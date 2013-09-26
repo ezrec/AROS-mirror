@@ -13,7 +13,7 @@
 #include "exec_util.h"
 #include "semaphores.h"
 
-#define CHECK_TASK	0 /* it seems to be legal to call ObtainSemaphore in one task and ReleaseSemaphore in another */
+#define CHECK_TASK      0 /* it seems to be legal to call ObtainSemaphore in one task and ReleaseSemaphore in another */
 
 /*****************************************************************************/
 #undef  Exec
@@ -22,29 +22,29 @@
 #endif
 
 /*  NAME  */
-	#include <proto/exec.h>
+        #include <proto/exec.h>
 
-	AROS_LH1(void, ReleaseSemaphore,
+        AROS_LH1(void, ReleaseSemaphore,
 
 /*  SYNOPSIS  */
-	AROS_LHA(struct SignalSemaphore *, sigSem, A0),
+        AROS_LHA(struct SignalSemaphore *, sigSem, A0),
 
 /*  LOCATION  */
-	struct ExecBase *, SysBase, 95, Exec)
+        struct ExecBase *, SysBase, 95, Exec)
 
 /*  FUNCTION
-	Releases a lock on a semaphore obtained with either ObtainSemaphore(),
-	ObtainSemaphoreShared(), AttemptSemaphore or AttemptSemaphoreShared().
-	Each call to one of those functions must be accompanied by one call
-	to ReleaseSemaphore().
+        Releases a lock on a semaphore obtained with either ObtainSemaphore(),
+        ObtainSemaphoreShared(), AttemptSemaphore or AttemptSemaphoreShared().
+        Each call to one of those functions must be accompanied by one call
+        to ReleaseSemaphore().
 
     INPUTS
-	sigSem - pointer to semaphore structure
+        sigSem - pointer to semaphore structure
 
     RESULT
 
     NOTES
-	This function preserves all registers.
+        This function preserves all registers.
 
     EXAMPLE
 
@@ -68,7 +68,7 @@
 
     /* We can be called from within exec's pre-init code. It's okay. */
     if (!me)
-    	return;
+        return;
 
     if (me->tc_State == TS_REMOVED)
         return;
@@ -90,138 +90,138 @@
 
     if(sigSem->ss_NestCount == 0)
     {
-	/*
-	    There are two cases here. Either we are a shared
-	    semaphore, or not. If we are not, make sure that the
-	    correct Task is calling ReleaseSemaphore()
-	*/
-	
+        /*
+            There are two cases here. Either we are a shared
+            semaphore, or not. If we are not, make sure that the
+            correct Task is calling ReleaseSemaphore()
+        */
+        
 #if CHECK_TASK
         if (sigSem->ss_Owner != NULL && sigSem->ss_Owner != me)
-	{
-	    /*
-		If it is not, there is a chance that the semaphore
-		is corrupt. It will be afterwards anyway :-) 
-	    */
-	    Alert( AN_SemCorrupt );
-	}
+        {
+            /*
+                If it is not, there is a chance that the semaphore
+                is corrupt. It will be afterwards anyway :-) 
+            */
+            Alert( AN_SemCorrupt );
+        }
 #endif
 
-	/*
-	    Do not try and wake anything unless there are a number
-	    of tasks waiting. We do both the tests, this is another
-	    opportunity to throw an alert if there is an error.
-	*/
-	if(
-	    sigSem->ss_QueueCount >= 0
-	 && sigSem->ss_WaitQueue.mlh_Head->mln_Succ != NULL
-	)
-	{
-	    struct SemaphoreRequest *sr, *srn;
+        /*
+            Do not try and wake anything unless there are a number
+            of tasks waiting. We do both the tests, this is another
+            opportunity to throw an alert if there is an error.
+        */
+        if(
+            sigSem->ss_QueueCount >= 0
+         && sigSem->ss_WaitQueue.mlh_Head->mln_Succ != NULL
+        )
+        {
+            struct SemaphoreRequest *sr, *srn;
 
-	    /*
-		Look at the first node, but only to see whether it
-		is shared or not.
-	    */
-	    sr = (struct SemaphoreRequest *)sigSem->ss_WaitQueue.mlh_Head;
+            /*
+                Look at the first node, but only to see whether it
+                is shared or not.
+            */
+            sr = (struct SemaphoreRequest *)sigSem->ss_WaitQueue.mlh_Head;
 
-	    /*
-		A node is shared if the ln_Name/sr_Waiter field is
-		odd (ie it has bit 1 set).
+            /*
+                A node is shared if the ln_Name/sr_Waiter field is
+                odd (ie it has bit 1 set).
 
-		If the sr_Waiter field is != NULL, then this is a
-		task waiting, otherwise it is a message.
-	    */
-	    if( ((IPTR)sr->sr_Waiter & SM_SHARED) == SM_SHARED )
-	    {
-		/* This is a shared lock, so ss_Owner == NULL */
-		sigSem->ss_Owner = NULL;
+                If the sr_Waiter field is != NULL, then this is a
+                task waiting, otherwise it is a message.
+            */
+            if( ((IPTR)sr->sr_Waiter & SM_SHARED) == SM_SHARED )
+            {
+                /* This is a shared lock, so ss_Owner == NULL */
+                sigSem->ss_Owner = NULL;
 
-		/* Go through all the nodes to find the shared ones */
-		ForeachNodeSafe( &sigSem->ss_WaitQueue, sr, srn)
-		{
-		    srn = (struct SemaphoreRequest *)sr->sr_Link.mln_Succ;
+                /* Go through all the nodes to find the shared ones */
+                ForeachNodeSafe( &sigSem->ss_WaitQueue, sr, srn)
+                {
+                    srn = (struct SemaphoreRequest *)sr->sr_Link.mln_Succ;
 
-		    if( ((IPTR)sr->sr_Waiter & SM_SHARED) == SM_SHARED )
-		    {
-			Remove((struct Node *)sr);
+                    if( ((IPTR)sr->sr_Waiter & SM_SHARED) == SM_SHARED )
+                    {
+                        Remove((struct Node *)sr);
 
-			/* Clear the bit, and update the owner count */
-			sr->sr_Waiter = (APTR)((IPTR)sr->sr_Waiter & ~1);
-			sigSem->ss_NestCount++;
+                        /* Clear the bit, and update the owner count */
+                        sr->sr_Waiter = (APTR)((IPTR)sr->sr_Waiter & ~1);
+                        sigSem->ss_NestCount++;
 
-			if(sr->sr_Waiter != NULL)
-			{
-			    /* This is a task, signal it */
+                        if(sr->sr_Waiter != NULL)
+                        {
+                            /* This is a task, signal it */
 #ifdef AROS_SMP
           UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
           locked=FALSE;
 #endif
-			    Signal(sr->sr_Waiter, SIGF_SINGLE);
-			}
-			else
-			{
-			    /* This is a message, send it back to its owner */
-			    ((struct SemaphoreMessage *)sr)->ssm_Semaphore = sigSem;
-			    ReplyMsg((struct Message *)sr);
-			}
-		    }
-		}
-	    }
+                            Signal(sr->sr_Waiter, SIGF_SINGLE);
+                        }
+                        else
+                        {
+                            /* This is a message, send it back to its owner */
+                            ((struct SemaphoreMessage *)sr)->ssm_Semaphore = sigSem;
+                            ReplyMsg((struct Message *)sr);
+                        }
+                    }
+                }
+            }
 
-	    /*	This is an exclusive lock - awaken first node */
-	    else
-	    {
-		/* Save typing */
-		struct SemaphoreMessage *sm = (struct SemaphoreMessage *)sr;
+            /*  This is an exclusive lock - awaken first node */
+            else
+            {
+                /* Save typing */
+                struct SemaphoreMessage *sm = (struct SemaphoreMessage *)sr;
 
-		/* Only awaken the first of the nodes */
-		Remove((struct Node *)sr);
-		sigSem->ss_NestCount++;
+                /* Only awaken the first of the nodes */
+                Remove((struct Node *)sr);
+                sigSem->ss_NestCount++;
 
-		if(sr->sr_Waiter != NULL)
-		{
-		    sigSem->ss_Owner = sr->sr_Waiter;
+                if(sr->sr_Waiter != NULL)
+                {
+                    sigSem->ss_Owner = sr->sr_Waiter;
 #ifdef AROS_SMP
         UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
         locked=FALSE;
 #endif
-		    Signal(sr->sr_Waiter, SIGF_SINGLE);
-		}
-		else
-		{
-		    sigSem->ss_Owner = (struct Task *)sm->ssm_Semaphore;
-		    sm->ssm_Semaphore = sigSem;
+                    Signal(sr->sr_Waiter, SIGF_SINGLE);
+                }
+                else
+                {
+                    sigSem->ss_Owner = (struct Task *)sm->ssm_Semaphore;
+                    sm->ssm_Semaphore = sigSem;
 #ifdef AROS_SMP
         UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
         locked=FALSE;
 #endif
-		    ReplyMsg((struct Message *)sr);
-		}
-	    }
-	} /* there are waiters */
+                    ReplyMsg((struct Message *)sr);
+                }
+            }
+        } /* there are waiters */
 
-	/*  Otherwise, there are not tasks waiting. */
-	else
-	{
-	    sigSem->ss_Owner = NULL;
-	    sigSem->ss_QueueCount = -1;
+        /*  Otherwise, there are not tasks waiting. */
+        else
+        {
+            sigSem->ss_Owner = NULL;
+            sigSem->ss_QueueCount = -1;
 
-	    D(bug("ReleaseSemaphore(): No tasks - ss_NestCount == %ld\n",
-		sigSem->ss_NestCount));
-	}
+            D(bug("ReleaseSemaphore(): No tasks - ss_NestCount == %ld\n",
+                sigSem->ss_NestCount));
+        }
     }
     else if(sigSem->ss_NestCount < 0)
     {
-	/*
-	    This can't happen. It means that somebody has released
-	    more times than they have obtained.
-	*/
+        /*
+            This can't happen. It means that somebody has released
+            more times than they have obtained.
+        */
 #ifdef AROS_SMP
         UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
         locked=FALSE;
 #endif
-	Alert( AN_SemCorrupt );
+        Alert( AN_SemCorrupt );
     }
 
     /* All done. */
