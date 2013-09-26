@@ -47,6 +47,7 @@ BOOL CheckSemaphore(struct SignalSemaphore *sigSem, struct TraceLocation *caller
 void InternalObtainSemaphore(struct SignalSemaphore *sigSem, struct Task *owner, struct TraceLocation *caller, struct ExecBase *SysBase)
 {
     struct Task *me = FindTask(NULL);
+    BOOL locked=FALSE;
 
     /*
      * If there's no ThisTask, the function is called from within memory
@@ -68,9 +69,14 @@ void InternalObtainSemaphore(struct SignalSemaphore *sigSem, struct Task *owner,
 
     /*
      * Arbitrate for the semaphore structure.
-     * TODO: SMP-aware versions of this code likely need to use spinlocks here
+     * SMP-aware versions of this code needs to use spinlocks here
      */
+#ifndef AROS_SMP
     Forbid();
+#else
+    LockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+    locked=TRUE;
+#endif
 
     /*
      * ss_QueueCount == -1 indicates that the semaphore is
@@ -129,11 +135,23 @@ void InternalObtainSemaphore(struct SignalSemaphore *sigSem, struct Task *owner,
          * Finally, we simply wait, ReleaseSemaphore() will fill in
          * who owns the semaphore.
          */
+#ifdef AROS_SMP
+        /* Wait breaks Forbid, but does not release a spinlock! */
+        UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+        locked=FALSE;
+#endif
         Wait(SIGF_SINGLE);
     }
 
     /* All Done! */
+#ifndef AROS_SMP
     Permit();
+#else
+    if(locked) 
+    {
+        UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+    }
+#endif
 }
 
 ULONG InternalAttemptSemaphore(struct SignalSemaphore *sigSem, struct Task *owner, struct TraceLocation *caller, struct ExecBase *SysBase)
@@ -146,9 +164,13 @@ ULONG InternalAttemptSemaphore(struct SignalSemaphore *sigSem, struct Task *owne
 
     /*
      * Arbitrate for the semaphore structure.
-     * TODO: SMP-aware versions of this code likely need to use spinlocks here
+     * SMP-aware version of this code needs to use spinlocks here
      */
+#ifndef AROS_SMP
     Forbid();
+#else
+    LockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+#endif
 
     /* Increment the queue count */
     sigSem->ss_QueueCount++;
@@ -172,7 +194,11 @@ ULONG InternalAttemptSemaphore(struct SignalSemaphore *sigSem, struct Task *owne
     }
 
     /* All done. */
+#ifndef AROS_SMP
     Permit();
+#else
+    UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+#endif
 
     return retval;
 }
