@@ -71,7 +71,7 @@ void InternalObtainSemaphore(struct SignalSemaphore *sigSem, struct Task *owner,
      * Arbitrate for the semaphore structure.
      * SMP-aware versions of this code needs to use spinlocks here
      */
-#ifndef AROS_SMP
+#if !AROS_SMP
     Forbid();
 #else
     LockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
@@ -135,7 +135,7 @@ void InternalObtainSemaphore(struct SignalSemaphore *sigSem, struct Task *owner,
          * Finally, we simply wait, ReleaseSemaphore() will fill in
          * who owns the semaphore.
          */
-#ifdef AROS_SMP
+#if !AROS_SMP
         /* Wait breaks Forbid, but does not release a spinlock! */
         UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
         locked=FALSE;
@@ -144,7 +144,7 @@ void InternalObtainSemaphore(struct SignalSemaphore *sigSem, struct Task *owner,
     }
 
     /* All Done! */
-#ifndef AROS_SMP
+#if !AROS_SMP
     Permit();
 #else
     if(locked) 
@@ -166,7 +166,7 @@ ULONG InternalAttemptSemaphore(struct SignalSemaphore *sigSem, struct Task *owne
      * Arbitrate for the semaphore structure.
      * SMP-aware version of this code needs to use spinlocks here
      */
-#ifndef AROS_SMP
+#if !AROS_SMP
     Forbid();
 #else
     LockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
@@ -194,7 +194,7 @@ ULONG InternalAttemptSemaphore(struct SignalSemaphore *sigSem, struct Task *owne
     }
 
     /* All done. */
-#ifndef AROS_SMP
+#if !AROS_SMP
     Permit();
 #else
     UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));

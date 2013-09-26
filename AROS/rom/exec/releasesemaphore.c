@@ -62,7 +62,7 @@
 
     struct TraceLocation tp = CURRENT_LOCATION("ReleaseSemaphore");
     struct Task *me = FindTask(NULL);
-#ifdef AROS_SMP
+#if AROS_SMP
     BOOL locked=FALSE;
 #endif
 
@@ -77,7 +77,7 @@
         return;
 
     /* Protect the semaphore structure from multiple access. */
-#ifndef AROS_SMP
+#if !AROS_SMP
     Forbid();
 #else
     LockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
@@ -153,7 +153,7 @@
                         if(sr->sr_Waiter != NULL)
                         {
                             /* This is a task, signal it */
-#ifdef AROS_SMP
+#if AROS_SMP
           UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
           locked=FALSE;
 #endif
@@ -182,7 +182,7 @@
                 if(sr->sr_Waiter != NULL)
                 {
                     sigSem->ss_Owner = sr->sr_Waiter;
-#ifdef AROS_SMP
+#if AROS_SMP
         UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
         locked=FALSE;
 #endif
@@ -192,7 +192,7 @@
                 {
                     sigSem->ss_Owner = (struct Task *)sm->ssm_Semaphore;
                     sm->ssm_Semaphore = sigSem;
-#ifdef AROS_SMP
+#if AROS_SMP
         UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
         locked=FALSE;
 #endif
@@ -217,7 +217,7 @@
             This can't happen. It means that somebody has released
             more times than they have obtained.
         */
-#ifdef AROS_SMP
+#if AROS_SMP
         UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
         locked=FALSE;
 #endif
@@ -225,7 +225,7 @@
     }
 
     /* All done. */
-#ifndef AROS_SMP
+#if !AROS_SMP
     Permit();
 #else
     UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));

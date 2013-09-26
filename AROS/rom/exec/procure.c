@@ -68,7 +68,7 @@
         bidMsg->ssm_Semaphore = (struct SignalSemaphore *)FindTask(NULL);
 
     /* Arbitrate for the semaphore structure - following like ObtainSema() */
-#ifndef AROS_SMP
+#if !AROS_SMP
     Forbid();
 #else
     LockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
@@ -84,7 +84,7 @@
         sigSem->ss_Owner = (struct Task *)bidMsg->ssm_Semaphore;
         sigSem->ss_NestCount++;
         bidMsg->ssm_Semaphore = sigSem;
-#ifdef AROS_SMP
+#if AROS_SMP
         UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
 #endif
         ReplyMsg(&bidMsg->ssm_Message);
@@ -97,7 +97,7 @@
         /* Yes we do... */
         sigSem->ss_NestCount++;
         bidMsg->ssm_Semaphore = sigSem;
-#ifdef AROS_SMP
+#if AROS_SMP
         UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
 #endif
         ReplyMsg(&bidMsg->ssm_Message);
@@ -134,12 +134,12 @@
             sr->sr_Waiter = (APTR)SM_SHARED;
 
         AddTail((struct List *)&sigSem->ss_WaitQueue, (struct Node *)bidMsg);
-#ifdef AROS_SMP
+#if AROS_SMP
         UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
 #endif
     }
     /* All done. */
-#ifndef AROS_SMP
+#if !AROS_SMP
     Permit();
 #endif
 

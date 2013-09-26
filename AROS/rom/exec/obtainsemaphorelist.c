@@ -73,7 +73,7 @@
      *  will be granted to us. In that case we do not have to wait for it.
      */
      
-#ifndef AROS_SMP
+#if !AROS_SMP
     Forbid();
 #else
     LockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
@@ -128,12 +128,12 @@
                  *  Check again because the signal could have been for a
                  *  different semaphore in the list we are waiting for.
                  */
-#ifdef AROS_SMP
+#if AROS_SMP
                 /* Wait() breaks Forbid(), so this spinlock needs to be unlocked, too */
                 UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
 #endif
                 Wait(SIGF_SINGLE);
-#ifdef AROS_SMP
+#if AROS_SMP
                 LockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
 #endif
             }
@@ -154,7 +154,7 @@
     }
 #endif
 
-#ifndef AROS_SMP
+#if !AROS_SMP
     Permit();
 #else
     UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));

@@ -54,7 +54,7 @@
     struct SemaphoreRequest *sr = NULL;
 
     /* Arbitrate for the semaphore structure */
-#ifndef AROS_SMP
+#if !AROS_SMP
     Forbid();
 #else
     LockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
@@ -75,21 +75,21 @@
             sigSem->ss_QueueCount--;
 
             /* And reply the message. */
-#ifdef AROS_SMP
+#if AROS_SMP
       UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
 #endif
 
             ReplyMsg(&bidMsg->ssm_Message);
 
             /* All done */
-#ifndef AROS_SMP
+#if !AROS_SMP
             Permit();
 #endif
             return;
         }
     }
 
-#ifdef AROS_SMP
+#if AROS_SMP
     UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
 #endif
 
@@ -97,7 +97,7 @@
     ReleaseSemaphore(sigSem);
 
     /* All done. */
-#ifndef AROS_SMP
+#if !AROS_SMP
     Permit();
 #endif
     AROS_LIBFUNC_EXIT
