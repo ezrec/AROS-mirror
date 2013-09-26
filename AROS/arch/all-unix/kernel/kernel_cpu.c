@@ -3,7 +3,7 @@
     $Id$
 */
 
-#define DEBUG 0
+#define DEBUG 1
 
 #include <aros/debug.h>
 #include <exec/alerts.h>
@@ -102,7 +102,7 @@ static void thread_SuspendOrBreakForbid(struct KernelBase *KernelBase)
     pd->iface->pthread_mutex_lock(&pd->forbid_mutex);
     if (pd->forbid_cpu == thiscpu) {
         int i;
-        D(bug("CPU%d: Breaking forbid state\n"));
+        D(bug("CPU%d: Breaking forbid state\n", thiscpu));
         for (i = 0; i < pd->threads; i++) {
             if (i == thiscpu || pd->thread[i].state != STATE_STOPPED)
                 continue;
@@ -179,16 +179,22 @@ void cpu_DispatchContext(struct Task *task, regs_t *regs, struct PlatformData *p
     struct AROSCPUContext *ctx;
 
     /* If task is in TS_REMOVED state, RemTask has already uninitialized 
-       the ETask structure. */
-    if(task->tc_State!=TS_REMOVED)
+     * the ETask structure. So check for a valid ETask. 
+     * WARNING: not sure, if this is a good idea! 
+     */
+    if((task->tc_Flags & TF_ETASK) && (task->tc_State != TS_REMOVED))
     {
-    
         ctx = task->tc_UnionETask.tc_ETask->et_RegFrame;
 
         RESTOREREGS(ctx, regs);
         *pd->errnoPtr = ctx->errno_backup;
 
         D(PRINT_SC(regs));
+    }
+    else 
+    {
+        bug("[KRN] WARNING: CPU%d: task %p has no valid ETask!\n", KrnGetCPUNumber(), task);
+        /* what next?? */
     }
 
     if (task->tc_Flags & TF_EXCEPT)
