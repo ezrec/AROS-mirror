@@ -112,9 +112,13 @@
         }
 #endif
     }
+
     /* reset original priority */
-    SetTaskPri(thistask, org_priority);
-    //thistask->tc_Node.ln_Pri=org_priority;
+    if(akt_priority!=org_priority) 
+    {
+        SetTaskPri(thistask, org_priority);
+        //thistask->tc_Node.ln_Pri=org_priority;
+    }
 
     AROS_LIBFUNC_EXIT
 } /* LockSpin */
