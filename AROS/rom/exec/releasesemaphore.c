@@ -74,7 +74,11 @@
         return;
 
     /* Protect the semaphore structure from multiple access. */
+#if !AROS_SMP
     Forbid();
+#else
+    LockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+#endif
 
     /* Release one on the nest count */
     sigSem->ss_NestCount--;
@@ -145,6 +149,9 @@
 			if(sr->sr_Waiter != NULL)
 			{
 			    /* This is a task, signal it */
+#if AROS_SMP
+          UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+#endif
 			    Signal(sr->sr_Waiter, SIGF_SINGLE);
 			}
 			else
@@ -170,12 +177,18 @@
 		if(sr->sr_Waiter != NULL)
 		{
 		    sigSem->ss_Owner = sr->sr_Waiter;
+#if AROS_SMP
+        UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+#endif
 		    Signal(sr->sr_Waiter, SIGF_SINGLE);
 		}
 		else
 		{
 		    sigSem->ss_Owner = (struct Task *)sm->ssm_Semaphore;
 		    sm->ssm_Semaphore = sigSem;
+#if AROS_SMP
+        UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+#endif
 		    ReplyMsg((struct Message *)sr);
 		}
 	    }
@@ -197,11 +210,18 @@
 	    This can't happen. It means that somebody has released
 	    more times than they have obtained.
 	*/
+#if AROS_SMP
+        UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+#endif
 	Alert( AN_SemCorrupt );
     }
 
     /* All done. */
+#if !AROS_SMP
     Permit();
+#else
+    UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+#endif
 
     AROS_LIBFUNC_EXIT
 } /* ReleaseSemaphore */

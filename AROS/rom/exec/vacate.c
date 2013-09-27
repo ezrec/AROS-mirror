@@ -54,7 +54,11 @@
     struct SemaphoreRequest *sr = NULL;
 
     /* Arbitrate for the semaphore structure */
+#if !AROS_SMP
     Forbid();
+#else
+    LockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+#endif
     bidMsg->ssm_Semaphore = NULL;
 
     /*
@@ -71,18 +75,30 @@
 	    sigSem->ss_QueueCount--;
 
 	    /* And reply the message. */
+#if AROS_SMP
+      UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+#endif
+
 	    ReplyMsg(&bidMsg->ssm_Message);
 
 	    /* All done */
+#if !AROS_SMP
 	    Permit();
+#endif
 	    return;
 	}
     }
+
+#if AROS_SMP
+    UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+#endif
 
     /* No, it must have been fulfilled. Release the semaphore and done. */
     ReleaseSemaphore(sigSem);
 
     /* All done. */
+#if !AROS_SMP
     Permit();
+#endif
     AROS_LIBFUNC_EXIT
 } /* Vacate */
