@@ -49,6 +49,8 @@
 #MM     workbench-libs-lcms2 \
 #MM     workbench-libs-gallium \
 #MM     workbench-libs-vega \
+#MM     workbench-libs-mesa \
+#MM     workbench-libs-glu \
 #MM     workbench-libs-egl
 
 #MM- includes-generate : \
