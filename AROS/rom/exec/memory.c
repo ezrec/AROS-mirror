@@ -1095,7 +1095,7 @@ void InternalFreePooled(APTR memory, IPTR memSize, struct TraceLocation *loc, st
         freeSize += MUNGWALL_TOTAL_SIZE;
 
     /* Verify that MemHeader pointer is correct */
-    if ((mh->mh_Node.ln_Type != NT_MEMORY) ||
+    if ((mh == NULL) || (mh->mh_Node.ln_Type != NT_MEMORY) ||
     (freeStart < mh->mh_Lower) || (freeStart + freeSize > mh->mh_Upper))
     {
         /*
