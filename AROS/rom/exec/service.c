@@ -37,8 +37,8 @@ void ServiceTask(struct ExecBase *SysBase)
              * So, currently we ignore this.
              */
 
-	    switch (task->tc_State)
-	    {
+            switch (task->tc_State)
+            {
             case TS_REMOVED:
                 DREMTASK("Removal request for task 0x%p <%s>", task, task->tc_Node.ln_Name);
 
