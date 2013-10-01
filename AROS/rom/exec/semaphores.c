@@ -14,6 +14,9 @@
 #include "exec_util.h"
 #include "semaphores.h"
 
+#define LOCK()   LockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock))
+#define UNLOCK() UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock))
+
 BOOL CheckSemaphore(struct SignalSemaphore *sigSem, struct TraceLocation *caller, struct ExecBase *SysBase)
 {
     /* TODO: Introduce AlertContext for this */
@@ -74,7 +77,7 @@ void InternalObtainSemaphore(struct SignalSemaphore *sigSem, struct Task *owner,
 #if !AROS_SMP
     Forbid();
 #else
-    LockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+    LOCK();
     locked=TRUE;
 #endif
 
@@ -124,7 +127,7 @@ void InternalObtainSemaphore(struct SignalSemaphore *sigSem, struct Task *owner,
          * return immediately. We then add the SemReq to the
          * waiters list of the semaphore. We were the last to
          * request, so we must be the last to get the semaphore.
-        */
+         */
 
         /* This must be atomic! */
         AROS_ATOMIC_AND(me->tc_SigRecvd, ~SIGF_SINGLE);
@@ -135,9 +138,9 @@ void InternalObtainSemaphore(struct SignalSemaphore *sigSem, struct Task *owner,
          * Finally, we simply wait, ReleaseSemaphore() will fill in
          * who owns the semaphore.
          */
-#if !AROS_SMP
+#if AROS_SMP
         /* Wait breaks Forbid, but does not release a spinlock! */
-        UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+        UNLOCK();
         locked=FALSE;
 #endif
         Wait(SIGF_SINGLE);
@@ -149,7 +152,7 @@ void InternalObtainSemaphore(struct SignalSemaphore *sigSem, struct Task *owner,
 #else
     if(locked) 
     {
-        UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+        UNLOCK();
     }
 #endif
 }
@@ -169,7 +172,7 @@ ULONG InternalAttemptSemaphore(struct SignalSemaphore *sigSem, struct Task *owne
 #if !AROS_SMP
     Forbid();
 #else
-    LockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+    LOCK();
 #endif
 
     /* Increment the queue count */
@@ -197,7 +200,7 @@ ULONG InternalAttemptSemaphore(struct SignalSemaphore *sigSem, struct Task *owne
 #if !AROS_SMP
     Permit();
 #else
-    UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+    UNLOCK();
 #endif
 
     return retval;

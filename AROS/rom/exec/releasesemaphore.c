@@ -153,10 +153,6 @@
                         if(sr->sr_Waiter != NULL)
                         {
                             /* This is a task, signal it */
-#if AROS_SMP
-          UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
-          locked=FALSE;
-#endif
                             Signal(sr->sr_Waiter, SIGF_SINGLE);
                         }
                         else
@@ -182,20 +178,12 @@
                 if(sr->sr_Waiter != NULL)
                 {
                     sigSem->ss_Owner = sr->sr_Waiter;
-#if AROS_SMP
-        UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
-        locked=FALSE;
-#endif
                     Signal(sr->sr_Waiter, SIGF_SINGLE);
                 }
                 else
                 {
                     sigSem->ss_Owner = (struct Task *)sm->ssm_Semaphore;
                     sm->ssm_Semaphore = sigSem;
-#if AROS_SMP
-        UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
-        locked=FALSE;
-#endif
                     ReplyMsg((struct Message *)sr);
                 }
             }
@@ -228,7 +216,10 @@
 #if !AROS_SMP
     Permit();
 #else
-    UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+    if(locked)
+    {
+        UnlockSpin(&(PrivExecBase(SysBase)->semaphore_spinlock));
+    }
 #endif
 
     AROS_LIBFUNC_EXIT
