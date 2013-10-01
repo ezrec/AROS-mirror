@@ -11,6 +11,8 @@
 #include <aros/debug.h>
 #include <proto/exec.h>
 
+#include "exec_intern.h"
+
 #define MIN_PRI -120
 
 /*****************************************************************************
@@ -20,7 +22,7 @@
         AROS_LH1I(void, LockSpin,
 
 /*  SYNOPSIS */
-        AROS_LHA(APTR, spin, A0),
+        AROS_LHA(APTR, aspin, A0),
 
 /*  LOCATION */
         struct ExecBase *, SysBase, 187, Exec)
@@ -32,7 +34,7 @@
         predictable, which task will get the lock next.
 
     INPUTS
-        spin - Pointer to spin (at the moment, a pointer to LONG)
+        spin - Pointer to spin (TODO: allocated with AllocSpin)
 
     RESULT
 
@@ -44,6 +46,10 @@
         systems, Forbid() or ObtainSemaphore usually gives better
         performance.
 
+        Like Forbid/Permit every single LockSpin must be followed by
+        one UnlockSpin. Only the task, which locked the spin
+        is allowed to free it again.
+
     EXAMPLE
 
     BUGS
@@ -51,7 +57,7 @@
         may happen.
 
     SEE ALSO
-        UnlockSpin()
+        AllocSpin(), UnlockSpin()
 
     INTERNALS
         Problem on AROS is, that a busy waiting task with a higher
@@ -73,36 +79,50 @@
 {
     AROS_LIBFUNC_INIT
 
+    struct SpinLock *spin=(struct SpinLock *) aspin;
     struct Task *thistask=FindTask(NULL);
     /* get current task priority (without changing it) */
     BYTE org_priority=thistask->tc_Node.ln_Pri;
     BYTE akt_priority=org_priority;
     ULONG count=0;
 
-    while( /*(*(int *)spin==1) ||*/ __sync_lock_test_and_set((int *)spin, 1) ) 
+    while( __sync_lock_test_and_set(&spin->lock, 1) ) 
     {
-        count++;
+        if(spin->owner==thistask) 
+        {
+            D(bug("[LOCKSPIN] reentry #%d of task %p (%s)\n", spin->nest, thistask, thistask->tc_Node.ln_Name));
+            spin->nest++;
+            return;
+        }
 
+        count++;
         /* If we are busy far too long, lower our priority, if still possible */
         /* TODO: Is 0xFFFF a good value? more tests need to be done here */
         if(count>0xFFFF) 
         {
             count=0;
 
-            if(akt_priority!=MIN_PRI) 
+            if(akt_priority>MIN_PRI+5) 
             {
                 /* we can go lower */
                 akt_priority=akt_priority-5;
-                if(akt_priority<MIN_PRI) 
+                if(akt_priority <= MIN_PRI) 
                 {
                     /* reached lower end */
                     akt_priority=MIN_PRI;
                 }
-                /* lower priority */
+                /* lower priority
+                 * we could access owner->tc_Node.ln_Pri, but there is a slight chance, that
+                 * the owner tasks ends, before we get the priority. And we can't use Forbid() here
+                 */
 
-                D(bug("LOCKSPIN: lower %lx to akt_priority %d\n", thistask, akt_priority));
+                D(bug("[LOCKSPIN] task %p still holds the spinlock %lx (%d) with priority %d (%s)\n",
+                        spin->owner, spin, spin->lock, spin->owner->tc_Node.ln_Pri, 
+                        spin->owner->tc_Node.ln_Name));
+
+                D(bug("[LOCKSPIN] lower this task %lx to priority %d (%s)\n", 
+                      thistask, akt_priority, thistask->tc_Node.ln_Name));
                 SetTaskPri(thistask, akt_priority);
-                //thistask->tc_Node.ln_Pri=akt_priority;
             }
         }
 #if 0
@@ -113,11 +133,13 @@
 #endif
     }
 
+    spin->nest=1;
+    spin->owner=thistask;
+
     /* reset original priority */
     if(akt_priority!=org_priority) 
     {
         SetTaskPri(thistask, org_priority);
-        //thistask->tc_Node.ln_Pri=org_priority;
     }
 
     AROS_LIBFUNC_EXIT

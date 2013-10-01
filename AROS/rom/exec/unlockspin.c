@@ -6,7 +6,12 @@
     Lang: english
 */
 
+#define DEBUG 1
+
+#include <aros/debug.h>
 #include <proto/exec.h>
+
+#include "exec_intern.h"
 
 /*****************************************************************************
 
@@ -15,7 +20,7 @@
         AROS_LH1I(void, UnlockSpin,
 
 /*  SYNOPSIS */
-        AROS_LHA(APTR, spin, A0),
+        AROS_LHA(APTR, aspin, A0),
 
 /*  LOCATION */
         struct ExecBase *, SysBase, 188, Exec)
@@ -44,8 +49,32 @@
 {
     AROS_LIBFUNC_INIT
 
-     __sync_synchronize();
-     *(ULONG *)spin=0;
+    struct SpinLock *spin=(struct SpinLock *) aspin;
+    struct Task *thistask=FindTask(NULL);
+
+    if(spin->owner!=thistask) 
+    {
+        kprintf("[PANIC] Spinlock %lx held by task %p, but unlocked by task %p\n", 
+                 spin, spin->owner, thistask);
+        Alert( AN_SemCorrupt );
+    }
+
+    if(spin->owner==NULL)
+    {
+        kprintf("[PANIC] Spinlock %lx is not locked, but unlocked by task %p\n", spin, thistask);
+        Alert( AN_SemCorrupt );
+    }
+    
+    if(spin->nest>1) 
+    {
+        spin->nest--;
+        return;
+    }
+
+    spin->owner=NULL;
+
+    __sync_synchronize();
+    spin->lock=0;
 
     AROS_LIBFUNC_EXIT
 } /* UnlockSpin */

@@ -31,6 +31,15 @@ struct SupervisorAlertTask
     IPTR            sat_Params[2];
 };
 
+#ifdef AROS_SMP
+struct SpinLock
+{
+    ULONG           lock;               /* actual spinlock                    */
+    struct Task *   owner;              /* Task currently holding the lock    */
+    ULONG           nest;               /* Number of locks, holding task got  */
+};
+#endif
+
 /* A private portion of ExecBase */
 struct IntExecBase
 {
@@ -54,7 +63,7 @@ struct IntExecBase
     char   AlertBuffer[ALERT_BUFFER_SIZE];      /* Buffer for alert text                                 */
 #if AROS_SMP
     struct List CPUList;                        /* List of CPUs                                          */
-    ULONG  semaphore_spinlock;                  /* spinlock for semaphore function synchronisation       */
+    struct SpinLock semaphore_spinlock;         /* spinlock for semaphore function synchronisation       */
 #endif
 };
 
