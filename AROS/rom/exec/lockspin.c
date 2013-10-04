@@ -43,7 +43,7 @@
         the spin variable is 0. If it is 0, it sets it to 1 and
         returns. Spinlocks are protected against concurrency, so
         they work both in SMP and non SMP systems. On single CPU
-        systems, Forbid() or ObtainSemaphore usually gives better
+        systems, Forbid() or ObtainSemaphore usually give better
         performance.
 
         Like Forbid/Permit every single LockSpin must be followed by
@@ -86,15 +86,18 @@
     BYTE akt_priority=org_priority;
     ULONG count=0;
 
+    /* no need to lock this access, either it is us, then there can't be a race or
+     * it is NULL/another task, then the owner is different
+     */
+    if(spin->owner==thistask) 
+    {
+        D(bug("[LOCKSPIN] reentry #%d of task %p (%s)\n", spin->nest, thistask, thistask->tc_Node.ln_Name));
+        spin->nest++;
+        return;
+    }
+
     while( __sync_lock_test_and_set(&spin->lock, 1) ) 
     {
-        if(spin->owner==thistask) 
-        {
-            D(bug("[LOCKSPIN] reentry #%d of task %p (%s)\n", spin->nest, thistask, thistask->tc_Node.ln_Name));
-            spin->nest++;
-            return;
-        }
-
         count++;
         /* If we are busy far too long, lower our priority, if still possible */
         /* TODO: Is 0xFFFF a good value? more tests need to be done here */
@@ -116,9 +119,11 @@
                  * the owner tasks ends, before we get the priority. And we can't use Forbid() here
                  */
 
+#if 0
                 D(bug("[LOCKSPIN] task %p still holds the spinlock %lx (%d) with priority %d (%s)\n",
                         spin->owner, spin, spin->lock, spin->owner->tc_Node.ln_Pri, 
                         spin->owner->tc_Node.ln_Name));
+#endif
 
                 D(bug("[LOCKSPIN] lower this task %lx to priority %d (%s)\n", 
                       thistask, akt_priority, thistask->tc_Node.ln_Name));
