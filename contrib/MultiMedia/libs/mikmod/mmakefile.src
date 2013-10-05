@@ -8,5 +8,5 @@
 
 TARGET_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-gcc
 
-%fetch_and_build_gnu_development package=libmikmod version=3.2.0 patch=yes \
-    package_repo=http://mikmod.shlomifish.org/files/ suffixes="tar.gz"
+%fetch_and_build_gnu_development package=libmikmod version=3.3.2 patch=yes \
+    package_repo=sf://mikmod suffixes="tar.gz"

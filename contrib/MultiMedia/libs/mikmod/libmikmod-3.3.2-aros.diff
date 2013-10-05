@@ -1,0 +1,36 @@
+diff -Naur libmikmod-3.3.2-orig/drivers/drv_raw.c libmikmod-3.3.2/drivers/drv_raw.c
+--- libmikmod-3.3.2-orig/drivers/drv_raw.c	2013-10-05 23:44:21.824110732 +0200
++++ libmikmod-3.3.2/drivers/drv_raw.c	2013-10-05 23:46:07.552115850 +0200
+@@ -52,6 +52,11 @@
+ #define O_BINARY 0
+ #endif
+ 
++#ifndef S_IREAD
++#	define S_IREAD 0
++#	define S_IWRITE 1
++#endif
++
+ #if defined(_WIN32) && !defined(__MWERKS__)
+ #define open _open
+ #endif
+diff -Naur libmikmod-3.3.2-orig/include/mikmod.h.in libmikmod-3.3.2/include/mikmod.h.in
+--- libmikmod-3.3.2-orig/include/mikmod.h.in	2013-10-05 23:44:21.816110731 +0200
++++ libmikmod-3.3.2/include/mikmod.h.in	2013-10-05 23:53:50.448138252 +0200
+@@ -108,7 +108,7 @@
+ 
+ @DOES_NOT_HAVE_SIGNED@
+ 
+-#if defined (_LP64) || defined(__arch64__) || defined(__alpha) || defined(__x86_64) || defined(__powerpc64__)
++#if (defined(__AROS__)&&!defined(EXEC_TYPES_H)) && (defined (_LP64) || defined(__arch64__) || defined(__alpha) || defined(__x86_64) || defined(__powerpc64__))
+ /* 64 bit architectures */
+ 
+ typedef signed char     SBYTE;  /* 1 byte, signed */
+@@ -127,7 +127,7 @@
+ typedef signed short    SWORD;  /* 2 bytes, signed */
+ typedef unsigned short  UWORD;  /* 2 bytes, unsigned */
+ typedef signed long     SLONG;  /* 4 bytes, signed */
+-#if !defined(__OS2__)&&!defined(__EMX__)
++#if (defined(__AROS__)&&!defined(EXEC_TYPES_H)) && !defined(__OS2__)&&!defined(__EMX__)
+ typedef unsigned long   ULONG;  /* 4 bytes, unsigned */
+ typedef int             BOOL;   /* 0=false, <>0 true */
+ #endif
