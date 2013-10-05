@@ -1,0 +1,439 @@
+diff -Naur abuse-0.8-orig/configure abuse-0.8/configure
+--- abuse-0.8-orig/configure	2013-10-05 11:22:35.229956738 +0200
++++ abuse-0.8/configure	2013-10-05 18:15:29.383155739 +0200
+@@ -16121,7 +16121,7 @@
+ if test "${ac_cv_my_have_sdl_mixer}" = "no"; then
+   as_fn_error $? "*** SDL_mixer not found!" "$LINENO" 5
+ fi
+-LIBS="$LIBS -lSDL_mixer"
++LIBS="$LIBS -lSDL_mixer -lvorbisfile -lvorbis -logg"
+ 
+ if test "${enable_debug}" = "yes"; then
+ 
+@@ -16536,36 +16536,8 @@
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for OpenGL support" >&5
+ $as_echo_n "checking for OpenGL support... " >&6; }
+ have_opengl=no
+-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+-/* end confdefs.h.  */
+ 
+-    #ifdef WIN32
+-    #include <windows.h>
+-    #elif defined(__APPLE__) && defined(__MACH__)
+-/*    #include <OpenGL/gl.h>*/
+-    #error	/* Error so the compile fails on OSX */
+-    #else
+-    #include <GL/gl.h>
+-    #endif
+-int
+-main ()
+-{
+-
+-  ;
+-  return 0;
+-}
+-_ACEOF
+-if ac_fn_c_try_compile "$LINENO"; then :
+-  have_opengl=yes
+-fi
+-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $have_opengl" >&5
+-$as_echo "$have_opengl" >&6; }
+-if test "x$have_opengl" = xyes; then
+-    CFLAGS="$CFLAGS -DHAVE_OPENGL"
+-    CXXFLAGS="$CXXFLAGS -DHAVE_OPENGL"
+-    LIBS="$LIBS -lGL -lpthread"
+-fi
++# disabled for AROS because OpenGL needs pthread
+ 
+ ac_config_files="$ac_config_files Makefile src/Makefile src/lisp/Makefile src/net/Makefile src/imlib/Makefile src/sdlport/Makefile data/Makefile doc/Makefile doc/abuse.6 doc/abuse-tool.6"
+ 
+diff -Naur abuse-0.8-orig/src/game.cpp abuse-0.8/src/game.cpp
+--- abuse-0.8-orig/src/game.cpp	2013-10-05 11:22:35.269956739 +0200
++++ abuse-0.8/src/game.cpp	2013-10-05 18:15:29.383155739 +0200
+@@ -62,6 +62,31 @@
+ #define SHIFT_RIGHT_DEFAULT 0
+ #define SHIFT_DOWN_DEFAULT 30
+ 
++#ifdef __AROS__
++#include <proto/exec.h>
++#include <proto/bsdsocket.h>
++struct Library *SocketBase;
++
++int aros_init(void)
++{
++    SocketBase = OpenLibrary("bsdsocket.library", 4);
++    if (!SocketBase)
++    {
++        fprintf(stderr,"Can't open bsdsocket.library\n");
++        return FALSE;
++    }
++    return TRUE;
++}
++
++void aros_exit(void)
++{
++    CloseLibrary(SocketBase);
++}
++
++ADD2INIT(aros_init, 0);
++ADD2EXIT(aros_exit, 0);
++#endif
++
+ extern CrcManager *net_crcs;
+ 
+ Game *the_game = NULL;
+diff -Naur abuse-0.8-orig/src/innet.cpp abuse-0.8/src/innet.cpp
+--- abuse-0.8-orig/src/innet.cpp	2013-10-05 11:22:35.269956739 +0200
++++ abuse-0.8/src/innet.cpp	2013-10-05 18:15:29.383155739 +0200
+@@ -290,13 +290,13 @@
+ {
+   if (prot)
+   {
+-    if (prot->select(0))  // anything happening net-wise?
++    if (prot->myselect(0))  // anything happening net-wise?
+     {
+       if (comm_sock && comm_sock->ready_to_read())  // new connection?
+       {
+                 net_address *addr;
+ 
+-                net_socket *new_sock=comm_sock->accept(addr);
++                net_socket *new_sock=comm_sock->myaccept(addr);
+                 if (new_sock)
+                 {
+                   uint8_t client_type;
+diff -Naur abuse-0.8-orig/src/intsect.cpp abuse-0.8/src/intsect.cpp
+--- abuse-0.8-orig/src/intsect.cpp	2013-10-05 11:22:35.281956740 +0200
++++ abuse-0.8/src/intsect.cpp	2013-10-05 18:15:29.383155739 +0200
+@@ -12,6 +12,7 @@
+ #   include "config.h"
+ #endif
+ 
++#include <stdint.h>
+ #include <stdlib.h>
+ 
+ void pushback(int32_t x1,int32_t y1,int32_t &x2,int32_t &y2,
+diff -Naur abuse-0.8-orig/src/net/fileman.cpp abuse-0.8/src/net/fileman.cpp
+--- abuse-0.8-orig/src/net/fileman.cpp	2013-10-05 11:22:35.281956740 +0200
++++ abuse-0.8/src/net/fileman.cpp	2013-10-05 18:15:29.383155739 +0200
+@@ -143,7 +143,7 @@
+     read_total=size_to_read>(READ_PACKET_SIZE-2) ? (READ_PACKET_SIZE-2) : size_to_read;
+ 
+     actual=read(file_fd,buf+2,read_total);
+-    ushort tmp = lstl(actual);
++    uint16_t tmp = lstl(actual);
+     memcpy(buf, &tmp, sizeof(tmp));
+ 
+     int write_amount=sock->write(buf,actual+2);
+@@ -322,7 +322,7 @@
+     int32_t total_read=0;
+     char buf[READ_PACKET_SIZE];
+ 
+-    ushort packet_size;
++    uint16_t packet_size;
+     do
+     {
+       if (sock->read(&packet_size,sizeof(packet_size))!=sizeof(packet_size))
+@@ -333,7 +333,7 @@
+ 
+       packet_size=lstl(packet_size);
+ 
+-      ushort size_read=sock->read(buf,packet_size);
++      uint16_t size_read=sock->read(buf,packet_size);
+ 
+       if (size_read!=packet_size)
+       {
+diff -Naur abuse-0.8-orig/src/net/gserver.cpp abuse-0.8/src/net/gserver.cpp
+--- abuse-0.8-orig/src/net/gserver.cpp	2013-10-05 11:22:35.281956740 +0200
++++ abuse-0.8/src/net/gserver.cpp	2013-10-05 18:15:29.383155739 +0200
+@@ -334,7 +334,7 @@
+ int game_server::end_reload(int disconnect)  // notify evryone you've reloaded the level (at server request)
+ {
+   player_client *c=player_list;
+-  prot->select(0);
++  prot->myselect(0);
+ 
+   for (; c; c=c->next)
+     if (!c->delete_me() && c->wait_reload())
+@@ -355,7 +355,7 @@
+ {
+   player_client *c=player_list;
+   reload_state=1;
+-  prot->select(0);
++  prot->myselect(0);
+ 
+   for (; c; c=c->next)
+   {
+diff -Naur abuse-0.8-orig/src/net/sock.h abuse-0.8/src/net/sock.h
+--- abuse-0.8-orig/src/net/sock.h	2013-10-05 11:22:35.281956740 +0200
++++ abuse-0.8/src/net/sock.h	2013-10-05 18:15:29.383155739 +0200
+@@ -36,8 +36,8 @@
+   virtual void read_unselectable()   { ; }
+   virtual void write_selectable()    { ; }
+   virtual void write_unselectable()  { ; }
+-  virtual int listen(int port)       { return 0; }
+-  virtual net_socket *accept(net_address *&from) { from=0; return 0; }
++  virtual int mylisten(int port)       { return 0; }
++  virtual net_socket *myaccept(net_address *&from) { from=0; return 0; }
+ };
+ 
+ class net_protocol
+@@ -71,7 +71,7 @@
+   virtual net_socket *create_listen_socket(int port, net_socket::socket_type sock_type) = 0;
+   virtual int installed() = 0;
+   virtual char const *name() = 0;
+-  virtual int select(int block) = 0;          // return # of sockets available for read & writing
++  virtual int myselect(int block) = 0;          // return # of sockets available for read & writing
+   virtual void cleanup() { ; }                // should do any needed pre-exit cleanup stuff
+   net_socket *connect_to_server(char const *&server_name, int port, int force_port=0,
+                 net_socket::socket_type sock_type=net_socket::SOCKET_SECURE);
+diff -Naur abuse-0.8-orig/src/net/tcpip.cpp abuse-0.8/src/net/tcpip.cpp
+--- abuse-0.8-orig/src/net/tcpip.cpp	2013-10-05 11:22:35.281956740 +0200
++++ abuse-0.8/src/net/tcpip.cpp	2013-10-05 18:15:29.383155739 +0200
+@@ -317,7 +317,7 @@
+   if (sock_type==net_socket::SOCKET_SECURE)
+     s=new tcp_socket(socket_fd);
+   else s=new udp_socket(socket_fd);
+-  if (s->listen(port)==0)
++  if (s->mylisten(port)==0)
+   {
+     delete s;
+     return 0;
+@@ -481,11 +481,11 @@
+             if (!found) {
+                 responder->write((void*)notify_signature,
+                                                  strlen(notify_signature),bcast);
+-                select(0);
++                myselect(0);
+             }
+         *((unsigned char *)(&bcast->addr.sin_addr)+3) += 1;
+ 
+-        select(0);
++        myselect(0);
+ 
+         if (!servers.empty())
+             break;
+@@ -615,7 +615,7 @@
+ }
+ //}}}///////////////////////////////////
+ 
+-int tcpip_protocol::select(int block)
++int tcpip_protocol::myselect(int block)
+ //{{{
+ {
+   int ret;
+@@ -628,7 +628,7 @@
+     ret = 0;
+     while (ret == 0) {
+       // get number of sockets ready from system call
+-      ret = ::select(FD_SETSIZE,&read_set,&write_set,&exception_set,NULL);
++      ret = ::c_select(FD_SETSIZE,&read_set,&write_set,&exception_set,NULL);
+ 
+       // remove notifier & responder events from the count of sockets selected
+       if (handle_notification())
+@@ -641,7 +641,7 @@
+   {
+     timeval tv={ 0,0};
+     // get number of sockets ready from system call
+-    ret = ::select(FD_SETSIZE,&read_set,&write_set,&exception_set,&tv);
++    ret = ::c_select(FD_SETSIZE,&read_set,&write_set,&exception_set,&tv);
+ 
+     // remove notifier & responder events from the count of sockets selected
+     if (handle_notification())
+@@ -669,6 +669,21 @@
+ }
+ //}}}///////////////////////////////////
+ 
++int c_listen(int sockfd, int backlog)
++{
++    return listen(sockfd, backlog);
++}
++
++int c_accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
++{
++    return accept(sockfd, addr, addrlen);
++}
++
++int c_select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout)
++{
++    return select(nfds, readfds, writefds, exceptfds, timeout);
++}
++
+ //{{{ Revision Log
+ /*//////////////////////////////////////////////////////////////////////
+ $Log$
+diff -Naur abuse-0.8-orig/src/net/tcpip.h abuse-0.8/src/net/tcpip.h
+--- abuse-0.8-orig/src/net/tcpip.h	2013-10-05 11:22:35.281956740 +0200
++++ abuse-0.8/src/net/tcpip.h	2013-10-05 18:15:29.383155739 +0200
+@@ -26,8 +26,10 @@
+ #   include <stdio.h>
+ #   include <string.h>
+ #   include <sys/time.h>
+-#   include <sys/ipc.h>
+-#   include <sys/shm.h>
++#   ifndef __AROS__
++#       include <sys/ipc.h>
++#       include <sys/shm.h>
++#   endif
+ #   include <sys/socket.h>
+ #   include <unistd.h>
+ #   ifdef HAVE_BSTRING_H
+@@ -42,6 +44,14 @@
+ 
+ extern fd_set master_set, master_write_set, read_set, exception_set, write_set;
+ 
++
++extern "C"
++{
++int c_listen(int sockfd, int backlog);
++int c_accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
++int c_select(int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, struct timeval *timeout);
++}
++
+ class ip_address : public net_address
+ {
+ public:
+@@ -115,7 +125,7 @@
+   int installed() { return 1; }  // always part of unix
+   char const *name() { return "UNIX generic TCPIP"; }
+   void cleanup();
+-  int select(int block);          // return # of sockets available for read & writing
++  int myselect(int block);          // return # of sockets available for read & writing
+ 
+   // Notification methods
+   virtual net_socket *start_notify(int port, void *data, int len);
+@@ -164,7 +174,7 @@
+   int listening;
+   public :
+   tcp_socket(int fd) : unix_fd(fd) { listening=0; };
+-  virtual int listen(int port)
++  virtual int mylisten(int port)
+   {
+     sockaddr_in host;
+     memset( (char*) &host,0, sizeof(host));
+@@ -176,7 +186,7 @@
+       fprintf(stderr,"net driver : could not bind socket to port %d\n",port);
+       return 0;
+     }
+-    if (::listen(fd,5)==-1)
++    if (::c_listen(fd,5)==-1)
+     {
+       fprintf(stderr,"net driver : could not listen to socket on port %d\n",port);
+       return 0;
+@@ -184,13 +194,13 @@
+     listening=1;
+     return 1;
+   }
+-  virtual net_socket *accept(net_address *&addr)
++  virtual net_socket *myaccept(net_address *&addr)
+   {
+     if (listening)
+     {
+       struct sockaddr_in from;
+       socklen_t addr_len=sizeof(from);
+-      int new_fd=::accept(fd,(sockaddr *)&from,&addr_len);
++      int new_fd=::c_accept(fd,(sockaddr *)&from,&addr_len);
+       if (new_fd>=0)
+       {
+         addr=new ip_address(&from);
+@@ -214,7 +224,7 @@
+     {
+       *addr=new ip_address;
+       socklen_t addr_size=sizeof(sockaddr_in);
+-      tr=recvfrom(fd,buf,size,0, (sockaddr *) &((ip_address *)(*addr))->addr,&addr_size);
++      tr=recvfrom(fd,buf,size,0, (sockaddr *) &((ip_address *)(*addr))->addr,(int*)&addr_size);
+     } else
+       tr=recv(fd,buf,size,0);
+     return tr;
+@@ -226,7 +236,7 @@
+     else
+       return ::write(fd,(char*)buf,size);
+   }
+-  virtual int listen(int port)
++  virtual int mylisten(int port)
+   {
+     sockaddr_in host;
+     memset( (char*) &host,0, sizeof(host));
+diff -Naur abuse-0.8-orig/src/sdlport/setup.cpp abuse-0.8/src/sdlport/setup.cpp
+--- abuse-0.8-orig/src/sdlport/setup.cpp	2013-10-05 11:22:35.289956741 +0200
++++ abuse-0.8/src/sdlport/setup.cpp	2013-10-05 18:15:29.383155739 +0200
+@@ -27,6 +27,9 @@
+ #include <sys/stat.h>
+ #include <signal.h>
+ #include <SDL.h>
++
++#undef HAVE_OPENGL
++
+ #ifdef HAVE_OPENGL
+ #ifdef __APPLE__
+ #include <Carbon/Carbon.h>
+@@ -388,6 +391,21 @@
+     char *savedir;
+     FILE *fd = NULL;
+ 
++#ifdef __AROS__
++    savedir = "PROGDIR:.abuse";
++
++    // Check if we already have a savegame directory
++    if( (fd = fopen( savedir, "r" )) == NULL )
++    {
++        // FIXME: Add some error checking here
++        mkdir( savedir, S_IRUSR | S_IWUSR | S_IXUSR );
++    }
++    else
++    {
++        fclose( fd );
++    }
++    set_save_filename_prefix( savedir );
++#else
+     if( (homedir = getenv( "HOME" )) != NULL )
+     {
+         savedir = (char *)malloc( strlen( homedir ) + 9 );
+@@ -414,6 +432,7 @@
+         // Hopefully they have write permissions....
+         set_save_filename_prefix( "" );
+     }
++#endif
+ 
+     // Set the datadir to a default value
+     // (The current directory)
+diff -Naur abuse-0.8-orig/src/sdlport/video.cpp abuse-0.8/src/sdlport/video.cpp
+--- abuse-0.8-orig/src/sdlport/video.cpp	2013-10-05 11:22:35.289956741 +0200
++++ abuse-0.8/src/sdlport/video.cpp	2013-10-05 22:13:57.051848188 +0200
+@@ -24,6 +24,8 @@
+ 
+ #include <SDL.h>
+ 
++#undef HAVE_OPENGL
++
+ #ifdef HAVE_OPENGL
+ #   ifdef __APPLE__
+ #       include <OpenGL/gl.h>
+@@ -74,14 +76,27 @@
+ void set_mode(int mode, int argc, char **argv)
+ {
+     const SDL_VideoInfo *vidInfo;
++#ifdef __AROS__
++    // with SDL_HWPALETTE I didn't get any video output but error
++    // "Blit combination not supported". Maybe it's a limitation
++    // of "hosted" AROS.
++    int vidFlags = 0;
++#else
+     int vidFlags = SDL_HWPALETTE;
++#endif
+ 
+     // Check for video capabilities
+     vidInfo = SDL_GetVideoInfo();
+     if(vidInfo->hw_available)
++    {
++        printf("Video : SDL_HWSURFACE\n");
+         vidFlags |= SDL_HWSURFACE;
++    }
+     else
++    {
++        printf("Video : SDL_SWSURFACE\n");
+         vidFlags |= SDL_SWSURFACE;
++    }
+ 
+     if(flags.fullscreen)
+         vidFlags |= SDL_FULLSCREEN;

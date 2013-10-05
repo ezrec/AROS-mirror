@@ -1,0 +1,31 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+##MM- ports-game : ports-game-abuse
+
+#MM- ports-game-abuse : contrib-sdl ports-game-abuse-drawericon
+
+PACKAGE      := abuse
+VERSION      := 0.8
+TARGETDIR    := $(AROS_CONTRIB)/Games/Abuse
+REPOSITORIES := http://abuse.zoy.org/raw-attachment/wiki/download
+
+%fetch_and_build mmake=ports-game-abuse prefix=$(TARGETDIR) \
+	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
+	patch=yes package_repo=$(REPOSITORIES) nix=no nix_dir_layout=no \
+	extraoptions="--with-assetdir='$$(PROGDIR)share/games/abuse'"
+
+
+ICONS := Abuse
+
+%build_icons mmake=ports-game-abuse-drawericon \
+	icons=$(ICONS) dir=$(TARGETDIR)/..
+
+
+#MM
+ports-game-abuse-clean :
+	$(RM) $(TARGETDIR)
+	$(RM) $(GENDIR)/$(CURDIR)
+
+%common
