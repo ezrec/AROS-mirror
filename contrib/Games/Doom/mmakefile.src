@@ -85,9 +85,10 @@ FILES :=             \
 #	amiga_main	
 
 #MM- contrib-games : Doom-$(AROS_TARGET_CPU)
-#MM Doom-i386 : Doom-extra
+#MM- Doom-i386 : Doom Doom-extra
+#MM- Doom-arm  : Doom Doom-extra
 
-%build_prog mmake=Doom-i386 \
+%build_prog mmake=Doom \
     progname=Doom targetdir=$(EXEDIR) \
     files=$(FILES)
 

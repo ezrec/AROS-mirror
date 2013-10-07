@@ -11,8 +11,12 @@ DEPLIBS := $(STARTUP) $(LIBDIR)/libstdc.a \
 EXE := $(INSTDIR)/quake
 
 #MM- contrib-games : Quake-$(AROS_TARGET_CPU)
-#MM Quake-i386 : linklibs includes
-Quake-i386 : make-dirs $(EXE)
+#MM- Quake-i386 : Quake
+#MM- Quake-arm  : Quake
+
+#MM Quake : linklibs includes
+
+Quake : make-dirs $(EXE)
 
 make-dirs :
 	%mkdirs_q $(INSTDIR) $(BUILDDIR)
@@ -26,6 +30,7 @@ else
 GLIBC=
 endif
 
+#FIXME: what about ARM?
 ifneq (,$(findstring alpha,$(shell uname -m)))
 ARCH=axp
 else
