@@ -137,7 +137,7 @@ Result
 ~~~~~~
 ::
 
-     A valid pipe screen instance or NULL of creation was not succesfull.
+     A valid pipe screen instance or NULL if creation was not successful.
 
 
 

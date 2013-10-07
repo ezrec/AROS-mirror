@@ -3040,7 +3040,7 @@ Function
 ~~~~~~~~
 ::
 
-     Delete a pool including all it's memory.
+     Delete a pool including all its memory.
 
 
 Inputs
@@ -3054,7 +3054,7 @@ Inputs
 See also
 ~~~~~~~~
 
-`CreatePool()`_ `AllocPooled()`_ `FreePooled()`_ 
+`CreatePool()`_ `AllocPooled()`_ `FreePooled()`_ `AllocVecPooled()`_ `FreeVecPooled()`_ 
 
 ----------
 
