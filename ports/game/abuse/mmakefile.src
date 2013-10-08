@@ -2,9 +2,12 @@
 
 include $(TOP)/config/make.cfg
 
-##MM- ports-game : ports-game-abuse
+#MM- ports-game : ports-game-abuse
 
-#MM- ports-game-abuse : contrib-sdl ports-game-abuse-drawericon
+#MM- ports-game-abuse : \
+#MM     contrib-sdl \
+#MM     contrib-sdl-sdl-mixer \
+#MM     ports-game-abuse-drawericon
 
 PACKAGE      := abuse
 VERSION      := 0.8
