@@ -1,0 +1,34 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+# #MM- ports-game : ports-emulation-scummvm
+
+#MM- ports-emulation-scummvm : \
+#MM     contrib-sdl \
+#MM     ports-emulation-scummvm-drawericon
+
+PACKAGE      := scummvm
+VERSION      := 1.6.0
+TARGETDIR    := $(AROS_CONTRIB)/Emu/Scummvm
+REPOSITORIES := sf://scummvm
+
+%fetch_and_build mmake=ports-emulation-scummvm prefix=$(TARGETDIR) \
+    package=$(PACKAGE) version=$(VERSION) suffixes="tar.bz2" \
+    patch=yes package_repo=$(REPOSITORIES) nix=no nix_dir_layout=no \
+    extracflags="" \
+    extraoptions="--enable-verbose-build --disable-all-engines"
+
+
+ICONS := Scummvm
+
+%build_icons mmake=ports-emulation-scummvm-drawericon \
+    icons=$(ICONS) dir=$(TARGETDIR)/..
+
+
+#MM
+ports-emulation-scummvm-clean :
+	$(RM) $(TARGETDIR)
+	$(RM) $(GENDIR)/$(CURDIR)
+
+%common

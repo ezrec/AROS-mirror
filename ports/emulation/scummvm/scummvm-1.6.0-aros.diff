@@ -1,0 +1,46 @@
+diff -Naur scummvm-1.6.0-orig/backends/graphics/opengl/gltexture.h scummvm-1.6.0/backends/graphics/opengl/gltexture.h
+--- scummvm-1.6.0-orig/backends/graphics/opengl/gltexture.h	2013-10-08 21:07:43.903296513 +0200
++++ scummvm-1.6.0/backends/graphics/opengl/gltexture.h	2013-10-08 21:37:44.007370745 +0200
+@@ -50,7 +50,11 @@
+ #elif defined(USE_GLES)
+ #include <GLES/gl.h>
+ #elif defined(SDL_BACKEND)
++#if defined(__AROS__)
++#include <SDL/SDL_opengl.h>
++#else
+ #include <SDL_opengl.h>
++#endif
+ #else
+ #include <GL/gl.h>
+ #endif
+diff -Naur scummvm-1.6.0-orig/backends/platform/sdl/sdl-sys.h scummvm-1.6.0/backends/platform/sdl/sdl-sys.h
+--- scummvm-1.6.0-orig/backends/platform/sdl/sdl-sys.h	2013-10-08 21:07:43.931296513 +0200
++++ scummvm-1.6.0/backends/platform/sdl/sdl-sys.h	2013-10-08 21:37:44.007370745 +0200
+@@ -51,6 +51,8 @@
+ 
+ #if defined(__SYMBIAN32__)
+ #include <esdl\SDL.h>
++#elif defined(__AROS__)
++#include <SDL/SDL.h>
+ #else
+ #include <SDL.h>
+ #endif
+diff -Naur scummvm-1.6.0-orig/config.log scummvm-1.6.0/config.log
+--- scummvm-1.6.0-orig/config.log	2013-10-08 21:07:43.767296507 +0200
++++ scummvm-1.6.0/config.log	2013-10-08 21:37:44.007370745 +0200
+@@ -1 +1 @@
+-Configure run on Tue Oct 8 21:06:41 CEST 2013
++Configure run on Tue Oct 8 22:47:36 CEST 2013
+diff -Naur scummvm-1.6.0-orig/configure scummvm-1.6.0/configure
+--- scummvm-1.6.0-orig/configure	2013-10-08 21:07:43.591296500 +0200
++++ scummvm-1.6.0/configure	2013-10-08 21:37:44.007370745 +0200
+@@ -1227,6 +1227,9 @@
+ 			engine_disable ${engine_name}
+ 		done
+ 		;;
++	--build=* | --target=* | --disable-nls | --without-x | --without-pic | --disable-shared)
++		# ignore some options from the AROS build system
++		;;
+ 	*)
+ 		option_error
+ 		;;
