@@ -25,12 +25,6 @@ diff -Naur scummvm-1.6.0-orig/backends/platform/sdl/sdl-sys.h scummvm-1.6.0/back
  #else
  #include <SDL.h>
  #endif
-diff -Naur scummvm-1.6.0-orig/config.log scummvm-1.6.0/config.log
---- scummvm-1.6.0-orig/config.log	2013-10-08 21:07:43.767296507 +0200
-+++ scummvm-1.6.0/config.log	2013-10-08 21:37:44.007370745 +0200
-@@ -1 +1 @@
--Configure run on Tue Oct 8 21:06:41 CEST 2013
-+Configure run on Tue Oct 8 22:47:36 CEST 2013
 diff -Naur scummvm-1.6.0-orig/configure scummvm-1.6.0/configure
 --- scummvm-1.6.0-orig/configure	2013-10-08 21:07:43.591296500 +0200
 +++ scummvm-1.6.0/configure	2013-10-08 21:37:44.007370745 +0200
