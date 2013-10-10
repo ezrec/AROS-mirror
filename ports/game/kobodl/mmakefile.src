@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-# #MM- ports-game : ports-game-kobodl
+#MM- ports-game : ports-game-kobodl
 
 #MM- ports-game-kobodl : contrib-sdl ports-game-kobodl-drawericon
 
@@ -15,7 +15,7 @@ REPOSITORIES := http://www.olofson.net/kobodl/download
     package=$(PACKAGE) version=$(VERSION) suffixes="tar.bz2" \
     patch=yes package_repo=$(REPOSITORIES) nix=yes nix_dir_layout=no \
     extracflags="-I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION) -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/graphics -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/eel -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/data/sfx -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/sound" \
-    extraoptions=""
+    extraoptions="--datarootdir='$$(PROGDIR)share' --sharedstatedir='$$(PROGDIR)com' --localstatedir='$$(PROGDIR)var' --program-transform-name='s/.*/KoboDL/'" 
 
 
 ICONS := KoboDeluxe
