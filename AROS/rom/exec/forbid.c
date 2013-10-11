@@ -6,6 +6,9 @@
     Lang: english
 */
 
+#define DEBUG 1
+
+#include <aros/debug.h>
 #include <exec/types.h>
 #include <exec/execbase.h>
 #include <exec/cpu.h>
@@ -78,7 +81,7 @@
 
 #if AROS_SMP
     if (KernelBase)
-        SysBase->TDNestCnt = KrnScheduling(KSCHED_FORBID);
+        KrnScheduling(KSCHED_FORBID);
 #else
     AROS_ATOMIC_INC(SysBase->TDNestCnt);
 #endif
