@@ -1,0 +1,79 @@
+diff -Naur ltris-1.0.18-orig/Makefile.in ltris-1.0.18/Makefile.in
+--- ltris-1.0.18-orig/Makefile.in	2013-10-12 13:30:39.667648187 +0200
++++ ltris-1.0.18/Makefile.in	2011-10-29 12:50:23.000000000 +0200
+@@ -233,10 +233,9 @@
+ SUBDIRS = intl m4 po src icons
+ EXTRA_DIST = config.rpath  AUTHORS COPYING ChangeLog INSTALL \
+ README TODO touchall ABOUT-NLS po/tr.po_full po/pt.po_full \
+-po/nonascii.pl ltris32.gif ltris48.gif ltris.desktop.in
++po/nonascii.pl
+ 
+ desktopdir = $(datadir)/applications
+-desktop_DATA = ltris.desktop
+ icondir = $(datadir)/icons
+ icon_DATA = ltris48.gif
+ AUTOMAKE_OPTIONS = foreign
+@@ -298,15 +297,7 @@
+ intl/Makefile: $(top_builddir)/config.status $(top_srcdir)/intl/Makefile.in
+ 	cd $(top_builddir) && $(SHELL) ./config.status $@
+ uninstall-info-am:
+-install-desktopDATA: $(desktop_DATA)
+-	@$(NORMAL_INSTALL)
+-	test -z "$(desktopdir)" || $(mkdir_p) "$(DESTDIR)$(desktopdir)"
+-	@list='$(desktop_DATA)'; for p in $$list; do \
+-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+-	  f=$(am__strip_dir) \
+-	  echo " $(desktopDATA_INSTALL) '$$d$$p' '$(DESTDIR)$(desktopdir)/$$f'"; \
+-	  $(desktopDATA_INSTALL) "$$d$$p" "$(DESTDIR)$(desktopdir)/$$f"; \
+-	done
++
+ 
+ uninstall-desktopDATA:
+ 	@$(NORMAL_UNINSTALL)
+@@ -709,12 +700,6 @@
+ 	uninstall-desktopDATA uninstall-iconDATA uninstall-info-am
+ 
+ 
+-# We can't use static desktop file because of icon location. Is this 
+-# the right way to handle it? At least it works... as long as $datadir
+-# does not contain plus signs. :-)
+-ltris.desktop:
+-	@sed -e "s+Icon=+Icon=$(datadir)/icons/ltris48.gif+" \
+-	< ltris.desktop.in > ltris.desktop
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+ .NOEXPORT:
+diff -Naur ltris-1.0.18-orig/src/config.c ltris-1.0.18/src/config.c
+--- ltris-1.0.18-orig/src/config.c	2013-10-12 13:30:39.675648187 +0200
++++ ltris-1.0.18/src/config.c	2011-10-29 12:50:23.000000000 +0200
+@@ -38,11 +38,15 @@
+ /* check if config directory exists; if not create it and set config_dir */
+ void config_check_dir()
+ {
++#ifdef __AROS__
++    snprintf( config.dir_name, sizeof(config.dir_name)-1, "%s/%s", "/PROGDIR", CONFIG_DIR_NAME );
++#else
+ #ifdef DISABLE_INSTALL
+     sprintf( config.dir_name, "." );
+ #else    
+     snprintf( config.dir_name, sizeof(config.dir_name)-1, "%s/%s", getenv( "HOME" ), CONFIG_DIR_NAME );
+ #endif
++#endif
+     if ( opendir( config.dir_name ) == 0 ) {
+         fprintf( stderr, "couldn't find/open config directory '%s'\n", config.dir_name );
+         fprintf( stderr, "attempting to create it... " );
+diff -Naur ltris-1.0.18-orig/src/manager.c ltris-1.0.18/src/manager.c
+--- ltris-1.0.18-orig/src/manager.c	2013-10-12 13:30:39.675648187 +0200
++++ ltris-1.0.18/src/manager.c	2011-10-29 12:50:23.000000000 +0200
+@@ -143,7 +143,11 @@
+         return;
+     }
+     /* get file name + path */
++#ifdef __AROS__
++    snprintf( fname, sizeof(fname)-1, "%s/%s/levels/%s", "/PROGDIR", CONFIG_DIR_NAME, levelset_home_names[config.levelset_home_id] );
++#else
+     snprintf( fname, sizeof(fname)-1, "%s/%s/levels/%s", getenv( "HOME" ), CONFIG_DIR_NAME, levelset_home_names[config.levelset_home_id] );
++#endif
+     remove( fname );
+     levelsets_load_names(); /* reinit name lists and configs indices */
+     /* reassign these name lists as position in memory has changed */

@@ -1,0 +1,10 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game-ltris : ports-game-ltris-icons
+
+ICONS     := LTris
+TARGETDIR := $(AROS_CONTRIB)/Games/LTris
+
+%build_icons mmake=ports-game-ltris-icons icons=$(ICONS) dir=$(TARGETDIR)
