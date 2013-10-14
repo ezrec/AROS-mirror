@@ -1,0 +1,69 @@
+diff -Naur blobwars-1.19-orig/src/CReplayData.cpp blobwars-1.19/src/CReplayData.cpp
+--- blobwars-1.19-orig/src/CReplayData.cpp	2013-10-14 19:13:21.625006360 +0200
++++ blobwars-1.19/src/CReplayData.cpp	2013-10-14 19:31:42.849059657 +0200
+@@ -38,7 +38,11 @@
+ 
+ void ReplayData::printReplayInformation()
+ {
++#ifdef __AROS__
++	tm *timeinfo = localtime((const time_t*)&header.randomSeed);
++#else
+ 	tm *timeinfo = localtime(&header.randomSeed);
++#endif
+ 	printf("Recorded on : %s", asctime(timeinfo));
+ 	printf("Map         : %s\n", header.map);
+ 	printf("Score       : %d\n", header.score);
+diff -Naur blobwars-1.19-orig/src/headers.h blobwars-1.19/src/headers.h
+--- blobwars-1.19-orig/src/headers.h	2013-10-14 19:13:21.621006360 +0200
++++ blobwars-1.19/src/headers.h	2013-10-14 19:35:01.533069219 +0200
+@@ -35,6 +35,12 @@
+ #ifndef SDL_GetGamma
+ extern DECLSPEC int SDLCALL SDL_GetGamma(float *red, float *green, float *blue);
+ #endif
++#elif __AROS__
++#include <SDL/SDL.h>
++#include <SDL/SDL_image.h>
++#include <SDL/SDL_mixer.h>
++#include <SDL/SDL_ttf.h>
++#include <SDL/SDL_net.h>
+ #else
+ #include "SDL/SDL.h"
+ #include "SDL/SDL_image.h"
+@@ -43,7 +49,7 @@
+ #include "SDL/SDL_net.h"
+ #endif
+ 
+-#ifndef WIN32
++#if !defined(WIN32) && !defined(__AROS__)
+ #include <libintl.h>
+ #define _(string) gettext(string)
+ #else
+diff -Naur blobwars-1.19-orig/src/init.cpp blobwars-1.19/src/init.cpp
+--- blobwars-1.19-orig/src/init.cpp	2013-10-14 19:13:21.621006360 +0200
++++ blobwars-1.19/src/init.cpp	2013-10-14 19:47:43.073106130 +0200
+@@ -92,6 +92,12 @@
+ #if UNIX
+ void setupUserHomeDirectory()
+ {
++	char dir[PATH_MAX];
++	dir[0] = 0;
++
++#ifdef __AROS__
++	char userHome[] = "/PROGDIR";
++#else
+ 	char *userHome = getenv("HOME");
+ 	
+ 	if ((!userHome) || (userHome == NULL))
+@@ -99,11 +105,9 @@
+ 		printf("Couldn't determine user home directory! Exitting.\n");
+ 		exit(1);
+ 	}
++#endif
+ 
+ 	debug(("User Home = %s\n", userHome));
+-	
+-	char dir[PATH_MAX];
+-	dir[0] = 0;
+ 
+ 	snprintf(dir, sizeof dir, "%s/.parallelrealities", userHome);
+ 	if ((mkdir(dir, S_IRWXU|S_IRWXG|S_IROTH|S_IXOTH) != 0) && (errno != EEXIST))

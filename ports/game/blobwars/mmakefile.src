@@ -1,0 +1,216 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game : ports-game-blobwars
+
+#MM- ports-game-blobwars : \
+#MM     ports-game-blobwars-bin \
+#MM     ports-game-blobwars-map \
+#MM     ports-game-blobwars-data \
+#MM     ports-game-blobwars-doc \
+#MM     ports-game-blobwars-gfx \
+#MM     ports-game-blobwars-music \
+#MM     ports-game-blobwars-sound \
+#MM     ports-game-blobwars-fetch \
+#MM     ports-game-blobwars-drawericon
+
+#MM ports-game-blobwars-bin : includes linklibs \
+#MM     contrib-sdl \
+#MM     contrib-sdl-sdl-mixer \
+#MM     contrib-sdl-sdl-gfx \
+#MM     contrib-sdl-sdl-image \
+#MM     contrib-sdl-sdl-ttf \
+#MM     contrib-sdl-sdl-net \
+#MM     ports-game-blobwars-fetch
+
+#MM ports-game-blobwars-map : includes linklibs \
+#MM     contrib-sdl \
+#MM     contrib-sdl-sdl-mixer \
+#MM     contrib-sdl-sdl-gfx \
+#MM     contrib-sdl-sdl-image \
+#MM     contrib-sdl-sdl-ttf \
+#MM     contrib-sdl-sdl-net \
+#MM     ports-game-blobwars-fetch
+
+#MM ports-game-blobwars-data : ports-game-blobwars-fetch
+#MM ports-game-blobwars-doc : ports-game-blobwars-fetch
+#MM ports-game-blobwars-gfx : ports-game-blobwars-fetch
+#MM ports-game-blobwars-music : ports-game-blobwars-fetch
+#MM ports-game-blobwars-sound : ports-game-blobwars-fetch
+
+#MM- ports-game-blobwars-quick : \
+#MM     ports-game-blobwars-bin-quick \
+#MM     ports-game-blobwars-map-quick
+
+#MM- ports-game-blobwars-clean : \
+#MM     ports-game-blobwars-bin-clean \
+#MM     ports-game-blobwars-map-clean
+
+
+ARCHBASE := blobwars
+REPOSITORIES := sf://blobwars
+TARGETDIR := $(AROS_CONTRIB)/Games/Blobwars
+
+# PROG := blobwars
+PAKNAME := blobwars.pak
+DOCS := doc/*
+ICONS := icons/
+DATA := data gfx sound music
+
+VERSION := 1.19
+RELEASE := 0
+USEPAK := 0
+
+PREFIX := /PROGDIR
+BINDIR := $(PREFIX)/
+DATADIR := $(PREFIX)/share/blobwars/
+DOCDIR := $(PREFIX)/share/doc/
+ICONDIR := $(PREFIX)/share/icons/hicolor/
+LOCALEDIR ;= $(PREFIX)/share/locale/
+MEDAL_SERVER_HOST := www.parallelrealities.co.uk
+MEDAL_SERVER_PORT := 80
+
+SDL_PREFIX   := $(AROS_DEVELOPMENT)
+
+USER_CFLAGS := -DVERSION=$(VERSION) -DRELEASE=$(RELEASE) -DUSEPAK=$(USEPAK)
+USER_CFLAGS += -DPAKNAME=\"$(PAKNAME)\" -DPAKLOCATION=\"$(DATADIR)\" -DUNIX -DGAMEPLAYMANUAL=\"$(DOCDIR)index.html\" -Wall
+USER_CFLAGS += -DLOCALEDIR=\"$(LOCALEDIR)\" -DMEDAL_SERVER_HOST=\"$(MEDAL_SERVER_HOST)\" -DMEDAL_SERVER_PORT=$(MEDAL_SERVER_PORT)
+USER_CFLAGS += -Werror
+
+USER_LDFLAGS := -nix
+
+LIBS := SDL_mixer SDL_image SDL_ttf SDL_net freetype2 vorbisfile vorbis ogg png jpeg SDL z stdc++
+
+FILES := \
+     CAudio \
+     CBoss \
+     CCollision \
+     CCutscene \
+     CConfig \
+     CData \
+     CEffect \
+     CEngine \
+     CEntity \
+     CFileData \
+     CGame \
+     CGameData \
+     CGameObject \
+     CGraphics \
+     CHub \
+     CKeyboard \
+     CJoystick \
+     CLineDef \
+     CList \
+     CMap \
+     CMath \
+     CMedalServer \
+     CObjective \
+     CPak \
+     CParticle \
+     CPersistant \
+     CPersistData \
+     CRadarBlip \
+     CReplayData \
+     CSpawnPoint \
+     CSprite \
+     CSwitch \
+     CTeleporter \
+     CTrain \
+     CTrap \
+     CWeapon \
+     CWidget \
+     aquaBoss \
+     bosses \
+     bullets \
+     cutscene \
+     droidBoss \
+     effects \
+     enemies \
+     entities \
+     explosions \
+     finalBattle \
+     galdov \
+     game \
+     graphics \
+     hub \
+     info \
+     init \
+     intro \
+     items \
+     lineDefs \
+     loadSave \
+     map \
+     mapData \
+     mias \
+     mission \
+     objectives \
+     obstacles \
+     options \
+     particles \
+     player \
+     resources \
+     spawnPoints \
+     switches \
+     tankBoss \
+     teleporters \
+     title \
+     trains \
+     traps \
+     triggers \
+     weapons \
+     widgets
+
+GAMEFILES := $(FILES) main
+MAPFILES  := $(FILES) mapEditor
+# PAKFILES = CFileData pak
+
+GAMEFILES := $(addprefix $(PORTSDIR)/$(ARCHBASE)/$(ARCHBASE)-$(VERSION)/src/,$(GAMEFILES))
+MAPFILES  := $(addprefix $(PORTSDIR)/$(ARCHBASE)/$(ARCHBASE)-$(VERSION)/src/,$(MAPFILES))
+
+#############################################################################################################
+
+%build_prog mmake=ports-game-blobwars-bin progname=Blobwars \
+    files= cxxfiles=$(GAMEFILES) targetdir=$(TARGETDIR) \
+    uselibs="$(LIBS)"
+
+%build_prog mmake=ports-game-blobwars-map progname=Mapeditor \
+    files= cxxfiles=$(MAPFILES) targetdir=$(TARGETDIR) \
+    uselibs="$(LIBS)"
+
+#############################################################################################################
+
+%fetch mmake=ports-game-blobwars-fetch archive=$(ARCHBASE)-$(VERSION) destination=$(PORTSDIR)/$(ARCHBASE) \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+    patches_specs=blobwars-1.19-aros.diff:$(ARCHBASE)-$(VERSION):-p1
+
+#############################################################################################################
+
+ICONS := Blobwars
+
+%build_icons mmake=ports-game-blobwars-drawericon \
+	icons=$(ICONS) dir=$(TARGETDIR)/..
+
+#############################################################################################################
+
+%copy_dir_recursive mmake=ports-game-blobwars-data \
+    src=$(PORTSDIR)/$(ARCHBASE)/$(ARCHBASE)-$(VERSION)/data \
+    dst=$(TARGETDIR)/data
+
+%copy_dir_recursive mmake=ports-game-blobwars-doc \
+    src=$(PORTSDIR)/$(ARCHBASE)/$(ARCHBASE)-$(VERSION)/doc \
+    dst=$(TARGETDIR)/doc
+
+%copy_dir_recursive mmake=ports-game-blobwars-gfx \
+    src=$(PORTSDIR)/$(ARCHBASE)/$(ARCHBASE)-$(VERSION)/gfx \
+    dst=$(TARGETDIR)/gfx
+
+%copy_dir_recursive mmake=ports-game-blobwars-music \
+    src=$(PORTSDIR)/$(ARCHBASE)/$(ARCHBASE)-$(VERSION)/music \
+    dst=$(TARGETDIR)/music
+
+%copy_dir_recursive mmake=ports-game-blobwars-sound \
+    src=$(PORTSDIR)/$(ARCHBASE)/$(ARCHBASE)-$(VERSION)/sound \
+    dst=$(TARGETDIR)/sound
+
+%common
