@@ -88,6 +88,8 @@ FILES :=             \
 #MM- Doom-i386 : Doom Doom-extra
 #MM- Doom-arm  : Doom Doom-extra
 
+#MM Doom : workbench-devs-AHI includes linklibs
+
 %build_prog mmake=Doom \
     progname=Doom targetdir=$(EXEDIR) \
     files=$(FILES)
