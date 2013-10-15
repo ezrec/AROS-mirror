@@ -33,11 +33,11 @@ FILES := AUTHORS ChangeLog COPYING NEWS TODO
 
 %copy_dir_recursive mmake=ports-game-ltris-install-gfx \
     src=$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/src/gfx \
-    dst=$(TARGETDIR)/share/ltris/gfx
+    dst=$(TARGETDIR)/share/ltris/gfx excludefiles="Makefile.in Makefile.am"
 
 %copy_dir_recursive mmake=ports-game-ltris-install-snd \
     src=$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/src/sounds \
-    dst=$(TARGETDIR)/share/ltris/sounds
+    dst=$(TARGETDIR)/share/ltris/sounds excludefiles="Makefile.in Makefile.am"
 
 
 ICONS := LTris
