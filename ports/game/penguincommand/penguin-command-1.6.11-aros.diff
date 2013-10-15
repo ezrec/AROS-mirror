@@ -1,5 +1,5 @@
 diff -Naur penguin-command-1.6.11-orig/config.sub penguin-command-1.6.11/config.sub
---- penguin-command-1.6.11-orig/config.sub	2010-06-24 23:26:26.564380677 +0200
+--- penguin-command-1.6.11-orig/config.sub	2013-10-15 20:52:23.785475456 +0200
 +++ penguin-command-1.6.11/config.sub	2007-03-18 16:44:44.000000000 +0100
 @@ -1,9 +1,10 @@
  #! /bin/sh
@@ -826,8 +826,39 @@ diff -Naur penguin-command-1.6.11-orig/config.sub penguin-command-1.6.11/config.
  
  # Local variables:
  # eval: (add-hook 'write-file-hooks 'time-stamp)
+diff -Naur penguin-command-1.6.11-orig/src/main.c penguin-command-1.6.11/src/main.c
+--- penguin-command-1.6.11-orig/src/main.c	2013-10-15 20:52:23.773475479 +0200
++++ penguin-command-1.6.11/src/main.c	2013-10-15 20:46:25.961458187 +0200
+@@ -32,8 +32,16 @@
+ #endif
+ 
+ 
+-    int fullscreen=1, CityDestroyed[6]={0,0,0,0,0,0},
++#ifdef __AROS__
++// fullscreen doesn't work well.
++int fullscreen=0;
++#else
++int fullscreen=1;
++#endif
++
++    int CityDestroyed[6]={0,0,0,0,0,0},
+ 	CannonDestroyed[3]={0,0,0}, Score=0, HWCursor=0, NoAlpha=0, ArcadeMode=0, MusicVol=10, SoundVol=10;
++
+ //images
+     SDL_Surface *ShotPic,*CityPic,*BackPic,*CityHitPic,*Cannon[21],*Font,
+ 		*BombPic[10],*CannonHitPic,*TitlePic,*ExplosionPic[21],
+@@ -420,7 +428,8 @@
+ {
+ // intialisation
+ //    if ( SDL_Init(SDL_INIT_AUDIO ) < 0 ) ComplainAndExit();
+-    ReadCommandLine(argv);
++    if (argc > 0)
++        ReadCommandLine(argv);
+     printf("** Starting SDL init **\n");
+     init_SDL();
+     SDL_EventState(SDL_ACTIVEEVENT, SDL_IGNORE);
 diff -Naur penguin-command-1.6.11-orig/src/Makefile.in penguin-command-1.6.11/src/Makefile.in
---- penguin-command-1.6.11-orig/src/Makefile.in	2010-06-24 23:26:26.551878257 +0200
+--- penguin-command-1.6.11-orig/src/Makefile.in	2013-10-15 20:52:23.773475479 +0200
 +++ penguin-command-1.6.11/src/Makefile.in	2007-03-18 16:44:44.000000000 +0100
 @@ -238,7 +238,7 @@
  	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
@@ -839,8 +870,8 @@ diff -Naur penguin-command-1.6.11-orig/src/Makefile.in penguin-command-1.6.11/sr
  mostlyclean-compile:
  	-rm -f *.$(OBJEXT)
 diff -Naur penguin-command-1.6.11-orig/src/options.c penguin-command-1.6.11/src/options.c
---- penguin-command-1.6.11-orig/src/options.c	2010-06-24 23:26:26.551878257 +0200
-+++ penguin-command-1.6.11/src/options.c	2010-06-25 01:53:10.391889561 +0200
+--- penguin-command-1.6.11-orig/src/options.c	2013-10-15 20:52:23.773475479 +0200
++++ penguin-command-1.6.11/src/options.c	2007-03-18 16:44:44.000000000 +0100
 @@ -10,10 +10,14 @@
      char filename[200];
      FILE *file;
