@@ -170,11 +170,11 @@ MAPFILES  := $(addprefix $(PORTSDIR)/$(ARCHBASE)/$(ARCHBASE)-$(VERSION)/src/,$(M
 
 %build_prog mmake=ports-game-blobwars-bin progname=Blobwars \
     files= cxxfiles=$(GAMEFILES) targetdir=$(TARGETDIR) \
-    uselibs="SDL_mixer SDL_image SDL_ttf SDL_net freetype2 vorbisfile vorbis ogg png jpeg SDL z stdc++"
+    uselibs="SDL_mixer SDL_image SDL_ttf SDL_net freetype2 vorbisfile vorbis ogg png jpeg SDL GL z stdc++"
 
 %build_prog mmake=ports-game-blobwars-map progname=Mapeditor \
     files= cxxfiles=$(MAPFILES) targetdir=$(TARGETDIR) \
-    uselibs="SDL_mixer SDL_image SDL_ttf SDL_net freetype2 vorbisfile vorbis ogg png jpeg SDL z stdc++"
+    uselibs="SDL_mixer SDL_image SDL_ttf SDL_net freetype2 vorbisfile vorbis ogg png jpeg SDL GL z stdc++"
 
 #############################################################################################################
 
