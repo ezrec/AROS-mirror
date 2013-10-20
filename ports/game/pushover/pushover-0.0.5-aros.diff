@@ -1,0 +1,90 @@
+diff -Naur pushover-0.0.5-orig/src/main.cpp pushover-0.0.5/src/main.cpp
+--- pushover-0.0.5-orig/src/main.cpp	2013-10-20 15:34:02.820714057 +0200
++++ pushover-0.0.5/src/main.cpp	2013-05-19 17:51:54.000000000 +0200
+@@ -146,31 +146,14 @@
+ 
+ static std::string getDataDir(void)
+ {
+-#if defined (__AROS__)
+-  static char binaryPath[1024] = {0};
+-  if (!*binaryPath)
+-    NameFromLock(GetProgramDir(), binaryPath, sizeof(binaryPath));
+-  return std::string(binaryPath);
+-#else
+   struct stat st;
+   return std::string((stat(PKGDATADIR, &st) == 0) ? PKGDATADIR : ".");
+-#endif
+ }
+ 
+ static std::string getLocaleDir(void)
+ {
+-#if defined (__AROS__)
+-  static char localePath[1024] = {0};
+-  if (!*localePath)
+-  {
+-    AddPart(localePath, getDataDir().c_str(), sizeof(localePath));
+-    AddPart(localePath, "locale", sizeof(localePath));
+-  }
+-  return localePath;
+-#else
+   struct stat st;
+   return std::string((stat(LOCALEDIR, &st) == 0) ? LOCALEDIR : "locale");
+-#endif
+ }
+ 
+ static unsigned int getKeyMask(void) {
+@@ -294,7 +277,7 @@
+ 
+   // setup internationalization
+ #if defined (__AROS__)
+-  amigaLocale(LC_MESSAGES);
++  amigaLocale();
+ #endif
+   setlocale(LC_MESSAGES, "");
+   bindtextdomain("pushover", getLocaleDir().c_str());
+diff -Naur pushover-0.0.5-orig/src/tools.cpp pushover-0.0.5/src/tools.cpp
+--- pushover-0.0.5-orig/src/tools.cpp	2013-10-20 15:34:02.820714057 +0200
++++ pushover-0.0.5/src/tools.cpp	2013-05-19 17:51:54.000000000 +0200
+@@ -42,6 +42,7 @@
+ #if defined(__AROS__)
+ #include <proto/locale.h>
+ #include <proto/dos.h>
++#include <string.h>
+ #endif
+ 
+ uint64_t getTime(void)
+@@ -88,10 +89,7 @@
+ 
+ #elif defined (__AROS__)
+ 
+-  static char binaryPath[1024] = {0};
+-  if (!*binaryPath)
+-    NameFromLock(GetProgramDir(), binaryPath, sizeof(binaryPath));
+-  std::string home = std::string(binaryPath);
++  std::string home = std::string("PROGDIR:.pushover/");
+ 
+ #else
+ 
+@@ -116,10 +114,6 @@
+       throw std::runtime_error("Can't create home directory: " + home);
+   }
+ 
+-#if defined (__AROS__)
+-  home += '/';
+-#endif
+-
+   return home;
+ }
+ 
+diff -Naur pushover-0.0.5-orig/src/window.cpp pushover-0.0.5/src/window.cpp
+--- pushover-0.0.5-orig/src/window.cpp	2013-10-20 15:34:02.820714057 +0200
++++ pushover-0.0.5/src/window.cpp	2013-05-19 17:51:54.000000000 +0200
+@@ -28,7 +28,7 @@
+ #include "solvedmap.h"
+ #include "leveldata.h"
+ #if defined(__AROS__)
+-
++#define PACKAGE_VERSION "0.0.5"
+ #else
+ #include "config.h"
+ #endif
