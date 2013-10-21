@@ -3,18 +3,20 @@
 include $(TOP)/config/make.cfg
 
 
-#MM- ports-game : ports-game-$(AROS_TARGET_CPU)
+# #MM- ports-game : ports-game-$(AROS_TARGET_CPU)
 
 #MM- ports-game-i386 : ports-game-koules
 #MM- ports-game-arm : ports-game-wormwars
 
-#MM  ports-game-wormwars : includes linklibs ports-game-wormwars-cpy \
-#MM  ports-game-wormwars-drawericon ports-game-wormwars-fx ports-game-wormwars-fonts \
-#MM  ports-game-wormwars-catalogs ports-game-wormwars-fetch
+#MM  ports-game-wormwars : includes linklibs \
+#MM     ports-game-wormwars-cpy \
+#MM     ports-game-wormwars-drawericon \
+#MM     ports-game-wormwars-fx \
+#MM     ports-game-wormwars-fonts \
+#MM     ports-game-wormwars-catalogs \
+#MM     ports-game-wormwars-fetch
 
 #MM  ports-game-wormwars-fx : ports-game-wormwars-fetch
-
-#MM  ports-game-wormwars-fonts : ports-game-wormwars-fetch
 
 #MM  ports-game-wormwars-catalogs : ports-game-wormwars-fetch
 
@@ -23,8 +25,9 @@ include $(TOP)/config/make.cfg
 #MM  ports-game-wormwars-quick : ports-game-wormwars-fetch
 
 
-REPOSITORIES := http://archives.aros-exec.org/share/game/misc/
-ARCHBASE     := wormwars-src-8.78
+#REPOSITORIES := http://archives.aros-exec.org/share/game/misc/
+REPOSITORIES := http://www.mazze-online.de/aros/ports-src/
+ARCHBASE     := wormwars-src-8.85
 TARGETDIR    := $(AROS_CONTRIB)/Games/WormWars
 USER_CFLAGS  := -DNO_PRAGMAS -D__STORM__ -D__chip= -DAMIGA \
                 -Wno-implicit-function-declaration -Wno-unknown-pragmas -Wno-parentheses
@@ -50,14 +53,12 @@ ICONS := WormWars
 %copy_dir_recursive mmake=ports-game-wormwars-fx src=$(PORTSDIR)/wormwars/$(ARCHBASE)/fx \
     dst=$(TARGETDIR)/fx
 
-%copy_dir_recursive mmake=ports-game-wormwars-fonts src=$(PORTSDIR)/wormwars/$(ARCHBASE)/fonts \
-    dst=$(TARGETDIR)/fonts
-
 %copy_dir_recursive mmake=ports-game-wormwars-catalogs src=$(PORTSDIR)/wormwars/$(ARCHBASE)/Catalogs \
     dst=$(TARGETDIR)/Catalogs
 
 
-CPYFILES := WormWars.info WormWars.guide WormWars.guide.info WormWars.lset WormWars.lset.info Nibbles.lset Nibbles.lset.info
+CPYFILES := WormWars.info WormWars.guide WormWars.guide.info WormWars.lset WormWars.lset.info \
+    Nibbles.lset Nibbles.lset.info RattlerRace.lset RattlerRace.lset.info
 
 %copy_files_q mmake=ports-game-wormwars-cpy files=$(CPYFILES) src=$(PORTSDIR)/wormwars/$(ARCHBASE) \
     dst=$(TARGETDIR)
