@@ -77,7 +77,7 @@ HISTORY
 
 #if AROS_SMP
     if (KernelBase)
-        SysBase->TDNestCnt = KrnScheduling(KSCHED_PERMIT);
+        KrnScheduling(KSCHED_PERMIT);
 #else
     AROS_ATOMIC_DEC(SysBase->TDNestCnt);
 #endif
