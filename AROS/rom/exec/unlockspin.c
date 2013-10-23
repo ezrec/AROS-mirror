@@ -10,6 +10,7 @@
 
 #include <aros/debug.h>
 #include <proto/exec.h>
+#include <proto/kernel.h>
 
 #include "exec_intern.h"
 
@@ -51,20 +52,38 @@
 
     struct SpinLock *spin=(struct SpinLock *) aspin;
     struct Task *thistask=FindTask(NULL);
+    char *taskname=NULL;
+
+    if(thistask)
+        taskname=thistask->tc_Node.ln_Name;
+
+    if(spin->nest == 0)
+    {
+        kprintf("[PANIC] Spinlock %lx is not locked, but unlocked by task %p (%s)\n", spin, thistask, taskname);
+        Alert( AN_SemCorrupt );
+    }
+
+    /* early boot time might not have had thistask, so owner was set to -1 and Forbid() was used to lock */
+    if(spin->owner == (struct Task *) -1) 
+    {
+        D(bug("[UNLOCKSPIN] fallback to Permit()\n"));
+        spin->nest--;
+        if(spin->nest == 0) 
+        {
+            spin->owner=(struct Task *) NULL;
+        }
+        /* don't call Permit(), as this calls UnlockSpin => recursion */
+        KrnScheduling(KSCHED_PERMIT);
+        return;
+    }
 
     if(spin->owner!=thistask) 
     {
-        kprintf("[PANIC] Spinlock %lx held by task %p, but unlocked by task %p\n", 
-                 spin, spin->owner, thistask);
+        kprintf("[PANIC] Spinlock %lx held by task %p, but unlocked by task %p (%s)\n", 
+                 spin, spin->owner, thistask, taskname);
         Alert( AN_SemCorrupt );
     }
 
-    if(spin->owner==NULL)
-    {
-        kprintf("[PANIC] Spinlock %lx is not locked, but unlocked by task %p\n", spin, thistask);
-        Alert( AN_SemCorrupt );
-    }
-    
     if(spin->nest>1) 
     {
         spin->nest--;
@@ -72,9 +91,12 @@
     }
 
     spin->owner=NULL;
+    spin->nest =0;
+
+    D(bug("[UNLOCKSPIN] %lx unlocked by task %p (%s)\n", spin, thistask, taskname));
 
     __sync_synchronize();
-    spin->lock=0;
+    spin->lock =0;
 
     AROS_LIBFUNC_EXIT
 } /* UnlockSpin */

@@ -64,6 +64,13 @@ struct IntExecBase
 #if AROS_SMP
     struct List CPUList;                        /* List of CPUs                                          */
     struct SpinLock semaphore_spinlock;         /* spinlock for semaphore function synchronisation       */
+
+    /* The following SpinLocks replace Forbid() calls. Some user code might still use
+     * Forbid() to access those ressources. Therefore any Forbid() call must lock these SpinLocks, too.  
+     * As SpinLocks are fast, there is no speed penalty, if they are unlocked. If they are locked,
+     * getting the lock is not slower than getting the Forbid()
+     */
+    struct SpinLock LibList_spinlock;           /* spinlock for SysBase->LibList synchronisation         */
 #endif
 };
 

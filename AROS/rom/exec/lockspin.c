@@ -57,7 +57,7 @@
         may happen.
 
     SEE ALSO
-        AllocSpin(), UnlockSpin()
+        AllocSpin(), UnlockSpin(), InitSpin()
 
     INTERNALS
         Problem on AROS is, that a busy waiting task with a higher
@@ -82,18 +82,39 @@
     struct SpinLock *spin=(struct SpinLock *) aspin;
     struct Task *thistask=FindTask(NULL);
     /* get current task priority (without changing it) */
-    BYTE org_priority=thistask->tc_Node.ln_Pri;
-    BYTE akt_priority=org_priority;
+    BYTE org_priority;
+    BYTE akt_priority;
+    char *taskname; /* TODO: remove it again */
     ULONG count=0;
+
+    /* allowed to be called early */
+    if(thistask == NULL)
+    {
+        D(bug("[LOCKSPIN] thistask is NULL, fallback to Forbid()\n"));
+        /* don't call Forbid(), as this calls LockSpin itself */
+        KrnScheduling(KSCHED_FORBID);
+        spin->nest++;
+        spin->owner=(struct Task *) -1;
+        return;
+    }
+
+    org_priority=thistask->tc_Node.ln_Pri;
+    akt_priority=org_priority;
+    taskname=thistask->tc_Node.ln_Name;
 
     /* no need to lock this access, either it is us, then there can't be a race or
      * it is NULL/another task, then the owner is different
      */
     if(spin->owner==thistask) 
     {
-        D(bug("[LOCKSPIN] reentry #%d of task %p (%s)\n", spin->nest, thistask, thistask->tc_Node.ln_Name));
+        D(bug("[LOCKSPIN] %lx reentry #%d of task %p (%s)\n", spin, spin->nest, thistask, taskname));
         spin->nest++;
         return;
+    }
+    else
+    {
+        D(bug("[LOCKSPIN] %lx task %p (%s) locking me ..\n", spin, thistask, taskname));
+        //D(bug("[LOCKSPIN] %lx task %p (%s) locking me from 0x%p / 0x%p / 0x%p / 0x%p / 0x%p / 0x%p / 0x%p\n", spin, thistask, taskname, __builtin_return_address (1), __builtin_return_address (2), __builtin_return_address (3), __builtin_return_address (4), __builtin_return_address (5), __builtin_return_address (6), __builtin_return_address (7)));
     }
 
     while( __sync_lock_test_and_set(&spin->lock, 1) ) 
@@ -119,14 +140,21 @@
                  * the owner tasks ends, before we get the priority. And we can't use Forbid() here
                  */
 
-#if 0
-                D(bug("[LOCKSPIN] task %p still holds the spinlock %lx (%d) with priority %d (%s)\n",
-                        spin->owner, spin, spin->lock, spin->owner->tc_Node.ln_Pri, 
-                        spin->owner->tc_Node.ln_Name));
-#endif
+                struct Task *sectask=spin->owner;
+                /* DEBUG only, owner might be dead already! */
+                if(sectask && (sectask != (struct Task *) -1))
+                {
+                  /* might still return dead values, but won't crash at least */
+                  D(bug("[LOCKSPIN] task %p (%s) still holds the spinlock %lx with priority %d\n",
+                        sectask, sectask->tc_Node.ln_Name, spin, sectask->tc_Node.ln_Pri));
+                }
+                else {
+                    D(bug("[LOCKSPIN] spin->owner is NULL, but holds the spinlock %lx\n", spin));
+                }
 
-                D(bug("[LOCKSPIN] lower this task %lx to priority %d (%s)\n", 
-                      thistask, akt_priority, thistask->tc_Node.ln_Name));
+
+                D(bug("[LOCKSPIN] lower this task %lx (%s) to priority %d\n", 
+                       thistask, taskname, akt_priority));
                 SetTaskPri(thistask, akt_priority);
             }
         }
@@ -137,6 +165,7 @@
         }
 #endif
     }
+    D(bug("[LOCKSPIN] %lx task %p (%s) locked me!\n", spin, thistask, taskname));
 
     spin->nest=1;
     spin->owner=thistask;
@@ -146,6 +175,8 @@
     {
         SetTaskPri(thistask, org_priority);
     }
+
+    //D(bug("[LOCKSPIN] %lx locked by task %p (%s)\n", spin, thistask, taskname));
 
     AROS_LIBFUNC_EXIT
 } /* LockSpin */
