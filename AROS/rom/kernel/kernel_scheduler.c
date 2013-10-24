@@ -5,6 +5,8 @@
     Desc:
 */
 
+#define DEBUG 0
+
 #include <aros/debug.h>
 
 #include <exec/alerts.h>
@@ -112,6 +114,7 @@ struct Task *core_Dispatch(void)
         BYTE pri = tmp->tc_Node.ln_Pri;
         ForeachNode(&SysBase->TaskReady, tmp) {
             if (tmp->tc_Node.ln_Pri == pri &&
+                tmp->tc_State != TS_REMOVED &&
                 (GetESysCPU(tmp) == NULL ||
                  GetESysCPU(tmp) == THISCPU)) {
                 task = tmp;
