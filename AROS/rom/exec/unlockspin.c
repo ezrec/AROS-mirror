@@ -42,7 +42,7 @@
     BUGS
 
     SEE ALSO
-        LockSpin()
+        LockSpin(), ResetSpin()
 
     INTERNALS
 
@@ -93,7 +93,7 @@
     spin->owner=NULL;
     spin->nest =0;
 
-    D(bug("[UNLOCKSPIN] %lx unlocked by task %p (%s)\n", spin, thistask, taskname));
+    //D(bug("[UNLOCKSPIN] %lx unlocked by task %p (%s)\n", spin, thistask, taskname));
 
     __sync_synchronize();
     spin->lock =0;

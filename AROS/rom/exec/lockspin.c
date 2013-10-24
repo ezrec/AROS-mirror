@@ -57,7 +57,7 @@
         may happen.
 
     SEE ALSO
-        AllocSpin(), UnlockSpin(), InitSpin()
+        AllocSpin(), UnlockSpin(), ResetSpin()
 
     INTERNALS
         Problem on AROS is, that a busy waiting task with a higher
@@ -113,7 +113,7 @@
     }
     else
     {
-        D(bug("[LOCKSPIN] %lx task %p (%s) locking me ..\n", spin, thistask, taskname));
+        //D(bug("[LOCKSPIN] %lx task %p (%s) locking me ..\n", spin, thistask, taskname));
         //D(bug("[LOCKSPIN] %lx task %p (%s) locking me from 0x%p / 0x%p / 0x%p / 0x%p / 0x%p / 0x%p / 0x%p\n", spin, thistask, taskname, __builtin_return_address (1), __builtin_return_address (2), __builtin_return_address (3), __builtin_return_address (4), __builtin_return_address (5), __builtin_return_address (6), __builtin_return_address (7)));
     }
 
@@ -165,7 +165,7 @@
         }
 #endif
     }
-    D(bug("[LOCKSPIN] %lx task %p (%s) locked me!\n", spin, thistask, taskname));
+    //D(bug("[LOCKSPIN] %lx task %p (%s) locked me!\n", spin, thistask, taskname));
 
     spin->nest=1;
     spin->owner=thistask;
