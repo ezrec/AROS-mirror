@@ -66,13 +66,23 @@
     SumLibrary(library);
 
     /* Arbitrate for the library list */
+#if !AROS_SMP
     Forbid();
+#else
+    bug("[ADDLIBRARY] Locking Spin\n");
+    LockSpin(&(PrivExecBase(SysBase)->LibList_spinlock));
+#endif
 
     /* And add the library */
     Enqueue(&SysBase->LibList,&library->lib_Node);
 
     /* All done. */
+#if !AROS_SMP
     Permit();
+#else
+    UnlockSpin(&(PrivExecBase(SysBase)->LibList_spinlock));
+    bug("[ADDLIBRARY] Unlocked Spin\n");
+#endif
 
     /*
      * When debug.library is added, open it and cache its base instantly.

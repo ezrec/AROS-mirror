@@ -12,6 +12,8 @@
 #include <proto/exec.h>
 
 #include "exec_debug.h"
+#include "exec_intern.h"
+
 #ifndef DEBUG_CloseLibrary
 #   define DEBUG_CloseLibrary 0
 #endif
@@ -19,6 +21,8 @@
 #if DEBUG_CloseLibrary
 #   define DEBUG 1
 #endif
+
+#define DEBUG 1
 #include <aros/debug.h>
 #undef kprintf
 
@@ -59,7 +63,7 @@
     AROS_LIBFUNC_INIT
     BPTR seglist;
 
-    D(bug("CloseLibrary $%lx (\"%s\") by \"%s\"\n", library,
+    D(bug("[CLOSELIBRARY] CloseLibrary $%lx (\"%s\") by \"%s\"\n", library,
         library ? library->lib_Node.ln_Name : "(null)",
         THISCPU->ThisTask->tc_Node.ln_Name));
 

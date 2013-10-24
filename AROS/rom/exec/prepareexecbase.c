@@ -162,6 +162,7 @@ struct ExecBase *PrepareExecBase(struct MemHeader *mh, struct TagItem *msg)
     ULONG i;
     char *args;
 
+
     /*
      * Copy reset proof pointers if old SysBase is valid.
      * Additional platform-specific code is needed in order to test
@@ -259,6 +260,10 @@ struct ExecBase *PrepareExecBase(struct MemHeader *mh, struct TagItem *msg)
 
     InitSemaphore(&PrivExecBase(SysBase)->MemListSem);
     InitSemaphore(&PrivExecBase(SysBase)->LowMemSem);
+
+    /* No need to initialize those locks. Just a reminder, if it becomes necessary in the future */
+    ResetSpin(&PrivExecBase(SysBase)->semaphore_spinlock);
+    ResetSpin(&PrivExecBase(SysBase)->LibList_spinlock);
 
     SysBase->SoftVer        = VERSION_NUMBER;
     SysBase->Quantum        = 4;

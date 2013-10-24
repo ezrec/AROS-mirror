@@ -77,7 +77,12 @@ HISTORY
 
 #if AROS_SMP
     if (KernelBase)
+    {
         KrnScheduling(KSCHED_PERMIT);
+        //bug("LibList: Unlocking by Permit()..\n");
+        UnlockSpin(&(PrivExecBase(SysBase)->LibList_spinlock));
+        //bug("LibList: Unlocking by Permit()..\n");
+    }
 #else
     AROS_ATOMIC_DEC(SysBase->TDNestCnt);
 #endif

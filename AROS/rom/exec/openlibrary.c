@@ -13,6 +13,7 @@
 #include <aros/libcall.h>
 #include <proto/exec.h>
 
+#include "exec_intern.h"
 #include "exec_debug.h"
 
 /*****************************************************************************
@@ -61,7 +62,13 @@
     DRAMLIB("OpenLibrary(\"%s\", %ld)", libName, version);
 
     /* Arbitrate for the library list */
+    bug("[OPENLIBRARY] OpenLibrary(\"%s\", %ld)\n", libName, version);
+#if !AROS_SMP
     Forbid();
+#else
+    //bug("[OPENLIBRARY] trying to lock spin %lx\n", &(PrivExecBase(SysBase)->LibList_spinlock));
+    LockSpin(&(PrivExecBase(SysBase)->LibList_spinlock));
+#endif
 
     /* Look for the library in our list */
     library = (struct Library *) FindName (&SysBase->LibList, libName);
@@ -72,11 +79,22 @@
         /* Check version */
         if(library->lib_Version>=version)
         {
+#if AROS_SMP
+            /* Does library code expect to be called within Forbid()?
+             * As libraries are usually opened only once, speed penalty is acceptable here,
+             * so call Forbid() now.
+             */
+            Forbid();
+#endif
+            bug("[OPENLIBRARY] call Open vector for %s\n", libName);
             /* Call Open vector */
             library=AROS_LVO_CALL1(struct Library *,
                 AROS_LCA(ULONG,version,D0),
                 struct Library *,library,1,lib
             );
+#if AROS_SMP
+            Permit();
+#endif
         }
         else
         {
@@ -92,9 +110,13 @@
      */
 
     /* All done. */
+#if !AROS_SMP
     Permit();
+#else
+    UnlockSpin(&(PrivExecBase(SysBase)->LibList_spinlock));
+#endif
 
-    DRAMLIB("OpenLibrary(\"%s\", %ld) = %p", libName, version, library);
+    //DRAMLIB("OpenLibrary(\"%s\", %ld) = %p", libName, version, library);
     return library;
 
     AROS_LIBFUNC_EXIT
