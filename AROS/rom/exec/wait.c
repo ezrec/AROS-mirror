@@ -5,7 +5,7 @@
     Desc: Wait for some signal.
     Lang: english
 */
-#define DEBUG 0
+#define DEBUG 1
 
 #include <aros/debug.h>
 #include <exec/execbase.h>
@@ -19,38 +19,38 @@
 
     NAME */
 
-	AROS_LH1(ULONG, Wait,
+        AROS_LH1(ULONG, Wait,
 
 /*  SYNOPSIS */
-	AROS_LHA(ULONG, signalSet, D0),
+        AROS_LHA(ULONG, signalSet, D0),
 
 /*  LOCATION */
-	struct ExecBase *, SysBase, 53, Exec)
+        struct ExecBase *, SysBase, 53, Exec)
 
 /*  FUNCTION
-	Wait until some signals are sent to the current task. If any signal
-	of the specified set is already set when entering this function it
-	returns immediately. Since almost any event in the OS can send a
-	signal to your task if you specify it to do so signals are a very
-	powerful mechanism.
+        Wait until some signals are sent to the current task. If any signal
+        of the specified set is already set when entering this function it
+        returns immediately. Since almost any event in the OS can send a
+        signal to your task if you specify it to do so signals are a very
+        powerful mechanism.
 
     INPUTS
-	signalSet - The set of signals to wait for.
+        signalSet - The set of signals to wait for.
 
     RESULT
-	The set of active signals.
+        The set of active signals.
 
     NOTES
-	Naturally it's not allowed to wait in supervisor mode.
+        Naturally it's not allowed to wait in supervisor mode.
 
-	Calling Wait() breaks an active Disable() or Forbid().
+        Calling Wait() breaks an active Disable() or Forbid().
 
     EXAMPLE
 
     BUGS
 
     SEE ALSO
-	Signal(), SetSignal(), AllocSignal(), FreeSignal()
+        Signal(), SetSignal(), AllocSignal(), FreeSignal()
 
     INTERNALS
 
@@ -62,33 +62,38 @@
 
     ULONG rcvd;
     struct Task *me;
+    ULONG spincount=0;
 
     /* Get pointer to current task - I'll need it very often */
     me = FindTask (NULL);
 
-    D(bug("[Exec] Wait(0x%08lX) called by %s\n", signalSet, me->tc_Node.ln_Name));
+    //D(bug("[Exec] Wait(0x%08lX) called by %s\n", signalSet, me->tc_Node.ln_Name));
     /* Protect the task lists against access by other tasks. */
     Disable();
 
     /* If at least one of the signals is already set do not wait. */
     while(!(me->tc_SigRecvd&signalSet))
     {
-	D(bug("[Exec] Signals are not set, putting the task to sleep\n"));
-	/* Set the wait signal mask */
-	me->tc_SigWait=signalSet;
+        //D(bug("[Exec] Signals are not set, putting the task to sleep\n"));
+        /* Set the wait signal mask */
+        me->tc_SigWait=signalSet;
 
-	/* Move current task to the waiting list. */
-	me->tc_State=TS_WAIT;
-	Enqueue(&SysBase->TaskWait,&me->tc_Node);
+        /* Move current task to the waiting list. */
+        me->tc_State=TS_WAIT;
+        Enqueue(&SysBase->TaskWait,&me->tc_Node);
 
-	/* And switch to the next ready task. */
-	KrnSwitch();
+        spincount=ResetSpin(&(PrivExecBase(SysBase)->LibList_spinlock));
+        if(spincount)
+            D(bug("[Exec] Wait() released %d spinlocks\n", spincount));
 
-	/*
-	    OK. Somebody awakened me. This means that either the
-	    signals are there or it's just a finished task exception.
-	    Test again to be sure (see above).
-	*/
+        /* And switch to the next ready task. */
+        KrnSwitch();
+
+        /*
+            OK. Somebody awakened me. This means that either the
+            signals are there or it's just a finished task exception.
+            Test again to be sure (see above).
+        */
     }
     /* Get active signals. */
     rcvd=me->tc_SigRecvd&signalSet;
@@ -98,6 +103,12 @@
 
     /* All done. */
     Enable();
+
+    /* get our locks back ! */
+    while(spincount--)
+    {
+        LockSpin(&(PrivExecBase(SysBase)->LibList_spinlock));
+    }
 
     return rcvd;
 

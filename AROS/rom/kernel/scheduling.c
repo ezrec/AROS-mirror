@@ -12,7 +12,11 @@
 #include <proto/kernel.h>
 #include <proto/exec.h>
 
+#include "exec_intern.h"
+
 #include <kernel_base.h>
+#define DEBUG 1
+#include <aros/debug.h>
 
 /*****************************************************************************
 
@@ -37,6 +41,8 @@
 
     NOTES
     This does nothing on uni-processor systems
+    KSCHED_FORBID/KSCHED_PERMIT increase/decrease SysBase->TDNestCnt
+    themselves. No need to manually set SysBase->TDNestCnt afterwards.
 
     EXAMPLE
 
@@ -55,7 +61,17 @@
     case KSCHED_INSPECT: break;
     case KSCHED_FORBID: AROS_ATOMIC_INC(SysBase->TDNestCnt); break;
     case KSCHED_PERMIT: AROS_ATOMIC_DEC(SysBase->TDNestCnt); break;
-    default:            SysBase->TDNestCnt = (BYTE)trigger; break;
+    default:            SysBase->TDNestCnt = (BYTE)trigger; 
+                        D(bug("[SCHEDULE] force TDNestCnt to %d\n", trigger));
+                        if(trigger==-1)
+                        {
+                            ResetSpin(&(PrivExecBase(SysBase)->LibList_spinlock));
+                        }
+                        else
+                        {
+                            bug("[SCHEDULE] WARNING: trigger %d not supported!\n", trigger);
+                        }
+                        break;
     }
 
     return SysBase->TDNestCnt;
