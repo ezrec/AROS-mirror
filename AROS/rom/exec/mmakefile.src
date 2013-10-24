@@ -36,7 +36,7 @@ ALL_FUNCTIONS := \
         addresetcallback remresetcallback doresetcallbacks newcreatetaska \
         alloctaskstorageslot freetaskstorageslot savetaskstorage \
         restoretaskstorage settaskstorageslot gettaskstorageslot \
-        scantasks lockspin unlockspin initspin
+        scantasks lockspin unlockspin resetspin
 
 INIT_FILES := exec_init prepareexecbase
 FILES      := alertextra alert_cpu systemalert initkicktags intservers \
