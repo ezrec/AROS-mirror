@@ -13,7 +13,6 @@ include $(TOP)/config/make.cfg
 #MM     AROS-chrp-ppc-efika
 
 #MM kernel-package-chrp-ppc-efika: \
-#MM     linklibs-clib \
 #MM     kernel-bootloader \
 #MM     kernel-bestcomm-chrp-ppc-efika \
 #MM     kernel-expansion \
@@ -25,8 +24,8 @@ include $(TOP)/config/make.cfg
 #MM     kernel-aros \
 #MM     kernel-misc \
 #MM     kernel-timer \
-#MM     kernel-pci \
-#MM     kernel-pci-efika \
+#MM     kernel-hidd-pci \
+#MM     kernel-hidd-pci-efika \
 #MM     kernel-graphics \
 #MM     workbench-libs-cgfx-kobj \
 #MM     kernel-layers \

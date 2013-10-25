@@ -1,4 +1,4 @@
-## version $VER: TheBar.catalog 21.4 (10.3.2008)
+## version $VER: TheBar.catalog 21.5 (28.8.2012)
 ## language czech
 ## codeset 5
 ;
@@ -714,27 +714,9 @@ Dvì linky
 ; Two points
 ;
 ;
-Msg_Info_First
-%s\n\
-Copyright (C) 2003-2008 Alfonso Ranieri\n\
-a TheBar Open Source Team
-; %s\n\
-; Copyright (c) 2003-2008 Alfonso Ranieri\n\
-; and TheBar Open Source Team
-;
-Msg_Info_Reserved
-Distribuováno na základì licence LGPL2.
-; Distributed under the terms of the LGPL2.
-;
-Msg_Info_Rest
-Aktuální verze a dal¹í informace najdete na adrese:\n\
-http://www.sourceforge.net/projects/thebar
-; For recent versions and updates visit:\n\
-; http://www.sourceforge.net/projects/thebar
-;
 Msg_Info_Translator
 Èeský pøeklad: Vít ©indláø
-; 
+;
 ;
 Msg_Item_Globals
 Obnovit výchozí

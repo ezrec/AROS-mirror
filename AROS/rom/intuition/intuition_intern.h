@@ -720,6 +720,7 @@ struct IntScreen
     Object                  *depthgadget;
     UWORD                    SpecialFlags;
     struct Layer            *rootLayer;
+    struct Hook              *preAlphaCompHook;
 #if !USE_NEWDISPLAYBEEP
     ULONG                    DisplayBeepColor0[3];
     struct Window           *DisplayBeepWindow;
@@ -744,7 +745,7 @@ struct IntScreen
     Object                  *WinDecorObj;
     struct NewDecorator     *Decorator;
 
-    struct BitMap           *AllocatedBitmap;
+    struct BitMap           *AllocatedBitMap;
     struct DBufInfo         *RestoreDBufInfo;
 #ifdef SKINS
     WORD                     LastClockPos;

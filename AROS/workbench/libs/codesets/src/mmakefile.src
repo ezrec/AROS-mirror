@@ -1,0 +1,27 @@
+#   $Id$
+
+#   AROS metamakefile for codesetslib
+
+include $(TOP)/config/make.cfg
+
+FILES := \
+    libinit \
+    init \
+    utils \
+    base64 \
+    convertUTF \
+    codesets \
+    codepages \
+    debug
+
+# We need to use -idirafter, so that we
+# *don't* pick up the project's local MUI headers.
+USER_CFLAGS = -I. -idirafter $(SRCDIR)/$(CURDIR)/../include -DAROS_ABI_V1
+
+#MM workbench-libs-codesets : workbench-libs-codesets-includes
+
+%build_module_simple mmake=workbench-libs-codesets \
+    modname=codesets modtype=library \
+    files=$(FILES)
+
+%common

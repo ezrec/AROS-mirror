@@ -32,6 +32,7 @@ struct IntuitionBase *IntuitionBase = NULL;
 struct GfxBase       *GfxBase       = NULL;
 struct Library       *UtilityBase   = NULL;
 struct Library       *LayersBase    = NULL;
+struct Library       *StdCBase      = NULL;
 
 /*
  * Prototypes of class functions.
@@ -99,6 +100,7 @@ static const IPTR Vectors[] = {
  */
 STATIC VOID CloseLibs(void)
 {
+   if (StdCBase)      CloseLibrary(StdCBase);
    if (BGUIBase)      CloseLibrary(BGUIBase);
    if (LayersBase)    CloseLibrary(LayersBase);
    if (UtilityBase)   CloseLibrary(UtilityBase);
@@ -141,11 +143,12 @@ SAVEDS ASM REGFUNC3(struct Library *, LibInit,
    UtilityBase    = OpenLibrary("utility.library",       37);
    LayersBase     = OpenLibrary("layers.library",        37);
    BGUIBase       = OpenLibrary("bgui.library",          41);
+   StdCBase       = OpenLibrary("stdc.library",          1);
 
    /*
     * All libraries open?
     */
-   if (DOSBase && IntuitionBase && GfxBase && UtilityBase && LayersBase && BGUIBase)
+   if (DOSBase && IntuitionBase && GfxBase && UtilityBase && LayersBase && BGUIBase && StdCBase)
    {
       if ((bcb->bcb_Class = BGUI_ClassInit()))
       {

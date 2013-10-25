@@ -13,10 +13,10 @@ include $(TOP)/config/make.cfg
 #MM  ports-scientific-mathomatic-quick : ports-scientific-mathomatic-fetch
 
 REPOSITORIES := http://mathomatic.orgserve.de
-ARCHBASE     := mathomatic-16.0.1
+ARCHBASE     := mathomatic-16.0.5
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Scientific/Mathomatic
 
-USER_CFLAGS  := -DVERSION=\"16.0.1\"
+USER_CFLAGS  := -DVERSION=\"16.0.5\"
 
 FILES := \
     $(PORTSDIR)/mathomatic/$(ARCHBASE)/main \
@@ -43,12 +43,13 @@ FILES := \
     files=$(FILES) targetdir=$(TARGETDIR)
 
 %fetch mmake=ports-scientific-mathomatic-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/mathomatic \
-    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2" \
+    patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
 
 ICONS := Mathomatic
 
 %build_icons mmake=ports-scientific-mathomatic-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)
+	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %copy_dir_recursive mmake=ports-scientific-mathomatic-docs \
 src=$(PORTSDIR)/mathomatic/$(ARCHBASE)/doc dst=$(TARGETDIR)/Docs

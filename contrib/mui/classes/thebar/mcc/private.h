@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2013 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -122,7 +122,7 @@ struct InstData
     char                           frameSpec[256];
     ULONG                          userFrame;
 
-    #if !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
+    #if defined(__amigaos3__)
     BOOL                           allowAlphaChannel;
     #endif
 

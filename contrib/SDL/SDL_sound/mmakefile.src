@@ -5,10 +5,11 @@
 
 #MM- contrib-sdl-sdl-sound : development-SDL_sound
 
-#MM- development-SDL_sound : linklibs-SDL
+#MM- development-SDL_sound : SDL-aros-lib
 
 REPOSITORIES := http://icculus.org/SDL_sound/downloads/ \
  http://downloads.openwrt.org/sources/
 
 %fetch_and_build_gnu_development package=SDL_sound version=1.0.3 patch=no \
-    suffixes="tar.gz" package_repo="$(REPOSITORIES)"
+    suffixes="tar.gz" package_repo="$(REPOSITORIES)" \
+    extraoptions="--disable-midi"

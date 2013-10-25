@@ -939,6 +939,10 @@ static IPTR windecor_draw_winborder(Class *cl, Object *obj, struct wdpDrawWinBor
     if (!(msg->wdp_Flags & WDF_DWB_TOP_ONLY))
     {
         UBYTE * buf = NULL;
+        int         overlap = 0;
+
+        if (data->dc->WinFrameStyle > 0)
+            overlap = 2;
         
         if (data->dc->UseGradients)
         {
@@ -953,25 +957,25 @@ static IPTR windecor_draw_winborder(Class *cl, Object *obj, struct wdpDrawWinBor
         if (data->dc->UseGradients)
         {
             /* Reuse the buffer for blitting frames */
-            if (window->BorderLeft > 2) HorizRepeatBuffer(buf, window->BorderTop, pen, wd->truecolor, rp, 
+            if (window->BorderLeft > overlap) HorizRepeatBuffer(buf, window->BorderTop, pen, wd->truecolor, rp, 
                                             0, window->BorderTop, 
                                             window->BorderLeft, window->Height - window->BorderTop);
-            if (window->BorderRight > 2) HorizRepeatBuffer(buf, window->BorderTop, pen, wd->truecolor, rp, 
+            if (window->BorderRight > overlap) HorizRepeatBuffer(buf, window->BorderTop, pen, wd->truecolor, rp, 
                                             window->Width - window->BorderRight, window->BorderTop,
                                             window->BorderRight, window->Height - window->BorderTop);
-            if (window->BorderBottom > 2) HorizRepeatBuffer(buf, window->Height - window->BorderBottom, pen, wd->truecolor, rp,
+            if (window->BorderBottom > overlap) HorizRepeatBuffer(buf, window->Height - window->BorderBottom, pen, wd->truecolor, rp,
                                             0, window->Height - window->BorderBottom,
                                             window->Width, window->BorderBottom);
         }
         else
         {
-            if (window->BorderLeft > 2) HorizVertRepeatNewImage(ni, color, 0, window->BorderTop, rp,  
+            if (window->BorderLeft > overlap) HorizVertRepeatNewImage(ni, color, 0, window->BorderTop, rp,  
                                             0, window->BorderTop, 
                                             window->BorderLeft - 1, window->Height - window->BorderTop);
-            if (window->BorderRight > 2) HorizVertRepeatNewImage(ni, color, window->Width - window->BorderRight , window->BorderTop, rp,  
+            if (window->BorderRight > overlap) HorizVertRepeatNewImage(ni, color, window->Width - window->BorderRight , window->BorderTop, rp,  
                                             window->Width - window->BorderRight , window->BorderTop, 
                                             window->BorderRight, window->Height - window->BorderTop);
-            if (window->BorderBottom > 2) HorizVertRepeatNewImage(ni, color, 0, window->Height - window->BorderBottom, rp,  
+            if (window->BorderBottom > overlap) HorizVertRepeatNewImage(ni, color, 0, window->Height - window->BorderBottom, rp,  
                                             0, window->Height - window->BorderBottom, 
                                             window->Width, window->BorderBottom);
         }
@@ -979,26 +983,28 @@ static IPTR windecor_draw_winborder(Class *cl, Object *obj, struct wdpDrawWinBor
         /* Shading borders */
         int bbt = bt;
 
-        if (bl > 0) ShadeLine(dpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_d, bbt, 0, bbt, 0, wh - 1);
-        if (bb > 0) ShadeLine(dpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_d, wh - 1, 0, wh - 1, ww - 1, wh - 1);
-        if (br > 0) ShadeLine(dpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_d, bbt , ww - 1, bbt , ww - 1, wh - 1);
-        if (bl > 1) ShadeLine(dpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_d, bbt, bl - 1, bbt, bl - 1, wh - bb);
-        if (bb > 1) ShadeLine(dpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_d, wh - bb, bl - 1, wh - bb, ww - br, wh - bb);
-        if (br > 1) ShadeLine(dpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_d, bbt , ww - br, bbt , ww - br, wh - bb);
-        if (bl > 2) ShadeLine(lpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_l, bbt, 1, bbt, 1, wh - 2);
-        if (bl > 3) {
-            if (bb > 1) ShadeLine(mpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_m, bbt, bl - 2, bbt, bl - 2, wh - bb + 1);
-            else ShadeLine(mpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_m, bbt, bl - 2, bbt, bl - 2, wh - bb);
-        }
-        if (br > 2) ShadeLine(mpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_m, bbt, ww - 2, bbt, ww - 2, wh - 2);
-        if (bb > 2) ShadeLine(mpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_m, wh - 2, 1, wh - 2, ww - 2, wh - 2);
-        if (bb > 3) {
-            if ((bl > 0) && (br > 0)) ShadeLine(lpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_l, wh - bb + 1, bl, wh - bb + 1, ww - br, wh - bb + 1);
-        }
-        if (br > 3) {
-            if (bb > 1) ShadeLine(lpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_l, bbt, ww - br + 1, bbt, ww - br + 1, wh - bb + 1);
-        }
-        
+        if (data->dc->WinFrameStyle > 0)
+        {
+            if (bl > 0) ShadeLine(dpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_d, bbt, 0, bbt, 0, wh - 1);
+            if (bb > 0) ShadeLine(dpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_d, wh - 1, 0, wh - 1, ww - 1, wh - 1);
+            if (br > 0) ShadeLine(dpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_d, bbt , ww - 1, bbt , ww - 1, wh - 1);
+            if (bl > 1) ShadeLine(dpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_d, bbt, bl - 1, bbt, bl - 1, wh - bb);
+            if (bb > 1) ShadeLine(dpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_d, wh - bb, bl - 1, wh - bb, ww - br, wh - bb);
+            if (br > 1) ShadeLine(dpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_d, bbt , ww - br, bbt , ww - br, wh - bb);
+            if (bl > 2) ShadeLine(lpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_l, bbt, 1, bbt, 1, wh - 2);
+            if (bl > 3) {
+                if (bb > 1) ShadeLine(mpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_m, bbt, bl - 2, bbt, bl - 2, wh - bb + 1);
+                else ShadeLine(mpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_m, bbt, bl - 2, bbt, bl - 2, wh - bb);
+            }
+            if (br > 2) ShadeLine(mpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_m, bbt, ww - 2, bbt, ww - 2, wh - 2);
+            if (bb > 2) ShadeLine(mpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_m, wh - 2, 1, wh - 2, ww - 2, wh - 2);
+            if (bb > 3) {
+                if ((bl > 0) && (br > 0)) ShadeLine(lpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_l, wh - bb + 1, bl, wh - bb + 1, ww - br, wh - bb + 1);
+            }
+            if (br > 3) {
+                if (bb > 1) ShadeLine(lpen, tc, data->dc->UseGradients, rp, ni, bc, data->dc->ShadeValues_l, bbt, ww - br + 1, bbt, ww - br + 1, wh - bb + 1);
+            }
+        }        
         FreeVec(buf);
     }
     return TRUE;

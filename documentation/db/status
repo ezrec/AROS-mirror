@@ -85,13 +85,13 @@ zune;menustrip;Menustrip.mui;2009-06-12
 zune;menu;Menu.mui;2009-06-12
 zune;menuitem;Menuitem.mui;2009-06-12
 zune;application;Application.mui;2009-06-18
-zune;window;Window.mui;2009-06-24
+zune;window;Window.mui;2013-07-09
 zune;aboutmui;Aboutmui.mui;2009-06-25
-zune;area;Area.mui;2009-06-25
+zune;area;Area.mui;2013-09-06
 zune;rectangle;Rectangle.mui;2012-07-10
 zune;balance;Balance.mui;2012-07-10
 zune;image;Image.mui;2012-07-10
-zune;imagedisplay;Imagedisplay.mui;2012-08-23
+zune;imagedisplay;Imagedisplay.mui;2013-07-09
 zune;bitmap;Bitmap.mui;2012-07-10
 zune;bodychunk;Bodychunk.mui;2012-07-10
 zune;text;Text.mui;2012-07-10
@@ -101,7 +101,7 @@ zune;prop;Prop.mui;2012-07-10
 zune;gauge;Gauge.mui;2012-07-10
 zune;scale;Scale.mui;2012-07-10
 zune;colorfield;Colorfield.mui;2012-07-10
-zune;list;List.mui;2012-07-10
+zune;list;List.mui;2013-07-09
 zune;floattext;Floattext.mui;2012-07-10
 zune;volumelist;Volumelist.mui;2012-07-10
 zune;dirlist;Dirlist.mui;2012-07-10
@@ -116,9 +116,9 @@ zune;group;Group.mui;2012-07-11
 zune;register;Register.mui;2012-07-17
 zune;penadjust;Penadjust.mui;2012-07-17
 zune;virtgroup;Virtgroup.mui;2012-07-17
-zune;scrollgroup;Scrollgroup.mui;2012-07-17
+zune;scrollgroup;Scrollgroup.mui;2013-09-20
 zune;scrollbar;Scrollbar.mui;2012-07-17
-zune;listview;Listview.mui;2012-07-17
+zune;listview;Listview.mui;2013-07-09
 zune;radio;Radio.mui;2012-07-17
 zune;cycle;Cycle.mui;2012-07-17
 zune;coloradjust;ColorAdjust.mui;2012-07-17
@@ -2690,7 +2690,7 @@ area;MUIA_Selected;1;1;2
 area;MUIA_ShortHelp;1;1;2
 area;MUIA_ShowMe;1;1;2
 area;MUIA_ShowSelState;1;1;2
-area;MUIA_Timer;1;1;1
+area;MUIA_Timer;1;1;2
 area;MUIA_TopEdge;1;1;2
 area;MUIA_VertDisappear;1;1;0
 area;MUIA_VertWeight;1;1;2
@@ -2721,7 +2721,6 @@ area;MUIM_HandleInput;1;1;1
 area;MUIM_Hide;1;1;2
 area;MUIM_Setup;1;1;2
 area;MUIM_Show;1;1;2
-area;MUIM_;1;1;2
 rectangle;MUIA_Rectangle_BarTitle;1;1;2
 rectangle;MUIA_Rectangle_HBar;1;1;2
 rectangle;MUIA_Rectangle_VBar;1;1;2
@@ -2939,9 +2938,9 @@ virtgroup;MUIA_Virtgroup_Width;1;1;0
 scrollgroup;MUIA_Scrollgroup_Contents;1;1;2
 scrollgroup;MUIA_Scrollgroup_FreeHoriz;1;1;0
 scrollgroup;MUIA_Scrollgroup_FreeVert;1;1;0
-scrollgroup;MUIA_Scrollgroup_HorizBar;1;1;0
+scrollgroup;MUIA_Scrollgroup_HorizBar;1;1;2
 scrollgroup;MUIA_Scrollgroup_UseWinBorder;1;1;2
-scrollgroup;MUIA_Scrollgroup_VertBar;1;1;0
+scrollgroup;MUIA_Scrollgroup_VertBar;1;1;2
 scrollbar;MUIA_Scrollbar_Type;1;1;2
 listview;MUIA_Listview_ClickColumn;1;1;2
 listview;MUIA_Listview_DefClickColumn;1;1;0

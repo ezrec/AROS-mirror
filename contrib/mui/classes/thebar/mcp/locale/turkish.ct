@@ -1,4 +1,4 @@
-## version $VER: TheBar_mcp.catalog 26.7 (31.10.2010)
+## version $VER: TheBar_mcp.catalog 26.8 (28.8.2012)
 ## language türkçe
 ## codeset 0
 ;
@@ -734,24 +734,6 @@ Msg_SpacersSize_TwoPoint
 Ýki piksel
 ; Two points
 ;
-;
-Msg_Info_First
-%s\n\
-Yayýn hakký (c) 2003-2008 Alfonso Ranieri\n\
-ve TheBar Açýk Kaynak Takýmý
-; %s\n\
-; Copyright (c) 2003-2008 Alfonso Ranieri\n\
-; and TheBar Open Source Team
-;
-Msg_Info_Reserved
-LGPL2 kurallarý altýnda daðýtýlabilir.
-; Distributed under the terms of the LGPL2.
-;
-Msg_Info_Rest
-Güncel sürümler için lütfen ziyaret edin:\n\
-http://www.sourceforge.net/projects/thebar
-; For recent versions and updates visit:\n\
-; http://www.sourceforge.net/projects/thebar
 ;
 Msg_Info_Translator
 Türkçe Çeviri : Alper Sönmez

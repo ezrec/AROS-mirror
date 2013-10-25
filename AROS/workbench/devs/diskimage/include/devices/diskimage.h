@@ -105,7 +105,7 @@ struct PluginData {
 	struct Library *UtilityBase;
 	struct DIPluginIFace *IPlugin;
 #ifdef __AROS__
-	struct Library *aroscbase;
+	struct Library *StdCBase;
 #endif
 };
 
@@ -141,7 +141,15 @@ struct DiskImagePluginTable plugin_table = { \
 };
 #endif
 
+#ifdef __GNUC__
+#define PLUGIN_NODE(pri,name) { .ln_Name = name, .ln_Pri = pri }
+#else
+#if defined(__AROS__) && defined(AROS_FLAVOUR) && !(AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT)
+#define PLUGIN_NODE(pri,name) { NULL, NULL, name, 0, pri }
+#else
 #define PLUGIN_NODE(pri,name) { NULL, NULL, 0, pri, name }
+#endif
+#endif
 
 #ifdef USED_PLUGIN_API_VERSION
 #if (USED_PLUGIN_API_VERSION < MIN_PLUGIN_API_VERSION) || (USED_PLUGIN_API_VERSION > MAX_PLUGIN_API_VERSION)

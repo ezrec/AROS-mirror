@@ -61,8 +61,6 @@ Object * DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...)
   AROS_SLOWSTACKTAGS_POST
 }
 #elif defined(__MORPHOS__)
-
-#else
 Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
 {
   Object *rc;

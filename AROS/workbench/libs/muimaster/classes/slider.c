@@ -33,19 +33,18 @@ struct MUI_SliderData
     ULONG flags;
     struct MUI_EventHandlerNode ehn;
     struct MUI_ImageSpec_intern *knob_bg;
-    LONG knob_offset;           /* current pixel offset for fine alignment */
+    LONG knob_offset;
+    LONG scale_length;
+    LONG knob_length;
     LONG knob_left;
     LONG knob_top;
     LONG knob_width;
     LONG knob_height;
     LONG knob_click;
-    LONG last_val;
-    LONG max_text_width;
-    LONG state;                 /* When using mouse */
-    int keep_knob_offset;
-
-    int same_knob_value;        /* 1 if the knob value didn't change
-                                 * since last call of MUIM_Draw */
+    UWORD max_text_width;
+    CONST_STRPTR text_buffer;
+    UWORD text_width;
+    UWORD text_length;
 };
 
 
@@ -53,6 +52,8 @@ enum slider_flags
 {
     SLIDER_HORIZ = (1 << 0),
     SLIDER_QUIET = (1 << 1),
+    SLIDER_VALIDOFFSET = (1 << 2),
+    SLIDER_VALIDSTRING = (1 << 3),
 };
 
 #define longget(obj,attr,var)             \
@@ -63,14 +64,64 @@ enum slider_flags
         *var = (LONG)_iptr_var;     \
     } while(0)
 
-/*
-Slider.mui/MUIA_Slider_Horiz
-Slider.mui/MUIA_Slider_Level
-Slider.mui/MUIA_Slider_Max
-Slider.mui/MUIA_Slider_Min
-Slider.mui/MUIA_Slider_Quiet
-Slider.mui/MUIA_Slider_Reverse      d
-*/
+
+static void CalcKnobDimensions(struct IClass *cl, Object *obj)
+{
+    struct MUI_SliderData *data = INST_DATA(cl, obj);
+    const struct ZuneFrameGfx *knob_frame;
+    LONG min = 0;
+    LONG max = 0;
+    LONG val;
+    LONG width;
+    struct RastPort rp;
+
+    knob_frame =
+        zune_zframe_get(obj,
+        &muiGlobalInfo(obj)->mgi_Prefs->frames[MUIV_Frame_Knob]);
+
+    InitRastPort(&rp);
+    SetFont(&rp, _font(obj));
+
+    width = 0;
+
+    longget(obj, MUIA_Numeric_Min, &min);
+    longget(obj, MUIA_Numeric_Max, &max);
+
+    if ((max - min) > MUI_MAXMAX)
+    {
+        min = 0;
+        max = MUI_MAXMAX;
+    }
+
+    /* Determine the width of the knob */
+    for (val = min; val <= max; val++)
+    {
+        LONG nw;
+        char *buf;
+
+        buf = (char *)DoMethod(obj, MUIM_Numeric_Stringify, val);
+        nw = TextLength(&rp, buf, strlen(buf));
+        if (nw > width)
+            width = nw;
+    }
+    data->max_text_width = width;
+    data->knob_width = width +
+        knob_frame->ileft +
+        knob_frame->iright +
+        muiGlobalInfo(obj)->mgi_Prefs->frames[MUIV_Frame_Knob].innerLeft +
+        muiGlobalInfo(obj)->mgi_Prefs->frames[MUIV_Frame_Knob].innerRight;
+
+    data->knob_height = _font(obj)->tf_YSize +
+        knob_frame->itop +
+        knob_frame->ibottom +
+        muiGlobalInfo(obj)->mgi_Prefs->frames[MUIV_Frame_Knob].innerTop +
+        muiGlobalInfo(obj)->mgi_Prefs->frames[MUIV_Frame_Knob].innerBottom;
+
+    if (data->flags & SLIDER_HORIZ)
+        data->knob_length = data->knob_width;
+    else
+        data->knob_length = data->knob_height;
+}
 
 /**************************************************************************
  OM_NEW
@@ -85,7 +136,6 @@ IPTR Slider__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
     {
         switch (tag->ti_Tag)
         {
-        case MUIA_Group_Horiz:
         case MUIA_Slider_Horiz:
             _handle_bool_tag(flags, tag->ti_Data, SLIDER_HORIZ);
             break;
@@ -135,15 +185,39 @@ IPTR Slider__OM_SET(struct IClass *cl, Object *obj, struct opSet *msg)
     {
         switch (tag->ti_Tag)
         {
+        case MUIA_Slider_Horiz:
+            _handle_bool_tag(data->flags, tag->ti_Data, SLIDER_HORIZ);
+            CalcKnobDimensions(cl, obj);
+            data->flags &= ~(SLIDER_VALIDOFFSET | SLIDER_VALIDSTRING);
+            MUI_Redraw(obj, MADF_DRAWOBJECT);
+            break;
         case MUIA_Numeric_Value:
-            if (!data->keep_knob_offset)
-            {
-                /* reset the offset */
-                data->knob_offset = 0;
-            }
+        case MUIA_Numeric_Min:
+        case MUIA_Numeric_Max:
+        case MUIA_Numeric_Format:
+            /* reset the knob position and string */
+            data->flags &= ~(SLIDER_VALIDOFFSET | SLIDER_VALIDSTRING);
             break;
         }
     }
+    return DoSuperMethodA(cl, obj, (Msg) msg);
+}
+
+/**************************************************************************
+ OM_GET
+**************************************************************************/
+IPTR Slider__OM_GET(struct IClass *cl, Object *obj, struct opGet *msg)
+{
+    struct MUI_SliderData *data = INST_DATA(cl, obj);
+    IPTR *store = msg->opg_Storage;
+
+    switch (msg->opg_AttrID)
+    {
+    case MUIA_Slider_Horiz:
+        *store = ((data->flags & SLIDER_HORIZ) != 0);
+        return TRUE;
+    }
+
     return DoSuperMethodA(cl, obj, (Msg) msg);
 }
 
@@ -164,48 +238,9 @@ IPTR Slider__MUIM_Setup(struct IClass *cl, Object *obj,
     if (!DoSuperMethodA(cl, obj, (Msg) msg))
         return FALSE;
 
-    knob_frame =
-        zune_zframe_get(obj,
-        &muiGlobalInfo(obj)->mgi_Prefs->frames[MUIV_Frame_Knob]);
     data->knob_bg = zune_imspec_setup(MUII_SliderKnob, muiRenderInfo(obj));
 
-    InitRastPort(&rp);
-    SetFont(&rp, _font(obj));
-
-    width = 0;
-
-    longget(obj, MUIA_Numeric_Min, &min);
-    longget(obj, MUIA_Numeric_Max, &max);
-
-    if ((max - min) > MUI_MAXMAX)
-    {
-        min = 0;
-        max = MUI_MAXMAX;
-    }
-
-    /* Determine the width of the knob */
-    for (val = min; val <= max; val++)
-    {
-        LONG nw;
-        char *buf;
-
-        buf = (char *)DoMethod(obj, MUIM_Numeric_Stringify, val);
-        nw = TextLength(&rp, buf, strlen(buf));
-        if (nw > width)
-            width = nw;
-    }
-    data->max_text_width = width;
-    data->knob_width = width +
-        knob_frame->ileft +
-        knob_frame->iright +
-        muiGlobalInfo(obj)->mgi_Prefs->frames[MUIV_Frame_Knob].innerLeft +
-        muiGlobalInfo(obj)->mgi_Prefs->frames[MUIV_Frame_Knob].innerRight;
-
-    data->knob_height = _font(obj)->tf_YSize +
-        knob_frame->itop +
-        knob_frame->ibottom +
-        muiGlobalInfo(obj)->mgi_Prefs->frames[MUIV_Frame_Knob].innerTop +
-        muiGlobalInfo(obj)->mgi_Prefs->frames[MUIV_Frame_Knob].innerBottom;
+    CalcKnobDimensions(cl, obj);
 
     DoMethod(_win(obj), MUIM_Window_AddEventHandler, (IPTR) & data->ehn);
 
@@ -226,6 +261,7 @@ IPTR Slider__MUIM_Cleanup(struct IClass *cl, Object *obj,
         data->knob_bg = NULL;
     }
     DoMethod(_win(obj), MUIM_Window_RemEventHandler, (IPTR) & data->ehn);
+
     return DoSuperMethodA(cl, obj, (Msg) msg);
 }
 
@@ -291,8 +327,8 @@ IPTR Slider__MUIM_Hide(struct IClass *cl, Object *obj,
         zune_imspec_hide(data->knob_bg);
 
     /* This may look ugly when window is resized but it is easier than
-     * recalculating the knob offset in Slider_Show */
-    data->knob_offset = 0;
+     * recalculating the knob offset in the Show method */
+    data->flags &= ~SLIDER_VALIDOFFSET;
 
     return DoSuperMethodA(cl, obj, (Msg) msg);
 }
@@ -306,10 +342,8 @@ IPTR Slider__MUIM_Draw(struct IClass *cl, Object *obj,
 {
     struct MUI_SliderData *data = INST_DATA(cl, obj);
     const struct ZuneFrameGfx *knob_frame;
-    int knob_frame_state;
+    UWORD knob_frame_state;
     LONG val = 0;
-    char *buf;
-    int width;
 
     DoSuperMethodA(cl, obj, (Msg) msg);
 
@@ -317,37 +351,29 @@ IPTR Slider__MUIM_Draw(struct IClass *cl, Object *obj,
         return FALSE;
 
     if (data->flags & SLIDER_HORIZ)
+        data->scale_length = _mwidth(obj);
+    else
+        data->scale_length = _mheight(obj);
+    data->scale_length -= data->knob_length;
+
+    /* Update knob position if not cached */
+    if (!(data->flags & SLIDER_VALIDOFFSET))
+    {
+        data->knob_offset =
+            DoMethod(obj, MUIM_Numeric_ValueToScale, 0,
+                data->scale_length);
+        data->flags |= SLIDER_VALIDOFFSET;
+    }
+
+    if (data->flags & SLIDER_HORIZ)
     {
         data->knob_top = _mtop(obj);
-        data->knob_left =
-            DoSuperMethod(cl, obj, MUIM_Numeric_ValueToScale, 0,
-            _mwidth(obj) - data->knob_width) + data->knob_offset +
-            _mleft(obj);
-
-        if (data->knob_left < _mleft(obj))
-            data->knob_left = _mleft(obj);
-        else
-        {
-            if (data->knob_left + data->knob_width > _mright(obj))
-                data->knob_left = _mright(obj) - data->knob_width;
-        }
+        data->knob_left = _mleft(obj) + data->knob_offset;
     }
     else
     {
-        data->knob_top =
-            (_mheight(obj) - data->knob_height - DoSuperMethod(cl, obj,
-                MUIM_Numeric_ValueToScale, 0,
-                _mheight(obj) - data->knob_height)) + data->knob_offset +
-            _mtop(obj);
+        data->knob_top = _mtop(obj) + data->knob_offset;
         data->knob_left = _mleft(obj);
-
-        if (data->knob_top < _mtop(obj))
-            data->knob_top = _mtop(obj);
-        else
-        {
-            if (data->knob_top + data->knob_height > _mbottom(obj))
-                data->knob_top = _mbottom(obj) - data->knob_height;
-        }
     }
 
     DoMethod(obj, MUIM_DrawBackground, _mleft(obj), _mtop(obj),
@@ -359,7 +385,7 @@ IPTR Slider__MUIM_Draw(struct IClass *cl, Object *obj,
 
     knob_frame_state =
         muiGlobalInfo(obj)->mgi_Prefs->frames[MUIV_Frame_Knob].state;
-    if (data->state)
+    if (XGET(obj, MUIA_Pressed))
         knob_frame_state ^= 1;
     knob_frame = zune_zframe_get_with_state(obj,
         &muiGlobalInfo(obj)->mgi_Prefs->frames[MUIV_Frame_Knob],
@@ -374,21 +400,26 @@ IPTR Slider__MUIM_Draw(struct IClass *cl, Object *obj,
         SetFont(_rp(obj), _font(obj));
         SetABPenDrMd(_rp(obj), _pens(obj)[MPEN_TEXT],
             _pens(obj)[MPEN_BACKGROUND], JAM1);
-        longget(obj, MUIA_Numeric_Value, &val);
-        buf = (char *)DoMethod(obj, MUIM_Numeric_Stringify, val);
-        width = TextLength(_rp(obj), buf, strlen(buf));
+        if (!(data->flags & SLIDER_VALIDSTRING))
+        {
+            longget(obj, MUIA_Numeric_Value, &val);
+            data->text_buffer = (CONST_STRPTR) DoMethod(obj,
+                MUIM_Numeric_Stringify, val);
+            data->text_length = strlen(data->text_buffer);
+            data->text_width =
+                TextLength(_rp(obj), data->text_buffer, data->text_length);
+            data->flags |= SLIDER_VALIDSTRING;
+        }
 
         Move(_rp(obj),
             data->knob_left + knob_frame->ileft +
-            muiGlobalInfo(obj)->mgi_Prefs->frames[MUIV_Frame_Knob].
-            innerLeft + (data->max_text_width - width) / 2,
+            muiGlobalInfo(obj)->mgi_Prefs->frames[MUIV_Frame_Knob].innerLeft +
+            (data->max_text_width - data->text_width) / 2,
             data->knob_top + _font(obj)->tf_Baseline + knob_frame->itop +
-            muiGlobalInfo(obj)->mgi_Prefs->frames[MUIV_Frame_Knob].
-            innerTop);
-        Text(_rp(obj), buf, strlen(buf));
+            muiGlobalInfo(obj)->mgi_Prefs->frames[MUIV_Frame_Knob].innerTop);
+        Text(_rp(obj), data->text_buffer, data->text_length);
     }
 
-    data->same_knob_value = 0;
     return TRUE;
 }
 
@@ -399,6 +430,7 @@ IPTR Slider__MUIM_HandleEvent(struct IClass *cl, Object *obj,
     struct MUIP_HandleEvent *msg)
 {
     struct MUI_SliderData *data = INST_DATA(cl, obj);
+    BOOL increase;
 
     if (!msg->imsg)
         return 0;
@@ -407,22 +439,19 @@ IPTR Slider__MUIM_HandleEvent(struct IClass *cl, Object *obj,
     case IDCMP_MOUSEBUTTONS:
         if (msg->imsg->Code == SELECTDOWN)
         {
-            if (_isinobject(obj, msg->imsg->MouseX, msg->imsg->MouseY))
+            if (_isinobject(obj, msg->imsg->MouseX, msg->imsg->MouseY)
+                && (msg->imsg->Qualifier
+                & (IEQUALIFIER_LSHIFT | IEQUALIFIER_RSHIFT)) == 0)
             {
                 if (data->flags & SLIDER_HORIZ)
                 {
                     data->knob_click =
-                        msg->imsg->MouseX - data->knob_left + _mleft(obj);
+                        msg->imsg->MouseX - data->knob_offset - _mleft(obj);
                 }
                 else
                 {
                     data->knob_click =
-                        msg->imsg->MouseY - data->knob_top + _mtop(obj);
-                    D(bug("%p: Y=%ld, mtop=%ld mheight=%ld ktop=%ld "
-                        "kheight=%ld knob_click=%ld\n",
-                        obj, msg->imsg->MouseY, _mtop(obj),
-                        _mheight(obj), data->knob_top,
-                        data->knob_height, data->knob_click));
+                        msg->imsg->MouseY - data->knob_offset - _mtop(obj);
                 }
 
                 if (_between(data->knob_left, msg->imsg->MouseX,
@@ -430,38 +459,41 @@ IPTR Slider__MUIM_HandleEvent(struct IClass *cl, Object *obj,
                     && _between(data->knob_top, msg->imsg->MouseY,
                         data->knob_top + data->knob_height))
                 {
+                    /* Clicked on knob */
                     DoMethod(_win(obj), MUIM_Window_RemEventHandler,
                         (IPTR) & data->ehn);
                     data->ehn.ehn_Events |= IDCMP_MOUSEMOVE;
                     DoMethod(_win(obj), MUIM_Window_AddEventHandler,
                         (IPTR) & data->ehn);
-                    data->state = 1;
+                    set(obj, MUIA_Pressed, TRUE);
                     MUI_Redraw(obj, MADF_DRAWUPDATE);
                 }
-                else if (((data->flags & SLIDER_HORIZ)
-                        && msg->imsg->MouseX < data->knob_left)
-                    || (!(data->flags & SLIDER_HORIZ)
-                        && msg->imsg->MouseY >
-                        data->knob_top + data->knob_height))
+                else 
                 {
-                    DoSuperMethod(cl, obj, MUIM_Numeric_Decrease, 1);
-                }
-                else
-                {
-                    DoSuperMethod(cl, obj, MUIM_Numeric_Increase, 1);
+                    /* Clicked on background */
+                    if (data->flags & SLIDER_HORIZ)
+                        increase = msg->imsg->MouseX > data->knob_left;
+                    else
+                        increase = msg->imsg->MouseY > data->knob_top;
+
+                    if (XGET(obj, MUIA_Numeric_Reverse))
+                        increase = !increase;
+                    
+                    DoMethod(obj, increase ?
+                        MUIM_Numeric_Increase : MUIM_Numeric_Decrease, 1);
                 }
             }
         }
         else
         {
-            if (data->state)
+            if (XGET(obj, MUIA_Pressed))
             {
                 DoMethod(_win(obj), MUIM_Window_RemEventHandler,
                     (IPTR) & data->ehn);
                 data->ehn.ehn_Events &= ~IDCMP_MOUSEMOVE;
                 DoMethod(_win(obj), MUIM_Window_AddEventHandler,
                     (IPTR) & data->ehn);
-                data->state = 0;
+                set(obj, MUIA_Pressed, FALSE);
                 MUI_Redraw(obj, MADF_DRAWUPDATE);
             }
         }
@@ -471,57 +503,38 @@ IPTR Slider__MUIM_HandleEvent(struct IClass *cl, Object *obj,
         {
             IPTR oldval = 0;
             LONG newval;
-            LONG pixel;
-            LONG oldko = data->knob_offset;
+            LONG old_offset = data->knob_offset;
 
             if (data->flags & SLIDER_HORIZ)
-            {
-                newval = DoSuperMethod(cl, obj, MUIM_Numeric_ScaleToValue,
-                    0, _mwidth(obj) - data->knob_width,
-                    msg->imsg->MouseX - data->knob_click);
-
-                pixel =
-                    DoSuperMethod(cl, obj, MUIM_Numeric_ValueToScaleExt,
-                    newval, 0,
-                    _mwidth(obj) - data->knob_width) + data->knob_click;
-                data->knob_offset = msg->imsg->MouseX - pixel;
-                data->keep_knob_offset = 1;
-//                D(bug("%ld %ld %ld %ld %ld\n", data->knob_offset, pixel,
-//                    msg->imsg->MouseX, _mleft(obj), data->knob_click));
-            }
+                data->knob_offset =
+                    msg->imsg->MouseX - data->knob_click - _mleft(obj);
             else
-            {
-                LONG scale;
+                data->knob_offset =
+                    msg->imsg->MouseY - data->knob_click - _mtop(obj);
 
-                scale =
-                    _mheight(obj) - data->knob_height + data->knob_click -
-                    msg->imsg->MouseY;
-                newval =
-                    DoSuperMethod(cl, obj, MUIM_Numeric_ScaleToValue, 0,
-                    _mheight(obj) - data->knob_height, scale);
-                pixel =
-                    (_mheight(obj) - data->knob_height - DoSuperMethod(cl,
-                        obj, MUIM_Numeric_ValueToScaleExt, newval, 0,
-                        _mheight(obj) - data->knob_height)) +
-                    data->knob_click;
-                data->knob_offset = msg->imsg->MouseY - pixel;
-                data->keep_knob_offset = 1;
-//                D(bug("%0lx: Y=%ld scale=%ld val=%ld pixel: %ld koff: %ld\n",
-//                    obj, msg->imsg->MouseY, scale, newval, pixel,
-//                    data->knob_offset));
-            }
+            /* Ensure knob offset is within range */
+            if (data->knob_offset < 0)
+                data->knob_offset = 0;
+            else if (data->knob_offset > data->scale_length)
+                data->knob_offset = data->scale_length;
 
-            get(obj, MUIA_Numeric_Value, &oldval);
-            if ((LONG) oldval != newval)
+            newval = DoMethod(obj, MUIM_Numeric_ScaleToValue,
+                0, data->scale_length, data->knob_offset);
+
+            if (data->knob_offset != old_offset)
             {
-                set(obj, MUIA_Numeric_Value, newval);
+                get(obj, MUIA_Numeric_Value, &oldval);
+                if ((LONG) oldval != newval)
+                {
+                    /* Bypass our own set method so that knob position is not
+                     * reset */
+                    data->flags &= ~SLIDER_VALIDSTRING;
+                    IPTR tag_list[] = {MUIA_Numeric_Value, newval, TAG_END};
+                    DoSuperMethod(cl, obj, OM_SET, tag_list, NULL);
+                }
+                else
+                    MUI_Redraw(obj, MADF_DRAWUPDATE);
             }
-            else if (oldko != data->knob_offset)
-            {
-                data->same_knob_value = 1;
-                MUI_Redraw(obj, MADF_DRAWUPDATE);
-            }
-            data->keep_knob_offset = 0;
         }
         break;
     }
@@ -537,6 +550,8 @@ BOOPSI_DISPATCHER(IPTR, Slider_Dispatcher, cl, obj, msg)
         return Slider__OM_NEW(cl, obj, (struct opSet *)msg);
     case OM_SET:
         return Slider__OM_SET(cl, obj, (struct opSet *)msg);
+    case OM_GET:
+        return Slider__OM_GET(cl, obj, (struct opGet *)msg);
     case MUIM_Setup:
         return Slider__MUIM_Setup(cl, obj, (APTR) msg);
     case MUIM_Cleanup:

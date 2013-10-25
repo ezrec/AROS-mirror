@@ -1,0 +1,13 @@
+diff -ruN gmp-5.1.2/gmp-h.in gmp-5.1.2.aros/gmp-h.in
+--- gmp-5.1.2/gmp-h.in	2013-05-20 16:59:56.000000000 +0200
++++ gmp-5.1.2.aros/gmp-h.in	2013-08-13 00:07:44.378523137 +0200
+@@ -264,7 +264,8 @@
+   || defined (_MSL_STDIO_H)           /* Metrowerks */          \
+   || defined (_STDIO_H_INCLUDED)      /* QNX4 */		\
+   || defined (_ISO_STDIO_ISO_H)       /* Sun C++ */		\
+-  || defined (__STDIO_LOADED)         /* VMS */
++  || defined (__STDIO_LOADED)         /* VMS */                 \
++  || defined (_STDC_STDIO_H_)         /* AROS */
+ #define _GMP_H_HAVE_FILE 1
+ #endif
+ 

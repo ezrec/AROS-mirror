@@ -209,6 +209,7 @@ INCLUDEFILES := \
     SDL_video.h
 
 #MM- SDL-aros-includes : contrib-sdl-sdl-main-fetch SDL_main-aros-includes
+#MM SDL_main-aros-includes : libiconv-includes
 
 STAMPFILE := $(GENDIR)/$(CURDIR)/.copy_stamp
 

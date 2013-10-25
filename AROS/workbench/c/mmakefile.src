@@ -75,7 +75,7 @@ SH_FILES := \
     SetKeyboard \
     WaitX
 
-USER_CFLAGS     := -DADATE="\"$(shell date "+%d.%m.%Y")\""
+USER_CFLAGS     := -DADATE="\"$(shell date "+%d.%m.%Y")\"" -I$(OBJDIR)
 
 #MM- workbench : workbench-c
 #MM- workbench-quick : workbench-c-quick
@@ -83,7 +83,7 @@ USER_CFLAGS     := -DADATE="\"$(shell date "+%d.%m.%Y")\""
 #MM workbench-c : includes linklibs workbench-c-sh workbench-c-requeststring workbench-libs-uuid
 #MM workbench-c-quick : workbench-c-sh-quick workbench-c-requeststring-quick
 
-USER_LDFLAGS := -noarosc
+USER_LDFLAGS := -nostdc
 
 %build_progs mmake=workbench-c \
     files=$(FILES) targetdir=$(AROS_C) \
@@ -102,11 +102,5 @@ $(OBJDIR)/evalParser.tab.c : evalParser.y
 	@$(ECHO) Generating $(notdir $@) from $<...
 	@$(BISON) -o $@ $<
 
-$(OBJDIR)/Eval.o : $(OBJDIR)/evalParser.tab.c $(SRCDIR)/$(CURDIR)/Eval.c
-	%compile_q from=$(SRCDIR)/$(CURDIR)/Eval.c opt="$(CFLAGS) -I$(OBJDIR)"
+$(OBJDIR)/Eval.o : $(OBJDIR)/evalParser.tab.c
 
-$(OBJDIR)/Load.o : $(OBJDIR)/Eject.o
-	@$(ECHO) "Copying    $< to $@"
-	@$(CP) $< $@
-
-%common

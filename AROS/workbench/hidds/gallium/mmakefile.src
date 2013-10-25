@@ -1,0 +1,20 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+INCLUDE_FILES := $(call WILDCARD, include/*.h)
+
+FILES := galliumclass init
+
+#MM includes-copy
+%copy_includes path=hidd dir=include
+
+#MM- workbench-hidds: hidd-gallium
+#MM hidd-gallium : includes
+
+USER_INCLUDES := \
+            -I$(AROS_DEVELOPMENT)/include/gallium \
+
+%build_module mmake=hidd-gallium modname=gallium modtype=hidd \
+    files="$(FILES)"
+    
+%common

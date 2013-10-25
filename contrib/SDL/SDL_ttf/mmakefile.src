@@ -13,7 +13,7 @@ HEADERS:=SDL_ttf.h
 
 #MM development-SDL_ttf-test : development-SDL_ttf
 
-#MM development-SDL_ttf : workbench-libs-freetype-linklib
+#MM development-SDL_ttf : SDL-aros-lib workbench-libs-freetype-linklib
 
 %build_prog mmake=development-SDL_ttf-test progname=sdl_ttf_showfont files=$(FILES) \
     targetdir=$(AROS_TESTS) uselibs="SDL GL iconv SDL_ttf freetype2"

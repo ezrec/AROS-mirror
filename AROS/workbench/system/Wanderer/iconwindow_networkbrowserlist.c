@@ -1,5 +1,5 @@
 /*
-  Copyright  2004-2009, The AROS Development Team. All rights reserved.
+  Copyright  2004-2013, The AROS Development Team. All rights reserved.
   $Id$
 */
 
@@ -136,7 +136,6 @@ struct IconWindowIconVolumeList_DATA
 
     IPTR                        iwvcd_ShowNetworkBrowser;
     IPTR                        iwvcd_ShowUserFolder;
-    char                        *iwvcd_UserFolderPath;
 };
 
 struct IconWindowIconNetworkBrowserList_DATA
@@ -573,7 +572,7 @@ BOOL IconWindowIconList__Func_ParseBackdrop(Class *CLASS, Object *self, char *bd
                         if (bdrp_currfile_dob)
                         {
                             struct IconEntry *this_entry = NULL;
-                            if ((this_entry = (struct IconEntry *)DoMethod(self, MUIM_IconList_CreateEntry, (IPTR)bdrp_fullfile, (IPTR)bdrp_namepart, (IPTR)NULL, (IPTR)bdrp_currfile_dob, 0)))
+                            if ((this_entry = (struct IconEntry *)DoMethod(self, MUIM_IconList_CreateEntry, (IPTR)bdrp_fullfile, (IPTR)bdrp_namepart, (IPTR)NULL, (IPTR)bdrp_currfile_dob, 0, (IPTR)NULL)))
                             {
                                 struct FileInfoBlock *fib = AllocDosObject(DOS_FIB, NULL);
                                 if (fib)
@@ -605,6 +604,7 @@ BOOL IconWindowIconList__Func_ParseBackdrop(Class *CLASS, Object *self, char *bd
                                 retVal = TRUE;
                             }
                         }
+                        FreeVec(bdrp_fullfile);
                     }
                 }
                 FreeMem(linebuf, BDRPLINELEN_MAX);
@@ -1212,7 +1212,7 @@ IPTR IconWindowIconList__MUIM_IconList_Update
                 if (_nb_dob)
                 {
                     struct Node *this_entry = NULL;
-                    if ((this_entry = (struct Node *)DoMethod(self, MUIM_IconList_CreateEntry, (IPTR)"?wanderer.networkbrowse?", (IPTR)"Network Access..", (IPTR)NULL, (IPTR)_nb_dob, 0)))
+                    if ((this_entry = (struct Node *)DoMethod(self, MUIM_IconList_CreateEntry, (IPTR)"?wanderer.networkbrowse?", (IPTR)"Network Access..", (IPTR)NULL, (IPTR)_nb_dob, 0, (IPTR)NULL)))
                     {
                         this_entry->ln_Pri = 3;   /// Network Access gets Priority 3 so its displayed after special dirs
                         sort_list = TRUE;
@@ -1238,8 +1238,6 @@ IPTR IconWindowIconList__MUIM_IconList_Update
                     {
                         struct DiskObject    *_nb_dob = NULL;
 
-                        volumel_data->iwvcd_UserFolderPath = userfiles_path;
-
                         D(bug("[IconWindowIconList] IconWindowIconList__MUIM_IconList_Update: UserFilesLocation Path storage @ 0x%p\n", userfiles_path));
 
                         strcpy(userfiles_path, __icwc_intern_TxtBuff);
@@ -1259,7 +1257,7 @@ IPTR IconWindowIconList__MUIM_IconList_Update
                         if (_nb_dob)
                         {
                             struct Node *this_entry = NULL;
-                            if ((this_entry = (struct Node *)DoMethod(self, MUIM_IconList_CreateEntry, userfiles_path, (IPTR)"User Files..", (IPTR)NULL, (IPTR)_nb_dob, 0)))
+                            if ((this_entry = (struct Node *)DoMethod(self, MUIM_IconList_CreateEntry, userfiles_path, (IPTR)"User Files..", (IPTR)NULL, (IPTR)_nb_dob, 0, (IPTR)NULL)))
                             {
                                 this_entry->ln_Pri = 5;   /// Special dirs get Priority 5
                                 sort_list = TRUE;

@@ -14,7 +14,7 @@ include $(TOP)/config/make.cfg
 #MM     AROS-sam440-ppc
 
 #MM kernel-package-sam440-ppc: \
-#MM     linklibs-clib \
+#MM     linklibs-rom \
 #MM     kernel-expansion \
 #MM     kernel-utility \
 #MM     kernel-oop \
@@ -23,9 +23,9 @@ include $(TOP)/config/make.cfg
 #MM     kernel-aros \
 #MM     kernel-misc \
 #MM     kernel-timer \
-#MM     kernel-pci \
-#MM     kernel-pci-amcc440 \
-#MM     kernel-pci-amcc460 \
+#MM     kernel-hidd-pci \
+#MM     kernel-hidd-pci-amcc440 \
+#MM     kernel-hidd-pci-amcc460 \
 #MM     kernel-graphics \
 #MM     kernel-layers \
 #MM     kernel-keymap \
@@ -77,7 +77,7 @@ $(BINDIR)/boot/aros-amcc440: $(KOBJSDIR)/kernel_resource.o $(KOBJSDIR)/exec_libr
 	@$(ECHO) "Linking    boot/aros-amcc440"
 	$(TARGET_CC) -nostartfiles -Wl,-Map -Wl,$(OSGENDIR)/boot/kernel.map -Wl,-T -Wl,$(SRCDIR)/$(CURDIR)/ldscript.lds \
         -o $@ $(KOBJSDIR)/kernel_resource.o $(KOBJSDIR)/exec_library.o \
-        -L$(LIBDIR) -larossupport -larosc.static -larosm -lamiga -lautoinit -llibinit -lgcc
+        -L$(LIBDIR) -larossupport -lamiga -lautoinit -llibinit -lstdc.static -lgcc
 
 
 PKG_LIBS     := aros partition expansion utility oop graphics layers intuition keymap workbench dos debug poseidon

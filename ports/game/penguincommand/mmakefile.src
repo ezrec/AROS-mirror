@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-##MM- ports-game : ports-game-penguincommand
+#MM- ports-game : ports-game-penguincommand
 
 #MM- ports-game-penguincommand : contrib-sdl ports-game-penguincommand-drawericon
 

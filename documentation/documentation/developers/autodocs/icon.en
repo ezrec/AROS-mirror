@@ -35,9 +35,9 @@ Function
 ~~~~~~~~
 ::
 
-     Adds supplied memory chunk to the supplied freelist.
-     All memory added in to the freelist can later be deallocated through
-     one single FreeFreeList() call.
+     Adds supplied memory chunk to the supplied freelist. The memory chunk
+     must have been allocated by AllocMem(). All memory added into the
+     freelist can later be deallocated through a single FreeFreeList() call.
 
 
 Inputs
@@ -45,9 +45,9 @@ Inputs
 ::
 
      freelist - pointer to freelist struct previously allocated by
-             the programmer.
+         the programmer.
      mem - memory to add to the freelist.
-     size - size of memory chunk to add to the frelist.
+     size - size of memory chunk to add to the freelist.
 
 
 Result
@@ -531,7 +531,17 @@ Function
 ~~~~~~~~
 ::
 
-     Open icon from disk
+     Opens an icon from disk.
+
+
+Inputs
+~~~~~~
+::
+
+     name - object path (without .info extension). May be NULL when
+         retrieving a default icon.
+     tags - tag list containing tags described below.
+
 
 Tags
 ~~~~
@@ -542,7 +552,8 @@ Tags
              overrides the "name" parameter.
      ICONGETA_GetDefaultName (STRPTR) - Name of default icon to get. This
              overrides the "name" parameter.
-     ICONGETA_FailIfUnavailable (BOOL)
+     ICONGETA_FailIfUnavailable (BOOL) - Find a default icon if there is no
+             specific icon.
      ICONGETA_GetPaletteMappedIcon (BOOL)
      ICONGETA_IsDefaultIcon (LONG *) - Upon completion of this function, the
          referenced LONG will be set to a boolean value indicating whether
@@ -680,8 +691,8 @@ Function
 ~~~~~~~~
 ::
 
-     Create empty diskobject structure.
-     
+     Creates an empty DiskObject structure.
+
 
 Inputs
 ~~~~~~
@@ -689,13 +700,6 @@ Inputs
 
      type - WBDISK, WBDRAWER, WBTOOL, WBPROJECT,
             WBGARBAGE, WBDEVICE or WBKICK
-
-
-Notes
-~~~~~
-::
-
-     Not implemented.
 
 
 

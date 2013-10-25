@@ -231,6 +231,8 @@ IPTR Listview__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
     data->selfnotify_hook.h_Data = data;
     data->noforward = FALSE;
 
+    data->last_active = -1;
+
     data->ehn.ehn_Events = IDCMP_MOUSEBUTTONS | IDCMP_RAWKEY;
     data->ehn.ehn_Priority = 0;
     data->ehn.ehn_Flags = 0;
@@ -426,7 +428,7 @@ IPTR Listview__MUIM_HandleEvent(struct IClass *cl, Object *obj,
     struct MUI_ListviewData *data = INST_DATA(cl, obj);
     Object *list = data->list;
     struct MUI_List_TestPos_Result pos;
-    LONG seltype;
+    LONG seltype, new_active = 0;
     IPTR result = 0;
     BOOL select = FALSE, multiselect = FALSE, clear = FALSE;
 
@@ -444,9 +446,8 @@ IPTR Listview__MUIM_HandleEvent(struct IClass *cl, Object *obj,
                 {
                     data->mouse_click = MOUSE_CLICK_ENTRY;
 
-                    set(list, MUIA_List_Active, pos.entry);
+                    new_active = pos.entry;
 
-                    select = TRUE;
                     clear =
                         data->multiselect == MUIV_Listview_MultiSelect_None
                         || (data->multiselect
@@ -456,6 +457,8 @@ IPTR Listview__MUIM_HandleEvent(struct IClass *cl, Object *obj,
                     seltype = clear ?
                         MUIV_List_Select_On: MUIV_List_Select_Toggle;
                     data->range_select = FALSE;
+                    select = new_active != XGET(list, MUIA_List_Active)
+                        || data->multiselect != MUIV_Listview_MultiSelect_None;
 
                     /* Handle MUIA_Listview_ClickColumn */
                     data->click_column = pos.column;
@@ -497,14 +500,14 @@ IPTR Listview__MUIM_HandleEvent(struct IClass *cl, Object *obj,
                 switch (msg->imsg->Code)
                 {
                 case RAWKEY_UP:
-                    set(list, MUIA_List_Active, MUIV_List_Active_Up);
+                    new_active = MUIV_List_Active_Up;
                     select = clear =
                         data->multiselect == MUIV_Listview_MultiSelect_None;
                     seltype = MUIV_List_Select_On;
                     break;
 
                 case RAWKEY_DOWN:
-                    set(list, MUIA_List_Active, MUIV_List_Active_Down);
+                    new_active = MUIV_List_Active_Down;
                     select = clear =
                         data->multiselect == MUIV_Listview_MultiSelect_None;
                     seltype = MUIV_List_Select_On;
@@ -535,18 +538,19 @@ IPTR Listview__MUIM_HandleEvent(struct IClass *cl, Object *obj,
 
         if (select)
         {
-            multiselect = multiselect ||
-                data->multiselect == MUIV_Listview_MultiSelect_Always
-                || (data->multiselect == MUIV_Listview_MultiSelect_Shifted
-                && (msg->imsg->Qualifier
-                & (IEQUALIFIER_LSHIFT | IEQUALIFIER_RSHIFT)) != 0);
+            multiselect = multiselect
+                || data->multiselect != MUIV_Listview_MultiSelect_None;
 
             if (clear)
             {
-                DoMethod(list, MUIM_List_Select,
-                    MUIV_List_Select_All,
+                DoMethod(list, MUIM_List_Select, multiselect ?
+                    MUIV_List_Select_All : MUIV_List_Select_Active,
                     MUIV_List_Select_Off, NULL);
             }
+
+            if (new_active != XGET(list, MUIA_List_Active))
+                set(list, MUIA_List_Active, new_active);
+
             DoMethod(list, MUIM_List_Select,
                 MUIV_List_Select_Active,
                 seltype, NULL);

@@ -2,7 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2005 Alfonso Ranieri
- Copyright (C) 2005-2009 by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2013 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -41,83 +41,13 @@ Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...)
   Object *rc;
   VA_LIST args;
 
-  ENTER();
-
   VA_START(args, obj);
   rc = (Object *)DoSuperMethod(cl, obj, OM_NEW, VA_ARG(args, ULONG), NULL);
   VA_END(args);
 
-  RETURN(rc);
   return rc;
 }
 #endif
-#endif
-
-#if !defined(__amigaos4__)
-/***********************************************************************/
-
-// own strlcpy/strlcat are only required for classic OS3 compiles and also
-// only when libnix is used. clib2 and the newer libnix of MorphOS already
-// has those functions.
-#if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__) && defined(__libnix__)
-
-size_t
-strlcpy(char *dst, const char *src, size_t siz)
-{
-        char *d = dst;
-        const char *s = src;
-        size_t n = siz;
-
-        /* Copy as many bytes as will fit */
-        if (n != 0) {
-                while (--n != 0) {
-                        if ((*d++ = *s++) == '\0')
-                                break;
-                }
-        }
-
-        /* Not enough room in dst, add NUL and traverse rest of src */
-        if (n == 0) {
-                if (siz != 0)
-                        *d = '\0';                /* NUL-terminate dst */
-                while (*s++)
-                        ;
-        }
-
-        return(s - src - 1);        /* count does not include NUL */
-}
-#endif
-
-#if !defined(__amigaos4__)
-size_t
-strlcat(char *dst, const char *src, size_t siz)
-{
-        char *d = dst;
-        const char *s = src;
-        size_t n = siz;
-        size_t dlen;
-
-        /* Find the end of dst and adjust bytes left but don't go past end */
-        while (n-- != 0 && *d != '\0')
-                d++;
-        dlen = d - dst;
-        n = siz - dlen;
-
-        if (n == 0)
-                return(dlen + strlen(s));
-        while (*s != '\0') {
-                if (n != 1) {
-                        *d++ = *s;
-                        n--;
-                }
-                s++;
-        }
-        *d = '\0';
-
-        return(dlen + (s - src));        /* count does not include NUL */
-}
-#endif
-
 #endif
 
 /***********************************************************************/
@@ -154,57 +84,10 @@ void stripUnderscore(STRPTR dest, STRPTR from, ULONG mode)
 
 /***********************************************************************/
 
-#if !defined(__MORPHOS__) && !defined(__AROS__)
-
-static int stcd_l(const char *in, long *value)
-{
-  ENTER();
-
-  if(in)
-  {
-    char *ptr;
-
-    switch(*in)
-    {
-      case '+':
-      case '-':
-      case '0':
-      case '1':
-      case '2':
-      case '3':
-      case '4':
-      case '5':
-      case '6':
-      case '7':
-      case '8':
-      case '9':
-      {
-        int ret;
-
-        *value = strtol(in, &ptr, 10);
-        ret = ptr-in;
-
-        RETURN(ret);
-        return ret;
-      }
-      break;
-    }
-  }
-
-  *value = 0;
-
-  RETURN(0);
-  return 0;
-}
-
-#endif
-
-/***********************************************************************/
-
-struct TextFont *openFont(STRPTR name)
+struct TextFont *openFont(const char *name)
 {
   char buf[256];
-  STRPTR t, s;
+  char *t;
   struct TextAttr ta;
   long ys;
   struct TextFont *font;
@@ -215,19 +98,19 @@ struct TextFont *openFont(STRPTR name)
 
   SHOWSTRING(DBF_GUI, buf);
 
-  if((t = strchr(buf,'/')) != NULL)
+  // determine the font size
+  if((t = strchr(buf, '/')) != NULL)
   {
-    *t++ = 0;
-    if(!stcd_l(t,&ys) || ys<=0)
+    *t++ = '\0';
+    ys = strtol(t, NULL, 10);
+    if(ys <= 0)
       ys = 8;
   }
   else
     ys = 8;
 
-  for(s = NULL, t = buf; *t; t++)
-    if(*t == '.')
-      s = t;
-  if(s == NULL || stricmp(++s, "font"))
+  // append ".font" if it is missing
+  if(strstr(buf, ".font") == NULL)
     strlcat(buf, ".font", sizeof(buf));
 
   SHOWSTRING(DBF_GUI, buf);
@@ -262,6 +145,7 @@ BOOL CreateSharedPool(void)
                                                 ASOPOOL_Threshold, 1024,
                                                 ASOPOOL_Name, "TheButton.mcc shared pool",
                                                 ASOPOOL_Protected, TRUE,
+                                                ASOPOOL_LockMem, FALSE,
                                                 TAG_DONE);
   #elif defined(__MORPHOS__)
   sharedPool = CreatePool(MEMF_SEM_PROTECTED, 2048, 1024);

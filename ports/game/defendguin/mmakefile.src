@@ -36,7 +36,7 @@ FILES := $(PORTSDIR)/defendguin/$(ARCHBASE)/src/defendguin
 ICONS := Defendguin
 
 %build_icons mmake=ports-game-defendguin-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)
+	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %copy_dir_recursive mmake=ports-game-defendguin-data src=$(PORTSDIR)/defendguin/$(ARCHBASE)/data \
 dst=$(TARGETDIR)/data

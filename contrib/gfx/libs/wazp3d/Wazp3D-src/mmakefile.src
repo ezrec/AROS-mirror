@@ -14,7 +14,7 @@ USER_CFLAGS := -Wno-implicit-function-declaration \
 FILES := Wazp3D soft3d_opengl
 
 %build_module mmake=contrib-wazp3d-lib modname=Warp3D modtype=library \
-  files=$(FILES) uselibs="GL"
+  files=$(FILES) uselibs="GL stdc"
 
 
 FILES := Wazp3D-Prefs

@@ -2,8 +2,172 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
-$Id: ChangeLog 401 2011-11-26 15:58:09Z damato $
-$URL: https://thebar.svn.sourceforge.net/svnroot/thebar/releases/26.8/ChangeLog $
+$Id: ChangeLog 457 2013-04-25 15:49:12Z damato $
+$URL: svn://svn.code.sf.net/p/thebar/code/releases/26.12/ChangeLog $
+
+#### v26.12 RELEASE ###########################################################
+
+2013-04-25 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final 26.12 release preparations
+
+2013-04-24 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/locale/greek.ct: updated greek translation kindly provided by Antonis
+    Iliakis.
+
+2013-03-06 Thore Böckelmann <tboeckel@gmx.de>
+
+  * include/mccinit.c, include/shellstart.c: rearranged the code to ensure that
+    trying to start the final class from a shell does not crash.
+
+2013-02-19 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: TheBar.mcc will now check the dimensions of separated selected
+    and disabled images against the dimension of the normal image. A warning
+    requester will be displayed in case the dimensions do not match to inform the
+    developer/user of this issue, because mismatching dimensions might cause
+    trashed memory under certain circumstances otherwise.
+
+2013-02-14 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/utils.c: removed some unneeded code and cleaned up the openFont()
+    function.
+
+2013-02-11 Thore Böckelmann <tboeckel@gmx.de>
+
+  * demo/misc: revisited all demos to be self-consistent. That means that all
+    demos enforce the application controlled appearance instead of using the
+    global user prefs. This is necessary to ensure that the toolbar's look
+    always exactly matches like the settings buttons' state.
+
+2013-01-19 Jens Langner <Jens.Langner@light-speed.de>
+
+  * mcc/class.c, mcc/button/class.c: reenabled UseGroupBack and UseButtonBack
+    checkbox even for MOS MUI4. Also changed default appearance flags to include
+    borderless buttons.
+  * mcc/class.c, mcc/button/class.c: MUICFG_TheBar_UseGroupBack and
+    MUICFG_TheBar_UseButtonBack will also be queried on MUI4 installations as
+    a user wants to be also able to define if the chosen color should be used
+    or not.
+  * include/mui/TheBar_mcp.h: changed some default values for the image precision
+    and the default spacer size.
+
+2013-01-15 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/utils.c: used a fixed height of 0 to enforce a suitable height of all
+    pen and frame buttons.
+
+2013-01-09 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/locale/german.ct: fixed a completely wrong translation.
+  * mcp/locale.c: fixed the wrong catalog name to be opened.
+
+#### v26.11 RELEASE ###########################################################
+
+2012-12-20 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final 26.11 release preparations
+
+2012-10-15 Thore Böckelmann <tboeckel@gmx.de>
+
+  * misc: revert some of Matthias Rustler's AROS specific changes to make
+    everything run again without crashes.
+
+2012-10-09 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/utils.c, mcc/button/utils.c: reverted the AROS specific modification of
+    DoSuperNew() to the previous state. The last change done by Matthias Rustler
+    crashes AROS distributions like Icaros so badly that even VirtualBox shuts
+    down the virtual machine.
+
+2012-09-20 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/utils.c: replaced the inner workings of stch_l() by strtoul().
+  * mcp/class.c: don't trigger notifications in MUIM_Mccprefs_ConfigToGadgets.
+
+2012-09-11 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/class.c: rearranged the pages to be displayable on small screens aswell.
+
+2012-08-28 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/class.c: adjusted the crawling text to better match the capabilities of
+    Crawling.mcc.
+
+2012-08-27 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/build.c, mcc/button/build.c: correctly respect MUIV_TheBar_SkipPic as raw
+    image data pointer. Thanks to Andreas Falkenhahn for the hint.
+  * doc/TheBar.doc: added some "SEE ALSO" passages for attributes which might get
+    overridden by the configured default settings if MUIA_TheBar_IgnoreAppearance
+    is not set to FALSE.
+
+2012-08-11 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/class.c: changed the way the control character is drawn to match
+    MUI's approach.
+
+#### v26.10 RELEASE ###########################################################
+
+2012-08-05 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final 26.10 release preparations
+
+2012-06-19 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/utils.c, mcc/button/utils.c: don't allocate locked memory.
+
+2012-05-16 Pär Boberg <pbobbenb@spray.se>
+
+  * mcp/locale/swedish.ct: minor changes.
+
+2012-05-15 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c, mcc/button/class.c: changed a lot of non-AmigaOS3 code to
+    dynamically depend on the availibility of MUI4 for better flexibility.
+
+2012-05-14 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/Makefile: removed .catalog files in clean target.
+  * mcp/locale/TheBar_mcp.cd: replaced non-ASCII character 0xa0 by space.
+
+#### v26.9 RELEASE ############################################################
+
+2012-05-12 Jens Langner <Jens.Langner@light-speed.de>
+
+  * misc: final 26.9 release preparations
+
+2012-05-07 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/class.c: enabled the special handling within MUIM_Draw for all supported
+    platforms, although this only applies for pre-MUI4 systems.
+
+2012-04-07 Jens Langner <Jens.Langner@light-speed.de>
+
+  * Makefile: removed -funroll-loops as this is potentially dangerous.
+
+2012-04-04 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/class.c: made the borderless mode working again with MUI 3.x.
+
+2012-03-30 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/button/class.c: use the MUI4+ attribute MUIA_KnowsDisabled to indicate
+    that TheButton.mcc has its own method to indicate disabled objects. For
+    MUI3 the well known disable pattern will be drawn.
+  * mcc/button/class.c: restored some former code to correctly reenable
+    borderless buttons. This was accidentally removed by mrustlers last commit.
+
+2010-06-03 Matthias Rustler <mrustler@gmx.de>
+
+  * misc: Backport of some AROS fixes.
+  * SDI headers updated.
+
+2012-01-23 Thore Böckelmann <tboeckel@gmx.de>
+
+  * all/Makefile: added __amigaos3__ symbol for the OS3 build.
+  * button/class.c: fixed dynamic frames in borderless mode.
 
 #### v26.8 RELEASE ############################################################
 

@@ -1,0 +1,129 @@
+diff -Naur vice-2.4-orig/configure vice-2.4/configure
+--- vice-2.4-orig/configure	2013-09-08 17:09:30.327048804 +0200
++++ vice-2.4/configure	2013-09-08 17:11:37.183054944 +0200
+@@ -3308,9 +3308,6 @@
+       done
+       ;;
+   esac
+-  if test x"$argvalid" = "xno"; then
+-    as_fn_error $? "invalid option: $argcheck" "$LINENO" 5
+-  fi
+ done
+ 
+ 
+diff -Naur vice-2.4-orig/src/arch/amigaos/console.c vice-2.4/src/arch/amigaos/console.c
+--- vice-2.4-orig/src/arch/amigaos/console.c	2013-09-08 17:09:30.359048806 +0200
++++ vice-2.4/src/arch/amigaos/console.c	2013-09-08 19:00:47.071371936 +0200
+@@ -52,7 +52,7 @@
+ static BPTR console_handle;
+ static int fullscreenwasenabled=0;
+ 
+-#ifdef AMIGA_MORPHOS
++#if defined(AMIGA_MORPHOS) || defined(AMIGA_AROS)
+ static APTR fh_putchproc(APTR putchdata, UBYTE ch)
+ {
+     FPutC((BPTR)putchdata, ch);
+@@ -65,12 +65,8 @@
+     va_list ap;
+ 
+     va_start(ap, format);
+-#ifndef AMIGA_MORPHOS
+-#ifdef AMIGA_AROS
+-    VFPrintf(console_handle, format, (IPTR *)ap);
+-#else
++#if !defined(AMIGA_MORPHOS) && !defined(AMIGA_AROS)
+     VFPrintf(console_handle, format, (CONST APTR)ap);
+-#endif
+ #else
+     VNewRawDoFmt(format, fh_putchproc, (STRPTR)console_handle, ap);
+ #endif
+diff -Naur vice-2.4-orig/src/arch/amigaos/x128ns.c vice-2.4/src/arch/amigaos/x128ns.c
+--- vice-2.4-orig/src/arch/amigaos/x128ns.c	2013-09-08 17:09:30.359048806 +0200
++++ vice-2.4/src/arch/amigaos/x128ns.c	2013-09-08 18:35:38.127298911 +0200
+@@ -29,5 +29,5 @@
+ 
+ int main(void)
+ {
+-    return system("x128.exe -sounddev dummy");
++    return system("x128 -sounddev dummy");
+ }
+diff -Naur vice-2.4-orig/src/arch/amigaos/x64dtvns.c vice-2.4/src/arch/amigaos/x64dtvns.c
+--- vice-2.4-orig/src/arch/amigaos/x64dtvns.c	2013-09-08 17:09:30.359048806 +0200
++++ vice-2.4/src/arch/amigaos/x64dtvns.c	2013-09-08 18:35:45.583299274 +0200
+@@ -29,5 +29,5 @@
+ 
+ int main(void)
+ {
+-    return system("x64dtv.exe -sounddev dummy");
++    return system("x64dtv -sounddev dummy");
+ }
+diff -Naur vice-2.4-orig/src/arch/amigaos/x64ns.c vice-2.4/src/arch/amigaos/x64ns.c
+--- vice-2.4-orig/src/arch/amigaos/x64ns.c	2013-09-08 17:09:30.359048806 +0200
++++ vice-2.4/src/arch/amigaos/x64ns.c	2013-09-08 18:35:51.887299576 +0200
+@@ -29,5 +29,5 @@
+ 
+ int main(void)
+ {
+-    return system("x64.exe -sounddev dummy");
++    return system("x64 -sounddev dummy");
+ }
+diff -Naur vice-2.4-orig/src/arch/amigaos/x64scns.c vice-2.4/src/arch/amigaos/x64scns.c
+--- vice-2.4-orig/src/arch/amigaos/x64scns.c	2013-09-08 17:09:30.359048806 +0200
++++ vice-2.4/src/arch/amigaos/x64scns.c	2013-09-08 18:35:57.999299873 +0200
+@@ -29,5 +29,5 @@
+ 
+ int main(void)
+ {
+-    return system("x64sc.exe -sounddev dummy");
++    return system("x64sc -sounddev dummy");
+ }
+diff -Naur vice-2.4-orig/src/arch/amigaos/xcbm2ns.c vice-2.4/src/arch/amigaos/xcbm2ns.c
+--- vice-2.4-orig/src/arch/amigaos/xcbm2ns.c	2013-09-08 17:09:30.359048806 +0200
++++ vice-2.4/src/arch/amigaos/xcbm2ns.c	2013-09-08 18:36:03.887300158 +0200
+@@ -29,5 +29,5 @@
+ 
+ int main(void)
+ {
+-    return system("xcbm2.exe -sounddev dummy");
++    return system("xcbm2 -sounddev dummy");
+ }
+diff -Naur vice-2.4-orig/src/arch/amigaos/xcbm5x0ns.c vice-2.4/src/arch/amigaos/xcbm5x0ns.c
+--- vice-2.4-orig/src/arch/amigaos/xcbm5x0ns.c	2013-09-08 17:09:30.359048806 +0200
++++ vice-2.4/src/arch/amigaos/xcbm5x0ns.c	2013-09-08 18:36:09.631300437 +0200
+@@ -29,5 +29,5 @@
+ 
+ int main(void)
+ {
+-    return system("xcbm5x0.exe -sounddev dummy");
++    return system("xcbm5x0 -sounddev dummy");
+ }
+diff -Naur vice-2.4-orig/src/arch/amigaos/xpetns.c vice-2.4/src/arch/amigaos/xpetns.c
+--- vice-2.4-orig/src/arch/amigaos/xpetns.c	2013-09-08 17:09:30.359048806 +0200
++++ vice-2.4/src/arch/amigaos/xpetns.c	2013-09-08 18:36:15.903300740 +0200
+@@ -29,5 +29,5 @@
+ 
+ int main(void)
+ {
+-    return system("xpet.exe -sounddev dummy");
++    return system("xpet -sounddev dummy");
+ }
+diff -Naur vice-2.4-orig/src/arch/amigaos/xplus4ns.c vice-2.4/src/arch/amigaos/xplus4ns.c
+--- vice-2.4-orig/src/arch/amigaos/xplus4ns.c	2013-09-08 17:09:30.359048806 +0200
++++ vice-2.4/src/arch/amigaos/xplus4ns.c	2013-09-08 18:36:22.255301047 +0200
+@@ -29,5 +29,5 @@
+ 
+ int main(void)
+ {
+-    return system("xplus4.exe -sounddev dummy");
++    return system("xplus4 -sounddev dummy");
+ }
+diff -Naur vice-2.4-orig/src/arch/amigaos/xvicns.c vice-2.4/src/arch/amigaos/xvicns.c
+--- vice-2.4-orig/src/arch/amigaos/xvicns.c	2013-09-08 17:09:30.363048806 +0200
++++ vice-2.4/src/arch/amigaos/xvicns.c	2013-09-08 18:36:29.551301400 +0200
+@@ -29,5 +29,5 @@
+ 
+ int main(void)
+ {
+-    return system("xvic.exe -sounddev dummy");
++    return system("xvic -sounddev dummy");
+ }

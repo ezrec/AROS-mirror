@@ -1,5 +1,5 @@
 /*
-    Copyright © 2001-2012, The AROS Development Team. All rights reserved.
+    Copyright © 2001-2013, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -768,7 +768,9 @@ static void RenderEntryField(Object *obj, struct IconList_DATA *data,
 
         case INDEX_LASTACCESS:
             text = AllocVec(strlen(entry->ie_TxtBuf_DATE) + strlen(entry->ie_TxtBuf_TIME) + 5, MEMF_CLEAR);
-            sprintf(text, "%s at %s", entry->ie_TxtBuf_DATE, entry->ie_TxtBuf_TIME);
+            if (text)
+                sprintf(text, "%s at %s", entry->ie_TxtBuf_DATE,
+                    entry->ie_TxtBuf_TIME);
             break;
 
         case INDEX_COMMENT:
@@ -1077,11 +1079,13 @@ static void IconList__LabelFunc_SplitLabel(Object *obj, struct IconList_DATA *da
     D(bug("[IconList]: %s: txwidth = %d\n", __PRETTY_FUNCTION__, txwidth));
 #endif
     entry->ie_TxtBuf_DisplayedLabel = AllocVecPooled(data->icld_Pool, 256);
-    memset(entry->ie_TxtBuf_DisplayedLabel, 0, 256);
+    if (entry->ie_TxtBuf_DisplayedLabel != NULL)
+        memset(entry->ie_TxtBuf_DisplayedLabel, 0, 256);
     entry->ie_SplitParts = 0;
 
     labelSplit_CharsDone = 0;
     labelSplit_CharsSplit = 0;
+    labelSplit_CurSplitWidth = 0;
 
     while (labelSplit_CharsDone < labelSplit_LabelLength)
     {
@@ -1181,11 +1185,17 @@ static void IconList__LabelFunc_SplitLabel(Object *obj, struct IconList_DATA *da
         }
         if ((labelSplit_CharsDone + labelSplit_CurSplitLength) > labelSplit_LabelLength) labelSplit_CurSplitLength = labelSplit_LabelLength - labelSplit_CharsDone;
 
-        labelSplit_CurSplitDest = (IPTR)(entry->ie_TxtBuf_DisplayedLabel + labelSplit_CharsSplit + entry->ie_SplitParts);
+        if (entry->ie_TxtBuf_DisplayedLabel != NULL)
+        {
+            labelSplit_CurSplitDest = (IPTR)(entry->ie_TxtBuf_DisplayedLabel
+                + labelSplit_CharsSplit + entry->ie_SplitParts);
 
-        strncpy((char *)labelSplit_CurSplitDest, (char *)labelSplit_SplitStart, labelSplit_CurSplitLength);
+            strncpy((char *)labelSplit_CurSplitDest,
+                (char *)labelSplit_SplitStart, labelSplit_CurSplitLength);
 
-        labelSplit_CurSplitWidth = TextLength(data->icld_BufferRastPort, (char *)labelSplit_CurSplitDest, labelSplit_CurSplitLength);
+            labelSplit_CurSplitWidth = TextLength(data->icld_BufferRastPort,
+                (char *)labelSplit_CurSplitDest, labelSplit_CurSplitLength);
+        }
 
         entry->ie_SplitParts = entry->ie_SplitParts + 1;
 
@@ -2134,8 +2144,6 @@ IPTR IconList__OM_NEW(struct IClass *CLASS, Object *obj, struct opSet *message)
 
     data->icld_IconLabelFont = icl_WindowFont;  
 
-/* Setup Icon View-Mode options */
-    data->icld_IVMAttribs = AllocMem(sizeof(struct IconViewModeAttribs), MEMF_CLEAR);
 /* Setup List View-Mode options */
     if ((data->icld_LVMAttribs = AllocMem(sizeof(struct ListViewModeAttribs), MEMF_CLEAR)) != NULL)
     {
@@ -2827,7 +2835,8 @@ IPTR IconList__MUIM_Setup(struct IClass *CLASS, Object *obj, struct MUIP_Setup *
      * Here we have our font, either from user preferences or from MUI's AreaData.
      * It's right time to set up some sizes.
      */
-    CalcHeight(data->icld_LVMAttribs, data->icld_IconLabelFont);
+    if (data->icld_LVMAttribs)
+        CalcHeight(data->icld_LVMAttribs, data->icld_IconLabelFont);
 #if defined(DEBUG_ILC_ICONRENDERING)
     D(bug("[IconList] %s: Use Font @ 0x%p, RastPort @ 0x%p\n", __PRETTY_FUNCTION__, data->icld_IconLabelFont, data->icld_BufferRastPort ));
 #endif
@@ -4222,7 +4231,7 @@ IPTR IconList__MUIM_IconList_PropagateEntryPos(struct IClass *CLASS, Object *obj
 ///IconList__MUIM_IconList_CreateEntry()
 /**************************************************************************
 MUIM_IconList_CreateEntry.
-Returns 0 on failure otherwise it returns the icons entry ..
+Returns 0 on failure; otherwise it returns the icon's entry.
 **************************************************************************/
 IPTR IconList__MUIM_IconList_CreateEntry(struct IClass *CLASS, Object *obj, struct MUIP_IconList_CreateEntry *message)
 {
@@ -4401,7 +4410,7 @@ IPTR IconList__MUIM_IconList_CreateEntry(struct IClass *CLASS, Object *obj, stru
     strcpy(entry->ie_IconNode.ln_Name, message->filename);
     strcpy(entry->ie_IconListEntry.label, message->label);
 
-    entry->ie_IconListEntry.udata = NULL;
+    entry->ie_IconListEntry.udata = message->udata;
 
     entry->ie_IconX = dob->do_CurrentX;
     entry->ie_IconY = dob->do_CurrentY;
@@ -4426,7 +4435,7 @@ IPTR IconList__MUIM_IconList_CreateEntry(struct IClass *CLASS, Object *obj, stru
 ///IconList__MUIM_IconList_UpdateEntry()
 /**************************************************************************
 MUIM_IconList_UpdateEntry.
-Returns 0 on failure otherwise it returns the icons entry ..
+Returns 0 on failure; otherwise it returns the icon's entry.
 **************************************************************************/
 IPTR IconList__MUIM_IconList_UpdateEntry(struct IClass *CLASS, Object *obj, struct MUIP_IconList_UpdateEntry *message)
 {
@@ -4562,8 +4571,10 @@ D(bug("[IconList] %s: DiskObject @ 0x%p\n", __PRETTY_FUNCTION__, dob));
     else
     {
         if (message->entry->ie_FileInfoBlock)
+        {
             FreeMem(message->entry->ie_FileInfoBlock, sizeof(struct FileInfoBlock));
-
+            message->entry->ie_FileInfoBlock = NULL;
+        }
         if (message->entry->ie_IconListEntry.type != ST_USERDIR)
         {
             message->entry->ie_Flags |= ICONENTRY_FLAG_NEEDSUPDATE;
@@ -6773,7 +6784,7 @@ IPTR IconList__MUIM_DragDrop(struct IClass *CLASS, Object *obj, struct MUIP_Drag
             FreeVec(clean_node->dropse_Node.ln_Name);
             FreeMem(clean_node, sizeof(struct IconList_Drop_SourceEntry));
         }
-        if (data->icld_DragDropEvent->drop_TargetPath) FreeVec(data->icld_DragDropEvent->drop_TargetPath);
+        FreeVec(data->icld_DragDropEvent->drop_TargetPath);
         FreeMem(data->icld_DragDropEvent, sizeof(struct IconList_Drop_Event));
         data->icld_DragDropEvent = NULL;
     }
@@ -7000,7 +7011,7 @@ IPTR IconList__MUIM_DragDrop(struct IClass *CLASS, Object *obj, struct MUIP_Drag
                         char *path = NULL;
 
                         GET(message->obj, MUIA_IconDrawerList_Drawer, &path);
-                        /* Properly expand the location incase it uses devices rather than volumes */
+                        /* Properly expand the location in case it uses devices rather than volumes */
                         if (path != NULL)
                         {
                             tmp_dirlock = Lock(path, SHARED_LOCK);
@@ -7017,8 +7028,11 @@ IPTR IconList__MUIM_DragDrop(struct IClass *CLASS, Object *obj, struct MUIP_Drag
                             {
                                 fulllen = strlen(path) + strlen(entry->ile_IconEntry->ie_IconNode.ln_Name) + 2;
                                 sourceEntry->dropse_Node.ln_Name = AllocVec(fulllen, MEMF_CLEAR);
-                                strcpy(sourceEntry->dropse_Node.ln_Name, path);
-                                AddPart(sourceEntry->dropse_Node.ln_Name, entry->label, fulllen);
+                                if (sourceEntry->dropse_Node.ln_Name != NULL)
+                                {
+                                    strcpy(sourceEntry->dropse_Node.ln_Name, path);
+                                    AddPart(sourceEntry->dropse_Node.ln_Name, entry->label, fulllen);
+                                }
 #if defined(DEBUG_ILC_ICONDRAGDROP)
                                 D(bug("[IconList] %s: Source Entry (Full Path) = '%s'\n", __PRETTY_FUNCTION__, sourceEntry->dropse_Node.ln_Name));
 #endif
@@ -7028,7 +7042,8 @@ IPTR IconList__MUIM_DragDrop(struct IClass *CLASS, Object *obj, struct MUIP_Drag
                     else
                     {
                         sourceEntry->dropse_Node.ln_Name = AllocVec(strlen(entry->label) + 1, MEMF_CLEAR);
-                        strcpy(sourceEntry->dropse_Node.ln_Name, entry->label);
+                        if (sourceEntry->dropse_Node.ln_Name != NULL)
+                            strcpy(sourceEntry->dropse_Node.ln_Name, entry->label);
 #if defined(DEBUG_ILC_ICONDRAGDROP)
                         D(bug("[IconList] %s: Source Entry = '%s'\n", __PRETTY_FUNCTION__, sourceEntry->dropse_Node.ln_Name));
 #endif
@@ -7044,7 +7059,7 @@ IPTR IconList__MUIM_DragDrop(struct IClass *CLASS, Object *obj, struct MUIP_Drag
 #if defined(DEBUG_ILC_ICONDRAGDROP)
                         D(bug("[IconList] %s: Source == Dest, Skipping!\n", __PRETTY_FUNCTION__));
 #endif
-                        if ( sourceEntry->dropse_Node.ln_Name) FreeVec(sourceEntry->dropse_Node.ln_Name);
+                        FreeVec(sourceEntry->dropse_Node.ln_Name);
                         FreeMem(sourceEntry, sizeof(struct IconList_Drop_SourceEntry));
                     }
                 }
@@ -7061,7 +7076,7 @@ IPTR IconList__MUIM_DragDrop(struct IClass *CLASS, Object *obj, struct MUIP_Drag
             }
             else
             {
-                if (dragDropEvent->drop_TargetPath) FreeVec(dragDropEvent->drop_TargetPath);
+                FreeVec(dragDropEvent->drop_TargetPath);
                 FreeMem(dragDropEvent, sizeof(struct IconList_Drop_Event));
             }
         }

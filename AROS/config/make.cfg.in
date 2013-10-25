@@ -88,7 +88,7 @@ AROS_PRINTERS        := $(AROS_DEVS)/Printers
 AROS_S	             := $(AROSDIR)/$(AROS_DIR_S)
 AROS_SYSTEM          := $(AROSDIR)/System
 AROS_WANDERER        := $(AROS_SYSTEM)/Wanderer
-AROS_THEMES          := $(AROS_SYSTEM)/Themes
+AROS_THEMES          := $(AROS_PREFS)/Presets/Themes
 AROS_IMAGES          := $(AROS_SYSTEM)/Images
 AROS_TOOLS           := $(AROSDIR)/Tools
 AROS_UTILITIES       := $(AROSDIR)/Utilities
@@ -105,7 +105,8 @@ SCRIPTDIR            := $(GENDIR)/scripts
 
 MKDEPEND             := $(SRCDIR)/scripts/mkdep
 FETCH                := $(SRCDIR)/scripts/fetch.sh
-   
+CPYDIRREC            := @PYTHON@ $(SRCDIR)/scripts/cpy-dir-rec.py
+
 # The paths to the generated tools
 TOOLDIR		:= $(HOSTDIR)/tools
 TOOLLIB		:= $(TOOLDIR)/libtool.a
@@ -134,6 +135,12 @@ MKSUNXIBOOT     := $(TOOLDIR)/mksunxiboot$(HOST_EXE_SUFFIX)
 RESIDENT_BEGIN  := compiler/libinit/libentry
 
 AROS_CC         := $(TARGET_CC)
+ifneq ($(TARGET_CXX),)
+AROS_CXX        := $(TARGET_CXX)
+else
+AROS_CXX        := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-g++
+endif
+AROS_CXXEXTS    := cpp cxx cc c++
 AROS_AS         := $(TARGET_AS)
 AROS_LD         := $(TARGET_LD)
 

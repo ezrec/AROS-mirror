@@ -5,6 +5,7 @@ include $(TOP)/config/make.cfg
 #MM- ports-filetool : ports-filetool-$(AROS_TARGET_CPU)
 
 #MM- ports-filetool-i386 : ports-filetool-zaphod
+#MM- ports-filetool-arm : ports-filetool-zaphod
 
 #MM  ports-filetool-zaphod : includes linklibs ports-filetool-zaphod-catalogs \
 #MM  ports-filetool-fetch ports-filetool-zaphod-docs ports-filetool-zaphod-fonts \

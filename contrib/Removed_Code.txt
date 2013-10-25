@@ -1,10 +1,14 @@
 This files list code that has been removed from the newest versions of the
 AROS contrib part of the repository.
-If you have checked out the contrib part of the AROs repository, you can use
+If you have checked out the contrib part of the AROS repository, you can use
 this information and the commit logs to retrieve the versions just before
 removal if you want.
 
 ----------------------------------------------------------------------------
+
+31 Aug 2013: contrib/freetype1
+
+  Removed because of freetype2 in workbench/libs.
 
 6 Jun 2012: contrib/pack/bzip2
 

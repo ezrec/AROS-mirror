@@ -36,7 +36,7 @@ FILES := \
 ICONS := SdlScavenger
 
 %build_icons mmake=ports-game-sdlscavenger-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)
+	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 CPYFILES := DOC STRATEGY COPYING README
 

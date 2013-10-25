@@ -33,6 +33,7 @@ EGL_SOURCES = \
             egl/main/eglstring \
             egl/main/eglsurface \
             egl/main/eglsync \
+            egl/drivers/arosmesa/egl_arosmesa \
             gallium/state_trackers/egl/common/egl_g3d \
             gallium/state_trackers/egl/common/egl_g3d_api \
             gallium/state_trackers/egl/common/egl_g3d_image \
@@ -71,7 +72,7 @@ USER_CFLAGS :=  -DFEATURE_GL=1 \
 %build_module mmake=workbench-libs-egl \
     modname=egl modtype=library linklibname=EGL \
     files="$(LIBRARY_SOURCES)" \
-    uselibs="galliumauxiliary gallium"
+    uselibs="galliumauxiliary gallium GL stdcio stdc"
 
 %common
 

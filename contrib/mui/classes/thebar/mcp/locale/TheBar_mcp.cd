@@ -431,7 +431,7 @@ Msg_SpecialSelect (//)
 Special select
 ;
 Msg_SpecialSelect_Help (//)
-If selected, buttons contents is moved\n\
+If selected, button contents are moved\n\
 when they are selected or active.
 ;
 Msg_TextOverUseShine (//)
@@ -528,19 +528,7 @@ Msg_SpacersSize_TwoPoint (//)
 Two points
 ;
 ;
-Msg_Info_First (600//)
-%s\n\
-Copyright (c) 2003-2008 Alfonso Ranieri\n\
-and TheBar Open Source Team
-;
-Msg_Info_Reserved (//)
-Distributed under the terms of the LGPL2.
-;
-Msg_Info_Rest (//)
-For recent versions and updates visit:\n\
-http://www.sourceforge.net/projects/thebar
-;
-Msg_Info_Translator (//)
+Msg_Info_Translator (603//)
 
 ;
 Msg_Item_Globals (//)

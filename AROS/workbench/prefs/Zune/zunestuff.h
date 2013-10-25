@@ -11,11 +11,25 @@
 #include <libraries/asl.h>
 #include "locale.h"
 
-struct ClassListview_DATA
+/* listview class */
+extern struct MUI_CustomClass *ClassListview_CLASS;
+struct MUI_CustomClass *create_listview_class(void);
+void delete_listview_class(void);
+
+
+struct page_entry
 {
-    Object *list;
-   struct MUI_EventHandlerNode   ehn;
+    char *name;
+    struct MUI_CustomClass *cl; /* The class pointer,  maybe NULL */
+    Object *group;  /* The group which should be is displayed, maybe NULL */
+    Object *mcp_image;  /* Result of MCC_Query(2) */
+    APTR mcp_listimage; /* mcp_image translated to list image */
+    const struct __MUIBuiltinClass *desc;
+    struct Library *mcp_library;
+    UBYTE mcp_namebuffer[MAXFILENAMELENGTH + 1];
+    UBYTE mcp_imagespec[30]; /* Image specification of MCP image */
 };
+
 
 Object *MakeButton (CONST_STRPTR str);
 Object *MakeCycle (CONST_STRPTR label, CONST_STRPTR entries[]);
@@ -44,16 +58,7 @@ void ConfigToPen (Object *configdata, ULONG cfg, Object *poppen);
 void ConfigToCycle (Object *configdata, ULONG cfg, Object *cycle);
 void ConfigToString (Object *configdata, ULONG cfg, Object *string);
 
-#ifndef __GNUC__
-LONG XGET(Object * obj, ULONG attr);
-#endif
-
 #define getstring(obj) (char*)XGET(obj,MUIA_String_Contents)
 #define FindFont(id) (void*)DoMethod(msg->configdata,MUIM_Dataspace_Find,id)
-
-#ifdef __amigaos4__
-Object *VARARGS68K DoSuperNewTags(struct IClass *cl, Object *obj, void *dummy, ...);
-#endif
-
 
 #endif /* _ZUNE_ZUNESTUFF_H */

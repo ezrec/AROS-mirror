@@ -1,7 +1,7 @@
 #ifndef GRAPHICS_INTERN_H
 #define GRAPHICS_INTERN_H
 /*
-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2013, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Internal header file for graphics.library
@@ -94,8 +94,8 @@ struct monitor_driverdata
     /* FakeGfx-related */
     OOP_Object      	      *gfxhidd_orig;	/* Real graphics driver object			  */
 
-    /* Composer-related */
-    OOP_Object		      *composer;	/* composition HIDD object			  */
+    /* Compositor-related */
+    OOP_Object		      *compositor;	/* screen composition HIDD object		  */
 
     /* Framebuffer stuff */
     struct BitMap   	      *frontbm;		/* Currently shown bitmap			  */
@@ -135,7 +135,7 @@ struct common_driverdata
     /* HIDD classes */
     OOP_Class		      *fakegfxclass;		/* Fakegfx (SW sprite) classes	   */
     OOP_Class		      *fakefbclass;
-    OOP_Class		      *composerClass;		/* Composer class		   */
+    OOP_Class		      *compositorClass;		/* Compositor class		   */
     OOP_Class		      *gcClass;			/* GC class			   */
 
     /* Attribute bases */
@@ -147,7 +147,7 @@ struct common_driverdata
     OOP_AttrBase    	     hiddGfxAttrBase;
     OOP_AttrBase    	     hiddFakeGfxHiddAttrBase;
     OOP_AttrBase	     hiddFakeFBAttrBase;
-    OOP_AttrBase	     hiddCompositingAttrBase;
+    OOP_AttrBase	     hiddCompositorAttrBase;
 };
 
 #define CDD(base)   	    ((struct common_driverdata *)&PrivGBase(base)->shared_driverdata)
@@ -160,7 +160,7 @@ struct common_driverdata
 #define __IHidd_Gfx         	CDD(GfxBase)->hiddGfxAttrBase
 #define __IHidd_FakeGfxHidd 	CDD(GfxBase)->hiddFakeGfxHiddAttrBase
 #define __IHidd_FakeFB	    	CDD(GfxBase)->hiddFakeFBAttrBase
-#define HiddCompositingAttrBase CDD(GfxBase)->hiddCompositingAttrBase
+#define HiddCompositorAttrBase  CDD(GfxBase)->hiddCompositorAttrBase
 
 /* Hashtable sizes. Must be powers of two */
 #define GFXASSOCIATE_HASHSIZE   8
@@ -202,7 +202,7 @@ struct GfxBase_intern
     OOP_MethodID                HiddGCBase;
     OOP_MethodID                HiddGfxBase;
     OOP_MethodID                HiddPlanarBMBase;
-    OOP_MethodID		HiddCompositingMethodBase;
+    OOP_MethodID		HiddCompositorMethodBase;
 };
 
 

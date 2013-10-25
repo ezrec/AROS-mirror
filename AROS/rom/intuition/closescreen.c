@@ -242,9 +242,9 @@ static VOID int_closescreen(struct CloseScreenActionMsg *msg,
     ReadPixel(&screen->RastPort,0,0);
 
     /* Free the screen's bitmap */
-    if (IS(screen)->AllocatedBitmap)
+    if (IS(screen)->AllocatedBitMap)
     {
-        FreeBitMap(IS(screen)->AllocatedBitmap);
+        FreeBitMap(IS(screen)->AllocatedBitMap);
     }
 
     screen->RastPort.BitMap = NULL;
@@ -342,8 +342,7 @@ static VOID int_closescreen(struct CloseScreenActionMsg *msg,
 
         Remove((struct Node *)IS(screen)->pubScrNode);
 
-        if(IS(screen)->pubScrNode->psn_Node.ln_Name != NULL)
-            FreeVec(IS(screen)->pubScrNode->psn_Node.ln_Name);
+        FreeVec(IS(screen)->pubScrNode->psn_Node.ln_Name);
 
         FreeMem(IS(screen)->pubScrNode,
                 sizeof(struct PubScreenNode));

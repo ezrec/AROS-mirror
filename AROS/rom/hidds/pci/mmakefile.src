@@ -1,0 +1,28 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+USER_INCLUDES := -I.
+
+CFLAGS := $(CFLAGS) -D__KERNEL__
+
+FILES	:= pci_init pcidriverclass pcideviceclass pciclass pciutil
+
+#MM kernel-hidd-pci : kernel-hidd-pci-ids
+#MM kernel-hidd-pci-kobj : kernel-hidd-pci-ids
+
+#MM
+includes-copy : $(AROS_INCLUDES)/hidd/pci.h $(GENINCDIR)/hidd/pci.h
+
+$(AROS_INCLUDES)/hidd/pci.h: include/pci_hidd.h
+	$(CP) $< $(AROS_INCLUDES)/hidd/pci.h
+
+$(GENINCDIR)/hidd/pci.h: include/pci_hidd.h
+	$(CP) $< $(GENINCDIR)/hidd/pci.h
+
+%fetch mmake=kernel-hidd-pci-ids \
+    archive_origins="http://pciids.sourceforge.net/v2.2/" \
+    archive="pci.ids" suffixes="" location=$(AROS_DEVS)
+
+%build_module mmake=kernel-hidd-pci \
+    modname=pci modtype=hidd \
+    files="$(FILES)"

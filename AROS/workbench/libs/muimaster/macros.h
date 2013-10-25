@@ -2,7 +2,7 @@
 #define _MUI_MACROS_H
 
 /*
-    Copyright © 2002-2007, The AROS Development Team. All rights reserved.
+    Copyright © 2002-2013, The AROS Development Team. All rights reserved.
     $Id$
 
     Macros available in original MUI and also some additional ones.
@@ -231,7 +231,7 @@
  Use them for example in a group containing 2 columns, in the first
  columns the label and in the second columns the object.
 
- These objects should be uses because the user might have set strange
+ These objects should be used because the user might have set strange
  values.
 
  xxxLabel() is suited for Objects without frame
@@ -364,6 +364,8 @@
     attr, (IPTR)(value), TAG_DONE)
 #define nnfset(obj, attr, value) SetAttrs(obj, MUIA_Group_Forward, FALSE, \
     MUIA_NoNotify, TRUE, attr, (IPTR)(value), TAG_DONE)
+#define superset(obj, attr, value) SetSuperAttrs(OCLASS(obj), obj, \
+    attr, (IPTR)(value), TAG_DONE)
 
 /* Some aliases... */
 #define GET(obj, attr, store) get(obj, attr, store)
@@ -381,7 +383,8 @@
 #endif /* __cplusplus */
 
 
-/* We need the notify and area Instace Data at least here, but this stuff should be placed at the button anywhy */
+/* We need the notify and area Instance Data at least here, but this stuff
+ * should be placed at the button anyway */
 #ifndef _MUI_CLASSES_NOTIFY_H
 #include "classes/notify.h"
 #endif

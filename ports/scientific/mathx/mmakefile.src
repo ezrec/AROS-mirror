@@ -5,17 +5,16 @@ include $(TOP)/config/make.cfg
 #MM- ports-scientific : ports-scientific-$(AROS_TARGET_CPU)
 
 #MM- ports-scientific-i386 : ports-scientific-mathx
+#MM- ports-scientific-arm : ports-scientific-mathx
 
 #MM  ports-scientific-mathx : includes linklibs ports-scientific-mathx-catalogs \
-#MM  ports-scientific-mathx-cpp ports-scientific-mathx-drawericon \
+#MM  ports-scientific-mathx-drawericon \
 #MM  ports-scientific-mathx-data ports-scientific-mathx-docs \
-#MM  ports-scientific-mathx-icons ports-scientific-mathx-images \
+#MM  ports-scientific-mathx-icons ports-scientific-mathx-makeimages \
 #MM  ports-scientific-mathx-rexx ports-scientific-mathx-cpy \
 #MM  ports-scientific-mathx-fetch
 
 #MM  ports-scientific-mathx-catalogs : ports-scientific-mathx-fetch
-
-#MM  ports-scientific-mathx-cpp : ports-scientific-mathx-fetch
 
 #MM  ports-scientific-mathx-drawericon : ports-scientific-mathx-fetch
 
@@ -36,7 +35,6 @@ include $(TOP)/config/make.cfg
 REPOSITORIES := http://archives.aros-exec.org/share/utility/scientific
 ARCHBASE     := muimathx-src-svn46
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Scientific/MathX
-TARGET_CXX   := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-g++
 USER_CFLAGS  := -D__MATHX_VERDATE=\"`date +%d.%m.%Y`\" \
                 -D__MATHX_VERDAYS="`expr \`date +%s\` / 86400 - 2922`" \
                 -D__MATHX_BUILDID=\"$(BUILDID)\" \
@@ -46,81 +44,66 @@ USER_CFLAGS  := -D__MATHX_VERDATE=\"`date +%d.%m.%Y`\" \
                 -Wno-write-strings -funroll-loops -fno-strict-aliasing -fpermissive -DDEBUG
 USER_INCLUDES:= -I$(PORTSDIR)/mathx/$(ARCHBASE) -I$(PORTSDIR)/mathx/$(ARCHBASE)/extrasrc
 
-# Remove C-only flags
-CXX_FLAGS    := $(subst -Wno-pointer-sign,, $(subst -Werror-implicit-function-declaration,, $(CFLAGS)))
+CXX_FILES := \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/About \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/AGraphics \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/AGraphicsIO \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Alien \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Ausdruck \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/ControlPanel \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Derivation \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Discussion \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Draw2D \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Draw3D \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/DrawSIRDS \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Edit2D \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Edit3D \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/EditSIRDS \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Eval \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/FEditor \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Graph2D \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Graph3D \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/GraphSIRDS \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Integration \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/LineShow \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Locales \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/mathX \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/mathX_main \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Matrix \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/MatrixWin \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/MUITools \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Number \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Numeric \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Oper1 \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/OperN \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/PageList \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Parser \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Polynom \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Pool \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Settings \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/StatusWin \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/STools \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/SymArr \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Symbol \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/TabData \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Tangente \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Taylor \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/TermPanel \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Termscript \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Textlist \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Tools \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Window2D \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/Window3D \
+	$(PORTSDIR)/mathx/$(ARCHBASE)/WindowSIRDS
 
 
-CXX_SOURCES := \
-	About \
-	AGraphics \
-	AGraphicsIO \
-	Alien \
-	Ausdruck \
-	ControlPanel \
-	Derivation \
-	Discussion \
-	Draw2D \
-	Draw3D \
-	DrawSIRDS \
-	Edit2D \
-	Edit3D \
-	EditSIRDS \
-	Eval \
-	FEditor \
-	Graph2D \
-	Graph3D \
-	GraphSIRDS \
-	Integration \
-	LineShow \
-	Locales \
-	mathX \
-	mathX_main \
-	Matrix \
-	MatrixWin \
-	MUITools \
-	Number \
-	Numeric \
-	Oper1 \
-	OperN \
-	PageList \
-	Parser \
-	Polynom \
-	Pool \
-	Settings \
-	StatusWin \
-	STools \
-	SymArr \
-	Symbol \
-	TabData \
-	Tangente \
-	Taylor \
-	TermPanel \
-	Termscript \
-	Textlist \
-	Tools \
-	Window2D \
-	Window3D \
-	WindowSIRDS
-
-
-OBJS  := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(CXX_SOURCES))))
-
-
-#MM 
-ports-scientific-mathx-cpp : $(CXX_SOURCES)
-
-$(CXX_SOURCES) : ports-scientific-mathx-makeimages | $(GENDIR)/$(CURDIR)
-%compile_q cmd=$(TARGET_CXX) opt=$(CXX_FLAGS) from=$(PORTSDIR)/mathx/$(ARCHBASE)/$@.cpp to="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $@)))"
-
-
-#MM
-ports-scientific-mathx :
-%link_q cmd=$(TARGET_CXX) from="$(OBJS)" to=$(TARGETDIR)/MathX libs="-lmui"
-
+%build_prog mmake=ports-scientific-mathx \
+    progname="MathX" targetdir=$(TARGETDIR) files="" \
+    cxxfiles="$(CXX_FILES)" uselibs="stdc++"
 
 %fetch mmake=ports-scientific-mathx-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/mathx \
-    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
-
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2" \
+    patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
 
 ##### create drawer icon #####
 
@@ -161,8 +144,6 @@ CPYFILES := AUTHORS COPYING
 images :
 %mkdir_q dir="images"
 
-$(GENDIR)/$(CURDIR) :
-%mkdir_q dir="$(GENDIR)/$(CURDIR)"
 
 ##### localisation #####
 

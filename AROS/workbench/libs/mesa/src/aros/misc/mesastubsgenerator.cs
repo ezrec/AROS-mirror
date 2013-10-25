@@ -646,7 +646,7 @@ namespace glstubgenerator
 			
 			foreach (Function f in functions)
 			{
-				swMangledHeader.Write("APIMINLINE {0} m{1} (", f.ReturnType, f.Name);
+				swMangledHeader.Write("{0} m{1} (", f.ReturnType, f.Name);
 				if (f.Arguments.Count > 0)
 				{
 					int i = 0;
@@ -671,7 +671,7 @@ namespace glstubgenerator
 
 			foreach (Function f in functions)
 			{
-				swMangledImplementation.Write("inline {0} m{1} (", f.ReturnType, f.Name);
+				swMangledImplementation.Write("{0} m{1} (", f.ReturnType, f.Name);
 				if (f.Arguments.Count > 0)
 				{
 					int i = 0;
@@ -681,10 +681,19 @@ namespace glstubgenerator
 				}
 				swMangledImplementation.WriteLine(")");
 				swMangledImplementation.WriteLine("{");
+				if (!f.ReturnsVoid())
+					swMangledImplementation.WriteLine("    {0} _ret;", f.ReturnType);
+
+				if (f.Name.Equals("glEnd"))
+					swMangledImplementation.WriteLine("    /* glBegin/glEnd must be atomic */");
+				else
+					swMangledImplementation.WriteLine("    HOSTGL_PRE");
+				swMangledImplementation.WriteLine("    D(bug(\"[HostGL] TASK: 0x%x, {0}\", FindTask(NULL)));", f.Name);
+
 				if (f.ReturnsVoid())
 					swMangledImplementation.Write("    GLCALL({0}", f.Name);
 				else
-					swMangledImplementation.Write("    return GLCALL({0}", f.Name);
+					swMangledImplementation.Write("    _ret = GLCALL({0}", f.Name);
 				if (f.Arguments.Count > 0)
 				{
 					int i = 0;
@@ -693,6 +702,14 @@ namespace glstubgenerator
 				}
 				swMangledImplementation.WriteLine(");");
 
+				swMangledImplementation.WriteLine("    D(bug(\"...exit\\n\"));");
+				if (f.Name.Equals("glBegin"))
+					swMangledImplementation.WriteLine("    /* glBegin/glEnd must be atomic */");
+				else
+					swMangledImplementation.WriteLine("    HOSTGL_POST");
+
+				if (!f.ReturnsVoid())
+					swMangledImplementation.WriteLine("    return _ret;");
 				swMangledImplementation.WriteLine("}");
 				swMangledImplementation.WriteLine();
 			}

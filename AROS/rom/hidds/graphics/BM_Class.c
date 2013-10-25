@@ -899,6 +899,8 @@ OOP_Object *BM__Root__New(OOP_Class *cl, OOP_Object *obj, struct pRoot_New *msg)
         data->modeid = vHidd_ModeID_Invalid;
         data->align  = 16;
 
+        data->compositable = FALSE;
+
         tstate = msg->attrList;
         while ((tag = NextTagItem(&tstate)))
         {
@@ -908,6 +910,10 @@ OOP_Object *BM__Root__New(OOP_Class *cl, OOP_Object *obj, struct pRoot_New *msg)
             {
                 switch (idx)
                 {
+                case aoHidd_BitMap_BMStruct:
+                    data->bmstruct = (struct BitMap *)tag->ti_Data;
+                    break;
+
                 case aoHidd_BitMap_Width:
                     data->width = tag->ti_Data;
                     break;
@@ -934,6 +940,10 @@ OOP_Object *BM__Root__New(OOP_Class *cl, OOP_Object *obj, struct pRoot_New *msg)
 
                 case aoHidd_BitMap_Displayable:
                     data->displayable = tag->ti_Data;
+                    break;
+
+                case aoHidd_BitMap_Compositable:
+                    data->compositable = tag->ti_Data;
                     break;
                 
                 case aoHidd_BitMap_FrameBuffer:
@@ -966,22 +976,30 @@ OOP_Object *BM__Root__New(OOP_Class *cl, OOP_Object *obj, struct pRoot_New *msg)
         if (data->framebuffer)
             data->displayable = TRUE;
 
-        if (ok && data->displayable)
+        if (ok && (data->displayable || data->compositable))
         {
+            HIDDT_ModeID bmmodeid = data->modeid;
+
             /* We should always get modeid, but we check anyway */
-            if (data->modeid == vHidd_ModeID_Invalid)
+            if ((data->compositable) &&  (data->friend))
             {
-                D(bug("!!! BitMap:New() DID NOT GET MODEID FOR DISPLAYABLE BITMAP !!!\n"));
-                ok = FALSE;
+                OOP_GetAttr(data->friend, aHidd_BitMap_ModeID, &bmmodeid);
+                D(bug("!!! BitMap:New() Using Friends ModeID - 0x%08X !!!\n", bmmodeid));
+            }
+
+            if (bmmodeid == vHidd_ModeID_Invalid)
+            {
+                D(bug("!!! BitMap:New() NO VALID MODEID SPECIFIED FOR DISPLAYABLE BITMAP !!!\n"));
+                data->compositable = ok = FALSE;
             }
             else
             {
                 OOP_Object *sync, *pf;
 
-                if (!HIDD_Gfx_GetMode(data->gfxhidd, data->modeid, &sync, &pf))
+                if (!HIDD_Gfx_GetMode(data->gfxhidd, bmmodeid, &sync, &pf))
                 {
-                    D(bug("!!! BitMap::New() RECEIVED INVALID MODEID 0x%08X\n", data->modeid));
-                    ok = FALSE;
+                    D(bug("!!! BitMap::New() RECEIVED INVALID MODEID 0x%08X\n", bmmodeid));
+                    data->compositable = ok = FALSE;
                 }
                 else
                 {
@@ -1129,6 +1147,10 @@ VOID BM__Root__Get(OOP_Class *cl, OOP_Object *obj, struct pRoot_Get *msg)
     {
         switch(idx)
         {
+        case aoHidd_BitMap_BMStruct:
+            *msg->storage = (IPTR)data->bmstruct;
+             return;
+
         case aoHidd_BitMap_Width:
             *msg->storage = data->width;
              D(bug("  width: %i\n", data->width));
@@ -1185,6 +1207,10 @@ VOID BM__Root__Get(OOP_Class *cl, OOP_Object *obj, struct pRoot_Get *msg)
         case aoHidd_BitMap_Visible:
             /* Framebuffer is always visible */
             *msg->storage = data->framebuffer ? TRUE : data->visible;
+            return;
+
+        case aoHidd_BitMap_Compositable:
+            *msg->storage = (IPTR)data->compositable;
             return;
 
         /*
@@ -1811,7 +1837,7 @@ VOID BM__Hidd_BitMap__DrawRect(OOP_Class *cl, OOP_Object *obj,
     FUNCTION
 
         Draws a solid rectangle. minX and minY specifies the upper
-        left corner of the rectangle. minY and maxY specifies the lower
+        left corner of the rectangle. maxX and maxY specifies the lower
         right corner of the rectangle.
         The function does not clip the rectangle against the drawing area.
 
@@ -4218,7 +4244,7 @@ VOID BM__Hidd_BitMap__BlitColorExpansion(OOP_Class *cl, OOP_Object *o,
                 msg->srcBitMap, msg->srcX, msg->srcY, msg->destX, msg->destY, msg->width, msg->height));
 
     cemd = GC_COLEXP(gc);
-    fg   = GC_FG(gc);Sticky jingles
+    fg   = GC_FG(gc);
     bg   = GC_BG(gc);
 
 /* bug("------------- Blit_ColExp: (%d, %d, %d, %d, %d, %d) cemd=%d, fg=%p, bg=%p -------------\n"
@@ -5105,6 +5131,45 @@ void BM__Hidd_BitMap__SetBitMapTags(OOP_Class *cl, OOP_Object *o, struct TagItem
             case aoHidd_BitMap_BytesPerRow:
                 data->bytesPerRow = tag->ti_Data;
                 break;
+
+            case aoHidd_BitMap_Compositable:
+                data->compositable = tag->ti_Data;
+                if (data->compositable)
+                {
+                    HIDDT_ModeID compositmodeid;
+                    struct Library *OOPBase = csd->cs_OOPBase;
+
+                    if (data->friend)
+                    {
+                        OOP_GetAttr(data->friend, aHidd_BitMap_ModeID, &compositmodeid);
+                    }
+                    else
+                        compositmodeid = data->modeid;
+
+                    if (compositmodeid == vHidd_ModeID_Invalid)
+                    {
+                        data->compositable = FALSE;
+                    }
+                    else
+                    {
+                        OOP_Object *sync, *pf;
+
+                        if (!HIDD_Gfx_GetMode(data->gfxhidd, compositmodeid, &sync, &pf))
+                        {
+                            data->compositable = FALSE;
+                        }
+                        else
+                        {
+                            /* Get display size from the modeid */
+                            OOP_GetAttr(sync, aHidd_Sync_HDisp, &data->displayWidth);
+                            OOP_GetAttr(sync, aHidd_Sync_VDisp, &data->displayHeight);
+                            data->display.MaxX = data->displayWidth;
+                            data->display.MaxY = data->displayHeight;
+
+                            D(bug("[BitMap] Bitmap %dx%d, display %dx%d\n", data->width, data->height, data->display.width, data->display.height));
+                        }
+                    }
+                }
             }
         }
     }
@@ -5137,7 +5202,7 @@ void BM__Hidd_BitMap__SetPixFmt(OOP_Class *cl, OOP_Object *o, OOP_Object *pf)
 /*
  * Change visible state of the bitmap.
  * Used in mirrored framebuffer mode. Actually needed because
- * of semaphore barried, which makes sure that bitmap state does
+ * of semaphore barrier, which makes sure that bitmap state does
  * not change during scrolling or updating operation. Prevents possibilities
  * of screen corruption during concurrently running scrolling with Show.
  */

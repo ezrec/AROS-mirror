@@ -189,6 +189,7 @@ struct HIDDBitMapData
 {
     struct _hidd_bitmap_protected prot;
 
+    struct BitMap          *bmstruct;
     UWORD                  width;         /* width of the bitmap in pixel                  */
     UWORD                  height;        /* height of the bitmap in pixel                 */
     UWORD                  align;         /* Default alignment                             */
@@ -197,7 +198,8 @@ struct HIDDBitMapData
     struct Rectangle       display;       /* Display rectangle (in bitmap's coordinates !) */
     struct SignalSemaphore lock;          /* Scroll/update semaphore                       */
     BOOL                   visible;       /* bitmap visible ?                              */
-    BOOL                   displayable;   /* bitmap displayable ?                          */
+    BOOL                   displayable;   /* bitmap directly displayable?                  */
+    BOOL                   compositable;  /* bitmap displayable via compositor             */
     BOOL                   framebuffer;	  /* is a framebuffer ?		                   */
     BOOL                   pf_registered; /* Registered own pixelformat ?	           */
     ULONG                  flags;         /* see hidd/graphic.h 'flags for                 */

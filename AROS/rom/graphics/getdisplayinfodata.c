@@ -15,7 +15,7 @@
 #include <string.h>
 
 #include "graphics_intern.h"
-#include "compositing_driver.h"
+#include "compositor_driver.h"
 #include "dispinfo.h"
 
 /****************************************************************************************/
@@ -277,9 +277,17 @@ static inline void CalcScreenResolution(Point *res, const struct MonitorSpec *ms
 	    /* At the moment sprites always have the same resolution as display */
 	    di->SpriteResolution = di->Resolution;
 
+            /* 
+                    AROS extensions to allow querying if a hidd bitmap can be displayed
+                    via the display compositor, and to enable it.
+                    e.g openscreen uses these to determine if a custombitmap may be displayed.
+                */
+            di->reserved[0] = (IPTR)compositor_IsBMCompositable;
+            di->reserved[1] = (IPTR)compositor_SetBMCompositable;
+
 	    break;
 	}
-	    
+
 	case DTAG_DIMS:
 	{
 	    struct DimensionInfo *di;
@@ -340,14 +348,17 @@ static inline void CalcScreenResolution(Point *res, const struct MonitorSpec *ms
 	     * It can't be done in another way because only we (graphics.library) know about existence
 	     * of software screen composition.
 	     */
-	    if (DIH(handle)->drv->composer)
+	    if (DIH(handle)->drv->compositor)
 	    {
-	    	OOP_GetAttr(DIH(handle)->drv->composer, aHidd_Compositing_Capabilities, &di->reserved[0]);
+                IPTR capabilities, state;
+                OOP_GetAttr(DIH(handle)->drv->compositor, aHidd_Compositor_Capabilities, &capabilities);
+                OOP_GetAttr(DIH(handle)->drv->compositor, aHidd_Compositor_State, &state);
+                di->reserved[0] = (capabilities << 16) | state;
 	    }
 	    else
 	    {
-		HIDD_Gfx_ModeProperties(gfxhidd, hiddmode, &HIDDProps, sizeof(HIDDProps));
-		di->reserved[0] = HIDDProps.CompositionFlags;
+                HIDD_Gfx_ModeProperties(gfxhidd, hiddmode, &HIDDProps, sizeof(HIDDProps));
+                di->reserved[0] = (HIDDProps.CompositionFlags << 16) | HIDDProps.CompositionFlags;
 	    }
 
 	    /* This is for cybergraphics.library */
@@ -385,7 +396,7 @@ static inline void CalcScreenResolution(Point *res, const struct MonitorSpec *ms
 	     */
 	    mi->PreferredModeID = ID;
 
-	    if (DIH(handle)->drv->composer)
+	    if (DIH(handle)->drv->compositor)
 	    {
 	    	/*
 	    	 * If we have software screen composition, we know we can compose.

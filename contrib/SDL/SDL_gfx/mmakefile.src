@@ -6,7 +6,7 @@
 #MM- contrib-sdl-sdl-gfx : development-SDL_gfx
 
 #MM- development-SDL_gfx : \
-#MM    linklibs-SDL \
+#MM    SDL-aros-lib \
 #MM    workbench-libs-z \
 #MM    workbench-libs-png \
 #MM    workbench-libs-jpeg

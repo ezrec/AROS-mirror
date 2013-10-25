@@ -1,5 +1,5 @@
-## chunk AUTH Jens Langner, Hans-Jörg Ottinger
-## version $VER: TheBar.catalog 21.2 (06.03.2007)
+## chunk AUTH Jens Langner, Thore Böckelmann, Hans-Jörg Ottinger
+## version $VER: TheBar.catalog 21.4 (9.1.2013)
 ## codeset 0
 ## language deutsch
 ;
@@ -333,12 +333,14 @@ Wenn gewählt, werden die Knöpfe skaliert dargestellt.
 ; If selected, buttons are scaled.
 ;
 Msg_BarSpacer
-Leistenzwischenraum
-; Bar spacer
+Leistentrenner erzwingen
+; Force Bar spacer
 ;
 Msg_BarSpacer_Help
-Wenn gewählt, wird ein Leistenzwischenraum als Trenner benutzt.
-; If selected, a bar spacer is used\nas buttons separator.
+Wenn gewählt, wird ein Leistentrenner für alle\n\
+Arten von Zwischenräumen benutzt.
+; If selected, a bar spacer is used\n\
+; for all kind of separators.
 ;
 Msg_EnableKeys
 Aktiviere Tastenkürzel
@@ -653,18 +655,6 @@ ein Pixel
 Msg_SpacersSize_TwoPoint
 zwei Pixer
 ;
-;
-Msg_Info_First
-%s\n\
-Copyright (c) 2003-2008 Alfonso Ranieri\n\
-and TheBar Open Source Team
-;
-Msg_Info_Reserved
-Distributed under the terms of the LGPL2.
-;
-Msg_Info_Rest
-For recent versions and updates visit:\n\
-http://www.sourceforge.net/projects/thebar
 ;
 Msg_Info_Translator
 Deutsch : Jens Langner, Hans-Jörg Ottinger

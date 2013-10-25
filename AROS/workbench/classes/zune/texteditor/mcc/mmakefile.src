@@ -7,10 +7,10 @@ include $(TOP)/config/make.cfg
 # We need to use -idirafter, so that we
 # *don't* pick up the project's local MUI headers.
 USER_INCLUDES := -idirafter $(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../mcp
+USER_CFLAGS := -DAROS_ABI_V1
 
 FILES := library \
         AllocBitMap \
-        AllocFunctions \
         BlockOperators \
         CaseConversion \
         ClipboardServer \
@@ -38,7 +38,9 @@ FILES := library \
         SpellChecker \
         StyleOperators \
         UndoFunctions \
-        Debug
+        NewGfx \
+        Debug \
+	extrasrc/MoveList
 
 %build_module_simple mmake=workbench-classes-zune-texteditor-class \
   modname=TextEditor modtype=mcc \

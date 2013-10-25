@@ -7,6 +7,7 @@
 */
 
 #include <hidd/graphics.h>
+#include <cybergraphx/cybergraphics.h>
 
 #include "cybergraphics_intern.h"
 
@@ -46,8 +47,14 @@
 {
     AROS_LIBFUNC_INIT
     
+    struct TagItem ultags[2] =
+    {
+            {UBMI_REALLYUNLOCK, TRUE    },
+            {TAG_DONE, 0                        }
+    };
+
     if (Handle)
-        HIDD_BM_ReleaseDirectAccess((OOP_Object *)Handle);
+        UnLockBitMapTagList(Handle, ultags);
 
     AROS_LIBFUNC_EXIT
 } /* UnLockBitMap */

@@ -7,6 +7,7 @@ include $(TOP)/config/make.cfg
 include $(SRCDIR)/$(CURDIR)/regina.ver
 
 #MM- AROS : contrib-regina
+#MM- contrib-complete : contrib-regina
 
 #MM- contrib-regina : contrib-regina-exes contrib-regina-module \
 #MM      contrib-regina-test
@@ -70,7 +71,7 @@ FILES := $(OFILES) \
 
 %build_module mmake=contrib-regina-module \
     modname=regina modtype=library \
-    files=$(FILES) uselibs="arosc_rel" \
+    files=$(FILES) \
     objdir=$(GENDIR)/$(CURDIR)/shared linklibname=regina_shared
 
 %copy_includes includes=rexxsaa.h

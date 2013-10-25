@@ -8,7 +8,7 @@ include $(TOP)/config/make.cfg
 
 PACKAGE      := cflow
 VERSION      := 1.4
-TARGETDIR    := $(AROS_CONTRIB)/Development/CFLow
+TARGETDIR    := $(AROS_CONTRIB)/Development/CFlow
 REPOSITORIES := gnu://cflow
 
 %fetch_and_build mmake=ports-devel-cflow prefix=$(TARGETDIR) \

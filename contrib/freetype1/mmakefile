@@ -1,7 +1,0 @@
-#MM- contrib-freetype : contrib-freetype1
-
-#MM- contrib-freetype1 : \
-#MM      contrib-freetype1-linklib \
-#MM      contrib-freetype1-module \
-#MM      contrib-freetype1-includes \
-#MM      contrib-freetype1-test

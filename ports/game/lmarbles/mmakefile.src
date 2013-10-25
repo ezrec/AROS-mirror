@@ -1,0 +1,67 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game : ports-game-lmarbles
+
+#MM- ports-game-lmarbles : contrib-sdl ports-game-lmarbles-drawericon
+
+PACKAGE      := lmarbles
+VERSION      := 1.0.8
+TARGETDIR    := $(AROS_CONTRIB)/Games/LMarbles
+REPOSITORIES := sf://lgames
+
+%fetch_and_build mmake=ports-game-lmarbles prefix=$(TARGETDIR) \
+    package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
+    patch=yes package_repo=$(REPOSITORIES) nix=yes nix_dir_layout=no \
+    extracflags="" install_target= postinstall=ports-game-lmarbles-install \
+    extraoptions="-datarootdir='$$(PROGDIR)share' LIBS='-lvorbisfile -lvorbis -logg'" 
+
+
+#MM- ports-game-lmarbles-install : \
+#MM     ports-game-lmarbles-install-bin \
+#MM     ports-game-lmarbles-install-gfx \
+#MM     ports-game-lmarbles-install-snd \
+#MM     ports-game-lmarbles-install-lvl \
+#MM     ports-game-lmarbles-install-files \
+#MM     ports-game-lmarbles-install-var
+
+%copy_files_q mmake=ports-game-lmarbles-install-bin \
+   files=lmarbles src=$(GENDIR)/$(CURDIR)/lmarbles/src dst=$(TARGETDIR)
+
+FILES := AUTHORS ChangeLog COPYING NEWS TODO
+%copy_files_q mmake=ports-game-lmarbles-install-files \
+    src=$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION) dst=$(TARGETDIR)
+
+%copy_dir_recursive mmake=ports-game-lmarbles-install-gfx \
+    src=$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/src/gfx \
+    dst=$(TARGETDIR)/share/lmarbles/gfx
+
+%copy_dir_recursive mmake=ports-game-lmarbles-install-snd \
+    src=$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/src/sounds \
+    dst=$(TARGETDIR)/share/lmarbles/sounds
+
+%copy_dir_recursive mmake=ports-game-lmarbles-install-lvl \
+    src=$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/src/levels \
+    dst=$(TARGETDIR)/share/lmarbles/levels
+
+
+#MM
+ports-game-lmarbles-install-var : $(TARGETDIR)/var
+
+$(TARGETDIR)/var :
+	%mkdir_q dir=$@
+
+
+ICONS := LMarbles
+
+%build_icons mmake=ports-game-lmarbles-drawericon \
+    icons=$(ICONS) dir=$(TARGETDIR)/..
+
+
+#MM
+ports-game-lmarbles-clean :
+	$(RM) $(TARGETDIR)
+	$(RM) $(GENDIR)/$(CURDIR)
+
+%common

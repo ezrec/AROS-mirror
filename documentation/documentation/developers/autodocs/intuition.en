@@ -5602,7 +5602,7 @@ Result
 ~~~~~~
 ::
 
- Depends in the class. For gadgets, this value is non-zero if
+ Depends on the class. For gadgets, this value is non-zero if
  they need redrawing after the values have changed. Other classes
  will define other return values.
 

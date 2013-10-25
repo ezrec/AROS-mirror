@@ -1,7 +1,9 @@
 /*
-    Copyright © 2011, The AROS Development Team.
+    Copyright © 2011-2013, The AROS Development Team.
     $Id$
 */
+
+#include <aros/debug.h>
 
 #include <intuition/imageclass.h>
 #include <graphics/rpattr.h>
@@ -9,8 +11,10 @@
 #include <proto/arossupport.h>
 #include <proto/graphics.h>
 #include <proto/cybergraphics.h>
+#include <proto/layers.h>
 #include <proto/exec.h>
-#include <aros/debug.h>
+
+#include <hidd/graphics.h>
 
 #include <math.h>
 
@@ -1034,12 +1038,143 @@ void PutImageToRP(struct RastPort *rp, struct NewImage *ni, UWORD x, UWORD y) {
     }
 }
 
+struct ShadeData
+{
+    struct NewImage     *ni;
+    UWORD               fact;
+    /* RectList for UnLockBitMap */
+    ULONG               rl_num;
+    IPTR                  rl_next;
+    struct Rectangle rl_rect;
+};
+
+struct layerhookmsg
+{
+    struct Layer *l;
+/*  struct Rectangle rect; (replaced by the next line!) */
+    WORD MinX, MinY, MaxX, MaxY;
+    LONG OffsetX, OffsetY;
+};
+
+ULONG CalcShade(ULONG base, UWORD fact)
+{
+    int     c0, c1, c2, c3;
+
+    c0 = (base >> 24) & 0xff;
+    c1 = (base >> 16) & 0xff;
+    c2 = (base >> 8) & 0xff;
+    c3 = base & 0xff;
+    c0 *= fact;
+    c1 *= fact;
+    c2 *= fact;
+    c3 *= fact;
+    c0 = c0 >> 8;
+    c1 = c1 >> 8;
+    c2 = c2 >> 8;
+    c3 = c3 >> 8;
+
+    if (c0 > 255) c0 = 255;
+    if (c1 > 255) c1 = 255;
+    if (c2 > 255) c2 = 255;
+    if (c3 > 255) c3 = 255;
+
+    return (ULONG)((c0 << 24) | (c1 << 16) | (c2 << 8) | c3);
+}
+
+AROS_UFH3(void, RectShadeFunc,
+    AROS_UFHA(struct Hook *        , h,      A0),
+    AROS_UFHA(struct RastPort *    , rp,     A2),
+    AROS_UFHA(struct layerhookmsg *, msg,    A1))
+{
+    AROS_USERFUNC_INIT
+
+    APTR        bm_handle;
+    ULONG       bm_bytesperrow;
+    IPTR        bm_baseaddress;
+
+    int         px, py, x, y;
+
+    ULONG       color;
+    HIDDT_Color col;
+
+    struct ShadeData *data = h->h_Data;
+
+    bm_handle = LockBitMapTags(rp->BitMap,
+                    LBMI_BYTESPERROW,   &bm_bytesperrow,
+                    LBMI_BASEADDRESS,   &bm_baseaddress,
+                    TAG_END);
+
+    if (msg->MinX == msg->MaxX)
+    {
+        x = (msg->MinX - rp->Layer->bounds.MinX) % data->ni->w; 
+        for (py = msg->MinY; py < (msg->MaxY + 1); py++)
+        {
+            y = (py - rp->Layer->bounds.MinY) % data->ni->h;
+            color = CalcShade(data->ni->data[x + y * data->ni->w], data->fact);
+
+            if (bm_handle)
+            {
+                col.alpha = (HIDDT_ColComp)((color >> 16) & 0x0000FF00);
+                col.red = (HIDDT_ColComp)((color >> 8) & 0x0000FF00);
+                col.green = (HIDDT_ColComp)(color & 0x0000FF00);
+                col.blue = (HIDDT_ColComp)((color << 8) & 0x0000FF00);
+
+                HIDD_BM_PutPixel(HIDD_BM_OBJ(rp->BitMap), msg->MinX, py, HIDD_BM_MapColor(HIDD_BM_OBJ(rp->BitMap), &col));
+            }
+            else
+            {
+                WriteRGBPixel(rp, msg->OffsetX, py + msg->OffsetY - msg->MinY, color);
+            }
+        }
+    }
+    else
+    {
+        y = (msg->MinY - rp->Layer->bounds.MinY) % data->ni->h;
+        for (px = msg->MinX; px < (msg->MaxX + 1); px++) {
+            x = (px - rp->Layer->bounds.MinX) % data->ni->h;
+            color = CalcShade(data->ni->data[x + y * data->ni->w], data->fact);
+
+            if (bm_handle)
+            {
+                col.alpha = (HIDDT_ColComp)((color >> 16) & 0x0000FF00);
+                col.red = (HIDDT_ColComp)((color >> 8) & 0x0000FF00);
+                col.green = (HIDDT_ColComp)(color & 0x0000FF00);
+                col.blue = (HIDDT_ColComp)((color << 8) & 0x0000FF00);
+
+                HIDD_BM_PutPixel(HIDD_BM_OBJ(rp->BitMap), px, msg->MinY, HIDD_BM_MapColor(HIDD_BM_OBJ(rp->BitMap), &col));
+            }
+            else
+            {
+                WriteRGBPixel(rp, px + msg->OffsetX - msg->MinX, msg->OffsetY, color);
+            }
+        }
+    }
+
+    if (bm_handle)
+    {
+        struct TagItem bm_ultags[3] =
+        {
+                {UBMI_REALLYUNLOCK, TRUE                },
+                {UBMI_UPDATERECTS,  (IPTR)&data->rl_num },
+                {TAG_DONE, 0                            }
+        };
+
+        data->rl_rect.MinX = msg->MinX;
+        data->rl_rect.MinY = msg->MinY;
+        data->rl_rect.MaxX = msg->MaxX;
+        data->rl_rect.MaxY = msg->MaxY;
+
+        UnLockBitMapTagList(bm_handle, bm_ultags);
+    }
+    else
+        UpdateBitMap(rp->BitMap, msg->MinX, msg->MinY, msg->MaxX - msg->MinX + 1, msg->MaxY - msg->MinY + 1);
+
+    AROS_USERFUNC_EXIT
+}
+
 void ShadeLine(LONG pen, BOOL tc, BOOL usegradients, struct RastPort *rp, struct NewImage *ni, ULONG basecolor, UWORD fact, UWORD _offy, UWORD x0, UWORD y0, UWORD x1, UWORD y1)
 {
-    int px, py, x, y;
-    ULONG   c;
-    int     c0, c1, c2, c3;
-    UWORD   offy = 0;
+    ULONG   color;
 
     if ((x1 < x0) || (y1 < y0)) return;
     if (!tc)
@@ -1051,81 +1186,31 @@ void ShadeLine(LONG pen, BOOL tc, BOOL usegradients, struct RastPort *rp, struct
     }
     if (usegradients)
     {
-        c = basecolor;
-        c3 = (c >> 24) & 0xff;
-        c2 = (c >> 16) & 0xff;
-        c1 = (c >> 8) & 0xff;
-        c0 = c & 0xff;
-        c0 *= fact;
-        c1 *= fact;
-        c2 *= fact;
-        c3 *= fact;
-        c0 = c0 >> 8;
-        c1 = c1 >> 8;
-        c2 = c2 >> 8;
-        c3 = c3 >> 8;
-        if (c0 > 255) c0 = 255;
-        if (c1 > 255) c1 = 255;
-        if (c2 > 255) c2 = 255;
-        if (c3 > 255) c3 = 255;
-        c = (c3 << 24) | (c2 << 16) | (c1 << 8) | c0;
-        SetRPAttrs(rp, RPTAG_PenMode, FALSE, RPTAG_FgColor, c, TAG_DONE);
+        color = CalcShade(basecolor, fact);
+        SetRPAttrs(rp, RPTAG_PenMode, FALSE, RPTAG_FgColor, color, TAG_DONE);
         Move(rp, x0, y0);
         Draw(rp, x1, y1);
     }
     else if (ni->ok)
     {
-        if (x0 == x1)
-        {
-            x = x0 % ni->w; 
-            for (py = y0; py < y1; py++)
-            {
-                y = (py - offy) % ni->h;
-                c = ni->data[x + y * ni->w];
-                c0 = (c >> 24) & 0xff;
-                c1 = (c >> 16) & 0xff;
-                c2 = (c >> 8) & 0xff;
-                c3 = c & 0xff;
-                c0 *= fact;
-                c1 *= fact;
-                c2 *= fact;
-                c3 *= fact;
-                c0 = c0 >> 8;
-                c1 = c1 >> 8;
-                c2 = c2 >> 8;
-                c3 = c3 >> 8;
-                if (c0 > 255) c0 = 255;
-                if (c1 > 255) c1 = 255;
-                if (c2 > 255) c2 = 255;
-                if (c3 > 255) c3 = 255;
-                c = (c3 << 24) | (c2 << 16) | (c1 << 8) | c0;
-                WriteRGBPixel(rp, x0, py, c);
-            }
-        } else {
-            y = (y0 - offy) % ni->h;
-            for (px = x0; px < x1; px++) {
-                x = px % ni->h;
-                c = ni->data[x + y * ni->w];
-                c0 = (c >> 24) & 0xff;
-                c1 = (c >> 16) & 0xff;
-                c2 = (c >> 8) & 0xff;
-                c3 = c & 0xff;
-                c0 *= fact;
-                c1 *= fact;
-                c2 *= fact;
-                c3 *= fact;
-                c0 = c0 >> 8;
-                c1 = c1 >> 8;
-                c2 = c2 >> 8;
-                c3 = c3 >> 8;
-                if (c0 > 255) c0 = 255;
-                if (c1 > 255) c1 = 255;
-                if (c2 > 255) c2 = 255;
-                if (c3 > 255) c3 = 255;
-                c = (c3 << 24) | (c2 << 16) | (c1 << 8) | c0;
-                WriteRGBPixel(rp, px, y0, c);
-            }
-        }
+        struct ShadeData shadeParams;
+        struct Hook      shadeHook;
+	struct Rectangle shadeRect;
+
+        shadeRect.MinX = x0;
+        shadeRect.MaxX = x1;
+        shadeRect.MinY = y0;
+        shadeRect.MaxY = y1;
+
+        shadeParams.ni = ni;
+        shadeParams.fact = fact;
+        shadeParams.rl_num = 1;
+        shadeParams.rl_next = (IPTR)NULL;
+
+        shadeHook.h_Entry = (HOOKFUNC)AROS_ASMSYMNAME(RectShadeFunc);
+        shadeHook.h_Data = &shadeParams;
+
+        DoHookClipRects(&shadeHook, rp, &shadeRect);
     }
     else
     {

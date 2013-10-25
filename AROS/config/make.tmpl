@@ -23,7 +23,7 @@ endif
 # Compile the file %(from) to %(to) with %(cmd). Write any errors to %(err)
 # and use the options in %(opt). Use %(iquote) and %(iquote_end) for supplying -iquote or -I- flags
 %define compile_q cmd="$(TARGET_CC) $(TARGET_CFLAGS)" opt=$(CFLAGS) from=$< to=$@ iquote=$(CFLAGS_IQUOTE) iquote_end=$(CFLAGS_IQUOTE_END)
-	@$(ECHO) "Compiling  $(CURDIR)/$(notdir %(from))"
+	@$(ECHO) "Compiling  $(if $(filter /%,%(from)),$(if $(filter $(SRCDIR)/%,$(abspath %(from))),$(patsubst $(SRCDIR)/%,%,$(abspath %(from))),$(patsubst $(TOP)/%,%,$(abspath %(from)))),$(patsubst $(SRCDIR)/%,%,$(abspath $(SRCDIR)/$(CURDIR)/%(from))))"
 	@$(IF) %(cmd) %(iquote) $(dir %(from)) %(iquote) $(SRCDIR)/$(CURDIR) %(iquote) . %(iquote_end) %(opt) -c %(from) -o %(to) > $(GENDIR)/cerrors 2>&1 ; then \
 	    $(IF) $(TEST) -s $(GENDIR)/cerrors ; then \
 		$(ECHO) "%(from): %(cmd) %(iquote) $(dir %(from)) %(iquote) $(SRCDIR)/$(CURDIR) %(iquote) . %(iquote_end) %(opt) -c %(from) -o %(to)" >> $(GENDIR)/errors ; \
@@ -85,16 +85,16 @@ endif
 # Link a module based upon a number of arguments and the standard $(LIBS)
 # and $(DEPLIBS) make variables.
 #
-%define link_module_q err="$(notdir $@).err" objs=/A endtag= module=$(MODULE) ldflags=$(LDFLAGS) libs=$(LIBS) objdir=$(OBJDIR)
+%define link_module_q cmd=$(AROS_CC) err="$(notdir $@).err" objs=/A endtag= module=$(MODULE) ldflags=$(LDFLAGS) libs=$(LIBS) objdir=$(OBJDIR)
 	@$(ECHO) "Building   $(subst $(TARGETDIR)/,,$@) ..."
-	@if $(AROS_CC) $(NOSTARTUP_LDFLAGS) %(ldflags) \
+	@if %(cmd) $(NOSTARTUP_LDFLAGS) -nostdc %(ldflags) \
 	    $(GENMAP) %(objdir)/%(module).map \
 	    %(objs) %(libs) %(endtag) \
 	    -o $@ 2>&1 > %(objdir)/%(err); \
 	then \
 	    cat %(objdir)/%(err); \
 	else \
-	    echo "$(AROS_CC) $(NOSTARTUP_LDFLAGS) %(ldflags) $(GENMAP) %(objdir)/%(module).map %(objs) %(libs) %(endtag) -o $@"; \
+	    echo "%(cmd) $(NOSTARTUP_LDFLAGS) -nostdc %(ldflags) $(GENMAP) %(objdir)/%(module).map %(objs) %(libs) %(endtag) -o $@"; \
 	    cat %(objdir)/%(err); \
 	    exit 1; \
 	fi
@@ -119,7 +119,7 @@ endif
 # Create the dependency file %(to) for %(from)
 %define mkdepend_q flags=$(CFLAGS) from=$< to=$@ cc=$(AROS_CC)
 	%mkdir_q dir="$(dir %(to))"
-	@$(ECHO) "Makedepend $(CURDIR)/$(notdir %(from))..."
+	@$(ECHO) "Makedepend $(if $(filter /%,%(from)),$(if $(filter $(SRCDIR)/%,$(abspath %(from))),$(patsubst $(SRCDIR)/%,%,$(abspath %(from))),$(patsubst $(TOP)/%,%,$(abspath %(from)))),$(patsubst $(SRCDIR)/%,%,$(abspath $(SRCDIR)/$(CURDIR)/%(from))))..."
 	@AROS_CC="%(cc)" $(MKDEPEND) %(flags) -I$(TOP)/$(CURDIR) -I$(SRCDIR)/$(CURDIR) %(from) -o %(to)
 %end
 #------------------------------------------------------------------------------
@@ -276,7 +276,7 @@ GLOB_MKDIRS += %(dirs)
 #   the same value as cflags will be used
 # - targetdir: the directory to put the .o file and the .d file. By default
 #   it is put in the same directory as the .c file
-%define rule_compile basename=/A cflags=$(CFLAGS) dflags= targetdir= compiler=target nix=no
+%define rule_compile basename=/A cflags=$(CFLAGS) dflags= targetdir= compiler=target
 
 ifeq (%(targetdir),)
   TMP_TARGETBASE := %(basename)
@@ -312,11 +312,7 @@ $(TMP_TARGETBASE).o : TMP_IQUOTE_END:=$(KERNEL_IQUOTE_END)
 $(TMP_TARGETBASE).d : TMP_IQUOTE_END:=$(KERNEL_IQUOTE_END)
 endif
 
-ifeq (%(nix),yes)
-  $(TMP_TARGETBASE).o : CFLAGS := -nix %(cflags)
-else
-  $(TMP_TARGETBASE).o : CFLAGS := %(cflags)
-endif
+$(TMP_TARGETBASE).o : CFLAGS := %(cflags)
 $(TMP_TARGETBASE).o : %(basename).c
 	%compile_q cmd=$(TMP_CMD) iquote=$(TMP_IQUOTE) iquote_end=$(TMP_IQUOTE_END)
 
@@ -351,7 +347,7 @@ $(TMP_TARGETBASE).d : %(basename).c
 #   the same value as cflags will be used
 # - targetdir: the directory to put the .o file and the .d file. By default
 #   it is put in the same directory as the .c file
-%define rule_compile_cxx basename=/A cflags=$(CFLAGS) dflags= targetdir= compiler=target nix=no
+%define rule_compile_cxx basename=/A cflags=$(CFLAGS) dflags= targetdir= compiler=target
 
 ifeq (%(targetdir),)
   TMP_TARGETBASE := %(basename)
@@ -368,8 +364,8 @@ ifeq ($(findstring %(compiler),host kernel target),)
   $(error unknown compiler %(compiler))
 endif
 ifeq (%(compiler),target)
-$(TMP_TARGETBASE).o : TMP_CMD:=$(TARGET_CC) $(TARGET_CFLAGS)
-$(TMP_TARGETBASE).d : TMP_CMD:=$(TARGET_CC) $(TARGET_CFLAGS)
+$(TMP_TARGETBASE).o : TMP_CMD:=$(AROS_CXX) $(TARGET_CFLAGS)
+$(TMP_TARGETBASE).d : TMP_CMD:=$(AROS_CXX) $(TARGET_CFLAGS)
 $(TMP_TARGETBASE).o : TMP_IQUOTE:=$(CFLAGS_IQUOTE)
 $(TMP_TARGETBASE).d : TMP_IQUOTE:=$(CFLAGS_IQUOTE)
 $(TMP_TARGETBASE).o : TMP_IQUOTE_END:=$(CFLAGS_IQUOTE_END)
@@ -392,11 +388,7 @@ $(TMP_TARGETBASE).o : TMP_IQUOTE_END:=$(KERNEL_IQUOTE_END)
 $(TMP_TARGETBASE).d : TMP_IQUOTE_END:=$(KERNEL_IQUOTE_END)
 endif
 
-ifeq (%(nix),yes)
-  $(TMP_TARGETBASE).o : CFLAGS := -nix $(TMP_CXXFLAGS)
-else
-  $(TMP_TARGETBASE).o : CFLAGS := $(TMP_CXXFLAGS)
-endif
+$(TMP_TARGETBASE).o : CFLAGS := $(TMP_CXXFLAGS)
 $(TMP_TARGETBASE).o : %(basename).cpp
 	%compile_q cmd=$(TMP_CMD) iquote=$(TMP_IQUOTE) iquote_end=$(TMP_IQUOTE_END)
 
@@ -540,18 +532,11 @@ else
   endif
 endif
 
-# Define the use of cross compiler
-ifeq ($(TARGET_CXX),)
-  TMP_CC := $(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-g++
-else
-  TMP_CC := $(TARGET_CXX)
-endif
-
 ifeq ($(findstring %(compiler),host kernel target),)
   $(error unknown compiler %(compiler))
 endif
 ifeq (%(compiler),target)
-  $(TMP_TARGETS) $(TMP_DTARGETS) : CMD:=$(TMP_CC) $(TARGET_CFLAGS)
+  $(TMP_TARGETS) $(TMP_DTARGETS) : CMD:=$(AROS_CXX) $(TARGET_CFLAGS)
   $(TMP_TARGETS) $(TMP_DTARGETS) : TMP_IQUOTE:=$(CFLAGS_IQUOTE)
   $(TMP_TARGETS) $(TMP_DTARGETS) : TMP_IQUOTE_END:=$(CFLAGS_IQUOTE_END)
 endif
@@ -597,7 +582,7 @@ $(TMP_DTARGETS) : $(TMP_WILDCARD).d : %%(suffix)
 #   the same value as cflags will be used
 # - targetdir: the directory to put the .o file and the .d file. By default
 #   it is put in the same directory as the .m file
-%define rule_compile_objc basename=/A cflags=$(CFLAGS) dflags= targetdir= compiler=target nix=no
+%define rule_compile_objc basename=/A cflags=$(CFLAGS) dflags= targetdir= compiler=target
 
 ifeq (%(targetdir),)
   TMP_TARGETBASE := %(basename)
@@ -638,11 +623,7 @@ $(TMP_TARGETBASE).o : TMP_IQUOTE_END:=$(KERNEL_IQUOTE_END)
 $(TMP_TARGETBASE).d : TMP_IQUOTE_END:=$(KERNEL_IQUOTE_END)
 endif
 
-ifeq (%(nix),yes)
-  $(TMP_TARGETBASE).o : CFLAGS := -nix $(TMP_OBJCFLAGS)
-else
-  $(TMP_TARGETBASE).o : CFLAGS := $(TMP_OBJCFLAGS)
-endif
+$(TMP_TARGETBASE).o : CFLAGS := $(TMP_OBJCFLAGS)
 $(TMP_TARGETBASE).o : %(basename).m
 	%compile_q cmd=$(TMP_CMD) iquote=$(TMP_IQUOTE) iquote_end=$(TMP_IQUOTE_END)
 
@@ -864,8 +845,8 @@ ifeq (%(nix),yes)
 endif
 ifeq (%(usestartup),no)
     TMP_EXTRA_LDFLAGS += $(NOSTARTUP_LDFLAGS)
-    TMP_EXTRA_LIBS += arosc.static
     ifeq (%(linker),target)
+        TMP_EXTRA_LDFLAGS += -nostdc
         TMP_EXTRA_LIBS += libinit autoinit
     endif
 endif
@@ -930,8 +911,8 @@ ifeq (%(nix),yes)
     TMP_EXTRA_LDFLAGS += $(NIX_LDFLAGS)
 endif
 ifeq (%(usestartup),no)
-    TMP_EXTRA_LDFLAGS += $(NOSTARTUP_LDFLAGS)
-    TMP_EXTRA_LIBS += arosc.static libinit autoinit
+    TMP_EXTRA_LDFLAGS += $(NOSTARTUP_LDFLAGS) -nostdc
+    TMP_EXTRA_LIBS += libinit autoinit
 endif
 ifeq (%(detach),yes)
     TMP_EXTRA_LDFLAGS += $(DETACH_LDFLAGS)
@@ -952,10 +933,11 @@ TMP_LIBS := $(addprefix lib,$(addsuffix .a,%(uselibs) $(TMP_EXTRA_LIBS)))
 TMP_DEPLIBS := $(foreach lib,$(TMP_LIBS), \
     $(firstword $(wildcard $(addsuffix $(lib),$(TMP_DIRS)))) \
 )
+TMP_PROGS := $(addprefix %(targetdir)/,%(progs))
 
-$(addprefix %(targetdir)/,%(progs)) : LDFLAGS:= %(ldflags) $(TMP_EXTRA_LDFLAGS)
-$(addprefix %(targetdir)/,%(progs)) : LIBS:= $(addprefix -l,%(uselibs) $(TMP_EXTRA_LIBS) %(usehostlibs))
-$(addprefix %(targetdir)/,%(progs)) : %(targetdir)/% : %(objdir)/%.o $(TMP_DEPLIBS)
+$(TMP_PROGS) : LDFLAGS:= %(ldflags) $(TMP_EXTRA_LDFLAGS)
+$(TMP_PROGS) : LIBS:= $(addprefix -l,%(uselibs) $(TMP_EXTRA_LIBS) %(usehostlibs))
+$(TMP_PROGS) : %(targetdir)/% : %(objdir)/%.o $(TMP_DEPLIBS)
 	%link_q from=$< opt=$(LDFLAGS) libs=$(LIBS)
 %end
 #------------------------------------------------------------------------------
@@ -986,10 +968,11 @@ endif
 #------------------------------------------------------------------------------
 # Link the %(objs) and %(endobj) to %(module) with errors in %(err) and using
 # the libraries in %(uselibs) and the host libraries in %(usehostlibs)
-# The -noarosc flag is added so that modules are not linked with arosc.library
+# The -nostdc flag is added so that modules are not linked with stdc.library,
+# stdcio.library or posixc.library
 # (see /config/specs.in file)
 %define rule_linkmodule module=/A objs=/A endobj=/A err=/A objdir=$(OBJDIR) \
-    ldflags=$(LDFLAGS) uselibs= usehostlibs=
+    cmd=$(AROS_CC) ldflags=$(LDFLAGS) uselibs= usehostlibs=
 
 TMP_LDFLAGS  := %(ldflags)
 # Make a list of the lib files the programs depend on.
@@ -1017,7 +1000,7 @@ TMP_DEPLIBS := $(foreach lib,$(TMP_LIBS), \
 %(module) : LIBS := $(addprefix -l,$(LIB_NAMES)) \
                     -L/usr/lib $(addprefix -l,%(usehostlibs))
 %(module) : %(objs) %(endobj) $(TMP_DEPLIBS) $(USER_DEPLIBS)
-	%link_module_q err=$(ERR) endtag=$(ENDTAG) objs=$(OBJS) libs=$(LIBS) objdir=$(OBJDIR) ldflags="$(LDFLAGS) -noarosc"
+	%link_module_q cmd=%(cmd) err=$(ERR) endtag=$(ENDTAG) objs=$(OBJS) libs=$(LIBS) objdir=$(OBJDIR) ldflags="$(LDFLAGS) -nostdc"
 
 %end
 #------------------------------------------------------------------------------
@@ -1393,7 +1376,7 @@ BD_LDFLAGS   := %(ldflags)
 %(mmake) : $(BD_EXES)
 
 ifneq ($(filter $(TARGET),%(mmake) %(mmake)-quick),)
-%rule_compile basename=% targetdir=$(BD_OBJDIR) nix=%(nix) \
+%rule_compile_multi basenames=$(BD_FILES) targetdir=$(BD_OBJDIR) \
     cflags=$(BD_CFLAGS) dflags=$(BD_DFLAGS)
 
 %rule_link_progs progs=$(BD_FILES) nix=%(nix) \
@@ -1545,12 +1528,12 @@ endif
 
 %rule_linkmodule module=$(BD_MODULE) objs=$(BD_OBJS) \
 		 endobj= err=$(BD_ERR) objdir=%(objdir) \
-		 ldflags="$(LDFLAGS) $(%(modname)_LDFLAGS)" \
+		 cmd=$(AROS_CC) ldflags="$(LDFLAGS) $(%(modname)_LDFLAGS)" \
 		 uselibs="%(uselibs) $(%(modname)_LIBS)" usehostlibs="%(usehostlibs)"
 
 %rule_linkmodule module=$(BD_PKGMOD) objs=$(BD_OBJS) \
 		 endobj= err=$(BD_ERR) objdir=%(objdir) \
-		 ldflags="$(LDFLAGS) $(%(modname)_LDFLAGS)" \
+		 cmd=$(AROS_CC) ldflags="$(LDFLAGS) $(%(modname)_LDFLAGS)" \
 		 uselibs="%(uselibs) $(%(modname)_LIBS)" usehostlibs="%(usehostlibs)"
 
 # Link kernel object file
@@ -1562,7 +1545,7 @@ BD_KBASE := DOSBase IntuitionBase LayersBase GfxBase OOPBase \
 
 BD_SYMBOLS := $(BD_KBASE)
 
-BD_KLIB := hiddstubs amiga arossupport arosc.static arosm autoinit libinit
+BD_KLIB := hiddstubs amiga arossupport autoinit libinit
 BD_KOBJ_LIBS := $(filter-out $(BD_KLIB),%(uselibs)) $(BD_KAUTOLIB)
 $(BD_KOBJ) : LINKLIBS:=$(BD_KOBJ_LIBS)
 $(BD_KOBJ) : FILTBASES:=$(addprefix -L ,$(BD_SYMBOLS))
@@ -1768,6 +1751,12 @@ else
 endif
 BD_LINKLIBFILES := $(BD_LINKLIBCFILES) $(BD_LINKLIBAFILES)
 
+ifneq ($(BD_CXXFILES) $(BD_CXXXXFILES) $(BD_CXXCCFILES),)
+BD_LINKCMD=$(AROS_CXX)
+else
+BD_LINKCMD=$(AROS_CC)
+endif
+
 BD_RELLINKLIBCFILES := $(addprefix %(objdir)/,$(%(modname)_RELLINKLIBFILES))
 BD_RELLINKLIBAFILES := $(addprefix %(objdir)/,$(%(modname)_RELLINKLIBAFILES))
 ifeq ($(strip $(%(modname)_RELLINKLIBFILES) $(%(modname)_RELLINKLIBAFILES) %(linklibfiles)),)
@@ -1865,20 +1854,21 @@ endif
 # The module is linked from all the compiled .o files
 %rule_linkmodule module=$(BD_MODULE) objs="$(BD_STARTOBJS) $(BD_OBJS) $(USER_OBJS)" \
 		 endobj=$(BD_ENDOBJS) err=$(BD_ERR) objdir=%(objdir) \
-		 ldflags="$(LDFLAGS) $(%(modname)_LDFLAGS)" \
+		 cmd=$(BD_LINKCMD) ldflags="$(LDFLAGS) $(%(modname)_LDFLAGS)" \
 		 uselibs="%(uselibs) $(%(modname)_LIBS)" usehostlibs="%(usehostlibs)"
 
 %rule_linkmodule module=$(BD_PKGMOD) objs="$(BD_STARTOBJS) $(BD_OBJS) $(USER_OBJS)" \
 		 endobj=$(BD_ENDOBJS) err=$(BD_ERR) objdir=%(objdir) \
-		 ldflags="$(LDFLAGS) $(%(modname)_LDFLAGS)" \
+		 cmd=$(BD_LINKCMD) ldflags="$(LDFLAGS) $(%(modname)_LDFLAGS)" \
 		 uselibs="%(uselibs) $(%(modname)_LIBS)" usehostlibs="%(usehostlibs)"
 
 # Link static lib
+BD_LINKLIBNAME := $(shell echo %(linklibname) | tr A-Z a-z)
+BD_MODNAME     := $(shell echo %(modname) | tr A-Z a-z)
 ifneq ($(BD_LINKLIB),)
-%rule_link_linklib libname=%(modname)$(BD_LIBSUFFIX) objs=$(BD_LINKLIBOBJS) libdir=%(prefix)/$(AROS_DIR_LIB)
-
-ifneq (%(modname),%(linklibname))
 %rule_link_linklib libname=%(linklibname)$(BD_LIBSUFFIX) objs=$(BD_LINKLIBOBJS) libdir=%(prefix)/$(AROS_DIR_LIB)
+ifneq ($(BD_MODNAME),$(BD_LINKLIBNAME))
+%rule_link_linklib libname=%(modname)$(BD_LIBSUFFIX) objs=$(BD_LINKLIBOBJS) libdir=%(prefix)/$(AROS_DIR_LIB)
 endif
 
 $(BD_LINKLIB) : | %(prefix)/$(AROS_DIR_LIB)
@@ -1886,9 +1876,9 @@ GLOB_MKDIRS += %(prefix)/$(AROS_DIR_LIB)
 endif
 
 ifneq ($(BD_RELLINKLIB),)
-%rule_link_linklib libname=%(modname)_rel$(BD_LIBSUFFIX) objs=$(BD_RELLINKLIBOBJS) libdir=%(prefix)/$(AROS_DIR_LIB)
-ifneq (%(modname),%(linklibname))
 %rule_link_linklib libname=%(linklibname)_rel$(BD_LIBSUFFIX) objs=$(BD_RELLINKLIBOBJS) libdir=%(prefix)/$(AROS_DIR_LIB)
+ifneq ($(BD_MODNAME),$(BD_LINKLIBNAME))
+%rule_link_linklib libname=%(modname)_rel$(BD_LIBSUFFIX) objs=$(BD_RELLINKLIBOBJS) libdir=%(prefix)/$(AROS_DIR_LIB)
 endif
 
 $(BD_RELLINKLIB) : | %(prefix)/$(AROS_DIR_LIB)
@@ -1904,7 +1894,7 @@ BD_KBASE := DOSBase IntuitionBase LayersBase GfxBase OOPBase \
 
 BD_SYMBOLS := $(BD_KBASE)
 
-BD_KLIB := hiddstubs amiga arossupport arosc.static arosm autoinit libinit
+BD_KLIB := hiddstubs amiga arossupport autoinit libinit
 BD_KOBJ_LIBS := $(filter-out $(BD_KLIB),%(uselibs)) $(BD_KAUTOLIB)
 $(BD_KOBJ) : LINKLIBS:=$(BD_KOBJ_LIBS) $(%(modname)_LIBS)
 $(BD_KOBJ) : FILTBASES:=$(addprefix -L ,$(BD_SYMBOLS))
@@ -2440,37 +2430,19 @@ GLOB_MKDIRS += %(dst)
 # Copy a directory recursively to another place, preserving the original 
 # hierarchical structure
 #
-# src: the source directory whose content will be copied
-# dst: the directory where to copy src's content. If not existing, it will be made.
+# src: the source directory whose content will be copied.
+# dst: the directories where to copy src's content. If not existing, they will be made.
+# excludefiles: files which must not be copied. Path must be relative to src.
 
 %define copy_dir_recursive mmake=/A src=. dst=/A excludefiles=
 
-%(mmake)_SRC   := $(shell echo %(src) | sed 's/^\(.\):\//\/\1\//')
-%(mmake)_FILES := $(shell cd $(if $(filter /%,$(%(mmake)_SRC)),$(%(mmake)_SRC),$(SRCDIR)/$(CURDIR)/$(%(mmake)_SRC)); find . -path '*/CVS' -prune -o -path '*/.svn' -prune -o -name .cvsignore -prune -o -name mmakefile -prune -o -name mmakefile.src -prune $(%(mmake)_FILTER) -o -type f -print)
-%(mmake)_DIRS  := $(sort $(dir $(%(mmake)_FILES)))
-
-%(mmake)_EXCLUDEFILES := $(addprefix ./,%(excludefiles))
-%(mmake)_FILES := $(filter-out $(%(mmake)_EXCLUDEFILES),$(%(mmake)_FILES))
-
-GLOB_MKDIRS += $(GENDIR)/$(CURDIR)
+%(mmake)_EXCLUDEFILES := %(excludefiles)
 
 .PHONY : %(mmake)
 
 #MM
-%(mmake): | $(GENDIR)/$(CURDIR)
-	@m="$(GENDIR)/$(CURDIR)/%(mmake)-auxiliary.mak";        \
-	$(ECHO) "all: $(addprefix \$$(DST)/,$(%(mmake)_FILES))" > $$m 
-	@m="$(GENDIR)/$(CURDIR)/%(mmake)-auxiliary.mak";    \
-	for d in $(%(mmake)_DIRS); do                      \
-	    $(ECHO) "\$$(DST)/$$d: ; $(MKDIR) \$$@" >> $$m;  \
-	done
-	@m="$(GENDIR)/$(CURDIR)/%(mmake)-auxiliary.mak";                           \
-	for f in $(%(mmake)_FILES); do                                            \
-	    $(ECHO) "\$$(DST)/$$f: \$$(SRC)/$$f | \$$(dir \$$(DST)/$$f); $(CP) \$$< \$$@" >> $$m; \
-	done;  \
-	for dst in %(dst); do \
-	    $(MAKE) -f $$m DST=$$dst SRC=$(if $(filter /%,$(%(mmake)_SRC)),$(%(mmake)_SRC),$(SRCDIR)/$(CURDIR)/$(%(mmake)_SRC)) all; \
-	done
+%(mmake) :
+	@cd $(SRCDIR)/$(CURDIR) && $(CPYDIRREC) -s %(src) -d %(dst) -e $(%(mmake)_EXCLUDEFILES)
 
 %end
 #------------------------------------------------------------------------------
@@ -2640,7 +2612,7 @@ DEPS := $(DEPS) $(STUBS_DEP)
 # endif
 #
 
-%define build_with_configure mmake=/A package= srcdir=$(SRCDIR)/$(CURDIR) prefix= \
+%define build_with_configure mmake=/A package= srcdir=$(SRCDIR)/$(CURDIR) gendir= prefix= \
     aros_prefix= extraoptions= extracflags= nix_dir_layout= nix=no compiler=target \
     install_target=install preconfigure= postconfigure= postinstall= \
     install_env= use_build_env=no
@@ -2686,18 +2658,25 @@ endif
 # Set legacy 'host' variable based on chosen compiler
 ifeq (%(compiler),host)
     host := yes
-	ifeq (%(package),)
-		%(mmake)-pkgdir := $(HOSTGENDIR)/$(CURDIR)
-	else
-		%(mmake)-pkgdir := $(HOSTGENDIR)/$(CURDIR)/%(package)
-	endif
+    ifeq (%(package),)
+        %(mmake)-pkgdir := $(HOSTGENDIR)/$(CURDIR)
+    else
+        %(mmake)-pkgdir := $(HOSTGENDIR)/$(CURDIR)/%(package)
+    endif
 else
     host := no
-	ifeq (%(package),)
-		%(mmake)-pkgdir := $(GENDIR)/$(CURDIR)
-	else
-		%(mmake)-pkgdir := $(GENDIR)/$(CURDIR)/%(package)
-	endif
+    ifeq (%(package),)
+        %(mmake)-pkgdir := $(GENDIR)/$(CURDIR)
+    else
+        %(mmake)-pkgdir := $(GENDIR)/$(CURDIR)/%(package)
+    endif
+endif
+ifneq (%(gendir),)
+    ifeq (%(package),)
+        %(mmake)-pkgdir := %(gendir)/$(CURDIR)
+    else
+        %(mmake)-pkgdir := %(gendir)/$(CURDIR)/%(package)
+    endif
 endif
 
 %(mmake)-configflag := $(%(mmake)-pkgdir)/.configured
@@ -3004,7 +2983,7 @@ endif
 #    - create_pkg       = create a distributable package of the compiled sources, defaults to no
 
 %define fetch_and_build mmake=/A package=/A subpackage= compiler=target install_target=install \
-    version=/A suffixes="tar.bz2 tar.gz" srcdir= builddir= package_repo= patch=no patch_repo= \
+    version=/A suffixes="tar.bz2 tar.gz" srcdir= builddir= gendir= package_repo= patch=no patch_repo= \
     prefix= aros_prefix= extraoptions= extracflags= preconfigure= postconfigure= postinstall= \
     install_env= use_build_env=no nix=no nix_dir_layout= create_pkg=no
 
@@ -3074,7 +3053,8 @@ ifneq (%(create_pkg),no)
 endif
 
 %build_with_configure mmake=%(mmake)-%(subpackage) package=%(package) compiler=%(compiler) install_target=%(install_target) \
-     srcdir=$(%(mmake)-portdir)/$(%(mmake)-%(subpackage)-builddir) install_env=%(install_env) use_build_env=%(use_build_env) \
+     srcdir=$(%(mmake)-portdir)/$(%(mmake)-%(subpackage)-builddir) gendir=%(gendir) \
+     install_env=%(install_env) use_build_env=%(use_build_env) \
      nix=%(nix) nix_dir_layout=%(nix_dir_layout) prefix="$(%(mmake)-prefix)" \
      aros_prefix="%(aros_prefix)" preconfigure="%(preconfigure)" postconfigure="%(postconfigure)" postinstall="%(postinstall) \
      %(mmake)-%(subpackage)-make-package"  extraoptions="%(extraoptions)" extracflags="%(extracflags)"
@@ -3291,7 +3271,7 @@ endif
 
 %(file): KOBJS := $(KOBJS)
 %(file): LDFLAGS := $(TMP_LDFLAGS) $(NOSTARTUP_LDFLAGS) \
-                    -noarosc -nosysbase -Wl,-Ur
+                    -nostdc -nosysbase -Wl,-Ur
 %(file): LDLIBS := $(addprefix -l, %(uselibs))
 %(file): $(KOBJS) $(DEPLIBS) | $(TMP_DIRS)
 	@$(ECHO) "Kickstart  $(subst $(TARGETDIR)/,,$@)..."

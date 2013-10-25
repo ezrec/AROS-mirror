@@ -1,0 +1,10 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-emulation-scummvmm : ports-emulation-scummvmm-icons
+
+ICONS     := Scummvm
+TARGETDIR := $(AROS_CONTRIB)/Emulation/Scummvm
+
+%build_icons mmake=ports-emulation-scummvmm-icons icons=$(ICONS) dir=$(TARGETDIR)

@@ -39,11 +39,9 @@
 #MM     workbench-libs-freetype-complete \
 #MM     workbench-libs-codesets \
 #MM     workbench-libs-muiscreen \
-#MM     workbench-libs-openurl \
 #MM     workbench-libs-popupmenu \
 #MM     workbench-libs-version \
 #MM     workbench-libs-identify \
-#MM     workbench-libs-bz2 \
 #MM     workbench-libs-expat \
 #MM     workbench-libs-z \
 #MM     workbench-libs-jpeg \
@@ -83,10 +81,8 @@
 #MM     workbench-libs-coolimages-includes \
 #MM     workbench-libs-codesets-lib-includes \
 #MM     workbench-libs-muiscreen-includes \
-#MM     workbench-libs-openurl-includes \
 #MM     workbench-libs-popupmenu-includes \
 #MM     workbench-libs-identify-includes \
-#MM     workbench-libs-bz2-includes \
 #MM     workbench-libs-expat-includes \
 #MM     workbench-libs-z-includes \
 #MM     workbench-libs-jpeg-includes \

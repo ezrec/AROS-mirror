@@ -1,0 +1,223 @@
+include $(TOP)/config/make.cfg
+
+#MM- AROS : compiler-posixc
+
+POSIXC := \
+    __env \
+    __exec \
+    __fdesc \
+    __posixc_assert \
+    __posixc_environ \
+    __posixc_init \
+    __posixc_nixmain \
+    __stdio \
+    __get_default_file \
+    __rand48 \
+    __stat \
+    __upath \
+    __vfork \
+    access \
+    basename \
+    cfgetispeed \
+    cfgetospeed \
+    cfsetispeed \
+    cfsetospeed \
+    chdir \
+    chmod \
+    chown \
+    clearerr \
+    close \
+    closedir \
+    creat \
+    dirfd \
+    dirname \
+    drand48 \
+    dup \
+    dup2 \
+    endgrent \
+    endpwent \
+    erand48 \
+    execl \
+    execlp \
+    execv \
+    execve \
+    execvp \
+    fchdir \
+    fchmod \
+    fchown \
+    fclose \
+    fcntl \
+    fdopen \
+    feof \
+    ferror \
+    fflush \
+    fgetc \
+    fgetpos \
+    fgets \
+    fileno \
+    flock \
+    fopen \
+    fprintf \
+    fputc \
+    fputs \
+    fread \
+    freopen \
+    fscanf \
+    fseek \
+    fseeko \
+    fsetpos \
+    fstat \
+    fsync \
+    ftell \
+    ftello \
+    ftruncate \
+    fwrite \
+    getchar \
+    getcwd \
+    getegid \
+    geteuid \
+    getenv \
+    getfsstat \
+    getgid \
+    getgrent \
+    getgrgid \
+    getgrnam \
+    getgroups \
+    getloadavg \
+    getlogin \
+    getpgrp \
+    getpid \
+    getppid \
+    getpwent \
+    getpwnam \
+    getpwuid \
+    getrlimit \
+    gets \
+    gettimeofday \
+    getuid \
+    ioctl \
+    isatty \
+    jrand48 \
+    kill \
+    lcong48 \
+    link \
+    lrand48 \
+    lseek \
+    lstat \
+    mkdir \
+    mknod \
+    mkstemp \
+    mktemp \
+    mrand48 \
+    nanosleep \
+    nrand48 \
+    open \
+    opendir \
+    pathconf \
+    pclose \
+    perror \
+    pipe \
+    popen \
+    posix_memalign \
+    printf \
+    putchar \
+    putenv \
+    puts \
+    random \
+    read \
+    readdir \
+    readlink \
+    realpath \
+    regex/regerror \
+    regex/regexec \
+    regex/regcomp \
+    regex/regfree \
+    remove \
+    rename \
+    rewind \
+    rewinddir \
+    rmdir \
+    scanf \
+    seed48 \
+    seekdir \
+    setbuf \
+    setenv \
+    setgid \
+    setgrent \
+    setpwent \
+    setrlimit \
+    setuid \
+    setvbuf \
+    sigaction \
+    sigaddset \
+    sigdelset \
+    sigemptyset \
+    sigfillset \
+    sigismember \
+    sigpending \
+    sigprocmask \
+    sigsuspend \
+    sleep \
+    srand48 \
+    stat \
+    statfs \
+    strerror \
+    strptime \
+    swab \
+    symlink \
+    sync \
+    sysconf \
+    system \
+    tcgetattr \
+    tcsetattr \
+    telldir \
+    tempnam \
+    times \
+    tmpfile \
+    tmpnam \
+    truncate \
+    ttyname \
+    umask \
+    uname \
+    ungetc \
+    unsetenv \
+    updatestdio \
+    usleep \
+    utime \
+    utimes \
+    vfprintf \
+    vfscanf \
+    vprintf \
+    vscanf \
+    wait \
+    waitpid \
+    write
+
+# The following files don't have source code here but have a CPU
+# specific version in arch directory hierarchy
+POSIXC_ARCH := \
+    vfork \
+    vfork_longjmp
+
+POSIXC_LINKLIB := \
+    ftime \
+    gcvt \
+    getopt \
+    getopt_long \
+    posixc_environ \
+    setlinebuf
+
+# Both in linklib and shared library
+POSIXC_COMMON := \
+    __posixc_stdstreams
+
+#MM- core-linklibs : linklibs-posixc
+
+USER_LDFLAGS := -noposixc
+POSIXC_LINKOBJS := $(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(POSIXC_COMMON))))
+
+%build_module mmake=compiler-posixc \
+    modname=posixc modtype=library \
+    files="$(POSIXC) $(POSIXC_COMMON) $(POSIXC_ARCH)" \
+    linklibfiles=$(POSIXC_LINKLIB) linklibobjs=$(POSIXC_LINKOBJS) \
+    uselibs="stdc_rel stdcio_rel"

@@ -1,0 +1,54 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game : ports-game-ltris
+
+#MM- ports-game-ltris : contrib-sdl ports-game-ltris-drawericon
+
+PACKAGE      := ltris
+VERSION      := 1.0.18
+TARGETDIR    := $(AROS_CONTRIB)/Games/LTris
+REPOSITORIES := sf://lgames
+
+%fetch_and_build mmake=ports-game-ltris prefix=$(TARGETDIR) \
+    package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
+    patch=yes package_repo=$(REPOSITORIES) nix=yes nix_dir_layout=no \
+    extracflags="" install_target= postinstall=ports-game-ltris-install \
+    extraoptions="--datarootdir='$$(PROGDIR)share' LIBS='-lvorbisfile -lvorbis -logg'" 
+
+
+#MM- ports-game-ltris-install : \
+#MM     ports-game-ltris-install-bin \
+#MM     ports-game-ltris-install-gfx \
+#MM     ports-game-ltris-install-snd \
+#MM     ports-game-ltris-install-files
+
+%copy_files_q mmake=ports-game-ltris-install-bin \
+   files=ltris src=$(GENDIR)/$(CURDIR)/ltris/src dst=$(TARGETDIR)
+
+FILES := AUTHORS ChangeLog COPYING NEWS TODO
+%copy_files_q mmake=ports-game-ltris-install-files \
+    src=$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION) dst=$(TARGETDIR)
+
+%copy_dir_recursive mmake=ports-game-ltris-install-gfx \
+    src=$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/src/gfx \
+    dst=$(TARGETDIR)/share/ltris/gfx excludefiles="Makefile.in Makefile.am"
+
+%copy_dir_recursive mmake=ports-game-ltris-install-snd \
+    src=$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/src/sounds \
+    dst=$(TARGETDIR)/share/ltris/sounds excludefiles="Makefile.in Makefile.am"
+
+
+ICONS := LTris
+
+%build_icons mmake=ports-game-ltris-drawericon \
+	icons=$(ICONS) dir=$(TARGETDIR)/..
+
+
+#MM
+ports-game-ltris-clean :
+	$(RM) $(TARGETDIR)
+	$(RM) $(GENDIR)/$(CURDIR)
+
+%common

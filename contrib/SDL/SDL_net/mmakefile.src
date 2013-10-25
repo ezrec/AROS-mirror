@@ -5,7 +5,7 @@
 
 #MM- contrib-sdl-sdl-net : development-SDL_net
 
-#MM- development-SDL_net : linklibs-SDL
+#MM- development-SDL_net : SDL-aros-lib
 
 %fetch_and_build_gnu_development package=SDL_net version=1.2.7 patch=yes \
     package_repo=http://www.libsdl.org/projects/SDL_net/release/ \

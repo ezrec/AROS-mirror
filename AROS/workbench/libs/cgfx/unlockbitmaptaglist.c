@@ -6,13 +6,24 @@
     Lang: english
 */
 
+#define DEBUG 0
 #include <aros/debug.h>
-#include <cybergraphx/cybergraphics.h>
-#include <hidd/graphics.h>
+
 #include <proto/oop.h>
 #include <proto/utility.h>
 
+#include <cybergraphx/cybergraphics.h>
+#include <hidd/graphics.h>
+
 #include "cybergraphics_intern.h"
+
+
+struct RectList
+{
+     ULONG rl_num;             // no. of rects in this list
+     struct RectList *rl_next; // pointer to next list
+     struct Rectangle rect1;   // First Rectangle in the list
+};
 
 /*****************************************************************************
 
@@ -57,39 +68,64 @@
 *****************************************************************************/
 {
     AROS_LIBFUNC_INIT
-    
+
     struct TagItem *tag;
     BOOL reallyunlock = TRUE;
-    
-    while ((tag = NextTagItem(&Tags)))
+    struct RectList *rl = NULL;
+    struct BitMap *bm = (struct BitMap *)Handle;
+
+    if ((bm) && (IS_HIDD_BM(bm)))
     {
-    	switch (tag->ti_Tag)
-	{
-	    case UBMI_REALLYUNLOCK:
-	    	reallyunlock = (BOOL)tag->ti_Data;
-		break;
-		
-	    case UBMI_UPDATERECTS:
-	    {
-#if 0
-	    	struct RectList *rl;
-		
-		rl = (struct RectList *)tag->ti_Data;
-		
-		/* TODO: Call HIDD_BM_UpdateRect() for all the regions */
-#endif		
-	    	break;
-	    }
-	
-	    default:
-	    	D(bug("!!! UNKNOWN TAG PASSED TO UnLockBitMapTagList() !!!\n"));
-		break;
-	}
+        while ((tag = NextTagItem(&Tags)))
+        {
+            switch (tag->ti_Tag)
+            {
+                case UBMI_REALLYUNLOCK:
+                    reallyunlock = (BOOL)tag->ti_Data;
+                    break;
+
+                case UBMI_UPDATERECTS:
+                {
+                    rl = (struct RectList *)tag->ti_Data;
+                    break;
+                }
+
+                default:
+                    D(bug("[Cybergfx] %s: !!! UNKNOWN TAG %08x !!!\n", __PRETTY_FUNCTION__, tag->ti_Tag));
+                    break;
+            }
+        }
+
+        if (reallyunlock)
+            HIDD_BM_ReleaseDirectAccess(HIDD_BM_OBJ(bm));
+
+        if (rl)
+        {
+            while (rl)
+            {
+                struct Rectangle *rectCurrent;
+                int count;
+
+                if ((count = rl->rl_num) > 0)
+                {
+                    D(bug("[Cybergfx] %s: RectList @ 0x%p [%d entries]\n", __PRETTY_FUNCTION__, rl, rl->rl_num));
+
+                    for (rectCurrent = &rl->rect1; count > 0; count--)
+                    {
+                        D(bug("[Cybergfx] %s: Updating BitMap Rect [%d, %d -> %d, %d]\n", __PRETTY_FUNCTION__, rectCurrent->MinX, rectCurrent->MinY, rectCurrent->MaxX, rectCurrent->MaxY));
+                        UpdateBitMap(bm, rectCurrent->MinX, rectCurrent->MinY, rectCurrent->MaxX - rectCurrent->MinX + 1, rectCurrent->MaxY - rectCurrent->MinY + 1);
+                        rectCurrent = (struct Rectangle *)((int)rectCurrent + sizeof(struct Rectangle));
+                    }
+                }
+                rl = rl->rl_next;
+            }
+        }
+        else
+            UpdateBitMap(bm, 0, 0, GetCyberMapAttr(bm, CYBRMATTR_WIDTH), GetCyberMapAttr(bm, CYBRMATTR_HEIGHT));
     }
-    
-    if (reallyunlock)
+    else
     {
-	HIDD_BM_ReleaseDirectAccess((OOP_Object *)Handle);
+        D(bug("[Cybergfx] %s: Called on Illegal BitMap @ 0x%p\n", __PRETTY_FUNCTION__, bm));
     }
 
     AROS_LIBFUNC_EXIT

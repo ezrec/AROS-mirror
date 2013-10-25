@@ -2,9 +2,10 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- ports-office : ports-office-$(AROS_TARGET_CPU)
+# #MM- ports-office : ports-office-$(AROS_TARGET_CPU)
 
 #MM- ports-office-i386 : ports-office-muibase
+#MM- ports-office-arm : ports-office-muibase
 
 #MM  ports-office-muibase : includes linklibs contrib-zune-classes-nlist ports-office-muibase-fetch \
 #MM  ports-office-muibase-create ports-office-muibase-install ports-office-muibase-catalogs
@@ -18,7 +19,7 @@ include $(TOP)/config/make.cfg
 #MM  ports-office-muibase-quick : ports-office-muibase-fetch
 
 REPOSITORIES := sf://muibase
-ARCHBASE     := MUIbase-2.11
+ARCHBASE     := MUIbase-3.0
 TARGETDIR    := $(AROS_CONTRIB)/Office/MUIbase
 BASE_SRCD    := src/base
 LANG_SRCD    := src/lang
@@ -34,44 +35,123 @@ USER_INCLUDES:= -I$(PORTSDIR)/muibase/$(ARCHBASE)/src -I$(PORTSDIR)/muibase/$(AR
                 -I$(PORTSDIR)/muibase/$(ARCHBASE)/$(AMIGA_SRCD) -I$(PORTSDIR)/muibase/$(ARCHBASE)/$(LANG_SRCD)
 USER_CFLAGS  := -fno-strict-aliasing -Wno-implicit-function-declaration \
                 -DAMIGA -DMUI -DMBASE -DUSE_HOOKENTRY -DNO_INLINE_STDARG
-MB_VERSION   := 2
-MB_REVISION  := 11
-MB_VERSTR    := 2.11
+MB_VERSION   := 3
+MB_REVISION  := 0
+MB_VERSTR    := 3.0
 DATE         := date
 
-BASE_SRCS := $(BASE_SRCD)/main $(BASE_SRCD)/error $(BASE_SRCD)/server \
-	$(BASE_SRCD)/project $(BASE_SRCD)/table $(BASE_SRCD)/attribute \
-	$(BASE_SRCD)/record $(BASE_SRCD)/memo $(BASE_SRCD)/display \
-	$(BASE_SRCD)/gui $(BASE_SRCD)/buildgui $(BASE_SRCD)/preferences $(BASE_SRCD)/requesters \
-	$(BASE_SRCD)/structureeditor $(BASE_SRCD)/queryeditor \
-	$(BASE_SRCD)/imexport $(BASE_SRCD)/pdfexport $(BASE_SRCD)/filter $(BASE_SRCD)/order $(BASE_SRCD)/search \
-	$(BASE_SRCD)/menuproject $(BASE_SRCD)/menuprefs $(BASE_SRCD)/menutable $(BASE_SRCD)/menuprogram \
-	$(BASE_SRCD)/menuhelp $(BASE_SRCD)/menueditor \
-	$(BASE_SRCD)/status $(BASE_SRCD)/name $(BASE_SRCD)/memory $(BASE_SRCD)/util \
-	$(BASE_SRCD)/formatmemo $(BASE_SRCD)/strhandle $(BASE_SRCD)/labels \
-	$(BASE_SRCD)/fileinfo $(BASE_SRCD)/textfile \
-	$(BASE_SRCD)/guidosutil $(BASE_SRCD)/dosutil
 
-LANG_SRCS := $(LANG_SRCD)/compile $(LANG_SRCD)/program $(LANG_SRCD)/programbingen $(LANG_SRCD)/programbinexe \
-	$(LANG_SRCD)/stack $(LANG_SRCD)/heap $(LANG_SRCD)/global $(LANG_SRCD)/functable \
-	$(LANG_SRCD)/func $(LANG_SRCD)/funccmp $(LANG_SRCD)/funcmath $(LANG_SRCD)/funcstr $(LANG_SRCD)/funcdate $(LANG_SRCD)/funclist \
-	$(LANG_SRCD)/funcio $(LANG_SRCD)/funcsfw $(LANG_SRCD)/funcdb $(LANG_SRCD)/funcprintf $(LANG_SRCD)/funcreq
+BASE_SRCS := \
+	$(BASE_SRCD)/main \
+	$(BASE_SRCD)/error \
+	$(BASE_SRCD)/server \
+	$(BASE_SRCD)/project \
+	$(BASE_SRCD)/log \
+	$(BASE_SRCD)/table \
+	$(BASE_SRCD)/attribute \
+	$(BASE_SRCD)/record \
+	$(BASE_SRCD)/memo \
+	$(BASE_SRCD)/display \
+	$(BASE_SRCD)/recorddescription \
+	$(BASE_SRCD)/gui \
+	$(BASE_SRCD)/buildgui \
+	$(BASE_SRCD)/preferences \
+	$(BASE_SRCD)/requesters \
+	$(BASE_SRCD)/structureeditor \
+	$(BASE_SRCD)/queryeditor \
+	$(BASE_SRCD)/imexport \
+	$(BASE_SRCD)/filter \
+	$(BASE_SRCD)/order \
+	$(BASE_SRCD)/search \
+	$(BASE_SRCD)/menuproject \
+	$(BASE_SRCD)/menuprefs \
+	$(BASE_SRCD)/menulog \
+	$(BASE_SRCD)/menutable \
+	$(BASE_SRCD)/menuprogram \
+	$(BASE_SRCD)/menuhelp \
+	$(BASE_SRCD)/menueditor \
+	$(BASE_SRCD)/status \
+	$(BASE_SRCD)/name \
+	$(BASE_SRCD)/memory \
+	$(BASE_SRCD)/util \
+	$(BASE_SRCD)/formatmemo \
+	$(BASE_SRCD)/strhandle \
+	$(BASE_SRCD)/labels \
+	$(BASE_SRCD)/fileinfo \
+	$(BASE_SRCD)/textfile \
+	$(BASE_SRCD)/guidosutil \
+	$(BASE_SRCD)/dosutil
 
-AMIGA_SRCS := $(AMIGA_SRCD)/codeset $(AMIGA_SRCD)/adosutil $(AMIGA_SRCD)/font $(AMIGA_SRCD)/exec
+LANG_SRCS := \
+	$(LANG_SRCD)/compile \
+	$(LANG_SRCD)/program \
+	$(LANG_SRCD)/programbingen \
+	$(LANG_SRCD)/programbinexe \
+	$(LANG_SRCD)/stack \
+	$(LANG_SRCD)/heap \
+	$(LANG_SRCD)/global \
+	$(LANG_SRCD)/functable \
+	$(LANG_SRCD)/func \
+	$(LANG_SRCD)/funccmp \
+	$(LANG_SRCD)/funcmath \
+	$(LANG_SRCD)/funcstr \
+	$(LANG_SRCD)/funcdate \
+	$(LANG_SRCD)/funclist \
+	$(LANG_SRCD)/funcio \
+	$(LANG_SRCD)/funcsfw \
+	$(LANG_SRCD)/funcdb \
+	$(LANG_SRCD)/funcprintf \
+	$(LANG_SRCD)/funcreq
 
-MUI_SRCS := $(MUI_SRCD)/mui $(MUI_SRCD)/rexx_mui $(MUI_SRCD)/requesters_mui $(MUI_SRCD)/break_mui \
-	$(MUI_SRCD)/structureeditor_mui $(MUI_SRCD)/table_mui $(MUI_SRCD)/attribute_mui \
-	$(MUI_SRCD)/display_mui $(MUI_SRCD)/displayattribute_mui $(MUI_SRCD)/menu_mui $(MUI_SRCD)/imexport_mui $(MUI_SRCD)/pdfexport_mui $(MUI_SRCD)/ansiprint_mui \
-	$(MUI_SRCD)/buildgui_mui $(MUI_SRCD)/buildguiattribute_mui $(MUI_SRCD)/buildguitable_mui \
-	$(MUI_SRCD)/buildguiwindow_mui $(MUI_SRCD)/quicksearch_mui \
-	$(MUI_SRCD)/filter_mui $(MUI_SRCD)/order_mui $(MUI_SRCD)/search_mui $(MUI_SRCD)/queryeditor_mui \
-	$(MUI_SRCD)/programeditor_mui $(MUI_SRCD)/progoutput_mui $(MUI_SRCD)/setformats_mui
+AMIGA_SRCS := \
+	$(AMIGA_SRCD)/codeset \
+	$(AMIGA_SRCD)/adosutil \
+	$(AMIGA_SRCD)/font \
+	$(AMIGA_SRCD)/exec
 
-MUIEXT_SRCS := $(MUIEXT_SRCD)/ExtEditor_mcc $(MUIEXT_SRCD)/ExtApplication_mcc $(MUIEXT_SRCD)/ExtWindow_mcc \
-	$(MUIEXT_SRCD)/StringText_mcc $(MUIEXT_SRCD)/RefAttrSelector_mcc $(MUIEXT_SRCD)/NewCycle_mcc \
-	$(MUIEXT_SRCD)/DDList_mcc $(MUIEXT_SRCD)/SFWList_mcc $(MUIEXT_SRCD)/EditLabels_mcc \
-	$(MUIEXT_SRCD)/PopEditLabels_mcc $(MUIEXT_SRCD)/DataTypes_mcc $(MUIEXT_SRCD)/WindowButton_mcc \
-	$(MUIEXT_SRCD)/ActGroup_mcc
+MUI_SRCS := \
+	$(MUI_SRCD)/mui \
+	$(MUI_SRCD)/rexx_mui \
+	$(MUI_SRCD)/requesters_mui \
+	$(MUI_SRCD)/break_mui \
+	$(MUI_SRCD)/structureeditor_mui \
+	$(MUI_SRCD)/table_mui \
+	$(MUI_SRCD)/attribute_mui \
+	$(MUI_SRCD)/display_mui \
+	$(MUI_SRCD)/displaytable_mui \
+	$(MUI_SRCD)/displayattribute_mui \
+	$(MUI_SRCD)/recorddescriptionspec_mui \
+	$(MUI_SRCD)/menu_mui \
+	$(MUI_SRCD)/imexport_mui \
+	$(MUI_SRCD)/ansiprint_mui \
+	$(MUI_SRCD)/buildgui_mui \
+	$(MUI_SRCD)/buildguiattribute_mui \
+	$(MUI_SRCD)/buildguitable_mui \
+	$(MUI_SRCD)/buildguiwindow_mui \
+	$(MUI_SRCD)/quicksearch_mui \
+	$(MUI_SRCD)/filter_mui \
+	$(MUI_SRCD)/order_mui \
+	$(MUI_SRCD)/search_mui \
+	$(MUI_SRCD)/queryeditor_mui \
+	$(MUI_SRCD)/programeditor_mui \
+	$(MUI_SRCD)/progoutput_mui \
+	$(MUI_SRCD)/setformats_mui
+
+MUIEXT_SRCS := \
+	$(MUIEXT_SRCD)/ExtEditor_mcc \
+	$(MUIEXT_SRCD)/ExtApplication_mcc \
+	$(MUIEXT_SRCD)/ExtWindow_mcc \
+	$(MUIEXT_SRCD)/StringText_mcc \
+	$(MUIEXT_SRCD)/RefAttrSelector_mcc \
+	$(MUIEXT_SRCD)/NewCycle_mcc \
+	$(MUIEXT_SRCD)/DDList_mcc \
+	$(MUIEXT_SRCD)/SFWList_mcc \
+	$(MUIEXT_SRCD)/EditLabels_mcc \
+	$(MUIEXT_SRCD)/ActGroup_mcc \
+	$(MUIEXT_SRCD)/PopEditLabels_mcc \
+	$(MUIEXT_SRCD)/DataTypes_mcc \
+	$(MUIEXT_SRCD)/WindowButton_mcc \
+
 
 AUTO_SRCS := y.tab appstrings_cat
 
@@ -84,11 +164,12 @@ FILES := \
 	$(AUTO_SRCS)
 FILES := $(addprefix $(PORTSDIR)/muibase/$(ARCHBASE)/,$(FILES))
 
+
 %build_prog mmake=ports-office-muibase progname=MUIbase \
     files=$(FILES) targetdir=$(TARGETDIR)
 
 
-%fetch mmake=ports-office-muibase-fetch archive=MUIbaseSource-2.11 destination=$(PORTSDIR)/muibase \
+%fetch mmake=ports-office-muibase-fetch archive=MUIbaseSource-3.0 destination=$(PORTSDIR)/muibase \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz"
 
 

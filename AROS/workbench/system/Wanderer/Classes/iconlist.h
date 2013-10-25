@@ -55,7 +55,7 @@
 struct MUIP_IconList_Clear              {STACKED ULONG MethodID;};
 struct MUIP_IconList_Update             {STACKED ULONG MethodID;};
 struct MUIP_IconList_RethinkDimensions  {STACKED ULONG MethodID; STACKED struct IconEntry *singleicon;};
-struct MUIP_IconList_CreateEntry        {STACKED ULONG MethodID; STACKED STRPTR filename; STACKED STRPTR label; STACKED struct FileInfoBlock *fib; STACKED struct DiskObject *entry_dob; STACKED ULONG type;};
+struct MUIP_IconList_CreateEntry        {STACKED ULONG MethodID; STACKED STRPTR filename; STACKED STRPTR label; STACKED struct FileInfoBlock *fib; STACKED struct DiskObject *entry_dob; STACKED ULONG type; STACKED APTR udata;};
 struct MUIP_IconList_UpdateEntry        {STACKED ULONG MethodID; STACKED struct IconEntry *entry; STACKED STRPTR filename; STACKED STRPTR label; STACKED struct FileInfoBlock *fib; STACKED struct DiskObject *entry_dob; STACKED ULONG type;};
 struct MUIP_IconList_DestroyEntry       {STACKED ULONG MethodID; STACKED struct IconEntry *entry;};
 struct MUIP_IconList_PropagateEntryPos  {STACKED ULONG MethodID; STACKED struct IconEntry *entry;};
@@ -73,7 +73,6 @@ struct IconList_Entry
     struct IconEntry    *ile_IconEntry;
     char                *label;     /* The label which is displayed (often FilePart(filename)) */
     LONG                type;
-    LONG                flags;      /* If type == ST_ROOT, these flags will set volume attributes */
     void                *udata;
 };
 
@@ -156,9 +155,11 @@ struct IconEntry
 
 struct VolumeIcon_Private
 {
-    ULONG                vip_FLags;
+    ULONG                   vip_FLags; /* These flags will set volume attributes */
     struct NotifyRequest    vip_FSNotifyRequest;
 };
+
+#define _volpriv(entry)  ((struct VolumeIcon_Private *)entry->ie_IconListEntry.udata)
 
 extern const struct __MUIBuiltinClass _MUI_IconList_desc; /* PRIV */
 extern const struct __MUIBuiltinClass _MUI_IconDrawerList_desc; /* PRIV */

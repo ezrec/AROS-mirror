@@ -45,14 +45,13 @@ FILES :=               \
 
 #MM aros-tcpip-apps-owb-resources : aros-tcpip-apps-owb-icons iconset-$(AROS_TARGET_ICONSET)-contrib-icons-owb aros-tcpip-apps-owb-readme
 
+I18N_LIBS=
 ifneq ($(AROS_TARGET_CPU),arm)
     ifneq ($(AROS_TARGET_CPU),m68k)
-        I18N_LIBS=icui18n icuuc icudata
-    else
-        I18N_LIBS=
+        ifneq ($(AROS_TARGET_CPU),ppc)
+            I18N_LIBS=icui18n icuuc icudata
+        endif
     endif
-else
-    I18N_LIBS=
 endif
 
 OWB_LIBS := webkit-owb webcore wtf jsc webkit-owb \

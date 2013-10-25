@@ -119,7 +119,7 @@
 #define MAX_SFS_SIZE (124L * 1024)
 #define MAX_SIZE(A) (((A) == &sfs0) ? MAX_SFS_SIZE : MAX_FFS_SIZE)
 
-const TEXT version_string[] = "$VER: Partition 41.5 (2.7.2013)";
+const TEXT version_string[] = "$VER: Partition 41.7 (17.10.2013)";
 
 static const struct PartitionType dos3 = { "DOS\3", 4 };
 #if AROS_BIG_ENDIAN
@@ -141,6 +141,7 @@ static struct PartitionHandle *CreateRDBPartition(
     struct PartitionHandle *parent, ULONG lowcyl, ULONG highcyl,
     CONST_STRPTR name, BOOL bootable, const struct PartitionType *type);
 static ULONG MBsToCylinders(ULONG size, struct DosEnvec *de);
+static LONG RecurviseDestroyPartitions(struct PartitionHandle *root);
 
 /*** Functions **************************************************************/
 int main(void)
@@ -252,7 +253,10 @@ int main(void)
         if ((root = OpenRootPartition(device, unit)) == NULL)
         {
             error = ERROR_UNKNOWN;
-            PutStr("*** Could not open root partition!\n");
+            Printf("*** Could not open root partition of device %s, unit %d!\n", device, unit);
+            PutStr("Make sure that you provided correct device name and unit number.\n");
+            PutStr("For example primary master IDE device will most likely map to\n");
+            PutStr("ata.device, unit 0 and secondary slave to ata.device, unit 3\n");
         }
     }
 
@@ -261,8 +265,8 @@ int main(void)
     {
         if (OpenPartitionTable(root) == 0)
         {
-            D(bug("[C:Partition] WIPE root partition table\n"));
-            error = DestroyPartitionTable(root);
+            D(bug("[C:Partition] WIPE partitions\n"));
+            error = RecurviseDestroyPartitions(root);
         }
     }
 
@@ -724,4 +728,35 @@ static ULONG MBsToCylinders(ULONG size, struct DosEnvec *de)
             / de->de_BlocksPerTrack / de->de_Surfaces;
     }
     return cyls;
+}
+
+#define ZEROBUFFSIZE    4096
+
+/* Go through whole partition tree and WIPE each and every entry */
+static LONG RecurviseDestroyPartitions(struct PartitionHandle *root)
+{
+    LONG error = 0;
+
+    if (root->table)
+    {
+        struct PartitionHandle *partition;
+        ForeachNode(&root->table->list, partition)
+        {
+            if (OpenPartitionTable(partition) == 0)
+            {
+                error += RecurviseDestroyPartitions(partition);
+            }
+            else
+            {
+                APTR buffer = AllocMem(ZEROBUFFSIZE, MEMF_CLEAR);
+                /* Damage first blocks of partition */
+                WritePartitionDataQ(partition, buffer, ZEROBUFFSIZE, 0);
+                FreeMem(buffer, ZEROBUFFSIZE);
+            }
+        }
+    }
+
+    error += DestroyPartitionTable(root);
+
+    return error;
 }

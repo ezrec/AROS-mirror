@@ -188,7 +188,7 @@ main(VOID)
 
 		/* Set up the process pointer. */
 
-	ThisProcess = (struct Process *)SysBase -> ThisTask;
+	ThisProcess = (struct Process *)FindTask(NULL);
 
 		/* Wait for Workbench startup packet. */
 

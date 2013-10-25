@@ -51,13 +51,13 @@ Q ?= @
 #MM     workbench-libs-nonvolatile-kobj \
 #MM     workbench-libs-nvdisk-kobj \
 #MM     workbench-libs-workbench-kobj \
-#MM     linklibs-loadseg
+#MM     linklibs-loadseg \
+#MM     linklibs-stdc-static
 
 #MM- kernel-workbench-devs-amiga-m68k : workbench-devs-amiga-m68k
 
-USELIBS := amiga arossupport arosc.static arosm autoinit libinit \
-	   hiddstubs 
-LIBS    := $(addprefix -l,$(USELIBS)) -L$(GENDIR)/lib -lloadseg
+USELIBS := amiga arossupport autoinit libinit stdc.static
+LIBS    := -L$(GENDIR)/lib -lloadseg $(addprefix -l,$(USELIBS))
 DEPLIBS := $(addprefix $(LIBDIR)/lib,$(addsuffix .a,$(USELIBS)))
 
 # Force rebuilding, so that we always get new date strings
@@ -74,7 +74,7 @@ USER_AFLAGS := -m68060 -DADATE="\"$(shell date "+%d.%m.%Y")\""
 # of CHIP RAM, but is only used until RTF_COLDSTART.
 #
 # Right before RTF_COLDSTART, a new SS will be allocated from the fastest
-# available RAM, and this 0x800-0x1000 area will be ignored.
+# available RAM, and this initial area will be ignored.
 ROMLOC_ss  := 0x003f800
 
 # Main ROM (0xf80000 - 0xffffff)

@@ -35,10 +35,10 @@ FILES := $(PORTSDIR)/circuslinux/$(ARCHBASE)/circuslinux
 ICONS := CircusLinux
 
 %build_icons mmake=ports-game-circuslinux-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)
+	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %copy_dir_recursive mmake=ports-game-circuslinux-data src=$(PORTSDIR)/circuslinux/$(ARCHBASE)/data \
-    dst=$(TARGETDIR)/data
+    dst=$(TARGETDIR)/data excludefiles="Makefile.in Makefile.am"
 
 CPYFILES := CHANGES.txt COPYING.txt FAQ.txt README.txt
 

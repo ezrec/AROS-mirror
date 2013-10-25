@@ -4,15 +4,18 @@ include $(TOP)/config/make.cfg
 INSTDIR  := $(CONTRIBDIR)/Games/Quake
 BUILDDIR := $(GENDIR)/$(CURDIR)
 STARTUP := $(LIBDIR)/startup.o
-LIBS	:= -L$(LIBDIR) -larosc -larosm -lamiga -larossupport -lautoinit
-DEPLIBS := $(STARTUP) $(LIBDIR)/libarosc.a $(LIBDIR)/libarosm.a	\
+LIBS	:= -L$(LIBDIR) -lamiga -larossupport -lautoinit
+DEPLIBS := $(STARTUP) $(LIBDIR)/libstdc.a \
 		$(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
 
 EXE := $(INSTDIR)/quake
 
 #MM- contrib-games : Quake-$(AROS_TARGET_CPU)
-#MM Quake-i386 : linklibs includes
-Quake-i386 : make-dirs $(EXE)
+#MM- Quake-i386 : Quake
+
+#MM Quake : linklibs includes
+
+Quake : make-dirs $(EXE)
 
 make-dirs :
 	%mkdirs_q $(INSTDIR) $(BUILDDIR)
@@ -26,6 +29,7 @@ else
 GLIBC=
 endif
 
+#FIXME: what about ARM?
 ifneq (,$(findstring alpha,$(shell uname -m)))
 ARCH=axp
 else
@@ -49,7 +53,7 @@ BASE_CFLAGS=-Dstricmp=strcasecmp
 DEBUG_CFLAGS=$(CFLAGS) $(BASE_CFLAGS) -g
 
 AROSCFLAGS=-DAROS $(RELEASE_CFLAGS)
-AROSLDFLAGS=-L$(LIBDIR) -larosc -larosm -lamiga -lautoinit -nix
+AROSLDFLAGS=-L$(LIBDIR) -lamiga -lautoinit -nix
 
 DO_CC=$(CC) $(CFLAGS) -o $@ -c $<
 DO_DEBUG_CC=$(CC) $(DEBUG_CFLAGS) -o $@ -c $<
