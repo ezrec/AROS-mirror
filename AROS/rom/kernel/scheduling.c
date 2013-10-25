@@ -65,7 +65,7 @@
                         D(bug("[SCHEDULE] force TDNestCnt to %d\n", trigger));
                         if(trigger==-1)
                         {
-                            ResetSpin(&(PrivExecBase(SysBase)->LibList_spinlock));
+                            ResetSpin(&(PrivExecBase(SysBase)->LibList_spinlock), 1);
                         }
                         else
                         {

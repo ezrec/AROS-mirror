@@ -262,8 +262,8 @@ struct ExecBase *PrepareExecBase(struct MemHeader *mh, struct TagItem *msg)
     InitSemaphore(&PrivExecBase(SysBase)->LowMemSem);
 
     /* No need to initialize those locks. Just a reminder, if it becomes necessary in the future */
-    ResetSpin(&PrivExecBase(SysBase)->semaphore_spinlock);
-    ResetSpin(&PrivExecBase(SysBase)->LibList_spinlock);
+    //ResetSpin(&PrivExecBase(SysBase)->semaphore_spinlock, 1);
+    //ResetSpin(&PrivExecBase(SysBase)->LibList_spinlock, 1);
 
     SysBase->SoftVer        = VERSION_NUMBER;
     SysBase->Quantum        = 4;
