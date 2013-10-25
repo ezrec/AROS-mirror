@@ -90,8 +90,8 @@
     /* allowed to be called early */
     /* a spinlock once locked with Forbid needs following Forbid locks, too */
     if((thistask == NULL) || (spin->owner == (struct Task *) -1) )
-#TODO
     {
+/*#TODO*/
         /* if we are already locked, we just increase the count, even if thistask is NULL
          * if we are not locked ATM, we try Forbid(). 
          */
