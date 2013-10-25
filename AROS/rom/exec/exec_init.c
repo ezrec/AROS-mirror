@@ -23,6 +23,7 @@
 #include <aros/asmcall.h>
 #include <aros/config.h>
 
+#define DEBUG 0
 #include <aros/debug.h>
 
 #include <proto/arossupport.h>
@@ -302,8 +303,12 @@ AROS_UFH3S(struct ExecBase *, GM_UNIQUENAME(init),
 #endif
 
     /* We now start up the interrupts */
-    Permit();
+    D(bug("[EXEC INIT] KrnScheduling(KSCHED_PERMIT) ..\n"));
+    /* don't use Permit() here, as no Forbid() was called before */
+    KrnScheduling(KSCHED_PERMIT);
+    D(bug("[EXEC INIT] Enable() ..\n"));
     Enable();
+    D(bug("[EXEC INIT] enabled interrupts\n"));
 
     D(debugmem());
 
@@ -320,6 +325,7 @@ AROS_UFH3S(struct ExecBase *, GM_UNIQUENAME(init),
         return NULL;
     }
 
+    D(bug("[EXEC INIT] Exec housekeeper started\n"));
     /* Create task for handling supervisor level errors */
     NewCreateTask(TASKTAG_NAME       , "Exec Guru Task",
                   TASKTAG_PRI        , 126,
@@ -327,9 +333,11 @@ AROS_UFH3S(struct ExecBase *, GM_UNIQUENAME(init),
                   TASKTAG_ARG1       , SysBase,
                   TAG_DONE);
 
+    D(bug("[EXEC INIT] Exec Guru Task started\n"));
     /* Call platform-specific init code (if any) */
     set_call_libfuncs(SETNAME(INITLIB), 1, 1, SysBase);
 
+    D(bug("[EXEC INIT] platform-specific init code called\n"));
     /* Multitasking is on. Call CoolCapture. */
     if (SysBase->CoolCapture)
     {
@@ -337,8 +345,10 @@ AROS_UFH3S(struct ExecBase *, GM_UNIQUENAME(init),
 
         AROS_UFC1NR(void, SysBase->CoolCapture,
             AROS_UFCA(struct Library *, (struct Library *)SysBase, A6));
+        D(bug("[EXEC INIT] CoolCapture called\n"));
     }
 
+    D(bug("[EXEC INIT] Finished\n"));
     /* Done. Following the convention, we return our base pointer. */
     return SysBase;
 
