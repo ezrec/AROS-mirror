@@ -60,7 +60,7 @@
     if(spin->nest == 0)
     {
         kprintf("[PANIC] Spinlock %lx is not locked, but unlocked by task %p (%s)\n", spin, thistask, taskname);
-        Alert( AN_SemCorrupt );
+        Alert( AN_SpinCorrupt );
     }
 
     /* early boot time might not have had thistask, so owner was set to -1 and Forbid() was used to lock */
@@ -71,6 +71,8 @@
         if(spin->nest == 0) 
         {
             spin->owner=(struct Task *) NULL;
+            __sync_synchronize();
+            spin->lock=0;
         }
         /* don't call Permit(), as this calls UnlockSpin => recursion */
         KrnScheduling(KSCHED_PERMIT);
@@ -81,7 +83,7 @@
     {
         kprintf("[PANIC] Spinlock %lx held by task %p, but unlocked by task %p (%s)\n", 
                  spin, spin->owner, thistask, taskname);
-        Alert( AN_SemCorrupt );
+        Alert( AN_SpinCorrupt );
     }
 
     if(spin->nest>1) 

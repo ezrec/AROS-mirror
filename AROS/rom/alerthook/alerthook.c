@@ -284,6 +284,7 @@ static const struct Errors execstrings[] =
     { AN_StackProbe,    "Stack extends out of range" },
     { AN_BadFreeAddr,   "Memory header not located" },
     { AN_BadSemaphore,  "Attempt to use the old message semaphore" },
+    { AN_SpinCorrupt,   "Illegal (un)lock of a SpinLock" },
     { 0, "unknown exec.library error" }
 };
 
