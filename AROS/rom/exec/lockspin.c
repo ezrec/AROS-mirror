@@ -88,13 +88,21 @@
     ULONG count=0;
 
     /* allowed to be called early */
-    if(thistask == NULL)
+    /* a spinlock once locked with Forbid needs following Forbid locks, too */
+    if((thistask == NULL) || (spin->owner == (struct Task *) -1) )
+#TODO
     {
-        D(bug("[LOCKSPIN] thistask is NULL, fallback to Forbid()\n"));
-        /* don't call Forbid(), as this calls LockSpin itself */
-        KrnScheduling(KSCHED_FORBID);
+        /* if we are already locked, we just increase the count, even if thistask is NULL
+         * if we are not locked ATM, we try Forbid(). 
+         */
+        if(spin->nest == 0)
+        {
+          D(bug("[LOCKSPIN] thistask is NULL, fallback to Forbid()\n"));
+          /* don't call Forbid(), as this calls LockSpin itself */
+          KrnScheduling(KSCHED_FORBID);
+          spin->owner=(struct Task *) -1;
+        }
         spin->nest++;
-        spin->owner=(struct Task *) -1;
         return;
     }
 
@@ -113,7 +121,7 @@
     }
     else
     {
-        //D(bug("[LOCKSPIN] %lx task %p (%s) locking me ..\n", spin, thistask, taskname));
+        D(bug("[LOCKSPIN] %lx task %p (%s) locking me ..\n", spin, thistask, taskname));
         //D(bug("[LOCKSPIN] %lx task %p (%s) locking me from 0x%p / 0x%p / 0x%p / 0x%p / 0x%p / 0x%p / 0x%p\n", spin, thistask, taskname, __builtin_return_address (1), __builtin_return_address (2), __builtin_return_address (3), __builtin_return_address (4), __builtin_return_address (5), __builtin_return_address (6), __builtin_return_address (7)));
     }
 
@@ -149,7 +157,13 @@
                         sectask, sectask->tc_Node.ln_Name, spin, sectask->tc_Node.ln_Pri));
                 }
                 else {
-                    D(bug("[LOCKSPIN] spin->owner is NULL, but holds the spinlock %lx\n", spin));
+                    bug("[LOCKSPIN] ERROR: spin->owner is NULL, but spinlock %lx is still locked\n", spin);
+                    bug("[LOCKSPIN] ERROR: BRUTE FORCE UNLOCK OF spinlock %lx\n", spin);
+                    Alert( AN_SpinCorrupt );
+                    /* maybe we are lucky.. */
+                    spin->nest=0;
+                    __sync_synchronize();
+                    spin->lock=0;
                 }
 
 
@@ -165,7 +179,7 @@
         }
 #endif
     }
-    //D(bug("[LOCKSPIN] %lx task %p (%s) locked me!\n", spin, thistask, taskname));
+    D(bug("[LOCKSPIN] %lx task %p (%s) locked me!\n", spin, thistask, taskname));
 
     spin->nest=1;
     spin->owner=thistask;
