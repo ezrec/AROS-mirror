@@ -1700,21 +1700,21 @@ Function
 ~~~~~~~~
 ::
 
-     Remove a Screen Notifications from Intuition.
+     Remove a Screen Notification from Intuition.
 
 
 Inputs
 ~~~~~~
 ::
 
-     notify - notification returned from StartScreenNotifyTagList() 
+     notify - notification returned from StartScreenNotifyTagList()
 
 
 Result
 ~~~~~~
 ::
 
-     BOOL - if false Notification is in use and cannot be removed, try later
+     BOOL - if FALSE, Notification is in use and cannot be removed; try later
 
 
 Notes
@@ -1728,7 +1728,7 @@ Notes
 See also
 ~~~~~~~~
 
-`StartScreenNotifyTagList()`_   
+`StartScreenNotifyTagList()`_ 
 
 ----------
 
@@ -5586,39 +5586,39 @@ Function
 ~~~~~~~~
 ::
 
- Changes several attributes of an object at the same time. How the
- object interprets the new attributes depends on the class.
+     Changes several attributes of an object at the same time. How the
+     object interprets the new attributes depends on the class.
 
 
 Inputs
 ~~~~~~
 ::
 
- object - Change the attributes of this object
- tagList - This is a list of attribute/value-pairs
+     object - Change the attributes of this object
+     tagList - This is a list of attribute/value-pairs
 
 
 Result
 ~~~~~~
 ::
 
- Depends on the class. For gadgets, this value is non-zero if
- they need redrawing after the values have changed. Other classes
- will define other return values.
+     Depends on the class. For gadgets, this value is non-zero if
+     they need redrawing after the values have changed. Other classes
+     will define other return values.
 
 
 Notes
 ~~~~~
 ::
 
- This function sends OM_SET to the object.
+     This function sends OM_SET to the object.
 
 
 
 See also
 ~~~~~~~~
 
-`NewObjectA()`_ `DisposeObject()`_ `GetAttr()`_ `MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
+`NewObjectA()`_ `DisposeObject()`_ `GetAttr()`_ `MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Document. 
 
 ----------
 

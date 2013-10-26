@@ -47,12 +47,12 @@ stdc
 `strncmp()`_                            `strncpy()`_                            `strndup()`_                            `strpbrk()`_                            
 `strrchr()`_                            `strrev()`_                             `strsep()`_                             `strspn()`_                             
 `strstr()`_                             `strtod()`_                             `strtoimax()`_                          `strtok()`_                             
-`strtol()`_                             `strtoll()`_                            `strtoul()`_                            `strtoull()`_                           
-`strtoumax()`_                          `strupr()`_                             `strxfrm()`_                            `system()`_                             
-`time()`_                               `tmpfile()`_                            `tmpnam()`_                             `ungetc()`_                             
-`vfprintf()`_                           `vfscanf()`_                            `vprintf()`_                            `vscanf()`_                             
-`vsnprintf()`_                          `vsprintf()`_                           `vsscanf()`_                            `wcstombs()`_                           
-`wctomb()`_                             
+`strtok_r()`_                           `strtol()`_                             `strtoll()`_                            `strtoul()`_                            
+`strtoull()`_                           `strtoumax()`_                          `strupr()`_                             `strxfrm()`_                            
+`system()`_                             `time()`_                               `tmpfile()`_                            `tmpnam()`_                             
+`ungetc()`_                             `vfprintf()`_                           `vfscanf()`_                            `vprintf()`_                            
+`vscanf()`_                             `vsnprintf()`_                          `vsprintf()`_                           `vsscanf()`_                            
+`wcstombs()`_                           `wctomb()`_                             
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -7641,6 +7641,81 @@ Example
 
      // Next word. Returns NULL.
      strtok (NULL, " \t");
+
+
+Notes
+~~~~~
+::
+
+     The function changes str !
+
+
+
+----------
+
+strtok_r()
+==========
+
+Synopsis
+~~~~~~~~
+::
+
+  char * strtok_r(
+     char       * str,
+     const char * sep,
+     char **saveptr)
+
+
+Function
+~~~~~~~~
+::
+
+     Separates a string by the characters in sep.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string to check or NULL if the next word in
+             the last string is to be searched.
+     sep - Characters which separate "words" in str.
+     saveptr - internal context for next scan
+
+
+Result
+~~~~~~
+::
+
+     The first word in str or the next one if str is NULL.
+
+
+Example
+~~~~~~~
+::
+
+     char buffer[64];
+     char *ptr;
+
+     strcpy (buffer, "Hello, this is a test.");
+
+     // Init. Returns "Hello"
+     strtok_r (str, " \t,.", &ptr);
+
+     // Next word. Returns "this"
+     strtok_r (NULL, " \t,.", &ptr);
+
+     // Next word. Returns "is"
+     strtok_r (NULL, " \t", &ptr);
+
+     // Next word. Returns "a"
+     strtok_r (NULL, " \t", &ptr);
+
+     // Next word. Returns "test."
+     strtok_r (NULL, " \t", &ptr);
+
+     // Next word. Returns NULL.
+     strtok_r (NULL, " \t", &ptr);
 
 
 Notes

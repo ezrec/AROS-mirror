@@ -30,29 +30,30 @@ posixc
 `getlogin()`_                           `getopt()`_                             `getopt_long()`_                        `getopt_long_only()`_                   
 `getpgrp()`_                            `getpid()`_                             `getppid()`_                            `getpwent()`_                           
 `getpwnam()`_                           `getpwuid()`_                           `getrlimit()`_                          `gets()`_                               
-`gettimeofday()`_                       `getuid()`_                             `getw()`_                               `isatty()`_                             
-`jrand48()`_                            `kill()`_                               `lcong48()`_                            `link()`_                               
-`lrand48()`_                            `lseek()`_                              `lstat()`_                              `mkdir()`_                              
-`mknod()`_                              `mkstemp()`_                            `mktemp()`_                             `mrand48()`_                            
-`nanosleep()`_                          `nrand48()`_                            `open()`_                               `opendir()`_                            
-`pclose()`_                             `perror()`_                             `pipe()`_                               `popen()`_                              
-`posix_memalign()`_                     `printf()`_                             `putc()`_                               `putchar()`_                            
-`putenv()`_                             `puts()`_                               `putw()`_                               `read()`_                               
-`readdir()`_                            `remove()`_                             `rename()`_                             `rewind()`_                             
-`rewinddir()`_                          `rmdir()`_                              `scanf()`_                              `seed48()`_                             
-`seekdir()`_                            `setbuf()`_                             `setenv()`_                             `setgid()`_                             
-`setgrent()`_                           `setlinebuf()`_                         `setpwent()`_                           `setrlimit()`_                          
-`setuid()`_                             `setvbuf()`_                            `sigaction()`_                          `sigaddset()`_                          
-`sigdelset()`_                          `sigemptyset()`_                        `sigfillset()`_                         `sigismember()`_                        
-`sigpending()`_                         `sigprocmask()`_                        `sigsuspend()`_                         `sleep()`_                              
-`srand48()`_                            `stat()`_                               `statfs()`_                             `swab()`_                               
-`symlink()`_                            `sysconf()`_                            `system()`_                             `telldir()`_                            
-`tempnam()`_                            `times()`_                              `tmpfile()`_                            `tmpnam()`_                             
-`truncate()`_                           `ttyname()`_                            `umask()`_                              `uname()`_                              
-`ungetc()`_                             `unlink()`_                             `unsetenv()`_                           `updatestdio()`_                        
-`usleep()`_                             `utime()`_                              `utimes()`_                             `vfork()`_                              
-`vfprintf()`_                           `vfscanf()`_                            `vprintf()`_                            `vscanf()`_                             
-`wait()`_                               `waitpid()`_                            `write()`_                              
+`gettimeofday()`_                       `getuid()`_                             `getw()`_                               `ioctl()`_                              
+`isatty()`_                             `jrand48()`_                            `kill()`_                               `lcong48()`_                            
+`link()`_                               `lrand48()`_                            `lseek()`_                              `lstat()`_                              
+`mkdir()`_                              `mknod()`_                              `mkstemp()`_                            `mktemp()`_                             
+`mrand48()`_                            `nanosleep()`_                          `nrand48()`_                            `open()`_                               
+`opendir()`_                            `pclose()`_                             `perror()`_                             `pipe()`_                               
+`popen()`_                              `posix_memalign()`_                     `printf()`_                             `putc()`_                               
+`putchar()`_                            `putenv()`_                             `puts()`_                               `putw()`_                               
+`read()`_                               `readdir()`_                            `remove()`_                             `rename()`_                             
+`rewind()`_                             `rewinddir()`_                          `rmdir()`_                              `scanf()`_                              
+`seed48()`_                             `seekdir()`_                            `setbuf()`_                             `setenv()`_                             
+`setgid()`_                             `setgrent()`_                           `setlinebuf()`_                         `setpwent()`_                           
+`setrlimit()`_                          `setuid()`_                             `setvbuf()`_                            `sigaction()`_                          
+`sigaddset()`_                          `sigdelset()`_                          `sigemptyset()`_                        `sigfillset()`_                         
+`sigismember()`_                        `sigpending()`_                         `sigprocmask()`_                        `sigsuspend()`_                         
+`sleep()`_                              `srand48()`_                            `stat()`_                               `statfs()`_                             
+`swab()`_                               `symlink()`_                            `sysconf()`_                            `system()`_                             
+`telldir()`_                            `tempnam()`_                            `times()`_                              `tmpfile()`_                            
+`tmpnam()`_                             `truncate()`_                           `ttyname()`_                            `umask()`_                              
+`uname()`_                              `ungetc()`_                             `unlink()`_                             `unsetenv()`_                           
+`updatestdio()`_                        `usleep()`_                             `utime()`_                              `utimes()`_                             
+`vfork()`_                              `vfprintf()`_                           `vfscanf()`_                            `vprintf()`_                            
+`vscanf()`_                             `wait()`_                               `waitpid()`_                            `write()`_                              
+
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -3874,6 +3875,29 @@ See also
 ~~~~~~~~
 
 `fread()`_ 
+
+----------
+
+ioctl()
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  int ioctl(
+     int fd,
+     int request,
+     ...)
+
+
+Notes
+~~~~~
+::
+
+     Not implemented.
+
+
 
 ----------
 

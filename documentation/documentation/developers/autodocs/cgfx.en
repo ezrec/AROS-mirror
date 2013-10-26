@@ -1384,11 +1384,19 @@ Result
      count - the number of pixels written to.
 
 
+Notes
+~~~~~
+::
+
+     Because of the X11 driver you have to set the drawmode
+     to JAM1 with SetDrMd().
+
+
 
 See also
 ~~~~~~~~
 
-`WritePixelArrayAlpha()`_ 
+`WritePixelArrayAlpha()`_ `graphics.library/SetDrMd() <./graphics#setdrmd>`_ 
 
 ----------
 
@@ -1444,6 +1452,14 @@ Result
      count - the number of pixels written to.
 
 
+Notes
+~~~~~
+::
+
+     Because of the X11 driver you have to set the drawmode
+     to JAM1 with SetDrMd().
+
+
 Bugs
 ~~~~
 ::
@@ -1455,7 +1471,7 @@ Bugs
 See also
 ~~~~~~~~
 
-`WritePixelArray()`_ 
+`WritePixelArray()`_ `graphics.library/SetDrMd() <./graphics#setdrmd>`_ 
 
 ----------
 
