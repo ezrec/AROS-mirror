@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-EXEDIR := $(CONTRIBDIR)/Demos/Kitty
+EXEDIR := $(AROS_CONTRIB)/Demos/Kitty
 
 %build_icons mmake=demo-kitty-icons icons=Kitty dir=$(EXEDIR)
 

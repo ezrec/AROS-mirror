@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/Demos/Voxel
+DESTDIR := $(AROS_CONTRIB)/Demos/Voxel
 
 %build_icons mmake=demo-voxel-icons icons=Voxel dir=$(DESTDIR)
 

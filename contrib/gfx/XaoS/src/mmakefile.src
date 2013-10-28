@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-PROG := $(CONTRIBDIR)/MultiMedia/Gfx/XaoS/XaoS
+PROG := $(AROS_CONTRIB)/MultiMedia/Gfx/XaoS/XaoS
 
 #MM gfx-xaos-prog : setup-gfx-xaos linklibs-xaosengine \
 #MM			      	   linklibs-xaosfilter \
@@ -17,9 +17,9 @@ gfx-xaos-prog : $(PROG)
 gfx-xaos-prog-quick : $(PROG)
 
 XAOSLIBS	:= ui engine util filter uiaros
-XAOSLIBFILES	:= $(foreach f, $(XAOSLIBS), $(LIBDIR)/libxaos$(f).a)
+XAOSLIBFILES	:= $(foreach f, $(XAOSLIBS), $(AROS_LIB)/libxaos$(f).a)
 
 %rule_link_prog prog=$(PROG) objs=$(XAOSLIBFILES)
 
 #MM setup-gfx-xaos
-%rule_makedirs dirs=$(CONTRIBDIR)/MultiMedia/Gfx/XaoS setuptarget=setup-gfx-xaos
+%rule_makedirs dirs=$(AROS_CONTRIB)/MultiMedia/Gfx/XaoS setuptarget=setup-gfx-xaos

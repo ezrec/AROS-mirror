@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-shuffle \
-    progname=shuffle targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=shuffle targetdir=$(AROS_CONTRIB)/Misc/fish \
     files="shuffle shuffle_files shuffle_main shuffle_temp"

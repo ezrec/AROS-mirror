@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 FILES  := tcc
 
-EXEDIR := $(CONTRIBDIR)/Development/TCC
+EXEDIR := $(AROS_CONTRIB)/Development/TCC
 
 USER_CFLAGS  := -O2 -g -Wall -DCONFIG_TCC_STATIC -DAROSC
 USER_LDFLAGS := -ltcc1

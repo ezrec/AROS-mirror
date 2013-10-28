@@ -4,7 +4,7 @@ include $(TOP)/config/make.cfg
 FILES := $(call WILDCARD, Levels/Level* Levels/Mission* Levels/Story*) \
 	 $(call WILDCARD, Textures/*.256) \
 	 Missions
-INSTDIR := $(CONTRIBDIR)/Games/Moria3D
+INSTDIR := $(AROS_CONTRIB)/Games/Moria3D
 
 DEST := $(foreach f,$(FILES),$(INSTDIR)/$(f))
 

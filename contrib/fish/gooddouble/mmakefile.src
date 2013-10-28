@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-gooddouble \
-    progname=GoodDouble targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=GoodDouble targetdir=$(AROS_CONTRIB)/Misc/fish \
     files="ClickTest GoodDouble GoodDouble2"
 

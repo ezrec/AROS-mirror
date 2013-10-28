@@ -3,7 +3,7 @@ include $(TOP)/config/make.cfg
 
 #MM- Doom-extra : Doom-extra-icons
 
-EXEDIR := $(CONTRIBDIR)/Games/Doom
+EXEDIR := $(AROS_CONTRIB)/Games/Doom
 
 %build_icons mmake=Doom-extra-icons icons=Doom dir=$(EXEDIR)
 

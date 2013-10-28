@@ -9,7 +9,7 @@ FILES  := nasm nasmlib float insnsa assemble labels \
        outobj outas86 outrdf outrdf2 outdbg zoutieee \
        preproc listing eval
 
-EXEDIR := $(CONTRIBDIR)/Development/nasm
+EXEDIR := $(AROS_CONTRIB)/Development/nasm
 
 #MM- contrib-development : contrib-development-nasm
 #MM contrib-development-nasm : contrib-development-nasm-setup \

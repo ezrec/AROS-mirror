@@ -38,7 +38,7 @@ FILES := globals \
 #	rexx
 #
 
-EXEDIR := $(CONTRIBDIR)/Networking/Apps/AMosaic
+EXEDIR := $(AROS_CONTRIB)/Networking/Apps/AMosaic
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../libwww2
 

@@ -3,9 +3,9 @@ include $(TOP)/config/make.cfg
 #MM fish-cfn : fish-cfn_newshell
 
 %build_prog mmake=fish-cfn \
-    progname=cfn targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=cfn targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=cfn
 
 %build_prog mmake=fish-cfn_newshell \
-    progname=cfn_newshell targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=cfn_newshell targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=cfn_newshell

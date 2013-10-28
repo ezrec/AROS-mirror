@@ -20,7 +20,7 @@ FILES := $(filter-out %_SPC_,$(subst .c,,$(wildcard Src/*.c Src/*/*.c)))
 ## 
 ##         XDME
 
-EXEDIR := $(CONTRIBDIR)/Misc/aminet/XDME
+EXEDIR := $(AROS_CONTRIB)/Misc/aminet/XDME
 
 #MM aminet-text-edit-xdme-quick : setup-xdme
 #MM aminet-text-edit-xdme : setup-xdme

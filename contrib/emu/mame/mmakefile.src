@@ -11,7 +11,7 @@ else
     AROSMAME_EXTRADEFS			:=
 endif
 
-INSTDIR  				:= $(CONTRIBDIR)/Emu/Mame
+INSTDIR  				:= $(AROS_CONTRIB)/Emu/Mame
 OBJDIR   				:= $(GENDIR)/$(CURDIR)
 
 EXE 					:= $(INSTDIR)/mame

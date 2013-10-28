@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/Demos/Metaballs
+DESTDIR := $(AROS_CONTRIB)/Demos/Metaballs
 
 %build_icons mmake=demo-metaballs-icons icons=Metaballs dir=$(DESTDIR)
 

@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-comm-term-tinyterminal \
-    progname=TinyTerminal targetdir=$(CONTRIBDIR)/Misc/aminet \
+    progname=TinyTerminal targetdir=$(AROS_CONTRIB)/Misc/aminet \
     files=tt

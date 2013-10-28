@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/Demos/Tunnel
+DESTDIR := $(AROS_CONTRIB)/Demos/Tunnel
 
 %define build_icons mmake=demo-tunnel-icons icons=Tunnel dir=$(DESTDIR)
 

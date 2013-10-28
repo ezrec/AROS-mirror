@@ -12,12 +12,12 @@ FILES := alter attach auth btree build callback date \
 	opcodes parse
 
 %build_prog mmake=contrib-sqlite3 \
-	progname=sqlite targetdir=$(CONTRIBDIR)/daikane \
+	progname=sqlite targetdir=$(AROS_CONTRIB)/daikane \
 	files="$(FILES) shell" \
 	cflags="-Wall -DOS_AROS -DSQLITE_DEBUG"
 
 %build_prog mmake=contrib-sqlite3-test \
-	progname=test targetdir=$(CONTRIBDIR)/daikane \
+	progname=test targetdir=$(AROS_CONTRIB)/daikane \
 	files="test" cflags="-Wall"
 
 #MM- contrib-sqlite3: \
@@ -47,7 +47,7 @@ contrib-sqlite3-opcodes-c: opcodes.h opcodes.c
 contrib-sqlite3-doc:	doc
 
 test-copy:
-	cp -f test.c $(CONTRIBDIR)/daikane/
+	cp -f test.c $(AROS_CONTRIB)/daikane/
 
 # Files to be published on the website.
 #
@@ -92,8 +92,8 @@ DOC = \
   whentouse.html
 
 doc: common.tcl $(DOC)
-	@mkdir -p $(CONTRIBDIR)/daikane/doc 2>/dev/null
-	@mv $(DOC) $(CONTRIBDIR)/daikane/doc/
+	@mkdir -p $(AROS_CONTRIB)/daikane/doc 2>/dev/null
+	@mv $(DOC) $(AROS_CONTRIB)/daikane/doc/
 
 lemon: tool/lemon.c tool/lempar.c
 	gcc -o lemon tool/lemon.c
@@ -172,7 +172,7 @@ docs.html:	www/docs.tcl
 	tclsh www/docs.tcl >docs.html
 
 download.html:	www/download.tcl
-	@mkdir -p $(CONTRIBDIR)/daikane/doc 2>/dev/null
+	@mkdir -p $(AROS_CONTRIB)/daikane/doc 2>/dev/null
 	tclsh www/download.tcl >download.html
 
 faq.html:	www/faq.tcl

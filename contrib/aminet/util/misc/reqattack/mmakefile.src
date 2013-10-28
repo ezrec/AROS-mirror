@@ -29,7 +29,7 @@ FILES := addicon    	\
 	 reqlist    	\
 	 reqoffexec 
 
-EXEDIR := $(CONTRIBDIR)/Misc/aminet/ReqAttack
+EXEDIR := $(AROS_CONTRIB)/Misc/aminet/ReqAttack
 
 USER_CFLAGS := -DNO_POPUPMENU -DNO_SOUND -DNO_ASM
 

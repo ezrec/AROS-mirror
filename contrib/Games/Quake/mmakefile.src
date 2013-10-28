@@ -1,12 +1,12 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-INSTDIR  := $(CONTRIBDIR)/Games/Quake
+INSTDIR  := $(AROS_CONTRIB)/Games/Quake
 BUILDDIR := $(GENDIR)/$(CURDIR)
-STARTUP := $(LIBDIR)/startup.o
-LIBS	:= -L$(LIBDIR) -lamiga -larossupport -lautoinit
-DEPLIBS := $(STARTUP) $(LIBDIR)/libstdc.a \
-		$(LIBDIR)/libamiga.a $(LIBDIR)/libarossupport.a
+STARTUP := $(AROS_LIB)/startup.o
+LIBS	:= -L$(AROS_LIB) -lamiga -larossupport -lautoinit
+DEPLIBS := $(STARTUP) $(AROS_LIB)/libstdc.a \
+		$(AROS_LIB)/libamiga.a $(AROS_LIB)/libarossupport.a
 
 EXE := $(INSTDIR)/quake
 
@@ -53,7 +53,7 @@ BASE_CFLAGS=-Dstricmp=strcasecmp
 DEBUG_CFLAGS=$(CFLAGS) $(BASE_CFLAGS) -g
 
 AROSCFLAGS=-DAROS $(RELEASE_CFLAGS)
-AROSLDFLAGS=-L$(LIBDIR) -lamiga -lautoinit -nix
+AROSLDFLAGS=-L$(AROS_LIB) -lamiga -lautoinit -nix
 
 DO_CC=$(CC) $(CFLAGS) -o $@ -c $<
 DO_DEBUG_CC=$(CC) $(DEBUG_CFLAGS) -o $@ -c $<

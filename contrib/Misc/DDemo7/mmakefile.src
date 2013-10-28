@@ -1,7 +1,7 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=contrib-ddemo7 \
-    progname=DDemo7 targetdir=$(CONTRIBDIR)/Misc \
+    progname=DDemo7 targetdir=$(AROS_CONTRIB)/Misc \
     files=DDemo7
 
 

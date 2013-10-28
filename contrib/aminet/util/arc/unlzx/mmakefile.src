@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-util-arc-unlzx \
-    progname=unlzx targetdir=$(CONTRIBDIR)/Misc/aminet/C \
+    progname=unlzx targetdir=$(AROS_CONTRIB)/Misc/aminet/C \
     files=unlzx

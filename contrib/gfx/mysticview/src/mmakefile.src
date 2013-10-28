@@ -30,7 +30,7 @@ FILES := MysticView		\
 	 Mystic_Tools		\
 	 Mystic_Window
 
-EXEDIR := $(CONTRIBDIR)/MultiMedia/Gfx/MysticView
+EXEDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/MysticView
 
 #MM- contrib-gfx : contrib-gfx-mysticview
 #MM contrib-gfx-mysticview : includes linklibs contrib-gfx-libs-mysticview

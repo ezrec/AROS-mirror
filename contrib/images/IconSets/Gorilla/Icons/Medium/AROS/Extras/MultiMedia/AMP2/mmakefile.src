@@ -8,4 +8,4 @@ include $(TOP)/config/make.cfg
 ICONS := Plugin AMP
 
 #MM- iconset-Gorilla-contrib-icons-extras-mmedia-clean : iconset-Gorilla-contrib-icons-extras-mmedia-amp2-clean
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras-mmedia-amp2 icons=$(ICONS) dir=$(CONTRIBDIR)/MultiMedia/AMP2
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-mmedia-amp2 icons=$(ICONS) dir=$(AROS_CONTRIB)/MultiMedia/AMP2

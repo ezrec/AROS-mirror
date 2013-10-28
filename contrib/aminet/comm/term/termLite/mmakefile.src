@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-comm-term-termlite \
-    progname=termLite targetdir=$(CONTRIBDIR)/Misc/aminet \
+    progname=termLite targetdir=$(AROS_CONTRIB)/Misc/aminet \
     files=termLite

@@ -4,7 +4,7 @@ include $(TOP)/config/make.cfg
 
 FILES := Toolbar-Demo
 
-EXEDIR := $(CONTRIBDIR)/Zune/MCC_Toolbar/Demos
+EXEDIR := $(AROS_CONTRIB)/Zune/MCC_Toolbar/Demos
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../../../../commonaros
 USER_CFLAGS := -DNO_INLINE_STDARG

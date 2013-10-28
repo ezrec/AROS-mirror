@@ -1,9 +1,9 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-LIBS	:= -L$(LIBDIR) -lamiga -larossupport -lautoinit -lstdc
+LIBS	:= -L$(AROS_LIB) -lamiga -larossupport -lautoinit -lstdc
 
-INSTDIR := $(CONTRIBDIR)/Games/Moria3D
+INSTDIR := $(AROS_CONTRIB)/Games/Moria3D
 EXE	:= $(INSTDIR)/Moria3D
 
 OBJS := $(GENDIR)/$(CURDIR)/Moveing.o \

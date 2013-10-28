@@ -5,4 +5,4 @@ include $(TOP)/config/make.cfg
 
 %build_catalogs mmake=setup-filemaster-catalogs \
                 name=FileMaster subdir=  source=../filemaster_strings.h \
-                dir=$(CONTRIBDIR)/Misc/aminet/FileMaster/Catalogs
+                dir=$(AROS_CONTRIB)/Misc/aminet/FileMaster/Catalogs

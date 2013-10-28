@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 FILES := lcc linux
 
-EXEDIR := $(CONTRIBDIR)/aminet/lcc
+EXEDIR := $(AROS_CONTRIB)/aminet/lcc
 
 USER_CFLAGS := -DAROS -DV39 
 

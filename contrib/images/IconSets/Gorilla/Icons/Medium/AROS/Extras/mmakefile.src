@@ -9,4 +9,4 @@ ICONS := MultiMedia DOpus Demos Development Emu Games Networking Office \
  Utilities System FryingPan
 
 #MM- iconset-Gorilla-contrib-icons-clean : iconset-Gorilla-contrib-icons-extras-clean
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras icons=$(ICONS) dir=$(CONTRIBDIR)
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras icons=$(ICONS) dir=$(AROS_CONTRIB)

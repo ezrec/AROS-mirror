@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-TARGETDIR := $(CONTRIBDIR)/Regina/trip
+TARGETDIR := $(AROS_CONTRIB)/Regina/trip
 
 REXXFILES := \
     arith.rexx \

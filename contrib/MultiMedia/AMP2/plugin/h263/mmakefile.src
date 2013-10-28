@@ -15,7 +15,7 @@ mjpeg dsputil msmpeg4 h263dec rv10 main
 
 OBJS = $(MAIN) $(COMMON)
 
-EXEDIR := $(CONTRIBDIR)/MultiMedia/AMP2/Plugin
+EXEDIR := $(AROS_CONTRIB)/MultiMedia/AMP2/Plugin
 
 USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../common -I$(SRCDIR)/$(CURDIR)/../../aros
 

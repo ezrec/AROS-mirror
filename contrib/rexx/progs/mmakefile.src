@@ -4,7 +4,7 @@
 
 include $(TOP)/config/make.cfg
 
-REXXDIR = $(CONTRIBDIR)/Rexx
+REXXDIR = $(AROS_CONTRIB)/Rexx
 DESTDIR = $(REXXDIR)/progs
 
 FILES = 3dplot.r \

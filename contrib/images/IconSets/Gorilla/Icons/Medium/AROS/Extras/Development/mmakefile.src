@@ -8,4 +8,4 @@ include $(TOP)/config/make.cfg
 ICONS := Build False Lua nasm MUIBuilder ChocolateCastle
 
 #MM- iconset-Gorilla-contrib-icons-extras-clean : iconset-Gorilla-contrib-icons-extras-development-clean
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras-development icons=$(ICONS) dir=$(CONTRIBDIR)/Development
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-development icons=$(ICONS) dir=$(AROS_CONTRIB)/Development

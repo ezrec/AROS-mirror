@@ -7,7 +7,7 @@ include $(TOP)/config/make.cfg
 
 FILES := mysticube logo
 
-EXEDIR := $(CONTRIBDIR)/MultiMedia/Gfx/MystiCube
+EXEDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/MystiCube
 
 USER_CFLAGS := -D__far
 

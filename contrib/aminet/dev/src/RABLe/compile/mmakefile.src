@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-dev-src-rable \
-    progname=rable targetdir=$(CONTRIBDIR)/Misc/aminet \
+    progname=rable targetdir=$(AROS_CONTRIB)/Misc/aminet \
     files="rable_draw rable_gadgets rable"

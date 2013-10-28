@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-comm-term-microtem \
-    progname=Microterm targetdir=$(CONTRIBDIR)/Misc/aminet \
+    progname=Microterm targetdir=$(AROS_CONTRIB)/Misc/aminet \
     files="console globals main serial"

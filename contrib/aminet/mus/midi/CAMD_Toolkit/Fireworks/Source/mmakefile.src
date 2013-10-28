@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 
 FILES := fireworks async message timer libopen stubs fwmodes linear parabolic
 
-EXEDIR := $(CONTRIBDIR)/Misc/aminet
+EXEDIR := $(AROS_CONTRIB)/Misc/aminet
 
 # -DNO_INLINE_STDARG
 

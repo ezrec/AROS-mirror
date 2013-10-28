@@ -3,7 +3,7 @@
 
 include $(TOP)/config/make.cfg
 
-EXEDIR := $(CONTRIBDIR)/Networking/Apps/OWB
+EXEDIR := $(AROS_CONTRIB)/Networking/Apps/OWB
     
 USER_CFLAGS := -DZUNE_BUILTIN_SCROLLGROUP=0 -DWTF_PLATFORM_AROS=1
 

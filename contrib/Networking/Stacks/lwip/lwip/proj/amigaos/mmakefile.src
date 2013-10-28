@@ -30,7 +30,7 @@ localdata
 #FLAGS = -specs=/home/cvs/AROS/bin/linux-i386/gen/config/specs
 FILES = $(COREOBJS) $(ARCHOBJS) $(NETIFOBJS) $(APIOBJS) $(LIBOBJS) test
 
-EXEDIR := $(CONTRIBDIR)/lwip
+EXEDIR := $(AROS_CONTRIB)/lwip
 
 USER_CFLAGS := -DLWIP_DEBUG -O2 -I$(SRCDIR)/include -I$(ARCHINCLUDE) -I$(IPVXINCLUDE) -I./ -I./include \
         -D__BSD_VISIBLE=1

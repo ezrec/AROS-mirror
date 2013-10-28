@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-fiveinline \
-    progname=fiveinline targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=fiveinline targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=fiveinline

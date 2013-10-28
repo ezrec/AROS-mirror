@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/Demos/RubberStrings
+DESTDIR := $(AROS_CONTRIB)/Demos/RubberStrings
 
 %build_icons mmake=demo-rubberstrings-icons icons=Rubberstrings dir=$(DESTDIR)
 

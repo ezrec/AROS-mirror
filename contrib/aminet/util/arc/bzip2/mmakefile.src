@@ -16,7 +16,7 @@ FILES := \
 
 USER_CFLAGS = -D_FILE_OFFSET_BITS=32
 
-EXEDIR := $(CONTRIBDIR)/Misc/aminet/C
+EXEDIR := $(AROS_CONTRIB)/Misc/aminet/C
 
 %build_prog mmake=aminet-util-arc-bzip2 \
     progname=bzip2 targetdir=$(EXEDIR) \

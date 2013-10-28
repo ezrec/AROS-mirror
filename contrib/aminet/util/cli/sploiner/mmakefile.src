@@ -1,7 +1,7 @@
 include $(TOP)/config/make.cfg
 
 FILES  := getbuff getopt join repair split sploiner usage
-EXEDIR := $(CONTRIBDIR)/Misc/aminet
+EXEDIR := $(AROS_CONTRIB)/Misc/aminet
 
 %build_prog mmake=contrib-aminet-util-cli-sploiner \
     progname=sploiner targetdir=$(EXEDIR) \

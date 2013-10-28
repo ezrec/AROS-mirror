@@ -3,7 +3,7 @@ include $(TOP)/config/make.cfg
 
 FILES := Main
 
-EXEDIR := $(CONTRIBDIR)/Games/Bomber
+EXEDIR := $(AROS_CONTRIB)/Games/Bomber
 
 #MM- contrib-games : Bomber
 #MM Bomber : Bomber-datafiles

@@ -12,7 +12,7 @@ USER_CFLAGS := -D__BSD_VISIBLE=1
 
 %build_progs mmake=contrib-net-developer-tests \
     files="$(TFILES) $(STACKTESTS) $(CLISERVTESTS)" \
-    targetdir=$(CONTRIBDIR)/Networking/Tests
+    targetdir=$(AROS_CONTRIB)/Networking/Tests
 
 ##MM contrib-net-developer-tests : aros-tcpip
 

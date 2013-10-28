@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 #MM- aminet-games-think-amichess : aminet-games-think-amichess-program aminet-games-think-amichess-datafiles
 
-AMICHESSDIR := $(CONTRIBDIR)/Games/AmiChess
+AMICHESSDIR := $(AROS_CONTRIB)/Games/AmiChess
 
 BOARDS := Crystal Default Fire Ice MarbleBrown MarbleGrey \
     	  Metal Plasma Redwood Water Wood1 Wood2

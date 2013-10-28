@@ -47,7 +47,7 @@ parser/qt/elst parser/qt/dref parser/qt/stsdtable parser/qt/util parser/qt/qt
 
 OBJS = $(MAIN) $(AROSFILES) $(AMIGAOS) $(COMMON) $(AUDIO) $(REFRESH) $(DVD) $(PARSER)
 
-EXEDIR := $(CONTRIBDIR)/MultiMedia/AMP2
+EXEDIR := $(AROS_CONTRIB)/MultiMedia/AMP2
 
 USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/aros -I$(SRCDIR)/$(CURDIR)/amigaos -I$(SRCDIR)/$(CURDIR)/audio -I$(SRCDIR)/$(CURDIR)/common -I$(SRCDIR)/$(CURDIR)/main -I$(SRCDIR)/$(CURDIR)/parser -I$(SRCDIR)/$(CURDIR)/parser/dvd -I$(SRCDIR)/$(CURDIR)/parser/dvd/dvdnav -I$(SRCDIR)/$(CURDIR)/parser/dvd/dvdread  -I$(SRCDIR)/$(CURDIR)/parser/mpeg  -I$(SRCDIR)/$(CURDIR)/parser/vcd  -I$(SRCDIR)/$(CURDIR)/parser/qt -I$(SRCDIR)/$(CURDIR)/plugin -Irefresh
 

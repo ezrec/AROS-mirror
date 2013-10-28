@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/Demos/Parallax
+DESTDIR := $(AROS_CONTRIB)/Demos/Parallax
 
 %build_icons mmake=demo-parallax-icons icons=Parallax dir=$(DESTDIR)
 

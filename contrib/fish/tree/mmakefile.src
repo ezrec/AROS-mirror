@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-tree \
-    progname=tree targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=tree targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=tree

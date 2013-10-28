@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 LOCALINCLUDES = -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/../Include
 
-LIBS := -L$(LIBDIR) -lamiga
+LIBS := -L$(AROS_LIB) -lamiga
 
 
 $(AROS_INCLUDES)/defines/xem.h : aros/xem_defines.h

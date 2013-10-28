@@ -38,7 +38,7 @@ USER_CFLAGS := -DUSE_PROTO_INCLUDES \
 	       -D__stdargs="" \
 	       -D__asm=""
 	 	 
-EXEDIR := $(CONTRIBDIR)/Misc/aminet/FileX
+EXEDIR := $(AROS_CONTRIB)/Misc/aminet/FileX
 
 #MM aminet-disk-moni-filex : includes linklibs setup-filex-catalogs
 

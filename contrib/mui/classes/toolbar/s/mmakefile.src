@@ -14,4 +14,4 @@ contrib-zune-classes-toolbar-envpackage :
 
 #MM- contrib-zune-classes-toolbar-mcp      : contrib-zune-classes-toolbar-startup
 
-%copy_files_q mmake=contrib-zune-classes-toolbar-startupfiles dst=$(CONTRIBDIR)/Zune/MCC_Toolbar/s
+%copy_files_q mmake=contrib-zune-classes-toolbar-startupfiles dst=$(AROS_CONTRIB)/Zune/MCC_Toolbar/s

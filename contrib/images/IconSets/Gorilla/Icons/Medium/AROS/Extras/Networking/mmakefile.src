@@ -8,4 +8,4 @@ include $(TOP)/config/make.cfg
 ICONS := Apps
 
 #MM- iconset-Gorilla-contrib-icons-extras-clean : iconset-Gorilla-contrib-icons-extras-networking-clean
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras-networking icons=$(ICONS) dir=$(CONTRIBDIR)/Networking
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-networking icons=$(ICONS) dir=$(AROS_CONTRIB)/Networking

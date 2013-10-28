@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=contrib-linie12 \
-    progname=Linie12 targetdir=$(CONTRIBDIR)/Misc \
+    progname=Linie12 targetdir=$(AROS_CONTRIB)/Misc \
     files=Linie12

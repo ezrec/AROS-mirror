@@ -8,4 +8,4 @@ include $(TOP)/config/make.cfg
 ICONS := uae
 
 #MM- iconset-Gorilla-contrib-icons-extras-clean : iconset-Gorilla-contrib-icons-extras-emu-uae-clean
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras-emu-uae icons=$(ICONS) dir=$(CONTRIBDIR)/Emu/UAE
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-emu-uae icons=$(ICONS) dir=$(AROS_CONTRIB)/Emu/UAE

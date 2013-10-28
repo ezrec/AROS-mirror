@@ -20,7 +20,7 @@ fobjects = $(TRGDIR)/opt $(TRGDIR)/av $(TRGDIR)/rd $(TRGDIR)/regs \
 FILES = $(bobjects) $(fobjects)
 
 
-EXEDIR := $(CONTRIBDIR)/vbcc
+EXEDIR := $(AROS_CONTRIB)/vbcc
 
 USER_CFLAGS := -O2 -DAROS -D_QUAD_HIGHWORD=1 -D_QUAD_LOWWORD=0 -DNO_UCPP_ERROR_FUNCTIONS -I./ -I./machines/i386
 #MM- contrib-development-compilers-vbcc : \

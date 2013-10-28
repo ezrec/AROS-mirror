@@ -8,4 +8,4 @@ include $(TOP)/config/make.cfg
 ICONS := MUIbase
 
 #MM- iconset-Gorilla-contrib-icons-extras-office-clean : iconset-Gorilla-contrib-icons-extras-office-muibase-clean
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras-office-muibase icons=$(ICONS) dir=$(CONTRIBDIR)/Office/MUIbase
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-office-muibase icons=$(ICONS) dir=$(AROS_CONTRIB)/Office/MUIbase

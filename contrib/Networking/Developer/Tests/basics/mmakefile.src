@@ -8,7 +8,7 @@ TFILES = accept nonblock send sockbind
 USER_CFLAGS := -D__BSD_VISIBLE=1
 
 %build_progs mmake=contrib-net-developer-basictests \
-    files="$(TFILES)" targetdir=$(CONTRIBDIR)/Networking/Tests
+    files="$(TFILES)" targetdir=$(AROS_CONTRIB)/Networking/Tests
 
 ##MM contrib-net-developer-basictests : aros-tcpip
 

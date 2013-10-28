@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=contrib-switch \
-    progname=SWitch targetdir=$(CONTRIBDIR)/Misc \
+    progname=SWitch targetdir=$(AROS_CONTRIB)/Misc \
     files=SWitch

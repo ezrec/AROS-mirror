@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-EXEDIR := $(CONTRIBDIR)/Games/NewMasterMind
+EXEDIR := $(AROS_CONTRIB)/Games/NewMasterMind
 
 %build_prog mmake=aminet-games-think-newmastermind \
     progname=NewMasterMind targetdir=$(EXEDIR) \

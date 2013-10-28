@@ -27,7 +27,7 @@ AMILUAFILES :=	amilua $(COREFILES)
 
 HEADERS :=	lua.h luaconf.h lualib.h lauxlib.h lsiamigalib.h lmuilib.h
 
-EXEDIR :=	$(CONTRIBDIR)/Development/Lua
+EXEDIR :=	$(AROS_CONTRIB)/Development/Lua
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../luafilesystem/src -I$(SRCDIR)/$(CURDIR)/../lua-xmlreader-0.1
 

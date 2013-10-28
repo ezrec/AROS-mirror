@@ -4,5 +4,5 @@ FILES := buffer language subwin mainwin system hotkey \
 	settings miscwin patches snoopdos 
 
 %build_prog mmake=aminet-util-moni-snoopdos \
-    progname=SnoopDos targetdir=$(CONTRIBDIR)/Misc/aminet \
+    progname=SnoopDos targetdir=$(AROS_CONTRIB)/Misc/aminet \
     files=$(FILES)

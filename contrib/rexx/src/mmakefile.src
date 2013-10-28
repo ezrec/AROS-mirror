@@ -28,7 +28,7 @@ FILES := \
 	bintree \
 	bmem
 
-EXEDIR := $(CONTRIBDIR)/Rexx
+EXEDIR := $(AROS_CONTRIB)/Rexx
 
 USER_CFLAGS := -DAROS -I$(SRCDIR)/$(CURDIR)/../inc -DALIGNED
 

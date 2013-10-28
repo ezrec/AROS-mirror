@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-mosaic \
-    progname=mosaic targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=mosaic targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=mosaic

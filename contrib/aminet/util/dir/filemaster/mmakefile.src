@@ -11,7 +11,7 @@ FILES := about commodity config copy dir diskinfo drives event execute \
 
 # does not work: audio
 
-EXEDIR := $(CONTRIBDIR)/Misc/aminet/FileMaster
+EXEDIR := $(AROS_CONTRIB)/Misc/aminet/FileMaster
 
 USER_CFLAGS := -DAROS -DV39 
 

@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 #MM demo-voxel : demo-voxel-icons demo-voxel-images
 
-DESTDIR := $(CONTRIBDIR)/Demos/Voxel
+DESTDIR := $(AROS_CONTRIB)/Demos/Voxel
 
 %build_prog mmake=demo-voxel \
     progname=Voxel targetdir=$(DESTDIR) \

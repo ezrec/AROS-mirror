@@ -1,7 +1,7 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=contrib-misc-m68kemul \
-    progname=m68kemul targetdir=$(CONTRIBDIR)/Misc/Berger \
+    progname=m68kemul targetdir=$(AROS_CONTRIB)/Misc/Berger \
     files="m68kemul kernellibs addressingmodes conditioncodes" \
     usestartup=no
 

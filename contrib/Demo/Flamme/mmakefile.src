@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 #MM demo-flamme : demo-flamme-icons
 
-DESTDIR := $(CONTRIBDIR)/Demos/Flamme
+DESTDIR := $(AROS_CONTRIB)/Demos/Flamme
 
 %build_prog mmake=demo-flamme \
     progname=Flamme targetdir=$(DESTDIR) \

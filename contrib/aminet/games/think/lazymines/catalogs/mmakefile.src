@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/Games/LazyMines/Catalogs
+DESTDIR := $(AROS_CONTRIB)/Games/LazyMines/Catalogs
 
 CATALOGS    := dansk deutsch italiano norsk polski svenska
 CATDESC     := lazymines

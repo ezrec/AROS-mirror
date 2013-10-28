@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-watchman \
-    progname=watchman targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=watchman targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=watchman

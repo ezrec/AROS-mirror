@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 FILES := main alloctab libs madmatrix
 
-EXEDIR := $(CONTRIBDIR)/aminet
+EXEDIR := $(AROS_CONTRIB)/aminet
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../libs/muimaster
 

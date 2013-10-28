@@ -7,7 +7,7 @@ USER_CFLAGS := $(PARANOIA_CFLAGS)
 FILES	:= \
     calculator_bgui
 
-EXEDIR := $(CONTRIBDIR)/BGUI/Examples
+EXEDIR := $(AROS_CONTRIB)/BGUI/Examples
 
 #MM- contrib-bgui : contrib-bgui-workbench-tools
 #MM contrib-bgui-workbench-tools : includes linklibs contrib-bgui

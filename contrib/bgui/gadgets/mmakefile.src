@@ -4,14 +4,13 @@ include $(SRCDIR)/$(CURDIR)/../make.cfg
 USER_CFLAGS := $(PARANOIA_CFLAGS)
 
 BINDIR = $(AROSDIR)
-LIBDIR = $(AROS_LIB)
 OBJDIR = $(GENDIR)/$(CURDIR)
 
 COMMONINCLUDES := -I$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/../
 LAYOUTGROUPINCLUDES := $(COMMONINCLUDES) -I$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/LayoutGroup
 TREEVIEWINCLUDES := $(COMMONINCLUDES) -I$(SRCDIR)/$(CURDIR)/TreeView/include
 
-EXELIBS = -L$(LIBDIR) -lamiga -larossupport -lbgui -lautoinit -lstdc
+EXELIBS = -L$(AROS_LIB) -lamiga -larossupport -lbgui -lautoinit -lstdc
 GADGETLIBS = -lbgui -lstdc -lamiga
 
 BARGADGET = bgui_bar.gadget

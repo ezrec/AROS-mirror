@@ -21,7 +21,7 @@ include $(SRCDIR)/$(CURDIR)/regina.ver
 #MM
 contrib-regina-module-quick : contrib-regina-module
 
-EXEDIR := $(CONTRIBDIR)/Regina
+EXEDIR := $(AROS_CONTRIB)/Regina
 
 # At the moment don't support threads.
 # Files shared by executables and shared library

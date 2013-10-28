@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 #MM demo-rubberstrings : demo-rubberstrings-icons
 
-DESTDIR := $(CONTRIBDIR)/Demos/RubberStrings
+DESTDIR := $(AROS_CONTRIB)/Demos/RubberStrings
 
 %build_prog mmake=demo-rubberstrings \
     progname=Rubberstrings targetdir=$(DESTDIR) \

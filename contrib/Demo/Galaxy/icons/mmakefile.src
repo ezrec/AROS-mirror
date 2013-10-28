@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/Demos/Galaxy
+DESTDIR := $(AROS_CONTRIB)/Demos/Galaxy
 
 %build_icons mmake=demo-galaxy-icons icons=Galaxy dir=$(DESTDIR)
 

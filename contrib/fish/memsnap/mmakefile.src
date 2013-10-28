@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-memsnap \
-    progname=memsnap targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=memsnap targetdir=$(AROS_CONTRIB)/Misc/fish \
     files="icon memsnap menu wintext"

@@ -107,7 +107,7 @@ OBJ=  $(OBJ1) $(OBJ2) $(OBJ3) $(OBJ4) $(OBJ5) $(OBJ6) $(OBJ7) $(OBJ8) $(OBJ9) $(
 
 FILES := $(OBJ)
 
-EXEDIR := $(CONTRIBDIR)/MultiMedia/Audio/Radium
+EXEDIR := $(AROS_CONTRIB)/MultiMedia/Audio/Radium
 
 USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/$(AD) -I$(SRCDIR)/$(CURDIR)/$(AR) \
     -I$(SRCDIR)/$(CURDIR)/$(CD) $(DEFINES)
@@ -117,7 +117,7 @@ USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/$(AD) -I$(SRCDIR)/$(CURDIR)/$(AR) \
     files=$(FILES) uselibs="realtime"
 
 #MM
-setup-contrib-radium : setup $(CONTRIBDIR)/radium/Execute.Me
+setup-contrib-radium : setup $(AROS_CONTRIB)/radium/Execute.Me
 
-$(CONTRIBDIR)/radium/Execute.Me : RADIUM.RUN
+$(AROS_CONTRIB)/radium/Execute.Me : RADIUM.RUN
 	$(CP) $< $@

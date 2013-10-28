@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 FILES  := false_int 
 
-EXEDIR := $(CONTRIBDIR)/Development/False
+EXEDIR := $(AROS_CONTRIB)/Development/False
 
 #MM- contrib-development : contrib-development-false-$(CPU)
 

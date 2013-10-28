@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR	:= $(CONTRIBDIR)/Misc/aminet/disk/misc/Mtools-2.0.7
+DESTDIR	:= $(AROS_CONTRIB)/Misc/aminet/disk/misc/Mtools-2.0.7
 
 SRCDIR := src/
 

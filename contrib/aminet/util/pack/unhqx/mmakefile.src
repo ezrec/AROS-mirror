@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-util-pack-unhqx \
-    progname=unhqx targetdir=$(CONTRIBDIR)/Misc/aminet \
+    progname=unhqx targetdir=$(AROS_CONTRIB)/Misc/aminet \
     files=unhqx

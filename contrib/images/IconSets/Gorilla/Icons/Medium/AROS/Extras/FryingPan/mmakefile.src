@@ -8,4 +8,4 @@ include $(TOP)/config/make.cfg
 ICONS := FryingPan
 
 #MM- iconset-Gorilla-contrib-icons-extras-clean : iconset-Gorilla-contrib-icons-extras-fryingpan-clean
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras-fryingpan icons=$(ICONS) dir=$(CONTRIBDIR)/FryingPan
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-fryingpan icons=$(ICONS) dir=$(AROS_CONTRIB)/FryingPan

@@ -24,7 +24,7 @@ include $(TOP)/config/make.cfg
 #MM     demo-mesa
 
 SCRIPTFILES = StartSomeDemos StartSomeDemos2 StartMesaDemos
-DSTDIR := $(CONTRIBDIR)/Demos
+DSTDIR := $(AROS_CONTRIB)/Demos
 
 %copy_files_q mmake=demo-startscripts files=$(SCRIPTFILES) dst=$(DSTDIR)
 

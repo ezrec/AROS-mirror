@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR	:= $(CONTRIBDIR)/DiskSpeed
+DESTDIR	:= $(AROS_CONTRIB)/DiskSpeed
 ICONS := DiskSpeed ScsiSpeed DiskSpeed.doc
 
 %build_icons mmake=contrib-diskspeed-icons icons=$(ICONS) dir=$(DESTDIR)

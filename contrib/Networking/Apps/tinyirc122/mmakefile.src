@@ -9,7 +9,7 @@ USER_CFLAGS := \
         -DDIRECTED_BROADCAST \
         -D__BSD_VISIBLE=1
 
-EXEDIR := $(CONTRIBDIR)/Networking/Apps/TinyIRC
+EXEDIR := $(AROS_CONTRIB)/Networking/Apps/TinyIRC
 
 %build_prog mmake=aros-tcpip-apps-tinyirc \
     progname=TinyIRC targetdir=$(EXEDIR)/ \

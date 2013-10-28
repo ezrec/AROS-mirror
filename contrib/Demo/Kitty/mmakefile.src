@@ -5,7 +5,7 @@
 include $(TOP)/config/make.cfg
 
 FILES 	    := main 
-EXEDIR      := $(CONTRIBDIR)/Demos/Kitty
+EXEDIR      := $(AROS_CONTRIB)/Demos/Kitty
 
 #MM demo-kitty : includes linklibs demo-kitty-extra demo-kitty-icons
 

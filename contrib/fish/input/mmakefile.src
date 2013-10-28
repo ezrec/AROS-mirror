@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-input \
-    progname=input_test targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=input_test targetdir=$(AROS_CONTRIB)/Misc/fish \
     files="console input test"

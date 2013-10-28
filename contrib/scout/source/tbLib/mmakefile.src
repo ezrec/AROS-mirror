@@ -42,6 +42,6 @@ FILES := \
     library_CheckLibVersionName
 
 %build_linklib mmake=contrib-scout-tblib libname=$(LIB) \
-  files=$(FILES) libdir=$(LIBDIR)
+  files=$(FILES) libdir=$(AROS_LIB)
 
 %common

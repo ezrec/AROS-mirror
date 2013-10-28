@@ -7,7 +7,7 @@ include $(TOP)/config/make.cfg
 FILES  := char checkbox error node locale \
           gadget text fontio typeface
 
-EXEDIR := $(CONTRIBDIR)/Misc/aminet/Typeface
+EXEDIR := $(AROS_CONTRIB)/Misc/aminet/Typeface
 
 USER_CFLAGS := -DINTUITION_NO_INLINE_STDARG \
 	       -Wno-unused-function $(FORMAT_SECURITY_CFLAGS)

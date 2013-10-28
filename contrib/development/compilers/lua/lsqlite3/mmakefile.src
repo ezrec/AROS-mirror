@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 # files to build the linker lib 'lsqlite3'
 LSQLITE3LIBFILES := lsqlite3
 
-EXEDIR := $(CONTRIBDIR)/Development/Lua
+EXEDIR := $(AROS_CONTRIB)/Development/Lua
 
 #MM- contrib-development : \
 #MM  contrib-development-lua-lsqlite3-doc \

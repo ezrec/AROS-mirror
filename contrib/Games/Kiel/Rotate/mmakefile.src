@@ -1,7 +1,7 @@
 include $(TOP)/config/make.cfg
 
 FILES := Rotate
-DESTDIR := $(CONTRIBDIR)/Games/Kiel
+DESTDIR := $(AROS_CONTRIB)/Games/Kiel
 
 #MM- contrib-games : games-kiel-rotate
 

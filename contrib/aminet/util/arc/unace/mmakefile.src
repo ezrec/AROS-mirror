@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 FILES := uac_crc globals uac_crt unace uac_sys uac_dcpr uac_comm
 
-EXEDIR := $(CONTRIBDIR)/Misc/aminet/C
+EXEDIR := $(AROS_CONTRIB)/Misc/aminet/C
 
 USER_CFLAGS := -DUNIX -UAMIGA -U_AMIGA $(FORMAT_SECURITY_CFLAGS)
 

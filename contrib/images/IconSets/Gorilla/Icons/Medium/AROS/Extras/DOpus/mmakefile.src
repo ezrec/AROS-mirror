@@ -8,4 +8,4 @@ include $(TOP)/config/make.cfg
 ICONS := DirectoryOpus ConfigOpus
 
 #MM- iconset-Gorilla-contrib-icons-extras-clean : iconset-Gorilla-contrib-icons-extras-dopus-clean
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras-dopus icons=$(ICONS) dir=$(CONTRIBDIR)/DOpus
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-dopus icons=$(ICONS) dir=$(AROS_CONTRIB)/DOpus

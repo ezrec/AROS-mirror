@@ -11,5 +11,5 @@ FILES := cmath \
 	tree
 
 %build_prog mmake=fish-icalc \
-    progname=icalc targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=icalc targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=$(FILES)

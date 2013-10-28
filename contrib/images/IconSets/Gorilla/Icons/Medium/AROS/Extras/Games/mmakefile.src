@@ -20,4 +20,4 @@ ICONS := AmiChess \
          Yahzee
 
 #MM- iconset-Gorilla-contrib-icons-extras-clean : iconset-Gorilla-contrib-icons-extras-games-clean
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games icons=$(ICONS) dir=$(CONTRIBDIR)/Games
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games icons=$(ICONS) dir=$(AROS_CONTRIB)/Games

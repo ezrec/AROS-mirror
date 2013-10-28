@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-comm-term-amigaterm \
-    progname=amigaterm targetdir=$(CONTRIBDIR)/Misc/aminet \
+    progname=amigaterm targetdir=$(AROS_CONTRIB)/Misc/aminet \
     files=amigaterm

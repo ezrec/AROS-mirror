@@ -3,7 +3,7 @@
 
 include $(TOP)/config/make.cfg
 
-CATDIR := $(CONTRIBDIR)/Networking/Apps/AiRcOS/Catalogs
+CATDIR := $(AROS_CONTRIB)/Networking/Apps/AiRcOS/Catalogs
 
 #MM aros-tcpip-apps-aircos-catalogs
 

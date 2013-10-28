@@ -11,7 +11,7 @@ include $(TOP)/config/make.cfg
 #MM     contrib-fryingpan-framework-generic \
 #MM     contrib-fryingpan-framework-libc
 
-DESTDIR := $(CONTRIBDIR)/FryingPan
+DESTDIR := $(AROS_CONTRIB)/FryingPan
 
 FILES := ../framework/Startup/Startup_aros Main Application Globals
 

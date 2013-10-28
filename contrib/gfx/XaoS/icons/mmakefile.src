@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR	:= $(CONTRIBDIR)/MultiMedia/Gfx/XaoS
+DESTDIR	:= $(AROS_CONTRIB)/MultiMedia/Gfx/XaoS
 
 %build_icons mmake=gfx-xaos-icons icons=XaoS dir=$(DESTDIR)
 

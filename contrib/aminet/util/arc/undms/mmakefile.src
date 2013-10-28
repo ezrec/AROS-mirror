@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-util-arc-undms \
-    progname=undms targetdir=$(CONTRIBDIR)/Misc/aminet/C \
+    progname=undms targetdir=$(AROS_CONTRIB)/Misc/aminet/C \
     files=undms

@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-snowfall \
-    progname=snowfall targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=snowfall targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=snowfall

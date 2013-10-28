@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/Demos/PowerZoom
+DESTDIR := $(AROS_CONTRIB)/Demos/PowerZoom
 
 %build_prog mmake=demo-powerzoom \
     progname=PowerZoom targetdir=$(DESTDIR) \

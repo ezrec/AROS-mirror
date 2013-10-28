@@ -9,7 +9,7 @@ makelist misc misc2 nextfile needed options parse portable prterror version\
 zoo zooadd zooadd2 zoodel zooext zoofilt zoolist zoopack io lzh maketbl\
 maketree huf encode decode
 
-EXEDIR := $(CONTRIBDIR)/Misc/aminet/C
+EXEDIR := $(AROS_CONTRIB)/Misc/aminet/C
 
 USER_CFLAGS := -DGENERIC -DNOSIGNAL
 

@@ -215,7 +215,7 @@ FILES := libtag \
 
 %build_module_simple mmake=bgui-library \
 	modname=bgui modtype=library \
-	moduledir=$(CONTRIBDIR)/BGUI/Libs \
+	moduledir=$(AROS_CONTRIB)/BGUI/Libs \
 	files="$(FILES)"
 
 %common

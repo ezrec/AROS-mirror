@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-EXEDIR := $(CONTRIBDIR)/Development/Lua
+EXEDIR := $(AROS_CONTRIB)/Development/Lua
 
 #MM- contrib-development : \
 #MM  contrib-development-lua-lfs-doc \

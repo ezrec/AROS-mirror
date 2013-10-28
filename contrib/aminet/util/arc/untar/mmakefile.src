@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 FILES := untar
 
-EXEDIR := $(CONTRIBDIR)/Misc/aminet/C
+EXEDIR := $(AROS_CONTRIB)/Misc/aminet/C
 
 #MM aminet-util-arc-untar : includes linklibs
 

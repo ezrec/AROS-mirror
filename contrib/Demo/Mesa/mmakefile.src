@@ -13,7 +13,7 @@ FILES 	    :=  bounce \
                 spectex \
                 eglgears \
                 
-EXEDIR      := $(CONTRIBDIR)/Demos/Mesa
+EXEDIR      := $(AROS_CONTRIB)/Demos/Mesa
 
 #MM- demo-mesa-prerequisites : workbench-libs-mesa workbench-libs-glu \
 #MM     contrib-gfx-libs-glut demo-mesa-images contrib-gfx-libs-eglut \

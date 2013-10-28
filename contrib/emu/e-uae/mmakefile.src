@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 ##MM- contrib-complete : contrib-euae
 
-PROGDIR := $(CONTRIBDIR)/Emu/E-UAE
+PROGDIR := $(AROS_CONTRIB)/Emu/E-UAE
 PACKAGE := e-uae
 VERSION := 0.8.28
 PKG_VER := $(PACKAGE)-$(VERSION)

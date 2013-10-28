@@ -4,7 +4,7 @@ include $(TOP)/config/make.cfg
 FILES	:= lazymines button counter field highscores images layout \
 	    localize requesters timer tooltypes lazymines_strings
 
-EXEDIR	:= $(CONTRIBDIR)/Games/LazyMines
+EXEDIR	:= $(AROS_CONTRIB)/Games/LazyMines
 
 #MM aminet-games-think-lazymines : aminet-dev-src-chunkyiclass setup-aminet-lazymines-catalogs
 

@@ -17,4 +17,4 @@ contrib-zune-classes-urltext-envpackage :
 #MM- contrib-zune-classes-urltext-mcp      : contrib-zune-classes-urltext-startup
 
 
-%copy_files_q  mmake=contrib-zune-classes-urltext-startupfiles dst=$(CONTRIBDIR)/Zune/MCC_Urltext/s
+%copy_files_q  mmake=contrib-zune-classes-urltext-startupfiles dst=$(AROS_CONTRIB)/Zune/MCC_Urltext/s

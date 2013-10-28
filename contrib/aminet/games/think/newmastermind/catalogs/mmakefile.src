@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/Games/NewMasterMind/Catalogs
+DESTDIR := $(AROS_CONTRIB)/Games/NewMasterMind/Catalogs
 
 CATALOGS := dansk svenska
 CATDESC := newmastermind

@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-EXEDIR := $(CONTRIBDIR)/Development/Lua
+EXEDIR := $(AROS_CONTRIB)/Development/Lua
 
 # files to build the linker lib 'luaxmlreader'
 XMLLIBFILES := error xmlreader

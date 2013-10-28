@@ -7,4 +7,4 @@ include $(TOP)/config/make.cfg
 
 ICONS := OWB
 
-%build_icons mmake=iconset-Gorilla-contrib-icons-owb-app icons=$(ICONS) dir=$(CONTRIBDIR)/Networking/Apps/OWB
+%build_icons mmake=iconset-Gorilla-contrib-icons-owb-app icons=$(ICONS) dir=$(AROS_CONTRIB)/Networking/Apps/OWB

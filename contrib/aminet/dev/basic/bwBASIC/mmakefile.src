@@ -8,7 +8,7 @@ FILES := bwbasic bwb_int bwb_tbl bwb_cmd bwb_prn\
 bwb_exp bwb_var bwb_inp bwb_fnc bwb_cnd\
 bwb_ops bwb_dio bwb_str bwb_elx bwb_mth
 
-EXEDIR := $(CONTRIBDIR)/Misc/aminet
+EXEDIR := $(AROS_CONTRIB)/Misc/aminet
 
 %build_prog mmake=aminet-dev-basic-bwBASIC \
     progname=bwbasic targetdir=$(EXEDIR) \

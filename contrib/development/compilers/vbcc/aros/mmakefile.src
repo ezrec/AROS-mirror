@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 FILES = about
 
-EXEDIR := $(CONTRIBDIR)/vbcc
+EXEDIR := $(AROS_CONTRIB)/vbcc
 
 #MM- contrib-development-compilers-vbcc-aros : \
 #MM      vbcc-about-aros vbcc-tmp

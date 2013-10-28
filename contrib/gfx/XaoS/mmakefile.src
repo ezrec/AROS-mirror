@@ -1,7 +1,7 @@
 include $(TOP)/config/make.cfg
 
 OBJDIR		:= $(GENDIR)/$(CURDIR)
-DESTDIR		:= $(CONTRIBDIR)/MultiMedia/Gfx/XaoS
+DESTDIR		:= $(AROS_CONTRIB)/MultiMedia/Gfx/XaoS
 DATADIR		:= $(DESTDIR)/data
 CATALOGDIR	:= $(DATADIR)/catalogs
 EXAMPLEDIR	:= $(DATADIR)/examples

@@ -2,6 +2,6 @@
 
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/FryingPan
+DESTDIR := $(AROS_CONTRIB)/FryingPan
 
 %copy_dir_recursive mmake=contrib-fryingpan-data dst=$(DESTDIR)

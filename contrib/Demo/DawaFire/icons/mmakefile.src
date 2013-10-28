@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/Demos/DawaFire
+DESTDIR := $(AROS_CONTRIB)/Demos/DawaFire
 
 %build_icons mmake=demo-dawafire-icons icons=DawaFire dir=$(DESTDIR)
 

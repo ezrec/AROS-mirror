@@ -52,16 +52,16 @@ mesa-demos-glexcess-cpp : mesa-demos-glexcess-cpp-directories-setup $(GLEXCESS_S
 
 #MM
 mesa-demos-glexcess-cpp-directories-setup :
-%mkdirs_q dirs="$(GENDIR)/$(CURDIR) $(CONTRIBDIR)/Demos/Mesa/GLExcess"
+%mkdirs_q dirs="$(GENDIR)/$(CURDIR) $(AROS_CONTRIB)/Demos/Mesa/GLExcess"
 
 USER_LDFLAGS := -L$(AROS_LIB)
 
 #MM
 mesa-demos-glexcess :
-%link_q cmd=$(TARGET_CXX) from="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(GLEXCESS_SOURCES))))" to=$(CONTRIBDIR)/Demos/Mesa/GLExcess/GLExcess libs="-lglut -lGL -lGLU"
+%link_q cmd=$(TARGET_CXX) from="$(addsuffix .o,$(addprefix $(GENDIR)/$(CURDIR)/,$(notdir $(GLEXCESS_SOURCES))))" to=$(AROS_CONTRIB)/Demos/Mesa/GLExcess/GLExcess libs="-lglut -lGL -lGLU"
 
 #MM
 mesa-demos-glexcess-copyfiles :
-%copy_dir_recursive mmake=mesa-demos-glexcess-copyfiles src=data dst="$(GENDIR)/$(CURDIR) $(CONTRIBDIR)/Demos/Mesa/GLExcess/data"
+%copy_dir_recursive mmake=mesa-demos-glexcess-copyfiles src=data dst="$(GENDIR)/$(CURDIR) $(AROS_CONTRIB)/Demos/Mesa/GLExcess/data"
 
 %common

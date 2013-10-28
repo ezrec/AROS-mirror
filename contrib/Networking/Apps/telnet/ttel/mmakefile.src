@@ -9,7 +9,7 @@ USER_CFLAGS := \
         -DDIRECTED_BROADCAST \
         -D__BSD_VISIBLE=1
 
-EXEDIR := $(CONTRIBDIR)/Networking/Apps/ttel
+EXEDIR := $(AROS_CONTRIB)/Networking/Apps/ttel
 
 %build_prog mmake=aros-tcpip-apps-ttel \
     progname=ttel targetdir=$(EXEDIR) \

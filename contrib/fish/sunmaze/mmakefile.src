@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-sunmaze \
-    progname=sunmaze targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=sunmaze targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=sunmaze

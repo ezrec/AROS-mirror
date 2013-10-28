@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR 	:= $(CONTRIBDIR)/Demos/kdp
+DESTDIR 	:= $(AROS_CONTRIB)/Demos/kdp
 OBJECTDIR	:= $(DESTDIR)/objects
 RAWDIR		:= $(DESTDIR)/raw
 BMPDIR		:= $(DESTDIR)/bmp

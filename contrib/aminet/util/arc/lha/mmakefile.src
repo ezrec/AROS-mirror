@@ -7,7 +7,7 @@ include $(TOP)/config/make.cfg
 FILES := append extract larc lhext maketree slide crcio header lhadd\
 lhlist patmatch dhuf huf lharc maketbl shuf util
 
-EXEDIR := $(CONTRIBDIR)/Misc/aminet/C
+EXEDIR := $(AROS_CONTRIB)/Misc/aminet/C
 
 USER_CFLAGS := -DAROS
 

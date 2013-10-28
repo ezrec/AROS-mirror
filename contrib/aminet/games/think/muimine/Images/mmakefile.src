@@ -27,7 +27,7 @@ IMAGES =                        \
 	def_FaceButtonImage     \
 	def_MineFieldImage
 
-EXEDIR := $(CONTRIBDIR)/Games/MUIMine
+EXEDIR := $(AROS_CONTRIB)/Games/MUIMine
 IMAGEDIR := $(EXEDIR)/Images
 
 %copy_files_q mmake=setup-aminet-games-think-muimine-images files=$(IMAGES) src=. dst=$(IMAGEDIR)

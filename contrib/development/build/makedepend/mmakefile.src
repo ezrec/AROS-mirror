@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 FILES  := include main parse pr cppsetup ifparser
 
-EXEDIR := $(CONTRIBDIR)/Development/Build
+EXEDIR := $(AROS_CONTRIB)/Development/Build
 
 USER_CFLAGS := -DAROS -DINCLUDEDIR=\"\" 
 

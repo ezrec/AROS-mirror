@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 #MM demo-tunnel : demo-tunnel-icons demo-tunnel-data
 
-DESTDIR := $(CONTRIBDIR)/Demos/Tunnel
+DESTDIR := $(AROS_CONTRIB)/Demos/Tunnel
 
 %build_prog mmake=demo-tunnel \
     progname=Tunnel targetdir=$(DESTDIR) \

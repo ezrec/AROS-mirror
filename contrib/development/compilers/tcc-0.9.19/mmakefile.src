@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 FILES  := tcc
 
-EXEDIR := $(CONTRIBDIR)/Development/TCC-0.9.19
+EXEDIR := $(AROS_CONTRIB)/Development/TCC-0.9.19
 
 USER_CFLAGS  := -Wall -DCONFIG_TCC_STATIC -DCONFIG_TCC_ALWAYS_RELOCATABLE
 USER_LDFLAGS := -ltcc1
@@ -14,10 +14,10 @@ USER_LDFLAGS := -ltcc1
     files=$(FILES)
 
 #MM
-setup-tcc-0.9.19 : $(LIBDIR)/bcheck.o $(EXEDIR)/stdarg.h
+setup-tcc-0.9.19 : $(AROS_LIB)/bcheck.o $(EXEDIR)/stdarg.h
 
-$(LIBDIR)/bcheck.o : bcheck.c
-	$(CC) -c bcheck.c -o $(LIBDIR)/bcheck.o
+$(AROS_LIB)/bcheck.o : bcheck.c
+	$(CC) -c bcheck.c -o $(AROS_LIB)/bcheck.o
 
 $(EXEDIR)/stdarg.h : stdarg.h
 	$(CP) ./stdarg.h $(EXEDIR)

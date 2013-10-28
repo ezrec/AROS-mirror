@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 FILES := font_back font_bold font_color font_def font_ital font_large font_small font_under pop_pic pop_smiley pop_url img_speek
 
-IMGDIR := $(CONTRIBDIR)/Networking/Apps/AiRcOS/Icons
+IMGDIR := $(AROS_CONTRIB)/Networking/Apps/AiRcOS/Icons
 
 %copy_files_q mmake=aros-tcpip-apps-aircos-gadgets files=$(FILES) dst=$(IMGDIR)
 

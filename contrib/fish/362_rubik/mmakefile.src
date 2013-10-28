@@ -4,5 +4,5 @@ FILES := rubik getwindow makecube rotate trig gadgets draw extras solve \
 	blurb
 
 %build_prog mmake=fish-362_rubik \
-    progname=362_rubik targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=362_rubik targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=$(FILES)

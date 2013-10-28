@@ -135,7 +135,7 @@ FILES := \
 USER_CFLAGS = -DINCLUDEALL -DCPU_ANY -Wno-parentheses
 
 %build_prog mmake=aminet-comm-term-term \
-    progname=Term targetdir=$(CONTRIBDIR)/Misc/aminet \
+    progname=Term targetdir=$(AROS_CONTRIB)/Misc/aminet \
     files=$(FILES) uselibs="gtlayout"
 
 #MM aminet-comm-term-term : aminet-dev-gui-gtlayout aminet-comm-term-xprz aminet-comm-term-xem setup-aminet-comm-term-term

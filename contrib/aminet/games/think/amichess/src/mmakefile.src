@@ -40,7 +40,7 @@ FILES := atak \
 
 USER_CFLAGS := -DHAVE64BIT
 
-EXEDIR := $(CONTRIBDIR)/Games/AmiChess
+EXEDIR := $(AROS_CONTRIB)/Games/AmiChess
 
 #MM aminet-games-think-amichess-program : \
 #MM     contrib-zune-classes-nlist contrib-zune-classes-nlistview

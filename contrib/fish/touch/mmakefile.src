@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-touch \
-    progname=touch targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=touch targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=touch

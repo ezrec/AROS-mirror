@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-dev-src-hexdump \
-    progname=HexDump targetdir=$(CONTRIBDIR)/Misc/aminet \
+    progname=HexDump targetdir=$(AROS_CONTRIB)/Misc/aminet \
     files=HexDump
 

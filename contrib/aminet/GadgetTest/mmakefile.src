@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-gadgettest \
-    progname=GadgetTest targetdir=$(CONTRIBDIR)/Misc/aminet \
+    progname=GadgetTest targetdir=$(AROS_CONTRIB)/Misc/aminet \
     files=GadgetTest
 

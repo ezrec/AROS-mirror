@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/Games/Yahzee/Catalogs
+DESTDIR := $(AROS_CONTRIB)/Games/Yahzee/Catalogs
 
 CATALOGS := dansk deutsch nederlands suomi svenska
 CATDESC  := yahzee

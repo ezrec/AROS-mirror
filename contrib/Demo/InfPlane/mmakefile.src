@@ -8,7 +8,7 @@ include $(TOP)/config/make.cfg
 
 #MM- demo-infplane-common : demo-infplane-icons demo-infplane-data
 
-DESTDIR 	:= $(CONTRIBDIR)/Demos/InfPlane
+DESTDIR 	:= $(AROS_CONTRIB)/Demos/InfPlane
 
 %build_prog mmake=demo-infplane-i386 \
     progname=InfPlane targetdir=$(DESTDIR) \

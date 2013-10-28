@@ -17,7 +17,7 @@ FILES :=           \
 	Digits
 
 
-EXEDIR := $(CONTRIBDIR)/Games/MUIMine
+EXEDIR := $(AROS_CONTRIB)/Games/MUIMine
 
 #MM aminet-games-think-muimine : setup-aminet-games-think-muimine-images
 

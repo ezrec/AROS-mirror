@@ -5,4 +5,4 @@ include $(TOP)/config/make.cfg
 
 %build_catalogs mmake=games-kiel-wumpus-catalogs \
                 name=Wumpus subdir= \
-                dir=$(CONTRIBDIR)/Games/Kiel/Catalogs
+                dir=$(AROS_CONTRIB)/Games/Kiel/Catalogs

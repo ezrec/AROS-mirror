@@ -1,7 +1,7 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=demo-blackhole \
-    progname=blackhole targetdir=$(CONTRIBDIR)/Demos/BlackHole \
+    progname=blackhole targetdir=$(AROS_CONTRIB)/Demos/BlackHole \
     files=blackhole
 
 

@@ -1,7 +1,7 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-EXEDIR := $(CONTRIBDIR)/Games/Doom
+EXEDIR := $(AROS_CONTRIB)/Games/Doom
 
 USER_CFLAGS = -DAROS -DNORMALUNIX -DUNROLL -O3 -ffast-math -funroll-loops \
               -fomit-frame-pointer -fexpensive-optimizations

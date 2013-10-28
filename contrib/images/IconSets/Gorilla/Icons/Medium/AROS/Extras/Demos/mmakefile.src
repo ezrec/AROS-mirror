@@ -27,4 +27,4 @@ ICONS := BlackHole \
          StartMesaDemos
 
 #MM- iconset-Gorilla-contrib-icons-extras-clean : iconset-Gorilla-contrib-icons-extras-demos-clean
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras-demos icons=$(ICONS) dir=$(CONTRIBDIR)/Demos
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-demos icons=$(ICONS) dir=$(AROS_CONTRIB)/Demos

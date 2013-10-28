@@ -8,4 +8,4 @@ include $(TOP)/config/make.cfg
 ICONS := POVRay XaoS
 
 #MM- iconset-Gorilla-contrib-icons-extras-mmedia-clean : iconset-Gorilla-contrib-icons-extras-mmedia-gfx-clean
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras-mmedia-gfx icons=$(ICONS) dir=$(CONTRIBDIR)/MultiMedia/Gfx
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-mmedia-gfx icons=$(ICONS) dir=$(AROS_CONTRIB)/MultiMedia/Gfx

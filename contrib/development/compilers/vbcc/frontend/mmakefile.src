@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 FILES = vc
 
-EXEDIR := $(CONTRIBDIR)/vbcc
+EXEDIR := $(AROS_CONTRIB)/vbcc
 
 #MM- contrib-development-compilers-vbcc-frontend : vbcc-frontend
 

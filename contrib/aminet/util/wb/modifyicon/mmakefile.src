@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 FILES := modifyicon
 
-EXEDIR := $(CONTRIBDIR)/Misc/aminet
+EXEDIR := $(AROS_CONTRIB)/Misc/aminet
 
 #MM aminet-util-wb-modifyicon : includes linklibs
 

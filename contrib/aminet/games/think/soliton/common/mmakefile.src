@@ -17,7 +17,7 @@ FILES := About \
 	 Statistics \
 	 Cardgame
 
-EXEDIR := $(CONTRIBDIR)/Games/Soliton
+EXEDIR := $(AROS_CONTRIB)/Games/Soliton
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../images
 
 USER_CFLAGS := -DUSE_ZUNE

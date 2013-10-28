@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 #MM demo-galaxy-x86_64 : demo-galaxy-common
 #MM- demo-galaxy-common : demo-galaxy-icons
 
-DESTDIR := $(CONTRIBDIR)/Demos/Galaxy
+DESTDIR := $(AROS_CONTRIB)/Demos/Galaxy
 
 %build_prog mmake=demo-galaxy-i386 \
     progname=Galaxy targetdir=$(DESTDIR) \

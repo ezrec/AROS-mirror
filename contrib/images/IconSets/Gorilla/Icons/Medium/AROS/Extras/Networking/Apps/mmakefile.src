@@ -13,6 +13,6 @@ OWBICON := OWB
 MARRANOFTPICON := MarranoFTP
 
 #MM- iconset-Gorilla-contrib-icons-extras-networking-clean : iconset-Gorilla-contrib-icons-extras-networking-apps-clean
-%build_icons mmake=iconset-Gorilla-contrib-icons-aircos icons=$(AIRCOSICON) dir=$(CONTRIBDIR)/Networking/Apps
-%build_icons mmake=iconset-Gorilla-contrib-icons-owb icons=$(OWBICON) dir=$(CONTRIBDIR)/Networking/Apps
-%build_icons mmake=iconset-Gorilla-contrib-icons-marranoftp icons=$(MARRANOFTPICON) dir=$(CONTRIBDIR)/Networking/Apps
+%build_icons mmake=iconset-Gorilla-contrib-icons-aircos icons=$(AIRCOSICON) dir=$(AROS_CONTRIB)/Networking/Apps
+%build_icons mmake=iconset-Gorilla-contrib-icons-owb icons=$(OWBICON) dir=$(AROS_CONTRIB)/Networking/Apps
+%build_icons mmake=iconset-Gorilla-contrib-icons-marranoftp icons=$(MARRANOFTPICON) dir=$(AROS_CONTRIB)/Networking/Apps

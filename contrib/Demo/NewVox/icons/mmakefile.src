@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/Demos/NewVox
+DESTDIR := $(AROS_CONTRIB)/Demos/NewVox
 
 %build_icons mmake=demo-newvox-icons icons=NewVox dir=$(DESTDIR)
 

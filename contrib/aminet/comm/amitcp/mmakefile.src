@@ -29,7 +29,7 @@ API:=	api/amiga_api api/amiga_libtables api/amiga_syscalls\
 
 FILES :=   $(NET) $(KERN) $(NETINET) $(API)
 
-EXEDIR := $(CONTRIBDIR)/aminet
+EXEDIR := $(AROS_CONTRIB)/aminet
 
 USER_DEFINES:= -DRCS_ID_C=// -DAMITCP -DKERNEL -DNO_DEBUG -DNDEBUG\
 -DNO_ARP_DEBUG -DNO_TCPDEBUG -DNO_ICMPPRINTFS -DNO_SOCKBUF_DEBUG -DAROS

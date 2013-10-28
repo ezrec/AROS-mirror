@@ -15,5 +15,5 @@ contrib-zune-classes-thebar-envpackage :
 #MM- contrib-zune-classes-thebar-mccv     : contrib-zune-classes-thebar-startup
 #MM- contrib-zune-classes-thebar-mcp      : contrib-zune-classes-thebar-startup
 
-%copy_files_q mmake=contrib-zune-classes-thebar-startupfiles dst=$(CONTRIBDIR)/Zune/MCC_TheBar/s
+%copy_files_q mmake=contrib-zune-classes-thebar-startupfiles dst=$(AROS_CONTRIB)/Zune/MCC_TheBar/s
 

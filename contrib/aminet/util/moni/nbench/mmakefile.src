@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 FILES :=emfloat misc nbench0 nbench1 sysspec
 
-EXEDIR := $(CONTRIBDIR)/Misc/aminet
+EXEDIR := $(AROS_CONTRIB)/Misc/aminet
 
 USER_CFLAGS := -s -static -Wall -O3 -fomit-frame-pointer -funroll-loops -DLINUX
 

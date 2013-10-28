@@ -4,5 +4,5 @@ FILES := find find_broker find_error find_file find_main find_match find_rx \
 	find_temp
 
 %build_prog mmake=fish-find \
-    progname=find targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=find targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=$(FILES)

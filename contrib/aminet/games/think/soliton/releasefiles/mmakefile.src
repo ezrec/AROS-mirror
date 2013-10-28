@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-SOLITONDIR := $(CONTRIBDIR)/Games/Soliton
+SOLITONDIR := $(AROS_CONTRIB)/Games/Soliton
 
 CARDS 		:= Cards_Standard_Medium
 CARDDIR 	:= $(SOLITONDIR)/Graphics

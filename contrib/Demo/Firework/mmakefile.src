@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 #MM demo-firework : demo-firework-icons
 
-DESTDIR	:= $(CONTRIBDIR)/Demos/Firework
+DESTDIR	:= $(AROS_CONTRIB)/Demos/Firework
 
 %build_prog mmake=demo-firework \
     progname=Firework targetdir=$(DESTDIR) \

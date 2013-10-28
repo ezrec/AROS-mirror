@@ -9,7 +9,7 @@ include $(TOP)/config/make.cfg
 
 FILES := alloc reclaim allchblk misc mach_dep os_dep mark_rts headers mark obj_map blacklst finalize new_hblk real_malloc dyn_load dbg_mlc malloc stubborn checksums typd_mlc ptr_chck mallocx tests/test
 
-EXEDIR := $(CONTRIBDIR)/gc
+EXEDIR := $(AROS_CONTRIB)/gc
 
 USER_CFLAGS := -O2 -Wunused -Wall -Uunix -Ulinux -U__linux__ -DATOMIC_UNCOLLECTABLE -DSILENT -Iinclude
 

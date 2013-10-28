@@ -1,7 +1,7 @@
 include $(TOP)/config/make.cfg
 
 FILES	:= Jump JumpEd
-DESTDIR := $(CONTRIBDIR)/Games/Kiel
+DESTDIR := $(AROS_CONTRIB)/Games/Kiel
 
 #MM games-kiel-jump : games-kiel-jump-info
 

@@ -2,7 +2,7 @@ include $(TOP)/config/make.cfg
 
 #MM demo-metaballs : demo-metaballs-icons
 
-DESTDIR := $(CONTRIBDIR)/Demos/Metaballs
+DESTDIR := $(AROS_CONTRIB)/Demos/Metaballs
 
 %build_prog mmake=demo-metaballs \
     progname=Metaballs targetdir=$(DESTDIR) \

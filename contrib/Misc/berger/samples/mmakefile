@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/Misc/Berger
+DESTDIR := $(AROS_CONTRIB)/Misc/Berger
 
 SAMPLES = registertest branchtest loops addressing benchmark
 

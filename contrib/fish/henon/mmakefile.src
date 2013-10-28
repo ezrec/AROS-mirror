@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-henon \
-    progname=henon targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=henon targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=henon

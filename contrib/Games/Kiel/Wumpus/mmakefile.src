@@ -5,7 +5,7 @@ FILES := Wumpus
 #MM- contrib-games : games-kiel-wumpus
 
 %build_prog mmake=games-kiel-wumpus \
-    progname=Wumpus targetdir=$(CONTRIBDIR)/Games/Kiel \
+    progname=Wumpus targetdir=$(AROS_CONTRIB)/Games/Kiel \
     files=$(FILES)
 
 #MM games-kiel-wumpus : games-kiel-wumpus-catalogs

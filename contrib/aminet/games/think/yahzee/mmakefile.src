@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-EXEDIR := $(CONTRIBDIR)/Games/Yahzee
+EXEDIR := $(AROS_CONTRIB)/Games/Yahzee
 
 FILES := dice draw game highscores layout localize requesters rules tooltypes \
 	yahzee yahzee_strings

@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-EXEDIR := $(CONTRIBDIR)/Games/Inv
+EXEDIR := $(AROS_CONTRIB)/Games/Inv
 
 %build_prog mmake=aminet-games-shoot-inv \
     progname=Inv targetdir=$(EXEDIR) \

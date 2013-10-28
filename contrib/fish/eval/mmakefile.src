@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-eval \
-    progname=eval targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=eval targetdir=$(AROS_CONTRIB)/Misc/fish \
     files="base bitwise emath estack etable eval funcs help parse"

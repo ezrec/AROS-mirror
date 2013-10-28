@@ -5,5 +5,5 @@ FILES := bezpt control fasttrig gadgetdef gadgetuse getfilenames \
 	readilbm revolve scrndef scrnio scrnops writeilbm
 
 %build_prog mmake=fish-surf \
-    progname=surf targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=surf targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=$(FILES)

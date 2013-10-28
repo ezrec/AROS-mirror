@@ -5,4 +5,4 @@ include $(TOP)/config/make.cfg
 
 %build_catalogs mmake=setup-typeface-catalogs \
                 name=Typeface subdir=  source=../locale.h \
-                dir=$(CONTRIBDIR)/Misc/aminet/Typeface/Catalogs
+                dir=$(AROS_CONTRIB)/Misc/aminet/Typeface/Catalogs

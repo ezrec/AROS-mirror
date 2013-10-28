@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 FILES := cpp getopt include macro tokens eval hideset lex nlist unix
 
-EXEDIR := $(CONTRIBDIR)/aminet/lcc
+EXEDIR := $(AROS_CONTRIB)/aminet/lcc
 
 USER_CFLAGS := -DAROS -DV39 
 

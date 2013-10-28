@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 
 FILES := PlayMF filter divdi3 qdivrem
 
-EXEDIR := $(CONTRIBDIR)/Misc/aminet
+EXEDIR := $(AROS_CONTRIB)/Misc/aminet
 USER_CFLAGS := -D_QUAD_HIGHWORD=1 -D_QUAD_LOWWORD=0 -D__BSD_VISIBLE=1
 
 #MM aminet-mus-midi-CAMD_Toolkit-PlayMF : setup-aminet-mus-midi-CAMD_Toolkit-PlayMF

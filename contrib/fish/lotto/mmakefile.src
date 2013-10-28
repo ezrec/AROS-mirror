@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-lotto \
-    progname=lotto targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=lotto targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=lotto

@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR	:= $(CONTRIBDIR)/DiskSpeed
+DESTDIR	:= $(AROS_CONTRIB)/DiskSpeed
 
 USER_CFLAGS := -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/diskspeed -I$(SRCDIR)/$(CURDIR)/scsispeed
 

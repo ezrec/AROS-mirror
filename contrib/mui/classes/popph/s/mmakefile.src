@@ -12,4 +12,4 @@ FILES := Package-Startup Package-Shutdown
 contrib-zune-classes-popph-envpackage :
 	$(ECHO) "Extras:Zune/MCC_Popph" >$(AROS_PACKAGES)/MCC_Popph
 
-%copy_files_q mmake=contrib-zune-classes-popph-startupfiles dst=$(CONTRIBDIR)/Zune/MCC_Popph/S
+%copy_files_q mmake=contrib-zune-classes-popph-startupfiles dst=$(AROS_CONTRIB)/Zune/MCC_Popph/S

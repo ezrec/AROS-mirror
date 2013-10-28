@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-TARGETDIR := $(CONTRIBDIR)/Regina/demo
+TARGETDIR := $(AROS_CONTRIB)/Regina/demo
 
 FILES := \
     animal.rexx \

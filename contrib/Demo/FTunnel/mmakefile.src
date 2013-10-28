@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/Demos/FTunnel
+DESTDIR := $(AROS_CONTRIB)/Demos/FTunnel
 
 #MM demo-ftunnel : demo-ftunnel-data
 

@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=aminet-util-moni-memspeed \
-    progname=memspeed targetdir=$(CONTRIBDIR)/Misc/aminet \
+    progname=memspeed targetdir=$(AROS_CONTRIB)/Misc/aminet \
     files=memspeed

@@ -8,4 +8,4 @@ include $(TOP)/config/make.cfg
 ICONS := AmiLua
 
 #MM- iconset-Gorilla-contrib-icons-extras-development-clean : iconset-Gorilla-contrib-icons-extras-development-lua-clean
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras-development-lua icons=$(ICONS) dir=$(CONTRIBDIR)/Development/Lua
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-development-lua icons=$(ICONS) dir=$(AROS_CONTRIB)/Development/Lua

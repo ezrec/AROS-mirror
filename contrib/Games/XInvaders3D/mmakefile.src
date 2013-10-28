@@ -3,7 +3,7 @@ include $(TOP)/config/make.cfg
 
 FILES := game aliens player effects object camera vec4x1 mat4x4 main-aros
 
-EXEDIR := $(CONTRIBDIR)/Games/XInvaders3D
+EXEDIR := $(AROS_CONTRIB)/Games/XInvaders3D
 
 USER_CFLAGS = -DGAME_AROS
 

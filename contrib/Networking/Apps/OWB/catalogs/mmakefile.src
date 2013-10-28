@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-EXEDIR := $(CONTRIBDIR)/Networking/Apps/OWB
+EXEDIR := $(AROS_CONTRIB)/Networking/Apps/OWB
 CATDIR := $(EXEDIR)/Catalogs
 
 #MM- aros-tcpip-apps-owb-catalogs : aros-tcpip-apps-owb-catalogs-owb

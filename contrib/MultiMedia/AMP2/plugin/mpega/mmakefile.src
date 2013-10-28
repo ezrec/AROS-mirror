@@ -14,7 +14,7 @@ MAIN = layer1 layer2 layer3 decode decode_2to1 decode_4to1 dct64 tabinit mpg123
 
 OBJS = $(MAIN) $(COMMON)
 
-EXEDIR := $(CONTRIBDIR)/MultiMedia/AMP2/Plugin
+EXEDIR := $(AROS_CONTRIB)/MultiMedia/AMP2/Plugin
 
 USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../../common -I$(SRCDIR)/$(CURDIR)/../../aros
 

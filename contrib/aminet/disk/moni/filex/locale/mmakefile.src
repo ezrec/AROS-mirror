@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-DESTDIR := $(CONTRIBDIR)/Misc/aminet/FileX/Catalogs
+DESTDIR := $(AROS_CONTRIB)/Misc/aminet/FileX/Catalogs
 
 CATALOGS 	:= $(basename $(call WILDCARD, *.ct))
 CATDESC 	:= FileX

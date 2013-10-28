@@ -7,4 +7,4 @@ include $(TOP)/config/make.cfg
 
 ICONS := AiRcOS
 
-%build_icons mmake=iconset-Gorilla-contrib-icons-aircos-app icons=$(ICONS) dir=$(CONTRIBDIR)/Networking/Apps/AiRcOS
+%build_icons mmake=iconset-Gorilla-contrib-icons-aircos-app icons=$(ICONS) dir=$(AROS_CONTRIB)/Networking/Apps/AiRcOS

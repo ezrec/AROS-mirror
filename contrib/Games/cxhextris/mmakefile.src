@@ -3,7 +3,7 @@ include $(TOP)/config/make.cfg
 
 FILES := hextris stdsys arosio shape
 
-EXEDIR := $(CONTRIBDIR)/Games/CXHextris
+EXEDIR := $(AROS_CONTRIB)/Games/CXHextris
 
 USER_CFLAGS = -DHIGHSCOREFILE=\""S:chextris-scores"\"
 

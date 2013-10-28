@@ -1,6 +1,6 @@
 include $(TOP)/config/make.cfg
 
-EXEDIR := $(CONTRIBDIR)/MultiMedia/Gfx/POVRay
+EXEDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/POVRay
 
 FILES = aros     \
 	atmosph  \

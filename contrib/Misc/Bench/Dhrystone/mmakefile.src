@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 FILES := dhry21a dhry21b timers
 
-EXEDIR := $(CONTRIBDIR)/Misc/Bench/Dhrystone
+EXEDIR := $(AROS_CONTRIB)/Misc/Bench/Dhrystone
 
 USER_CFLAGS := -O2 -Wunused -Wall
 

@@ -5,7 +5,7 @@ USER_CFLAGS := -Wno-uninitialized -Wno-parentheses -D__BSD_VISIBLE=1
 
 %build_progs mmake=contrib-networking-utils-daytime \
     files="daytime dayserv" \
-    targetdir="$(CONTRIBDIR)/Networking/Utils/daytime"
+    targetdir="$(AROS_CONTRIB)/Networking/Utils/daytime"
 
 
 %common

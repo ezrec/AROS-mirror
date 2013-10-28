@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
 
 %build_prog mmake=fish-memeter \
-    progname=memeter targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=memeter targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=memeter

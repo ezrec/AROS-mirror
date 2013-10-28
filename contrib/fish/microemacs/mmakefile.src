@@ -21,5 +21,5 @@ FILES := ansi \
 CFLAGS := $(filter-out -Werror-implicit-function-declaration,$(CFLAGS))
 
 %build_prog mmake=fish-microemacs \
-    progname=microemacs targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=microemacs targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=$(FILES)

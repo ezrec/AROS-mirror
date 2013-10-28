@@ -3,5 +3,5 @@ include $(TOP)/config/make.cfg
 CFLAGS := $(filter-out -Werror-implicit-function-declaration,$(CFLAGS))
 
 %build_prog mmake=fish-bezier2 \
-    progname=bezier2 targetdir=$(CONTRIBDIR)/Misc/fish \
+    progname=bezier2 targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=bezier

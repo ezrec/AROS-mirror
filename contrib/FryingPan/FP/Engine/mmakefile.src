@@ -9,7 +9,7 @@ include $(TOP)/config/make.cfg
 #MM     contrib-fryingpan-framework-genericlib \
 #MM     contrib-fryingpan-framework-libc
 
-DESTDIR := $(CONTRIBDIR)/FryingPan/Libs
+DESTDIR := $(AROS_CONTRIB)/FryingPan/Libs
 
 CXXFILES := \
  Wrapper \
