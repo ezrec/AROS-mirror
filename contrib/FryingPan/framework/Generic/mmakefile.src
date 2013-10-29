@@ -39,4 +39,4 @@ USER_CFLAGS := -isystem $(SRCDIR)/$(CURDIR)/..
 USER_CFLAGS += -fpermissive
 
 %build_linklib mmake=contrib-fryingpan-framework-generic \
- libname="Generic" cxxfiles="$(FILES)"
+ libname="Generic" files= cxxfiles="$(FILES)"
