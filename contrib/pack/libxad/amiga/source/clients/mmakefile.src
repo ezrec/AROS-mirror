@@ -32,25 +32,25 @@ LDFLAGS += -nostartfiles -nostdc
 #MM xadmaster-client-zap : xadmaster-includes
 
 %build_prog mmake=xadmaster-client-ar \
-    files="extheader ar" progname=ar targetdir=$(AROS_LIBS)/XAD \
+    files="extheader ar" progname=ar targetdir=$(AROS_LIBRARIES)/XAD \
     uselibs="debug"
 
 %build_prog mmake=xadmaster-client-bzip \
-    files="extheader bzip" progname=bzip targetdir=$(AROS_LIBS)/XAD \
+    files="extheader bzip" progname=bzip targetdir=$(AROS_LIBRARIES)/XAD \
     uselibs="debug"
 
 %build_prog mmake=xadmaster-client-dimp \
-    files="extheader DImp" progname=DImp targetdir=$(AROS_LIBS)/XAD \
+    files="extheader DImp" progname=DImp targetdir=$(AROS_LIBRARIES)/XAD \
     uselibs="debug"
 
 %build_prog mmake=xadmaster-client-msa \
-    files="extheader MSA" progname=MSA targetdir=$(AROS_LIBS)/XAD \
+    files="extheader MSA" progname=MSA targetdir=$(AROS_LIBRARIES)/XAD \
     uselibs="debug"
 
 %build_prog mmake=xadmaster-client-packdir \
-    files="extheader PackDir" progname=PackDir targetdir=$(AROS_LIBS)/XAD \
+    files="extheader PackDir" progname=PackDir targetdir=$(AROS_LIBRARIES)/XAD \
     uselibs="debug"
 
 %build_prog mmake=xadmaster-client-zap \
-    files="extheader ZAP" progname=ZAP targetdir=$(AROS_LIBS)/XAD \
+    files="extheader ZAP" progname=ZAP targetdir=$(AROS_LIBRARIES)/XAD \
     uselibs="debug"

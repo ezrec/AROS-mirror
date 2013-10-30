@@ -50,7 +50,7 @@ includes-copy: $(AROS_INCLUDES)/proto/xem.h $(AROS_INCLUDES)/defines/xem.h $(ARO
 #MM
 setup-xem :
 	%mkdirs_q $(AROS_INCLUDES) $(OBJDIRS)
-	%mkdirs_q $(AROS_LIB) $(AROS_LIBS) 
+	%mkdirs_q $(AROS_LIB) $(AROS_LIBRARIES) 
 
 clean ::
 	-$(RM) $(INTERMEDIATES) $(OBJS) 
