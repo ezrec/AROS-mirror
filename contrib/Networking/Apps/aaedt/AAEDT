@@ -92,6 +92,10 @@ show_rm_btn = nil
 -- strings for radio gadgets
 rdio_entries = strarray.new(archives[0].caption, archives[1].caption, archives[2].caption, archives[3].caption)
 
+function os_execute(command)
+  local status, msg, retval = os.execute(command)
+  return retval
+end
 
 function parse_content()
   -- parses index file and fill list gadget
@@ -106,7 +110,7 @@ function parse_content()
   file = io.open(loc, "r")
   if file then
     listobject:set(mui.MUIA_List_Quiet, true)
-    for line in file:lines(loc) do
+    for line in file:lines() do
       local p1, p2, p3, p4, p5, p6 = string.match(line, pattern)
       if p1~=nil and p2~=nil then
         local newentry = {
@@ -181,7 +185,7 @@ function download_archive()
         ' -O' .. save_in
 
       print("\n*** Executing command: " .. command)
-      local retval = os.execute(command)
+      local retval = os_execute(command)
       print("\n*** Done")
       if retval > 0 then
         app:request(window, 0, "Error", "OK", "wget returned error code " .. retval)
@@ -205,7 +209,7 @@ function download_readme()
       ' -O' .. readme_target
 
     print("\n*** Executing command: " .. command)
-    local retval = os.execute(command)
+    local retval = os_execute(command)
     print("\n*** Done")
     if retval > 0 then
       app:request(window, 0, "Error", "OK", "wget returned error code " .. retval)
@@ -227,7 +231,7 @@ function download_index()
 
   local command = wget_command .. url .. ' -O' .. loc
   print("\n*** Executing command: " .. command)
-  local retval = os.execute(command)
+  local retval = os_execute(command)
   print("\n*** Done")
   if retval > 0 then
     app:request(window, 0, "Error", "OK", "wget returned error code " .. retval)
@@ -237,7 +241,7 @@ end
 
 function show_readme()
   -- show latest downloaded readme file
-  local retval = os.execute('c:run sys:utilities/multiview "' .. readme_target .. '"')
+  local retval = os_execute('c:run sys:utilities/multiview "' .. readme_target .. '"')
   if retval > 0 then
     app:request(window, 0, "Error", "OK", "'run multiview' returned error code " .. retval)
   end
