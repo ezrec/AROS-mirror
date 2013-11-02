@@ -180,6 +180,16 @@ static LONG InternalOpen(CONST_STRPTR name, LONG accessMode,
         return dupHandle(handle, ast, DOSBase);
     }
 
+    /* ABI_V0 compatibility: don't show the consoles that are opened via autoinit lib */
+    /*
+     * These consoles were not openening automatically and now a lot of programs show
+     * consoles in the background. The workaround is rather poor, but does the job.
+     * Example: Lunapaint, schismtracker
+     */
+    if (!Stricmp(name, "CON://///AUTO/CLOSE"))
+    {
+        name = "NIL:";
+    }
     /*
      * Special case for NIL:, since it has no
      * device task attached to it.
