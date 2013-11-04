@@ -15,7 +15,7 @@
 #include "exec_intern.h"
 
 #include <kernel_base.h>
-#define DEBUG 1
+#define DEBUG 0
 #include <aros/debug.h>
 
 /*****************************************************************************
@@ -63,15 +63,6 @@
     case KSCHED_PERMIT: AROS_ATOMIC_DEC(SysBase->TDNestCnt); break;
     default:            SysBase->TDNestCnt = (BYTE)trigger; 
                         D(bug("[SCHEDULE] force TDNestCnt to %d\n", trigger));
-                        if(trigger==-1)
-                        {
-                            ResetSpin(&(PrivExecBase(SysBase)->LibList_spinlock), 1);
-                        }
-                        else
-                        {
-                            bug("[SCHEDULE] WARNING: trigger %d not supported!\n", trigger);
-                        }
-                        break;
     }
 
     return SysBase->TDNestCnt;
