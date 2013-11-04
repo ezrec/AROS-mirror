@@ -6,6 +6,8 @@
     Lang: english
 */
 
+#define DEBUG 0
+
 #include <aros/debug.h>
 #include <exec/execbase.h>
 #include <exec/tasks.h>
@@ -67,6 +69,7 @@
         task=THISCPU->ThisTask;
 
     DREMTASK("RemTask (0x%p (\"%s\"))", task, task->tc_Node.ln_Name);
+    D(bug("RemTask (0x%p - %s)\n", task, task->tc_Node.ln_Name));
 
     /* Don't let any other task interfere with us at the moment
     */
@@ -82,8 +85,11 @@
     if (!suicide) {
         ASSERT(task->tc_State == TS_WAIT || task->tc_State == TS_READY);
         Remove(&task->tc_Node);
-    } else
+    } /* else
         THISCPU->ThisTask = NULL;
+        */
+
+    /* REMEMBER: THISCPU->ThisTask = NULL  => SpinLocks might not work reliable any more */
 
     /*
      * The task is being removed.
@@ -101,6 +107,8 @@
 
     /* Uninitialize ETask structure */
     DREMTASK("Cleaning up ETask et=%p", et);
+    D(bug("Cleaning up ETask of task %p\n", task));
+
     CleanupETask(task);
     task->tc_UnionETask.tc_ETask = NULL;
     task->tc_Flags &= ~TF_ETASK;
@@ -124,9 +132,14 @@
         /*
             Since I don't know how many levels of Forbid()
             are already pending I set a default value.
+            System SpinLocks are cleared, too.
         */
-        SysBase->TDNestCnt = KrnScheduling(KSCHED_RESET(-1));
+        ResetSpin(&(PrivExecBase(SysBase)->LibList_spinlock), 0);
+        KrnScheduling(KSCHED_RESET(-1));
+        
+        D(bug("Cleaning up ETask: THISCPU->ThisTask=NULL (task %lx)\n", task));
 
+        THISCPU->ThisTask=NULL;
         /* And force a task switch. Note: Dispatch, not Switch,
            because the state of ThisTask must not be saved
         */
