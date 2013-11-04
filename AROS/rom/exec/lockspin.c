@@ -91,11 +91,12 @@
     /* a spinlock once locked with Forbid needs following Forbid locks, too */
     if((thistask == NULL) || (spin->owner == (struct Task *) -1) )
     {
-        /* if we are already locked, we just increase the count, even if thistask is NULL
-         * if we are not locked ATM, we try Forbid(). 
+        /* if we are already locked, we just Forbid and increase the count, even if thistask is NULL
          */
-        D(bug("[LOCKSPIN] thistask is NULL, fallback to Forbid()\n"));
+        D(bug("[LOCKSPIN] %lx thistask is NULL (spin->owner==%p), fallback to Forbid()\n", spin, spin->owner));
         /* don't call Forbid(), as this calls LockSpin itself */
+        if(spin->owner && spin->owner!=(struct Task *) -1) /* what to do now?? */
+             asm("int3");
         KrnScheduling(KSCHED_FORBID);
         spin->owner=(struct Task *) -1;
         spin->nest++;
