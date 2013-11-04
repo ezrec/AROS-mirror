@@ -39,7 +39,7 @@
 
     RESULT
         Returns the amount of nested LockSpin calls, which
-        have not been unlocked by UnlockSpin.
+        have been unlocked by ResetSpin
 
     NOTES
         You should never have to call it on a foreign locked spinlock.
@@ -67,7 +67,6 @@
     char  *secname="(null)";
     struct Task *mytask;
     char  *mytaskname="(null)";
-    ULONG reset=1;
 
     if(parameter>1) 
     {
@@ -80,19 +79,24 @@
         return 0;
 
     mytask=FindTask(NULL);
+
     /* race condition security */
     sectask=spin->owner;
 
+#if DEBUG
+    if(mytask) 
+        mytaskname=mytask->tc_Node.ln_Name;
+
+    if(sectask && (sectask!=(struct Task *) -1))
+        secname=sectask->tc_Node.ln_Name;
+#endif
+
+
+    /* parameter==0 means no forced unlock, so if it is not owned by us, do nothing */
     if((parameter==0) && (mytask!=spin->owner))
     {
 #if DEBUG
-        if(mytask) 
-            mytaskname=mytask->tc_Node.ln_Name;
-
-        if(sectask && (sectask!=(struct Task *) -1))
-            secname=sectask->tc_Node.ln_Name;
-
-        D(bug("[RESETSPIN] INFO: lock %lx soft reset by %p (%s), but different owner %p (%s)\n", 
+        D(bug("[RESETSPIN] INFO: lock %lx soft reset by %p (%s), but different owner %p (%s), did nothing\n", 
                spin, mytask, mytaskname, sectask, secname));
 #endif
         return 0;
@@ -101,14 +105,26 @@
     /* now we have to reset the lock and return the original nest count */
 
 #if DEBUG
-    if(sectask && (sectask != (struct Task *) -1))
+    if(parameter==0) /* mytask==spin->owner checked above already*/
     {
-        D(bug("[RESETSPIN] INFO: spinlock %lx reset from me (task %p (%s)), although it was still held by task %p (%s)!\n", 
-                spin, mytask, mytaskname, sectask, sectask->tc_Node.ln_Name));
+        /* soft reset for our own spinlocks. Nice. */
+        D(bug("[RESETSPIN] INFO: lock %lx soft reset by %p (%s) for own spinlocks. Nice.\n", 
+            spin, mytask, mytaskname));
     }
-    else 
+    else /* force needed */
     {
-        D(bug("[RESETSPIN] INFO: spinlock %lx reset request from me (task %p (%s)), although it was held by a NULL/* task!?\n", spin, mytask, mytaskname));
+        if(mytask==spin->owner)
+        {
+            D(bug("[RESETSPIN] INFO: lock %lx hard reset by %p (%s) for own spinlocks. Nice.\n", 
+                spin, mytask, mytaskname));
+        }
+        else
+        {
+            /* evil case. Forced remove necessary */
+            D(bug("[RESETSPIN] INFO: spinlock %lx hard reset from me (task %p (%s)), although it was still held by foreign task %p (%s)!\n", 
+                    spin, mytask, mytaskname, sectask, secname));
+
+        }
     }
 #endif
 
