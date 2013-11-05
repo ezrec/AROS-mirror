@@ -16,6 +16,17 @@
 #include "exec_intern.h"
 #include "exec_debug.h"
 
+
+#if AROS_SMP
+/* Use SpinLocks only for short-time locks. This lock is too big, as
+ * the open vector might open other libraries *in other tasks*,
+ * so we run into a deadlock for sure. 
+ *
+ * Maybe use a separate spinlock for every library and one for the
+ * library list itself. TODO
+ */
+//#define USE_SPINLOCK 1
+#endif
 /*****************************************************************************
 
     NAME */
@@ -62,11 +73,11 @@
     DRAMLIB("OpenLibrary(\"%s\", %ld)", libName, version);
 
     /* Arbitrate for the library list */
-    bug("[OPENLIBRARY] OpenLibrary(\"%s\", %ld)\n", libName, version);
-#if !AROS_SMP
+    bug("[OPENLIBRARY] OpenLibrary(\"%s\", %ld) by task %p\n", libName, version, FindTask(NULL));
+#if !USE_SPINLOCK
     Forbid();
 #else
-    //bug("[OPENLIBRARY] trying to lock spin %lx\n", &(PrivExecBase(SysBase)->LibList_spinlock));
+    bug("[OPENLIBRARY] trying to lock spin %lx\n", &(PrivExecBase(SysBase)->LibList_spinlock));
     LockSpin(&(PrivExecBase(SysBase)->LibList_spinlock));
 #endif
 
@@ -79,10 +90,8 @@
         /* Check version */
         if(library->lib_Version>=version)
         {
-#if AROS_SMP
+#if USE_SPINLOCK
             /* Does library code expect to be called within Forbid()?
-             * As libraries are usually opened only once, speed penalty is acceptable here,
-             * so call Forbid() now.
              */
             Forbid();
 #endif
@@ -92,7 +101,7 @@
                 AROS_LCA(ULONG,version,D0),
                 struct Library *,library,1,lib
             );
-#if AROS_SMP
+#if USE_SPINLOCK
             Permit();
 #endif
         }
@@ -110,10 +119,11 @@
      */
 
     /* All done. */
-#if !AROS_SMP
+#if !USE_SPINLOCK
     Permit();
 #else
     UnlockSpin(&(PrivExecBase(SysBase)->LibList_spinlock));
+    bug("[OPENLIBRARY] Library %s opened: %lx\n", libName, library);
 #endif
 
     //DRAMLIB("OpenLibrary(\"%s\", %ld) = %p", libName, version, library);

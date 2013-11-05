@@ -6,7 +6,7 @@
     Lang: english
 */
 
-#define DEBUG 0
+#define DEBUG 1
 
 #include <aros/debug.h>
 #include <exec/execbase.h>
@@ -134,7 +134,7 @@
             are already pending I set a default value.
             System SpinLocks are cleared, too.
         */
-        ResetSpin(&(PrivExecBase(SysBase)->LibList_spinlock), 0);
+        //ResetSpin(&(PrivExecBase(SysBase)->LibList_spinlock), 0);
         KrnScheduling(KSCHED_RESET(-1));
         
         D(bug("Cleaning up ETask: THISCPU->ThisTask=NULL (task %lx)\n", task));

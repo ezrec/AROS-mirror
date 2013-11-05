@@ -59,14 +59,14 @@
 
     if(spin->nest == 0)
     {
-        kprintf("[PANIC] Spinlock %lx is not locked, but unlocked by task %p (%s)\n", spin, thistask, taskname);
+        bug("[PANIC] Spinlock %lx is not locked, but unlocked by task %p (%s)\n", spin, thistask, taskname);
         Alert( AN_SpinCorrupt );
     }
 
     /* early boot time might not have had thistask, so owner was set to -1 and Forbid() was used to lock */
     if(spin->owner == (struct Task *) -1) 
     {
-        D(bug("[UNLOCKSPIN] fallback to Permit()\n"));
+        D(bug("[UNLOCKSPIN] %lx fallback to Permit()\n", spin));
         spin->nest--;
         if(spin->nest == 0) 
         {

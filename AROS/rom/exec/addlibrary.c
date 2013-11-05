@@ -66,7 +66,7 @@
     SumLibrary(library);
 
     /* Arbitrate for the library list */
-#if !AROS_SMP
+#if !USE_SPINLOCK
     Forbid();
 #else
     bug("[ADDLIBRARY] Locking Spin\n");
@@ -77,7 +77,7 @@
     Enqueue(&SysBase->LibList,&library->lib_Node);
 
     /* All done. */
-#if !AROS_SMP
+#if !USE_SPINLOCK
     Permit();
 #else
     UnlockSpin(&(PrivExecBase(SysBase)->LibList_spinlock));

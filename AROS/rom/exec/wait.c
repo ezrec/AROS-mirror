@@ -83,9 +83,9 @@
         Enqueue(&SysBase->TaskWait,&me->tc_Node);
 
         /* temporarly release all our spinlocks */
-        spincount=ResetSpin(&(PrivExecBase(SysBase)->LibList_spinlock), 0);
-        if(spincount)
-            D(bug("[Exec] Wait() task %p released %d %p spinlocks\n", FindTask(NULL), spincount, &(PrivExecBase(SysBase)->LibList_spinlock)));
+        //spincount=ResetSpin(&(PrivExecBase(SysBase)->LibList_spinlock), 0);
+        //if(spincount)
+            //D(bug("[Exec] Wait() task %p released %d %p spinlocks\n", FindTask(NULL), spincount, &(PrivExecBase(SysBase)->LibList_spinlock)));
 
         /* And switch to the next ready task. */
         KrnSwitch();
@@ -102,19 +102,19 @@
     /* And clear them. */
     me->tc_SigRecvd&=~signalSet;
 
-    if(spincount)
-        D(bug("[Exec] Wait() needs back spinlock %p %d times for task %p.\n", &(PrivExecBase(SysBase)->LibList_spinlock), spincount), FindTask(NULL));
+    //if(spincount)
+        //D(bug("[Exec] Wait() needs back spinlock %p %d times for task %p.\n", &(PrivExecBase(SysBase)->LibList_spinlock), spincount), FindTask(NULL));
     /* All done. */
     Enable();
 
 
     /* get our locks back ! */
-    while(spincount)
-    {
-        LockSpin(&(PrivExecBase(SysBase)->LibList_spinlock));
-        D(bug("[Exec] Wait() aquired back spinlock %p number %d\n", &(PrivExecBase(SysBase)->LibList_spinlock), spincount, FindTask(NULL)));
-        spincount--;
-    }
+    //while(spincount)
+    //{
+        //LockSpin(&(PrivExecBase(SysBase)->LibList_spinlock));
+        //D(bug("[Exec] Wait() aquired back spinlock %p number %d\n", &(PrivExecBase(SysBase)->LibList_spinlock), spincount, FindTask(NULL)));
+        //spincount--;
+    //}
 
     return rcvd;
 

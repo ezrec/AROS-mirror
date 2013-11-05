@@ -84,7 +84,7 @@
     if (KernelBase)
     {
         //bug("LibList: Locking by Forbid()..\n");
-        LockSpin(&(PrivExecBase(SysBase)->LibList_spinlock));
+        //LockSpin(&(PrivExecBase(SysBase)->LibList_spinlock));
         //bug("LibList: Locked by Forbid()\n");
         KrnScheduling(KSCHED_FORBID);
     }

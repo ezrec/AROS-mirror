@@ -80,7 +80,7 @@ HISTORY
     {
         KrnScheduling(KSCHED_PERMIT);
         //bug("LibList: Unlocking by Permit()..\n");
-        UnlockSpin(&(PrivExecBase(SysBase)->LibList_spinlock));
+        //UnlockSpin(&(PrivExecBase(SysBase)->LibList_spinlock));
         //bug("LibList: Unlocking by Permit()..\n");
     }
 #else
