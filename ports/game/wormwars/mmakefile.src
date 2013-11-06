@@ -3,7 +3,7 @@
 include $(TOP)/config/make.cfg
 
 
-# #MM- ports-game : ports-game-$(AROS_TARGET_CPU)
+#MM- ports-game : ports-game-$(AROS_TARGET_CPU)
 
 #MM- ports-game-i386 : ports-game-koules
 #MM- ports-game-arm : ports-game-wormwars
@@ -25,8 +25,7 @@ include $(TOP)/config/make.cfg
 #MM  ports-game-wormwars-quick : ports-game-wormwars-fetch
 
 
-#REPOSITORIES := http://archives.aros-exec.org/share/game/misc/
-REPOSITORIES := http://www.mazze-online.de/aros/ports-src/
+REPOSITORIES := http://archives.aros-exec.org/share/game/misc/
 ARCHBASE     := wormwars-src-8.85
 TARGETDIR    := $(AROS_CONTRIB)/Games/WormWars
 USER_CFLAGS  := -DNO_PRAGMAS -D__STORM__ -D__chip= -DAMIGA \
