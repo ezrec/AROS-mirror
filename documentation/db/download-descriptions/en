@@ -96,6 +96,16 @@ linux-arm-contrib:
     compiled for the ARM architecture, for use with the
     Linux/ARM port. Please note that this version requires at least
     an ARMv6 CPU with VFP unit.
+linux-armhf-system:
+    The hosted version for Linux/ARM (using hard-float ABI). This archive
+    contains the AROS core system binaries, compiled from the Subversion
+    tree. Please note that this version requires at least an ARMv6 CPU
+    with VFP unit.
+linux-armhf-contrib:
+    This archive contains all the contributed programs,
+    compiled for the ARM architecture, for use with the
+    Linux/ARM port (using hard-float ABI). Please note that this
+    version requires at least an ARMv6 CPU with VFP unit.
 android-arm-system:
     The hosted version for Android/ARM. This archive
     contains the AROS core system binaries, compiled from the Subversion
@@ -152,6 +162,10 @@ linux-ppc-sdk:
     on your preferred machine. You'll need also gcc and the
     binutils configured to produce ppc-elf executables.
 linux-arm-sdk:
+    A set of files and tools to build your own AROS programs
+    on your preferred machine. You'll need also gcc and the
+    binutils configured to produce arm-elf executables.
+linux-armhf-sdk:
     A set of files and tools to build your own AROS programs
     on your preferred machine. You'll need also gcc and the
     binutils configured to produce arm-elf executables.
