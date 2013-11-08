@@ -28,7 +28,9 @@
 
 SDI_LIBBASE(struct DosLibrary, DOSBase, struct DOSIFace, IDOS)
 SDI_LIBBASE(struct xadMasterBase, xadMasterBase, struct xadMasterIFace, IxadMaster)
+#if !defined(__AROS__)
 SDI_GLOBALLIBBASE(struct ExecBase, SysBase, ExecIFace, IExec)
+#endif
 
 #define PARAM	"FILE/M,ALL/S,NE=NOEXTERN/S,ONLYKNOWN/S"
 
