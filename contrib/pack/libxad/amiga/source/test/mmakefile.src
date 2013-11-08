@@ -1,0 +1,27 @@
+#   $Id$
+#
+#   Makefile for xad Tests
+
+include $(TOP)/config/make.cfg
+
+TESTFILES := \
+    CreateFilenameMask \
+    MakeTestDisk \
+    TestCopyMem \
+    TestFilename \
+    TestxadDate \
+    TestxadDate2
+
+EXEDIR := $(AROS_TESTS)/xad
+
+USER_CFLAGS     := -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/../../../portable/include
+
+#MM- test : test-xad
+
+#MM  test-xad : includes linklibs xadmaster-includes
+
+%build_progs mmake=test-xad \
+    files=$(TESTFILES) targetdir=$(EXEDIR) \
+    uselibs="stdc"
+
+%common
