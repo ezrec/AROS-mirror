@@ -2,7 +2,7 @@ Short:        XAD (UnArc) client for RAR3 archives
 Uploader:     chris@unsatisfactorysoftware.co.uk (Chris Young)
 Author:       Chris Young, Stephan Matzke, Shay Green, Alexander L. Roshal
 Type:         util/arc
-Version:      2.5
+Version:      2.6
 URL:          http://www.unsatisfactorysoftware.co.uk
 Architecture: ppc-amigaos; m68k-amigaos
 
@@ -18,7 +18,7 @@ How to identify which version you are running
 
 In the Shell, type xadLibInfo and search for the RAR line:
 
-RAR | ---- | 13 |  2.5  | FILE,EXTERN,FREE(FI)
+RAR | ---- | 13 |  2.6  | FILE,EXTERN,FREE(FI)
              ^^    ^^^
              |      |
 xadmaster version   client version
@@ -28,6 +28,9 @@ xadmaster version   client version
 
 HISTORY
 =======
+
+2.6 (8.11.2013)
+Ported to AROS.
 
 2.5 (05.02.2012)
 Now lists the date, packed size and file attributes (file attributes
