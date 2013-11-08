@@ -1,0 +1,75 @@
+Rar_Extractor 0.2.1 Notes
+-------------------------
+
+Basic Usage
+-----------
+Rar_Extractor can open an RAR archive, iterate over each file/directory, and
+optionally extract the current file. See demo.cpp for an example.
+
+open()          Open RAR archive and check header
+
+			For each item
+next()          Go to next item (file/directory) in archive
+info()          Information about current item
+extract()       Extract current file
+
+Out of memory errors are reported by calling rar_out_of_memory(), which you
+must define. It *must* throw an exception or perform a longjmp(); it must not
+return. All other errors are reported through normal error_t return values.
+
+Iterating over archives compressed with the "solid" option is slower than
+others. If no files will be extracted, call scan_only() after opening the
+archive and scanning will be faster for solid archives.
+
+Unrarlib provides a C interface to Rar_Extractor, using the same interface as
+unrarlib 0.4.0. With it you can get a list of all files in an RAR archive or
+extract one by name. See demo_unrarlib.c for an example.
+
+
+File Access
+-----------
+Rar_Extractor uses the File_Reader interface to access RAR archive data and
+Data_Writer to write extracted files. This allows the data to be provided by a
+normal file, memory block, or any custom data source/destination. The interface
+is defined in abstract_file.h, and several readers and writers are provided:
+
+Std_File_Reader     Reads from standard file
+Mem_File_Reader     Reads from a block of memory
+Std_File_Writer     Writes to a standard file
+Mem_Writer          Keeps written data in a memory block
+
+
+Limitations
+-----------
+- Archives using encryption and/or split archive files are not supported.
+
+- Error return values from Rar_Reader::read() and Rar_Writer::write() are
+currently ignored.
+
+- Unicode filenames in archives are currently ignored.
+
+
+Structure Alignment
+-------------------
+It is important to provide 1 byte alignment for structures in model.hpp. Now it
+contains '#pragma pack(1)' directive, but your compiler may require something
+else. Though Unrar should work with other model.hpp alignments, its memory
+requirements may increase significantly. Alignment in other modules is not
+important.
+
+
+Misc
+----
+Thanks to Richard Bannister and R. Belmont for using this in their program and
+giving feedback.
+
+Dmitry Shkarin wrote PPMII text compression. Dmitry Subbotin wrote the
+carryless rangecoder.
+
+Unrar source may be used in any software to handle RAR archives without
+limitations free of charge, but cannot be used to re-create the RAR compression
+algorithm, which is proprietary. Distribution of modified Unrar source in
+separate form or as a part of other software is permitted, provided that it is
+clearly stated in the documentation and source comments that the code may not
+be used to develop a RAR (WinRAR) compatible archiver.
+

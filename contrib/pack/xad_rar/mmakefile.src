@@ -1,0 +1,19 @@
+# Copyright © 2013, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+USER_CFLAGS     := -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/Rar_Extractor-0.2.1/unrarlib/unrarlib
+LDFLAGS += -nostartfiles -nostdc
+
+#MM- xadmaster-clients : \
+#MM xadmaster-client-rar
+
+#MM- xadmaster-clients-quick : \
+#MM xadmaster-client-rar-quick
+
+#MM xadmaster-client-rar : xadmaster-includes linklibs-rarextract
+
+%build_prog mmake=xadmaster-client-rar \
+    files="extheader xad_rar" cxxfiles="Rar_Extractor-0.2.1/unrarlib/unrarlib" progname=RAR targetdir=$(AROS_LIBRARIES)/XAD \
+    uselibs="rarextract debug stdc++ posixc stdcio stdc"

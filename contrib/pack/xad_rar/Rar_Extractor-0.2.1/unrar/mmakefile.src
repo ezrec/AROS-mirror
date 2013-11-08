@@ -1,0 +1,24 @@
+# Copyright © 2013, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+CPPSRCS := \
+	abstract_file \
+	archive \
+	arcread \
+	crc \
+	getbits \
+	model \
+	Rar_Extractor \
+	rarvm \
+	rawread \
+	rdwrfn \
+	rs \
+	suballoc \
+	unpack \
+	unpack15 \
+	unpack20
+
+%build_linklib mmake=linklibs-rarextract libname=rarextract files= cxxfiles=$(CPPSRCS) \
+                     compiler=target

@@ -1,0 +1,29 @@
+Rar_Extractor Change Log
+------------------------
+
+Rar_Extractor 0.2.1
+-------------------
+- Improved documentation and demo code
+
+- Renamed files in unrar/ to match original names from original unRAR sources
+
+- Renamed C wrapper from urarlib to unrarlib and synchronized with unrarlib
+0.4.0 interface
+
+
+Rar_Extractor 0.2.0
+-------------------
+- Added urarlib_freelist() to C interface
+
+- Disabled SFX code that scans first 256K of RAR file for file header, since
+this was "finding" it in random data of a ZIP file
+
+- Made Rar_Extractor always return an error code, except when out of memory,
+where it calls user-defined rar_out_of_memory().
+
+- Improved readme
+
+
+Rar_Extractor 0.1.1
+-------------------
+- First release

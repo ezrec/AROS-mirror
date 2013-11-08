@@ -1,0 +1,67 @@
+Short:        XAD (UnArc) client for RAR3 archives
+Uploader:     chris@unsatisfactorysoftware.co.uk (Chris Young)
+Author:       Chris Young, Stephan Matzke, Shay Green, Alexander L. Roshal
+Type:         util/arc
+Version:      2.5
+URL:          http://www.unsatisfactorysoftware.co.uk
+Architecture: ppc-amigaos; m68k-amigaos
+
+This is a replacement for xadmaster.library's RAR client which supports
+RAR v3 archives.  However, it does not support MS self-extracting RARs
+and may be missing some other features.
+
+It is built on top of (a modified version of) RAR_Extractor's simple
+unrarlib interface.  Source code is included.
+
+How to identify which version you are running
+---------------------------------------------
+
+In the Shell, type xadLibInfo and search for the RAR line:
+
+RAR | ---- | 13 |  2.5  | FILE,EXTERN,FREE(FI)
+             ^^    ^^^
+             |      |
+xadmaster version   client version
+ 12 = 68k build      1.x = original version
+ 13 = OS4 build      2.x = RAR3 compatible (this one)
+
+
+HISTORY
+=======
+
+2.5 (05.02.2012)
+Now lists the date, packed size and file attributes (file attributes
+untested)
+Code tidy-up
+
+2.4 (04.02.2012) [internal/AmiKit only]
+Add XAD file calls to abstraction interface, and use them (greatly
+reduces memory usage)
+Rebuilt librarextract with latest SDK [OS4]
+
+2.3 (24.01.2012)
+Fixed major memory leak. (thx Ancalimon)
+
+2.2a (23.01.2012)
+Added 68k build.
+
+2.2 (02.11.2008)
+Now supports usage of swap partition on OS4.1, to allow extraction of
+files which don't fit into physical memory.
+
+2.1 (25.05.2008)
+First release.  Version number starts at v2 in order to obsolete the
+original (which is v1.7 and almost exactly eight years old today)
+----
+Please note the primary download location for my software is Aminet
+(http://www.aminet.net).  If you obtained this archive from anywhere
+else, please check Aminet and AmiUpdate (http://www.amiupdate.net) for
+newer versions.
+
+As usual, I can and will not accept responsibility for any damage,
+loss of data etc incurred through use of this software.  This archive
+is provided "as-is" without warranty of any kind and all use is at
+your own risk.
+
+Please check the PGP signature in the Aminet readme against the
+archive to ensure it has not been tampered with.
