@@ -18,36 +18,36 @@ dos
 `DateToStr()`_                          `Delay()`_                              `DeleteFile()`_                         `DeleteVar()`_                          
 `DeviceProc()`_                         `DoPkt()`_                              `DupLock()`_                            `DupLockFromFH()`_                      
 `EndNotify()`_                          `ErrorReport()`_                        `ExAll()`_                              `ExAllEnd()`_                           
-`Examine()`_                            `Execute()`_                            `Exit()`_                               `ExNext()`_                             
-`Fault()`_                              `FGetC()`_                              `FGets()`_                              `FilePart()`_                           
-`FindArg()`_                            `FindCliProc()`_                        `FindDosEntry()`_                       `FindSegment()`_                        
-`FindVar()`_                            `Flush()`_                              `Format()`_                             `FPutC()`_                              
-`FPuts()`_                              `FRead()`_                              `FreeArgs()`_                           `FreeDeviceProc()`_                     
-`FreeDosEntry()`_                       `FreeDosObject()`_                      `FWrite()`_                             `GetArgStr()`_                          
-`GetConsoleTask()`_                     `GetCurrentDirName()`_                  `GetDeviceProc()`_                      `GetFileSysTask()`_                     
-`GetProgramDir()`_                      `GetProgramName()`_                     `GetPrompt()`_                          `GetVar()`_                             
-`Info()`_                               `Inhibit()`_                            `Input()`_                              `InternalLoadSeg()`_                    
-`InternalUnLoadSeg()`_                  `IoErr()`_                              `IsFileSystem()`_                       `IsInteractive()`_                      
-`LoadSeg()`_                            `Lock()`_                               `LockDosList()`_                        `LockRecord()`_                         
-`LockRecords()`_                        `MakeDosEntry()`_                       `MakeLink()`_                           `MatchEnd()`_                           
-`MatchFirst()`_                         `MatchNext()`_                          `MatchPattern()`_                       `MatchPatternNoCase()`_                 
-`MaxCli()`_                             `NameFromFH()`_                         `NameFromLock()`_                       `NewLoadSeg()`_                         
-`NextDosEntry()`_                       `Open()`_                               `OpenFromLock()`_                       `Output()`_                             
-`ParentDir()`_                          `ParentOfFH()`_                         `ParsePattern()`_                       `ParsePatternNoCase()`_                 
-`PathPart()`_                           `PrintFault()`_                         `PutStr()`_                             `Read()`_                               
-`ReadArgs()`_                           `ReadItem()`_                           `ReadLink()`_                           `Relabel()`_                            
-`RemAssignList()`_                      `RemDosEntry()`_                        `RemSegment()`_                         `Rename()`_                             
-`ReplyPkt()`_                           `RunCommand()`_                         `SameDevice()`_                         `SameLock()`_                           
-`Seek()`_                               `SelectInput()`_                        `SelectOutput()`_                       `SendPkt()`_                            
-`SetArgStr()`_                          `SetComment()`_                         `SetConsoleTask()`_                     `SetCurrentDirName()`_                  
-`SetFileDate()`_                        `SetFileSize()`_                        `SetFileSysTask()`_                     `SetIoErr()`_                           
-`SetMode()`_                            `SetOwner()`_                           `SetProgramDir()`_                      `SetProgramName()`_                     
-`SetPrompt()`_                          `SetProtection()`_                      `SetVar()`_                             `SetVBuf()`_                            
-`SplitName()`_                          `StartNotify()`_                        `StrToDate()`_                          `StrToLong()`_                          
-`SystemTagList()`_                      `UnGetC()`_                             `UnLoadSeg()`_                          `UnLock()`_                             
-`UnLockDosList()`_                      `UnLockRecord()`_                       `UnLockRecords()`_                      `VFPrintf()`_                           
-`VFWritef()`_                           `VPrintf()`_                            `WaitForChar()`_                        `WaitPkt()`_                            
-`Write()`_                              `WriteChars()`_                         
+`Examine()`_                            `ExamineFH()`_                          `Execute()`_                            `Exit()`_                               
+`ExNext()`_                             `Fault()`_                              `FGetC()`_                              `FGets()`_                              
+`FilePart()`_                           `FindArg()`_                            `FindCliProc()`_                        `FindDosEntry()`_                       
+`FindSegment()`_                        `FindVar()`_                            `Flush()`_                              `Format()`_                             
+`FPutC()`_                              `FPuts()`_                              `FRead()`_                              `FreeArgs()`_                           
+`FreeDeviceProc()`_                     `FreeDosEntry()`_                       `FreeDosObject()`_                      `FWrite()`_                             
+`GetArgStr()`_                          `GetConsoleTask()`_                     `GetCurrentDirName()`_                  `GetDeviceProc()`_                      
+`GetFileSysTask()`_                     `GetProgramDir()`_                      `GetProgramName()`_                     `GetPrompt()`_                          
+`GetVar()`_                             `Info()`_                               `Inhibit()`_                            `Input()`_                              
+`InternalLoadSeg()`_                    `InternalUnLoadSeg()`_                  `IoErr()`_                              `IsFileSystem()`_                       
+`IsInteractive()`_                      `LoadSeg()`_                            `Lock()`_                               `LockDosList()`_                        
+`LockRecord()`_                         `LockRecords()`_                        `MakeDosEntry()`_                       `MakeLink()`_                           
+`MatchEnd()`_                           `MatchFirst()`_                         `MatchNext()`_                          `MatchPattern()`_                       
+`MatchPatternNoCase()`_                 `MaxCli()`_                             `NameFromFH()`_                         `NameFromLock()`_                       
+`NewLoadSeg()`_                         `NextDosEntry()`_                       `Open()`_                               `OpenFromLock()`_                       
+`Output()`_                             `ParentDir()`_                          `ParentOfFH()`_                         `ParsePattern()`_                       
+`ParsePatternNoCase()`_                 `PathPart()`_                           `PrintFault()`_                         `PutStr()`_                             
+`Read()`_                               `ReadArgs()`_                           `ReadItem()`_                           `ReadLink()`_                           
+`Relabel()`_                            `RemAssignList()`_                      `RemDosEntry()`_                        `RemSegment()`_                         
+`Rename()`_                             `ReplyPkt()`_                           `RunCommand()`_                         `SameDevice()`_                         
+`SameLock()`_                           `Seek()`_                               `SelectInput()`_                        `SelectOutput()`_                       
+`SendPkt()`_                            `SetArgStr()`_                          `SetComment()`_                         `SetConsoleTask()`_                     
+`SetCurrentDirName()`_                  `SetFileDate()`_                        `SetFileSize()`_                        `SetFileSysTask()`_                     
+`SetIoErr()`_                           `SetMode()`_                            `SetOwner()`_                           `SetProgramDir()`_                      
+`SetProgramName()`_                     `SetPrompt()`_                          `SetProtection()`_                      `SetVar()`_                             
+`SetVBuf()`_                            `SplitName()`_                          `StartNotify()`_                        `StrToDate()`_                          
+`StrToLong()`_                          `SystemTagList()`_                      `UnGetC()`_                             `UnLoadSeg()`_                          
+`UnLock()`_                             `UnLockDosList()`_                      `UnLockRecord()`_                       `UnLockRecords()`_                      
+`VFPrintf()`_                           `VFWritef()`_                           `VPrintf()`_                            `WaitForChar()`_                        
+`WaitPkt()`_                            `Write()`_                              `WriteChars()`_                         
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -732,15 +732,15 @@ Function
 ::
 
 
- Set up the first shell process.
+     Set up the first shell process.
 
- Currently, no DOS Packet arguments are used by this
- routine.
+     Currently, no DOS Packet arguments are used by this
+     routine.
 
- A new Boot Cli process is created, and 'dp' is
- sent to it. If the boot shell succeeds, then 'dp'
- is returned with dp_Res1 = DOSTRUE.
- has started.
+     A new Boot Cli process is created, and 'dp' is
+     sent to it. If the boot shell succeeds, then 'dp'
+     is returned with dp_Res1 = DOSTRUE.
+     has started.
  
 
 Inputs
@@ -748,7 +748,7 @@ Inputs
 ::
 
 
- dp  --  startup arguments specified as a packet
+     dp -- startup arguments specified as a packet
 
 
 Result
@@ -756,7 +756,7 @@ Result
 ::
 
 
- RETURN_OK on success, ERROR_* (from dp_Res2) on failure.
+     RETURN_OK on success, ERROR_* (from dp_Res2) on failure.
 
 
 Notes
@@ -764,8 +764,8 @@ Notes
 ::
 
 
- This function is internal to AROS, and should never be
- called by user space.
+     This function is internal to AROS, and should never be
+     called by user space.
 
 
 
@@ -785,26 +785,23 @@ Function
 ~~~~~~~~
 ::
 
-
- Set up a process to be a shell using a startup packet.
+     Set up a process to be a shell using a startup packet.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- packet  --  startup arguments that were passed to the shell
-             If NULL, defaults will be used
+     packet  --  startup arguments that were passed to the shell
+                 If NULL, defaults will be used
 
 
 Notes
 ~~~~~
 ::
 
-
- Called to initialize CLI private data structures, when
- the User Shell is in interactive mode.
+     Called to initialize CLI private data structures, when
+     the User Shell is in interactive mode.
 
 
 
@@ -829,25 +826,22 @@ Function
 ~~~~~~~~
 ::
 
-
- Set up a process to be a shell.
+     Set up a process to be a shell.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- dp  --  startup arguments specified as a packet
+     dp  --  startup arguments specified as a packet
 
 
 Notes
 ~~~~~
 ::
 
-
- Called to initialize CLI private data structures, when
- the User Shell is not interactive.
+     Called to initialize CLI private data structures, when
+     the User Shell is not interactive.
 
 
 
@@ -881,7 +875,7 @@ Inputs
 ~~~~~~
 ::
 
-     file  --  filehandle
+     file - filehandle
 
 
 Result
@@ -959,7 +953,7 @@ Inputs
 ~~~~~~
 ::
 
-     name  -- NUL terminated name.
+     name - NUL terminated name.
 
 
 Result
@@ -1053,10 +1047,10 @@ Inputs
 ~~~~~~
 ::
 
-     name        --   Name of the new process.
-     pri         --   Starting priority.
-     segList     --   BCPL pointer to a seglist.
-     stackSize   --   The size of the initial process stack.
+     name      - Name of the new process.
+     pri       - Starting priority.
+     segList   - BCPL pointer to a seglist.
+     stackSize - The size of the initial process stack.
 
 
 Result
@@ -1247,13 +1241,6 @@ Result
      not be converted.  Non-zero indicates that the call succeeded.
 
 
-Example
-~~~~~~~
-::
-
-     See below.
-
-
 
 See also
 ~~~~~~~~
@@ -1311,7 +1298,7 @@ Inputs
 ~~~~~~
 ::
 
-     name       - NUL terminated name.
+     name - NUL terminated name.
 
 
 Result
@@ -1353,17 +1340,16 @@ Inputs
 ~~~~~~
 ::
 
-     name    -   the name of the variable to delete. Note that variable
-                 names follow the same syntax and semantics as filesystem
-                 names.
+     name  - the name of the variable to delete. Note that variable
+             names follow the same syntax and semantics as filesystem
+             names.
 
-     flags   -   A combination of the type of variable (low 8 bits), and
-                 flags to control the behaviour of this routine.
-                 Currently defined flags:
+     flags - A combination of the type of variable (low 8 bits), and
+             flags to control the behaviour of this routine.
+             Currently defined flags:
 
-                 GVF_LOCAL_ONLY  - delete a local variable.
-                 GVF_GLOBAL_ONLY - delete a global environmental variable.
-
+             GVF_LOCAL_ONLY  - delete a local variable.
+             GVF_GLOBAL_ONLY - delete a global environmental variable.
 
 
 Result
@@ -1469,18 +1455,17 @@ Function
 ~~~~~~~~
 ::
 
-
- Send a dos packet to a filesystem and wait for the action to complete.
+     Send a dos packet to a filesystem and wait for the action to complete.
 
 
 Notes
 ~~~~~
 ::
 
+     Callable from a task.
 
- Callable from a task.
-
- This function should NOT be used; it's only here for AmigaOS compatibility.
+     This function should NOT be used; it's only here for AmigaOS
+     compatibility.
 
 
 
@@ -1572,17 +1557,15 @@ Function
 ~~~~~~~~
 ::
 
-
- End a notification (quit notifying for a request previously sent with
- StartNotify()).
+     End a notification (quit notifying for a request previously sent with
+     StartNotify()).
 
 
 Inputs
 ~~~~~~
 ::
 
-
- notify  --  NotifyRequest used with StartNotify()
+     notify - NotifyRequest used with StartNotify()
 
 
 
@@ -1610,34 +1593,33 @@ Function
 ~~~~~~~~
 ::
 
- Displays a requester with Retry/Cancel buttons for an error.
- IoErr() is set to "code".
-     
+     Displays a requester with Retry/Cancel buttons for an error.
+     IoErr() is set to "code".
+
 
 Inputs
 ~~~~~~
 ::
 
+     code   - The error to put up the requester for
+     type   - Type of request:
+                  REPORT_LOCK   - arg1 is a lock (BPTR).
+                  REPORT_FH     - arg1 is a filehandle (BPTR).
+                  REPORT_VOLUME - arg1 is a volumenode (C pointer).
+                  REPORT_INSERT - arg1 is the string for the volume name.
 
- code    --  The error to put up the requester for
- type    --  Type of request
-
-             REPORT_LOCK    --  arg1 is a lock (BPTR).
-             REPORT_FH      --  arg1 is a filehandle (BPTR).
-             REPORT_VOLUME  --  arg1 is a volumenode (C pointer).
-             REPORT_INSERT  --  arg1 is the string for the volumename
-
- arg1    --  Argument according to type (see above)
- device  --  Optional handler task address (obsolete!)
+     arg1   - Argument according to type (see above)
+     device - Optional handler task address (obsolete!)
 
 
 Result
 ~~~~~~
 ::
 
- DOSFALSE - user has selected "Retry"
- DOSTRUE  - user has selected "Cancel" or code wasn't understood or
-            pr_WindowPtr is -1 or if an attempt to open the requester fails.
+     DOSFALSE - user has selected "Retry"
+     DOSTRUE  - user has selected "Cancel" or code wasn't understood or
+                pr_WindowPtr is -1 or if an attempt to open the requester
+                fails.
 
 
 
@@ -1661,86 +1643,80 @@ Function
 ~~~~~~~~
 ::
 
-
- Examine an entire directory.
+     Examine an entire directory.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- lock     --  lock on the directory to be examined
- buffer   --  buffer for the data that is returned (must be aligned)
-              which is filled with (partial) ExAllData structures
-              (see NOTES)
- size     --  size of 'buffer' in bytes
- data     --  type of the data to be returned
- control  --  a control structure allocated by AllocDosObject()
+     lock    - lock on the directory to be examined
+     buffer  - buffer for the data that is returned (must be aligned)
+               which is filled with (partial) ExAllData structures
+               (see NOTES)
+     size    - size of 'buffer' in bytes
+     data    - type of the data to be returned
+     control - a control structure allocated by AllocDosObject()
 
 
 Result
 ~~~~~~
 ::
 
-
- An indicator of if ExAll() is done. If FALSE is returned, either ExAll()
- has completed in which case IoErr() is ERROR_NO_MORE_ENTRIES or an
- error occurred. If a non-zero value is returned ExAll() must be called
- again until it returns FALSE.
+     An indicator of whether ExAll() is finished. If FALSE is returned,
+     either ExAll() has completed, in which case IoErr() is
+     ERROR_NO_MORE_ENTRIES, or an error occurred. If a non-zero value is
+     returned, ExAll() must be called again until it returns FALSE.
 
 
 Notes
 ~~~~~
 ::
 
- 
- The following information is essential information on the ExAllData
- structure:
+     The following information is essential information in the ExAllData
+     structure:
 
- ed_Type:
+     ed_Type:
 
- ED_NAME        --  filename
- ED_TYPE        --  type
- ED_SIZE        --  size in bytes
- ED_PROTECTION  --  protection bits
- ED_DATE        --  date information (3 longwords)
- ED_COMMENT     --  file comment (NULL if no comment exists)
- ED_OWNER       --  owner user and group id
+         ED_NAME       - filename
+         ED_TYPE       - type
+         ED_SIZE       - size in bytes
+         ED_PROTECTION - protection bits
+         ED_DATE       - date information (3 longwords)
+         ED_COMMENT    - file comment (NULL if no comment exists)
+         ED_OWNER      - owner user and group id
 
- This is an incremental list meaning that if you specify ED_OWNER you
- will get ALL attributes!
+         This is an incremental list, meaning that if you specify ED_OWNER
+         you will get ALL attributes!
 
+         Filesystems that support ExAll() must support at least up to
+         ED_COMMENT. If a filesystem doesn't support a particular type,
+         ERROR_BAD_NUMBER must be returned.
 
- Filesystems that support ExAll() must support at least up to ED_COMMENT.
- If a filesystem doesn't support a particular type, ERROR_BAD_NUMBER must
- be returned.
+     ed_Next: pointer to the next entry in the buffer. The last entry
+              has a NULL value for ed_Next.
 
- ed_Next : pointer to the next entry in the buffer. The last entry
-            has a NULL value for ed_Next.
+     The control structure have the following fields:
 
+     eac_Entries: the number of entries in the buffer after a call to
+                  ExAll(). Make sure that your code handles the case when
+                  eac_Entries is 0 and ExAll() returns TRUE.
 
- The control structure have the following fields.
+     eac_LastKey: must be initialized to 0 before calling ExAll() for the
+                  first time.
 
- eac_Entries : the number of entries in the buffer after a call to ExAll().
-               Make sure that your code handles the case when eac_Entries
-               is 0 and ExAll() returns TRUE.
+     eac_MatchString: if NULL then information on all files will be returned.
+                      If non-NULL it's interpreted as a pointer to a string
+                      used for pattern matching which files to return
+                      information on. This string must have been parsed by
+                      ParsePatternNoCase()!
 
- eac_LastKey : must be initialized to 0 before calling ExAll() for the
-               first time.
+     eac_MatchFunc: pointer to a hook that will be called to decide if an
+                    entry should be included in the buffer. If NULL, no
+                    matching function will be called. The hook is called as
+                    follows:
 
- eac_MatchString : if NULL then information on all files will be returned.
-                   If non-NULL it's interpreted as a pointer to a string
-                   used for pattern matching which files to return
-                   information on. This string must have been parsed by
-                   ParsePatternNoCase()!
-
- eac_MatchFunc : pointer to a hook that will be called to decide if an
-                 entry should be included in the buffer. If NULL, no
-                 matching function will be called. The hook is called as
-                 follows
-
-                     BOOL = MatchFunc(hook, data, typeptr)
+                         BOOL = MatchFunc(hook, data, typeptr)
 
 
 
@@ -1769,30 +1745,28 @@ Function
 ~~~~~~~~
 ::
 
-
- Stop an ExAll() operation before returning ERROR_NO_MORE_ENTRIES.
+     Stop an ExAll() operation before returning ERROR_NO_MORE_ENTRIES.
 
 
 Inputs
 ~~~~~~
 ::
 
+     The inputs should correspond to the inputs for the ExAll() function.
 
- The inputs should correspond to the inputs for the ExAll() function.
-
- lock     --  lock on the directory that is being examined
- buffer   --  buffer for data returned
- size     --  size of 'buffer' in bytes
- type     --  type of data to be returned
- control  --  control data structure
+     lock    - lock on the directory that is being examined
+     buffer  - buffer for data returned
+     size    - size of 'buffer' in bytes
+     type    - type of data to be returned
+     control - control data structure
 
 
 Notes
 ~~~~~
 ::
 
-
- The control data structure must have been allocated with AllocDosObject().
+     The control data structure must have been allocated with
+     AllocDosObject().
 
 
 
@@ -1818,36 +1792,32 @@ Function
 ~~~~~~~~
 ::
 
-
- Fill in a FileInfoBlock structure concerning a file or directory 
- associated with a particular lock.
+     Fill in a FileInfoBlock structure concerning a file or directory 
+     associated with a particular lock.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- lock  --  lock to examine
- fib   --  FileInfoBlock where the result of the examination is stored
+     lock - lock to examine
+     fib  - FileInfoBlock where the result of the examination is stored
 
 
 Result
 ~~~~~~
 ::
 
-
- A boolean telling whether the operation was successful or not.
+     A boolean telling whether the operation was successful or not.
 
 
 Notes
 ~~~~~
 ::
 
-
- FileInfoBlocks should be allocated with AllocDosObject(). You may make
- a copy of the FileInfoBlock but, however, this copy may NOT be passed
- to ExNext()!
+     FileInfoBlocks should be allocated with AllocDosObject(). You may make
+     a copy of the FileInfoBlock but, however, this copy may NOT be passed
+     to ExNext()!
 
 
 
@@ -1855,6 +1825,20 @@ See also
 ~~~~~~~~
 
 `Lock()`_ `UnLock()`_ `ExNext()`_ `AllocDosObject()`_ `ExAll()`_ `dos/dos.h <../headerfiles/dos/dos.h>`_ 
+
+----------
+
+ExamineFH()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ BOOL ExamineFH(
+          BPTR lock,
+          struct FileInfoBlock * fib );
+
 
 ----------
 
@@ -1874,36 +1858,34 @@ Function
 ~~~~~~~~
 ::
 
+     Execute a CLI command specified in 'string'. This string may contain
+     features you may use on the shell commandline like redirection using >,
+     < or >>. Execute() doesn't return until the command(s) that should be
+     executed are finished.
 
- Execute a CLI command specified in 'string'. This string may contain
- features you may use on the shell commandline like redirection using >,
- < or >>. Execute() doesn't return until the command(s) that should be
- executed are finished.
      If 'input' is not NULL, more commands will be read from this stream
- until end of file is reached. 'output' will be used as the output stream
- of the commands (if output is not redirected). If 'output' is NULL the
- current window is used for output -- note that programs run from the
- Workbench doesn't normally have a current window.
+     until end of file is reached. 'output' will be used as the output stream
+     of the commands (if output is not redirected). If 'output' is NULL the
+     current window is used for output -- note that programs run from the
+     Workbench doesn't normally have a current window.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- string  --  pointer to a NULL-terminated string with commands
-             (may be NULL)
- input   --  stream to use as input (may be NULL)
- output  --  stream to use as output (may be NULL)
+     string - pointer to a NULL-terminated string with commands
+              (may be NULL)
+     input  - stream to use as input (may be NULL)
+     output - stream to use as output (may be NULL)
 
 
 Result
 ~~~~~~
 ::
 
-
- Boolean telling whether Execute() could find and start the specified
- command(s). (This is NOT the return code of the command(s).)
+     Boolean telling whether Execute() could find and start the specified
+     command(s). (This is NOT the return code of the command(s).)
 
 
 
@@ -1973,26 +1955,23 @@ Function
 ~~~~~~~~
 ::
 
+     Examine the next entry in a directory.
 
- Examine the next entry in a directory.
-     
 
 Inputs
 ~~~~~~
 ::
 
-
- lock  --  lock on the direcory the contents of which to examine
- fib   --  a FileInfoBlock previously initialized by Examine()
-           (or used before with ExNext())
+     lock - lock on the direcory the contents of which to examine
+     fib  - a FileInfoBlock previously initialized by Examine()
+            (or used before with ExNext())
 
 
 Result
 ~~~~~~
 ::
 
-
- success  --  a boolean telling whether the operation was successful
+     success  --  a boolean telling whether the operation was successful
               or not. A failure occurs also if there is no "next" entry in
               the directory. Then IoErr() equals ERROR_NO_MORE_ENTRIES.
 
@@ -2001,25 +1980,24 @@ Example
 ~~~~~~~
 ::
 
+     To examine a directory, do the following:
 
- To examine a directory, do the following:
-
- 1.  Pass a lock on the directory and a FileInfoBlock (allocated by
-     AllocDosObject()) to Examine().
- 2.  Pass the same parameters to ExNext().
- 3.  Do something with the FileInfoBlock returned.
- 4.  Call ExNext() repeatedly until it returns FALSE and use the
-     information you are provided. When ExNext returns FALSE, check IoErr()
-     to make sure that there was no real failure (ERROR_NO_MORE_ENTRIES).
+     1.  Pass a lock on the directory and a FileInfoBlock (allocated by
+         AllocDosObject()) to Examine().
+     2.  Pass the same parameters to ExNext().
+     3.  Do something with the FileInfoBlock returned.
+     4.  Call ExNext() repeatedly until it returns FALSE and use the
+         information you are provided. When ExNext returns FALSE, check
+         IoErr() to make sure that there was no real failure
+         (ERROR_NO_MORE_ENTRIES).
 
 
 Notes
 ~~~~~
 ::
 
-
- If scanning a filesystem tree recursively, you'll need to allocate a
- new FileInfoBlock for each directory level.
+     If scanning a filesystem tree recursively, you'll need to allocate a
+     new FileInfoBlock for each directory level.
 
 
 
@@ -2063,18 +2041,18 @@ Inputs
 ~~~~~~
 ::
 
-     code    -   The error code.
-     header  -   The string to prepend to the buffer before the error
-                 text. This may be NULL in which case nothing is prepended.
-     buffer  -   The destination buffer.
-     len     -   Length of the buffer.
+     code   - The error code.
+     header - The string to prepend to the buffer before the error
+              text. This may be NULL in which case nothing is prepended.
+     buffer - The destination buffer.
+     len    - Length of the buffer.
 
 
 Result
 ~~~~~~
 ::
 
-     Number of characters placed in the buffer, may be 0.
+     Number of characters placed in the buffer. May be 0.
 
 
 
@@ -2294,8 +2272,7 @@ Notes
 ~~~~~
 ::
 
-
- The process calling this function doesn't need to do any locking.
+     The process calling this function doesn't need to do any locking.
 
 
 
@@ -2430,12 +2407,12 @@ Inputs
 ~~~~~~
 ::
 
-     name   --   the name of the variable you wish to find. Note that
-                 variable names follow the same syntax and semantics
-                 as filesystem names.
-     type   --   The type of variable to be found (see <dos/var.h>).
-                 Actually, only the lower 8 bits of "type" are used
-                 by FindVar().
+     name - the name of the variable you wish to find. Note that
+            variable names follow the same syntax and semantics
+            as filesystem names.
+     type - The type of variable to be found (see <dos/var.h>).
+            Actually, only the lower 8 bits of "type" are used
+            by FindVar().
 
 
 Result
@@ -2531,9 +2508,9 @@ Inputs
 ~~~~~~
 ::
 
-     devicename      - Name of the device to format.
-     volumename      - The name you wish the volume to be called.
-     dostype         - The DOS type you wish on the disk.
+     devicename - Name of the device to format.
+     volumename - The name you wish the volume to be called.
+     dostype    - The DOS type you wish on the disk.
 
 
 Result
@@ -2703,8 +2680,8 @@ Inputs
 ~~~~~~
 ::
 
-     args            - The data used by ReadArgs(). May be NULL,
-                       in which case, FreeArgs() does nothing.
+     args - The data used by ReadArgs(). May be NULL, in which case,
+            FreeArgs() does nothing.
 
 
 Result
@@ -2782,7 +2759,7 @@ Inputs
 ~~~~~~
 ::
 
-     dlist  --  pointer to dos list entry. May be NULL.
+     dlist - pointer to dos list entry. May be NULL.
 
 
 
@@ -2843,8 +2820,8 @@ Inputs
 
      fh        - Write to this file
      block     - The data begins here
- blocklen  - number of bytes per block.  Must be > 0.
- numblocks - number of blocks to write.  Must be > 0.
+     blocklen  - number of bytes per block.  Must be > 0.
+     numblocks - number of blocks to write.  Must be > 0.
 
 
 Result
@@ -3020,8 +2997,8 @@ Inputs
 ~~~~~~
 ::
 
-     name            - Name of the object to find.
-     dp              - Previous result of GetDeviceProc() or NULL.
+     name - Name of the object to find.
+     dp   - Previous result of GetDeviceProc() or NULL.
 
 
 Result
@@ -3309,36 +3286,33 @@ Function
 ~~~~~~~~
 ::
 
-
- Get information about a volume in the system.
+     Get information about a volume in the system.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- lock            --  a lock on any file on the volume for which information
-                     should be supplied, or 0
- parameterBlock  --  pointer to an InfoData structure
+     lock           - a lock on any file on the volume for which information
+                      should be supplied, or 0
+     parameterBlock - pointer to an InfoData structure
 
 
 Result
 ~~~~~~
 ::
 
-
- Boolean indicating success or failure. If TRUE (success) the
- 'parameterBlock' is filled with information on the volume.
+     Boolean indicating success or failure. If TRUE (success) the
+     'parameterBlock' is filled with information on the volume.
 
 
 Notes
 ~~~~~
 ::
 
- Supplying a lock of 0 will return InfoData from the task
- that is returned from GetFileSysTask().
- (Usually the boot volumes' filesystem "SYS:")
+     Supplying a lock of 0 will return InfoData from the task that is
+     returned from GetFileSysTask() (usually the boot volume's filesystem
+     "SYS:").
      
 
 
@@ -3364,35 +3338,31 @@ Function
 ~~~~~~~~
 ::
 
-
- Stop a filesystem from being used.
+     Stop a filesystem from being used.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- name   --  Name of the device to inhibit (including a ':')
- onoff  --  Specify whether to inhibit (DOSTRUE) or uninhibit (DOSFALSE)
-            the device
+     name  - Name of the device to inhibit (including a ':')
+     onoff - Specify whether to inhibit (DOSTRUE) or uninhibit (DOSFALSE)
+             the device
 
 
 Result
 ~~~~~~
 ::
 
-
- A boolean telling whether the action was carried out.
+     A boolean telling whether the action was carried out.
 
 
 Notes
 ~~~~~
 ::
 
-
- After uninhibiting a device anything might have happened like the disk
- in the drive was removed.
+     After uninhibiting a device anything might have happened like the disk
+     in the drive was removed.
 
 
 
@@ -3528,7 +3498,7 @@ Result
 ~~~~~~
 ::
 
-     DOSTRUE if everything wents O.K.
+     DOSTRUE if everything went OK.
 
 
 
@@ -3796,38 +3766,35 @@ Function
 ~~~~~~~~
 ::
 
-
- Lock a portion of a file for exclusive access. A timeout may be specified
- which is the maximum amount of time to wait for the record to be available.
+     Lock a portion of a file for exclusive access. A timeout may be
+     specified which is the maximum amount of time to wait for the record
+     to be available.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- fh       --  file handle for the file to lock a record of
- offset   --  starting position of the lock
- length   --  length of the record in bytes
- mode     --  lock type
- timeout  --  timeout interval measured in ticks (may be 0)
+     fh      - file handle for the file to lock a record of
+     offset  - starting position of the lock
+     length  - length of the record in bytes
+     mode    - lock type
+     timeout - timeout interval measured in ticks (may be 0)
 
 
 Result
 ~~~~~~
 ::
 
-
- Success/failure indicator.
+     Success/failure indicator.
 
 
 Notes
 ~~~~~
 ::
 
-
- Record locks are cooperative, meaning that they only affect other calls
- to LockRecord().
+     Record locks are cooperative, meaning that they only affect other calls
+     to LockRecord().
 
 
 
@@ -3853,37 +3820,33 @@ Function
 ~~~~~~~~
 ::
 
-
- Lock several records at the same time. The timeout specified is applied
- to each lock to attempt. The array of RecordLock:s is terminated with
- an entry where rec_FH is equal to NULL.
+     Lock several records at the same time. The timeout specified is applied
+     to each lock to attempt. The array of RecordLock:s is terminated with
+     an entry where rec_FH is equal to NULL.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- recArray  --  array of records to lock
- timeout   --  maximum number of ticks to wait for a lock to be ready
+     recArray - array of records to lock
+     timeout  - maximum number of ticks to wait for a lock to be ready
 
 
 Result
 ~~~~~~
 ::
 
-
- Success/failure indication. In case of a success, all the record locks
- are locked. In case of failure, no record locks are locked.
+     Success/failure indication. In case of a success, all the record locks
+     are locked. In case of failure, no record locks are locked.
 
 
 Notes
 ~~~~~
 ::
 
-
- A set of records should always be locked in the same order so as to
- reduce possiblities of deadlock.
+     A set of records should always be locked in the same order so as to
+     reduce possiblities of deadlock.
 
 
 
@@ -3917,14 +3880,13 @@ Inputs
 ~~~~~~
 ::
 
-     name  --  pointer to name
-     type  --  type of list entry to create
+     name - pointer to name
+     type - type of list entry to create
 
 
 Result
 ~~~~~~
 ::
-
 
      The new device entry, or NULL if it couldn't be created.
 
@@ -4013,8 +3975,8 @@ Inputs
 ~~~~~~
 ::
 
-     AP  - pointer to Anchor Path structure which had been passed to
-           MatchFirst() before.
+     AP - pointer to Anchor Path structure which had been passed to
+          MatchFirst() before.
 
 
 Result
@@ -4042,7 +4004,6 @@ Function
 ~~~~~~~~
 ::
 
-
      Searches for the first file or directory that matches a given pattern.
      MatchFirst() initializes the AnchorPath structure for you but you
      must initilize the following fields: ap_Flags, ap_Strlen, ap_BreakBits
@@ -4058,9 +4019,9 @@ Inputs
 ~~~~~~
 ::
 
-     pat  - pattern to search for
-     AP   - pointer to (initilized) AnchorPath structure
-     
+     pat - pattern to search for
+     AP  - pointer to (initilized) AnchorPath structure
+
 
 Result
 ~~~~~~
@@ -4100,8 +4061,8 @@ Inputs
 ~~~~~~
 ::
 
-     AP  - pointer to Anchor Path structure which had been passed to
-           MatchFirst() before.
+     AP - pointer to Anchor Path structure which had been passed to
+          MatchFirst() before.
 
 
 Result
@@ -4134,26 +4095,23 @@ Function
 ~~~~~~~~
 ::
 
-
- Check if a string matches a pattern. The pattern must be a pattern as
- output by ParsePattern(). Note that this routine is case sensitive.
+     Check if a string matches a pattern. The pattern must be a pattern as
+     output by ParsePattern(). Note that this routine is case sensitive.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- pat   --   Pattern string (as returned by ParsePattern())
- str   --   The string to match against the pattern 'pat'
+     pat - Pattern string (as returned by ParsePattern())
+     str - The string to match against the pattern 'pat'
 
 
 Result
 ~~~~~~
 ::
 
-
- Boolean telling whether the string matched the pattern.
+     Boolean telling whether the string matched the pattern.
 
 
 
@@ -4179,26 +4137,23 @@ Function
 ~~~~~~~~
 ::
 
-
- Similar to MatchPattern(), only case insensitive (see there for
- more information). For use with ParsePatternNoCase().
+     Similar to MatchPattern(), only case insensitive (see there for
+     more information). For use with ParsePatternNoCase().
 
 
 Inputs
 ~~~~~~
 ::
 
-
- pat  --  Pattern as returned by ParsePatternNoCase()
- str  --  String to match against the pattern 'pat'
+     pat - Pattern as returned by ParsePatternNoCase()
+     str - String to match against the pattern 'pat'
 
 
 Result
 ~~~~~~
 ::
 
-
- Boolean telling whether the match was successful or not.
+     Boolean telling whether the match was successful or not.
 
 
 
@@ -4575,8 +4530,8 @@ Inputs
 ~~~~~~
 ::
 
-     fh  - Filhandle of which you want to obtain the parent
-     
+     fh   - Filehandle of which you want to obtain the parent
+
 
 Result
 ~~~~~~
@@ -4584,14 +4539,13 @@ Result
 
      lock - Lock on the parent directory of the filehandle or
             NULL for failure.
-            
 
 
 
 See also
 ~~~~~~~~
 
-`Lock()`_ `UnLock()`_ `ParentDir()`_   
+`Lock()`_ `UnLock()`_ `ParentDir()`_ 
 
 ----------
 
@@ -4747,9 +4701,9 @@ Inputs
 ~~~~~~
 ::
 
-     code    --  Error code.
-     header  --  Text to print before the error message. This may be NULL
-                 in which case only the error message is printed.
+     code   - Error code.
+     header - Text to print before the error message. This may be NULL
+              in which case only the error message is printed.
 
 
 Result
@@ -4913,10 +4867,10 @@ Inputs
                    template.
                 /F Eats the rest of the line even if there are option
                    keywords in it.
-     array         - Array to be filled with the result values. The array must
+     array    - Array to be filled with the result values. The array must
                 be intialized to the default values before calling
                 ReadArgs().
-     rdargs         - An optional RDArgs structure determining the type of
+     rdargs   - An optional RDArgs structure determining the type of
                 input to process.
 
 
@@ -5078,25 +5032,22 @@ Function
 ~~~~~~~~
 ::
 
-
- Change names of a volume.
+     Change names of a volume.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- drive    --  The name of the device to rename (including the ':').
- newname  --  The new name for the device (without the ':').
+     drive   - The name of the device to rename (including the ':').
+     newname - The new name for the device (without the ':').
 
 
 Result
 ~~~~~~
 ::
 
-
- A boolean telling whether the name change was successful or not.
+     A boolean telling whether the name change was successful or not.
 
 
 
@@ -5129,16 +5080,16 @@ Inputs
 ~~~~~~
 ::
 
-     name    -   Name of the device to remove lock from. This should
-                 not contain the trailing ':'.
-     lock    -   Lock on the object to remove from the list.
+     name    - Name of the device to remove lock from. This should
+               not contain the trailing ':'.
+     lock    - Lock on the object to remove from the list.
 
 
 Result
 ~~~~~~
 ::
 
-     success -   Have we actually succeeded
+     success - Have we actually succeeded
 
 
 Bugs
@@ -5223,7 +5174,7 @@ Inputs
 ~~~~~~
 ::
 
-     seg             - Segment to remove.
+     seg - Segment to remove.
 
 
 Result
@@ -5376,14 +5327,14 @@ Inputs
 ~~~~~~
 ::
 
-     lock1, lock2 - locks
+     lock1, lock2 - locks to compare
 
 
 Result
 ~~~~~~
 ::
 
-     DOSTRUE when they are on the same device
+     DOSTRUE when locks are on the same device
 
 
 
@@ -5411,7 +5362,7 @@ Inputs
 ~~~~~~
 ::
 
-     lock1, lock2 - locks
+     lock1, lock2 - locks to compare
 
 
 Result
@@ -5557,27 +5508,24 @@ Function
 ~~~~~~~~
 ::
 
-
- Send a packet to a handler without waiting for the result. The packet will
- be returned to 'replyport'.
+     Send a packet to a handler without waiting for the result. The packet
+     will be returned to 'replyport'.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- packet     --  the (initialized) packet to send
- port       --  the MsgPort to send the packet to
- replyport  --  the MsgPort to which the packet will be replied
+     packet    - the (initialized) packet to send
+     port      - the MsgPort to send the packet to
+     replyport - the MsgPort to which the packet will be replied
 
 
 Result
 ~~~~~~
 ::
 
-
- This function is callable from a task.
+     This function is callable from a task.
 
 
 
@@ -5610,7 +5558,7 @@ Inputs
 ~~~~~~
 ::
 
-     string  -   The new argument string. (A C string).
+     string - The new argument string (a C string).
 
 
 Result
@@ -5690,7 +5638,7 @@ Inputs
 ~~~~~~
 ::
 
-     handler         - The new console handler for the process.
+     handler - The new console handler for the process.
 
 
 Result
@@ -5698,14 +5646,6 @@ Result
 ::
 
      The address of the old handler.
-
-
-Notes
-~~~~~
-::
-
-     The use of Task in the name is because historically filesystem
-     handlers were tasks (instead of Devices).
 
 
 
@@ -5863,7 +5803,7 @@ Inputs
 ~~~~~~
 ::
 
-     task            - The new filesystem handler.
+     task - The new filesystem handler.
 
 
 Result
@@ -5902,7 +5842,7 @@ Inputs
 ~~~~~~
 ::
 
-     result -- new error code
+     result - new error code
 
 
 Result
@@ -5938,10 +5878,10 @@ Inputs
 ~~~~~~
 ::
 
-     fh      -   The filehandle describing the console.
-     mode    -   The new mode of the console:
-                     1   - RAW: mode
-                     0   - CON: mode
+     fh   - The filehandle describing the console.
+     mode - The new mode of the console:
+                1 - RAW: mode
+                0 - CON: mode
 
 
 Result
@@ -5972,8 +5912,8 @@ Inputs
 ~~~~~~
 ::
 
-     name        --  name of the file
-     owner_info  --  (UID << 16) + GID
+     name       - name of the file
+     owner_info - (UID << 16) + GID
 
 
 Result
@@ -6011,8 +5951,8 @@ Inputs
 ~~~~~~
 ::
 
-     lock    -   The lock to set as the new program directory. NULL
-                 is a valid value.
+     lock - The lock to set as the new program directory. NULL
+            is a valid value.
 
 
 Result
@@ -6062,7 +6002,7 @@ Inputs
 ~~~~~~
 ::
 
-     name  --  Name for the current program.
+     name - Name for the current program.
 
 
 Result
@@ -6351,13 +6291,6 @@ Result
      there is no separator after name+oldpos.
 
 
-Example
-~~~~~~~
-::
-
-     See below.
-
-
 
 ----------
 
@@ -6375,36 +6308,31 @@ Function
 ~~~~~~~~
 ::
 
-
- Send a notification request to a filesystem. You will then be notified
- whenever the file (or directory) changes.
+     Send a notification request to a filesystem. You will then be notified
+     whenever the file (or directory) changes.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- notify  --  a notification request for the file or directory to monitor
+     notify - a notification request for the file or directory to monitor
 
 
 Result
 ~~~~~~
 ::
 
-
- Success/failure indicator.
+     Success/failure indicator.
 
 
 Notes
 ~~~~~
 ::
 
-
- The file or directory connected to a notification request does not have
- to exist at the time of calling StartNotify().
- The NotifyRequest used with this function should not be altered while
- active.
+     The file or directory connected to a notification request does not
+     have to exist at the time of calling StartNotify(). The NotifyRequest
+     used with this function should not be altered while active.
 
 
 
@@ -6532,18 +6460,12 @@ Result
      converted or -1 if no valid number could be found.
 
 
-Example
-~~~~~~~
-::
-
-     // Valid number are: 5, -1, +3, +0007, etc.
-
-
 Notes
 ~~~~~
 ::
 
-     The routine doesn't check if the number if too large.
+     The routine doesn't check if the number is too large.
+     Examples of valid number: 5, -1, +3, +0007, etc.
 
 
 
@@ -6568,67 +6490,66 @@ Function
 ~~~~~~~~
 ::
 
+     Execute a command via a shell. As defaults, the process will use the
+     current Input() and Output(), and the current directory as well as the
+     path will be inherited from your process. If no path is specified, this
+     path will be used to find the command.
 
- Execute a command via a shell. As defaults, the process will use the
- current Input() and Output(), and the current directory as well as the
- path will be inherited from your process. If no path is specified, this
- path will be used to find the command.
      Normally, the boot shell is used but other shells may be specified
- via tags. The tags are passed through to CreateNewProc() except those
- that conflict with SystemTagList(). Currently, these are
+     via tags. The tags are passed through to CreateNewProc() except those
+     that conflict with SystemTagList(). Currently, these are
 
-     NP_Seglist
-     NP_FreeSeglist
-     NP_Entry
-     NP_Input
-     NP_Error
-     NP_Output
-     NP_CloseInput
-     NP_CloseOutput
-     NP_CloseError
-     NP_HomeDir
-     NP_Cli
-     NP_Arguments
-     NP_Synchrounous
-     NP_UserData
-
+         NP_Seglist
+         NP_FreeSeglist
+         NP_Entry
+         NP_Input
+         NP_Error
+         NP_Output
+         NP_CloseInput
+         NP_CloseOutput
+         NP_CloseError
+         NP_HomeDir
+         NP_Cli
+         NP_Arguments
+         NP_Synchrounous
+         NP_UserData
 
 
 Inputs
 ~~~~~~
 ::
 
-
- command  --  program and arguments as a string
- tags     --  see <dos/dostags.h>. Note that both SystemTagList() tags and
-              tags for CreateNewProc() may be passed.
+     command - program and arguments as a string
+     tags    - see <dos/dostags.h>. Note that both SystemTagList() tags and
+               tags for CreateNewProc() may be passed.
 
 
 Result
 ~~~~~~
 ::
 
-
- The return code of the command executed or -1 if the command could
- not run because the shell couldn't be created. If the command is not
- found, the shell will return an error code, usually RETURN_ERROR.
+     The return code of the command executed or -1 if the command could
+     not run because the shell couldn't be created. If the command is not
+     found, the shell will return an error code, usually RETURN_ERROR.
 
 
 Notes
 ~~~~~
 ::
 
+     You must close the input and output filehandles yourself (if needed)
+     after System() returns if they were specified via SYS_Input or
+     SYS_Output (also, see below).
 
- You must close the input and output filehandles yourself (if needed)
- after System() returns if they were specified via SYS_Input or
- SYS_Output (also, see below).
      You may NOT use the same filehandle for both SYS_Input and SYS_Output.
- If you want them to be the same CON: window, set SYS_Input to a filehandle
- on the CON: window and set SYS_Output to NULL. Then the shell will
- automatically set the output by opening CONSOLE: on that handler.
+     If you want them to be the same CON: window, set SYS_Input to a
+     filehandle on the CON: window and set SYS_Output to NULL. Then the
+     shell will automatically set the output by opening CONSOLE: on that
+     handler.
+
      If you specified SYS_Asynch, both the input and the output filehandles
- will be closed when the command is finished (even if this was your Input()
- and Output().
+     will be closed when the command is finished (even if this was your
+     Input() and Output()).
 
 
 
@@ -6716,6 +6637,7 @@ Result
                seglist was NULL.
 
 
+
 See also
 ~~~~~~~~
 
@@ -6744,7 +6666,7 @@ Inputs
 ~~~~~~
 ::
 
-     lock -- The lock to free
+     lock - The lock to free
 
 
 
@@ -6793,27 +6715,24 @@ Function
 ~~~~~~~~
 ::
 
-
- Release a lock made with LockRecord().
+     Release a lock made with LockRecord().
 
 
 Inputs
 ~~~~~~
 ::
 
-
- fh      --  filehandle the lock was made on
- offset  --  starting position of the lock
- length  --  length of the record in bytes
+     fh     - filehandle the lock was made on
+     offset - starting position of the lock
+     length - length of the record in bytes
 
 
 Notes
 ~~~~~
 ::
 
-
- The length and offset must match the corresponding LockRecord()
- call.
+     The length and offset must match the corresponding LockRecord()
+     call.
 
 
 
@@ -6838,24 +6757,28 @@ Function
 ~~~~~~~~
 ::
 
+     Release an array of record locks obtained with LockRecords().
 
- Release an array of record locks obtained with LockRecords().
- 
 
 Inputs
 ~~~~~~
 ::
 
+     recArray - array of record locks (previously locked with LockRecords())
 
- recArray  --  array of record locks (previously locked with LockRecords())
+
+Result
+~~~~~~
+::
+
+     success - Boolean success indicator.
 
 
 Notes
 ~~~~~
 ::
 
-
- A array of records may not be modified when records are locked.
+     An array of records may not be modified when records are locked.
 
 
 
@@ -6920,21 +6843,21 @@ Function
 ~~~~~~~~
 ::
 
+     Write a formatted string (with supplied values) to a specified file.
+     The string may be of any length and the routine is buffered.
+     The following format commands may be used (preceded by a '%') a la
+     printf().
 
- Write a formatted string (with supplied values) to a specified file.
- The string may be of any length and the routine is buffered.
- The following format commands may be used (preceded by a '%') a la printf.
-
-     S   --  string (C style)
-     Tx  --  writes a left justified string padding it to be (at least)
-             x bytes long
-     C   --  character
-     Ox  --  octal number; maximum width x characters
-     Xx  --  hexadecimal number; maximum width x characters
-     Ix  --  decimal number; maximum width x chararcters
-     N   --  decimal number; any length
-     Ux  --  unsigned decimal number; maximum width x characters
-     $   --  ignore parameter
+         S  - string (C style)
+         Tx - writes a left justified string padding it to be (at least)
+              x bytes long
+         C  - character
+         Ox - octal number; maximum width x characters
+         Xx - hexadecimal number; maximum width x characters
+         Ix - decimal number; maximum width x chararcters
+         N  - decimal number; any length
+         Ux - unsigned decimal number; maximum width x characters
+         $  - ignore parameter
 
      Note: 'x' above is the character value - '0'.
 
@@ -6943,18 +6866,16 @@ Inputs
 ~~~~~~
 ::
 
-
- fh        --  file to write the output to
- fmt       --  format string
- argarray  --  pointer to an array of formatting values
+     fh       - file to write the output to
+     fmt      - format string
+     argarray - pointer to an array of formatting values
 
 
 Result
 ~~~~~~
 ::
 
-
- The number of bytes written or -1 if there was an error.
+     The number of bytes written or -1 if there was an error.
 
 
 
@@ -7027,9 +6948,9 @@ Inputs
 ~~~~~~
 ::
 
-     file            - File to wait for a character on.
-     timeout         - Number of microseconds to wait for the character
-                       to arrive. A value of 0 says to wait indefinately.
+     file    - File to wait for a character on.
+     timeout - Number of microseconds to wait for the character
+               to arrive. A value of 0 says to wait indefinitely.
 
 Result
 ~~~~~~
@@ -7062,28 +6983,32 @@ Function
 ~~~~~~~~
 ::
 
+     Wait for a packet to arrive at your process's pr_MsgPort. It will call
+     pr_PktWait if such a function is installed.
 
- Wait for a packet to arrive at your process' pr_MsgPort. It will call
- pr_PktWait if such a function is installed.
+
+Inputs
+~~~~~~
+::
+
+     None.
 
 
 Result
 ~~~~~~
 ::
 
-
- The packet we received.
+     packet - The packet we received.
 
 
 Notes
 ~~~~~
 ::
 
+     The packet will be released from the port.
 
- The packet will be released from the port.
-
- This function should NOT be used. It's there only for AmigaOS
- compatibility.
+     This function should NOT be used. It's there only for AmigaOS
+     compatibility.
 
 
 
