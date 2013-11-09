@@ -3,7 +3,7 @@
 include $(TOP)/config/make.cfg
 
 #MM contrib-scout-bin : includes linklibs contrib-zune-classes-nlist contrib-scout-tblib \
-#MM contrib-scout-catalogs contrib-scout-bin contrib-scout-icon workbench-libs-identify
+#MM contrib-scout-catalogs contrib-scout-bin contrib-scout-icon workbench-libs-identify-linklib
 
 EXE := Scout
 

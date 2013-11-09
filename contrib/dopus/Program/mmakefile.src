@@ -13,7 +13,7 @@ FILES := about arbiter main main1 main2 main3 main4 main5 main6 main7\
 
 EXEDIR := $(DOPUSDIR)
 
-#MM- DirOpus : dopus-library workbench-libs-rexxsyslib
+#MM- DirOpus : dopus-library workbench-libs-rexxsyslib-linklib
 
 USER_CFLAGS := -I$(DOPUSDIR)/Development/include \
     -I$(SRCDIR)/$(CURDIR)/../include \
