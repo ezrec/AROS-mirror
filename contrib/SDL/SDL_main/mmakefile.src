@@ -9,7 +9,7 @@ include $(TOP)/config/make.cfg
 #MM- SDL-aros : SDL-aros-lib SDL-aros-tests
 ##MM- SDL-aros-tests : SDL-aros-standardtests SDL-aros-gltests
 
-#MM SDL-aros-sharedlib : SDL-aros-includes workbench-devs-AHI workbench-libs-mesa \
+#MM SDL-aros-sharedlib : SDL-aros-includes workbench-devs-AHI workbench-libs-mesa-linklib \
 #MM  development-libiconv SDL-aros-config
 
 REPOSITORIES := http://www.libsdl.org/release/

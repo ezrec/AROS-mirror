@@ -15,9 +15,9 @@ FILES 	    :=  bounce \
                 
 EXEDIR      := $(AROS_CONTRIB)/Demos/Mesa
 
-#MM- demo-mesa-prerequisites : workbench-libs-mesa workbench-libs-glu \
+#MM- demo-mesa-prerequisites : workbench-libs-mesa-linklib workbench-libs-glu-linklib \
 #MM     contrib-gfx-libs-glut demo-mesa-images contrib-gfx-libs-eglut \
-#MM     workbench-libs-vega workbench-libs-egl
+#MM     workbench-libs-vega-linklibs workbench-libs-egl-linklib
 
 #MM demo-mesa : demo-mesa-prerequisites demo-mesa-teapot demo-mesa-fire demo-mesa-textures \
 #MM     demo-mesa-tunnel demo-mesa-ipers demo-mesa-reflect demo-mesa-lion
