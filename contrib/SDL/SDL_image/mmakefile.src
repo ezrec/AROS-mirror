@@ -8,8 +8,8 @@
 #MM- development-SDL_image : \
 #MM    SDL-aros-lib \
 #MM    workbench-libs-z \
-#MM    workbench-libs-png \
-#MM    workbench-libs-jpeg
+#MM    workbench-libs-png-linklib \
+#MM    workbench-libs-jpeg-linklib
 
 %fetch_and_build_gnu_development package=SDL_image version=1.2.3 patch=yes \
     package_repo=http://www.libsdl.org/projects/SDL_image/release/ \

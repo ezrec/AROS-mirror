@@ -31,8 +31,8 @@ FILES :=               \
 
 #MM- aros-tcpip-apps-startowb : contrib-fontconfig
 
-#MM- aros-tcpip-apps-owb : workbench-libs-jpeg           \
-#MM                        workbench-libs-png            \
+#MM- aros-tcpip-apps-owb : workbench-libs-jpeg-linklib   \
+#MM                        workbench-libs-png-linklib    \
 #MM                        workbench-libs-thread         \
 #MM                        aros-tcpip-apps-owb-webview   \
 #MM                        aros-tcpip-apps-owb-icon      \
