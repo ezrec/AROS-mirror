@@ -117,7 +117,7 @@ USER_INCLUDES := -I$(SDLINCDIR) -I$(ARCHSRCDIR) -I$(ARCHSRCDIR)/src -DSDL_AROS_S
 #    uselibs="GL iconv"
 
 #MM SDL-aros-staticlib : SDL-aros-includes SDL-aros-staticlib-prebuild \
-#MM  workbench-devs-AHI workbench-libs-mesa \
+#MM  workbench-devs-AHI workbench-libs-mesa-linklib \
 #MM  development-libiconv SDL-aros-config
 
 USER_INCLUDES := -I$(SDLINCDIR) -I$(ARCHSRCDIR) -I$(ARCHSRCDIR)/src
