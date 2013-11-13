@@ -1914,6 +1914,8 @@ AROS_UFH2(struct InputEvent *, IntuiInputHandler,
 
         /* Use event to find the active window */
 
+#if 0 /* toolbox stuff disabled. broken. calling LockLayerinfo() for every event is broken. deadlocks */
+ 
         toolbox = GetToolBoxWindow(ie, screen, IntuitionBase);
 
         if (toolbox)
@@ -1933,6 +1935,7 @@ AROS_UFH2(struct InputEvent *, IntuiInputHandler,
 
             } /* switch (ie->ie_Class) */
         } /* if (toolbox) */
+#endif
 
         w = IntuitionBase->ActiveWindow;
 
