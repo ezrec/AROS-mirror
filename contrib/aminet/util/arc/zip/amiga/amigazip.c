@@ -330,10 +330,10 @@ iztimes *t;             /* return value: access, modific. and creation times */
    times.
    If f is "-", use standard input as the file. */
 {
-    struct FileInfoBlock *inf;
-    BPTR lock;
-    time_t ftime;
-    struct tm local_tm;
+  struct FileInfoBlock *inf;
+  BPTR lock;
+  time_t ftime;
+  struct tm local_tm;
 
   if (f == label) {
     if (a != NULL)
