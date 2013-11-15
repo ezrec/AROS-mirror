@@ -1,12 +1,15 @@
-# Copyright © 2009-2011, The AROS Development Team. All rights reserved.
+# Copyright © 2009-2013, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
 
 #MM- contrib-networking-curl : contrib-networking-openssl development-curl
 
+REPOSITORIES := http://curl.haxx.se/download \
+ http://ftp.sunet.se/pub/www/utilities/curl
+
 %fetch_and_build_gnu_development package=curl version=7.19.2 \
-    patch=yes package_repo="http://curl.haxx.se/download" \
+    patch=yes package_repo="$(REPOSITORIES)" \
     extraoptions="--without-random CPPFLAGS='-D__BSD_VISIBLE=1'" \
     postconfigure="development-curl-fixconfig"
 
