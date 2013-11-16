@@ -1,19 +1,15 @@
 handle SIGUSR1 pass noprint nostop
 handle SIGUSR2 pass noprint nostop
+set disassembly-flavor intel
 set follow-fork-mode child
 
-# This is a bit tricky, because we have several cases,
-# and gdb has no easy 'is this symbol defined' tests.
-#
 # Case 1: Hosted AROSBootstrap (ie linux-i386)
 #         Provides SysBase, Debug_ModList, and Debug_KickList
-# Case 2: ROM (ie amiga-m68k)
-#         Provides AbsExecBase and SysBase
-#
+
 define _sysbase_init
     init-if-undefined $AbsExecBase = 0
-    if $AbsExecBase != 0
-        set $AbsExecBase = (struct IntExecBase *)$AbsExecBase
+    if SysBase != 0
+        set $AbsExecBase = (struct ExecBase *)SysBase
     end
 end
 document _sysbase_init
@@ -22,21 +18,11 @@ end
 
 define _debug_init
     _sysbase_init
-    init-if-undefined $_debug_DebugBase = 0
 
-    # This is the case for ROM debugging - the user must
-    #  'set $AbsExecBase = 4', then this kicks in.
-    if $AbsExecBase != 0 && $_debug_DebugBase == 0
-        set $_debug_DebugBase = (struct DebugBase *)($AbsExecBase->DebugBase)
-    end
-
-    if $_debug_DebugBase != 0
-        set $_debug_DebugBase = (struct DebugBase *)($_debug_DebugBase)
-        # This is the case for debugging a ROM
-        set $_debug_ModList = &($_debug_DebugBase->db_Modules)
-    else
-        # This is the case for debugging a bootstrap
-        init-if-undefined $_debug_ModList = Debug_ModList
+    # This is the case for debugging a bootstrap
+    init-if-undefined $_debug_ModList = 0
+    if Debug_ModList != 0
+        set $_debug_ModList = Debug_ModList
     end
 end
 document _debug_init
@@ -278,20 +264,20 @@ define findaddr
     #then in the resident list
     if $cont
         printf "Searching in the resident list...\n"
-    end
 
-    set $resp = (struct Resident **)((struct ExecBase *)$AbsExecBase)->ResModules
-    set $i = 0
+        set $resp = (struct Resident **)((struct ExecBase *)$AbsExecBase)->ResModules
+        set $i = 0
 
-    while (($resp)[$i] != 0) && $cont
-    set $res = ($resp)[$i]
+        while (($resp)[$i] != 0) && $cont
+        set $res = ($resp)[$i]
 
-        if ($arg0 >= $res) && ($arg0 <= $res->rt_EndSkip)
-            printf "Address found in %s, which resides at %p\n", $res->rt_Name, $res
-            set $cont = 0
+            if ($arg0 >= $res) && ($arg0 <= $res->rt_EndSkip)
+                printf "Address found in %s, which resides at %p\n", $res->rt_Name, $res
+                set $cont = 0
+            end
+
+            set $i = $i + 1
         end
-
-        set $i = $i + 1
     end
 
     if $cont
