@@ -58,11 +58,27 @@ void writeincinline(struct config *cfg)
                     cfg->includenameupper
             );
 
+            if (funclistit->hidden)
+            {
+                fprintf(out,
+                        "\n"
+                        "#if defined(__ENABLE_HIDDEN_LIBAPI__)"
+                        "\n");
+            }
+
             writeinlineregister(out, funclistit, cfg);
             if (!funclistit->novararg)
                 writeinlinevararg(out, funclistit, cfg);
 
             writealiases(out, funclistit, cfg);
+
+            if (funclistit->hidden)
+            {
+                fprintf(out,
+                        "\n"
+                        "#endif /* defined(__ENABLE_HIDDEN_LIBAPI__) */"
+                        "\n");
+            }
 
             fprintf(out,
                     "\n"
