@@ -64,17 +64,17 @@ Function
 ~~~~~~~~
 ::
 
- Activates the specified gadget.
+     Activates the specified gadget.
 
 
 Inputs
 ~~~~~~
 ::
 
- gadget - The gadget to activate
- window - The window which contains the gadget
- requester - The requester which contains the gadget or
-     NULL if it is not a requester gadget
+     gadget - The gadget to activate
+     window - The window which contains the gadget
+     requester - The requester which contains the gadget or
+         NULL if it is not a requester gadget
 
 
 
@@ -147,38 +147,38 @@ Function
 ~~~~~~~~
 ::
 
- Makes a class publically usable. This function must not be called
- before MakeClass().
+     Makes a class publically usable. This function must not be called
+     before MakeClass().
 
 
 Inputs
 ~~~~~~
 ::
 
- class - The result of MakeClass()
+     class - The result of MakeClass()
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- Do not use this function for private classes.
- 
+     Do not use this function for private classes.
+
 
 Bugs
 ~~~~
 ::
 
- There is no protection against creating multiple classes with
- the same name yet. The operation of the system is undefined
- in this case.
+     There is no protection against creating multiple classes with
+     the same name yet. The operation of the system is undefined
+     in this case.
 
 
 
@@ -205,34 +205,34 @@ Function
 ~~~~~~~~
 ::
 
- Adds a single gadget to a window.
+     Adds a single gadget to a window.
 
 
 Inputs
 ~~~~~~
 ::
 
- window - Add gadget to this window
- gadget - Add this gadget
- position - The position to add the gadget in the list of
-     gadgets already in the window. Use 0 to insert the
-     gadget before all others or ~0 to append it to the
-     list.
+     window - Add gadget to this window
+     gadget - Add this gadget
+     position - The position to add the gadget in the list of
+         gadgets already in the window. Use 0 to insert the
+         gadget before all others or ~0 to append it to the
+         list.
 
 
 Result
 ~~~~~~
 ::
 
- The position where the gadget was really inserted.
+     The position where the gadget was really inserted.
 
 
 Notes
 ~~~~~
 ::
 
- This just adds the gadget to the list. It will not be visible
- until you refresh the window.
+     This just adds the gadget to the list. It will not be visible
+     until you refresh the window.
 
 
 
@@ -256,37 +256,37 @@ Function
 ~~~~~~~~
 ::
 
- Add some gadgets to a window.
+     Add some gadgets to a window.
 
 
 Inputs
 ~~~~~~
 ::
 
- window - Add gadgets to this window
- gadget - This is the list of gadgets to add
- position - Where to insert the gadgets in the list of gadgets
-     already in the window. Use 0 to insert the gadgets
-     before all others in the window or ~0 to append them.
- numGad - How many gadgets of the list should be added.
-     Use -1 to add all gadgets in the list.
- requester - Pointer to the requester structure if the window is
-     a requester.
+     window - Add gadgets to this window
+     gadget - This is the list of gadgets to add
+     position - Where to insert the gadgets in the list of gadgets
+         already in the window. Use 0 to insert the gadgets
+         before all others in the window or ~0 to append them.
+     numGad - How many gadgets of the list should be added.
+         Use -1 to add all gadgets in the list.
+     requester - Pointer to the requester structure if the window is
+         a requester.
 
 
 Result
 ~~~~~~
 ::
 
- The actual position where the gadgets were inserted.
+     The actual position where the gadgets were inserted.
 
 
 Notes
 ~~~~~
 ::
 
- The gadgets will just be added. To make them visible, you must
- refresh the window or the gadgets.
+     The gadgets will just be added. To make them visible, you must
+     refresh the window or the gadgets.
 
 
 
@@ -313,24 +313,24 @@ Function
 ~~~~~~~~
 ::
 
- Allocate some memory and remeber it in the Remember-List.
+     Allocate some memory and remember it in the Remember-List.
 
 
 Inputs
 ~~~~~~
 ::
 
- rememberKey - Store information in this list. Must be NULL for
-               initial call.
- size - How many bytes to allocate
- flags - Attributes (see AllocMem())
+     rememberKey - Store information in this list. Must be NULL for
+                   initial call.
+     size - How many bytes to allocate
+     flags - Attributes (see AllocMem())
 
 
 Result
 ~~~~~~
 ::
 
- Pointer to the allocated memory or NULL.
+     Pointer to the allocated memory or NULL.
 
 
 Example
@@ -362,57 +362,56 @@ Function
 ~~~~~~~~
 ::
 
- Allocate a ScreenBuffer (and BitMap) for double or multiple
- buffering in Intuition screens. Use this function to obtain a
- ScreenBuffer for the screen's initial BitMap and for all other
- BitMaps you want to swap in.
- 
- This function also allocates a DBufInfo from graphics.library
- The returned ScreenBuffer contains a pointer to that DBufInfo.
- See graphics.library/AllocDBufInfo() for more information on
- how to use this struct to obtain info when it is safe to render
- into an old buffer and when to switch.
+     Allocate a ScreenBuffer (and BitMap) for double or multiple
+     buffering in Intuition screens. Use this function to obtain a
+     ScreenBuffer for the screen's initial BitMap and for all other
+     BitMaps you want to swap in.
+
+     This function also allocates a DBufInfo from graphics.library
+     The returned ScreenBuffer contains a pointer to that DBufInfo.
+     See graphics.library/AllocDBufInfo() for more information on
+     how to use this struct to obtain info when it is safe to render
+     into an old buffer and when to switch.
 
 
 Inputs
 ~~~~~~
 ::
 
- screen - Screen to double-buffer
- bitmap - You may pre-allocate a BitMap for CUSTOMBITMAP screens,
-     and pass the pointer to get a ScreenBuffer referring to it.
-     If you specify NULL, intuition will allocate the BitMap for
-     you. For non-CUSTOMBITMAP screens this parameter must be NULL.
- flags - A combination of these flags:
-     SB_SCREEN_BITMAP for non-CUSTOMBITMAP screens to get a
-     ScreenBuffer referring to the screen's actual BitMap
-     (For CUSTOMBITMAP screens just pass the BitMap you used for
-     OpenScreen() as the bitmap parameter)
-     SB_COPY_BITMAP to copy the screen's BitMap intto the
-     ScreenBuffer's BitMap. Use this to get intuition rendered
-     stuff into your bitmap (such as menu-bars or gadgets).
-     May be omitted if the screen has no intuition rendered stuff,
-     as well as for allocating a ScreenBuffer for the screen's
-     initial BitMap.
-     
+     screen - Screen to double-buffer
+     bitmap - You may pre-allocate a BitMap for CUSTOMBITMAP screens,
+         and pass the pointer to get a ScreenBuffer referring to it.
+         If you specify NULL, intuition will allocate the BitMap for
+         you. For non-CUSTOMBITMAP screens this parameter must be NULL.
+     flags - A combination of these flags:
+         SB_SCREEN_BITMAP for non-CUSTOMBITMAP screens to get a
+         ScreenBuffer referring to the screen's actual BitMap
+         (For CUSTOMBITMAP screens just pass the BitMap you used for
+         OpenScreen() as the bitmap parameter)
+         SB_COPY_BITMAP to copy the screen's BitMap intto the
+         ScreenBuffer's BitMap. Use this to get intuition rendered
+         stuff into your bitmap (such as menu-bars or gadgets).
+         May be omitted if the screen has no intuition rendered stuff,
+         as well as for allocating a ScreenBuffer for the screen's
+         initial BitMap.
 
 
 Result
 ~~~~~~
 ::
 
- Pointer to the allocated ScreenBuffer or NULL if function failed.
+     Pointer to the allocated ScreenBuffer or NULL if function failed.
 
 
 Notes
 ~~~~~
 ::
 
- You may render into the resulting BitMap.
- Use the sb_DBufInfo field to access graphics.library's ViewPort
- buffering features to e.g check if it is safe to reuse the previous
- BitMap. Otherwise you risk to write into the on-screen BitMap and
- damage menu or gadget rendering.
+     You may render into the resulting BitMap.
+     Use the sb_DBufInfo field to access graphics.library's ViewPort
+     buffering features to e.g check if it is safe to reuse the previous
+     BitMap. Otherwise you risk to write into the on-screen BitMap and
+     damage menu or gadget rendering.
 
 
 
@@ -518,7 +517,7 @@ Function
 
      Initializes optimized refreshing. It restricts redrawing to areas which
      need refreshing after a window has been moved or has changed size.
-     
+
 
 Inputs
 ~~~~~~
@@ -531,8 +530,8 @@ Example
 ~~~~~~~
 ::
 
-     somewhere in your window's event handling loop:
-     
+     Somewhere in your window's event handling loop:
+
      case IDCMP_REFRESHWINDWOW:
          BeginRefresh(mywindow);
          EndRefresh(mywindow, TRUE);
@@ -545,10 +544,10 @@ Notes
 
      Only simple graphics.library functions are allowed between
      BeginRefresh() and EndRefresh().
-     
+
      BeginRefresh()/EndRefresh() should always be called when an
      IDCMP_REFRESHWINDWOW message happens.
-     
+
 
 
 See also
@@ -684,24 +683,25 @@ Inputs
 ::
 
      ID - identifier for decorations, see screens.h
-     nd -  an ID dependent NewDecorator structure
+     nd - an ID dependent NewDecorator structure
 
 
 Result
 ~~~~~~
 ::
 
-     void - this Function cannot fail, 
+     None.
 
 
 Notes
 ~~~~~
 ::
 
-     The function fails if screens are open, use ChangeIntuition() to notify applications that
-     the UI will be changed.
+     The function fails if screens are open; use ChangeIntuition() to
+     notify applications that the UI will be changed.
 
-     This function is private and AROS-specific. Do not use it in regular applications.
+     This function is private and AROS-specific. Do not use it in regular
+     applications.
 
 
 
@@ -727,38 +727,36 @@ Function
 ~~~~~~~~
 ::
 
- Do double or multiple buffering on an intuition screen in an
- intuition-cooperative way.
- The ScreenBuffer's BitMap will be installed on the specifies screen,
- if possible.
- After a signal from graphics.library, the previously installed
- BitMap will be available for re-use.
- Consult graphics.library/AllocDBufInfo() and
- graphics.library/ChangeVPBitMap() for further information.
+     Do double or multiple buffering on an intuition screen in an
+     intuition-cooperative way. The ScreenBuffer's BitMap will be
+     installed on the specified screen, if possible. After a signal from
+     graphics.library, the previously installed BitMap will be available
+     for re-use. Consult graphics.library/AllocDBufInfo() and
+     graphics.library/ChangeVPBitMap() for further information.
 
 
 Inputs
 ~~~~~~
 ::
 
- screen - The screen this screenbuffer belongs to
- screenbuffer - The screenbuffer obtained by AllocScreenBuffer()
+     screen - The screen this screenbuffer belongs to
+     screenbuffer - The screenbuffer obtained by AllocScreenBuffer()
 
 
 Result
 ~~~~~~
 ::
 
- Non-zero if fuction succeeded, or zero if operation could not be
- performed, eg. if user selects menus or gadgets.
+     Non-zero if fuction succeeded, or zero if operation could not be
+     performed, e.g. if user selects menus or gadgets.
 
 
 Notes
 ~~~~~
 ::
 
- You need not re-install the original ScreenBuffer before closing
- a screen. Just FreeScreenBuffer() all buffers used for that screen.
+     You need not re-install the original ScreenBuffer before closing
+     a screen. Just FreeScreenBuffer() all buffers used for that screen.
 
 
 
@@ -787,24 +785,24 @@ Function
 ~~~~~~~~
 ::
 
- Set the new position and size of a window in one call.
+     Set the new position and size of a window in one call.
 
 
 Inputs
 ~~~~~~
 ::
 
- window - Change this window
- left, top - New position
- width, height - New size
+     window - Change this window
+     left, top - New position
+     width, height - New size
 
 
 Notes
 ~~~~~
 ::
 
- This call is deferred. Wait() for IDCMP_CHANGEWINDOW if your
- program depends on the new size.
+     This call is deferred. Wait() for IDCMP_CHANGEWINDOW if your
+     program depends on the new size.
 
 
 
@@ -826,15 +824,15 @@ Inputs
 ~~~~~~
 ::
 
-      window - The window to affect.
+     window - The window to affect.
 
 
 Notes
 ~~~~~
 ::
 
-      This function is also present in MorphOS v50, however
-      not implemented and reserved.
+     This function is also present in MorphOS v50, however
+     not implemented and reserved.
 
 
 
@@ -854,21 +852,21 @@ Function
 ~~~~~~~~
 ::
 
- Detach the DMRequest from the window
+     Detach the DMRequest from the window
 
 
 Inputs
 ~~~~~~
 ::
 
- window - The window from which the DMRequest is to be cleared
+     window - The window from which the DMRequest is to be cleared
 
 
 Result
 ~~~~~~
 ::
 
- TRUE if requester could successfully be detached.
+     TRUE if requester could successfully be detached.
 
 
 
@@ -893,9 +891,9 @@ Function
 ~~~~~~~~
 ::
 
-     Detach menu stript from a window.
-     Call this function before you change menu data.
-     
+     Detach menu stript from a window. Call this function before you
+     change menu data.
+
 
 Inputs
 ~~~~~~
@@ -908,7 +906,7 @@ Inputs
 See also
 ~~~~~~~~
 
-`SetMenuStrip()`_   
+`SetMenuStrip()`_ 
 
 ----------
 
@@ -926,17 +924,23 @@ Function
 ~~~~~~~~
 ::
 
- Reset the mousepointer of this window to the default one.
- If the window is active during this call the pointer will
- immediately change its shape.
- Set custom mousepointers with SetPointer().
+     Reset the mouse pointer of this window to the default one. If the
+     window is active during this call the pointer will immediately change
+     its shape. Set custom mouse pointers with SetPointer().
 
 
 Inputs
 ~~~~~~
 ::
 
- window - The window of which the mousepointer will be cleared
+     window - The window of which the mousepointer will be cleared
+
+
+Result
+~~~~~~
+::
+
+     None.
 
 
 
@@ -961,25 +965,22 @@ Function
 ~~~~~~~~
 ::
 
-
- Release all resources held by a screen and close it down visually.
+     Release all resources held by a screen and close it down visually.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- screen  --  pointer to the screen to be closed
+     screen - pointer to the screen to be closed
 
 
 Result
 ~~~~~~
 ::
 
-
- TRUE if the screen is successfully closed, FALSE if there were still
- windows left on the screen (which means the screen is not closed).
+     TRUE if the screen is successfully closed, FALSE if there were still
+     windows left on the screen (which means the screen is not closed).
 
 
 
@@ -1022,7 +1023,7 @@ Notes
 ~~~~~
 ::
 
-     The window might not have been disappeared when this function returns.
+     The window might not have disappeared when this function returns.
 
 
 
@@ -1046,8 +1047,8 @@ Function
 ~~~~~~~~
 ::
 
- Attempt to close the Workbench screen. This will fail if there are any
- non-Drawer windows open on it.
+     Attempt to close the Workbench screen. This will fail if there are any
+     non-Drawer windows open on it.
 
 
 Result
@@ -1088,32 +1089,32 @@ Function
 ~~~~~~~~
 ::
 
- Copies the current time into the argument pointers.
+     Copies the current time into the argument pointers.
 
 
 Inputs
 ~~~~~~
 ::
 
- seconds - ptr to ULONG varaible which will contain the current
-     seconds after function call
- micros - ptr to ULONG varaible which will contain the current
-     microseconds after function call
+     seconds - ptr to ULONG varaible which will contain the current
+         seconds after function call
+     micros - ptr to ULONG varaible which will contain the current
+         microseconds after function call
 
 
 Result
 ~~~~~~
 ::
 
- Copies the time values to the memory the arguments point to
- Return value is not set.
+     Copies the time values to the memory the arguments point to
+     Return value is not set.
 
 
 Notes
 ~~~~~
 ::
 
- Makes use of timer.library/timer.device
+     Makes use of timer.library/timer.device
 
 
 
@@ -1147,17 +1148,18 @@ Inputs
 ~~~~~~
 ::
 
-     alertnumber - Value determining type of alert. For historic reasons
-                   this is the same value as passed to Alert(). However
-                   this functions takes into account only AT_DeadEnd bit.
-     string - A pointer to a text data. Text data have the following layout:
-              each string is preceded by 3 bytes. First two of them are X coordinate
-              of the string in alert display. This is given as bigendian value. Third
-              byte is Y coordinate of text's baseline. Then NULL-terminated string
-              follows by itself. After NULL terminator there's one more byte. If it's
-              not zero, another string starts from the next byte. Zero marks end of
-              the sequence.
-              The text is always rendered using topaz/8 font.
+     alertnumber - Value determining type of alert. For historical reasons,
+              this is the same value as passed to Alert(). However,
+              this functions takes into account only AT_DeadEnd bit.
+     string - A pointer to text data. Text data have the following layout:
+              each string is preceded by 3 bytes. The first two of them are
+              the X coordinates of the string in the alert display. This is
+              given as a big-endian value. The third byte is the Y
+              coordinate of the text's baseline. Then a NUL-terminated
+              string follows by itself. After the NUL terminator there's
+              one more byte. If it's not zero, another string starts from
+              the next byte. Zero marks the end of the sequence. The text
+              is always rendered using the topaz/8 font.
      height - The height of alert display in pixels.
 
 
@@ -1165,22 +1167,25 @@ Result
 ~~~~~~
 ::
 
-     Always FALSE if AT_DeadEnd bit is set in the alertnumber. Otherwise the function
-     returns TRUE or FALSE depending on what user chooses. In AROS alerts are presented
-     in a requester with two gadgets: Ok and Cancel. Ok returns TRUE, Cancel returns FALSE.
+     Always FALSE if AT_DeadEnd bit is set in alertnumber. Otherwise the
+     function returns TRUE or FALSE depending on what user chooses. In
+     AROS, alerts are presented in a requester with two gadgets: Ok and
+     Cancel. Ok returns TRUE; Cancel returns FALSE.
 
-     If the alert could not be posted for whatever reason, FALSE is returned.
+     If the alert could not be posted for whatever reason, FALSE is
+     returned.
 
 
 Notes
 ~~~~~
 ::
 
-     This function is obsolete and exists only for backwards compatibility with
-     AmigaOS(tm). On various modern systems this function has different effects.
-     On classic Amiga(tm) this function may not work with RTG displays, so it
-     is generally deprecated. Please don't use it in a new software! Use legitimate
-     intuition requesters if you want to present some message to the user.
+     This function is obsolete and exists only for backwards compatibility
+     with AmigaOS(tm). On various modern systems this function has
+     different effects. On classic Amiga(tm) this function may not work
+     with RTG displays, so it is generally deprecated. Please don't use it
+     in new software! Use legitimate intuition requesters if you want to
+     present some message to the user.
 
 
 
@@ -1200,17 +1205,17 @@ Function
 ~~~~~~~~
 ::
 
- The Amiga has no internal speaker, so it flashes the background
- color of the specified screen as a signal. If the argument is
- NULL all screens will be flashed.
+     The Amiga has no internal speaker, so it flashes the background
+     color of the specified screen as a signal. If the argument is
+     NULL all screens will be flashed.
 
 
 Inputs
 ~~~~~~
 ::
 
- screen - The Screen that will be flashed.
-     If NULL all screens will flash.
+     screen - The Screen that will be flashed.
+         If NULL all screens will flash.
 
 
 
@@ -1230,41 +1235,41 @@ Function
 ~~~~~~~~
 ::
 
- Deletes a BOOPSI object. All memory associated with the object
- is freed. The object must have been created with NewObject().
- Some object contain other object which might be freed as well
- when this function is used on the "parent" while others might
- also contain children but won't free them. Read the documentation
- of the class carefully to find out how it behaves.
+     Deletes a BOOPSI object. All memory associated with the object
+     is freed. The object must have been created with NewObject().
+     Some object contain other object which might be freed as well
+     when this function is used on the "parent" while others might
+     also contain children but won't free them. Read the documentation
+     of the class carefully to find out how it behaves.
 
 
 Inputs
 ~~~~~~
 ::
 
- object - The result of a call to NewObject() or a similar function,
-      may be NULL.
+     object - The result of a call to NewObject() or a similar function,
+          may be NULL.
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- This functions sends OM_DISPOSE to the oejct.
+     This functions sends OM_DISPOSE to the oejct.
 
 
 
 See also
 ~~~~~~~~
 
-`NewObjectA()`_ `SetAttrsA()`_ `GetAttr()`_ `MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
+`NewObjectA()`_ `SetAttrsA()`_ `GetAttr()`_ `MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Document. 
 
 ----------
 
@@ -1291,28 +1296,28 @@ Function
 ~~~~~~~~
 ::
 
- Invokes a BOOPSI method on an object with a GadgetInfo derived from
- the supplied window or requester parameter.
+     Invokes a BOOPSI method on an object with a GadgetInfo derived from
+     the supplied window or requester parameter.
 
 
 Inputs
 ~~~~~~
 ::
 
- gad - The gadget to work on
- win - The window which contains the gadget or the requester with
-     the gadgets.
- req - If the gadget is in a requester, you must specify that one,
-     too.
- message - Send this message to the gadget.
+     gad - The gadget to work on
+     win - The window which contains the gadget or the requester with
+         the gadgets.
+     req - If the gadget is in a requester, you must specify that one,
+         too.
+     message - Send this message to the gadget.
 
 
 Result
 ~~~~~~
 ::
 
- The result depends on the contents of the message sent to the
- gadget.
+     The result depends on the contents of the message sent to the
+     gadget.
 
 
 
@@ -1335,23 +1340,23 @@ Function
 ~~~~~~~~
 ::
 
- Check if two times are within the doubleclick interval.
+     Check if two times are within the doubleclick interval.
 
 
 Inputs
 ~~~~~~
 ::
 
- sSeconds, sMicros - Seconds and microseconds of the first event.
- cSeconds, cMicros - Seconds and microseconds of the second event.
+     sSeconds, sMicros - Seconds and microseconds of the first event.
+     cSeconds, cMicros - Seconds and microseconds of the second event.
 
 
 Result
 ~~~~~~
 ::
 
- TRUE if the times are within the doubleclick interval, FALSE
- otherwise.
+     TRUE if the times are within the doubleclick interval, FALSE
+     otherwise.
 
 
 
@@ -1374,57 +1379,57 @@ Function
 ~~~~~~~~
 ::
 
- Draws one or more borders in the specified RastPort. Rendering
- will start at the position which you get when you add the offsets
- leftOffset and topOffset to the LeftEdge and TopEdge specified
- in the Border structure. All coordinates are relative to that point.
+     Draws one or more borders in the specified RastPort. Rendering
+     will start at the position which you get when you add the offsets
+     leftOffset and topOffset to the LeftEdge and TopEdge specified
+     in the Border structure. All coordinates are relative to that point.
 
 
 Inputs
 ~~~~~~
 ::
 
- rp - The RastPort to render into
- border - Information what and how to render
- leftOffset, topOffset - Initial starting position
+     rp - The RastPort to render into
+     border - Information what and how to render
+     leftOffset, topOffset - Initial starting position
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Example
 ~~~~~~~
 ::
 
- // Draw a house with one stroke
- // The drawing starts at the lower left edge
- WORD XY[] =
- {
-     10, -10,
-     10,   0,
-      0, -10,
-     10, -10,
-      5, -15,
-      0, -10,
-      0,   0,
-     10,   0,
- };
- struct Border demo =
- {
-     100, 100,   // Position
-     1, 2,   // Pens
-     JAM1,   // Drawmode
-     8,      // Number of pairs in XY
-     XY,     // Vector offsets
-     NULL    // No next border
- };
+     // Draw a house with one stroke
+     // The drawing starts at the lower left edge
+     WORD XY[] =
+     {
+         10, -10,
+         10,   0,
+          0, -10,
+         10, -10,
+          5, -15,
+          0, -10,
+          0,   0,
+         10,   0,
+     };
+     struct Border demo =
+     {
+         100, 100,   // Position
+         1, 2,   // Pens
+         JAM1,   // Drawmode
+         8,      // Number of pairs in XY
+         XY,     // Vector offsets
+         NULL    // No next border
+     };
 
- // Render the house with the bottom left edge at 150, 50
- DrawBorder (rp, &demo, 50, -50);
+     // Render the house with the bottom left edge at 150, 50
+     DrawBorder (rp, &demo, 50, -50);
 
 
 
@@ -1447,23 +1452,23 @@ Function
 ~~~~~~~~
 ::
 
- Draw an image.
+     Draw an image.
 
 
 Inputs
 ~~~~~~
 ::
 
- rp - The RastPort to render into
- image - The image to render
- leftOffset, topOffset - Where to place the image.
+     rp - The RastPort to render into
+     image - The image to render
+     leftOffset, topOffset - Where to place the image.
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 
@@ -1488,34 +1493,34 @@ Function
 ~~~~~~~~
 ::
 
- This function renders an image in a certain state.
+     This function renders an image in a certain state.
 
 
 Inputs
 ~~~~~~
 ::
 
- rp - Render in this RastPort
- image - Render this image
- leftOffset, topOffset - Add this offset to the position stored in the
-     image.
- state - Which state (see intuition/imageclass.h for possible
-     values).
- drawInfo - The DrawInfo from the screen.
+     rp - Render in this RastPort
+     image - Render this image
+     leftOffset, topOffset - Add this offset to the position stored in the
+         image.
+     state - Which state (see intuition/imageclass.h for possible
+         values).
+     drawInfo - The DrawInfo from the screen.
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- DrawImageState(), handles both boopsi and conventional images.
+     DrawImageState(), handles both boopsi and conventional images.
 
 
 
@@ -1534,14 +1539,14 @@ Function
 ~~~~~~~~
 ::
 
- Private: dump the internal state of intuition.
+     Private: dump the internal state of intuition.
 
 
 Result
 ~~~~~~
 ::
 
-     none
+     None.
 
 
 
@@ -1570,34 +1575,34 @@ Function
 ~~~~~~~~
 ::
 
- Opens and handles a requester, which provides one or more choices.
- It blocks the application until the user closes the requester.
- Returned is an integer indicating which gadget had been selected.
+     Opens and handles a requester, which provides one or more choices.
+     It blocks the application until the user closes the requester.
+     Returned is an integer indicating which gadget had been selected.
 
 
 Inputs
 ~~~~~~
 ::
 
- Window - A reference window. If NULL, the requester opens on
-      the default public screen.
- easyStruct - The EasyStruct structure (<intuition/intuition.h>)
-     describing the requester.
- IDCMP_Ptr - Pointer to IDCMP flags. The requester will be closed early
-     if any of the specified message types is received. This is useful
-     for requesters that want to listen to disk changes etc. The contents
-     of this pointer is set to the IDCMP flag that caused the requester
-     to close. This pointer may be NULL.
- ArgList - The arguments for easyStruct->es_TextFormat.
+     Window - A reference window. If NULL, the requester opens on
+         the default public screen.
+     easyStruct - The EasyStruct structure (<intuition/intuition.h>)
+         describing the requester.
+     IDCMP_Ptr - Pointer to IDCMP flags. The requester will be closed early
+         if any of the specified message types is received. This is useful
+         for requesters that want to listen to disk changes etc. The
+         contents of this pointer is set to the IDCMP flag that caused the
+         requester to close. This pointer may be NULL.
+     ArgList - The arguments for easyStruct->es_TextFormat.
 
 
 Result
 ~~~~~~
 ::
 
- -1, if one of the IDCMP flags of IDCMP_ptr was set.
-  0, if the rightmost button was clicked or an error occured.
-  n, if the n-th button from the left was clicked.
+     -1, if one of the IDCMP flags of IDCMP_ptr was set.
+      0, if the rightmost button was clicked or an error occured.
+      n, if the n-th button from the left was clicked.
 
 
 
@@ -1659,23 +1664,23 @@ Function
 ~~~~~~~~
 ::
 
- Remove a requester from the specified window.
- Other open requesters of this window stay alive.
+     Remove a requester from the specified window. Other open requesters
+     of this window stay alive.
 
 
 Inputs
 ~~~~~~
 ::
 
- requester - The requester to be deleted
- window - The window to which the requester belongs
+     requester - The requester to be deleted
+     window - The window to which the requester belongs
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 
@@ -1714,7 +1719,8 @@ Result
 ~~~~~~
 ::
 
-     BOOL - if FALSE, Notification is in use and cannot be removed; try later
+     BOOL - if FALSE, Notification is in use and cannot be removed; try
+         later.
 
 
 Notes
@@ -1749,24 +1755,24 @@ Function
 ~~~~~~~~
 ::
 
- Erase an image on the screen.
+     Erase an image on the screen.
 
 
 Inputs
 ~~~~~~
 ::
 
- rp - Render in this RastPort
- image - Erase this image
- leftOffset, topOffset - Add this offset the the position in the
-     image.
+     rp - Render in this RastPort
+     image - Erase this image
+     leftOffset, topOffset - Add this offset the the position in the
+         image.
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 
@@ -1791,71 +1797,76 @@ Function
 ~~~~~~~~
 ::
 
- Only for class implementatores.
+     Only for class implementatores.
 
- Tries to free a class which has been created with MakeClass() in the
- first place. This will not succeed in all cases: Classes which
- still have living objects or which are still being used by subclasses
- can't simply be freed. In this case this call will fail.
+     Tries to free a class which has been created with MakeClass() in the
+     first place. This will not succeed in all cases: Classes which
+     still have living objects or which are still being used by subclasses
+     can't simply be freed. In this case this call will fail.
 
- Public classes will always be removed with RemoveClass() no matter
- if FreeClass() would succeed or not. This gurantees that after the
- call to FreeClass() no new objects can be created.
+     Public classes will always be removed with RemoveClass() no matter
+     if FreeClass() would succeed or not. This gurantees that after the
+     call to FreeClass() no new objects can be created.
 
- If you have a pointer to allocated memory in cl_UserData, you must
- make a copy of that pointer, call FreeClass() and if the call
- succeeded, you may free the memory. If you don't follow these rules,
- you might end up with a class which is partially freed.
+     If you have a pointer to allocated memory in cl_UserData, you must
+     make a copy of that pointer, call FreeClass() and if the call
+     succeeded, you may free the memory. If you don't follow these rules,
+     you might end up with a class which is partially freed.
 
 
 Inputs
 ~~~~~~
 ::
 
- iclass - The pointer you got from MakeClass().
+     iclass - The pointer you got from MakeClass().
 
 
 Result
 ~~~~~~
 ::
 
- FALSE if the class couldn't be freed at this time. This can happen
- either if there are still objects from this class or if the class
- is used a SuperClass of at least another class.
+     FALSE if the class couldn't be freed at this time. This can happen
+     either if there are still objects from this class or if the class
+     is used a SuperClass of at least another class.
 
- TRUE if the class could be freed. You must not use iclass after
- that.
+     TRUE if the class could be freed. You must not use iclass after
+     that.
 
 
 Example
 ~~~~~~~
 ::
 
- // Free a public class with dynamic memory in cl_UserD
+     // Free a public class with dynamic memory in cl_UserD
 
- int freeMyClass (Class * cl)
- {
-     struct MyPerClassData * mpcd;
-
-     mpcd = (struct MyPerClassData *)cl->cl_UserData;
-
-     if (FreeClass (cl)
+     int freeMyClass (Class * cl)
      {
-     FreeMem (mpcd, sizeof (struct MyPerClassData));
-     return (TRUE);
-     }
+         struct MyPerClassData * mpcd;
 
-     return (FALSE);
- }
+         mpcd = (struct MyPerClassData *)cl->cl_UserData;
+
+         if (FreeClass (cl)
+         {
+             FreeMem (mpcd, sizeof (struct MyPerClassData));
+             return (TRUE);
+         }
+
+         return (FALSE);
+     }
 
 
 Notes
 ~~~~~
 ::
 
- *Always* calls RemoveClass().
+     *Always* calls RemoveClass().
 
 
+
+See also
+~~~~~~~~
+
+`MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "Boopsi Class Reference" Document. 
 
 ----------
 
@@ -1874,7 +1885,7 @@ Function
 ::
 
      Frees an array of monitor class objects obtained using
-     GetMonitorList()
+     GetMonitorList().
 
 
 Inputs
@@ -1902,7 +1913,7 @@ Notes
 See also
 ~~~~~~~~
 
-`GetMonitorList()`_   
+`GetMonitorList()`_ 
 
 ----------
 
@@ -1922,7 +1933,7 @@ Function
 ::
 
      Free memory allocated by AllocRemember().
-     
+
 
 Inputs
 ~~~~~~
@@ -1956,37 +1967,37 @@ Function
 ~~~~~~~~
 ::
 
- Frees a ScreenBuffer allocated by AllocScreenBuffer() and releases
- associated resources. You have to call this before closing your
- screen.
+     Frees a ScreenBuffer allocated by AllocScreenBuffer() and releases
+     associated resources. You have to call this before closing your
+     screen.
 
 
 Inputs
 ~~~~~~
 ::
 
- screen - The screen this screenbuffer belongs to
- screenbuffer - The screenbuffer obtained by AllocScreenBuffer()
-     It is safe to pass NULL.
+     screen - The screen this screenbuffer belongs to
+     screenbuffer - The screenbuffer obtained by AllocScreenBuffer().
+         It is safe to pass NULL.
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- When used SB_SCREEN_BITMAP on allocating the ScreenBuffer
- (ie. the ScreenBuffer only refers to the screen's BitMap) you must
- FreeScreenBuffer() the ScreenBuffer before closing the screen.
- Intuition will recognize when FreeScreenBuffer() is called for the
- currently installed ScreenBuffer that it must not free the BitMap.
- This is left to the CloseScreen() function.
+     When used SB_SCREEN_BITMAP on allocating the ScreenBuffer
+     (ie. the ScreenBuffer only refers to the screen's BitMap) you must
+     FreeScreenBuffer() the ScreenBuffer before closing the screen.
+     Intuition will recognize when FreeScreenBuffer() is called for the
+     currently installed ScreenBuffer that it must not free the BitMap.
+     This is left to the CloseScreen() function.
 
 
 
@@ -2012,23 +2023,23 @@ Function
 ~~~~~~~~
 ::
 
- Tell intuition that you have finished work with struct DrawInfo
- returned by GetScreenDrawInfo()
+     Tell intuition that you have finished work with struct DrawInfo
+     returned by GetScreenDrawInfo().
 
 
 Inputs
 ~~~~~~
 ::
 
- screen - The screen you passed to GetScreenDrawInfo()
- drawInfo - The DrawInfo structure returned by GetScreenDrawInfo()
+     screen - The screen you passed to GetScreenDrawInfo()
+     drawInfo - The DrawInfo structure returned by GetScreenDrawInfo()
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 
@@ -2053,22 +2064,22 @@ Function
 ~~~~~~~~
 ::
 
- Frees a requester made with BuildSysRequest() or
- BuildEasyRequestArgs().
+     Frees a requester made with BuildSysRequest() or
+     BuildEasyRequestArgs().
 
 
 Inputs
 ~~~~~~
 ::
 
- Window - The requester to be freed. May be NULL or 1.
+     window - The requester to be freed. May be NULL or 1.
 
 
 Bugs
 ~~~~
 ::
 
- BuildSysRequest() requesters not supported, yet.
+     BuildSysRequest() requesters not supported, yet.
 
 
 
@@ -2095,34 +2106,36 @@ Function
 ~~~~~~~~
 ::
 
- Determines the current mouse position relative to the upper-left
- corner of a custom gadget.
- It is recommended not to call this function!
+     Determines the current mouse position relative to the upper-left
+     corner of a custom gadget. It is recommended not to call this
+     function!
 
 
 Inputs
 ~~~~~~
 ::
 
- gadget - The gadget to take as origin
- ginfo - The GadgetInfo structure as passed to the custom gadget hook routine
- mousepoint - Pointer to an array of two WORDs or a structure of type Point
+     gadget - The gadget to take as origin.
+     ginfo - The GadgetInfo structure as passed to the custom gadget hook
+         routine.
+     mousepoint - Pointer to an array of two WORDs or a structure of type
+         Point.
 
 
 Result
 ~~~~~~
 ::
 
- None. Fills in the two WORDs pointed to by mousepoint.
+     None. Fills in the two WORDs pointed to by mousepoint.
 
 
 Notes
 ~~~~~
 ::
 
- This function is useless, because programs which need this information
- can get it in a cleaner way.
- It is recommended not to call this function!
+     This function is useless, because programs which need this
+     information can get it in a cleaner way. It is recommended not to
+     call this function!
 
 
 
@@ -2144,45 +2157,45 @@ Function
 ~~~~~~~~
 ::
 
- Asks the specified object for the value of an attribute. This is not
- possible for all attributes of an object. Read the documentation for
- the class to find out which can be read and which can't.
+     Asks the specified object for the value of an attribute. This is not
+     possible for all attributes of an object. Read the documentation for
+     the class to find out which can be read and which can't.
 
 
 Inputs
 ~~~~~~
 ::
 
- attrID - ID of the attribute you want
- object - Ask the attribute from this object
- storagePtr - This is a pointer to memory which is large enough
-     to hold a copy of the attribute. Most classes will simply
-     put a copy of the value stored in the object here but this
-     behaviour is class specific. Therefore read the instructions
-     in the class description carefully.
+     attrID - ID of the attribute you want
+     object - Ask the attribute from this object
+     storagePtr - This is a pointer to memory which is large enough
+         to hold a copy of the attribute. Most classes will simply
+         put a copy of the value stored in the object here but this
+         behaviour is class specific. Therefore read the instructions
+         in the class description carefully.
 
 
 Result
 ~~~~~~
 ::
 
- Mostly TRUE if the method is supported for the specified attribute
- and FALSE if it isn't or the attribute can't be read at this time.
- See the classes documentation for details.
+     Mostly TRUE if the method is supported for the specified attribute
+     and FALSE if it isn't or the attribute can't be read at this time.
+     See the classes documentation for details.
 
 
 Notes
 ~~~~~
 ::
 
- This function sends OM_GET to the object.
+     This function sends OM_GET to the object.
 
 
 
 See also
 ~~~~~~~~
 
-`NewObjectA()`_ `DisposeObject()`_ `SetAttrsA()`_ `MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
+`NewObjectA()`_ `DisposeObject()`_ `SetAttrsA()`_ `MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "Boopsi Class Reference" Document. 
 
 ----------
 
@@ -2200,31 +2213,31 @@ Function
 ~~~~~~~~
 ::
 
- Returns the name of the current default public screen.
- This will be "Workbench" if there is no default public screen.
+     Returns the name of the current default public screen. This will be
+     "Workbench" if there is no default public screen.
 
 
 Inputs
 ~~~~~~
 ::
 
- nameBuffer - A buffer of length MAXPUBSCREENNAME
+     nameBuffer - A buffer of length MAXPUBSCREENNAME
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- Only Public Screen Manager utilities want to use this function
- since it is easy to open a window on the default public screen
- without specifying a name.
+     Only Public Screen Manager utilities want to use this function
+     since it is easy to open a window on the default public screen
+     without specifying a name.
 
 
 
@@ -2250,23 +2263,23 @@ Function
 ~~~~~~~~
 ::
 
- Gets a copy of the Intuition default Preferences structure.
+     Gets a copy of the Intuition default Preferences structure.
 
 
 Inputs
 ~~~~~~
 ::
 
- prefbuffer - The buffer which contains your settings for the
-     preferences.
- size - The number of bytes of the buffer you want to be copied.
+     prefbuffer - The buffer which contains your settings for the
+         preferences.
+     size - The number of bytes of the buffer you want to be copied.
 
 
 Result
 ~~~~~~
 ::
 
- Returns your parameter buffer.
+     Returns your parameter buffer.
 
 
 
@@ -2420,23 +2433,23 @@ Function
 ~~~~~~~~
 ::
 
- Gets a copy of the current Preferences structure.
+     Gets a copy of the current Preferences structure.
 
 
 Inputs
 ~~~~~~
 ::
 
- prefbuffer - The buffer which contains your settings for the
-     preferences.
- size - The number of bytes of the buffer you want to be copied.
+     prefbuffer - The buffer which contains your settings for the
+         preferences.
+     size - The number of bytes of the buffer you want to be copied.
 
 
 Result
 ~~~~~~
 ::
 
- Returns your parameter buffer.
+     Returns your parameter buffer.
 
 
 
@@ -2464,35 +2477,35 @@ Function
 ~~~~~~~~
 ::
 
- Copy part or all infos about a screen into a private buffer.
+     Copy part or all infos about a screen into a private buffer.
 
- To copy the Workbench, one would call
+     To copy the Workbench, one would call
 
-     GetScreenData (buffer, sizeof(struct Screen), WBENCHSCREEN, NULL)
+         GetScreenData (buffer, sizeof(struct Screen), WBENCHSCREEN, NULL)
 
- If the screen is not open, this call will open it. You can use
- this function for these purposes:
+     If the screen is not open, this call will open it. You can use
+     this function for these purposes:
 
- 1) Get information about the workbench in order to open a window
-    on it (eg. size).
- 2) Clone a screen.
+     1) Get information about the workbench in order to open a window
+        on it (eg. size).
+     2) Clone a screen.
 
 
 Inputs
 ~~~~~~
 ::
 
- buffer - The data gets copied here
- size - The size of the buffer in bytes
- type - The type of the screen as in OpenWindow().
- screen - Ignored unless type is CUSTOMSCREEN.
+     buffer - The data gets copied here
+     size - The size of the buffer in bytes
+     type - The type of the screen as in OpenWindow().
+     screen - Ignored unless type is CUSTOMSCREEN.
 
 
 Result
 ~~~~~~
 ::
 
- TRUE if successful, FALSE if the screen could not be opened.
+     TRUE if successful, FALSE if the screen could not be opened.
 
 
 
@@ -2512,32 +2525,32 @@ Function
 ~~~~~~~~
 ::
 
- Returns a pointer to struct DrawInfo of the passed screen.
- This data is READ ONLY. The version of the struct DrawInfo
- is given in the dri_Version field.
+     Returns a pointer to struct DrawInfo of the passed screen.
+     This data is READ ONLY. The version of the struct DrawInfo
+     is given in the dri_Version field.
 
 
 Inputs
 ~~~~~~
 ::
 
- screen - The screen you want to get the DrawInfo from.
-     Must be valid and open.
+     screen - The screen you want to get the DrawInfo from.
+         Must be valid and open.
 
 
 Result
 ~~~~~~
 ::
 
- Returns pointer to struct DrawInfo defined in intuition/screens.h
+     Returns pointer to struct DrawInfo defined in intuition/screens.h
 
 
 Notes
 ~~~~~
 ::
 
- Call FreeScreenDrawInfo() after finishing using the pointer.
- This function does not prevent the screen from being closed.
+     Call FreeScreenDrawInfo() after finishing using the pointer.
+     This function does not prevent the screen from being closed.
 
 
 
@@ -2663,21 +2676,21 @@ Function
 ::
 
      This function is OBSOLETE and should not be called. To preserve
- compatibility with old programs, calling this function is a no-op.
+     compatibility with old programs, calling this function is a no-op.
 
 
 Inputs
 ~~~~~~
 ::
 
- requester - The struct Requester to be initialized
+     requester - The struct Requester to be initialized
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
@@ -2709,25 +2722,25 @@ Function
 ~~~~~~~~
 ::
 
- Measure the length of the IntuiText passed to the function. Further
- IntuiTexts in iText->NextText are ignored. The length is measured in
- pixels.
+     Measure the length of the IntuiText passed to the function. Further
+     IntuiTexts in iText->NextText are ignored. The length is measured in
+     pixels.
 
 
 Inputs
 ~~~~~~
 ::
 
- iText - The size of this text. If iText->ITextFont contains NULL,
-     the systems font is used (and *not* the font of the currently
-     active screen !).
+     iText - The size of this text. If iText->ITextFont contains NULL,
+         the system's font is used (and *not* the font of the currently
+         active screen!).
 
 
 Result
 ~~~~~~
 ::
 
- The width of the text in pixels.
+     The width of the text in pixels.
 
 
 
@@ -2750,14 +2763,13 @@ Function
      Check whether a window is visible or not. This does not
      check whether the window is within the visible area of
      the screen but rather whether it is in visible state.
-     
 
 
 Inputs
 ~~~~~~
 ::
 
- window - The window to affect. 
+     window - The window to affect.
 
 
 Result
@@ -2793,35 +2805,35 @@ Function
 ~~~~~~~~
 ::
 
- Returns the address of the menuitem 'menunumber' of 'menustrip'.
- The number is the one you get from intuition after the user has
- selected a menu.
- The menunumber must be well-defined.
- Valid numbers are MENUNULL, which makes the routine return NULL,
- or valid item number of your menustrip, which contains
- - a valid menu number
- - a valid item number
- - if the menu-item has a sub-item, a valid sub-item number
- Menu number and item number must be specified. Sub-item, if
- available, is optional, therefore this function returns either
- the item or sub-item.
+     Returns the address of the menuitem 'menunumber' of 'menustrip'.
+     The number is the one you get from intuition after the user has
+     selected a menu.
+     The menunumber must be well-defined.
+     Valid numbers are MENUNULL, which makes the routine return NULL,
+     or valid item number of your menustrip, which contains
+     - a valid menu number
+     - a valid item number
+     - if the menu-item has a sub-item, a valid sub-item number
+     Menu number and item number must be specified. Sub-item, if
+     available, is optional, therefore this function returns either
+     the item or sub-item.
 
 
 Inputs
 ~~~~~~
 ::
 
- menustrip - Pointer to the first menu of the menustrip.
- menunumber - Packed value describing the menu, item and if
-     appropriate sub-item.
+     menustrip - Pointer to the first menu of the menustrip.
+     menunumber - Packed value describing the menu, item and if
+         appropriate sub-item.
 
 
 Result
 ~~~~~~
 ::
 
- Returns NULL for menunumber == MENUNULL or the address of the
- menuitem described by menunumber.
+     Returns NULL for menunumber == MENUNULL or the address of the
+     menuitem described by menunumber.
 
 
 
@@ -2842,29 +2854,30 @@ Function
 ~~~~~~~~
 ::
 
- This function 'lends' the menus of one window to another.
- This makes the menu events (eg. menu button press) take place
- in another window's menu (ie. the other window's strip and screen).
- This function is used to unify two windows on different attached
- screens. (Eg. a painting program with an attached palette screen
- can open the menu on the main screen if the menu button is
- pressed on the palette screen.
+     This function "lends" the menus of one window to another. This makes
+     the menu events (e.g. menu button presses) take place in another
+     window's menu (i.e. the other window's strip and screen).
+
+     This function is used to unify two windows on different attached
+     screens. (E.g. a painting program with an attached palette screen
+     can open the menu on the main screen if the menu button is
+     pressed on the palette screen.)
 
 
 Inputs
 ~~~~~~
 ::
 
- fromwindow - This window's menu events will go to another window.
- towindow - This is the window that will react on the menu actions
-     of the other window. If NULL 'lending' will be turned off.
+     fromwindow - This window's menu events will go to another window.
+     towindow - This is the window that will react on the menu actions
+         of the other window. If NULL 'lending' will be turned off.
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 
@@ -2889,31 +2902,31 @@ Function
 ~~~~~~~~
 ::
 
- Locks Intuition. While you hold this lock, no fields of Intuition
- will change. Please release this as soon as possible.
+     Locks Intuition. While you hold this lock, no fields of Intuition
+     will change. Please release this as soon as possible.
 
 
 Inputs
 ~~~~~~
 ::
 
- What - Which fields of Intuition should be locked. The only allowed
-     value for this is currently 0 which means to lock everything.
+     What - Which fields of Intuition should be locked. The only allowed
+         value for this is currently 0 which means to lock everything.
 
 
 Result
 ~~~~~~
 ::
 
- The result of this function must be passed to UnlockIBase().
+     The result of this function must be passed to UnlockIBase().
 
 
 Notes
 ~~~~~
 ::
 
- You *must not* call this function if you have any locks on other
- system resources like layers and LayerInfo locks.
+     You *must not* call this function if you have any locks on other
+     system resources like layers and LayerInfo locks.
 
 
 
@@ -2937,15 +2950,28 @@ Function
 ~~~~~~~~
 ::
 
+     Locks the public classes list.
 
- Locks the public classes list.
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     None.
 
 
 
 See also
 ~~~~~~~~
 
-`unlockPubClass()`_ 
+`UnlockPubClass()`_ 
 
 ----------
 
@@ -2963,24 +2989,22 @@ Function
 ~~~~~~~~
 ::
 
+     Locks a public screen, thus preventing it from closing. This is
+     useful if you want to put up a visitor window on a public screen
+     and need to check some of the public screen's fields first -- not
+     locking the screen may lead to the public screen not existing when
+     your visitor window is ready.
 
- Locks a public screen, thus preventing it from closing.
- This is useful if you want to put up a visitor window on a public screen
- and need to check some of the public screen's field first -- not locking
- the screen may lead to the public screen not existing when your visitor
- window is ready.
-
- If you try to lock the Workbench screen or the default public screen
- and there isn't any, the Workbench screen will be automatically opened
- and locked.
+     If you try to lock the Workbench screen or the default public screen
+     and there isn't any, the Workbench screen will be automatically opened
+     and locked.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- Name   --  Name of the public screen or NULL for the default public
+     name - Name of the public screen or NULL for the default public
             screen. The name "Workbench" refers to the Workbench screen.
             The name is case insensitive.
 
@@ -2989,38 +3013,35 @@ Result
 ~~~~~~
 ::
 
-
- A pointer to the screen or NULL if something went wrong. Failure can
- happen for instance when the public screen is in private state or doesn't
- exist.
+     A pointer to the screen or NULL if something went wrong. Failure can
+     happen for instance when the public screen is in private state or
+     doesn't exist.
 
 
 Example
 ~~~~~~~
 ::
 
+     To open a visitor window which needs information from the screen
+     structure of the public screen to open on, do this:
 
- To open a visitor window which needs information from the screen structure
- of the public screen to open on, do this:
-
- if((pubscreen = LockPubScreen("PubScreentoOpenon")) != NULL)
- {
-     ...check pubscreen's internal data...
- OpenWindow(VisitorWindow, pubscreen);
- UnlockPubScreen(NULL, pubscreen);
- ...use your visitor window...
- CloseWindow(VisitorWindow);
- }
+     if((pubscreen = LockPubScreen("PubScreentoOpenon")) != NULL)
+     {
+         ...check pubscreen's internal data...
+         OpenWindow(VisitorWindow, pubscreen);
+         UnlockPubScreen(NULL, pubscreen);
+         ...use your visitor window...
+         CloseWindow(VisitorWindow);
+     }
 
 
 Notes
 ~~~~~
 ::
 
-
- You don't need to hold the lock when your visitor window is opened as
- the pubscreen cannot be closed as long as there are visitor windows
- on it.
+     You don't need to hold the lock when your visitor window is opened as
+     the pubscreen cannot be closed as long as there are visitor windows
+     on it.
 
 
 
@@ -3044,18 +3065,17 @@ Function
 ~~~~~~~~
 ::
 
-
- Arbitrates access to the system public screen list. This is for Public
- Screen Manager programs only! The list should be locked for as short a
- time as possible.
+     Arbitrates access to the system public screen list. This is for Public
+     Screen Manager programs only! The list should be locked for as short a
+     time as possible.
 
 
 Notes
 ~~~~~
 ::
 
-
- The list's nodes are PubScreenNodes as defined in <intuition/screens.h>.
+     The list's nodes are PubScreenNodes as defined in
+     <intuition/screens.h>.
 
 
 
@@ -3084,57 +3104,57 @@ Function
 ~~~~~~~~
 ::
 
- Only for class implementators.
+     Only for class implementators.
 
- This function creates a new public BOOPSI class. The SuperClass
- should be another BOOPSI class; all BOOPSI classes are subclasses
- of the ROOTCLASS.
+     This function creates a new public BOOPSI class. The SuperClass
+     should be another BOOPSI class; all BOOPSI classes are subclasses
+     of the ROOTCLASS.
 
- SuperClasses can by private or public. You can specify a name/ID
- for the class if you want it to become a public class. For public
- classes, you must call AddClass() afterwards to make it public
- accessible.
+     SuperClasses can by private or public. You can specify a name/ID
+     for the class if you want it to become a public class. For public
+     classes, you must call AddClass() afterwards to make it public
+     accessible.
 
- The return value contains a pointer to the IClass structure of your
- class. You must specify your dispatcher in cl_Dispatcher. You can
- also store shared data in cl_UserData.
+     The return value contains a pointer to the IClass structure of your
+     class. You must specify your dispatcher in cl_Dispatcher. You can
+     also store shared data in cl_UserData.
 
- To get rid of the class, you must call FreeClass().
+     To get rid of the class, you must call FreeClass().
 
 
 Inputs
 ~~~~~~
 ::
 
- classID - NULL for private classes otherwise the name/ID of the
-     public class.
- superClassID - Name/ID of a public SuperClass. NULL is you don't
-     want to use a public SuperClass or if you have the pointer
-     your SuperClass.
- superClassPtr - Pointer to the SuperClass. If this is non-NULL,
-     then superClassID is ignored.
- instanceSize - The amount of memory which your objects need (in
-     addition to the memory which is needed by the SuperClass(es))
- flags - For future extensions. To maintain comaptibility, use 0
-     for now.
+     classID - NULL for private classes otherwise the name/ID of the
+         public class.
+     superClassID - Name/ID of a public SuperClass. NULL is you don't
+         want to use a public SuperClass or if you have the pointer
+         your SuperClass.
+     superClassPtr - Pointer to the SuperClass. If this is non-NULL,
+         then superClassID is ignored.
+     instanceSize - The amount of memory which your objects need (in
+         addition to the memory which is needed by the SuperClass(es))
+     flags - For future extensions. To maintain comaptibility, use 0
+         for now.
 
 
 Result
 ~~~~~~
 ::
 
- Pointer to the new class or NULL if
- - There wasn't enough memory
- - The superclass couldn't be found
- - There already is a class with the same name/ID.
+     Pointer to the new class or NULL if
+         - There wasn't enough memory
+         - The superclass couldn't be found
+         - There already is a class with the same name/ID.
 
 
 Notes
 ~~~~~
 ::
 
- No copy is made of classID. So make sure the lifetime of the contents
- of classID is at least the same as the lifetime of the class itself.
+     No copy is made of classID. So make sure the lifetime of the contents
+     of classID is at least the same as the lifetime of the class itself.
 
 
 
@@ -3154,28 +3174,28 @@ Function
 ~~~~~~~~
 ::
 
- Create viewport of the screen.
- 
+     Create viewport of the screen.
+
 
 Inputs
 ~~~~~~
 ::
 
- Pointer to your custom screen.
+     Pointer to your custom screen.
 
 
 Result
 ~~~~~~
 ::
 
- Zero for success, non-zero for failure.
+     Zero for success, non-zero for failure.
 
 
 
 See also
 ~~~~~~~~
 
-`RemakeDisplay()`_ `RethinkDisplay()`_ `graphics.library/MakeVPort() <./graphics#makevport>`_ 
+`RemakeDisplay()`_ `RethinkDisplay()`_ graphics.library/MakeVPort(). 
 
 ----------
 
@@ -3194,75 +3214,75 @@ Function
 ~~~~~~~~
 ::
 
- This routine modifies the state of your window's IDCMP (Intuition
- Direct Communication Message Port).
+     This routine modifies the state of your window's IDCMP (Intuition
+     Direct Communication Message Port).
 
- Depending on the current state in the IDCMPFlags of the window and
- the specified flags these actions are possible:
+     Depending on the current state in the IDCMPFlags of the window and
+     the specified flags these actions are possible:
 
- IDCMP   flags   Action
-   0   0 Nothing happens
-   0  !=0    The flags are copied in the IDCMPFlags of the window
-         and a MessagePort is created and stored in the
-         UserPort of the window.
-  !=0      0 The IDCMPFlags are cleared and the MessagePort in the
-         UserPort is deleted.
-  !=0     !=0    The flags are copied to the IDCMPFlags of the
-         window.
+     IDCMP   flags   Action
+     0       0       Nothing happens.
+     0       !=0     The flags are copied in the IDCMPFlags of the window
+                     and a MessagePort is created and stored in the
+                     UserPort of the window.
+     !=0     0       The IDCMPFlags are cleared and the MessagePort in the
+                     UserPort is deleted.
+     !=0     !=0     The flags are copied to the IDCMPFlags of the
+                     window.
 
 
 Inputs
 ~~~~~~
 ::
 
- window - The window to change the IDCMPFlags in.
- flags - New flags for the IDCMPFlags of the window. See
-     intuition/intuition.h for the available flags.
+     window - The window to change the IDCMPFlags in.
+     flags - New flags for the IDCMPFlags of the window. See
+         intuition/intuition.h for the available flags.
 
 
 Result
 ~~~~~~
 ::
 
- TRUE if the change could be made and FALSE otherwise.
+     TRUE if the change could be made and FALSE otherwise.
 
 
 Notes
 ~~~~~
 ::
 
- You can set up the Window->UserPort to any port of your own
- before you call ModifyIDCMP().  If IDCMPFlags is non-null but
- your UserPort is already initialized, Intuition will assume that
- it's a valid port with task and signal data preset and Intuition
- won't disturb your set-up at all, Intuition will just allocate
- the Intuition message port half of it.  The converse is true
- as well:  if UserPort is NULL when you call here with
- IDCMPFlags == NULL, Intuition will deallocate only the Intuition
- side of the port.
+     You can set up the Window->UserPort to any port of your own
+     before you call ModifyIDCMP().  If IDCMPFlags is non-null but
+     your UserPort is already initialized, Intuition will assume that
+     it's a valid port with task and signal data preset and Intuition
+     won't disturb your set-up at all, Intuition will just allocate
+     the Intuition message port half of it.  The converse is true
+     as well:  if UserPort is NULL when you call here with
+     IDCMPFlags == NULL, Intuition will deallocate only the Intuition
+     side of the port.
 
- This allows you to use a port that you already have allocated:
+     This allows you to use a port that you already have allocated:
 
- - OpenWindow() with IDCMPFlags equal to NULL (open no ports)
- - set the UserPort variable of your window to any valid port of your
-   own choosing
- - call ModifyIDCMP with IDCMPFlags set to what you want
- - then, to clean up later, set UserPort equal to NULL before calling
-   CloseWindow() (leave IDCMPFlags alone)  BUT FIRST: you must make
-   sure that no messages sent your window are queued at the port,
-   since they will be returned to the memory free pool.
+     - OpenWindow() with IDCMPFlags equal to NULL (open no ports)
+     - set the UserPort variable of your window to any valid port of your
+       own choosing
+     - call ModifyIDCMP with IDCMPFlags set to what you want
+     - then, to clean up later, set UserPort equal to NULL before calling
+       CloseWindow() (leave IDCMPFlags alone)  BUT FIRST: you must make
+       sure that no messages sent your window are queued at the port,
+       since they will be returned to the memory free pool.
 
- For an example of how to close a window with a shared IDCMP,
- see the description for CloseWindow().
+     For an example of how to close a window with a shared IDCMP,
+     see the description for CloseWindow().
 
- Intuition v50 features WA_UserPort tag, which allows to set
- the UserPort at OpenWindow stage. Please note that using this tag
- changes the behaviour of ModifyIDCMP() slightly. Creating/disposing
- message ports is now up to the app. ModifyIDCMP(win,0) still clears
- win->UserPort pointer, but the message port is NOT disposed - you
- need to store it and dispose yourself! Also calling
- ModifyIDCMP(win,someidcmp) on a window with NULL win->UserPort will
- NOT create a new port!
+     Intuition v50 features a WA_UserPort tag, which allows to set
+     the UserPort at OpenWindow stage. Please note that using this tag
+     changes the behaviour of ModifyIDCMP() slightly. Creating/disposing
+     message ports is now up to the app. ModifyIDCMP(win,0) still clears
+     win->UserPort pointer, but the message port is NOT disposed - you
+     need to store it and dispose yourself! Also calling
+     ModifyIDCMP(win,someidcmp) on a window with NULL win->UserPort will
+     NOT create a new port!
 
 
 
@@ -3294,39 +3314,39 @@ Function
 ~~~~~~~~
 ::
 
- Changes the values in the PropInfo-structure of a proportional
- gadget and refreshes the display.
+     Changes the values in the PropInfo-structure of a proportional
+     gadget and refreshes the display.
 
 
 Inputs
 ~~~~~~
 ::
 
- gadget - Must be a PROPGADGET
- window - The window which contains the gadget
- requester - If the gadget has GTYP_REQGADGET set, this must be
-     non-NULL.
- flags - New flags
- horizPot - New value for the HorizPot field of the PropInfo
- vertPot - New value for the VertPot field of the PropInfo
- horizBody - New value for the HorizBody field of the PropInfo
- vertBody - New value for the VertBody field of the PropInfo
+     gadget - Must be a PROPGADGET
+     window - The window which contains the gadget
+     requester - If the gadget has GTYP_REQGADGET set, this must be
+         non-NULL.
+     flags - New flags
+     horizPot - New value for the HorizPot field of the PropInfo
+     vertPot - New value for the VertPot field of the PropInfo
+     horizBody - New value for the HorizBody field of the PropInfo
+     vertBody - New value for the VertBody field of the PropInfo
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- This function causes all gadgets from this gadget to the end of
- the gadget list to be refreshed. If you want a better behaviour,
- use NewModifProp().
+     This function causes all gadgets from this gadget to the end of
+     the gadget list to be refreshed. If you want a better behaviour,
+     use NewModifProp().
 
 
 
@@ -3353,34 +3373,34 @@ Function
 ~~~~~~~~
 ::
 
- Move a screen by the specified amount in X/Y direction. The
- resolution is always the screen resolution.
+     Move a screen by the specified amount in X/Y direction. The
+     resolution is always the screen resolution.
 
 
 Inputs
 ~~~~~~
 ::
 
- screen - Move this screen
- dx - Move it by this amount along the X axis (> 0 to the right,
-     < 0 to the left).
- dy - Move it by this amount along the Y axis (> 0 down, < 0 up)
+     screen - Move this screen
+     dx - Move it by this amount along the X axis (> 0 to the right,
+         < 0 to the left).
+     dy - Move it by this amount along the Y axis (> 0 down, < 0 up)
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- Depending on other restrictions, the screen may not move as far
- as specified. It will move as far as possible and you can check
- LeftEdge and TopEdge of the screen to see how far it got.
+     Depending on other restrictions, the screen may not move as far
+     as specified. It will move as far as possible and you can check
+     LeftEdge and TopEdge of the screen to see how far it got.
 
 
 
@@ -3407,22 +3427,22 @@ Function
 ~~~~~~~~
 ::
 
- Change the position of a window on the screen.
+     Change the position of a window on the screen.
 
 
 Inputs
 ~~~~~~
 ::
 
- window - Move this window
- dx, dy - Move it that many pixels along the axis (right, down)
+     window - Move this window
+     dx, dy - Move it that many pixels along the axis (right, down)
 
 
 Result
 ~~~~~~
 ::
 
- The window will move when the next input event will be received.
+     The window will move when the next input event will be received.
 
 
 
@@ -3448,22 +3468,22 @@ Function
 ~~~~~~~~
 ::
 
- Arrange the relative depth of a window.
+     Arrange the relative depth of a window.
 
 
 Inputs
 ~~~~~~
 ::
 
- window - the window to reposition
- behindwindow - the window the other one will be brought in front of
+     window - the window to reposition
+     behindwindow - the window the other one will be brought in front of
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 
@@ -3496,47 +3516,47 @@ Function
 ~~~~~~~~
 ::
 
- Changes the values in the PropInfo-structure of a proportional
- gadget and refreshes the specified number of gadgets beginning
- at the proportional gadget. If numGad is 0 (zero), then no
- refreshing is done.
+     Changes the values in the PropInfo-structure of a proportional
+     gadget and refreshes the specified number of gadgets beginning
+     at the proportional gadget. If numGad is 0 (zero), then no
+     refreshing is done.
 
 
 Inputs
 ~~~~~~
 ::
 
- gadget - Must be a PROPGADGET.
- window - The window which contains the gadget
- requester - If the gadget has GTYP_REQGADGET set, this must be
-     non-NULL.
- flags - New flags
- horizPot - New value for the HorizPot field of the PropInfo
- vertPot - New value for the VertPot field of the PropInfo
- horizBody - New value for the HorizBody field of the PropInfo
- vertBody - New value for the VertBody field of the PropInfo
- numGad - How many gadgets to refresh. 0 means none (not even
-     the current gadget) and -1 means all of them.
+     gadget - Must be a PROPGADGET.
+     window - The window which contains the gadget
+     requester - If the gadget has GTYP_REQGADGET set, this must be
+         non-NULL.
+     flags - New flags
+     horizPot - New value for the HorizPot field of the PropInfo
+     vertPot - New value for the VertPot field of the PropInfo
+     horizBody - New value for the HorizBody field of the PropInfo
+     vertBody - New value for the VertBody field of the PropInfo
+     numGad - How many gadgets to refresh. 0 means none (not even
+         the current gadget) and -1 means all of them.
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- If NewModifyProp does not work for you, check if you
- really have a gadget with GTYP_PROPGADGET set. If you
- create a new gadget object from PROPGCLASS, you
- might very well get a GTYP_CUSTOMGADGET gadget.
- As a workaround, you might have to set the
- gadget type to GTYP_PROPGADGET manually during the
- call to NewModifyProp. Intuition does this, too.
+     If NewModifyProp does not work for you, check if you
+     really have a gadget with GTYP_PROPGADGET set. If you
+     create a new gadget object from PROPGCLASS, you
+     might very well get a GTYP_CUSTOMGADGET gadget.
+     As a workaround, you might have to set the
+     gadget type to GTYP_PROPGADGET manually during the
+     call to NewModifyProp. Intuition does this, too.
 
 
 
@@ -3568,46 +3588,46 @@ Function
 ~~~~~~~~
 ::
 
- Use this function to create BOOPSI objects (BOOPSI stands for
- "Basic Object Oriented Programming System for Intuition).
+     Use this function to create BOOPSI objects (BOOPSI stands for
+     "Basic Object Oriented Programming System for Intuition).
 
- You may specify a class either by it's name (if it's a public class)
- or by a pointer to its definition (if it's a private class). If
- classPtr is NULL, classID is used.
+     You may specify a class either by it's name (if it's a public class)
+     or by a pointer to its definition (if it's a private class). If
+     classPtr is NULL, classID is used.
 
 
 Inputs
 ~~~~~~
 ::
 
- classPtr - Pointer to a private class (or a public class if you
-     happen to have a pointer to it)
- classID - Name of a public class
- tagList - Initial attributes. Read the documentation of the class
-     carefully to find out which attributes must be specified
-     here and which can.
+     classPtr - Pointer to a private class (or a public class if you
+         happen to have a pointer to it)
+     classID - Name of a public class
+     tagList - Initial attributes. Read the documentation of the class
+         carefully to find out which attributes must be specified
+         here and which can.
 
 
 Result
 ~~~~~~
 ::
 
- A BOOPSI object which can be manipulated with general functions and
- which must be disposed with DisposeObject() later.
+     A BOOPSI object which can be manipulated with general functions and
+     which must be disposed with DisposeObject() later.
 
 
 Notes
 ~~~~~
 ::
 
- This functions send OM_NEW to the dispatcher of the class.
+     This functions send OM_NEW to the dispatcher of the class.
 
 
 
 See also
 ~~~~~~~~
 
-`DisposeObject()`_ `SetAttrsA()`_ `GetAttr()`_ `MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
+`DisposeObject()`_ `SetAttrsA()`_ `GetAttr()`_ `MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "Boopsi Class Reference" Document. 
 
 ----------
 
@@ -3651,7 +3671,7 @@ Result
 See also
 ~~~~~~~~
 
-`NewObjectA()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Document. 
+`NewObjectA()`_ "Basic Object-Oriented Programming System for Intuition" and "Boopsi Class Reference" Document. 
 
 ----------
 
@@ -3670,41 +3690,39 @@ Function
 ~~~~~~~~
 ::
 
-
- Gets the next public screen in the system; this allows visitor windows
- to jump among public screens in a cycle.
+     Gets the next public screen in the system; this allows visitor windows
+     to jump among public screens in a cycle.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- screen    --  Pointer to the public screen your window is open in or
-               NULL if you don't have a pointer to a public screen.
- namebuff  --  Pointer to a buffer with (at least) MAXPUBSCREENNAME+1
-               characters to put the name of the next public screen in.
+     screen   - Pointer to the public screen your window is open in or
+                NULL if you don't have a pointer to a public screen.
+     namebuff - Pointer to a buffer with (at least) MAXPUBSCREENNAME+1
+                characters to put the name of the next public screen in.
 
 
 Result
 ~~~~~~
 ::
 
- 
- Returns 'namebuff' or NULL if there are no public screens.
+     Returns 'namebuff' or NULL if there are no public screens.
 
 
 Notes
 ~~~~~
 ::
 
+     We cannot guarantee that the public screen, the name of which you got
+     by using this function, is available when you call for instance 
+     LockPubScreen(). Therefore you must be prepared to handle failure of
+     that kind of functions.
 
- We cannot guarantee that the public screen, the name of which you got
- by using this function, is available when you call for instance 
- LockPubScreen(). Therefore you must be prepared to handle failure of
- that kind of functions.
      This function may return the name of a public screen which is in
- private mode.
+     private mode.
+
      The cycle order is undefined, so draw no conclusions based on it!
 
 
@@ -3730,34 +3748,34 @@ Function
 ~~~~~~~~
 ::
 
- This function sets up a RastPort for exclusive use by custom
- gadget hook routines. Call this function each time a hook
- routine needs to render into the gadget and ReleaseGIRPort()
- immediately afterwards.
+     This function sets up a RastPort for exclusive use by custom
+     gadget hook routines. Call this function each time a hook
+     routine needs to render into the gadget and ReleaseGIRPort()
+     immediately afterwards.
 
 
 Inputs
 ~~~~~~
 ::
 
- gInfo - Pointer to GadgetInfo structure, as passed to each
- custom gadget hook function.
+     gInfo - Pointer to GadgetInfo structure, as passed to each
+         custom gadget hook function.
 
 
 Result
 ~~~~~~
 ::
 
- Pointer to a RastPort you can render to. NULL if you aren't
- allowed to render into this gadget.
+     Pointer to a RastPort you can render to. NULL if you aren't
+     allowed to render into this gadget.
 
 
 Notes
 ~~~~~
 ::
 
- If a routine passes a RastPort, eg. GM_RENDER, ObtainGIRPort()
- needn't be called.
+     If a routine passes a RastPort, eg. GM_RENDER, ObtainGIRPort()
+     needn't be called.
 
 
 
@@ -3784,32 +3802,32 @@ Function
 ~~~~~~~~
 ::
 
- Disable a gadget. It will appear ghosted.
+     Disable a gadget. It will appear ghosted.
 
 
 Inputs
 ~~~~~~
 ::
 
- gadget - The gadget to deactivate
- window - The window, the gadget is in
- requester - The requester, the gadget is in or NULL if the
-     gadget is in no requester
+     gadget - The gadget to deactivate
+     window - The window, the gadget is in
+     requester - The requester, the gadget is in or NULL if the
+         gadget is in no requester
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- This function will update the gadget (unlike the original function
- which would update all gadgets in the window).
+     This function will update the gadget (unlike the original function
+     which would update all gadgets in the window).
 
 
 
@@ -3835,23 +3853,23 @@ Function
 ~~~~~~~~
 ::
 
- Disable a whole menu, an item or a sub-item depending on
- the menunumber.
+     Disable a whole menu, an item or a sub-item depending on
+     the menunumber.
 
 
 Inputs
 ~~~~~~
 ::
 
- window - The window, the menu belongs to
- menunumber - The packed information on what piece of menu to disable
+     window - The window, the menu belongs to
+     menunumber - The packed information on what piece of menu to disable
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 
@@ -3878,32 +3896,32 @@ Function
 ~~~~~~~~
 ::
 
- Enable a gadget. It will appear normal.
+     Enable a gadget. It will appear normal.
 
 
 Inputs
 ~~~~~~
 ::
 
- gadget - The gadget to deactivate
- window - The window, the gadget is in
- requester - The requester, the gadget is in or NULL if the
-     gadget is in no requester
+     gadget - The gadget to deactivate
+     window - The window, the gadget is in
+     requester - The requester, the gadget is in or NULL if the
+         gadget is in no requester
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- This function will update the gadget (unlike the original function
- which would update all gadgets in the window).
+     This function will update the gadget (unlike the original function
+     which would update all gadgets in the window).
 
 
 
@@ -3924,23 +3942,23 @@ Function
 ~~~~~~~~
 ::
 
- Enable a whole menu, an item or a sub-item depending on
- the menunumber.
+     Enable a whole menu, an item or a sub-item depending on
+     the menunumber.
 
 
 Inputs
 ~~~~~~
 ::
 
- window - The window, the menu belongs to
- menunumber - The packed information on what piece of menu to enable
+     window - The window, the menu belongs to
+     menunumber - The packed information on what piece of menu to enable
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 
@@ -3983,16 +4001,16 @@ Function
 ~~~~~~~~
 ::
 
- Open a screen
- 
+     Open a screen
+
 
 Inputs
 ~~~~~~
 ::
 
- newScreen - struct with screen specification. This is for compatibility
-             with OpenScreen() and usually set to NULL.
- tagList   - tags which specify the screen
+     newScreen - struct with screen specification. This is for compatibility
+         with OpenScreen() and usually set to NULL.
+     tagList   - tags which specify the screen
 
 
 Tags
@@ -4123,9 +4141,9 @@ Tags
 
          Values:
              0 - Fixed-width font (old-style)
-             1 - Font which is set by font preferences editor. Note: windows opened
-                 on this screen will still have the rastport initialized with the
-                 fixed-width font (sysfont 0).
+             1 - Font which is set by font preferences editor. Note:
+                 windows opened on this screen will still have the rastport
+                 initialized with the fixed-width font (sysfont 0).
 
          Default: 0
 
@@ -4156,8 +4174,9 @@ Tags
          Default: FALSE
 
      SA_SharePens (BOOL)
-         Per default, Intuition obtains the pens of a public screen with PENF_EXCLUSIVE.
-         Set this to TRUE to instruct Intuition to leave the pens unallocated.
+         Per default, Intuition obtains the pens of a public screen with
+         PENF_EXCLUSIVE. Set this to TRUE to instruct Intuition to leave
+         the pens unallocated.
          Default: FALSE
 
      SA_Colors32 (ULONG *)
@@ -4191,21 +4210,21 @@ Result
 ~~~~~~
 ::
 
- Pointer to screen or NULL if opening fails.
- 
+     Pointer to screen or NULL if opening fails.
+
 
 Notes
 ~~~~~
 ::
 
- If you need a pointer to the screen's bitmap use Screen->RastPort.BitMap
- instead of &Screen->BitMap.
+     If you need a pointer to the screen's bitmap use
+     Screen->RastPort.BitMap instead of &Screen->BitMap.
 
- If you want DOS requester to appear on your screen you have to do:
-     process = FindTask(0);
-     process->pr_WindowPtr = (APTR) window;
- The old value of pr->WindowPtr must be reset before you quit your
- program.
+     If you want DOS requester to appear on your screen you have to do:
+         process = FindTask(0);
+         process->pr_WindowPtr = (APTR) window;
+     The old value of pr->WindowPtr must be reset before you quit your
+     program.
 
 
 
@@ -4225,24 +4244,23 @@ Function
 ~~~~~~~~
 ::
 
- Opens a new window with the characteristics specified in
- newWindow.
+     Opens a new window with the characteristics specified in
+     newWindow.
 
 
 Inputs
 ~~~~~~
 ::
 
- newWindow - How you would like your new window.
+     newWindow - How you would like your new window.
 
 
 Result
 ~~~~~~
 ::
 
- A pointer to the new window or NULL if it couldn't be
- opened. Reasons for this might be lack of memory or illegal
- attributes.
+     A pointer to the new window or NULL if it couldn't be opened. Reasons
+     for this might be lack of memory or illegal attributes.
 
 
 
@@ -4299,25 +4317,25 @@ Tags
      WA_Flags
          Initial values for various boolean window properties. Can be
          overwritten by WA_... tags.
-     
+
      WA_Gadgets (struct Gadget *)
          Pointer to a linked list of gadgets
-     
+
      WA_Title (STRPTR) - Window title string
-     
+
      WA_CustomScreen (struct Screen *)
          Open window on the given screen
-     
+
      WA_SuperBitMap (struct BitMap *)
          Create window with superbitmap refreshing
-     
+
      WA_MinWidth           - Minimum width of the window
      WA_MinHeight          - Minimum height of the window
      WA_MaxWidth           - Maximum width of the window
      WA_MaxHeight          - Maximum height of the window
          Use 0 to keep the current size as limit. The maximums can be
          set to -1 or ~0 to limit size only to screen dimension.
-     
+
      WA_SizeGadget (BOOL)  - Make window resizeable
      WA_DragBar (BOOL)     - Make window dragable
      WA_DepthGadget (BOOL) - Add a depth gadget
@@ -4325,38 +4343,38 @@ Tags
 
      WA_Backdrop (BOOL)
          Create a window which is placed behind other windows
-     
+
      WA_ReportMouse (BOOL) - Store mouse position in struct Window
-     
+
      WA_NoCareRefresh (BOOL)
          Use this if you don't want to be responsible for calling
          BeginRefresh()/EndRefresh().
-     
+
      WA_Borderless (BOOL) - Create borderless window
-     
+
      WA_Activate (BOOL)
          Make this window the active one, i.e. it
          receives the input from mouse and keyboard.
-     
+
      WA_RMBTrap (BOOL)
          Set to TRUE if you want to get button events
          events for the right mouse button.
-     
+
      WA_SimpleRefresh (BOOL)
          Enable simplerefresh mode. Only specify if TRUE.
-     
+
      WA_SmartRefresh (BOOL)
          Enable smartrefresh mode. Only specify if TRUE.
-     
+
      WA_SizeBRight (BOOL)    - Place size gadget in right window border
      WA_SizeBBottom (BOOL)   - Place size gadget in bottom window border
-     
+
      WA_GimmeZeroZero (BOOL)
-         Create a GimmeZeroZero window. The window borders have their own layer,
-         so you can't overdraw it. The coordinate 0,0 is related to the inner
-         area of the window. This makes handling of windows easier, but it
-         slows down the system.
-     
+         Create a GimmeZeroZero window. The window borders have their own
+         layer, so you can't overdraw it. The coordinate 0,0 is related to
+         the inner area of the window. This makes handling of windows
+         easier, but it slows down the system.
+
      WA_NewLookMenus (BOOL)
          Use DrawInfo colors for rendering the menu bar.
 
@@ -4373,7 +4391,7 @@ Tags
      WA_InnerWidth
      WA_InnerHeight
          Dimensions of the interior region of the window.
-         
+
          Note that this restricts border gadgets:
          - GACT_LEFTBORDER gadgets can't be GFLG_RELWIDTH if
            WA_InnerWidth is used.
@@ -4475,14 +4493,13 @@ Tags
      WA_ShapeHook (struct Hook *)
 
 
-
 Result
 ~~~~~~
 ::
 
- A pointer to the new window or NULL if it couldn't be
- opened. Reasons for this might be lack of memory or illegal
- attributes.
+     A pointer to the new window or NULL if it couldn't be
+     opened. Reasons for this might be lack of memory or illegal
+     attributes.
 
 
 
@@ -4501,25 +4518,24 @@ Function
 ~~~~~~~~
 ::
 
- Attempt to open the Workbench screen.
+     Attempt to open the Workbench screen.
 
 
 Inputs
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Result
 ~~~~~~
 ::
 
- Tries to (re)open WorkBench screen. If successful return value
- is a pointer to the screen structure, which shouldn't be used,
- because other programs may close the WorkBench and make the
- pointer invalid.
- If this function fails the return value is NULL.
+     Tries to (re)open WorkBench screen. If successful return value
+     is a pointer to the screen structure, which shouldn't be used,
+     because other programs may close the WorkBench and make the
+     pointer invalid. If this function fails the return value is NULL.
 
 
 
@@ -4545,24 +4561,24 @@ Function
 ~~~~~~~~
 ::
 
- Check whether a point is inside an image.
+     Check whether a point is inside an image.
 
 
 Inputs
 ~~~~~~
 ::
 
- point - This are the packed point coordinates. The X coordinate
-     in in the upper 16 bits and the Y coordinate is in the
-     lower 16 bits. The coordinates are signed.
- image - Check against this image.
+     point - This are the packed point coordinates. The X coordinate
+         in in the upper 16 bits and the Y coordinate is in the
+         lower 16 bits. The coordinates are signed.
+     image - Check against this image.
 
 
 Result
 ~~~~~~
 ::
 
- TRUE is the point is inside the image, FALSE otherwise.
+     TRUE if the point is inside the image, FALSE otherwise.
 
 
 
@@ -4585,25 +4601,25 @@ Function
 ~~~~~~~~
 ::
 
- Render an IntuiText in the specified RastPort with the
- specified offset.
+     Render an IntuiText in the specified RastPort with the
+     specified offset.
 
 
 Inputs
 ~~~~~~
 ::
 
- rp - Draw into this RastPort
- iText - Render this text
- leftOffset, topOffset - Starting-Point. All coordinates in the
-     IntuiText structures are relative to this point.
+     rp - Draw into this RastPort
+     iText - Render this text
+     leftOffset, topOffset - Starting-Point. All coordinates in the
+         IntuiText structures are relative to this point.
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 
@@ -4624,28 +4640,25 @@ Function
 ~~~~~~~~
 ::
 
-
- Change the status flags for a given public screen. 
+     Change the status flags for a given public screen. 
 
 
 Inputs
 ~~~~~~
 ::
 
-
- Scr          --  The screen the flags of which to change.
- StatusFlags  --  The new values for the flags, see <intuition/screens.h>
-                  for further information on the flag bits.
+     Scr         - The screen the flags of which to change.
+     StatusFlags - The new values for the flags, see <intuition/screens.h>
+                   for further information on the flag bits.
 
 
 Result
 ~~~~~~
 ::
 
-
- Clears bit 0 if the screen wasn't public or if it was impossible
- to make private (PSNF_PRIVATE) as visitor windows are open on it.
- The other bits in the return value are reserved for future use.
+     Clears bit 0 if the screen wasn't public or if it was impossible
+     to make private (PSNF_PRIVATE) as visitor windows are open on it.
+     The other bits in the return value are reserved for future use.
 
 
 
@@ -4674,14 +4687,14 @@ Function
 
      Query overscan dimensions. The resulting rectangle can be used
      with SA_DisplayID.
-     
+
      Overscan types:
      OSCAN_TEXT: completely visible. Left/Top is always 0,0.
      OSCAN_STANDARD: visible bounds of monitor. Left/Top may be negative.
      OSCAN_MAX: The largest displayable region.
      OSCAN_VIDEO: The absolute largest region that the graphics.library
-       can display.  This region must be used as-is.
-     
+         can display.  This region must be used as-is.
+
 
 Inputs
 ~~~~~~
@@ -4690,7 +4703,7 @@ Inputs
      displayid - ID to be queried
      rect      - Pointer to struct Rectangle to store result
      oscantype - OSCAN_TEXT, OSCAN_STANDARD, OSCAN_MAX, OSCAN_VIDEO
-     
+
 
 Result
 ~~~~~~
@@ -4719,33 +4732,32 @@ Function
 ~~~~~~~~
 ::
 
- Refreshes all gadgets starting at the specified gadget.
+     Refreshes all gadgets starting at the specified gadget.
 
 
 Inputs
 ~~~~~~
 ::
 
- gadgets - The first gadget to be refreshed
- window - The gadget must be in this window
- requester - If any gadget has GTYP_REQGADGET set, this must
-     point to a valid Requester. Otherwise the value is
-     ignored.
+     gadgets - The first gadget to be refreshed
+     window - The gadget must be in this window
+     requester - If any gadget has GTYP_REQGADGET set, this must
+         point to a valid Requester. Otherwise the value is ignored.
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Example
 ~~~~~~~
 ::
 
- // Refresh all gadgets of a window
- RefreshGadgets (win->FirstGadget, win, NULL);
+     // Refresh all gadgets of a window
+     RefreshGadgets (win->FirstGadget, win, NULL);
 
 
 
@@ -4773,49 +4785,49 @@ Function
 ~~~~~~~~
 ::
 
- Refresh (draw anew) the specified number of gadgets starting
- at the specified gadget.
+     Refresh (draw anew) the specified number of gadgets starting
+     at the specified gadget.
 
 
 Inputs
 ~~~~~~
 ::
 
- gadgets - This is the first gadget which will be refreshed.
- window - The window which contains the gadget
- requester - If the gadget has GTYP_REQGADGET set, this must be
-     a pointer to a Requester; otherwise the value is
-     ignored.
- numGad - How many gadgets should be refreshed. The value
-     may range from 0 to MAXLONG. If there are less gadgets
-     in the list than numGad, only the gadgets in the
-     list will be refreshed.
+     gadgets - This is the first gadget which will be refreshed.
+     window - The window which contains the gadget
+     requester - If the gadget has GTYP_REQGADGET set, this must be
+         a pointer to a Requester; otherwise the value is
+         ignored.
+     numGad - How many gadgets should be refreshed. The value
+         may range from 0 to MAXLONG. If there are less gadgets
+         in the list than numGad, only the gadgets in the
+         list will be refreshed.
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Example
 ~~~~~~~
 ::
 
- // Refresh one gadget
- RefreshGList (&gadget, win, NULL, 1);
+     // Refresh one gadget
+     RefreshGList (&gadget, win, NULL, 1);
 
- // Refresh all gadgets in the window
- RefreshGList (win->FirstGadget, win, NULL, -1L);
+     // Refresh all gadgets in the window
+     RefreshGList (win->FirstGadget, win, NULL, -1L);
 
 
 Notes
 ~~~~~
 ::
 
- This function *must not* be called inside a
- BeginRefresh()/EndRefresh() pair.
+     This function *must not* be called inside a
+     BeginRefresh()/EndRefresh() pair.
 
 
 
@@ -4862,21 +4874,21 @@ Function
 ~~~~~~~~
 ::
 
- Release a RastPort previously obtained by ObtainGIRPort().
+     Release a RastPort previously obtained by ObtainGIRPort().
 
 
 Inputs
 ~~~~~~
 ::
 
- rp - The result of ObtainGIRPort()
+     rp - The result of ObtainGIRPort()
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 
@@ -4895,21 +4907,21 @@ Function
 ~~~~~~~~
 ::
 
- Remake the entire Intuition display.
- 
+     Remake the entire Intuition display.
+
 
 Inputs
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Result
 ~~~~~~
 ::
 
- Zero for success, non-zero for failure.
+     Zero for success, non-zero for failure.
 
 
 
@@ -4934,30 +4946,30 @@ Function
 ~~~~~~~~
 ::
 
- Makes a public class inaccessible. This function may be called
- several times on the same class and even if the class never was
- in the public list.
+     Makes a public class inaccessible. This function may be called
+     several times on the same class and even if the class never was
+     in the public list.
 
 
 Inputs
 ~~~~~~
 ::
 
- classPtr - Pointer to the result of MakeClass(). May be NULL.
+     classPtr - Pointer to the result of MakeClass(). May be NULL.
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 
 See also
 ~~~~~~~~
 
-`MakeClass()`_ `FreeClass()`_ `AddClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
+`MakeClass()`_ `FreeClass()`_ `AddClass()`_ "Basic Object-Oriented Programming System for Intuition" and "Boopsi Class Reference" Document. 
 
 ----------
 
@@ -4976,23 +4988,23 @@ Function
 ~~~~~~~~
 ::
 
- Remove a gadget from the list of gadgets in a window.
+     Remove a gadget from the list of gadgets in a window.
 
 
 Inputs
 ~~~~~~
 ::
 
- window - Remove the gadget from this list.
- gadget - Remove this gadget.
+     window - Remove the gadget from this list.
+     gadget - Remove this gadget.
 
 
 Result
 ~~~~~~
 ::
 
- The position of the gadget or 0xFFFF if the gadget doesn't
- exist or the gadget is the 65535th of the list.
+     The position of the gadget or 0xFFFF if the gadget doesn't
+     exist or the gadget is the 65535th of the list.
 
 
 
@@ -5015,7 +5027,7 @@ Function
 ::
 
      Remove sublist of gadgets from a window.
-     
+
 
 Inputs
 ~~~~~~
@@ -5102,22 +5114,22 @@ Function
 ~~~~~~~~
 ::
 
- Add a requester to specified window and display it.
+     Add a requester to specified window and display it.
 
 
 Inputs
 ~~~~~~
 ::
 
- requester - The requester to be displayed
- window - The window to which the requester belongs
+     requester - The requester to be displayed
+     window - The window to which the requester belongs
 
 
 Result
 ~~~~~~
 ::
 
- TRUE if requester was opened successfully, FALSE else.
+     TRUE if requester was opened successfully, FALSE else.
 
 
 
@@ -5143,26 +5155,26 @@ Function
 ~~~~~~~~
 ::
 
- Works like a "fast" SetMenuStrip() as it doesn't check Menu or
- calculate internal values before attaching the Menu to the Window.
- Use this function only if the Menu has been added before by
- SetMenuStrip() and you changed nothing in the struct except
- CHECKED and ITEMENABLED flags.
+     Works like a "fast" SetMenuStrip() as it doesn't check Menu or
+     calculate internal values before attaching the Menu to the Window.
+     Use this function only if the Menu has been added before by
+     SetMenuStrip() and you changed nothing in the struct except
+     CHECKED and ITEMENABLED flags.
 
 
 Inputs
 ~~~~~~
 ::
 
- window - The window to add the MenuStrip to
- menu   - The menu to be added to the window above.
+     window - The window to add the MenuStrip to
+     menu   - The menu to be added to the window above.
 
 
 Result
 ~~~~~~
 ::
 
- Always TRUE.
+     Always TRUE.
 
 
 Notes
@@ -5170,9 +5182,9 @@ Notes
 ::
 
      Yes, I do repeat it again:
- Use this function only if the Menu has been added before by
- SetMenuStrip() and you changed nothing in the struct except
- CHECKED and ITEMENABLED flags.
+     Use this function only if the Menu has been added before by
+     SetMenuStrip() and you changed nothing in the struct except
+     CHECKED and ITEMENABLED flags.
 
 
 
@@ -5196,21 +5208,21 @@ Function
 ~~~~~~~~
 ::
 
- Check and update, ie. redisplay the whole Intuition display.
+     Check and update, i.e. redisplay the whole Intuition display.
 
 
 Inputs
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Result
 ~~~~~~
 ::
 
- Zero for success, non-zero for failure.
+     Zero for success, non-zero for failure.
 
 
 
@@ -5237,61 +5249,60 @@ Function
 ~~~~~~~~
 ::
 
- Move the specified screen to the front or back, based on passed flag.
- If the screen is in a group, the screen will change its position in
- the group only. If the screen is the parent of a group, the whole
- group will be moved.
+     Move the specified screen to the front or back, based on passed flag.
+     If the screen is in a group, the screen will change its position in
+     the group only. If the screen is the parent of a group, the whole
+     group will be moved.
 
 
 Inputs
 ~~~~~~
 ::
 
- screen - Move this screen.
- flags - SDEPTH_TOFRONT or SDEPTH_TOBACK for bringing the screen to
-     front or back.
-     If the screen is a child of another screen you may specify
-     SDEPTH_INFAMILY to move the screen within the family. If
-     not specified the whole family will move.
- reserved - For future use. MUST be NULL by now.
+     screen - Move this screen.
+     flags - SDEPTH_TOFRONT or SDEPTH_TOBACK for bringing the screen to
+         front or back.
+         If the screen is a child of another screen you may specify
+         SDEPTH_INFAMILY to move the screen within the family. If
+         not specified the whole family will move.
+     reserved - For future use. MUST be NULL by now.
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- Only the owner of the screen should use SDEPTH_INFAMILY.
- Intentionally commodities should not change the internal arrangement
- of screen families.
+     Only the owner of the screen should use SDEPTH_INFAMILY.
+     Intentionally commodities should not change the internal arrangement
+     of screen families.
 
 
 Bugs
 ~~~~
 ::
 
+     I am not sure, if it is enough to just send a SNOTIFY message to one 
+     screen. I would suggest, the former FirstScreen gets a SDEPTH_TOBACK 
+     message and the new FirstScreen gets a SDEPTH_TOFRONT message.
+     Currently only the screen supplied with ScreenDepth gets a message.
 
- I am not sure, if it is enough, to just send a SNOTIFY message to one 
- screen.  I would suggest, the former FirstScreen gets a SDEPTH_TOBACK 
- message and the new FirstScreen gets a SDEPTH_TOFRONT message.
- Currently only the screen supplied with ScreenDepth gets a message.
+     But those messages need to be sent in front of the actual
+     screen depth change because of the SNOTIFY_WAIT_REPLY-flag must be
+     able to block the action. But we only know after int_screendepth(), 
+     if there was a change and which change took place. 
 
- But those messages need to be sent in front of the actual
- screen depth change because of the SNOTIFY_WAIT_REPLY-flag must be
- able to block the action. But we only know after int_screendepth(), 
- if there was a change and which change took place. 
+     So I leave it, as it is. This way SNOTIFY_WAIT_REPLY should work 
+     at least. Is there something written in the AutoDocs, how this has 
+     to be done (each screen gets a message)?
 
- So I leave it, as it is. This way SNOTIFY_WAIT_REPLY should work 
- at least. Is there something written in the AutoDocs, how this has 
- to be done (each screen gets a message)?
-
- (o1i)
+     (o1i)
 
 
 
@@ -5321,47 +5332,47 @@ Function
 ~~~~~~~~
 ::
 
- Move a screen to the specified position or by the specified
- increment. Resolution is always the screen resolution.
- If this move would be out of bounds, the move is clipped at
- these boundaries. The real new position can be obtained from
- LeftEdge and TopEdge of the screen's structure.
+     Move a screen to the specified position or by the specified
+     increment. Resolution is always the screen resolution.
+     If this move would be out of bounds, the move is clipped at
+     these boundaries. The real new position can be obtained from
+     LeftEdge and TopEdge of the screen's structure.
 
 
 Inputs
 ~~~~~~
 ::
 
- screen - Move this screen
- flags - One of SPOS_RELATIVE, SPOS_ABSOLUTE or SPOS_MAKEVISIBLE
-     Use SPOS_FORCEDRAG to override non-movable screens ie. screens
-     opened with {SA_Draggable,FLASE} attribute.
+     screen - Move this screen
+     flags - One of SPOS_RELATIVE, SPOS_ABSOLUTE or SPOS_MAKEVISIBLE
+         Use SPOS_FORCEDRAG to override non-movable screens ie. screens
+         opened with {SA_Draggable,FLASE} attribute.
 
-     SPOS_RELATIVE (or NULL) moves the screen by a delta of x1,y1.
+         SPOS_RELATIVE (or NULL) moves the screen by a delta of x1,y1.
 
-     SPOS_ABSOLUTE moves the screen to the specified position x1,y1.
+         SPOS_ABSOLUTE moves the screen to the specified position x1,y1.
 
-     SPOS_MAKEVISIBLE moves an oversized scrolling screen to make
-     the rectangle (x1,y1),(x2,y2) visible
- x1,y1 - Absolute (SPOS_ABSOLUTE) or relative (SPOS_RELATIVE) coordinate
-     to move screen, or upper-left corner of rectangle
-     (SPOS_MAKEVISIBLE)
- x2,y2 - Ignored with SPOS_ABSOLUTE and SPOS_RELATIVE.
-     Lower-right corner of rectangle with SPOS_MAKEVISIBLE.
+         SPOS_MAKEVISIBLE moves an oversized scrolling screen to make
+         the rectangle (x1,y1),(x2,y2) visible
+     x1,y1 - Absolute (SPOS_ABSOLUTE) or relative (SPOS_RELATIVE) coordinate
+         to move screen, or upper-left corner of rectangle
+         (SPOS_MAKEVISIBLE)
+     x2,y2 - Ignored with SPOS_ABSOLUTE and SPOS_RELATIVE.
+         Lower-right corner of rectangle with SPOS_MAKEVISIBLE.
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- SPOS_FORCEDRAG should only be used by the owner of the screen.
+     SPOS_FORCEDRAG should only be used by the owner of the screen.
 
 
 
@@ -5386,27 +5397,27 @@ Function
 ~~~~~~~~
 ::
 
- Move a screen behind all other screens. If the screen is in a
- group, the screen will be moved behind all other screens in the
- group only. If the screen is the parent of a group, the whole
- group will be moved in the back.
+     Move a screen behind all other screens. If the screen is in a
+     group, the screen will be moved behind all other screens in the
+     group only. If the screen is the parent of a group, the whole
+     group will be moved in the back.
 
 
 Inputs
 ~~~~~~
 ::
 
- screen - Move this screen.
+     screen - Move this screen.
 
 
 Result
 ~~~~~~
 ::
 
- You will see the screen move behind all other screens. If some
- screen before this screen occupies the whole display, then it
- will disappear completely. If all other screens occupy only part
- of the display, the screen will appear behind the screens.
+     You will see the screen move behind all other screens. If some
+     screen before this screen occupies the whole display, then it
+     will disappear completely. If all other screens occupy only part
+     of the display, the screen will appear behind the screens.
 
 
 
@@ -5431,24 +5442,24 @@ Function
 ~~~~~~~~
 ::
 
- Move a screen in front of all other screens. If the screen is in a
- group, the screen will be moved in front of all other screens in the
- group only. If the screen is the parent of a group, the whole
- group will be moved in the front.
+     Move a screen in front of all other screens. If the screen is in a
+     group, the screen will be moved in front of all other screens in the
+     group only. If the screen is the parent of a group, the whole
+     group will be moved in the front.
 
 
 Inputs
 ~~~~~~
 ::
 
- screen - Move this screen.
+     screen - Move this screen.
 
 
 Result
 ~~~~~~
 ::
 
- You will see the screen move in front of all other screens.
+     You will see the screen move in front of all other screens.
 
 
 
@@ -5618,7 +5629,7 @@ Notes
 See also
 ~~~~~~~~
 
-`NewObjectA()`_ `DisposeObject()`_ `GetAttr()`_ `MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Document. 
+`NewObjectA()`_ `DisposeObject()`_ `GetAttr()`_ `MakeClass()`_ "Basic Object-Oriented Programming System for Intuition" and "Boopsi Class Reference" Document. 
 
 ----------
 
@@ -5636,20 +5647,25 @@ Function
 ~~~~~~~~
 ::
 
-
- Specifies the default public screen for visitor windows to open up on.
+     Specifies the default public screen for visitor windows to open up on.
      The screen is used when a requested public screen is not available
- and the FALLBACK option is enabled or when the visitor window asks for
- the default public screen.
+     and the FALLBACK option is enabled or when the visitor window asks for
+     the default public screen.
 
 
 Inputs
 ~~~~~~
 ::
 
+     name - The name of the public screen that should be used as default,
+            or NULL to specify the Workbench screen.
 
- name  --  The name of the public screen that should be used as default,
-           or NULL to specify the Workbench screen.
+
+Result
+~~~~~~
+::
+
+     None.
 
 
 
@@ -5675,39 +5691,38 @@ Function
 ~~~~~~~~
 ::
 
- Try to set the DMRequest of a window.
- A DMRequest is a requester that appears if the user double-clicks
- with the menu button.
- The new DMRequest will only be set if the old DMRequest is not in use.
- The official way to change the DMRequest is to call ClearDMRequest()
- until it returns TRUE and then call SetDMRequest().
+     Try to set the DMRequest of a window. A DMRequest is a requester that
+     appears if the user double-clicks with the menu button.
 
+     The new DMRequest will only be set if the old DMRequest is not in use.
+     The official way to change the DMRequest is to call ClearDMRequest()
+     until it returns TRUE and then call SetDMRequest().
 
 
 Inputs
 ~~~~~~
 ::
 
- window - The window from which the DMRequest is to be set
- dmrequest - Pointer to the requester
+     window - The window from which the DMRequest is to be set
+     dmrequest - Pointer to the requester
 
 
 Result
 ~~~~~~
 ::
 
- TRUE if old DMRequest was not in use and therefore changed to
- the new one, or FALSE if the old DMRequest was in use and could
- not be set to the new one.
+     TRUE if old DMRequest was not in use and therefore changed to
+     the new one, or FALSE if the old DMRequest was in use and could
+     not be set to the new one.
 
 
 Notes
 ~~~~~
 ::
 
- If the DMRequest has the POINTREL flag set, the DMR will show up
- as close to the pointer as possible. The RelLeft/Top fields are
- used to fine-tune the positioning.
+     If the DMRequest has the POINTREL flag set, the DMR will show up
+     as close to the pointer as possible. The RelLeft/Top fields are
+     used to fine-tune the positioning.
 
 
 
@@ -5732,8 +5747,8 @@ Function
 ~~~~~~~~
 ::
 
- Sets the global (default) string editing hook of intuition
- string gadgets.
+     Sets the global (default) string editing hook of intuition
+     string gadgets.
 
 
 Inputs
@@ -5776,41 +5791,41 @@ Function
 ~~~~~~~~
 ::
 
- Sets some tags and provides gadget specific data. Prefer this to
- SetAttrsA(), if you are manipulating gadgets.
+     Sets some tags and provides gadget specific data. Prefer this to
+     SetAttrsA(), if you are manipulating gadgets.
 
 
 Inputs
 ~~~~~~
 ::
 
- gadget - Change the attributes of this gadget
- window - The window of the gadget
- requester - The requester of the gadget (or NULL)
- tagList - This is a list of attribute/value-pairs
+     gadget - Change the attributes of this gadget
+     window - The window of the gadget
+     requester - The requester of the gadget (or NULL)
+     tagList - This is a list of attribute/value-pairs
 
 
 Result
 ~~~~~~
 ::
 
- Depends in the class. For gadgets, this value is non-zero if
- they need redrawing after the values have changed. Other classes
- will define other return values.
+     Depends in the class. For gadgets, this value is non-zero if
+     they need redrawing after the values have changed. Other classes
+     will define other return values.
 
 
 Notes
 ~~~~~
 ::
 
- This function sends OM_SET to the gadget object.
+     This function sends OM_SET to the gadget object.
 
 
 
 See also
 ~~~~~~~~
 
-`NewObjectA()`_ `SetAttrsA()`_ `GetAttr()`_ `DoGadgetMethodA()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
+`NewObjectA()`_ `SetAttrsA()`_ `GetAttr()`_ `DoGadgetMethodA()`_ "Basic Object-Oriented Programming System for Intuition" and "Boopsi Class Reference" Document. 
 
 ----------
 
@@ -5830,14 +5845,14 @@ Result
 ~~~~~~
 ::
 
- Depending on the operation
+     Depending on the operation.
 
 
 Notes
 ~~~~~
 ::
 
-     This function is currently considered private
+     This function is currently considered private.
 
 
 
@@ -5858,34 +5873,34 @@ Function
 ~~~~~~~~
 ::
 
- This function adds a MenuStrip to the Window, which can be invoked
- by the user after this call by pressing the right mouse button.
- Menus with no MenuItems will not be attached.
+     This function adds a MenuStrip to the Window, which can be invoked
+     by the user after this call by pressing the right mouse button.
+     Menus with no MenuItems will not be attached.
 
 
 Inputs
 ~~~~~~
 ::
 
- window - The window to add the MenuStrip to
- menu   - The menu to be added to the window above.
+     window - The window to add the MenuStrip to
+     menu   - The menu to be added to the window above.
 
 
 Result
 ~~~~~~
 ::
 
- TRUE if all menus have at least one menuitem.
+     TRUE if all menus have at least one menuitem.
 
 
 Notes
 ~~~~~
 ::
 
- This function calculates internal values and is therfore the
- official way to add a new MenuStrip to Window.
- Always do a ClearMenuStrip() before closing the Window or adding
- another MenuStrip to the Window.
+     This function calculates internal values and is therfore the
+     official way to add a new MenuStrip to Window.
+     Always do a ClearMenuStrip() before closing the Window or adding
+     another MenuStrip to the Window.
 
 
 
@@ -5911,32 +5926,33 @@ Function
 ~~~~~~~~
 ::
 
- Change the number of mouse messages for your window to be allowed
- to be outstanding.
+     Change the number of mouse messages for your window to be allowed
+     to be outstanding.
 
 
 Inputs
 ~~~~~~
 ::
 
- window - the window
- queuelength - the number of mouse messages to be allowed to be
-     outstanding
+     window - the window
+     queuelength - the number of mouse messages to be allowed to be
+         outstanding
 
 
 Result
 ~~~~~~
 ::
 
- Returns -1 if the window is unknown otherwise the old value of the
- queuelength is returned.
+     Returns -1 if the window is unknown otherwise the old value of the
+     queuelength is returned.
 
 
 Notes
 ~~~~~
 ::
 
- There should be a function for changing the repeat key queue limit, too.
+     There should be a function for changing the repeat key queue limit
+     too.
 
 
 
@@ -5966,19 +5982,19 @@ Function
 ~~~~~~~~
 ::
 
- Changes the shape of the mouse pointer for a given window.
+     Changes the shape of the mouse pointer for a given window.
 
 
 Inputs
 ~~~~~~
 ::
 
- window - Change it for this window
- pointer - The shape of the new pointer as a bitmap with depth 2.
- height - Height of the pointer
- width - Width of the pointer (must be <= 16)
- xOffset, yOffset - The offset of the "hot spot" relative to the
-     left, top edge of the bitmap.
+     window - Change it for this window
+     pointer - The shape of the new pointer as a bitmap with depth 2.
+     height - Height of the pointer
+     width - Width of the pointer (must be <= 16)
+     xOffset, yOffset - The offset of the "hot spot" relative to the
+         left, top edge of the bitmap.
 
 
 
@@ -6005,25 +6021,25 @@ Function
 ~~~~~~~~
 ::
 
- Sets the current Preferences structure.
+     Sets the current Preferences structure.
 
 
 Inputs
 ~~~~~~
 ::
 
- prefbuffer - The buffer which contains your settings for the
-     preferences.
- size - The number of bytes of the buffer you want to be copied.
- inform - If TRUE, all windows with IDCMP_NEWPREFS IDCMPFlags set
-     get an IDCMP_NEWPREFS message.
+     prefbuffer - The buffer which contains your settings for the
+         preferences.
+     size - The number of bytes of the buffer you want to be copied.
+     inform - If TRUE, all windows with IDCMP_NEWPREFS IDCMPFlags set
+         get an IDCMP_NEWPREFS message.
 
 
 Result
 ~~~~~~
 ::
 
- Returns your parameter buffer.
+     Returns your parameter buffer.
 
 
 
@@ -6048,28 +6064,25 @@ Function
 ~~~~~~~~
 ::
 
-
- Specify global intuition public screen handling.
+     Specify global intuition public screen handling.
 
 
 Inputs
 ~~~~~~
 ::
 
-
- modes  --  The new set of flags to consider. Currently defined flags are:
-            SHANGHAI       Workbench windows are opened on the default
-               public screen.
-        POPPUBSCREEN   When a visitor window opens on a public screen,
-               the screen is brought to front.
+     modes - The new set of flags to consider. Currently defined flags are:
+        SHANGHAI: Workbench windows are opened on the default public
+            screen.
+        POPPUBSCREEN: When a visitor window opens on a public screen, the
+            screen is brought to front.
 
 
 Result
 ~~~~~~
 ::
 
-
- The flags set before the change was made.
+     The flags set before the change was made.
 
 
 
@@ -6114,38 +6127,38 @@ Function
 ~~~~~~~~
 ::
 
- Changes the current window and/or the screen title.
+     Changes the current window and/or the screen title.
 
 
 Inputs
 ~~~~~~
 ::
 
- window - Change the title for this window or the screen which the
-     window contains.
- windowTitle - New title for the window or ((UBYTE *)~0L) to keep the
-     old title or NULL for no title. If you specify a string,
-     this string is *NOT* copied.
- screenTitle - New title for the screen of the window or ((UBYTE *)~0L)
-     to keep the old title or NULL for no title. If you specify
-     a title for the screen, this title will be shown when the
-     window becomes active. If you specify a string, this string
-     is *NOT* copied.
+     window - Change the title for this window or the screen which the
+         window contains.
+     windowTitle - New title for the window or ((UBYTE *)~0L) to keep the
+         old title or NULL for no title. If you specify a string,
+         this string is *NOT* copied.
+     screenTitle - New title for the screen of the window or ((UBYTE *)~0L)
+         to keep the old title or NULL for no title. If you specify
+         a title for the screen, this title will be shown when the
+         window becomes active. If you specify a string, this string
+         is *NOT* copied.
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- You should be careful with specifying a screen title because that
- may irritate the user.
+     You should be careful with specifying a screen title because that
+     may irritate the user.
 
 
 
@@ -6166,25 +6179,26 @@ Function
 ~~~~~~~~
 ::
 
- Modify SHOWTITLE flag of the screen and refresh the screen and
- its windows.
- If ShowIt is TRUE the screen's title bar will be shown in front of
- WFLG_BACKDROP windows. A value of FALSE will bring the title bar
- behind all windows.
+     Modify SHOWTITLE flag of the screen and refresh the screen and
+     its windows.
+
+     If ShowIt is TRUE the screen's title bar will be shown in front of
+     WFLG_BACKDROP windows. A value of FALSE will bring the title bar
+     behind all windows.
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- The default of the SHOWTITLE flag for new screens is TRUE.
+     The default of the SHOWTITLE flag for new screens is TRUE.
 
 
 
@@ -6257,31 +6271,31 @@ Function
 ~~~~~~~~
 ::
 
- Modify the size of a window by the specified offsets.
+     Modify the size of a window by the specified offsets.
 
 
 Inputs
 ~~~~~~
 ::
 
- window - The window to resize.
- dx - Add this to the width.
- dy - Add this to the height.
+     window - The window to resize.
+     dx - Add this to the width.
+     dy - Add this to the height.
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- The resize of the window may be delayed. If you depend on the
- information that is has changed size, wait for IDCMP_NEWSIZE.
+     The resize of the window may be delayed. If you depend on the
+     information that is has changed size, wait for IDCMP_NEWSIZE.
 
 
 
@@ -6320,22 +6334,27 @@ Tags
 ::
 
      SNA_PubName (STRPTR)          - Name of the public screen. NULL means
-                                     you'll get notifications for all screens.
-     SNA_MsgPort (struct MsgPort*) - Notifications will be sent to this port.
+                                     you'll get notifications for all
+                                     screens.
+     SNA_MsgPort (struct MsgPort*) - Notifications will be sent to this
+                                     port.
      SNA_SigBit (BYTE)             - The signal bit to use
      SNA_SigTask (struct Task*)    - The task to signal
      SNA_UserData (IPTR)           - For your personal use. Will be copied
-                                     into snm_UserData of the messages you receive
+                                     into snm_UserData of the messages you
+                                     receive.
      SNA_Hook (struct Hook*)
      SNA_Priority (Byte)           - Priority in the notification queue.
-     SNA_Notify (ULONG)            - SNOTIFY_ flags, see intuition/intuition.h
+     SNA_Notify (ULONG)            - SNOTIFY_ flags, see
+                                     intuition/intuition.h
 
 
 Result
 ~~~~~~
 ::
 
-     The value is private, only a test against ZERO is allowed and means Failure
+     The value is private; only a test against ZERO is allowed and means
+     Failure.
 
 
 Notes
@@ -6382,7 +6401,7 @@ Inputs
 ~~~~~~
 ::
 
-     Window - The window pointer returned by either BuildSysRequest() or
+     window - The window pointer returned by either BuildSysRequest() or
               BuildEasyRequestArgs().
      IDCMPFlagsPtr - Pointer to a ULONG to store the IDCMP flag that was
                      received by the window. This will be set if you
@@ -6440,10 +6459,9 @@ Function
 ~~~~~~~~
 ::
 
-     Display an alert with automatic time-out.
-     
-     See DisplayAlert() documentation
- 
+     Display an alert with automatic time-out. See DisplayAlert()
+     documentation.
+
 
 Inputs
 ~~~~~~
@@ -6483,7 +6501,7 @@ Bugs
 See also
 ~~~~~~~~
 
-`DisplayAlert()`_   
+`DisplayAlert()`_ 
 
 ----------
 
@@ -6501,22 +6519,22 @@ Function
 ~~~~~~~~
 ::
 
- Release parts of Intuition which have been blocked with a prior
- call to LockIBase().
+     Release parts of Intuition which have been blocked with a prior
+     call to LockIBase().
 
 
 Inputs
 ~~~~~~
 ::
 
- ibLock - The result of LockIBase().
+     ibLock - The result of LockIBase().
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 
@@ -6540,8 +6558,21 @@ Function
 ~~~~~~~~
 ::
 
+     Unlocks the public classes list.
 
- Unlocks the public classes list.
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     None.
 
 
 
@@ -6567,26 +6598,35 @@ Function
 ~~~~~~~~
 ::
 
- Release a lock to a screen locked by LockPubScreen().
- Identify screen by the pointer returned from LockPubScreen()
- and pass NULL name in normal cases.
- Sometimes it might be useful to specify the name string. In
- this case the screen pointer will be ignored.
+     Release a lock to a screen locked by LockPubScreen().
+     Identify screen by the pointer returned from LockPubScreen()
+     and pass NULL name in normal cases.
+
+     Sometimes it might be useful to specify the name string. In
+     this case the screen pointer will be ignored.
 
 
 Inputs
 ~~~~~~
 ::
 
- name - Name of the public screen to unlock. The name is case insensitive.
- screen - Pointer to the screen to unlock
+     name - Name of the public screen to unlock. The name is case
+         insensitive.
+     screen - Pointer to the screen to unlock.
+
+
+Result
+~~~~~~
+::
+
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- The screen parameter will be ignored if name is non-NULL
+     The screen parameter will be ignored if name is non-NULL.
 
 
 
@@ -6610,8 +6650,21 @@ Function
 ~~~~~~~~
 ::
 
+     Release lock made by LockPubScreenList().
 
- Release lock made by LockPubScreenList().
+
+Inputs
+~~~~~~
+::
+
+     None.
+
+
+Result
+~~~~~~
+::
+
+     None.
 
 
 
@@ -6635,23 +6688,23 @@ Function
 ~~~~~~~~
 ::
 
- Returns the address of the Intuition View structure. This view
- is needed if you want to use any of the graphics, text or animation
- functions in your window that need the pointer to the view structure.
+     Returns the address of the Intuition View structure. This view
+     is needed if you want to use any of the graphics, text or animation
+     functions in your window that need the pointer to the view structure.
 
 
 Inputs
 ~~~~~~
 ::
 
- None
+     None.
 
 
 Result
 ~~~~~~
 ::
 
- Address of the Intuition View structure
+     Address of the Intuition View structure
 
 
 
@@ -6676,24 +6729,24 @@ Function
 ~~~~~~~~
 ::
 
- Returns the address of the viewport of a given window. Use this
- call, if you want to use any graphics, text or animation functions
- that require the address of a viewport for your window.
- 
+     Returns the address of the viewport of a given window. Use this
+     call, if you want to use any graphics, text or animation functions
+     that require the address of a viewport for your window.
+
 
 Inputs
 ~~~~~~
 ::
 
- Window - pointer to a Window structure
+     Window - pointer to a Window structure
 
 
 Result
 ~~~~~~
 ::
 
- Address of the Intuition ViewPort structure for the screen that your
- window is displayed on.
+     Address of the Intuition ViewPort structure for the screen that your
+     window is displayed on.
 
 
 
@@ -6717,22 +6770,22 @@ Function
 ~~~~~~~~
 ::
 
- Bring the WorkBench behind all other screens.
+     Bring the WorkBench behind all other screens.
 
 
 Result
 ~~~~~~
 ::
 
- TRUE if the Workbench screen is open, FALSE else.
+     TRUE if the Workbench screen is open, FALSE otherwise.
 
 
 Notes
 ~~~~~
 ::
 
- This function does not influence the position of the screen,
- it just changes the depth-arrangement of the screens.
+     This function does not influence the position of the screen,
+     it just changes the depth-arrangement of the screens.
 
 
 
@@ -6756,22 +6809,29 @@ Function
 ~~~~~~~~
 ::
 
- Make the WorkBench screen the frontmost.
+     Make the WorkBench screen the frontmost.
+
+
+Inputs
+~~~~~~
+::
+
+     None.
 
 
 Result
 ~~~~~~
 ::
 
- TRUE if the Workbench screen is open, FALSE else.
+     TRUE if the Workbench screen is open, FALSE else.
 
 
 Notes
 ~~~~~
 ::
 
- This function does not influence the position of the screen,
- it just changes the depth-arrangement of the screens.
+     This function does not influence the position of the screen,
+     it just changes the depth-arrangement of the screens.
 
 
 
@@ -6803,7 +6863,7 @@ Function
 ~~~~~~~~
 ::
 
-     Perform an acynchronous action on a window that is not controlled
+     Perform an asynchronous action on a window that is not controlled
      by the caller task.
 
      This function is safe even when the window is destroyed by the owner
@@ -6817,7 +6877,7 @@ Inputs
      window - a window to act upon
      action - a requested action code
      tags   - additional parameters, depending on the action
-     
+
      Currently defined actions are:
 
        WAC_SENDIDCMPCLOSE - send an IDCMP_CLOSEWINDOW message.
@@ -6835,8 +6895,8 @@ Notes
 ::
 
      This function is compatible with MorphOS.
-     
-     The requested action is executed asynchronously, the function actually
+
+     The requested action is executed asynchronously; the function actually
      returns before it is complete.
 
 
@@ -6868,26 +6928,26 @@ Function
 ~~~~~~~~
 ::
 
- This functions sets the minimum and maximum sizes of a window.
+     This function sets the minimum and maximum sizes of a window.
 
 
 Inputs
 ~~~~~~
 ::
 
- Window - window to change
- MinWidth, MinHeight - the minimum size, may be 0 for no change
- MaxWidth, MaxHeight - the maximum size, may be 0 for no change,
-     may be -1 for no maximum size
+     window - window to change
+     MinWidth, MinHeight - the minimum size, may be 0 for no change
+     MaxWidth, MaxHeight - the maximum size, may be 0 for no change,
+         may be -1 for no maximum size
 
 
 Result
 ~~~~~~
 ::
 
- A boolean. FALSE is returned if any of the provided sizes is out
- of range. Note that the other sizes take effect, though. TRUE if
- all sizes could be set.
+     A boolean. FALSE is returned if any of the provided sizes is out
+     of range. Note that the other sizes take effect, though. TRUE if
+     all sizes could be set.
 
 
 
@@ -6912,21 +6972,21 @@ Function
 ~~~~~~~~
 ::
 
- Bring a window to the back (ie. behind any other window).
+     Bring a window to the back (i.e. behind any other window).
 
 
 Inputs
 ~~~~~~
 ::
 
- window - Which window
+     window - Which window
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 
@@ -6946,21 +7006,21 @@ Function
 ~~~~~~~~
 ::
 
- Bring a window to the front (ie. before any other window).
+     Bring a window to the front (i.e. before any other window).
 
 
 Inputs
 ~~~~~~
 ::
 
- window - Which window
+     window - Which window
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 
@@ -6980,31 +7040,31 @@ Function
 ~~~~~~~~
 ::
 
- "Zip" (move and resize) a window to the coordinates and dimensions
- the window had at the last call of ZipWindow(), or invoked via the
- zoom-gadget.
+     "Zip" (move and resize) a window to the coordinates and dimensions
+     the window had at the last call of ZipWindow(), or invoked via the
+     zoom-gadget.
 
 
 Inputs
 ~~~~~~
 ::
 
- window - Which window
+     window - Which window
 
 
 Result
 ~~~~~~
 ::
 
- None.
+     None.
 
 
 Notes
 ~~~~~
 ::
 
- This call is deferred. Wait() for IDCMP_CHANGEWINDOW if your
- program depends on the new size.
+     This call is deferred. Wait() for IDCMP_CHANGEWINDOW if your
+     program depends on the new size.
 
 
 
