@@ -4,12 +4,11 @@ include $(TOP)/config/make.cfg
 
 #MM contrib-ptplay-lib : includes linklibs
 
-LIB := ptplay
 FILES := ptinit ptplay ptplaytest
 
 USER_CFLAGS := -DAMIGA -Wno-parentheses -Wno-missing-braces
 
-%build_module mmake=contrib-ptplay-lib modname=$(LIB) modtype=library \
+%build_module mmake=contrib-ptplay-lib modname=ptplay modtype=library \
   files=$(FILES) uselibs="stdc"
 
 %copy_includes mmake=includes-copy includes=ptplay.h path=libraries

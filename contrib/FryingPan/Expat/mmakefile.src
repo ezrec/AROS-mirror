@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-fryingpan-expat: $(CROSSTOOLS_CXX_TARGET)
+#MM- contrib-fryingpan-expat: $(CROSSTOOLS_TARGET)
 
 #MM contrib-fryingpan-expat: \
 #MM     contrib-fryingpan-framework-generic \

@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-fryingpan-fp-guimui: $(CROSSTOOLS_CXX_TARGET)
+#MM- contrib-fryingpan-fp-guimui: $(CROSSTOOLS_TARGET)
 
 #MM contrib-fryingpan-fp-guimui: \
 #MM     contrib-zune-classes-nlist \

@@ -27,7 +27,7 @@ FILES :=               \
 	browserwindow      \
 	browserapp
 	
-#MM- aros-tcpip-apps: aros-tcpip-apps-owb
+# #MM- aros-tcpip-apps: aros-tcpip-apps-owb
 
 #MM- aros-tcpip-apps-startowb : contrib-fontconfig
 
@@ -54,10 +54,6 @@ ifneq ($(AROS_TARGET_CPU),arm)
     endif
 endif
 
-OWB_LIBS := webkit-owb webcore wtf jsc webkit-owb \
-    $(I18N_LIBS) codesets thread xml2 fontconfig freetype2.static \
-    SDL SDL_gfx GL png jpeg curl iconv z mui ssl \
-    crypto sqlite3 xslt thread
 
 #TODO: Link OWB with shared library version of freetype2
 
@@ -66,7 +62,7 @@ USER_CFLAGS := -DZUNE_BUILTIN_SCROLLGROUP=0 -DMUIMASTER_YES_INLINE_STDARG \
     -I$(AROS_INCLUDES)/webkit-owb
 
 %build_prog mmake=aros-tcpip-apps-owb progname=owb targetdir=$(EXEDIR) \
-            files="$(FILES)" uselibs="$(OWB_LIBS) stdc++"
+            files="$(FILES)" uselibs="webkit-owb webcore wtf jsc webkit-owb $(I18N_LIBS) codesets thread xml2 fontconfig freetype2.static SDL SDL_gfx GL png jpeg curl iconv z mui ssl crypto sqlite3 xslt thread stdc++"
 
 ICONS := back.png close.png download.png find.png forward.png go.png home.png preferences.png reload.png search.png stop.png bookmarks.png logo.png
 

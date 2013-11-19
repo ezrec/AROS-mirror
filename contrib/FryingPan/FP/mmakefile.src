@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-fryingpan-fp: $(CROSSTOOLS_CXX_TARGET)
+#MM- contrib-fryingpan-fp: $(CROSSTOOLS_TARGET)
 
 #MM contrib-fryingpan-fp: \
 #MM     contrib-fryingpan-fp-engine \
