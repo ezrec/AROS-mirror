@@ -1,0 +1,53 @@
+/* GPLsrc */
+/* $Date: 2008-06-01 10:01:35 +0200 (So, 01 Jun 2008) $ */
+/* $Revision: 2829 $ */
+/* $Id: GPLsrc 2829 2008-06-01 09:01:35Z juergen $ */
+
+LHAName1 = 'RAM:VideoPlugin-src'
+LHAName2 = 'RAM:DeleteModule-src'
+
+address command
+
+"makedir RAM:Video.Plugin"
+"makedir RAM:Delete.Module"
+"makedir RAM:Delete.Module/"
+"makedir RAM:Delete.Module/Catalogs"
+"makedir RAM:Delete.Module/Catalogs/deutsch"
+"makedir RAM:Delete.Module/Catalogs/sample"
+"makedir RAM:Delete.Module/Catalogs/français"
+"makedir RAM:Delete.Module/Catalogs/deutsch/Scalos"
+"makedir RAM:Delete.Module/Catalogs/sample/Scalos"
+"makedir RAM:Delete.Module/Catalogs/français/Scalos"
+
+say "Copying Video.Plugin..."
+
+'copy Plugins/Preview/Video/#?.(c|h) "RAM:Video.Plugin" clone quiet'
+'copy Plugins/Preview/Video/makefile-new "RAM:Video.Plugin/makefile" clone quiet'
+'copy Plugins/Preview/Video/config.mk "RAM:Video.Plugin" clone quiet'
+'copy gpl-3.0.txt "RAM:Video.Plugin" clone quiet'
+'copy lgpl-3.0.txt "RAM:Video.Plugin" clone quiet'
+'copy Plugins/Preview/Video/COPYING "RAM:Video.Plugin" clone quiet'
+
+say "Copying Delete.Module..."
+
+'copy Modules/Delete.MUI/Source/#?.(c|h) "RAM:Delete.Module" clone quiet'
+'copy Modules/Delete.MUI/Source/Delete.Module_rev#? "RAM:Delete.Module" clone quiet'
+'copy Modules/Delete.MUI/Source/makefile-new "RAM:Delete.Module/makefile" clone quiet'
+'copy Modules/Delete.MUI/Source/config.mk "RAM:Delete.Module" clone quiet'
+'copy Modules/Delete.MUI/Source/#?.cd "RAM:Delete.Module" clone quiet'
+'copy gpl-3.0.txt "RAM:Delete.Module/COPYING" clone quiet'
+
+'copy Modules/Delete.MUI/Source/Catalogs/sample/Scalos/#?.ct "RAM:Delete.Module/Catalogs/sample/Scalos" clone quiet'
+'copy Modules/Delete.MUI/Source/Catalogs/deutsch/Scalos/#?.ct "RAM:Delete.Module/Catalogs/deutsch/Scalos" clone quiet'
+'copy Modules/Delete.MUI/Source/Catalogs/deutsch/Scalos/makefile-new "RAM:Delete.Module/Catalogs/deutsch/Scalos/makefile" clone quiet'
+'copy Modules/Delete.MUI/Source/Catalogs/français/Scalos/#?.ct "RAM:Delete.Module/Catalogs/français/Scalos" clone quiet'
+'copy Modules/Delete.MUI/Source/Catalogs/français/Scalos/makefile-new "RAM:Delete.Module/Catalogs/français/Scalos/makefile" clone quiet'
+
+
+say "Creating archives..."
+
+'lha -r -e -x a ' || LHAName1 || ' RAM:Video.Plugin '
+'lha -r -e -x a ' || LHAName2 || ' RAM:Delete.Module '
+
+lha t LHAName1
+lha t LHAName2

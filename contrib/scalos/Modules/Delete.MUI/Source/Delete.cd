@@ -1,0 +1,312 @@
+; Delete.cd
+; $Date$
+; $Revision$
+;
+; version $VER: Information.catalog 40.1 (20 Feb 2005 21:03:45)
+; codeset 0s
+; language english
+;
+;#arrayopts static __far
+;
+;
+MSG_APP_TITLE       (1//)
+Delete.module
+;
+MSG_APP_DESC        (//)
+Replacement for Scalos Delete.module
+;
+MSG_WIN_TITLE       (//)
+Delete
+;
+MSG_ASL_TITLE       (//)
+Select Trashcan directory
+;
+MSG_PAGES_FILES     (//)
+Files
+;
+MSG_PAGES_PREFS     (//)
+Preferences
+;
+MSG_LABEL_TRASH     (//)
+Use trashcan?
+;
+MSG_LABEL_DIRS      (//)
+Confirm dir delete?
+;
+MSG_LABEL_FILES     (//)
+Confirm file delete?
+;
+MSG_LABEL_QUIET     (//)
+Quiet start
+;
+MSG_LABEL_TLOC      (//)
+Trashcan Location
+;
+MSG_LABEL_INFO      (//)
+Done %ld%%
+;
+MSG_LABEL_PROG      (//)
+Selected: %ld files [%ld bytes], %ld directories
+;
+MSG_LABEL_VERS      (//)
+Version:
+;
+MSG_LABEL_COMP      (//)
+Compiled:
+;
+MSG_BUTTON_FULL     (//)
+Details
+;
+MSG_BUTTON_DEL      (//)
+Delete
+;
+MSG_BUTTON_ABT      (//)
+About...
+;
+MSG_BUTTON_CAN      (//)
+Cancel
+;
+MSG_BUTTON_STOP     (//)
+STOP!
+;
+MSG_BUTTON_AMUI     (//)
+About MUI...
+;
+MSG_BUTTON_SAVE     (//)
+Save
+;
+MSG_BUTTON_USE      (//)
+Use
+;
+MSG_BUTTON_REST     (//)
+Restore
+;
+MSG_KEY_DETAILS     (//)
+e
+;
+MSG_KEY_TRASH       (//)
+t
+;
+MSG_KEY_DIRS        (//)
+o
+;
+MSG_KEY_FILES       (//)
+n
+;
+MSG_KEY_QUIET       (//)
+q
+;
+MSG_KEY_TLOC        (//)
+l
+;
+MSG_KEY_SAVE        (//)
+v
+;
+MSG_KEY_USE         (//)
+u
+;
+MSG_KEY_REST        (//)
+r
+;
+MSG_KEY_DELETE      (//)
+d
+;
+MSG_KEY_ABOUT       (//)
+a
+;
+MSG_KEY_CANCEL      (//)
+c
+;
+MSG_KEY_STOP        (//)
+s
+;
+MSG_KEY_AMUI        (//)
+m
+;
+MSG_HELP_TRASH      (//)
+\33cFiles are moved to\nSYS:Trashcan\nrather than being\nremoved completely
+;
+MSG_HELP_DIRS       (//)
+\33cIf set, you must confirm that\na directory should be deleted
+;
+MSG_HELP_FILES      (//)
+\33cIf set, you must confirm every\nfile delete operation
+;
+MSG_HELP_QUIET      (//)
+\33cIf set, the about window is not\nshown when the program starts
+;
+MSG_HELP_TLOC       (//)
+\33cLocation of the trashcan used\nif \"Use Trashcan\" is set
+;
+MSG_LVT_NAME        (//)
+\33bName\33n
+;
+MSG_LVT_SIZE        (//)
+Size
+;
+MSG_LVT_DATE        (//)
+Date
+;
+MSG_LVT_TIME        (//)
+Time
+;
+MSG_ERROR_TITLE     (//)
+Delete module error
+;
+MSG_WARN_TITLE      (//)
+Delete module warning
+;
+MSG_REQ_TITLE       (//)
+Delete module request
+;
+MSG_GAD_OK          (//)
+*_Ok
+;
+MSG_GAD_NOYES       (//)
+_Yes|*_No
+;
+MSG_GAD_PROTECT     (//)
+_Yes|_All files|*_No
+;
+MSG_BODY_NOFILES    (//)
+\33cNo files have been selected!\n\nOperation aborted
+;
+MSG_BODY_NOLIST     (//)
+\33cUnable to create internal lists\n\nOperation aborted
+;
+MSG_BODY_VOLUME     (//)
+\33cDetected an attempt to delete volume\n\33b%s\33n\nAre you \33bsure\33n you want to do this?!?
+;
+MSG_BODY_CFILE      (//)
+\33cAre you sure you want to delete file\n%s
+;
+MSG_BODY_BUFERR     (//)
+\33cUnable to copy\n%s\nto trashcan\nOut of buffer space.\nContinue to delete the file?
+;
+MSG_BODY_COPYFAIL   (//)
+\33cUnable to copy\n%s\nto trashcan\nError writing to trashcan\nContinue to delete the file?
+;
+MSG_BODY_NOICON     (//)
+\33cUnable to delete icon\n%s
+;
+MSG_BODY_CDIR       (//)
+\33cAre you sure you want to delete directory\n%s
+;
+MSG_BODY_BADTD      (//)
+\33cUnable to create directory\nin Trashcan.\nContinue?
+;
+MSG_BODY_NOSCAN     (//)
+\33cUnable to scan directory\nDirectory aborted
+;
+MSG_BODY_PROTECT    (//)
+\33c%s\nis protected from deletion\nRemove the protection?
+;
+MSG_BODY_NODEL      (//)
+\33c%s\nnot deleted
+;
+MSG_BODY_COPYING    (//)
+Copying %s to trashcan
+;
+MSG_BODY_REMOVE     (//)
+Removing %s
+;
+MSG_BODY_SCAN       (//)
+Scanning %s
+;
+MSG_BODY_DETAIL     (//)
+\33c\0338WARNING\0330\nThis operation may take a long time\nto complete and may not be\naborted. Continue?
+;
+MSG_ABOUT_HEAD      (//)
+\n\33b\33c\0338ScalosDelete\0330\33n\n\
+  Copyright 1999 Chris Page,  \n\
+  The World Foundry LLC \n\n\
+  Contact: \33ichris <chris@worldfoundry.demon.co.uk>  \n
+;
+MSG_ABOUT_BODY      (//)
+\n\33cThis program is free software; you can\n\
+ redistribute it and/or modify it under the \n\
+terms of the GNU General Public License as\n\
+published by the Free Software Foundation;\n\
+either version 2 of the License, or (at\n\
+your option) any later version.\n\n\
+This program is distributed in the hope\n\
+that it will be useful,but WITHOUT ANY\n\
+WARRANTY; without even the implied\n\
+    warranty of MERCHANTABILITY or FITNESS FOR    \n\
+A PARTICULAR PURPOSE. See the GNU General\n\
+Public License for more details.\n\n\
+You should have received a copy of the GNU\n\
+General Public License along with this\n\
+program; if not, write to\n\n\
+Free Software Foundation, Inc.,\n\
+59 Temple Place,\n\
+Suite 330,\n\
+Boston, MA\n\
+02111-1307\n\
+USA\n\n\
+Or email the original author
+;
+;
+MSGID_UNDO_OK (//)
+Undo possible since \033bUse trashcan\033n is enabled
+;
+;
+MSGID_UNDO_NOT_POSSIBLE (//)
+Undo \033inot\033n possible unless \033bUse trashcan\033n is enabled
+;
+;
+MSG_GAD_OK_ABORT (//)
+*_Ok|Abort
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT (2000//)
+Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT (//)
+About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI (//)
+About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT (//)
+Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT (//)
+Q
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE (5000//)
+Delete.module startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD (//)
+Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+\n\
+Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+%lu.%lu is currently in use by other applications.\n\
+\n\
+Once you have installed the required version,\n\
+close all MUI programs, make sure the old class\n\
+is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;

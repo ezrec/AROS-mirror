@@ -1,0 +1,13 @@
+; PictureDimensionsPlugin.ct
+## version $VER: PictureDimensionsPlugin.catalog 40.3 (17 Jan 2004 14:47:10)
+## codeset 0
+## language deutsch
+;
+;#arrayopts static __far
+;
+;
+MSGID_PIXELS_COLOURS
+%ld x %ld Pixel x %ld Bit, %ld Farben
+;%ld x %ld pixels x %ld Bit, %ld colours
+;
+;

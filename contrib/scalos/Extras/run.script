@@ -1,0 +1,12 @@
+.key browse
+.bra {
+.ket }
+
+c:requestfile "{browse}" title "Run what program?" noicons >env:runit
+IF WARN
+	delete env:runit >nil:
+	QUIT
+ELSE
+	c:wbrun $runit
+ENDIF
+delete env:runit >nil:

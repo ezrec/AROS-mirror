@@ -1,0 +1,66 @@
+# $Date: 2010-05-02 20:34:59 +0200 (So, 02. Mai 2010) $
+# $Revision: 599 $
+##############################################################################
+
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/../..
+endif
+
+##############################################################################
+
+include		config.mk
+
+##############################################################################
+#
+# Project Object files
+#
+
+OBJS	=       $(OBJDIR)/NewIconDt.o
+
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS:.o=.d)
+endif
+
+##############################################################################
+#
+# Targets
+#
+
+NAME	=	newiconobject.datatype
+NAME_DB	=	newiconobject.datatype.debug
+
+##############################################################################
+
+.PHONY: all install clean bump dump
+
+all:	$(BINDIR)/$(NAME) \
+	$(BINDIR)/$(NAME_DB)
+
+##############################################################################
+
+$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) : $(OBJS)
+	$(ECHO) "Link $(NAME)"
+	@$(CC) $(OBJS) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(NAME_DB)
+	@$(STRIP) $(BINDIR)/$(NAME_DB) -o $(BINDIR)/$(NAME)
+	@protect $@ +e
+
+##############################################################################
+
+install:
+	-@$(ECHO) "Installing $(NAME)"
+	-@$(MKDIR) $(DT_DIR)
+	@copy $(BINDIR)/$(NAME) $(DT_DIR)
+	@avail flush
+
+clean:
+	-@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d $(OBJDIR)/*.d.* \
+        	$(OBJDIR)/*.i $(OBJDIR)/*.s \
+		$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) \
+		*.dump *_str.*
+
+##############################################################################

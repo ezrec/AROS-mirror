@@ -1,0 +1,6 @@
+# Scalos filetype description
+# written 03 Apr 2005 17:38:22
+
+DESCRIPTION "[ Image JPEG ]"
+PREVIEWPLUGIN "Scalos:Plugins/Preview/jpegpicture.pvplugin"
+

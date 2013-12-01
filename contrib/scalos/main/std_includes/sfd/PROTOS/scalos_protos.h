@@ -1,0 +1,2 @@
+#ifndef  CLIB_SCALOS_PROTOS_H
+#define  CLIB_SCALOS_PROTOS_H

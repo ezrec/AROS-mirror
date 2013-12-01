@@ -1,0 +1,209 @@
+## version $VER: Protect.catalog 1.0 (09.06.04)
+## codeset 0
+## language français
+;
+MSGID_ENTRY
+Entrée :
+; Entry:
+;
+MSGID_ASLTEXT
+Choix d'un répertoire ou d'un fichier...
+; Please, select a drawer or file...
+;
+MSGID_TYPE
+Type :
+; Type:
+;
+MSGID_PROTECT
+_Appliquer
+; _Apply
+;
+MSGID_ALL
+Tout
+; All
+;
+MSGID_HELPALL
+Si coché, la protection sera appliquée\n\
+au répertoire et à tout son contenu.
+; If selected, Protect will be apply\n\
+; to drawer and its contents.
+;
+MSGID_QUIT
+Quitter
+; Quit
+;
+MSGID_HELPQUIT
+Si coché, permet de quitter Protect.module après\n\
+avoir terminer de protéger les éléments choisis. 
+; If selected, apply to quit Protect.module after\n\
+; to finish Protect operation.
+;
+MSGID_TIME
+Durée :
+; Time: 
+;
+MSGID_HELPBTABORT
+Annuler l'opération
+; Abort operation.
+;
+MSGID_BTABORT
+Annuler
+; Abort
+;
+MSGID_GROUPENTRY
+ Entrée actuelle 
+; Current entry
+;
+MSGID_HELPGROUPENTRY
+Répertoire et fichier en cours de traitement.
+; Current drawer and file analysing
+;
+MSGID_LABELDRAWER
+Répertoire :
+; Drawer:
+;
+MSGID_LABELFILE
+Fichier :
+; File:
+;
+MSGID_ERRORREQ
+Entrée :  %s !\n\
+Code d'erreur : %ld, %s
+; Entry : %s !\n\
+; ErrorCode: %ld, %s
+;
+MSGID_BTOKREQ
+ D'accord 
+; Okay
+;
+MSGID_NOFOUND
+Introuvable !
+; No found!
+;
+MSGID_MUIERROR
+Impossible d' ouvrir "%s".\n
+; Failed to open "%s".\n
+;
+MSGID_ICONLIBERROR
+Impossible d' ouvrir "icon.library" !\n
+; Failed to open icon.library!\n
+;
+MSGID_APPERROR
+La création de l'application a échouée !\n
+; Failed to create application!\n
+;
+MSGID_TYPETOOL
+Outil
+; Tool
+;
+MSGID_TYPEPROJECT
+Projet
+; Project
+;
+MSGID_TYPEDRAWER
+Répertoire
+; Drawer
+;
+MSGID_TYPEASSIGN
+Assignation
+; Assign
+;
+MSGID_TYPEDISK
+Volume
+; Disk
+;
+MSGID_TYPEGARBAGE
+Corbeille
+; Trashcan
+;
+MSGID_TITLEERRORREQ
+Protect.module: Erreur...
+; Protect.module: Error
+;
+MSGID_PREFNOFOUNDREQ
+Le fichier des préférences :\n\
+"%s"\n\
+n'a pu être localisé !\n\
+Utilisation des réglages par défaut...
+; Prefs file:\n\
+; "%s"\n\
+; no found!\n\
+; Use default settings...
+;
+MSGID_TEXTHIDE
+Caché
+; Hide
+;
+MSGID_TEXTSCRIPT
+Script
+; Script
+;
+MSGID_TEXTPURE
+Pur
+; Pure
+;
+MSGID_TEXTARCHIVE
+Archivé
+; Archive
+;
+MSGID_TEXTREAD
+Lisible
+; Read
+;
+MSGID_TEXTWRITE
+Modigiable
+; Write
+;
+MSGID_TEXTEXECUTE
+Executable
+; Execute
+;
+MSGID_TEXTDELETE
+Effaçable
+; Delete
+;
+MSGID_GROUPPROTECT
+ Attributs 
+;  Protection bits
+;
+MSGID_TEXTNOTHING
+Rien à éffectuer !
+; Nothing to do!
+;
+MSGID_HELPTEXTHIDE
+Le fichier est caché.
+; The file is hidden.
+;
+MSGID_HELPTEXTSCRIPT
+le fichier set un script.
+; The file is a script.
+;
+MSGID_HELPTEXTPURE
+Le fichier est une pure commande\n\
+et peut être resident.
+; The file is a pure command\n\
+; and can be made resident.
+;
+MSGID_HELPTEXTARCHIVE
+Le fichier est archivé.
+; The file has been archived.
+;
+MSGID_HELPTEXTREAD
+Le fichier peut être lu.
+; The file can be read.
+;
+MSGID_HELPTEXTWRITE
+Le fichier peut être modifié.
+; The file can be written to (altered).
+;
+MSGID_HELPTEXTEXECUTE
+Le fichier est executable(un programme).
+; The file is executable (a program).
+;
+MSGID_HELPTEXTDELETE
+Le fichier ou répertoire peut être éffaçé\n\
+(Les fichiers se trouvant à l'interieur d'un répertoire\n\
+protégé en écriture, peuvent être éffaçés). 
+; The file or directory can be deleted.\n\
+; (Files within a delete-protected directory can still be deleted.
+;

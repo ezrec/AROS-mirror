@@ -1,0 +1,40 @@
+# $Date: 2011-06-23 22:23:38 +0200 (Do, 23. Jun 2011) $
+# $Revision: 740 $
+##############################################################################
+
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/..
+endif
+
+##############################################################################
+
+include		config.mk
+
+###############################################################################
+
+SUBDIRS	=	preferences	\
+		sqlite		\
+		scalosgfx	\
+		iconobject
+
+ifeq ($(MACHINE), ppc-amigaos)
+else
+ifeq ($(MACHINE), i386-aros)
+else
+SUBDIRS	+=	popupmenu
+endif
+endif
+
+##############################################################################
+
+.PHONY: all install clean bump dump
+
+all:	all_subdirs
+
+install: install_subdirs
+
+clean: clean_subdirs
+
+nodebug: nodebug_subdirs
+
+##############################################################################

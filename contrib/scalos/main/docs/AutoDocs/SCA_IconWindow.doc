@@ -1,0 +1,1523 @@
+TABLE OF CONTENTS
+
+IconWindow.sca/--background
+IconWindow.sca/SCCM_IconWin_ActivateIconDown
+IconWindow.sca/SCCM_IconWin_ActivateIconLeft
+IconWindow.sca/SCCM_IconWin_ActivateIconNext
+IconWindow.sca/SCCM_IconWin_ActivateIconPrevious
+IconWindow.sca/SCCM_IconWin_ActivateIconRight
+IconWindow.sca/SCCM_IconWin_ActivateIconUp
+IconWindow.sca/SCCM_IconWin_AddGadget
+IconWindow.sca/SCCM_IconWin_AddIcon
+IconWindow.sca/SCCM_IconWin_AddToControlBar
+IconWindow.sca/SCCM_IconWin_AddToStatusBar
+IconWindow.sca/SCCM_IconWin_AddUndoEvent
+IconWindow.sca/SCCM_IconWin_BeginUndoStep
+IconWindow.sca/SCCM_IconWin_Browse
+IconWindow.sca/SCCM_IconWin_CleanUp
+IconWindow.sca/SCCM_IconWin_CleanUpByDate
+IconWindow.sca/SCCM_IconWin_CleanUpByName
+IconWindow.sca/SCCM_IconWin_CleanUpBySize
+IconWindow.sca/SCCM_IconWin_CleanUpByType
+IconWindow.sca/SCCM_IconWin_ClearIconFileTypes
+IconWindow.sca/SCCM_IconWin_CountWBArg
+IconWindow.sca/SCCM_IconWin_DeltaMove
+IconWindow.sca/SCCM_IconWin_DragDrop
+IconWindow.sca/SCCM_IconWin_DragEnter
+IconWindow.sca/SCCM_IconWin_DragQuery
+IconWindow.sca/SCCM_IconWin_DragLeave
+IconWindow.sca/SCCM_IconWin_DrawIcon
+IconWindow.sca/SCCM_IconWin_EndUndoStep
+IconWindow.sca/SCCM_IconWin_GetDefIcon
+IconWindow.sca/SCCM_IconWin_GetIconFileType
+IconWindow.sca/SCCM_IconWin_History_Back
+IconWindow.sca/SCCM_IconWin_History_Forward
+IconWindow.sca/SCCM_IconWin_ImmediateCheckUpdate
+IconWindow.sca/SCCM_IconWin_LayoutIcon
+IconWindow.sca/SCCM_IconWin_MakeWBArg
+IconWindow.sca/SCCM_IconWin_MenuCommand
+IconWindow.sca/SCCM_IconWin_NewPath
+IconWindow.sca/SCCM_IconWin_NewPatternNumber
+IconWindow.sca/SCCM_IconWin_NewViewMode
+IconWindow.sca/SCCM_IconWin_Open
+IconWindow.sca/SCCM_IconWin_RandomizePatternNumber
+IconWindow.sca/SCCM_IconWin_RawKey
+IconWindow.sca/SCCM_IconWin_ReadIcon
+IconWindow.sca/SCCM_IconWin_ReadIconList
+IconWindow.sca/SCCM_IconWin_Redraw
+IconWindow.sca/SCCM_IconWin_RemFromControlBar
+IconWindow.sca/SCCM_IconWin_RemFromStatusBar
+IconWindow.sca/SCCM_IconWin_RemIcon
+IconWindow.sca/SCCM_IconWin_ScheduleUpdate
+IconWindow.sca/SCCM_IconWin_SetVirtSize
+IconWindow.sca/SCCM_IconWin_ShowGadgetToolTip
+IconWindow.sca/SCCM_IconWin_ShowIconToolTip
+IconWindow.sca/SCCM_IconWin_ShowPopupMenu
+IconWindow.sca/SCCM_IconWin_Sleep
+IconWindow.sca/SCCM_IconWin_StartNotify
+IconWindow.sca/SCCM_IconWin_UnCleanUp
+IconWindow.sca/SCCM_IconWin_UnCleanUpRegion
+IconWindow.sca/SCCM_IconWin_Update
+IconWindow.sca/SCCM_IconWin_UpdateIcon
+IconWindow.sca/SCCM_IconWin_UpdateIconTags
+IconWindow.sca/SCCM_IconWin_UpdateControlBar
+IconWindow.sca/SCCM_IconWin_UpdateStatusBar
+IconWindow.sca/SCCM_IconWin_WakeUp
+IconWindow.sca/SCCM_IconWin_WBStartupFinished
+
+IconWindow.sca/--background
+
+    NAME
+	--background
+
+    DESCRIPTION
+	This class implements the functionality for the common workbench 
+	icon windows.
+
+    ATTRIBUTES
+	SCCA_IconWin_Reading - (BOOL)  [SG]
+		currently reading directory
+
+	SCCA_IconWin_SelectedCount - (ULONG) [SG]
+		number of selected icons in window
+
+	SCCA_IconWin_Typing - (BOOL)  [SG]
+		user is currently tying icon name
+
+	SCCA_IconWin_ShowType - (ULONG) [SG]
+		DDFLAGS_SHOWDEFAULT, DDFLAGS_SHOWICONS, or DDFLAGS_SHOWALL
+
+	SCCA_IconWin_InnerWidth - (ULONG) [.G]
+		icon window inner width
+
+	SCCA_IconWin_InnerHeight - (ULONG) [.G]
+		icon window inner height
+
+	SCCA_IconWin_IconFont - (struct TextFont *) [.G]
+		icon window icon font
+
+	SCCA_IconWin_LayersLocked - (ULONG) [.G]
+		Flag: icon window has Layers locked
+
+	SCCA_IconWin_StatusBar - (BOOL)  [SG]
+		Flag: Status bar is present
+
+	SCCA_IconWin_ThumbnailView - (ULONG) [SG]
+		Thumbnail display mode. One of THUMBNAILS_Never,
+		THUMBNAILS_Always, or THUMBNAILS_AsDefault.
+		Any other value makes the window use the default value,
+                as set in Scalos preferences.
+
+IconWindow.sca/SCCM_IconWin_ActivateIconDown
+
+    NAME
+	SCCM_IconWin_ActivateIconDown
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_ActivateIconDown);
+
+    FUNCTION
+	Starting from the first icon currently selected, the icon located 
+	directly below the selected will be activated.
+	If there is no icon selected, or the selected icon is located in 
+	the bottommost row, the method is a no-op.
+
+    INPUTS
+    	None
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_IconWin_ActivateIconUp
+	SCCM_IconWin_ActivateIconLeft
+	SCCM_IconWin_ActivateIconRight
+IconWindow.sca/SCCM_IconWin_ActivateIconLeft
+
+    NAME
+	SCCM_IconWin_ActivateIconLeft
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_ActivateIconLeft);
+
+    FUNCTION
+	Starting from the first icon currently selected, the icon located 
+	directly left of the selected will be activated.
+	If there is no icon selected, or the selected icon is located in 
+	the leftmost column, the method is a no-op.
+
+    INPUTS
+    	None
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_IconWin_ActivateIconDown
+	SCCM_IconWin_ActivateIconUp
+	SCCM_IconWin_ActivateIconRight
+IconWindow.sca/SCCM_IconWin_ActivateIconNext
+
+    NAME
+	SCCM_IconWin_ActivateIconNext
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_ActivateIconNext);
+
+    FUNCTION
+	Starting from the first icon currently selected, the icon which 
+	alphabetically follows the name of the selected one 
+	will be activated.
+	If there is no icon selected, the alphabetically first 
+	icon will be selected.
+	If the currently activated icon is the alphabetically last one in 
+	the window, this method will wrap around and activate the 
+	alphabetically first one.
+
+    INPUTS
+    	None
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_IconWin_ActivateIconPrevious
+IconWindow.sca/SCCM_IconWin_ActivateIconPrevious
+
+    NAME
+	SCCM_IconWin_ActivateIconPrevious
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_ActivateIconPrevious);
+
+    FUNCTION
+	Starting from the first icon currently selected, the icon which 
+	alphabetically precedes the name of the selected one 
+	will be activated.
+	If there is no icon selected, the alphabetically last
+	icon will be selected.
+	If the currently activated icon is the alphabetically first one in 
+	the window, this method will wrap around and activate the 
+	alphabetically last one.
+
+    INPUTS
+    	None
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_IconWin_ActivateIconNext
+IconWindow.sca/SCCM_IconWin_ActivateIconRight
+
+    NAME
+	SCCM_IconWin_ActivateIconRight
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_ActivateIconRight);
+
+    FUNCTION
+	Starting from the first icon currently selected, the icon located 
+	directly right of the selected will be activated.
+	If there is no icon selected, or the selected icon is located in 
+	the rightmost column, the method is a no-op.
+
+    INPUTS
+    	None
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_IconWin_ActivateIconDown
+	SCCM_IconWin_ActivateIconUp
+	SCCM_IconWin_ActivateIconLeft
+IconWindow.sca/SCCM_IconWin_ActivateIconUp
+
+    NAME
+	SCCM_IconWin_ActivateIconUp
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_ActivateIconUp);
+
+    FUNCTION
+	Starting from the first icon currently selected, the icon located 
+	directly above the selected will be activated.
+	If there is no icon selected, or the selected icon is located in 
+	the topmost row, the method is a no-op.
+
+    INPUTS
+    	None
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_IconWin_ActivateIconDown
+	SCCM_IconWin_ActivateIconLeft
+	SCCM_IconWin_ActivateIconRight
+IconWindow.sca/SCCM_IconWin_AddGadget
+
+    NAME
+	SCCM_IconWin_AddGadget
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_AddGadget,struct Gadget *g);
+
+    FUNCTION
+	Inserts a user-supplied Intuition Gadget at the front 
+	of the internal Gadget list.
+
+    INPUTS
+	Gadget - User-supplied Gadget
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_AddIcon
+
+    NAME
+	SCCM_IconWin_AddIcon
+
+    SYNOPSIS
+	struct ScaIconNode *icon = DoMethod(obj,SCCM_IconWin_AddIcon,
+		WORD x,WORD y,BPTR Lock,CONST_STRPTR Name);
+
+    FUNCTION
+	Causes a window task to load the specified selected icon.
+
+    INPUTS
+	x - icon x position or $8000 for any position
+	y - icon y position
+	Lock - Lock on icon directory
+	Name - icon name
+
+    RESULT
+	icon - newly added ScaIconNode or NULL if something went wrong.
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_AddToControlBar
+
+    NAME
+        SCCM_IconWin_AddToControlBar
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_AddToControlBar,struct Gadget *g,
+		ULONG Tag, ...);
+
+    FUNCTION
+	Adds a new BOOPSI gadget to the window control bar.
+
+    INPUTS
+	g - new Gadget to be added
+	Tag - Taglist
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_IconWin_RemFromControlBar
+IconWindow.sca/SCCM_IconWin_AddToStatusBar
+
+    NAME
+	SCCM_IconWin_AddToStatusBar
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_AddToStatusBar,struct Gadget *g,
+		ULONG Tag, ...);
+
+    FUNCTION
+	Adds a new BOOPSI gadget to the window status bar.
+
+    INPUTS
+	g - new Gadget to be added
+	Tag - Taglist
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_IconWin_RemFromStatusBar
+IconWindow.sca/SCCM_IconWin_AddUndoEvent
+
+    NAME
+	SCCM_IconWin_AddToStatusBar
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_AddUndoEvent,enum ScalosUndoType type,
+		ULONG Tag, ...);
+
+    FUNCTION
+	This method is part of the Scalos Undo/Redo API.
+	For every single item to undo, this method should be called, i.e.
+	when moving 10 separate files, call this method for every file.
+
+    INPUTS
+	type - class of action that is performed
+	Tag - Taglist
+
+    TAGS
+	UNDOTAG_UndoMultiStep - (APTR) an Undo step handle returned
+		by SCCM_IconWin_BeginUndoStep
+
+	UNDOTAG_IconNode - struct ScaIconNode *
+	UNDOTAG_IconList - struct ScaIconNode *
+	UNDOTAG_IconDirLock - BPTR
+
+	UNDOTAG_CopySrcDirLock - BPTR
+	UNDOTAG_CopyDestDirLock - BPTR
+	UNDOTAG_CopySrcName - CONST_STRPTR
+	UNDOTAG_CopyDestName - CONST_STRPTR
+
+	UNDOTAG_IconPosX - LONG
+	UNDOTAG_IconPosY - LONG
+	UNDOTAG_OldIconPosX - LONG
+	UNDOTAG_OldIconPosY - LONG
+
+	UNDOTag_WindowTask - struct ScaWindowTask *
+	UNDOTag_CleanupMode - ULONG
+	UNDOTAG_UndoHook - struct Hook *
+	UNDOTAG_RedoHook - struct Hook *
+	UNDOTAG_DisposeHook - struct Hook *
+
+    RESULT
+	Success - TRUE if information was stored successfully,
+		FALSE on error.
+
+    SEE ALSO
+        SCCM_IconWin_BeginUndoStep
+        SCCM_IconWin_EndUndoStep
+IconWindow.sca/SCCM_IconWin_BeginUndoStep
+
+    NAME
+        SCCM_IconWin_Browse
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_BeginUndoStep);
+
+    FUNCTION
+	This method is part of the Scalos Undo/Redo API.
+	Call this method to ontain an Undo step handle if the operation
+	in progress consists of multiple objects, e.g. moving 10 icons.
+	This handle is passed to every SCCM_IconWin_AddUndoEvent call
+	for the individual objects.
+	When the operation is finalised with SCCM_IconWin_EndUndoStep,
+	all events can be undone in a single operation.
+
+    INPUTS
+	none
+
+    RESULT
+	opaque handle that identifies the Undo step, or NULL.
+
+    SEE ALSO
+        SCCM_IconWin_AddUndoEvent
+        SCCM_IconWin_EndUndoStep
+IconWindow.sca/SCCM_IconWin_Browse
+
+    NAME
+        SCCM_IconWin_Browse
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_Browse);
+
+    FUNCTION
+	Opens an ASL requester that allows selection of a new
+        path to display in the current window.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_ScheduleUpdate
+
+    NAME
+	SCCM_IconWin_ScheduleUpdate
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_ScheduleUpdate);
+
+    FUNCTION
+	Schedule a check of the window for updated files and perform 
+	updates, including adding and removing icons.
+	This real update check will be delayed for about 2 seconds in 
+	order to avoid many rapidly repeated window updates, and is done 
+	via the SCCM_IconWin_ImmediateCheckUpdate method.
+	These 2 seconds are restarted with each new 
+	SCCM_IconWin_ScheduleUpdate invokation.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_IconWin_ImmediateCheckUpdate
+IconWindow.sca/SCCM_IconWin_CleanUp
+
+    NAME
+	SCCM_IconWin_CleanUp
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_CleanUp);
+
+    FUNCTION
+	Fits all window icons to free positions, including icons in 
+	wt_LateIconList. Prevents icons from overlapping each other.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_CleanUpByDate
+
+    NAME
+	SCCM_IconWin_CleanUpByDate
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_CleanUpByDate);
+
+    FUNCTION
+	Sorts all window icons descending by date, and fits them to free 
+	positions, including icons in wt_LateIconList. 
+	Prevents icons from overlapping each other.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_IconWin_CleanUpByName
+	SCCM_IconWin_CleanUpBySize
+	SCCM_IconWin_CleanUpByType
+IconWindow.sca/SCCM_IconWin_CleanUpByName
+
+    NAME
+	SCCM_IconWin_CleanUpByName
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_CleanUpByName);
+
+    FUNCTION
+	Sorts all window icons ascending by name, and fits them to free 
+	positions, including icons in wt_LateIconList. 
+	Prevents icons from overlapping each other.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_IconWin_CleanUpByDate
+	SCCM_IconWin_CleanUpBySize
+	SCCM_IconWin_CleanUpByType
+IconWindow.sca/SCCM_IconWin_CleanUpBySize
+
+    NAME
+	SCCM_IconWin_CleanUpBySize
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_CleanUpBySize);
+
+    FUNCTION
+	Sorts all window icons ascending by size, and fits them to free 
+	positions, including icons in wt_LateIconList. 
+	Prevents icons from overlapping each other.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_IconWin_CleanUpByDate
+	SCCM_IconWin_CleanUpByName
+	SCCM_IconWin_CleanUpByType
+IconWindow.sca/SCCM_IconWin_CleanUpByType
+
+    NAME
+	SCCM_IconWin_CleanUpByType
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_CleanUpByType);
+
+    FUNCTION
+	Sorts all window icons ascending by type, and fits them to free 
+	positions, including icons in wt_LateIconList. 
+	Prevents icons from overlapping each other.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_IconWin_CleanUpByDate
+	SCCM_IconWin_CleanUpByName
+	SCCM_IconWin_CleanUpBySize
+IconWindow.sca/SCCM_IconWin_ClearIconFileTypes
+
+    NAME
+	SCCM_IconWin_ClearIconFileTypes
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_ClearIconFileTypes);
+
+    FUNCTION
+	Clears the filetype information for all windows in the icon 
+	window. Useful if filetype information hasd changed 
+	and has to be re-read.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_CountWBArg
+
+    NAME
+	SCCM_IconWin_CountWBArg
+
+    SYNOPSIS
+	ULONG Count = DoMethod(obj,SCCM_IconWin_CountWBArg,
+		struct ScaIconNode *icon);
+
+    FUNCTION
+	Count arguments that will be crated by SCCM_IconWin_MakeWBArg.
+	Useful to allocate a WBArg buffer for SCCM_IconWin_MakeWBArg.
+
+    INPUTS
+	icon - icon to make WBArg from
+		if icon = NULL, return WBArg with wa_Lock = copy of
+		window lock and wa_Name = NULL
+
+    RESULT
+	Count - number of WBArg's that SCCM_IconWin_MakeWBArg will create
+
+    SEE ALSO
+	SCCM_IconWin_MakeWBArg
+
+IconWindow.sca/SCCM_IconWin_DeltaMove
+
+    NAME
+	SCCM_IconWin_DeltaMove
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_DeltaMove,LONG deltaX,LONG deltaY);
+
+    FUNCTION
+	Moves window interior by (deltaX,deltaY) and adjusts 
+	scrollers accordingly.
+
+    INPUTS
+	deltaX - movement in horizontal direction
+	deltaY - movement in vertical direction
+
+    RESULT
+	nothing
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_DragDrop
+
+    NAME
+	SCCM_IconWin_DragDrop
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_DragDrop,struct Window *dropWindow,
+		ULONG mouseX,ULONG mouseY,ULONG Qualifier);
+
+    FUNCTION
+	Drops all dragged icons into (dropWindow) at coordinates 
+	(mouseX,MouseY).
+
+    INPUTS
+	dropWindow - Intuition window to drop in
+	mouseX - mouse x position from IntuiMessage
+	mouseY - mouse y position from IntuiMessage
+	Qualifier - qualifier position from IntuiMessage
+
+    RESULT
+	nothing
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_DragEnter
+
+    NAME
+	SCCM_IconWin_DragEnter
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_DragEnter, struct ScaWindowStruct *StartWin,
+		struct ScaIconNode *Icon, ULONG MouseX, ULONG MouseY)
+
+    FUNCTION
+	Signals destination window that mouse pointer with attached 
+	icons has entered the window area (drage_Icon = NULL) or
+	now points to icon (drage_Icon).
+
+    INPUTS
+	StartWin - scalos window from which dragging started
+	Icon -icon under mouse pointer
+	MouseX, MouseY - mouse coordinates.
+
+    RESULT
+	nothing
+
+    NOTE
+	It is VERY IMPORTANT that every SCCM_IconWin_DragEnter (icon 
+	or window) is paired with a corresponding 
+	SCCM_IconWin_DragLeave method (icon or window) call !!!
+
+    SEE ALSO
+	SCCM_IconWin_DragLeave
+IconWindow.sca/SCCM_IconWin_DragQuery
+
+    NAME
+	SCCM_IconWin_DragQuery
+
+    SYNOPSIS
+	BOOL DoMethod(obj,SCCM_IconWin_DragQuery, struct ScaWindowStruct *StartWin,
+		struct ScaIconNode *Icon, ULONG MouseX, ULONG MouseY)
+
+    FUNCTION
+	Check whether icons may be dropped into our window
+	or onto specified icon.
+
+    INPUTS
+	StartWin - scalos window from which dragging started
+	Icon -icon under mouse pointer
+	MouseX, MouseY - mouse coordinates.
+
+    RESULT
+	BOOL
+		TRUE	yes, we may drop here
+		FALSE	no, dropping not allowed
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_DragLeave
+
+    NAME
+	SCCM_IconWin_DragLeave
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_DragLeave, struct ScaWindowStruct *StartWin,
+		struct ScaIconNode *Icon, ULONG MouseX, ULONG MouseY);
+
+    FUNCTION
+	Signals destination window that mouse pointer with attached 
+	icons has left the window area (drage_Icon = NULL) or
+	now points no longer to icon (drage_Icon).
+
+    INPUTS
+	StartWin - scalos window from which dragging started
+	Icon -icon under mouse pointer
+	MouseX, MouseY - mouse coordinates.
+
+    RESULT
+	nothing
+
+    NOTE
+	It is VERY IMPORTANT that every SCCM_IconWin_DragEnter (icon 
+	or window) is paired with a corresponding 
+	SCCM_IconWin_DragLeaveDrag method (icon or window) call !!!
+
+    SEE ALSO
+	SCCM_IconWin_DragEnter
+IconWindow.sca/SCCM_IconWin_DrawIcon
+
+    NAME
+	SCCM_IconWin_DrawIcon
+
+    SYNOPSIS
+	ULONG Result = DoMethod(obj,SCCM_IconWin_DrawIcon,Object *IconObject);
+
+    FUNCTION
+	Draws (IconObject) in window by invoking IDTM_Draw method with icon
+
+    INPUTS
+	IconObject - Icon to be drawn
+
+    RESULT
+	Result - result from IDTM_Draw
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_EndUndoStep
+
+    NAME
+        SCCM_IconWin_Browse
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_EndUndoStep, APTR undoStep);
+
+    FUNCTION
+	This method is part of the Scalos Undo/Redo API.
+	Call this method to finish an Undo step handle if the operation
+	in progress consists of multiple objects, e.g. moving 10 icons.
+	The undoStep handle has been previously acquired by
+	calling SCCM_IconWin_BeginUndoStep and has been used to mark
+	subsequent SCCM_IconWin_AddUndoEvent calls as being part of
+	one single undo step.
+
+    INPUTS
+	undoStep - the Undo step handle obtained by
+		calling SCCM_IconWin_BeginUndoStep.
+
+    RESULT
+	opaque handle that identifies the Undo step, or NULL.
+
+    SEE ALSO
+        SCCM_IconWin_AddUndoEvent
+        SCCM_IconWin_BeginUndoStep
+IconWindow.sca/SCCM_IconWin_GetDefIcon
+
+    NAME
+	SCCM_IconWin_GetDefIcon
+
+    SYNOPSIS
+	Object *icon = DoMethod(obj,SCCM_IconWin_GetDefIcon,CONST_STRPTR Name,
+		LONG Type,ULONG Protection);
+
+    FUNCTION
+	Tries to get a default icon for the specified file. Calls 
+	iconobject.library/GetDefIconObject and returns result.
+
+    INPUTS
+	Name - file name
+	Type - file type (fib_DirEntryType from FileInfoBlock)
+	Protection - file protection (fib_Protection from FileInfoBlock)
+
+    RESULT
+	icon - default Icon IconObject
+
+    SEE ALSO
+	iconobject.library/GetDefIconObject
+IconWindow.sca/SCCM_IconWin_GetIconFileType
+
+    NAME
+	SCCM_IconWin_GetIconFileType
+
+    SYNOPSIS
+	Object *icon = DoMethod(obj,SCCM_IconWin_GetIconFileType,
+		struct ScaIconNode *icon);
+
+    FUNCTION
+	Identifies object for icon, find the appropriate filetype 
+	and setup the in_FileType member of ScaIconNode.
+
+    INPUTS
+	icon - icon to find filetype for.
+
+    RESULT
+	icon - default Icon IconObject
+
+    SEE ALSO
+	iconobject.library/GetDefIconObject
+IconWindow.sca/SCCM_IconWin_History_Back
+
+    NAME
+        SCCM_IconWin_History_Back
+
+    SYNOPSIS
+	Object *icon = DoMethod(obj,SCCM_IconWin_History_Back);
+
+    FUNCTION
+	Move one step backwards in the history of the window contents,
+	and switch to display the contents of the path from the history
+	using the current view mode.
+	Does nothing if the current view is already the oldest one
+        in the window history.
+
+    INPUTS
+	None.
+
+    RESULT
+	None.
+
+    SEE ALSO
+        SCCM_IconWin_History_Forward
+IconWindow.sca/SCCM_IconWin_History_Forward
+
+    NAME
+        SCCM_IconWin_History_Forward
+
+    SYNOPSIS
+	Object *icon = DoMethod(obj,SCCM_IconWin_History_Forward);
+
+    FUNCTION
+	Move one step forward in the history of the window contents,
+	and switch to display the contents of the path from the history
+	using the current view mode.
+	Does nothing if the current view is already the most recent one
+        in the window history.
+
+    INPUTS
+	None.
+
+    RESULT
+	None.
+
+    SEE ALSO
+        SCCM_IconWin_History_Back
+IconWindow.sca/SCCM_IconWin_ImmediateCheckUpdate
+
+    NAME
+	SCCM_IconWin_ImmediateCheckUpdate
+
+    SYNOPSIS
+	Object *icon = DoMethod(obj,SCCM_IconWin_ImmediateCheckUpdate);
+
+    FUNCTION
+	Scan directory associated to this window and check for any changes 
+	between the display and the disk contents. If any changes are found,
+	icons are added, removed, or replaced as necessary.
+
+    INPUTS
+	None
+
+    SEE ALSO
+	SCCM_IconWin_ScheduleUpdate
+IconWindow.sca/SCCM_IconWin_LayoutIcon
+
+    NAME
+	SCCM_IconWin_LayoutIcon
+
+    SYNOPSIS
+	ULONG Result = DoMethod(obj,SCCM_IconWin_LayoutIcon,Object *IconObject,
+		ULONG LayoutFlags);
+
+    FUNCTION
+	Prepares an IconObject to be rendered.
+
+    INPUTS
+	IconObject - icon to be layouted
+	LayoutFlags
+		IOLAYOUTB_NormalImage		// Layout normal Image
+		IOLAYOUTB_SelectedImage		// Layout selected Image
+
+    RESULT
+	Result - result from IDTM_Layout
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_MakeWBArg
+
+    NAME
+	SCCM_IconWin_MakeWBArg
+
+    SYNOPSIS
+	ULONG Count = DoMethod(obj,SCCM_IconWin_MakeWBArg,
+		struct ScaIconNode *icon, struct WBArg *Buffer);
+
+    FUNCTION
+	Fill a WBArg structure (wa_Lock and wa_Name) from the given icon or 
+	from the window.
+
+    INPUTS
+	icon - icon to make WBArg from
+		if icon = NULL, return WBArg with wa_Lock = copy of 
+		window lock and wa_Name = NULL
+	Buffer - Result buffer with at least enough room for one WBArg.
+
+    RESULT
+	Count - number of successfully created WBArg's in (Buffer)
+
+    SEE ALSO
+        SCCM_IconWin_CountWBArg
+
+IconWindow.sca/SCCM_IconWin_MenuCommand
+
+    NAME
+	SCCM_IconWin_MenuCommand
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_MenuCommand,CONST_STRPTR CmdName, 
+		struct ScaIconNode *icon, BOOL state);
+
+    FUNCTION
+
+
+    INPUTS
+	CmdName - command name
+	icon - icon to apply command to
+	state - ?
+
+    RESULT
+	nothing
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_NewPath
+
+    NAME
+        SCCM_IconWin_NewPath
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_NewPath,CONST_STRPTR path,ULONG tags,...);
+
+    FUNCTION
+	Change contents in existing window to display the given new path.
+
+    INPUTS
+	path - command name
+	tags - tag list.
+	
+    TAGS
+	SCA_ShowAllMode - one of the workbench DDFLAGS_* values.
+	SCA_ViewModes - one of the workbench DDVM_BY* values
+	SCA_XOffset - (LONG) Window X offset
+	SCA_YOffset - (LONG) Window Y offset
+	SCA_IconList - (struct ScaIconNode *) pregenerated icon list
+
+    RESULT
+	Success - FALSE on failure, TRUE to indiciate success.
+
+    SEE ALSO
+        scalosAPI/SM_NewWindowPath
+IconWindow.sca/SCCM_IconWin_NewPatternNumber
+
+    NAME
+	SCCM_IconWin_NewPatternNumber
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_NewPatternNumber,ULONG NewPatternNumber);
+
+    FUNCTION
+	
+
+    INPUTS
+	NewPatternNumber - Instruct Scalos to use a new background for the 
+		current icon window. Special constant can be specified to
+		use one of the predefined default patterns:
+
+		PATTERNNR_WorkbenchDefault	use default Workbench 
+						window background.
+		PATTERNNR_IconWindowDefault	use default icon window 
+						background pattern.
+		PATTERNNR_TextWindowDefault	use default text window 
+						pattern.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_NewViewMode
+
+    NAME
+	SCCM_IconWin_NewViewMode
+
+    SYNOPSIS
+	Object *WindowObj = DoMethod(obj,SCCM_IconWin_NewViewMode,
+		ULONG ViewMode);
+
+    FUNCTION
+	changes window view mode from text to icon and vice versa.
+
+    INPUTS
+	ViewMode - new window view mode
+
+    RESULT
+	WindowObj - IconWindow.sca subclass object if window class 
+		changes from text to icon or vice versa
+		NULL if window class is not changed.
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_Open
+
+    NAME
+	SCCM_IconWin_Open
+
+    SYNOPSIS
+	BOOL Success = DoMethod(obj, SCCM_IconWin_Open, struct ScaIconNode *icon, ULONG Flags);
+
+    FUNCTION
+	perform "open" function on (icon)
+
+    INPUTS
+	icon - icon to open
+	Flags - ICONWINOPENF_IgnoreFileTypes -- always OPEN icon, ignore 
+		file type settings.
+		ICONWINOPENF_NewWindow -- open drawers in new window, regardless
+		of browser mode.
+
+    RESULT
+	Success - TRUE if new window could be opened
+		FALSE if anything went wrong
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_RandomizePatternNumber
+
+    NAME
+        SCCM_IconWin_RandomizePatternNumber
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_RandomizePatternNumber);
+
+    FUNCTION
+	If multiple patterns are configured for the IconWindow, a new
+	pseudo-random pattern is selected. This Method doesn't do anything
+	if there is only a single pattern defined for this window.
+
+    INPUTS
+	nothing
+
+    RESULT
+	nothing
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_RawKey
+
+    NAME
+	SCCM_IconWin_RawKey
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_RawKey,struct IntuiMessage *iMsg);
+
+    FUNCTION
+	Processes Intuition IDCMP_RAWKEY events.
+
+    INPUTS
+	iMsg - IntuiMessage
+
+    RESULT
+	nothing
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_ReadIcon
+
+    NAME
+	SCCM_IconWin_ReadIcon
+
+    SYNOPSIS
+	struct ScaIconNode *icon = DoMethod(obj,SCCM_IconWin_ReadIcon,
+			CONST_STRPTR name, struct ScaReadIconArg *ria);
+
+    FUNCTION
+	Read one icon, add it to the window icon list, and display it. 
+	If an icon with the same name already exists it is replaced.
+	If no icon could be created, i.e. because the file system
+	object is no longer present, any existing icon is removed
+        from the window.
+	The intended use of this method is to update icon window after
+	change in file system, i.e. add file, remove file, or change file.
+
+    INPUTS
+	name - name of the icon
+	ria - pointer to struct ScaReadIconArg with information about x/y icon 
+		position, and optional Lock on parent directory. 
+		ria may be NULL.
+
+    RESULT
+	icon - newly created ScaIconNode or NULL if something went wrong.
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_ReadIconList
+
+    NAME
+	SCCM_IconWin_ReadIconList
+
+    SYNOPSIS
+	BOOL Error = DoMethod(obj,SCCM_IconWin_ReadIconList,ULONG flags);
+
+    FUNCTION
+	Read all icons in directory into window.
+
+    INPUTS
+	flags - SCCV_IconWin_ReadIconList_ShowAll = show all files
+
+    RESULT
+	SCANDIR_OK              - everything worked, continue
+	SCANDIR_FAIL_ABORT      - fatal error, abort
+	SCANDIR_FAIL_RETRY      - maybe recoverable error, continue
+	SCANDIR_EXALL_FAIL      - ExAll failed, retry with Examine
+	SCANDIR_EXALL_BADNUMBER - ExAll failed, retry with lower rilc_ExAllType
+	SCANDIR_ABORT           - externally aborted
+	SCANDIR_FINISHED        - dir scan finished, end
+	SCANDIR_VIEWMODE_CHANGE - window view mode changed
+	SCANDIR_WINDOW_CLOSING  - Window is about to be closed
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_Redraw
+
+    NAME
+	SCCM_IconWin_Redraw
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_Redraw,ULONG flags);
+
+    FUNCTION
+	redraws window
+
+    INPUTS
+	flags
+		REDRAWB_DontEraseWindow : don't erase window before redraw
+		REDRAWB_ReLayoutIcons : relayout icons
+		REDRAWB_DontRefreshWindowFrame : do not refresh window frame
+
+    RESULT
+	nothing
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_RemIcon
+
+    NAME
+	SCCM_IconWin_RemIcon
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_RemIcon,BPTR Lock, CONSTR_STRPTR Name);
+
+    FUNCTION
+	Remove specified icon from window
+
+    INPUTS
+	Lock - Lock on icon directory
+	Name - Name of icon to remove
+
+    RESULT
+	nothing
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_RemFromControlBar
+
+    NAME
+        SCCM_IconWin_RemFromControlBar
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_RemFromControlBar,struct Gadget *g);
+
+    FUNCTION
+	Remove specified Gadget from window control bar, and disposes it.
+
+    INPUTS
+	g - Gadget to remove from control bar
+
+    SEE ALSO
+	SCCM_IconWin_AddToControlBar
+IconWindow.sca/SCCM_IconWin_RemFromStatusBar
+
+    NAME
+	SCCM_IconWin_RemFromStatusBar
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_RemFromStatusBar,struct Gadget *g);
+
+    FUNCTION
+	Remove specified Gadget from window status bar, and disposes it.
+
+    INPUTS
+	g - Gadget to remove from status bar
+
+    SEE ALSO
+	SCCM_IconWin_AddToStatusBar
+IconWindow.sca/SCCM_IconWin_SetVirtSize
+
+    NAME
+	SCCM_IconWin_SetVirtSize
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_SetVirtSize,ULONG Flags);
+
+    FUNCTION
+	Calculate bounding rectangle of all icons in window and optionally 
+	adjust window scrollers accordingly.
+
+    INPUTS
+	Flags
+		SETVIRTF_AdjustRightSlider  = adjust right (vertical) slider
+		SETVIRTF_AdjustBottomSlider = set bottom (horizontal) slider
+
+    RESULT
+	nothing
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_ShowGadgetToolTip
+
+    NAME
+	SCCM_IconWin_ShowIconToolTip
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_ShowGadgetToolTip, ULONG gadgetID);
+
+    FUNCTION
+	Display tool tip window for (gadgetID).
+
+    INPUTS
+	gadgetID - GadgetID of gadget to display tool tip for.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_ShowIconToolTip
+
+    NAME
+	SCCM_IconWin_ShowIconToolTip
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_ShowIconToolTip,
+		struct ScaIconNode *icon);
+
+    FUNCTION
+	Display icon tool tip window for (icon).
+
+    INPUTS
+	icon - icon to display tool tip for.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_Sleep
+
+    NAME
+	SCCM_IconWin_Sleep
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_Sleep);
+
+    FUNCTION
+	Iconify window and add AppIcon to Workbench.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_StartNotify
+
+    NAME
+        SCCM_IconWin_StartNotify
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_StartNotify);
+
+    FUNCTION
+	Cancel any existing drawer notification for this window,
+        and install a new notification.
+
+    INPUTS
+	none
+
+    RESULT
+	Success - TRUE if notification successfully started, FALSE on failure.
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_UnCleanUp
+
+    NAME
+        SCCM_IconWin_UnCleanUp
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_UnCleanUp);
+
+    FUNCTION
+	Revoke layout of all icons without fixed position.
+	In order to display those icons, SCCM_IconWin_CleanUp must be
+	performed to move those icons back to the normal icon display list.
+
+    INPUTS
+	none
+
+    RESULT
+        none
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_UnCleanUpRegion
+
+    NAME
+        SCCM_IconWin_UnCleanUpRegion
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_UnCleanUpRegion,region);
+
+    FUNCTION
+	Revoke layout of all icons without fixed position which are
+	located at least partially inside region.
+	In order to display those icons, SCCM_IconWin_CleanUp must be
+	performed to move those icons back to the normal icon display list.
+
+    INPUTS
+	region - Region where icons will be un-positioned
+
+    RESULT
+        none
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_Update
+
+    NAME
+	SCCM_IconWin_Update
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_Update);
+
+    FUNCTION
+	Re-read all icons into window and redraw window.
+
+    INPUTS
+	none
+
+    RESULT
+	SCANDIR_OK              - everything worked, continue
+	SCANDIR_FAIL_ABORT      - fatal error, abort
+	SCANDIR_FAIL_RETRY      - maybe recoverable error, continue
+	SCANDIR_EXALL_FAIL      - ExAll failed, retry with Examine
+	SCANDIR_EXALL_BADNUMBER - ExAll failed, retry with lower rilc_ExAllType
+	SCANDIR_ABORT           - externally aborted
+	SCANDIR_FINISHED        - dir scan finished, end
+	SCANDIR_VIEWMODE_CHANGE - window view mode changed
+	SCANDIR_WINDOW_CLOSING  - Window is about to be closed
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_UpdateIcon
+
+    NAME
+	SCCM_IconWin_UpdateIcon
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_UpdateIcon,BPTR Lock,CONST_STRPTR Name);
+
+    FUNCTION
+	Update and redisplay icon.
+
+    INPUTS
+	Lock - Lock to icon directory 
+	Name - name of icon
+
+    RESULT
+	none
+
+    SEE ALSO
+        SCCM_IconWin_UpdateIconTags
+IconWindow.sca/SCCM_IconWin_UpdateIconTags
+
+    NAME
+	SCCM_IconWin_UpdateIconTags
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_UpdateIconTags,BPTR Lock,CONST_STRPTR Name,ULONG Tags,...);
+
+    FUNCTION
+	Update and redisplay icon.
+
+    INPUTS
+	Lock - Lock to icon directory
+	Name - name of icon
+	tags - Taglist
+		UPDATEICON_IconType - (ULONG) suggested icon type (e.g. "WBDRAWER")
+			which is used if automatik type detection failed (e.g. if
+			object cannot be locked).
+
+    RESULT
+	none
+
+    SEE ALSO
+        SCCM_IconWin_UpdateIcon
+IconWindow.sca/SCCM_IconWin_UpdateControlBar
+
+    NAME
+        SCCM_IconWin_UpdateControlBar
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_UpdateControlBar,struct Gadget *g,ULONG Tags,...);
+
+    FUNCTION
+	Update window control bar member gadget. Applies OM_SET method with
+	the supplied taglist to member gadget.
+
+    INPUTS
+	g - Control bar member gadget to update
+	Tags - Taglist
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_UpdateStatusBar
+
+    NAME
+	SCCM_IconWin_UpdateStatusBar
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_IconWin_UpdateStatusBar,struct Gadget *g,ULONG Tags,...);
+
+    FUNCTION
+	Update window status bar member gadget. Applies OM_SET method with
+	the supplied taglist to member gadget.
+
+    INPUTS
+	g - Status bar member gadget to update
+	Tags - Taglist
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_WakeUp
+
+    NAME
+	SCCM_IconWin_WakeUp
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_WakeUp,ULONG ReLayout);
+
+    FUNCTION
+	Uniconify and open iconified window.
+
+    INPUTS
+	ReLayout - TRUE if all icons of the window should be relayouted
+
+    RESULT
+	nothing
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_ShowPopupMenu
+
+    NAME
+	SCCM_IconWin_ShowPopupMenu
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_ShowPopupMenu,
+		struct PopupMenu *pm, struct ScaIconNode *in, 
+		ULONG Flags, struct FileTypeDef *fType);
+
+    FUNCTION
+	Show a popup menu and execute the user's menu command.
+
+    INPUTS
+	pm - Popup menu to display.
+	in - Scalos icon node the popup menu should be associated to. 
+	     Can be NULL for window popup menus.
+	Flags - Show which items are still locked and HAVE TO BE UNLOCKED 
+	     during processing.
+	     SHOWPOPUPFLGF_IconSemaLocked - wt_IconSemaphore is still locked
+	     SHOWPOPUPFLGF_WinListLocked - Scalos window list is still locked.
+	fType - Private data structure for support of file type specific 
+	     popup menus. Should be NULL if unused.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+IconWindow.sca/SCCM_IconWin_WBStartupFinished
+
+    NAME
+        SCCM_IconWin_WBStartupFinished
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_IconWin_WBStartupFinished);
+
+    FUNCTION
+	This message is broadcasted to all Scalos windows as soon as WBStartup procedure has finished.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+

@@ -1,0 +1,94 @@
+# $Date: 2011-07-16 18:28:30 +0200 (Sa, 16. Jul 2011) $
+# $Revision: 784 $
+#############################################################
+TOPLEVEL	=	$(shell pwd)/../..
+
+# Native FlexCat doesn't like Linux paths
+ifeq ($(CROSS), )
+	SDPATH=/
+else
+	SDPATH=../..
+endif
+
+include		config.mk
+
+##############################################################################
+#
+# Project Object files
+#
+
+OBJS	=      	$(OBJDIR)/WindowProperties.o \
+		$(OBJDIR)/IconobjectMCC.o \
+		$(OBJDIR)/BitMapMCC.o \
+		$(OBJDIR)/Backfill.o \
+		$(OBJDIR)/ToolTypes.o \
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS:.o=.d)
+endif
+
+##############################################################################
+#
+# Subdirs
+#
+
+SUBDIRS	=	$(filter-out Catalogs/sample/Scalos, $(wildcard Catalogs/*/Scalos))
+
+##############################################################################
+#
+# Targets
+#
+
+NAME  	=       WindowProperties.module
+NAME_DB	=	$(NAME).debug
+
+##############################################################################
+
+.PHONY: all install clean bump dump nodebug
+
+all:	$(BINDIR)/$(NAME) \
+	$(BINDIR)/$(NAME_DB) \
+	all_subdirs
+
+##############################################################################
+
+WindowProperties.c : $(OBJDIR)/WindowProperties_Locale.h
+
+$(OBJDIR)/WindowProperties_Locale.h : WindowProperties.cd
+	@$(ECHO) "FlexCat $@"
+	$(FLEXCAT) $< $@=$(SDPATH)/CatComp_h.sd
+
+##############################################################################
+
+$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) : $(OBJS)
+	@$(ECHO) "Link $(NAME)"
+	@$(CC) $(OBJS) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(NAME_DB)
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(NAME_DB) -o $(BINDIR)/$(NAME)
+ifneq ($(MACHINE), ppc-amigaos)
+	-@chmod u+x $@
+endif
+
+##############################################################################
+
+install:
+	-@$(ECHO) "Installing $(NAME)"
+	@copy $(BINDIR)/$(NAME) Scalos:modules/ clone
+
+install: install_subdirs
+
+
+clean:
+	-@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d $(OBJDIR)/*.d.* \
+        	$(OBJDIR)/*.i $(OBJDIR)/*.s \
+		$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) \
+		*.dump *_str.* \
+		$(OBJDIR)/WindowProperties_Locale.h
+
+clean: clean_subdirs
+
+##############################################################################
+

@@ -1,0 +1,5 @@
+##base _ScalosPluginBase
+##public
+##bias 30
+SCAGetClassInfo()()
+##end

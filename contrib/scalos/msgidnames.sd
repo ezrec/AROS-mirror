@@ -1,0 +1,32 @@
+##stringtype C
+
+// MsgIdNames.h
+
+#ifndef MSGIDNAMES_H_INCLUDED
+#define MSGIDNAMES_H_INCLUDED
+
+/****************************************************************************/
+
+/* This file was created automatically.
+ * Do NOT edit by hand!
+ */
+
+#include "locale.h"
+
+#define	UNKNOWN_MSG	((LONG) ~0)
+
+struct MsgIdNameDef
+	{
+	ULONG mnd_MsgId;
+	CONST_STRPTR mnd_MsgName;
+	};
+
+static const struct MsgIdNameDef MsgIdNames[] =
+{
+	{ %i,	"%i"	},
+	{ 0,						NULL }
+};
+
+/****************************************************************************/
+
+#endif	/* MSGIDNAMES_H_INCLUDED */

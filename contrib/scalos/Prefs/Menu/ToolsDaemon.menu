@@ -1,0 +1,12 @@
+TITLE Utils
+	ITEM Item #1
+	HOTKEY 1
+	(CLI) 2048 CLI Command
+	(WB) WB Command
+	ITEMBAR
+	ITEM SubMenu
+		SUB Item #3
+		(WB) Command #3
+		SUB Item #2
+		(WB) Extra Command
+END

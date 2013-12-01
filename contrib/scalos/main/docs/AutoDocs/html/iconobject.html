@@ -1,0 +1,243 @@
+	<HTML><HEAD><TITLE>iconobject.library</TITLE></HEAD><BODY BACKGROUND='http://scalos.striatum.org/gfx/backdrop.gif'>
+	
+	<FONT SIZE="5"><B>iconobject.library</B></FONT><P><UL>
+<LI><A HREF="#1">--background</A></LI>
+<LI><A HREF="#2">NewIconObject</A></LI>
+<LI><A HREF="#3">DisposeIconObject</A></LI>
+<LI><A HREF="#4">GetDefIconObject</A></LI>
+<LI><A HREF="#5">PutIconObject</A></LI>
+<LI><A HREF="#6">IsIconName</A></LI>
+<LI><A HREF="#7">Convert2IconObject</A></LI>
+<LI><A HREF="#8">Convert2IconObjectA</A></LI></UL><P><UL><UL><A NAME="1"><br>
+    </LI>
+<LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+	--background<br>
+<br>
+</UL><FONT SIZE="4"><B>    SYNOPSIS<br>
+</B></FONT><PRE>	This library is an interface to the iconobject.datatype. Normaly<br>
+	it has comparable functions to icon.library. It was written because<br>
+	the datatypes.library was so slow while scaning the datatypes.<br>
+</UL><HR><A NAME="#2"><br>
+<br>
+    </LI>
+<LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+	NewIconObject<br>
+<br>
+</UL><FONT SIZE="4"><B>    SYNOPSIS<br>
+</B></FONT><PRE>	Object *NewIconObject (Name, Taglist)<br>
+	                           A0      A1<br>
+<br>
+	Object *NewIconObject ( CONST_STRPTR Name , APTR Taglist );<br>
+<br>
+	Object *NewIconObjectTags( CONST_STRPTR Name , ULONG, ... );<br>
+<br>
+</PRE>&nbsp;<br>
+<FONT SIZE="4"><B>    FUNCTION<br>
+</B></FONT><UL>	Reads an icon from disk. It cannot be use for drawings before a<br>
+	IDTM_Layout method was used.<br>
+<br>
+</UL><FONT SIZE="4"><B>    INPUTS<br>
+</B></FONT><UL>	Name - the filename (without an extention like .info)<br>
+	Taglist -<br>
+		IDTA_Text - text under the icon<br>
+		IDTA_InnerLeft<br>
+		IDTA_InnerTop<br>
+		IDTA_InnerRight<br>
+		IDTA_InnerBottom - offset from iconimage inside of the icon<br>
+		IDTA_FrameType - type of frame around the icon<br>
+		IDTA_TextPen - Outline pen for the icontext<br>
+		IDTA_TextMode - textmode<br>
+			IDTV_TextMode_Normal - standard text<br>
+			IDTV_TextMode_Outline - outline text<br>
+			IDTV_TextMode_Shadow - text with shadow (IDTA_TextPen<br>
+					       is the shadow color)<br>
+		IDTA_TextSkip - space between the icon and the text in pixels<br>
+<br>
+</UL><FONT SIZE="4"><B>    RESULT<br>
+</B></FONT><UL>	Object     - iconobject.datatype object or NULL if it fails to open<br>
+		     the icon<br>
+<br>
+</UL><FONT SIZE="4"><B>    SEE ALSO<br>
+</B></FONT><UL>	DisposeIconObject(), GetDefIconObject()<br>
+<br>
+</UL><HR><A NAME="#3"><br>
+<br>
+    </LI>
+<LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+	DisposeIconObject<br>
+<br>
+</UL><FONT SIZE="4"><B>    SYNOPSIS<br>
+</B></FONT><PRE>	DisposeIconObject (iconobject)<br>
+	                       A0<br>
+<br>
+	void DisposeIconObject ( Object * );<br>
+<br>
+</PRE>&nbsp;<br>
+<FONT SIZE="4"><B>    FUNCTION<br>
+</B></FONT><UL>	Disposes the iconobject. It's similar to intuitions DisposeObject().<br>
+<br>
+</UL><FONT SIZE="4"><B>    INPUTS<br>
+</B></FONT><UL>	iconobject - iconobject.datatype object<br>
+<br>
+</UL><FONT SIZE="4"><B>    RESULT<br>
+</B></FONT><UL><br>
+</UL><FONT SIZE="4"><B>    SEE ALSO<br>
+</B></FONT><UL><br>
+</UL><HR><A NAME="#4"><br>
+<br>
+    </LI>
+<LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+	GetDefIconObject<br>
+<br>
+</UL><FONT SIZE="4"><B>    SYNOPSIS<br>
+</B></FONT><PRE>	Object *GetDefIconObject (IconType,TagList)<br>
+	                                D0      A0<br>
+<br>
+	Object *GetDefIconObject ( ULONG IconType , APTR TagList );<br>
+<br>
+	Object *GetDefIconObjectTags ( ULONG IconType , ULONG FirstTag, ... );<br>
+<br>
+</PRE>&nbsp;<br>
+<FONT SIZE="4"><B>    FUNCTION<br>
+</B></FONT><UL>	Reads a default icon from ram or disk.<br>
+<br>
+</UL><FONT SIZE="4"><B>    INPUTS<br>
+</B></FONT><UL>	IconType - diskobject icontype (see icon.library)<br>
+	TagList - the same tags like NewIconObject and:<br>
+		DTA_Name - you could give the icon a name<br>
+<br>
+</UL><FONT SIZE="4"><B>    RESULT<br>
+</B></FONT><UL>	Object - iconobject.datatype object or NULL if it fails.<br>
+<br>
+</UL><FONT SIZE="4"><B>    NOTE<br>
+</B></FONT><UL><br>
+</UL><FONT SIZE="4"><B>    SEE ALSO<br>
+</B></FONT><UL>	DisposeIconObject(), NewIconObject()<br>
+<br>
+</UL><HR><A NAME="#5"><br>
+<br>
+    </LI>
+<LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+	PutIconObject<br>
+<br>
+</UL><FONT SIZE="4"><B>    SYNOPSIS<br>
+</B></FONT><PRE>	PutIconObject (iconobject,path,TagList)<br>
+	                   A0      A1    A2<br>
+<br>
+	void PutIconObject ( Object *iconobject, CONST_STRPTR path, APTR TagList );<br>
+<br>
+	void PutIconObjectTags ( Object *iconobject, CONST_STRPTR path, ULONG FirstTag, ... );<br>
+<br>
+</PRE>&nbsp;<br>
+<FONT SIZE="4"><B>    FUNCTION<br>
+</B></FONT><UL>	Writes an icon to disk. This function sends the IDTM_Write method<br>
+<br>
+</UL><FONT SIZE="4"><B>    INPUTS<br>
+</B></FONT><UL>	iconobject - iconobject.datatype object<br>
+	path - the path for the icon (without an extention)<br>
+	TagList -<br>
+		ICONA_NoNewImage - don't change the image (the readed image<br>
+				   will be rewritten)<br>
+		ICONA_NoPosition - save a non-position icon<br>
+		ICONA_NoUsePosition - use the current position of the icon-<br>
+				      object<br>
+<br>
+</UL><FONT SIZE="4"><B>    RESULT<br>
+</B></FONT><UL><br>
+</UL><FONT SIZE="4"><B>    SEE ALSO<br>
+</B></FONT><UL><br>
+</UL><HR><A NAME="#6"><br>
+<br>
+    </LI>
+<LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+	IsIconName<br>
+<br>
+</UL><FONT SIZE="4"><B>    SYNOPSIS<br>
+</B></FONT><PRE>	pos IsIconName (filename)<br>
+	                   A0<br>
+<br>
+	ULONG pos IsIconName ( CONST_STRPTR filename );<br>
+<br>
+</PRE>&nbsp;<br>
+<FONT SIZE="4"><B>    FUNCTION<br>
+</B></FONT><UL>	Checks if the given filename could be an icon, because you don't know<br>
+	which extention it could have.<br>
+<br>
+</UL><FONT SIZE="4"><B>    INPUTS<br>
+</B></FONT><UL>	filename - the path to check<br>
+<br>
+</UL><FONT SIZE="4"><B>    RESULT<br>
+</B></FONT><UL>	pos - NULL if it's not an icon<br>
+	      ~0 if it's an icon, but it has no extention<br>
+	      &gt;0 the position inside the filename where the extention begins<br>
+<br>
+</UL><FONT SIZE="4"><B>    SEE ALSO<br>
+</B></FONT><UL><br>
+</UL><HR><A NAME="#7"><br>
+<br>
+    </LI>
+<LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+	Convert2IconObject<br>
+<br>
+</UL><FONT SIZE="4"><B>    SYNOPSIS<br>
+</B></FONT><PRE>	Object *Convert2IconObject (diskobject)<br>
+	                                   A0<br>
+<br>
+	Object *Convert2IconObject ( struct DiskObject *);<br>
+<br>
+</PRE>&nbsp;<br>
+<FONT SIZE="4"><B>    FUNCTION<br>
+</B></FONT><UL>	Converts a icon.library - diskobject to a iconobject.datatype object.<br>
+<br>
+</UL><FONT SIZE="4"><B>    INPUTS<br>
+</B></FONT><UL>	diskobject - diskobject from icon.library<br>
+<br>
+</UL><FONT SIZE="4"><B>    RESULT<br>
+</B></FONT><UL>	object - iconobject.datatype object<br>
+<br>
+</UL><FONT SIZE="4"><B>    NOTE<br>
+</B></FONT><UL>	THIS FUNCTION IS PRIVATE! IT SHOULD NOT BE USED!<br>
+<br>
+</UL><FONT SIZE="4"><B>    SEE ALSO<br>
+</B></FONT><UL>	DisposeIconObject(), Convert2IconObjectTags(), Convert2IconObjectA()<br>
+<br>
+</UL><HR><A NAME="#8"><br>
+<br>
+    </LI>
+<LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+	Convert2IconObjectA (V40)<br>
+	Convert2IconObjectTags<br>
+<br>
+</UL><FONT SIZE="4"><B>    SYNOPSIS<br>
+</B></FONT><PRE>	Object *Convert2IconObjectA(diskobject,taglist)<br>
+	                                A0        A1<br>
+<br>
+	Object *Convert2IconObjectA( struct DiskObject *, <br>
+		CONST struct TagItem *taglist);<br>
+	Object *Convert2IconObjectTags( struct DiskObject *, <br>
+		ULONG firsttag, ...);<br>
+<br>
+</PRE>&nbsp;<br>
+<FONT SIZE="4"><B>    FUNCTION<br>
+</B></FONT><UL>	Converts a icon.library - diskobject to a iconobject.datatype object.<br>
+	This is an extension to Convert2IconObject().<br>
+<br>
+</UL><FONT SIZE="4"><B>    INPUTS<br>
+</B></FONT><UL>	diskobject - diskobject from icon.library<br>
+	taglist - tags, same as in NewIconObject()<br>
+<br>
+</UL><FONT SIZE="4"><B>    RESULT<br>
+</B></FONT><UL>	object - iconobject.datatype object<br>
+<br>
+</UL><FONT SIZE="4"><B>    NOTE<br>
+</B></FONT><UL>	THIS FUNCTION IS PRIVATE! IT SHOULD NOT BE USED!<br>
+<br>
+</UL><FONT SIZE="4"><B>    SEE ALSO<br>
+</B></FONT><UL>	DisposeIconObject(), Convert2IconObject()<br>
+<br>
+</UL><HR><A NAME="#9"><br>
+ 
+	</LI></UL><P align="right">
+	Generated on 12th April 2004 by ad2html.pl v0.87 by <A HREF="http://www.philprice.net" TARGET="_blank">Phil Price</A>
+	</BODY></HTML>
+	

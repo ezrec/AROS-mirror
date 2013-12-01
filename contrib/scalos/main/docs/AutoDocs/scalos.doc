@@ -1,0 +1,1434 @@
+TABLE OF CONTENTS
+
+scalos.library/--background
+scalos.library/SCA_AddBob
+scalos.library/SCA_AllocMessage
+scalos.library/SCA_AllocNode
+scalos.library/SCA_AllocStdNode
+scalos.library/SCA_CountWBArgs
+scalos.library/SCA_DisposeScalosObject
+scalos.library/SCA_DrawDrag
+scalos.library/SCA_EndDrag
+scalos.library/SCA_FreeAllNodes
+scalos.library/SCA_FreeMessage
+scalos.library/SCA_FreeNode
+scalos.library/SCA_FreeScalosClass
+scalos.library/SCA_FreeWBArgs
+scalos.library/SCA_GetDefIconObject
+scalos.library/SCA_InitDrag
+scalos.library/SCA_LockDrag
+scalos.library/SCA_LockWindowList
+scalos.library/SCA_MakeScalosClass
+scalos.library/SCA_MakeWBArgs
+scalos.library/SCA_MoveNode
+scalos.library/SCA_NewAddAppIcon
+scalos.library/SCA_NewAddAppMenuItem
+scalos.library/SCA_NewAddAppWindow
+scalos.library/SCA_NewScalosObject
+scalos.library/SCA_OpenDrawerByName
+scalos.library/SCA_OpenIconWindow
+scalos.library/SCA_RemoveAppObject
+scalos.library/SCA_ScalosControlA
+scalos.library/SCA_ScreenTitleMsg
+scalos.library/SCA_SortNodes
+scalos.library/SCA_SwapNodes
+scalos.library/SCA_UnlockDrag
+scalos.library/SCA_UnLockWindowList
+scalos.library/SCA_UpdateIcon
+scalos.library/SCA_WBStart
+
+scalos.library/--background
+
+    NAME
+	--background
+
+    DESCRIPTION
+	This library is used as application interface for the Scalos
+	workbenchreplacement. It's only available if Scalos is running.
+	This means if the library-open fails Scalos isn't running.
+
+	For information about NodeList see SCA_SortNodes() and Node see
+	SCA_AllocStdNode().
+
+scalos.library/SCA_WBStart
+
+    NAME
+	SCA_WBStart
+
+    SYNOPSIS
+	succ SCA_WBStart (ArgArray, Taglist, NumArgs )
+	                   A0         A1       D0
+
+	BOOL SCA_WBStart ( struct WBArg *ArgArray , 
+		const struct TagItem *Taglist, ULONG NumArgs );
+
+	BOOL SCA_WBStartTags( struct WBArg *ArgArray , ULONG NumArgs, 
+		ULONG FirstTag, ... );
+
+    FUNCTION
+	The first argument is used as filename for the to started program.
+	The Locks inside the ArgArray are automatically unlocked (use DupLock)
+	and the strings are copied.
+	The first element in ArgArray must contain the directory lock and 
+	name of the icon to start.
+
+    INPUTS
+	ArgArray - Standard Workbench Args
+	NumArgs - Number of Args in the ArgArray. This must be at least
+		  one.
+	Taglist - Pointer to a taglist.
+
+    TAGS
+	SCA_IconObject (Object *) - iconobject.library - IconObject to get
+	    information from it. No icon will be loaded.
+
+	SCA_Priority (LONG) - priority for the newly started process
+
+	SCA_Stacksize (ULONG) - stack size if no icon is available
+
+	SCA_WaitTimeout (ULONG) - wait timeout in seconds
+
+	SCA_Flags (ULONG) - Flags
+	    SCAF_WBStart_NoIcon - don't read an icon.
+	    SCAF_WBStart_Wait - wait until the program returns
+	    SCAF_WBStart_PathSearch - search through paths
+	    SCAF_WBStart_NoIconCheck - don't check icon type
+
+    RESULT
+	succ - FALSE if the start fails. It only fails if not enough
+	       memory available or the WBL task couldn't be started.
+	       If the program couldn't be loaded it will return TRUE, because
+	       of it doesn't wait for the returncode of WBL task.
+
+    NOTE
+	Locks will *NOT* be unlocked if this function fails!
+
+    SEE ALSO
+	diskobject.library
+
+scalos.library/SCA_SortNodes
+
+    NAME
+	SCA_SortNodes
+
+    SYNOPSIS
+	SCA_SortNodes (NodeList, CompareFunc, SortType)
+	                 A0          A1          D0
+
+	void SCA_SortNodes ( struct ScalosNodeList *, struct Hook *, 
+		ULONG SortType);
+
+    FUNCTION
+	Sorts a list of MinNodes and uses the CompareFunc to find differences
+	between to nodes. NodeList is a pointer to a APTR which points to the
+	first node. The first node has as mln_succ a NULL and the last node 
+	has as mln_pred a NULL. Only mln_succ, mln_pred and the address of the
+	of the first will changed. Nothing will be reallocated or freed.
+
+	The CompareFunc will be called with a pointer to one node in A1 (Node0)
+	and a pointer to second node in A2 (Node1). You have to return a
+	specific value in D0:
+		  0	if Node0 = Node1
+		  1	if Node0 < Node1
+		 -1	if Node0 > Node1
+
+    INPUTS
+	NodeList - Pointer to an APTR which is a pointer to the first node
+	CompareFunc - Pointer to a Hook structure for the compare function
+	SortType -
+		SCA_SortType_Bubble	: enhanced BubbleSort
+		SCA_SortType_Selection	: SelectionSort
+		SCA_SortType_Insertion	: InsertionSort
+		SCA_SortType_Quick	: QuickSort
+		SCA_SortType_Best	: The nodes will be counted and then
+					  the best SortType will be used.
+    SEE ALSO
+	SCA_AllocNode(), SCA_AllocStdNode(), SCA_FreeNode(), 
+	SCA_FreeAllNodes(), SCA_MoveNode(), SCA_SwapNodes()
+
+scalos.library/SCA_NewAddAppIcon
+
+    NAME
+	SCA_NewAddAppIcon
+	SCA_NewAddAppIconTags
+
+    SYNOPSIS
+	AppObject = SCA_NewAddAppIcon (ID, UserData, IconObject, MessagePort, 
+	   D0                          D0     D1         A0          A1 
+		Taglist)
+	          A2
+
+	struct AppObject *SCA_NewAddAppIcon( ULONG ID, ULONG UserData, 
+		struct IconObject *, struct MsgPort *, 
+		const struct TagItem *Taglist);
+
+	struct AppObject *SCA_NewAddAppIconTags( ULONG ID, ULONG UserData, 
+		struct IconObject *, struct MsgPort *, 
+		ULONG FirstTag, ...);
+
+    FUNCTION
+	Adds an icon to the mainwindow of the Scalos-screen. See
+	workbench.library/AddAppIconA() for more information.
+
+    INPUTS
+	ID, UserData - will be passed through the AppMessage
+	IconObject - diskobject.library - IconObject, IDTM_Layout should not
+	to be done.
+	MessagePort - a MsgPort where you will receive the AppMessage
+	Taglist - pointer to a taglist.
+
+    TAGS
+	Currently no tags are defined. With wb39.plugin, however, most of the
+	V44 workbench tags are supported.
+
+    RESULT
+	AppObject - a private structure to be pass to SCA_RemoveAppObject() 
+		    or NULL after failure
+
+    SEE ALSO
+	SCA_NewAddAppWindow(), SCA_NewAddAppMenuItem(), SCA_RemoveAppObject()
+	workbench.library/AddAppIconA()
+
+scalos.library/SCA_NewAddAppWindow
+
+    NAME
+	SCA_NewAddAppWindow
+	SCA_NewAddAppWindowTags
+
+    SYNOPSIS
+	AppObject = SCA_NewAddAppWindow (ID, UserData, Window, MessagePort, 
+	   D0                            D0     D1       A0        A1
+		Taglist)
+	          A2
+
+	struct AppObject *SCA_NewAddAppWindow( ULONG ID, ULONG UserData, 
+		struct Window *, struct MsgPort *, 
+		const struct TagItem *Taglist);
+
+	struct AppObject *SCA_NewAddAppWindowTags( ULONG ID, ULONG UserData, 
+		struct Window *, struct MsgPort *, ULONG FirstTag, ...);
+
+    FUNCTION
+	Same as workbench.library/AddAppWindowA(). See there for further 
+	information.
+
+    INPUTS
+	ID, UserData - will be passed through the AppMessage
+	Window - Intuition Window
+	MessagePort - a MsgPort where you will receive the AppMessage
+	Taglist - pointer to a taglist.
+
+    TAGS
+	Currently no tags are defined.
+
+    RESULT
+	AppObject - a private structure to be pass to SCA_RemoveAppObject 
+		    or NULL on failure
+
+    SEE ALSO
+	SCA_NewAddAppIcon(), SCA_NewAddAppMenuItem(), SCA_RemoveAppObject()
+	workbench.library/AddAppWindowA()
+
+scalos.library/SCA_NewAddAppMenuItem
+
+    NAME
+	SCA_NewAddAppMenuItem
+	SCA_NewAddAppMenuItemTags
+
+    SYNOPSIS
+	AppObject = SCA_NewAddAppMenuItem (ID, UserData, Text, MessagePort, 
+	   D0                              D0     D1      A0       A1
+		Taglist)
+	          A2
+
+	struct AppObject *SCA_NewAddAppMenuItem ( ULONG ID, ULONG UserData, 
+		CONST_STRPTR Text, struct MsgPort *, 
+		const struct TagItem *Taglist);
+
+	struct AppObject *SCA_NewAddAppMenuItemTags( ULONG ID, 
+		ULONG UserData, CONST_STRPTR Text, struct MsgPort *, 
+		ULONG FirstTag, ...);
+
+    FUNCTION
+	Same as workbench.library/AddAppMenuItemA(). See there for further 
+	information.
+
+    INPUTS
+	ID, UserData - will be passed through the AppMessage
+	Text - a pointer to the menutext. Starting with V40, any menu
+	       text consisting entirely of '-', '_' or '~' characters will
+	       result in a separator bar to be added.
+	MessagePort - a MsgPort where you will receive the AppMessage
+	Taglist - pointer to a taglist.
+
+    TAGS
+	WBAPPMENUA_CommandKeyString (STRPTR) -- Command key to assign to
+	    this AppMenu. This must be a NUL-terminated string. If the
+	    string is empty, it will be ignored. Also, if the command key
+	    is already in use by a different menu item it will be ignored,
+	    too. In any case, only the first character of the string will
+	    be used (V40).
+
+	    This tag defaults to NULL.
+
+	WBAPPMENUA_GetKey (ULONG *) -- To add menus with sub menu items,
+	    you need to add a menu item first which the sub items will
+	    be added to later. In order to do this, add the item the sub items
+	    should be attached to and use the WBAPPMENUA_GetKey tag to
+	    obtain a key value. This key value is to be used later with the
+	    WBAPPMENUA_UseKey tag (V40.20).
+
+	    This feature was introduced in Scalos 40.20, it
+	    does not work in any of the older Scalos releases.
+
+	    This tag defaults to NULL.
+
+	WBAPPMENUA_GetTitleKey (ULONG *) -- To add new entries to the Scalos
+	    menu strip you first need to create a new title to which the new
+	    menu items can be attached later. To do this, first create a new
+	    menu entry and use the WBAPPMENUA_GetTitleKey tag to obtain a key
+	    value. This key value is to be used later with the
+	    WBAPPMENUA_UseKey tag (V40.20).
+
+	    This tag defaults to NULL.
+
+	WBAPPMENUA_UseKey (ULONG) -- When adding a menu item with the
+	    WBAPPMENUA_UseKey tag, using a key value obtained by a previous
+	    invocation of AddAppMenuItemA(), the new menu item will be
+	    added as a sub item (V40.20).
+
+	    If the key you provide was obtained via the WBAPPMENUA_GetTitleKey
+	    tag, then the item you add will be attached to the respective
+	    menu entry (V40.20).
+
+	    This tag defaults to NULL.
+
+    RESULT
+	AppObject - a private structure to be pass to SCA_RemoveAppObject or 
+		    NULL on failure
+
+	            Starting with V40, NULL will be returned if you attempt to
+	            add an AppMenu item to a menu which already contains 63
+	            menu items. Only a maximum of 15 sub items can be added 
+	            to a menu item.
+
+    SEE ALSO
+	SCA_NewAddAppIcon(), SCA_NewAddAppWindow(), SCA_RemoveAppObject()
+	workbench.library/AddAppMenuItemA()
+
+scalos.library/SCA_RemoveAppObject
+
+    NAME
+	SCA_RemoveAppObject
+
+    SYNOPSIS
+	succ = SCA_RemoveAppObject (AppObject)
+	 D0                        A0
+
+	BOOL SCA_RemoveAppObject (struct AppObject *);
+
+    FUNCTION
+	Removes an AppObject from Scalos. This could be an Icon, a Window or
+	a MenuItem.
+
+    INPUTS
+	AppObject - result from SCA_NewAddAppIcon(), SCA_NewAddAppWindow() 
+		    or SCA_NewAddAppMenuItem()
+
+    RESULT
+	succ - currently it always returns TRUE
+
+    SEE ALSO
+	SCA_NewAddAppIcon(), SCA_NewAddAppWindow(), SCA_NewAddAppMenuItem()
+
+scalos.library/SCA_AllocStdNode
+
+    NAME
+	SCA_AllocStdNode
+
+    SYNOPSIS
+	Node = SCA_AllocStdNode (NodeList, NodeType)
+	 D0                        A0        D0
+
+	struct MinNode *SCA_AllocStdNode (struct ScalosNodeList *, 
+		ULONG NodeType);
+
+    FUNCTION
+	Allocates a standard Scalos-node. It's the only compatible why to
+	allocate one of the standard nodes. NEVER allocate a node yourself and
+	pass it to Scalos! The scalos.library will use a memorypool for all
+	nodes to decrease the memoryfragmentation. The new node will be the
+	last in your NodeList and it is cleared public memory. Don't change
+	mln_succ and mln_pred yourself, use the node function instead.
+	See SCA_SortNodes() for information about the NodeList.
+
+    INPUTS
+	NodeList - Pointer to an APTR which is a pointer to the first node
+	NodeType - see scalos.(h|i)
+
+    RESULT
+	Node - Node at the end or the NodeList or NULL on failure.
+
+    NOTE
+	Node *MUST* be freed with SCA_FreeNode() or SCA_FreeAllNodes()
+	This function preserves all registers except D0.
+
+    SEE ALSO
+	SCA_AllocNode(), SCA_FreeNode(), SCA_FreeAllNodes(), 
+	SCA_MoveNode(), SCA_SortNodes(), SCA_SwapNodes()
+
+scalos.library/SCA_AllocNode
+
+    NAME
+	SCA_AllocNode
+
+    SYNOPSIS
+	Node = SCA_AllocNode (NodeList, Size)
+	 D0                      A0      D0
+
+	struct MinNode *SCA_AllocNode (struct ScalosNodeList *, ULONG Size);
+
+    FUNCTION
+	Allocates a node and inserts it at the end of the NodeList. Use this
+	function only for your own node-handling. Never allocate a standard
+	Scalos-node, use SCA_AllocStdNode() instead. Size is the number of 
+	bytes that allocated after the the MinNode. This means the memsize 
+	of node is size+MLN_SIZE.
+	See SCA_AllocStdNode() for further information.
+
+    INPUTS
+	NodeList - Pointer to an APTR which is a pointer to the first node
+	Size - bytes after MLN_SIZE
+
+    RESULT
+	Node - Node at the end or the NodeList or NULL on failure.
+
+    NOTE
+	Node *MUST* be freed with SCA_FreeNode() or SCA_FreeAllNodes() !
+	This function preserves all registers except D0.
+
+    SEE ALSO
+	SCA_AllocStdNode(), SCA_FreeNode(), SCA_FreeAllNodes(), 
+	SCA_MoveNode(), SCA_SortNodes(), SCA_SwapNodes()
+
+scalos.library/SCA_FreeNode
+
+    NAME
+	SCA_FreeNode
+
+    SYNOPSIS
+	SCA_FreeNode (NodeList, Node)
+	                 A0      A1
+
+	void SCA_FreeNode (struct ScalosNodeList *, struct MinNode *);
+
+    FUNCTION
+	Removes the Node out of the NodeList and Frees a node allocated with
+	SCA_AllocStdNode() or SCA_AllocNode().
+
+    INPUTS
+	NodeList - pointer to an APTR which is a pointer to the first node
+	Node - node to remove and free
+
+    NOTE
+	Node *MUST* be part of NodeList!
+	This function preserves all registers.
+
+    SEE ALSO
+	SCA_AllocStdNode(), SCA_AllocNode(), SCA_FreeAllNodes(), 
+	SCA_MoveNode(), SCA_SortNodes(), SCA_SwapNodes()
+
+scalos.library/SCA_FreeAllNodes
+
+    NAME
+	SCA_FreeAllNodes
+
+    SYNOPSIS
+	SCA_FreeAllNodes (NodeList)
+	                    A0
+
+	void SCA_FreeAllNodes (struct ScalosNodeList *);
+
+    FUNCTION
+	Will free the whole list of nodes.
+
+    INPUTS
+	NodeList - pointer to an APTR which is a pointer to the first node
+
+    NOTE
+	This function preserves all registers.
+
+    SEE ALSO
+	SCA_AllocStdNode(), SCA_AllocNode(), SCA_FreeNode(), 
+	SCA_MoveNode(), SCA_SortNodes(), SCA_SwapNodes()
+
+scalos.library/SCA_MoveNode
+
+    NAME
+	SCA_MoveNode
+
+    SYNOPSIS
+	SCA_MoveNode (SrcNodeList, DestNodeList, Node)
+	                  A0            A1        D0
+
+	void SCA_MoveNode (struct ScalosNodeList *, struct ScalosNodeList *, 
+		struct MinNode *);
+
+    FUNCTION
+	Will remove the Node from SrcNodeList and will insert the Node at
+	the end of DestNodeList.
+
+    INPUTS
+	SrcNodeList - pointer to an APTR which is a pointer to the first node
+	DestNodeList - pointer to an APTR which is a pointer to the first node
+	Node - MinNode
+
+    NOTE
+	This function preserves all registers.
+	WARNING: Node *MUST* be member of SrcNodeList or very nasty 
+		things will happen !!
+
+    SEE ALSO
+	SCA_AllocStdNode(), SCA_AllocNode(), SCA_FreeNode(), 
+	SCA_FreeAllNodes(), SCA_SortNodes(), SCA_SwapNodes()
+
+scalos.library/SCA_SwapNodes
+
+    NAME
+	SCA_SwapNodes
+
+    SYNOPSIS
+	SCA_SwapNodes ( SrcNode, DestNode, NodeList)
+	                  A0        A1        A2
+
+	void SCA_SwapNodes (struct MinNode *, struct MinNode *, 
+		struct ScalosNodeList *);
+
+    FUNCTION
+	Swaps the positions of SrcNode and DestNode inside the NodeList.
+
+    INPUTS
+	SrcNode - MinNode
+	DestNode - MinNode
+	NodeList - pointer to an APTR which is a pointer to the first node
+
+    NOTE
+	SrcNode and DestNode *MUST* be part of NodeList!
+
+    SEE ALSO
+	SCA_AllocStdNode(), SCA_AllocNode(), SCA_FreeNode(), 
+	SCA_FreeAllNodes(), SCA_MoveNode(), SCA_SortNodes()
+
+scalos.library/SCA_OpenIconWindow
+
+    NAME
+	SCA_OpenIconWindow
+	SCA_OpenIconWindowTags
+
+    SYNOPSIS
+	succ SCA_OpenIconWindow ( TagList )
+	 D0                         A0
+
+	BOOL SCA_OpenIconWindow ( const struct TagItem *TagList );
+
+	BOOL SCA_OpenIconWindowTags(ULONG, ...);
+
+    FUNCTION
+	opens a windowtask filled with icons. All information will be given
+	as tags, see below.
+
+    INPUTS
+	TagList - pointer to a taglist.
+
+    TAGS
+	    SCA_IconNode (struct ScaIconNode *) - fullfilled ScaIconNode
+
+	    SCA_IconObject (Object *) - iconobject.library - iconobject
+
+	    SCA_Path (CONST_STRPTR) - the path to open
+
+	    SCA_MessagePort (struct MsgPort *) - Message port for reply 
+		to startup message of new icon window process, or NULL.
+
+	    SCA_WindowTitle (CONST_STRPTR) - windowtitle parsestring 
+		( take a look at the prefsprogram for info)
+
+	    SCA_WindowRect (struct IBox *) - rectangle with window 
+		dimensions (see diskobject.library).
+
+	    SCA_XOffset,SCA_YOffset (LONG) - virtual position
+
+	    SCA_PatternNumber (ULONG) - background pattern number which is 
+		configured in "Scalos Pattern" prefs
+
+	    SCA_ShowAllFiles (ULONG) - TRUE or FALSE
+		deprecated, use SCA_ShowAllMode instead!
+
+	    SCA_ShowAllMode (ULONG) - DDFLAGS_SHOWDEFAULT,
+		DDFLAGS_SHOWICONS, or DDFLAGS_SHOWALL.
+
+	    SCA_ViewModes (ULONG) - view modes for the window
+		SCAV_ViewModes_Icon
+		SCAV_ViewModes_Name
+		SCAV_ViewModes_Size
+		SCAV_ViewModes_Date
+		SCAV_ViewModes_Time
+		SCAV_ViewModes_Comment
+		SCAV_ViewModes_Protection
+		SCAV_ViewModes_Owner
+		SCAV_ViewModes_Group
+
+	    SCA_Flags (ULONG) - none available yet
+
+	    SCA_Iconify (ULONG) - TRUE or FALSE for open iconified
+
+	    SCA_NoActivateWindow (ULONG) - TRUE or FALSE. The new window 
+		will not be activated if this tag is set to TRUE. 
+		Defaults to FALSE.
+
+	    SCA_WindowStruct (struct ScaWindowStruct **) - The pointer to the
+		ScaWindowStruct of the new generated Scalos window will be
+		returned. If the new Scalos window couldn't be opened, NULL
+		is returned.
+
+	    SCA_BrowserMode (ULONG) - TRUE or FALSE. The window will be
+		opened in browser mode if set to TRUE.
+
+	    SCA_NoStatusBar (ULONG) - TRUE or FALSE. The status bar will not
+		be present in the new window if set to TRUE, overriding the
+		global setting for status bar.
+
+	    SCA_CheckOverlappingIcons (ULONG) - TRUE or FALSE. Defines whether
+		icon windows check for overlapping icons. If enabled, an icon
+		overlapping any other is repositioned on directory scan.
+		Default value is TRUE for MorphOS, FALSE for all other platforms.
+
+	    SCA_TransparencyActive (ULONG) - degree of opacity in active
+		window state, 0=transparent, 100=opaque.
+                Semi-transparent windows are not supported on all platforms.
+
+	    SCA_TransparencyInactive (ULONG) - degree of opacity in inactive
+	        window state, 0=transparent, 100=opaque
+                Semi-transparent windows are not supported on all platforms.
+
+    RESULT
+	succ - Success
+
+    NOTE
+	One of SCA_IconNode, SCA_IconObject or SCA_Path must be given!
+
+    SEE ALSO
+
+scalos.library/SCA_LockDrag
+
+    NAME
+	SCA_LockDrag
+
+    SYNOPSIS
+	 SCA_LockDrag ( draghandle )
+	   		   D0
+
+	void SCA_LockDrag ( APTR draghandle );
+
+    FUNCTION
+	Locks the screen layer info that is connected to the draghandle.
+	Main purpose is to temporarily unlock and lock again the screen
+        layers during a dragging operiation, in order to allow some drawing to happen.
+
+    INPUTS
+	draghandle - That drag handle that is to be locked.
+
+    SEE ALSO
+	SCA_UnLockDrag(), SCA_InitDrag(), SCA_EndDrag(), SCA_DrawDrag()
+
+scalos.library/SCA_LockWindowList
+
+    NAME
+	SCA_LockWindowList
+
+    SYNOPSIS
+	Windowlist SCA_LockWindowList ( accessmode )
+	 D0                                D0
+
+	struct ScaWindowList *SCA_LockWindowList ( LONG accessmode );
+
+    FUNCTION
+	Locks the windowlist and returns. This function is a main interface of
+	the Scalos-API. The messageport should be used to comunicate with a
+	windowtask. No window can be closed while the windowlist is locked.
+	For more information take a look at the ScalosAPI documentation.
+
+    INPUTS
+	accessmode -
+		SCA_LockWindowList_Shared - locks the window list for a read-
+		                only access. Shared access is sufficient if
+		                you just want to traverse the window list,
+		                and make sure nobody modifies the
+				list inbetween.
+		SCA_LockWindowList_Exclusiv - locks the window list
+				exclusively for read-write accesss. Exclusive
+				mode is required if windows are to be created
+				or removed.
+		SCA_LockWindowList_AttemptShared - tries to acquire a shared
+				lock on the window list for read-only access.
+				NULL is returned if the list cannot be locked,
+				e.g. because someone else holds an exclusive
+				lock on the list.
+		SCA_LockWindowList_AttemptExclusive - try to acquire an
+				exclusive lock on the window list.
+				NULL is returned if the list cannot be locked,
+				e.g. because someone else holds a lock on
+				the list.
+
+    RESULT
+	windowlist - a struct ScaWindowList * - With the
+				SCA_LockWindowList_Attempt*** values, it is
+				possible that NULL is returned if the window
+				list cannot be locked.
+
+    NOTE
+	Normally you should not use the SCA_LockWindowList_Exclusiv. If you
+	lock the windowlist exclusiv you should NEVER use intuition calls!
+
+    SEE ALSO
+	SCA_UnLockWindowList()
+
+scalos.library/SCA_UnLockWindowList
+
+    NAME
+	SCA_UnLockWindowList
+
+    SYNOPSIS
+	SCA_UnLockWindowList ()
+
+	void SCA_UnLockWindowList ( void );
+
+    FUNCTION
+	Unlocks a with SCA_LockWindowList() locked windowlist.
+
+    SEE ALSO
+	SCA_LockWindowList()
+
+scalos.library/SCA_AllocMessage
+
+    NAME
+	SCA_AllocMessage
+
+    SYNOPSIS
+	ScalosMessage SCA_AllocMessage( messagetype, additional_size)
+	   D0                               D0            D1
+
+	struct ScalosMessage *SCA_AllocMessage ( ULONG messagetype, 
+		UWORD additional_size );
+
+    FUNCTION
+	Allocates a message which could be sent to Scalos. It's the only
+	future-compatible way to do this. The scalos message signature and the
+	the message type will be set and the returned memory is cleared.
+
+    INPUTS
+	messagetype - see ScalosAPI.doc
+	additional_size - number of bytes that will be added to the size of
+		          the message. Normally this should be 0.
+
+    RESULT
+	ScalosMessage - a full-filled ScalosMessage of the selected type or NULL
+
+    NOTE
+	Never try to free a message yourself, it will cause a memory trashing!
+	Scalos uses fast memorypool functions for its messages.
+
+    SEE ALSO
+	SCA_FreeMessage()
+
+scalos.library/SCA_FreeMessage
+
+    NAME
+	SCA_FreeMessage
+
+    SYNOPSIS
+	SCA_FreeMessage( message )
+	                   A1
+
+	void SCA_FreeMessage ( struct ScalosMessage *);
+
+    FUNCTION
+	Frees a with SCA_AllocMessage() allocated message.
+
+    INPUTS
+	message - struct ScalosMessage (returned from SCA_AllocMessage())
+
+    SEE ALSO
+	SCA_AllocMessage()
+
+scalos.library/SCA_InitDrag
+
+    NAME
+	SCA_InitDrag
+
+    SYNOPSIS
+	DragHandle SCA_InitDrag( Screen )
+	    D0                     A0
+
+	struct DragHandle *SCA_InitDrag ( struct Screen *);
+
+    FUNCTION
+	Inits special bobroutines. This routines are easy to use and
+	support 24bit bobs.
+
+    INPUTS
+	Screen - the screen to use for the bobs or NULL for the default
+	         Scalos screen
+
+    RESULT
+	DragHandle - a private structure to pass it to the other Drag functions
+		or NULL on failure.
+
+    SEE ALSO
+	SCA_DrawDrag(), SCA_EndDrag(), SCA_LockDrag(), SCA_UnlockDrag()
+
+scalos.library/SCA_EndDrag
+
+    NAME
+	SCA_EndDrag
+
+    SYNOPSIS
+	SCA_EndDrag( DragHandle )
+	                 A0
+
+	void SCA_EndDrag ( struct DragHandle *);
+
+    FUNCTION
+	Removes all bobs from screen and frees it, if nessesary it unlocks
+	the layers.
+
+    INPUTS
+	DragHandle - result from SCA_InitDrag()
+
+    SEE ALSO
+	SCA_DrawDrag(), SCA_InitDrag(), SCA_LockDrag(), SCA_UnlockDrag()
+
+scalos.library/SCA_AddBob
+
+    NAME
+	SCA_AddBob
+
+    SYNOPSIS
+	succ SCA_AddBob( DragHandle, Bitmap, Mask, Width, Height, 
+	 D0                  A0        A1     A2     D0     D1
+		XOffset, YOffset )
+	           D2       D3
+
+	BOOL SCA_AddBob ( struct DragHandle *, struct BitMap *, APTR Mask, 
+		ULONG Width, ULONG Height, LONG XOffset, LONG YOffset );
+
+    FUNCTION
+	Addes a bitmap to the Boblist. Bitmap and Mask will be copied, it can 
+	be freed after calling this function. Mask is a planar bitplane the 
+	width divided by 8 and height. It must be in Chipram. X and Y offsets 
+	are the offset from movepoint give in SCA_DrawDrag(). Normaly it's 
+	the relative position to the mouse pointer.
+
+    INPUTS
+	DragHandle - result from SCA_InitDrag()
+	Bitmap - a standard bitmap structure, any depth allowed
+	Mask - width/8 * height mask for the bitmap
+	Width - width in pixels
+	Height - height in pixels
+	XOffset - relative x-position to the move point
+	YOffset - relative y-position to the move point
+
+    RESULT
+	succ - TRUE if anything went well, FALSE if some problem occured
+
+    SEE ALSO
+
+scalos.library/SCA_DrawDrag
+
+    NAME
+	SCA_DrawDrag
+
+    SYNOPSIS
+	SCA_DrawDrag( DragHandle, X, Y, Flags )
+	                  A0      D0 D1   D2
+
+	void SCA_DrawDrag ( struct DragHandle *, LONG X, LONG Y, ULONG Flags );
+
+    FUNCTION
+	Blits the bobs to the selected screen relative to the given position.
+
+    INPUTS
+	DragHandle - result from SCA_InitDrag()
+	X - movepoint x direction
+	Y - movepoint y direction
+	Flags - 
+	  SCAF_Drag_Transparent		- draw all bobs transparent, 
+					  normally it's a raster ("ghosted")
+	  SCAF_Drag_IndicateCopy	- draw all bobs plus 
+					  "copy" indicator
+	  SCAF_Drag_NoDropHere		- draw all bobs plus 
+				          "no drop" indicator
+	  SCAF_Drag_Hide		- hide bobs
+	  SCAF_Drag_IndicateMakeLink	- draw all bobs plus "make link" 
+					  indicator
+	  SCAF_Drag_NoDrawDrag		- (internal use only)
+
+    NOTE
+	Transparent drawing only works with CyberGfx installed and a 
+	workbench screen of more than 256 colors (depth > 8).
+
+    SEE ALSO
+	SCA_InitDrag(), SCA_EndDrag(), SCA_LockDrag(), SCA_UnlockDrag()
+
+scalos.library/SCA_UpdateIcon
+
+    NAME
+	SCA_UpdateIcon
+
+    SYNOPSIS
+	SCA_UpdateIcon( WindowType, SCA_UpdateIcon, UpdateIcon_Size )
+	                   D0           A0             D1
+
+	void SCA_UpdateIcon ( UBYTE WindowType, struct ScaUpdateIcon_IW *,
+		 ULONG ui_SIZE );
+
+    FUNCTION
+	Refreshes an icon specified in SCA_UpdateIcon structure. The icon 
+	will be loaded, removed or reloaded. The SCA_UpdateIcon struct 
+	depends on the windowtype.
+
+    INPUTS
+	WindowType - windowtype which should be updated
+	SCA_UpdateIcon - special information, depents on WindowType
+	UpdateIcon_Size - size of the SCA_UpdateIcon structure in bytes
+
+    SEE ALSO
+
+scalos.library/SCA_MakeWBArgs
+
+    NAME
+	SCA_MakeWBArgs
+
+    SYNOPSIS
+	number = SCA_MakeWBArgs( Buffer, Iconnode, ArgsSize )
+	                           A0       A1        D0
+
+	ULONG SCA_MakeWBArgs ( struct WBArg *Buffer, 
+		struct ScaIconNode *Iconnode, ULONG ArgsSize);
+
+    FUNCTION
+	Generates a WBArgs Array from all selected icons except the 
+	given Iconode.
+	It is recommended to determine the required buffer size
+        with SCA_CountWBArgs().
+
+    INPUTS
+	Buffer   - Array of WBArg structures to save the Lock and 
+		   Name pointers
+	Iconnode - an iconnode to exclude or NULL
+	ArgsSize - Number of WBArg's the buffer has room for
+
+    RESULT
+	number - number of args generated
+
+    SEE ALSO
+	SCA_FreeWBArgs() SCA_CountWBArgs()
+
+scalos.library/SCA_FreeWBArgs
+
+    NAME
+	SCA_FreeWBArgs
+
+    SYNOPSIS
+	number = SCA_FreeWBArgs( Buffer, Number, Flags )
+	                           A0      D0     D1
+
+	void SCA_FreeWBArgs ( struct WBArg *Buffer, ULONG Number, 
+		ULONG Flags);
+
+    FUNCTION
+	Frees a WBArg array generated with SCA_MakeWBArgs.
+
+    INPUTS
+	Buffer - Array with WBArg structures
+	Number - Number of WBArg's to free
+	Flags - 
+		SCAB_FreeLocks - free the Locks
+		SCAB_FreeName - free the namefields
+
+    SEE ALSO
+	SCA_MakeWBArgs(); SCA_CountWBArgs();
+
+scalos.library/SCA_CountWBArgs
+
+    NAME
+        SCA_CountWBArgs
+
+    SYNOPSIS
+	number = SCA_CountWBArgs( Iconnode )
+				    A0
+
+	ULONG SCA_CountWBArgs( struct ScaIconNode *Iconnode );
+
+    FUNCTION
+	Determines required size for WBArgs Array from all
+	selected icons except the given Iconode.
+	The returned count can be used to allocate a WBArg
+        array for SCA_MakeWBArgs().
+
+    INPUTS
+	Iconnode - an iconnode to exclude or NULL
+
+    RESULT
+	number - number of args that will be generated
+        by SCA_MakeWBArgs().
+
+    SEE ALSO
+	SCA_FreeWBArgs() SCA_MakeWBArgs()
+
+scalos.library/SCA_ScreenTitleMsg
+
+    NAME
+	SCA_ScreenTitleMsg
+
+    SYNOPSIS
+	SCA_ScreenTitleMsg( Format, Args )
+	                      A0     A1
+
+	void SCA_ScreenTitleMsg ( CONST_STRPTR Format, APTR Args);
+
+	void SCA_ScreenTitleMsgArgs( CONST_STRPTR Format, ...);
+
+    FUNCTION
+	Show a message on ScreenTitle of all Scalos windows.
+
+    INPUTS
+	Format - FormatString. All RawDoFmt() args are allowed.
+		special values :
+			NULL to recover the standard title. 
+			~0   to recover the last non-standard title (message).
+	Args - the arguments for the formatstring
+
+    SEE ALSO
+	exec.library/RawDoFmt
+
+scalos.library/SCA_MakeScalosClass
+
+    NAME
+	SCA_MakeScalosClass
+
+    SYNOPSIS
+	ScalosClass ( ClassName, SuperClassName, InstSize, DispFunc )
+	     D0           A0            A1          D0        A2
+
+	struct ScalosClass *SCA_MakeScalosClass ( CONST_STRPTR ClassName, 
+		CONST_STRPTR SuperClassName, UWORD InstSize, APTR DispFunc);
+
+    FUNCTION
+	Addes a new BOOPSI Class to the internal classlist. ClassName may be 
+	a new name or a classname that's already available. In this case the 
+	class will replace or enhance a known class.
+
+    INPUTS
+	ClassName - name of the new class or NULL for a private class
+	SuperClassName - name of the super class for the new class
+	InstSize - size of the instance variables
+	DispFunc - pointer to your Dispatcher function
+
+    RESULT
+	ScalosClass - a ScalosClass structure or NULL if it fails
+
+    NOTE
+	If you like a add a subclass to your private class then use the 
+	intuition class functions.
+
+    SEE ALSO
+	SCA_FreeScalosClass(), intuition.library/MakeClass
+
+scalos.library/SCA_FreeScalosClass
+
+    NAME
+	SCA_FreeScalosClass
+
+    SYNOPSIS
+	scc SCA_FreeScalosClass( ScalosClass )
+	D0                          A0
+
+	BOOL SCA_FreeScalosClass ( struct ScalosClass *);
+
+    FUNCTION
+	Removes a ScalosClass from the internal classlist.
+
+    INPUTS
+	ScalosClass - return value from SCA_MakeScalosClass()
+
+    RESULT
+	succ - FALSE if the class couldn't be removed, else TRUE
+
+    SEE ALSO
+	SCA_MakeScalosClass(), FreeClass()
+
+scalos.library/SCA_NewScalosObject
+
+    NAME
+	SCA_NewScalosObject
+	SCA_NewScalosObjectTags
+
+    SYNOPSIS
+	Object SCA_NewScalosObject( ClassName, TagList )
+	  D0                            A0       A1
+
+	Object *SCA_NewScalosObject ( CONST_STRPTR ClassName, 
+		const struct TagItem *TagList);
+
+	Object *SCA_NewScalosObjectTags( CONST_STRPTR ClassName, 
+		ULONG FirstTag, ...);
+
+    FUNCTION
+	Allocates and inits a new BOOPSI Object.
+
+    INPUTS
+	ClassName - Scalos Classname
+	TagList - taglist (depends on the class)
+
+    RESULT
+	Object - new BOOPSI Object or NULL
+
+    SEE ALSO
+	SCA_DisposeScalosObject(), NewObject()
+
+scalos.library/SCA_DisposeScalosObject
+
+    NAME
+	SCA_DisposeScalosObject
+
+    SYNOPSIS
+	SCA_DisposeScalosObject( Object )
+	                           A0
+
+	void SCA_DisposeScalosObject (Object *);
+
+    FUNCTION
+	Disposes a object created with SCA_NewScalosObject().
+
+    INPUTS
+	Object - BOOPSI Object
+
+    SEE ALSO
+	SCA_NewScalosObject(), DisposeObject()
+scalos.library/SCA_ScalosControlA
+
+    NAME
+	SCA_ScalosControlA -- Query or modify Scalos options (V40)
+	SCA_ScalosControl
+
+    SYNOPSIS
+	ULONG SCA_ScalosControlA( Name, TagList )
+	  D0                        A0     A1
+
+	ULONG SCA_ScalosControlA( CONST_STRPTR Name, 
+		const struct TagItem *TagList);
+
+	ULONG SCA_ScalosControl( CONST_STRPTR Name, ULONG FirstTag, ...);
+
+    FUNCTION
+	With this function you can query or modify global Scalos parameters.
+
+    INPUTS
+	name -- Name of an object to query or modify.
+
+	tags -- Additional options.
+
+    TAGS
+	SCALOSCTRLA_GetDefaultStackSize (ULONG *) -- Get the default stack
+	    size used by Scalos when launching Shell programs
+	    or programs without a valid stack size number.
+
+	    The default stack size is 8192 bytes.
+
+	SCALOSCTRLA_SetDefaultStackSize (ULONG) -- Set the default stack
+	    size used by Scalos when launching Shell programs
+	    or programs without a valid stack size number. You cannot
+	    set a stack size number smaller than 8192 bytes.
+
+	SCALOSCTRLA_GetProgramList (struct List **) -- You can obtain a list
+	    of currently running Workbench programs; every entry of this
+	    list will have the complete path to the program and the
+	    program name in its Node->ln_Name. When you no longer need
+	    the list, don't forget to free it again using the tag
+	    WBCTRLA_FreeProgramList.
+
+	SCALOSCTRLA_FreeProgramList (struct List *) -- With this tag you can
+	    free the list allocated by the SCALOSCTRLA_GetProgramList tag.
+
+	SCALOSCTRLA_GetCloseWBDisabled (ULONG *) -- Get the current disable
+	    state for the intuition.library/CloseWorkBench() function. 
+	    If TRUE, intuition.library/CloseWorkBench() always returns FALSE 
+	    and Scalos will never close.
+
+	SCALOSCTRLA_SetCloseWBDisabled (ULONG) -- Set the disable
+	    state for the intuition.library/CloseWorkBench() function.
+	    If TRUE, intuition.library/CloseWorkBench() always returns FALSE 
+	    and Scalos will never close.
+
+	SCALOSCTRLA_GetSplashEnable (ULONG *) -- Get the current disable
+	    state for the Scalos startup splash window. If TRUE, Scalos shows
+	    its splash window on startup.
+
+	SCALOSCTRLA_SetSplashEnable (ULONG) -- Set the disable
+	    state for the Scalos startup splash window. If TRUE, Scalos shows
+	    its splash window on startup.
+
+	SCALOSCTRLA_GetToolTipEnable (ULONG *) -- Get the current enable
+	    state for icon tool tips. If TRUE, icon tool tips will show up
+	    if the mouse pointer kept over an icon for some seconds.
+
+	SCALOSCTRLA_SetToolTipEnable (ULONG) -- Set the enabled
+	    state for icon tool tips. If TRUE, icon tool tips will show up
+	    if the mouse pointer kept over an icon for some seconds.
+
+	SCALOSCTRLA_GetToolTipDelay (ULONG *) -- Set the delay time until
+	    the icon tool tips pop up (in seconds).
+
+	SCALOSCTRLA_SetToolTipDelay (ULONG) -- Set the delay time until
+	    the icon tool tips pop up (in seconds). You must specify a 
+	    number between 1 and 599 seconds. Default delay time is 2 seconds.
+
+	SCALOSCTRLA_GetOldDragIconMode (ULONG *) -- Enable old (workbench-
+	    like) icon dragging mode, i.e. all icons are visibly dragged.
+	    If turned OFF (=0), the new "icon stack" method is used.
+	    Default value is OFF (0).
+
+	SCALOSCTRLA_SetOldDragIconMode (ULONG) -- Get the current icon 
+	    dragging mode.
+	    0	New "icon stack" icon dragging method is used.
+	    1	Old (workbench-like) icon dragging mode, i.e. all icons 
+		are visibly dragged
+
+	SCALOSCTRLA_GetTypeRestartTime (ULONG *) -- Get the number of seconds
+	    that have to pass before typing the next character in a drawer
+	    window will restart with a new file name.
+
+	SCALOSCTRLA_SetTypeRestartTime (ULONG) -- Set the number of seconds
+	    that have to pass before typing the next character in a drawer
+	    window will restart with a new file name. You must specify a
+	    number greater than 0. Default type restart time is 3 seconds.
+
+	SCALOSCTRLA_GetEmulationMode (ULONG *) -- get a BOOL variable telling 
+	    whether which mode Scalos is running in.
+	    TRUE	emulation mode
+	    FALSE	preview mode
+
+	SCALOSCTRLA_GetStatusBarEnable (ULONG *) -- get a BOOL variable 
+	    telling whether Scalos displays a status bar in every 
+	    non-backdrop window.
+
+	SCALOSCTRLA_SetStatusBarEnable (ULONG) -- Telling whether Scalos to 
+	    display a status bar in every non-backdrop window (any non-zero 
+	    value) or to display no status bars. Changes only apply to 
+	    windows opened thereafter.
+	    TRUE	show status bar
+	    FALSE	don't show status bar
+	    NOTE: Changes only apply to windows opened thereafter.
+
+	SCALOSCTRLA_GetStripedTextWindows (ULONG *) -- get a BOOL variable 
+	    telling whether Scalos displays horizontally striped lines in 
+	    text windows.
+
+	SCALOSCTRLA_SetStripedTextWindows (ULONG) -- Tell whether Scalos to 
+	    display  horizontally striped lines in text windows.
+	    TRUE	show stripes in text window
+	    FALSE	show standard background.
+	    NOTE: Changes only apply to windows opened thereafter.
+
+	SCALOSCTRLA_GetDisplayDragCount (ULONG *) -- get a BOOL variable 
+	    telling whether Scalos shows the number of dragged objects 
+	    during Drag and Drop.
+
+	SCALOSCTRLA_SetDisplayDragCount (ULONG) -- Tell whether Scalos to
+	    display the number of dragged objects during Drag and Drop.
+	    TRUE	show number of objects while dragging
+	    FALSE	don't show number of objects
+
+	SCALOSCTRLA_GetWindowDropMarkMode (ULONG *) - get a ULONG variable
+	    telling when Scalos shows window drop marks during D&D 
+	    IDTV_WinDropMark_Never - never
+	    IDTV_WinDropMark_WindowedOnly - only on non-backdrop windows
+	    IDTV_WinDropMark_Always - always
+
+	SCALOSCTRLA_SetWindowDropMarkMode (ULONG) - Set when Scalos will 
+	    show window drop marks during D&D 
+	    IDTV_WinDropMark_Never - never
+	    IDTV_WinDropMark_WindowedOnly - only on non-backdrop windows
+	    IDTV_WinDropMark_Always - always
+
+	SCALOSCTRLA_GetCopyHook (struct Hook **) - Obtain the current hook 
+	    that will be invoked when Scalos starts copying files and 
+	    data (V40).
+
+	SCALOSCTRLA_SetCopyHook (struct Hook *) - Install a new hook that 
+	    will be invoked when Scalos starts copying files and data (V40).
+	    The hook will be invoked exactly the same way as Workbench 
+	    does with its WBCTRLA_SetCopyHook hook.
+
+	SCALOSCTRLA_GetDeleteHook (struct Hook **) - Obtain the current hook 
+	    that will be invoked when Scalos deletes files and drawers or 
+	    empties the trashcan (V40).
+
+	SCALOSCTRLA_SetDeleteHook (struct Hook *) - Install a new hook that 
+	    will be invoked when Scalos deletes files and drawers or empties 
+	    the trashcan (V40).
+	    The hook will be invoked exactly the same way as Workbench 
+	    does with its WBCTRLA_SetDeleteHook hook.
+	    NOTE: this hook will take precedence over the 
+	    	  installed "Delete.module".
+
+	SCALOSCTRLA_GetTextInputHook (struct Hook **) - Obtain the current 
+	    hook that will be invoked when Scalos requests the user to enter 
+	    text, i.e. when a file is to be renamed or a new drawer is to 
+	    be created (V40).
+
+	SCALOSCTRLA_SetTextInputHook (struct Hook *) - Install a new hook 
+	    that will be invoked when Scalos requests the user to enter text, 
+	    i.e. when a file is to be renamed or a new drawer is to 
+	    be created (V40).
+	    The hook will be invoked exactly the same way as Workbench 
+	    does with its WBCTRLA_SetTextInputHook hook.
+	    NOTE: this hook will take precedence over the installed 
+		  "NewDrawer.module", "Execute.module" and "Rename.module".
+
+	SCALOSCTRLA_AddCloseWBHook (struct Hook *) - Add a hook that will 
+	    be invoked when Scalos is about to close (cleanup), and when 
+	    Scalos has opened again (setup) (V40).
+	    The hook will be invoked exactly the same way as Workbench 
+	    does with its WBCTRLA_AddSetupCleanupHook hook.
+
+	SCALOSCTRLA_RemCloseWBHook (struct Hook *) - Remove a hook that has 
+	    been installed with the SCALOSCTRLA_AddCloseWBHook tag (V40).
+
+	SCALOSCTRLA_GetSupportedIconTypes (ULONG *) - Get bit mask 
+	                  of all currently enabled icon types
+	    IDTV_IconType_NewIcon - display NewIcons
+	    IDTV_IconType_ColorIcon - display OS3.5 color icons
+
+	SCALOSCTRLA_SetSupportedIconTypes (ULONG) - Select which 
+	    icon types are enabled :
+	    IDTV_IconType_NewIcon - display NewIcons
+	    IDTV_IconType_ColorIcon - display OS3.5 color icons
+
+	SCALOSCTRLA_GetMenuCommandList (struct List **) -- You can obtain a list
+	    of all supported menu command names. When you no longer need
+	    the list, don't forget to free it again using the tag
+	    WBCTRLA_FreeMenuCommandList.
+
+	SCALOSCTRLA_FreeMenuCommandList (struct List *) -- With this tag you can
+	    free the list allocated by the SCALOSCTRLA_GetMenuCommandList tag.
+
+	SCALOSCTRLA_GetCopyBuffSize (ULONG *) -- Query the size of the buffer 
+	    used for moving and copying files.
+
+	SCALOSCTRLA_SetCopyBuffSize (ULONG) -- Set the size of the buffer used 
+	    for moving and copying files. The size can be changed 
+	    between 4 KBytes and 4 MBytes (40.30).
+
+
+
+    RESULT
+	Returns the number of tags successfully processed. If the returned 
+	value is less than the number of tags supplied, you can query the error
+	code using dos.library/IoErr().
+
+    NOTES
+	This function may only be called by a Process.
+
+
+    SEE ALSO
+	dos.library/IoErr
+	<dos/dosextens.h>
+scalos.library/SCA_GetDefIconObject
+
+    NAME
+        SCA_GetDefIconObject
+	SCA_GetDefIconObjectA
+	SCA_GetDefIconObjectTags
+
+    SYNOPSIS
+	IconObject SCA_GetDefIconObject( dirLock, name )
+	  D0                              A0       A1
+	IconObject SCA_GetDefIconObjectA( dirLock, name, tagList )
+	  D0                               A0       A1    A2
+
+	Object *SCA_GetDefIconObject(BPTR dirLock, CONST_STRPTR name)
+	Object *SCA_GetDefIconObjectA(BPTR dirLock,
+		CONST_STRPTR name, struct TagItem *tagList)
+	Object *SCA_GetDefIconObjectTags(BPTR dirLock, CONST_STRPTR name, ...)
+
+    FUNCTION
+	Returns default IconObject for the file system object
+        (tool/project/drawer/device) described by dirLock and name.
+	A filetype-specific default icon is selected according
+        to the object type.
+
+    INPUTS
+	dirlock - Lock on the parent directory of the object.
+	name - Name of the object.
+	tagList - additional tags for creation of IconObject.
+    RESULT
+	IconObject - new IconObject or NULL
+
+scalos.library/SCA_OpenDrawerByName
+
+    NAME
+        SCA_OpenDrawerByName
+	SCA_OpenDrawerByNameTags
+
+    SYNOPSIS
+	ScaWindow = SCA_OpenDrawerByName( path, tagList )
+	  D0                             A0    A1
+
+	struct ScaWindowStruct *SCA_OpenDrawerByName(CONST_STRPTR path,
+		struct TagItem *tagList);
+
+	struct ScaWindowStruct *SCA_OpenDrawerByNameTags(CONST_STRPTR path,
+		ULONG firstTag, ...);
+
+    FUNCTION
+	Tries to open the named drawer.
+
+    INPUTS
+	path - Full path name of the drawer to be opened.
+	TagList - taglist
+
+    RESULT
+	ScaWindow - ScaWindowStruct of the newly opened drawer window or NULL.
+
+    SEE ALSO
+	SCA_OpenIconWindow()
+scalos.library/SCA_UnlockDrag
+
+    NAME
+	SCA_UnlockDrag
+
+    SYNOPSIS
+	 wasLocked = SCA_UnlockDrag ( draghandle )
+	   		   D0
+
+	ULONG SCA_LockDrag ( APTR draghandle );
+
+    FUNCTION
+	Unlocks the screen layer info that is connected to the draghandle.
+	Main purpose is to temporarily unlock and lock again the screen
+        layers during a dragging operiation, in order to allow some drawing to happen.
+
+    INPUTS
+	draghandle - That drag handle that is to be locked.
+
+    RESULT
+	wasLocked - Flag that indicated whether the screen layer was locked
+	    before calling. The result can be used to decide if you need to
+	    call SCA_LockDrag() when you are finished drawing.
+
+    SEE ALSO
+	SCA_LockDrag(), SCA_InitDrag(), SCA_EndDrag(), SCA_DrawDrag()
+
+

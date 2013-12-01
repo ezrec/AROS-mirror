@@ -1,0 +1,29 @@
+==id $Id: mcpgfx_lib.sfd 5 2009-02-17 20:22:13Z jlachmann $
+==base _MCPGfxBase
+*==basetype struct Library *
+*==libname mcpgfx.library
+==bias 30
+==public
+==include <exec/types.h>
+==include <libraries/mcpgfx.h>
+==include <graphics/rastport.h>
+==include <intuition/screens.h>
+==include <utility/tagitem.h>
+VOID mcpPaintSysIGad(APTR sysImageObject, struct DrawInfo * drawInfo, WORD gadgetNumber,
+	WORD width, WORD height) (a0,a1,d0,d1,d2)
+VOID mcpRectFillA(struct RastPort * rp, WORD x1, WORD y1, WORD x2, WORD y2,
+	CONST struct TagItem * tagList) (a0,d0,d1,d2,d3,a1)
+==varargs
+VOID mcpRectFill(struct RastPort * rp, WORD x1, WORD y1, WORD x2, WORD y2,
+	Tag tagList, ...) (a0,d0,d1,d2,d3,a1)
+VOID mcpDrawFrameA(struct RastPort * rp, WORD x1, WORD y1, WORD x2, WORD y2,
+	struct TagItem * tagList) (a0,d0,d1,d2,d3,a1)
+==varargs
+VOID mcpDrawFrame(struct RastPort * rp, WORD x1, WORD y1, WORD x2, WORD y2,
+	Tag tagList, ...) (a0,d0,d1,d2,d3,a1)
+struct ExtDrawInfo	* mcpGetExtDrawInfo(struct Screen * screen, struct DrawInfo * drawInfo) (a0,a1)
+struct FrameSize	* mcpGetFrameSize(struct DrawInfo * drawInfo, WORD frameType) (a0,d0)
+VOID mcpSetGFXAttrsA(struct TagItem * tagList) (a0)
+==varargs
+VOID mcpSetGFXAttrs(Tag tagList, ...) (a0)
+==end

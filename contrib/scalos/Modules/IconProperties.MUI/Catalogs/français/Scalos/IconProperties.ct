@@ -1,0 +1,156 @@
+; IconProperties.ct
+; $Date$
+; $Revision$
+## version $VER: IconProperties.catalog 40.6 (05. Oct 2005 18:50:08)
+## codeset 0
+## language français
+;
+;#arrayopts static __far
+;
+MSGID_TITLENAME
+Scalos Propriétés d'icônes
+; Scalos Icon Properties
+;
+;
+MSGID_OKBUTTON
+Sauver
+; Ok
+;
+;
+MSGID_SHORTHELP_OKBUTTON
+Enregistre les changements dans les types\n\
+d'outils de l'icône.\n\
+Si nécessaire, une nouvelle icône sera\n\
+créée d'après le type d'icône par défaut.
+; Save the changes in the icon's tooltypes.\n\
+; If necessary, a new icon will be\n\
+; created from a the default icon.
+;
+;
+MSGID_CANCELBUTTON
+Annuler
+; Cancel
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Oublier tout changement en cours.\n\
+L'icône ne sera pas modifiée.
+; Discard all changes and\n\
+; leave the icon unchanged.
+;
+;
+MSGID_CHECKMARK_NOTEXT
+Caher le texte de l'icône
+; Hide Icon Text
+;
+;
+MSGID_CHECKMARK_NOTEXT_SHORTHELP
+Supprime l'affichage du texte de l'icône.
+; Suppress display of the icon's name.
+;
+;
+MSGID_CHECKMARK_NODRAG
+Figer la position de l'icône
+; Icon cannot be moved
+;
+;
+MSGID_CHECKMARK_NODRAG_SHORTHELP
+L'icône ne pourra être déplacer dans sa fenêtre.\n\
+Toutefois, la copie reste toujours possible.
+; The icon cannot be moved inside its window.\n\
+; Copying is still possible, however.
+;
+;
+MSGID_READ_ONLY
+(Protégé en écriture)
+; (Read-Only)
+;
+;
+MSGID_TEXT_ICONNAME_SHORTHELP
+Nom de l'icône
+; Icon name
+;
+;
+MSGID_TEXT_ICONPATH_SHORTHELP
+Chemin d'accès de l'icône
+; Icon path
+;
+;
+MSGID_CHECKMARK_NOTOOLTIPS
+Désactiver la bulle d'informations
+;Suppress Tooltips
+;
+;
+MSGID_CHECKMARK_NOTOOLTIPS_SHORTHELP
+Aucune information ne sera affichée lorsque le\n\
+curseur de la souris se trouvera au dessus de cette icône.
+;No tooltips are displayed when the\n\
+;mouse pointer is held over this icon.
+;
+;
+MSGID_CHECKMARK_BROWSERMODE
+Mode navigateur
+;Browser mode
+;
+;
+MSGID_CHECKMARK_BROWSERMODE_SHORTHELP
+Activater le mode navigateur.\n\
+Option disponible pour les volumes, corbeilles et répertoires.
+;Activate the browser mode.\n\
+;Availlable for disks, trashcans and drawers.
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT
+Projet
+; Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+A propos...
+; About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+A propos de MUI...
+; About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Quitter
+; Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;Q
+;
+MSGID_MENU_IMAGE
+Image de l'icône
+;Icon Image
+;
+;
+MSGID_MENU_IMAGE_DEFAULT
+Image par défaut
+;Default
+;
+;
+MSGID_MENU_IMAGE_DEFAULT_SHORT
+D
+;D
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK
+D'_accord
+; _OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Main IconProperties.module V\0333%ld\0332.\0333%ld\0332\033n\n\
+Compilé sous : \0333%s\0332\n\
+© 2004%s The Scalos Team
+; \33c\033bScalos Main IconProperties.module V%ld.%ld\033n\n\
+; © 2004 The Scalos Team
+;
+;-----------------------------------------------------------

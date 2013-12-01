@@ -1,0 +1,1435 @@
+; ScalosFileTypes.ct
+## version $VER: ScalosFileTypes.catalog 40.23 (11 Apr 2010 17:25:00)
+## codeset 0
+## language deutsch
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos Dateiarten Voreinsteller
+;Scalos FileTypes Prefs Plugin
+;
+;
+MSGID_SAVENAME
+Speichern
+;Save
+;
+;
+MSGID_USENAME
+Benutzen
+;Use
+;
+;
+MSGID_CANCELNAME
+Abbrechen
+;Cancel
+;
+;---------------------------------------------
+;
+MSGID_MENU_PROJECT_OPEN
+Öffnen...
+;Open...
+;
+;
+MSGID_MENU_PROJECT_OPEN_SHORT
+O
+;O
+;
+;
+MSGID_MENU_PROJECT_SAVEAS
+Speichern als...
+;Save As...
+;
+;
+MSGID_MENU_PROJECT_SAVEAS_SHORT
+A
+;A
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+Über...
+;About...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Beenden
+;Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;Q
+;
+;
+MSGID_MENU_PROJECT
+Projekt
+;Project
+;
+;
+MSGID_MENU_EDIT_LASTSAVED
+auf zuletzt gespeichertes
+;Last Saved
+;
+;
+MSGID_MENU_EDIT_LASTSAVED_SHORT
+L
+;L
+;
+;
+MSGID_MENU_EDIT
+Verändern
+;Edit
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS
+Piktogramme erzeugen?
+;Create Icons?
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS_SHORT
+I
+;I
+;
+;
+MSGID_MENU_SETTINGS
+Einstellungen
+;Settings
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS
+auf Vorgaben zurücksetzen
+;Reset To Defaults
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS_SHORT
+D
+;D
+;
+;
+MSGID_MENU_EDIT_RESTORE
+auf vorigen Stand
+;Restore
+;
+;
+MSGID_MENU_EDIT_RESTORE_SHORT
+R
+;R
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+Über MUI...
+;About MUI...
+;
+;
+MSGID_MENU_EDIT_COLLAPSE
+Auswahl zuklappen
+;Collapse selected
+;
+;
+MSGID_MENU_EDIT_EXPAND
+Auswahl aufklappen
+;Expand selected
+;
+;
+MSGID_MENU_EDIT_COLLAPSEALL
+Alles zuklappen
+;Collapse all
+;
+;
+MSGID_MENU_EDIT_EXPANDALL
+Alles aufklappen
+;Expand all
+;
+;
+MSGID_MENU_EDIT_COPY
+Kopieren
+;Copy
+;
+;
+MSGID_MENU_EDIT_CUT
+Ausschneiden
+;Cut
+;
+;
+MSGID_MENU_EDIT_PASTE
+Einfügen
+;Paste
+;
+;
+MSGID_MENU_HIDE_EMPTY_ENTRIES
+Leere Einträge weglassen?
+;Hide empty entries?
+;
+;
+MSGID_MENU_EDIT_FIND
+Suchen...
+;Find...
+;
+;---------------------------------------------
+;
+MSGID_ABOUTREQOK
+_OK
+;_OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Dateiarten Voreinsteller V%ld.%ld\033n\n\
+%s\n\
+© 1999%s Das Scalos Team
+;\33c\033bScalos FileTypes Preferences V%ld.%ld\033n\n\
+;%s\n\
+;© 1999-2003 The Scalos Team
+;
+;
+MSGID_SHORTHELP_SAVEBUTTON
+Drücken Sie diesen Knopf, um alle\n\
+Einstellungen dauerhaft in\n\
+\"ENVARC:Scalos/menu13.prefs\"\n\
+zu speichern.
+;Press this button to save \n\
+;the current settings\n\
+;and make changes permanent.
+;
+;
+MSGID_SHORTHELP_USEBUTTON
+Drücken Sie diesen Knopf, um alle Einstellungen\n\
+bis zum nächsten Neustart in\n\
+\"ENV:Scalos/menu13.prefs\"\n\
+zu speichern.
+;Press this button to save \n\
+;the current settings\n\
+;and keep settings until reboot.
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Drücken Sie diesen Knopf, um das\n\
+Programm abzubrechen und alle\n\
+Änderungen zu verwerfen.
+;Press this button to abort \n\
+;and forget all changes.
+;
+;
+MSGID_REQTITLE_SAVEERROR
+Fehler beim Schreiben der Einstellungs-\n\
+Datei \"%s\"\n\
+%s
+;Error writing filetypes preferences\n\
+;file \"%s\"\n\
+;%s
+;
+;
+MSGID_REQTITLE_READERROR
+Fehler beim Lesen der Einstellungs-\n\
+Datei \"%s\"\n\
+%s
+;Error reading filetypes preferences\n\
+;file \"%s\"\n\
+;%s
+;
+;
+MSGID_PLUGIN_LIST_TITLE
+Dateiarten
+;FileTypes
+;
+;
+MSGID_SPLASHWINDOW_LOADING_FILETYPES_PREFS
+\33c  Dateiarten laden...
+; \33c  Loading FileTypes Prefs...  
+;
+;
+MSGID_SPLASHWINDOW_APPLYING_FILETYPES_PREFS
+\33c  Dateiarten anwenden...
+; \33c  Applying FileTypes Prefs...  
+;
+;
+MSGID_SPLASHWINDOW_SAVING_FILETYPES_PREFS
+\33c  Dateiarten speichern...
+; \33c  Saving FileTypes Prefs...  
+;
+;---------------------------------------------
+;
+MSGID_ATTRCOLUMNTITLE_NAME
+Name
+;Name
+;
+;
+MSGID_ATTRCOLUMNTITLE_VALUE
+Wert
+;Value
+;
+;---------------------------------------------
+;
+MSGID_BUTTON_ADD_ENTRY
+Hinzufügen
+;Add
+;
+MSGID_BUTTON_ADD_ENTRY_KEY
+A
+;A
+;
+;
+MSGID_SHORTHELP_BUTTON_ADD_ENTRY
+FÜgt eine neue Dateiarten-spezifische Aktion hinzu.\n\
+Das kann ein Eintrag für das Popup-Menü oder\n\
+für einen Tooltip sein.
+;...Add...
+;
+;
+MSGID_BUTTON_DELETE_ENTRY
+Löschen
+;Delete
+;
+;
+MSGID_BUTTON_DELETE_ENTRY_KEY
+D
+;D
+;
+;
+MSGID_SHORTHELP_BUTTON_DELETE_ENTRY
+Löscht die ausgewählte Dateiarten-spezifische Aktion.\n\
+\033bVorsicht: Entfernen eines Listenknotens\n\
+löscht alle untergeordneten Einträge!\033n
+;...Delete Entry...
+;
+;
+MSGID_BUTTON_ADD_ATTRIBUTE
+Hinzufügen
+;Add
+;
+;
+MSGID_BUTTON_ADD_ATTRIBUTE_KEY
+
+;
+;
+;
+MSGID_SHORTHELP_BUTTON_ADD_ATTRIBUTE
+Hinzufügen eines neuen Attributs für die\n\
+aktuelle Dateiarten-spezifische Aktion.\n\
+Typische Attribute sind Name, Schriftart\n\
+oder Ausrichtung eines Eintrags.
+;...Add Attribute...
+;
+;
+MSGID_BUTTON_EDIT_ATTRIBUTE
+Ändern
+;Edit
+;
+;
+MSGID_SHORTHELP_BUTTON_EDIT_ATTRIBUTE
+Ändern des Wertes eines Attributs für die\n\
+aktuelle Dateiarten-spezifische Aktion.\n\
+;...Edit Attribute...
+;
+;
+MSGID_BUTTON_DELETE_ATTRIBUTE
+Entfernen
+;Remove
+;
+;
+MSGID_BUTTON_DELETE_ATTRIBUTE_KEY
+R
+;R
+;
+;
+MSGID_SHORTHELP_BUTTON_DELETE_ATTRIBUTE
+Entfernen des aktuellen Attributs für die\n\
+aktuelle Dateiarten-spezifische Aktion.\n\
+;...Delete Attribute...
+;
+; new in 40.2
+;
+MSGID_SHORTHELP_LAMP_CHANGED
+Diese Anzeigelampe wechselt den Zustand von \033bAus\033n\n\
+nach \033bAn\033n wenn die Konfiguration seit\n\
+dem ersten Laden verändert wurde.
+;This lamp indicator changes from \033bOff\033n\n\
+;to \033bOk\033n when the settings have been\n\
+;modified since initial loading.
+;
+;
+MSGID_BUTTON_CREATE_ICON
+Neues erzeugen
+;Create New
+;
+;
+MSGID_SHORTHELP_BUTTON_CREATE_ICON
+Erzeugt ein neues eigenes Piktogramm für diesen Dateityp.
+;Create a new dedicated icon for this filetype.
+;
+;
+MSGID_BUTTON_FIND_NEXT_SHORTHELP
+Nächsten Dateityp suchen, der zum angegebenen Suchtext paßt.
+;Find next filetype that matches the given search string.
+;
+;
+MSGID_BUTTON_FIND_HIDE_SHORTHELP
+Schaltflächen zur Suche nach Dateityp ausblenden.
+;Hide Find Filetype Dialog.
+;
+;
+MSGID_STRING_FIND_SHORTHELP
+In den Namen der Dateitypen wirf nach diesem Text gesucht.\n\
+Während der Eingabe wird immer der erste passende Eintrag gezeigt.
+;This is the string to find in filetypes' name.\n\
+;While you type, the first matching entry is always shown.
+;
+;
+MSGID_BUTTON_FIND_PREV_SHORTHELP
+Vorigen Dateityp suchen, der zum angegebenen Suchtext paßt.
+;Find previous filetype that matches the given search string.
+;
+;---------------------------------------------
+;
+MSGID_ENTRYTYPE_FILETYPE
+Dateiart
+;Filetype
+;
+;
+MSGID_ENTRYTYPE_POPUPMENU
+Popup Menu
+;Popup Menu
+;
+;
+MSGID_ENTRYTYPE_SUBMENU
+UnterMenu
+;SubMenu
+;
+;
+MSGID_ENTRYTYPE_MENUITEM
+Menupunkt
+;Menu Item
+;
+;
+MSGID_ENTRYTYPE_INTERNALCMD
+Interner Befehl
+;Internal Command
+;
+;
+MSGID_ENTRYTYPE_WBCMD
+Workbench Befehl
+;Workbench Command
+;
+;
+MSGID_ENTRYTYPE_AREXXCMD
+ARexx Befehl
+;ARexx Command
+;
+;
+MSGID_ENTRYTYPE_CLICMD
+CLI Befehl
+;CLI Command
+;
+;
+MSGID_ENTRYTYPE_PLUGINCMD
+Menu Plugin Befehl
+;Menu Plugin Command
+;
+;
+MSGID_ENTRYTYPE_ICONWINDOWCMD
+Piktogrammfenster
+;Icon Window Command
+;
+;
+MSGID_ENTRYTYPE_MENUSEPARATOR
+\033C
+;\033C
+;
+;
+MSGID_ENTRYTYPE_TOOLTIP
+Tooltip
+;Tooltip
+;
+;
+MSGID_ENTRYTYPE_GROUP
+Gruppe
+;Group
+;
+;
+MSGID_ENTRYTYPE_MEMBER
+Mitglied
+;Member
+;
+;
+MSGID_ENTRYTYPE_HBAR
+Horizontaler Strich
+;Horizontal Bar
+;
+;
+MSGID_ENTRYTYPE_STRING
+Text
+;String
+;
+;
+MSGID_ENTRYTYPE_SPACE
+Leerraum
+;Space
+;
+;
+MSGID_ENTRYTYPE_DTIMAGE
+Datatypes Bild
+;Datatypes Image
+;
+;---------------------------------------------
+;
+MSGID_CHANGEME
+Neuer Text
+;Change me
+;
+;---------------------------------------------
+;
+MSGID_BUTTON_CHANGE_ATTRIBUTE
+Ändern
+;Change
+;
+MSGID_SHORTHELP_BUTTON_CHANGE_ATTRIBUTE
+Übernimmt die Änderungen des Attribut-Wertes.
+;Commit changes to attribute and use changed values.
+;
+MSGID_BUTTON_KEEP_ATTRIBUTE
+Abbrechen
+;Cancel
+;
+MSGID_SHORTHELP_BUTTON_KEEP_ATTRIBUTE
+Verwirft die Änderungen und behält den\n\
+originalen Wert des Attributes bei.
+;Abort attribute changes and retain original values.
+;
+MSGID_EDITATTRIBUTE_WINDOWTITLE
+Attributwert ändern
+;Edit Attribute Value
+;
+MSGID_EDITATTRIBUTE_TITLE
+Neuen Wert für Attribut auswählen
+;Select new Value for Attribute
+;
+;
+MSGID_EDITATTRIBUTE_TTFONT_ASLTITLE
+TrueType Schrift wählen...
+;Select TrueType Font...
+;
+;
+MSGID_EDITATTRIBUTE_TTFONT_ASL_OKBUTTON
+Ok
+;Ok
+;
+;
+MSGID_EDITATTRIBUTE_TTFONT_ASL_CANCELBUTTON
+Abbruch
+;Cancel
+;
+;
+MSGID_TTFONTSPAGE_SAMPLETEXT
+Franz jagt im komplett verwahrlosten Taxi quer durch Bayern
+;The quick brown fox jumps over the lazy dog
+;
+;
+MSGID_TTFONTSPAGE_SCREENFONT_SAMPLETEXT_SHORTHELP
+Dies ist ein Beispiel für die\n\
+ausgewählte TrueType Bildschirmschrift.
+;This is an example text to visualize what the\n\
+;selected TrueType screen font looks like.
+;
+;---------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Scalos Dateiarten Voreinsteller kann nicht gestartet werden
+;Scalos Filetypes Prefs startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Wiederholen|Beenden
+;Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\
+Die Klasse ist nicht installiert.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\n\
+Sie haben momentan Version v%lu.%lu installiert und\n\
+sollten die Klasse daher aktualisieren!
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\n\
+Version %lu.%lu wird momentan von einer anderen Anwendung\n\
+verwendet. Wenn sie die benötigte Version installiert haben,\n\
+schließen sie alle MUI Programme und probieren es erneut.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;
+MSGID_REGISTERTITLE_RECOGNITION
+Erkennung
+;Recognition
+;
+;
+MSGID_REGISTERTITLE_ACTIONS
+Aktionen
+;Actions
+;
+;-----------------------------------------------------------
+;
+MSGID_BUTTON_ADD_FILETYPE
+Hinzufügen
+;Add
+;
+;
+MSGID_SHORTHELP_BUTTON_ADD_FILETYPE
+Fügt einen neuen Eintrag für eine Dateiart hinzu.
+;Add a new entry with a filetypes description.
+;
+;-----------------------------------------------------------
+;
+MSGID_BUTTON_DELETE_FILETYPE
+Entfernen
+;Remove
+;
+;
+MSGID_SHORTHELP_BUTTON_DELETE_FILETYPE
+Entfernt den aktuellen Eintrag für eine Dateiart,\n\
+\033bVorsicht: Entfernen eines Listen-Knotens\n\
+löscht sämtliche untergeordneten Einträge!\033n
+;Remove currently selected filetypes description.\n\
+;\033bNote that removing a tree node deletes\n\
+;all subordinate entries!\033n
+;
+;
+MSGID_BUTTON_REMOVE_FILETYPEACTION
+Entfernen
+;Remove
+;
+;
+MSGID_SHORTHELP_BUTTON_REMOVE_FILETYPEACTION
+Entfernt die aktuelle Aktion zur Identifizierung einer Dateiart.
+;Remove currently selected filetype identification action.
+;
+;
+MSGID_BUTTON_ADD_FILETYPEACTION
+Hinzufügen...
+;Add...
+;
+;
+MSGID_SHORTHELP_BUTTON_ADD_FILETYPEACTION
+Fügt eine neue Aktion zur Identifizierung einer Dateiart hinzu.
+;Add new filetype identification action.
+;
+;
+MSGID_BUTTON_LEARN_FILETYPEACTION
+Lernen...
+;Learn...
+;
+;
+MSGID_SHORTHELP_BUTTON_LEARN_FILETYPEACTION
+Lernt die Identifizierung einer Dateiart durch\n\
+Angabe von zwei oder mehr Beispiel-Dateien.
+;Learn about filetype by giving two or more example files.
+;
+;
+MSGID_NEW_FILETYPE
+«neu»
+;«new»
+;
+;-----------------------------------------------------------
+;
+MSGID_FILETYPE_ADD_ACTION_MATCH
+VERGLEICH
+;MATCH
+;
+;
+MSGID_FILETYPE_ADD_ACTION_SEARCH
+SUCHEN
+;SEARCH
+;
+;
+MSGID_FILETYPE_ADD_ACTION_FILESIZE
+DATEIGRÖSSE
+;FILESIZE
+;
+;
+MSGID_FILETYPE_ADD_ACTION_PATTERN
+NAMENSMUSTER
+;PATTERN
+;
+;
+MSGID_FILETYPE_ADD_ACTION_PROTECTION
+ZUGRIFF
+;PROTECTION
+;
+;
+MSGID_FILETYPE_ADD_ACTION_OR
+ODER
+;OR
+;
+;
+MSGID_FILETYPE_ADD_ACTION_ISASCII
+ISASCII
+;
+;
+MSGID_FILETYPE_ADD_ACTION_MACROCLASS
+MAKROKLASSE
+;MACROCLASS
+;
+;
+MSGID_FILETYPE_ADD_ACTION_DOSDEVICE
+DOSDEVICE
+;
+;
+MSGID_FILETYPE_ADD_ACTION_DEVICENAME
+DEVICENAME
+;
+;
+MSGID_FILETYPE_ADD_ACTION_CONTENTS
+INHALT
+;
+;
+MSGID_FILETYPE_ADD_ACTION_MINSIZEMB
+MIN_GRÖßE_MB
+;
+;
+MSGID_FILETYPE_ADD_ACTION_DOSTYPE
+DOSTYP
+;DOSTYPE
+;
+;-----------------------------------------------------------
+;
+MSGID_FILETYPEACTION_MATCH_OFFSET
+Abstand:
+;Offset:
+;
+;
+MSGID_FILETYPEACTION_MATCH_CASE_SENSITIVE
+GROSS/klein unterscheiden:
+;Case sensitive:
+;
+;
+MSGID_FILETYPEACTION_MATCH_MATCH
+Vergleichen:
+;Match:
+;
+;
+MSGID_FILETYPEACTION_SEARCH_SKIP_SPACES
+Leerzeichen ignorieren:
+;Skip spaces:
+;
+;
+MSGID_FILETYPEACTION_SEARCH_CASE_SENSITIVE
+GROSS/klein unterscheiden:
+;Case sensitive:
+;
+;
+MSGID_FILETYPEACTION_SEARCH_SEARCH
+Suchen:
+;Search:
+;
+;
+MSGID_FILETYPEACTION_FILESIZE_FILESIZE
+Dateigröße:
+;File size:
+;
+;
+MSGID_FILETYPEACTION_PATTERN_PATTERN
+Namensmuster:
+;Pattern:
+;
+;
+MSGID_FILETYPEACTION_PROTECTION_R
+R
+;R
+;
+;
+MSGID_FILETYPEACTION_PROTECTION_W
+W
+;W
+;
+;
+MSGID_FILETYPEACTION_PROTECTION_E
+E
+;E
+;
+;
+MSGID_FILETYPEACTION_PROTECTION_D
+D
+;D
+;
+;
+MSGID_FILETYPEACTION_PROTECTION_S
+S
+;S
+;
+;
+MSGID_FILETYPEACTION_PROTECTION_P
+P
+;P
+;
+;
+MSGID_FILETYPEACTION_PROTECTION_A
+A
+;A
+;
+;
+MSGID_FILETYPEACTION_PROTECTION_H
+H
+;H
+;
+;
+MSGID_GROUP_FILETYPES_FILETYPES
+Dateiarten
+;Filetypes
+;
+;
+MSGID_GROUP_FILETYPES_METHODS
+Methoden
+;Methods
+;
+;
+MSGID_FILETYPEACTION_MINSIZEMB_SIZE
+Minimale Kapazität in Megabytes:
+;
+;
+MSGID_FILETYPEACTION_DOSDEVICE_PATTERN
+Muster für DOS-Gerätename:
+;DOS device name pattern:
+;
+;
+MSGID_FILETYPEACTION_DEVICENAME_PATTERN
+Muster für Gerätename:
+;Device name pattern:
+;
+;
+MSGID_FILETYPEACTION_CONTENTS_PATTERN
+Muster für Datenträgerinhalt:
+;Volume contents pattern:
+;
+;
+MSGID_FILETYPEACTION_DOSTYPE_PATTERN
+Schablone für DOS-Typ:
+;DOS type match string:
+;
+;-----------------------------------------------------------
+;
+MSGID_FILETYPE_PROTECTION_SET
+Gesetzt
+;Set
+;
+;
+MSGID_FILETYPE_PROTECTION_UNSET
+Gelöscht
+;Unset
+;
+;
+MSGID_FILETYPE_PROTECTION_IGNORE
+Ignorieren
+;Ignore
+;
+;-----------------------------------------------------------
+;
+MSGID_GROUP_FILETYPESACTION_MATCH
+Werte für VERGLEICH
+;MATCH attributes
+;
+;
+MSGID_GROUP_FILETYPESACTION_SEARCH
+Werte für SUCHEN
+;SEARCH attributes
+;
+;
+MSGID_GROUP_FILETYPESACTION_FILESIZE
+Werte für DATEIGRÖSSE
+;FILESIZE attributes
+;
+;
+MSGID_GROUP_FILETYPESACTION_PATTERN
+Werte für NAMENSMUSTER
+;PATTERN attributes
+;
+;
+MSGID_GROUP_FILETYPESACTION_PROTECTION
+Werte für ZUGRIFF
+;PROTECTION attributes
+;
+;
+MSGID_GROUP_FILETYPESACTION_MINSIZEMB
+Werte für MIN_GRÖßE_MB
+;MINSIZEMB attributes
+;
+;
+MSGID_GROUP_FILETYPESACTION_DOSDEVICE
+Werte für DOSDEVICE
+;DOSDEVICE attributes
+;
+;
+MSGID_GROUP_FILETYPESACTION_DEVICENAME
+Werte für DEVICENAME
+;DEVICENAME attributes
+;
+;
+MSGID_GROUP_FILETYPESACTION_CONTENTS
+Werte für INHALT
+;CONTENTS attributes
+;
+;
+MSGID_GROUP_FILETYPESACTION_DOSTYPE
+Werte für DOSTYPE
+;DOSTYPE attributes
+;
+;-----------------------------------------------------------
+;
+MSGID_FILETYPESACTION_CASE_SENSITIVE
+ GROSS/klein unterscheiden
+; case sensitive
+;
+;
+MSGID_FILETYPESACTION_SKIP_SPACES
+ Leerzeichen ignorieren
+; Skip spaces
+;
+;
+MSGID_FILETYPESACTION_FILESIZE
+%u Bytes
+;%u bytes
+;
+;
+MSGID_FILETYPESACTION_PROTECTION_IGNORE
+-
+;-
+;
+;
+MSGID_FILETYPESACTION_PROTECTION_R_SET
+R
+;R
+;
+;
+MSGID_FILETYPESACTION_PROTECTION_R_CLEARED
+r
+;r
+;
+;
+MSGID_FILETYPESACTION_PROTECTION_W_SET
+W
+;W
+;
+;
+MSGID_FILETYPESACTION_PROTECTION_W_CLEARED
+w
+;w
+;
+;
+MSGID_FILETYPESACTION_PROTECTION_E_SET
+E
+;E
+;
+;
+MSGID_FILETYPESACTION_PROTECTION_E_CLEARED
+e
+;e
+;
+;
+MSGID_FILETYPESACTION_PROTECTION_D_SET
+D
+;D
+;
+;
+MSGID_FILETYPESACTION_PROTECTION_D_CLEARED
+d
+;d
+;
+;
+MSGID_FILETYPESACTION_PROTECTION_H_SET
+H
+;H
+;
+;
+MSGID_FILETYPESACTION_PROTECTION_H_CLEARED
+h
+;h
+;
+;
+MSGID_FILETYPESACTION_PROTECTION_A_SET
+A
+;A
+;
+;
+MSGID_FILETYPESACTION_PROTECTION_A_CLEARED
+a
+;a
+;
+;
+MSGID_FILETYPESACTION_PROTECTION_S_SET
+S
+;S
+;
+;
+MSGID_FILETYPESACTION_PROTECTION_S_CLEARED
+s
+;s
+;
+;
+MSGID_FILETYPESACTION_PROTECTION_P_SET
+P
+;P
+;
+;
+MSGID_FILETYPESACTION_PROTECTION_P_CLEARED
+p
+;p
+;
+;
+MSGID_FILETYPESACTION_MINSIZEMB
+%u Megabytes
+;
+;-----------------------------------------------------------
+;
+MSGID_SHORTHELP_DEFAULTICON
+Hier wird das Standardpiktogramm für die ausgewählte Dateiart angezeigt.\n\
+Ist kein genau passendes Standardpiktogramm vorhanden, wird nach dem\n\
+Vater dieser Dateiart gesucht und so weiter, bis als letzter Ausweg\n\
+das Standardpiktogramm für Projekte verwendet wird.
+;This shows the default icon found for the selected\n\
+;filetype, and the associated name.\n\
+;If no default icon is found for the specific filetype,\n\
+;its parent is tried and so on, until as last\n\
+;resort the default project icon is used.
+;
+;
+MSGID_SHORTHELP_LISTVIEW_FILETYPES
+Dies ist die hierarchiche Ansicht aller definierten Dateiarten.
+;This list shows a hierarchic view of all defined filetypes.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPES
+Dies ist der Name der aktuellen Dateiart.\n\
+Der Name wird verwendet, um ein passendes Standardpiktogramm zu\n\
+finden, z.B. für die Dateiart \"picture\" wird nach dem\n\
+Piktogramm \"def_picture.info"\" gesucht.
+;This is the name of the currently selected filetype.\n\
+;The name is used to find an associated default icon,\n\
+;i.e, for the name \"picture\", a default icon\n\
+;named \"def_picture.info\" is being looked for.
+;
+;
+MSGID_SHORTHELP_LISTVIEW_FILETYPE_ACTION
+Dies ist die Liste aller Aktionen zur Identifizierung der aktuellen Dateiart.\n\
+Die Aktionen werden der Reihe nach abgearbeitet, und wenn alle\n\
+Bedingungen erfüllt sind, wird die geprüfte Datei als\n\
+dieser Art zugehörig erkannt.
+;This list shows the actions to identify the currently selected filetype.\n\
+;The actions are processed sequentially from top to bottom,\n\
+;and if all actions match, the file in question is\n\
+;considered to be of this type.
+;
+;
+MSGID_SHORTHELP_VIRTGROUP_FILETYPE_ACTION_ATTRIBUTES
+Dieser Bereich enthält die Werte für die aktuelle\n\
+Aktionen zur Identifizierung der Dateiart.\n\
+Die angezeigten Werte variieren je nach Art der aktuellen Aktion.
+;This area contains the attributes for the currently\n\
+;selected filetypes identification action.\n\
+;The available attributes vary depending on the\n\
+;type of the selected identification action.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPEACTION_MATCH_OFFSET
+Dies ist der Abstand vom Dateiabstand, ab dem verglichen wird.
+;This is the file offset where matching shall start.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPEACTION_MATCH
+Mit dem Inhalt dieses Textes wird verglichen.\n\
+Nicht darstellbare Zeichen können als hexadezimaler Code eingeben werden, z.B. \\\\x00.
+;This is the string that filetype is being compared to.\n\
+;Non-printable characters can be entered via their hexadecimal codes, e.g. \\x00.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPEACTION_SEARCH
+Nach diesem Text wird in der zu prüfenden Datei gesucht.\n\
+Nicht darstellbare Zeichen können als hexadezimaler Code eingeben werden, z.B. \\\\x00.
+;This is the string the filetype is being searched for.\n\
+;Non-printable characters can be entered via their hexadecimal codes, e.g. \\x00.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPEACTION_FILESIZE
+Auf diese Dateigröße wird verglichen.
+;This is the file size the filetype is checked for.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPEACTION_PATTERN
+Mit diesem Muster wird der Dateinamen verglichen.\n\
+Es können alle üblichen DOS-Musterzeichen wir z.B. ? order # verwendet werden.
+;This is the file name pattern the filetype is being matched against.\n\
+;You may use all standard DOS patterns like ? or #.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_R
+Hier wird festgelegt, ob die geprüfte Datei lesbar sein muß,\n\
+nicht lesbar sein darf, oder ob die Lesbarkeit keine Rolle spielt.
+;Select here whether the filetype needs to be readable,\n\
+;or must not be readable, or if readability doesn't matter.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_W
+Hier wird festgelegt, ob die geprüfte Datei beschreibbar sein muß,\n\
+nicht beschreibbar sein darf, oder ob die Beschreibbarkeit keine Rolle spielt.
+;Select here whether the filetype needs to be writeable,\n\
+;or must not be writeable, or if writeability doesn't matter.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_E
+Hier wird festgelegt, ob die geprüfte Datei ausführbar sein muß,\n\
+nicht ausführbar sein darf, oder ob die Ausführbarkeit keine Rolle spielt.
+;Select here whether the filetype needs to be executable,\n\
+;or must not be executable, or if executability doesn't matter.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_D
+Hier wird festgelegt, ob die geprüfte Datei löschbar sein muß,\n\
+nicht löschbar sein darf, oder ob die Löschbarkeit keine Rolle spielt.
+;Select here whether the filetype needs to be deleteable,\n\
+;or must not be deleteable, or if deleteability doesn't matter.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_S
+Hier wird festgelegt, ob die geprüfte Datei als Skript\n\
+ausführbar sein muß, nicht als Skript ausführbar sein\n\
+darf, oder ob die Ausführbarkeit als Skript keine Rolle spielt.
+;Select here whether the filetype needs to be a script,\n\
+;or must be no script, or if the script attribute doesn't matter.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_P
+Hier wird festgelegt, ob die geprüfte Datei resident\n\
+ausführbar sein muß, nicht resident ausführbar sein darf,\n\
+oder ob die residente Ausführbarkeit keine Rolle spielt.
+;Select here whether the filetype needs to be pure,\n\
+;or must not be pure, or if the pure attribute doesn't matter.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_A
+Hier wird festgelegt, ob die geprüfte Datei archiviert sein muß,\n\
+nicht archiviert sein darf, oder ob der Archiv-Zustand keine Rolle spielt.
+;Select here whether the filetype needs to be archived,\n\
+;or must not be archived, or if archived state doesn't matter.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_H
+Hier wird festgelegt, ob die geprüfte Datei unsichtbar sein muß,\n\
+nicht unsichtbar sein darf, oder ob die Sichtbarkeit keine Rolle spielt.
+;Select here whether the filetype needs to be hidden,\n\
+;or must be visible, or if visibility doesn't matter.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPEACTION_MINSIZEMB
+Dies ist die minimale Kapazität des Datenträgers in Megabytes.
+;This is the mimimum volume capacity to checked for.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPEACTION_DOSDEVICE
+Dies ist der DOS-Gerätename (wie z.B. \"DH0\") eines Datenträgers.
+;This is the DOS device name (e.g. \"DH0\") for a volume.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPEACTION_DEVICENAME
+Das ist der Gerätename, (wie z.B. \"scsi.device\") der\n\
+für den Zugriff auf den Datenträger benutzt wird.
+;This is the device name (e.g. \"scsi.device\") for a volume.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPEACTION_CONTENTS
+Dies ist ein Muster für den Inhalt (Datei(en) oder\n\
+Verzeichnis(se)) des Datenträgers.
+;This is a matching pattern for the contents of a volume.
+;
+;
+MSGID_SHORTHELP_STRING_FILETYPEACTION_DOSTYPE
+Das ist der Vergleichstext für den DOS-Typ (z.B. \"SFS\\0\") eines Datenträgers.\n\
+Nichtdarstellbare Zeichen können als Hex  \"\\\\x1f\" eingegeben werden.
+;This is the match string for the DOS type (e.g. \"SFS\\0\") of a volume.\n\
+;Use hex notation like \"\\x1f\" for non-printable characters.
+;
+;-----------------------------------------------------------
+;
+MSGID_LEARN_OPEN
+Zwei oder mehr Bespiel-Dateien zum Lernen auswählen
+;Select two or more files to learn from
+;
+;
+MSGID_SELECT_TWO_REQ_OK
+_Ok
+;_Ok
+;
+;
+MSGID_SELECT_TWO_REQ_CONTENTS
+Sie müssen mindestens zwei Beispiel-Dateien auswählen!
+;You must select at least two sample files!
+;
+;-----------------------------------------------------------
+;
+MSGID_COM1NAME
+Als Hintergrund
+;
+;
+MSGID_COM2NAME
+Programm ausführen
+;
+;
+MSGID_COM3NAME
+Alles neuzeichnen
+;
+;
+MSGID_COM4NAME
+Alles neu laden
+;
+;
+MSGID_COM5NAME
+Über Scalos
+;
+;
+MSGID_COM6NAME
+Beenden
+;
+;
+MSGID_COM7NAME
+Neue Schublade
+;
+;
+MSGID_COM8NAME
+Mutterverzeichnis öffnen
+;
+;
+MSGID_COM9NAME
+Fenster schließen
+;
+;
+MSGID_COM10NAME
+Neuladen
+;
+;
+MSGID_COM11NAME
+Inhalt anwählen
+;
+;
+MSGID_COM12NAME
+Inhalt aufräumen
+;
+;
+MSGID_COM13NAME
+Fenster fixieren
+;
+;
+MSGID_COM14NAME
+Alles fixieren
+;
+;
+MSGID_COM15NAME
+Nur Piktogramme anzeigen
+;
+;
+MSGID_COM16NAME
+Alle Dateien anzeigen
+;
+;
+MSGID_COM17NAME
+Als Piktogramm anzeigen
+;
+;
+MSGID_COM18NAME
+Mit Namen anzeigen
+;
+;
+MSGID_COM19NAME
+Öffnen
+;
+;
+MSGID_COM20NAME
+Scalos neustarten
+;
+;
+MSGID_COM21NAME
+Umbenennen
+;
+;
+MSGID_COM22NAME
+Information
+;
+;
+MSGID_COM23NAME
+Fixieren
+;
+;
+MSGID_COM24NAME
+Fixierung aufheben
+;
+;
+MSGID_COM25NAME
+Auslagern
+;
+;
+MSGID_COM26NAME
+Zurücklegen
+;
+;
+MSGID_COM27NAME
+Löschen
+;
+;
+MSGID_COM28NAME
+Duplizieren
+;
+;
+MSGID_COM29NAME
+Papierkorb leeren
+;
+;
+MSGID_COM30NAME
+Letzte Meldung
+;
+;
+MSGID_COM31NAME
+Neuzeichnen
+;
+;
+MSGID_COM32NAME
+Iconifizieren
+;
+;
+MSGID_COM33NAME
+Disk formatieren...
+;
+;
+MSGID_COM34NAME
+Herunterfahren...
+;
+;
+MSGID_COM35NAME
+Größe anpassen
+;
+;
+MSGID_COM36NAME
+Auswahl löschen
+;Clear Selection
+;
+;
+MSGID_COM37NAME
+Inhalt auflisten nach Größe
+;
+;
+MSGID_COM38NAME
+Inhalt auflisten nach Datum
+;
+;
+MSGID_COM39NAME
+Datei kopieren
+;
+;
+MSGID_COM40NAME
+Datei ausschneiden
+;
+;
+MSGID_COM41NAME
+Datei einfügen
+;
+;
+MSGID_COM42NAME
+Inhalt auflisten nach Art
+;
+;
+MSGID_COM43NAME
+Inhalt aufräumen nach Namen
+;
+;
+MSGID_COM44NAME
+Inhalt aufräumen nach Datum
+;
+;
+MSGID_COM45NAME
+Inhalt aufräumen nach Größe
+;
+;
+MSGID_COM46NAME
+Inhalt aufräumen nach Art
+;
+;
+MSGID_COM_ICONPROPERTIES
+Piktogramm-Eigenschaften
+;Icon properties
+;
+;
+MSGID_COM_WINDOWPROPERTIES
+Fenster-Eigenschaften
+;Window properties
+;
+;
+MSGID_COM47NAME
+Inhalt auflisten nach Standard
+;View By - Default
+;
+;
+MSGID_COM48NAME
+Anzeigen nach Standard
+;Show - Default
+;
+;
+MSGID_COM49NAME
+Kopieren nach...
+;Copy to...
+;
+;
+MSGID_COM50NAME
+Verschieben nach...
+;Move to...
+;
+;
+MSGID_COM51NAME
+Vorschaubild erzeugen
+;Create thumbnail
+;
+;
+MSGID_COM_OPENNEWWINDOW
+In neuem Fenster öffnen
+;Open in new window
+;
+;
+MSGID_COM_THUMBNAILCACHECLEANUP
+Vorschaubilder-Zwischenspeicher aufräumen
+;Cleanup thumbnail cache
+;
+;
+MSGID_COM_FIND
+Datei(en) suchen
+;Find File(s)
+;
+;
+MSGID_COM_UNDO
+Rückgängig
+;Undo
+;
+;
+MSGID_COM_REDO
+Wiederholen
+;Redo
+;
+;
+MSGID_FIND_HITCOUNT_FMT
+%ld Treffer
+;%ld Hits
+;
+;
+MSGID_COM_OPENBROWSERWINDOW
+In Browserfenster öffnen
+;Open in Browser Window
+;
+;-----------------------------------------------------------
+;

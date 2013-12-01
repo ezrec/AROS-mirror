@@ -1,0 +1,148 @@
+Last updated: 25-May-2001
+
+ADDITIONAL FEATURES --- - - -- - ---------------- - - - - -------
+
+delete.module:
+When deleting and the object (directory/file) is in use, add a retry
+option to requester along with the 'skip' and 'cancel' buttons.
+
+Make the 'clean-up' option for windows like the "IconAlign" proggy by
+Oliver Knorr (olk@johann.nbg.sub.org) which makes the icons aligned by
+their base so all filenames are lined up rather than a mess as is
+produced with the standard WB style clean-up process. Currently the
+proggy by Oliver can't be used as a replacment in the Scalos menu
+because it needs names of icons rather than just a directory path. At
+the moment some icons overlap when they are being cleaned up, whilst
+others hang outside the screen area.
+
+Configurable window drag bar gadgets (as found in PowerWindows). These
+can be associated with functions in the screen menu such as toggle
+between show all files and toggle between icon/text view mode. Make it
+possible for buttons to be of image or text type.
+
+In the menu editor make the keyboard short-cut key gadget like the
+hotkey scanner in MCP. So that it's possible to assign control keys to
+menu options - such as RETURN to toggle between show all files etc. The
+MUI custom class 'popxxx' has this feature for PopHotkey ... maybe use
+this?
+
+When files are copied from a directory in view-by-text mode ask user if
+the associated icons should be copied. At the moment it just does it
+without asking. Add an option in the main Scalos prefs to select wether
+it should be transparent or the user should be consulted first.
+
+Currently Scalos has the remove icon border feature but Birdie goes one
+better. It includes a fast flood fill which replaces all the grey colour
+around the outside of STANDARD icons with the transparent colour. I
+understand NewIcons does this FOR NewIcons but standard Amiga icons look
+stupid with no border and a big grey block for a background. For example
+the Aminet or Amiga Developer CD icons... they look silly with just the
+border missing.
+
+Replace the standard Scalos 'Quit' option with a closedown/reboot/cancel
+requester which is slightly more useful than a requester saying you
+can't quit because of the open-count. Also make it go through all AREXX
+ports and send a QUIT message to try and close down as many programs as
+possible. Maybe also send CTRL-C signals to other programs. If the
+application is good it will put up a requester asking to save work etc.
+Would make the whole system feel more integrated too :-)
+
+Make long filenames under icons get split up over multiple lines as in
+Windows95.
+
+Make Scalos search in windows files and display the icon stored
+internally? Dunno if this would be to slooooowwww or not?? Maybe extract
+the icon for it and save the image as a standard Amiga #?.info file?
+Could be more suited to the programmers of the 'information.module'
+
+Make the copying window text gadgets into progress bars. One bar for the
+current file and another for the total files copied progress. Add an
+abort button to stop the copying process. Add a check to see if
+destination file exists and is of a newer version (via version string).
+If they seem the same then pop-up a requester asking what to do. Add an
+option in Scalos prefs to override all this and ALWAYS copy over old
+files.
+
+Filetype sensitive menus would be a great addition. As found in Dopus
+they would have menu items relevant to the type of file you have
+selected. Don't know if this would be part of the filetypes.plugin or a
+seperate system in itself?
+
+When double clicking on a file and the 'execute command' window pops up
+make it automatically add quotes around filenames that have spaces in
+them.
+
+When listing a directory in text mode make it possible to select one
+file then whilst holding down a shift key (or middle mouse button?) a
+second file can be selected which would then select all files inbetween
+them - making it a multiple select. But then make it possible to
+un-select certain files whilst holding down the control key. This sort
+of operation is found in Windows3.1 File Manager.
+
+Add the possability to select an icon by clicking on its text label. And
+if the label gets a double click it should turn into a string gadget so
+that the file can be renamed.
+
+Integrate the 'ARChandler' as found on Aminet better. At the moment it
+will not work when windows are shown as icons. I think it's a conflict
+with the filetypes.plugin ??
+
+When ANY window on the Scalos screen is moved or re-sized display the
+co-ordinate of it's top left hand corner for moving OR width and height
+when resizing the window. I got this idea from UNIX.
+
+When a window is re-sized to be as small as possible and the mouse
+button is lifted, auto-iconify the window.
+
+Whilst reading a directory and multitasking have a spinning arrow in
+corner of window drag bar.
+
+Clicking on a directory window zip gadgets shrinks to titlebar size.
+
+When an icon is dragged onto another device/directory the window will
+spring open without clicking. The icon can then be dragged through the
+heirachy until the destination found. When mouse is moved outside the
+window, the window will snap shut. Allowing you to continue to the
+desired destination. When the icon is finally dropped all windows before
+the destination will automatically close - except the destination window
+that the icon was placed in.
+
+Spring loaded folders By clicking 1 and a half times on an icon to
+activate it; you can quickly navigate
+
+Option to turn icons in to buttons, so one mouse click will select them.
+
+When a directory window is dragged to the bottom of screen it turns into
+a titlebar/button along the bottom of the screen. Clicking on the
+button/titlebar will make the window pop-up whilst remaining stuck to
+the bottom of the screen. Dragging an icon out of pop-up window will
+make the window close back to the titlebar at the bottom of the screen.
+When an icon is dragged onto the titlebar, the window will pop-up whilst
+staying locked to the bottom of screen. To free a window from the bottom
+drag it away fromthe bottom of the screen.
+
+Definition of an icon 'zone' on the desktop. That way you can specifiy
+where device icons, left out icons, application icons etc. are placed to
+avoid them from going behind backdrop windows on the Scalos desktop.
+These ares that are defined could then be used to generate
+lighter/darker boxed areas on the current backdrop pattern to show the
+area (user configurable).
+
+An option to centre a backdrop picture and fill the border with a solid
+colour rather than tiling. This is allowed by the newer FastIPrefs and
+would be nice in Scalos too :)
+
+In pop-up menus have images showing the kb short-cuts, radio buttons and
+checkmarks like in standard pull down menu.  just needs some tags setting
+as detailed in the latest popupmenu.library archive.
+
+When we use a lot of backgrounds, the possibility of change the color of
+desired icon text. Why? What do you do if background on the desktop will
+be dark and in windows bright ?
+
+When viewing a directory in text mode clicking on a column header more than
+once will alternate the sorting direction.
+
+in a folder/drawers icon have a tooltype, say SCALOS_EXECUTE, which can
+be given a script (arexx?) to run every time the window is opened. maybe
+two scripts, one for open and one for close of the directory window?

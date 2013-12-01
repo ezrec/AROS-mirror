@@ -1,0 +1,12 @@
+.key browse
+.bra {
+.ket }
+
+c:requestfile "{browse}" title "What drawer should open?" drawersonly noicons >env:browse
+IF WARN
+	delete env:browse >nil:
+	QUIT
+ELSE
+	scalos:tools/opendrawer $browse
+ENDIF
+delete env:browse >nil:

@@ -1,0 +1,128 @@
+; IconProperties.ct
+## version $VER: IconProperties.catalog 40.6 (05. Oct 2005 18:50:08)
+## codeset 0s
+## language xxxxxx
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos Icon Properties
+;
+;
+MSGID_OKBUTTON
+Save
+;
+;
+MSGID_SHORTHELP_OKBUTTON
+Save the changes in the icon's tooltypes.\n\
+If necessary, a new icon will be created\n\
+from a the default icon.
+;
+;
+MSGID_CANCELBUTTON
+Cancel
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Discard all changes and\n\
+leave the icon unchanged.
+;
+;
+MSGID_CHECKMARK_NOTEXT
+Hide Icon Text
+;
+;
+MSGID_CHECKMARK_NOTEXT_SHORTHELP
+Suppress display of the icon's name.
+;
+;
+MSGID_CHECKMARK_NODRAG
+Icon cannot be moved
+;
+;
+MSGID_CHECKMARK_NODRAG_SHORTHELP
+The icon cannot be moved inside its window.\n\
+Copying is still possible, however.
+;
+;
+MSGID_READ_ONLY
+(Read-Only)
+;
+;
+MSGID_TEXT_ICONNAME_SHORTHELP
+Icon name
+;
+;
+MSGID_TEXT_ICONPATH_SHORTHELP
+Icon path
+;
+;+++translateme+++
+MSGID_CHECKMARK_NOTOOLTIPS
+Suppress Tooltips
+;Suppress Tooltips
+;
+;+++translateme+++
+MSGID_CHECKMARK_NOTOOLTIPS_SHORTHELP
+No tooltips are displayed when the\n\
+mouse pointer is held over this icon.
+;No tooltips are displayed when the\n\
+;mouse pointer is held over this icon.
+;
+;
+;+++translateme+++
+MSGID_CHECKMARK_BROWSERMODE
+Browser mode
+;Browser mode
+;
+;+++translateme+++
+MSGID_CHECKMARK_BROWSERMODE_SHORTHELP
+Activate the browser mode.\n\
+Availlable for disks, trashcans and drawers.
+;Activate the browser mode.\n\
+;Availlable for disks, trashcans and drawers.
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT
+Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;
+;
+MSGID_MENU_IMAGE
+Icon Image
+;
+;
+MSGID_MENU_IMAGE_DEFAULT
+Default
+;
+;
+MSGID_MENU_IMAGE_DEFAULT_SHORT
+D
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK
+_OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Main IconProperties.module V%ld.%ld\033n\n\
+© 2004 The Scalos Team
+;
+;-----------------------------------------------------------

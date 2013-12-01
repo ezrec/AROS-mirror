@@ -1,0 +1,162 @@
+# $Date: 2011-10-20 20:07:22 +0200 (Do, 20. Okt 2011) $
+# $Revision: 879 $
+##############################################################################
+
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/../..
+endif
+
+##############################################################################
+
+include		config.mk
+
+###############################################################################
+#
+# Project Object files
+#
+
+ifeq ($(MACHINE),ppc-amigaos)
+OBJS	:=	$(OBJDIR)/sqlite3-aos4.o \
+		$(OBJDIR)/sqlite3-aos4-68kstubs.o
+else
+ifeq ($(MACHINE),i386-aros)
+OBJS	:=	$(OBJDIR)/sqlite3-aros.o
+else
+OBJS	:=	$(OBJDIR)/sqlite3-classic.o
+endif
+endif
+
+OBJS	+=	$(OBJDIR)/alter.o \
+		$(OBJDIR)/analyze.o \
+                $(OBJDIR)/attach.o \
+		$(OBJDIR)/auth.o \
+                $(OBJDIR)/backup.o \
+                $(OBJDIR)/bitvec.o \
+                $(OBJDIR)/btmutex.o \
+                $(OBJDIR)/btree.o \
+                $(OBJDIR)/build.o \
+		$(OBJDIR)/callback.o \
+                $(OBJDIR)/complete.o \
+		$(OBJDIR)/ctime.o \
+                $(OBJDIR)/date.o \
+                $(OBJDIR)/delete.o \
+         	$(OBJDIR)/expr.o \
+                $(OBJDIR)/fault.o \
+		$(OBJDIR)/fkey.o \
+                $(OBJDIR)/func.o \
+                $(OBJDIR)/global.o \
+                $(OBJDIR)/hash.o \
+                $(OBJDIR)/insert.o \
+	 	$(OBJDIR)/journal.o \
+	 	$(OBJDIR)/loadext.o \
+	 	$(OBJDIR)/malloc.o \
+	 	$(OBJDIR)/main.o \
+	 	$(OBJDIR)/mem0.o \
+	 	$(OBJDIR)/mem1.o \
+	 	$(OBJDIR)/mem2.o \
+	 	$(OBJDIR)/mem3.o \
+	 	$(OBJDIR)/mem5.o \
+                $(OBJDIR)/memjournal.o \
+	 	$(OBJDIR)/mutex.o \
+	 	$(OBJDIR)/mutex_noop.o \
+	 	$(OBJDIR)/mutex_other.o \
+	 	$(OBJDIR)/notify.o \
+                $(OBJDIR)/opcodes.o \
+                $(OBJDIR)/os.o \
+                $(OBJDIR)/os_other.o \
+         	$(OBJDIR)/os_unix.o \
+                $(OBJDIR)/os_win.o \
+	 	$(OBJDIR)/pager.o \
+	 	$(OBJDIR)/pcache1.o \
+		$(OBJDIR)/parse.o \
+	 	$(OBJDIR)/pcache.o \
+                $(OBJDIR)/pragma.o \
+         	$(OBJDIR)/prepare.o \
+                $(OBJDIR)/printf.o \
+                $(OBJDIR)/random.o \
+                $(OBJDIR)/resolve.o \
+                $(OBJDIR)/rowset.o \
+	 	$(OBJDIR)/select.o \
+	 	$(OBJDIR)/status.o \
+                $(OBJDIR)/table.o \
+                $(OBJDIR)/tokenize.o \
+                $(OBJDIR)/trigger.o \
+         	$(OBJDIR)/update.o \
+                $(OBJDIR)/util.o \
+                $(OBJDIR)/vacuum.o \
+	 	$(OBJDIR)/vdbe.o \
+                $(OBJDIR)/vdbeapi.o \
+                $(OBJDIR)/vdbeaux.o \
+                $(OBJDIR)/vdbeblob.o \
+                $(OBJDIR)/vdbemem.o \
+		$(OBJDIR)/vdbesort.o \
+		$(OBJDIR)/vdbetrace.o \
+	 	$(OBJDIR)/vtab.o \
+		$(OBJDIR)/wal.o \
+         	$(OBJDIR)/walker.o \
+         	$(OBJDIR)/where.o \
+                $(OBJDIR)/utf.o \
+                $(OBJDIR)/legacy.o \
+		$(OBJDIR)/LibSQLite3.o \
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS:.o=.d)
+endif
+
+##############################################################################
+#
+# Targets
+#
+
+NAME	=	sqlite3.library
+NAME_DB	=	$(NAME).debug
+
+##############################################################################
+#
+# Some lame deps
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	@$(run-cc)
+
+$(OBJDIR)/%.d :: $(SRCDIR)/%.c
+	-@$(ECHO) "Update dependencies for $<"; \
+	set -e; rm -f $@; \
+	$(CC) -MM $(DEFINES) $(CFLAGS) $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,$(OBJDIR)/\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
+
+##############################################################################
+
+.PHONY: all install clean bump dump
+
+all:	all_subdirs \
+	$(BINDIR)/$(NAME) \
+	$(BINDIR)/$(NAME_DB)
+	
+##############################################################################
+
+$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) : $(OBJS)
+	@$(ECHO) "Link $(NAME)"
+	@$(CC) $(OBJS) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(NAME_DB)
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(NAME_DB) -o $(BINDIR)/$(NAME)
+	@chmod u+x $@
+
+##############################################################################
+
+install: install_subdirs
+	-@$(ECHO) "Installing $(NAME)"
+	@copy $(BINDIR)/$(NAME) LIBS: clone
+	@avail flush
+
+
+clean: clean_subdirs
+	-@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d $(OBJDIR)/*.d.* \
+        	$(OBJDIR)/*.i $(OBJDIR)/*.s \
+		$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) \
+		*.dump *_str.*
+
+##############################################################################

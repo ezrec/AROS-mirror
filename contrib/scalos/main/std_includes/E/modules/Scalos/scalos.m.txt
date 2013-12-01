@@ -1,0 +1,1114 @@
+ShowModule v1.10 (c) 1992 $#%!
+now showing: "scalos.m"
+NOTE: don't use this output in your code, use the module instead.
+
+(----) OBJECT scalosbase
+(   0)   scb_LibNode:PTR TO lib
+(   4)   scb_Pad[2]:ARRAY OF LONG
+(  12)   scb_Revision:LONG
+(----) ENDOBJECT     /* SIZEOF=16 */
+
+(----) OBJECT overwriterequest
+(   0)   methodid:PTR TO LONG
+(   4)   overwritereqtype:LONG
+(   8)   requesttype:LONG
+(  12)   srclock:LONG
+(  16)   srcname:LONG
+(  20)   destlock:LONG
+(  24)   destname:LONG
+(  28)   parentwindow:PTR TO window
+(  32)   suggestedbodytextid:PTR TO LONG
+(  36)   suggestedgadgettextid:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=40 */
+
+(----) OBJECT updatewindow
+(   0)   methodid:PTR TO LONG
+(   4)   updatemode:PTR TO LONG
+(   8)   srcdirlock:LONG
+(  12)   destdirlock:LONG
+(  16)   srcname:LONG
+(----) ENDOBJECT     /* SIZEOF=20 */
+
+(----) OBJECT copy
+(   0)   methodid:PTR TO LONG
+(   4)   srcdirlock:LONG
+(   8)   destdirlock:LONG
+(  12)   srcname:LONG
+(  16)   destname:LONG
+(  20)   mousex:LONG
+(  24)   mousey:LONG
+(----) ENDOBJECT     /* SIZEOF=28 */
+
+(----) OBJECT move
+(   0)   methodid:PTR TO LONG
+(   4)   srcdirlock:LONG
+(   8)   destdirlock:LONG
+(  12)   name:LONG
+(  16)   mousex:LONG
+(  20)   mousey:LONG
+(----) ENDOBJECT     /* SIZEOF=24 */
+
+(----) OBJECT geticonfiletype
+(   0)   methodid:PTR TO LONG
+(   4)   iconnode:PTR TO scaiconnode
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT settitle
+(   0)   methodid:PTR TO LONG
+(   4)   title:LONG
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT remclipregion
+(   0)   methodid:PTR TO LONG
+(   4)   oldclipregion:PTR TO region
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT query
+(   0)   methodid:PTR TO LONG
+(   4)   parseid:LONG
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT translate
+(   0)   methodid:PTR TO LONG
+(   4)   buffer:PTR TO LONG
+(   8)   titleformat:LONG
+(  12)   parseid:LONG
+(  16)   bufflen:LONG
+(----) ENDOBJECT     /* SIZEOF=20 */
+
+(----) OBJECT inserticon
+(   0)   methodid:PTR TO LONG
+(   4)   iconnode:PTR TO scaiconnode
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT endupdate
+(   0)   methodid:PTR TO LONG
+(   4)   refreshflag:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT showpopupmenu
+(   0)   methodid:PTR TO LONG
+(   4)   popupmenu:PTR TO popupmenu
+(   8)   iconnode:PTR TO scaiconnode
+(  12)   flags:PTR TO LONG
+(  16)   qualifier:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=20 */
+
+(----) OBJECT readicon
+(   0)   methodid:PTR TO LONG
+(   4)   name:LONG
+(   8)   ria:PTR TO scareadiconarg
+(----) ENDOBJECT     /* SIZEOF=12 */
+
+(----) OBJECT addgadget
+(   0)   methodid:PTR TO LONG
+(   4)   newgadget:PTR TO gadget
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT updatestatusbar
+(   0)   methodid:PTR TO LONG
+(   4)   member:PTR TO gadget
+(   8)   taglist:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=12 */
+
+(----) OBJECT remfromstatusbar
+(   0)   methodid:PTR TO LONG
+(   4)   oldmember:PTR TO gadget
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT addtostatusbar
+(   0)   methodid:PTR TO LONG
+(   4)   newmember:PTR TO gadget
+(   8)   taglist:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=12 */
+
+(----) OBJECT deltamove
+(   0)   methodid:PTR TO LONG
+(   4)   deltax:LONG
+(   8)   deltay:LONG
+(----) ENDOBJECT     /* SIZEOF=12 */
+
+(----) OBJECT newviewmode
+(   0)   methodid:PTR TO LONG
+(   4)   newmode:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT menucommand
+(   0)   methodid:PTR TO LONG
+(   4)   cmdname:LONG
+(   8)   iconnode:PTR TO scaiconnode
+(  12)   state:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=16 */
+
+(----) OBJECT getdeficon
+(   0)   methodid:PTR TO LONG
+(   4)   name:LONG
+(   8)   type:LONG
+(  12)   protection:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=16 */
+
+(----) OBJECT layouticon
+(   0)   methodid:PTR TO LONG
+(   4)   iconobject:PTR TO object
+(   8)   layoutflags:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=12 */
+
+(----) OBJECT drawicon
+(   0)   methodid:PTR TO LONG
+(   4)   iconobject:PTR TO object
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT wakeup
+(   0)   methodid:PTR TO LONG
+(   4)   relayout:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT redraw
+(   0)   methodid:PTR TO LONG
+(   4)   flags:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT setvirtsize
+(   0)   methodid:PTR TO LONG
+(   4)   flags:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT makewbarg
+(   0)   methodid:PTR TO LONG
+(   4)   icon:PTR TO scaiconnode
+(   8)   buffer:PTR TO wbarg
+(----) ENDOBJECT     /* SIZEOF=12 */
+
+(----) OBJECT remicon
+(   0)   methodid:PTR TO LONG
+(   4)   lock:LONG
+(   8)   name:LONG
+(----) ENDOBJECT     /* SIZEOF=12 */
+
+(----) OBJECT addicon
+(   0)   methodid:PTR TO LONG
+(   4)   x:LONG
+(   8)   y:LONG
+(  12)   lock:LONG
+(  16)   name:LONG
+(----) ENDOBJECT     /* SIZEOF=20 */
+
+(----) OBJECT open
+(   0)   methodid:PTR TO LONG
+(   4)   iconnode:PTR TO scaiconnode
+(   8)   flags:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=12 */
+
+(----) OBJECT dragdrop
+(   0)   methodid:PTR TO LONG
+(   4)   dropwindow:PTR TO window
+(   8)   mousex:PTR TO LONG
+(  12)   mousey:PTR TO LONG
+(  16)   qualifier:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=20 */
+
+(----) OBJECT dragbegin
+(   0)   methodid:PTR TO LONG
+(   4)   dragenter:dragenter (or ARRAY OF dragenter)
+(----) ENDOBJECT     /* SIZEOF=20 */
+
+(----) OBJECT rawkey
+(   0)   methodid:PTR TO LONG
+(   4)   msg:PTR TO intuimessage
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT showgadgettooltip
+(   0)   methodid:PTR TO LONG
+(   4)   gadgetid:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT showicontooltip
+(   0)   methodid:PTR TO LONG
+(   4)   iconnode:PTR TO scaiconnode
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT readiconlist
+(   0)   methodid:PTR TO LONG
+(   4)   flags:LONG
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT devwinremicon
+(   0)   methodid:PTR TO LONG
+(   4)   iconnode:PTR TO scaiconnode
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT devwinreadicon
+(   0)   methodid:PTR TO LONG
+(   4)   devicenode:PTR TO scadeviceicon
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT getlocstring
+(   0)   methodid:PTR TO LONG
+(   4)   stringid:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT addtoclipboard
+(   0)   methodid:PTR TO LONG
+(   4)   wt:PTR TO scawindowtask
+(   8)   in:PTR TO scaiconnode
+(  12)   ftopcodes:LONG
+(  16)   opcode:LONG
+(----) ENDOBJECT     /* SIZEOF=20 */
+
+(----) OBJECT message
+(   0)   methodid:PTR TO LONG
+(   4)   msg:PTR TO intuimessage
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT runprocess
+(   0)   methodid:PTR TO LONG
+(   4)   entrypoint:LONG
+(   8)   args:LONG
+(  12)   argsize:LONG
+(  16)   replyport:PTR TO mp
+(----) ENDOBJECT     /* SIZEOF=20 */
+
+(----) OBJECT dragenter
+(   0)   window:PTR TO scawindowstruct
+(   4)   icon:PTR TO scaiconnode
+(   8)   mousex:LONG
+(  12)   mousey:LONG
+(----) ENDOBJECT     /* SIZEOF=16 */
+
+(----) OBJECT scaappobjnode
+(   0)   minnode:PTR TO mn
+(   4)   kennug:LONG
+(   8)   type:LONG
+(  12)   id:LONG
+(  16)   userdata:LONG
+(  20)   msg:PTR TO mp
+(  24)   object:LONG
+(  28)   userdata2:LONG
+(----) ENDOBJECT     /* SIZEOF=32 */
+
+(----) OBJECT scareadiconarg
+(   0)   x:LONG
+(   4)   y:LONG
+(   8)   lock:LONG
+(----) ENDOBJECT     /* SIZEOF=12 */
+
+(----) OBJECT scatooltipinfohookdata
+(   0)   iconnode:PTR TO scaiconnode
+(   4)   filelock:LONG
+(   8)   fib:PTR TO fileinfoblock
+(  12)   buffer:LONG
+(  16)   bufflen:LONG
+(----) ENDOBJECT     /* SIZEOF=20 */
+
+(----) OBJECT scaclassinfo
+(   0)   hook:hook (or ARRAY OF hook)
+(  20)   priority:LONG
+(  24)   instsize:INT
+(  26)   neededversion:INT
+(  28)   reserved:INT
+(  30)   classname:PTR TO CHAR
+(  34)   superclassname:PTR TO CHAR
+(  38)   name:PTR TO CHAR
+(  42)   description:PTR TO CHAR
+(  46)   makername:PTR TO CHAR
+(----) ENDOBJECT     /* SIZEOF=50 */
+
+(----) OBJECT scaooppluginbase
+(   0)   soob_library:LONG
+(   4)   soob_signature:LONG
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT scainterninfos
+(   0)   mainmsgport:PTR TO mp
+(   4)   mainwindowstruct:PTR TO scawindowstruct
+(   8)   appwindowstruct:PTR TO scawindowstruct
+(  12)   screen:PTR TO screen
+(  16)   drawinfo:PTR TO drawinfo
+(  20)   visualinfo:PTR TO CHAR
+(----) ENDOBJECT     /* SIZEOF=24 */
+
+(----) OBJECT scarootlist
+(   0)   windowtask:PTR TO scawindowtask
+(   4)   interninfos:PTR TO scainterninfos
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT scalosnodelist
+(   0)   minnode:PTR TO mn
+(----) ENDOBJECT     /* SIZEOF=4 */
+
+(----) OBJECT scaupdateicon_iw
+(   0)   ui_iw_lock:LONG
+(   4)   ui_iw_name:PTR TO CHAR
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT scadeviceicon
+(   0)   node:mn (or ARRAY OF mn)
+(  20)   handler:PTR TO mp
+(  24)   volume:PTR TO CHAR
+(  28)   device:PTR TO CHAR
+(  32)   icon:PTR TO LONG
+(  36)   info:PTR TO infodata
+(  40)   infobuf:infodata (or ARRAY OF infodata)
+( 184)   flags:INT
+( 186)   notifyreq:notifyrequest (or ARRAY OF notifyrequest)
+( 234)   diskiconname:LONG
+(----) ENDOBJECT     /* SIZEOF=238 */
+
+(----) OBJECT scaiconnode
+(   0)   node:mn (or ARRAY OF mn)
+(  20)   icon:PTR TO LONG
+(  24)   name:PTR TO CHAR
+(  28)   deviceicon:PTR TO scadeviceicon
+(  32)   lock:PTR TO LONG
+(  36)   iconlist:PTR TO scabackdropicon
+(  40)   flags:INT
+(  42)   userdata:INT
+(  44)   datestamp:datestamp (or ARRAY OF datestamp)
+(  56)   typenode:PTR TO LONG
+(  60)   filedatestamp:datestamp (or ARRAY OF datestamp)
+(  72)   filesize:PTR TO LONG
+(  76)   oldleftedge:INT
+(  78)   oldtopedge:INT
+(----) ENDOBJECT     /* SIZEOF=80 */
+
+(----) OBJECT scabackdropicon
+(   0)   node:mn (or ARRAY OF mn)
+(  20)   sbi_icon:PTR TO LONG
+(  24)   notifyreq:PTR TO LONG
+(  28)   sbi_drawername:LONG
+(----) ENDOBJECT     /* SIZEOF=32 */
+
+(----) OBJECT sm_newwindowpath
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   path:LONG
+(  32)   taglist:tagitem (or ARRAY OF tagitem)
+(----) ENDOBJECT     /* SIZEOF=40 */
+
+(----) OBJECT sm_setthumbnailimage_argb
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   smtia_iconobject:LONG
+(  32)   smtia_newimage:PTR TO argbheader
+(----) ENDOBJECT     /* SIZEOF=36 */
+
+(----) OBJECT sm_setthumbnailimage_remapped
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   smtir_iconobject:LONG
+(  32)   smtir_newimage:PTR TO scalosbitmapandcolor
+(----) ENDOBJECT     /* SIZEOF=36 */
+
+(----) OBJECT sm_deltamove
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   deltax:LONG
+(  32)   deltay:LONG
+(  36)   adjustslider:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=40 */
+
+(----) OBJECT sm_newpreferences
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   prefsflags:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=32 */
+
+(----) OBJECT sm_redrawiconobj
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   smrio_iconobject:PTR TO LONG
+(  32)   smrio_flags:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=36 */
+
+(----) OBJECT sm_dopopupmenu
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   ie:inputevent (or ARRAY OF inputevent)
+(----) ENDOBJECT     /* SIZEOF=50 */
+
+(----) OBJECT sm_redrawicon
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   smri_icon:PTR TO scaiconnode
+(----) ENDOBJECT     /* SIZEOF=32 */
+
+(----) OBJECT sm_showstatusbar
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   visible:LONG
+(----) ENDOBJECT     /* SIZEOF=32 */
+
+(----) OBJECT sm_showpopupmenu
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   smpm_popupmenu:PTR TO popupmenu
+(  32)   iconnode:PTR TO scaiconnode
+(  36)   flags:LONG
+(  40)   filetypedef:PTR TO LONG
+(  44)   qualifier:INT
+(----) ENDOBJECT     /* SIZEOF=46 */
+
+(----) OBJECT sm_realupdateicon
+(   0)   smc_asyncroutine:sm_asyncroutine (or ARRAY OF sm_asyncroutine)
+(  34)   arg:PTR TO wbarg
+(----) ENDOBJECT     /* SIZEOF=38 */
+
+(----) OBJECT sm_runmenucmd
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   scalosmenutree:PTR TO LONG
+(  32)   iconnode:PTR TO scaiconnode
+(  36)   flags:LONG
+(----) ENDOBJECT     /* SIZEOF=40 */
+
+(----) OBJECT sm_menucmd
+(   0)   smc_asyncroutine:sm_asyncroutine (or ARRAY OF sm_asyncroutine)
+(  34)   smc_flags:PTR TO LONG
+(  38)   smc_iconNode:PTR TO scaiconnode
+(----) ENDOBJECT     /* SIZEOF=42 */
+
+(----) OBJECT sm_arexxroutine
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   smrx_entrypoint:arexxfunc (or ARRAY OF arexxfunc)
+(  36)   smrx_RexxMsg:PTR TO rexxmsg
+(----) ENDOBJECT     /* SIZEOF=40 */
+
+(----) OBJECT sm_asyncbackfill
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   smab_backfillfunc:runprocfunc (or ARRAY OF runprocfunc)
+(  32)   patternnode:PTR TO LONG
+(  36)   smab_patterninfo:PTR TO patterninfo
+(  40)   smab_screenstruct:PTR TO screen
+(  44)   smab_windowtaskstruct:PTR TO scawindowtask
+(  48)   smab_patterninfocopy:CHAR
+(----) ENDOBJECT     /* SIZEOF=50 */
+
+(----) OBJECT sm_requester
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   smrq_ReqResult:PTR TO LONG
+(  32)   smrq_ParentWindow:PTR TO window
+(  36)   smrq_MultiPurpose:LONG
+(  40)   smrq_ArgList:PTR TO CHAR
+(  44)   smrq_ez:easystruct (or ARRAY OF easystruct)
+(  64)   smrq_ArgListBuffer:CHAR
+(----) ENDOBJECT     /* SIZEOF=66 */
+
+(----) OBJECT sm_uniconify
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(----) ENDOBJECT     /* SIZEOF=28 */
+
+(----) OBJECT sm_iconify
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(----) ENDOBJECT     /* SIZEOF=28 */
+
+(----) OBJECT sm_remicon
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   dirlock:LONG
+(  32)   iconname:LONG
+(----) ENDOBJECT     /* SIZEOF=36 */
+
+(----) OBJECT sm_addicon
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   x:INT
+(  30)   y:INT
+(  32)   dirlock:LONG
+(  36)   iconname:LONG
+(----) ENDOBJECT     /* SIZEOF=40 */
+
+(----) OBJECT sm_updateicon
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   dirlock:LONG
+(  32)   iconname:LONG
+(----) ENDOBJECT     /* SIZEOF=36 */
+
+(----) OBJECT sm_update
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(----) ENDOBJECT     /* SIZEOF=28 */
+
+(----) OBJECT sm_redraw
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   flags:LONG
+(----) ENDOBJECT     /* SIZEOF=32 */
+
+(----) OBJECT sm_appwakeup
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   relayout:LONG
+(----) ENDOBJECT     /* SIZEOF=32 */
+
+(----) OBJECT sm_appsleep
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(----) ENDOBJECT     /* SIZEOF=28 */
+
+(----) OBJECT sm_runprocess
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   windowtask:PTR TO scawindowtask
+(  32)   entrypoint:runprocfunc (or ARRAY OF runprocfunc)
+(  36)   flags:LONG
+(----) ENDOBJECT     /* SIZEOF=40 */
+
+(----) OBJECT sm_asyncroutine
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   entrypoint:asyncroutinefunc (or ARRAY OF asyncroutinefunc)
+(  32)   args:CHAR
+(----) ENDOBJECT     /* SIZEOF=34 */
+
+(----) OBJECT sm_showtitle
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   showtitle:LONG
+(----) ENDOBJECT     /* SIZEOF=32 */
+
+(----) OBJECT sm_wakeup
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   relayout:LONG
+(----) ENDOBJECT     /* SIZEOF=32 */
+
+(----) OBJECT sm_sleep
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(----) ENDOBJECT     /* SIZEOF=28 */
+
+(----) OBJECT sm_newpattern
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   patternnode:PTR TO CHAR
+(----) ENDOBJECT     /* SIZEOF=32 */
+
+(----) OBJECT sm_timer
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   windowstruct:PTR TO scawindowstruct
+(  32)   time:timeval (or ARRAY OF timeval)
+(----) ENDOBJECT     /* SIZEOF=40 */
+
+(----) OBJECT sm_startwindow
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(  28)   windowstruct:PTR TO scawindowstruct
+(----) ENDOBJECT     /* SIZEOF=32 */
+
+(----) OBJECT sm_closewindow
+(   0)   sm:scalosmessage (or ARRAY OF scalosmessage)
+(----) ENDOBJECT     /* SIZEOF=28 */
+
+(----) OBJECT scalosmessage
+(   0)   message:mn (or ARRAY OF mn)
+(  20)   signature:LONG
+(  24)   messagetype:LONG
+(----) ENDOBJECT     /* SIZEOF=28 */
+
+(----) OBJECT runprocfunc
+(   0)   sm_runprocess:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=4 */
+
+(----) OBJECT arexxfunc
+(   0)   scawindowtask:PTR TO LONG
+(   4)   rexxmsg:LONG
+(----) ENDOBJECT     /* SIZEOF=8 */
+
+(----) OBJECT asyncroutinefunc
+(   0)   scawindowtask:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=4 */
+
+(----) OBJECT scawindowtask
+(   0)   patterninfo:PTR TO patterninfo
+(   4)   xoffset:INT
+(   6)   yoffset:INT
+(   8)   mainobject:PTR TO CHAR
+(  12)   windowobject:PTR TO CHAR
+(  16)   window:PTR TO window
+(  20)   iconlist:PTR TO scaiconnode
+(  24)   lateiconlist:PTR TO scaiconnode
+(  28)   iconsemaphore:PTR TO ss
+(  32)   iconport:PTR TO mp
+(  36)   windowsemaphore:PTR TO ss
+(  40)   windowstruct:PTR TO scawindowstruct
+(----) ENDOBJECT     /* SIZEOF=44 */
+
+(----) OBJECT patterninfo
+(   0)   hook:hook (or ARRAY OF hook)
+(  20)   width:LONG
+(  24)   height:LONG
+(  28)   bitmap:PTR TO bitmap
+(  32)   pattern:PTR TO CHAR
+(  36)   flags:INT
+(  38)   pad:LONG
+(  42)   pen:LONG
+(  46)   message:mn (or ARRAY OF mn)
+(----) ENDOBJECT     /* SIZEOF=66 */
+
+(----) OBJECT scawindowstruct
+(   0)   node:mn (or ARRAY OF mn)
+(  20)   task:PTR TO tc
+(  24)   lock:PTR TO LONG
+(  28)   window:PTR TO window
+(  32)   messageport:PTR TO mp
+(  36)   left:INT
+(  38)   top:INT
+(  40)   width:INT
+(  42)   height:INT
+(  44)   xoffset:INT
+(  46)   yoffset:INT
+(  48)   patternnode:PTR TO CHAR
+(  52)   windowtask:PTR TO scawindowtask
+(  56)   name:PTR TO CHAR
+(  60)   title:PTR TO CHAR
+(  64)   classname:PTR TO CHAR
+(  68)   class:PTR TO LONG
+(  72)   flags:INT
+(  74)   patternnumber:INT
+(  76)   viewmodes:CHAR
+(  77)   windowtype:CHAR
+(  78)   windowtaskname:LONG
+(  82)   viewall:LONG
+(  86)   thumbnailview:PTR TO LONG
+(  90)   thumbnailslifetimedays:PTR TO LONG
+(----) ENDOBJECT     /* SIZEOF=94 */
+
+(----) OBJECT scawindowlist
+(   0)   windowstruct:PTR TO scawindowstruct
+(   4)   mainwindowstruct:PTR TO scawindowstruct
+(   8)   appwindowstruct:PTR TO scawindowstruct
+(----) ENDOBJECT     /* SIZEOF=12 */
+
+CONST INB_Identified=8,
+      SCCM_Window_RemClipRegion=$80580080,
+      SCCM_Window_InitClipRegion=$8058007F,
+      SGTT_GADGETID_StatusBar_Typing=$3F3,
+      SCCA_IconWin_Typing=$805803EA,
+      SCCM_Ping=$8058008C,
+      WSV_FlagB_Typing=9,
+      SCCM_Window_GetIconFileType=$805800A8,
+      SCCM_IconWin_CleanUpByType=$805800B7,
+      SCCA_IconWin_ShowType=$805803EB,
+      SCCA_Title_Type=$80580003,
+      MTYP_SetThumbnailImage_Remapped=31,
+      NTYP_MenuInfo=9,
+      EXISTREQ_Replace=1,
+      SCCM_RunProcess=$80580078,
+      WSV_FlagB_NeedsTimerMsg=1,
+      MTYP_RunProcess=10,
+      SCCM_IconWin_MenuCommand=$8058008A,
+      INB_IconVisible=7,
+      INB_DropMarkVisible=4,
+      THUMBNAILS_Always=2,
+      SCCV_ReplaceMode_Always=2,
+      SCCM_IconWin_Sleep=$80580083,
+      MTYP_AppSleep=11,
+      MTYP_Sleep=7,
+      IDTV_WinDropMark_Always=2,
+      SCCA_FileTrans_ReplaceMode=$8058009D,
+      SCCM_IconWin_NewViewMode=$8058008B,
+      WSV_FlagB_BrowserMode=13,
+      SCA_BrowserMode=$8053001B,
+      SCA_ShowAllMode=$80530019,
+      SCCA_IconWin_ThumbnailView=$805803F1,
+      INB_VolumeWriteProtected=5,
+      SCCM_IconWin_ActivateIconRight=$805800AF,
+      SCCM_IconWin_DragEnter=$80580095,
+      SCCA_IconWin_InnerHeight=$805803ED,
+      SMRIOFLAGB_Highlight=2,
+      SCA_ViewModes=$8053000C,
+      NTYP_AppObject=8,
+      SCA_IconObject=$80530001,
+      FTUPDATE_Entry=2,
+      SCAB_FreeLocks=0,
+      SCAV_FreeLocks=1,
+      INB_SupportsDelete=8,
+      SGTT_GADGETID_BottomScroller=$3EA,
+      SGTT_GADGETID_RightScroller=$3E9,
+      INB_SupportsUnSnapshot=5,
+      INB_SupportsSnapshot=4,
+      SCCM_IconWin_ActivateIconLeft=$805800AE,
+      SCCM_IconWin_DragLeave=$80580096,
+      MTYP_Requester=5,
+      SCA_Priority=$80530016,
+      SCA_SortType_Bubble=0,
+      SGTT_GADGETID_StatusBar_ReadOnly=$3F1,
+      IDTV_WinDropMark_WindowedOnly=1,
+      SCCM_Window_ClearIconFileTypes=$805800A9,
+      SCCM_IconWin_UpdateStatusBar=$805800A1,
+      SCCM_IconWin_RemFromStatusBar=$805800A0,
+      SCCM_IconWin_AddToStatusBar=$8058009F,
+      SCCA_IconWin_StatusBar=$805803F0,
+      WSV_FlagB_NoStatusBar=10,
+      MTYP_ShowStatusBar=25,
+      SCA_HideStatusBar=$8053001C,
+      SCA_NoStatusBar=$80530014,
+      SCA_YOffset=$80530009,
+      SCA_XOffset=$80530008,
+      SCCM_Message=$8058006B,
+      SCCM_ScalosMessage=$8058006A,
+      SCCA_IconWin_SelectedCount=$805803E9,
+      NTYP_ScalosArg=4,
+      SGTT_GADGETID_StatusBar_ShowAll=$3F4,
+      SCCV_IconWin_ReadIconList_ShowAll=1,
+      SMNPFLAGB_FILETYPESPREFS=7,
+      SMNPFLAGB_LOCALEPREFS=6,
+      SMNPFLAGB_DEFICONSPREFS=5,
+      SMNPFLAGB_PALETTEPREFS=4,
+      SMNPFLAGB_SCALOSPREFS=3,
+      SMNPFLAGB_FONTPREFS=2,
+      SMNPFLAGB_MENUPREFS=1,
+      SMNPFLAGB_PATTERNPREFS=0,
+      SCCM_FileTrans_UpdateWindow=$805800A5,
+      SCCM_FileTrans_OpenWindow=$805800A3,
+      SCCM_Window_ChangeWindow=$805800BD,
+      SCCV_Title_Type_Window=1,
+      WSV_Type_DeviceWindow=1,
+      WSV_Type_IconWindow=0,
+      WSV_FlagB_NoActivateWindow=11,
+      WSV_FlagB_RootWindow=0,
+      MTYP_StartWindow=3,
+      MTYP_CloseWindow=2,
+      SCA_NoActivateWindow=$80530015,
+      EXISTREQ_Abort=0,
+      SCCM_FileTrans_CheckAbort=$805800A2,
+      SCCV_ReplaceMode_Abort=3,
+      SCCM_DeviceList_Filter=$80580087,
+      INB_Sticky=3,
+      SMRIOFLAGB_HightlightOff=5,
+      NTYP_PluginClass=10,
+      SCA_Class=$80530010,
+      SCALOSCONTROL_BASE=$80530300,
+      SCCM_Window_SetTitle=$80580081,
+      SCCM_Title_QueryTitle=$80580067,
+      MTYP_ShowTitle=22,
+      SCA_WindowTitle=$80530005,
+      SCCM_Title_Translate=$80580068,
+      FTUPDATE_SameFile=3,
+      INB_File=1,
+      SCCA_IconWin_InnerWidth=$805803EC,
+      SMRIOFLAGB_HightlightOn=4,
+      EXISTREQ_SkipAll=4,
+      SCCM_FileTrans_OpenWindowDelayed=$805800A4,
+      ID_IMSG=$494D5347,
+      MTYP_AsyncBackFill=21,
+      MTYP_NewPattern=6,
+      SCCM_IconWin_ActivateIconNext=$805800B2,
+      SCCM_IconWin_DragFinish=$80580070,
+      SCCM_IconWin_ActivateIconPrevious=$805800B3,
+      SCCM_IconWin_CleanUpByName=$805800B4,
+      SCCM_ClearClipboard=$805800AD,
+      SCCM_AddToClipboard=$805800AC,
+      INB_SupportsRename=2,
+      SMRIOFLAGB_FreeLayout=1,
+      SCA_ClassName=$8053000F,
+      SCA_Flags=$80530003,
+      EXISTREQ_ReplaceAll=3,
+      SCCA_IconWin_IconFont=$805803EE,
+      SCA_WindowRect=$80530007,
+      THUMBNAILS_Never=0,
+      SCCV_ReplaceMode_Never=1,
+      IDTV_WinDropMark_Never=0,
+      SCCM_IconWin_CleanUp=$80580077,
+      OVERWRITEREQ_Move=1,
+      SCCM_FileTrans_Move=$80580094,
+      FTOPCODE_Move=2,
+      SCCM_IconWin_DeltaMove=$80580090,
+      SCCV_AddToClipboard_Move=2,
+      DIBB_Remove=1,
+      MTYP_DeltaMove=30,
+      SCAB_FreeNames=1,
+      SCAV_FreeNames=2,
+      SCCM_IconWin_ActivateIconDown=$805800B1,
+      SCCM_IconWin_WakeUp=$80580084,
+      WSV_FlagB_TimerMsgSent=3,
+      SCAB_OpenWindow_ScalosPort=0,
+      SCA_MessagePort=$8053000D,
+      SCA_SortType_Quick=3,
+      MTYP_NewPreferences=29,
+      SCCM_DeviceList_FreeDevNode=$80580086,
+      SCCV_RunProcess_WaitReply=-1,
+      SCCV_RunProcess_NoReply=0,
+      SCCM_ScalosMessageReply=$8058006C,
+      NTYP_PluginNode=11,
+      NTYP_PatternNode=3,
+      NTYP_DragNode=2,
+      NTYP_IconNode=0,
+      SCA_IconNode=$80530004,
+      SCCM_IconWin_DragBegin=$8058006E,
+      SCC_Dummy=$80580000,
+      WSV_FlagB_ShowAllFiles=5,
+      SCA_ShowAllFiles=$8053000B,
+      SCCA_FileTrans_Screen=$80580006,
+      SCCM_IconWin_ShowGadgetToolTip=$805800AB,
+      SCCM_IconWin_ShowIconToolTip=$8058009C,
+      SCCV_Title_Type_Screen=0,
+      MTYP_RedrawIconObj=28,
+      OVERWRITEREQ_CopyIcon=2,
+      SCCM_TextWin_InsertIcon=$805800BA,
+      SCCM_TextWin_ReadIcon=$80580089,
+      SCCM_DeviceWin_RemIcon=$805800BC,
+      SCCM_DeviceWin_ReadIcon=$80580088,
+      SCCM_IconWin_GetDefIcon=$80580092,
+      SCCM_IconWin_LayoutIcon=$8058008E,
+      SCCM_IconWin_DrawIcon=$8058008D,
+      SCCM_IconWin_RemIcon=$80580075,
+      SCCM_IconWin_AddIcon=$80580074,
+      SCCM_IconWin_UpdateIcon=$80580073,
+      SCCM_IconWin_ReadIcon=$8058006D,
+      DIBB_DontDisplay=0,
+      INB_TextIcon=2,
+      INB_DefaultIcon=0,
+      SMRIOFLAGB_EraseIcon=0,
+      MTYP_RedrawIcon=26,
+      MTYP_RemIcon=17,
+      MTYP_AddIcon=16,
+      MTYP_UpdateIcon=15,
+      NTYP_DeviceIcon=5,
+      SCAB_WBStart_NoIcon=0,
+      OVERWRITEREQ_Copy=0,
+      SCCM_FileTrans_Copy=$80580093,
+      FTOPCODE_Copy=1,
+      SCCA_Title_Format=$80580002,
+      SCCV_AddToClipboard_Copy=1,
+      SCCA_WindowTask=$80580001,
+      INB_SupportsCopy=1,
+      ICONLAYOUT_Columns=0,
+      SCCM_HandleMessages=$80580069,
+      MTYP_SetThumbnailImage_ARGB=$20,
+      SCCM_IconWin_ReadIconList=$80580064,
+      SCCM_TextWin_EndUpdate=$80580099,
+      SCCM_TextWin_BeginUpdate=$80580098,
+      SCCM_IconWin_ImmediateCheckUpdate=$805800BB,
+      SCCM_IconWin_ActivateIconUp=$805800B0,
+      SCCM_IconWin_ScheduleUpdate=$80580097,
+      SCCM_IconWin_Update=$80580082,
+      SCCM_IconWin_CleanUpByDate=$805800B5,
+      SCCM_Window_UnlockUpdate=$8058009B,
+      SCCM_Window_LockUpdate=$8058009A,
+      MTYP_Update=14,
+      FTUPDATE_Final=4,
+      SCA_SortType_Best=-1,
+      WSV_FlagB_TaskSleeps=4,
+      SCA_LockWindowList_AttemptExclusive=3,
+      SCA_SemaphoreExclusive=$80530012,
+      MTYP_ARexxRoutine=18,
+      MTYP_AsyncRoutine=9,
+      ICONLAYOUT_Rows=1,
+      SCCM_IconWin_Open=$80580072,
+      SCCM_Window_Open=$8058007B,
+      INB_SupportsOpen=0,
+      SGTT_GADGETID_StatusBar_Reading=$3F2,
+      SCCA_IconWin_ThumbnailsGenerating=$805803F2,
+      SCCA_IconWin_Reading=$805803E8,
+      DIBB_InfoPending=2,
+      WSV_FlagB_RefreshPending=12,
+      WSV_FlagB_ActivatePending=8,
+      WSV_FlagB_CheckUpdatePending=7,
+      FTUPDATE_EnterNewDir=1,
+      SCCV_ReplaceMode_Ask=0,
+      SCCM_IconWin_DragDrop=$80580071,
+      WSV_FlagB_Backdrop=2,
+      SCCM_IconWin_RawKey=$8058009E,
+      INB_SupportsPutAway=7,
+      INB_SupportsEmptyTrash=10,
+      SCAB_WBStart_PathSearch=2,
+      SCCM_IconWin_SetVirtSize=$80580079,
+      SCCM_IconWin_CleanUpBySize=$805800B6,
+      SCCM_Window_SetInnerSize=$8058008F,
+      SCA_Stacksize=$80530002,
+      SCCM_FileTrans_CountTimeout=$805800A7,
+      MTYP_Timer=4,
+      SCA_WaitTimeout=$80530011,
+      SCCM_TextWin_ReAdjust=$80580091,
+      INB_SupportsInformation=3,
+      INB_FreeIconPosition=6,
+      SCA_SortType_Insertion=2,
+      SCA_SortType_Selection=1,
+      SCCA_IconWin_LayersLocked=$805803EF,
+      SMRIOFLAGB_IconListLocked=3,
+      SCCM_DeviceList_Generate=$80580085,
+      SCCM_Title_Generate=$80580065,
+      SCCM_Window_Close=$8058007C,
+      SCCM_IconWin_MakeWBArg=$80580076,
+      SCCM_IconWin_DragQuery=$8058006F,
+      SCCM_Title_Query=$80580066,
+      SCCM_IconWin_AddGadget=$805800B8,
+      SCCM_GetLocalizedString=$805800BE,
+      NTYP_WindowStruct=1,
+      SCA_WindowStruct=$80430017,
+      SGTT_GADGETID_StatusBar_Text=$3F0,
+      SCAB_WBStart_NoIconCheck=3,
+      INB_SupportsFormatDisk=9,
+      SCA_LockWindowList_AttemptShared=2,
+      SCA_LockWindowList_Shared=0,
+      SCA_SemaphoreShared=$80530013,
+      SCCA_FileTrans_Number=$80580005,
+      SCA_PatternNumber=$8053000A,
+      SCCM_FileTrans_OverwriteRequest=$805800B9,
+      SCAB_WBStart_Wait=1,
+      SGTT_GADGETID_Iconify=$3EF,
+      SCCM_Window_UnIconify=$8058007E,
+      SCCM_Window_Iconify=$8058007D,
+      WSV_FlagB_Iconify=6,
+      MTYP_RunMenuCmd=23,
+      MTYP_UnIconify=20,
+      MTYP_Iconify=19,
+      SCA_Iconify=$8053000E,
+      SCCM_IconWin_Redraw=$8058007A,
+      MTYP_Redraw=13,
+      MTYP_AppWakeup=12,
+      MTYP_Wakeup=8,
+      THUMBNAILS_AsDefault=1,
+      SCA_LockWindowList_Exclusiv=1,
+      SGTT_GADGETID_LeftArrow=$3EE,
+      SGTT_GADGETID_RightArrow=$3ED,
+      SGTT_GADGETID_DownArrow=$3EC,
+      SGTT_GADGETID_UpArrow=$3EB,
+      FTUPDATE_Initial=0,
+      INB_SupportsLeaveOut=6,
+      EXISTREQ_Skip=2,
+      SCCA_Window_IDCMP=$80580002,
+      MTYP_MAX=$22,
+      MTYP_NewWindowPath=$21,
+      SCA_Path=$80530006,
+      SGTT_GADGETID_unknown=$3F5,
+      SCCM_IconWin_ShowPopupMenu=$805800A6,
+      MTYP_DoPopupMenu=27,
+      MTYP_ShowPopupMenu=24,
+      MTYP_DropProc=1,
+      SCA_SemaphoreExclusiveNoNest=$80530018
+
+#define INF_Identified/0
+#define WSV_FlagF_Typing/0
+#define SCAV_ViewModes_Type/0
+#define SCAF_Drag_Transparent/0
+#define SCAB_Drag_Transparent/0
+#define WSV_FlagF_NeedsTimerMsg/0
+#define INF_IconVisible/0
+#define INF_DropMarkVisible/0
+#define SCALOSCTRLA_SetWindowDropMarkMode/0
+#define SCALOSCTRLA_GetWindowDropMarkMode/0
+#define SCALOSCTRLA_GetEmulationMode/0
+#define SCALOSCTRLA_SetOldDragIconMode/0
+#define SCALOSCTRLA_GetOldDragIconMode/0
+#define WSV_FlagF_BrowserMode/0
+#define SIV_DeviceWin/0
+#define INF_VolumeWriteProtected/0
+#define SMRIOFLAGF_Highlight/0
+#define SCAV_ViewModes_Owner/0
+#define SCAF_FreeLocks/0
+#define INF_SupportsDelete/0
+#define REDRAWF_ReLayoutIcons/0
+#define REDRAWB_ReLayoutIcons/0
+#define INF_SupportsUnSnapshot/0
+#define INF_SupportsSnapshot/0
+#define SCALOSCTRLA_SetSupportedIconTypes/0
+#define SCALOSCTRLA_GetSupportedIconTypes/0
+#define ICONWINOPENF_IgnoreFileTypes/0
+#define ICONWINOPENB_IgnoreFileTypes/0
+#define WSV_FlagF_NoStatusBar/0
+#define SIV_IconWin/0
+#define SCALOSCTRLA_SetDisplayDragCount/0
+#define SCALOSCTRLA_GetDisplayDragCount/0
+#define SETVIRTF_AdjustRightSlider/0
+#define SETVIRTF_AdjustBottomSlider/0
+#define SETVIRTB_AdjustRightSlider/0
+#define SETVIRTB_AdjustBottomSlider/0
+#define SMNPFLAGF_FILETYPESPREFS/0
+#define SMNPFLAGF_LOCALEPREFS/0
+#define SMNPFLAGF_DEFICONSPREFS/0
+#define SMNPFLAGF_PALETTEPREFS/0
+#define SMNPFLAGF_SCALOSPREFS/0
+#define SMNPFLAGF_FONTPREFS/0
+#define SMNPFLAGF_MENUPREFS/0
+#define SMNPFLAGF_PATTERNPREFS/0
+#define SCALOSCTRLA_RemCloseWBHook/0
+#define SCALOSCTRLA_AddCloseWBHook/0
+#define SCALOSCTRLA_SetTextInputHook/0
+#define SCALOSCTRLA_GetTextInputHook/0
+#define SCALOSCTRLA_SetDeleteHook/0
+#define SCALOSCTRLA_GetDeleteHook/0
+#define SCALOSCTRLA_SetCopyHook/0
+#define SCALOSCTRLA_GetCopyHook/0
+#define REDRAWF_DontEraseWindow/0
+#define REDRAWB_DontEraseWindow/0
+#define WSV_Type_DesktopWindow/0
+#define WSV_FlagF_NoActivateWindow/0
+#define WSV_FlagF_RootWindow/0
+#define INF_Sticky/0
+#define SMRIOFLAGF_HightlightOff/0
+#define INF_File/0
+#define SMRIOFLAGF_HightlightOn/0
+#define SCAV_ViewModes_Version/0
+#define SCAF_Drag_IndicateMakeLink/0
+#define SCAB_Drag_IndicateMakeLink/0
+#define INF_SupportsRename/0
+#define SMRIOFLAGF_FreeLayout/0
+#define SCAV_ViewModes_Name/0
+#define DIBF_Remove/0
+#define SCAF_FreeNames/0
+#define WSV_FlagF_TimerMsgSent/0
+#define SCAF_OpenWindow_ScalosPort/0
+#define SCALOSCTRLA_SetStripedTextWindows/0
+#define SCALOSCTRLA_GetStripedTextWindows/0
+#define SCAV_ViewModes_Group/0
+#define WSV_FlagF_ShowAllFiles/0
+#define DIB_DontDisplay/0
+#define DIBF_DontDisplay/0
+#define INF_TextIcon/0
+#define INF_DefaultIcon/0
+#define SMRIOFLAGF_EraseIcon/0
+#define SCAV_ViewModes_MiniIcon/0
+#define SCAV_ViewModes_Icon/0
+#define SCAV_WBStart_NoIcon/0
+#define SCAF_WBStart_NoIcon/0
+#define SCAF_Drag_IndicateCopy/0
+#define SCAB_Drag_IndicateCopy/0
+#define INF_SupportsCopy/0
+#define SCALOSCTRLA_SetTypeRestartTime/0
+#define SCALOSCTRLA_GetTypeRestartTime/0
+#define SCAV_ViewModes_Time/0
+#define SCALOSCTRLA_SetCloseWBDisabled/0
+#define SCALOSCTRLA_GetCloseWBDisabled/0
+#define SCALOSCTRLA_FreeMenuCommandList/0
+#define SCALOSCTRLA_GetMenuCommandList/0
+#define SCALOSCTRLA_FreeProgramList/0
+#define SCALOSCTRLA_GetProgramList/0
+#define SCALOSCTRLA_SetToolTipDelay/0
+#define SCALOSCTRLA_GetToolTipDelay/0
+#define SCAV_ViewModes_Date/0
+#define SCALOS_SCALOS_H/0
+#define WSV_FlagF_TaskSleeps/0
+#define INF_SupportsOpen/0
+#define DIBF_InfoPending/0
+#define WSV_FlagF_RefreshPending/0
+#define WSV_FlagF_ActivatePending/0
+#define WSV_FlagF_CheckUpdatePending/0
+#define WSV_FlagF_Backdrop/0
+#define INF_SupportsPutAway/0
+#define INF_SupportsEmptyTrash/0
+#define SCAV_WBStart_PathSearch/0
+#define SCAF_WBStart_PathSearch/0
+#define SCALOSCTRLA_SetCopyBuffSize/0
+#define SCALOSCTRLA_GetCopyBuffSize/0
+#define SCALOSCTRLA_SetDefaultStackSize/0
+#define SCALOSCTRLA_GetDefaultStackSize/0
+#define SCAV_ViewModes_Size/0
+#define IOLAYOUTF_SelectedImage/0
+#define IOLAYOUTB_SelectedImage/0
+#define IOLAYOUTF_NormalImage/0
+#define IOLAYOUTB_NormalImage/0
+#define SCAF_Drag_Hide/0
+#define SCAB_Drag_Hide/0
+#define SCALOSCTRLA_SetStatusBarEnable/0
+#define SCALOSCTRLA_GetStatusBarEnable/0
+#define SCALOSCTRLA_SetToolTipEnable/0
+#define SCALOSCTRLA_GetToolTipEnable/0
+#define SCALOSCTRLA_SetSplashEnable/0
+#define SCALOSCTRLA_GetSplashEnable/0
+#define INF_SupportsInformation/0
+#define INF_FreeIconPosition/0
+#define SCAV_ViewModes_Protection/0
+#define SHOWPOPUPFLGF_WinListLocked/0
+#define SHOWPOPUPFLGF_IconSemaLocked/0
+#define SHOWPOPUPFLGB_WinListLocked/0
+#define SHOWPOPUPFLGB_IconSemaLocked/0
+#define SMRIOFLAGF_IconListLocked/0
+#define SCAF_Drag_NoDrawDrag/0
+#define SCAB_Drag_NoDrawDrag/0
+#define SCAV_WBStart_NoIconCheck/0
+#define SCAF_WBStart_NoIconCheck/0
+#define INF_SupportsFormatDisk/0
+#define SCAV_WBStart_Wait/0
+#define SCAF_WBStart_Wait/0
+#define WSV_FlagF_Iconify/0
+#define SCAV_ViewModes_Default/0
+#define INF_SupportsLeaveOut/0
+#define ICONLAYOUT_RESTRICTED_MAX/0
+#define ICONTYPE_MAX/0
+#define SCALOSREVISION/0
+#define SCALOSVERSION/0
+#define SCAF_Drag_NoDropHere/0
+#define SCAB_Drag_NoDropHere/0
+#define SCAV_ViewModes_Comment/0
+#define SHOWPOPUPFLGF_FreePopupMenu/0
+#define SHOWPOPUPFLGB_FreePopupMenu/0
+#define SCALOSNAME/0
+

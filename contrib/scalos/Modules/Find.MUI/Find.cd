@@ -1,0 +1,247 @@
+; Find.cd
+; $Date$
+; $Revision$
+; version $VER: Find.catalog 40.1 (23. Aug 2008 18:50:08)
+; codeset 0s
+; language english
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME (//)
+Scalos Find
+;
+;
+MSGID_SEARCH_FINISHED (//)
+Finished.
+;
+;
+MSGID_SEARCH_ABORTED (//)
+Aborted.
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT (1000//)
+Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT (//)
+About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI (//)
+About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT (//)
+Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT (//)
+Q
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK (2000//)
+_OK
+;
+;
+MSGID_ABOUTREQFORMAT (//)
+\33c\033bScalos Find.module V%ld.%ld\033n\n\
+%s\n\
+© 2008%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+MSGID_POPSTRING_NAME (3000//)
+Name:
+;
+;
+MSGID_POPSTRING_NAME_SHORTHELP (//)
+Pattern for file names to look for.\n\
+You can use all DOS wildcards like \"#?\"
+;
+;
+MSGID_POPSTRING_TEXT (//)
+Text:
+;
+;
+MSGID_POPSTRING_TEXT_SHORTHELP (//)
+String that is search inside all files\n\
+matching the file name pattern.\n\
+No wildcards are allowed here.
+;
+;
+MSGID_POPSTRING_TYPE (//)
+Type:
+;
+;
+MSGID_POPSTRING_TYPE_SHORTHELP (//)
+Name of Filetype all found entries must have.
+;
+;
+MSGID_SHORTHELP_LISTVIEW_FILETYPES (//)
+Select any filetype from this list by double-licking it.
+;
+;
+MSGID_GROUP_SOURCES (//)
+Sources
+;
+;
+MSGID_GROUP_SOURCES_ASLTITLE (//)
+Enter find source path:
+;
+;
+MSGID_GROUP_RESULTS (//)
+Results
+;
+;
+MSGID_BUTTON_ADD (//)
+Add \033I[6:20]
+;
+;
+MSGID_BUTTON_ADD_KEY (/1/1)
+A
+;
+;
+MSGID_BUTTON_ADD_SHORTHELP (//)
+Add another path to search for desired file(s).
+;
+;
+MSGID_BUTTON_REMOVE (//)
+Remove
+;
+;
+MSGID_BUTTON_REMOVE_KEY (/1/1)
+R
+;
+;
+MSGID_BUTTON_REMOVE_SHORTHELP (//)
+Remove selected entry from the list of\n\
+paths to search for desired file(s).
+;
+;
+MSGID_BUTTON_SEARCH (//)
+Search
+;
+;
+MSGID_BUTTON_SEARCH_KEY (/1/1)
+S
+;
+;
+MSGID_BUTTON_SEARCH_SHORTHELP (//)
+Start searching for desired file(s).
+;
+;
+MSGID_BUTTON_STOP (//)
+Stop
+;
+;
+MSGID_BUTTON_STOP_KEY (//)
+p
+;
+;
+MSGID_BUTTON_STOP_SHORTHELP (//)
+Immediately stop search in progress.
+;
+;
+MSGID_RESULTLIST_NAME (//)
+Name
+;
+;
+MSGID_RESULTLIST_LOCATION (//)
+Location
+;
+;
+MSGID_BUTTON_FIND_NEXT (//)
+Next
+;
+;
+MSGID_BUTTON_FIND_NEXT_KEY (/1/1)
+N
+;
+;
+MSGID_BUTTON_FIND_NEXT_SHORTHELP (//)
+Find next filetype that matches the given search string.
+;
+;
+MSGID_BUTTON_FIND_HIDE_SHORTHELP (//)
+Hide Find Filetype Dialog.
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE (6000//)
+Find Module startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD (//)
+Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+\n\
+Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+%lu.%lu is currently in use by other applications.\n\
+\n\
+Once you have installed the required version,\n\
+close all MUI programs, make sure the old class\n\
+is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_RESULTS_TITLE (7000//)
+Find Results
+;
+;
+MSGID_MENU_RESULTS_OPEN (//)
+Open with MultiView...
+;
+;
+MSGID_MENU_RESULTS_OPENDRAWER (//)
+Open Drawer...
+;
+;
+MSGID_MENU_RESULTS_FIND (//)
+Find in Result...
+;
+;
+MSGID_MENU_RESULTS_COPYTOCLIP (//)
+Copy to Clipboard
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_FILETYPES_TITLE (7100//)
+File Types
+;
+;
+MSGID_MENU_EDIT_COLLAPSE (//)
+Collapse Selected
+;
+;
+MSGID_MENU_EDIT_EXPAND (//)
+Expand Selected
+;
+;
+MSGID_MENU_EDIT_COLLAPSEALL (//)
+Collapse All
+;
+;
+MSGID_MENU_EDIT_EXPANDALL (//)
+Expand All
+;
+;
+MSGID_MENU_CLEARHISTORY (//)
+Clear History
+;
+;-----------------------------------------------------------
+;

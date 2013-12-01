@@ -1,0 +1,443 @@
+## version $VER: Delete.catalog 1.RR (DD.MM.1998)
+## codeset 0
+## language deutsch
+;
+;#arrayopts static __far
+;
+MSG_APP_TITLE
+Delete.module
+;
+MSG_APP_DESC
+Ersatz für das Scalos Delete.module
+;Replacement for Scalos Delete.module
+;
+MSG_WIN_TITLE
+Löschen
+;Delete
+;
+MSG_ASL_TITLE
+Verzeichnis für Papierkorb wählen
+;Select Trashcan directory
+;
+MSG_PAGES_FILES
+Dateien
+;Files
+;
+MSG_PAGES_PREFS
+Einstellungen
+;Preferences
+;
+MSG_LABEL_TRASH
+Papierkorb benutzen?
+;Use trashcan?
+;
+MSG_LABEL_DIRS
+Löschen von Verzeichnissen bestätigen?
+;Confirm dir delete?
+;
+MSG_LABEL_FILES
+Löschen von Dateien bestätigen?
+;Confirm file delete?
+;
+MSG_LABEL_QUIET
+Stiller Start
+;Quiet start
+;
+MSG_LABEL_TLOC
+Verzeichnis des Papierkorbs
+;Trashcan Location
+;
+MSG_LABEL_INFO
+%ld%% fertig
+;Done %ld%%
+;
+MSG_LABEL_PROG
+Ausgewählt: %ld Dateien (%ld Bytes) und %ld Verzeichnisse
+;Selected: %ld files [%ld bytes], %ld directories
+;
+MSG_LABEL_VERS
+Version:
+;
+MSG_LABEL_COMP
+Übersetzt:
+;Compiled:
+;
+MSG_BUTTON_FULL
+Details
+;
+MSG_BUTTON_DEL
+Löschen
+;Delete
+;
+MSG_BUTTON_ABT
+Über...
+;About
+;
+MSG_BUTTON_CAN
+Abbruch
+;Cancel
+;
+MSG_BUTTON_STOP
+HALT!
+;STOP!
+;
+MSG_BUTTON_AMUI
+Über MUI...
+;About MUI...
+;
+MSG_BUTTON_SAVE
+Speichern
+;Save
+;
+MSG_BUTTON_USE
+Benutzen
+;Use
+;
+MSG_BUTTON_REST
+Wiederherstellen
+;Restore
+;
+MSG_KEY_DETAILS
+e
+;
+MSG_KEY_TRASH
+t
+;
+MSG_KEY_DIRS
+o
+;
+MSG_KEY_FILES
+n
+;
+MSG_KEY_QUIET
+q
+;
+MSG_KEY_TLOC
+l
+;
+MSG_KEY_SAVE
+v
+;
+MSG_KEY_USE
+u
+;
+MSG_KEY_REST
+r
+;
+MSG_KEY_DELETE
+d
+;
+MSG_KEY_ABOUT
+a
+;
+MSG_KEY_CANCEL
+c
+;
+MSG_KEY_STOP
+s
+;
+MSG_KEY_AMUI
+m
+;
+MSG_HELP_TRASH
+\33cDateien werden in den Papierkorb\n\
+verschoben und nicht sofort\n\
+vollständig gelöscht.
+;\33cFiles are moved to\n\
+;SYS:Trashcan\n\
+;rather than being\n\
+;removed completely
+;
+MSG_HELP_DIRS
+\33cWenn dieser Schalter eingeschaltet ist,\n\
+wird vor dem Löschen jedes\n\
+Verzeichnisses nachgefragt.
+;\33cIf set, you must confirm that\n\
+;a directory should be deleted
+;
+MSG_HELP_FILES
+\33cWenn dieser Schalter eingeschaltet ist,\n\
+wird vor dem Löschen jeder Datei\n\
+einzeln nachgefragt.
+;\33cIf set, you must confirm every\n\
+;file delete operation
+;
+MSG_HELP_QUIET
+\33cDieser Schalter unterdrückt die\n\
+Anzeige des \"Über\" Fensters bei\n\
+jedem Programmstart.
+;\33cIf set, the about window is not\n\
+;shown when the program starts
+;
+MSG_HELP_TLOC
+\33cLocation of the trashcan used\n\
+if \"Use Trashcan\" is set
+;
+MSG_LVT_NAME
+\33bName\33n
+;
+MSG_LVT_SIZE
+Größe
+;Size
+;
+MSG_LVT_DATE
+Datum
+;Date
+;
+MSG_LVT_TIME
+Uhrzeit
+;Time
+;
+MSG_ERROR_TITLE
+Delete Modul Fehler
+;Delete module error
+;
+MSG_WARN_TITLE
+Delete Modul Warnung
+;Delete module warning
+;
+MSG_REQ_TITLE
+Delete Modul Anfrage
+;Delete module request
+;
+MSG_GAD_OK
+*_Ok
+;
+MSG_GAD_NOYES
+_Ja|*_Nein
+;_Yes|*_No
+;
+MSG_GAD_PROTECT
+_Ja|_Alle Dateien|*_Nein
+;_Yes|_All files|*_No
+;
+MSG_BODY_NOFILES
+\33cKeine Dateien ausgewählt!\n\
+\n\
+Befehl abgebrochen
+;\33cNo files have been selected!\n\
+;\n\
+;Operation aborted
+;
+MSG_BODY_NOLIST
+\33cFehler beim Erzeugen der internen Listen\n\
+\n\
+Befehl abgebrochen
+;\33cUnable to create internal lists\n\
+;\n\
+;Operation aborted
+;
+MSG_BODY_VOLUME
+\33cDetected an attempt to delete volume\n\
+\33b%s\33n\n\
+Are you \33bsure\33n you want to do this?!?
+;
+MSG_BODY_CFILE
+\33cAre you sure you want to delete file\n\
+%s
+;
+MSG_BODY_BUFERR
+\33cUnable to copy\n\
+%s\n\
+to trashcan\n\
+Out of buffer space.\n\
+Continue to delete the file?
+;
+MSG_BODY_COPYFAIL
+\33cUnable to copy\n\
+%s\n\
+to trashcan\n\
+Error writing to trashcan\n\
+Continue to delete the file?
+;
+MSG_BODY_NOICON
+\33cKann Piktogramm\n\
+%s\n\
+nicht löschen
+;\33cUnable to delete icon\n\
+;%s
+;
+MSG_BODY_CDIR
+\33cAre you sure you want to delete directory\n\
+%s
+;
+MSG_BODY_BADTD
+\33cUnable to create directory\n\
+in Trashcan.\n\
+Continue?
+;
+MSG_BODY_NOSCAN
+\33cUnable to scan directory\n\
+Directory aborted
+;
+MSG_BODY_PROTECT
+\33c%s\n\
+is protected from deletion\n\
+Remove the protection?
+;
+MSG_BODY_NODEL
+\33c%s\n\
+nicht gelöscht
+;\33c%s\n\
+;not deleted
+;
+MSG_BODY_COPYING
+%s in Papierkorb verschieben
+;Copying %s to trashcan
+;
+MSG_BODY_REMOVE
+%s wird gelöscht
+;Removing %s
+;
+MSG_BODY_SCAN
+%s wird durchsucht
+;Scanning %s
+;
+MSG_BODY_DETAIL
+\33c\0338VORSICHT\0330\n\
+Diese Operation könnte längere Zeit\n\
+dauern und kann nicht abgebrochen\n\
+werden. Weitermachen?
+;\33c\0338WARNING\0330\n\
+;This operation may take a long time\n\
+;to complete and may not be\n\
+;aborted. Continue?
+;
+MSG_ABOUT_HEAD
+\n\33b\33c\0338ScalosDelete\0330\33n\n\
+  Copyright 1999 Chris Page,  \n\
+  The World Foundry LLC \n\n\
+  Contact: \33ichris <chris@worldfoundry.demon.co.uk>  \n
+;\n\33b\33c\0338ScalosDelete\0330\33n\n\
+;  Copyright 1999 Chris Page,  \n\
+;  The World Foundry LLC \n\n\
+;  Contact: \33ichris <chris@worldfoundry.demon.co.uk>  \n
+;
+MSG_ABOUT_BODY
+\n\33cDieses Program is Freie Software; you can\n\
+ redistribute it and/or modify it under the \n\
+terms of the GNU General Public License as\n\
+published by the Free Software Foundation;\n\
+either version 2 of the License, or (at\n\
+your option) any later version.\n\n\
+This program is distributed in the hope\n\
+that it will be useful,but WITHOUT ANY\n\
+WARRANTY; without even the implied\n\
+    warranty of MERCHANTABILITY or FITNESS FOR    \n\
+A PARTICULAR PURPOSE. See the GNU General\n\
+Public License for more details.\n\n\
+You should have received a copy of the GNU\n\
+General Public License along with this\n\
+program; if not, write to\n\n\
+Free Software Foundation, Inc.,\n\
+59 Temple Place,\n\
+Suite 330,\n\
+Boston, MA\n\
+02111-1307\n\
+USA\n\n\
+Or email the original author
+;\n\33cThis program is free software; you can\n\
+; redistribute it and/or modify it under the \n\
+;terms of the GNU General Public License as\n\
+;published by the Free Software Foundation;\n\
+;either version 2 of the License, or (at\n\
+;your option) any later version.\n\n\
+;This program is distributed in the hope\n\
+;that it will be useful,but WITHOUT ANY\n\
+;WARRANTY; without even the implied\n\
+;    warranty of MERCHANTABILITY or FITNESS FOR    \n\
+;A PARTICULAR PURPOSE. See the GNU General\n\
+;Public License for more details.\n\n\
+;You should have received a copy of the GNU\n\
+;General Public License along with this\n\
+;program; if not, write to\n\n\
+;Free Software Foundation, Inc.,\n\
+;59 Temple Place,\n\
+;Suite 330,\n\
+;Boston, MA\n\
+;02111-1307\n\
+;USA\n\n\
+;Or email the original author
+;
+;
+MSGID_UNDO_OK
+Kann Rückgängig gemacht werden, da \033bPapierkorb benutzen\033n eingeschaltet
+;Undo possible since \033bUse trashcan\033n is enabled
+;
+;
+MSGID_UNDO_NOT_POSSIBLE
+Rückgängigmachen \033inicht\033n möglich solange \033bPapierkorb benutzen\033n ausgeschaltet
+;Undo \033inot\033n possible unless \033bUse trashcan\033n is enabled
+;
+;
+MSG_GAD_OK_ABORT
+*_Ok|Abbrechen
+;*_Ok|Abort
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT
+Projekt
+;Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+Über...
+;About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+Über MUI...
+;About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Beenden
+;Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Delete.module kann nicht gestartet werden
+;Delete.module startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Wiederholen|Beenden
+;Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\
+Die Klasse ist nicht installiert.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\n\
+Sie haben momentan Version v%lu.%lu installiert und\n\
+sollten die Klasse daher aktualisieren!
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\n\
+Version %lu.%lu wird momentan von einer anderen Anwendung\n\
+verwendet. Wenn sie die benötigte Version installiert haben,\n\
+schließen sie alle MUI Programme und probieren es erneut.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;

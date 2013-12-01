@@ -1,0 +1,741 @@
+; Information.ct
+## version $VER: Information.catalog 40.1 (20 Feb 2005 22:01:34)
+## codeset 0s
+## language xxxxxx
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos Information
+;Scalos Information
+;
+;
+MSGID_OKBUTTON
+Save
+;Save
+;
+;
+MSGID_SHORTHELP_OKBUTTON
+Save the changed icon.\n\
+If necessary, a new icon will be\n\
+created from a the default icon.
+;Save the changed icon.\n\
+;If necessary, a new icon will be\n\
+;created from a the default icon.
+;
+;
+MSGID_CANCELBUTTON
+Cancel
+;Cancel
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Discard all changes and\n\
+leave the icon unchanged.
+;Discard all changes and\n\
+;leave the icon unchanged.
+;
+;
+MSGID_CREATE_APPLICATION_FAILED
+Failed to create Application.\n
+;Failed to create Application.\n
+;
+;
+MSGID_CREATE_MAINWINDOW_FAILED
+Failed to open main window !\n
+;Failed to open main window !\n
+;
+;
+MSGID_OPEN_LIBRARY_FAILED
+Failed to open \"%s\" !\n
+;Failed to open \"%s\" !\n
+;
+;;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT
+Project
+;Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+About...
+;About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+About MUI...
+;About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Quit
+;Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;Q
+;
+;
+MSGID_MENU_TYPE
+Type
+;Type
+;
+;
+MSGID_MENU_TYPE_DISK
+Disk
+;Disk
+;
+;
+MSGID_MENU_TYPE_DRAWER
+Drawer
+;Drawer
+;
+;
+MSGID_MENU_TYPE_PROJECT
+Project
+;Project
+;
+;
+MSGID_MENU_TYPE_TOOL
+Tool
+;Tool
+;
+;
+MSGID_MENU_TYPE_TRASHCAN
+Trashcan
+;Trashcan
+;
+;
+MSGID_MENU_IMAGE
+Icon Image
+;Icon Image
+;
+;
+MSGID_MENU_IMAGE_DEFAULT
+Default
+;Default
+;
+;
+MSGID_MENU_IMAGE_DEFAULT_SHORT
+D
+;D
+;
+;+++ translateme +++
+MSGID_MENU_OPTIONS
+Options
+; Options
+;
+;+++ translateme +++
+MSGID_MENU_ALWAYS_ICONPATH
+Always display icon path
+; Always display icon path
+;
+;+++ translateme +++
+MSGID_MENU_ALWAYS_ICONPATH_SHORT
+P
+; P
+;
+; +++ translateme +++
+MSGID_MENU_ALWAYS_GETSIZE
+Always get size
+; Always get size
+;
+; +++ translateme +++
+MSGID_MENU_ALWAYS_GETSIZE_SHORT
+G
+; G
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK
+_OK
+;_OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Information.module V%ld.%ld\033n\n\
+%s\n\
+© 2004%s The Scalos Team
+;\33c\033bScalos Information.module V%ld.%ld\033n\n\
+;%s\n\
+;© 2004%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+MSGID_DEVICE_DEVICE
+Device
+;Device
+;
+;
+MSGID_DEVICE_HANDLER
+Handler
+;Handler
+;
+;
+MSGID_DEVICE_CREATED_ON
+Created on
+;Created on
+;
+;
+MSGID_DEVICE_SPACE_USED
+Used
+;Used
+;
+;
+MSGID_DEVICE_SPACE_FREE
+Free
+;Free
+;
+;
+MSGID_DEVICE_SIZE
+Size
+;Size
+;
+;
+MSGID_DEVICE_BLOCK_SIZE
+Block size
+;Block size
+;
+;
+MSGID_DEVICE_STATE
+State
+;State
+;
+;
+MSGID_DEVICE_BLOCKS_PERCENT
+%s (%lD Blocks, %lD%%)
+;%s (%lD Blocks, %lD%%)
+;
+;
+MSGID_DEVICE_BLOCKS
+%s (%lD Blocks)
+;%s (%lD Blocks)
+;
+;
+MSGID_DEVICE_DISKSTATE_READONLY
+read-only
+;read-only
+;
+;
+MSGID_DEVICE_DISKSTATE_VALIDATING
+validating
+;validating
+;
+;
+MSGID_DEVICE_DISKSTATE_READ_WRITE
+read-/writable
+;read-/writable
+;
+;
+MSGID_DEVICE_DISKSTATE_UNKNOWN
+??unknown??
+??unknown??
+;
+;
+MSGID_DEVICE_BLOCKSIZE_BYTES
+%lD bytes
+;%lD bytes
+;
+;
+MSGID_DEVICE_HANDLER_DISKID
+%s %ld.%ld
+;%s %ld.%ld
+;
+;
+MSGID_DEVICE_ON_DEVNAME
+on %s
+;on %s
+;
+;
+MSGID_DEVICE_DEVICE_UNIT
+%s, %ld
+;%s, %ld
+;
+;-----------------------------------------------------------
+;
+MSGID_LASTCHANGE
+Last change
+;Last change
+;
+;
+MSGID_SIZE
+Size
+;Size
+;
+;
+MSGID_SIZE_FORMAT
+%s bytes
+;%s bytes
+;
+;
+MSGID_PROTECTION
+Protection
+;Protection
+;
+;
+MSGID_PROTECTION_READ
+Read
+;Read
+;
+;
+MSGID_PROTECTION_WRITE
+Write
+;Write
+;
+;
+MSGID_PROTECTION_ARCHIVE
+Archive
+;Archive
+;
+;
+MSGID_PROTECTION_DELETE
+Delete
+;Delete
+;
+;
+MSGID_PROTECTION_EXECUTE
+Execute
+;Execute
+;
+;
+MSGID_PROTECTION_SCRIPT
+Script
+;Script
+;
+;
+MSGID_PROTECTION_READ_SHORTHELP
+Read???
+;Read???
+;
+;
+MSGID_PROTECTION_WRITE_SHORTHELP
+Write???
+;Write???
+;
+;
+MSGID_PROTECTION_ARCHIVE_SHORTHELP
+Archive???
+;Archive???
+;
+;
+MSGID_PROTECTION_DELETE_SHORTHELP
+Delete???
+;Delete???
+;
+;
+MSGID_PROTECTION_EXECUTE_SHORTHELP
+Execute???
+;Execute???
+;
+;
+MSGID_PROTECTION_SCRIPT_SHORTHELP
+Script???
+;Script???
+;
+;
+MSGID_COMMENT
+Comment
+;Comment
+;
+;
+MSGID_TOOLTYPES
+Tooltypes
+;Tooltypes
+;
+;
+MSGID_VERSION
+Version
+;Version
+;
+;
+MSGID_DEFAULTTOOL
+Default tool
+;Default tool
+;
+;
+MSGID_STACKSIZE
+Stack size
+;Stack size
+;
+;
+MSGID_TOOL_PRIORITY
+Priority
+;Priority
+;
+;
+MSGID_START_FROM
+Start from
+;Start from
+;
+;
+MSGID_PROMPT_FOR_INPUT
+Prompt for input
+;Prompt for input
+;
+;
+MSGID_VERSION_NOT_AVAILABLE
+not available
+;not available
+;
+;
+MSGID_DRAWER_SIZE_SHORTHELP
+Press this button to calculate the actual\n\
+size of the drawer contents.\n\
+This operation may takt some time,\n\
+depending on the drawer contents.
+;Press this button to calculate the actual\n\
+;size of the drawer contents.\n\
+;This operation may takt some time,\n\
+;depending on the drawer contents.
+;
+;
+MSGID_INITIAL_DRAWER_SIZE
+1 block
+;1 block
+;
+;
+MSGID_DRAWER_SIZE
+%s bytes in %lD files, %lD drawers (%lD blocks)
+;%s bytes in %lD files, %lD drawers (%lD blocks)
+;
+;
+MSGID_BUTTON_ABORT_SIZE
+Abort !
+; Abort !
+;
+;
+MSGID_ABORT_SIZE_CALCULATION
+Abort the size's calculation
+; Abort the size's calculation
+;
+;+++translateme+++
+MSGID_STARTPRI
+Start priority:
+;Start priority:
+;
+;+++translateme+++
+MSGID_WAITUNTILFINISHED
+Wait until finished:
+;Wait until finished:
+;
+;+++translateme+++
+MSGID_WAITUNTILFINISHED_SHORTHELP
+For WBStartup programs, selects if Scalos will wait\n\
+until program is finished holding WBStartup processsing,\n\
+or if processing will continue asynchronously.
+;For WBStartup programs, selects if Scalos will wait\n\
+;until program is finished holding WBStartup processsing,\n\
+;or if processing will continue asynchronously.
+;
+;+++translateme+++
+MSGID_TOOL_SECONDS
+seconds
+;seconds
+;
+;+++translateme+++
+MSGID_ICONPOS_X
+X:
+;
+;+++translateme+++
+MSGID_ICONPOS_Y
+Y:
+;
+;+++translateme+++
+MSGID_ICONPOS_NONE
+-
+;
+;-----------------------------------------------------------
+;
+MSGID_START_FROM_WORKBENCH
+Workbench
+;Workbench
+;
+;
+MSGID_START_FROM_CLI
+Shell
+;Shell
+;
+;
+MSGID_START_FROM_AREXX
+ARexx
+;ARexx
+;
+;-----------------------------------------------------------
+;
+MSGID_DEVICE_REGISTER_DEVICE
+Device
+;Device
+;
+;
+MSGID_DEVICE_REGISTER_ICON
+Icon
+;Icon
+;
+;-----------------------------------------------------------
+;
+MSGID_DRAWER_REGISTER_DRAWER
+Drawer
+;Drawer
+;
+;
+MSGID_DRAWER_REGISTER_ICON
+Icon
+;Icon
+;
+;-----------------------------------------------------------
+;
+MSGID_PROJECT_REGISTER_PROJECT
+Project
+;Project
+;
+;
+MSGID_PROJECT_REGISTER_ICON
+Icon
+;Icon
+;
+;-----------------------------------------------------------
+;
+MSGID_TOOL_REGISTER_TOOL
+Tool
+;Tool
+;
+;
+MSGID_TOOL_REGISTER_ICON
+Icon
+;Icon
+;
+;-----------------------------------------------------------
+;
+MSGID_ICONTYPE_DISK
+(Disk)
+;(Disk)
+;
+;
+MSGID_ICONTYPE_DRAWER
+(Drawer)
+;(Drawer)
+;
+;
+MSGID_ICONTYPE_TOOL
+(Tool)
+;(Tool)
+;
+;
+MSGID_ICONTYPE_PROJECT
+(Project)
+;(Project)
+;
+;
+MSGID_ICONTYPE_TRASHCAN
+(Trashcan)
+;(Trashcan)
+;
+;
+MSGID_ICONTYPE_DEVICE
+(Device)
+;(Device)
+;
+;
+MSGID_ICONTYPE_KICKSTART
+(Kickstart)
+;(Kickstart)
+;
+;
+MSGID_ICONTYPE_APPICON
+(AppIcon)
+;(AppIcon)
+;
+;
+MSGID_ICONTYPE_UNKNOWN
+(??unknown??)
+;(??unknown??)
+;
+;-----------------------------------------------------------
+;
+MSGID_BYTES_GB
+%lDG
+;%lDG
+;
+;
+MSGID_BYTES_GB_2
+%lD%s%-02ldG
+;%lD%s%-02ldG
+;
+;
+MSGID_BYTES_GB_1
+%lD%s%1ldG
+;%lD%s%1ldG
+;
+;
+MSGID_BYTES_MB
+%lDM
+;%lDM
+;
+;
+MSGID_BYTES_MB_2
+%lD%s%-02ldM
+;%lD%s%-02ldM
+;
+;
+MSGID_BYTES_MB_1
+%lD%s%1ldM
+;%lD%s%1ldM
+;
+;
+MSGID_BYTES_KB
+%lDK
+;%lDK
+;
+;
+MSGID_BYTES_KB_2
+%lD%s%-02ldK
+;%lD%s%-02ldK
+;
+;
+MSGID_BYTES_KB_1
+%lD%s%1ldK
+;%lD%s%1ldK
+;
+;-----------------------------------------------------------
+;
+MSGID_ERROR_SETCOMMENT
+Error setting comment\n\
+%s.
+;Error setting comment\n\
+;%s.
+;
+;
+MSGID_ERROR_SETPROTECTION
+Error setting protection\n\
+%s.
+;Error setting protection\n\
+;%s.
+;
+;
+MSGID_ERROR_RELABEL
+Error relabelling disk\n\
+%s.
+;Error relabelling disk\n\
+;%s.
+;
+;
+MSGID_ERROR_RENAME
+Error renaming\n\
+%s.
+;Error renaming\n\
+;%s.
+;
+;
+MSGID_ERROR_REQ_OK
+_OK
+;_OK
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Information.module startup failed
+;Information.module startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Try again|Quit
+;Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+The class is not installed.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+\n\
+Currently installed is V%lu.%lu, please upgrade!
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+%lu.%lu is currently in use by other applications.\n\
+\n\
+Once you have installed the required version,\n\
+close all MUI programs, make sure the old class\n\
+is flushed from memory and try again.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;
+MSGID_DEVICE_DOSTYPE
+Identifier:
+;Identifier:
+;
+MSGID_DEVICE_DOSTYPESTRING
+(\033b%c%c%c%c\033n)
+;(\033b%c%c%c%c\033n)
+;
+;--------------------------------------------------------------
+;
+MSGID_PROTECTION_HIDDEN
+Hidden
+;Hidden
+;
+MSGID_PROTECTION_HIDDEN_SHORTHELP
+Hidden???
+;Hidden???
+;
+MSGID_PROTECTION_PURE
+Pure
+;Pure
+;
+MSGID_PROTECTION_PURE_SHORTHELP
+Pure???
+;Pure???
+;
+;------------------------------------------------------------
+;
+MSGID_TEXT_ICONPATH_SHORTHELP
+Icon path
+;Icon path
+;
+;+++translateme+++
+MSGID_FILETYPE_DRAWER
+Drawer
+;Drawer
+;
+;+++translateme+++
+MSGID_FILETYPE_GARBAGE
+Trashcan
+;Trashcan
+;
+;+++translateme+++
+MSGID_FILETYPE_DISK
+Disk
+;Disk
+;
+;+++translateme+++
+MSGID_FILETYPE_TOOL
+Tool
+;Tool
+;
+;+++translateme+++
+MSGID_FILETYPE_PROJECT
+Project
+;Project
+;
+;+++translateme+++
+MSGID_FILETYPE_APPICON
+Appicon
+;Appicon
+;
+;------------------------------------------------------------
+;

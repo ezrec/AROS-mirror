@@ -1,0 +1,9 @@
+==id $Id: scalosmenuplugin_lib.sfd 5 2009-02-17 20:22:13Z jlachmann $
+==copyright ©1999-2002 The Scalos Team
+==base _ScalosMenuPluginBase
+*==basetype struct Library *
+==bias 30
+==public
+==include <scalos/scalos.h>
+VOID SCAMenuFunction(struct ScaWindowTask *wt, struct ScaIconNode *in) (a0,a1)
+==end

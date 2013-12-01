@@ -1,0 +1,273 @@
+; Find.ct
+; $Date$
+; $Revision$
+## version $VER: Find.catalog 40.1 (23 Aug 2008 18:50:08)
+## codeset 0
+## language français
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos : Rechercher
+;Scalos Find
+;
+MSGID_SEARCH_FINISHED
+Terminé.
+;Finished.
+;
+MSGID_SEARCH_ABORTED
+Annulé.
+;Aborted.
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT
+Projet
+;Project
+;
+MSGID_MENU_PROJECT_ABOUT
+A propos...
+;About...
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+A propos de MUI...
+;About MUI...
+;
+MSGID_MENU_PROJECT_QUIT
+Quitter
+;Quit
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;Q
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK
+_OKay
+;_OK
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Find.module V%ld.%ld\033n\n\
+%s\n\
+© 2008%s The Scalos Team
+;\33c\033bScalos Find.module V%ld.%ld\033n\n\
+;%s\n\
+;© 2008%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+MSGID_POPSTRING_NAME
+Nom :
+;Name:
+;
+MSGID_POPSTRING_NAME_SHORTHELP
+Motif pour les noms de fichiers à rechercher.\n\
+Vous pouvez utiliser toutes les syntaxes DOS comme \"#?\"
+;Pattern for file names to look for.\n\
+;You can use all DOS wildcards like \"#?\"
+;
+MSGID_POPSTRING_TEXT
+Texte :
+;Text:
+;
+MSGID_POPSTRING_TEXT_SHORTHELP
+Texte à rechercher dans tous les fichiers\n\
+correspondant au motif du nom du fichier.\n\
+Aucune syntaxe n'est allouée ici.
+;String that is search inside all files\n\
+;matching the file name pattern.\n\
+;No wildcards are allowed here.
+;
+MSGID_POPSTRING_TYPE
+Type :
+;Type:
+;
+MSGID_POPSTRING_TYPE_SHORTHELP
+Nom du type de fichier que toutes\n\
+les entrées doivent avoir.
+;Name of Filetype all found entries must have.
+;
+MSGID_SHORTHELP_LISTVIEW_FILETYPES
+Selectionnez un type de fichier depuis cette liste par Double-Click.
+;Select any filetype from this list by double-licking it.
+;
+MSGID_GROUP_SOURCES
+Sources
+;Sources
+;
+MSGID_GROUP_SOURCES_ASLTITLE
+Entrer un chemin de recherche :
+;Enter find source path:
+;
+MSGID_GROUP_RESULTS
+Résultats
+;Results
+;
+MSGID_BUTTON_ADD
+Ajouter \033I[6:20]
+;Add \033I[6:20]
+;
+MSGID_BUTTON_ADD_KEY
+A
+;A
+;
+MSGID_BUTTON_ADD_SHORTHELP
+Ajouter un autre chemin de recherche\n\
+pour le ou les fichiers désirés.
+;Add another path to search for desired file(s).
+;
+MSGID_BUTTON_REMOVE
+Retirer
+;Remove
+;
+MSGID_BUTTON_REMOVE_KEY
+R
+;R
+;
+MSGID_BUTTON_REMOVE_SHORTHELP
+Supprimer l'entrée sélectionnée, depuis la liste, des\n\
+chemins de recherches pour le ou les fichiers désirés.
+;Remove selected entry from the list of\n\
+;paths to search for desired file(s).
+;
+MSGID_BUTTON_SEARCH
+Chercher
+;Search
+;
+MSGID_BUTTON_SEARCH_KEY
+S
+;S
+;
+MSGID_BUTTON_SEARCH_SHORTHELP
+Débuter la recherche pour le\n\
+ou les fichiers désirés.
+;Start searching for desried file(s).
+;
+MSGID_BUTTON_STOP
+Interrompre
+;Stop
+;
+MSGID_BUTTON_STOP_KEY
+I
+;p
+;
+MSGID_BUTTON_STOP_SHORTHELP
+Interrompre immédiatement\n\
+le processus de recherche.
+;Immediately stop search in progress.
+;
+MSGID_RESULTLIST_NAME
+Nom
+;Name
+;
+MSGID_RESULTLIST_LOCATION
+Emplacement
+;Location
+;
+MSGID_BUTTON_FIND_NEXT
+Prochain
+;Next
+;
+MSGID_BUTTON_FIND_NEXT_KEY
+P
+;N
+;
+MSGID_BUTTON_FIND_NEXT_SHORTHELP
+Trouver le prochain type de fichier \n\
+correspondant à la recherche donnée.
+;Find next filetype that matches the given search string.
+;
+MSGID_BUTTON_FIND_HIDE_SHORTHELP
+Cacher le dialogue avec les types de fichiers.
+;Hide Find Filetype Dialog.
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Le démarrage du module de recherche a échoué.
+;Find Module startup failed
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Essayer de nouveau | Quitter
+;Try again|Quit
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Ouverture impossible de la classe MUI '%s' V%lu.%lu.\n\
+La classe n'est pas installée.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+MSGID_STARTUP_OLD_MCC
+Ouverture impossible de la classe MUI '%s' V%lu.%lu.\n\
+\n\
+Actuellement installée : V%lu.%lu, \n\
+installez une version supérieure S.V.P !
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+MSGID_STARTUP_MCC_IN_USE
+Ouverture impossible de la classe MUI '%s' V%lu.%lu.\n\
+%lu.%lu est actuellement utilisé par d'autres applications.\n\
+\n\
+Une fois que vous vaez installé la version requise,\n\
+fermez tous les programmes MUI, soyez sure que l'ancienne classe\n\
+ne soit plus en mémoire et essayez de nouveau.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_RESULTS_TITLE
+Résultats de recherche
+;Find Results
+;
+MSGID_MENU_RESULTS_OPEN
+Ouvrir avec MultiView...
+;Open with MultiView...
+;
+MSGID_MENU_RESULTS_OPENDRAWER
+Ouvrir le répertoire...
+;Open Drawer...
+;
+MSGID_MENU_RESULTS_FIND
+Trouver dans le résultat...
+;Find in Result...
+;
+MSGID_MENU_RESULTS_COPYTOCLIP
+Copier vers le presse-papier
+;Copy to Clipboard
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_FILETYPES_TITLE
+Type de fichier
+;File Types
+;
+MSGID_MENU_EDIT_COLLAPSE
+Plier l'entrée sélectionée
+;Collapse Selected
+;
+MSGID_MENU_EDIT_EXPAND
+Déplier l'entrée sélectionnée
+;Expand Selected
+;
+MSGID_MENU_EDIT_COLLAPSEALL
+Tout plier
+;Collapse All
+;
+MSGID_MENU_EDIT_EXPANDALL
+Tout déplier
+;Expand All
+;
+MSGID_MENU_CLEARHISTORY
+Nettoyer l'historique
+;Clear History
+;
+;-----------------------------------------------------------

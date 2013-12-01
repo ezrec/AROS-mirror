@@ -1,0 +1,65 @@
+TABLE OF CONTENTS
+
+DeviceWin.sca/--background
+DeviceWin.sca/SCCM_DeviceWin_ReadIcon
+DeviceWin.sca/SCCM_DeviceWin_RemIcon
+DeviceWin.sca/--background
+
+    NAME
+	--background
+
+    DESCRIPTION
+	This class implements the main Workbench (= root) window, which 
+	shows the icons for the mounted devices and volumes.
+
+DeviceWin.sca/SCCM_DeviceWin_ReadIcon
+
+    NAME
+	SCCM_DeviceWin_ReadIcon
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_DeviceWin_ReadIcon,
+		struct ScaDeviceIcon *DeviceNode);
+
+    FUNCTION
+	Read icon for device (DeviceNode) into window. Depending on prefs 
+	settings "DefIcons First", it tries to read :
+
+	DefIconsFirst enabled:
+		1. default volume icon "<DefIconPath>/def_<VolumeName>.info"
+		2. default device icon "<DefIconPath>/def_<DeviceName>.info"
+		3. disk icon "<VolumeName>:disk.info"
+
+	DefIconsFirst disabled:
+		1. disk icon "<VolumeName>:disk.info"
+		2. default volume icon "<DefIconPath>/def_<VolumeName>.info"
+		3. default device icon "<DefIconPath>/def_<DeviceName>.info"
+
+	If everything else fails, a default icon if type WBDISK is read.
+
+    INPUTS
+	DeviceNode - info about what device to read icon for.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+DeviceWin.sca/SCCM_DeviceWin_RemIcon
+
+    NAME
+	SCCM_DeviceWin_RemIcon
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_DeviceWin_RemIcon,struct ScaIconNode *icon);
+
+    FUNCTION
+	Remove specified icon from window
+
+    INPUTS
+	icon - Icon to remove from window
+
+    RESULT
+	nothing
+
+    SEE ALSO
+

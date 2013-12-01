@@ -1,0 +1,286 @@
+/* Release */
+/* Scalos release package creation script */
+/* $Date: 2008-05-19 20:20:58 +0200 (Mo, 19 Mai 2008) $ */
+/* $Revision: 2819 $ */
+
+LHAName = 'RAM:ScalosBeta'
+tmpfname = "t:xyzzy"
+
+address command
+
+"version"
+
+os = GetOsName()
+
+/* system-specific language catalog names */
+select
+when os = "AmigaOS4" then do
+	/* Amiga OS4 */
+	LangGerman = "german";
+	LangFrench = "french";
+	BinDir = ".bin_os4/";
+	end
+when os = "AmigaOS3" then do
+	/* Amiga OS3 */
+	LangGerman = "Deutsch";
+	LangFrench = "français";
+	BinDir = ".bin_os3/";
+	end
+otherwise do
+	/* MorphOS */
+	LangGerman = "Deutsch";
+	LangFrench = "français";
+	BinDir = ".bin_mos/";
+	end;
+end
+
+say BinDir
+
+say "Deleting old directory tree..."
+"delete RAM:ScalosBeta all QUIET"
+say "Deleting old archive..."
+"delete " || LHAName || ".lha quiet"
+
+/* "makedir RAM:ScalosBeta" */
+address workbench "newdrawer RAM:ScalosBeta"
+
+/* "copy ScalosBeta.info RAM: clone quiet" */
+
+"makedir RAM:ScalosBeta/c"
+"mkdir -p RAM:ScalosBeta/Icondatatypes/Datatypes"
+"makedir RAM:ScalosBeta/libs"
+"makedir RAM:ScalosBeta/libs/OS4"
+"makedir RAM:ScalosBeta/Prefs"
+"mkdir -p RAM:ScalosBeta/Themes/default"
+"mkdir -p RAM:ScalosBeta/env-archive"
+"makedir RAM:ScalosBeta/Tools"
+"mkdir -p RAM:ScalosBeta/modules"
+"mkdir -p RAM:ScalosBeta/Plugins/FileTypes"
+"mkdir -p RAM:ScalosBeta/Plugins/Menu"
+"mkdir -p RAM:ScalosBeta/Plugins/OOP"
+"mkdir -p RAM:ScalosBeta/Plugins/Preview"
+
+"mkdir -p RAM:ScalosBeta/catalogs/" || LangGerman || "/Scalos"
+"mkdir -p RAM:ScalosBeta/catalogs/" || LangFrench || "/Scalos"
+
+
+say "Copying Installer..."
+
+"copy Installer/#? RAM:ScalosBeta/ all clone quiet"
+
+say "Copying History and Readme.txt..."
+
+"copy History RAM:ScalosBeta/ clone quiet"
+"copy ReadMe#? RAM:ScalosBeta/ clone quiet"
+"copy gpl#? RAM:ScalosBeta/ clone quiet"
+"copy lgpl#? RAM:ScalosBeta/ clone quiet"
+
+say "Copying Scalos main executable..."
+
+"copy main/" || BinDir || "Scalos RAM:ScalosBeta/ clone quiet"
+"copy main/Scalos.info RAM:ScalosBeta/ clone quiet"
+
+say "Copying Preferences..."
+
+'copy Prefs/Menu/' || BinDir || 'Scalos_Menu "RAM:ScalosBeta/Prefs/Scalos Menu" clone quiet'
+'copy Prefs/Menu/Scalos_Menu.info "RAM:ScalosBeta/Prefs/Scalos Menu.info" clone quiet'
+
+'copy Prefs/Pattern/' || BinDir || 'Scalos_Pattern "RAM:ScalosBeta/Prefs/Scalos Pattern" clone quiet'
+'copy Prefs/Pattern/Scalos_Pattern.info "RAM:ScalosBeta/Prefs/Scalos Pattern.info" clone quiet'
+
+'copy Prefs/Palette/' || BinDir || 'Scalos_Palette "RAM:ScalosBeta/Prefs/Scalos Palette" clone quiet'
+'copy Prefs/Palette/Scalos_Palette.info "RAM:ScalosBeta/Prefs/Scalos Palette.info" clone quiet'
+
+'copy Prefs/FileTypes/' || BinDir || 'Scalos_FileTypes "RAM:ScalosBeta/Prefs/Scalos FileTypes" clone quiet'
+'copy Prefs/FileTypes/Scalos_FileTypes.info "RAM:ScalosBeta/Prefs/Scalos FileTypes.info" clone quiet'
+
+'copy Prefs/MainPrefs/' || BinDir || 'Scalos_Prefs "RAM:ScalosBeta/Prefs/Scalos Prefs" clone quiet'
+'copy Prefs/MainPrefs/Scalos_Prefs.info "RAM:ScalosBeta/Prefs/Scalos Prefs.info" clone quiet'
+
+'copy Plugins/Prefs/FileTypes/' || BinDir || '#?.prefsplugin "RAM:ScalosBeta/Prefs/" clone quiet'
+'copy Plugins/Prefs/Palette/' || BinDir || '#?.prefsplugin "RAM:ScalosBeta/Prefs/" clone quiet'
+'copy Plugins/Prefs/Pattern/' || BinDir || '#?.prefsplugin "RAM:ScalosBeta/Prefs/" clone quiet'
+'copy Plugins/Prefs/Menu/' || BinDir || '#?.prefsplugin "RAM:ScalosBeta/Prefs/" clone quiet'
+if os ~= "AmigaOS4" then do
+	'copy Plugins/Prefs/Popupmenu/' || BinDir || '#?.prefsplugin "RAM:ScalosBeta/Prefs/" clone quiet'
+end
+
+
+say "Copying Modules..."
+
+'copy Modules/IconProperties.MUI/' || BinDir || 'IconProperties.module     "RAM:ScalosBeta/modules/" clone quiet'
+'copy Modules/WindowProperties.MUI/' || BinDir || 'WindowProperties.module "RAM:ScalosBeta/modules/" clone quiet'
+'copy Modules/Delete.MUI/Source/' || BinDir || 'Delete.module "RAM:ScalosBeta/modules/" clone quiet'
+'copy Modules/Empty_Trashcan.MUI/' || BinDir || 'Empty_Trashcan.module "RAM:ScalosBeta/modules/" clone quiet'
+'copy Modules/Exchange.MUI/' || BinDir || 'Exchange.module "RAM:ScalosBeta/modules/" clone quiet'
+'copy Modules/Find.MUI/' || BinDir || 'Find.module "RAM:ScalosBeta/modules/" clone quiet'
+'copy Modules/FormatDisk.Gadtools/' || BinDir || 'Format_Disk.module "RAM:ScalosBeta/modules/" clone quiet'
+'copy Modules/Execute_Command.MUI/' || BinDir || 'Execute_Command.module "RAM:ScalosBeta/modules/" clone quiet'
+'copy Modules/Information.MUI/' || BinDir || 'Information.module "RAM:ScalosBeta/modules/" clone quiet'
+'copy Modules/NewDrawer.MUI/' || BinDir || 'NewDrawer.module "RAM:ScalosBeta/modules/" clone quiet'
+'copy Modules/Rename.MUI/' || BinDir || 'Rename.module "RAM:ScalosBeta/modules/" clone quiet'
+'copy Modules/Updater.MUI/' || BinDir || 'Updater.module "RAM:ScalosBeta/modules/" clone quiet'
+
+
+say "Copying Libraries..."
+
+'copy libraries/iconobject/' || BinDir || 'iconobject.library "RAM:ScalosBeta/libs/" clone quiet'
+'copy libraries/preferences/' || BinDir || 'preferences.library "RAM:ScalosBeta/libs/" clone quiet'
+'copy libraries/sqlite/' || BinDir || 'sqlite3.library "RAM:ScalosBeta/libs/" clone quiet'
+'copy libraries/scalosgfx/' || BinDir || 'scalosgfx.library "RAM:ScalosBeta/libs/" clone quiet'
+if os ~= "AmigaOS4" then do
+	'copy libraries/popupmenu/' || BinDir || 'popupmenu.library "RAM:ScalosBeta/libs/" clone quiet'
+end
+'copy libs/#?.library#? "RAM:ScalosBeta/libs/" clone quiet'
+'copy libs/OS4/#?.library "RAM:ScalosBeta/libs/OS4" clone quiet'
+
+say "Copying Datatypes..."
+
+'copy datatypes/AmigaIconObj3.5/' || BinDir || '#?.datatype "RAM:ScalosBeta/Icondatatypes/Datatypes/" clone quiet'
+'copy datatypes/AmigaIconObject/' || BinDir || '#?.datatype "RAM:ScalosBeta/Icondatatypes/Datatypes/" clone quiet'
+'copy datatypes/GlowIconObject/' || BinDir || '#?.datatype "RAM:ScalosBeta/Icondatatypes/Datatypes/" clone quiet'
+'copy datatypes/IconObject/' || BinDir || '#?.datatype "RAM:ScalosBeta/Icondatatypes/Datatypes/" clone quiet'
+'copy datatypes/PNGIcons/' || BinDir || '#?.datatype "RAM:ScalosBeta/Icondatatypes/Datatypes/" clone quiet'
+if os ~= "AmigaOS4" then do
+	'copy datatypes/NewIcons/' || BinDir || '#?.datatype "RAM:ScalosBeta/Icondatatypes/Datatypes/" clone quiet'
+end
+
+'copy main/envarc/#? "RAM:ScalosBeta/env-archive/" all clone quiet'
+
+'copy Default_Theme/#? "RAM:ScalosBeta/Themes/default" all clone quiet'
+
+'copy main/tools/' || BinDir || 'LoadWB.Scalos "RAM:ScalosBeta/c/LoadWB" clone quiet'
+
+'copy main/tools/' || BinDir || 'ScalosCtrl "RAM:ScalosBeta/Tools/" clone quiet'
+
+say "Copying Extras..."
+
+'copy Extras/browse.script "RAM:ScalosBeta/Tools/" clone quiet'
+'copy Extras/opendrawer#? "RAM:ScalosBeta/Tools/" clone quiet'
+'copy Extras/PictIcon "RAM:ScalosBeta/Tools/" clone quiet'
+'copy Extras/open_volume.rexx "RAM:ScalosBeta/Tools/" clone quiet'
+'copy Extras/CreateTrash#? "RAM:ScalosBeta/Tools/" clone quiet'
+'copy Extras/CreateDefaultIcon#? "RAM:ScalosBeta/Tools/" clone quiet'
+'copy Extras/run.script "RAM:ScalosBeta/Tools/" clone quiet'
+'copy Extras/NewIconUtil "RAM:ScalosBeta/Tools/" clone quiet'
+'copy Extras/OpenLocation#? "RAM:ScalosBeta/Tools/" clone quiet'
+'copy Extras/OpenShell "RAM:ScalosBeta/Tools/" clone quiet'
+'copy Extras/Scalos_Comment#? "RAM:ScalosBeta/Tools/" all clone quiet'
+'copy Extras/Scalos_GetHidden#? "RAM:ScalosBeta/Tools/" all clone quiet'
+
+say "Copying Plugins..."
+
+'copy Plugins/FileTypes/DrawerContents/#?.plugin "RAM:ScalosBeta/Plugins/FileTypes/" clone quiet'
+'copy Plugins/FileTypes/Picture_Dimensions/#?.plugin "RAM:ScalosBeta/Plugins/FileTypes/" clone quiet'
+'copy Plugins/FileTypes/ExifPicture/#?.plugin "RAM:ScalosBeta/Plugins/FileTypes/" clone quiet'
+
+'copy Plugins/OOP/DeviceFilter/#?.plugin "RAM:ScalosBeta/Plugins/OOP/" clone quiet'
+'copy Plugins/OOP/title_freepens/#?.plugin "RAM:ScalosBeta/Plugins/OOP/" clone quiet'
+'copy Plugins/OOP/TitleClock/#?.plugin "RAM:ScalosBeta/Plugins/OOP/" clone quiet'
+'copy Plugins/OOP/wb39_plugin/#?.plugin "RAM:ScalosBeta/Plugins/OOP/" clone quiet'
+'copy Plugins/OOP/wb39_plugin/wbrexx/#?.plugin "RAM:ScalosBeta/Plugins/OOP/" clone quiet'
+'copy Plugins/OOP/wb39_plugin/persist/#?.plugin "RAM:ScalosBeta/Plugins/OOP/" clone quiet'
+'copy Plugins/OOP/wb39_plugin/volumegauge/#?.plugin "RAM:ScalosBeta/Plugins/OOP/" clone quiet'
+'copy Plugins/OOP/XTWindows/#?.plugin "RAM:ScalosBeta/Plugins/OOP/" clone quiet'
+
+'copy Plugins/Menu/Sorted_Cleanup/#?.plugin "RAM:ScalosBeta/Plugins/Menu/" clone quiet'
+
+'copy Plugins/Preview/DefPicture/#?.pvplugin "RAM:ScalosBeta/Plugins/Preview/" clone quiet'
+'copy Plugins/Preview/JpegPicture/#?.pvplugin "RAM:ScalosBeta/Plugins/Preview/" clone quiet'
+'copy Plugins/Preview/PNGPicture/#?.pvplugin "RAM:ScalosBeta/Plugins/Preview/" clone quiet'
+'copy Plugins/Preview/Video/#?.pvplugin "RAM:ScalosBeta/Plugins/Preview/" clone quiet'
+
+say "Copying Language catalogs..."
+
+'copy main/catalogs/deutsch/Scalos/#?.catalog 						"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/" clone quiet'
+'copy Plugins/FileTypes/DrawerContents/Catalogs/deutsch/Scalos/#?.catalog 		"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/" clone quiet'
+'copy Plugins/FileTypes/Picture_Dimensions/Catalogs/deutsch/Scalos/#?.catalog 		"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/" clone quiet'
+'copy Prefs/MainPrefs/Catalogs/deutsch/Scalos/#?.catalog 				"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/" clone quiet'
+'copy Prefs/FileTypes/Catalogs/deutsch/Scalos/#?.catalog 				"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/" clone quiet'
+'copy Prefs/Menu/Catalogs/deutsch/Scalos/#?.catalog 					"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/" clone quiet'
+'copy Prefs/Palette/Catalogs/deutsch/Scalos/#?.catalog 					"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/" clone quiet'
+'copy Prefs/Pattern/Catalogs/deutsch/Scalos/#?.catalog 					"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/" clone quiet'
+'copy Plugins/FileTypes/ExifPicture/Catalogs/deutsch/Scalos/#?.catalog    		"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/" clone quiet'
+'copy Plugins/FileTypes/DrawerContents/Catalogs/deutsch/Scalos/#?.catalog  		"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/" clone quiet'
+'copy Plugins/Prefs/Popupmenu/Catalogs/deutsch/Scalos/#?.catalog			"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/" clone quiet'
+'copy Modules/Delete.MUI/Source/Catalogs/deutsch/Scalos/#?.catalog       		"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/"  clone quiet'
+'copy Modules/Execute_Command.MUI/Catalogs/deutsch/Scalos/#?.catalog   			"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/"  clone quiet'
+'copy Modules/IconProperties.MUI/Catalogs/deutsch/Scalos/#?.catalog     		"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/"  clone quiet'
+'copy Modules/Information.MUI/Catalogs/deutsch/Scalos/#?.catalog           		"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/"  clone quiet'
+'copy Modules/NewDrawer.MUI/Catalogs/deutsch/Scalos/#?.catalog               		"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/"  clone quiet'
+'copy Modules/Rename.MUI/Catalogs/deutsch/Scalos/#?.catalog                     	"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/"  clone quiet'
+'copy Modules/Empty_Trashcan.MUI/Catalogs/deutsch/Scalos/#?.catalog      		"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/"  clone quiet'
+'copy Modules/Exchange.MUI/Catalogs/deutsch/Scalos/#?.catalog      			"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/"  clone quiet'
+'copy Modules/Find.MUI/Catalogs/deutsch/Scalos/#?.catalog      				"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/"  clone quiet'
+'copy Modules/WindowProperties.MUI/Catalogs/deutsch/Scalos/#?.catalog 			"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/"  clone quiet'
+'copy Modules/Updater.MUI/Catalogs/deutsch/Scalos/#?.catalog 				"RAM:ScalosBeta/catalogs/' || LangGerman || '/Scalos/"  clone quiet'
+
+'copy main/catalogs/français/Scalos/#?.catalog 						"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Plugins/FileTypes/DrawerContents/Catalogs/français/Scalos/#?.catalog 		"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Plugins/FileTypes/Picture_Dimensions/Catalogs/français/Scalos/#?.catalog 		"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Prefs/MainPrefs/Catalogs/français/Scalos/#?.catalog 				"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Prefs/FileTypes/Catalogs/français/Scalos/#?.catalog 				"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Prefs/Menu/Catalogs/français/Scalos/#?.catalog 					"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Prefs/Palette/Catalogs/français/Scalos/#?.catalog 				"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Prefs/Pattern/Catalogs/français/Scalos/#?.catalog 				"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Plugins/FileTypes/ExifPicture/Catalogs/français/Scalos/#?.catalog			"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Plugins/FileTypes/DrawerContents/Catalogs/français/Scalos/#?.catalog		"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Plugins/Prefs/Popupmenu/Catalogs/français/Scalos/#?.catalog			"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Modules/Delete.MUI/Source/Catalogs/français/Scalos/#?.catalog              	"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Modules/Execute_Command.MUI/Catalogs/français/Scalos/#?.catalog  			"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Modules/IconProperties.MUI/Catalogs/français/Scalos/#?.catalog    		"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Modules/Information.MUI/Catalogs/français/Scalos/#?.catalog          		"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Modules/NewDrawer.MUI/Catalogs/français/Scalos/#?.catalog              		"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Modules/Rename.MUI/Catalogs/français/Scalos/#?.catalog                    	"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Modules/Empty_Trashcan.MUI/Catalogs/français/Scalos/#?.catalog     		"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Modules/Exchange.MUI/Catalogs/français/Scalos/#?.catalog     			"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Modules/Find.MUI/Catalogs/français/Scalos/#?.catalog     				"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Modules/WindowProperties.MUI/Catalogs/français/Scalos/#?.catalog 			"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+'copy Modules/Updater.MUI/Catalogs/français/Scalos/#?.catalog 				"RAM:ScalosBeta/catalogs/' || LangFrench || '/Scalos/" clone quiet'
+
+say "Removing SVN directories..."
+
+TempName = 't:xx123'
+
+'list dir "RAM:ScalosBeta/" all pat ".svn" nohead lformat "delete *"%f%n*" all quiet" to ' || TempName
+'execute ' || TempName
+'delete ' || TempName || ' quiet'
+
+'list dir "RAM:ScalosBeta/" all pat ".subversion" nohead lformat "delete *"%f%n*" all quiet" to ' || TempName
+'execute ' || TempName
+'delete ' || TempName || ' quiet'
+
+'lha -r -e -x a ' || LHAName || ' RAM:ScalosBeta'
+'lha -r -e -x a ' || LHAName || ' RAM:ScalosBeta.info '
+
+lha t LHAName
+
+exit
+
+/* -------------------------------------------------------------------------------- */
+
+GetOsName: procedure
+
+'version >' tmpfname
+rc = open( 'tmpfile', tmpfname, 'R' )
+versionstring = readln( 'tmpfile' )
+rc = close( 'tmpfile' )
+'delete ' || tmpfname || ' quiet'
+if index(versionstring, "MorphOS") > 0 then
+	do
+	os = "MorphOS"
+	end
+else
+	do
+	versionstring =	strip(subword(versionstring, 2, 1), 'B', ',')
+	if versionstring > 50 then
+		os = "AmigaOS4"
+	else
+		os = "AmigaOS3"
+	end
+
+return os
+
+END
+
+/* -------------------------------------------------------------------------------- */

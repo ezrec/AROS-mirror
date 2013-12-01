@@ -1,0 +1,464 @@
+; WindowProperties.ct
+; $Date$
+; $Revision$
+## version $VER: WindowProperties.catalog 40.6 (11.01.2009 19:01:45)
+## codeset 0
+## language deutsch
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos Fenstereigenschaften
+;
+;
+MSGID_OKBUTTON
+Speichern
+;
+;
+MSGID_SHORTHELP_OKBUTTON
+Alle Änderungen in den Merkmalen\n\
+des Schubladen-Piktogramms speichern.\n\
+Gegebenenfalls wird ein neues Piktogramm\n\
+aus dem Standardpiktogramm für Schubladen erzeugt.
+;Save the changes in the icon's tooltypes.\n\
+;If necessary, a new icon will be\n\
+;created from a the default icon.
+;
+;
+MSGID_CANCELBUTTON
+Abbruch
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Alle Änderungen verwerfen und Piktogramm\n\
+der Schublade unverändert belassen.
+;Discard all changes and\n\
+;leave the icon unchanged.
+;
+;
+MSGID_CYCLE_NOSTATUSBAR
+Statusbalken unterdrücken:
+;Hide Status Bar:
+;
+;
+MSGID_CYCLE_NOSTATUSBAR_SHORTHELP
+Mit diesem Schalter kann der Statusbalken für dieses\n\
+Fenster abgeschaltet werden, unabhängig von der\n\
+globalen Einstellung.
+;This switch can be used to turn off the status bar\n\
+;for this window, independent of the global setting.
+;
+;
+MSGID_POPUP_PATTERNNUMBER
+Hintergrundbild:
+;Pattern number:
+;
+;
+MSGID_READ_ONLY
+(Schreibgeschützt)
+;(Read-Only)
+;
+;
+MSGID_TEXT_WINDOWNAME_SHORTHELP
+Fenstername
+; Window name
+;
+;
+MSGID_TEXT_PARENTDIR_SHORTHELP
+Pfad des Ordnerfensters
+; Drawer window path
+;
+;
+MSGID_SHOWTHUMBNAILS_NOTSET
+(Standard verwenden)
+;Never
+;
+;
+MSGID_SHOWTHUMBNAILS_NEVER
+Niemals
+;Never
+;
+;
+MSGID_SHOWTHUMBNAILS_AS_DEFAULT
+Für Standardpiktogr.
+;As default
+;
+;
+MSGID_SHOWTHUMBNAILS_ALWAYS
+Immer
+;Always
+;
+;
+MSGID_CYCLE_THUMBNAILS
+Miniaturbilder zeigen:
+;Show Thumbnails:
+;
+;
+MSGID_CYCLE_THUMBNAILS_SHORTHELP
+Ordnerspezifische Vorgabe für die Anzeige von\n\
+Miniaturbildern für Bilder.\n\
+Ist die Vorgabe nicht gesetzt, wird die\n\
+globale Einstellung verwendet.
+;Individual drawer-specific setting for thumbnail display.\n\
+;If not set, the default setting from Scalos prefs is used.
+;
+;
+MSGID_CHECKOVERLAP_NO
+Nein
+;No
+;
+;
+MSGID_CHECKOVERLAP_YES
+Ja
+;Yes
+;
+;
+MSGID_CHECKOVERLAP_NOTSET
+(Standard verwenden)
+;(not set)
+;
+;
+MSGID_CYCLE_CHECKOVERLAP
+Piktogrammüberlappung prüfen:
+;Check Overlapping Icons:
+;
+;
+MSGID_CYCLE_CHECKOVERLAP_SHORTHELP
+Ordnerspezifische Vorgabe für die Prüfung auf überlappende Piktogramme.\n\
+Ist die Prüfung eingeschaltet, werden alle Piktogramme verschoben, die\n\
+andere Piktogramme überlappen könnten.
+;Individual drawer-specific setting for overlapping icons check.\n\
+;If set icons that overlap any other icon will be repositioned.
+;
+;
+MSGID_HIDESTATUSBAR_NOTSET
+(Standard verwenden)
+;(not set)
+;
+;
+MSGID_HIDESTATUSBAR_HIDE
+unterdrücken
+;Hidden
+;
+;
+MSGID_TRANSPARENCY_ACTIVEWINDOW
+Fenster aktiv
+;Active window state
+;
+;
+MSGID_TRANSPARENCY_INACTIVEWINDOW
+Fenster inaktiv
+;Inactive window state
+;
+;
+MSGID_TRANSPARENCY_ACTIVEWINDOW_SHORTHELP
+Hier wird der Grad der Durchsichtigkeit für\n\
+das aktive Scalos-Fenster eingestellt.\n\
+Die Arbeitsfläche wird nur transparent,\n\
+wenn sie kein Hintergundfenster ist.
+;Here you can select the degree of transparency\n\
+;for the active Scalos desktop, icon, or text window.\n\
+;The desktop will only get transparent if it is not a backdrop window.
+;
+;
+MSGID_TRANSPARENCY_INACTIVEWINDOW_SHORTHELP
+Hier wird der Grad der Durchsichtigkeit für alle\n\
+inaktiven Scalos-Fenster eingestellt.\n\
+Die Arbeitsfläche wird nur transparent,\n\
+wenn sie kein Hintergundfenster ist.
+;Here you can select the degree of transparency\n\
+;for all inactive Scalos desktop, icon, or text windows.\n\
+;The desktop will only get transparent if it is not a backdrop window.
+;
+;
+MSGID_TRANSPARENCY_OPAQUE
+Undurchsichtig
+;opaque
+;
+;
+MSGID_TRANSPARENCY_TRANSPARENT
+Transparent
+;transparent
+;
+;
+MSGID_CHECKBOX_TRANSPARENCY_USEDEFAULT
+Standard verwenden:
+;Use default:
+;
+;
+MSGID_CHECKBOX_TRANSPARENCY_USEDEFAULT_SHORTHELP
+Standard verwenden:
+;Use default:
+;
+;
+MSGID_CYCLE_NOCONTROLBAR
+Steuerleiste unterdrücken:
+;Hide Control Bar:
+;
+;
+MSGID_CYCLE_NOCONTROLBAR_SHORTHELP
+Mit diesem Schalter kann die Steuerleiste für dieses\n\
+Fenster abgeschaltet werden, unabhängig von der\n\
+globalen Einstellung.
+;This switch can be used to turn off the control bar\n\
+;for this window, independent of the global setting.
+;
+;
+MSGID_HIDECONTROLBAR_NOTSET
+(Standard verwenden)
+;(not set)
+;
+;
+MSGID_HIDECONTROLBAR_HIDE
+unterdrücken
+;Hidden
+;
+;
+MSGID_GROUP_ICONSCALING
+Piktogrammskalierung
+;Icon Scaling
+;
+;
+MSGID_ICONSCALING_NOMINALSIZE_SHORTHELP
+Dies ist die Standardskalierung für alle Piktogramme in diesem Fenster.
+;Standard size adjustment applied to all icons.
+;
+;
+MSGID_ICONSCALING_NOMINALSIZE
+Standardgröße:
+;Nominal Size:
+;
+;
+MSGID_ICONSCALING_PERCENT
+%
+;
+;
+MSGID_ICONSCALING_MINSIZE
+Minimalgröße:
+;Minimum Size:
+;
+;
+MSGID_ICONSCALING_MINSIZE_SHORTHELP
+Minimale Größe für alle Piktogramme in diesem Fenster.\n\
+Kleinere Piktogramme werden auf die Mindestgröße skaliert.
+;Minimum size for displayed icons.\n\
+;Smaller icons will be scaled to\n\
+;the specified minimum size.
+;
+;
+MSGID_ICONSCALING_MAXSIZE
+Maximalgröße:
+;Maximum Size:
+;
+;
+MSGID_ICONSCALING_MAXSIZE_SHORTHELP
+Maximale Größe für alle Piktogramme in diesem Fenster.\n\
+Größere Piktogramme werden auf die Maximalgröße skaliert.
+;Maximum size for displayed icons.\n\
+;Larger icons will be scaled to\n\
+;the specified maximum size.
+;
+;
+MSGID_CHECKBOX_ICONSCALING_NOMINALSIZE
+Standard verwenden:
+;Use default:
+;
+;
+MSGID_CHECKBOX_ICONSCALING_NOMINALSIZE_SHORTHELP
+Dieser Schalter legt fest, ob der globale Wert für die\n\
+Piktogrammskalierung aus dem Scalos Voreinsteller verwendet wird.\n\
+Wenn ausgeschaltet, wird in diesem Fenster ein\n\
+individueller Wert für die Piktogrammskalierung benutzt.
+;If this checkbox is checked, global icon scaling from Scalos Preferences is used.\n\
+;Turn off this checkbox to specify individual icon scaling for this window.
+;
+;
+MSGID_CHECKBOX_ICONSIZECONSTRAINTS_USEDEFAULT
+Standard verwenden:
+;Use default:
+;
+;
+MSGID_CHECKBOX_ICONSIZECONSTRAINTS_USEDEFAULT_SHORTHELP
+Dieser Schalter legt fest, ob die globale Werte für die\n\
+Piktogrammgrößenbegrenzung aus dem Scalos Voreinsteller verwendet werden.\n\
+Wenn ausgeschaltet, werden in diesem Fenster\n\
+individuelle Werte für die Piktogrammgrößenbegrenzung benutzt.
+;If this checkbox is checked, global icon size\n\
+;constraints from Scalos Preferences are used.\n\
+;Turn off this checkbox to specify individual\n\
+;icon size constraints for this window.
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT
+Projekt
+;Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+Über...
+;About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+Über MUI...
+;About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Beenden
+;Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;Q
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK
+_OK
+;_OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos WindowProperties.module V%ld.%ld\033n\n\
+%s\n\
+© 2004%s Das Scalos Team
+;\33c\033bScalos WindowProperties.module V%ld.%ld\033n\n\
+;© 2004%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+MSGID_THUMBNAILS_LIFETIME_FOREVER
+niemals
+;never
+;
+;
+MSGID_THUMBNAILS_LIFETIME_NOTSET
+(Standard verwenden)
+;(Default)
+;
+;
+MSGID_ICONSPAGE_THUMBNAILS_MAXAGE
+Vorschaubilder aufräumen nach:
+;Cleanup thumbnails after:
+;
+;
+MSGID_ICONSPAGE_THUMBNAILS_MAXAGE_SHORTHELP
+Um die Größe der Zwischenspeicherdatei in Grenzen\n\
+zu halten, werden die zwischengespeicherten Vorschaubilder\n\
+gelöscht, wenn sie länger als die eingestellte Anzahl\n\
+Tage nicht benutzt wurden.\n\
+Mit der Einstellung \033b(Standard verwenden)\033n wird die\n\
+systemweite Einstellung benutzt.
+;Cached thumbnail images will be removed from the cache\n\
+;if they have not been accessed for more than the\n\
+;specified number of days, in order to keep cache\n\
+;size as small as possible.
+;If \033b(Default)\033n is selected, the global setting is used.
+;
+;
+MSGID_ICONSPAGE_THUMBNAILS_MAXAGE_DAYS
+Tagen
+;days
+;
+;-----------------------------------------------------------
+;
+MSGID_COLUMNTITLE_1
+\33bNr.
+;\33bNr.
+;
+;
+MSGID_COLUMNTITLE_3
+\33bVorschau
+;\33bPreview
+;
+;
+MSGID_REQTITLE_READERROR
+Fehler beim Lesen der Hintergrundbilder-Einstellungs-\n\
+Datei \"%s\"\n\
+%s
+;Error reading pattern preferences\n\
+;file \"%s\"\n\
+;%s
+;
+;
+MSGID_LOADING_THUMBNAIL
+\33cLade Miniatur-Vorschaubild für
+;\33cLoading Pattern Thumbnail for
+;
+;
+MSGID_PROGRESS_THUMBNAILS
+\33c%ld/%ld
+;\33c%ld/%ld
+;
+;
+MSGID_LOADING_THUMBNAILS
+\033cVorschaubilder laden...
+;\033cLoading Pattern Thumbnails...
+;
+;
+MSGID_WINDOW_STARTUP
+Scalos Fenstereigenschaften Start
+;Scalos Window Properties Startup
+;
+;
+MSGID_PATTERNR_DEFAULT
+(Standard)
+;(default)
+;
+;-----------------------------------------------------------
+;
+MSGID_ICONSIZES_16x16
+16 x 16
+;16 x 16
+;
+;
+MSGID_ICONSIZES_24x24
+24 x 24
+;24 x 24
+;
+;
+MSGID_ICONSIZES_32x32
+32 x 32
+;32 x 32
+;
+;
+MSGID_ICONSIZES_48x48
+48 x 48
+;48 x 48
+;
+;
+MSGID_ICONSIZES_64x64
+64 x 64
+;64 x 64
+;
+;
+MSGID_ICONSIZES_96x96
+96 x 96
+;96 x 96
+;
+;
+MSGID_ICONSIZES_128x128
+128 x 128
+;128 x 128
+;
+;
+MSGID_ICONSIZES_UNLIMITED
+unbegrenzt
+;unlimited
+;
+;-----------------------------------------------------------
+;
+MSGID_REGISTERTITLE_WINDOW
+Fenster
+;Window
+;
+;
+MSGID_REGISTERTITLE_ICONS
+Piktogramme
+;Icons
+;
+;-----------------------------------------------------------

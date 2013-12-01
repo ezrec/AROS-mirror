@@ -1,0 +1,33 @@
+# $Date: 2006-11-26 16:13:59 +0200 (So, 26 Nov 2006) $
+# $Revision: 2043 $
+#############################################################
+TOPLEVEL	=	$(shell pwd)/../..
+
+include		config.mk
+
+##############################################################################
+#
+# Project subdirectories
+#
+
+SUBDIRS	=	Menu \
+		Palette \
+		FileTypes \
+		Pattern \
+
+ifneq ($(MACHINE), ppc-amigaos)
+SUBDIRS	+=      Popupmenu
+endif
+
+##############################################################################
+
+.PHONY: all install clean
+
+all: all_subdirs
+
+clean: clean_subdirs
+
+install: install_subdirs
+
+nodebug: nodebug_subdirs
+

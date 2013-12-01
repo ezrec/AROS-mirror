@@ -1,0 +1,33 @@
+# $Date: 2007-03-31 11:02:47 +0200 (Sa, 31 Mär 2007) $
+# $Revision: 2382 $
+##############################################################################
+
+include		config.mk
+
+##############################################################################
+
+.PHONY: all clean
+
+# Libraries
+
+$(eval $(call build-os4-lib-files,iconobject,$(TOPLEVEL)/libraries/iconobject))
+$(eval $(call build-os4-lib-files,pm,$(TOPLEVEL)/libraries/popupmenu))
+$(eval $(call build-os4-lib-files,preferences,$(TOPLEVEL)/libraries/preferences))
+$(eval $(call build-os4-lib-files,scalos,$(TOPLEVEL)/main))
+$(eval $(call build-os4-lib-files,scalosgfx,$(TOPLEVEL)/libraries/scalosgfx))
+$(eval $(call build-os4-lib-files,sqlite3,$(TOPLEVEL)/libraries/sqlite))
+
+# Plugins
+
+$(eval $(call build-os4-lib-files-68kcall,scalosfiletypeplugin,$(TOPLEVEL)/common/Plugin))
+$(eval $(call build-os4-lib-files-68kcall,scalosplugin,$(TOPLEVEL)/common/Plugin))
+$(eval $(call build-os4-lib-files-68kcall,scalospreviewplugin,$(TOPLEVEL)/common/Plugin))
+$(eval $(call build-os4-lib-files-68kcall,scalosprefsplugin,$(TOPLEVEL)/common/Plugin))
+
+all: $(FILES)
+
+clean:
+	@$(RM) -frv .files/include .files/*_68k.c
+
+##############################################################################
+

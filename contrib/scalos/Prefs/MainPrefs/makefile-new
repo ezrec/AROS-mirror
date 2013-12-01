@@ -1,0 +1,116 @@
+# $Date: 2011-08-08 18:52:39 +0200 (Mo, 08. Aug 2011) $
+# $Revision: 826 $
+
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/../..
+endif
+
+# Native FlexCat doesn't like Linux paths
+ifeq ($(CROSS), )
+	SDPATH=/
+else
+	SDPATH=../..
+endif
+
+##############################################################################
+
+include		config.mk
+
+##############################################################################
+#
+# Project Object files
+#
+
+OBJS	=	$(OBJDIR)/Hooks.o			\
+		$(OBJDIR)/ReadWritePrefs.o 		\
+		$(OBJDIR)/HiddenDevices.o		\
+		$(OBJDIR)/DataTypesMCC.o 		\
+		$(OBJDIR)/FontSampleMCC.o 		\
+		$(OBJDIR)/Images.o 			\
+		$(OBJDIR)/McpFrameMCC.o			\
+		$(OBJDIR)/PrefsPlugins.o 		\
+		$(OBJDIR)/Scalos.o 			\
+		$(OBJDIR)/PrefsVersion.o		\
+		$(OBJDIR)/ScalosMcpGfx.o		\
+		$(OBJDIR)/SelectMarkSampleClass.o	\
+
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS:.o=.d)
+endif
+
+##############################################################################
+# 
+# Subdirs
+#
+
+SUBDIRS	=	$(filter-out Catalogs/sample/Scalos, $(wildcard Catalogs/*/Scalos))
+
+##############################################################################
+#
+# Targets
+#
+
+NAME	=	Scalos_Prefs
+NAME_DB	=	$(NAME).debug
+
+##############################################################################
+#
+# Some lame deps
+
+$(OBJDIR)/%.o: $(FONTSAMPLE_DIR)/%.c
+	@$(run-cc)
+
+$(OBJDIR)/%.o: $(DATATYPESMCC_DIR)/%.c
+	@$(run-cc)
+
+$(OBJDIR)/%.o: $(MCPGFX_DIR)/%.c
+	@$(run-cc)
+
+$(OBJDIR)/Hooks.o $(OBJDIR)/Hooks.d $(OBJDIR)/Scalos.o $(OBJDIR)/Scalos.d : $(OBJDIR)/ScalosPrefs_locale.h
+
+$(OBJDIR)/ScalosPrefs_locale.h : Scalos_Prefs.cd
+	@$(ECHO) "FlexCat $@"
+	$(FLEXCAT) $< $@=$(SDPATH)/CatComp_h.sd
+
+$(OBJDIR)/PrefsVersion.o : FORCE
+
+FORCE:
+
+##############################################################################
+
+.PHONY: all install clean bump dump nodebug
+
+all:	$(BINDIR)/$(NAME) \
+	all_subdirs
+
+##############################################################################
+
+$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) : $(OBJS)
+	@$(ECHO) "Link $(NAME)"
+	@$(CC) $(OBJS) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(NAME_DB)
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(NAME_DB) -o $(BINDIR)/$(NAME)
+	@chmod u+x $@
+
+##############################################################################
+
+install: 
+	-@$(ECHO) "Installing $(NAME)"
+	@copy $(BINDIR)/$(NAME) "Scalos:Prefs/Scalos Prefs" clone
+
+install: install_subdirs
+
+
+clean:
+	-@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d $(OBJDIR)/*.i \
+        	$(OBJDIR)/*.d.* $(OBJDIR)/*.s \
+		@$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) \
+		*.dump *_str.* \
+                $(OBJDIR)/ScalosPrefs_locale.h
+
+clean:  clean_subdirs
+

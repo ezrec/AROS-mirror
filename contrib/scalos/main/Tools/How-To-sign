@@ -1,0 +1,11 @@
+# Generate new Private key and certificate
+openssl req -x509 -nodes -days 3650 -newkey rsa:1024 -keyout ram:Scalos.pem -out ram:Scalos.pem
+
+# Create public RSA key from private key
+openssl rsa -in "Ram Disk:Scalos.pem"  -pubout >ram:ScalosPub.pem
+
+# Generate signature for file
+openssl dgst -sha1 -sign ram:Scalos.pem  -out "Ram Disk:Information.module.lha.sha1" "Ram Disk:Information.module.lha"
+
+# Verify File signature
+openssl dgst -sha1 -verify ram:ScalosPub.pem  -signature "Ram Disk:Information.module.lha.sha1" "Ram Disk:Information.module.lha"

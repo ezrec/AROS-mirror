@@ -1,0 +1,549 @@
+; Updater.ct
+; $Date$
+; $Revision$
+; $Id$
+## version $VER: Updater.catalog 40.1 (05 Nov 2009 18:50:08)
+## codeset 0
+## language français
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos : mise à jour
+;Scalos Updater
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT
+Projet
+;Project
+;
+MSGID_MENU_PROJECT_ABOUT
+A propos...
+;About...
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+A propos de MUI...
+;About MUI...
+;
+MSGID_MENU_PROJECT_QUIT
+Quitter
+;Quit
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;Q
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK
+_OKay
+;_OK
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Updater.module V%ld.%ld\033n\n\
+%s\n\
+© 2009%s The Scalos Team
+;\33c\033bScalos Updater.module V%ld.%ld\033n\n\
+;%s\n\
+;© 2009%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+MSGID_COMPONENTLIST_DIRECTORY
+Répertoire
+;Directory
+;
+MSGID_COMPONENTLIST_FILE
+Fichier
+;Filename
+;
+MSGID_COMPONENTLIST_LATEST_VERSION
+Dernier
+;Latest
+;
+MSGID_COMPONENTLIST_INSTALLED_VERSION
+Installé
+;Installed
+;
+MSGID_COMPONENTLIST_UPDATE
+Mise à jour
+;Update
+;
+;-----------------------------------------------------------
+;
+MSGID_BUTTON_CHECKFORUPDATES
+Chercher les mises à jour
+;Check For Updates
+;
+MSGID_BUTTON_CHECKFORUPDATES_SHORT
+C
+;C
+;
+MSGID_BUTTON_CHECKFORUPDATES_HELP
+...TBD...
+;...TBD...
+;
+MSGID_BUTTON_STARTUPDATE
+Commencer la mise à jour
+;Begin Update
+;
+MSGID_BUTTON_STARTUPDATE_SHORT
+J
+;B
+;
+MSGID_BUTTON_STARTUPDATE_HELP
+...TBD...
+;...TBD...
+;
+MSGID_BUTTON_SELECT_ALL
+Tout sélectionner
+;Select All
+;
+MSGID_BUTTON_SELECT_ALL_SHORT
+T
+;A
+;
+;+++translateme+++
+MSGID_BUTTON_SELECT_ALL_HELP
+...TBD...
+;...TBD...
+;
+MSGID_BUTTON_DESELECT_ALL
+Tout déselectionner
+;Deselect All
+;
+MSGID_BUTTON_DESELECT_ALL_SHORT
+D
+;D
+;
+;+++translateme+++
+MSGID_BUTTON_DESELECT_ALL_HELP
+...TBD...
+;...TBD...
+;
+MSGID_TEXT_SELECTED_COUNT
+%ld Sélectionné(s)
+;%ld Selected
+;
+MSGID_REGISTER_MAIN
+Principal
+;Main
+;
+MSGID_REGISTER_LOG
+Compte rendu
+;Log
+;
+MSGID_REGISTER_CONFIGURATION
+Configuration
+;Configuration
+;
+MSGID_GROUP_PROXY
+Options du Proxy
+;Proxy Settings
+;
+MSGID_CHECK_USE_PROXY
+Utiliser un Proxy ?
+;Use Proxy?
+;
+;+++translateme+++
+MSGID_CHECK_USE_PROXY_SHORTHELP
+...TBD...
+;...TBD...
+;
+MSGID_STRING_PROXY_ADDR
+Adresse:
+;Address:
+;
+;+++translateme+++
+MSGID_STRING_PROXY_ADDR_SHORTHELP
+...TBD...
+;...TBD...
+;
+MSGID_STRING_PROXY_PORT
+Port:
+;Port:
+;
+;+++translateme+++
+MSGID_STRING_PROXY_PORT_SHORTHELP
+...TBD...
+;...TBD...
+;
+MSGID_CHECK_USE_PROXYAUTH
+Le Proxy néccessite une authentification ?
+;Proxy requires authentication?
+;
+;+++translateme+++
+MSGID_CHECK_USE_PROXYAUTH_SHORTHELP
+...TBD...
+;...TBD...
+;
+MSGID_STRING_PROXY_USERNAME
+Nom d'utilisateur:
+;User Name:
+;
+;+++translateme+++
+MSGID_STRING_PROXY_USERNAME_SHORTHELP
+...TBD...
+;...TBD...
+;
+MSGID_STRING_PROXY_PASSWD
+Mot de passe:
+;Password:
+;
+;+++translateme+++
+MSGID_STRING_PROXY_PASSWD_SHORTHELP
+...TBD...
+;...TBD...
+;
+MSGID_REQFORMAT_OPENSSL_ERROR
+Dans la fonction \033b%s\033n,\n\
+OpenSSL appelant \033b%s\033n a échoué :\n\
+%s
+;In function \033b%s\033n,\n\
+;OpenSSL call \033b%s\033n failed:\n\
+;%s
+;
+MSGID_REQFORMAT_NO_UPDATES_FOUND
+Pas de mise à jour pour %s.\n\
+Vous possédez déjà les composants\n\
+les plus récents de Scalos.
+;No Updates found for %s.\n\
+;You already have the most recent\n\
+;Scalos components installed.
+;
+MSGID_CHECK_SHOW_ALL_COMPONENTS
+Voir les vieux composants ?
+;Show up-to-date components?
+;
+;+++translateme+++
+MSGID_CHECK_SHOW_ALL_COMPONENTS_SHORTHELP
+...TBD...
+;...TBD...
+;
+MSGID_CHECK_ASK_EVERY_UPDATE
+Demander pour chaque mise à jour des composants ?
+;Ask about every component update?
+;
+;+++translateme+++
+MSGID_CHECK_ASK_EVERY_UPDATE_SHORTHELP
+...TBD...
+;...TBD...
+;
+MSGID_ABOUTREQ_YES_NO_ABORT
+_Oui|_Non|_Annuler
+;_Yes|_No|_Abort
+;
+;
+MSGID_REQFORMAT_ASK_UPDATE
+Etes-vous certain de vouloir mettre à jour\n\
+\"%s\" en version %ld.%ld\n\
+(Version installée : %ld.%ld) ?
+;Are you sure you want to update\n\
+;\"%s\" to version %ld.%ld\n\
+;(Installed Version: %ld.%ld) ?
+;
+MSGID_ERROR_DOWNLOADING_UPDATE
+Erreur pendant le téléchargement du pack \"%s\"\n\
+%s
+;Error downloading update package \"%s\"\n\
+;%s
+;
+MSGID_REQ_CONTINUE_ABORT
+_Continuer|_Annuler
+;_Continue|_Abort
+;
+MSGID_ERROR_LHA1
+Erreur : LHA n'a pas réussit à désarchiver \"%s\".
+;Error: LHA failed to unpack \"%s\".
+;
+MSGID_ERROR_LHA2
+Erreur : LHA n'a pas réussit à désarchiver\n\
+les catalogues pour \"%s\".
+;Error: LHA failed to unpack\n\
+;catalog files for \"%s\".
+;
+;
+MSGID_ERROR_OPEN_LHAFILE
+Erreur : Impossible d'ouvrir l'archive\n\
+temporaire \"%s\" pour mettre à jour \"%s\".
+;Error: failed to open temporary\n\
+;archive \"%s\" for updating \"%s\".
+;
+MSGID_STRING_SCALOS_SERVER
+Scalos : Serveur de mise à jour
+;Scalos Update Server
+;
+;+++translateme+++
+MSGID_STRING_SCALOS_SERVER_SHORTHELP
+...TBD...
+;...TBD...
+;
+MSGID_REQ_INSTALL_UPDATES_GADGETS
+_Mettre à jour|_Annuler
+;_Update|_Abort
+;
+MSGID_REQ_INSTALL_UPDATES
+Etes-vous certain de vouloir instajjer\n\
+%ld les mises à jour de Scalos maintenant ?
+;Are you sure you want to install\n\
+;%ld Scalos updates now?
+;
+MSGID_GROUP_LOG
+Mise à jour du compte rendu
+;Update Log
+;
+MSGID_POPASL_TEMPPATH
+Chemin pour les fichiers temporarires
+;Path for Temporary Files
+;
+MSGID_GROUP_MISCELLANEOUS
+Divers
+;Miscellaneous
+;
+MSGID_BUTTON_CLEAR_LOG
+Vider le compte rendu
+;Clear Log
+;
+MSGID_BUTTON_CLEAR_LOG_SHORT
+V
+;C
+;
+;+++translateme+++
+MSGID_BUTTON_CLEAR_LOG_SHORTHELP
+...TBD..
+;...TBD..
+;
+MSGID_BUTTON_SAVE_LOG
+Sauver le compte rendu...
+;Save Log...
+;
+;+++translateme+++
+MSGID_BUTTON_SAVE_LOG_SHORT
+S
+;S
+;
+;+++translateme+++
+MSGID_BUTTON_SAVE_LOG_SHORTHELP
+...TBD..
+;...TBD..
+;
+MSGID_SAVE_LOG_ASLTITLE
+Sauver la mise à jour du compte rendu...
+;Save Update Log...
+;
+;-----------------------------------------------------------
+;
+MSG_PROGRESS_RESOLVING_NAME
+Résolution du nom %s...
+;Resolving name %s...
+;
+MSG_PROGRESS_CONNECTING
+Connection à %s...
+;Connecting to %s...
+;
+MSG_PROGRESS_SEND_HTTP_REQUEST
+Envoi de la requête HTTP...
+;Sending HTTP Request...
+;
+MSG_PROGRESS_PROCESS_HTTP_RESPONSE
+Processus de réponse HTTP...
+;Processing HTTP Response...
+;
+MSG_PROGRESS_DONE
+Terminé !
+;Finished!
+;
+MSG_PROGRESS_FAILURE
+Impossible de se connecter à %s : %s
+;Failed to connect to %s : %s
+;
+MSG_PROGRESS_START_UPDATE
+Démarrage de la mise à jour...
+;Starting Update...
+;
+MSG_PROGRESS_DOWNLOAD_UPDATE
+Téléchargement de la mise à jour %s...
+;Downloading update %s...
+;
+MSG_PROGRESS_FAILED
+Echoué.
+;Failed.
+;
+MSG_PROGRESS_VERIFY_SIGNATURE
+Vérification de la signature...
+;Verifying signature...
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_COMPONENTS_TITLE
+Composants
+;Components
+;
+MSGID_MENU_COMPONENTS_SELECT_ALL
+Tout sélectionner
+;Select All
+;
+MSGID_MENU_COMPONENTS_SELECT_NONE
+Tout déselectionner
+;Deselect All
+;
+;-----------------------------------------------------------
+;
+MSGID_LOG_READ_VERSIONINFO
+Lecture d'information de la version depuis le serveur de mise à jour de Scalos %s.\n
+;Reading version information from Scalos update server %s.\n
+;
+MSGID_LOG_ERROR_READ_VERSIONINFO
+La recherche de l'information de la version a échouée depuis le serveur de mise à jour de Scalos %s : %s.\n
+;Failed to get version information from Scalos update server %s : %s.\n
+;
+;+++translateme+++
+MSGID_LOG_CHECKING_VERSIONS
+Processing information about available updates.\n
+;Processing information about available updates.\n
+;
+;+++translateme+++
+MSGID_LOG_UPDATES_FOUND
+Found %ld components to update.\n
+;Found %ld components to update.\n
+;
+;+++translateme+++
+MSGID_LOG_UPDATING
+Updating component %ld of %ld.\n
+;Updating component %ld of %ld.\n
+;
+;+++translateme+++
+MSGID_LOG_DOWNLOAD_PACKAGE
+Downloading update package for %s\n.
+;Downloading update package for %s\n.
+;
+;+++translateme+++
+MSGID_LOG_VERIFY_SIGNATURE
+Verifying signature of %s update package\n.
+;Verifying signature of %s update package\n.
+;
+;+++translateme+++
+MSGID_LOG_VERIFY_FAIL_SIGNATURE
+Failed to update %s - invalid signature!\n
+;Failed to update %s - invalid signature!\n
+;
+;+++translateme+++
+MSGID_LOG_DOWNLOAD_FAILED_PACKAGE
+Failed to download update package for %s - %s.\n
+;Failed to download update package for %s - %s.\n
+;
+;+++translateme+++
+MSGID_LOG_SKIP_PACKAGE
+Skipping update of %s, due to user's request.\n
+;Skipping update of %s, due to user's request.\n
+;
+;+++translateme+++
+MSGID_LOG_UNPACK_PACKAGE
+Unpacking update package for %s.\n
+;Unpacking update package for %s.\n
+;
+;+++translateme+++
+MSGID_LOG_UNPACK_FAIL_PACKAGE
+Failed to unpack update for %s.\n
+;Failed to unpack update for %s.\n
+;
+;+++translateme+++
+MSGID_LOG_UNPACK_CATALOGS_FAIL_PACKAGE
+Failed to unpack language catalogs for %s.\n
+;Failed to unpack language catalogs for %s.\n
+;
+;+++translateme+++
+MSGID_LOG_ERROR_OPEN_LHAFILE
+Error: failed to open temporary archive \"%s\" for updating \"%s\".\n
+;
+;+++translateme+++
+MSGID_LOG_ERROR_OPEN_INPUTFD
+Error: failed to open input file handle for lha: %s\n
+;Error: failed to open input file handle for lha: %s\n
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Le démarrage du module de recherche a échoué.
+;Updater Module startup failed
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Essayer de nouveau | Quitter
+;Try again|Quit
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Ouverture impossible de la classe MUI '%s' V%lu.%lu.\n\
+La classe n'est pas installée.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+MSGID_STARTUP_OLD_MCC
+Ouverture impossible de la classe MUI '%s' V%lu.%lu.\n\
+\n\
+Actuellement installée : V%lu.%lu, \n\
+installez une version supérieure S.V.P !
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+MSGID_STARTUP_MCC_IN_USE
+Ouverture impossible de la classe MUI '%s' V%lu.%lu.\n\
+%lu.%lu est actuellement utilisé par d'autres applications.\n\
+\n\
+Une fois que vous vaez installé la version requise,\n\
+fermez tous les programmes MUI, soyez sure que l'ancienne classe\n\
+ne soit plus en mémoire et essayez de nouveau.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;+++translateme+++
+MSGID_AMISSL_LIBOPEN_FAIL_AMISSLMASTER
+Failed to open amisslmaster.library
+;Failed to open amisslmaster.library
+;
+;+++translateme+++
+MSGID_AMISSL_FAIL_INITAMISSLMASTER
+InitAmiSSLMaster failed, probably your AmiSSL installation is too old
+;InitAmiSSLMaster failed, probably your AmiSSL installation is too old
+;
+;+++translateme+++
+MSGID_AMISSL_FAIL_OPENAMISSL
+OpenAmiSSL failed
+;OpenAmiSSL failed
+;
+;+++translateme+++
+MSGID_AMISSL_FAIL_AMISSL_INTERFACE
+Couldn't get AmiSSL interface
+;Couldn't get AmiSSL interface
+;
+;+++translateme+++
+MSGID_AMISSL_FAIL_AMISSLMASTER_INTERFACE
+Couldn't get AmiSSLMaster interface
+;Couldn't get AmiSSLMaster interface
+;
+;+++translateme+++
+MSGID_AMISSL_FAIL_INITAMISSL
+InitAmiSSL failed
+;InitAmiSSL failed
+;
+;+++translateme+++
+MSGID_AMISSL_FAIL_REQ_FORMAT
+Could not initialize AmiSSL:\n\
+%s\n\
+Sorry, but Updater needs a working AmiSSL V3 installation\n\
+(http://www.heightanxiety.com/AmiSSL)/\n\
+to verify the signatures of the downloaded files.
+;Could not initialize AmiSSL:\n\
+;%s\n\
+;Sorry, but Updater needs a working AmiSSL V3 installation\n\
+;(http://www.heightanxiety.com/AmiSSL)/\n\
+;to verify the signatures of the downloaded files.
+;
+;-----------------------------------------------------------

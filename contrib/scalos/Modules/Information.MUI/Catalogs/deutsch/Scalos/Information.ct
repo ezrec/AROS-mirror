@@ -1,0 +1,734 @@
+; Information.ct
+; $Date$
+; $Revision$
+;
+## version $VER: Information.catalog 40.5 (25 Jan 2006 22:02:39)
+## codeset 0
+## language deutsch
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos Information
+;Scalos Information
+;
+;
+MSGID_OKBUTTON
+Speichern
+;Save
+;
+;
+MSGID_SHORTHELP_OKBUTTON
+Speichert die Änderungen am Piktogramm.\n\
+Ein neues Piktogramm wird erzeugt,\n\
+wenn bisher keines existierte.
+;Save the changed icon.\n\
+;If necessary, a new icon will be\n\
+;created from a the default icon.
+;
+;
+MSGID_CANCELBUTTON
+Abbrechen
+;Cancel
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Alle Änderungen verwerfen und das\n\
+Piktogramm im originalen Zustand lassen.
+;Discard all changes and\n\
+;leave the icon unchanged.
+;
+;
+MSGID_CREATE_APPLICATION_FAILED
+Fehler beim Erzeugen der Anwendung.\n
+;Failed to create Application.\n
+;
+;
+MSGID_CREATE_MAINWINDOW_FAILED
+Fehler beim Öffnen des Hauptfensters !\n
+;Failed to open main window !\n
+;
+;
+MSGID_OPEN_LIBRARY_FAILED
+Fehler beim Öffnen von \"%s\" !\n
+;Failed to open \"%s\" !\n
+;
+;;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT
+Projekt
+;Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+Über...
+;About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+Über MUI...
+;About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Beenden
+;Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;Q
+;
+;
+MSGID_MENU_TYPE
+Typ
+;Type
+;
+;
+MSGID_MENU_TYPE_DISK
+Datenträger
+;Disk
+;
+;
+MSGID_MENU_TYPE_DRAWER
+Verzeichnis
+;Drawer
+;
+;
+MSGID_MENU_TYPE_PROJECT
+Projekt
+;Project
+;
+;
+MSGID_MENU_TYPE_TOOL
+Programm
+;Tool
+;
+;
+MSGID_MENU_TYPE_TRASHCAN
+Papierkorb
+;Trashcan
+;
+;
+MSGID_MENU_IMAGE
+Piktogramm-Bild
+;Icon Image
+;
+;
+MSGID_MENU_IMAGE_DEFAULT
+Standardbild
+;Default
+;
+;
+MSGID_MENU_IMAGE_DEFAULT_SHORT
+D
+;D
+;
+;
+MSGID_MENU_OPTIONS
+Optionen
+; Options
+;
+;
+MSGID_MENU_ALWAYS_ICONPATH
+Piktogrammpfad sofort anzeigen?
+; Always display icon path
+;
+;
+MSGID_MENU_ALWAYS_ICONPATH_SHORT
+P
+; P
+;
+;
+MSGID_MENU_ALWAYS_GETSIZE
+Verzeichnisgröße sofort bestimmen?
+; Always get size
+;
+;
+MSGID_MENU_ALWAYS_GETSIZE_SHORT
+G
+; G
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK
+Ok
+;_OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Information.module V%ld.%ld\033n\n\
+%s\n\
+© 2004%s DasScalos-Team
+;\33c\033bScalos Information.module V%ld.%ld\033n\n\
+;%s\n\
+;© 2004%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+MSGID_DEVICE_DEVICE
+Gerät:
+;Device
+;
+;
+MSGID_DEVICE_HANDLER
+Dateisystem:
+;Handler
+;
+;
+MSGID_DEVICE_CREATED_ON
+Erstellt am:
+;Created on
+;
+;
+MSGID_DEVICE_SPACE_USED
+Belegt:
+;Used
+;
+;
+MSGID_DEVICE_SPACE_FREE
+Frei:
+;Free
+;
+;
+MSGID_DEVICE_SIZE
+Größe:
+;Size
+;
+;
+MSGID_DEVICE_BLOCK_SIZE
+Blockgröße:
+;Block size
+;
+;
+MSGID_DEVICE_STATE
+Status:
+;State
+;
+;
+MSGID_DEVICE_BLOCKS_PERCENT
+%s (%lD Blöcke, %lD%%)
+;%s (%lD Blocks, %lD%%)
+;
+;
+MSGID_DEVICE_BLOCKS
+%s (%lD Blöcke)
+;%s (%lD Blocks)
+;
+;
+MSGID_DEVICE_DISKSTATE_READONLY
+nur lesbar
+;read-only
+;
+;
+MSGID_DEVICE_DISKSTATE_VALIDATING
+Beim Validieren
+;validating
+;
+;
+MSGID_DEVICE_DISKSTATE_READ_WRITE
+schreib-/lesbar
+;read-/writable
+;
+;
+MSGID_DEVICE_DISKSTATE_UNKNOWN
+??unbekannt??
+;??unknown??
+;
+;
+MSGID_DEVICE_BLOCKSIZE_BYTES
+%lD Bytes
+;%lD bytes
+;
+;
+MSGID_DEVICE_HANDLER_DISKID
+%s %ld.%ld
+;%s %ld.%ld
+;
+;
+MSGID_DEVICE_ON_DEVNAME
+auf %s
+;on %s
+;
+;
+MSGID_DEVICE_DEVICE_UNIT
+%s, %ld
+;%s, %ld
+;
+;-----------------------------------------------------------
+;
+MSGID_LASTCHANGE
+Letzte Änderung:
+;Last change
+;
+;
+MSGID_SIZE
+Größe:
+;Size
+;
+;
+MSGID_SIZE_FORMAT
+%s Bytes
+;%s bytes
+;
+;
+MSGID_PROTECTION
+Schutz:
+;Protection
+;
+;
+MSGID_PROTECTION_READ
+Lesbar
+;Read
+;
+;
+MSGID_PROTECTION_WRITE
+Schreibbar
+;Write
+;
+;
+MSGID_PROTECTION_ARCHIVE
+Archiv
+;Archive
+;
+;
+MSGID_PROTECTION_DELETE
+Löschbar
+;Delete
+;
+;
+MSGID_PROTECTION_EXECUTE
+Ausführbar
+;Execute
+;
+;
+MSGID_PROTECTION_SCRIPT
+Skript
+;Script
+;
+;
+MSGID_PROTECTION_READ_SHORTHELP
+Dieses Dateisystem-Attribute erlaubt das Lesen aus der Datei.
+;Read???
+;
+;
+MSGID_PROTECTION_WRITE_SHORTHELP
+Dieses Dateisystem-Attribute erlaubt das Beschreiben der Datei.
+;Write???
+;
+;
+MSGID_PROTECTION_ARCHIVE_SHORTHELP
+Dieses Dateisystem-Attribute kennzeichnet die Datei als archiviert.\n\
+Es wird automatisch beim ersten Schreibzugriff gelöscht.
+;Archive???
+;
+;
+MSGID_PROTECTION_DELETE_SHORTHELP
+Dieses Dateisystem-Attribute erlaubt das Löschen der Datei.
+;Delete???
+;
+;
+MSGID_PROTECTION_EXECUTE_SHORTHELP
+Dieses Dateisystem-Attribute kennzeichnet die Datei als ausführbar.
+;Execute???
+;
+;
+MSGID_PROTECTION_SCRIPT_SHORTHELP
+Dieses Dateisystem-Attribute kennzeichnet die Datei als\n\
+ausführbares Skript (Shell- oder ARexx-Skript).
+;Script???
+;
+;
+MSGID_COMMENT
+Kommentar:
+;Comment
+;
+;
+MSGID_TOOLTYPES
+Merkmale:
+;Tooltypes
+;
+;
+MSGID_VERSION
+Version:
+;Version
+;
+;
+MSGID_DEFAULTTOOL
+Standardprogramm:
+;Default tool
+;
+;
+MSGID_STACKSIZE
+Stapelgröße:
+;Stack size
+;
+;
+MSGID_TOOL_PRIORITY
+Priorität:
+;Priority
+;
+;
+MSGID_START_FROM
+Start durch:
+;Start from
+;
+;
+MSGID_PROMPT_FOR_INPUT
+Auf Eingabe warten:
+;Prompt for input
+;
+;
+MSGID_VERSION_NOT_AVAILABLE
+nicht verfügbar
+;not available
+;
+;
+MSGID_DRAWER_SIZE_SHORTHELP
+Klicken Sie auf diesen Knopf, um die\n\
+tatsächliche Größe des Schubladeninhalts\n\
+zu bestimmen.\n\
+Abhängig von Inhalt der Schublade kann die\n\
+Größenbestimmung unter Umständen einige Zeit dauern!
+;Press this button to calculate the actual\n\
+;size of the drawer contents.\n\
+;This operation may takt some time,\n\
+;depending on the drawer contents.
+;
+;
+MSGID_INITIAL_DRAWER_SIZE
+1 Block
+;1 block
+;
+;
+MSGID_DRAWER_SIZE
+%s Bytes in %lD Dateien, %lD Verzeichnissen (%lD Blöcke)
+;%s bytes in %lD files, %lD drawers (%lD blocks)
+;
+;
+MSGID_STARTPRI
+Startpriorität:
+;Start priority:
+;
+;
+MSGID_WAITUNTILFINISHED
+Auf Beendigung warten:
+;Wait until finished:
+;
+;
+MSGID_WAITUNTILFINISHED_SHORTHELP
+Bei WBStartup Programmen legt diese Einstellung fest,\n\
+ob Scalos wartet, bis das Programm fertig ist, oder\n\
+einfach mit dem nächsten Programm aus WBStartup weitermacht.
+;For WBStartup programs, selects if Scalos will wait\n\
+;until program is finished holding WBStartup processsing,\n\
+;or if processing will continue asynchronously.
+;
+;
+MSGID_TOOL_SECONDS
+Sekunden
+;seconds
+;
+;
+MSGID_ICONPOS_X
+X:
+;
+;
+MSGID_ICONPOS_Y
+Y:
+;
+;
+MSGID_ICONPOS_NONE
+-
+;
+;-----------------------------------------------------------
+;
+MSGID_START_FROM_WORKBENCH
+Workbench
+;Workbench
+;
+;
+MSGID_START_FROM_CLI
+Shell
+;Shell
+;
+;
+MSGID_START_FROM_AREXX
+ARexx
+;ARexx
+;
+;-----------------------------------------------------------
+;
+MSGID_DEVICE_REGISTER_DEVICE
+Datenträger
+;Device
+;
+;
+MSGID_DEVICE_REGISTER_ICON
+Piktogramm
+;Icon
+;
+;-----------------------------------------------------------
+;
+MSGID_DRAWER_REGISTER_DRAWER
+Verzeichnis
+;Drawer
+;
+;
+MSGID_DRAWER_REGISTER_ICON
+Piktogramm
+;Icon
+;
+;-----------------------------------------------------------
+;
+MSGID_PROJECT_REGISTER_PROJECT
+Projekt
+;Project
+;
+;
+MSGID_PROJECT_REGISTER_ICON
+Piktogramm
+;Icon
+;
+;-----------------------------------------------------------
+;
+MSGID_TOOL_REGISTER_TOOL
+Programm
+;Tool
+;
+;
+MSGID_TOOL_REGISTER_ICON
+Piktogramm
+;Icon
+;
+;-----------------------------------------------------------
+;
+MSGID_ICONTYPE_DISK
+(Datenträger)
+;(Disk)
+;
+;
+MSGID_ICONTYPE_DRAWER
+(Verzeichnis)
+;(Drawer)
+;
+;
+MSGID_ICONTYPE_TOOL
+(Programm)
+;(Tool)
+;
+;
+MSGID_ICONTYPE_PROJECT
+(Projekt)
+;(Project)
+;
+;
+MSGID_ICONTYPE_TRASHCAN
+(Papierkorb)
+;(Trashcan)
+;
+;
+MSGID_ICONTYPE_DEVICE
+(Gerät)
+;(Device)
+;
+;
+MSGID_ICONTYPE_KICKSTART
+(Kickstart)
+;(Kickstart)
+;
+;
+MSGID_ICONTYPE_APPICON
+(AppIcon)
+;(AppIcon)
+;
+;
+MSGID_ICONTYPE_UNKNOWN
+(??unbekannt??)
+;(??unknown??)
+;
+;-----------------------------------------------------------
+;
+MSGID_BYTES_GB
+%lDG
+;%lDG
+;
+;
+MSGID_BYTES_GB_2
+%lD%s%-02ldG
+;
+;
+MSGID_BYTES_GB_1
+%lD%s%1ldG
+;
+;
+MSGID_BYTES_MB
+%lDM
+;%lDM
+;
+;
+MSGID_BYTES_MB_2
+%lD%s%-02ldM
+;
+;
+MSGID_BYTES_MB_1
+%lD%s%1ldM
+;
+;
+MSGID_BYTES_KB
+%lDK
+;%lDK
+;
+;
+MSGID_BYTES_KB_2
+%lD%s%-02ldK
+;
+;
+MSGID_BYTES_KB_1
+%lD%s%1ldK
+;
+;-----------------------------------------------------------
+;
+MSGID_ERROR_SETCOMMENT
+Fehler beim Ändern des Kommentars\n\
+%s.
+;Error setting comment\n\
+;%s.
+;
+;
+MSGID_ERROR_SETPROTECTION
+Fehler beim Ändern des Schutzes\n\
+%s.
+;Error setting protection\n\
+;%s.
+;
+;
+MSGID_ERROR_RELABEL
+Fehler beim Umbenennen eines Datenträgers\n\
+%s.
+;Error relabelling disk\n\
+;%s.
+;
+;
+MSGID_ERROR_RENAME
+Fehler beim Umbenennen\n\
+%s.
+;Error renaming\n\
+;%s.
+;
+;
+MSGID_ERROR_REQ_OK
+Ok
+;_OK
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Information.module kann nicht gestartet werden
+;Information.module startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Wiederholen|Beenden
+;Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\
+Die Klasse ist nicht installiert.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\n\
+Sie haben momentan Version v%lu.%lu installiert und\n\
+sollten die Klasse daher aktualisieren!
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\n\
+Version %lu.%lu wird momentan von einer anderen Anwendung\n\
+verwendet. Wenn sie die benötigte Version installiert haben,\n\
+schließen sie alle MUI Programme und probieren es erneut.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;
+MSGID_DEVICE_DOSTYPE
+Dateisystemkennung:
+;Identifier:
+;
+;
+MSGID_DEVICE_DOSTYPESTRING
+(\033b%c%c%c%c\033n)
+;(\033b%c%c%c%c\033n)
+;
+;-----------------------------------------------------------
+;
+;
+MSGID_PROTECTION_HIDDEN
+Versteckt
+;Hidden
+;
+;
+MSGID_PROTECTION_HIDDEN_SHORTHELP
+Dieses Dateisystem-Attribut kennzeichnet die Datei als versteckt.
+;Hidden???
+;
+;
+MSGID_PROTECTION_PURE
+Resident-Fähig
+;Pure
+;
+;
+MSGID_PROTECTION_PURE_SHORTHELP
+Dieses Dateisystem-Attribut kennzeichnet die Datei als geeignet für Residenten Betrieb.
+;Pure???
+;
+;------------------------------------------------------------
+;
+MSGID_TEXT_ICONPATH_SHORTHELP
+Piktogrammpfad
+;Icon path
+;
+;
+MSGID_FILETYPE_DRAWER
+Schublade
+;Drawer
+;
+;
+MSGID_FILETYPE_GARBAGE
+Mülleimer
+;Trashcan
+;
+;
+MSGID_FILETYPE_DISK
+Datenträger
+;Disk
+;
+;
+MSGID_FILETYPE_TOOL
+Werkzeug
+;Tool
+;
+;
+MSGID_FILETYPE_PROJECT
+Projekt
+;Project
+;
+;
+MSGID_FILETYPE_APPICON
+Anwendungspiktogramm
+;Appicon
+;
+;------------------------------------------------------------
+;

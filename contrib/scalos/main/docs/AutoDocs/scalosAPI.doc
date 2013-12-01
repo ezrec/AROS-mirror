@@ -1,0 +1,826 @@
+TABLE OF CONTENTS
+
+scalosAPI/--background
+scalosAPI/--Scalos_Message
+scalosAPI/--Modules
+scalosAPI/--PlugIn's
+scalosAPI/--MenuPlugIn's
+scalosAPI/SM_AddIcon
+scalosAPI/SM_AppSleep
+scalosAPI/SM_AppWakeup
+scalosAPI/SM_CloseWindow
+scalosAPI/SM_DeltaMove
+scalosAPI/SM_DoPopupMenu
+scalosAPI/SM_Iconify
+scalosAPI/SM_NewPreferences
+scalosAPI/SM_NewPattern
+scalosAPI/SM_NewWindowPath
+scalosAPI/SM_PrefsChanged
+scalosAPI/SM_Redraw
+scalosAPI/SM_RedrawIcon
+scalosAPI/SM_RedrawIconObj
+scalosAPI/SM_RemIcon
+scalosAPI/SM_Requester
+scalosAPI/SM_RunMenuCmd
+scalosAPI/SM_RunProcess
+scalosAPI/SM_SetThumbnailImage_ARGB
+scalosAPI/SM_SetThumbnailImage_Remapped
+scalosAPI/SM_ShowControlBar
+scalosAPI/SM_ShowPopupMenu
+scalosAPI/SM_ShowStatusBar
+scalosAPI/SM_ShowTitle
+scalosAPI/SM_Sleep
+scalosAPI/SM_StartChildProcess
+scalosAPI/SM_UnIconify
+scalosAPI/SM_Update
+scalosAPI/SM_UpdateIcon
+scalosAPI/SM_Wakeup
+scalosAPI/--background
+
+    NAME
+	--background
+
+    DESCRIPTION
+	This documentation gives you information how to communicate with 
+	Scalos and its windowtasks. There are not many MessageTypes 
+	currently available, but it will be more in future.
+
+scalosAPI/--Scalos_Message
+
+    NAME
+	--Scalos_Message
+
+    DESCRIPTION
+	If you send a message to scalos you should use the SCA_AllocMessage() 
+	and SCA_FreeMessage() calls from the scalos.library. The returned 
+	message will look like this:
+
+	struct ScalosMessage
+	{
+		struct Message sm_Message;
+		ULONG  sm_Signature;	/* "IMSG" */
+		ULONG  sm_MessageType;
+	};
+
+	The message ports where to sent the messages to are available via 
+	the SCA_LockWindowList() / SCA_UnLockWindowList() calls from 
+	scalos.library.
+
+	Additional data depends upon MessageType.
+	SYNOPSIS will give you information about this data. INPUTS means the 
+	message for PutMsg() and RESULT the one that was replied.
+
+scalosAPI/--Modules
+
+    NAME
+	--Modules
+
+    DESCRIPTION
+	Modules are programs with a standard wb-start enviroment. The 
+	arguments are additional values (e.g. Execute_Command: the dir and 
+	the filename as default value for the string-gadget).
+
+scalosAPI/--PlugIn's
+
+    NAME
+	--PlugIn's
+
+    DESCRIPTION
+	PlugIn's are external BOOPSI Classes that will enhance or replace 
+	internal classes. The only thing you have to do is to write a little 
+	shared library with only one offset. The library base should have at
+	least a structure of a Library structure followed by a longword
+	(four bytes). These four bytes are used to store an identifier so that
+	Scalos can know that it is a Scalos plugin. The value for these four
+	bytes should be 'PLUG' (which you should set in the initialisation
+	routine of your plugin, or the auto initialisation).
+
+	The one specific offset (it must be the first public function of your
+	library if you decide to have more functions) has to return a ScaClassInfo
+	struct. Your PlugIn can be added automatically on startup if you 
+	add it to the PlugIn list in Scalos Prefs.
+
+    SYNOPSIS
+	ScaClassInfo SCAGetClassInfo()
+		D0
+
+	struct ScaClassInfo *SCAGetClassInfo( void );
+
+scalosAPI/--MenuPlugIn's
+
+    NAME
+	--MenuPlugIn's
+
+    DESCRIPTION
+	A MenuPlugIn is a little library with one function. As with the standard
+	plugins, your plugin function must be the first public function of the
+	library. Menu plugins also require an identifier in the four bytes
+	following the Library structure of the library base. In the case of menu
+	plugins, the value for these four bytes should be 'OOPP'.
+
+	This functions have to be full reentrant. The windowtask is blocked until 
+	your function returns. Never open a requester or block the task for a 
+	long time use SCCM_AsyncRoutine instead.
+
+    SYNOPSIS
+	SCAMenuFunction( WindowTask, IconNode)
+					 A0          A1
+
+	void SCAMenuFunction( struct ScaWindowTask *, struct ScaIconNode *);
+
+    NOTES
+	In order to get a pointer to the IconNode, your plugin must be
+	called from an popup menu. When called from a screen menu, the IconNode
+	pointer is always NULL.
+
+scalosAPI/SM_DeltaMove
+
+    NAME
+	SM_DeltaMove
+
+    SYNOPSIS
+	LONG smdm_DeltaX;
+	LONG smdm_DeltaY;
+	ULONG smdm_AdjustSlider;
+
+    FUNCTION
+	Moves window interior by (deltaX,deltaY) and adjusts 
+	scrollers accordingly.
+
+    INPUTS
+	smdm_DeltaX - number of pixels to scroll the window contents 
+		in horizontal direction.
+	smdm_DeltaY - number of pixels to scroll the window contents 
+		in vertical direction.
+	smdm_AdjustSlider - Flags to use for correction of virtual size
+		SETVIRTF_AdjustRightSlider  = adjust right (vertical) slider
+		SETVIRTF_AdjustBottomSlider = set bottom (horizontal) slider
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	IconWindow.sca/SCCM_IconWin_DeltaMove
+	IconWindow.sca/SCCM_IconWin_SetVirtSize
+
+scalosAPI/SM_CloseWindow
+
+    NAME
+	SM_CloseWindow
+
+    SYNOPSIS
+
+    FUNCTION
+	Closes the window of the selected messageport.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+
+scalosAPI/SM_DoPopupMenu
+
+    NAME
+        SM_DoPopupMenu
+
+    SYNOPSIS
+
+    FUNCTION
+	Trigger opening of a window or icon popup menu.
+
+    INPUTS
+	smdpm_InputEvent - InputEvent that triggered the popup menu.
+		The mouse coordinates from the InputEvent are ignored,
+		and the screen->MouseX, MouseY are used instead.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+
+scalosAPI/SM_NewPattern
+
+    NAME
+	SM_NewPattern
+
+    SYNOPSIS
+	APTR nmnp_PatternNode
+
+    FUNCTION
+	Sets a new pattern for the window
+
+    INPUTS
+	snmp_PatternNode - the new pattern or NULL for no pattern.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+
+scalosAPI/SM_NewWindowPath
+
+    NAME
+        SM_NewWindowPath
+
+    SYNOPSIS
+
+    FUNCTION
+	Change contents in existing window to display the given new path.
+
+    INPUTS
+	STRPTR smnwp_Path - Path of the new drawer to display in the window
+	struct TagItem *smnwp_TagList - additional tags
+
+	Supported tags are:
+		SCA_ShowAllMode - one of the workbench DDFLAGS_* values.
+		SCA_ViewModes - one of the workbench DDVM_BY* values
+		SCA_XOffset - (LONG) Window X offset
+		SCA_YOffset - (LONG) Window Y offset
+		SCA_IconList - (struct ScaIconNode *) pregenerated icon list
+
+    RESULT
+	nothing
+
+    SEE ALSO
+        IconWindow.sca/SCCM_IconWin_NewPath
+scalosAPI/SM_PrefsChanged
+
+    NAME
+        SM_PrefsChanged
+
+    SYNOPSIS
+	ULONG Flags
+
+    FUNCTION
+	Inform existing window about changed preferences. The window is
+	responsible to perform any required updating.
+
+    INPUTS
+	ULONG Flags - future flags. Set to 0 for upwards compatibility.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+scalosAPI/SM_Sleep
+
+    NAME
+	SM_Sleep
+
+    SYNOPSIS
+
+    FUNCTION
+	The windowtask that receives this message will be sleep. Only the
+	window will be closed, no icon will be displayed.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    NOTES
+	Never send this message to a the main_messageport!
+
+    SEE ALSO
+	SM_Wakeup
+
+scalosAPI/SM_Wakeup
+
+    NAME
+	SM_Wakeup
+
+    SYNOPSIS
+	ULONG   smwu_ReLayout
+
+    FUNCTION
+	Wakeup the selected window_task. It's the opposite to SM_Sleep.
+
+    INPUTS
+	smwu_ReLayout - BOOL
+	   TRUE if all icons of the window should be relayouted.
+	   This is especially important when WorkBench screen has changed.
+
+    RESULT
+	nothing
+
+    NOTES
+	Never send this message to a the main_messageport!
+
+    SEE ALSO
+	SM_Sleep
+
+scalosAPI/SM_AppSleep
+
+    NAME
+	SM_AppSleep
+
+    SYNOPSIS
+
+    FUNCTION
+	All windowtasks and all ScalosApplications will fall asleep.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    NOTES
+	This message must be sent to the main_messageport!
+
+    SEE ALSO
+	SM_AppWakeup
+
+scalosAPI/SM_AppWakeup
+
+    NAME
+	SM_AppWakeup
+
+    SYNOPSIS
+	ULONG   smaw_ReLayout
+
+    FUNCTION
+	Wakeup all thing that sleeps since SM_AppSleep.
+
+    INPUTS
+	smaw_ReLayout - TRUE if all icons should be relayouted.
+	   This is especially important when WorkBench screen has changed.
+
+    RESULT
+	nothing
+
+    NOTES
+	This message must be sent to the main_messageport!
+
+    SEE ALSO
+	SM_AppSleep
+
+scalosAPI/SM_Redraw
+
+    NAME
+	SM_Redraw
+
+    SYNOPSIS
+	ULONG   smmr_Flags
+
+    FUNCTION
+	Redraws the icons inside of the window. This method could be uses to
+	refresh the window after adding or selecting/deselecting icons.
+
+    INPUTS
+	smmr_Flags - 
+		REDRAWB_DontEraseWindow : don't erase window before redraw
+		REDRAWB_ReLayoutIcons : relayout icons
+
+    RESULT
+	nothing
+
+    SEE ALSO
+
+scalosAPI/SM_RedrawIcon
+
+    NAME
+	SM_RedrawIcon
+
+    SYNOPSIS
+	struct ScaIconObject *smri_Icon
+
+    FUNCTION
+	Redraws the specified icon inside of the window.
+	The window icon list semaphore must not be kept locked for this
+	message to work! Before actually trying to redraw, an explicit
+	check is done whether the icon is really member of the
+        window's icon list.
+
+    INPUTS
+	smri_Icon - the icvon to be redrawn
+
+    RESULT
+	nothing
+
+    SEE ALSO
+
+scalosAPI/SM_RedrawIconObj
+
+    NAME
+        SM_RedrawIconObj
+
+    SYNOPSIS
+	Object *smrio_IconObject
+	ULONG smrio_Flags
+
+    FUNCTION
+	Redraws the specified iconobject inside of the window.
+	The window icon list semaphore must not be kept locked for this
+	message to work! Before actually trying to redraw, an explicit
+	check is done whether the icon is really member of the
+        window's icon list.
+	Optionally, the icon can be explicitly erased before redrawing,
+	and a new icon icon layout may be requested (IDTM_FreeLayout
+        / IDTM_Layout).
+
+    INPUTS
+	smrio_IconObject - the iconobject to be redrawn
+	smrio_Flags
+		SMRIOFLAGF_EraseIcon - the iconobject is erased before redraw
+		SMRIOFLAGF_FreeLayout - the iconobject is forced to refresh its
+			layout (with IDTM_FreeLayout and IDTM_Layout).
+		SMRIOFLAGF_Highlight - indicates that there is only a change
+			in icon highlighting state.
+		SMRIOFLAGF_IconListLocked - the window icon list is
+			currently locked. 
+		SMRIOFLAGB_HightlightOn - set ICONOBJ_USERFLAGF_DrawHighlite 
+			before drawing. Useful in combination 
+			with SMRIOFLAGF_Highlight.
+		SMRIOFLAGB_HightlightOff - clear ICONOBJ_USERFLAGF_DrawHighlite 
+			before drawing. Useful in combination 
+			with SMRIOFLAGF_Highlight.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+
+scalosAPI/SM_SetThumbnailImage_ARGB
+
+    NAME
+        SM_SetThumbnailImage_ARGB
+
+    SYNOPSIS
+	Object	*smtia_IconObject
+	struct ARGBHeader smtia_NewImage
+
+    FUNCTION
+	Attach a new ARGB image to an existing icon. The sender of this
+	message is responsible to make sure that destination icon is able
+	to handle true-color ARGB images.
+
+    INPUTS
+	smtia_IconObject - the icon to attach the new image to.
+	smtia_NewImage -- the new ARGB image.
+		ARGBHeader contents (BitMap) is supposed to be freed
+		by message receiver.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+
+scalosAPI/SM_SetThumbnailImage_Remapped
+
+    NAME
+        SM_SetThumbnailImage_Remapped
+
+    SYNOPSIS
+	Object	*smtir_IconObject;			// the icon to attach the new image to
+	struct ScalosBitMapAndColor *smtir_NewImage;    // the new image. ScalosBitMapAndColor contents is freed by message handler
+
+    FUNCTION
+	Attach a new color-mapped image to an existing icon.
+	The sender of this message is responsible to make sure
+	that destination icon is able to handle the color-mapped image.
+
+    INPUTS
+	smtir_IconObject -- the icon to attach the new image to.
+	smtir_NewImage -- the new image. ScalosBitMapAndColor
+		contents is supposed to be freed by message receiver.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+
+scalosAPI/SM_ShowControlBar
+
+    NAME
+	SM_ShowControlBar
+
+    SYNOPSIS
+	BOOL Visible
+
+    FUNCTION
+	Show or hide the control bar on a Scalos window.
+
+    INPUTS
+	Visible - TRUE to display the control bar, FALSE to hide it.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+
+scalosAPI/SM_ShowPopupMenu
+
+    NAME
+	SM_ShowPopupMenu
+
+    SYNOPSIS
+	struct PopupMenu *pm
+	struct ScaIconNode *in
+	ULONG Flags
+	struct FileTypeDef *fType
+
+    FUNCTION
+	Show a popup menu and execute the user's menu command.
+
+    INPUTS
+	pm - Popup menu to display.
+	in - Scalos icon node the popup menu should be associated to. 
+	     Can be NULL for window popup menus.
+	Flags - Show which items are still locked and HAVE TO BE UNLOCKED 
+	     during processing.
+	     SHOWPOPUPFLGF_IconSemaLocked - wt_IconSemaphore is still locked
+	     SHOWPOPUPFLGF_WinListLocked - Scalos window list is still locked.
+	fType - Private data structure for support of file type specific 
+	     popup menus. Should be NULL if unused.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+
+scalosAPI/SM_ShowStatusBar
+
+    NAME
+	SM_ShowStatusBar
+
+    SYNOPSIS
+	BOOL Visible
+
+    FUNCTION
+	Show or hide the status bar on a Scalos window.
+
+    INPUTS
+	Visible - TRUE to display the status bar, FALSE to hide it.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+
+scalosAPI/SM_Update
+
+    NAME
+	SM_Update
+
+    SYNOPSIS
+
+    FUNCTION
+	Causes the window to reread its icons.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+
+scalosAPI/SM_UpdateIcon
+
+    NAME
+	SM_UpdateIcon
+
+    SYNOPSIS
+	BPTR smui_DirLock
+	CONST_STRPTR smui_IconName
+
+    FUNCTION
+	Refresh a selected icon.
+
+    INPUTS
+	smui_DirLock - Lock to parent dir of icon.
+	smui_IconName - Name of the icon.
+
+    RESULT
+	nothing
+
+    NOTES
+	You must create copies of smui_DirLock and smui_IconName before 
+	sending this message. Those copies will be deleted by Scalos.
+
+	Example:
+		smui_DirLock = DupLock(myLock);
+		smui_IconName = AllocVec(1 + strlen(myName), MEMF_PUBLIC);
+
+
+    SEE ALSO
+	scalos.library/SCA_UpdateIcon()
+scalosAPI/SM_AddIcon
+
+    NAME
+	SM_AddIcon
+
+    SYNOPSIS
+	UWORD	smai_x
+	UWORD	smai_y
+	BPTR	smai_DirLock
+	STRPTR	smai_IconName
+
+    FUNCTION
+	Causes a window task to load a selected icon.
+
+    INPUTS
+	smai_x
+	smai_y - the position where the icon should appear or 0x8000 for any
+	smai_DirLock - Lock to parent dir of icon.
+	smai_IconName - Name of the icon.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+
+scalosAPI/SM_RemIcon
+
+    NAME
+	SM_RemIcon
+
+    SYNOPSIS
+	BPTR	smri_DirLock
+	STRPTR	smri_IconName
+
+    FUNCTION
+	Removes an icon from window.
+
+    INPUTS
+	smri_DirLock - Lock to parent dir of icon.
+	smri_IconName - Name of the icon.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+
+scalosAPI/SM_Iconify
+
+    NAME
+	SM_Iconify
+
+    SYNOPSIS
+
+    FUNCTION
+	Set the window to sleep and adds an icon to the main window.
+
+    INPUTS
+	none
+
+    NOTES
+	Never send this message to the main window!
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SM_UnIconify
+
+scalosAPI/SM_UnIconify
+
+    NAME
+	SM_UnIconify
+
+    SYNOPSIS
+
+    FUNCTION
+	Removes the appicon from main window and reopens the window.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    NOTES
+	Never send this message to the main window!
+
+    SEE ALSO
+	SM_Iconify
+scalosAPI/SM_RunMenuCmd
+
+    NAME
+	SM_RunMenuCmd
+
+    SYNOPSIS
+	APTR smrm_MenuItem
+	struct ScaIconNode *smrm_IconNode
+	ULONG smrm_Flags
+
+    FUNCTION
+	This message is used to execute a Scalos menu command in some 
+	other window task's context.
+
+    INPUTS
+	smrm_MenuItem - internal Scalos menu item descriptor
+	smrm_IconNode - Iconnode to execute the command with.
+	smrm_Flags - none defined yet.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+scalosAPI/SM_ShowTitle
+
+    NAME
+	SM_ShowTitle
+
+    SYNOPSIS
+	ULONG smst_showTitle
+
+    FUNCTION
+	This message is used to set the screen title bar display mode.
+
+    INPUTS
+	smst_showTitle - Screen title bar mode
+	   If TRUE, the screen's title bar will be shown in front of 
+	   WFLG_BACKDROP windows.
+           If FALSE, the title bar will be rendered behind all windows.
+
+
+    RESULT
+	nothing
+
+    SEE ALSO
+scalosAPI/SM_Requester
+
+    NAME
+	SM_Requester
+
+    SYNOPSIS
+	union	{
+		ULONG 		smrq_ReqResult;
+		struct	Window 	*smrq_ParentWindow;
+		};
+	APTR			smrq_ArgList;
+	struct	EasyStruct 	smrq_ez;
+	UBYTE			smrq_ArgListBuffer[0];
+
+    FUNCTION
+	Asynchronously pops up a requester and returns the result.
+
+    INPUTS
+	smrq_ParentWindow - designates which screen to open the requester on.
+	smrq_ReqResult - Here the result from EaysRequest() is returned.
+	smrq_ArgList - pointer to ArgList for EasyRequestArgs().
+	smrq_ez - Contains information for EasyRequestArgs()
+	smrq_ArgListBuffer - buffer for ArgList - allocated as large as needed.
+		Put the required buffer length into the additional_size
+		parameter of the SCA_AllocMessage() call.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	intuition.library/EasyRequestArgs()
+	scalos/SCA_AllocMessage()
+scalosAPI/SM_NewPreferences
+
+    NAME
+        SM_NewPreferences
+
+    SYNOPSIS
+	ULONG	smnp_PrefsFlags
+
+    FUNCTION
+	Triggers re-reading and checking of preferences files used by
+	Scalos. Multiple invocations of SM_NewPreferences accumulate
+	the bits for changes subsystems.
+	When there are no more SM_NewPreferences for 0.5s, all marked
+	preferences are re-read and check for changes. If changes are
+	detected, Scalos reinitializes subsystems as required by the
+        preferences changes.
+
+    INPUTS
+	smnp_PrefsFlags	- Bitmask with one bit set for each changed
+		preferences file.   .
+
+    RESULT
+	nothing
+
+    SEE ALSO
+
+scalosAPI/SM_StartChildProcess
+    NAME
+        SM_StartChildProcess
+
+    SYNOPSIS
+	ULONG   smscp_WindowTask
+
+    FUNCTION
+	This message is internally used to synchronize startup
+	of child processes.
+
+    INPUTS
+	smscp_WindowTask - parent WindowTask that is starting
+		the child process.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+
+s
+

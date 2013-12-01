@@ -1,0 +1,161 @@
+; Rename.cd
+; version $VER: Rename.catalog 40.1 (26 Feb 2005 21:03:45)
+; codeset 0s
+; language english
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME (//)
+Scalos Rename
+;
+;
+MSGID_OKBUTTON (//)
+Rename
+;
+;
+MSGID_OKBUTTON_SHORT (/1/1)
+r
+;
+;
+MSGID_SHORTHELP_OKBUTTON (//)
+Rename the object as\n\
+the string gadget's content.
+;
+;
+MSGID_SKIPBUTTON (//)
+Skip
+;
+;
+MSGID_SKIPBUTTON_SHORT (/1/1)
+s
+;
+;
+MSGID_SHORTHELP_SKIPBUTTON (//)
+..SkipButton..
+;
+;
+MSGID_CANCELBUTTON (//)
+Cancel
+;
+;
+MSGID_CANCELBUTTON_SHORT (/1/1)
+c
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON (//)
+Discard all changes and\n\
+leave keep the original name.
+;
+;
+MSGID_CREATE_APPLICATION_FAILED (//)
+Failed to create Application.\n
+;
+;
+MSGID_CREATE_MAINWINDOW_FAILED (//)
+Failed to open main window !\n
+;
+;
+MSGID_OPEN_LIBRARY_FAILED (//)
+Failed to open \"%s\" !\n
+;
+;;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT (2000//)
+Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT (//)
+About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI (//)
+About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT (//)
+Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT (//)
+Q
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK (3000//)
+_OK
+;
+;
+MSGID_ABOUTREQFORMAT (//)
+\33c\033bScalos Rename.module V%ld.%ld\033n\n\
+%s\n\
+© 2004%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+;
+MSGID_TEXTLINE_ENTERNEWNAME (4000//)
+Enter a new Name for \"%s\"
+;
+;
+MSGID_LABEL_NEWNAME (//)
+New Name
+;
+;
+MSGID_TITLE_ERRORREQ (//)
+Rename Error
+;
+;
+MSGID_ERRORREQ_BODYTEXT (//)
+Could not rename\n'%s' to '%s'\n%s
+;
+;
+MSGID_REQ_OK (//)
+ _Ok
+;
+;
+MSGID_TEXTLINE_PATH (//)
+Path: \"%s\"
+;
+;
+MSGID_BUTTON_SKIP (//)
+_Skip
+;
+;
+MSGID_PATHOF_NAME (//)
+Path of object.\n\n\
+It's possible to show all content of this gadget using\n\
+the scroller located at the bottom of the window.\n\
+Can be usefull for large path lenght.
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE (5000//)
+Rename.module startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD (//)
+Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+\n\
+Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+%lu.%lu is currently in use by other applications.\n\
+\n\
+Once you have installed the required version,\n\
+close all MUI programs, make sure the old class\n\
+is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;

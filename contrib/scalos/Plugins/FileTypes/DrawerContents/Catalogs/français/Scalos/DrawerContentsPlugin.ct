@@ -1,0 +1,23 @@
+; DrawerContentsPlugin.ct
+## version $VER: DrawerContentsPlugin.catalog 40.7 (30.09.05)
+## codeset 0
+## language français
+;
+;#arrayopts static __far
+;
+;
+MSGID_DRAWER_EMPTY
+Ce répertoire est vide.
+;This drawer is empty.
+;
+;
+MSGID_MORE_ENTRIES
+...
+;...
+;
+;
+MSGID_ERROR_DOS
+Erreur : %ld, %s.
+;Error: %ld, %s.
+;
+;

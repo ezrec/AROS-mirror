@@ -1,0 +1,82 @@
+==id $Id: scalosgfx_lib.sfd 230 2009-09-14 10:55:37Z jlachmann $
+==copyright ©2006 The Scalos Team
+==base _ScalosGfxBase
+*==basetype struct Library *
+*==libname scalosgfx.library
+==bias 30
+==public
+==include <intuition/classusr.h>
+==include <scalos/scalos.h>
+==include <graphics/gfx.h>
+==include <scalos/scalosgfx.h>
+struct ScalosBitMapAndColor *ScalosGfxCreateEmptySAC() ()
+struct ScalosBitMapAndColor *ScalosGfxCreateSAC(ULONG width, ULONG height, ULONG depth,
+	struct BitMap *friendBM, struct TagItem *tagList) (d0,d1,d2,a0,a1)
+==varargs
+struct ScalosBitMapAndColor *ScalosGfxCreateSACTags(ULONG width, ULONG height, ULONG depth,
+	struct BitMap *friendBM, ULONG firstTag, ...) (d0,d1,d2,a0,a1)
+VOID ScalosGfxFreeSAC(struct ScalosBitMapAndColor *sac) (a0)
+struct gfxARGB *ScalosGfxCreateARGB(ULONG width, ULONG height, struct TagItem *tagList) (d0,d1,a0)
+==varargs
+struct gfxARGB *ScalosGfxCreateARGBTags(ULONG width, ULONG height, ULONG firstTag, ...) (d0,d1,a0)
+VOID ScalosGfxFreeARGB(struct gfxARGB **argb) (a0)
+VOID ScalosGfxARGBSetAlpha(struct ARGBHeader *src, UBYTE alpha) (a0,d0)
+VOID ScalosGfxARGBSetAlphaMask(struct ARGBHeader *argbh, PLANEPTR maskPlane) (a0,a1)
+struct gfxARGB *ScalosGfxCreateARGBFromBitMap(struct BitMap *bm, ULONG width, ULONG height,
+	ULONG numberOfColors, const ULONG *colorTable, PLANEPTR maskPlane) (a0,d0,d1,d2,a1,a2)
+VOID ScalosGfxFillARGBFromBitMap(struct ARGBHeader *argbh, struct BitMap *srcBM, PLANEPTR maskPlane) (a0,a1,a2)
+VOID ScalosGfxWriteARGBToBitMap(struct ARGBHeader *argbh, struct BitMap *bm,
+	ULONG numberOfColors, const ULONG *colorTable) (a0,a1,d0,a2)
+struct ScalosBitMapAndColor *ScalosGfxMedianCut(struct ARGBHeader *argbh,
+	ULONG depth, struct TagItem *tagList) (a0,d0,a1)
+==varargs
+struct ScalosBitMapAndColor *ScalosGfxMedianCutTags(struct ARGBHeader *argbh,
+	ULONG depth, ULONG firstTag, ...) (a0,d0,a1)
+struct gfxARGB *ScalosGfxScaleARGBArray(const struct ARGBHeader *src, ULONG *destWidth,
+	ULONG *destHeight, struct TagItem *tagList) (a0,a1,a2,a3)
+==varargs
+struct gfxARGB *ScalosGfxScaleARGBArrayTags(const struct ARGBHeader *src, ULONG *destWidth,
+	ULONG *destHeight, ULONG firstTag, ...) (a0,a1,a2,a3)
+struct BitMap *ScalosGfxScaleBitMap(struct ScaleBitMapArg *sbma, struct TagItem *tagList) (a0,a1)
+==varargs
+struct BitMap *ScalosGfxScaleBitMapTags(struct ScaleBitMapArg *sbma, ULONG firstTag, ...) (a0,a1)
+VOID ScalosGfxCalculateScaleAspect(ULONG sourceWidth, ULONG sourceHeight, ULONG *destWidth,
+	ULONG *destHeight) (d0,d1,a0,a1)
+VOID ScalosGfxBlitARGB(struct ARGBHeader *destARGB, const struct ARGBHeader *srcARGB,
+	LONG destLeft, LONG destTop, LONG srcLeft, LONG srcTop, LONG width, LONG height) (a0,a1,d0,d1,d2,d3,d4,d5)
+VOID ScalosGfxFillRectARGB(struct ARGBHeader *destARGB, const struct gfxARGB *fillARGB,
+	LONG left, LONG top, LONG width, LONG height) (a0,a1,d0,d1,d2,d3)
+VOID ScalosGfxSetARGB(struct ARGBHeader *destARGB, const struct gfxARGB *fillARGB) (a0,a1)
+BOOL ScalosGfxNewColorMap(struct ScalosBitMapAndColor *sac, const ULONG *colorMap, ULONG colorEntries) (a0,a1,d0)
+VOID ScalosGfxARGBRectMult(struct RastPort *rp, const struct gfxARGB *numerator,
+	const struct gfxARGB *denominator, WORD xMin, WORD yMin, WORD xMax, WORD yMax) (a0,a1,a2,d0,d1,d2,d3)
+VOID ScalosGfxBlitARGBAlpha (struct RastPort *rp, const struct ARGBHeader *srcH,
+	ULONG destLeft, ULONG destTop, ULONG srcLeft, ULONG srcTop, ULONG width, ULONG height) (a0,a1,d0,d1,d2,d3,d4,d5)
+VOID ScalosGfxBlitARGBAlphaTagList(struct RastPort *rp, const struct ARGBHeader *srcH,
+	ULONG destLeft, ULONG destTop, const struct IBox *srcSize, struct TagItem *tagList) (a0,a1,d0,d1,a3,a2)
+==varargs
+VOID ScalosGfxBlitARGBAlphaTags(struct RastPort *rp, const struct ARGBHeader *srcH,
+	ULONG destLeft, ULONG destTop, const struct IBox *srcSize, ULONG firstTag, ...) (a0,a1,d0,d1,a3,a2)
+VOID ScalosGfxBlitIcon(struct RastPort *rpBackground, struct RastPort *rpIcon,
+	ULONG left, ULONG top, ULONG width, ULONG height, struct TagItem *tagList) (a0,a1,d0,d1,d2,d3,a2)
+==varargs
+VOID ScalosGfxBlitIconTags(struct RastPort *rpBackground, struct RastPort *rpIcon,
+	ULONG left, ULONG top, ULONG width, ULONG height, ULONG firstTag, ...) (a0,a1,d0,d1,d2,d3,a2)
+* --- function in v42 or higher
+BOOL ScalosGfxDrawGradient(struct ARGBHeader *dest, LONG left, LONG top, LONG width, LONG height,
+	struct gfxARGB *start, struct gfxARGB *stop, ULONG gradType) (a0,d0,d1,d2,d3,a1,a2,d4)
+BOOL ScalosGfxDrawGradientRastPort(struct RastPort *rp, LONG left, LONG top, LONG width,
+	LONG height, struct gfxARGB *start, struct gfxARGB *stop,
+	ULONG gradType) (a0,d0,d1,d2,d3,a1,a2,d4)
+VOID ScalosGfxDrawLine(struct ARGBHeader *dest, LONG fromX, LONG fromY, LONG toX, LONG toY,
+	const struct gfxARGB *lineColor) (a0,d0,d1,d2,d3,a1)
+VOID ScalosGfxDrawLineRastPort(struct RastPort *rp, LONG fromX, LONG fromY, LONG toX, LONG toY,
+	const struct gfxARGB *lineColor) (a0,d0,d1,d2,d3,a1)
+VOID ScalosGfxDrawEllipse(struct ARGBHeader *dest, LONG xCenter, LONG yCenter, LONG radiusX,
+	LONG  radiusy, WORD segment, const struct gfxARGB *color1,
+	const struct gfxARGB *color2) (a0,d0,d1,d2,d3,d4,a1,a2)
+VOID ScalosGfxDrawEllipseRastPort(struct RastPort *rp, LONG xCenter, LONG yCenter, LONG radiusX,
+	LONG  radiusy, WORD segment, const struct gfxARGB *color1,
+	const struct gfxARGB *color2) (a0,d0,d1,d2,d3,d4,a1,a2)
+==end
+

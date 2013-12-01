@@ -1,0 +1,205 @@
+; Rename.ct
+## version $VER: Rename.catalog 40.1 (20 Feb 2005 22:02:39)
+## codeset 0
+## language deutsch
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos Umbenennen
+;Scalos Rename
+;
+;
+MSGID_OKBUTTON
+Umbenennen
+;Rename
+;
+;
+MSGID_OKBUTTON_SHORT
+u
+;r
+;
+;
+MSGID_SHORTHELP_OKBUTTON
+Namen des ausgählten Objects ändern.
+;Save the changed icon.\n\
+;If necessary, a new icon will be\n\
+;created from a the default icon.
+;
+;
+MSGID_SKIPBUTTON
+Überspringen
+;Skip
+;
+;
+MSGID_SKIPBUTTON_SHORT
+ü
+;s
+;
+;
+MSGID_SHORTHELP_SKIPBUTTON
+...SkipButton...
+;
+;
+MSGID_CANCELBUTTON
+Abbrechen
+;Cancel
+;
+;
+MSGID_CANCELBUTTON_SHORT
+a
+;c
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Änderungen verwerfen und den\n\
+originalen Namen beibehalten.
+;Discard all changes and\n\
+;leave keep the original name.
+;
+;
+MSGID_CREATE_APPLICATION_FAILED
+Fehler beim Erzeugen der Anwendung.\n
+;Failed to create Application.\n
+;
+;
+MSGID_CREATE_MAINWINDOW_FAILED
+Fehler beim Öffnen des Hauptfensters!\n
+;Failed to open main window !\n
+;
+;
+MSGID_OPEN_LIBRARY_FAILED
+Fehler beim Öffnen von \"%s\" !\n
+;Failed to open \"%s\" !\n
+;
+;;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT
+Projekt
+;Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+Über...
+;About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+Über MUI...
+;About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Beenden
+;Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK
+Ok
+;_OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Rename.module V%ld.%ld\033n\n\
+%s\n\
+© 2004%s Das Scalos-Team
+;\33c\033bScalos Rename.module V%ld.%ld\033n\n\
+;%s\n\
+;© 2004%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+;
+MSGID_TEXTLINE_ENTERNEWNAME
+Neuen Namen for \"%s\" angeben
+;Enter a new Name for \"%s\"
+;
+;
+MSGID_LABEL_NEWNAME
+Neuer Name
+;New Name
+;
+;
+MSGID_TITLE_ERRORREQ
+Fehler beim Umbenennen
+;Rename Error
+;
+;
+MSGID_ERRORREQ_BODYTEXT
+Fehler beim Umbennenen\n\
+von \"%s" nach \"%s\"\n%s.
+;Could not rename\n'%s' to '%s'\n%s
+;
+;
+MSGID_REQ_OK
+Ok
+; _Ok
+;
+;
+MSGID_TEXTLINE_PATH
+Pfad: \"%s\"
+;Path: \"%s\"
+;
+;
+MSGID_BUTTON_SKIP
+Überspringen
+;_Skip
+;
+;
+MSGID_PATHOF_NAME
+Pfad des Objects.\n\
+Mit dem Rollbalken am unteren Fensterrand kann\n\
+der Inhalt des Pfades hin- und hergeschoben werden,\n\
+um auch lange Pfadnamen lesen zu können.
+;Path of object.\n\n\
+;It's possible to show all content of this gadget using\n\
+;the scroller located at the bottom of the window.\n\
+;Can be usefull for large path lenght.
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Rename.module kann nicht gestartet werden
+;Rename.module startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Wiederholen|Beenden
+;Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\
+Die Klasse ist nicht installiert.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\n\
+Sie haben momentan Version v%lu.%lu installiert und\n\
+sollten die Klasse daher aktualisieren!
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\n\
+Version %lu.%lu wird momentan von einer anderen Anwendung\n\
+verwendet. Wenn sie die benötigte Version installiert haben,\n\
+schließen sie alle MUI Programme und probieren es erneut.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------

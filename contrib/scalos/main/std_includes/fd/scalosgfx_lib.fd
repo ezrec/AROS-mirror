@@ -1,0 +1,19 @@
+##base _ScalosGfxBase
+##bias 30
+##public
+ScalosGfxCreateEmptySAC()()
+ScalosGfxCreateSAC(width,height,depth,friendBM,tagList)(d0/d1/d2/a0/a1)
+ScalosGfxFreeSAC(sac)(a0)
+ScalosGfxCreateARGB(width,height,tagList)(d0/d1/a0)
+ScalosGfxFreeARGB(argb)(a0)
+ScalosGfxARGBSetAlpha(src,alpha)(a0,d0)
+ScalosGfxARGBSetAlphaMask(argbh,maskPlane)(a0/a1)
+ScalosGfxCreateARGBFromBitMap(bm,width,height,numberOfColors,colorTable,maskPlane)(a0,d0/d1/d2/a1/a2)
+ScalosGfxFillARGBFromBitMap(argbh,srcBM,maskPlane)(a0/a1/a2)
+ScalosGfxWriteARGBToBitMap(argbh,bm,numberOfColors,colorTable)(a0/a1,d0/a2)
+ScalosGfxMedianCut(argbh,depth,tagList)(a0,d0/a1)
+ScalosGfxScaleARGBArray(src,destWidth,destHeight,tagList)(a0/a1/a2/a3)
+ScalosGfxScaleBitMap(sbma,tagList)(a0/a1)
+ScalosGfxCalculateScaleAspect(sourceWidth,sourceHeight,destWidth,destHeight)(d0/d1/a0/a1)
+ScalosGfxBlitARGB(destARGB,srcARGB,destLeft,destTop,srcLeft,srcTop,width,height)(a0/a1,d0/d1/d2/d3/d4/d5)
+##end

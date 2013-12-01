@@ -1,0 +1,12 @@
+==id $Id: scalospreviewplugin_lib.sfd 5 2009-02-17 20:22:13Z jlachmann $
+==copyright ©2006 The Scalos Team
+==base _ScalosPreviewPluginBase
+*==basetype struct Library *
+==bias 30
+==public
+==include <scalos/scalos.h>
+==include <utility/tagitem.h>
+LONG SCAPreviewGenerate(struct ScaWindowTask *wt, BPTR dirLock, CONST_STRPTR iconName, struct TagItem *tagList) (a0,a1,a2,a3)
+==varargs
+LONG SCAPreviewGenerateTags(struct ScaWindowTask *wt, BPTR dirLock, CONST_STRPTR iconName, ULONG firstTag, ...) (a0,a1,a2,a3)
+==end

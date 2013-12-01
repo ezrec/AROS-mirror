@@ -1,0 +1,23 @@
+==id $Id: preferences_lib.sfd 5 2009-02-17 20:22:13Z jlachmann $
+==base _PreferencesBase
+*==basetype struct Library *
+*==libname preferences.library
+==bias 30
+==public
+==include <exec/types.h>
+==include <scalos/preferences.h>
+APTR AllocPrefsHandle(CONST_STRPTR name) (a0)
+VOID FreePrefsHandle(APTR prefsHandle) (a0)
+VOID SetPreferences(APTR prefsHandle, ULONG iD, ULONG prefsTag, const APTR a1arg,
+	UWORD struct_Size) (a0,d0,d1,a1,d2)
+ULONG GetPreferences(APTR prefsHandle, ULONG iD, ULONG prefsTag, APTR a1arg,
+	UWORD struct_Size) (a0,d0,d1,a1,d2)
+VOID ReadPrefsHandle(APTR prefsHandle, CONST_STRPTR filename) (a0,a1)
+VOID WritePrefsHandle(APTR prefsHandle, CONST_STRPTR filename) (a0,a1)
+struct PrefsStruct  * FindPreferences(APTR prefsHandle, ULONG iD, ULONG prefsTag) (a0,d0,d1)
+VOID SetEntry(APTR prefsHandle, ULONG iD, ULONG prefsTag, const APTR a1arg,
+	UWORD struct_Size, ULONG entry) (a0,d0,d1,a1,d2,d3)
+ULONG GetEntry(APTR prefsHandle, ULONG iD, ULONG prefsTag, APTR a1arg,
+	UWORD struct_Size, ULONG entry) (a0,d0,d1,a1,d2,d3)
+ULONG RemEntry(APTR prefsHandle, ULONG iD, ULONG prefsTag, ULONG entry) (a0,d0,d1,d2)
+==end

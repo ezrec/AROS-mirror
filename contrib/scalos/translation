@@ -1,0 +1,179 @@
+/* translation */
+/* $Date: 2010-01-02 16:37:11 +0100 (Sa, 02. Jan 2010) $ */
+/* $Revision: 423 $ */
+/* $Id: translation 423 2010-01-02 15:37:11Z jlachmann $ */
+
+LHAName = 'RAM:ScalosTranslation'
+
+address command
+
+say "Deleting old directory tree..."
+"delete ScalosTranslation all QUIET"
+say "Deleting old archive..."
+"delete " || LHAName || ".lha quiet"
+
+say "Createing directories..."
+
+"mkdir -p RAM:ScalosTranslation/Catalogs/Scalos/dansk"
+"mkdir -p RAM:ScalosTranslation/Catalogs/Scalos/deutsch"
+"mkdir -p RAM:ScalosTranslation/Catalogs/Scalos/español"
+"mkdir -p RAM:ScalosTranslation/Catalogs/Scalos/français"
+"mkdir -p RAM:ScalosTranslation/Catalogs/Scalos/italiano"
+"mkdir -p RAM:ScalosTranslation/Catalogs/Scalos/sample"
+"mkdir -p RAM:ScalosTranslation/Catalogs/Scalos/svenska"
+"mkdir -p RAM:ScalosTranslation/Catalogs/Scalos/ÃeÓtina"
+"mkdir -p RAM:ScalosTranslation/Catalogs/Scalos/Polski"
+
+say "Copying FileTypes Prefs..."
+
+"copy Prefs/FileTypes/ScalosFileTypes.cd RAM:ScalosTranslation clone quiet"
+"copy Prefs/FileTypes/catalogs/deutsch/Scalos/ScalosFileTypes.ct RAM:ScalosTranslation/Catalogs/Scalos/deutsch clone quiet"
+"copy Prefs/FileTypes/catalogs/français/Scalos/ScalosFileTypes.ct RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+"copy Prefs/FileTypes/catalogs/sample/Scalos/ScalosFileTypes.ct RAM:ScalosTranslation/Catalogs/Scalos/sample clone quiet"
+
+say "Copying Main Prefs..."
+
+"copy Prefs/MainPrefs/Scalos_Prefs.cd 	 RAM:ScalosTranslation clone quiet"
+"copy Prefs/MainPrefs/catalogs/deutsch/Scalos/Scalos_Prefs.ct   RAM:ScalosTranslation/Catalogs/Scalos/deutsch clone quiet"
+"copy Prefs/MainPrefs/catalogs/français/Scalos/Scalos_Prefs.ct  RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+"copy Prefs/MainPrefs/catalogs/sample/Scalos/Scalos_Prefs.ct    RAM:ScalosTranslation/Catalogs/Scalos/sample clone quiet"
+
+say "Copying Menu Prefs..."
+
+"copy Prefs/Menu/ScalosMenu.cd        	 RAM:ScalosTranslation clone quiet"
+"copy Prefs/Menu/Catalogs/dansk/Scalos/ScalosMenu.ct            RAM:ScalosTranslation/Catalogs/Scalos/dansk clone quiet"
+"copy Prefs/Menu/Catalogs/deutsch/Scalos/ScalosMenu.ct          RAM:ScalosTranslation/Catalogs/Scalos/deutsch clone quiet"
+"copy Prefs/Menu/Catalogs/español/Scalos/ScalosMenu.ct          RAM:ScalosTranslation/Catalogs/Scalos/español clone quiet"
+"copy Prefs/Menu/Catalogs/français/Scalos/ScalosMenu.ct         RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+"copy Prefs/Menu/Catalogs/italiano/Scalos/ScalosMenu.ct         RAM:ScalosTranslation/Catalogs/Scalos/italiano clone quiet"
+"copy Prefs/Menu/Catalogs/sample/Scalos/ScalosMenu.ct           RAM:ScalosTranslation/Catalogs/Scalos/sample clone quiet"
+"copy Prefs/Menu/Catalogs/svenska/Scalos/ScalosMenu.ct          RAM:ScalosTranslation/Catalogs/Scalos/svenska clone quiet"
+"copy Prefs/Menu/Catalogs/ÃeÓtina/Scalos/ScalosMenu.ct          RAM:ScalosTranslation/Catalogs/Scalos/ÃeÓtina clone quiet"
+
+say "Copying Palette Prefs..."
+
+"copy Prefs/Palette/ScalosPalette.cd   	 RAM:ScalosTranslation clone quiet"
+"copy Prefs/Palette/Catalogs/dansk/Scalos/ScalosPalette.ct      RAM:ScalosTranslation/Catalogs/Scalos/dansk clone quiet"
+"copy Prefs/Palette/Catalogs/deutsch/Scalos/ScalosPalette.ct    RAM:ScalosTranslation/Catalogs/Scalos/deutsch clone quiet"
+"copy Prefs/Palette/Catalogs/español/Scalos/ScalosPalette.ct    RAM:ScalosTranslation/Catalogs/Scalos/español clone quiet"
+"copy Prefs/Palette/Catalogs/français/Scalos/ScalosPalette.ct   RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+"copy Prefs/Palette/Catalogs/italiano/Scalos/ScalosPalette.ct   RAM:ScalosTranslation/Catalogs/Scalos/italiano clone quiet"
+"copy Prefs/Palette/Catalogs/sample/Scalos/ScalosPalette.ct     RAM:ScalosTranslation/Catalogs/Scalos/sample   clone quiet"
+"copy Prefs/Palette/Catalogs/svenska/Scalos/ScalosPalette.ct    RAM:ScalosTranslation/Catalogs/Scalos/svenska  clone quiet"
+"copy Prefs/Palette/Catalogs/ÃeÓtina/Scalos/ScalosPalette.ct    RAM:ScalosTranslation/Catalogs/Scalos/ÃeÓtina  clone quiet"
+
+say "Copying Pattern Prefs..."
+
+"copy Prefs/Pattern/ScalosPattern.cd  	 RAM:ScalosTranslation clone quiet"
+"copy Prefs/Pattern/Catalogs/dansk/Scalos/ScalosPattern.ct      RAM:ScalosTranslation/Catalogs/Scalos/dansk   clone quiet"
+"copy Prefs/Pattern/Catalogs/deutsch/Scalos/ScalosPattern.ct    RAM:ScalosTranslation/Catalogs/Scalos/deutsch clone quiet"
+"copy Prefs/Pattern/Catalogs/español/Scalos/ScalosPattern.ct    RAM:ScalosTranslation/Catalogs/Scalos/español  clone quiet"
+"copy Prefs/Pattern/Catalogs/français/Scalos/ScalosPattern.ct   RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+"copy Prefs/Pattern/Catalogs/italiano/Scalos/ScalosPattern.ct   RAM:ScalosTranslation/Catalogs/Scalos/italiano clone quiet"
+"copy Prefs/Pattern/Catalogs/sample/Scalos/ScalosPattern.ct     RAM:ScalosTranslation/Catalogs/Scalos/sample   clone quiet"
+"copy Prefs/Pattern/Catalogs/svenska/Scalos/ScalosPattern.ct    RAM:ScalosTranslation/Catalogs/Scalos/svenska  clone quiet"
+"copy Prefs/Pattern/Catalogs/ÃeÓtina/Scalos/ScalosPattern.ct    RAM:ScalosTranslation/Catalogs/Scalos/ÃeÓtina  clone quiet"
+
+say "Copying ExifPicture..."
+
+"copy Plugins/FileTypes/ExifPicture/ExifPicturePlugin.cd        RAM:ScalosTranslation clone quiet"
+"copy Plugins/FileTypes/ExifPicture/Catalogs/deutsch/Scalos/ExifPicturePlugin.ct    	RAM:ScalosTranslation/Catalogs/Scalos/deutsch clone quiet"
+"copy Plugins/FileTypes/ExifPicture/Catalogs/français/Scalos/ExifPicturePlugin.ct	RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+
+say "Copying DrawerContents..."
+
+"copy Plugins/FileTypes/DrawerContents/DrawerContentsPlugin.cd        RAM:ScalosTranslation clone quiet"
+"copy Plugins/FileTypes/DrawerContents/Catalogs/deutsch/Scalos/DrawerContentsPlugin.ct        RAM:ScalosTranslation/Catalogs/Scalos/deutsch clone quiet"
+"copy Plugins/FileTypes/DrawerContents/Catalogs/français/Scalos/DrawerContentsPlugin.ct	      RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+
+say "Copying Scalos..."
+
+"copy main/Scalos.cd                  	 RAM:ScalosTranslation clone quiet"
+"copy main/catalogs/Polski/Scalos/Scalos.ct                     RAM:ScalosTranslation/Catalogs/Scalos/Polski   clone quiet"
+"copy main/catalogs/dansk/Scalos/Scalos.ct                      RAM:ScalosTranslation/Catalogs/Scalos/dansk    clone quiet"
+"copy main/catalogs/deutsch/Scalos/Scalos.ct                    RAM:ScalosTranslation/Catalogs/Scalos/deutsch  clone quiet"
+"copy main/catalogs/español/Scalos/Scalos.ct                    RAM:ScalosTranslation/Catalogs/Scalos/español  clone quiet"
+"copy main/catalogs/français/Scalos/Scalos.ct                   RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+"copy main/catalogs/sample/Scalos/Scalos.ct                     RAM:ScalosTranslation/Catalogs/Scalos/sample   clone quiet"
+"copy main/catalogs/ÃeÓtina/Scalos/Scalos.ct                    RAM:ScalosTranslation/Catalogs/Scalos/ÃeÓtina  clone quiet"
+
+say "Copying delete.module..."
+
+"copy Modules/Delete.MUI/Source/Delete.cd       				RAM:ScalosTranslation clone quiet"
+"copy Modules/Delete.MUI/Source/Catalogs/deutsch/Scalos/Delete.ct       	RAM:ScalosTranslation/Catalogs/Scalos/deutsch  clone quiet"
+"copy Modules/Delete.MUI/Source/Catalogs/français/Scalos/Delete.ct              RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+"copy Modules/Delete.MUI/Source/Catalogs/sample/Scalos/Delete.ct                RAM:ScalosTranslation/Catalogs/Scalos/sample   clone quiet"
+
+say "Copying execute_command.module..."
+
+"copy Modules/Execute_Command.MUI/Execute_Command.cd    			RAM:ScalosTranslation clone quiet"
+"copy Modules/Execute_Command.MUI/Catalogs/deutsch/Scalos/Execute_Command.ct   	RAM:ScalosTranslation/Catalogs/Scalos/deutsch  clone quiet"
+"copy Modules/Execute_Command.MUI/Catalogs/français/Scalos/Execute_Command.ct  	RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+"copy Modules/Execute_Command.MUI/Catalogs/sample/Scalos/Execute_Command.ct    	RAM:ScalosTranslation/Catalogs/Scalos/sample   clone quiet"
+
+say "Copying IconProperties.module..."
+
+"copy Modules/IconProperties.MUI/IconProperties.cd 				RAM:ScalosTranslation clone quiet"
+"copy Modules/IconProperties.MUI/Catalogs/deutsch/Scalos/IconProperties.ct     	RAM:ScalosTranslation/Catalogs/Scalos/deutsch  clone quiet"
+"copy Modules/IconProperties.MUI/Catalogs/français/Scalos/IconProperties.ct    	RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+"copy Modules/IconProperties.MUI/Catalogs/sample/Scalos/IconProperties.ct      	RAM:ScalosTranslation/Catalogs/Scalos/sample   clone quiet"
+
+say "Copying Information.module..."
+
+"copy Modules/Information.MUI/Information.cd 					RAM:ScalosTranslation clone quiet"
+"copy Modules/Information.MUI/Catalogs/deutsch/Scalos/Information.ct           	RAM:ScalosTranslation/Catalogs/Scalos/deutsch  clone quiet"
+"copy Modules/Information.MUI/Catalogs/français/Scalos/Information.ct          	RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+"copy Modules/Information.MUI/Catalogs/sample/Scalos/Information.ct            	RAM:ScalosTranslation/Catalogs/Scalos/sample   clone quiet"
+
+say "Copying NewDrawer.module..."
+
+"copy Modules/NewDrawer.MUI/NewDrawer.cd 					RAM:ScalosTranslation clone quiet"
+"copy Modules/NewDrawer.MUI/Catalogs/deutsch/Scalos/NewDrawer.ct               	RAM:ScalosTranslation/Catalogs/Scalos/deutsch  clone quiet"
+"copy Modules/NewDrawer.MUI/Catalogs/français/Scalos/NewDrawer.ct              	RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+"copy Modules/NewDrawer.MUI/Catalogs/sample/Scalos/NewDrawer.ct                	RAM:ScalosTranslation/Catalogs/Scalos/sample   clone quiet"
+
+say "Copying Rename.module..."
+
+"copy Modules/Rename.MUI/Rename.cd 						RAM:ScalosTranslation clone quiet"
+"copy Modules/Rename.MUI/Catalogs/deutsch/Scalos/Rename.ct                     	RAM:ScalosTranslation/Catalogs/Scalos/deutsch  clone quiet"
+"copy Modules/Rename.MUI/Catalogs/français/Scalos/Rename.ct                    	RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+"copy Modules/Rename.MUI/Catalogs/sample/Scalos/Rename.ct                       RAM:ScalosTranslation/Catalogs/Scalos/sample   clone quiet"
+
+say "Copying Updater.module..."
+
+"copy Modules/Updater.MUI/Updater.cd 						RAM:ScalosTranslation clone quiet"
+"copy Modules/Updater.MUI/Catalogs/deutsch/Scalos/Updater.ct           		RAM:ScalosTranslation/Catalogs/Scalos/deutsch  clone quiet"
+"copy Modules/Updater.MUI/Catalogs/français/Scalos/Updater.ct          		RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+"copy Modules/Updater.MUI/Catalogs/sample/Scalos/Updater.ct            		RAM:ScalosTranslation/Catalogs/Scalos/sample   clone quiet"
+
+say "Copying Empty_Trashcan.module..."
+
+"copy Modules/Empty_Trashcan.MUI/Empty_Trashcan.cd 				RAM:ScalosTranslation clone quiet"
+"copy Modules/Empty_Trashcan.MUI/Catalogs/deutsch/Scalos/Empty_Trashcan.ct      RAM:ScalosTranslation/Catalogs/Scalos/deutsch  clone quiet"
+"copy Modules/Empty_Trashcan.MUI/Catalogs/français/Scalos/Empty_Trashcan.ct     RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+"copy Modules/Empty_Trashcan.MUI/Catalogs/sample/Scalos/Empty_Trashcan.ct       RAM:ScalosTranslation/Catalogs/Scalos/sample   clone quiet"
+
+say "Copying WindowProperties.module..."
+
+"copy Modules/WindowProperties.MUI/WindowProperties.cd 				RAM:ScalosTranslation clone quiet"
+"copy Modules/WindowProperties.MUI/Catalogs/deutsch/Scalos/WindowProperties.ct 	RAM:ScalosTranslation/Catalogs/Scalos/deutsch  clone quiet"
+"copy Modules/WindowProperties.MUI/Catalogs/français/Scalos/WindowProperties.ct RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+"copy Modules/WindowProperties.MUI/Catalogs/sample/Scalos/WindowProperties.ct   RAM:ScalosTranslation/Catalogs/Scalos/sample   clone quiet"
+
+say "Copying Find.module..."
+
+"copy Modules/Find.MUI/Find.cd 							RAM:ScalosTranslation clone quiet"
+"copy Modules/Find.MUI/Catalogs/deutsch/Scalos/Find.ct 				RAM:ScalosTranslation/Catalogs/Scalos/deutsch  clone quiet"
+"copy Modules/Find.MUI/Catalogs/français/Scalos/Find.ct 			RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+"copy Modules/Find.MUI/Catalogs/sample/Scalos/Find.ct   			RAM:ScalosTranslation/Catalogs/Scalos/sample   clone quiet"
+
+say "Copying Exchange.module..."
+
+"copy Modules/Exchange.MUI/Exchange.cd 						RAM:ScalosTranslation clone quiet"
+"copy Modules/Exchange.MUI/Catalogs/deutsch/Scalos/Exchange.ct 			RAM:ScalosTranslation/Catalogs/Scalos/deutsch  clone quiet"
+"copy Modules/Exchange.MUI/Catalogs/français/Scalos/Exchange.ct 		RAM:ScalosTranslation/Catalogs/Scalos/français clone quiet"
+"copy Modules/Exchange.MUI/Catalogs/sample/Scalos/Exchange.ct   		RAM:ScalosTranslation/Catalogs/Scalos/sample   clone quiet"
+
+'lha -r -e -x a ' || LHAName || ' RAM:ScalosTranslation'
+
+lha t LHAName

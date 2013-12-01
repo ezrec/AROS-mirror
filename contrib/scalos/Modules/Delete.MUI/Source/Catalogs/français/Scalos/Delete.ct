@@ -1,0 +1,427 @@
+; Delete.ct
+; $Date$
+; $Revision$
+; $Id$
+## version $VER: Delete.catalog 1.0 (27.11.06)
+## codeset 0
+## language français
+;
+;#arrayopts static __far
+;
+MSG_APP_TITLE
+Delete.module
+;Delete.module
+;
+MSG_APP_DESC
+Module Delete.module pour Scalos
+;Replacement for Scalos Delete.module
+;
+MSG_WIN_TITLE
+Effacer
+;Delete
+;
+MSG_ASL_TITLE
+Choix de l'emplacement de la corbeille
+;Select Trashcan directory
+;
+MSG_PAGES_FILES
+Fichiers
+;Files
+;
+MSG_PAGES_PREFS
+Préferences
+;Preferences
+;
+MSG_LABEL_TRASH
+Utiliser la corbeille ?
+;Use trashcan?
+;
+MSG_LABEL_DIRS
+Confirmer l'éffacement des répertoires ?
+;Confirm dir delete?
+;
+MSG_LABEL_FILES
+Confirmer l'éffacement des fichiers ?
+;Confirm file delete?
+;
+MSG_LABEL_QUIET
+Lancement rapide
+;Quiet start
+;
+MSG_LABEL_TLOC
+Emplacement de la corbeille
+;Trashcan Location
+;
+MSG_LABEL_INFO
+%ld%% fait
+;Done %ld%%
+;
+MSG_LABEL_PROG
+Sélectionnés : %ld fichiers [%ld bytes], %ld répertoires
+;Selected: %ld files [%ld bytes], %ld directories
+;
+MSG_LABEL_VERS
+Version :
+;Version:
+;
+MSG_LABEL_COMP
+Compilé :
+;Compiled:
+;
+MSG_BUTTON_FULL
+Détail
+;Details
+;
+MSG_BUTTON_DEL
+Effacer
+;Delete
+;
+MSG_BUTTON_ABT
+A propos...
+;About...
+;
+MSG_BUTTON_CAN
+Annuler
+;Cancel
+;
+MSG_BUTTON_STOP
+Interrompre !
+;STOP!
+;
+MSG_BUTTON_AMUI
+A propos de MUI...
+;About MUI...
+;
+MSG_BUTTON_SAVE
+Sauver
+;Save
+;
+MSG_BUTTON_USE
+Utiliser
+;Use
+;
+MSG_BUTTON_REST
+Restaurer
+;Restore
+;
+MSG_KEY_DETAILS
+d
+;e
+;
+MSG_KEY_TRASH
+c
+;t
+;
+MSG_KEY_DIRS
+r
+;o
+;
+MSG_KEY_FILES
+f
+;n
+;
+MSG_KEY_QUIET
+q
+;q
+;
+MSG_KEY_TLOC
+|
+;l
+;
+MSG_KEY_SAVE
+s
+;v
+;
+MSG_KEY_USE
+u
+;u
+;
+MSG_KEY_REST
+t
+;r
+;
+MSG_KEY_DELETE
+e
+;d
+;
+MSG_KEY_ABOUT
+o
+;a
+;
+MSG_KEY_CANCEL
+a
+;c
+;
+MSG_KEY_STOP
+i
+;s
+;
+MSG_KEY_AMUI
+m
+;m
+;
+MSG_HELP_TRASH
+\33cFichiers sont déplaçès vers\nSYS:Trashcan\nplutôt que d'être\ncompletement supprimés
+;\33cFiles are moved to\nSYS:Trashcan\nrather than being\nremoved completely
+;
+MSG_HELP_DIRS
+\33cSi sélectionné, vous devez confirmer\nl'éffacement d'un répertoire
+;\33cIf set, you must confirm that\na directory should be deleted
+;
+MSG_HELP_FILES
+\33cSi sélectionné, vous devez confirmer\nà chaque fois l'éffacement d'un fichier
+;\33cIf set, you must confirm every\nfile delete operation
+;
+MSG_HELP_QUIET
+\33cSi sélectionné, la fenêtre d'information du programme\nne s'ouvrira pas au démarrage
+;\33cIf set, the about window is not\nshown when the program starts
+;
+MSG_HELP_TLOC
+\33cEmplacement de la corbeille à utiliser\nsi l'option \"Utilser la corbeille\" est sélectionnée
+;\33cLocation of the trashcan used\nif \"Use Trashcan\" is set
+;
+MSG_LVT_NAME
+\33bNom\33n
+;\33bName\33n
+;
+MSG_LVT_SIZE
+Taille
+;Size
+;
+MSG_LVT_DATE
+Date
+;Date
+;
+MSG_LVT_TIME
+Heure
+;Time
+;
+MSG_ERROR_TITLE
+Delete.module: Erreur
+;Delete module error
+;
+MSG_WARN_TITLE
+Delete.module: Alerte
+;Delete module warning
+;
+MSG_REQ_TITLE
+Requête de delete.module
+;Delete module request
+;
+MSG_GAD_OK
+*_D'accord
+;*_Ok
+;
+MSG_GAD_NOYES
+_Oui|*_Non
+;_Yes|*_No
+;
+MSG_GAD_PROTECT
+_Oui|_Tous les fichiers|*_non
+;_Yes|_All files|*_No
+;
+MSG_BODY_NOFILES
+\33cAucun fichier n'a été sélectionner !\n\nOpération annulée
+;\33cNo files have been selected!\n\nOperation aborted
+;
+MSG_BODY_NOLIST
+\33cLa création des listes internes a échouée\n\nOpération annulée
+;\33cUnable to create internal lists\n\nOperation aborted
+;
+MSG_BODY_VOLUME
+\33cDetection d'une tentative d'éffacement du volume\n\33b%s\33n\nEtes-vous \33bsûr\33n de vouloir faire çà ?!?
+;\33cDetected an attempt to delete volume\n\33b%s\33n\nAre you \33bsure\33n you want to do this?!?
+;
+MSG_BODY_CFILE
+\33cEtes-vous sûr de voulir éffacer le fichier\n%s
+;\33cAre you sure you want to delete file\n%s
+;
+MSG_BODY_BUFERR
+\33cImpossible de copier\n%s\nvers la corbeille\nPas assez d'espace libre.\nContinuer à éffacer le fichier ?
+;\33cUnable to copy\n%s\nto trashcan\nOut of buffer space.\nContinue to delete the file?
+;
+MSG_BODY_COPYFAIL
+\33cImpossible de copier\n%s\nvers la corbeille\nErreur survennue lors de l'écriture vers la corbeille\nContinuer à éffacer le fichier ?
+;\33cUnable to copy\n%s\nto trashcan\nError writing to trashcan\nContinue to delete the file?
+;
+MSG_BODY_NOICON
+\33cImposible déffacer l'icône\n%s
+;\33cUnable to delete icon\n%s
+;
+MSG_BODY_CDIR
+\33cEtes-vous sûr de vouloir éffacer le répertoire\n%s
+;\33cAre you sure you want to delete directory\n%s
+;
+MSG_BODY_BADTD
+\33cImpossible de créer le répertoire\ndans la corbeille.\nContinuer ?
+;\33cUnable to create directory\nin Trashcan.\nContinue?
+;
+MSG_BODY_NOSCAN
+\33cImpossible d'analyser le contenu du répertoire\nOpération sur répertoire annulée
+;\33cUnable to scan directory\nDirectory aborted
+;
+MSG_BODY_PROTECT
+\33c%s\nest protégé contre l'éffacement\nRetirer la protection ?
+;\33c%s\nis protected from deletion\nRemove the protection?
+;
+MSG_BODY_NODEL
+\33c%s\nn'a pas été supprimé
+;\33c%s\nnot deleted
+;
+MSG_BODY_COPYING
+Copie de %s vers la corbeille
+;Copying %s to trashcan
+;
+MSG_BODY_REMOVE
+Suppresion de %s
+;Removing %s
+;
+MSG_BODY_SCAN
+Analyse de %s
+;Scanning %s
+;
+MSG_BODY_DETAIL
+\33c\0338ATTENTION\0330\nCette opération peut prendre beaucoup de temps\net ne peut être annulée. Continuer ?
+;\33c\0338WARNING\0330\nThis operation may take a long time\nto complete and may not be\naborted. Continue?
+;
+MSG_ABOUT_HEAD
+\n\33b\33c\0338ScalosDelete\0330\33n\n\
+  Tout droit réservé 1999 Chris Page,  \n\
+  The World Foundry LLC \n\n\
+  Contact : \33ichris <chris@worldfoundry.demon.co.uk>  \n
+;
+;\n\33b\33c\0338ScalosDelete\0330\33n\n\
+;  Copyright 1999 Chris Page,  \n\
+;  The World Foundry LLC \n\n\
+;  Contact: \33ichris <chris@worldfoundry.demon.co.uk>  \n
+;
+MSG_ABOUT_BODY
+\n\33cThis program is free software; you can\n\
+ redistribute it and/or modify it under the \n\
+terms of the GNU General Public License as\n\
+published by the Free Software Foundation;\n\
+either version 2 of the License, or (at\n\
+your option) any later version.\n\n\
+This program is distributed in the hope\n\
+that it will be useful,but WITHOUT ANY\n\
+WARRANTY; without even the implied\n\
+    warranty of MERCHANTABILITY or FITNESS FOR    \n\
+A PARTICULAR PURPOSE. See the GNU General\n\
+Public License for more details.\n\n\
+You should have received a copy of the GNU\n\
+General Public License along with this\n\
+program; if not, write to\n\n\
+Free Software Foundation, Inc.,\n\
+59 Temple Place,\n\
+Suite 330,\n\
+Boston, MA\n\
+02111-1307\n\
+USA\n\n\
+Or email the original author
+;
+;\n\33cThis program is free software; you can\n\
+; redistribute it and/or modify it under the \n\
+;terms of the GNU General Public License as\n\
+;published by the Free Software Foundation;\n\
+;either version 2 of the License, or (at\n\
+;your option) any later version.\n\n\
+;This program is distributed in the hope\n\
+;that it will be useful,but WITHOUT ANY\n\
+;WARRANTY; without even the implied\n\
+;    warranty of MERCHANTABILITY or FITNESS FOR    \n\
+;A PARTICULAR PURPOSE. See the GNU General\n\
+;Public License for more details.\n\n\
+;You should have received a copy of the GNU\n\
+;General Public License along with this\n\
+;program; if not, write to\n\n\
+;Free Software Foundation, Inc.,\n\
+;59 Temple Place,\n\
+;Suite 330,\n\
+;Boston, MA\n\
+;02111-1307\n\
+;USA\n\n\
+;Or email the original author
+;
+;+++translateme+++
+MSGID_UNDO_OK
+Undo possible since \033bUtiliser la corbeille\033n is enabled
+;Undo possible since \033bUse trashcan\033n is enabled
+;
+;+++translateme+++
+MSGID_UNDO_NOT_POSSIBLE
+Undo \033inot\033n possible unless \033bUtiliser la corbeille\033n is enabled
+;Undo \033inot\033n possible unless \033bUse trashcan\033n is enabled
+;
+;+++translateme+++
+MSG_GAD_OK_ABORT
+*_Ok|Abort
+;*_Ok|Abort
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT
+Projet
+; Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+A propos de MUI...
+; About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Quitter
+; Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+; Q
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Le lancement de Delete.module a échoué
+;Delete.module startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Recommençer | Quitter
+;Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Impossible de charger la classe MUI '%s' V%lu.%lu.\n\
+Celle-ci n'est pas installée.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Impossible de charger la classe MUI '%s' V%lu.%lu.\n\
+\n\
+La version installée est V%lu.%lu, installez-en une plus récente s'il vous plaît !
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Impossible de charger la classe MUI '%s' V%lu.%lu.\n\
+%lu.%lu est actuellement utilisée par d'autres applications.\n\
+\n\
+Une fois la version requise installée,\n\
+fermez tous les programmes MUI, soyez sûr que l'ancienne classe\n\
+ne soit plus présente dans la mémoire puis, essayez de nouveau.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;

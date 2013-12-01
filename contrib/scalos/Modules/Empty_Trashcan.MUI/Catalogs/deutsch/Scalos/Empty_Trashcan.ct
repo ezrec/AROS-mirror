@@ -1,0 +1,234 @@
+; Empty_Trashcan.ct
+## version $VER: Empty_Trashcan.catalog 40.1 (04 Dec 2005 23:01:34)
+## codeset 0
+## language deutsch
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos Papierkorb leeren
+;Scalos Empty_Trashcan
+;
+;
+MSGID_OKBUTTON
+Start
+;Ok
+;
+;
+MSGID_OKBUTTON_SHORT
+S
+;O
+;
+;
+MSGID_SHORTHELP_OKBUTTON
+Beginnt die Leerung des Papierkorbs.\n\
+Der gesamte Inhalt wird unwiederruflich gelöscht!
+;Start emptying trashcan.\n\
+;All contents is deleted irrevocably!
+;
+;
+MSGID_CANCELBUTTON
+Abbruch
+;Cancel
+;
+;
+MSGID_CANCELBUTTON_SHORT
+a
+;c
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Papierkorb unberührt lassen und Programm beenden.
+;Leave trashcan untouched and quit
+;
+;
+MSGID_ABORTBUTTON
+Abbruch
+;Abort
+;
+;
+MSGID_ABORTBUTTON_SHORT
+a
+;a
+;
+;
+MSGID_SHORTHELP_ABORTBUTTON
+Leere des Papierkorbs abbrechen\n\
+und Programm beenden.
+;Immediately abort emptying\n\
+;of trashcan and quit.
+;
+;
+MSGID_CREATE_APPLICATION_FAILED
+Fehler beim Erzeugen der Anwendung.\n
+;Failed to create Application.\n
+;
+;
+MSGID_CREATE_MAINWINDOW_FAILED
+Fehler beim Öffnen des Hauptfensters !\n
+;Failed to open main window !\n
+;
+;
+MSGID_OPEN_LIBRARY_FAILED
+Fehler beiom Öffnen von \"%s\" !\n
+;Failed to open \"%s\" !\n
+;
+;;-----------------------------------------------------------
+;
+;
+MSGID_MENU_PROJECT
+Projekt
+;Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+Über...
+;About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+Über MUI...
+;About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Beenden
+;Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;Q
+;
+;-----------------------------------------------------------
+;
+;
+MSGID_ABOUTREQOK
+OK
+;OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Empty_Trashcan.module V%ld.%ld\033n\n\
+%s\n\
+© 2005%s Das Scalos-Team
+;\33c\033bScalos Empty_Trashcan.module V%ld.%ld\033n\n\
+;%s\n\
+;© 2005%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+;
+MSGID_WARNING_EMPTY_TRASHCAN
+Vorsicht!\n\
+Gelöschte Inhalte können nicht wiederhergestellt werden!\n\
+Soll der Papierkorb jetzt geleert werden?
+;Warning! You cannot get back what you delete!\n\
+;OK to empty the trashcan?
+;
+;
+MSGID_GADGETS_EMPTY_ABORT
+Leeren|Abbruch
+;Empty|Abort
+;
+;
+MSGID_GADGETTEXT_OK
+OK
+;OK
+;
+;
+MSGID_GADGETTEXT_CANCEL
+Abbruch
+;Cancel
+;
+;
+MSGID_EMPTY_TRASHCAN
+Papierkorb leeren
+;Empty Trashcan
+;
+;
+MSGID_GADGETS_DELETE_ABORT
+Löschen|Abbruch
+;Delete|Abort
+;
+;
+MSGID_EMPTYING_TRASHCAN
+Papierkorb wird geleert...
+;Emptying Trashcan...
+;
+;
+MSGID_PATH
+Pfad
+;Path
+;
+;
+MSGID_GADGET_ABORT
+Abbruch
+;Abort
+;
+;
+MSGID_BUILD_FILELIST
+Dateiliste bilden...
+;Building Filelist...
+;
+;
+MSGID_OUT_OF_MEMORY
+Nicht genug Speicher
+;Not Enough Memory
+;
+;
+MSGID_ERROR
+Fehler
+;Error
+;
+;
+MSGID_FAILED_TO_DELETE
+%s\n\
+konnte nicht gelöscht werden:\n\
+%s
+;%s\n\
+;couldn't be deleted:\n\
+;%s
+;
+;
+MSGID_GADGETS_SKIP_ABORT
+Überspringen|Abbruch
+;Skip it|Abort
+;
+;
+MSGID_DELETE_PROTECTED
+%s ist gegen Löschen geschützt.\n\
+Trotzdem löschen?
+;%s is protected against deletion.\n\
+;Delete anyway?
+;
+;
+MSGID_GADGETS_DELETE_SKIP
+Löschen|Überspringen
+;Delete|Skip it
+;
+;
+MSGID_GADGETS_DELETE_DELETEALL_PROTECT_SKIP
+Löschen|Alles Löschen|Überspringen
+;Delete|DeleteAllProtect|Skip
+;
+;
+MSGID_TEXT_CURRENTITEM
+Beim Löschen von:
+;Currently removing:
+;
+;
+MSGID_TEXT_CURRENTITEM_SHORTHELP
+Dies ist der Name des Elements\n\
+der gerade gelöscht wird.
+;This is the name if the item currently\n\
+;being deleted from trashcan.
+;
+;
+MSGID_GLOBAL_TRASHCAN
+\nDieser globale Papierkorb wird ebenfalls geleert:
+;\nThis global trashcan will be emptied, too:
+;
+;-----------------------------------------------------------
+;

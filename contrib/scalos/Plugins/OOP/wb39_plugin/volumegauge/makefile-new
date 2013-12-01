@@ -1,0 +1,70 @@
+# $Date: 2011-08-02 00:13:23 +0200 (Di, 02. Aug 2011) $
+# $Revision: 816 $
+##############################################################################
+
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/../../../..
+endif
+
+##############################################################################
+
+include		config.mk
+
+##############################################################################
+#
+# Project Object files
+#
+
+OBJS	=   	$(BEGIN_OBJS) \
+		$(OBJDIR)/vg_plugin.o \
+		$(OBJDIR)/VolumeGauge.o \
+		$(END_OBJS)
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS:.o=.d)
+endif
+
+##############################################################################
+#
+# Targets
+#
+
+NAME	=	volumegauge.plugin
+NAME_DB	=	$(NAME).debug
+
+##############################################################################
+
+.PHONY: all install clean bump dump nodebug
+
+all:	$(BINDIR)/$(NAME) \
+	$(BINDIR)/$(NAME_DB)
+
+##############################################################################
+
+$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) : $(OBJS)
+	$(ECHO) "Link $(NAME)"
+	@$(CC) $(OBJS) $(LFLAGS2) $(DEFINES) -o$(BINDIR)/$(NAME_DB)
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(NAME_DB) -o $(BINDIR)/$(NAME)
+	@chmod u+x $@
+
+##############################################################################
+
+install:
+	-@$(ECHO) "Installing $(NAME)"
+	copy $(BINDIR)/$(NAME) Scalos:Plugins/OOP clone
+
+
+clean:
+	-@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d $(OBJDIR)/*.d.* \
+        	$(OBJDIR)/*.i $(OBJDIR)/*.s \
+		$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) \
+		*.dump *_str.*
+
+##############################################################################
+
+
+

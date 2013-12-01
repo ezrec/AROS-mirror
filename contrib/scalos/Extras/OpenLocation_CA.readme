@@ -1,0 +1,8 @@
+OpenLocation_CA v0.3 by Eric Sauvageau
+--------------------------------------
+This program will popup a GUI, asking you to enter the path of the drawer
+you want to open.  If a drawer is specified as a WB argument, it will 
+put this one in its string gadget by default (so you can put it in a 
+menu, and define it as a "WB+Arg" command type in Scalos_Menu).
+
+Uses ClassAct for its GUI.

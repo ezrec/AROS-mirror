@@ -1,0 +1,131 @@
+#!/bin/bash
+
+# $Id$
+
+# AROS doesn't have a working installer, so we copy things such
+# that we need only minimal additional installation after unpacking.
+
+targetdir=../Reserve/Scalos.i386-aros
+
+echo "Creating directories..."
+
+rm -rf $targetdir
+mkdir -p $targetdir
+mkdir -p $targetdir/IconDatatypes/datatypes
+mkdir -p $targetdir/Libs
+mkdir -p $targetdir/Modules
+mkdir -p $targetdir/Prefs
+mkdir -p $targetdir/Plugins/FileTypes
+mkdir -p $targetdir/Plugins/OOP
+mkdir -p $targetdir/Plugins/Preview
+mkdir -p $targetdir/Tools
+mkdir -p $targetdir/Themes
+mkdir -p $targetdir/Env-Archive
+mkdir -p $targetdir/S
+
+echo "Copying files..."
+
+cp gpl-3.0.txt GPLsrc History lgpl-3.0.txt readme.txt LEGAL                         $targetdir
+
+cp main/.bin_i386-aros/Scalos                                                       $targetdir
+cp main/Scalos.info                                                                 $targetdir
+
+cp datatypes/AmigaIconObject/.bin_i386-aros/amigaiconobject.datatype                $targetdir/IconDatatypes/datatypes
+cp datatypes/IconObject/.bin_i386-aros/iconobject.datatype                          $targetdir/IconDatatypes/datatypes
+cp datatypes/PNGIcons/.bin_i386-aros/pngiconobject.datatype                         $targetdir/IconDatatypes/datatypes
+cp datatypes/AmigaIconObj3.5/.bin_i386-aros/amigaiconobj35.datatype                 $targetdir/IconDatatypes/datatypes
+cp datatypes/GlowIconObject/.bin_i386-aros/glowiconobject.datatype                  $targetdir/IconDatatypes/datatypes
+
+cp libraries/sqlite/.bin_i386-aros/sqlite3.library                                  $targetdir/Libs
+cp libraries/iconobject/.bin_i386-aros/iconobject.library                           $targetdir/Libs
+cp libraries/preferences/.bin_i386-aros/preferences.library                         $targetdir/Libs
+cp libraries/scalosgfx/.bin_i386-aros/scalosgfx.library                             $targetdir/Libs
+
+cp Modules/NewDrawer.MUI/.bin_i386-aros/NewDrawer.module                            $targetdir/Modules
+cp Modules/Delete.MUI/Source/.bin_i386-aros/Delete.module                           $targetdir/Modules
+cp Modules/Empty_Trashcan.MUI/.bin_i386-aros/Empty_Trashcan.module                  $targetdir/Modules
+cp Modules/Exchange.MUI/.bin_i386-aros/Exchange.module                              $targetdir/Modules
+cp Modules/Information.MUI/.bin_i386-aros/Information.module                        $targetdir/Modules
+cp Modules/WindowProperties.MUI/.bin_i386-aros/WindowProperties.module              $targetdir/Modules
+cp Modules/Find.MUI/.bin_i386-aros/Find.module                                      $targetdir/Modules
+cp Modules/FormatDisk.Gadtools/.bin_i386-aros/Format_Disk.module                    $targetdir/Modules
+# cp Modules/FormatDisk.MUI/.bin_i386-aros/FormatDisk.module                          $targetdir/Modules
+cp Modules/Rename.MUI/.bin_i386-aros/Rename.module                                  $targetdir/Modules
+cp Modules/IconProperties.MUI/.bin_i386-aros/IconProperties.module                  $targetdir/Modules
+cp Modules/Execute_Command.MUI/.bin_i386-aros/Execute_Command.module                $targetdir/Modules
+cp Modules/Updater.MUI/.bin_i386-aros/Updater.module                                $targetdir/Modules
+
+# prefsplugins must go into Prefs dir!
+cp Plugins/Prefs/Pattern/.bin_i386-aros/Pattern.prefsplugin                         $targetdir/Prefs
+cp Plugins/Prefs/Palette/.bin_i386-aros/Palette.prefsplugin                         $targetdir/Prefs
+cp Plugins/Prefs/FileTypes/.bin_i386-aros/FileTypes.prefsplugin                     $targetdir/Prefs
+cp Plugins/Prefs/Popupmenu/.bin_i386-aros/PopupMenu.prefsplugin                     $targetdir/Prefs
+cp Plugins/Prefs/Menu/.bin_i386-aros/Menu.prefsplugin                               $targetdir/Prefs
+
+# TODO: add video.pvplugin when it builds
+cp Plugins/Preview/PNGPicture/.bin_i386-aros/pngpicture.pvplugin                    $targetdir/Plugins/Preview
+cp Plugins/Preview/JpegPicture/.bin_i386-aros/jpegpicture.pvplugin                  $targetdir/Plugins/Preview
+cp Plugins/Preview/DefPicture/.bin_i386-aros/defpicture.pvplugin                    $targetdir/Plugins/Preview
+
+cp Plugins/OOP/title_freepens/.bin_i386-aros/title_freepens.plugin                  $targetdir/Plugins/OOP
+cp Plugins/OOP/title_envvar/.bin_i386-aros/title_envvar.plugin                      $targetdir/Plugins/OOP
+cp Plugins/OOP/XTWindows/.bin_i386-aros/xtwindows.plugin                            $targetdir/Plugins/OOP
+cp Plugins/OOP/TitleClock/.bin_i386-aros/title_clock.plugin                         $targetdir/Plugins/OOP
+cp Plugins/OOP/TitleClock/prefs/Title_Clock_Prefs                                   $targetdir/Plugins/OOP
+cp Plugins/OOP/wb39_plugin/.bin_i386-aros/test                                      $targetdir/Plugins/OOP
+cp Plugins/OOP/wb39_plugin/.bin_i386-aros/wb39.plugin                               $targetdir/Plugins/OOP
+cp Plugins/OOP/wb39_plugin/wbrexx/.bin_i386-aros/wbrexx.plugin                      $targetdir/Plugins/OOP
+cp Plugins/OOP/wb39_plugin/volumegauge/.bin_i386-aros/volumegauge.plugin            $targetdir/Plugins/OOP
+cp Plugins/OOP/wb39_plugin/persist/.bin_i386-aros/persist.plugin                    $targetdir/Plugins/OOP
+cp Plugins/OOP/DeviceFilter/.bin_i386-aros/devicefilter.plugin                      $targetdir/Plugins/OOP
+
+cp Plugins/FileTypes/DrawerContents/.bin_i386-aros/drawercontents.plugin            $targetdir/Plugins/FileTypes
+cp Plugins/FileTypes/Picture_Dimensions/.bin_i386-aros/picturedimensions.plugin     $targetdir/Plugins/FileTypes
+cp Plugins/FileTypes/ExifPicture/.bin_i386-aros/exifpicture.plugin                  $targetdir/Plugins/FileTypes
+
+cp Prefs/Pattern/.bin_i386-aros/Scalos_Pattern                                      $targetdir/Prefs
+cp Prefs/MainPrefs/.bin_i386-aros/Scalos_Prefs                                      $targetdir/Prefs
+cp Prefs/Palette/.bin_i386-aros/Scalos_Palette                                      $targetdir/Prefs
+cp Prefs/FileTypes/.bin_i386-aros/Scalos_FileTypes                                  $targetdir/Prefs
+cp Prefs/Menu/.bin_i386-aros/Scalos_Menu                                            $targetdir/Prefs
+
+cp main/Tools/.bin_i386-aros/LoadWB.Scalos                                          $targetdir/Tools
+cp main/Tools/.bin_i386-aros/ScalosSema                                             $targetdir/Tools
+cp main/Tools/.bin_i386-aros/GenMsgIdNames                                          $targetdir/Tools
+cp main/Tools/.bin_i386-aros/ScalosCtrl                                             $targetdir/Tools
+
+cp main/Tools/OpenDrawer/.bin_i386-aros/OpenDrawer                                  $targetdir/Tools
+cp Extras/opendrawer.68k.info                                                       $targetdir/Tools/OpenDrawer.info
+
+# Don't copy non-AROS binaries!
+cp Extras/run.script Extras/browse.script Extras/open_volume.rexx Extras/OpenShell Extras/Quit.rexx     $targetdir/Tools
+
+echo "Exporting default theme and env archive..."
+svn export -q Default_Theme                                                         $targetdir/Themes/Default_Theme
+svn export -q main/envarc/scalos.AROS                                               $targetdir/Env-Archive/Scalos
+cp main/envarc/deficons.prefs                                                       $targetdir/Env-Archive
+
+echo "Copying catalogs..."
+find -iname "*.catalog" >tmpcatalogs
+while read LINE; do
+    target=$targetdir/Catalogs${LINE#*[C|c]atalogs}
+    mkdir -p "${target%/*}"
+    cp "$LINE" "$target"
+done < tmpcatalogs
+rm -f tmpcatalogs
+
+echo "Copying icons..."
+# FIXME
+
+echo "Copying InstallAROS script..."
+cp Installer/InstallAROS $targetdir
+cp Installer/InstallAROS.info $targetdir
+
+echo "Creating startup package..."
+echo 'assign Scalos: ""' >>$targetdir/S/Package-Startup
+echo 'assign Theme: Scalos:Themes/Default_Theme ADD'  >>$targetdir/S/Package-Startup
+
+
+echo "Done"
+
+exit 0

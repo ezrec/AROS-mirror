@@ -1,0 +1,647 @@
+; ScalosPattern.ct
+## version $VER: ScalosPattern.catalog 40.12 (15 May 2005 09:36:09)
+## codeset 0
+## language español
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Plugin Patrones Scalos
+;
+;
+MSGID_REGISTER_PATTERNLIST
+Lista de patrones
+;
+;
+MSGID_REMAPNAME
+No remapear
+;
+;
+MSGID_RENDERTYPE_TILED
+Repetir
+;
+;
+MSGID_NEWNAME
+Nuevo \033I[6:19]
+;
+;
+MSGID_DELNAME
+Eliminar
+;
+;
+MSGID_SAVEBUTTON
+Guardar
+;
+;
+MSGID_USEBUTTON
+Usar
+;
+;
+MSGID_CANCELBUTTON
+Cancelar
+;
+;
+MSGID_SCREENNAME
+Workbench
+;
+;
+MSGID_WINDOWNAME
+Ventana
+;
+;
+MSGID_MENU_PROJECT_OPEN
+Abrir...
+;
+;
+MSGID_MENU_PROJECT_OPEN_SHORT
+B
+;
+;
+MSGID_MENU_PROJECT_SAVEAS
+Guardar como...
+;
+;
+MSGID_MENU_PROJECT_SAVEAS_SHORT
+G
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Salir
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+S
+;
+;
+MSGID_MENU_PROJECT
+Proyecto
+;
+;
+MSGID_MENU_EDIT_LASTSAVED
+Último guardado
+;
+;
+MSGID_MENU_EDIT_LASTSAVED_SHORT
+Ú
+;
+;
+MSGID_MENU_EDIT
+Editar
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS
+¿Crear icono?
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS_SHORT
+I
+;
+;
+MSGID_MENU_SETTINGS
+Valores
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS
+Predeterminados
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS_SHORT
+P
+;
+;
+MSGID_MENU_EDIT_RESTORE
+Recuperar
+;
+;
+MSGID_MENU_EDIT_RESTORE_SHORT
+C
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+Acerca de MUI...
+;
+;
+MSGID_RENDERTYPE_FITSIZE
+Ajustar tamaño
+;
+;
+MSGID_CENTEREDNAME
+Centrado
+;
+;
+MSGID_PRECEXACTNAME
+Exacto
+;
+;
+MSGID_PRECIMAGENAME
+Imagen
+;
+;
+MSGID_PRECICONNAME
+Icono
+;
+;
+MSGID_PRECGUINAME
+GUI
+;
+;
+MSGID_PRECNAME
+Precisión de color:
+;
+;
+MSGID_ENHANCNAME
+Usar GUIGfx:
+;
+;
+MSGID_NUMCOLSNAME
+Peso de color:
+;
+;
+MSGID_ENHANCOPTSNAME
+Opciones GUIGfx
+;
+;
+MSGID_AUTODITHERNAME
+Autotramado
+;
+;
+MSGID_DITHERMODENAME
+Tramado:
+;
+;
+MSGID_DITHERAMOUNTNAME
+Cantidad de trama:
+;
+;
+MSGID_DITHERMODE1NAME
+Ninguno
+;
+;
+MSGID_DITHERMODE2NAME
+Floyd-Steinberg
+;
+;
+MSGID_DITHERMODE3NAME
+Aleatorio
+;
+;
+MSGID_PICTURENAME
+Imagen
+;
+;
+MSGID_PATTERNNAME
+Patrón
+;
+;
+MSGID_REGISTER_DEFAULTS
+Predeterminados
+;
+;
+MSGID_DEFWBNAME
+Escritorio:
+;
+;
+MSGID_DEFSCREENNAME
+Pantalla:
+;
+;
+MSGID_DEFWINNAME
+Ventana:
+;
+;
+MSGID_ASYNCNAME
+Cálculo asíncono:
+;
+;
+MSGID_FRIENDNAME
+Usar FriendBitmap:
+;
+;
+MSGID_NONE_PRIORITY
+Ninguno
+;
+;
+MSGID_RELAYOUTNAME
+Redibujar siempre:
+;
+;
+MSGID_RANDOMNAME
+Elegir cada vez:
+;
+;
+MSGID_TASKPRINAME
+Prioridad de la tarea:
+;
+;
+MSGID_TEXTNAME
+Modo texto:
+;
+;
+MSGID_CHECKMARKGADBUBBLE
+No remapear los colores
+;
+;
+MSGID_CHECKMARKASYNCBUBBLE
+Calcular la imagen mientras se leen los iconos\n\
+en lugar de esperar a que se muestren
+;
+;
+MSGID_CHECKMARKFRIENDBUBBLE
+Acelerar el refresco utilizando un segundo bitmap\n\
+Se ignora si utiliza picture.datatype V43\n\
+o GUIGfx, porque lo hacen automáticamente
+;
+;
+MSGID_CHECKMARKENHBUBBLE
+Usar la librería GUIGfx.\n\
+Proporciona rutinas muy rápidas para\n\
+reducción de color y tramado
+;
+;
+MSGID_CHECKMARKAUTODITHERBUBBLE
+Activar automáticamente el tramado si la\n\
+imagen va a perder muchos colores
+;
+;
+MSGID_CHECKMARKRELAYOUTBUBBLE
+Cambia el tamaño de la imagen cada vez\n\
+que se cambia el de la ventana
+;
+;
+MSGID_CHECKMARKRANDOMBUBBLE
+Para patrones con el mismo número,\n\
+elegirlos al azar cada vez que se abre\n\
+una ventana, en lugar de hacerlo sólo la\n\
+primera vez
+;
+;
+MSGID_SAVEBUTTONBUBBLE
+Guardar los valores y salir
+;
+;
+MSGID_USEBUTTONBUBBLE
+Usar los valores y salir
+;
+;
+MSGID_CANCELBUTTONBUBBLE
+Salir sin usar ni guardar los valores
+;
+;
+MSGID_NUMBUTTONBUBBLE
+El número asigna el patrón al escritorio, pantalla,\n\
+ventana y/o ventana en modo texto
+;
+;
+MSGID_PRECSLIDERBUBBLE
+Precisión del color para la imagen
+;
+;
+MSGID_COLORSSLIDERBUBBLE
+Cantidad de lápices libres que\n\
+deben utilizarse para la imagen
+;
+;
+MSGID_CYCLEDITHERMODEBUBBLE
+Rutina a seguir cuando no hay lápices\n\
+libres para la imagen. Entonces, se crea el color\n\
+con una trama de colores próximos
+;
+;
+MSGID_SLIDERDITHERAMOUNTBUBBLE
+Parámetro para la rutina de tramado
+;
+;
+MSGID_SLIDERWBBUBBLE
+El número del patrón para el escritorio.
+;
+;
+MSGID_SLIDERSCREENBUBBLE
+El número del patrón para la pantalla (no es visible\n\
+si Scalos está en pantalla completa)
+;
+;
+MSGID_SLIDERWINBUBBLE
+El número del patrón para las\n\
+ventanas que muestran iconos
+;
+;
+MSGID_SLIDERTEXTBUBBLE
+El número del patrón para las\n\
+ventanas que muestran texto
+;
+;
+MSGID_SLIDERTASKPRIBUBBLE
+Prioridad de la tarea asíncrona\n\
+que muestra los iconos
+;
+;
+MSGID_PREVIEWIMAGEBUBBLE
+Mostrar la imagen seleccionada
+;
+;
+MSGID_CYCLEGADBUBBLE
+El patrón puede repetirse en cuadrícula,\n\
+o estirarse, para que ocupe todo el\n\
+espacio disponible
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+Acerca...
+;
+;
+MSGID_ABOUTREQOK
+_OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos pattern preferences V%ld.%ld\033n\n\
+%s\n\
+© 1999%s The Scalos Team\n\
+Based on original code by Stefan Sommerfeld of ALiENDESiGN!\n\
+Bubbles done by Crayor.
+;
+;
+MSGID_COLUMNTITLE_1
+\33bNr.
+;
+;
+MSGID_COLUMNTITLE_2
+\33bFile name
+;
+;
+MSGID_SHORTHELP_NEWBUTTON
+Press this button to create a \n\
+new pattern entry
+;
+;
+MSGID_SHORTHELP_DELBUTTON
+Press this button to delete the \n\
+currently selected pattern entry.
+;
+;
+MSGID_SHORTHELP_SAVEBUTTON
+Press this button to save \n\
+the current settings to\n\
+\"ENVARC:Scalos/Pattern.prefs\".
+;
+;
+MSGID_SHORTHELP_USEBUTTON
+Press this button to save \n\
+the current settings to\n\
+\"ENV:Scalos/Pattern.prefs\".
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Press this button to abort \n\
+and discard all changes.
+;
+;
+MSGID_REQTITLE_SAVEERROR
+Error writing pattern preferences\n\
+file \"%s\"\n\
+%s
+;
+;
+MSGID_REQTITLE_READERROR
+Error reading pattern preferences\n\
+file \"%s\"\n\
+%s
+;
+; new in 40.4
+;
+MSGID_PLUGIN_LIST_TITLE
+Pattern
+;
+;
+MSGID_GROUP_MISCELLANEOUS
+Miscellaneous
+;
+;
+MSGID_GROUP_PATTERNNUMBERS
+Pattern numbers
+;
+;
+MSGID_MENU_ENABLE_PREVIEW
+Show Preview?
+;
+;
+MSGID_MENU_AUTO_PREVIEW
+Auto Preview?
+;
+; new in 40.6
+;
+; +++translateme+++
+MSGID_SHORTHELP_LAMP_CHANGED
+This lamp indicator changes from \033bOff\033n\n\
+to \033bOk\033n when the settings have been\n\
+modified since initial loading.
+;This lamp indicator changes from \033bOff\033n\n\
+;to \033bOk\033n when the settings have been\n\
+;modified since initial loading.
+;
+; new in 40.7
+;
+MSGID_COLUMNTITLE_3
+\33bPreview
+;\33bPreview
+;
+;
+MSGID_CREATING_THUMBNAIL
+\33cCreating Thumbnail for
+;\33cCreating Thumbnail for
+;
+;
+MSGID_LOADING_THUMBNAIL
+\33cLoading Thumbnail for
+;\33cLoading Thumbnail for
+;
+;
+MSGID_PROGRESS_THUMBNAILS
+\33c%ld/%ld
+;\33c%ld/%ld
+;
+;
+MSGID_WINDOW_STARTUP
+Scalos PatternPrefs startup
+;Scalos PatternPrefs startup
+;
+;
+MSGID_STARTUP_CREATING
+On initial start, thumbnails are created for every \
+pattern. Unfortunately this takes some time. \
+However, thumbnail bitmaps are saved together \
+with the standard pattern preferences.\n\
+After the thumbnails have been saved, \
+future startups will be \033bmuch faster\033n.
+;On initial start, thumbnails are created for every \
+;pattern. Unfortunately this takes some time. \
+;However, thumbnail bitmaps are saved together \
+;with the standard pattern preferences.\n\
+;After the thumbnails have been saved, \
+;future startups will be \033bmuch faster\033n.
+;
+;
+MSGID_MENU_ENABLE_THUMBNAILS
+Display Thumbnails?
+;Display Thumbnails?
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Scalos Pattern Prefs startup failed
+;Scalos Pattern Prefs startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Try again|Quit
+;Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+The class is not installed.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+\n\
+Currently installed is V%lu.%lu, please upgrade!
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+%lu.%lu is currently in use by other applications.\n\
+\n\
+Once you have installed the required version,\n\
+close all MUI programs, make sure the old class\n\
+is flushed from memory and try again.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;
+MSGID_COLUMNTITLE_4
+\33bType
+;
+;-----------------------------------------------------------
+;
+MSGID_PATTERNTYPE_DESKTOP
+DE
+;
+;
+MSGID_PATTERNTYPE_SCREEN
+SC
+;
+;
+MSGID_PATTERNTYPE_ICONWINDOW
+IW
+;
+;
+MSGID_PATTERNTYPE_TEXTWINDOW
+TW
+;
+;
+MSGID_PATTERNTYPE_NONE
+
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_RELOAD_THUMBNAILS
+Reload Thumbnails
+;Reload Thumbnails
+;
+;
+MSGID_LOADING_THUMBNAILS
+\033cLoading Thumbnails...
+;\033cLoading Thumbnails...
+;
+;-----------------------------------------------------------
+;+++translateme+++
+MSGID_REGISTER_BACKGROUNDCOLORS
+Background Colours
+;Background Colours
+;
+;+++translateme+++
+MSGID_BGTYPE_NONE
+None
+;None
+;
+;+++translateme+++
+MSGID_LABEL_CYCLEBACKGROUND
+Background Type:
+;Background Type:
+;
+;+++translateme+++
+MSGID_BGTYPE_SINGLECOLOR
+Single Colour
+;Single Colour
+;
+;+++translateme+++
+MSGID_BGTYPE_HOR_GRADIENT
+Horizontal gradient
+;Horizontal gradient
+;
+;+++translateme+++
+MSGID_BGTYPE_VERT_GRADIENT
+Vertical gradient
+;Vertical gradient
+;
+;+++translateme+++
+MSGID_SHORTHELP_BACKGROUNDCOLOR1
+Here you can adjust the window background color.\n\
+This is only possible with \033bcentered\033n and\n\
+\033bcolor-only\033n pattern type.\n\
+For \033bgradient\33n pattern types, you can\n\
+select the top (vertical gradient) or left (horizontal gradient) colour here.
+;Here you can adjust the window background color.\n\
+;This is only possible with \033bcentered\033n and\n\
+;\033bcolor-only\033n pattern type.\n\
+;For \033bgradient\33n pattern types, you can\n\
+;select the top (vertical gradient) or left (horizontal gradient) colour here.
+;
+;+++translateme+++
+MSGID_SHORTHELP_BACKGROUNDCOLOR2
+Here you can adjust the secondary window background color.\n\
+For \033bgradient\33n pattern types, you can\n\
+select the bottom (vertical gradient) or right\n\
+(horizontal gradient) colour here.
+;Here you can adjust the secondary window background color.\n\
+;For \033bgradient\33n pattern types, you can\n\
+;select the bottom (vertical gradient) or right\n\
+;(horizontal gradient) colour here.
+;
+;+++translateme+++
+MSGID_SHORTHELP_CYCLEBACKGROUND
+This gadget selects the type of background that\n\
+is drawn besides the selected image.\n\
+It is selectable only in \033bCentered\033n mode because\n\
+in other modes, there is no room around the image where\n\
+the background color could be seen.
+;This gadget selects the type of background that\n\
+;is drawn besides the selected image.\n\
+;It is selectable only in \033bCentered\033n mode because\n\
+;in other modes, there is no room around the image where\n\
+;the background color could be seen.
+;
+;+++translateme+++
+MSGID_SCALEDMINNAME
+Proportionally Scaled (min)
+;Proportionally Scaled (min)
+;
+;+++translateme+++
+MSGID_SCALEDMAXNAME
+Proportionally Scaled (max)
+;Proportionally Scaled (max)
+;
+;-----------------------------------------------------------
+;

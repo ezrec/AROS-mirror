@@ -1,0 +1,3106 @@
+; // $Date: 2008-01-19 19:30:12 +0200 (Sa, 19 Jan 2008) $
+; // $Revision: 2765 $
+;
+; $VER: Scalos Beta Installation Script 4.3 (06.04.2010) (c)2005-2010 THE SALOS TEAM
+; Scalos Beta Installation Script written by:
+; Name  : Jean-Marie COAT <agalliance@free.fr>
+; Name  : Jürgen Lachmann <juergen_lachmann@t-online.de>
+;
+; @user-level: 0 novice, 1 average et 2 expert
+;
+
+
+(set #installer-version (/ @installer-version 65536))
+
+;-----------------------------
+(set #Smdmatrix ("SVGA.png"))
+(set #Hmdmatrix ("MVGA.png"))
+(set #Lmdmatrix ("VGA.png"))
+(set #Deficonify ("def_iconify.iff"))
+(set #PointerIcons ("PointerIcons.iff"))
+(set #StatusBar ("StatusBar.iff"))
+
+(set #licencetext 'History')
+
+(if (>= #installer-version 44)
+	(
+	(effect "center" "radial" $000000 $039A00) ;$000000
+
+	(set #w (querydisplay "screen" "width"))
+	(set #h (querydisplay "screen" "height"))
+	(set #d (querydisplay "screen" "depth"))
+	(set #c (querydisplay "screen" "colors"))
+	)
+)
+
+;=====================================================
+
+(set @language (getenv "Language" ))
+
+
+(set @applicationdate (cat "(06.04.2010)" ))
+
+(set #scalosresident 0)
+(set #scalosresident (getversion "scalos.library" (resident)))
+(set #scalosresidentVer (/ #scalosresident 65536))
+(set #scalosresidentRev (- #scalosresident (* #scalosresidentVer 65536) ))
+
+(set #tranceversion 0)
+(set #tranceversion (/ (getversion "trance.library" (resident)) 65536))
+(set #newlibversion 0)
+(set #newlibversion (/ (getversion "newlib.library" (resident)) 65536))
+
+(set #wbversion 0)
+(set #MOS 0)
+(set #OS4 0)
+(if (> #tranceversion 40)
+	(
+	(set #MOS 1)
+	(set #wbversion 50)
+	(set cpuadd-1 ".060")
+	)
+	(
+	(set #MOS 0)
+	(if (>= #newlibversion 52)
+		(set #OS4 1)
+		(set #OS4 0)
+	)
+	(set #wbversion (/ (getversion "Libs:version.library") 65536))
+	)
+)
+
+(set #scaversion (getversion "scalos" ))
+(set #scaver (/ #scaversion 65536) )
+(set #scarev (- #scaversion (* #scaver 65536) ))
+
+;(message "trance.library version " #tranceversion)
+;(message "newlib.library version " #newlibversion)
+;(message "wb version " #wbversion)
+
+(set #cat-app-name
+	(cat
+		"Scalos Beta "#scaver"."#scarev""
+	)
+)
+(set @app-name #cat-app-name)
+
+(set foundthemes 0)
+
+;===================== VERSION ICONOBJECT DATATYPES =================================
+;= PNG =
+(set #dtversionpng (getversion "Scalos:Icondatatypes/datatypes/pngiconobject.datatype" ))
+(set #dtverpng (/ #dtversionpng 65536) )
+(set #dtrevpng (- #dtversionpng (* #dtverpng 65536) ))
+
+;============================== AMIGAICONOBJ35 ======================================
+
+(set #dtversion_aiconobj35 (getversion "Scalos:Icondatatypes/datatypes/amigaiconobj35.datatype" ))
+(set #dtver_aiconobj35 (/ #dtversion_aiconobj35 65536) )
+(set #dtrev_aiconobj35 (- #dtversion_aiconobj35 (* #dtver_aiconobj35 65536) ))
+
+;============================= AMIGAICONOBJECT ======================================
+
+(set #dtversion_aiconobject (getversion "Scalos:Icondatatypes/datatypes/amigaiconobject.datatype" ))
+(set #dtver_aiconobject (/ #dtversion_aiconobject 65536) )
+(set #dtrev_aiconobject (- #dtversion_aiconobject (* #dtver_aiconobject 65536) ))
+
+;=============================== ICONOBJECT =========================================
+
+(set #dtversion_iconobject (getversion "Scalos:Icondatatypes/datatypes/iconobject.datatype" ))
+(set #dtver_iconobject (/ #dtversion_iconobject 65536) )
+(set #dtrev_iconobject (- #dtversion_iconobject (* #dtver_iconobject 65536) ))
+
+;============================== NEWICONOBJECT =======================================
+
+(if (= #OS4 0)
+	(
+	(set #dtversion_niconobject (getversion "Scalos:Icondatatypes/datatypes/newiconobject.datatype" ))
+	(set #dtver_niconobject (/ #dtversion_niconobject 65536) )
+	(set #dtrev_niconobject (- #dtversion_niconobject (* #dtver_niconobject 65536) ))
+	)
+)
+
+;============================== GLOWICONOBJECT =======================================
+
+(set #dtversion_glowiconobject (getversion "Scalos:Icondatatypes/datatypes/glowiconobject.datatype" ))
+(set #dtver_glowiconobject (/ #dtversion_glowiconobject 65536) )
+(set #dtrev_glowiconobject (- #dtversion_glowiconobject (* #dtver_glowiconobject 65536) ))
+
+
+;=========================== DIRECTORY Classes ======================================
+
+(set #defclasses "Scalos:Icondatatypes/Datatypes")
+
+;====================================================================================
+
+(set #catctrl
+	(cat
+		"Installing useful tools ?\n"
+	)
+)
+
+(set #install-exit2
+	(cat
+		"\nThank you for installing Scalos\n"
+		"and have fun with it!"
+	)
+)
+
+(set #makedir-scalos "Creating Scalos-Destination...")
+
+(set #makedir-Prefs-scalos "Creating Prefs-Destination...")
+
+(set #CatMOsLibs (cat "Installing MorphOS library:\n"))
+(set #CatOsLibs  (cat "Installing library:\n"))
+
+;------------------------------------------------------------
+;---  CHECK BEST IMAGE SIZE  --------------------------------
+;------------------------------------------------------------
+
+(if (>= #installer-version 44)
+	(
+	(set #hires 0)
+
+	(if (> #c 32)
+		(
+		(if (> #h 590)
+			(
+			(set #hires 2)
+			)
+			(
+			(set #hires 1)
+			)
+		)
+		(if (> #h 800)
+			(
+			(set #hires 3)
+			)
+		)
+		)
+	)
+
+	(if (<= #c 32)
+		(
+		(if (> #h 590)
+			(
+			(set #hires 2)
+			)
+			(
+			(set #hires 1)
+			)
+		)
+		)
+	)
+
+
+	(if #hires
+		(
+		(if (= #hires 1)
+			(
+			(set #mdmatrix #Lmdmatrix)
+			)
+		)
+		(if (= #hires 2)
+			(
+			(set #mdmatrix #Hmdmatrix)
+			)
+		)
+		(if (= #hires 3)
+			(
+			(set #mdmatrix #Smdmatrix)
+			)
+		)
+		(showmedia "mdmatrix" (tackon "GFX" #mdmatrix) 'center' 'none' 0)
+		)
+	)
+	)
+)
+;----------------------------------------------------------------------------
+;==  PROCEDURE  ASKABOUTCPU =================================================
+;----------------------------------------------------------------------------
+
+(procedure askaboutcpu
+
+	(set cpu (database "cpu"))
+	(if	(= cpu 68020)
+		(set cpuadd-1 ".020")
+	)
+	(if	(= cpu 68030)
+		(set cpuadd-1 ".020")
+	)
+	(if	(= cpu 68040)
+		(set cpuadd-1 ".040")
+	)
+	(if	(= cpu 68060)
+		(set cpuadd-1 ".060")
+	)
+)
+
+;----------------------------------------------------------------------------
+;==  PROCEDURE  CLOSEMEDIA  =================================================
+;----------------------------------------------------------------------------
+
+(procedure P_closemedia #media
+	(if (>= #installer-version 44)
+		(closemedia #media)
+	)
+)
+
+;----------------------------------------------------------------------------
+;==  PROCEDURE  REBOOT  =====================================================
+;----------------------------------------------------------------------------
+
+(procedure P_EndInstall #boot
+	(if #boot
+		(
+			(message #install-exit2)
+			(P_closemedia mdmatrix)
+			(if (= #OS4 0)
+				(reboot)
+				;else
+				(run C:reboot)
+			)
+		)
+		(
+			(P_closemedia mdmatrix)
+			(exit #install-exit2) ; (quiet))
+		)
+	)
+)
+
+;----------------------------------------------------------------------------
+;==  PROCEDURE  REPLACE =====================================================
+;----------------------------------------------------------------------------
+
+(procedure P_Replace #nwb #owb
+	(set #sverwb
+		(cat
+			"File to copy:\n"
+			""#nwb" replacement.\n"
+			"Old version will be replaced:\n"
+			""#owb".\n"
+		)
+	)
+)
+
+;----------------------------------------------------------------------------
+;==  PROCEDURE  SIMPLE COPY =================================================
+;----------------------------------------------------------------------------
+
+(procedure P_SimpleCopy #text #src #dest #helptxt
+		(copyfiles
+			(prompt	#text)
+			(source	#src)
+			(dest	#dest)
+			(help   #helptxt)
+			(files)
+		)
+)
+
+;----------------------------------------------------------------------------
+;==  PROCEDURE  SIMPLE COPY WITH ICON =======================================
+;----------------------------------------------------------------------------
+
+(procedure P_SimpleCopyInfo #text #src #dest #helptxt
+		(copyfiles
+			(prompt	#text)
+			(source	#src)
+			(dest	#dest)
+			(help   #helptxt)
+			(files)
+			(infos)
+		)
+)
+
+;----------------------------------------------------------------------------
+;==  PROCEDURE  SIMPLE AVERAGE / EXPERT =====================================
+;----------------------------------------------------------------------------
+
+(procedure P_SimpleCopyAvExp #text #src #dest #helptxt
+		(copyfiles
+			(prompt	#text)
+			(source	#src)
+			(dest	#dest)
+			(help   #helptxt)
+			(confirm "average")
+			(files)
+		)
+)
+
+;----------------------------------------------------------------------------
+;==  PROCEDURE  SIMPLE COPY FOR NOVICE ======================================
+;----------------------------------------------------------------------------
+
+(procedure P_SimpleCopyNovice #ntext #nsrc #ndest #nhelptxt
+		(copyfiles
+			(prompt	#ntext)
+			(source	#nsrc)
+			(dest	#ndest)
+			(help   #nhelptxt)
+			(confirm 0)
+			(files)
+		)
+)
+
+;----------------------------------------------------------------------------
+;==    PROCEDURE P_VERIFYTHEMES   =====================================
+;----------------------------------------------------------------------------
+
+(procedure P_VerifyThemes
+
+	(set ReplaceWinStatusBar 0)
+	(set foundstatusbar 0)
+
+    	(set #b 0)
+    	(while
+		(set brush
+			(select #b
+				"Themes/default/AboutBackground"
+				"Themes/default/ScalosAboutLogo"
+				"Themes/default/FileTransBackground"
+				"Themes/default/ScalosSplashLogo"
+				"Themes/default/ScalosLogo"
+				"Themes/default/SplashBackground"
+				"Themes/default/ToolTipBackground"
+				"Themes/default/About/Backfill"
+				"Themes/default/About/ButtonFlushSelected"
+				"Themes/default/About/ButtonFlushNormal"
+				"Themes/default/About/ButtonFlushDisabled"
+				"Themes/default/About/ButtonInfoSelected"
+				"Themes/default/About/ButtonInfoNormal"
+				"Themes/default/About/ButtonInfoDisabled"
+				"Themes/default/About/ButtonStopSelected"
+				"Themes/default/About/ButtonStopNormal"
+				"Themes/default/About/ButtonStopDisabled"
+				"Themes/default/About/ButtonOkSelected"
+				"Themes/default/About/ButtonOkNormal"
+				"Themes/default/About/ButtonOkDisabled"
+				"Themes/default/About/ButtonRebootSelected"
+				"Themes/default/About/ButtonRebootNormal"
+				"Themes/default/About/ButtonRebootDisabled"
+				"Themes/default/Desktop/Background"
+				"Themes/default/FileTypes/archiveextract"
+				"Themes/default/FileTypes/Browse"
+				"Themes/default/FileTypes/Close"
+				"Themes/default/FileTypes/CreateThumbnail"
+				"Themes/default/FileTypes/Delete"
+				"Themes/default/FileTypes/Edit"
+				"Themes/default/FileTypes/EditCopy"
+				"Themes/default/FileTypes/EditCut"
+				"Themes/default/FileTypes/EditPaste"
+				"Themes/default/FileTypes/Find"
+				"Themes/default/FileTypes/Information"
+				"Themes/default/FileTypes/NewDir"
+				"Themes/default/FileTypes/Open"
+				"Themes/default/FileTypes/Properties"
+				"Themes/default/FileTypes/Rename"
+				"Themes/default/FileTypes/SizeToFit"
+				"Themes/default/FileTypes/Update"
+				"Themes/default/Window/Background"
+				"Themes/default/Window/SortDescending"
+				"Themes/default/Window/SortAscending"
+				"Themes/default/Window/Textbackground"
+				"Themes/default/Window/def_iconify.info"
+				"Themes/default/window/ControlBar/Background"
+				"Themes/default/window/ControlBar/BrowseDisabled"
+				"Themes/default/window/ControlBar/BrowseNormal"
+				"Themes/default/window/ControlBar/BrowseSelected"
+				"Themes/default/window/ControlBar/ButtonAboutDisabled"
+				"Themes/default/window/ControlBar/ButtonAboutNormal"
+				"Themes/default/window/ControlBar/ButtonAboutSelected"
+				"Themes/default/window/ControlBar/ButtonBackDisabled"
+				"Themes/default/window/ControlBar/ButtonBackNormal"
+				"Themes/default/window/ControlBar/ButtonBackSelected"
+				"Themes/default/window/ControlBar/ButtonForwardDisabled"
+				"Themes/default/window/ControlBar/ButtonForwardNormal"
+				"Themes/default/window/ControlBar/ButtonForwardSelected"
+				"Themes/default/window/ControlBar/ButtonInfoDisabled"
+				"Themes/default/window/ControlBar/ButtonInfoNormal"
+				"Themes/default/window/ControlBar/ButtonInfoSelected"
+				"Themes/default/window/ControlBar/ButtonPropertiesDisabled"
+				"Themes/default/window/ControlBar/ButtonPropertiesNormal"
+				"Themes/default/window/ControlBar/ButtonPropertiesSelected"
+				"Themes/default/window/ControlBar/ButtonUpDisabled"
+				"Themes/default/window/ControlBar/ButtonUpNormal"
+				"Themes/default/window/ControlBar/ButtonUpSelected"
+				"Themes/default/window/ControlBar/CycleBackground"
+				"Themes/default/window/ControlBar/CycleNormal"
+				"Themes/default/window/ControlBar/CycleSelected"
+				"Themes/default/window/ControlBar/CyclePopupBackground"
+				"Themes/default/window/ControlBar/HistoryNormal"
+				"Themes/default/window/ControlBar/HistorySelected"
+				"Themes/default/window/ControlBar/HistoryPopupBackground"
+				"Themes/default/window/ControlBar/ShowModeCycleFrame"
+				"Themes/default/window/ControlBar/ViewByCycleFrame"
+				"Themes/default/window/StatusBar/Background"
+				"Themes/default/window/StatusBar/PadLock"
+				"Themes/default/window/StatusBar/Reading"
+				"Themes/default/window/StatusBar/ShowAll"
+				"Themes/default/window/StatusBar/ThumbnailsAlways"
+				"Themes/default/window/StatusBar/ThumbnailsAsDefault"
+				"Themes/default/window/StatusBar/ThumbnailsGenerate"
+				"Themes/default/window/StatusBar/Typing"
+				"Themes/default/Menu/DropMenu/Abort"
+				"Themes/default/Menu/DropMenu/Copy"
+				"Themes/default/Menu/DropMenu/Move"
+                                "Themes/default/PointerIcons/copying.info"
+				"Themes/default/PointerIcons/forbidden.info"
+				"Themes/default/PointerIcons/makelink.info"
+				"Themes/default/PointerIcons/moving.info"
+				"Themes/default/Prefs/Modules/delete"
+				"Themes/default/Prefs/Modules/empty_trashcan"
+				"Themes/default/Prefs/Modules/execute_command"
+				"Themes/default/Prefs/Modules/iconproperties"
+				"Themes/default/Prefs/Modules/information"
+				"Themes/default/Prefs/Modules/newdrawer"
+				"Themes/default/Prefs/Modules/reboot"
+				"Themes/default/Prefs/Modules/rename"
+				"Themes/default/Prefs/Modules/systeminfo"
+				"Themes/default/Prefs/Modules/windowproperties"
+				"Themes/default/Prefs/Pages/about"
+				"Themes/default/Prefs/Pages/desktop"
+				"Themes/default/Prefs/Pages/dragndrop"
+				"Themes/default/Prefs/Pages/filedisplay"
+				"Themes/default/Prefs/Pages/icons"
+				"Themes/default/Prefs/Pages/misc"
+				"Themes/default/Prefs/Pages/modules"
+				"Themes/default/Prefs/Pages/paths"
+				"Themes/default/Prefs/Pages/plugins"
+				"Themes/default/Prefs/Pages/startup"
+				"Themes/default/Prefs/Pages/truetypefonts"
+				"Themes/default/Prefs/Pages/windows"
+				"Themes/default/Icons/Overlay/LeftOut"
+				"Themes/default/Icons/Overlay/ReadOnly"
+				"Themes/default/Icons/Overlay/Thumbnail"
+				""
+				)
+			)
+			(
+			(set #Theme-WinStatusBar-Installed (tackon "Scalos:" brush))
+			(if (exists #Theme-WinStatusBar-Installed (NOREQ))
+				(
+				(set ReplaceWinStatusBar 1)
+				;(message "Number: " #b "\nBrush: " #Theme-WinStatusBar-Installed)
+				)
+			)
+	      		(set #b (+ #b 1))
+		)
+	)
+
+	(if ReplaceWinStatusBar
+		(
+		(set #ask-replace-winstatusbar
+			(cat
+				"Installer found themes installed.\n"
+				"Do you want to replace them?\n"
+				"A backup copy will be created in 'Sys:Storage/Scalos'\n\n"
+				"NOTE: If an old backup copy already exists, it will be replaced!"
+			)
+		)
+		(set foundstatusbar
+			(askbool
+				(prompt #ask-replace-winstatusbar)
+				(help #help-themes-statusbar)
+				(default 0)
+				)
+			)
+		)
+	)
+
+ 	(set #b 0)
+    	(while
+		(set brush
+			(select #b
+				"Themes/default/AboutBackground"
+				"Themes/default/ScalosAboutLogo"
+				"Themes/default/FileTransBackground"
+				"Themes/default/ScalosSplashLogo"
+				"Themes/default/ScalosLogo"
+				"Themes/default/SplashBackground"
+				"Themes/default/ToolTipBackground"
+				"Themes/default/About/Backfill"
+				"Themes/default/About/ButtonFlushSelected"
+				"Themes/default/About/ButtonFlushNormal"
+				"Themes/default/About/ButtonFlushDisabled"
+				"Themes/default/About/ButtonInfoSelected"
+				"Themes/default/About/ButtonInfoNormal"
+				"Themes/default/About/ButtonInfoDisabled"
+				"Themes/default/About/ButtonStopSelected"
+				"Themes/default/About/ButtonStopNormal"
+				"Themes/default/About/ButtonStopDisabled"
+				"Themes/default/About/ButtonOkSelected"
+				"Themes/default/About/ButtonOkNormal"
+				"Themes/default/About/ButtonOkDisabled"
+				"Themes/default/About/ButtonRebootSelected"
+				"Themes/default/About/ButtonRebootNormal"
+				"Themes/default/About/ButtonRebootDisabled"
+				"Themes/default/Desktop/Background"
+				"Themes/default/FileTypes/archiveextract"
+				"Themes/default/FileTypes/Browse"
+				"Themes/default/FileTypes/Close"
+				"Themes/default/FileTypes/CreateThumbnail"
+				"Themes/default/FileTypes/Delete"
+				"Themes/default/FileTypes/Edit"
+				"Themes/default/FileTypes/EditCopy"
+				"Themes/default/FileTypes/EditCut"
+				"Themes/default/FileTypes/EditPaste"
+				"Themes/default/FileTypes/Find"
+				"Themes/default/FileTypes/Information"
+				"Themes/default/FileTypes/NewDir"
+				"Themes/default/FileTypes/Open"
+				"Themes/default/FileTypes/Properties"
+				"Themes/default/FileTypes/Rename"
+				"Themes/default/FileTypes/SizeToFit"
+				"Themes/default/FileTypes/Update"
+				"Themes/default/Window/Background"
+				"Themes/default/Window/SortDescending"
+				"Themes/default/Window/SortAscending"
+				"Themes/default/Window/Textbackground"
+				"Themes/default/Window/def_iconify.info"
+				"Themes/default/window/ControlBar/Background"
+				"Themes/default/window/ControlBar/BrowseDisabled"
+				"Themes/default/window/ControlBar/BrowseNormal"
+				"Themes/default/window/ControlBar/BrowseSelected"
+				"Themes/default/window/ControlBar/ButtonAboutDisabled"
+				"Themes/default/window/ControlBar/ButtonAboutNormal"
+				"Themes/default/window/ControlBar/ButtonAboutSelected"
+				"Themes/default/window/ControlBar/ButtonBackDisabled"
+				"Themes/default/window/ControlBar/ButtonBackNormal"
+				"Themes/default/window/ControlBar/ButtonBackSelected"
+				"Themes/default/window/ControlBar/ButtonForwardDisabled"
+				"Themes/default/window/ControlBar/ButtonForwardNormal"
+				"Themes/default/window/ControlBar/ButtonForwardSelected"
+				"Themes/default/window/ControlBar/ButtonInfoDisabled"
+				"Themes/default/window/ControlBar/ButtonInfoNormal"
+				"Themes/default/window/ControlBar/ButtonInfoSelected"
+				"Themes/default/window/ControlBar/ButtonPropertiesDisabled"
+				"Themes/default/window/ControlBar/ButtonPropertiesNormal"
+				"Themes/default/window/ControlBar/ButtonPropertiesSelected"
+				"Themes/default/window/ControlBar/ButtonUpDisabled"
+				"Themes/default/window/ControlBar/ButtonUpNormal"
+				"Themes/default/window/ControlBar/ButtonUpSelected"
+				"Themes/default/window/ControlBar/CycleBackground"
+				"Themes/default/window/ControlBar/CycleNormal"
+				"Themes/default/window/ControlBar/CycleSelected"
+				"Themes/default/window/ControlBar/CyclePopupBackground"
+				"Themes/default/window/ControlBar/HistoryNormal"
+				"Themes/default/window/ControlBar/HistorySelected"
+				"Themes/default/window/ControlBar/HistoryPopupBackground"
+				"Themes/default/window/ControlBar/ShowModeCycleFrame"
+				"Themes/default/window/ControlBar/ViewByCycleFrame"
+				"Themes/default/window/StatusBar/Background"
+				"Themes/default/window/StatusBar/PadLock"
+				"Themes/default/window/StatusBar/Reading"
+				"Themes/default/window/StatusBar/ShowAll"
+				"Themes/default/window/StatusBar/ThumbnailsAlways"
+				"Themes/default/window/StatusBar/ThumbnailsAsDefault"
+				"Themes/default/window/StatusBar/ThumbnailsGenerate"
+				"Themes/default/window/StatusBar/Typing"
+				"Themes/default/Menu/DropMenu/Abort"
+				"Themes/default/Menu/DropMenu/Copy"
+				"Themes/default/Menu/DropMenu/Move"
+                                "Themes/default/PointerIcons/copying.info"
+				"Themes/default/PointerIcons/forbidden.info"
+				"Themes/default/PointerIcons/makelink.info"
+				"Themes/default/PointerIcons/moving.info"
+				"Themes/default/Prefs/Modules/delete"
+				"Themes/default/Prefs/Modules/empty_trashcan"
+				"Themes/default/Prefs/Modules/execute_command"
+				"Themes/default/Prefs/Modules/iconproperties"
+				"Themes/default/Prefs/Modules/information"
+				"Themes/default/Prefs/Modules/newdrawer"
+				"Themes/default/Prefs/Modules/reboot"
+				"Themes/default/Prefs/Modules/rename"
+				"Themes/default/Prefs/Modules/systeminfo"
+				"Themes/default/Prefs/Modules/windowproperties"
+				"Themes/default/Prefs/Pages/about"
+				"Themes/default/Prefs/Pages/desktop"
+				"Themes/default/Prefs/Pages/dragndrop"
+				"Themes/default/Prefs/Pages/filedisplay"
+				"Themes/default/Prefs/Pages/icons"
+				"Themes/default/Prefs/Pages/misc"
+				"Themes/default/Prefs/Pages/modules"
+				"Themes/default/Prefs/Pages/paths"
+				"Themes/default/Prefs/Pages/plugins"
+				"Themes/default/Prefs/Pages/startup"
+				"Themes/default/Prefs/Pages/truetypefonts"
+				"Themes/default/Prefs/Pages/windows"
+				"Themes/default/Icons/Overlay/LeftOut"
+				"Themes/default/Icons/Overlay/ReadOnly"
+				"Themes/default/Icons/Overlay/Thumbnail"
+				""
+				)
+			)
+			(
+			(set #Theme-WinStatusBar-Installed (tackon "Scalos:" brush))
+			(if ReplaceWinStatusBar
+				(
+				;(message "Number: " #b "\nInstall: " brush "\nTo: " (tackon "Scalos:" (pathonly(brush))))
+				(if foundstatusbar
+					(
+
+					(if (exists #Theme-WinStatusBar-Installed (NOREQ))
+						(P_BackupThemes #Theme-WinStatusBar-Installed brush)
+					)
+					(trap 4
+						(P_SimpleCopy ("Copying: " (fileonly (brush)) "...") brush (tackon "Scalos:" (pathonly(brush))) " Theme.")
+						)
+					)
+					)
+				)
+				(
+				(trap 4
+					(P_SimpleCopy ("Copying: " (fileonly (brush)) "...") brush (tackon "Scalos:" (pathonly(brush))) " Theme.")
+					)
+				)
+			)
+
+			(if 	(= @ioerr 202)
+					(
+					(message 	"ErrorCode: " @ioerr "\nTheme: '" (fileonly(brush)) "'\n"
+						"This theme hasn't been installed to: '" (pathonly(#Theme-WinStatusBar-Installed)) "'!\n"
+		  				"Installer's going to try to install it again."
+						)
+
+					(trap 4
+						(P_SimpleCopy ("Copying: " (fileonly (brush)) "...") brush (tackon "Scalos:" (pathonly(brush))) " Theme.")
+						)
+
+					(if 	(= @ioerr 202)
+							(
+							(message 	"ErrorCode: " @ioerr "\nTheme: '" (fileonly(brush)) "'\n"
+							"Sorry! This theme hasn't been installed to: '" (pathonly(#Theme-WinStatusBar-Installed)) "'.\n"
+							)
+						)
+					)
+
+				)
+
+			)
+			(set @ioerr 0)
+			(set #b (+ #b 1))
+		)
+	)
+)
+
+;----------------------------------------------------------------------------
+;==  PROCEDURE P_RemoveObsolete  ========================================
+;----------------------------------------------------------------------------
+
+(procedure P_RemoveObsolete
+ 	(set #b 0)
+    	(while
+		(set fname
+			(select #b
+				"SYS:Classes/datatypes/amigaiconobj35.datatype"
+				"SYS:Classes/datatypes/amigaiconobject.datatype"
+				"SYS:Classes/datatypes/glowiconobject.datatype"
+				"SYS:Classes/datatypes/iconobject.datatype"
+				"SYS:Classes/datatypes/newiconobject.datatype"
+				"SYS:Classes/datatypes/pngiconobject.datatype"
+				"Devs:Datatypes/AmigaIconObj35"
+				"Devs:Datatypes/AmigaIconObj35.info"
+				"Devs:Datatypes/AmigaIconObject"
+				"Devs:Datatypes/AmigaIconObject.info"
+				"Devs:Datatypes/GlowIconObject"
+				"Devs:Datatypes/GlowIconObject.info"
+				"Devs:Datatypes/NewIconObject"
+				"Devs:Datatypes/NewIconObject.info"
+				"Devs:Datatypes/PNGIconObject"
+				"Devs:Datatypes/PNGIconObject.info"
+				""
+			)
+		)
+		(
+			(if	(exists fname (NOREQ))
+				(
+				(delete fname force)
+				)
+			)
+			(set #b (+ #b 1))
+		)
+	)
+)
+
+;----------------------------------------------------------------------------
+;==  PROCEDURE P_BACKUPTHEMES  ========================================
+;----------------------------------------------------------------------------
+
+(procedure P_BackupThemes #picture #pathpic
+
+	(set #BackupThemes (tackon #storage-scalos "Themes"))
+
+	(if (not (exists  #BackupThemes (NOREQ)))
+		(
+		(makedir #BackupThemes
+			(prompt "Create dir: " #BackupThemes)
+			(help	@makedir-help)
+			)
+		)
+	)
+
+
+	(set #BackupDefaultThemes (tackon #BackupThemes "default"))
+
+	(if (not (exists  #BackupDefaultThemes (NOREQ)))
+		(
+		(makedir #BackupDefaultThemes
+			(prompt "Create dir: " #BackupDefaultThemes)
+			(help	@makedir-help)
+			)
+		)
+	)
+
+	(set #BackupThemePointers (tackon #BackupDefaultThemes "Pointers"))
+
+	(if (not (exists  #BackupThemePointers (NOREQ)))
+		(
+		(makedir #BackupThemePointers
+			(prompt "Create dir: " #BackupThemePointers)
+			(help	@makedir-help)
+			)
+		)
+	)
+
+	(set #BackupThemeDesktop (tackon #BackupDefaultThemes "Desktop"))
+
+	(if (not (exists  #BackupThemeDesktop (NOREQ)))
+		(
+		(makedir #BackupThemeDesktop
+			(prompt "Create dir: " #BackupThemeDesktop)
+			(help	@makedir-help)
+			)
+		)
+	)
+
+	(set #BackupThemeMenu (tackon #BackupDefaultThemes "Menu"))
+
+	(if (not (exists  #BackupThemeMenu (NOREQ)))
+		(
+		(makedir #BackupThemeMenu
+			(prompt "Create dir: " #BackupThemeMenu)
+			(help	@makedir-help)
+			)
+		)
+	)
+
+	(set #BackupThemeDropMenu (tackon #BackupThemeMenu "DropMenu"))
+
+	(if (not (exists  #BackupThemeDropMenu (NOREQ)))
+		(
+		(makedir #BackupThemeDropMenu
+			(prompt "Create dir: " #BackupThemeDropMenu)
+			(help	@makedir-help)
+			)
+		)
+	)
+
+	(set #BackupThemesWin (tackon #BackupDefaultThemes "Window"))
+
+	(if (not (exists  #BackupThemesWin (NOREQ)))
+		(
+		(makedir #BackupThemesWin
+			(prompt "Create dir: " #BackupThemesWin)
+			(help	@makedir-help)
+			)
+		)
+	)
+
+	(set #BackupThemesWinStatusBar (tackon #BackupThemesWin "StatusBar"))
+
+	(if (not (exists  #BackupThemesWinStatusBar (NOREQ)))
+		(
+		(makedir #BackupThemesWinStatusBar
+			(prompt "Create dir: " #BackupThemesWinStatusBar)
+			(help	@makedir-help)
+			)
+		)
+	)
+
+	(set #BackupThemesPrefs (tackon #BackupDefaultThemes "Prefs"))
+
+	(if (not (exists  #BackupThemesPrefs (NOREQ)))
+		(
+		(makedir #BackupThemesPrefs
+			(prompt "Create dir: " #BackupThemesPrefs)
+			(help	@makedir-help)
+			)
+		)
+	)
+
+	(set #BackupThemesPrefsPages (tackon #BackupThemesPrefs "Pages"))
+
+	(if (not (exists  #BackupThemesPrefsPages (NOREQ)))
+		(
+		(makedir #BackupThemesPrefsPages
+			(prompt "Create dir: " #BackupThemesPrefsPages)
+			(help	@makedir-help)
+			)
+		)
+	)
+
+	(set #BackupThemesPrefsModules (tackon #BackupThemesPrefs "Modules"))
+
+	(if (not (exists  #BackupThemesPrefsModules (NOREQ)))
+		(
+		(makedir #BackupThemesPrefsModules
+			(prompt "Create dir: " #BackupThemesPrefsModules)
+			(help	@makedir-help)
+			)
+		)
+	)
+
+
+	(set #BackupThemesIcons (tackon #BackupDefaultThemes "Icons"))
+
+	(if (not (exists  #BackupThemesIcons (NOREQ)))
+		(
+		(makedir #BackupThemesIcons
+			(prompt "Create dir: " #BackupThemesIcons)
+			(help	@makedir-help)
+			)
+		)
+	)
+
+	(set #BackupThemesIconsOverlay (tackon #BackupThemesIcons "Overlay"))
+
+	(if (not (exists #BackupThemesIconsOverlay (NOREQ)))
+		(
+		(makedir #BackupThemesIconsOverlay
+			(prompt "Create dir: " #BackupThemesIconsOverlay)
+			(help	@makedir-help)
+			)
+		)
+	)
+
+	; (message "Copy: \n" #picture  "\nTo: \n" (tackon #storage-scalos (pathonly(#pathpic))))
+	(trap 4
+		(P_SimpleCopy ("Copy backup: " (fileonly (#picture)) "...") #picture (tackon #storage-scalos (pathonly(#pathpic))) " Theme.")
+	)
+	(if 	(> @ioerr 0 )
+		(
+		(message 	"ErrorCode: " @ioerr "\nTheme: '" (fileonly(brush)) "'! :(\n"
+				"Sorry! This theme hasn't been copied to: '" (tackon #storage-scalos (pathonly(#pathpic))) "'.\n"
+				)
+		)
+	)
+	(set foundthemes 1)
+	(set @ioerr 0)
+)
+
+;----------------------------------------------------------------------------
+;==  PROCEDURE ENVARC AVERAGE ===============================================
+;----------------------------------------------------------------------------
+
+(procedure P_VerifyEnvarcAverage #ehelptext
+
+	(set ReplaceEnvarc 0)
+	(set FoundEnvarc 0)
+
+	(set #num 0)
+    	(while
+		(set #deftype
+			(select #num
+				"deficons.prefs"
+				"icandy"
+				"Palette13.prefs"
+				"Pattern.prefs"
+				"Persist.prefs"
+				"scalos.prefs"
+				"Menu13.prefs"
+				"appicon"
+				"archive"
+				"brush"
+				"disk"
+				"drawer"
+				"filearchive"
+				"gif"
+				"ILBM"
+				"jpeg"
+				"picture"
+				"project"
+				"tool"
+				"trashcan"
+				""
+				)
+			)
+			(
+			(if (= #num 0)
+				(
+				(set #ftypes-installed (cat "" (tackon #env #deftype)))
+				(set #ftypes-to-install #deficons)
+				(set #destbackup "Sys:Storage/Envarc")
+				)
+			)
+
+			(if (and (> #num 0) (<= #num 5))
+				(
+				(set #ftypes-installed (cat "" (tackon #env-scalos #deftype)))
+				(set #ftypes-to-install (cat "" (tackon #envarc-common #deftype)))
+				(set #destbackup (tackon #storage-scalos "Envarc"))
+				)
+			)
+
+			(if (= #num 6)
+				(
+				(set #ftypes-installed (cat "" (tackon #env-scalos #deftype)))
+				(set #ftypes-to-install #menu13)
+				(set #destbackup (tackon #storage-scalos "Envarc"))
+				)
+			)
+
+			(if (and (> #num 6) (<= #num 19))
+				(
+				(set #ftypes-installed (cat "" (tackon (tackon #env-scalos "Filetypes") #deftype)))
+				(set #ftypes-to-install (cat "" (tackon #envarcftypes #deftype)))
+				(set #destbackup (tackon #storage-scalos "Envarc/Filetypes"))
+				)
+			)
+
+			(if (exists #ftypes-installed (NOREQ))
+				(
+				(set ReplaceEnvarc 1)
+				;(message "Number: " #num "\nInstalled: " #ftypes-installed "\nTo install: " #ftypes-to-install "\n\nBackup of: " #ftypes-installed "\nto: " #destbackup)
+				)
+			)
+			(set #num(+ #num 1))
+		)
+	)
+	(if ReplaceEnvarc
+		(
+		(set #ask-replace-Envarc
+			(cat
+				"Installer found some default preferences installed.\n"
+				"Do you want to replace them?\n\n"
+				"Files to install:\n"
+				"deficons.prefs, icandy, Palette13.prefs, Pattern.prefs\n"
+				"Menu13.prefs, Persist.prefs, scalos.prefs\n\n"
+				"appicon, archive, brush, disk, drawer, filearchive\n"
+				"gif, ILBM, jpeg, picture, project, tool, trashcan\n\n"
+				"A backup copy will be created in 'Sys:Storage/Scalos'\n\n"
+				"NOTE: If a old backup copy already exists, it will be replaced!"
+			)
+		)
+		(set FoundEnvarc
+			(askbool
+				(prompt #ask-replace-Envarc)
+				(help #help-themes-statusbar)
+				(default 0)
+				)
+			)
+		)
+	)
+	(set #num 0)
+    	(while
+		(set #deftype
+			(select #num
+				"deficons.prefs"
+				"icandy"
+				"Palette13.prefs"
+				"Pattern.prefs"
+				"Persist.prefs"
+				"scalos.prefs"
+				"Menu13.prefs"
+				"appicon"
+				"archive"
+				"brush"
+				"disk"
+				"drawer"
+				"filearchive"
+				"gif"
+				"ILBM"
+				"jpeg"
+				"picture"
+				"project"
+				"tool"
+				"trashcan"
+				""
+				)
+			)
+			(
+
+			(if (= #num 0)
+				(
+				(set #ftypes-installed (cat "" (tackon #env #deftype)))
+				(set #ftypes-to-install #deficons)
+				(set #destbackup "Sys:Storage/Envarc")
+				)
+			)
+
+			(if (and (> #num 0) (<= #num 5))
+				(
+				(set #ftypes-installed (cat "" (tackon #env-scalos #deftype)))
+				(set #ftypes-to-install (cat "" (tackon #envarc-common #deftype)))
+				(set #destbackup (tackon #storage-scalos "Envarc"))
+				)
+			)
+
+			(if (= #num 6)
+				(
+				(set #ftypes-installed (cat "" (tackon #env-scalos #deftype)))
+				(set #ftypes-to-install #menu13)
+				(set #destbackup (tackon #storage-scalos "Envarc"))
+				)
+			)
+
+			(if (and (> #num 6) (<= #num 19))
+				(
+				(set #ftypes-installed (cat "" (tackon (tackon #env-scalos "Filetypes") #deftype)))
+				(set #ftypes-to-install (cat "" (tackon #envarcftypes #deftype)))
+				(set #destbackup (tackon #storage-scalos "Envarc/Filetypes"))
+				)
+			)
+
+
+			(if ReplaceEnvarc
+				(
+				(if FoundEnvarc
+					(
+					(if (exists #ftypes-installed (NOREQ))
+						(
+						(P_BackupEnvarc #ftypes-installed #destbackup)
+						)
+					)
+					(P_SimpleCopy ("Copying: " (fileonly (#deftype)) "...") #ftypes-to-install (pathonly(#ftypes-installed)) " default prefs.")
+					)
+					)
+				)
+				(
+				(P_SimpleCopy ("Copying: " (fileonly (#deftype)) "...") #ftypes-to-install (pathonly(#ftypes-installed)) " default prefs.")
+				)
+			)
+			(set #num (+ #num 1))
+		)
+	)
+)
+
+;----------------------------------------------------------------------------
+;==  PROCEDURE P_BACKUPENVARC  	=============================================
+;----------------------------------------------------------------------------
+
+(procedure P_BackupEnvarc #file #destpath
+
+	(if (not (exists  #destpath (NOREQ)))
+		(
+		(makedir #destpath
+			(prompt "Create dir: " #destpath)
+			(help	@makedir-help)
+			)
+		)
+	)
+	(P_SimpleCopy ("Copy backup: " (fileonly (#file)) "...") #file #destpath " default prefs.")
+)
+
+;----------------------------------------------------------------------------
+;==    PROCEDURE ENVARC EXPERT   ============================================
+;----------------------------------------------------------------------------
+
+(procedure P_VerifyEnvarcForExpert #esrc #edest #ehelptext
+
+	(set  #flag-icandy  1)
+	(set  #flag-Palette 2)
+	(set  #flag-Pattern 4)
+	(set  #flag-Persist 8)
+	(set  #flag-scalosprefs 16)
+
+	(set #install-default (BITOR #install-default #flag-icandy))
+	(set #install-default (BITOR #install-default #flag-Palette))
+	(set #install-default (BITOR #install-default #flag-Pattern))
+	(set #install-default (BITOR #install-default #flag-Persist))
+	(set #install-default (BITOR #install-default #flag-scalosprefs))
+
+
+    	(set ftypes-files
+      		(askoptions
+			(prompt #prompt-default-prefs)
+			(help #fhelptext @askoptions-help)
+        		(choices
+				"icandy"
+				"Palette13.prefs"
+				"Pattern.prefs"
+				"Persist.prefs"
+				"scalos.prefs"
+          			)
+        			(default #install-default)
+      			)
+    		)
+		(set #num 0)
+    		(while
+			(set #deftype
+				(select #num
+					"icandy"
+					"Palette13.prefs"
+					"Pattern.prefs"
+					"Persist.prefs"
+					"scalos.prefs"
+					""
+					)
+				)
+				(
+				(set #ftypes-installed
+					(cat "" (tackon #edest #deftype)
+					)
+				)
+
+				(
+				(set #ftypes-to-install
+					(cat "" (tackon #esrc #deftype)
+					)
+				)
+
+				(if (IN ftypes-files #num)
+					(
+					(P_SimpleCopy "Copy Filetypes: " #ftypes-to-install #edest #ehelptxt)
+					)
+				)
+				(set #num(+ #num 1))
+			)
+      		)
+
+	)
+)
+
+
+;----------------------------------------------------------------------------
+;==  PROCEDURE ENVARC FILETYPES NOVICE ======================================
+;----------------------------------------------------------------------------
+
+(procedure P_VerifyEnvarcFTypesForNovice #fsrc #fdest #fhelptext
+
+	(set  #flag-appicon  1)
+	(set  #flag-archive 2)
+	(set  #flag-brush 4)
+	(set  #flag-disk 8)
+	(set  #flag-drawer 16)
+	(set  #flag-filearchive 32) 
+	(set  #flag-gif 64)
+	(set  #flag-ILBM 128)
+	(set  #flag-jpeg 256)
+	(set  #flag-picture 1024)
+	(set  #flag-project 2048)
+	(set  #flag-tool 4096)
+	(set  #flag-trashcan 8192)
+
+	(set #install-default (BITOR #install-default #flag-appicon))
+	(set #install-default (BITOR #install-default #flag-archive))
+	(set #install-default (BITOR #install-default #flag-brush))
+	(set #install-default (BITOR #install-default #flag-disk))
+	(set #install-default (BITOR #install-default #flag-drawer))
+	(set #install-default (BITOR #install-default #flag-filearchive))
+	(set #install-default (BITOR #install-default #flag-gif))
+	(set #install-default (BITOR #install-default #flag-ILBM))
+	(set #install-default (BITOR #install-default #flag-jpeg))
+	(set #install-default (BITOR #install-default #flag-picture))
+	(set #install-default (BITOR #install-default #flag-project))
+	(set #install-default (BITOR #install-default #flag-tool))
+	(set #install-default (BITOR #install-default #flag-trashcan))
+
+
+    	(set ftypes-files
+      		(askoptions
+			(prompt #prompt-default-prefs)
+			(help #fhelptext @askoptions-help)
+        		(choices
+				"appicon"
+				"archive"
+				"brush"
+				"disk"
+				"drawer"
+				"filearchive"
+				"gif"
+				"ILBM"
+				"jpeg"
+				"picture"
+				"project"
+				"tool"
+				"trashcan"
+          			)
+        			(default #install-default)
+      			)
+    		)
+		(set #num 0)
+    		(while
+			(set #deftype
+				(select #num
+					"appicon"
+					"archive"
+					"brush"
+					"disk"
+					"drawer"
+					"filearchive"
+					"gif"
+					"ILBM"
+					"jpeg"
+					"picture"
+					"project"
+					"tool"
+					"trashcan"
+					""
+					)
+				)
+				(
+				(set #ftypes-installed
+					(cat "" (tackon #fdest #deftype)
+					)
+				)
+
+				(
+				(set #ftypes-to-install
+					(cat "" (tackon #fsrc #deftype)
+					)
+				)
+
+				(if (IN ftypes-files #num)
+					(if (not (exists #ftypes-installed (NOREQ)))
+						(
+						(P_SimpleCopy "Copy Filetypes: " #ftypes-to-install #fdest #fhelptxt)
+						)
+					)
+				)
+				(set #num(+ #num 1))
+			)
+      		)
+	)
+)
+
+;----------------------------------------------------------------------------
+;==  PROCEDURE ENVARC NOVICE ================================================
+;----------------------------------------------------------------------------
+
+(procedure P_VerifyEnvarcForNovice #esrc #edest #ehelptext
+
+	(set  #flag-icandy  1)
+	(set  #flag-Palette 2)
+	(set  #flag-Pattern 4)
+	(set  #flag-Persist 8)
+	(set  #flag-scalosprefs 16)
+
+	(set #install-default (BITOR #install-default #flag-icandy))
+	(set #install-default (BITOR #install-default #flag-Palette))
+	(set #install-default (BITOR #install-default #flag-Pattern))
+	(set #install-default (BITOR #install-default #flag-Persist))
+	(set #install-default (BITOR #install-default #flag-scalosprefs))
+
+
+    	(set ftypes-files
+      		(askoptions
+			(prompt "Do you want to install Scalos default preferences?\n")
+			(help #fhelptext @askoptions-help)
+        		(choices
+				"icandy"
+				"Palette13.prefs"
+				"Pattern.prefs"
+				"Persist.prefs"
+				"scalos.prefs"
+          			)
+        			(default #install-default)
+      			)
+    		)
+		(set #num 0)
+    		(while
+			(set #deftype
+				(select #num
+					"icandy"
+					"Palette13.prefs"
+					"Pattern.prefs"
+					"Persist.prefs"
+					"scalos.prefs"
+					""
+					)
+				)
+				(
+				(set #ftypes-installed
+					(cat "" (tackon #edest #deftype)
+					)
+				)
+
+				(
+				(set #ftypes-to-install
+					(cat "" (tackon #esrc #deftype)
+					)
+				)
+
+				(if (IN ftypes-files #num)
+					(if (not (exists #ftypes-installed (NOREQ)))
+						(
+						;(set #deftext
+						;	(cat "Really overwrite: " #ftypes-installed "?"
+						;	)
+						;)
+						;(P_SimpleCopyNovice #deftext #ftypes-to-install #edest #helptext)
+						;)
+						;(
+						(set #deftext
+							(cat "Copying: " #deftype " to:" #ftypes-installed
+							)
+						)
+						(P_SimpleCopy #deftext #ftypes-to-install #edest #helptext)
+						)
+					)
+				)
+				(set #num(+ #num 1))
+			)
+      		)
+
+	)
+)
+
+;----------------------------------------------------------------------------
+;==  PROCEDURE  P_VERIFYIFEXISTSFORNOVICE ===================================
+;----------------------------------------------------------------------------
+
+(procedure P_VeriFyIfExistsForNovice #srcdir #object #destdir #help
+
+	(if (not (exists (tackon #destdir #object) (NOREQ)))
+		(
+		(set #deftext
+			(cat "Copying: " #object " to: " #destdir
+			)
+		)
+		(P_SimpleCopy #deftext (tackon #srcdir #object) #destdir #help)
+		)
+	)
+)
+
+;----------------------------------------------------------------------------
+;==  PROCEDURE  P_VERIFYIFEXISTSFORAVEXP ===================================
+;----------------------------------------------------------------------------
+
+(procedure P_VeriFyIfExistsForAvExp #srcdir #object #destdir #help
+
+	(if (not (exists (tackon #destdir #object) (NOREQ)))
+		(
+		(set #deftext
+			(cat "Copying: " #object " to: " #destdir
+			)
+		)
+		(P_SimpleCopy #deftext (tackon #srcdir #object) #destdir #help)
+		)
+		(
+		(set #deftext
+			(cat "Do you want to replace: " #object " from: " #destdir
+			)
+		)
+		(P_SimpleCopyAvExp #deftext (tackon #srcdir #object) #destdir #help)
+		)
+	)
+)
+
+;----------------------------------------------------------------------------
+;==  PROCEDURE  COPYLIB =====================================================
+;----------------------------------------------------------------------------
+
+(procedure P_Copylib #ptext #srclib #destlib
+	(copylib
+		(prompt	#ptext)
+		(source	#srclib)
+		(dest	#destlib)
+		(help	@copylib-help)
+		(confirm)
+	)
+)
+
+;----------------------------------------------------------------------------
+;==  PROCEDURE  COPYLIBCPU ==================================================
+;----------------------------------------------------------------------------
+
+(procedure P_CopylibCPU #ptext #srclib #destlib #new
+	(askaboutcpu)
+	(if	(exists (cat #srclib cpuadd-1) )
+		(
+		(copylib
+			(prompt	#ptext)
+			(source (cat #srclib cpuadd-1))
+  			(dest #destlib)
+  			(newname #new)
+			(help	@copylib-help)
+			(confirm)
+			;(optional "nofail") 
+			) 
+		)
+	)
+)
+
+;----------------------------------------------------------------------------
+;========================= KICKSTART ========================================
+;----------------------------------------------------------------------------
+
+(set #msg-badkick
+(cat "You must be using Kickstart v3.1 and AmigaOS 3.5 "
+     "to run install script for " @app-name "!"
+     ))
+
+;==================
+; Have the  KS3.1
+(if (< #wbversion 40)
+(   (exit #msg-badkick (quiet))
+    ))
+
+(set guides-default 1)
+
+(set #bad-kick "You must be using Kickstart 3.0+ to install Scalos")
+(set #bad-cpu "You require at least a 68020 or higher processor to run Scalos")
+
+(if (= #MOS 1)
+	(
+	(set #machine "MorphOS/PPC")
+	)
+	(
+	(if (= #OS4 1)
+		(set #machine "AmigaOS4/PPC")
+		(set #machine "AmigaOS/68K")
+	)
+	)
+)
+
+(set #install-start
+	(cat
+		"\n\n" @app-name "\n"
+		#machine "\n"
+     		@applicationdate"\n"
+		"Copyright © 2000-2010 THE SCALOS TEAM\n\n\n"
+		"E-mail: info@scalos.noname.fr\n"
+		"Web: http://scalos.noname.fr\n\n"
+     		"\nThis script will install "@app-name" \n"
+     		"on your disk...\n")
+)
+
+(set #warning-start
+	(cat
+		"\n\n Scalos (Version: " #scalosresidentVer "." #scalosresidentRev ") is currently running, please, close all windows\n"
+		" before to continue the installation. As Scalos use some pictures\n"
+		" for windows status bar and if some windows are opened without\n"
+		" Status Bar hidden, the installation will break returning a DOS ERROR.\n")
+)
+
+;--------------------------------------------------------------------
+;---  SCALOS  MESSAGES  ---------------------------------------------
+;--------------------------------------------------------------------
+
+(set #cat-where-scalos
+	(cat
+		"Where would you like to install "#cat-app-name"?\n"
+		"(A directory named Scalos will be created)."
+	)
+)
+(set #where-scalos #cat-where-scalos)
+
+(set #where-scalos-help
+	(cat
+		"Scalos will be installed directly into the"
+		" desired directory. An assign Scalos: is made"
+		" right after the creation of the directory"
+	)
+)
+
+(set #startup-scalos "Scalos: assign is about add to you user-startup")
+
+(set #startup-scalos-help
+	(cat
+		"An Assign Scalos: will be added to your user-startup"
+	)
+)
+
+(set #startsca-select "Do you want to install Scalos as Workbench replacement?")
+
+(set #startsca-select-help
+	(cat
+		"If you select YES this installscript will rename the current"
+		" LoadWB to LoadWB.orig and install a tiny replacement to load"
+		" Scalos intead of the original Workbench"
+	)
+)
+(set #startsca-select-scaloadwbhelp
+	(cat
+		"If you select YES this installscript will copy"
+		" LoadWB.scalos to c: and not as LoadWB replacement."
+	)
+)
+
+;--------------------------------------------------------------------
+;---  SCALOS PREFS MESSAGES  ----------------------------------------
+;--------------------------------------------------------------------
+
+(set #where-scalosprefs "Where is the place for the preferences editors?")
+
+(set #where-scalosprefs-help
+	(cat
+		"This is the destination directory of all Scalos preferences"
+		" editors!\n\n Normally ALL Scalos preferences editors are in Scalos:Prefs !"
+	)
+)
+
+(set #prompt-default-prefs "Do you want to install Scalos default preferences?")
+
+;--------------------------------------------------------------------
+;---  PLUGINS MESSAGES  ---------------------------------------------
+;--------------------------------------------------------------------
+
+(set #plugin-select "Do you want to install some useful plugins for Scalos")
+
+(set #plugin-select-help
+	(cat
+		"One plugin for example might be useful for you if you want"
+		" a sorted cleanup of the icons..."
+	)
+)
+
+;--------------------------------------------------------------------
+;---  COPIES  MESSAGES ----------------------------------------------
+;--------------------------------------------------------------------
+
+(set #copy-scalos "Installing Scalos (Mainprogram)...")
+(set #copy-scalosprefs "Installing Scalos Preferences...")
+(set #copy-libs1 "Installing Library: iconobject.library ...")
+(set #copy-libs4 "Installing Datatype: amigaiconob35.datatype ...")
+(set #copy-libs4.1 "Installing Datatype: amigaiconobject.datatype ...")
+(set #copy-libs5 "Installing Datatype: iconobject.datatype ...")
+(set #copy-libs6 "Installing Datatype: newiconobject.datatype ...")
+(set #copy-libs7 "Installing Datatype: pngiconobject.datatype ...")
+(set #copy-libs8 "Installing Datatype: glowiconobject.datatype ...")
+(set #copy-libs9 "Installing Library:  sqlite3.library ...")
+
+(set #CatMOsGuiLib "Installing MorphOS library: guigfx.library.elf...")
+(set #CatMOsRenderLib "Installing MorphOS library: render.library.elf...") 
+(set #CatOS4GuiLib "Installing library: guigfx.library.os4...")
+(set #CatOS4RenderLib "Installing library: render.library.os4...")
+(set #CatGuiLib "Installing library: guigfx.library...")
+(set #CatRenderLib "Installing library: render.library...") 
+
+(set #CatPopLib "Installing Library: popupmenu.library...")
+(set #CatPrefLib "Installing Library: preferences.library...")
+(set #CatScaGfxLib "Installing Library: scalosgfx.library...")
+
+(set #copy-classes "Installing required datatypes (Classes)...")
+(set #copy-datatypes "Installing required datatypes (Devs)...")
+(set #copy-catalog "Installing desired catalogs...")
+(set #copy-presets "Installing Presets...")
+(set #copy-filetypes-presets "Installing Filetypes preferences...")
+(set #copy-plugins-filetypes "Installing FileTypes Plugins...")
+(set #copy-plugins-menu "Installing Menu Plugins...")
+(set #copy-plugins-oop "Installing OOP Plugins...")
+(set #copy-plugins-preview "Installing Preview Plugins...")
+(set #copy-tools "Installing Tools...")
+(set #copy-loadwb "Installing LoadWB replacement...")
+
+;--------------------------------------------------------------------
+;---  DIALOGUES RENAME  ---------------------------------------------
+;--------------------------------------------------------------------
+
+(set #rename-loadwborg "Renaming of original LoadWB...")
+(set #rename-loadwbscalos "Renaming/Installing Scalos-LoadWB...")
+
+;--------------------------------------------------------------------
+;---  MESSAGE: SCALOS NO FOUND [UNUSED] -----------------------------
+;--------------------------------------------------------------------
+
+(set #cat-scalos-nofound
+	(cat
+		"\n\n\nSorry ! Assign SCALOS: no found,\n"
+		" ScalosBeta V"#scaver"."#scarev"\n"
+		"can't be installed.\n"
+	)
+)
+;----------------------------------------------------------------------------
+;=========================== PROGRAM-START ==================================
+;----------------------------------------------------------------------------
+
+(set @default-dest "")
+
+;Check Kickstart (>= v3.0) Version.
+
+(if (< (/ (getversion) 65536) 39)
+	(abort #bad-kick)
+)
+(set processor (database "cpu"))
+(if (< processor "68020")
+	(abort #bad-cpu)
+)
+
+(set #envarc-scalos-request 0)
+
+(set #scalos-default-dest "SYS:")
+(set #env "Envarc:")
+(set #env-scalos ("Envarc:Scalos"))
+
+;(set #scalos-default-dest "RAM:t")
+;(set #env "Env:")
+;(set #env-scalos ("Env:Scalos"))
+
+(if (exists #env-scalos (NOREQ))
+	(set #envarc-scalos-request 1)
+)
+
+
+(set #storage-scalos ("Sys:Storage/Scalos"))
+
+(set #backupinfo
+	(cat 
+		"\n\nInstaller has found Scalos preferences in '" #env-scalos "'.\n"
+		" You will be prompted if you want anything to be overwritten, and\n"
+		" a backup copy will be created in '" #storage-scalos "'\n"
+	)
+)
+
+(complete 0)
+
+;----------------------------------------------------------------------------
+;=========================== START REQUEST  =================================
+;----------------------------------------------------------------------------
+
+(message #install-start)
+
+;----------------------------------------------------------------------------
+;============================================================================
+;=== If Scalos is running, check its version and revison, if version >= 40
+;===  OR version = 41 AND revision <= 2 then open request asking user to
+;===  close all windows(datatypes images locked).  
+;============================================================================
+(set #residentmore40 0)
+
+(if 	(> #scalosresident 0)
+	(
+	(if (and (> #scalosresident 0) (>= #scalosresidentVer 40))
+			(
+			(set #residentmore40 1)
+			)
+		)
+		(if #residentmore40)
+			(
+			(if 	(OR (< #scalosresidentVer 41) (and (= #scalosresidentVer 41) (<= #scalosresidentRev 2)) )
+				(
+				(message #warning-start)
+				)
+			)
+		)
+	)
+)
+;===========================================================================
+;---------------------------------------------------------------------------
+
+(welcome)
+
+;=== DETECT USER-LEVEL SELECTED BY USER =====================================
+
+(set #level @user-level)
+
+;============================================================================
+
+(if (and (> #envarc-scalos-request 0) (> #level 0))
+	(
+	(message #backupinfo)
+	)
+)
+
+;===[ SELECT SCALOS DESTINATION ]============================================
+
+
+(if (and (>= #installer-version 44) (> #level 0))
+	(
+	(showmedia "mediatext" #licencetext 'lower_left' 'small' 1 'wordwrap')
+	)
+)
+
+(set #oldlevel #level)
+
+(if (exists "Scalos:" (NOREQ))
+	(
+ 		(set firstinstall 0)
+		(set #scalos-dest "Scalos:")
+		;===
+		(if (exists "Scalos:Scalos" (NOREQ))
+			(
+				(if (> #level 0)
+					(
+						(set #oldversion-select-help
+							(cat
+								"\n\n   Script found ASSIGN Scalos: and\n"
+								"compare Scalos version already installed\n"
+								"with the new version to install.\n"
+							)
+						)
+
+						(set #oldscaversion (getversion "Scalos:scalos" ))
+						(set #oldscaver (/ #oldscaversion 65536) )
+						(set #oldscarev (- #oldscaversion (* #oldscaver 65536) ))
+						(set #catoldversion
+							(cat
+								"\n\n   Scalos version already installed:\n"
+								"Scalos V"#oldscaver"."#oldscarev"\n\n"
+								"   Scalos to install:\n"
+								" ScalosBeta V"#scaver"."#scarev" ")
+						)
+
+						;===
+						(set #instnew
+							(askbool
+								(prompt #catoldversion)
+								(help #oldversion-select-help)
+								(default 1)
+							)
+						)
+					)
+				)
+			)
+		)
+	)
+	;== ELSE ==[ ASSIGN SCALOS: NO FOUND ]===============================
+
+ 	(
+		(set firstinstall 1)
+		(if	(= #level 0)
+			(
+			(set #scalos-dest #scalos-default-dest)
+			)
+			(set #scalos-dest
+				(askdir
+					(prompt	#where-scalos)
+					(help	#where-scalos-help "\n\n" @askdir-help)
+					(default #scalos-default-dest)
+					(newpath)
+				)
+			)
+		)
+
+	)
+ )
+
+(complete 2)
+
+;===[  BACKUP ENV:SCALOS  ]==================================================
+
+(set #envarc-backup-prompt
+	(cat
+		"Installer found Scalos preferences!\n"
+		"If you want, a backup copy of '" #env-scalos "'\n" 
+		" will be created in '" #storage-scalos "'"
+	)
+)
+
+(if #envarc-scalos-request
+		(
+		(if 	(not (exists #storage-scalos (NOREQ)))
+				(
+					(set #create-env-sca
+						(cat	"Create 'Scalos' directory:\n" #storage-scalos)
+					)
+					(makedir #storage-scalos
+					(prompt #create-env-sca)
+					(help	@makedir-help)
+				)
+			)
+		)
+
+		;(copyfiles
+		;	(prompt	#envarc-backup-prompt)
+		;	(source	#env-scalos)
+		;	(dest	#storage-scalos)
+		;	(help   @askfile-help)
+		;	(confirm "average")
+		;	(infos)
+		;	(all)
+		;)
+	)
+)
+
+;========================[ INFOS SCALOS/DATATYPES ]==========================
+
+(set #catinfo
+	(if (= #OS4 0)
+		(cat
+			"\n\nScalosBeta V"#scaver"."#scarev" will be installed to : "#scalos-dest"\n\n"
+			"Datatypes versions to install:\n\n"
+			"- pngiconobject.datatype V"#dtverpng"."#dtrevpng"\n"
+			"- amigaiconobj35.datatype V"#dtver_aiconobj35"."#dtrev_aiconobj35"\n"
+			"- amigaiconobject.datatype V"#dtver_aiconobject"."#dtrev_aiconobject"\n"
+			"- iconobject.datatype V"#dtver_iconobject"."#dtrev_iconobject"\n"
+			"- newiconobject.datatype V"#dtver_niconobject"."#dtrev_niconobject"\n"
+			"- glowiconobject.datatype V"#dtver_glowiconobject"."#dtrev_glowiconobject"\n"
+		)
+		;else
+		(cat
+			"\n\nScalosBeta V"#scaver"."#scarev" will be installed to : "#scalos-dest"\n\n"
+			"Datatypes versions to install:\n\n"
+			"- pngiconobject.datatype V"#dtverpng"."#dtrevpng"\n"
+			"- amigaiconobj35.datatype V"#dtver_aiconobj35"."#dtrev_aiconobj35"\n"
+			"- amigaiconobject.datatype V"#dtver_aiconobject"."#dtrev_aiconobject"\n"
+			"- iconobject.datatype V"#dtver_iconobject"."#dtrev_iconobject"\n"
+			"- glowiconobject.datatype V"#dtver_glowiconobject"."#dtrev_glowiconobject"\n"
+		)
+	)
+)
+
+(if (= #level 2)
+	(
+	(message #catinfo)
+	)
+)
+
+(P_closemedia mediatext)
+
+;===================[ CREATE AND ASSIGN SCALOS DIR ]=========================
+
+(if firstinstall
+	(
+	(set #userdir
+		(cat "" (tackon  #scalos-dest "Scalos"))
+	)
+
+	(if	(not (exists #userdir (NOREQ)))
+			(
+			(makedir #userdir
+				(prompt #makedir-scalos)
+				(help	@makedir-help)
+				(infos)
+				)
+
+			)
+
+		)
+		(makeassign "Scalos" (tackon  #scalos-dest "Scalos"))
+	)
+
+)
+
+(set #scalos-dest "Scalos:")
+
+;----------------------------------------------------------------------------
+;------------------ IF USER-LEVEL = EXPERT (2) ------------------------------
+;----------------------------------------------------------------------------
+(if (= #level 2)
+	(
+		(set scalosprefs-dest
+			(askdir
+				(prompt	#where-scalosprefs)
+				(help	#where-scalosprefs-help "\n\n" @askdir-help)
+				(default (tackon "Scalos:" "Prefs"))
+				(newpath)
+			)
+		)
+	)
+	(
+		(set scalosprefs-dest (tackon "Scalos:" "Prefs"))
+	)
+)
+
+(complete 6)
+
+;============================================================================
+;==================== VERIFING DIRECTORY TREE THEMES ========================
+;============================================================================
+
+(set #copy-themes-help
+	(cat
+		"Installing different brushes for:\n"
+		" statusbar,pointer,tooltip backdrops"
+	)
+)
+
+(set #copy-themes-logos
+	(cat
+		"Installing Themes:\n " logos "..."
+	)
+)
+(set #copy-themes
+	(cat
+		"Do you want to install themes?\n\n"
+		"Brushes or images will be used:\n"
+		" - As background for:\n"
+		"     FileTransfer Request, Tooltips bubble.\n\n"
+		" - As background and informations for:\n"
+		"     Windows Statusbar.\n\n"
+		" - By 'Scalos Prefs':\n"
+		"     Delete, Empty_Traschcan, Execute_Command, Information,\n"
+		"     NewDrawer, Reboot, Rename, SystemInfo.\n"
+	)
+)
+
+(complete 8)
+
+(if (< #level 2)
+	(
+	(set askthemes 1)
+	)
+	(
+	(set askthemes
+		(askbool
+			(prompt #copy-themes)
+			(help #copy-themes-help)
+			(default 1)
+			)
+		)
+	)
+)
+
+(if askthemes
+	(
+		(set themes			"Scalos:Themes")
+		(set themes-defaut		"Scalos:Themes/default")
+
+		(set themes-menu		"Scalos:Themes/default/Menu")
+		(set themes-modules		"Scalos:Themes/default/Modules")
+
+		(set themes-module-delete	"Scalos:Themes/default/Modules/delete.module")
+		(set themes-module-etrasch	"Scalos:Themes/default/Modules/empty_trashcan.module")
+		(set themes-module-ecommand	"Scalos:Themes/default/Modules/execute_command.module")
+		(set themes-module-info		"Scalos:Themes/default/Modules/information.module")
+		(set themes-module-ndrawer	"Scalos:Themes/default/Modules/newdrawer.module")
+		(set themes-module-reboot	"Scalos:Themes/default/Modules/reboot.module")
+		(set themes-module-rename	"Scalos:Themes/default/Modules/rename.module")
+		(set themes-module-sysinfo	"Scalos:Themes/default/Modules/systeminfo.module")
+
+		(set themes-pointers		"Scalos:Themes/default/PointerIcons")
+		(set themes-sound		"Scalos:Themes/default/Sound")
+		(set themes-desktop		"Scalos:Themes/default/Desktop")
+		(set themes-window		"Scalos:Themes/default/Window")
+		(set themes-controlbar		"Scalos:Themes/default/Window/ControlBar")
+		(set themes-statusbar		"Scalos:Themes/default/Window/StatusBar")
+
+		(set themes-prefs		"Scalos:Themes/default/Prefs")
+		(set themes-prefs-pages		"Scalos:Themes/default/Prefs/Pages")
+		(set themes-prefs-modules	"Scalos:Themes/default/Prefs/Modules")
+
+		(set themes-icons		"Scalos:Themes/default/Icons")
+		(set themes-icons-overlay	"Scalos:Themes/default/Icons/Overlay")
+
+		(set #makedir-themes	 	"Creating Themes-Destination...")
+
+		(if (not (exists themes (NOREQ)))
+			(
+				(makedir themes
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)		(if (not (exists themes-defaut (NOREQ)))
+			(
+				(makedir themes-defaut
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)		(if (not (exists themes-desktop (NOREQ)))
+			(
+				(makedir themes-desktop
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)		(if (not (exists themes-menu (NOREQ)))
+			(
+				(makedir themes-menu
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)		(if (not (exists themes-modules (NOREQ)))
+			(
+				(makedir themes-modules
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)		(if (not (exists themes-module-delete (NOREQ)))
+			(
+				(makedir themes-module-delete
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)		(if (not (exists themes-module-etrasch (NOREQ)))
+			(
+				(makedir themes-module-etrasch
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)		(if (not (exists themes-module-ecommand (NOREQ)))
+			(
+				(makedir themes-module-ecommand
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)		(if (not (exists themes-module-info (NOREQ)))
+			(
+				(makedir themes-module-info
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)		(if (not (exists themes-module-ndrawer (NOREQ)))
+			(
+				(makedir themes-module-ndrawer
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)		(if (not (exists themes-module-reboot (NOREQ)))
+			(
+				(makedir themes-module-reboot
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)		(if (not (exists themes-module-rename (NOREQ)))
+			(
+				(makedir themes-module-rename
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)		(if (not (exists themes-module-sysinfo (NOREQ)))
+			(
+				(makedir themes-module-sysinfo
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)		(if (not (exists themes-pointers (NOREQ)))
+			(
+				(makedir themes-pointers
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)		(if (not (exists themes-sound (NOREQ)))
+			(
+				(makedir themes-sound
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)		(if (not (exists themes-window (NOREQ)))
+			(
+				(makedir themes-window
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)		(if (not (exists themes-statusbar (NOREQ)))
+			(
+				(makedir themes-statusbar
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)		(if (not (exists themes-controlbar (NOREQ)))
+			(
+				(makedir themes-controlbar
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)
+
+		;================================= Default themes prefs ==================================
+
+		(if	(not (exists themes-prefs (NOREQ)))
+				(
+				(makedir themes-prefs
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)
+		(if	(not (exists themes-prefs-pages (NOREQ)))
+				(
+				(makedir themes-prefs-pages
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)
+		(if	(not (exists themes-prefs-modules (NOREQ)))
+				(
+				(makedir themes-prefs-modules
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)
+
+		;================================= Default themes icons ==================================
+
+		(if	(not (exists themes-icons (NOREQ)))
+				(
+				(makedir themes-icons
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)
+		(if	(not (exists themes-icons-overlay (NOREQ)))
+				(
+				(makedir themes-icons-overlay
+				(prompt #makedir-themes)
+				(help	@makedir-help)
+				)
+			)
+		)
+
+		;======================================== HELP THEMES ====================================
+
+		(set #help-themes-default
+			(cat
+	 			"\nBackgrounds and Scalos Logo brushes.\n\n"
+				"  AboutBackground: About window background\n"
+				"  FileTransBackground: Request transferfiles window background\n"
+				"  ScalosAboutLogo: About window logo\n"
+				"  ScalosLogo: About page of 'Scalos Prefs'\n"
+				"  ScalosSplashLogo:  Splash window logo\n"
+				"  SplashBackground: Splash window background\n"
+				"  ToolTipBackground: Tooltip bubble background\n\n"
+			)
+		)
+
+		(set #help-themes-module-delete
+			(cat
+	 			"\nInstalling theme Delete.module file."
+			)
+		)
+
+		(set #help-themes-module-etrasch
+			(cat
+	 			"\nInstalling theme Empty_TraschCan.module file."
+			)
+		)
+
+		(set #help-themes-module-ecommand
+			(cat
+	 			"\nInstalling theme Execute_Command.module file."
+			)
+		)
+
+		(set #help-themes-module-info
+			(cat
+	 			"\nInstalling theme Information.module file."
+			)
+		)
+
+		(set #help-themes-module-ndrawer
+			(cat
+	 			"\nInstalling theme NewDrawer.module file."
+			)
+		)
+
+		(set #help-themes-module-reboot
+			(cat
+	 			"\nInstalling theme Reboot.module file."
+			)
+		)
+
+		(set #help-themes-module-rename
+			(cat
+	 			"\nInstalling theme Rename.module file."
+			)
+		)
+
+		(set #help-themes-module-sysinfo
+			(cat
+	 			"\nInstalling theme Systeminfo.module file."
+			)
+		)
+
+		(set #help-themes-PointerIcons
+			(cat
+	 			"\n     Theme PointerIcons files.\n"
+				"They are used for all files to manipulate.\n"
+				"e.g. Icon 'copying.info' is used when\n"
+				"some objects must be copied, moved or cloned."
+			)
+		)
+
+		(set #help-themes-desktop
+			(cat
+			 	"\n Used as default Desktop background."
+			)
+		)
+
+
+		(set #help-themes-window
+			(cat
+			 	"\n Icon 'def_iconify.info' is used for all\n"
+				"Scalos windows iconified on desktop.\n"
+				"Background:     default picture used with mode view by icon.\n"
+				"TextBackground: default picture used with mode view by text."
+			)
+		)
+
+		(set #help-themes-statusbar
+			(cat
+			 	"\n     Theme for Window's status bar.\n\n"
+				"Reading:\n"
+				"   Indicates that the window is currently reading the disk directory.\n"
+				"Tipyng:\n"
+				"   Indicates that the keyboard icon selection is active.\n"
+				"By typing any letter, you may select the first icon starting with that letter.\n"
+				"PadLock:\n"
+				"   Indicates that the contents of the window cannot be changed.\n"
+				"e.g. might be located on a read-only medium.\n"
+				"ShowAll:\n"
+				"   This symbol shows that the window is in 'Show all files' mode.\n"
+				"Background:\n"
+				"   This brush is used for the gadget status bar background."
+			)
+		)
+
+		(set #help-themes-prefs
+			(cat
+			 	"\n Used by "Scalos Prefs":\n"
+				" - Pages.\n"
+				" - Modules.\n"
+			)
+		)
+
+		(set #help-icons-overlay
+			(cat
+			 	"\n Used for "icons overlay":\n"
+				" - LeftOut.\n"
+				" - ReadOnly.\n"
+				" - Thumbnail.\n"
+			)
+		)
+
+		;===[ COPY MODULES-THEMES ]==================================
+
+		(set themes-delete-int "Scalos:Themes/default/Modules/delete.module/delete")
+		(if (exists themes-delete-int (NOREQ))
+			(
+				(set foundthemes 1)
+
+				;(debug "foundthemes = " foundthemes "\nlogos = " themes-delete-int "\n")
+
+				(set themes-delete-new (cat "" themes-delete-int ".old"))
+				(rename themes-delete-int themes-delete-new
+				(prompt "Rename old theme: delete")
+				)
+			)
+		)
+		(P_SimpleCopy "Installing theme: Delete..." "Themes/default/Modules/delete.module/delete" themes-module-delete #help-themes-module-delete)
+
+		;------------------------------------------------------------
+
+		(set themes-etrash-int "Scalos:Themes/default/Modules/empty_trashcan.module/empty_trashcan")
+		(if (exists themes-etrash-int (NOREQ))
+			(
+				(set foundthemes 1)
+
+				;(debug "foundthemes = " foundthemes "\nlogos = " themes-etrash-int "\n")
+
+				(set themes-etrash-new (cat "" themes-etrash-int ".old"))
+				(rename themes-etrash-int themes-etrash-new
+				(prompt "Rename old theme: empty_trashcan")
+				)
+			)
+		)
+		(P_SimpleCopy "Installing theme: Empty_Trashcan..." "Themes/default/Modules/empty_trashcan.module/empty_trashcan" themes-module-etrasch #help-themes-module-etrasch)
+
+		;------------------------------------------------------------
+
+		(set themes-exec-int "Scalos:Themes/default/Modules/execute_command.module/execute_command")
+		(if (exists themes-exec-int (NOREQ))
+			(
+				(set foundthemes 1)
+
+				;(debug "foundthemes = " foundthemes "\nlogos = " themes-exec-int "\n")
+
+				(set themes-exec-new (cat "" themes-exec-int ".old"))
+				(rename themes-exec-int themes-exec-new
+				(prompt "Rename old theme: execute_command")
+				)
+			)
+		)
+		(P_SimpleCopy "Installing theme: Execute_Command..." "Themes/default/Modules/execute_command.module/execute_command" themes-module-ecommand #help-themes-module-ecommand)
+
+		;------------------------------------------------------------
+
+		(set themes-info-int "Scalos:Themes/default/Modules/information.module/information")
+		(if (exists themes-info-int (NOREQ))
+			(
+				(set foundthemes 1)
+
+				;(debug "foundthemes = " foundthemes "\nlogos = " themes-info-int "\n")
+
+				(set themes-info-new (cat "" themes-info-int ".old"))
+				(rename themes-info-int themes-info-new
+				(prompt "Rename old theme: information")
+				)
+			)
+		)
+		(P_SimpleCopy "Installing theme: Information..." "Themes/default/Modules/information.module/information" themes-module-info #help-themes-module-info)
+
+		;------------------------------------------------------------
+
+		(set themes-drawer-int "Scalos:Themes/default/Modules/Newdrawer.module/Newdrawer")
+		(if (exists themes-drawer-int (NOREQ))
+			(
+				(set foundthemes 1)
+
+				;(debug "foundthemes = " foundthemes "\nlogos = " themes-drawer-int "\n")
+
+				(set themes-drawer-new (cat "" themes-drawer-int ".old"))
+				(rename themes-drawer-int themes-drawer-new
+				(prompt "Rename old theme: newdrawer")
+				)
+			)
+		)
+		(P_SimpleCopy "Installing theme: NewDrawer..." "Themes/default/Modules/newdrawer.module/Newdrawer" themes-module-ndrawer #help-themes-module-ndrawer)
+
+		;------------------------------------------------------------
+
+		(set themes-reboot-int "Scalos:Themes/default/Modules/Reboot.module/Reboot")
+		(if (exists themes-reboot-int (NOREQ))
+			(
+				(set foundthemes 1)
+
+				;(debug "foundthemes = " foundthemes "\nlogos = " themes-reboot-int "\n")
+
+				(set themes-reboot-new (cat "" themes-reboot-int ".old"))
+				(rename themes-reboot-int themes-reboot-new
+				(prompt "Rename old theme: reboot")
+				)
+			)
+		)
+		(P_SimpleCopy "Installing theme: Reboot..." "Themes/default/Modules/reboot.module/reboot" themes-module-reboot #help-themes-module-reboot)
+
+		;------------------------------------------------------------
+
+		(set themes-rename-int "Scalos:Themes/default/Modules/Rename.module/Rename")
+		(if (exists themes-rename-int (NOREQ))
+			(
+				(set foundthemes 1)
+
+				;(debug "foundthemes = " foundthemes "\nlogos = " themes-rename-int "\n")
+
+				(set themes-rename-new (cat "" themes-rename-int ".old"))
+				(rename themes-rename-int themes-rename-new
+				(prompt "Rename old theme: rename")
+				)
+			)
+		)
+		(P_SimpleCopy "Installing theme: Rename..." "Themes/default/Modules/rename.module/rename" themes-module-rename #help-themes-module-rename)
+
+		;------------------------------------------------------------
+
+		(set themes-sysinfo-int "Scalos:Themes/default/Modules/SystemInfo.module/SystemInfo")
+		(if (exists themes-sysinfo-int (NOREQ))
+			(
+				(set foundthemes 1)
+
+				;(debug "foundthemes = " foundthemes "\nlogos = " themes-sysinfo-int "\n")
+
+				(set themes-sysinfo-new (cat "" themes-sysinfo-int ".old"))
+				(rename themes-sysinfo-int themes-sysinfo-new
+				(prompt "Rename old theme: systeminfo")
+				)
+			)
+		)
+		(P_SimpleCopy "Installing theme: SystemInfo..." "Themes/default/Modules/systeminfo.module/SystemInfo" themes-module-sysinfo #help-themes-module-sysinfo)
+
+		;===[ VERIFY DESKTOP/WINDOW/POINTERICONS THEMES ]==========================
+
+		(if (and (>= #installer-version 44) (> #level 0))
+			(
+			(showmedia "StatusBar" (tackon "GFX" #StatusBar) 'lower_left' 'none' 0)
+			(showmedia "Deficonify" (tackon "GFX" #Deficonify) 'center_left' 'none' 0)
+			(showmedia "PointerIcons" (tackon "GFX" #PointerIcons) 'upper_left' 'none' 0)
+			)
+		)
+
+		(if	(= #level 2)
+			(
+			;--- EXPERT ---[ Themes/default/PointerIcons ]------------------------------------------------------
+			(copyfiles
+				(prompt	"Do you want to install theme: PointerIcons?")
+				(source	"Themes/default/PointerIcons")
+				(dest	themes-pointers)
+				(help   #help-themes-PointerIcons)
+				(files)
+				(infos)
+				(all)
+				(confirm "expert")
+			)
+			)
+		)
+
+		(if	(= #level 2)
+			(
+			;--- EXPERT ---[ Themes/default ]-------------------------------------------------------------------
+			(copyfiles
+				(prompt	"Do you want to install themes for:\nScalos logos, windows and Tooltip backgrounds")
+				(source	"Themes/default")
+				(dest	themes-defaut)
+				(help   #help-themes-default)
+				(files)
+				(confirm "expert")
+				(all)
+			)
+
+			;--- EXPERT ---[ Themes/default/window/ControlBar ]--------------------------------------------------
+			(copyfiles
+				(prompt	"Do you want to install theme for\nwindows Control Bar and examples?\n")
+				(source	"Themes/default/window/ControlBar")
+				(dest	themes-controlbar)
+				(help   #help-themes-controlbar)
+				(files)
+				(confirm "expert")
+				(all)
+			)
+
+			;--- EXPERT ---[ Themes/default/window/statusbar ]--------------------------------------------------
+			(copyfiles
+				(prompt	"Do you want to install theme for\nwindows statusbar and examples?\n")
+				(source	"Themes/default/window/statusbar")
+				(dest	themes-statusbar)
+				(help   #help-themes-statusbar)
+				(files)
+				(confirm "expert")
+				(all)
+			)
+
+			;--- EXPERT ---[ Themes/default/window ]------------------------------------------------------------
+			(copyfiles
+				(prompt	"Do you want to install theme for windows?\n")
+				(source	"Themes/default/window")
+				(dest	themes-window)
+				(help   #help-themes-window)
+				(files)
+				(confirm "expert")
+				(all)
+			)
+			;--- EXPERT ---[ Themes/default/Desktop ]-----------------------------------------------------------
+			(copyfiles
+				(prompt	"Do you want to install theme for desktop?\n")
+				(source	"Themes/default/Desktop")
+				(dest	themes-desktop)
+				(help   #help-themes-desktop)
+				(files)
+				(confirm "expert")
+				(all)
+			)
+			;--- EXPERT ---[ Themes/default/Prefs/Pages ]-------------------------------------------------------
+			(copyfiles
+				(prompt	"Do you want to install pages themes used by scalos prefs?\n")
+				(source	"Themes/default/Prefs/Pages")
+				(dest	themes-prefs-pages)
+				(help   #help-themes-prefs)
+				(files)
+				(confirm "expert")
+				(all)
+			)
+			;--- EXPERT ---[ Themes/default/Prefs/modules ]-----------------------------------------------------
+			(copyfiles
+				(prompt	"Do you want to install modules themes used by scalos prefs?\n")
+				(source	"Themes/default/Prefs/Modules")
+				(dest	themes-prefs-modules)
+				(help   #help-themes-prefs)
+				(files)
+				(confirm "expert")
+				(all)
+			)
+			;--- EXPERT ---[ Themes/default/Prefs/icons/Overlay ]-----------------------------------------------
+			(copyfiles
+				(prompt	"Do you want to install themes used for icons overlay?\n")
+				(source	"Themes/default/Icons/Overlay")
+				(dest	themes-icons-overlay)
+				(help   #help-icons-overlay)
+				(files)
+				(confirm "expert")
+				(all)
+			)
+
+			)
+			(
+			(P_VerifyThemes)
+			)
+			)
+
+		(if (> #level 0)
+			(
+			(P_closemedia Statusbar)
+			(P_closemedia Deficonify)
+			(P_closemedia PointerIcons)
+			)
+		)
+	)
+)
+
+
+;===[ START MODULES ]========================================================
+
+(set modules (tackon #scalos-dest "Modules"))
+
+(set #help-module-iconproper
+	(cat
+		"\nInstalling IconProperties.module."
+	)
+)
+(set #help-module-winproper
+	(cat
+		"\nInstalling WindowProperties.module."
+	)
+)
+(set #help-module-information
+	(cat
+		"\nInstalling Information.module."
+	)
+)
+(set #help-module-delete
+	(cat
+		"\nInstalling Delete.module."
+	)
+)
+(set #help-module-emptytrashcan
+	(cat
+		"\nInstalling Empty_Trashcan.module."
+	)
+)
+(set #help-module-executecommand
+	(cat
+		"\nInstalling Execute_Command.module."
+	)
+)
+(set #help-module-newdrawer
+	(cat
+		"\nInstalling NewDrawer.module."
+	)
+)
+(set #help-module-rename
+	(cat
+		"\nInstalling Rename.module."
+	)
+)
+
+(set #makedir-modules 	"Create modules directory...")
+(if (not (exists modules (NOREQ)))
+	(
+		(makedir modules
+		(prompt #makedir-modules)
+		(help	@makedir-help)
+		)
+	)
+)
+
+(complete 20)
+
+(if	(> #level 0)
+	(
+	(copyfiles
+		(prompt	"Select modules to install, please...")
+		(source	"Modules/")
+		(dest	modules)
+		(help @askfile-help)
+		(infos)
+		(confirm "expert")
+		(all)
+		)
+	)
+	(
+	(P_VeriFyIfExistsForNovice "Modules" "IconProperties.module"   modules #help-module-iconproper)
+	(P_VeriFyIfExistsForNovice "Modules" "WindowProperties.module" modules #help-module-winproper)
+	(P_VeriFyIfExistsForNovice "Modules" "Information.module"      modules #help-module-information)
+	(P_VeriFyIfExistsForNovice "Modules" "Delete.module"           modules #help-module-delete)
+	(P_VeriFyIfExistsForNovice "Modules" "Empty_Trashcan.module"   modules #help-module-emptytrashcan)
+	(P_VeriFyIfExistsForNovice "Modules" "Execute_Command.module"  modules #help-module-executecommand)
+	(P_VeriFyIfExistsForNovice "Modules" "NewDrawer.module"        modules #help-module-newdrawer)
+	(P_VeriFyIfExistsForNovice "Modules" "Rename.module"           modules #help-module-rename)
+	)
+)
+
+;===[ END MODULES ]===========================================================
+
+
+(complete 40)
+
+;===[ COPY SCALOS-MAINFILE ]==================================================
+
+(set #help-scamain
+	(cat
+		"\nInstalling Scalos main executable."
+	)
+)
+(P_SimpleCopyinfo "Installing Scalos ..." "Scalos" #scalos-dest #help-scamain)
+
+
+;==================[ COPY PREFS ]============================================
+
+(if (not (exists "Scalos:Prefs" (NOREQ)))
+	(
+		(makedir scalosprefs-dest
+			(prompt #makedir-prefs)
+			(help	@makedir-help)
+		)
+	(set scalosprefs-dest "Scalos:Prefs")
+	)
+)
+
+(copyfiles
+	(prompt	#copy-scalosprefs)
+	(source	"Prefs/")
+	(dest	scalosprefs-dest)
+	(help	@askfile-help)
+	(infos)
+	(confirm)
+	(all)
+)
+
+(complete 50)
+
+;==================[ COPY LIBRARIES ]========================================
+
+(P_Copylib #copy-libs1 "Libs/iconobject.library" "Libs:")
+(P_Copylib #copy-libs4 "Icondatatypes/Datatypes/amigaiconobject.datatype" #defclasses)
+(P_Copylib #copy-libs4.1 "Icondatatypes/Datatypes/amigaiconobj35.datatype" #defclasses)
+(P_Copylib #copy-libs5 "Icondatatypes/Datatypes/iconobject.datatype" #defclasses)
+(if (= #OS4 0)
+	(P_Copylib #copy-libs6 "Icondatatypes/Datatypes/newiconobject.datatype" #defclasses)
+)
+(P_Copylib #copy-libs7 "Icondatatypes/Datatypes/pngiconobject.datatype" #defclasses)
+(P_Copylib #copy-libs8 "Icondatatypes/Datatypes/glowiconobject.datatype" #defclasses)
+(P_Copylib #copy-libs9 "Libs/sqlite3.library" "Libs:")
+
+(if (= #OS4 0)
+	(P_Copylib #CatPopLib    "Libs/popupmenu.library"   "Libs:")
+)
+(P_Copylib #CatPrefLib   "Libs/preferences.library" "Libs:")
+(P_Copylib #CatScaGfxLib "Libs/scalosgfx.library"   "Libs:")
+
+(if (= #MOS 1)
+	(
+	(P_Copylib #CatMOsGuiLib    "Libs/guigfx.library.elf" "Libs:")
+	(P_Copylib #CatMOsRenderLib "Libs/render.library.elf" "Libs:")
+	)
+	(if (= #OS4 1)
+		(
+		(P_Copylib #CatOS4GuiLib    "Libs/OS4/guigfx.library" "Libs:")
+		(P_Copylib #CatOS4RenderLib "Libs/OS4/render.library" "Libs:")
+		)
+		(
+		(P_Copylib #CatGuiLib    "Libs/guigfx.library" "Libs:")
+		(P_Copylib #CatRenderLib "Libs/render.library" "Libs:")
+		)
+	)
+)
+
+;==================[ COPY MUI CLASSES ]========================================
+
+(if (= #MOS 1)
+	(
+	(set #mui-classes "SYS:classes/mui")
+	)
+	(
+	(set #mui-classes "MUI:libs/mui")
+	)
+)
+
+;===========[ COPY CATALOG FILES ]===========================================
+
+(set catalogs
+	(tackon "Catalogs" (tackon @language "Scalos"))
+)
+
+(set destination
+	(tackon "Locale:Catalogs" (tackon @language "Scalos"))
+)
+
+(if (exists (catalogs))
+	(copyfiles
+		(prompt	#copy-catalog)
+		(source	catalogs)
+		(dest destination)
+		(help @askfile-help)
+		(confirm)
+		(all)
+	)
+)
+
+;===========[ COPY ENV-ARCHIVE ]=============================================
+
+(set #deficons "env-archive/deficons.prefs")
+
+; select source directory for localized preferences
+(if (= #MOS 1)
+	(
+	; MorphOS
+	(set #envarc-common "env-archive/scalos.MOS")
+	)
+	(if (= #OS4 1)
+		(
+		; OS4
+		(set #envarc-common "env-archive/scalos.OS4")
+		)
+		(
+		; 68K
+		(set #envarc-common "env-archive/scalos.68k")
+		)
+	)
+)
+
+; default for unknown language is "English"
+(set #envarc-locale (tackon #envarc-common "English"))
+
+(if (= @language "français")
+	(
+	(set #envarc-locale (tackon #envarc-common "Français"))
+	)
+)
+(if (= @language "deutsch")
+	(
+	(set #envarc-locale (tackon #envarc-common "Deutsch"))
+	)
+)
+
+(set #menu13 (tackon #envarc-locale "Menu13.prefs"))
+(set #envarcftypes (tackon #envarc-locale "FileTypes"))
+
+(complete 75)
+
+(if 	(= #level 0)
+		(
+		(P_VerifyEnvarcForNovice #envarc-common #env-scalos #copy-filetypes-presets)
+		(P_VerifyEnvarcFTypesForNovice #envarcftypes (tackon #env-scalos "Filetypes") #copy-filetypes-presets)
+		(if	(not (exists (tackon #env-scalos "Menu13.prefs") (NOREQ)))
+				(
+				(set #deftext
+					(cat "Copying: " #menu13 " to: " #env-scalos
+					)
+				)
+				(P_SimpleCopy #deftext #menu13 #env-scalos #helptext)
+				)
+			)
+
+		(if	(not (exists (tackon #env "deficons.prefs") (NOREQ)))
+				(
+				(set #deftext
+					(cat "Copying: " #deficons " to: " #env
+					)
+				)
+				(P_SimpleCopy #deftext #deficons #env #helptext)
+				)
+			)
+		)
+		(
+		;===[ Average and expert mode ]===
+		(if 	(= #level 1)
+			(
+			(P_VerifyEnvarcAverage #copy-filetypes-presets)
+			)
+		)
+
+		(if 	(= #level 2)
+			(
+				(P_VerifyEnvarcForExpert #envarc-common #env-scalos #copy-filetypes-presets)
+
+				;=========[ COPY ENV-ARCHIVE FILETYPES ]=====================================
+
+				(copyfiles
+					(prompt	#copy-filetypes-presets)
+					(source	#envarcftypes)
+					(dest	(tackon #env-scalos "Filetypes"))
+					(help	@askfile-help)
+					(confirm "expert")
+					(all)
+				)
+				(copyfiles
+					(prompt	#copy-presets)
+					(source	#envarc-locale)
+					(dest	#env-scalos)
+					(help	@askfile-help)
+					(confirm "expert")
+					(files)
+					(all)
+				)
+				(copyfiles
+					(prompt	"Do you want to install: \n" #deficons " to: "#env " ?")
+					(source	#deficons)
+					(dest	#env)
+					(help	@askfile-help)
+					(confirm "expert")
+					(files)
+				)
+			)
+		)
+	)
+)
+
+;=========[ HISTORY ]=========================================================
+
+(P_SimpleCopy "Installing History..." #licencetext #scalos-dest @askfile-help)
+
+;=========[ README ]===========================================================
+
+(P_SimpleCopy "Installing Readme..." "Readme.txt" #scalos-dest @askfile-help)
+
+(complete 85)
+
+;=========[ ASK COPY PLUGINS ================================================
+
+(if (= #level 2)
+	(
+		(set plugin
+			(askbool
+				(prompt #plugin-select)
+				(help #plugin-select-help)
+				(default 1)
+			)
+		)
+	)
+	(
+	(set plugin 1)
+	)
+)
+
+(if plugin
+	(
+		(set #plugins-dest	 "Scalos:Plugins")
+		(set #plugins-dest-types "Scalos:Plugins/FileTypes")
+		(set #plugins-dest-menu	 "Scalos:Plugins/Menu")
+		(set #plugins-dest-oop	 "Scalos:Plugins/OOP")
+		(set #plugins-dest-preview "Scalos:Plugins/Preview")
+
+		(set #makedir-plug	 "Creating Plugin-Destination...")
+		(set #makedir-plug-types "Creating FileTypes Plugins-Destination...")
+		(set #makedir-plug-menu	 "Creating Menu Plugins-Destination...")
+		(set #makedir-plug-oop	 "Creating OOP Plugin-Destination...")
+		(set #makedir-plug-preview "Creating Preview Plugin-Destination...")
+
+;----------------------------------------------------------------------------
+;------------------[ VERIFY DIRECTORY TREE PLUGINS ]-------------------------
+;----------------------------------------------------------------------------
+
+		(if (not (exists #plugins-dest (NOREQ)))
+			(
+				(makedir #plugins-dest
+				(prompt #makedir-plug)
+				(help	@makedir-help)
+				)
+			)
+		)
+
+		(if (not (exists #plugins-dest-types (NOREQ)))
+			(
+				(makedir #plugins-dest-types
+				(prompt #makedir-plug-types)
+				(help	@makedir-help)
+				)
+			)
+		)
+
+		(if (not (exists #plugins-dest-menu (NOREQ)))
+			(
+				(makedir #plugins-dest-menu
+				(prompt #makedir-plug-menu)
+				(help	@makedir-help)
+				)
+			)
+		)
+		(if (not (exists #plugins-dest-oop (NOREQ)))
+			(
+				(makedir #plugins-dest-oop
+				(prompt #makedir-plug-oop)
+				(help	@makedir-help)
+				)
+			)
+		)
+
+		(if (not (exists #plugins-dest-preview (NOREQ)))
+			(
+				(makedir #plugins-dest-preview
+				(prompt #makedir-plug-preview)
+				(help	@makedir-help)
+				)
+			)
+		)
+
+(complete 88)
+
+;=========[ COPY PLUGINS ]===================================================
+
+		(copyfiles
+			(prompt	#copy-plugins-filetypes)
+			(source	"PlugIns/Filetypes")
+			(dest	(tackon #scalos-dest "Plugins/Filetypes"))
+			(help	@askfile-help)
+			(confirm)
+			(all)
+		)
+
+		(copyfiles
+			(prompt	#copy-plugins-menu)
+			(source	"Plugins/Menu")
+			(dest	(tackon #scalos-dest "Plugins/Menu"))
+			(help	@askfile-help)
+			(confirm)
+			(all)
+		)
+
+		(copyfiles
+			(prompt	#copy-plugins-preview)
+			(source	"Plugins/Preview")
+			(dest	(tackon #scalos-dest "Plugins/Preview"))
+			(help	@askfile-help)
+			(confirm)
+			(all)
+		)
+
+;=========[ COPY OOP PLUGINS WITH VERSIONS CHECKED - AUTO COMPLETE ]=========
+
+		(set p 0)
+		(while (set oopplug (select p 	"devicefilter.plugin" "persist.plugin" "title_clock.plugin" "title_freepens.plugin" "volumegauge.plugin" "wb39.plugin" "wbrexx.plugin" "xtwindows.plugin" ""))
+			(
+			(set p(+ p 1))
+			(P_Copylib (cat "" #copy-plugins-oop "\n" oopplug "") (tackon "Plugins/OOP" oopplug) (tackon #scalos-dest "Plugins/OOP"))
+			)
+		)
+
+	)
+)
+
+(complete 94)
+
+;=========[ Remove icon datatypes from old locations ]=======================
+
+(P_RemoveObsolete)
+
+(complete 95)
+
+;=========[ COPY SCALOS TOOLS ]==============================================
+
+(copyfiles
+	(prompt	#catctrl)
+	(source	"Tools")
+	(dest "Scalos:Tools")
+	(help @askfile-help)
+	(confirm)
+	(files)
+	(infos)
+	(all)
+)
+
+;=========[ LOADWB (VERSION CHECKED) ]=======================================
+
+(complete 98)
+
+(if (= #MOS 1)
+	(
+	(set #loadwb "MOSSYS:c/LoadWB")
+	)
+	(
+	(set #loadwb "c:LoadWB")
+	)
+)
+(set #loadwb-backup (cat #loadwb ".orig"))
+(set #loadwbsca (cat #loadwb ".scalos"))
+
+;=========[ WORKBENCH REPLACEMENT // SET USER LEVEL 1 ]======================
+
+(user 1)
+
+(set #startsca 0)
+
+(set #startsca
+	(askbool
+		(prompt #startsca-select)
+		(help #startsca-select-help)
+		(default 1)
+		)
+	)
+
+
+(P_Replace 'C/LoadWB' #loadwb)
+
+(user #oldlevel)
+
+(if #startsca
+	(
+	(if 	(NOT (exists #loadwb-backup (NOREQ)))
+			(
+			(rename #loadwb #loadwb-backup
+			(prompt #rename-loadwborg)
+			)
+		)
+	)
+	(copyfiles
+		(prompt	#sverwb)
+		(source	"c/LoadWB")
+		(dest (pathonly #loadwb))
+		(help @askfile-help)
+		(confirm "expert")
+	)
+	(startup @app-name
+		(prompt	#startup-scalos)
+		(help	#startup-scalos-help "\n\n" @startup-help)
+		(command 'Assign Scalos: \"' (expandpath (#scalos-dest)) '\"\n')
+		)
+	)
+)
+
+;=========[ ASK REBOOT ]=====================================================
+
+(set #final-exit
+	(cat
+		"\n\nThe installation of " @app-name " is now complete.\n\n"
+		"To enable Scalos Beta, you need to your Amiga.\n\n"
+		"Select the \"Yes\" gadget to reboot your Amiga."
+	)
+)
+
+(set #reboot-help
+	(cat
+		"   New Scalos Beta will be running only after the next startup.\n"
+		"If you choose not to reboot you will continue to use the old version of "
+		"Scalos currently resident in memory."
+	)
+)
+
+(if	(> #level 0)
+		(
+		(if foundthemes
+			(
+			(set #install-exit
+				(cat
+					"\n\n   Script found some Themes files already presents\n"
+					"in 'Scalos:Themes/modules' directory, and backed them up \n"
+					"with a '.old' suffix.\n"
+					"\n\n   The installation of " @app-name " is now complete.\n\n"
+					"To enable Scalos Beta, you need to reboot your Amiga.\n\n"
+					"Select the \"Yes\" gadget to reboot your Amiga."
+					)
+				)
+			)
+			(
+			(set #install-exit #final-exit)
+			)
+		)
+	)
+	(
+	(set #install-exit #final-exit)
+	)
+)
+
+(user 1)
+
+(set @default-dest (expandpath("Scalos:")))
+(complete 100)
+
+(if #startsca
+	(
+	(set #preboot
+		(askbool
+			(prompt #install-exit)
+			(help #reboot-help)
+			(default 0)
+		)
+	)
+	(P_EndInstall #preboot)
+	)
+	(
+	(P_closemedia mdmatrix)
+	(exit #install-exit2)
+	)
+)
+
+
+;=========[ END INSTALLATION ]===============================================
+

@@ -1,0 +1,237 @@
+; FormatDisk.cd
+; version $VER: FormatDiskMUI.catalog 40.1 (26 Feb 2005 21:03:45)
+; codeset 0
+; language english
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME (//)
+Scalos FormatDisk
+;
+;
+MSGID_OKBUTTON (//)
+New Drawer
+;
+;
+MSGID_OKBUTTON_SHORT (/1/1)
+n
+;
+;
+MSGID_SHORTHELP_OKBUTTON (//)
+Create new drawer.
+;
+;
+MSGID_CANCELBUTTON (//)
+Cancel
+;
+;
+MSGID_CANCELBUTTON_SHORT (/1/1)
+c
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON (//)
+Discard all changes and\n\
+do not create anything.
+;
+;
+MSGID_CREATE_APPLICATION_FAILED (//)
+Failed to create Application.\n
+;
+;
+MSGID_CREATE_MAINWINDOW_FAILED (//)
+Failed to open main window !\n
+;
+;
+MSGID_OPEN_LIBRARY_FAILED (//)
+Failed to open \"%s\" !\n
+;
+;;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT (2000//)
+Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT (//)
+About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI (//)
+About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT (//)
+Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT (//)
+Q
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK (3000//)
+_OK
+;
+;
+MSGID_ABOUTREQFORMAT (//)
+\33c\033bScalos FormatDisk.module V%ld.%ld\033n\n\
+%s\n\
+© 2004%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+MSGID_STRING_LABEL (4000//)
+Label:
+;
+;
+MSGID_TEXT_FILESYSTEM (//)
+File System:
+;
+;
+MSGID_TEXT_STATUS (//)
+Status:
+;
+;
+MSGID_GROUP_COMMON (//)
+Common
+;
+;
+MSGID_CHECK_CREATEICONS (//)
+Create Icons?
+;
+;
+MSGID_CHECK_CREATEICONS_SHORTHELP (//)
+...create icons..
+;
+;
+MSGID_GROUP_SPECIFIC (//)
+Specific
+;
+;
+MSGID_CHECK_CASE_SENSITIVE (//)
+Case Sensitive?
+;
+;
+MSGID_CHECK_CASE_SENSITIVE_SHORTHELP (//)
+...Case Sensitive...
+;
+;
+MSGID_CHECK_CREATE_RECYCLE (//)
+Create Recyle Directory?
+;
+;
+MSGID_CHECK_CREATE_RECYCLE_SHORTHELP (//)
+...Create Recyle Directory...
+;
+;
+MSGID_CHECK_RECYCLE_VISIBLE (//)
+Recycle Directory Visible?
+;
+;
+MSGID_CHECK_RECYCLE_VISIBLE_SHORTHELP (//)
+...Recycle Directory Visible...
+;
+;
+MSGID_DISK_FORMATTED (//)
+Formatted
+;
+;
+MSGID_DISK_UNFORMATTED (//)
+Unformatted
+;
+;
+MSGID_FSNAME_UNKNOWN (//)
+Unknown (%s%s%s%s)
+;
+;
+MSGID_TEXT_DEVICENAME (//)
+%s, Unit %ld. %s
+;
+;
+MSGID_KBYTENAME (//)
+KB
+;
+;
+MSGID_MBYTENAME (//)
+MBytes
+;
+;
+MSGID_GBYTENAME (//)
+GBytes
+;
+;
+MSGID_HBYTENAME (//)
+HBytes
+;
+;
+MSGID_LABEL_RELABEL_ME (//)
+Relabel me!
+;
+;
+MSGID_BUTTON_QUICKFORMAT (//)
+Quick Format...
+;
+;
+MSGID_BUTTON_QUICKFORMAT_SHORT (/1/1)
+Q
+;
+;
+MSGID_BUTTON_QUICKFORMAT_SHORTHELP (//)
+...quick format...
+;
+;
+MSGID_BUTTON_FORMAT (//)
+Format...
+;
+;
+MSGID_BUTTON_FORMAT_SHORT (/1/1)
+F
+;
+;
+MSGID_BUTTON_FORMAT_SHORTHELP (//)
+...Format...
+;
+;
+MSGID_BUTTON_FORMAT_VERIFY (//)
+Format and Verify...
+;
+;
+MSGID_BUTTON_FORMAT_VERIFY_SHORT (/1/1)
+V
+;
+;
+MSGID_BUTTON_FORMAT_VERIFY_SHORTHELP (//)
+...Format and Verify...
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE (5000//)
+FormatDisk.module startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD (//)
+Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+\n\
+Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+%lu.%lu is currently in use by other applications.\n\
+\n\
+Once you have installed the required version,\n\
+close all MUI programs, make sure the old class\n\
+is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;
+;

@@ -1,0 +1,101 @@
+# $Date: 2011-08-10 15:09:09 +0200 (Mi, 10. Aug 2011) $
+# $Revision: 833 $
+##############################################################################
+
+ifndef TOPLEVEL
+	TOPLEVEL	=	$(shell pwd)/../..
+endif
+
+# Native FlexCat doesn't like Linux paths
+ifeq ($(CROSS), )
+	SDPATH=/
+else
+	SDPATH=../..
+endif
+
+##############################################################################
+
+include		config.mk
+
+##############################################################################
+#
+# Project Object files
+#
+
+OBJS	=      	$(OBJDIR)/Updater.o \
+
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS:.o=.d)
+endif
+
+##############################################################################
+#
+# Subdirs
+#
+
+SUBDIRS	=	$(filter-out Catalogs/sample/Scalos, $(wildcard Catalogs/*/Scalos))
+
+##############################################################################
+#
+# Targets
+#
+
+NAME  	=       Updater.module
+NAME_DB	=	$(NAME).debug
+
+##############################################################################
+
+.PHONY: all install clean bump dump nodebug
+
+all:	$(BINDIR)/$(NAME) \
+	$(BINDIR)/$(NAME_DB) \
+	all_subdirs
+
+##############################################################################
+
+$(OBJDIR)/%.o: $(TOOLTYPE_DIR)/%.c
+	@$(run-cc)
+
+$(OBJDIR)/%.o: $(ICONOBJMCC_DIR)/%.c
+	@$(run-cc)
+
+Updater.c : $(OBJDIR)/Updater_Locale.h
+
+$(OBJDIR)/Updater_Locale.h : Updater.cd
+	@$(ECHO) "FlexCat $@"
+	$(FLEXCAT) $< $@=$(SDPATH)/CatComp_h.sd
+
+##############################################################################
+
+$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) : $(OBJS)
+	@$(ECHO) "Link $(NAME)"
+	@$(CC) $(OBJS) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(NAME_DB)
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(NAME_DB) -o $(BINDIR)/$(NAME)
+ifneq ($(MACHINE), ppc-amigaos)
+	-@chmod u+x $@
+endif
+
+##############################################################################
+
+install: install_subdirs
+
+install:
+	-@$(ECHO) "Installing $(NAME)"
+	@copy $(BINDIR)/$(NAME) Scalos:modules/ clone
+
+clean:	clean_subdirs
+
+clean:
+	-@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d $(OBJDIR)/*.d.* \
+        	$(OBJDIR)/*.i $(OBJDIR)/*.s \
+		$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) \
+		*.dump *_str.* \
+		$(OBJDIR)/Updater_Locale.h
+
+##############################################################################
+

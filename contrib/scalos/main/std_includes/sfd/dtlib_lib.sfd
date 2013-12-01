@@ -1,0 +1,10 @@
+==id $Id: dtlib_lib.sfd 5 2009-02-17 20:22:13Z jlachmann $
+==copyright ©1999-2005 The Scalos Team
+==base _DtLibBase
+*==basetype struct Library *
+==bias 30
+==public
+==include <exec/types.h>
+==include <intuition/classes.h>
+Class *ObtainInfoEngine(struct Library *libBase) (a0)
+==end

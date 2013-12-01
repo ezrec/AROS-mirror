@@ -1,0 +1,69 @@
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/../../../..
+endif
+
+##############################################################################
+
+include		config.mk
+
+##############################################################################
+#
+# Project Object files
+#
+
+OBJS	=      	$(OBJDIR)/title_clock_prefs.o \
+		$(OBJDIR)/prefs_file.o \
+		$(OBJDIR)/screen.o \
+		$(OBJDIR)/tcp_locale.o \
+		$(OBJDIR)/interface.o \
+		$(OBJDIR)/requesters.o \
+		$(OBJDIR)/saveicon.o \
+		$(OBJDIR)/misc.o \
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS:.o=.d)
+endif
+
+##############################################################################
+#
+# Targets
+#
+
+TITLECLOCKPREFS	   =	   Title_Clock_Prefs
+
+##############################################################################
+
+.PHONY: all install clean bump dump
+
+all:	$(TITLECLOCKPREFS)
+
+##############################################################################
+
+$(OBJDIR)/%.o: $(PREFS_DIR)/%.c
+	@$(run-cc)
+
+##############################################################################
+
+$(TITLECLOCKPREFS): $(OBJS)
+	@$(ECHO) "Link $@"
+	@$(CC) $(OBJS) $(LFLAGS) $(DEFINES) -o$@.debug
+	@$(STRIP) $(SFLAGS) $@.debug -o $@
+ifneq ($(MACHINE), ppc-amigaos)
+	@chmod u+x $@
+endif
+
+##############################################################################
+
+install:
+#	@copy $(TITLECLOCKPREFS) Scalos:Plugins/OOP clone
+
+
+clean:
+	-@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d $(OBJDIR)/*.i \
+        	$(OBJDIR)/*.s $(OBJDIR)/*.d.* \
+		$(TITLECLOCKPREFS).debug $(TITLECLOCKPREFS)
+

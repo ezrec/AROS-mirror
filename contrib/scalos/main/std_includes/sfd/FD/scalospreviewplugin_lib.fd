@@ -1,0 +1,5 @@
+##base _ScalosPreviewPluginBase
+##bias 30
+##public
+SCAPreviewGenerate(wt,dirLock,iconName,tagList)(a0/a1/a2/a3)
+##end

@@ -1,0 +1,196 @@
+; Empty_Trashcan.ct
+## version $VER: Empty_Trashcan.catalog 40.1 (04 Dec 2005 23:01:34)
+## codeset 0
+## language français
+;
+;#arrayopts static __far
+;
+MSGID_TITLENAME
+Scalos Empty_Trashcan
+;Scalos Empty_Trashcan
+;
+MSGID_OKBUTTON
+D'accord
+;Ok
+;
+MSGID_OKBUTTON_SHORT
+O
+;O
+;
+MSGID_SHORTHELP_OKBUTTON
+Vider la corbeille.\n\
+Le contenu est \033birrévocablement éffaçé\033n !
+;Start emptying trashcan.\n\
+;All contents is deleted irrevocably!
+;
+MSGID_CANCELBUTTON
+Annuler
+;Cancel
+;
+MSGID_CANCELBUTTON_SHORT
+A
+;c
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Ne pas vider la corbeille et quitter.
+;Leave trashcan untouched and quit
+;
+MSGID_ABORTBUTTON
+Interrompre
+;Abort
+;
+MSGID_ABORTBUTTON_SHORT
+i
+;a
+;
+;
+MSGID_SHORTHELP_ABORTBUTTON
+Interrompre immèdiatement la\n\
+vidange de la corbeille et quitter.
+;Immediately abort emptying\n\
+;of trashcan and quit.
+;
+;
+MSGID_CREATE_APPLICATION_FAILED
+La création de l'application a échouée.\n
+;Failed to create Application.\n
+;
+MSGID_CREATE_MAINWINDOW_FAILED
+Impoosible d'ouvrir la fenêtre principale !\n
+;Failed to open main window !\n
+;
+MSGID_OPEN_LIBRARY_FAILED
+L'ouverture de \"%s\" a échouée !\n
+;Failed to open \"%s\" !\n
+;
+;;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT
+Projet
+;Project
+;
+MSGID_MENU_PROJECT_ABOUT
+A propos...
+;About...
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+A propos de MUI...
+;About MUI...
+;
+MSGID_MENU_PROJECT_QUIT
+Quitter
+;Quit
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;Q
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK
+_D'accord
+;_OK
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Empty_Trashcan.module V\0333%ld\0332.\0333%ld\0332\033n\n\
+%s\n\
+© 2005%s The Scalos Team
+;\33c\033bScalos Empty_Trashcan.module V%ld.%ld\033n\n\
+;%s\n\
+;© 2005%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+MSGID_WARNING_EMPTY_TRASHCAN
+\033c\033bAttention !\033n\n\
+Vous ne pouvez pas récupèrer ce que vous éffacez !\n\
+OK pour vider la corbeille ?
+;Warning! You cannot get back what you delete!\n\
+;OK to empty the trashcan?
+;
+MSGID_GADGETS_EMPTY_ABORT
+Vider|Interrompre
+;Empty|Abort
+;
+MSGID_GADGETTEXT_OK
+OK
+;OK
+;
+MSGID_GADGETTEXT_CANCEL
+Annuler
+;Cancel
+;
+MSGID_EMPTY_TRASHCAN
+Empty Trashcan
+;Empty Trashcan
+;
+MSGID_GADGETS_DELETE_ABORT
+Efacer|Interrompre
+;Delete|Abort
+;
+MSGID_EMPTYING_TRASHCAN
+Vidange de la corbeille...
+;Emptying Trashcan...
+;
+MSGID_PATH
+Chemin
+;Path
+;
+MSGID_GADGET_ABORT
+Interrompre
+;Abort
+;
+MSGID_BUILD_FILELIST
+Création de la liste des fichiers...
+;Building Filelist...
+;
+MSGID_OUT_OF_MEMORY
+Plus assez de mémoire
+;Not Enough Memory
+;
+MSGID_ERROR
+Erreur
+;Error
+;
+MSGID_FAILED_TO_DELETE
+%s\n\
+n'a put être supprimé :\n\
+%s
+;%s\n\
+;couldn't be deleted:\n\
+;%s
+;
+MSGID_GADGETS_SKIP_ABORT
+Le laisser|Interrompre
+;Skip it|Abort
+;
+MSGID_DELETE_PROTECTED
+%s est protégé contre l'éffacement.\n\
+L'éffacer quand même ?
+;%s is protected against deletion.\n\
+;Delete anyway?
+;
+MSGID_GADGETS_DELETE_SKIP
+Effacer|Le laisser
+;Delete|Skip it
+;
+MSGID_GADGETS_DELETE_DELETEALL_PROTECT_SKIP
+Effacer|Effacer toute protection|Laisser
+;Delete|DeleteAllProtect|Skip
+;
+MSGID_TEXT_CURRENTITEM
+Effacement de :
+;Currently removing:
+;
+MSGID_TEXT_CURRENTITEM_SHORTHELP
+Nom de l'object en train d'être\n\
+supprimer de la corbeille.
+;This is the name if the item currently\n\
+;being deleted from trashcan.
+;
+MSGID_GLOBAL_TRASHCAN
+\nCette corbeille globale sera vidée, aussi :
+;\nThis global trashcan will be emptied, too:
+;
+;-----------------------------------------------------------
+;

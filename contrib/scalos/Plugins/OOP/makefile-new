@@ -1,0 +1,32 @@
+# $Date: 2009-02-17 21:22:13 +0100 (Di, 17. Feb 2009) $
+# $Revision: 5 $
+#############################################################
+TOPLEVEL	=	$(shell pwd)/../..
+
+include		config.mk
+
+##############################################################################
+#
+# Project subdirectories
+#
+
+SUBDIRS	= 	wb39_plugin \
+		DeviceFilter \
+		XTWindows \
+	       	title_freepens \
+		TitleClock \
+		title_envvar \
+#		title_test \
+
+##############################################################################
+
+.PHONY: all install clean
+
+all: all_subdirs
+
+clean: clean_subdirs
+
+install: install_subdirs
+
+nodebug: nodebug_subdirs
+

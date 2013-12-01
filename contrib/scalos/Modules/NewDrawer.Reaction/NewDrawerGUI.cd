@@ -1,0 +1,32 @@
+; *** catalog description file of "NewDrawerGUI.res"
+;
+MSGID_WINTITLE_NEWDRAWER (256//)
+Add a new drawer
+;
+MSGID_LABEL_ENTERNAME (257//)
+Enter Name for a new Drawer in '%s'
+;
+MSGID_NEWNAME_DEFAULT (258//)
+New_Drawer_Name
+;
+MSGID_LABEL_NEWDRAWER (259//)
+New Drawer
+;
+MSGID_GADGETTEXT_CREATEICON (260//)
+Create _Icon
+;
+MSGID_BUTTON_OK (261//)
+_Ok
+;
+MSGID_BUTTON_CANCEL (262//)
+_Cancel
+;
+MSGID_TITLE_ERRORREQ (263//)
+NewDrawer Error
+;
+MSGID_ERRORREQ_BODYTEXT (264//)
+Could not create new drawer\n'%s'\n%s
+;
+MSGID_REQ_OK (265//)
+ _Ok
+;

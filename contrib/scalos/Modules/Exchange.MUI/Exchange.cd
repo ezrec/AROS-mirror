@@ -1,0 +1,138 @@
+; Exchange.cd
+; $Date$
+; $Revision$
+; version $VER: Exchange.catalog 40.1 (23 Dec 2008 18:50:08)
+; codeset 0s
+; language english
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME (//)
+Scalos Exchange
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT (1000//)
+Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT (//)
+About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI (//)
+About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT (//)
+Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT (/1/1)
+Q
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK (2000//)
+_OK
+;
+;
+MSGID_ABOUTREQFORMAT (//)
+\33c\033bScalos Exchange.module V%ld.%ld\033n\n\
+%s\n\
+© 2008%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+MSGID_BUTTON_SHOW (3000//)
+Show
+;
+;
+MSGID_BUTTON_SHOW_KEY (/1/1)
+S
+;
+;
+MSGID_BUTTON_SHOW_SHORTHELP (//)
+Show Commodity window.
+;
+;
+MSGID_BUTTON_HIDE (//)
+Hide
+;
+;
+MSGID_BUTTON_HIDE_KEY (/1/1)
+H
+;
+;
+MSGID_BUTTON_HIDE_SHORTHELP (//)
+Hide Commodity window.
+;
+;
+MSGID_BUTTON_REMOVE (//)
+Remove
+;
+;
+MSGID_BUTTON_REMOVE_KEY (/1/1)
+R
+;
+;
+MSGID_BUTTON_REMOVE_SHORTHELP (//)
+Remove selected Commodity.
+;
+;
+MSGID_CXLIST_NAME (//)
+Name
+;
+;
+MSGID_CXLIST_STATE (//)
+State
+;
+;
+MSGID_CXLIST_TITLE (//)
+Title
+;
+;
+MSGID_CXLIST_PRIORITY (//)
+Priority
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE (4000//)
+Exchange Module startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD (//)
+Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+\n\
+Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+%lu.%lu is currently in use by other applications.\n\
+\n\
+Once you have installed the required version,\n\
+close all MUI programs, make sure the old class\n\
+is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;
+MSGID_CYCLE_ACTIVE_ACTIVE (5000//)
+Active
+;
+;
+MSGID_CYCLE_ACTIVE_INACTIVE (//)
+Inactive
+;
+;-----------------------------------------------------------
+;

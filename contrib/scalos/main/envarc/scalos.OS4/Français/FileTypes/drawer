@@ -1,0 +1,129 @@
+# Scalos filetype description
+# written Sat Jan 22 17:22:49 2005
+
+DESCRIPTION "[ Répertoire ]"
+
+POPUPMENU
+	MENUENTRY DEFAULTACTION NAME "Ouvrir" UNSELECTEDICON "THEME:Filetypes/Open"
+		INTERNALCMD NAME "open"
+	ENDMENUENTRY
+	MENUENTRY NAME "Ouvrir dans une nouvelle fenêtre"
+		INTERNALCMD NAME "openinnewwindow"
+	ENDMENUENTRY
+	MENUENTRY NAME "Informations..." UNSELECTEDICON "THEME:Filetypes/Information"
+		INTERNALCMD NAME "iconinfo"
+	ENDMENUENTRY
+	MENUSEPARATOR
+	MENUENTRY NAME "Explorer..." UNSELECTEDICON "THEME:Filetypes/Browse"
+		CLICMD NAME "Scalos:Tools/browse.script %p" STACK "16384" WBARGS
+	ENDMENUENTRY
+	MENUENTRY NAME "Chercher..." UNSELECTEDICON "THEME:Filetypes/Find"
+		INTERNALCMD NAME "find"
+	ENDMENUENTRY
+	MENUSEPARATOR
+	MENUENTRY NAME "Figer"
+		INTERNALCMD NAME "snapshot"
+	ENDMENUENTRY
+	MENUENTRY NAME "Libérer"
+		INTERNALCMD NAME "unsnapshot"
+	ENDMENUENTRY
+	MENUSEPARATOR
+	SUBMENU NAME "Edition" UNSELECTEDICON "THEME:Filetypes/Edit"
+		MENUENTRY NAME "Couper" UNSELECTEDICON "THEME:Filetypes/EditCut"
+			INTERNALCMD NAME "cut"
+		ENDMENUENTRY
+		MENUENTRY NAME "Copier" UNSELECTEDICON "THEME:Filetypes/EditCopy"
+			INTERNALCMD NAME "copy"
+		ENDMENUENTRY
+		MENUENTRY NAME "Coller" UNSELECTEDICON "THEME:Filetypes/EditPaste"
+			INTERNALCMD NAME "paste"
+		ENDMENUENTRY
+	ENDSUBMENU
+	MENUENTRY NAME "Renommer..." UNSELECTEDICON "THEME:Filetypes/Rename"
+		INTERNALCMD NAME "rename"
+	ENDMENUENTRY
+	MENUENTRY NAME "Sortir"
+		INTERNALCMD NAME "leaveout"
+	ENDMENUENTRY
+	MENUENTRY NAME "Ranger"
+		INTERNALCMD NAME "putaway"
+	ENDMENUENTRY
+	MENUENTRY NAME "Effacer" UNSELECTEDICON "THEME:Filetypes/Delete"
+		INTERNALCMD NAME "delete"
+	ENDMENUENTRY
+	MENUSEPARATOR
+	MENUENTRY NAME "Propriétés..." UNSELECTEDICON "THEME:Filetypes/Properties"
+		INTERNALCMD NAME "iconproperties"
+	ENDMENUENTRY
+ENDPOPUPMENU
+
+TOOLTIP
+	GROUP ORIENTATION "vertical"
+		MEMBER
+			GROUP ORIENTATION "horizontal"
+				MEMBER
+					STRING SRC "fibfilename" HALIGN "center" FONT "CenturyGothicBold.font/16" TTFONT "0/600/15/Arial Rounded MT Bold" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+				ENDMEMBER
+				MEMBER
+					STRING SRC "filetypestring" HALIGN "center" VALIGN "bottom" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+				ENDMEMBER
+			ENDGROUP
+		ENDMEMBER
+		MEMBER
+			SPACE SIZE "1"
+		ENDMEMBER
+		MEMBER
+			HBAR
+		ENDMEMBER
+		MEMBER
+			SPACE SIZE "1"
+		ENDMEMBER
+		MEMBER
+			GROUP ORIENTATION "horizontal"
+				MEMBER
+					GROUP ORIENTATION "vertical"
+						MEMBER HIDE "isempty plugin drawercontents.plugin dirs noicons showempty"
+							STRING ID "MSGID_TOOLTIP_DRAWERS" HALIGN "right" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+						MEMBER HIDE "isempty plugin drawercontents.plugin noicons"
+							STRING ID "MSGID_TOOLTIP_FILES" HALIGN "right" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+						MEMBER
+							STRING ID "MSGID_TOOLTIP_LASTCHANGE" HALIGN "right" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+						MEMBER HIDE "isempty fileprotection"
+							STRING ID "MSGID_TOOLTIP_PROTECTION" HALIGN "right" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+					ENDGROUP
+				ENDMEMBER
+				MEMBER
+					GROUP ORIENTATION "vertical"
+						MEMBER HIDE "isempty plugin drawercontents.plugin dirs noicons showempty"
+							STRING SRC "plugin drawercontents.plugin dirs noicons showempty" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+						MEMBER HIDE "isempty plugin drawercontents.plugin noicons"
+							STRING SRC "plugin drawercontents.plugin noicons" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+						MEMBER
+							GROUP ORIENTATION "horizontal"
+								MEMBER
+									STRING SRC "filedate" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+								ENDMEMBER
+								MEMBER
+									STRING SRC "filetime" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+								ENDMEMBER
+							ENDGROUP
+						ENDMEMBER
+						MEMBER
+							STRING SRC "fileprotection" HALIGN "left" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+					ENDGROUP
+				ENDMEMBER
+			ENDGROUP
+		ENDMEMBER
+		MEMBER HIDE "isempty filecomment"
+			STRING SRC "filecomment" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+		ENDMEMBER
+	ENDGROUP
+ENDTOOLTIP
+

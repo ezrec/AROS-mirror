@@ -1,0 +1,480 @@
+; Updater.cd
+; $Date$
+; $Revision$
+; version $VER: Updater.catalog 40.1 (23. Aug 2008 18:50:08)
+; codeset 0s
+; language english
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME (//)
+Scalos Updater
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT (1000//)
+Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT (//)
+About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI (//)
+About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT (//)
+Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT (//)
+Q
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK (2000//)
+_OK
+;
+;
+MSGID_ABOUTREQFORMAT (//)
+\33c\033bScalos Updater.module V%ld.%ld\033n\n\
+%s\n\
+© 2009%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+MSGID_COMPONENTLIST_DIRECTORY (3000//)
+Directory
+;
+;
+MSGID_COMPONENTLIST_FILE (//)
+Filename
+;
+;
+MSGID_COMPONENTLIST_LATEST_VERSION (//)
+Latest
+;
+;
+MSGID_COMPONENTLIST_INSTALLED_VERSION (//)
+Installed
+;
+;
+MSGID_COMPONENTLIST_UPDATE (//)
+Update
+;
+;-----------------------------------------------------------
+;
+MSGID_BUTTON_CHECKFORUPDATES (3500//)
+Check For Updates
+;
+;
+MSGID_BUTTON_CHECKFORUPDATES_SHORT (/1/1)
+C
+;
+;
+MSGID_BUTTON_CHECKFORUPDATES_HELP (//)
+...TBD...
+;
+;
+MSGID_BUTTON_STARTUPDATE (//)
+Begin Update
+;
+;
+MSGID_BUTTON_STARTUPDATE_SHORT (/1/1)
+B
+;
+;
+MSGID_BUTTON_STARTUPDATE_HELP (//)
+...TBD...
+;
+;
+MSGID_BUTTON_SELECT_ALL (//)
+Select All
+;
+;
+MSGID_BUTTON_SELECT_ALL_SHORT (/1/1)
+A
+;
+;
+MSGID_BUTTON_SELECT_ALL_HELP (//)
+...TBD...
+;
+;
+MSGID_BUTTON_DESELECT_ALL (//)
+Deselect All
+;
+;
+MSGID_BUTTON_DESELECT_ALL_SHORT (/1/1)
+D
+;
+;
+MSGID_BUTTON_DESELECT_ALL_HELP (//)
+...TBD...
+;
+;
+MSGID_TEXT_SELECTED_COUNT (//)
+%ld Selected
+;
+;
+MSGID_REGISTER_MAIN (//)
+Main
+;
+;
+MSGID_REGISTER_CONFIGURATION (//)
+Configuration
+;
+;
+MSGID_REGISTER_LOG (//)
+Log
+;
+;
+MSGID_GROUP_PROXY (//)
+Proxy Settings
+;
+;
+MSGID_CHECK_USE_PROXY (//)
+Use Proxy?
+;
+;
+MSGID_CHECK_USE_PROXY_SHORTHELP (//)
+...TBD...
+;
+;
+MSGID_STRING_PROXY_ADDR (//)
+Address:
+;
+;
+MSGID_STRING_PROXY_ADDR_SHORTHELP (//)
+...TBD...
+;
+;
+MSGID_STRING_PROXY_PORT (//)
+Port:
+;
+;
+MSGID_STRING_PROXY_PORT_SHORTHELP (//)
+...TBD...
+;
+;
+MSGID_CHECK_USE_PROXYAUTH (//)
+Proxy requires authentication?
+;
+;
+MSGID_CHECK_USE_PROXYAUTH_SHORTHELP (//)
+...TBD...
+;
+;
+MSGID_STRING_PROXY_USERNAME (//)
+User Name:
+;
+;
+MSGID_STRING_PROXY_USERNAME_SHORTHELP (//)
+...TBD...
+;
+;
+MSGID_STRING_PROXY_PASSWD (//)
+Password:
+;
+;
+MSGID_STRING_PROXY_PASSWD_SHORTHELP (//)
+...TBD...
+;
+;
+MSGID_REQFORMAT_OPENSSL_ERROR (//)
+In function \033b%s\033n,\n\
+OpenSSL call \033b%s\033n failed:\n\
+%s
+;
+;
+MSGID_REQFORMAT_NO_UPDATES_FOUND (//)
+No Updates found for %s.\n\
+You already have the most recent\n\
+Scalos components installed.
+;
+;
+MSGID_CHECK_SHOW_ALL_COMPONENTS (//)
+Show up-to-date components?
+;
+;
+MSGID_CHECK_SHOW_ALL_COMPONENTS_SHORTHELP (//)
+...TBD...
+;
+;
+MSGID_CHECK_ASK_EVERY_UPDATE (//)
+Ask about every component update?
+;
+;
+MSGID_CHECK_ASK_EVERY_UPDATE_SHORTHELP (//)
+...TBD...
+;
+;
+MSGID_ABOUTREQ_YES_NO_ABORT (//)
+_Yes|_No|_Abort
+;
+;
+MSGID_REQFORMAT_ASK_UPDATE (//)
+Are you sure you want to update\n\
+\"%s\" to version %ld.%ld\n\
+(Installed Version: %ld.%ld) ?
+;
+;
+MSGID_ERROR_DOWNLOADING_UPDATE (//)
+Error downloading update package \"%s\"\n\
+%s
+;
+;
+MSGID_REQ_CONTINUE_ABORT (//)
+_Continue|_Abort
+;
+;
+MSGID_ERROR_LHA1 (//)
+Error: LHA failed to unpack \"%s\".
+;
+;
+MSGID_ERROR_LHA2 (//)
+Error: LHA failed to unpack\n\
+catalog files for \"%s\".
+;
+;
+MSGID_ERROR_OPEN_LHAFILE (//)
+Error: failed to open temporary\n\
+archive \"%s\" for updating \"%s\".
+;
+;
+MSGID_STRING_SCALOS_SERVER (//)
+Scalos Update Server
+;
+;
+MSGID_STRING_SCALOS_SERVER_SHORTHELP (//)
+...TBD...
+;
+;
+MSGID_REQ_INSTALL_UPDATES_GADGETS (//)
+_Update|_Abort
+;
+;
+MSGID_REQ_INSTALL_UPDATES (//)
+Are you sure you want to install\n\
+%ld Scalos updates now?
+;
+;
+MSGID_GROUP_LOG (//)
+Update Log
+;
+;
+MSGID_POPASL_TEMPPATH (//)
+Path for Temporary Files:
+;
+;
+MSGID_GROUP_MISCELLANEOUS (//)
+Miscellaneous
+;
+;
+MSGID_BUTTON_CLEAR_LOG (//)
+Clear Log
+;
+;
+MSGID_BUTTON_CLEAR_LOG_SHORT (/1/1)
+C
+;
+;
+MSGID_BUTTON_CLEAR_LOG_SHORTHELP (//)
+...TBD..
+;
+;
+MSGID_BUTTON_SAVE_LOG (//)
+Save Log...
+;
+;
+MSGID_BUTTON_SAVE_LOG_SHORT (/1/1)
+S
+;
+;
+MSGID_BUTTON_SAVE_LOG_SHORTHELP (//)
+...TBD..
+;
+;
+MSGID_SAVE_LOG_ASLTITLE (//)
+Save Update Log...
+;
+;-----------------------------------------------------------
+;
+MSG_PROGRESS_RESOLVING_NAME (4000//)
+Resolving name %s...
+;
+;
+MSG_PROGRESS_CONNECTING (//)
+Connecting to %s...
+;
+;
+MSG_PROGRESS_SEND_HTTP_REQUEST (//)
+Sending HTTP Request...
+;
+;
+MSG_PROGRESS_PROCESS_HTTP_RESPONSE (//)
+Processing HTTP Response...
+;
+;
+MSG_PROGRESS_DONE (//)
+Finished!
+;
+;
+MSG_PROGRESS_FAILURE (//)
+Failed to connect to %s : %s
+;
+;
+MSG_PROGRESS_START_UPDATE (//)
+Starting Update...
+;
+;
+MSG_PROGRESS_DOWNLOAD_UPDATE (//)
+Downloading update %s...
+;
+;
+MSG_PROGRESS_FAILED (//)
+Failed.
+;
+;
+MSG_PROGRESS_VERIFY_SIGNATURE (//)
+Verifying signature...
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_COMPONENTS_TITLE (5000//)
+Components
+;
+;
+MSGID_MENU_COMPONENTS_SELECT_ALL (//)
+Select All
+;
+;
+MSGID_MENU_COMPONENTS_SELECT_NONE (//)
+Deselect All
+;
+;-----------------------------------------------------------
+;
+MSGID_LOG_READ_VERSIONINFO (5500//)
+Reading version information from Scalos update server %s.\n
+;
+;
+MSGID_LOG_ERROR_READ_VERSIONINFO (//)
+Failed to get version information from Scalos update server %s : %s.\n
+;
+;
+MSGID_LOG_CHECKING_VERSIONS (//)
+Processing information about available updates.\n
+;
+;
+MSGID_LOG_UPDATES_FOUND (//)
+Found %ld components to update.\n
+;
+;
+MSGID_LOG_UPDATING (//)
+Updating component %ld of %ld.\n
+;
+;
+MSGID_LOG_DOWNLOAD_PACKAGE (//)
+Downloading update package for %s\n.
+;
+;
+MSGID_LOG_VERIFY_SIGNATURE (//)
+Verifying signature of %s update package\n.
+;
+;
+MSGID_LOG_VERIFY_FAIL_SIGNATURE (//)
+Failed to update %s - invalid signature!\n
+;
+;
+MSGID_LOG_DOWNLOAD_FAILED_PACKAGE (//)
+Failed to download update package for %s - %s.\n
+;
+;
+MSGID_LOG_SKIP_PACKAGE (//)
+Skipping update of %s, due to user's request.\n
+;
+;
+MSGID_LOG_UNPACK_PACKAGE (//)
+Unpacking update package for %s.\n
+;
+;
+MSGID_LOG_UNPACK_FAIL_PACKAGE (//)
+Failed to unpack update for %s.\n
+;
+;
+MSGID_LOG_UNPACK_CATALOGS_FAIL_PACKAGE (//)
+Failed to unpack language catalogs for %s.\n
+;
+;
+MSGID_LOG_ERROR_OPEN_LHAFILE (//)
+Error: failed to open temporary archive \"%s\" for updating \"%s\".\n
+;
+;
+MSGID_LOG_ERROR_OPEN_INPUTFD (//)
+Error: failed to open input file handle for lha: %s\n
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE (6000//)
+Updater Module startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD (//)
+Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+\n\
+Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+%lu.%lu is currently in use by other applications.\n\
+\n\
+Once you have installed the required version,\n\
+close all MUI programs, make sure the old class\n\
+is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;
+MSGID_AMISSL_LIBOPEN_FAIL_AMISSLMASTER (6100//)
+Failed to open amisslmaster.library
+;
+;
+MSGID_AMISSL_FAIL_INITAMISSLMASTER (//)
+InitAmiSSLMaster failed, probably your AmiSSL installation is too old
+;
+;
+MSGID_AMISSL_FAIL_OPENAMISSL (//)
+OpenAmiSSL failed
+;
+;
+MSGID_AMISSL_FAIL_AMISSL_INTERFACE (//)
+Couldn't get AmiSSL interface
+;
+;
+MSGID_AMISSL_FAIL_AMISSLMASTER_INTERFACE (//)
+Couldn't get AmiSSLMaster interface
+;
+;
+MSGID_AMISSL_FAIL_INITAMISSL (//)
+InitAmiSSL failed
+;
+;
+MSGID_AMISSL_FAIL_REQ_FORMAT (//)
+Could not initialize AmiSSL:\n\
+%s\n\
+Sorry, but Updater needs a working AmiSSL V3 installation\n\
+(http://www.heightanxiety.com/AmiSSL)/\n\
+to verify the signatures of the downloaded files.
+;
+;-----------------------------------------------------------
+;

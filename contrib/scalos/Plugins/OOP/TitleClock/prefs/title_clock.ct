@@ -1,0 +1,123 @@
+## version $VER: XX.catalog XX.XX (XX.XX.XX)
+## codeset X
+## language X
+;
+; $Date$
+; $Revision$
+;
+MSG_DATE_GAD
+
+; _Date
+;
+MSG_DATE_SCT
+
+; D
+;
+MSG_EXAMPLE_GAD
+
+; Example
+;
+MSG_TIME_GAD
+
+; _Time
+;
+MSG_TIME_SCT
+
+; T
+;
+MSG_SAVE_GAD
+
+; _Save
+;
+MSG_SAVE_SCT
+
+; S
+;
+MSG_USE_GAD
+
+; _Use
+;
+MSG_USE_SCT
+
+; U
+;
+MSG_CANCEL_GAD
+
+; _Cancel
+;
+MSG_CANCEL_SCT
+
+; C
+;
+MSG_PROJECT_MENU
+
+; Project
+;
+MSG_PROJECT_OPEN
+
+; Open...
+;
+MSG_PROJECT_OPEN_SCT
+
+; O
+;
+MSG_PROJECT_SAVEAS
+
+; Save As...
+;
+MSG_PROJECT_SAVEAS_SCT
+
+; A
+;
+MSG_PROJECT_QUIT
+
+; Quit
+;
+MSG_PROJECT_QUIT_SCT
+
+; Q
+;
+MSG_EDIT_MENU
+
+; Edit
+;
+MSG_EDIT_RESET
+
+; Reset to Defaults
+;
+MSG_EDIT_RESET_SCT
+
+; D
+;
+MSG_EDIT_LASTSAVED
+
+; Last Saved
+;
+MSG_EDIT_LASTSAVED_SCT
+
+; L
+;
+MSG_EDIT_RESTORE
+
+; Restore
+;
+MSG_EDIT_RESTORE_SCT
+
+; R
+;
+MSG_SETTINGS_MENU
+
+; Settings
+;
+MSG_SETTINGS_CREATEICONS
+
+; Create Icons?
+;
+MSG_SETTINGS_CREATEICONS_SCT
+
+; I
+;
+MSG_WINDOW
+
+; Titlebar Clock Plugin Preferences
+;

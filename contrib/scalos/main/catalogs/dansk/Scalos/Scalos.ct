@@ -1,0 +1,1489 @@
+## version $VER: scalos.catalog 41.7 (30 Jan 2010 11:45:04)
+## codeset 0
+## language dansk
+;
+;
+MSGID_BYTENAME
+B
+;
+;
+MSGID_KBYTENAME
+KiB
+;
+;
+MSGID_MBYTENAME
+MiB
+;
+;
+MSGID_GBYTENAME
+GiB
+;
+;
+MSGID_TBYTENAME
+TiB
+;
+;
+MSGID_PBYTENAME
+PiB
+;
+;
+MSGID_HBYTENAME
+HiB
+;
+;
+MSGID_REQTITLE
+Scalos meddelelse
+; Scalos Request
+;
+;
+MSGID_OPENERRORNAME
+Kan ikke åbne værktøj '%s'
+; Unable to open your tool '%s'
+;
+;
+MSGID_OPENERRORGADGETS
+Retry|Select different Tool|Cancel
+;
+;
+MSGID_CANNOT_QUIT_FOREIGNWINDOWS
+Afslutningsfejl\n\
+Der er stadig vinduer åben !
+; Cannot quit ...\n\
+; There are some foreign windows open!
+;
+;
+MSGID_GADGETSNAME
+Igen|Afbryd
+; Retry|Cancel
+;
+;
+MSGID_WBLOADNAME
+Forsøg at start '%s'.
+; Attempt to load program '%s'.
+;
+;
+MSGID_WBLOAD_ASLTITLE
+Select different Tool
+;
+;
+MSGID_REPLACENAME
+Fil '%s' eksisterer allerede| Overskriv?
+; File '%s' already exists! Replace?
+;
+;
+MSGID_REPLACEGNAME
+Overskriv|Afbryd
+; Replace|Cancel
+;
+;
+MSGID_DOWAITERRNAME
+Programmet '%s' er\n\
+ikke returneret endnu !\n\
+Skal jeg vente noget længere ?
+; The program '%s' has\n\
+; not yet returned\n\
+; Should I wait some more?
+;
+;
+MSGID_CANNOT_QUIT_LIBOPEN
+Scalos.library åbn-tæller er på %d.\n\
+Kan ikke afslutte!
+; Can't quit yet. The Scalos.library\n\
+; is being used by %d applications.
+;
+;
+MSGID_CLOSEWBNAME
+Scalos prøver at genåbne\n\
+Workbench skærmen. Vær venlig at lukke alle vinduer\n\
+bortset fra foldere.
+; Scalos is attempting to reset the\n\
+; Workbench screen. Please close all windows\n\
+; except drawers.
+;
+;
+MSGID_ABOUTNAME
+Om...
+; About Scalos...
+;
+;
+MSGID_OKNAME
+Ok
+;
+;
+;*** DM000A
+MSGID_UPDATENAME
+Update
+;
+;
+;*** CDH0002
+MSGID_SYSINFONAME
+System Info
+;
+;
+MSGID_FLUSHNAME
+Flush
+;
+;
+;*** DM000A
+MSGID_REBOOTNAME
+Genstart
+; Reboot
+;
+;
+; +jl+ 20010403
+MSGID_EXISTSNAME_COPY
+Cannot copy object\n\
+\"%s\" already exists.
+;
+;
+; +jl+ 20010403
+MSGID_EXISTSGNAME
+Replace|Skip|Replace All|Abort
+;
+;
+MSGID_SUREREBOOTNAME
+Vil Du virkelig genstarte maskinen ?
+; Do you really want to reboot?
+;
+;
+MSGID_OKCANCELNAME
+Ok|Afbryd
+; Ok|Cancel
+;
+;
+MSGID_LIBERRORNAME
+Kunne ikke åbne %s V%ld !
+; Couldn't open \"%s\" V%ld !
+;
+;
+MSGID_SCALIBERRORNAME
+Kunne ikke oprette scalos.library!
+; Couldn't create scalos.library!
+;
+;
+MSGID_COLNAMENAME
+Navn
+; Name
+;
+;
+MSGID_COLSIZENAME
+Størrelse
+; Size
+;
+;
+MSGID_COLACCESSNAME
+Tilgang
+; Access
+;
+;
+MSGID_COLDATENAME
+Dato
+; Date
+;
+;
+MSGID_COLTIMENAME
+Tid
+; Time
+;
+;
+MSGID_COLCOMNAME
+Kommentar
+; Comment
+;
+;
+MSGID_USEDLIBSNAME
+Brugte biblioteker:
+; Used libraries:
+;
+;
+MSGID_SCARUNNINGNAME
+Scalos läuft im
+; Scalos is running in 
+;
+;
+MSGID_PREVIEWNAME
+præsentations modus!
+; Preview Mode!
+;
+;
+MSGID_EMULATIONNAME
+emulations modus!
+; Emulation Mode!
+;
+;
+MSGID_FILETRANSTITLE_COPY
+Copying...
+;
+;
+MSGID_COPYINGNAME
+Copying file
+;
+;
+MSGID_FROMNAME
+From
+;
+;
+MSGID_TONAME
+to
+;
+;
+MSGID_PMTITLE1NAME
+[Disk]
+;
+;
+MSGID_PMTITLE2NAME
+[Drawer]
+;
+;
+MSGID_PMTITLE3NAME
+[Tool-/Project]
+;
+;
+MSGID_PMTITLE4NAME
+[Trashcan]
+;
+;
+MSGID_PMTITLE5NAME
+[Scalos Window]
+;
+;
+MSGID_PMTITLE6NAME
+[AppIcon]
+;
+;+++translateme+++
+MSGID_PMTITLE7NAME
+[Desktop]
+;[Desktop]
+;
+;
+MSGID_COPYERRORNAME
+Error copying file\n\
+\"%s\"\n\
+%s
+;
+;
+MSGID_COPYERRORGNAME
+Retry|Skip|Abort
+;
+;
+MSGID_MOVEERRORNAME
+Error moving file\n\
+\"%s\"\n\
+%s
+;
+;
+MSGID_DELETEERRORNAME
+Error deleting file\n\
+\"%s\"\n\
+%s
+;
+;
+;text: first bytes:
+;0 = Font: n = normal, b =bold, i = italic, j = bold+italic
+;1 = DRIPen: 0..9 (ascii)
+;2 = Justify: l = left, r = right, c = centered
+;3-5 = SkipLines: 3 digits decimal = height in pixels to skip after this textline
+;
+;
+; the following macros are recognized :
+; "%b" gets replaces by the Scalos Revision build number, e.g. "2440"
+; "%r" gets replaces by the Scalos Revision string, e.g. "1.3m"
+; "%v" inserts the Scalos version, e.g. "40.12"
+; "%c" inserts compiler information, e.g. "(SAS/C 6.58)"
+; "%p" generates a list of all disk plugins - should stand alone on a line
+; "%l" inserts the Scalos logo
+; "%R" inserts the registration/user information
+; "%C" inserts the Copyright of scalos
+;
+MSGID_ABOUT_TESTTEXT
+n2c000%l\n\
+n2c008Version %v - Release %r - (Build %b)\n\
+n2c000%c\n\
+n3c000Starting with version 1.2b, Scalos is\n\
+n3c014%C\n\
+b2c014Installed Plugins:\n\
+n2c000%p\n\
+n3c014\n\
+b2l004Features:\n\
+n2l000 - 100%% Workbench replacement\n\
+n2l000 - Fully multitasking\n\
+n2l000 - Cybergraphics 24bit support\n\
+n2l000 - Scalable icons\n\
+n2l000 - OS4 32bit icon support\n\
+n2l000 - Fast backfill routines with special functions\n\
+n2l000 - Unlimited background patterns\n\
+n2l000 - Highly configurable\n\
+n2l000 - Filetype-specific user-defineable popup menus and tooltips\n\
+n2l000 - New bob-routine with real transparency\n\
+n2l000 - Comfortable API for programmers\n\
+n2l014 - And much, much more...\n\
+b2c010Who did it - Credits\n\
+b2c000Programming\n\
+n2c000up to V1.2a - Stefan Sommerfeld\n\
+n2c008since V1.2b - The Scalos Team\n\
+b2c000Scalos Logo and MagicWB icons\n\
+n2c008Vincent Schöttke\n\
+b2c000NewIcons\n\
+n2c008Phil Vedovatti\n\
+b2c000MUI Modules\n\
+n2c008Torsten Bach\n\
+b2c000ClassAct Modules\n\
+n2c010Eric Sauvageau\n\
+b2c000GadTools Modules\n\
+n2c010Sebastian Bauer\n\
+b2c000French translation + Betatesting\n\
+n2c008Jean-Marie COAT\n\
+b2c000PNG icon support\n\
+n2c008Elena Novaretti\n\
+b2c000Thanks to all betatesters\n\
+b2c010and users!\n\
+b2c000guigfx.library is copyright by\n\
+n2c008Captain Bifat / TEK neoscientists\n\
+b2c000popupmenu.library is copyright by\n\
+n2c008Henrik Isaksson\n\
+b2c000AMIGA is (currently) a trademark of\n\
+n2c010Amiga Inc.\n\
+b3c000For bugs, suggestions or comments contact:\n\
+n3c000The Scalos Team\n\
+n3c000E-mail: Scalos@VFEmail.net\n\
+n3c014Web: http://scalos.noname.fr\n\
+b2c160Have fun with Scalos and feel the real Workbench power!\n
+;
+;
+MSGID_ABOUT_UNREGTEXT
+n2c004* Unregistered Version *\n\
+n2c000Please register to use Scalos\n\
+n2c010as a real Workbench replacement\n
+;
+;
+MSGID_ABOUT_REGTOTEXT
+b2c004Registered to:
+;
+;
+MSGID_ABOUT_REGTEXT
+n2c010Thanks for your support!
+;
+;
+MSGID_ABOUT_COMREGINFO
+freeware version\n
+;
+;
+MSGID_PROGRESS_SETUPSCREEN
+Setting up Scalos Screen...
+;
+;
+MSGID_PROGRESS_SETUPSCRPATTERN
+Setting up Screen Pattern...
+;
+;
+MSGID_PROGRESS_INITMENU
+Initializing Menus...
+;
+;
+MSGID_PROGRESS_INITTIMER
+Setting up 1s Timer...
+;
+;
+MSGID_PROGRESS_STARTWINDOWPROC
+Starting Main Window Process...
+;
+;
+MSGID_PROGRESS_INITNOTIFY
+Setting up File System Notify...
+;
+;
+MSGID_PROGRESS_WBSTARTUP
+Starting WBStartup Process...
+;
+;
+MSGID_PROGRESS_WBSTARTUP_RUNPRG
+WBStartup : Running \"%s\" ...
+;
+;
+MSGID_PROGRESS_READDEVICEICONS
+Reading Device Window Icons...
+;
+;
+MSGID_PROGRESS_INITDEVICEWINDOW
+Initializing Device Window...
+;
+;
+MSGID_PROGRESS_WBSTARTUPFINISHED
+WBStartup finished.
+;
+;
+MSGID_PROGRESS_SCALOSVERSION
+Scalos Version %ld.%ld (Build %s)
+; Scalos Version %ld.%ld (Build %s)
+;
+;
+MSGID_TOOLTIP_ROOTDIR
+[Root Directory]
+;
+;
+MSGID_TOOLTIP_USERDIR
+[Drawer]
+;
+;
+MSGID_TOOLTIP_SOFTLINK
+[SoftLink]
+;
+;
+MSGID_TOOLTIP_HARDLINKDIR
+[Hard Link to Drawer]
+;
+;
+MSGID_TOOLTIP_FILE
+[File]
+;
+;
+MSGID_TOOLTIP_HARDLINKFILE
+[Hard Link to File]
+;
+;
+MSGID_TOOLTIP_PIPEFILE
+[Pipe File]
+;
+;
+MSGID_TOOLTIP_UNKNOWNTYPE
+[(unknown type)]
+;
+;
+MSGID_TOOLTIP_LASTCHANGE
+Last Change: 
+;
+;
+MSGID_TOOLTIP_SIZE
+Size: 
+;
+;
+MSGID_TOOLTIP_PROTECTION
+Protection: 
+;
+;
+MSGID_TOOLTIP_STATE_WRITEPROTECT
+Write Protected
+;
+;
+MSGID_TOOLTIP_STATE_VALIDATING
+Validating
+;
+;
+MSGID_TOOLTIP_STATE_READWRITE
+Read-/Writeable
+;
+;
+MSGID_TOOLTIP_STATE_UNKNOWN
+(unknown state)
+;
+;
+MSGID_TOOLTIP_DISK
+[Disk]
+;
+;
+MSGID_TOOLTIP_USEDCOUNTFMT
+%s %% full, %s free, %s in use
+;
+;
+MSGID_TOOLTIP_USEDCOUNTFMT_FULL
+%s %% full
+;
+;
+MSGID_TOOLTIP_USEDCOUNTFMT_FREE
+%s free
+;
+;
+MSGID_TOOLTIP_USEDCOUNTFMT_INUSE
+%s in use
+;
+;
+MSGID_TOOLTIP_CREATED
+Created: 
+;
+;
+MSGID_TOOLTIP_STATE
+State: 
+;
+;
+MSGID_TOOLTIP_USED
+Used: 
+;
+;
+MSGID_TOOLTIP_FILESIZEFMT
+%s Bytes
+;
+;
+MSGID_TOOLTIP_APPICON
+[AppIcon]
+;
+;
+MSGID_ICON_WITHOUT_FILE
+[Icon without Object]
+;
+;
+MSGID_ICONIFIED_WINDOW
+[Iconified Window]
+;
+;
+MSGID_PMMENU_APPICON_OPEN
+Open
+;
+;
+MSGID_PMMENU_APPICON_COPY
+Duplicate
+;
+;
+MSGID_PMMENU_APPICON_RENAME
+Rename...
+;
+;
+MSGID_PMMENU_APPICON_INFO
+Information...
+;
+;
+MSGID_PMMENU_APPICON_SNAPSHOT
+Snapshot
+;
+;
+MSGID_PMMENU_APPICON_UNSNAPSHOT
+UnSnapshot
+;
+;
+MSGID_PMMENU_APPICON_LEAVEOUT
+Leave Out
+;
+;
+MSGID_PMMENU_APPICON_PUTAWAY
+Put Away
+;
+;
+MSGID_PMMENU_APPICON_DELETE
+Delete...
+;
+;
+MSGID_PMMENU_APPICON_FORMATDISK
+Format Disk...
+;
+;
+MSGID_PMMENU_APPICON_EMPTYTRASHCAN
+Empty Trashcan
+;
+;
+MSGID_EXISTSNAME_MOVE
+Cannot move object\n\
+\"%s\" already exists.
+;
+;
+MSGID_MULTIDRAG
+%lU %s
+;
+;
+MSGID_MULTIDRAG_DRAWER_1
+Drawer
+;
+;
+MSGID_MULTIDRAG_DRAWER_2
+Drawers
+;
+;
+MSGID_MULTIDRAG_FILE_1
+File
+;
+;
+MSGID_MULTIDRAG_FILE_2
+Files
+;
+;
+; Message in text window "size" column for drawers
+MSGID_TEXTICON_DRAWER
+Drawer
+;
+;
+; Message in text window "size" column for trashcan
+MSGID_TEXTICON_TRASHCAN
+Trashcan
+;
+;
+MSGID_PROGRESS_ENDREADDEVICEICONS
+ 
+;
+MSGID_STATUSBARTEXT
+%ld Items, %ld selected
+;
+;
+MSGID_MULTIDRAG_DEVICE_1
+Device
+;
+;
+MSGID_MULTIDRAG_DEVICE_2
+Devices
+;
+;
+; File transfer dialog window - "Cancel" button
+MSGID_CANCELBUTTON
+_Cancel
+;
+;
+MSGID_PREPARING_COPY
+Counting Objects to Copy...
+;
+;
+MSGID_PREPARING_MOVE
+Counting Objects to Move...
+;
+;
+; File transfer dialog window
+MSGID_FILETRANSFER_REMAININGTIME
+Remaining Time
+;
+;
+; File transfer dialog window
+MSGID_FILETRANSFER_MINUTES
+Minutes
+;
+;
+; File transfer dialog window
+MSGID_FILETRANSFER_SECONDS
+Seconds
+;
+;
+; File transfer dialog window
+MSGID_FILETRANSFER_SECOND
+Second
+;
+;
+MSGID_FILETRANSTITLE_MOVE
+Moving...
+;
+;
+MSGID_MOVINGNAME
+Moving file
+;
+;
+MSGID_PROGRESS_READINGPREFS
+Reading Menu and Pattern Prefs...
+;
+;
+; this text is shown on unreadable disks appended 
+; to the device name, e.g. "DF0:Unreadable"
+MSGID_DISK_UNREADABLE
+Unreadable
+;
+;
+MSGID_PROGRESS_MAINWINDOW
+Initializing Main Window...
+;
+;
+; default name for new drawer
+; if an object with this name exists,
+; a number "_xxx" will be appended
+MSGID_NEW_DRAWER_NAME
+New_Drawer
+;
+;
+; This message is displayed in the screen title when the user double-clicked 
+; a drawer icon and the associated drawer cannot be opened (e.g. drawer 
+; doesn't exist.)
+MSGID_CANNOT_OPEN_DRAWER
+This drawer cannot be opened.
+;
+;
+; Requester informing the user that not all requested pens could be allocated.
+MSGID_ALLOCPENSREQ_CONTENTS
+%ld of the pens defined in Scalos \n\
+Palette prefs could not be allocated.
+;
+;
+MSGID_ALLOCPENSREQ_GADGETSNAME
+Ok
+;
+MSGID_TOOLTIP_FILETYPE_WBGARBAGE
+[Trashcan]
+;
+;
+MSGID_TOOLTIP_FILETYPE_WBPROJECT
+[Project file]
+;
+;
+MSGID_TOOLTIP_FILETYPE_WBDEVICE
+[Device]
+;
+;
+MSGID_TOOLTIP_FILETYPE_WBKICK
+[Kickstart Disk]
+;
+;
+MSGID_TOOLTIP_FILETYPE_WBTOOL
+[Tool file]
+;
+;
+MSGID_TOOLTIP_FILETYPE_WBDISK
+[Disk]
+;
+;
+MSGID_ERROR_NO_DEFAULTTOOL
+Ikonet eller ikonerne har ikke noget standardværktøj.
+; The icon(s) have no default tool.
+;
+;
+MSGID_TOOLTIP_GADGET_RIGHTSCROLLER
+Use this scroller to move the\n\
+window contents up and down.
+;
+;
+MSGID_TOOLTIP_GADGET_BOTTOMSCROLLER
+Use this scroller to move the\n\
+window contents left and right.
+;
+;
+MSGID_TOOLTIP_GADGET_UPARROW
+Use this arrow to scroll the\n\
+window contents downwards.
+;
+;
+MSGID_TOOLTIP_GADGET_DOWNARROW
+Use this arrow to scroll the\n\
+window contents upwards.
+;
+;
+MSGID_TOOLTIP_GADGET_RIGHTARROW
+Use this arrow to scroll the\n\
+window contents to the left.
+;
+;
+MSGID_TOOLTIP_GADGET_LEFTARROW
+Use this arrow to scroll the\n\
+window contents to the right.
+;
+;
+MSGID_TOOLTIP_GADGET_ICONIFY
+This gadget iconifies\n\
+the current window.
+;
+;
+MSGID_TOOLTIP_GADGET_STATUSBAR_TEXT
+This text shows the total number of\n\
+items displayed and the number of\n\
+selected items in this window.
+;
+;
+MSGID_TOOLTIP_GADGET_STATUSBAR_READONLY
+This symbol indicates that the contents\n\
+of this window cannot be changed.\n\
+e.g. might be located on a read-only medium.
+;
+;
+MSGID_TOOLTIP_GADGET_STATUSBAR_READING
+This symbol indicates that\n\
+this window is currently\n\
+reading the disk directory.
+;
+;
+MSGID_TOOLTIP_GADGET_STATUSBAR_TYPING
+This symbol indicates that the keyboard icon\n\
+selection is active. By typing any letter, \n\
+you may select the first icon starting \n\
+with that letter.
+;
+;
+MSGID_TOOLTIP_GADGET_STATUSBAR_SHOWALL
+This symbol shows that\n\
+this window is in \n\
+\"Show all files\" mode.
+;
+;
+MSGID_EXISTSICON_COPY
+Error copying icon\n\
+\"%s\" already exists.
+;
+;
+; new 5-Jan-2003
+MSGID_TOOLTIP_DRAWERS
+Drawers: 
+;
+;
+MSGID_TOOLTIP_FILES
+Files: 
+;
+;
+MSGID_TOOLTIP_LINKTO
+Link to:
+;
+;
+MSGID_TOOLTIP_KICKSTART
+[Kickstart Disk]
+;
+; === added as of Scalos 40.28 ===
+;
+MSGID_NODEFAULTTOOL_REQ
+The icon \"%s\" has no default tool.\n\
+Do you want to select a tool?
+;
+;
+MSGID_NODEFAULTTOOL_REQ_GADGETS
+Select Tool|Cancel
+;
+;
+MSGID_REQ_SELECTDEFTOOL
+Select default Tool
+;
+;
+; Message in text window "size" column for icons w/o object
+MSGID_TEXTICON_SOLOICON
+Icon only
+;
+; new in 40.29
+;
+MSGID_COLOWNERNAME
+Owner
+;
+;
+MSGID_COLGROUPNAME
+Group
+;
+;
+MSGID_COLFILETYPENAME
+FileType
+;
+;
+MSGID_COLVERSIONNAME
+Version
+;
+;
+; this text is shown on busy disks appended 
+; to the device name, e.g. "DF0:Busy"
+MSGID_DISK_BUSY
+Busy
+;Busy
+;
+;
+; this text is shown on not dos disks appended 
+; to the device name, e.g. "DF0:NDOS"
+MSGID_DISK_NDOS
+Uninitialized
+;Uninitialized
+;
+; new in 40.30
+;
+MSGID_EXISTS_GNAME_NEW
+Replace|Skip|Replace All|Skip All|Abort
+;Replace|Skip|Replace All|Skip All|Abort
+;
+;
+MSGID_COPYTO_ASLTITLE
+Scalos: Move to...
+;Scalos: Copy to...
+;
+;
+MSGID_MOVETO_ASLTITLE
+Scalos: Move to...
+;Scalos: Move to...
+;
+; new in 41.2
+;
+MSGID_WRITEPROTECTED_MOVE
+Error moving object\n\
+\"%s\"\n\
+%s.
+;Error moving object\n\
+;\"%s\"\n\
+;%s.
+;
+;
+MSGID_WRITEPROTECTED_COPYICON
+Error copying icon\n\
+\"%s\"\n\
+%s.
+;Error copying icon\n\
+;\"%s\"\n\
+;%s.
+;
+;
+MSGID_WRITEPROTECTED_COPY
+Error copying object\n\
+\"%s\"\n\
+%s.
+;Error copying object\n\
+;\"%s\"\n\
+;%s.
+;
+;
+MSGID_WRITEPROTECTED_GNAME_NEW
+Overwrite|Skip|Overwrite All|Skip All|Abort
+;
+;+++translateme+++
+MSGID_TOOLTIP_GADGET_STATUSBAR_THUMBNAILS_ALWAYS
+This symbol shows that this window\n\
+displays thumbnails for every image.
+;This symbol shows that this window\n\
+;displays thumbnails for every image.
+;
+;+++translateme+++
+MSGID_TOOLTIP_GADGET_STATUSBAR_THUMBNAILS_ASDEFAULT
+This symbol shows that this\n\
+window displays thumbnails for\n\
+every image without an icon.
+;This symbol shows that this\n\
+;window displays thumbnails for\n\
+;every image without an icon.
+;
+;+++translateme+++
+MSGID_TOOLTIP_GADGET_STATUSBAR_THUMBNAILS_GENERATE
+This symbol indicates that thumbnail\n\
+generation from images is currently in progress.
+;This symbol indicates that thumbnail\n\
+;generation from images is currently in progress.
+;
+;+++translateme+++
+MSGID_MOVETO_DEVICE
+MoveTo command aborted!\n\
+Error moving\n\
+\"%s\"\n\
+is a drive!
+;MoveTo command aborted!\n\
+;Error moving\n\
+;\"%s\"\n\
+;is a drive!
+;
+;do not change this one:
+MSGID_COLICONNAME
+\x20
+;
+;+++translateme+++
+MSGID_CREATE_LINK_ERRORNAME
+Error creating link to\n\
+\"%s\"\n%s
+;Error creating link to\n\
+;\"%s\"\n%s
+;
+;+++translateme+++
+MSGID_BROWSE_ASLTITLE
+Select new path to display
+;
+;+++translateme+++
+MSGID_ABOUTHOLDSCROLLNAME
+Hold
+;Hold
+;
+;
+;+++translateme+++
+MSGID_CANNOT_QUIT_WBREPLACEMENT
+Cannot quit ...\n\
+Scalos is running as Workbench replacement!
+;Cannot quit ...\n\
+;Scalos is running as Workbench replacement!
+;
+;+++translateme+++
+MSGID_ABOUT_OK_SHORTHELP
+Click this button to\n\
+close the About Window.
+;Click this button to\n\
+;close the About Window.
+;
+;+++translateme+++
+MSGID_ABOUT_STOP_SHORTHELP
+Clicking this button toggles the\n\
+scrolling of the About information.\n\
+You may also click anywhere inside\n\
+the About window to toggle scrolling.
+;Clicking this button toggles the\n\
+;scrolling of the About information.\n\
+;You may also click anywhere inside\n\
+;the About window to toggle scrolling.
+;
+;+++translateme+++
+MSGID_ABOUT_SYSINFO_SHORTHELP
+Call separate SystemInfo.module to show\n\
+various bits of information about your machine.\n\
+Gadget stays disabled if SystemInfo.module is not available.
+;Call separate SystemInfo.module to show\n\
+;various bits of information about your machine.\n\
+;Gadget stays disabled if SystemInfo.module is not available.
+;
+;+++translateme+++
+MSGID_ABOUT_FLUSH_SHORTHELP
+Flushes all unused libraries and other memory blocks
+;Flushes all unused libraries and other memory blocks
+;
+;+++translateme+++
+MSGID_ABOUT_REBOOT_SHORTHELP
+Displays a confirmation window that\n\
+offers to reboot your machine.
+;Displays a confirmation window that\n\
+;offers to reboot your machine.
+;
+;+++translateme+++
+MSGID_ABOUT_SHUTDOWN_REBOOT_CONFIRM
+Do you really want to Shutdown or Reboot?
+;Do you really want to Shutdown or Reboot?
+;
+;+++translateme+++
+MSGID_ABOUT_CONFIRM_GADGETS
+Reboot|Shutdown|Cancel
+;Reboot|Shutdown|Cancel
+;
+;+++translateme+++
+MSGID_LINKSNOTSUPPORTED_BODY
+Failed to create link for \"%s\"\n\
+Seems like file system doesn't support \
+links on \"%s\".
+;Failed to create link for \"%s\"\n\
+;Seems like file system doesn't support \
+;links on \"%s\".
+;
+;+++translateme+++
+MSGID_LINKSNOTSUPPORTED_GADGETS
+Ignore|Ignore All|Copy|Copy All|Abort
+;Ignore|Ignore All|Copy|Copy All|Abort
+;
+;+++translateme+++
+MSGID_FILETRANSFER_DETAILS_OBJECTCOUNT
+Finished: %lU / %lU Objects
+;Finished: %lU / %lU Objects
+;
+;+++translateme+++
+MSGID_FILETRANSFER_DETAILS_SIZE
+Processed: %s / %s
+;Processed: %s / %s
+;
+;+++translateme+++
+MSGID_FILETRANSFER_DETAILS_SPEED
+Average Speed: %s/s
+;Average Speed: %s/s
+;
+;+++translateme+++
+MSGID_REQUEST_SCALOS_ALREADY_RUNNING
+There is already one instance of Scalos running!\n\
+Probably you use Scalos as Workbench replacement?\n\
+From original Workbench, you may start Scalos with this icon.
+;There is already one instance of Scalos running!\n\
+;Probably you use Scalos as Workbench replacement?\n\
+;From original Workbench, you may start Scalos with this icon.
+;
+;+++translateme+++
+MSGID_READMENUPREFS_FAIL
+Scalos failed to read your\n\
+menu preferences: %s\n\
+Due to this error, you won't have any menus available.\n\
+Please use Scalos Menu Preferences to create preferences!
+;Scalos failed to read your\n\
+;menu preferences: %s\n\
+;Due to this error, you won't have any menus available.\n\
+;Please use Scalos Menu Preferences to create preferences!
+;
+;+++translateme+++
+MSGID_FILETRANSTITLE_DELETE
+Deleting...
+;Deleting...
+;
+;+++translateme+++
+MSGID_PREPARING_DELETE
+Counting Objects to Delete...
+;Counting Objects to Delete...
+;
+;+++translateme+++
+MSGID_FILETRANSFER_DETAILS_OBJECTCOUNT_NOTOTAL
+Finished: %lU Objects
+;Finished: %lU Objects
+;
+;+++translateme+++
+MSGID_FILETRANSFER_DETAILS_SIZE_NOTOTAL
+Processed: %s
+;Processed: %s
+;
+;+++translateme+++
+MSGID_FILETRANSFER_INSUFFICIENTSPACE_BODY
+Insufficient space on destination %s\n\
+Required: %s\n\
+Available: %s
+;Insufficient space on destination %s\n\
+;Required: %s\n\
+;Available: %s
+;
+;+++translateme+++
+MSGID_FILETRANSFER_INSUFFICIENTSPACE_GADGETS
+Proceed anyway|Abort
+;Proceed anyway|Abort
+;
+;+++translateme+++
+MSGID_OPENERRORGADGETS2
+Retry|Select different Tool|Use Standard Tool|Cancel
+; Retry|Select different Tool|Use Standard Tool|Cancel
+;
+;+++translateme+++
+; File transfer dialog window
+MSGID_FILETRANSFER_MINUTE
+Minute
+;Minute
+;
+;+++translateme+++
+; File transfer dialog window
+MSGID_FILETRANSFER_HOURS
+Hours
+;Hours
+;
+;+++translateme+++
+; File transfer dialog window
+MSGID_FILETRANSFER_HOUR
+Hour
+;Hour
+;
+; ==============================================
+;+++translateme+++
+MSGID_DROPMENU_DROPMENUTITLE
+Drop Menu
+;Drop Menu
+;
+;+++translateme+++
+MSGID_DROPMENU_CANCEL
+Cancel drop
+;Cancel drop
+;
+;+++translateme+++
+MSGID_DROPMENU_COPY
+Copy here
+;Copy here
+;
+;+++translateme+++
+MSGID_DROPMENU_MOVE
+Move here
+;Move here
+;
+;+++translateme+++
+MSGID_DROPMENU_CREATE_LINK
+Create Link here
+;Create Link here
+;
+; ==============================================
+;
+;+++translateme+++
+MSGID_TOOLTIP_GADGET_CONTROLBAR_BACK
+This gadget switches the displayed view one step\n\
+back in the history of viewed directories.
+;This gadget switches the displayed view one step\n\
+;back in the history of viewed directories.
+;
+;+++translateme+++
+MSGID_TOOLTIP_GADGET_CONTROLBAR_FORWARD
+This gadget switches the displayed view one step\n\
+forward in the history of viewed directories.
+;This gadget switches the displayed view one step\n\
+;forward in the history of viewed directories.
+;
+;+++translateme+++
+MSGID_TOOLTIP_GADGET_CONTROLBAR_PARENT
+This gadget changes the view to the\n\
+parent directory of the current one.
+;This gadget changes the view to the\n\
+;parent directory of the current one.
+;
+;+++translateme+++
+MSGID_TOOLTIP_GADGET_CONTROLBAR_SHOWMODE
+This gadget switches display mode\n\
+between \"Only icons\" and \"All files\".
+;This gadget switches display mode\n\
+;between \"Only icons\" and \"All files\".
+;
+;+++translateme+++
+MSGID_TOOLTIP_GADGET_CONTROLBAR_VIEWBY
+This gadget allows to switch\n\
+between different view modes.
+;This gadget allows to switch\n\
+;between different view modes.
+;
+;+++translateme+++
+MSGID_TOOLTIP_GADGET_CONTROLBAR_HISTORY
+This gadget opens a popup window with all history entries \n\
+and allows to jump directly to any history entry.
+;
+;+++translateme+++
+MSGID_TOOLTIP_GADGET_CONTROLBAR_BROWSE
+This gadget opens an ASL requester where you\n\
+can select a new path to display in this window.
+;
+;+++translateme+++
+MSGID_CONTROLBAR_VIEWBY_ICON
+Icon
+;Icon
+;
+;+++translateme+++
+MSGID_CONTROLBAR_VIEWBY_NAME
+Name
+;Name
+;
+;+++translateme+++
+MSGID_CONTROLBAR_VIEWBY_SIZE
+Size
+;Size
+;
+;+++translateme+++
+MSGID_CONTROLBAR_VIEWBY_DATE
+Date
+;Date
+;
+;+++translateme+++
+MSGID_CONTROLBAR_VIEWBY_TIME
+Time
+;Time
+;
+;+++translateme+++
+MSGID_CONTROLBAR_VIEWBY_COMMENT
+Comment
+;Comment
+;
+;+++translateme+++
+MSGID_CONTROLBAR_VIEWBY_PROTECTION
+Protection
+;Protection
+;
+;+++translateme+++
+MSGID_CONTROLBAR_SHOW_ONLYICONS
+Only Icons
+;Only Icons
+;
+;+++translateme+++
+MSGID_CONTROLBAR_SHOW_ALLFILES
+All Files
+;All Files
+;
+;+++translateme+++
+MSGID_CONTROLBAR_VIEWBY_TYPE
+Type
+;Type
+;
+; ==============================================
+;+++translateme+++
+MSGID_ICONTYPE_WBDISK
+Disk
+;
+;+++translateme+++
+MSGID_ICONTYPE_WBDRAWER
+Drawer
+;
+;+++translateme+++
+MSGID_ICONTYPE_WBTOOL
+Tool
+;
+;+++translateme+++
+MSGID_ICONTYPE_WBPROJECT
+Project
+;
+;+++translateme+++
+MSGID_ICONTYPE_WBGARBAGE
+Trashcan
+;
+;+++translateme+++
+MSGID_ICONTYPE_WBDEVICE
+Device
+;
+;+++translateme+++
+MSGID_ICONTYPE_WBKICK
+Kickstart Disk
+;
+;+++translateme+++
+MSGID_ICONTYPE_WBAPPICON
+Application Icon
+;
+;+++translateme+++
+MSGID_ICONTYPE_UNKNOWN
+unknown
+;
+; ==============================================
+;
+;+++translateme+++
+MSGID_UNDO_NOT_AVAILABLE
+%s (not available)
+;%s (not available)
+;
+;+++translateme+++
+MSGID_UNDO_UNDO
+Undo
+;Undo
+;
+;+++translateme+++
+MSGID_UNDO_REDO
+Redo
+;Redo
+;
+;+++translateme+++
+MSGID_UNDO_COPY_SINGLE
+%s: Copy %s
+;%s: Copy %s
+;
+;+++translateme+++
+MSGID_UNDO_COPY_MORE
+%s: Copy %ld items
+;%s: Copy %ld items
+;
+;+++translateme+++
+MSGID_UNDO_MOVE_SINGLE
+%s: Move %s
+;%s: Move %s
+;
+;+++translateme+++
+MSGID_UNDO_MOVE_MORE
+%s: Move %ld items
+;%s: Move %ld items
+;
+;+++translateme+++
+MSGID_UNDO_CREATELINK_SINGLE
+%s: Create Link %s
+;%s: Create Link %s
+;
+;+++translateme+++
+MSGID_UNDO_CREATELINK_MORE
+%s: Create %ld links
+;%s: Create %ld links
+;
+;+++translateme+++
+MSGID_UNDO_CHANGEICONPOS_SINGLE
+%s: Move %s icon
+;%s: Move %s icon
+;
+;+++translateme+++
+MSGID_UNDO_CHANGEICONPOS_MORE
+%s: Move %ld icons.
+;%s: Move %ld icons.
+;
+;+++translateme+++
+MSGID_UNDO_CLEANUP
+%s: Cleanup %s
+;%s: Cleanup %s
+;
+;+++translateme+++
+MSGID_UNDO_SNAPSHOT_SINGLE
+%s: Snapshot %s
+;%s: Snapshot %s
+;
+;+++translateme+++
+MSGID_UNDO_SNAPSHOT_MORE
+%s: Snapshot %ld items
+;%s: Snapshot %ld items
+;
+;+++translateme+++
+MSGID_UNDO_UNSNAPSHOT_SINGLE
+%s: Unsnapshot %s
+;%s: Unsnapshot %s
+;
+;+++translateme+++
+MSGID_UNDO_UNSNAPSHOT_MORE
+%s: Unsnapshot %ld items
+;%s: Unsnapshot %ld items
+;
+;+++translateme+++
+MSGID_UNDO_RENAME_SINGLE
+%s: Rename %s
+;%s: Rename %s
+;
+;+++translateme+++
+MSGID_UNDO_RENAME_MORE
+%s: Rename %ld items
+;%s: Rename %ld items
+;
+;+++translateme+++
+MSGID_UNDO_RELABEL_SINGLE
+%s: Relabel %s
+;%s: Relabel %s
+;
+;+++translateme+++
+MSGID_UNDO_RELABEL_MORE
+%s: Relabel %ld items
+;%s: Relabel %ld items
+;
+;+++translateme+++
+MSGID_UNDO_SIZEWINDOW
+%s: Resize %s window
+;%s: Resize %s window
+;
+;+++translateme+++
+MSGID_UNDO_DELETE_SINGLE
+%s: Delete %s
+;%s: Delete %s
+;
+;+++translateme+++
+MSGID_UNDO_DELETE_MORE
+%s: Delete %ld items
+;%s: Delete %ld items
+;
+;+++translateme+++
+MSGID_UNDO_NEWDRAWER_SINGLE
+%s: Create Drawer %s
+;%s: Create Drawer %s
+;
+;+++translateme+++
+MSGID_UNDO_NEWDRAWER_MORE
+%s: Create %ld Drawers
+;%s: Create %ld Drawers
+;
+;+++translateme+++
+MSGID_UNDO_LEAVEOUT_SINGLE
+%s: Leave out %s
+;%s: Leave out %s
+;
+;+++translateme+++
+MSGID_UNDO_LEAVEOUT_MORE
+%s: Leave out %ld items
+;%s: Leave out %ld items
+;
+;+++translateme+++
+MSGID_UNDO_PUTAWAY_SINGLE
+%s: Put away %s
+;%s: Put away %s
+;
+;+++translateme+++
+MSGID_UNDO_PUTAWAY_MORE
+%s: Put away %ld items
+;%s: Put away %ld items
+;
+;+++translateme+++
+MSGID_UNDO_SETPROTECTION_SINGLE
+%s: Change Protection on %s
+;%s: Change Protection on %s
+;
+;+++translateme+++
+MSGID_UNDO_SETPROTECTION_MORE
+%s: Change Protection %ld icons
+;%s: Change Protection %ld icons
+;
+;+++translateme+++
+MSGID_UNDO_SETCOMMENT_SINGLE
+%s: Change Comment on %s
+;%s: Change Comment on %s
+;
+;+++translateme+++
+MSGID_UNDO_SETCOMMENT_MORE
+%s: Change Comment on %ld icons
+;%s: Change Comment on %ld icons
+;
+;+++translateme+++
+MSGID_UNDO_SETTOOLTYPES_SINGLE
+%s: Change Tooltypes on %s
+;%s: Change Tooltypes on %s
+;
+;+++translateme+++
+MSGID_UNDO_SETTOOLTYPES_MORE
+%s: Change Tooltypes on %ld icons
+;%s: Change Tooltypes on %ld icons
+;
+;+++translateme+++
+MSGID_UNDO_CHANGEICON_SINGLE
+%s: Change icon %s
+;%s: Change icon %s
+;
+;+++translateme+++
+MSGID_UNDO_CHANGEICON_MORE
+%s: Change %ld icons
+;%s: Change %ld icons
+;
+;+++translateme+++
+MSGID_UNDO_CLOSEWINDOW_SINGLE
+%s: Close %s Window
+;%s: Close %s Window
+;
+;+++translateme+++
+MSGID_UNDO_CLOSEWINDOW_MORE
+%s: Close %ld Windows
+;%s: Close %ld Windows
+;
+; ==============================================
+;

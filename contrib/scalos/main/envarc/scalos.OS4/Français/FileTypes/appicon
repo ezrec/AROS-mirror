@@ -1,0 +1,16 @@
+# Scalos filetype description
+# written Sat Jan 22 17:22:48 2005
+
+DESCRIPTION "[App Icône]"
+
+TOOLTIP
+	GROUP ORIENTATION "horizontal"
+		MEMBER HIDE "isempty iconname"
+			STRING SRC "iconname" HALIGN "center" FONT "CenturyGothicBold/16" TTFONT "0/600/15/Arial Rounded MT Bold" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+		ENDMEMBER
+		MEMBER
+			STRING SRC "filetypestring" HALIGN "center" VALIGN "center" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+		ENDMEMBER
+	ENDGROUP
+ENDTOOLTIP
+

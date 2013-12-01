@@ -1,0 +1,155 @@
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/..
+endif
+
+###############################################################################
+
+include		config.mk
+
+##############################################################################
+#
+# Project Object files
+#
+
+OBJS	=       	$(OBJDIR)/Scalos.o                  \
+		       	$(OBJDIR)/MainWait.o                \
+			$(OBJDIR)/about.o                   \
+			$(OBJDIR)/windowtask.o              \
+			$(OBJDIR)/Class.o                   \
+			$(OBJDIR)/AppMenu.o                 \
+			$(OBJDIR)/GaugeGadgetClass.o        \
+			$(OBJDIR)/FileCommands.o            \
+			$(OBJDIR)/LocaleStrings.o           \
+			$(OBJDIR)/CLIStart.o                \
+			$(OBJDIR)/IconWindow_MouseMove.o    \
+			$(OBJDIR)/DragDropBobs.o            \
+			$(OBJDIR)/Window.o                  \
+			$(OBJDIR)/Messages.o                \
+			$(OBJDIR)/ScanDir.o                 \
+			$(OBJDIR)/Splash.o                  \
+			$(OBJDIR)/Prefs.o                   \
+			$(OBJDIR)/wbl.o                     \
+			$(OBJDIR)/ToolTip.o                 \
+			$(OBJDIR)/Lasso.o                   \
+			$(OBJDIR)/ScaLibrary.o              \
+			$(OBJDIR)/Gadgets.o                 \
+			$(OBJDIR)/ToolTypes.o               \
+			$(OBJDIR)/Backdrop.o                \
+			$(OBJDIR)/Subroutines.o             \
+			$(OBJDIR)/MenuCommand.o             \
+			$(OBJDIR)/Functions.o               \
+			$(OBJDIR)/IconImageClass.o          \
+			$(OBJDIR)/ScalosInit.o              \
+			$(OBJDIR)/Pattern.o                 \
+			$(OBJDIR)/PopupMenus.o              \
+			$(OBJDIR)/WindowClass.o             \
+			$(OBJDIR)/TextIconClass.o           \
+			$(OBJDIR)/TTLayout.o                \
+			$(OBJDIR)/IconWindowClass.o         \
+			$(OBJDIR)/TextWindowClass.o         \
+			$(OBJDIR)/DeviceWindowClass.o       \
+			$(OBJDIR)/FontUtil.o                \
+			$(OBJDIR)/RootClass.o               \
+			$(OBJDIR)/DevListClass.o            \
+			$(OBJDIR)/FileTransClass.o          \
+			$(OBJDIR)/TitleClass.o              \
+			$(OBJDIR)/Menu.o                    \
+			$(OBJDIR)/GadgetBarClass.o          \
+			$(OBJDIR)/GadgetBarImageClass.o     \
+			$(OBJDIR)/GadgetBarTextClass.o      \
+			$(OBJDIR)/Request.o                 \
+			$(OBJDIR)/Scalos_Cx.o               \
+			$(OBJDIR)/IconifyClass.o            \
+			$(OBJDIR)/WBStartup.o               \
+			$(OBJDIR)/filetypes.o               \
+			$(OBJDIR)/DefIcons.o                \
+			$(OBJDIR)/Patches.o                 \
+			$(OBJDIR)/idcmp.o                   \
+			$(OBJDIR)/int64.o                   \
+			$(OBJDIR)/ButtonGadgetClass.o       \
+			$(OBJDIR)/cleanup.o                 \
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS:.o=.d)
+endif
+
+##############################################################################
+#
+# Some lame deps
+#
+
+Scalos_Locale.h : Scalos.cd
+	catcomp scalos.cd vb=1 cfile=Scalos_locale.h
+
+
+MsgIdNames.h : Scalos_Locale.h
+	GenMsgIdNames Scalos_Locale.h MsgIdNames.h
+
+
+
+##############################################################################
+#
+# Target
+#
+
+NAME	=	Scalos
+NAME_DB =	Scalos.debug
+
+##############################################################################
+# 
+# Subdirs
+#
+
+SUBDIRS	=	Tools				\
+#		std_includes/sfd		\
+#		Catalogs/dansk/Scalos		\
+#		Catalogs/español/Scalos         \
+#		Catalogs/français/Scalos	\
+#		Catalogs/ÃeÓtina/Scalos	        \
+#		Catalogs/sample/Scalos	        \
+#		Catalogs/deutsch/Scalos	        \
+#		Catalogs/polski/Scalos		\
+			
+
+##############################################################################
+
+.PHONY: all install clean bump dump
+
+all:	$(NAME) \
+	$(NAME_DB) \
+	all_subdirs \
+
+##############################################################################
+
+$(NAME): $(OBJS)
+	$(ECHO) "Link $(NAME)"
+	$(CC) -s $(STARTUP) $(OBJS) $(LFLAGS) $(DEFINES) -o $(NAME)
+
+
+$(NAME_DB): $(OBJS)
+	$(ECHO) "Link $(NAME_DB)"
+	$(CC) $(STARTUP) $(OBJS) $(LFLAGS) $(DEFINES) -o $(NAME_DB)
+
+##############################################################################
+
+install:
+	install_subdirs
+	copy Scalos Scalos: clone
+	copy "catalogs/deutsch/Scalos/Scalos.catalog" "Locale:Catalogs/Deutsch/Scalos/" clone
+	copy "catalogs/polski/Scalos/Scalos.catalog" "Locale:Catalogs/Polski/Scalos/" clone
+	copy "catalogs/français/Scalos/Scalos.catalog" "Locale:Catalogs/français/Scalos/" clone
+	copy "catalogs/ÃeÓtina/Scalos/Scalos.catalog" "Locale:Catalogs/ÃeÓtina/Scalos/" clone
+	copy "catalogs/dansk/Scalos/Scalos.catalog" "Locale:Catalogs/dansk/Scalos/" clone
+	copy "catalogs/español/Scalos/Scalos.catalog" "Locale:Catalogs/español/Scalos/" clone
+
+clean:
+	clean_subdirs
+	$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d $(OBJDIR)/*.i $(OBJDIR)/*.s \
+	$(NAME) $(NAME_DB) *.dump *_str.*
+	$(RM) -fv $(BINDIR)/$(NAME)
+
+##############################################################################

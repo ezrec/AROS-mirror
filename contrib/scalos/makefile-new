@@ -1,0 +1,33 @@
+# $Date: 2011-08-06 20:15:50 +0200 (Sa, 06. Aug 2011) $
+# $Revision: 824 $
+#############################################################
+TOPLEVEL	=	$(shell pwd)
+
+include		config.mk
+include		rules.mk
+
+##############################################################################
+#
+# Project subdirectories
+#
+
+SUBDIRS	=	main       \
+		libraries  \
+		datatypes  \
+		Plugins    \
+		Prefs      \
+		Modules    \
+
+##############################################################################
+
+.PHONY: all install clean nodebug
+
+all: all_subdirs
+
+clean: clean_subdirs
+
+install: install_subdirs
+
+nodebug: nodebug_subdirs
+
+

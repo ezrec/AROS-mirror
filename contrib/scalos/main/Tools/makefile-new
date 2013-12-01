@@ -1,0 +1,107 @@
+# $Date: 2011-08-20 15:34:17 +0200 (Sa, 20. Aug 2011) $
+# $Revision: 863 $
+##############################################################################
+
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/../..
+endif
+
+##############################################################################
+
+include		config.mk
+
+##############################################################################
+#
+# Project subdirectories
+#
+
+SUBDIRS	=	OpenDrawer \
+		#
+
+##############################################################################
+#
+# Project Object files
+#
+
+OBJS_CTRL	=       	$(OBJDIR)/ScalosCtrl.o
+
+OBJS_SEMA	=       	$(OBJDIR)/ScalosSema.o
+
+OBJS_LOADWB	=       	$(OBJDIR)/LoadWB.o
+
+OBJS_GETMSG	=       	$(OBJDIR)/GenMsgIdNames.o
+
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS_CTRL:.o=.d)
+	-include $(OBJS_SEMA:.o=.d)
+	-include $(OBJS_LOADWB:.o=.d)
+	-include $(OBJS_GETMSG:.o=.d)
+endif
+
+##############################################################################
+#
+# Targets
+#
+
+CTRL	=	ScalosCtrl
+SEMA	=	ScalosSema
+LOADWB	=	LoadWB.Scalos
+GETMSG	=	GenMsgIdNames
+
+##############################################################################
+
+.PHONY: all install clean bump dump
+
+all:	all_subdirs \
+	$(BINDIR)/$(CTRL) \
+	$(BINDIR)/$(SEMA) \
+	$(BINDIR)/$(LOADWB) \
+	$(BINDIR)/$(GETMSG) \
+	
+##############################################################################
+
+$(BINDIR)/$(CTRL): $(OBJS_CTRL)
+	@$(ECHO) "Link $(CTRL)"
+	@$(CC) $(STARTUP) $(OBJS_CTRL) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(CTRL).debug
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(CTRL).debug -o $(BINDIR)/$(CTRL)
+	@chmod u+x $@
+
+$(BINDIR)/$(SEMA): $(OBJS_SEMA)
+	@$(ECHO) "Link $(SEMA)"
+	@$(CC) $(STARTUP) $(OBJS_SEMA) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(SEMA).debug
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(SEMA).debug -o $(BINDIR)/$(SEMA)
+	@chmod u+x $@
+
+$(BINDIR)/$(LOADWB): $(OBJS_LOADWB)
+	@$(ECHO) "Link $(LOADWB)"
+	@$(CC) $(STARTUP) $(OBJS_LOADWB) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(LOADWB).debug
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(LOADWB).debug -o $(BINDIR)/$(LOADWB)
+	@chmod u+x $@
+
+$(BINDIR)/$(GETMSG): $(OBJS_GETMSG)
+	@$(ECHO) "Link $(GETMSG)"
+	@$(CC) $(STARTUP) $(OBJS_GETMSG) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(GETMSG).debug
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(GETMSG).debug -o $(BINDIR)/$(GETMSG)
+	@chmod u+x $@
+
+##############################################################################
+
+install: install_subdirs
+	@copy $(BINDIR)/$(CTRL) Scalos:Tools/
+	@copy $(BINDIR)/$(LOADWB) c:LoadWB
+
+
+clean: clean_subdirs
+	@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d $(OBJDIR)/*.i $(OBJDIR)/*.s \
+		$(BINDIR)/$(CTRL) $(BINDIR)/$(SEMA) \
+		$(BINDIR)/$(LOADWB) $(BINDIR)/$(GETMSG) \
+		$(BINDIR)/$(CTRL).debug $(BINDIR)/$(SEMA).debug \
+		$(BINDIR)/$(LOADWB).debug $(BINDIR)/$(GETMSG).debug
+
+##############################################################################
+

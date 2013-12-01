@@ -1,0 +1,423 @@
+; WindowProperties.ct
+; $Date$
+; $Revision$
+; $Id$
+;
+## version $VER: WindowProperties.catalog 40.6 (11.01.2009 19:01:45)
+## codeset 0
+## language français
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos Propriétés des fenêtres
+; Scalos Window Properties
+;
+;
+MSGID_OKBUTTON
+D'accord
+; Ok
+;
+;
+MSGID_SHORTHELP_OKBUTTON
+Enregistre les changements dans les types\n\
+d'outils de l'icône\n\
+Si nécessaire, une nouvelle icône sera\n\
+créée d'après le type d'icône par défaut.
+; Save the changes in the icon's tooltypes.\n\
+; If necessary, a new icon will be\n\
+; created from a the default icon.
+;
+;
+MSGID_CANCELBUTTON
+Annuler
+; Cancel
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Oublier tout changement en cours.\n\
+L'icône ne sera pas modifiée.
+; Discard all changes and\n\
+; leave the icon unchanged.
+;
+;
+MSGID_CYCLE_NOSTATUSBAR
+Cacher la barre de statut:
+; Hide Status Bar:
+;
+;
+MSGID_CYCLE_NOSTATUSBAR_SHORTHELP
+Si activé la barre de statut\n\
+de la fenêtre sera cachée.\n\
+Le type d'outil: \033bSCALOS_NOSTATUSBAR\033n,\n\
+sera insèrer dans l'icône du répertoire parent.
+;This switch can be used to turn off the status bar\n\
+;for this window, independent of the global setting.
+;
+;
+MSGID_POPUP_PATTERNNUMBER
+Numéro du motif de fond:
+; Pattern number:
+;
+;
+MSGID_READ_ONLY
+(Lecture-Seulement)
+; (Read-Only)
+;
+;
+MSGID_TEXT_WINDOWNAME_SHORTHELP
+Nom de la fenêtre
+; Window name
+;
+;
+MSGID_TEXT_PARENTDIR_SHORTHELP
+Chemin d'accès de la fenêtre
+; Drawer window path
+;
+;
+MSGID_SHOWTHUMBNAILS_NOTSET
+(Non défini)
+;(not set)
+;
+;
+MSGID_SHOWTHUMBNAILS_NEVER
+Jamais
+;Never
+;
+;
+MSGID_SHOWTHUMBNAILS_AS_DEFAULT
+Icônes par défaut
+;As default
+;
+;
+MSGID_SHOWTHUMBNAILS_ALWAYS
+Toujours
+;Always
+;
+;
+MSGID_CYCLE_THUMBNAILS
+Afficher les vignettes:
+;Show Thumbnails:
+;
+;
+MSGID_CYCLE_THUMBNAILS_SHORTHELP
+Option individuelle des répertoires\n\
+pour l'affichage des vignettes.\n\
+Si non défini, l'option par défaut,\n\
+depuis "Scalos prefs", est utilisée.
+;Individual drawer-specific setting for thumbnail display.\n\
+;If not set, the default setting from Scalos prefs is used.
+;
+MSGID_CHECKOVERLAP_NO
+Non
+;No
+;
+MSGID_CHECKOVERLAP_YES
+Oui
+;Yes
+;
+MSGID_CHECKOVERLAP_NOTSET
+(non saisi)
+;(not set)
+;
+MSGID_CYCLE_CHECKOVERLAP
+Analyser les icônes se chevauchant :
+;Check Overlapping Icons:
+;
+MSGID_CYCLE_CHECKOVERLAP_SHORTHELP
+Option spécifique au répertoires pour l'analyse des icônes se chevauchant.\n\
+Si coché les icônes chevauchant d'autres icônes seront repsitionnées.
+;Individual drawer-specific setting for overlapping icons check.\n\
+;If set icons that overlap any other icon will be repositioned.
+;
+MSGID_HIDESTATUSBAR_NOTSET
+(non saisi)
+;(not set)
+;
+MSGID_HIDESTATUSBAR_HIDE
+Caché
+;Hidden
+;
+MSGID_TRANSPARENCY_ACTIVEWINDOW
+Etat de la fenêtre active
+;Active window state
+;
+MSGID_TRANSPARENCY_INACTIVEWINDOW
+Etat de la fenêtre inactive
+;Inactive window state
+;
+MSGID_TRANSPARENCY_ACTIVEWINDOW_SHORTHELP
+Ici vous pouvez choisir le degrès de transparence\n\
+pour le bureau, icône ou la fenêtre en mode listeur activés.\n\
+Le bureau sera transparent seulement si il n'est pas en arrière-plan.
+; Here you can select the degree of transparency\n\
+; for the active Scalos desktop, icon, or text window.\n\
+; The desktop will only get transparent if it is not a backdrop window.
+;
+MSGID_TRANSPARENCY_INACTIVEWINDOW_SHORTHELP
+Ici vous pouvez choisir le degrès de transparence\n\
+pour le bureau, icône ou la fenêtre en mode listeur inactivés.\n\
+Le bureau sera tranparent seulement si il n'est pas en arrière-plan.
+; Here you can select the degree of transparency\n\
+; for all inactive Scalos desktop, icon, or text windows.\n\
+; The desktop will only get transparent if it is not a backdrop window.
+;
+MSGID_TRANSPARENCY_OPAQUE
+Opaque
+;opaque
+;
+MSGID_TRANSPARENCY_TRANSPARENT
+Transparent
+; transparent
+;
+MSGID_CHECKBOX_TRANSPARENCY_USEDEFAULT
+Par défaut
+; Use default
+;
+MSGID_CHECKBOX_TRANSPARENCY_USEDEFAULT_SHORTHELP
+Par défaut
+; Use default
+;
+MSGID_CYCLE_NOCONTROLBAR
+Cacher la barre de contrôle :
+;Hide Control Bar:
+;
+MSGID_CYCLE_NOCONTROLBAR_SHORTHELP
+Ce gadget peut être utilisé pour désactiver la barre de contrôle\n\
+pour cette fenêtre, indépendement du réglage global.
+;This switch can be used to turn off the control bar\n\
+;for this window, independent of the global setting.
+;
+MSGID_HIDECONTROLBAR_NOTSET
+(non saisi)
+;(not set)
+;
+MSGID_HIDECONTROLBAR_HIDE
+Caché
+;Hidden
+;
+MSGID_GROUP_ICONSCALING
+Dimensions de l'icône
+;Icon Scaling
+;
+MSGID_ICONSCALING_NOMINALSIZE_SHORTHELP
+Ajustement standard appliqué à toutes les icônes.
+;Standard size adjustment applied to all icons.
+;
+MSGID_ICONSCALING_NOMINALSIZE
+Taille nominale :
+;Nominal Size:
+;
+MSGID_ICONSCALING_PERCENT
+%
+;
+MSGID_ICONSCALING_MINSIZE
+Taille minimum :
+;Minimum Size:
+;
+MSGID_ICONSCALING_MINSIZE_SHORTHELP
+Taille minimum d'affichage des icôness.\n\
+Les plus petites icônes seront redimensionnées\n\
+d'aprés la taille minimum spécifiée.
+;Minimum size for displayed icons.\n\
+;Smaller icons will be scaled to\n\
+;the specified minimum size.
+;
+MSGID_ICONSCALING_MAXSIZE
+Taille maximum :
+;Maximum Size:
+;
+MSGID_ICONSCALING_MAXSIZE_SHORTHELP
+taille maximum d'affichage des icônes.\n\
+Les plus grandes icônes seront redimensionnées\n\
+d'aprés la taille maxiimum spécifiée.
+;Maximum size for displayed icons.\n\
+;Larger icons will be scaled to\n\
+;the specified maximum size.
+;
+MSGID_CHECKBOX_ICONSCALING_NOMINALSIZE
+Par défaut :
+;Use default:
+;
+MSGID_CHECKBOX_ICONSCALING_NOMINALSIZE_SHORTHELP
+Si ce gadget est activé, la redimension globale, depuis les préferences de Scalos\n\
+est utilisée. Décochez ce gadget afin de spécifier la redimension individuelle d'une\n\
+icône, pour cette fenêtre.
+;If this checkbox is checked, global icon scaling from Scalos Preferences is used.\n\
+;Turn off this checkbox to specify individual icon scaling for this window.
+;
+MSGID_CHECKBOX_ICONSIZECONSTRAINTS_USEDEFAULT
+Par défaut :
+;Use default:
+;
+MSGID_CHECKBOX_ICONSIZECONSTRAINTS_USEDEFAULT_SHORTHELP
+Si ce gadget est activé, les contraintes globales de la taille\n\
+des icônes, depuis les préferences de Scalos, seront utilisées.\n\
+décochez ce gadget afin de spécifier les contraintes\n\
+de la taille des icônes pour cette fenêtre.
+;If this checkbox is checked, global icon size\n\
+;constraints from Scalos Preferences are used.\n\
+;Turn off this checkbox to specify individual\n\
+;icon size constraints for this window.
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT
+Projet
+; Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+A propos...
+; About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+A propos de MUI...
+; About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Quitter
+; Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+; Q
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK
+D'accord
+; _OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\033c\033bScalos Main IconProperties.module V\0333%ld\0332.\0333%ld\0332\033n\n\
+%s\n\
+© 2004%s The Scalos Team
+; \33c\033bScalos Main IconProperties.module V%ld.%ld\033n\n\
+; © 2004 The Scalos Team
+;
+;-----------------------------------------------------------
+MSGID_THUMBNAILS_LIFETIME_FOREVER
+Jamais
+;never
+;
+MSGID_THUMBNAILS_LIFETIME_NOTSET
+(Défaut)
+;(Default)
+;
+MSGID_ICONSPAGE_THUMBNAILS_MAXAGE
+Nettoyage des vignettes après :
+;Cleanup thumbnails after:
+;
+MSGID_ICONSPAGE_THUMBNAILS_MAXAGE_SHORTHELP
+Les vignettes du cache seront supprimées\n\
+si elles n'ont pu être localisées aprés le\n\
+nombre de jours spécifié, afin de limiter autant\n\
+que possible la taille du cache.\n\
+Si \033b(Défaut)\033n est sélectionné, l'option globale est utilisée.
+;Cached thumbnail images will be removed from the cache\n\
+;if they have not been accessed for more than the\n\
+;specified number of days, in order to keep cache\n\
+;size as small as possible.\n\
+;If \033b(Default)\033n is selected, the global setting is used.
+;
+MSGID_ICONSPAGE_THUMBNAILS_MAXAGE_DAYS
+jours
+;days
+;
+;-----------------------------------------------------------
+;
+MSGID_COLUMNTITLE_1
+\033bN°.
+;\33bNr.
+;
+;
+MSGID_COLUMNTITLE_3
+\33bAperçu
+;\33bPreview
+;
+;
+MSGID_REQTITLE_READERROR
+Erreur de chargement des\n\
+préferences des motifs,\n\
+fichier : \"%s\"\n\
+%s
+;Error reading pattern preferences\n\
+;file \"%s\"\n\
+;%s
+;
+;
+MSGID_LOADING_THUMBNAIL
+\33cChargement d'une vignette pour
+;\33cLoading Pattern Thumbnail for
+;
+;
+MSGID_PROGRESS_THUMBNAILS
+\33c%ld/%ld
+;\33c%ld/%ld
+;
+;
+MSGID_LOADING_THUMBNAILS
+\033cChargement des vignettes...
+;\033cLoading Pattern Thumbnails...
+;
+;
+MSGID_WINDOW_STARTUP
+Proprièté des fenêtres de Scalos
+;Scalos Window Properties Startup
+;
+;
+MSGID_PATTERNR_DEFAULT
+(défaut)
+;(default)
+;
+;-----------------------------------------------------------
+;
+MSGID_ICONSIZES_16x16
+16 x 16
+;16 x 16
+;
+MSGID_ICONSIZES_24x24
+24 x 24
+;24 x 24
+;
+MSGID_ICONSIZES_32x32
+32 x 32
+;32 x 32
+;
+MSGID_ICONSIZES_48x48
+48 x 48
+;48 x 48
+;
+MSGID_ICONSIZES_64x64
+64 x 64
+;64 x 64
+;
+MSGID_ICONSIZES_96x96
+96 x 96
+;96 x 96
+;
+MSGID_ICONSIZES_128x128
+128 x 128
+;128 x 128
+;
+MSGID_ICONSIZES_UNLIMITED
+Illimitée
+;unlimited
+;
+;-----------------------------------------------------------
+;
+MSGID_REGISTERTITLE_WINDOW
+Fenêtre
+;Window
+;
+MSGID_REGISTERTITLE_ICONS
+Icônes
+;Icons
+;
+;-----------------------------------------------------------

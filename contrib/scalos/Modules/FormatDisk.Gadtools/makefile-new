@@ -1,0 +1,103 @@
+# $Date: 2011-08-10 18:36:43 +0200 (Mi, 10. Aug 2011) $
+# $Revision: 836 $
+##############################################################################
+
+TOPLEVEL	=	$(shell pwd)/../..
+
+# Native FlexCat doesn't like Linux paths
+ifeq ($(CROSS), )
+	SDPATH=/
+else
+	SDPATH=../..
+endif
+
+include		config.mk
+
+##############################################################################
+#
+# Project Object files
+#
+
+OBJS	=	$(OBJDIR)/NSD_64bit.o		\
+		$(OBJDIR)/Device_Handler.o	\
+		$(OBJDIR)/FullFormat.o		\
+		$(OBJDIR)/FormatVolume.o	\
+		$(OBJDIR)/ParseArgs.o		\
+		$(OBJDIR)/Format.o		\
+		$(OBJDIR)/GetInputFromWindow.o	\
+		$(OBJDIR)/GUI.o			\
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS:.o=.d)
+endif
+
+##############################################################################
+#
+# Subdirs
+#
+
+SUBDIRS	=	$(filter-out Catalogs/sample/Scalos, $(wildcard Catalogs/*/Scalos))
+
+##############################################################################
+#
+# Targets
+#
+
+NAME  	=       Format_Disk.module
+NAME_DB	=	$(NAME).debug
+
+##############################################################################
+
+.PHONY: all install clean bump dump nodebug
+
+all:	$(BINDIR)/$(NAME) \
+	$(BINDIR)/$(NAME_DB) \
+	all_subdirs
+
+##############################################################################
+
+$(OBJDIR)/%.o: $(TOOLTYPE_DIR)/%.c
+	$(run-cc)
+
+$(OBJDIR)/%.o: $(ICONOBJMCC_DIR)/%.c
+	$(run-cc)
+
+Format.c : $(OBJDIR)/FormatDisk_Locale.h
+
+$(OBJDIR)/FormatDisk_Locale.h : FormatDisk.cd
+	@$(ECHO) "FlexCat $@"
+	$(FLEXCAT) $< $@=$(SDPATH)/CatComp_h.sd
+
+##############################################################################
+
+$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) : $(OBJS)
+	@$(ECHO) "Link $(NAME)"
+	@$(CC) $(OBJS) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(NAME_DB)
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(NAME_DB) -o $(BINDIR)/$(NAME)
+ifneq ($(MACHINE), ppc-amigaos)
+	@chmod u+x $@
+endif
+
+##############################################################################
+
+install:
+	-@$(ECHO) "Installing $(NAME)"
+	@copy $(BINDIR)/$(NAME) Scalos:modules/ clone
+
+install: install_subdirs
+
+clean:
+	-@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d $(OBJDIR)/*.d.* \
+        	$(OBJDIR)/*.i $(OBJDIR)/*.s \
+		$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) \
+		*.dump *_str.* \
+		$(OBJDIR)/FormatDisk_Locale.h
+
+clean:	clean_subdirs
+
+##############################################################################
+

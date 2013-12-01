@@ -1,0 +1,174 @@
+; Exchange.ct
+; $Date$
+; $Revision$
+## version $VER: Exchange.catalog 40.1 (23 Dec 2008 18:50:08)
+## codeset 0s
+## language xxxxxx
+;
+;#arrayopts static __far
+;
+;+++translateme+++
+SGID_TITLENAME
+Scalos Exchange
+;Scalos Exchange
+;
+;-----------------------------------------------------------
+;+++translateme+++
+MSGID_MENU_PROJECT
+Project
+;Project
+;
+;+++translateme+++
+MSGID_MENU_PROJECT_ABOUT
+About...
+;About...
+;
+;+++translateme+++
+MSGID_MENU_PROJECT_ABOUTMUI
+About MUI...
+;About MUI...
+;
+;+++translateme+++
+MSGID_MENU_PROJECT_QUIT
+Quit
+;Quit
+;
+;+++translateme+++
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;Q
+;
+;-----------------------------------------------------------
+;+++translateme+++
+MSGID_ABOUTREQOK
+_OK
+;_OK
+;
+;+++translateme+++
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Exchange.module V%ld.%ld\033n\n\
+%s\n\
+© 2008%s The Scalos Team
+;\33c\033bScalos Exchange.module V%ld.%ld\033n\n\
+;%s\n\
+;© 2008%s The Scalos Team
+;
+;-----------------------------------------------------------
+;+++translateme+++
+MSGID_BUTTON_SHOW
+Show
+;Show
+;
+;+++translateme+++
+MSGID_BUTTON_SHOW_KEY
+S
+;S
+;
+;+++translateme+++
+MSGID_BUTTON_SHOW_SHORTHELP
+Show Commodity window.
+;Show Commodity window.
+;
+;+++translateme+++
+MSGID_BUTTON_HIDE
+Hide
+;Hide
+;
+;+++translateme+++
+MSGID_BUTTON_HIDE_KEY
+H
+;H
+;
+;+++translateme+++
+MSGID_BUTTON_HIDE_SHORTHELP
+Hide Commodity window.
+;Hide Commodity window.
+;
+;+++translateme+++
+MSGID_BUTTON_REMOVE
+Remove
+;Remove
+;
+;+++translateme+++
+MSGID_BUTTON_REMOVE_KEY
+R
+;R
+;
+;+++translateme+++
+MSGID_BUTTON_REMOVE_SHORTHELP
+Remove selected Commodity.
+;Remove selected Commodity.
+;
+;+++translateme+++
+MSGID_CXLIST_NAME
+Name
+;Name
+;
+;+++translateme+++
+MSGID_CXLIST_STATE
+State
+;State
+;
+;+++translateme+++
+MSGID_CXLIST_TITLE
+Title
+;Title
+;
+;+++translateme+++
+MSGID_CXLIST_PRIORITY
+Priority
+;
+;-----------------------------------------------------------
+;+++translateme+++
+MSGID_STARTUP_FAILURE
+Exchange Module startup failed
+;Exchange Module startup failed
+;
+;+++translateme+++
+MSGID_STARTUP_RETRY_QUIT_GAD
+Try again|Quit
+;Try again|Quit
+;
+;+++translateme+++
+MSGID_STARTUP_MCC_NOT_FOUND
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+The class is not installed.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;+++translateme+++
+MSGID_STARTUP_OLD_MCC
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+\n\
+Currently installed is V%lu.%lu, please upgrade!
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;+++translateme+++
+MSGID_STARTUP_MCC_IN_USE
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+%lu.%lu is currently in use by other applications.\n\
+\n\
+Once you have installed the required version,\n\
+close all MUI programs, make sure the old class\n\
+is flushed from memory and try again.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;+++translateme+++
+MSGID_CYCLE_ACTIVE_ACTIVE
+Active
+;Active
+;
+;+++translateme+++
+MSGID_CYCLE_ACTIVE_INACTIVE
+Inactive
+;Inactive
+;
+;-----------------------------------------------------------

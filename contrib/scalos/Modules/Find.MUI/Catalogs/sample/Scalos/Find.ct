@@ -1,0 +1,314 @@
+; Find.ct
+; version $VER: Find.catalog 40.1 (23. Aug 2008 18:50:08)
+; $Date$
+; $Revision$
+; codeset 0s
+; language xxxxxx
+;
+;#arrayopts static __far
+;
+;+++translateme+++
+MSGID_TITLENAME
+Scalos Find
+;Scalos Find
+;
+;+++translateme+++
+MSGID_SEARCH_FINISHED
+Finished.
+;Finished.
+;
+;+++translateme+++
+MSGID_SEARCH_ABORTED
+Aborted.
+;Aborted.
+;
+;-----------------------------------------------------------
+;+++translateme+++
+MSGID_MENU_PROJECT
+Project
+;Project
+;
+;+++translateme+++
+MSGID_MENU_PROJECT_ABOUT
+About...
+;About...
+;
+;+++translateme+++
+MSGID_MENU_PROJECT_ABOUTMUI
+About MUI...
+;About MUI...
+;
+;+++translateme+++
+MSGID_MENU_PROJECT_QUIT
+Quit
+;Quit
+;
+;+++translateme+++
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;Q
+;
+;-----------------------------------------------------------
+;+++translateme+++
+MSGID_ABOUTREQOK
+_OK
+;_OK
+;
+;+++translateme+++
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Find.module V%ld.%ld\033n\n\
+%s\n\
+© 2008%s The Scalos Team
+;\33c\033bScalos Find.module V%ld.%ld\033n\n\
+;%s\n\
+;© 2008%s The Scalos Team
+;
+;-----------------------------------------------------------
+;+++translateme+++
+MSGID_POPSTRING_NAME
+Name:
+;Name:
+;
+;+++translateme+++
+MSGID_POPSTRING_NAME_SHORTHELP
+Pattern for file names to look for.\n\
+You can use all DOS wildcards like \"#?\"
+;Pattern for file names to look for.\n\
+;You can use all DOS wildcards like \"#?\"
+;
+;+++translateme+++
+MSGID_POPSTRING_TEXT
+Text:
+;Text:
+;
+;+++translateme+++
+MSGID_POPSTRING_TEXT_SHORTHELP
+String that is search inside all files\n\
+matching the file name pattern.\n\
+No wildcards are allowed here.
+;String that is search inside all files\n\
+;matching the file name pattern.\n\
+;No wildcards are allowed here.
+;
+;+++translateme+++
+MSGID_POPSTRING_TYPE
+Type:
+;Type:
+;
+;+++translateme+++
+MSGID_POPSTRING_TYPE_SHORTHELP
+Name of Filetype all found entries must have.
+;Name of Filetype all found entries must have.
+;
+;+++translateme+++
+MSGID_SHORTHELP_LISTVIEW_FILETYPES
+Select any filetype from this list by double-licking it.
+;Select any filetype from this list by double-licking it.
+;
+;+++translateme+++
+MSGID_GROUP_SOURCES
+Sources
+;Sources
+;
+;+++translateme+++
+MSGID_GROUP_SOURCES_ASLTITLE
+Enter find source path:
+;Enter find source path:
+;
+;+++translateme+++
+MSGID_GROUP_RESULTS
+Results
+;Results
+;
+;+++translateme+++
+MSGID_BUTTON_ADD
+Add \033I[6:20]
+;Add \033I[6:20]
+;
+;+++translateme+++
+MSGID_BUTTON_ADD_KEY (/1/1)
+A
+;A
+;
+;+++translateme+++
+MSGID_BUTTON_ADD_SHORTHELP
+Add another path to search for desired file(s).
+;Add another path to search for desired file(s).
+;
+;+++translateme+++
+MSGID_BUTTON_REMOVE
+Remove
+;Remove
+;
+;+++translateme+++
+MSGID_BUTTON_REMOVE_KEY (/1/1)
+R
+;R
+;
+;+++translateme+++
+MSGID_BUTTON_REMOVE_SHORTHELP
+Remove selected entry from the list of\n\
+paths to search for desired file(s).
+;Remove selected entry from the list of\n\
+;paths to search for desired file(s).
+;
+;+++translateme+++
+MSGID_BUTTON_SEARCH
+Search
+;Search
+;
+;+++translateme+++
+MSGID_BUTTON_SEARCH_KEY (/1/1)
+S
+;S
+;
+;+++translateme+++
+MSGID_BUTTON_SEARCH_SHORTHELP
+Start searching for desried file(s).
+;Start searching for desried file(s).
+;
+;+++translateme+++
+MSGID_BUTTON_STOP
+Stop
+;Stop
+;
+;+++translateme+++
+MSGID_BUTTON_STOP_KEY
+p
+;p
+;
+;+++translateme+++
+MSGID_BUTTON_STOP_SHORTHELP
+Immediately stop search in progress.
+;Immediately stop search in progress.
+;
+;+++translateme+++
+MSGID_RESULTLIST_NAME
+Name
+;Name
+;
+;+++translateme+++
+MSGID_RESULTLIST_LOCATION
+Location
+;Location
+;
+;+++translateme+++
+MSGID_BUTTON_FIND_NEXT
+Next
+;Next
+;
+;+++translateme+++
+MSGID_BUTTON_FIND_NEXT_KEY (/1/1)
+N
+;N
+;
+;+++translateme+++
+MSGID_BUTTON_FIND_NEXT_SHORTHELP
+Find next filetype that matches the given search string.
+;Find next filetype that matches the given search string.
+;
+;+++translateme+++
+MSGID_BUTTON_FIND_HIDE_SHORTHELP
+Hide Find Filetype Dialog.
+;Hide Find Filetype Dialog.
+;
+;-----------------------------------------------------------
+;+++translateme+++
+MSGID_STARTUP_FAILURE
+Find Module startup failed
+;Find Module startup failed
+;
+;+++translateme+++
+MSGID_STARTUP_RETRY_QUIT_GAD
+Try again|Quit
+;Try again|Quit
+;
+;+++translateme+++
+MSGID_STARTUP_MCC_NOT_FOUND
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+The class is not installed.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;+++translateme+++
+MSGID_STARTUP_OLD_MCC
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+\n\
+Currently installed is V%lu.%lu, please upgrade!
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;+++translateme+++
+MSGID_STARTUP_MCC_IN_USE
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+%lu.%lu is currently in use by other applications.\n\
+\n\
+Once you have installed the required version,\n\
+close all MUI programs, make sure the old class\n\
+is flushed from memory and try again.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;+++translateme+++
+MSGID_MENU_RESULTS_TITLE
+Find Results
+;Find Results
+;
+;+++translateme+++
+MSGID_MENU_RESULTS_OPEN
+Open with MultiView...
+;Open with MultiView...
+;
+;+++translateme+++
+MSGID_MENU_RESULTS_OPENDRAWER
+Open Drawer...
+;Open Drawer...
+;
+;+++translateme+++
+MSGID_MENU_RESULTS_FIND
+Find in Result...
+;Find in Result...
+;
+;+++translateme+++
+MSGID_MENU_RESULTS_COPYTOCLIP
+Copy to Clipboard
+;Copy to Clipboard
+;
+;-----------------------------------------------------------
+;+++translateme+++
+MSGID_MENU_FILETYPES_TITLE
+File Types
+;File Types
+;
+;+++translateme+++
+MSGID_MENU_EDIT_COLLAPSE
+Collapse Selected
+;Collapse Selected
+;
+;+++translateme+++
+MSGID_MENU_EDIT_EXPAND
+Expand Selected
+;Expand Selected
+;
+;+++translateme+++
+MSGID_MENU_EDIT_COLLAPSEALL
+Collapse All
+;Collapse All
+;
+;+++translateme+++
+MSGID_MENU_EDIT_EXPANDALL
+Expand All
+;Expand All
+;
+;+++translateme+++
+MSGID_MENU_CLEARHISTORY
+Clear History
+;Clear History
+;
+;-----------------------------------------------------------

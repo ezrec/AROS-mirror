@@ -1,0 +1,48 @@
+##base _CyberGfxBase
+##bias 30
+##public
+*--- (4 function slots reserved here) ---
+##bias 54
+IsCyberModeID(displayID)(d0)
+BestCModeIDTagList(bestModeIDTags)(a0)
+CModeRequestTagList(modeRequest,modeRequestTags)(a0/a1)
+AllocCModeListTagList(modeListTags)(a1)
+FreeCModeList(modeList)(a0)
+*--- (1 function slot reserved here) ---
+##bias 90
+ScalePixelArray(srcRect,srcW,srcH,srcMod,rp,destX,destY,destW,destH,srcFormat)(a0,d0/d1/d2/a1,d3/d4/d5/d6/d7)
+GetCyberMapAttr(cyberGfxBitmap,cyberAttrTag)(a0,d0)
+GetCyberIDAttr(cyberIDAttr,cyberDisplayModeID)(d0/d1)
+ReadRGBPixel(rp,x,y)(a1,d0/d1)
+WriteRGBPixel(rp,x,y,argb)(a1,d0/d1/d2)
+ReadPixelArray(destRect,destX,destY,destMod,rp,srcX,srcY,sizeX,sizeY,destFormat)(a0,d0/d1/d2/a1,d3/d4/d5/d6/d7)
+WritePixelArray(srcRect,srcX,srcY,srcMod,rp,destX,destY,sizeX,sizeY,srcFormat)(a0,d0/d1/d2/a1,d3/d4/d5/d6/d7)
+MovePixelArray(srcX,srcY,rp,destX,destY,sizeX,sizeY)(d0/d1/a1,d2/d3/d4/d5)
+*--- (1 function slot reserved here) ---
+##bias 144
+InvertPixelArray(rp,destX,destY,sizeX,sizeY)(a1,d0/d1/d2/d3)
+FillPixelArray(rp,destX,destY,sizeX,sizeY,aRGB)(a1,d0/d1/d2/d3/d4)
+DoCDrawMethodTagList(hook,rp,tagList)(a0/a1/a2)
+CVideoCtrlTagList(viewPort,tagList)(a0/a1)
+LockBitMapTagList(bitMap,tagList)(a0/a1)
+UnLockBitMap(handle)(a0)
+UnLockBitMapTagList(handle,tagList)(a0/a1)
+ExtractColor(rp,bitMap,colour,srcX,srcY,width,height)(a0/a1,d0/d1/d2/d3/d4)
+*--- (1 function slot reserved here) ---
+##bias 198
+WriteLUTPixelArray(srcRect,srcX,srcY,srcMod,rp,colorTab,destX,destY,sizeX,sizeY,cTFormat)(a0,d0/d1/d2/a1/a2,d3/d4/d5/d6/d7)
+*--- (2 function slots reserved here) ---
+##bias 216
+* --- function in v43 or higher
+WritePixelArrayAlpha(srcRect,srcX,srcY,srcMod,rp,destX,destY,sizeX,sizeY,globalAlpha)(a0,d0/d1/d2/a1,d3/d4/d5/d6/d7)
+BltTemplateAlpha(source,xSrc,srcMod,destRP,xDest,yDest,xSize,ySize)(a0,d0/d1/a1,d2/d3/d4/d5)
+ProcessPixelArray(rp,destX,destY,sizeX,sizeY,operation,value,taglist)(a1,d0/d1/d2/d3/d4/d5/a2)
+* --- function in v50 or higher
+BltBitMapAlpha(srcBitMap,srcX,srcY,destBitMap,destX,destY,sizeX,sizeY,taglist)(a0,d0/d1/a1,d2/d3/d4/d5/a2)
+BltBitMapRastPortAlpha(srcBitMap,srcX,srcY,destRP,destX,destY,sizeX,sizeY,taglist)(a0,d0/d1/a1,d2/d3/d4/d5/a2)
+*--- (2 function slots reserved here) ---
+##bias 258
+ScalePixelArrayAlpha(srcRect,srcW,srcH,srcMod,rp,destX,destY,destW,destH,globalAlpha)(a0,d0/d1/d2/a1,d3/d4/d5/d6/d7)
+*--- (31 function slots reserved here) ---
+##bias 450
+##end

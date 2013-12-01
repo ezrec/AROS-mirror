@@ -1,0 +1,128 @@
+## version $VER: GetHidden.catalog 1.0 (26.05.09)
+## codeset 0s
+## language français
+;
+MSGID_SEARCHING
+Patientez s'il vous plaît, la recherche des éléments cachés est en cours...
+; Please wait, searching hidden protection...
+;
+MSGID_REMOVEHIDDEN
+Retirer le bit de protection caché...
+; Remove hidden protection...
+;
+MSGID_ABORT
+Annuler
+; Abort
+;
+MSGID_DIRS
+Répertoires :
+; Dirs:
+;
+MSGID_FILES
+Fichiers :
+; Files:
+;
+MSGID_TOTAL
+Total :
+; Total:
+;
+MSGID_NUMBERDIRS
+Nombre de répertoire trouvés.
+; Number of dirs found.
+;
+MSGID_NUMBERFILES
+Nombre de fichiers trouvés.
+; Number of files found.
+;
+MSGID_NUMBERTOTAL
+Nombre total d'éléments trouvés.
+; Total number of objects found.
+;
+MSGID_ANYHIDDENFOUND
+Aucun bit de protection caché n'a été trouvé !
+; Any hidden protection bit found!
+;
+MSGID_USERABORTED
+Annulé par l'utilisateur !
+; Aborted by user!
+;
+MSGID_COMPLETED
+Complété !
+; Completed!
+;
+MSGID_WAITHIDDENREMOVED
+Patientez s'il vous plaît, retrait de la protection...
+; Please wait, remove hidden protection...
+;
+MSGID_HIDDENREMOVED
+Bit de protection caché retiré !
+; Hidden protection bit removed!
+;
+MSGID_SCALOSFAILED
+Impossible d'ouvrir %s.%s !
+; Can't open %s.%s
+;
+MSGID_ERRORMUIMASTER
+Impossible d'ouvrir %s !
+; Can't open %s!
+;
+MSGID_ERRORICONLIB
+Impossible d'ouvrir la librairie icon.library !
+; Can't open icon.library!
+;
+MSGID_ERRORAPP
+La création de l'application a échouée !
+; Can't create application! 
+;
+MSGID_IOERRORFILE
+*** ATTENTION ***\n\
+%s\n\
+\tCode d'erreur : %ld - %s\n***************\n
+; *** WARNING ***\n\
+;%s\n\
+;\tErrorCode: %ld - %s\n***************\n
+;
+MSGID_IOERRORFULLPATH
+*** ATTENTION ***\n\
+%s\n\
+\tCode d'erreur : %ld - %s\n***************\n
+; *** WARNING ***\n\
+; %s\n\
+; \tErrorCode: %ld - %s\n***************\n
+;
+MSGID_TITLENAME
+Nom
+; Name
+;
+MSGID_TITLEPROTECT
+Acces
+; Protection
+;
+MSGID_TITLESISE
+Taille
+; Size
+;
+MSGID_TITLEDATE
+Date
+; Date
+;
+MSGID_TITLETIME
+Heure
+; Time
+;
+MSGID_TITLEPATH
+Chemin
+; Path
+;
+MSGID_MENUOPENDIR
+Ouvrir son répertoire
+; Open parent dir
+;
+MSGID_ARGNOFOUND
+Pas trouvé d'argument !
+; Argument no found!
+;
+MSGID_ENTRYNAME
+** Nom de l'entrée :
+; ** Entry name:
+;

@@ -1,0 +1,30 @@
+# $Date: 2010-04-16 22:49:51 +0200 (Fr, 16. Apr 2010) $
+# $Revision: 572 $
+#############################################################
+
+TOPLEVEL	=	$(shell pwd)/../..
+
+include		config.mk
+
+##############################################################################
+#
+# Project subdirectories
+#
+
+SUBDIRS	=	DefPicture \
+		JpegPicture \
+		PNGPicture \
+		Video
+
+##############################################################################
+
+.PHONY: all install clean
+
+all: all_subdirs
+
+clean: clean_subdirs
+
+install: install_subdirs
+
+nodebug: nodebug_subdirs
+

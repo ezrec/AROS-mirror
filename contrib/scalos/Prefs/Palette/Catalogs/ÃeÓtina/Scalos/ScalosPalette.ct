@@ -1,0 +1,435 @@
+; ScalosPalette.ct
+## version $VER: ScalosPalette.catalog 40.11 (25 Dec 2008 10:09:16)
+## codeset 0
+## language √e”tina
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos Palette Prefs Plugin
+;
+;
+MSGID_NEW
+Nov◊
+;
+;
+MSGID_DELETE
+Smazat
+;
+;
+MSGID_PEN
+Pero
+;
+;
+MSGID_RED
+„erven¡
+;
+;
+MSGID_GREEN
+Zelen¡
+;
+;
+MSGID_SAVENAME
+Ulo⁄it
+;
+;
+MSGID_USENAME
+Pou⁄…t
+;
+;
+MSGID_CANCELNAME
+Zru”it
+;
+;
+MSGID_BLUE
+Modr¡
+;
+;
+MSGID_COMMANDNAME
+Paleta
+;
+;
+MSGID_IMPORTNAME
+Barvy WB
+;
+;
+MSGID_MENU_PROJECT_OPEN
+Otev“…t...
+;
+;
+MSGID_MENU_PROJECT_OPEN_SHORT
+O
+;
+;
+MSGID_MENU_PROJECT_SAVEAS
+Ulo⁄it jako...
+;
+;
+MSGID_MENU_PROJECT_SAVEAS_SHORT
+A
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Skon√it
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;
+;
+MSGID_MENU_PROJECT
+Projekt
+;
+;
+MSGID_MENU_EDIT_LASTSAVED
+Naposledy ulo⁄en◊
+;
+;
+MSGID_MENU_EDIT_LASTSAVED_SHORT
+L
+;
+;
+MSGID_MENU_EDIT
+ıpravy
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS
+Vytv¡“et ikony?
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS_SHORT
+I
+;
+;
+MSGID_MENU_SETTINGS
+Nastaven…
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS
+Syst◊mov◊
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS_SHORT
+D
+;
+;
+MSGID_MENU_EDIT_RESTORE
+P“edchoz…
+;
+;
+MSGID_MENU_EDIT_RESTORE_SHORT
+R
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+O MUI...
+;
+;
+MSGID_WBCOLORS
+Workbench barvy
+;
+;
+MSGID_TEXTPEN
+Text
+;
+;
+MSGID_SHINEPEN
+Sv≈tl◊ okraje
+;
+;
+MSGID_SHADOWPEN
+Tmav◊ okraje
+;
+;
+MSGID_HIFILLPEN
+VŸplŒ
+;
+;
+MSGID_FILLTEXTPEN
+Text na aktivn…m poli
+;
+;
+MSGID_BGPEN
+Pozad…
+;
+;
+MSGID_HITEXTPEN
+JasnŸ text
+;
+;
+MSGID_BARDETAILPEN
+Text na li”t≈ obrazovky
+;
+;
+MSGID_BARBLOCKPEN
+Li”ta obrazovky
+;
+;
+MSGID_BARTRIMPEN
+Lem li”ty obrazovky
+;
+;
+MSGID_HSHINEPEN
+Polosv≈tl◊ okraje
+;
+;
+MSGID_HSHADOWPEN
+Polotmav◊ okraje
+;
+;
+MSGID_ICONTEXTPEN
+Icon Text Pen
+;
+;
+MSGID_DRAWERTEXT
+Adres¡“
+;
+;
+MSGID_DRAWERTEXTSEL
+Ozna√enŸ adres¡“
+;
+;
+MSGID_DRAWERBG
+Pozad… ozna√en◊ho adres¡“e
+;
+;
+MSGID_FILETEXT
+Soubor
+;
+;
+MSGID_FILETEXTSEL
+Ozna√enŸ soubor
+;
+;
+MSGID_FILEBG
+Pozad… ozna√en◊ho souboru
+;
+;
+MSGID_PENNAMENAME
+Jm◊no pera
+;
+;
+MSGID_BACKDROPDETAIL
+Pozad… detail
+;
+;
+MSGID_BACKDROPBLOCK
+Pozad… blok
+;
+;
+MSGID_MAINMENUNAME
+MainMenu
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+About...
+;
+;
+MSGID_ABOUTREQOK
+_OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Palette Preferences V%ld.%ld\033n\n\
+%s\n\
+© 1999%s The Scalos Team\n\
+Based on original code by Stefan Sommerfeld of ALiENDESiGN!
+;
+;
+MSGID_TOOLTIP_TEXT
+Tooltip Text Pen
+;
+;
+MSGID_TOOLTIP_BG
+Tooltip Background Pen
+;
+;
+MSGID_DRAGINFO_TEXT
+Dragging Infotext Text Pen
+;
+;
+MSGID_DRAGINFO_BG
+Dragging Infotext Background Pen
+;
+;
+MSGID_STATUSBAR_BG
+Status Bar Background Pen
+;
+;
+MSGID_STATUSBAR_TEXT
+Status Bar Text Pen
+;
+;
+MSGID_REQTITLE_SAVEERROR
+Error writing palette preferences\
+file \"%s\"\
+%s
+;
+;
+MSGID_REQTITLE_READERROR
+Error reading palette preferences\
+file \"%s\"\
+%s
+;
+;
+MSGID_TITLE_SCALOSPENLIST
+Scalos item pens
+;
+;
+MSGID_TITLE_PALETTEPENLIST
+Allocated Pens %ld/%ld
+;
+;
+MSGID_SHORTHELP_SCALOSPENLIST
+This is the Scalos pen list.\n\
+Change pen assignments by dragging pens \n\
+from the allocated pens list onto the \n\
+entry you want to change.
+;
+;
+MSGID_SHORTHELP_PALETTEPENLIST
+This is the list of all \n\
+pens allocated by Scalos.\n\
+ \n\
+You can drag new pens from the \n\
+Workbench pen list into this list.\n\
+ \n\
+Drag pens from here into the \n\
+Scalos pen list to assign colors \n\
+to specific Scalos items.
+;
+;
+MSGID_SHORTHELP_WBPENLIST
+This is a list of all currently \n\
+used pens on the WorkBench screen.\n\
+You may drag one or more pens into \n\
+the list of Scalos allocated pens.
+;
+;
+MSGID_SHORTHELP_SAVEBUTTON
+Press this button to save \n\
+the current settings to\n\
+\"ENVARC:Scalos/Palette13.prefs\".
+;
+;
+MSGID_SHORTHELP_USEBUTTON
+Press this button to save \n\
+the current settings to\n\
+\"ENV:Scalos/Palette13.prefs\".
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Press this button to abort \n\
+and forget all changes.
+;
+;
+MSGID_SHORTHELP_NEWBUTTON
+Press this button to allocate \n\
+a new palette pen. \n\
+The button gets disabled when you try \n\
+to allocated more pens than available \n\
+for the Workbench screen.
+;
+;
+MSGID_SHORTHELP_DELETEBUTTON
+Press this button to delete the \n\
+currently selected palette pen.
+;
+;
+MSGID_SHORTHELP_WBPENSBUTTON
+This button opens a new window \n\
+with a list of all currently \n\
+used WorkBench screen colors.
+;
+;
+MSGID_ICONTEXTPENSEL
+Selected Icon Text Pen
+;
+;
+MSGID_ICONTEXTOUTLINEPEN
+Icon Text Outline Pen
+;
+;
+MSGID_ICONTEXTSHADOWPEN
+Icon Text Shadow Pen
+;
+; new in 40.3
+;
+MSGID_PLUGIN_LIST_TITLE
+Palette
+;
+;
+MSGID_PEN_REFERENCE_COUNT
+Ref.
+;
+; new in 40.6
+;
+; +++translateme+++
+MSGID_SHORTHELP_LAMP_CHANGED
+This lamp indicator changes from \033bOff\033n\n\
+to \033bOk\033n when the settings have been\n\
+modified since initial loading.
+;This lamp indicator changes from \033bOff\033n\n\
+;to \033bOk\033n when the settings have been\n\
+;modified since initial loading.
+;
+; +++translateme+++
+MSGID_ICONTEXTFILESELBG
+Selected Icon Text Rectangle Pen
+;Selected Icon Text Rectangle Pen
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Scalos Palette Prefs startup failed
+;Scalos Palette Prefs startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Try again|Quit
+;Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+The class is not installed.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+\n\
+Currently installed is V%lu.%lu, please upgrade!
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+%lu.%lu is currently in use by other applications.\n\
+\n\
+Once you have installed the required version,\n\
+close all MUI programs, make sure the old class\n\
+is flushed from memory and try again.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;+++translateme+++
+MSGID_THUMBNAIL_BG
+Thumbnail background pen
+;Thumbnail background pen
+;
+;+++translateme+++
+MSGID_THUMBNAIL_BG_SEL
+Selected thumbnail background pen
+;Selected thumbnail background pen
+;
+;-----------------------------------------------------------
+;

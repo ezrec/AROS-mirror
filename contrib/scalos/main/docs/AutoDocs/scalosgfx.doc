@@ -1,0 +1,910 @@
+TABLE OF CONTENTS
+
+scalosgfx.library/ScalosGfxARGBRectMult
+scalosgfx.library/ScalosGfxARGBSetAlpha
+scalosgfx.library/ScalosGfxARGBSetAlphaMask
+scalosgfx.library/ScalosGfxBlitIcon
+scalosgfx.library/ScalosGfxBlitARGB
+scalosgfx.library/ScalosGfxBlitARGBAlpha
+scalosgfx.library/ScalosGfxBlitARGBAlphaTagList
+scalosgfx.library/ScalosGfxCalculateScaleAspect
+scalosgfx.library/ScalosGfxCreateARGB
+scalosgfx.library/ScalosGfxCreateARGBFromBitMap
+scalosgfx.library/ScalosGfxCreateEmptySAC
+scalosgfx.library/ScalosGfxCreateSAC
+scalosgfx.library/ScalosGfxDrawEllipse
+scalosgfx.library/ScalosGfxDrawEllipseRastPort
+scalosgfx.library/ScalosGfxDrawGradient
+scalosgfx.library/ScalosGfxDrawGradientRastPort
+scalosgfx.library/ScalosGfxDrawLine
+scalosgfx.library/ScalosGfxDrawLineRastPort
+scalosgfx.library/ScalosGfxFillARGBFromBitMap
+scalosgfx.library/ScalosGfxFillRectARGB
+scalosgfx.library/ScalosGfxFreeSAC
+scalosgfx.library/ScalosGfxFreeARGB
+scalosgfx.library/ScalosGfxMedianCut
+scalosgfx.library/ScalosGfxNewColorMap
+scalosgfx.library/ScalosGfxScaleARGBArray
+scalosgfx.library/ScalosGfxScaleBitMap
+scalosgfx.library/ScalosGfxSetARGB
+scalosgfx.library/ScalosGfxWriteARGBToBitMap
+
+scalosgfx.library/ScalosGfxCreateEmptySAC  scalosgfx.library/ScalosGfxCreateEmptySAC
+
+   NAME
+	ScalosGfxCreateEmptySAC	-- Allocate an empty ScalosBitMapAndColor
+
+   SYNOPSIS
+	sac = ScalosGfxCreateEmptySAC( )
+	D0
+
+	struct ScalosBitMapAndColor *ScalosGfxCreateEmptySAC( void );
+
+   FUNCTION
+	Allocates an empty ScalosBitMapAndColor structure, with NULL
+	sca_BitMap and sac_ColorTable.
+
+   INPUTS
+	none
+
+   RESULT
+	sac - new created ScalosBitMapAndColor, or NULL on failure
+
+   SEE ALSO
+	ScalosGfxFreeSAC(), ScalosGfxCreateSAC()
+
+scalosgfx.library/ScalosGfxCreateSAC     scalosgfx.library/ScalosGfxCreateSAC
+
+   NAME
+	ScalosGfxCreateSAC -- Allocate ScalosBitMapAndColor
+
+   SYNOPSIS
+	sac = ScalosGfxCreateSAC(width, height, depth, friendBM, tagList);
+	D0                       D0     D1      D2     A0        A1
+
+	struct ScalosBitMapAndColor *ScalosGfxCreateSAC(ULONG, ULONG, ULONG,
+		struct BitMap *, struct TagItem *)
+
+	struct ScalosBitMapAndColor *ScalosGfxCreateSACTags(ULONG, ULONG, ULONG,
+		struct BitMap *, ULONG, ...)
+
+   FUNCTION
+	Allocate a ScalosBitMapAndColor structure. sac_BitMap and sac_ColorTable
+	are allocated according to specified dimensions.
+
+   INPUTS
+	width    - Desired width of new ScalosBitMapAndColor BitMap.
+	height 	 - Desired height of new ScalosBitMapAndColor BitMap.
+	depth	 - Desired depth of new ScalosBitMapAndColor BitMap. Must be less
+		   than 256. sac_ColorTable will be allocated to hold 2^depth entries.
+	friendBM - Friend BitMap to use for BitMap allocation.
+	tagList	 - pointer to list of Tags, or NULL.
+
+   TAGS
+	None defined yet.
+
+   RESULT
+	sac - new created ScalosBitMapAndColor, or NULL on failure
+
+   SEE ALSO
+	ScalosGfxFreeSAC(), ScalosGfxCreateEmptySAC()
+
+scalosgfx.library/ScalosGfxFreeSAC         scalosgfx.library/ScalosGfxFreeSAC
+
+   NAME
+	ScalosGfxFreeSAC -- free a previously allocated ScalosBitMapAndColor
+
+   SYNOPSIS
+	ScalosGfxFreeSAC(sac);
+	                A0
+
+	void ScalosGfxFreeSAC((struct ScalosBitMapAndColor *);
+
+   FUNCTION
+	Frees and deallocates a previously allocated ScalosBitMapAndColor,
+	including sac_BitMap and sac_ColorTable.
+
+   INPUTS
+	sac - previously allocated ScalosBitMapAndColor, or NULL
+
+   RESULT
+	nothing
+
+   SEE ALSO
+	ScalosGfxCreateSAC(), ScalosGfxCreateEmptySAC()
+
+scalosgfx.library/ScalosGfxCreateARGB   scalosgfx.library/ScalosGfxCreateARGB
+
+   NAME
+	ScalosGfxCreateARGB -- Allocate a gfxARGB with specified size
+
+   SYNOPSIS
+	argb = ScalosGfxCreateARGB(width, height, tagList)
+	D0                         D0     D1      A0
+
+	struct gfxARGB *ScalosGfxCreateARGB(ULONG, ULONG, struct TagItem *)
+
+   FUNCTION
+	Allocates an array of struct gfxARGB with sufficient size for
+	specified width and height.
+	If either width of height is 0, this function returns NULL.
+
+   INPUTS
+	width	- width of gfxARGB array
+	height	- height of gfxARGB array
+	tagList	- pointer to list of Tags, or NULL.
+
+   TAGS
+	None defined yet.
+
+   RESULT
+	argb	- new allocated gfxARGB, or NULL on failure.
+
+   SEE ALSO
+
+scalosgfx.library/ScalosGfxFreeARGB       scalosgfx.library/ScalosGfxFreeARGB
+
+   NAME
+	ScalosGfxFreeARGB -- Free a previously allocated gfxARGB
+
+   SYNOPSIS
+	ScalosGfxFreeARGB(argb)
+	D0                A0
+
+	VOID ScalosGfxFreeARGB(struct gfxARGB **)
+
+   FUNCTION
+
+   INPUTS
+	argb - pointer to storage of previously allocated gfxARGB.
+	       argb may point to NULL.
+
+   RESULT
+	nothing
+
+   SEE ALSO
+	ScalosGfxCreateARGB()
+
+scalosgfx.library/ScalosGfxARGBSetAlpha  scalosgfx.library/ScalosGfxARGBSetAlpha
+
+   NAME
+	ScalosGfxARGBSetAlpha -- Set all pixels to specified Alpha value.
+
+   SYNOPSIS
+	ScalosGfxARGBSetAlpha(src, alpha);
+			      A0   D0
+
+	VOID ScalosGfxARGBSetAlpha(struct ARGBHeader *, UBYTE)
+
+   FUNCTION
+	Alpha value of all pixels in the ARGBHeader and its previously
+	allocated gfxARGB array is set to the specified value.
+
+   INPUTS
+	src	- Header of gfxARGB rectangle to modify.
+	alpha	- Alpha (transparency) value to set.
+
+   RESULT
+
+   SEE ALSO
+	ScalosGfxARGBSetAlphaMask()
+
+scalosgfx.library/ScalosGfxARGBSetAlphaMask  scalosgfx.library/ScalosGfxARGBSetAlphaMask
+
+   NAME
+	ScalosGfxARGBSetAlphaMask --  Set alpha value according to mask plane
+
+   SYNOPSIS
+	ScalosGfxARGBSetAlphaMask(argbh, maskPlane)
+				  A0     A1
+
+	VOID ScalosGfxARGBSetAlphaMask(struct ARGBHeader *, PLANEPTR)
+
+   FUNCTION
+	Alpha values of all pixels in the ARGBHeader and its previously
+	allocated gfxARGB array are set according to mask plane, i.e. for
+	every bit set in mask plane, alpha is maximum (255), and for every
+	cleared bit, alpha is set to minimum (0).
+
+   INPUTS
+	argbh	  - Header of gfxARGB rectangle to modify.
+	maskPlane - Single bit mask plane. Dimensions must match size of argbh, with
+		    width rounded up to next 16-bit.
+
+   RESULT
+	nothing
+
+   SEE ALSO
+	ScalosGfxARGBSetAlpha()
+scalosgfx.library/ScalosGfxCreateARGBFromBitMap  scalosgfx.library/ScalosGfxCreateARGBFromBitMap
+
+   NAME
+	ScalosGfxCreateARGBFromBitMap -- Create gfxARGB array from a BitMap
+
+   SYNOPSIS
+	argb = ScalosGfxCreateARGBFromBitMap(bm, width, height, numberOfColors, colorTable, maskPlane
+	D0                                   A0  D0     D1      D2              A1          A2
+
+	struct gfxARGB *ScalosGfxCreateARGBFromBitMap(struct BitMap *, ULONG, ULONG, ULONG,
+		const ULONG *, PLANEPTR)
+
+   FUNCTION
+	Allocates and a gfxARGB array with specified dimensions, and fills it from
+	provided BitMap, with optional mask plane. Works only with standard BitMaps with
+        less than 256 colors.
+
+   INPUTS
+	bm	       - source BitMap to fill gfxARGB array from,
+			 Depth must be less than 256 colors.
+	width	       - Width of gfxARGB array
+	height	       - Height of gfxARGB array
+	numberOfColors - number of entries in colorTable
+	colorTable     - Color table to use for BitMap
+	maskPlane      - Single bit mask plane. Dimensions must match width and
+			 height, with width rounded up to next 16-bit. May be NULL.
+   RESULT
+	argb	- allocated gfxARGB array or NULL on failure.
+
+   NOTES
+	Use ScalosGfxFillARGBFromBitMap() for high-color or true-color BitMaps.
+
+   SEE ALSO
+	ScalosGfxFillARGBFromBitMap()
+
+scalosgfx.library/ScalosGfxFillARGBFromBitMap  scalosgfx.library/ScalosGfxFillARGBFromBitMap
+
+   NAME
+	ScalosGfxFillARGBFromBitMap -- Fill previously allocated gfxARGB array from CGFX BitMap
+
+   SYNOPSIS
+	ScalosGfxFillARGBFromBitMap(argbh, srcBM, maskPlane)
+				    A0     A1     A2
+
+	VOID ScalosGfxFillARGBFromBitMap(struct ARGBHeader *, struct BitMap *, PLANEPTR)
+
+   FUNCTION
+	Fill a previously allocated gfxARGB array from a CyberGraphics BitMap. Can only
+	be used for high-color or true-color BitMaps.
+	If maskPlane if given, alpha information in argbh is created from maskPlane. If
+	maskPlane if NULL, alpha channel from source BitMap is used if available,
+	otherwise alpha is set to opaque.
+
+   INPUTS
+	argbh	  - completely initialized gfxARGB array
+	srcBM	  - source BitMap to use for filling, depth must be at least 65536 colors
+	maskPlane - Single bit mask plane. Dimensions must match width and height, with
+		    width rounded up to next 16-bit. May be NULL.
+   RESULT
+	nothing
+
+   NOTES
+	Use ScalosGfxARGBSetAlpha() for standard BitMaps (i.e. less than 256 colors).
+
+   SEE ALSO
+	ScalosGfxCreateARGBFromBitMap()
+
+scalosgfx.library/ScalosGfxWriteARGBToBitMap  scalosgfx.library/ScalosGfxWriteARGBToBitMap
+
+   NAME
+	ScalosGfxWriteARGBToBitMap -- Copy gfxARGB array to BitMap
+
+   SYNOPSIS
+	ScalosGfxWriteARGBToBitMap(argbh, bm, numberOfColors, colorTable)
+				   A0     A1  D0              A2)
+
+	VOID ScalosGfxWriteARGBToBitMap(struct ARGBHeader *, struct BitMap *, ULONG, const ULONG *)
+
+   FUNCTION
+	Creates a copy of gfxARGB array in destination BitMap,
+	using pre-defined colorTable. Works only with standard BitMaps, i.e. with
+	less than 256 colors. No sophisticated color reduction is performed, but
+	bit-fit pens are decided via FindBestPen().
+
+   INPUTS
+	argbh	       - gfxARGB array to read from
+	bm	       - Standard BitMap to write to. BitMap must
+			 have less than 256 colors.
+	numberOfColors - Number of entries in colorTable
+	colorTable     - color table to use for BitMap.
+
+   RESULT
+	nothing
+
+   SEE ALSO
+scalosgfx.library/ScalosGfxMedianCut     scalosgfx.library/ScalosGfxMedianCut
+
+   NAME
+	ScalosGfxMedianCut -- Create color-reduced BitMap from gfxARGB array
+
+   SYNOPSIS
+	sac = ScalosGfxMedianCut(argbh, depth, tagList)
+	D0                       A0     D0     A1
+
+	struct ScalosBitMapAndColor *ScalosGfxMedianCut(struct ARGBHeader *, ULONG, struct TagItem *)
+
+	struct ScalosBitMapAndColor *ScalosGfxMedianCutTags(struct ARGBHeader *, ULONG, ULONG, ...)
+
+   FUNCTION
+	Allocate and fill a color-reduced BitMap and a best-match color table from gfxARGB array.
+	Either ordered dithering or Floyd-Steinberg dithering will be used for best results.
+
+   INPUTS
+	argbh	- gfxARGB array to read from
+	depth	- desired depth of generated BitMap, must be less than 256.
+	tagList	- array of tagItems, as desribed below, or NULL.
+
+   TAGS
+	SCALOSGFX_MedianCutFlags - Flags as described below.
+	SCALOSGFX_MedianCutFriendBitMap - struct BitMap *, friend BitMap to use
+					  for allocating result BitMap
+	SCALOSGFX_MedianCutReservedColors - ULONG, number of reserved (unused) color
+					    entries at start of generated color table.
+
+   FLAGS
+	SCALOSGFXFLAGF_MedianCut_FloydSteinberg - If set, Floyd-Steinberg dithering
+						  will be used for color reduction.
+
+   RESULT
+	sac	- created ScalosBitMapAndColor pointer, or NULL on failure.
+
+   SEE ALSO
+scalosgfx.library/ScalosGfxScaleARGBArray  scalosgfx.library/ScalosGfxScaleARGBArray
+
+   NAME
+	ScalosGfxScaleARGBArray	-- Scale given gfxARGB array
+
+   SYNOPSIS
+	argb = ScalosGfxScaleARGBArray(src, destWidth, destHeight, tagList)
+	D0                             A0   A1         A2          A3
+
+	struct gfxARGB *ScalosGfxScaleARGBArray(const struct ARGBHeader *, ULONG *,
+		ULONG *, struct TagItem *)
+
+	struct gfxARGB *ScalosGfxScaleARGBArrayTags(const struct ARGBHeader *, ULONG *,
+		ULONG *, ULONG, ...)
+
+   FUNCTION
+	Scales given gfxARGB array to a new size. Supports both enlarging and shrinking
+	gfxARGB arrays.
+
+   INPUTS
+	src	   - source gfxARGB array, will not be modified
+	destWidth  - desired width, might be internally corrected
+		     if SCALEFLAGF_CORRECTASPECT is set.
+	destHeight - desired height, might be internally corrected
+		    if SCALEFLAGF_CORRECTASPECT is set.
+	tagList	   - pointer to list of Tags, or NULL.
+
+   TAGS
+	SCALOSGFX_ScaleARGBArrayFlags - ULONG, specify some operation flags as listed below.
+
+   FLAGS
+	SCALEFLAGF_BICUBIC - allow bicubic scaling
+	SCALEFLAGF_BILINEAR - allow bilinear scaling
+	SCALEFLAGF_AVERAGE - allow average scaling
+	SCALEFLAGF_DOUBLESIZE - allow intermediate step via double size, to improve quality
+	SCALEFLAGF_CORRECTASPECT - allow correction of destWidth and destHeight to
+				   meet source aspect ratio.
+
+   RESULT
+	argb	- Scaled copy of the source gfxARGB array
+
+   SEE ALSO
+scalosgfx.library/ScalosGfxScaleBitMap  scalosgfx.library/ScalosGfxScaleBitMap
+
+   NAME
+	ScalosGfxScaleBitMap -- Scale given BitMap
+
+   SYNOPSIS
+	bm = ScalosGfxScaleBitMap(sbma, tagList)
+	D0                        A0    A1
+
+	struct BitMap *ScalosGfxScaleBitMap(struct ScaleBitMapArg *, struct TagItem *)
+
+	struct BitMap *ScalosGfxScaleBitMapTags(struct ScaleBitMapArg *, ULONG, ...)
+
+   FUNCTION
+	Scales given gfxARGB array to a new size. Supports both enlarging and shrinking
+	gfxARGB arrays.
+   INPUTS
+	sbma	- Structure with scaling parameters:
+		sbma_SourceBM - The original BitMap. This BitMap is not modified.
+		sbma_SourceWidth - Width of the source BitMap.
+		sbma_SourceHeight - Height of the source BitMap
+		sbma_DestWidth - Pointer to Width of resized BitMap, might be internally
+		    corrected if SCALEFLAGF_CORRECTASPECT is set.
+		sbma_DestHeight - Pointer to Height of resized BitMap, might be internally
+		    corrected if SCALEFLAGF_CORRECTASPECT is set.
+		sbma_NumberOfColors - number of entries in color table
+		sbma_ColorTable - Color table for both source and resized BitMap.
+		sbma_Flags - scaling flags:
+			SCALEFLAGF_BICUBIC - allow bicubic scaling
+			SCALEFLAGF_BILINEAR - allow bilinear scaling
+			SCALEFLAGF_AVERAGE - allow average scaling
+			SCALEFLAGF_DOUBLESIZE - allow intermediate scaling step with
+				double size, to improve quality
+			SCALEFLAGF_CORRECTASPECT - allow correction of destWidth and
+				destHeight to meet source aspect ratio.
+		sbma_ScreenBM - Firend BitMap used when allocating resized BitMap.
+	tagList - pointer to list of Tags, or NULL.
+
+   TAGS
+	none defined yet.
+
+   RESULT
+	bm	- Scaled copy of the original BitMap
+
+   SEE ALSO
+scalosgfx.library/ScalosGfxCalculateScaleAspect  scalosgfx.library/ScalosGfxCalculateScaleAspect
+
+   NAME
+	ScalosGfxCalculateScaleAspect -- Adjust scaling dimensions to source aspect
+
+   SYNOPSIS
+	ScalosGfxCalculateScaleAspect(sourceWidth, sourceHeight, *destWidth, *destHeight)
+				      D0           D1            A0          A1
+
+	VOID ScalosGfxCalculateScaleAspect(ULONG, ULONG, ULONG *, ULONG *)
+
+   FUNCTION
+	Adjusts either destWidth or destHeight according to aspect ratio of
+        sourceWidth and soureHeight.
+
+   INPUTS
+	sourceWidth  - Unscaled width.
+	sourceHeight - Unscaled Height;
+	destWidth    - Pointer to desired scaled width.
+	destHeight   - Pointer to desired scaled width.
+
+   RESULT
+	nothing
+
+   SEE ALSO
+scalosgfx.library/ScalosGfxBlitARGB       scalosgfx.library/ScalosGfxBlitARGB
+
+   NAME
+	ScalosGfxBlitARGB -- Blit rectangle between two gfxARGB array rectangles.
+
+   SYNOPSIS
+	ScalosGfxBlitARGB(destARGB, srcARGB, destLeft, destTop, srcLeft, srcTop, width, height)
+			  A0        A1       D0        D1       D2       D3      D4     D5
+
+	VOID ScalosGfxBlitARGB(struct ARGBHeader *, const struct ARGBHeader *,
+		LONG, LONG, LONG, LONG, LONG, LONG)
+
+   FUNCTION
+	Blits user-defined rectangle from srcARGB at specified position into destARGB.
+	No alpha handling is performed, destination pixel values are simply
+        replaced by source pixels.
+
+   INPUTS
+	destARGB - destination gfxARGB array
+	srcARGB	 - source gfxARGB array
+	destLeft - Left start position in destARGB.
+	destTop	 - Top start position in destARGB.
+	srcLeft	 - Left start position in srcARGB.
+	srcTop	 - Top start position in srcARGB.
+	width	 - Width of blitted rectangle.
+	height	 - Height of blitted rectangle.
+
+   RESULT
+	nothing
+
+   SEE ALSO
+scalosgfx.library/ScalosGfxFillRectARGB  scalosgfx.library/ScalosGfxFillRectARGB
+
+   NAME
+	ScalosGfxFillRectARGB -- Blit two gfxARGB array rectangles
+
+   SYNOPSIS
+	ScalosGfxFillRectARGB(destARGB, fillARGB, left, top, width, height)
+			      A0        A1        D0    D1   D2     D3
+
+	VOID ScalosGfxFillRectARGB(struct ARGBHeader *, const struct gfxARGB *,
+		LONG, LONG, LONG, LONG)
+
+   FUNCTION
+	Blits fillARGB at specified position into destARGB. No alpha handling is
+        performed, destination pixel values are just replaced by source pixels.
+	Blit always starts at (0,0) in fillARGB.
+
+   INPUTS
+	destARGB - destination gfxARGB array.
+	fillARGB - source gfxARGB array.
+	left	 - Left start position in destARGB.
+	top	 - Top start position in destARGB.
+	width	 - Width of blitted rectangle.
+	height	 - Height of blitted rectangle.
+
+   RESULT
+	nothing
+
+   SEE ALSO
+scalosgfx.library/ScalosGfxSetARGB         scalosgfx.library/ScalosGfxSetARGB
+
+   NAME
+	ScalosGfxSetARGB -- Set entire gfxARGB array to given ARGB color
+
+   SYNOPSIS
+	ScalosGfxSetARGB(destARGB, fillARGB)
+			A0         A1
+
+	VOID ScalosGfxSetARGB(struct ARGBHeader *, const struct gfxARGB *)
+
+   FUNCTION
+	Set all pixels in entire gfxARGB array to the given ARGB color.
+
+   INPUTS
+	destARGB - gfxARGB array to be changed.
+	fillARGB - ARGB value to set pixels to.
+
+   RESULT
+	nothing
+
+   SEE ALSO
+scalosgfx.library/ScalosGfxNewColorMap        scalosgfx.library/ScalosGfxNewColorMap
+
+   NAME
+	ScalosGfxNewColorMap -- Allocate new color table for ScalosBitMapAndColor
+
+   SYNOPSIS
+	success = ScalosGfxNewColorMap(sac, colorMap, colorEntries)
+	D0                             A0   A1        D0
+
+	BOOL ScalosGfxNewColorMap(struct ScalosBitMapAndColor *, const ULONG *, ULONG)
+
+   FUNCTION
+	Allocates a new color table for ScalosBitMapAndColor. The new color table is
+	filled with the RGB values from colorMap.
+	Any previously color table in ScalosBitMapAndColor is freed.
+
+   INPUTS
+	sac	     - ScalosBitMapAndColor where to store new color table.
+	colorMap     - RGB values for new color table
+	colorEntries - Desired number of entries in new color table
+
+   RESULT
+	success	- TRUE if new color table was successfully allocated,
+		FALSE on failure.
+
+   SEE ALSO
+scalosgfx.library/ScalosGfxARGBRectMult        scalosgfx.library/ScalosGfxARGBRectMult
+
+   NAME
+	ScalosGfxARGBRectMult -- Multiply RGB value with given factor
+
+   SYNOPSIS
+	ScalosGfxARGBRectMult(rp, numerator, denominator, xMin, yMin, xMax, yMax)
+			      A0  A1         A2           D0    D1    D2    D3
+
+	VOID ScalosGfxARGBRectMult(struct RastPort *, const struct gfxARGB *,
+		const struct gfxARGB *, WORD, WORD, WORD, WORD)
+
+   FUNCTION
+	Multiplies RGB values of pixels within a specified rectangle
+	with (numerator/denominator). Overflow is clipped to maximum RGB value (255).
+	Works only with CyberGraphics generated, high-color or true-color BitMaps.
+	Takes Layers in RastPort into account.
+
+   INPUTS
+	rp	    - RastPort with the BitMap to be modified.
+	numerator   - Scaling factor as numerator:denominator
+	denominator - Scaling factor as numerator:denominator
+	xMin	    - Left start of modified rectangle.
+	yMin	    - Top start of modified rectangle.
+	xMax	    - Right end of modified rectangle.
+	yMax	    - Bottom end of modified rectangle.
+
+   RESULT
+	nothing
+
+   SEE ALSO
+scalosgfx.library/ScalosGfxBlitARGBAlpha        scalosgfx.library/ScalosGfxBlitARGBAlpha
+
+   NAME
+	ScalosGfxBlitARGBAlpha -- Alpha blit from gfxARGB array into RastPort
+
+   SYNOPSIS
+	ScalosGfxBlitARGBAlpha(rp, srcH, destLeft, destTop, srcLeft, srcTop, width, height)
+			       A0  A1    D0        D1       D2       D3      D4     D5
+
+	VOID ScalosGfxBlitARGBAlpha (struct RastPort *, const struct ARGBHeader *,
+		ULONG, ULONG, ULONG, ULONG, ULONG, ULONG)
+
+   FUNCTION
+	Blit a rectangular area from source gfxARGB array into
+	destination RastPort. Alpha (transparency) information in
+        source gfxARGB array is fully accounted for.
+	Destination RastPort may have Layers.
+
+   INPUTS
+	rp	 - Destination, this RastPort is been drawn to.
+	srcH	 - Source gfxARGB array
+	destLeft - Left offset in destination RastPort.
+	destTop	 - Top offset in destination RastPort.
+	srcLeft	 - Left offset in source gfxARGB array.
+	srcTop	 - Left offset in source gfxARGB array.
+	width	 - Width of blit rectangle.
+	height	 - Height of blit rectangle.
+
+   RESULT
+	nothing
+
+   NOTES
+
+   SEE ALSO
+	ScalosGfxBlitARGBAlphaTagList()
+scalosgfx.library/ScalosGfxBlitARGBAlphaTagList        scalosgfx.library/ScalosGfxBlitARGBAlphaTagList
+
+   NAME
+	ScalosGfxBlitARGBAlphaTagList -- Alpha blit from gfxARGB array into RastPort
+
+   SYNOPSIS
+	ScalosGfxBlitARGBAlphaTagList(rp, srcH, destLeft, destTop, srcSize, tagList)
+				      A0  A1    D0        D1       A3       A2
+
+	VOID ScalosGfxBlitARGBAlphaTagList(struct RastPort *, const struct ARGBHeader *,
+		ULONG, ULONG, const struct IBox *, struct TagItem *)
+
+	VOID ScalosGfxBlitARGBAlphaTags(struct RastPort *, const struct ARGBHeader *,
+		ULONG, ULONG, const struct IBox *, ULONG, ...)
+
+   FUNCTION
+
+   INPUTS
+	rp	 - Destination, this RastPort is been drawn to.
+	srcH	 - Source gfxARGB array
+	destLeft - Left offset in destination RastPort.
+	destTop	 - Top offset in destination RastPort.
+	srcSize	 - IBox defining both left/top offset in source gfxARGB
+		   array, and size of blit rectangle.
+	tagList	 - pointer to list of Tags, or NULL.
+
+   TAGS
+	SCALOSGFX_BlitIconHilight - const struct ARGB *, ARGB value to use
+				    for highlighting.Its RGB values are added
+				    to the destination pixels, with clipping
+                                    to 0..255 range.
+	SCALOSGFX_BlitIconAlpha	- const UBYTE *, specify alpha array for icon.
+	SCALOSGFX_BlitIconTransparency - ULONG, specify alpha for icon, 0...255.
+   RESULT
+	nothing
+
+   SEE ALSO
+	ScalosGfxBlitARGBAlpha()
+scalosgfx.library/ScalosGfxBlitIcon        scalosgfx.library/ScalosGfxBlitIcon
+
+   NAME
+	ScalosGfxBlitIcon -- Alpha blit from RastPort to RastPort
+
+   SYNOPSIS
+	ScalosGfxBlitIcon(rpBackground, rpIcon, left, top, width, height, tagList)
+			  A0            A1      D0    D1   D2     D3      A2
+
+	VOID ScalosGfxBlitIcon(struct RastPort *, struct RastPort *,
+		ULONG, ULONG, ULONG, ULONG, struct TagItem *)
+
+	VOID ScalosGfxBlitIconTags(struct RastPort *, struct RastPort *,
+		ULONG, ULONG, ULONG, ULONG, ULONG, ...)
+
+   FUNCTION
+	Blit a rectangular area from rpIcon into rpBackground, with full
+	alpha (transparency) support.
+	This function supports RastPorts with Layers.
+
+   INPUTS
+	rpBackground - Target RastPort.
+	rpIcon	     - Source RastPort. The BitMap of this RastPort is
+		       not modified.
+	left	     - left start of blit in rpBackground
+	top	     - top start of blit in rpBackground
+	width	     - width of the blitting rectangle
+	height	     - height of the blitting rectangle
+	tagList	     - pointer to list of Tags, or NULL.
+
+   TAGS
+	SCALOSGFX_BlitIconHilight - const struct ARGB *, ARGB value to use
+				    for highlighting. Its RGB values are
+				    added to the destination pixels, with
+                                    clipping to 0..255 range.
+	SCALOSGFX_BlitIconAlpha	- const UBYTE *, specify alpha array for icon.
+	SCALOSGFX_BlitIconTransparency - ULONG, specify alpha for icon, 0...255.
+
+   RESULT
+	nothing
+
+   SEE ALSO
+scalosgfx.library/ScalosGfxDrawGradient        scalosgfx.library/ScalosGfxDrawGradient
+
+   NAME
+	ScalosGfxDrawGradient -- Draw a gradient into a gfxARGB array
+
+   SYNOPSIS
+	ScalosGfxDrawGradient(dest, left, top, width, height, start, stop, gradType)
+			       A0    D0    D1   D2     D3      A1     A2      D4
+
+	BOOL ScalosGfxDrawGradient(struct ARGBHeader *, LONG, LONG, LONG, LONG,
+		struct gfxARGB *, struct gfxARGB *, ULONG)
+
+   FUNCTION
+	Fills a rectangular area in a gfxARGB array with a color gradient, as specified.
+
+   INPUTS
+	dest         - Target gfxARGB array.
+	left	     - left start of filled area in gfxARGB array
+	top	     - top start of filled area in gfxARGB array
+	width	     - width of the filled area
+	height	     - height of the filled area
+	start        - ARGB color for the start of the gradient (top or left).
+	stop         - ARGB color for the end of the gradient (bottom or right).
+	gradType     - Type of gradient to be drawn.
+
+   VALUES
+	SCALOS_GRADIENT_VERTICAL - draw gradient from top to bottom.
+	SCALOS_GRADIENT_HORIZONTAL - draw gradient tom left to right.
+
+   RESULT
+	nothing
+
+   SEE ALSO
+        scalosgfx.library/ScalosGfxDrawGradientRastPort
+scalosgfx.library/ScalosGfxDrawGradientRastPort        scalosgfx.library/ScalosGfxDrawGradientRastPort
+
+   NAME
+	ScalosGfxDrawGradientRastPort -- Draw gradient into a RastPort
+
+   SYNOPSIS
+	ScalosGfxDrawGradientRastPort(rp, left, top, width, height, start, stop, gradType)
+				      A0    D0    D1   D2     D3      A1     A2      D4
+
+	BOOL ScalosGfxDrawGradientRastPort(struct RastPort *, LONG, LONG, LONG, LONG,
+		struct gfxARGB *, struct gfxARGB *, ULONG)
+
+   FUNCTION
+	Fills a rectangular area in a RastPort with a color gradient, as specified.
+
+   INPUTS
+	rp           - Target RastPort where the gradient is drawn
+	left	     - left start of filled area in RastPort
+	top	     - top start of filled area in RastPort
+	width	     - width of the filled area
+	height	     - height of the filled area
+	start        - ARGB color for the start of the gradient (top or left).
+	stop         - ARGB color for the end of the gradient (bottom or right).
+	gradType     - Type of gradient to be drawn.
+
+   VALUES
+	SCALOS_GRADIENT_VERTICAL - draw gradient from top to bottom.
+	SCALOS_GRADIENT_HORIZONTAL - draw gradient tom left to right.
+
+   RESULT
+	nothing
+
+   SEE ALSO
+        scalosgfx.library/ScalosGfxDrawGradient
+scalosgfx.library/ScalosGfxDrawLine        scalosgfx.library/ScalosGfxDrawLine
+
+   NAME
+	ScalosGfxDrawLine -- Draw an anti-aliased line in a gfxARGB array
+
+   SYNOPSIS
+	ScalosGfxDrawLine(dest, fromX, fromY, toX, toY, lineColor)
+			   A0    D0     D1    D2   D3      A1
+
+	VOID ScalosGfxDrawLine(struct ARGBHeader *, LONG, LONG, LONG, LONG,
+		const struct gfxARGB *)
+
+   FUNCTION
+	Draws an anti-aliased line in a gfxARGB array, with given ARGB
+	color, including Alpha.
+
+   INPUTS
+	dest         - Target gfxARGB array.
+	fromX	     - X coordinate for starting point of line
+	fromY	     - Y coordinate for starting point of line
+	toX          - X coordinate for end point of line
+	toY          - Y coordinate for end point of line
+	lineColor    - ARGB color of the line to be drawn
+
+   RESULT
+	nothing
+
+   SEE ALSO
+scalosgfx.library/ScalosGfxDrawEllipse        scalosgfx.library/ScalosGfxDrawEllipse
+
+   NAME
+	ScalosGfxDrawEllipse -- Draw an anti-aliased ellipse  in a gfxARGB array
+
+   SYNOPSIS
+	ScalosGfxDrawEllipse(dest, xCenter, yCenter, radiusX, radiusY, segment, color1, color2)
+			      A0     D0       D1       D2       D3       D4       A1      A2
+
+	VOID ScalosGfxDrawEllipse(struct ARGBHeader *, LONG, LONG, LONG,
+		LONG, WORD, const struct gfxARGB *, const struct gfxARGB *)
+
+   FUNCTION
+	Draws an anti-aliased ellipse in a gfxARGB array, with given ARGB
+	color, including Alpha.
+
+   INPUTS
+	dest         - Target gfxARGB array.
+	xCenter      - X coordinate for the center of the ellipse
+	yCenter      - Y coordinate for the center of the ellipse
+	radiusX      - horizontal radius of the ellipse
+	radiusY      - vertical radius of the ellipse
+	segment      - bitmask to define which quadrants of the ellipse will be drawn
+
+   VALUES
+	ELLIPSE_SEGMENT_TOPLEFT     - set this flag to draw top left ellipse quadrant
+	ELLIPSE_SEGMENT_TOPRIGHT    - set this flag to draw top right ellipse quadrant
+	ELLIPSE_SEGMENT_BOTTOMLEFT  - set this flag to draw bottom left ellipse quadrant
+	ELLIPSE_SEGMENT_BOTTOMRIGHT - set this flag to draw bottom right ellipse quadrant
+
+   RESULT
+	nothing
+
+   SEE ALSO
+
+scalosgfx.library/ScalosGfxDrawLineRastPort    scalosgfx.library/ScalosGfxDrawLineRastPort
+
+   NAME
+	ScalosGfxDrawLineRastPort -- Draw an anti-aliased line into a RastPort
+
+   SYNOPSIS
+	ScalosGfxDrawLineRastPort(rp, fromX, fromY, toX, toY, lineColor)
+		       		  A0    D0     D1    D2   D3      A1
+
+	VOID ScalosGfxDrawLineRastPort(struct RastPort *, LONG, LONG, LONG, LONG,
+		const struct gfxARGB *)
+
+   FUNCTION
+	Draws an anti-aliased line in a gfxARGB array, with given ARGB
+	color, including Alpha.
+
+   INPUTS
+	rp           - Target RastPort where the line is drawn
+	fromX	     - X coordinate for starting point of line
+	fromY	     - Y coordinate for starting point of line
+	toX          - X coordinate for end point of line
+	toY          - Y coordinate for end point of line
+	lineColor    - ARGB color of the line to be drawn
+
+   RESULT
+	nothing
+
+   SEE ALSO
+scalosgfx.library/ScalosGfxDrawEllipseRastPort    scalosgfx.library/ScalosGfxDrawEllipseRastPort
+
+   NAME
+	ScalosGfxDrawEllipseRastPort -- Draw an anti-aliased ellipse into a RastPort
+
+   SYNOPSIS
+	ScalosGfxDrawEllipseRastPort(rp, xCenter, yCenter, radiusX, radiusY, segment, color1, color2)
+			             A0     D0       D1       D2       D3       D4       A1      A2
+
+	VOID ScalosGfxDrawEllipseRastPort(struct RastPort *, LONG, LONG, LONG,
+		LONG, WORD, const struct gfxARGB *, const struct gfxARGB *)
+
+   FUNCTION
+	Draws an anti-aliased ellipse in a gfxARGB array, with given ARGB
+	color, including Alpha.
+
+   INPUTS
+	rp           - Target RastPort where the elipse is drawn
+	xCenter      - X coordinate for the center of the ellipse
+	yCenter      - Y coordinate for the center of the ellipse
+	radiusX      - horizontal radius of the ellipse
+	radiusY      - vertical radius of the ellipse
+	segment      - bitmask to define which quadrants of the ellipse will be drawn
+
+   VALUES
+	ELLIPSE_SEGMENT_TOPLEFT     - set this flag to draw top left ellipse quadrant
+	ELLIPSE_SEGMENT_TOPRIGHT    - set this flag to draw top right ellipse quadrant
+	ELLIPSE_SEGMENT_BOTTOMLEFT  - set this flag to draw bottom left ellipse quadrant
+	ELLIPSE_SEGMENT_BOTTOMRIGHT - set this flag to draw bottom right ellipse quadrant
+
+   RESULT
+	nothing
+
+   SEE ALSO
+

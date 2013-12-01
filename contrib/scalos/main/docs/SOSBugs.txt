@@ -1,0 +1,141 @@
+**** MISC BUGS
+
+1 (   ) If screenmode is changed so that it's a higher depth Scalos will close
+and re-open screen BUT the iconify/MUI gadgets are all corrupt. It seems
+as it the original SYSIHACK gadgets don't have enough bitplaces and are
+showing scrambled mess mixed in with the original SYSIHACK gadget? Also
+the backdrops do not get re-mapped to better colours when more are made
+available :-( Maybe be an MCP problem?
+
+2 ( X ) Dunno if this is more a 'filetypes.plugin' problem but when the
+directory window is in text view mode the filetypes are not recognised
+resulting in files all trying to be executed rather than using the
+program which is associated with the filetype as specified in the icons
+tooltype.
+
+3 ( X ) Update the developers API docs as they are not very useful at the
+moment! More examples would be nice too. And the autodoc function names
+don't mirror the actual library commands!!!
+
+4 ( X ) Using AREXX menu option causes Scalos to crash when items selected.
+Current work around is to use AmigaDOS command type and launch the
+scripts with the 'Rx' command.
+
+
+6 (   ) The WBLauncher doesn't free all memory.  About 60 bytes left allocated.
+
+7 (   ) WBStartup runner is syncron and locks if any program does not return
+
+
+**** WINDOW BUGS
+
+11 (   ) I use the middle mouse button to move the windows contents around. When
+I let go of the MMB and move the pointer the window bitmap jumps to the
+location of the current mouse pointer rather than the place which I let
+go of the MMB. It only does this if I move the mouse relatively quick
+but is still annoying as I like to move the window bitmap around and
+click on icons when navigating my hard drive.  Probably a task priority
+conflict between Scalos_Window_Task and Input.device
+
+13 (   ) If I change a directory window to 'view by text' Scalos seems to assume
+I want to view any nested directories also in the same view mode no
+matter what they were snapshot as.
+
+14 (   ) Bug or not? Open a directory window from a floppy disk (or removable
+media) and then open a sub-directory window. Iconify the root directory
+window and REMOVE the floppy disk. Then select 'Open Parent' from the
+sub-directory window pop-up menu. The iconified window does not pop-up
+into view. However it DOES pop into view when the disk is re-inserted
+and the menu option re-selected. Can't decide if this is a bug or not.
+Quite a lot of the time it causes the common 'Scalos_Window_Task'
+recoverable error.
+
+15 (   ) Open a directory window. Reduce its size with the zip gadget. Now
+iconify it. Un-iconify it and it returns to the previous window size,
+i.e. zipped up small. Now click on the zip gadget to return it to it's
+original size. OOOPS! It doesn't - it expands to full screen size.
+Naughty :-) Weird?!  And how or why did I find this... :o)  Check
+wd_MaxWidth and wd_MaxHeight fields in Window structure are filled
+correctly after un-iconifying
+
+18 (   ) When many many Scalos windows are opened the pop-up menu for the window
+becomes VERY slow and un-responsive when the Snapshot/Show/Viewby
+options are selected (the ones with sub-menus).  Maybe a popupmenu.library bug?
+
+19 ( X ) Leave Out / Put away , works ok when "View by Icon" but when
+"View by Text" Leaveing out , puts the image on the Workbench but does
+not remove it from the dir Putting away, does not remove it from
+Workbench. Then ,,, Workbench Lock up :( (pop up infos still works but i
+cannot close windows ect). different behavior with "Auto remove icons"
+off now when putting away the icon on the Workbench goes and the icons
+home window refreshes but the file is not visible untill i "Update"
+
+20 ( X ) scalos_window_task didn't like workbench trying to close on it after
+a CloseWorkbench() earlier with some other windows open
+
+21 ( X ) Forcing an icon window update sends Scalos_Window_Task crazy
+(LONG-READs), seems to do a few hits at intervals until reboot. The
+attempted LONG-READS are all to the same address (in this test case
+0032001E). Also then seemed to effect CON: and make that normally well
+behaved task to cause hits (WORD-READs).
+
+
+**** COPYING & ICONS BUGS
+
+23 (   ) When selecting the 'Copy' option from the disk icon pop-up menu it will
+not just launch a diskcopy. Instead it tells me to select it from the
+'icons/copy' menu option!
+
+24 (   ) Disk icons hang-off the bottom or right side of the Scalos desktop until
+a refresh is done. This appears to be caused when the snapshot of an
+icon does not fit properly into a different screen resolution.
+
+26 ( X ) When a program is copied into another directory BUT a directory of the
+same name exists in it, the copy half works. Basically the icon of the
+file to be copied gets copied. I think (this is personal opinion now)
+that the icon should not be copied over if it was being copied as the
+package (i.e. the executable and icon). However if (in text view mode)
+just the icon is dragged over then this should be okay. Hope I explained
+that well?!?
+
+27 (   ) When a selection of icons are dragged memory loss occurs! Memory loss occurs
+of 18160 bytes every time when I drag the SAME group of icons, however I get
+different values for different groups of icons being dragged.
+
+28 (   ) Add SCALOS_NODRAG to a icons tooltypes and you can't drag the icon, but
+you can drag it to the backdrop, then you can drag it back to original
+window in a new position. And seeing as it is suppost to be NODRAG why
+am I able to actually move the icon image in the first place?
+
+29 ( X ) If I drag a device icon into another directory window it will copy
+everything from the device into a directory of that name. But if I stop
+it during the copying and then re-drag the device icon into the
+directory window again nothing happens. No attempt is made to copy ANY
+files nor does a requester pop-up asking if files should be replaced
+etc.
+
+31 ( X ) The CD0 default device icons take priority of any existing
+icons on the media in the specified device. Make it possible to select
+which has priority in the main Scalos prefs so that CDs without an Amiga
+specific icon will still show up with a nice icon but at the same time
+Amiga CDs will have their own correctly snapshotted icon displayed.
+
+32 ( X ) def_iconify is ALWAYS read from env:sys/ no matter what path
+is set in the prefs
+
+
+**** DISKS BUGS
+
+33 (   ) When the disks icons are locked, and some new device are mounting (ie.
+CDrom by Cachecdfs), these icons are rearanged and loose the original
+position. Note, the CD media icon has no SCALOS_NODRAG tooltype.
+
+34 ( X ) If a disk is write protected and you try to drag files
+onto a left-out directory (of a non-write protected drive), it complains
+that the source disk is write protected.. Why is it trying to write to the
+source disk?
+
+35 (   ) If I drag a '????' device icon (like when a PC disk is in DF0) onto
+another device icon the task "Scalos_Drag&Drop" causes an Enforcer hit
+according to Cyberguard whilst starting up the diskcopy program. No
+crash or reboot happens though which makes a nice change ;^)

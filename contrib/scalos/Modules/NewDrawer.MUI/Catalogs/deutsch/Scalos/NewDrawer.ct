@@ -1,0 +1,203 @@
+; Rename.ct
+## version $VER: Rename.catalog 40.1 (20 Feb 2005 22:02:39)
+## codeset 0
+## language deutsch
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos Neue Schublade
+;Scalos NewDrawer
+;
+;
+MSGID_OKBUTTON
+Anlegen
+;NewDrawer
+;
+;
+MSGID_OKBUTTON_SHORT
+n
+;r
+;
+;
+MSGID_SHORTHELP_OKBUTTON
+Legt eine neue, leere Schublade\n\
+mit dem angegebenen Namen an.
+;Create new drawer.
+;
+;
+MSGID_CANCELBUTTON
+Abbrechen
+;Cancel
+;
+;
+MSGID_CANCELBUTTON_SHORT
+a
+;c
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Abbrechen ohne Anlegen\n\
+einer neuer Schublade.
+;Discard all changes and\n\
+;do not create anything.
+;
+;
+MSGID_CREATE_APPLICATION_FAILED
+Fehler beim Erzeugen der Anwendung.\n
+;Failed to create Application.\n
+;
+;
+MSGID_CREATE_MAINWINDOW_FAILED
+Fehler beim Öffnen des Hauptfensters !\n
+;Failed to open main window !\n
+;
+;
+MSGID_OPEN_LIBRARY_FAILED
+Fehler beim Öffnen von \"%s\" !\n
+;Failed to open \"%s\" !\n
+;
+;;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT
+Projekt
+;Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+Über...
+;About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+Über MUI...
+;About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Beenden
+;Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK
+Ok
+;_OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Rename.module V%ld.%ld\033n\n\
+%s\n\
+© 2004%s Das Scalos-Team
+;\33c\033bScalos Rename.module V%ld.%ld\033n\n\
+;%s\n\
+;© 2004%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+MSGID_NEWNAME_DEFAULT
+Bitte_umbenennen
+;New_Drawer_Name
+;
+;
+MSGID_TEXT_ENTERNAME
+Name der neuen Schublade in \"%s\":
+;Enter name for a new drawer in \"%s\"
+;
+;
+MSGID_LABEL_ENTERNAME
+Name der Schublade:
+;New Drawer
+;
+;
+MSGID_LABEL_CREATE_ICON
+Piktogramm
+;Create Icon
+;
+;
+MSGID_CHECKMARK_CREATEICON_SHORTHELP
+Ist dieser Schalter eingeschaltet, wird für\n\
+die neue Schublade ein Piktogramm mit erzeugt.
+;If this checkbox is checked, an icon\n\
+;will be created for the new drawer.
+;
+;
+MSGID_TITLE_ERRORREQ
+Fehler bei neuer Schublade
+;NewDrawer Error
+;
+;
+MSGID_ERRORREQ_BODYTEXT
+Konnte \"%s" nicht anlegen:\n\
+%s
+;Could not create '%s'\n%s
+;
+;
+MSGID_REQ_OK
+ _Ok
+;
+;
+MSGID_TEXT_ENTERNAME_SHORTHELP
+Pfad der neuen Schublade.\n\
+Mit dem Rollbalken am unteren Fensterrand kann\n\
+der Inhalt des Pfades hin- und hergeschoben werden,\n\
+um auch lange Pfadnamen lesen zu können.
+;Path to create a new drawer.\n\n\
+;It's possible to show all content of this gadget using\n\
+;the scroller located at the bottom of the window.\n\
+;Can be usefull for large path lenght.
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+NewDrawer.module kann nicht gestartet werden
+;NewDrawer.module startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Wiederholen|Beenden
+;Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\
+Die Klasse ist nicht installiert.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\n\
+Sie haben momentan Version v%lu.%lu installiert und\n\
+sollten die Klasse daher aktualisieren!
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\n\
+Version %lu.%lu wird momentan von einer anderen Anwendung\n\
+verwendet. Wenn sie die benötigte Version installiert haben,\n\
+schließen sie alle MUI Programme und probieren es erneut.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;
+;+++ translateme +++
+MSGID_OPEN_PREFS_LIBRARY_FAILED
+Failed to open \"%s\" !\n\
+Loading and saving of settings aren't availlables.\n
+;
+;-----------------------------------------------------------
+;

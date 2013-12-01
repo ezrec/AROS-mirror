@@ -1,0 +1,6 @@
+# Scalos filetype description
+# written 16. April 2010 23:06:42
+
+DESCRIPTION "[ Image PNG ]"
+PREVIEWPLUGIN "scalos:plugins/preview/defpicture.pvplugin"
+

@@ -1,0 +1,98 @@
+# $Date: 2011-08-02 00:13:23 +0200 (Di, 02. Aug 2011) $
+# $Revision: 816 $
+##############################################################################
+
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/../../..
+endif
+
+##############################################################################
+
+include		config.mk
+
+##############################################################################
+#
+# Project Object files
+#
+
+OBJS_NAME	=       	$(BEGIN_OBJS) \
+				$(OBJDIR)/wb39.o \
+				$(OBJDIR)/AppWindow.o \
+				$(OBJDIR)/WorkbenchControl.o \
+				$(OBJDIR)/VolumeGauge.o \
+				$(OBJDIR)/AppIcons.o \
+				$(OBJDIR)/Scalos_Helper.o \
+				$(END_OBJS)
+
+OBJS_TEST	=		$(OBJDIR)/test.o
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS_NAME:.o=.d)
+	-include $(OBJS_TEST:.o=.d)
+endif
+
+##############################################################################
+#
+# Targets
+#
+
+NAME	=	wb39.plugin
+TEST	=	test
+NAME_DB	=	$(NAME).debug
+TEST_DB	=	$(TEST).debug
+
+##############################################################################
+#
+# Subdirs
+#
+
+SUBDIRS	=	persist \
+		wbrexx \
+		volumegauge \
+
+##############################################################################
+
+.PHONY: all install clean bump dump nodebug
+
+all:	$(BINDIR)/$(NAME) \
+	$(BINDIR)/$(NAME_DB) \
+	$(BINDIR)/$(TEST) \
+	all_subdirs \
+
+##############################################################################
+
+$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) : $(OBJS_NAME)
+	$(ECHO) "Link $(NAME)"
+	@$(CC) $(OBJS_NAME) $(LFLAGS2) $(DEFINES) -o$(BINDIR)/$(NAME_DB)
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(NAME_DB) -o $(BINDIR)/$(NAME)
+	@chmod u+x $@
+
+$(BINDIR)/$(TEST) $(BINDIR)/$(TEST_DB) : $(OBJS_TEST)
+	@$(ECHO) "Link $(TEST)"
+	@$(CC) $(STARTUP) $(OBJS_TEST) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(TEST_DB)
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(TEST_DB) -o $(BINDIR)/$(TEST)
+	@chmod u+x $@
+
+##############################################################################
+
+install: install_subdirs
+	-@$(ECHO) "Installing $(NAME)"
+	@copy $(BINDIR)/$(NAME) Scalos:Plugins/OOP clone
+
+
+clean: clean_subdirs
+	-@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d $(OBJDIR)/*.d.* \
+        	$(OBJDIR)/*.i $(OBJDIR)/*.s \
+		$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) \
+		$(BINDIR)/$(TEST) $(BINDIR)/$(TEST_DB) \
+		*.dump *_str.*
+
+nodebug: nodebug_subdirs
+
+##############################################################################
+
+

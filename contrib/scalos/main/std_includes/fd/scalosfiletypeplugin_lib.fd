@@ -1,0 +1,5 @@
+##base _ScalosFileTypePluginBase
+##bias 30
+##public
+SCAToolTipInfoString(ttshd,args)(a0/a1)
+##end

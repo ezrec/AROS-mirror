@@ -1,0 +1,27 @@
+##base _PopupMenuBase
+##bias 30
+##public
+PM_MakeMenuA(tags)(a1)
+PM_MakeItemA(tags)(a1)
+PM_FreePopupMenu(menu)(a1)
+PM_OpenPopupMenuA(wnd,tags)(a1/a2)
+PM_MakeIDListA(tags)(a1)
+PM_ItemChecked(pm,id)(a1,d1)
+PM_GetItemAttrsA(item,tags)(a2,a1)
+PM_SetItemAttrsA(item,tags)(a2,a1)
+PM_FindItem(menu,id)(a1,d1)
+PM_AlterState(menu,idlst,action)(a1/a2,d1)
+*--- (1 function slot reserved here) ---
+##bias 96
+PM_ExLstA(id)(a1)
+PM_FilterIMsgA(window,menu,imsg,tags)(a0/a1/a2/a3)
+PM_InsertMenuItemA(menu,tags)(a0/a1)
+PM_RemoveMenuItem(menu,item)(a0/a1)
+PM_AbortHook(handle)(a0)
+PM_GetVersion()()
+PM_ReloadPrefs()()
+PM_LayoutMenuA(window,menu,tags)(a0/a1/a2)
+*--- (1 function slot reserved here) ---
+##bias 150
+PM_FreeIDList(list)(a0)
+##end

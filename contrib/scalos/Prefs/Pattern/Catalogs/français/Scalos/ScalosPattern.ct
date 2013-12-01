@@ -1,0 +1,846 @@
+; ScalosPattern.ct
+; $Date$
+; $Revision$
+; $Id$
+;
+## version $VER: ScalosPattern.catalog 40.12 (08/02/06 23:59:19)
+## codeset 0
+## language français
+;
+;#arrayopts static __far
+;
+; Translation done
+;
+; By COAT Jean-Marie ALIAS JMC
+; E-Mail : agalliance@free.fr
+;
+;
+MSGID_TITLENAME 
+Motif de Scalos
+; Scalos Pattern
+;
+;
+MSGID_REGISTER_PATTERNLIST 
+Liste des motifs
+; Patternlist
+;
+;
+MSGID_REMAPNAME 
+Ne pas recolorier :
+; No remap:
+;
+;
+MSGID_RENDERTYPE_TILED 
+Mosaïque
+; Tiled
+;
+;
+MSGID_NEWNAME 
+Nouveau \033I[6:19]
+; New \033I[6:19]
+;
+;
+MSGID_SHORTHELP_NEWBUTTON
+Pressez ce bouton pour ajouter\n\
+un nouveau motif.
+; Press this button to create a\n\
+; new pattern entry
+;
+;
+MSGID_DELNAME 
+Effacer
+; Delete
+;
+;
+MSGID_SHORTHELP_DELBUTTON
+Pressez ce bouton pour éffacer le\n\
+motif actuellement sélectionné.
+; Press this button to delete the\n\
+; currently selected pattern entry.
+;
+;
+MSGID_SAVEBUTTON 
+Sauver
+; Save
+;
+;
+MSGID_SHORTHELP_SAVEBUTTON
+Pressez ce bouton afin de sauvegarder\n\
+les changements actuels vers\n\
+"\033bENVARC:Scalos/Pattern.prefs\033n".
+; Press this button to save \n\
+; the current settings to\n\
+; \"ENVARC:Scalos/Pattern.prefs\".
+;
+;
+MSGID_USEBUTTON 
+Utiliser
+; Use
+;
+;
+MSGID_SHORTHELP_USEBUTTON
+Pressez ce bouton afin de sauvegarder\n\
+les changements actuels vers\n\
+"\033bENV:Scalos/Pattern.prefs\033n".
+; Press this button to save \n\
+; the current settings to\n\
+; \"ENV:Scalos/Pattern.prefs\".
+;
+;
+MSGID_CANCELBUTTON 
+Annuler
+; Cancel
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Pressez ce bouton afin d'annuler\n\
+et d'oublier tous changements.
+; Press this button to abort \n\
+; and discard all changes.
+;
+;
+MSGID_SCREENNAME
+Workbench
+; Workbench
+;
+;
+MSGID_WINDOWNAME 
+Fenêtre
+; Window
+;
+;
+MSGID_MENU_PROJECT_OPEN 
+Ouvrir...
+; Open...
+;
+;
+MSGID_MENU_PROJECT_OPEN_SHORT
+O
+;
+;
+MSGID_MENU_PROJECT_SAVEAS
+Sauver en...
+; Save As...
+;
+;
+MSGID_MENU_PROJECT_SAVEAS_SHORT
+S
+;
+;
+MSGID_MENU_PROJECT_QUIT 
+Quitter
+; Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;
+;
+MSGID_MENU_PROJECT 
+Projet
+; Project
+;
+;
+MSGID_MENU_EDIT_LASTSAVED 
+Dernière sauvegarde
+; Last Saved
+;
+;
+MSGID_MENU_EDIT_LASTSAVED_SHORT
+D
+;
+;
+MSGID_MENU_EDIT 
+Edition
+; Edit
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS 
+Créer une icône ?
+; Create Icons?
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS_SHORT
+C
+;
+;
+MSGID_MENU_SETTINGS 
+Options
+; Settings
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS 
+Réglages par défaut
+; Reset To Defaults
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS_SHORT
+A
+;
+;
+MSGID_MENU_EDIT_RESTORE 
+Restaurer
+; Restore
+;
+;
+MSGID_MENU_EDIT_RESTORE_SHORT
+R
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI 
+A propos de MUI...
+; About MUI...
+;
+;
+MSGID_RENDERTYPE_FITSIZE 
+Ajuster la taille
+; Fit Size
+;
+;
+MSGID_CENTEREDNAME 
+Centré
+; Centered
+;
+;
+MSGID_PRECEXACTNAME 
+Exacte
+; Exact
+;
+;
+MSGID_PRECIMAGENAME 
+Image
+; Image
+;
+;
+MSGID_PRECICONNAME 
+Icône
+; Icon
+;
+;
+MSGID_PRECGUINAME 
+GUI
+;
+;
+MSGID_PRECNAME 
+Précision des couleurs :
+; Pen Precision:
+;
+;
+MSGID_ENHANCNAME 
+Utiliser GUIGfx :
+; use GUIGfx:
+;
+;
+MSGID_NUMCOLSNAME 
+Pourcentage:
+; Color weight
+;
+;
+MSGID_ENHANCOPTSNAME 
+Options GUIGfx
+; GUIGfx Options
+;
+;
+MSGID_AUTODITHERNAME 
+Filtre Auto :
+; AutoDither
+;
+;
+MSGID_DITHERMODENAME 
+Tramage :
+; Dithering:
+;
+;
+MSGID_DITHERAMOUNTNAME 
+Degré de tramage :
+; Ditheramount:
+;
+;
+MSGID_DITHERMODE1NAME 
+Aucun
+; None
+;
+;
+MSGID_DITHERMODE2NAME 
+Floyd Steinberg
+; Floyd Steinberg
+;
+;
+MSGID_DITHERMODE3NAME 
+Hasard
+; Random
+;
+;
+MSGID_PICTURENAME 
+Image :
+; Picture:
+;
+;
+MSGID_PATTERNNAME 
+Motif
+; Pattern
+;
+;
+MSGID_REGISTER_DEFAULTS 
+Configuration
+; Defaults
+;
+;
+MSGID_DEFWBNAME 
+Bureau :
+; Desktop:
+;
+;
+MSGID_DEFSCREENNAME 
+Ecran :
+; Screen:
+;
+;
+MSGID_DEFWINNAME 
+Fenêtre :
+; Window:
+;
+;
+MSGID_ASYNCNAME 
+Calculer en asyncrone :
+; asynchronous layout:
+;
+;
+MSGID_FRIENDNAME 
+Utiliser un second bitmap :
+; use friend bitmap:
+;
+;
+MSGID_NONE_PRIORITY
+Aucune
+; none
+;
+;
+MSGID_RELAYOUTNAME 
+Toujours recalculer :
+; always relayout:
+;
+;
+MSGID_RANDOMNAME 
+Toujours au hasard :
+; randomize everytime:
+;
+;
+MSGID_TASKPRINAME 
+Priorité de la tâche asyncrone :
+; Asynchronous Task priority:
+;
+;
+MSGID_TEXTNAME 
+Mode texte :
+; Text Mode:
+;
+;
+MSGID_CHECKMARKGADBUBBLE 
+Ne retouche pas les couleurs\n\
+de l'image(si validé).
+; Don't remap the colors\n\
+; of the picture if set.
+;
+;
+MSGID_CHECKMARKASYNCBUBBLE 
+Affiche l'image de fond en même temps que\n\
+les icônes au lieu d'attendre la fin de leurs\n\
+tracés pour ouvrir la fenêtre(si validé).
+; Render the picture while reading\n\
+; the icons instead of waiting for\n\
+; the layout to finish before\n\
+; opening the window if set.
+;
+;
+MSGID_CHECKMARKFRIENDBUBBLE 
+Accélère le raffraichissement du motif\n\
+en utilisant un second bitmap(si validé).\n\
+Option ignorée si vous utilisez\n\
+le \033bpicture.datatype V43\033n ou \033bGuiGfx\033n,\n\
+car ils le font eux même.
+; Speed up the pattern refresh\n\
+; by using a second bitmap if set.\n\
+; This is ignored if you use\n\
+; a V43 picture.datatype or\n\
+; GUIGFX because they do it\n\
+; themselves.
+;
+;
+MSGID_CHECKMARKENHBUBBLE 
+La librairie \033bGuiGfx\033n vous offre des\n\
+routines trés rapides pour, par exemple,\n\
+la réduction de couleur et le tramage.\n\
+Utilise la \033bGuiGfx.library\033n(si validé).
+; The GUIGFX library gives you\n\
+; some very fast routines e.g. for\n\
+; colorreduction and dithering.\n\
+; Use guigfx.library if set.
+;
+;
+MSGID_CHECKMARKAUTODITHERBUBBLE 
+Le tramage sera utilisé\n\
+automatiquement si l'image doit\n\
+perdre trop de couleurs(si validé).
+; If set, dithering will be enabled\n\
+; automatically if the picture would\n\
+; loose too many pens.
+;
+;
+MSGID_CHECKMARKRELAYOUTBUBBLE 
+Remet à l'échelle l'image de fond si vous\n\
+changez la taille de la fenêtre(si validé).
+; Scales the picture again if you\n\
+; change the window size if set.
+;
+;
+MSGID_CHECKMARKRANDOMBUBBLE 
+Choisit au hasard un des motifs, chaque\n\
+fois que vous ouvrez une fenêtre, au\n\
+lieu de faire un choix unique\n\
+au départ(si validé).
+; Selects one of the random patterns\n\
+; everytime you open a window instead\n\
+; of randomizing the patterns only at\n\
+; startup if set.
+;
+;
+MSGID_SAVEBUTTONBUBBLE 
+Sauver les réglages et quitter.
+; Save settings and quit.
+;
+;
+MSGID_USEBUTTONBUBBLE 
+Utiliser les réglages et quitter.
+; Use settings and quit.
+;
+;
+MSGID_CANCELBUTTONBUBBLE 
+Quitter sans rien sauver.
+; Quit without saving.
+;
+;
+MSGID_NUMBUTTONBUBBLE 
+Le chiffre assigne le motif aux\n\
+bureau, écran, fenêtre et/ou au mode\n\
+de texte. Voir page "\033bConfiguration\033n".
+; The number assigns the pattern\n\
+; to the Desktop, Screen, Window\n\
+; and/or Textmode of the Defaults\n\
+; page.
+;
+;
+MSGID_PRECSLIDERBUBBLE 
+Choisissez la précision des\n\
+couleurs pour l'image.
+; Select the precision of the\n\
+; pens for the picture.
+;
+;
+MSGID_COLORSSLIDERBUBBLE
+Pourcentage des couleurs pouvant\n\
+être utilisé pour l'image.
+; How many free pens should\n\
+; be used for the picture.
+;
+;
+MSGID_CYCLEDITHERMODEBUBBLE
+Routine utilisée quand il n'y a plus\n\
+de couleur disponible. Dans ce cas, une\n\
+couleur est faite de plusieurs points de\n\
+différentes couleurs pour se rapprocher\n\
+au maximum du résultat voulu.
+; The routine that is used when\n\
+; there is no free pen. In that\n\
+; case a color is made of many\n\
+; points with different colors\n\
+; close to each other.
+;
+;
+MSGID_SLIDERDITHERAMOUNTBUBBLE
+Paramètre pour la routine de tramage.
+; A parameter for the dithering\n\
+; routine.
+;
+;
+MSGID_SLIDERWBBUBBLE
+Chiffre indiquant que le motif est assigné\n\
+au \033bbureau\033n. Un même motif peut\n\
+servir pour le bureau et les fenêtres.\n\
+Tous les motifs portant le même numéro\n\
+seront choisis aléatoirement.
+; The number that should be used for\n\
+; the Desktop pattern to get assigned.\n\
+; A pattern with the assigned number\n\
+; one and a one selected for Desktop\n\
+; and Window means that the Window\n\
+; and Desktop patterns should be that\n\
+; pattern.\n\
+; All patterns with the same\n\
+; number are selected by random.
+;
+;
+MSGID_SLIDERSCREENBUBBLE
+Chiffre indiquant que le motif est assigné\n\
+à l'\033bécran\033n. Un même motif peut\n\
+servir pour le bureau et les fenêtres.\n\
+Tous les motifs portant le même numéro\n\
+seront choisis aléatoirement.
+; The number that should be used for\n\
+; the Screen pattern to get assigned.\n\
+; A pattern with the assigned number\n\
+; one and a one selected for Desktop\n\
+; and Window means that the Window\n\
+; and Desktop patterns should be that\n\
+; pattern.\n\
+; All patterns with the same\n\
+; number are selected by random.
+;
+;
+MSGID_SLIDERWINBUBBLE
+Chiffre indiquant que le motif est assigné\n\
+aux fenêtres avec affichage \033bpar icônes\033n.\n\
+Un même motif peut servir pour le bureau et les fenêtres.\n\
+Tous les motifs portant le même numéro\n\
+seront choisis aléatoirement.
+; The number that should be used for\n\
+; the Window pattern to get assigned.\n\
+; A pattern with the assigned number\n\
+; one and a one selected for Desktop\n\
+; and Window means that the Window\n\
+; and Desktop patterns should be that\n\
+; pattern.\n\
+; All patterns with the same\n\
+; number are selected by random.
+;
+;
+MSGID_SLIDERTEXTBUBBLE
+Chiffre indiquant que le motif est assigné\n\
+aux fenêtres avec affichage en \033bmode texte\033n.\n\
+Un même motif peut servir pour le bureau et les fenêtres.\n\
+Tous les motifs portant le même numéro\n\
+seront choisis aléatoirement.
+; The number that should be used for\n\
+; the Textmode pattern to get assigned.\n\
+; A pattern with the assigned number\n\
+; one and a one selected for Desktop\n\
+; and Window means that the Window\n\
+; and Desktop patterns should be that\n\
+; pattern.\n\
+; (Window Menu: View by >> Text)\n\
+; All patterns with the same\n\
+; number are selected by random.
+;
+;
+MSGID_SLIDERTASKPRIBUBBLE
+Priorité de la tâche asyncrone.
+; Task priority of the\n\
+; asynclayout task.
+;
+;
+MSGID_PREVIEWIMAGEBUBBLE
+Cliquez ici pour voir\n\
+l'image choisie.
+; Click here to see\n\
+; the selected picture.
+;
+;
+MSGID_CYCLEGADBUBBLE
+\033bMosaïque\033n :\n\
+Création de l'image de la fenêtre\n\
+par assemblage multiple de ce motif.\n\
+\033bAjuster la taille\033n :\n\
+La taille du motif sera ajuster\n\
+en fonction de la taille de la fenêtre.\n\
+\033uNote\033n :\n\
+Si vous choisissez "Ajuster la taille",\n\
+vous devez activer "Utiliser GUIGfx". 
+; Do you want a pattern to be scaled\n\
+; (\"Fit Size\") or do you want a pattern\n\
+; to be made of many instances of that\n\
+; pattern put together like a mosiac\n\
+; (\"Tiled\") when resizing the window.\n\
+; If you like to use \"Fit Size\" you have\n\
+; to enable \"use GUIGFX\".
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+A propos...
+; About...
+;
+;
+MSGID_ABOUTREQOK
+D'accord
+; _OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\033cPréférences : \033bScalos Pattern V\0333%ld\0332.\0333%ld\0332\033n\n\
+Compilé sous: \0333%s\0332\n\
+\033b© 1999%s \0333The Scalos Team\033n\0332\n\
+Inspiré du programme original créé par\n\
+\033bStefan Sommerfeld\033n de \033b\0333ALiENDESiGN!\033n\0332\n\
+\033iBulles par \033bCrayor\033n.
+; \33cScalos pattern preferences V40.2\n\
+; © 1999-2002 The Scalos Team\n\
+; Based on original code by Stefan Sommerfeld of ALiENDESiGN!\n\
+; Bubbles done by Crayor.
+;
+;
+MSGID_COLUMNTITLE_1
+\033bN°.
+; \33bNr.
+;
+;
+MSGID_COLUMNTITLE_2
+\033bNom du fichier
+; \33bFile name
+;
+;
+MSGID_REQTITLE_SAVEERROR
+Erreur durant l'écriture du fichier\n\
+des préférences : "%s"\n\
+%s
+; Error writing pattern preferences\n\
+; file \"%s\"\n\
+; %s
+;
+;
+MSGID_REQTITLE_READERROR
+Erreur durant le chargement du fichier\n\
+des préférences : "%s"\n\
+%s
+; Error reading pattern preferences\n\
+; file \"%s\"\n\
+; %s
+;
+; new in 40.4
+;
+MSGID_PLUGIN_LIST_TITLE
+Motifs de fond
+;Pattern
+;
+;
+MSGID_GROUP_MISCELLANEOUS
+Divers
+;Miscellaneous
+;
+;
+MSGID_GROUP_PATTERNNUMBERS
+Nombre de motifs
+;Pattern numbers
+;
+;
+MSGID_MENU_ENABLE_PREVIEW
+Visualiser un aperçu ?
+;Show Preview?
+;
+;
+MSGID_MENU_AUTO_PREVIEW
+Aperçu automatique ?
+;Auto Preview?
+;
+; New in 40.6
+;
+MSGID_SHORTHELP_LAMP_CHANGED
+Cet indicateur passe de l'état \033binactif\033n\n\
+à l'état \033bactif\033n, une fois que les options\n\
+ont été modifiées depuis le chargement initial.
+;This lamp indicator changes from \033bOff\033n\n\
+;to \033bOk\033n when the settings have been\n\
+;modified since initial loading.
+;
+; ** new in 40.7
+;
+MSGID_COLUMNTITLE_3
+\33bAperçu
+;\33bPreview
+;
+;
+MSGID_CREATING_THUMBNAIL
+\33cCréation d'une vignette pour
+;\33cCreating Thumbnail for
+;
+;
+MSGID_LOADING_THUMBNAIL
+\33cChargement d'une vignette pour
+;\33cLoading Thumbnail for
+;
+;
+MSGID_PROGRESS_THUMBNAILS
+\33c%ld/%ld
+;\33c%ld/%ld
+;
+;
+MSGID_WINDOW_STARTUP
+Préférences des motifs de Scalos
+;Scalos PatternPrefs startup
+;
+;
+MSGID_STARTUP_CREATING
+Au lancement, les vignettes sont créées pour tous \
+les motifs. Maleureusement cette opération prend du temps. \
+Toutefois, les données des vignettes sont sauvegardées \
+avec les préférences du programme.\n\
+Aprés que les vignettes soient sauvegardées, \
+les prochains lancement seront \033bplus rapides\033n.
+;On initial start, thumbnails are created for every \
+;pattern. Unfortunately this takes some time. \
+;However, thumbnail bitmaps are saved together \
+;with the standard pattern preferences.\n\
+;After the thumbnails have been saved, \
+;future startups will be \033bmuch faster\033n.
+;
+;
+MSGID_MENU_ENABLE_THUMBNAILS
+Afficher les vignettes ?
+;Display Thumbnails?
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Le lancement de Scalos Prefs a échoué
+;Scalos Pattern Prefs startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Recommençer|Quitter
+;Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Impossible de charger la classe MUI '%s' V%lu.%lu.\n\
+Celle-ci n'est pas installée.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Impossible de charger la classe MUI '%s' V%lu.%lu.\n\
+\n\
+La version installée est V%lu.%lu, installez-en une plus récente s'il vous plaît !
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Impossible de charger la classe MUI '%s' V%lu.%lu.\n\
+%lu.%lu est actuellement utilisée par d'autres applications.\n\
+\n\
+Une fois la version requise installée,\n\
+fermez tous les programmes MUI, soyez sûr que l'ancienne classe\n\
+ne soit plus présente dans la mémoire puis, essayez de nouveau.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;
+MSGID_COLUMNTITLE_4
+\033bType
+;\033bType
+;
+MSGID_PATTERNTYPE_DESKTOP
+\0333BUREAU
+;DE
+;
+MSGID_PATTERNTYPE_SCREEN
+\0333ECRAN
+;SC
+;
+MSGID_PATTERNTYPE_ICONWINDOW
+\0333F-ICONE
+;IW
+;
+MSGID_PATTERNTYPE_TEXTWINDOW
+\0333F-TEXTE
+;TW
+;
+MSGID_PATTERNTYPE_NONE
+\0333\033c-
+; 
+;-----------------------------------------------------------
+;
+MSGID_MENU_RELOAD_THUMBNAILS
+Recharger les vignettes
+;Reload Thumbnails
+;
+MSGID_LOADING_THUMBNAILS
+\033cChargement des vignettes...
+;\033cLoading Thumbnails...
+;
+;-----------------------------------------------------------
+;
+MSGID_REGISTER_BACKGROUNDCOLORS
+Couleurs d'arrière-plan
+;Background Colours
+;
+MSGID_BGTYPE_NONE
+Rien
+;None
+;
+MSGID_LABEL_CYCLEBACKGROUND
+Type d'arrière plan :
+;Background Type:
+;
+MSGID_BGTYPE_SINGLECOLOR
+Simple couleur
+;Single Colour
+;
+MSGID_BGTYPE_HOR_GRADIENT
+Dégradé horizontal
+;Horizontal gradient
+;
+MSGID_BGTYPE_VERT_GRADIENT
+Dégradé vertical
+;Vertical gradient
+;
+MSGID_SHORTHELP_BACKGROUNDCOLOR1
+Ici vous pouvez ajuster la couleur d'arrière-paln.\n\
+ceci n'est possible qu'avec le mode \033bCentré\033n et\n\
+le type de motif : \033bCouleur seulement\033n.\n\
+Pour les types de motif \033bdégradés\33n, vous pouvez\n\
+choisir ici, la couleur du haut(dégradé vertical) ou celle\n\
+de la gauche (dégradé horizontal).
+;Here you can adjust the window background color.\n\
+;This is only possible with \033bcentered\033n and\n\
+;\033bcolor-only\033n pattern type.\n\
+;For \033bgradient\33n pattern types, you can\n\
+;select the top (vertical gradient) or left (horizontal gradient) colour here.
+;
+MSGID_SHORTHELP_BACKGROUNDCOLOR2
+Ici vous pouvez ajuster la seconde couleur de l'arrière-plan.\n\
+Pour les types de motif \033bdégradés\33n, vous pouvez\n\
+choisir ici, la couleur du bas(dégradé vertical) ou celle\n\
+de la droite(dégradé horizontal).
+;Here you can adjust the secondary window background color.\n\
+;For \033bgradient\33n pattern types, you can\n\
+;select the bottom (vertical gradient) or right\n\
+;(horizontal gradient) colour here.
+;
+MSGID_SHORTHELP_CYCLEBACKGROUND
+Ce gadget sélectionne le type d'arrière-plan\n\
+qui sera tracé autour de l'image choisie.\n\
+Cette option n'est disponible qu'avec le mode \033bCentré\033n car,\n\
+dans les autres modes, il n'y a aucun espace libre autour de l'image\n\
+où la couleur d'arrière-plan peut être visible.
+;This gadget selects the type of background that\n\
+;is drawn besides the selected image.\n\
+;It is selectable only in \033bCentered\033n mode because\n\
+;in other modes, there is no room around the image where\n\
+;the background color could be seen.
+;
+MSGID_SCALEDMINNAME
+Echelle proportionnelle (Min)
+;Proportionally Scaled (min)
+;
+MSGID_SCALEDMAXNAME
+Echelle proportionnelle (Max)
+;Proportionally Scaled (max)
+;
+;-----------------------------------------------------------
+;

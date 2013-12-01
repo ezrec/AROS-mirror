@@ -1,0 +1,33 @@
+# makefile for DrawerContentsPlugin (translated Texts : français)
+# $Date: 2011-07-31 22:05:01 +0200 (So, 31. Jul 2011) $
+# $Revision: 813 $
+
+.SUFFIXES: .ct .catalog
+.PHONY: all install clean
+
+include config.mk
+
+CATNAME	=       DrawerContentsPlugin
+
+# Native FlexCat doesn't like Linux paths
+ifeq ($(CROSS), )
+	CDPATH=//
+else
+	CDPATH=../../..
+endif
+
+all:	$(CATNAME).catalog
+
+
+.ct.catalog :
+	@printf '\033[32mMake catalog: \033[31m\033[1m$(LANG)\033[0m\n'
+	$(FLEXCAT) $(CDPATH)/$*.cd $*.ct CATALOG $*.catalog
+
+$(CATNAME).catalog : $(CATNAME).ct ../../../$(CATNAME).cd
+
+
+clean:
+	$(RM) -f $(CATNAME).catalog
+
+install:
+	-copy $(CATNAME).catalog Locale:catalogs/$(LANG)/Scalos/ clone

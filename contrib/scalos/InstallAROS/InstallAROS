@@ -1,0 +1,101 @@
+; AROS-DOS script for installing Scalos on AROS
+
+; $VER: InstallAROS 1.0 (26.12.2011)
+
+Set target=""
+Set subdir="Scalos"
+Set target=`RequestFile DRAWER Extras: TITLE "Choose directory for Scalos" SAVEMODE DRAWERSONLY`
+IF "$target" EQ ""
+    RequestChoice "Information" "Script cancelled" "OK"
+    Quit
+EndIf
+
+Set target="$target$subdir"
+
+If Exists "$target"
+    Set result=`RequestChoice "Warning" "Directory $target already exists.*NIt will be deleted if you continue!" "Continue|Cancel"`
+    If $result EQ 0
+        RequestChoice "Information" "Script cancelled" "OK" >NIL:
+        Quit
+    Else
+        Delete "$target" ALL
+    EndIf
+EndIf
+
+
+MakeDir "$target" ALL
+Copy Scalos Scalos.info History readme.txt LEGAL "$target"
+Copy IconDatatypes "$target/IconDatatypes" ALL
+Copy Libs "$target/Libs" ALL
+Copy Modules "$target/Modules" ALL
+Copy Plugins "$target/Plugins" ALL
+Copy Prefs "$target/Prefs" ALL
+Copy S "$target/S" ALL
+Copy Themes "$target/Themes" ALL
+Copy Tools "$target/Tools" ALL
+
+
+; Copy icons
+Copy Envarc:SYS/def_Drawer.info "$target//Scalos.info"
+
+Copy Envarc:SYS/def_Drawer.info "$target/Modules.info"
+Copy Envarc:SYS/def_Drawer.info "$target/Prefs.info"
+Copy Envarc:SYS/def_Drawer.info "$target/Tools.info"
+
+Copy Envarc:SYS/def_Tool.info "$target/Modules/Delete.module.info"
+Copy Envarc:SYS/def_Tool.info "$target/Modules/Empty_Trashcan.module.info"
+Copy Envarc:SYS/def_Tool.info "$target/Modules/Exchange.module.info"
+Copy Envarc:SYS/def_Tool.info "$target/Modules/Execute_Command.module.info"
+Copy Envarc:SYS/def_Tool.info "$target/Modules/Find.module.info"
+Copy Envarc:SYS/def_Tool.info "$target/Modules/Format_Disk.module.info"
+Copy Envarc:SYS/def_Tool.info "$target/Modules/IconProperties.module.info"
+Copy Envarc:SYS/def_Tool.info "$target/Modules/Information.module.info"
+Copy Envarc:SYS/def_Tool.info "$target/Modules/NewDrawer.module.info"
+Copy Envarc:SYS/def_Tool.info "$target/Modules/Rename.module.info"
+Copy Envarc:SYS/def_Tool.info "$target/Modules/Updater.module.info"
+Copy Envarc:SYS/def_Tool.info "$target/Modules/WindowProperties.module.info"
+
+Copy Envarc:SYS/def_Tool.info "$target/Prefs/Scalos_FileTypes.info"
+Copy Envarc:SYS/def_Tool.info "$target/Prefs/Scalos_Menu.info"
+Copy Envarc:SYS/def_Tool.info "$target/Prefs/Scalos_Palette.info"
+Copy Envarc:SYS/def_Tool.info "$target/Prefs/Scalos_Pattern.info"
+Copy Envarc:SYS/def_Tool.info "$target/Prefs/Scalos_Prefs.info"
+
+
+; Copy catalogs
+Set result=`RequestChoice "Request" "Do you want to copy the catalogs?" "Yes|No"`
+If $result NOT EQ 0
+    Copy Catalogs Locale:Catalogs ALL
+EndIf
+
+
+; Copy Env
+If Not Exists ENVARC:Scalos
+    MakeDir ENVARC:Scalos
+EndIf
+
+Copy Env-Archive/deficons.prefs ENVARC:
+Copy Env-Archive/Scalos/icandy ENVARC:Scalos
+Copy Env-Archive/Scalos/Palette13.prefs ENVARC:Scalos
+Copy Env-Archive/Scalos/Pattern.prefs ENVARC:Scalos
+Copy Env-Archive/Scalos/Persist.prefs ENVARC:Scalos
+Copy Env-Archive/Scalos/scalos.prefs ENVARC:Scalos
+
+Set result=`RequestChoice "Request" "In what language do you want to install the environment?" "German|French|English"`
+If $result EQ 1
+    Copy Env-Archive/Scalos/Deutsch/#? ENVARC:Scalos ALL
+Else
+    If $result EQ 2
+        Copy Env-Archive/Scalos/Français/#? ENVARC:Scalos ALL
+    Else
+        Copy Env-Archive/Scalos/English/#? ENVARC:Scalos ALL
+    Endif
+EndIf
+
+
+; Create package variable
+Echo "$target" >ENVARC:SYS/Packages/Scalos
+
+
+RequestChoice "Information" "Done. After a reset you should be able to start Scalos." "OK" >NIL:
+

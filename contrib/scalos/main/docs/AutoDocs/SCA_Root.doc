@@ -1,0 +1,228 @@
+TABLE OF CONTENTS
+
+Root.sca/--background
+Root.sca/SCCM_AddToClipboard
+Root.sca/SCCM_CheckForMessages
+Root.sca/SCCM_ClearClipboard
+Root.sca/SCCM_GetLocalizedString
+Root.sca/SCCM_HandleMessages
+Root.sca/SCCM_Message
+Root.sca/SCCM_RunProcess
+Root.sca/SCCM_Ping
+Root.sca/SCCM_WindowStartComplete
+Root.sca/--background
+
+    NAME
+	--background
+
+    DESCRIPTION
+	This class is used for some fundamental message and event handling.
+
+    TAGS
+	SCCA_WindowTask (struct ScaWindowTask *) -- Scalos window task to 
+		operate on.
+
+	    Applicability is (ISG).
+
+Root.sca/SCCM_AddToClipboard
+
+    NAME
+	SCCM_AddToClipboard
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_AddToClipboard,struct ScaWindowTask *wt,
+		 struct ScaIconNode *in, ULONG opcode);
+
+    FUNCTION
+	Adds an entry to the global Scalos copy/cut/paste clipboard.
+
+    INPUTS
+	wt - Scalos window the ScaIconNode belongs to.
+	in - IconNode defines the entry (file or directory).
+	opcode - determines what kind of operation is to applied to this entry.
+		SCCV_AddToClipboard_Copy - Entry will be copied ("copy").
+		SCCV_AddToClipboard_Move - Entry will be moved ("cut").
+
+    RESULT
+	nothing
+
+    NOTE
+	Entries which are to be moved/cut are visibly marked by drawing 
+	their icons in a "shadowed" state. This marking is removed upon
+	excution of SCCM_ClearClipboard.
+
+    SEE ALSO
+	SCCM_ClearClipboard
+Root.sca/SCCM_CheckForMessages
+
+    NAME
+        SCCM_CheckForMessages
+
+    SYNOPSIS
+	ULONG flag = DoMethod(obj,SCCM_CheckForMessages);
+
+    FUNCTION
+	Calls main message handler for Root. All messages currently
+	queued are processed. When no messages are available,
+	the call immediately returns.
+
+    INPUTS
+	none
+
+    RESULT
+	ULONG flag <>0  signals window is to be closed.
+
+    SEE ALSO
+	SCCM_Message, SCCM_HandleMessages
+Root.sca/SCCM_ClearClipboard
+
+    NAME
+	SCCM_ClearClipboard
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_ClearClipboard);
+
+    FUNCTION
+	Removes and frees all entries from the global Scalos copy/cut/paste 
+	clipboard. Unmarks all files which have been visibly marked for 
+	"cut" operation.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_AddToClipboard
+Root.sca/SCCM_GetLocalizedString
+
+    NAME
+	SCCM_GetLocalizedString
+
+    SYNOPSIS
+	CONST_STRPTR string = DoMethod(obj,SCCM_GetLocalizedString,
+		ULONG StringID);
+
+    FUNCTION
+	Get localized string from Scalos catalog.
+
+    INPUTS
+	StringID - numeric ID of localized Scalos string.
+
+    RESULT
+	string - Localized Scalos string
+
+    SEE ALSO
+Root.sca/SCCM_HandleMessages
+
+    NAME
+	SCCM_HandleMessages
+
+    SYNOPSIS
+	ULONG flag = DoMethod(obj,SCCM_HandleMessages);
+
+    FUNCTION
+	Calls main message handler for Root. All queued messages
+	are processed. Under certain circumstances, this call
+	may block calling WaitPort() for additional messages.
+	Use SCCM_CheckForMessages if you just want to check for
+	pending messages.
+
+    INPUTS
+	none
+
+    RESULT
+	ULONG flag <>0  signals window is to be closed.
+
+    SEE ALSO
+	SCCM_Message, SCCM_CheckForMessages
+Root.sca/SCCM_Message
+
+    NAME
+	SCCM_Message
+
+    SYNOPSIS
+	ULONG flag = DoMethod(obj,SCCM_Message,struct IntuiMessage *Msg);
+
+    FUNCTION
+	Incoming messages get forwarded to the window by the 
+	SCCM_HandleMessages message handler.
+
+    INPUTS
+	Msg - IntuiMessage to handle
+
+    RESULT
+	flag <>0  signals window is to be closed.
+
+    SEE ALSO
+	SCCM_HandleMessages
+Root.sca/SCCM_RunProcess
+
+    NAME
+	SCCM_RunProcess
+
+    SYNOPSIS
+	ULONG Success = DoMethod(obj,SCCM_RunProcess,APTR EntryPoint,
+		APTR Args,ULONG ArgSize,struct MsgPort *ReplyPort);
+
+    FUNCTION
+	Start some code as an asynchronous process. Optionally, wait 
+	for process result.
+
+    INPUTS
+	void (*EntryPoint)(APTR Args, struct SM_RunProcess *) - Entry point for 
+		new Routine. Parameter <Args> is a copy of the <Args> given in
+		the DoMethod() call.
+	Args - arguments for new Routine
+	ArgSize - byte size of (Args)
+	ReplyPort - Reply port for process message or 
+		one of the following special constants:
+			SCCV_RunProcess_NoReply
+			SCCV_RunProcess_WaitReply
+
+    RESULT
+	Success - TRUE if process started successfully
+		FALSE if something went wrong
+
+    SEE ALSO
+Root.sca/SCCM_Ping
+
+    NAME
+	SCCM_Ping
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_Ping);
+
+    FUNCTION
+	Timer event. This is sent to windows if the wt_NeedsTimerFlag is set
+	and WSV_FlagF_NeedsTimerMsg in ws_Flags is set. 
+	Timer events occur at a rate of about 1 per second.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+Root.sca/SCCM_WindowStartComplete
+    NAME
+        SCCM_WindowStartComplete
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_WindowStartComplete);
+
+    FUNCTION
+	This method is issued whenever a new windows has been opened
+	and initialized completely.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+R
+

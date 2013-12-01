@@ -1,0 +1,51 @@
+/* Release */
+/* 24 Apr 2005 21:37:16 */
+
+/* Generate an archive with full delete.module source code,
+   according to GPL. */
+
+DirName = 'RAM:DeleteModule'
+LHAName = 'RAM:Scalos-Module_Delete_Src'
+
+address command
+
+"version"
+
+say "Deleting old directory tree..."
+"delete RAM:DeleteModule all QUIET"
+say "Deleting old archive..."
+"delete " || LHAName || ".lha quiet"
+
+"makedir RAM:DeleteModule"
+
+"makedir RAM:DeleteModule/source"
+"mkdir -p RAM:DeleteModule/source/catalogs/Deutsch/Scalos"
+"mkdir -p RAM:DeleteModule/source/catalogs/français/Scalos"
+
+
+"copy #? RAM:DeleteModule/ all clone quiet"
+
+say "Removing CVS directories..."
+
+TempName = 't:xx123'
+'list dir "RAM:DeleteModule/" all pat "CVS" nohead lformat "delete *"%f%n*" all quiet" to ' || TempName
+'execute ' || TempName
+'delete ' || TempName || ' quiet'
+
+say "Removing .obj directories..."
+
+TempName = 't:xx123'
+'list dir "RAM:DeleteModule/" all pat ".objs" nohead lformat "delete *"%f%n*" all quiet" to ' || TempName
+'execute ' || TempName
+'delete ' || TempName || ' quiet'
+
+say "Removing .obj directories..."
+
+TempName = 't:xx123'
+'list dir "RAM:DeleteModule/" all pat ".sasobj" nohead lformat "delete *"%f%n*" all quiet" to ' || TempName
+'execute ' || TempName
+'delete ' || TempName || ' quiet'
+
+'lha -r -e -x a ' || LHAName || ' RAM:DeleteModule/'
+
+lha t LHAName

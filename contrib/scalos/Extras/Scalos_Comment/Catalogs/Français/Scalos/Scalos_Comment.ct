@@ -1,0 +1,305 @@
+## version $VER: Scalos_Comment.catalog 1.3.c (29.10.05)
+## codeset 0
+## language français
+;
+MSGID_ENTRY
+Entrée :
+; Entry:
+;
+MSGID_Asltext
+Choix d'un ou plusieurs fichiers...
+; Please, select a drawer, disk or file...
+;
+MSGID_TYPE
+Type :
+; Type:
+;
+MSGID_COMMENT
+Commentaire :
+; Comment:
+;
+MSGID_ALL
+Tout
+; All
+;
+MSGID_HELPALL
+Si coché, le commentaire sera appliquer\n\
+au répertoire et à son contenu. 
+; If selected, comment will be apply\n\
+; to drawer and its contents.
+;
+MSGID_QUIT
+Quitter
+; Quit
+;
+MSGID_HELPQUIT
+Si coché, permet de quitter Comment.module après\n\
+avoir terminer de commenter les éléments choisis.  
+; If selected, apply to quit Comment.module after\n\
+; to finish comment operation.
+;
+MSGID_TIME
+Temps :
+; Time:
+;
+MSGID_HELPBTABORT
+Annuler l'opération
+; Abort operation.
+;
+MSGID_BTABORT
+_Annuler
+; Abort
+;
+MSGID_GROUPENTRY
+ Entrée actuelle 
+; Current entry
+;
+MSGID_HELPGROUPENTRY
+Répertoire et fichier en cours de traitement.
+; Current drawer and file analysing
+;
+MSGID_LABELDRAWER
+Répertoire :
+; Drawer:
+;
+MSGID_LABELFILE
+Fichier :
+; File:
+;
+MSGID_ERRORREQ
+Entrée :  %s !\n\
+Code d'erreur : %ld, %s
+; Entry : %s !\n\
+; ErrorCode: %ld, %s
+;
+MSGID_BTOKREQ
+ D'accord 
+; Okay
+;
+MSGID_NOFOUND
+Introuvable !
+; No found!
+;
+MSGID_MUIERROR
+Impossible d' ouvrir "%s".\n
+; Failed to open "%s".\n
+;
+MSGID_ICONLIBERROR
+Impossible d' ouvrir "icon.library" !\n
+; Failed to open icon.library!\n
+;
+MSGID_APPERROR
+La création de l'application a échouée !
+; Failed to create application!\n
+;
+MSGID_TYPETOOL
+Outil
+; Tool
+;
+MSGID_TYPEPROJECT
+Projet
+; Project
+;
+MSGID_TYPEDRAWER
+Répertoire
+; Drawer
+;
+MSGID_TYPEASSIGN
+Assignation
+; Assign
+;
+MSGID_TYPEDISK
+Volume
+; Disk
+;
+MSGID_TYPEGARBAGE
+Corbeille
+; Trashcan
+;
+MSGID_TITLEERRORREQ
+Comment.module: Erreur...
+; Error
+;
+MSGID_PREFNOFOUNDREQ
+Le fichier des préférences :\n\
+"\%s"\n\
+n'a pu être localisé !\n\
+Utilisation des réglages par défaut...
+; Prefs file:\n\
+; "%s" no found!\n\
+; Use default settings...
+;
+MSGID_ENTRYEXISTS
+L'élément :\n\
+"\033b%s\033n"\n\
+est déjà présent !
+; Entry:\n\
+; "\033b%s\033n"\n\
+; is already present!
+;
+MSGID_PATH
+Chemin :
+; Path:
+;
+MSGID_WINANALYSING
+Comment.module en cours d'analyse...
+; Comment.module in progress...
+;
+MSGID_WININFOS
+Comment.module - Informations
+; Comment.module - Informations
+;
+MSGID_OBJECTS
+Objet(s)
+; Object(s)
+;
+MSGID_DRAWERS
+Répertoire(s)
+; Drawers
+;
+MSGID_FILES
+Fichier(s)
+; File(s)
+;
+MSGID_SIZE
+Taille
+; Size
+;
+MSGID_BYTES
+Octets
+; Bytes
+;
+MSGID_KBYTES
+KOctets
+; KBytes
+;
+MSGID_MBYTES
+MOctets
+; MBytes
+;
+MSGID_GETSIZE
+Saisir la taille
+; Get size
+;
+MSGID_LNAME
+\033bNom
+; \033bName
+;
+MSGID_LCOMMENT
+\033bCommentaire
+; \033bComment
+;
+MSGID_LSIZE
+\033bTaille
+; \033bSize
+;
+MSGID_LDATE
+\033bDate
+; \033bDate
+;
+MSGID_LTIME
+\033bHeure
+; \033bTime
+;
+MSGID_LPATH
+\033bChemin
+;\033bPath
+;
+MSGID_INCOMPLETE
+\033c\033b[ Analyse incomplète ! ]
+; \033c\033b[ Incomplete! ]
+;
+MSGID_BTCOMMALL
+_Tout commenter
+; _Comment all
+;
+MSGID_BTCOMMSEL
+Commenter _sélectionnés
+; Comment _selected
+;
+MSGID_BTREMENTRY
+_Retirer les entrées
+; _Remove entry
+;
+MSGID_TITLECONFIRMREQ
+Confirmation
+; Comment.module: Confirmation
+;
+MSGID_BTCONFIRMREQ
+ Oui | Non | Oui pour tous | Jamais 
+;  Yes | No | Yes for all | Never 
+;
+MSGID_BODYCONFIRMREQ
+Commenter tous les éléments présents\n\
+dans : %s ?
+; Comment all objects presents\n\
+; in : %s?
+;
+MSGID_ENTRIESNUMBER
+Nombre d'entrées :
+; Entries number:
+;
+MSGID_ENTRIESNUMBER_HELP
+Ceci est le nombre d'entrées actuellement\n\
+présentes dans la liste. 
+; This is the number of entries currently\n\
+; presents into the list.
+;
+MSGID_MENU_PROJECT
+Projet
+; Project
+;
+MSGID_MENUITEM_ABOUT
+A propos...
+; About...
+;
+MSGID_MENUITEM_SETTINGS
+Sauver les options
+; Save settings
+;
+MSGID_MENUITEM_QUIT
+Quitter
+; Quit
+;
+MSGID_OPEN_DIR
+Accéder au chemin
+; Open path
+;
+MSGID_ABOUT
+Comment.module pour Scalos\n\
+Codé en language E\n\
+%s\n\
+%s
+; Comment module for Scalos\n\
+; Written in E\n\
+; %s\n\
+; %s
+;
+MSGID_REQ_ABOUTTITLE
+A propos de comment.module...
+; About Comment.module...
+;
+MSGID_SCALIB_ERROR
+Impossible d'ouvrir "%s" %s\n
+; Failed to open "%s" %s.\n
+;
+MSGID_MENUITEM_ABOUT_KEY
+A
+; A
+;
+MSGID_MENUITEM_SETTINGS_KEY
+S
+; S
+;
+MSGID_MENUITEM_QUIT_KEY
+Q
+; Q
+;
+MSGID_AsltextDir
+Choixs d'un volume ou d'un répertoire...
+; Please, select a drawer or disk...
+;
+MSGID_Blocks
+(\0333%ld \0332Blocs)
+;(%ld Blocks) 
+;

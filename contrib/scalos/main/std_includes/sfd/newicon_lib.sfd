@@ -1,0 +1,18 @@
+==id $Id: newicon_lib.sfd 5 2009-02-17 20:22:13Z jlachmann $
+==base _NewIconBase
+*==basetype struct Library *
+*==libname newicon.library
+==bias 30
+==public
+==include <exec/types.h>
+==include <libraries/newicon.h>
+struct NewDiskObject * GetNewDiskObject(UBYTE * name) (a0)
+BOOL PutNewDiskObject(UBYTE * name, struct NewDiskObject * newdiskobj) (a0,a1)
+VOID FreeNewDiskObject(struct NewDiskObject * newdiskobj) (a0)
+BOOL newiconPrivate1(struct NewDiskObject * diskobj) (a0)
+UBYTE ** newiconPrivate2(struct NewDiskObject * diskobj) (a0)
+VOID newiconPrivate3(struct NewDiskObject * diskobj) (a0)
+struct Image * RemapChunkyImage(struct ChunkyImage * chunkyimage, struct Screen * screen) (a0,a1)
+VOID FreeRemappedImage(struct Image * image, struct Screen * screen) (a0,a1)
+struct NewDiskObject * GetDefNewDiskObject(LONG def_type) (d0)
+==end

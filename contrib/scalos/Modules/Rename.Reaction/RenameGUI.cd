@@ -1,0 +1,35 @@
+; *** catalog description file of "RenameGUI.res"
+;
+MSGID_WINTITLE_RENAME (256//)
+Rename
+;
+MSGID_TEXTLINE_ENTERNEWNAME (257//)
+Enter a new Name for '%s'
+;
+MSGID_NEWNAME_DEFAULT (258//)
+New_Object_Name
+;
+MSGID_LABEL_NEWNAME (259//)
+New Name
+;
+MSGID_BUTTON_OK (261//)
+_Ok
+;
+MSGID_BUTTON_CANCEL (262//)
+_Cancel
+;
+MSGID_TITLE_ERRORREQ (263//)
+Rename Error
+;
+MSGID_ERRORREQ_BODYTEXT (264//)
+Could not rename\n'%s' to '%s'\n%s
+;
+MSGID_REQ_OK (265//)
+ _Ok
+;
+MSGID_TEXTLINE_PATH (266//)
+Path: '%s'
+;
+MSGID_BUTTON_SKIP (267//)
+_Skip
+;

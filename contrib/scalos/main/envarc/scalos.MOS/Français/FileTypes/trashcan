@@ -1,0 +1,103 @@
+# Scalos filetype description
+# written 03 Apr 2005 17:38:58
+
+DESCRIPTION "[ Corbeille ]"
+
+POPUPMENU
+	MENUENTRY NAME "Vider la corbeille..."
+		INTERNALCMD NAME "emptytrashcan"
+	ENDMENUENTRY
+	MENUSEPARATOR
+	MENUENTRY DEFAULTACTION NAME "Ouvrir" "Open" UNSELECTEDICON "THEME:Filetypes/Open"
+		INTERNALCMD NAME "open"
+	ENDMENUENTRY
+	MENUENTRY NAME "Informations..." UNSELECTEDICON "THEME:Filetypes/Information"
+		INTERNALCMD NAME "iconinfo"
+	ENDMENUENTRY
+	MENUSEPARATOR
+	MENUENTRY NAME "Explorer..." UNSELECTEDICON "THEME:Filetypes/Browse"
+		CLICMD NAME "Scalos:Tools/browse.script %p" STACK "16384" WBARGS
+	ENDMENUENTRY
+	MENUSEPARATOR
+	MENUENTRY NAME "Figer"
+		INTERNALCMD NAME "snapshot"
+	ENDMENUENTRY
+	MENUENTRY NAME "Libérer"
+		INTERNALCMD NAME "unsnapshot"
+	ENDMENUENTRY
+	MENUSEPARATOR
+	SUBMENU NAME "Edition" UNSELECTEDICON "THEME:Filetypes/Edit"
+		MENUENTRY NAME "Couper" UNSELECTEDICON "THEME:Filetypes/EditCut"
+			INTERNALCMD NAME "cut"
+		ENDMENUENTRY
+		MENUENTRY NAME "Copier" UNSELECTEDICON "THEME:Filetypes/EditCopy"
+			INTERNALCMD NAME "copy"
+		ENDMENUENTRY
+	ENDSUBMENU
+	MENUENTRY NAME "Renommer..." UNSELECTEDICON "THEME:Filetypes/Rename"
+		INTERNALCMD NAME "rename"
+	ENDMENUENTRY
+	MENUENTRY NAME "Sortir"
+		INTERNALCMD NAME "leaveout"
+	ENDMENUENTRY
+	MENUENTRY NAME "Ranger"
+		INTERNALCMD NAME "putaway"
+	ENDMENUENTRY
+	MENUENTRY NAME "Effacer..." UNSELECTEDICON "THEME:Filetypes/Delete"
+		INTERNALCMD NAME "delete"
+	ENDMENUENTRY
+	MENUSEPARATOR
+	MENUENTRY NAME "Propriètés..." UNSELECTEDICON "THEME:Filetypes/Properties"
+		INTERNALCMD NAME "iconproperties"
+	ENDMENUENTRY
+ENDPOPUPMENU
+
+
+TOOLTIP
+	GROUP ORIENTATION "vertical"
+		MEMBER
+			GROUP ORIENTATION "horizontal"
+				MEMBER
+					STRING SRC "fibfilename" HALIGN "center" FONT "CenturyGothicBold.font/16" TTFONT "0/600/15/Arial Rounded MT Bold" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+				ENDMEMBER
+				MEMBER
+					STRING SRC "filetypestring" HALIGN "center" VALIGN "bottom" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+				ENDMEMBER
+			ENDGROUP
+		ENDMEMBER
+		MEMBER
+			SPACE SIZE "1"
+		ENDMEMBER
+		MEMBER
+			HBAR
+		ENDMEMBER
+		MEMBER
+			SPACE SIZE "1"
+		ENDMEMBER
+		MEMBER
+			GROUP ORIENTATION "horizontal"
+				MEMBER
+					GROUP ORIENTATION "vertical"
+						MEMBER HIDE "isempty plugin drawercontents.plugin dirs noicons showempty"
+							STRING ID "MSGID_TOOLTIP_DRAWERS" HALIGN "right" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+						MEMBER HIDE "isempty plugin drawercontents.plugin noicons"
+							STRING ID "MSGID_TOOLTIP_FILES" HALIGN "right" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+					ENDGROUP
+				ENDMEMBER
+				MEMBER
+					GROUP ORIENTATION "vertical"
+						MEMBER HIDE "isempty plugin drawercontents.plugin dirs noicons showempty"
+							STRING SRC "plugin drawercontents.plugin dirs noicons showempty" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+						MEMBER HIDE "isempty plugin drawercontents.plugin noicons"
+							STRING SRC "plugin drawercontents.plugin noicons" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+					ENDGROUP
+				ENDMEMBER
+			ENDGROUP
+		ENDMEMBER
+	ENDGROUP
+ENDTOOLTIP
+

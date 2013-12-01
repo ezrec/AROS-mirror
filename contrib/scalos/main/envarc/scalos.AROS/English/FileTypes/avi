@@ -1,0 +1,6 @@
+# Scalos filetype description
+# written 06/20/07 18:04:59
+
+PREVIEWPLUGIN "Scalos:Plugins/Preview/video.pvplugin"
+DESCRIPTION "AVI Video"
+

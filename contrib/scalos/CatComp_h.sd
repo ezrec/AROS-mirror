@@ -1,0 +1,167 @@
+##rem $Id: CatComp_h.sd 79 2007-01-01 11:45:21Z tactica $
+##stringtype C
+##shortstrings
+
+/****************************************************************
+
+   This file was created automatically by `%fv'
+   from "%f0"
+
+   using CatComp.sd 1.2 (24.09.1999)
+
+   Do NOT edit by hand!
+
+****************************************************************/
+
+#ifndef %b_STRINGS_H
+#define %b_STRINGS_H
+
+#ifndef EXEC_TYPES_H
+#include <exec/types.h>
+#endif
+
+#ifdef  %b_BASIC_CODE
+#undef  %b_BASIC
+#undef  %b_CODE
+#define %b_BASIC
+#define %b_CODE
+#endif
+
+#ifdef  %b_BASIC
+#undef  %b_ARRAY
+#undef  %b_BLOCK
+#define %b_ARRAY
+#define %b_BLOCK
+#endif
+
+#ifdef  %b_ARRAY
+#undef  %b_NUMBERS
+#undef  %b_STRINGS
+#define %b_NUMBERS
+#define %b_STRINGS
+#endif
+
+#ifdef  %b_BLOCK
+#undef  %b_STRINGS
+#define %b_STRINGS
+#endif
+
+
+#ifdef %b_NUMBERS
+
+#define %i %d
+
+#endif /* %b_NUMBERS */
+
+
+/****************************************************************************/
+
+
+#ifdef %b_STRINGS
+
+#define %i_STR %s
+
+#endif /* %b_STRINGS */
+
+
+/****************************************************************************/
+
+
+#ifdef %b_ARRAY
+
+struct %b_ArrayType
+{
+    LONG   cca_ID;
+    CONST_STRPTR cca_Str;
+};
+
+static const struct %b_ArrayType %b_Array[] =
+{
+    { %i, %i_STR },
+};
+
+
+#endif /* %b_ARRAY */
+
+
+/****************************************************************************/
+
+
+#ifdef %b_BLOCK
+
+static const char %b_Block[] =
+{
+
+     "%4a" "%2t"\n    %i_STR "%z"
+
+};
+
+#endif /* %b_BLOCK */
+
+
+/****************************************************************************/
+
+
+#ifdef %b_CODE
+
+#ifndef PROTO_LOCALE_H
+#define __NOLIBBASE__
+#define __NOGLOBALIFACE__
+#include <proto/locale.h>
+#endif
+
+#ifndef %b_CODE_EXISTS
+ #define %b_CODE_EXISTS
+
+CONST_STRPTR Get%bString(struct %b_LocaleInfo *li, LONG stringNum)
+{
+#ifndef __amigaos4__
+    struct Library     *LocaleBase = li->li_LocaleBase;
+#else
+    struct LocaleIFace *ILocale    = li->li_ILocale;
+#endif
+
+    CONST_STRPTR  builtIn = "";
+    ULONG n;
+
+    for (n = 0; n < sizeof(%b_Array) / sizeof(%b_Array[0]); n++)
+    {
+        if (%b_Array[n].cca_ID == stringNum)
+        {
+            builtIn = %b_Array[n].cca_Str;
+            break;
+        }
+    }
+
+#ifndef __amigaos4__
+    if (LocaleBase)
+    {
+        return GetCatalogStr(li->li_Catalog, stringNum, (STRPTR)builtIn);
+    }
+#else
+    if (ILocale)
+    {
+#ifdef __USE_INLINE__
+        return GetCatalogStr(li->li_Catalog, stringNum, (STRPTR)builtIn);
+#else
+        return ILocale->GetCatalogStr(li->li_Catalog, stringNum, (STRPTR)builtIn);
+#endif
+    }
+#endif
+
+    return builtIn;
+}
+
+#else
+
+STRPTR Get%bString(struct %b_LocaleInfo *li, LONG stringNum);
+
+#endif /* %b_CODE_EXISTS */
+
+#endif /* %b_CODE */
+
+
+/****************************************************************************/
+
+
+#endif /* %b_STRINGS_H */

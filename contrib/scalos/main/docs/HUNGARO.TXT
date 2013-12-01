@@ -1,0 +1,47 @@
+Bastardised Hungarian Notation
+==============================
+
+1) Functions should have the first letter of each word in capitals. No crappy types for parameters
+or return values, just the function name.
+
+example:    void CheckMaxWidth(void);
+
+
+2) structure names should be like AmigaOS structures - first letter of each word capitialised. The
+fields in the structure should be in the form <tag>_<identifier> where <tag> is an abbreviated
+version of the structure name. The identifiers will be named as listed below for normal variables.
+
+example:    struct Blah {
+				WORD    bl_wValue;
+				LONG    bl_lSize;
+			};
+
+			struct Blah bl_Misc;
+
+
+3) Identifier (for variables and fields of structures) names:
+Variable name is constructued from <tag><identifier>. The identifier always starts with a capital
+letter (the only capital in the name) and would probably be something similar to what you would
+usually call the variable. The tag should have the type in it, and if it's a struct, should be
+separated from the identifier by an underscore.
+
+The tags to use are (bearing in mind the sizes of the AmigaOS standard types):
+
+b   = byte (8 bit value)
+w   = word (16 bit value)
+l   = long (32 bit value)
+i   = int
+s   = short
+f   = float or double
+p   = pointer (can be combined with types by putting it in front)
+o   = BOOL
+
+The exceptions to this rule are variables like i, j, k, etc.
+
+examples:		BYTE    *pbString;
+			STRPTR  *pbStr2;
+			int     iMaximum;
+			float   fRadius;
+			void    *pNothing;
+
+

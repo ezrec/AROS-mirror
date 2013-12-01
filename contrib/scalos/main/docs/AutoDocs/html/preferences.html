@@ -1,0 +1,488 @@
+	<HTML><HEAD><TITLE>preferences.library</TITLE></HEAD><BODY BACKGROUND='http://scalos.striatum.org/gfx/backdrop.gif'>
+	
+	<FONT SIZE="5"><B>preferences.library</B></FONT><P><UL>
+	<LI><A HREF="#1">--background--</A></LI><LI><A HREF="#2">AllocPrefsHandle</A></LI><LI><A HREF="#3">FindPreferences</A></LI><LI><A HREF="#4">FreePrefsHandle</A></LI><LI><A HREF="#5">GetEntry</A></LI><LI><A HREF="#6">GetPreferences</A></LI><LI><A HREF="#7">ReadPrefsHandle</A></LI><LI><A HREF="#8">RemEntry</A></LI><LI><A HREF="#9">SetEntry</A></LI><LI><A HREF="#10">SetPreferences</A></LI><LI><A HREF="#11">WritePrefsHandle</A></LI></UL><P><UL><UL><A NAME="1"><br>
+    </LI><LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+	--background<br>
+<br>
+</UL><FONT SIZE="4"><B>   PURPOSE<br>
+</B></FONT><UL>      The preferences.library provides a convenient way to store the<br>
+      preferences for your program. All internal management and I/O of your<br>
+      data is handled by the library, and is controlled via a simple interface<br>
+      which makes use of identifiers and tags to access the data. Multiple<br>
+      programs can access the data (held only once in memory) at the same time<br>
+      as access is arbitrated through the use of semaphores.<br>
+<br>
+   OVERVIEW<br>
+      Most of the data and structures mentioned here will be unavailable to<br>
+      the programmer, but it is useful to know, so that the correct use of the<br>
+      library can be adhered to.<br>
+<br>
+      * All accesses to a preferences structure must be made through a<br>
+        &quot;PrefsHandle&quot;. A PrefsHandle is accessed by name (maximum of 32<br>
+        unique characters) using AllocPrefsHandle(). Within a PrefsHandle a<br>
+        list of ID's within this handle is stored. The pointer remains valid<br>
+        until you call FreePrefsHandle().<br>
+<br>
+      * The ID's are the first level of separation of preference data. Each<br>
+        ID must be 4 ASCII characters, for example &quot;MAIN&quot;, or &quot;MENU&quot;. For<br>
+        creating the ID you can use the MAKE_ID macro as defined in<br>
+        libraries/iffparse.h. ID's are unique within each PrefsHandle. This<br>
+        means that you can have an ID &quot;MAIN&quot; within two PrefsHandle's<br>
+        and they will be completely different ID's.<br>
+<br>
+      * The second level of separating the data is to use tags. A tag can have<br>
+        any value except 0. The data is stored along with the tag. Tags are<br>
+        unique within an ID the same way an ID is unique within a PrefsHandle.<br>
+<br>
+      This gives the following structure to preferences items:<br>
+<br>
+                       Main list of all preferences handles<br>
+                               /        |       \<br>
+                ______________/         |        \___________________<br>
+               /                        |                            \<br>
+          PrefsHandle              PrefsHandle      ...          PrefsHandle<br>
+        _/          \_<br>
+       /              \<br>
+      ID        ______ID<br>
+    _/ |\      /   __/ |\<br>
+   /   | \    |   /   /  \         etc.<br>
+  Tag+ | Tag+ | Tag+ | Tag+<br>
+  Data | Data | Data | Data<br>
+       |      |      |<br>
+     Tag+   Tag+   Tag+<br>
+     Data   Data   Data<br>
+<br>
+<br>
+      The data can be manipulated in these structures using SetPreferences()<br>
+      to set the data and GetPreferences() to retrieve the data.<br>
+<br>
+<br>
+      There is an alternative way to store the data. You can also have a list<br>
+      of data items for each tag value. NB: you cannot mix normal single data<br>
+      tags and their functions with the list type tags and their functions.<br>
+      This is achieved using SetEntry(), GetEntry() and RemEntry() functions.<br>
+      Each data item in the list is accessed using a logical entry number.<br>
+      Since the data items are not explicitly accessed using this entry<br>
+      number (such as with an array), their positions can change when you add<br>
+      items in the middle of the list. For this reason you cannot guarantee<br>
+      the order of data items in this sub-list. Applications of this method of<br>
+      storing data could be a list of files which your program runs at<br>
+      startup, without needing them to be in any specific order.<br>
+<br>
+<br>
+      FindPreferences() will return a pointer to the tag specified and can be<br>
+      used to find whether a certain tag exists or to access the data (if you<br>
+      know the internal structure of tag items :). This works for either<br>
+      type of tag (single data item or list of data items).<br>
+<br>
+      ReadPrefsHandle() and WritePrefsHandle() can be used to read or write an<br>
+      entire PrefsHandle in the specified file.<br>
+<br>
+</UL><HR><A NAME="#2"><br>
+<br>
+   </LI><LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+      AllocPrefsHandle -- Allocate preferences handle<br>
+<br>
+</UL><FONT SIZE="4"><B>   SYNOPSIS<br>
+</B></FONT><PRE>      prefshandle = AllocPrefsHandle( name )<br>
+      D0                             A0<br>
+<br>
+      APTR AllocPrefsHandle( CONST_STRPTR );<br>
+<br>
+</PRE>&nbsp;<br>
+<FONT SIZE="4"><B>   FUNCTION<br>
+</B></FONT><UL>      Allocate a handle so that the preferences inside can be accessed. All<br>
+      successful calls to this function must be matched by a call to the<br>
+      FreePrefsHandle() function.<br>
+<br>
+</UL><FONT SIZE="4"><B>   INPUTS<br>
+</B></FONT><UL>      name - a string that you can identify the preferences set by<br>
+<br>
+</UL><FONT SIZE="4"><B>   RESULT<br>
+</B></FONT><UL>      prefshandle - a pointer to the newly allocated preferences set or NULL<br>
+                    for failure.<br>
+<br>
+   EXAMPLE<br>
+<br>
+   NOTES<br>
+<br>
+   BUGS<br>
+<br>
+</UL><FONT SIZE="4"><B>   SEE ALSO<br>
+</B></FONT><UL>      FreePrefsHandle()<br>
+<br>
+</UL><HR><A NAME="#3"><br>
+<br>
+   </LI><LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+      FindPreferences -- get pointer to data stored for a preference tag<br>
+<br>
+</UL><FONT SIZE="4"><B>   SYNOPSIS<br>
+</B></FONT><PRE>      prefsstruct = FindPreferences(prefshandle, ID, Tag);<br>
+      D0                            A0           D0  D1<br>
+<br>
+      struct PrefsStruct *FindPreferences(APTR, ULONG, ULONG);<br>
+<br>
+</PRE>&nbsp;<br>
+<FONT SIZE="4"><B>   FUNCTION<br>
+</B></FONT><UL>      Searchs for the preferences entry specified by the preferences handle,<br>
+      ID and Tag values and returns a pointer to whatever is stored there.<br>
+      Similar to GetPreferences() and GetEntry(), but since it does not copy<br>
+      any data can be used on both types of tag it can be used to find out<br>
+      whether a tag is present in a PrefsHandle.<br>
+<br>
+</UL><FONT SIZE="4"><B>   INPUTS<br>
+</B></FONT><UL>      PrefsHandle   - pointer to a previously successfully allocated<br>
+                      preferences handle<br>
+      ID            - id of the set within the preferences handle you wish to<br>
+                      use<br>
+      Tag           - the tag used to identify this preference data within the<br>
+                      the ID set<br>
+<br>
+</UL><FONT SIZE="4"><B>   RESULT<br>
+</B></FONT><UL>      prefsstruct - pointer to the preferences item if found, NULL otherwise<br>
+<br>
+   EXAMPLE<br>
+<br>
+   NOTES<br>
+      The returned pointer will return a pointer to the tag item, which will<br>
+      either be followed by the data (if set with SetPreferences()) or the<br>
+      list of sub items (if set by SetEntry()).<br>
+<br>
+   BUGS<br>
+<br>
+</UL><FONT SIZE="4"><B>   SEE ALSO<br>
+</B></FONT><UL>      AllocPrefsHandle(), SetPreferences(), SetEntry(), GetPreferences(),<br>
+      GetEntry()<br>
+<br>
+</UL><HR><A NAME="#4"><br>
+<br>
+   </LI><LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+      FreePrefsHandle -- free a previously allocated preferences handle<br>
+<br>
+</UL><FONT SIZE="4"><B>   SYNOPSIS<br>
+</B></FONT><PRE>      FreePrefsHandle(PrefsHandle);<br>
+                      A0<br>
+<br>
+      void FreePrefsHandle(APTR);<br>
+<br>
+</PRE>&nbsp;<br>
+<FONT SIZE="4"><B>   FUNCTION<br>
+</B></FONT><UL>      Frees the preferences set associated with the handle passed into this<br>
+      function. This handle can ONLY be created by calling AllocPrefsHandle<br>
+      successfully. You MUST NOT use this preferences handle after you free<br>
+      it.<br>
+<br>
+</UL><FONT SIZE="4"><B>   INPUTS<br>
+</B></FONT><UL>      PrefsHandle - pointer to the preferences handle successfully allocated<br>
+                    using AllocPrefsHandle()<br>
+<br>
+</UL><FONT SIZE="4"><B>   RESULT<br>
+</B></FONT><UL><br>
+   EXAMPLE<br>
+<br>
+   NOTES<br>
+<br>
+   BUGS<br>
+<br>
+</UL><FONT SIZE="4"><B>   SEE ALSO<br>
+</B></FONT><UL>      AllocPrefsHandle()<br>
+<br>
+</UL><HR><A NAME="#5"><br>
+<br>
+   </LI><LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+      GetEntry -- fills in a user structure from a preferences item<br>
+<br>
+</UL><FONT SIZE="4"><B>   SYNOPSIS<br>
+</B></FONT><PRE>      bytescopied = GetEntry(PrefsHandle, ID, Tag, Struct, Struct_Size, Entry)<br>
+      D0                     A0           D0  D1   A1      D2           D3<br>
+<br>
+      ULONG GetEntry(APTR, ULONG, ULONG, APTR, UWORD, ULONG);<br>
+<br>
+</PRE>&nbsp;<br>
+<FONT SIZE="4"><B>   FUNCTION<br>
+</B></FONT><UL>      Copies the data stored in a preferences item to a struture or area of<br>
+      memory supplied by the programmer. The preference item will come from<br>
+      the list item at position &quot;Entry&quot; from the list in the Tag / ID /<br>
+      preferences handle.<br>
+<br>
+</UL><FONT SIZE="4"><B>   INPUTS<br>
+</B></FONT><UL>      PrefsHandle   - pointer to a previously successfully allocated<br>
+                      preferences handle<br>
+      ID            - id of the set within the preferences handle you wish to<br>
+                      use<br>
+      Tag           - the tag used to identify this preference data within the<br>
+                      the ID set<br>
+      Struct        - pointer to the structure/memory you wish to copy the<br>
+                      preferences data to<br>
+      Struct_Size   - size of the structure/memory<br>
+      Entry         - the position in the Tag's entry list to read this data<br>
+                      from<br>
+<br>
+</UL><FONT SIZE="4"><B>   RESULT<br>
+</B></FONT><UL>      bytescopied - the actual number of bytes copied from the preference data<br>
+                    to the structure/memory pointer.<br>
+<br>
+   EXAMPLE<br>
+<br>
+   NOTES<br>
+      DO NOT MIX this command with Tag's which have had their preference data<br>
+      set with SetPreferences. They are different internally. Only use this<br>
+      with Tag's used with SetEntry.<br>
+<br>
+   BUGS<br>
+<br>
+</UL><FONT SIZE="4"><B>   SEE ALSO<br>
+</B></FONT><UL>      AllocPrefsHandle(), SetPreferences(), SetEntry()<br>
+<br>
+</UL><HR><A NAME="#6"><br>
+<br>
+   </LI><LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+      GetPreferences -- returns data from a preference item to the programmer<br>
+<br>
+</UL><FONT SIZE="4"><B>   SYNOPSIS<br>
+</B></FONT><PRE>      bytescopied = GetPreferences(PrefsHandle, ID, Tag, Struct, Struct_Size);<br>
+      D0                           A0           D0  D1   A1      D2<br>
+<br>
+      ULONG GetPreferences(APTR, ULONG, ULONG, const APTR, UWORD);<br>
+<br>
+</PRE>&nbsp;<br>
+<FONT SIZE="4"><B>   FUNCTION<br>
+</B></FONT><UL>      Copies the data stored in a preferences item (as referenced the prefs<br>
+      handle, ID and Tag values) into a structure/memory that the user passes.<br>
+      The number of bytes actually copied will be returned.<br>
+<br>
+</UL><FONT SIZE="4"><B>   INPUTS<br>
+</B></FONT><UL>      PrefsHandle   - pointer to a previously successfully allocated<br>
+                      preferences handle<br>
+      ID            - id of the set within the preferences handle you wish to<br>
+                      use<br>
+      Tag           - the tag used to identify this preference data within the<br>
+                      the ID set<br>
+      Struct        - pointer to the structure/memory you wish to store<br>
+      Struct_Size   - size of the structure/memory<br>
+<br>
+</UL><FONT SIZE="4"><B>   RESULT<br>
+</B></FONT><UL><br>
+   EXAMPLE<br>
+<br>
+   NOTES<br>
+      This function does nothing if the ID and Tag values are 0, as they are<br>
+      not considered valid as an ID or a Tag.<br>
+<br>
+      This function assumes a single preferences item per tag, DO NOT USE IT<br>
+      with preferences items set up with the &quot;Entry&quot; functions.<br>
+<br>
+   BUGS<br>
+<br>
+</UL><FONT SIZE="4"><B>   SEE ALSO<br>
+</B></FONT><UL>      AllocPrefsHandle(), SetPreferences()<br>
+<br>
+</UL><HR><A NAME="#7"><br>
+<br>
+   </LI><LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+      ReadPrefsHandle -- Load an entire prefs handle from disk<br>
+<br>
+</UL><FONT SIZE="4"><B>   SYNOPSIS<br>
+</B></FONT><PRE>      ReadPrefsHandle(PrefsHandle, Filename);<br>
+                      A0           A1<br>
+<br>
+      void ReadPrefsHandle(APTR, CONST_STRPTR);<br>
+<br>
+</PRE>&nbsp;<br>
+<FONT SIZE="4"><B>   FUNCTION<br>
+</B></FONT><UL>      Attempts to read data from a file on disk (previously saved with<br>
+      WritePrefsHandle) into the specified preferences handle.<br>
+<br>
+</UL><FONT SIZE="4"><B>   INPUTS<br>
+</B></FONT><UL>      PrefsHandle   - pointer to a previously allocated preferences handle<br>
+      Filename      - full path and name of file to load from<br>
+<br>
+</UL><FONT SIZE="4"><B>   RESULT<br>
+</B></FONT><UL><br>
+   EXAMPLE<br>
+<br>
+   NOTES<br>
+      Data is stored in memory using SetPreferences() and SetEntry()<br>
+      functions.<br>
+<br>
+   BUGS<br>
+      Should probably return a value to indicate whether file was read<br>
+      successfully or not.<br>
+<br>
+</UL><FONT SIZE="4"><B>   SEE ALSO<br>
+</B></FONT><UL>      AllocPrefsHandle(), WritePrefsHandle(), SetPreferences(), SetEntry()<br>
+<br>
+</UL><HR><A NAME="#8"><br>
+<br>
+   </LI><LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+      RemEntry -- remove an preferences item entry from a Tag that has a list<br>
+<br>
+</UL><FONT SIZE="4"><B>   SYNOPSIS<br>
+</B></FONT><PRE>      success = RemEntry(PrefsHandle, ID, Tag, Entry);<br>
+      D0                 A0           D0  D1   D2<br>
+<br>
+      ULONG RemEntry(APTR, ULONG, ULONG, ULONG);<br>
+<br>
+</PRE>&nbsp;<br>
+<FONT SIZE="4"><B>   FUNCTION<br>
+</B></FONT><UL>      Removes a preferences item, that is in a list at position &quot;Entry&quot;, at<br>
+      the given preferences handle, ID and Tag locations.<br>
+<br>
+</UL><FONT SIZE="4"><B>   INPUTS<br>
+</B></FONT><UL>      PrefsHandle   - pointer to a previously successfully allocated<br>
+                      preferences handle<br>
+      ID            - id of the set within the preferences handle you wish to<br>
+                      use<br>
+      Tag           - the tag used to identify this preference data within the<br>
+                      the ID set<br>
+      Entry         - the position in the Tag's entry list to read this data<br>
+                      from<br>
+<br>
+</UL><FONT SIZE="4"><B>   RESULT<br>
+</B></FONT><UL>      success - whether the entry was successfully removed or not.<br>
+<br>
+   EXAMPLE<br>
+<br>
+   NOTES<br>
+      DO NOT MIX this function with Tag's which have been created with<br>
+      SetPreferences.<br>
+<br>
+   BUGS<br>
+<br>
+</UL><FONT SIZE="4"><B>   SEE ALSO<br>
+</B></FONT><UL>      AllocPrefsHandle(), SetPreferences(), SetEntry()<br>
+<br>
+</UL><HR><A NAME="#9"><br>
+<br>
+   </LI><LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+      SetEntry -- adds preference data to a list of entries related to the Tag<br>
+<br>
+</UL><FONT SIZE="4"><B>   SYNOPSIS<br>
+</B></FONT><PRE>      SetEntry(PrefsHandle, ID, Tag, Struct, Struct_Size, Entry)<br>
+               A0           D0  D1   A1      D2           D3<br>
+<br>
+      void SetEntry(APTR, ULONG, ULONG, const APTR, UWORD, ULONG);<br>
+<br>
+</PRE>&nbsp;<br>
+<FONT SIZE="4"><B>   FUNCTION<br>
+</B></FONT><UL>      Stores some user data in the preferences item in the preferences handle,<br>
+      under the specified ID and Tag values. It will be stored at position<br>
+      &quot;Entry&quot; in a list of values being stored under the given Tag value.<br>
+<br>
+</UL><FONT SIZE="4"><B>   INPUTS<br>
+</B></FONT><UL>      PrefsHandle   - pointer to a previously successfully allocated<br>
+                      preferences handle<br>
+      ID            - id of the set within the preferences handle you wish to<br>
+                      use<br>
+      Tag           - the tag used to identify this preference data within the<br>
+                      the ID set<br>
+      Struct        - pointer to the structure/memory you wish to store<br>
+      Struct_Size   - size of the structure/memory<br>
+      Entry         - the position in the Tag's entry list to store this data<br>
+<br>
+</UL><FONT SIZE="4"><B>   RESULT<br>
+</B></FONT><UL><br>
+   EXAMPLE<br>
+<br>
+   NOTES<br>
+      DO NOT MIX this command with Tag values which have been created with<br>
+      SetPreferences. They are different internally. If you have previously<br>
+      stored data in this PrefsHandle/ID/Tag/Entry combination, it will be<br>
+      overwritten if the data sizes are the same, otherwise this new data will<br>
+      be inserted at the position specified.<br>
+<br>
+   BUGS<br>
+      Since the entry can be added at the end of the list (if the position is<br>
+      not found), this means that it can be added at a position not equal to<br>
+      the given Entry value. This is not a bug as such, but the function<br>
+      should probably return the actual position that it is inserted at. Also,<br>
+      the function can fail (when allocating memory) so it should also return<br>
+      a value to indicate that failure.<br>
+<br>
+</UL><FONT SIZE="4"><B>   SEE ALSO<br>
+</B></FONT><UL>      AllocPrefsHandle(), SetPreferences()<br>
+<br>
+</UL><HR><A NAME="#10"><br>
+<br>
+   </LI><LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+      SetPreferences -- store data in a preference item<br>
+<br>
+</UL><FONT SIZE="4"><B>   SYNOPSIS<br>
+</B></FONT><PRE>      SetPreferences(PrefsHandle, ID, Tag, Struct, Struct_Size);<br>
+                     A0,          D0, D1,  A1,     D2<br>
+<br>
+      void SetPreferences(APTR, ULONG, ULONG, const APTR, UWORD);<br>
+<br>
+</PRE>&nbsp;<br>
+<FONT SIZE="4"><B>   FUNCTION<br>
+</B></FONT><UL>      Stores a structure of data in the preferences handle, under the given<br>
+      ID and tag values.<br>
+<br>
+</UL><FONT SIZE="4"><B>   INPUTS<br>
+</B></FONT><UL>      PrefsHandle   - pointer to a previously successfully allocated<br>
+                      preferences handle<br>
+      ID            - id of the set within the preferences handle you wish to<br>
+                      use<br>
+      Tag           - the tag used to identify this preference data within the<br>
+                      the ID set<br>
+      Struct        - pointer to the structure/memory you wish to store<br>
+      Struct_Size   - size of the structure/memory<br>
+<br>
+</UL><FONT SIZE="4"><B>   RESULT<br>
+</B></FONT><UL><br>
+   EXAMPLE<br>
+<br>
+   NOTES<br>
+      This function does nothing if the ID and Tag values are 0, as they are<br>
+      not considered valid as an ID or a Tag. This will overwrite any data<br>
+      that has previously been stored in this PrefsHandle/ID/Tag combination.<br>
+<br>
+      This sets up a single preferences item for the given tag. DO NOT MIX<br>
+      preferences created with this function with the &quot;Entry&quot; commands!!!<br>
+<br>
+   BUGS<br>
+<br>
+</UL><FONT SIZE="4"><B>   SEE ALSO<br>
+</B></FONT><UL>      AllocPrefsHandle()<br>
+<br>
+</UL><HR><A NAME="#11"><br>
+<br>
+   </LI><LI><B><FONT SIZE="4">NAME</FONT></B><UL><br>
+      WritePrefsHandle -- saves an entire preferences handle to a file<br>
+<br>
+</UL><FONT SIZE="4"><B>   SYNOPSIS<br>
+</B></FONT><PRE>      WritePrefsHandle(PrefsHandle, Filename);<br>
+                       A0           A1<br>
+<br>
+      void WritePrefsHandle(APTR, CONST_STRPTR);<br>
+<br>
+</PRE>&nbsp;<br>
+<FONT SIZE="4"><B>   FUNCTION<br>
+</B></FONT><UL>      Stores all the data and structure of the preferences handle to a file<br>
+      on disk.<br>
+<br>
+</UL><FONT SIZE="4"><B>   INPUTS<br>
+</B></FONT><UL>      PrefsHandle - pointer to a previously allocated preferences handle<br>
+      Filename    - full path and name of file to save to<br>
+<br>
+</UL><FONT SIZE="4"><B>   RESULT<br>
+</B></FONT><UL><br>
+   EXAMPLE<br>
+<br>
+   NOTES<br>
+      This function can deal with single or list entries for a Tag value.<br>
+<br>
+   BUGS<br>
+      Should probably return a value to show if the file was successfully<br>
+      saved or not.<br>
+<br>
+</UL><FONT SIZE="4"><B>   SEE ALSO<br>
+</B></FONT><UL>      AllocPrefsHandle(), ReadPrefsHandle()<br>
+<br>
+</UL><HR><A NAME="#12"><br>
+ 
+	</LI></UL><P align="right">
+	Generated on 12th April 2004 by ad2html.pl v0.87 by <A HREF="http://www.philprice.net" TARGET="_blank">Phil Price</A>
+	</BODY></HTML>
+	

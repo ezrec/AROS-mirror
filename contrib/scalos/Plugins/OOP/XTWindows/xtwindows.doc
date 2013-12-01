@@ -1,0 +1,26 @@
+This was just a small test to try out the Scalos plugin-API but it is quite useful.
+
+xtwindows.plugin currently has only two features:
+
+
+1) When you press a qualifier while opening a drawer/file (ALT) the window is closed.
+
+2) When you press a qualifier while closing a drawer (SHIFT) the parent-drawer is opened.
+
+
+The qualifier isn't settable yet, but will be soon...  I'll probably add some other useful
+functions too.
+
+
+
+History
+-------
+
+1.1   First release
+
+1.2   Fixed excessive stack-usage
+
+
+Originally By David Rydh <dary@lindesign.se>
+http://scalos.satanicdreams.com
+mailto:scalos@satanicdreams.com

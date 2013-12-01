@@ -1,0 +1,12 @@
+*.lha
+*.LHA
+*.lzx
+*.LZX
+*.tar
+*.tgz
+*.gz
+*.o
+*.lst
+*.debug
+main/obsolete/*
+Website/*

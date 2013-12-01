@@ -1,0 +1,204 @@
+; Protect.module.cd
+; version $VER: Protect.catalog 1.0 (09.06.04)
+; codeset 0s
+; language english
+;
+;#arrayopts static __far
+;
+;
+MSGID_ENTRY (//)
+Entry:
+;
+;
+MSGID_ASLTEXT (//)
+Please, select a drawer or file...
+;
+;
+MSGID_TYPE (//)
+Type:
+;
+;
+MSGID_PROTECT (//)
+_Apply
+;
+;
+MSGID_ALL (//)
+All
+;
+;
+MSGID_HELPALL (//)
+If selected, Protect will be apply\n\
+to drawer and its contents.
+;
+;
+MSGID_QUIT (//)
+Quit
+;
+;
+MSGID_HELPQUIT (//)
+If selected, apply to quit Protect.module after\n\
+to finish Protect operation.
+;
+;
+MSGID_TIME (//)
+Time: 
+;
+;
+MSGID_HELPBTABORT (//)
+Abort operation.
+;
+;
+MSGID_BTABORT (//)
+Abort
+;
+;
+MSGID_GROUPENTRY (//)
+Current entry
+;
+;
+MSGID_HELPGROUPENTRY (//)
+Current drawer and file analysing
+;
+;
+MSGID_LABELDRAWER (//)
+Drawer:
+;
+;
+MSGID_LABELFILE (//)
+File:
+;
+;
+MSGID_ERRORREQ (//)
+Entry : %s !\n\
+ErrorCode: %ld, %s
+;
+;
+MSGID_BTOKREQ (//)
+Okay
+;
+;
+MSGID_NOFOUND (//)
+No found!
+;
+;
+MSGID_MUIERROR (//)
+Failed to open "%s".\n
+;
+;
+MSGID_ICONLIBERROR (//)
+Failed to open icon.library!\n
+;
+;
+MSGID_APPERROR (//)
+Failed to create application!\n
+;
+;
+MSGID_TYPETOOL (//)
+Tool
+;
+;
+MSGID_TYPEPROJECT (//)
+Project
+;
+;
+MSGID_TYPEDRAWER (//)
+Drawer
+;
+;
+MSGID_TYPEASSIGN (//)
+Assign
+;
+;
+MSGID_TYPEDISK (//)
+Disk
+;
+;
+MSGID_TYPEGARBAGE (//)
+Trashcan
+;
+;
+MSGID_TITLEERRORREQ (//)
+Protect.module: Error
+;
+;
+MSGID_PREFNOFOUNDREQ (//)
+Prefs file:\n\
+"%s"\n\
+no found!\n\
+Use default settings...
+;
+;
+MSGID_TEXTHIDE (//)
+Hide
+;
+;
+MSGID_TEXTSCRIPT (//)
+Script
+;
+;
+MSGID_TEXTPURE (//)
+Pure
+;
+;
+MSGID_TEXTARCHIVE (//)
+Archive
+;
+;
+MSGID_TEXTREAD (//)
+Read
+;
+;
+MSGID_TEXTWRITE (//)
+Write
+;
+;
+MSGID_TEXTEXECUTE (//)
+Execute
+;
+;
+MSGID_TEXTDELETE (//)
+Delete
+;
+;
+MSGID_GROUPPROTECT (//)
+ Protection bits
+;
+;
+MSGID_TEXTNOTHING (//)
+Nothing to do!
+;
+;
+MSGID_HELPTEXTHIDE (//)
+The file is hidden.
+;
+;
+MSGID_HELPTEXTSCRIPT (//)
+The file is a script.
+;
+;
+MSGID_HELPTEXTPURE (//)
+The file is a pure command\n\
+and can be made resident.
+;
+;
+MSGID_HELPTEXTARCHIVE (//)
+The file has been archived.
+;
+;
+MSGID_HELPTEXTREAD (//)
+The file can be read.
+;
+;
+MSGID_HELPTEXTWRITE (//)
+The file can be written to (altered).
+;
+;
+MSGID_HELPTEXTEXECUTE (//)
+The file is executable (a program).
+;
+;
+MSGID_HELPTEXTDELETE (//)
+The file or directory can be deleted.\n\
+(Files within a delete-protected directory can still be deleted.
+;
+;

@@ -1,0 +1,173 @@
+; Execute_Command.ct
+## version $VER: Execute_Command.catalog 40.1 (26 Feb 2005 22:01:34)
+## codeset 0s
+## language xxxxxx
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos Execute_Command
+;
+;
+MSGID_OKBUTTON
+Execute
+;
+;
+MSGID_OKBUTTON_SHORT
+r
+;
+;
+MSGID_SHORTHELP_OKBUTTON
+Execute command as stated in \n\
+the string gadget's content.
+;
+;
+MSGID_CANCELBUTTON
+Cancel
+;
+;
+MSGID_CANCELBUTTON_SHORT
+c
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Discard all changes and\n\
+do not execute any command.
+;
+;
+MSGID_CREATE_APPLICATION_FAILED
+Failed to create Application.\n
+;
+;
+MSGID_CREATE_MAINWINDOW_FAILED
+Failed to open main window !\n
+;
+;
+MSGID_OPEN_LIBRARY_FAILED
+Failed to open \"%s\" !\n
+;
+;;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT
+Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK
+_OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Execute_Command.module V%ld.%ld\033n\n\
+%s\n\
+© 2004%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+;
+MSGID_TEXT_ENTER_COMMAND
+Enter command and its arguments:
+;
+;
+MSGID_LABEL_COMMAND
+Command:
+;
+;
+MSGID_TITLE_ERRORREQ
+Execute_Command Error
+;
+;
+MSGID_CURRENTDIR
+Current dir: "%s"
+;
+;
+MSGID_CURRENTDIR_SHORTHELP
+Current dir.\n\n\
+It's possible to show all content of this gadget using\n\
+the scroller located at the bottom of the window.\n\
+Can be usefull for large path lenght.
+;
+;
+MSGID_ERRORREQ_BODYTEXT
+Could not execute command\n\
+\"%s\"\n\
+%s
+;
+;
+MSGID_REQ_OK
+ _Ok
+;
+;
+MSGID_ASL_REQUESTER_SHORTHELP
+Open a ASL file requeter\n\
+and choose a file to execute.\n\
+;
+;
+MSGID_COMMAND_ASLTITLE
+Select file to execute
+;
+;
+MSGID_LABEL_STACK
+Stack:
+;
+;
+MSGID_GET_DEFSTACK_SHORTHELP
+Use default stack size
+;
+;
+MSGID_LABEL_CHECKQUIT
+Stay opened
+;
+;
+MSGID_CHECKQUIT_SHORTHELP
+If selected, Execute_Command.module\n\
+stay opened after execution.
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Execute_Command.module startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+\n\
+Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+%lu.%lu is currently in use by other applications.\n\
+\n\
+Once you have installed the required version,\n\
+close all MUI programs, make sure the old class\n\
+is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;

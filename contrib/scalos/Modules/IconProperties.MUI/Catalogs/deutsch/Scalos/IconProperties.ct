@@ -1,0 +1,161 @@
+; IconProperties.ct
+## version $VER: IconProperties.catalog 40.6 (05. Oct 2005 18:50:08)
+## codeset 0
+## language deutsch
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos Piktogramm-Eigenschaften
+;
+;
+MSGID_OKBUTTON
+Speichern
+; Ok
+;
+MSGID_SHORTHELP_OKBUTTON
+Alle Änderungen in den Merkmalen\n\
+des Piktogramms speichern.\n\
+Gegebenenfalls wird ein neues Piktogramm\n\
+aus dem Standardpiktogramm erzeugt.
+;Save the changes in the icon's tooltypes.\n\
+;If necessary, a new icon will be created\n\
+;from a the default icon.
+;
+;
+MSGID_CANCELBUTTON
+Abbruch
+;Cancel
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Alle Änderungen verwerfen und\n\
+Piktogramm unverändert belassen.
+;Discard all changes and\n\
+;leave the icon unchanged.
+;
+;
+MSGID_CHECKMARK_NOTEXT
+Piktogrammtext unterdrücken
+;Hide Icon Text
+;
+;
+MSGID_CHECKMARK_NOTEXT_SHORTHELP
+Wenn dieser Schalter eingeschaltet ist, wird\n\
+zu diesem Piktogramm kein Text angezeigt.
+;Suppress display of the icon's name.
+;
+;
+MSGID_CHECKMARK_NODRAG
+Piktogramm nicht verschiebbar
+;Icon cannot be moved
+;
+;
+MSGID_CHECKMARK_NODRAG_SHORTHELP
+Wenn dieser Schalter eingeschaltet ist, kann\n\
+dieses Piktogramm nicht mehr innerhalb seines\n\
+Fensters verschoben werden.\n\
+Kopieren ist auch dann jederzeit möglich.
+;The icon cannot be moved inside its window.\n\
+;Copying is still possible, however.
+;
+;
+MSGID_READ_ONLY
+(Schreibgeschützt)
+;(Read-Only)
+;
+;
+MSGID_TEXT_ICONNAME_SHORTHELP
+Piktogramm-Name
+; Icon name
+;
+;
+MSGID_TEXT_ICONPATH_SHORTHELP
+Piktogramm-Pfad
+;Icon path
+;
+;
+MSGID_CHECKMARK_NOTOOLTIPS
+Keine Tooltips zeigen
+;Suppress Tooltips
+;
+;
+MSGID_CHECKMARK_NOTOOLTIPS_SHORTHELP
+Wenn dieser Schalter eingeschaltet ist, werden\n\
+keine Tooltips angezeigt, wenn der Mauszeiger\n\
+über dem Piktrogramm bleibt.
+;No tooltips are displayed when the\n\
+;mouse pointer is held over this icon.
+;
+;
+;
+MSGID_CHECKMARK_BROWSERMODE
+Einzelfenster-Modus
+;Browser mode
+;
+;
+MSGID_CHECKMARK_BROWSERMODE_SHORTHELP
+In dieser Betriebsart werden für Verzeichnisse\n\
+und Datenträger keine neuen Fenster geöffnet,\n\
+sondern ihr Inhalt erscheint im aktuellen Fenster.\n\
+Verfügbar bei Datenträgern, Paperkörben und Verzeichnissen.
+;Activate the browser mode.\n\
+;Availlable for disks, trashcans and drawers.
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT
+Projekt
+;Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+Über...
+;About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+Über MUI...
+;About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Beenden
+;Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;Q
+;
+;
+MSGID_MENU_IMAGE
+Piktogramm-Bild
+;Icon Image
+;
+;
+MSGID_MENU_IMAGE_DEFAULT
+Standardbild
+;Default
+;
+;
+MSGID_MENU_IMAGE_DEFAULT_SHORT
+D
+;D
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK
+_OK
+;_OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos IconProperties.module V%ld.%ld\033n\n\
+%s\n\
+© 2004%s Das Scalos-Team
+;\33c\033bScalos IconProperties.module V%ld.%ld\033n\n\
+;© 2004%s The Scalos Team
+;
+;-----------------------------------------------------------

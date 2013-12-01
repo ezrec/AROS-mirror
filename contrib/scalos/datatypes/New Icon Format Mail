@@ -1,0 +1,223 @@
+Return-Path: <sentto-365480-746-959272050-mike.carter=redhotant.co.uk@returns.onelist.com>
+Delivered-To: redhotant¬co¬uk-mike.carter@redhotant.co.uk
+Received: (qmail 24928 invoked from network); 25 May 2000 16:15:05 -0000
+Received: from ef.egroups.com (207.138.41.172)
+  by mail.jakinternet.co.uk with SMTP; 25 May 2000 16:15:05 -0000
+X-eGroups-Return: sentto-365480-746-959272050-mike.carter=redhotant.co.uk@returns.onelist.com
+Received: from [10.1.10.35] by ef.egroups.com with NNFMP; 25 May 2000 16:27:30 -0000
+Received: (qmail 20280 invoked from network); 25 May 2000 16:27:29 -0000
+Received: from unknown (10.1.10.27) by m1.onelist.org with QMQP; 25 May 2000 16:27:29 -0000
+Received: from unknown (HELO hudson.atuk.aspentec.com) (208.201.95.28) by mta2 with SMTP; 25 May 2000 16:27:28 -0000
+Received: by hudson.atuk.aspentec.com with Internet Mail Service (5.5.2650.21) id <L41BQJ12>; Thu, 25 May 2000 17:29:51 +0100
+Message-ID: <40A5DAC1F183D3119DF300805F8BDD32016EC3B4@hudson.atuk.aspentec.com>
+To: "sdev (E-mail)" <scalos-dev@egroups.com>
+X-Mailer: Internet Mail Service (5.5.2650.21)
+From: Michael Carter <michael.carter@aspentech.com>
+MIME-Version: 1.0
+Mailing-List: list scalos-dev@egroups.com; contact scalos-dev-owner@egroups.com
+Delivered-To: mailing list scalos-dev@egroups.com
+Precedence: bulk
+List-Unsubscribe: <mailto:scalos-dev-unsubscribe@egroups.com>
+Date: Thu, 25 May 2000 17:29:50 +0100
+Reply-To: scalos-dev@egroups.com
+Subject: [scalos-dev] FW: colourimage icon format
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+Heres a little gem for you Richard :)
+
+-----Original Message-----
+From: Olaf Barthel [mailto:olsen@sourcery.han.de]
+Sent: Thursday, May 25, 2000 3:57 PM
+To: Michael Carter
+Subject: Re: colourimage icon format
+
+
+On May 25 Michael (Michael Carter) wrote:
+
+> Hi Olaf,
+> 
+> I wounder if you would be willing to help?  I'm project manager of Scalos
+> and we're currently sorting out OS3.5 icon support.  However the coder of
+> the icon datatype has been trying to get everything working and compatible
+> but is getting peeved with the mess the code is getting opening libaries
+all
+> over the place just to read the icon format.
+
+   Hm... what's the problem? Opening icon.library and calling
+GetIconTagList()
+should do the trick, shouldn't it?
+
+> We know the new colouricon format is in a IFF structure tacked to the end
+of
+> the OS3.5 icons ... but have not tried to work out how to decode it.
+Would
+> you be willing to either make some sort of domcument detailing the chunky
+> encoding or maybe a snippet of source to show how to get the data from the
+> .info file to a image?
+
+   Say, why do you need to know this? The icon file format has never been
+officially documented, which may not have been a good idea, but judging
+from how it works I can understand why they never documented it (it really
+is
+rather embarrassing). So far I didn't write a complete description of
+the format, so the only way to explain how it works would be by sharing
+code. Before I can hand out code, I need some sort of authorization. If
+you can arrange for Amiga, Inc. to nod their heads, I'd be happy to share
+the reader code with you. Until then, here are my notes on the icon
+file format:
+
+/* The layout of an old icon file (format version 1.1) is as follows:
+ *
+ * <diskobject> ::= (struct DiskObject); 78 bytes
+ * <old-drawerdata> ::= (struct OldDrawerData); 56 bytes
+ * <remaining-drawerdata> ::= the last six bytes of a (struct DrawerData)
+ * <image> ::= (struct Image); 20 bytes
+ * <image-data> ::= UWORD[]; variable number of bytes, depending on image
+size
+ * <string-len> ::= LONG; 4 bytes
+ * <string> ::= UBYTE[]; variable number of bytes, depending on string
+length
+ * <number-of-tooltypes> ::= LONG; 4 bytes
+ * <first-image> ::= <image> <image-data>
+ * <second-image> ::= <image> <image-data>
+ * <default-tool> ::= <string-len> <string>
+ * <tool-window> ::= <string-len> <string>
+ * <tooltype> ::= <string-len> <string>
+ *
+ * <old-icon-file> ::= <diskobject> [<old-drawerdata>] <first-image>
+[<second-image>]
+ *                     [<default-tool>] [<number-of-tooltypes> <tooltype>+]
+ *                     [<tool-window>] [<remaining-drawerdata>]
+ *
+ * NOTES:
+ *
+ *   - If the icon has drawer data attached, <old-drawerdata> is
+ *     mandatory; if the icon's do_Gadget.UserData member's lowest
+ *     eight bits (which contain the file format revision number)
+ *     are > 0 and <= WB_DISKREVISION, <remaining-drawerdata> must
+ *     be present, too.
+ *
+ *   - The image data size is computed from the information stored
+ *     in the preceding image header; exactly
+ *     RASSIZE(image->Width,image->Height) * image->Depth bytes will
+ *     be stored. RASSIZE(w,h) computes as ((((w + 15) / 8) & ~1) * h).
+ *
+ *   - <number-of-tooltypes> is actually the number of tool types plus
+ *     one, multiplied by four, i.e. for six tool type strings to be
+ *     stored, <number-of-tooltypes> would be (6 + 1) * 4 = 28. In other
+ *     words, there are exactly (<number-of-tooltypes>-1)/4 tool
+ *     type strings following <number-of-tooltypes>.
+ *     <number-of-tooltypes> may never be 0.
+ *
+ *   - <string> always includes the trailing NUL byte. <string-len>
+ *     always includes this extra byte, i.e. the string "foo" would
+ *     be stored as four bytes and its length would be stored as
+ *     four bytes.
+ *
+ *   - The contents of <diskobject> define whether <old-drawerdata> and
+ *     <remaining-drawerdata>, <second-image>, <default-tool>,
+ *     <number-of-tooltypes> and <tooltype>, <tool-window> will
+ *     be stored in the file. If do_DrawerData==NULL, <old-drawerdata> and
+ *     <remaining-drawerdata> will be omitted; if
+do_Gadget.SelectRender==NULL
+ *     <second-image> will be omitted; if do_DefaultTool==NULL
+<default-tool>
+ *     will be omitted; if do_ToolTypes==NULL <number-of-tooltypes> and
+<tooltype>
+ *     will be omitted; if do_ToolWindow==NULL, <tool-window> will be
+omitted.
+ *
+ *
+ * The layout of a new icon file is as follows:
+ *
+ * <chunk-id> ::= UBYTE[4]; four upper case 7 bit ASCII characters
+ * <chunk-len> ::= ULONG; four bytes; contents must be an even number
+ * <chunk-bytes> ::= UBYTE[]; variable number of bytes, depending on chunk
+length;
+ *                   this must be an even number of bytes
+ * <chunk> ::= <chunk-id> <chunk-len> <chunk-bytes>
+ * <face-id> ::= "FACE"; four bytes
+ * <face-contents> ::= (struct FaceChunk); 4 bytes
+ * <face-chunk> ::= <face-id> <chunk-len> <face-contents>
+ * <image-id> ::= "IMAG"; four bytes
+ * <image-header> ::= (struct ImageChunk); 8 bytes
+ * <image-palette> ::= UBYTE[]; variable number of bytes, depending on
+ *                     palette size
+ * <image-data> ::= UBYTE[]; variable number of bytes, depending on
+ *                  image size
+ * <image-chunk> ::= <image-id> <chunk-len> <image-header> <image-data>
+[<image-palette>]
+ * <form-id> ::= "FORM"; four bytes
+ * <icon-id> ::= "ICON"; four bytes
+ *
+ * <new-icon-file> ::= <old-icon-file> <form-id> <chunk-len> <icon-id>
+ *                     <face-chunk> <image-chunk> [<image-chunk>] <chunk>*
+ *
+ * NOTES:
+ *
+ * - The new icon data structures immediately follow the old icon data
+ *   structures; the new data is more or less stored in straight IFF
+ *   format, the only difference being that the IFF structure need not
+ *   begin at an even offset into the file. There are no version or revision
+ *   indicators or magic numbers in the icon file to tell the reader that
+ *   there is new data following the old icon format. The reader just tries
+ *   to read the data and makes the best of what follows.
+ *
+ * - The chunk contents must always be an even number of bytes long.
+ *   If necessary, pad bytes are added.
+ *
+ * - The <chunk-len> of the initial "FORM" chunk contains the
+ *   number of bytes to follow <old-icon-file> minus 8 bytes
+ *   (used by <form-id> and <chunk-len>).
+ *
+ * - The IMAG chunks contain both the header information and the
+ *   pixel and palette data. Immediately following the header
+ *   there will be ic_NumImageBytes+1 bytes of image data. If the
+ *   ICF_HasPalette flag is set in the ic_Flags member, exactly
+ *   ic_NumPaletteBytes+1 number of palette bytes will follow the
+ *   pixel data, otherwise, there will be 0 bytes of palette
+ *   information and the contents of ic_NumPaletteBytes will
+ *   be ignored.
+ *
+ * - The first image stored in an IMAG chunk must have palette
+ *   information. If the second image has no palette stored
+ *   with it, it will use the palette of the first image.
+ *
+ * - Palette and image data may be stored in compressed format.
+ *   The only compression algorithm supported so far is the run
+ *   length encoding method known as "ByteRun1" as used by the
+ *   IFF-ILBM format. Data may be stored in compressed format only
+ *   if compression actually resulted in space savings. The
+ *   ByteRun1 compression method operates on pixels with the number
+ *   of significant bits taken into account. This means, for example,
+ *   that if the pixel data contains only colours in the range 0..15
+ *   that there are four significant bits. The compressor will then
+ *   pack the four bit pixel values into bytes.
+ *
+ * - In the FACE chunk, the image aspect ratio information is encoded
+ *   into a single byte. The upper four bits contain the X aspect value,
+ *   the lower bits contain the Y aspect value, i.e. a ratio of 1:2 would
+ *   be encoded as 0x12.
+ *
+ * - The image size given in the FACE chunk need not agree with the
+ *   data stored in the DiskObject do_Gadget.Width/do_Gadget.Height
+ *   members since the loader will automatically adjust these values
+ *   acording to the actual image size being used. If no new icon data
+ *   is stored with a file, the loader will default to use the size of
+ *   the first <image> found.
+ */
+
+-- 
+Home: Olaf Barthel, Brabeckstrasse 35, D-30559 Hannover
+ Net: olsen@sourcery.han.de (Home), olsen@logicalline.com (Work)
+
+------------------------------------------------------------------------
+Best friends, most artistic, class clown Find 'em here:
+http://click.egroups.com/1/4054/0/_/647280/_/959272050/
+------------------------------------------------------------------------
+
+.-----------------------------------------------.
+         http://scalos.satanicdreams.com
+
+

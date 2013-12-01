@@ -1,0 +1,79 @@
+==id $Id: guigfx_lib.sfd 64 2009-03-10 21:26:58Z jlachmann $
+==base _GuiGFXBase
+*==basetype struct Library *
+*==libname guigfx.library
+==bias 30
+==public
+==include <exec/types.h>
+APTR MakePictureA(APTR array, UWORD width, UWORD height, struct TagItem * tags) (a0,d0,d1,a1)
+==varargs
+APTR MakePicture(APTR array, UWORD width, UWORD height, ULONG firstTag,...) (a0,d0,d1,a1)
+APTR LoadPictureA(STRPTR filename, struct TagItem * tags) (a0,a1)
+==varargs
+APTR LoadPicture(STRPTR filename, ULONG firstTag, ...) (a0,a1)
+APTR ReadPictureA(struct RastPort * rp, struct ColorMap * colormap, UWORD x,
+	UWORD y, UWORD width, UWORD height, struct TagItem * tags) (a0,a1,d0,d1,d2,d3,a2)
+==varargs
+APTR ReadPicture(struct RastPort * rp, struct ColorMap * colormap, UWORD x,
+	UWORD y, UWORD width, UWORD height, ULONG firstTag, ...) (a0,a1,d0,d1,d2,d3,a2)
+APTR ClonePictureA(APTR pic, struct TagItem * tags) (a0,a1)
+==varargs
+APTR ClonePicture(APTR pic, ULONG firstTag, ...) (a0,a1)
+VOID DeletePicture(APTR pic) (a0)
+==reserve 1
+APTR AddPictureA(APTR psm, APTR pic, struct TagItem * tags) (a0,a1,a2)
+==varargs
+APTR AddPicture(APTR psm, APTR pic, ULONG firstTag, ...) (a0,a1,a2)
+APTR AddPaletteA(APTR psm, APTR palette, struct TagItem * tags) (a0,a1,a2)
+==varargs
+APTR AddPalette(APTR psm, APTR palette, ULONG firstTag, ...) (a0,a1,a2)
+APTR AddPixelArrayA(APTR psm, APTR array, UWORD width, UWORD height, struct TagItem * tags) (a0,a1,d0,d1,a2)
+==varargs
+APTR AddPixelArray(APTR psm, APTR array, UWORD width, UWORD height, ULONG firstTag, ...) (a0,a1,d0,d1,a2)
+VOID RemColorHandle(APTR colorhandle) (a0)
+APTR CreatePenShareMapA(struct TagItem * tags) (a0)
+==varargs
+APTR CreatePenShareMap(Tag tags, ...) (a0)
+VOID DeletePenShareMap(APTR psm) (a0)
+APTR ObtainDrawHandleA(APTR psm, struct RastPort * rp, struct ColorMap * cm,
+	struct TagItem * tags) (a0,a1,a2,a3)
+==varargs
+APTR ObtainDrawHandle(APTR psm, struct RastPort * rp, struct ColorMap * cm, ULONG firstTag, ...) (a0,a1,a2,a3)
+VOID ReleaseDrawHandle(APTR drawhandle) (a0)
+BOOL DrawPictureA(APTR drawhandle, APTR pic, UWORD x, UWORD y, struct TagItem * tags) (a0,a1,d0,d1,a2)
+==varargs
+BOOL DrawPicture(APTR drawhandle, APTR pic, UWORD x, UWORD y, ULONG firstTag, ...) (a0,a1,d0,d1,a2)
+BOOL MapPaletteA(APTR drawhandle, APTR palette, UBYTE * pentab, struct TagItem * tags) (a0,a1,a2,a3)
+==varargs
+BOOL MapPalette(APTR drawhandle, APTR palette, UBYTE * pentab, ULONG firstTag, ...) (a0,a1,a2,a3)
+LONG MapPenA(APTR drawhandle, ULONG rgb, struct TagItem * tags) (a0,a1,a2)
+==varargs
+LONG MapPen(APTR drawhandle, ULONG rgb, ULONG firstTag, ...) (a0,a1,a2)
+struct BitMap * CreatePictureBitMapA(APTR drawhandle, APTR pic, struct TagItem * tags) (a0,a1,a2)
+==varargs
+struct BitMap * CreatePictureBitMap(APTR drawhandle, APTR pic, ULONG firstTag, ...) (a0,a1,a2)
+ULONG DoPictureMethodA(APTR pic, ULONG method, ULONG * arguments) (a0,d0,a1)
+==varargs
+ULONG DoPictureMethod(APTR pic, ULONG method, ULONG firstTag, ...) (a0,d0,a1)
+ULONG GetPictureAttrsA(APTR pic, struct TagItem * tags) (a0,a1)
+==varargs
+ULONG GetPictureAttrs(APTR pic, ULONG firstTag, ...) (a0,a1)
+ULONG LockPictureA(APTR pic, ULONG mode, ULONG * args) (a0,d0,a1)
+==varargs
+ULONG LockPicture(APTR pic, ULONG mode, ULONG firstTag, ...) (a0,d0,a1)
+VOID UnLockPicture(APTR pic, ULONG mode) (a0,d0)
+BOOL IsPictureA(STRPTR filename, struct TagItem * tags) (a0,a1)
+==varargs
+BOOL IsPicture(STRPTR filename, ULONG firstTag, ...) (a0,a1)
+APTR CreateDirectDrawHandleA(APTR drawhandle, UWORD sw, UWORD sh, UWORD dw, UWORD dh,
+	struct TagItem * tags) (a0,d0,d1,d2,d3,a1)
+==varargs
+APTR CreateDirectDrawHandle(APTR drawhandle, UWORD sw, UWORD sh, UWORD dw, UWORD dh, ULONG firstTag, ...) (a0,d0,d1,d2,d3,a1)
+VOID DeleteDirectDrawHandle(APTR ddh) (a0)
+BOOL DirectDrawTrueColorA(APTR ddh, ULONG * array, UWORD x, UWORD y, struct TagItem * tags) (a0,a1,d0,d1,a2)
+==varargs
+BOOL DirectDrawTrueColor(APTR ddh, ULONG * array, UWORD x, UWORD y, ULONG firstTag, ...) (a0,a1,d0,d1,a2)
+BOOL CreatePictureMaskA(APTR pic, UBYTE * mask, UWORD maskwidth, struct TagItem * tags) (a0,a1,d0,a2)
+==varargs
+BOOL CreatePictureMask(APTR pic, UBYTE * mask, UWORD maskwidth, ULONG firstTag, ...) (a0,a1,d0,a2)
+==end

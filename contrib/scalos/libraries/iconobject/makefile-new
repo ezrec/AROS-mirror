@@ -1,0 +1,78 @@
+# $Date: 2011-06-23 22:22:37 +0200 (Do, 23. Jun 2011) $
+# $Revision: 739 $
+##############################################################################
+
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/../..
+endif
+
+##############################################################################
+
+include		config.mk
+
+###############################################################################
+#
+# Project Object files
+#
+
+ifeq ($(MACHINE),ppc-amigaos)
+OBJS	:=	$(OBJDIR)/IconObject-aos4.o \
+		$(OBJDIR)/iconobject-aos4-68kstubs.o
+else
+ifeq ($(MACHINE),i386-aros)
+OBJS	:=	$(OBJDIR)/IconObject-aros.o
+else
+OBJS	:=	$(OBJDIR)/IconObject-classic.o
+endif
+endif
+
+OBJS	+=	$(OBJDIR)/IconObject.o
+
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS:.o=.d)
+endif
+
+##############################################################################
+#
+# Targets
+#
+
+NAME	=	iconobject.library
+NAME_DB	=	$(NAME).debug
+
+##############################################################################
+
+.PHONY: all install clean bump dump
+
+all:	all_subdirs \
+	$(BINDIR)/$(NAME) \
+	$(BINDIR)/$(NAME_DB)
+	
+##############################################################################
+
+$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) : $(OBJS)
+	$(ECHO) "Link $(NAME)"
+	@$(CC) $(OBJS) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(NAME_DB)
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(NAME_DB) -o $(BINDIR)/$(NAME)
+	@chmod u+x $@
+
+##############################################################################
+
+install: install_subdirs
+	-@$(ECHO) "Installing $(NAME)"
+	@copy $(BINDIR)/$(NAME) LIBS: clone
+	@avail flush
+
+
+clean: clean_subdirs
+	-@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d $(OBJDIR)/*.d.* \
+		$(OBJDIR)/*.i $(OBJDIR)/*.s \
+		$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) \
+		*.dump *_str.*
+
+##############################################################################

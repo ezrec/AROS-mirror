@@ -1,0 +1,327 @@
+TABLE OF CONTENTS
+
+Window.sca/--background
+Window.sca/SCCM_Window_ChangeWindow
+Window.sca/SCCM_Window_Close
+Window.sca/SCCM_Window_DynamicResize
+Window.sca/SCCM_Window_GetIconFileType
+Window.sca/SCCM_Window_Iconify
+Window.sca/SCCM_Window_InitClipRegion
+Window.sca/SCCM_Window_LockUpdate
+Window.sca/SCCM_Window_NewPath
+Window.sca/SCCM_Window_RemClipRegion
+Window.sca/SCCM_Window_Open
+Window.sca/SCCM_Window_SetTitle
+Window.sca/SCCM_Window_SetInnerSize
+Window.sca/SCCM_Window_UnIconify
+Window.sca/SCCM_Window_UnlockUpdate
+Window.sca/SCCM_Window_WBStartupFinished
+Window.sca/--background
+
+    NAME
+	--background
+
+    DESCRIPTION
+	This class implements all common window functionality used for icon 
+	windows, text windows and device windows.
+
+	All window methods are invoked with mt_WindowObject.
+
+Window.sca/SCCM_Window_ChangeWindow
+
+    NAME
+	SCCM_Window_ChangeWindow
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_Window_ChangeWindow);
+
+    FUNCTION
+	Notifies that a Scalos window may have changed either 
+	position, or size, or both.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+Window.sca/SCCM_Window_Close
+
+    NAME
+	SCCM_Window_Close
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_Window_Close);
+
+    FUNCTION
+	Closes a scalos window
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+Window.sca/SCCM_Window_DynamicResize
+
+    NAME
+	SCCM_Window_DynamicResize
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_Window_DynamicResize);
+
+    FUNCTION
+	Handles dynamic window resizing, including recalculation of window 
+	inner size, and re-sorting of unpositioned icons (if enabled).
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+Window.sca/SCCM_Window_GetIconFileType
+
+    NAME
+	SCCM_Window_GetIconFileType
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_Window_GetIconFileType, struct ScaIconNode *in);
+
+    FUNCTION
+	Fills the in_FileType element of the Scalos icon with a TypeNode 
+	according to the file type of the icon.
+
+    INPUTS
+	in - Scalos icon that gets its in_FileType updated.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+Window.sca/SCCM_Window_Iconify
+
+    NAME
+	SCCM_Window_Iconify
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_Window_Iconify);
+
+    FUNCTION
+	Iconifies a scalos window
+
+    INPUTS
+	none
+
+    RESULT
+	TRUE if window could be iconified successfully or 
+		has already been iconified.
+	FALSE if something went wrong.
+
+    SEE ALSO
+Window.sca/SCCM_Window_UnIconify
+
+    NAME
+	SCCM_Window_UnIconify
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_Window_UnIconify);
+
+    FUNCTION
+	Uniconifies an iconified scalos window
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+Window.sca/SCCM_Window_InitClipRegion
+
+    NAME
+	SCCM_Window_InitClipRegion
+
+    SYNOPSIS
+	struct Region *oldRegion = DoMethod(obj,SCCM_Window_InitClipRegion);
+
+    FUNCTION
+	Initializes window clip region so that all rendering is limited to
+	the window interior.
+	All window drawing - especially icon rendering - should be done 
+	inside a SCCM_Window_InitClipRegion / SCCM_Window_RemClipRegion call.
+
+    INPUTS
+	none
+
+    RESULT
+	oldRegion - original clip region (to be supplied 
+		to SCCM_Window_RemClipRegion)
+
+    SEE ALSO
+	SCCM_Window_RemClipRegion
+Window.sca/SCCM_Window_LockUpdate
+
+    NAME
+	SCCM_Window_LockUpdate
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_Window_LockUpdate)
+
+    FUNCTION
+	Holds all icon updates for that window.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_Window_UnlockUpdate
+Window.sca/SCCM_Window_NewPath
+
+    NAME
+        SCCM_Window_NewPath
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_Window_NewPath,CONST_STRPTR path,ULONG tags,...);
+
+    FUNCTION
+	Inform window object about new path.
+        No-op in standard window classes.
+
+    INPUTS
+	path - command name
+	tags - tag list. Supported tags are:
+		SCA_ShowAllMode - one of the workbench DDFLAGS_* values.
+		SCA_ViewModes - one of the workbench DDVM_BY* values
+		SCA_XOffset - (LONG) Window X offset
+		SCA_YOffset - (LONG) Window Y offset
+		SCA_IconList - (struct ScaIconNode *) pregenerated icon list
+
+    RESULT
+	Success - FALSE on failure, TRUE to indiciate success.
+
+    SEE ALSO
+        scalosAPI/SM_NewWindowPath
+        IconWindow.sca/SCCM_IconWin_NewPath
+Window.sca/SCCM_Window_RemClipRegion
+
+    NAME
+	SCCM_Window_RemClipRegion
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_Window_RemClipRegion, 
+		struct Region *oldRegion);
+
+    FUNCTION
+	Resets window clip region to oldRegion.
+
+    INPUTS
+	oldRegion - original clip region 
+		(Result from SCCM_Window_InitClipRegion)
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_Window_InitClipRegion
+Window.sca/SCCM_Window_Open
+
+    NAME
+	SCCM_Window_Open
+
+    SYNOPSIS
+	struct Window *win = DoMethod(obj,SCCM_Window_Open);
+
+    FUNCTION
+	Opens a scalos window
+
+    INPUTS
+	none
+
+    RESULT
+	win - Pointer to Intuition Window if window could be opened, 
+		NULL if something went wrong.
+
+    SEE ALSO
+Window.sca/SCCM_Window_SetTitle
+
+    NAME
+	SCCM_Window_SetTitle
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_Window_SetTitle, CONST_STRPTR title)
+
+    FUNCTION
+	Sets window title to (title).
+
+    INPUTS
+	title - window title string.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+
+Window.sca/SCCM_Window_SetInnerSize
+
+    NAME
+	SCCM_Window_SetInnerSize
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_Window_SetInnerSize)
+
+    FUNCTION
+	Update internal Scalos variables according to the current 
+	window size and setup a new window clip region.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+
+Window.sca/SCCM_Window_UnlockUpdate
+
+    NAME
+	SCCM_Window_UnlockUpdate
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_Window_UnlockUpdate)
+
+    FUNCTION
+	Enabled window updates stopped by SCCM_Window_LockUpdate.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_Window_LockUpdate
+
+IconWindow.sca/SCCM_Window_WBStartupFinished
+
+    NAME
+        SCCM_Window_WBStartupFinished
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_Window_WBStartupFinished);
+
+    FUNCTION
+	This message is broadcasted to all Scalos windows as soon as WBStartup procedure has finished.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+

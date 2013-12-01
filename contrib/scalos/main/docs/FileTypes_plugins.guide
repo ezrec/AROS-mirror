@@ -1,0 +1,94 @@
+@database "FileTypes_plugins.guide"
+@width 77
+@height 24
+@smartwrap
+@version $VER: FileTypes_plugins.guide 1.0 (21.09.05) ©2000-2005 The Scalos Team
+
+----------------------------------------------------------------------------
+@node main "FileTypes_Plugins.guide"
+
+@{" drawercontents.plugin " Link drawercontents	}	DIRS/S,ENTRIES/K/N,LINELENGTH/K/N,NOICONS/S,SHOWEMPTY/S
+
+
+@{" exifpicture.plugin    " Link exifpicture	}	EXIFONLY/S,NOFILEDATETIME/S,NOFILESIZE/S,NOJPEGPROCESS/S,NOCOMMENT/S
+
+@endnode
+----------------------------------------------------------------------------
+@node drawercontents "drawercontents.plugin"
+
+
+@{b}DIRS/S @{ub}
+
+@{LINDENT 8}
+	Show only driectories.
+@{LINDENT 0}
+
+
+@{b}ENTRIES/K/N @{ub}
+
+@{LINDENT 8}
+	Number of entries to display(Min: 1, max: 64).
+@{LINDENT 0}
+
+
+@{b}LINELENGTH/K/N @{ub}
+
+@{LINDENT 8}
+	Maximum line lenght(Min: 5, max: 256).
+@{LINDENT 0}
+
+
+@{b}NOICONS/S @{ub}
+
+@{LINDENT 8}
+	Don't show icons.
+@{LINDENT 0}
+
+
+@{b}SHOWEMPTY/S @{ub}
+
+@{LINDENT 8}
+	Display too, empty directories.
+@{LINDENT 0}
+
+@endnode
+----------------------------------------------------------------------------
+@node exifpicture "exifpicture.plugin"
+
+
+@{b}EXIFONLY/S @{ub}
+
+@{LINDENT 8}
+	Don't display any JPEG's informations if EXIF header isn't availlable.
+@{LINDENT 0}
+
+
+@{b}NOFILEDATETIME/S @{ub}
+
+@{LINDENT 8}
+	Don't display file's datestamp informations.
+@{LINDENT 0}
+
+
+@{b}NOFILESIZE/S @{ub}
+
+@{LINDENT 8}
+	Don't display file's size information.
+@{LINDENT 0}
+
+
+@{b}NOJPEGPROCESS/S @{ub}
+
+@{LINDENT 8}
+	Don't display JPEG's type(Baseline, progressive, etc...).
+@{LINDENT 0}
+
+
+@{b}NOCOMMENT/S @{ub}
+
+@{LINDENT 8}
+	Don't display JPEG's comments if availlables.
+@{LINDENT 0}
+
+@endnode
+----------------------------------------------------------------------------

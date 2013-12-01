@@ -1,0 +1,74 @@
+# $Date: 2011-07-09 20:50:13 +0200 (Sa, 09. Jul 2011) $
+# $Revision: 759 $
+##############################################################################
+
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/../..
+endif
+
+##############################################################################
+
+include		config.mk
+
+##############################################################################
+#
+# Project Object files
+#
+
+ifeq ($(MACHINE), ppc-amigaos)
+OBJS	=       $(OBJDIR)/AmigaIconObj35-aos4.o $(OBJDIR)/AmigaIconObj35.o
+else
+ifeq ($(MACHINE), i386-aros)
+OBJS	=       $(OBJDIR)/AmigaIconObj35-aros.o $(OBJDIR)/AmigaIconObj35.o
+else
+OBJS	=       $(OBJDIR)/AmigaIconObj35-classic.o $(OBJDIR)/AmigaIconObj35.o
+endif
+endif
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS:.o=.d)
+endif
+
+##############################################################################
+#
+# Targets
+#
+
+NAME	=	amigaiconobj35.datatype
+NAME_DB	=	amigaiconobj35.datatype.debug
+
+##############################################################################
+
+.PHONY: all install clean bump dump
+
+all:	$(BINDIR)/$(NAME) \
+	$(BINDIR)/$(NAME_DB)
+	
+##############################################################################
+
+$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) : $(OBJS)
+	@$(ECHO) "Link $(NAME)"
+	@$(CC) $(OBJS) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(NAME_DB)
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(NAME_DB) -o $(BINDIR)/$(NAME)
+	@chmod u+x $@
+
+##############################################################################
+
+install:
+	-@$(ECHO) "Installing $(NAME)"
+	-@$(MKDIR) $(DT_DIR)
+	@copy $(BINDIR)/$(NAME) $(DT_DIR)
+	@avail flush
+
+
+clean:
+	-@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d $(OBJDIR)/*.d.* \
+        	$(OBJDIR)/*.i $(OBJDIR)/*.s \
+		$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) \
+		*.dump *_str.*
+
+##############################################################################

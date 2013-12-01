@@ -1,0 +1,218 @@
+# $Date: 2011-07-02 20:26:48 +0200 (Sa, 02. Jul 2011) $
+# $Revision: 752 $
+##############################################################################
+
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/..
+endif
+
+# Native FlexCat doesn't like Linux paths
+ifeq ($(CROSS), )
+	SDPATH=
+else
+	SDPATH=..
+endif
+
+###############################################################################
+
+include		config.mk
+
+##############################################################################
+#
+# Project Object files
+#
+
+OBJS	=	$(OBJDIR)/about.o                   	\
+		$(OBJDIR)/AppMenu.o                 	\
+		$(OBJDIR)/AutoUpdate.o              	\
+		$(OBJDIR)/Backdrop.o                	\
+		$(OBJDIR)/BackFill.o                	\
+		$(OBJDIR)/BTree.o		    	\
+		$(OBJDIR)/ButtonGadgetClass.o       	\
+		$(OBJDIR)/ChildProcess.o       	    	\
+		$(OBJDIR)/Class.o                   	\
+		$(OBJDIR)/cleanup.o                 	\
+		$(OBJDIR)/CLIStart.o                	\
+		$(OBJDIR)/ControlBar.o		    	\
+		$(OBJDIR)/crc32.o                   	\
+		$(OBJDIR)/CycleGadgetClass.o	    	\
+		$(OBJDIR)/DefIcons.o                	\
+		$(OBJDIR)/DeviceWindowClass.o       	\
+		$(OBJDIR)/DevListClass.o            	\
+		$(OBJDIR)/Dos64.o            	    	\
+		$(OBJDIR)/DoubleClick.o             	\
+		$(OBJDIR)/DragDrop.o                	\
+		$(OBJDIR)/DragDropBobs.o            	\
+		$(OBJDIR)/DrawIcon.o                	\
+		$(OBJDIR)/DropMarks.o		    	\
+		$(OBJDIR)/dtimage.o                 	\
+		$(OBJDIR)/DtImageClass.o            	\
+		$(OBJDIR)/FileCommands.o            	\
+		$(OBJDIR)/FileTransClass.o          	\
+		$(OBJDIR)/filetypes.o               	\
+		$(OBJDIR)/FontUtil.o                	\
+		$(OBJDIR)/FrameImageClass.o	    	\
+		$(OBJDIR)/FsAbstraction.o		\
+		$(OBJDIR)/Functions.o               	\
+		$(OBJDIR)/GadgetBarClass.o          	\
+		$(OBJDIR)/GadgetBarImageClass.o     	\
+		$(OBJDIR)/GadgetBarTextClass.o      	\
+		$(OBJDIR)/GaugeGadgetClass.o        	\
+		$(OBJDIR)/HistoryGadgetClass.o	    	\
+		$(OBJDIR)/IconifyClass.o            	\
+		$(OBJDIR)/IconImageClass.o          	\
+		$(OBJDIR)/IconWindowClass.o         	\
+		$(OBJDIR)/IconWindow_MouseMove.o    	\
+		$(OBJDIR)/idcmp.o                   	\
+		$(OBJDIR)/InputHandler.o            	\
+		$(OBJDIR)/int64.o                   	\
+		$(OBJDIR)/Lasso.o                   	\
+		$(OBJDIR)/LocaleStrings.o           	\
+		$(OBJDIR)/MainWait.o                	\
+		$(OBJDIR)/Memory.o		    	\
+		$(OBJDIR)/Menu.o                    	\
+		$(OBJDIR)/MenuCommand.o             	\
+		$(OBJDIR)/Messages.o                	\
+		$(OBJDIR)/MouseIcon.o               	\
+		$(OBJDIR)/OpenDrawerByName.o	    	\
+		$(OBJDIR)/Patches.o                 	\
+		$(OBJDIR)/Pattern.o                 	\
+		$(OBJDIR)/PopOpenWindows.o              \
+		$(OBJDIR)/PopupMenus.o              	\
+		$(OBJDIR)/Prefs.o                   	\
+		$(OBJDIR)/Rename.o                 	\
+		$(OBJDIR)/Request.o                 	\
+		$(OBJDIR)/RootClass.o               	\
+		$(OBJDIR)/ScaLibrary.o              	\
+		$(OBJDIR)/Scalos.o                  	\
+		$(OBJDIR)/ScalosInit.o              	\
+		$(OBJDIR)/ScalosMcpGfx.o	    	\
+		$(OBJDIR)/ScalosLocale.o            	\
+		$(OBJDIR)/ScalosVersion.o	    	\
+		$(OBJDIR)/Scalos_Cx.o               	\
+		$(OBJDIR)/ScanDir.o                 	\
+		$(OBJDIR)/ScanDirText.o             	\
+		$(OBJDIR)/Semaphores.o		    	\
+		$(OBJDIR)/SeparatorGadgetClass.o	\
+		$(OBJDIR)/Shortcuts.o                  	\
+		$(OBJDIR)/Splash.o                  	\
+		$(OBJDIR)/StatusBar.o	            	\
+		$(OBJDIR)/StringGadgetClass.o       	\
+		$(OBJDIR)/Subroutines.o             	\
+		$(OBJDIR)/TextIconClass.o           	\
+		$(OBJDIR)/TextIconHighlightClass.o      \
+		$(OBJDIR)/TextWindowClass.o         	\
+		$(OBJDIR)/TitleClass.o              	\
+		$(OBJDIR)/ThumbnailCache.o	    	\
+		$(OBJDIR)/Thumbnails.o		    	\
+		$(OBJDIR)/ToolTip.o                 	\
+		$(OBJDIR)/ToolTypes.o               	\
+		$(OBJDIR)/TTLayout.o                	\
+		$(OBJDIR)/Undo.o                     	\
+		$(OBJDIR)/wbl.o                     	\
+		$(OBJDIR)/WBStartup.o               	\
+		$(OBJDIR)/Window.o                  	\
+		$(OBJDIR)/WindowClass.o             	\
+		$(OBJDIR)/windowtask.o              	\
+
+ifeq ($(MACHINE), ppc-amigaos)
+	OBJS += $(OBJDIR)/Patches-aos4.o		\
+		$(OBJDIR)/malloc.o			\
+		$(OBJDIR)/ScaLibrary-aos4.o 		\
+		$(OBJDIR)/scalos-aos4-68kstubs.o
+else
+ifeq ($(MACHINE), i386-aros)
+	OBJS += $(OBJDIR)/Patches-aros.o		\
+		$(OBJDIR)/ScaLibrary-aros.o
+else
+	OBJS += $(OBJDIR)/Patches-classic.o		\
+		$(OBJDIR)/malloc.o			\
+		$(OBJDIR)/ScaLibrary-classic.o
+endif
+endif
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS:.o=.d)
+endif
+
+##############################################################################
+#
+# Some lame deps
+#
+
+$(OBJDIR)/%.o: $(MCPGFX_DIR)/%.c
+	@$(run-cc)
+
+about.c Scalos.c windowtask.c locale.h : $(OBJDIR)/Scalos_Locale.h
+filetypes.c : MsgIdNames.h
+
+$(OBJDIR)/Scalos_Locale.h : Scalos.cd $(TOPLEVEL)/CatComp_h.sd
+	@printf 'Compile $@ from $<\n'
+	@$(FLEXCAT) $< $@=$(SDPATH)/CatComp_h.sd
+
+MsgIdNames.h : Scalos.cd $(TOPLEVEL)/msgidnames.sd
+	@printf 'Generate $@\n'
+	@$(FLEXCAT) $< $@=$(SDPATH)/msgidnames.sd
+
+$(OBJDIR)/ScalosVersion.o : FORCE
+
+FORCE:
+
+##############################################################################
+#
+# Target
+#
+
+NAME	=	Scalos
+NAME_DB =	Scalos.debug
+
+##############################################################################
+# 
+# Subdirs
+#
+
+SUBDIRS	=	Tools				\
+		$(filter-out catalogs/sample/Scalos, $(wildcard catalogs/*/Scalos)) \
+#		std_includes/sfd		\
+
+##############################################################################
+
+.PHONY: all install clean bump dump nodebug
+
+all:	$(BINDIR)/$(NAME) \
+	$(BINDIR)/$(NAME_DB) \
+	all_subdirs \
+
+##############################################################################
+
+$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) : $(OBJS)
+	@$(ECHO) "Link $(NAME)"
+	@$(CC) $(STARTUP) $(OBJS) $(LFLAGS) $(DEFINES) -o $(BINDIR)/$(NAME_DB)
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(NAME_DB) -o $(BINDIR)/$(NAME)
+	@chmod u+x $@
+
+##############################################################################
+
+nodebug: nodebug_subdirs
+
+install: install_subdirs
+
+install:
+	-@$(ECHO) "Installing $(NAME)"
+	@copy $(BINDIR)/$(NAME) Scalos: clone
+
+clean:  clean_subdirs
+
+clean:
+	@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d  $(OBJDIR)/*.d.* \
+        	$(OBJDIR)/*.i \
+        	$(OBJDIR)/*.s $(OBJDIR)/*.d.* \
+		$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) \
+		*.dump *_str.* \
+		$(OBJDIR)/Scalos_Locale.h MsgIdNames.h
+
+##############################################################################

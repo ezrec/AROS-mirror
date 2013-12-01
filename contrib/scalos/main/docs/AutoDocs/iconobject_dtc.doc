@@ -1,0 +1,279 @@
+TABLE OF CONTENTS
+
+iconobject.datatype/--background--
+iconobject.datatype/iconobject.datatype
+iconobject.datatype/--background--          iconobject.datatype/--background--
+
+    PURPOSE
+	The iconobject.datatype has a special API to work with icons. It makes
+	both images , tooltypes and many more available.
+
+    FUNCTION
+	The iconobject.datatype has some special method to draw images and
+	writing icons. It is also compatible to gadgets methods. You can use
+	datatypes.library or iconobject.library to create objects. The icon-
+	object.library is much faster.
+	After creating an object the gadget.left and gadget.top fields are
+	filled with the saved iconposition. The GA_LEFT,GA_TOP,GA_WIDTH and
+	GA_HEIGHT tags are ignored. They have to be set after creating the obj-
+	ect if you like to change them.
+	Before using the IDTM_Draw method you have to use IDTM_Layout. The
+	IDTM_Layout method will generate the images and probably changing the
+	size. The extgadget.bounds field of the return object hold the position
+	and the whole size (including the text) and the position. The gadget
+	size infos are only the image size. The size may change after layouting
+	if you setup a inneroffset. The gadget.left/top field may be
+	IO_NOPOSITION. If you use an iconobject as gadget you don't need to
+	layout it, this will be done automatically.
+	The textcolor and the drawmode you like have to be set in the rastport
+	before drawing.
+
+	CREATING SUBDATATYPES
+		OM_NEW
+			You have to open the icon and then you should set some
+			attributes to the superclass (e.g. Tooltypes). Set the
+			position and the size in the gadget struct. If you like
+			to have a transparent icon then set the IDTA_Mask_..
+			tags before the IDTM_Layout method.
+
+		OM_DISPOSE
+			Free your icon.
+
+		IDTM_Layout
+			After calling the superclass you can get the
+			gadget.gadgetrender and selectrender. These are filled
+			with a pointer to a rastport or NULL. Get the
+			IDTA_InnerLeft and IDTA_InnerTop attributes and draw
+			your image into the rastport. The bitmap in the rastport
+			may be a 15/16 or 24bit bitmap. You can use
+			cybergraphics.library to access it. Check the
+			layout.flags to know which image you should generate.
+
+		IDTM_Write
+			Generate a icon from the icon object and write it to
+			disk.
+
+		IDTA_Extention
+			Set the extention of your icons or NULL if they have
+			none.
+
+	USING ICONOBJECT-DATATYPES
+
+
+iconobject.datatype/iconobject.datatype iconobject.datatype/iconobject.datatype
+
+    NAME
+	iconobject.datatype -- root data type for iconobject.
+
+    FUNCTION
+	The iconobject.datatype is the super-class of all iconobjects.
+
+    METHODS
+	OM_NEW -- Create a new iconobject.
+
+	OM_GET -- Obtain the value of an attribute.
+
+	OM_SET -- Set the values of multiple attributes.
+
+	GM_HITTEST -- Determine if the object has been hit with the
+	    mouse. If the image has a mask, the iconobject will check if the
+	    click is insite of this mask.
+
+	GM_RENDER -- Cause the graphic to render.
+
+	IDTM_Layout -- layout the iconobject, it *MUST* be used before using the
+	               ITDM_Draw method
+
+	IDTM_Draw -- draw the whole icon to the rastport given in the io_draw
+	             struct. The gadget flag SELECTED will determinate the if
+	             the unselected or selected image will be drawn.
+
+	IDTM_Write -- write the icon to disk
+
+	IDTM_FindToolType -- find a tooltype
+
+	IDTM_GetToolTypeValue -- get a value from a tooltype
+
+	IDTM_FreeLayout -- free the layout. This should be used if you change
+	                   the screen. You can use IDTM_Layout after this
+	                   method.
+
+	IDTM_Erase -- erase the icon from a given RastPort.
+
+	IDTM_Scale -- scale icon to given size.
+
+	IDTM_NewImage -- replace the icon image(s).
+
+	IDTM_CloneIconObject -- clone an existing iconobject.
+
+    TAGS
+	IDTA_Type (ULONG) -- icontype (see icon.library/diskobject)
+	    Applicability is (ISG).
+
+	IDTA_Text (*CHAR) -- icon text, will normally displayed under the icon
+	                     if you set this attribute you have to relayout the
+	                     iconobject.
+
+	    Applicability is (ISG).
+
+	IDTA_DefaultTool (CHAR *) -- default tool
+
+	    Applicability is (ISG).
+
+	IDTA_WindowRect (struct IBox *) -- the window position and size if the
+	                                   icontype is disk/drawer/trashcan
+
+	    Applicability is (ISG).
+
+	IDTA_ToolTypes (STRPTR *) -- tooltype array
+
+	    Beware: a tooltype pointer received by GetAttr() will get invalid
+	    (memory gets freed) as soon as tooltypes are changed with 
+	    SetAttrs(IDTA_ToolTypes...).
+
+	    Applicability is (ISG).
+
+	IDTA_Stacksize (ULONG) -- stacksize
+
+	    Applicability is (ISG).
+
+	IDTA_InnerLeft (ULONG)
+	IDTA_InnerTop (ULONG)
+	IDTA_InnerRight (ULONG)
+	IDTA_InnerBottom (ULONG) -- inner offset to the iconimage, you need to
+	                            relayout the icon after changing this
+	                            attribute
+
+	    Applicability is (ISG).
+
+	IDTA_FrameType (ULONG)
+	IDTA_FrameTypeSel (ULONG) -- frame type for the unselected and 
+				    selected image
+	
+	    Applicability is (ISG).
+
+	IDTA_WinCurrentX (LONG)
+	IDTA_WinCurrentY (LONG) -- virtual inneroffset of the window to open
+
+	    Applicability is (ISG).
+
+	IDTA_LayoutFlags (ULONG) -- find out what's already layouted
+	    Applicability is (..G).
+
+	IDTA_Extention (CHAR *) --  the icon name extension or NULL
+	    Applicability is (..G).
+
+	IDTA_Mask_Normal (BYTE *)
+	IDTA_Mask_Selected (BYTE *) -- the image mask, the width is rounded by
+	                               16. It one planar bitplane.
+
+	    Applicability is (ISG).
+
+	IDTA_Flags (ULONG) -- icon flags (e.g. ShowAllFiles)
+
+	    Applicability is (ISG).
+
+	IDTA_ViewModes -- viewmodes for the window to open
+
+	    Applicability is (ISG).
+
+	IDTA_DefType (ULONG) -- defaulticon type (see icon.library/diskobject)
+
+	    Applicability is (I..).
+
+	IDTA_TextPenSel (ULONG) -- selected icon text pen
+
+	    Applicability is (ISG).
+
+	IDTA_TextPen (ULONG) -- unselected icon text pen
+
+	    Applicability is (ISG).
+
+	IDTA_TextPenOutline (ULONG) -- pen for text outline
+
+	    Applicability is (ISG).
+
+	IDTA_TextPenShadow (ULONG) -- pen for text shadow
+
+	    Applicability is (ISG).
+
+	IDTA_TextMode (ULONG) -- the textmode (e.g. Outline)
+
+	    Applicability is (ISG).
+
+	IDTA_TextSkip (ULONG) -- space in pixels between the text and the image
+
+	    Applicability is (ISG).
+
+	IDTA_HalfShadowPen (ULONG) -- MagicWB halfshadow pen, needed for some
+	                              frames
+
+	    Applicability is (ISG).
+
+	IDTA_HalfShinePen (ULONG) -- MagicWB halfshine pen, need for some frames
+
+	    Applicability is (ISG).
+
+	IDTA_Borderless (ULONG) -- When TRUE, always draw icon without border
+
+	    Applicability is (ISG).
+
+	IDTA_UserFlags (ULONG) -- unused by icon datatype
+
+	    Applicability is (ISG).
+
+	IDTA_MaskBM_Normal (struct BitMap *) -- returns BitMap with unselected 
+				                icon drawing mask
+
+	    Applicability is (..G).
+
+	IDTA_MaskBM_Selected (struct BitMap *) -- returns BitMap with selected 
+				                icon drawing mask
+
+	    Applicability is (..G).
+
+	IDTA_IconLocation (struct WBArg *) -- sets information about the object
+						associated to a new icon. The 
+						datatype may choose to examine 
+						the object.
+
+	    Applicability is (I..).
+
+	IDTA_ARGBImageData (struct ARGBHeader *) -- return image data in ARGB
+						    format. This is only supported
+						    by icons with natively supply
+						    ARGB data (e.g. PNG icons),
+						    otherwise NULL is returned.
+						    The image data always has
+						    unscaled size, without any
+                                                    defined image borders.
+
+	    Applicability is (ISG).
+
+	IDTA_CopyARGBImageData (ULONG) -- selects if a copy of IDTA_ARGBImageData
+					  is made. By default, otly a reference to
+					  the ARGB image data is kept. If set to
+					  TRUE, the ARGB image is cloned and the
+					  original data can be freed by the
+					  calling application.
+
+	IDTA_SizeConstraints (struct Rectangle *) -- Set size constraints for
+						     icon image. If icon scaling
+						     is possible (cybergraphics.library
+						     is required), iocn image will
+						     be scaled to fit the given
+                                                     size constraints.
+
+	    Applicability is (I..).
+
+	IDTA_Width_Mask_Normal (ULONG)
+	IDTA_Height_Mask_Normal (ULONG) -- dimensions of IDTA_Mask_Normal bitplane.
+
+	    Applicability is (ISG).
+
+	IDTA_Width_Mask_Selected (ULONG)
+	IDTA_Height_Mask_Selected (ULONG) -- dimensions of IDTA_Mask_Selected bitplane.
+
+	    Applicability is (ISG).
+
+

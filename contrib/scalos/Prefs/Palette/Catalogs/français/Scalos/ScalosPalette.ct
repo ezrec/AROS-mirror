@@ -1,0 +1,537 @@
+; ScalosPalette.ct
+## version $VER: ScalosPalette.catalog 40.11 (25 Dec 2008 10:09:16)
+## codeset 0
+## language français
+;
+;#arrayopts static __far
+;
+; Translation done
+;
+; By COAT Jean-Marie ALIAS JMC
+; E-Mail : agalliance@free.fr
+;
+;
+MSGID_TITLENAME
+Palette plugin de Scalos
+; Scalos Palette
+;
+;
+MSGID_NEW
+Nouveau
+; New
+;
+;
+MSGID_DELETE
+Effacer
+; Delete
+;
+;
+MSGID_PEN
+Couleur
+; Pen
+;
+;
+MSGID_RED
+Rouge
+; Red
+;
+;
+MSGID_GREEN
+Vert
+; Green
+;
+;
+MSGID_SAVENAME
+Sauver
+; Save
+;
+;
+MSGID_USENAME
+Utiliser
+; Use
+;
+;
+MSGID_CANCELNAME
+Annuler
+; Cancel
+;
+;
+MSGID_BLUE
+Bleu
+; Blue
+;
+;
+MSGID_COMMANDNAME
+Palette
+; Palette
+;
+;
+MSGID_IMPORTNAME
+Couleurs actuelles du WB
+; Current WB Colours
+;
+;
+MSGID_MENU_PROJECT_OPEN
+Ouvrir...
+; Open...
+;
+;
+MSGID_MENU_PROJECT_OPEN_SHORT
+O
+;
+;
+MSGID_MENU_PROJECT_SAVEAS
+Sauver en...
+; Save As...
+;
+;
+MSGID_MENU_PROJECT_SAVEAS_SHORT
+A
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Quitter
+; Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;
+;
+MSGID_MENU_PROJECT
+Projet
+; Project
+;
+;
+MSGID_MENU_EDIT_LASTSAVED
+Dernière sauvegarde
+; Last Saved
+;
+;
+MSGID_MENU_EDIT_LASTSAVED_SHORT
+L
+;
+;
+MSGID_MENU_EDIT
+Edition
+; Edit
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS
+Créer les icônes ?
+; Create Icons?
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS_SHORT
+I
+;
+;
+MSGID_MENU_SETTINGS
+Options
+; Settings
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS
+Réglages par défaut
+; Reset To Defaults
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS_SHORT
+D
+;
+;
+MSGID_MENU_EDIT_RESTORE
+Restaurer
+; Restore
+;
+MSGID_MENU_EDIT_RESTORE_SHORT
+R
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+A propos de MUI...
+; About MUI...
+;
+MSGID_WBCOLORS
+Couleurs du Workbench
+; Workbench Colours
+;
+MSGID_TEXTPEN
+Texte
+; Text Pen
+;
+;
+MSGID_SHINEPEN
+Arêtes brillantes
+; Bright Edges Pen
+;
+;
+MSGID_SHADOWPEN
+Arêtes sombres
+; Dark Edges Pen
+;
+;
+MSGID_HIFILLPEN
+Barre de fenêtre active
+; Active Window Title Bar Pen
+;
+;
+MSGID_FILLTEXTPEN
+Titre de la fenêtre active
+; Active Window Titles Pen
+;
+;
+MSGID_BGPEN
+Arrière-plan
+; Background Pen
+;
+;
+MSGID_HITEXTPEN
+Texte important
+; Important Text Pen
+;
+;
+MSGID_BARDETAILPEN
+Texte des menus
+; Menu Text Pen
+;
+;
+MSGID_BARBLOCKPEN
+Arrière-plan des menus
+; Menu Background Pen
+;
+;
+MSGID_BARTRIMPEN
+Bords des menus
+; Menu Border Pen
+;
+;
+MSGID_HSHINEPEN
+Arêtes demi-brillante
+; Half-bright edges Pen
+;
+;
+MSGID_HSHADOWPEN
+Arêtes demi-sombre
+; Half-dark edges Pen
+;
+;
+MSGID_ICONTEXTPEN
+Texte des icônes
+; Icon Text Pen
+;
+;
+MSGID_DRAWERTEXT
+Texte des répertoires
+; Drawer Text Pen
+;
+;
+MSGID_DRAWERTEXTSEL
+Texte des répertoires sélectionnés
+; Drawer selected Text Pen
+;
+;
+MSGID_DRAWERBG
+Arrière-plan des répertoires sélectionnés
+; Drawer selected Background
+;
+;
+MSGID_FILETEXT
+Texte des fichiers
+; File Text Pen
+;
+;
+MSGID_FILETEXTSEL
+Texte des fichiers sélectionnés
+; File selected Text Pen
+;
+;
+MSGID_FILEBG
+Arrière-plan des fichiers sélectionnés
+; File selected Background
+;
+;
+MSGID_PENNAMENAME
+Désignation
+; Pen Name
+;
+;
+MSGID_BACKDROPDETAIL
+Détail de l'arrière-plan
+; Backdrop Detail Pen
+;
+;
+MSGID_BACKDROPBLOCK
+Bloc d'arrière-plan
+; Backdrop Block Pen
+;
+;
+MSGID_MAINMENUNAME
+Menu principal
+; MainMenu
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+A propos...
+; About...
+;
+;
+MSGID_ABOUTREQOK
+D'accord
+; _OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\033cPréférences : \033bPalette de Scalos V\0333%ld\0332.\0333%ld\033n\0332\n\
+Compilé sous: \0333%s\0332\n\
+\033b© 1999%s \0333The Scalos Team\033n\0332\n\
+Inspiré du programme original créé par\n\
+\033bStefan Sommerfeld\033n de \0333\033bALiENDESiGN!\033n\0332
+; \033cScalos Palette Preferences V40.1\n\
+; © 1999-2002 The Scalos Team\n\
+; Based on original code by Stefan Sommerfeld of ALiENDESiGN!
+;
+;
+MSGID_TOOLTIP_TEXT
+Texte du Tooltip
+; Tooltip Text Pen
+;
+;
+MSGID_TOOLTIP_BG
+Arrière-plan du Tooltip
+; Tooltip Background Pen
+;
+;
+MSGID_DRAGINFO_TEXT
+Fichiers en mouvement
+; Dragging Infotext Text Pen
+;
+;
+MSGID_DRAGINFO_BG
+Arrière-plan des fichiers en mouvement
+; Dragging Infotext Background Pen
+;
+;
+MSGID_STATUSBAR_BG
+Arrière-plan de la barre de statut
+; Status Bar Background Pen
+;
+;
+MSGID_STATUSBAR_TEXT
+Texte de la barre de statut
+; Status Bar Text Pen
+;
+;
+MSGID_REQTITLE_SAVEERROR
+Erreur durant l'écriture du fichier\n\
+des préférences : \"%s\"\n\
+%s
+; Error writing palette preferences\
+; file \"%s\"\
+; %s
+;
+;
+MSGID_REQTITLE_READERROR
+Erreur durant le chargement du fichier\n\
+des préférences : \"%s\"\n\
+%s
+; Error reading palette preferences\
+; file \"%s\"\
+; %s
+;
+;
+MSGID_TITLE_SCALOSPENLIST
+Couleurs des objets de Scalos
+; Scalos item colors
+;
+;
+MSGID_TITLE_PALETTEPENLIST
+Couleurs allouées \033b\0333%ld\0331 / \0333%ld\0331\033n
+; Allocated Pens
+;
+;
+MSGID_SHORTHELP_SCALOSPENLIST
+C'est la liste des couleurs des objets de Scalos.\n\
+Changez les assignements des couleurs par \n\
+déplacement des couleurs de la liste allouées\n\
+par Scalos sur l'entrée que vous désirez changer.
+; This is the Scalos pen list.\n\
+; Change pen assignments by dragging pens \n\
+; from the allocated pens list onto the \n\
+; entry you want to change.
+;
+;
+MSGID_SHORTHELP_PALETTEPENLIST
+C'est la liste de toutes les \n\
+couleurs allouées par Scalos.\n\
+\n\
+Vous pouvez imorter de nouvelles couleurs depuis\n\
+la liste des couleurs du Workbench dans cette liste.\n\
+\n\
+Exporter des couleurs de cette liste vers\n\
+la liste des objets de Scalos afin de les\n\
+assigner aux couleurs des objets désirées.
+; This is the list of all \n\
+; pens allocated by Scalos.\n\
+;  \n\
+; You can drag new pens from the \n\
+; Workbench pen list into this list.\n\
+;  \n\
+; Drag pens from here into the \n\
+; Scalos pen list to assign colors \n\
+; to specific Scalos items.
+;
+;
+MSGID_SHORTHELP_WBPENLIST
+C'est la liste de toutes les couleurs actuellement\n\
+utilisées par l'écran WorkBench.\n\
+Vous pouvez exporter une ou plusieurs couleurs\n\
+vers la liste des couleurs allouées par Scalos.
+; This is a list of all currently \n\
+; used pens on the WorkBench screen.\n\
+; You may drag one or more pens into \n\
+; the list of Scalos allocated pens.
+;
+;
+MSGID_SHORTHELP_SAVEBUTTON
+Pressez ce bouton afin de sauvegarder \n\
+les changements actuels vers :\n\
+\"\033bENVARC:Scalos/Palette13.prefs\033n\".
+; Press this button to save \n\
+; the current settings to\n\
+; \"ENVARC:Scalos/Palette13.prefs\".
+;
+;
+MSGID_SHORTHELP_USEBUTTON
+Pressez ce bouton afin de sauvegarder \n\
+les changements actuels vers :\n\
+\"\033bENV:Scalos/Palette13.prefs\033n\".
+; Press this button to save \n\
+; the current settings to\n\
+; \"ENV:Scalos/Palette13.prefs\".
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Pressez ce bouton afin d'annuler \n\
+et d'oublier tous changements.
+; Press this button to abort \n\
+; and forget all changes.
+;
+;
+MSGID_SHORTHELP_NEWBUTTON
+Pressez ce bouton afin d'allouer une nouvelle couleur.\n\
+Le bouton est innaccèssible lorsque vous essayez\n\
+d'allouer plus de couleurs que celles disponibles\n\
+depuis l'écran du Workbench.
+; Press this button to allocate \n\
+; a new palette pen. \n\
+; The button gets disabled when you try \n\
+; to allocated more pens than available \n\
+; for the Workbench screen.
+;
+;
+MSGID_SHORTHELP_DELETEBUTTON
+Pressez ce bouton afin d'éffacer la\n\
+couleur actuellement sélectionnée.
+; Press this button to delete the \n\
+; currently selected palette pen.
+;
+;
+MSGID_SHORTHELP_WBPENSBUTTON
+Ce bouton ouvre une nouvelle fenêtre \n\
+contenant les couleurs actuellement \n\
+utilisées par l'écran du WorkBench.
+; This button opens a new window \n\
+; with a list of all currently \n\
+; used WorkBench screen colors.
+;
+;
+MSGID_ICONTEXTPENSEL
+Texte de l'icône sélectionnée
+; Selected Icon Text Pen
+;
+;
+MSGID_ICONTEXTOUTLINEPEN
+Pourtour du texte
+; Icon Text Outline Pen
+;
+;
+MSGID_ICONTEXTSHADOWPEN
+Arête demi-ombrée du texte de l'icône
+; Icon Text Shadow Pen
+;
+;
+MSGID_PLUGIN_LIST_TITLE
+Palette
+;Palette
+;
+;
+MSGID_PEN_REFERENCE_COUNT
+Réf.
+;Ref.
+;
+; New in 40.6
+;
+MSGID_SHORTHELP_LAMP_CHANGED
+Cet indicateur passe de l'état \033binactif\033n\n\
+à l'état \033bactif\033n, une fois que les options\n\
+ont été modifiées depuis le chargement initial.
+;This lamp indicator changes from \033bOff\033n\n\
+;to \033bOk\033n when the settings have been\n\
+;modified since initial loading.
+;
+MSGID_ICONTEXTFILESELBG
+Pinceau du rectangle du texte de l'icône
+;Selected Icon Text Rectangle Pen
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Le lancement de Scalos Prefs a échoué
+;Scalos Palette Prefs startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Recommençer|Quitter
+;Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Impossible de charger la classe MUI '%s' V%lu.%lu.\n\
+Celle-ci n'est pas installée.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Impossible de charger la classe MUI '%s' V%lu.%lu.\n\
+\n\
+La version installée est V%lu.%lu, installez-en une plus récente s'il vous plaît !
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Impossible de charger la classe MUI '%s' V%lu.%lu.\n\
+%lu.%lu est actuellement utilisée par d'autres applications.\n\
+\n\
+Une fois la version requise installée,\n\
+fermez tous les programmes MUI, soyez sûr que l'ancienne classe\n\
+ne soit plus présente dans la mémoire puis, essayez de nouveau.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+MSGID_THUMBNAIL_BG
+Arrière-plan des vignettes
+;Thumbnail background pen
+;
+MSGID_THUMBNAIL_BG_SEL
+Arrière-plan des vignettes sélectionées
+;Selected thumbnail background pen
+;
+;-----------------------------------------------------------
+;

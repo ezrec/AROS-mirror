@@ -1,0 +1,51 @@
+==id $Id: pm_lib.sfd 5 2009-02-17 20:22:13Z jlachmann $
+==base _PopupMenuBase
+*==basetype struct PopupMenuBase *
+*==libname pm.library
+==bias 30
+==public
+==include <libraries/pm.h>
+struct PopupMenu * PM_MakeMenuA(struct TagItem * tags) (a1)
+==varargs
+struct PopupMenu * PM_MakeMenu(ULONG tags, ...) (a1)
+struct PopupMenu * PM_MakeItemA(struct TagItem * tags) (a1)
+==varargs
+struct PopupMenu * PM_MakeItem(ULONG tags, ...) (a1)
+VOID PM_FreePopupMenu(struct PopupMenu * menu) (a1)
+ULONG PM_OpenPopupMenuA(struct Window * wnd, struct TagItem * tags) (a1,a2)
+==varargs
+ULONG PM_OpenPopupMenu(struct Window * wnd, ULONG tags, ...) (a1,a2)
+struct PM_IDLst * PM_MakeIDListA(struct TagItem * tags) (a1)
+==varargs
+struct PM_IDLst * PM_MakeIDList(ULONG tags, ...) (a1)
+BOOL PM_ItemChecked(struct PopupMenu * pm, ULONG id) (a1,d1)
+LONG PM_GetItemAttrsA(struct PopupMenu * item, struct TagItem * tags) (a2,a1)
+==varargs
+LONG PM_GetItemAttrs(struct PopupMenu * item, ULONG tags, ...) (a2,a1)
+LONG PM_SetItemAttrsA(struct PopupMenu * item, struct TagItem * tags) (a2,a1)
+==varargs
+LONG PM_SetItemAttrs(struct PopupMenu * item, ULONG tags, ...) (a2,a1)
+struct PopupMenu * PM_FindItem(struct PopupMenu * menu, ULONG id) (a1,d1)
+VOID PM_AlterState(struct PopupMenu * menu, struct PM_IDLst * idlst, UWORD action) (a1,a2,d1)
+==reserve 1
+struct PM_IDLst * PM_ExLstA(ULONG * id) (a1)
+==varargs
+struct PM_IDLst * PM_ExLst(ULONG id, ...) (a1)
+APTR PM_FilterIMsgA(struct Window * window, struct PopupMenu * menu,
+	struct IntuiMessage * imsg, struct TagItem * tags) (a0,a1,a2,a3)
+==varargs
+APTR PM_FilterIMsg(struct Window * window, struct PopupMenu * menu,
+	struct IntuiMessage * imsg, ULONG tags, ...) (a0,a1,a2,a3)
+LONG PM_InsertMenuItemA(struct PopupMenu * menu, struct TagItem * tags) (a0,a1)
+==varargs
+LONG PM_InsertMenuItem(struct PopupMenu * menu, ULONG tags, ...) (a0,a1)
+struct PopupMenu * PM_RemoveMenuItem(struct PopupMenu * menu, struct PopupMenu * item) (a0,a1)
+BOOL PM_AbortHook(APTR handle) (a0)
+STRPTR PM_GetVersion() ()
+VOID PM_ReloadPrefs() ()
+LONG PM_LayoutMenuA(struct Window * window, struct PopupMenu * menu, struct TagItem * tags) (a0,a1,a2)
+==varargs
+LONG PM_LayoutMenu(struct Window * window, struct PopupMenu * menu, ULONG tags, ...) (a0,a1,a2)
+==reserve 1
+VOID PM_FreeIDList(struct PM_IDLst * list) (a0)
+==end

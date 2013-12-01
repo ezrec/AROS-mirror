@@ -1,0 +1,340 @@
+; FormatDisk.ct
+; $Date$
+; $Revision$
+; $Id$
+;
+## version $VER: FormatDisk.catalog 1.05 (08.12.2006)
+## codeset 0
+## language français
+;
+;#arrayopts static __far
+;
+;
+MSGID_DEVICE_SPACE_USED
+Utilisé :
+;Used:
+;
+;
+MSGID_DEVICE_SPACE_FREE
+Libre:
+;Free:
+;
+;
+MSGID_DEVICE_SIZE
+Taille :
+;Size:
+;
+;
+MSGID_DEVICE_BLOCK_SIZE
+Taille des blocs :
+;Block size:
+;
+;
+MSGID_DEVICE_BLOCKS_PERCENT_USED
+Utilisé : %s (%lD Blocks, %lD%%)
+;Used: %s (%lD Blocks, %lD%%)
+;
+;
+MSGID_DEVICE_BLOCKS_PERCENT_FREE
+Libre: %s (%lD Blocks, %lD%%)
+;Free: %s (%lD Blocks, %lD%%)
+;
+;
+;Size:
+MSGID_DEVICE_BLOCKS
+Taille : %s (%lD Blocks)
+;%s (%lD Blocks)
+;
+;
+MSGID_DEVICE_SHORTSIZE
+Taille : %ld
+;Size : %ld
+;
+;
+; Block size:
+MSGID_DEVICE_BLOCKSIZE_BYTES
+Taille des blocs : %lD
+;Block size: %lD bytes
+;
+;
+;
+MSGID_REQ_SURE_TITLE
+Format_Disk.module : Requête...
+;Format_Disk.module: Request...
+;
+;
+MSGID_REQ_SURE_BODY
+Etes-vous certain de vouloir formater le volume :\n\
+%s\n\
+\n\
+%s\n\
+\n\
+(Le contenu de ce disque sera détruit) ?
+;Are you sure you want to format volume\n\
+;%s\n\
+;\n\
+;%s\n\
+;\n\
+;(the contents of the disk will be destroyed)?
+;
+;
+;
+MSGID_REQ_SURE_GADGETS
+Oui|Non
+;Yes|No
+;
+;
+MSGID_VOLUME_PROTECTED
+Le Volume\n%s\nest protégé en écriture
+;Volume\n%s\nis write protected
+;
+;
+MSGID_REQ_RETRY_CANCEL
+Recommencer|Annuler
+;Retry|Cancel
+;
+;
+MSGID_GADGET_OK
+D'accord
+;OK
+;
+;---------------------------------------------------------------------------
+;
+MSGID_GADGET_DEVNAME
+_Nom du volume :
+;_Name:
+;
+;
+MSGID_GADGET_VOLUME
+Volume :
+;Volume:
+;
+MSGID_GADGET_DEVICE
+Unité :
+;Device:
+;
+;
+MSGID_GADGET_FFS
+_FFS
+;_Fast File System
+;
+;
+MSGID_GADGET_INTL
+Mode _International
+;_International
+;
+;
+MSGID_GADGET_VERIFY
+_Vérification
+;_Verify Format
+;
+;
+MSGID_GADGET_TRASHCAN
+Avec cor_beille
+;With t_rashcan
+;
+;
+MSGID_GADGET_DIRCACHE
+_Répertoire cache
+;_Dircache
+;
+;
+MSGID_GADGET_TRASHCAN_NAME
+_Corbeille :
+;_Trash:
+;
+;
+MSGID_GADGET_GUI_FORMAT
+_D'accord
+;_Format
+;
+;
+MSGID_GADGET_QUICK_FORMAT
+For_mat. rapide
+;_Quick Format
+;
+;
+MSGID_GADGET_GUI_CANCEL
+_Annuler
+;_Cancel
+;
+;
+MSGID_DRIVE_NOFOUND
+L'unité est introuvable !
+;
+;
+MSGID_VOLUME_SELECTED
+Volume sélectionné :
+;Volume selected:
+;
+;
+MSGID_OBJECT
+L'objet :
+;Object:
+;
+;
+MSGID_IS_WRONG_TYPE
+est de type incorrect !
+;is a wrong type!
+;
+;
+;--------------------------------------------------------
+;
+;
+MSGID_CLI_SUPPORT_64CMD
+*** L'unité %s supporte les commandes 64bit ! Capacité de formattage illimité !\n
+;*** Device %s supports 64bit commands! No size limit!!\n
+;
+;
+MSGID_CLI_NO_SUPPORT_64CMD
+*** L'unité %s ne supporte pas les commandes 64bit. Le formattage est limité à une capacité de 4GB !\n
+;*** Device %s does NOT support 64bit commands. 4GB limit activated!!\n
+;
+;
+MSGID_CLI_INSERT_DISK
+Insèrez le disque à formatter dans le lecteur 
+;Insert the disk to be formatted in drive 
+;
+;
+MSGID_CLI_PRESS_RETURN
+ et pressez la touche RETURN 
+; and press RETURN 
+;
+;
+MSGID_INITIALIZING_DISK
+Initialisation du disque...
+;Initializing disk...
+;
+;
+MSGID_INITIALIZING_DISK_SUCCESS
+Initialisation réussie.
+;Initialized successfully.
+;
+;
+MSGID_INITIALIZING_DISK_FAILED
+L'initialisation du disque a échouée.
+;Initialization failed.
+;
+;
+MSGID_SECOND_INITIALIZING_DISK
+Seconde initialisation...
+;Second Initialization...
+;
+;
+MSGID_CLI_BREAK
+***Interruption\n
+;***Break\n
+;
+;
+MSGID_FORMAT_DISK_FAILED
+Impossible de formatter le volume
+;Cannot format volume
+;
+;
+MSGID_FORMAT_DISK_WRITEPROTECTED
+parce que le disque est protégé en écriture
+;because the disk is write protected
+;
+;
+MSGID_DEVICE_NOT_ACCESS
+Impossible d'accèder à l'unité !
+;Couldn't access the device
+;
+;
+MSGID_CREATING_TRASHCAN_USER
+Création de la corbeille, nommée : \"%s\" 
+;Creating Trashcan, named: \"%s\" 
+;
+;
+MSGID_CREATING_TRASHCAN_DEFAULT
+Création de la corbeille, nommée : \"Trashcan\" 
+;Creating Trashcan, named: \"Trashcan\" 
+;
+;
+MSGID_CREATING_TRASHCAN_ERROR
+Une erreur est survenue lors de la création de la corbeille.
+;There was an error while creating the trashcan
+;
+;
+MSGID_CREATING_TRASHCAN_DIR_ERROR
+Une erreur est survenue lors de la création du répertoire de la corbeille.
+;There was an error while creating the trashcan directory
+;
+;----------------------------------------------------------
+;
+MSGID_GUI_FORMATTING_CYLINDER
+Formatage   du cylindre %ld/%ld, %ld restant(s)
+;Formatting cylinder %ld/%ld, %ld to go
+;
+;
+MSGID_FORMATTING_ERROR
+Une erreur est survenue pendant le formatage !
+;A formatting error occured
+;
+;
+MSGID_GUI_FORMATTING_ABORTED
+Opération de formatage annulée !
+;Formatting operation aborted!
+;
+;
+MSGID_GUI_VERIFYING_CYLINDER
+Vérification du cylindre %ld/%ld, %ld restant(s)
+;Verifying  cylinder %ld/%ld, %ld to go
+;
+;
+MSGID_VERIFYING_ERROR
+Une erreur est survenue pendant la vérification !
+;A verify error occurred
+;
+;
+MSGID_GUI_VERIFYING_ABORTED
+Opération de vérification annulée !
+;Verifying operation aborted!
+;
+;
+MSGID_WARNING_FORMAT_DEVICE_NO64BIT
+Vous tentez de formater au-delà des 4GB néanmoins\n\
+votre unité ne supporte pas les commandes 64 bit. De ce fait,\n\
+l'opération de formatage est annulée afin de préserver votre disque.
+;You are trying to format beyond 4GB border although\n\
+;your device does not support 64 bit commands. Due to this\n\
+;fact, format operation is aborted in order to save your drive.
+;
+;
+;--------------------------------------------------------
+;
+MSGID_GUI_PREPWINDOW_TITLE
+Format_Disk.module
+;Format_Disk.module
+;
+;
+MSGID_GUI_STATUSWINDOW_TITLE
+Format_Disk.module: Statut
+;Format_Disk.module: Status
+;
+;
+MSGID_GUI_STATUSWINDOW_FORMATTING_DRIVE
+Formatage de \"%s\" nommé \"%s\" - [%s] ...
+;Formatting drive \"%s\" as \"%s\" [%s] ...
+;
+;
+MSGID_GUI_STATUSWINDOW_DEVICE_64BIT
+Unité statut : \"%s\" [ Support NSD : OUI ].
+;Status Device: \"%s\" [ NSD Support: YES ].
+;
+;
+MSGID_GUI_STATUSWINDOW_DEVICE_NO64BIT
+Unité statut : \"%s\" [ Support NSD : N/D ].
+;Status Device: \"%s\" [ NSD Support: N/A. ]
+;
+;
+MSGID_GUI_STATUSWINDOW_ABORT
+_Interrompre
+;_Stop
+;
+;
+MSGID_GUI_ON_DRIVE
+Sur périphèrique : 
+;On drive
+;
+;

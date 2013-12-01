@@ -1,0 +1,4172 @@
+; ScalosPrefs.ct
+; $Date$
+; $Revision$
+
+## version $VER: Scalos_Prefs.catalog 40.28 (28 Mar 2010 19:20:49)
+## codeset 0s
+## language xxxxxx
+;
+;#arrayopts static const __far
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT_OPEN
+Open...
+;Open...
+;
+;
+MSGID_MENU_PROJECT_OPEN_SHORT
+O
+;O
+;
+;
+MSGID_MENU_PROJECT_OPEN_ASLTITLE
+Open Scalos Prefs...
+;Open Scalos Prefs...
+;
+;
+MSGID_MENU_PROJECT_SAVEAS
+Save As...
+;Save As...
+;
+;
+MSGID_MENU_PROJECT_SAVEAS_SHORT
+A
+;A
+;
+;
+MSGID_MENU_PROJECT_SAVEAS_ASLTITLE
+Save Scalos Prefs As...
+;Save Scalos Prefs As...
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+About...
+;About...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Quit
+;Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;Q
+;
+;
+MSGID_MENU_PROJECT
+Project
+;Project
+;
+;
+MSGID_MENU_EDIT_LASTSAVED
+Last Saved
+;Last Saved
+;
+;
+MSGID_MENU_EDIT_LASTSAVED_SHORT
+L
+;L
+;
+;
+MSGID_MENU_EDIT
+Edit
+;Edit
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS
+Create Icons?
+;Create Icons?
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS_SHORT
+I
+;I
+;
+;
+MSGID_MENU_SETTINGS
+Settings
+;Settings
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS
+Reset To Defaults
+;Reset To Defaults
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS_SHORT
+D
+;D
+;
+;
+MSGID_MENU_EDIT_RESTORE
+Restore
+;Restore
+;
+;
+MSGID_MENU_EDIT_RESTORE_SHORT
+R
+;R
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+About MUI...
+;About MUI...
+;
+;+++translateme+++
+MSGID_MENU_PROJECT_ABOUTMORPHOS
+About MorphOS...
+;About MorphOS...
+;
+;-----------------------------------------------------------
+;
+MSGID_FILEDISP_COLUMN_NAME
+Name
+;Name
+;
+;
+MSGID_FILEDISP_COLUMN_SIZE
+Size
+;Size
+;
+;
+MSGID_FILEDISP_COLUMN_PROT
+Protection bits
+;Protection bits
+;
+;
+MSGID_FILEDISP_COLUMN_DATE
+Date
+;Date
+;
+;
+MSGID_FILEDISP_COLUMN_TIME
+Time
+;Time
+;
+;
+MSGID_FILEDISP_COLUMN_COMMENT
+Comment
+;Comment
+;
+;
+MSGID_FILEDISP_COLUMN_VERSION
+Version
+;Version
+;
+;
+MSGID_FILEDISP_COLUMN_FILETYPE
+Filetype
+;Filetype
+;
+;
+MSGID_FILEDISP_COLUMN_OWNER
+Owner
+;Owner
+;
+;
+MSGID_FILEDISP_COLUMN_GROUP
+Group
+;Group
+;
+;
+MSGID_FILEDISP_COLUMN_ICON
+Icon
+;Icon
+;
+;-----------------------------------------------------------
+;
+MSGID_PRECISION_EXACT
+Exact
+;Exact
+;
+;
+MSGID_PRECISION_IMAGE
+Image
+;Image
+;
+;
+MSGID_PRECISION_ICON
+Icon
+;Icon
+;
+;
+MSGID_PRECISION_GUI
+GUI
+;GUI
+;
+;-----------------------------------------------------------
+;
+;+++translateme+++
+MSGID_THUMBNAILS_LIFETIME_FOREVER
+never
+;never
+;
+;-----------------------------------------------------------
+;
+MSGID_PREFGROUPS_SHORTHELP
+Select one of the preferences categories
+;Select one of the preferences categories
+;
+;
+MSGID_PREFGROUPS_ABOUT
+About Scalos
+;About Scalos
+;
+;
+MSGID_PREFGROUPS_PATHS
+Paths
+;Paths
+;
+;
+MSGID_PREFGROUPS_STARTUP
+Startup
+;Startup
+;
+;
+MSGID_PREFGROUPS_DESKTOP
+Desktop
+;Desktop
+;
+;
+MSGID_PREFGROUPS_ICONS
+Icons
+;Icons
+;
+;
+MSGID_PREFGROUPS_WINDOWS
+Windows
+;Windows
+;
+;
+MSGID_PREFGROUPS_MISC
+Miscellaneous
+;Miscellaneous
+;
+;
+MSGID_PREFGROUPS_PLUGINS
+Plugins
+;Plugins
+;
+;
+MSGID_PREFGROUPS_MODULES
+Modules
+;Modules
+;
+;
+MSGID_PREFGROUPS_DRAGNDROP
+Drag and Drop
+;Drag and Drop
+;
+;
+MSGID_PREFGROUPS_TRUETYPEFONTS
+TrueType Fonts
+;TrueType Fonts
+;
+;+++translateme+++
+MSGID_PREFGROUPS_TEXTWINDOWS
+Text Windows
+;Text Windows
+;
+;-----------------------------------------------------------
+;
+MSGID_DESKTOPPAGES_SCREEN
+Screen
+;Screen
+;
+;
+MSGID_DESKTOPPAGES_ICONS
+Icons
+;Icons
+;
+;
+MSGID_ICONPAGES_MISC
+Miscellaneous
+;Miscellaneous
+;
+;+++translateme+++
+MSGID_DESKTOPPAGES_LAYOUT
+Layout
+;Layout
+;
+;-----------------------------------------------------------
+;
+MSGID_ICONPAGES_BORDERS
+Borders
+;Borders
+;
+;
+MSGID_ICONPAGES_LABELS
+Labels
+;Labels
+;
+;
+MSGID_ICONPAGES_ATRIBUTES
+Attributes
+;Attributes
+;
+;
+MSGID_ICONPAGES_TOOLTIPS
+Tooltips
+;Tooltips
+;
+;+++translateme+++
+MSGID_ICONPAGES_THUMBNAILS
+Thumbnails
+;Thumbnails
+;
+;+++translateme+++
+MSGID_ICONPAGES_SIZES
+Sizes
+;
+;-----------------------------------------------------------
+;
+MSGID_TITLEPLACEHOLDER_KICKSTART_RELEASE
+%os|Kickstart release (e.g. 3.1)
+;%os|Kickstart release (e.g. 3.1)
+;
+;
+MSGID_TITLEPLACEHOLDER_KICKSTART_VERSION
+%ov|Kickstart version (e.g. 40.68)
+;%ov|Kickstart version (e.g. 40.68)
+;
+;
+MSGID_TITLEPLACEHOLDER_SCALOS_RELEASE
+%wb|Scalos release (e.g. 1.2d)
+;%wb|Scalos release (e.g. 1.2d)
+;
+;
+MSGID_TITLEPLACEHOLDER_SCALOS_VERSION
+%wv|Scalos version (e.g. 39.220)
+;%wv|Scalos version (e.g. 39.220)
+;
+;
+MSGID_TITLEPLACEHOLDER_FREE_CHIP_MEM
+%fc|Free chip RAM in bytes
+;%fc|Free chip RAM in bytes
+;
+;
+MSGID_TITLEPLACEHOLDER_FREE_FAST_MEM
+%ff|Free fast RAM in bytes
+;%ff|Free fast RAM in bytes
+;
+;
+MSGID_TITLEPLACEHOLDER_FREE_MEM
+%ft|Total free RAM in bytes
+;%ft|Total free RAM in bytes
+;
+;
+MSGID_TITLEPLACEHOLDER_WINDOW_PATH
+%pa|Windows directory path
+;%pa|Windows directory path
+;
+;
+MSGID_TITLEPLACEHOLDER_DISK_FREE
+%df|Free disk space
+;%df|Free disk space
+;
+;
+MSGID_TITLEPLACEHOLDER_DISK_FREE_DIVIDE
+%DF|Free disk space (auto divide)
+;%DF|Free disk space (auto divide)
+;
+;
+MSGID_TITLEPLACEHOLDER_DISK_USED
+%du|Used disk space
+;%du|Used disk space
+;
+;
+MSGID_TITLEPLACEHOLDER_DISK_USED_DIVIDE
+%DU|Used disk space (auto divide)
+;%DU|Used disk space (auto divide)
+;
+;
+MSGID_TITLEPLACEHOLDER_START_NODISK
+%d(|Start: don't show if no disk inserted
+;%d(|Start: don't show if no disk inserted
+;
+;
+MSGID_TITLEPLACEHOLDER_STOP_NODISK
+%d)|Stop: don't show if no disk inserted
+;%d)|Stop: don't show if no disk inserted
+;
+;
+MSGID_TITLEPLACEHOLDER_DISK_PERCENT
+%dp|Percent of used disk space
+;%dp|Percent of used disk space
+;
+;
+MSGID_TITLEPLACEHOLDER_GFXCHIPS
+%cs|Graphics chip set (e.g. AGA)
+;%cs|Graphics chip set (e.g. AGA)
+;
+;
+MSGID_TITLEPLACEHOLDER_CPU
+%pr|68k processor
+;%pr|68k processor
+;
+;
+MSGID_TITLEPLACEHOLDER_FPU
+%cp|68k co-processor (FPU)
+;%cp|68k co-processor (FPU)
+;
+;
+MSGID_TITLEPLACEHOLDER_TASKS
+%nt|Number of tasks
+;%nt|Number of tasks
+;
+;
+MSGID_TITLEPLACEHOLDER_LIBRARIES
+%nl|Number of libraries
+;%nl|Number of libraries
+;
+;
+MSGID_TITLEPLACEHOLDER_PORTS
+%np|Number of ports
+;%np|Number of ports
+;
+;
+MSGID_TITLEPLACEHOLDER_DEVICES
+%nd|Number of devices
+;%nd|Number of devices
+;
+;
+MSGID_TITLEPLACEHOLDER_SCREENS
+%ns|Number of screens
+;%ns|Number of screens
+;
+;
+;-----------------------------------------------------------
+;
+MSGID_WINDOWPAGES_GENERAL
+General
+;General
+;
+;
+MSGID_WINDOWPAGES_SIZE
+Size
+;Size
+;
+;+++translateme+++
+MSGID_WINDOWPAGES_LAYOUT
+Layout
+;Layout
+;
+;+++translateme+++
+MSGID_WINDOWPAGES_CONTROLBAR
+Control Bar
+;Control Bar
+;
+;+++translateme+++
+MSGID_WINDOWPAGES_CONTROLBAR_BROWSER
+Browser Window Control Bar
+;Browser Window Control Bar
+;
+;+++translateme+++
+MSGID_WINDOWPAGES_CONTROLBAR_NORMAL
+Standard Window Control Bar
+;Standard Window Control Bar
+;
+;-----------------------------------------------------------
+;
+;+++translateme+++
+MSGID_TEXTWINDOWPAGES_FONTS
+Fonts
+;Fonts
+;
+;+++translateme+++
+MSGID_TEXTWINDOWPAGES_COLUMNS
+Columns
+;Columns
+;
+;+++translateme+++
+MSGID_TEXTWINDOWPAGES_SELECTIONMARKS
+Selection marks
+;Selection marks
+;
+;+++translateme+++
+MSGID_TEXTWINDOWPAGES_MISC
+Miscellaneous
+;Miscellaneous
+;
+;-----------------------------------------------------------
+;
+;+++translateme+++
+MSGID_CREATELINKS_HARDLINKS
+Hard links
+;
+;+++translateme+++
+MSGID_CREATELINKS_SOFTLINKS
+Soft links
+;
+;-----------------------------------------------------------
+;
+MSGID_WINDOWREFRESH_SIMPLE
+Simple Refresh
+;Simple Refresh
+;
+;
+MSGID_WINDOWREFRESH_SMART
+Smart Refresh
+;Smart Refresh
+;
+;-----------------------------------------------------------
+;
+MSGID_WINDOW_SHOWALL_DEFAULT_ICONS
+Show - Only Icons
+;Show - Only Icons
+;
+;
+MSGID_WINDOW_SHOWALL_DEFAULT_ALL
+Show - All Files
+;Show - All Files
+;
+;-----------------------------------------------------------
+;
+MSGID_WINDOW_VIEWBY_DEFAULT_ICON
+View By - Icon
+;View By - Icon
+;
+;
+MSGID_WINDOW_VIEWBY_DEFAULT_NAME
+View By - Name
+;View By - Name
+;
+;
+MSGID_WINDOW_VIEWBY_DEFAULT_SIZE
+View By - Size
+;View By - Size
+;
+;
+MSGID_WINDOW_VIEWBY_DEFAULT_DATE
+View By - Date
+;View By - Date
+;
+;
+MSGID_WINDOW_VIEWBY_DEFAULT_TIME
+View By - Time
+;View By - Time
+;
+;
+MSGID_WINDOW_VIEWBY_DEFAULT_COMMENT
+View By - Comment
+;View By - Comment
+;
+;
+MSGID_WINDOW_VIEWBY_DEFAULT_PROTECTION
+View By - Comment
+;View By - Comment
+;
+;
+MGSID_WINDOW_VIEWBY_DEFAULT_OWNER
+View By - Owner
+;View By - Owner
+;
+;
+MSGID_WINDOW_VIEWBY_DEFAULT_GROUP
+View By - Group
+;View By - Group
+;
+;-----------------------------------------------------------
+;
+MSGID_FILEDISPLAYPAGES_TEXT
+Text
+;Text
+;
+;-----------------------------------------------------------
+;+++translateme+++
+MSGID_ICONLAYOUT_COLUMNS
+Columns (top-down, then left-to-right)
+;Columns (top-down, then left-to-right)
+;
+;+++translateme+++
+MSGID_ICONLAYOUT_ROWS
+Rows (left-to-right, then top-down)
+;Rows (left-to-right, then top-down)
+;
+;-----------------------------------------------------------
+;
+MSGID_ICONLABELSTYLES_NORMAL
+Normal
+;Normal
+;
+;
+MSGID_ICONLABELSTYLES_OUTLINE
+Outline
+;Outline
+;
+;
+MSGID_ICONLABELSTYLES_SHADOW
+Shadow
+;Shadow
+;
+;-----------------------------------------------------------
+;
+MSGID_ICONSIZES_16x16
+16 x 16
+;16 x 16
+;
+;
+MSGID_ICONSIZES_24x24
+24 x 24
+;24 x 24
+;
+;
+MSGID_ICONSIZES_32x32
+32 x 32
+;32 x 32
+;
+;
+MSGID_ICONSIZES_48x48
+48 x 48
+;48 x 48
+;
+;
+MSGID_ICONSIZES_64x64
+64 x 64
+;64 x 64
+;
+;
+MSGID_ICONSIZES_96x96
+96 x 96
+;96 x 96
+;
+;
+MSGID_ICONSIZES_128x128
+128 x 128
+;128 x 128
+;
+;
+MSGID_ICONSIZES_UNLIMITED
+unlimited
+;unlimited
+;
+;-----------------------------------------------------------
+;
+MSGID_ICONDRAGSTYLES_IMAGEONLY
+Image Only
+;Image Only
+;
+;
+MSGID_ICONDRAGSTYLES_IMAGEANDTEXT
+Image & Text
+;Image & Text
+;
+;-----------------------------------------------------------
+;
+MSGID_THUMBNAILSIZES_16x16
+16 x 16
+;16 x 16
+;
+;
+MSGID_THUMBNAILSIZES_24x24
+24 x 24
+;16 x 16
+;
+;
+MSGID_THUMBNAILSIZES_32x32
+32 x 32
+;32 x 32
+;
+;
+MSGID_THUMBNAILSIZES_48x48
+48 x 48
+;48 x 48
+;
+;
+MSGID_THUMBNAILSIZES_64x64
+64 x 64
+;64 x 64
+;
+;
+MSGID_THUMBNAILSIZES_96x96
+96 x 96
+;96 x 96
+;
+;
+MSGID_THUMBNAILSIZES_128x128
+128 x 128
+;128 x 128
+;
+;-----------------------------------------------------------
+;
+MSGID_ICONDRAGTRANSPARENCY_GHOSTED
+Ghosted
+;Ghosted
+;
+;
+MSGID_ICONDRAGTRANSPARENCY_TRANSPARENT
+Ghosted/Real Transparent
+;Ghosted/Real Transparent
+;
+;-----------------------------------------------------------
+;
+MSGID_SHOWTHUMBNAILS_NEVER
+Never
+;Never
+;
+;
+MSGID_SHOWTHUMBNAILS_AS_DEFAULT
+As default
+;As default
+;
+;
+MSGID_SHOWTHUMBNAILS_ALWAYS
+Always
+;Always
+;
+;-----------------------------------------------------------
+;
+MSGID_ICONDRAGTROUTINES_SYSTEM
+System
+;System
+;
+;
+MSGID_ICONDRAGTROUTINES_CUSTOM
+Custom
+;Custom
+;
+;-----------------------------------------------------------
+;
+MSGID_ICONDROPMARK_NEVER
+Never show
+;Never show
+;
+;
+MSGID_ICONDROPMARK_ALWAYS
+Always
+;Always
+;
+;
+MSGID_ICONDROPMARK_DRAWERSONLY
+Only in drawer windows
+;Only in drawer windows
+;
+;-----------------------------------------------------------
+;
+MSGID_ICONDRAGLOOK_TRANSP_SOLID
+\033bTransparent\033n when dragging, \033bsolid\033n over triggers
+;\033bTransparent\033n when dragging, \033bsolid\033n over triggers
+;
+;
+MSGID_ICONDRAGLOOK_ALWAYS_SOLID
+Always \033bsolid\033n icons when dragging
+;Always \033bsolid\033n icons when dragging
+;
+;
+MSGID_ICONDRAGLOOK_ALWAYS_TRANSP
+Always \033btransparent\033n icons when dragging
+;Always \033btransparent\033n icons when dragging
+;
+;
+MSGID_ICONDRAGLOOK_SOLID_TRANSP
+\033bSolid\033n when dragging, \033btransparent\033n over triggers
+;\033bSolid\033n when dragging, \033btransparent\033n over triggers
+;
+;-----------------------------------------------------------
+;
+MSGID_VERSIONSTRING
+Scalos Version %s (%d.%d) (Build %s)
+;Scalos Version %s (%d.%d) (Build %s)
+;
+;
+MSGID_COPYRIGHTSTRING
+®2003-2004 The Scalos Team
+;®2003-2004 The Scalos Team
+;
+;
+; +++translateme+++
+MSGID_SPLASHWINDOW_LOADINGPREFS
+\33c  Loading Scalos Prefs...  
+;\33c  Loading Scalos Prefs...  
+;
+;
+MSGID_SPLASHWINDOW_APPLYINGPREFS
+\33c  Applying Scalos Prefs...  
+;\33c  Applying Scalos Prefs...  
+;
+;
+MSGID_SPLASHWINDOW_SAVINGPREFS
+\33c  Saving Scalos Prefs...  
+;\33c  Saving Scalos Prefs...  
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTPAGE_COPYRIGHT
+\033c\033bCopyright ©2003-2004 The Scalos Team
+;\033c\033bCopyright ©2003-2004 The Scalos Team
+;
+;
+MSGID_ABOUTPAGE_CONTACT1
+contact us by email <
+;contact us by email <
+;
+;
+MSGID_ABOUTPAGE_CONTACT2
+> // web <
+;> // web <
+;
+;
+MSGID_ABOUTPAGE_CONTACT3
+>
+;>
+;
+;
+MSGID_ABOUTPAGE_PREFSVERSION
+Scalos Main Preferences V%ld.%ld
+;Scalos Main Preferences V%ld.%ld
+;
+;-----------------------------------------------------------
+;
+MSGID_PATHSPAGE_DEFAULTPATHS
+Default Paths
+;Default Paths
+;
+;
+MSGID_PATHSPAGE_SCALOS_HOME
+Scalos Home:
+;Scalos Home:
+;
+;
+MSGID_PATHSPAGE_SCALOS_HOME_ASLTITLE
+Please select a drawer...
+;Please select a drawer...
+;
+;
+MSGID_PATHSPAGE_SCALOS_HOME_SHORTHELP
+An assign called SCALOS: will point to this directory
+;An assign called SCALOS: will point to this directory
+;
+;
+MSGID_PATHSPAGE_THEMES
+Themes:
+;Themes:
+;
+;
+MSGID_PATHSPAGE_THEMES_SHORTHELP
+This is the drawer where all the\n\
+theme-specific files are located.
+;This is the drawer where all the\n\
+;theme-specific files are located.
+;
+;
+MSGID_PATHSPAGE_THEMES_ASLTITLE
+Please select a drawer...
+;Please select a drawer...
+;
+;
+MSGID_PATHSPAGE_DEFAULTICONS
+Default Icons:
+;Default Icons:
+;
+;
+MSGID_PATHSPAGE_DEFAULTICONS_SHORTHELP
+This is the drawer where Scalos\n\
+looks for default icons.
+;This is the drawer where Scalos\n\
+;looks for default icons.
+;
+;
+MSGID_PATHSPAGE_DEFAULTICONS_ASLTITLE
+Please select a drawer...
+;Please select a drawer...
+;
+;
+MSGID_PATHSPAGE_WBSTARTUP
+WBStartup:
+;WBStartup:
+;
+;
+MSGID_PATHSPAGE_WBSTARTUP_SHORTHELP
+This drawer is used as WBStartup, i.e. any program\n\
+located inside is executed upon Scalos startup.
+;This drawer is used as WBStartup, i.e. any program\n\
+;located inside is executed upon Scalos startup.
+;
+;
+MSGID_PATHSPAGE_WBSTARTUP_ASLTITLE
+Please select a drawer...
+;Please select a drawer...
+;
+;
+MSGID_PATHSPAGE_DISKCOPY
+DiskCopy:
+;DiskCopy:
+;
+;
+MSGID_PATHSPAGE_DISKCOPY_SHORTHELP
+This is the complete file name for\n\
+the \"Diskcopy\" system program.
+;This is the complete file name for\n\
+;the \"Diskcopy\" system program.
+;
+;
+MSGID_PATHSPAGE_DISKCOPY_ASLTITLE
+Please select a drawer...
+;Please select a drawer...
+;
+;
+MSGID_PATHSPAGE_FORMAT
+Format:
+;Format:
+;
+;
+MSGID_PATHSPAGE_FORMAT_SHORTHELP
+This is the complete file name for\n\
+the \"Format\" system program.
+;This is the complete file name for\n\
+;the \"Format\" system program.
+;
+;
+MSGID_PATHSPAGE_FORMAT_ASLTITLE
+Please select a drawer...
+;Please select a drawer...
+;
+;+++translateme+++
+MSGID_PATHSPAGE_THUMBNAILDB
+Thumbnail cache file:
+;Thumbnail cache file:
+;
+;+++translateme+++
+MSGID_PATHSPAGE_THUMBNAILDB_ASLTITLE
+Please select thumbnail cache location...
+;Please select thumbnail cache location...
+;
+;+++translateme+++
+MSGID_PATHSPAGE_THUMBNAILDB_SHORTHELP
+Scalos uses a database file to cache thumbnail icon images.\n\
+This file easily grows to several megabytes.\n\
+Select here a place where this file should be kept.
+;Scalos uses a database file to cache thumbnail icon images.\n\
+;This file easily grows to several megabytes.\n\
+;Select here a place where this file should be kept.
+;
+;+++translateme+++
+MSGID_PATHSPAGE_IMAGECACHE
+Image Cache:
+;Image Cache:
+;
+;+++translateme+++
+MSGID_PATHSPAGE_IMAGECACHE_SHORTHELP
+This drawer is used to cache the datatypes images used by Scalos.\n\
+Since datatypes prevents images from being updated,\n\
+Scalos creates cached copies of the images used.
+;This drawer is used to cache the datatypes images used by Scalos.\n\
+;Since datatypes prevents images from being updated,\n\
+;Scalos creates cached copies of the images used.
+;
+;+++translateme+++
+MSGID_PATHSPAGE_IMAGECACHE_ASLTITLE
+Please select a drawer...
+;Please select a drawer...
+;
+;+++translateme+++
+MSGID_PATHSPAGE_SQLITE3TEMPPATH
+Thumbnail Database Temporary Files:
+;Thumbnail Database Temporary Files:
+;
+;+++translateme+++
+MSGID_PATHSPAGE_SQLITE3TEMPPATH_SHORTHELP
+This drawer is used to store any temporary\n\
+files for internal use by the thumbnail database.
+;This drawer is used to store any temporary\n\
+;files for internal use by the thumbnail database.
+;
+;+++translateme+++
+MSGID_PATHSPAGE_SQLITE3TEMPPATH_ASLTITLE
+Please select thumbnail cache temporary files location...
+;Please select thumbnail cache temporary files location...
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUPPAGE_SPLASHWINDOW
+Splash Window
+;Splash Window
+;
+;
+MSGID_STARTUPPAGE_SHOWSPLASHWINDOW
+Show splash window:
+;Show splash window:
+;
+;
+MSGID_STARTUPPAGE_SHOWSPLASHWINDOW_SHORTHELP
+Enable this checkbox to display the\n\
+splash window upon every Scalos startup.
+;Enable this checkbox to display the\n\
+;splash window upon every Scalos startup.
+;
+;
+MSGID_STARTUPPAGE_SPLASHCLOSEDELAY
+Splash close delay:
+;Splash close delay:
+;
+;
+MSGID_STARTUPPAGE_SPLASHCLOSEDELAY_SHORTHELP
+Specify here how long the Scalos splash window\n\
+will stay open after the last startup message\n\
+has been displayed.
+;Specify here how long the Scalos splash window\n\
+;will stay open after the last startup message\n\
+;has been displayed.
+;
+;
+MSGID_STARTUPPAGE_WBSTARTUP
+WBStartup
+;WBStartup
+;
+;
+MSGID_STARTUPPAGE_DOWAITDELAY
+DoWait delay:
+;DoWait delay:
+;
+;
+MSGID_STARTUPPAGE_DOWAITDELAY_SHORTHELP
+If a tool in the WBStartup drawer doesn't\n\
+finish within the specified delay a requester will be\n\
+presented to choose wether to stop waiting.
+;If a tool in the WBStartup drawer doesn't\n\
+;finish within the specified delay a requester will be\n\
+;presented to choose wether to stop waiting.
+;
+;
+MSGID_STARTUPPAGE_DOWAITDELAY_SECONDS
+seconds
+;seconds
+;
+;-----------------------------------------------------------
+;
+MSGID_DESKTOPPAGE_SCREENTITLEBAR
+Screen Title
+;Screen Title
+;
+;
+MSGID_DESKTOPPAGE_SCREEN
+Title
+;Title
+;
+;
+MSGID_DESKTOPPAGE_SCREEN_DESCRIPTION
+|\033b\0338Description
+;|\033b\0338Description
+;
+;
+MSGID_DESKTOPPAGE_TITLEBAR_REFRESH
+Titlebar refresh rate:
+;Titlebar refresh rate:
+;
+;
+MSGID_DESKTOPPAGE_TITLEBAR_REFRESH_SHORTHELP
+This is the time interval between\n\
+consecutive screen title bar refreshes.
+;This is the time interval between\n\
+;consecutive screen title bar refreshes.
+;
+;
+MSGID_DESKTOPPAGE_TITLEBAR_REFRESH_SECONDS
+seconds
+;seconds
+;
+;
+MSGID_DESKTOPPAGE_TITLEBAR_REFRESH_MEMCHANGE
+Refresh only on memory change:
+;Refresh only on memory change:
+;
+;
+MSGID_DESKTOPPAGE_TITLEBAR_REFRESH_MEMCHANGE_SHORTHELP
+When this item is checked, the screen title bar\n\
+is only refreshed when the amount of available\n\
+system memory has changed since last check.\n\
+The memory is checked every \"Titlebar refresh rate\" seconds.
+;When this item is checked, the screen title bar\n\
+;is only refreshed when the amount of available\n\
+;system memory has changed since last check.\n\
+;The memory is checked every \"Titlebar refresh rate\" seconds.
+;
+;
+MSGID_DESKTOPPAGE_DESKTOP_REFRESH
+Desktop Refresh
+;Desktop Refresh
+;
+;
+MSGID_DESKTOPPAGE_DISK_ICON_RATE
+Disk icon rate:
+;Disk icon rate:
+;
+;
+MSGID_DESKTOPPAGE_DISK_ICON_RATE_SHORTHELP
+This is the time interval Scalos\n\
+checks for changed disks and volumes.
+;This is the time interval Scalos\n\
+;checks for changed disks and volumes.
+;
+;
+MSGID_DESKTOPPAGE_DISK_ICON_RATE_SECONDS
+seconds
+;seconds
+;
+;
+MSGID_DESKTOPPAGE_SCREENTITLE
+Screen Title
+;Screen Title
+;
+;
+MSGID_DESKTOPPAGE_SCREENTITLE_MODE
+Visibility
+;Visibility
+;
+;
+MSGID_DESKTOPPAGE_SCREENTITLE_MODE_SHORTHELP
+Specifiy here whether you like the screen title\n\
+- to be visible all the time\n\
+- to pop up when the mouse pointer is positioned at the top of the screen\n\
+- to be hidden all the time
+;Specifiy here whether you like the screen title\n\
+;- to be visible all the time\n\
+;- to pop up when the mouse pointer is positioned at the top of the screen\n\
+;- to be hidden all the time
+;
+;
+MSGID_DESKTOPPAGE_MISCELLANEOUS
+Miscellaneous
+;Miscellaneous
+;
+;
+MSGID_DESKTOPPAGE_ALLOW_CLOSEWB
+Allow CloseWorkbench():
+;Allow CloseWorkbench():
+;
+;
+MSGID_DESKTOPPAGE_ALLOW_CLOSEWB_SHORTHELP
+Disable this checkbox to make the CloseWB() function\n\
+a no-op. This allows to work with some ancient\n\
+programs and leave Scalos open all the time.
+;Disable this checkbox to make the CloseWB() function\n\
+;a no-op. This allows to work with some ancient\n\
+;programs and leave Scalos open all the time.
+;
+;
+MSGID_DESKTOPPAGE_DROPSTART
+Drop-start:
+;Drop-start:
+;
+;
+MSGID_DESKTOPPAGE_DROPSTART_SHORTHELP
+Dropping a project icon on to another programs\n\
+icon will automatically run the program and\n\
+pass the project file as a parameter
+;Dropping a project icon on to another programs\n\
+;icon will automatically run the program and\n\
+;pass the project file as a parameter
+;
+;
+MSGID_DESKTOPPAGE_CONSOLENAME
+Console name
+;Console name
+;
+;
+MSGID_DESKTOPPAGE_CONSOLENAME_SHORTHELP
+Gives complete file specifier for CLI and ARexx console.
+;Gives complete file specifier for CLI and ARexx console.
+;
+;
+MSGID_DESKTOPPAGE_AUTOLEAVEOUT
+Automatic leave-out
+;Automatic leave-out
+;
+;
+MSGID_DESKTOPPAGE_AUTOLEAVEOUT_SHORTHELP
+If this switch is turned on, dragging icons\n\
+onto the desktop remembers them permanently\n\
+as left-out, just like selecting the\n\
+\"leave out\" menu command.
+;If this switch is turned on, dragging icons\n\
+;onto the desktop remembers them permanently\n\
+;as left-out, just like selecting the\n\
+;\"leave out\" menu command.
+;
+;
+MSGID_DESKTOPPAGE_WINTITLEBAR_REFRESH
+Titlebar refresh rate:
+; Titlebar refresh rate:
+;
+;
+MSGID_DESKTOPPAGE_WINTITLEBAR_REFRESH_SHORTHELP
+This is the time interval between\n\
+consecutive window title bar refreshes.
+; This is the time interval between\n\
+; consecutive window title bar refreshes.
+;
+;
+MSGID_DESKTOPPAGE_WINTITLEBAR_REFRESH_SECONDS
+seconds
+; seconds
+;
+;
+MSGID_DESKTOPPAGE_WINTITLEBAR_REFRESH_MEMCHANGE
+Refresh only on memory change:
+; Refresh only on memory change:
+;
+;
+MSGID_DESKTOPPAGE_WINTITLEBAR_REFRESH_MEMCHANGE_SHORTHELP
+When this item is checked, the window title bar\n\
+is only refreshed when the amount of available\n\
+system memory has changed since last check.\n\
+The memory is checked every \"Titlebar refresh rate\" seconds.
+; When this item is checked, the window title bar\n\
+; is only refreshed when the amount of available\n\
+; system memory has changed since last check.\n\
+; The memory is checked every \"Titlebar refresh rate\" seconds.
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_LASSO
+Lasso
+;Lasso
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_SINGLEWINDOW_LASSO
+Single-Window Lasso Mode
+;Single-Window Lasso Mode
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_SINGLEWINDOW_LASSO_SHORTHELP
+Press this qualifier key to limit lasso operation to a single window.\n\
+In this mode, the window contents scrolls to unveal hidden\n\
+icons if the mouse leaves the inner window area.
+;Press this qualifier key to limit lasso operation to a single window.\n\
+;In this mode, the window contents scrolls to unveal hidden\n\
+;icons if the mouse leaves the inner window area.
+;
+;-----------------------------------------------------------
+;
+MSGID_ICONSPAGE_ICONFRAME
+Icon Frame
+;Icon Frame
+;
+;
+MSGID_ICONSPAGE_ICONFRAME_NORMAL
+Normal
+;Normal
+;
+;
+MSGID_ICONSPAGE_ICONFRAME_NORMAL_SHORTHELP
+This type of border is drawn around unselected icons.\n\
+\033bGlowIcons\033n which have been marked as\n\
+\"borderless\" will not show this border.\n\
+Please note that the icon borders below must\n\
+be non-zero for the icon border to show.
+;This type of border is drawn around unselected icons.\n\
+;\033bGlowIcons\033n which have been marked as\n\
+;\"borderless\" will not show this border.\n\
+;Please note that the icon borders below must\n\
+;be non-zero for the icon border to show.
+;
+;
+MSGID_ICONSPAGE_ICONFRAME_SELECTED
+Selected
+;Selected
+;
+;
+MSGID_ICONSPAGE_ICONFRAME_SELECTED_SHORTHELP
+This type of border is drawn around selected icons.\n\
+\033bGlowIcons\033n which have been marked as\n\
+\"borderless\" will not show this border.\n\
+Please note that the icon borders below must\n\
+be non-zero for the icon border to show.
+;This type of border is drawn around selected icons.\n\
+;\033bGlowIcons\033n which have been marked as\n\
+;\"borderless\" will not show this border.\n\
+;Please note that the icon borders below must\n\
+;be non-zero for the icon border to show.
+;
+;
+MSGID_ICONSPAGE_ICONBORDER_LEFT
+Left:
+;Left:
+;
+;
+MSGID_ICONSPAGE_ICONBORDER_LEFT_SHORTHELP
+This is the space between the left side of an\n\
+icon and the border. No icon borders will be\n\
+drawn when this space is 0.
+;This is the space between the left side of an\n\
+;icon and the border. No icon borders will be\n\
+;drawn when this space is 0.
+;
+;
+MSGID_ICONSPAGE_ICONBORDER_TOP
+Top:
+;Top:
+;
+;
+MSGID_ICONSPAGE_ICONBORDER_TOP_SHORTHELP
+This is the space between the top of an\n\
+icon and the border. No icon borders will be\n\
+drawn when this space is 0.
+;This is the space between the top of an\n\
+;icon and the border. No icon borders will be\n\
+;drawn when this space is 0.
+;
+;
+MSGID_ICONSPAGE_ICONBORDER_RIGHT
+Right:
+;Right:
+;
+;
+MSGID_ICONSPAGE_ICONBORDER_RIGHT_SHORTHELP
+This is the space between the right side of an\n\
+icon and the border. No icon borders will be\n\
+drawn when this space is 0.
+;This is the space between the right side of an\n\
+;icon and the border. No icon borders will be\n\
+;drawn when this space is 0.
+;
+;
+MSGID_ICONSPAGE_ICONBORDER_BOTTOM
+Bottom:
+;Bottom:
+;
+;
+MSGID_ICONSPAGE_ICONBORDER_BOTTOM_SHORTHELP
+This is the space between the bottom of an\n\
+icon and the border. No icon borders will be\n\
+drawn when this space is 0.
+;This is the space between the bottom of an\n\
+;icon and the border. No icon borders will be\n\
+;drawn when this space is 0.
+;
+;
+MSGID_ICONSPAGE_LABELS
+Labels
+;Labels
+;
+;
+MSGID_ICONSPAGE_LABELS_TEXT
+Text style:
+;Text style:
+;
+;
+MSGID_ICONSPAGE_LABELS_TEXT_SHORTHELP
+Provides a choice of label font formatting\n\
+which can be applied to the icons text label
+;Provides a choice of label font formatting\n\
+;which can be applied to the icons text label
+;
+;
+MSGID_ICONSPAGE_LABELS_TEXTSPACE
+Image <-> Text Space
+;Image <-> Text Space
+;
+;
+MSGID_ICONSPAGE_LABELS_TEXTSPACE_SHORTHELP
+Adjusts the space between the\n\
+icon imagery and its text label
+;Adjusts the space between the\n\
+;icon imagery and its text label
+;
+;
+MSGID_ICONSPAGE_LABELS_TEXTSPACE_PIXELS
+pixels
+;pixels
+;
+;
+MSGID_ICONSPAGE_LABELS_SPLIT
+Split into multiple lines:
+;Split into multiple lines:
+;
+;
+MSGID_ICONSPAGE_LABELS_SPLIT_SHORTHELP
+Allows filenames to be split\n\
+over multiple lines
+;Allows filenames to be split\n\
+;over multiple lines
+;
+;
+MSGID_ICONSPAGE_LABELS_UNDERLINE_LINKS
+Display soft-link file names \033uunderlined\033n:
+;Display soft-link file names \033uunderlined\033n:
+;
+;
+MSGID_ICONSPAGE_LABELS_UNDERLINE_LINKS_SHORTHELP
+When this item is checked, icon names of\n\
+soft-links are displayed \033uunderlined\033n.
+;When this item is checked, icon names of\n\
+;soft-links are displayed \033uunderlined\033n.
+;
+;
+MSGID_ICONSPAGE_LABELS_FONT
+Font
+;Font
+;
+;
+MSGID_ICONSPAGE_LABELS_FONT_NOTICE
+To change the font used for icon labels you must use \
+the standard \033bFont preferences\033n program installed on your \
+system.  Use the pop-up button on the right to launch \
+the fonts preference program.
+;To change the font used for icon labels you must use \
+;the standard \033bFont preferences\033n program installed on your \
+;system.  Use the pop-up button on the right to launch \
+;the fonts preference program.
+;
+;
+MSGID_ICONSPAGE_LABELS_FONT_SHORTHELP
+Launch standard Font prefs program
+;Launch standard Font prefs program
+;
+;
+MSGID_ICONSPAGE_GENERAL
+General
+;General
+;
+;
+MSGID_ICONSPAGE_MASKED_CLICKAREA
+Masked click area:
+;Masked click area:
+;
+;
+MSGID_ICONSPAGE_MASKED_CLICKAREA_SHORTHELP
+If this checkbox is checked, you have to click on the\n\
+unmasked, visible area of an icon to activate it. If it\n\
+is unchecked, a click anywhere inside the icon\n\
+rectangle will be sufficient for activation.
+;If this checkbox is checked, you have to click on the\n\
+;unmasked, visible area of an icon to activate it. If it\n\
+;is unchecked, a click anywhere inside the icon\n\
+;rectangle will be sufficient for activation.
+;
+;
+MSGID_ICONSPAGE_MULTISELECTION
+Multi-Selection:
+;Multi-Selection:
+;
+;
+MSGID_ICONSPAGE_MULTISELECTION_SHORTHELP
+Provides an alternative multi-select method which\n\
+does not require you to hold down the SHIFT key\n\
+whilst dragging multiple icons.
+;Provides an alternative multi-select method which\n\
+;does not require you to hold down the SHIFT key\n\
+;whilst dragging multiple icons.
+;
+;
+MSGID_ICONSPAGE_NEWICONS
+New Icons
+;New Icons
+;
+;
+MSGID_ICONSPAGE_NEWICONS_REMAP_PRECISION
+Remap precision:
+;Remap precision:
+;
+;
+MSGID_ICONSPAGE_NEWICONS_REMAP_PRECISION_SHORTHELP
+Specifies the precision to use when\n\
+remapping NewIcon colors to the screen palette.
+;Specifies the precision to use when\n\
+;remapping NewIcon colors to the screen palette.
+;
+;
+MSGID_ICONSPAGE_NEWICONS_TRANSPARENTBG
+Transparent background:
+;Transparent background:
+;
+;
+MSGID_ICONSPAGE_NEWICONS_TRANSPARENTBG_SHORTHELP
+Makes the background of NewIcons transparent
+;Makes the background of NewIcons transparent
+;
+;
+MSGID_ICONSPAGE_DEFICONS
+Def Icons
+;Def Icons
+;
+;
+MSGID_ICONSPAGE_DEFICONS_LOADFIRST
+Load first:
+;Load first:
+;
+;
+MSGID_ICONSPAGE_DEFICONS_LOADFIRST_SHORTHELP
+Your def_#? icons will get priority when\n\
+loading over a specific icon for a device.
+;Your def_#? icons will get priority when\n\
+;loading over a specific icon for a device.
+;
+;
+MSGID_ICONSPAGE_DEFICONS_SAVEABLE
+Icons saveable:
+;Icons saveable:
+;
+;
+MSGID_ICONSPAGE_DEFICONS_SAVEABLE_SHORTHELP
+When enabled, \033bsnapshot\033n saves changes\n\
+to default icons.\n\
+Uncheck this checkbox to prevent Scalos from\n\
+changing any ofyour default icons.
+;When enabled, \033bsnapshot\033n saves changes\n\
+;to default icons.\n\
+;Uncheck this checkbox to prevent Scalos from\n\
+;changing any ofyour default icons.
+;
+;
+MSGID_ICONSPAGE_TOOLTIPS_GENERAL
+General
+;General
+;
+;
+MSGID_ICONSPAGE_TOOLTIPS_SHOW
+Show toolips for icons:
+;Show toolips for icons:
+;
+;
+MSGID_ICONSPAGE_TOOLTIPS_SHOW_SHORTHELP
+When this checkbox is checked, Scalos pops up\n\
+\033btooltips\033n with additional information\n\
+when you keep the mouse pointer positioned over\n\
+an icon for more than the tooltip delay time.\n\
+The tooltip automatically disappears as soon as\n\
+the mouse is moved or any key is pressed.
+;When this checkbox is checked, Scalos pops up\n\
+;\033btooltips\033n with additional information\n\
+;when you keep the mouse pointer positioned over\n\
+;an icon for more than the tooltip delay time.\n\
+;The tooltip automatically disappears as soon as\n\
+;the mouse is moved or any key is pressed.
+;
+;
+MSGID_ICONSPAGE_TOOLTIPS_SETTINGS
+Settings
+;Settings
+;
+;
+MSGID_ICONSPAGE_TOOLTIPS_DELAY
+Delay before pop-up:
+;Delay before pop-up:
+;
+;
+MSGID_ICONSPAGE_TOOLTIPS_DELAY_SHORTHELP
+Here you can select how long you have to\n\
+keep the mouse pointer positioned over an\n\
+icon until the tooltip pops up.
+;Here you can select how long you have to\n\
+;keep the mouse pointer positioned over an\n\
+;icon until the tooltip pops up.
+;
+;
+MSGID_ICONSPAGE_TOOLTIPS_DELAY_SECONDS
+seconds
+;seconds
+;
+;
+MSGID_ICONSPAGE_TOOLTIPS_FONT
+Font:
+;Font:
+;
+;
+MSGID_ICONSPAGE_TOOLTIPS_FONT_SHORTHELP
+???
+;???
+;
+;
+MSGID_ICONSPAGE_TOOLTIPS_FONT_ASLTITLE
+Please select a font...
+;Please select a font...
+;
+;
+MSGID_ICONSPAGE_TOOLTIPS_DISPLAYFIELDS
+Display Fields
+;Display Fields
+;
+;
+MSGID_ICONSPAGE_TOOLTIPS_AVAILABLEFIELDS
+Available Fields
+;Available Fields
+;
+;
+MSGID_ICONSPAGE_TOOLTIPS_AVAILABLEFIELDS_SHORTHELP
+???
+;???
+;
+;
+MSGID_ICONSPAGE_TOOLTIPS_FIELDSINUSE
+Fields In Use
+;Fields In Use
+;
+;
+MSGID_ICONSPAGE_TOOLTIPS_FIELDSINUSE_SHORTHELP
+???
+;???
+;
+;
+MSGID_ICONSPAGE_DRAGGING
+Dragging
+;Dragging
+;
+;
+MSGID_ICONSPAGE_ATTRIBUTES_TRANSPARENCY_DEFICONS
+Transparency
+;Transparency
+;
+;
+MSGID_ICONSPAGE_ATTRIBUTES_TRANSPARENCY_DEFICONS_SHORTHELP
+Default icons may be drawn transparent.\n\
+Please select the degree of transparency you\n\
+would like default icons to be draw with.\n\
+Please note that real transparency is only available\n\
+if your desktop screen has more than 256 colors.
+;Default icons may be drawn transparent.\n\
+;Please select the degree of transparency you\n\
+;would like default icons to be draw with.\n\
+;Please note that real transparency is only available\n\
+;if your desktop screen has more than 256 colors.
+;
+; +++translateme+++
+MSGID_ICONSPAGE_LABELS_FONT_SAMPLETEXT_SHORTHELP
+This is an example text to visualize what the selected font looks like
+;This is an example text to visualize what the selected font looks like
+;
+; +++translateme+++
+MSGID_ICONSPAGE_HILITE_UNDER_MOUSE
+Mark icon under mouse
+;Mark icon under mouse
+;
+; +++translateme+++
+MSGID_ICONSPAGE_HILITE_UNDER_MOUSE_SHORTHELP
+If this switch is turned on, every\n\
+icon is shown in a highlighted stated\n\
+while the mouse pointer is over it.
+;If this switch is turned on, every\n\
+;icon is shown in a highlighted stated\n\
+;while the mouse pointer is over it.
+;
+;+++translateme+++
+MSGID_ICONSPAGE_ICONSCALING
+Icon Scaling
+;Icon Scaling
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SCALING_MINSIZE
+Minimum Size:
+;Minimum Size:
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SCALING_MINSIZE_SHORTHELP
+Minimum size for displayed icons.\n\
+Smaller icons will be scaled to\n\
+the specified minimum size.
+;Minimum size for displayed icons.\n\
+;Smaller icons will be scaled to\n\
+;the specified minimum size.
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SCALING_MAXSIZE
+Maximum Size:
+;Maximum Size:
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SCALING_MAXSIZE_SHORTHELP
+Maximum size for displayed icons.\n\
+Larger icons will be scaled to\n\
+the specified maximum size.
+;Maximum size for displayed icons.\n\
+;Larger icons will be scaled to\n\
+;the specified maximum size.
+;
+;+++translateme+++
+MSGID_ICONSPAGE_GROUP_ICONFONT
+Standard Font
+;Standard Font
+;
+;+++translateme+++
+MSGID_ICONSPAGE_LABELS_ICONFONT_SHORTHELP
+Select font to display icon names.\n\
+This selection is disabled while TrueType\n\
+icon fonts are enabled.
+;Select font to display icon names.\n\
+;This selection is disabled while TrueType\n\
+;icon fonts are enabled.
+;
+;+++translateme+++
+MSGID_ICONSPAGE_ICONFONT_ASLTITLE
+Please select an icon font...
+;Please select an icon font...
+;
+;+++translateme+++
+MSGID_ICONSPAGE_ICONTHUMBNAILS
+Thumbnails
+;Thumbnails
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SHOWTHUMBNAILS
+Display Thumbnails
+;Display Thumbnails
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SHOWTHUMBNAILS_SHORTHELP
+Select if and when icons are displayed as image thumbnails:\n\
+Never - don't show thumbnails\n\
+As default - show thumbnails instead of default icons\n\
+Always - always show thumbnails
+;Select if and when icons are displayed as image thumbnails:\n\
+:Never - don't show thumbnails\n\
+:As default - show thumbnails instead of default icons\n\
+:Always - always show thumbnails
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SHOWTHUMBNAILS_AS_DEFAULT
+Ignore \033bShowOnlyIcons\033n mode:
+;Ignore \033bShowOnlyIcons\033n mode:
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SHOWTHUMBNAILS_AS_DEFAULT_SHORTHELP
+Select it to allow the displaying of icons\n\
+thumbnails images for default icons with windows\n\
+using the \033bShow Only Icons\033n show mode.\n\
+\n\
+This option is only availlable if \033bAs default\033n\n\
+option is set from \033bDisplay Thumbnails\033n setting.
+;Select it to allow the displaying of icons\n\
+;thumbnails images for default icons with windows\n\
+;using the \033bShow Only Icons\033n show mode.\n\
+;\n\
+;This option is only availlable if \033bAs default\033n\n\
+;option is set from \033bDisplay Thumbnails\033n setting.
+;
+;+++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_SIZE
+Thumbnail size
+;Thumbnail size
+;
+;+++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_SIZE_SHORTHELP
+Select desired size for thumbnail images.\n\
+Actual size may vary, due to image aspect.
+;Select desired size for thumbnail images.\n\
+;Actual size may vary, due to image aspect.
+;
+;+++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_MAXAGE
+Cleanup after
+;Cleanup after
+;
+;+++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_MAXAGE_SHORTHELP
+Cached thumbnail images will be removed from the cache\n\
+if they have not been accessed for more than the\n\
+specified number of days, in order to keep cache\n\
+size as small as possible.
+;Cached thumbnail images will be removed from the cache\n\
+;if they have not been accessed for more than the\n\
+;specified number of days, in order to keep cache\n\
+;size as small as possible.
+;
+;+++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_MAXAGE_DAYS
+days
+;days
+;
+; +++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_MINSIZE_LIMIT
+Minimum limit size
+;Minimum limit size
+;
+; +++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_MINSIZE_LIMIT_SHORTHELP
+Select desired minimum dimensions for images to cache.\n\
+Images with smallers dimensions than value specified here,\n\
+will not be added to the cache.
+;Select desired minimum dimensions for images to cache.\n\
+;Images with smallers dimensions than value specified here,\n\
+;will not be added to the cache.
+;
+; +++translateme+++
+MSGID_ICONSPAGE_SHOWTHUMBNAILS_AS_DEFAULT_SHORTHELP
+Select it to allow the displaying of icons\n\
+thumbnails images for default icons.\n\
+This option is only availlable if \033bAs default\033n\n\
+option is set from \033bDisplay Thumbnails\033n setting.
+;Select it to allow the displaying of icons\n\
+;thumbnails images for default icons.\n\
+;This option is only availlable if \033bAs default\033n\n\
+;option is set from \033bDisplay Thumbnails\033n setting.
+;
+; +++translateme+++
+MSGID_ICONSPAGE_TOOLTIPS_TRANSPARENCY
+Transparency
+;Transparency
+;
+; +++translateme+++
+MSGID_ICONSPAGE_TOOLTIPS_TRANSPARENCY_SHORTHELP
+Tooltips can be drawn transparent.\n\
+Please select the degree of\n\
+transparency for the tooltips.\n\
+Please note that transparency is only available\n\
+if your desktop screen has more than 256 colors.
+;Tooltips can be drawn transparent.\n\
+;Please select the degree of\n\
+;transparency for the tooltips.\n\
+;Please note that transparency is only available\n\
+;if your desktop screen has more than 256 colors.
+;
+; +++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_SETTINGS
+Settings
+;Settings
+;
+; +++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_CACHE
+Caching
+;Caching
+;
+; +++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_QUALITY
+Quality
+;Quality
+;
+; +++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_QUALITY_WORST
+Low
+;Low
+;
+; +++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_QUALITY_BEST
+High
+;High
+;
+; +++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_QUALITY_SHORTHELP
+This slider selects the quality of the generated thumbnails.\n\
+Usually, better quality thumbnails take longer to create.\n\
+The actual effect of quality setting depends on the preview plugin used.
+;This slider selects the quality of the generated thumbnails.\n\
+;Usually, better quality thumbnails take longer to create.\n\
+;The actual effect of quality setting depends on the preview plugin used.
+;
+; +++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_SQUARE
+Thumbnails always square:
+;Thumbnails always square:
+;
+; +++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_SQUARE_SHORTHELP
+By default, thumbnail image icons reflect the aspect ratio\n\
+of their parent images, i.e. they can be wider than high or vice versa.\n\
+If this checkbox is checked, thumbnail image icons are always square.\n\
+;By default, thumbnail image icons reflect the aspect ratio\n\
+;of their parent images, i.e. they can be wider than high or vice versa.\n\
+;If this checkbox is checked, thumbnail image icons are always square.\n\
+;
+; +++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_ICONFRAME
+Thumbnail Icon Frames
+;Thumbnail Icon Frames
+;
+; +++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_ICONFRAME_NORMAL_SHORTHELP
+This type of border is drawn around unselected thumbnail icons.\n\
+\033bGlowIcons\033n which have been marked as\n\
+\"borderless\" will not show this border.\n\
+;Please note that the icon borders below must\n\
+;be non-zero for the icon border to show.
+;This type of border is drawn around unselected thumbnail icons.\n\
+;\033bGlowIcons\033n which have been marked as\n\
+;\"borderless\" will not show this border.\n\
+;;Please note that the icon borders below must\n\
+;;be non-zero for the icon border to show.
+;
+; +++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_ICONFRAME_SELECTED_SHORTHELP
+This type of border is drawn around selected thumbnail icons.\n\
+\033bGlowIcons\033n which have been marked as\n\
+\"borderless\" will not show this border.\n\
+;Please note that the icon borders below must\n\
+;be non-zero for the icon border to show.
+;This type of border is drawn around selected thumbnail icons.\n\
+;\033bGlowIcons\033n which have been marked as\n\
+;\"borderless\" will not show this border.\n\
+;;Please note that the icon borders below must\n\
+;;be non-zero for the icon border to show.
+;
+;+++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_BACKFILL
+Thumbnails background filled
+;Thumbnails background filled
+;
+;+++translateme+++
+MSGID_ICONSPAGE_THUMBNAILS_BACKFILL_SHORTHELP
+Enable this attribute to draw all thumbnail icons with the\n\
+backfill colors defined by Scalos palette prefs.\n\
+If this switch is off, thumbnails have transparent background.
+;Enable this attribute to draw all thumbnail icons with the\n\
+;backfill colors defined by Scalos palette prefs.\n\
+;If this switch is off, thumbnails have transparent background.
+;
+;+++translateme+++
+MSGID_ICONSPAGE_THUMBNAIL_BACKFILL_TRANSPARENCY
+Thumbnail background transparency
+;Thumbnail background transparency
+;
+;+++translateme+++
+MSGID_ICONSPAGE_THUMBNAIL_BACKFILL_TRANSPARENCY_SHORTHELP
+True-color icons can be drawn with filled\n\
+background of selectable transparency.
+;True-color icons can be drawn with filled\n\
+;background of selectable transparency.
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SEL_ICONTEXT_RECT_GROUP
+Selected Icon Text Rectangle
+;Selected Icon Text Rectangle
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SEL_ICONTEXT_RECT
+Draw additional rectangle around selected icon text
+;Draw additional rectangle around selected icon text
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SEL_ICONTEXT_RECT_SHORTHELP
+Select this checkbox to draw a rectangle around the\n\
+icon text of all selected icons, for improved visibility.
+;Select this checkbox to draw a rectangle around the\n\
+;icon text of all selected icons, for improved visibility.
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SEL_ICONTEXT_XBORDER
+Additional Horizontal border
+;Additional Horizontal border
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SEL_ICONTEXT_XBORDER_SHORTHELP
+Additional horizontal border which is used for\n\
+drawing a rectangle around the icon text of selected icons.
+;Additional horizontal border which is used for\n\
+;drawing a rectangle around the icon text of selected icons.
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SEL_ICONTEXT_YBORDER
+Additional Vertical border
+;Additional Vertical border
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SEL_ICONTEXT_YBORDER_SHORTHELP
+Additional vertical border which is used for drawing\n\
+a rectangle around the icon text of selected icons.
+;Additional vertical border which is used for drawing\n\
+;a rectangle around the icon text of selected icons.
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SEL_ICONTEXT_RADIUS
+Corner Radius
+;Corner Radius
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SEL_ICONTEXT_RADIUS_SHORTHELP
+Corner radius of the rectangle drawn\n\
+around the text of selected icons.
+;Corner radius of the rectangle drawn\n\
+;around the text of selected icons.
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SCALING_NOMINALSIZE
+Nominal Size:
+;Nominal Size:
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SCALING_NOMINALSIZE_SHORTHELP
+Standard size adjustment applied to all icons.
+;Standard size adjustment applied to all icons.
+;
+;+++translateme+++
+MSGID_ICONSPAGE_SCALING_PERCENT
+%
+;%
+;
+;-----------------------------------------------------------
+;
+MSGID_DRAGNDROPPAGE_STYLE
+Style:
+;Style:
+;
+;
+MSGID_DRAGNDROPPAGE_STYLE_SHORTHELP
+The icon label may be displayed\n\
+whilst the icon is being dragged.
+;The icon label may be displayed\n\
+;whilst the icon is being dragged.
+;
+;
+MSGID_DRAGNDROPPAGE_BOBS
+Bobs
+;Bobs
+;
+;
+MSGID_DRAGNDROPPAGE_ROUTINES
+Bob Routines:
+;Bob Routines:
+;
+;
+MSGID_DRAGNDROPPAGE_ROUTINES_SHORTHELP
+Scalos provides custom fast smooth icon dragging routines.\n\
+Those custom routines are only used if you are\n\
+running a desktop with more than 256 colours.
+;Scalos provides custom fast smooth icon dragging routines.\n\
+;Those custom routines are only used if you are\n\
+;running a desktop with more than 256 colours.
+;
+;
+MSGID_DRAGNDROPPAGE_TRANSPARENCY
+Transparency Method:
+;Transparency Method:
+;
+;
+MSGID_DRAGNDROPPAGE_TRANSPARENCY_SHORTHELP
+When \"Ghosted/Real Transparent\" is selected, use\n\
+real transparency to draw drag-drop icons. Otherwise,\n\
+dotted \"ghosted\" display is used. Please note that\n\
+real transparency is only available if your\n\
+desktop screen has more than 256 colors.
+;When \"Ghosted/Real Transparent\" is selected, use\n\
+;real transparency to draw drag-drop icons. Otherwise,\n\
+;dotted \"ghosted\" display is used. Please note that\n\
+;real transparency is only available if your\n\
+;desktop screen has more than 256 colors.
+;
+;
+MSGID_DRAGNDROPPAGE_DROPMARKMODE
+Drop mark mode:
+;Drop mark mode:
+;
+;
+MSGID_DRAGNDROPPAGE_DROPMARKMODE_SHORTHELP
+Select which kind of drap-marks Scalos\n\
+shows while you drag icons around.
+;Select which kind of drap-marks Scalos\n\
+;shows while you drag icons around.
+;
+;
+MSGID_DRAGNDROPPAGE_LOOK
+Look:
+;Look:
+;
+;
+MSGID_DRAGNDROPPAGE_LOOK_SHORTHELP
+A Trigger can change the look of the icon\n\
+currently being dragged. You can select what\n\
+\033btriggers\033n should affect your icons below.
+;A Trigger can change the look of the icon\n\
+;currently being dragged. You can select what\n\
+;\033btriggers\033n should affect your icons below.
+;
+;
+MSGID_DRAGNDROPPAGE_AUTOREMOVE
+Auto remove icons:
+;Auto remove icons:
+;
+;
+MSGID_DRAGNDROPPAGE_AUTOREMOVE_SHORTHELP
+If enabled, when you drag icons away from their\n\
+original position, only a semi-transparent shadow\n\
+of the icon remains at the original place.
+;If enabled, when you drag icons away from their\n\
+;original position, only a semi-transparent shadow\n\
+;of the icon remains at the original place.
+;
+;
+MSGID_DRAGNDROPPAGE_GROUP_MULTIPLE
+Group multiple icons:
+;Group multiple icons:
+;
+;
+MSGID_DRAGNDROPPAGE_GROUP_MULTIPLE_SHORTHELP
+When dragging multiple icons\n\
+they will appear as a pile\n\
+to speed up OS.
+;When dragging multiple icons\n\
+;they will appear as a pile\n\
+;to speed up OS.
+;
+;
+MSGID_DRAGNDROPPAGE_DRAGGINGLABEL
+Display dragging label:
+;Display dragging label:
+;
+;
+MSGID_DRAGNDROPPAGE_DRAGGINGLABEL_SHORTHELP
+When dragging multiple icons Scalos will display\n\
+a text line detailing number of files, drawers\n\
+and devices being dragged.
+;When dragging multiple icons Scalos will display\n\
+;a text line detailing number of files, drawers\n\
+;and devices being dragged.
+;
+;
+MSGID_DRAGNDROPPAGE_FORCECOPY
+Force copy:
+;Force copy:
+;
+;
+MSGID_DRAGNDROPPAGE_FORCECOPY_SHORTHELP
+Define the qualifier key that is used to\n\
+force copying (instead of moving) any\n\
+dragged files and drawers.
+;Define the qualifier key that is used to\n\
+;force copying (instead of moving) any\n\
+;dragged files and drawers.
+;
+;
+MSGID_DRAGNDROPPAGE_TRIGGERS
+Triggers
+;Triggers
+;
+;
+MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP
+Enabling a trigger will change the icons appearance\n\
+to the \033bLook\033n configured above when the\n\
+icon is above trigger.
+;Enabling a trigger will change the icons appearance\n\
+;to the \033bLook\033n configured above when the\n\
+;icon is above trigger.
+;
+;
+MSGID_DRAGNDROPPAGE_QUALIFIERS
+Qualifiers
+;Qualifiers
+;
+;
+MSGID_DRAGNDROPPAGE_TRIGGERS_DISKICONS
+Disk icons
+;Disk icons
+;
+;
+MSGID_DRAGNDROPPAGE_TRIGGERS_DRAWERICONS
+Drawer icons
+;Drawer icons
+;
+;
+MSGID_DRAGNDROPPAGE_TRIGGERS_TOOLICONS
+Tool icons
+;Tool icons
+;
+;
+MSGID_DRAGNDROPPAGE_TRIGGERS_PROJECTICONS
+Project icons
+;Project icons
+;
+;
+MSGID_DRAGNDROPPAGE_TRIGGERS_TRASHCANICONS
+Trashcan icons
+;Trashcan icons
+;
+;
+MSGID_DRAGNDROPPAGE_TRIGGERS_KICKICONS
+Kick icons
+;Kick icons
+;
+;
+MSGID_DRAGNDROPPAGE_TRIGGERS_APPICONS
+Application icons
+;Application icons
+;
+;
+MSGID_DRAGNDROPPAGE_TRIGGERS_APPWINDOWS
+Application windows
+;Application windows
+;
+;
+MSGID_DRAGNDROPPAGE_TRIGGERS_ICONIFIED_WINDOWS
+Iconified windows
+;Iconified windows
+;
+;
+MSGID_DRAGNDROPPAGE_TRANSPARENCY_ICONDRAG
+Icon drag
+;Icon drag
+;
+;
+MSGID_DRAGNDROPPAGE_TRANSPARENCY_ICONDRAG_SHORTHELP
+Select degree of icon transparency when dragging icons.\n\
+0%% means completely transparent (invisible!) icons.\n\
+100%% means opaque icons.\n\
+Please note that real transparency is only available\n\
+if your desktop screen has more than 256 colors.
+;Select degree of icon transparency when dragging icons.\n\
+;0%% means completely transparent (invisible!) icons.\n\
+;100%% means opaque icons.\n\
+;Please note that real transparency is only available\n\
+;if your desktop screen has more than 256 colors.
+;
+;
+MSGID_DRAGNDROPPAGE_TRANSPARENCY_ICONSHADOW
+Icon shadow
+;Icon shadow
+;
+;
+MSGID_DRAGNDROPPAGE_TRANSPARENCY_ICONSHADOW_SHORTHELP
+Select degree of transparency of the icon shadow that\n\
+remains at the original position when you start\n\
+dragging the icon away.\n\
+0% means completely transparent (invisible!) shadow.\n\
+100% means opaque shadow.
+;Select degree of transparency of the icon shadow that\n\
+;remains at the original position when you start\n\
+;dragging the icon away.\n\
+;0% means completely transparent (invisible!) shadow.\n\
+;100% means opaque shadow.\n\
+;Please note that real transparency is only available\n\
+;if your desktop screen has more than 256 colors.
+;
+;
+MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE
+opaque
+;opaque
+;
+;
+MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT
+transparent
+;transparent
+;
+;
+MSGID_DRAGNDROPPAGE_EASY_MULTISELECT
+Easy Multiple Icon Selection:
+;Easy Multiple Icon Selection:
+;
+;
+MSGID_DRAGNDROPPAGE_EASY_MULTISELECT_SHORTHELP
+When enabled, you are not required to hold the\n\
+\033bshift\033n key to select multiple icons.
+;When enabled, you are not required to hold the\n\
+;\033bshift\033n key to select multiple icons.
+;
+;
+MSGID_DRAGNDROPPAGE_EASY_MULTIDRAG
+Easy Dragging of Multiple Icons:
+;Easy Dragging of Multiple Icons:
+;
+;
+MSGID_DRAGNDROPPAGE_EASY_MULTIDRAG_SHORTHELP
+When enabled, you are not required to hold the\n\
+\033bshift\033n key when you begin to drag\n\
+multiple selected icons.
+;When enabled, you are not required to hold the\n\
+;\033bshift\033n key when you begin to drag\n\
+;multiple selected icons.
+;
+;
+MSGID_DRAGNDROPPAGE_FORCEMAKELINK
+Create Links:
+;Create Links:
+;
+;
+MSGID_DRAGNDROPPAGE_FORCEMAKELINK_SHORTHELP
+Define the qualifier key that is used to\n\
+create links to (instead of copying) any\n\
+dragged files and drawers.
+;Define the qualifier key that is used to\n\
+;create links to (instead of copying) any\n\
+;dragged files and drawers.
+;
+;
+MSGID_DRAGNDROPPAGE_FORCEMOVE
+Force move:
+;Force move:
+;
+;
+MSGID_DRAGNDROPPAGE_FORCEMOVE_SHORTHELP
+Define the qualifier key that is used to\n\
+force moving (instead of copying) any\n\
+dragged files and drawers.
+;Define the qualifier key that is used to\n\
+;force moving (instead of copying) any\n\
+;dragged files and drawers.
+;
+;+++translateme+++
+MSGID_DRAGNDROPPAGE_DROPMENU
+Show Drop Menu:
+;Show Drop Menu:
+;
+;+++translateme+++
+MSGID_DRAGNDROPPAGE_DROPMENU_SHORTHELP
+When enabled, a popup menu is displayed on each drag-drop\n\
+operation that allows easy selection whether to \033bcopy\033n or\n\
+\033bmove\033n item, \033bcreate link\033n to item, or entirely cancel drag-drop.
+;When enabled, a popup menu is displayed on each drag-drop\n\
+;operation that allows easy selection whether to \033bcopy\033n or\n\
+;\033bmove\033n item, \033bcreate link\033n to item, or entirely cancel drag-drop.
+;
+;+++translateme+++
+MSGID_DRAGNDROPPAGE_TRIGGERS_SCALOS_WINDOWS
+Scalos Windows
+;Scalos Windows
+;
+;+++translateme+++
+MSGID_DRAGNDROPPAGE_POPOPENWINDOWS
+Pop-Open Windows
+;Pop-Open Windows
+;
+;+++translateme+++
+MSGID_DRAGNDROPPAGE_SLIDER_POPOPWINDOW_DELAY
+Pop-Open Delay:
+;Pop-Open Delay:
+;
+;+++translateme+++
+MSGID_DRAGNDROPPAGE_SLIDER_POPOPWINDOW_DELAY_SHORTHELP
+During a drag&drop operation, this is the number of seconds\n\
+you have to keep the mouse pointer steady over a drawer\n\
+or volume icon before it pops open.
+;During a drag&drop operation, this is the number of seconds\n\
+;you have to keep the mouse pointer steady over a drawer\n\
+;or volume icon before it pops open.
+;
+;-----------------------------------------------------------
+;
+MSGID_WINDOWPAGE_WINDOWTITLES
+Window Titles
+;Window Titles
+;
+;
+MSGID_WINDOWPAGE_WINDOWTITLES_ROOTWINDOW
+Root Window:
+;Root Window:
+;
+;
+MSGID_WINDOWPAGE_WINDOWTITLES_ROOTWINDOW_SHORTHELP
+This is the title for the Scalos root window. You only\n\
+see this window title when you have the \"Backdrop\"\n\
+menu item in the Scalos main menu unchecked.
+;This is the title for the Scalos root window. You only\n\
+;see this window title when you have the \"Backdrop\"\n\
+;menu item in the Scalos main menu unchecked.
+;
+;
+MSGID_WINDOWPAGE_WINDOWTITLES_ROOTWINDOW_DESCRIPTION
+|\033b\0338Description
+;|\033b\0338Description
+;
+;
+MSGID_WINDOWPAGE_WINDOWTITLES_DIRECTORYWINDOW
+Directory Window:
+;Directory Window:
+;
+;
+MSGID_WINDOWPAGE_WINDOWTITLES_DIRECTORYWINDOW_SHORTHELP
+This is the window title for any\n\
+normal Scalos drawer window.
+;This is the window title for any\n\
+;normal Scalos drawer window.
+;
+;
+MSGID_WINDOWPAGE_WINDOWTITLES_DIRECTORYWINDOW_DESCRIPTION
+|\033b\0338Description
+;|\033b\0338Description
+;
+;
+MSGID_WINDOWPAGE_WINDOWTYPE
+Window type:
+;Window type:
+;
+;
+MSGID_WINDOWPAGE_WINDOWTYPE_SHORTHELP
+Select whether you would like to be all\n\
+Scalos windows to be created as simple-refresh\n\
+or smart-refresh window.
+;Select whether you would like to be all\n\
+;Scalos windows to be created as simple-refresh\n\
+;or smart-refresh window.
+;
+;
+MSGID_WINDOWPAGE_CONTEXTMENU_DRAGBAR
+Context menu on dragbar only:
+;Context menu on dragbar only:
+;
+;
+MSGID_WINDOWPAGE_CONTEXTMENU_DRAGBAR_SHORTHELP
+Only allows the windows pop-up menu\n\
+to appear when the right mouse button\n\
+is clicked over the\nwindows dragbar
+;Only allows the windows pop-up menu\n\
+;to appear when the right mouse button\n\
+;is clicked over the\nwindows dragbar
+;
+;
+MSGID_WINDOWPAGE_MMB_MOVE
+MMB Moves Contents:
+;MMB Moves Contents:
+;
+;
+MSGID_WINDOWPAGE_MMB_MOVE_SHORTHELP
+Allows the use of the middle mouse button\n\
+to pan around the window contents
+;Allows the use of the middle mouse button\n\
+;to pan around the window contents
+;
+;
+MSGID_WINDOWPAGE_SHOW_STATUSBAR
+Show status bar:
+;Show status bar:
+;
+;
+MSGID_WINDOWPAGE_SHOW_STATUSBAR_SHORTHELP
+Globally sets wether directory windows\n\
+display the status bar at the bottom.
+;Globally sets wether directory windows\n\
+;display the status bar at the bottom.
+;
+;
+MSGID_WINDOWPAGE_DEFAULT_WINDOWSIZE
+Default Window Size
+;Default Window Size
+;
+;
+MSGID_WINDOWPAGE_DEFAULT_WINDOWSIZE_SHORTHELP
+These are the default dimensions for Scalos drawer\n\
+windows. Windows for drawers without icons are opened\n\
+at this position and in this size. You are free to\n\
+move and resize the window any way you like, and\n\
+use \"snapshot window\" to permanently store the\n\
+changed values for that specific drawer window.
+;These are the default dimensions for Scalos drawer\n\
+;windows. Windows for drawers without icons are opened\n\
+;at this position and in this size. You are free to\n\
+;move and resize the window any way you like, and\n\
+;use \"snapshot window\" to permanently store the\n\
+;changed values for that specific drawer window.
+;
+;
+MSGID_WINDOWPAGE_DEFAULT_WINDOWSIZE_LEFT
+Left:
+;Left:
+;
+;
+MSGID_WINDOWPAGE_DEFAULT_WINDOWSIZE_TOP
+Top:
+;Top:
+;
+;
+MSGID_WINDOWPAGE_DEFAULT_WINDOWSIZE_WIDTH
+Width:
+;Width:
+;
+;
+MSGID_WINDOWPAGE_DEFAULT_WINDOWSIZE_HEIGHT
+Height:
+;Height:
+;
+;
+MSGID_WINDOWPAGE_CLEANUPSPACE
+Cleanup Spaces
+;Cleanup Spaces
+;
+;
+MSGID_WINDOWPAGE_CLEANUPSPACE_SHORTHELP
+This are the distances Scalos will leave around\n\
+icons when they are positioned with\n\
+the \"cleanup\" command.
+;This are the distances Scalos will leave around\n\
+;icons when they are positioned with\n\
+;the \"cleanup\" command.
+;
+;
+MSGID_WINDOWPAGE_CLEANUPSPACE_LEFT
+Left:
+;Left:
+;
+;
+MSGID_WINDOWPAGE_CLEANUPSPACE_TOP
+Top:
+;Top:
+;
+;
+MSGID_WINDOWPAGE_CLEANUPSPACE_XSKIP
+X-Skip:
+;X-Skip:
+;
+;
+MSGID_WINDOWPAGE_CLEANUPSPACE_YSKIP
+Y-Skip:
+;Y-Skip:
+;
+;
+MSGID_WINDOWPAGE_CLEANUP_ONRESIZE
+Rearrange icons on resize
+;
+;
+MSGID_WINDOWPAGE_CLEANUP_ONRESIZE_SHORTHELP
+If this switch is enabled, all icons\n\
+without fixed position are automatically\n\
+rearranged when window is resized.
+;
+;
+MSGID_WINDOWPAGE_SHOWALL_DEFAULT
+Default mode for \033bShow All\033n:
+;Default mode for \033bShow All\033n:
+;
+;
+MSGID_WINDOWPAGE_SHOWALL_DEFAULT_SHORTHELP
+This setting selects how the value \"default\"\n\
+is handled for \033bshow all\033n.\n\
+You can select whether \"default\" shows\n\
+\033bonly icons\033n, or \033ball files\033n.
+;This setting selects how the value \"default\"\n\
+;is handled for \033bshow all\033n.\n\
+;You can select whether \"default\" shows\n\
+;\033bonly icons\033n, or \033ball files\033n.
+;
+;
+MSGID_WINDOWPAGE_VIEWBY_DEFAULT
+Default \033bView By\033n Mode:
+;Default \033bView By\033n Mode:
+;
+;
+MSGID_WINDOWPAGE_WINDOWTYPE_VIEWBY_DEFAULT_SHORTHELP
+Selects which view mode is to be used for all\n\
+drawers with their view mode set to \"default\".
+;Selects which view mode is to be used for all\n\
+;drawers with their view mode set to \"default\".
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_BROWSER_GADGETS
+Browser Window Gadgets
+;Browser Window Gadgets
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_GADGETS_SHORTHELP
+Select here which gadgets you would like to\n\
+have in your browser window control bar.
+;Select here which gadgets you would like to\n\
+;have in your browser window control bar.
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_AVAILABLE_GADGETS
+Available Gadgets
+;Available Gadgets
+;
+;
+MSGID_WINDOWPAGE_CONTROLBAR_AVAILABLE_GADGETS_SHORTHELP
+Select one ore move gadgets from this list and drag\n\
+them to the list of \033bActive Gadgets\00n.
+;Select one ore move gadgets from this list and drag\n\
+;them to the list of \033bActive Gadgets\00n.
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_ACTIVE_GADGETS
+Active Gadgets
+;Active Gadgets
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_ACTIVE_GADGETS_SHORTHELP
+These are the gadgets currently on your control bar.\n\
+Change the order of the gadgets by sorting them via drag-and-drop.\n\
+To remove gadgets, drag them to the\n\
+\033bAvailable Gadgets\033n on the left.\n\
+To add new gadgets, drag new gadgets from the\n\
+\033bAvailable Gadgets\033n to the position you want to see them.
+;These are the gadgets currently on your control bar.\n\
+;Change the order of the gadgets by sorting them via drag-and-drop.\n\
+;To remove gadgets, drag them to the\n\
+;\033bAvailable Gadgets\033n on the left.\n\
+;To add new gadgets, drag new gadgets from the\n\
+;\033bAvailable Gadgets\033n to the position you want to see them.
+;
+;+++translateme+++
+MSGID_CONTROLBARGADGETLIST_TYPE
+Gadget Type
+;Gadget Type
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_NORMALIMAGE
+Unselected Image
+;Unselected Image
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_NORMALIMAGE_ASLTITLE
+Select image for unselected state
+;Select image for unselected state
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_NORMALIMAGE_SHORTHELP
+Select here any datatypes image for the\n\
+unselected state of a user-defined button.
+;Select here any datatypes image for the\n\
+;unselected state of a user-defined button.
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_SELECTEDIMAGE
+Selected Image
+;Selected Image
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_SELECTEDIMAGE_ASLTITLE
+Select image for Selected state
+;Select image for Selected state
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_SELECTEDIMAGE_SHORTHELP
+Select here any datatypes image for the\n\
+selected state of a user-defined button.
+;Select here any datatypes image for the\n\
+;selected state of a user-defined button.
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_DISABLEDIMAGE
+Disabled Image
+;Disabled Image
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_DISABLEDIMAGE_ASLTITLE
+Select image for Disabled state
+;Select image for Disabled state
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_DISABLEDIMAGE_SHORTHELP
+Select here any datatypes image for the\n\
+disabled state of a user-defined button.
+;Select here any datatypes image for the\n\
+;disabled state of a user-defined button.
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_ACTION
+Button Action
+;Button Action
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_ACTION_SHORTHELP
+For user-defined buttons select here any action from\n\
+the list of available Scalos menu commands.
+;For user-defined buttons select here any action from\n\
+;the list of available Scalos menu commands.
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_GADGETHELPTEXT
+Help Text
+;Help Text
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_GADGETHELPTEXT_SHORTHELP
+For user-defined buttons, enter your gadget help text here.\n\
+This text is displayed when you keep your mouse\n\
+steadily positioned on the gadgets for a few seconds.
+;For user-defined buttons, enter your gadget help text here.\n\
+;This text is displayed when you keep your mouse\n\
+;steadily positioned on the gadgets for a few seconds.
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CHECK_OVERLAP
+Check for Overlapping Icons:
+;Check for Overlapping Icons:
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CHECK_OVERLAP_SHORTHELP
+Globally sets whether verification is performed that icons do\n\
+not overlap each other.\n\
+If enabled, overlapping icons will be repositioned when read.
+;Globally sets whether verification is performed that icons do\n\
+;not overlap each other.\n\
+;If enabled, overlapping icons will be repositioned when read.
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_TRANSPARENCY_WINDOW
+Transparency
+;Transparency
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_TRANSPARENCY_ACTIVEWINDOW
+Active window
+;Active window
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_TRANSPARENCY_INACTIVEWINDOW
+Inactive windows
+;Inactive windows
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_TRANSPARENCY_ACTIVEWINDOW_SHORTHELP
+Here you can select the degree of transparency\n\
+for the active Scalos desktop, icon, or text window.\n\
+The desktop will only get transparent if it is not a backdrop window.
+;Here you can select the degree of transparency\n\
+;for the active Scalos desktop, icon, or text window.\n\
+;The desktop will only get transparent if it is not a backdrop window.
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_TRANSPARENCY_INACTIVEWINDOW_SHORTHELP
+Here you can select the degree of transparency\n\
+for all inactive Scalos desktop, icon, or text windows.\n\
+The desktop will only get transparent if it is not a backdrop window.
+;Here you can select the degree of transparency\n\
+;for all inactive Scalos desktop, icon, or text windows.\n\
+;The desktop will only get transparent if it is not a backdrop window.
+;
+;+++translateme+++
+MSGID_WINDOWPAGE_CONTROLBAR_NORMAL_GADGETS
+Standard Window Gadgets
+;Standard Window Gadgets
+;
+;-----------------------------------------------------------
+;
+;+++translateme+++
+MSGID_TEXTWINDOWSPAGE_SELECTION_BORDER_TRANSPARENCY
+Border Transparency
+;Border Transparency
+;
+;+++translateme+++
+MSGID_TEXTWINDOWSPAGE_SELECTION_FILL_TRANSPARENCY
+Fill Transparency
+;Fill Transparency
+;
+;+++translateme+++
+MSGID_TEXTWINDOWSPAGE_GROUP_BASECOLOR
+Base Color
+;Base Color
+;
+;+++translateme+++
+MSGID_TEXTWINDOWSPAGE_SELECTIONMARK_BASECOLOR_SHORTHELP
+Here you can adjust the base color for the\n\
+text window icon selection marker.
+;Here you can adjust the base color for the\n\
+;text window icon selection marker.
+;
+;+++translateme+++
+MSGID_TEXTWINDOWSPAGE_SELECTIONMARK_BORDER_TRANSPARENCY_SHORTHELP
+Adjust degree of transparency for the border\n\
+of the text window icon selection marker.
+;Adjust degree of transparency for the border\n\
+;of the text window icon selection marker.
+;
+;+++translateme+++
+MSGID_TEXTWINDOWSPAGE_SELECTIONMARK_FILL_TRANSPARENCY_SHORTHELP
+Adjust degree of transparency for the interior\n\
+fill of the text window icon selection marker.
+;Adjust degree of transparency for the interior\n\
+;fill of the text window icon selection marker.
+;
+;+++translateme+++
+MSGID_TEXTWINDOWPAGE_DRAWERSORT_TOP
+Before files
+;Before files
+;
+;+++translateme+++
+MSGID_TEXTWINDOWPAGE_DRAWERSORT_BOTTOM
+After files
+;After files
+;
+;+++translateme+++
+MSGID_TEXTWINDOWPAGE_DRAWERSORT_MIXED
+With files
+;With files
+;
+;+++translateme+++
+MSGID_TEXTWINDOWSPAGE_DRAWERSORT
+Drawer sorting
+;Drawer sorting
+;
+;+++translateme+++
+MSGID_TEXTWINDOWSPAGE_DRAWERSORT_SHORTHELP
+Select how drawers are sorted in text windows.\n\
+Drawers can be displayed always on top, always\n\
+on bottom, or mixed between files.
+;Select how drawers are sorted in text windows.\n\
+;Drawers can be displayed always on top, always\n\
+;on bottom, or mixed between files.
+;
+;-----------------------------------------------------------
+;
+MSGID_FILEDISPLAYPAGE_FONT
+Font:
+;Font:
+;
+;
+MSGID_FILEDISPLAYPAGE_FONT_SHORTHELP
+Select font to display text window contents.\n\
+This selection is disabled while TrueType\n\
+text window fonts are enabled.
+;Select font to display text window contents.\n\
+;This selection is disabled while TrueType\n\
+;text window fonts are enabled.
+;
+;
+MSGID_FILEDISPLAYPAGE_FONT_ASLTITLE
+Please select a font...
+;Please select a font...
+;
+;
+MSGID_FILEDISPLAYPAGE_FONT_EXAMPLE
+Example:
+;Example:
+;
+;
+MSGID_FILEDISPLAYPAGE_FONT_SAMPLETEXT
+This is an example text to visualize what the selected font looks like
+;This is an example text to visualize what the selected font looks like
+;
+;
+MSGID_FILEDISPLAYPAGE_SOFTLINKS_UNDERLINED
+Display soft-link file names \033uunderlined\033n:
+;Display soft-link file names \033uunderlined\033n:
+;
+;
+MSGID_FILEDISPLAYPAGE_SOFTLINKS_UNDERLINED_SHORTHELP
+When this item is checked, names of soft-links\n\
+are displayed \033uunderlined\033n.
+;When this item is checked, names of soft-links\n\
+;are displayed \033uunderlined\033n.
+;
+;
+MSGID_FILEDISPLAYPAGE_HIDE_HIDDENFILES
+Hide hidden files:
+;Hide hidden files:
+;
+;
+MSGID_FILEDISPLAYPAGE_HIDE_HIDDENFILES_SHORTHELP
+A hidden file is any filename beginning with\n\
+a '\033b.\033n' or icon files '\033b#?.info\033n'
+;A hidden file is any filename beginning with\n\
+;a '\033b.\033n' or icon files '\033b#?.info\033n'
+;
+;
+MSGID_FILEDISPLAYPAGE_AVAILABLE_COLUMNS
+Available Columns
+;Available Columns
+;
+;
+MSGID_FILEDISPLAYPAGE_AVAILABLE_COLUMNS_SHORTHELP
+This are the columns currently not displayed\n\
+in text windows. If you want some item to be\n\
+displayed, drag it to the \"Displayed columns\" list.
+;This are the columns currently not displayed\n\
+;in text windows. If you want some item to be\n\
+;displayed, drag it to the \"Displayed columns\" list.
+;
+;
+MSGID_FILEDISPLAYPAGE_COLUMNS_INUSE
+Displayed Columns
+;Displayed Columns
+;
+;
+MSGID_FILEDISPLAYPAGE_COLUMNS_INUSE_SHORTHELP
+This are the columns that will display in text\n\
+windows. You may change the display order by\n\
+drag-sorting the lines. If you want some item\n\
+not to be displayed, drag it to\n\
+the \"Available columns\" list.
+;This are the columns that will display in text\n\
+;windows. You may change the display order by\n\
+;drag-sorting the lines. If you want some item\n\
+;not to be displayed, drag it to\n\
+;the \"Available columns\" list.
+;
+;
+MSGID_FILEDISPLAYPAGE_STRIPED
+Striped Display
+;Striped Display
+;
+;
+MSGID_FILEDISPLAYPAGE_STRIPED_SHORTHELP
+Shows every other line in text window\n\
+in different color, to improve readability.\n\
+Please note that real transparency is only available\n\
+if your desktop screen has more than 256 colors.
+;Shows every other line in text window\n\
+;in different color, to improve readability.\n\
+;Please note that real transparency is only available\n\
+;if your desktop screen has more than 256 colors.
+;
+;
+MSGID_FILEDISPLAYPAGE_SELECTTEXTICONNAME
+Name column selects text icons
+; Name column selects text icons
+;
+;
+MSGID_FILEDISPLAYPAGE_SELECTTEXTICONNAME_SHORTHELP
+If this checkmark is checked, text icons can\n\
+only be selected within the \033bname\033n column.\n\
+If unchecked, the entire row can be used\n\
+to select the icon.
+;If this checkmark is checked, text icons can\n\
+;only be selected within the \033bname\033n column.\n\
+;If unchecked, the entire row can be used\n\
+;to select the icon.
+;
+;-----------------------------------------------------------
+;
+MSGID_TTFONTSPAGE_SCREENFONT
+TrueType Screen Font
+;TrueType Screen Font
+;
+;
+MSGID_TTFONTSPAGE_SCREENFONT_ENABLE
+Use TT Screen Font
+;Use TT Screen Font
+;
+;
+MSGID_TTFONTSPAGE_SCREENFONT_ENABLE_SHORTHELP
+When this item is checked, Scalos uses\n\
+TrueType fonts for screen font.
+;When this item is checked, Scalos uses\n\
+;TrueType fonts for screen font.
+;
+;
+MSGID_TTFONTSPAGE_SCREENFONT_SHORTHELP
+This is the textual TrueType screen font\n\
+specification (style/weight/size/name).
+;This is the textual TrueType screen font\n\
+;specification (style/weight/size/name).
+;
+;
+MSGID_TTFONTSPAGE_ICONFONT
+TrueType Icon Font
+;TrueType Icon Font
+;
+;
+MSGID_TTFONTSPAGE_ICONFONT_ENABLE
+Use TT Icon Font
+;Use TT Icon Font
+;
+;
+MSGID_FONTSPAGE_TTFICONFONT_ENABLE_SHORTHELP
+When this item is checked, Scalos\n\
+uses TrueType fonts for icons.
+;When this item is checked, Scalos\n\
+;uses TrueType fonts for icons.
+;
+;
+MSGID_TTFONTSPAGE_ICONFONT_SHORTHELP
+This is the textual TrueType icon font\n\
+specification (style/weight/size/name).
+;This is the textual TrueType icon font\n\
+;specification (style/weight/size/name).
+;
+;
+MSGID_TTFONTSPAGE_TEXTWINDOWFONT
+TrueType Text Window Font
+;TrueType Text Window Font
+;
+;
+MSGID_TTFONTSPAGE_TTFTEXTWINDOWFONT_ENABLE
+Use TT Text WIndow Font
+;Use TT Text WIndow Font
+;
+;
+MSGID_TTFONTSPAGE_TTFTEXTWINDOWFONT_ENABLE_SHORTHELP
+When this item is checked, Scalos uses\n\
+TrueType fonts for text windows.
+;When this item is checked, Scalos uses\n\
+;TrueType fonts for text windows.
+;
+;
+MSGID_TTFONTSPAGE_TEXTWINDOWFONT_SHORTHELP
+This is the textual TrueType text window\n\
+font specification (style/weight/size/name).
+;This is the textual TrueType text window\n\
+;font specification (style/weight/size/name).
+;
+;
+MSGID_TTFONTSPAGE_SAMPLETEXT
+The quick brown fox jumps over the lazy dog
+;The quick brown fox jumps over the lazy dog
+;
+;
+MSGID_TTFONTSPAGE_SCREENFONT_SAMPLETEXT_SHORTHELP
+This is an example text to visualize what the\n\
+selected TrueType screen font looks like.
+;This is an example text to visualize what the\n\
+;selected TrueType screen font looks like.
+;
+;
+MSGID_TTFONTSPAGE_ICONFONT_SAMPLETEXT_SHORTHELP
+This is an example text to visualize what the\n\
+selected TrueType icon font looks like.
+;This is an example text to visualize what the\n\
+;selected TrueType icon font looks like.
+;
+;
+MSGID_TTFONTSPAGE_TEXTWINDOWFONT_SAMPLETEXT_SHORTHELP
+This is an example text to visualize what the\n\
+selected TrueType text window font looks like.
+;This is an example text to visualize what the\n\
+;selected TrueType text window font looks like.
+;
+;
+MSGID_TTFONTSPAGE_SELECTSCREENFONT_ASLTITLE
+Select Screen TT Font...
+;Select Screen TT Font...
+;
+;
+MSGID_TTFONTSPAGE_SELECTICONFONT_ASLTITLE
+Select Icon TT Font...
+;Select Icon TT Font...
+;
+;
+MSGID_TTFONTSPAGE_SELECTTEXTWINDOWFONT_ASLTITLE
+Select Text Window TT Font...
+;Select Text Window TT Font...
+;
+;
+MSGID_TTFONTSPAGE_SELECTFONT_ASL_OKBUTTON
+Ok
+;Ok
+;
+;
+MSGID_TTFONTSPAGE_SELECTFONT_ASL_CANCELBUTTON
+Cancel
+;Cancel
+;
+;
+MSGID_TTFONTSPAGE_GLOBALS
+Globals
+;Globals
+;
+;
+MSGID_TTFONTSPAGE_ANTIALIASING
+Antialiasing
+;Antialiasing
+;
+;
+MSGID_TTFONTSPAGE_ANTIALIASING_SHORTHELP
+Controls ttengine antialiasing (on, off or automatic):\n\
+Off - turns antialias off\n\
+On - turns antialias on\n\
+Auto (default) - antialias state depends on font\n\
+size. Typically sizes of 9 or less pixels are\n\
+antialiased, sizes from 10 to 19 pixels are not\n\
+antialiased, sizes of 20 of more pixels are\n\
+antialiased. These settings can be changed in the\n\
+ttengine font database separately for every font face.
+;Controls ttengine antialiasing (on, off or automatic):\n\
+;Off - turns antialias off\n\
+;On - turns antialias on\n\
+;Auto (default) - antialias state depends on font\n\
+;size. Typically sizes of 9 or less pixels are\n\
+;antialiased, sizes from 10 to 19 pixels are not\n\
+;antialiased, sizes of 20 of more pixels are\n\
+;antialiased. These settings can be changed in the\n\
+;ttengine font database separately for every font face.
+;
+;
+MSGID_TTFONTSPAGE_ANTIALIASING_ON
+On
+;On
+;
+;
+MSGID_TTFONTSPAGE_ANTIALIASING_OFF
+Off
+;Off
+;
+;
+MSGID_TTFONTSPAGE_ANTIALIASING_AUTO
+Auto
+;Auto
+;
+;
+MSGID_TTFONTSPAGE_GAMMA
+Gamma correction
+;Gamma correction
+;
+;
+MSGID_TTFONTSPAGE_GAMMA_SHORTHELP
+Adjustable gamma correction used for ttengine\n\
+antialiasing. After RGB alphablending gamma\n\
+correction is applied to resulting pixel colour\n\
+according to x' = x ^ 1/gamma, where x\n\
+is a RGB component.
+;Adjustable gamma correction used for ttengine\n\
+;antialiasing. After RGB alphablending gamma\n\
+;correction is applied to resulting pixel colour\n\
+;according to x' = x ^ 1/gamma, where x\n\
+;is a RGB component.
+;
+;-----------------------------------------------------------
+;
+MSGID_MISCPAGE_MENU_CURRENTDIR
+Menu CurrentDir:
+;Menu CurrentDir:
+;
+;
+MSGID_MISCPAGE_MENU_CURRENTDIR_SHORTHELP
+If enabled, Scalos changes to the directory of\n\
+the CLI tool before running a CLI menu command.
+;If enabled, Scalos changes to the directory of\n\
+;the CLI tool before running a CLI menu command.
+;
+;
+MSGID_MISCPAGE_HARD_EMULATION
+Hard emulation:
+;Hard emulation:
+;
+;
+MSGID_MISCPAGE_HARD_EMULATION_SHORTHELP
+If this item is checked, some additional Workbench\n\
+function vectors are patched by Scalos. In most\n\
+cases, there shouldn't be any reason to\n\
+turn off \"Hard emulation\".
+;If this item is checked, some additional Workbench\n\
+;function vectors are patched by Scalos. In most\n\
+;cases, there shouldn't be any reason to\n\
+;turn off \"Hard emulation\".
+;
+;
+MSGID_MISCPAGE_USE_EXALL
+Use ExAll():
+;Use ExAll():
+;
+;
+MSGID_MISCPAGE_USE_EXALL_SHORTHELP
+If this item is checked, Scalos will try to use\n\
+the \"ExAll()\" function to scan directories.\n\
+Usually, if a file system doesn't support ExAll(),\n\
+there is a fully automatic fall-back to other\n\
+functions. However, there might be some file systems\n\
+that don't support ExAll() but don't return\n\
+appropriate error codes either, or even crash.\n\
+If you happen to have such a file system, try to\n\
+turn \"Use ExAll()\" off.
+;If this item is checked, Scalos will try to use\n\
+;the \"ExAll()\" function to scan directories.\n\
+;Usually, if a file system doesn't support ExAll(),\n\
+;there is a fully automatic fall-back to other\n\
+;functions. However, there might be some file systems\n\
+;that don't support ExAll() but don't return\n\
+;appropriate error codes either, or even crash.\n\
+;If you happen to have such a file system, try to\n\
+;turn \"Use ExAll()\" off.
+;
+;
+MSGID_MISCPAGE_POPUPMENUS
+Popup menus
+;Popup menus
+;
+;
+MSGID_MISCPAGE_POPUP_SELECTED_HOTKEY
+Apply to every selected icon:
+;Apply to every selected icon:
+;
+;
+MSGID_MISCPAGE_POPUP_SELECTED_HOTKEY_SHORTHELP
+Define the qualifier key that\n\
+applies popup menu commands to\n\
+every selected icon.\n\
+Normally, popup menu commands only apply\n\
+to the icon under the mouse pointer.
+;Define the qualifier key that\n\
+;applies popup menu commands to\n\
+;every selected icon.\n\
+;Normally, popup menu commands only apply\n\
+;to the icon under the mouse pointer.
+;
+;
+MSGID_MISCPAGE_DEFAULTSTACKSIZE
+Default Stack size
+;Default Stack size
+;
+;
+MSGID_MISCPAGE_DEFAULTSTACKSIZE_SHORTHELP
+Sets the stack size for most internal Scalos\n\
+processes and for CLI and ARexx processes\n\
+started by Scalos.
+;Sets the stack size for most internal Scalos\n\
+;processes and for CLI and ARexx processes\n\
+;started by Scalos.
+;
+;
+MSGID_MISCPAGE_DEFAULTSTACKSIZE_OS35
+Starting with Workbench 3.5, the default stack size \
+is be changed with the standard \
+\033bWorkbench Preferences\033n program.
+;Starting with Workbench 3.5, the default stack size \
+;is changed with the standard \
+;\033bWorkbench Preferences\033n program.
+;
+;
+MSGID_MISCPAGE_LABELS_STACK
+Stack
+;Stack
+;
+;
+MSGID_MISCPAGE_CREATE_LINKS
+Create links:
+;Create links:
+;
+;
+MSGID_MISCPAGE_CREATE_LINKS_SHORTHELP
+Select what kind of links Scalos tries to create\n\
+when an object is dropped with the create-link\n\
+qualifier key pressed.
+;Select what kind of links Scalos tries to create\n\
+;when an object is dropped with the create-link\n\
+;qualifier key pressed.
+;
+;+++translateme+++
+MSGID_MISCPAGE_POP_WORKBENCHPREFS_SHORTHELP
+Launch standard \033bWorkbench Preferences\033n program.
+;Launch standard \033bWorkbench Preferences\033n program.
+;
+;+++translateme+++
+MSGID_MISCPAGE_POPUP_SELECTED_ALWAYS
+Always apply to all selected icons?
+;Always apply to all selected icons?
+;
+;+++translateme+++
+MSGID_MISCPAGE_POPUP_SELECTED_ALWAYS_SHORTHELP
+Select this checkbox to \033balways\033n apply popup menus\n\
+to every selected icons, regardless of qualifier key
+;Select this checkbox to \033balways\033n apply popup menus\n\
+;to every selected icons, regardless of qualifier key
+;
+;+++translateme+++
+MSGID_MISCPAGE_COPYBUFFERSIZE
+File Copy Buffer Size:
+;File Copy Buffer Size:
+;
+;+++translateme+++
+MSGID_MISCPAGE_COPYBUFFERSIZE_SHORTHELP
+Sets the buffer size for file copying.
+;Sets the buffer size for file copying.
+;
+;+++translateme+++
+MSGID_MISCPAGE_LABELS_FILEOPERATIONS
+File Operations
+;File Operations
+;
+;+++translateme+++
+MSGID_MISCPAGE_LABELS_UNDOSTEPS
+Maximum Number of Undo Steps
+;Maximum Number of Undo Steps
+;
+;+++translateme+++
+MSGID_MISCPAGE_UNDOSTEPS
+Max. Undo Steps:
+;Max. Undo Steps:
+;
+;+++translateme+++
+MSGID_MISCPAGE_UNDOSTEPS_SHORTHELP
+Here you can limit the number of\n\
+available Undo/Redo steps.
+;Here you can limit the number of\n\
+;available Undo/Redo steps.
+;
+;-----------------------------------------------------------
+;
+MSGID_PLUGINSPAGE_ACTIVEPLUGINS
+Active Plugins
+;Active Plugins
+;
+;
+MSGID_PLUGINSPAGE_INSTALLEDPLUGINS
+\033cInstalled Plugins
+;\033cInstalled Plugins
+;
+;
+MSGID_PLUGINSPAGE_INSTALLEDPLUGINS_SHORTHELP
+This is a complete list of all OOP plugins that\n\
+are loaded upon Scalos startup. OOP plugins add\n\
+new features to Scalos or improve existing\n\
+Scalos features.
+;This is a complete list of all OOP plugins that\n\
+;are loaded upon Scalos startup. OOP plugins add\n\
+;new features to Scalos or improve existing\n\
+;Scalos features.
+;
+;
+MSGID_PLUGINSPAGE_ADD_NEW
+\033cAdd New
+;\033cAdd New
+;
+;
+MSGID_PLUGINSPAGE_ADD_NEW_SHORTHELP
+Add a new OOP plugin to the list. This plugin\n\
+will be activated upon next Scalos startup.
+;Add a new OOP plugin to the list. This plugin\n\
+;will be activated upon next Scalos startup.
+;
+;
+MSGID_PLUGINSPAGE_REMOVE_SELECTED
+\033cRemove Selected
+;\033cRemove Selected
+;
+;
+MSGID_PLUGINSPAGE_REMOVE_SELECTED_SHORTHELP
+Remove the currently selected plugin\n\
+from the list. Scalos will not load the\n\
+plugin again. This change will only become\n\
+effective upon next Scalos startup.
+;Remove the currently selected plugin\n\
+;from the list. Scalos will not load the\n\
+;plugin again. This change will only become\n\
+;effective upon next Scalos startup.
+;
+;
+MSGID_PLUGINSPAGE_NAME
+\033lName:
+;\033lName:
+;
+;
+MSGID_PLUGINSPAGE_NAME_SHORTHELP
+This is the name the selected plugin\n\
+has been given by its creator.
+;This is the name the selected plugin\n\
+;has been given by its creator.
+;
+;
+MSGID_PLUGINSPAGE_FILENAME
+\033lFile:
+;\033lFile:
+;
+;
+MSGID_PLUGINSPAGE_FILENAME_SHORTHELP
+This is the complete filename and\n\
+path for the selected plugin.
+;This is the complete filename and\n\
+;path for the selected plugin.
+;
+;
+MSGID_PLUGINSPAGE_VERSION
+\033lVersion:
+;\033lVersion:
+;
+;
+MSGID_PLUGINSPAGE_VERSION_SHORTHELP
+This is the current version\n\
+of the selected plugin.
+;This is the current version\n\
+;of the selected plugin.
+;
+;
+MSGID_PLUGINSPAGE_DESCRIPTION
+\033lDescription:
+;\033lDescription:
+;
+;
+MSGID_PLUGINSPAGE_DESCRIPTION_SHORTHELP
+This is a description of what the\n\
+selected plugin is supposed to do.
+;This is a description of what the\n\
+;selected plugin is supposed to do.
+;
+;
+MSGID_PLUGINSPAGE_CREATOR
+\033lCreator:
+;\033lCreator:
+;
+;
+MSGID_PLUGINSPAGE_CREATOR_SHORTHELP
+This is the creator's name\n\
+of the selected plugin.
+;This is the creator's name\n\
+;of the selected plugin.
+;
+;
+MSGID_PLUGINSPAGE_EDIT_PREFERENCES
+\033cEdit Preferences
+;\033cEdit Preferences
+;
+;
+MSGID_PLUGINSPAGE_EDIT_PREFERENCES_SHORTHELP
+\033cEdit Preferences
+;\033cEdit Preferences
+;
+;
+MSGID_ADD_PLUGIN_ASLTITLE
+Select new OOP plugin...
+;Select new OOP plugin...
+;
+;-----------------------------------------------------------
+;
+MSGID_MODULESPAGE_MODULE_PREFERENCES
+Module Preferences
+;Module Preferences
+;
+;
+MSGID_MODULESPAGE_MODULE_PREFERENCES_NOTICE
+To configure any Scalos modules' settings you must click on \
+the pop-up image gadget to the right of the modules name.  \
+This will open a new window with specific settings in it.\n\
+\n\
+If no configuration is available for a certain module \
+the pop-up gadget will be disabled.
+;To configure any Scalos modules' settings you must click on \
+;the pop-up image gadget to the right of the modules name.  \
+;This will open a new window with specific settings in it.\n\
+;\n\
+;If no configuration is available for a certain module \
+;the pop-up gadget will be disabled.
+;
+;
+MSGID_MODULESPAGE_DELETE
+Delete
+;Delete
+;
+;
+MSGID_MODULESPAGE_EMPTY_TRASHCAN
+Empty Trashcan
+;Empty Trashcan
+;
+;
+MSGID_MODULESPAGE_EXECUTE_COMMAND
+Execute Command
+;Execute Command
+;
+;
+MSGID_MODULESPAGE_INFORMATION
+Information
+;Information
+;
+;
+MSGID_MODULESPAGE_NEWDRAWER
+New Drawer
+;New Drawer
+;
+;
+MSGID_MODULESPAGE_REBOOT
+Reboot
+;Reboot
+;
+;
+MSGID_MODULESPAGE_RENAME
+Rename
+;Rename
+;
+;
+MSGID_MODULESPAGE_SYSTEM_INFORMATION
+System Information
+;System Information
+;
+;-----------------------------------------------------------
+;
+MSGID_SAVEBUTTON
+\033cSave
+;\033cSave
+;
+;
+MSGID_SAVEBUTTON_SHORTHELP
+Press this button to save \n\
+the current settings to\n\
+\"ENVARC:Scalos/Scalos.prefs\"\n\
+and make changes permanent.
+;Press this button to save \n\
+;the current settings to\n\
+;\"ENVARC:Scalos/Scalos.prefs\"\n\
+;and make changes permanent.
+;
+;
+MSGID_USEBUTTON
+\033cUse
+;\033cUse
+;
+;
+MSGID_USEBUTTON_SHORTHELP
+Press this button to save \n\
+the current settings to\n\
+\"ENV:Scalos/menu13.prefs\"\n\
+and keep settings until reboot.
+;Press this button to save \n\
+;the current settings to\n\
+;\"ENV:Scalos/menu13.prefs\"\n\
+;and keep settings until reboot.
+;
+;
+MSGID_CANCELBUTTON
+\033cCancel
+;\033cCancel
+;
+;
+MSGID_CANCELBUTTON_SHORTHELP
+Press this button to abort \n\
+and forget all changes.
+;Press this button to abort \n\
+;and forget all changes.
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK
+_OK
+;_OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33cScalos Main Preferences V%ld.%ld\n\
+%s\n\
+© 2003-2004 The Scalos Team
+;\33cScalos Main Preferences V%ld.%ld\n\
+;%s\n\
+;© 2003-2004 The Scalos Team
+;
+;-----------------------------------------------------------
+;
+MSGID_DESKTOPPAGES_SCREENTITLE_ALWAYS
+Always visible
+;Always visible
+;
+;
+MSGID_DESKTOPPAGES_SCREENTITLE_POP
+Pops up under mouse
+;Pops up under mouse
+;
+;
+MSGID_DESKTOPPAGES_SCREENTITLE_NEVER
+permanently hidden
+;permanently hidden
+;
+;-----------------------------------------------------------
+;
+;
+MSGID_ICONSPAGES_DRAGNDROP_DRAGGING
+Dragging
+;Dragging
+;
+;
+MSGID_ICONSPAGES_DRAGNDROP_TRANSPARENCY
+Transparency
+;Transparency
+;
+;
+MSGID_ICONSPAGES_DRAGNDROP_TRIGGERS
+Triggers
+;Triggers
+;
+;-----------------------------------------------------------
+;
+MSGID_FRAMEWINDOW_TITLE
+Available Frames
+;Available Frames
+;
+;-----------------------------------------------------------
+;
+MSGID_PLUGINLIST_NAME
+Name
+;Name
+;
+;
+MSGID_PLUGINLIST_PATH
+Path
+;Path
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Scalos Prefs startup failed
+;Scalos Prefs startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Try again|Quit
+;Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+The class is not installed.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+\n\
+Currently installed is V%lu.%lu, please upgrade!
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+%lu.%lu is currently in use by other applications.\n\
+\n\
+Once you have installed the required version,\n\
+close all MUI programs, make sure the old class\n\
+is flushed from memory and try again.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;
+MSGID_ADDPLUGIN_FAILURE
+Add Plugin Failure
+;Add Plugin Failure
+;
+;
+MSGID_ADDPLUGIN_OK_GAD
+Ok
+;Ok
+;
+;
+MSGID_ADDPLUGIN_COULD_NOT_ADD
+Could not add plugin.\n\
+Opening the plugin failed.
+;Could not add plugin.\n\
+;Opening the plugin failed.
+;
+;-----------------------------------------------------------
+;
+MSGID_DESKTOPPAGE_ICONS_HIDDENDEVICES
+Hidden Devices
+;Hidden Devices
+;
+;
+MSGID_DESKTOPPAGE_HIDDENDEVICES_SHORTHELP
+Here you can select which devices will never show up on desktop.\n\
+This is the same setting as available in OS3.9 Workbench Prefs.
+;Here you can select which devices will never show up on desktop.\n\
+;This is the same setting as available in OS3.9 Workbench Prefs.
+;
+;-----------------------------------------------------------
+;+++translateme+++
+MSGID_DESKTOPPAGE_LAYOUTPREFERENCES
+Desktop Layout Preferences by Icon Type
+;Desktop Layout Preferences by Icon Type
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_LAYOUT_WBDISK
+Disk icons:
+;Disk icons:
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_LAYOUT_WBDISK_SHORTHELP
+Select preferred icon layout direction\n\
+for \033bdisk icons\033n in desktop window.\n\
+\033iColumns\033n layouts icons in columns from top\n\
+to bottom, starting a new column when the\n\
+bottom of the window is reached.\n\
+\033iRows\033n layouts icons in rows left to right,\n\
+starting a new row when the right\n\
+window border is reached.
+;Select preferred icon layout direction\n\
+;for \033bdisk icons\033n in desktop window.\n\
+;\033iColumns\033n layouts icons in columns from top\n\
+;to bottom, starting a new column when the\n\
+;bottom of the window is reached.\n\
+;\033iRows\033n layouts icons in rows left to right,\n\
+;starting a new row when the right\n\
+;window border is reached.
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_LAYOUT_WBDRAWER
+Drawer icons:
+;Drawer icons:
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_LAYOUT_WBDRAWER_SHORTHELP
+Select preferred icon layout direction\n\
+for \033bdrawer icons\033n in desktop window.\n\
+\033iColumns\033n layouts icons in columns from top\n\
+to bottom, starting a new column when the\n\
+bottom of the window is reached.\n\
+\033iRows\033n layouts icons in rows left to right,\n\
+starting a new row when the right\n\
+window border is reached.
+;Select preferred icon layout direction\n\
+;for \033bdrawer icons\033n in desktop window.\n\
+;\033iColumns\033n layouts icons in columns from top\n\
+;to bottom, starting a new column when the\n\
+;bottom of the window is reached.\n\
+;\033iRows\033n layouts icons in rows left to right,\n\
+;starting a new row when the right\n\
+;window border is reached.
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_LAYOUT_WBTOOL
+Tool icons:
+;Tool icons:
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_LAYOUT_WBTOOL_SHORTHELP
+Select preferred icon layout direction\n\
+for \033btool icons\033n in desktop window.\n\
+\033iColumns\033n layouts icons in columns from top\n\
+to bottom, starting a new column when the\n\
+bottom of the window is reached.\n\
+\033iRows\033n layouts icons in rows left to right,\n\
+starting a new row when the right\n\
+window border is reached.
+;Select preferred icon layout direction\n\
+;for \033btool icons\033n in desktop window.\n\
+;\033iColumns\033n layouts icons in columns from top\n\
+;to bottom, starting a new column when the\n\
+;bottom of the window is reached.\n\
+;\033iRows\033n layouts icons in rows left to right,\n\
+;starting a new row when the right\n\
+;window border is reached.
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_LAYOUT_WBPROJECT
+Project icons:
+;Project icons:
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_LAYOUT_WBPROJECT_SHORTHELP
+Select preferred icon layout direction\n\
+for \033bproject icons\033n in desktop window.\n\
+\033iColumns\033n layouts icons in columns from top\n\
+to bottom, starting a new column when the\n\
+bottom of the window is reached.\n\
+\033iRows\033n layouts icons in rows left to right,\n\
+starting a new row when the right\n\
+window border is reached.
+;Select preferred icon layout direction\n\
+;for \033bproject icons\033n in desktop window.\n\
+;\033iColumns\033n layouts icons in columns from top\n\
+;to bottom, starting a new column when the\n\
+;bottom of the window is reached.\n\
+;\033iRows\033n layouts icons in rows left to right,\n\
+;starting a new row when the right\n\
+;window border is reached.
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_LAYOUT_WBGARBAGE
+Trashcan icons:
+;Trashcan icons:
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_LAYOUT_WBGARBAGE_SHORTHELP
+Select preferred icon layout direction\n\
+for \033btrashcan icons\033n in desktop window.\n\
+\033iColumns\033n layouts icons in columns from top\n\
+to bottom, starting a new column when the\n\
+bottom of the window is reached.\n\
+\033iRows\033n layouts icons in rows left to right,\n\
+starting a new row when the right\n\
+window border is reached.
+;Select preferred icon layout direction\n\
+;for \033btrashcan icons\033n in desktop window.\n\
+;\033iColumns\033n layouts icons in columns from top\n\
+;to bottom, starting a new column when the\n\
+;bottom of the window is reached.\n\
+;\033iRows\033n layouts icons in rows left to right,\n\
+;starting a new row when the right\n\
+;window border is reached.
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_LAYOUT_WBDEVICE
+Device icons:
+;Device icons:
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_LAYOUT_WBDEVICE_SHORTHELP
+Select preferred icon layout direction\n\
+for \033bdevice icons\033n in desktop window.\n\
+\033iColumns\033n layouts icons in columns from top\n\
+to bottom, starting a new column when the\n\
+bottom of the window is reached.\n\
+\033iRows\033n layouts icons in rows left to right,\n\
+starting a new row when the right\n\
+window border is reached.
+;Select preferred icon layout direction\n\
+;for \033bdevice icons\033n in desktop window.\n\
+;\033iColumns\033n layouts icons in columns from top\n\
+;to bottom, starting a new column when the\n\
+;bottom of the window is reached.\n\
+;\033iRows\033n layouts icons in rows left to right,\n\
+;starting a new row when the right\n\
+;window border is reached.
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_LAYOUT_WBKICK
+Kickstart Disk icons:
+;Kickstart Disk icons:
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_LAYOUT_WBKICK_SHORTHELP
+Select preferred icon layout direction\n\
+for \033bkickstart disk icons\033n in desktop window.\n\
+\033iColumns\033n layouts icons in columns from top\n\
+to bottom, starting a new column when the\n\
+bottom of the window is reached.\n\
+\033iRows\033n layouts icons in rows left to right,\n\
+starting a new row when the right\n\
+window border is reached.
+;Select preferred icon layout direction\n\
+;for \033bkickstart disk icons\033n in desktop window.\n\
+;\033iColumns\033n layouts icons in columns from top\n\
+;to bottom, starting a new column when the\n\
+;bottom of the window is reached.\n\
+;\033iRows\033n layouts icons in rows left to right,\n\
+;starting a new row when the right\n\
+;window border is reached.
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_LAYOUT_WBAPPICON
+Application icons:
+;Application icons:
+;
+;+++translateme+++
+MSGID_DESKTOPPAGE_LAYOUT_WBAPPICON_SHORTHELP
+Select preferred icon layout direction\n\
+for \033bapplication icons\033n in desktop window.\n\
+\033iColumns\033n layouts icons in columns from top\n\
+to bottom, starting a new column when the\n\
+bottom of the window is reached.\n\
+\033iRows\033n layouts icons in rows left to right,\n\
+starting a new row when the right\n\
+window border is reached.
+;Select preferred icon layout direction\n\
+;for \033bapplication icons\033n in desktop window.\n\
+;\033iColumns\033n layouts icons in columns from top\n\
+;to bottom, starting a new column when the\n\
+;bottom of the window is reached.\n\
+;\033iRows\033n layouts icons in rows left to right,\n\
+;starting a new row when the right\n\
+;window border is reached.
+;
+;-----------------------------------------------------------
+;+++translateme+++
+MSGID_ICONSPAGE_LAYOUTPREFERENCES
+Layout Preferences by Icon Type
+;Layout Preferences by Icon Type
+;
+;+++translateme+++
+MSGID_ICONSPAGE_LAYOUT_WBDRAWER
+Drawer icons:
+;Drawer icons:
+;
+;+++translateme+++
+MSGID_ICONSPAGE_LAYOUT_WBDRAWER_SHORTHELP
+Select preferred icon layout direction\n\
+for \033bdrawer icons\033n in icon windows.\n\
+\033iColumns\033n layouts icons in columns from top\n\
+to bottom, starting a new column when the\n\
+bottom of the window is reached.\n\
+\033iRows\033n layouts icons in rows left to right,\n\
+starting a new row when the right\n\
+window border is reached.
+;Select preferred icon layout direction\n\
+;for \033bdrawer icons\033n in icon windows.\n\
+;\033iColumns\033n layouts icons in columns from top\n\
+;to bottom, starting a new column when the\n\
+;bottom of the window is reached.\n\
+;\033iRows\033n layouts icons in rows left to right,\n\
+;starting a new row when the right\n\
+;window border is reached.
+;
+;+++translateme+++
+MSGID_ICONSPAGE_LAYOUT_WBTOOL
+Tool icons:
+;Tool icons:
+;
+;+++translateme+++
+MSGID_ICONSPAGE_LAYOUT_WBTOOL_SHORTHELP
+Select preferred icon layout direction\n\
+for \033btool icons\033n in icon windows.\n\
+\033iColumns\033n layouts icons in columns from top\n\
+to bottom, starting a new column when the\n\
+bottom of the window is reached.\n\
+\033iRows\033n layouts icons in rows left to right,\n\
+starting a new row when the right\n\
+window border is reached.
+;Select preferred icon layout direction\n\
+;for \033btool icons\033n in icon windows.\n\
+;\033iColumns\033n layouts icons in columns from top\n\
+;to bottom, starting a new column when the\n\
+;bottom of the window is reached.\n\
+;\033iRows\033n layouts icons in rows left to right,\n\
+;starting a new row when the right\n\
+;window border is reached.
+;
+;+++translateme+++
+MSGID_ICONSPAGE_LAYOUT_WBPROJECT
+Project icons:
+;Project icons:
+;
+;+++translateme+++
+MSGID_ICONSPAGE_LAYOUT_WBPROJECT_SHORTHELP
+Select preferred icon layout direction\n\
+for \033bproject icons\033n in icon windows.\n\
+\033iColumns\033n layouts icons in columns from top\n\
+to bottom, starting a new column when the\n\
+bottom of the window is reached.\n\
+\033iRows\033n layouts icons in rows left to right,\n\
+starting a new row when the right\n\
+window border is reached.
+;Select preferred icon layout direction\n\
+;for \033bproject icons\033n in icon windows.\n\
+;\033iColumns\033n layouts icons in columns from top\n\
+;to bottom, starting a new column when the\n\
+;bottom of the window is reached.\n\
+;\033iRows\033n layouts icons in rows left to right,\n\
+;starting a new row when the right\n\
+;window border is reached.
+;
+;-----------------------------------------------------------
+;
+;+++translateme+++
+MSGID_SCPGADGETTYPE_BACKBUTTON
+Back Button
+;Back Button
+;
+;+++translateme+++
+MSGID_SCPGADGETTYPE_FORWARDBUTTON
+Forward Button
+;Forward Button
+;
+;+++translateme+++
+MSGID_SCPGADGETTYPE_UPBUTTON
+Up Button
+;Up Button
+;
+;+++translateme+++
+MSGID_SCPGADGETTYPE_HISTORY
+History Button
+;History Button
+;
+;+++translateme+++
+MSGID_SCPGADGETTYPE_BROWSEBUTTON
+Browse Button
+;Browse Button
+;
+;+++translateme+++
+MSGID_SCPGADGETTYPE_VIEWBY
+View By Cycle
+;View By Cycle
+;
+;
+MSGID_SCPGADGETTYPE_SHOWMODE
+Show Mode Cycle
+;Show Mode Cycle
+;
+;+++translateme+++
+MSGID_SCPGADGETTYPE_SEPARATOR
+(Separator)
+;(Separator)
+;
+;+++translateme+++
+MSGID_SCPGADGETTYPE_ACTIONBUTTON
+User-defined Button
+;User-defined Button
+;
+;+++translateme+++
+MSGID_SCPGADGETTYPE_UNKNOWN
+??unknown??
+;??unknown??
+;
+;-----------------------------------------------------------
+;
+:+++translateme+++
+MSGID_COM1NAME
+Backdrop
+;
+;+++translateme+++
+MSGID_COM2NAME
+Execute Command
+;
+;+++translateme+++
+MSGID_COM3NAME
+Redraw All
+;
+;+++translateme+++
+MSGID_COM4NAME
+Update All
+;
+;+++translateme+++
+MSGID_COM5NAME
+About Scalos
+;
+;+++translateme+++
+MSGID_COM6NAME
+Quit
+;
+;+++translateme+++
+MSGID_COM7NAME
+New Drawer
+;
+;+++translateme+++
+MSGID_COM8NAME
+Open Parent
+;
+;+++translateme+++
+MSGID_COM9NAME
+Close Window
+;
+;+++translateme+++
+MSGID_COM10NAME
+Update
+;
+;+++translateme+++
+MSGID_COM11NAME
+Select Contents
+;
+;+++translateme+++
+MSGID_COM12NAME
+Cleanup
+;
+;+++translateme+++
+MSGID_COM13NAME
+Snapshot - Window
+;
+;+++translateme+++
+MSGID_COM14NAME
+Snapshot - All
+;
+;+++translateme+++
+MSGID_COM15NAME
+Show - Only Icons
+;
+;+++translateme+++
+MSGID_COM16NAME
+Show - All Files
+;
+;+++translateme+++
+MSGID_COM17NAME
+View By - Icon
+;
+;+++translateme+++
+MSGID_COM18NAME
+View By - Text
+;
+;+++translateme+++
+MSGID_COM19NAME
+Open
+;
+;+++translateme+++
+MSGID_COM20NAME
+Reset Scalos
+;
+;+++translateme+++
+MSGID_COM21NAME
+Rename
+;
+;+++translateme+++
+MSGID_COM22NAME
+Information
+;
+;+++translateme+++
+MSGID_COM23NAME
+Snapshot
+;
+;+++translateme+++
+MSGID_COM24NAME
+UnSnapshot
+;
+;+++translateme+++
+MSGID_COM25NAME
+Leave Out
+;
+;+++translateme+++
+MSGID_COM26NAME
+Put Away
+;
+;+++translateme+++
+MSGID_COM27NAME
+Delete
+;
+;+++translateme+++
+MSGID_COM28NAME
+Clone
+;
+;+++translateme+++
+MSGID_COM29NAME
+Empty Trashcan
+;
+;+++translateme+++
+MSGID_COM30NAME
+Last Message
+;
+;+++translateme+++
+MSGID_COM31NAME
+Redraw
+;
+;+++translateme+++
+MSGID_COM32NAME
+Iconify
+;
+;+++translateme+++
+MSGID_COM33NAME
+Format Disk...
+;
+;+++translateme+++
+MSGID_COM34NAME
+Shutdown...
+;
+;+++translateme+++
+MSGID_COM35NAME
+Size To Fit
+;
+;+++translateme+++
+MSGID_COM36NAME
+Clear Selection
+;
+;+++translateme+++
+MSGID_COM37NAME
+View By - Size
+;
+;+++translateme+++
+MSGID_COM38NAME
+View By - Date
+;
+;+++translateme+++
+MSGID_COM39NAME
+Copy file
+;
+;+++translateme+++
+MSGID_COM40NAME
+Cut file
+;
+;+++translateme+++
+MSGID_COM41NAME
+Paste file
+;
+;+++translateme+++
+MSGID_COM42NAME
+View By - Type
+;
+;+++translateme+++
+MSGID_COM43NAME
+Cleanup By - Name
+;
+;+++translateme+++
+MSGID_COM44NAME
+Cleanup By - Date
+;
+;+++translateme+++
+MSGID_COM45NAME
+Cleanup By - Size
+;
+;+++translateme+++
+MSGID_COM46NAME
+Cleanup By - Type
+;
+;+++translateme+++
+MSGID_COM_ICONPROPERTIES
+Icon properties
+;
+;+++translateme+++
+MSGID_COM_WINDOWPROPERTIES
+Window properties
+;
+;+++translateme+++
+MSGID_COM47NAME
+View By - Default
+;
+;+++translateme+++
+MSGID_COM48NAME
+Show - Default
+;
+;+++translateme+++
+MSGID_COM49NAME
+Copy to...
+;Copy to...
+;
+;+++translateme+++
+MSGID_COM50NAME
+Move to...
+;Move to...
+;
+;+++translateme+++
+MSGID_COM51NAME
+Create thumbnail
+;Create thumbnail
+;
+;+++translateme+++
+MSGID_COM_OPENNEWWINDOW
+Open in new window
+;Open in new window
+;
+;+++translateme+++
+MSGID_COM_THUMBNAILCACHECLEANUP
+Cleanup thumbnail cache
+;Cleanup thumbnail cache
+;
+;-----------------------------------------------------------
+;

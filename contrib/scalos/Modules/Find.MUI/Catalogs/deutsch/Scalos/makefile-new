@@ -1,0 +1,30 @@
+# makefile for Find.module (translated Texts : deutsch)
+# $Date: 2011-07-24 10:11:00 +0200 (So, 24. Jul 2011) $
+
+.SUFFIXES: .ct .catalog
+.PHONY: all install clean
+
+include config.mk
+
+CATNAME	=	Find
+
+# Native FlexCat doesn't like Linux paths
+ifeq ($(CROSS), )
+	CDPATH=//
+else
+	CDPATH=../../..
+endif
+
+all:	$(CATNAME).catalog
+
+.ct.catalog :
+	@printf '\033[32mMake catalog: \033[31m\033[1m$(LANG)\033[0m\n'
+	$(FLEXCAT) $(CDPATH)/$*.cd $*.ct CATALOG $*.catalog
+
+$(CATNAME).catalog : $(CATNAME).ct ../../../$(CATNAME).cd
+
+clean:
+	$(RM) -f $(CATNAME).catalog
+
+install:
+	-copy $(CATNAME).catalog Locale:catalogs/$(LANG)/Scalos/ clone

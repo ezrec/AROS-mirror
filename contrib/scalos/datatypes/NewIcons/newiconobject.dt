@@ -1,0 +1,6 @@
+# DataType file for Amiga-NewIconObjects
+Filename=newiconobject
+DTName=NewIconObject,newiconobject
+ID=icon,newi
+Recog=#?.info
+Flags=Binary,n,0

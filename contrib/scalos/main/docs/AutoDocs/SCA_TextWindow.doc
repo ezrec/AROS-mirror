@@ -1,0 +1,115 @@
+TABLE OF CONTENTS
+
+TextWin.sca/--background
+TextWin.sca/SCCM_TextWin_BeginUpdate
+TextWin.sca/SCCM_TextWin_DrawColumnHeaders
+TextWin.sca/SCCM_TextWin_EndUpdate
+TextWin.sca/SCCM_TextWin_InsertIcon
+TextWin.sca/SCCM_TextWin_ReAdjust
+
+TextWin.sca/--background
+
+    NAME
+	--background
+
+    DESCRIPTION
+	This class implements the text-only Scalos windows. Most 
+	functionality is derived from IconWindow.sca but there are 
+	some special methods described below.
+
+TextWin.sca/SCCM_TextWin_BeginUpdate
+
+    NAME
+	SCCM_TextWin_BeginUpdate
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_TextWin_BeginUpdate);
+
+    FUNCTION
+	hold all visible updates until SCCM_TextWin_EndUpdate
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_TextWin_EndUpdate
+TextWin.sca/SCCM_TextWin_DrawColumnHeaders
+
+    NAME
+        SCCM_TextWin_DrawColumnHeaders
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_TextWin_DrawColumnHeaders);
+
+    FUNCTION
+	Redraws text window column headers.
+
+    INPUTS
+	nothing
+
+    RESULT
+	nothing
+
+    SEE ALSO
+TextWin.sca/SCCM_TextWin_EndUpdate
+
+    NAME
+	SCCM_TextWin_EndUpdate
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_TextWin_EndUpdate,ULONG RefreshFlag);
+
+    FUNCTION
+	Unlock window updates and optionally rebuild window contents.
+
+    INPUTS
+	RefreshFlag - if TRUE,
+		forces window to perform SCCM_TextWin_ReAdjust.
+
+    RESULT
+	nothing
+
+    SEE ALSO
+	SCCM_TextWin_BeginUpdate
+TextWin.sca/SCCM_TextWin_InsertIcon
+
+    NAME
+	SCCM_TextWin_InsertIcon
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_TextWin_InsertIcon,struct ScaIconNode *in);
+
+    FUNCTION
+	The ScaIconNode is inserted into the text window icon list, 
+	according to the current sorting order.
+	If an icon with the same name already exists, it is replaced.
+
+    INPUTS
+	in - ScaIconNode which is to inserted into the 
+		sorted icon list if the text window.
+
+    RESULT
+	nothing
+TextWin.sca/SCCM_TextWin_ReAdjust
+
+    NAME
+	SCCM_TextWin_ReAdjust
+
+    SYNOPSIS
+	void DoMethod(obj,SCCM_TextWin_ReAdjust);
+
+    FUNCTION
+	Rebuilds text window. Entries are re-sorted, all column headers
+	and text gadgets are redrawn and the scrollers are adjusted.
+
+    INPUTS
+	none
+
+    RESULT
+	nothing
+
+    SEE ALSO
+

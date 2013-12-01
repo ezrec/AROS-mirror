@@ -1,0 +1,86 @@
+; Scalos Debug Helper
+; Budda [mike@scalos.com]
+; $Date: 2009-11-05 21:42:52 +0100 (Do, 05. Nov 2009) $
+; $Revision: 297 $
+
+setenv VERSIONWB_PARAM LIKECVER TEXT
+setenv VERSIONWB_MAX 255
+
+; --- the system
+echo "System Info..."
+versionWB LIKECVER
+versionWB scalos:scalos LIKECVER
+echo " "
+
+; --- datatypes
+echo "Icon Datatypes..."
+versionWB sys:classes/datatypes/amigaiconobject.datatype LIKECVER
+versionWB sys:classes/datatypes/amigaiconobj35.datatype LIKECVER
+versionWB sys:classes/datatypes/newiconobject.datatype LIKECVER
+versionWB sys:classes/datatypes/glowiconobject.datatype LIKECVER
+versionWB sys:classes/datatypes/pngiconobject.datatype LIKECVER
+versionWB sys:classes/datatypes/iconobject.datatype LIKECVER
+echo " "
+
+; --- libraries
+echo "Libraries..."
+versionWB sys:classes/datatypes/iconobject.library LIKECVER
+echo " "
+
+; --- prefs
+echo "Preferences..."
+versionWB scalos:prefs/FileTypes.prefsplugin LIKECVER
+versionWB scalos:prefs/Menu.prefsplugin LIKECVER
+versionWB scalos:prefs/Pattern.prefsplugin LIKECVER
+versionWB scalos:prefs/Palette.prefsplugin LIKECVER
+versionWB "scalos:prefs/Scalos Menu" LIKECVER
+versionWB "scalos:prefs/Scalos Palette" LIKECVER
+versionWB "scalos:prefs/Scalos Pattern" LIKECVER
+versionWB "scalos:prefs/Scalos Prefs" LIKECVER
+echo " "
+
+; --- modules
+echo "Modules..."
+versionWB scalos:modules/Delete.module LIKECVER
+versionWB scalos:modules/Empty_Trashcan.module LIKECVER
+versionWB scalos:modules/Execute_Command.module LIKECVER
+versionWB scalos:modules/IconProperties.module LIKECVER
+versionWB scalos:modules/Information.module LIKECVER
+versionWB scalos:modules/NewDrawer.module LIKECVER
+versionWB scalos:modules/Rename.module LIKECVER
+versionWB scalos:modules/WindowProperties.module LIKECVER
+echo " "
+
+; --- plugins
+echo "Plugins..."
+VersionWB Scalos:Plugins/Filetypes/drawercontents.plugin LIKECVER
+VersionWB Scalos:Plugins/Filetypes/exifpicture.plugin LIKECVER
+VersionWB Scalos:Plugins/Filetypes/picturedimensions.plugin LIKECVER
+
+; OOP Plugins
+VersionWB Scalos:Plugins/OOP/devicefilter.plugin LIKECVER
+VersionWB Scalos:Plugins/OOP/persist.plugin LIKECVER
+VersionWB Scalos:Plugins/OOP/title_clock.plugin LIKECVER
+VersionWB Scalos:Plugins/OOP/title_envvar.plugin LIKECVER
+VersionWB Scalos:Plugins/OOP/title_freepens.plugin LIKECVER
+VersionWB Scalos:Plugins/OOP/volumegauge.plugin LIKECVER
+VersionWB Scalos:Plugins/OOP/wb39.plugin LIKECVER
+VersionWB Scalos:Plugins/OOP/wbrexx.plugin LIKECVER
+VersionWB Scalos:Plugins/OOP/xtwindows.plugin LIKECVER
+
+; Menu plugins
+VersionWB Scalos:Plugins/Menu/sorted_cleanup.plugin LIKECVER
+
+; Preview plugins
+VersionWB Scalos:Plugins/Preview/defpicture.pvplugin LIKECVER
+VersionWB Scalos:Plugins/Preview/jpegpicture.pvplugin LIKECVER
+VersionWB Scalos:Plugins/Preview/video.pvplugin LIKECVER
+echo " "
+
+; --- 3rd party stuff
+echo "3rd Party Files..."
+versionWB libs:guigfx.library LIKECVER
+versionWB libs:render.library LIKECVER
+versionWB libs:popupmenu.library LIKECVER
+echo " "
+

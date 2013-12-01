@@ -1,0 +1,35 @@
+; persist.plugin prefs file
+; ENV:Scalos/Persist.prefs
+; 12 Jul 2009 17:37:18
+
+
+; number of Delay() ticks to wait before opening each window
+; 1 ticks represents 1/50 s
+; default : 20 ticks = 0.4s
+OpenDelay_Ticks = 10
+
+
+;
+; If set, SCA_Iconify will be used when re-opening iconified windows
+; (broken up to Scalos V222x24)
+;
+; If commented out, window will be opened normally, then iconified 
+; after 2 seconds.
+; default: 0 if scalos.library version <= 39
+;	   1 if scalos.library version >= 40
+;
+Use_SCA_Iconify = 1
+
+
+; If set to non-zero value, stored window positions
+; and sizes are restored on startup.
+;
+; default: 1
+UseWindowSizes = 1
+
+;
+; this designates the file where the open window state is stored.
+; (max. 254 characters)
+; default: "ENVARC:Scalos/Persistant_Windows"
+Persist_FileName = "ENVARC:Scalos/Persistant_Windows"
+

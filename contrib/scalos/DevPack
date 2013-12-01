@@ -1,0 +1,106 @@
+/* DevPack */
+/* $Date: 2009-03-12 21:27:42 +0100 (Do, 12. Mär 2009) $ */
+/* $Revision: 94 $ */
+/* $Id: DevPack 94 2009-03-12 20:27:42Z jlachmann $ */
+
+LHAName = 'RAM:ScalosDev'
+
+address command
+
+/*
+x = statef(LHAName)
+if length(x) > 0 then do
+	say "Deleting old directory tree..."
+	"delete " || LHAName || " all QUIET"
+	end
+
+x = statef(LHAName || ".lha")
+if length(x) > 0 then do
+	say "Deleting old archive..."
+	"delete " || LHAName || ".lha quiet"
+	end
+*/
+
+"makedir RAM:ScalosDev"
+"makedir RAM:ScalosDev/asm/lvo all"
+"makedir RAM:ScalosDev/asm/Scalos"
+"makedir RAM:ScalosDev/AutoDoc"
+"makedir RAM:ScalosDev/C"
+"makedir RAM:ScalosDev/C/Include"
+"makedir RAM:ScalosDev/C/Include/clib"
+"makedir RAM:ScalosDev/C/Include/datatypes"
+"makedir RAM:ScalosDev/C/Include/inline"
+"makedir RAM:ScalosDev/C/Include/libraries"
+"makedir RAM:ScalosDev/C/Include/pragmas"
+"makedir RAM:ScalosDev/C/Include/proto"
+"makedir RAM:ScalosDev/C/Include/ppc-aos4"
+"makedir RAM:ScalosDev/C/Include/ppc-aos4/inline"
+"makedir RAM:ScalosDev/C/Include/ppc-aos4/inline4"
+"makedir RAM:ScalosDev/C/Include/ppc-aos4/interfaces"
+"makedir RAM:ScalosDev/C/Include/ppc-aos4/proto"
+"makedir RAM:ScalosDev/C/Include/ppc-mos"
+"makedir RAM:ScalosDev/C/Include/ppc-mos/inline"
+"makedir RAM:ScalosDev/C/Include/Scalos"
+"makedir RAM:ScalosDev/E/modules/Scalos all"
+"makedir RAM:ScalosDev/FD"
+"makedir RAM:ScalosDev/SFD"
+"makedir RAM:ScalosDev/interfaces"
+"makedir RAM:ScalosDev/gcc-lib"
+
+
+say "Copying AutoDocs..."
+
+'copy main/docs/AutoDocs/#?.doc "RAM:ScalosDev/AutoDoc" clone quiet'
+
+say "Copying asm files..."
+
+'copy main/std_includes/asm/lvo/#? "RAM:ScalosDev/asm/lvo" clone quiet'
+'copy main/std_includes/asm/Scalos/#? "RAM:ScalosDev/asm/Scalos" clone quiet'
+
+say "Copying C headers..."
+
+'copy include/defs.h "RAM:ScalosDev/C/Include/" clone quiet'
+'copy include/clib/#? "RAM:ScalosDev/C/Include/clib" clone quiet'
+'copy include/datatypes/#? "RAM:ScalosDev/C/Include/datatypes" clone quiet'
+'copy include/inline/#? "RAM:ScalosDev/C/Include/inline" clone quiet'
+'copy include/inline4/#? "RAM:ScalosDev/C/Include/inline4" clone quiet'
+'copy include/interfaces/#? "RAM:ScalosDev/C/Include/interfaces" clone quiet'
+'copy include/libraries/#? "RAM:ScalosDev/C/Include/libraries" clone quiet'
+'copy include/pragmas/#? "RAM:ScalosDev/C/Include/pragmas" clone quiet'
+'copy include/proto/#? "RAM:ScalosDev/C/Include/proto" clone quiet'
+
+'delete "RAM:ScalosDev/C/Include/proto/guigfx.h" quiet'
+'delete "RAM:ScalosDev/C/Include/inline/guigfx.h" quiet'
+
+'copy ppc-mos-include/inline/#?.h  "RAM:ScalosDev/C/Include/ppc-mos/inline/" clone quiet'
+
+'copy include/Scalos/#? "RAM:ScalosDev/C/Include/Scalos" clone quiet'
+
+say "Copying E modules..."
+
+'copy main/std_includes/E/modules/#? "RAM:ScalosDev/E/modules" clone quiet'
+/* 'copy main/std_includes/E/modules/Scalos/#? "RAM:ScalosDev/E/modules/Scalos" clone quiet' */
+'copy main/std_includes/E/#? "RAM:ScalosDev/E/" clone quiet'
+
+say "Copying FD files..."
+
+'copy main/std_includes/fd/#?.fd "RAM:ScalosDev/FD" clone quiet'
+
+say "Copying SFD files..."
+
+'copy main/std_includes/sfd/#?.sfd "RAM:ScalosDev/SFD" clone quiet'
+
+say "Copying OS4 interface files..."
+
+'copy main/std_includes/interfaces/#?.xml "RAM:ScalosDev/interfaces" clone quiet'
+
+say "Copying GCC libraries..."
+
+'copy gcc-lib/libscalosmenuplugin.a "RAM:ScalosDev/gcc-lib" clone quiet'
+'copy gcc-lib/libscalosplugin.a "RAM:ScalosDev/gcc-lib" clone quiet'
+
+say "Creating archive..."
+
+'lha -r -e -x a ' || LHAName || ' RAM:ScalosDev '
+
+lha t LHAName

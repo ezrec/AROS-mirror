@@ -1,0 +1,175 @@
+; Exchange.ct
+; $Date$
+; $Revision$
+## version $VER: Exchange.catalog 40.1 (23 Dec 2008 18:50:08)
+## codeset 0
+## language deutsch
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos Exchange
+;Scalos Exchange
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT
+Projekt
+;Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+Über...
+;About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+Über MUI...
+;About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Beenden
+;Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;Q
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK
+_OK
+;_OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Exchange.module V%ld.%ld\033n\n\
+%s\n\
+© 2008%s Das Scalos Team
+;\33c\033bScalos Exchange.module V%ld.%ld\033n\n\
+;%s\n\
+;© 2008%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+MSGID_BUTTON_SHOW
+Oberfläche zeigen
+;Show
+;
+;
+MSGID_BUTTON_SHOW_KEY
+Z
+;S
+;
+;
+MSGID_BUTTON_SHOW_SHORTHELP
+Öffnet das Fenster des\n\
+ausgewählten Commodities.
+;Show Commodity window.
+;
+;
+MSGID_BUTTON_HIDE
+Oberfläche verbergen
+;Hide
+;
+;
+MSGID_BUTTON_HIDE_KEY
+V
+;H
+;
+;
+MSGID_BUTTON_HIDE_SHORTHELP
+Schließt das Fenster des\n\
+ausgewählten Commodities.
+;Hide Commodity window.
+;
+;
+MSGID_BUTTON_REMOVE
+Entfernen
+;Remove
+;
+;
+MSGID_BUTTON_REMOVE_KEY
+E
+;R
+;
+;
+MSGID_BUTTON_REMOVE_SHORTHELP
+Versucht das ausgewählte Commodity zu beenden.
+;Remove selected Commodity.
+;
+;
+MSGID_CXLIST_NAME
+Name
+;Name
+;
+;
+MSGID_CXLIST_STATE
+Zustand
+;State
+;
+;
+MSGID_CXLIST_TITLE
+Titel
+;Title
+;
+;
+MSGID_CXLIST_PRIORITY
+Priorität
+;Priority
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Exchange.module kann nicht gestartet werden
+;Exchange Module startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Wiederholen|Beenden
+;Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\
+Die Klasse ist nicht installiert.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\n\
+Sie haben momentan Version v%lu.%lu installiert und\n\
+sollten die Klasse daher aktualisieren!
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\n\
+Version %lu.%lu wird momentan von einer anderen Anwendung\n\
+verwendet. Wenn sie die benötigte Version installiert haben,\n\
+schließen sie alle MUI Programme und probieren es erneut.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;
+MSGID_CYCLE_ACTIVE_ACTIVE
+Aktiv
+;Active
+;
+;
+MSGID_CYCLE_ACTIVE_INACTIVE
+Inaktiv
+;Inactive
+;
+;-----------------------------------------------------------

@@ -1,0 +1,432 @@
+/* CollectVersions.rexx */
+/* $Date: 2010-04-16 23:11:51 +0200 (Fr, 16. Apr 2010) $ */
+/* $Revision: 573 $ */
+
+options results
+
+address command
+
+PkgPath = "/products/scalos/update/"
+tmpfname = "t:xyzzy"
+versionfilename = "ram:versions.txt"
+
+/* -------------------------------------------------------------------------------- */
+
+/* Scalos main */
+ScalosComponents.0.Path = "scalos:"; ScalosComponents.0.File = "Scalos"; ScalosComponents.0.Catalog = "Scalos.catalog"; ScalosComponents.0.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+
+/* --- datatypes */
+ScalosComponents.1.Path = "Scalos:IconDatatypes/datatypes"; ScalosComponents.1.File = "amigaiconobject.datatype"; ScalosComponents.1.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.2.Path = "Scalos:IconDatatypes/datatypes"; ScalosComponents.2.File = "amigaiconobj35.datatype"; ScalosComponents.2.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.3.Path = "Scalos:IconDatatypes/datatypes"; ScalosComponents.3.File = "newiconobject.datatype"; ScalosComponents.3.OsMask = "AmigaOS3 MorphOS";
+ScalosComponents.4.Path = "Scalos:IconDatatypes/datatypes"; ScalosComponents.4.File = "glowiconobject.datatype"; ScalosComponents.4.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.5.Path = "Scalos:IconDatatypes/datatypes"; ScalosComponents.5.File = "pngiconobject.datatype"; ScalosComponents.5.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.6.Path = "Scalos:IconDatatypes/datatypes"; ScalosComponents.6.File = "iconobject.datatype"; ScalosComponents.6.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+
+/* --- libraries */
+ScalosComponents.7.Path = "Libs:"; ScalosComponents.7.File = "iconobject.library"; ScalosComponents.7.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.8.Path = "Libs:"; ScalosComponents.8.File = "popupmenu.library"; ScalosComponents.8.OsMask = "AmigaOS3 MorphOS";
+ScalosComponents.9.Path = "Libs:"; ScalosComponents.9.File = "preferences.library"; ScalosComponents.9.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.10.Path = "Libs:"; ScalosComponents.10.File = "scalosgfx.library"; ScalosComponents.10.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.11.Path = "Libs:"; ScalosComponents.11.File = "sqlite3.library"; ScalosComponents.11.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+
+/* --- prefs */
+ScalosComponents.12.Path = "scalos:prefs"; ScalosComponents.12.File = "FileTypes.prefsplugin"; ScalosComponents.12.Catalog = "ScalosFileTypes.catalog"; ScalosComponents.12.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.13.Path = "scalos:prefs"; ScalosComponents.13.File = "Menu.prefsplugin"; ScalosComponents.13.Catalog = "ScalosMenu.catalog"; ScalosComponents.13.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.14.Path = "scalos:prefs"; ScalosComponents.14.File = "Pattern.prefsplugin"; ScalosComponents.14.Catalog = "ScalosPattern.catalog"; ScalosComponents.14.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.15.Path = "scalos:prefs"; ScalosComponents.15.File = "Palette.prefsplugin"; ScalosComponents.15.Catalog = "ScalosPalette.catalog"; ScalosComponents.15.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.16.Path = "scalos:prefs"; ScalosComponents.16.File = "PopupMenu.prefsplugin"; ScalosComponents.16.Catalog = "ScalosPopupMenu.catalog"; ScalosComponents.16.OsMask = "AmigaOS3 MorphOS";
+ScalosComponents.17.Path = "scalos:prefs"; ScalosComponents.17.File = "Scalos Menu"; ScalosComponents.17.Catalog = "ScalosMenu.catalog"; ScalosComponents.17.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.18.Path = "scalos:prefs"; ScalosComponents.18.File = "Scalos Palette"; ScalosComponents.18.Catalog = "ScalosPalette.catalog"; ScalosComponents.18.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.19.Path = "scalos:prefs"; ScalosComponents.19.File = "Scalos Pattern"; ScalosComponents.19.Catalog = "ScalosPattern.catalog"; ScalosComponents.19.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.20.Path = "scalos:prefs"; ScalosComponents.20.File = "Scalos Prefs"; ScalosComponents.20.Catalog = "Scalos_Prefs.catalog"; ScalosComponents.20.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+
+/* --- modules */
+ScalosComponents.21.Path = "scalos:modules"; ScalosComponents.21.File = "Format_Disk.module"; ScalosComponents.21.Catalog = "FormatDisk.catalog"; ScalosComponents.21.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.22.Path = "scalos:modules"; ScalosComponents.22.File = "Delete.module"; ScalosComponents.22.Catalog = "Delete.catalog"; ScalosComponents.22.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.23.Path = "scalos:modules"; ScalosComponents.23.File = "Find.module"; ScalosComponents.23.Catalog = "Find.catalog"; ScalosComponents.23.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.24.Path = "scalos:modules"; ScalosComponents.24.File = "Empty_Trashcan.module"; ScalosComponents.24.Catalog = "Empty_Trashcan.catalog"; ScalosComponents.24.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.25.Path = "scalos:modules"; ScalosComponents.25.File = "Exchange.module"; ScalosComponents.25.Catalog = "Exchange.catalog"; ScalosComponents.25.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.26.Path = "scalos:modules"; ScalosComponents.26.File = "Execute_Command.module"; ScalosComponents.26.Catalog = "Execute_Command.catalog"; ScalosComponents.26.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.27.Path = "scalos:modules"; ScalosComponents.27.File = "IconProperties.module"; ScalosComponents.27.Catalog = "IconProperties.catalog"; ScalosComponents.27.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.28.Path = "scalos:modules"; ScalosComponents.28.File = "Information.module"; ScalosComponents.28.Catalog = "Information.catalog"; ScalosComponents.28.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.29.Path = "scalos:modules"; ScalosComponents.29.File = "NewDrawer.module"; ScalosComponents.29.Catalog = "NewDrawer.catalog"; ScalosComponents.29.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.30.Path = "scalos:modules"; ScalosComponents.30.File = "Rename.module"; ScalosComponents.30.Catalog = "Rename.catalog"; ScalosComponents.30.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.31.Path = "scalos:modules"; ScalosComponents.31.File = "WindowProperties.module"; ScalosComponents.31.Catalog = "WindowProperties.catalog"; ScalosComponents.31.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.32.Path = "scalos:modules"; ScalosComponents.32.File = "Updater.module"; ScalosComponents.32.Catalog = "Updater.catalog"; ScalosComponents.32.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+
+/*  --- plugins */
+ScalosComponents.33.Path = "Scalos:Plugins/Filetypes"; ScalosComponents.33.File = "drawercontents.plugin"; ScalosComponents.33.Catalog = "DrawerContentsPlugin.catalog"; ScalosComponents.33.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.34.Path = "Scalos:Plugins/Filetypes"; ScalosComponents.34.File = "exifpicture.plugin"; ScalosComponents.34.Catalog = "ExifPicturePlugin.catalog"; ScalosComponents.34.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.35.Path = "Scalos:Plugins/Filetypes"; ScalosComponents.35.File = "picturedimensions.plugin"; ScalosComponents.35.Catalog = "PictureDimensionsPlugin.catalog"; ScalosComponents.35.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+
+/* OOP Plugins */
+ScalosComponents.36.Path = "Scalos:Plugins/OOP"; ScalosComponents.36.File = "devicefilter.plugin"; ScalosComponents.36.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.37.Path = "Scalos:Plugins/OOP"; ScalosComponents.37.File = "persist.plugin"; ScalosComponents.37.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.38.Path = "Scalos:Plugins/OOP"; ScalosComponents.38.File = "title_clock.plugin"; ScalosComponents.38.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.39.Path = "Scalos:Plugins/OOP"; ScalosComponents.39.File = "title_envvar.plugin"; ScalosComponents.39.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.40.Path = "Scalos:Plugins/OOP"; ScalosComponents.40.File = "title_freepens.plugin"; ScalosComponents.40.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.41.Path = "Scalos:Plugins/OOP"; ScalosComponents.41.File = "volumegauge.plugin"; ScalosComponents.41.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.42.Path = "Scalos:Plugins/OOP"; ScalosComponents.42.File = "wb39.plugin"; ScalosComponents.42.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.43.Path = "Scalos:Plugins/OOP"; ScalosComponents.43.File = "wbrexx.plugin"; ScalosComponents.43.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.44.Path = "Scalos:Plugins/OOP"; ScalosComponents.44.File = "xtwindows.plugin"; ScalosComponents.44.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+
+/* Menu plugins */
+ScalosComponents.45.Path = "Scalos:Plugins/Menu"; ScalosComponents.45.File = "sorted_cleanup.plugin"; ScalosComponents.45.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+
+/* Preview plugins */
+ScalosComponents.46.Path = "Scalos:Plugins/Preview"; ScalosComponents.46.File = "defpicture.pvplugin"; ScalosComponents.46.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.47.Path = "Scalos:Plugins/Preview"; ScalosComponents.47.File = "jpegpicture.pvplugin"; ScalosComponents.47.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.48.Path = "Scalos:Plugins/Preview"; ScalosComponents.48.File = "video.pvplugin"; ScalosComponents.48.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.49.Path = "Scalos:Plugins/Preview"; ScalosComponents.49.File = "pngpicture.pvplugin"; ScalosComponents.49.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+
+/* --- 3rd party stuff */
+ScalosComponents.50.Path = "libs:"; ScalosComponents.50.File = "guigfx.library"; ScalosComponents.50.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+ScalosComponents.51.Path = "libs:"; ScalosComponents.51.File = "render.library"; ScalosComponents.51.OsMask = "AmigaOS3 AmigaOS4 MorphOS";
+
+ScalosComponents.Count = 51;
+
+/* -------------------------------------------------------------------------------- */
+
+call addlib("rexxsupport.library", 0, -30, 0)
+
+parse arg componentname
+/* say "<" || componentname || ">" */
+
+os = GetOsName();
+
+PkgPath = PkgPath || os || "/"
+LocalPkgPath = "RAM:" || strip(PkgPath, 'L', '/')
+
+say "Deleting old directory tree..."
+"delete " || LocalPkgPath || " all QUIET"
+
+'makedir ' || LocalPkgPath || ' ALL'
+
+call LoadExistingVersionFile(os, versionfilename, componentname)
+
+rc = open( 'versionfile', versionfilename, 'append' )
+if rc ~= 1 then
+	do
+	say "failed to open version file " || versionfilename " !"
+	exit
+	end
+
+rc = seek( 'versionfile', 0, 'End' )
+
+call writeln('versionfile', "; AUTOMATICALLY GENERATED FILE, DO NOT EDIT MANUALLY!!!")
+
+/* Test-String for Base64 encoder */
+/* say encodebase64('Polyfon zwitschernd aßen Mäxchens Vögel Rüben, Joghurt und Quark') */
+/* output should be
+UG9seWZvbiB6d2l0c2NoZXJuZCBhw59lbiBNw6R4Y2hlbnMgVsO2Z2VsIFLDvGJlbiwgSm9naHVydCB1bmQgUXVhcms=
+*/
+
+DO n=0 TO ScalosComponents.Count
+	if ( length(componentname) = 0 |  ScalosComponents.n.File = componentname ) then
+		do
+		if index(ScalosComponents.n.OsMask, os) ~= 0 then
+			do
+			call getversion(ScalosComponents.n.Path, ScalosComponents.n.File, ScalosComponents.n.Catalog)
+			end
+		end
+END
+
+rc = close( 'versionfile' )
+
+/* create signature for versions file */
+call SignVersionFile(versionfilename)
+
+exit
+
+/* -------------------------------------------------------------------------------- */
+
+getversion: procedure expose PkgPath LocalPkgPath os
+parse arg dirname, filename, catalogname
+
+say "processing " || filename
+
+connectstr = ""
+if right(dirname,1) ~= ":" then connectstr = "/"
+
+filePath = dirname || connectstr
+'version full "' || filePath || filename || '" >' tmpfname
+/* say "version returned" rc */
+
+if rc = 0 then
+	do
+	/* say dirname || connectstr || filename */
+
+	rc = open( 'tmpfile', tmpfname, 'R' )
+	versionstring = readln( 'tmpfile' )
+	rc = close( 'tmpfile' )
+	'delete ' || tmpfname || ' quiet'
+
+	do wordpos=2 by 1
+		vstring = subword(versionstring, wordpos)
+		/* say wordpos vstring */
+		/* say left(vstring, 1) */
+		/* say index("Vv0123456789", left(vstring, 1)) */
+		if index("Vv0123456789", left(vstring, 1)) > 0 then break
+	end
+	if index("Vv", left(vstring, 1)) > 0 then vstring = substr(vstring,2)
+	vstring = subword(vstring, 1, 1)
+
+	/* say filename || " Version: " || vstring */
+
+	LHAName = LocalPkgPath || filename || ".lha"
+	PkgName = PkgPath || filename || ".lha"
+	Hash = "0"
+
+	'lha -Iqr a "' || LHAName || '" -w "' || filePath || '" "' || filename || '"'
+	if rc ~= 0 then
+		do
+		say "lha failed with " || filename || " not found!"
+		return
+		end
+
+	/* try to add associated icon (may fail) */
+	if fileexists(filePath || filename || '.info') = 1 then
+		do
+		'lha -Iqr a "' || LHAName || '" -w "' || filePath || '" "' || filename || '.info"'
+		end
+
+	if length(catalogname) > 0 then
+		do
+		catalogdir = "Locale:catalogs"
+		languages = showdir(catalogdir)
+		do n=0 by 1 to words(languages)
+			lang = word(languages, n)
+			scaloscatalogdir = catalogdir || "/" || lang || "/Scalos"
+			scaloscatalogs = showdir(scaloscatalogdir)
+			if length(scaloscatalogs) > 0 then
+				do
+				if index(scaloscatalogs, catalogname) > 0 then
+					do
+					catalog = scaloscatalogdir || "/" || catalogname
+					'lha -Iqrx a "' || LHAName || '" "' || catalog || '"'
+					if rc ~= 0 then
+						do
+						say "lha failed with " || filePath || " not found!"
+						return
+						end
+					end
+				end
+		end
+		end
+
+	xfname = "t:signature.sha1"
+	'openssl dgst -sha1 -sign Scalos.pem  -out "' || xfname || '" "' || LHAName || '"'
+	if rc ~= 0 then
+		do
+		say "Failed to create signature for " || LHAName
+		return
+		end
+
+	rc = open( 'sha1file', xfname, 'R' )
+	hashbin = readch( 'sha1file', 128 )
+	rc = close( 'sha1file' )
+	'delete ' || xfname || ' quiet'
+/*	say length(hashbin) */
+/*	  Hash = c2x(hashbin) */
+	Hash = encodebase64(hashbin)
+
+	vfstring = 'DIR="' || dirname || '" FILE="' || filename || '" OS="' || os || '" VERSION=' || vstring || ' PKG="' || PkgName || '" HASH="' || Hash || '"'
+	/* say vfstring */
+
+	call writeln('versionfile', vfstring)
+	end
+else
+	do
+	say "File " || filePath || " not found!"
+	end
+
+return
+
+/* -------------------------------------------------------------------------------- */
+
+LoadExistingVersionFile: procedure
+parse arg osname, versionfilename, componentfilename
+
+say "Downloading existing " || versionfilename || "."
+
+oldversionfilename = 'ram:versions-old'
+
+/* use wget to download any existing version file */
+'wget -q --output-document=' || oldversionfilename || ' http://scalos.noname.fr/versions.txt'
+if rc ~= 0 then
+	do
+	say "wget failed to retrieve old version file !"
+	exit
+	end
+
+rc = open( 'versionfile', versionfilename, 'write' )
+if rc ~= 1 then
+	do
+	say "failed to open version file " || versionfilename " !"
+	exit
+	end
+
+rc = open( 'oldversionfile', oldversionfilename, 'read' )
+if rc ~= 1 then
+	do
+	say "failed to open old version file " || oldversionfilename " !"
+	exit
+	end
+
+call writeln('versionfile', "; AUTOMATICALLY GENERATED FILE, DO NOT EDIT MANUALLY!!!")
+
+/* copy all lines for operating systems different from "osname" to new file */
+do while ~eof('oldversionfile')
+	vline = readln('oldversionfile')
+	if length(vline) > 0 & left(vline, 1) ~= ';' then
+		do
+		if index(vline, 'OS="' || osname || '"') = 0 then
+			do
+			rc = writeln('versionfile', vline)
+			end
+		else if index(vline, 'FILE="' || componentfilename || '"') = 0 then
+			do
+			/* if component has been specified, copy all entries execpt for this component back */
+			rc = writeln('versionfile', vline)
+			end
+		end
+	end
+
+rc = close( 'versionfile' )
+rc = close( 'oldversionfile' )
+
+/* remove old version file */
+'delete ' || oldversionfilename || ' quiet'
+
+return
+
+/* -------------------------------------------------------------------------------- */
+
+fileexists: procedure
+parse arg filename
+
+rc = open( 'testfile', filename, 'read' )
+if rc ~= 1 then
+	do
+	found = 0
+	end
+else
+	do
+	found = 1
+	rc = close( 'testfile' )
+	end
+
+return found
+
+/* -------------------------------------------------------------------------------- */
+
+encodebase64: procedure
+parse arg binstring
+
+/* Encodes a file in Base64.                         */
+/*                                                   */
+/* Written by James L. Dean                          */
+
+char_set='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+b64string = ''
+
+binlength = length(binstring)
+
+DO WHILE (binlength > 0)
+	num_octets=0
+	triple=0
+	DO octet_num=1 TO 3
+		IF binlength > 0 THEN
+			DO
+			octet = left(binstring, 1)
+			binstring = substr(binstring, 2)
+			triple = 256 * triple + C2D(octet)
+			num_octets = num_octets + 1
+			binlength = binlength - 1
+			END
+		ELSE
+			triple = 256 * triple
+	END
+
+	num_sextets = (8 * num_octets) % 6
+
+	IF 6*num_sextets < 8*num_octets THEN
+		num_sextets = num_sextets + 1
+
+	IF num_sextets > 0 THEN
+		DO
+		sextet_num = 1
+		DO WHILE(sextet_num <= 4)
+			quotient = triple % 64
+			stack.sextet_num = triple - 64 * quotient
+			sextet_num = sextet_num + 1
+			triple = quotient
+			END
+		DO WHILE (num_sextets >= 1)
+			sextet_num = sextet_num-1
+			b64string = b64string || SUBSTR(char_set, 1 + stack.sextet_num, 1)
+			num_sextets = num_sextets-1
+			END
+		DO WHILE (sextet_num > 1)
+			b64string = b64string || '='
+			sextet_num = sextet_num - 1
+			END
+		END
+END
+
+return b64string
+
+/* -------------------------------------------------------------------------------- */
+
+GetOsName: procedure
+
+'version >' tmpfname
+rc = open( 'tmpfile', tmpfname, 'R' )
+versionstring = readln( 'tmpfile' )
+rc = close( 'tmpfile' )
+'delete ' || tmpfname || ' quiet'
+if index(versionstring, "MorphOS") > 0 then
+	do
+	os = "MorphOS"
+	end
+else
+	do
+	versionstring =	strip(subword(versionstring, 2, 1), 'B', ',')
+	if versionstring > 50 then
+		os = "AmigaOS4"
+	else
+		os = "AmigaOS3"
+	end
+
+return os
+
+END
+
+/* -------------------------------------------------------------------------------- */
+
+SignVersionFile: procedure
+
+parse arg versionfilename
+
+xfname = versionfilename || ".sig"
+'openssl dgst -sha1 -sign Scalos.pem  -out "' || xfname || '" "' || versionfilename || '"'
+if rc ~= 0 then
+	do
+	say "Failed to create signature for " || versionfilename
+	return
+	end
+
+rc = open( 'sha1file', xfname, 'R' )
+hashbin = readch( 'sha1file', 128 )
+rc = close( 'sha1file' )
+'delete ' || xfname || ' quiet'
+
+rc = open( 'sigfile', xfname, 'W' )
+rc = writeln('sigfile', encodebase64(hashbin))
+rc = close('sigfile')
+
+return
+
+/* -------------------------------------------------------------------------------- */
+

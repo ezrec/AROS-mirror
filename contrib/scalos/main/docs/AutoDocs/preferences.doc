@@ -1,0 +1,455 @@
+TABLE OF CONTENTS
+
+preferences.library/--background--
+preferences.library/AllocPrefsHandle
+preferences.library/FindPreferences
+preferences.library/FreePrefsHandle
+preferences.library/GetEntry
+preferences.library/GetPreferences
+preferences.library/ReadPrefsHandle
+preferences.library/RemEntry
+preferences.library/SetEntry
+preferences.library/SetPreferences
+preferences.library/WritePrefsHandle
+preferences.library/--background--            preferences.library/--background--
+
+    NAME
+	--background
+
+   PURPOSE
+	The preferences.library provides a convenient way to store the
+	preferences for your program. All internal management and I/O of your
+	data is handled by the library, and is controlled via a simple interface
+	which makes use of identifiers and tags to access the data. Multiple
+	programs can access the data (held only once in memory) at the same time
+	as access is arbitrated through the use of semaphores.
+
+   OVERVIEW
+	Most of the data and structures mentioned here will be unavailable to
+	the programmer, but it is useful to know, so that the correct use of the
+	library can be adhered to.
+
+	* All accesses to a preferences structure must be made through a
+	  "PrefsHandle". A PrefsHandle is accessed by name (maximum of 32
+	  unique characters) using AllocPrefsHandle(). Within a PrefsHandle a
+	  list of ID's within this handle is stored. The pointer remains valid
+	  until you call FreePrefsHandle().
+
+	* The ID's are the first level of separation of preference data. Each
+	  ID must be 4 ASCII characters, for example "MAIN", or "MENU". For
+	  creating the ID you can use the MAKE_ID macro as defined in
+	  libraries/iffparse.h. ID's are unique within each PrefsHandle. This
+	  means that you can have an ID "MAIN" within two PrefsHandle's
+	  and they will be completely different ID's.
+
+	* The second level of separating the data is to use tags. A tag can have
+	  any value except 0. The data is stored along with the tag. Tags are
+	  unique within an ID the same way an ID is unique within a PrefsHandle.
+
+	This gives the following structure to preferences items:
+
+	                     Main list of all preferences handles
+	                             /        |       \
+	              ______________/         |        \___________________
+	             /                        |                            \
+	        PrefsHandle              PrefsHandle      ...          PrefsHandle
+	      _/          \_
+	     /              \
+	    ID        ______ID
+	  _/ |\      /   __/ |\
+	 /   | \    |   /   /  \         etc.
+	Tag+ | Tag+ | Tag+ | Tag+
+	Data | Data | Data | Data
+	     |      |      |
+	   Tag+   Tag+   Tag+
+	   Data   Data   Data
+
+
+	The data can be manipulated in these structures using SetPreferences()
+	to set the data and GetPreferences() to retrieve the data.
+
+
+	There is an alternative way to store the data. You can also have a list
+	of data items for each tag value. NB: you cannot mix normal single data
+	tags and their functions with the list type tags and their functions.
+	This is achieved using SetEntry(), GetEntry() and RemEntry() functions.
+	Each data item in the list is accessed using a logical entry number.
+	Since the data items are not explicitly accessed using this entry
+	number (such as with an array), their positions can change when you add
+	items in the middle of the list. For this reason you cannot guarantee
+	the order of data items in this sub-list. Applications of this method of
+	storing data could be a list of files which your program runs at
+	startup, without needing them to be in any specific order.
+
+
+	FindPreferences() will return a pointer to the tag specified and can be
+	used to find whether a certain tag exists or to access the data (if you
+	know the internal structure of tag items :). This works for either
+	type of tag (single data item or list of data items).
+
+	ReadPrefsHandle() and WritePrefsHandle() can be used to read or write an
+	entire PrefsHandle in the specified file.
+
+preferences.library/AllocPrefsHandle        preferences.library/AllocPrefsHandle
+
+   NAME
+	AllocPrefsHandle -- Allocate preferences handle
+
+   SYNOPSIS
+	prefshandle = AllocPrefsHandle( name )
+	D0                             A0
+
+	APTR AllocPrefsHandle( CONST_STRPTR );
+
+   FUNCTION
+	Allocate a handle so that the preferences inside can be accessed. All
+	successful calls to this function must be matched by a call to the
+	FreePrefsHandle() function.
+
+   INPUTS
+	name - a string that you can identify the preferences set by
+
+   RESULT
+	prefshandle - a pointer to the newly allocated preferences set or NULL
+	              for failure.
+
+   SEE ALSO
+	FreePrefsHandle()
+
+preferences.library/FindPreferences          preferences.library/FindPreferences
+
+   NAME
+	FindPreferences -- get pointer to data stored for a preference tag
+
+   SYNOPSIS
+	prefsstruct = FindPreferences(prefshandle, ID, Tag);
+	D0                            A0           D0  D1
+
+	struct PrefsStruct *FindPreferences(APTR, ULONG, ULONG);
+
+   FUNCTION
+	Searchs for the preferences entry specified by the preferences handle,
+	ID and Tag values and returns a pointer to whatever is stored there.
+	Similar to GetPreferences() and GetEntry(), but since it does not copy
+	any data can be used on both types of tag it can be used to find out
+	whether a tag is present in a PrefsHandle.
+
+   INPUTS
+	PrefsHandle   - pointer to a previously successfully allocated
+	                preferences handle
+	ID            - id of the set within the preferences handle you wish to
+	                use
+	Tag           - the tag used to identify this preference data within the
+	                the ID set
+
+   RESULT
+	prefsstruct - pointer to the preferences item if found, NULL otherwise
+
+   NOTES
+	The returned pointer will return a pointer to the tag item, which will
+	either be followed by the data (if set with SetPreferences()) or the
+	list of sub items (if set by SetEntry()).
+
+   BUGS
+
+   SEE ALSO
+	AllocPrefsHandle(), SetPreferences(), SetEntry(), GetPreferences(),
+	GetEntry()
+
+preferences.library/FreePrefsHandle          preferences.library/FreePrefsHandle
+
+   NAME
+	FreePrefsHandle -- free a previously allocated preferences handle
+
+   SYNOPSIS
+	FreePrefsHandle(PrefsHandle);
+	                A0
+
+	void FreePrefsHandle(APTR);
+
+   FUNCTION
+	Frees the preferences set associated with the handle passed into this
+	function. This handle can ONLY be created by calling AllocPrefsHandle
+	successfully. You MUST NOT use this preferences handle after you free
+	it.
+
+   INPUTS
+	PrefsHandle - pointer to the preferences handle successfully allocated
+	              using AllocPrefsHandle()
+
+   RESULT
+	nothing
+
+   SEE ALSO
+	AllocPrefsHandle()
+
+preferences.library/GetEntry                        preferences.library/GetEntry
+
+   NAME
+	GetEntry -- fills in a user structure from a preferences item
+
+   SYNOPSIS
+	bytescopied = GetEntry(PrefsHandle, ID, Tag, Struct, Struct_Size, Entry)
+	D0                     A0           D0  D1   A1      D2           D3
+
+	ULONG GetEntry(APTR, ULONG, ULONG, APTR, UWORD, ULONG);
+
+   FUNCTION
+	Copies the data stored in a preferences item to a struture or area of
+	memory supplied by the programmer. The preference item will come from
+	the list item at position "Entry" from the list in the Tag / ID /
+	preferences handle.
+
+   INPUTS
+	PrefsHandle   - pointer to a previously successfully allocated
+	                preferences handle
+	ID            - id of the set within the preferences handle you wish to
+	                use
+	Tag           - the tag used to identify this preference data within the
+	                the ID set
+	Struct        - pointer to the structure/memory you wish to copy the
+	                preferences data to
+	Struct_Size   - size of the structure/memory
+	Entry         - the position in the Tag's entry list to read this data
+	                from
+
+   RESULT
+	bytescopied - the actual number of bytes copied from the preference data
+	            to the structure/memory pointer.
+
+   NOTES
+	DO NOT MIX this command with Tag's which have had their preference data
+	set with SetPreferences. They are different internally. Only use this
+	with Tag's used with SetEntry.
+
+   SEE ALSO
+	AllocPrefsHandle(), SetPreferences(), SetEntry()
+
+preferences.library/GetPreferences            preferences.library/GetPreferences
+
+   NAME
+	GetPreferences -- returns data from a preference item to the programmer
+
+   SYNOPSIS
+	bytescopied = GetPreferences(PrefsHandle, ID, Tag, Struct, Struct_Size);
+	D0                           A0           D0  D1   A1      D2
+
+	ULONG GetPreferences(APTR, ULONG, ULONG, const APTR, UWORD);
+
+   FUNCTION
+	Copies the data stored in a preferences item (as referenced the prefs
+	handle, ID and Tag values) into a structure/memory that the user passes.
+	The number of bytes actually copied will be returned.
+
+   INPUTS
+	PrefsHandle   - pointer to a previously successfully allocated
+	                preferences handle
+	ID            - id of the set within the preferences handle you wish to
+	                use
+	Tag           - the tag used to identify this preference data within the
+	                the ID set
+	Struct        - pointer to the structure/memory you wish to store
+	Struct_Size   - size of the structure/memory
+
+   RESULT
+	bytescopied - the actual number of bytes copied from the preference data
+	            to the structure/memory pointer.
+
+   NOTES
+	This function does nothing if the ID and Tag values are 0, as they are
+	not considered valid as an ID or a Tag.
+
+	This function assumes a single preferences item per tag, DO NOT USE IT
+	with preferences items set up with the "Entry" functions.
+
+   SEE ALSO
+	AllocPrefsHandle(), SetPreferences()
+
+preferences.library/ReadPrefsHandle          preferences.library/ReadPrefsHandle
+
+   NAME
+	ReadPrefsHandle -- Load an entire prefs handle from disk
+
+   SYNOPSIS
+	ReadPrefsHandle(PrefsHandle, Filename);
+	                A0           A1
+
+	void ReadPrefsHandle(APTR, CONST_STRPTR);
+
+   FUNCTION
+	Attempts to read data from a file on disk (previously saved with
+	WritePrefsHandle) into the specified preferences handle.
+
+   INPUTS
+	PrefsHandle   - pointer to a previously allocated preferences handle
+	Filename      - full path and name of file to load from
+
+   RESULT
+	nothing
+
+   NOTES
+	Data is stored in memory using SetPreferences() and SetEntry()
+	functions.
+
+   BUGS
+	Should probably return a value to indicate whether file was read
+	successfully or not.
+
+   SEE ALSO
+	AllocPrefsHandle(), WritePrefsHandle(), SetPreferences(), SetEntry()
+
+preferences.library/RemEntry                        preferences.library/RemEntry
+
+   NAME
+	RemEntry -- remove an preferences item entry from a Tag that has a list
+
+   SYNOPSIS
+	success = RemEntry(PrefsHandle, ID, Tag, Entry);
+	D0                 A0           D0  D1   D2
+
+	ULONG RemEntry(APTR, ULONG, ULONG, ULONG);
+
+   FUNCTION
+	Removes a preferences item, that is in a list at position "Entry", at
+	the given preferences handle, ID and Tag locations.
+
+   INPUTS
+	PrefsHandle   - pointer to a previously successfully allocated
+	                preferences handle
+	ID            - id of the set within the preferences handle you wish to
+	                use
+	Tag           - the tag used to identify this preference data within the
+	                the ID set
+	Entry         - the position in the Tag's entry list to read this data
+	                from
+
+   RESULT
+	success - whether the entry was successfully removed or not.
+
+   NOTES
+	DO NOT MIX this function with Tag's which have been created with
+	SetPreferences.
+
+   SEE ALSO
+	AllocPrefsHandle(), SetPreferences(), SetEntry()
+
+preferences.library/SetEntry                        preferences.library/SetEntry
+
+   NAME
+	SetEntry -- adds preference data to a list of entries related to the Tag
+
+   SYNOPSIS
+	SetEntry(PrefsHandle, ID, Tag, Struct, Struct_Size, Entry)
+	         A0           D0  D1   A1      D2           D3
+
+	void SetEntry(APTR, ULONG, ULONG, const APTR, UWORD, ULONG);
+
+   FUNCTION
+	Stores some user data in the preferences item in the preferences handle,
+	under the specified ID and Tag values. It will be stored at position
+	"Entry" in a list of values being stored under the given Tag value.
+
+   INPUTS
+	PrefsHandle   - pointer to a previously successfully allocated
+	                preferences handle
+	ID            - id of the set within the preferences handle you wish to
+	                use
+	Tag           - the tag used to identify this preference data within the
+	                the ID set
+	Struct        - pointer to the structure/memory you wish to store
+	Struct_Size   - size of the structure/memory
+	Entry         - the position in the Tag's entry list to store this data
+
+   RESULT
+	nothing
+
+   NOTES
+	DO NOT MIX this command with Tag values which have been created with
+	SetPreferences. They are different internally. If you have previously
+	stored data in this PrefsHandle/ID/Tag/Entry combination, it will be
+	overwritten if the data sizes are the same, otherwise this new data will
+	be inserted at the position specified.
+
+   BUGS
+	Since the entry can be added at the end of the list (if the position is
+	not found), this means that it can be added at a position not equal to
+	the given Entry value. This is not a bug as such, but the function
+	should probably return the actual position that it is inserted at. Also,
+	the function can fail (when allocating memory) so it should also return
+	a value to indicate that failure.
+
+   SEE ALSO
+	AllocPrefsHandle(), SetPreferences()
+
+preferences.library/SetPreferences            preferences.library/SetPreferences
+
+   NAME
+	SetPreferences -- store data in a preference item
+
+   SYNOPSIS
+	SetPreferences(PrefsHandle, ID, Tag, Struct, Struct_Size);
+	               A0,          D0, D1,  A1,     D2
+
+	void SetPreferences(APTR, ULONG, ULONG, const APTR, UWORD);
+
+   FUNCTION
+	Stores a structure of data in the preferences handle, under the given
+	ID and tag values.
+
+   INPUTS
+	PrefsHandle   - pointer to a previously successfully allocated
+	                preferences handle
+	ID            - id of the set within the preferences handle you wish to
+	                use
+	Tag           - the tag used to identify this preference data within the
+	                the ID set
+	Struct        - pointer to the structure/memory you wish to store
+	Struct_Size   - size of the structure/memory
+
+   RESULT
+	nothing
+
+   NOTES
+	This function does nothing if the ID and Tag values are 0, as they are
+	not considered valid as an ID or a Tag. This will overwrite any data
+	that has previously been stored in this PrefsHandle/ID/Tag combination.
+
+	This sets up a single preferences item for the given tag. DO NOT MIX
+	preferences created with this function with the "Entry" commands!!!
+
+   SEE ALSO
+	AllocPrefsHandle()
+
+preferences.library/WritePrefsHandle        preferences.library/WritePrefsHandle
+
+   NAME
+	WritePrefsHandle -- saves an entire preferences handle to a file
+
+   SYNOPSIS
+	WritePrefsHandle(PrefsHandle, Filename);
+	                 A0           A1
+
+	void WritePrefsHandle(APTR, CONST_STRPTR);
+
+   FUNCTION
+	Stores all the data and structure of the preferences handle to a file
+	on disk.
+
+   INPUTS
+	PrefsHandle - pointer to a previously allocated preferences handle
+	Filename    - full path and name of file to save to
+
+   RESULT
+	nothing
+
+   NOTES
+	This function can deal with single or list entries for a Tag value.
+
+   BUGS
+	Should probably return a value to show if the file was successfully
+	saved or not.
+
+   SEE ALSO
+	AllocPrefsHandle(), ReadPrefsHandle()
+
+

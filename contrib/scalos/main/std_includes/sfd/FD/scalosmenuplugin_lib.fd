@@ -1,0 +1,5 @@
+##base _ScalosMenuPluginBase
+##bias 30
+##public
+SCAMenuFunction(wt,in)(a0/a1)
+##end

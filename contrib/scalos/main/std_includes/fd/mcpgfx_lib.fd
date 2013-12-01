@@ -1,0 +1,10 @@
+##base _MCPGfxBase
+##bias 30
+##public
+mcpPaintSysIGad(sysImageObject,drawInfo,gadgetNumber,width,height)(a0/a1,d0/d1/d2)
+mcpRectFillA(rp,x1,y1,x2,y2,tagList)(a0,d0/d1/d2/d3/a1)
+mcpDrawFrameA(rp,x1,y1,x2,y2,tagList)(a0,d0/d1/d2/d3/a1)
+mcpGetExtDrawInfo(screen,drawInfo)(a0/a1)
+mcpGetFrameSize(drawInfo,frameType)(a0,d0)
+mcpSetGFXAttrsA(tagList)(a0)
+##end

@@ -1,0 +1,6 @@
+# Scalos filetype description
+# written 08/15/07 16:25:15
+
+PREVIEWPLUGIN "Scalos:Plugins/Preview/video.pvplugin"
+DESCRIPTION "Video"
+

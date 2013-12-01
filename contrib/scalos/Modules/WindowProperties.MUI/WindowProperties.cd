@@ -1,0 +1,354 @@
+; WindowProperties.cd
+; version $VER: WindowProperties.catalog 40.6 (11.01.2009 19:01:45)
+; codeset 0s
+; language english
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME (//)
+Scalos Window Properties
+;
+;
+MSGID_OKBUTTON (//)
+Ok
+;
+;
+MSGID_SHORTHELP_OKBUTTON (//)
+Save the changes in the icon's tooltypes.\n\
+If necessary, a new icon will be\n\
+created from a the default icon.
+;
+;
+MSGID_CANCELBUTTON (//)
+Cancel
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON (//)
+Discard all changes and\n\
+leave the icon unchanged.
+;
+;
+MSGID_CYCLE_NOSTATUSBAR (//)
+Hide Status Bar:
+;
+;
+MSGID_CYCLE_NOSTATUSBAR_SHORTHELP (//)
+This switch can be used to turn off the status bar\n\
+for this window, independent of the global setting.
+;
+;
+MSGID_POPUP_PATTERNNUMBER (//)
+Pattern number:
+;
+;
+MSGID_READ_ONLY (+1//)
+(Read-Only)
+;
+;
+MSGID_TEXT_WINDOWNAME_SHORTHELP (//)
+Window name
+;
+;
+MSGID_TEXT_PARENTDIR_SHORTHELP (//)
+Drawer window path
+;
+;
+MSGID_SHOWTHUMBNAILS_NOTSET (//)
+(not set)
+;
+;
+MSGID_SHOWTHUMBNAILS_NEVER (//)
+Never
+;
+;
+MSGID_SHOWTHUMBNAILS_AS_DEFAULT (//)
+As default
+;
+;
+MSGID_SHOWTHUMBNAILS_ALWAYS (//)
+Always
+;
+;
+MSGID_CYCLE_THUMBNAILS (//)
+Show Thumbnails:
+;
+;
+MSGID_CYCLE_THUMBNAILS_SHORTHELP (//)
+Individual drawer-specific setting for thumbnail display.\n\
+If not set, the default setting from Scalos prefs is used.
+;
+;
+MSGID_CHECKOVERLAP_NO (//)
+No
+;
+;
+MSGID_CHECKOVERLAP_YES (//)
+Yes
+;
+;
+MSGID_CHECKOVERLAP_NOTSET (//)
+(not set)
+;
+;
+MSGID_CYCLE_CHECKOVERLAP (//)
+Check Overlapping Icons:
+;
+;
+MSGID_CYCLE_CHECKOVERLAP_SHORTHELP (//)
+Individual drawer-specific setting for overlapping icons check.\n\
+If set icons that overlap any other icon will be repositioned.
+;
+;
+MSGID_HIDESTATUSBAR_NOTSET (//)
+(not set)
+;
+;
+MSGID_HIDESTATUSBAR_HIDE (//)
+Hidden
+;
+;
+MSGID_TRANSPARENCY_ACTIVEWINDOW (//)
+Active window state
+;
+;
+MSGID_TRANSPARENCY_INACTIVEWINDOW (//)
+Inactive window state
+;
+;
+MSGID_TRANSPARENCY_ACTIVEWINDOW_SHORTHELP (//)
+Here you can select the degree of transparency\n\
+for the active Scalos desktop, icon, or text window.\n\
+The desktop will only get transparent if it is not a backdrop window.
+;
+;
+MSGID_TRANSPARENCY_INACTIVEWINDOW_SHORTHELP (//)
+Here you can select the degree of transparency\n\
+for all inactive Scalos desktop, icon, or text windows.\n\
+The desktop will only get transparent if it is not a backdrop window.
+;
+;
+MSGID_TRANSPARENCY_OPAQUE (//)
+opaque
+;
+;
+MSGID_TRANSPARENCY_TRANSPARENT (//)
+transparent
+;
+;
+MSGID_CHECKBOX_TRANSPARENCY_USEDEFAULT (//)
+Use default:
+;
+;
+MSGID_CHECKBOX_TRANSPARENCY_USEDEFAULT_SHORTHELP (//)
+Use default:
+;
+;
+MSGID_CYCLE_NOCONTROLBAR (//)
+Hide Control Bar:
+;
+;
+MSGID_CYCLE_NOCONTROLBAR_SHORTHELP (//)
+This switch can be used to turn off the control bar\n\
+for this window, independent of the global setting.
+;
+;
+MSGID_HIDECONTROLBAR_NOTSET (//)
+(not set)
+;
+;
+MSGID_HIDECONTROLBAR_HIDE (//)
+Hidden
+;
+;
+MSGID_GROUP_ICONSCALING (//)
+Icon Scaling
+;
+;
+MSGID_ICONSCALING_NOMINALSIZE_SHORTHELP (//)
+Standard size adjustment applied to all icons.
+;
+;
+MSGID_ICONSCALING_NOMINALSIZE (//)
+Nominal Size:
+;
+;
+MSGID_ICONSCALING_PERCENT (//)
+%
+;
+;
+MSGID_ICONSCALING_MINSIZE (//)
+Minimum Size:
+;
+;
+MSGID_ICONSCALING_MINSIZE_SHORTHELP (//)
+Minimum size for displayed icons.\n\
+Smaller icons will be scaled to\n\
+the specified minimum size.
+;
+;
+MSGID_ICONSCALING_MAXSIZE (//)
+Maximum Size:
+;
+;
+MSGID_ICONSCALING_MAXSIZE_SHORTHELP (//)
+Maximum size for displayed icons.\n\
+Larger icons will be scaled to\n\
+the specified maximum size.
+;
+;
+MSGID_CHECKBOX_ICONSCALING_NOMINALSIZE (//)
+Use default:
+;
+;
+MSGID_CHECKBOX_ICONSCALING_NOMINALSIZE_SHORTHELP (//)
+If this checkbox is checked, global icon scaling from Scalos Preferences is used.\n\
+Turn off this checkbox to specify individual icon scaling for this window.
+;
+;
+MSGID_CHECKBOX_ICONSIZECONSTRAINTS_USEDEFAULT (//)
+Use default:
+;
+;
+MSGID_CHECKBOX_ICONSIZECONSTRAINTS_USEDEFAULT_SHORTHELP (//)
+If this checkbox is checked, global icon size\n\
+constraints from Scalos Preferences are used.\n\
+Turn off this checkbox to specify individual\n\
+icon size constraints for this window.
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT (2000//)
+Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT (//)
+About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI (//)
+About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT (//)
+Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT (//)
+Q
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK (3000//)
+_OK
+;
+;
+MSGID_ABOUTREQFORMAT (//)
+\33c\033bScalos WindowProperties.module V%ld.%ld\033n\n\
+%s\n\
+© 2004%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+MSGID_THUMBNAILS_LIFETIME_FOREVER (3100//)
+never
+;
+;
+MSGID_THUMBNAILS_LIFETIME_NOTSET (//)
+(Default)
+;
+;
+MSGID_ICONSPAGE_THUMBNAILS_MAXAGE (//)
+Cleanup thumbnails after:
+;
+;
+MSGID_ICONSPAGE_THUMBNAILS_MAXAGE_SHORTHELP (//)
+Cached thumbnail images will be removed from the cache\n\
+if they have not been accessed for more than the\n\
+specified number of days, in order to keep cache\n\
+size as small as possible.\n\
+If \033b(Default)\033n is selected, the global setting is used.
+;
+;
+MSGID_ICONSPAGE_THUMBNAILS_MAXAGE_DAYS (//)
+days
+;
+;-----------------------------------------------------------
+;
+MSGID_COLUMNTITLE_1 (3200//)
+\33bNr.
+;
+;
+MSGID_COLUMNTITLE_3 (+1//)
+\33bPreview
+;
+;
+MSGID_REQTITLE_READERROR (//)
+Error reading pattern preferences\n\
+file \"%s\"\n\
+%s
+;
+;
+MSGID_LOADING_THUMBNAIL (//)
+\33cLoading Pattern Thumbnail for
+;
+;
+MSGID_PROGRESS_THUMBNAILS (//)
+\33c%ld/%ld
+;
+;
+MSGID_LOADING_THUMBNAILS (//)
+\033cLoading Pattern Thumbnails...
+;
+;
+MSGID_WINDOW_STARTUP (//)
+Scalos Window Properties Startup
+;
+;
+MSGID_PATTERNR_DEFAULT (//)
+(default)
+;
+;-----------------------------------------------------------
+;
+MSGID_ICONSIZES_16x16 (3300//)
+16 x 16
+;
+;
+MSGID_ICONSIZES_24x24 (//)
+24 x 24
+;
+;
+MSGID_ICONSIZES_32x32 (//)
+32 x 32
+;
+;
+MSGID_ICONSIZES_48x48 (//)
+48 x 48
+;
+;
+MSGID_ICONSIZES_64x64 (//)
+64 x 64
+;
+;
+MSGID_ICONSIZES_96x96 (//)
+96 x 96
+;
+;
+MSGID_ICONSIZES_128x128 (//)
+128 x 128
+;
+;
+MSGID_ICONSIZES_UNLIMITED (//)
+unlimited
+;
+;-----------------------------------------------------------
+;
+MSGID_REGISTERTITLE_WINDOW (//)
+Window
+;
+;
+MSGID_REGISTERTITLE_ICONS (//)
+Icons
+;
+;-----------------------------------------------------------
+;

@@ -1,0 +1,5 @@
+##base _ScalosPrefsPluginBase
+##bias 30
+##public
+SCAGetPrefsInfo(which)(d0)
+##end

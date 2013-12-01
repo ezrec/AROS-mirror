@@ -1,0 +1,31 @@
+# $Date: 2009-02-17 21:22:13 +0100 (Di, 17. Feb 2009) $
+# $Revision: 5 $
+#############################################################
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/..
+endif
+
+###############################################################################
+
+include		config.mk
+
+###############################################################################
+
+SUBDIRS	=	Palette		\
+		Menu		\
+		FileTypes	\
+		Pattern		\
+		MainPrefs	\
+
+###############################################################################
+
+.PHONY: all install clean bump dump
+
+all:	all_subdirs
+
+clean:	clean_subdirs
+
+install:	install_subdirs
+
+nodebug: nodebug_subdirs
+

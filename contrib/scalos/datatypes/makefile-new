@@ -1,0 +1,38 @@
+# $Date: 2011-07-09 20:50:13 +0200 (Sa, 09. Jul 2011) $
+# $Revision: 759 $
+#############################################################
+ifndef $(TOPLEVEL)
+	TOPLEVEL=$(shell pwd)/..
+endif
+
+###############################################################################
+
+include		config.mk
+
+###############################################################################
+
+SUBDIRS	=	AmigaIconObj3.5	\
+		AmigaIconObject	\
+		IconObject	\
+		PNGIcons	\
+                GlowIconObject
+
+ifneq ($(MACHINE), ppc-amigaos)
+ifneq ($(MACHINE), i386-aros)
+SUBDIRS	+=   NewIcons
+endif
+endif
+
+###############################################################################
+
+.PHONY: all install clean bump dump
+
+all:	all_subdirs
+
+clean: clean_subdirs
+
+install: install_subdirs
+
+nodebug: nodebug_subdirs
+
+

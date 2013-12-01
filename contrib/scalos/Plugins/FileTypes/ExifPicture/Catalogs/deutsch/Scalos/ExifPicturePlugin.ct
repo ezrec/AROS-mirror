@@ -1,0 +1,249 @@
+; ExifPicturePlugin.ct
+; Date: $
+; Revision: $
+## version $VER: ExifPicturePlugin.catalog 40.0 (17.09.05)
+## codeset 0
+## language deutsch
+;
+;#arrayopts static __far
+;
+;
+MSGID_ERROR_NOJPEG
+Fehler: Datei %s ist kein JPEG Bild!.
+;Error, file: %s isn't a JPEG picture.
+;
+MSGID_PICTURE_FILESIZE
+Dateigröße : %lD Bytes\n
+;File size: %lD bytes\n
+;
+MSGID_PICTURE_FILEDATE
+Datei-Datum : %s\n
+;File date: %s\n
+;
+MSGID_CAMERA_MAKE_MODEL
+Kamera-Hersteller : %s\n\
+Kamera-Modell : %s\n
+;Camera make: %s\n\
+;Camera model: %s\n
+;
+MSGID_DATE_TIME
+Aufnahmedatum : %s\n
+;Date/Time: %s\n
+;
+MSGID_PICTURE_RESOLUTION
+Auflösung : %d x %d\n
+;Resolution: %d x %d\n
+;
+MSGID_ORIENTATION
+Orientierung  : %s\n
+;Orientation: %s\n
+;
+MSGID_ISCOLOR
+Farbe oder s/w : schwarzweiß\n
+;Color/bw: Black and white\n
+;
+MSGID_FLASHUSED
+Blitz benutzt : %s\n
+;Flash used: %s\n
+;
+MSGID_NO
+Nein
+;No
+;
+MSGID_YES
+Ja
+;Yes
+;
+MSGID_FOCAL_LENGTH
+Brennweite : %4.1fmm
+;Focal length: %4.1fmm
+;
+MSGID_FOCAL_LENGTH_CDDWIDTH
+  (entspricht 35mm : %dmm)
+;  (35mm equivalent: %dmm)
+;
+MSGID_CDDWIDTH
+Größe des CCD : %4.2fmm\n
+;CCD width: %4.2fmm\n
+;
+MSGID_EXPOSURETIME64
+Belichtungszeit : %6.4f s
+;Exposure time: %6.4f s 
+;
+MSGID_EXPOSURETIME53
+Belichtungszeit : %5.3f s
+;Exposure time: %5.3f s 
+;
+MSGID_APERTUREFNUMBER
+Blende : f/%3.1f\n
+;Aperture: f/%3.1f\n
+;
+MSGID_DISTANCE_INFINITE
+Fokus-Entfernung : unendlich\n
+;Focus dist.: Infinite\n
+;
+MSGID_DISTANCE
+Fokus-Entfernung : %4.2fm\n
+;Focus dist.: %4.2fm\n
+;
+MSGID_ISOEQUIVALENT
+ISO Empfindlichkeit : %2d\n
+;ISO equiv.: %2d\n
+;
+MSGID_EXPOSUREBIAS
+Belichtungskorrektur :%4.2f\n
+;Exposure bias: %4.2f\n
+;
+MSGID_WHITEBALANCE1
+Weißabgleich : Sonne\n
+;Whitebalance: sunny\n
+;
+MSGID_WHITEBALANCE2
+Weißabgleich : Leuchtstoffröhre\n
+;Whitebalance: fluorescent\n
+;
+MSGID_WHITEBALANCE3
+Weißabgleich :Glühlampe\n
+;Whitebalance: incandescent\n
+;
+MSGID_WHITEBALANCE4
+Weißabgleich : bewölkter Himmel\n
+;Whitebalance: cloudy\n
+;
+MSGID_METERINGMODE_CENTER
+Belichtungsmessung : mittenbetont\n
+;Metering Mode: center weight\n
+;
+MSGID_METERINGMODE_SPOT
+Belichtungsmessung : spot\n
+;Metering Mode: spot\n
+;
+MSGID_METERINGMODE_MATRIX
+Belichtungsmessung : Matrix\n
+;Metering Mode: matrix\n
+;
+MSGID_EXPOSURE_PROGRAM1
+Belichtung : Programmautomatik\n
+;Exposure : program (auto)\n
+;
+MSGID_EXPOSURE_PROGRAM2
+Belichtung : Blendenautomatik\n
+;Exposure: aperture priority (semi-auto)\n
+;
+MSGID_EXPOSURE_PROGRAM3
+Belichtung : Zeitautomatik\n
+;Exposure: shutter priority (semi-auto)\n
+;
+MSGID_JPEG_PROCESS
+JPEG Typ : %s\n
+;Jpeg process: %s\n
+;
+MSGID_COMMENT
+Kommentar :
+;Comment: 
+;
+;-------------------- ProcessTable --------------------------------------------
+;
+MSGID_BASELINE
+Standard
+;Baseline
+;
+MSGID_EXTENDED_SEQUENTIAL
+Erweitert sequentiell
+;Extended sequential
+;
+MSGID_PROGRESSIVE
+Progressiv
+;Progressive
+;
+MSGID_LOSSLESS
+Verlustfrei
+;Lossless
+;
+MSGID_DIFFERENTIAL_SEQUENTIAL
+Differentiell sequentiell
+;Differential sequential
+;
+MSGID_DIFFERENTIAL_PROGRESSIVE
+Differentiell progressiv
+;Differential progressive
+;
+MSGID_DIFFERENTIAL_LOSSLESS
+Differentiell verlustfrei
+;Differential lossless
+;
+MSGID_EXTENDED_SEQUENTIAL_ARITHMETIC_CODING
+Erweitert sequentiell, arithmetische Kodierung
+;Extended sequential, arithmetic coding
+;
+MSGID_PROGRESSIVE_ARITHMETIC_CODING
+Progressiv, arithmetische Kodierung
+;Progressive, arithmetic coding
+;
+MSGID_LOSSLESS_ARITHMETIC_CODING
+Verlustfrei, arithmetische Kodierung
+;Lossless, arithmetic coding
+;
+MSGID_DIFFERENTIAL_SEQUENTIAL_ARITHMETIC_CODING
+Differentiell sequentiell, arithmetische Kodierung
+;Differential sequential, arithmetic coding
+;
+MSGID_DIFFERENTIAL_PROGRESSIVE_ARITHMETIC_CODING
+Differentiell progressiv, arithmetische Kodierung
+;Differential progressive, arithmetic coding
+;
+MSGID_DIFFERENTIAL_LOSSLESS_ARITHMETIC_CODING
+Differentiell verlustfrei, arithmetische Kodierung
+;Differential lossless, arithmetic coding
+;
+MSGID_UNKNOWN
+Unbekannt
+;Unknown
+;
+;------------------------------------------------------------------------------
+;
+MSGID_ERROR_DOS
+Fehler: %ld, %s.
+; Error: %ld, %s.
+;
+;---------------------------- OrientTab ---------------------------------------
+;
+MSGID_ORIENTTAB_UNDEFINED
+Undefiniert
+; Undefined
+;
+MSGID_ORIENTTAB_NORMAL
+Normal
+; Normal
+;
+MSGID_ORIENTTAB_FLIP_HORIZONTAL
+Horizontal gespiegelt
+; flip horizontal
+;
+MSGID_ORIENTTAB_ROTATE_180
+180° drehen
+; rotate 180
+;
+MSGID_ORIENTTAB_FLIP_VERTICAL
+Vertikal gespiegelt
+; flip vertical
+;
+MSGID_ORIENTTAB_TRANSPOSE
+Transponiert
+; transpose
+;
+MSGID_ORIENTTAB_ROTATE_90
+90° gedreht
+; rotate 90
+;
+;
+MSGID_ORIENTTAB_TRANSVERSE
+quer
+; transverse
+;
+MSGID_ORIENTTAB_ROTATE_270
+270° gedreht
+; rotate 270
+;
+;------------------------------------------------------------------------------
+;

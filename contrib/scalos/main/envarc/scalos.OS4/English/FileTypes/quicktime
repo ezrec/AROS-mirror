@@ -1,0 +1,6 @@
+# Scalos filetype description
+# written 06/30/07 17:06:49
+
+PREVIEWPLUGIN "Scalos:Plugins/Preview/video.pvplugin"
+DESCRIPTION "Quicktime Video"
+

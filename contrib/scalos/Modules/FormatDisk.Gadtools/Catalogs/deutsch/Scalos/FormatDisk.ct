@@ -1,0 +1,354 @@
+; FormatDisk.ct
+; $Date$
+; $Revision$
+; $Id$
+;
+## version $VER: FormatDisk.catalog 1.05 (08.12.2006)
+## codeset 0
+## language deutsch
+;
+;#arrayopts static __far
+;
+;
+;
+;
+MSGID_DEVICE_SPACE_USED
+Belegt:
+;Used:
+;
+;
+;
+MSGID_DEVICE_SPACE_FREE
+Frei:
+;Free:
+;
+;
+;
+MSGID_DEVICE_SIZE
+Größe:
+;Size:
+;
+;
+;
+MSGID_DEVICE_BLOCK_SIZE
+Blockgröße:
+;Block size:
+;
+;
+;
+MSGID_DEVICE_BLOCKS_PERCENT_USED
+Belegt: %s (%lD Blöcke, %lD%%)
+;Used: %s (%lD Blocks, %lD%%)
+;
+;
+;
+MSGID_DEVICE_BLOCKS_PERCENT_FREE
+Frei: %s (%lD Blöcke, %lD%%)
+;Free: %s (%lD Blocks, %lD%%)
+;
+;
+;
+MSGID_DEVICE_BLOCKS
+Größe: %s (%lD Blöcke)
+;Size: %s (%lD Blocks)
+;
+;
+;
+MSGID_DEVICE_SHORTSIZE
+Größe: %ld
+;Size : %ld
+;
+;
+;
+MSGID_DEVICE_BLOCKSIZE_BYTES
+Blockgröße: %lD bytes
+;Block size:%lD bytes
+;
+;
+;
+MSGID_REQ_SURE_TITLE
+Format_Disk.module : Anfrage...
+;Format_Disk.module: Request...
+;
+;
+;
+MSGID_REQ_SURE_BODY
+Sind Sie sicher, daß Sie den Datenträger\n\
+%s\n\
+\n\
+%s\n\
+formatieren möchten??\n\
+(Der Inhalt des Datenträgers wird komplett gelöscht!)?
+;Are you sure you want to format volume\n\
+;%s\n\
+;\n\
+;%s\n\
+;\n\
+;(the contents of the disk will be destroyed)?
+;
+;
+;
+MSGID_REQ_SURE_GADGETS
+Ja|Nein
+;Yes|No
+;
+;
+;
+MSGID_VOLUME_PROTECTED
+Datenträger\n%s\nist schreibgeschützt
+;Volume\n%s\nis write protected
+;
+;
+;
+MSGID_REQ_RETRY_CANCEL
+Wiederholen|Abbrechen
+;Retry|Cancel
+;
+;
+;
+MSGID_GADGET_OK
+OK
+;Ok
+;
+;---------------------------------------------------------------------------
+;
+MSGID_GADGET_DEVNAME
+_Name:
+;_Name:
+;
+;
+MSGID_GADGET_VOLUME
+Datenträger:
+;Volume:
+;
+;
+MSGID_GADGET_DEVICE
+Gerät:
+;Device:
+;
+;
+MSGID_GADGET_FFS
+_Fastfilesystem:
+;_Fast File System
+;
+;
+MSGID_GADGET_INTL
+_Internationaler Modus:
+;_International
+;
+;
+MSGID_GADGET_VERIFY
+Format _Überprüfen
+;_Verify Format
+;
+;
+MSGID_GADGET_TRASHCAN
+Mit _Papierkorb
+;With t_rashcan
+;
+;
+MSGID_GADGET_DIRCACHE
+_Verzeichnis-Cache:
+;_Dircache
+;
+;
+MSGID_GADGET_TRASHCAN_NAME
+Papier_korb:
+;_Trash:
+;
+;
+MSGID_GADGET_GUI_FORMAT
+_Formatieren
+;_Format
+;
+;
+MSGID_GADGET_QUICK_FORMAT
+_Schnellformatierung
+;_Quick Format
+;
+;
+MSGID_GADGET_GUI_CANCEL
+_Abbruch
+;_Cancel
+;
+;
+MSGID_DRIVE_NOFOUND
+Kann Laufwerk nicht finden!
+;
+;
+MSGID_VOLUME_SELECTED
+Ausgewählter Datenträger:
+;Volume selected:
+;
+;
+MSGID_OBJECT
+Objekt:
+;Object:
+;
+;
+MSGID_IS_WRONG_TYPE
+hat falschen typ!
+;is a wrong type!
+;
+;--------------------------------------------------------
+;
+;
+MSGID_CLI_SUPPORT_64CMD
+*** Gerät %s unterstützt 64-Bit Befehle! Keine Größenbegrenzung!\n
+;*** Device %s supports 64bit commands! No size limit!!\n
+;
+;
+MSGID_CLI_NO_SUPPORT_64CMD
+*** Gerät %s unterstützt KEINE 64-Bit Befehle! Größe wird auf 4GB begrenzt!!\n
+;*** Device %s does NOT support 64bit commands. 4GB limit activated!!\n
+;
+;
+MSGID_CLI_INSERT_DISK
+Bitte zu formatierenden Datenträger ins Laufwerk einlegen
+;Insert the disk to be formatted in drive 
+;
+;
+MSGID_CLI_PRESS_RETURN
+ und die Enter-Taste drücken
+; and press RETURN 
+;
+;
+MSGID_INITIALIZING_DISK
+Disk wird initialisiert...
+;Initializing disk...
+;
+;
+MSGID_INITIALIZING_DISK_SUCCESS
+Initialisierung erfolgreich.
+;Initialized successfully.
+;
+;
+MSGID_INITIALIZING_DISK_FAILED
+Fehler bei der Initialisierung.
+;Initialization failed.
+;
+; +++ translateme +++
+MSGID_SECOND_INITIALIZING_DISK
+Second Initialization...
+;Second Initialization...
+;
+;
+MSGID_CLI_BREAK
+***Abbruch\n
+;***Break\n
+;
+;
+MSGID_FORMAT_DISK_FAILED
+Kann Datenträger nicht formatieren
+;Cannot format volume
+;
+;
+MSGID_FORMAT_DISK_WRITEPROTECTED
+Weil er schreibgeschützt ist
+;because the disk is write protected
+;
+;
+MSGID_DEVICE_NOT_ACCESS
+Konnte nicht auf das Gerät zugreifen
+;Couldn't access the device
+;
+;
+MSGID_CREATING_TRASHCAN_USER
+Papierkorb wird angelegt als \"%s\".
+;Creating Trashcan, named: \"%s\" 
+;
+;
+MSGID_CREATING_TRASHCAN_DEFAULT
+Papierkorb wird angelegt als \"Trashcan\".
+;Creating Trashcan, named: \"Trashcan\" 
+;
+;
+MSGID_CREATING_TRASHCAN_ERROR
+Fehler beim Anlegen des Papierkorbs
+;There was an error while creating the trashcan
+;
+;
+MSGID_CREATING_TRASHCAN_DIR_ERROR
+Fehler beim Erzeugen der Papierkorb-Schublade
+;There was an error while creating the trashcan directory
+;
+;----------------------------------------------------------
+;
+;
+MSGID_GUI_FORMATTING_CYLINDER
+Formatieren von Zylinder %ld/%ld, noch %ld übrig
+;Formatting cylinder %ld/%ld, %ld to go
+;
+;
+MSGID_FORMATTING_ERROR
+Fehler beim Formatieren
+;A formatting error occured
+;
+;
+MSGID_GUI_FORMATTING_ABORTED
+Formatierung abgebrochen!
+;Formatting operation aborted!
+;
+;
+MSGID_GUI_VERIFYING_CYLINDER
+Überprüfen von Zylinder %ld/%ld, noch %ld übrig
+;Verifying  cylinder %ld/%ld, %ld to go
+;
+;
+MSGID_VERIFYING_ERROR
+Fehler beim Überprüfen
+;A verify error occurred
+;
+;
+MSGID_GUI_VERIFYING_ABORTED
+Überprüfung abgebrochen
+;Verifying operation aborted!
+;
+;
+MSGID_WARNING_FORMAT_DEVICE_NO64BIT
+Sie veruschen ein Laufwerk jenseits der 4GB-Grenze zu\n\
+formatieren, obwohl das Gerät keine 64-Befehle unterstützt.\n\
+Daher wird die Formatierung abgebrochen, um Zerstörung von\n\
+Laufwerksinhalten zu vermeiden.
+;You are trying to format beyond 4GB border although\n\
+;your device does not support 64 bit commands. Due to this\n\
+;fact, format operation is aborted in order to save your drive.
+;
+;--------------------------------------------------------
+;
+;
+MSGID_GUI_PREPWINDOW_TITLE
+Format_Disk.module
+;Format_Disk.module
+;
+;
+MSGID_GUI_STATUSWINDOW_TITLE
+Format_Disk.module: Status
+;Format_Disk.module: Status
+;
+;
+MSGID_GUI_STATUSWINDOW_FORMATTING_DRIVE
+Formatiere Laufwerk \"%s\" als \"%s\" [%s] ...
+;Formatting drive \"%s\" as \"%s\" [%s] ...
+;
+;
+MSGID_GUI_STATUSWINDOW_DEVICE_64BIT
+Gerätestatus: \"%s\" [ NSD-Unterstützung: Ja ].
+;Status Device: \"%s\" [ NSD Support: YES ].
+;
+;
+MSGID_GUI_STATUSWINDOW_DEVICE_NO64BIT
+Gerätestatus: \"%s\" [ NSD-Unterstützung: Nein. ]
+;Status Device: \"%s\" [ NSD Support: N/A. ]
+;
+;
+MSGID_GUI_STATUSWINDOW_ABORT
+_Abbrechen
+;_Stop
+;
+;
+MSGID_GUI_ON_DRIVE
+Auf Laufwerk
+;On drive
+;
+;

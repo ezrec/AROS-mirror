@@ -1,0 +1,98 @@
+; $Date$
+; $Revision$
+;
+#header CC_LOCALE
+; NB: In all the label texts for gadgets, use the underscore character ('_')
+; to make it underscored by gadtools when using the GUI. You should also
+; make sure the texts which contain the letters for the shortcuts match the
+; character which is after the underscore. If there is to be no shortcut,
+; do not include the underscore character in the label and leave the shortcut
+; line blank (the same goes for menu shortcuts).
+;
+; String for date format entry gadget label
+MSG_DATE_GAD (//)
+_Date
+; String for shortcut key for above string.
+MSG_DATE_SCT (//)
+D
+; Label for example text display gadgets
+MSG_EXAMPLE_GAD (//)
+Example
+; Label for time format entry gadget.
+MSG_TIME_GAD (//)
+_Time
+; Letter for keypresses to activate time format gadget.
+MSG_TIME_SCT (//)
+T
+; Label for the button to save preferences
+MSG_SAVE_GAD (//)
+_Save
+; Letter to press for Save shortcut
+MSG_SAVE_SCT (//)
+S
+; Label for the button to use the preferences
+MSG_USE_GAD (//)
+_Use
+; Letter to press for shortcut for above gadget
+MSG_USE_SCT (//)
+U
+; Label for gadget to cancel the preferences
+MSG_CANCEL_GAD (//)
+_Cancel
+; Letter to press for shortcut to above gadget
+MSG_CANCEL_SCT (//)
+C
+; Text for first (Project) menu title
+MSG_PROJECT_MENU (//)
+Project
+; Text for menu item to open prefs file from a requester
+MSG_PROJECT_OPEN (//)
+Open...
+; Shortcut key for the above menu item
+MSG_PROJECT_OPEN_SCT (//)
+O
+; Text for menu item to save prefs to a file with a requester
+MSG_PROJECT_SAVEAS (//)
+Save As...
+; Shortcut key for the above menu item
+MSG_PROJECT_SAVEAS_SCT (//)
+A
+; Text for menu item to quit program
+MSG_PROJECT_QUIT (//)
+Quit
+; Shortcut key for the above menu item
+MSG_PROJECT_QUIT_SCT (//)
+Q
+; Title for second menu - Edit (control of currently edited prefs)
+MSG_EDIT_MENU (//)
+Edit
+; Text for menu item to set preferences to defaults
+MSG_EDIT_RESET (//)
+Reset to Defaults
+; Shortcut key for above menu item
+MSG_EDIT_RESET_SCT (//)
+D
+; Text for menu item to load last saved preferences
+MSG_EDIT_LASTSAVED (//)
+Last Saved
+; Shortcut key for the above menu item
+MSG_EDIT_LASTSAVED_SCT (//)
+L
+; Text for menu item to restore prefs to state at program start
+MSG_EDIT_RESTORE (//)
+Restore
+; Shortcut key for above menu item
+MSG_EDIT_RESTORE_SCT (//)
+R
+; Menu title for Settings (program prefs) menu title
+MSG_SETTINGS_MENU (//)
+Settings
+; Menu item for creating icons
+MSG_SETTINGS_CREATEICONS (//)
+Create Icons?
+; Shortcut key for above menu item
+MSG_SETTINGS_CREATEICONS_SCT (//)
+I
+; Window title
+MSG_WINDOW (//)
+Titlebar Clock Plugin Preferences

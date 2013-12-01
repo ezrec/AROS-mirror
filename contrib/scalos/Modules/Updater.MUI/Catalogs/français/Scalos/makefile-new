@@ -1,0 +1,30 @@
+# makefile for Updater.module (translated Texts : français)
+# $Date: 2011-08-10 15:09:09 +0200 (Mi, 10. Aug 2011) $
+
+.SUFFIXES: .ct .catalog
+.PHONY: all install clean
+
+include config.mk
+
+CATNAME	=	Updater
+
+# Native FlexCat doesn't like Linux paths
+ifeq ($(CROSS), )
+	CDPATH=//
+else
+	CDPATH=../../..
+endif
+
+all:	$(CATNAME).catalog
+
+.ct.catalog :
+	@printf '\033[32mMake catalog: \033[31m\033[1m$(LANG)\033[0m\n'
+	$(FLEXCAT) $(CDPATH)/$*.cd $*.ct CATALOG $*.catalog
+
+$(CATNAME).catalog : $(CATNAME).ct ../../../$(CATNAME).cd
+
+clean:
+	$(RM) -f $(CATNAME).catalog
+
+install:
+	-copy $(CATNAME).catalog Locale:catalogs/$(LANG)/Scalos/ clone

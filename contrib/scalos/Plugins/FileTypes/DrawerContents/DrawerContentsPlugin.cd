@@ -1,0 +1,20 @@
+; DrawerContentsPlugin.cd
+; version $VER: DrawerContentsPlugin.catalog 40.7 (30.09.05)
+; codeset 0s
+; language english
+;
+;#arrayopts static __far
+;
+;
+MSGID_DRAWER_EMPTY (//)
+This drawer is empty.
+;
+;
+MSGID_MORE_ENTRIES (//)
+...
+;
+;
+MSGID_ERROR_DOS (//)
+Error: %ld, %s.
+;
+;

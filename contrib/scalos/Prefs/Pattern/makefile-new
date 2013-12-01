@@ -1,0 +1,97 @@
+# $Date: 2011-08-06 19:37:48 +0200 (Sa, 06. Aug 2011) $
+# $Revision: 823 $
+##############################################################################
+
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/../..
+endif
+
+# Native FlexCat doesn't like Linux paths
+ifeq ($(CROSS), )
+	SDPATH=/
+else
+	SDPATH=../..
+endif
+
+##############################################################################
+
+include		config.mk
+
+##############################################################################
+#
+# Project Object files
+#
+
+OBJS	=       	$(OBJDIR)/Pattern.o
+
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS:.o=.d)
+endif
+
+##############################################################################
+# 
+# Subdirs
+#
+
+SUBDIRS	=	$(filter-out Catalogs/sample/Scalos, $(wildcard Catalogs/*/Scalos))
+
+##############################################################################
+#
+# Some lame deps
+
+$(OBJDIR)/Pattern.o $(OBJDIR)/Pattern.d : $(OBJDIR)/ScalosPattern_locale.h
+
+$(OBJDIR)/ScalosPattern_locale.h : ScalosPattern.cd
+	@$(ECHO) "FlexCat $@"
+	$(FLEXCAT) $< $@=$(SDPATH)/CatComp_h.sd
+
+##############################################################################
+#
+# Targets
+#
+
+NAME	=	Scalos_Pattern
+NAME_DB	=	$(NAME).debug
+
+##############################################################################
+
+.PHONY: all install clean bump dump
+
+all:    $(BINDIR)/$(NAME) \
+	$(BINDIR)/$(NAME_DB) \
+	all_subdirs
+
+##############################################################################
+
+$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) : $(OBJS)
+	$(ECHO) "Link $(NAME)"
+	@$(CC) $(OBJS) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(NAME_DB)
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(NAME_DB) -o $(BINDIR)/$(NAME)
+	@chmod u+x $@
+
+##############################################################################
+
+install: 
+	-@$(ECHO) "Installing $(NAME)"
+	-@copy $(BINDIR)/$(NAME) "Scalos:Prefs/Scalos Pattern" clone
+
+install: install_subdirs
+
+
+clean:
+	-@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d $(OBJDIR)/*.d.* \
+        	$(OBJDIR)/*.i $(OBJDIR)/*.s \
+		$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) \
+		*.dump *_str.* \
+		$(OBJDIR)/ScalosPattern_locale.h
+
+clean:  clean_subdirs
+
+##############################################################################
+
+

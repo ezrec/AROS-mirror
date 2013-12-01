@@ -1,0 +1,224 @@
+TABLE OF CONTENTS
+
+iconobject.library/--background
+iconobject.library/NewIconObject
+iconobject.library/DisposeIconObject
+iconobject.library/GetDefIconObject
+iconobject.library/PutIconObject
+iconobject.library/IsIconName
+iconobject.library/Convert2IconObject
+iconobject.library/Convert2IconObjectA
+
+iconobject.library/--background
+
+    NAME
+	--background
+
+    SYNOPSIS
+	This library is an interface to the iconobject.datatype. Normaly
+	it has comparable functions to icon.library. It was written because
+	the datatypes.library was so slow while scaning the datatypes.
+iconobject.library/NewIconObject             iconobject.library/NewIconObject
+
+    NAME
+	NewIconObject
+
+    SYNOPSIS
+	Object *NewIconObject (Name, Taglist)
+	                           A0      A1
+
+	Object *NewIconObject ( CONST_STRPTR Name , APTR Taglist );
+
+	Object *NewIconObjectTags( CONST_STRPTR Name , ULONG, ... );
+
+    FUNCTION
+	Reads an icon from disk. It cannot be use for drawings before a
+	IDTM_Layout method was used.
+
+    INPUTS
+	Name - the filename (without an extention like .info)
+	Taglist -
+		IDTA_Text - text under the icon
+		IDTA_InnerLeft
+		IDTA_InnerTop
+		IDTA_InnerRight
+		IDTA_InnerBottom - offset from iconimage inside of the icon
+		IDTA_FrameType - type of frame around the icon
+		IDTA_TextPen - Outline pen for the icontext
+		IDTA_TextMode - textmode
+			IDTV_TextMode_Normal - standard text
+			IDTV_TextMode_Outline - outline text
+			IDTV_TextMode_Shadow - text with shadow (IDTA_TextPen
+					       is the shadow color)
+		IDTA_TextSkip - space between the icon and the text in pixels
+
+    RESULT
+	Object     - iconobject.datatype object or NULL if it fails to open
+		     the icon
+
+    SEE ALSO
+	DisposeIconObject(), GetDefIconObject()
+
+iconobject.library/DisposeIconObject     iconobject.library/DisposeIconObject
+
+    NAME
+	DisposeIconObject
+
+    SYNOPSIS
+	DisposeIconObject (iconobject)
+	                       A0
+
+	void DisposeIconObject ( Object * );
+
+    FUNCTION
+	Disposes the iconobject. It's similar to intuitions DisposeObject().
+
+    INPUTS
+	iconobject - iconobject.datatype object
+
+    RESULT
+
+    SEE ALSO
+
+iconobject.library/GetDefIconObject       iconobject.library/GetDefIconObject
+
+    NAME
+	GetDefIconObject
+
+    SYNOPSIS
+	Object *GetDefIconObject (IconType,TagList)
+	                                D0      A0
+
+	Object *GetDefIconObject ( ULONG IconType , APTR TagList );
+
+	Object *GetDefIconObjectTags ( ULONG IconType , ULONG FirstTag, ... );
+
+    FUNCTION
+	Reads a default icon from ram or disk.
+
+    INPUTS
+	IconType - diskobject icontype (see icon.library)
+	TagList - the same tags like NewIconObject and:
+		DTA_Name - you could give the icon a name
+
+    RESULT
+	Object - iconobject.datatype object or NULL if it fails.
+
+    SEE ALSO
+	DisposeIconObject(), NewIconObject()
+
+iconobject.library/PutIconObject             iconobject.library/PutIconObject
+
+    NAME
+	PutIconObject
+
+    SYNOPSIS
+	result = PutIconObject (iconobject,path,TagList)
+	                   A0      A1    A2
+
+	LONG PutIconObject ( Object *iconobject, CONST_STRPTR path, APTR TagList );
+
+	LONG PutIconObjectTags ( Object *iconobject, CONST_STRPTR path, ULONG FirstTag, ... );
+
+    FUNCTION
+	Writes an icon to disk. This function sends the IDTM_Write method
+
+    INPUTS
+	iconobject - iconobject.datatype object
+	path - the path for the icon (without an extention)
+	TagList -
+		ICONA_NoNewImage - don't change the image (the readed image
+				   will be rewritten)
+		ICONA_NoPosition - save a non-position icon
+		ICONA_NoUsePosition - use the current position of the icon-
+				      object
+
+    RESULT
+	result - RETURN_OK if icon was saved sucessfully, or DOS error code.
+
+    SEE ALSO
+
+iconobject.library/IsIconName                   iconobject.library/IsIconName
+
+    NAME
+	IsIconName
+
+    SYNOPSIS
+	pos IsIconName (filename)
+	                   A0
+
+	ULONG pos IsIconName ( CONST_STRPTR filename );
+
+    FUNCTION
+	Checks if the given filename could be an icon, because you don't know
+	which extention it could have.
+
+    INPUTS
+	filename - the path to check
+
+    RESULT
+	pos - NULL if it's not an icon
+	      ~0 if it's an icon, but it has no extention
+	      >0 the position inside the filename where the extention begins
+
+    SEE ALSO
+
+iconobject.library/Convert2IconObject   iconobject.library/Convert2IconObject
+
+    NAME
+	Convert2IconObject
+
+    SYNOPSIS
+	Object *Convert2IconObject (diskobject)
+	                                   A0
+
+	Object *Convert2IconObject ( struct DiskObject *);
+
+    FUNCTION
+	Converts a icon.library - diskobject to a iconobject.datatype object.
+
+    INPUTS
+	diskobject - diskobject from icon.library
+
+    RESULT
+	object - iconobject.datatype object
+
+    NOTE
+	THIS FUNCTION IS PRIVATE! IT SHOULD NOT BE USED!
+
+    SEE ALSO
+	DisposeIconObject(), Convert2IconObjectTags(), Convert2IconObjectA()
+
+iconobject.library/Convert2IconObjectA  iconobject.library/Convert2IconObject
+
+    NAME
+	Convert2IconObjectA (V40)
+	Convert2IconObjectTags
+
+    SYNOPSIS
+	Object *Convert2IconObjectA(diskobject,taglist)
+	                                A0        A1
+
+	Object *Convert2IconObjectA( struct DiskObject *, 
+		CONST struct TagItem *taglist);
+	Object *Convert2IconObjectTags( struct DiskObject *, 
+		ULONG firsttag, ...);
+
+    FUNCTION
+	Converts a icon.library - diskobject to a iconobject.datatype object.
+	This is an extension to Convert2IconObject().
+
+    INPUTS
+	diskobject - diskobject from icon.library
+	taglist - tags, same as in NewIconObject()
+
+    RESULT
+	object - iconobject.datatype object
+
+    NOTE
+	THIS FUNCTION IS PRIVATE! IT SHOULD NOT BE USED!
+
+    SEE ALSO
+	DisposeIconObject(), Convert2IconObject()
+
+

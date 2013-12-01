@@ -1,0 +1,1989 @@
+; ScalosMenu.ct
+## version $VER: ScalosMenu.catalog 40.18 (24 Aug 2008 10:22:01)
+## codeset 0
+## language español
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Menú Plugin Scalos
+;
+;
+MSGID_TITLENAME_CMDLIST
+Interior comandos de menú
+;Scalos Internal Menu Commands
+;
+;
+MSGID_FRAMETITLE
+Lista de menús
+;
+;
+MSGID_NEWINAME
+Nueva entrada
+;
+;
+MSGID_HOTKEYNAME
+Tecla
+;
+;
+MSGID_NEWNAME
+Nuevo menú
+;
+;
+MSGID_DELNAME
+Eliminar
+;
+;
+MSGID_SAVENAME
+Guardar
+;
+;
+MSGID_USENAME
+Usar
+;
+;
+MSGID_CANCELNAME
+Cancelar
+;
+;
+MSGID_NEW2NAME
+Nuevo comando
+;
+;
+MSGID_COMMANDNAME
+Comando
+;
+;
+MSGID_MENU_PROJECT_IMPORT
+Importar
+;
+;
+MSGID_MENU_PROJECT_IMPORT_SHORT
+I
+;
+;
+MSGID_MENU_PROJECT_OPEN
+Abrir...
+;
+;
+MSGID_MENU_PROJECT_OPEN_SHORT
+O
+;
+;
+MSGID_MENU_PROJECT_SAVEAS
+Guardar como...
+;
+;
+MSGID_MENU_PROJECT_SAVEAS_SHORT
+A
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Salir
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;
+;
+MSGID_MENU_PROJECT
+Proyecto
+;
+;
+MSGID_MENU_EDIT_LASTSAVED
+Último guardado
+;
+;
+MSGID_MENU_EDIT_LASTSAVED_SHORT
+L
+;
+;
+MSGID_MENU_EDIT
+Editar
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS
+¿Crear icono?
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS_SHORT
+I
+;
+;
+MSGID_MENU_SETTINGS
+Valores
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS
+Predeterminados
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS_SHORT
+D
+;
+;
+MSGID_MENU_EDIT_RESTORE
+Recuperar
+;
+;
+MSGID_MENU_EDIT_RESTORE_SHORT
+R
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+Acerca de MUI...
+;
+;
+MSGID_WBNAME
+Workbench
+;
+;
+MSGID_ADOSNAME
+AmigaDOS
+;
+;
+MSGID_STACKNAME
+Pila
+;
+;
+MSGID_MAINMENUNAME
+Menú principal
+;
+;
+MSGID_COM1NAME
+Pantalla completa
+;
+;
+MSGID_COM2NAME
+Ejecutar comando
+;
+;
+MSGID_COM3NAME
+Redibujar todo
+;
+;
+MSGID_COM4NAME
+Actualizar todo
+;
+;
+MSGID_COM5NAME
+Acerca de Scalos
+;
+;
+MSGID_COM6NAME
+Salir
+;
+;
+MSGID_COM7NAME
+Nuevo cajón
+;
+;
+MSGID_COM8NAME
+Abrir cajón anterior
+;
+;
+MSGID_COM9NAME
+Cerrar ventana
+;
+;
+MSGID_COM10NAME
+Actualizar
+;
+;
+MSGID_COM11NAME
+Seleccionar contenido
+;
+;
+MSGID_COM12NAME
+Reorganizar
+;
+;
+MSGID_COM13NAME
+Congelar ventana
+;
+;
+MSGID_COM14NAME
+Congelar ventana y contenido
+;
+;
+MSGID_COM15NAME
+Mostrar sólo iconos
+;
+;
+MSGID_COM16NAME
+Mostrar todos los ficheros
+;
+;
+MSGID_COM17NAME
+Ver por icono
+;
+;
+MSGID_COM18NAME
+Ver por texto
+;
+;
+MSGID_COM19NAME
+Abrir
+;
+;
+MSGID_COM20NAME
+Reiniciar Scalos
+;
+;
+MSGID_COM21NAME
+Renombrar
+;
+;
+MSGID_COM22NAME
+Información
+;
+;
+MSGID_COM23NAME
+Congelar
+;
+;
+MSGID_COM24NAME
+Descongelar
+;
+;
+MSGID_COM25NAME
+Dejar fuera
+;
+;
+MSGID_COM26NAME
+Salir
+;
+;
+MSGID_COM27NAME
+Eliminar
+;
+;
+MSGID_BARNAME
+\033C
+;
+;
+MSGID_UPNAME
+Arriba
+;
+;
+MSGID_DOWNNAME
+Abajo
+;
+;
+MSGID_MENU_PROJECT_IMPORT_TD
+ToolsDaemon...
+;
+;
+MSGID_MENU_PROJECT_IMPORT_TD_SHORT
+T
+;
+;
+MSGID_MENU_PROJECT_IMPORT_P
+Parm...
+;
+;
+MSGID_MENU_PROJECT_IMPORT_P_SHORT
+P
+;
+;
+MSGID_COM28NAME
+Copiar
+;
+;
+MSGID_ICONWINNAME
+Icono ventana
+;
+;
+MSGID_AREXXNAME
+ARexx
+;
+;
+MSGID_MENU_EDIT_COPY
+Copiar
+;Copy
+;
+;
+MSGID_MENU_EDIT_CUT
+Cortar
+;Cut
+;
+;
+MSGID_MENU_EDIT_PASTE
+Pegar
+;Paste
+;
+;
+MSGID_MENU_EDIT_COLLAPSE
+Cerrar seleccionados
+;Collapse Selected
+;
+;
+MSGID_MENU_EDIT_EXPAND
+Ampliar seleccionados
+;Expand Selected
+;
+;---------------------------------------------
+;
+MSGID_POPMENUNAME1
+Menú PopUp: Discos
+;
+;
+MSGID_POPMENUNAME2
+Menú PopUp: Cajones
+;
+;
+MSGID_POPMENUNAME3
+Menú PopUp: Herramientas y proyectos
+;
+;
+MSGID_POPMENUNAME4
+Menú PopUp: Papeleras
+;
+;
+MSGID_POPMENUNAME5
+Menú PopUp: Ventanas
+;
+;
+MSGID_ARGSNAME
+Argumentos WB:
+;
+;
+MSGID_COM29NAME
+Vaciar papelera
+;
+;
+MSGID_COM30NAME
+Último mensaje
+;
+;
+MSGID_COM31NAME
+Redibujar
+;
+;
+MSGID_COM32NAME
+Iconificar
+;
+;
+MSGID_PLUGINNAME
+PlugIn
+;
+;
+MSGID_MENU_PROJECT_MERGE
+Mezclar...
+;
+;
+MSGID_MENU_PROJECT_MERGE_SHORT
+M
+;
+;
+MSGID_MENU_EDIT_COLLAPSEALL
+Se derrumban todos
+;Collapse All
+;
+;
+MSGID_MENU_EDIT_EXPANDALL
+Amplíe todos
+;Expand All
+;
+;
+MSGID_MENU_SETTINGS_HIDEOBSOLETE
+Piel obsoleta?
+;Hide Obsolete?
+;
+;
+MSGID_MENU_SETTINGS_HIDEOBSOLETE_SHORT
+Si están comprobados, los menús móviles obsoletos\n\
+que ahora se definen vía prefs de los tipos de\n\
+archivo no se demuestran.
+;If checked, obsolete popup menus which are now\n\
+;defined via filetypes prefs are not shown.
+;
+;
+MSGID_COM33NAME
+Formato de disco...
+;
+;
+MSGID_COM34NAME
+Parada...
+;Shutdown...
+;
+;
+MSGID_COM35NAME
+Tamaño a caber
+;Size to fit
+;
+;
+MSGID_COM36NAME
+Selección clara
+;Clear Selection
+;
+;+++translateme+++
+MSGID_POPMENUNAME6
+Popup Menu: AppIcons
+;
+;+++translateme+++
+MSGID_POPMENUNAME7
+Popup Menu: Desktop
+;Popup Menu: Desktop
+;
+;
+MSGID_COM37NAME
+Visión por tamaño
+;View By - Size
+;
+;
+MSGID_COM38NAME
+Visión por la fecha
+;View By - Date
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+About...
+;
+;
+MSGID_ABOUTREQOK
+_OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Menu Preferences V%ld.%ld\033n\n\
+%s\n\
+© 1999%s The Scalos Team\n
+;
+;
+;*** +jl+ 20011214
+;
+MSGID_COM39NAME
+Copie el archivo
+;Copy file
+;
+;
+MSGID_COM40NAME
+Corte el archivo
+;Cut file
+;
+;
+MSGID_COM41NAME
+archivo de la goma
+;Paste file
+;
+;
+MSGID_COM42NAME
+visión por el tipo
+;View By - Type
+;
+;
+MSGID_COM43NAME
+limpieza por nombre
+;Cleanup By - Name
+;
+;
+MSGID_COM44NAME
+limpieza por la fecha
+;Cleanup By - Date
+;
+;
+MSGID_COM45NAME
+limpieza por tamaño
+;Cleanup By - Size
+;
+;
+MSGID_COM46NAME
+limpieza por tipo
+;Cleanup By - Type
+;
+;
+MSGID_COM_ICONPROPERTIES
+Icono de propiedades
+;Icon properties
+;
+;
+MSGID_COM_WINDOWPROPERTIES
+Ventana de propiedades
+;Window properties
+;
+;
+MSGID_COM47NAME
+Visión por - Predeterminado
+;View By - Default
+;
+;+++translateme+++
+MSGID_COM48NAME
+Show - Default
+;
+;
+MSGID_COM49NAME
+Copie a...
+;Copy to...
+;
+;
+MSGID_COM50NAME
+Muévase a...
+;Move to...
+;
+;
+MSGID_COM51NAME
+Crear miniatura
+;Create thumbnail
+;
+;
+MSGID_COM_OPENNEWWINDOW
+Ábrase en nueva ventana
+;Open in new window
+;
+;
+MSGID_COM_THUMBNAILCACHECLEANUP
+De caché miniatura de limpieza
+;Cleanup thumbnail cache
+;
+;
+MSGID_COM_FIND
+archivo del hallazgo
+;Find File(s)
+;
+;
+MSGID_COM_UNDO
+deshaga
+;Undo
+;
+;
+MSGID_COM_REDO
+haga de nuevo
+;Redo
+;
+;+++translateme+++
+MSGID_COM_OPENBROWSERWINDOW
+Open in Browser Window
+;Open in Browser Window
+;
+;---------------------------------------------
+;
+;
+MSGID_SHORTHELP_NEWMENUBUTTON
+Presione este botón para crear un nuevo menú o\n\
+Entrada del submenú en la posición actualmente seleccionada.
+;Press this button to create a new Menu or\n\
+;Submenu entry at the currently selected position.
+;
+;
+;
+MSGID_SHORTHELP_NEWITEMBUTTON
+Presione este botón para insertar un nuevo artículo\n\
+de menú en la posición actualmente seleccionada.
+;Press this button to insert a new menu\n\
+;item at the currently selected position.
+;
+;
+;
+MSGID_SHORTHELP_NEWCOMMANDBUTTON
+Presione este botón para agregar un nuevo\n\
+ordene actualmente al artículo de menú.
+;Press this button to add a new\n\
+;command to the currently menu item.
+;
+;
+;
+MSGID_SHORTHELP_DELBUTTON
+Presione este botÃ³n para suprimir el comando,\n\
+el artÃ­culo de menÃº, o el menÃº actualmente selecto.
+;Press this button to delete the currently\n\
+;select command, menu item, or menu.
+;
+;
+;
+MSGID_SHORTHELP_SAVEBUTTON
+Presione este botón para ahorrar\n\
+los ajustes actuales a\n\
+\"ENVARC:Scalos/menu13.prefs\".
+;Press this button to save \n\
+;the current settings to\n\
+;\"ENVARC:Scalos/menu13.prefs\".
+;
+;
+;
+MSGID_SHORTHELP_USEBUTTON
+Presione este botón para ahorrar\n\
+los ajustes actuales a\n\
+\"ENV:Scalos/menu13.prefs\".
+;Press this button to save \n\
+;the current settings to\n\
+;\"ENV:Scalos/menu13.prefs\".
+;
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Presione este botón para abortar\n\
+y para olvidar todos los cambios.
+;Press this button to abort\n\
+;and forget all changes.
+;
+;
+;+++translateme+++
+MSGID_REQTITLE_SAVEERROR
+Error writing palette preferences\n\
+file \"%s\"\n\
+%s
+;
+;+++translateme+++
+MSGID_REQTITLE_READERROR
+Error reading palette preferences\n\
+file \"%s\"\n\
+%s
+;
+;
+MSGID_IMPORTNAME
+Importación
+;Import
+;
+;+++translateme+++
+MSGID_TITLE_IMPORTTD
+Import ToolsDaemon Prefs
+;
+;+++translateme+++
+MSGID_TITLE_IMPORTP
+Import ParM Prefs
+;
+;
+MSGID_PRIORITY_SLIDER_NAME
+Prioridad
+;Priority
+;
+;
+MSGID_PRIORITY_SLIDER_BUBBLE
+Utilice este resbalador para ajustar la\n\
+prioridad que el comando debe funcionar con
+;Use this slider to adjust the priority the command should run with.
+;
+; new in 40.7
+;+++translateme+++
+MSGID_PLUGIN_LIST_TITLE
+Menu
+;
+;+++translateme+++
+MSGID_POPUP_ASLTITLE_AMIGADOS
+Select AmigaDOS command
+;
+;+++translateme+++
+MSGID_POPUP_ASLTITLE_WORKBENCH
+Select Workbench command
+;
+;
+MSGID_POPUP_ASLTITLE_ICONWINDOW
+Selecciona directorio de icono de la ventana
+;Select directory for icon window
+;
+;+++translateme+++
+MSGID_POPUP_ASLTITLE_AREXX
+Select ARexx program
+;
+;+++translateme+++
+MSGID_POPUP_ASLTITLE_MENUPLUGIN
+Select Scalos Menu plugin
+;
+;+++translateme+++
+MSGID_MENU_PROJECT_MERGE_ASLTITLE
+Select prefs to merge with
+;
+;
+MSGID_MENU_GROUP_COMMAND_PROPERTIES
+Características del comando
+;Command Properties
+;
+; new in 40.10
+;
+;
+MSGID_SHORTHELP_LAMP_CHANGED
+Esta luz indicadora de los cambios de \033bOff\033n a \033bOK\033n\n\
+cuando los ajustes se han modificado desde la carga inicial.
+;This lamp indicator changes from \033bOff\033n\n\
+;to \033bOk\033n when the settings have been\n\
+;modified since initial loading.
+;
+; new in 40.16
+;
+;
+MSGID_POPASL_UNSELECTEDIMAGE_SHORTHELP
+Aquí usted puede seleccionar una imagen icónica que se\n\
+demuestre a la izquierda del nombre del artículo de\n\
+menú, en estado no seleccionado del artículo de menú.
+;Here you may select an iconic image that is shown left of\n\
+;the menu item name, in unselected menu item state.
+;
+;
+MSGID_SAMPLE_UNSELECTEDIMAGE_SHORTHELP
+Esto es una muestra de la imagen icónica que será\n\
+demostrada a la izquierda del nombre del artículo de\n\
+menú, en estado no seleccionado del artículo de menú.
+;This is a sample of the iconic image that will be shown\n\
+;left of the menu item name, in unselected menu item state.
+;
+;
+MSGID_POPASL_SELECTEDIMAGE_SHORTHELP
+Aquí usted puede seleccionar una imagen icónica que se\n\
+demuestre a la izquierda del nombre del artículo de\n\
+menú, en estado seleccionado del artículo de menú.
+;Here you may select an iconic image that is shown left of\n\
+;the menu item name, in selected menu item state.
+;
+;
+MSGID_SAMPLE_SELECTEDIMAGE_SHORTHELP
+Esto es una muestra de la imagen icónica que será demostrada\n\
+a la izquierda del nombre del artículo de menú,\n\
+en estado seleccionado del artículo de menú.
+;This is a sample of the iconic image that will be shown\n\
+;left of the menu item name, in selected menu item state.
+;
+;
+MSGID_ENTRY_STRING_NAME
+Nombre:
+;Name:
+;
+;
+MSGID_ENTRY_GROUP_UNSELECTEDIMAGE
+Imagen de Estado no seleccionados
+;Unselected State Image
+;
+;
+MSGID_ENTRY_GROUP_SELECTEDIMAGE
+Estado de la imagen seleccionada
+;Selected State Image
+;
+;-----------------------------------------------------------
+;+++translateme+++
+MSGID_STARTUP_FAILURE
+Scalos Menu Prefs startup failed
+;Scalos Menu Prefs startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Inténtelo de nuevo|Salir
+;Try again|Quit
+;
+;+++translateme+++
+MSGID_STARTUP_MCC_NOT_FOUND
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+The class is not installed.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;+++translateme+++
+MSGID_STARTUP_OLD_MCC
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+\n\
+Currently installed is V%lu.%lu, please upgrade!
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;+++translateme+++
+MSGID_STARTUP_MCC_IN_USE
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+%lu.%lu is currently in use by other applications.\n\
+\n\
+Once you have installed the required version,\n\
+close all MUI programs, make sure the old class\n\
+is flushed from memory and try again.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;
+MSGID_NEW_MENU
+Nuevo menú
+;New Menu
+;
+;
+MSGID_NEW_ITEM
+Nuevo artículo
+;New Item
+;
+;
+MSGID_TOOLS_MENU
+Herramientas
+;Tools
+;
+;-----------------------------------------------------------
+;
+MSGID_DEFAULT_MENU_OPEN
+Abierto
+;Open
+;
+;
+MSGID_DEFAULT_MENU_OPEN_SHORT
+A
+;O
+;
+;
+MSGID_DEFAULT_MENU_INFORMATION
+Informatión...
+;Information...
+;
+;
+MSGID_DEFAULT_MENU_INFORMATION_SHORT
+I
+;I
+;
+;
+MSGID_DEFAULT_MENU_BROWSE
+Navegar...
+;Browse...
+;
+;
+MSGID_DEFAULT_MENU_BROWSE_SHORT
+N
+;
+;
+MSGID_DEFAULT_MENU_FIND
+Hallar...
+;Find...
+;
+;
+MSGID_DEFAULT_MENU_FIND_SHORT
+H
+;F
+;
+;
+MSGID_DEFAULT_MENU_SNAPSHOT
+Instantánea
+;Snapshot
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SNAPSHOT_SHORT
+S
+;S
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UNSNAPSHOT
+Unsnapshot
+;Unsnapshot
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UNSNAPSHOT_SHORT
+U
+;U
+;
+;
+MSGID_DEFAULT_MENU_CLONE
+Clonar
+;Clone
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_CLONE_SHORT
+C
+;C
+;
+;
+MSGID_DEFAULT_MENU_COPY
+Copiar
+;Copy
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_COPY_SHORT
+
+;
+;
+MSGID_DEFAULT_MENU_CUT
+Cortar
+;Cut
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_CUT_SHORT
+
+;
+;
+MSGID_DEFAULT_MENU_PASTE
+Pegar
+;Paste
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PASTE_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_DISKCOPY
+Diskcopy...
+;Diskcopy...
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_DISKCOPY_SHORT
+
+;
+;
+MSGID_DEFAULT_MENU_RELABEL
+Reetiquetar...
+;Relabel...
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_RELABEL_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_FORMAT
+Format...
+;Format...
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_FORMAT_SHORT
+
+;
+;
+MSGID_DEFAULT_MENU_PROPERTIES
+Propiedades...
+;Properties...
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PROPERTIES_SHORT
+
+;
+;
+MSGID_DEFAULT_MENU_EDIT
+Editar
+;Edit
+;
+;
+MSGID_DEFAULT_MENU_RENAME
+Cambiar el nombre
+;Rename
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_RENAME_SHORT
+R
+;R
+;
+;
+MSGID_DEFAULT_MENU_LEAVEOUT
+Váyase hacia fuera
+;Leave Out
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_LEAVEOUT_SHORT
+F
+;L
+;
+;
+MSGID_DEFAULT_MENU_PUTAWAY
+Puesto de lado
+;Put Away
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PUTAWAY_SHORT
+P
+;P
+;
+;
+MSGID_DEFAULT_MENU_DELETE
+Eliminar...
+;Delete...
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_DELETE_SHORT
+
+;
+;
+MSGID_DEFAULT_MENU_EMPTYTRASH
+Vaciar papelera...
+;Empty Trashcan...
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_EMPTYTRASH_SHORT
+
+;
+;
+MSGID_DEFAULT_MENU_CLOSE
+Cerrar
+;Close
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_CLOSE_SHORT
+K
+;
+;
+MSGID_DEFAULT_MENU_OPENPARENT
+Abra al padre
+;Open Parent
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_OPENPARENT_SHORT
+
+;
+;
+MSGID_DEFAULT_MENU_UPDATE
+Actualización
+;Update
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UPDATE_SHORT
+M
+;M
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_CLEANUP
+Cleanup
+;Cleanup
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_CLEANUP_SHORT
+
+;
+;
+MSGID_DEFAULT_MENU_RESIZETOFIT
+Tamaño a caber
+;Resize To Fit
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_RESIZETOFIT_SHORT
+
+;
+;
+MSGID_DEFAULT_MENU_SELECTCONTENTS
+Seleccione el contenido
+;Select Contents
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SELECTCONTENTS_SHORT
+A
+;A
+;
+;
+MSGID_DEFAULT_MENU_CLEARSELECTION
+Selección clara
+;Clear Selection
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_CLEARSELECTION_SHORT
+Z
+;Z
+;
+;
+MSGID_DEFAULT_MENU_SNAPSHOT_ALL
+Todo
+;All
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SNAPSHOT_ALL_SHORT
+
+;
+;
+MSGID_DEFAULT_MENU_SNAPSHOT_WINDOW
+Ventana
+;Window
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SNAPSHOT_WINDOW_SHORT
+W
+;W
+;
+;
+MSGID_DEFAULT_MENU_NEWDRAWER
+Cajón de nuevo...
+;New Drawer...
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_NEWDRAWER_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SCALOS
+Scalos
+;Scalos
+;
+;
+MSGID_DEFAULT_MENU_WINDOW
+Ventana
+;Window
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_ICONS
+Icons
+;Icons
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_DRAWERS
+Drawers
+;Drawers
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS
+Prefs
+;Prefs
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_BACKDROP
+Backdrop?
+;Backdrop?
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_BACKDROP_SHORT
+B
+;B
+;
+;
+MSGID_DEFAULT_MENU_EXECUTECOMMAND
+Ejecute el comando...
+;Execute Command...
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_EXECUTECOMMAND_SHORT
+E
+;E
+;
+;
+MSGID_DEFAULT_MENU_REDRAWALL
+Rediseñe todos
+;Redraw All
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_REDRAWALL_SHORT
+
+;
+;
+MSGID_DEFAULT_MENU_UPDATEALL
+Ponga al día todos
+;Update All
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UPDATEALL_SHORT
+
+;
+;
+MSGID_DEFAULT_MENU_LASTMESSAGE
+Mensaje pasado
+;Last Message
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_LASTMESSAGE_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_ABOUT
+About...
+;About...
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_ABOUT_SHORT
+?
+;?
+;
+;
+MSGID_DEFAULT_MENU_QUIT
+Salir...
+;Quit...
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_QUIT_SHORT
+
+;
+;
+MSGID_DEFAULT_MENU_CLEANUPBY
+Limpie cerca
+;Clean up by
+;
+;
+MSGID_DEFAULT_MENU_CLEANUPBY_COLUMN
+Columna
+;Column
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_CLEANUPBY_COLUMN_SHORT
+.
+;.
+;
+;
+MSGID_DEFAULT_MENU_CLEANUPBY_NAME
+Nombre
+;Name
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_CLEANUPBY_NAME_SHORT
+
+;
+;
+MSGID_DEFAULT_MENU_CLEANUPBY_DATE
+Fecha
+;Date
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_CLEANUPBY_DATE_SHORT
+
+;
+;
+MSGID_DEFAULT_MENU_CLEANUPBY_SIZE
+Tamaño
+;Size
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_CLEANUPBY_SIZE_SHORT
+
+;
+;
+MSGID_DEFAULT_MENU_CLEANUPBY_TYPE
+Tipo
+;Type
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_CLEANUPBY_TYPE_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SHOW
+Show
+;Show
+;
+;
+MSGID_DEFAULT_MENU_SHOW_DEFAULT
+Predeterminado
+;Default
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SHOW_DEFAULT_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SHOW_ONLYICONS
+Only Icons
+;Only Icons
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SHOW_ONLYICONS_SHOT
+-
+;-
+;
+;
+MSGID_DEFAULT_MENU_SHOW_ALLFILES
+Todos los archivos
+;All Files
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SHOW_ALLFILES_SHORT
++
+;+
+;
+;
+MSGID_DEFAULT_MENU_VIEWBY
+Ver por
+;View By
+;
+;
+MSGID_DEFAULT_MENU_VIEWBY_DEFAULT
+Predeterminado
+;Default
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_VIEWBY_DEFAULT_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_VIEWBY_ICON
+Icon
+;Icon
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_VIEWBY_ICON_SHORT
+1
+;1
+;
+;
+MSGID_DEFAULT_MENU_VIEWBY_NAME
+Nombre
+;Name
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_VIEWBY_NAME_SHORT
+2
+;2
+;
+;
+MSGID_DEFAULT_MENU_VIEWBY_DATE
+Fecha
+;Date
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_VIEWBY_DATE_SHORT
+3
+;3
+;
+;
+MSGID_DEFAULT_MENU_VIEWBY_SIZE
+Tamaño
+;Size
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_VIEWBY_SIZE_SHORT
+4
+;4
+;
+;
+MSGID_DEFAULT_MENU_VIEWBY_TYPE
+Tipo
+;Type
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_VIEWBY_TYPE_SHORT
+5
+;5
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_RESETSCALOS
+Reset Scalos
+;Reset Scalos
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_RESETSCALOS_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_NEWSHELL
+New Shell
+;New Shell
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_NEWSHELL_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_DRAWERS_VOYAGER
+Voyager
+;Voyager
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_DRAWERS_VOYAGER_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_DRAWERS_ENVARC_SYS
+ENVARC:Sys
+;ENVARC:Sys
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_DRAWERS_ENVARC_SYS_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_DRAWERS_WBSTARTUP
+WBStartup
+;WBStartup
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_DRAWERS_WBSTARTUP_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_DRAWERS_PREFS
+Prefs
+;Prefs
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_DRAWERS_PREFS_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_DRAWERS_SCALOSPREFS
+Scalos Prefs
+;Scalos Prefs
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_DRAWERS_SCALOSPREFS_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_SYSTEM
+System...
+;System...
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_SYSTEM_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_MUI
+MUI...
+;MUI...
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_MUI_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_AHI
+AHI...
+;AHI...
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_AHI_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_SCALOS
+Scalos Prefs...
+;Scalos Prefs...
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_SCALOS_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_EMPTY_SHORT
+
+;
+;+++translateme+++
+MSGID_DEFAULT_TOOLS
+Tools
+;Tools
+;
+;+++translateme+++
+MSGID_DEFAULT_UTILITIES
+Utilities
+;Utilities
+;
+;+++translateme+++
+MSGID_DEFAULT_PREFERENCES
+Preferences
+;Preferences
+;
+;+++translateme+++
+MSGID_DEFAULT_EXCHANGE
+Exchange
+;Exchange
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_MOUNTER
+Mounter
+;Mounter
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_SCSICONFIG
+SCSIConfig
+;SCSIConfig
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_SNOOPIUM
+Snoopium
+;Snoopium
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_DEFRAG
+Defrag
+;Defrag
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_FTMANAGER
+FTManager
+;FTManager
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_MUISHELL
+MUIShell
+;MUIShell
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_SFSDOCTOR
+SFSDoctor
+;SFSDoctor
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_UNITCONTROL
+UnitControl
+;UnitControl
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_FILEIMAGECTRL
+FileImageCtrl
+;FileImageCtrl
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_HDCONFIG
+HDConfig
+;HDConfig
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_REGTOOL
+RegTool
+;RegTool
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_SHELL
+Shell
+;Shell
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_EDITOR
+Editor
+;Editor
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_FRAGMENT
+Fragment
+;Fragment
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_GRABBER
+Grabber
+;Grabber
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_GRAPHICBOARDS
+GraphicBoards
+;GraphicBoards
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_KEYSTROKE
+Keystroke
+;Keystroke
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_MINICALC
+MiniCalc
+;MiniCalc
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_MORE
+More
+;More
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_MUIPROCALC
+MUIProCalc
+;MUIProCalc
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_MULTIVIEW
+Multiview
+;Multiview
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_MYSTICVIEW
+MysticView
+;MysticView
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_TASKMANAGER
+TaskManager
+;TaskManager
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_TRANCESTATS
+Trancestats
+;Trancestats
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_TIPS
+Tips
+;Tips
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_ZOOM
+Zoom
+;Zoom
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_AMIGS
+AmiGS
+;AmiGS
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_AMIPDF
+AmiPDF
+;AmiPDF
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_SGRAB
+SGrab
+;SGrab
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_CALCULATOR
+Calculator
+;Calculator
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_CLOCK
+Clock
+;Clock
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_GRAPHICDUMP
+GraphicDump
+;GraphicDump
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_ICONEDIT
+IconEdit
+;IconEdit
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_INITPRINTER
+InitPrinter
+;InitPrinter
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_KEYSHOW
+KeyShow
+;KeyShow
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_MEMACS
+MEmacs
+;MEmacs
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_NOTEPAD
+Notepad
+;Notepad
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_PARTITIONWIZARD
+Partition Wizard
+;Partition Wizard
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_PLAYCD
+PlayCD
+;PlayCD
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_PREFSOBJECTSEDITOR
+PrefsObjectsEditor
+;PrefsObjectsEditor
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_PRINTFILES
+PrintFiles
+;PrintFiles
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_RAWDISK
+RawDisk
+;RawDisk
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_SHOWCONFIG
+ShowConfig
+;ShowConfig
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_UNARC
+UnArc
+;UnArc
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_USBINSPECTOR
+USBInspector
+;USBInspector
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_AMIGAINPUT
+AmigaInput
+;AmigaInput
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_ASL
+ASL
+;ASL
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_COMPATIBILITY
+Compatibility
+;Compatibility
+;
+;
+MSGID_DEFAULT_MENU_PREFS_DEFICONS
+DefIcons
+;DefIcons
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_DOS
+DOS
+;DOS
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_FONT
+Font
+;Font
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_GUI
+GUI
+;GUI
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_INPUT
+Input
+;Input
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_INTERNET
+Internet
+;Internet
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_LOCALE
+Locale
+;Locale
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_NOTIFICATIONS
+Notifications
+;Notifications
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_PALETTE
+Palette
+;Palette
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_PICASSO96MODE
+Picasso96Mode
+;Picasso96Mode
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_POINTER
+Pointer
+;Pointer
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_POPUPMENU
+PopupMenu
+;PopupMenu
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_PRINTER
+Printer
+;Printer
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_PRINTERGFX
+PrinterGFX
+;PrinterGFX
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_PRINTERPS
+PrinterPS
+;PrinterPS
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_SCREENBLANKER
+ScreenBlanker
+;ScreenBlanker
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_SCREENMODE
+ScreenMode
+;ScreenMode
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_SCREENS
+Screens
+;Screens
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_SERIAL
+Serial
+;Serial
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_SOUND
+Sound
+;Sound
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_TIME
+Time
+;Time
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_URL
+URL
+;URL
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_USB
+USB
+;USB
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_WBPATTERN
+WBPattern
+;WBPattern
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_WBSTARTUP
+WBStartup
+;WBStartup
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_WORKBENCH
+Workbench
+;Workbench
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SYSTEM_INTELLIFONT
+IntelliFont
+;IntelliFont
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_GRAPHICDUMP
+GraphicDump
+;GraphicDump
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_UTILITIES_WBCLOCK
+WBClock
+;WBClock
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_CACHECDFS
+CacheCDFS
+;CacheCDFS
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_ICONTROL
+IControl
+;IControl
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_OVERSCAN
+Overscan
+;Overscan
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_REACTION
+Reaction
+;Reaction
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_VINCED
+ViNCDe
+;ViNCDe
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_PREFS_WARPOS
+WarpOS
+;WarpOS
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_BENCHTRASH
+BenchTrash
+;BenchTrash
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_CALCULATOR
+Calculator
+;Calculator
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_EDITPAD
+EditPad
+;EditPad
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_HDTOOLBOX
+HDToolBox
+;HDToolBox
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_ICONEDIT
+IconEdit
+;IconEdit
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_INITPRINTER
+InitPrinter
+;InitPrinter
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_IOTOOLS
+IoTools
+;IoTools
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_KEYSHOW
+KeyShow
+;KeyShow
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_LACER
+Lacer
+;Lacer
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_MEMACS
+MEmacs
+;MEmacs
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_PREPCARD
+PrepCard
+;PrepCard
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_PRINTFILES
+PrintFiles
+;PrintFiles
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_SHOWCONFIG
+ShowConfig
+;ShowConfig
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_TOOLS_UNARC
+Unarc
+;Unarc
+;
+;+++translateme+++
+MSGID_DEFAULT_SYSTEM
+System
+;System
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SYSTEM_FIND
+Find...
+;Find...
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SYSTEM_FIXFONT
+FixFont
+;FixFont
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SYSTEM_FORMAT
+Format...
+;Format...
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SYSTEM_SHELL
+Shell
+;Shell
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SYSTEM_FORMATCDRW
+FormatCDRW
+;FormatCDRW
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SYSTEM_MEDIATOOLBOX
+MediaToolBox
+;MediaToolBox
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SYSTEM_MOUNTER
+Mounter
+;Mounter
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SYSTEM_TYPEMANAGER
+TypeManager
+;TypeManager
+;
+;+++translateme+++
+MSGID_DEFAULT_MENU_SYSTEM_HELP
+Help
+;Help
+;
+;-----------------------------------------------------------
+;

@@ -1,0 +1,9 @@
+==id $Id: scalosfiletypeplugin_lib.sfd 5 2009-02-17 20:22:13Z jlachmann $
+==copyright ©1999-2002 The Scalos Team
+==base _ScalosFileTypePluginBase
+*==basetype struct Library *
+==bias 30
+==public
+==include <scalos/scalos.h>
+STRPTR SCAToolTipInfoString(struct ScaToolTipInfoHookData *ttshd, CONST_STRPTR args) (a0,a1)
+==end

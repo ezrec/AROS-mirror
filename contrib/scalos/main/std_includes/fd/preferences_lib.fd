@@ -1,0 +1,14 @@
+##base _PreferencesBase
+##bias 30
+##public
+AllocPrefsHandle(name)(a0)
+FreePrefsHandle(prefsHandle)(a0)
+SetPreferences(prefsHandle,iD,prefsTag,a1arg,struct_Size)(a0,d0/d1/a1,d2)
+GetPreferences(prefsHandle,iD,prefsTag,a1arg,struct_Size)(a0,d0/d1/a1,d2)
+ReadPrefsHandle(prefsHandle,filename)(a0/a1)
+WritePrefsHandle(prefsHandle,filename)(a0/a1)
+FindPreferences(prefsHandle,iD,prefsTag)(a0,d0/d1)
+SetEntry(prefsHandle,iD,prefsTag,a1arg,struct_Size,entry)(a0,d0/d1/a1,d2/d3)
+GetEntry(prefsHandle,iD,prefsTag,a1arg,struct_Size,entry)(a0,d0/d1/a1,d2/d3)
+RemEntry(prefsHandle,iD,prefsTag,entry)(a0,d0/d1/d2)
+##end

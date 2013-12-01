@@ -1,0 +1,68 @@
+TABLE OF CONTENTS
+
+DeviceList.sca/--background
+DeviceList.sca/SCCM_DeviceList_Generate
+DeviceList.sca/SCCM_DeviceList_FreeDevNode
+DeviceList.sca/SCCM_DeviceList_Filter
+DeviceList.sca/--background
+
+    NAME
+	--background
+
+    DESCRIPTION
+	This class is used to generate a list of all currently available
+	devices. The list will be used to load or update diskicons. You may
+	use this class to filter the devices.
+
+DeviceList.sca/SCCM_DeviceList_Generate
+
+    NAME
+	SCCM_DeviceList_Generate
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_DeviceList_Generate,APTR NodeList);
+
+    FUNCTION
+	Generates the full list of devices.
+	Scans through the DosList and adds a ScaDeviceIcon to the
+	NodeList for every appropriate device/volume found.
+	When finished scanning, applies SCCM_DeviceList_Filter to the
+	NodeList of generated icons.
+
+    INPUTS
+	NodeList - pointer to an empty ScalosNodeList
+
+    SEE ALSO
+DeviceList.sca/SCCM_DeviceList_FreeDevNode
+
+    NAME
+	SCCM_DeviceList_FreeDevNode
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_DeviceList_FreeDevNode,APTR Node);
+
+    FUNCTION
+	Frees anything inside of this node, but not the node itself.
+
+    INPUTS
+	Node - DeviceNode
+
+    SEE ALSO
+DeviceList.sca/SCCM_DeviceList_Filter
+
+    NAME
+	SCCM_DeviceList_Filter
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_DeviceList_Filter,APTR NodeList);
+
+    FUNCTION
+	Filters the list of DeviceNodes. You can hide some devices or restore
+	the nodelist. Default: all DOS-Devices without a volume will be
+	filtered. Checkout the flags field in the DeviceNode structure.
+
+    INPUTS
+	NodeList - pointer to a ScalosNodeList
+
+    SEE ALSO
+

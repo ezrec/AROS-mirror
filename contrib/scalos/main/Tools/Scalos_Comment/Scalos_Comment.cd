@@ -1,0 +1,297 @@
+; Comment.module.cd
+; version $VER: Comment.catalog 1.3c (29.10.05)
+; codeset 0s
+; language english
+;
+;#arrayopts static __far
+;
+;
+MSGID_ENTRY (//)
+Entry:
+;
+;
+MSGID_Asltext (//)
+Please, select one or several files...
+;
+;
+MSGID_TYPE (//)
+Type:
+;
+;
+MSGID_COMMENT (//)
+Comment:
+;
+;
+MSGID_ALL (//)
+All
+;
+;
+MSGID_HELPALL (//)
+If selected, comment will be apply\n\
+to drawer and its contents.
+;
+;
+MSGID_QUIT (//)
+Quit
+;
+;
+MSGID_HELPQUIT (//)
+If selected, apply to quit Comment.module after\n\
+to finish comment operation.
+;
+;
+MSGID_TIME (//)
+Time:
+;
+;
+MSGID_HELPBTABORT (//)
+Abort operation.
+;
+;
+MSGID_BTABORT (//)
+_Abort
+;
+;
+MSGID_GROUPENTRY (//)
+Current entry
+;
+;
+MSGID_HELPGROUPENTRY (//)
+Current drawer and file analysing
+;
+;
+MSGID_LABELDRAWER (//)
+Drawer:
+;
+;
+MSGID_LABELFILE (//)
+File:
+;
+;
+MSGID_ERRORREQ (//)
+Entry : %s !\n\
+ErrorCode: %ld, %s
+;
+;
+MSGID_BTOKREQ (//)
+Okay
+;
+;
+MSGID_NOFOUND (//)
+No found!
+;
+;
+MSGID_MUIERROR (//)
+Failed to open "%s".\n
+;
+;
+MSGID_ICONLIBERROR (//)
+Failed to open icon.library!\n
+;
+;
+MSGID_APPERROR (//)
+Failed to create application!\n
+;
+;
+MSGID_TYPETOOL (//)
+Tool
+;
+;
+MSGID_TYPEPROJECT (//)
+Project
+;
+;
+MSGID_TYPEDRAWER (//)
+Drawer
+;
+;
+MSGID_TYPEASSIGN (//)
+Assign
+;
+;
+MSGID_TYPEDISK (//)
+Disk
+;
+;
+MSGID_TYPEGARBAGE (//)
+Trashcan
+;
+;
+MSGID_TITLEERRORREQ (//)
+Comment.module: Error
+;
+;
+MSGID_PREFNOFOUNDREQ (//)
+Prefs file:\n\
+"\%s"\n\
+no found!\n\
+Use default settings...
+;
+;
+MSGID_ENTRYEXISTS (//)
+Entry:\n\
+"\033b%s\033n"\n\
+is already present!
+;
+;
+MSGID_PATH (//)
+Path:
+;
+;
+MSGID_WINANALYSING (//)
+Comment.module in progress...
+;
+;
+MSGID_WININFOS (//)
+Comment.module - Infos
+;
+;
+MSGID_OBJECTS (//)
+Object(s)
+;
+;
+MSGID_DRAWERS (//)
+Drawer(s)
+;
+;
+MSGID_FILES (//)
+File(s)
+;
+;
+MSGID_SIZE (//)
+Size
+;
+;
+MSGID_BYTES (//)
+Bytes
+;
+;
+MSGID_KBYTES (//)
+KBytes
+;
+;
+MSGID_MBYTES (//)
+MBytes
+;
+;
+MSGID_GETSIZE (//)
+Get size
+;
+;
+MSGID_LNAME (//)
+Name
+;
+;	
+MSGID_LCOMMENT (//)
+Comment
+;
+;
+MSGID_LSIZE (//)
+Size
+;
+;
+MSGID_LDATE (//)
+Date
+;
+;
+MSGID_LTIME (//)
+Time
+;
+;
+MSGID_LPATH (//)
+Path
+;
+;
+MSGID_INCOMPLETE (//)
+\033c\033b[ Incomplete! ]
+;
+;
+MSGID_BTCOMMALL (//)
+_Comment all
+;
+;
+MSGID_BTCOMMSEL (//)
+Comment _selected
+;
+;
+MSGID_BTREMENTRY (//)
+_Remove entry
+;
+;
+MSGID_TITLECONFIRMREQ (//)
+Comment.module: Confirmation
+;
+;
+MSGID_BTCONFIRMREQ (//)
+ Yes | No | Yes for all | Never 
+;
+;
+MSGID_BODYCONFIRMREQ (//)
+Comment all objects presents\n\
+in : %s?
+;
+;
+MSGID_ENTRIESNUMBER (//)
+Entries number:
+;
+;
+MSGID_ENTRIESNUMBER_HELP (//)
+This is the number of entries currently\n\
+presents into the list.
+;
+;
+MSGID_MENU_PROJECT (//)
+Project
+;
+;
+MSGID_MENUITEM_ABOUT (//)
+About...
+;
+;
+MSGID_MENUITEM_SETTINGS (//)
+Save settings
+;
+;
+MSGID_MENUITEM_QUIT (//)
+Quit
+;
+;
+MSGID_OPEN_DIR (//)
+Open path
+;
+;
+MSGID_ABOUT (//)
+Comment module for Scalos\n\
+Written in E\n\
+%s\n\
+%s
+;
+;
+MSGID_REQ_ABOUTTITLE (//)
+About Comment.module...
+;
+;
+MSGID_SCALIB_ERROR (//)
+Failed to open "%s" %s.\n
+;
+;
+MSGID_MENUITEM_ABOUT_KEY (//)
+A
+;
+;
+MSGID_MENUITEM_SETTINGS_KEY (//)
+S
+;
+;
+MSGID_MENUITEM_QUIT_KEY (//)
+Q
+;
+;
+MSGID_AsltextDir (//)
+Please, select a drawer or disk...
+;
+;
+MSGID_Blocks (//)
+(%ld Blocks) 
+;
+;

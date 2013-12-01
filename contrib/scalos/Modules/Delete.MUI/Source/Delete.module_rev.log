@@ -1,0 +1,74 @@
+
+Delete.module 0.1 (12.11.1998) 14:07:38 by chris@worldfoundry.demon.co.uk
+
+Started, shouldn't take long (he says hopefully...)
+
+
+Delete.module 0.2 (13.11.1998) 14:38:49 by chris@worldfoundry.demon.co.uk
+
+interface complete, selection listing working. Tested as real scalos module
+sucessfully. Adding delete code presently
+
+
+Delete.module 0.3 (14.11.1998) 11:33:10 by chris@worldfoundry.demon.co.uk
+
+Almost everything working. Only major problems so far caused by some
+incorrect directory scanning.
+
+
+Delete.module 1.0 (14.11.1998) 17:46:09 by chris@worldfoundry.demon.co.uk
+
+Finally got everything working. Some of the more fun bugs include the rather stupid attempt to
+delete icons twice in a recursive directory delete (once implicitly and once explicitly) and
+fun with Storm's optimister (program crashes on 9, set back to 1 and compiler, runs, set back
+to 9, compile, runs again... don'tcha love it..)
+Anyway, 'tis done. Enjoy
+
+
+Delete.module 1.1 (24.11.1998) 21:14:51 by worldfoundry@worldfoundry.demon.co.uk
+
+Added automatic update of icons (after remaking half the Scalos include files to work in Storm!)
+
+
+Delete.module 1.2 (26.11.1998) 14:26:50 by worldfoundry@worldfoundry.demon.co.uk
+
+Fixed non-update of "drawerless" drawer icons. 
+
+
+Delete.module 1.3 (28.11.1998) 16:42:58 by worldfoundry@worldfoundry.demon.co.uk
+
+Found the cause of the lockups on some people's systems - I'd not removed some of the
+debug code (DOH!). Fixed in this version, as well as a slight optimisation of the 
+directory delete code.
+
+
+Delete.module 1.4 (18.12.1998) 19:53:17 by worldfoundry@worldfoundry.demon.co.uk
+
+BUGGER!!! I didn't take files with 0 length into account in the progress display. This would cause
+divide by 0 errors. This version has some extra checks to deal with the problem.
+
+
+Delete.module 1.5 (1.7.1999) 18:10:07 by worldfoundry@worldfoundry.demon.co.uk
+
+Added "remove protection" option, localised code. Started converting to GNU GPL license &
+ensuring code comments are up to scratch....
+
+
+Delete.module 1.6 (2.7.1999) 14:02:40 by worldfoundry@worldfoundry.demon.co.uk
+
+Added details scanning routine. 
+
+
+Delete.module 1.7 (3.7.1999) 15:11:56 by worldfoundry@worldfoundry.demon.co.uk
+
+Removed automatic save of preferences settings, added gadgets to do the work (pointless saving
+every time the program is used! :/)
+
+
+Delete.module 1.8 (5.7.1999) 18:57:18 by worldfoundry@worldfoundry.demon.co.uk
+
+Volume delete warning should now open in the correct place, About window title is localised (I
+always have to miss one of the buggers), fixed a problem with the version string in Exchange -
+RevUp's VERSTAG isn't really suitable for the MUI version data.....
+
+

@@ -1,0 +1,270 @@
+; FormatDisk.cd
+; $Date$
+; $Revision$
+; $Id$
+; version $VER: FormatDisk.catalog 1.05 (08.12.2006)
+; codeset 0s
+; language english
+;
+;#arrayopts static __far
+;
+;
+MSGID_DEVICE_SPACE_USED (//)
+Used:
+;
+;
+MSGID_DEVICE_SPACE_FREE (//)
+Free:
+;
+;
+MSGID_DEVICE_SIZE (//)
+Size:
+;
+;
+MSGID_DEVICE_BLOCK_SIZE (//)
+Block size:
+;
+;
+;
+MSGID_DEVICE_BLOCKS_PERCENT_USED (//)
+Used: %s (%lD Blocks, %lD%%)
+;
+;
+MSGID_DEVICE_BLOCKS_PERCENT_FREE (//)
+Free: %s (%lD Blocks, %lD%%)
+;
+;
+;Size:
+MSGID_DEVICE_BLOCKS (//)
+Size: %s (%lD Blocks)
+;
+;
+MSGID_DEVICE_SHORTSIZE (//)
+Size: %ld
+;
+;
+; Block size:
+MSGID_DEVICE_BLOCKSIZE_BYTES (//)
+Block size: %lD bytes
+;
+;
+MSGID_REQ_SURE_TITLE (//)
+Format_Disk.module: Request...
+;
+;
+MSGID_REQ_SURE_BODY (//)
+Are you sure you want to format volume\n\
+%s\n\
+\n\
+%s\n\
+\n\
+(the contents of the disk will be destroyed)?
+;
+;
+MSGID_REQ_SURE_GADGETS (//)
+Yes|No
+;
+;
+MSGID_VOLUME_PROTECTED (//)
+Volume\n%s\nis write protected
+;
+;
+MSGID_REQ_RETRY_CANCEL (//)
+Retry|Cancel
+;
+;
+MSGID_GADGET_OK (//)
+OK
+;
+;
+;---------------------------------------------------------------------------
+;
+MSGID_GADGET_DEVNAME (2000//)
+_Name:
+;
+;
+MSGID_GADGET_VOLUME (//)
+Volume:
+;
+;
+MSGID_GADGET_DEVICE (//)
+Device:
+;
+;
+MSGID_GADGET_FFS (//)
+_Fast File System
+;
+;
+MSGID_GADGET_INTL (//)
+_International
+;
+;
+MSGID_GADGET_VERIFY (//)
+_Verify Format
+;
+;
+MSGID_GADGET_TRASHCAN (//)
+With t_rashcan
+;
+;
+MSGID_GADGET_DIRCACHE (//)
+_Dircache
+;
+;
+MSGID_GADGET_TRASHCAN_NAME (//)
+_Trash:
+;
+;
+MSGID_GADGET_GUI_FORMAT (//)
+_Format
+;
+;
+MSGID_GADGET_QUICK_FORMAT (//)
+_Quick Format
+;
+;
+MSGID_GADGET_GUI_CANCEL (//)
+_Cancel
+;
+;
+MSGID_DRIVE_NOFOUND (//)
+Can't find its drive!
+;
+;
+MSGID_VOLUME_SELECTED (//)
+Volume selected:
+;
+;
+MSGID_OBJECT (//)
+Object:
+;
+;
+MSGID_IS_WRONG_TYPE (//)
+is a wrong type!
+;
+;--------------------------------------------------------
+;
+MSGID_CLI_SUPPORT_64CMD (//)
+*** Device %s supports 64bit commands! No size limit!!\n
+;
+;
+MSGID_CLI_NO_SUPPORT_64CMD (//)
+*** Device %s does NOT support 64bit commands. 4GB limit activated!!\n
+;
+;
+MSGID_CLI_INSERT_DISK (//)
+Insert the disk to be formatted in drive 
+;
+;
+MSGID_CLI_PRESS_RETURN (//)
+ and press RETURN 
+;
+;
+MSGID_INITIALIZING_DISK (//)
+Initializing disk...
+;
+;
+MSGID_INITIALIZING_DISK_SUCCESS (//)
+Initialized successfully.
+;
+;
+MSGID_INITIALIZING_DISK_FAILED (//)
+Initialization failed.
+;
+;
+MSGID_SECOND_INITIALIZING_DISK (//)
+Second Initialization...
+;
+;
+MSGID_CLI_BREAK (//)
+***Break\n
+;
+;
+MSGID_FORMAT_DISK_FAILED (//)
+Cannot format volume
+;
+;
+MSGID_FORMAT_DISK_WRITEPROTECTED (//)
+because the disk is write protected
+;
+;
+MSGID_DEVICE_NOT_ACCESS (//)
+Couldn't access the device
+;
+;
+MSGID_CREATING_TRASHCAN_USER (//)
+Creating Trashcan, named: \"%s\" 
+;
+;
+MSGID_CREATING_TRASHCAN_DEFAULT (//)
+Creating Trashcan, named: \"Trashcan\" 
+;
+;
+MSGID_CREATING_TRASHCAN_ERROR (//)
+There was an error while creating the trashcan
+;
+;
+MSGID_CREATING_TRASHCAN_DIR_ERROR (//)
+There was an error while creating the trashcan directory
+;
+;----------------------------------------------------------
+;
+MSGID_GUI_FORMATTING_CYLINDER (//)
+Formatting cylinder %ld/%ld, %ld to go
+;
+;
+MSGID_FORMATTING_ERROR (//)
+A formatting error occured
+;
+;
+MSGID_GUI_FORMATTING_ABORTED (//)
+Formatting operation aborted!
+;
+;
+MSGID_GUI_VERIFYING_CYLINDER (//)
+Verifying  cylinder %ld/%ld, %ld to go
+;
+;
+MSGID_VERIFYING_ERROR (//)
+A verify error occurred
+;
+;
+MSGID_GUI_VERIFYING_ABORTED (//)
+Verifying operation aborted!
+;
+;
+MSGID_WARNING_FORMAT_DEVICE_NO64BIT (//)
+You are trying to format beyond 4GB border although\n\
+your device does not support 64 bit commands. Due to this\n\
+fact, format operation is aborted in order to save your drive.
+;
+;--------------------------------------------------------
+;
+MSGID_GUI_PREPWINDOW_TITLE (//)
+Format_Disk.module
+;
+;
+MSGID_GUI_STATUSWINDOW_TITLE (//)
+Format_Disk.module: Status
+;
+;
+MSGID_GUI_STATUSWINDOW_FORMATTING_DRIVE (//)
+Formatting drive \"%s\" as \"%s\" [%s] ...
+;
+;
+MSGID_GUI_STATUSWINDOW_DEVICE_64BIT (//)
+Status Device: \"%s\" [ NSD Support: YES ].
+;
+;
+MSGID_GUI_STATUSWINDOW_DEVICE_NO64BIT (//)
+Status Device: \"%s\" [ NSD Support: N/A. ]
+;
+;
+MSGID_GUI_STATUSWINDOW_ABORT (//)
+_Stop
+;
+;
+MSGID_GUI_ON_DRIVE (//)
+On drive
+;
+;

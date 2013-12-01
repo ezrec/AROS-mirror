@@ -1,0 +1,583 @@
+; Information.cd
+; version $VER: Information.catalog 40.1 (20 Feb 2005 21:03:45)
+; codeset 0s
+; language english
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME (//)
+Scalos Information
+;
+;
+MSGID_OKBUTTON (//)
+Save
+;
+;
+MSGID_SHORTHELP_OKBUTTON (//)
+Save the changed icon.\n\
+If necessary, a new icon will be\n\
+created from a the default icon.
+;
+;
+MSGID_CANCELBUTTON (//)
+Cancel
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON (//)
+Discard all changes and\n\
+leave the icon unchanged.
+;
+;
+MSGID_CREATE_APPLICATION_FAILED (//)
+Failed to create Application.\n
+;
+;
+MSGID_CREATE_MAINWINDOW_FAILED (//)
+Failed to open main window !\n
+;
+;
+MSGID_OPEN_LIBRARY_FAILED (//)
+Failed to open \"%s\" !\n
+;
+;;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT (2000//)
+Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT (//)
+About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI (//)
+About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT (//)
+Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT (//)
+Q
+;
+;
+MSGID_MENU_TYPE (//)
+Type
+;
+;
+MSGID_MENU_TYPE_DISK (//)
+Disk
+;
+;
+MSGID_MENU_TYPE_DRAWER (//)
+Drawer
+;
+;
+MSGID_MENU_TYPE_PROJECT (//)
+Project
+;
+;
+MSGID_MENU_TYPE_TOOL (//)
+Tool
+;
+;
+MSGID_MENU_TYPE_TRASHCAN (//)
+Trashcan
+;
+;
+MSGID_MENU_IMAGE (//)
+Icon Image
+;
+;
+MSGID_MENU_IMAGE_DEFAULT (//)
+Default
+;
+;
+MSGID_MENU_IMAGE_DEFAULT_SHORT (/1/1)
+D
+;
+;
+MSGID_MENU_OPTIONS (//)
+Options
+;
+;
+MSGID_MENU_ALWAYS_ICONPATH (//)
+Always display icon path
+;
+;
+MSGID_MENU_ALWAYS_ICONPATH_SHORT (/1/1)
+P
+;
+;
+MSGID_MENU_ALWAYS_GETSIZE (//)
+Always get size
+;
+;
+MSGID_MENU_ALWAYS_GETSIZE_SHORT (/1/1)
+G
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK (3000//)
+_OK
+;
+;
+MSGID_ABOUTREQFORMAT (//)
+\33c\033bScalos Information.module V%ld.%ld\033n\n\
+%s\n\
+© 2004%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+MSGID_DEVICE_DEVICE (4000//)
+Device:
+;
+;
+MSGID_DEVICE_HANDLER (//)
+Handler:
+;
+;
+MSGID_DEVICE_CREATED_ON (//)
+Created on:
+;
+;
+MSGID_DEVICE_SPACE_USED (//)
+Used:
+;
+;
+MSGID_DEVICE_SPACE_FREE (//)
+Free:
+;
+;
+MSGID_DEVICE_SIZE (//)
+Size:
+;
+;
+MSGID_DEVICE_BLOCK_SIZE (//)
+Block size:
+;
+;
+MSGID_DEVICE_STATE (//)
+State:
+;
+;
+MSGID_DEVICE_BLOCKS_PERCENT (//)
+%s (%lD Blocks, %lD%%)
+;
+;
+MSGID_DEVICE_BLOCKS (//)
+%s (%lD Blocks)
+;
+;
+MSGID_DEVICE_DISKSTATE_READONLY (//)
+read-only
+;
+;
+MSGID_DEVICE_DISKSTATE_VALIDATING (//)
+validating
+;
+;
+MSGID_DEVICE_DISKSTATE_READ_WRITE (//)
+read-/writable
+;
+;
+MSGID_DEVICE_DISKSTATE_UNKNOWN (//)
+??unknown??
+;
+;
+MSGID_DEVICE_BLOCKSIZE_BYTES (//)
+%lD bytes
+;
+;
+MSGID_DEVICE_HANDLER_DISKID (//)
+%s %ld.%ld
+;
+;
+MSGID_DEVICE_ON_DEVNAME (//)
+on %s
+;
+;
+MSGID_DEVICE_DEVICE_UNIT (//)
+%s, %ld
+;
+;-----------------------------------------------------------
+;
+MSGID_LASTCHANGE (5000//)
+Last change:
+;
+;
+MSGID_SIZE (//)
+Size:
+;
+;
+MSGID_SIZE_FORMAT (//)
+%s bytes
+;
+;
+MSGID_PROTECTION (//)
+Protection:
+;
+;
+MSGID_PROTECTION_READ (//)
+Read
+;
+;
+MSGID_PROTECTION_WRITE (//)
+Write
+;
+;
+MSGID_PROTECTION_ARCHIVE (//)
+Archive
+;
+;
+MSGID_PROTECTION_DELETE (//)
+Delete
+;
+;
+MSGID_PROTECTION_EXECUTE (//)
+Execute
+;
+;
+MSGID_PROTECTION_SCRIPT (//)
+Script
+;
+;
+MSGID_PROTECTION_READ_SHORTHELP (//)
+Read???
+;
+;
+MSGID_PROTECTION_WRITE_SHORTHELP (//)
+Write???
+;
+;
+MSGID_PROTECTION_ARCHIVE_SHORTHELP (//)
+Archive???
+;
+;
+MSGID_PROTECTION_DELETE_SHORTHELP (//)
+Delete???
+;
+;
+MSGID_PROTECTION_EXECUTE_SHORTHELP (//)
+Execute???
+;
+;
+MSGID_PROTECTION_SCRIPT_SHORTHELP (//)
+Script???
+;
+;
+MSGID_COMMENT (//)
+Comment:
+;
+;
+MSGID_TOOLTYPES (//)
+Tooltypes:
+;
+;
+MSGID_VERSION (//)
+Version:
+;
+;
+MSGID_DEFAULTTOOL (//)
+Default tool:
+;
+;
+MSGID_STACKSIZE (//)
+Stack size:
+;
+;
+MSGID_TOOL_PRIORITY (//)
+Priority:
+;
+;
+MSGID_START_FROM (//)
+Start from:
+;
+;
+MSGID_PROMPT_FOR_INPUT (//)
+Prompt for input:
+;
+;
+MSGID_VERSION_NOT_AVAILABLE (//)
+not available
+;
+;
+MSGID_DRAWER_SIZE_SHORTHELP (//)
+Press this button to calculate the actual\n\
+size of the drawer contents.\n\
+This operation may takt some time,\n\
+depending on the drawer contents.
+;
+;
+MSGID_INITIAL_DRAWER_SIZE (//)
+1 block
+;
+;
+MSGID_DRAWER_SIZE (//)
+%s bytes in %lD files, %lD drawers (%lD blocks)
+;
+;
+MSGID_STARTPRI (//)
+Start priority:
+;
+;
+MSGID_WAITUNTILFINISHED (//)
+Wait until finished:
+;
+;
+MSGID_WAITUNTILFINISHED_SHORTHELP (//)
+For WBStartup programs, selects if Scalos will wait\n\
+until program is finished holding WBStartup processsing,\n\
+or if processing will continue asynchronously.
+;
+;
+MSGID_TOOL_SECONDS (//)
+seconds
+;
+;
+MSGID_ICONPOS_X (//)
+X:
+;
+;
+MSGID_ICONPOS_Y (//)
+Y:
+;
+;
+MSGID_ICONPOS_NONE (//)
+-
+;
+;-----------------------------------------------------------
+;
+MSGID_START_FROM_WORKBENCH (5500//)
+Workbench
+;
+;
+MSGID_START_FROM_CLI (//)
+Shell
+;
+;
+MSGID_START_FROM_AREXX (//)
+ARexx
+;
+;-----------------------------------------------------------
+;
+MSGID_DEVICE_REGISTER_DEVICE (5550//)
+Device
+;
+;
+MSGID_DEVICE_REGISTER_ICON (//)
+Icon
+;
+;-----------------------------------------------------------
+;
+MSGID_DRAWER_REGISTER_DRAWER (5600//)
+Drawer
+;
+;
+MSGID_DRAWER_REGISTER_ICON (//)
+Icon
+;
+;-----------------------------------------------------------
+;
+MSGID_PROJECT_REGISTER_PROJECT (5700//)
+Project
+;
+;
+MSGID_PROJECT_REGISTER_ICON (//)
+Icon
+;
+;-----------------------------------------------------------
+;
+MSGID_TOOL_REGISTER_TOOL (5800//)
+Tool
+;
+;
+MSGID_TOOL_REGISTER_ICON (//)
+Icon
+;
+;-----------------------------------------------------------
+;
+MSGID_ICONTYPE_DISK (5900//)
+(Disk)
+;
+;
+MSGID_ICONTYPE_DRAWER (//)
+(Drawer)
+;
+;
+MSGID_ICONTYPE_TOOL (//)
+(Tool)
+;
+;
+MSGID_ICONTYPE_PROJECT (//)
+(Project)
+;
+;
+MSGID_ICONTYPE_TRASHCAN (//)
+(Trashcan)
+;
+;
+MSGID_ICONTYPE_DEVICE (//)
+(Device)
+;
+;
+MSGID_ICONTYPE_KICKSTART (//)
+(Kickstart)
+;
+;
+MSGID_ICONTYPE_APPICON (//)
+(AppIcon)
+;
+;
+MSGID_ICONTYPE_UNKNOWN (//)
+(?unknown?)
+;
+;-----------------------------------------------------------
+;
+MSGID_BYTES_GB (6000//)
+%lDG
+;
+;
+MSGID_BYTES_GB_2 (//)
+%lD%s%-02ldG
+;
+;
+MSGID_BYTES_GB_1 (//)
+%lD%s%1ldG
+;
+;
+MSGID_BYTES_MB (//)
+%lDM
+;
+;
+MSGID_BYTES_MB_2 (//)
+%lD%s%-02ldM
+;
+;
+MSGID_BYTES_MB_1 (//)
+%lD%s%1ldM
+;
+;
+MSGID_BYTES_KB (//)
+%lDK
+;
+;
+MSGID_BYTES_KB_2 (//)
+%lD%s%-02ldK
+;
+;
+MSGID_BYTES_KB_1 (//)
+%lD%s%1ldK
+;
+;-----------------------------------------------------------
+;
+MSGID_ERROR_SETCOMMENT (6100//)
+Error setting comment\n\
+%s.
+;
+;
+MSGID_ERROR_SETPROTECTION (//)
+Error setting protection\n\
+%s.
+;
+;
+MSGID_ERROR_RELABEL (//)
+Error relabelling disk\n\
+%s.
+;
+;
+MSGID_ERROR_RENAME (//)
+Error renaming\n\
+%s.
+;
+;
+MSGID_ERROR_REQ_OK (//)
+_OK
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE (6200//)
+Information.module startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD (//)
+Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+\n\
+Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+%lu.%lu is currently in use by other applications.\n\
+\n\
+Once you have installed the required version,\n\
+close all MUI programs, make sure the old class\n\
+is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;
+MSGID_DEVICE_DOSTYPE (//)
+Identifier:
+;
+;
+MSGID_DEVICE_DOSTYPESTRING (//)
+(\033b%c%c%c%c\033n)
+;
+;-----------------------------------------------------------
+;
+MSGID_PROTECTION_HIDDEN (//)
+Hidden
+;
+;
+MSGID_PROTECTION_HIDDEN_SHORTHELP (//)
+Hidden???
+;
+;
+MSGID_PROTECTION_PURE (//)
+Pure
+;
+;
+MSGID_PROTECTION_PURE_SHORTHELP (//)
+Pure???
+;
+;------------------------------------------------------------
+;
+MSGID_TEXT_ICONPATH_SHORTHELP (6300//)
+Icon path
+;
+;
+MSGID_FILETYPE_DRAWER (//)
+Drawer
+;
+;
+MSGID_FILETYPE_GARBAGE (//)
+Trashcan
+;
+;
+MSGID_FILETYPE_DISK (//)
+Disk
+;
+;
+MSGID_FILETYPE_TOOL (//)
+Tool
+;
+;
+MSGID_FILETYPE_PROJECT (//)
+Project
+;
+;
+MSGID_FILETYPE_APPICON (//)
+Appicon
+;
+;------------------------------------------------------------
+;

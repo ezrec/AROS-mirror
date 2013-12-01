@@ -1,0 +1,233 @@
+; Empty_Trashcan.ct
+## version $VER: Empty_Trashcan.catalog 40.1 (04 Dec 2005 23:01:34)
+## codeset 0s
+## language xxxxxx
+;
+;#arrayopts static __far
+;
+;+++translateme+++
+MSGID_TITLENAME
+Scalos Empty_Trashcan
+;Scalos Empty_Trashcan
+;
+;+++translateme+++
+MSGID_OKBUTTON
+Ok
+;Ok
+;
+;+++translateme+++
+MSGID_OKBUTTON_SHORT
+O
+;O
+;
+;+++translateme+++
+MSGID_SHORTHELP_OKBUTTON
+Start emptying trashcan.\n\
+All contents is deleted irrevocably!
+;Start emptying trashcan.\n\
+;All contents is deleted irrevocably!
+;
+;+++translateme+++
+MSGID_CANCELBUTTON
+Cancel
+;Cancel
+;
+;+++translateme+++
+MSGID_CANCELBUTTON_SHORT
+c
+;c
+;
+;+++translateme+++
+MSGID_SHORTHELP_CANCELBUTTON
+Leave trashcan untouched and quit
+;Leave trashcan untouched and quit
+;
+;+++translateme+++
+MSGID_ABORTBUTTON
+Abort
+;Abort
+;
+;+++translateme+++
+MSGID_ABORTBUTTON_SHORT
+a
+;a
+;
+;+++translateme+++
+MSGID_SHORTHELP_ABORTBUTTON
+Immediately abort emptying\n\
+of trashcan and quit.
+;Immediately abort emptying\n\
+;of trashcan and quit.
+;
+;+++translateme+++
+MSGID_CREATE_APPLICATION_FAILED
+Failed to create Application.\n
+;Failed to create Application.\n
+;
+;+++translateme+++
+MSGID_CREATE_MAINWINDOW_FAILED
+Failed to open main window !\n
+;Failed to open main window !\n
+;
+;+++translateme+++
+MSGID_OPEN_LIBRARY_FAILED
+Failed to open \"%s\" !\n
+;Failed to open \"%s\" !\n
+;
+;;-----------------------------------------------------------
+;
+;+++translateme+++
+MSGID_MENU_PROJECT
+Project
+;Project
+;
+;+++translateme+++
+MSGID_MENU_PROJECT_ABOUT
+About...
+;About...
+;
+;+++translateme+++
+MSGID_MENU_PROJECT_ABOUTMUI
+About MUI...
+;About MUI...
+;
+;+++translateme+++
+MSGID_MENU_PROJECT_QUIT
+Quit
+;Quit
+;
+;+++translateme+++
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;Q
+;
+;-----------------------------------------------------------
+;
+;+++translateme+++
+MSGID_ABOUTREQOK
+_OK
+;_OK
+;
+;+++translateme+++
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Empty_Trashcan.module V%ld.%ld\033n\n\
+%s\n\
+© 2005%s The Scalos Team
+;\33c\033bScalos Empty_Trashcan.module V%ld.%ld\033n\n\
+;%s\n\
+;© 2005%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+;+++translateme+++
+MSGID_WARNING_EMPTY_TRASHCAN
+Warning! You cannot get back what you delete!\n\
+OK to empty the trashcan?
+;Warning! You cannot get back what you delete!\n\
+;OK to empty the trashcan?
+;
+;+++translateme+++
+MSGID_GADGETS_EMPTY_ABORT
+Empty|Abort
+;Empty|Abort
+;
+;+++translateme+++
+MSGID_GADGETTEXT_OK
+OK
+;OK
+;
+;+++translateme+++
+MSGID_GADGETTEXT_CANCEL
+Cancel
+;Cancel
+;
+;+++translateme+++
+MSGID_EMPTY_TRASHCAN
+Empty Trashcan
+;Empty Trashcan
+;
+;+++translateme+++
+MSGID_GADGETS_DELETE_ABORT
+Delete|Abort
+;Delete|Abort
+;
+;+++translateme+++
+MSGID_EMPTYING_TRASHCAN
+Emptying Trashcan...
+;Emptying Trashcan...
+;
+;+++translateme+++
+MSGID_PATH
+Path
+;Path
+;
+;+++translateme+++
+MSGID_GADGET_ABORT
+Abort
+;Abort
+;
+;+++translateme+++
+MSGID_BUILD_FILELIST
+Building Filelist...
+;Building Filelist...
+;
+;+++translateme+++
+MSGID_OUT_OF_MEMORY
+Not Enough Memory
+;Not Enough Memory
+;
+;
+MSGID_ERROR
+Error
+;Error
+;
+;
+MSGID_FAILED_TO_DELETE
+%s\n\
+couldn't be deleted:\n\
+%s
+;%s\n\
+;couldn't be deleted:\n\
+;%s
+;
+;
+MSGID_GADGETS_SKIP_ABORT
+Skip it|Abort
+;Skip it|Abort
+;
+;
+MSGID_DELETE_PROTECTED
+%s is protected against deletion.\n\
+Delete anyway?
+;%s is protected against deletion.\n\
+;Delete anyway?
+;
+;
+MSGID_GADGETS_DELETE_SKIP
+Delete|Skip it
+;Delete|Skip it
+;
+;
+MSGID_GADGETS_DELETE_DELETEALL_PROTECT_SKIP
+Delete|DeleteAllProtect|Skip
+;Delete|DeleteAllProtect|Skip
+;
+;
+MSGID_TEXT_CURRENTITEM
+Currently removing:
+;Currently removing:
+;
+;
+MSGID_TEXT_CURRENTITEM_SHORTHELP
+This is the name if the item currently\n\
+being deleted from trashcan.
+;This is the name if the item currently\n\
+;being deleted from trashcan.
+;
+;
+MSGID_GLOBAL_TRASHCAN
+\nThis global trashcan will be emptied, too:
+;\nThis global trashcan will be emptied, too:
+;
+;-----------------------------------------------------------
+;

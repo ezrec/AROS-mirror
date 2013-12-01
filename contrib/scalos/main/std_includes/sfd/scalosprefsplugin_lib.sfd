@@ -1,0 +1,8 @@
+==id $Id: scalosprefsplugin_lib.sfd 5 2009-02-17 20:22:13Z jlachmann $
+==copyright ©1999-2002 The Scalos Team
+==base _ScalosPrefsPluginBase
+*==basetype struct Library *
+==bias 30
+==public
+ULONG SCAGetPrefsInfo(LONG which) (d0)
+==end

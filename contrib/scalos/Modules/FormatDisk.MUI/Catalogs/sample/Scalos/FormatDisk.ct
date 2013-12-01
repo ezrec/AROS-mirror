@@ -1,0 +1,171 @@
+; Rename.ct
+## version $VER: FormatDiskMUI.catalog 40.1 (26 Feb 2005 22:01:34)
+## codeset 0s
+## language xxxxxx
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos NewDrawer
+;
+;
+MSGID_OKBUTTON
+NewDrawer
+;
+;
+MSGID_OKBUTTON_SHORT
+r
+;
+;
+MSGID_SHORTHELP_OKBUTTON
+Create new drawer.
+;
+;
+MSGID_CANCELBUTTON
+Cancel
+;
+;
+MSGID_CANCELBUTTON_SHORT
+c
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Discard all changes and\n\
+do not create anything.
+;
+;
+MSGID_CREATE_APPLICATION_FAILED
+Failed to create Application.\n
+;
+;
+MSGID_CREATE_MAINWINDOW_FAILED
+Failed to open main window !\n
+;
+;
+MSGID_OPEN_LIBRARY_FAILED
+Failed to open \"%s\" !\n
+;
+;;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT
+Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK
+_OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Rename.module V%ld.%ld\033n\n\
+%s\n\
+© 2004%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+MSGID_NEWNAME_DEFAULT
+New_Drawer_Name
+;
+;
+MSGID_TEXT_ENTERNAME
+Enter name for a new drawer in \"%s\"
+;
+;
+MSGID_LABEL_ENTERNAME
+New Drawer
+;
+;
+MSGID_LABEL_CREATE_ICON
+Create Icon
+;
+;
+MSGID_CHECKMARK_CREATEICON_SHORTHELP
+If this checkbox is checked, an icon\n\
+will be created for the new drawer.
+;
+;
+MSGID_TITLE_ERRORREQ
+NewDrawer Error
+;
+;
+MSGID_ERRORREQ_BODYTEXT
+Could not create '%s'\n%s
+;
+;
+MSGID_REQ_OK
+ _Ok
+;
+;
+MSGID_TEXT_ENTERNAME_SHORTHELP
+Path to create a new drawer.\n\n\
+It's possible to show all content of this gadget using\n\
+the scroller located at the bottom of the window.\n\
+Can be usefull for large path lenght.
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+NewDrawer.module Prefs startup failed
+;NewDrawer.module startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Try again|Quit
+;Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+The class is not installed.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+\n\
+Currently installed is V%lu.%lu, please upgrade!
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+%lu.%lu is currently in use by other applications.\n\
+\n\
+Once you have installed the required version,\n\
+close all MUI programs, make sure the old class\n\
+is flushed from memory and try again.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;
+MSGID_OPEN_PREFS_LIBRARY_FAILED
+Failed to open \"%s\" !\n\
+Loading and saving of settings aren't availlables.\n
+;
+;-----------------------------------------------------------
+;

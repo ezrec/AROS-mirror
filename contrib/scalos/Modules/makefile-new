@@ -1,0 +1,47 @@
+# $Date: 2011-08-10 17:07:41 +0200 (Mi, 10. Aug 2011) $
+# $Revision: 835 $
+#############################################################
+TOPLEVEL	=	$(shell pwd)/..
+
+include		config.mk
+
+##############################################################################
+#
+# Project subdirectories
+#
+
+SUBDIRS	=	WindowProperties.MUI \
+		IconProperties.MUI \
+		Information.MUI \
+		Rename.MUI \
+		NewDrawer.MUI \
+		Execute_Command.MUI \
+		Exchange.MUI \
+		Find.MUI \
+		Delete.MUI \
+		Empty_Trashcan.MUI \
+		Updater.MUI \
+		FormatDisk.Gadtools \
+		#
+
+# 		Delete.Gadtools \
+#		Rename.Reaction \
+#		Rename.Gadtools \
+#		NewDrawer.Reaction \
+#		NewDrawer.Gadtools \
+#		Execute_Command.Gadtools \
+#		Empty_Trashcan.Gadtools \
+
+##############################################################################
+
+.PHONY: all install clean
+
+all: all_subdirs
+
+clean: clean_subdirs
+
+install: install_subdirs
+
+nodebug: nodebug_subdirs
+
+

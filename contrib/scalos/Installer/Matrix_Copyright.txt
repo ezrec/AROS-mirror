@@ -1,0 +1,15 @@
+
+   Matrix picture, used with ScalosBeta installation script, is a screenshot(by Jean-marie COAT) of "Matrix" screen blanker.
+The graphics (included in the "Matrix" executable released as freeware) were not entirely made by the
+author(©2000-2002 Olivier Fabre - Email: off@free.fr).
+The major part of them come from a BeOS screen blanker, whose author took them from a Linux version, and their legal
+status is unknown.
+
+
+
+JMC
+
+ Jean-Marie COAT
+ agalliance@free.fr
+
+

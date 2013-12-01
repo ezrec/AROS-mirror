@@ -1,0 +1,1930 @@
+In the following you will find an alphabetical description
+of the WB3.9 ARexx command set. This description is copyrighted
+by Amiga (copied from the OS3.9 CD) and must not be distributed !
+
+
+Currently WBRexx supports the complete WB3.9 ARexx command set,
+with the following exceptions :
+
+
+ACTIVATEWINDOW	fully supported
+
+CHANGEWINDOW	fully supported
+
+DELETE		fully supported
+
+FAULT		fully supported
+
+GETATTR		fully supported
+
+HELP		unsupported
+
+ICON		fully supported
+
+INFO		fully supported
+
+KEYBOARD	fully supported
+
+LOCKGUI		unsupported, no-op
+
+MENU		INVOKE mostlysupported
+			WINDOW.CLEANUPBY.NAME	unsupported, no-op
+			WINDOW.CLEANUPBY.DATE	unsupported, no-op
+			WINDOW.CLEANUPBY.SIZE	unsupported, no-op
+			WINDOW.CLEANUPBY.TYPE	unsupported, no-op
+			WINDOW.VIEWBY.TYPE	unsupported, no-op
+			TOOLS.RESETWB		unsupported, no-op
+			DEBUG.SAD		unsupported, no-op
+			DEBUG.FLUSHLIBS		unsupported, no-op
+
+MOVEWINDOW	fully supported
+
+NEWDRAWER	fully supported
+
+RENAME		fully supported
+
+RX		fully supported
+
+SIZEWINDOW	fully supported
+
+UNLOCKGUI	unsupported, no-op
+
+UNZOOMWINDOW	fully supported
+
+VIEW		fully supported
+
+WINDOW		fully supported
+
+WINDOWTOBACK	fully supported
+
+WINDOWTOFRONT	fully supported
+
+ZOOMWINDOW	fully supported
+
+
+------------------------------------------------------------------------------
+ACTIVATEWINDOW command
+
+Purpose:
+
+This command will attempt to make a window the active one.
+
+Format:
+
+ACTIVATEWINDOW [WINDOW] <ROOT|Drawer name>
+
+Template:
+
+ACTIVATEWINDOW WINDOW
+
+Parameters:
+
+WINDOW
+
+Either ROOT" to activate the Workbench root window (where volume icons and
+AppIcons live) or the fully qualified name of a drawer window to activate.
+Note that the drawer window must already be open.
+
+If no WINDOW parameter is specified, this command will try to operate on the
+currently active Workbench window.
+
+Errors:
+
+10 - If the named window cannot be activated. The error code will be placed
+in the WORKBENCH.LASTERROR variable.
+
+Result:
+
+-
+
+Notes:
+
+If you choose to have a window activated that is not the root window you must
+make sure that the window name is given as a fully qualified path name. For
+example Work:" is a fully qualified name, and so is SYS:Utilities".
+Devs/Printers" would not be a fully qualified name. A fully qualified name
+always contains the name of an assignment, a volume or a device.
+
+Example:
+
+/* Activate the root window. */ ADDRESS workbench
+ACTIVATEWINDOW root
+
+/* Activate the Work:" partition`s window. */
+ACTIVATEWINDOW ,Work:`
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+CHANGEWINDOW command
+
+Purpose:
+
+This command will attempt to change the size and the position of a window.
+
+Format:
+
+CHANGEWINDOW [WINDOW] <ROOT|ACTIVE|Drawer name> [[LEFTEDGE] <new left edge
+position>][[TOPEDGE] <new top edge position>][[WIDTH] <new window
+width>][[HEIGHT] <new window height>]
+
+Template:
+
+CHANGEWINDOW WINDOW,LEFTEDGE/N,TOPEDGE/N,WIDTH/N,HEIGHT/N
+
+Parameter:
+
+WINDOW
+
+Either ROOT" to resize/move the Workbench root window (where volume icons and
+AppIcons live), ACTIVE" to change the currently active Workbench window or
+the fully qualified name of a drawer window to change. Note that the drawer
+window must already be open.
+
+If no WINDOW parameter is specified, this command will try to operate on the
+currently active Workbench window.
+
+LEFTEDGE
+
+New left edge window position.
+
+TOPEDGE
+
+New top edge window position.
+
+WIDTH
+
+New window width.
+
+HEIGHT
+
+New window height.
+
+Errors:
+
+10 - If the named window cannot be changed; this can also happen if you
+specified ACTIVE" as the window name and none of the Workbench windows is
+currently active. The error code will be placed in the WORBENCH.LASTERROR
+variable.
+
+Result:
+
+-
+
+Notes:
+
+If you choose to have a window changed that is neither the root nor the
+active window you must make sure that the window name is given as a fully
+qualified path name. For example Work:" is a fully qualified name, and so is
+SYS:Utilities". Devs/Printers" would not be a fully qualified name. A fully
+qualified name always contains the name of an assignment, a volume or a
+device.
+
+Example:
+
+/* Change the root window; move it to position 10,30. * and change its size
+to 200100 pixels. */
+ADDRESS workbench
+CHANGEWINDOW root LEFTEDGE 10 TOPEDGE 30 WIDTH 200 HEIGHT 100
+
+/* Change the currently active window. */
+CHANGEWINDOW active 20 40 200 100
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+DELETE command
+
+Purpose:
+
+This command is for deleting files and drawers (and their contents).
+
+Format:
+
+DELETE [NAME] <File or drawer name> [ALL]
+
+Template:
+
+DELETE NAME/A,ALL/S
+
+Parameters:
+
+NAME
+
+Name of the file or drawer or volume to delete.
+
+ALL
+
+If the object in question is a drawer, attempt to delete the contents of the
+drawer as well as the drawer itself. If this option is not specified, the
+DELETE command will only attempt to delete the drawer itself, which may fail
+if the drawer is not yet empty.
+
+Errors:
+
+10 - If the named file, drawer or volume could not be found or could not be
+deleted.
+
+Result:
+
+-
+
+Notes:
+
+The file name given must be an absolute path, such as in RAM:Empty". A
+relative path, such as /fred/barney" will not work.
+
+Example:
+
+/* Delete the contents of the drawer RAM:Empty". */
+
+ADDRESS workbench
+DELETE ,RAM:Empty` ALL
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+FAULT command
+
+Purpose:
+
+This command will return a human readable explanation corresponding to an
+error code.
+
+Format:
+
+FAULT [CODE] <Error code>
+
+Template:
+
+FAULT CODE/A/N
+
+Parameters:
+
+CODE
+
+Error code to return a human readable explanation for.
+
+Errors:
+
+-
+
+Result:
+
+-
+
+Example:
+
+/* Query the error message corresponding to error code #205. */
+ADDRESS workbench
+OPTIONS RESULTS
+FAULT 205
+SAY result
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+GETATTR command
+
+Purpose:
+
+This command will retrieve information from the Workbench database, such the
+names of the drawers currently open and the icons currently selected.
+
+Format:
+
+GETATTR [OBJECT] <Object name> [NAME <Item name>][STEM <Name of stem
+variable>] [VAR <Variable name>]
+
+Template:
+
+GETATTR OBJECT/A,NAME/K,STEM/K,VAR/K
+
+Parameters:
+
+OBJECT
+
+Name of the database entry to retrieve. For a list of valid entries see
+below.
+
+NAME
+
+For some datatabase entries further information is required to identify the
+data to retrieve. This is when you will need to provide a name.
+
+STEM
+
+If you request more than one database entry you will need to provide a
+variable to store the information in. For an example of its use, see below.
+
+VAR
+
+If you want the queried information to be stored in a specific variable
+(other than the RESULT variable), this is where you provive its name.
+
+Attributes:
+
+You can obtain information on the following attributes:
+
+APPLICATION.VERSION
+
+Version number of workbench.library".
+
+APPLICATION.SCREEN
+
+Name of the public screen Workbench uses.
+
+APPLICATION.AREXX
+
+Name of the Workbench ARexx port.
+
+APPLICATION.LASTERROR
+
+Number of the last error caused by the ARexx interface.
+
+APPLICATION.ICONBORDER
+
+Sizes of the icon borders, returned as four numbers separated by blank
+spaces, e.g. 4 3 4 3". The four numbers represent the left border width, the
+top border height, the right border width and the bottom border height (in
+exactly that order).
+
+APPLICATION.FONT.SCREEN.NAME
+
+Name of the Workbench screen font.
+
+APPLICATION.FONT.SCREEN.WIDTH APPLICATION.FONT.SCREEN.HEIGHT
+
+Size of a single character of the Workbench screen font. Please note that
+since the font in question may be proportional spaced the width information
+may be of little value. To measure the accurate pixel width of a text in
+reference to the font, use the .SIZE attribute.
+
+APPLICATION.FONT.SCREEN.SIZE
+
+Size of a text, measured in pixels, in reference to the screen font. The text
+to measure must be provided with the NAME parameter of the GETATTR command.
+
+APPLICATION.FONT.ICON.NAME
+
+Name of the Workbench icon font.
+
+APPLICATION.FONT.ICON.WIDTH APPLICATION.FONT.ICON.HEIGHT
+
+Size of a single character of the Workbench icon font. Please note that since
+the font in question may be proportional spaced the width information may be
+of little value. To measure the accurate pixel width of a text in reference
+to the font, use the .SIZE attribute.
+
+APPLICATION.FONT.ICON.SIZE
+
+Size of a text, measured in pixels, in reference to the icon font. The text
+to measure must be provided with the NAME parameter of the GETATTR command.
+
+APPLICATION.FONT.SYSTEM.NAME
+
+Name of the system font.
+
+APPLICATION.FONT.SYSTEM.WIDTH
+APPLICATION.FONT.SYSTEM.HEIGHT
+
+Size of a single character of the system font.
+
+APPLICATION.FONT.SYSTEM.SIZE
+
+Size of a text, measured in pixels, in reference to the system font. The text
+to measure must be provided with the NAME parameter of the GETATTR command.
+
+WINDOWS.COUNT
+
+Number of the drawer windows currently open. This can be 0.
+
+WINDOWS.0 .. WINDOWS.N
+
+Names of the windows currently open.
+
+WINDOWS.ACTIVE
+
+Name of the currently active Workbench window; this will be " if none of
+Workbench`s windows is currently active.
+
+KEYCOMMANDS.COUNT
+
+Number of keyboard commands assigned. This can be 0.
+
+KEYCOMMANDS.0 .. KEYCOMMANDS.N
+
+Information on all the keyboard commands assigned.
+
+KEYCOMMANDS.<n>.NAME
+
+Name of the keyboard command.
+
+KEYCOMMANDS.<n>.KEY
+
+The key combination assigned to this keyboard command.
+
+KEYCOMMANDS.<n>.COMMAND
+
+The ARexx command assigned to this key combination.
+
+MENUCOMMANDS.COUNT
+
+Number of menu commands assigned (through the MENU ADD .." command). This can
+be 0.
+
+MENUCOMMANDS.0 .. MENUCOMMANDS.N
+
+Information on all the menu commands assigned.
+
+MENUCOMMANDS.<n>.NAME
+
+Name of this menu item.
+
+MENUCOMMANDS.<n>.TITLE
+
+Title of this menu item.
+
+MENUCOMMANDS.<n>.SHORTCUT
+
+The keyboard shortcut assigned to this menu item.
+
+MENUCOMMANDS.<n>.COMMAND
+
+The ARexx command assigned to this menu item.
+
+The following attributes require that the name of the window to obtain
+information on is provided.
+
+Example:
+
+WINDOW.LEFT
+
+Left edge of the window.
+
+WINDOW.TOP
+
+Top edge of the window.
+
+WINDOW.WIDTH
+
+Width of the window.
+
+WINDOW.HEIGHT
+
+Height of the window.
+
+WINDOW.MIN.WIDTH
+
+Minimum width of the window.
+
+WINDOW.MIN.HEIGHT
+
+Minimum height of the window.
+
+WINDOW.MAX.WIDTH
+
+Maximum width of the window.
+
+WINDOW.MAX.HEIGHT
+
+Maximum height of the window.
+
+WINDOW.VIEW.LEFT
+
+Horizontal offset of the drawer contents; this value corresponds to the
+horizontal window scroller position.
+
+WINDOW.VIEW.TOP
+
+Vertical offset of the drawer contents; this value corresponds to the
+vertical window scroller position.
+
+WINDOW.SCREEN.NAME
+
+Name of the public screen the window was opened on.
+
+WINDOW.SCREEN.WIDTH WINDOW.SCREEN.HEIGHT
+
+Size of the public screen the window was opened on.
+
+WINDOW.ICONS.ALL.COUNT
+
+Number of the icons displayed in the window. This can be 0.
+
+WINDOW.ICONS.ALL.0 .. WINDOW.ICONS.ALL.N
+
+Information on all the icons displayed in the window:
+
+WINDOW.ICONS.ALL.<n>.NAME
+
+Name of the icon in question.
+
+WINDOW.ICONS.ALL.<n>.LEFT WINDOW.ICONS.ALL.<n>.TOP
+
+Position of the icon in question.
+
+WINDOW.ICONS.ALL.<n>.WIDTH WINDOW.ICONS.ALL.<n>.HEIGHT
+
+Size of the icon in question.
+
+WINDOW.ICONS.ALL.<n>.TYPE
+
+Type of the icon; one of DISK, DRAWER, TOOL, PROJECT,GARBAGE, DEVICE, KICK or
+APPICON.
+
+WINDOW.ICONS.ALL.<n>.STATUS
+
+Whether the icon is selected and (if the icon is a drawer-likeobject, such as
+a disk, drawer or trashcan icon) whether thecorresponding drawer is currently
+open or closed. This attributeis returned in the form of a string, such as
+SELECTED OPEN" which means that the icon is selected and the corresponding
+draweris currently open. The other options include UNSELECTED" andCLOSED".
+
+WINDOW.ICONS.SELECTED.COUNT
+
+Number of the selected icons displayed in the window. This can be 0.
+
+WINDOW.ICONS.SELECTED.0 .. WINDOW.ICONS.SELECTED.N
+
+Information on all selected the icons in the window:
+
+WINDOW.ICONS.SELECTED.<n>.NAME
+
+Name of the icon in question.
+
+WINDOW.ICONS.SELECTED.<n>.LEFT WINDOW.ICONS.SELECTED.<n>.TOP
+
+Position of the icon in question.
+
+WINDOW.ICONS.SELECTED.<n>.WIDTH WINDOW.ICONS.SELECTED.<n>.HEIGHT
+
+Size of the icon in question.
+
+WINDOW.ICONS.SELECTED.<n>.TYPE
+
+Type of the icon; one of DISK, DRAWER, TOOL, PROJECT,GARBAGE, DEVICE, KICK or
+APPICON.
+
+WINDOW.ICONS.SELECTED.<n>.STATUS
+
+Whether the icon is selected and (if the icon is a drawer-like object, such
+as a disk, drawer or trashcan icon) whether the corresponding drawer is
+currently open or closed. This attribute is returned in the form of a string,
+such as SELECTED OPEN" which means that the icon is selected and the
+corresponding drawer is currently open. The other options include UNSELECTED"
+and CLOSED". Of course, for the WINDOW.ICONS.SELECTED stem the icon status
+will always be reported as SELECTED".
+
+WINDOW.ICONS.UNSELECTED.COUNT
+
+Number of the unselected icons displayed in the window. This can be 0.
+
+WINDOW.ICONS.UNSELECTED.0 .. WINDOW.ICONS.UNSELECTED.N
+
+Information on all selected the icons in the window:
+
+WINDOW.ICONS.UNSELECTED.<n>.NAME
+
+Name of the icon in question.
+
+WINDOW.ICONS.UNSELECTED.<n>.LEFT WINDOW.ICONS.UNSELECTED.<n>.TOP
+
+Position of the icon in question.
+
+WINDOW.ICONS.UNSELECTED.<n>.WIDTH WINDOW.ICONS.UNSELECTED.<n>.HEIGHT
+
+Size of the icon in question.
+
+WINDOW.ICONS.UNSELECTED.<n>.TYPE
+
+Type of the icon; one of DISK, DRAWER, TOOL, PROJECT, GARBAGE, DEVICE, KICK
+or APPICON.
+
+WINDOW.ICONS.UNSELECTED.<n>.STATUS
+
+Whether the icon is selected and (if the icon is a drawer-like object, such
+as a disk, drawer or trashcan icon) whether the corresponding drawer is
+currently open or closed. This attribute is returned in the form of a string,
+such as UNSELECTED OPEN" which means that the icon is selected and the
+corresponding drawer is currently open. The other options include SELECTED"
+and CLOSED". Of course, for the WINDOW.ICONS.UNSELECTED stem the icon status
+will always be reported as UNSELECTED".
+
+Errors:
+
+10 - If the requester information could not be retrieved, you requested more
+than one database entry and did not provide a stem variable or if you
+provided a stem variable but did not request more than one database entry.
+The error code will be placed in the WORKBENCH.LASTERROR variable.
+
+Result:
+
+RESULT - The information retrieved from the database.
+
+Example:
+
+/* Query the Workbench version. */
+ADDRESS workbench
+OPTIONS RESULTS
+
+GETATTR application.version
+SAY result
+
+/* Query the Workbench version and store it in the * variable
+`version_number`. */
+GETATTR application.version
+VAR version_number
+SAY version_number
+
+/* Query the names of all currently open windows, * then print them. */
+GETATTR windows
+STEM window_list
+
+DO i = 0 TO window_list.count-1
+SAY window_list.i;
+END;
+
+/* Query name, position and size of the first icon * shown in the root
+window. */
+GETATTR window.icons.all.0
+NAME root
+STEM root
+
+SAY root.name
+SAY root.left
+SAY root.top
+SAY root.width
+SAY root.height
+SAY root.type
+
+/* Query the width and height of the root window. */
+GETATTR window.width
+NAME root
+SAY result
+
+GETATTR window.height
+NAME root
+SAY result
+
+/* Query the length of a text (in pixels) with reference * to the icon font.
+*/
+GETATTR application.font.icon.size
+NAME ,Text to measure`
+SAY result
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+HELP command
+
+Purpose:
+
+This command can be used to open the online help and to obtain information on
+the supported menus, commands and command parameters.
+
+Format:
+
+HELP [COMMAND <Command name>] [MENUS] [PROMPT]
+
+Template:
+
+HELP COMMAND/K,MENUS/S,PROMPT/S
+
+Parameters:
+
+COMMAND
+
+Name of the command whose command template should be retrieved.
+
+MENUS
+
+Specify this parameter to retrieve a list of menu items currently available.
+
+PROMPT
+
+Specify this parameter to invoke the online help system.
+
+If no parameter is provided, a list of supported commands will be returned.
+
+Errors:
+
+10 - If the named command is not supported by the ARexx interface. The error
+code will be placed in the WORKBENCH.LASTERROR variable.
+
+Result:
+
+RESULT
+
+The command template, list of menu items or commands, as specified in the
+command parameters.
+
+Example:
+
+/* Retrieve the list of supported commands. */
+ADDRESS workbench
+OPTIONS results
+
+HELP
+SAY result
+
+/* Retrieve the command template of the `GETATTR` command. */
+HELP COMMAND getattr
+SAY result
+
+/* Retrieve the list of available menu items. */
+HELP MENUS
+SAY result
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+ICON command
+
+Purpose:
+
+This command is for manipulating the icons displayed in a window.
+
+Format:
+
+ICON [WINDOW] <Window name> <Icon name> .. <Icon name> [OPEN] [MAKEVISIBLE]
+[SELECT] [UNSELECT] [UP <Pixels>] [DOWN <Pixels>] [LEFT <Pixels>] [RIGHT
+<Pixels>] [X <Horizontal position>] [Y <Vertical position>] [ACTIVATE
+UP|DOWN|LEFT|RIGHT] [CYCLE PREVIOUS|NEXT] [MOVE IN|OUT]
+
+Template:
+
+ICON WINDOW,NAMES/M,OPEN/S,MAKEVISIBLE/S,SELECT/S,UNSELECT/S,
+UP/N,DOWN/N,LEFT/N,RIGHT/N,X/N,Y/N,ACTIVATE/K,CYCLE/K, MOVE/K
+
+Parameters:
+
+WINDOW
+
+Name of the window whose icons should be manipulated. This can be ROOT" to
+work on the Workbench root window (where volume icons and AppIcons live),
+ACTIVE" to work on the currently active Workbench window or the fully
+qualified name of a drawer window. Note that the drawer window must already
+be open.
+
+If no WINDOW parameter is specified, this command will try to operate on the
+currently active Workbench window.
+
+NAMES
+
+Names of the icons to manipulate.
+
+OPEN
+
+Specifies that the named icons should be opened.
+
+MAKEVISIBLE
+
+Specifies that the named icons should be made visible. This generally works
+well for the first icon in a list but does not always work for a whole list.
+
+SELECT
+
+Select the named icons.
+
+UNSELECT
+
+Unselect the named icons.
+
+UP, DOWN, LEFT, RIGHT
+
+Move the named icons by the specified number of pixels.
+
+X, Y
+
+Move the named icons to the specified position.
+
+ACTIVATE
+
+This command is for activating the icon closest to the currently selected
+icon in the window. Activating" in this context means selecting an icon,
+whilst at the same time unselecting all others". Thus, the active" icon is
+the only selected icon in the window.
+
+You can indicate which direction the next icon to be activated should be
+searched for, relative to the currently active icon. UP" searches upwards,
+DOWN" searches downwards, LEFT" searches to the left and RIGHT" searches to
+the right.
+
+CYCLE
+
+This command is for cycling through all icons in a window, making each one
+the active one in turn (for a description of what active" means in this
+context, see the ACTIVATE" description above). You must indicate in which
+direction you want to cycle through the icons: you can either specify
+PREVIOUS" or NEXT".
+
+MOVE
+
+This command is not for moving icons but for moving through a file system
+hierarchy. Thus, moving in" will open a drawer and moving out" will open the
+drawer`s parent directory. The IN" parameter will cause the drawer
+represented by the active icon to be opened. Please note that an icon must be
+selected and it must be a drawer. The OUT" parameter will open the drawer`s
+parent directory, and it also requires that in the drawer there is an icon
+selected. This may sound strange, but this feature is not meant as a
+replacement for the Open Parent" menu item.
+
+Errors:
+
+10 - If the named window cannot be found, none of the Workbench windows are
+currently active and the command was set to work on the currently active
+Workbench window. The error code will be placed in the WORKBENCH.LASTERROR
+variable.
+
+Result:
+
+-
+
+Example:
+
+/* Select the icons of the Workbench" and Work" volumes * displayed in the
+root window. */
+ADDRESS workbench
+
+ICON WINDOW root
+NAMES Workbench Work SELECT
+
+/* Open the Workbench" volume icon displayed in the root * window. */
+ICON WINDOW root
+NAMES Workbench OPEN
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+INFO command
+
+Purpose:
+
+This command is for opening the Workbench icon information requester.
+
+Format:
+
+INFO [NAME] <File, drawer or volume name>
+
+Template:
+
+INFO NAME/A
+
+Parameters :
+
+NAME
+
+Name of the file, drawer or volume to open the information window for.
+
+Errors:
+
+10 - If the named file, drawer or volume could not be found. The error code
+will be placed in the WORKBENCH.LASTERROR variable.
+
+Result:
+
+-
+
+Example:
+
+/* Open the information window for SYS:". */
+ADDRESS workbench
+
+INFO NAME ,SYS:`
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+KEYBOARD command
+
+Purpose:
+
+This command can be used to bind ARexx commands to key combinations.
+
+Format:
+
+KEYBOARD [NAME] <Name of key combination> ADD|REMOVE [KEY <Key combination>]
+[CMD <ARexx command>]
+
+Template:
+
+KEYBOARD NAME/A,ADD/S,REMOVE/S,KEY,CMD/F
+
+Parameters:
+
+NAME
+
+Name of the key combination to add or remove. Each key combination must have
+a name with which it is associated. The name must be unique.
+
+ADD
+
+This tells the KEYBOARD command to add a new keyboard combination. You will
+also need to specify the KEY and CMD parameters.
+
+REMOVE
+
+This tells the KEYBOARD command to remove an existing keyboard combination.
+
+KEY
+
+The keyboard combination to add; this must be in the same format as used by
+the Commodities programs.
+
+CMD
+
+This is the ARexx command to bind to the keyboard combination. The command
+can either be the name of an ARexx script to execute or a short ARexx program
+in a single line.
+
+Errors:
+
+10 - The command will fail if you tried to add a duplicate of an existing key
+combination or if the key combination to remove does not exist. The error
+code will be placed in the WORKBENCH.LASTERROR variable.
+
+Result:
+
+-
+
+Example:
+
+/* Bind an ARexx script to the [Control]+A key combination. * When pressed,
+this will cause the ARexx script by the name * test.wb" to be executed. ARexx
+will search for that program * in the REXX:" directory. If no test.wb" file
+can * be found, ARexx will attempt to execute a script * by the name of
+test.rexx". */
+
+ADDRESS workbench
+
+KEYBOARD ADD NAME test1 KEY ,"ctrl a", CMD ,test`
+
+/* Bind an ARexx script to the [Alt]+[F1] key combination. * When pressed,
+this will cause a short inline program to be * executed. */
+KEYBOARD ADD NAME test2 KEY ,"alt f1", CMD `say 42"
+
+/* Bind an ARexx script to the [Shift]+[Help] key combination. * When
+pressed, this will cause the Workbench About" menu item * to be invoked. */
+KEYBOARD ADD NAME test3 KEY ,"shift help", CMD `MENU INVOKE WORKBENCH.ABOUT"
+
+/* Remove the first key combination we added above. */
+KEYBOARD REMOVE NAME test1
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+LOCKGUI command
+
+Purpose:
+
+This command will block access to all Workbench drawer windows.
+
+Format:
+
+LOCKGUI
+
+Template:
+
+LOCKGUI
+
+Parameters:
+
+-
+
+Errors:
+
+-
+
+Result:
+
+-
+
+Notes:
+
+It takes as many UNLOCKGUI commands as there were LOCKGUI commands to make
+the Workbench drawer windows usable again. In other words, the LOCKGUI
+command nests".
+
+Example:
+
+/* Block access to all Workbench drawer windows. */
+ADDRESS workbench
+
+LOCKGUI
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+UNZOOMWINDOW command
+
+Purpose:
+
+This command will attempt return a window to its original position and
+dimensions.
+
+Format:
+
+UNZOOMWINDOW [WINDOW] <ROOT|ACTIVE|Drawer name>
+
+Template:
+
+UNZOOMWINDOW WINDOW
+
+Parameters:
+
+WINDOW
+
+Name of the window to operate on. ROOT" will use the Workbench root window
+(where volume icons and AppIcons live), ACTIVE" will use the currently active
+Workbench window. Any other fully qualified path name will use the drawer
+window corresponding to the path. If no WINDOW parameter is specified, this
+command will try to operate on the currently active Workbench window.
+
+Errors:
+
+10 - If the named window cannot be found. The error code will be placed in
+the WORKBENCH.LASTERROR variable.
+
+Result:
+
+-
+
+Example:
+
+/* Change the root window. */
+ADDRESS workbench
+
+UNZOOMWINDOW root
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+MENU command
+
+Purpose:
+
+This command is for invoking items of the Workbench menu, as if the user had
+selected them with the mouse and for adding/removing user menus.
+
+Format:
+
+MENU [WINDOW <Window name>] [INVOKE] <Menu name> [NAME <Menu name>] [TITLE
+<Menu title>] [SHORTCUT <Menu shortcut>] [ADD|REMOVE] [CMD <ARexx command>]
+
+Template:
+
+MENU WINDOW/K,INVOKE,NAME/K,TITLE/K,SHORTCUT/K,ADD/S,REMOVE/S,CMD/K/F
+
+Parameters:
+
+The following set of parameters can be used solely for invoking menu items.
+
+WINDOW
+
+Name of the window whose menu should be invoked. This can be ROOT" to work on
+the Workbench root window (where volume icons and AppIcons live), ACTIVE" to
+work on the currently active Workbench window or the fully qualified name of
+a drawer window. Note that the drawer window must already be open.
+
+If no WINDOW parameter is specified, this command will try to operate on the
+currently active Workbench window.
+
+INVOKE
+
+Name of the menu to invoke. See below for a list of available menu items.
+
+The following set of parameters are for adding and removing menu items.
+
+NAME
+
+Name of the menu item to add or remove. Each menu item must have a name with
+which it is associated. The name must be unique and has nothing to do with
+the title of the item, as shown in the Tools" menu.
+
+TITLE
+
+This is the text that will be used as the menu item title, as it will appear
+in the Tools" menu. This parameter is required if you ADD a new menu item.
+
+SHORTCUT
+
+When adding a new menu item, this will be the menu shortcut associated with
+the item. Please note that the shortcut cannot be longer than a single
+character and that it will be ignored if there already is an item in any of
+the menus which uses this shortcut. This parameter is optional.
+
+ADD
+
+This tells the MENU command to add a new item to the Tools" menu. When adding
+a menu item you will also need to specify the NAME, TITLE and CMD parameters.
+
+Starting with V45 you can also add new menu titles beyond
+the "Tools" menu. For such menu titles, the first letter of
+the TITLE parameter must indicate the name of the title
+to add. This means for example that a title like
+"\menu title\menu item\submenu item" will a new menu title
+by the name of "menu title", and below that add a menu item
+labeled "menu item" and below that a submenu item by the
+name of "submenu item".
+
+Before the respective menu titles, items and subitems are
+added, all backslashes are removed from their labels; if
+you want to retain a single backslash, use two \\ in place
+of one; the cleanup code will only remove the first one.
+
+REMOVE
+
+This tells the MENU command to remove a menu item previously added via the
+ARexx interface. When removing a menu item you will also need to specify the
+NAME parameter.
+
+CMD
+
+This is the ARexx command to bind to the new menu item. The command can
+either be the name of an ARexx script to execute or a short ARexx program in
+a single line.
+
+Menu items:
+
+WORKBENCH.BACKDROP
+
+Toggles the Workbench Backdrop" window switch.
+
+WORKBENCH.EXECUTE
+
+Invokes the Workbench Execute Command" requester. The user will be prompted
+to enter the command to be executed.
+
+WORKBENCH.REDRAWALL
+
+Invokes the Workbench Redraw All" function.
+
+WORKBENCH.UPDATEALL
+
+Invokes the Workbench Update All" function.
+
+WORKBENCH.LASTMESSAGE
+
+Redisplays the last Workbench error message.
+
+WORKBENCH.ABOUT
+
+Displays the Workbench About..." requester.
+
+WORKBENCH.QUIT
+
+Attempts to close Workbench; this may bring up a requester the user will have
+to answer.
+
+WINDOW.NEWDRAWER
+
+Prompts the user to enter the name of a new drawer to be created.
+
+WINDOW.OPENPARENT
+
+If possible, this will open the parent directory of the drawer the command
+operates on.
+
+WINDOW.CLOSE
+
+If possible, this will close the drawer the command operates on.
+
+WINDOW.UPDATE
+
+This will update the drawer the command operates on, i.e. the contents will
+be reread.
+
+WINDOW.SELECTCONTENTS
+
+This will select the contents of the drawer the command operates on.
+
+WINDOW.CLEARSELECTION
+
+This unselects all icons selected in the drawer the command operates on.
+
+WINDOW.CLEANUPBY.COLUMN
+
+This will sort the contents of the drawer and place the icons in columns.
+
+WINDOW.CLEANUPBY.NAME
+
+This will sort the contents of the drawer by name and place the icons in
+rows.
+
+WINDOW.CLEANUPBY.DATE
+
+This will sort the contents of the drawer by date and place the icons in
+rows.
+
+WINDOW.CLEANUPBY.SIZE
+
+This will sort the contents of the drawer by size and place the icons in
+rows.
+
+WINDOW.CLEANUPBY.TYPE
+
+This will sort the contents of the drawer by type and place the icons in
+rows.
+
+WINDOW.RESIZETOFIT
+
+This will resize the drawer window, trying to make it just as large as to
+allow all its icons to fit.
+
+WINDOW.SNAPSHOT.WINDOW
+
+This will snapshot the drawer window, but none of its contents.
+
+WINDOW.SNAPSHOT.ALL
+
+This will snapshot the drawer window and its contents.
+
+WINDOW.SHOW.ONLYICONS
+
+This will change the display mode of the drawer to show only files and
+drawers which have icons attached.
+
+WINDOW.SHOW.ALLFILES
+
+This will change the display mode of the drawer to show all files and
+drawers, regardless of whether they have icons attached or not.
+
+WINDOW.VIEWBY.ICON
+
+This will change the display mode of the drawer to show its contents as
+icons.
+
+WINDOW.VIEWBY.NAME
+
+This will change the display mode of the drawer to show its contents in
+textual format, sorted by name.
+
+WINDOW.VIEWBY.DATE
+
+This will change the display mode of the drawer to show its contents in
+textual format, sorted by date.
+
+WINDOW.VIEWBY.SIZE
+
+This will change the display mode of the drawer to show its contents in
+textual format, sorted by size.
+
+WINDOW.VIEWBY.TYPE
+
+This will change the display mode of the drawer to show its contents in
+textual format, sorted by type.
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+MOVEWINDOW command
+
+Purpose:
+
+This command will attempt to change the position of a window.
+
+Format:
+
+MOVEWINDOW [WINDOW] <ROOT|ACTIVE|Drawer name> [[LEFTEDGE] <new left edge
+position>] [[TOPEDGE] <new top edge position>]
+
+Template:
+
+MOVEWINDOW WINDOW,LEFTEDGE/N,TOPEDGE/N
+
+Parameters:
+
+WINDOW
+
+Either ROOT" to move the Workbench root window (where volume icons and
+AppIcons live), ACTIVE" to move the currently active Workbench window or the
+fully qualified name of a drawer window to change. Note that the drawer
+window must already be open.
+
+If no WINDOW parameter is specified, this command will try to operate on the
+currently active Workbench window.
+
+LEFTEDGE
+
+New left edge window position.
+
+TOPEDGE
+
+New top edge window position.
+
+Errors:
+
+10 - If the named window cannot be moved; this can also happen if you
+specified ACTIVE" as the window name and none of the Workbench windows is
+currently active. The error code will be placed in the WORKBENCH.LASTERROR
+variable.
+
+Result:
+
+-
+
+Notes:
+
+If you choose to have a window changed that is neither the root nor the
+active window you must make sure that the window name is given as a fully
+qualified path name. For example Work:" is a fully qualified name, and so is
+SYS:Utilities". Devs/Printers" would not be a fully qualified name. A fully
+qualified name always contains the name of an assignment, a volume or a
+device.
+
+Example:
+
+/* Move the root window to position 10,30. */
+ADDRESS workbench
+
+MOVEWINDOW root LEFTEDGE 10 TOPEDGE 30
+
+/* Move the currently active window. */
+MOVEWINDOW active 20 40
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+NEWDRAWER command
+
+Purpose:
+
+This command is for creating new drawers.
+
+Format:
+
+NEWDRAWER [NAME] <Name of drawer to create>
+
+Template:
+
+NEWDRAWER NAME/A
+
+Parameters:
+
+NAME
+
+Name of the drawer to be created.
+
+Errors:
+
+10 - If the named drawer could not be created.
+
+Result:
+
+-
+
+Notes:
+
+The drawer name given must be an absolute path, such as in RAM:Empty". A
+relative path, such as /fred/barney" will not work.
+
+Example :
+
+/* Create a drawer by the name of Empty" in the RAM disk. */
+ADDRESS workbench
+
+NEWDRAWER ,RAM:Empty`
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+RENAME command
+
+Purpose:
+
+This command is for renaming files, drawers and volumes.
+
+Format:
+
+RENAME [OLDNAME] <Name of file/drawer/volume to rename> [NEWNAME] <New name
+of the file/drawer/volume>
+
+Template:
+
+RENAME OLDNAME/A,NEWNAME/A
+
+Parameters:
+
+OLDNAME
+
+Name of the file/drawer/volume to be renamed. This must be an absolute path,
+such as in RAM:Empty". A relative path, such as /fred/barney", will not work.
+
+NEWNAME
+
+The new name to assign to the file/drawer/volume. This must not be an
+absolute or relative path. For example, wilma" is valid new name, /wilma" or
+wilma:" would be invalid names.
+
+Errors:
+
+10 - If the object cannot be renamed.
+
+Result:
+
+-
+
+Notes:
+
+The RENAME command does not work like for example the AmigaDOS Rename"
+command. For example, RENAME ,ram:empty` ,newname`" will rename the file
+,RAM:empty` to ,RAM:newname`.
+
+Example:
+
+/* Rename a drawer by the name of Old" in the RAM disk to New". */
+ADDRESS workbench
+
+RENAME ,RAM:Old` ,New`
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+RX command
+
+Purpose:
+
+This command is for executing ARexx scripts and commands.
+
+Format:
+
+RX [CONSOLE] [ASYNC] [CMD] <Command to execute>
+
+Template:
+
+RX CONSOLE/S,ASYNC/S,CMD/A/F
+
+Parameters:
+
+CONSOLE
+
+This switch indicates that a console (for default I/O) is needed.
+
+ASYNC
+
+This switch indicates that the command should be run asynchronously, i.e. the
+RX" command will return as soon as ARexx has been instructed to run the
+command you specified. Otherwise, the RX" command will wait for the specified
+ARexx command to complete execution.
+
+COMMAND
+
+This is the name of the ARexx program to execute.
+
+Errors:
+
+10 - If the given ARexx program could not be executed.
+
+Result:
+
+-
+
+Example:
+
+/* Execute an ARexx program by the name of ,test.wb`; * its output should be
+sent to a console window. */
+ADDRESS workbench
+
+RX CONSOLE CMD ,test.wb`
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+SIZEWINDOW command
+
+Purpose:
+
+This command will attempt to change the size of a window.
+
+Format:
+
+SIZEWINDOW [WINDOW] <ROOT|ACTIVE|Drawer name> [[WIDTH] <new window width>]
+[[HEIGHT] <new window height>]
+
+Template:
+
+SIZEWINDOW WINDOW,WIDTH/N,HEIGHT/N
+
+Parameters:
+
+WINDOW
+
+Either ROOT" to resize the Workbench root window (where volume icons and
+AppIcons live), ACTIVE" to resize the currently active Workbench window or
+the fully qualified name of a drawer window to change. Note that the drawer
+window must already be open.
+
+If no WINDOW parameter is specified, this command will try to operate on the
+currently active Workbench window.
+
+WIDTH
+
+New window width.
+
+HEIGHT
+
+New window height.
+
+Errors:
+
+10 - If the named window cannot be resized; this can also happen if you
+specified ACTIVE" as the window name and none of the Workbench windows is
+currently active. The error code will be placed in the WORKBENCH.LASTERROR
+variable.
+
+Result:
+
+-
+
+Notes:
+
+If you choose to have a window resized that is neither the root nor the
+active window you must make sure that the window name is given as a fully
+qualified path name. For example Work:" is a fully qualified name, and so is
+SYS:Utilities". Devs/Printers" would not be a fully qualified name. A fully
+qualified name always contains the name of an assignment, a volume or a
+device.
+
+Example:
+
+/* Change the root window size to 200100 pixels. */
+ADDRESS workbench
+
+SIZEWINDOW root 30 WIDTH 200 HEIGHT 100
+
+/* Resize the currently active window. */
+SIZEWINDOW active 200 100
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+UNLOCKGUI command
+
+Purpose:
+
+This command will allow access to all Workbench drawer windows locked with
+the LOCKGUI command.
+
+Format:
+
+UNLOCKGUI
+
+Template:
+
+UNLOCKGUI
+
+Parameters:
+
+-
+
+Errors:
+
+-
+
+Result:
+
+-
+
+Notes:
+
+It takes as many UNLOCKGUI commands as there were LOCKGUI commands to make
+the Workbench drawer windows usable again. In other words, the LOCKGUI
+command nests".
+
+Example:
+
+/* Reallow access to all Workbench drawer windows. */
+ADDRESS workbench
+
+UNLOCKGUI
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+VIEW command
+
+Purpose:
+
+This command will change the position of the viewable display area of a
+window.
+
+Format:
+
+VIEW [WINDOW] <ROOT|ACTIVE|Drawer name> [PAGE|PIXEL] [UP|DOWN|LEFT|RIGHT]
+
+Template:
+
+VIEW WINDOW,PAGE/S,PIXEL/S,UP/S,DOWN/S,LEFT/S,RIGHT/S
+
+Parameters:
+
+WINDOW
+
+Either ROOT" to change the Workbench root window view (where volume icons and
+AppIcons live), ACTIVE" to change the currently active Workbench window view
+or the fully qualified name of a drawer window to change. Note that the
+drawer window must already be open.
+
+If no WINDOW parameter is specified, this command will try to operate on the
+currently active Workbench window.
+
+UP
+
+Move the view up by about 1/8 of the window height. If PAGE is specified,
+moves the view up by a whole page. If PIXEL is specified, moves the view up
+by a single pixel.
+
+DOWN
+
+Move the view down by about 1/8 of the window height. If PAGE is specified,
+moves the view down by a whole page. If PIXEL is specified, moves the view
+down by a single pixel.
+
+LEFT
+
+Move the view left by about 1/8 of the window height. If PAGE is specified,
+moves the view left by a whole page. If PIXEL is specified, moves the view
+left by a single pixel.
+
+RIGHT
+
+Move the view right by about 1/8 of the window height. If PAGE is specified,
+moves the view right by a whole page. If PIXEL is specified, moves the view
+right by a single pixel.
+
+Errors:
+
+10 - If the named window view cannot be changed; this can also happen if you
+specified ACTIVE" as the window name and none of the Workbench windows is
+currently active. The error code will be placed in the WORKBENCH.LASTERROR
+variable.
+
+Result:
+
+-
+
+Notes:
+
+If you choose to have a window view changed that is neither the root nor the
+active window you must make sure that the window name is given as a fully
+qualified path name. For example Work:" is a fully qualified name, and so is
+SYS:Utilities". Devs/Printers" would not be a fully qualified name. A fully
+qualified name always contains the name of an assignment, a volume or a
+device.
+
+To find out about a window`s current view position, use the GETATTR command
+and query the window`s WINDOW.VIEW.LEFT and WINDOW.VIEW.TOP attributes.
+
+Example:
+
+/* Change the root window view; move it up by a whole page. */
+ADDRESS workbench
+
+VIEW root PAGE UP
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+WINDOW command
+
+Purpose:
+
+This command will change, open, close or snapshot windows.
+
+Format:
+
+WINDOW [WINDOWS] <Window name> .. <Window name> [OPEN|CLOSE] [SNAPSHOT]
+[ACTIVATE] [MIN|MAX] [FRONT|BACK] [CYCLE PREVIOUS|NEXT]
+
+Template:
+
+WINDOW WINDOWS/M/A,OPEN/S,CLOSE/S,SNAPSHOT/S,ACTIVATE/S,MIN/S,MAX/S,
+FRONT/S,BACK/S,CYCLE/K
+
+Parameters:
+
+WINDOWS
+
+Names of the windows to operate on. This can be ROOT" to for the Workbench
+root window (where volume icons and AppIcons live), ACTIVE" for the currently
+active Workbench window or the fully qualified name of a drawer window.
+
+OPEN
+
+Attempt to open the specified windows.
+
+CLOSE
+
+Close the specified windows. Note that if a window is closed no further
+operations (such as SNAPSHOT, ACTIVATE, etc.) can be performed on it.
+
+SNAPSHOT
+
+Snapshot the sizes and positions of the specified windows.
+
+ACTIVATE
+
+Activate the specified windows. With multiple windows to activate, only one
+window will wind up as the active one. Commonly, this will be the last window
+in the list.
+
+MIN
+
+Resize the windows to their minimum dimensions.
+
+MAX
+
+Resize the windows to their maximum dimensions.
+
+FRONT
+
+Move the windows into the foreground.
+
+BACK
+
+Move the windows into the background.
+
+CYCLE
+
+This command operates on the currently active drawer window. You can specify
+either PREVIOUS", to activate the previous drawer window in the list, or
+NEXT", to activate the next following drawer window in the list.
+
+Errors:
+
+10 - If the named windows cannot be opened or operated on; this can also
+happen if you specified ACTIVE" as a window name and none of the Workbench
+windows is currently active. The error code will be placed in the
+WORKBENCH.LASTERROR variable.
+
+Result:
+
+-
+
+Notes:
+
+If you choose to have a window operated on that is neither the root nor the
+active window you must make sure that the window name is given as a fully
+qualified path name. For example Work:" is a fully qualified name, and so is
+SYS:Utilities". Devs/Printers" would not be a fully qualified name. A fully
+qualified name always contains the name of an assignment, a volume or a
+device.
+
+Example:
+
+/* Open the Work:" drawer. */
+ADDRESS workbench
+
+WINDOW ,Work:` OPEN
+
+/* Activate the root window. */
+WINDOW root ACTIVATE
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+WINDOWTOBACK command
+
+Purpose:
+
+This command will push a window into the background.
+
+Format:
+
+WINDOWTOBACK [WINDOW] <ROOT|ACTIVE|Drawer name>
+
+Template:
+
+WINDOWTOBACK WINDOW
+
+Parameters:
+
+WINDOW
+
+ROOT" to push the the Workbench root window (where volume icons and AppIcons
+live) into to the background, ACTIVE" to push the currently active Workbench
+window into the background or the fully qualified name of a drawer window.
+Note that the drawer window must already be open.
+
+If no WINDOW parameter is specified, this command will try to operate on the
+currently active Workbench window.
+
+Errors:
+
+10 - If the named window cannot be found. The error code will be placed in
+the WORKBENCH.LASTERROR variable.
+
+Result:
+
+-
+
+Notes:
+
+If you choose to have a window pushed into the background that is not the
+root window or the currently active window you must make sure that the window
+name is given as a fully qualified path name. For example Work:" is a fully
+qualified name, and so is SYS:Utilities". Devs/Printers" would not be a fully
+qualified name. A fully qualified name always contains the name of an
+assignment, a volume or a device.
+
+Example:
+
+/* Push the root window into the background. */
+ADDRESS workbench
+
+WINDOWTOBACK root
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+WINDOWTOFRONT command
+
+Purpose:
+
+This command will bring a window to the foreground.
+
+Format:
+
+WINDOWTOFRONT [WINDOW] <ROOT|ACTIVE|Drawer name>
+
+Template:
+
+WINDOWTOFRONT WINDOW
+
+Parameters:
+
+WINDOW
+
+ROOT" to bring the the Workbench root window (where volume icons and AppIcons
+live) to the foreground, ACTIVE" to bring the currently active Workbench
+window to the foreground or the fully qualified name of a drawer window. Note
+that the drawer window must already be open.
+
+If no WINDOW parameter is specified, this command will try to operate on the
+currently active Workbench window.
+
+Errors:
+
+10 - If the named window cannot be found. The error code will be placed in
+the WORKBENCH.LASTERROR variable.
+
+Result:
+
+-
+
+Notes:
+
+If you choose to have a window brought to the foreground that is not the root
+window or the currently active window you must make sure that the window name
+is given as a fully qualified path name. For example Work:" is a fully
+qualified name, and so is SYS:Utilities". Devs/Printers" would not be a fully
+qualified name. A fully qualified name always contains the name of an
+assignment, a volume or a device.
+
+Example:
+
+/* Bring the root window to the foreground. */ ADDRESS workbench
+
+WINDOWTOFRONT root
+
+
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+ZOOMWINDOW command
+
+Purpose:
+
+This command will change a window to alternate position and dimensions.
+
+Format:
+
+ZOOMWINDOW [WINDOW] <ROOT|ACTIVE|Drawer name>
+
+Template:
+
+ZOOMWINDOW WINDOW
+
+Parameters:
+
+WINDOW
+
+Name of the window to operate on. ROOT" will use the Workbench root window
+(where volume icons and AppIcons live), ACTIVE" will use the currently active
+Workbench window. Any other fully qualified path name will use the drawer
+window corresponding to the path. If no WINDOW parameter is specified, this
+command will try to operate on the currently active Workbench window.
+
+Errors:
+
+10 - If the named window cannot be found. The error code will be placed in
+the WORKBENCH.LASTERROR variable.
+
+Result:
+
+-
+
+Example:
+
+/* Change the root window. */
+ADDRESS workbench
+
+ZOOMWINDOW root
+
+
+------------------------------------------------------------------------------

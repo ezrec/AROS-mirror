@@ -1,0 +1,85 @@
+# $Date: 2011-07-09 20:50:13 +0200 (Sa, 09. Jul 2011) $
+# $Revision: 759 $
+##############################################################################
+
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/../..
+endif
+
+##############################################################################
+
+include		config.mk
+
+##############################################################################
+#
+# Project Object files
+#
+
+OBJS	:=      $(OBJDIR)/iconobj.o     	\
+		$(OBJDIR)/argb.o		\
+		$(OBJDIR)/ScalosMcpGfx.o	\
+
+ifeq ($(MACHINE), ppc-amigaos)
+OBJS	:=	$(OBJDIR)/iconobj-aos4.o $(OBJS)
+else
+ifeq ($(MACHINE), i386-aros)
+OBJS	:=	$(OBJDIR)/iconobj-aros.o $(OBJS)
+else
+OBJS	:=	$(OBJDIR)/iconobj-classic.o $(OBJS)
+endif
+endif
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS:.o=.d)
+endif
+
+##############################################################################
+#
+# Some lame deps
+#
+
+$(OBJDIR)/%.o: $(MCPGFX_DIR)/%.c
+	@$(run-cc)
+
+##############################################################################
+#
+# Targets
+#
+
+NAME	=	iconobject.datatype
+NAME_DB	=	iconobject.datatype.debug
+
+##############################################################################
+
+.PHONY: all install clean bump dump nodebug
+
+all:	$(BINDIR)/$(NAME) \
+	$(BINDIR)/$(NAME_DB)
+
+##############################################################################
+
+$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) : $(OBJS)
+	@$(ECHO) "Link $(NAME)"
+	@$(CC) $(OBJS) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(NAME_DB)
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(NAME_DB) -o $(BINDIR)/$(NAME)
+	@chmod u+x $@
+
+##############################################################################
+
+install:
+	-@$(ECHO) "Installing $(NAME)"
+	-@$(MKDIR) $(DT_DIR)
+	@copy $(BINDIR)/$(NAME) $(DT_DIR)
+	@avail flush
+
+clean:
+	-@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d $(OBJDIR)/*.d.* \
+        	$(OBJDIR)/*.i $(OBJDIR)/*.s \
+		$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) \
+		*.dump *_str.*
+
+##############################################################################

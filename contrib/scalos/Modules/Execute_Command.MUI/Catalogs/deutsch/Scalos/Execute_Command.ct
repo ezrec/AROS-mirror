@@ -1,0 +1,223 @@
+; Execute_Command.ct
+## version $VER: Execute_Command.catalog 40.1 (20 Feb 2005 22:02:39)
+## codeset 0
+## language deutsch
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos Execute_Command
+;
+;
+MSGID_OKBUTTON
+Ausführen
+;Execute
+;
+;
+MSGID_OKBUTTON_SHORT
+r
+;
+;
+MSGID_SHORTHELP_OKBUTTON
+Save the changed icon.\n\
+If necessary, a new icon will be\n\
+created from a the default icon.
+;
+;
+MSGID_CANCELBUTTON
+Abbrechen
+;Cancel
+;
+;
+MSGID_CANCELBUTTON_SHORT
+a
+;c
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Änderungen verwerfen und\n\
+keinen Befehl ausführen.
+;Discard all changes and\n\
+;do not execute any command.
+;
+;
+MSGID_CREATE_APPLICATION_FAILED
+Fehler beim Erzeugen der Anwendung.\n
+;Failed to create Application.\n
+;
+;
+MSGID_CREATE_MAINWINDOW_FAILED
+Fehler beim Öffnen des Hauptfensters!\n
+;Failed to open main window !\n
+;
+;
+MSGID_OPEN_LIBRARY_FAILED
+Fehler beim Öffnen von \"%s\" !\n
+;Failed to open \"%s\" !\n
+;
+;--------------------------------
+;
+MSGID_MENU_PROJECT
+Projekt
+;Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+Über...
+;About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+Über MUI...
+;About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Beenden
+;Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK
+_OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Execute_Command.module V%ld.%ld\033n\n\
+%s\n\
+© 2004%s Das Scalos-Team
+;\33c\033bScalos Execute_Command.module V%ld.%ld\033n\n\
+;%s\n\
+;© 2004%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+;
+MSGID_TEXT_ENTER_COMMAND
+Befehl und Parameter:
+;Enter command and its arguments:
+;
+;
+MSGID_LABEL_COMMAND
+Befehl:
+;Command:
+;
+;
+MSGID_TITLE_ERRORREQ
+Eceute_Command Fehler
+;Execute_Command Error
+;
+;
+MSGID_CURRENTDIR
+Aktuelles Verzeichnis: "%s"
+; Current dir: "%s"
+;
+;
+MSGID_CURRENTDIR_SHORTHELP
+Aktuelles Verzeichnis.\n\
+Bei langen Verzeichnisnamen kann der ganze Inhalt mit\n\
+dem Rollbalken am unteren Fensterrand angezeigt werden.
+;Current dir.\n\n\
+;It's possible to show all content of this gadget using\n\
+;the scroller located at the bottom of the window.\n\
+;Can be usefull for large path lenght.
+;
+;
+MSGID_ERRORREQ_BODYTEXT
+Konnte Befehl\n\
+\"%s\" nicht ausführen\n\
+%s
+;Could not execute command\n\
+;\"%s\"\n\
+;%s
+;
+;
+MSGID_REQ_OK
+Ok
+;
+;
+MSGID_ASL_REQUESTER_SHORTHELP
+Öffnet einen Dateiauswahldialog, in dem das\n\
+auszuführende Programm ausgewählt werden kann.
+;Open a ASL file requeter\n\
+;and choose a file to execute.\n\
+;
+;
+MSGID_COMMAND_ASLTITLE
+Auszuführenden Befehl wählen
+;Select file to execute
+;
+;
+MSGID_LABEL_STACK
+Stackgröße:
+;Stack:
+;
+;
+MSGID_GET_DEFSTACK_SHORTHELP
+Standardgröße für Stack benutzen.
+;Use default stack size
+;
+;
+MSGID_LABEL_CHECKQUIT
+Dialogfenster geöffnet lassen
+;Stay opened
+;
+;
+MSGID_CHECKQUIT_SHORTHELP
+When diese Option eingeschaltet ist, bleibt das\n\
+Fenster vom Execute_Command.module auch nach\n\
+dem Start einer Anwendung offen.
+;If selected, Execute_Command.module\n\
+;stay opened after execution.
+;
+;
+MSGID_CONSOLE_NAME
+Scalos Execute_Command Ausgabefenster
+;Scalos Execute_Command Output Window
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Execute_Command.module kann nicht gestartet werden
+;Execute_Command.module startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Wiederholen|Beenden
+;Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\
+Die Klasse ist nicht installiert.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\n\
+Sie haben momentan Version v%lu.%lu installiert und\n\
+sollten die Klasse daher aktualisieren!
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\n\
+Version %lu.%lu wird momentan von einer anderen Anwendung\n\
+verwendet. Wenn sie die benötigte Version installiert haben,\n\
+schließen sie alle MUI Programme und probieren es erneut.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------

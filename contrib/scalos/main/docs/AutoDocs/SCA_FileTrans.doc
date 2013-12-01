@@ -1,0 +1,468 @@
+TABLE OF CONTENTS
+
+FileTrans.sca/--background
+FileTrans.sca/SCCM_FileTrans_CreateLink
+FileTrans.sca/SCCM_FileTrans_Copy
+FileTrans.sca/SCCM_FileTrans_CountTimeout
+FileTrans.sca/SCCM_FileTrans_Delete
+FileTrans.sca/SCCM_FileTrans_ErrorRequest
+FileTrans.sca/SCCM_FileTrans_InsufficientSpaceRequest
+FileTrans.sca/SCCM_FileTrans_LinksNotSupportedRequest
+FileTrans.sca/SCCM_FileTrans_Move
+FileTrans.sca/SCCM_FileTrans_CheckAbort
+FileTrans.sca/SCCM_FileTrans_OpenWindow
+FileTrans.sca/SCCM_FileTrans_OpenWindowDelayed
+FileTrans.sca/SCCM_FileTrans_OverwriteRequest
+FileTrans.sca/SCCM_FileTrans_UpdateWindow
+FileTrans.sca/SCCM_FileTrans_WriteProtectedRequest
+FileTrans.sca/--background
+
+    NAME
+	--background
+
+    DESCRIPTION
+	This class is used to display a progress window showing the user 
+	what is currently going on while copying or moving files/directories.
+
+   TAGS
+	SCCA_FileTrans_Number (ULONG) -- Number of objects to move or copy.
+	    Applicability is (I).
+
+	SCCA_FileTrans_Screen (struct Screen *) -- Screen to display to 
+	    file transfer progress window on.
+	    Applicability is (I).
+
+	SCCA_FileTrans_ReplaceMode (ULONG) -- How to react if an object 
+	    to copy/move already exists at destination.
+
+		SCCV_ReplaceMode_Ask -- Pop up a requester and ask 
+			the user what to do.
+		SCCV_ReplaceMode_Never -- Quietly skip the object and 
+			proceed to the next one.
+		SCCV_ReplaceMode_Always -- Quietly overwrite the 
+			existing object.
+
+	    Applicability is (I). Defaults to SCCV_ReplaceMode_Ask.
+
+FileTrans.sca/SCCM_FileTrans_CreateLink
+
+    NAME
+	SCCM_FileTrans_CreateLink
+
+    SYNOPSIS
+	LONG Result = DoMethod(obj,SCCM_FileTrans_CreateLink,BPTR srcLock,
+		BPTR destLock,CONST_STRPTR srcName,CONST_STRPTR destName,
+		LONG MouseX,LONG MouseY);
+
+    FUNCTION
+	Creates a link to the specified object (file or directory) and
+	updates the current progress window on the scalos screen with some 
+	message about the link currently being created.	
+
+    INPUTS
+	srcLock - Lock on source directory.
+	destLock - Lock on destination directory.
+	srcName - Name of object to create link from.
+	destName - Name of the created link object
+	MouseX,MouseY - position for destination link icon.
+
+    RESULT
+	Result - 0 = RETURN_OK = Link created successfully
+		5 = RETURN_WARN = Link creation was aborted by user
+		... other DOS error code if something went wrong
+
+    SEE ALSO
+FileTrans.sca/SCCM_FileTrans_Copy
+
+    NAME
+	SCCM_FileTrans_Copy
+
+    SYNOPSIS
+	LONG Result = DoMethod(obj,SCCM_FileTrans_Copy,BPTR srcLock,
+		BPTR destLock,CONST_STRPTR srcName,CONST_STRPTR destName,
+		LONG MouseX,LONG MouseY);
+
+    FUNCTION
+	Copies a file system object (file or directory), and updates
+	the current progress window on the scalos screen with some 
+	message about the file currently being copied.	
+
+    INPUTS
+	srcLock - Lock on copy source directory.
+	destLock - Lock on copy destination directory.
+	srcName - Name of object currently being copied from.
+	destName - Name of object currently being copied to. May be NULL,
+		in this case the value of srcName is also used as destName.
+	MouseX,MouseY - position for destination icon.
+
+    RESULT
+	Result - 0 = RETURN_OK = copying finished successfully
+		5 = RETURN_WARN = Copying was aborted by user
+		... other DOS error code if something went wrong
+
+    NOTES
+	This function has special support for copying an entire volume to 
+	a directory. To enable this functionality, srcName must be 
+	empty ("", but not NULL), srcLock must be a Lock to the root of the 
+	source volume, and destName must contain the volume name without 
+	trailing colon.
+
+    SEE ALSO
+FileTrans.sca/SCCM_FileTrans_Move
+
+    NAME
+	SCCM_FileTrans_Move
+
+    SYNOPSIS
+	LONG Result = DoMethod(obj,SCCM_FileTrans_Move,BPTR srcLock,
+		BPTR destLock,CONST_STRPTR Name,LONG MouseX,LONG MouseY);
+
+    FUNCTION
+    	Moves a file system object (file or directory), and updates 
+	the current progress window on the scalos screen with some 
+	message about the file currently being moved.	
+
+    INPUTS
+	srcLock - Lock on move source directory
+	destLock - Lock on move destination directory
+	Name - Name of object currently being moved
+	MouseX,MouseY - position for destination icon
+
+    RESULT
+	Result - 0 = RETURN_OK = moving finished successfully
+		5 = RETURN_WARN = moving was aborted by user
+		... other DOS error code if something went wrong
+
+    SEE ALSO
+FileTrans.sca/SCCM_FileTrans_CheckAbort
+
+    NAME
+	SCCM_FileTrans_CheckAbort
+
+    SYNOPSIS
+	LONG Result = DoMethod(obj,SCCM_FileTrans_CheckAbort);
+
+    FUNCTION
+	Checks if current file copy(move operation should be aborted 
+	upon operator's request.
+
+    INPUTS
+	none
+
+    RESULT
+	Result - any non-zero value : Abort requested
+
+    SEE ALSO
+FileTrans.sca/SCCM_FileTrans_OpenWindow
+
+    NAME
+	SCCM_FileTrans_OpenWindow
+
+    SYNOPSIS
+	struct Window *Result = DoMethod(obj,SCCM_FileTrans_OpenWindow);
+
+    FUNCTION
+	Opens the file-transfer progress window.
+
+    INPUTS
+	none
+
+    RESULT
+	Result - a pointer to the file transfer progress window,
+	    or NULL if window could not be opened.
+
+    SEE ALSO
+FileTrans.sca/SCCM_FileTrans_OpenWindowDelayed
+
+    NAME
+	SCCM_FileTrans_OpenWindowDelayed
+
+    SYNOPSIS
+	struct Window *Result = DoMethod(obj,SCCM_FileTrans_OpenWindowDelayed);
+
+    FUNCTION
+	Checks if the elapsed time after start of copy/move operations is 
+	move than about 2 seconds.
+	If so, opens the file-transfer progress window.
+
+    INPUTS
+	none
+
+    RESULT
+	Result - a pointer to the file transfer progress window,
+	    or NULL if window has not been opened.
+
+    SEE ALSO
+FileTrans.sca/SCCM_FileTrans_UpdateWindow
+
+    NAME
+	SCCM_FileTrans_UpdateWindow
+
+    SYNOPSIS
+	DoMethod(obj,SCCM_FileTrans_UpdateWindow, ULONG UpdateMode,
+		BPTR SrcDirLock,BPTR DestDirLock,CONST_STRPTR Name);
+
+    FUNCTION
+	Updates the file transfer progress window.
+	First does a check if the window is already open. If the window is 
+	open, the contents are updated. If it is not open, 
+	SCCM_FileTrans_OpenWindowDelayed is called.
+
+    INPUTS
+	UpdateMode - Mode of window update
+	   FTUPDATE_Initial - Initializes several things.
+		SrcDirLock, DestDirLock, and Name are ignored.
+	   FTUPDATE_EnterNewDir - Display new "From" and "To" paths.
+	   FTUPDATE_Entry - Display new filename
+		SrcDirLock and DestDirLock are ignored.
+	   FTUPDATE_SameFile - only update progress gauge
+		SrcDirLock, DestDirLock, and Name are ignored.
+	   FTUPDATE_Final - Update progress gauge to 100%,
+		SrcDirLock, DestDirLock, and Name are ignored.
+	SrcDirLock - Lock on copy/move source directory
+	DestDirLock - Lock on copy/move destination directory
+	Name - Name of object currently being copied or moved
+
+    SEE ALSO
+FileTrans.sca/SCCM_FileTrans_OverwriteRequest
+
+    NAME
+	SCCM_FileTrans_OverwriteRequest
+
+    SYNOPSIS
+	ULONG Result = DoMethod(obj,SCCM_FileTrans_OverwriteRequest, ULONG requestType,
+		BPTR srcLock, CONST_STRPTR srcName,
+		BPTR destLock, CONST_STRPTR destName,
+		struct Window *parentWindow,
+		ULONG bodyTextID, ULONG gadgetTextID);
+
+    FUNCTION
+	Pops up a requester telling the user that some file system object is 
+	about to be overwritten. Ask user for decision about what to do, 
+	and returns appropriate result.
+
+    INPUTS
+	requestType - type of operation
+		OVERWRITEREQ_Copy - file or directory is going to be copied
+		OVERWRITEREQ_Move - file or directory is going to be moved
+		OVERWRITEREQ_CopyIcon - icon is going to be copied
+	srcLock - Lock on source directory.
+	srcName - source name.
+	destLock - Lock on destination directory.
+	destName - destination name.
+	parentWindow - progress window on Scalos screen, may be NULL.
+	suggestedBodyTextId - Text ID from Scalos catalog that specifies suggested 
+		requester body text.
+	suggestedGadgetTextId - Text ID from Scalos catalog that specifies 
+		suggested requester gadget contents.
+
+    RESULT
+	Result - ExistsReqResult
+		EXISTREQ_Replace - replace only this object
+		EXISTREQ_Skip - don't replace and skip this object
+		EXISTREQ_ReplaceAll - replace this and any following object
+		EXISTREQ_Abort - abort copy/move operation
+
+    SEE ALSO
+FileTrans.sca/SCCM_FileTrans_CountTimeout
+
+    NAME
+	SCCM_FileTrans_CountTimeout
+
+    SYNOPSIS
+	ULONG Result = DoMethod(obj,SCCM_FileTrans_CountTimeout);
+
+    FUNCTION
+	Checks if counting of files (on file transfer start) takes longer 
+	than the configured time (default: 10s),
+	returns non-zero value if timeout is exceeded and counting 
+	should be aborted.
+
+    INPUTS
+	none
+
+    RESULT
+	Result - non-zero value if CountTimeout is exceeded and 
+	   counting should be aborted.
+
+    SEE ALSO
+FileTrans.sca/SCCM_FileTrans_Delete
+
+    NAME
+        SCCM_FileTrans_Delete
+
+    SYNOPSIS
+	ULONG Result = DoMethod(obj,SCCM_FileTrans_Delete
+		BPTR dirLock, CONST_STRPTR name);
+
+    FUNCTION
+	Deletes the given file system object. Directories are
+	deleted recursively, including all contents.
+
+    INPUTS
+	dirLock - Lock on parent directory of object
+	srcName - file name of object
+
+    RESULT
+	Result - 0 = RETURN_OK = deleted successfully
+		5 = RETURN_WARN = Deleting was aborted by user
+		... other DOS error code if something went wrong
+
+    SEE ALSO
+FileTrans.sca/SCCM_FileTrans_ErrorRequest
+
+    NAME
+        SCCM_FileTrans_ErrorRequest
+
+    SYNOPSIS
+	ULONG Result = DoMethod(obj,SCCM_FileTrans_ErrorRequest,
+		struct Window *parentWindow,
+		enum FileTransTypeAction action, enum FileTransOperation op,
+		LONG	errorCode,  STRPTR  errorFileName,
+		ULONG suggestedBodyTextId, ULON suggestedGadgetTextId);
+
+
+    FUNCTION
+	Pops up a requester telling the user that some file system object is
+	write-protected. Ask user for decision about what to do,
+	and returns appropriate result.
+
+    INPUTS
+	parentWindow - progress window on Scalos screen, may be NULL.
+	action - Action performed when the error occurred
+	op - Operation performed (Lock, Examine etc.) when error occurred
+	errorCode - DOS error code
+	errorFileName - name of object on which error occured
+	suggestedBodyTextId - Text ID from Scalos catalog that specifies suggested
+		requester body text.
+	suggestedGadgetTextId - Text ID from Scalos catalog that specifies
+		suggested requester gadget contents.
+
+    RESULT
+	Result - ErrorReqResult
+		ERRORREQ_Retry - retry failed operation on this object
+		ERRORREQ_Skip - ignore error and proceed with next object
+		ERRORREQ_Abort - abort copy/move operation
+
+    SEE ALSO
+FileTrans.sca/SCCM_FileTrans_InsufficientSpaceRequest
+    NAME
+        SCCM_FileTrans_InsufficientSpaceRequest
+
+    SYNOPSIS
+	ULONG Result = DoMethod(obj,SCCM_FileTrans_InsufficientSpaceRequest,
+		struct Window *parentWindow,
+		BPTR srcDirLock, CONST_STRPTR srcName,
+		BPTR destDirLock, CONST_STRPTR destName,
+		const ULONG64 *requiredSpace, const ULONG64 *availableSpace,
+		ULONG suggestedBodyTextId, ULONG suggestedGadgetTextId);
+
+    FUNCTION
+	Pops up a requester telling the user that there is insufficient
+	space available on the destination of a copy or move operation.
+	Ask user for decision about what to do,
+	and returns appropriate result.
+
+    INPUTS
+	parentWindow - progress window on Scalos screen, may be NULL.
+	srcDirLock - Lock on parent directory of source object.
+	srcName - file name of source object.
+	destDirLock - Lock on destination directory.
+	destName - desired destination name.
+	requiredSpace - number of octets required for operation.
+	availableSpace - number of octets available on destination.
+	suggestedBodyTextId - Text ID from Scalos catalog that specifies suggested
+		requester body text.
+	suggestedGadgetTextId - Text ID from Scalos catalog that specifies
+		suggested requester gadget contents.
+    RESULT
+	Result - InsufficientSpaceReqResult
+		INSUFFICIENTSPACE_Ignore - proceed with operation
+		INSUFFICIENTSPACE_Abort	- abort operation
+
+    SEE ALSO
+FileTrans.sca/SCCM_FileTrans_LinksNotSupportedRequest
+
+    NAME
+        SCCM_FileTrans_LinksNotSupportedRequest
+
+    SYNOPSIS
+	ULONG Result = DoMethod(obj,SCCM_FileTrans_LinksNotSupportedRequest,
+		struct Window *parentWindow,
+		BPTR srcDirLock, CONST_STRPTR srcName,
+		CONST_STRPTR destName, struct Window *parentWindow,
+		LONG ErrorCode, ULONG suggestedBodyTextId,
+		ULONG suggestedGadgetTextId);
+
+
+    FUNCTION
+	Pops up a requester telling the user that the destination file system of
+	a copy or move operation does not support links.
+	Ask user for decision about what to do, and returns appropriate result.
+
+    INPUTS
+	parentWindow - progress window on Scalos screen, may be NULL.
+	srcDirLock - Lock on parent directory of source object (destination
+		of link).
+	srcName - file name of source object (destination of link).
+	destLock - Lock on destination directory.
+	destName - desired destination name.
+	suggestedBodyTextId - Text ID from Scalos catalog that specifies suggested
+		requester body text.
+	suggestedGadgetTextId - Text ID from Scalos catalog that specifies
+		suggested requester gadget contents.
+
+    RESULT
+	Result - LinksNotSupportedReqResult
+		LINKSNOTSUPPORTEDREQ_Ignore - ignore error and proceed with next object
+		LINKSNOTSUPPORTEDREQ_IgnoreAll - ignore this error for current
+			and any following object.
+		LINKSNOTSUPPORTEDREQ_Copy - Instead of creating a link,
+			physically copy source to destination.
+		LINKSNOTSUPPORTEDREQ_CopyAll - Instead of creating links,
+			physically copy this and any following object.
+		LINKSNOTSUPPORTEDREQ_Abort - abort copy/move operation
+
+    SEE ALSO
+FileTrans.sca/SCCM_FileTrans_WriteProtectedRequest
+
+    NAME
+        SCCM_FileTrans_WriteProtectedRequest
+
+    SYNOPSIS
+	ULONG Result = DoMethod(obj,SCCM_FileTrans_WriteProtectedRequest,
+		enum WriteProtectedReqType requestType, BPTR destLock,
+		CONST_STRPTR destName, struct Window *parentWindow,
+		LONG ErrorCode, ULONG suggestedBodyTextId,
+		ULONG suggestedGadgetTextId);
+
+
+    FUNCTION
+	Pops up a requester telling the user that some file system object is
+	write-protected. Ask user for decision about what to do,
+	and returns appropriate result.
+
+    INPUTS
+	requestType - type of operation
+		WRITEPROTREQ_Copy - file or directory is about to be copied
+		WRITEPROTREQ_Move - file or directory is about to be moved
+		WRITEPROTREQ_CopyIcon - icon is about to be copied
+	destLock - Lock on parent directory.
+	destName - destination  name.
+	parentWindow - progress window on Scalos screen, may be NULL.
+	errorCode - the errorcode returned by the last DOS operation.
+	suggestedBodyTextId - Text ID from Scalos catalog that specifies suggested
+		requester body text.
+	suggestedGadgetTextId - Text ID from Scalos catalog that specifies
+		suggested requester gadget contents.
+
+    RESULT
+	Result - WriteProtectedReqResult
+		WRITEPROTREQ_Replace - unprotect and overwrite only this object
+		WRITEPROTREQ_Skip - don't overwrite and leave this object
+		WRITEPROTREQ_SkipAll - unprotect and overwrite this and
+			any following object
+		WRITEPROTREQ_Abort - abort copy/move operation
+
+    SEE ALSO
+

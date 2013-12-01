@@ -1,0 +1,90 @@
+# $Date: 2010-05-02 20:34:59 +0200 (So, 02. Mai 2010) $
+# $Revision: 599 $
+##############################################################################
+
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/../..
+endif
+
+###############################################################################
+
+include		config.mk
+
+##############################################################################
+#
+# Project Object files
+#
+
+ifneq ($(MACHINE),ppc-amigaos)
+OBJS	:=	$(OBJDIR)/popupmenu-classic.o
+else
+OBJS	:=	$(OBJDIR)/popupmenu-aos4.o     \
+		$(OBJDIR)/pm-aos4-68kstubs.o
+endif
+
+OBJS	+=	$(OBJDIR)/pm.o                  \
+		$(OBJDIR)/pmgraph.o  		\
+		$(OBJDIR)/pminit.o      	\
+		$(OBJDIR)/window.o      	\
+                $(OBJDIR)/pmimages.o		\
+		$(OBJDIR)/pmfind.o      	\
+		$(OBJDIR)/pmshadow.o    	\
+		$(OBJDIR)/pmtopography.o	\
+		$(OBJDIR)/pmdlist.o     	\
+		$(OBJDIR)/pmlayout.o    	\
+		$(OBJDIR)/pmdrawshadow.o	\
+		$(OBJDIR)/pmtags.o      	\
+		$(OBJDIR)/pmcreate.o    	\
+		$(OBJDIR)/pmmem.o       	\
+                $(OBJDIR)/pmprefs.o		\
+                $(OBJDIR)/pminput.o		\
+                $(OBJDIR)/pmversion.o		\
+		$(OBJDIR)/iff.o                 \
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS:.o=.d)
+endif
+
+##############################################################################
+#
+# Target
+#
+
+NAME	=	popupmenu.library
+NAME_DB =	$(NAME).debug
+
+##############################################################################
+
+.PHONY: all install clean bump dump nodebug
+
+all:    $(BINDIR)/$(NAME) \
+	$(BINDIR)/$(NAME_DB)
+
+##############################################################################
+
+$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) : $(OBJS)
+	$(ECHO) "Link $(NAME)"
+	@$(CC) $(OBJS) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(NAME_DB)
+	@$(STRIP) $(BINDIR)/$(NAME_DB) -o $(BINDIR)/$(NAME)
+	@protect $@ +e
+
+##############################################################################
+
+install: install_subdirs
+	-@$(ECHO) "Installing $(NAME)"
+	@copy $(BINDIR)/$(NAME) LIBS: clone
+	@avail flush
+
+
+clean:
+	-@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d  $(OBJDIR)/*.d.* \
+        	$(OBJDIR)/*.i \
+        	$(OBJDIR)/*.s $(OBJDIR)/*.d.* \
+		$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) \
+		*.dump *_str.*
+
+##############################################################################

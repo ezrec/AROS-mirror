@@ -1,0 +1,164 @@
+#ifndef CC_LOCALE_H
+#define CC_LOCALE_H
+
+
+/****************************************************************************/
+
+
+/* This file was created automatically by CatComp.
+ * Do NOT edit by hand!
+ */
+
+
+#ifndef EXEC_TYPES_H
+#include <exec/types.h>
+#endif
+
+#ifdef CATCOMP_ARRAY
+#undef CATCOMP_NUMBERS
+#undef CATCOMP_STRINGS
+#define CATCOMP_NUMBERS
+#define CATCOMP_STRINGS
+#endif
+
+#ifdef CATCOMP_BLOCK
+#undef CATCOMP_STRINGS
+#define CATCOMP_STRINGS
+#endif
+
+
+/****************************************************************************/
+
+
+#ifdef CATCOMP_NUMBERS
+
+#define MSG_DATE_GAD 0
+#define MSG_DATE_SCT 1
+#define MSG_EXAMPLE_GAD 2
+#define MSG_TIME_GAD 3
+#define MSG_TIME_SCT 4
+#define MSG_SAVE_GAD 5
+#define MSG_SAVE_SCT 6
+#define MSG_USE_GAD 7
+#define MSG_USE_SCT 8
+#define MSG_CANCEL_GAD 9
+#define MSG_CANCEL_SCT 10
+#define MSG_PROJECT_MENU 11
+#define MSG_PROJECT_OPEN 12
+#define MSG_PROJECT_OPEN_SCT 13
+#define MSG_PROJECT_SAVEAS 14
+#define MSG_PROJECT_SAVEAS_SCT 15
+#define MSG_PROJECT_QUIT 16
+#define MSG_PROJECT_QUIT_SCT 17
+#define MSG_EDIT_MENU 18
+#define MSG_EDIT_RESET 19
+#define MSG_EDIT_RESET_SCT 20
+#define MSG_EDIT_LASTSAVED 21
+#define MSG_EDIT_LASTSAVED_SCT 22
+#define MSG_EDIT_RESTORE 23
+#define MSG_EDIT_RESTORE_SCT 24
+#define MSG_SETTINGS_MENU 25
+#define MSG_SETTINGS_CREATEICONS 26
+#define MSG_SETTINGS_CREATEICONS_SCT 27
+#define MSG_WINDOW 28
+
+#endif /* CATCOMP_NUMBERS */
+
+
+/****************************************************************************/
+
+
+#ifdef CATCOMP_STRINGS
+
+#define MSG_DATE_GAD_STR "_Date"
+#define MSG_DATE_SCT_STR "D"
+#define MSG_EXAMPLE_GAD_STR "Example"
+#define MSG_TIME_GAD_STR "_Time"
+#define MSG_TIME_SCT_STR "T"
+#define MSG_SAVE_GAD_STR "_Save"
+#define MSG_SAVE_SCT_STR "S"
+#define MSG_USE_GAD_STR "_Use"
+#define MSG_USE_SCT_STR "U"
+#define MSG_CANCEL_GAD_STR "_Cancel"
+#define MSG_CANCEL_SCT_STR "C"
+#define MSG_PROJECT_MENU_STR "Project"
+#define MSG_PROJECT_OPEN_STR "Open..."
+#define MSG_PROJECT_OPEN_SCT_STR "O"
+#define MSG_PROJECT_SAVEAS_STR "Save As..."
+#define MSG_PROJECT_SAVEAS_SCT_STR "A"
+#define MSG_PROJECT_QUIT_STR "Quit"
+#define MSG_PROJECT_QUIT_SCT_STR "Q"
+#define MSG_EDIT_MENU_STR "Edit"
+#define MSG_EDIT_RESET_STR "Reset to Defaults"
+#define MSG_EDIT_RESET_SCT_STR "D"
+#define MSG_EDIT_LASTSAVED_STR "Last Saved"
+#define MSG_EDIT_LASTSAVED_SCT_STR "L"
+#define MSG_EDIT_RESTORE_STR "Restore"
+#define MSG_EDIT_RESTORE_SCT_STR "R"
+#define MSG_SETTINGS_MENU_STR "Settings"
+#define MSG_SETTINGS_CREATEICONS_STR "Create Icons?"
+#define MSG_SETTINGS_CREATEICONS_SCT_STR "I"
+#define MSG_WINDOW_STR "Titlebar Clock Plugin Preferences"
+
+#endif /* CATCOMP_STRINGS */
+
+
+/****************************************************************************/
+
+
+#ifdef CATCOMP_ARRAY
+
+struct CatCompArrayType
+{
+    LONG   cca_ID;
+    STRPTR cca_Str;
+};
+
+static const struct CatCompArrayType CatCompArray[] =
+{
+    {MSG_DATE_GAD,(STRPTR)MSG_DATE_GAD_STR},
+    {MSG_DATE_SCT,(STRPTR)MSG_DATE_SCT_STR},
+    {MSG_EXAMPLE_GAD,(STRPTR)MSG_EXAMPLE_GAD_STR},
+    {MSG_TIME_GAD,(STRPTR)MSG_TIME_GAD_STR},
+    {MSG_TIME_SCT,(STRPTR)MSG_TIME_SCT_STR},
+    {MSG_SAVE_GAD,(STRPTR)MSG_SAVE_GAD_STR},
+    {MSG_SAVE_SCT,(STRPTR)MSG_SAVE_SCT_STR},
+    {MSG_USE_GAD,(STRPTR)MSG_USE_GAD_STR},
+    {MSG_USE_SCT,(STRPTR)MSG_USE_SCT_STR},
+    {MSG_CANCEL_GAD,(STRPTR)MSG_CANCEL_GAD_STR},
+    {MSG_CANCEL_SCT,(STRPTR)MSG_CANCEL_SCT_STR},
+    {MSG_PROJECT_MENU,(STRPTR)MSG_PROJECT_MENU_STR},
+    {MSG_PROJECT_OPEN,(STRPTR)MSG_PROJECT_OPEN_STR},
+    {MSG_PROJECT_OPEN_SCT,(STRPTR)MSG_PROJECT_OPEN_SCT_STR},
+    {MSG_PROJECT_SAVEAS,(STRPTR)MSG_PROJECT_SAVEAS_STR},
+    {MSG_PROJECT_SAVEAS_SCT,(STRPTR)MSG_PROJECT_SAVEAS_SCT_STR},
+    {MSG_PROJECT_QUIT,(STRPTR)MSG_PROJECT_QUIT_STR},
+    {MSG_PROJECT_QUIT_SCT,(STRPTR)MSG_PROJECT_QUIT_SCT_STR},
+    {MSG_EDIT_MENU,(STRPTR)MSG_EDIT_MENU_STR},
+    {MSG_EDIT_RESET,(STRPTR)MSG_EDIT_RESET_STR},
+    {MSG_EDIT_RESET_SCT,(STRPTR)MSG_EDIT_RESET_SCT_STR},
+    {MSG_EDIT_LASTSAVED,(STRPTR)MSG_EDIT_LASTSAVED_STR},
+    {MSG_EDIT_LASTSAVED_SCT,(STRPTR)MSG_EDIT_LASTSAVED_SCT_STR},
+    {MSG_EDIT_RESTORE,(STRPTR)MSG_EDIT_RESTORE_STR},
+    {MSG_EDIT_RESTORE_SCT,(STRPTR)MSG_EDIT_RESTORE_SCT_STR},
+    {MSG_SETTINGS_MENU,(STRPTR)MSG_SETTINGS_MENU_STR},
+    {MSG_SETTINGS_CREATEICONS,(STRPTR)MSG_SETTINGS_CREATEICONS_STR},
+    {MSG_SETTINGS_CREATEICONS_SCT,(STRPTR)MSG_SETTINGS_CREATEICONS_SCT_STR},
+    {MSG_WINDOW,(STRPTR)MSG_WINDOW_STR},
+};
+
+#endif /* CATCOMP_ARRAY */
+
+
+/****************************************************************************/
+
+
+struct LocaleInfo
+{
+    APTR li_LocaleBase;
+    APTR li_Catalog;
+};
+
+
+
+#endif /* CC_LOCALE_H */

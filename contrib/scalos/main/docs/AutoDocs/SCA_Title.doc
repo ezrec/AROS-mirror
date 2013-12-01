@@ -1,0 +1,154 @@
+TABLE OF CONTENTS
+
+Title.sca/--background
+Title.sca/SCCM_Title_Generate
+Title.sca/SCCM_Title_Query
+Title.sca/SCCM_Title_QueryTitle
+Title.sca/SCCM_Title_Translate
+Title.sca/--background
+
+    NAME
+	--background
+
+    DESCRIPTION
+	This class implements the screen title and window title functionality.
+
+
+    TAGS
+	SCCA_Title_Format (CONST_STRPTR) -- Format string for the title. 
+	    This string is processed, replacing all the "%" variables 
+	    with their values.
+
+	    Standard title variables:
+
+		"%os"	Kickstart release (e.g. "3.1")
+		"%wb"	Scalos release (e.g. "1.3")
+		"%ov"	Kickstart version (e.g. "40.68")
+		"%wv"	Scalos version (e.g. "40.6")
+		"%fc" *	Free chip RAM in bytes
+		"%ff" *	Free fast RAM in bytes
+		"%ft" *	Total free RAM in bytes
+		"%pa"	Window's path
+		"%df" *	Free disk space in bytes
+		"%DF"	Free disk space, displayed in GBytes/MBytes/KBytes
+		"%du" *	Used disk space in bytes
+		"%DU"	Used disk space, displayed in GBytes/MBytes/KBytes
+		"%d("	start: don't show if no disk inserted
+		"%d)"	stop: don't show if no disk inserted
+		"%dp"	percentage of disk space used
+		"%cs"	Chip set
+		"%cp"	Processor
+		"%pr"	CoProzessor
+		"%nt"	number of tasks
+		"%nl"	number of libraries
+		"%np"	number of message ports
+		"%nd"	number of devices
+		"%ns"	number of screens
+
+	     Variables marked with "*" may optionally immediately be followed 
+	     by a scaling modifier "0" .. "6" :
+		0	Values is displayed in bytes.
+		1	Values is displayed in KBytes.
+		2	Values is displayed in MBytes.
+		3	Values is displayed in GBytes.
+		4	Values is displayed in TBytes.
+		5	Values is displayed in PBytes.
+		6	Values is displayed in HBytes.
+
+	    Applicability is (IS).
+
+
+	SCCA_Title_Type (ULONG) -- type of title
+
+		SCCV_Title_Type_Screen -- Screen title (default)
+		SCCV_Title_Type_Window -- Window title
+
+	    Applicability is (I).
+
+Title.sca/SCCM_Title_Generate
+
+    NAME
+	SCCM_Title_Generate
+
+    SYNOPSIS
+	STRPTR GeneratedTitle = DoMethod(obj,SCCM_Title_Generate);
+
+    FUNCTION
+	Parses internal TitleFormat string and generates ready-to-use title 
+	text in internal buffer.
+
+    INPUTS
+	-
+
+    RESULT
+        GeneratedTitle - String pointer to generated title
+
+    SEE ALSO
+Title.sca/SCCM_Title_Query
+
+    NAME
+	SCCM_Title_Query
+
+    SYNOPSIS
+	BOOL NeedRefresh = DoMethod(obj,SCCM_Title_Query, UWORD ParseID);
+
+    FUNCTION
+	Check whether variable text has changed and needs to be refreshed.
+
+    INPUTS
+		ParseID - contains the two-character variable name, e.g. "os"
+
+    RESULT
+	NeedRefresh - non-zero value if title string has changed, i.e. 
+		needs to be refreshed.
+
+    SEE ALSO
+Title.sca/SCCM_Title_QueryTitle
+
+    NAME
+	SCCM_Title_QueryTitle
+
+    SYNOPSIS
+	BOOL NeedRefresh = DoMethod(obj,SCCM_Title_QueryTitle);
+
+    FUNCTION
+	Check whether title has changed and needs to bed refreshed.
+
+    INPUTS
+	-
+
+    RESULT
+	NeedRefresh - non-zero value if title string has changed, i.e. 
+		needs to be refreshed.
+
+    SEE ALSO
+Title.sca/SCCM_Title_Translate
+
+    NAME
+	SCCM_Title_Translate
+
+    SYNOPSIS
+	BOOL Success = DoMethod(obj,SCCM_Title_Translate, STRPTR Buffer, 
+		CONST_STRPTR TitleFormat, UWORD ParseID, UWORD Length);
+
+    FUNCTION
+	Processes one title format variable and generates expanded text 
+	into buffer provided by caller.
+
+    INPUTS
+	Buffer - Pointer to a buffer where the expanded text will be stored.
+		This pointer gets updated during method execution !!
+	TitleFormat - pointer into title format string, immediately after the 
+		variable name.
+		This pointer gets updated during method execution !!
+	ParseID - contains the two-character variable name, e.g. "os"
+	Length - The number of bytes that fit into Buffer. Beware of writing 
+		more than (Length) Bytes into Buffer!
+
+    RESULT
+	Success - a non-zero value indicates translation was successful.
+		a zero value signals some kind of error (e.g. unknown 
+		ParseID or insufficient Length).
+
+    SEE ALSO
+

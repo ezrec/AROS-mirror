@@ -1,0 +1,718 @@
+; ScalosPattern.ct
+## version $VER: ScalosPattern.catalog 40.12 (15 May 2005 09:36:09)
+## codeset 0
+## language deutsch
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos Muster Erweiterung
+;
+;
+MSGID_REGISTER_PATTERNLIST
+Hintergrundbilder-Liste
+;
+;
+MSGID_REMAPNAME
+Nicht optimieren:
+;
+;
+MSGID_RENDERTYPE_TILED
+gekachelt
+;
+;
+MSGID_NEWNAME
+Neu \033I[6:19]
+;
+;
+MSGID_DELNAME
+Löschen
+;
+;
+MSGID_SAVEBUTTON
+Speichern
+;
+;
+MSGID_USEBUTTON
+Benutzen
+;
+;
+MSGID_CANCELBUTTON
+Abbrechen
+;
+;
+MSGID_SCREENNAME
+Workbench
+;
+;
+MSGID_WINDOWNAME
+Fenster
+;
+;
+MSGID_MENU_PROJECT_OPEN
+Öffnen...
+;
+;
+MSGID_MENU_PROJECT_OPEN_SHORT
+Ö
+;
+;
+MSGID_MENU_PROJECT_SAVEAS
+Speichern als...
+;
+;
+MSGID_MENU_PROJECT_SAVEAS_SHORT
+S
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Beenden
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+B
+;
+;
+MSGID_MENU_PROJECT
+Projekt
+;
+;
+MSGID_MENU_EDIT_LASTSAVED
+auf zuletzt gespeichertes
+;
+;
+MSGID_MENU_EDIT_LASTSAVED_SHORT
+Z
+;
+;
+MSGID_MENU_EDIT
+Verändern
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS
+Piktogramme erzeugen?
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS_SHORT
+P
+;
+;
+MSGID_MENU_SETTINGS
+Einstellungen
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS
+auf Vorgaben zurücksetzen
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS_SHORT
+Z
+;
+;
+MSGID_MENU_EDIT_RESTORE
+auf vorherigen Stand
+;
+;
+MSGID_MENU_EDIT_RESTORE_SHORT
+V
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+Über MUI...
+;
+;
+MSGID_RENDERTYPE_FITSIZE
+An Größe angepaßt
+;
+;
+MSGID_CENTEREDNAME
+zentriert
+;
+;
+MSGID_PRECEXACTNAME
+Exakt
+;
+;
+MSGID_PRECIMAGENAME
+Bild
+;
+;
+MSGID_PRECICONNAME
+Piktogramm
+;
+;
+MSGID_PRECGUINAME
+GUI
+;
+;
+MSGID_PRECNAME
+Stiftgenauigkeit:
+;
+;
+MSGID_ENHANCNAME
+benutze GUIGfx:
+;
+;
+MSGID_NUMCOLSNAME
+Farbgewichtung:
+;
+;
+MSGID_ENHANCOPTSNAME
+GUIGfx Optionen
+;
+;
+MSGID_AUTODITHERNAME
+Auto_Rasterung:
+;
+;
+MSGID_DITHERMODENAME
+Rasterung:
+;
+;
+MSGID_DITHERAMOUNTNAME
+Rasterungs-Stärke:
+;
+;
+MSGID_DITHERMODE1NAME
+Aus
+;
+;
+MSGID_DITHERMODE2NAME
+Floyd Steinberg
+;
+;
+MSGID_DITHERMODE3NAME
+Zufall
+;
+;
+MSGID_PICTURENAME
+Bild:
+;
+;
+MSGID_PATTERNNAME
+Pattern
+;
+;
+MSGID_REGISTER_DEFAULTS
+Voreinstellungen
+;
+;
+MSGID_DEFWBNAME
+Desktop:
+;
+;
+MSGID_DEFSCREENNAME
+Bildschirm:
+;
+;
+MSGID_DEFWINNAME
+Fenster:
+;
+;
+MSGID_ASYNCNAME
+asynchrones Berechnen:
+;
+;
+MSGID_FRIENDNAME
+benutze FriendBitMap:
+;
+;
+MSGID_NONE_PRIORITY
+aus
+;
+;
+MSGID_RELAYOUTNAME
+immer neuberechnen:
+;
+;
+MSGID_RANDOMNAME
+ständiger Zufall:
+;
+;
+MSGID_TASKPRINAME
+Priorität des asynchronen Tasks:
+;
+;
+MSGID_TEXTNAME
+Text-Modus:
+;
+;
+MSGID_CHECKMARKGADBUBBLE
+Wenn eingeschaltet, werden die Farben\n\
+des Bildes nicht angepaßt.
+;
+;
+MSGID_CHECKMARKASYNCBUBBLE
+Wenn eingeschaltet, wird das\n\
+Hintergrundbild während des Ladens\n\
+der Piktogramme gezeichnet, anstatt\n\
+zu warten, bis alle\n\
+Piktogramme geladen sind.
+;
+;
+MSGID_CHECKMARKFRIENDBUBBLE
+Beschleunigt das Neuzeichnen des\n\
+Hintergrundmusters durch Nutzung\n\
+einer zweiten BitMap.\n\
+Wird ignoriert, wenn ein V43 Datatype\n\
+oder GUIGFX genutzt werden.
+;
+;
+MSGID_CHECKMARKENHBUBBLE
+Die GUIGFX Bibliothek stellt einige sehr\n\
+schnelle Funktionen z.B. zur\n\
+Farbreduktion und zum Rastern zur\n\
+Verfügung.\n\
+Wenn eingeschaltet, wird\n\
+guigfx.library benutzt.
+;
+;
+MSGID_CHECKMARKAUTODITHERBUBBLE
+Wenn eingeschaltet, werden Bilder\n\
+automatisch gerastert, wenn nicht\n\
+genügend freie Stifte verfügbar sind.
+;
+;
+MSGID_CHECKMARKRELAYOUTBUBBLE
+Wenn eingeschaltet, wird bei\n\
+Größenänderung des Fensters das\n\
+Hintergrundbild neu skaliert.
+;
+;
+MSGID_CHECKMARKRANDOMBUBBLE
+Wenn eingeschaltet, wird jedesmal bei\n\
+Öffnen eines Fensters eines der\n\
+zufälligen Muster ausgewählt.\n\
+Wenn ausgeschaltet, werden die\n\
+zufällligen Muster einmal beim\n\
+Programmstart ausgewählt.
+;
+;
+MSGID_SAVEBUTTONBUBBLE
+Einstellungen speichern\n\
+und Programm beenden.
+;
+;
+MSGID_USEBUTTONBUBBLE
+Einstellungen benutzen\n\
+und Programm beenden.
+;
+;
+MSGID_CANCELBUTTONBUBBLE
+Drücken Sie diesen Knopf, um das\n\
+Programm abzubrechen und alle\n\
+Änderungen zu verwerfen.
+;
+;
+MSGID_NUMBUTTONBUBBLE
+Diese Nummer legt das Hintergrundbild\n\
+für die Arbeitsfläche, den Bildschirm\n\
+sowie Text-Fenster und\n\
+Piktogrammfenster auf der\n\
+Seite "Voreinstellungen" fest.
+;
+;
+MSGID_PRECSLIDERBUBBLE
+Legt die Genauigkeit der Stifte\n\
+für das Hintergrundbild fest.
+;
+;
+MSGID_COLORSSLIDERBUBBLE
+Wie viele Stifte sollen für das\n\
+Hintergrundbild maximal benutzt werden?
+;
+;
+MSGID_CYCLEDITHERMODEBUBBLE
+Die Methode, die benutzt wird, wenn\n\
+nicht genügend freie Stifte\n\
+vorhanden sind.\n\
+In diesem Fall wird das Bild gerastert,\n\
+d.h. eine Farbe wird durch mehrere\n\
+benachbarte Punkte angenähert.
+;
+;
+MSGID_SLIDERDITHERAMOUNTBUBBLE
+Ein Parameter für die\n\
+Raster-Routine.
+;
+;
+MSGID_SLIDERWBBUBBLE
+Diese Nummer legt das Hintergrundbild\n\
+für das Workbench Hintergrundfenster fest.\n\
+Aus mehreren Hintergrundbildern mit\n\
+derselben Nummer wird eines zufällig\n\
+ausgewählt.
+;
+;
+MSGID_SLIDERSCREENBUBBLE
+Diese Nummer legt das Hintergrundbild\n\
+für den Workbench-Bildschirm fest.\n\
+Aus mehreren Hintergrundbildern mit\n\
+derselben Nummer wird eines zufällig\n\
+ausgewählt.
+;
+;
+MSGID_SLIDERWINBUBBLE
+Diese Nummer legt das Hintergrundbild\n\
+für normale Workbench-Fenster mit\n\
+Piktogrammen fest.\n\
+Aus mehreren Hintergrundbildern mit\n\
+derselben Nummer wird eines zufällig\n\
+ausgewählt.
+;
+;
+MSGID_SLIDERTEXTBUBBLE
+Diese Nummer legt das Hintergrundbild\n\
+für normale Workbench-Fenster in\n\
+Textdarstellung fest.\n\
+Aus mehreren Hintergrundbildern mit\n\
+derselben Nummer wird eines zufällig\n\
+ausgewählt.
+;
+;
+MSGID_SLIDERTASKPRIBUBBLE
+Ausführungs-Priorität der\n\
+asynchronen Layout-Task.
+;
+;
+MSGID_PREVIEWIMAGEBUBBLE
+Hier klicken, um das\n\
+ausgewählte Bild zu sehen.
+;
+;
+MSGID_CYCLEGADBUBBLE
+Möchten Sie das Hintergrundbild auf die\n\
+volle Größe skalieren lassen ("Größe anpassen")\n\
+oder möchten  Sie das Fenster mit\n\
+vielen "Kacheln" des Hintergrundbildes\n\
+neben- und untereinander füllen ("gekachelt") ?\n\
+\"Zentriert\" zeigt das gweählte Bild in Originalgröße\n\
+in Fenstermitte, umgeben von einem Rand mit\n\
+einstellbarer Farbe.
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+Über...
+;
+;
+MSGID_ABOUTREQOK
+_OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Muster Voreinsteller V%ld.%ld\033n\n\
+%s\n\
+© 1999%s Das Scalos Team\n\
+Basiert auf Code von Stefan Sommerfeld bei ALiENDESiGN!\n\
+Hilfe-Blasen-Design von Crayor.
+;
+;
+MSGID_COLUMNTITLE_1
+\33bNr.
+;
+;
+MSGID_COLUMNTITLE_2
+\33bDateiname
+;
+;
+MSGID_SHORTHELP_NEWBUTTON
+Dieser Knopf legt einen neuen Eintrag\n\
+in der Liste der Hintergrundbilder an.
+;Press this button to create a \n\
+;new pattern entry
+;
+;
+MSGID_SHORTHELP_DELBUTTON
+Dieser Knopf löscht den aktuell markierten\n\
+Eintrag in der Liste der Hintergrundbilder,
+;Press this button to delete the \n\
+;currently selected pattern entry.
+;
+;
+MSGID_SHORTHELP_SAVEBUTTON
+Einstellungen dauerhaft\n\
+speichern und Programm beenden.
+;Press this button to save \n\
+;the current settings to\n\
+;\"ENVARC:Scalos/Pattern.prefs\".
+;
+;
+MSGID_SHORTHELP_USEBUTTON
+Einstellungen benutzen\n\
+und Programm beenden.
+;Press this button to save \n\
+;the current settings to\n\
+;\"ENV:Scalos/Pattern.prefs\".
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Drücken Sie diesen Knopf, um das\n\
+Programm abzubrechen und alle\n\
+Änderungen zu verwerfen.
+;Press this button to abort \n\
+;and discard all changes.
+;
+;
+MSGID_REQTITLE_SAVEERROR
+Fehler beim Schreiben der Einstellungs-\n\
+Datei \"%s\"\n\
+%s 
+;Error writing pattern preferences\n\
+;file \"%s\"\n\
+;%s
+;
+;
+MSGID_REQTITLE_READERROR
+Fehler beim Lesen der Einstellungs-\n\
+Datei \"%s\"\n\
+%s 
+;Error reading pattern preferences\n\
+;file \"%s\"\n\
+;%s
+;
+; new in 40.4
+;
+MSGID_PLUGIN_LIST_TITLE
+Hintergrundbilder
+;Pattern
+;
+;
+MSGID_GROUP_MISCELLANEOUS
+Vermischtes
+;Miscellaneous
+;
+;
+MSGID_GROUP_PATTERNNUMBERS
+Hintergrundbilder-Nummern
+;Pattern numbers
+;
+;
+MSGID_MENU_ENABLE_PREVIEW
+Vorschau zeigen?
+;Show Preview?
+;
+;
+MSGID_MENU_AUTO_PREVIEW
+Automatische Vorschau?
+;Auto Preview?
+;
+; new in 40.6
+;
+MSGID_SHORTHELP_LAMP_CHANGED
+Diese Anzeigelampe wechselt den Zustand von \033bAus\033n\n\
+nach \033bAn\033n, wenn die Konfiguration seit\n\
+dem ersten Laden verändert wurde.
+;This lamp indicator changes from \033bOff\033n\n\
+;to \033bOk\033n when the settings have been\n\
+;modified since initial loading.
+;
+; new in 40.7
+;
+MSGID_COLUMNTITLE_3
+\33bVorschau
+;\33bPreview
+;
+;
+MSGID_CREATING_THUMBNAIL
+\33cErzeuge Miniatur-Vorschaubild für
+;\33cCreating Thumbnail for
+;
+;
+MSGID_LOADING_THUMBNAIL
+\33cLade Miniatur-Vorschaubild für
+;\33cLoading Thumbnail for
+;
+;
+MSGID_PROGRESS_THUMBNAILS
+\33c%ld/%ld
+;\33c%ld/%ld
+;
+;
+MSGID_WINDOW_STARTUP
+Scalos Muster-Voreinsteller Start
+;Scalos PatternPrefs startup
+;
+;
+MSGID_STARTUP_CREATING
+Beim ersten Programmstart wird eine Miniatur-Vorschau\n\
+for alle Hintergrundbilder berechnet.\n\
+Leider kann das auf langsameren Maschinen\n\
+eine Weile dauern.\n\
+Die berechneten Miniatur-Vorschaubilder werden\n\
+aber zusammen mit den anderen Einstellungen gespeichert.\n\
+Bei den nächsten Programmstarts werden die\n\
+gespeicherten Miniatur-Vorschaubilder geladen\n\
+und ermöglichen eine \033berheblich schnellere\033n Anzeige.
+;On initial start, thumbnails are created for every \
+;pattern. Unfortunately this takes some time. \
+;However, thumbnail bitmaps are saved together \
+;with the standard pattern preferences.\n\
+;After the thumbnails have been saved, \
+;future startups will be \033bmuch faster\033n.
+;
+;
+MSGID_MENU_ENABLE_THUMBNAILS
+Miniaturvorschaubilder anzeigen?
+;Display Thumbnails?
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Scalos Muster Voreinsteller kann nicht gestartet werden
+;Scalos Pattern Prefs startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Wiederholen|Beenden
+;Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\
+Die Klasse ist nicht installiert.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\n\
+Sie haben momentan Version v%lu.%lu installiert und\n\
+sollten die Klasse daher aktualisieren!
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\n\
+Version %lu.%lu wird momentan von einer anderen Anwendung\n\
+verwendet. Wenn sie die benötigte Version installiert haben,\n\
+schließen sie alle MUI Programme und probieren es erneut.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;
+MSGID_COLUMNTITLE_4
+\33bTyp
+;
+;-----------------------------------------------------------
+;
+MSGID_PATTERNTYPE_DESKTOP
+DE
+;
+;
+MSGID_PATTERNTYPE_SCREEN
+SC
+;
+;
+MSGID_PATTERNTYPE_ICONWINDOW
+IW
+;
+;
+MSGID_PATTERNTYPE_TEXTWINDOW
+TW
+;
+;
+MSGID_PATTERNTYPE_NONE
+
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_RELOAD_THUMBNAILS
+Vorschaubilder neu laden
+;Reload Thumbnails
+;
+;
+MSGID_LOADING_THUMBNAILS
+\033cVorschaubilder laden...
+;\033cLoading Thumbnails...
+;
+;-----------------------------------------------------------
+;
+MSGID_REGISTER_BACKGROUNDCOLORS
+Hintergrundfarben
+;Background Colours
+;
+;
+MSGID_BGTYPE_NONE
+Keiner
+;None
+;
+;
+MSGID_LABEL_CYCLEBACKGROUND
+Art des Hintergrunds
+;Background Type:
+;
+;
+MSGID_BGTYPE_SINGLECOLOR
+Nur eine Farbe
+;Single Colour
+;
+;
+MSGID_BGTYPE_HOR_GRADIENT
+Horizontaler Verlauf
+;Horizontal gradient
+;
+;
+MSGID_BGTYPE_VERT_GRADIENT
+Vertikaler Verlauf
+;Vertical gradient
+;
+;
+;
+MSGID_SHORTHELP_BACKGROUNDCOLOR1
+Hier wird die primäre Hintergrundfarbe eingestellt.\n\
+Das funktioniert nur bei \033bzentriertem\033n Bild sowie bei\n\
+den Varianten \033bNur Farbe\033n und den \033bFarbverläufen\033n.\n\
+Bei \033bhorizontalem Farbverlauf\033n wird hier die Farbe am linken\n\
+Fensterrand eingestellt, und bei \033bVertikalem Farbverlauf\033n\n\
+ die Farbe am oberen Rand.
+;Here you can adjust the window background color.\n\
+;This is only possible with \033bcentered\033n and\n\
+;\033bcolor-only\033n pattern type.\n\
+;For \033bgradient\33n pattern types, you can\n\
+;select the top (vertical gradient) or left (horizontal gradient) colour here.
+;
+;
+MSGID_SHORTHELP_BACKGROUNDCOLOR2
+Hier wird die sekundäre Hintergrundfarbe eingestellt.\n\
+Das funktioniert nur bei den \033bFarbverläufen\033n.\n\
+Bei \033bhorizontalem Farbverlauf\033n wird hier die Farbe am rechten\n\
+Fensterrand eingestellt, und bei \033bVertikalem Farbverlauf\033n\n\
+ die Farbe am unteren Rand.
+;Here you can adjust the secondary window background color.\n\
+;For \033bgradient\33n pattern types, you can\n\
+;select the bottom (vertical gradient) or right\n\
+;(horizontal gradient) colour here.
+;
+;
+MSGID_SHORTHELP_CYCLEBACKGROUND
+Hier legen Sie fest, wie der Fensterhintergrund\n\
+rund um das gewählte Bild eingefärbt wird.\n\
+Es ist nur bei der Einstellung \033bzentriert\033n\n\
+wählbar, da in den anderen Modi kein sichtbarer Rand\n\
+rund um das Hintergrundbild vorhanden ist.
+;This gadget selects the type of background that\n\
+;is drawn besides the selected image.\n\
+;It is selectable only in \033bCentered\033n mode because\n\
+;in other modes, there is no room around the image where\n\
+;the background color could be seen.
+;
+;
+MSGID_SCALEDMINNAME
+Proportional skaliert (min)
+;Proportionally Scaled (min)
+;
+;
+MSGID_SCALEDMAXNAME
+Proportional skaliert (max)
+;Proportionally Scaled (max)
+;
+;-----------------------------------------------------------
+;

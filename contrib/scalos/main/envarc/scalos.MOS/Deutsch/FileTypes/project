@@ -1,0 +1,78 @@
+# Scalos filetype description
+# written Sat Jan 22 17:22:50 2005
+
+DESCRIPTION "[Projekt-Datei]"
+
+TOOLTIP
+	GROUP ORIENTATION "vertical"
+		MEMBER
+			GROUP ORIENTATION "horizontal"
+				MEMBER
+					STRING SRC "fibfilename" HALIGN "center" FONT "CenturyGothicBold.font/16" TTFONT "0/600/15/Arial Rounded MT Bold" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+				ENDMEMBER
+				MEMBER
+					STRING SRC "filetypestring" HALIGN "center" VALIGN "bottom" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+				ENDMEMBER
+			ENDGROUP
+		ENDMEMBER
+		MEMBER
+			SPACE SIZE "1"
+		ENDMEMBER
+		MEMBER
+			HBAR
+		ENDMEMBER
+		MEMBER
+			SPACE SIZE "1"
+		ENDMEMBER
+		MEMBER HIDE "isempty versionstring"
+			STRING SRC "versionstring" HALIGN "center" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+		ENDMEMBER
+		MEMBER
+			GROUP ORIENTATION "horizontal"
+				MEMBER
+					GROUP ORIENTATION "vertical"
+						MEMBER HIDE "isempty linktarget"
+							STRING ID "MSGID_TOOLTIP_LINKTO" HALIGN "right" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+						MEMBER
+							STRING ID "MSGID_TOOLTIP_LASTCHANGE" HALIGN "right" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+						MEMBER HIDE "isempty filesize"
+							STRING ID "MSGID_TOOLTIP_SIZE" HALIGN "right" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+						MEMBER HIDE "isempty fileprotection"
+							STRING ID "MSGID_TOOLTIP_PROTECTION" HALIGN "right" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+					ENDGROUP
+				ENDMEMBER
+				MEMBER
+					GROUP ORIENTATION "vertical"
+						MEMBER HIDE "isempty linktarget"
+							STRING SRC "linktarget" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+						MEMBER
+							GROUP ORIENTATION "horizontal"
+								MEMBER
+									STRING SRC "filedate" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+								ENDMEMBER
+								MEMBER
+									STRING SRC "filetime" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+								ENDMEMBER
+							ENDGROUP
+						ENDMEMBER
+						MEMBER HIDE "isempty filesize"
+							STRING SRC "filesize" HALIGN "left" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+						MEMBER
+							STRING SRC "fileprotection" HALIGN "left" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+					ENDGROUP
+				ENDMEMBER
+			ENDGROUP
+		ENDMEMBER
+		MEMBER HIDE "isempty filecomment"
+			STRING SRC "filecomment" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+		ENDMEMBER
+	ENDGROUP
+ENDTOOLTIP
+

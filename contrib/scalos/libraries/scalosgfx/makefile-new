@@ -1,0 +1,79 @@
+# $Date: 2011-06-23 22:21:05 +0200 (Do, 23. Jun 2011) $
+# $Revision: 737 $
+##############################################################################
+
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/../..
+endif
+
+##############################################################################
+
+include		config.mk
+
+##############################################################################
+#
+# Project Object files
+#
+
+OBJS	=	$(OBJDIR)/scalosgfx.o \
+		$(OBJDIR)/argb.o \
+		$(OBJDIR)/blit.o \
+		$(OBJDIR)/BitMapScale.o \
+		$(OBJDIR)/Dither.o \
+		$(OBJDIR)/Render.o \
+
+ifeq ($(MACHINE),ppc-amigaos)
+OBJS	:=	 $(OBJDIR)/scalosgfx-aos4.o $(OBJDIR)/scalosgfx-aos4-68kstubs.o $(OBJS)
+else
+ifeq ($(MACHINE),i386-aros)
+OBJS	:=	 $(OBJDIR)/scalosgfx-aros.o $(OBJS)
+else
+OBJS	:=	 $(OBJDIR)/scalosgfx-classic.o $(OBJS)
+endif
+endif
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS:.o=.d)
+endif
+
+##############################################################################
+#
+# Targets
+#
+
+NAME	=	scalosgfx.library
+NAME_DB	=	$(NAME).debug
+
+##############################################################################
+
+.PHONY: all install clean bump dump
+
+all:	$(BINDIR)/$(NAME) \
+	$(BINDIR)/$(NAME_DB)
+	
+##############################################################################
+
+$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) : $(OBJS)
+	$(ECHO) "Link $(NAME)"
+	@$(CC) $(OBJS) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(NAME_DB)
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(NAME_DB) -o $(BINDIR)/$(NAME)
+	@chmod u+x $@
+
+##############################################################################
+
+install: 
+	-@$(ECHO) "Installing $(NAME)"
+	@copy $(BINDIR)/$(NAME) LIBS: clone
+	@avail flush
+
+clean:
+	-@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d $(OBJDIR)/*.d.* \
+        	$(OBJDIR)/*.i $(OBJDIR)/*.s \
+		$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) \
+		*.dump *_str.*
+
+##############################################################################

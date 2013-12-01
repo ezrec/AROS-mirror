@@ -1,0 +1,128 @@
+; GetHidden.cd
+; version $VER: GetHidden.catalog 1.0 (26.05.09)
+; codeset 0s
+; language english
+;
+;#arrayopts static __far
+;
+;
+MSGID_SEARCHING (//)
+Please wait, searching hidden protection...
+;
+;
+MSGID_REMOVEHIDDEN (//)
+Remove hidden protection...
+;
+;
+MSGID_ABORT (//)
+Abort
+;
+;
+MSGID_DIRS (//)
+Dirs:
+;
+;
+MSGID_FILES (//)
+Files:
+;
+;
+MSGID_TOTAL (//)
+Total:
+;
+;
+MSGID_NUMBERDIRS (//)
+Number of dirs found.
+;
+;
+MSGID_NUMBERFILES (//)
+Number of files found.
+;
+;
+MSGID_NUMBERTOTAL (//)
+Total number of objects found.
+;
+;
+MSGID_ANYHIDDENFOUND (//)
+Any hidden protection bit found!
+;
+;
+MSGID_USERABORTED (//)
+Aborted by user!
+;
+;
+MSGID_COMPLETED (//)
+Completed!
+;
+;
+MSGID_WAITHIDDENREMOVED (//)
+Please wait, remove hidden protection...
+;
+;
+MSGID_HIDDENREMOVED (//)
+Hidden protection bit removed!
+;
+;
+MSGID_SCALOSFAILED (//)
+Can't open %s.%s
+;
+;
+MSGID_ERRORMUIMASTER (//)
+Can't open %s!
+;
+;
+MSGID_ERRORICONLIB (//)
+Can't open icon.library!
+;
+;
+MSGID_ERRORAPP (//)
+Can't create application! 
+;
+;
+MSGID_IOERRORFILE (//)
+*** WARNING ***\n\
+%s\n\
+\tErrorCode: %ld - %s\n***************\n
+;
+;
+MSGID_IOERRORFULLPATH (//)
+*** WARNING ***\n\
+%s\n\
+\tErrorCode: %ld - %s\n***************\n
+;
+;
+MSGID_TITLENAME (//)
+Name
+;
+;
+MSGID_TITLEPROTECT (//)
+Protection
+;
+;
+MSGID_TITLESISE (//)
+Size
+;
+;
+MSGID_TITLEDATE (//)
+Date
+;
+;
+MSGID_TITLETIME (//)
+Time
+;
+;
+MSGID_TITLEPATH (//)
+Path
+;
+;
+MSGID_MENUOPENDIR (//)
+Open parent dir
+;
+;
+MSGID_ARGNOFOUND (//)
+Argument no found!
+;
+;
+MSGID_ENTRYNAME (//)
+** Entry name:
+;
+;

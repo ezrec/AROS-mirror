@@ -1,0 +1,54 @@
+Titlebar clock plugin and preferences
+Example (and useful) plugin for Scalos title bars, written in C
+Shows the current time or date in a configurable format
+
+The prefs file is stored in ENVARC:Scalos/title_clock.prefs or
+ENV:Scalos/title_clock.prefs. It's just an ASCII file with two lines in it.
+The first line is the date format and the second line in the time format.
+
+However, there's a handy prefs program to edit this file.
+
+You can put these special symbols in the date and time strings to have the
+following effects:
+
+	%a - abbreviated weekday name
+	%A - weekday name
+	%b - abbreviated month name
+	%B - month name
+	%c - same as "%a %b %d %H:%M:%S %Y"
+	%C - same as "%a %b %e %T %Z %Y"
+	%d - day number with leading 0s
+	%D - same as "%m/%d/%y"
+	%e - day number with leading spaces
+	%h - abbreviated month name
+	%H - hour using 24-hour style with leading 0s
+	%I - hour using 12-hour style with leading 0s
+	%j - julian date
+	%m - month number with leading 0s
+	%M - the number of minutes with leading 0s
+	%n - insert a linefeed
+	%p - AM or PM strings
+	%q - hour using 24-hour style
+	%Q - hour using 12-hour style
+	%r - same as "%I:%M:%S %p"
+	%R - same as "%H:%M"
+	%S - number of seconds with leadings 0s
+	%t - insert a tab character
+	%T - same as "%H:%M:%S"
+	%U - week number, taking Sunday as first day of week
+	%w - weekday number
+	%W - week number, taking Monday as first day of week
+	%x - same as "%m/%d/%y"
+	%X - same as "%H:%M:%S"
+	%y - year using two digits with leading 0s
+	%Y - year using four digits with leading 0s
+
+Leaving the format blank will result in the default time or date format
+being used, which is defined depending on the country and language you have
+specified in your system Locale preferences.
+
+For some reason, if you use %R then any part of the string AFTER the %R will
+not be parsed. It seems to be a feature of locale.library, honestly. If you
+do need to put something after the time, then use %H:%M.
+
+

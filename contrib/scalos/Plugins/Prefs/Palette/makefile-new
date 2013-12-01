@@ -1,0 +1,97 @@
+# $Date: 2011-08-09 11:15:58 +0200 (Di, 09. Aug 2011) $
+# $Revision: 828 $
+##############################################################################
+
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/../../..
+endif
+
+# Native FlexCat doesn't like Linux paths
+ifeq ($(CROSS), )
+	PARENTDIR=/
+	SDPATH=//
+else
+	PARENTDIR=../
+	SDPATH=../../..
+endif
+
+##############################################################################
+
+include		config.mk
+
+##############################################################################
+#
+# Project Object files
+#
+
+OBJS	=      	$(BEGIN_OBJS) \
+		$(OBJDIR)/PalettePrefs.o \
+		$(OBJDIR)/DataTypesMCC.o \
+		$(END_OBJS)
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS:.o=.d)
+endif
+
+##############################################################################
+#
+# Targets
+#
+
+NAME	=	Palette.prefsplugin
+NAME_DB	=	$(NAME).debug
+
+##############################################################################
+
+PREFSDIR	=	../../../Prefs/Palette
+
+##############################################################################
+#
+# Some lame deps
+
+$(OBJDIR)/%.o: $(DATATYPESMCC_DIR)/%.c
+	@$(run-cc)
+
+##############################################################################
+
+.PHONY: all install clean bump dump nodebug
+
+all:	$(BINDIR)/$(NAME) \
+	$(BINDIR)/$(NAME_DB)
+
+#############################################################
+
+PalettePrefs.c : $(SCALOS_LOCALE)
+
+$(SCALOS_LOCALE) : $(PREFSDIR)/ScalosPalette.cd
+	@$(ECHO) "FlexCat $@"
+	$(FLEXCAT) $(subst ../,$(PARENTDIR),$<) $@=$(SDPATH)/CatComp_h.sd
+
+##############################################################################
+
+$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) : $(OBJS)
+	$(ECHO) "Link $(NAME)"
+	@$(CC) $(OBJS) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(NAME_DB)
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(NAME_DB) -o $(BINDIR)/$(NAME)
+	@chmod u+x $@
+
+##############################################################################
+
+install:
+	-@$(ECHO) "Installing $(NAME)"
+	@copy $(BINDIR)/$(NAME) Scalos:Prefs/ clone
+	@avail flush
+
+clean:
+	-@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d $(OBJDIR)/*.d.* \
+        	$(OBJDIR)/*.i $(OBJDIR)/*.s \
+		$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) \
+		*.dump *_str.* \
+                $(SCALOS_LOCALE)
+
+##############################################################################
+

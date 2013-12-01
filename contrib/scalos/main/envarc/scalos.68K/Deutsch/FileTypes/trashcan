@@ -1,0 +1,88 @@
+# Scalos filetype description
+# written 03 Apr 2005 17:38:58
+
+DESCRIPTION "[Papierkorb]"
+
+POPUPMENU
+	MENUENTRY NAME "Papierkorb leeren..."
+		INTERNALCMD NAME "emptytrashcan"
+	ENDMENUENTRY
+	MENUSEPARATOR
+	MENUENTRY DEFAULTACTION NAME "Öffnen" UNSELECTEDICON "THEME:Filetypes/Open"
+		INTERNALCMD NAME "open"
+	ENDMENUENTRY
+	MENUENTRY NAME "Informationen anzeigen..." UNSELECTEDICON "THEME:Filetypes/Information"
+		INTERNALCMD NAME "iconinfo"
+	ENDMENUENTRY
+	MENUSEPARATOR
+	MENUENTRY NAME "Durchsuchen..."
+		CLICMD NAME "Scalos:Tools/browse.script %p" STACK "16384" WBARGS
+	ENDMENUENTRY
+	MENUSEPARATOR
+	MENUENTRY NAME "Fixieren"
+		INTERNALCMD NAME "snapshot"
+	ENDMENUENTRY
+	MENUENTRY NAME "Position freigeben"
+		INTERNALCMD NAME "unsnapshot"
+	ENDMENUENTRY
+	MENUSEPARATOR
+	MENUENTRY NAME "Auslagern"
+		INTERNALCMD NAME "leaveout"
+	ENDMENUENTRY
+	MENUENTRY NAME "Zurücklegen"
+		INTERNALCMD NAME "putaway"
+	ENDMENUENTRY
+	MENUSEPARATOR
+	MENUENTRY NAME "Eigenschaften..." UNSELECTEDICON "THEME:Filetypes/Properties"
+		INTERNALCMD NAME "iconproperties"
+	ENDMENUENTRY
+ENDPOPUPMENU
+
+TOOLTIP
+	GROUP ORIENTATION "vertical"
+		MEMBER
+			GROUP ORIENTATION "horizontal"
+				MEMBER
+					STRING SRC "fibfilename" HALIGN "center" FONT "CenturyGothicBold.font/16" TTFONT "0/600/15/Arial Rounded MT Bold" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+				ENDMEMBER
+				MEMBER
+					STRING SRC "filetypestring" HALIGN "center" VALIGN "bottom" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+				ENDMEMBER
+			ENDGROUP
+		ENDMEMBER
+		MEMBER
+			SPACE SIZE "1"
+		ENDMEMBER
+		MEMBER
+			HBAR
+		ENDMEMBER
+		MEMBER
+			SPACE SIZE "1"
+		ENDMEMBER
+		MEMBER
+			GROUP ORIENTATION "horizontal"
+				MEMBER
+					GROUP ORIENTATION "vertical"
+						MEMBER HIDE "isempty plugin drawercontents.plugin dirs noicons showempty"
+							STRING ID "MSGID_TOOLTIP_DRAWERS" HALIGN "right" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+						MEMBER HIDE "isempty plugin drawercontents.plugin noicons"
+							STRING ID "MSGID_TOOLTIP_FILES" HALIGN "right" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+					ENDGROUP
+				ENDMEMBER
+				MEMBER
+					GROUP ORIENTATION "vertical"
+						MEMBER HIDE "isempty plugin drawercontents.plugin dirs noicons showempty"
+							STRING SRC "plugin drawercontents.plugin dirs noicons showempty" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+						MEMBER HIDE "isempty plugin drawercontents.plugin noicons"
+							STRING SRC "plugin drawercontents.plugin noicons" TEXTPEN "PENIDX_TOOLTIP_TEXT"
+						ENDMEMBER
+					ENDGROUP
+				ENDMEMBER
+			ENDGROUP
+		ENDMEMBER
+	ENDGROUP
+ENDTOOLTIP
+

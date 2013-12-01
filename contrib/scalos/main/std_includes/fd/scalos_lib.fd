@@ -1,0 +1,43 @@
+##base _ScalosBase
+##bias 30
+##public
+SCA_WBStart(argArray,tagList,numArgs)(a0/a1,d0)
+SCA_SortNodes(nodelist,sortHook,sortType)(a0/a1,d0)
+SCA_NewAddAppIcon(iD,userData,iconObj,msgPort,tagList)(d0/d1/a0/a1/a2)
+SCA_RemoveAppObject(appObj)(a0)
+SCA_NewAddAppWindow(iD,userData,win,msgPort,tagList)(d0/d1/a0/a1/a2)
+SCA_NewAddAppMenuItem(iD,userData,text,msgPort,tagList)(d0/d1/a0/a1/a2)
+SCA_AllocStdNode(nodeList,nodeType)(a0,d0)
+SCA_AllocNode(nodeList,size)(a0,d0)
+SCA_FreeNode(nodeList,minNode)(a0/a1)
+SCA_FreeAllNodes(nodeList)(a0)
+SCA_MoveNode(srcNodeList,destNodeList,minNode)(a0/a1,d0)
+SCA_SwapNodes(minNode1,minNode2,nodeList)(a0/a1/a2)
+SCA_OpenIconWindow(tagList)(a0)
+SCA_LockWindowList(accessmode)(d0)
+SCA_UnLockWindowList()()
+SCA_AllocMessage(messagetype,additional_size)(d0/d1)
+SCA_FreeMessage(message)(a1)
+SCA_InitDrag(screen)(a0)
+SCA_EndDrag(dragHandle)(a0)
+SCA_AddBob(dragHandle,bm,mask,width,height,xOffset,yOffset)(a0/a1/a2,d0/d1/d2/d3)
+SCA_DrawDrag(dragHandle,x,y,flags)(a0,d0/d1/d2)
+SCA_UpdateIcon(windowType,updateIconStruct,ui_SIZE)(d0/a0,d1)
+SCA_MakeWBArgs(buffer,in,argsSize)(a0/a1,d0)
+SCA_FreeWBArgs(buffer,number,flags)(a0,d0/d1)
+##private
+scalosPrivate1()()
+##public
+SCA_ScreenTitleMsg(format,args)(a0/a1)
+SCA_MakeScalosClass(className,superClassName,instSize,dispFunc)(a0/a1,d0/a2)
+SCA_FreeScalosClass(scalosClass)(a0)
+SCA_NewScalosObject(className,tagList)(a0/a1)
+SCA_DisposeScalosObject(obj)(a0)
+*--- functions in V40 or higher (Release 3.1) ---
+SCA_ScalosControlA(name,tagList)(a0/a1)
+*--- functions in V41 or higher (Transitional Release 3.2) ---
+SCA_GetDefIconObject(dirLock,name)(a0/a1)
+SCA_OpenDrawerByName(path,tagList)(a0/a1)
+SCA_CountWBArgs(in)(a0)
+SCA_GetDefIconObjectA(dirLock,name,tagList)(a0/a1/a2)
+##end

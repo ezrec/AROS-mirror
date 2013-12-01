@@ -1,0 +1,76 @@
+// $Date	: $
+// $Revision	: $
+
+src
+   Installer			(optional, useful) Scalos installer package
+
+   Plugins
+     FileTypes
+       DrawerContents		(optional) 100% GCC/MOS native
+       Picture_Dimensions 	(optional) 100% GCC/MOS native
+       ExifPicture		(optional) 100% GCC/MOS native
+     Menu
+       Sorted_Cleanup		(optional) 100% ASM, 68K only
+     OOP
+       title_freepens		(optional) 100% GCC/MOS native
+       DeviceFilter		(optional, useful) 100% GCC/MOS native
+       XTWindows		(optional) 100% 100% GCC/MOS native
+       title_envvar		(optional) 100% GCC/MOS native
+       TitleClock		(optional) 100% GCC/MOS native
+       title_test		(example only) 100% ASM, 68K only
+       wb39_plugin		(optional, very useful) 100% GCC/MOS native
+     Prefs
+       Menu			(important) (MUI) 100% GCC/MOS native
+       Pattern			(important) (MUI) 100% GCC/MOS native
+       Palette			(important) (MUI) 100% GCC/MOS native
+       FileTypes		(important) (MUI) 100% GCC/MOS native
+
+   Modules
+     WindowProperties.MUI	(optional) (MUI) 100% GCC/MOS native
+     IconProperties.MUI		(optional) (MUI) 100% GCC/MOS native
+     Information.MUI		(optional) (MUI) 100% GCC/MOS native
+     Delete.Gadtools		(optional) 100% C, 68K only
+     Delete.MUI			(optional) (MUI) 100% GCC/MOS native
+     Delete.MUI			(optional) (MUI) 100% GCC/MOS native
+     Rename.Gadtools		(optional) 100% C, 68K only
+     Rename.MUI			(optional) (MUI) 100% GCC/MOS native
+     Rename.Reaction		(optional) (Reaction) 100% C
+     NewDrawer.Gadtools		(optional) 100% C, 68K only
+     NewDrawer.MUI		(optional) (MUI) 100% GCC/MOS native
+     NewDrawer.Reaction		(optional) (Reaction) 100% C
+     Execute_Command.Gadtools	(optional) 100% C, 68K only
+     Execute_Command.MUI	(optional) (MUI) 100% GCC/MOS native
+     Empty_Trashcan.Gadtools	(optional) 100% C, 68K only
+
+   main				(required) Scalos main, 100% GCC/MOS native
+     Tools			(optional) supplementary tools, 100% GCC/MOS native
+     Test			(optional) several test tools, 100% GCC/MOS native
+     gcc-lib			(required for GCC compile) Scalos-specific link libraries
+     std_includes		(required) all Scalos-specific includes
+     docs			(documentation) Scalos autodocs
+     Default_Theme		(required) default theme files for release package
+
+   libraries			(required) 100% GCC/MOS native
+
+   datatypes
+     NewIcons			(optional, useful) newiconobject.datatype 
+						100% GCC/MOS native
+     						required for newicons support
+     Devs			(required) datatype descriptors for Devs:datatypes
+     PNGIcons			(optional, useful) 100% GCC/MOS native
+     						required for PNG icon support
+     IconObject			(required) iconobject.datatype 
+						100% GCC/MOS native
+     GlowIconObject		(optional, useful) glowiconobject.datatype 
+						100% GCC/MOS native
+     AmigaIconObject		(required) amigaiconobject.datatype
+						100% GCC/MOS native
+     AmigaIconObj3.5		(optional, useful) amigaiconobj35.datatype 
+						100% GCC/MOS native
+     						required for GlowIcons support
+   Prefs
+     MainPrefs			(required) (MUI) 100% GCC/MOS native
+     FileTypes			(optional, useful) (MUI) 100% GCC/MOS native
+     Menu			(required) (MUI) 100% GCC/MOS native
+     Palette			(required) (MUI) 100% GCC/MOS native
+     Pattern			(required) (MUI) 100% GCC/MOS native

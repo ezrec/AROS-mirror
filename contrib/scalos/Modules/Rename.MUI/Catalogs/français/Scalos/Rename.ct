@@ -1,0 +1,216 @@
+; Rename.ct
+; $Date$
+; $Revision$
+;
+## version $VER: Rename.catalog 40.1 (20 Feb 2005 20:27:40)
+## codeset 0
+## language français
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos Renommer
+; Scalos Rename
+;
+;
+MSGID_OKBUTTON
+Renommer
+; Rename
+;
+;
+MSGID_OKBUTTON_SHORT
+r
+; r
+;
+;
+MSGID_SHORTHELP_OKBUTTON
+Renommer l'objet d'après\n\
+le contenu du champ de texte.
+; Rename the object as\n\
+; the string gadget's content.
+;
+;
+MSGID_SKIPBUTTON
+Passer
+; Skip
+;
+;
+MSGID_SKIPBUTTON_SHORT
+p
+; s
+;
+;
+MSGID_SHORTHELP_SKIPBUTTON
+Ignorer l'objet à renommer\n\
+et passer au suivant.  
+; ...SkipButton...
+;
+;
+MSGID_CANCELBUTTON
+Annuler
+; Cancel
+;
+;
+MSGID_CANCELBUTTON_SHORT
+a
+; c
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Oublier tout changement en cours et\n\
+conserver le nom d'origine.
+; Discard all changes and\n\
+; leave keep the original name.
+;
+;
+MSGID_CREATE_APPLICATION_FAILED
+La création de l'application a échouée.\n
+; Failed to create Application.\n
+;
+;
+MSGID_CREATE_MAINWINDOW_FAILED
+Impossible d'ouvrir la fenêtre !\n
+; Failed to open main window !\n
+;
+;
+MSGID_OPEN_LIBRARY_FAILED
+Impossible d'ouvrir "%s" !\n
+; Failed to open "%s" !\n
+;
+;-----------------------------------------------------------
+;
+MSGID_MENU_PROJECT
+Projet
+; Project
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+About...
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+A propos de MUI...
+; About MUI...
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Quitter
+; Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+; Q
+;-----------------------------------------------------------
+;
+MSGID_ABOUTREQOK
+D'acc_ord
+; _OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Rename.module V\0333%ld\0332.\0333%ld\0332\033n\n\
+Compilé sous : \0333%s\0332\n\
+© 2004%s The Scalos Team
+; \33c\033bScalos Rename.module V%ld.%ld\033n\n\
+; %s\n\
+; © 2004%s The Scalos Team
+;
+;-----------------------------------------------------------
+;
+;
+MSGID_TEXTLINE_ENTERNEWNAME
+\033bEntrez un nouveau nom pour\033n "%s"
+; Enter a new Name for \"%s\"
+;
+;
+MSGID_LABEL_NEWNAME
+Nouveau nom
+; New Name
+;
+;
+MSGID_TITLE_ERRORREQ
+Renomination erreur
+; Rename Error
+;
+;
+MSGID_ERRORREQ_BODYTEXT
+Impossible de renommer\n\
+'\033b%s\033n' en '\033b%s\033n'\n\
+%s
+; Could not rename\n\
+; '%s' to '%s'\n%s
+;
+;
+MSGID_REQ_OK
+D'acc_ord
+; _Ok
+;
+;
+MSGID_TEXTLINE_PATH
+\033bChemin :\033n "%s"
+; Path: \"%s\"
+;
+;
+MSGID_BUTTON_SKIP
+_Passer
+; _Skip
+;
+;
+MSGID_PATHOF_NAME
+Chemin d'accès de l'élément.\n\n\
+Si besoin, vous avez la possibilité d'utiliser\n\
+l'ascenseur siué au bas de la fenêtre\n\
+afin de visionner le chemin d'accès\n\
+complet de l'élément.\n\
+Peut s'avèrer utile pour de longs chemins d'accès.
+; Path of object\n\n\
+; It's possible to show all content of this gadget using\n\
+; the scroller located at the bottom of the window.\n\
+; Can be usefull for large path lenght.
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Le lancement de Rename.module a échoué
+;Rename.module startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Recommençer | Quitter
+;Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Impossible de charger la classe MUI '%s' V%lu.%lu.\n\
+Celle-ci n'est pas installée.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Impossible de charger la classe MUI '%s' V%lu.%lu.\n\
+\n\
+La version installée est V%lu.%lu, installez-en une plus récente s'il vous plaît !
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Impossible de charger la classe MUI '%s' V%lu.%lu.\n\
+%lu.%lu est actuellement utilisée par d'autres applications.\n\
+\n\
+Une fois la version requise installée,\n\
+fermez tous les programmes MUI, soyez sûr que l'ancienne classe\n\
+ne soit plus présente dans la mémoire puis, essayez de nouveau.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;

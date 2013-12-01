@@ -1,0 +1,157 @@
+## version $VER: GetHidden.catalog 1.0 (26.05.09)
+## codeset 0s
+## language deutsch
+;
+; +++translateme+++
+MSGID_SEARCHING
+Please wait, searching hidden protection...
+; Please wait, searching hidden protection...
+;
+; +++translateme+++
+MSGID_REMOVEHIDDEN
+Remove hidden protection...
+; Remove hidden protection...
+;
+; +++translateme+++
+MSGID_ABORT
+Abort
+; Abort
+;
+; +++translateme+++
+MSGID_DIRS
+Dirs:
+; Dirs:
+;
+; +++translateme+++
+MSGID_FILES
+Fichiers :
+; Files:
+;
+; +++translateme+++
+MSGID_TOTAL
+Total :
+; Total:
+;
+; +++translateme+++
+MSGID_NUMBERDIRS
+Number of dirs found.
+; Number of dirs found.
+;
+; +++translateme+++
+MSGID_NUMBERFILES
+Number of files found.
+; Number of files found.
+;
+; +++translateme+++
+MSGID_NUMBERTOTAL
+Total number of objects found.
+; Total number of objects found.
+;
+; +++translateme+++
+MSGID_ANYHIDDENFOUND
+Any hidden protection bit found!
+; Any hidden protection bit found!
+;
+; +++translateme+++
+MSGID_USERABORTED
+Aborted by user!
+; Aborted by user!
+;
+; +++translateme+++
+MSGID_COMPLETED
+Completed!
+; Completed!
+;
+; +++translateme+++
+MSGID_WAITHIDDENREMOVED
+Please wait, remove hidden protection...
+; Please wait, remove hidden protection...
+;
+; +++translateme+++
+MSGID_HIDDENREMOVED
+Hidden protection bit removed!
+; Hidden protection bit removed!
+;
+; +++translateme+++
+MSGID_SCALOSFAILED
+Can't open %s.%s
+; Can't open %s.%s
+;
+; +++translateme+++
+MSGID_ERRORMUIMASTER
+Can't open %s!
+; Can't open %s!
+;
+; +++translateme+++
+MSGID_ERRORICONLIB
+Can't open icon.library!
+; Can't open icon.library!
+;
+; +++translateme+++
+MSGID_ERRORAPP
+Can't create application!
+; Can't create application! 
+;
+; +++translateme+++
+MSGID_IOERRORFILE
+ *** WARNING ***\n\
+%s\n\
+\tErrorCode: %ld - %s\n***************\n
+; *** WARNING ***\n\
+;%s\n\
+;\tErrorCode: %ld - %s\n***************\n
+;
+; +++translateme+++
+MSGID_IOERRORFULLPATH
+ *** WARNING ***\n\
+%s\n\
+\tErrorCode: %ld - %s\n***************\n
+; *** WARNING ***\n\
+; %s\n\
+; %tErrorCode: %ld - %s\n***************\n
+;
+; +++translateme+++
+MSGID_TITLENAME
+Name
+; Name
+;
+; +++translateme+++
+MSGID_TITLEPROTECT
+Protection
+; Protection
+;
+; +++translateme+++
+MSGID_TITLESISE
+Size
+; Size
+;
+; +++translateme+++
+MSGID_TITLEDATE
+Date
+; Date
+;
+; +++translateme+++
+MSGID_TITLETIME
+Time
+; Time
+;
+; +++translateme+++
+MSGID_TITLEPATH
+Path
+; Path
+;
+; +++translateme+++
+MSGID_MENUOPENDIR
+Open parent dir
+; Open parent dir
+;
+; +++translateme+++
+MSGID_ARGNOFOUND
+Argument no found!
+; Argument no found!
+;
+; +++translateme+++
+MSGID_ENTRYNAME
+** Entry name:
+; ** Entry name:
+;

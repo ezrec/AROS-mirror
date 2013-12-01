@@ -1,0 +1,241 @@
+; ExifPicturePlugin.cd
+; Date: $
+; Revision: $
+; version $VER: ExifPicturePlugin.catalog 40.0 (17.09.05)
+; codeset 0s
+; language english
+;
+;#arrayopts static __far
+;
+;
+MSGID_ERROR_NOJPEG (//)
+Error, file: %s isn't a JPEG picture.
+;
+;
+MSGID_PICTURE_FILESIZE (//)
+File size: %lD bytes\n
+;
+;
+MSGID_PICTURE_FILEDATE (//)
+File date: %s\n
+;
+;
+MSGID_CAMERA_MAKE_MODEL (//)
+Camera make: %s\n\
+Camera model: %s\n
+;
+;
+MSGID_DATE_TIME (//)
+Date/Time: %s\n
+;
+;
+MSGID_PICTURE_RESOLUTION (//)
+Resolution: %d x %d\n
+;
+;
+MSGID_ORIENTATION (//)
+Orientation: %s\n
+;
+;
+MSGID_ISCOLOR (//)
+Color/bw: Black and white\n
+;
+;
+MSGID_FLASHUSED (//)
+Flash used: %s\n
+;
+;
+MSGID_NO (//)
+No
+;
+;
+MSGID_YES (//)
+Yes
+;
+;
+MSGID_FOCAL_LENGTH (//)
+Focal length: %4.1fmm
+;
+;
+MSGID_FOCAL_LENGTH_CDDWIDTH (//)
+  (35mm equivalent: %dmm)
+;
+;
+MSGID_CDDWIDTH (//)
+CCD width: %4.2fmm\n
+;
+;
+MSGID_EXPOSURETIME64 (//)
+Exposure time: %6.4f s
+;
+;
+MSGID_EXPOSURETIME53 (//)
+Exposure time: %5.3f s
+;
+;
+MSGID_APERTUREFNUMBER (//)
+Aperture: f/%3.1f\n
+;
+;
+MSGID_DISTANCE_INFINITE (//)
+Focus dist.: Infinite\n
+;
+;
+MSGID_DISTANCE (//)
+Focus dist.: %4.2fm\n
+;
+;
+MSGID_ISOEQUIVALENT (//)
+ISO equiv.: %2d\n
+;
+;
+MSGID_EXPOSUREBIAS (//)
+Exposure bias:%4.2f\n
+;
+;
+MSGID_WHITEBALANCE1 (//)
+Whitebalance: sunny\n
+;
+;
+MSGID_WHITEBALANCE2 (//)
+Whitebalance: fluorescent\n
+;
+;
+MSGID_WHITEBALANCE3 (//)
+Whitebalance: incandescent\n
+;
+;
+MSGID_WHITEBALANCE4 (//)
+Whitebalance: cloudy\n
+;
+;
+MSGID_METERINGMODE_CENTER (//)
+Metering Mode: center weight\n
+;
+;
+MSGID_METERINGMODE_SPOT (//)
+Metering Mode: spot\n
+;
+;
+MSGID_METERINGMODE_MATRIX (//)
+Metering Mode: matrix\n
+;
+;
+MSGID_EXPOSURE_PROGRAM1 (//)
+Exposure: program (auto)\n
+;
+;
+MSGID_EXPOSURE_PROGRAM2 (//)
+Exposure: aperture priority (semi-auto)\n
+;
+;
+MSGID_EXPOSURE_PROGRAM3 (//)
+Exposure: shutter priority (semi-auto)\n
+;
+;
+MSGID_JPEG_PROCESS (//)
+Jpeg process: %s\n
+;
+;
+MSGID_COMMENT (//)
+Comment:
+;
+;-------------------
+MSGID_BASELINE (//)
+Baseline
+;
+;
+MSGID_EXTENDED_SEQUENTIAL (//)
+Extended sequential
+;
+;
+MSGID_PROGRESSIVE (//)
+Progressive
+;
+;
+MSGID_LOSSLESS (//)
+Lossless
+;
+;
+MSGID_DIFFERENTIAL_SEQUENTIAL (//)
+Differential sequential
+;
+;
+MSGID_DIFFERENTIAL_PROGRESSIVE (//)
+Differential progressive
+;
+;
+MSGID_DIFFERENTIAL_LOSSLESS (//)
+Differential lossless
+;
+;
+MSGID_EXTENDED_SEQUENTIAL_ARITHMETIC_CODING (//)
+Extended sequential, arithmetic coding
+;
+;
+MSGID_PROGRESSIVE_ARITHMETIC_CODING (//)
+Progressive, arithmetic coding
+;
+;
+MSGID_LOSSLESS_ARITHMETIC_CODING (//)
+Lossless, arithmetic coding
+;
+;
+MSGID_DIFFERENTIAL_SEQUENTIAL_ARITHMETIC_CODING (//)
+Differential sequential, arithmetic coding
+;
+;
+MSGID_DIFFERENTIAL_PROGRESSIVE_ARITHMETIC_CODING (//)
+Differential progressive, arithmetic coding
+;
+;
+MSGID_DIFFERENTIAL_LOSSLESS_ARITHMETIC_CODING (//)
+Differential lossless, arithmetic coding
+;
+;
+MSGID_UNKNOWN (//)
+Unknown
+;
+;------------------------------------------------------------------------------
+;
+MSGID_ERROR_DOS (//)
+Error: %ld, %s.
+;
+;---------------------------- OrientTab ----------------------------------------
+;
+MSGID_ORIENTTAB_UNDEFINED (// )
+Undefined
+;
+;
+MSGID_ORIENTTAB_NORMAL (//)
+Normal
+;
+;
+MSGID_ORIENTTAB_FLIP_HORIZONTAL (//)
+flip horizontal
+;
+;
+MSGID_ORIENTTAB_ROTATE_180 (//)
+rotate 180
+;
+;
+MSGID_ORIENTTAB_FLIP_VERTICAL (//)
+flip vertical
+;
+;
+MSGID_ORIENTTAB_TRANSPOSE (//)
+transpose
+;
+;
+MSGID_ORIENTTAB_ROTATE_90 (//)
+rotate 90
+;
+;
+MSGID_ORIENTTAB_TRANSVERSE (//)
+transverse
+;
+;
+MSGID_ORIENTTAB_ROTATE_270 (//)
+rotate 270
+;
+;

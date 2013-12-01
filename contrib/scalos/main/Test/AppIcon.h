@@ -1,0 +1,126 @@
+/*
+ * AppIcon.h - Icon for AppIcon. Output from IconEd.
+ *
+
+Copyright (c) 1991-1999 Amiga, Inc.
+
+This example is provided in electronic form by Amiga, Inc.
+for use with the Amiga Mail Volume II technical publication.
+Amiga Mail Volume II contains additional information on the correct
+usage of the techniques and operating system functions presented in
+these examples.  The source and executable code of these examples may
+only be distributed in free electronic form, via bulletin board or
+as part of a fully non-commercial and freely redistributable
+diskette.  Both the source and executable code (including comments)
+must be included, without modification, in any copy.  This example
+may not be published in printed form or distributed with any
+commercial product. However, the programming techniques and support
+routines set forth in these examples may be used in the development
+of original executable software products for Amiga
+computers.
+
+All other rights reserved.
+
+This example is provided "as-is" and is subject to change; no
+warranties are made.  All use is at your own risk. No liability or
+responsibility is assumed.
+*/
+
+
+UWORD chip      AppIcon1IData[] =
+{
+/* Plane 0 */
+    0x0000, 0x0000, 0x0000, 0x8000, 0x0000, 0x0000, 0x0001, 0x8000,
+    0x0000, 0x0000, 0x0011, 0x8000, 0x0000, 0x0000, 0x0031, 0x8000,
+    0x0000, 0x0000, 0x0231, 0x8000, 0x0000, 0x0000, 0x0631, 0x8000,
+    0x0000, 0x0000, 0x4631, 0x8000, 0x0000, 0x0000, 0xC631, 0x8000,
+    0x0000, 0x0000, 0xC631, 0x8000, 0x0000, 0x0000, 0xC631, 0x8000,
+    0x0000, 0x0000, 0xC631, 0x8000, 0x0000, 0x0000, 0xC631, 0x8000,
+    0x0000, 0x0000, 0xC631, 0x8000, 0x0000, 0xFFFF, 0xC631, 0x8000,
+    0x0000, 0x0000, 0x0631, 0x8000, 0x001F, 0xFFFF, 0xFE31, 0x8000,
+    0x0000, 0x0000, 0x0031, 0x8000, 0x03FF, 0xFFFF, 0xFFF1, 0x8000,
+    0x0000, 0x0000, 0x0001, 0x8000, 0x7FFF, 0xFFFF, 0xFFFF, 0x8000,
+/* Plane 1 */
+    0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0xC000, 0x0000, 0x0000, 0x0000,
+    0xC7FF, 0xFFFF, 0xFFE0, 0x0000, 0xC600, 0x0000, 0x0000, 0x0000,
+    0xC63F, 0xFFFF, 0xFC00, 0x0000, 0xC630, 0x0000, 0x0000, 0x0000,
+    0xC631, 0xFFFF, 0x8000, 0x0000, 0xC631, 0x8000, 0x0000, 0x0000,
+    0xC631, 0x8000, 0x0000, 0x0000, 0xC631, 0x8000, 0x0000, 0x0000,
+    0xC631, 0x8000, 0x0000, 0x0000, 0xC631, 0x8000, 0x0000, 0x0000,
+    0xC631, 0x8000, 0x0000, 0x0000, 0xC631, 0x0000, 0x0000, 0x0000,
+    0xC630, 0x0000, 0x0000, 0x0000, 0xC620, 0x0000, 0x0000, 0x0000,
+    0xC600, 0x0000, 0x0000, 0x0000, 0xC400, 0x0000, 0x0000, 0x0000,
+    0xC000, 0x0000, 0x0000, 0x0000, 0x8000, 0x0000, 0x0000, 0x0000,
+};
+
+struct Image    AppIconI1 =
+{
+    0, 0,                                        /* Upper left corner */
+    49, 20, 2,                                   /* Width, Height, Depth */
+    AppIcon1IData,                               /* Image data */
+    0x0003, 0x0000,                              /* PlanePick, PlaneOnOff */
+    NULL                                         /* Next image */
+};
+
+UWORD chip      AppIconI2Data[] =
+{
+/* Plane 0 */
+    0xFFFF, 0xFFFF, 0xFFFF, 0x0000, 0xC000, 0x0000, 0x0000, 0x0000,
+    0xC7FF, 0xFFFF, 0xFFE0, 0x0000, 0xC600, 0x0000, 0x0000, 0x0000,
+    0xC63F, 0xFFFF, 0xFC00, 0x0000, 0xC630, 0x0000, 0x0000, 0x0000,
+    0xC631, 0xFFFF, 0x8000, 0x0000, 0xC631, 0x8000, 0x0000, 0x0000,
+    0xC631, 0x8000, 0x0000, 0x0000, 0xC631, 0x8000, 0x0000, 0x0000,
+    0xC631, 0x8000, 0x0000, 0x0000, 0xC631, 0x8000, 0x0000, 0x0000,
+    0xC631, 0x8000, 0x0000, 0x0000, 0xC631, 0x0000, 0x0000, 0x0000,
+    0xC630, 0x0000, 0x0000, 0x0000, 0xC620, 0x0000, 0x0000, 0x0000,
+    0xC600, 0x0000, 0x0000, 0x0000, 0xC400, 0x0000, 0x0000, 0x0000,
+    0xC000, 0x0000, 0x0000, 0x0000, 0x8000, 0x0000, 0x0000, 0x0000,
+/* Plane 1 */
+    0x0000, 0x0000, 0x0000, 0x8000, 0x0000, 0x0000, 0x0001, 0x8000,
+    0x0000, 0x0000, 0x0011, 0x8000, 0x0000, 0x0000, 0x0031, 0x8000,
+    0x0000, 0x0000, 0x0231, 0x8000, 0x0000, 0x0000, 0x0631, 0x8000,
+    0x0000, 0x0000, 0x4631, 0x8000, 0x0000, 0x0000, 0xC631, 0x8000,
+    0x0000, 0x0000, 0xC631, 0x8000, 0x0000, 0x0000, 0xC631, 0x8000,
+    0x0000, 0x0000, 0xC631, 0x8000, 0x0000, 0x0000, 0xC631, 0x8000,
+    0x0000, 0x0000, 0xC631, 0x8000, 0x0000, 0xFFFF, 0xC631, 0x8000,
+    0x0000, 0x0000, 0x0631, 0x8000, 0x001F, 0xFFFF, 0xFE31, 0x8000,
+    0x0000, 0x0000, 0x0031, 0x8000, 0x03FF, 0xFFFF, 0xFFF1, 0x8000,
+    0x0000, 0x0000, 0x0001, 0x8000, 0x7FFF, 0xFFFF, 0xFFFF, 0x8000,
+};
+
+struct Image    AppIconI2 =
+{
+    0, 0,                                        /* Upper left corner */
+    49, 20, 2,                                   /* Width, Height, Depth */
+    AppIconI2Data,                               /* Image data */
+    0x0003, 0x0000,                              /* PlanePick, PlaneOnOff */
+    NULL                                         /* Next image */
+};
+
+struct DiskObject AppIconDObj =
+{
+    NULL,                                        /* Magic Number */
+    NULL,                                        /* Version */
+    {                                            /* Embedded Gadget Structure */
+        NULL,                                    /* Next Gadget Pointer */
+        0, 0, 49, 21,                            /* Left,Top,Width,Height */
+        GADGHIMAGE,                              /* Flags */
+        NULL,                                    /* Activation Flags */
+        NULL,                                    /* Gadget Type */
+        (APTR) & AppIconI1,                      /* Render Image */
+        (APTR) & AppIconI2,                      /* Select Image */
+        NULL,                                    /* Gadget Text */
+        NULL,                                    /* Mutual Exclude */
+        NULL,                                    /* Special Info */
+        0,                                       /* Gadget ID */
+        NULL,                                    /* User Data */
+    },
+    NULL,                                        /* Icon Type */
+    NULL,                                        /* Default Tool */
+    NULL,                                        /* Tool Type Array */
+    NO_ICON_POSITION,                            /* Current X */
+    NO_ICON_POSITION,                            /* Current Y */
+    NULL,                                        /* Drawer Structure */
+    NULL,                                        /* Tool Window */
+    NULL                                         /* Stack Size */
+};

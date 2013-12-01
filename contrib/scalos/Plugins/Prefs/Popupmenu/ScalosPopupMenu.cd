@@ -1,0 +1,483 @@
+; ScalosPopupMenu.cd
+; version $VER: ScalosPopupMenu.catalog 40.1 (10 Jan 2010 14:32:34)
+; codeset 0s
+; language english
+;
+;#arrayopts static __far
+;
+;---------------------------------------------
+;
+MSGID_PLUGIN_LIST_TITLE (//)
+PopupMenu
+;
+;
+MSGID_TITLENAME (//)
+Scalos PopupMenu Prefs Plugin
+;
+;---------------------------------------------
+;
+MSGID_MENU_PROJECT_OPEN (5000//)
+Open...
+;
+;
+MSGID_MENU_PROJECT_OPEN_SHORT (/1/1)
+O
+;
+;
+MSGID_MENU_PROJECT_SAVEAS (//)
+Save As...
+;
+;
+MSGID_MENU_PROJECT_SAVEAS_SHORT (/1/1)
+A
+;
+;
+MSGID_MENU_PROJECT_ABOUT (//)
+About...
+;
+;
+MSGID_MENU_PROJECT_QUIT (//)
+Quit
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT (/1/1)
+Q
+;
+;
+MSGID_MENU_PROJECT (//)
+Project
+;
+;
+MSGID_MENU_EDIT_LASTSAVED (//)
+Last Saved
+;
+;
+MSGID_MENU_EDIT_LASTSAVED_SHORT (/1/1)
+L
+;
+;
+MSGID_MENU_EDIT (//)
+Edit
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS (//)
+Create Icons?
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS_SHORT (/1/1)
+I
+;
+;
+MSGID_MENU_SETTINGS (//)
+Settings
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS (//)
+Reset To Defaults
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS_SHORT (/1/1)
+D
+;
+;
+MSGID_MENU_EDIT_RESTORE (//)
+Restore
+;
+;
+MSGID_MENU_EDIT_RESTORE_SHORT (/1/1)
+R
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI (//)
+About MUI...
+;
+;---------------------------------------------
+;
+MSGID_ABOUTREQOK (6000//)
+_OK
+;
+;
+MSGID_ABOUTREQFORMAT (//)
+\33c\033bScalos PopupMenu Preferences V%ld.%ld\033n\n\
+%s\n\
+© 2006%s The Scalos Team
+;
+;---------------------------------------------
+;
+MSGID_SHORTHELP_SAVEBUTTON (7000//)
+Press this button to save \n\
+the current settings to\n\
+\"ENVARC:sys/PopupMenu.prefs\"\n\
+and make changes permanent.
+;
+;
+MSGID_SHORTHELP_USEBUTTON (//)
+Press this button to save \n\
+the current settings to\n\
+\"ENV:sys/PopupMenu.prefs\"\n\
+and keep settings until reboot.
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON (//)
+Press this button to abort \n\
+and forget all changes.
+;
+;---------------------------------------------
+;
+MSGID_REQTITLE_SAVEERROR (7500//)
+Error writing PopupMenu preferences\n\
+file \"%s\"\n\
+%s
+;
+;
+MSGID_REQTITLE_READERROR (//)
+Error reading PopupMenu preferences\n\
+file \"%s\"\n\
+%s
+;
+;---------------------------------------------
+;
+MSGID_POPUP_ASLTITLE_MENUPLUGIN (8000//)
+Select Scalos PopupMenu prefs
+;
+;
+MSGID_SHORTHELP_LAMP_CHANGED (//)
+This lamp indicator changes from \033bOff\033n\n\
+to \033bOk\033n when the settings have been\n\
+modified since initial loading.
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE (8500//)
+Scalos PopupMenu Prefs startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD (//)
+Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+\n\
+Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE (//)
+Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+%lu.%lu is currently in use by other applications.\n\
+\n\
+Once you have installed the required version,\n\
+close all MUI programs, make sure the old class\n\
+is flushed from memory and try again.
+;
+;-----------------------------------------------------------
+;
+MSGID_PREFSPAGES_MISC (9000//)
+Misc.
+;
+;
+MSGID_PREFSPAGES_BORDERS (//)
+Borders
+;
+;
+MSGID_PREFSPAGES_SPACING (//)
+Spacing
+;
+;
+MSGID_PREFSPAGES_TEXT (//)
+Text
+;
+;
+MSGID_PREFSPAGES_TRANSPARENCY (//)
+Transparency
+;
+;-----------------------------------------------------------
+;
+MSGID_MISCPAGE_TITLE (9600//)
+Miscellaneous
+;
+;
+MSGID_MISCPAGE_ANIMATION_TYPE (//)
+Type:
+;
+;
+MSGID_MISCPAGE_ANIMATION_TYPE_SHORTHELP (//)
+Select the type of animation\n\
+used to open the popup menu.
+;
+;
+MSGID_MISCPAGE_ANIMATION (//)
+Animation
+;
+;
+MSGID_MISCPAGE_DELAY_SUBMENUS (//)
+Delay for submenus:
+;
+;
+MSGID_MISCPAGE_DELAY_SUBMENUS_SHORTHELP (//)
+Here you can adjust how long it will take\n\
+until the submenu opens when you move the\n\
+mouse of the submenu item.
+;
+;
+MSGID_MISCPAGE_MENUSHADOWS (//)
+Menu Shadows?
+;
+;
+MSGID_MISCPAGE_MENUSHADOWS_SHORTHELP (//)
+Select here whether popup menus\n\
+will have a drop-shadow.
+;
+;
+MSGID_MISCPAGE_STICKY (//)
+Sticky?
+;
+;
+MSGID_MISCPAGE_STICKY_SHORTHELP (//)
+Select here whether popup menus will behave sticky,\n\
+i.e. will stay  open after you release the right mouse\n\
+button.
+;
+;
+MSGID_MISCPAGE_REALSHADOWS (//)
+Real Shadows?
+;
+;
+MSGID_MISCPAGE_REALSHADOWS_SHORTHELP (//)
+If selected, realistic and translucent dropshadows\n\
+are drawn (required graphics board and hi-colour\n\
+or true-colour screen).
+;
+;
+MSGID_ANIMATION_NONE (//)
+None
+;
+;
+MSGID_ANIMATION_ZOOM (//)
+Zoom
+;
+;
+MSGID_ANIMATION_FADE (//)
+Fade
+;
+;
+MSGID_ANIMATION_EXPLODE (//)
+Explode
+;
+;-----------------------------------------------------------
+;
+MSGID_BORDERSPAGE_TITLE (9800//)
+Menu Border
+;
+;
+MSGID_BORDERSPAGE_MENUBORDER (//)
+Menu Border
+;
+;
+MSGID_BORDERSPAGE_SELECTEDITEM (//)
+Selected Item
+;
+;
+MSGID_BORDERSPAGE_SEPARATORS (//)
+Separators
+;
+;
+MSGID_BORDERSPAGE_NORMAL (//)
+Normal
+;
+;
+MSGID_BORDERSPAGE_RAISED (//)
+Raised
+;
+;
+MSGID_BORDERSPAGE_RECESSED (//)
+Recessed
+;
+;
+MSGID_BORDERSPAGE_NEW_LOOK (//)
+New Look
+;
+;
+MSGID_BORDERSPAGE_OLD_LOOK (//)
+Old Look
+;
+;-----------------------------------------------------------
+;
+MSGID_SPACINGPAGE_TITLE (9900//)
+Spacing
+;
+;
+MSGID_SPACINGPAGE_HORIZONTAL_SPACE (//)
+Horizontal inner spacing
+;
+;
+MSGID_SPACINGPAGE_VERTICAL_SPACE (//)
+Vertical spacing
+;
+;
+MSGID_SPACINGPAGE_HORIZONTAL (//)
+Horizontal outer spacing
+;
+;
+MSGID_SPACINGPAGE_VERTICAL_OFFSET (//)
+Vertical offset
+;
+;
+MSGID_SPACINGPAGE_INTERMEDIATE_SPACING (//)
+Intermediate spacing
+;
+;
+MSGID_SPACINGPAGE_TEXT_DISPLACEMENT (//)
+Text displacement
+;
+;-----------------------------------------------------------
+;
+MSGID_TEXTPAGE_TITLE (10000//)
+Text styles
+;
+;
+MSGID_TEXTPAGE_MENU_TITLES (//)
+Menu Titles
+;
+;
+MSGID_TEXTPAGE_MENU_ITEMS (//)
+Menu Items
+;
+;
+MSGID_TEXTPAGE_MENUTITLES_ITALIC (//)
+\033iItalic?\033n
+;
+;
+MSGID_TEXTPAGE_MENUTITLES_ITALIC_SHORTHELP (//)
+If checked, menu titles will be drawn \033iitalic\033n.
+;
+;
+MSGID_TEXTPAGE_MENUTITLES_SHADOWED (//)
+Shadowed?
+;
+;
+MSGID_TEXTPAGE_MENUTITLES_SHADOWED_SHORTHELP (//)
+If checked, menu titles will be drawn shadowed.
+;
+;
+MSGID_TEXTPAGE_MENUTITLES_UNDERLINED (//)
+\033uUnderlined?\033n
+;
+;
+MSGID_TEXTPAGE_MENUTITLES_UNDERLINED_SHORTHELP (//)
+If checked, menu titles will be drawn \033uunderlined\033n.
+;
+;
+MSGID_TEXTPAGE_MENUTITLES_OUTLINED (//)
+Outlined?
+;
+;
+MSGID_TEXTPAGE_MENUTITLES_OUTLINED_SHORTHELP (//)
+If checked, menu titles will be drawn outlined.
+;
+;
+MSGID_TEXTPAGE_MENUTITLES_BOLD (//)
+\033bBold?\033n
+;
+;
+MSGID_TEXTPAGE_MENUTITLES_BOLD_SHORTHELP (//)
+If checked, menu titles will be drawn \033bbold\033n.
+;
+;
+MSGID_TEXTPAGE_MENUTITLES_EMBOSSED (//)
+Embossed?
+;
+;
+MSGID_TEXTPAGE_MENUTITLES_EMBOSSED_SHORTHELP (//)
+If checked, menu titles will be drawn embossed.
+;
+;
+MSGID_TEXTPAGE_MENUITEMS_ITALIC (//)
+\033iItalic?\033n
+;
+;
+MSGID_TEXTPAGE_MENUITEMS_ITALIC_SHORTHELP (//)
+If checked, menu items  will be drawn \033iitalic\033n.
+;
+;
+MSGID_TEXTPAGE_MENUITEMS_SHADOWED (//)
+Shadowed?
+;
+;
+MSGID_TEXTPAGE_MENUITEMS_SHADOWED_SHORTHELP (//)
+If checked,  menu items will be drawn shadowed.
+;
+;
+MSGID_TEXTPAGE_MENUITEMS_UNDERLINED (//)
+\033uUnderlined?\033n
+;
+;
+MSGID_TEXTPAGE_MENUITEMS_UNDERLINED_SHORTHELP (//)
+If checked, menu items  will be drawn \033uunderlined\033n.
+;
+;
+MSGID_TEXTPAGE_MENUITEMS_OUTLINED (//)
+Outlined?
+;
+;
+MSGID_TEXTPAGE_MENUITEMS_OUTLINED_SHORTHELP (//)
+If checked, menu items will be drawn outlined.
+;
+;
+MSGID_TEXTPAGE_MENUITEMS_BOLD (//)
+\033bBold?\033n
+;
+;
+MSGID_TEXTPAGE_MENUITEMS_BOLD_SHORTHELP (//)
+If checked, menu items will be drawn \033bbold\033n.
+;
+;
+MSGID_TEXTPAGE_MENUITEMS_EMBOSSED (//)
+Embossed?
+;
+;
+MSGID_TEXTPAGE_MENUITEMS_EMBOSSED_SHORTHELP (//)
+If checked, menu items will be drawn embossed.
+;
+;-----------------------------------------------------------
+;
+MSGID_TRANSPARENCYPAGE_TITLE (10400//)
+Transparency
+;
+;
+MSGID_TRANSPARENCYPAGE_TRANSP_NUMERIC_FORMAT (//)
+%ld %%
+;
+;
+MSGID_TRANSPARENCYPAGE_TRANSPARENCY (//)
+Transparency
+;
+;
+MSGID_TRANSPARENCYPAGE_BLUR (//)
+Blur
+;
+;
+MSGID_TRANSPARENCYPAGE_BLUR_SHORTHELP (//)
+Here you can adjust the degree of blurring which is aplied\n\
+to the background shining through transparent popup menus.
+;
+;
+MSGID_TRANSPARENCYPAGE_BLUR_NUMERIC_FORMAT (//)
+%ld %%
+;
+;
+MSGID_TRANSPARENCYPAGE_ENABLE (//)
+Transparent Menus?
+;
+;
+MSGID_TRANSPARENCYPAGE_ENABLE_SHORTHELP (//)
+If checked, popup menus are transparent, with\n\
+the contents behind shining through.
+;
+;-----------------------------------------------------------
+;

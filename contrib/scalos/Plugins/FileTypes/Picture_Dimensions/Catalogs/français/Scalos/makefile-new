@@ -1,0 +1,33 @@
+# makefile for PictureDimensionsPlugin (translated Texts : français)
+# $Date: 2009-02-17 21:22:13 +0200 (Di, 17 Feb 2009) $
+# $Revision:                 $
+
+.SUFFIXES: .ct .catalog
+.PHONY: all install clean
+
+include config.mk
+
+CATNAME	=       PictureDimensionsPlugin
+
+# Native FlexCat doesn't like Linux paths
+ifeq ($(CROSS), )
+	CDPATH=//
+else
+	CDPATH=../../..
+endif
+
+all:	$(CATNAME).catalog
+
+
+.ct.catalog :
+	@printf '\033[32mMake catalog: \033[31m\033[1m$(LANG)\033[0m\n'
+	$(FLEXCAT) $(CDPATH)/$*.cd $*.ct CATALOG $*.catalog
+
+$(CATNAME).catalog : $(CATNAME).ct ../../../$(CATNAME).cd
+
+
+clean:
+	$(RM) -f $(CATNAME).catalog
+
+install:
+	-copy $(CATNAME).catalog Locale:catalogs/$(LANG)/Scalos/ clone

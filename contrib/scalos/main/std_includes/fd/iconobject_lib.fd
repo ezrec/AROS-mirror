@@ -1,0 +1,11 @@
+##base _IconobjectBase
+##bias 30
+##public
+NewIconObject(name,tagList)(a0/a1)
+DisposeIconObject(iconObject)(a0)
+GetDefIconObject(iconType,tagList)(d0/a0)
+PutIconObject(iconObject,path,tagList)(a0/a1/a2)
+IsIconName(fileName)(a0)
+Convert2IconObject(diskObject)(a0)
+Convert2IconObjectA(diskObject,tagList)(a0/a1)
+##end

@@ -1,0 +1,76 @@
+# $Date: 2011-06-23 22:21:49 +0200 (Do, 23. Jun 2011) $
+# $Revision: 738 $
+##############################################################################
+
+ifndef TOPLEVEL
+	TOPLEVEL=$(shell pwd)/../..
+endif
+
+##############################################################################
+
+include		config.mk
+
+##############################################################################
+#
+# Project Object files
+#
+
+OBJS	=	$(OBJDIR)/Preferences.o \
+
+ifeq ($(MACHINE),ppc-amigaos)
+OBJS	:=	$(OBJDIR)/Preferences-aos4.o \
+		$(OBJDIR)/Preferences-aos4-68kstubs.o \
+		$(OBJS)
+else
+ifeq ($(MACHINE),i386-aros)
+OBJS	:=	$(OBJDIR)/Preferences-aros.o $(OBJS)
+else
+OBJS	:=	$(OBJDIR)/Preferences-classic.o $(OBJS)
+endif
+endif
+
+##############################################################################
+#
+# Autodependencies
+#
+ifneq ($(MAKECMDGOALS),clean)
+	-include $(OBJS:.o=.d)
+endif
+
+##############################################################################
+#
+# Targets
+#
+
+NAME	=	preferences.library
+NAME_DB	=	$(NAME).debug
+
+##############################################################################
+
+.PHONY: all install clean bump dump
+
+all:	$(BINDIR)/$(NAME) \
+	$(BINDIR)/$(NAME_DB)
+	
+##############################################################################
+
+$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) : $(OBJS)
+	$(ECHO) "Link $(NAME)"
+	@$(CC) $(OBJS) $(LFLAGS) $(DEFINES) -o$(BINDIR)/$(NAME_DB)
+	@$(STRIP) $(SFLAGS) $(BINDIR)/$(NAME_DB) -o $(BINDIR)/$(NAME)
+	@chmod u+x $@
+
+##############################################################################
+
+install: 
+	-@$(ECHO) "Installing $(NAME)"
+	@copy $(BINDIR)/$(NAME) LIBS: clone
+	@avail flush
+
+clean:
+	-@$(RM) -frv $(OBJDIR)/*.o $(OBJDIR)/*.d $(OBJDIR)/*.d.* \
+        	$(OBJDIR)/*.i $(OBJDIR)/*.s \
+		$(BINDIR)/$(NAME) $(BINDIR)/$(NAME_DB) \
+		*.dump *_str.*
+
+##############################################################################

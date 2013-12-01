@@ -1,0 +1,462 @@
+; ScalosgPalette.ct
+## version $VER: ScalosPalette.catalog 40.11 (25 Dec 2008 10:09:16)
+## codeset 0
+## language deutsch
+;
+;#arrayopts static __far
+;
+;
+MSGID_TITLENAME
+Scalos Palette Prefs Plugin
+;
+;
+MSGID_NEW
+Neu
+;
+;
+MSGID_DELETE
+Löschen
+;
+;
+MSGID_PEN
+Stift
+;
+;
+MSGID_RED
+Rot
+;
+;
+MSGID_GREEN
+Grün
+;
+;
+MSGID_SAVENAME
+Speichern
+;
+;
+MSGID_USENAME
+Benutzen
+;
+;
+MSGID_CANCELNAME
+Abbrechen
+;
+;
+MSGID_BLUE
+Blau
+;
+;
+MSGID_COMMANDNAME
+Palette
+;
+;
+MSGID_IMPORTNAME
+WB-Farben
+;
+;
+MSGID_MENU_PROJECT_OPEN
+Öffnen...
+;
+;
+MSGID_MENU_PROJECT_OPEN_SHORT
+O
+;
+;
+MSGID_MENU_PROJECT_SAVEAS
+Speichern als...
+;
+;
+MSGID_MENU_PROJECT_SAVEAS_SHORT
+A
+;
+;
+MSGID_MENU_PROJECT_QUIT
+Beenden
+;
+;
+MSGID_MENU_PROJECT_QUIT_SHORT
+Q
+;
+;
+MSGID_MENU_PROJECT
+Projekt
+;
+;
+MSGID_MENU_EDIT_LASTSAVED
+auf zuletzt gespeichertes
+;
+;
+MSGID_MENU_EDIT_LASTSAVED_SHORT
+L
+;
+;
+MSGID_MENU_EDIT
+Verändern
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS
+Piktogramme erzeugen?
+;
+;
+MSGID_MENU_SETTINGS_CREATEICONS_SHORT
+I
+;
+;
+MSGID_MENU_SETTINGS
+Einstellungen
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS
+auf Vorgaben zurücksetzen
+;
+;
+MSGID_MENU_EDIT_RESETTODEFAULTS_SHORT
+D
+;
+;
+MSGID_MENU_EDIT_RESTORE
+auf vorherigen Stand
+;
+;
+MSGID_MENU_EDIT_RESTORE_SHORT
+V
+;
+;
+MSGID_MENU_PROJECT_ABOUTMUI
+Über MUI...
+;
+;
+MSGID_WBCOLORS
+Workbench Farben
+;
+;
+MSGID_TEXTPEN
+Text
+;
+;
+MSGID_SHINEPEN
+helle Kanten
+;
+;
+MSGID_SHADOWPEN
+dunkle Kanten
+;
+;
+MSGID_HIFILLPEN
+Titelbalken aktiver Fenster
+;
+;
+MSGID_FILLTEXTPEN
+Titeltexte aktiver Fenster
+;
+;
+MSGID_BGPEN
+Hintergrund
+;
+;
+MSGID_HITEXTPEN
+wichtiger Text
+;
+;
+MSGID_BARDETAILPEN
+Menü-Text
+;
+;
+MSGID_BARBLOCKPEN
+Menü-Hintergrund
+;
+;
+MSGID_BARTRIMPEN
+Bildschirmtitel Rand
+;
+;
+MSGID_HSHINEPEN
+halbhelle Kante
+;
+;
+MSGID_HSHADOWPEN
+halbdunkle Kante
+;
+;
+MSGID_ICONTEXTPEN
+Icontext
+;
+;
+MSGID_DRAWERTEXT
+Verzeichnistext
+;
+;
+MSGID_DRAWERTEXTSEL
+angewählter Verzeichnistext
+;
+;
+MSGID_DRAWERBG
+angewählter Verzeichnistext Hintergrund
+;
+;
+MSGID_FILETEXT
+Dateitext
+;
+;
+MSGID_FILETEXTSEL
+angewählter Dateitext
+;
+;
+MSGID_FILEBG
+angewählter Dateitext Hintergrund
+;
+;
+MSGID_PENNAMENAME
+Stiftname
+;
+;
+MSGID_BACKDROPDETAIL
+Hintergrund Detail
+;
+;
+MSGID_BACKDROPBLOCK
+Hintergrund Block
+;
+;
+MSGID_MAINMENUNAME
+MainMenu
+;
+;
+MSGID_MENU_PROJECT_ABOUT
+Über...
+;
+;
+MSGID_ABOUTREQOK
+_OK
+;
+;
+MSGID_ABOUTREQFORMAT
+\33c\033bScalos Palette Voreinsteller V%ld.%ld\033n\n\
+%s\n\
+© 1999%s The Scalos Team\n\
+Basiert auf Code von Stefan Sommerfeld bei ALiENDESiGN!
+;
+;
+MSGID_TOOLTIP_TEXT
+Tooltip Schriftfarbe
+;
+;
+MSGID_TOOLTIP_BG
+Tooltip Hintergrundfarbe
+;
+;
+MSGID_DRAGINFO_TEXT
+Ziehen Infotext Schriftfarbe
+;
+;
+MSGID_DRAGINFO_BG
+Ziehen Infotext Hintergrundfarbe
+;
+;
+MSGID_STATUSBAR_BG
+Statusbalken Hintergrundfarbe
+;
+;
+MSGID_STATUSBAR_TEXT
+Statusbalken Schriftfarbe
+;
+;
+MSGID_REQTITLE_SAVEERROR
+Fehler beim Schreiben der Palette \
+Voreinstellungs-Datei \"%s\"\
+%s
+;
+;
+MSGID_REQTITLE_READERROR
+Fehler beim Lesen der Palette \
+Voreinstellungs-Datei \"%s\"\
+%s
+;
+;
+MSGID_TITLE_SCALOSPENLIST
+Farben für Scalos-Elemente
+;Scalos item pens
+;
+;
+MSGID_TITLE_PALETTEPENLIST
+Reservierte Farben %ld/%ld
+;Allocated Pens %ld/%ld
+;
+;
+MSGID_SHORTHELP_SCALOSPENLIST
+Dies ist die Liste der Farben für die\n\
+verschiedenen graphischen Elemente von Scalos.\n\
+\n\
+Ändern der Farbzuordnung durch Ziehen einer\n\
+Farbe von der Liste der reservierten Farben\n\
+auf das gewünschte Element.
+;This is the Scalos pen list.\n\
+;Change pen assignments by dragging pens \n\
+;from the allocated pens list onto the \n\
+;entry you want to change.
+;
+;
+MSGID_SHORTHELP_PALETTEPENLIST
+Dies ist die Liste aller von Scalos reservierten Farben.\n\
+\n\
+Reservieren neuer Farben durch Ziehen von Farben\n\
+aus dem Fenster der Workbench-Farben in die Liste.\n\
+\n\
+Zum Ändern der Farbe einzelner Scalos-Elemente\n\
+ziehen Sie eine Farbe von hier auf das Element\n\
+in der Liste der Farben für die Scalos-Elemente.
+;This is the list of all \n\
+;pens allocated by Scalos.\n\
+; \n\
+;You can drag new pens from the \n\
+;Workbench pen list into this list.\n\
+; \n\
+;Drag pens from here into the \n\
+;Scalos pen list to assign colors \n\
+;to specific Scalos items.
+;
+;
+MSGID_SHORTHELP_WBPENLIST
+Dies ist die Liste aller Farben auf dem Workbench-Bildschirm.\n\
+\n\
+Zum Reservieren zusätzlicher Farben ziehen\n\
+Sie einen Eintrag in die Liste der reservierten Farben.
+;This is a list of all currently \n\
+;used pens on the WorkBench screen.\n\
+;You may drag one or more pens into \n\
+;the list of Scalos allocated pens.
+;
+;
+MSGID_SHORTHELP_SAVEBUTTON
+Drücken Sie diesen Knopf, um alle\n\
+Einstellungen dauerhaft in\n\
+\"ENVARC:Scalos/Palette13.prefs\"\n\
+zu speichern.
+;Press this button to save \n\
+;the current settings to\n\
+;\"ENVARC:Scalos/Palette13.prefs\".
+;
+;
+MSGID_SHORTHELP_USEBUTTON
+Drücken Sie diesen Knopf, um alle Einstellungen\n\
+bis zum nächsten Neustart in\n\
+\"ENV:Scalos/Palette13.prefs\"\n\
+zu speichern.
+;Press this button to save \n\
+;the current settings to\n\
+;\"ENV:Scalos/Palette13.prefs\".
+;
+;
+MSGID_SHORTHELP_CANCELBUTTON
+Dieser Knopf bricht das Programm ab.\n\
+Alle Änderungen werden verworfen.
+;
+;
+MSGID_SHORTHELP_NEWBUTTON
+Dieser Knopf belegt einen neuen Stift. \n\
+Er ist stillgelegt, wenn mehr Stifte belegt \n\
+werden sollen, als auf dem \n\
+Workbench-Bildschirm verfügbar sind.
+;
+;
+MSGID_SHORTHELP_DELETEBUTTON
+Dieser Knopf entfernt den \n\
+aktuell ausgewählten Stift.
+;
+;
+MSGID_SHORTHELP_WBPENSBUTTON
+Dieser Knopf öffnet ein neues Fenster mit der\n\
+Liste aller Farben auf dem Workbench-Bildschirm.
+;This button opens a new window \n\
+;with a list of all currently \n\
+;used WorkBench screen colors.
+;
+;
+MSGID_ICONTEXTPENSEL
+Icontext ausgewählt
+;
+;
+MSGID_ICONTEXTOUTLINEPEN
+Icontext Umrandung (Outline)
+;
+;
+MSGID_ICONTEXTSHADOWPEN
+Icontext Schatten
+;
+; new in 40.3
+;
+MSGID_PLUGIN_LIST_TITLE
+Farbpalette
+;Palette
+;
+;
+MSGID_PEN_REFERENCE_COUNT
+Ref.
+;
+; new in 40.6
+;
+MSGID_SHORTHELP_LAMP_CHANGED
+Diese Anzeigelampe wechselt den Zustand von \033bAus\033n\n\
+nach \033bAn\033n wenn die Konfiguration seit\n\
+dem ersten Laden verändert wurde.
+;This lamp indicator changes from \033bOff\033n\n\
+;to \033bOk\033n when the settings have been\n\
+;modified since initial loading.
+;
+;
+MSGID_ICONTEXTFILESELBG
+Rechteck um ausgewählten Icontext
+;Selected Icon Text Rectangle Pen
+;
+;-----------------------------------------------------------
+;
+MSGID_STARTUP_FAILURE
+Scalos Palettenvoreinsteller kann nicht gestartet werden
+;Scalos Palette Prefs startup failed
+;
+;
+MSGID_STARTUP_RETRY_QUIT_GAD
+Wiederholen|Beenden
+;Try again|Quit
+;
+;
+MSGID_STARTUP_MCC_NOT_FOUND
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\
+Die Klasse ist nicht installiert.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;The class is not installed.
+;
+;
+MSGID_STARTUP_OLD_MCC
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\n\
+Sie haben momentan Version v%lu.%lu installiert und\n\
+sollten die Klasse daher aktualisieren!
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;\n\
+;Currently installed is V%lu.%lu, please upgrade!
+;
+;
+MSGID_STARTUP_MCC_IN_USE
+Konnte die MUI Klasse '%s' v%lu.%lu nicht öffnen.\n\n\
+Version %lu.%lu wird momentan von einer anderen Anwendung\n\
+verwendet. Wenn sie die benötigte Version installiert haben,\n\
+schließen sie alle MUI Programme und probieren es erneut.
+;Couldn't open MUI custom class '%s' V%lu.%lu.\n\
+;%lu.%lu is currently in use by other applications.\n\
+;\n\
+;Once you have installed the required version,\n\
+;close all MUI programs, make sure the old class\n\
+;is flushed from memory and try again.
+;
+;
+MSGID_THUMBNAIL_BG
+Vorschaubilder Hintergrundfarbe
+;Thumbnail background pen
+;
+;
+MSGID_THUMBNAIL_BG_SEL
+angewählte Vorchaubilder Hintergrundfarbe
+;Selected thumbnail background pen
+;
+;-----------------------------------------------------------
+;

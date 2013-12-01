@@ -1,0 +1,20 @@
+StHex translate string's characters into HEX value like ID=MAKE_ID(.,.,.,.) often used in C language.
+So the ID used will be: CONST ID={hex}
+
+Example and usage:
+
+  StHex will ask you some text then it will convert it into HEX value.
+
+Enter ID: MAIN
+ M = 4d
+ A = 41
+ I = 49
+ N = 4e
+
+Result:
+CONST MAIN = $4d41494e
+
+
+JMC
+
+agalliance@free.fr
