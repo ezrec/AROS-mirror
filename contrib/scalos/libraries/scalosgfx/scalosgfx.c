@@ -53,7 +53,9 @@
 
 //----------------------------------------------------------------------------
 
+#if !defined(__AROS__)
 struct ExecBase *SysBase;
+#endif
 struct IntuitionBase *IntuitionBase;
 T_UTILITYBASE UtilityBase;
 struct DosLibrary * DOSBase;
@@ -918,4 +920,16 @@ void _XCEXIT(long x)
 }
 #endif /* defined(__SASC) */
 
-//----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2INITLIB(ScalosGfxInit, 0);
+ADD2EXPUNGELIB(ScalosGfxCleanup, 0);
+ADD2OPENLIB(ScalosGfxOpen, 0);
+
+#endif
+
+//-----------------------------------------------------------------------------

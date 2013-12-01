@@ -134,7 +134,9 @@ static LONG SameName(CONST_STRPTR Name1, CONST_STRPTR Name2, size_t MaxLen);
 
 //----------------------------------------------------------------------------
 
+#if !defined(__AROS__)
 struct ExecBase *SysBase;
+#endif
 struct IntuitionBase *IntuitionBase;
 T_UTILITYBASE UtilityBase;
 struct DosLibrary * DOSBase;
@@ -1530,6 +1532,18 @@ static LONG SameName(CONST_STRPTR Name1, CONST_STRPTR Name2, size_t MaxLen)
 
 	return Stricmp(Name1, Name2);
 }
+
+//-----------------------------------------------------------------------------
+
+#if defined(__AROS__)
+
+#include <aros/symbolsets.h>
+
+ADD2INITLIB(PreferencesInit, 0);
+ADD2EXPUNGELIB(PreferencesCleanup, 0);
+ADD2OPENLIB(PreferencesOpen, 0);
+
+#endif
 
 //-----------------------------------------------------------------------------
 

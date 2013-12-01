@@ -1,0 +1,26 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-scalos-libraries-iconobject : \
+#MM     linklibs \
+#MM     contrib-scalos-libraries-iconobject-dir
+
+FILES := IconObject
+TARGETDIR := $(AROS_CONTRIB)/Scalos
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR) -idirafter $(SRCDIR)/$(CURDIR)/../../include
+USER_CFLAGS := -D__UTILITY_STDLIBBASE__
+
+%build_module mmake=contrib-scalos-libraries-iconobject \
+    modname=iconobject modtype=library conffile="iconobject-aros.conf" \
+    files="$(FILES)" moduledir=Libs prefix=$(TARGETDIR)
+
+
+GLOB_MKDIRS += $(TARGETDIR)/IconDatatypes/datatypes
+
+
+#MM
+contrib-scalos-libraries-iconobject-dir :
+	%mkdirs_q $(TARGETDIR)/IconDatatypes/datatypes
+
+%common

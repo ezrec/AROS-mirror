@@ -1,0 +1,132 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-scalos-main : \
+#MM     linklibs \
+#MM     contrib-scalos-main-locale \
+#MM     contrib-scalos-main-msgid
+
+FILES :=	about                   	\
+		AppMenu                 	\
+		AutoUpdate              	\
+		Backdrop                	\
+		BackFill                	\
+		BTree		    		\
+		ButtonGadgetClass       	\
+		ChildProcess       	    	\
+		Class                   	\
+		cleanup                 	\
+		CLIStart                	\
+		ControlBar		    	\
+		crc32                   	\
+		CycleGadgetClass	    	\
+		DefIcons                	\
+		DeviceWindowClass       	\
+		DevListClass            	\
+		$(SRCDIR)/$(CURDIR)/../common/Int64/Dos64 \
+		DoubleClick             	\
+		DragDrop                	\
+		DragDropBobs            	\
+		DrawIcon                	\
+		DropMarks		    	\
+		dtimage                 	\
+		DtImageClass            	\
+		FileCommands            	\
+		FileTransClass          	\
+		filetypes               	\
+		FontUtil                	\
+		FrameImageClass			\
+		$(SRCDIR)/$(CURDIR)/../common/Fs/FsAbstraction \
+		Functions               	\
+		GadgetBarClass          	\
+		GadgetBarImageClass     	\
+		GadgetBarTextClass      	\
+		GaugeGadgetClass        	\
+		HistoryGadgetClass	    	\
+		IconifyClass            	\
+		IconImageClass          	\
+		IconWindowClass         	\
+		IconWindow_MouseMove    	\
+		idcmp                   	\
+		InputHandler            	\
+		int64                   	\
+		Lasso                   	\
+		LocaleStrings           	\
+		MainWait                	\
+		Memory		    		\
+		Menu                    	\
+		MenuCommand             	\
+		Messages                	\
+		MouseIcon               	\
+		OpenDrawerByName	    	\
+		Patches                 	\
+		Pattern                 	\
+		PopOpenWindows              	\
+		PopupMenus              	\
+		Prefs                   	\
+		Rename                 		\
+		Request                 	\
+		RootClass               	\
+		ScaLibrary              	\
+		Scalos                  	\
+		ScalosInit              	\
+		$(SRCDIR)/$(CURDIR)/../common/McpGfx/ScalosMcpGfx \
+		ScalosLocale            	\
+		ScalosVersion	    		\
+		Scalos_Cx               	\
+		ScanDir                 	\
+		ScanDirText             	\
+		Semaphores		    	\
+		SeparatorGadgetClass		\
+		Shortcuts                  	\
+		Splash                  	\
+		StatusBar	            	\
+		StringGadgetClass       	\
+		Subroutines             	\
+		TextIconClass           	\
+		TextIconHighlightClass      	\
+		TextWindowClass         	\
+		TitleClass              	\
+		ThumbnailCache	    		\
+		Thumbnails		    	\
+		ToolTip                 	\
+		ToolTypes               	\
+		TTLayout                	\
+		Undo                     	\
+		wbl                     	\
+		WBStartup               	\
+		Window                  	\
+		WindowClass             	\
+		windowtask			\
+		Patches-aros			\
+		ScaLibrary-aros
+
+USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development -idirafter $(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../common/McpGfx \
+    -I$(SRCDIR)/$(CURDIR)/../common/Fs -I$(SRCDIR)/$(CURDIR)/../common/Int64 -I$(SRCDIR)/$(CURDIR)
+SCALOS_LOCALE := Scalos_Locale.h
+USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -D__REXXSYSLIB_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ \
+    -D__CONSOLE_STDLIBBASE__ -DSCALOSLOCALE=$(SCALOS_LOCALE)
+TARGETDIR := $(AROS_CONTRIB)/Scalos
+
+%build_prog mmake=contrib-scalos-main progname=Scalos \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs="png"
+
+
+#MM
+contrib-scalos-main-locale : Scalos_Locale.h
+
+Scalos_Locale.h : $(SRCDIR)/$(CURDIR)/Scalos.cd $(SRCDIR)/$(CURDIR)/../CatComp_h.sd
+	@$(ECHO) 'Compile $@ from $<'
+	@$(FLEXCAT) $< $@=$(SRCDIR)/$(CURDIR)/../CatComp_h.sd
+
+
+#MM
+contrib-scalos-main-msgid : MsgIdNames.h
+
+MsgIdNames.h : $(SRCDIR)/$(CURDIR)/Scalos.cd $(SRCDIR)/$(CURDIR)/../msgidnames.sd
+	@$(ECHO) 'Generate $@'
+	@$(FLEXCAT) $< $@=$(SRCDIR)/$(CURDIR)/../msgidnames.sd
+
+%common

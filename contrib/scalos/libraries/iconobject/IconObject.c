@@ -54,7 +54,9 @@ static struct Iconobject *InternalConvert2IconObjectA(
 
 //----------------------------------------------------------------------------
 
+#if !defined(__AROS__)
 struct ExecBase *SysBase;
+#endif
 struct IntuitionBase *IntuitionBase;
 T_UTILITYBASE UtilityBase;
 struct DosLibrary * DOSBase;
@@ -755,6 +757,18 @@ void exit(int x)
 }
 
 #endif /* !defined(__SASC) */
+
+//-----------------------------------------------------------------------------
+
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2INITLIB(IconObjectInit, 0);
+ADD2EXPUNGELIB(IconObjectCleanup, 0);
+ADD2OPENLIB(IconObjectOpen, 0);
+
+#endif
 
 //-----------------------------------------------------------------------------
 
