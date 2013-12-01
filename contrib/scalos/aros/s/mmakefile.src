@@ -1,0 +1,14 @@
+include $(TOP)/config/make.cfg
+
+FILES := Package-Startup
+
+#MM- contrib-scalos : \
+#MM     workbench-prefs-envarc \
+#MM     contrib-scalos-startupfiles \
+#MM     contrib-scalos-envpackage
+
+#MM
+contrib-scalos-envpackage :
+	$(ECHO) "Extras:Scalos" >$(AROS_PACKAGES)/Scalos
+
+%copy_files_q mmake=contrib-scalos-startupfiles dst=$(AROS_CONTRIB)/Scalos/S

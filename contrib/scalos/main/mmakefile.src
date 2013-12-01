@@ -2,10 +2,15 @@
 
 include $(TOP)/config/make.cfg
 
+#MM- contrib-scalos : contrib-scalos-main
+
 #MM contrib-scalos-main : \
 #MM     linklibs \
 #MM     contrib-scalos-main-locale \
-#MM     contrib-scalos-main-msgid
+#MM     contrib-scalos-main-msgid \
+#MM     contrib-scalos-libraries-iconobject \
+#MM     contrib-scalos-libraries-preferences \
+#MM     contrib-scalos-libraries-scalosgfx
 
 FILES :=	about                   	\
 		AppMenu                 	\
