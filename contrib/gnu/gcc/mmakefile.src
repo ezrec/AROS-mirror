@@ -8,6 +8,7 @@
 #MM- development-gcc : development-gmp development-mpfr development-mpc
 
 GCC_VERSION := 4.6.4
+GCC_LANGUAGES = c,c++,objc
 
 ifneq (,$(findstring $(AROS_TARGET_CPU),arm))
 GCC_EXTRAOPTS := CFLAGS=-I$(AROS_DEVELOPMENT)/include \
