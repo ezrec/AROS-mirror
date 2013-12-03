@@ -18,6 +18,6 @@ USER_CFLAGS := -D__UTILITY_STDLIBBASE__
 
 %build_module mmake=contrib-scalos-libraries-scalosgfx \
     modname=scalosgfx modtype=library conffile="scalosgfx-aros.conf" \
-    files="$(FILES)" moduledir=Libs prefix=$(TARGETDIR)
+    files="$(FILES)" uselibs="stdc" moduledir=Libs prefix=$(TARGETDIR)
 
 %common
