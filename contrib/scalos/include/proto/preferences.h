@@ -1,6 +1,10 @@
 #ifndef PROTO_PREFERENCES_H
 #define PROTO_PREFERENCES_H
 
+#ifdef __AROS__
+#error You must include AROS headers
+#endif
+
 #include <exec/types.h>
 extern struct Library *PreferencesBase;
 #ifdef __amigaos4__

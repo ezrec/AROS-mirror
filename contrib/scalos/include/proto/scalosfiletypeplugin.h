@@ -1,6 +1,10 @@
 #ifndef PROTO_SCALOSFILETYPEPLUGIN_H
 #define PROTO_SCALOSFILETYPEPLUGIN_H
 
+#ifdef __AROS__
+#error You must include AROS headers
+#endif
+
 #include <exec/types.h>
 extern struct Library *ScalosFileTypePluginBase ;
 #ifdef __amigaos4__

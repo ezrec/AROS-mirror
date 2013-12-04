@@ -1,6 +1,10 @@
 #ifndef PROTO_SQLITE3_H
 #define PROTO_SQLITE3_H
 
+#ifdef __AROS__
+#error You must include AROS headers
+#endif
+
 #include <exec/types.h>
 #include <sqlite3.h>
 extern struct Library *SQLite3Base;

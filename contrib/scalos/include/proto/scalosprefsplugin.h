@@ -1,6 +1,10 @@
 #ifndef  PROTO_SCALOSPREFSPLUGIN_H
 #define  PROTO_SCALOSPREFSPLUGIN_H
 
+#ifdef __AROS__
+#error You must include AROS headers
+#endif
+
 #include <exec/types.h>
 extern struct Library *ScalosPrefsPluginBase ;
 #ifdef __amigaos4__

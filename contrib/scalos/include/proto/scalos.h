@@ -1,6 +1,10 @@
 #ifndef PROTO_SCALOS_H
 #define PROTO_SCALOS_H
 
+#ifdef __AROS__
+#error You must include AROS headers
+#endif
+
 #include <exec/types.h>
 #include <scalos/scalos.h>
 #include <scalos/scalosgfx.h>

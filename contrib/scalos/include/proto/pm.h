@@ -1,5 +1,10 @@
 #ifndef POPUPMENU_PROTO_H
 #define POPUPMENU_PROTO_H
+
+#ifdef __AROS__
+#error You must include AROS headers
+#endif
+
 #include <exec/types.h>
 #include <clib/pm_protos.h>
 extern struct PopupMenuBase	*PopupMenuBase;

@@ -1,6 +1,10 @@
 #ifndef PROTO_SCALOSPLUGIN_H
 #define PROTO_SCALOSPLUGIN_H
 
+#ifdef __AROS__
+#error You must include AROS headers
+#endif
+
 #include <exec/types.h>
 extern struct Library *DtLibBase ;
 

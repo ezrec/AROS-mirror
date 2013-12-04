@@ -3,6 +3,10 @@
 #include <exec/types.h>
 #include <exec/libraries.h>
 
+#ifdef __AROS__
+#error You must include AROS headers
+#endif
+
 extern struct Library *IconobjectBase;
 #ifdef __amigaos4__
 #include <interfaces/iconobject.h>

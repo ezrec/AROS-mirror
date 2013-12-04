@@ -1,6 +1,10 @@
 #ifndef _PROTO_NEWICON_H
 #define _PROTO_NEWICON_H
 
+#ifdef __AROS__
+#error You must include AROS headers
+#endif
+
 #ifndef EXEC_TYPES_H
 #include <exec/types.h>
 #endif

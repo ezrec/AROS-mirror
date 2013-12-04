@@ -1,6 +1,10 @@
 #ifndef PROTO_SCALOSMENUPLUGIN_H
 #define PROTO_SCALOSMENUPLUGIN_H
 
+#ifdef __AROS__
+#error You must include AROS headers
+#endif
+
 #include <exec/types.h>
 extern struct Library *ScalosMenuPluginBase ;
 #ifdef __amigaos4__

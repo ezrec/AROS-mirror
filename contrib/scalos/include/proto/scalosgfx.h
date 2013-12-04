@@ -1,6 +1,10 @@
 #ifndef PROTO_SCALOSGFX_H
 #define PROTO_SCALOSGFX_H
 
+#ifdef __AROS__
+#error You must include AROS headers
+#endif
+
 #include <exec/types.h>
 #include <scalos/scalos.h>
 extern struct ScalosGfxBase *ScalosGfxBase ;

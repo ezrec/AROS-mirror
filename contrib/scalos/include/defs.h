@@ -2038,13 +2038,13 @@
 			struct Library *, libbase, 0, Dummy)
 
 	#define LIBFUNC_P1_PROTO(returntype, funcname, 		\
-			register1, type1, name1) 		\
+			register1, type1, name1, lvo) 		\
 		AROS_LD0(returntype, funcname, 			\
-			type1, name1, 0, name1)
+			type1, name1, lvo, name1)
 
 	#define LIBFUNC_P2_PROTO(returntype, funcname, 		\
 			register1, type1, name1, 		\
-			register2, type2, name2) 		\
+			register2, type2, name2, lvo) 		\
 		AROS_LD1(returntype, funcname, 			\
 			AROS_LPA(type1, name1, register1), 	\
 			type2, name2, 0, name2)
@@ -2052,35 +2052,35 @@
 	#define LIBFUNC_P3_PROTO(returntype, funcname, 		\
 			register1, type1, name1, 		\
 			register2, type2, name2, 		\
-			register3, type3, name3) 		\
+			register3, type3, name3, lvo) 		\
 		AROS_LD2(returntype, funcname, 			\
 			AROS_LPA(type1, name1, register1), 	\
 			AROS_LPA(type2, name2, register2), 	\
-			type3, name3, 0, name3)
+			type3, name3, lvo, name3)
 
 	#define LIBFUNC_P4_PROTO(returntype, funcname, 		\
 			register1, type1, name1, 		\
 			register2, type2, name2, 		\
 			register3, type3, name3, 		\
-			register4, type4, name4) 		\
+			register4, type4, name4, lvo) 		\
 		AROS_LD3(returntype, funcname, 			\
 			AROS_LPA(type1, name1, register1), 	\
 			AROS_LPA(type2, name2, register2), 	\
 			AROS_LPA(type3, name3, register3), 	\
-			type4, name4, 0, name4)
+			type4, name4, lvo, name4)
 
 	#define LIBFUNC_P5_PROTO(returntype, funcname, 		\
 			register1, type1, name1, 		\
 			register2, type2, name2, 		\
 			register3, type3, name3, 		\
 			register4, type4, name4, 		\
-			register5, type5, name5) 		\
+			register5, type5, name5, lvo) 		\
 		AROS_LD4(returntype, funcname, 			\
 			AROS_LPA(type1, name1, register1), 	\
 			AROS_LPA(type2, name2, register2), 	\
 			AROS_LPA(type3, name3, register3), 	\
 			AROS_LPA(type4, name4, register4), 	\
-			type5, name5, 0, name5)
+			type5, name5, lvo, name5)
 
 	#define LIBFUNC_P6_PROTO(returntype, funcname, 		\
 			register1, type1, name1, 		\
@@ -2088,14 +2088,14 @@
 			register3, type3, name3, 		\
 			register4, type4, name4, 		\
 			register5, type5, name5, 		\
-			register6, type6, name6) 		\
+			register6, type6, name6, lvo) 		\
 		AROS_LD5(returntype, funcname, 			\
 			AROS_LPA(type1, name1, register1), 	\
 			AROS_LPA(type2, name2, register2), 	\
 			AROS_LPA(type3, name3, register3), 	\
 			AROS_LPA(type4, name4, register4), 	\
 			AROS_LPA(type5, name5, register5), 	\
-			type6, name6, 0, name6)
+			type6, name6, lvo, name6)
 
 	#define LIBFUNC_P7_PROTO(returntype, funcname, 		\
 			register1, type1, name1, 		\
@@ -2104,7 +2104,7 @@
 			register4, type4, name4, 		\
 			register5, type5, name5, 		\
 			register6, type6, name6, 		\
-			register7, type7, name7) 		\
+			register7, type7, name7, lvo) 		\
 		AROS_LD6(returntype, funcname, 			\
 			AROS_LPA(type1, name1, register1), 	\
 			AROS_LPA(type2, name2, register2), 	\
@@ -2112,7 +2112,7 @@
 			AROS_LPA(type4, name4, register4), 	\
 			AROS_LPA(type5, name5, register5), 	\
 			AROS_LPA(type6, name6, register6), 	\
-			type7, name7, 0, name7)
+			type7, name7, lvo, name7)
 
 	#define LIBFUNC_P8_PROTO(returntype, funcname, 		\
 			register1, type1, name1, 		\
@@ -2122,7 +2122,7 @@
 			register5, type5, name5, 		\
 			register6, type6, name6, 		\
 			register7, type7, name7, 		\
-			register8, type8, name8) 		\
+			register8, type8, name8, lvo) 		\
 		AROS_LD7(returntype, funcname, 			\
 			AROS_LPA(type1, name1, register1), 	\
 			AROS_LPA(type2, name2, register2), 	\
@@ -2131,7 +2131,7 @@
 			AROS_LPA(type5, name5, register5), 	\
 			AROS_LPA(type6, name6, register6), 	\
 			AROS_LPA(type7, name7, register7), 	\
-			type8, name8, 0, name8)
+			type8, name8, lvo, name8)
 
 	#define LIBFUNC_P9_PROTO(returntype, funcname, 		\
 			register1, type1, name1, 		\
@@ -2142,7 +2142,7 @@
 			register6, type6, name6, 		\
 			register7, type7, name7, 		\
 			register8, type8, name8, 		\
-			register9, type9, name9) 		\
+			register9, type9, name9, lvo) 		\
 		AROS_LD8(returntype, funcname, 			\
 			AROS_LPA(type1, name1, register1), 	\
 			AROS_LPA(type2, name2, register2), 	\
@@ -2152,7 +2152,7 @@
 			AROS_LPA(type6, name6, register6), 	\
 			AROS_LPA(type7, name7, register7), 	\
 			AROS_LPA(type8, name8, register8), 	\
-			type9, name9, 0, name9)
+			type9, name9, lvo, name9)
 
 	//======================================================
 
@@ -2163,29 +2163,29 @@
 			AROS_LIBFUNC_INIT
 
 	#define LIBFUNC_P1(returntype, funcname, 		\
-			register1, type1, name1) 		\
+			register1, type1, name1, lvo) 		\
 		AROS_LH0(returntype, funcname, 			\
-			type1, name1, 0, name1) 		\
+			type1, name1, lvo, name1) 		\
 		{						\
 			AROS_LIBFUNC_INIT
 
 	#define LIBFUNC_P2(returntype, funcname, 		\
 			register1, type1, name1, 		\
-			register2, type2, name2) 		\
+			register2, type2, name2, lvo) 		\
 		AROS_LH1(returntype, funcname, 			\
 			AROS_LHA(type1, name1, register1), 	\
-			type2, name2, 0, name2) 		\
+			type2, name2, lvo, name2) 		\
 		{						\
 			AROS_LIBFUNC_INIT
 
 	#define LIBFUNC_P3(returntype, funcname, 		\
 			register1, type1, name1, 		\
 			register2, type2, name2, 		\
-			register3, type3, name3) 		\
+			register3, type3, name3, lvo) 		\
 		AROS_LH2(returntype, funcname, 			\
 			AROS_LHA(type1, name1, register1), 	\
 			AROS_LHA(type2, name2, register2), 	\
-			type3, name3, 0, name3) 		\
+			type3, name3, lvo, name3) 		\
 		{						\
 			AROS_LIBFUNC_INIT
 
@@ -2193,12 +2193,12 @@
 			register1, type1, name1, 		\
 			register2, type2, name2, 		\
 			register3, type3, name3, 		\
-			register4, type4, name4) 		\
+			register4, type4, name4, lvo) 		\
 		AROS_LH3(returntype, funcname, 			\
 			AROS_LHA(type1, name1, register1), 	\
 			AROS_LHA(type2, name2, register2), 	\
 			AROS_LHA(type3, name3, register3), 	\
-			type4, name4, 0, name4) 		\
+			type4, name4, lvo, name4) 		\
 		{						\
 			AROS_LIBFUNC_INIT
 
@@ -2207,13 +2207,13 @@
 			register2, type2, name2, 		\
 			register3, type3, name3, 		\
 			register4, type4, name4, 		\
-			register5, type5, name5) 		\
+			register5, type5, name5, lvo) 		\
 		AROS_LH4(returntype, funcname, 			\
 			AROS_LHA(type1, name1, register1), 	\
 			AROS_LHA(type2, name2, register2), 	\
 			AROS_LHA(type3, name3, register3), 	\
 			AROS_LHA(type4, name4, register4), 	\
-			type5, name5, 0, name5) 		\
+			type5, name5, lvo, name5) 		\
 		{						\
 			AROS_LIBFUNC_INIT
 
@@ -2223,14 +2223,14 @@
 			register3, type3, name3, 		\
 			register4, type4, name4, 		\
 			register5, type5, name5, 		\
-			register6, type6, name6) 		\
+			register6, type6, name6, lvo) 		\
 		AROS_LH5(returntype, funcname, 			\
 			AROS_LHA(type1, name1, register1), 	\
 			AROS_LHA(type2, name2, register2), 	\
 			AROS_LHA(type3, name3, register3), 	\
 			AROS_LHA(type4, name4, register4), 	\
 			AROS_LHA(type5, name5, register5), 	\
-			type6, name6, 0, name6) 		\
+			type6, name6, lvo, name6) 		\
 		{						\
 			AROS_LIBFUNC_INIT
 
@@ -2241,7 +2241,7 @@
 			register4, type4, name4, 		\
 			register5, type5, name5, 		\
 			register6, type6, name6, 		\
-			register7, type7, name7) 		\
+			register7, type7, name7, lvo) 		\
 		AROS_LH6(returntype, funcname, 			\
 			AROS_LHA(type1, name1, register1), 	\
 			AROS_LHA(type2, name2, register2), 	\
@@ -2249,7 +2249,7 @@
 			AROS_LHA(type4, name4, register4), 	\
 			AROS_LHA(type5, name5, register5), 	\
 			AROS_LHA(type6, name6, register6), 	\
-			type7, name7, 0, name7) 		\
+			type7, name7, lvo, name7) 		\
 		{						\
 			AROS_LIBFUNC_INIT
 
@@ -2261,7 +2261,7 @@
 			register5, type5, name5, 		\
 			register6, type6, name6, 		\
 			register7, type7, name7, 		\
-			register8, type8, name8) 		\
+			register8, type8, name8, lvo) 		\
 		AROS_LH7(returntype, funcname, 			\
 			AROS_LHA(type1, name1, register1), 	\
 			AROS_LHA(type2, name2, register2), 	\
@@ -2270,7 +2270,7 @@
 			AROS_LHA(type5, name5, register5), 	\
 			AROS_LHA(type6, name6, register6), 	\
 			AROS_LHA(type7, name7, register7), 	\
-			type8, name8, 0, name8) 		\
+			type8, name8, lvo, name8) 		\
 		{						\
 			AROS_LIBFUNC_INIT
 
@@ -2283,7 +2283,7 @@
 			register6, type6, name6, 		\
 			register7, type7, name7, 		\
 			register8, type8, name8, 		\
-			register9, type9, name9) 		\
+			register9, type9, name9, lvo) 		\
 		AROS_LH8(returntype, funcname, 			\
 			AROS_LHA(type1, name1, register1), 	\
 			AROS_LHA(type2, name2, register2), 	\
@@ -2293,7 +2293,7 @@
 			AROS_LHA(type6, name6, register6), 	\
 			AROS_LHA(type7, name7, register7), 	\
 			AROS_LHA(type8, name8, register8), 	\
-			type9, name9, 0, name9) 		\
+			type9, name9, lvo, name9) 		\
 		{						\
 			AROS_LIBFUNC_INIT
 

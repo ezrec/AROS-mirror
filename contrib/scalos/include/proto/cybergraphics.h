@@ -1,5 +1,10 @@
 #ifndef PROTO_CYBERGRAPHICS_H
 #define PROTO_CYBERGRAPHICS_H 1
+
+#ifdef __AROS__
+#error You must include AROS headers
+#endif
+
 #include <exec/types.h>
 extern struct Library *CyberGfxBase;
 #ifdef __amigaos4__
