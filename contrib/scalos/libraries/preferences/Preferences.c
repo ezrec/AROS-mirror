@@ -349,7 +349,7 @@ void PreferencesCleanup(struct PreferencesBase *PreferencesBase)
 
 LIBFUNC_P2(APTR, LIBAllocPrefsHandle,
 	A0, CONST_STRPTR, Name,
-	A6, struct PreferencesBase *, PreferencesBase)
+	A6, struct PreferencesBase *, PreferencesBase, 5)
 {
 	struct PrefsListEntry *pleFound = NULL;
 
@@ -398,7 +398,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(void, LIBFreePrefsHandle,
 	A0, APTR, PrefsHandle,
-	A6, struct PreferencesBase *, PreferencesBase)
+	A6, struct PreferencesBase *, PreferencesBase, 6)
 {
 	struct PrefsListEntry *ple = (struct PrefsListEntry *) PrefsHandle;
 
@@ -439,7 +439,7 @@ LIBFUNC_P6(void, LIBSetPreferences,
 	D1, ULONG, tag,
 	A1, const APTR, Struct,
 	D2, UWORD, StructSize,
-	A6, struct PreferencesBase *, PreferencesBase)
+	A6, struct PreferencesBase *, PreferencesBase, 7)
 {
 	struct PrefsListEntry *ple = (struct PrefsListEntry *) PrefsHandle;
 
@@ -527,7 +527,7 @@ LIBFUNC_P6(ULONG, LIBGetPreferences,
 	D1, ULONG, tag,
 	A1, APTR, Struct,
 	D2, UWORD, StructSize,
-	A6, struct PreferencesBase *, PreferencesBase)
+	A6, struct PreferencesBase *, PreferencesBase, 8)
 {
 	struct PrefsListEntry *ple = (struct PrefsListEntry *) PrefsHandle;
 	ULONG BytesCopied = 0;
@@ -598,7 +598,7 @@ LIBFUNC_END
 LIBFUNC_P3(void, LIBReadPrefsHandle,
 	A0, APTR, PrefsHandle,
 	A1, CONST_STRPTR, Filename,
-	A6, struct PreferencesBase *, PreferencesBase)
+	A6, struct PreferencesBase *, PreferencesBase, 9)
 {
 	struct PrefsListEntry *ple = (struct PrefsListEntry *) PrefsHandle;
 	struct IFFHandle *iff;
@@ -748,7 +748,7 @@ LIBFUNC_END
 LIBFUNC_P3(void, LIBWritePrefsHandle,
 	A0, APTR, PrefsHandle,
 	A1, CONST_STRPTR, Filename,
-	A6, struct PreferencesBase *, PreferencesBase)
+	A6, struct PreferencesBase *, PreferencesBase, 10)
 {
 	struct PrefsListEntry *ple = (struct PrefsListEntry *) PrefsHandle;
 	struct IFFHandle *iff;
@@ -907,7 +907,7 @@ LIBFUNC_P4(struct PrefsStruct *, LIBFindPreferences,
 	A0, APTR, PrefsHandle,
 	D0, ULONG, ID,
 	D1, ULONG, tag,
-	A6, struct PreferencesBase *, PreferencesBase)
+	A6, struct PreferencesBase *, PreferencesBase, 11)
 {
 	struct PrefsListEntry *ple = (struct PrefsListEntry *) PrefsHandle;
 	struct PrefsStruct *ps = NULL;
@@ -978,7 +978,7 @@ LIBFUNC_P7(void, LIBSetEntry,
 	A1, const APTR, Struct,
 	D2, UWORD, StructSize,
 	D3, ULONG, Entry,
-	A6, struct PreferencesBase *, PreferencesBase)
+	A6, struct PreferencesBase *, PreferencesBase, 12)
 {
 	struct PrefsListEntry *ple = (struct PrefsListEntry *) PrefsHandle;
 
@@ -1099,7 +1099,7 @@ LIBFUNC_P7(ULONG, LIBGetEntry,
 	A1, APTR, Struct,
 	D2, UWORD, StructSize,
 	D3, ULONG, Entry,
-	A6, struct PreferencesBase *, PreferencesBase)
+	A6, struct PreferencesBase *, PreferencesBase, 13)
 {
 	struct PrefsListEntry *ple = (struct PrefsListEntry *) PrefsHandle;
 	ULONG BytesCopied = 0;
@@ -1185,7 +1185,7 @@ LIBFUNC_P5(ULONG, LIBRemEntry,
 	D0, ULONG, ID,
 	D1, ULONG, tag,
 	D2, ULONG, Entry,
-	A6, struct PreferencesBase *, PreferencesBase)
+	A6, struct PreferencesBase *, PreferencesBase, 14)
 {
 	struct PrefsListEntry *ple = (struct PrefsListEntry *) PrefsHandle;
 	ULONG Success = 0;
