@@ -122,33 +122,33 @@ BOOL ScalosGfxOpen(struct ScalosGfxBase *ScalosGfxBase);
 void ScalosGfxCleanup(struct ScalosGfxBase *ScalosGfxBase);
 
 LIBFUNC_P1_PROTO(struct ScalosBitMapAndColor *, LIBScalosGfxCreateEmptySAC,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 5);
 LIBFUNC_P6_PROTO(struct ScalosBitMapAndColor *, LIBScalosGfxCreateSAC,
 	D0, ULONG, width,
 	D1, ULONG, height,
 	D2, ULONG, depth,
 	A0, struct BitMap *, friendBM,
 	A1, struct TagItem *, tagList,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 6);
 LIBFUNC_P2_PROTO(VOID, LIBScalosGfxFreeSAC,
 	A0, struct ScalosBitMapAndColor *, sac,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 7);
 LIBFUNC_P4_PROTO(struct gfxARGB *, LIBScalosGfxCreateARGB,
 	D0, ULONG, width,
 	D1, ULONG, height,
 	A0, struct TagItem *, tagList,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 8);
 LIBFUNC_P2_PROTO(VOID, LIBScalosGfxFreeARGB,
 	A0, struct gfxARGB **, argb,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 9);
 LIBFUNC_P3_PROTO(VOID, LIBScalosGfxARGBSetAlpha,
 	A0, struct ARGBHeader *, argbh,
 	D0, UBYTE, alpha,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 10);
 LIBFUNC_P3_PROTO(VOID, LIBScalosGfxARGBSetAlphaMask,
 	A0, struct ARGBHeader *, argbh,
 	A1, PLANEPTR, maskPlane,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 11);
 LIBFUNC_P7_PROTO(struct gfxARGB *, LIBScalosGfxCreateARGBFromBitMap,
 	A0, struct BitMap *,bm,
 	D0, ULONG, width,
@@ -156,39 +156,39 @@ LIBFUNC_P7_PROTO(struct gfxARGB *, LIBScalosGfxCreateARGBFromBitMap,
 	D2, ULONG, numberOfColors,
 	A1, const ULONG *, colorTable,
 	A2, PLANEPTR, maskPlane,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 12);
 LIBFUNC_P4_PROTO(VOID, LIBScalosGfxFillARGBFromBitMap,
 	A0, struct ARGBHeader *, argbh,
 	A1, struct BitMap *, srcBM,
 	A2, PLANEPTR, maskPlane,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 13);
 LIBFUNC_P5_PROTO(VOID, LIBScalosGfxWriteARGBToBitMap,
 	A0, struct ARGBHeader *, argbh,
 	A1, struct BitMap *, bm,
 	D0, ULONG, numberOfColors,
 	A2, const ULONG *, colorTable,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 14);
 LIBFUNC_P4_PROTO(struct ScalosBitMapAndColor *, LIBScalosGfxMedianCut,
 	A0, struct ARGBHeader *, argbh,
 	D0, ULONG, depth,
 	A1, struct TagItem *, tagList,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 15);
 LIBFUNC_P5_PROTO(struct gfxARGB *, LIBScalosGfxScaleARGBArray,
 	A0, const struct ARGBHeader *, src,
 	A1, ULONG *, destWidth,
 	A2, ULONG *, destHeight,
 	A3, struct TagItem *, tagList,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 16);
 LIBFUNC_P3_PROTO(struct BitMap *, LIBScalosGfxScaleBitMap,
 	A0, struct ScaleBitMapArg *, sbma,
 	A1, struct TagItem *, tagList,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 17);
 LIBFUNC_P5_PROTO(VOID, LIBScalosGfxCalculateScaleAspect,
 	D0, ULONG, sourceWidth,
 	D1, ULONG, sourceHeight,
 	A0, ULONG *, destWidth,
 	A1, ULONG *, destHeight,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 18);
 LIBFUNC_P9_PROTO(VOID, LIBScalosGfxBlitARGB,
 	A0, struct ARGBHeader *, DestARGB,
 	A1, const struct ARGBHeader *, SrcARGB,
@@ -198,7 +198,7 @@ LIBFUNC_P9_PROTO(VOID, LIBScalosGfxBlitARGB,
 	D3, LONG, SrcTop,
 	D4, LONG, Width,
 	D5, LONG, Height,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 19);
 LIBFUNC_P7_PROTO(VOID, LIBScalosGfxFillRectARGB,
 	A0, struct ARGBHeader *, DestARGB,
 	A1, const struct gfxARGB *, fillARGB,
@@ -206,16 +206,16 @@ LIBFUNC_P7_PROTO(VOID, LIBScalosGfxFillRectARGB,
 	D1, LONG, top,
 	D2, LONG, width,
 	D3, LONG, height,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 20);
 LIBFUNC_P3_PROTO(VOID, LIBScalosGfxSetARGB,
 	A0, struct ARGBHeader *, DestARGB,
 	A1, const struct gfxARGB *, fillARGB,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 21);
 LIBFUNC_P4_PROTO(BOOL, LIBScalosGfxNewColorMap,
 	A0, struct ScalosBitMapAndColor *, sac,
 	A1, const ULONG *, colorMap,
 	D0, ULONG, colorEntries,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 22);
 LIBFUNC_P8_PROTO(VOID, LIBScalosGfxARGBRectMult,
 	A0, struct RastPort *, rp,
 	A1, const struct ARGB *, numerator,
@@ -224,7 +224,7 @@ LIBFUNC_P8_PROTO(VOID, LIBScalosGfxARGBRectMult,
 	D1, WORD, yMin,
 	D2, WORD, xMax,
 	D3, WORD, yMax,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 23);
 LIBFUNC_P9_PROTO(VOID, LIBScalosGfxBlitARGBAlpha,
 	A0, struct RastPort *, rp,
 	A1, const struct ARGBHeader *, srcH,
@@ -234,7 +234,7 @@ LIBFUNC_P9_PROTO(VOID, LIBScalosGfxBlitARGBAlpha,
 	D3, ULONG, srcTop,
 	D4, ULONG, width,
 	D5, ULONG, height,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 24);
 LIBFUNC_P7_PROTO(VOID, LIBScalosGfxBlitARGBAlphaTagList,
 	A0, struct RastPort *, rp,
 	A1, const struct ARGBHeader *, srcH,
@@ -242,7 +242,7 @@ LIBFUNC_P7_PROTO(VOID, LIBScalosGfxBlitARGBAlphaTagList,
 	D1, ULONG, destTop,
 	A3, const struct IBox *, srcSize,
 	A2, struct TagItem *, tagList,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 25);
 LIBFUNC_P8_PROTO(VOID, LIBScalosGfxBlitIcon,
 	A0, struct RastPort *, rpBackground,
 	A1, struct RastPort *, rpIcon,
@@ -251,7 +251,7 @@ LIBFUNC_P8_PROTO(VOID, LIBScalosGfxBlitIcon,
 	D2, ULONG, width,
 	D3, ULONG, height,
 	A2, struct TagItem *, tagList,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 26);
 LIBFUNC_P9_PROTO(BOOL, LIBScalosGfxDrawGradient,
 	A0, struct ARGBHeader *, dest,
 	D0, LONG, left,
@@ -261,7 +261,7 @@ LIBFUNC_P9_PROTO(BOOL, LIBScalosGfxDrawGradient,
 	A1, struct gfxARGB *, start,
 	A2, struct gfxARGB *, stop,
 	D4, ULONG, gradType,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 27);
 LIBFUNC_P9_PROTO(BOOL, LIBScalosGfxDrawGradientRastPort,
 	A0, struct RastPort *, rp,
 	D0, LONG, left,
@@ -271,7 +271,7 @@ LIBFUNC_P9_PROTO(BOOL, LIBScalosGfxDrawGradientRastPort,
 	A1, struct gfxARGB *, start,
 	A2, struct gfxARGB *, stop,
 	D4, ULONG, gradType,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 28);
 LIBFUNC_P7_PROTO(VOID, LIBScalosGfxDrawLine,
 	A0, struct ARGBHeader *, dest,
 	D0, LONG, fromX,
@@ -279,7 +279,7 @@ LIBFUNC_P7_PROTO(VOID, LIBScalosGfxDrawLine,
 	D2, LONG, toX,
 	D3, LONG, toY,
 	A1, const struct gfxARGB *, lineColor,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 29);
 LIBFUNC_P7_PROTO(VOID, LIBScalosGfxDrawLineRastPort,
 	A0, struct RastPort *, rp,
 	D0, LONG, fromX,
@@ -287,7 +287,7 @@ LIBFUNC_P7_PROTO(VOID, LIBScalosGfxDrawLineRastPort,
 	D2, LONG, toX,
 	D3, LONG, toY,
 	A1, const struct gfxARGB *, lineColor,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 30);
 LIBFUNC_P9_PROTO(VOID, LIBScalosGfxDrawEllipse,
 	A0, struct ARGBHeader *, dest,
 	D0, LONG, xCenter,
@@ -297,7 +297,7 @@ LIBFUNC_P9_PROTO(VOID, LIBScalosGfxDrawEllipse,
 	D4, WORD, segment,
 	A1, const struct gfxARGB *, color1,
 	A2, const struct gfxARGB *, color2,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 31);
 LIBFUNC_P9_PROTO(VOID, LIBScalosGfxDrawEllipseRastPort,
 	A0, struct RastPort *, rp,
 	D0, LONG, xCenter,
@@ -307,7 +307,7 @@ LIBFUNC_P9_PROTO(VOID, LIBScalosGfxDrawEllipseRastPort,
 	D4, WORD, segment,
 	A1, const struct gfxARGB *, color1,
 	A2, const struct gfxARGB *, color2,
-	A6, struct ScalosGfxBase *, ScalosGfxBase);
+	A6, struct ScalosGfxBase *, ScalosGfxBase, 32);
 APTR ScalosGfxAllocVecPooled(struct ScalosGfxBase *ScalosGfxBase, ULONG Size);
 void ScalosGfxFreeVecPooled(struct ScalosGfxBase *ScalosGfxBase, APTR mem);
 
