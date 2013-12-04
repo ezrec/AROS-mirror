@@ -487,7 +487,7 @@ static VOID FreeClassList( struct IconObjectBase *IconObjectBase )
 LIBFUNC_P3(struct Iconobject *, LIBNewIconObject,
 	A0, APTR, Name,
 	A1, CONST struct TagItem *, Taglist, 
-	A6, struct IconObjectBase *, IconObjectBase)
+	A6, struct IconObjectBase *, IconObjectBase, 5)
 {
 	struct Iconobject *obj = NULL;
 	BPTR IconFh = (BPTR) NULL;
@@ -551,7 +551,7 @@ LIBFUNC_END
 // DisposeIconObject()
 LIBFUNC_P2(void, LIBDisposeIconObject,
 	A0, struct Iconobject *, iconobject, 
-	A6, struct IconObjectBase *, IconObjectBase)
+	A6, struct IconObjectBase *, IconObjectBase, 6)
 {
 	d1(kprintf(__FILE__ "/%s/%ld:  iconobject=%08lx\n", __FUNC__ , __LINE__, iconobject));
 	(void) IconObjectBase;
@@ -566,7 +566,7 @@ LIBFUNC_END
 LIBFUNC_P3(struct Iconobject *, LIBGetDefIconObject,
 	D0, ULONG, IconType,
 	A0, CONST struct TagItem *, TagList, 
-	A6, struct IconObjectBase *, IconObjectBase)
+	A6, struct IconObjectBase *, IconObjectBase, 7)
 {
 	struct IconNode *in;
 	struct Iconobject *obj = NULL;
@@ -601,7 +601,7 @@ LIBFUNC_P4(LONG, LIBPutIconObject,
 	A0, struct Iconobject *, iconobject, 
 	A1, APTR, path, 
 	A2, CONST struct TagItem *, TagList, 
-	A6, struct IconObjectBase *, IconObjectBase)
+	A6, struct IconObjectBase *, IconObjectBase, 8)
 {
 	d1(kprintf(__FILE__ "/%s/%ld:  obj=%08lx\n", __FUNC__, __LINE__, iconobject));
 
@@ -618,7 +618,7 @@ LIBFUNC_END
 // IsIconName()
 LIBFUNC_P2(ULONG, LIBIsIconName,
 	A0, const char *, filename, 
-	A6, struct IconObjectBase *, IconObjectBase);
+	A6, struct IconObjectBase *, IconObjectBase, 9);
 {
 	struct IconNode *in;
 
@@ -656,7 +656,7 @@ LIBFUNC_END
 LIBFUNC_P3(struct Iconobject *, LIBConvert2IconObjectA,
 	A0, struct DiskObject *, diskobject, 
 	A1, const struct TagItem *, TagList,
-	A6, struct IconObjectBase *, IconObjectBase)
+	A6, struct IconObjectBase *, IconObjectBase, 11)
 {
 	return InternalConvert2IconObjectA(diskobject, TagList, IconObjectBase);
 }
@@ -667,7 +667,7 @@ LIBFUNC_END
 // Convert2IconObject()
 LIBFUNC_P2(struct Iconobject *, LIBConvert2IconObject,
 	A0, struct DiskObject *, diskobject, 
-	A6, struct IconObjectBase *, IconObjectBase)
+	A6, struct IconObjectBase *, IconObjectBase, 10)
 {
 	return InternalConvert2IconObjectA(diskobject, NULL, IconObjectBase);
 }
