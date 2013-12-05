@@ -1,0 +1,54 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+TARGETDIR := $(AROS_CONTRIB)/Scalos/Development/include
+
+INCLUDES := $(TARGETDIR)/clib/scalosplugin_protos.h $(TARGETDIR)/defines/scalosplugin.h \
+    $(TARGETDIR)/inline/scalosplugin.h $(TARGETDIR)/proto/scalosplugin.h 
+
+#MM
+contrib-scalos-plugin-includes : $(INCLUDES)
+
+$(INCLUDES) : $(SRCDIR)/$(CURDIR)/scalosplugin-aros.conf
+	%mkdirs_q $(TARGETDIR)/clib $(TARGETDIR)/defines/ \
+		$(TARGETDIR)/inline $(TARGETDIR)/proto
+	$(GENMODULE) -c $^ -d $(TARGETDIR) writeincludes scalosplugin library
+
+
+INCLUDES := $(TARGETDIR)/clib/scalosmenuplugin_protos.h $(TARGETDIR)/defines/scalosmenuplugin.h \
+    $(TARGETDIR)/inline/scalosmenuplugin.h $(TARGETDIR)/proto/scalosmenuplugin.h 
+
+#MM
+contrib-scalos-menuplugin-includes : $(INCLUDES)
+
+$(INCLUDES) : $(SRCDIR)/$(CURDIR)/scalosmenuplugin-aros.conf
+	%mkdirs_q $(TARGETDIR)/clib $(TARGETDIR)/defines/ \
+		$(TARGETDIR)/inline $(TARGETDIR)/proto
+	$(GENMODULE) -c $^ -d $(TARGETDIR) writeincludes scalosmenuplugin library
+
+
+INCLUDES := $(TARGETDIR)/clib/scalopreviewplugin_protos.h $(TARGETDIR)/defines/scalospreviewplugin.h \
+    $(TARGETDIR)/inline/scalospreviewplugin.h $(TARGETDIR)/proto/scalospreviewplugin.h 
+
+#MM
+contrib-scalos-previewplugin-includes : $(INCLUDES)
+
+$(INCLUDES) : $(SRCDIR)/$(CURDIR)/scalospreviewplugin-aros.conf
+	%mkdirs_q $(TARGETDIR)/clib $(TARGETDIR)/defines/ \
+		$(TARGETDIR)/inline $(TARGETDIR)/proto
+	$(GENMODULE) -c $^ -d $(TARGETDIR) writeincludes scalospreviewplugin library
+
+
+INCLUDES := $(TARGETDIR)/clib/scalosfiletypeplugin_protos.h $(TARGETDIR)/defines/scalosfiletypeplugin.h \
+    $(TARGETDIR)/inline/scalosfiletypeplugin.h $(TARGETDIR)/proto/scalosfiletypeplugin.h 
+
+#MM
+contrib-scalos-filetypeplugin-includes : $(INCLUDES)
+
+$(INCLUDES) : $(SRCDIR)/$(CURDIR)/scalosfiletypeplugin-aros.conf
+	%mkdirs_q $(TARGETDIR)/clib $(TARGETDIR)/defines/ \
+		$(TARGETDIR)/inline $(TARGETDIR)/proto
+	$(GENMODULE) -c $^ -d $(TARGETDIR) writeincludes scalosfiletypeplugin library
+
+%common
