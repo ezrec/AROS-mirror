@@ -10,7 +10,13 @@ include $(TOP)/config/make.cfg
 #MM     contrib-scalos-main-msgid \
 #MM     contrib-scalos-libraries-iconobject \
 #MM     contrib-scalos-libraries-preferences \
-#MM     contrib-scalos-libraries-scalosgfx
+#MM     contrib-scalos-libraries-scalosgfx \
+#MM     contrib-scalos-library-includes \
+#MM     contrib-scalos-plugin-includes \
+#MM     contrib-scalos-menuplugin-includes \
+#MM     contrib-scalos-previewplugin-includes \
+#MM     contrib-scalos-filetypeplugin-includes
+
 
 FILES :=	about                   	\
 		AppMenu                 	\
@@ -107,7 +113,7 @@ FILES :=	about                   	\
 		Patches-aros			\
 		ScaLibrary-aros
 
-USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development -idirafter $(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../common/McpGfx \
+USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include -idirafter $(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../common/McpGfx \
     -I$(SRCDIR)/$(CURDIR)/../common/Fs -I$(SRCDIR)/$(CURDIR)/../common/Int64 -I$(SRCDIR)/$(CURDIR)
 SCALOS_LOCALE := Scalos_Locale.h
 USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -D__REXXSYSLIB_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ \
@@ -133,5 +139,18 @@ contrib-scalos-main-msgid : MsgIdNames.h
 MsgIdNames.h : $(SRCDIR)/$(CURDIR)/Scalos.cd $(SRCDIR)/$(CURDIR)/../msgidnames.sd
 	@$(ECHO) 'Generate $@'
 	@$(FLEXCAT) $< $@=$(SRCDIR)/$(CURDIR)/../msgidnames.sd
+
+
+INCLUDES := $(TARGETDIR)/Development/include/clib/scalos_protos.h $(TARGETDIR)/Development/include/defines/scalos.h \
+    $(TARGETDIR)/Development/include/inline/scalos.h $(TARGETDIR)/Development/include/proto/scalos.h 
+
+#MM
+contrib-scalos-library-includes : $(INCLUDES)
+
+$(INCLUDES) : $(SRCDIR)/$(CURDIR)/scalos-aros.conf
+	%mkdirs_q $(TARGETDIR)/Development/include/clib $(TARGETDIR)/Development/include/defines/ \
+		$(TARGETDIR)/Development/include/inline $(TARGETDIR)/Development/include/proto
+	$(GENMODULE) -c $^ -d $(TARGETDIR)/Development/include writeincludes scalos library
+
 
 %common

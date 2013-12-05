@@ -224,7 +224,7 @@ static ULONG DoiCount;
 
 // CloseWorkBench() replacement
 LIBFUNC_P1(LONG, sca_CloseWorkBench,
-	A6, struct IntuitionBase *, iBase)
+	A6, struct IntuitionBase *, iBase, 0)
 {
 	struct MsgPort *ReplyPort = NULL;
 	LONG Success = FALSE;
@@ -337,7 +337,7 @@ LIBFUNC_END
 
 // OpenWorkBench() replacement
 LIBFUNC_P1(LONG, sca_OpenWorkBench,
-	A6, struct IntuitionBase *, iBase)
+	A6, struct IntuitionBase *, iBase, 0)
 {
 	LONG Success;
 
@@ -460,7 +460,7 @@ LIBFUNC_P8(struct AppIcon *, sca_AddAppIconA,
 	A2, BPTR, lock,
 	A3, struct DiskObject *, DiskObj,
 	A4, struct TagItem *, TagList,
-	A6, struct Library *, wbBase)
+	A6, struct Library *, wbBase, 0)
 {
 	struct DiskObject *DiskObjClone = NULL;
 	struct AppObject *appIcon = NULL;
@@ -882,7 +882,7 @@ static SAVEDS(ULONG) AppChangeFunc(struct WBArg *ArgArray, struct SM_RunProcess 
 //   D0                      A0
 LIBFUNC_P2(ULONG, sca_RemoveAppIcon,
 	A0, struct AppIcon *, appIcon,
-	A6, struct Library *, wbBase)
+	A6, struct Library *, wbBase, 0)
 {
 	struct AppObject *AppObj = (struct AppObject *) appIcon;
 	BOOL Success = TRUE;
@@ -936,7 +936,7 @@ LIBFUNC_P6(struct AppWindow *, sca_AddAppWindowA,
 	A0, struct Window *, window,
 	A1, struct MsgPort *, iconPort,
 	A2, struct TagItem *, TagList,
-	A6, struct Library *, wbBase)
+	A6, struct Library *, wbBase, 0)
 {
 	(void) wbBase;
 
@@ -953,7 +953,7 @@ LIBFUNC_END
 //         D0                        A0
 LIBFUNC_P2(BOOL, sca_RemoveAppWindow,
 	A0, struct AppWindow *, aw,
-	A6, struct Library *, wbBase)
+	A6, struct Library *, wbBase, 0)
 {
 	struct AppObject *appo = (struct AppObject *) aw;
 
@@ -983,7 +983,7 @@ LIBFUNC_P6(struct AppMenuItem *, sca_AddAppMenuItemA,
 	A0, CONST_STRPTR, text,
 	A1, struct MsgPort *, iconPort,
 	A2, struct TagItem *, TagList,
-	A6, struct Library *, wbBase)
+	A6, struct Library *, wbBase, 0)
 {
 	(void) wbBase;
 
@@ -1000,7 +1000,7 @@ LIBFUNC_END
 //         D0                        A0
 LIBFUNC_P2(BOOL, sca_RemoveAppMenuItem,
 	A0, struct AppMenuItem *, ami,
-	A6, struct Library *, wbBase)
+	A6, struct Library *, wbBase, 0)
 {
 	struct AppObject *appo = (struct AppObject *) ami;
 
@@ -1347,7 +1347,7 @@ LIBFUNC_END
 LIBFUNC_P3(struct Screen *, sca_OpenScreenTagList,
 	A0, struct NewScreen *, newScr,
 	A1, const struct TagItem *, TagList,
-	A6, struct IntuitionBase *, iBase)
+	A6, struct IntuitionBase *, iBase, 0)
 {
 	struct Screen *Scr = NULL;
 	CONST_STRPTR PubScreenName;
@@ -1490,7 +1490,7 @@ LIBFUNC_P4(void, sca_UpdateWorkbench,
 	A0, CONST_STRPTR, Name,
 	A1, BPTR, ParentLock,
 	D0, LONG, Action,
-	A6, struct Library *, wbBase)
+	A6, struct Library *, wbBase, 0)
 {
 	struct ScaUpdateIcon_IW upd;
 
@@ -1520,7 +1520,7 @@ LIBFUNC_END
 
 // private Workbench function -84
 LIBFUNC_P1(LONG, sca_SetBackFill,
-	A6, struct Library *, wbBase)
+	A6, struct Library *, wbBase, 0)
 {
 	(void) wbBase;
 
@@ -1539,7 +1539,7 @@ LIBFUNC_P4(ULONG, sca_WBInfo,
 	A0, BPTR, lock,
 	A1, STRPTR, name,
 	A2, struct Screen *, screen,
-	A6, struct Library *, wbBase)
+	A6, struct Library *, wbBase, 0)
 {
 	ULONG Success;
 	struct ScaIconNode in;
@@ -1584,7 +1584,7 @@ LIBFUNC_END
 LIBFUNC_P3(BOOL, sca_PutDiskObject,
 	A0, CONST_STRPTR, Name,
 	A1, const struct DiskObject *, diskObj,
-	A6, struct Library *, IconBase)
+	A6, struct Library *, IconBase, 0)
 {
 #ifdef __AROS__
 	BOOL Success = AROS_CALL2(BOOL, (*OldPutDiskObject),
@@ -1612,7 +1612,7 @@ LIBFUNC_END
 //	BOOL DeleteDiskObject(STRPTR);
 LIBFUNC_P2(BOOL, sca_DeleteDiskObject,
 	A0, CONST_STRPTR, Name,
-	A6, struct Library *, IconBase)
+	A6, struct Library *, IconBase, 0)
 {
 #ifdef __AROS__
 	BOOL Success = AROS_CALL1(BOOL, (*OldDeleteDiskObject),
@@ -1642,7 +1642,7 @@ LIBFUNC_P4(BOOL, sca_PutIconTagList,
 	A0, CONST_STRPTR, Name,
 	A1, const struct DiskObject *, diskObj,
 	A2, struct TagItem *, tags,
-	A6, struct Library *, IconBase)
+	A6, struct Library *, IconBase, 0)
 {
 	//ULONG NotifyWB;
 #ifdef __AROS__
@@ -1720,7 +1720,7 @@ static void PatchRefreshIcon(CONST_STRPTR IconName, UBYTE IconType)
 //	BOOL DeleteFile(STRPTR)
 LIBFUNC_P2(ULONG, sca_DeleteFile,
 	D1, CONST_STRPTR, Name,
-	A6, struct DosLibrary *, DOSBase)
+	A6, struct DosLibrary *, DOSBase, 0)
 {
 	ULONG Success;
 
@@ -1754,7 +1754,7 @@ LIBFUNC_END
 LIBFUNC_P3(ULONG, sca_Rename,
 	D1, CONST_STRPTR, oldName,
 	D2, CONST_STRPTR, newName,
-	A6, struct DosLibrary *, DOSBase)
+	A6, struct DosLibrary *, DOSBase, 0)
 {
 	struct internalScaWindowTask *iwtMain = (struct internalScaWindowTask *) iInfos.xii_iinfos.ii_MainWindowStruct->ws_WindowTask;
 	ULONG isIcon;
@@ -1935,7 +1935,7 @@ LIBFUNC_END
 LIBFUNC_P3(BPTR, sca_Open,
 	D1, CONST_STRPTR, name,
 	D2, LONG, accessMode,
-	A6, struct DosLibrary *, DOSBase)
+	A6, struct DosLibrary *, DOSBase, 0)
 {
 	BPTR file;
 	T_ExamineData *fib = NULL;
@@ -2018,7 +2018,7 @@ LIBFUNC_END
 //	BOOL Close(BPTR)
 LIBFUNC_P2(ULONG, sca_Close,
 	D1, BPTR, file,
-	A6, struct DosLibrary *, DOSBase)
+	A6, struct DosLibrary *, DOSBase, 0)
 {
 	BOOL Success;
 	struct DosOpenInfo *doi = NULL;
@@ -2144,7 +2144,7 @@ LIBFUNC_END
 //	BOOL CreateDir(STRPTR)
 LIBFUNC_P2(BPTR, sca_CreateDir,
 	D1, CONST_STRPTR, name,
-	A6, struct DosLibrary *, DOSBase)
+	A6, struct DosLibrary *, DOSBase, 0)
 {
 	BPTR lock;
 

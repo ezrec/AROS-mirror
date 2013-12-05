@@ -247,10 +247,10 @@ void ResumeDrag(struct DragHandle *dh, struct internalScaWindowTask *iwt, BOOL w
 void ReLockDrag(struct DragHandle *dh, struct internalScaWindowTask *iwt, BOOL wasLocked);
 LIBFUNC_P2_PROTO(void, sca_LockDrag,
 	A0, struct DragHandle *, dh,
-	A6, struct ScalosBase *, ScalosBase);
+	A6, struct ScalosBase *, ScalosBase, 0);
 LIBFUNC_P2_PROTO(ULONG, sca_UnlockDrag,
 	A0, struct DragHandle *, dh,
-	A6, struct ScalosBase *, ScalosBase);
+	A6, struct ScalosBase *, ScalosBase, 0);
 void DrawDrag(ULONG DrawFlags, struct internalScaWindowTask *iwt);
 LIBFUNC_P8_PROTO(BOOL, sca_AddBob,
 	A0, struct DragHandle *, dh, 
@@ -260,19 +260,19 @@ LIBFUNC_P8_PROTO(BOOL, sca_AddBob,
 	D1, ULONG, Height, 
 	D2, LONG, XOffset, 
 	D3, LONG, YOffset,
-	A6, struct ScalosBase *, ScalosBase);
+	A6, struct ScalosBase *, ScalosBase, 0);
 LIBFUNC_P5_PROTO(void, sca_DrawDrag,
 	A0, struct DragHandle *, dh,
 	D0, LONG, XOffset, 
 	D1, LONG, YOffset,
 	D2, ULONG, Flags,
-	A6, struct ScalosBase *, ScalosBase);
+	A6, struct ScalosBase *, ScalosBase, 0);
 LIBFUNC_P2_PROTO(void, sca_EndDrag,
 	A0, struct DragHandle *, dh,
-	A6, struct ScalosBase *, ScalosBase);
+	A6, struct ScalosBase *, ScalosBase, 0);
 LIBFUNC_P2_PROTO(struct DragHandle *, sca_InitDrag,
 	A0, struct Screen *, Scr,
-	A6, struct ScalosBase *, ScalosBase);
+	A6, struct ScalosBase *, ScalosBase, 0);
 void EndDrag(struct internalScaWindowTask *iwt);
 void EndDragUnlock(struct internalScaWindowTask *iwt);
 void DragRefreshIcons(struct internalScaWindowTask *iwt);
@@ -413,7 +413,7 @@ struct ScalosClass *initFrameImageClass(const struct PluginClass *plug);
 ///
 LIBFUNC_P2_PROTO(BOOL, sca_OpenIconWindow,
 	A0, struct TagItem *, TagList,
-	A6, struct ScalosBase *, ScalosBase);
+	A6, struct ScalosBase *, ScalosBase, 0);
 BPTR DiskInfoLock(const struct ScaIconNode *in);
 STRPTR GetWsNameFromLock(BPTR WsLock);
 Object *FunctionsFindIconObjectForPath(CONST_STRPTR Path, BOOL *WindowListLocked,

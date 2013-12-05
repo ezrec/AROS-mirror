@@ -86,7 +86,7 @@ static BOOL MatchPath(CONST_STRPTR VolPath, CONST_STRPTR DevIconPath);
 
 LIBFUNC_P2(BOOL, sca_OpenIconWindow,
 	A0, struct TagItem *, TagList,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	Object *IconObj = NULL;
 	Object *allocIconObj = NULL;

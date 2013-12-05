@@ -61,12 +61,12 @@
 LIBFUNC_P3_PROTO(struct Window *, sca_OpenWindowTagList,
 	A0, struct NewWindow *, newWin,
 	A1, const struct TagItem *, TagList,
-	A6, struct IntuitionBase *, iBase);
+	A6, struct IntuitionBase *, iBase, 0);
 
 LIBFUNC_P1_PROTO(LONG, sca_CloseWorkBench,
-	A6, struct IntuitionBase *, iBase);
+	A6, struct IntuitionBase *, iBase, 0);
 LIBFUNC_P1_PROTO(LONG, sca_OpenWorkBench,
-	A6, struct IntuitionBase *, iBase);
+	A6, struct IntuitionBase *, iBase, 0);
 LIBFUNC_P8_PROTO(struct AppIcon *, sca_AddAppIconA,
 	D0, ULONG, Id,
 	D1, ULONG, UserData,
@@ -75,76 +75,76 @@ LIBFUNC_P8_PROTO(struct AppIcon *, sca_AddAppIconA,
 	A2, BPTR, lock,
 	A3, struct DiskObject *, DiskObj,
 	A4, struct TagItem *, TagList,
-	A6, struct Library *, wbBase);
+	A6, struct Library *, wbBase, 0);
 LIBFUNC_P2_PROTO(ULONG, sca_RemoveAppIcon,
 	A0, struct AppIcon *, appIcon,
-	A6, struct Library *, wbBase);
+	A6, struct Library *, wbBase, 0);
 LIBFUNC_P6_PROTO(struct AppWindow *, sca_AddAppWindowA,
 	D0, ULONG, Id,
 	D1, ULONG, UserData,
 	A0, struct Window *, window,
 	A1, struct MsgPort *, iconPort,
 	A2, struct TagItem *, TagList,
-	A6, struct Library *, wbBase);
+	A6, struct Library *, wbBase, 0);
 LIBFUNC_P2_PROTO(BOOL, sca_RemoveAppWindow,
 	A0, struct AppWindow *, aw,
-	A6, struct Library *, wbBase);
+	A6, struct Library *, wbBase, 0);
 LIBFUNC_P6_PROTO(struct AppMenuItem *, sca_AddAppMenuItemA,
 	D0, ULONG, Id,
 	D1, ULONG, UserData,
 	A0, CONST_STRPTR, text,
 	A1, struct MsgPort *, iconPort,
 	A2, struct TagItem *, TagList,
-	A6, struct Library *, wbBase);
+	A6, struct Library *, wbBase, 0);
 LIBFUNC_P2_PROTO(BOOL, sca_RemoveAppMenuItem,
 	A0, struct AppMenuItem *, ami,
-	A6, struct Library *, wbBase);
+	A6, struct Library *, wbBase, 0);
 LIBFUNC_P3_PROTO(struct Screen *, sca_OpenScreenTagList,
 	A0, struct NewScreen *, newScr,
 	A1, const struct TagItem *, TagList,
-	A6, struct IntuitionBase *, iBase);
+	A6, struct IntuitionBase *, iBase, 0);
 LIBFUNC_P4_PROTO(void, sca_UpdateWorkbench,
 	A0, CONST_STRPTR, Name,
 	A1, BPTR, ParentLock,
 	D0, LONG, Action,
-	A6, struct Library *, wbBase);
+	A6, struct Library *, wbBase, 0);
 LIBFUNC_P1_PROTO(LONG, sca_SetBackFill,
-	A6, struct Library *, wbBase);
+	A6, struct Library *, wbBase, 0);
 LIBFUNC_P4_PROTO(ULONG, sca_WBInfo,
 	A0, BPTR, lock,
 	A1, STRPTR, name,
 	A2, struct Screen *, screen,
-	A6, struct Library *, wbBase);
+	A6, struct Library *, wbBase, 0);
 LIBFUNC_P3_PROTO(BOOL, sca_PutDiskObject,
 	A0, CONST_STRPTR, Name,
 	A1, const struct DiskObject *, diskObj,
-	A6, struct Library *, IconBase);
+	A6, struct Library *, IconBase, 0);
 LIBFUNC_P2_PROTO(BOOL, sca_DeleteDiskObject,
 	A0, CONST_STRPTR, Name,
-	A6, struct Library *, IconBase);
+	A6, struct Library *, IconBase, 0);
 LIBFUNC_P4_PROTO(BOOL, sca_PutIconTagList,
 	A0, CONST_STRPTR, Name,
 	A1, const struct DiskObject *, diskObj,
 	A2, struct TagItem *, tags,
-	A6, struct Library *, IconBase);
+	A6, struct Library *, IconBase, 0);
 
 LIBFUNC_P2_PROTO(ULONG, sca_DeleteFile,
 	D1, CONST_STRPTR, Name,
-	A6, struct DosLibrary *, DOSBase);
+	A6, struct DosLibrary *, DOSBase, 0);
 LIBFUNC_P3_PROTO(ULONG, sca_Rename,
 	D1, CONST_STRPTR, oldName,
 	D2, CONST_STRPTR, newName,
-	A6, struct DosLibrary *, DOSBase);
+	A6, struct DosLibrary *, DOSBase, 0);
 LIBFUNC_P3_PROTO(BPTR, sca_Open,
 	D1, CONST_STRPTR, name,
 	D2, LONG, accessMode,
-	A6, struct DosLibrary *, DOSBase);
+	A6, struct DosLibrary *, DOSBase, 0);
 LIBFUNC_P2_PROTO(ULONG, sca_Close,
 	D1, BPTR, file,
-	A6, struct DosLibrary *, DOSBase);
+	A6, struct DosLibrary *, DOSBase, 0);
 LIBFUNC_P2_PROTO(BPTR, sca_CreateDir,
 	D1, CONST_STRPTR, name,
-	A6, struct DosLibrary *, DOSBase);
+	A6, struct DosLibrary *, DOSBase, 0);
 
 //LIBFUNC_P2_PROTO(CONST_STRPTR, sca_GetLocString,
 //	D0, ULONG, StringID,

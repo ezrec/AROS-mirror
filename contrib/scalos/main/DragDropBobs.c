@@ -708,7 +708,7 @@ LIBFUNC_P8(BOOL, sca_AddBob,
 	D1, ULONG, Height, 
 	D2, LONG, XOffset, 
 	D3, LONG, YOffset,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	(void) ScalosBase;
 
@@ -1176,7 +1176,7 @@ void ReLockDrag(struct DragHandle *dh, struct internalScaWindowTask *iwt, BOOL w
 
 LIBFUNC_P2(void, sca_LockDrag,
 	A0, struct DragHandle *, dh,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	(void) ScalosBase;
 
@@ -1200,7 +1200,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(ULONG, sca_UnlockDrag,
 	A0, struct DragHandle *, dh,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	ULONG WasLocked = FALSE;
 
@@ -1234,7 +1234,7 @@ LIBFUNC_P5(void, sca_DrawDrag,
 	D0, LONG, XOffset, 
 	D1, LONG, YOffset,
 	D2, ULONG, Flags,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	(void) ScalosBase;
 
@@ -2569,7 +2569,7 @@ static void FreeSpeedBitMapAlloc(struct DragHandle *dh)
 
 LIBFUNC_P2(void, sca_EndDrag,
 	A0, struct DragHandle *, dh,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	(void)ScalosBase;
 
@@ -2627,7 +2627,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(struct DragHandle *, sca_InitDrag,
 	A0, struct Screen *, Scr,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	ULONG Depth;
 

@@ -116,7 +116,7 @@ LIBFUNC_P6(struct AppObject *, sca_NewAddAppIcon,
 	A0, Object *, iconObj, 
 	A1, struct MsgPort *, msgPort, 
 	A2, struct TagItem *, TagList,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	static const struct TagItem AppIconSupportsMap[] =
 		{
@@ -243,7 +243,7 @@ LIBFUNC_END
 LIBFUNC_P3(ULONG, sca_ScalosControl,
 	A0, CONST_STRPTR, name,
 	A1, struct TagItem *, taglist,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	ULONG TagsSuccessfullyProcessed = 0;
 	struct TagItem *TState = taglist;
@@ -756,7 +756,7 @@ LIBFUNC_P6(struct AppObject *, sca_NewAddAppMenuItem,
 	A0, CONST_STRPTR, MenuText, 
 	A1, struct MsgPort *, msgPort, 
 	A2, struct TagItem *, TagList,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	struct internalScaWindowTask *iwt = (struct internalScaWindowTask *) iInfos.xii_iinfos.ii_AppWindowStruct->ws_WindowTask;
 	struct Menu *theNewMenu = NULL;
@@ -944,7 +944,7 @@ LIBFUNC_P4(BOOL, sca_WBStart,
 	A0, struct WBArg *, ArgArray,
 	A1, struct TagItem *, TagList, 
 	D0, ULONG, NumArgs,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	struct WblMessage *wblArg = NULL;
 	BOOL Success = FALSE;
@@ -1386,7 +1386,7 @@ LIBFUNC_P5(struct ScalosClass *, sca_MakeScalosClass,
 	A1, CONST_STRPTR, SuperClassName, 
 	D0, UWORD, InstSize, 
 	A2, APTR, DispFunc,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	struct ScalosClass *NewScalosClass = NULL;
 	Class *NewClass = NULL;
@@ -1468,7 +1468,7 @@ LIBFUNC_END
 // SCA_FreeScalosClass() implementation
 LIBFUNC_P2(BOOL, sca_FreeScalosClass,
 	A0, struct ScalosClass *, sccl,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	BOOL Success = FALSE;
 
@@ -1497,7 +1497,7 @@ LIBFUNC_END
 LIBFUNC_P3(Object *, sca_NewScalosObject,
 	A0, CONST_STRPTR, ClassName,
 	A1, struct TagItem *, TagList,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	struct ScalosClass *cl;
 	Object *o = NULL;
@@ -1538,7 +1538,7 @@ LIBFUNC_END
 //SCA_DisposeScalosObject()
 LIBFUNC_P2(void, sca_DisposeScalosObject,
 	A0, Object *, o,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	(void) ScalosBase;
 
@@ -1579,7 +1579,7 @@ static struct ScalosClass *FindScalosClass(CONST_STRPTR ClassName)
 // SCA_RemoveAppObject()
 LIBFUNC_P2(BOOL, sca_RemoveAppObject,
 	A0, struct AppObject *, appObj,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	BOOL Success = TRUE;
 	struct ScaWindowStruct *ws = iInfos.xii_iinfos.ii_AppWindowStruct;
@@ -1732,7 +1732,7 @@ static BOOL RemoveAppMenuItem(struct internalScaWindowTask *iwt, struct AppObjec
 LIBFUNC_P3(void, sca_ScreenTitleMsg,
 	A0, CONST_STRPTR, Format, 
 	A1, APTR, Args,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	static BOOL fCustomTitle = FALSE;
 
@@ -1808,7 +1808,7 @@ LIBFUNC_P6(struct AppObject *, sca_NewAddAppWindow,
 	A0, struct Window *, win,
 	A1, struct MsgPort *, msgPort, 
 	A2, struct TagItem *, TagList,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	struct internalScaWindowTask *iwt = (struct internalScaWindowTask *) iInfos.xii_iinfos.ii_AppWindowStruct->ws_WindowTask;
 	struct AppObject *appo;
@@ -1847,7 +1847,7 @@ LIBFUNC_END
 LIBFUNC_P3(struct MinNode *, sca_AllocNode,
 	A0, struct ScalosNodeList *, nodeList,
 	D0, ULONG, ExtraSize,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	struct MinNode *newNode;
 
@@ -1884,7 +1884,7 @@ LIBFUNC_END
 LIBFUNC_P3(void, sca_FreeNode,
 	A0, struct ScalosNodeList *, nodeList,
 	A1, struct MinNode *, oldNode,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	(void) ScalosBase;
 
@@ -1909,7 +1909,7 @@ LIBFUNC_END
 //	void SCA_FreeAllNodes (struct ScalosNodeList *);
 LIBFUNC_P2(void, sca_FreeAllNodes,
 	A0, struct ScalosNodeList *, nodeList,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	struct MinNode *oldNode = nodeList->snl_MinNode;
 
@@ -1935,7 +1935,7 @@ LIBFUNC_END
 LIBFUNC_P3(struct MinNode *, sca_AllocStdNode,
 	A0, struct ScalosNodeList *, nodeList,
 	D0, ULONG, NodeType,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	static const UWORD NodeSizeTable[] =
 		{
@@ -1970,7 +1970,7 @@ LIBFUNC_END
 LIBFUNC_P3(struct ScalosMessage *, sca_AllocMessage,
 	D0, ULONG, MessageType,
 	D1, UWORD, AdditionalSize,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	static const UWORD MsgSizeTable[] =
 		{
@@ -2045,7 +2045,7 @@ LIBFUNC_END
 //	void SCA_FreeMessage ( struct ScalosMessage *);
 LIBFUNC_P2(void, sca_FreeMessage,
 	A1, struct ScalosMessage *, msg,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	(void) ScalosBase;
 
@@ -2069,7 +2069,7 @@ LIBFUNC_P4(void, sca_UpdateIcon,
 	D0, UBYTE, WindowType, 
 	A0, struct ScaUpdateIcon_IW *, uiiw,
 	D1, ULONG, ui_SIZE,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	(void) ui_SIZE;
 	(void) ScalosBase;
@@ -2149,7 +2149,7 @@ LIBFUNC_P4(void, sca_FreeWBArgs,
 	A0, struct WBArg *, wbArg,
 	D0, ULONG, NumArgs,
 	D1, ULONG, Flags,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	(void) ScalosBase;
 
@@ -2187,7 +2187,7 @@ LIBFUNC_P4(ULONG, sca_MakeWBArgs,
 	A0, struct WBArg *, wbArg, 
 	A1, struct ScaIconNode *, in,
 	D0, ULONG, MaxArg,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	struct ScaWindowStruct *ws;
 	ULONG ArgCount = 0;
@@ -2263,7 +2263,7 @@ static ULONG MakeWindowWBArgs(struct ScaWindowStruct *ws,
 //	 D0                                D0
 LIBFUNC_P2(struct ScaWindowList *, sca_LockWindowList,
 	D0, LONG, accessmode,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	struct ScaWindowList *Result = &winlist;
 
@@ -2296,7 +2296,7 @@ LIBFUNC_END
 
 //	void SCA_UnLockWindowList ( void );
 LIBFUNC_P1(void, sca_UnLockWindowList,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	(void) ScalosBase;
 
@@ -2310,7 +2310,7 @@ LIBFUNC_P4(void, sca_MoveNode,
 	A0, struct ScalosNodeList *, src,
 	A1, struct ScalosNodeList *, dest, 
 	D0, struct MinNode *, node,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	(void) ScalosBase;
 
@@ -2348,7 +2348,7 @@ LIBFUNC_P4(void, sca_SwapNodes,
 	A0, struct MinNode *, srcNode,
 	A1, struct MinNode *, destNode, 
 	A2, struct ScalosNodeList *, nodeList,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	(void) ScalosBase;
 
@@ -2416,7 +2416,7 @@ LIBFUNC_P4(void, sca_SortNodes,
 	A0, struct ScalosNodeList *, nodeList,
 	A1, struct Hook *, compareHook, 
 	D0, ULONG, SortType,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	static const NodeSortFuncType sortingFunctions[] =
 		{
@@ -2468,7 +2468,7 @@ LIBFUNC_END
 LIBFUNC_P3(Object *, sca_GetDefIconObject,
 	A0, BPTR, dirLock,
 	A1, CONST_STRPTR, name,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	(void) ScalosBase;
 
@@ -2481,7 +2481,7 @@ LIBFUNC_P4(Object *, sca_GetDefIconObjectA,
 	A0, BPTR, dirLock,
 	A1, CONST_STRPTR, name,
 	A2, struct TagItem *, tagList,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	(void) ScalosBase;
 
@@ -2493,7 +2493,7 @@ LIBFUNC_END
 LIBFUNC_P3(struct ScaWindowStruct *, sca_OpenDrawerByName,
 	A0, CONST_STRPTR, path,
 	A1, struct TagItem *, TagList,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	(void) ScalosBase;
 
@@ -2761,7 +2761,7 @@ LIBFUNC_P4(void, sca_RemapBitmap,
 	A0, struct BitMap *, bmSrc, 
 	A1, struct BitMap *, bmDest,
 	A2, const BYTE *, penArray,
-	A6, struct ScalosBase *, ScalosBase)
+	A6, struct ScalosBase *, ScalosBase, 0)
 {
 	// no longer supported
 	(void) bmSrc;
@@ -2774,7 +2774,7 @@ LIBFUNC_END
 
 
 LIBFUNC_P1(ULONG, sca_CountWBArgs,
-	A0, struct ScaIconNode *, in)
+	A0, struct ScaIconNode *, in, 0)
 {
 	struct ScaWindowStruct *ws;
 	ULONG ArgCount = 0;
