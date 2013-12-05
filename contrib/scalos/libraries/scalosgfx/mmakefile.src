@@ -2,7 +2,10 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-scalos-libraries-scalosgfx : linklibs
+#MM- contrib-scalos-libraries-scalosgfx : \
+#MM     linklibs \
+#MM     contrib-scalos-library-includes
+
 
 FILES := \
     scalosgfx \
