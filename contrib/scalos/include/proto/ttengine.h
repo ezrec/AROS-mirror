@@ -3,9 +3,9 @@
 #ifndef PROTO_TTENGINE_H
 #define PROTO_TTENGINE_H
 
-#ifdef __AROS__
-#error You must include AROS headers
-#endif
+//#ifdef __AROS__
+//#error You must include AROS headers
+//#endif
 
 #include <clib/ttengine_protos.h>
 
