@@ -1,0 +1,22 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-scalos : contrib-scalos-tools
+
+#MM contrib-scalos-tools : \
+#MM     linklibs \
+#MM     includes \
+#MM     contrib-scalos-library-includes
+
+FILES := GenMsgIdNames LoadWB ScalosCtrl ScalosSema
+
+USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include -idirafter $(SRCDIR)/$(CURDIR)/../../include \
+    -I$(SRCDIR)/$(CURDIR)/../../common/Fs -I$(SRCDIR)/$(CURDIR)/../../common/Int64
+
+TARGETDIR := $(AROS_CONTRIB)/Scalos/Tools
+
+%build_progs mmake=contrib-scalos-tools \
+    files=$(FILES) targetdir=$(TARGETDIR)
+
+%common

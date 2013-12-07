@@ -1,0 +1,28 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-scalos : \
+#MM     contrib-scalos-cpy \
+#MM     contrib-scalos-extras \
+#MM     contrib-scalos-theme
+
+TARGETDIR := $(AROS_CONTRIB)/Scalos/Tools
+
+FILES := gpl-3.0.txt GPLsrc History LEGAL lgpl-3.0.txt readme.txt 
+%copy_files_q mmake=contrib-scalos-cpy src=$(SRCDIR)/$(CURDIR) \
+    dst=$(TARGETDIR)
+
+
+FILES := browse.script OpenShell open_volume.rexx Quit.rexx run.script
+%copy_files_q mmake=contrib-scalos-extras src=$(SRCDIR)/$(CURDIR)/Extras \
+    dst=$(TARGETDIR)
+
+
+TARGETDIR := $(AROS_CONTRIB)/Scalos/Themes/Default_Theme
+
+%copy_dir_recursive mmake=contrib-scalos-theme \
+    src=$(SRCDIR)/$(CURDIR)/Default_Theme dst=$(TARGETDIR)
+
+
+%common

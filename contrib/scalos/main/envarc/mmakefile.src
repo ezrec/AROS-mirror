@@ -1,0 +1,29 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-scalos-main : \
+#MM     contrib-scalos-deficons \
+#MM     contrib-scalos-arosenv \
+#MM     contrib-scalos-arosenv-english
+
+
+TARGETDIR := $(AROS_ENVARC)
+
+FILES := deficons.prefs
+%copy_files_q mmake=contrib-scalos-deficons \
+    src=$(SRCDIR)/$(CURDIR) dst=$(TARGETDIR)
+
+
+TARGETDIR := $(AROS_ENVARC)/Scalos
+
+FILES := icandy Palette13.prefs Pattern.prefs Persist.prefs scalos.prefs
+%copy_files_q mmake=contrib-scalos-arosenv \
+    src=$(SRCDIR)/$(CURDIR)/scalos.AROS dst=$(TARGETDIR)
+
+
+%copy_dir_recursive mmake=contrib-scalos-arosenv-english \
+    src=$(SRCDIR)/$(CURDIR)/scalos.AROS/English dst=$(TARGETDIR)
+
+
+%common
