@@ -414,6 +414,8 @@ ULONG OpenDatatype(struct IconObjectDtLibBase *dtLib)
 
 		// Make class available for the public
 		AddClass(IconObjectClass);
+#else
+		dtLib->nib_ClassLibrary.cl_Lib.lib_Node.ln_Pri = SCHAR_MIN;
 #endif
 		}
 

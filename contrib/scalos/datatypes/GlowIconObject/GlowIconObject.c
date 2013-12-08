@@ -330,6 +330,8 @@ ULONG OpenDatatype(struct GlowIconObjectDtLibBase *dtLib)
 
 		// Make class available for the public
 		AddClass(GlowIconObjectClass);
+#else
+		dtLib->nib_ClassLibrary.cl_Lib.lib_Node.ln_Pri = 10;
 #endif
 
 		CyberGfxBase = OpenLibrary(CYBERGFXNAME, 0);

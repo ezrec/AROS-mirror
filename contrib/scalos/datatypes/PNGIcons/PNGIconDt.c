@@ -933,6 +933,8 @@ ULONG OpenDatatype(struct PngIconObjectDtLibBase *dtLib)
 
 		// Make class available for the public
 		AddClass(PngIconClass);
+#else
+		dtLib->nib_ClassLibrary.cl_Lib.lib_Node.ln_Pri = 12;
 #endif
 		}
 

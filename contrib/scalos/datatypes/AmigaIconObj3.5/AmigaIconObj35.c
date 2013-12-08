@@ -289,6 +289,8 @@ ULONG OpenDatatype(struct AmigaIconObj35DtLibBase *dtLib)
 
 		// Make class available for the public
 		AddClass(AmigaIconObj35Class);
+#else
+		dtLib->nib_ClassLibrary.cl_Lib.lib_Node.ln_Pri = 7;
 #endif
 
 		CyberGfxBase = OpenLibrary(CYBERGFXNAME, 0);
