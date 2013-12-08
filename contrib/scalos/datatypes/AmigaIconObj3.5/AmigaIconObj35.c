@@ -57,6 +57,7 @@
 
 //----------------------------------------------------------------------------
 
+#ifndef __AROS__
 struct GfxBase *GfxBase;
 struct Library *LayersBase;
 T_UTILITYBASE UtilityBase;
@@ -64,8 +65,9 @@ struct ExecBase *SysBase;
 struct Library *IconBase;
 struct Library *CyberGfxBase;
 struct DosLibrary *DOSBase;
-struct Library *IconObjectDTBase;
 struct IntuitionBase *IntuitionBase;
+#endif
+struct Library *IconObjectDTBase;
 #ifdef __amigaos4__
 struct Library *NewlibBase;
 struct Interface *INewlib;
@@ -86,7 +88,7 @@ static Class *AmigaIconObj35Class;
 
 //----------------------------------------------------------------------------
 
-static SAVEDS(ULONG) INTERRUPT AmigaIconObj35Dispatcher(Class *cl, Object *o, Msg msg);
+SAVEDS(ULONG) INTERRUPT AmigaIconObj35Dispatcher(Class *cl, Object *o, Msg msg);
 
 //-----------------------------------------------------------------------------
 
@@ -274,7 +276,8 @@ ULONG OpenDatatype(struct AmigaIconObj35DtLibBase *dtLib)
 		d1(kprintf("%s/%ld: MemPool=%08lx\n", __FUNC__, __LINE__, MemPool));
 		if (NULL == MemPool)
 			return 0;
-		
+
+#ifndef __AROS__
 		AmigaIconObj35Class = dtLib->nib_ClassLibrary.cl_Class = MakeClass(libName, 
 			"iconobject.datatype", NULL, sizeof(struct InstanceData), 0);
 		d1(kprintf("%s/%ld:  AmigaIconObj35Class=%08lx\n", __FUNC__, __LINE__, AmigaIconObj35Class));
@@ -286,6 +289,7 @@ ULONG OpenDatatype(struct AmigaIconObj35DtLibBase *dtLib)
 
 		// Make class available for the public
 		AddClass(AmigaIconObj35Class);
+#endif
 
 		CyberGfxBase = OpenLibrary(CYBERGFXNAME, 0);
 #ifdef __amigaos4__
@@ -321,9 +325,11 @@ void CloseDatatype(struct AmigaIconObj35DtLibBase *dtLib)
 		{
 		if (AmigaIconObj35Class)
 			{
+#ifndef __AROS__
 			RemoveClass(AmigaIconObj35Class);
 			FreeClass(AmigaIconObj35Class);
 			AmigaIconObj35Class = dtLib->nib_ClassLibrary.cl_Class = NULL;
+#endif
 			}
 
 #ifdef __amigaos4__
@@ -412,7 +418,7 @@ void CloseDatatype(struct AmigaIconObj35DtLibBase *dtLib)
 
 //-----------------------------------------------------------------------------
 
-static SAVEDS(ULONG) INTERRUPT AmigaIconObj35Dispatcher(Class *cl, Object *o, Msg msg)
+SAVEDS(ULONG) INTERRUPT AmigaIconObj35Dispatcher(Class *cl, Object *o, Msg msg)
 {
 	ULONG Result;
 
@@ -1866,3 +1872,15 @@ static void MySetFont(Object *o, struct RastPort *rp)
 }
 
 //----------------------------------------------------------------------------------------
+
+
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2INITLIB(InitDatatype, 0);
+ADD2EXPUNGELIB(CloseDatatype, 0);
+ADD2OPENLIB(OpenDatatype, 0);
+
+#endif
+//-----------------------------------------------------------------------------

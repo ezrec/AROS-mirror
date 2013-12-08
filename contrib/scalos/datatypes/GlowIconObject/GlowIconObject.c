@@ -54,16 +54,18 @@
 
 //----------------------------------------------------------------------------
 
+#ifndef __AROS__
 struct ExecBase *SysBase;
 struct GfxBase *GfxBase;
 T_UTILITYBASE UtilityBase;
 struct Library *WorkbenchBase;
 struct Library *IconBase;
-struct Library *IconObjectDTBase;
 struct IntuitionBase *IntuitionBase;
 struct Library *CyberGfxBase;
 struct Library *IFFParseBase;
 struct DosLibrary *DOSBase;
+#endif
+struct Library *IconObjectDTBase;
 #ifdef TIMESTAMPS
 T_TIMERBASE TimerBase;
 #endif /* TIMESTAMPS */
@@ -90,7 +92,7 @@ static Class *GlowIconObjectClass;
 //----------------------------------------------------------------------------
 // Standard library functions
 
-static SAVEDS(ULONG) INTERRUPT GlowIconObjectDispatcher(Class *cl, Object *o, Msg msg);
+SAVEDS(ULONG) INTERRUPT GlowIconObjectDispatcher(Class *cl, Object *o, Msg msg);
 
 //-----------------------------------------------------------------------------
 
@@ -315,7 +317,8 @@ ULONG OpenDatatype(struct GlowIconObjectDtLibBase *dtLib)
 		d1(kprintf("%s/%s/%ld: MemPool=%08lx\n", __FILE__, __FUNC__, __LINE__, MemPool));
 		if (NULL == MemPool)
 			return 0;
-		
+
+#ifndef __AROS__
 		GlowIconObjectClass = dtLib->nib_ClassLibrary.cl_Class = MakeClass(libName, 
 			"iconobject.datatype", NULL, sizeof(struct InstanceData), 0);
 		d1(kprintf("%s/%s/%ld:  GlowIconObjectClass=%08lx\n", __FILE__, __FUNC__, __LINE__, GlowIconObjectClass));
@@ -327,6 +330,7 @@ ULONG OpenDatatype(struct GlowIconObjectDtLibBase *dtLib)
 
 		// Make class available for the public
 		AddClass(GlowIconObjectClass);
+#endif
 
 		CyberGfxBase = OpenLibrary(CYBERGFXNAME, 0);
 		// CyberGfxBase may be NULL
@@ -362,9 +366,11 @@ void CloseDatatype(struct GlowIconObjectDtLibBase *dtLib)
 		{
 		if (GlowIconObjectClass)
 			{
+#ifndef __AROS__
 			RemoveClass(GlowIconObjectClass);
 			FreeClass(GlowIconObjectClass);
 			GlowIconObjectClass = dtLib->nib_ClassLibrary.cl_Class = NULL;
+#endif
 			}
 
 		if (NULL != IconObjectDTBase)
@@ -492,7 +498,7 @@ void CloseDatatype(struct GlowIconObjectDtLibBase *dtLib)
 
 //-----------------------------------------------------------------------------
 
-static SAVEDS(ULONG) INTERRUPT GlowIconObjectDispatcher(Class *cl, Object *o, Msg msg)
+SAVEDS(ULONG) INTERRUPT GlowIconObjectDispatcher(Class *cl, Object *o, Msg msg)
 {
 	ULONG Result;
 
@@ -4038,3 +4044,14 @@ void exit(int x)
 
 //----------------------------------------------------------------------------------------
 
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2INITLIB(InitDatatype, 0);
+ADD2EXPUNGELIB(CloseDatatype, 0);
+ADD2OPENLIB(OpenDatatype, 0);
+
+#endif
+
+//----------------------------------------------------------------------------------------

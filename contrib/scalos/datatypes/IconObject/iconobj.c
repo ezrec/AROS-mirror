@@ -92,12 +92,14 @@ struct AllocatedMemFromPool
 
 //----------------------------------------------------------------------------
 
+#ifndef __AROS__
 struct GfxBase *GfxBase;
 T_UTILITYBASE UtilityBase;
 struct ExecBase *SysBase;
 struct Library *CyberGfxBase;
 struct DosLibrary *DOSBase;
 struct IntuitionBase *IntuitionBase;
+#endif
 struct ScalosGfxBase *ScalosGfxBase;
 #ifdef TIMESTAMPS
 T_TIMERBASE TimerBase;
@@ -398,7 +400,9 @@ ULONG OpenDatatype(struct IconObjectDtLibBase *dtLib)
 		d1(kprintf("%s/%s/%ld: ChipMemPool=%08lx\n", __FILE__, __FUNC__, __LINE__, ChipMemPool));
 		if (NULL == ChipMemPool)
 			return 0;
-		
+
+#ifdef __AROS__
+		// class will be created by code from genmodule
 		IconObjectClass = dtLib->nib_ClassLibrary.cl_Class = MakeClass(libName, 
 			"datatypesclass", NULL, sizeof(struct InstanceData), 0);
 		d1(kprintf("%s/%s/%ld:  IconObjectClass=%08lx\n", __FILE__, __FUNC__, __LINE__, IconObjectClass));
@@ -410,6 +414,7 @@ ULONG OpenDatatype(struct IconObjectDtLibBase *dtLib)
 
 		// Make class available for the public
 		AddClass(IconObjectClass);
+#endif
 		}
 
 	d1(kprintf("%s/%s/%ld:  Open Success!\n", __FILE__, __FUNC__, __LINE__));
@@ -425,9 +430,11 @@ void CloseDatatype(struct IconObjectDtLibBase *dtLib)
 		{
 		if (IconObjectClass)
 			{
+#ifndef __AROS__
 			RemoveClass(IconObjectClass);
 			FreeClass(IconObjectClass);
 			IconObjectClass = dtLib->nib_ClassLibrary.cl_Class = NULL;
+#endif
 			}
 
 		if (NULL != ChipMemPool)

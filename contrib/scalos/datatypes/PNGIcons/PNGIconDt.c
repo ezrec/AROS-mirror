@@ -57,15 +57,17 @@ const ULONG InstanceSize = sizeof(struct InstanceData);
 
 static struct SignalSemaphore PngMemPoolSemaphore;
 
+#ifndef __AROS__
 struct ExecBase *SysBase;
 struct Library *WorkbenchBase;
 struct IntuitionBase *IntuitionBase;
 T_UTILITYBASE UtilityBase;
-static struct Library *IconObjectDTBase;
 struct Library *IconBase;
 struct GfxBase *GfxBase;
 struct DosLibrary *DOSBase;
+#endif
 struct Library *CyberGfxBase;
+static struct Library *IconObjectDTBase;
 #ifdef TIMESTAMPS
 T_TIMERBASE TimerBase;
 #endif /* TIMESTAMPS */
@@ -88,7 +90,7 @@ extern T_UTILITYBASE __UtilityBase;
 
 //----------------------------------------------------------------------------
 
-static SAVEDS(ULONG) INTERRUPT PngIconDispatcher(Class *cl, Object *obj, Msg msg);
+SAVEDS(ULONG) INTERRUPT PngIconDispatcher(Class *cl, Object *obj, Msg msg);
 
 static BOOL DtNew(Class *cl, Object *o, struct opSet *ops);
 static ULONG DtDispose(Class *cl, Object *o, Msg msg);
@@ -135,7 +137,7 @@ void _XCEXIT(long x)
 
 //----------------------------------------------------------------------------
 
-static SAVEDS(ULONG) INTERRUPT PngIconDispatcher(Class *cl, Object *o, Msg msg)
+SAVEDS(ULONG) INTERRUPT PngIconDispatcher(Class *cl, Object *o, Msg msg)
 {
 	ULONG Result;
 
@@ -919,6 +921,7 @@ ULONG OpenDatatype(struct PngIconObjectDtLibBase *dtLib)
 		if (NULL == PngMemPool)
 			return 0;
 
+#ifndef __AROS__
 		PngIconClass = dtLib->nib_ClassLibrary.cl_Class = MakeClass(libName,
 			"iconobject.datatype", NULL, sizeof(struct InstanceData), 0);
 		d1(kprintf("%s/%s/%ld:  PngIconClass=%08lx\n", __FILE__, __FUNC__, __LINE__, PngIconClass));
@@ -930,6 +933,7 @@ ULONG OpenDatatype(struct PngIconObjectDtLibBase *dtLib)
 
 		// Make class available for the public
 		AddClass(PngIconClass);
+#endif
 		}
 
 	d1(kprintf("%s/%s/%ld:  Open Success!\n", __FILE__, __FUNC__, __LINE__));
@@ -946,9 +950,11 @@ void CloseDatatype(struct PngIconObjectDtLibBase *dtLib)
 		{
 		if (PngIconClass)
 			{
+#ifndef __AROS__
 			RemoveClass(PngIconClass);
 			FreeClass(PngIconClass);
 			PngIconClass = dtLib->nib_ClassLibrary.cl_Class = NULL;
+#endif
 			}
 
 #if !defined(__amigaos4__) && !defined(__AROS__)
@@ -1260,4 +1266,13 @@ static void SetParentAttributes(Class *cl, Object *o)
 
 //-----------------------------------------------------------------------------
 
+#if defined(__AROS__)
 
+#include "aros/symbolsets.h"
+
+ADD2INITLIB(InitDatatype, 0);
+ADD2EXPUNGELIB(CloseDatatype, 0);
+ADD2OPENLIB(OpenDatatype, 0);
+
+#endif
+//-----------------------------------------------------------------------------

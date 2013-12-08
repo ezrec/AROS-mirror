@@ -57,14 +57,16 @@ struct argb
 
 //----------------------------------------------------------------------------
 
+#ifndef __AROS__
 struct Library *WorkbenchBase;
 struct GfxBase *GfxBase;
 T_UTILITYBASE UtilityBase;
 struct DosLibrary *DOSBase;
 struct ExecBase *SysBase;
 struct Library *IconBase;
-struct Library *IconObjectDTBase;
 struct IntuitionBase *IntuitionBase;
+#endif
+struct Library *IconObjectDTBase;
 #ifdef __amigaos4__
 struct Library *NewlibBase;
 struct Interface *INewlib;
@@ -84,7 +86,7 @@ static Class *AmigaIconObjectClass;
 
 //----------------------------------------------------------------------------
 
-static SAVEDS(ULONG) INTERRUPT AmigaIconObjectDispatcher(Class *cl, Object *o, Msg msg);
+SAVEDS(ULONG) INTERRUPT AmigaIconObjectDispatcher(Class *cl, Object *o, Msg msg);
 
 //-----------------------------------------------------------------------------
 
@@ -255,7 +257,8 @@ ULONG OpenDatatype(struct AmigaIconObjectDtLibBase *dtLib)
 		d1(kprintf("%s/%ld: MemPool=%08lx\n", __FUNC__, __LINE__, MemPool));
 		if (NULL == MemPool)
 			return 0;
-		
+
+#ifndef __AROS__
 		AmigaIconObjectClass = dtLib->nib_ClassLibrary.cl_Class = MakeClass(libName, 
 			"iconobject.datatype", NULL, sizeof(struct InstanceData), 0);
 		d1(kprintf("%s/%ld:  AmigaIconObjectClass=%08lx\n", __FUNC__, __LINE__, AmigaIconObjectClass));
@@ -267,6 +270,7 @@ ULONG OpenDatatype(struct AmigaIconObjectDtLibBase *dtLib)
 
 		// Make class available for the public
 		AddClass(AmigaIconObjectClass);
+#endif
 		}		
 
 	d1(kprintf("%s/%ld:  Open Success!\n", __FUNC__, __LINE__));
@@ -294,9 +298,11 @@ void CloseDatatype(struct AmigaIconObjectDtLibBase *dtLib)
 #endif
 		if (AmigaIconObjectClass)
 			{
+#ifndef __AROS__
 			RemoveClass(AmigaIconObjectClass);
 			FreeClass(AmigaIconObjectClass);
 			AmigaIconObjectClass = dtLib->nib_ClassLibrary.cl_Class = NULL;
+#endif
 			}
 
 		if (NULL != IconObjectDTBase)
@@ -369,7 +375,7 @@ void CloseDatatype(struct AmigaIconObjectDtLibBase *dtLib)
 
 //-----------------------------------------------------------------------------
 
-static SAVEDS(ULONG) INTERRUPT AmigaIconObjectDispatcher(Class *cl, Object *o, Msg msg)
+SAVEDS(ULONG) INTERRUPT AmigaIconObjectDispatcher(Class *cl, Object *o, Msg msg)
 {
 	ULONG Result;
 
@@ -1021,5 +1027,16 @@ static void DoUpdateWb(struct InstanceData *inst, CONST_STRPTR SavePath)
 	if (fLock)
 		UnLock(fLock);
 }
+
+//-----------------------------------------------------------------------------
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2INITLIB(InitDatatype, 0);
+ADD2EXPUNGELIB(CloseDatatype, 0);
+ADD2OPENLIB(OpenDatatype, 0);
+
+#endif
 
 //-----------------------------------------------------------------------------
