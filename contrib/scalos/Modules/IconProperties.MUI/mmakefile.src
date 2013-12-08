@@ -1,0 +1,51 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-scalos-main : contrib-scalos-modules-iconproperties
+
+#MM contrib-scalos-modules-iconproperties : \
+#MM     includes \
+#MM     linklibs \
+#MM     contrib-scalos-modules-iconproperties-locale \
+#MM     contrib-scalos-modules-iconproperties-icon \
+#MM     contrib-scalos-libraries-iconobject \
+#MM     contrib-scalos-libraries-preferences \
+#MM     contrib-scalos-library-includes
+
+FILES := \
+    IconProperties \
+    $(SRCDIR)/$(CURDIR)/../../common/IconobjectMCC/IconobjectMCC \
+    ToolTypes
+
+USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include \
+    -I$(SRCDIR)/$(CURDIR)/../../common/IconobjectMCC \
+    -idirafter $(SRCDIR)/$(CURDIR)/../../include
+SCALOS_LOCALE := IconProperties_Locale.h
+USER_CFLAGS := -DMUI_OBSOLETE -Wno-parentheses \
+    -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -DSCALOSLOCALE=$(SCALOS_LOCALE)
+
+TARGETDIR := $(AROS_CONTRIB)/Scalos/Modules
+
+%build_prog mmake=contrib-scalos-modules-iconproperties progname=IconProperties.module \
+    files=$(FILES) targetdir=$(TARGETDIR)
+
+
+#MM
+contrib-scalos-modules-iconproperties-locale : $(SCALOS_LOCALE)
+
+$(SCALOS_LOCALE) : $(SRCDIR)/$(CURDIR)/IconProperties.cd $(SRCDIR)/$(CURDIR)/../../CatComp_h.sd
+	@$(ECHO) 'Compile $@ from $<'
+	@$(FLEXCAT) $< $@=$(SRCDIR)/$(CURDIR)/../../CatComp_h.sd
+
+
+ICON := $(TARGETDIR)/IconProperties.module.info
+
+#MM
+contrib-scalos-modules-iconproperties-icon : $(ICON)
+
+$(ICON) : $(AROS_ENVARC)/SYS/def_Tool.info
+	%mkdirs_q $(TARGETDIR)
+	$(CP) $^ $@
+
+%common

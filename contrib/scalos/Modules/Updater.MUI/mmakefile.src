@@ -1,0 +1,44 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-scalos-main : contrib-scalos-modules-updater
+
+#MM contrib-scalos-modules-updater : \
+#MM     includes \
+#MM     linklibs \
+#MM     contrib-scalos-modules-updater-locale \
+#MM     contrib-scalos-modules-updater-icon \
+#MM     contrib-scalos-library-includes
+
+FILES := Updater
+
+USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include -idirafter $(SRCDIR)/$(CURDIR)/../../include
+SCALOS_LOCALE := Updater_Locale.h
+USER_CFLAGS := -DMUI_OBSOLETE -DSTATIC_SSL -Wno-parentheses \
+    -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__ -DSCALOSLOCALE=$(SCALOS_LOCALE)
+
+TARGETDIR := $(AROS_CONTRIB)/Scalos/Modules
+
+%build_prog mmake=contrib-scalos-modules-updater progname=Updater.module \
+    files=$(FILES) targetdir=$(TARGETDIR) uselibs="curl ssl crypto z"
+
+
+#MM
+contrib-scalos-modules-updater-locale : $(SCALOS_LOCALE)
+
+$(SCALOS_LOCALE) : $(SRCDIR)/$(CURDIR)/Updater.cd $(SRCDIR)/$(CURDIR)/../../CatComp_h.sd
+	@$(ECHO) 'Compile $@ from $<'
+	@$(FLEXCAT) $< $@=$(SRCDIR)/$(CURDIR)/../../CatComp_h.sd
+
+
+ICON := $(TARGETDIR)/Updater.module.info
+
+#MM
+contrib-scalos-modules-updater-icon : $(ICON)
+
+$(ICON) : $(AROS_ENVARC)/SYS/def_Tool.info
+	%mkdirs_q $(TARGETDIR)
+	$(CP) $^ $@
+
+%common
