@@ -5,7 +5,8 @@ include $(TOP)/config/make.cfg
 #MM- contrib-scalos : contrib-scalos-datatypes-iconobject
 
 #MM- contrib-scalos-datatypes-iconobject : \
-#MM     linklibs
+#MM     linklibs \
+#MM     scalos-libraries-scalosgfx-includes
 
 FILES := \
     argb \
