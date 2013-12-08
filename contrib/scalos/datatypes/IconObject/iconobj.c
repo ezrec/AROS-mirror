@@ -172,7 +172,8 @@ static const ULONG packTable[] =
 
 //----------------------------------------------------------------------------
 
-static SAVEDS(ULONG) INTERRUPT IconObjectDispatcher(Class *cl, Object *o, Msg msg);
+// must be public for AROS
+SAVEDS(ULONG) INTERRUPT IconObjectDispatcher(Class *cl, Object *o, Msg msg);
 
 //-----------------------------------------------------------------------------
 
@@ -521,7 +522,7 @@ void CloseDatatype(struct IconObjectDtLibBase *dtLib)
 
 //-----------------------------------------------------------------------------
 
-static SAVEDS(ULONG) INTERRUPT IconObjectDispatcher(Class *cl, Object *o, Msg msg)
+SAVEDS(ULONG) INTERRUPT IconObjectDispatcher(Class *cl, Object *o, Msg msg)
 {
 	ULONG Result;
 
@@ -3946,4 +3947,15 @@ void exit(int x)
 }
 
 #endif /* !defined(__SASC) */
+//-----------------------------------------------------------------------------
+
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2INITLIB(InitDatatype, 0);
+ADD2EXPUNGELIB(CloseDatatype, 0);
+ADD2OPENLIB(OpenDatatype, 0);
+
+#endif
 //-----------------------------------------------------------------------------
