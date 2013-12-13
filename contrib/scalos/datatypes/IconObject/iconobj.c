@@ -269,6 +269,16 @@ char ALIGNED libIdString[] = "$VER: iconobject.datatype "
 
 //-----------------------------------------------------------------------------
 
+#ifdef __AROS__
+AROS_LH0(ULONG, ObtainInfoEngine,
+    struct Library *, libBase, 5, Iconobj
+)
+{
+	AROS_LIBFUNC_INIT
+	return (ULONG) IconObjectClass;
+	AROS_LIBFUNC_EXIT
+}
+#else
 LIBFUNC(ObtainInfoEngine, libbase, ULONG)
 {
 	(void) libbase;
@@ -276,6 +286,7 @@ LIBFUNC(ObtainInfoEngine, libbase, ULONG)
 	return (ULONG) IconObjectClass;
 }
 LIBFUNC_END
+#endif
 
 //-----------------------------------------------------------------------------
 
@@ -401,8 +412,6 @@ ULONG OpenDatatype(struct IconObjectDtLibBase *dtLib)
 		if (NULL == ChipMemPool)
 			return 0;
 
-#ifdef __AROS__
-		// class will be created by code from genmodule
 		IconObjectClass = dtLib->nib_ClassLibrary.cl_Class = MakeClass(libName, 
 			"datatypesclass", NULL, sizeof(struct InstanceData), 0);
 		d1(kprintf("%s/%s/%ld:  IconObjectClass=%08lx\n", __FILE__, __FUNC__, __LINE__, IconObjectClass));
@@ -414,7 +423,7 @@ ULONG OpenDatatype(struct IconObjectDtLibBase *dtLib)
 
 		// Make class available for the public
 		AddClass(IconObjectClass);
-#else
+#ifdef __AROS__
 		dtLib->nib_ClassLibrary.cl_Lib.lib_Node.ln_Pri = SCHAR_MIN;
 #endif
 		}
@@ -432,11 +441,9 @@ void CloseDatatype(struct IconObjectDtLibBase *dtLib)
 		{
 		if (IconObjectClass)
 			{
-#ifndef __AROS__
 			RemoveClass(IconObjectClass);
 			FreeClass(IconObjectClass);
 			IconObjectClass = dtLib->nib_ClassLibrary.cl_Class = NULL;
-#endif
 			}
 
 		if (NULL != ChipMemPool)

@@ -121,6 +121,16 @@ char ALIGNED libIdString[] = "$VER: pngiconobject.datatype "
 
 //----------------------------------------------------------------------------
 
+#ifdef __AROS__
+AROS_LH0(ULONG, ObtainInfoEngine,
+    struct Library *, libBase, 5, PNGIconobject
+)
+{
+	AROS_LIBFUNC_INIT
+	return (ULONG) PngIconClass;
+	AROS_LIBFUNC_EXIT
+}
+#else
 LIBFUNC(ObtainInfoEngine, libbase, ULONG)
 {
 	d1(KPrintF("%s/%s/%ld: libbase=%08lx\n", __FILE__, __FUNC__, __LINE__, libbase));
@@ -128,6 +138,7 @@ LIBFUNC(ObtainInfoEngine, libbase, ULONG)
 	return (ULONG) PngIconClass;
 }
 LIBFUNC_END
+#endif
 
 //-----------------------------------------------------------------------------
 
@@ -921,7 +932,6 @@ ULONG OpenDatatype(struct PngIconObjectDtLibBase *dtLib)
 		if (NULL == PngMemPool)
 			return 0;
 
-#ifndef __AROS__
 		PngIconClass = dtLib->nib_ClassLibrary.cl_Class = MakeClass(libName,
 			"iconobject.datatype", NULL, sizeof(struct InstanceData), 0);
 		d1(kprintf("%s/%s/%ld:  PngIconClass=%08lx\n", __FILE__, __FUNC__, __LINE__, PngIconClass));
@@ -933,7 +943,7 @@ ULONG OpenDatatype(struct PngIconObjectDtLibBase *dtLib)
 
 		// Make class available for the public
 		AddClass(PngIconClass);
-#else
+#ifdef __AROS__
 		dtLib->nib_ClassLibrary.cl_Lib.lib_Node.ln_Pri = 12;
 #endif
 		}
@@ -952,11 +962,9 @@ void CloseDatatype(struct PngIconObjectDtLibBase *dtLib)
 		{
 		if (PngIconClass)
 			{
-#ifndef __AROS__
 			RemoveClass(PngIconClass);
 			FreeClass(PngIconClass);
 			PngIconClass = dtLib->nib_ClassLibrary.cl_Class = NULL;
-#endif
 			}
 
 #if !defined(__amigaos4__) && !defined(__AROS__)

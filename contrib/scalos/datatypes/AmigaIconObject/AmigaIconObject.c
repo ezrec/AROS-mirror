@@ -120,6 +120,16 @@ char ALIGNED libIdString[] = "$VER: amigaiconobject.datatype "
 
 //----------------------------------------------------------------------------
 
+#ifdef __AROS__
+AROS_LH0(ULONG, ObtainInfoEngine,
+    struct Library *, libBase, 5, Amigaiconobject
+)
+{
+	AROS_LIBFUNC_INIT
+	return (ULONG) AmigaIconObjectClass;
+	AROS_LIBFUNC_EXIT
+}
+#else
 LIBFUNC(ObtainInfoEngine, libbase, ULONG)
 {
 	(void) libbase;
@@ -127,6 +137,7 @@ LIBFUNC(ObtainInfoEngine, libbase, ULONG)
 	return (ULONG) AmigaIconObjectClass;
 }
 LIBFUNC_END
+#endif
 
 //-----------------------------------------------------------------------------
 
@@ -258,7 +269,6 @@ ULONG OpenDatatype(struct AmigaIconObjectDtLibBase *dtLib)
 		if (NULL == MemPool)
 			return 0;
 
-#ifndef __AROS__
 		AmigaIconObjectClass = dtLib->nib_ClassLibrary.cl_Class = MakeClass(libName, 
 			"iconobject.datatype", NULL, sizeof(struct InstanceData), 0);
 		d1(kprintf("%s/%ld:  AmigaIconObjectClass=%08lx\n", __FUNC__, __LINE__, AmigaIconObjectClass));
@@ -270,7 +280,6 @@ ULONG OpenDatatype(struct AmigaIconObjectDtLibBase *dtLib)
 
 		// Make class available for the public
 		AddClass(AmigaIconObjectClass);
-#endif
 		}		
 
 	d1(kprintf("%s/%ld:  Open Success!\n", __FUNC__, __LINE__));
@@ -298,11 +307,9 @@ void CloseDatatype(struct AmigaIconObjectDtLibBase *dtLib)
 #endif
 		if (AmigaIconObjectClass)
 			{
-#ifndef __AROS__
 			RemoveClass(AmigaIconObjectClass);
 			FreeClass(AmigaIconObjectClass);
 			AmigaIconObjectClass = dtLib->nib_ClassLibrary.cl_Class = NULL;
-#endif
 			}
 
 		if (NULL != IconObjectDTBase)

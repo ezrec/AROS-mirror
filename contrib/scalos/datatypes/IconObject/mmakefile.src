@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 #MM- contrib-scalos-datatypes-iconobject : \
 #MM     linklibs \
-#MM     scalos-libraries-scalosgfx-includes
+#MM     contrib-scalos-libraries-scalosgfx-includes
 
 FILES := \
     argb \
@@ -18,11 +18,11 @@ USER_INCLUDES := -I$(TARGETDIR)/Development/include \
     -I$(SRCDIR)/$(CURDIR)/../../common/McpGfx \
     -idirafter $(SRCDIR)/$(CURDIR)/../../include
 
-USER_CFLAGS := -D__UTILITY_STDLIBBASE__
+USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -Wno-implicit-function-declaration
 
 %build_module mmake=contrib-scalos-datatypes-iconobject \
-    modname=iconobject modtype=datatype conffile="iconobject-aros.conf" \
-    files="$(FILES)" moduledir=IconDatatypes/datatypes prefix=$(TARGETDIR)
+    modname=iconobject modtype=library modsuffix=datatype conffile="iconobject-aros.conf" \
+    files="$(FILES)" moduledir=IconDatatypes/datatypes prefix=$(TARGETDIR) linklibname=iconobject-dt
 
 
 %common

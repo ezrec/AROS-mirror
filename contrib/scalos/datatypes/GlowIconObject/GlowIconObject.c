@@ -189,6 +189,16 @@ static struct Hook StreamHook =
 
 //----------------------------------------------------------------------------
 
+	#ifdef __AROS__
+AROS_LH0(ULONG, ObtainInfoEngine,
+    struct Library *, libBase, 5, GlowIconobject
+)
+{
+	AROS_LIBFUNC_INIT
+	return (ULONG) GlowIconObjectClass;
+	AROS_LIBFUNC_EXIT
+}
+#else
 LIBFUNC(ObtainInfoEngine, libbase, ULONG)
 {
 	(void) libbase;
@@ -198,6 +208,7 @@ LIBFUNC(ObtainInfoEngine, libbase, ULONG)
 	return (ULONG) GlowIconObjectClass;
 }
 LIBFUNC_END
+#endif
 
 //-----------------------------------------------------------------------------
 
@@ -318,7 +329,6 @@ ULONG OpenDatatype(struct GlowIconObjectDtLibBase *dtLib)
 		if (NULL == MemPool)
 			return 0;
 
-#ifndef __AROS__
 		GlowIconObjectClass = dtLib->nib_ClassLibrary.cl_Class = MakeClass(libName, 
 			"iconobject.datatype", NULL, sizeof(struct InstanceData), 0);
 		d1(kprintf("%s/%s/%ld:  GlowIconObjectClass=%08lx\n", __FILE__, __FUNC__, __LINE__, GlowIconObjectClass));
@@ -330,7 +340,7 @@ ULONG OpenDatatype(struct GlowIconObjectDtLibBase *dtLib)
 
 		// Make class available for the public
 		AddClass(GlowIconObjectClass);
-#else
+#ifdef __AROS__
 		dtLib->nib_ClassLibrary.cl_Lib.lib_Node.ln_Pri = 10;
 #endif
 
@@ -368,11 +378,9 @@ void CloseDatatype(struct GlowIconObjectDtLibBase *dtLib)
 		{
 		if (GlowIconObjectClass)
 			{
-#ifndef __AROS__
 			RemoveClass(GlowIconObjectClass);
 			FreeClass(GlowIconObjectClass);
 			GlowIconObjectClass = dtLib->nib_ClassLibrary.cl_Class = NULL;
-#endif
 			}
 
 		if (NULL != IconObjectDTBase)

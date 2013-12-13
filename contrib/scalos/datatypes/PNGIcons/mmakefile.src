@@ -16,11 +16,11 @@ TARGETDIR := $(AROS_CONTRIB)/Scalos
 USER_INCLUDES := -I$(TARGETDIR)/Development/include \
     -idirafter $(SRCDIR)/$(CURDIR)/../../include
 
-USER_CFLAGS := -D__UTILITY_STDLIBBASE__
+USER_CFLAGS := -D__UTILITY_STDLIBBASE__  -Wno-implicit-function-declaration
 
 %build_module mmake=contrib-scalos-datatypes-pngiconobject \
-    modname=pngiconobject modtype=datatype conffile="pngiconobject-aros.conf" \
-    files="$(FILES)" moduledir=IconDatatypes/datatypes prefix=$(TARGETDIR)
+    modname=pngiconobject modtype=library modsuffix=datatype conffile="pngiconobject-aros.conf" \
+    files="$(FILES)" moduledir=IconDatatypes/datatypes prefix=$(TARGETDIR) linklibname=pngiconobject-dt
 
 
 %common
