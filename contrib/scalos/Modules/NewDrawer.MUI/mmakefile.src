@@ -9,6 +9,8 @@ include $(TOP)/config/make.cfg
 #MM     linklibs \
 #MM     contrib-scalos-modules-newdrawer-locale \
 #MM     contrib-scalos-modules-newdrawer-icon \
+#MM     contrib-scalos-libraries-preferences-includes \
+#MM     contrib-scalos-libraries-iconobject-includes \
 #MM     contrib-scalos-library-includes
 
 FILES := NewDrawer
