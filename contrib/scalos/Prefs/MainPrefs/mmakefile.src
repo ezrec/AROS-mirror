@@ -1,0 +1,64 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-scalos : contrib-scalos-prefs-main
+
+#MM contrib-scalos-prefs-main : \
+#MM     includes \
+#MM     linklibs \
+#MM     contrib-scalos-prefs-main-locale \
+#MM     contrib-scalos-prefs-main-icon \
+#MM     contrib-scalos-library-includes \
+#MM     contrib-scalos-prefsplugin-includes
+
+FILES := \
+    Hooks \
+    ReadWritePrefs \
+    HiddenDevices \
+    $(SRCDIR)/$(CURDIR)/../../common/DataTypesMCC/DataTypesMCC \
+    $(SRCDIR)/$(CURDIR)/../../common/FontSampleMCC/FontSampleMCC \
+    Images \
+    McpFrameMCC \
+    PrefsPlugins \
+    Scalos \
+    PrefsVersion \
+    $(SRCDIR)/$(CURDIR)/../../common/McpGfx/ScalosMcpGfx \
+    SelectMarkSampleClass
+
+
+USER_INCLUDES := \
+    -I$(AROS_CONTRIB)/Scalos/Development/include \
+    -I$(SRCDIR)/$(CURDIR)/../../common/FontSampleMCC \
+    -I$(SRCDIR)/$(CURDIR)/../../common/McpGfx \
+    -I$(SRCDIR)/$(CURDIR)/../../common/DataTypesMCC \
+    -idirafter $(SRCDIR)/$(CURDIR)/../../include
+
+SCALOS_LOCALE := ScalosPrefs_locale.h
+USER_CFLAGS := -DMUI_OBSOLETE -D__LOCALE_STDLIBBASE__ -D__UTILITY_STDLIBBASE__ -DSCALOSLOCALE=$(SCALOS_LOCALE)
+
+TARGETDIR := $(AROS_CONTRIB)/Scalos/Prefs
+
+%build_prog mmake=contrib-scalos-prefs-main progname=Scalos_Prefs \
+    files=$(FILES) targetdir=$(TARGETDIR)
+
+
+#MM
+contrib-scalos-prefs-main-locale : $(SCALOS_LOCALE)
+
+$(SCALOS_LOCALE) : $(SRCDIR)/$(CURDIR)/Scalos_Prefs.cd $(SRCDIR)/$(CURDIR)/../../CatComp_h.sd
+	@$(ECHO) 'Compile $@ from $<'
+	@$(FLEXCAT) $< $@=$(SRCDIR)/$(CURDIR)/../../CatComp_h.sd
+
+
+ICON := $(TARGETDIR)/Scalos_Prefs.info
+
+#MM
+contrib-scalos-prefs-main-icon : $(ICON)
+
+$(ICON) : $(AROS_ENVARC)/SYS/def_Tool.info
+	%mkdirs_q $(TARGETDIR)
+	$(CP) $^ $@
+
+
+%common
