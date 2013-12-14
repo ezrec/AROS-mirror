@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-scalos-main : contrib-scalos-modules-exchange
+#MM- contrib-scalos : contrib-scalos-modules-exchange
 
 #MM contrib-scalos-modules-exchange : \
 #MM     includes \

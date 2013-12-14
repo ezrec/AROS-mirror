@@ -51,4 +51,16 @@ $(INCLUDES) : $(SRCDIR)/$(CURDIR)/scalosfiletypeplugin-aros.conf
 		$(TARGETDIR)/inline $(TARGETDIR)/proto
 	$(GENMODULE) -c $^ -d $(TARGETDIR) writeincludes scalosfiletypeplugin library
 
+
+INCLUDES := $(TARGETDIR)/clib/scalosprefsplugin_protos.h $(TARGETDIR)/defines/scalosprefsplugin.h \
+    $(TARGETDIR)/inline/scalosprefsplugin.h $(TARGETDIR)/proto/scalosprefsplugin.h 
+
+#MM
+contrib-scalos-prefsplugin-includes : $(INCLUDES)
+
+$(INCLUDES) : $(SRCDIR)/$(CURDIR)/scalosprefsplugin-aros.conf
+	%mkdirs_q $(TARGETDIR)/clib $(TARGETDIR)/defines/ \
+		$(TARGETDIR)/inline $(TARGETDIR)/proto
+	$(GENMODULE) -c $^ -d $(TARGETDIR) writeincludes scalosprefsplugin library
+
 %common

@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-scalos-main : contrib-scalos-modules-windowproperties
+#MM- contrib-scalos : contrib-scalos-modules-windowproperties
 
 #MM contrib-scalos-modules-windowproperties : \
 #MM     includes \

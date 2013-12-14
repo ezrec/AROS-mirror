@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-scalos-main : contrib-scalos-modules-rename
+#MM- contrib-scalos : contrib-scalos-modules-rename
 
 #MM contrib-scalos-modules-rename : \
 #MM     includes \

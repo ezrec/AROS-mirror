@@ -10,9 +10,11 @@ include $(TOP)/config/make.cfg
 
 TARGETDIR := $(AROS_ENVARC)
 
-FILES := deficons.prefs
-%copy_files_q mmake=contrib-scalos-deficons \
-    src=$(SRCDIR)/$(CURDIR) dst=$(TARGETDIR)
+#MM
+contrib-scalos-deficons : $(TARGETDIR)/deficons.prefs
+
+$(TARGETDIR)/deficons.prefs : $(SRCDIR)/$(CURDIR)/deficons.prefs
+	$(CP) $^ $@
 
 
 TARGETDIR := $(AROS_ENVARC)/Scalos

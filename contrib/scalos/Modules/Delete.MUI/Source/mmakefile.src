@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-scalos-main : contrib-scalos-modules-delete
+#MM- contrib-scalos : contrib-scalos-modules-delete
 
 #MM contrib-scalos-modules-delete : \
 #MM     includes \

@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-scalos-main : contrib-scalos-modules-newdrawer
+#MM- contrib-scalos : contrib-scalos-modules-newdrawer
 
 #MM contrib-scalos-modules-newdrawer : \
 #MM     includes \

@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-scalos-main : contrib-scalos-modules-emptytrashcan
+#MM- contrib-scalos : contrib-scalos-modules-emptytrashcan
 
 #MM contrib-scalos-modules-emptytrashcan : \
 #MM     includes \
