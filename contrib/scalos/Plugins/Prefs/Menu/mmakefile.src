@@ -1,0 +1,40 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-scalos : contrib-scalos-plugins-prefs-menu
+
+#MM- contrib-scalos-plugins-prefs-menu : \
+#MM     linklibs \
+#MM     contrib-scalos-plugins-prefs-menu-locale
+
+FILES := \
+    MenuPrefs \
+    $(SRCDIR)/$(CURDIR)/../../../common/DataTypesMCC/DataTypesMCC \
+    DefaultMenu
+
+TARGETDIR := $(AROS_CONTRIB)/Scalos
+
+USER_INCLUDES := \
+    -I$(TARGETDIR)/Development/include \
+    -I$(SRCDIR)/$(CURDIR)/../../../common/Plugin \
+    -I$(SRCDIR)/$(CURDIR)/../../../common/DataTypesMCC \
+    -idirafter $(SRCDIR)/$(CURDIR)/../../../include
+
+SCALOS_LOCALE := ScalosMenu_locale.h
+USER_CFLAGS := -DMUI_OBSOLETE -DSCALOSLOCALE=$(SCALOS_LOCALE) -Wno-implicit-function-declaration \
+    -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__
+
+%build_module mmake=contrib-scalos-plugins-prefs-menu \
+    modname=Menu modtype=library modsuffix=prefsplugin conffile=menuprefs-aros.conf \
+    files="$(FILES)" moduledir=Prefs prefix=$(TARGETDIR) uselibs=stdc linklibname=menu-pl
+
+
+#MM
+contrib-scalos-plugins-prefs-menu-locale : $(SCALOS_LOCALE)
+
+$(SCALOS_LOCALE) : $(SRCDIR)/$(CURDIR)/../../../Prefs/Menu/ScalosMenu.cd $(SRCDIR)/$(CURDIR)/../../../CatComp_h.sd
+	@$(ECHO) 'Compile $@ from $<'
+	@$(FLEXCAT) $< $@=$(SRCDIR)/$(CURDIR)/../../../CatComp_h.sd
+
+%common

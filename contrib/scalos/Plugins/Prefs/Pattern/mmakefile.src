@@ -1,0 +1,45 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-scalos : contrib-scalos-plugins-prefs-pattern
+
+#MM- contrib-scalos-plugins-prefs-pattern : \
+#MM     linklibs \
+#MM     contrib-scalos-plugins-prefs-pattern-locale \
+#MM     contrib-scalos-libraries-scalosgfx-includes
+
+FILES := \
+    PatternPrefs \
+    $(SRCDIR)/$(CURDIR)/../../../common/BackfillMCC/Backfill \
+    $(SRCDIR)/$(CURDIR)/../../../common/BitMapMCC/BitMapMCC \
+    $(SRCDIR)/$(CURDIR)/../../../common/DataTypesMCC/DataTypesMCC \
+    DoLoadDT
+
+TARGETDIR := $(AROS_CONTRIB)/Scalos
+
+USER_INCLUDES := \
+    -I$(TARGETDIR)/Development/include \
+    -I$(SRCDIR)/$(CURDIR)/../../../common/Plugin \
+    -I$(SRCDIR)/$(CURDIR)/../../../common/BackfillMCC \
+    -I$(SRCDIR)/$(CURDIR)/../../../common/BitMapMCC \
+    -I$(SRCDIR)/$(CURDIR)/../../../common/DataTypesMCC \
+    -idirafter $(SRCDIR)/$(CURDIR)/../../../include
+
+SCALOS_LOCALE := ScalosPattern_locale.h
+USER_CFLAGS := -DMUI_OBSOLETE -DSCALOSLOCALE=$(SCALOS_LOCALE) -Wno-implicit-function-declaration \
+    -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__
+
+%build_module mmake=contrib-scalos-plugins-prefs-pattern \
+    modname=Pattern modtype=library modsuffix=prefsplugin conffile=patternprefs-aros.conf \
+    files="$(FILES)" moduledir=Prefs prefix=$(TARGETDIR) uselibs=stdc linklibname=pattern-pl
+
+
+#MM
+contrib-scalos-plugins-prefs-pattern-locale : $(SCALOS_LOCALE)
+
+$(SCALOS_LOCALE) : $(SRCDIR)/$(CURDIR)/../../../Prefs/Pattern/ScalosPattern.cd $(SRCDIR)/$(CURDIR)/../../../CatComp_h.sd
+	@$(ECHO) 'Compile $@ from $<'
+	@$(FLEXCAT) $< $@=$(SRCDIR)/$(CURDIR)/../../../CatComp_h.sd
+
+%common

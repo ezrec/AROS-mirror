@@ -389,16 +389,18 @@ static size_t stccpy(char *dest, const char *src, size_t MaxLen);
 
 // local data items
 
+#ifndef __AROS__
 struct Library *MUIMasterBase;
 T_LOCALEBASE LocaleBase;
 struct GfxBase *GfxBase;
-struct Library *WorkbenchBase;
 struct Library *IconBase;
-struct Library *IFFParseBase;
-struct Library *IconobjectBase;
 T_UTILITYBASE UtilityBase;
 struct IntuitionBase *IntuitionBase;
+#endif
 struct Library *TTEngineBase;
+struct Library *IconobjectBase;
+struct Library *WorkbenchBase;
+struct Library *IFFParseBase;
 struct Library *DiskfontBase;
 struct Library *PreferencesBase;
 struct Library *DataTypesBase;
@@ -1649,7 +1651,7 @@ VOID closePlugin(struct PluginBase *PluginBase)
 
 LIBFUNC_P2(ULONG, LIBSCAGetPrefsInfo,
 	D0, ULONG, which,
-	A6, struct PluginBase *, PluginBase)
+	A6, struct PluginBase *, PluginBase, 5)
 {
 	ULONG result;
 
@@ -7883,5 +7885,16 @@ void exit(int x)
 APTR _WBenchMsg;
 
 #endif /* !__SASC && !__amigaos4__ */
+
+//----------------------------------------------------------------------------
+
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2EXPUNGELIB(closePlugin, 0);
+ADD2OPENLIB(initPlugin, 0);
+
+#endif
 
 //----------------------------------------------------------------------------
