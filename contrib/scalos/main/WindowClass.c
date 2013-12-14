@@ -928,7 +928,7 @@ static struct Window *ScaOpenWindow(struct internalScaWindowTask *iwt, Class *cl
 		{
 		WindowToFront(win);
 
-#if !defined(__MORPHOS__)
+#if !defined(__MORPHOS__) && !defined(__AROS__)
 		if (!iwt->iwt_BackDrop && ws != iInfos.xii_iinfos.ii_AppWindowStruct)
 			{
 			// Add iconify Gadget
