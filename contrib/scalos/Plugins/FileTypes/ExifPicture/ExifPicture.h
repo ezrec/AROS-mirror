@@ -11,7 +11,7 @@ void ExifPictureCleanup(struct ExifPictureBase *ExifPictureBase);
 LIBFUNC_P3_PROTO(STRPTR, LIBToolTipInfoString,
 	A0, struct ScaToolTipInfoHookData *, ttshd,
 	A1, CONST_STRPTR, args,
-	A6, struct ExifPictureBase *, ExifPictureBase);
+	A6, struct ExifPictureBase *, ExifPictureBase, 5);
 
 //---------------------------------------------------------------
 

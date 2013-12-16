@@ -51,11 +51,13 @@ M68KFUNC_P3_PROTO(ULONG, CI_HOOKFUNC,
 
 #if PLUGIN_TYPE == FILETYPE
 #include <scalos/scalos.h>
+#ifndef __AROS__
 
 LIBFUNC_P3_PROTO(STRPTR, FT_INFOSTRING,
 	A0, struct ScaToolTipInfoHookData *, ttshd,
 	A1, CONST_STRPTR, args,
-	A6, struct PluginBase *, PluginBase);
+	A6, struct PluginBase *, PluginBase, 5);
+#endif
 #endif // PLUGIN_TYPE == FILETYPE
 
 #if PLUGIN_TYPE == PREVIEW
@@ -72,6 +74,6 @@ LIBFUNC_P5_PROTO(LONG, LIBSCAPreviewGenerate,
 #if PLUGIN_TYPE == PREFS
 LIBFUNC_P2_PROTO(ULONG, LIBSCAGetPrefsInfo,
 	D0, ULONG, which,
-	A6, struct PluginBase *, PluginBase);
+	A6, struct PluginBase *, PluginBase, 5);
 #endif // PLUGIN_TYPE == PREFS
 

@@ -54,12 +54,12 @@ static struct Iconobject *InternalConvert2IconObjectA(
 
 //----------------------------------------------------------------------------
 
-#if !defined(__AROS__)
+#ifndef __AROS__
 struct ExecBase *SysBase;
-#endif
 struct IntuitionBase *IntuitionBase;
 T_UTILITYBASE UtilityBase;
 struct DosLibrary * DOSBase;
+#endif
 #ifdef __amigaos4__
 struct Library *NewlibBase;
 struct Interface *INewlib;

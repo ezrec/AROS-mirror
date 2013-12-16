@@ -376,9 +376,11 @@ static struct SignalSemaphore MemPoolSemaphore;
 
 //---------------------------------------------------------------------------------------
 
+#ifndef __AROS__
 struct DosLibrary *DOSBase;
 T_UTILITYBASE UtilityBase;
 T_LOCALEBASE LocaleBase;
+#endif
 
 #ifdef __amigaos4__
 struct DOSIFace *IDOS;
@@ -685,7 +687,7 @@ void InitProccessTableLocale(struct ExifPictureBase *ExifPictureBase)
 LIBFUNC_P3(STRPTR, LIBToolTipInfoString,
 	A0, struct ScaToolTipInfoHookData *, ttshd,
 	A1, CONST_STRPTR, args,
-	A6, struct PluginBase *, PluginBase);
+	A6, struct PluginBase *, PluginBase, 5);
 {
 	struct ExifPictureBase *ExifPictureBase = (struct ExifPictureBase *)PluginBase;
 	BPTR oldDir = NOT_A_LOCK;
@@ -2615,3 +2617,14 @@ void MyFreeVecPooled(APTR mem)
 }
 
 //-----------------------------------------------------------------------------
+
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2EXPUNGELIB(closePlugin, 0);
+ADD2OPENLIB(initPlugin, 0);
+
+#endif
+
+//----------------------------------------------------------------------------

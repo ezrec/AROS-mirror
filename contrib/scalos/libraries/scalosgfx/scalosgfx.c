@@ -53,13 +53,13 @@
 
 //----------------------------------------------------------------------------
 
-#if !defined(__AROS__)
+#ifndef __AROS__
 struct ExecBase *SysBase;
-#endif
 struct IntuitionBase *IntuitionBase;
 T_UTILITYBASE UtilityBase;
 struct DosLibrary * DOSBase;
 struct Library *CyberGfxBase;
+#endif
 struct GfxBase *GfxBase;
 struct Library *LayersBase;
 #ifdef __amigaos4__

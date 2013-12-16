@@ -50,9 +50,11 @@
 //#define DataTypesBase	  PictureDimensionsBase->pdb_DataTypesBase
 //#define LocaleBase	  PictureDimensionsBase->pdb_LocaleBase
 //#define DOSBase	  PictureDimensionsBase->pdb_DOSBase
+#ifndef __AROS__
 struct Library *DataTypesBase;
 struct DosLibrary *DOSBase;
 T_LOCALEBASE LocaleBase;
+#endif
 
 #ifdef __amigaos4__
 struct DataTypesIFace *IDataTypes;
@@ -220,7 +222,7 @@ VOID closePlugin(struct PluginBase *PluginBase)
 LIBFUNC_P3(STRPTR, LIBToolTipInfoString,
 	A0, struct ScaToolTipInfoHookData *, ttshd,
 	A1, CONST_STRPTR, args,
-	A6, struct PluginBase *, PluginBase);
+	A6, struct PluginBase *, PluginBase, 5);
 {
 	struct PictureDimensionsBase *PictureDimensionsBase = (struct PictureDimensionsBase *)PluginBase;
 	BPTR oldDir = NOT_A_LOCK;
@@ -308,5 +310,16 @@ void exit(int x)
 APTR _WBenchMsg;
 
 #endif /* !__SASC && !__amigaos4__ */
+
+//----------------------------------------------------------------------------
+
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2EXPUNGELIB(closePlugin, 0);
+ADD2OPENLIB(initPlugin, 0);
+
+#endif
 
 //----------------------------------------------------------------------------

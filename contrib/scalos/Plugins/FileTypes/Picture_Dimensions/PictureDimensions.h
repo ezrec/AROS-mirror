@@ -11,7 +11,7 @@ void PictureDimensionsCleanup(struct PictureDimensionsBase *PictureDimensionsBas
 LIBFUNC_P3_PROTO(STRPTR, LIBToolTipInfoString,
 	A0, struct ScaToolTipInfoHookData *, ttshd,
 	A1, CONST_STRPTR, args,
-	A6, struct PictureDimensionsBase *, PictureDimensionsBase);
+	A6, struct PictureDimensionsBase *, PictureDimensionsBase, 5);
 
 //---------------------------------------------------------------
 

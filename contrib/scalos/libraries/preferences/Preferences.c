@@ -134,13 +134,13 @@ static LONG SameName(CONST_STRPTR Name1, CONST_STRPTR Name2, size_t MaxLen);
 
 //----------------------------------------------------------------------------
 
-#if !defined(__AROS__)
+#ifndef __AROS__
 struct ExecBase *SysBase;
-#endif
 struct IntuitionBase *IntuitionBase;
 T_UTILITYBASE UtilityBase;
 struct DosLibrary * DOSBase;
 struct Library *IFFParseBase;
+#endif
 #ifdef __amigaos4__
 struct Library *NewlibBase;
 struct Interface *INewlib;

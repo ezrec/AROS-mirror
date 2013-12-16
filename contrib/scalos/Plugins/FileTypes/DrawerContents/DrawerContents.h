@@ -11,7 +11,7 @@ void DrawerContentsCleanup(struct DrawerContentsBase *DrawerContentsBase);
 LIBFUNC_P3_PROTO(STRPTR, LIBToolTipInfoString,
 	A0, struct ScaToolTipInfoHookData *, ttshd,
 	A1, CONST_STRPTR, args,
-	A6, struct DrawerContentsBase *, DrawerContentsBase);
+	A6, struct DrawerContentsBase *, DrawerContentsBase, 5);
 
 //---------------------------------------------------------------
 
