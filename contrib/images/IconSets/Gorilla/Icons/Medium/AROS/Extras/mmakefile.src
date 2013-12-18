@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 #MM- iconset-Gorilla-contrib-icons : iconset-Gorilla-contrib-icons-extras
 
 ICONS := MultiMedia DOpus Demos Development Emu Games Networking Office \
- Utilities System FryingPan
+ Utilities System FryingPan Scalos
 
 #MM- iconset-Gorilla-contrib-icons-clean : iconset-Gorilla-contrib-icons-extras-clean
 %build_icons mmake=iconset-Gorilla-contrib-icons-extras icons=$(ICONS) dir=$(AROS_CONTRIB)

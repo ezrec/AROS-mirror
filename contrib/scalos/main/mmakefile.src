@@ -8,6 +8,7 @@ include $(TOP)/config/make.cfg
 #MM     linklibs \
 #MM     contrib-scalos-main-locale \
 #MM     contrib-scalos-main-msgid \
+#MM     contrib-scalos-main-icon \
 #MM     contrib-scalos-libraries-iconobject \
 #MM     contrib-scalos-libraries-preferences \
 #MM     contrib-scalos-libraries-scalosgfx \
@@ -152,5 +153,14 @@ $(INCLUDES) : $(SRCDIR)/$(CURDIR)/scalos-aros.conf
 		$(TARGETDIR)/Development/include/inline $(TARGETDIR)/Development/include/proto
 	$(GENMODULE) -c $^ -d $(TARGETDIR)/Development/include writeincludes scalos library
 
+
+ICON := $(TARGETDIR)/Scalos.info
+
+#MM
+contrib-scalos-main-icon : $(ICON)
+
+$(ICON) : $(SRCDIR)/$(CURDIR)/Scalos.info
+	%mkdirs_q $(TARGETDIR)
+	$(CP) $^ $@
 
 %common

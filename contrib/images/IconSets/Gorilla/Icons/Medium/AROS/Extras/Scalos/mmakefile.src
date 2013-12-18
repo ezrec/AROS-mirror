@@ -1,0 +1,11 @@
+# Copyright © 2004-2013, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- iconset-Gorilla-contrib-icons-extras : iconset-Gorilla-contrib-icons-extras-scalos
+
+ICONS := Modules Prefs
+
+#MM- iconset-Gorilla-contrib-icons-extras-clean : iconset-Gorilla-contrib-icons-extras-scalos-clean
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-scalos icons=$(ICONS) dir=$(AROS_CONTRIB)/Scalos
