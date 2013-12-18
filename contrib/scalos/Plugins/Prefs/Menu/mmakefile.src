@@ -22,7 +22,7 @@ USER_INCLUDES := \
     -idirafter $(SRCDIR)/$(CURDIR)/../../../include
 
 SCALOS_LOCALE := ScalosMenu_locale.h
-USER_CFLAGS := -DMUI_OBSOLETE -DSCALOSLOCALE=$(SCALOS_LOCALE) -Wno-implicit-function-declaration \
+USER_CFLAGS := -DMUI_OBSOLETE -DSCALOSLOCALE=$(SCALOS_LOCALE) \
     -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__
 
 %build_module mmake=contrib-scalos-plugins-prefs-menu \
