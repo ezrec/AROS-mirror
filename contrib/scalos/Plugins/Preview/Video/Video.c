@@ -92,11 +92,14 @@ struct VideoFrame
 
 //---------------------------------------------------------------------------------------
 
+#ifndef __AROS__
 struct GfxBase *GfxBase;
 T_UTILITYBASE UtilityBase;
 struct Library *CyberGfxBase;
 struct DosLibrary *DOSBase;
 struct IntuitionBase *IntuitionBase;
+#endif
+struct Library *CyberGfxBase;
 struct ScalosGfxBase *ScalosGfxBase;
 
 #ifdef __amigaos4__
@@ -326,7 +329,7 @@ LIBFUNC_P5(LONG, LIBSCAPreviewGenerate,
 	A1, BPTR, dirLock,
 	A2, CONST_STRPTR, iconName,
 	A3, struct TagItem *, tagList,
-	A6, struct PluginBase *, PluginBase)
+	A6, struct PluginBase *, PluginBase, 5)
 {
 	LONG Success = FALSE;
 
@@ -1284,3 +1287,14 @@ static void ByteDump(const unsigned char *Data, size_t Length)
 #endif /* BYTEDUMP */
 
 //-----------------------------------------------------------------------------
+
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2EXPUNGELIB(closePlugin, 0);
+ADD2OPENLIB(initPlugin, 0);
+
+#endif
+
+//----------------------------------------------------------------------------

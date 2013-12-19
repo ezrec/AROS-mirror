@@ -68,7 +68,7 @@ LIBFUNC_P5_PROTO(LONG, LIBSCAPreviewGenerate,
 	A1, BPTR, dirLock,
 	A2, CONST_STRPTR, iconName,
 	A3, struct TagItem *, tagList,
-	A6, struct PluginBase *, PluginBase);
+	A6, struct PluginBase *, PluginBase, 5);
 #endif // PLUGIN_TYPE == PREVIEW
 
 #if PLUGIN_TYPE == PREFS

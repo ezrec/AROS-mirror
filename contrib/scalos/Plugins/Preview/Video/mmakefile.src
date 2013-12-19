@@ -1,0 +1,29 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+# Doesn't build yet because of missing avcodec and avformat
+# #MM- contrib-scalos : contrib-scalos-plugins-preview-video
+
+#MM- contrib-scalos-plugins-preview-video : \
+#MM     linklibs \
+#MM     contrib-scalos-libraries-scalosgfx-includes
+
+FILES := Video
+
+TARGETDIR := $(AROS_CONTRIB)/Scalos
+
+USER_INCLUDES := \
+    -I$(TARGETDIR)/Development/include \
+    -I$(SRCDIR)/$(CURDIR)/../../../common/Plugin \
+    -idirafter $(SRCDIR)/$(CURDIR)/../../../include \
+    -idirafter $(SRCDIR)/$(CURDIR)/../../../include/ffmpeg
+
+USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__
+
+%build_module mmake=contrib-scalos-plugins-preview-video \
+    modname=video modtype=library modsuffix=pvplugin conffile=video-aros.conf \
+    files="$(FILES)" moduledir=Plugins/Preview prefix=$(TARGETDIR) \
+    uselibs="avcodec avformat avcodec avutil" linklibname=video-pl
+
+%common

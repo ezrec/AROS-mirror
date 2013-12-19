@@ -10,7 +10,8 @@ include $(TOP)/config/make.cfg
 #MM     contrib-scalos-prefs-filetypes-locale \
 #MM     contrib-scalos-prefs-filetypes-icon \
 #MM     contrib-scalos-library-includes \
-#MM     contrib-scalos-prefsplugin-includes
+#MM     contrib-scalos-prefsplugin-includes \
+#MM     contrib-scalos-libraries-iconobject-includes
 
 FILES := FileTypes
 
