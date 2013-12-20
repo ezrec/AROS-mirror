@@ -10,15 +10,15 @@ include $(TOP)/config/make.cfg
 
 FILES := AmigaIconObj35
 
-TARGETDIR := $(AROS_CONTRIB)/Scalos
-USER_INCLUDES := -I$(TARGETDIR)/Development/include \
+TARGETDIR := $(AROS_CONTRIB)/Scalos/IconDatatypes
+USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include \
     -idirafter $(SRCDIR)/$(CURDIR)/../../include
 
 USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -Wno-implicit-function-declaration
 
 %build_module mmake=contrib-scalos-datatypes-amigaiconobj35 \
     modname=amigaiconobj35 modtype=library modsuffix=datatype conffile="amigaiconobj35-aros.conf" \
-    files="$(FILES)" moduledir=IconDatatypes/datatypes prefix=$(TARGETDIR) linklibname=amigaiconobj35-dt
+    files="$(FILES)" moduledir=datatypes prefix=$(TARGETDIR)
 
 
 %common

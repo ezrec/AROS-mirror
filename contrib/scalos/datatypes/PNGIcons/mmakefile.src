@@ -12,15 +12,15 @@ include $(TOP)/config/make.cfg
 FILES := \
     GetPNGPicture LoadPngIcon PNGIconDt SavePngIcon
 
-TARGETDIR := $(AROS_CONTRIB)/Scalos
-USER_INCLUDES := -I$(TARGETDIR)/Development/include \
+TARGETDIR := $(AROS_CONTRIB)/Scalos/IconDatatypes
+USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include \
     -idirafter $(SRCDIR)/$(CURDIR)/../../include
 
 USER_CFLAGS := -D__UTILITY_STDLIBBASE__  -Wno-implicit-function-declaration
 
 %build_module mmake=contrib-scalos-datatypes-pngiconobject \
     modname=pngiconobject modtype=library modsuffix=datatype conffile="pngiconobject-aros.conf" \
-    files="$(FILES)" moduledir=IconDatatypes/datatypes prefix=$(TARGETDIR) linklibname=pngiconobject-dt
+    files="$(FILES)" moduledir=datatypes prefix=$(TARGETDIR)
 
 
 %common

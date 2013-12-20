@@ -13,8 +13,8 @@ FILES := \
     $(SRCDIR)/$(CURDIR)/../../common/McpGfx/ScalosMcpGfx \
     iconobj
 
-TARGETDIR := $(AROS_CONTRIB)/Scalos
-USER_INCLUDES := -I$(TARGETDIR)/Development/include \
+TARGETDIR := $(AROS_CONTRIB)/Scalos/IconDatatypes
+USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include \
     -I$(SRCDIR)/$(CURDIR)/../../common/McpGfx \
     -idirafter $(SRCDIR)/$(CURDIR)/../../include
 
@@ -22,7 +22,7 @@ USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -Wno-implicit-function-declaration
 
 %build_module mmake=contrib-scalos-datatypes-iconobject \
     modname=iconobject modtype=library modsuffix=datatype conffile="iconobject-aros.conf" \
-    files="$(FILES)" moduledir=IconDatatypes/datatypes prefix=$(TARGETDIR) linklibname=iconobject-dt
+    files="$(FILES)" moduledir=datatypes prefix=$(TARGETDIR)
 
 
 %common
