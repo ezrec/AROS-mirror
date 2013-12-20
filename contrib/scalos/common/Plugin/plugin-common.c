@@ -93,7 +93,15 @@ static struct ScaClassInfo ClassInfo =
 	CI_AUTHOR	/* name of author */
 };
 
+#ifdef __AROS__
+AROS_LH0(struct ScaClassInfo *, GetClassInfo,
+struct Library *, libbase, 5, PluginBase
+)
+{
+	AROS_LIBFUNC_INIT
+#else
 static LIBFUNC(GetClassInfo, libbase, struct ScaClassInfo *)
+#endif
 {
 	(void)libbase;
 	return &ClassInfo;
