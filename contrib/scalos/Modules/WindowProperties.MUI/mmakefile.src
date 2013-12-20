@@ -10,7 +10,9 @@ include $(TOP)/config/make.cfg
 #MM     contrib-scalos-modules-windowproperties-locale \
 #MM     contrib-scalos-modules-windowproperties-icon \
 #MM     contrib-scalos-library-includes \
-#MM     contrib-scalos-libraries-scalosgfx
+#MM     contrib-scalos-libraries-iconobject-includes \
+#MM     contrib-scalos-libraries-preferences-includes \
+#MM     contrib-scalos-libraries-scalosgfx-includes
 
 FILES := \
     WindowProperties \
