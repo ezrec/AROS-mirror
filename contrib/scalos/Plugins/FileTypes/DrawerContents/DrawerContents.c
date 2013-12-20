@@ -140,7 +140,7 @@ BOOL initPlugin (struct PluginBase *PluginBase)
 }
 
 
-VOID closePlugin(struct PluginBase *PluginBase)
+BOOL closePlugin(struct PluginBase *PluginBase)
 {
 	struct DrawerContentsBase *DrawerContentsBase = (struct DrawerContentsBase *)PluginBase;
 
@@ -195,6 +195,8 @@ VOID closePlugin(struct PluginBase *PluginBase)
 #if !defined(__amigaos4__) && !defined(__AROS__)
 	_STD_240_TerminateMemFunctions();
 #endif
+
+	return TRUE;
 }
 
 

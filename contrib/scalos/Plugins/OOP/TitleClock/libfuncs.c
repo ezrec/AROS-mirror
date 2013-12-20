@@ -294,7 +294,7 @@ BOOL initPlugin(struct PluginBase *pluginBase)
 }
 
 
-void closePlugin(struct PluginBase *pluginBase)
+BOOL closePlugin(struct PluginBase *pluginBase)
 {
 	struct myLibBase *myLibBase = (struct myLibBase *)pluginBase;
 
@@ -349,6 +349,7 @@ void closePlugin(struct PluginBase *pluginBase)
 		CloseLibrary((struct Library *)LocaleBase);
 		LocaleBase = NULL;
 		}
+	return TRUE;
 }
 
 //----------------------------------------------------------------------------

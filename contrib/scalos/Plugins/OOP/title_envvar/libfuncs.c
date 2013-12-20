@@ -91,7 +91,7 @@ BOOL initPlugin(struct PluginBase *base)
 	return TRUE;
 }
 
-void closePlugin(struct PluginBase *base)
+BOOL closePlugin(struct PluginBase *base)
 {
 #ifdef __amigaos4__
 	if (INewlib)
@@ -126,6 +126,7 @@ void closePlugin(struct PluginBase *base)
 		CloseLibrary((struct Library *) DOSBase);
 		DOSBase = NULL;
 		}
+	return TRUE;
 }
 
 //----------------------------------------------------------------

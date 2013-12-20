@@ -24,7 +24,7 @@ extern struct ExecBase *SysBase;
 
 BOOL PreferencesInit(struct PreferencesBase *PreferencesBase);
 BOOL PreferencesOpen(struct PreferencesBase *PreferencesBase);
-void PreferencesCleanup(struct PreferencesBase *PreferencesBase);
+BOOL PreferencesCleanup(struct PreferencesBase *PreferencesBase);
 
 LIBFUNC_P2_PROTO(APTR, LIBAllocPrefsHandle,
 	A0, CONST_STRPTR, Name,

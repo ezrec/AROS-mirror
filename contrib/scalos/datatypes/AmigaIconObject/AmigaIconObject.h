@@ -43,7 +43,7 @@ struct AmigaIconObjectDtLibBase
 
 ULONG InitDatatype(struct AmigaIconObjectDtLibBase *dtLib);
 ULONG OpenDatatype(struct AmigaIconObjectDtLibBase *dtLib);
-void CloseDatatype(struct AmigaIconObjectDtLibBase *dtLib);
+ULONG CloseDatatype(struct AmigaIconObjectDtLibBase *dtLib);
 
 LIBFUNC_PROTO(ObtainInfoEngine, libbase, ULONG);
 

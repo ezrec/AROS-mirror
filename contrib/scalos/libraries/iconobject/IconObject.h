@@ -40,7 +40,7 @@ extern char ALIGNED libIdString[];
 
 BOOL IconObjectInit(struct IconObjectBase *IconObjectBase);
 BOOL IconObjectOpen(struct IconObjectBase *IconObjectBase);
-void IconObjectCleanup(struct IconObjectBase *IconObjectBase);
+BOOL IconObjectCleanup(struct IconObjectBase *IconObjectBase);
 
 LIBFUNC_P3_PROTO(struct Iconobject *, LIBNewIconObject,
 	A0, APTR, Name,

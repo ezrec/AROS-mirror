@@ -175,7 +175,7 @@ BOOL initPlugin(struct PluginBase *base)
 }
 ///FrexxEndFold1.
 
-void closePlugin(struct PluginBase *base)
+BOOL closePlugin(struct PluginBase *base)
 {
 ///FrexxStartFold1.2.0.
 
@@ -210,6 +210,7 @@ void closePlugin(struct PluginBase *base)
 		CloseLibrary( (struct Library *)IntuitionBase );
 	if( DOSBase )
 		CloseLibrary( (struct Library *)DOSBase );
+	return TRUE;
 }
 ///FrexxEndFold1.
 

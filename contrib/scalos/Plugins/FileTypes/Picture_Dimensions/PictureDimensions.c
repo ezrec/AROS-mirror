@@ -152,7 +152,7 @@ BOOL initPlugin(struct PluginBase *PluginBase)
 }
 
 
-VOID closePlugin(struct PluginBase *PluginBase)
+BOOL closePlugin(struct PluginBase *PluginBase)
 {
 	struct PictureDimensionsBase *PictureDimensionsBase = (struct PictureDimensionsBase *)PluginBase;
 
@@ -215,6 +215,7 @@ VOID closePlugin(struct PluginBase *PluginBase)
 		CloseLibrary((struct Library *) DOSBase);
 		DOSBase = NULL;
 		}
+	return TRUE;
 }
 
 

@@ -182,13 +182,14 @@ BOOL initPlugin(struct PluginBase *base)
 }
 
 
-VOID closePlugin(struct PluginBase *base)
+BOOL closePlugin(struct PluginBase *base)
 {
 	ShutdownWBRexxProcess();
 
 	CloseLibraries();
 
 	fInit = FALSE;
+	return TRUE;
 }
 
 

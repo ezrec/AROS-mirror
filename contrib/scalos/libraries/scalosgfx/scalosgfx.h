@@ -119,7 +119,7 @@ extern struct Library *CyberGfxBase;
 
 BOOL ScalosGfxInit(struct ScalosGfxBase *ScalosGfxBase);
 BOOL ScalosGfxOpen(struct ScalosGfxBase *ScalosGfxBase);
-void ScalosGfxCleanup(struct ScalosGfxBase *ScalosGfxBase);
+BOOL ScalosGfxCleanup(struct ScalosGfxBase *ScalosGfxBase);
 
 LIBFUNC_P1_PROTO(struct ScalosBitMapAndColor *, LIBScalosGfxCreateEmptySAC,
 	A6, struct ScalosGfxBase *, ScalosGfxBase, 5);

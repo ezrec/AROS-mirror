@@ -228,7 +228,7 @@ BOOL initPlugin(struct PluginBase *pluginbase)
 
 //----------------------------------------------------------------------------
 
-VOID closePlugin(struct PluginBase *pluginbase)
+BOOL closePlugin(struct PluginBase *pluginbase)
 {
 	(void) pluginbase;
 
@@ -302,6 +302,7 @@ VOID closePlugin(struct PluginBase *pluginbase)
 		IntuitionBase = NULL;
 		}
 	ReleaseSemaphore(&PersistSema);
+	return TRUE;
 }
 
 //----------------------------------------------------------------------------

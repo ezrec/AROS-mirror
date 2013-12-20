@@ -96,7 +96,7 @@ BOOL initPlugin(struct PluginBase *base)
 	return TRUE;
 }
 
-void closePlugin(struct PluginBase *base)
+BOOL closePlugin(struct PluginBase *base)
 {
 #ifdef __amigaos4__
 	if (INewlib)
@@ -120,6 +120,7 @@ void closePlugin(struct PluginBase *base)
 		IntuitionBase = NULL;
 		}
 #endif /* __amigaos4__ */
+	return TRUE;
 }
 
 /* The actual (hook) function which does the work for this plugin

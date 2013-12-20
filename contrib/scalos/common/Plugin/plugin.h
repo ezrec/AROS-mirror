@@ -38,7 +38,7 @@ struct PluginBase
 #endif /* PLUGIN_H_INCLUDED */
 
 BOOL initPlugin(struct PluginBase *pluginbase);
-VOID closePlugin(struct PluginBase *pluginbase);
+BOOL closePlugin(struct PluginBase *pluginbase);
 
 #if PLUGIN_TYPE == OOP
 #include <intuition/classes.h>

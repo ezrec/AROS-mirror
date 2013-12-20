@@ -224,7 +224,7 @@ BOOL ScalosGfxOpen(struct ScalosGfxBase *ScalosGfxBase)
 
 //-----------------------------------------------------------------------------
 
-void ScalosGfxCleanup(struct ScalosGfxBase *ScalosGfxBase)
+BOOL ScalosGfxCleanup(struct ScalosGfxBase *ScalosGfxBase)
 {
 	d1(kprintf("%s/%ld:\n", __FUNC__, __LINE__));
 
@@ -294,6 +294,7 @@ void ScalosGfxCleanup(struct ScalosGfxBase *ScalosGfxBase)
 		ScalosGfxBase->sgb_MemPool = NULL;
 		}
 	d1(kprintf("%s/%ld:\n", __FUNC__, __LINE__));
+	return TRUE;
 }
 
 //-----------------------------------------------------------------------------

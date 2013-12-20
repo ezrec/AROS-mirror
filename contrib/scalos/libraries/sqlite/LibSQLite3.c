@@ -173,7 +173,7 @@ BOOL SQLite3Open(struct SQLite3Base *SQLite3Base)
 
 //-----------------------------------------------------------------------------
 
-void SQLite3Cleanup(struct SQLite3Base *SQLite3Base)
+BOOL SQLite3Cleanup(struct SQLite3Base *SQLite3Base)
 {
 	d1(kprintf("%s/%ld:  START\n", __FUNC__, __LINE__));
 
@@ -242,6 +242,7 @@ void SQLite3Cleanup(struct SQLite3Base *SQLite3Base)
 		CloseLibrary((struct Library *) DOSBase);
 		DOSBase = NULL;
 		}
+	return TRUE;
 }
 
 //-----------------------------------------------------------------------------

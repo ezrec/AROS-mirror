@@ -535,7 +535,7 @@ BOOL initPlugin(struct PluginBase *base)
 }
 
 
-VOID closePlugin(struct PluginBase *base)
+BOOL closePlugin(struct PluginBase *base)
 {
 	struct ExifPictureBase *ExifPictureBase = (struct ExifPictureBase *)base;
 
@@ -603,6 +603,7 @@ VOID closePlugin(struct PluginBase *base)
 		DeletePool(MemPool);
 		MemPool = NULL;
 		}
+	return TRUE;
 }
 
 void InitProccessTableLocale(struct ExifPictureBase *ExifPictureBase)

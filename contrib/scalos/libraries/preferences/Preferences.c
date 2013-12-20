@@ -271,7 +271,7 @@ BOOL PreferencesOpen(struct PreferencesBase *PreferencesBase)
 
 //-----------------------------------------------------------------------------
 
-void PreferencesCleanup(struct PreferencesBase *PreferencesBase)
+BOOL PreferencesCleanup(struct PreferencesBase *PreferencesBase)
 {
 	d1(KPrintF("%s/%s/%ld:\n", __FILE__, __FUNC__, __LINE__));
 
@@ -338,6 +338,7 @@ void PreferencesCleanup(struct PreferencesBase *PreferencesBase)
 		CloseLibrary((struct Library *) DOSBase);
 		DOSBase = NULL;
 		}
+	return TRUE;
 }
 
 //-----------------------------------------------------------------------------

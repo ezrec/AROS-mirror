@@ -650,7 +650,7 @@ BOOL initPlugin(struct PluginBase *libbase)
 }
 
 
-VOID closePlugin(struct PluginBase *libbase)
+BOOL closePlugin(struct PluginBase *libbase)
 {
 	fInit = FALSE;
 
@@ -822,6 +822,7 @@ VOID closePlugin(struct PluginBase *libbase)
 
 	d1(kprintf("%s/%s/%ld: \n"__FILE__, __FUNC__, __LINE__));
 
+	return TRUE;
 }
 
 

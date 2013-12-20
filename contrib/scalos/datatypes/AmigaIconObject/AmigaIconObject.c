@@ -287,7 +287,7 @@ ULONG OpenDatatype(struct AmigaIconObjectDtLibBase *dtLib)
 	return 1;
 }
 
-void CloseDatatype(struct AmigaIconObjectDtLibBase *dtLib)
+ULONG CloseDatatype(struct AmigaIconObjectDtLibBase *dtLib)
 {
 	d1(kprintf("%s/%s/%ld:  OpenCnt=%ld\n", __FILE__, __FUNC__, __LINE__, dtLib->nib_ClassLibrary.cl_Lib.lib_OpenCnt));
 
@@ -378,6 +378,7 @@ void CloseDatatype(struct AmigaIconObjectDtLibBase *dtLib)
 			}
 		}
 	d1(kprintf("%s/%s/%ld:  OpenCnt=%ld\n", __FILE__, __FUNC__, __LINE__, dtLib->nib_ClassLibrary.cl_Lib.lib_OpenCnt));
+	return 1;
 }
 
 //-----------------------------------------------------------------------------

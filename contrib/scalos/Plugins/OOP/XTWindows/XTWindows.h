@@ -24,7 +24,7 @@ struct XTWindowsBase
 #endif /* __GNUC__ */
 
 BOOL initPlugin(struct PluginBase *base);
-void closePlugin(struct PluginBase *base);
+BOOL closePlugin(struct PluginBase *base);
 
 /* ------------------------------------------------- */
 

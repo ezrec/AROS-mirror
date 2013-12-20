@@ -139,7 +139,7 @@ BOOL initPlugin(struct PluginBase *pluginbase)
 
 
 // Plugin/library cleanup routine. Called at library expunge.
-void closePlugin(struct PluginBase *pluginbase)
+BOOL closePlugin(struct PluginBase *pluginbase)
 {
 	(void)pluginbase;
 
@@ -160,6 +160,7 @@ void closePlugin(struct PluginBase *pluginbase)
 		}
 
 	CloseLibraries();
+	return TRUE;
 }
 
 //-----------------------------------------------------------------

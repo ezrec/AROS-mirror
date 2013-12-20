@@ -332,7 +332,7 @@ static const struct PopupMenuPrefs DefaultPMPrefs =
 
 //----------------------------------------------------------------------------
 
-VOID closePlugin(struct PluginBase *PluginBase)
+BOOL closePlugin(struct PluginBase *PluginBase)
 {
 	d1(kprintf("%s/%s/%ld: start\n", __FILE__, __FUNC__, __LINE__));
 
@@ -372,6 +372,7 @@ VOID closePlugin(struct PluginBase *PluginBase)
 #endif
 
 	d1(kprintf("%s/%s/%ld: endt\n", __FILE__, __FUNC__, __LINE__));
+	return TRUE;
 }
 
 

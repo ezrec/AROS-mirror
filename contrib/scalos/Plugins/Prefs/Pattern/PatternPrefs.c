@@ -423,7 +423,7 @@ static STRPTR CycleBackgroundModeStrings[] =
 
 //---------------------------------------------------------------
 
-VOID closePlugin(struct PluginBase *PluginBase)
+BOOL closePlugin(struct PluginBase *PluginBase)
 {
 	d1(kprintf(__FUNC__ "/%ld:\n", __FILE__, __FUNC__, __LINE__));
 
@@ -476,6 +476,8 @@ VOID closePlugin(struct PluginBase *PluginBase)
 #if !defined(__amigaos4__) && !defined(__AROS__)
 	_STD_240_TerminateMemFunctions();
 #endif
+
+	return TRUE;
 }
 
 

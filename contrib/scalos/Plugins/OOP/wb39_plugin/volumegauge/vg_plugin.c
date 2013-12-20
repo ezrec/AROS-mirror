@@ -283,11 +283,12 @@ static BOOL Init(void)
 }
 
 
-VOID closePlugin(struct PluginBase *base)
+BOOL closePlugin(struct PluginBase *base)
 {
 	CloseLibraries();
 
 	fInit = FALSE;
+	return TRUE;
 }
 
 

@@ -35,7 +35,7 @@ LIBFUNC_PROTO(ObtainInfoEngine, libbase, ULONG);
 
 ULONG InitDatatype(struct IconObjectDtLibBase *dtLib);
 ULONG OpenDatatype(struct IconObjectDtLibBase *dtLib);
-void CloseDatatype(struct IconObjectDtLibBase *dtLib);
+ULONG CloseDatatype(struct IconObjectDtLibBase *dtLib);
 
 //----------------------------------------------------------------------------
 

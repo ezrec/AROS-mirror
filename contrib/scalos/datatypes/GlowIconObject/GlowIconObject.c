@@ -370,7 +370,7 @@ ULONG OpenDatatype(struct GlowIconObjectDtLibBase *dtLib)
 	return 1;
 }
 
-void CloseDatatype(struct GlowIconObjectDtLibBase *dtLib)
+ULONG CloseDatatype(struct GlowIconObjectDtLibBase *dtLib)
 {
 	d1(kprintf("%s/%s/%ld:  OpenCnt=%ld\n", __FILE__, __FUNC__, __LINE__, dtLib->nib_ClassLibrary.cl_Lib.lib_OpenCnt));
 
@@ -504,6 +504,7 @@ void CloseDatatype(struct GlowIconObjectDtLibBase *dtLib)
 			DOSBase = NULL;
 			}
 		}
+	return 1;
 }
 
 //-----------------------------------------------------------------------------

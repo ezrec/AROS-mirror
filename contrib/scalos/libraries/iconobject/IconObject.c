@@ -196,7 +196,7 @@ BOOL IconObjectOpen(struct IconObjectBase *IconObjectBase)
 
 //-----------------------------------------------------------------------------
 
-void IconObjectCleanup(struct IconObjectBase *IconObjectBase)
+BOOL IconObjectCleanup(struct IconObjectBase *IconObjectBase)
 {
 	d1(kprintf("%s/%ld:\n", __FUNC__, __LINE__));
 
@@ -249,6 +249,7 @@ void IconObjectCleanup(struct IconObjectBase *IconObjectBase)
 		MemPool = NULL;
 		}
 	d1(kprintf("%s/%ld: Done!\n", __FUNC__, __LINE__));
+	return TRUE;
 }
 
 //-----------------------------------------------------------------------------

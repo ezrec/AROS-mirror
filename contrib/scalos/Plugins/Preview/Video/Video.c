@@ -236,7 +236,7 @@ BOOL initPlugin(struct PluginBase *PluginBase)
 }
 
 
-void closePlugin(struct PluginBase *PluginBase)
+BOOL closePlugin(struct PluginBase *PluginBase)
 {
 	d1(kprintf("%s/%s/%ld:\n", __FILE__, __FUNC__, __LINE__));
 
@@ -320,6 +320,7 @@ void closePlugin(struct PluginBase *PluginBase)
 		CloseLibrary((struct Library *) DOSBase);
 		DOSBase = NULL;
 		}
+	return TRUE;
 }
 
 //--------------------------------------------------------------------------
