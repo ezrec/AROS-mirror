@@ -38,7 +38,7 @@ ICON := $(TARGETDIR)/Scalos_FileTypes.info
 #MM
 contrib-scalos-prefs-filetypes-icon : $(ICON)
 
-$(ICON) : $(AROS_ENVARC)/SYS/def_Tool.info
+$(ICON) : $(SRCDIR)/$(CURDIR)/Scalos_FileTypes.info
 	%mkdirs_q $(TARGETDIR)
 	$(CP) $^ $@
 

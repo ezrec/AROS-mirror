@@ -59,7 +59,7 @@ ICON := $(TARGETDIR)/Scalos_Prefs.info
 #MM
 contrib-scalos-prefs-main-icon : $(ICON)
 
-$(ICON) : $(AROS_ENVARC)/SYS/def_Tool.info
+$(ICON) : $(SRCDIR)/$(CURDIR)/Scalos_Prefs.info
 	%mkdirs_q $(TARGETDIR)
 	$(CP) $^ $@
 

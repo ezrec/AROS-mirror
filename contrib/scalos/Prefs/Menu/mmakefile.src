@@ -37,7 +37,7 @@ ICON := $(TARGETDIR)/Scalos_Menu.info
 #MM
 contrib-scalos-prefs-menu-icon : $(ICON)
 
-$(ICON) : $(AROS_ENVARC)/SYS/def_Tool.info
+$(ICON) : $(SRCDIR)/$(CURDIR)/Scalos_Menu.info
 	%mkdirs_q $(TARGETDIR)
 	$(CP) $^ $@
 
