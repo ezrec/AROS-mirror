@@ -27,6 +27,10 @@
 
 #include "volumegauge.h"
 
+#ifdef __AROS__
+#include "plugin.h"
+#include "plugin-common.c"
+#endif
 
 // Instance structure for overridden window.sca class
 struct VGinst
@@ -40,7 +44,6 @@ extern int kprintf(const char *fmt, ...);
 
 
 static BOOL Init(void);
-VOID closePlugin(void);
 static BOOL OpenLibraries(void);
 static void CloseLibraries(void);
 static void UpdateVolumeGauge(struct Gadget *gad, struct Window *win, BPTR iLock);
@@ -50,12 +53,15 @@ static void UpdateVolumeGauge(struct Gadget *gad, struct Window *win, BPTR iLock
 const ULONG VGinstSize = sizeof(struct VGinst);
 
 
+#ifndef __AROS__
 struct DosLibrary *DOSBase;
 T_UTILITYBASE UtilityBase;
 struct IntuitionBase *IntuitionBase;
 struct Library *LayersBase;
+#endif
 struct Library *GfxBase;
 struct Library *ScalosBase;
+
 #ifdef __amigaos4__
 struct Library *NewlibBase;
 
@@ -241,16 +247,20 @@ M68KFUNC_P3(ULONG, myHookFunc,
 M68KFUNC_END
 
 
-BOOL initPlugin(void)
+BOOL initPlugin(struct PluginBase *base)
 {
 	d(kprintf(__FUNC__ "/%ld: \n", __LINE__));
+
+#ifdef __AROS__
+	base->pl_PlugID = MAKE_ID('P','L','U','G');
+#endif
 
 	if (!fInit)
 		{
 		BOOL Success = Init();
 
 		if (!Success)
-			closePlugin();
+			closePlugin(base);
 
 		return Success;
 		}
@@ -273,7 +283,7 @@ static BOOL Init(void)
 }
 
 
-VOID closePlugin(void)
+VOID closePlugin(struct PluginBase *base)
 {
 	CloseLibraries();
 
@@ -466,4 +476,15 @@ void _XCEXIT(long x)
 {
 }
 
+//----------------------------------------------------------------------------
 
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2EXPUNGELIB(closePlugin, 0);
+ADD2OPENLIB(initPlugin, 0);
+
+#endif
+
+//----------------------------------------------------------------------------

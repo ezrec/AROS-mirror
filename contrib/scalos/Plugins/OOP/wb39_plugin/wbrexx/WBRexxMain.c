@@ -42,24 +42,31 @@
 #include "wbrexx.h"
 #include "Scalos_Helper.h"
 
-VOID closePlugin(void);
+#ifdef __AROS__
+#include "plugin.h"
+#include "plugin-common.c"
+#endif
+
 static BOOL OpenLibraries(void);
 static void CloseLibraries(void);
 
 
+#ifndef __AROS__
 struct DosLibrary *DOSBase;
-struct Library *IconobjectBase;
-struct Library *WorkbenchBase;
 T_UTILITYBASE UtilityBase;
-struct ScalosBase *ScalosBase;
 struct IntuitionBase *IntuitionBase;
 struct Library *LayersBase;
-struct Library *GfxBase;
 struct Library *IconBase;
 struct Library *IFFParseBase;
-struct Library *CxBase;
+#endif
+struct ScalosBase *ScalosBase;
+struct Library *IconobjectBase;
+struct Library *WorkbenchBase;
+struct Library *GfxBase;
 struct Library *AmigaGuideBase;
 T_LOCALEBASE *LocaleBase;
+struct Library *CxBase;
+
 #ifdef __amigaos4__
 struct Library *NewlibBase;
 
@@ -136,9 +143,13 @@ M68KFUNC_P3(ULONG, myHookFunc,
 M68KFUNC_END
 
 
-BOOL initPlugin(void)
+BOOL initPlugin(struct PluginBase *base)
 {
 	d(kprintf(__FUNC__ "/%ld: \n", __LINE__));
+
+#ifdef __AROS__
+	base->pl_PlugID = MAKE_ID('P','L','U','G');
+#endif
 
 	if (!fInit)
 		{
@@ -162,7 +173,7 @@ BOOL initPlugin(void)
 			ReadScalosPrefs();
 			}
 		else
-			closePlugin();
+			closePlugin(base);
 
 		return fInit;
 		}
@@ -171,7 +182,7 @@ BOOL initPlugin(void)
 }
 
 
-VOID closePlugin(void)
+VOID closePlugin(struct PluginBase *base)
 {
 	ShutdownWBRexxProcess();
 
@@ -517,3 +528,15 @@ APTR _WBenchMsg;
 
 #endif /* __SASC */
 
+//----------------------------------------------------------------------------
+
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2EXPUNGELIB(closePlugin, 0);
+ADD2OPENLIB(initPlugin, 0);
+
+#endif
+
+//----------------------------------------------------------------------------

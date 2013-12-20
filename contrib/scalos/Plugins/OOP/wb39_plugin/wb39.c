@@ -45,6 +45,11 @@
 #include "wb39proto.h"
 #include "volumegauge.h"
 
+#ifdef __AROS__
+#include "plugin.h"
+#include "plugin-common.c"
+#endif
+
 // moved revision history to file "History"
 
 
@@ -113,27 +118,27 @@ static void CloseLibraries(void);
 static LIBFUNC_P3_PROTO(BOOL, myOpenWorkbenchObjectA,
 	A0, STRPTR, name,
 	A1, struct TagItem *, tags,
-	A6, struct Library *, WorkbenchBase);
+	A6, struct Library *, WorkbenchBase, 0);
 static struct WBArg *BuildWBArg(struct TagItem *Tags, ULONG *ArgCount);
 static void FreeWBArg(struct WBArg *ArgList, ULONG ArgCount, BOOL FreeLocks);
 static LIBFUNC_P3_PROTO(BOOL, myCloseWorkbenchObjectA,
 	A0, STRPTR, name,
 	A1, struct TagItem *, tags,
-	A6, struct Library *, WorkbenchBase);
+	A6, struct Library *, WorkbenchBase, 0);
 static LIBFUNC_P3_PROTO(ULONG, myWbprivate1,
 	A0, STRPTR, Name,
 	A1, BPTR, iLock,
-	A6, struct Library *, WorkbenchBase);
+	A6, struct Library *, WorkbenchBase, 0);
 static LIBFUNC_P3_PROTO(BOOL, myMakeWorkbenchObjectVisibleA,
 	A0, STRPTR, name,
 	A1, struct TagItem *, tags,
-	A6, struct Library *, WorkbenchBase);
+	A6, struct Library *, WorkbenchBase, 0);
 static void UpdateVolumeGauge(struct Gadget *gad, struct Window *win, BPTR iLock);
 static LIBFUNC_P4_PROTO(BOOL, myChangeWorkbenchSelectionA,
 	A0, STRPTR, name,
 	A1, struct Hook *, hook,
 	A2, struct TagItem *, tags,
-	A6, struct Library *, WorkbenchBase);
+	A6, struct Library *, WorkbenchBase, 0);
 static void FreeAllNodes(struct List *pl);      // +dm+ 20010518
 
 #ifdef __amigaos4__
@@ -152,16 +157,19 @@ static LIBFUNC_P3VA_PROTO(BOOL, myChangeWorkbenchSelection,
 	A6, struct Library *, WorkbenchBase);
 #endif
 
+#ifndef __AROS__
 struct DosLibrary *DOSBase = NULL;
-struct Library *IconobjectBase = NULL;
 struct Library *WorkbenchBase = NULL;
 T_UTILITYBASE UtilityBase = NULL;
-struct ScalosBase *ScalosBase = NULL;
 struct IntuitionBase *IntuitionBase = NULL;
 struct Library *LayersBase = NULL;
-struct Library *GfxBase = NULL;
 struct Library *IconBase = NULL;
 struct Library *IFFParseBase = NULL;
+#endif
+struct Library *IconobjectBase = NULL;
+struct ScalosBase *ScalosBase = NULL;
+struct Library *GfxBase = NULL;
+
 #ifdef __amigaos4__
 struct Library *NewlibBase = NULL;
 
@@ -610,11 +618,16 @@ static BOOL LateInit(void)
 }
 
 
-BOOL initPlugin(struct Library *libbase)
+BOOL initPlugin(struct PluginBase *libbase)
 {
 	d1(KPrintF("%s/%s/%ld: Start.\n"__FILE__, __FUNC__, __LINE__));
 
 	(void)libbase;
+
+#ifdef __AROS__
+	libbase->pl_PlugID = MAKE_ID('P','L','U','G');
+#endif
+
 	if (!fInit)
 		{
 		if (!OpenLibraries())
@@ -637,7 +650,7 @@ BOOL initPlugin(struct Library *libbase)
 }
 
 
-VOID closePlugin(struct Library *libbase)
+VOID closePlugin(struct PluginBase *libbase)
 {
 	fInit = FALSE;
 
@@ -1048,7 +1061,7 @@ static void CloseLibraries(void)
 static LIBFUNC_P3(BOOL, myOpenWorkbenchObjectA,
 	A0, STRPTR, name,
 	A1, struct TagItem *, tags,
-	A6, struct Library *, WorkbenchBase)
+	A6, struct Library *, WorkbenchBase, 0)
 {
 	struct WBArg *ArgList;
 	struct Process *myProc;
@@ -1330,7 +1343,7 @@ static void FreeWBArg(struct WBArg *ArgList, ULONG ArgCount, BOOL FreeLocks)
 static LIBFUNC_P3(BOOL, myCloseWorkbenchObjectA,
 	A0, STRPTR, name,
 	A1, struct TagItem *, tags,
-	A6, struct Library *, WorkbenchBase)
+	A6, struct Library *, WorkbenchBase, 0)
 {
 	BOOL Found = FALSE;
 	struct ScaWindowList *swList = SCA_LockWindowList(SCA_LockWindowList_Shared);
@@ -1383,7 +1396,7 @@ LIBFUNC_END
 static LIBFUNC_P3(ULONG, myWbprivate1,
 	A0, STRPTR, Name,
 	A1, BPTR, iLock,
-	A6, struct Library *, WorkbenchBase)
+	A6, struct Library *, WorkbenchBase, 0)
 {
 	struct Task *myTask = FindTask(NULL);
 
@@ -1445,7 +1458,7 @@ void _XCEXIT(long x)
 static LIBFUNC_P3(BOOL, myMakeWorkbenchObjectVisibleA,
 	A0, STRPTR, name,
 	A1, struct TagItem *, tags,
-	A6, struct Library *, WorkbenchBase)
+	A6, struct Library *, WorkbenchBase, 0)
 {
 	struct Process *myProc;
 	BPTR fLock;
@@ -1498,7 +1511,7 @@ static LIBFUNC_P4(BOOL, myChangeWorkbenchSelectionA,
 	A0, STRPTR, name,
 	A1, struct Hook *, hook,
 	A2, struct TagItem *, tags,
-	A6, struct Library *, WorkbenchBase)
+	A6, struct Library *, WorkbenchBase, 0)
 {
 	struct ScaWindowStruct *swi = NULL;
 	BOOL Result = FALSE;
@@ -1743,3 +1756,15 @@ APTR _WBenchMsg;
 
 #endif /* __SASC */
 
+//----------------------------------------------------------------------------
+
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2EXPUNGELIB(closePlugin, 0);
+ADD2OPENLIB(initPlugin, 0);
+
+#endif
+
+//----------------------------------------------------------------------------

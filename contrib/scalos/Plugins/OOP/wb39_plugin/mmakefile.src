@@ -1,0 +1,33 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-scalos : contrib-scalos-plugins-oop-wb39
+
+#MM- contrib-scalos-plugins-oop-wb39 : \
+#MM     linklibs
+
+FILES := \
+    wb39 \
+    AppWindow \
+    WorkbenchControl \
+    volumegauge/VolumeGauge \
+    AppIcons \
+    Scalos_Helper
+
+TARGETDIR := $(AROS_CONTRIB)/Scalos
+
+USER_INCLUDES := \
+    -I$(TARGETDIR)/Development/include \
+    -I$(SRCDIR)/$(CURDIR)/../../../common/Plugin \
+    -I$(SRCDIR)/$(CURDIR)/volumegauge \
+    -idirafter $(SRCDIR)/$(CURDIR)/../../../include
+
+USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__
+
+%build_module mmake=contrib-scalos-plugins-oop-wb39 \
+    modname=wb39 modtype=library modsuffix=plugin conffile=wb39-aros.conf \
+    files="$(FILES)" moduledir=Plugins/OOP uselibs=stdc prefix=$(TARGETDIR)
+
+
+%common

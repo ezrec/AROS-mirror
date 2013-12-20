@@ -102,7 +102,7 @@ LIBFUNC_P5(struct myAppWindowDropZone *, myAddAppWindowDropZoneA,
 	D0, ULONG, id,
 	D1, ULONG, userdata,
 	A1, struct TagItem *, tags,
-	A6, struct Library *, WorkbenchBase)
+	A6, struct Library *, WorkbenchBase, 0)
 {
 	struct myAppWindowDropZone *dz;
 	struct TagItem *ti;
@@ -242,7 +242,7 @@ LIBFUNC_END
 LIBFUNC_P3(BOOL, myRemoveAppWindowDropZone,
 	A0, struct myAppWindow *, maw,
 	A1, struct myAppWindowDropZone *, dz,
-	A6, struct Library *, WorkbenchBase)
+	A6, struct Library *, WorkbenchBase, 0)
 {
 	struct myAppWindowDropZone *dzz;
 	BOOL Found = FALSE;
@@ -292,7 +292,7 @@ LIBFUNC_P6(struct myAppWindow *, myAddAppWindowA,
 	A0, struct Window *, window,
 	A1, struct MsgPort *, msgport,
 	A2, struct TagItem *, taglist,
-	A6, struct Library *, WorkbenchBase)
+	A6, struct Library *, WorkbenchBase, 0)
 {
 	struct ScaAppObjNode *aw;
 	struct myAppWindow *maw;
@@ -357,7 +357,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(BOOL, myRemoveAppWindow,
 	A0, struct myAppWindow *, maw,
-	A6, struct Library *, WorkbenchBase)
+	A6, struct Library *, WorkbenchBase, 0)
 {
 	BOOL Result;
 	struct myAppWindowDropZone *dz;
@@ -419,7 +419,7 @@ LIBFUNC_P5(void, mySCA_DrawDrag,
 	D0, LONG, X,
 	D1, LONG, Y,
 	D2, LONG, Flags,
-	A6, struct Library *, ScalosBase)
+	A6, struct Library *, ScalosBase, 0)
 {
 	struct Layer *mLayer;
 

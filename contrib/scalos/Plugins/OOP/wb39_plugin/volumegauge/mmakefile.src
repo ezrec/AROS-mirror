@@ -1,0 +1,26 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-scalos : contrib-scalos-plugins-oop-volumegauge
+
+#MM- contrib-scalos-plugins-oop-volumegauge : \
+#MM     linklibs
+
+FILES := vg_plugin VolumeGauge
+
+TARGETDIR := $(AROS_CONTRIB)/Scalos
+
+USER_INCLUDES := \
+    -I$(TARGETDIR)/Development/include \
+    -I$(SRCDIR)/$(CURDIR)/../../../../common/Plugin \
+    -idirafter $(SRCDIR)/$(CURDIR)/../../../../include
+
+USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__ -D__INPUT_STDLIBBASE__
+
+%build_module mmake=contrib-scalos-plugins-oop-volumegauge \
+    modname=volumegauge modtype=library modsuffix=plugin conffile=volumegauge-aros.conf \
+    files="$(FILES)" moduledir=Plugins/OOP prefix=$(TARGETDIR)
+
+
+%common

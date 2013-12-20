@@ -31,6 +31,10 @@
 #include "Persist.h"
 #include "plugin.h"
 
+#ifdef __AROS__
+#include "plugin-common.c"
+#endif
+
 // moved revision history to file "History"
 
 //----------------------------------------------------------------------------
@@ -129,6 +133,10 @@ struct Process *UpdaterProc = NULL;
 
 BOOL initPlugin(struct PluginBase *pluginbase)
 {
+#ifdef __AROS__
+	pluginbase->pl_PlugID = MAKE_ID('P','L','U','G');
+#endif
+
 	BOOL Success = FALSE;
 
 	d(kprintf(__FUNC__ "/%ld \n", __LINE__);)
@@ -1641,3 +1649,13 @@ APTR _WBenchMsg;
 
 //----------------------------------------------------------------------------
 
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2EXPUNGELIB(closePlugin, 0);
+ADD2OPENLIB(initPlugin, 0);
+
+#endif
+
+//----------------------------------------------------------------------------

@@ -230,7 +230,7 @@ static ULONG LayoutVolumeGauge(Class *cl, struct Gadget *g, struct gpLayout *gpl
 		inst->ActiveFillPen = gpl->gpl_GInfo->gi_DrInfo->dri_Pens[FILLPEN];
 		inst->InactiveFillPen = gpl->gpl_GInfo->gi_DrInfo->dri_Pens[DETAILPEN];
 
-#if DRI_VERSION >= 3 && !defined(__MORPHOS__)
+#if DRI_VERSION >= 3 && !defined(__MORPHOS__) && !defined(__AROS__)
 		if (gpl->gpl_GInfo->gi_DrInfo->dri_Version >= 3)
 			{
 			inst->ActiveShinePen = gpl->gpl_GInfo->gi_DrInfo->dri_Pens[FILLSHINEPEN];

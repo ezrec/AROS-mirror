@@ -18,27 +18,27 @@ LIBFUNC_P5_PROTO(struct myAppWindowDropZone *, myAddAppWindowDropZoneA,
 	D0, ULONG, id,
 	D1, ULONG, userdata,
 	A1, struct TagItem *, tags,
-	A6, struct Library *, WorkbenchBase);
+	A6, struct Library *, WorkbenchBase, 0);
 LIBFUNC_P3_PROTO(BOOL, myRemoveAppWindowDropZone,
 	A0, struct myAppWindow *, maw,
 	A1, struct myAppWindowDropZone *, dropZone,
-	A6, struct Library *, WorkbenchBase);
+	A6, struct Library *, WorkbenchBase, 0);
 LIBFUNC_P6_PROTO(struct myAppWindow *, myAddAppWindowA,
 	D0, ULONG, id,
 	D1, ULONG, userdata,
 	A0, struct Window *, window,
 	A1, struct MsgPort *, msgport,
 	A2, struct TagItem *, taglist,
-	A6, struct Library *, WorkbenchBase);
+	A6, struct Library *, WorkbenchBase, 0);
 LIBFUNC_P2_PROTO(BOOL, myRemoveAppWindow,
 	A0, struct myAppWindow *, appWindow,
-	A6, struct Library *, WorkbenchBase);
+	A6, struct Library *, WorkbenchBase, 0);
 LIBFUNC_P5_PROTO(void, mySCA_DrawDrag,
 	A0, APTR, draghandle,
 	D0, LONG, X,
 	D1, LONG, Y,
 	D2, LONG, Flags,
-	A6, struct Library *, ScalosBase);
+	A6, struct Library *, ScalosBase, 0);
 
 #ifdef __amigaos4__
 LIBFUNC_P4VA_PROTO(struct AppWindowDropZone *, myAddAppWindowDropZone,
@@ -58,7 +58,7 @@ LIBFUNC_P5VA_PROTO(struct AppWindow *, myAddAppWindow,
 LIBFUNC_P3_PROTO(BOOL, myWorkbenchControlA,
 	A0, STRPTR, name,
 	A1, struct TagItem *, tags,
-	A6, struct Library *, WorkbenchBase);
+	A6, struct Library *, WorkbenchBase, 0);
 
 #ifdef __amigaos4__
 LIBFUNC_P2VA_PROTO(BOOL, myWorkbenchControl,

@@ -110,7 +110,7 @@ static ULONG IconMemoryType = MEMF_ANY;
 LIBFUNC_P3(BOOL, myWorkbenchControlA,
 	A0, STRPTR, name,
 	A1, struct TagItem *, tags,
-	A6, struct Library *, WorkbenchBase)
+	A6, struct Library *, WorkbenchBase, 0)
 {
 	BOOL Success = TRUE;
 	struct TagItem *taglist = tags, *ti;
