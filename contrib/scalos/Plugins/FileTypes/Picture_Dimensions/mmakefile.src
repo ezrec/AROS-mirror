@@ -24,7 +24,7 @@ USER_CFLAGS := -DSCALOSLOCALE=$(SCALOS_LOCALE) \
 
 %build_module mmake=contrib-scalos-plugins-filetypes-picturedimensions \
     modname=picturedimensions modtype=library modsuffix=plugin conffile=picturedimensions-aros.conf \
-    files="$(FILES)" moduledir=Plugins/FileTypes prefix=$(TARGETDIR) linklibname=picturedimensions-pl
+    files="$(FILES)" moduledir=Plugins/FileTypes prefix=$(TARGETDIR)
 
 
 #MM

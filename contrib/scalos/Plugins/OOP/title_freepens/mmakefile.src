@@ -20,7 +20,7 @@ USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIB
 
 %build_module mmake=contrib-scalos-plugins-oop-titlefreepens \
     modname=title_freepens modtype=library modsuffix=plugin conffile=titlefreepens-aros.conf \
-    files="$(FILES)" moduledir=Plugins/OOP prefix=$(TARGETDIR) linklibname=titlefreepens-pl
+    files="$(FILES)" moduledir=Plugins/OOP prefix=$(TARGETDIR)
 
 
 %common

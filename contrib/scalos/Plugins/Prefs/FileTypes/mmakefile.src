@@ -7,6 +7,8 @@ include $(TOP)/config/make.cfg
 #MM- contrib-scalos-plugins-prefs-filetypes : \
 #MM     linklibs \
 #MM     contrib-scalos-plugins-prefs-filetypes-locale \
+#MM     contrib-scalos-libraries-preferences-includes \
+#MM     contrib-scalos-libraries-iconobject-includes \
 #MM     contrib-scalos-libraries-scalosgfx-includes
 
 FILES := \
@@ -36,7 +38,7 @@ USER_CFLAGS := -DMUI_OBSOLETE -DSCALOSLOCALE=$(SCALOS_LOCALE) \
 
 %build_module mmake=contrib-scalos-plugins-prefs-filetypes \
     modname=FileTypes modtype=library modsuffix=prefsplugin conffile=filetypesprefs-aros.conf \
-    files="$(FILES)" moduledir=Prefs prefix=$(TARGETDIR) uselibs=stdc linklibname=filetypes-pl
+    files="$(FILES)" moduledir=Prefs prefix=$(TARGETDIR) uselibs=stdc
 
 
 #MM

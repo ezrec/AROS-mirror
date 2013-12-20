@@ -24,6 +24,6 @@ USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIB
 %build_module mmake=contrib-scalos-plugins-preview-video \
     modname=video modtype=library modsuffix=pvplugin conffile=video-aros.conf \
     files="$(FILES)" moduledir=Plugins/Preview prefix=$(TARGETDIR) \
-    uselibs="avcodec avformat avcodec avutil" linklibname=video-pl
+    uselibs="avcodec avformat avcodec avutil"
 
 %common

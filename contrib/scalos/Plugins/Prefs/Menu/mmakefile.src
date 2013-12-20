@@ -27,7 +27,7 @@ USER_CFLAGS := -DMUI_OBSOLETE -DSCALOSLOCALE=$(SCALOS_LOCALE) \
 
 %build_module mmake=contrib-scalos-plugins-prefs-menu \
     modname=Menu modtype=library modsuffix=prefsplugin conffile=menuprefs-aros.conf \
-    files="$(FILES)" moduledir=Prefs prefix=$(TARGETDIR) uselibs=stdc linklibname=menu-pl
+    files="$(FILES)" moduledir=Prefs prefix=$(TARGETDIR) uselibs=stdc
 
 
 #MM

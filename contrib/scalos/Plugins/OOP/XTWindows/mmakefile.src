@@ -5,7 +5,9 @@ include $(TOP)/config/make.cfg
 #MM- contrib-scalos : contrib-scalos-plugins-oop-xtwindows
 
 #MM- contrib-scalos-plugins-oop-xtwindows : \
-#MM     linklibs
+#MM     linklibs \
+#MM     contrib-scalos-library-includes
+
 
 FILES := XTWindows
 
@@ -20,7 +22,7 @@ USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIB
 
 %build_module mmake=contrib-scalos-plugins-oop-xtwindows \
     modname=xtwindows modtype=library modsuffix=plugin conffile=xtwindows-aros.conf \
-    files="$(FILES)" moduledir=Plugins/OOP prefix=$(TARGETDIR) linklibname=xtwindows-pl
+    files="$(FILES)" moduledir=Plugins/OOP prefix=$(TARGETDIR)
 
 
 %common

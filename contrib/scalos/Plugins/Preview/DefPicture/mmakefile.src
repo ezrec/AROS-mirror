@@ -21,6 +21,6 @@ USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIB
 
 %build_module mmake=contrib-scalos-plugins-preview-defpicture \
     modname=defpicture modtype=library modsuffix=pvplugin conffile=defpicture-aros.conf \
-    files="$(FILES)" moduledir=Plugins/Preview prefix=$(TARGETDIR) linklibname=defpicture-pl
+    files="$(FILES)" moduledir=Plugins/Preview prefix=$(TARGETDIR)
 
 %common

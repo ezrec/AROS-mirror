@@ -24,7 +24,7 @@ USER_CFLAGS := -DSCALOSLOCALE=$(SCALOS_LOCALE) \
 
 %build_module mmake=contrib-scalos-plugins-filetypes-exifpicture \
     modname=exifpicture modtype=library modsuffix=plugin conffile=exifpicture-aros.conf \
-    files="$(FILES)" moduledir=Plugins/FileTypes prefix=$(TARGETDIR) linklibname=exifpicture-pl
+    files="$(FILES)" moduledir=Plugins/FileTypes prefix=$(TARGETDIR)
 
 
 #MM

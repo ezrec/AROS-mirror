@@ -29,7 +29,7 @@ USER_CFLAGS := -DMUI_OBSOLETE -DSCALOSLOCALE=$(SCALOS_LOCALE) \
 
 %build_module mmake=contrib-scalos-plugins-prefs-popupmenu \
     modname=PopupMenu modtype=library modsuffix=prefsplugin conffile=popupmenuprefs-aros.conf \
-    files="$(FILES)" moduledir=Prefs prefix=$(TARGETDIR) uselibs=stdc linklibname=popupmenu-pl
+    files="$(FILES)" moduledir=Prefs prefix=$(TARGETDIR) uselibs=stdc
 
 
 #MM

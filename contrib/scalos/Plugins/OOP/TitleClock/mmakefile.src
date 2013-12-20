@@ -20,7 +20,7 @@ USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIB
 
 %build_module mmake=contrib-scalos-plugins-oop-titleclock \
     modname=title_clock modtype=library modsuffix=plugin conffile=titleclock-aros.conf \
-    files="$(FILES)" moduledir=Plugins/OOP prefix=$(TARGETDIR) linklibname=titleclock-pl
+    files="$(FILES)" moduledir=Plugins/OOP prefix=$(TARGETDIR)
 
 
 %common

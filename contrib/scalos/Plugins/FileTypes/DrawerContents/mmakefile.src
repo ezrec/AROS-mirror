@@ -24,7 +24,7 @@ USER_CFLAGS := -DSCALOSLOCALE=$(SCALOS_LOCALE) \
 
 %build_module mmake=contrib-scalos-plugins-filetypes-drawercontents \
     modname=drawercontents modtype=library modsuffix=plugin conffile=drawercontents-aros.conf \
-    files="$(FILES)" moduledir=Plugins/FileTypes prefix=$(TARGETDIR) uselibs=stdc linklibname=drawercontents-pl
+    files="$(FILES)" moduledir=Plugins/FileTypes prefix=$(TARGETDIR) uselibs=stdc
 
 
 #MM
