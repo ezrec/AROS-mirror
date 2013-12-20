@@ -24,7 +24,11 @@
 #include <utility/hooks.h>
 
 #include <defs.h>
-#include "plugin_data.h"
+#include "plugin.h"
+
+#ifdef __AROS__
+#include "plugin-common.c"
+#endif
 
 //----------------------------------------------------------------
 
@@ -39,7 +43,9 @@
 
 //----------------------------------------------------------------
 
+#ifndef __AROS__
 struct DosLibrary *DOSBase = NULL;
+#endif
 
 #ifdef __amigaos4__
 /* On OS4 DoSuperMethod is part of intuition.library */
@@ -53,11 +59,16 @@ struct Interface *INewlib = NULL;
 STRPTR VersTag = LIB_VERSTRING;
 
 
-BOOL initPlugin(APTR base)
+BOOL initPlugin(struct PluginBase *base)
 {
 	DOSBase = (struct DosLibrary *) OpenLibrary(DOSNAME, 39);
 	if (NULL == DOSBase)
 		return FALSE;
+
+#ifdef __AROS__
+	base->pl_PlugID = MAKE_ID('P','L','U','G');
+#endif
+
 #ifdef __amigaos4__
 	IDOS = (struct DOSIFace *)GetInterface((struct Library *)DOSBase, "main", 1, NULL);
 	if (NULL == IDOS)
@@ -80,7 +91,7 @@ BOOL initPlugin(APTR base)
 	return TRUE;
 }
 
-void closePlugin(APTR base)
+void closePlugin(struct PluginBase *base)
 {
 #ifdef __amigaos4__
 	if (INewlib)
@@ -214,4 +225,17 @@ M68KFUNC_P3(ULONG, EnvVar,
 	return (ULONG) DoSuperMethodA(keepclass, object, (Msg)msg);
 }
 M68KFUNC_END
+
+//----------------------------------------------------------------------------
+
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2EXPUNGELIB(closePlugin, 0);
+ADD2OPENLIB(initPlugin, 0);
+
+#endif
+
+//----------------------------------------------------------------------------
 

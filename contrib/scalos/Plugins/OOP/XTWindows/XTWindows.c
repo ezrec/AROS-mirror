@@ -27,16 +27,23 @@
 #include <defs.h>
 #include "XTWindows.h"
 
+#ifdef __AROS__
+#include "plugin-common.c"
+#endif
+
 DISPATCHER_PROTO(FreeMsgInter);
 
 
 extern struct ExecBase	*SysBase;
+#ifndef __AROS__
 struct DosLibrary	*DOSBase = NULL;
 struct IntuitionBase	*IntuitionBase = NULL;
-struct Library		*IconobjectBase = NULL;
+#endif
 struct ScalosBase	*ScalosBase = NULL;
 T_INPUTDEVICE		InputBase = NULL;
+struct Library		*IconobjectBase = NULL;
 T_UTILITYBASE		UtilityBase = NULL;
+
 #ifdef __amigaos4__
 struct Library 		*NewlibBase = NULL;
 
@@ -84,6 +91,10 @@ BOOL initPlugin(struct PluginBase *base)
 {
 ///FrexxStartFold1.2.0.
 	d1(KPrintF(__FUNC__ "/%ld: lib_OpenCnt=%lu\n", __LINE__, base->lib_OpenCnt));
+
+#ifdef __AROS__
+	base->pl_PlugID = MAKE_ID('P','L','U','G');
+#endif
 
 	if( !(DOSBase = (struct DosLibrary *)OpenLibrary( "dos.library", 37 )) )
 		{
@@ -310,3 +321,15 @@ M68KFUNC_END
 ///FrexxEndFold2.
 
 
+//----------------------------------------------------------------------------
+
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2EXPUNGELIB(closePlugin, 0);
+ADD2OPENLIB(initPlugin, 0);
+
+#endif
+
+//----------------------------------------------------------------------------

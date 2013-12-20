@@ -31,6 +31,10 @@
 #include "prefs/prefs_file.h"
 #include "libfuncs.h"
 
+#ifdef __AROS__
+#include "plugin-common.c"
+#endif
+
 /*
 **  The TITLETIME identifier (%ti in Scalos title prefs) adds the current time to the title bar.
 **  TITLEDATE adds %da so that the current date. Both are in their default locale.
@@ -46,8 +50,11 @@ struct FormatDateHookData
 	};
 
 
+#ifndef __AROS__
 struct DosLibrary   *DOSBase;
 T_LOCALEBASE   	LocaleBase;
+#endif
+
 #ifdef __amigaos4__
 struct IntuitionBase *IntuitionBase;
 struct Library *NewlibBase;
@@ -217,6 +224,11 @@ M68KFUNC_END
 BOOL initPlugin(struct PluginBase *pluginBase)
 {
 	struct myLibBase *myLibBase = (struct myLibBase *)pluginBase;
+
+#ifdef __AROS__
+	pluginBase->pl_PlugID = MAKE_ID('P','L','U','G');
+#endif
+
 	BOOL Success = FALSE;
 
 	do	{
@@ -339,4 +351,15 @@ void closePlugin(struct PluginBase *pluginBase)
 		}
 }
 
+//----------------------------------------------------------------------------
 
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2EXPUNGELIB(closePlugin, 0);
+ADD2OPENLIB(initPlugin, 0);
+
+#endif
+
+//----------------------------------------------------------------------------

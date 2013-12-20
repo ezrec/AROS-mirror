@@ -30,6 +30,10 @@
 #include <defs.h>
 #include "devicefilter.h"
 
+#ifdef __AROS__
+#include "plugin-common.c"
+#endif
+
 //-----------------------------------------------------------------
 
 #define	WBPREFSNAME             "ENV:sys/workbench.prefs"
@@ -75,9 +79,11 @@ static SAVEDS(int) WBPrefsProcess(void);
 
 // Things we'll be using in this source
 extern struct ExecBase	*SysBase;
+#ifndef __AROS__
 struct DosLibrary	*DOSBase;
 struct Library		*IFFParseBase;
 T_UTILITYBASE		UtilityBase;
+#endif
 
 #ifdef __amigaos4__
 struct IntuitionBase	*IntuitionBase;
@@ -109,6 +115,10 @@ BOOL initPlugin(struct PluginBase *pluginbase)
 		return FALSE;
 
 	d1(KPrintF("%s/%s/%ld: SysBase=%08lx  DOSBase=%08lx\n", __FILE__, __FUNC__, __LINE__, SysBase, DOSBase));
+
+#ifdef __AROS__
+	pluginbase->pl_PlugID = MAKE_ID('P','L','U','G');
+#endif
 
 	NewList(&HiddenDevicesList);
 	InitSemaphore(&HiddenDevicesSema);
@@ -864,4 +874,13 @@ static SAVEDS(int) WBPrefsProcess(void)
 
 //----------------------------------------------------------------------------
 
+#if defined(__AROS__)
 
+#include "aros/symbolsets.h"
+
+ADD2EXPUNGELIB(closePlugin, 0);
+ADD2OPENLIB(initPlugin, 0);
+
+#endif
+
+//----------------------------------------------------------------------------

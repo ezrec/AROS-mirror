@@ -31,7 +31,11 @@
 
 #include <defs.h>
 
-#include "plugin_data.h"
+#include "plugin.h"
+
+#ifdef __AROS__
+#include "plugin-common.c"
+#endif
 
 /* This is the UWORD which contains the ASCII value of
 ** the characters that this plugin should be activated by.
@@ -68,7 +72,7 @@ struct Interface *INewlib;
 
 STRPTR VersTag = LIB_VERSTRING;
 
-BOOL initPlugin(APTR base)
+BOOL initPlugin(struct PluginBase *base)
 {
 #ifdef __amigaos4__
 	IntuitionBase = (struct IntuitionBase *)OpenLibrary("intuition.library", 0);
@@ -85,10 +89,14 @@ BOOL initPlugin(APTR base)
 		return FALSE;
 #endif /* __amigaos4__ */
 
+#ifdef __AROS__
+	base->pl_PlugID = MAKE_ID('P','L','U','G');
+#endif
+
 	return TRUE;
 }
 
-void closePlugin(APTR base)
+void closePlugin(struct PluginBase *base)
 {
 #ifdef __amigaos4__
 	if (INewlib)
@@ -196,3 +204,15 @@ M68KFUNC_P3(ULONG, FreePens,
 }
 M68KFUNC_END
 
+//----------------------------------------------------------------------------
+
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2EXPUNGELIB(closePlugin, 0);
+ADD2OPENLIB(initPlugin, 0);
+
+#endif
+
+//----------------------------------------------------------------------------

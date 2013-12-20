@@ -1,0 +1,26 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-scalos : contrib-scalos-plugins-oop-titlefreepens
+
+#MM- contrib-scalos-plugins-oop-titlefreepens : \
+#MM     linklibs
+
+FILES := libfuncs
+
+TARGETDIR := $(AROS_CONTRIB)/Scalos
+
+USER_INCLUDES := \
+    -I$(TARGETDIR)/Development/include \
+    -I$(SRCDIR)/$(CURDIR)/../../../common/Plugin \
+    -idirafter $(SRCDIR)/$(CURDIR)/../../../include
+
+USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__
+
+%build_module mmake=contrib-scalos-plugins-oop-titlefreepens \
+    modname=title_freepens modtype=library modsuffix=plugin conffile=titlefreepens-aros.conf \
+    files="$(FILES)" moduledir=Plugins/OOP prefix=$(TARGETDIR) linklibname=titlefreepens-pl
+
+
+%common
