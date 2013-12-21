@@ -8,7 +8,7 @@ include $(TOP)/config/make.cfg
 #MM     includes \
 #MM     linklibs \
 #MM     contrib-scalos-modules-newdrawer-locale \
-#MM     contrib-scalos-modules-newdrawer-icon \
+#MM     iconset-Gorilla-contrib-icons-extras-scalos-modules \
 #MM     contrib-scalos-libraries-preferences-includes \
 #MM     contrib-scalos-libraries-iconobject-includes \
 #MM     contrib-scalos-library-includes
@@ -32,15 +32,5 @@ contrib-scalos-modules-newdrawer-locale : $(SCALOS_LOCALE)
 $(SCALOS_LOCALE) : $(SRCDIR)/$(CURDIR)/NewDrawer.cd $(SRCDIR)/$(CURDIR)/../../CatComp_h.sd
 	@$(ECHO) 'Compile $@ from $<'
 	@$(FLEXCAT) $< $@=$(SRCDIR)/$(CURDIR)/../../CatComp_h.sd
-
-
-ICON := $(TARGETDIR)/NewDrawer.module.info
-
-#MM
-contrib-scalos-modules-newdrawer-icon : $(ICON)
-
-$(ICON) : $(AROS_ENVARC)/SYS/def_Tool.info
-	%mkdirs_q $(TARGETDIR)
-	$(CP) $^ $@
 
 %common

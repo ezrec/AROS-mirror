@@ -8,7 +8,7 @@ include $(TOP)/config/make.cfg
 #MM     includes \
 #MM     linklibs \
 #MM     contrib-scalos-modules-updater-locale \
-#MM     contrib-scalos-modules-updater-icon \
+#MM     iconset-Gorilla-contrib-icons-extras-scalos-modules \
 #MM     contrib-scalos-library-includes
 
 FILES := Updater
@@ -30,15 +30,5 @@ contrib-scalos-modules-updater-locale : $(SCALOS_LOCALE)
 $(SCALOS_LOCALE) : $(SRCDIR)/$(CURDIR)/Updater.cd $(SRCDIR)/$(CURDIR)/../../CatComp_h.sd
 	@$(ECHO) 'Compile $@ from $<'
 	@$(FLEXCAT) $< $@=$(SRCDIR)/$(CURDIR)/../../CatComp_h.sd
-
-
-ICON := $(TARGETDIR)/Updater.module.info
-
-#MM
-contrib-scalos-modules-updater-icon : $(ICON)
-
-$(ICON) : $(AROS_ENVARC)/SYS/def_Tool.info
-	%mkdirs_q $(TARGETDIR)
-	$(CP) $^ $@
 
 %common

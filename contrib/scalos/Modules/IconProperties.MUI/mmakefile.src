@@ -8,7 +8,7 @@ include $(TOP)/config/make.cfg
 #MM     includes \
 #MM     linklibs \
 #MM     contrib-scalos-modules-iconproperties-locale \
-#MM     contrib-scalos-modules-iconproperties-icon \
+#MM     iconset-Gorilla-contrib-icons-extras-scalos-modules \
 #MM     contrib-scalos-libraries-iconobject \
 #MM     contrib-scalos-libraries-preferences \
 #MM     contrib-scalos-library-includes
@@ -37,15 +37,5 @@ contrib-scalos-modules-iconproperties-locale : $(SCALOS_LOCALE)
 $(SCALOS_LOCALE) : $(SRCDIR)/$(CURDIR)/IconProperties.cd $(SRCDIR)/$(CURDIR)/../../CatComp_h.sd
 	@$(ECHO) 'Compile $@ from $<'
 	@$(FLEXCAT) $< $@=$(SRCDIR)/$(CURDIR)/../../CatComp_h.sd
-
-
-ICON := $(TARGETDIR)/IconProperties.module.info
-
-#MM
-contrib-scalos-modules-iconproperties-icon : $(ICON)
-
-$(ICON) : $(AROS_ENVARC)/SYS/def_Tool.info
-	%mkdirs_q $(TARGETDIR)
-	$(CP) $^ $@
 
 %common
