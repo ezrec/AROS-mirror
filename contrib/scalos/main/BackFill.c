@@ -156,8 +156,16 @@ void WindowBackFill(struct RastPort *rp,
 			__FILE__, __FUNC__, __LINE__, XOffset, YOffset));
 
 #if defined(__AROS__)
-		msgOffsetX = (msg->bfm_Rect.MinX - msg->bfm_Layer->bounds.MinX) % bmWidth;
-		msgOffsetY = (msg->bfm_Rect.MinY - msg->bfm_Layer->bounds.MinY) % bmHeight;
+		if (msg->bfm_Layer)
+			{
+			msgOffsetX = (msg->bfm_Rect.MinX - msg->bfm_Layer->bounds.MinX) % bmWidth;
+			msgOffsetY = (msg->bfm_Rect.MinY - msg->bfm_Layer->bounds.MinY) % bmHeight;
+			}
+			else
+			{
+			msgOffsetX = msg->bfm_Rect.MinX % bmWidth;
+			msgOffsetY = msg->bfm_Rect.MinY % bmHeight;
+			}
 #else
 		msgOffsetX = msg->bfm_OffsetX % bmWidth;
 		msgOffsetY = msg->bfm_OffsetY % bmHeight;
