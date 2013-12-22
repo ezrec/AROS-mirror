@@ -1,0 +1,22 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+LANGUAGE  := german
+CATNAME   := Scalos_Prefs
+TARGETDIR := $(AROS_CONTRIB)/Scalos/Locale/Catalogs/$(LANGUAGE)/Scalos
+CATALOG   := $(TARGETDIR)/$(CATNAME).catalog
+CDFILE    := $(SRCDIR)/$(CURDIR)/../../../$(CATNAME).cd
+CTFILE    := $(SRCDIR)/$(CURDIR)/$(CATNAME).ct
+
+# disabled because CT files has errors
+# #MM- contrib-scalos-prefs-main : contrib-scalos-prefs-main-catalog
+
+#MM
+contrib-scalos-prefs-main-catalog : $(CATALOG)
+
+$(CATALOG) : $(CDFILE) $(CTFILE)
+	$(ECHO) Make catalog $(CATALOG)
+	$(MKDIR) $(TARGETDIR)
+	$(FLEXCAT) $^ CATALOG $(CATALOG)
+%common

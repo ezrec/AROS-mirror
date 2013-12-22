@@ -1,0 +1,21 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+LANGUAGE  := french
+CATNAME   := Execute_Command
+TARGETDIR := $(AROS_CONTRIB)/Scalos/Locale/Catalogs/$(LANGUAGE)/Scalos
+CATALOG   := $(TARGETDIR)/$(CATNAME).catalog
+CDFILE    := $(SRCDIR)/$(CURDIR)/../../../$(CATNAME).cd
+CTFILE    := $(SRCDIR)/$(CURDIR)/$(CATNAME).ct
+
+#MM- contrib-scalos-modules-executecommand : contrib-scalos-modules-executecommand-catalog
+
+#MM
+contrib-scalos-modules-executecommand-catalog : $(CATALOG)
+
+$(CATALOG) : $(CDFILE) $(CTFILE)
+	$(ECHO) Make catalog $(CATALOG)
+	$(MKDIR) $(TARGETDIR)
+	$(FLEXCAT) $^ CATALOG $(CATALOG)
+%common
