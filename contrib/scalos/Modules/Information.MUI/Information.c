@@ -4948,6 +4948,12 @@ static void AddDropZoneForObject(Object *o, DropZoneHandler Handler)
 
 	d1(KPrintF("%s/%ld: o=%08lx\n", __FUNC__, __LINE__, o));
 
+#ifdef __AROS__
+	// Fix for a crash in EMU mode: patched AddAppWindow()
+	// isn't compatible with AROS
+	return;
+#endif
+
 	if (WorkbenchBase->lib_Version < 44)
 		return;
 
