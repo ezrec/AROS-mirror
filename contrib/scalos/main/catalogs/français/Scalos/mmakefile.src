@@ -12,11 +12,12 @@ CTFILE    := $(SRCDIR)/$(CURDIR)/$(CATNAME).ct
 # disabled because CT file has errors
 # #MM- contrib-scalos-main : contrib-scalos-main-catalog
 
-#MM
-contrib-scalos-main-catalog : $(CATALOG)
+# #MM
+# contrib-scalos-main-catalog : $(CATALOG)
 
 $(CATALOG) : $(CDFILE) $(CTFILE)
-	$(ECHO) Make catalog $(CATALOG)
-	$(MKDIR) $(TARGETDIR)
-	$(FLEXCAT) $^ CATALOG $(CATALOG)
+	@$(ECHO) Make catalog $(CATALOG)
+	@$(MKDIR) $(TARGETDIR)
+	@$(FLEXCAT) $^ CATALOG $(CATALOG)
+
 %common

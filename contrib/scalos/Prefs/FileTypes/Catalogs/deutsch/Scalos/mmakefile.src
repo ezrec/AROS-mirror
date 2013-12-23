@@ -16,7 +16,8 @@ CTFILE    := $(SRCDIR)/$(CURDIR)/$(CATNAME).ct
 contrib-scalos-prefs-filetypes-catalog : $(CATALOG)
 
 $(CATALOG) : $(CDFILE) $(CTFILE)
-	$(ECHO) Make catalog $(CATALOG)
-	$(MKDIR) $(TARGETDIR)
-	$(FLEXCAT) $^ CATALOG $(CATALOG)
+	@$(ECHO) Make catalog $(CATALOG)
+	@$(MKDIR) $(TARGETDIR)
+	@$(FLEXCAT) $^ CATALOG $(CATALOG)
+
 %common
