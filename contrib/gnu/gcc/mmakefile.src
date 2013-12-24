@@ -21,6 +21,7 @@ EXTRAOPTS := \
     --enable-languages=$(GCC_LANGUAGES) --enable-longlong --disable-sjlj-exceptions \
     --enable-version-specific-runtime-libs --disable-libssp --disable-libstdcxx-pch \
     --with-sysroot=/Development --with-build-sysroot=$(AROS_DEVELOPMENT) \
+    --with-dwarf2 \
     $(GCC_EXTRAOPTS)
 
 %fetch_and_build_gnu_development package=gcc version=$(GCC_VERSION) patch=yes \
