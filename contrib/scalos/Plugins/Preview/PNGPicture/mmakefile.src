@@ -6,7 +6,8 @@ include $(TOP)/config/make.cfg
 
 #MM- contrib-scalos-plugins-preview-pngpicture : \
 #MM     linklibs \
-#MM     contrib-scalos-libraries-scalosgfx-includes
+#MM     contrib-scalos-libraries-scalosgfx-includes \
+#MM     workbench-libs-png
 
 FILES := PNGPicture
 

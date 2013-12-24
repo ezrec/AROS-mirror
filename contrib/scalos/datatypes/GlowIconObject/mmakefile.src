@@ -6,7 +6,8 @@ include $(TOP)/config/make.cfg
 
 #MM- contrib-scalos-datatypes-glowiconobject : \
 #MM     linklibs \
-#MM     contrib-scalos-datatypes-iconobject
+#MM     contrib-scalos-datatypes-iconobject \
+#MM     workbench-libs-z
 
 FILES := GlowIconObject 
 

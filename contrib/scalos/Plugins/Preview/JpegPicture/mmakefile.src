@@ -6,7 +6,8 @@ include $(TOP)/config/make.cfg
 
 #MM- contrib-scalos-plugins-preview-jpegpicture : \
 #MM     linklibs \
-#MM     contrib-scalos-libraries-scalosgfx-includes
+#MM     contrib-scalos-libraries-scalosgfx-includes \
+#MM     workbench-libs-jpeg
 
 FILES := JpegPicture
 

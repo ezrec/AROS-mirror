@@ -6,8 +6,8 @@ include $(TOP)/config/make.cfg
 
 #MM- contrib-scalos-datatypes-pngiconobject : \
 #MM     linklibs \
-#MM     contrib-scalos-datatypes-iconobject
-
+#MM     contrib-scalos-datatypes-iconobject \
+#MM     workbench-libs-png
 
 FILES := \
     GetPNGPicture LoadPngIcon PNGIconDt SavePngIcon
