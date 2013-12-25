@@ -5,7 +5,8 @@ include $(TOP)/config/make.cfg
 #MM- contrib-scalos-main : \
 #MM     contrib-scalos-deficons \
 #MM     contrib-scalos-arosenv \
-#MM     contrib-scalos-arosenv-english
+#MM     contrib-scalos-arosenv-english \
+#MM     contrib-scalos-arosenv-all
 
 
 TARGETDIR := $(AROS_ENVARC)
@@ -27,5 +28,10 @@ FILES := icandy Palette13.prefs Pattern.prefs Persist.prefs scalos.prefs
 %copy_dir_recursive mmake=contrib-scalos-arosenv-english \
     src=$(SRCDIR)/$(CURDIR)/scalos.AROS/English dst=$(TARGETDIR)
 
+
+TARGETDIR := $(AROS_CONTRIB)/Scalos/Storage/Envarc
+
+%copy_dir_recursive mmake=contrib-scalos-arosenv-all \
+    src=$(SRCDIR)/$(CURDIR)/scalos.AROS dst=$(TARGETDIR)
 
 %common
