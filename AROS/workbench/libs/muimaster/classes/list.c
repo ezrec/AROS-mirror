@@ -822,7 +822,7 @@ IPTR List__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
     }
 
     /* ABI_V0 compatibility */
-    data->ehn.ehn_Events = IDCMP_MOUSEBUTTONS;
+    data->ehn.ehn_Events = IDCMP_MOUSEBUTTONS | IDCMP_RAWKEY;
     data->ehn.ehn_Priority = 1; /* Higher than Listview */
     data->ehn.ehn_Flags = 0;
     data->ehn.ehn_Object = obj;
@@ -2888,6 +2888,35 @@ static IPTR List__MUIM_CreateDragImage(struct IClass *cl, Object *obj,
 }
 
 /* ABI_V0 compatibility */
+
+#include <devices/rawkeycodes.h>
+
+static void DoWheelMove(struct IClass *cl, Object *obj, LONG wheely)
+{
+    LONG new, first, entries, visible;
+
+    new = first = XGET(obj, MUIA_List_First);
+    entries = XGET(obj, MUIA_List_Entries);
+    visible = XGET(obj, MUIA_List_Visible);
+
+    new += wheely;
+
+    if (new > entries - visible)
+    {
+        new = entries - visible;
+    }
+
+    if (new < 0)
+    {
+        new = 0;
+    }
+
+    if (new != first)
+    {
+        set(obj, MUIA_List_First, new);
+    }
+}
+
 /**************************************************************************
  MUIM_HandleEvent
 **************************************************************************/
@@ -2951,6 +2980,23 @@ IPTR List__MUIM_HandleEvent(struct IClass *cl, Object *obj,
                     data->mouse_click = 0;
                     return 0;
                 }
+            }
+            break;
+        case    IDCMP_RAWKEY:
+            switch(msg->imsg->Code)
+            {
+            case RAWKEY_NM_WHEEL_UP:
+                if (_isinobject(obj, msg->imsg->MouseX, msg->imsg->MouseY))
+                {
+                        DoWheelMove(cl, obj, -4);
+                }
+                break;
+            case RAWKEY_NM_WHEEL_DOWN:
+                if (_isinobject(obj, msg->imsg->MouseX, msg->imsg->MouseY))
+                {
+                        DoWheelMove(cl, obj, 4);
+                }
+                break;
             }
             break;
         }
