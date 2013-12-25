@@ -1,0 +1,75 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- workbench-hidds : hidd-llvmpipe
+
+#MM hidd-llvmpipe: includes hidd-gallium linklibs-galliumauxiliary
+
+GALLIUM_LLVMPIPE_SOURCES = \
+        drivers/llvmpipe/lp_bld_alpha \
+        drivers/llvmpipe/lp_bld_blend_aos \
+        drivers/llvmpipe/lp_bld_blend_logicop \
+        drivers/llvmpipe/lp_bld_blend_soa \
+        drivers/llvmpipe/lp_bld_depth \
+        drivers/llvmpipe/lp_bld_interp \
+        drivers/llvmpipe/lp_clear \
+        drivers/llvmpipe/lp_context \
+        drivers/llvmpipe/lp_draw_arrays \
+        drivers/llvmpipe/lp_fence \
+        drivers/llvmpipe/lp_flush \
+        drivers/llvmpipe/lp_jit \
+        drivers/llvmpipe/lp_memory \
+        drivers/llvmpipe/lp_perf \
+        drivers/llvmpipe/lp_query \
+        drivers/llvmpipe/lp_rast \
+        drivers/llvmpipe/lp_rast_debug \
+        drivers/llvmpipe/lp_rast_tri \
+        drivers/llvmpipe/lp_scene \
+        drivers/llvmpipe/lp_scene_queue \
+        drivers/llvmpipe/lp_screen \
+        drivers/llvmpipe/lp_setup \
+        drivers/llvmpipe/lp_setup_line \
+        drivers/llvmpipe/lp_setup_point \
+        drivers/llvmpipe/lp_setup_tri \
+        drivers/llvmpipe/lp_setup_vbuf \
+        drivers/llvmpipe/lp_state_blend \
+        drivers/llvmpipe/lp_state_clip \
+        drivers/llvmpipe/lp_state_derived \
+        drivers/llvmpipe/lp_state_fs \
+        drivers/llvmpipe/lp_state_setup \
+        drivers/llvmpipe/lp_state_gs \
+        drivers/llvmpipe/lp_state_rasterizer \
+        drivers/llvmpipe/lp_state_sampler \
+        drivers/llvmpipe/lp_state_so \
+        drivers/llvmpipe/lp_state_surface \
+        drivers/llvmpipe/lp_state_vertex \
+        drivers/llvmpipe/lp_state_vs \
+        drivers/llvmpipe/lp_surface \
+        drivers/llvmpipe/lp_tex_sample \
+        drivers/llvmpipe/lp_texture \
+        drivers/llvmpipe/lp_tile_image \
+        drivers/llvmpipe/lp_tile_soa \
+
+GALLIUM_PATH = $(SRCDIR)/workbench/libs/mesa/src/gallium/
+
+# WARNING - THIS MMAKEFILE REFERENCES SOURCE CODE OUTSIDE OF ITS TREE
+
+LLVMPIPE_HIDD_SOURCES := \
+             $(addprefix $(GALLIUM_PATH),$(GALLIUM_LLVMPIPE_SOURCES))\
+             init \
+             llvmpipegalliumclass
+
+USER_INCLUDES := \
+            -I$(GALLIUM_PATH)/drivers \
+            -I$(AROS_DEVELOPMENT)/include/gallium \
+            -I$(GALLIUM_PATH)/include \
+            -I$(SRCDIR)/$(CURDIR) \
+
+USER_CFLAGS := -DHAVE_LLVM=0x0209 -D__STDC_CONSTANT_MACROS
+USER_LDFLAGS := -L$(SRCDIR)/$(CURDIR)/lib
+
+%build_module mmake=hidd-llvmpipe modname=llvmpipe modtype=hidd \
+    files="$(LLVMPIPE_HIDD_SOURCES)" cxxfiles="dummy" uselibs="galliumvm galliumauxiliary LLVMExecutionEngine LLVMJIT LLVMX86CodeGen LLVMX86Info LLVMX86Utils LLVMSelectionDAG LLVMCodeGen LLVMCore LLVMTarget LLVMScalarOpts LLVMTransformUtils LLVMInstCombine LLVMAnalysis LLVMMC LLVMSupport stdcio stdc"
+    
+%common

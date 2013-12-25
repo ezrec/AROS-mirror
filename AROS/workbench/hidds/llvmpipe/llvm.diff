@@ -1,0 +1,3062 @@
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/build_aros/cmakeline llvm-2.9-aros/build_aros/cmakeline
+--- llvm-2.9/build_aros/cmakeline	1970-01-01 01:00:00.000000000 +0100
++++ llvm-2.9-aros/build_aros/cmakeline	2013-12-14 17:33:04.135969195 +0100
+@@ -0,0 +1,18 @@
++#!/bin/sh
++
++cmake \
++    -DCMAKE_SYSTEM_NAME=AROS \
++    -DCMAKE_SYSTEM_VERSION=1 \
++    -DCMAKE_BUILD_TYPE=RELEASE \
++    -DCMAKE_C_COMPILER=/data/deadwood/repo-gitorious-aros/abi-v0-on-trunk-linux-i386-d/bin/linux-i386/tools/i386-linux-aros-gcc \
++    -DCMAKE_C_COMPILER_WORKS:INTERNAL=TRUE \
++    -DCMAKE_CXX_COMPILER=/data/deadwood/repo-gitorious-aros/abi-v0-on-trunk-linux-i386-d/bin/linux-i386/tools/i386-linux-aros-g++ \
++    -DCMAKE_CXX_COMPILER_WORKS:INTERNAL=TRUE \
++    -DCMAKE_FIND_ROOT_PATH=/data/deadwood/repo-gitorious-aros/abi-v0-on-trunk-linux-i386-d/bin/linux-i386/AROS/Development \
++    -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
++    -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
++    -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
++    -DCMAKE_INSTALL_PREFIX=/data/deadwood/repo-gitorious-aros/abi-v0-on-trunk-linux-i386-d/bin/linux-i386/AROS/Development \
++    -DLLVM_ENABLE_PIC=OFF \
++    -DNM_PATH=/data/deadwood/repo-gitorious-aros/abi-v0-on-trunk-linux-i386-d/bin/linux-i386/tools/i386-linux-aros-nm \
++    ../
+\ No newline at end of file
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/cmake/modules/HandleLLVMOptions.cmake llvm-2.9-aros/cmake/modules/HandleLLVMOptions.cmake
+--- llvm-2.9/cmake/modules/HandleLLVMOptions.cmake	2011-03-13 17:10:40.000000000 +0100
++++ llvm-2.9-aros/cmake/modules/HandleLLVMOptions.cmake	2013-12-14 19:05:13.699804395 +0100
+@@ -67,7 +67,13 @@
+     # FIXME: Maximum path length is currently set to 'safe' fixed value
+     set(MAXPATHLEN 2024)
+   else(UNIX)
+-    MESSAGE(SEND_ERROR "Unable to determine platform")
++    set(LTDL_SHLIB_EXT ".so")
++    set(MAXPATHLEN 128)
++    set(EXEEXT "")
++    set(LLVM_ON_WIN32 0)
++    set(LLVM_ON_UNIX 0)
++    set(LLVM_ON_AROS 1)
++#      MESSAGE(SEND_ERROR "Unable to determine platform")
+   endif(UNIX)
+ endif(WIN32)
+ 
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/cmake/Platform/AROS.cmake llvm-2.9-aros/cmake/Platform/AROS.cmake
+--- llvm-2.9/cmake/Platform/AROS.cmake	1970-01-01 01:00:00.000000000 +0100
++++ llvm-2.9-aros/cmake/Platform/AROS.cmake	2013-12-14 17:32:58.915969345 +0100
+@@ -0,0 +1 @@
++SET(AROS 1)
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/include/llvm/ADT/Triple.h llvm-2.9-aros/include/llvm/ADT/Triple.h
+--- llvm-2.9/include/llvm/ADT/Triple.h	2011-02-17 13:24:17.000000000 +0100
++++ llvm-2.9-aros/include/llvm/ADT/Triple.h	2013-12-14 17:52:27.139934530 +0100
+@@ -50,6 +50,7 @@
+     arm,     // ARM; arm, armv.*, xscale
+     bfin,    // Blackfin: bfin
+     cellspu, // CellSPU: spu, cellspu
++    m68k,    // M68k: 680x0
+     mips,    // MIPS: mips, mipsallegrex
+     mipsel,  // MIPSEL: mipsel, mipsallegrexel, psp
+     msp430,  // MSP430: msp430
+@@ -77,6 +78,8 @@
+   enum OSType {
+     UnknownOS,
+ 
++    Amiga,
++    Aros,
+     AuroraUX,
+     Cygwin,
+     Darwin,
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/include/llvm/Config/config.h.cmake llvm-2.9-aros/include/llvm/Config/config.h.cmake
+--- llvm-2.9/include/llvm/Config/config.h.cmake	2011-02-27 05:11:05.000000000 +0100
++++ llvm-2.9-aros/include/llvm/Config/config.h.cmake	2013-12-14 19:13:11.443790158 +0100
+@@ -560,6 +560,9 @@
+ /* Define if this is Win32ish platform */
+ #cmakedefine LLVM_ON_WIN32 ${LLVM_ON_WIN32}
+ 
++/* Define if this is AROS platform */
++#cmakedefine LLVM_ON_AROS ${LLVM_ON_AROS}
++
+ /* Define to path to circo program if found or 'echo circo' otherwise */
+ #cmakedefine LLVM_PATH_CIRCO "${LLVM_PATH_CIRCO}"
+ 
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/include/llvm/Config/llvm-config.h.cmake llvm-2.9-aros/include/llvm/Config/llvm-config.h.cmake
+--- llvm-2.9/include/llvm/Config/llvm-config.h.cmake	2011-02-27 05:11:05.000000000 +0100
++++ llvm-2.9-aros/include/llvm/Config/llvm-config.h.cmake	2013-12-14 19:13:38.491789351 +0100
+@@ -67,6 +67,9 @@
+ /* Define if this is Win32ish platform */
+ #cmakedefine LLVM_ON_WIN32 ${LLVM_ON_WIN32}
+ 
++/* Define if this is AROS platform */
++#cmakedefine LLVM_ON_AROS ${LLVM_ON_AROS}
++
+ /* Define to path to circo program if found or 'echo circo' otherwise */
+ #cmakedefine LLVM_PATH_CIRCO "${LLVM_PATH_CIRCO}"
+ 
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/AROS/Host.inc llvm-2.9-aros/lib/Support/AROS/Host.inc
+--- llvm-2.9/lib/Support/AROS/Host.inc	1970-01-01 01:00:00.000000000 +0100
++++ llvm-2.9-aros/lib/Support/AROS/Host.inc	2010-12-19 20:43:38.000000000 +0100
+@@ -0,0 +1,97 @@
++ //===- llvm/Support/Unix/Host.inc -------------------------------*- C++ -*-===//
++//
++//                     The LLVM Compiler Infrastructure
++//
++// This file is distributed under the University of Illinois Open Source
++// License. See LICENSE.TXT for details.
++//
++//===----------------------------------------------------------------------===//
++//
++// This file implements the UNIX Host support.
++//
++//===----------------------------------------------------------------------===//
++
++//===----------------------------------------------------------------------===//
++//=== WARNING: Implementation here must contain only generic UNIX code that
++//===          is guaranteed to work on *all* UNIX variants.
++//===----------------------------------------------------------------------===//
++
++#include "llvm/Config/config.h"
++#include "llvm/ADT/StringRef.h"
++#include "Unix.h"
++#include <sys/utsname.h>
++#include <cctype>
++#include <string>
++
++using namespace llvm;
++
++static std::string getOSVersion() {
++  struct utsname info;
++
++  if (uname(&info))
++    return "";
++
++  return info.release;
++}
++
++std::string sys::getHostTriple() {
++  // FIXME: Derive directly instead of relying on the autoconf generated
++  // variable.
++
++  StringRef HostTripleString(LLVM_HOSTTRIPLE);
++  std::pair<StringRef, StringRef> ArchSplit = HostTripleString.split('-');
++
++  // Normalize the arch, since the host triple may not actually match the host.
++  std::string Arch = ArchSplit.first;
++
++  // It would be nice to do this in terms of llvm::Triple, but that is in
++  // Support which is layered above us.
++#if defined(__x86_64__)
++  Arch = "x86_64";
++#elif defined(__i386__)
++  Arch = "i386";
++#elif defined(__ppc64__)
++  Arch = "powerpc64";
++#elif defined(__ppc__)
++  Arch = "powerpc";
++#elif defined(__arm__)
++
++  // FIXME: We need to pick the right ARM triple (which involves querying the
++  // chip). However, for now this is most important for LLVM arch selection, so
++  // we only need to make sure to distinguish ARM and Thumb.
++#  if defined(__thumb__)
++  Arch = "thumb";
++#  else
++  Arch = "arm";
++#  endif
++
++#else
++
++  // FIXME: When enough auto-detection is in place, this should just
++  // #error. Then at least the arch selection is done, and we only need the OS
++  // etc selection to kill off the use of LLVM_HOSTTRIPLE.
++
++#endif
++
++  std::string Triple(Arch);
++  Triple += '-';
++  Triple += ArchSplit.second;
++
++  // Force i<N>86 to i386.
++  if (Triple[0] == 'i' && isdigit(Triple[1]) &&
++      Triple[2] == '8' && Triple[3] == '6')
++    Triple[1] = '3';
++
++  // On darwin, we want to update the version to match that of the
++  // host.
++  std::string::size_type DarwinDashIdx = Triple.find("-darwin");
++  if (DarwinDashIdx != std::string::npos) {
++    Triple.resize(DarwinDashIdx + strlen("-darwin"));
++
++    // Only add the major part of the os version.
++    std::string Version = getOSVersion();
++    Triple += Version.substr(0, Version.find('.'));
++  }
++
++  return Triple;
++}
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/AROS/Memory.inc llvm-2.9-aros/lib/Support/AROS/Memory.inc
+--- llvm-2.9/lib/Support/AROS/Memory.inc	1970-01-01 01:00:00.000000000 +0100
++++ llvm-2.9-aros/lib/Support/AROS/Memory.inc	2013-12-16 19:58:05.751344646 +0100
+@@ -0,0 +1,61 @@
++//===- AROS/Memory.cpp - AROS System Configuration ------*- C++ -*-===//
++//
++//                     The LLVM Compiler Infrastructure
++//
++// This file is distributed under the University of Illinois Open Source
++// License. See LICENSE.TXT for details.
++//
++//===----------------------------------------------------------------------===//
++//
++// This file defines some functions for various memory management utilities.
++//
++//===----------------------------------------------------------------------===//
++
++#include "llvm/Support/DataTypes.h"
++#include "llvm/Support/Process.h"
++
++#include <proto/exec.h>
++#include <aros/debug.h>
++
++/// AllocateRWX - Allocate a slab of memory with read/write/execute
++/// permissions.  This is typically used for JIT applications where we want
++/// to emit code to the memory then jump to it.  Getting this type of memory
++/// is very OS specific.
++///
++llvm::sys::MemoryBlock
++llvm::sys::Memory::AllocateRWX(size_t NumBytes, const MemoryBlock* NearBlock,
++                               std::string *ErrMsg) {
++  if (NumBytes == 0) return MemoryBlock();
++
++  size_t pageSize = Process::GetPageSize();
++  size_t NumPages = (NumBytes+pageSize-1)/pageSize;
++
++  MemoryBlock result;
++  result.Size = NumPages*pageSize;
++  result.Address = AllocMem(result.Size, MEMF_ANY | MEMF_CLEAR);
++
++bug("Allocated: %x - %x\n", result.Address, (char *)result.Address + result.Size);
++  return result;
++}
++
++bool llvm::sys::Memory::ReleaseRWX(MemoryBlock &M, std::string *ErrMsg) {
++  if (M.Address == 0 || M.Size == 0) return false;
++  FreeMem(M.Address, M.Size);
++  return false;
++}
++
++bool llvm::sys::Memory::setWritable (MemoryBlock &M, std::string *ErrMsg) {
++  return true;
++}
++
++bool llvm::sys::Memory::setExecutable (MemoryBlock &M, std::string *ErrMsg) {
++  return false;
++}
++
++bool llvm::sys::Memory::setRangeWritable(const void *Addr, size_t Size) {
++  return true;
++}
++
++bool llvm::sys::Memory::setRangeExecutable(const void *Addr, size_t Size) {
++  return true;
++}
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/AROS/Path.inc llvm-2.9-aros/lib/Support/AROS/Path.inc
+--- llvm-2.9/lib/Support/AROS/Path.inc	1970-01-01 01:00:00.000000000 +0100
++++ llvm-2.9-aros/lib/Support/AROS/Path.inc	2013-12-14 19:18:31.691780614 +0100
+@@ -0,0 +1,891 @@
++//===- llvm/Support/Unix/Path.cpp - Unix Path Implementation -----*- C++ -*-===//
++//
++//                     The LLVM Compiler Infrastructure
++//
++// This file is distributed under the University of Illinois Open Source
++// License. See LICENSE.TXT for details.
++//
++//===----------------------------------------------------------------------===//
++//
++// This file implements the Unix specific portion of the Path class.
++//
++//===----------------------------------------------------------------------===//
++
++//===----------------------------------------------------------------------===//
++//=== WARNING: Implementation here must contain only generic UNIX code that
++//===          is guaranteed to work on *all* UNIX variants.
++//===----------------------------------------------------------------------===//
++
++#include "Unix.h"
++#if HAVE_SYS_STAT_H
++#include <sys/stat.h>
++#endif
++#if HAVE_FCNTL_H
++#include <fcntl.h>
++#endif
++#ifdef HAVE_SYS_MMAN_H
++#include <sys/mman.h>
++#endif
++#ifdef HAVE_SYS_STAT_H
++#include <sys/stat.h>
++#endif
++#if HAVE_UTIME_H
++#include <utime.h>
++#endif
++#if HAVE_TIME_H
++#include <time.h>
++#endif
++#if HAVE_DIRENT_H
++# include <dirent.h>
++# define NAMLEN(dirent) strlen((dirent)->d_name)
++#else
++# define dirent direct
++# define NAMLEN(dirent) (dirent)->d_namlen
++# if HAVE_SYS_NDIR_H
++#  include <sys/ndir.h>
++# endif
++# if HAVE_SYS_DIR_H
++#  include <sys/dir.h>
++# endif
++# if HAVE_NDIR_H
++#  include <ndir.h>
++# endif
++#endif
++
++#if HAVE_DLFCN_H
++#include <dlfcn.h>
++#endif
++
++#ifdef __APPLE__
++#include <mach-o/dyld.h>
++#endif
++
++// Put in a hack for Cygwin which falsely reports that the mkdtemp function
++// is available when it is not.
++#ifdef __CYGWIN__
++# undef HAVE_MKDTEMP
++#endif
++
++namespace {
++inline bool lastIsSlash(const std::string& path) {
++  return !path.empty() && path[path.length() - 1] == '/';
++}
++
++}
++
++namespace llvm {
++using namespace sys;
++
++const char sys::PathSeparator = ':';
++
++StringRef Path::GetEXESuffix() {
++  return StringRef();
++}
++
++Path::Path(StringRef p)
++  : path(p) {}
++
++Path::Path(const char *StrStart, unsigned StrLen)
++  : path(StrStart, StrLen) {}
++
++Path&
++Path::operator=(StringRef that) {
++  path.assign(that.data(), that.size());
++  return *this;
++}
++
++bool
++Path::isValid() const {
++  // Empty paths are considered invalid here.
++  // This code doesn't check MAXPATHLEN because there's no need. Nothing in
++  // LLVM manipulates Paths with fixed-sizes arrays, and if the OS can't
++  // handle names longer than some limit, it'll report this on demand using
++  // ENAMETOLONG.
++  return !path.empty();
++}
++
++bool
++Path::isAbsolute(const char *NameStart, unsigned NameLen) {
++  assert(NameStart);
++  if (NameLen == 0)
++    return false;
++  return NameStart[0] == '/';
++}
++
++bool
++Path::isAbsolute() const {
++  if (path.empty())
++    return false;
++  return path[0] == '/';
++}
++
++Path
++Path::GetRootDirectory() {
++  Path result;
++  result.set("/");
++  return result;
++}
++
++Path
++Path::GetTemporaryDirectory(std::string *ErrMsg) {
++#if defined(HAVE_MKDTEMP)
++  // The best way is with mkdtemp but that's not available on many systems,
++  // Linux and FreeBSD have it. Others probably won't.
++  char pathname[] = "/tmp/llvm_XXXXXX";
++  if (0 == mkdtemp(pathname)) {
++    MakeErrMsg(ErrMsg,
++               std::string(pathname) + ": can't create temporary directory");
++    return Path();
++  }
++  return Path(pathname);
++#elif defined(HAVE_MKSTEMP)
++  // If no mkdtemp is available, mkstemp can be used to create a temporary file
++  // which is then removed and created as a directory. We prefer this over
++  // mktemp because of mktemp's inherent security and threading risks. We still
++  // have a slight race condition from the time the temporary file is created to
++  // the time it is re-created as a directoy.
++  char pathname[] = "/tmp/llvm_XXXXXX";
++  int fd = 0;
++  if (-1 == (fd = mkstemp(pathname))) {
++    MakeErrMsg(ErrMsg,
++      std::string(pathname) + ": can't create temporary directory");
++    return Path();
++  }
++  ::close(fd);
++  ::unlink(pathname); // start race condition, ignore errors
++  if (-1 == ::mkdir(pathname, S_IRWXU)) { // end race condition
++    MakeErrMsg(ErrMsg,
++      std::string(pathname) + ": can't create temporary directory");
++    return Path();
++  }
++  return Path(pathname);
++#elif defined(HAVE_MKTEMP)
++  // If a system doesn't have mkdtemp(3) or mkstemp(3) but it does have
++  // mktemp(3) then we'll assume that system (e.g. AIX) has a reasonable
++  // implementation of mktemp(3) and doesn't follow BSD 4.3's lead of replacing
++  // the XXXXXX with the pid of the process and a letter. That leads to only
++  // twenty six temporary files that can be generated.
++  char pathname[] = "/tmp/llvm_XXXXXX";
++  char *TmpName = ::mktemp(pathname);
++  if (TmpName == 0) {
++    MakeErrMsg(ErrMsg,
++      std::string(TmpName) + ": can't create unique directory name");
++    return Path();
++  }
++  if (-1 == ::mkdir(TmpName, S_IRWXU)) {
++    MakeErrMsg(ErrMsg,
++        std::string(TmpName) + ": can't create temporary directory");
++    return Path();
++  }
++  return Path(TmpName);
++#else
++  // This is the worst case implementation. tempnam(3) leaks memory unless its
++  // on an SVID2 (or later) system. On BSD 4.3 it leaks. tmpnam(3) has thread
++  // issues. The mktemp(3) function doesn't have enough variability in the
++  // temporary name generated. So, we provide our own implementation that
++  // increments an integer from a random number seeded by the current time. This
++  // should be sufficiently unique that we don't have many collisions between
++  // processes. Generally LLVM processes don't run very long and don't use very
++  // many temporary files so this shouldn't be a big issue for LLVM.
++  static time_t num = ::time(0);
++  char pathname[MAXPATHLEN];
++  do {
++    num++;
++    sprintf(pathname, "/tmp/llvm_%010u", unsigned(num));
++  } while ( 0 == access(pathname, F_OK ) );
++  if (-1 == ::mkdir(pathname, S_IRWXU)) {
++    MakeErrMsg(ErrMsg,
++      std::string(pathname) + ": can't create temporary directory");
++    return Path();
++  }
++  return Path(pathname);
++#endif
++}
++
++void
++Path::GetSystemLibraryPaths(std::vector<sys::Path>& Paths) {
++#ifdef LTDL_SHLIBPATH_VAR
++  char* env_var = getenv(LTDL_SHLIBPATH_VAR);
++  if (env_var != 0) {
++    getPathList(env_var,Paths);
++  }
++#endif
++  // FIXME: Should this look at LD_LIBRARY_PATH too?
++  Paths.push_back(sys::Path("/usr/local/lib/"));
++  Paths.push_back(sys::Path("/usr/X11R6/lib/"));
++  Paths.push_back(sys::Path("/usr/lib/"));
++  Paths.push_back(sys::Path("/lib/"));
++}
++
++void
++Path::GetBitcodeLibraryPaths(std::vector<sys::Path>& Paths) {
++  char * env_var = getenv("LLVM_LIB_SEARCH_PATH");
++  if (env_var != 0) {
++    getPathList(env_var,Paths);
++  }
++#ifdef LLVM_LIBDIR
++  {
++    Path tmpPath;
++    if (tmpPath.set(LLVM_LIBDIR))
++      if (tmpPath.canRead())
++        Paths.push_back(tmpPath);
++  }
++#endif
++  GetSystemLibraryPaths(Paths);
++}
++
++Path
++Path::GetLLVMDefaultConfigDir() {
++  return Path("/etc/llvm/");
++}
++
++Path
++Path::GetUserHomeDirectory() {
++  const char* home = getenv("HOME");
++  Path result;
++  if (home && result.set(home))
++    return result;
++  result.set("/");
++  return result;
++}
++
++Path
++Path::GetCurrentDirectory() {
++  char pathname[MAXPATHLEN];
++  if (!getcwd(pathname,MAXPATHLEN)) {
++    assert (false && "Could not query current working directory.");
++    return Path();
++  }
++
++  return Path(pathname);
++}
++
++#if defined(__FreeBSD__) || defined (__NetBSD__) || \
++    defined(__OpenBSD__) || defined(__minix)
++static int
++test_dir(char buf[PATH_MAX], char ret[PATH_MAX],
++    const char *dir, const char *bin)
++{
++  struct stat sb;
++
++  snprintf(buf, PATH_MAX, "%s/%s", dir, bin);
++  if (realpath(buf, ret) == NULL)
++    return (1);
++  if (stat(buf, &sb) != 0)
++    return (1);
++
++  return (0);
++}
++
++static char *
++getprogpath(char ret[PATH_MAX], const char *bin)
++{
++  char *pv, *s, *t, buf[PATH_MAX];
++
++  /* First approach: absolute path. */
++  if (bin[0] == '/') {
++    if (test_dir(buf, ret, "/", bin) == 0)
++      return (ret);
++    return (NULL);
++  }
++
++  /* Second approach: relative path. */
++  if (strchr(bin, '/') != NULL) {
++    if (getcwd(buf, PATH_MAX) == NULL)
++      return (NULL);
++    if (test_dir(buf, ret, buf, bin) == 0)
++      return (ret);
++    return (NULL);
++  }
++
++  /* Third approach: $PATH */
++  if ((pv = getenv("PATH")) == NULL)
++    return (NULL);
++  s = pv = strdup(pv);
++  if (pv == NULL)
++    return (NULL);
++  while ((t = strsep(&s, ":")) != NULL) {
++    if (test_dir(buf, ret, t, bin) == 0) {
++      free(pv);
++      return (ret);
++    }
++  }
++  free(pv);
++  return (NULL);
++}
++#endif // __FreeBSD__ || __NetBSD__
++
++/// GetMainExecutable - Return the path to the main executable, given the
++/// value of argv[0] from program startup.
++Path Path::GetMainExecutable(const char *argv0, void *MainAddr) {
++#if defined(__APPLE__)
++  // On OS X the executable path is saved to the stack by dyld. Reading it
++  // from there is much faster than calling dladdr, especially for large
++  // binaries with symbols.
++  char exe_path[MAXPATHLEN];
++  uint32_t size = sizeof(exe_path);
++  if (_NSGetExecutablePath(exe_path, &size) == 0) {
++    char link_path[MAXPATHLEN];
++    if (realpath(exe_path, link_path))
++      return Path(link_path);
++  }
++#elif defined(__FreeBSD__) || defined (__NetBSD__) || \
++      defined(__OpenBSD__) || defined(__minix)
++  char exe_path[PATH_MAX];
++
++  if (getprogpath(exe_path, argv0) != NULL)
++    return Path(exe_path);
++#elif defined(__linux__) || defined(__CYGWIN__)
++  char exe_path[MAXPATHLEN];
++  ssize_t len = readlink("/proc/self/exe", exe_path, sizeof(exe_path));
++  if (len >= 0)
++    return Path(StringRef(exe_path, len));
++#elif defined(HAVE_DLFCN_H)
++  // Use dladdr to get executable path if available.
++  Dl_info DLInfo;
++  int err = dladdr(MainAddr, &DLInfo);
++  if (err == 0)
++    return Path();
++
++  // If the filename is a symlink, we need to resolve and return the location of
++  // the actual executable.
++  char link_path[MAXPATHLEN];
++  if (realpath(DLInfo.dli_fname, link_path))
++    return Path(link_path);
++#else
++//#error GetMainExecutable is not implemented on this host yet.
++asm("int3");
++#endif
++  return Path();
++}
++
++
++StringRef Path::getDirname() const {
++  return getDirnameCharSep(path, "/");
++}
++
++StringRef
++Path::getBasename() const {
++  // Find the last slash
++  std::string::size_type slash = path.rfind('/');
++  if (slash == std::string::npos)
++    slash = 0;
++  else
++    slash++;
++
++  std::string::size_type dot = path.rfind('.');
++  if (dot == std::string::npos || dot < slash)
++    return StringRef(path).substr(slash);
++  else
++    return StringRef(path).substr(slash, dot - slash);
++}
++
++StringRef
++Path::getSuffix() const {
++  // Find the last slash
++  std::string::size_type slash = path.rfind('/');
++  if (slash == std::string::npos)
++    slash = 0;
++  else
++    slash++;
++
++  std::string::size_type dot = path.rfind('.');
++  if (dot == std::string::npos || dot < slash)
++    return StringRef();
++  else
++    return StringRef(path).substr(dot + 1);
++}
++
++bool Path::getMagicNumber(std::string &Magic, unsigned len) const {
++  assert(len < 1024 && "Request for magic string too long");
++  char Buf[1025];
++  int fd = ::open(path.c_str(), O_RDONLY);
++  if (fd < 0)
++    return false;
++  ssize_t bytes_read = ::read(fd, Buf, len);
++  ::close(fd);
++  if (ssize_t(len) != bytes_read)
++    return false;
++  Magic.assign(Buf, len);
++  return true;
++}
++
++bool
++Path::exists() const {
++  return 0 == access(path.c_str(), F_OK );
++}
++
++bool
++Path::isDirectory() const {
++  struct stat buf;
++  if (0 != stat(path.c_str(), &buf))
++    return false;
++  return ((buf.st_mode & S_IFMT) == S_IFDIR) ? true : false;
++}
++
++bool
++Path::isSymLink() const {
++  struct stat buf;
++  if (0 != lstat(path.c_str(), &buf))
++    return false;
++  return S_ISLNK(buf.st_mode);
++}
++
++
++bool
++Path::canRead() const {
++  return 0 == access(path.c_str(), R_OK);
++}
++
++bool
++Path::canWrite() const {
++  return 0 == access(path.c_str(), W_OK);
++}
++
++bool
++Path::isRegularFile() const {
++  // Get the status so we can determine if it's a file or directory
++  struct stat buf;
++
++  if (0 != stat(path.c_str(), &buf))
++    return false;
++
++  if (S_ISREG(buf.st_mode))
++    return true;
++
++  return false;
++}
++
++bool
++Path::canExecute() const {
++  if (0 != access(path.c_str(), R_OK | X_OK ))
++    return false;
++  struct stat buf;
++  if (0 != stat(path.c_str(), &buf))
++    return false;
++  if (!S_ISREG(buf.st_mode))
++    return false;
++  return true;
++}
++
++StringRef
++Path::getLast() const {
++  // Find the last slash
++  size_t pos = path.rfind('/');
++
++  // Handle the corner cases
++  if (pos == std::string::npos)
++    return path;
++
++  // If the last character is a slash
++  if (pos == path.length()-1) {
++    // Find the second to last slash
++    size_t pos2 = path.rfind('/', pos-1);
++    if (pos2 == std::string::npos)
++      return StringRef(path).substr(0,pos);
++    else
++      return StringRef(path).substr(pos2+1,pos-pos2-1);
++  }
++  // Return everything after the last slash
++  return StringRef(path).substr(pos+1);
++}
++
++const FileStatus *
++PathWithStatus::getFileStatus(bool update, std::string *ErrStr) const {
++  if (!fsIsValid || update) {
++    struct stat buf;
++    if (0 != stat(path.c_str(), &buf)) {
++      MakeErrMsg(ErrStr, path + ": can't get status of file");
++      return 0;
++    }
++    status.fileSize = buf.st_size;
++    status.modTime.fromEpochTime(buf.st_mtime);
++    status.mode = buf.st_mode;
++    status.user = buf.st_uid;
++    status.group = buf.st_gid;
++    status.uniqueID = uint64_t(buf.st_ino);
++    status.isDir  = S_ISDIR(buf.st_mode);
++    status.isFile = S_ISREG(buf.st_mode);
++    fsIsValid = true;
++  }
++  return &status;
++}
++
++static bool AddPermissionBits(const Path &File, int bits) {
++  // Get the umask value from the operating system.  We want to use it
++  // when changing the file's permissions. Since calling umask() sets
++  // the umask and returns its old value, we must call it a second
++  // time to reset it to the user's preference.
++  int mask = umask(0777); // The arg. to umask is arbitrary.
++  umask(mask);            // Restore the umask.
++
++  // Get the file's current mode.
++  struct stat buf;
++  if (0 != stat(File.c_str(), &buf))
++    return false;
++  // Change the file to have whichever permissions bits from 'bits'
++  // that the umask would not disable.
++  if ((chmod(File.c_str(), (buf.st_mode | (bits & ~mask)))) == -1)
++      return false;
++  return true;
++}
++
++bool Path::makeReadableOnDisk(std::string* ErrMsg) {
++  if (!AddPermissionBits(*this, 0444))
++    return MakeErrMsg(ErrMsg, path + ": can't make file readable");
++  return false;
++}
++
++bool Path::makeWriteableOnDisk(std::string* ErrMsg) {
++  if (!AddPermissionBits(*this, 0222))
++    return MakeErrMsg(ErrMsg, path + ": can't make file writable");
++  return false;
++}
++
++bool Path::makeExecutableOnDisk(std::string* ErrMsg) {
++  if (!AddPermissionBits(*this, 0111))
++    return MakeErrMsg(ErrMsg, path + ": can't make file executable");
++  return false;
++}
++
++bool
++Path::getDirectoryContents(std::set<Path>& result, std::string* ErrMsg) const {
++  DIR* direntries = ::opendir(path.c_str());
++  if (direntries == 0)
++    return MakeErrMsg(ErrMsg, path + ": can't open directory");
++
++  std::string dirPath = path;
++  if (!lastIsSlash(dirPath))
++    dirPath += '/';
++
++  result.clear();
++  struct dirent* de = ::readdir(direntries);
++  for ( ; de != 0; de = ::readdir(direntries)) {
++    if (de->d_name[0] != '.') {
++      Path aPath(dirPath + (const char*)de->d_name);
++      struct stat st;
++      if (0 != lstat(aPath.path.c_str(), &st)) {
++        if (S_ISLNK(st.st_mode))
++          continue; // dangling symlink -- ignore
++        return MakeErrMsg(ErrMsg,
++                          aPath.path +  ": can't determine file object type");
++      }
++      result.insert(aPath);
++    }
++  }
++
++  closedir(direntries);
++  return false;
++}
++
++bool
++Path::set(StringRef a_path) {
++  if (a_path.empty())
++    return false;
++  path = a_path;
++  return true;
++}
++
++bool
++Path::appendComponent(StringRef name) {
++  if (name.empty())
++    return false;
++  if (!lastIsSlash(path))
++    path += '/';
++  path += name;
++  return true;
++}
++
++bool
++Path::eraseComponent() {
++  size_t slashpos = path.rfind('/',path.size());
++  if (slashpos == 0 || slashpos == std::string::npos) {
++    path.erase();
++    return true;
++  }
++  if (slashpos == path.size() - 1)
++    slashpos = path.rfind('/',slashpos-1);
++  if (slashpos == std::string::npos) {
++    path.erase();
++    return true;
++  }
++  path.erase(slashpos);
++  return true;
++}
++
++bool
++Path::eraseSuffix() {
++  size_t dotpos = path.rfind('.',path.size());
++  size_t slashpos = path.rfind('/',path.size());
++  if (dotpos != std::string::npos) {
++    if (slashpos == std::string::npos || dotpos > slashpos+1) {
++      path.erase(dotpos, path.size()-dotpos);
++      return true;
++    }
++  }
++  return false;
++}
++
++static bool createDirectoryHelper(char* beg, char* end, bool create_parents) {
++
++  if (access(beg, R_OK | W_OK) == 0)
++    return false;
++
++  if (create_parents) {
++
++    char* c = end;
++
++    for (; c != beg; --c)
++      if (*c == '/') {
++
++        // Recurse to handling the parent directory.
++        *c = '\0';
++        bool x = createDirectoryHelper(beg, c, create_parents);
++        *c = '/';
++
++        // Return if we encountered an error.
++        if (x)
++          return true;
++
++        break;
++      }
++  }
++
++  return mkdir(beg, S_IRWXU | S_IRWXG) != 0;
++}
++
++bool
++Path::createDirectoryOnDisk( bool create_parents, std::string* ErrMsg ) {
++  // Get a writeable copy of the path name
++  std::string pathname(path);
++
++  // Null-terminate the last component
++  size_t lastchar = path.length() - 1 ;
++
++  if (pathname[lastchar] != '/')
++    ++lastchar;
++
++  pathname[lastchar] = '\0';
++
++  if (createDirectoryHelper(&pathname[0], &pathname[lastchar], create_parents))
++    return MakeErrMsg(ErrMsg, pathname + ": can't create directory");
++
++  return false;
++}
++
++bool
++Path::createFileOnDisk(std::string* ErrMsg) {
++  // Create the file
++  int fd = ::creat(path.c_str(), S_IRUSR | S_IWUSR);
++  if (fd < 0)
++    return MakeErrMsg(ErrMsg, path + ": can't create file");
++  ::close(fd);
++  return false;
++}
++
++bool
++Path::createTemporaryFileOnDisk(bool reuse_current, std::string* ErrMsg) {
++  // Make this into a unique file name
++  if (makeUnique( reuse_current, ErrMsg ))
++    return true;
++
++  // create the file
++  int fd = ::open(path.c_str(), O_WRONLY|O_CREAT|O_TRUNC, 0666);
++  if (fd < 0)
++    return MakeErrMsg(ErrMsg, path + ": can't create temporary file");
++  ::close(fd);
++  return false;
++}
++
++bool
++Path::eraseFromDisk(bool remove_contents, std::string *ErrStr) const {
++  // Get the status so we can determine if it's a file or directory.
++  struct stat buf;
++  if (0 != stat(path.c_str(), &buf)) {
++    MakeErrMsg(ErrStr, path + ": can't get status of file");
++    return true;
++  }
++
++  // Note: this check catches strange situations. In all cases, LLVM should
++  // only be involved in the creation and deletion of regular files.  This
++  // check ensures that what we're trying to erase is a regular file. It
++  // effectively prevents LLVM from erasing things like /dev/null, any block
++  // special file, or other things that aren't "regular" files.
++  if (S_ISREG(buf.st_mode)) {
++    if (unlink(path.c_str()) != 0)
++      return MakeErrMsg(ErrStr, path + ": can't destroy file");
++    return false;
++  }
++
++  if (!S_ISDIR(buf.st_mode)) {
++    if (ErrStr) *ErrStr = "not a file or directory";
++    return true;
++  }
++
++  if (remove_contents) {
++    // Recursively descend the directory to remove its contents.
++    std::string cmd = "/bin/rm -rf " + path;
++    if (system(cmd.c_str()) != 0) {
++      MakeErrMsg(ErrStr, path + ": failed to recursively remove directory.");
++      return true;
++    }
++    return false;
++  }
++
++  // Otherwise, try to just remove the one directory.
++  std::string pathname(path);
++  size_t lastchar = path.length() - 1;
++  if (pathname[lastchar] == '/')
++    pathname[lastchar] = '\0';
++  else
++    pathname[lastchar+1] = '\0';
++
++  if (rmdir(pathname.c_str()) != 0)
++    return MakeErrMsg(ErrStr, pathname + ": can't erase directory");
++  return false;
++}
++
++bool
++Path::renamePathOnDisk(const Path& newName, std::string* ErrMsg) {
++  if (0 != ::rename(path.c_str(), newName.c_str()))
++    return MakeErrMsg(ErrMsg, std::string("can't rename '") + path + "' as '" +
++               newName.str() + "'");
++  return false;
++}
++
++bool
++Path::setStatusInfoOnDisk(const FileStatus &si, std::string *ErrStr) const {
++//  struct utimbuf utb;
++//  utb.actime = si.modTime.toPosixTime();
++//  utb.modtime = utb.actime;
++//  if (0 != ::utime(path.c_str(),&utb))
++//    return MakeErrMsg(ErrStr, path + ": can't set file modification time");
++//  if (0 != ::chmod(path.c_str(),si.mode))
++//    return MakeErrMsg(ErrStr, path + ": can't set mode");
++asm("int3");
++  return false;
++}
++
++bool
++sys::CopyFile(const sys::Path &Dest, const sys::Path &Src, std::string* ErrMsg){
++  int inFile = -1;
++  int outFile = -1;
++  inFile = ::open(Src.c_str(), O_RDONLY);
++  if (inFile == -1)
++    return MakeErrMsg(ErrMsg, Src.str() +
++      ": can't open source file to copy");
++
++  outFile = ::open(Dest.c_str(), O_WRONLY|O_CREAT, 0666);
++  if (outFile == -1) {
++    ::close(inFile);
++    return MakeErrMsg(ErrMsg, Dest.str() +
++      ": can't create destination file for copy");
++  }
++
++  char Buffer[16*1024];
++  while (ssize_t Amt = ::read(inFile, Buffer, 16*1024)) {
++    if (Amt == -1) {
++      if (errno != EINTR && errno != EAGAIN) {
++        ::close(inFile);
++        ::close(outFile);
++        return MakeErrMsg(ErrMsg, Src.str()+": can't read source file");
++      }
++    } else {
++      char *BufPtr = Buffer;
++      while (Amt) {
++        ssize_t AmtWritten = ::write(outFile, BufPtr, Amt);
++        if (AmtWritten == -1) {
++          if (errno != EINTR && errno != EAGAIN) {
++            ::close(inFile);
++            ::close(outFile);
++            return MakeErrMsg(ErrMsg, Dest.str() +
++              ": can't write destination file");
++          }
++        } else {
++          Amt -= AmtWritten;
++          BufPtr += AmtWritten;
++        }
++      }
++    }
++  }
++  ::close(inFile);
++  ::close(outFile);
++  return false;
++}
++
++bool
++Path::makeUnique(bool reuse_current, std::string* ErrMsg) {
++  bool Exists;
++  if (reuse_current && (fs::exists(path, Exists) || !Exists))
++    return false; // File doesn't exist already, just use it!
++
++  // Append an XXXXXX pattern to the end of the file for use with mkstemp,
++  // mktemp or our own implementation.
++  // This uses std::vector instead of SmallVector to avoid a dependence on
++  // libSupport. And performance isn't critical here.
++  std::vector<char> Buf;
++  Buf.resize(path.size()+8);
++  char *FNBuffer = &Buf[0];
++    path.copy(FNBuffer,path.size());
++  bool isdir;
++  if (!fs::is_directory(path, isdir) && isdir)
++    strcpy(FNBuffer+path.size(), "/XXXXXX");
++  else
++    strcpy(FNBuffer+path.size(), "-XXXXXX");
++
++#if defined(HAVE_MKSTEMP)
++  int TempFD;
++  if ((TempFD = mkstemp(FNBuffer)) == -1)
++    return MakeErrMsg(ErrMsg, path + ": can't make unique filename");
++
++  // We don't need to hold the temp file descriptor... we will trust that no one
++  // will overwrite/delete the file before we can open it again.
++  close(TempFD);
++
++  // Save the name
++  path = FNBuffer;
++#elif defined(HAVE_MKTEMP)
++  // If we don't have mkstemp, use the old and obsolete mktemp function.
++  if (mktemp(FNBuffer) == 0)
++    return MakeErrMsg(ErrMsg, path + ": can't make unique filename");
++
++  // Save the name
++  path = FNBuffer;
++#else
++  // Okay, looks like we have to do it all by our lonesome.
++  static unsigned FCounter = 0;
++  // Try to initialize with unique value.
++  if (FCounter == 0) FCounter = ((unsigned)getpid() & 0xFFFF) << 8;
++  char* pos = strstr(FNBuffer, "XXXXXX");
++  do {
++    if (++FCounter > 0xFFFFFF) {
++      return MakeErrMsg(ErrMsg,
++        path + ": can't make unique filename: too many files");
++    }
++    sprintf(pos, "%06X", FCounter);
++    path = FNBuffer;
++  } while (exists());
++  // POSSIBLE SECURITY BUG: An attacker can easily guess the name and exploit
++  // LLVM.
++#endif
++  return false;
++}
++
++const char *Path::MapInFilePages(int FD, uint64_t FileSize) {
++//  int Flags = MAP_PRIVATE;
++#ifdef MAP_FILE
++//  Flags |= MAP_FILE;
++#endif
++asm("int3");
++//  void *BasePtr = ::mmap(0, FileSize, PROT_READ, Flags, FD, 0);
++//  if (BasePtr == MAP_FAILED)
++    return 0;
++//  return (const char*)BasePtr;
++}
++
++void Path::UnMapFilePages(const char *BasePtr, uint64_t FileSize) {
++//  ::munmap((void*)BasePtr, FileSize);
++asm("int3");
++}
++
++} // end llvm namespace
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/AROS/PathV2.inc llvm-2.9-aros/lib/Support/AROS/PathV2.inc
+--- llvm-2.9/lib/Support/AROS/PathV2.inc	1970-01-01 01:00:00.000000000 +0100
++++ llvm-2.9-aros/lib/Support/AROS/PathV2.inc	2013-12-14 19:36:36.699748276 +0100
+@@ -0,0 +1,508 @@
++//===- llvm/Support/Unix/PathV2.cpp - Unix Path Implementation --*- C++ -*-===//
++//
++//                     The LLVM Compiler Infrastructure
++//
++// This file is distributed under the University of Illinois Open Source
++// License. See LICENSE.TXT for details.
++//
++//===----------------------------------------------------------------------===//
++//
++// This file implements the Unix specific implementation of the PathV2 API.
++//
++//===----------------------------------------------------------------------===//
++
++//===----------------------------------------------------------------------===//
++//=== WARNING: Implementation here must contain only generic UNIX code that
++//===          is guaranteed to work on *all* UNIX variants.
++//===----------------------------------------------------------------------===//
++
++#include "Unix.h"
++#if HAVE_SYS_STAT_H
++#include <sys/stat.h>
++#endif
++#if HAVE_FCNTL_H
++#include <fcntl.h>
++#endif
++#if HAVE_DIRENT_H
++# include <dirent.h>
++# define NAMLEN(dirent) strlen((dirent)->d_name)
++#else
++# define dirent direct
++# define NAMLEN(dirent) (dirent)->d_namlen
++# if HAVE_SYS_NDIR_H
++#  include <sys/ndir.h>
++# endif
++# if HAVE_SYS_DIR_H
++#  include <sys/dir.h>
++# endif
++# if HAVE_NDIR_H
++#  include <ndir.h>
++# endif
++#endif
++#if HAVE_STDIO_H
++#include <stdio.h>
++#endif
++
++using namespace llvm;
++
++namespace {
++  /// This class automatically closes the given file descriptor when it goes out
++  /// of scope. You can take back explicit ownership of the file descriptor by
++  /// calling take(). The destructor does not verify that close was successful.
++  /// Therefore, never allow this class to call close on a file descriptor that
++  /// has been read from or written to.
++  struct AutoFD {
++    int FileDescriptor;
++
++    AutoFD(int fd) : FileDescriptor(fd) {}
++    ~AutoFD() {
++      if (FileDescriptor >= 0)
++        ::close(FileDescriptor);
++    }
++
++    int take() {
++      int ret = FileDescriptor;
++      FileDescriptor = -1;
++      return ret;
++    }
++
++    operator int() const {return FileDescriptor;}
++  };
++
++  error_code TempDir(SmallVectorImpl<char> &result) {
++    // FIXME: Don't use TMPDIR if program is SUID or SGID enabled.
++    const char *dir = 0;
++    (dir = std::getenv("TMPDIR" )) ||
++    (dir = std::getenv("TMP"    )) ||
++    (dir = std::getenv("TEMP"   )) ||
++    (dir = std::getenv("TEMPDIR")) ||
++#ifdef P_tmpdir
++    (dir = P_tmpdir) ||
++#endif
++    (dir = "/tmp");
++
++    result.clear();
++    StringRef d(dir);
++    result.append(d.begin(), d.end());
++    return success;
++  }
++}
++
++namespace llvm {
++namespace sys  {
++namespace fs {
++
++error_code current_path(SmallVectorImpl<char> &result) {
++  result.reserve(MAXPATHLEN);
++
++  while (true) {
++    if (::getcwd(result.data(), result.capacity()) == 0) {
++      // See if there was a real error.
++      if (errno != errc::not_enough_memory)
++        return error_code(errno, system_category());
++      // Otherwise there just wasn't enough space.
++      result.reserve(result.capacity() * 2);
++    } else
++      break;
++  }
++
++  result.set_size(strlen(result.data()));
++  return success;
++}
++
++error_code copy_file(const Twine &from, const Twine &to, copy_option copt) {
++ // Get arguments.
++  SmallString<128> from_storage;
++  SmallString<128> to_storage;
++  StringRef f = from.toNullTerminatedStringRef(from_storage);
++  StringRef t = to.toNullTerminatedStringRef(to_storage);
++
++  const size_t buf_sz = 32768;
++  char buffer[buf_sz];
++  int from_file = -1, to_file = -1;
++
++  // Open from.
++  if ((from_file = ::open(f.begin(), O_RDONLY)) < 0)
++    return error_code(errno, system_category());
++  AutoFD from_fd(from_file);
++
++  // Stat from.
++  struct stat from_stat;
++  if (::stat(f.begin(), &from_stat) != 0)
++    return error_code(errno, system_category());
++
++  // Setup to flags.
++  int to_flags = O_CREAT | O_WRONLY;
++  if (copt == copy_option::fail_if_exists)
++    to_flags |= O_EXCL;
++
++  // Open to.
++  if ((to_file = ::open(t.begin(), to_flags, from_stat.st_mode)) < 0)
++    return error_code(errno, system_category());
++  AutoFD to_fd(to_file);
++
++  // Copy!
++  ssize_t sz, sz_read = 1, sz_write;
++  while (sz_read > 0 &&
++         (sz_read = ::read(from_fd, buffer, buf_sz)) > 0) {
++    // Allow for partial writes - see Advanced Unix Programming (2nd Ed.),
++    // Marc Rochkind, Addison-Wesley, 2004, page 94
++    sz_write = 0;
++    do {
++      if ((sz = ::write(to_fd, buffer + sz_write, sz_read - sz_write)) < 0) {
++        sz_read = sz;  // cause read loop termination.
++        break;         // error.
++      }
++      sz_write += sz;
++    } while (sz_write < sz_read);
++  }
++
++  // After all the file operations above the return value of close actually
++  // matters.
++  if (::close(from_fd.take()) < 0) sz_read = -1;
++  if (::close(to_fd.take()) < 0) sz_read = -1;
++
++  // Check for errors.
++  if (sz_read < 0)
++    return error_code(errno, system_category());
++
++  return success;
++}
++
++error_code create_directory(const Twine &path, bool &existed) {
++  SmallString<128> path_storage;
++  StringRef p = path.toNullTerminatedStringRef(path_storage);
++
++  if (::mkdir(p.begin(), S_IRWXU | S_IRWXG) == -1) {
++    if (errno != errc::file_exists)
++      return error_code(errno, system_category());
++    existed = true;
++  } else
++    existed = false;
++
++  return success;
++}
++
++error_code create_hard_link(const Twine &to, const Twine &from) {
++  // Get arguments.
++  SmallString<128> from_storage;
++  SmallString<128> to_storage;
++  StringRef f = from.toNullTerminatedStringRef(from_storage);
++  StringRef t = to.toNullTerminatedStringRef(to_storage);
++
++  if (::link(t.begin(), f.begin()) == -1)
++    return error_code(errno, system_category());
++
++  return success;
++}
++
++error_code create_symlink(const Twine &to, const Twine &from) {
++  // Get arguments.
++  SmallString<128> from_storage;
++  SmallString<128> to_storage;
++  StringRef f = from.toNullTerminatedStringRef(from_storage);
++  StringRef t = to.toNullTerminatedStringRef(to_storage);
++
++  if (::symlink(t.begin(), f.begin()) == -1)
++    return error_code(errno, system_category());
++
++  return success;
++}
++
++error_code remove(const Twine &path, bool &existed) {
++  SmallString<128> path_storage;
++  StringRef p = path.toNullTerminatedStringRef(path_storage);
++
++  if (::remove(p.begin()) == -1) {
++    if (errno != errc::no_such_file_or_directory)
++      return error_code(errno, system_category());
++    existed = false;
++  } else
++    existed = true;
++
++  return success;
++}
++
++error_code rename(const Twine &from, const Twine &to) {
++  // Get arguments.
++  SmallString<128> from_storage;
++  SmallString<128> to_storage;
++  StringRef f = from.toNullTerminatedStringRef(from_storage);
++  StringRef t = to.toNullTerminatedStringRef(to_storage);
++
++  if (::rename(f.begin(), t.begin()) == -1) {
++    // If it's a cross device link, copy then delete, otherwise return the error
++    if (errno == EXDEV) {
++      if (error_code ec = copy_file(from, to, copy_option::overwrite_if_exists))
++        return ec;
++      bool Existed;
++      if (error_code ec = remove(from, Existed))
++        return ec;
++    } else
++      return error_code(errno, system_category());
++  }
++
++  return success;
++}
++
++error_code resize_file(const Twine &path, uint64_t size) {
++  SmallString<128> path_storage;
++  StringRef p = path.toNullTerminatedStringRef(path_storage);
++
++  if (::truncate(p.begin(), size) == -1)
++    return error_code(errno, system_category());
++
++  return success;
++}
++
++error_code exists(const Twine &path, bool &result) {
++  SmallString<128> path_storage;
++  StringRef p = path.toNullTerminatedStringRef(path_storage);
++
++  struct stat status;
++  if (::stat(p.begin(), &status) == -1) {
++    if (errno != errc::no_such_file_or_directory)
++      return error_code(errno, system_category());
++    result = false;
++  } else
++    result = true;
++
++  return success;
++}
++
++error_code equivalent(const Twine &A, const Twine &B, bool &result) {
++  // Get arguments.
++  SmallString<128> a_storage;
++  SmallString<128> b_storage;
++  StringRef a = A.toNullTerminatedStringRef(a_storage);
++  StringRef b = B.toNullTerminatedStringRef(b_storage);
++
++  struct stat stat_a, stat_b;
++  int error_b = ::stat(b.begin(), &stat_b);
++  int error_a = ::stat(a.begin(), &stat_a);
++
++  // If both are invalid, it's an error. If only one is, the result is false.
++  if (error_a != 0 || error_b != 0) {
++    if (error_a == error_b)
++      return error_code(errno, system_category());
++    result = false;
++  } else {
++    result =
++      stat_a.st_dev == stat_b.st_dev &&
++      stat_a.st_ino == stat_b.st_ino;
++  }
++
++  return success;
++}
++
++error_code file_size(const Twine &path, uint64_t &result) {
++  SmallString<128> path_storage;
++  StringRef p = path.toNullTerminatedStringRef(path_storage);
++
++  struct stat status;
++  if (::stat(p.begin(), &status) == -1)
++    return error_code(errno, system_category());
++  if (!S_ISREG(status.st_mode))
++    return make_error_code(errc::operation_not_permitted);
++
++  result = status.st_size;
++  return success;
++}
++
++error_code status(const Twine &path, file_status &result) {
++  SmallString<128> path_storage;
++  StringRef p = path.toNullTerminatedStringRef(path_storage);
++
++  struct stat status;
++  if (::stat(p.begin(), &status) != 0) {
++    error_code ec(errno, system_category());
++    if (ec == errc::no_such_file_or_directory)
++      result = file_status(file_type::file_not_found);
++    else
++      result = file_status(file_type::status_error);
++    return ec;
++  }
++
++  if (S_ISDIR(status.st_mode))
++    result = file_status(file_type::directory_file);
++  else if (S_ISREG(status.st_mode))
++    result = file_status(file_type::regular_file);
++  else if (S_ISBLK(status.st_mode))
++    result = file_status(file_type::block_file);
++  else if (S_ISCHR(status.st_mode))
++    result = file_status(file_type::character_file);
++  else if (S_ISFIFO(status.st_mode))
++    result = file_status(file_type::fifo_file);
++  else if (S_ISSOCK(status.st_mode))
++    result = file_status(file_type::socket_file);
++  else
++    result = file_status(file_type::type_unknown);
++
++  return success;
++}
++
++error_code unique_file(const Twine &model, int &result_fd,
++                             SmallVectorImpl<char> &result_path) {
++  SmallString<128> Model;
++  model.toVector(Model);
++  // Null terminate.
++  Model.c_str();
++
++  // Make model absolute by prepending a temp directory if it's not already.
++  bool absolute = path::is_absolute(Twine(Model));
++  if (!absolute) {
++    SmallString<128> TDir;
++    if (error_code ec = TempDir(TDir)) return ec;
++    path::append(TDir, Twine(Model));
++    Model.swap(TDir);
++  }
++
++  // Replace '%' with random chars. From here on, DO NOT modify model. It may be
++  // needed if the randomly chosen path already exists.
++  SmallString<128> RandomPath;
++  RandomPath.reserve(Model.size() + 1);
++  ::srand(::time(NULL));
++
++retry_random_path:
++  // This is opened here instead of above to make it easier to track when to
++  // close it. Collisions should be rare enough for the possible extra syscalls
++  // not to matter.
++  FILE *RandomSource = ::fopen("/dev/urandom", "r");
++  RandomPath.set_size(0);
++  for (SmallVectorImpl<char>::const_iterator i = Model.begin(),
++                                             e = Model.end(); i != e; ++i) {
++    if (*i == '%') {
++      char val = 0;
++      if (RandomSource)
++        val = fgetc(RandomSource);
++      else
++        val = ::rand();
++      RandomPath.push_back("0123456789abcdef"[val & 15]);
++    } else
++      RandomPath.push_back(*i);
++  }
++
++  if (RandomSource)
++    ::fclose(RandomSource);
++
++  // Try to open + create the file.
++rety_open_create:
++  int RandomFD = ::open(RandomPath.c_str(), O_RDWR | O_CREAT | O_EXCL, 0600);
++  if (RandomFD == -1) {
++    // If the file existed, try again, otherwise, error.
++    if (errno == errc::file_exists)
++      goto retry_random_path;
++    // The path prefix doesn't exist.
++    if (errno == errc::no_such_file_or_directory) {
++      StringRef p(RandomPath.begin(), RandomPath.size());
++      SmallString<64> dir_to_create;
++      for (path::const_iterator i = path::begin(p),
++                                e = --path::end(p); i != e; ++i) {
++        path::append(dir_to_create, *i);
++        bool Exists;
++        if (error_code ec = exists(Twine(dir_to_create), Exists)) return ec;
++        if (!Exists) {
++          // Don't try to create network paths.
++          if (i->size() > 2 && (*i)[0] == '/' &&
++                               (*i)[1] == '/' &&
++                               (*i)[2] != '/')
++            return make_error_code(errc::no_such_file_or_directory);
++          if (::mkdir(dir_to_create.c_str(), 0700) == -1)
++            return error_code(errno, system_category());
++        }
++      }
++      goto rety_open_create;
++    }
++    return error_code(errno, system_category());
++  }
++
++   // Make the path absolute.
++  char real_path_buff[PATH_MAX + 1];
++//  if (realpath(RandomPath.c_str(), real_path_buff) == NULL) {
++//    int error = errno;
++//    ::close(RandomFD);
++//    ::unlink(RandomPath.c_str());
++//    return error_code(error, system_category());
++// }
++asm("int3");
++
++  result_path.clear();
++  StringRef d(real_path_buff);
++  result_path.append(d.begin(), d.end());
++
++  result_fd = RandomFD;
++  return success;
++}
++
++error_code directory_iterator_construct(directory_iterator &it, StringRef path){
++  SmallString<128> path_null(path);
++  DIR *directory = ::opendir(path_null.c_str());
++  if (directory == 0)
++    return error_code(errno, system_category());
++
++  it.IterationHandle = reinterpret_cast<intptr_t>(directory);
++  // Add something for replace_filename to replace.
++  path::append(path_null, ".");
++  it.CurrentEntry = directory_entry(path_null.str());
++  return directory_iterator_increment(it);
++}
++
++error_code directory_iterator_destruct(directory_iterator& it) {
++  if (it.IterationHandle)
++    ::closedir(reinterpret_cast<DIR *>(it.IterationHandle));
++  it.IterationHandle = 0;
++  it.CurrentEntry = directory_entry();
++  return success;
++}
++
++error_code directory_iterator_increment(directory_iterator& it) {
++  errno = 0;
++  dirent *cur_dir = ::readdir(reinterpret_cast<DIR *>(it.IterationHandle));
++  if (cur_dir == 0 && errno != 0) {
++    return error_code(errno, system_category());
++  } else if (cur_dir != 0) {
++    StringRef name(cur_dir->d_name, NAMLEN(cur_dir));
++    if ((name.size() == 1 && name[0] == '.') ||
++        (name.size() == 2 && name[0] == '.' && name[1] == '.'))
++      return directory_iterator_increment(it);
++    it.CurrentEntry.replace_filename(name);
++  } else
++    return directory_iterator_destruct(it);
++
++  return success;
++}
++
++error_code get_magic(const Twine &path, uint32_t len,
++                     SmallVectorImpl<char> &result) {
++  SmallString<128> PathStorage;
++  StringRef Path = path.toNullTerminatedStringRef(PathStorage);
++  result.set_size(0);
++
++  // Open path.
++  std::FILE *file = std::fopen(Path.data(), "rb");
++  if (file == 0)
++    return error_code(errno, system_category());
++
++  // Reserve storage.
++  result.reserve(len);
++
++  // Read magic!
++  size_t size = std::fread(result.data(), 1, len, file);
++  if (std::ferror(file) != 0) {
++    std::fclose(file);
++    return error_code(errno, system_category());
++  } else if (size != result.size()) {
++    if (std::feof(file) != 0) {
++      std::fclose(file);
++      result.set_size(size);
++      return make_error_code(errc::value_too_large);
++    }
++  }
++  std::fclose(file);
++  result.set_size(len);
++  return success;
++}
++
++} // end namespace fs
++} // end namespace sys
++} // end namespace llvm
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/AROS/Process.inc llvm-2.9-aros/lib/Support/AROS/Process.inc
+--- llvm-2.9/lib/Support/AROS/Process.inc	1970-01-01 01:00:00.000000000 +0100
++++ llvm-2.9-aros/lib/Support/AROS/Process.inc	2013-12-15 23:09:17.985736351 +0100
+@@ -0,0 +1,284 @@
++//===- Unix/Process.cpp - Unix Process Implementation --------- -*- C++ -*-===//
++//
++//                     The LLVM Compiler Infrastructure
++//
++// This file is distributed under the University of Illinois Open Source
++// License. See LICENSE.TXT for details.
++//
++//===----------------------------------------------------------------------===//
++//
++// This file provides the generic Unix implementation of the Process class.
++//
++//===----------------------------------------------------------------------===//
++
++#include "Unix.h"
++#ifdef HAVE_SYS_TIME_H
++#include <sys/time.h>
++#endif
++#ifdef HAVE_SYS_RESOURCE_H
++#include <sys/resource.h>
++#endif
++// DragonFly BSD has deprecated <malloc.h> for <stdlib.h> instead,
++//  Unix.h includes this for us already.
++#if defined(HAVE_MALLOC_H) && !defined(__DragonFly__)
++#include <malloc.h>
++#endif
++#ifdef HAVE_MALLOC_MALLOC_H
++#include <malloc/malloc.h>
++#endif
++#ifdef HAVE_SYS_IOCTL_H
++#  include <sys/ioctl.h>
++#endif
++#ifdef HAVE_TERMIOS_H
++#  include <termios.h>
++#endif
++
++//===----------------------------------------------------------------------===//
++//=== WARNING: Implementation here must contain only generic UNIX code that
++//===          is guaranteed to work on *all* UNIX variants.
++//===----------------------------------------------------------------------===//
++
++using namespace llvm;
++using namespace sys;
++
++unsigned
++Process::GetPageSize()
++{
++    const int page_size = 0x1000;
++    return static_cast<unsigned>(page_size);
++}
++
++size_t Process::GetMallocUsage() {
++#if defined(HAVE_MALLINFO)
++  struct mallinfo mi;
++  mi = ::mallinfo();
++  return mi.uordblks;
++#elif defined(HAVE_MALLOC_ZONE_STATISTICS) && defined(HAVE_MALLOC_MALLOC_H)
++  malloc_statistics_t Stats;
++  malloc_zone_statistics(malloc_default_zone(), &Stats);
++  return Stats.size_in_use;   // darwin
++#elif defined(HAVE_SBRK)
++  // Note this is only an approximation and more closely resembles
++  // the value returned by mallinfo in the arena field.
++  static char *StartOfMemory = reinterpret_cast<char*>(::sbrk(0));
++  char *EndOfMemory = (char*)sbrk(0);
++  if (EndOfMemory != ((char*)-1) && StartOfMemory != ((char*)-1))
++    return EndOfMemory - StartOfMemory;
++  else
++    return 0;
++#else
++#warning Cannot get malloc info on this platform
++  return 0;
++#endif
++}
++
++size_t
++Process::GetTotalMemoryUsage()
++{
++#if defined(HAVE_MALLINFO)
++  struct mallinfo mi = ::mallinfo();
++  return mi.uordblks + mi.hblkhd;
++#elif defined(HAVE_MALLOC_ZONE_STATISTICS) && defined(HAVE_MALLOC_MALLOC_H)
++  malloc_statistics_t Stats;
++  malloc_zone_statistics(malloc_default_zone(), &Stats);
++  return Stats.size_allocated;   // darwin
++#elif defined(HAVE_GETRUSAGE) && !defined(__HAIKU__)
++  struct rusage usage;
++  ::getrusage(RUSAGE_SELF, &usage);
++  return usage.ru_maxrss;
++#else
++#warning Cannot get total memory size on this platform
++  return 0;
++#endif
++}
++
++void
++Process::GetTimeUsage(TimeValue& elapsed, TimeValue& user_time,
++                      TimeValue& sys_time)
++{
++  elapsed = TimeValue::now();
++#if defined(HAVE_GETRUSAGE)
++  struct rusage usage;
++  ::getrusage(RUSAGE_SELF, &usage);
++  user_time = TimeValue(
++    static_cast<TimeValue::SecondsType>( usage.ru_utime.tv_sec ),
++    static_cast<TimeValue::NanoSecondsType>( usage.ru_utime.tv_usec *
++      TimeValue::NANOSECONDS_PER_MICROSECOND ) );
++  sys_time = TimeValue(
++    static_cast<TimeValue::SecondsType>( usage.ru_stime.tv_sec ),
++    static_cast<TimeValue::NanoSecondsType>( usage.ru_stime.tv_usec *
++      TimeValue::NANOSECONDS_PER_MICROSECOND ) );
++#else
++#warning Cannot get usage times on this platform
++  user_time.seconds(0);
++  user_time.microseconds(0);
++  sys_time.seconds(0);
++  sys_time.microseconds(0);
++#endif
++}
++
++int Process::GetCurrentUserId() {
++  return getuid();
++}
++
++int Process::GetCurrentGroupId() {
++  return getgid();
++}
++
++#ifdef HAVE_MACH_MACH_H
++#include <mach/mach.h>
++#endif
++
++// Some LLVM programs such as bugpoint produce core files as a normal part of
++// their operation. To prevent the disk from filling up, this function
++// does what's necessary to prevent their generation.
++void Process::PreventCoreFiles() {
++#if HAVE_SETRLIMIT
++  struct rlimit rlim;
++  rlim.rlim_cur = rlim.rlim_max = 0;
++  setrlimit(RLIMIT_CORE, &rlim);
++#endif
++
++#ifdef HAVE_MACH_MACH_H
++  // Disable crash reporting on Mac OS X 10.0-10.4
++
++  // get information about the original set of exception ports for the task
++  mach_msg_type_number_t Count = 0;
++  exception_mask_t OriginalMasks[EXC_TYPES_COUNT];
++  exception_port_t OriginalPorts[EXC_TYPES_COUNT];
++  exception_behavior_t OriginalBehaviors[EXC_TYPES_COUNT];
++  thread_state_flavor_t OriginalFlavors[EXC_TYPES_COUNT];
++  kern_return_t err =
++    task_get_exception_ports(mach_task_self(), EXC_MASK_ALL, OriginalMasks,
++                             &Count, OriginalPorts, OriginalBehaviors,
++                             OriginalFlavors);
++  if (err == KERN_SUCCESS) {
++    // replace each with MACH_PORT_NULL.
++    for (unsigned i = 0; i != Count; ++i)
++      task_set_exception_ports(mach_task_self(), OriginalMasks[i],
++                               MACH_PORT_NULL, OriginalBehaviors[i],
++                               OriginalFlavors[i]);
++  }
++
++  // Disable crash reporting on Mac OS X 10.5
++  signal(SIGABRT, _exit);
++  signal(SIGILL,  _exit);
++  signal(SIGFPE,  _exit);
++  signal(SIGSEGV, _exit);
++  signal(SIGBUS,  _exit);
++#endif
++}
++
++bool Process::StandardInIsUserInput() {
++  return FileDescriptorIsDisplayed(STDIN_FILENO);
++}
++
++bool Process::StandardOutIsDisplayed() {
++  return FileDescriptorIsDisplayed(STDOUT_FILENO);
++}
++
++bool Process::StandardErrIsDisplayed() {
++  return FileDescriptorIsDisplayed(STDERR_FILENO);
++}
++
++bool Process::FileDescriptorIsDisplayed(int fd) {
++#if HAVE_ISATTY
++  return isatty(fd);
++#else
++  // If we don't have isatty, just return false.
++  return false;
++#endif
++}
++
++static unsigned getColumns(int FileID) {
++  // If COLUMNS is defined in the environment, wrap to that many columns.
++  if (const char *ColumnsStr = std::getenv("COLUMNS")) {
++    int Columns = std::atoi(ColumnsStr);
++    if (Columns > 0)
++      return Columns;
++  }
++
++  unsigned Columns = 0;
++
++#if defined(HAVE_SYS_IOCTL_H) && defined(HAVE_TERMIOS_H)
++  // Try to determine the width of the terminal.
++//  struct winsize ws;
++//  if (ioctl(FileID, TIOCGWINSZ, &ws) == 0)
++//    Columns = ws.ws_col;
++#endif
++asm("int3");
++  return Columns;
++}
++
++unsigned Process::StandardOutColumns() {
++  if (!StandardOutIsDisplayed())
++    return 0;
++
++  return getColumns(1);
++}
++
++unsigned Process::StandardErrColumns() {
++  if (!StandardErrIsDisplayed())
++    return 0;
++
++  return getColumns(2);
++}
++
++static bool terminalHasColors() {
++  if (const char *term = std::getenv("TERM")) {
++    // Most modern terminals support ANSI escape sequences for colors.
++    // We could check terminfo, or have a list of known terms that support
++    // colors, but that would be overkill.
++    // The user can always ask for no colors by setting TERM to dumb, or
++    // using a commandline flag.
++    return strcmp(term, "dumb") != 0;
++  }
++  return false;
++}
++
++bool Process::StandardOutHasColors() {
++  if (!StandardOutIsDisplayed())
++    return false;
++  return terminalHasColors();
++}
++
++bool Process::StandardErrHasColors() {
++  if (!StandardErrIsDisplayed())
++    return false;
++  return terminalHasColors();
++}
++
++bool Process::ColorNeedsFlush() {
++  // No, we use ANSI escape sequences.
++  return false;
++}
++
++#define COLOR(FGBG, CODE, BOLD) "\033[0;" BOLD FGBG CODE "m"
++
++#define ALLCOLORS(FGBG,BOLD) {\
++    COLOR(FGBG, "0", BOLD),\
++    COLOR(FGBG, "1", BOLD),\
++    COLOR(FGBG, "2", BOLD),\
++    COLOR(FGBG, "3", BOLD),\
++    COLOR(FGBG, "4", BOLD),\
++    COLOR(FGBG, "5", BOLD),\
++    COLOR(FGBG, "6", BOLD),\
++    COLOR(FGBG, "7", BOLD)\
++  }
++
++static const char colorcodes[2][2][8][10] = {
++ { ALLCOLORS("3",""), ALLCOLORS("3","1;") },
++ { ALLCOLORS("4",""), ALLCOLORS("4","1;") }
++};
++
++const char *Process::OutputColor(char code, bool bold, bool bg) {
++  return colorcodes[bg?1:0][bold?1:0][code&7];
++}
++
++const char *Process::OutputBold(bool bg) {
++  return "\033[1m";
++}
++
++const char *Process::ResetColor() {
++  return "\033[0m";
++}
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/AROS/Program.inc llvm-2.9-aros/lib/Support/AROS/Program.inc
+--- llvm-2.9/lib/Support/AROS/Program.inc	1970-01-01 01:00:00.000000000 +0100
++++ llvm-2.9-aros/lib/Support/AROS/Program.inc	2013-12-14 19:25:54.283767427 +0100
+@@ -0,0 +1,430 @@
++//===- llvm/Support/Unix/Program.cpp -----------------------------*- C++ -*-===//
++//
++//                     The LLVM Compiler Infrastructure
++//
++// This file is distributed under the University of Illinois Open Source
++// License. See LICENSE.TXT for details.
++//
++//===----------------------------------------------------------------------===//
++//
++// This file implements the Unix specific portion of the Program class.
++//
++//===----------------------------------------------------------------------===//
++
++//===----------------------------------------------------------------------===//
++//=== WARNING: Implementation here must contain only generic UNIX code that
++//===          is guaranteed to work on *all* UNIX variants.
++//===----------------------------------------------------------------------===//
++
++#include <llvm/Config/config.h>
++#include "llvm/Support/FileSystem.h"
++#include "Unix.h"
++#if HAVE_SYS_STAT_H
++#include <sys/stat.h>
++#endif
++#if HAVE_SYS_RESOURCE_H
++#include <sys/resource.h>
++#endif
++#if HAVE_SIGNAL_H
++#include <signal.h>
++#endif
++#if HAVE_FCNTL_H
++#include <fcntl.h>
++#endif
++#ifdef HAVE_POSIX_SPAWN
++#include <spawn.h>
++#if !defined(__APPLE__)
++  extern char **environ;
++#else
++#include <crt_externs.h> // _NSGetEnviron
++#endif
++#endif
++
++namespace llvm {
++using namespace sys;
++
++Program::Program() : Data_(0) {}
++
++Program::~Program() {}
++
++unsigned Program::GetPid() const {
++  uint64_t pid = reinterpret_cast<uint64_t>(Data_);
++  return static_cast<unsigned>(pid);
++}
++
++// This function just uses the PATH environment variable to find the program.
++Path
++Program::FindProgramByName(const std::string& progName) {
++
++  // Check some degenerate cases
++  if (progName.length() == 0) // no program
++    return Path();
++  Path temp;
++  if (!temp.set(progName)) // invalid name
++    return Path();
++  // Use the given path verbatim if it contains any slashes; this matches
++  // the behavior of sh(1) and friends.
++  if (progName.find('/') != std::string::npos)
++    return temp;
++
++  // At this point, the file name is valid and does not contain slashes. Search
++  // for it through the directories specified in the PATH environment variable.
++
++  // Get the path. If its empty, we can't do anything to find it.
++  const char *PathStr = getenv("PATH");
++  if (PathStr == 0)
++    return Path();
++
++  // Now we have a colon separated list of directories to search; try them.
++  size_t PathLen = strlen(PathStr);
++  while (PathLen) {
++    // Find the first colon...
++    const char *Colon = std::find(PathStr, PathStr+PathLen, ':');
++
++    // Check to see if this first directory contains the executable...
++    Path FilePath;
++    if (FilePath.set(std::string(PathStr,Colon))) {
++      FilePath.appendComponent(progName);
++      if (FilePath.canExecute())
++        return FilePath;                    // Found the executable!
++    }
++
++    // Nope it wasn't in this directory, check the next path in the list!
++    PathLen -= Colon-PathStr;
++    PathStr = Colon;
++
++    // Advance past duplicate colons
++    while (*PathStr == ':') {
++      PathStr++;
++      PathLen--;
++    }
++  }
++  return Path();
++}
++
++static bool RedirectIO(const Path *Path, int FD, std::string* ErrMsg) {
++  if (Path == 0) // Noop
++    return false;
++  const char *File;
++  if (Path->isEmpty())
++    // Redirect empty paths to /dev/null
++    File = "/dev/null";
++  else
++    File = Path->c_str();
++
++  // Open the file
++  int InFD = open(File, FD == 0 ? O_RDONLY : O_WRONLY|O_CREAT, 0666);
++  if (InFD == -1) {
++    MakeErrMsg(ErrMsg, "Cannot open file '" + std::string(File) + "' for "
++              + (FD == 0 ? "input" : "output"));
++    return true;
++  }
++
++  // Install it as the requested FD
++  if (dup2(InFD, FD) == -1) {
++    MakeErrMsg(ErrMsg, "Cannot dup2");
++    close(InFD);
++    return true;
++  }
++  close(InFD);      // Close the original FD
++  return false;
++}
++
++#ifdef HAVE_POSIX_SPAWN
++static bool RedirectIO_PS(const Path *Path, int FD, std::string *ErrMsg,
++                          posix_spawn_file_actions_t &FileActions) {
++  if (Path == 0) // Noop
++    return false;
++  const char *File;
++  if (Path->isEmpty())
++    // Redirect empty paths to /dev/null
++    File = "/dev/null";
++  else
++    File = Path->c_str();
++
++  if (int Err = posix_spawn_file_actions_addopen(&FileActions, FD,
++                            File, FD == 0 ? O_RDONLY : O_WRONLY|O_CREAT, 0666))
++    return MakeErrMsg(ErrMsg, "Cannot dup2", Err);
++  return false;
++}
++#endif
++
++static void TimeOutHandler(int Sig) {
++}
++
++static void SetMemoryLimits (unsigned size)
++{
++#if HAVE_SYS_RESOURCE_H && HAVE_GETRLIMIT && HAVE_SETRLIMIT
++  struct rlimit r;
++  __typeof__ (r.rlim_cur) limit = (__typeof__ (r.rlim_cur)) (size) * 1048576;
++
++  // Heap size
++  getrlimit (RLIMIT_DATA, &r);
++  r.rlim_cur = limit;
++  setrlimit (RLIMIT_DATA, &r);
++#ifdef RLIMIT_RSS
++  // Resident set size.
++  getrlimit (RLIMIT_RSS, &r);
++  r.rlim_cur = limit;
++  setrlimit (RLIMIT_RSS, &r);
++#endif
++#ifdef RLIMIT_AS  // e.g. NetBSD doesn't have it.
++  // Virtual memory.
++  getrlimit (RLIMIT_AS, &r);
++  r.rlim_cur = limit;
++  setrlimit (RLIMIT_AS, &r);
++#endif
++#endif
++}
++
++bool
++Program::Execute(const Path &path, const char **args, const char **envp,
++                 const Path **redirects, unsigned memoryLimit,
++                  std::string *ErrMsg) {
++  // If this OS has posix_spawn and there is no memory limit being implied, use
++  // posix_spawn.  It is more efficient than fork/exec.
++#ifdef HAVE_POSIX_SPAWN
++  if (memoryLimit == 0) {
++    posix_spawn_file_actions_t FileActions;
++    posix_spawn_file_actions_init(&FileActions);
++
++    if (redirects) {
++      // Redirect stdin/stdout.
++      if (RedirectIO_PS(redirects[0], 0, ErrMsg, FileActions) ||
++          RedirectIO_PS(redirects[1], 1, ErrMsg, FileActions))
++        return false;
++      if (redirects[1] == 0 || redirects[2] == 0 ||
++          *redirects[1] != *redirects[2]) {
++        // Just redirect stderr
++        if (RedirectIO_PS(redirects[2], 2, ErrMsg, FileActions)) return false;
++      } else {
++        // If stdout and stderr should go to the same place, redirect stderr
++        // to the FD already open for stdout.
++        if (int Err = posix_spawn_file_actions_adddup2(&FileActions, 1, 2))
++          return !MakeErrMsg(ErrMsg, "Can't redirect stderr to stdout", Err);
++      }
++    }
++
++    if (!envp)
++#if !defined(__APPLE__)
++      envp = const_cast<const char **>(environ);
++#else
++      // environ is missing in dylibs.
++      envp = const_cast<const char **>(*_NSGetEnviron());
++#endif
++
++    // Explicitly initialized to prevent what appears to be a valgrind false
++    // positive.
++    pid_t PID = 0;
++    int Err = posix_spawn(&PID, path.c_str(), &FileActions, /*attrp*/0,
++                          const_cast<char **>(args), const_cast<char **>(envp));
++
++    posix_spawn_file_actions_destroy(&FileActions);
++
++    if (Err)
++     return !MakeErrMsg(ErrMsg, "posix_spawn failed", Err);
++
++    Data_ = reinterpret_cast<void*>(PID);
++    return true;
++  }
++#endif
++
++  // Create a child process.
++//  int child = fork();
++asm("int3");
++int child = 0;
++  switch (child) {
++    // An error occured:  Return to the caller.
++    case -1:
++      MakeErrMsg(ErrMsg, "Couldn't fork");
++      return false;
++
++    // Child process: Execute the program.
++    case 0: {
++      // Redirect file descriptors...
++      if (redirects) {
++        // Redirect stdin
++        if (RedirectIO(redirects[0], 0, ErrMsg)) { return false; }
++        // Redirect stdout
++        if (RedirectIO(redirects[1], 1, ErrMsg)) { return false; }
++        if (redirects[1] && redirects[2] &&
++            *(redirects[1]) == *(redirects[2])) {
++          // If stdout and stderr should go to the same place, redirect stderr
++          // to the FD already open for stdout.
++          if (-1 == dup2(1,2)) {
++            MakeErrMsg(ErrMsg, "Can't redirect stderr to stdout");
++            return false;
++          }
++        } else {
++          // Just redirect stderr
++          if (RedirectIO(redirects[2], 2, ErrMsg)) { return false; }
++        }
++      }
++
++      // Set memory limits
++      if (memoryLimit!=0) {
++        SetMemoryLimits(memoryLimit);
++      }
++
++      // Execute!
++      if (envp != 0)
++        execve(path.c_str(),
++               const_cast<char **>(args),
++               const_cast<char **>(envp));
++      else
++        execv(path.c_str(),
++              const_cast<char **>(args));
++      // If the execve() failed, we should exit. Follow Unix protocol and
++      // return 127 if the executable was not found, and 126 otherwise.
++      // Use _exit rather than exit so that atexit functions and static
++      // object destructors cloned from the parent process aren't
++      // redundantly run, and so that any data buffered in stdio buffers
++      // cloned from the parent aren't redundantly written out.
++      _exit(errno == ENOENT ? 127 : 126);
++    }
++
++    // Parent process: Break out of the switch to do our processing.
++    default:
++      break;
++  }
++
++  Data_ = reinterpret_cast<void*>(child);
++
++  return true;
++}
++
++int
++Program::Wait(const sys::Path &path,
++              unsigned secondsToWait,
++              std::string* ErrMsg)
++{
++#ifdef HAVE_SYS_WAIT_H
++  struct sigaction Act, Old;
++
++  if (Data_ == 0) {
++    MakeErrMsg(ErrMsg, "Process not started!");
++    return -1;
++  }
++
++  // Install a timeout handler.  The handler itself does nothing, but the simple
++  // fact of having a handler at all causes the wait below to return with EINTR,
++  // unlike if we used SIG_IGN.
++  if (secondsToWait) {
++    memset(&Act, 0, sizeof(Act));
++    Act.sa_handler = TimeOutHandler;
++    sigemptyset(&Act.sa_mask);
++    sigaction(SIGALRM, &Act, &Old);
++//    alarm(secondsToWait);
++asm("int3");
++  }
++
++  // Parent process: Wait for the child process to terminate.
++  int status;
++  uint64_t pid = reinterpret_cast<uint64_t>(Data_);
++  pid_t child = static_cast<pid_t>(pid);
++  while (waitpid(pid, &status, 0) != child)
++    if (secondsToWait && errno == EINTR) {
++      // Kill the child.
++      kill(child, SIGKILL);
++
++      // Turn off the alarm and restore the signal handler
++//      alarm(0);
++asm("int3");
++      sigaction(SIGALRM, &Old, 0);
++
++      // Wait for child to die
++      if (wait(&status) != child)
++        MakeErrMsg(ErrMsg, "Child timed out but wouldn't die");
++      else
++        MakeErrMsg(ErrMsg, "Child timed out", 0);
++
++      return -1;   // Timeout detected
++    } else if (errno != EINTR) {
++      MakeErrMsg(ErrMsg, "Error waiting for child process");
++      return -1;
++    }
++
++  // We exited normally without timeout, so turn off the timer.
++  if (secondsToWait) {
++//    alarm(0);
++asm("int3");
++    sigaction(SIGALRM, &Old, 0);
++  }
++
++  // Return the proper exit status. Detect error conditions
++  // so we can return -1 for them and set ErrMsg informatively.
++  int result = 0;
++  if (WIFEXITED(status)) {
++    result = WEXITSTATUS(status);
++#ifdef HAVE_POSIX_SPAWN
++    // The posix_spawn child process returns 127 on any kind of error.
++    // Following the POSIX convention for command-line tools (which posix_spawn
++    // itself apparently does not), check to see if the failure was due to some
++    // reason other than the file not existing, and return 126 in this case.
++    bool Exists;
++    if (result == 127 && !llvm::sys::fs::exists(path.str(), Exists) && Exists)
++      result = 126;
++#endif
++    if (result == 127) {
++      if (ErrMsg)
++        *ErrMsg = llvm::sys::StrError(ENOENT);
++      return -1;
++    }
++    if (result == 126) {
++      if (ErrMsg)
++        *ErrMsg = "Program could not be executed";
++      return -1;
++    }
++  } else if (WIFSIGNALED(status)) {
++    if (ErrMsg) {
++//      *ErrMsg = strsignal(WTERMSIG(status));
++asm("int3");
++#ifdef WCOREDUMP
++      if (WCOREDUMP(status))
++        *ErrMsg += " (core dumped)";
++#endif
++    }
++    return -1;
++  }
++  return result;
++#else
++  if (ErrMsg)
++    *ErrMsg = "Program::Wait is not implemented on this platform yet!";
++  return -1;
++#endif
++}
++
++bool
++Program::Kill(std::string* ErrMsg) {
++  if (Data_ == 0) {
++    MakeErrMsg(ErrMsg, "Process not started!");
++    return true;
++  }
++
++  uint64_t pid64 = reinterpret_cast<uint64_t>(Data_);
++  pid_t pid = static_cast<pid_t>(pid64);
++
++  if (kill(pid, SIGKILL) != 0) {
++    MakeErrMsg(ErrMsg, "The process couldn't be killed!");
++    return true;
++  }
++
++  return false;
++}
++
++bool Program::ChangeStdinToBinary(){
++  // Do nothing, as Unix doesn't differentiate between text and binary.
++  return false;
++}
++
++bool Program::ChangeStdoutToBinary(){
++  // Do nothing, as Unix doesn't differentiate between text and binary.
++  return false;
++}
++
++bool Program::ChangeStderrToBinary(){
++  // Do nothing, as Unix doesn't differentiate between text and binary.
++  return false;
++}
++
++}
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/AROS/Signals.inc llvm-2.9-aros/lib/Support/AROS/Signals.inc
+--- llvm-2.9/lib/Support/AROS/Signals.inc	1970-01-01 01:00:00.000000000 +0100
++++ llvm-2.9-aros/lib/Support/AROS/Signals.inc	2010-11-29 18:16:10.000000000 +0100
+@@ -0,0 +1,303 @@
++//===- Signals.cpp - Generic Unix Signals Implementation -----*- C++ -*-===//
++//
++//                     The LLVM Compiler Infrastructure
++//
++// This file is distributed under the University of Illinois Open Source
++// License. See LICENSE.TXT for details.
++//
++//===----------------------------------------------------------------------===//
++//
++// This file defines some helpful functions for dealing with the possibility of
++// Unix signals occuring while your program is running.
++//
++//===----------------------------------------------------------------------===//
++
++#include "Unix.h"
++#include "llvm/ADT/STLExtras.h"
++#include "llvm/Support/Mutex.h"
++#include <vector>
++#include <algorithm>
++#if HAVE_EXECINFO_H
++# include <execinfo.h>         // For backtrace().
++#endif
++#if HAVE_SIGNAL_H
++#include <signal.h>
++#endif
++#if HAVE_SYS_STAT_H
++#include <sys/stat.h>
++#endif
++#if HAVE_DLFCN_H && __GNUG__
++#include <dlfcn.h>
++#include <cxxabi.h>
++#endif
++using namespace llvm;
++
++static RETSIGTYPE SignalHandler(int Sig);  // defined below.
++
++static SmartMutex<true> SignalsMutex;
++
++/// InterruptFunction - The function to call if ctrl-c is pressed.
++static void (*InterruptFunction)() = 0;
++
++static std::vector<sys::Path> FilesToRemove;
++static std::vector<std::pair<void(*)(void*), void*> > CallBacksToRun;
++
++// IntSigs - Signals that may interrupt the program at any time.
++static const int IntSigs[] = {
++  SIGHUP, SIGINT, SIGQUIT, SIGPIPE, SIGTERM, SIGUSR1, SIGUSR2
++};
++static const int *const IntSigsEnd =
++  IntSigs + sizeof(IntSigs) / sizeof(IntSigs[0]);
++
++// KillSigs - Signals that are synchronous with the program that will cause it
++// to die.
++static const int KillSigs[] = {
++  SIGILL, SIGTRAP, SIGABRT, SIGFPE, SIGBUS, SIGSEGV
++#ifdef SIGSYS
++  , SIGSYS
++#endif
++#ifdef SIGXCPU
++  , SIGXCPU
++#endif
++#ifdef SIGXFSZ
++  , SIGXFSZ
++#endif
++#ifdef SIGEMT
++  , SIGEMT
++#endif
++};
++static const int *const KillSigsEnd =
++  KillSigs + sizeof(KillSigs) / sizeof(KillSigs[0]);
++
++static unsigned NumRegisteredSignals = 0;
++static struct {
++  struct sigaction SA;
++  int SigNo;
++} RegisteredSignalInfo[(sizeof(IntSigs)+sizeof(KillSigs))/sizeof(KillSigs[0])];
++
++
++static void RegisterHandler(int Signal) {
++  assert(NumRegisteredSignals <
++         sizeof(RegisteredSignalInfo)/sizeof(RegisteredSignalInfo[0]) &&
++         "Out of space for signal handlers!");
++
++  struct sigaction NewHandler;
++
++  NewHandler.sa_handler = SignalHandler;
++  NewHandler.sa_flags = SA_NODEFER|SA_RESETHAND;
++  sigemptyset(&NewHandler.sa_mask);
++
++  // Install the new handler, save the old one in RegisteredSignalInfo.
++  sigaction(Signal, &NewHandler,
++            &RegisteredSignalInfo[NumRegisteredSignals].SA);
++  RegisteredSignalInfo[NumRegisteredSignals].SigNo = Signal;
++  ++NumRegisteredSignals;
++}
++
++static void RegisterHandlers() {
++  // If the handlers are already registered, we're done.
++  if (NumRegisteredSignals != 0) return;
++
++  std::for_each(IntSigs, IntSigsEnd, RegisterHandler);
++  std::for_each(KillSigs, KillSigsEnd, RegisterHandler);
++}
++
++static void UnregisterHandlers() {
++  // Restore all of the signal handlers to how they were before we showed up.
++  for (unsigned i = 0, e = NumRegisteredSignals; i != e; ++i)
++    sigaction(RegisteredSignalInfo[i].SigNo,
++              &RegisteredSignalInfo[i].SA, 0);
++  NumRegisteredSignals = 0;
++}
++
++
++/// RemoveFilesToRemove - Process the FilesToRemove list. This function
++/// should be called with the SignalsMutex lock held.
++static void RemoveFilesToRemove() {
++  while (!FilesToRemove.empty()) {
++    FilesToRemove.back().eraseFromDisk(true);
++    FilesToRemove.pop_back();
++  }
++}
++
++// SignalHandler - The signal handler that runs.
++static RETSIGTYPE SignalHandler(int Sig) {
++  // Restore the signal behavior to default, so that the program actually
++  // crashes when we return and the signal reissues.  This also ensures that if
++  // we crash in our signal handler that the program will terminate immediately
++  // instead of recursing in the signal handler.
++  UnregisterHandlers();
++
++  // Unmask all potentially blocked kill signals.
++  sigset_t SigMask;
++  sigfillset(&SigMask);
++  sigprocmask(SIG_UNBLOCK, &SigMask, 0);
++
++  SignalsMutex.acquire();
++  RemoveFilesToRemove();
++
++  if (std::find(IntSigs, IntSigsEnd, Sig) != IntSigsEnd) {
++    if (InterruptFunction) {
++      void (*IF)() = InterruptFunction;
++      SignalsMutex.release();
++      InterruptFunction = 0;
++      IF();        // run the interrupt function.
++      return;
++    }
++
++    SignalsMutex.release();
++    raise(Sig);   // Execute the default handler.
++    return;
++  }
++
++  SignalsMutex.release();
++
++  // Otherwise if it is a fault (like SEGV) run any handler.
++  for (unsigned i = 0, e = CallBacksToRun.size(); i != e; ++i)
++    CallBacksToRun[i].first(CallBacksToRun[i].second);
++}
++
++void llvm::sys::RunInterruptHandlers() {
++  SignalsMutex.acquire();
++  RemoveFilesToRemove();
++  SignalsMutex.release();
++}
++
++void llvm::sys::SetInterruptFunction(void (*IF)()) {
++  SignalsMutex.acquire();
++  InterruptFunction = IF;
++  SignalsMutex.release();
++  RegisterHandlers();
++}
++
++// RemoveFileOnSignal - The public API
++bool llvm::sys::RemoveFileOnSignal(const sys::Path &Filename,
++                                   std::string* ErrMsg) {
++  SignalsMutex.acquire();
++  FilesToRemove.push_back(Filename);
++
++  SignalsMutex.release();
++
++  RegisterHandlers();
++  return false;
++}
++
++// DontRemoveFileOnSignal - The public API
++void llvm::sys::DontRemoveFileOnSignal(const sys::Path &Filename) {
++  SignalsMutex.acquire();
++  std::vector<sys::Path>::reverse_iterator I =
++    std::find(FilesToRemove.rbegin(), FilesToRemove.rend(), Filename);
++  if (I != FilesToRemove.rend())
++    FilesToRemove.erase(I.base()-1);
++  SignalsMutex.release();
++}
++
++/// AddSignalHandler - Add a function to be called when a signal is delivered
++/// to the process.  The handler can have a cookie passed to it to identify
++/// what instance of the handler it is.
++void llvm::sys::AddSignalHandler(void (*FnPtr)(void *), void *Cookie) {
++  CallBacksToRun.push_back(std::make_pair(FnPtr, Cookie));
++  RegisterHandlers();
++}
++
++
++// PrintStackTrace - In the case of a program crash or fault, print out a stack
++// trace so that the user has an indication of why and where we died.
++//
++// On glibc systems we have the 'backtrace' function, which works nicely, but
++// doesn't demangle symbols.
++static void PrintStackTrace(void *) {
++#ifdef HAVE_BACKTRACE
++  static void* StackTrace[256];
++  // Use backtrace() to output a backtrace on Linux systems with glibc.
++  int depth = backtrace(StackTrace,
++                        static_cast<int>(array_lengthof(StackTrace)));
++#if HAVE_DLFCN_H && __GNUG__
++  int width = 0;
++  for (int i = 0; i < depth; ++i) {
++    Dl_info dlinfo;
++    dladdr(StackTrace[i], &dlinfo);
++    const char* name = strrchr(dlinfo.dli_fname, '/');
++
++    int nwidth;
++    if (name == NULL) nwidth = strlen(dlinfo.dli_fname);
++    else              nwidth = strlen(name) - 1;
++
++    if (nwidth > width) width = nwidth;
++  }
++
++  for (int i = 0; i < depth; ++i) {
++    Dl_info dlinfo;
++    dladdr(StackTrace[i], &dlinfo);
++
++    fprintf(stderr, "%-2d", i);
++
++    const char* name = strrchr(dlinfo.dli_fname, '/');
++    if (name == NULL) fprintf(stderr, " %-*s", width, dlinfo.dli_fname);
++    else              fprintf(stderr, " %-*s", width, name+1);
++
++    fprintf(stderr, " %#0*lx",
++            (int)(sizeof(void*) * 2) + 2, (unsigned long)StackTrace[i]);
++
++    if (dlinfo.dli_sname != NULL) {
++      int res;
++      fputc(' ', stderr);
++      char* d = abi::__cxa_demangle(dlinfo.dli_sname, NULL, NULL, &res);
++      if (d == NULL) fputs(dlinfo.dli_sname, stderr);
++      else           fputs(d, stderr);
++      free(d);
++
++      fprintf(stderr, " + %tu",(char*)StackTrace[i]-(char*)dlinfo.dli_saddr);
++    }
++    fputc('\n', stderr);
++  }
++#else
++  backtrace_symbols_fd(StackTrace, depth, STDERR_FILENO);
++#endif
++#endif
++}
++
++/// PrintStackTraceOnErrorSignal - When an error signal (such as SIBABRT or
++/// SIGSEGV) is delivered to the process, print a stack trace and then exit.
++void llvm::sys::PrintStackTraceOnErrorSignal() {
++  AddSignalHandler(PrintStackTrace, 0);
++}
++
++
++/***/
++
++// On Darwin, raise sends a signal to the main thread instead of the current
++// thread. This has the unfortunate effect that assert() and abort() will end up
++// bypassing our crash recovery attempts. We work around this for anything in
++// the same linkage unit by just defining our own versions of the assert handler
++// and abort.
++
++#ifdef __APPLE__
++
++int raise(int sig) {
++  return pthread_kill(pthread_self(), sig);
++}
++
++void __assert_rtn(const char *func,
++                  const char *file,
++                  int line,
++                  const char *expr) {
++  if (func)
++    fprintf(stderr, "Assertion failed: (%s), function %s, file %s, line %d.\n",
++            expr, func, file, line);
++  else
++    fprintf(stderr, "Assertion failed: (%s), file %s, line %d.\n",
++            expr, file, line);
++  abort();
++}
++
++#include <signal.h>
++#include <pthread.h>
++
++void abort() {
++  raise(SIGABRT);
++  usleep(1000);
++  __builtin_trap();
++}
++
++#endif
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/AROS/system_error.inc llvm-2.9-aros/lib/Support/AROS/system_error.inc
+--- llvm-2.9/lib/Support/AROS/system_error.inc	1970-01-01 01:00:00.000000000 +0100
++++ llvm-2.9-aros/lib/Support/AROS/system_error.inc	2010-11-29 19:44:50.000000000 +0100
+@@ -0,0 +1,34 @@
++//===- llvm/Support/Unix/system_error.inc - Unix error_code ------*- C++ -*-===//
++//
++//                     The LLVM Compiler Infrastructure
++//
++// This file is distributed under the University of Illinois Open Source
++// License. See LICENSE.TXT for details.
++//
++//===----------------------------------------------------------------------===//
++//
++// This file provides the Unix specific implementation of the error_code
++// and error_condition classes.
++//
++//===----------------------------------------------------------------------===//
++
++//===----------------------------------------------------------------------===//
++//=== WARNING: Implementation here must contain only generic UNIX code that
++//===          is guaranteed to work on *all* UNIX variants.
++//===----------------------------------------------------------------------===//
++
++using namespace llvm;
++
++std::string
++_system_error_category::message(int ev) const {
++  return _do_message::message(ev);
++}
++
++error_condition
++_system_error_category::default_error_condition(int ev) const {
++#ifdef ELAST
++  if (ev > ELAST)
++    return error_condition(ev, system_category());
++#endif  // ELAST
++  return error_condition(ev, generic_category());
++}
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/AROS/TimeValue.inc llvm-2.9-aros/lib/Support/AROS/TimeValue.inc
+--- llvm-2.9/lib/Support/AROS/TimeValue.inc	1970-01-01 01:00:00.000000000 +0100
++++ llvm-2.9-aros/lib/Support/AROS/TimeValue.inc	2013-12-14 19:30:10.663759782 +0100
+@@ -0,0 +1,57 @@
++//===- Unix/TimeValue.cpp - Unix TimeValue Implementation -------*- C++ -*-===//
++//
++//                     The LLVM Compiler Infrastructure
++//
++// This file is distributed under the University of Illinois Open Source
++// License. See LICENSE.TXT for details.
++//
++//===----------------------------------------------------------------------===//
++//
++// This file implements the Unix specific portion of the TimeValue class.
++//
++//===----------------------------------------------------------------------===//
++
++//===----------------------------------------------------------------------===//
++//=== WARNING: Implementation here must contain only generic UNIX code that
++//===          is guaranteed to work on *all* UNIX variants.
++//===----------------------------------------------------------------------===//
++
++#include "Unix.h"
++
++namespace llvm {
++  using namespace sys;
++
++std::string TimeValue::str() const {
++  char buffer[32];
++
++  time_t ourTime = time_t(this->toEpochTime());
++#ifdef __hpux
++// note that the following line needs -D_REENTRANT on HP-UX to be picked up
++  asctime_r(localtime(&ourTime), buffer);
++#else
++//  ::asctime_r(::localtime(&ourTime), buffer);
++asm("int3");
++#endif
++
++  std::string result(buffer);
++  return result.substr(0,24);
++}
++
++TimeValue TimeValue::now() {
++  struct timeval the_time;
++  timerclear(&the_time);
++  if (0 != ::gettimeofday(&the_time,0)) {
++    // This is *really* unlikely to occur because the only gettimeofday
++    // errors concern the timezone parameter which we're passing in as 0.
++    // In the unlikely case it does happen, just return MinTime, no error
++    // message needed.
++    return MinTime;
++  }
++
++  return TimeValue(
++    static_cast<TimeValue::SecondsType>( the_time.tv_sec + PosixZeroTime.seconds_ ),
++    static_cast<TimeValue::NanoSecondsType>( the_time.tv_usec *
++      NANOSECONDS_PER_MICROSECOND ) );
++}
++
++}
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/AROS/Unix.h llvm-2.9-aros/lib/Support/AROS/Unix.h
+--- llvm-2.9/lib/Support/AROS/Unix.h	1970-01-01 01:00:00.000000000 +0100
++++ llvm-2.9-aros/lib/Support/AROS/Unix.h	2010-11-29 19:44:50.000000000 +0100
+@@ -0,0 +1,87 @@
++//===- llvm/Support/Unix/Unix.h - Common Unix Include File -------*- C++ -*-===//
++//
++//                     The LLVM Compiler Infrastructure
++//
++// This file is distributed under the University of Illinois Open Source
++// License. See LICENSE.TXT for details.
++//
++//===----------------------------------------------------------------------===//
++//
++// This file defines things specific to Unix implementations.
++//
++//===----------------------------------------------------------------------===//
++
++#ifndef LLVM_SYSTEM_UNIX_UNIX_H
++#define LLVM_SYSTEM_UNIX_UNIX_H
++
++//===----------------------------------------------------------------------===//
++//=== WARNING: Implementation here must contain only generic UNIX code that
++//===          is guaranteed to work on all UNIX variants.
++//===----------------------------------------------------------------------===//
++
++#include "llvm/Config/config.h"     // Get autoconf configuration settings
++#include "llvm/Support/Errno.h"
++#include <cstdlib>
++#include <cstdio>
++#include <cstring>
++#include <cerrno>
++#include <string>
++#include <algorithm>
++
++#ifdef HAVE_UNISTD_H
++#include <unistd.h>
++#endif
++
++#ifdef HAVE_SYS_TYPES_H
++#include <sys/types.h>
++#endif
++
++#ifdef HAVE_SYS_PARAM_H
++#include <sys/param.h>
++#endif
++
++#ifdef HAVE_ASSERT_H
++#include <assert.h>
++#endif
++
++#ifdef TIME_WITH_SYS_TIME
++# include <sys/time.h>
++# include <time.h>
++#else
++# ifdef HAVE_SYS_TIME_H
++#  include <sys/time.h>
++# else
++#  include <time.h>
++# endif
++#endif
++
++#ifdef HAVE_SYS_WAIT_H
++# include <sys/wait.h>
++#endif
++
++#ifndef WEXITSTATUS
++# define WEXITSTATUS(stat_val) ((unsigned)(stat_val) >> 8)
++#endif
++
++#ifndef WIFEXITED
++# define WIFEXITED(stat_val) (((stat_val) & 255) == 0)
++#endif
++
++/// This function builds an error message into \p ErrMsg using the \p prefix
++/// string and the Unix error number given by \p errnum. If errnum is -1, the
++/// default then the value of errno is used.
++/// @brief Make an error message
++///
++/// If the error number can be converted to a string, it will be
++/// separated from prefix by ": ".
++static inline bool MakeErrMsg(
++  std::string* ErrMsg, const std::string& prefix, int errnum = -1) {
++  if (!ErrMsg)
++    return true;
++  if (errnum == -1)
++    errnum = errno;
++  *ErrMsg = prefix + ": " + llvm::sys::StrError(errnum);
++  return true;
++}
++
++#endif
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/DynamicLibrary.cpp llvm-2.9-aros/lib/Support/DynamicLibrary.cpp
+--- llvm-2.9/lib/Support/DynamicLibrary.cpp	2010-12-07 08:56:20.000000000 +0100
++++ llvm-2.9-aros/lib/Support/DynamicLibrary.cpp	2013-12-15 22:53:31.489720104 +0100
+@@ -96,8 +96,9 @@
+ 
+ bool DynamicLibrary::LoadLibraryPermanently(const char *Filename,
+                                             std::string *ErrMsg) {
+-  if (ErrMsg) *ErrMsg = "dlopen() not supported on this platform";
+-  return true;
++//  if (ErrMsg) *ErrMsg = "dlopen() not supported on this platform";
++//  return true;
++    return false;
+ }
+ #endif
+ 
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/Host.cpp llvm-2.9-aros/lib/Support/Host.cpp
+--- llvm-2.9/lib/Support/Host.cpp	2010-11-29 19:16:10.000000000 +0100
++++ llvm-2.9-aros/lib/Support/Host.cpp	2013-12-14 19:38:11.995745437 +0100
+@@ -22,6 +22,9 @@
+ #ifdef LLVM_ON_WIN32
+ #include "Windows/Host.inc"
+ #endif
++#ifdef LLVM_ON_AROS
++#include "AROS/Host.inc"
++#endif
+ #ifdef _MSC_VER
+ #include <intrin.h>
+ #endif
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/Memory.cpp llvm-2.9-aros/lib/Support/Memory.cpp
+--- llvm-2.9/lib/Support/Memory.cpp	2010-11-29 19:16:10.000000000 +0100
++++ llvm-2.9-aros/lib/Support/Memory.cpp	2013-12-14 19:27:20.947764841 +0100
+@@ -27,6 +27,9 @@
+ #ifdef LLVM_ON_WIN32
+ #include "Windows/Memory.inc"
+ #endif
++#ifdef LLVM_ON_AROS
++#include "AROS/Memory.inc"
++#endif
+ 
+ extern "C" void sys_icache_invalidate(const void *Addr, size_t len);
+ 
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/Path.cpp llvm-2.9-aros/lib/Support/Path.cpp
+--- llvm-2.9/lib/Support/Path.cpp	2011-01-15 21:39:36.000000000 +0100
++++ llvm-2.9-aros/lib/Support/Path.cpp	2013-12-14 19:08:51.511797903 +0100
+@@ -281,3 +281,6 @@
+ #if defined(LLVM_ON_WIN32)
+ #include "Windows/Path.inc"
+ #endif
++#if defined(LLVM_ON_AROS)
++#include "AROS/Path.inc"
++#endif
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/PathV2.cpp llvm-2.9-aros/lib/Support/PathV2.cpp
+--- llvm-2.9/lib/Support/PathV2.cpp	2011-02-15 18:51:19.000000000 +0100
++++ llvm-2.9-aros/lib/Support/PathV2.cpp	2013-12-14 19:35:53.563749561 +0100
+@@ -772,3 +772,6 @@
+ #if defined(LLVM_ON_WIN32)
+ #include "Windows/PathV2.inc"
+ #endif
++#if defined(LLVM_ON_AROS)
++#include "AROS/PathV2.inc"
++#endif
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/Process.cpp llvm-2.9-aros/lib/Support/Process.cpp
+--- llvm-2.9/lib/Support/Process.cpp	2010-11-29 19:16:10.000000000 +0100
++++ llvm-2.9-aros/lib/Support/Process.cpp	2013-12-14 19:22:40.131773210 +0100
+@@ -31,3 +31,6 @@
+ #ifdef LLVM_ON_WIN32
+ #include "Windows/Process.inc"
+ #endif
++#ifdef LLVM_ON_AROS
++#include "AROS/Process.inc"
++#endif
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/Program.cpp llvm-2.9-aros/lib/Support/Program.cpp
+--- llvm-2.9/lib/Support/Program.cpp	2010-11-29 19:16:10.000000000 +0100
++++ llvm-2.9-aros/lib/Support/Program.cpp	2013-12-14 19:22:30.223773508 +0100
+@@ -54,3 +54,6 @@
+ #ifdef LLVM_ON_WIN32
+ #include "Windows/Program.inc"
+ #endif
++#ifdef LLVM_ON_AROS
++#include "AROS/Program.inc"
++#endif
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/Signals.cpp llvm-2.9-aros/lib/Support/Signals.cpp
+--- llvm-2.9/lib/Support/Signals.cpp	2010-11-29 19:16:10.000000000 +0100
++++ llvm-2.9-aros/lib/Support/Signals.cpp	2013-12-14 19:38:21.675745148 +0100
+@@ -32,3 +32,6 @@
+ #ifdef LLVM_ON_WIN32
+ #include "Windows/Signals.inc"
+ #endif
++#ifdef LLVM_ON_AROS
++#include "AROS/Signals.inc"
++#endif
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/system_error.cpp llvm-2.9-aros/lib/Support/system_error.cpp
+--- llvm-2.9/lib/Support/system_error.cpp	2010-12-09 18:36:48.000000000 +0100
++++ llvm-2.9-aros/lib/Support/system_error.cpp	2013-12-14 19:21:01.671776142 +0100
+@@ -128,3 +128,6 @@
+ #if defined(LLVM_ON_WIN32)
+ #include "Windows/system_error.inc"
+ #endif
++#if defined(LLVM_ON_AROS)
++#include "AROS/system_error.inc"
++#endif
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/TimeValue.cpp llvm-2.9-aros/lib/Support/TimeValue.cpp
+--- llvm-2.9/lib/Support/TimeValue.cpp	2010-11-29 19:16:10.000000000 +0100
++++ llvm-2.9-aros/lib/Support/TimeValue.cpp	2013-12-14 19:29:26.003761115 +0100
+@@ -55,3 +55,6 @@
+ #ifdef LLVM_ON_WIN32
+ #include "Windows/TimeValue.inc"
+ #endif
++#ifdef LLVM_ON_AROS
++#include "AROS/TimeValue.inc"
++#endif
+diff -ruN -x.svn -xclang-2.9 -xM68k '-xREADME*' -b llvm-2.9/lib/Support/Triple.cpp llvm-2.9-aros/lib/Support/Triple.cpp
+--- llvm-2.9/lib/Support/Triple.cpp	2011-02-17 13:24:17.000000000 +0100
++++ llvm-2.9-aros/lib/Support/Triple.cpp	2013-12-14 17:59:55.075921181 +0100
+@@ -42,6 +42,7 @@
+   case xcore:   return "xcore";
+   case mblaze:  return "mblaze";
+   case ptx:     return "ptx";
++  case m68k:    return "m68k";
+   }
+ 
+   return "<invalid>";
+@@ -75,6 +76,7 @@
+   case xcore:   return "xcore";
+ 
+   case ptx:     return "ptx";
++  case m68k:    return "m68k";
+   }
+ }
+ 
+@@ -108,6 +110,8 @@
+   case Win32: return "win32";
+   case Haiku: return "haiku";
+   case Minix: return "minix";
++  case Aros: return "aros";
++  case Amiga: return "amiga";
+   }
+ 
+   return "<invalid>";
+@@ -164,6 +168,9 @@
+     return xcore;
+   if (Name == "ptx")
+     return ptx;
++  if (Name == "m68k")
++    return m68k;
++
+ 
+   return UnknownArch;
+ }
+@@ -237,6 +244,8 @@
+     return "armv7";
+   if (Str == "ptx")
+     return "ptx";
++  if (Str == "m68k")
++    return "m68k";
+   return NULL;
+ }
+ 
+@@ -287,6 +296,8 @@
+     return xcore;
+   else if (ArchName == "ptx")
+     return ptx;
++  else if (ArchName == "m68k")
++	return m68k;
+   else
+     return UnknownArch;
+ }
+@@ -331,6 +342,10 @@
+     return Haiku;
+   else if (OSName.startswith("minix"))
+     return Minix;
++  else if (OSName.startswith("aros"))
++    return Aros;
++  else if (OSName.startswith("amiga"))
++    return Amiga;
+   else
+     return UnknownOS;
+ }

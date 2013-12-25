@@ -197,6 +197,8 @@ USER_CFLAGS := -ffast-math
 %build_linklib mmake=linklibs-galliumauxiliary libname=galliumauxiliary \
     files="$(GALLIUM_AUXILIARY_SOURCES) $(GALLIUM_AUXILIARY_GENERATED_SOURCES)"
 
+#Hack
+USER_INCLUDES += -I$(SRCDIR)/workbench/hidds/llvmpipe
 USER_CFLAGS := -ffast-math -DHAVE_LLVM=0x0209 -D__STDC_CONSTANT_MACROS
 
 %build_linklib mmake=linklibs-galliumvm libname=galliumvm \

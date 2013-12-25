@@ -56,6 +56,24 @@ OOP_Object * SelectGalliumDriver(ULONG requestedinterfaceversion, struct Library
         }
     }
 
+    if (!GB(GalliumBase)->drivermodule)
+        GB(GalliumBase)->drivermodule = OpenLibrary("llvmpipe.hidd", 1);
+
+    /* 2. Nouveau fails,try the next best...*/
+    driver = OOP_NewObject(NULL, "hidd.gallium.llvmpipe", NULL);
+    if (driver)
+    {
+        if (IsVersionMatching(requestedinterfaceversion, driver, GalliumBase)){
+            return driver;
+        }
+        else
+        {
+            /* Failed version check */
+            OOP_DisposeObject(driver);
+            driver = NULL;
+        }
+    }
+
     /* 3. Everything else failed. Let's try loading softpipe */
     if (!GB(GalliumBase)->drivermodule)
         GB(GalliumBase)->drivermodule = OpenLibrary("softpipe.hidd", 9);

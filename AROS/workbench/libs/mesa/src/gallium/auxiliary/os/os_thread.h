@@ -294,6 +294,27 @@ typedef int64_t pipe_condvar;
 #define pipe_condvar_broadcast(condvar) \
    (void) condvar
 
+
+typedef unsigned pipe_thread;
+
+#define PIPE_THREAD_ROUTINE( name, param ) \
+   void * name( void *param )
+
+static INLINE pipe_thread pipe_thread_create( void *(* routine)( void *), void *param )
+{
+   return 0;
+}
+
+static INLINE int pipe_thread_wait( pipe_thread thread )
+{
+   return -1;
+}
+
+static INLINE int pipe_thread_destroy( pipe_thread thread )
+{
+   return -1;
+}
+
 #else
 
 #include "os/os_time.h"
