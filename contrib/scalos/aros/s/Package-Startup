@@ -1,3 +1,7 @@
 Assign Scalos: ""
 Assign Theme: Scalos:Themes/Default_Theme add
 Assign Locale: Scalos:Locale add
+
+Protect Scalos:Tools/browse.script s add quiet
+Protect Scalos:Tools/OpenShell s add quiet
+Protect Scalos:Tools/run.script s add quiet
