@@ -12,16 +12,14 @@ include $(TOP)/config/make.cfg
 #MM     contrib-scalos-extras \
 #MM     contrib-scalos-theme
 
-TARGETDIR := $(AROS_CONTRIB)/Scalos/Tools
-
-FILES := gpl-3.0.txt GPLsrc History LEGAL lgpl-3.0.txt readme.txt 
-%copy_files_q mmake=contrib-scalos-cpy src=$(SRCDIR)/$(CURDIR) \
-    dst=$(TARGETDIR)
+FILES1 := gpl-3.0.txt GPLsrc History LEGAL lgpl-3.0.txt readme.txt 
+%copy_files_q mmake=contrib-scalos-cpy files=$(FILES1) \
+    dst=$(AROS_CONTRIB)/Scalos
 
 
-FILES := browse.script OpenShell open_volume.rexx Quit.rexx run.script
-%copy_files_q mmake=contrib-scalos-extras src=$(SRCDIR)/$(CURDIR)/Extras \
-    dst=$(TARGETDIR)
+FILES2 := browse.script OpenShell open_volume.rexx Quit.rexx run.script
+%copy_files_q mmake=contrib-scalos-extras files=$(FILES2) src=$(SRCDIR)/$(CURDIR)/Extras \
+    dst=$(AROS_CONTRIB)/Scalos/Tools
 
 
 TARGETDIR := $(AROS_CONTRIB)/Scalos/Themes/Default_Theme
