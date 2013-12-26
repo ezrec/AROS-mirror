@@ -54,10 +54,13 @@
 
 //----------------------------------------------------------------------------
 
+#ifndef __AROS__
 struct ExecBase *SysBase;
 T_UTILITYBASE UtilityBase;
 struct DosLibrary * DOSBase;
+#endif
 T_TIMERBASE TimerBase;
+
 #ifdef __amigaos4__
 struct Library *NewlibBase;
 struct Interface *INewlib;
@@ -249,7 +252,7 @@ BOOL SQLite3Cleanup(struct SQLite3Base *SQLite3Base)
 
 LIBFUNC_P2(LONG, LIBSQLite3Close,
 	A0, sqlite3 *, db,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 5)
 {
 	LONG Result;
 
@@ -269,7 +272,7 @@ LIBFUNC_P6(LONG, LIBSQLite3Exec,
 	A2, sqlite3_callback, xCallback,
 	A3, APTR, pArg,
 	D0, STRPTR *, errmsg,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 6)
 {
 	LONG Result;
 
@@ -285,7 +288,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3Changes,
 	A0, sqlite3 *, db,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 7)
 {
 	LONG Result;
 
@@ -301,7 +304,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3TotalChanges,
 	A0, sqlite3 *, db,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 8)
 {
 	LONG Result;
 
@@ -317,7 +320,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(VOID, LIBSQLite3Interrupt,
 	A0, sqlite3 *, db,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 9)
 {
 	(void) SQLite3Base;
 	d1(KPrintF("%s/%ld:   START\n", __FUNC__, __LINE__));
@@ -330,7 +333,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3Complete,
 	A0, CONST_STRPTR, sql,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 10)
 {
 	LONG Result;
 
@@ -348,7 +351,7 @@ LIBFUNC_P4(LONG, LIBSQLite3BusyHandler,
 	A0, sqlite3 *, db,
 	A1, xBusyFunc, callback,
 	A2, APTR, userdata,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 11)
 {
 	LONG Result;
 
@@ -365,7 +368,7 @@ LIBFUNC_END
 LIBFUNC_P3(LONG, LIBSQLite3BusyTimeout,
 	A0, sqlite3 *, db,
 	D0, LONG, ms,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 12)
 {
 	LONG Result;
 
@@ -386,7 +389,7 @@ LIBFUNC_P7(LONG, LIBSQLite3GetTable,
 	A3, LONG *, nrow,
 	D0, LONG *, ncolumn,
 	D1, STRPTR *, errmsg,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 13)
 {
 	LONG Result;
 	int NRow, NColumn;
@@ -406,7 +409,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(VOID, LIBSQLite3FreeTable,
 	A0, STRPTR *, result,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 14)
 {
 	(void) SQLite3Base;
 	d1(KPrintF("%s/%ld:   START\n", __FUNC__, __LINE__));
@@ -419,7 +422,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(VOID, LIBSQLite3Free,
 	A0, STRPTR, z,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 15)
 {
 	(void) SQLite3Base;
 	d1(KPrintF("%s/%ld:   START\n", __FUNC__, __LINE__));
@@ -434,7 +437,7 @@ LIBFUNC_P4(APTR, LIBSQLite3Trace,
 	A0, sqlite3 *, db,
 	A1, xTraceFunc, xTrace,
 	A2, APTR, parg,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 16)
 {
 	APTR Result;
 
@@ -453,7 +456,7 @@ LIBFUNC_P5(VOID, LIBSQLite3ProgressHandler,
 	D0, LONG, nOps,
 	A1, xProgressFunc, xProgress,
 	A2, APTR, pArg,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 17)
 {
 	(void) SQLite3Base;
 	d1(KPrintF("%s/%ld:   START\n", __FUNC__, __LINE__));
@@ -468,7 +471,7 @@ LIBFUNC_P4(APTR, LIBSQLite3CommitHook,
 	A0, sqlite3 *, db,
 	A1, xCommitFunc, xCallback,
 	A2, APTR, pArg,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 18)
 {
 	APTR Result;
 
@@ -485,7 +488,7 @@ LIBFUNC_END
 LIBFUNC_P3(LONG, LIBSQLite3Open,
 	A0, CONST_STRPTR, filename,
 	A1, sqlite3 **, ppDb,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 19)
 {
 	LONG Result;
 
@@ -501,7 +504,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3Errcode,
 	A0, sqlite3 *, db,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 20)
 {
 	LONG Result;
 
@@ -517,7 +520,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(CONST_STRPTR, LIBSQLite3Errmsg,
 	A0, sqlite3 *, db,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 21)
 {
 	CONST_STRPTR Result;
 
@@ -537,7 +540,7 @@ LIBFUNC_P6(LONG, LIBSQLite3Prepare,
 	D0, LONG, nBytes,
 	A2, sqlite3_stmt **, ppStmt,
 	A3, CONST_STRPTR *, pzTail,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 22)
 {
 	LONG Result;
 
@@ -558,7 +561,7 @@ LIBFUNC_P6(LONG, LIBSQLite3BindBlob,
 	A1, CONST_APTR, zData,
 	D1, LONG, nData,
 	A2, xDeleteFunc, xDel,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 23)
 {
 	LONG Result;
 
@@ -576,7 +579,7 @@ LIBFUNC_P4(LONG, LIBSQLite3BindInt,
 	A0, sqlite3_stmt *, pStmt,
 	D0, LONG, i,
 	D1, LONG, iValue,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 24)
 {
 	LONG Result;
 
@@ -593,7 +596,7 @@ LIBFUNC_END
 LIBFUNC_P3(LONG, LIBSQLite3BindNull,
 	A0, sqlite3_stmt *, pStmt,
 	D0, LONG, i,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 25)
 {
 	LONG Result;
 
@@ -613,7 +616,7 @@ LIBFUNC_P6(LONG, LIBSQLite3BindText,
 	A1, CONST_STRPTR, zData,
 	D1, LONG, nData,
 	A2, xDeleteFunc, xDel,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 26)
 {
 	LONG Result;
 
@@ -632,7 +635,7 @@ LIBFUNC_P4(LONG, LIBSQLite3BindValue,
 	A0, sqlite3_stmt *, pStmt,
 	D0, LONG, i,
 	A1, CONST sqlite3_value *, pVal,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 27)
 {
 	LONG Result;
 
@@ -652,7 +655,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3BindParameterCount,
 	A0, sqlite3_stmt *, pStmt,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 28)
 {
 	LONG Result;
 
@@ -669,7 +672,7 @@ LIBFUNC_END
 LIBFUNC_P3(CONST_STRPTR, LIBSQLite3BindParameterName,
 	A0, sqlite3_stmt *, pStmt,
 	D0, LONG, i,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 29)
 {
 	CONST_STRPTR Result;
 
@@ -686,7 +689,7 @@ LIBFUNC_END
 LIBFUNC_P3(LONG, LIBSQLite3BindParameterIndex,
 	A0, sqlite3_stmt *, pStmt,
 	A1, CONST_STRPTR, zName,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 30)
 {
 	LONG Result;
 
@@ -702,7 +705,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3ClearBindings,
 	A0, sqlite3_stmt *, pStmt,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 31)
 {
 	LONG Result;
 
@@ -720,7 +723,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3ColumnCount,
 	A0, sqlite3_stmt *, pStmt,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 32)
 {
 	LONG Result;
 
@@ -737,7 +740,7 @@ LIBFUNC_END
 LIBFUNC_P3(CONST_STRPTR, LIBSQLite3ColumnName,
 	A0, sqlite3_stmt *, pStmt,
 	D0, LONG, i,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 33)
 {
 	CONST_STRPTR Result;
 
@@ -754,7 +757,7 @@ LIBFUNC_END
 LIBFUNC_P3(CONST_STRPTR, LIBSQLite3ColumnDecltype,
 	A0, sqlite3_stmt *, pStmt,
 	D0, LONG, i,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 34)
 {
 	CONST_STRPTR Result;
 
@@ -770,7 +773,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3Step,
 	A0, sqlite3_stmt *, pStmt,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 35)
 {
 	LONG Result;
 
@@ -786,7 +789,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3DataCount,
 	A0, sqlite3_stmt *, pStmt,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 36)
 {
 	LONG Result;
 
@@ -803,7 +806,7 @@ LIBFUNC_END
 LIBFUNC_P3(CONST_APTR, LIBSQLite3ColumnBlob,
 	A0, sqlite3_stmt *, pStmt,
 	D0, LONG, i,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 37)
 {
 	CONST_APTR Result;
 
@@ -820,7 +823,7 @@ LIBFUNC_END
 LIBFUNC_P3(LONG, LIBSQLite3ColumnBytes,
 	A0, sqlite3_stmt *, pStmt,
 	D0, LONG, i,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 38)
 {
 	LONG Result;
 
@@ -837,7 +840,7 @@ LIBFUNC_END
 LIBFUNC_P3(LONG, LIBSQLite3ColumnInt,
 	A0, sqlite3_stmt *, pStmt,
 	D0, LONG, i,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 39)
 {
 	LONG Result;
 
@@ -854,7 +857,7 @@ LIBFUNC_END
 LIBFUNC_P3(CONST_STRPTR, LIBSQLite3ColumnText,
 	A0, sqlite3_stmt *, pStmt,
 	D0, LONG, i,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 40)
 {
 	CONST_STRPTR Result;
 
@@ -871,7 +874,7 @@ LIBFUNC_END
 LIBFUNC_P3(LONG, LIBSQLite3ColumnType,
 	A0, sqlite3_stmt *, pStmt,
 	D0, LONG, i,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 41)
 {
 	LONG Result;
 
@@ -887,7 +890,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3Finalize,
 	A0, sqlite3_stmt *, pStmt,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 42)
 {
 	LONG Result;
 
@@ -903,7 +906,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3Reset,
 	A0, sqlite3_stmt *, pStmt,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 43)
 {
 	LONG Result;
 
@@ -919,7 +922,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG , LIBSQLite3AggregateCount,
 	A0, sqlite3_context *, pCtx,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 44)
 {
 	LONG Result;
 
@@ -935,7 +938,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(CONST_APTR, LIBSQLite3ValueBlob,
 	A0, sqlite3_value *, pVal,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 45)
 {
 	CONST_APTR Result;
 
@@ -951,7 +954,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3ValueBytes,
 	A0, sqlite3_value *, pVal,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 46)
 {
 	LONG Result;
 
@@ -967,7 +970,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3ValueInt,
 	A0, sqlite3_value *, pVal,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 47)
 {
 	LONG Result;
 
@@ -983,7 +986,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(CONST_STRPTR, LIBSQLite3ValueText,
 	A0, sqlite3_value *, pVal,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 48)
 {
 	CONST_STRPTR Result;
 
@@ -999,7 +1002,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3ValueType,
 	A0, sqlite3_value *, pVal,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 49)
 {
 	LONG Result;
 
@@ -1016,7 +1019,7 @@ LIBFUNC_END
 LIBFUNC_P3(APTR, LIBSQLite3Aggregate_context,
 	A0, sqlite3_context *, pCtx,
 	D0, LONG, nBytes,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 50)
 {
 	APTR Result;
 
@@ -1032,7 +1035,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(APTR, LIBSQLite3UserData,
 	A0, sqlite3_context *, pCtx,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 51)
 {
 	APTR Result;
 
@@ -1049,7 +1052,7 @@ LIBFUNC_END
 LIBFUNC_P3(APTR, LIBSQLite3GetAuxdata,
 	A0, sqlite3_context *, pCtx,
 	D0, LONG, iArg,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 52)
 {
 	APTR Result;
 
@@ -1068,7 +1071,7 @@ LIBFUNC_P5(VOID, LIBSQLite3SetAuxdata,
 	D0, LONG, iArg,
 	A1, APTR, pAux,
 	A2, xDeleteFunc, xDelete,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 53)
 {
 	(void) SQLite3Base;
 	d1(KPrintF("%s/%ld:   START\n", __FUNC__, __LINE__));
@@ -1084,7 +1087,7 @@ LIBFUNC_P5(VOID, LIBSQLite3ResultBlob,
 	A1, CONST_APTR, z,
 	D1, LONG, n,
 	A2, xDeleteFunc, xDelete,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 54)
 {
 	(void) SQLite3Base;
 	d1(KPrintF("%s/%ld:   START\n", __FUNC__, __LINE__));
@@ -1099,7 +1102,7 @@ LIBFUNC_P4(VOID, LIBSQLite3ResultError,
 	A0, sqlite3_context *, pCtx,
 	A1, CONST_STRPTR, z,
 	D0, LONG, n,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 55)
 {
 	(void) SQLite3Base;
 	d1(KPrintF("%s/%ld:   START\n", __FUNC__, __LINE__));
@@ -1113,7 +1116,7 @@ LIBFUNC_END
 LIBFUNC_P3(VOID, LIBSQLite3ResultInt,
 	A0, sqlite3_context *, pCtx,
 	D0, LONG, iVal,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 56)
 {
 	(void) SQLite3Base;
 	d1(KPrintF("%s/%ld:   START\n", __FUNC__, __LINE__));
@@ -1126,7 +1129,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(VOID, LIBSQLite3ResultNull,
 	A0, sqlite3_context *, pCtx,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 57)
 {
 	(void) SQLite3Base;
 	d1(KPrintF("%s/%ld:   START\n", __FUNC__, __LINE__));
@@ -1142,7 +1145,7 @@ LIBFUNC_P5(VOID, LIBSQLite3ResultText,
 	A1, CONST_STRPTR, z,
 	D1, LONG, n,
 	A2, xDeleteFunc, xDelete,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 58)
 {
 	(void) SQLite3Base;
 	d1(KPrintF("%s/%ld:   START\n", __FUNC__, __LINE__));
@@ -1156,7 +1159,7 @@ LIBFUNC_END
 LIBFUNC_P3(VOID, LIBSQLite3ResultValue,
 	A0, sqlite3_context *, pCtx,
 	A1, sqlite3_value *, pValue,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 59)
 {
 	(void) SQLite3Base;
 	d1(KPrintF("%s/%ld:   START\n", __FUNC__, __LINE__));
@@ -1173,7 +1176,7 @@ LIBFUNC_P6(LONG, LIBSQLite3CreateCollation,
 	D0, LONG, eTextRep,
 	A2, APTR, pCtx,
 	A3, xCompareFunc, xCompare,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 60)
 {
 	LONG Result;
 
@@ -1192,7 +1195,7 @@ LIBFUNC_P4(LONG, LIBSQLite3CollationNeeded,
 	A0, sqlite3 *, db,
 	D0, APTR, pCollNeededArg,
 	A1, xCollationNeededFunc, xCollNeeded,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 61)
 {
 	LONG Result;
 
@@ -1208,7 +1211,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3Sleep,
 	D0, LONG, ms,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 62)
 {
 	LONG Result;
 
@@ -1226,7 +1229,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3Expired,
 	A0, sqlite3_stmt *, pStmt,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 63)
 {
 	LONG Result;
 
@@ -1243,7 +1246,7 @@ LIBFUNC_END
 LIBFUNC_P3(LONG, LIBSQLite3TransferBindings,
 	A0, sqlite3_stmt *, pFromStmt,
 	A1, sqlite3_stmt *, pToStmt,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 64)
 {
 	LONG Result;
 
@@ -1258,7 +1261,7 @@ LIBFUNC_END
 //-----------------------------------------------------------------------------
 
 LIBFUNC_P1(LONG, LIBSQLite3GlobalRecover,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 65)
 {
 	LONG Result;
 
@@ -1274,7 +1277,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3GetAutocommit,
 	A0, sqlite3 *, db,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 66)
 {
 	LONG Result;
 
@@ -1290,7 +1293,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(sqlite3 *, LIBSQLite3DbHandle,
 	A0, sqlite3_stmt *, pStmt,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 67)
 {
 	sqlite3	*Result;
 
@@ -1308,7 +1311,7 @@ LIBFUNC_P4(APTR, LIBSQLite3RollbackHook,
 	A0, sqlite3 *, db,
 	A1, xRollbackCallbackFunc, callback,
 	A2, APTR, pUserData,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 68)
 {
 	APTR Result;
 
@@ -1324,7 +1327,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3EnableSharedCache,
 	D0, BOOL, enable,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 69)
 {
 	LONG Result;
 
@@ -1340,7 +1343,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3ReleaseMemory,
 	D0, LONG, bytesCount,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 70)
 {
 	LONG Result;
 
@@ -1356,7 +1359,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(VOID, LIBSQLite3SoftHeapLimit,
 	D0, LONG, maxBytes,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 71)
 {
 	(void) SQLite3Base;
 	d1(KPrintF("%s/%ld:   START\n", __FUNC__, __LINE__));
@@ -1368,7 +1371,7 @@ LIBFUNC_END
 //-----------------------------------------------------------------------------
 
 LIBFUNC_P1(VOID, LIBSQLite3ThreadCleanup,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 72)
 {
 	(void) SQLite3Base;
 	d1(KPrintF("%s/%ld:   START\n", __FUNC__, __LINE__));
@@ -1385,7 +1388,7 @@ LIBFUNC_P6(LONG, LIBSQLite3PrepareV2,
 	D0, LONG, nBytes,
 	A2, sqlite3_stmt **, ppStmt,
 	A3, CONST_STRPTR *, pzTail,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 73)
 {
 	LONG Result;
 
@@ -1409,7 +1412,7 @@ LIBFUNC_P9(LONG, LIBSQLite3CreateFunction,
 	A3, xFunctionFunc, xFunc,
 	D2, xFunctionStep, xStep,
 	D3, xFunctionFinal, xFinal,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 74)
 {
 	LONG Result;
 
@@ -1429,7 +1432,7 @@ LIBFUNC_P5(LONG, LIBSQLite3CreateModule,
 	A1, CONST_STRPTR, zName,
 	A2, CONST sqlite3_module *, methods,
 	A3, APTR, clientData,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 75)
 {
 	LONG Result;
 
@@ -1446,7 +1449,7 @@ LIBFUNC_END
 LIBFUNC_P3(LONG, LIBSQLite3DeclareVtab,
 	A0, sqlite3 *, db,
 	A1, CONST_STRPTR, zCreateTable,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 76)
 {
 	LONG Result;
 
@@ -1464,7 +1467,7 @@ LIBFUNC_P4(LONG, LIBSQLite3OverloadFunction,
 	A0, sqlite3 *, db,
 	A1, CONST_STRPTR, zFuncName,
 	D0, LONG, nArg,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 77)
 {
 	LONG Result;
 
@@ -1486,7 +1489,7 @@ LIBFUNC_P8(LONG, LIBSQLite3BlobOpen,
 	D0, LONG, iRow,
 	D1, LONG, flags,
 	A4, sqlite3_blob **, ppBlob,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 78)
 {
 	LONG Result;
 
@@ -1502,7 +1505,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3BlobClose,
 	A0, sqlite3_blob *, blob,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 79)
 {
 	LONG Result;
 
@@ -1518,7 +1521,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3BlobBytes,
 	A0, sqlite3_blob *, blob,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 80)
 {
 	LONG Result;
 
@@ -1537,7 +1540,7 @@ LIBFUNC_P5(LONG, LIBSQLite3BlobRead,
 	A1, APTR, z,
 	D0, LONG, n,
 	D1, LONG, iOffset,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 81)
 {
 	LONG Result;
 
@@ -1556,7 +1559,7 @@ LIBFUNC_P5(LONG, LIBSQLite3BlobWrite,
 	A1, CONST_APTR, z,
 	D0, LONG, n,
 	D1, LONG, iOffset,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 82)
 {
 	LONG Result;
 
@@ -1573,7 +1576,7 @@ LIBFUNC_END
 LIBFUNC_P3(LONG, LIBSQLite3ExtendedResultCodes,
 	A0, sqlite3 *, db,
 	D0, LONG, onoff,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 83)
 {
 	LONG Result;
 
@@ -1591,7 +1594,7 @@ LIBFUNC_P4(LONG, LIBSQLite3BindZeroBlob,
 	A0, sqlite3_stmt *, pStmt,
 	D0, LONG, i,
 	D1, LONG, n,
-	A6, struct SQLite3Base *, SQLite3Base);
+	A6, struct SQLite3Base *, SQLite3Base, 84);
 {
 	LONG Result;
 
@@ -1608,7 +1611,7 @@ LIBFUNC_END
 LIBFUNC_P3(CONST_STRPTR, LIBSQLite3ColumnDatabaseName,
 	A0, sqlite3_stmt *, stmt,
 	D0, LONG, iCol,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 85)
 {
 	CONST_STRPTR Result;
 
@@ -1625,7 +1628,7 @@ LIBFUNC_END
 LIBFUNC_P3(CONST_STRPTR, LIBSQLite3ColumnTableName,
 	A0, sqlite3_stmt *, stmt,
 	D0, LONG, iCol,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 86)
 {
 	CONST_STRPTR Result;
 
@@ -1642,7 +1645,7 @@ LIBFUNC_END
 LIBFUNC_P3(CONST_STRPTR, LIBSQLite3ColumnOriginName,
 	A0, sqlite3_stmt *, stmt,
 	D0, LONG, iCol,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 87)
 {
 	CONST_STRPTR Result;
 
@@ -1659,7 +1662,7 @@ LIBFUNC_END
 LIBFUNC_P3(sqlite3_value *, LIBSQLite3ColumnValue,
 	A0, sqlite3_stmt *, pStmt,
 	D0, LONG, iCol,
-	A6, struct SQLite3Base *, SQLite3Base);
+	A6, struct SQLite3Base *, SQLite3Base, 88);
 {
 	sqlite3_value *Result;
 
@@ -1680,7 +1683,7 @@ LIBFUNC_P7(LONG, LIBSQLite3CreateCollationV2,
 	A2, APTR, pCtx,
 	A3, xCreateCollationCompare, xCompare,
 	D1, xCreateCollationDestroy, xDestroy,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 89)
 {
 	LONG Result;
 
@@ -1695,7 +1698,7 @@ LIBFUNC_END
 //-----------------------------------------------------------------------------
 
 LIBFUNC_P1(CONST_STRPTR, LIBSQLite3LibVersion,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 90)
 {
 	CONST_STRPTR Result;
 
@@ -1710,7 +1713,7 @@ LIBFUNC_END
 //-----------------------------------------------------------------------------
 
 LIBFUNC_P1(LONG, LIBSQLite3LibversionNumber,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 91)
 {
 	LONG Result;
 
@@ -1726,7 +1729,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(VOID, LIBSQLite3ResultErrorToobig,
 	A0, sqlite3_context *, pCtx,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 92)
 {
 	(void) SQLite3Base;
 	d1(KPrintF("%s/%ld:   START\n", __FUNC__, __LINE__));
@@ -1740,7 +1743,7 @@ LIBFUNC_END
 LIBFUNC_P3(VOID, LIBSQLite3ResultZeroBlob,
 	A0, sqlite3_context *, pCtx,
 	D0, LONG, n,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 93)
 {
 	(void) SQLite3Base;
 	d1(KPrintF("%s/%ld:   START\n", __FUNC__, __LINE__));
@@ -1753,7 +1756,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3ValueNumericType,
 	A0, sqlite3_value *, pVal,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 94)
 {
 	LONG Result;
 
@@ -1770,7 +1773,7 @@ LIBFUNC_END
 LIBFUNC_P3(LONG, LIBSQLite3ConfigV,
 	D0, LONG, op,
 	A0, APTR, ap,
-	A6, struct SQLite3Base *, SQLite3Base)
+	A6, struct SQLite3Base *, SQLite3Base, 95)
 {
 	LONG Result;
 
@@ -1788,7 +1791,7 @@ LIBFUNC_P4(LONG, LIBSQLlite3DbConfigV,
 	A0, sqlite3 *, db,
 	D0, LONG, op,
 	A1, APTR, ap,
-	A6, struct SQLite3Base *, SQLite3Base);
+	A6, struct SQLite3Base *, SQLite3Base, 96);
 {
 	LONG Result;
 
@@ -1804,7 +1807,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(sqlite3_vfs *, LIBSQLite3VfsFind,
 	A0, CONST_STRPTR, zVfsName,
-	A6, struct SQLite3Base *, SQLite3Base);
+	A6, struct SQLite3Base *, SQLite3Base, 97);
 {
 	sqlite3_vfs *Result;
 
@@ -1821,7 +1824,7 @@ LIBFUNC_END
 LIBFUNC_P3(LONG, LIBSQLite3VfsRegister,
 	A0, sqlite3_vfs *, vfs,
 	D0, LONG, makeDflt,
-	A6, struct SQLite3Base *, SQLite3Base);
+	A6, struct SQLite3Base *, SQLite3Base, 98);
 {
 	LONG Result;
 
@@ -1837,7 +1840,7 @@ LIBFUNC_END
 
 LIBFUNC_P2(LONG, LIBSQLite3VfsUnregister,
 	A0, sqlite3_vfs *, vfs,
-	A6, struct SQLite3Base *, SQLite3Base);
+	A6, struct SQLite3Base *, SQLite3Base, 99);
 {
 	LONG Result;
 
@@ -1856,7 +1859,7 @@ LIBFUNC_P5(LONG, LIBSQLite3FileControl,
 	A1, CONST_STRPTR, zDbName,
 	D0, LONG, op,
 	A2, void *, arg,
-	A6, struct SQLite3Base *, SQLite3Base);
+	A6, struct SQLite3Base *, SQLite3Base, 100);
 {
 	LONG Result;
 
@@ -1875,7 +1878,7 @@ LIBFUNC_P5(LONG, LIBSQLite3Status,
 	A0, LONG *, pCurrent,
 	A1, LONG *, pHighwater,
 	D1, LONG, resetFlag,
-	A6, struct SQLite3Base *, SQLite3Base);
+	A6, struct SQLite3Base *, SQLite3Base, 101);
 {
 	LONG Result;
 
@@ -1895,7 +1898,7 @@ LIBFUNC_P6(LONG, LIBSQLite3DbStatus,
 	A1, LONG *, pCur,
 	A2, LONG *, pHiwtr,
 	D1, LONG, resetFlg,
-	A6, struct SQLite3Base *, SQLite3Base);
+	A6, struct SQLite3Base *, SQLite3Base, 102);
 {
 	LONG Result;
 
@@ -1930,4 +1933,17 @@ void exit(int x)
 #endif /*__MORPHOS__*/
 
 #endif /* !defined(__SASC) */
+
+//-----------------------------------------------------------------------------
+
+#if defined(__AROS__)
+
+#include "aros/symbolsets.h"
+
+ADD2INITLIB(SQLite3Init, 0);
+ADD2EXPUNGELIB(SQLite3Cleanup, 0);
+ADD2OPENLIB(SQLite3Open, 0);
+
+#endif
+
 //-----------------------------------------------------------------------------

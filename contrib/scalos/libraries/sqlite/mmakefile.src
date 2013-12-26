@@ -1,0 +1,107 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-scalos-libraries-sqlite3 : \
+#MM     linklibs \
+#MM     contrib-scalos-libraries-preferences-includes
+
+FILES := \
+    src/alter \
+    src/analyze \
+    src/attach \
+    src/auth \
+    src/backup \
+    src/bitvec \
+    src/btmutex \
+    src/btree \
+    src/build \
+    src/callback \
+    src/complete \
+    src/ctime \
+    src/date \
+    src/delete \
+    src/expr \
+    src/fault \
+    src/fkey \
+    src/func \
+    src/global \
+    src/hash \
+    src/insert \
+    src/journal \
+    src/loadext \
+    src/malloc \
+    src/main \
+    src/mem0 \
+    src/mem1 \
+    src/mem2 \
+    src/mem3 \
+    src/mem5 \
+    src/memjournal \
+    src/mutex \
+    src/mutex_noop \
+    src/mutex_other \
+    src/notify \
+    opcodes \
+    src/os \
+    src/os_other \
+    src/os_unix \
+    src/os_win \
+    src/pager \
+    src/pcache1 \
+    parse \
+    src/pcache \
+    src/pragma \
+    src/prepare \
+    src/printf \
+    src/random \
+    src/resolve \
+    src/rowset \
+    src/select \
+    src/status \
+    src/table \
+    src/tokenize \
+    src/trigger \
+    src/update \
+    src/util \
+    src/vacuum \
+    src/vdbe \
+    src/vdbeapi \
+    src/vdbeaux \
+    src/vdbeblob \
+    src/vdbemem \
+    src/vdbesort \
+    src/vdbetrace \
+    src/vtab \
+    src/wal \
+    src/walker \
+    src/where \
+    src/utf \
+    src/legacy \
+    LibSQLite3
+
+TARGETDIR := $(AROS_CONTRIB)/Scalos
+
+USER_INCLUDES := -I$(TARGETDIR)/Development/include \
+    -I$(SRCDIR)/$(CURDIR)/src \
+    -idirafter $(SRCDIR)/$(CURDIR)/../../include
+
+USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -Wno-implicit-function-declaration \
+    -DNO_TCL=1 \
+    -DHAVE_USLEEP=0 \
+    -DSQLITE_THREADSAFE=1 \
+    -DSQLITE_MUTEX_NOOP=1 \
+    -DSQLITE_EXTRA \
+    -DSQLITE_OS_OTHER=1 \
+    -DSQLITE_OMIT_UTF16=1 \
+    -DSQLITE_ENABLE_MEMORY_MANAGEMENT \
+    -DSQLITE_ENABLE_COLUMN_METADATA \
+    -DSQLITE_OMIT_AUTHORIZATION=1 \
+    -DTEMP_FILE_PREFIX="t:etilqs_"
+
+%build_module mmake=contrib-scalos-libraries-sqlite3 \
+    modname=sqlite3 modtype=library conffile="sqlite3-aros.conf" \
+    files="$(FILES)" moduledir=Libs prefix=$(TARGETDIR) uselibs=stdc
+
+
+%common

@@ -12,6 +12,7 @@ include $(TOP)/config/make.cfg
 #MM     contrib-scalos-libraries-iconobject \
 #MM     contrib-scalos-libraries-preferences \
 #MM     contrib-scalos-libraries-scalosgfx \
+#MM     contrib-scalos-libraries-sqlite3 \
 #MM     contrib-scalos-library-includes \
 #MM     contrib-scalos-plugin-includes \
 #MM     contrib-scalos-menuplugin-includes \
