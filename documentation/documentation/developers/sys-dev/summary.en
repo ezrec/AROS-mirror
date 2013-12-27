@@ -87,28 +87,6 @@ FAQ or moving some parts in other documents.
     I don't think so, but I may not fully understand what you are getting at.
     Could you elaborate a little bit?
 
-    > How can I write a varargs function?
-
-    For functions with C argument passing you can use the ANSI standard
-    stdarg.h convention; again the ABI has to define the behavior.
-    For Amiga vararg functions, vararg version are generated automagically if
-    one of the following conditions are met:
-    - The last letter of the function name is A; the vararg function name is
-    the name without this letter A
-    - The function name ends in TagList; the vararg function name is TagList
-    replaced with Tags
-    - The function name ends in Args and the name of the last argument to the
-    function is args or arglist or a variation with other capitalization
-    (Args, Arglist, ArgList, ...); the vararg function name is the name
-    without the ending Args
-    - the type of the last argument is "struct TagItem *"; the vararg
-    function name is the name with Tags appended.
-
-    This feature is still implement in a hackish way and it is on my to-do
-    list to investigate if and how this feature needs to be improved. (At
-    the moment only a #define will be generated for the vararg version of
-    the function).
-
     > How do I write a library function which takes a pointer to a function as
     > argument (callback)? Do I need struct Hook?
 
@@ -212,61 +190,6 @@ FAQ or moving some parts in other documents.
 
     ------------
 
-    I have been fighting with some errors caused by variadic DoMethod and
-    DoSuperMethod calls and the method messages itself. The errors are pretty
-    nasty and very hard to detect, since they mostly cause a crash at some
-    completely different place :) Let me show you what I'm talking about.
-
-    On the x86_64, only the first 6 function arguments are passed in
-    registers. All further parameters are passed through and have to be
-    aligned on the 8-byte boundary, even if they are 8-bit in size. Long ago,
-    in order to overcome this issue, we introduced STACK* types, e.g. on
-    x86_64 a STACKBYTE is expanded to a signed 64-bit variable.
-
-    So far so good....
-
-    The problem arises when the compiler pushes arguments on the stack for
-    variadic functions. If it pushes a ULONG or UBYTE variable, it will not
-    expand it automatically to 64-bits (why should it at all???) but only
-    align it properly. So, for example, you will have in the code:
-
-    movb %al, some_offset(%rip)     // Send UBYTE as a variadic parameter
-
-    or
-
-    movl %eax, some_offset(%rip)
-
-    However, it happens (in 99.999% cases) that the stack contains some old
-    junk there which will be not zeroed at all.... And since the affected
-    method expects somewhere a STACKBYTE or STACKLONG argument, it will fetch
-    the whole 64-bits, including the junk...
-
-    Such a thing happened yesterday night in png.datatype, which called
-    PDTM_WRITEPIXELARRAY method with number of lines equal 1. The gcc pushed
-    ULONG value 1 on the stack (there were more than 6 arguments for the
-    DoMethod* call), but the method in the picture superclass fetched whole
-    64-bit, which happened to be something like 0x1237f78000000001 (you can
-    see the LONG 1 value there ;)) and crashed badly.
-
-    What I would suggest instead of STACK* types, would be STACKARG parameter,
-    with the following define on x86_64:
-
-    #define STACKARG __attribute__((aligned(8)))
-
-    On other architectures, it could be just empty. Then, the method messages
-    could be defined as following:
-
-    struct SomeMethod {
-            STACKARG ULONG  MethodID;
-            STACKARG UBYTE  some_argument;
-            ....
-    };
-
-    This way both the variadic call and the method handler would parse the
-    arguments in proper way....
-
-    ------
-
     > Provided that programs need to be recompiled anyway, with a little
     > modification of the existing source code things can work smoothly.
     >
@@ -358,88 +281,6 @@ FAQ or moving some parts in other documents.
 
     --------
 
-    > Another doubt is the purpose of "o" argument of AROS_LHx() macros. It
-    > seems to mean the index of function in the vector table. But if I've
-    > guessed it right, then "dummylibraryexample.i386.src.tar.gz" assigns
-    > offsets wrong, as library init function is not placed in the vector
-    > table, so Open() should have 0, Close() 1 and so on. On the other hand
-    > it seems that parameter "o"
-
-    Since the vector table is below the library base (grows downwards) the
-    first index is 1:
-
-    #define LIB_VECTSIZE                    (sizeof (struct JumpVec))
-    #define __AROS_GETJUMPVEC(lib,n)        (&((struct JumpVec *)lib)[-(n)])
-
-    > is not used at all and is probably left as some historical artefact.
-
-    One never knows if for some obscure target it will be needed, but once
-    upon time auto-generated library headers were built from the source code,
-    which looked at the AROS_LH#? and the offset in there. The library call
-    macros in <defines/[libname].h> (AROS_LC#?) of course need that offset.
-
-    > Can I have some explanation on the subject? Also knowing what parameters
-    > (and which way) really are passed to LibInit(), LibOpen(), LibClose()
-    > and LibExpunge() will help me.
-
-    Looking at some generated file it should be like this:
-
-
-    AROS_UFH3 (LIBBASETYPEPTR, GM_UNIQUENAME(InitLib),
-         AROS_UFHA(LIBBASETYPEPTR, lh, D0),
-         AROS_UFHA(BPTR, segList, A0),
-         AROS_UFHA(struct ExecBase *, sysBase, A6)
-    )
-    {
-         AROS_USERFUNC_INIT
-
-         [...]
-
-         AROS_USERFUNC_EXIT
-    }
-
-    AROS_LH1 (LIBBASETYPEPTR, GM_UNIQUENAME(OpenLib),
-         AROS_LHA (ULONG, version, D0),
-         LIBBASETYPEPTR, lh, 1, Asl
-    )
-    {
-         AROS_LIBFUNC_INIT
-
-         [...]
-
-         AROS_LIBFUNC_EXIT
-    }
-
-    AROS_LH0 (BPTR, GM_UNIQUENAME(CloseLib),
-         LIBBASETYPEPTR, lh, 2, Asl
-    )
-    {
-         AROS_LIBFUNC_INIT
-
-         [...]
-
-         AROS_LIBFUNC_EXIT
-    }
-
-    AROS_LH1 (BPTR, GM_UNIQUENAME(ExpungeLib),
-         AROS_LHA(LIBBASETYPEPTR, lh, D0),
-         struct ExecBase *, sysBase, 3, Asl
-    )
-    {
-         AROS_LIBFUNC_INIT
-
-         [...]
-
-         AROS_LIBFUNC_EXIT
-    }
-
-    On some targets parameters are not passed in registers but in stacks,
-    for example on x86. Therefore, one needs to be careful not to use a
-    different parameter order or to leave out some of the first parameters
-    (like version in OpenLib).
-
-    ------
-
     > I will post my test program when I get back home.
 
     Maybe check generated asm:
@@ -498,14 +339,6 @@ FAQ or moving some parts in other documents.
 
     By using nm on the .o files, you can see which library bases are used in
     the files. External variables start with a U.
-
-    ------
-
-    > +struct ExecBase *SysBase=NULL;
-    >
-    > Don't think this will help ..
-
-    This helped very much.
 
     -------------
 
