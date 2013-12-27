@@ -41,20 +41,28 @@ modules. The parameters are:
 ``modname=/A``
     Name of the generated module without the suffix.
 
-''modtype=/A``
+``modtype=/A``
     Type of the generated module. Possible values: library, mcc, mui, mcp,
-    device, resource, gadget, datatype, hidd.
+    device, resource, gadget, datatype, hidd, usbclass, handler or hook.
 
 ``modsuffix``
     You don't normally need to specify this as the build system has a default
     suffix for every type of module.
 
+``version``
+    A string which will be appended to the version string of the module.
+
 ``conffile``
     The name if the configuration file. Default is <modname>.conf.
 
-``files="$(basename $(wildcard *.c))"``
+``files``
     A list of all the C source files, without the .c suffixes, that make up
     the code for this module. By default all the .c files in the current
+    directory will be used.
+
+``cxxfiles``
+    A list of all the C++ source files, without the .c++ suffixes, that make up
+    the code for this module. By default all the .c++ files in the current
     directory will be used.
 
 ``linklibfiles``
@@ -62,20 +70,20 @@ modules. The parameters are:
     the code that needs to be added to the module linklib.
 
 ``linklibobjs``
-    FIXME
+    A list of all the object files, without the .o suffixes, that contain
+    the code that needs to be added to the module linklib.
 
-``cflags=$(CFLAGS)``
+``cflags``
     The flags to use when compiling the .c files. By default the standard
     AROS cflags (e.g. ``$(CFLAGS)``) are taken. This also
     means that some flags can be added by assigning these to the
     USER_CFLAGS and USER_INCLUDES make variables before using this macro.
 
-``dflags=%(cflags)``
+``dflags``
     The flags to add when doing the dependency check. Default is the same
     as the ``cflags``.
 
-
-``objdir=$(OBJDIR)``
+``objdir``
     The directory where to generate all the intermediate files. The
     default value is ``$(OBJDIR)`` which in itself is by default equal to
     ``$(GENDIR)/$(CURDIR)``.
@@ -84,9 +92,10 @@ modules. The parameters are:
     Target directory. See table "Defaults" below.
 
 ``prefix``
-    FIXME
+    A prefix for the path where the "Development" directory will be created
+    The generated headers and linklibs will be stored there.
 
-``linklibname=%(modname)``
+``linklibname``
     The name to be used for the static link library that contains the
     library autoinit code and the stubs converting C stack calling
     convention to a call of the function from the library functable with
@@ -105,11 +114,20 @@ modules. The parameters are:
     By default no libraries are used when linking the module.
 
 ``usehostlibs``
-    FIXME
+    Same as ``uselibs`` but for static libraries of the host system.
 
 ``compiler``
-    FIXME
+    The compiler for building the module. Can be "target", "host" or
+    "kernel". Defaults to "target" which creates binaries which run
+    under AROS.
 
+``nostartup``
+    Defines whether the module should be linked with startup code. Defaults
+    to "no".
+
+``archspecific``
+    If "yes" the module will be created in an architecture specific
+    directory. Defaults to "no".
 
 
 Module Types
@@ -132,7 +150,7 @@ Module Types
     preferences Editor.
 
 ``device``
-    Device driver.
+    EXEC device driver.
 
 ``resource``
     Lightweight libraries.
@@ -150,6 +168,11 @@ Module Types
     that provides an interface to hardware that hides as many details of
     the hardware as practical.
 
+``handler``
+    DOS device driver.
+
+``hook``
+    FIXME
 
 
 Configuration File
@@ -164,8 +187,8 @@ Configuration files contain named sections with definitions::
     <definitions>
     ##end <sectionname>
 
-Sectionname can be "config", "class", "cdefprivate", "cdef", "functionlist",
-"methodlist" or "startup".
+Sectionname can be "config", "cdef", "cdefprivate", "functionlist", "cfunctionlist",
+"startup", "methodlist", "class", "handler", "interface" or "attributelist".
 
 
 Section "config"
@@ -216,68 +239,91 @@ to the last non-white-space character on that line.
     library.
 
 ``superclass``
-    FIXME
+    Name of the parent class. Example: ``superclass MUIC_Group``.
 
 ``superclass_field``
     FIXME
 
 ``residentpri``
-    FIXME
+    Sets the value of the rt_Pri field in struct Resident. Additionally,
+    the resident flag is set:
+    
+    priority flag
+    -------- ----
+    >=105    RTF_SINGLETASK
+    >=-60    RTF_COLDSTART
+    <-120    RTF_AFTERDOS
     
 ``options``
-    Comma separated list of options.
+    Comma separated list of options. The defaults depend on the type of module.
 
     ``noautolib``
-        FIXME
+        Do not call the symbolsets. 
 
     ``noexpunge``
-        FIXME
+        Do not expunge the module.
 
     ``noresident``
-        FIXME
+        Do not create struct Resident.
 
     ``peropenerbase``
         Every time the library is opened a new address is returned. This is
         useful if you have defined ``libbasetypeextern``.
 
-    ``peridbase``
-        FIXME
+    ``pertaskbase``
+        See comments in writestart.c of genmodule.
 
     ``includes``
-        FIXME
+        Create the module's public include headers (proto, clib, defines, inline).
 
     ``noincludes``
-        FIXME
+        Don't create public include headers.
 
     ``nostubs``
-        FIXME
+        Don't write the stubs file for the linker library.
 
     ``autoinit``
-        FIXME
+        Add code for automatic library opening to the linker library.
 
     ``noautoinit``
+        Don't add code for automatic library opening to the linker library.
+
+    ``resautoinit``
+        Automatically setup the library functions in struct Resident.
+
+    ``noopenclose``
+        Do not add standard functions for opening and closing the module.
+
+    ``selfinit``
         FIXME
 
 ``sysbase_field``
-    FIXME
+    Sets the name of the sysbase field in the library.
 
 ``seglist_field``
-    FIXME
+    Sets the name of the seglist field in the library.
 
 ``rootbase_field``
-    FIXME
+    Sets the name of the rootbase field in the library.
 
 ``classptr_field``
-    FIXME
+    Sets the name of the classptr field in the library.
 
 ``classptr_var``
-    FIXME
+    The variable which contains a pointer to the class is per default hidden.
+    If you need to have access to this pointer you have to use this option,
+    like::
+    
+        classptr_var MyClass
 
 ``classid``
-    FIXME
+    Public name of the class, either a string or a C macros. Examples::
+    
+        classid "gradientslider.gadget"
+        classid AROSCHECKBOXCLASS
 
 ``classdatatype``
-    FIXME
+    Example: ``classdatatype struct Data``.
 
 ``beginio_func``
     Name of the beginio function of a device.
@@ -286,7 +332,8 @@ to the last non-white-space character on that line.
     Name of the abortio function of a device.
 
 ``dispatcher``
-    FIXME
+    Use this if you want to use a dispatcher which exists in
+    the source code instead of one generated by the build system.
 
 ``initpri``
     Sets the priority of initialization if you have more than one class
@@ -295,10 +342,35 @@ to the last non-white-space character on that line.
     value is initialized first.
 
 ``type``
+    Set the type of a class.
+    "mcc", "mui", "mcp", "image", "gadget", "datatype", "usbclass", "class", "hidd"
+
+``addromtag``
+    Define the variable name of struct Resident.
+
+``oopbase_field``
+    Sets the name of the oopbase field in the library.
+
+``rellib``
+    See comments in genmodule's source.
+
+``interfaceid``
+    Sets the ID of the interface.
+
+``interfacename``
+    Sets the name of the interface.
+
+``methodstub``
     FIXME
 
-``getidfunc``
+``methodbase``
     FIXME
+
+``attributebase``
+    FIXME
+
+``handler_func``
+    Sets the name of the handler function.
 
 
 section "class"
@@ -337,33 +409,25 @@ in the "config" section.
         See `Module Types`_.
 
 ``superclass``
-    Name of the parent class. Example: ``superclass MUIC_Group``.
+    See `Section "config"`_.
 
 ``superclass_field``
-    FIXME.
+    See `Section "config"`_.
 
 ``classptr_field``
-    FIXME
+    See `Section "config"`_.
 
 ``classptr_var``
-    The variable which contains a pointer to the class is per default hidden.
-    If you need to have access to this pointer you have to use this option,
-    like::
-    
-        classptr_var MyClass
+    See `Section "config"`_.
 
 ``classid``
-    Public name of the class, either a string or a C macros. Examples::
-    
-        classid "gradientslider.gadget"
-        classid AROSCHECKBOXCLASS
+    See `Section "config"`_.
 
 ``classdatatype``
-    Example: ``classdatatype struct Data``.
+    See `Section "config"`_.
 
 ``dispatcher``
-    Use this if you want to use a dispatcher which exists in
-    the source code instead of one generated by the build system.
+    See `Section "config"`_.
 
 
 Section "cdef"
@@ -402,27 +466,59 @@ to be given between parentheses::
     ULONG func5(ULONG a, STRPTR b) (D0,A0)
     ##end functionlist
 
-There are some tags which influence the previously defined function.
+There are some modifiers which influence the previously defined function.
 
-``.skip n``
-    Every function gets an index number, the Library Vector Offset.
-    With this tag you can increase the LVO without inserting empty
-    lines in the "functionlist" section.
-
-``.alias name``
+``.alias``
     Define an alternate name for the function.
 
-``.function name``
-    FIXME
+``.function``
+    Define the real name of the function in the source code. Note that
+    for register based function that name will be prefixed by basename
+    and lvo.
 
 ``.cfunction``
-    FIXME
+    Adds a wrapper from a register based function to a C fucntion.
 
 ``.private``
     FIXME
 
 ``.novararg``
+    Do not create a vararg wrapper for the function. By default that
+    wrapper is generated for register based functions if:
+    
+    + The last letter of the function name is A; the vararg function name is
+      the name without this letter A.
+    
+    + The function name ends in TagList; the vararg function name is TagList
+      replaced with Tags.
+    
+    + The function name ends in Args and the name of the last argument to the
+      function is args or arglist or a variation with other capitalization
+      (Args, Arglist, ArgList, ...); the vararg function name is the name
+      without the ending Args.
+    
+    + The type of the last argument is "struct TagItem \*"; the vararg
+      function name is the name with Tags appended.
+
+``.unusedlibbase``
     FIXME
+
+There are some modifiers which influence the following functions.
+
+``.skip``
+    Every function gets an index number, the Library Vector Offset.
+    With this tag you can increase the LVO without inserting empty
+    lines in the "functionlist" section.
+
+``.version``
+    The function will be only available if the library is opened with
+    at least that version.
+
+
+Section "cfunctionlist"
+-----------------------
+
+Same as functionlist but with modifier ".cfunction" for each function.
 
 
 Section "methodlist"
@@ -434,21 +530,61 @@ in the source code.
 
 There are some tags which influence the previously defined method.
 
-``.alias name``
+``.alias``
     Alternative name for the method
 
-``.function name``
-    FIXME
+``.function``
+    Define the real name of the function in the source code.
 
-``.interface name``
+``.interface``
     FIXME
 
 
 Section "startup"
 -----------------
 
+The content will be written at the begin of autoinit.c which will be part
+of the autostart linker library.
+
+
+Section "handler"
+-----------------
+
+``.autodetect``
+    FIXME
+
+``.stacksize``
+    FIXME
+
+``.priority``
+    FIXME
+
+``.bootpri``
+    FIXME
+
+``.startup``
+    FIXME
+
+resident=
+    FIXME
+
+dosnode=
+    FIXME
+
+dostype=
+    FIXME
+
+
+Section "interface"
+-------------------
+
 FIXME
 
+
+Section "attributelist"
+-----------------------
+
+FIXME
 
 
 Defaults
