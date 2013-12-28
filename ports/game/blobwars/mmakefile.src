@@ -67,7 +67,7 @@ BINDIR := $(PREFIX)/
 DATADIR := $(PREFIX)/share/blobwars/
 DOCDIR := $(PREFIX)/share/doc/
 ICONDIR := $(PREFIX)/share/icons/hicolor/
-LOCALEDIR ;= $(PREFIX)/share/locale/
+LOCALEDIR := $(PREFIX)/share/locale/
 MEDAL_SERVER_HOST := www.parallelrealities.co.uk
 MEDAL_SERVER_PORT := 80
 
