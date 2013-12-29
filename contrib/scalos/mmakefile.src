@@ -5,7 +5,6 @@ include $(TOP)/config/make.cfg
 #MM- contrib : contrib-scalos-$(CPU)
 
 #MM- contrib-scalos-i386 : contrib-scalos
-#MM- contrib-scalos-arm : contrib-scalos
 
 #MM- contrib-scalos : \
 #MM     contrib-scalos-cpy \
