@@ -4243,7 +4243,7 @@ diff -ruN OWB-r1097/BAL/Network/WebCore/WK/BCResourceHandleInternalWK.h OWB-r109
 diff -ruN OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp OWB-r1097.aros/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp
 --- OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp	1970-01-01 01:00:00.000000000 +0100
 +++ OWB-r1097.aros/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp	2013-07-10 07:53:52.000000000 +0100
-@@ -0,0 +1,165 @@
+@@ -0,0 +1,169 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -4337,7 +4337,11 @@ diff -ruN OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp OWB-r1097.aros/
 +
 +static struct MsgPort *mp = NULL;
 +static struct timerequest *timereq = NULL;
-+static struct Interrupt timerint = { { NULL, NULL, 0, NT_UNKNOWN, "OWB shared timer int" }, NULL, (void (*)(void)) timerint_func };
++#if defined(__i386__)
++static struct Interrupt timerint = { { NULL, NULL, "OWB shared timer int", NT_UNKNOWN, 0 }, NULL, (void (*)(void)) timerint_func };
++#else
++static struct Interrupt timerint = { { NULL, NULL, NT_UNKNOWN, 0, "OWB shared timer int" }, NULL, (void (*)(void)) timerint_func };
++#endif
 +
 +static void cleanup(void)
 +{
