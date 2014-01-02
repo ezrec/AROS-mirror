@@ -1,7 +1,7 @@
 #ifndef LIBRARIES_XADMASTER_H
 #define LIBRARIES_XADMASTER_H
 
-/*  $Id: xadmaster.h.in,v 1.26 2006/06/21 07:18:12 stoecker Exp $
+/*  $Id$
     xadmaster.library defines and structures
 
     XAD library system for archive handling

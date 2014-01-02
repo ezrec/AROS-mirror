@@ -19,7 +19,7 @@
 
   MUIBuilder Support Site: http://sourceforge.net/projects/muibuilder/
 
-  $Id: load.c 70 2011-01-11 20:08:44Z marust $$
+  $Id$$
 
 ***************************************************************************/
 

@@ -19,7 +19,7 @@
 
   MUIBuilder Support Site: http://sourceforge.net/projects/muibuilder/
 
-  $Id: functions.h 43 2011-01-05 16:24:55Z marust $
+  $Id$
 
 ***************************************************************************/
 

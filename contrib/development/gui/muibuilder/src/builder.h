@@ -19,7 +19,7 @@
 
   MUIBuilder Support Site: http://sourceforge.net/projects/muibuilder/
 
-  $Id: builder.h 73 2011-01-12 18:22:30Z marust $$
+  $Id$
 
 ***************************************************************************/
 

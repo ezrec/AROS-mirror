@@ -1,4 +1,4 @@
-/*  $Id: extheader.c,v 1.3 2005/06/23 15:47:25 stoecker Exp $
+/*  $Id$
     C header for xad externals
 
     XAD library system for archive handling

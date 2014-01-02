@@ -19,7 +19,7 @@
 
   MUIBuilder Support Site: http://sourceforge.net/projects/muibuilder/
 
-  $Id: muib_file.h 12 2010-12-30 20:11:42Z marust $$
+  $Id$$
 
 ***************************************************************************/
 

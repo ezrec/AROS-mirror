@@ -19,7 +19,7 @@
 
   MUIBuilder Support Site: http://sourceforge.net/projects/muibuilder/
 
-  $Id: GenCodeC.c 79 2011-01-16 16:05:40Z marust $
+  $Id$
 
 ***************************************************************************/
 

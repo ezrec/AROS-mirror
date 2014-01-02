@@ -19,7 +19,7 @@
 
   MUIBuilder Support Site: http://sourceforge.net/projects/muibuilder/
 
-  $Id: file.c 44 2011-01-05 22:22:25Z marust $$
+  $Id$$
 
 ***************************************************************************/
 

@@ -19,7 +19,7 @@
 
   MUIBuilder Support Site: http://sourceforge.net/projects/muibuilder/
 
-  $Id: argnotify.c 64 2011-01-09 19:41:59Z marust $$
+  $Id$$
 
 ***************************************************************************/
 

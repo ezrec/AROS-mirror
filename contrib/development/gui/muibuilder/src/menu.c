@@ -19,7 +19,7 @@
 
   MUIBuilder Support Site: http://sourceforge.net/projects/muibuilder/
 
-  $Id: menu.c 73 2011-01-12 18:22:30Z marust $$
+  $Id$$
 
 ***************************************************************************/
 

@@ -19,7 +19,7 @@
 
   MUIBuilder Support Site: http://sourceforge.net/projects/muibuilder/
 
-  $Id: notify.c 75 2011-01-12 19:14:41Z marust $$
+  $Id$$
 
 ***************************************************************************/
 

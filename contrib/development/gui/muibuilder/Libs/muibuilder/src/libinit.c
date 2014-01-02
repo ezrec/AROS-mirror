@@ -19,7 +19,7 @@
 
   MUIBuilder Support Site: http://sourceforge.net/projects/muibuilder/
 
-  $Id: libinit.c 62 2011-01-09 15:30:56Z marust $
+  $Id$
 
 ***************************************************************************/
 

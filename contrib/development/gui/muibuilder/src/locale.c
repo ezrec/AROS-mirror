@@ -19,7 +19,7 @@
 
   MUIBuilder Support Site: http://sourceforge.net/projects/muibuilder/
 
-  $Id: locale.c 61 2011-01-09 08:39:09Z marust $$
+  $Id$$
 
 ***************************************************************************/
 
