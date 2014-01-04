@@ -17,21 +17,14 @@ contrib-scalos-deficons : $(TARGETDIR)/deficons.prefs
 $(TARGETDIR)/deficons.prefs : $(SRCDIR)/$(CURDIR)/deficons.prefs
 	$(CP) $^ $@
 
-
-TARGETDIR := $(AROS_ENVARC)/Scalos
-
 FILES := icandy Palette13.prefs Pattern.prefs Persist.prefs scalos.prefs
 %copy_files_q mmake=contrib-scalos-arosenv \
-    src=$(SRCDIR)/$(CURDIR)/scalos.AROS dst=$(TARGETDIR)
-
+    src=$(SRCDIR)/$(CURDIR)/scalos.AROS dst=$(AROS_ENVARC)/Scalos
 
 %copy_dir_recursive mmake=contrib-scalos-arosenv-english \
-    src=$(SRCDIR)/$(CURDIR)/scalos.AROS/English dst=$(TARGETDIR)
-
-
-TARGETDIR := $(AROS_CONTRIB)/Scalos/Storage/Envarc
+    src=$(SRCDIR)/$(CURDIR)/scalos.AROS/English dst=$(AROS_ENVARC)/Scalos
 
 %copy_dir_recursive mmake=contrib-scalos-arosenv-all \
-    src=$(SRCDIR)/$(CURDIR)/scalos.AROS dst=$(TARGETDIR)
+    src=$(SRCDIR)/$(CURDIR)/scalos.AROS dst=$(AROS_CONTRIB)/Scalos/Storage/Envarc
 
 %common
