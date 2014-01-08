@@ -1,0 +1,22 @@
+====================
+Improvements in 2013
+====================
+
+:Author:   Matthias Rustler
+:Date:     2014-01-08
+:State:    WIP
+
+
+Scalos ported
+-------------
+
+The Wanderer/Workbench replacement `Scalos`__ has been ported to AROS.
+Currently it is only available in nightly builds of `ABIv1`__ of the
+i386 platform. Scalos can either be started like an application from
+*Extras:Scalos* or it can replace Wanderer by exchanging
+``Wanderer:Wanderer`` by ``Scalos:Scalos EMU`` in ``S:Startup-Sequence``.
+
+__ http://scalos.noname.fr
+__ http://aros.sourceforge.net/nightly1.php
+
+FIXME: to be continued
