@@ -1,0 +1,30 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+STACK_NAME := lwIP
+
+#MM- workbench-network : workbench-network-stacks-lwip
+
+#MM- workbench-network-stacks-lwip: linklibs-lwip
+LWIP_C := $(call WILDCARD, lwip/src/api/*.c) \
+          $(call WILDCARD, lwip/src/core/*.c) \
+          $(call WILDCARD, lwip/src/core/ipv4/*.c) \
+          $(call WILDCARD, lwip/src/core/ipv6/*.c) \
+          $(call WILDCARD, lwip/src/core/snmp/*.c) \
+          $(call WILDCARD, lwip/src/netif/*.c) \
+          $(call WILDCARD, lwip/src/netif/ppp/*.c) \
+          arch/sys_arch.c
+
+LWIP_SOURCES := $(LWIP_C:%.c=%)
+
+USER_CFLAGS += -I$(SRCDIR)/$(CURDIR) \
+               -I$(SRCDIR)/$(CURDIR)/lwip/src/include \
+               -I$(SRCDIR)/$(CURDIR)/lwip/src/include/ipv4 \
+               -I$(SRCDIR)/$(CURDIR)/lwip/src/include/ipv6 \
+               -Wno-attributes -Wno-address
+
+%build_linklib mmake=linklibs-lwip \
+    objdir="$(OBJDIR)/lwip" \
+    libname=lwip files="$(LWIP_SOURCES)"
+
+%common
