@@ -32,7 +32,7 @@ int bsd_ioctl(int s, long cmd, void *argp);
 int bsd_fcntl(int s, int cmd, int val);
 
 int bsd_getdtablesize(void);
-in_addr_t bsd_inet_addr(const char *cp);
+struct in_addr bsd_inet_addr(const char *cp);
 char *bsd_inet_ntoa(struct in_addr *addr);
 
 #endif /* BSD_SOCKET_H */

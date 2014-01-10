@@ -2552,9 +2552,12 @@ int bsd_getdtablesize(void)
     return NUM_SOCKETS;
 }
 
-in_addr_t bsd_inet_addr(const char *cp)
+struct in_addr bsd_inet_addr(const char *cp)
 {
-    return (in_addr_t)ipaddr_addr(cp);
+    struct in_addr in;
+
+    in.s_addr = ipaddr_addr(cp);
+    return in;
 }
 
 char *bsd_inet_ntoa(struct in_addr *addr)
