@@ -45,18 +45,28 @@
    <img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
    "Nightly builds" werden automatisch jede Nacht aus dem aktuellen Quellkode erstellt. Falls Du einfach mal eine AROS-Live-CD ausprobieren willst, nimm die "boot ISO" für Deine Plattform (i386 or PPC).<br><br>
    <?php virtual("/cgi-bin/files2") ?> <br></td></tr></tbody></table>-->
+
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Archive Icon\" src=\"/images/archivedownloadicon.gif\" align=\"middle\">"; } 
    else { echo "<img alt=\"Archive Icon\" src=\"/images/archivedownloadicon.png\" align=\"middle\">"; } ?>
    Neuste Archiv-Uploads:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
    Das <a href=http://archives.aros-exec.org>AROS-Archive</a> enthält die neusten Beiträge der Community. Hier findest Du Anwendungsprogramme, Themes, Grafiken und zusätzliche Dokumentation.<br><br>
    <?php include("../rsfeed/archives.php"); ?><br></td></tr></table>
+
    <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
    <?php if ($win_ie56) { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.gif\" align=\"middle\">"; } 
    else { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.png\" align=\"middle\">"; } ?> 
    Neueste Beiträge im AROS-EXEC-Forum:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
    <a href=http://aros-exec.org>AROS-EXEC</a> ist die Haupt-Community-Site. Hier kannst Du Hilfe bekommen, herausfinden was los ist und Deine Gedanken zu AROS los werden.<br><br>
    <?php include("../rsfeed/aeforum.php"); ?><br></td></tr></tbody></table>
+
+   <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
+   <?php if ($win_ie56) { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.gif\" align=\"middle\">"; } 
+   else { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.png\" align=\"middle\">"; } ?>
+   Latest commits:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
+   <a href="http://repo.or.cz/w/AROS.git">AROS.git</a> contains the commits to the source code repository.<br><br>
+   <?php include("../rsfeed/commits.php"); ?><br></td></tr></table>
+
    <table style="width: 100%; text-align: justify; margin-left: auto; margin-right: auto;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td style="vertical-align: top;">
    <?php if ($win_ie56) { echo "<img alt=\"Syndication Icon\" src=\"/images/rssicon1.gif\" align=\"middle\">"; } else { echo "<img alt=\"Syndication Icon\" src=\"/images/rssicon1.png\" align=\"middle\">"; } ?>
    Kurznachrichten:<br><img style="width: 177px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
