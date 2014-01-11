@@ -2,10 +2,32 @@
 Improvements in 2013
 ====================
 
-:Author:   Matthias Rustler, Staf Verhaegen
+:Author:   Matthias Rustler, Staf Verhaegen, Neil Cafferkey
 :Date:     2014-01-08
 :State:    WIP
 
+2013 was mainly a year of internal improvements and fixes to AROS, so 
+there were fewer new bells and whistles added to it than in previous 
+years. However, there were still a few notable components introduced 
+that should be mentioned.
+
+New C libraries
+---------------
+
+After a long journey a cleaned up and split C library was commited to the
+ABIv1 branch. Next to a clean up and some improved documentation, the main
+part of the patch is a split of the ANSI standard part from the POSIX
+part. This allows using standard C functions everywhere in AROS without
+having a POSIX emulation overhead added.
+
+Raspberry Pi
+------------
+
+In 2012 we reported that AROS was running on the Raspberry Pi, but 
+hosted on top of Linux. In 2013 a native version of AROS for this 
+compact and ubiquitous platform emerged, with support for USB, SD card 
+and graphics (at least with the aid of the proprietary binary blob that 
+Linux also relies upon).
 
 Scalos ported
 -------------
@@ -19,10 +41,19 @@ i386 platform. Scalos can either be started like an application from
 __ http://scalos.noname.fr
 __ http://aros.sourceforge.net/nightly1.php
 
-After a long journey a cleaned up and split C library was commited to the
-ABIv1 branch. Next to a clean up and some improved documentation the main
-part of the patch is a split of the ANSI standard part from the POSIX
-part. This allows using standard C functions everywhere in AROS without
-having a POSIX emulation overhead added.
+Sound drivers
+-------------
 
-FIXME: to be continued
+Three new drivers were added for VIA audio controllers, namely some of 
+their Envy24, Envy24HT and AC97 chipsets. Compatibility of our HD Audio 
+driver was also increased, and it now supports a wider range of 
+controllers and codecs.
+
+Miscellaneous
+-------------
+
+Lots of smaller improvements were also made, including bug fixes and 
+refactoring to components such as ATA and SATA drivers, filesystems and 
+partitioning, EFI support, and system shutdown. User interfaces received 
+some attention too, with the Zune GUI system gradually becoming more 
+complete, and new preferences utilities for GRUB and theming options.
