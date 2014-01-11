@@ -2,7 +2,7 @@
 Improvements in 2013
 ====================
 
-:Author:   Matthias Rustler
+:Author:   Matthias Rustler, Staf Verhaegen
 :Date:     2014-01-08
 :State:    WIP
 
@@ -18,5 +18,11 @@ i386 platform. Scalos can either be started like an application from
 
 __ http://scalos.noname.fr
 __ http://aros.sourceforge.net/nightly1.php
+
+After a long journey a cleaned up and split C library was commited to the
+ABIv1 branch. Next to a clean up and some improved documentation the main
+part of the patch is a split of the ANSI standard part from the POSIX
+part. This allows using standard C functions everywhere in AROS without
+having a POSIX emulation overhead added.
 
 FIXME: to be continued
