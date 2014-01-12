@@ -247,12 +247,14 @@ to the last non-white-space character on that line.
 ``residentpri``
     Sets the value of the rt_Pri field in struct Resident. Additionally,
     the resident flag is set:
-    
+
+    ======== ==============
     priority flag
-    -------- ----
+    ======== ==============
     >=105    RTF_SINGLETASK
     >=-60    RTF_COLDSTART
     <-120    RTF_AFTERDOS
+    ======== ==============
     
 ``options``
     Comma separated list of options. The defaults depend on the type of module.
