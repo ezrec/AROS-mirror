@@ -10,8 +10,9 @@ unixio_hidd
 
 ========================================== ========================================== ========================================== ========================================== 
 `--background--`_                          `aoHidd_UnixIO_Architecture`_              `aoHidd_UnixIO_Opener`_                    `moHidd_UnixIO_AddInterrupt`_              
-`moHidd_UnixIO_CloseFile`_                 `moHidd_UnixIO_IOControlFile`_             `moHidd_UnixIO_MemoryMap`_                 `moHidd_UnixIO_MemoryUnMap`_               
-`moHidd_UnixIO_OpenFile`_                  `moHidd_UnixIO_Poll`_                      `moHidd_UnixIO_ReadFile`_                  `moHidd_UnixIO_RemInterrupt`_              
+`moHidd_UnixIO_CloseFile`_                 `moHidd_UnixIO_ClosePacket`_               `moHidd_UnixIO_IOControlFile`_             `moHidd_UnixIO_MemoryMap`_                 
+`moHidd_UnixIO_MemoryUnMap`_               `moHidd_UnixIO_OpenFile`_                  `moHidd_UnixIO_OpenPacket`_                `moHidd_UnixIO_Poll`_                      
+`moHidd_UnixIO_ReadFile`_                  `moHidd_UnixIO_RecvPacket`_                `moHidd_UnixIO_RemInterrupt`_              `moHidd_UnixIO_SendPacket`_                
 `moHidd_UnixIO_Wait`_                      `moHidd_UnixIO_WriteFile`_                 
 ========================================== ========================================== ========================================== ========================================== 
 
@@ -165,7 +166,7 @@ Synopsis
 ~~~~~~~~
 ::
 
-     OOP_DoMethod(OOP_Object *obj, struct uioMsgAddInterrupt *msg);
+     OOP_DoMethod(OOP_Object *obj, struct pHidd_UnixIO_AddInterrupt *msg);
 
      int Hidd_UnixIO_AddInterrupt(OOP_Object *obj, struct uioInterrupt *interrupt);
 
@@ -221,7 +222,7 @@ Synopsis
 ~~~~~~~~
 ::
 
-     OOP_DoMethod(OOP_Object *obj, struct uioMsgCloseFile *msg);
+     OOP_DoMethod(OOP_Object *obj, struct pHidd_UnixIO_CloseFile *msg);
 
      int Hidd_UnixIO_CloseFile (OOP_Object *obj, int fd, int *errno_ptr);
 
@@ -265,6 +266,57 @@ See also
 
 ----------
 
+moHidd_UnixIO_ClosePacket
+=========================
+
+Synopsis
+~~~~~~~~
+::
+
+     OOP_DoMethod(OOP_Object *obj, struct pHidd_UnixIO_ClosePacket *msg);
+
+     int Hidd_UnixIO_ClosePacket (OOP_Object *obj, int fd, int *errno_ptr);
+
+
+Function
+~~~~~~~~
+::
+
+     Close a UNIX packet descriptor.
+
+
+Inputs
+~~~~~~
+::
+
+     obj       - A pointer to a UnixIO object.
+     pd        - A packet descriptor to close.
+     errno_ptr - An optional pointer to a location where error code (a value of UNIX
+                 errno variable) will be written.
+
+
+Result
+~~~~~~
+::
+
+     0 in case of success and -1 on failure.
+
+
+Notes
+~~~~~
+::
+
+     Despite there's no return value, error code still can be set.
+
+
+
+See also
+~~~~~~~~
+
+`moHidd_UnixIO_OpenPacket`_ 
+
+----------
+
 moHidd_UnixIO_IOControlFile
 ===========================
 
@@ -272,7 +324,7 @@ Synopsis
 ~~~~~~~~
 ::
 
-     OOP_DoMethod(OOP_Object *obj, struct uioMsgIOControlFile *msg);
+     OOP_DoMethod(OOP_Object *obj, struct pHidd_UnixIO_IOControlFile *msg);
 
      int Hidd_UnixIO_IOControlFile(OOP_Object *obj, int fd, int request, void *param, int *errno_ptr);
 
@@ -320,7 +372,7 @@ Synopsis
 ~~~~~~~~
 ::
 
-     OOP_DoMethod(OOP_Object *obj, struct uioMsgMemoryMap *msg);
+     OOP_DoMethod(OOP_Object *obj, struct pHidd_UnixIO_MemoryMap *msg);
 
      int Hidd_UnixIO_MemoryMap(OOP_Object *obj, OOP_Object *o, void *addr, int len, int prot, int flags, int fd, int offset, int *errno_ptr);
 
@@ -366,7 +418,7 @@ Synopsis
 ~~~~~~~~
 ::
 
-     OOP_DoMethod(OOP_Object *obj, struct uioMsgMemoryUnMap *msg);
+     OOP_DoMethod(OOP_Object *obj, struct pHidd_UnixIO_MemoryUnMap *msg);
 
      int Hidd_UnixIO_MemoryUnMap(OOP_Object *obj, OOP_Object *o, void *addr, int len, int *errno_ptr);
 
@@ -411,7 +463,7 @@ Synopsis
 ~~~~~~~~
 ::
 
-     OOP_DoMethod(OOP_Object *obj, struct uioMsgOpenFile *msg);
+     OOP_DoMethod(OOP_Object *obj, struct pHidd_UnixIO_OpenFile *msg);
 
      int Hidd_UnixIO_OpenFile (OOP_Object *obj, const char *filename, int flags, int mode, int *errno_ptr);
 
@@ -451,6 +503,50 @@ See also
 
 ----------
 
+moHidd_UnixIO_OpenPacket
+========================
+
+Synopsis
+~~~~~~~~
+::
+
+     OOP_DoMethod(OOP_Object *obj, struct pHidd_UnixIO_OpenPacket *msg);
+
+     int Hidd_UnixIO_OpenPacket (OOP_Object *obj, const char *Interface, int *errno_ptr);
+
+
+Function
+~~~~~~~~
+::
+
+     Open a UNIX packet descriptor to a raw network interface
+
+
+Inputs
+~~~~~~
+::
+
+     obj       - An pointer to a UnixIO object
+     interface - Name of a network interace (ie eth0)
+     errno_ptr - An optional pointer to a location where error code (value of
+             UNIX errno variable) will be written
+
+
+Result
+~~~~~~
+::
+
+     A number of the opened packet descriptor or -1 for an error. 
+
+
+
+See also
+~~~~~~~~
+
+`moHidd_UnixIO_ClosePacket`_ 
+
+----------
+
 moHidd_UnixIO_Poll
 ==================
 
@@ -458,7 +554,7 @@ Synopsis
 ~~~~~~~~
 ::
 
-     OOP_DoMethod(OOP_Object *obj, struct uioMsgPoll *msg);
+     OOP_DoMethod(OOP_Object *obj, struct pHidd_UnixIO_Poll *msg);
 
      int Hidd_UnixIO_Poll(OOP_Object *obj, int fd, int mode, int *errno_ptr);
 
@@ -505,7 +601,7 @@ Synopsis
 ~~~~~~~~
 ::
 
-     OOP_DoMethod(OOP_Object *obj, struct uioMsgReadFile *msg);
+     OOP_DoMethod(OOP_Object *obj, struct pHidd_UnixIO_ReadFile *msg);
 
      int Hidd_UnixIO_ReadFile(OOP_Object *obj, int fd, void *buffer, int count, int *errno_ptr);
 
@@ -555,6 +651,63 @@ See also
 
 ----------
 
+moHidd_UnixIO_RecvPacket
+========================
+
+Synopsis
+~~~~~~~~
+::
+
+     OOP_DoMethod(OOP_Object *obj, struct pHidd_UnixIO_RecvPacket *msg);
+
+     int Hidd_UnixIO_RecvPacket(OOP_Object *obj, int fd, void *buffer, int count, int *errno_ptr);
+
+
+Function
+~~~~~~~~
+::
+
+     Read packet from a Unix packet descriptor
+
+
+Inputs
+~~~~~~
+::
+
+     obj       - A pointer to a UnixIO object.
+     pd        - A packet descriptor to read from.
+     buffer    - A pointer to a buffer for data.
+     count     - Number of bytes to read.
+     errno_ptr - An optional pointer to a location where error code (a value of UNIX
+                 errno variable) will be written.
+
+
+Result
+~~~~~~
+::
+
+     Number of bytes actually read or -1 if error happened.
+
+
+Notes
+~~~~~
+::
+
+     If there's no errno pointer supplied read operation will be automatically repeated if one
+     of EINTR or EAGAIN error happens. If you supplied valid own errno_ptr you should be ready
+     to handle these conditions yourself.
+
+     This method can be called from within interrupts.
+
+
+
+See also
+~~~~~~~~
+
+`moHidd_UnixIO_SendPacket`_ 
+
+----------
+
 moHidd_UnixIO_RemInterrupt
 ==========================
 
@@ -562,7 +715,7 @@ Synopsis
 ~~~~~~~~
 ::
 
-     OOP_DoMethod(OOP_Object *obj, struct uioMsgRemInterrupt *msg);
+     OOP_DoMethod(OOP_Object *obj, struct pHidd_UnixIO_RemInterrupt *msg);
 
      void Hidd_UnixIO_RemInterrupt(OOP_Object *obj, struct uioInterrupt *interrupt);
 
@@ -597,6 +750,63 @@ See also
 
 ----------
 
+moHidd_UnixIO_SendPacket
+========================
+
+Synopsis
+~~~~~~~~
+::
+
+     OOP_DoMethod(OOP_Object *obj, struct pHidd_UnixIO_SendPacket *msg);
+
+     int Hidd_UnixIO_SendPacket(OOP_Object *obj, int fd, void *buffer, int count, int *errno_ptr);
+
+
+Function
+~~~~~~~~
+::
+
+     Write data to a UNIX packet descriptor.
+
+
+Inputs
+~~~~~~
+::
+
+     obj       - A pointer to a UnixIO object.
+     pd        - A packet descriptor to write to.
+     buffer    - A pointer to a buffer containing data.
+     count     - Number of bytes to write.
+     errno_ptr - An optional pointer to a location where error code (a value of UNIX
+                 errno variable) will be written.
+
+
+Result
+~~~~~~
+::
+
+     Number of bytes actually written or -1 if error happened.
+
+
+Notes
+~~~~~
+::
+
+     If there's no errno pointer supplied read operation will be automatically repeated if one
+     of EINTR or EAGAIN error happens. If you supplied valid own errno_ptr you should be ready
+     to handle these conditions yourself.
+
+     This method can be called from within interrupts.
+
+
+
+See also
+~~~~~~~~
+
+`moHidd_UnixIO_RecvPacket`_ 
+
+----------
+
 moHidd_UnixIO_Wait
 ==================
 
@@ -604,7 +814,7 @@ Synopsis
 ~~~~~~~~
 ::
 
-     OOP_DoMethod(OOP_Object *obj, struct uioMsg *msg);
+     OOP_DoMethod(OOP_Object *obj, struct pHidd_UnixIO_ *msg);
 
      IPTR Hidd_UnixIO_Wait(OOP_Object *obj, ULONG fd, ULONG mode);
 
@@ -644,7 +854,7 @@ Synopsis
 ~~~~~~~~
 ::
 
-     OOP_DoMethod(OOP_Object *obj, struct uioMsgWriteFile *msg);
+     OOP_DoMethod(OOP_Object *obj, struct pHidd_UnixIO_WriteFile *msg);
 
      int Hidd_UnixIO_WriteFile(OOP_Object *obj, int fd, void *buffer, int count, int *errno_ptr);
 
