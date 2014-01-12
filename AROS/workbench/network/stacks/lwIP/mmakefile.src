@@ -21,7 +21,8 @@ USER_CFLAGS += -I$(SRCDIR)/$(CURDIR) \
                -I$(SRCDIR)/$(CURDIR)/lwip/src/include \
                -I$(SRCDIR)/$(CURDIR)/lwip/src/include/ipv4 \
                -I$(SRCDIR)/$(CURDIR)/lwip/src/include/ipv6 \
-               -Wno-attributes -Wno-address
+               -Wno-attributes -Wno-address \
+               -Wno-unused-but-set-variable
 
 %build_linklib mmake=linklibs-lwip \
     objdir="$(OBJDIR)/lwip" \
