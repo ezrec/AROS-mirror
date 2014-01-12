@@ -26,6 +26,18 @@
 
 .. raw:: html
 
+   <table style="width: 100%; text-align: justify; margin-left: auto; margin-right: auto; min-height: 300px;" background="/images/bgcolormain.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
+
+Commits
+=======
+
+.. raw:: html
+
+   <?php include("../rsfeed/commits.php"); ?></td></tr></table>
+
+
+.. raw:: html
+
    <table style="width: 100%; text-align: justify; margin-left: auto; margin-right: auto;" border="0" cellpadding="1" cellspacing="1"><tr><td>
 
 .. Include:: news/index.cs
@@ -59,13 +71,6 @@
    Poslední pøíspìvky na AROS-EXEC fóru:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
    <a href=http://aros-exec.org>AROS-EXEC</a> je primární komunitní stránka AROSu. Mù¾ete zde vyhledat pomoc, zjistit co se dìje v rámci komunity nového a sdílet svoje my¹lenky.<br><br>
    <?php include("../rsfeed/aeforum.php"); ?><br></td></tr></tbody></table>
-
-   <table style="text-align: justify; width: 100%;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td>
-   <?php if ($win_ie56) { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.gif\" align=\"middle\">"; } 
-   else { echo "<img alt=\"Community Icon\" src=\"/images/communityicon.png\" align=\"middle\">"; } ?>
-   Latest commits:<br><img style="width: 238px; height: 2px;" alt="spacer" src="/images/sidespacer.png"><br>
-   <a href="http://repo.or.cz/w/AROS.git">AROS.git</a> contains the commits to the source code repository.<br><br>
-   <?php include("../rsfeed/commits.php"); ?><br></td></tr></table>
 
    <table style="width: 100%; text-align: justify; margin-left: auto; margin-right: auto;" background="/images/bgcolorright.png" border="0" cellpadding="1" cellspacing="1"><tr><td style="vertical-align: top;">
    <?php if ($win_ie56) { echo "<img alt=\"Syndication Icon\" src=\"/images/rssicon1.gif\" align=\"middle\">"; } else { echo "<img alt=\"Syndication Icon\" src=\"/images/rssicon1.png\" align=\"middle\">"; } ?>
