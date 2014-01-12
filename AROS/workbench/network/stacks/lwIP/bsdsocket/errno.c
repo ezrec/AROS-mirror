@@ -17,7 +17,7 @@
 /*  SYNOPSIS */
 
 /*  LOCATION */
-        struct Library *, SocketBase, 27, BSDSocket)
+        struct bsdsocketBase *, bsdsocketBase, 27, BSDSocket)
 
 /*  FUNCTION
 
@@ -41,10 +41,7 @@
 {
     AROS_LIBFUNC_INIT
 
-    aros_print_not_implemented ("Errno");
-/* FIXME: Write BSDSocket/Errno */
-
-    return 0;
+    return bsd_errno(bsdsocketBase->bsd);
 
     AROS_LIBFUNC_EXIT
 

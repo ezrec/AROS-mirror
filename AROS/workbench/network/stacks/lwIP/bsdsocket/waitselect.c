@@ -25,7 +25,7 @@
         AROS_LHA(ULONG *,          sigmask,   D1),
 
 /*  LOCATION */
-        struct Library *, SocketBase, 21, BSDSocket)
+        struct bsdsocketBase *, bsdsocketBase, 21, BSDSocket)
 
 /*  FUNCTION
 
@@ -49,8 +49,7 @@
 {
     AROS_LIBFUNC_INIT
 
-/* FIXME: Abort on any of the desired signals */
-    return bsd_select(nfds, readfds, writefds, exceptfds, timeout);
+    return bsd_select(bsdsocketBase->bsd, nfds, readfds, writefds, exceptfds, timeout, sigmask);
 
     AROS_LIBFUNC_EXIT
 

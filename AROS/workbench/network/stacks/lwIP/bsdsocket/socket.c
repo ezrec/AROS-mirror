@@ -23,7 +23,7 @@
         AROS_LHA(int, protocol, D2),
 
 /*  LOCATION */
-        struct bsdsocketBase *, SocketBase, 5, BSDSocket)
+        struct bsdsocketBase *, bsdsocketBase, 5, BSDSocket)
 
 /*  FUNCTION
 
@@ -47,7 +47,7 @@
 {
     AROS_LIBFUNC_INIT
 
-    return bsd_socket(domain, type, protocol);
+    return bsd_socket(bsdsocketBase->bsd, domain, type, protocol);
 
     AROS_LIBFUNC_EXIT
 

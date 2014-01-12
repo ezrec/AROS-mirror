@@ -19,7 +19,7 @@
         AROS_LHA(LONG, id, D1),
 
 /*  LOCATION */
-        struct Library *, SocketBase, 26, BSDSocket)
+        struct bsdsocketBase *, bsdsocketBase, 26, BSDSocket)
 
 /*  FUNCTION
 
@@ -43,10 +43,10 @@
 {
     AROS_LIBFUNC_INIT
 
-    aros_print_not_implemented ("ReleaseCopyOfSocket");
-/* FIXME: Write BSDSocket/ReleaseCopyOfSocket */
+    int ns;
 
-    return 0;
+    ns = bsd_socket_dup2(bsdsocketBase->bsd, sd, -1);
+    return bsd_socket_release(bsdsocketBase->bsd, ns, id);
 
     AROS_LIBFUNC_EXIT
 

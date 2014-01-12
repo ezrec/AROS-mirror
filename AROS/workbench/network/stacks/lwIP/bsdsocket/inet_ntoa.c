@@ -18,7 +18,7 @@
         AROS_LHA(unsigned long, in, D0),
 
 /*  LOCATION */
-        struct bsdsocketBase *, SocketBase, 29, BSDSocket)
+        struct bsdsocketBase *, bsdsocketBase, 29, BSDSocket)
 
 /*  FUNCTION
 
@@ -42,7 +42,7 @@
 {
     AROS_LIBFUNC_INIT
 
-    return bsd_inet_ntoa((struct in_addr *)&in);
+    return bsd_inet_ntoa(bsdsocketBase->bsd, (struct in_addr *)&in);
 
     AROS_LIBFUNC_EXIT
 

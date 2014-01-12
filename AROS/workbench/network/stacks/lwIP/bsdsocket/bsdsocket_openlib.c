@@ -16,32 +16,38 @@ extern APTR BSDSocket_FuncTable[];
 
 AROS_LH1(struct Library *, BSDSocket_OpenLib,
         AROS_LHA(ULONG, version, D0),
-        struct Library *, BSDSocketBase, 1, BSDSocket)
+        struct BSDSocketBase *, BSDSocketBase, 1, BSDSocket)
 {
     AROS_LIBFUNC_INIT
+    struct bsd *bsd;
 
     struct bsdsocketBase *bsdsocketBase;
 
-    bsdsocketBase = (struct bsdsocketBase *)MakeLibrary(BSDSocket_FuncTable, NULL, NULL, sizeof(struct bsdsocketBase), NULL);
+    bsd = bsd_init(BSDSocketBase->bsd_global);
+    if (!bsd)
+        return NULL;
 
-    bsdsocketBase->lib.lib_Node.ln_Name = BSDSocketBase->lib_Node.ln_Name;
+    bsdsocketBase = (struct bsdsocketBase *)MakeLibrary(BSDSocket_FuncTable, NULL, NULL, sizeof(struct bsdsocketBase), NULL);
+    if (!bsdsocketBase) {
+        bsd_expunge(bsd);
+        return NULL;
+    }
+
+    bsdsocketBase->lib.lib_Node.ln_Name = BSDSocketBase->lib.lib_Node.ln_Name;
     bsdsocketBase->lib.lib_Node.ln_Type = NT_LIBRARY;
-    bsdsocketBase->lib.lib_Node.ln_Pri = BSDSocketBase->lib_Node.ln_Pri;
+    bsdsocketBase->lib.lib_Node.ln_Pri = BSDSocketBase->lib.lib_Node.ln_Pri;
     bsdsocketBase->lib.lib_Flags = LIBF_CHANGED;
-    bsdsocketBase->lib.lib_Version = BSDSocketBase->lib_Version;
-    bsdsocketBase->lib.lib_Revision = BSDSocketBase->lib_Revision;
-    bsdsocketBase->lib.lib_IdString = BSDSocketBase->lib_IdString;
+    bsdsocketBase->lib.lib_Version = BSDSocketBase->lib.lib_Version;
+    bsdsocketBase->lib.lib_Revision = BSDSocketBase->lib.lib_Revision;
+    bsdsocketBase->lib.lib_IdString = BSDSocketBase->lib.lib_IdString;
 
     SumLibrary(&bsdsocketBase->lib);
 
-    bsdsocketBase->errnoPtr = &bsdsocketBase->errnoVal;
-    bsdsocketBase->errnoSize = sizeof(bsdsocketBase->errnoVal);
     bsdsocketBase->sigintr = SIGBREAKF_CTRL_C;
 
-    /* FIXME: Make adjustable descriptor table size */
     bsdsocketBase->lib.lib_OpenCnt++;
     bsdsocketBase->lib_Master = BSDSocketBase;
-    BSDSocketBase->lib_OpenCnt++;
+    BSDSocketBase->lib.lib_OpenCnt++;
 
     return &bsdsocketBase->lib;
 
@@ -52,7 +58,7 @@ AROS_LH0(BPTR, BSDSocket_CloseLib,
          struct bsdsocketBase *, bsdsocketBase, 2, BSDSocket)
 {
     AROS_LIBFUNC_INIT
-    struct Library *BSDSocketBase = bsdsocketBase->lib_Master;
+    struct Library *BSDSocketBase = &bsdsocketBase->lib_Master->lib;
 
     bsdsocketBase->lib.lib_OpenCnt--;
     BSDSocketBase->lib_OpenCnt--;
@@ -61,6 +67,7 @@ AROS_LH0(BPTR, BSDSocket_CloseLib,
         APTR addr;
 
         addr = (APTR)((IPTR)bsdsocketBase - bsdsocketBase->lib.lib_NegSize);
+        bsd_expunge(bsdsocketBase->bsd);
         FreeMem(addr, bsdsocketBase->lib.lib_NegSize + bsdsocketBase->lib.lib_PosSize);
     }
 

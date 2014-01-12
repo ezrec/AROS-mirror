@@ -26,7 +26,7 @@
         AROS_LHA(int *,             fromlen, A2),
 
 /*  LOCATION */
-        struct bsdsocketBase *, SocketBase, 12, BSDSocket)
+        struct bsdsocketBase *, bsdsocketBase, 12, BSDSocket)
 
 /*  FUNCTION
 
@@ -50,7 +50,7 @@
 {
     AROS_LIBFUNC_INIT
 
-    return bsd_recvfrom(s, buf, len, flags, from, fromlen);
+    return bsd_recvfrom(bsdsocketBase->bsd, s, buf, len, flags, from, fromlen);
 
     AROS_LIBFUNC_EXIT
 

@@ -46,7 +46,7 @@
 
     D(bug("[bsdsocket] CloseSocket(%u)\n", s));
 
-    return bsd_close(s);
+    return bsd_close(bsdsocketBase->bsd, s);
 
     AROS_LIBFUNC_EXIT
 } /* CloseSocket */

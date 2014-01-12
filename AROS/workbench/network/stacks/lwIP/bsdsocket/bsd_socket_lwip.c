@@ -1,15 +1,6 @@
 /**
- * @file
  * Sockets BSD-Like API module
  *
- */
-
-#include <lwip/opt.h>
-#include <lwip/sockets.h>
-#include <lwip/inet.h>
-#include <lwip/ip4_addr.h>
-
-/*
  * Copyright (c) 2001-2004 Swedish Institute of Computer Science.
  * All rights reserved.
  *
@@ -35,15 +26,28 @@
  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  *
- * This file is part of the lwIP TCP/IP stack.
- *
  * Author: Adam Dunkels <adam@sics.se>
  *
  * Improved by Marc Boucher <marc@mbsi.ca> and David Haas <dhaas@alum.rpi.edu>
  *
+ * Adapted for use in the AROS lwIP based bsdsockets.library, these portions
+ * Copyright (c) 2014, The AROS Development Team
+ * Author: Jason S. McMullan <jason.mcmullan@gmail.com>
  */
 
-#include "lwip/opt.h"
+#define DEBUG 1
+
+#include <aros/debug.h>
+#include <proto/exec.h>
+#include <libraries/bsdsocket.h>
+
+#include "bsd_socket.h"
+
+#include <lwip/opt.h>
+#include <lwip/init.h>
+#include <lwip/sockets.h>
+#include <lwip/inet.h>
+#include <lwip/ip4_addr.h>
 
 #include "lwip/sockets.h"
 #include "lwip/api.h"
@@ -60,6 +64,12 @@
 #endif
 
 #include <string.h>
+
+#define BSD_ASSERT(msg, iftrue) do { \
+    if (iftrue) { \
+        D(bug("bsd[%p] %s\n", bsd, msg)); \
+    } } while (0)
+
 
 #define IP4ADDR_PORT_TO_SOCKADDR(sin, ipXaddr, port) do { \
       (sin)->sin_len = sizeof(struct sockaddr_in); \
@@ -119,12 +129,19 @@
                                                     SOCK_ADDR_TYPE_MATCH(name, sock))
 #define IS_SOCK_ADDR_ALIGNED(name)      ((((mem_ptr_t)(name)) % 4) == 0)
 
-
-
-#define NUM_SOCKETS MEMP_NUM_NETCONN
+struct bsd_creator {
+    int id;     /* Used in ObtainSocket/ReleaseSocket */
+    int domain, type, protocol;
+    int accepted;
+};
 
 /** Contains all internal pointers and states used for a socket */
-struct lwip_sock {
+struct bsd_sock {
+  struct MinNode node;
+  /** usage count **/
+  int usage; 
+  /** creation information **/
+  struct bsd_creator creator;
   /** sockets currently are built on netconns, each socket has one netconn */
   struct netconn *conn;
   /** data that was left from the previous read */
@@ -146,11 +163,11 @@ struct lwip_sock {
 };
 
 /** Description for a task waiting in select */
-struct lwip_select_cb {
+struct bsd_select_cb {
   /** Pointer to the next waiting task */
-  struct lwip_select_cb *next;
+  struct bsd_select_cb *next;
   /** Pointer to the previous waiting task */
-  struct lwip_select_cb *prev;
+  struct bsd_select_cb *prev;
   /** readset passed to select */
   fd_set *readset;
   /** writeset passed to select */
@@ -165,10 +182,11 @@ struct lwip_select_cb {
 
 /** This struct is used to pass data to the set/getsockopt_internal
  * functions running in tcpip_thread context (only a void* is allowed) */
-struct lwip_setgetsockopt_data {
+struct bsd_setgetsockopt_data {
+  struct bsd *bsd;
   /** socket struct for which to change options */
-  struct lwip_sock *sock;
-#ifdef LWIP_DEBUG
+  struct bsd_sock *sock;
+#if DEBUG
   /** socket index for which to change options */
   int s;
 #endif /* LWIP_DEBUG */
@@ -196,14 +214,89 @@ union sockaddr_aligned {
    struct sockaddr_in sin;
 };
 
+struct bsd_global {
+    struct MinList bsd_list;
+    struct MinList bsd_sock_list;
+    struct SignalSemaphore bsd_lock;
+};
 
-/** The global array of available sockets */
-static struct lwip_sock sockets[NUM_SOCKETS];
-/** The global list of tasks waiting for select */
-static struct lwip_select_cb *select_cb_list;
-/** This counter is increased from lwip_select when the list is chagned
-    and checked in event_callback to see if it has changed. */
-static volatile int select_cb_ctr;
+struct bsd {
+    struct MinNode bsd_node;
+
+    struct bsd_global *bsd_global;
+    struct {
+        /** The list of tasks waiting for select */
+        struct bsd_select_cb *list;
+        /** This counter is increased from lwip_select when the list is chagned
+            and checked in event_callback to see if it has changed. */
+        volatile int ctr;
+    } bsd_select_cb;
+
+    struct {
+        int sockets;
+        struct bsd_sock **socket;
+    } bsd_dt;
+    struct {
+        void *ptr;
+        void (*update)(struct bsd *bsd, int errno_val);
+        int value;      /* Last set value */
+    } bsd_errno;
+};
+
+struct bsd_global *bsd_global_init(void)
+{
+    struct bsd_global *bg;
+
+    lwip_init();
+
+    bg = AllocVec(sizeof(*bg), MEMF_ANY | MEMF_CLEAR);
+    if (bg) {
+        NEWLIST(&bg->bsd_list);
+        NEWLIST(&bg->bsd_sock_list);
+
+        InitSemaphore(&bg->bsd_lock);
+    }
+
+    return bg;
+}
+
+int bsd_global_expunge(struct bsd_global *bg)
+{
+    if (IsListEmpty(&bg->bsd_list)) {
+        FreeVec(bg);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+struct bsd *bsd_init(struct bsd_global *bsd_global)
+{
+    struct bsd *bsd;
+
+    if ((bsd = AllocVec(sizeof(*bsd), MEMF_ANY | MEMF_CLEAR))) {
+        bsd->bsd_global = bsd_global;
+        bsd->bsd_dt.sockets = BSD_DTABLESIZE_DEFAULT;
+        bsd->bsd_dt.socket = AllocVec(sizeof(bsd->bsd_dt.socket[0])*bsd->bsd_dt.sockets, MEMF_ANY | MEMF_CLEAR);
+        if (bsd->bsd_dt.socket) {
+            ADDTAIL(&bsd->bsd_global, bsd);
+            return bsd;
+        }
+        FreeVec(bsd);
+    }
+
+    return NULL;
+}
+
+/* THIS CANNOT FAIL!
+ * It may stall, or spawn a Task to finish cleaning up,
+ * but it cannot fail.
+ */
+void bsd_expunge(struct bsd *bsd)
+{
+    REMOVE(bsd);
+    FreeVec(bsd);
+}
 
 /** Table to quickly map an lwIP error (err_t) to a socket error
   * by using -err as an index */
@@ -233,13 +326,7 @@ static const int err_to_errno_table[] = {
   ((unsigned)(-(err)) < ERR_TO_ERRNO_TABLE_SIZE ? \
     err_to_errno_table[-(err)] : EIO)
 
-#ifdef ERRNO
-#ifndef set_errno
-#define set_errno(err) errno = (err)
-#endif
-#else /* ERRNO */
-#define set_errno(err)
-#endif /* ERRNO */
+#define set_errno(err)  do { bsd->bsd_errno.value = err; if (bsd->bsd_errno.ptr) { bsd->bsd_errno.update(bsd, bsd->bsd_errno.value); } } while (0)
 
 #define sock_set_errno(sk, e) do { \
   sk->err = (e); \
@@ -248,27 +335,74 @@ static const int err_to_errno_table[] = {
 
 /* Forward delcaration of some functions */
 static void event_callback(struct netconn *conn, enum netconn_evt evt, u16_t len);
-static void lwip_getsockopt_internal(void *arg);
-static void lwip_setsockopt_internal(void *arg);
+static void bsd_getsockopt_internal(void *arg);
+static void bsd_setsockopt_internal(void *arg);
+
+/* Set errno number pointer */
+static inline void errno_byte(struct bsd *bsd, int errno_val)
+{
+    *(BYTE *)bsd->bsd_errno.ptr = (BYTE)errno_val;
+}
+
+static inline void errno_word(struct bsd *bsd, int errno_val)
+{
+    *(WORD *)bsd->bsd_errno.ptr = (WORD)errno_val;
+}
+
+static inline void errno_long(struct bsd *bsd, int errno_val)
+{
+    *(LONG *)bsd->bsd_errno.ptr = (LONG)errno_val;
+}
+
+static inline void errno_quad(struct bsd *bsd, int errno_val)
+{
+    *(QUAD *)bsd->bsd_errno.ptr = (QUAD)errno_val;
+}
+
+int bsd_set_errno(struct bsd *bsd, void *errno_ptr, size_t errno_size)
+{
+    void (*func)(struct bsd *bsd, int errno_val);
+
+    switch (errno_size) {
+    case 1: func = errno_byte; break;
+    case 2: func = errno_word; break;
+    case 4: func = errno_long; break;
+    case 8: func = errno_quad; break;
+    default:
+        return -EINVAL;
+    }
+
+    bsd->bsd_errno.ptr = errno_ptr;
+    bsd->bsd_errno.update = func;
+
+    return 0;
+}
+
+int bsd_errno(struct bsd *bsd)
+{
+    return bsd->bsd_errno.value;
+}
 
 /**
  * Map a externally used socket index to the internal socket representation.
  *
  * @param s externally used socket index
- * @return struct lwip_sock for the socket or NULL if not found
+ * @return struct bsd_sock for the socket or NULL if not found
  */
-static struct lwip_sock *
-get_socket(int s)
+static struct bsd_sock *get_socket(struct bsd *bsd, int s)
 {
-  struct lwip_sock *sock;
+  struct bsd_sock *sock;
 
-  if ((s < 0) || (s >= NUM_SOCKETS)) {
+  if (!bsd)
+      return NULL;
+
+  if ((s < 0) || (s >= bsd->bsd_dt.sockets)) {
     D(bug("get_socket(%d): invalid\n", s));
     set_errno(EBADF);
     return NULL;
   }
 
-  sock = &sockets[s];
+  sock = bsd->bsd_dt.socket[s];
 
   if (!sock->conn) {
     D(bug("get_socket(%d): not active\n", s));
@@ -283,18 +417,17 @@ get_socket(int s)
  * Same as get_socket but doesn't set errno
  *
  * @param s externally used socket index
- * @return struct lwip_sock for the socket or NULL if not found
+ * @return struct bsd_sock for the socket or NULL if not found
  */
-static struct lwip_sock *
-tryget_socket(int s)
+static struct bsd_sock *tryget_socket(struct bsd *bsd, int s)
 {
-  if ((s < 0) || (s >= NUM_SOCKETS)) {
+  if ((s < 0) || (s >= bsd->bsd_dt.sockets)) {
     return NULL;
   }
-  if (!sockets[s].conn) {
+  if (!bsd->bsd_dt.socket[s]) {
     return NULL;
   }
-  return &sockets[s];
+  return bsd->bsd_dt.socket[s];
 }
 
 /**
@@ -305,34 +438,49 @@ tryget_socket(int s)
  *                 0 if socket has been created by socket()
  * @return the index of the new socket; -1 on error
  */
-static int
-alloc_socket(struct netconn *newconn, int accepted)
+static int alloc_socket(struct bsd *bsd, struct netconn *newconn, int domain, int type, int protocol, int accepted)
 {
   int i;
+  struct bsd_sock *sock;
   SYS_ARCH_DECL_PROTECT(lev);
 
+  sock = AllocVec(sizeof(*sock), MEMF_ANY | MEMF_CLEAR);
+  if (sock == NULL) {
+      set_errno(ENOMEM);
+      return -1;
+  }
+
   /* allocate a new socket identifier */
-  for (i = 0; i < NUM_SOCKETS; ++i) {
+  for (i = 0; i < bsd->bsd_dt.sockets; ++i) {
     /* Protect socket array */
     SYS_ARCH_PROTECT(lev);
-    if (!sockets[i].conn) {
-      sockets[i].conn       = newconn;
+    if (!bsd->bsd_dt.socket[i]) {
+      bsd->bsd_dt.socket[i] = sock;
       /* The socket is not yet known to anyone, so no need to protect
          after having marked it as used. */
       SYS_ARCH_UNPROTECT(lev);
-      sockets[i].lastdata   = NULL;
-      sockets[i].lastoffset = 0;
-      sockets[i].rcvevent   = 0;
+      sock->lastdata   = NULL;
+      sock->lastoffset = 0;
+      sock->rcvevent   = 0;
       /* TCP sendbuf is empty, but the socket is not yet writable until connected
        * (unless it has been created by accept()). */
-      sockets[i].sendevent  = (NETCONNTYPE_GROUP(newconn->type) == NETCONN_TCP ? (accepted != 0) : 1);
-      sockets[i].errevent   = 0;
-      sockets[i].err        = 0;
-      sockets[i].select_waiting = 0;
+      sock->sendevent  = (NETCONNTYPE_GROUP(newconn->type) == NETCONN_TCP ? (accepted != 0) : 1);
+      sock->errevent   = 0;
+      sock->err        = 0;
+      sock->select_waiting = 0;
+      sock->usage = 1;
+      sock->creator.id = UNIQUE_ID;
+      sock->creator.accepted = accepted;
+      sock->creator.domain = domain;
+      sock->creator.type = type;
+      sock->creator.protocol = protocol;
+      sock->conn       = newconn;
       return i;
     }
     SYS_ARCH_UNPROTECT(lev);
   }
+
+  FreeVec(sock);
   return -1;
 }
 
@@ -342,23 +490,15 @@ alloc_socket(struct netconn *newconn, int accepted)
  * @param sock the socket to free
  * @param is_tcp != 0 for TCP sockets, used to free lastdata
  */
-static void
-free_socket(struct lwip_sock *sock, int is_tcp)
+static void free_socket(struct bsd_sock *sock, int is_tcp)
 {
   void *lastdata;
-  SYS_ARCH_DECL_PROTECT(lev);
+
+  sock->usage--;
+  if (sock->usage > 0)
+      return;
 
   lastdata         = sock->lastdata;
-  sock->lastdata   = NULL;
-  sock->lastoffset = 0;
-  sock->err        = 0;
-
-  /* Protect socket array */
-  SYS_ARCH_PROTECT(lev);
-  sock->conn       = NULL;
-  SYS_ARCH_UNPROTECT(lev);
-  /* don't use 'sock' after this line, as another task might have allocated it */
-
   if (lastdata != NULL) {
     if (is_tcp) {
       pbuf_free((struct pbuf *)lastdata);
@@ -375,9 +515,9 @@ free_socket(struct lwip_sock *sock, int is_tcp)
  */
 
 int
-bsd_accept(int s, struct sockaddr *addr, socklen_t *addrlen)
+bsd_accept(struct bsd *bsd, int s, struct sockaddr *addr, socklen_t *addrlen)
 {
-  struct lwip_sock *sock, *nsock;
+  struct bsd_sock *sock, *nsock;
   struct netconn *newconn;
   ipX_addr_t naddr;
   u16_t port = 0;
@@ -386,7 +526,7 @@ bsd_accept(int s, struct sockaddr *addr, socklen_t *addrlen)
   SYS_ARCH_DECL_PROTECT(lev);
 
   D(bug("lwip_accept(%d)...\n", s));
-  sock = get_socket(s);
+  sock = get_socket(bsd, s);
   if (!sock) {
     return -1;
   }
@@ -408,7 +548,7 @@ bsd_accept(int s, struct sockaddr *addr, socklen_t *addrlen)
     sock_set_errno(sock, err_to_errno(err));
     return -1;
   }
-  LWIP_ASSERT("newconn != NULL", newconn != NULL);
+  BSD_ASSERT("newconn != NULL", newconn != NULL);
   /* Prevent automatic window updates, we do this on our own! */
   netconn_set_noautorecved(newconn, 1);
 
@@ -425,7 +565,7 @@ bsd_accept(int s, struct sockaddr *addr, socklen_t *addrlen)
       sock_set_errno(sock, err_to_errno(err));
       return -1;
     }
-    LWIP_ASSERT("addr valid but addrlen NULL", addrlen != NULL);
+    BSD_ASSERT("addr valid but addrlen NULL", addrlen != NULL);
 
     IPXADDR_PORT_TO_SOCKADDR(NETCONNTYPE_ISIPV6(newconn->type), &tempaddr, &naddr, port);
     if (*addrlen > tempaddr.sa.sa_len) {
@@ -434,15 +574,15 @@ bsd_accept(int s, struct sockaddr *addr, socklen_t *addrlen)
     MEMCPY(addr, &tempaddr, *addrlen);
   }
 
-  newsock = alloc_socket(newconn, 1);
+  newsock = alloc_socket(bsd, newconn, sock->creator.domain, sock->creator.type, sock->creator.protocol, 1);
   if (newsock == -1) {
     netconn_delete(newconn);
     sock_set_errno(sock, ENFILE);
     return -1;
   }
-  LWIP_ASSERT("invalid socket index", (newsock >= 0) && (newsock < NUM_SOCKETS));
-  LWIP_ASSERT("newconn->callback == event_callback", newconn->callback == event_callback);
-  nsock = &sockets[newsock];
+  BSD_ASSERT("invalid socket index", (newsock >= 0) && (newsock < bsd->bsd_dt.sockets));
+  BSD_ASSERT("newconn->callback == event_callback", newconn->callback == event_callback);
+  nsock = bsd->bsd_dt.socket[newsock];
 
   /* See event_callback: If data comes in right away after an accept, even
    * though the server task might not have created a new socket yet.
@@ -466,14 +606,14 @@ bsd_accept(int s, struct sockaddr *addr, socklen_t *addrlen)
 }
 
 int
-bsd_bind(int s, const struct sockaddr *name, socklen_t namelen)
+bsd_bind(struct bsd *bsd, int s, const struct sockaddr *name, socklen_t namelen)
 {
-  struct lwip_sock *sock;
+  struct bsd_sock *sock;
   ipX_addr_t local_addr;
   u16_t local_port;
   err_t err;
 
-  sock = get_socket(s);
+  sock = get_socket(bsd, s);
   if (!sock) {
     return -1;
   }
@@ -509,14 +649,15 @@ bsd_bind(int s, const struct sockaddr *name, socklen_t namelen)
 }
 
 int
-bsd_close(int s)
+bsd_close(struct bsd *bsd, int s)
 {
-  struct lwip_sock *sock;
+  struct bsd_sock *sock;
   int is_tcp = 0;
+  SYS_ARCH_DECL_PROTECT(lev);
 
   D(bug("lwip_close(%d)\n", s));
 
-  sock = get_socket(s);
+  sock = get_socket(bsd, s);
   if (!sock) {
     return -1;
   }
@@ -524,8 +665,13 @@ bsd_close(int s)
   if(sock->conn != NULL) {
     is_tcp = NETCONNTYPE_GROUP(netconn_type(sock->conn)) == NETCONN_TCP;
   } else {
-    LWIP_ASSERT("sock->lastdata == NULL", sock->lastdata == NULL);
+    BSD_ASSERT("sock->lastdata == NULL", sock->lastdata == NULL);
   }
+
+    /* Protect socket array */
+  SYS_ARCH_PROTECT(lev);
+  bsd->bsd_dt.socket[s] = NULL;
+  SYS_ARCH_UNPROTECT(lev);
 
   netconn_delete(sock->conn);
 
@@ -535,12 +681,12 @@ bsd_close(int s)
 }
 
 int
-bsd_connect(int s, const struct sockaddr *name, socklen_t namelen)
+bsd_connect(struct bsd *bsd, int s, const struct sockaddr *name, socklen_t namelen)
 {
-  struct lwip_sock *sock;
+  struct bsd_sock *sock;
   err_t err;
 
-  sock = get_socket(s);
+  sock = get_socket(bsd, s);
   if (!sock) {
     return -1;
   }
@@ -590,14 +736,14 @@ bsd_connect(int s, const struct sockaddr *name, socklen_t namelen)
  * @return 0 on success, non-zero on failure
  */
 int
-bsd_listen(int s, int backlog)
+bsd_listen(struct bsd *bsd, int s, int backlog)
 {
-  struct lwip_sock *sock;
+  struct bsd_sock *sock;
   err_t err;
 
   D(bug("lwip_listen(%d, backlog=%d)\n", s, backlog));
 
-  sock = get_socket(s);
+  sock = get_socket(bsd, s);
   if (!sock) {
     return -1;
   }
@@ -621,11 +767,10 @@ bsd_listen(int s, int backlog)
   return 0;
 }
 
-int
-bsd_recvfrom(int s, void *mem, size_t len, int flags,
+int bsd_recvfrom(struct bsd *bsd, int s, void *mem, size_t len, int flags,
               struct sockaddr *from, socklen_t *fromlen)
 {
-  struct lwip_sock *sock;
+  struct bsd_sock *sock;
   void             *buf = NULL;
   struct pbuf      *p;
   u16_t            buflen, copylen;
@@ -634,7 +779,7 @@ bsd_recvfrom(int s, void *mem, size_t len, int flags,
   err_t            err;
 
   D(bug("lwip_recvfrom(%d, %p, %"SZT_F", 0x%x, ..)\n", s, mem, len, flags));
-  sock = get_socket(s);
+  sock = get_socket(bsd, s);
   if (!sock) {
     return -1;
   }
@@ -688,7 +833,7 @@ bsd_recvfrom(int s, void *mem, size_t len, int flags,
           return -1;
         }
       }
-      LWIP_ASSERT("buf != NULL", buf != NULL);
+      BSD_ASSERT("buf != NULL", buf != NULL);
       sock->lastdata = buf;
     }
 
@@ -716,7 +861,7 @@ bsd_recvfrom(int s, void *mem, size_t len, int flags,
     off += copylen;
 
     if (NETCONNTYPE_GROUP(netconn_type(sock->conn)) == NETCONN_TCP) {
-      LWIP_ASSERT("invalid copylen, len would underflow", len >= copylen);
+      BSD_ASSERT("invalid copylen, len would underflow", len >= copylen);
       len -= copylen;
       if ( (len <= 0) || 
            (p->flags & PBUF_FLAG_PUSH) || 
@@ -795,21 +940,21 @@ bsd_recvfrom(int s, void *mem, size_t len, int flags,
 }
 
 int
-bsd_read(int s, void *mem, size_t len)
+bsd_read(struct bsd *bsd, int s, void *mem, size_t len)
 {
   return lwip_recvfrom(s, mem, len, 0, NULL, NULL);
 }
 
 int
-bsd_recv(int s, void *mem, size_t len, int flags)
+bsd_recv(struct bsd *bsd, int s, void *mem, size_t len, int flags)
 {
   return lwip_recvfrom(s, mem, len, flags, NULL, NULL);
 }
 
 int
-bsd_send(int s, const void *data, size_t size, int flags)
+bsd_send(struct bsd *bsd, int s, const void *data, size_t size, int flags)
 {
-  struct lwip_sock *sock;
+  struct bsd_sock *sock;
   err_t err;
   u8_t write_flags;
   size_t written;
@@ -817,7 +962,7 @@ bsd_send(int s, const void *data, size_t size, int flags)
   D(bug("lwip_send(%d, data=%p, size=%"SZT_F", flags=0x%x)\n",
                               s, data, size, flags));
 
-  sock = get_socket(s);
+  sock = get_socket(bsd, s);
   if (!sock) {
     return -1;
   }
@@ -843,10 +988,10 @@ bsd_send(int s, const void *data, size_t size, int flags)
 }
 
 int
-bsd_sendto(int s, const void *data, size_t size, int flags,
+bsd_sendto(struct bsd *bsd, int s, const void *data, size_t size, int flags,
        const struct sockaddr *to, socklen_t tolen)
 {
-  struct lwip_sock *sock;
+  struct bsd_sock *sock;
   err_t err;
   u16_t short_size;
   u16_t remote_port;
@@ -854,7 +999,7 @@ bsd_sendto(int s, const void *data, size_t size, int flags,
   struct netbuf buf;
 #endif
 
-  sock = get_socket(s);
+  sock = get_socket(bsd, s);
   if (!sock) {
     return -1;
   }
@@ -876,7 +1021,7 @@ bsd_sendto(int s, const void *data, size_t size, int flags,
   }
 
   /* @todo: split into multiple sendto's? */
-  LWIP_ASSERT("lwip_sendto: size must fit in u16_t", size <= 0xffff);
+  BSD_ASSERT("lwip_sendto: size must fit in u16_t", size <= 0xffff);
   short_size = (u16_t)size;
   LWIP_ERROR("lwip_sendto: invalid address", (((to == NULL) && (tolen == 0)) ||
              (IS_SOCK_ADDR_LEN_VALID(tolen) &&
@@ -1008,8 +1153,7 @@ bsd_sendto(int s, const void *data, size_t size, int flags,
   return (err == ERR_OK ? short_size : -1);
 }
 
-int
-bsd_socket(int domain, int type, int protocol)
+int bsd_socket(struct bsd *bsd, int domain, int type, int protocol)
 {
   struct netconn *conn;
   int i;
@@ -1023,19 +1167,19 @@ bsd_socket(int domain, int type, int protocol)
   case SOCK_RAW:
     conn = netconn_new_with_proto_and_callback(DOMAIN_TO_NETCONN_TYPE(domain, NETCONN_RAW),
                                                (u8_t)protocol, event_callback);
-    D(bug("lwip_socket(%s, SOCK_RAW, %d) = ",
+    D(bug("bsd_socket(%s, SOCK_RAW, %d) = ",
                                  domain == PF_INET ? "PF_INET" : "UNKNOWN", protocol));
     break;
   case SOCK_DGRAM:
     conn = netconn_new_with_callback(DOMAIN_TO_NETCONN_TYPE(domain,
                  ((protocol == IPPROTO_UDPLITE) ? NETCONN_UDPLITE : NETCONN_UDP)) ,
                  event_callback);
-    D(bug("lwip_socket(%s, SOCK_DGRAM, %d) = ",
+    D(bug("bsd_socket(%s, SOCK_DGRAM, %d) = ",
                                  domain == PF_INET ? "PF_INET" : "UNKNOWN", protocol));
     break;
   case SOCK_STREAM:
     conn = netconn_new_with_callback(DOMAIN_TO_NETCONN_TYPE(domain, NETCONN_TCP), event_callback);
-    D(bug("lwip_socket(%s, SOCK_STREAM, %d) = ",
+    D(bug("bsd_socket(%s, SOCK_STREAM, %d) = ",
                                  domain == PF_INET ? "PF_INET" : "UNKNOWN", protocol));
     if (conn != NULL) {
       /* Prevent automatic window updates, we do this on our own! */
@@ -1043,7 +1187,7 @@ bsd_socket(int domain, int type, int protocol)
     }
     break;
   default:
-    D(bug("lwip_socket(%d, %d/UNKNOWN, %d) = -1\n",
+    D(bug("bsd_socket(%d, %d/UNKNOWN, %d) = -1\n",
                                  domain, type, protocol));
     set_errno(EINVAL);
     return -1;
@@ -1055,21 +1199,22 @@ bsd_socket(int domain, int type, int protocol)
     return -1;
   }
 
-  i = alloc_socket(conn, 0);
+  i = alloc_socket(bsd, conn, domain, type, protocol, 0);
 
   if (i == -1) {
     netconn_delete(conn);
     set_errno(ENFILE);
     return -1;
   }
+  /* This connection is owned by this opener */
+  conn->callback_priv = bsd;
   conn->socket = i;
   D(bug("%d\n", i));
   set_errno(0);
   return i;
 }
 
-int
-bsd_write(int s, const void *data, size_t size)
+int bsd_write(struct bsd *bsd, int s, const void *data, size_t size)
 {
   return lwip_send(s, data, size, 0);
 }
@@ -1090,13 +1235,12 @@ bsd_write(int s, const void *data, size_t size)
  * @param exceptset_out: set os sockets that had error events
  * @return number of sockets that had events (read/write/exception) (>= 0)
  */
-static int
-lwip_selscan(int maxfdp1, fd_set *readset_in, fd_set *writeset_in, fd_set *exceptset_in,
+static int bsd__selscan(struct bsd *bsd, int maxfdp1, fd_set *readset_in, fd_set *writeset_in, fd_set *exceptset_in,
              fd_set *readset_out, fd_set *writeset_out, fd_set *exceptset_out)
 {
   int i, nready = 0;
   fd_set lreadset, lwriteset, lexceptset;
-  struct lwip_sock *sock;
+  struct bsd_sock *sock;
   SYS_ARCH_DECL_PROTECT(lev);
 
   FD_ZERO(&lreadset);
@@ -1112,7 +1256,7 @@ lwip_selscan(int maxfdp1, fd_set *readset_in, fd_set *writeset_in, fd_set *excep
     u16_t errevent = 0;
     /* First get the socket's status (protected)... */
     SYS_ARCH_PROTECT(lev);
-    sock = tryget_socket(i);
+    sock = tryget_socket(bsd, i);
     if (sock != NULL) {
       lastdata = sock->lastdata;
       rcvevent = sock->rcvevent;
@@ -1124,19 +1268,19 @@ lwip_selscan(int maxfdp1, fd_set *readset_in, fd_set *writeset_in, fd_set *excep
     /* See if netconn of this socket is ready for read */
     if (readset_in && FD_ISSET(i, readset_in) && ((lastdata != NULL) || (rcvevent > 0))) {
       FD_SET(i, &lreadset);
-      D(bug("lwip_selscan: fd=%d ready for reading\n", i));
+      D(bug("bsd__selscan: fd=%d ready for reading\n", i));
       nready++;
     }
     /* See if netconn of this socket is ready for write */
     if (writeset_in && FD_ISSET(i, writeset_in) && (sendevent != 0)) {
       FD_SET(i, &lwriteset);
-      D(bug("lwip_selscan: fd=%d ready for writing\n", i));
+      D(bug("bsd__selscan: fd=%d ready for writing\n", i));
       nready++;
     }
     /* See if netconn of this socket had an error */
     if (exceptset_in && FD_ISSET(i, exceptset_in) && (errevent != 0)) {
       FD_SET(i, &lexceptset);
-      D(bug("lwip_selscan: fd=%d ready for exception\n", i));
+      D(bug("bsd__selscan: fd=%d ready for exception\n", i));
       nready++;
     }
   }
@@ -1145,22 +1289,22 @@ lwip_selscan(int maxfdp1, fd_set *readset_in, fd_set *writeset_in, fd_set *excep
   *writeset_out = lwriteset;
   *exceptset_out = lexceptset;
 
-  LWIP_ASSERT("nready >= 0", nready >= 0);
+  BSD_ASSERT("nready >= 0", nready >= 0);
   return nready;
 }
 
 /**
  * Processing exceptset is not yet implemented.
  */
-int
-bsd_select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset,
-            struct timeval *timeout)
+int bsd_select(struct bsd *bsd, int maxfdp1,
+               fd_set *readset, fd_set *writeset, fd_set *exceptset,
+               struct timeval *timeout, ULONG *sigmask)
 {
   u32_t waitres = 0;
   int nready;
   fd_set lreadset, lwriteset, lexceptset;
   u32_t msectimeout;
-  struct lwip_select_cb select_cb;
+  struct bsd_select_cb select_cb;
   err_t err;
   int i;
   SYS_ARCH_DECL_PROTECT(lev);
@@ -1172,7 +1316,7 @@ bsd_select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset,
 
   /* Go through each socket in each list to count number of sockets which
      currently match */
-  nready = lwip_selscan(maxfdp1, readset, writeset, exceptset, &lreadset, &lwriteset, &lexceptset);
+  nready = bsd__selscan(bsd, maxfdp1, readset, writeset, exceptset, &lreadset, &lwriteset, &lexceptset);
 
   /* If we don't have any current events, then suspend if we are supposed to */
   if (!nready) {
@@ -1201,17 +1345,17 @@ bsd_select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset,
       return -1;
     }
 
-    /* Protect the select_cb_list */
+    /* Protect the bsd->bsd_select_cb.list */
     SYS_ARCH_PROTECT(lev);
 
     /* Put this select_cb on top of list */
-    select_cb.next = select_cb_list;
-    if (select_cb_list != NULL) {
-      select_cb_list->prev = &select_cb;
+    select_cb.next = bsd->bsd_select_cb.list;
+    if (bsd->bsd_select_cb.list != NULL) {
+      bsd->bsd_select_cb.list->prev = &select_cb;
     }
-    select_cb_list = &select_cb;
+    bsd->bsd_select_cb.list = &select_cb;
     /* Increasing this counter tells even_callback that the list has changed. */
-    select_cb_ctr++;
+    bsd->bsd_select_cb.ctr++;
 
     /* Now we can safely unprotect */
     SYS_ARCH_UNPROTECT(lev);
@@ -1221,18 +1365,18 @@ bsd_select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset,
       if ((readset && FD_ISSET(i, readset)) ||
           (writeset && FD_ISSET(i, writeset)) ||
           (exceptset && FD_ISSET(i, exceptset))) {
-        struct lwip_sock *sock = tryget_socket(i);
-        LWIP_ASSERT("sock != NULL", sock != NULL);
+        struct bsd_sock *sock = tryget_socket(bsd, i);
+        BSD_ASSERT("sock != NULL", sock != NULL);
         SYS_ARCH_PROTECT(lev);
         sock->select_waiting++;
-        LWIP_ASSERT("sock->select_waiting > 0", sock->select_waiting > 0);
+        BSD_ASSERT("sock->select_waiting > 0", sock->select_waiting > 0);
         SYS_ARCH_UNPROTECT(lev);
       }
     }
 
-    /* Call lwip_selscan again: there could have been events between
+    /* Call bsd__selscan again: there could have been events between
        the last scan (whithout us on the list) and putting us on the list! */
-    nready = lwip_selscan(maxfdp1, readset, writeset, exceptset, &lreadset, &lwriteset, &lexceptset);
+    nready = bsd__selscan(bsd, maxfdp1, readset, writeset, exceptset, &lreadset, &lwriteset, &lexceptset);
     if (!nready) {
       /* Still none ready, just wait to be woken */
       if (timeout == 0) {
@@ -1253,11 +1397,11 @@ bsd_select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset,
       if ((readset && FD_ISSET(i, readset)) ||
           (writeset && FD_ISSET(i, writeset)) ||
           (exceptset && FD_ISSET(i, exceptset))) {
-        struct lwip_sock *sock = tryget_socket(i);
-        LWIP_ASSERT("sock != NULL", sock != NULL);
+        struct bsd_sock *sock = tryget_socket(bsd, i);
+        BSD_ASSERT("sock != NULL", sock != NULL);
         SYS_ARCH_PROTECT(lev);
         sock->select_waiting--;
-        LWIP_ASSERT("sock->select_waiting >= 0", sock->select_waiting >= 0);
+        BSD_ASSERT("sock->select_waiting >= 0", sock->select_waiting >= 0);
         SYS_ARCH_UNPROTECT(lev);
       }
     }
@@ -1266,15 +1410,15 @@ bsd_select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset,
     if (select_cb.next != NULL) {
       select_cb.next->prev = select_cb.prev;
     }
-    if (select_cb_list == &select_cb) {
-      LWIP_ASSERT("select_cb.prev == NULL", select_cb.prev == NULL);
-      select_cb_list = select_cb.next;
+    if (bsd->bsd_select_cb.list == &select_cb) {
+      BSD_ASSERT("select_cb.prev == NULL", select_cb.prev == NULL);
+      bsd->bsd_select_cb.list = select_cb.next;
     } else {
-      LWIP_ASSERT("select_cb.prev != NULL", select_cb.prev != NULL);
+      BSD_ASSERT("select_cb.prev != NULL", select_cb.prev != NULL);
       select_cb.prev->next = select_cb.next;
     }
     /* Increasing this counter tells even_callback that the list has changed. */
-    select_cb_ctr++;
+    bsd->bsd_select_cb.ctr++;
     SYS_ARCH_UNPROTECT(lev);
 
     sys_sem_free(&select_cb.sem);
@@ -1287,7 +1431,7 @@ bsd_select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptset,
     }
 
     /* See what's set */
-    nready = lwip_selscan(maxfdp1, readset, writeset, exceptset, &lreadset, &lwriteset, &lexceptset);
+    nready = bsd__selscan(bsd, maxfdp1, readset, writeset, exceptset, &lreadset, &lwriteset, &lexceptset);
   }
 
   D(bug("lwip_select: nready=%d\n", nready));
@@ -1309,13 +1453,13 @@ return_copy_fdsets:
  * Callback registered in the netconn layer for each socket-netconn.
  * Processes recvevent (data available) and wakes up tasks waiting for select.
  */
-static void
-event_callback(struct netconn *conn, enum netconn_evt evt, u16_t len)
+static void event_callback(struct netconn *conn, enum netconn_evt evt, u16_t len)
 {
   int s;
-  struct lwip_sock *sock;
-  struct lwip_select_cb *scb;
+  struct bsd_sock *sock;
+  struct bsd_select_cb *scb;
   int last_select_cb_ctr;
+  struct bsd *bsd = conn->callback_priv;
   SYS_ARCH_DECL_PROTECT(lev);
 
   LWIP_UNUSED_ARG(len);
@@ -1341,7 +1485,7 @@ event_callback(struct netconn *conn, enum netconn_evt evt, u16_t len)
       SYS_ARCH_UNPROTECT(lev);
     }
 
-    sock = get_socket(s);
+    sock = get_socket(bsd, s);
     if (!sock) {
       return;
     }
@@ -1368,24 +1512,24 @@ event_callback(struct netconn *conn, enum netconn_evt evt, u16_t len)
       sock->errevent = 1;
       break;
     default:
-      LWIP_ASSERT("unknown event", 0);
+      BSD_ASSERT("unknown event", 0);
       break;
   }
 
   if (sock->select_waiting == 0) {
-    /* noone is waiting for this socket, no need to check select_cb_list */
+    /* noone is waiting for this socket, no need to check bsd->bsd_select_cb.list */
     SYS_ARCH_UNPROTECT(lev);
     return;
   }
 
   /* Now decide if anyone is waiting for this socket */
-  /* NOTE: This code goes through the select_cb_list list multiple times
+  /* NOTE: This code goes through the bsd->bsd_select_cb.list list multiple times
      ONLY IF a select was actually waiting. We go through the list the number
      of waiting select calls + 1. This list is expected to be small. */
 
   /* At this point, SYS_ARCH is still protected! */
 again:
-  for (scb = select_cb_list; scb != NULL; scb = scb->next) {
+  for (scb = bsd->bsd_select_cb.list; scb != NULL; scb = scb->next) {
     if (scb->sem_signalled == 0) {
       /* semaphore not signalled yet */
       int do_signal = 0;
@@ -1413,12 +1557,12 @@ again:
       }
     }
     /* unlock interrupts with each step */
-    last_select_cb_ctr = select_cb_ctr;
+    last_select_cb_ctr = bsd->bsd_select_cb.ctr;
     SYS_ARCH_UNPROTECT(lev);
     /* this makes sure interrupt protection time is short */
     SYS_ARCH_PROTECT(lev);
-    if (last_select_cb_ctr != select_cb_ctr) {
-      /* someone has changed select_cb_list, restart at the beginning */
+    if (last_select_cb_ctr != bsd->bsd_select_cb.ctr) {
+      /* someone has changed bsd->bsd_select_cb.list, restart at the beginning */
       goto again;
     }
   }
@@ -1430,15 +1574,15 @@ again:
  * Currently, the full connection is closed.
  */
 int
-bsd_shutdown(int s, int how)
+bsd_shutdown(struct bsd *bsd, int s, int how)
 {
-  struct lwip_sock *sock;
+  struct bsd_sock *sock;
   err_t err;
   u8_t shut_rx = 0, shut_tx = 0;
 
   D(bug("lwip_shutdown(%d, how=%d)\n", s, how));
 
-  sock = get_socket(s);
+  sock = get_socket(bsd, s);
   if (!sock) {
     return -1;
   }
@@ -1470,15 +1614,14 @@ bsd_shutdown(int s, int how)
   return (err == ERR_OK ? 0 : -1);
 }
 
-static int
-lwip_getaddrname(int s, struct sockaddr *name, socklen_t *namelen, u8_t local)
+static int bsd__getaddrname(struct bsd *bsd, int s, struct sockaddr *name, socklen_t *namelen, u8_t local)
 {
-  struct lwip_sock *sock;
+  struct bsd_sock *sock;
   union sockaddr_aligned saddr;
   ipX_addr_t naddr;
   u16_t port;
 
-  sock = get_socket(s);
+  sock = get_socket(bsd, s);
   if (!sock) {
     return -1;
   }
@@ -1489,7 +1632,7 @@ lwip_getaddrname(int s, struct sockaddr *name, socklen_t *namelen, u8_t local)
   IPXADDR_PORT_TO_SOCKADDR(NETCONNTYPE_ISIPV6(netconn_type(sock->conn)),
     &saddr, &naddr, port);
 
-  D(bug("lwip_getaddrname(%d, addr=", s));
+  D(bug("bsd__getaddrname(%d, addr=", s));
   ipX_addr_debug_print(NETCONNTYPE_ISIPV6(netconn_type(sock->conn)),
     SOCKETS_DEBUG, &naddr);
   D(bug(" port=%"U16_F")\n", port));
@@ -1504,23 +1647,23 @@ lwip_getaddrname(int s, struct sockaddr *name, socklen_t *namelen, u8_t local)
 }
 
 int
-bsd_getpeername(int s, struct sockaddr *name, socklen_t *namelen)
+bsd_getpeername(struct bsd *bsd, int s, struct sockaddr *name, socklen_t *namelen)
 {
-  return lwip_getaddrname(s, name, namelen, 0);
+  return bsd__getaddrname(bsd, s, name, namelen, 0);
 }
 
 int
-bsd_getsockname(int s, struct sockaddr *name, socklen_t *namelen)
+bsd_getsockname(struct bsd *bsd, int s, struct sockaddr *name, socklen_t *namelen)
 {
-  return lwip_getaddrname(s, name, namelen, 1);
+  return bsd__getaddrname(bsd, s, name, namelen, 1);
 }
 
 int
-bsd_getsockopt(int s, int level, int optname, void *optval, socklen_t *optlen)
+bsd_getsockopt(struct bsd *bsd, int s, int level, int optname, void *optval, socklen_t *optlen)
 {
   err_t err = ERR_OK;
-  struct lwip_sock *sock = get_socket(s);
-  struct lwip_setgetsockopt_data data;
+  struct bsd_sock *sock = get_socket(bsd, s);
+  struct bsd_setgetsockopt_data data;
 
   if (!sock) {
     return -1;
@@ -1719,7 +1862,7 @@ bsd_getsockopt(int s, int level, int optname, void *optval, socklen_t *optlen)
 
   /* Now do the actual option processing */
   data.sock = sock;
-#ifdef LWIP_DEBUG
+#if DEBUG
   data.s = s;
 #endif /* LWIP_DEBUG */
   data.level = level;
@@ -1727,31 +1870,33 @@ bsd_getsockopt(int s, int level, int optname, void *optval, socklen_t *optlen)
   data.optval = optval;
   data.optlen = optlen;
   data.err = err;
-  tcpip_callback(lwip_getsockopt_internal, &data);
+  data.bsd = bsd;
+  tcpip_callback(bsd_getsockopt_internal, &data);
   sys_arch_sem_wait(&sock->conn->op_completed, 0);
-  /* maybe lwip_getsockopt_internal has changed err */
+  /* maybe bsd_getsockopt_internal has changed err */
   err = data.err;
 
   sock_set_errno(sock, err);
   return err ? -1 : 0;
 }
 
-static void
-lwip_getsockopt_internal(void *arg)
+static void bsd_getsockopt_internal(void *arg)
 {
-  struct lwip_sock *sock;
-#ifdef LWIP_DEBUG
+  struct bsd_sock *sock;
+#if DEBUG
   int s;
 #endif /* LWIP_DEBUG */
   int level, optname;
   void *optval;
-  struct lwip_setgetsockopt_data *data;
+  struct bsd_setgetsockopt_data *data;
+  struct bsd *bsd = NULL;
 
-  LWIP_ASSERT("arg != NULL", arg != NULL);
+  BSD_ASSERT("arg != NULL", arg != NULL);
 
-  data = (struct lwip_setgetsockopt_data*)arg;
+  data = (struct bsd_setgetsockopt_data*)arg;
+  bsd = data->bsd;
   sock = data->sock;
-#ifdef LWIP_DEBUG
+#if DEBUG
   s = data->s;
 #endif /* LWIP_DEBUG */
   level = data->level;
@@ -1834,7 +1979,7 @@ lwip_getsockopt_internal(void *arg)
       break;
 #endif /* LWIP_UDP*/
     default:
-      LWIP_ASSERT("unhandled optname", 0);
+      BSD_ASSERT("unhandled optname", 0);
       break;
     }  /* switch (optname) */
     break;
@@ -1874,7 +2019,7 @@ lwip_getsockopt_internal(void *arg)
       break;
 #endif /* LWIP_IGMP */
     default:
-      LWIP_ASSERT("unhandled optname", 0);
+      BSD_ASSERT("unhandled optname", 0);
       break;
     }  /* switch (optname) */
     break;
@@ -1912,7 +2057,7 @@ lwip_getsockopt_internal(void *arg)
       break;
 #endif /* LWIP_TCP_KEEPALIVE */
     default:
-      LWIP_ASSERT("unhandled optname", 0);
+      BSD_ASSERT("unhandled optname", 0);
       break;
     }  /* switch (optname) */
     break;
@@ -1928,7 +2073,7 @@ lwip_getsockopt_internal(void *arg)
                   s, *(int *)optval));
       break;
     default:
-      LWIP_ASSERT("unhandled optname", 0);
+      BSD_ASSERT("unhandled optname", 0);
       break;
     }  /* switch (optname) */
     break;
@@ -1949,24 +2094,24 @@ lwip_getsockopt_internal(void *arg)
                   s, (*(int*)optval)) );
       break;
     default:
-      LWIP_ASSERT("unhandled optname", 0);
+      BSD_ASSERT("unhandled optname", 0);
       break;
     }  /* switch (optname) */
     break;
 #endif /* LWIP_UDP */
   default:
-    LWIP_ASSERT("unhandled level", 0);
+    BSD_ASSERT("unhandled level", 0);
     break;
   } /* switch (level) */
   sys_sem_signal(&sock->conn->op_completed);
 }
 
 int
-bsd_setsockopt(int s, int level, int optname, const void *optval, socklen_t optlen)
+bsd_setsockopt(struct bsd *bsd, int s, int level, int optname, const void *optval, socklen_t optlen)
 {
-  struct lwip_sock *sock = get_socket(s);
+  struct bsd_sock *sock = get_socket(bsd, s);
   err_t err = ERR_OK;
-  struct lwip_setgetsockopt_data data;
+  struct bsd_setgetsockopt_data data;
 
   if (!sock) {
     return -1;
@@ -2176,7 +2321,7 @@ bsd_setsockopt(int s, int level, int optname, const void *optval, socklen_t optl
 
   /* Now do the actual option processing */
   data.sock = sock;
-#ifdef LWIP_DEBUG
+#if DEBUG
   data.s = s;
 #endif /* LWIP_DEBUG */
   data.level = level;
@@ -2184,31 +2329,33 @@ bsd_setsockopt(int s, int level, int optname, const void *optval, socklen_t optl
   data.optval = (void*)optval;
   data.optlen = &optlen;
   data.err = err;
-  tcpip_callback(lwip_setsockopt_internal, &data);
+  data.bsd = bsd;
+  tcpip_callback(bsd_setsockopt_internal, &data);
   sys_arch_sem_wait(&sock->conn->op_completed, 0);
-  /* maybe lwip_setsockopt_internal has changed err */
+  /* maybe bsd_setsockopt_internal has changed err */
   err = data.err;
 
   sock_set_errno(sock, err);
   return err ? -1 : 0;
 }
 
-static void
-lwip_setsockopt_internal(void *arg)
+static void bsd_setsockopt_internal(void *arg)
 {
-  struct lwip_sock *sock;
-#ifdef LWIP_DEBUG
+  struct bsd_sock *sock;
+#if DEBUG
   int s;
 #endif /* LWIP_DEBUG */
   int level, optname;
   const void *optval;
-  struct lwip_setgetsockopt_data *data;
+  struct bsd_setgetsockopt_data *data;
+  struct bsd *bsd = NULL;
 
-  LWIP_ASSERT("arg != NULL", arg != NULL);
+  BSD_ASSERT("arg != NULL", arg != NULL);
 
-  data = (struct lwip_setgetsockopt_data*)arg;
+  data = (struct bsd_setgetsockopt_data*)arg;
+  bsd = data->bsd;
   sock = data->sock;
-#ifdef LWIP_DEBUG
+#if DEBUG
   s = data->s;
 #endif /* LWIP_DEBUG */
   level = data->level;
@@ -2265,7 +2412,7 @@ lwip_setsockopt_internal(void *arg)
       break;
 #endif /* LWIP_UDP */
     default:
-      LWIP_ASSERT("unhandled optname", 0);
+      BSD_ASSERT("unhandled optname", 0);
       break;
     }  /* switch (optname) */
     break;
@@ -2318,7 +2465,7 @@ lwip_setsockopt_internal(void *arg)
       break;
 #endif /* LWIP_IGMP */
     default:
-      LWIP_ASSERT("unhandled optname", 0);
+      BSD_ASSERT("unhandled optname", 0);
       break;
     }  /* switch (optname) */
     break;
@@ -2360,7 +2507,7 @@ lwip_setsockopt_internal(void *arg)
       break;
 #endif /* LWIP_TCP_KEEPALIVE */
     default:
-      LWIP_ASSERT("unhandled optname", 0);
+      BSD_ASSERT("unhandled optname", 0);
       break;
     }  /* switch (optname) */
     break;
@@ -2380,7 +2527,7 @@ lwip_setsockopt_internal(void *arg)
                   s, ((sock->conn->flags & NETCONN_FLAG_IPV6_V6ONLY) ? 1 : 0)));
       break;
     default:
-      LWIP_ASSERT("unhandled optname", 0);
+      BSD_ASSERT("unhandled optname", 0);
       break;
     }  /* switch (optname) */
     break;
@@ -2411,22 +2558,22 @@ lwip_setsockopt_internal(void *arg)
                   s, (*(int*)optval)) );
       break;
     default:
-      LWIP_ASSERT("unhandled optname", 0);
+      BSD_ASSERT("unhandled optname", 0);
       break;
     }  /* switch (optname) */
     break;
 #endif /* LWIP_UDP */
   default:
-    LWIP_ASSERT("unhandled level", 0);
+    BSD_ASSERT("unhandled level", 0);
     break;
   }  /* switch (level) */
   sys_sem_signal(&sock->conn->op_completed);
 }
 
 int
-bsd_ioctl(int s, long cmd, void *argp)
+bsd_ioctl(struct bsd *bsd, int s, long cmd, void *argp)
 {
-  struct lwip_sock *sock = get_socket(s);
+  struct bsd_sock *sock = get_socket(bsd, s);
   u8_t val;
 #if LWIP_SO_RCVBUF
   u16_t buflen = 0;
@@ -2518,10 +2665,9 @@ bsd_ioctl(int s, long cmd, void *argp)
  * Currently only the commands F_GETFL and F_SETFL are implemented.
  * Only the flag O_NONBLOCK is implemented.
  */
-int
-bsd_fcntl(int s, int cmd, int val)
+int bsd_fcntl(struct bsd *bsd, int s, int cmd, int val)
 {
-  struct lwip_sock *sock = get_socket(s);
+  struct bsd_sock *sock = get_socket(bsd, s);
   int ret = -1;
 
   if (!sock || !sock->conn) {
@@ -2546,13 +2692,42 @@ bsd_fcntl(int s, int cmd, int val)
   return ret;
 }
 
-/* AROS specific functions */
-int bsd_getdtablesize(void)
+int bsd_getdtablesize(struct bsd *bsd)
 {
-    return NUM_SOCKETS;
+    return bsd->bsd_dt.sockets;
 }
 
-struct in_addr bsd_inet_addr(const char *cp)
+int bsd_setdtablesize(struct bsd *bsd, int size)
+{
+    struct bsd_sock **s;
+
+    if (size == bsd->bsd_dt.sockets)
+        return 0;
+
+    if ((s = AllocVec(sizeof(*s)*size, MEMF_ANY))) {
+        if (bsd->bsd_dt.sockets < size) {
+            CopyMem(bsd->bsd_dt.socket, s, sizeof(*s)*bsd->bsd_dt.sockets);
+            memset(&s[bsd->bsd_dt.sockets], 0, sizeof(*s)*(size - bsd->bsd_dt.sockets));
+        } else {
+            int i;
+            /* Shring the array */
+            CopyMem(bsd->bsd_dt.socket, s, sizeof(*s)*size);
+            for (i = size; i < bsd->bsd_dt.sockets; i++) {
+                if (bsd->bsd_dt.socket[i])
+                    bsd_close(bsd, i);
+            }
+        }
+        FreeVec(bsd->bsd_dt.socket);
+        bsd->bsd_dt.socket = s;
+        bsd->bsd_dt.sockets = size;
+        return 0;
+    }
+
+    set_errno(ENOMEM);
+    return -1;
+}
+
+struct in_addr bsd_inet_addr(struct bsd *bsd, const char *cp)
 {
     struct in_addr in;
 
@@ -2560,7 +2735,152 @@ struct in_addr bsd_inet_addr(const char *cp)
     return in;
 }
 
-char *bsd_inet_ntoa(struct in_addr *addr)
+char *bsd_inet_ntoa(struct bsd *bsd, struct in_addr *addr)
 {
     return ipaddr_ntoa((ip_addr_t *)addr);
+}
+
+int bsd_socket_release(struct bsd *bsd, int s, int id)
+{
+    struct bsd_sock *tmp;
+    struct bsd_sock *sock;
+    SYS_ARCH_DECL_PROTECT(lev);
+
+    ObtainSemaphore(&bsd->bsd_global->bsd_lock);
+
+    if (id >= 0 && id <= 65535) {
+        /* 'sharable' IDs */
+    } else if (id == UNIQUE_ID) {
+        /* Generate a new unique ID */
+        if (IsListEmpty(&bsd->bsd_global->bsd_sock_list)) {
+                id = 65536;
+        } else {
+            /* The list is sorted by ID */
+            tmp = (struct bsd_sock *)GetTail(&bsd->bsd_global->bsd_sock_list);
+            id = tmp->creator.id + 1;
+        }
+    } else {
+        /* Verify that the ID has not already been used */
+        ForeachNode(&bsd->bsd_global->bsd_sock_list, tmp) {
+            if (tmp->creator.id == id) {
+                ReleaseSemaphore(&bsd->bsd_global->bsd_lock);
+                set_errno(EEXIST);
+                return -1;
+            }
+        }
+    }
+
+    SYS_ARCH_PROTECT(lev);
+    sock = bsd->bsd_dt.socket[s];
+    if (sock == NULL) {
+        SYS_ARCH_UNPROTECT(lev);
+        ReleaseSemaphore(&bsd->bsd_global->bsd_lock);
+        set_errno(ENOENT);
+        return -1;
+    }
+
+    /* Mark this socket as 'gone' in our dt */
+    bsd->bsd_dt.socket[s] = NULL;
+    SYS_ARCH_UNPROTECT(lev);
+
+    ForeachNode(&bsd->bsd_global->bsd_sock_list, tmp) {
+        if (sock->creator.id > tmp->creator.id)
+            break;
+    }
+
+    /* Insert into the ordered position */
+    sock->node.mln_Pred = tmp->node.mln_Pred;
+    sock->node.mln_Succ = &tmp->node;
+    tmp->node.mln_Pred->mln_Succ = &sock->node;
+    tmp->node.mln_Pred = &sock->node;
+
+    ReleaseSemaphore(&bsd->bsd_global->bsd_lock);
+
+    return 0;
+}
+
+int bsd_socket_obtain(struct bsd *bsd, int id, int domain, int type, int protocol)
+{
+    struct bsd_sock *sock, *tmp;
+    SYS_ARCH_DECL_PROTECT(lev);
+
+    ObtainSemaphore(&bsd->bsd_global->bsd_lock);
+
+    ForeachNodeSafe(&bsd->bsd_global->bsd_sock_list, sock, tmp) {
+        if (sock->creator.id == id && (domain == 0 || (
+            sock->creator.domain == domain &&
+            sock->creator.type == type &&
+            sock->creator.protocol == protocol))) {
+            int s;
+
+            /* Look for free slot in the dt */
+            SYS_ARCH_PROTECT(lev);
+            for (s = 0; s < bsd->bsd_dt.sockets; s++) {
+                if (bsd->bsd_dt.socket[s] == NULL) {
+                    bsd->bsd_dt.socket[s] = sock;
+                    SYS_ARCH_UNPROTECT(lev);
+
+                    REMOVE(&sock->node);
+                    ReleaseSemaphore(&bsd->bsd_global->bsd_lock);
+                    return s;
+                }
+            }
+
+            /* No free slot. Fooey. */
+            SYS_ARCH_UNPROTECT(lev);
+            ReleaseSemaphore(&bsd->bsd_global->bsd_lock);
+            set_errno(ENOSPC);
+            return -1;
+        }
+    }
+
+    set_errno(ENOENT);
+    ReleaseSemaphore(&bsd->bsd_global->bsd_lock);
+
+    return -1;
+}
+
+int bsd_socket_dup2(struct bsd *bsd, int olds, int news)
+{
+    SYS_ARCH_DECL_PROTECT(lev);
+
+    if (olds == news) {
+        set_errno(EBADF);
+        return -1;
+    }
+
+    /* Look for free slot in the dt */
+    SYS_ARCH_PROTECT(lev);
+    if (olds < 0 || olds >= bsd->bsd_dt.sockets || bsd->bsd_dt.socket[olds] == NULL) {
+        set_errno(EBADF);
+        return -1;
+    }
+
+    if (news < 0) {
+        for (news = 0; news < bsd->bsd_dt.sockets; news++) {
+            if (bsd->bsd_dt.socket[news] == NULL)
+                break;
+        }
+        if (news == bsd->bsd_dt.sockets) {
+            SYS_ARCH_UNPROTECT(lev);
+            set_errno(ENOSPC);
+            return -1;
+        }
+    } else {
+        if (news >= bsd->bsd_dt.sockets) {
+            SYS_ARCH_UNPROTECT(lev);
+            set_errno(EBADF);
+            return -1;
+        }
+        if (bsd->bsd_dt.socket[news]) {
+            bsd_close(bsd, news);
+        }
+    }
+
+    bsd->bsd_dt.socket[olds]->usage++;
+    bsd->bsd_dt.socket[news] = bsd->bsd_dt.socket[olds];
+    SYS_ARCH_UNPROTECT(lev);
+
+    set_errno(0);
+    return 0;
 }

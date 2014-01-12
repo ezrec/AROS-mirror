@@ -42,7 +42,7 @@
 {
     AROS_LIBFUNC_INIT
 
-    return bsd_inet_addr(cp).s_addr;
+    return bsd_inet_addr(bsdsocketBase->bsd, cp).s_addr;
 
     AROS_LIBFUNC_EXIT
 

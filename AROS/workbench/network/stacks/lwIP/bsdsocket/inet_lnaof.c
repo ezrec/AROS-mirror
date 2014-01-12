@@ -18,7 +18,7 @@
         AROS_LHA(unsigned long, in, D0),
 
 /*  LOCATION */
-        struct Library *, SocketBase, 31, BSDSocket)
+        struct bsdsocketBase *, bsdsocketBase, 31, BSDSocket)
 
 /*  FUNCTION
 

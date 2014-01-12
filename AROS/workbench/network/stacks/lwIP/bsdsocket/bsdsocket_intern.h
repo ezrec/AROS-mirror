@@ -20,15 +20,14 @@
 struct BSDSocketBase {
     struct Library lib;
     BPTR bs_SegList;
+    struct bsd_global *bsd_global;
 };
 
 /* Per-opener library */
 struct bsdsocketBase {
     struct Library lib;
-    struct Library *lib_Master;
-    void *errnoPtr;
-    int errnoSize;
-    LONG errnoVal;
+    struct BSDSocketBase *lib_Master;
+    struct bsd *bsd;
     ULONG sigintr;
     ULONG sigio;
     ULONG sigurg;

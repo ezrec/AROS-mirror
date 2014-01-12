@@ -17,7 +17,7 @@
 /*  SYNOPSIS */
 
 /*  LOCATION */
-        struct Library *, SocketBase, 48, BSDSocket)
+        struct bsdsocketBase *, bsdsocketBase, 48, BSDSocket)
 
 /*  FUNCTION
 

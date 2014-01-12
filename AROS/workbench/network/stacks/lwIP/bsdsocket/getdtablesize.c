@@ -41,7 +41,7 @@
 {
     AROS_LIBFUNC_INIT
 
-    return bsd_getdtablesize();
+    return bsd_getdtablesize(bsdsocketBase->bsd);
 
     AROS_LIBFUNC_EXIT
 

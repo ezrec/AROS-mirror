@@ -19,7 +19,7 @@
         AROS_LHA(int,    size, D0),
 
 /*  LOCATION */
-        struct bsdsocketBase *, SocketBase, 28, BSDSocket)
+        struct bsdsocketBase *, bsdsocketBase, 28, BSDSocket)
 
 /*  FUNCTION
 
@@ -43,8 +43,7 @@
 {
     AROS_LIBFUNC_INIT
 
-    SocketBase->errnoPtr = ptr;
-    SocketBase->errnoSize = size;
+    bsd_set_errno(bsdsocketBase->bsd, ptr, size);
 
     AROS_LIBFUNC_EXIT
 } /* SetErrnoPtr */

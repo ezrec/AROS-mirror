@@ -18,7 +18,7 @@
         AROS_LHA(struct TagItem *, tagList, A0),
 
 /*  LOCATION */
-        struct Library *, SocketBase, 49, BSDSocket)
+        struct bsdsocketBase *, bsdsocketBase, 49, BSDSocket)
 
 /*  FUNCTION
 

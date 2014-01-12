@@ -4,15 +4,17 @@
 
 #include "bsdsocket_intern.h"
 
-static int bsdsocket_Init(struct bsdsocketBase *SocketBase)
+static int BSDSocket_Init(struct BSDSocketBase *BSDSocketBase)
 {
-    return TRUE;
+    BSDSocketBase->bsd_global = bsd_global_init();
+
+    return (BSDSocketBase->bsd_global) ? TRUE : FALSE;
 }
 
-static int bsdsocket_Cleanup(struct bsdsocketBase *SocketBase)
+static int BSDSocket_Expunge(struct BSDSocketBase *BSDSocketBase)
 {
-    return TRUE;
+    return bsd_global_expunge(BSDSocketBase->bsd_global);
 }
 
-ADD2INITLIB(bsdsocket_Init, 0);
-ADD2EXPUNGELIB(bsdsocket_Cleanup, 0);
+ADD2INITLIB(BSDSocket_Init, 0);
+ADD2EXPUNGELIB(BSDSocket_Expunge, 0);

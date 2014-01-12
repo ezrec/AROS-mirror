@@ -20,7 +20,7 @@
         AROS_LHA(ULONG, urgmask,  D2),
 
 /*  LOCATION */
-        struct bsdsocketBase *, SocketBase, 22, BSDSocket)
+        struct bsdsocketBase *, bsdsocketBase, 22, BSDSocket)
 
 /*  FUNCTION
 
@@ -44,9 +44,9 @@
 {
     AROS_LIBFUNC_INIT
 
-    SocketBase->sigintr = intrmask;
-    SocketBase->sigio   = iomask;
-    SocketBase->sigurg  = urgmask;
+    bsdsocketBase->sigintr = intrmask;
+    bsdsocketBase->sigio   = iomask;
+    bsdsocketBase->sigurg  = urgmask;
 
     AROS_LIBFUNC_EXIT
 

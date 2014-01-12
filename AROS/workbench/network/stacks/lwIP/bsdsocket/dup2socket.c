@@ -19,7 +19,7 @@
         AROS_LHA(int, fd2, D1),
 
 /*  LOCATION */
-        struct Library *, SocketBase, 44, BSDSocket)
+        struct bsdsocketBase *, bsdsocketBase, 44, BSDSocket)
 
 /*  FUNCTION
 
@@ -43,10 +43,7 @@
 {
     AROS_LIBFUNC_INIT
 
-    aros_print_not_implemented ("Dup2Socket");
-/* FIXME: Write BSDSocket/Dup2Socket */
-
-    return 0;
+    return bsd_socket_dup2(bsdsocketBase->bsd, fd1, fd2);
 
     AROS_LIBFUNC_EXIT
 

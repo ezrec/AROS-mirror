@@ -21,7 +21,7 @@
         AROS_LHA(LONG, protocol, D3),
 
 /*  LOCATION */
-        struct Library *, SocketBase, 24, BSDSocket)
+        struct bsdsocketBase *, bsdsocketBase, 24, BSDSocket)
 
 /*  FUNCTION
 
@@ -45,10 +45,7 @@
 {
     AROS_LIBFUNC_INIT
 
-    aros_print_not_implemented ("ObtainSocket");
-/* FIXME: Write BSDSocket/ObtainSocket */
-
-    return 0;
+    return bsd_socket_obtain(bsdsocketBase->bsd, id, domain, type, protocol);
 
     AROS_LIBFUNC_EXIT
 
