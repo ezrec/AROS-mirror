@@ -5,7 +5,6 @@ STACK_NAME := lwIP
 
 #MM- workbench-network : workbench-network-stacks-lwip
 
-#MM- workbench-network-stacks-lwip : workbench-network-stacks-lwip-bsdsocket
 #MM- workbench-network-stacks-lwip: linklibs-lwip
 LWIP_C := $(call WILDCARD, lwip/src/api/*.c) \
           $(call WILDCARD, lwip/src/core/*.c) \
@@ -25,25 +24,29 @@ USER_CFLAGS += -I$(SRCDIR)/$(CURDIR) \
                -Wno-attributes -Wno-address \
                -Wno-unused-but-set-variable
 
+#MM- linklibs-lwip : network-includes
+
 %build_linklib mmake=linklibs-lwip \
     objdir="$(OBJDIR)/lwip" \
     libname=lwip files="$(LWIP_SOURCES)"
 
+INCLUDE_FILES := lwipopts.h $(call WILDCARD, arch/*.h)
 
-#MM- workbench-network-stacks-lwip-bsdsocket: linklibs-lwip arostcp-includes
+%copy_includes path=lwip
 
-BSDSOCKET_C := $(call WILDCARD, bsdsocket/*.c)
-BSDSOCKET_SOURCES := $(BSDSOCKET_C:%.c=%)
+INCLUDE_FILES := $(call WILDCARD, lwip/src/include/lwip/*.h)
 
-USER_CFLAGS += -I$(SRCDIR)/$(CURDIR)/bsdsocket
+%copy_includes path=lwip dir=lwip/src/include/lwip
 
-%build_module mmake=workbench-network-stacks-lwip-bsdsocket \
-    modname=bsdsocket modtype=library \
-    files="$(BSDSOCKET_SOURCES)" uselibs="lwip stdc" \
-    objdir="$(OBJDIR)/bsdsocket" \
-    moduledir="$(AROS_SYSTEM)/Network/$(STACK_NAME)/Libs"
+INCLUDE_FILES := $(call WILDCARD, lwip/src/include/ipv4/lwip/*.h)
 
-%copy_files_q mmake=workbench-network-stacks-lwip files="README" \
+%copy_includes path=lwip dir=lwip/src/include/ipv4/lwip
+
+INCLUDE_FILES := $(call WILDCARD, lwip/src/include/ipv6/lwip/*.h)
+
+%copy_includes path=lwip dir=lwip/src/include/ipv6/lwip
+
+%copy_files_q mmake=workbench-network-stacks-lwip files="README.txt" \
     dst="$(AROS_SYSTEM)/Network/lwIP"
 
 %common
