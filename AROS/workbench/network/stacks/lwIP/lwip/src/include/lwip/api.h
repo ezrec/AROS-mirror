@@ -218,6 +218,8 @@ struct netconn {
 #endif /* LWIP_TCP */
   /** A callback function that is informed about events for this netconn */
   netconn_callback callback;
+  /** private data for use by the callback function */
+  void *callback_priv;
 };
 
 /** Register an Network connection event */
