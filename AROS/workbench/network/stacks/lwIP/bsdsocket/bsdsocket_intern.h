@@ -31,6 +31,7 @@ struct bsdsocketBase {
     ULONG sigintr;
     ULONG sigio;
     ULONG sigurg;
+    int bsd_syslog;     /* Syslog socket */
 };
 
 #endif /* BSDSOCKET_INTERN_H */
