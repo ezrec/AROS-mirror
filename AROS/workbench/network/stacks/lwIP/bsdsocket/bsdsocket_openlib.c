@@ -44,9 +44,10 @@ AROS_LH1(struct Library *, BSDSocket_OpenLib,
     SumLibrary(&bsdsocketBase->lib);
 
     bsdsocketBase->sigintr = SIGBREAKF_CTRL_C;
+    bsdsocketBase->bsd_syslog = -1;
+    bsdsocketBase->lib_Master = BSDSocketBase;
 
     bsdsocketBase->lib.lib_OpenCnt++;
-    bsdsocketBase->lib_Master = BSDSocketBase;
     BSDSocketBase->lib.lib_OpenCnt++;
 
     return &bsdsocketBase->lib;
@@ -59,6 +60,10 @@ AROS_LH0(BPTR, BSDSocket_CloseLib,
 {
     AROS_LIBFUNC_INIT
     struct Library *BSDSocketBase = &bsdsocketBase->lib_Master->lib;
+
+    /* Close the syslog socket, if needed */
+    if (bsdsocketBase->bsd_syslog >= 0)
+        bsd_close(bsdsocketBase->bsd, bsdsocketBase->bsd_syslog);
 
     bsdsocketBase->lib.lib_OpenCnt--;
     BSDSocketBase->lib_OpenCnt--;
