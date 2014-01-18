@@ -99,8 +99,8 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             ( [
                 A( _N['contribute'], href=makeURL( 'documentation/developers/contribute', lang ) ),
                 A( _N['roadmap'], href=makeURL( 'documentation/developers/roadmap', lang ) ),
-                A( _N['bug-tracker'], href='http://sourceforge.net/tracker/?atid=439463&amp;group_id=43586&amp;func=browse' ),
-                A( _N['feature-requests'], href='http://sourceforge.net/tracker/?group_id=43586&amp;atid=439466' ),
+                A( _N['bug-tracker'], href='http://sourceforge.net/p/aros/bugs/' ),
+                A( _N['feature-requests'], href='http://sourceforge.net/p/aros/feature-requests/' ),
                 A( _N['working-with-subversion'], href=makeURL( 'documentation/developers/svn', lang ) ),
                 A( _N['compiling'],  href=makeURL( 'documentation/developers/compiling', lang ) ),
                 A( _N['application-development-manual'], href=makeURL( 'documentation/developers/app-dev/index', lang ) ),
@@ -155,10 +155,6 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         A( _N['links'], href=makeURL( 'links', lang ) )])
     ] )
 
-    counter = Img( 
-    src = 'http://www.hepe.com/cgi-bin/wwwcount.cgi?df=aros.dat&amp;dd=E&amp;ft=0', alt = 'www.hepe.com' 
-    )
-    
     sponsors = Table\
     ( 
         cellspacing = 5, cellpadding = 0,
@@ -215,8 +211,6 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                 ]
             ),
             TR( valign = 'top', contents = TD( navigation ) ),
-            TR( TD() ),
-            TR( valign = 'top', contents = TD( align = 'center', contents = counter ) ),
             TR( TD() ),
             TR( valign = 'top', contents = TD( align = 'center', contents = sponsors ) ),
             TR( TD()),
