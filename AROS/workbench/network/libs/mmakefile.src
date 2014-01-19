@@ -1,6 +1,6 @@
 #   $Id$
 include $(TOP)/config/make.cfg
 
-#MM- workbench-network: workbench-network-common
+#MM- workbench-network : network-libs
 
 %common

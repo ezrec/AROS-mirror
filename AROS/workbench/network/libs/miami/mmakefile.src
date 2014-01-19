@@ -1,0 +1,10 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+#MM- network-libs : network-libs-miami
+#MM- network-libs-miami : network-includes
+
+%build_module_abi mmake=network-libs-miami \
+    modname=miami modtype=library
+
+%common

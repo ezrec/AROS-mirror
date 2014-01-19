@@ -240,7 +240,7 @@ struct msghdr {
 	u_int	msg_iovlen;		/* # elements in msg_iov */
 	caddr_t	msg_control;		/* ancillary data, see below */
 	u_int	msg_controllen;		/* ancillary data buffer len */
-	long	msg_flags;		/* flags on received message */
+	long	msg_flags;		/* flags on received message (ignored on send) */
 };
 
 #define	MSG_OOB		0x1		/* process out-of-band data */

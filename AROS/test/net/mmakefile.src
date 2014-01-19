@@ -8,10 +8,10 @@ EXEDIR          := $(AROS_TESTS)/net
 
 #MM- test : test-net
 #MM- test-quick : test-net-quick
-#MM- test-net : arostcp-linklibs-netlib
+#MM- test-net : linklibs
 
 %build_progs mmake=test-net \
     files=$(FILES) targetdir=$(EXEDIR) \
-    uselibs="net"
+    uselibs="net bsdsocket"
 
 %common
