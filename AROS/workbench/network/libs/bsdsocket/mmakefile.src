@@ -1,0 +1,15 @@
+#   $Id$
+include $(TOP)/config/make.cfg
+
+#MM- network-libs : network-libs-bsdsocket
+
+#MM- network-libs-bsdsocket: network-includes
+
+BSDSOCKET_C := $(call WILDCARD, *.c)
+BSDSOCKET_SOURCES := $(BSDSOCKET_C:%.c=%)
+
+%build_module mmake=network-libs-bsdsocket \
+    modname=bsdsocket modtype=library \
+    files="$(BSDSOCKET_SOURCES)" uselibs="asocket stdc"
+
+%common
