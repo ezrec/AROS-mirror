@@ -50,16 +50,17 @@
     }
 
     for (s = 0; s < SocketBase->bsd_fds; s++) {
-        APTR as;
         LONG err;
         ULONG active;
+        struct bsd_fd *fd = &SocketBase->bsd_fd[s];
 
-        if (SocketBase->bsd_fd[s].asocket == NULL)
+        if (fd->asocket == NULL)
             continue;
         
-        as = SocketBase->bsd_fd[s].asocket;
+        if (!(fd->flags & O_ASYNC))
+            continue;
 
-        err = ASocketGet(as, AS_TAG_NOTIFY_FD_ACTIVE, &active, TAG_END);
+        err = ASocketGet(fd->asocket, AS_TAG_NOTIFY_FD_ACTIVE, &active, TAG_END);
         if (err != 0) {
             BSD_SET_ERRNO(SocketBase, err);
             return -1;

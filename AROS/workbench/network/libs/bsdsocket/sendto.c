@@ -89,7 +89,7 @@
 
         err = ASocketSendMsg(as, &asmsg, flags);
         if (err == 0)
-            size = bsdsocket_wait_msg(SocketBase, &asmsg);
+            err = bsdsocket_wait_msg(SocketBase, &asmsg, &size);
     } else {
         size = 0;
         err = 0;

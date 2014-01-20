@@ -15,10 +15,14 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <syslog.h>
 #include <sys/uio.h>
 
 #include <proto/bsdsocket.h>
 #include <proto/asocket.h>
+
+#include <libraries/bsdsocket.h>
+#include <bsdsocket/socketbasetags.h>
 
 #define BSD_DEFAULT_DTABLESIZE  64
 
@@ -28,6 +32,7 @@ struct bsd_fd {
         struct Task *sigioTask;
         struct Task *sigurgTask;
         ULONG  flags;               /* O_* flags */
+        ULONG  fd_mask;             /* FD_* event mask in O_ASYNC mode */
         ULONG  id;                  /* Used by WaitSelect and
                                      * ObtainSocket/ReleaseSocket
                                      */
@@ -37,6 +42,8 @@ struct bsd_fd {
 struct BSDSocketBase {
     struct Library lib;
     BPTR bs_SegList;
+    struct Task *bs_NotifyTask;
+    struct MsgPort *bs_MsgPort;     /* Serviced by bs_NotifyTask */
     struct List bs_FDList;
     struct SignalSemaphore bs_Lock;
 };
@@ -52,13 +59,23 @@ struct bsdsocketBase {
         ULONG intr;
         ULONG io;
         ULONG urg;
+        ULONG event;
     } bsd_sigmask;
     struct {
         ULONG value;
         APTR  ptr;
         void (*update)(APTR addr, ULONG value);
     } bsd_errno;
-    int bsd_syslog;     /* Syslog socket */
+    int bsd_h_errno;
+    int (*bsd_fdCallback)(int fd, int action);
+
+    struct {
+        int fd;         /* Syslog socket */
+        int facility;   /* Syslog facility */
+        int mask;       /* Syslog mask */
+        int logstat;    /* openlog() options */
+        const char *tag;
+    } bsd_syslog;
 
     /* Referenced libraries */
     struct BSDSocketBase *lib_BSDSocketBase;
@@ -100,9 +117,34 @@ static inline struct Library *bsdsocket_openlibrary(struct Library **libp, CONST
     return *libp;
 }
 
-static inline LONG bsdsocket_fd_init(struct bsdsocketBase *SocketBase, struct bsd_fd *fd, APTR asocket, ULONG flags)
+#define BSD_FD_CALLBACK(sb, fd, action) \
+    ((sb)->bsd_fdCallback ? (sb)->bsd_fdCallback(fd, action) : 0)
+
+/* Find the next available fd, or -1 if done available */
+static inline int bsdsocket_fd_avail(struct bsdsocketBase *SocketBase)
+{
+    int ns;
+
+    for (ns = 0; ns <= SocketBase->bsd_fds; ns++) {
+        if (SocketBase->bsd_fd[ns].asocket == NULL)
+            continue;
+        if (BSD_FD_CALLBACK(SocketBase, ns, FDCB_CHECK) == 0)
+            continue;
+        return ns;
+    }
+
+    BSD_SET_ERRNO(SocketBase, EMFILE);
+    return -1;
+}
+
+static inline LONG bsdsocket_fd_init(struct bsdsocketBase *SocketBase, int s, APTR asocket, ULONG flags)
 {
     LONG err;
+    struct bsd_fd *fd;
+
+    BSD_FD_CALLBACK(SocketBase, s, FDCB_ALLOC);
+
+    fd = &SocketBase->bsd_fd[s];
 
     /* Disable notification, but set up the port to use.
      */
@@ -137,6 +179,6 @@ static inline struct timerequest *bsdsocket_timerequest(struct bsdsocketBase *So
  */
 LONG bsdsocket_wait_event(struct bsdsocketBase *SocketBase, APTR as, ULONG mask);
 
-size_t bsdsocket_wait_msg(struct bsdsocketBase *SocketBase, struct ASocket_Msg *msg);
+LONG bsdsocket_wait_msg(struct bsdsocketBase *SocketBase, struct ASocket_Msg *msg, size_t *len);
 
 #endif /* BSDSOCKET_INTERN_H */

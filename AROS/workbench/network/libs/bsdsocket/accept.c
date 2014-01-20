@@ -58,27 +58,23 @@
     }
 
     /* Ok, we have an FD_ACCEPT waiting - allocate a free socket */
-    for (ns = 0; ns <= SocketBase->bsd_fds; ns++) {
-        if (SocketBase->bsd_fd[ns].asocket == NULL) {
-            err = ASocketAccept(fd->asocket, &nas);
-            if (err == 0) {
-                if (addrlen && addr) {
-                    struct ASocket_Address as_addr;
-                    as_addr.asa_Length = *addrlen;
-                    as_addr.asa_Address = addr;
-                    err = ASocketGet(nas, AS_TAG_SOCKET_ENDPOINT, &as_addr, TAG_END);
-                    /* We're ignoring any error for now... */
-                    (void)err;
-                    *addrlen = as_addr.asa_Length;
-                }
-                bsdsocket_fd_init(SocketBase, &SocketBase->bsd_fd[ns], nas, O_RDWR);
-                return ns;
-            }
-            break;
+    ns = bsdsocket_fd_avail(SocketBase);
+    if (ns < 0)
+        return -1;
+
+    err = ASocketAccept(fd->asocket, &nas);
+    if (err == 0) {
+        if (addrlen && addr) {
+            struct ASocket_Address as_addr;
+            as_addr.asa_Length = *addrlen;
+            as_addr.asa_Address = addr;
+            err = ASocketGet(nas, AS_TAG_SOCKET_ENDPOINT, &as_addr, TAG_END);
+            /* We're ignoring any error for now... */
+            (void)err;
+            *addrlen = as_addr.asa_Length;
         }
-    }
-    if (err == 0 && ns >= SocketBase->bsd_fds) {
-        err = EMFILE;
+        bsdsocket_fd_init(SocketBase, ns, nas, O_RDWR);
+        return ns;
     }
 
     BSD_SET_ERRNO(SocketBase, err);

@@ -55,14 +55,9 @@
     fd = BSD_GET_FD(SocketBase, fd1);
 
     if (fd2 < 0) {
-        for (fd2 = 0; fd2 < SocketBase->bsd_fds; fd2++) {
-            if (SocketBase->bsd_fd[fd2].asocket == NULL)
-                break;
-        }
-        if (fd2 >= SocketBase->bsd_fds) {
-            BSD_SET_ERRNO(SocketBase, EMFILE);
+        fd2 = bsdsocket_fd_avail(SocketBase);
+        if (fd2 < 0)
             return -1;
-        }
     }
 
     if (fd2 >= SocketBase->bsd_fds) {
@@ -80,7 +75,7 @@
        CloseSocket(fd2);
     }
 
-    err = bsdsocket_fd_init(SocketBase, &SocketBase->bsd_fd[fd2], nas, fd->flags);
+    err = bsdsocket_fd_init(SocketBase, fd2, nas, fd->flags);
     BSD_SET_ERRNO(SocketBase, err);
     return (err == 0) ? 0 : -1;
 

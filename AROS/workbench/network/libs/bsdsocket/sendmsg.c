@@ -58,7 +58,7 @@
     err = ASocketSendMsg(as, &asmsg, flags);
 
     if (err == 0)
-        size = bsdsocket_wait_msg(SocketBase, &asmsg);
+        err = bsdsocket_wait_msg(SocketBase, &asmsg, &size);
 
     BSD_SET_ERRNO(SocketBase, err);
     return (err == 0) ? size : -1;

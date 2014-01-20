@@ -42,16 +42,20 @@
 {
     AROS_LIBFUNC_INIT
     struct bsd_fd *fd;
+    LONG err;
 
     D(bug("[bsdsocket] CloseSocket(%u)\n", s));
 
     fd = BSD_GET_FD(SocketBase, s);
 
-    ASocketDispose(fd->asocket);
-    fd->asocket = NULL;
+    err = BSD_FD_CALLBACK(SocketBase, s, FDCB_FREE);
+    if (err == 0) {
+        ASocketDispose(fd->asocket);
+        fd->asocket = NULL;
+    }
 
-    BSD_SET_ERRNO(SocketBase, 0);
-    return 0;
+    BSD_SET_ERRNO(SocketBase, err);
+    return (err == 0) ? 0 : err;
 
     AROS_LIBFUNC_EXIT
 } /* CloseSocket */

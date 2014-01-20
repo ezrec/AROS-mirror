@@ -56,10 +56,36 @@
 
     switch (request) {
     case FIOASYNC:
+        tmp = fd->flags;
         switch (*(long *)argp) {
         case 0: fd->flags &= ~O_ASYNC; break;
         case 1: fd->flags |=  O_ASYNC; break;
         default: err = EINVAL; break;
+        }
+        if (tmp != fd->flags) {
+            if (fd->flags & O_ASYNC) {
+                /* Fail if no owner for sigio */
+                if (fd->sigioTask == NULL) {
+                    fd->flags = tmp;
+                    err = EINVAL;
+                    break;
+                }
+                /* Put in async mode - use the global async monitor task */
+                err = ASocketSet(fd->asocket,
+                                 AS_TAG_NOTIFY_MSGPORT, SocketBase->lib_BSDSocketBase->bs_MsgPort,
+                                 AS_TAG_NOTIFY_FD_MASK, fd->fd_mask,
+                                 AS_TAG_NOTIFY_NAME, fd,
+                                 TAG_END);
+            } else {
+                /* Stop async mode */
+                err = ASocketSet(fd->asocket, 
+                                 AS_TAG_NOTIFY_MSGPORT, NULL,
+                                 AS_TAG_NOTIFY_FD_MASK, 0,
+                                 AS_TAG_NOTIFY_NAME, NULL,
+                                 TAG_END);
+            }
+            if (err != 0)
+                fd->flags = tmp;
         }
         break;
     case FIOCLEX:

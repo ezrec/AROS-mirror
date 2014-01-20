@@ -58,12 +58,20 @@ static int _vasprintf(char **strp, const char *format, va_list args);
     int msgs;
     struct sockaddr_in sa;
 
+    /* Masked out? */
+    if ((SocketBase->bsd_syslog.mask & level) == 0)
+        return;
+
+    /* Set the default facility */
+    if (LOG_FAC(level) == 0)
+        level = LOG_MAKEPRI(SocketBase->bsd_syslog.facility, LOG_PRI(level));
+
     /* If we need a syslog socket, create one. */
-    if (SocketBase->bsd_syslog < 0) {
-        SocketBase->bsd_syslog = socket(AF_INET, SOCK_DGRAM, 0);
+    if (SocketBase->bsd_syslog.fd < 0) {
+        SocketBase->bsd_syslog.fd = socket(AF_INET, SOCK_DGRAM, 0);
     }
 
-    if (SocketBase->bsd_syslog < 0) {
+    if (SocketBase->bsd_syslog.fd < 0) {
         /* Nothing to log to! */
         return;
     }
@@ -142,7 +150,6 @@ static int _vasprintf(char **strp, const char *format, va_list args);
         /* Calculate the RFC 5424 string for the message:
          * <pri>v year-mo-dyThh:mm:ss.ppZ hostname taskname pid - - msg
          */
-        struct Task *me = FindTask(NULL);
         char hostname[64];
         struct tm tm;
         time_t t;
@@ -158,9 +165,9 @@ static int _vasprintf(char **strp, const char *format, va_list args);
                     tm.tm_year+1900, tm.tm_mon+1, tm.tm_mday, 
                     tm.tm_hour, tm.tm_min, tm.tm_sec, 0,
                     hostname,
-                    me->tc_Node.ln_Name,
-                    (unsigned long long)(IPTR)me, msg) >= 0) {
-            sendto(SocketBase->bsd_syslog, rfc5424, strlen(rfc5424), 0, (struct sockaddr *)&sa, sizeof(sa));
+                    SocketBase->bsd_syslog.tag,
+                    (unsigned long long)(IPTR)FindTask(NULL), msg) >= 0) {
+            sendto(SocketBase->bsd_syslog.fd, rfc5424, strlen(rfc5424), 0, (struct sockaddr *)&sa, sizeof(sa));
             FreeVec(rfc5424);
         }
 

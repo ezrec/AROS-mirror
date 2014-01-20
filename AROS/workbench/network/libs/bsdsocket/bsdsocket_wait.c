@@ -35,19 +35,22 @@ LONG bsdsocket_wait_event(struct bsdsocketBase *SocketBase, APTR as, ULONG mask)
 /* Wait for an ASocket_Msg to complete.
  * This is eerily similar to Exec/WaitIO()
  */
-size_t bsdsocket_wait_msg(struct bsdsocketBase *SocketBase, struct ASocket_Msg *asmsg)
+LONG bsdsocket_wait_msg(struct bsdsocketBase *SocketBase, struct ASocket_Msg *asmsg, size_t *sizep)
 {
     struct Message *msg;
-    size_t size;
-    int i;
-
-    for (size = i = 0; i < asmsg->asm_MsgHdr->msg_iovlen; i++)
-        size += asmsg->asm_MsgHdr->msg_iov[i].iov_len;
 
     WaitPort(asmsg->asm_Message.mn_ReplyPort);
     msg = GetMsg(asmsg->asm_Message.mn_ReplyPort);
 
     ASSERT(msg == (struct Message *)asmsg);
 
-    return size;
+    if (asmsg->asm_Errno == 0 && sizep) {
+        size_t size;
+        int i;
+        for (size = i = 0; i < asmsg->asm_MsgHdr->msg_iovlen; i++)
+            size += asmsg->asm_MsgHdr->msg_iov[i].iov_len;
+        *sizep = size;
+    }
+
+    return asmsg->asm_Errno;
 }

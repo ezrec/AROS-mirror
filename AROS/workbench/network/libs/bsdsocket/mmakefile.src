@@ -8,8 +8,24 @@ include $(TOP)/config/make.cfg
 BSDSOCKET_C := $(call WILDCARD, *.c)
 BSDSOCKET_SOURCES := $(BSDSOCKET_C:%.c=%)
 
+FILES=accept amiga_errlists bind \
+      bsdsocket_init bsdsocket_openlib bsdsocket_wait \
+      closesocket connect dup2socket errno getdtablesize \
+      gethostbyaddr gethostbyname gethostid gethostname \
+      getnetbyaddr getnetbyname getpeername \
+      getprotobyname getprotobynumber getservbyname getservbyport \
+      getsocketevents getsockname getsockopt \
+      inet_addr inet_lnaof inet_makeaddr inet_netof inet_network inet_ntoa \
+      ioctlsocket listen obtainsocket \
+      recv recvfrom recvmsg \
+      releasecopyofsocket releasesocket \
+      send sendmsg sendto \
+      seterrnoptr setsocketsignals setsockopt shutdown \
+      socketbasetaglist socket vsyslog waitselect
+
 %build_module mmake=network-libs-bsdsocket \
     modname=bsdsocket modtype=library \
-    files="$(BSDSOCKET_SOURCES)" uselibs="asocket stdc"
+    files="$(FILES)" \
+    uselibs="asocket stdc"
 
 %common

@@ -87,10 +87,9 @@
 
         err = ASocketRecvMsg(as, &asmsg, flags);
         if (err == 0) {
-            size = bsdsocket_wait_msg(SocketBase, &asmsg);
-            if (fromlen) {
+            err = bsdsocket_wait_msg(SocketBase, &asmsg, &size);
+            if (err == 0 && fromlen)
                 *fromlen = msghdr.msg_namelen;
-            }
         }
     } else {
         size = 0;

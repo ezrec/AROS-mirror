@@ -65,7 +65,10 @@ AROS_LH1(struct Library *, BSDSocket_OpenLib,
     bsdsocketBase->bsd_MsgPort = mp;
 
     bsdsocketBase->bsd_sigmask.intr = SIGBREAKF_CTRL_C;
-    bsdsocketBase->bsd_syslog = -1;
+    bsdsocketBase->bsd_syslog.fd = -1;
+    bsdsocketBase->bsd_syslog.facility = LOG_USER;
+    bsdsocketBase->bsd_syslog.mask = 0xff;
+    bsdsocketBase->bsd_syslog.tag = FindTask(NULL)->tc_Node.ln_Name;
 
     bsdsocketBase->lib_BSDSocketBase = BSDSocketBase;
     bsdsocketBase->lib_ASocketBase = asocketBase;
@@ -85,8 +88,8 @@ AROS_LH0(BPTR, BSDSocket_CloseLib,
     struct Library *BSDSocketBase = &SocketBase->lib_BSDSocketBase->lib;
 
     /* Close the syslog socket, if needed */
-    if (SocketBase->bsd_syslog >= 0)
-        CloseSocket(SocketBase->bsd_syslog);
+    if (SocketBase->bsd_syslog.fd >= 0)
+        CloseSocket(SocketBase->bsd_syslog.fd);
 
     SocketBase->lib.lib_OpenCnt--;
     BSDSocketBase->lib_OpenCnt--;
