@@ -7,6 +7,8 @@ FILES :=	alloc bpf comapi conflex ctrace discover dispatch	\
 		nit options packet parse print raw resolv socket	\
 		tables tr tree upf
 
+#MM- network-dhcp-libdhcp: network-libs
+
 %build_linklib mmake=network-dhcp-libdhcp	\
 	libname=dhcp			        \
 	files="$(FILES)"

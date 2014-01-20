@@ -148,7 +148,7 @@
 *       Berkeley.
 *
 *   SEE ALSO
-*       bsdsocket.library/syslog(), bsdsocket.library/SocketBaseTagList()
+*       bsdsocket.library/vsyslog(), bsdsocket.library/SocketBaseTagList()
 *****************************************************************************
 *
 */
@@ -184,4 +184,18 @@ setlogmask(int pmask)
 
   SocketBaseTagList((struct TagItem *)taglist);
   return (int)taglist[1];
+}
+
+#ifdef syslog
+#undef syslog
+#endif
+
+void
+syslog(int level, const char *format, ...)
+{
+  va_list args;
+
+  va_start(args, format);
+  vsyslog(level, format, args);
+  va_end(args);
 }

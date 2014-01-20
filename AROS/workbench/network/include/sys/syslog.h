@@ -194,6 +194,7 @@ CODE facilitynames[] = {
 void openlog(const char *, int, int);
 void closelog(void);
 int setlogmask(int);
+void syslog(int level, const char *format, ...);
 /*
  * Include protos/inlines/pragmas for the syslog()
  * (+ all other AmiTCP functions)

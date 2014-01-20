@@ -58,17 +58,6 @@ static void __close_bsdsocket()
 		SocketBase = NULL;
 	}
 }
-
-void  openlog(const char *ident, int logstat, int logfac)
-{
-	log_debug("openlog %s %d %d\n", ident, logstat, logfac);
-}
-
-int   setlogmask(int pmask)
-{
-	log_debug("setlogmask %d\n", pmask);
-	return -1;
-}
 #endif
 
 TIME default_lease_time = 43200; /* 12 hours... */
