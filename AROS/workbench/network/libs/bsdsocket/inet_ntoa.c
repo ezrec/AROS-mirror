@@ -12,7 +12,7 @@
 
     NAME */
 
-        AROS_LH1(char *, Inet_NtoA,
+        AROS_NTLH1(char *, Inet_NtoA,
 
 /*  SYNOPSIS */
         AROS_LHA(unsigned long, in, D0),
