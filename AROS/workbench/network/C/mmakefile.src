@@ -9,7 +9,8 @@ USER_CFLAGS := -Wno-uninitialized -Wno-parentheses -D__BSD_VISIBLE=1
 
 %build_progs mmake=workbench-network-c \
     files="ifconfig route ping resolve arp logger hostname" \
-    targetdir=$(AROS_C)
+    targetdir=$(AROS_C) \
+    uselibs="net"
 
 #%common
 
