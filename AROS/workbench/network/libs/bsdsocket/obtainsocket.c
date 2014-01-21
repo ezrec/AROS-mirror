@@ -24,10 +24,32 @@
         struct bsdsocketBase *, SocketBase, 24, BSDSocket)
 
 /*  FUNCTION
+ 
+        When one task wants to give  a socket to  an another one, it
+        releases it (with a key value) to a special socket list held
+        by the bsdsocket.library. This function requests that socket
+        and receives it if id and other parameters match.
 
     INPUTS
 
+        id       - a key value given by the socket donator.
+        domain   - see documentation of socket().
+        type     - see documentation of socket().
+        protocol - see documentation of socket().
+
     RESULT
+
+        Non negative socket descriptor on success. On failure, -1 is
+        returned and the errno is set to indicate the error.
+
+        EMFILE          - The per-process descriptor table is full.
+
+        EPROTONOSUPPORT - The protocol type or the specified protocol
+                          is not supported within this domain.
+
+        EPROTOTYPE      - The protocol is the wrong type for the socket.
+
+        EWOULDBLOCK     - Matching socket is not found.
 
     NOTES
 
@@ -36,6 +58,8 @@
     BUGS
 
     SEE ALSO
+
+        ReleaseCopyOfSocket(), ReleaseSocket(), socket()
 
     INTERNALS
 

@@ -20,6 +20,10 @@
         struct bsdsocketBase *, SocketBase, 23, BSDSocket)
 
 /*  FUNCTION
+        
+        Return value of maximum  number of open socket  descriptors.
+        Larger  socket  descriptor  table  can   be  allocated  with
+        the SocketBaseTagList() call.
 
     INPUTS
 
@@ -32,6 +36,8 @@
     BUGS
 
     SEE ALSO
+
+        SocketBaseTagList()
 
     INTERNALS
 

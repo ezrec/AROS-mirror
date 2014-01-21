@@ -34,6 +34,7 @@
     BUGS
 
     SEE ALSO
+        inet_addr()
 
     INTERNALS
 

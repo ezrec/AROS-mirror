@@ -43,18 +43,42 @@ static inline void errno_quad(APTR addr, ULONG errno_val)
         struct bsdsocketBase *, SocketBase, 28, BSDSocket)
 
 /*  FUNCTION
+ 
+        This functions allows caller to redirect error variable inside
+        scope of  caller task.   Usually this is  used to make  task's
+        global variable errno as error variable.
 
     INPUTS
+
+         ptr     - pointer to error variable that is to be modified on
+                   every error condition on this library function.
+         size    - size of the error variable.
 
     RESULT
 
     NOTES
 
+        Be sure that this new error variable exists until library base
+        is finally closed or SetErrnoPtr() is called again for another
+        variable.
+
     EXAMPLE
+
+        #include <errno.h>
+        #include <protos/bsdsocket.h>
+
+        int main(int argc, char **argv)
+        {
+            ...
+            SetErrnoPtr(&errno, sizeof(errno));
+            ...
+        }
 
     BUGS
 
     SEE ALSO
+
+        Errno()
 
     INTERNALS
 
