@@ -88,11 +88,13 @@ struct bsdsocketBase {
 #define DOSBase (bsdsocket_openlibrary(&SocketBase->lib_DOSBase, "dos.library", 0))
 
 #define BSD_SET_ERRNO(bsd, errval)  do { \
-        struct bsdsocketBase *e_bsd = bsd; \
-        e_bsd->bsd_errno.value = errval; \
-        if (e_bsd->bsd_errno.update) { \
-            ASSERT(e_bsd->bsd_errno.ptr != NULL); \
-            e_bsd->bsd_errno.update(e_bsd->bsd_errno.ptr, e_bsd->bsd_errno.value); \
+        if (errval != 0) { \
+            struct bsdsocketBase *e_bsd = bsd; \
+            e_bsd->bsd_errno.value = errval; \
+            if (e_bsd->bsd_errno.update) { \
+                ASSERT(e_bsd->bsd_errno.ptr != NULL); \
+                e_bsd->bsd_errno.update(e_bsd->bsd_errno.ptr, e_bsd->bsd_errno.value); \
+            } \
         } \
     } while (0)
 
