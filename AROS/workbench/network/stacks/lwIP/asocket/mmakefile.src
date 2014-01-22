@@ -1,0 +1,10 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+#MM- network-stacks-loop: network-stacks-loop-asocket
+
+%build_module_library mmake=network-stacks-loop-asocket \
+  modname=asocket modtype=library \
+  files="$(FILES)"
+
+%common

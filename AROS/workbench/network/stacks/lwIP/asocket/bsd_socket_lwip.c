@@ -44,8 +44,6 @@
 #include <libraries/bsdsocket.h>
 #include <devices/sana2.h>
 
-#include "bsd_socket.h"
-
 #include <lwip/opt.h>
 #include <lwip/init.h>
 #include <lwip/sockets.h>
@@ -132,19 +130,11 @@ err_t etharp_output(struct netif *netif, struct pbuf *q, ip_addr_t *ipaddr);
                                                     SOCK_ADDR_TYPE_MATCH(name, sock))
 #define IS_SOCK_ADDR_ALIGNED(name)      ((((mem_ptr_t)(name)) % 4) == 0)
 
-struct bsd_creator {
-    int id;     /* Used in ObtainSocket/ReleaseSocket */
-    int domain, type, protocol;
-    int accepted;
-};
-
 /** Contains all internal pointers and states used for a socket */
 struct bsd_sock {
   struct MinNode node;
   /** usage count **/
   int usage; 
-  /** creation information **/
-  struct bsd_creator creator;
   /** sockets currently are built on netconns, each socket has one netconn */
   struct netconn *conn;
   /** data that was left from the previous read */
@@ -226,77 +216,29 @@ struct bsd_netif {
     struct MsgPort *bn_task_port;
 };
 
-struct bsd_global {
-    struct MinList bg_bsd_list;
-    struct MinList bg_sock_list;
-    struct MinList bg_netif_list;
-    struct SignalSemaphore bg_lock;
-};
-
 struct bsd {
     struct MinNode bsd_node;
 
-    struct bsd_global *bsd_global;
+    struct SignalSemaphore bs_lock;
+    struct MinList bs_bsd_list;
+    struct MinList bs_netif_list;
+
     struct {
         /** The list of tasks waiting for select */
         struct bsd_select_cb *list;
         /** This counter is increased from lwip_select when the list is chagned
             and checked in event_callback to see if it has changed. */
         volatile int ctr;
-    } bsd_select_cb;
-
-    struct {
-        int sockets;
-        struct bsd_sock **socket;
-    } bsd_dt;
-    struct {
-        void *ptr;
-        void (*update)(struct bsd *bsd, int errno_val);
-        int value;      /* Last set value */
-    } bsd_errno;
+    } bs_select_cb;
 };
-
-struct bsd_global *bsd_global_init(void)
-{
-    struct bsd_global *bg;
-
-    lwip_init();
-
-    bg = AllocVec(sizeof(*bg), MEMF_ANY | MEMF_CLEAR);
-    if (bg) {
-        NEWLIST(&bg->bg_bsd_list);
-        NEWLIST(&bg->bg_sock_list);
-        NEWLIST(&bg->bg_netif_list);
-
-        InitSemaphore(&bg->bg_lock);
-    }
-
-    return bg;
-}
-
-int bsd_global_expunge(struct bsd_global *bg)
-{
-    if (IsListEmpty(&bg->bg_bsd_list)) {
-        FreeVec(bg);
-        return TRUE;
-    }
-
-    return FALSE;
-}
 
 struct bsd *bsd_init(struct bsd_global *bsd_global)
 {
     struct bsd *bsd;
 
     if ((bsd = AllocVec(sizeof(*bsd), MEMF_ANY | MEMF_CLEAR))) {
-        bsd->bsd_global = bsd_global;
-        bsd->bsd_dt.sockets = BSD_DTABLESIZE_DEFAULT;
-        bsd->bsd_dt.socket = AllocVec(sizeof(bsd->bsd_dt.socket[0])*bsd->bsd_dt.sockets, MEMF_ANY | MEMF_CLEAR);
-        if (bsd->bsd_dt.socket) {
-            ADDTAIL(&bsd->bsd_global, bsd);
-            return bsd;
-        }
-        FreeVec(bsd);
+        InitSemaphore(&bsd->bsd_lock);
+        return bsd;
     }
 
     return NULL;
@@ -308,7 +250,6 @@ struct bsd *bsd_init(struct bsd_global *bsd_global)
  */
 void bsd_expunge(struct bsd *bsd)
 {
-    REMOVE(bsd);
     FreeVec(bsd);
 }
 
@@ -527,143 +468,140 @@ static void free_socket(struct bsd_sock *sock, int is_tcp)
  *
  * Exceptions are documented!
  */
-
-int
-bsd_accept(struct bsd *bsd, int s, struct sockaddr *addr, socklen_t *addrlen)
+int bsd_accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 {
-  struct bsd_sock *sock, *nsock;
-  struct netconn *newconn;
-  ipX_addr_t naddr;
-  u16_t port = 0;
-  int newsock;
-  err_t err;
-  SYS_ARCH_DECL_PROTECT(lev);
+      struct bsd_sock *sock, *nsock;
+      struct netconn *newconn;
+      ipX_addr_t naddr;
+      u16_t port = 0;
+      int newsock;
+      err_t err;
+      SYS_ARCH_DECL_PROTECT(lev);
 
-  D(bug("lwip_accept(%d)...\n", s));
-  sock = get_socket(bsd, s);
-  if (!sock) {
-    return -1;
-  }
+      D(bug("lwip_accept(%d)...\n", s));
+      sock = get_socket(bsd, s);
+      if (!sock) {
+        return -1;
+      }
 
-  if (netconn_is_nonblocking(sock->conn) && (sock->rcvevent <= 0)) {
-    D(bug("lwip_accept(%d): returning EWOULDBLOCK\n", s));
-    sock_set_errno(sock, EWOULDBLOCK);
-    return -1;
-  }
+      if (netconn_is_nonblocking(sock->conn) && (sock->rcvevent <= 0)) {
+        D(bug("lwip_accept(%d): returning EWOULDBLOCK\n", s));
+        sock_set_errno(sock, EWOULDBLOCK);
+        return -1;
+      }
 
-  /* wait for a new connection */
-  err = netconn_accept(sock->conn, &newconn);
-  if (err != ERR_OK) {
-    D(bug("lwip_accept(%d): netconn_acept failed, err=%d\n", s, err));
-    if (NETCONNTYPE_GROUP(netconn_type(sock->conn)) != NETCONN_TCP) {
-      sock_set_errno(sock, EOPNOTSUPP);
-      return EOPNOTSUPP;
+      /* wait for a new connection */
+      err = netconn_accept(sock->conn, &newconn);
+      if (err != ERR_OK) {
+        D(bug("lwip_accept(%d): netconn_acept failed, err=%d\n", s, err));
+        if (NETCONNTYPE_GROUP(netconn_type(sock->conn)) != NETCONN_TCP) {
+          sock_set_errno(sock, EOPNOTSUPP);
+          return EOPNOTSUPP;
+        }
+        sock_set_errno(sock, err_to_errno(err));
+        return -1;
+      }
+      BSD_ASSERT("newconn != NULL", newconn != NULL);
+      /* Prevent automatic window updates, we do this on our own! */
+      netconn_set_noautorecved(newconn, 1);
+
+      /* Note that POSIX only requires us to check addr is non-NULL. addrlen must
+       * not be NULL if addr is valid.
+       */
+      if (addr != NULL) {
+        union sockaddr_aligned tempaddr;
+        /* get the IP address and port of the remote host */
+        err = netconn_peer(newconn, ipX_2_ip(&naddr), &port);
+        if (err != ERR_OK) {
+          D(bug("lwip_accept(%d): netconn_peer failed, err=%d\n", s, err));
+          netconn_delete(newconn);
+          sock_set_errno(sock, err_to_errno(err));
+          return -1;
+        }
+        BSD_ASSERT("addr valid but addrlen NULL", addrlen != NULL);
+
+        IPXADDR_PORT_TO_SOCKADDR(NETCONNTYPE_ISIPV6(newconn->type), &tempaddr, &naddr, port);
+        if (*addrlen > tempaddr.sa.sa_len) {
+          *addrlen = tempaddr.sa.sa_len;
+        }
+        MEMCPY(addr, &tempaddr, *addrlen);
+      }
+
+      newsock = alloc_socket(bsd, newconn, sock->creator.domain, sock->creator.type, sock->creator.protocol, 1);
+      if (newsock == -1) {
+        netconn_delete(newconn);
+        sock_set_errno(sock, ENFILE);
+        return -1;
+      }
+      BSD_ASSERT("invalid socket index", (newsock >= 0) && (newsock < bsd->bsd_dt.sockets));
+      BSD_ASSERT("newconn->callback == event_callback", newconn->callback == event_callback);
+      nsock = bsd->bsd_dt.socket[newsock];
+
+      /* See event_callback: If data comes in right away after an accept, even
+       * though the server task might not have created a new socket yet.
+       * In that case, newconn->socket is counted down (newconn->socket--),
+       * so nsock->rcvevent is >= 1 here!
+       */
+      SYS_ARCH_PROTECT(lev);
+      nsock->rcvevent += (s16_t)(-1 - newconn->socket);
+      newconn->socket = newsock;
+      SYS_ARCH_UNPROTECT(lev);
+
+      D(bug("lwip_accept(%d) returning new sock=%d", s, newsock));
+      if (addr != NULL) {
+        D(bug(" addr="));
+        ipX_addr_debug_print(NETCONNTYPE_ISIPV6(newconn->type), SOCKETS_DEBUG, &naddr);
+        D(bug(" port=%"U16_F"\n", port));
+      }
+
+      sock_set_errno(sock, 0);
+      return newsock;
     }
-    sock_set_errno(sock, err_to_errno(err));
-    return -1;
-  }
-  BSD_ASSERT("newconn != NULL", newconn != NULL);
-  /* Prevent automatic window updates, we do this on our own! */
-  netconn_set_noautorecved(newconn, 1);
 
-  /* Note that POSIX only requires us to check addr is non-NULL. addrlen must
-   * not be NULL if addr is valid.
-   */
-  if (addr != NULL) {
-    union sockaddr_aligned tempaddr;
-    /* get the IP address and port of the remote host */
-    err = netconn_peer(newconn, ipX_2_ip(&naddr), &port);
-    if (err != ERR_OK) {
-      D(bug("lwip_accept(%d): netconn_peer failed, err=%d\n", s, err));
-      netconn_delete(newconn);
-      sock_set_errno(sock, err_to_errno(err));
-      return -1;
-    }
-    BSD_ASSERT("addr valid but addrlen NULL", addrlen != NULL);
+    int bsd_bind(struct bsd *bsd, int s, const struct sockaddr *name, socklen_t namelen)
+    {
+      struct bsd_sock *sock;
+      ipX_addr_t local_addr;
+      u16_t local_port;
+      err_t err;
 
-    IPXADDR_PORT_TO_SOCKADDR(NETCONNTYPE_ISIPV6(newconn->type), &tempaddr, &naddr, port);
-    if (*addrlen > tempaddr.sa.sa_len) {
-      *addrlen = tempaddr.sa.sa_len;
-    }
-    MEMCPY(addr, &tempaddr, *addrlen);
-  }
+      sock = get_socket(bsd, s);
+      if (!sock) {
+        return -1;
+      }
 
-  newsock = alloc_socket(bsd, newconn, sock->creator.domain, sock->creator.type, sock->creator.protocol, 1);
-  if (newsock == -1) {
-    netconn_delete(newconn);
-    sock_set_errno(sock, ENFILE);
-    return -1;
-  }
-  BSD_ASSERT("invalid socket index", (newsock >= 0) && (newsock < bsd->bsd_dt.sockets));
-  BSD_ASSERT("newconn->callback == event_callback", newconn->callback == event_callback);
-  nsock = bsd->bsd_dt.socket[newsock];
+      if (!SOCK_ADDR_TYPE_MATCH(name, sock)) {
+        /* sockaddr does not match socket type (IPv4/IPv6) */
+        sock_set_errno(sock, err_to_errno(ERR_VAL));
+        return -1;
+      }
 
-  /* See event_callback: If data comes in right away after an accept, even
-   * though the server task might not have created a new socket yet.
-   * In that case, newconn->socket is counted down (newconn->socket--),
-   * so nsock->rcvevent is >= 1 here!
-   */
-  SYS_ARCH_PROTECT(lev);
-  nsock->rcvevent += (s16_t)(-1 - newconn->socket);
-  newconn->socket = newsock;
-  SYS_ARCH_UNPROTECT(lev);
+      /* check size, familiy and alignment of 'name' */
+      LWIP_ERROR("lwip_bind: invalid address", (IS_SOCK_ADDR_LEN_VALID(namelen) &&
+                 IS_SOCK_ADDR_TYPE_VALID(name) && IS_SOCK_ADDR_ALIGNED(name)),
+                 sock_set_errno(sock, err_to_errno(ERR_ARG)); return -1;);
+      LWIP_UNUSED_ARG(namelen);
 
-  D(bug("lwip_accept(%d) returning new sock=%d", s, newsock));
-  if (addr != NULL) {
-    D(bug(" addr="));
-    ipX_addr_debug_print(NETCONNTYPE_ISIPV6(newconn->type), SOCKETS_DEBUG, &naddr);
-    D(bug(" port=%"U16_F"\n", port));
-  }
+      SOCKADDR_TO_IPXADDR_PORT((name->sa_family == AF_INET6), name, &local_addr, local_port);
+      D(bug("lwip_bind(%d, addr=", s));
+      ipX_addr_debug_print(name->sa_family == AF_INET6, SOCKETS_DEBUG, &local_addr);
+      D(bug(" port=%"U16_F")\n", local_port));
 
-  sock_set_errno(sock, 0);
-  return newsock;
-}
+      err = netconn_bind(sock->conn, ipX_2_ip(&local_addr), local_port);
 
-int
-bsd_bind(struct bsd *bsd, int s, const struct sockaddr *name, socklen_t namelen)
-{
-  struct bsd_sock *sock;
-  ipX_addr_t local_addr;
-  u16_t local_port;
-  err_t err;
+      if (err != ERR_OK) {
+        D(bug("lwip_bind(%d) failed, err=%d\n", s, err));
+        sock_set_errno(sock, err_to_errno(err));
+        return -1;
+      }
 
-  sock = get_socket(bsd, s);
-  if (!sock) {
-    return -1;
-  }
-
-  if (!SOCK_ADDR_TYPE_MATCH(name, sock)) {
-    /* sockaddr does not match socket type (IPv4/IPv6) */
-    sock_set_errno(sock, err_to_errno(ERR_VAL));
-    return -1;
-  }
-
-  /* check size, familiy and alignment of 'name' */
-  LWIP_ERROR("lwip_bind: invalid address", (IS_SOCK_ADDR_LEN_VALID(namelen) &&
-             IS_SOCK_ADDR_TYPE_VALID(name) && IS_SOCK_ADDR_ALIGNED(name)),
-             sock_set_errno(sock, err_to_errno(ERR_ARG)); return -1;);
-  LWIP_UNUSED_ARG(namelen);
-
-  SOCKADDR_TO_IPXADDR_PORT((name->sa_family == AF_INET6), name, &local_addr, local_port);
-  D(bug("lwip_bind(%d, addr=", s));
-  ipX_addr_debug_print(name->sa_family == AF_INET6, SOCKETS_DEBUG, &local_addr);
-  D(bug(" port=%"U16_F")\n", local_port));
-
-  err = netconn_bind(sock->conn, ipX_2_ip(&local_addr), local_port);
-
-  if (err != ERR_OK) {
-    D(bug("lwip_bind(%d) failed, err=%d\n", s, err));
-    sock_set_errno(sock, err_to_errno(err));
-    return -1;
-  }
-
-  D(bug("lwip_bind(%d) succeeded\n", s));
-  sock_set_errno(sock, 0);
+      D(bug("lwip_bind(%d) succeeded\n", s));
+      sock_set_errno(sock, 0);
   return 0;
 }
 
-int
-bsd_close(struct bsd *bsd, int s)
+
+int bsd_close(struct bsd *bsd, int s)
 {
   struct bsd_sock *sock;
   int is_tcp = 0;
@@ -694,8 +632,7 @@ bsd_close(struct bsd *bsd, int s)
   return 0;
 }
 
-int
-bsd_connect(struct bsd *bsd, int s, const struct sockaddr *name, socklen_t namelen)
+int bsd_connect(struct bsd *bsd, int s, const struct sockaddr *name, socklen_t namelen)
 {
   struct bsd_sock *sock;
   err_t err;
@@ -749,8 +686,7 @@ bsd_connect(struct bsd *bsd, int s, const struct sockaddr *name, socklen_t namel
  * @param backlog (ATTENTION: needs TCP_LISTEN_BACKLOG=1)
  * @return 0 on success, non-zero on failure
  */
-int
-bsd_listen(struct bsd *bsd, int s, int backlog)
+int bsd_listen(struct bsd *bsd, int s, int backlog)
 {
   struct bsd_sock *sock;
   err_t err;
@@ -953,20 +889,17 @@ int bsd_recvfrom(struct bsd *bsd, int s, void *mem, size_t len, int flags,
   return off;
 }
 
-int
-bsd_read(struct bsd *bsd, int s, void *mem, size_t len)
+int bsd_read(struct bsd *bsd, int s, void *mem, size_t len)
 {
   return lwip_recvfrom(s, mem, len, 0, NULL, NULL);
 }
 
-int
-bsd_recv(struct bsd *bsd, int s, void *mem, size_t len, int flags)
+int bsd_recv(struct bsd *bsd, int s, void *mem, size_t len, int flags)
 {
   return lwip_recvfrom(s, mem, len, flags, NULL, NULL);
 }
 
-int
-bsd_send(struct bsd *bsd, int s, const void *data, size_t size, int flags)
+int bsd_send(struct bsd *bsd, int s, const void *data, size_t size, int flags)
 {
   struct bsd_sock *sock;
   err_t err;
@@ -1001,8 +934,7 @@ bsd_send(struct bsd *bsd, int s, const void *data, size_t size, int flags)
   return (err == ERR_OK ? (int)written : -1);
 }
 
-int
-bsd_sendto(struct bsd *bsd, int s, const void *data, size_t size, int flags,
+int bsd_sendto(struct bsd *bsd, int s, const void *data, size_t size, int flags,
        const struct sockaddr *to, socklen_t tolen)
 {
   struct bsd_sock *sock;
@@ -1587,8 +1519,7 @@ again:
  * Unimplemented: Close one end of a full-duplex connection.
  * Currently, the full connection is closed.
  */
-int
-bsd_shutdown(struct bsd *bsd, int s, int how)
+int bsd_shutdown(struct bsd *bsd, int s, int how)
 {
   struct bsd_sock *sock;
   err_t err;
@@ -1660,20 +1591,17 @@ static int bsd__getaddrname(struct bsd *bsd, int s, struct sockaddr *name, sockl
   return 0;
 }
 
-int
-bsd_getpeername(struct bsd *bsd, int s, struct sockaddr *name, socklen_t *namelen)
+int bsd_getpeername(struct bsd *bsd, int s, struct sockaddr *name, socklen_t *namelen)
 {
   return bsd__getaddrname(bsd, s, name, namelen, 0);
 }
 
-int
-bsd_getsockname(struct bsd *bsd, int s, struct sockaddr *name, socklen_t *namelen)
+int bsd_getsockname(struct bsd *bsd, int s, struct sockaddr *name, socklen_t *namelen)
 {
   return bsd__getaddrname(bsd, s, name, namelen, 1);
 }
 
-int
-bsd_getsockopt(struct bsd *bsd, int s, int level, int optname, void *optval, socklen_t *optlen)
+int bsd_getsockopt(struct bsd *bsd, int s, int level, int optname, void *optval, socklen_t *optlen)
 {
   err_t err = ERR_OK;
   struct bsd_sock *sock = get_socket(bsd, s);
@@ -2120,8 +2048,7 @@ static void bsd_getsockopt_internal(void *arg)
   sys_sem_signal(&sock->conn->op_completed);
 }
 
-int
-bsd_setsockopt(struct bsd *bsd, int s, int level, int optname, const void *optval, socklen_t optlen)
+int bsd_setsockopt(struct bsd *bsd, int s, int level, int optname, const void *optval, socklen_t optlen)
 {
   struct bsd_sock *sock = get_socket(bsd, s);
   err_t err = ERR_OK;
@@ -2938,8 +2865,7 @@ static int bsd__ioctl_netdevice(struct bsd *bsd, long cmd, void *argp)
     return -1;
 }
 
-int
-bsd_ioctl(struct bsd *bsd, int s, long cmd, void *argp)
+int bsd_ioctl(struct bsd *bsd, int s, long cmd, void *argp)
 {
   struct bsd_sock *sock = get_socket(bsd, s);
   u8_t val;
