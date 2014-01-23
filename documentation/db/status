@@ -2946,11 +2946,11 @@ listview;MUIA_Listview_ClickColumn;1;1;2
 listview;MUIA_Listview_DefClickColumn;1;1;0
 listview;MUIA_Listview_DoubleClick;1;1;2
 listview;MUIA_Listview_DragType;1;1;0
-listview;MUIA_Listview_Input;1;1;1
+listview;MUIA_Listview_Input;1;1;2
 listview;MUIA_Listview_List;1;1;2
 listview;MUIA_Listview_MultiSelect;1;1;2
-listview;MUIA_Listview_ScrollerPos;1;1;0
-listview;MUIA_Listview_SelectChange;1;1;0
+listview;MUIA_Listview_ScrollerPos;1;1;2
+listview;MUIA_Listview_SelectChange;1;1;2
 radio;MUIA_Radio_Active;1;1;2
 radio;MUIA_Radio_Entries;1;1;2
 cycle;MUIA_Cycle_Active;1;1;2
