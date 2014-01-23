@@ -3,17 +3,21 @@
     $Id$
 */
 
+#include "asocket_intern.h"
+
 /*****************************************************************************
 
     NAME */
+        #include <proto/asocket.h>
+
         AROS_LH2(LONG, ASocketGetA,
 
 /*  SYNOPSIS */
-        AROS_LHA(APTR, as, A0),
+        AROS_LHA(APTR, s, A0),
         AROS_LHA(struct TagItem *, tags, A1),
 
 /*  LOCATION */
-        struct Library *, ASocketBase, 10, ASocket)
+        struct ASocketBase *, ASocketBase, 10, ASocket)
 
 /*  FUNCTION
 
@@ -97,6 +101,64 @@
 {
     AROS_LIBFUNC_INIT
 
+    struct ASocket *as = s;
+    struct bsd *bsd = ASocketBase->ab_bsd;
+    struct TagItem *tag, *tptr = tags;
+
+    while ((tag = LibNextTagItem(&tptr))) {
+        int err = 0;
+        struct ASocket_Address *addr;
+
+        switch (tag->ti_Tag) {
+        case AS_TAG_SOCKET_DOMAIN:
+            *(ULONG *)tag->ti_Data = as->as_Socket.domain;
+            break;
+        case AS_TAG_SOCKET_TYPE:
+            *(ULONG *)tag->ti_Data = as->as_Socket.type;
+            break;
+        case AS_TAG_SOCKET_PROTOCOL:
+            *(ULONG *)tag->ti_Data = as->as_Socket.protocol;
+            break;
+        case AS_TAG_SOCKET_ADDRESS:
+            addr = (struct ASocket_Address *)tag->ti_Data;
+            err = bsd_getsockname(bsd, s, addr->asa_Address, &addr->asa_Length);
+            break;
+        case AS_TAG_SOCKET_ENDPOINT:
+            addr = (struct ASocket_Address *)tag->ti_Data;
+            err = bsd_getpeername(bsd, s, addr->asa_Address, &addr->asa_Length);
+            break;
+        case AS_TAG_SOCKET_LISTEN:
+            *(BOOL *)tag->ti_Data = (as->as_Listen.enabled ? TRUE : FALSE);
+            break;
+        case AS_TAG_LISTEN_BACKLOG:
+            *(ULONG *)tag->ti_Data = as->as_Listen.backlog;
+            break;
+        case AS_TAG_NOTIFY_MSGPORT:
+            *(struct MsgPort **)tag->ti_Data = as->as_Notify.asn_Message.mn_ReplyPort;
+            break;
+        case AS_TAG_NOTIFY_FD_MASK:
+            *(ULONG *)tag->ti_Data = as->as_Notify.asn_NotifyEvents;
+            break;
+        case AS_TAG_NOTIFY_NAME:
+            *(APTR *)tag->ti_Data = as->as_Notify.asn_Message.mn_Node.ln_Name;
+            break;
+#if 0
+        case AS_TAG_IFACE_INDEX:
+            *(ULONG *)tag->ti_Data = iface_index;
+            break;
+        case AS_TAG_IFACE_NAME:
+            *(CONST_STRPTR *)tag->ti_Data = iface_name;
+            break;
+#endif
+        default:
+            return EINVAL;
+        }
+
+        if (err)
+            return err;
+
+        tag->ti_Tag |= AS_TAGF_COMPLETE;
+    }
     return EINVAL;
 
     AROS_LIBFUNC_EXIT

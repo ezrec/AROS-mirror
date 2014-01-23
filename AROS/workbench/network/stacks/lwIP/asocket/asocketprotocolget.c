@@ -3,9 +3,13 @@
     $Id$
 */
 
+#include "asocket_intern.h"
+
 /*****************************************************************************
 
     NAME */
+        #include <proto/asocket.h>
+
         AROS_LH5(LONG, ASocketProtocolGet,
 
 /*  SYNOPSIS */
@@ -16,7 +20,7 @@
         AROS_LHA(LONG *, val_len, A3),
 
 /*  LOCATION */
-        struct Library *, ASocketBase, 12, ASocket)
+        struct ASocketBase *, ASocketBase, 12, ASocket)
 
 /*  FUNCTION
  
@@ -54,7 +58,7 @@
 {
     AROS_LIBFUNC_INIT
 
-    return EINVAL;
+    return bsd_getsockopt(ASocketBase->ab_bsd, as, level, option, val_addr, val_len);
 
     AROS_LIBFUNC_EXIT
 }

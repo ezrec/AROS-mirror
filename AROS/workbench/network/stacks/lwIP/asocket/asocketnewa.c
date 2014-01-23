@@ -3,11 +3,14 @@
     $Id$
 */
 
+#include "asocket_intern.h"
+
+#include <fcntl.h>
+
 /*****************************************************************************
 
     NAME */
-
-        #include <protos/asocket.h>
+        #include <proto/asocket.h>
 
         AROS_LH2(LONG, ASocketNewA,
 
@@ -16,7 +19,7 @@
         AROS_LHA(struct TagItem *, tags, A1),
 
 /*  LOCATION */
-        struct Library *, ASocketBase, 5, ASocket)
+        struct ASocketBase *, ASocketBase, 5, ASocket)
 
 /*  FUNCTION
  
@@ -105,16 +108,19 @@
 {
     AROS_LIBFUNC_INIT
 
-    struct ASocket *as;
+    struct bsd *bsd = ASocketBase->ab_bsd;
+    struct bsd_sock *s;
     struct TagItem *tag, *tptr = tags;
     const struct ASocket_Address *addr = NULL, *endp = NULL;
     BOOL listen = FALSE;
-    ULONG listen_backlog = 0
+    ULONG listen_backlog = 0;
     ULONG domain = AF_UNSPEC, type = 0, protocol = PF_UNSPEC;
     struct MsgPort *notify_msgport = NULL;
     ULONG notify_fd_mask = 0;
     APTR notify_name = NULL;
     ULONG iface_index = 0;
+    CONST_STRPTR iface_name = NULL;
+    int err;
 
     while ((tag = LibNextTagItem(&tptr))) {
         switch (tag->ti_Tag) {
@@ -161,86 +167,67 @@
         tag->ti_Tag |= AS_TAGF_COMPLETE;
     }
 
-    /* This 'loop' stack only supports AF_LINK and AF_INET protocols
-     */
     if (domain == AF_LINK && type == SOCK_RAW && protocol == 0) {
         if (iface_index != 0 && iface_name != NULL)
             return EINVAL;
 
-        if (iface_name) {
-            /* Search for ASocket interface by name */
-            struct ASocket *tmp;
-            err = EINVAL;
-            ObtainSemaphore(&ASocketBase->ab_Lock);
-            ForeachNode(&ASocketBase->ab_InterfaceList, tmp) {
-                if (strcmp(tmp->as_Node.ln_Name, iface_name) == 0) {
-                    LONG err;
-                    err = ASocketDuplicate(tmp, new_as);
-                    break;
-                }
-            }
-            ReleaseSemaphore(&ASocketBase->ab_Lock);
-            return err;
-        } else if (iface_index < 128) {
-            /* We abuse the as_Node.ln_Pri field for interface id */
-            ObtainSemaphore(&ASocketBase->ab_Lock);
-            ForeachNode(&ASocketBase->ab_InterfaceList, tmp) {
-                if (tmp->as_Node.ln_Type == (BYTE)iface_index) {
-                    LONG err;
-                    err = ASocketDuplicate(tmp, new_as);
-                    break;
-                }
-            }
-            ReleaseSemaphore(&ASocketBase->ab_Lock);
-            return err;
-        }
-
-        return EINVAL;
-    } else if (domain == AF_INET) {
-        /* Only SOCK_STREAM and SOCK_DRAM supported in this emulation */
-        if (type != SOCK_STREAM && type != SOCK_DGRAM)
-            return EINVAL;
-
-        if (protocol == IPPROTO_IP)
-            protocol = (type == SOCK_STREAM) ? IPPROTO_TCP : IPPROTO_UDP;
-
-        if (addr && !addrcheck(addr))
-            return EINVAL;
-
-        if (endp && !addrcheck(endp))
-            return EINVAL;
-    } else {
+        /* Unused for now */
         return EINVAL;
     }
 
-    if ((as = AllocVec(sizeof(*as), MEMF_ANY | MEMF_CLEAR))) {
+    err = bsd_socket(bsd, &s, domain, type, protocol);
+    if (err == 0) {
+        struct ASocket *as = (struct ASocket *)s;
+        /* Put in async mode */
+        err = bsd_fcntl(bsd, s, F_SETFL, bsd_fcntl(bsd, s, F_GETFL, 0) | O_NONBLOCK);
+        if (err < 0) {
+            bsd_close(bsd, s);
+            return err;
+        }
         as->as_Node.ln_Type = NT_UNKNOWN;
         as->as_Node.ln_Name = "ASocket (loop)";
-
-        as->as_Usage = 1;
 
         as->as_Socket.domain = domain;
         as->as_Socket.type   = type;
         as->as_Socket.protocol = protocol;
 
-        as->as_Listen.enabled = listen;
-        as->as_Listen.backlog = listen_backlog;
+        if (listen) {
+            as->as_Listen.enabled = listen;
+            as->as_Listen.backlog = listen_backlog;
 
-        if (addr)
-            CopyMem(addr->asa_Address, as->as_Address, 8);
+            err = bsd_listen(bsd, s, listen_backlog);
+            if (err != 0) {
+                bsd_close(bsd, s);
+                return err;
+            }
+        }
 
-        if (endp)
-            CopyMem(endp->asa_Address, as->as_Endpoint, 8);
+        if (addr) {
+            err = bsd_bind(bsd, s, addr->asa_Address, addr->asa_Length);
+            if (err != 0) {
+                bsd_close(bsd, s);
+                return err;
+            }
+        }
+
+        if (endp) {
+            err = bsd_connect(bsd, s, endp->asa_Address, endp->asa_Length);
+            if (err != 0) {
+                bsd_close(bsd, s);
+                return err;
+            }
+        }
 
         as->as_Notify.asn_Message.mn_Node.ln_Type = NT_UNKNOWN;
         as->as_Notify.asn_Message.mn_Node.ln_Name = notify_name;
+        as->as_Notify.asn_Message.mn_ReplyPort = notify_msgport;
         as->as_Notify.asn_ASocket = as;
-        as->as_Notify.asn_NotifyEvents = notify_mask;
+        as->as_Notify.asn_NotifyEvents = notify_fd_mask;
         as->as_Notify.asn_Events = 0;
 
         ObtainSemaphore(&ASocketBase->ab_Lock);
         ADDTAIL(&ASocketBase->ab_SocketList, as);
-        ReleaseSeamphore(&ASocketBase->ab_Lock);
+        ReleaseSemaphore(&ASocketBase->ab_Lock);
 
         *new_as = as;
 

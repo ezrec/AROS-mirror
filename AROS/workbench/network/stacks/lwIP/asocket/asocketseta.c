@@ -3,17 +3,21 @@
     $Id$
 */
 
+#include "asocket_intern.h"
+
 /*****************************************************************************
 
     NAME */
+        #include <proto/asocket.h>
+
         AROS_LH2(LONG, ASocketSetA,
 
 /*  SYNOPSIS */
-        AROS_LHA(APTR, as, A0),
+        AROS_LHA(APTR, s, A0),
         AROS_LHA(struct TagItem *, tags, A1),
 
 /*  LOCATION */
-        struct Library *, ASocketBase, 11, ASocket)
+        struct ASocketBase *, ASocketBase, 11, ASocket)
 
 /*  FUNCTION
  
@@ -85,7 +89,56 @@
 {
     AROS_LIBFUNC_INIT
 
-    return EINVAL;
+    struct bsd *bsd = ASocketBase->ab_bsd;
+    struct TagItem *tag, *tptr = tags;
+    struct ASocket_Address *addr;
+    ULONG tmp;
+    struct ASocket *as = s;
+
+    while ((tag = LibNextTagItem(&tptr))) {
+        int err = 0;
+
+        switch (tag->ti_Tag) {
+        case AS_TAG_SOCKET_ADDRESS:
+            addr = (struct ASocket_Address *)tag->ti_Data;
+            if (addr) {
+                err = bsd_bind(bsd, s, addr->asa_Address, addr->asa_Length);
+            } else {
+                err = EFAULT;
+            }
+            break;
+        case AS_TAG_SOCKET_ENDPOINT:
+            addr = (struct ASocket_Address *)tag->ti_Data;
+            if (addr) {
+                err = bsd_connect(bsd, s, addr->asa_Address, addr->asa_Length);
+            } else {
+                err = EFAULT;
+            }
+            break;
+        case AS_TAG_LISTEN_BACKLOG:
+            tmp = (ULONG)tag->ti_Data;
+            err = bsd_listen(bsd, s, tmp);
+            break;
+        case AS_TAG_NOTIFY_MSGPORT:
+            as->as_Notify.asn_Message.mn_ReplyPort = (struct MsgPort *)tag->ti_Data;
+            break;
+        case AS_TAG_NOTIFY_FD_MASK:
+            as->as_Notify.asn_NotifyEvents = (ULONG)tag->ti_Data;
+            break;
+        case AS_TAG_NOTIFY_NAME:
+            as->as_Notify.asn_Message.mn_Node.ln_Name = (APTR)tag->ti_Data;
+            break;
+        default:
+            return EINVAL;
+        }
+
+        if (err)
+            return err;
+
+        tag->ti_Tag |= AS_TAGF_COMPLETE;
+    }
+
+    return 0;
 
     AROS_LIBFUNC_EXIT
 }

@@ -3,18 +3,22 @@
     $Id$
 */
 
+#include "asocket_intern.h"
+
 /*****************************************************************************
 
     NAME */
+        #include <proto/asocket.h>
+
         AROS_LH3(LONG, ASocketSendMsg,
 
 /*  SYNOPSIS */
-        AROS_LHA(APTR, as, A0),
-        AROS_LHA(const struct ASocket_Msg *, msg, A1),
+        AROS_LHA(APTR, s, A0),
+        AROS_LHA(struct ASocket_Msg *, msg, A1),
         AROS_LHA(int, flags, D0),
 
 /*  LOCATION */
-        struct Library *, ASocketBase, 14, ASocket)
+        struct ASocketBase *, ASocketBase, 14, ASocket)
 
 /*  FUNCTION
 
@@ -52,7 +56,19 @@
 {
     AROS_LIBFUNC_INIT
 
-    return EINVAL;
+    int err;
+
+    if (msg == NULL)
+        return EFAULT;
+
+    err = bsd_sendmsg(ASocketBase->ab_bsd, s, msg->asm_MsgHdr, flags);
+    if (err)
+        return err;
+
+    msg->asm_Message.mn_Node.ln_Type = NT_AS_MSG_SEND;
+    ReplyMsg(&msg->asm_Message);
+
+    return 0;
 
     AROS_LIBFUNC_EXIT
 }

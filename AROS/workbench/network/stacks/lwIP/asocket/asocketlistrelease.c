@@ -3,16 +3,20 @@
     $Id$
 */
 
+#include "asocket_intern.h"
+
 /*****************************************************************************
 
     NAME */
+        #include <proto/asocket.h>
+
         AROS_LH1(VOID, ASocketListRelease,
 
 /*  SYNOPSIS */
         AROS_LHA(struct List *, aslist, A0),
 
 /*  LOCATION */
-        struct Library *, ASocketBase, 9, ASocket)
+        struct ASocketBase *, ASocketBase, 9, ASocket)
 
 /*  FUNCTION
 

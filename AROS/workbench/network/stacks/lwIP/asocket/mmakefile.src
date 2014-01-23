@@ -1,10 +1,21 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-#MM- network-stacks-loop: network-stacks-loop-asocket
+#MM- network-stacks-lwip: network-stacks-lwip-asocket
 
-%build_module_library mmake=network-stacks-loop-asocket \
+FILES := \
+       asocket_init bsd_socket \
+       asocketaccept asocketdispose asocketduplicate \
+       asocketseta asocketgeta \
+       asocketlistobtain asocketlistrelease asocketnewa \
+       asocketprotocolget asocketprotocolset \
+       asocketrecvmsg asocketsendmsg \
+       asocketshutdown
+
+USER_CFLAGS += -I$(AROS_DEVELOPMENT)/include/lwip
+
+%build_module_library mmake=network-stacks-lwip-asocket \
   modname=asocket modtype=library \
-  files="$(FILES)"
+  files="$(FILES)" uselibs="lwip stdc"
 
 %common

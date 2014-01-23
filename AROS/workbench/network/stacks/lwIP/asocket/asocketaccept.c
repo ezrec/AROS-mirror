@@ -3,17 +3,21 @@
     $Id$
 */
 
+#include "asocket_intern.h"
+
 /*****************************************************************************
 
     NAME */
+        #include <proto/asocket.h>
+
         AROS_LH2(LONG, ASocketAccept,
 
 /*  SYNOPSIS */
-        AROS_LHA(APTR, as, A0),
-        AROS_LHA(APTR *, new_as, A1),
+        AROS_LHA(APTR, s, A0),
+        AROS_LHA(APTR *, new_s, A1),
 
 /*  LOCATION */
-        struct Library *, ASocketBase, 16, ASocket)
+        struct ASocketBase *, ASocketBase, 16, ASocket)
 
 /*  FUNCTION
   
@@ -51,7 +55,18 @@
 {
     AROS_LIBFUNC_INIT
 
-    return EINVAL;
+    int err;
+    struct ASocket *as = s, *new_as;
+
+    err = bsd_accept(ASocketBase->ab_bsd, (struct bsd_sock *)as, (struct bsd_sock **)&new_as);
+    if (err == 0) {
+        new_as->as_Socket.domain = as->as_Socket.domain;
+        new_as->as_Socket.type = as->as_Socket.type;
+        new_as->as_Socket.protocol = as->as_Socket.protocol;
+        *new_s = new_as;
+    }
+
+    return err;
 
     AROS_LIBFUNC_EXIT
 }

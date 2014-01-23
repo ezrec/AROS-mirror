@@ -3,9 +3,13 @@
     $Id$
 */
 
+#include "asocket_intern.h"
+
 /*****************************************************************************
 
     NAME */
+        #include <proto/asocket.h>
+
         AROS_LH2(LONG, ASocketShutdown,
 
 /*  SYNOPSIS */
@@ -13,7 +17,7 @@
         AROS_LHA(int, how, D1),
 
 /*  LOCATION */
-        struct Library *, ASocketBase, 17, ASocket)
+        struct ASocketBase *, ASocketBase, 17, ASocket)
 
 /*  FUNCTION
  
@@ -52,7 +56,7 @@
 {
     AROS_LIBFUNC_INIT
 
-    return 0;
+    return bsd_shutdown(ASocketBase->ab_bsd, as, how);
 
     AROS_LIBFUNC_EXIT
 }

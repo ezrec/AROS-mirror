@@ -8,15 +8,17 @@
  * $Id$
  */
 
+#include <aros/symbolsets.h>
+
 #include "asocket_intern.h"
 
 #include "bsd_socket.h"
 
 static int ASocket_Init(struct ASocketBase *ASocketBase)
 {
-    ASocketBase->as_bsd = bsd_init();
+    ASocketBase->ab_bsd = bsd_init();
 
-    return (ASocketBase->as_bsd) ? TRUE : FALSE;
+    return (ASocketBase->ab_bsd) ? TRUE : FALSE;
 }
 
 static int ASocket_Expunge(struct ASocketBase *ASocketBase)

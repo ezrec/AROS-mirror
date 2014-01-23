@@ -3,18 +3,22 @@
     $Id$
 */
 
+#include "asocket_intern.h"
+
 /*****************************************************************************
 
     NAME */
+        #include <proto/asocket.h>
+
         AROS_LH3(LONG, ASocketRecvMsg,
 
 /*  SYNOPSIS */
-        AROS_LHA(APTR, as, A0),
+        AROS_LHA(APTR, s, A0),
         AROS_LHA(struct ASocket_Msg *, msg, A1),
         AROS_LHA(int, flags, D0),
 
 /*  LOCATION */
-        struct Library *, ASocketBase, 15, ASocket)
+        struct ASocketBase *, ASocketBase, 15, ASocket)
 
 /*  FUNCTION
  
@@ -52,10 +56,16 @@
 {
     AROS_LIBFUNC_INIT
 
+    int err;
+
     if (msg == NULL)
         return EFAULT;
 
-    msg->asm_Message.mn_Node.ln_Type = NT_AS_MSG;
+    err = bsd_recvmsg(ASocketBase->ab_bsd, s, msg->asm_MsgHdr, flags);
+    if (err)
+        return err;
+
+    msg->asm_Message.mn_Node.ln_Type = NT_AS_MSG_RECV;
     ReplyMsg(&msg->asm_Message);
 
     return 0;
