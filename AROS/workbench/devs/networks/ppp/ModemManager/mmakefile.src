@@ -6,7 +6,7 @@ USER_CFLAGS := \
 FILES := ModemManager misc  
 EXEDIR := $(AROS_C)
 
-#MM workbench-devs-networks-ppp-mm : includes linklibs
+#MM workbench-devs-networks-ppp-mm : includes linklibs network-libs
 
 %build_prog mmake=workbench-devs-networks-ppp-mm \
     progname=ModemManager targetdir=$(EXEDIR) \
