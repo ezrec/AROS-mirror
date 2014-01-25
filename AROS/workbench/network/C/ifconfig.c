@@ -293,6 +293,7 @@ main(argc, argv)
    }
    if (!(MiamiBase = OpenLibrary("miami.library", 0)))
    {
+      CloseLibrary(SocketBase);
       return RETURN_FAIL;
    }
 	atexit(__close_bsdsocket);
