@@ -45,6 +45,8 @@ struct ASocketBase {
     struct List ab_SocketList;
 
     struct bsd *ab_bsd;
+
+    BPTR ab_SegList;
 };
 
 #endif /* ASOCKET_INTERN_H */

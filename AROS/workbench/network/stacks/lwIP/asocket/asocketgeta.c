@@ -105,6 +105,8 @@
     struct bsd *bsd = ASocketBase->ab_bsd;
     struct TagItem *tag, *tptr = tags;
 
+    D(bug("%s: as=%p, tags=%p\n", __func__, as, tags));
+
     while ((tag = LibNextTagItem(&tptr))) {
         int err = 0;
         struct ASocket_Address *addr;

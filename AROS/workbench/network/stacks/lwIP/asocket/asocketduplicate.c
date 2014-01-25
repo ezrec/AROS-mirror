@@ -54,6 +54,8 @@
     int err;
     struct ASocket *as = s, *new_as;
 
+    D(bug("%s: as=%p, new_as=%p\n", __func__, as, new_s));
+
     if (new_as == NULL)
         return EFAULT;
 

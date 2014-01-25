@@ -44,6 +44,8 @@
 {
     AROS_LIBFUNC_INIT
 
+    D(bug("%s: as=%p\n", __func__, as));
+
     bsd_close(ASocketBase->ab_bsd, as);
 
     return;

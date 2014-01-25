@@ -122,6 +122,8 @@
     CONST_STRPTR iface_name = NULL;
     int err;
 
+    D(bug("%s: new_as=%p, tags=%p\n", __func__, new_as, tags));
+
     while ((tag = LibNextTagItem(&tptr))) {
         switch (tag->ti_Tag) {
         case AS_TAG_SOCKET_DOMAIN:

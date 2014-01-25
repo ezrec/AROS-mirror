@@ -58,6 +58,8 @@
     int err;
     struct ASocket *as = s, *new_as;
 
+    D(bug("%s: as=%p, new_as=%p\n", __func__, as, new_as));
+
     err = bsd_accept(ASocketBase->ab_bsd, (struct bsd_sock *)as, (struct bsd_sock **)&new_as);
     if (err == 0) {
         new_as->as_Socket.domain = as->as_Socket.domain;

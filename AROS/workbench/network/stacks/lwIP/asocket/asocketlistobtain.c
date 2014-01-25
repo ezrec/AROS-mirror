@@ -107,6 +107,8 @@
 {
     AROS_LIBFUNC_INIT
 
+    D(bug("%s: pattern=%p\n", __func__, pattern));
+
     return NULL;
 
     AROS_LIBFUNC_EXIT

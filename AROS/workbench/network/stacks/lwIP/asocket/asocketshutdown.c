@@ -56,6 +56,8 @@
 {
     AROS_LIBFUNC_INIT
 
+    D(bug("%s: as=%p, how=%d\n", __func__, as, how));
+
     return bsd_shutdown(ASocketBase->ab_bsd, as, how);
 
     AROS_LIBFUNC_EXIT

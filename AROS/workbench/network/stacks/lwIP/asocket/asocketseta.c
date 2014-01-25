@@ -95,6 +95,8 @@
     ULONG tmp;
     struct ASocket *as = s;
 
+    D(bug("%s: as=%p, tags=%p\n", __func__, as, tags));
+
     while ((tag = LibNextTagItem(&tptr))) {
         int err = 0;
 

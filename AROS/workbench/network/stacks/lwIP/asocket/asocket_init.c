@@ -18,11 +18,14 @@ static int ASocket_Init(struct ASocketBase *ASocketBase)
 {
     ASocketBase->ab_bsd = bsd_init();
 
+    D(bug("%s: ASocketBase->ab_bsd=%p\n", __func__, ASocketBase->ab_bsd));
+
     return (ASocketBase->ab_bsd) ? TRUE : FALSE;
 }
 
 static int ASocket_Expunge(struct ASocketBase *ASocketBase)
 {
+    D(bug("%s: Expunge\n"));
     return TRUE;
 }
 

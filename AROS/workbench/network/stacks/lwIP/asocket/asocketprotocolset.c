@@ -56,6 +56,8 @@
 {
     AROS_LIBFUNC_INIT
 
+    D(bug("%s: as=%p, level=%d, option=%d, val_addr=%p, val_len=%d\n", __func__, as, level, option, val_addr, val_len));
+
     return bsd_setsockopt(ASocketBase->ab_bsd, as, level, option, val_addr, val_len);
 
     AROS_LIBFUNC_EXIT

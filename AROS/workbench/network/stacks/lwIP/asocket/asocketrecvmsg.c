@@ -58,6 +58,8 @@
 
     int err;
 
+    D(bug("%s: as=%p, msg=%p, flags=%d\n", __func__, s, msg, flags));
+
     if (msg == NULL)
         return EFAULT;
 
