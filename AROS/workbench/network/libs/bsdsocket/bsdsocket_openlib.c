@@ -24,13 +24,18 @@ AROS_LH1(struct Library *, BSDSocket_OpenLib,
     struct Library *asocketBase;
     struct MsgPort *mp;
 
+    D(bug("%s: OpenLibrary()\n", __func__));
+
     asocketBase = OpenLibrary("asocket.library",0);
-    if (asocketBase == NULL)
+    if (asocketBase == NULL) {
+        D(bug("%s: OpenLibrary(\"asocket.library\",0) failed!\n", __func__));
         return FALSE;
+    }
 
     mp = CreateMsgPort();
     if (mp == NULL) {
         CloseLibrary(asocketBase);
+        D(bug("%s: CreateMsgPort() failed!\n", __func__));
         return NULL;
     }
 
@@ -38,6 +43,7 @@ AROS_LH1(struct Library *, BSDSocket_OpenLib,
     if (!bsdsocketBase) {
         DeleteMsgPort(mp);
         CloseLibrary(asocketBase);
+        D(bug("%s: MakeLibrary() failed!\n", __func__));
         return NULL;
     }
 
@@ -59,6 +65,7 @@ AROS_LH1(struct Library *, BSDSocket_OpenLib,
         FreeMem(addr, bsdsocketBase->lib.lib_NegSize + bsdsocketBase->lib.lib_PosSize);
         DeleteMsgPort(mp);
         CloseLibrary(asocketBase);
+        D(bug("%s: AllocVec(fds) failed!\n", __func__));
         return NULL;
     }
 
@@ -76,6 +83,7 @@ AROS_LH1(struct Library *, BSDSocket_OpenLib,
     bsdsocketBase->lib.lib_OpenCnt++;
     BSDSocketBase->lib.lib_OpenCnt++;
 
+    D(bug("%s: bsdsocketBase=%p\n", __func__, bsdsocketBase));
     return &bsdsocketBase->lib;
 
     AROS_LIBFUNC_EXIT
@@ -86,6 +94,8 @@ AROS_LH0(BPTR, BSDSocket_CloseLib,
 {
     AROS_LIBFUNC_INIT
     struct Library *BSDSocketBase = &SocketBase->lib_BSDSocketBase->lib;
+
+    D(bug("%s: bsdsocketBase=%p\n", __func__, SocketBase));
 
     /* Close the syslog socket, if needed */
     if (SocketBase->bsd_syslog.fd >= 0)
@@ -106,13 +116,17 @@ AROS_LH0(BPTR, BSDSocket_CloseLib,
 
         addr = (APTR)((IPTR)SocketBase - SocketBase->lib.lib_NegSize);
         FreeMem(addr, SocketBase->lib.lib_NegSize + SocketBase->lib.lib_PosSize);
+        D(bug("%s: bsdsocketBase closed\n", __func__, SocketBase));
+
         return BNULL;
     }
 
     if (BSDSocketBase->lib_OpenCnt > 0) {
+        D(bug("%s: BSDSocketBase closed\n", __func__));
         return BNULL;
     }
 
+    D(bug("%s: BSDSocketBase expunging\n", __func__));
     if (BSDSocketBase->lib_Flags & LIBF_DELEXP) {
         return AROS_LC1(BPTR, BSDSocket_ExpungeLib,
                 AROS_LCA(struct Library *, BSDSocketBase, D0),

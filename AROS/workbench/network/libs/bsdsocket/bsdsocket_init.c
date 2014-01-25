@@ -9,6 +9,7 @@ static void BSDSocket_NotifyTask(struct BSDSocketBase *BSDSocketBase)
 {
     BOOL dead = FALSE;
 
+    D(bug("%s[%p]: Running\n", __func__, FindTask(NULL)));
     while (!dead) {
         struct Message *msg;
 
@@ -32,6 +33,7 @@ static void BSDSocket_NotifyTask(struct BSDSocketBase *BSDSocketBase)
     }
 
     /* Done! */
+    D(bug("%s[%p]: Exiting\n", __func__, FindTask(NULL)));
 }
 
 static int BSDSocket_Init(struct BSDSocketBase *BSDSocketBase)
@@ -52,6 +54,8 @@ static int BSDSocket_Init(struct BSDSocketBase *BSDSocketBase)
 
     BSDSocketBase->bs_NotifyTask = t;
 
+    D(bug("%s: BSDSocketBase=%p\n", __func__, BSDSocketBase));
+
     return TRUE;
 }
 
@@ -71,6 +75,8 @@ static int BSDSocket_Expunge(struct BSDSocketBase *BSDSocketBase)
         WaitPort(mp);
         GetMsg(mp);
         DeleteMsgPort(mp);
+
+        D(bug("%s: BSDSocketBase=NULL\n", __func__));
 
         return TRUE;
     }

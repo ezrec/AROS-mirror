@@ -23,6 +23,8 @@ FILES=accept amiga_errlists bind \
       seterrnoptr setsocketsignals setsockopt shutdown \
       socketbasetaglist socket vsyslog waitselect
 
+USER_CFLAGS += -DDEBUG=1
+
 %build_module mmake=network-libs-bsdsocket \
     modname=bsdsocket modtype=library \
     files="$(FILES)" \

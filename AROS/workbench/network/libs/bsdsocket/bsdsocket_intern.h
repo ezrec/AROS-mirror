@@ -128,9 +128,9 @@ static inline int bsdsocket_fd_avail(struct bsdsocketBase *SocketBase)
     int ns;
 
     for (ns = 0; ns <= SocketBase->bsd_fds; ns++) {
-        if (SocketBase->bsd_fd[ns].asocket == NULL)
+        if (SocketBase->bsd_fd[ns].asocket != NULL)
             continue;
-        if (BSD_FD_CALLBACK(SocketBase, ns, FDCB_CHECK) == 0)
+        if (BSD_FD_CALLBACK(SocketBase, ns, FDCB_CHECK) != 0)
             continue;
         return ns;
     }

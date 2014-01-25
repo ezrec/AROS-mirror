@@ -51,10 +51,14 @@
     APTR as;
     LONG err = EMFILE;
 
+    D(bug("%s: domain=%d, type=%d, protocol=%d\n", __func__, domain, type, protocol));
+
     /* Find a free slot */
     ns = bsdsocket_fd_avail(SocketBase);
-    if (ns < 0)
+    if (ns < 0) {
+        D(bug("%s: No fd available\n", __func__));
         return -1;
+    }
 
     err = ASocketNew(&as,
                      AS_TAG_SOCKET_DOMAIN, domain,
@@ -62,8 +66,10 @@
                      AS_TAG_SOCKET_PROTOCOL, protocol,
                      TAG_END);
 
-    if (err == 0)
+    if (err == 0) {
+        D(bug("%s: fd %d mapped to ASocket %p\n", __func__, ns, as));
         err = bsdsocket_fd_init(SocketBase, ns, as, O_RDWR);
+    }
 
     BSD_SET_ERRNO(SocketBase, err);
     return (err == 0) ? ns : err;
