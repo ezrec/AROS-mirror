@@ -4,7 +4,25 @@ include $(TOP)/config/make.cfg
 #MM- network-libs : network-libs-miami
 #MM- network-libs-miami : network-includes
 
-%build_module_abi mmake=network-libs-miami \
-    modname=miami modtype=library
+FILES := adddyndomain adddynnameserv \
+         cleardyndomain cleardynnameserv \
+         enddyndomain enddynnameserv \
+         endhostent endprotoent \
+         findkernelvar freeaddrinfo \
+         gai_strerror getaddrinfo gethostbyname2 gethostent \
+         getnameinfo getprotoent \
+         if_freenameindex if_indextoname if_nameindex if_nametoindex \
+         inet_aton inet_ntop inet_pton \
+         miamiclosessl miamidisallowdns miamigetcredentials \
+         miamigetfdcallback miamigethardwarelen miamigetpid \
+         miamigetresoptions miamiisonline miamionoffline \
+         miamiopenssl miamipfaddhook miamipfremovehook \
+         miamisetfdcallback miamisetresoptions miamisetsocksconn \
+         miamisupportedcpus miamisupportsipv6 miamisysctl \
+         queryinterfacetaglist sethostname setsyslogport sockatmark
+
+%build_module mmake=network-libs-miami \
+    modname=miami modtype=library \
+    files="$(FILES)"
 
 %common
