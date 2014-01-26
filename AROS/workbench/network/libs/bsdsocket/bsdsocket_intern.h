@@ -96,6 +96,7 @@ struct bsdsocketBase {
                 e_bsd->bsd_errno.update(e_bsd->bsd_errno.ptr, e_bsd->bsd_errno.value); \
             } \
         } \
+        D(bug("%s: ERRNO=%d\n", __func__, errval)); \
     } while (0)
 
 #define BSD_GET_FD(bsd, s)    ({ \
