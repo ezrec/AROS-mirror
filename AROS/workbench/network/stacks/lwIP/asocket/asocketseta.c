@@ -97,6 +97,9 @@
 
     D(bug("%s: as=%p, tags=%p\n", __func__, as, tags));
 
+    if (as->as_Node.ln_Type != NT_AS_SOCKET)
+        return EINVAL;
+    
     while ((tag = LibNextTagItem(&tptr))) {
         int err = 0;
 
@@ -104,7 +107,7 @@
         case AS_TAG_SOCKET_ADDRESS:
             addr = (struct ASocket_Address *)tag->ti_Data;
             if (addr) {
-                err = bsd_bind(bsd, s, addr->asa_Address, addr->asa_Length);
+                err = bsd_bind(bsd, as->as_bsd, addr->asa_Address, addr->asa_Length);
             } else {
                 err = EFAULT;
             }
@@ -112,14 +115,14 @@
         case AS_TAG_SOCKET_ENDPOINT:
             addr = (struct ASocket_Address *)tag->ti_Data;
             if (addr) {
-                err = bsd_connect(bsd, s, addr->asa_Address, addr->asa_Length);
+                err = bsd_connect(bsd, as->as_bsd, addr->asa_Address, addr->asa_Length);
             } else {
                 err = EFAULT;
             }
             break;
         case AS_TAG_LISTEN_BACKLOG:
             tmp = (ULONG)tag->ti_Data;
-            err = bsd_listen(bsd, s, tmp);
+            err = bsd_listen(bsd, as->as_bsd, tmp);
             break;
         case AS_TAG_NOTIFY_MSGPORT:
             as->as_Notify.asn_Message.mn_ReplyPort = (struct MsgPort *)tag->ti_Data;

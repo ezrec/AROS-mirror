@@ -13,7 +13,7 @@
         AROS_LH5(LONG, ASocketProtocolSet,
 
 /*  SYNOPSIS */
-        AROS_LHA(APTR, as, A0),
+        AROS_LHA(APTR, s, A0),
         AROS_LHA(LONG, level, D0),
         AROS_LHA(LONG, option, D1),
         AROS_LHA(CONST_APTR, val_addr, A2),
@@ -56,9 +56,14 @@
 {
     AROS_LIBFUNC_INIT
 
+    struct ASocket *as = s;
+
     D(bug("%s: as=%p, level=%d, option=%d, val_addr=%p, val_len=%d\n", __func__, as, level, option, val_addr, val_len));
 
-    return bsd_setsockopt(ASocketBase->ab_bsd, as, level, option, val_addr, val_len);
+    if (as->as_Node.ln_Type != NT_AS_SOCKET)
+        return EINVAL;
+    
+    return bsd_setsockopt(ASocketBase->ab_bsd, as->as_bsd, level, option, val_addr, val_len);
 
     AROS_LIBFUNC_EXIT
 }

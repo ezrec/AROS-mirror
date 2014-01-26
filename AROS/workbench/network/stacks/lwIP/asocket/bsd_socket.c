@@ -135,7 +135,6 @@ err_t etharp_output(struct netif *netif, struct pbuf *q, ip_addr_t *ipaddr);
 
 /** Contains all internal pointers and states used for a socket */
 struct bsd_sock {
-  struct ASocket as;
   /** usage count **/
   int usage; 
   /** sockets currently are built on netconns, each socket has one netconn */
@@ -217,7 +216,6 @@ struct bsd_netif {
 
 struct bsd {
     struct SignalSemaphore bs_lock;
-    struct MinList bs_bsd_list;
     struct MinList bs_netif_list;
 
     struct {
@@ -229,12 +227,24 @@ struct bsd {
     } bs_select_cb;
 };
 
+static void bsd_tcpip_done(void *ptr)
+{
+    Signal((struct Task *)ptr, SIGF_SINGLE);
+}
+
 struct bsd *bsd_init(void)
 {
     struct bsd *bsd;
 
     if ((bsd = AllocVec(sizeof(*bsd), MEMF_ANY | MEMF_CLEAR))) {
         InitSemaphore(&bsd->bs_lock);
+
+        NEWLIST(&bsd->bs_netif_list);
+
+        /* Start TCP/IP from lwip */
+        tcpip_init(bsd_tcpip_done, FindTask(NULL));
+        Wait(SIGF_SINGLE);
+
         return bsd;
     }
 
@@ -329,17 +339,17 @@ int bsd_accept(struct bsd *bsd, struct bsd_sock *sock, struct bsd_sock **new_soc
   err_t err;
   SYS_ARCH_DECL_PROTECT(lev);
 
-  D(bug("lwip_accept(%p)...\n", sock));
+  D(bug("bsd_accept(%p)...\n", sock));
 
   if (netconn_is_nonblocking(sock->conn) && (sock->rcvevent <= 0)) {
-    D(bug("lwip_accept(%p): returning EWOULDBLOCK\n", sock));
+    D(bug("bsd_accept(%p): returning EWOULDBLOCK\n", sock));
     return EWOULDBLOCK;
   }
 
   /* wait for a new connection */
   err = netconn_accept(sock->conn, &newconn);
   if (err != ERR_OK) {
-    D(bug("lwip_accept(%p): netconn_acept failed, err=%d\n", sock, err));
+    D(bug("bsd_accept(%p): netconn_acept failed, err=%d\n", sock, err));
     if (NETCONNTYPE_GROUP(netconn_type(sock->conn)) != NETCONN_TCP) {
       return EOPNOTSUPP;
     }
@@ -366,7 +376,7 @@ int bsd_accept(struct bsd *bsd, struct bsd_sock *sock, struct bsd_sock **new_soc
   newconn->socket = 0;
   SYS_ARCH_UNPROTECT(lev);
 
-  D(bug("lwip_accept(%p) returning new sock=%p", sock, nsock));
+  D(bug("bsd_accept(%p) returning new sock=%p", sock, nsock));
 
   *new_sockp = nsock;
   return 0;
@@ -384,24 +394,24 @@ int bsd_bind(struct bsd *bsd, struct bsd_sock *sock, const struct sockaddr *name
   }
 
   /* check size, familiy and alignment of 'name' */
-  LWIP_ERROR("lwip_bind: invalid address", (IS_SOCK_ADDR_LEN_VALID(namelen) &&
+  LWIP_ERROR("bsd_bind: invalid address", (IS_SOCK_ADDR_LEN_VALID(namelen) &&
              IS_SOCK_ADDR_TYPE_VALID(name) && IS_SOCK_ADDR_ALIGNED(name)),
              return err_to_errno(ERR_ARG););
   LWIP_UNUSED_ARG(namelen);
 
   SOCKADDR_TO_IPXADDR_PORT((name->sa_family == AF_INET6), name, &local_addr, local_port);
-  D(bug("lwip_bind(%p, addr=", sock));
+  D(bug("bsd_bind(%p, addr=", sock));
   ipX_addr_debug_print(name->sa_family == AF_INET6, SOCKETS_DEBUG, &local_addr);
   D(bug(" port=%"U16_F")\n", local_port));
 
   err = netconn_bind(sock->conn, ipX_2_ip(&local_addr), local_port);
 
   if (err != ERR_OK) {
-    D(bug("lwip_bind(%p) failed, err=%d\n", sock, err));
+    D(bug("bsd_bind(%p) failed, err=%d\n", sock, err));
     return err_to_errno(err);
   }
 
-  D(bug("lwip_bind(%p) succeeded\n", sock));
+  D(bug("bsd_bind(%p) succeeded\n", sock));
   return 0;
 }
 
@@ -411,7 +421,7 @@ int bsd_close(struct bsd *bsd, struct bsd_sock *sock)
   int is_tcp = 0;
   void *lastdata;
 
-  D(bug("lwip_close(%p)\n", sock));
+  D(bug("bsd_close(%p)\n", sock));
 
   if (--sock->usage > 0)
       return 0;
@@ -442,18 +452,18 @@ int bsd_connect(struct bsd *bsd, struct bsd_sock *sock, const struct sockaddr *n
   }
 
   /* check size, familiy and alignment of 'name' */
-  LWIP_ERROR("lwip_connect: invalid address", IS_SOCK_ADDR_LEN_VALID(namelen) &&
+  LWIP_ERROR("bsd_connect: invalid address", IS_SOCK_ADDR_LEN_VALID(namelen) &&
              IS_SOCK_ADDR_TYPE_VALID_OR_UNSPEC(name) && IS_SOCK_ADDR_ALIGNED(name),
              return err_to_errno(ERR_ARG); );
   LWIP_UNUSED_ARG(namelen);
   if (name->sa_family == AF_UNSPEC) {
-    D(bug("lwip_connect(%p, AF_UNSPEC)\n", sock));
+    D(bug("bsd_connect(%p, AF_UNSPEC)\n", sock));
     err = netconn_disconnect(sock->conn);
   } else {
     ipX_addr_t remote_addr;
     u16_t remote_port;
     SOCKADDR_TO_IPXADDR_PORT((name->sa_family == AF_INET6), name, &remote_addr, remote_port);
-    D(bug("lwip_connect(%p, addr=", sock));
+    D(bug("bsd_connect(%p, addr=", sock));
     ipX_addr_debug_print(name->sa_family == AF_INET6, SOCKETS_DEBUG, &remote_addr);
     D(bug(" port=%"U16_F")\n", remote_port));
 
@@ -461,12 +471,12 @@ int bsd_connect(struct bsd *bsd, struct bsd_sock *sock, const struct sockaddr *n
   }
 
   if (err != ERR_OK) {
-    D(bug("lwip_connect(%p) failed, err=%d\n", sock, err));
+    D(bug("bsd_connect(%p) failed, err=%d\n", sock, err));
     return err_to_errno(err);
     
   }
 
-  D(bug("lwip_connect(%p) succeeded\n", sock));
+  D(bug("bsd_connect(%p) succeeded\n", sock));
   
   return 0;
 }
@@ -483,7 +493,7 @@ int bsd_listen(struct bsd *bsd, struct bsd_sock *sock, int backlog)
 {
   err_t err;
 
-  D(bug("lwip_listen(%p, backlog=%d)\n", sock, backlog));
+  D(bug("bsd_listen(%p, backlog=%d)\n", sock, backlog));
 
   /* limit the "backlog" parameter to fit in an u8_t */
   backlog = LWIP_MIN(LWIP_MAX(backlog, 0), 0xff);
@@ -491,7 +501,7 @@ int bsd_listen(struct bsd *bsd, struct bsd_sock *sock, int backlog)
   err = netconn_listen_with_backlog(sock->conn, (u8_t)backlog);
 
   if (err != ERR_OK) {
-    D(bug("lwip_listen(%p) failed, err=%d\n", sock, err));
+    D(bug("bsd_listen(%p) failed, err=%d\n", sock, err));
     if (NETCONNTYPE_GROUP(netconn_type(sock->conn)) != NETCONN_TCP) {
       return EOPNOTSUPP;
       return EOPNOTSUPP;
@@ -519,7 +529,7 @@ int bsd_recvmsg(struct bsd *bsd, struct bsd_sock *sock, struct msghdr *msg, int 
     void *mem = msg->msg_iov[i].iov_base;
     size_t len = msg->msg_iov[i].iov_len;
 
-    D(bug("lwip_recvmsg(%p, [%d] { %p, %"SZT_F", 0x%x })\n", sock, i, mem, len, flags));
+    D(bug("bsd_recvmsg(%p, [%d] { %p, %"SZT_F", 0x%x })\n", sock, i, mem, len, flags));
 
     done = 0;
     do {
@@ -1040,7 +1050,7 @@ int bsd_shutdown(struct bsd *bsd, struct bsd_sock *sock, int how)
   err_t err;
   u8_t shut_rx = 0, shut_tx = 0;
 
-  D(bug("lwip_shutdown(%p, how=%d)\n", sock, how));
+  D(bug("bsd_shutdown(%p, how=%d)\n", sock, how));
 
   if (sock->conn != NULL) {
     if (NETCONNTYPE_GROUP(netconn_type(sock->conn)) != NETCONN_TCP) {
@@ -2271,11 +2281,30 @@ static int bsd__sana_open(struct bsd *bsd, const char *name)
 static int bsd__ioctl_netdevice(struct bsd *bsd, long cmd, void *argp)
 {
     struct ifreq *ifr = argp;
+    struct ifconf *ifconf = argp;
     struct bsd_netif *bn;
     char name[IFNAMSIZ+1];
-    int rc;
+    int rc, len;
 
     switch (cmd) {
+    case SIOCGIFCONF:
+        /* Get all the known SANA interfaces */
+        ObtainSemaphore(&bsd->bs_lock);
+        len = 0;
+        ifr = ifconf->ifc_req;
+        ForeachNode(&bsd->bs_netif_list, bn) {
+            len += sizeof(*ifr);
+            if (len < ifconf->ifc_len) {
+                strncpy(ifr->ifr_name, bn->bn_name, IFNAMSIZ);
+                ifr->ifr_addr.sa_len = 0;
+                ifr->ifr_addr.sa_family = AF_UNSPEC;
+            }
+            ifr++;
+        }
+        ifconf->ifc_len = len;
+        ReleaseSemaphore(&bsd->bs_lock);
+        return 0;
+        break;
     case SIOCGIFNAME:
         /* Get the name for an index */
         ObtainSemaphore(&bsd->bs_lock);
@@ -2330,10 +2359,6 @@ int bsd_ioctl(struct bsd *bsd, struct bsd_sock *sock, long cmd, void *argp)
   s16_t recv_avail;
 #endif /* LWIP_SO_RCVBUF */
 
-  if (!sock) {
-    
-  }
-
   switch (cmd) {
 #if LWIP_SO_RCVBUF || LWIP_FIONREAD_LINUXMODE
   case FIONREAD:
@@ -2385,7 +2410,7 @@ int bsd_ioctl(struct bsd *bsd, struct bsd_sock *sock, long cmd, void *argp)
       *((u16_t*)argp) += buflen;
     }
 
-    D(bug("lwip_ioctl(%p, FIONREAD, %p) = %"U16_F"\n", sock, argp, *((u16_t*)argp)));
+    D(bug("bsd_ioctl(%p, FIONREAD, %p) = %"U16_F"\n", sock, argp, *((u16_t*)argp)));
     
     return 0;
 #else /* LWIP_SO_RCVBUF */
@@ -2399,7 +2424,7 @@ int bsd_ioctl(struct bsd *bsd, struct bsd_sock *sock, long cmd, void *argp)
       val = 1;
     }
     netconn_set_nonblocking(sock->conn, val);
-    D(bug("lwip_ioctl(%p, FIONBIO, %d)\n", sock, val));
+    D(bug("bsd_ioctl(%p, FIONBIO, %d)\n", sock, val));
     
     return 0;
 
@@ -2410,7 +2435,7 @@ int bsd_ioctl(struct bsd *bsd, struct bsd_sock *sock, long cmd, void *argp)
         return rc;
     break;
   } /* switch (cmd) */
-  D(bug("lwip_ioctl(%p, UNIMPL: 0x%lx, %p)\n", sock, cmd, argp));
+  D(bug("bsd_ioctl(%p, UNIMPL: 0x%lx, %p)\n", sock, cmd, argp));
   return ENOSYS; /* not yet implemented */
 }
 
@@ -2434,7 +2459,7 @@ int bsd_fcntl(struct bsd *bsd, struct bsd_sock *sock, int cmd, int val)
     }
     break;
   default:
-    D(bug("lwip_fcntl(%p, UNIMPL: %d, %d)\n", sock, cmd, val));
+    D(bug("bsd_fcntl(%p, UNIMPL: %d, %d)\n", sock, cmd, val));
     break;
   }
   return ret;

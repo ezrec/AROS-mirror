@@ -6,6 +6,7 @@
 #include "asocket_intern.h"
 
 #include <fcntl.h>
+#include <sys/ioctl.h>
 
 /*****************************************************************************
 
@@ -118,9 +119,10 @@
     struct MsgPort *notify_msgport = NULL;
     ULONG notify_fd_mask = 0;
     APTR notify_name = NULL;
-    ULONG iface_index = 0;
-    CONST_STRPTR iface_name = NULL;
     int err;
+    struct ASocket *as;
+    ULONG iface_index;
+    CONST_STRPTR iface_name;
 
     D(bug("%s: new_as=%p, tags=%p\n", __func__, new_as, tags));
 
@@ -169,74 +171,115 @@
         tag->ti_Tag |= AS_TAGF_COMPLETE;
     }
 
-    if (domain == AF_LINK && type == SOCK_RAW && protocol == 0) {
-        if (iface_index != 0 && iface_name != NULL)
-            return EINVAL;
+    /* Unused for now.. */
+    (void)iface_name;
+    (void)iface_index;
 
-        /* Unused for now */
-        return EINVAL;
-    }
+    as = AllocVec(sizeof(*as), MEMF_ANY | MEMF_CLEAR);
+    if (as == NULL)
+        return ENOMEM;
 
     err = bsd_socket(bsd, &s, domain, type, protocol);
-    if (err == 0) {
-        struct ASocket *as = (struct ASocket *)s;
-        /* Put in async mode */
-        err = bsd_fcntl(bsd, s, F_SETFL, bsd_fcntl(bsd, s, F_GETFL, 0) | O_NONBLOCK);
-        if (err < 0) {
-            bsd_close(bsd, s);
-            return err;
-        }
-        as->as_Node.ln_Type = NT_UNKNOWN;
-        as->as_Node.ln_Name = "ASocket (loop)";
-
-        as->as_Socket.domain = domain;
-        as->as_Socket.type   = type;
-        as->as_Socket.protocol = protocol;
-
-        if (listen) {
-            as->as_Listen.enabled = listen;
-            as->as_Listen.backlog = listen_backlog;
-
-            err = bsd_listen(bsd, s, listen_backlog);
-            if (err != 0) {
-                bsd_close(bsd, s);
-                return err;
-            }
-        }
-
-        if (addr) {
-            err = bsd_bind(bsd, s, addr->asa_Address, addr->asa_Length);
-            if (err != 0) {
-                bsd_close(bsd, s);
-                return err;
-            }
-        }
-
-        if (endp) {
-            err = bsd_connect(bsd, s, endp->asa_Address, endp->asa_Length);
-            if (err != 0) {
-                bsd_close(bsd, s);
-                return err;
-            }
-        }
-
-        as->as_Notify.asn_Message.mn_Node.ln_Type = NT_UNKNOWN;
-        as->as_Notify.asn_Message.mn_Node.ln_Name = notify_name;
-        as->as_Notify.asn_Message.mn_ReplyPort = notify_msgport;
-        as->as_Notify.asn_ASocket = as;
-        as->as_Notify.asn_NotifyEvents = notify_fd_mask;
-        as->as_Notify.asn_Events = 0;
-
-        ObtainSemaphore(&ASocketBase->ab_Lock);
-        ADDTAIL(&ASocketBase->ab_SocketList, as);
-        ReleaseSemaphore(&ASocketBase->ab_Lock);
-
-        *new_as = as;
-
-        return 0;
+    if (err) {
+        FreeVec(as);
+        return err;
     }
 
-    return ENOMEM;
+    /* Cache some information for SOCK_RAW sockets */
+    if (type == SOCK_RAW) {
+        struct ifreq ifr;
+
+        /* Either by name or index, not both. */
+        if (!iface_name && iface_index < 0)
+            return EINVAL;
+
+        if (iface_name && iface_index >= 0)
+            return EINVAL;
+
+        /* Get interface index by name */
+        if (iface_name) {
+            /* Cache the interface's name and index */
+            strncpy(as->as_IFace.name, iface_name, IFNAMSIZ);
+            strncpy(ifr.ifr_name, iface_name, IFNAMSIZ);
+            err = bsd_ioctl(bsd, s, SIOCGIFINDEX, &ifr);
+            if (err != 0) {
+                bsd_close(bsd, s);
+                FreeVec(as);
+                return err;
+            }
+            as->as_IFace.index = ifr.ifr_index;
+        } else { /* By index */
+            as->as_IFace.index = iface_index;
+            ifr.ifr_index = iface_index;
+            err = bsd_ioctl(bsd, s, SIOCGIFNAME, &ifr);
+            if (err != 0) {
+                bsd_close(bsd, s);
+                FreeVec(as);
+                return err;
+            }
+            CopyMem(ifr.ifr_name, as->as_IFace.name, IFNAMSIZ);
+        }
+    }
+ 
+    as->as_bsd = s;
+    /* Put in async mode */
+    err = bsd_fcntl(bsd, as->as_bsd, F_SETFL, bsd_fcntl(bsd, as->as_bsd, F_GETFL, 0) | O_NONBLOCK);
+    if (err < 0) {
+        bsd_close(bsd, as->as_bsd);
+        FreeVec(as);
+        return err;
+    }
+    as->as_Node.ln_Type = NT_AS_SOCKET;
+    as->as_Node.ln_Name = "ASocket";
+
+    as->as_Socket.domain = domain;
+    as->as_Socket.type   = type;
+    as->as_Socket.protocol = protocol;
+
+    if (listen) {
+        as->as_Listen.enabled = listen;
+        as->as_Listen.backlog = listen_backlog;
+
+        err = bsd_listen(bsd, as->as_bsd, listen_backlog);
+        if (err != 0) {
+            bsd_close(bsd, as->as_bsd);
+            FreeVec(as);
+            return err;
+        }
+    }
+
+    if (addr) {
+        err = bsd_bind(bsd, as->as_bsd, addr->asa_Address, addr->asa_Length);
+        if (err != 0) {
+            bsd_close(bsd, as->as_bsd);
+            FreeVec(as);
+            return err;
+        }
+    }
+
+    if (endp) {
+        err = bsd_connect(bsd, as->as_bsd, endp->asa_Address, endp->asa_Length);
+        if (err != 0) {
+            bsd_close(bsd, as->as_bsd);
+            FreeVec(as);
+            return err;
+        }
+    }
+
+    as->as_Notify.asn_Message.mn_Node.ln_Type = NT_UNKNOWN;
+    as->as_Notify.asn_Message.mn_Node.ln_Name = notify_name;
+    as->as_Notify.asn_Message.mn_ReplyPort = notify_msgport;
+    as->as_Notify.asn_ASocket = as;
+    as->as_Notify.asn_NotifyEvents = notify_fd_mask;
+    as->as_Notify.asn_Events = 0;
+
+    ObtainSemaphore(&ASocketBase->ab_Lock);
+    ADDTAIL(&ASocketBase->ab_SocketList, as);
+    ReleaseSemaphore(&ASocketBase->ab_Lock);
+
+    *new_as = as;
+
+    return 0;
 
     AROS_LIBFUNC_EXIT
 }

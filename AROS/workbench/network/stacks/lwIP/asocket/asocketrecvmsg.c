@@ -57,13 +57,17 @@
     AROS_LIBFUNC_INIT
 
     int err;
+    struct ASocket *as = s;
 
     D(bug("%s: as=%p, msg=%p, flags=%d\n", __func__, s, msg, flags));
 
+    if (as->as_Node.ln_Type != NT_AS_SOCKET)
+        return EINVAL;
+    
     if (msg == NULL)
         return EFAULT;
 
-    err = bsd_recvmsg(ASocketBase->ab_bsd, s, msg->asm_MsgHdr, flags);
+    err = bsd_recvmsg(ASocketBase->ab_bsd, as->as_bsd, msg->asm_MsgHdr, flags);
     if (err)
         return err;
 

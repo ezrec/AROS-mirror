@@ -13,7 +13,7 @@
         AROS_LH1(VOID, ASocketDispose,
 
 /*  SYNOPSIS */
-        AROS_LHA(APTR, as, A0),
+        AROS_LHA(APTR, s, A0),
 
 /*  LOCATION */
         struct ASocketBase *, ASocketBase, 6, ASocket)
@@ -44,9 +44,20 @@
 {
     AROS_LIBFUNC_INIT
 
+    struct ASocket *as = s;
+
     D(bug("%s: as=%p\n", __func__, as));
 
-    bsd_close(ASocketBase->ab_bsd, as);
+    ASSERT(as->as_Node.ln_Type == NT_AS_SOCKET);
+    if (as->as_Node.ln_Type != NT_AS_SOCKET)
+        return;
+    
+    ObtainSemaphore(&ASocketBase->ab_Lock);
+    REMOVE(as);
+    ReleaseSemaphore(&ASocketBase->ab_Lock);
+
+    bsd_close(ASocketBase->ab_bsd, as->as_bsd);
+    FreeVec(as);
 
     return;
 

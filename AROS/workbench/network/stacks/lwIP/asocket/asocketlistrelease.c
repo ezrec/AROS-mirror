@@ -46,7 +46,18 @@
 {
     AROS_LIBFUNC_INIT
 
+    struct ASocket *as, *tmp;
+
     D(bug("%s: aslist=%p\n", __func__, aslist));
+
+    ForeachNodeSafe(aslist, as, tmp) {
+
+        REMOVE(as);
+        bsd_close(ASocketBase->ab_bsd, as->as_bsd);
+        FreeVec(as);
+    }
+
+    FreeVec(aslist);
 
     AROS_LIBFUNC_EXIT
 }

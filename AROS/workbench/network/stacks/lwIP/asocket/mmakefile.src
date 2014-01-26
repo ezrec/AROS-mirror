@@ -7,13 +7,15 @@ FILES := \
        asocket_init bsd_socket \
        asocketaccept asocketdispose asocketduplicate \
        asocketseta asocketgeta \
-       asocketlistobtain asocketlistrelease asocketnewa \
+       asocketlistobtaina asocketlistrelease asocketnewa \
        asocketprotocolget asocketprotocolset \
        asocketrecvmsg asocketsendmsg \
-       asocketshutdown
+       asocketshutdown asocketcomparea
 
 USER_CFLAGS += -I$(AROS_DEVELOPMENT)/include/lwip
 USER_CFLAGS += -DDEBUG=1
+
+#MM- network-stacks-lwip-asocket: linklibs-lwip
 
 %build_module_library mmake=network-stacks-lwip-asocket \
   modname=asocket modtype=library \

@@ -13,7 +13,7 @@
         AROS_LH2(LONG, ASocketShutdown,
 
 /*  SYNOPSIS */
-        AROS_LHA(APTR, as, A0),
+        AROS_LHA(APTR, s, A0),
         AROS_LHA(int, how, D1),
 
 /*  LOCATION */
@@ -56,9 +56,13 @@
 {
     AROS_LIBFUNC_INIT
 
+    struct ASocket *as = s;
     D(bug("%s: as=%p, how=%d\n", __func__, as, how));
 
-    return bsd_shutdown(ASocketBase->ab_bsd, as, how);
+    if (as->as_Node.ln_Type != NT_AS_SOCKET)
+        return EINVAL;
+    
+    return bsd_shutdown(ASocketBase->ab_bsd, as->as_bsd, how);
 
     AROS_LIBFUNC_EXIT
 }

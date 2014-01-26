@@ -56,15 +56,30 @@
 
     D(bug("%s: as=%p, new_as=%p\n", __func__, as, new_s));
 
-    if (new_as == NULL)
+    if (as->as_Node.ln_Type != NT_AS_SOCKET &&
+        as->as_Node.ln_Type != NT_AS_OBTAINED)
+        return EINVAL;
+    
+    if (new_s == NULL)
         return EFAULT;
 
-    err = bsd_socket_dup(ASocketBase->ab_bsd, (struct bsd_sock *)as, (struct bsd_sock **)&new_as);
-    if (err == 0 && as != new_as) {
-        new_as->as_Socket.domain = as->as_Socket.domain;
-        new_as->as_Socket.type = as->as_Socket.type;
-        new_as->as_Socket.protocol = as->as_Socket.protocol;
-        *new_s = new_as;
+    new_as = AllocVec(sizeof(*new_as), MEMF_ANY | MEMF_CLEAR);
+    if (new_as) {
+        CopyMem(as, new_as, sizeof(*as));
+        err = bsd_socket_dup(ASocketBase->ab_bsd, as->as_bsd, &new_as->as_bsd);
+        if (err == 0) {
+            new_as->as_Node.ln_Type = NT_AS_SOCKET;
+
+            ObtainSemaphore(&ASocketBase->ab_Lock);
+            ADDTAIL(&ASocketBase->ab_SocketList, new_as);
+            ReleaseSemaphore(&ASocketBase->ab_Lock);
+
+            *new_s = new_as;
+        } else {
+            FreeVec(new_as);
+        }
+    } else {
+        err = ENOMEM;
     }
 
     return err;

@@ -107,6 +107,10 @@
 
     D(bug("%s: as=%p, tags=%p\n", __func__, as, tags));
 
+    if (as->as_Node.ln_Type != NT_AS_SOCKET &&
+        as->as_Node.ln_Type != NT_AS_OBTAINED)
+        return EINVAL;
+    
     while ((tag = LibNextTagItem(&tptr))) {
         int err = 0;
         struct ASocket_Address *addr;
@@ -123,11 +127,11 @@
             break;
         case AS_TAG_SOCKET_ADDRESS:
             addr = (struct ASocket_Address *)tag->ti_Data;
-            err = bsd_getsockname(bsd, s, addr->asa_Address, &addr->asa_Length);
+            err = bsd_getsockname(bsd, as->as_bsd, addr->asa_Address, &addr->asa_Length);
             break;
         case AS_TAG_SOCKET_ENDPOINT:
             addr = (struct ASocket_Address *)tag->ti_Data;
-            err = bsd_getpeername(bsd, s, addr->asa_Address, &addr->asa_Length);
+            err = bsd_getpeername(bsd, as->as_bsd, addr->asa_Address, &addr->asa_Length);
             break;
         case AS_TAG_SOCKET_LISTEN:
             *(BOOL *)tag->ti_Data = (as->as_Listen.enabled ? TRUE : FALSE);
@@ -144,14 +148,18 @@
         case AS_TAG_NOTIFY_NAME:
             *(APTR *)tag->ti_Data = as->as_Notify.asn_Message.mn_Node.ln_Name;
             break;
-#if 0
         case AS_TAG_IFACE_INDEX:
-            *(ULONG *)tag->ti_Data = iface_index;
+            if (as->as_Socket.type == SOCK_RAW)
+                *(ULONG *)tag->ti_Data = as->as_IFace.index;
+            else
+                return EINVAL;
             break;
         case AS_TAG_IFACE_NAME:
-            *(CONST_STRPTR *)tag->ti_Data = iface_name;
+            if (as->as_Socket.type == SOCK_RAW)
+                *(CONST_STRPTR *)tag->ti_Data = as->as_IFace.name;
+            else
+                return EINVAL;
             break;
-#endif
         default:
             return EINVAL;
         }

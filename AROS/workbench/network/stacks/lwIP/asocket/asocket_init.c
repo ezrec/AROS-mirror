@@ -20,6 +20,9 @@ static int ASocket_Init(struct ASocketBase *ASocketBase)
 
     D(bug("%s: ASocketBase->ab_bsd=%p\n", __func__, ASocketBase->ab_bsd));
 
+    InitSemaphore(&ASocketBase->ab_Lock);
+    NEWLIST(&ASocketBase->ab_SocketList);
+
     return (ASocketBase->ab_bsd) ? TRUE : FALSE;
 }
 

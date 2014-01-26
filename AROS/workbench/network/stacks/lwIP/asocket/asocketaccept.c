@@ -58,14 +58,27 @@
     int err;
     struct ASocket *as = s, *new_as;
 
-    D(bug("%s: as=%p, new_as=%p\n", __func__, as, new_as));
+    D(bug("%s: as=%p, new_as=%p\n", __func__, s, new_s));
 
-    err = bsd_accept(ASocketBase->ab_bsd, (struct bsd_sock *)as, (struct bsd_sock **)&new_as);
-    if (err == 0) {
-        new_as->as_Socket.domain = as->as_Socket.domain;
-        new_as->as_Socket.type = as->as_Socket.type;
-        new_as->as_Socket.protocol = as->as_Socket.protocol;
-        *new_s = new_as;
+    if (as->as_Node.ln_Type != NT_AS_SOCKET)
+        return EINVAL;
+    
+    new_as = AllocVec(sizeof(*new_as), MEMF_CLEAR | MEMF_ANY);
+    if (new_as != NULL) {
+        err = bsd_accept(ASocketBase->ab_bsd, as->as_bsd, &new_as->as_bsd);
+        if (err == 0) {
+            new_as->as_Node.ln_Type = NT_AS_SOCKET;
+            new_as->as_Socket.domain = as->as_Socket.domain;
+            new_as->as_Socket.type = as->as_Socket.type;
+            new_as->as_Socket.protocol = as->as_Socket.protocol;
+            *new_s = new_as;
+
+            ObtainSemaphore(&ASocketBase->ab_Lock);
+            ADDTAIL(&ASocketBase->ab_SocketList, new_as);
+            ReleaseSemaphore(&ASocketBase->ab_Lock);
+        }
+    } else {
+        err = ENOMEM;
     }
 
     return err;

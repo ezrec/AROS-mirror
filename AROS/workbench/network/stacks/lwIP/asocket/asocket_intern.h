@@ -21,7 +21,13 @@
 #include <exec/libraries.h>
 #include <exec/semaphores.h>
 
+#ifndef ARRAY_SIZE
+#define ARRAY_SIZE(x)   (sizeof(x)/sizeof((x)[0]))
+#endif
+
 #include "bsd_socket.h"
+
+#include <net/if.h>
 
 struct ASocket {
     struct Node as_Node;
@@ -35,7 +41,15 @@ struct ASocket {
         ULONG backlog;
     } as_Listen;
 
+    /* type = SOCK_RAW information */
+    struct {
+        int index;
+        TEXT name[IFNAMSIZ];
+    } as_IFace;
+
     struct ASocket_Notify as_Notify;
+
+    struct bsd_sock *as_bsd;
 };
 
 struct ASocketBase {
