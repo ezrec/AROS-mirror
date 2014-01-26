@@ -3,9 +3,9 @@ include $(TOP)/config/make.cfg
 
 STACK_NAME := lwIP
 
-#MM- workbench-network : workbench-network-stacks-lwip
+#MM- network-stacks : network-stacks-lwip
 
-#MM- workbench-network-stacks-lwip: linklibs-lwip
+#MM- network-stacks-lwip: linklibs-lwip
 LWIP_C := $(call WILDCARD, lwip/src/api/*.c) \
           $(call WILDCARD, lwip/src/core/*.c) \
           $(call WILDCARD, lwip/src/core/ipv4/*.c) \
@@ -23,6 +23,8 @@ USER_CFLAGS += -I$(SRCDIR)/$(CURDIR) \
                -I$(SRCDIR)/$(CURDIR)/lwip/src/include/ipv6 \
                -Wno-attributes -Wno-address \
                -Wno-unused-but-set-variable
+
+#USER_CFLAGS += -DDEBUG=1
 
 #MM- linklibs-lwip : network-includes
 

@@ -25,7 +25,6 @@ include $(TOP)/config/make.cfg
 #MM	    workbench-tools \
 #MM	    workbench-prefs \
 #MM         workbench-printers \
-#MM	    workbench-network \
 #MM         workbench-rexxc \
 #MM         kernel-usb-$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU)
 
