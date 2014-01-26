@@ -27,7 +27,8 @@ void sys_arch_unprotect(sys_prot_t state);
 
 /* Semaphores */
 #define SYS_SEM_NULL    NULL
-typedef struct SignalSemaphore sys_sem_t;
+struct sys_arch_sem;
+typedef struct sys_arch_sem *sys_sem_t;
 
 err_t sys_sem_new(sys_sem_t *sem, u8_t count);
 void sys_sem_free(sys_sem_t *sem);
@@ -39,15 +40,16 @@ u32_t sys_arch_sem_wait(sys_sem_t *sem, u32_t timeout_ms);
 
 /* Mailboxes */
 #define SYS_MBOX_NULL   NULL
-typedef struct MsgPort *sys_mbox_t;
+struct sys_arch_mbox;
+typedef struct sys_arch_mbox *sys_mbox_t;
 err_t sys_mbox_new(sys_mbox_t *mbox, int size);
 void sys_mbox_free(sys_mbox_t *mbox);
 void sys_mbox_post(sys_mbox_t *mbox, void *msg);
 u32_t sys_arch_mbox_fetch(sys_mbox_t *mbox, void **msg, u32_t timeout_ms);
 u32_t sys_arch_mbox_tryfetch(sys_mbox_t *mbox, void **msg);
 err_t sys_mbox_trypost(sys_mbox_t *mbox, void *msg);
-#define sys_mbox_set_invalid(x) do { } while (0)
-#define sys_mbox_valid(x)   (1)
+#define sys_mbox_set_invalid(x) do { *(x) = NULL; } while (0)
+#define sys_mbox_valid(x)   (*(x) != NULL)
 
 /* Get the per-thread timeout list for this thread */
 struct sys_timeouts *sys_arch_timeouts(void);
