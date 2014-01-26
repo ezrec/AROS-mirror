@@ -41,10 +41,6 @@ struct ASocket_Msg {
     LONG   asm_Errno;                   /* Error, if non-zero */
 };
 
-/* Value of ASocket_Msg.asp_Message.mn_Node.ln_Type */
-#define NT_AS_MSG_SEND      (NT_USER - 0)   /* Processed msg */
-#define NT_AS_MSG_RECV      (NT_USER - 1)   /* Processed msg */
-
 /* Structure for getting alerted on ASocket handles.
  * This structure is owned by the ASocketBase.
  *
@@ -58,8 +54,17 @@ struct ASocket_Notify {
     ULONG asn_NotifyEvents;     /* Mask of events requested */
 };
 
+/* Value of an ASocket node's ln_Type */
+#define NT_AS_SOCKET       (NT_USER - 0)
+/* Value of an ASocketObtainList node's ln_Type */
+#define NT_AS_OBTAINED     (NT_USER - 1)
+
+/* Value of ASocket_Msg.asp_Message.mn_Node.ln_Type */
+#define NT_AS_MSG_SEND      (NT_USER - 10)   /* Processed msg */
+#define NT_AS_MSG_RECV      (NT_USER - 11)   /* Processed msg */
+
 /* Value of ASocket_Notify.asp_Message.mn_Node.ln_Type */
-#define NT_AS_NOTIFY       (NT_USER - 10)
+#define NT_AS_NOTIFY       (NT_USER - 20)
 
 /* ASocketGet/ASocketSet tags
  * [..G] = Read-only values
@@ -68,30 +73,35 @@ struct ASocket_Notify {
  * [iSG] = Can be called by ASocketNew(), ASocketGet(), or ASocketSet()
  */
 
-#define AS_TAGM____G        0x0
-#define AS_TAGM__I_G        0x1
-#define AS_TAGM__IsG        0x2
-#define AS_TAGM__ISG        0x3
-
 #define AS_TAGF_COMPLETE    (1UL << 30)
 
-#define AS_TAG(mode, index, type)  (TAG_USER | (sizeof(type)<<16) | ((mode) << 12) | index)
+#define AS_TAG(index, type)  (TAG_USER | (sizeof(type) << 16) | index)
 
-#define   AS_TAG_SOCKET_DOMAIN          AS_TAG(AS_TAGM__I_G, 0x00, LONG)  /* Address Domain */
-#define   AS_TAG_SOCKET_TYPE            AS_TAG(AS_TAGM__I_G, 0x01, LONG)  /* Socket type */
-#define   AS_TAG_SOCKET_PROTOCOL        AS_TAG(AS_TAGM__I_G, 0x02, LONG)  /* Protocol */
-#define   AS_TAG_SOCKET_ADDRESS         AS_TAG(AS_TAGM__IsG, 0x03, struct ASocket_Address *)  /* Socket address */
-#define   AS_TAG_SOCKET_ENDPOINT        AS_TAG(AS_TAGM__IsG, 0x04, struct ASocket_Address *)  /* Socket endpoint */
-#define   AS_TAG_SOCKET_LISTEN          AS_TAG(AS_TAGM__IsG, 0x05, BOOL)     /* Socket is listening */
-#define   AS_TAG_LISTEN_BACKLOG         AS_TAG(AS_TAGM__IsG, 0x08, LONG)     /* Socket listen backlog */
-#define   AS_TAG_IFACE_IFF_MASK         AS_TAG(AS_TAGM__ISG, 0x10, ULONG)    /* See IFF_* flag mask */
-#define   AS_TAG_IFACE_METRIC           AS_TAG(AS_TAGM___SG, 0x11, LONG)     /* Metric */
-#define   AS_TAG_IFACE_INDEX            AS_TAG(AS_TAGM__I_G, 0x12, LONG)     /* Interface number */
-#define   AS_TAG_IFACE_NAME             AS_TAG(AS_TAGM__I_G, 0x13, STRPTR)   /* Name of interface */
-#define   AS_TAG_STATUS_READABLE        AS_TAG(AS_TAGM____G, 0x20, ULONG)    /* Number of bytes available to read */
-#define   AS_TAG_NOTIFY_MSGPORT         AS_TAG(AS_TAGM__ISG, 0x40, struct MsgPort *)   /* Notify target */
-#define   AS_TAG_NOTIFY_FD_MASK         AS_TAG(AS_TAGM__ISG, 0x41, ULONG)    /* See FD_* flag mask */
-#define   AS_TAG_NOTIFY_FD_ACTIVE       AS_TAG(AS_TAGM____G, 0x42, ULONG)    /* See FD_* flag mask */
-#define   AS_TAG_NOTIFY_NAME            AS_TAG(AS_TAGM__ISG, 0x43, APTR)     /* Private data for use by the Notify MsgPort, stored in ASocket_Notify.asm_Message.mn_Node.ln_Name */
+#define   AS_TAG_SOCKET_DOMAIN          AS_TAG(0x0000, LONG)  /* Address Domain */
+#define   AS_TAG_SOCKET_TYPE            AS_TAG(0x0001, LONG)  /* Socket type */
+#define   AS_TAG_SOCKET_PROTOCOL        AS_TAG(0x0002, LONG)  /* Protocol */
+#define   AS_TAG_SOCKET_ADDRESS         AS_TAG(0x0003, struct ASocket_Address *)  /* Socket address */
+#define   AS_TAG_SOCKET_ENDPOINT        AS_TAG(0x0004, struct ASocket_Address *)  /* Socket endpoint */
+#define   AS_TAG_SOCKET_LISTEN          AS_TAG(0x0005, BOOL)     /* Socket is listening */
+#define   AS_TAG_LISTEN_BACKLOG         AS_TAG(0x0008, LONG)     /* Socket listen backlog */
+
+/* Interface control */
+#define   AS_TAG_IFACE_INDEX            AS_TAG(0x0100, LONG)     /* Interface number */
+#define   AS_TAG_IFACE_NAME             AS_TAG(0x0101, STRPTR)   /* Name of interface */
+#define   AS_TAG_IFACE_ADDRESS          AS_TAG(0x0102, struct ASocket_Address *)    /* Interface address */
+#define   AS_TAG_IFACE_ENDPOINT         AS_TAG(0x0103, struct ASocket_Address *)    /* Point-To-Point destination address */
+#define   AS_TAG_IFACE_NETMASK          AS_TAG(0x0104, struct ASocket_Address *)    /* Interface address */
+#define   AS_TAG_IFACE_BROADCAST        AS_TAG(0x0105, struct ASocket_Address *)    /* Interface address */
+#define   AS_TAG_IFACE_IFF_MASK         AS_TAG(0x0106, ULONG)    /* See IFF_* flag mask */
+#define   AS_TAG_IFACE_METRIC           AS_TAG(0x0107, LONG)     /* Metric */
+
+/* Socket status */
+#define   AS_TAG_STATUS_READABLE        AS_TAG(0x0200, ULONG)    /* Number of bytes available to read */
+
+/* Notification control */
+#define   AS_TAG_NOTIFY_MSGPORT         AS_TAG(0x0400, struct MsgPort *)   /* Notify target */
+#define   AS_TAG_NOTIFY_FD_MASK         AS_TAG(0x0401, ULONG)    /* See FD_* flag mask */
+#define   AS_TAG_NOTIFY_FD_ACTIVE       AS_TAG(0x0402, ULONG)    /* See FD_* flag mask */
+#define   AS_TAG_NOTIFY_NAME            AS_TAG(0x0403, APTR)     /* Private data for use by the Notify MsgPort, stored in ASocket_Notify.asm_Message.mn_Node.ln_Name */
 
 #endif /* ASOCKET_H */
