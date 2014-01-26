@@ -43,11 +43,12 @@
 /* Enable DHCP */
 #define LWIP_DHCP                       1
 
-#define MEM_SIZE                       (128*1024)
 #define TCP_SND_QUEUELEN                40
-#define MEMP_NUM_TCP_SEG                TCP_SND_QUEUELEN
 #define TCP_SND_BUF                     (12 * TCP_MSS)
 #define TCP_WND                         (10 * TCP_MSS)
+
+#define MEMP_NUM_TCP_SEG                TCP_SND_QUEUELEN
+#define MEM_LIBC_MALLOC                 1
 
 #define ARP_QUEUEING            1
 #define CHAP_SUPPORT            1
