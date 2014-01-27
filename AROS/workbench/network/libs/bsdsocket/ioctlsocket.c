@@ -52,12 +52,16 @@ static int do_ifconf(struct bsdsocketBase *SocketBase, struct ifconf *ifc);
     LONG err = 0;
     ULONG tmp;
     struct ifreq *ifr;
+    struct ifaliasreq *ifra;
+    ULONG domain = AF_LINK;
     D(CONST_STRPTR reqname = "unknown");
     APTR as;
 
     D(bug("%s: s=%d, request=%d, argp=%p\n", __func__, s, request, argp));
 
     fd = BSD_GET_FD(SocketBase, s);
+
+    ASocketGet(fd->asocket, AS_TAG_SOCKET_DOMAIN, &domain, TAG_END);
 
     switch (request) {
     case FIOASYNC:
@@ -77,14 +81,14 @@ static int do_ifconf(struct bsdsocketBase *SocketBase, struct ifconf *ifc);
                     break;
                 }
                 /* Put in async mode - use the global async monitor task */
-                err = ASocketSet(fd->asocket,
+                err = ASocketSet(as,
                                  AS_TAG_NOTIFY_MSGPORT, SocketBase->lib_BSDSocketBase->bs_MsgPort,
                                  AS_TAG_NOTIFY_FD_MASK, fd->fd_mask,
                                  AS_TAG_NOTIFY_NAME, fd,
                                  TAG_END);
             } else {
                 /* Stop async mode */
-                err = ASocketSet(fd->asocket, 
+                err = ASocketSet(as,
                                  AS_TAG_NOTIFY_MSGPORT, NULL,
                                  AS_TAG_NOTIFY_FD_MASK, 0,
                                  AS_TAG_NOTIFY_NAME, NULL,
@@ -116,7 +120,7 @@ static int do_ifconf(struct bsdsocketBase *SocketBase, struct ifconf *ifc);
         break;
     case FIONREAD:
         D(reqname = "FIONREAD");
-        err = ASocketGet(fd->asocket, AS_TAG_STATUS_READABLE, &tmp, TAG_END);
+        err = ASocketGet(as, AS_TAG_STATUS_READABLE, &tmp, TAG_END);
         if (err == 0) {
             *(long *)argp = (long)tmp;
         }
@@ -128,7 +132,7 @@ static int do_ifconf(struct bsdsocketBase *SocketBase, struct ifconf *ifc);
     case SIOCGIFFLAGS:
         D(reqname = "SIOCGIFFLAGS");
         ifr = (struct ifreq *)argp;
-        err = ASocketNew(&as, AS_TAG_SOCKET_DOMAIN, AF_LINK,
+        err = ASocketNew(&as, AS_TAG_SOCKET_DOMAIN, domain,
                               AS_TAG_SOCKET_TYPE, SOCK_RAW,
                               AS_TAG_SOCKET_PROTOCOL, 0,
                               AS_TAG_IFACE_NAME, ifr->ifr_name,
@@ -144,7 +148,7 @@ static int do_ifconf(struct bsdsocketBase *SocketBase, struct ifconf *ifc);
     case SIOCGIFMETRIC:
         D(reqname = "SIOCGIFMETRIC");
         ifr = (struct ifreq *)argp;
-        err = ASocketNew(&as, AS_TAG_SOCKET_DOMAIN, AF_LINK,
+        err = ASocketNew(&as, AS_TAG_SOCKET_DOMAIN, domain,
                               AS_TAG_SOCKET_TYPE, SOCK_RAW,
                               AS_TAG_SOCKET_PROTOCOL, 0,
                               AS_TAG_IFACE_NAME, ifr->ifr_name,
@@ -160,7 +164,7 @@ static int do_ifconf(struct bsdsocketBase *SocketBase, struct ifconf *ifc);
     case SIOCGIFMTU:
         D(reqname = "SIOCGIFMTU");
         ifr = (struct ifreq *)argp;
-        err = ASocketNew(&as, AS_TAG_SOCKET_DOMAIN, AF_LINK,
+        err = ASocketNew(&as, AS_TAG_SOCKET_DOMAIN, domain,
                               AS_TAG_SOCKET_TYPE, SOCK_RAW,
                               AS_TAG_SOCKET_PROTOCOL, 0,
                               AS_TAG_IFACE_NAME, ifr->ifr_name,
@@ -180,6 +184,94 @@ static int do_ifconf(struct bsdsocketBase *SocketBase, struct ifconf *ifc);
     case SIOCGIFCONF:
         D(reqname = "SIOCGIFCONF");
         err = do_ifconf(SocketBase, (struct ifconf *)argp);
+        break;
+    case SIOCGIFADDR:
+        D(reqname = "SIOGAIFADDR");
+        ifr = (struct ifreq *)argp;
+        err = ASocketNew(&as, AS_TAG_SOCKET_DOMAIN, domain,
+                              AS_TAG_SOCKET_TYPE, SOCK_RAW,
+                              AS_TAG_SOCKET_PROTOCOL, 0,
+                              AS_TAG_IFACE_NAME, ifr->ifr_name,
+                              TAG_END);
+        if (err == 0) {
+            struct ASocket_Address addr;
+            addr.asa_Length = sizeof(struct sockaddr);
+            addr.asa_Address = &ifr->ifr_addr;
+            err = ASocketGet(as, AS_TAG_IFACE_ADDRESS, &addr, TAG_END);
+            ASocketDispose(as);
+        }
+        break;
+    case SIOCGIFNETMASK:
+        D(reqname = "SIOCGIFNETMASK");
+        ifr = (struct ifreq *)argp;
+        err = ASocketNew(&as, AS_TAG_SOCKET_DOMAIN, domain,
+                              AS_TAG_SOCKET_TYPE, SOCK_RAW,
+                              AS_TAG_SOCKET_PROTOCOL, 0,
+                              AS_TAG_IFACE_NAME, ifr->ifr_name,
+                              TAG_END);
+        if (err == 0) {
+            struct ASocket_Address addr;
+            addr.asa_Length = sizeof(struct sockaddr);
+            addr.asa_Address = &ifr->ifr_addr;
+            err = ASocketGet(as, AS_TAG_IFACE_NETMASK, &addr, TAG_END);
+            ASocketDispose(as);
+        }
+        break;
+    case SIOCGIFBRDADDR:
+        D(reqname = "SIOCGIFBRDADDR");
+        ifr = (struct ifreq *)argp;
+        err = ASocketNew(&as, AS_TAG_SOCKET_DOMAIN, domain,
+                              AS_TAG_SOCKET_TYPE, SOCK_RAW,
+                              AS_TAG_SOCKET_PROTOCOL, 0,
+                              AS_TAG_IFACE_NAME, ifr->ifr_name,
+                              TAG_END);
+        if (err == 0) {
+            struct ASocket_Address addr;
+            addr.asa_Length = sizeof(struct sockaddr);
+            addr.asa_Address = &ifr->ifr_addr;
+            err = ASocketGet(as, AS_TAG_IFACE_BROADCAST, &addr, TAG_END);
+            ASocketDispose(as);
+        }
+        break;
+    case SIOCAIFADDR:
+        D(reqname = "SIOCAIFADDR");
+        ifra = (struct ifaliasreq *)argp;
+        err = ASocketNew(&as, AS_TAG_SOCKET_DOMAIN, domain,
+                              AS_TAG_SOCKET_TYPE, SOCK_RAW,
+                              AS_TAG_SOCKET_PROTOCOL, 0,
+                              AS_TAG_IFACE_NAME, ifra->ifra_name,
+                              TAG_END);
+        if (err == 0) {
+            struct ASocket_Address addr, mask, brdc;
+            struct TagItem tags[4] = {
+                { AS_TAG_IFACE_ADDRESS,   (IPTR)&addr },
+                { AS_TAG_IFACE_NETMASK,   (IPTR)&mask },
+                { AS_TAG_IFACE_BROADCAST, (IPTR)&brdc },
+                { TAG_END }
+            };
+
+            if (ifra->ifra_addr.sa_len) {
+                addr.asa_Address = &ifra->ifra_addr;
+                addr.asa_Length = ifra->ifra_addr.sa_len;
+            } else {
+                tags[0].ti_Tag = TAG_IGNORE;
+            }
+            if (ifra->ifra_mask.sa_len) {
+                mask.asa_Address = &ifra->ifra_mask;
+                mask.asa_Length = ifra->ifra_mask.sa_len;
+            } else {
+                tags[1].ti_Tag = TAG_IGNORE;
+            }
+            if (ifra->ifra_broadaddr.sa_len) {
+                brdc.asa_Address = &ifra->ifra_broadaddr;
+                brdc.asa_Length = ifra->ifra_broadaddr.sa_len;
+            } else {
+                tags[2].ti_Tag = TAG_IGNORE;
+            }
+
+            err = ASocketGetA(as, &tags[0]);
+            ASocketDispose(as);
+        }
         break;
     default:
         err = EINVAL;

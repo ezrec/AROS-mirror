@@ -3,7 +3,7 @@ include $(TOP)/config/make.cfg
 
 #MM- network-libs : network-libs-bsdsocket
 
-#MM- network-libs-bsdsocket: network-includes
+#MM- network-libs-bsdsocket: network-includes network-libs-asocket
 
 BSDSOCKET_C := $(call WILDCARD, *.c)
 BSDSOCKET_SOURCES := $(BSDSOCKET_C:%.c=%)

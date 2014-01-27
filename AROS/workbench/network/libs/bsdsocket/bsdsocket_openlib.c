@@ -58,7 +58,7 @@ AROS_LH1(struct Library *, BSDSocket_OpenLib,
     SumLibrary(&bsdsocketBase->lib);
 
     bsdsocketBase->bsd_fds = BSD_DEFAULT_DTABLESIZE;
-    bsdsocketBase->bsd_fd = AllocVec(sizeof(bsdsocketBase->bsd_fd[0]), MEMF_ANY | MEMF_CLEAR);
+    bsdsocketBase->bsd_fd = AllocVec(sizeof(bsdsocketBase->bsd_fd[0])*bsdsocketBase->bsd_fds, MEMF_ANY | MEMF_CLEAR);
     if (bsdsocketBase->bsd_fd == NULL) {
         APTR addr;
         addr = (APTR)((IPTR)bsdsocketBase - bsdsocketBase->lib.lib_NegSize);
@@ -106,6 +106,12 @@ AROS_LH0(BPTR, BSDSocket_CloseLib,
 
     if (SocketBase->lib.lib_OpenCnt == 0) {
         APTR addr;
+        ULONG i;
+
+        for (i = 0; i < SocketBase->bsd_fds; i++) {
+            if (SocketBase->bsd_fd[i].asocket)
+                CloseSocket(i);
+        }
 
         CloseLibrary(SocketBase->lib_DOSBase);
         CloseLibrary(SocketBase->lib_ASocketBase);
