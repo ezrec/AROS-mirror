@@ -95,6 +95,8 @@ struct ASocket_Notify {
 #define   AS_TAG_IFACE_IFF_MASK         AS_TAG(0x0106, ULONG)    /* See IFF_* flag mask */
 #define   AS_TAG_IFACE_METRIC           AS_TAG(0x0107, LONG)     /* Metric */
 
+#define   AS_TAG_IFACE_MTU              AS_TAG(0x0108, ULONG)    /* MTU */
+
 /* Socket status */
 #define   AS_TAG_STATUS_READABLE        AS_TAG(0x0200, ULONG)    /* Number of bytes available to read */
 
