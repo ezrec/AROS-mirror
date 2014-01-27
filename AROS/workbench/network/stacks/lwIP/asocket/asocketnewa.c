@@ -121,8 +121,8 @@
     APTR notify_name = NULL;
     int err;
     struct ASocket *as;
-    ULONG iface_index;
-    CONST_STRPTR iface_name;
+    ULONG iface_index = 0;
+    CONST_STRPTR iface_name = NULL;
 
     D(bug("%s: new_as=%p, tags=%p\n", __func__, new_as, tags));
 
@@ -171,16 +171,13 @@
         tag->ti_Tag |= AS_TAGF_COMPLETE;
     }
 
-    /* Unused for now.. */
-    (void)iface_name;
-    (void)iface_index;
-
     as = AllocVec(sizeof(*as), MEMF_ANY | MEMF_CLEAR);
     if (as == NULL)
         return ENOMEM;
 
     err = bsd_socket(bsd, &s, domain, type, protocol);
     if (err) {
+        D(bug("%s: Invalid socket type %d,%d,%d\n", __func__, domain, type, protocol));
         FreeVec(as);
         return err;
     }
@@ -190,11 +187,15 @@
         struct ifreq ifr;
 
         /* Either by name or index, not both. */
-        if (!iface_name && iface_index < 0)
+        if (iface_name == NULL && iface_index == 0) {
+            D(bug("%s: Specify interface name or index\n", __func__));
             return EINVAL;
+        }
 
-        if (iface_name && iface_index >= 0)
+        if (iface_name != NULL && iface_index > 0) {
+            D(bug("%s: Interface name (\"%s\") and index (%d) specificed\n", __func__, iface_name, iface_index));
             return EINVAL;
+        }
 
         /* Get interface index by name */
         if (iface_name) {
@@ -203,6 +204,7 @@
             strncpy(ifr.ifr_name, iface_name, IFNAMSIZ);
             err = bsd_ioctl(bsd, s, SIOCGIFINDEX, &ifr);
             if (err != 0) {
+                D(bug("%s: bsd_ioctl(..., SIOCGIFINDEX, ifr_name=\"%s\") failed\n", __func__, iface_name));
                 bsd_close(bsd, s);
                 FreeVec(as);
                 return err;
@@ -213,6 +215,7 @@
             ifr.ifr_index = iface_index;
             err = bsd_ioctl(bsd, s, SIOCGIFNAME, &ifr);
             if (err != 0) {
+                D(bug("%s: bsd_ioctl(..., SIOCGIFNAME, ifr_index=%d) failed\n", __func__, iface_index));
                 bsd_close(bsd, s);
                 FreeVec(as);
                 return err;
@@ -225,6 +228,7 @@
     /* Put in async mode */
     err = bsd_fcntl(bsd, as->as_bsd, F_SETFL, bsd_fcntl(bsd, as->as_bsd, F_GETFL, 0) | O_NONBLOCK);
     if (err < 0) {
+        D(bug("%s: bsd_fcntl(..., F_SETFL, | O_NONBLOCK) failed\n"));
         bsd_close(bsd, as->as_bsd);
         FreeVec(as);
         return err;
@@ -242,6 +246,7 @@
 
         err = bsd_listen(bsd, as->as_bsd, listen_backlog);
         if (err != 0) {
+            D(bug("%s: bsd_listen(.., %d) failed\n", __func__, listen_backlog));
             bsd_close(bsd, as->as_bsd);
             FreeVec(as);
             return err;
@@ -251,6 +256,7 @@
     if (addr) {
         err = bsd_bind(bsd, as->as_bsd, addr->asa_Address, addr->asa_Length);
         if (err != 0) {
+            D(bug("%s: bsd_bind(...) failed\n", __func__));
             bsd_close(bsd, as->as_bsd);
             FreeVec(as);
             return err;
@@ -260,6 +266,7 @@
     if (endp) {
         err = bsd_connect(bsd, as->as_bsd, endp->asa_Address, endp->asa_Length);
         if (err != 0) {
+            D(bug("%s: bsd_connect(...) failed\n", __func__));
             bsd_close(bsd, as->as_bsd);
             FreeVec(as);
             return err;

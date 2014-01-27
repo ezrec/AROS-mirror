@@ -186,10 +186,14 @@
                                 if ((as = AllocVec(sizeof(*as), MEMF_ANY | MEMF_CLEAR))) {
                                     CopyMem(&atmp, as, sizeof(*as));
                                     ADDTAIL(list, as);
+                                    ds = NULL;
                                 }
+                                if (ds)
+                                    bsd_close(bsd, ds);
                             }
                         }
-                        bsd_close(bsd, ds);
+                        if (ds)
+                            bsd_close(bsd, ds);
                     }
                 }
             }

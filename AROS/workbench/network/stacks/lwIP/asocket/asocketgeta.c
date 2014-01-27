@@ -5,6 +5,14 @@
 
 #include "asocket_intern.h"
 
+static inline void sa_copy(struct sockaddr *sa, struct ASocket_Address *aa)
+{
+    int minlen = (sizeof(*sa) < aa->asa_Length) ? sizeof(*sa) : aa->asa_Length;
+    if (aa->asa_Address)
+        CopyMem(sa, aa->asa_Address, minlen);
+}
+
+
 /*****************************************************************************
 
     NAME */
@@ -115,6 +123,8 @@
         int err = 0;
         struct ASocket_Address *addr;
 
+        D(bug("%s: Tag 0x%08lx, 0x%p\n", __func__, (unsigned long)tag->ti_Tag, (APTR)tag->ti_Data));
+
         switch (tag->ti_Tag) {
         case AS_TAG_SOCKET_DOMAIN:
             *(ULONG *)tag->ti_Data = as->as_Socket.domain;
@@ -149,19 +159,83 @@
             *(APTR *)tag->ti_Data = as->as_Notify.asn_Message.mn_Node.ln_Name;
             break;
         case AS_TAG_IFACE_INDEX:
-            if (as->as_Socket.type == SOCK_RAW)
+            if (as->as_Socket.type == SOCK_RAW) {
                 *(ULONG *)tag->ti_Data = as->as_IFace.index;
-            else
-                return EINVAL;
+            } else {
+                D(bug("%s: AS_TAG_IFACE_INDEX not valid for %d type sockets\n", __func__, as->as_Socket.type));
+                err = EINVAL;
+            }
             break;
         case AS_TAG_IFACE_NAME:
-            if (as->as_Socket.type == SOCK_RAW)
+            if (as->as_Socket.type == SOCK_RAW) {
                 *(CONST_STRPTR *)tag->ti_Data = as->as_IFace.name;
-            else
-                return EINVAL;
+            } else {
+                D(bug("%s: AS_TAG_IFACE_NAME not valid for %d type sockets\n", __func__, as->as_Socket.type));
+                err = EINVAL;
+            }
+            break;
+        case AS_TAG_IFACE_IFF_MASK:
+            if (as->as_Socket.type == SOCK_RAW) {
+                struct ifreq ifr;
+                CopyMem(as->as_IFace.name, ifr.ifr_name, IFNAMSIZ);
+                err = bsd_ioctl(bsd, as->as_bsd, SIOCGIFFLAGS, &ifr);
+                if (err == 0)
+                    *(ULONG *)tag->ti_Data = ifr.ifr_flags;
+            } else {
+                D(bug("%s: AS_TAG_IFACE_IFF_MASK not valid for %d type sockets\n", __func__, as->as_Socket.type));
+                err = EINVAL;
+            }
+            break;
+        case AS_TAG_IFACE_METRIC:
+            if (as->as_Socket.type == SOCK_RAW) {
+                struct ifreq ifr;
+                CopyMem(as->as_IFace.name, ifr.ifr_name, IFNAMSIZ);
+                err = bsd_ioctl(bsd, as->as_bsd, SIOCGIFMETRIC, &ifr);
+                if (err == 0)
+                    *(ULONG *)tag->ti_Data = ifr.ifr_metric;
+            } else {
+                D(bug("%s: AS_TAG_IFACE_METRIC not valid for %d type sockets\n", __func__, as->as_Socket.type));
+                err = EINVAL;
+            }
+            break;
+        case AS_TAG_IFACE_ADDRESS:
+            if (as->as_Socket.type == SOCK_RAW) {
+                struct ifreq ifr;
+                CopyMem(as->as_IFace.name, ifr.ifr_name, IFNAMSIZ);
+                err = bsd_ioctl(bsd, as->as_bsd, SIOCGIFADDR, &ifr);
+                if (err == 0)
+                    sa_copy(&ifr.ifr_addr, (struct ASocket_Address *)tag->ti_Data);
+            } else {
+                D(bug("%s: AS_TAG_IFACE_ADDRESS not valid for %d type sockets\n", __func__, as->as_Socket.type));
+                err = EINVAL;
+            }
+            break;
+        case AS_TAG_IFACE_NETMASK:
+            if (as->as_Socket.type == SOCK_RAW) {
+                struct ifreq ifr;
+                CopyMem(as->as_IFace.name, ifr.ifr_name, IFNAMSIZ);
+                err = bsd_ioctl(bsd, as->as_bsd, SIOCGIFNETMASK, &ifr);
+                if (err == 0)
+                    sa_copy(&ifr.ifr_addr, (struct ASocket_Address *)tag->ti_Data);
+            } else {
+                D(bug("%s: AS_TAG_IFACE_NETMASK not valid for %d type sockets\n", __func__, as->as_Socket.type));
+                err = EINVAL;
+            }
+            break;
+        case AS_TAG_IFACE_BROADCAST:
+            if (as->as_Socket.type == SOCK_RAW) {
+                struct ifreq ifr;
+                CopyMem(as->as_IFace.name, ifr.ifr_name, IFNAMSIZ);
+                err = bsd_ioctl(bsd, as->as_bsd, SIOCGIFBRDADDR, &ifr);
+                if (err == 0)
+                    sa_copy(&ifr.ifr_addr, (struct ASocket_Address *)tag->ti_Data);
+            } else {
+                D(bug("%s: AS_TAG_IFACE_BROADCAST not valid for %d type sockets\n", __func__, as->as_Socket.type));
+                err = EINVAL;
+            }
             break;
         default:
-            return EINVAL;
+            err = EINVAL;
         }
 
         if (err)
@@ -169,7 +243,8 @@
 
         tag->ti_Tag |= AS_TAGF_COMPLETE;
     }
-    return EINVAL;
+
+    return 0;
 
     AROS_LIBFUNC_EXIT
 }

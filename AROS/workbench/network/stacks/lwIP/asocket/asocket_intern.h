@@ -13,6 +13,8 @@
 
 #include <errno.h>
 #include <netinet/in.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
 
 #include <aros/debug.h>
 #include <proto/arossupport.h>

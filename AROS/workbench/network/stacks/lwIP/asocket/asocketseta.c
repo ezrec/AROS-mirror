@@ -5,6 +5,13 @@
 
 #include "asocket_intern.h"
 
+static inline void copy_sa(struct sockaddr *sa, struct ASocket_Address *aa)
+{
+    int minlen = (sizeof(*sa) < aa->asa_Length) ? sizeof(*sa) : aa->asa_Length;
+    if (aa->asa_Address)
+        CopyMem(aa->asa_Address, sa, minlen);
+}
+
 /*****************************************************************************
 
     NAME */
@@ -132,6 +139,39 @@
             break;
         case AS_TAG_NOTIFY_NAME:
             as->as_Notify.asn_Message.mn_Node.ln_Name = (APTR)tag->ti_Data;
+            break;
+        case AS_TAG_IFACE_ADDRESS:
+            if (as->as_Socket.type == SOCK_RAW) {
+                struct ifreq ifr;
+                CopyMem(as->as_IFace.name, ifr.ifr_name, IFNAMSIZ);
+                copy_sa(&ifr.ifr_addr, (struct ASocket_Address *)tag->ti_Data);
+                err = bsd_ioctl(bsd, as->as_bsd, SIOCSIFADDR, &ifr);
+            } else {
+                D(bug("%s: AS_TAG_IFACE_ADDRESS not valid for %d type sockets\n", __func__, as->as_Socket.type));
+                err = EINVAL;
+            }
+            break;
+        case AS_TAG_IFACE_NETMASK:
+            if (as->as_Socket.type == SOCK_RAW) {
+                struct ifreq ifr;
+                CopyMem(as->as_IFace.name, ifr.ifr_name, IFNAMSIZ);
+                copy_sa(&ifr.ifr_addr, (struct ASocket_Address *)tag->ti_Data);
+                err = bsd_ioctl(bsd, as->as_bsd, SIOCSIFNETMASK, &ifr);
+            } else {
+                D(bug("%s: AS_TAG_IFACE_NETMASK not valid for %d type sockets\n", __func__, as->as_Socket.type));
+                err = EINVAL;
+            }
+            break;
+        case AS_TAG_IFACE_BROADCAST:
+            if (as->as_Socket.type == SOCK_RAW) {
+                struct ifreq ifr;
+                CopyMem(as->as_IFace.name, ifr.ifr_name, IFNAMSIZ);
+                copy_sa(&ifr.ifr_addr, (struct ASocket_Address *)tag->ti_Data);
+                err = bsd_ioctl(bsd, as->as_bsd, SIOCSIFBRDADDR, &ifr);
+            } else {
+                D(bug("%s: AS_TAG_IFACE_BROADCAST not valid for %d type sockets\n", __func__, as->as_Socket.type));
+                err = EINVAL;
+            }
             break;
         default:
             return EINVAL;

@@ -44,6 +44,7 @@
 #include <proto/exec.h>
 #include <libraries/bsdsocket.h>
 #include <devices/sana2.h>
+#include <exec/errors.h>
 
 #include <lwip/opt.h>
 #include <lwip/init.h>
@@ -133,6 +134,15 @@ err_t etharp_output(struct netif *netif, struct pbuf *q, ip_addr_t *ipaddr);
                                                     SOCK_ADDR_TYPE_MATCH(name, sock))
 #define IS_SOCK_ADDR_ALIGNED(name)      ((((mem_ptr_t)(name)) % 4) == 0)
 
+/* Set up a SIGF_SINGLE temporary message port */
+#define MP_SINGLE(mp) do { \
+    struct MsgPort *_mp = (struct MsgPort *)(mp); \
+    NEWLIST(&_mp->mp_MsgList); \
+    _mp->mp_SigTask = FindTask(NULL); \
+    _mp->mp_Flags = PA_SIGNAL; \
+    _mp->mp_SigBit = SIGB_SINGLE; \
+} while (0)
+
 /** Contains all internal pointers and states used for a socket */
 struct bsd_sock {
   /** usage count **/
@@ -209,9 +219,13 @@ struct bsd_netif {
     struct MinNode bn_node;
     struct netif   bn_netif;
     char           bn_name[IFNAMSIZ+1];
-    struct IOSana2Req bn_IOSana2Req;
+    BOOL           bn_promisc;                 /* Is promiscuous? */
     struct Task    *bn_task;
     struct MsgPort *bn_task_port;
+    struct {
+        IPTR           unit;
+        STRPTR         device;
+    } bn_sana;
 };
 
 struct bsd {
@@ -230,34 +244,6 @@ struct bsd {
 static void bsd_tcpip_done(void *ptr)
 {
     Signal((struct Task *)ptr, SIGF_SINGLE);
-}
-
-struct bsd *bsd_init(void)
-{
-    struct bsd *bsd;
-
-    if ((bsd = AllocVec(sizeof(*bsd), MEMF_ANY | MEMF_CLEAR))) {
-        InitSemaphore(&bsd->bs_lock);
-
-        NEWLIST(&bsd->bs_netif_list);
-
-        /* Start TCP/IP from lwip */
-        tcpip_init(bsd_tcpip_done, FindTask(NULL));
-        Wait(SIGF_SINGLE);
-
-        return bsd;
-    }
-
-    return NULL;
-}
-
-/* THIS CANNOT FAIL!
- * It may stall, or spawn a Task to finish cleaning up,
- * but it cannot fail.
- */
-void bsd_expunge(struct bsd *bsd)
-{
-    FreeVec(bsd);
 }
 
 /** Table to quickly map an lwIP error (err_t) to a socket error
@@ -421,7 +407,7 @@ int bsd_close(struct bsd *bsd, struct bsd_sock *sock)
   int is_tcp = 0;
   void *lastdata;
 
-  D(bug("bsd_close(%p)\n", sock));
+  D(bug("%s(%p) usage=%d\n", __func__, sock, sock->usage));
 
   if (--sock->usage > 0)
       return 0;
@@ -876,19 +862,19 @@ int bsd_socket(struct bsd *bsd, struct bsd_sock **sockp, int domain, int type, i
     conn = netconn_new_with_proto_and_callback(DOMAIN_TO_NETCONN_TYPE(domain, NETCONN_RAW),
                                                (u8_t)protocol, event_callback);
     D(bug("bsd_socket(%s, SOCK_RAW, %d) = ",
-                                 domain == PF_INET ? "PF_INET" : "UNKNOWN", protocol));
+                                 domain == AF_INET ? "AF_INET" : domain == AF_LINK ? "AF_LINK" : "UNKNOWN", protocol));
     break;
   case SOCK_DGRAM:
     conn = netconn_new_with_callback(DOMAIN_TO_NETCONN_TYPE(domain,
                  ((protocol == IPPROTO_UDPLITE) ? NETCONN_UDPLITE : NETCONN_UDP)) ,
                  event_callback);
     D(bug("bsd_socket(%s, SOCK_DGRAM, %d) = ",
-                                 domain == PF_INET ? "PF_INET" : "UNKNOWN", protocol));
+                                 domain == AF_INET ? "AF_INET" : domain == AF_LINK ? "AF_LINK" : "UNKNOWN", protocol));
     break;
   case SOCK_STREAM:
     conn = netconn_new_with_callback(DOMAIN_TO_NETCONN_TYPE(domain, NETCONN_TCP), event_callback);
     D(bug("bsd_socket(%s, SOCK_STREAM, %d) = ",
-                                 domain == PF_INET ? "PF_INET" : "UNKNOWN", protocol));
+                                 domain == AF_INET ? "AF_INET" : domain == AF_LINK ? "AF_LINK" : "UNKNOWN", protocol));
     if (conn != NULL) {
       /* Prevent automatic window updates, we do this on our own! */
       netconn_set_noautorecved(conn, 1);
@@ -2036,28 +2022,37 @@ static err_t bsd__sana_error(const struct IOSana2Req *io)
     (void *)((char *)(ptr) - offsetof(type, member))
 #endif
 
-static err_t bsd__sana_linkoutput(struct netif *netif, struct pbuf *p)
+static inline void bsd__netif_io(struct bsd_netif *bn, struct IOSana2Req *io)
 {
-    struct bsd_netif *bn;
-    struct MsgPort *mp;
-    err_t err = ERR_MEM;
+    struct MsgPort mp;
 
-    bn = container_of(netif, struct bsd_netif, bn_netif);
-    if ((mp = CreateMsgPort())) {
-       bn->bn_IOSana2Req.ios2_Command = CMD_WRITE;
-       bn->bn_IOSana2Req.ios2_Flags = SANA2IOF_RAW;
-       bn->bn_IOSana2Req.ios2_PacketType = 0;
-       bn->bn_IOSana2Req.ios2_DataLength = p->tot_len;
-       bn->bn_IOSana2Req.ios2_Data = p;
-       bn->bn_IOSana2Req.ios2_Req.io_Message.mn_ReplyPort = mp;
-       DoIO(&bn->bn_IOSana2Req.ios2_Req);
-       err = bsd__sana_error(&bn->bn_IOSana2Req);
-    }
+    MP_SINGLE(&mp);
 
-    return err;
+    io->ios2_Req.io_Message.mn_Length = sizeof(io);
+    io->ios2_Req.io_Message.mn_ReplyPort = &mp;
+    PutMsg(bn->bn_task_port, &io->ios2_Req.io_Message);
+    WaitPort(&mp);
+    GetMsg(&mp);
 }
 
-static err_t bsd__sana_lo_init(struct netif *netif)
+static err_t bsd__netif_sana_linkoutput(struct netif *netif, struct pbuf *p)
+{
+    struct IOSana2Req io = {};
+    struct bsd_netif *bn;
+
+    bn = container_of(netif, struct bsd_netif, bn_netif);
+
+    io.ios2_Command = CMD_WRITE;
+    io.ios2_Flags = SANA2IOF_RAW;
+    io.ios2_PacketType = 0;
+    io.ios2_DataLength = p->tot_len;
+    io.ios2_Data = p;
+    bsd__netif_io(bn, &io);
+
+    return bsd__sana_error(&io);
+}
+
+static err_t bsd__netif_lo_init(struct netif *netif)
 {
     NETIF_INIT_SNMP(netif, snmp_ifType_softwareLoopback, 0);
     netif->name[0] = 'l';
@@ -2071,24 +2066,124 @@ static err_t bsd__sana_lo_init(struct netif *netif)
 
 static void bsd__sana_task(struct bsd_netif *bn)
 {
+    /* NOTE: AROS's NewCreateTask() allocates TASKTAG_NAME
+     *       in the context of the task.
+     */
+    char *me = FindTask(NULL)->tc_Node.ln_Name;
+    struct netif *netif = &bn->bn_netif;
     struct MsgPort *mp = bn->bn_task_port;
-    struct IOSana2Req *io;
-    struct IOSana2Req io_read[BSD_READ_PER_NETIF];
+    struct IOSana2Req *io, ios2_open = {};
+    struct IOSana2Req ios2_read[BSD_READ_PER_NETIF];
+    struct Sana2DeviceQuery dq;
     BOOL dead;
-    err_t err;
+    ULONG flags;
     int i;
+    struct TagItem ios2_tags[] = {
+        { S2_CopyToBuff, (IPTR)AROS_ASMSYMNAME(bsd__sana_CopyToBuff) },
+        { S2_CopyFromBuff, (IPTR)AROS_ASMSYMNAME(bsd__sana_CopyFromBuff) },
+        { TAG_END }};
+
+    /* Get the startup message */
+    WaitPort(mp);
+    io = (struct IOSana2Req *)GetMsg(mp);
+    ASSERT(io->ios2_Command == CMD_START);
+
+    /* Mark our IO requests with a unique identifier */
+    ios2_open.ios2_Req.io_Message.mn_Node.ln_Name = (APTR)me;
+    ios2_open.ios2_Req.io_Message.mn_ReplyPort = mp;
+    ios2_open.ios2_Req.io_Message.mn_Length = sizeof(ios2_open);
+    ios2_open.ios2_BufferManagement = &ios2_tags;
+    flags = SANA2OPB_MINE |
+            (bn->bn_promisc ? SANA2OPB_PROM : 0);
+    if (0 != OpenDevice(bn->bn_sana.device, bn->bn_sana.unit, &ios2_open.ios2_Req, flags)) {
+        io->ios2_Error = ios2_open.ios2_Error;
+        ReplyMsg(&io->ios2_Req.io_Message);
+        return;
+    }
+
+    /* Fill in some netif info */
+    ios2_open.ios2_Command = S2_DEVICEQUERY;
+    ios2_open.ios2_Flags = 0;
+    ios2_open.ios2_StatData = &dq;
+    DoIO(&ios2_open.ios2_Req);
+    if (ios2_open.ios2_Error) {
+        io->ios2_Error = ios2_open.ios2_Error;
+        io->ios2_WireError = ios2_open.ios2_WireError;
+        CloseDevice(&ios2_open.ios2_Req);
+        ReplyMsg(&io->ios2_Req.io_Message);
+        return;
+    }
+
+    netif->mtu = dq.MTU;
+    netif->hwaddr_len = (dq.AddrFieldSize + 7)/8;
+    if (netif->hwaddr_len > NETIF_MAX_HWADDR_LEN) {
+        io->ios2_Error = IOERR_OPENFAIL;
+        io->ios2_WireError = S2ERR_NOT_SUPPORTED;
+        CloseDevice(&ios2_open.ios2_Req);
+        ReplyMsg(&io->ios2_Req.io_Message);
+        return;
+    }
+
+    ios2_open.ios2_Command = S2_GETSTATIONADDRESS;
+    ios2_open.ios2_Flags = 0;
+    DoIO(&ios2_open.ios2_Req);
+    if (ios2_open.ios2_Error) {
+        io->ios2_Error = ios2_open.ios2_Error;
+        io->ios2_WireError = ios2_open.ios2_WireError;
+        CloseDevice(&ios2_open.ios2_Req);
+        ReplyMsg(&io->ios2_Req.io_Message);
+        return;
+    }
+
+    CopyMem(ios2_open.ios2_SrcAddr, netif->hwaddr, netif->hwaddr_len);
+    if (dq.HardwareType == S2WireType_Ethernet) {
+        netif->flags |= NETIF_FLAG_ETHERNET |
+                        NETIF_FLAG_ETHARP   |
+                        NETIF_FLAG_BROADCAST;
+    }
+
+    /* Configure the SANA device with the station address */
+    ios2_open.ios2_Command = S2_CONFIGINTERFACE;
+    /* ios2_open.ios2_SrcAddr was filled in by S2_GETSTATIONADDRESS */
+    ios2_open.ios2_Flags = 0;
+    DoIO(&ios2_open.ios2_Req);
+    if (ios2_open.ios2_Error) {
+        io->ios2_Error = ios2_open.ios2_Error;
+        io->ios2_WireError = ios2_open.ios2_WireError;
+        CloseDevice(&ios2_open.ios2_Req);
+        ReplyMsg(&io->ios2_Req.io_Message);
+        return;
+    }
 
     /* Start up the SANA read queue */
     for (i = 0; i < BSD_READ_PER_NETIF; i++) {
-        io_read[i] = bn->bn_IOSana2Req;
-        io_read[i].ios2_Req.io_Message.mn_ReplyPort = mp;
-        io_read[i].ios2_Command = CMD_READ;
-        io_read[i].ios2_Flags = SANA2IOB_RAW;
-        io_read[i].ios2_PacketType = 0;
-        /* FIXME: handle what happends if the alloc fails */
-        io_read[i].ios2_Data = pbuf_alloc(PBUF_RAW, bn->bn_netif.mtu, PBUF_POOL);
-        /* Send the READ request off... we'll catch it later */
-        SendIO(&io_read[i].ios2_Req);
+        /* Clone from the open.. */
+        ios2_read[i] = ios2_open;
+        ios2_read[i].ios2_Command = CMD_READ;
+        ios2_read[i].ios2_Flags = SANA2IOB_RAW;
+        ios2_read[i].ios2_PacketType = 0;
+        ios2_read[i].ios2_Data = pbuf_alloc(PBUF_RAW, bn->bn_netif.mtu, PBUF_POOL);
+        /* Damn. Allocation failure. */
+        if (ios2_read[i].ios2_Data == NULL) {
+            for (i--; i >= 0; i--)
+                pbuf_free((struct pbuf *)ios2_read[i].ios2_Data);
+            CloseDevice(&ios2_open.ios2_Req);
+            io->ios2_Error = IOERR_OPENFAIL;
+            io->ios2_WireError = S2WERR_BUFF_ERROR;
+            ReplyMsg(&io->ios2_Req.io_Message);
+            return;
+        }
+    }
+
+    /* Ok, we should be ready now!
+     * Reply OK to the CMD_START message */
+    io->ios2_Error = 0;
+    io->ios2_WireError = 0;
+    ReplyMsg(&io->ios2_Req.io_Message);
+
+    /* Send the READ requests off... we'll catch them later */
+    for (i = 0; i < BSD_READ_PER_NETIF; i++) {
+        SendIO(&ios2_read[i].ios2_Req);
     }
 
     while (!dead) {
@@ -2096,106 +2191,82 @@ static void bsd__sana_task(struct bsd_netif *bn)
         io = (struct IOSana2Req *)GetMsg(mp);
 
         switch (io->ios2_Command) {
-        case CMD_INVALID:
+        case CMD_STOP:
             dead = TRUE;
             break;
         case CMD_READ:
-            if (io->ios2_Error) {
-                D(bug("%s: SANA2 error (%d,%d) on CMD_READ\n", __func__, io->ios2_Error, io->ios2_WireError));
-            } else {
-                /* On CMD_READs, send the packet to the netif's input function */
-                err = bn->bn_netif.input((struct pbuf *)io->ios2_Data, &bn->bn_netif);
-                if (err != ERR_OK) {
-                    D(bug("%s: lwIP netif error (%d) on input\n", __func__, err));
+            /* Is this one of ours? */
+            if (io->ios2_Req.io_Message.mn_Node.ln_Name == me) {
+                if (io->ios2_Error) {
+                    D(bug("%s: SANA2 error (%d,%d) on CMD_READ\n", __func__, io->ios2_Error, io->ios2_WireError));
+                } else {
+                    /* On CMD_READs, send the packet to the netif's input function */
+                    int err;
+
+                    err = bn->bn_netif.input((struct pbuf *)io->ios2_Data, &bn->bn_netif);
+                    if (err != ERR_OK) {
+                        D(bug("%s: lwIP netif error (%d) on input\n", __func__, err));
+                    }
                 }
-            }
-            /* Recycle the packet */
-            SendIO((struct IORequest *)io);
+                /* Recycle the packet */
+                SendIO(&io->ios2_Req);
+                break;
+            } 
+            /* Nope - not ours. FALLTHROUGH */
+        default:
+            /* Proxy the packet to the SANA2 device */
+            io->ios2_Req.io_Device = ios2_open.ios2_Req.io_Device;
+            io->ios2_Req.io_Unit = ios2_open.ios2_Req.io_Unit;
+            io->ios2_PacketType = ios2_open.ios2_PacketType;
+            io->ios2_BufferManagement = ios2_open.ios2_BufferManagement;
+            SendIO(&io->ios2_Req);
             break;
         }
     }
 
     /* Clean up */
     for (i = 0; i < BSD_READ_PER_NETIF; i++) {
-        AbortIO(&io_read[i].ios2_Req);
-        WaitIO(&io_read[i].ios2_Req);
-        pbuf_free((struct pbuf *)io_read[i].ios2_Data);
+        AbortIO(&ios2_read[i].ios2_Req);
+        WaitIO(&ios2_read[i].ios2_Req);
+        pbuf_free((struct pbuf *)ios2_read[i].ios2_Data);
     }
 
-    /* Reply on the CMD_INVALID death message */
+    CloseDevice(&ios2_open.ios2_Req);
+    DeleteMsgPort(mp);
+
+    /* Reply on the CMD_STOP death message */
     io->ios2_Error = 0;
     ReplyMsg(&io->ios2_Req.io_Message);
 
     return;
 }
 
-void bsd__sana_remove_cb(struct netif *netif)
+/* Note that we are using a SIGF_SINGLE message port */
+void bsd__netif_sana_remove_cb(struct netif *netif)
 {
-    struct IORequest io;
-    struct MsgPort *mp;
+    struct IOSana2Req io = {};
     struct bsd_netif *bn;
     
     bn = container_of(netif, struct bsd_netif, bn_netif);
 
     /* Send the Packet of Death */
-    if ((mp = CreateMsgPort())) {
-        io.io_Message.mn_ReplyPort = mp;
-        io.io_Message.mn_Length = sizeof(io);
-        io.io_Command = CMD_INVALID;
-        PutMsg(bn->bn_task_port, &io.io_Message);
-        WaitPort(mp);
-        GetMsg(mp);
-        DeleteMsgPort(mp);
-    } else {
-        D(bug("%s: Can't close netif %s - out of memory?\n", __func__, bn->bn_name));
-    }
+    io.ios2_Command = CMD_STOP;
+
+    bsd__netif_io(bn, &io);
 }
 
-/* NOTE: bn->bn_IOSana2Req is still valid in this function! */
 static err_t bsd__sana_init(struct netif *netif)
 {
     struct bsd_netif *bn;
-    struct IOSana2Req *io = &bn->bn_IOSana2Req;
-    struct Sana2DeviceQuery dq;
+    struct IOSana2Req io;
 
     bn = container_of(netif, struct bsd_netif, bn_netif);
-
-    /* Fill in some netif info */
-    io->ios2_Command = S2_DEVICEQUERY;
-    io->ios2_StatData = &dq;
-    DoIO(&io->ios2_Req);
-    if (io->ios2_Error)
-        return bsd__sana_error(io);
-
-
-    netif->mtu = dq.MTU;
-    netif->hwaddr_len = (dq.AddrFieldSize + 7)/8;
-    if (netif->hwaddr_len > NETIF_MAX_HWADDR_LEN) {
-        /* We don't support this long of a station address */
-        return ERR_IF;
-    }
-
-    io->ios2_Command = S2_GETSTATIONADDRESS;
-    DoIO(&io->ios2_Req);
-    if (io->ios2_Error)
-        return bsd__sana_error(io);
-
-    CopyMem(io->ios2_SrcAddr, netif->hwaddr, netif->hwaddr_len);
-    if (dq.HardwareType == S2WireType_Ethernet) {
-        netif->flags |= NETIF_FLAG_ETHERNET |
-                        NETIF_FLAG_ETHARP   |
-                        NETIF_FLAG_BROADCAST;
-    }
-
-    /* FIXME: Assume link is up? */
-    netif->flags |= NETIF_FLAG_LINK_UP;
 
     netif->name[0] = 's';
     netif->name[1] = 'n';
     netif->output = etharp_output;
-    netif->linkoutput = bsd__sana_linkoutput;
-//    netif->link_callback = bsd__sana_link_cb;
-    netif->remove_callback = bsd__sana_remove_cb;
+    netif->linkoutput = bsd__netif_sana_linkoutput;
+    netif->remove_callback = bsd__netif_sana_remove_cb;
 
     bn->bn_task = NewCreateTask(TASKTAG_PC, bsd__sana_task,
                                 TASKTAG_NAME, bn->bn_name,
@@ -2203,88 +2274,156 @@ static err_t bsd__sana_init(struct netif *netif)
                                 TASKTAG_TASKMSGPORT, &bn->bn_task_port,
                                 TAG_END);
 
-    return (bn->bn_task != NULL);
+    if (bn->bn_task == NULL)
+        return ERR_MEM;
+
+    /* Send the statup message */
+    io.ios2_Command = CMD_START;
+    bsd__netif_io(bn, &io);
+
+    D(bug("%s[%s]: Startup message returned %d/%d\n", __func__, bn->bn_name, io.ios2_Error, io.ios2_WireError));
+
+    return bsd__sana_error(&io);
 }
 
-/* NOTE: This function returns -errno, or the ifindex of the interface
- */
-static int bsd__sana_open(struct bsd *bsd, const char *name)
+static struct bsd_netif *bsd__netif_open(struct bsd *bsd, const char *name, BOOL promisc)
 {
     struct bsd_netif *bn;
 
     bn = AllocVec(sizeof(*bn), MEMF_ANY | MEMF_CLEAR);
     if (bn == NULL)
-        return -ENOMEM;
+        return NULL;
 
-    do {
-        if (name != NULL && name[0] != 0) {
-            /* 'built in' devices */
-            if (strcmp(name, "lo") == 0) {
-                ip_addr_t loop_ipaddr, loop_netmask, loop_gw;
-                IP4_ADDR(&loop_gw, 127,0,0,1);
-                IP4_ADDR(&loop_ipaddr, 127,0,0,1);
-                IP4_ADDR(&loop_netmask, 255,0,0,0);
-                strcpy(bn->bn_name, "lo");
-                netif_add(&bn->bn_netif, &loop_ipaddr, &loop_netmask, &loop_gw, NULL, bsd__sana_lo_init, tcpip_input);
-                netif_set_up(&bn->bn_netif);
-                break;
+
+    if (name != NULL && name[0] != 0) {
+        strncpy(bn->bn_name, name, sizeof(bn->bn_name));
+        bn->bn_name[sizeof(bn->bn_name)-1] = 0;
+
+        /* 'built in' devices */
+        if (strcmp(bn->bn_name, "lo") == 0) {
+            D(bug("%s: Create internal '%s'\n", __func__, bn->bn_name));
+            ip_addr_t loop_ipaddr, loop_netmask, loop_gw;
+            IP4_ADDR(&loop_gw, 127,0,0,1);
+            IP4_ADDR(&loop_ipaddr, 127,0,0,1);
+            IP4_ADDR(&loop_netmask, 255,0,0,0);
+            bn->bn_sana.device = NULL;
+            bn->bn_sana.unit = 0;
+            if (netif_add(&bn->bn_netif, &loop_ipaddr, &loop_netmask, &loop_gw, NULL, bsd__netif_lo_init, tcpip_input) != NULL) {
+                ADDTAIL(&bsd->bs_netif_list, bn);
+                return bn;
             } else {
-                /* Look for a SANA II device/unit name */
-                const char *suffix = strchr(name, '/');
-                if (suffix != NULL) {
-                    int unit;
-                    char *cp;
-                    unit = strtod(suffix+1, &cp);
-                    if (unit >= 0 && cp != NULL && *cp == 0) {
-                        /* DEVS : Networks / ifname . device \000 */
-                        char path[4 + 1 + 8 + 1 + (IFNAMSIZ-2) + 1 + 6 + 1];
-                        struct MsgPort *mp;
+                D(bug("%s: netif_add(..., '%s') failed\n", __func__, bn->bn_name));
+            }
+        } else {
+            /* Look for a SANA II device/unit name */
+            const char *suffix = strchr(bn->bn_name, '/');
+            if (suffix != NULL) {
+                char *cp;
+                D(bug("%s: Create SANA II '%s'\n", __func__, bn->bn_name));
+                bn->bn_sana.unit = (IPTR)strtoull(suffix+1, &cp, 0);
+                if (bn->bn_sana.unit >= 0 && cp != NULL && *cp == 0) {
+                    /* DEVS : Networks / ifname . device \000 */
+                    char path[4 + 1 + 8 + 1 + (IFNAMSIZ-2) + 1 + 6 + 1];
+                    int len;
 
-                        CopyMem("DEVS:Networks/", path, 4 + 1 + 8 + 1);
-                        CopyMem(name, &path[4 + 1 + 8 + 1], suffix - name);
-                        CopyMem(".device", &path[4 + 1 + 8 + 1 + (suffix - name)], 1 + 6 + 1);
+                    CopyMem("DEVS:Networks/", path, 4 + 1 + 8 + 1);
+                    CopyMem(name, &path[4 + 1 + 8 + 1], suffix - bn->bn_name);
+                    CopyMem(".device", &path[4 + 1 + 8 + 1 + (suffix - bn->bn_name)], 1 + 6 + 1);
 
-                        if ((mp = CreateMsgPort())) {
-                            struct TagItem tags[] = {
-                                { S2_CopyToBuff, (IPTR)AROS_ASMSYMNAME(bsd__sana_CopyToBuff) },
-                                { S2_CopyFromBuff, (IPTR)AROS_ASMSYMNAME(bsd__sana_CopyFromBuff) },
-                                { TAG_END }};
-                            bn->bn_IOSana2Req.ios2_Req.io_Message.mn_ReplyPort = mp;
-                            bn->bn_IOSana2Req.ios2_Req.io_Message.mn_Length = sizeof(bn->bn_IOSana2Req);
-                            bn->bn_IOSana2Req.ios2_BufferManagement = &tags;
-                            if (0 == OpenDevice(name, unit, &bn->bn_IOSana2Req.ios2_Req, 0)) {
-                                netif_add(&bn->bn_netif, NULL, NULL, NULL, NULL, bsd__sana_init, tcpip_input);
-                                bn->bn_IOSana2Req.ios2_Req.io_Message.mn_ReplyPort = NULL;
-                                DeleteMsgPort(mp);
-                                break;
-                            }
-                            DeleteMsgPort(mp);
+                    bn->bn_promisc = promisc;
+                    len = strlen(path)+1;
+                    if ((bn->bn_sana.device = AllocVec(len, MEMF_ANY))) {
+                        CopyMem(path, bn->bn_sana.device, len);
+
+                        if (netif_add(&bn->bn_netif, NULL, NULL, NULL, NULL, bsd__sana_init, tcpip_input) != NULL) {
+                            ADDTAIL(&bsd->bs_netif_list, bn);
+                            return bn;
                         }
+                        FreeVec(bn->bn_sana.device);
                     }
                 }
             }
         }
-        FreeVec(bn);
-        bn = NULL;
-    } while (0);
+    }
+    FreeVec(bn);
 
-    if (bn) {
-        ObtainSemaphore(&bsd->bs_lock);
-        ADDTAIL(&bsd->bs_netif_list, &bn->bn_node);
-        ReleaseSemaphore(&bsd->bs_lock);
-        return 0;
+    return NULL;
+}
+
+void bsd__netif_close(struct bsd *bsd, struct bsd_netif *bn)
+{
+    REMOVE(bn);
+    netif_remove(&bn->bn_netif);
+    if (bn->bn_sana.device)
+        FreeVec(bn->bn_sana.device);
+    FreeVec(bn);
+}
+
+static struct bsd_netif *bsd__netif_obtain(struct bsd *bsd, const char ifname[IFNAMSIZ])
+{
+    TEXT name[IFNAMSIZ+1];
+    struct bsd_netif *bn;
+
+    /* See if we've already loaded this interface */
+    CopyMem(ifname, name, IFNAMSIZ);
+    name[IFNAMSIZ] = 0;
+
+    ObtainSemaphore(&bsd->bs_lock);
+
+    ForeachNode(&bsd->bs_netif_list, bn) {
+        if (strcmp(bn->bn_name, name) == 0) {
+            return bn;
+        }
     }
 
-    return -ENODEV;
+    D(bug("%s: \"%s\" does not (yet) exist\n", __func__, name));
+
+    /* Not found - let's see if we can start it */
+    bn = bsd__netif_open(bsd, name, FALSE);
+
+    if (bn)
+        return bn;
+
+    D(bug("%s: \"%s\" could not be created\n", __func__, name));
+
+    ReleaseSemaphore(&bsd->bs_lock);
+    return NULL;
+}
+
+static inline void bsd__netif_release(struct bsd *bsd, struct bsd_netif *netif)
+{
+    ReleaseSemaphore(&bsd->bs_lock);
+}
+
+static inline short bsd__netif_ifflags(struct bsd_netif *bn)
+{
+    short ifflags = 0;
+
+    if (bn->bn_netif.flags & NETIF_FLAG_UP)
+        ifflags |= IFF_UP;
+    if (bn->bn_netif.flags & NETIF_FLAG_LINK_UP)
+        ifflags |= IFF_RUNNING;
+    if (bn->bn_netif.flags & NETIF_FLAG_BROADCAST)
+        ifflags |= IFF_BROADCAST;
+    if (bn->bn_netif.flags & NETIF_FLAG_POINTTOPOINT)
+        ifflags |= IFF_POINTOPOINT;
+    if (!(bn->bn_netif.flags & NETIF_FLAG_ETHARP))
+        ifflags |= IFF_NOARP;
+    if (bn->bn_promisc)
+        ifflags |= IFF_PROMISC;
+
+    return ifflags;
 }
     
 static int bsd__ioctl_netdevice(struct bsd *bsd, long cmd, void *argp)
 {
     struct ifreq *ifr = argp;
     struct ifconf *ifconf = argp;
+    struct ifaliasreq *ifra = argp;
     struct bsd_netif *bn;
-    char name[IFNAMSIZ+1];
-    int rc, len;
+    int len;
+    short ifflags;
+    struct sockaddr_in *sin;
 
     switch (cmd) {
     case SIOCGIFCONF:
@@ -2304,7 +2443,6 @@ static int bsd__ioctl_netdevice(struct bsd *bsd, long cmd, void *argp)
         ifconf->ifc_len = len;
         ReleaseSemaphore(&bsd->bs_lock);
         return 0;
-        break;
     case SIOCGIFNAME:
         /* Get the name for an index */
         ObtainSemaphore(&bsd->bs_lock);
@@ -2318,31 +2456,202 @@ static int bsd__ioctl_netdevice(struct bsd *bsd, long cmd, void *argp)
         ReleaseSemaphore(&bsd->bs_lock);
         /* Not found! */
         return ENODEV;
-        break;
     case SIOCGIFINDEX:
-        /* See if we've already loaded this interface */
-        memcpy(name, ifr->ifr_name, IFNAMSIZ);
-        name[IFNAMSIZ] = 0;
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
 
-        ObtainSemaphore(&bsd->bs_lock);
-        ForeachNode(&bsd->bs_netif_list, bn) {
-            if (strcmp(bn->bn_name, name) == 0) {
-                ifr->ifr_ifindex = bn->bn_netif.num;
-                ReleaseSemaphore(&bsd->bs_lock);
-                return 0;
+        ifr->ifr_ifindex = bn->bn_netif.num;
+        bsd__netif_release(bsd, bn);
+        return 0;
+    case SIOCGIFFLAGS:
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        ifr->ifr_flags = bsd__netif_ifflags(bn);
+
+        bsd__netif_release(bsd, bn);
+        return 0;
+    case SIOCSIFFLAGS:
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        /* Error is never returned, user must
+         * re-inspect flags to see what changed
+         */
+        ifflags = bsd__netif_ifflags(bn);
+
+        /* Do the 'possible to fail' flags first */
+
+        /* Handle IFF_PROMISC state change */
+        if ((ifflags ^ ifr->ifr_flags) & IFF_PROMISC) {
+            BOOL promisc = (ifflags & IFF_PROMISC) ? FALSE : TRUE;
+            struct bsd_netif *pbn;
+            /* Try to make an alias in the new mode... */
+            pbn = bsd__netif_open(bsd, ifr->ifr_name, promisc);
+            if (pbn) {
+                /* Remove the old version */
+                bsd__netif_close(bsd, bn);
+                bn = pbn;
+                /* Mask out the IFF_UP state, so the
+                 * next section will make us go up if needed
+                 */
+                ifflags &= ~IFF_UP;
             }
         }
-        ReleaseSemaphore(&bsd->bs_lock);
 
-        /* Not found - let's see if we can start it */
-        rc = bsd__sana_open(bsd, name);
-
-        if (rc >= 0) {
-            ifr->ifr_ifindex = rc;
-            return 0;
+        /* Handle IFF_UP state change */
+        if ((ifflags ^ ifr->ifr_flags) & IFF_UP) {
+            if (ifflags & IFF_UP)
+                netif_set_down(&bn->bn_netif);
+            else
+                netif_set_up(&bn->bn_netif);
         }
-        return -rc;
-        break;
+
+        /* Handle IFF_BROADCAST state change */
+        if ((ifflags ^ ifr->ifr_flags) & IFF_BROADCAST) {
+            if (ifflags & IFF_BROADCAST)
+                bn->bn_netif.flags |= NETIF_FLAG_BROADCAST;
+            else
+                bn->bn_netif.flags &= ~NETIF_FLAG_BROADCAST;
+        }
+
+        /* Handle IFF_NOARP state change */
+        if ((ifflags ^ ifr->ifr_flags) & IFF_NOARP) {
+            if (ifflags & IFF_NOARP)
+                bn->bn_netif.flags &= ~NETIF_FLAG_ETHARP;
+            else
+                bn->bn_netif.flags |= NETIF_FLAG_ETHARP;
+        }
+
+        bsd__netif_release(bsd, bn);
+        return 0;
+    case SIOCGIFMETRIC:
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        if (ip_addr_isany(&bn->bn_netif.gw))
+            ifr->ifr_metric = 1;
+        else
+            ifr->ifr_metric = 0;
+
+        bsd__netif_release(bsd, bn);
+        return 0;
+    case SIOCGIFMTU:
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        ifr->ifr_mtu = bn->bn_netif.mtu;
+
+        bsd__netif_release(bsd, bn);
+        return 0;
+    case SIOCGIFADDR:
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        sin = (struct sockaddr_in *)&ifr->ifr_addr;
+        sin->sin_len = sizeof(*sin);
+        sin->sin_family = AF_INET;
+        sin->sin_port = 0;
+        sin->sin_addr.s_addr = bn->bn_netif.ip_addr.addr;
+
+        bsd__netif_release(bsd, bn);
+        return 0;
+    case SIOCGIFNETMASK:
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        sin = (struct sockaddr_in *)&ifr->ifr_addr;
+        sin->sin_len = sizeof(*sin);
+        sin->sin_family = AF_INET;
+        sin->sin_port = 0;
+        sin->sin_addr.s_addr = bn->bn_netif.netmask.addr;
+
+        bsd__netif_release(bsd, bn);
+        return 0;
+    case SIOCGIFBRDADDR:
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        sin = (struct sockaddr_in *)&ifr->ifr_addr;
+        sin->sin_len = sizeof(*sin);
+        sin->sin_family = AF_INET;
+        sin->sin_port = 0;
+        sin->sin_addr.s_addr = bn->bn_netif.gw.addr;
+
+        bsd__netif_release(bsd, bn);
+        return 0;
+    case SIOCSIFADDR:
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        if ((ifr->ifr_addr.sa_len == sizeof(struct sockaddr_in)) &&
+            (ifr->ifr_addr.sa_family == AF_INET)) {
+            sin = (struct sockaddr_in *)&ifr->ifr_addr;
+            netif_set_ipaddr(&bn->bn_netif, (ip_addr_t *)&sin->sin_addr.s_addr);
+        }
+
+        bsd__netif_release(bsd, bn);
+        return 0;
+    case SIOCSIFBRDADDR:
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        if ((ifr->ifr_addr.sa_len == sizeof(struct sockaddr_in)) &&
+            (ifr->ifr_addr.sa_family == AF_INET)) {
+            sin = (struct sockaddr_in *)&ifr->ifr_addr;
+            netif_set_gw(&bn->bn_netif, (ip_addr_t *)&sin->sin_addr.s_addr);
+        }
+
+        bsd__netif_release(bsd, bn);
+        return 0;
+    case SIOCSIFNETMASK:
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        if ((ifr->ifr_addr.sa_len == sizeof(struct sockaddr_in)) &&
+            (ifr->ifr_addr.sa_family == AF_INET)) {
+            sin = (struct sockaddr_in *)&ifr->ifr_addr;
+            netif_set_netmask(&bn->bn_netif, (ip_addr_t *)&sin->sin_addr.s_addr);
+        }
+
+        bsd__netif_release(bsd, bn);
+        return 0;
+    case SIOCAIFADDR:
+        bn = bsd__netif_obtain(bsd, ifra->ifra_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        if ((ifra->ifra_broadaddr.sa_len == sizeof(struct sockaddr_in)) &&
+            (ifra->ifra_broadaddr.sa_family == AF_INET)) {
+            sin = (struct sockaddr_in *)&ifra->ifra_broadaddr;
+            netif_set_gw(&bn->bn_netif, (ip_addr_t *)&sin->sin_addr.s_addr);
+        }
+
+        if ((ifra->ifra_mask.sa_len == sizeof(struct sockaddr_in)) &&
+            (ifra->ifra_mask.sa_family == AF_INET)) {
+            sin = (struct sockaddr_in *)&ifra->ifra_mask;
+            netif_set_netmask(&bn->bn_netif, (ip_addr_t *)&sin->sin_addr.s_addr);
+        }
+
+        if ((ifra->ifra_addr.sa_len == sizeof(struct sockaddr_in)) &&
+            (ifra->ifra_addr.sa_family == AF_INET)) {
+            sin = (struct sockaddr_in *)&ifra->ifra_mask;
+            netif_set_ipaddr(&bn->bn_netif, (ip_addr_t *)&sin->sin_addr.s_addr);
+        }
+
+        bsd__netif_release(bsd, bn);
+        return 0;
     default:
         break;
     }
@@ -2465,22 +2774,52 @@ int bsd_fcntl(struct bsd *bsd, struct bsd_sock *sock, int cmd, int val)
   return ret;
 }
 
-int bsd_socket_release(struct bsd *bsd, struct bsd_sock *sock, int id)
-{
-    /* Nothing to do */
-
-    return 0;
-}
-
-int bsd_socket_obtain(struct bsd *bsd, struct bsd_sock *sock)
-{
-    return 0;
-}
-
 int bsd_socket_dup(struct bsd *bsd, struct bsd_sock *olds, struct bsd_sock **news)
 {
     *news = olds;
     olds->usage++;
+    D(bug("%s(%p) usage=%d\n", __func__, olds, olds->usage));
 
     return 0;
+}
+
+struct bsd *bsd_init(void)
+{
+    struct bsd *bsd;
+
+    if ((bsd = AllocVec(sizeof(*bsd), MEMF_ANY | MEMF_CLEAR))) {
+        struct bsd_netif *lo;
+
+        InitSemaphore(&bsd->bs_lock);
+
+        NEWLIST(&bsd->bs_netif_list);
+
+        /* Start TCP/IP from lwip */
+        tcpip_init(bsd_tcpip_done, FindTask(NULL));
+        Wait(SIGF_SINGLE);
+
+        /* Start the 'lo' loopback */
+        lo = bsd__netif_open(bsd, "lo", FALSE);
+        if (lo == NULL) {
+            /* FIXME: We should try to do some cleanup, but
+             * lwip doesn't support a tear-down (just yet)
+             */
+            D(bug("%s: Can't create loopback device?!\n", __func__));
+            return NULL;
+        }
+        netif_set_up(&lo->bn_netif);
+
+        return bsd;
+    }
+
+    return NULL;
+}
+
+/* THIS CANNOT FAIL!
+ * It may stall, or spawn a Task to finish cleaning up,
+ * but it cannot fail.
+ */
+void bsd_expunge(struct bsd *bsd)
+{
+    FreeVec(bsd);
 }
