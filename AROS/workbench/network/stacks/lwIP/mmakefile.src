@@ -48,6 +48,10 @@ INCLUDE_FILES := $(call WILDCARD, lwip/src/include/ipv6/lwip/*.h)
 
 %copy_includes path=lwip dir=lwip/src/include/ipv6/lwip
 
+INCLUDE_FILES := $(call WILDCARD, lwip/src/include/netif/*.h)
+
+%copy_includes path=lwip/netif dir=lwip/src/include/netif
+
 %copy_files_q mmake=workbench-network-stacks-lwip files="README.txt" \
     dst="$(AROS_SYSTEM)/Network/lwIP"
 

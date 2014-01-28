@@ -234,6 +234,18 @@ static inline void sa_copy(struct sockaddr *sa, struct ASocket_Address *aa)
                 err = EINVAL;
             }
             break;
+        case AS_TAG_IFACE_MTU:
+            if (as->as_Socket.type == SOCK_RAW) {
+                struct ifreq ifr;
+                CopyMem(as->as_IFace.name, ifr.ifr_name, IFNAMSIZ);
+                err = bsd_ioctl(bsd, as->as_bsd, SIOCGIFMTU, &ifr);
+                if (err == 0)
+                    *(ULONG *)tag->ti_Data = ifr.ifr_mtu;
+            } else {
+                D(bug("%s: AS_TAG_IFACE_MTU not valid for %d type sockets\n", __func__, as->as_Socket.type));
+                err = EINVAL;
+            }
+            break;
         default:
             err = EINVAL;
         }

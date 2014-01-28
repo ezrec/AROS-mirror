@@ -46,12 +46,15 @@
 #include <devices/sana2.h>
 #include <exec/errors.h>
 
+#include <net/route.h>
+
 #include <lwip/opt.h>
 #include <lwip/init.h>
 #include <lwip/sockets.h>
 #include <lwip/inet.h>
 #include <lwip/ip4_addr.h>
 
+#include "lwip/netif/etharp.h"
 #include "lwip/sockets.h"
 #include "lwip/api.h"
 #include "lwip/sys.h"
@@ -240,11 +243,6 @@ struct bsd {
         volatile int ctr;
     } bs_select_cb;
 };
-
-static void bsd_tcpip_done(void *ptr)
-{
-    Signal((struct Task *)ptr, SIGF_SINGLE);
-}
 
 /** Table to quickly map an lwIP error (err_t) to a socket error
   * by using -err as an index */
@@ -2421,11 +2419,120 @@ static int bsd__ioctl_netdevice(struct bsd *bsd, long cmd, void *argp)
     struct ifconf *ifconf = argp;
     struct ifaliasreq *ifra = argp;
     struct bsd_netif *bn;
-    int len;
+    int len, rc;
     short ifflags;
     struct sockaddr_in *sin;
+    err_t err;
 
     switch (cmd) {
+    case SIOCADDRT:
+        D(bug("%s: SIOCADDRT unsupported\n", __func__));
+        /* Modify routing table */
+        return EINVAL;
+    case SIOCAIFADDR:
+        bn = bsd__netif_obtain(bsd, ifra->ifra_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        if ((ifra->ifra_broadaddr.sa_len == sizeof(struct sockaddr_in)) &&
+            (ifra->ifra_broadaddr.sa_family == AF_INET)) {
+            sin = (struct sockaddr_in *)&ifra->ifra_broadaddr;
+            netif_set_gw(&bn->bn_netif, (ip_addr_t *)&sin->sin_addr.s_addr);
+        }
+
+        if ((ifra->ifra_mask.sa_len == sizeof(struct sockaddr_in)) &&
+            (ifra->ifra_mask.sa_family == AF_INET)) {
+            sin = (struct sockaddr_in *)&ifra->ifra_mask;
+            netif_set_netmask(&bn->bn_netif, (ip_addr_t *)&sin->sin_addr.s_addr);
+        }
+
+        if ((ifra->ifra_addr.sa_len == sizeof(struct sockaddr_in)) &&
+            (ifra->ifra_addr.sa_family == AF_INET)) {
+            sin = (struct sockaddr_in *)&ifra->ifra_mask;
+            netif_set_ipaddr(&bn->bn_netif, (ip_addr_t *)&sin->sin_addr.s_addr);
+        }
+
+        bsd__netif_release(bsd, bn);
+        return 0;
+    case SIOCDARP:
+        /* Delete an ARP entry */
+        if (argp) {
+            struct arpreq *ar = argp;
+
+            sin = (struct sockaddr_in *)&ar->arp_pa;
+
+            if (ar->arp_pa.sa_family == AF_INET) {
+                err = etharp_remove_static_entry((ip_addr_t *)&sin->sin_addr);
+                return err_to_errno(err);
+            }
+            return EINVAL;
+        } else {
+            return EFAULT;
+        }
+    case SIOCDELRT:
+        D(bug("%s: SIOCDELRT unsupported\n", __func__));
+        /* Delete a route */
+        return EINVAL;
+    case SIOCDIFADDR:
+        D(bug("%s: SIOCDIFADDR unsupported\n", __func__));
+        /* Delete an interface address */
+        return EINVAL;
+    case SIOCGARP:
+        if (argp) {
+            struct arpreq *ar = argp;
+            s8_t rc;
+            sin = (struct sockaddr_in *)&ar->arp_pa;
+           
+            if (ar->arp_pa.sa_family == AF_INET) {
+                struct eth_addr *ea = NULL;
+                ip_addr_t *ia = NULL;
+                rc = etharp_find_addr(NULL, (ip_addr_t *)&sin->sin_addr, &ea, &ia);
+                if (rc > -1) {
+                    if (ea)
+                        CopyMem(ea, (struct eth_addr *)&ar->arp_ha.sa_data[0], sizeof(struct eth_addr));
+                    if (ia)
+                        CopyMem(ia, (ip_addr_t *)&sin->sin_addr, sizeof(ip_addr_t));
+                    return 0;
+                }
+            }
+            return EINVAL;
+        } else {
+            return EFAULT;
+        }
+    case SIOCGARPT:
+        D(bug("%s: SIOCGARPT unsupported\n", __func__));
+        return EINVAL;
+    case SIOCGIFADDR:
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        sin = (struct sockaddr_in *)&ifr->ifr_addr;
+        sin->sin_len = sizeof(*sin);
+        sin->sin_family = AF_INET;
+        sin->sin_port = 0;
+        sin->sin_addr.s_addr = bn->bn_netif.ip_addr.addr;
+
+        bsd__netif_release(bsd, bn);
+        return 0;
+    case SIOCGIFBRDADDR:
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        if (bn->bn_netif.flags & NETIF_FLAG_POINTTOPOINT) {
+            rc = EINVAL;
+        } else {
+            sin = (struct sockaddr_in *)&ifr->ifr_broadaddr;
+            sin->sin_len = sizeof(*sin);
+            sin->sin_family = AF_INET;
+            sin->sin_port = 0;
+            sin->sin_addr.s_addr = bn->bn_netif.gw.addr;
+            rc = 0;
+        }
+
+        bsd__netif_release(bsd, bn);
+        return rc;
     case SIOCGIFCONF:
         /* Get all the known SANA interfaces */
         ObtainSemaphore(&bsd->bs_lock);
@@ -2443,6 +2550,62 @@ static int bsd__ioctl_netdevice(struct bsd *bsd, long cmd, void *argp)
         ifconf->ifc_len = len;
         ReleaseSemaphore(&bsd->bs_lock);
         return 0;
+    case SIOCGIFDSTADDR:
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        if (bn->bn_netif.flags & NETIF_FLAG_POINTTOPOINT) {
+            sin = (struct sockaddr_in *)&ifr->ifr_dstaddr;
+            sin->sin_len = sizeof(*sin);
+            sin->sin_family = AF_INET;
+            sin->sin_port = 0;
+            sin->sin_addr.s_addr = bn->bn_netif.gw.addr; /* Same as broadaddr */
+            rc = 0;
+        } else {
+            rc = EINVAL;
+        }
+
+        bsd__netif_release(bsd, bn);
+        return rc;
+    case SIOCGIFFLAGS:
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        ifr->ifr_flags = bsd__netif_ifflags(bn);
+
+        bsd__netif_release(bsd, bn);
+        return 0;
+    case SIOCGIFINDEX:
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        ifr->ifr_ifindex = bn->bn_netif.num;
+        bsd__netif_release(bsd, bn);
+        return 0;
+    case SIOCGIFMETRIC:
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        if (ip_addr_isany(&bn->bn_netif.gw))
+            ifr->ifr_metric = 1;
+        else
+            ifr->ifr_metric = 0;
+
+        bsd__netif_release(bsd, bn);
+        return 0;
+    case SIOCGIFMTU:
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        ifr->ifr_mtu = bn->bn_netif.mtu;
+
+        bsd__netif_release(bsd, bn);
+        return 0;
     case SIOCGIFNAME:
         /* Get the name for an index */
         ObtainSemaphore(&bsd->bs_lock);
@@ -2456,20 +2619,45 @@ static int bsd__ioctl_netdevice(struct bsd *bsd, long cmd, void *argp)
         ReleaseSemaphore(&bsd->bs_lock);
         /* Not found! */
         return ENODEV;
-    case SIOCGIFINDEX:
+    case SIOCGIFNETMASK:
         bn = bsd__netif_obtain(bsd, ifr->ifr_name);
         if (bn == NULL)
             return ENODEV;
 
-        ifr->ifr_ifindex = bn->bn_netif.num;
+        sin = (struct sockaddr_in *)&ifr->ifr_addr;
+        sin->sin_len = sizeof(*sin);
+        sin->sin_family = AF_INET;
+        sin->sin_port = 0;
+        sin->sin_addr.s_addr = bn->bn_netif.netmask.addr;
+
         bsd__netif_release(bsd, bn);
         return 0;
-    case SIOCGIFFLAGS:
+    case SIOCSARP:
+        D(bug("%s: SIOCSARP unsupported\n", __func__));
+        return EINVAL;
+    case SIOCSIFADDR:
         bn = bsd__netif_obtain(bsd, ifr->ifr_name);
         if (bn == NULL)
             return ENODEV;
 
-        ifr->ifr_flags = bsd__netif_ifflags(bn);
+        if ((ifr->ifr_addr.sa_len == sizeof(struct sockaddr_in)) &&
+            (ifr->ifr_addr.sa_family == AF_INET)) {
+            sin = (struct sockaddr_in *)&ifr->ifr_addr;
+            netif_set_ipaddr(&bn->bn_netif, (ip_addr_t *)&sin->sin_addr.s_addr);
+        }
+
+        bsd__netif_release(bsd, bn);
+        return 0;
+    case SIOCSIFBRDADDR:
+        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
+        if (bn == NULL)
+            return ENODEV;
+
+        if ((ifr->ifr_addr.sa_len == sizeof(struct sockaddr_in)) &&
+            (ifr->ifr_addr.sa_family == AF_INET)) {
+            sin = (struct sockaddr_in *)&ifr->ifr_addr;
+            netif_set_gw(&bn->bn_netif, (ip_addr_t *)&sin->sin_addr.s_addr);
+        }
 
         bsd__netif_release(bsd, bn);
         return 0;
@@ -2528,92 +2716,9 @@ static int bsd__ioctl_netdevice(struct bsd *bsd, long cmd, void *argp)
 
         bsd__netif_release(bsd, bn);
         return 0;
-    case SIOCGIFMETRIC:
-        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
-        if (bn == NULL)
-            return ENODEV;
-
-        if (ip_addr_isany(&bn->bn_netif.gw))
-            ifr->ifr_metric = 1;
-        else
-            ifr->ifr_metric = 0;
-
-        bsd__netif_release(bsd, bn);
-        return 0;
-    case SIOCGIFMTU:
-        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
-        if (bn == NULL)
-            return ENODEV;
-
-        ifr->ifr_mtu = bn->bn_netif.mtu;
-
-        bsd__netif_release(bsd, bn);
-        return 0;
-    case SIOCGIFADDR:
-        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
-        if (bn == NULL)
-            return ENODEV;
-
-        sin = (struct sockaddr_in *)&ifr->ifr_addr;
-        sin->sin_len = sizeof(*sin);
-        sin->sin_family = AF_INET;
-        sin->sin_port = 0;
-        sin->sin_addr.s_addr = bn->bn_netif.ip_addr.addr;
-
-        bsd__netif_release(bsd, bn);
-        return 0;
-    case SIOCGIFNETMASK:
-        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
-        if (bn == NULL)
-            return ENODEV;
-
-        sin = (struct sockaddr_in *)&ifr->ifr_addr;
-        sin->sin_len = sizeof(*sin);
-        sin->sin_family = AF_INET;
-        sin->sin_port = 0;
-        sin->sin_addr.s_addr = bn->bn_netif.netmask.addr;
-
-        bsd__netif_release(bsd, bn);
-        return 0;
-    case SIOCGIFBRDADDR:
-        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
-        if (bn == NULL)
-            return ENODEV;
-
-        sin = (struct sockaddr_in *)&ifr->ifr_addr;
-        sin->sin_len = sizeof(*sin);
-        sin->sin_family = AF_INET;
-        sin->sin_port = 0;
-        sin->sin_addr.s_addr = bn->bn_netif.gw.addr;
-
-        bsd__netif_release(bsd, bn);
-        return 0;
-    case SIOCSIFADDR:
-        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
-        if (bn == NULL)
-            return ENODEV;
-
-        if ((ifr->ifr_addr.sa_len == sizeof(struct sockaddr_in)) &&
-            (ifr->ifr_addr.sa_family == AF_INET)) {
-            sin = (struct sockaddr_in *)&ifr->ifr_addr;
-            netif_set_ipaddr(&bn->bn_netif, (ip_addr_t *)&sin->sin_addr.s_addr);
-        }
-
-        bsd__netif_release(bsd, bn);
-        return 0;
-    case SIOCSIFBRDADDR:
-        bn = bsd__netif_obtain(bsd, ifr->ifr_name);
-        if (bn == NULL)
-            return ENODEV;
-
-        if ((ifr->ifr_addr.sa_len == sizeof(struct sockaddr_in)) &&
-            (ifr->ifr_addr.sa_family == AF_INET)) {
-            sin = (struct sockaddr_in *)&ifr->ifr_addr;
-            netif_set_gw(&bn->bn_netif, (ip_addr_t *)&sin->sin_addr.s_addr);
-        }
-
-        bsd__netif_release(bsd, bn);
-        return 0;
+    case SIOCSIFMTU:
+        D(bug("%s: SIOCSIFMTU unsupported\n", __func__));
+        return EINVAL;
     case SIOCSIFNETMASK:
         bn = bsd__netif_obtain(bsd, ifr->ifr_name);
         if (bn == NULL)
@@ -2623,31 +2728,6 @@ static int bsd__ioctl_netdevice(struct bsd *bsd, long cmd, void *argp)
             (ifr->ifr_addr.sa_family == AF_INET)) {
             sin = (struct sockaddr_in *)&ifr->ifr_addr;
             netif_set_netmask(&bn->bn_netif, (ip_addr_t *)&sin->sin_addr.s_addr);
-        }
-
-        bsd__netif_release(bsd, bn);
-        return 0;
-    case SIOCAIFADDR:
-        bn = bsd__netif_obtain(bsd, ifra->ifra_name);
-        if (bn == NULL)
-            return ENODEV;
-
-        if ((ifra->ifra_broadaddr.sa_len == sizeof(struct sockaddr_in)) &&
-            (ifra->ifra_broadaddr.sa_family == AF_INET)) {
-            sin = (struct sockaddr_in *)&ifra->ifra_broadaddr;
-            netif_set_gw(&bn->bn_netif, (ip_addr_t *)&sin->sin_addr.s_addr);
-        }
-
-        if ((ifra->ifra_mask.sa_len == sizeof(struct sockaddr_in)) &&
-            (ifra->ifra_mask.sa_family == AF_INET)) {
-            sin = (struct sockaddr_in *)&ifra->ifra_mask;
-            netif_set_netmask(&bn->bn_netif, (ip_addr_t *)&sin->sin_addr.s_addr);
-        }
-
-        if ((ifra->ifra_addr.sa_len == sizeof(struct sockaddr_in)) &&
-            (ifra->ifra_addr.sa_family == AF_INET)) {
-            sin = (struct sockaddr_in *)&ifra->ifra_mask;
-            netif_set_ipaddr(&bn->bn_netif, (ip_addr_t *)&sin->sin_addr.s_addr);
         }
 
         bsd__netif_release(bsd, bn);
@@ -2783,6 +2863,11 @@ int bsd_socket_dup(struct bsd *bsd, struct bsd_sock *olds, struct bsd_sock **new
     return 0;
 }
 
+static void bsd_tcpip_done(void *ptr)
+{
+    Signal((struct Task *)ptr, SIGF_SINGLE);
+}
+
 struct bsd *bsd_init(void)
 {
     struct bsd *bsd;
@@ -2821,5 +2906,7 @@ struct bsd *bsd_init(void)
  */
 void bsd_expunge(struct bsd *bsd)
 {
+    /* FIXME: Dammit. lwIP can't be shutdown cleanly.
+     */
     FreeVec(bsd);
 }
