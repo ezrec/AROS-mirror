@@ -233,6 +233,28 @@ static int do_ifconf(struct bsdsocketBase *SocketBase, struct ifconf *ifc);
             ASocketDispose(as);
         }
         break;
+    case SIOCDIFADDR:
+        D(reqname = "SIODAIFADDR");
+        ifr = (struct ifreq *)argp;
+        err = ASocketNew(&as, AS_TAG_SOCKET_DOMAIN, domain,
+                              AS_TAG_SOCKET_TYPE, SOCK_RAW,
+                              AS_TAG_SOCKET_PROTOCOL, 0,
+                              AS_TAG_IFACE_NAME, ifr->ifr_name,
+                              TAG_END);
+        if (err == 0) {
+            /* Set to the NULL address */
+            struct ASocket_Address addr;
+            struct sockaddr sa;
+            addr.asa_Length = sizeof(struct sockaddr);
+            addr.asa_Address = &sa;
+            err = ASocketGet(as, AS_TAG_IFACE_ADDRESS, &addr, TAG_END);
+            if (err == 0) {
+                memset(&sa.sa_data[0], 0, sa.sa_len - offsetof(struct sockaddr, sa_data[0]));
+                err = ASocketSet(as, AS_TAG_IFACE_ADDRESS, &addr, TAG_END);
+            }
+            ASocketDispose(as);
+        }
+        break;
     case SIOCAIFADDR:
         D(reqname = "SIOCAIFADDR");
         ifra = (struct ifaliasreq *)argp;
