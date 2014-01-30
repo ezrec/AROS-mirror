@@ -85,7 +85,7 @@ Ejemplos de editores que se sepa que pueden guardar tal EOL incluyen
 enhanced notepad), `DOS Navigator OSP <http://dnosp.com/>`__, y muchos más.
 También está disponible el cliente RapidSVN, como se dijo antes.
 
-__ http://tortoisesvn.sourceforge.net
+__ http://www.tortoisesvn.net/
 
 MacOS X
 -------

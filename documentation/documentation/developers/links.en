@@ -29,7 +29,7 @@ Device drivers development
   the key points."
 
 __ http://www.usb.org/developers/docs/
-__ http://www.beyondlogic.org/usbnutshell/usb1.htm
+__ http://www.beyondlogic.org/usbnutshell/usb1.shtml
 
 
 Executable file formats
@@ -49,7 +49,7 @@ Executable file formats
   time; but it *does* contain some interesting ideas. Definitely something
   we would like to see in AROS.
 
-__ http://refspecs.freestandards.org/elf/elf.pdf
+__ http://www.nondot.org/sabre/os/files/Executables/ELF.pdf
 __ http://greywire.8m.com/greywire/amigasde.htm
 
 
@@ -109,17 +109,12 @@ Tools
   A cross-compiler suite by Martin Blom based on GCC for cross-compiling
   Amiga programs on Linux.
 
-+ `Jocke 'Zerohero' Birging's cross-compiler`__
-
-  Cross-compilers for Cygwin and Linux for creation of AROS programs.
-
 + `68k Hosted cross-compiler for generating x86-AROS binaries`__
 
 
 __ http://oop4a.benderirc.de/oop4a_e.html
 __ http://ftp.back2roots.org/geekgadgets/
 __ http://www.lysator.liu.se/~lcs/files/gg-cross/
-__ http://www.zerohero.se/cross/aros.html
 __ http://www.whoosh777.com/amiga-68k-x-x86-aros-gcc.html
 
 

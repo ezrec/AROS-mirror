@@ -32,7 +32,7 @@ installeras parallellt med andra OS som Microsoft Windows på en egen partition
 (kräver kunskap i GRUB). Inkluderas gör även en användarhandbok i PDF-format.
 
 __ http://live.icarosdesktop.org/
-__ http://virtualbox.org/
+__ https://www.virtualbox.org/
 
 
 AspireOS
@@ -45,7 +45,7 @@ AspireOS
 netbooks såsom Acer Aspire One i åtanke. Dess filosofi är att vara så simpel
 och nerbantad som möjligt. Alla inkluderade program är väl testade.
 
-__ http://www.aspireos.com/
+__ https://www.aspireos.com/
 
 
 AROS Broadway
@@ -79,7 +79,7 @@ Dessa versioner är inte övergivna, så använd den vanliga kanalen för att
 rapportera buggar (`bug tracker`__).
 
 __ snapshots
-__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
+__ http://sourceforge.net/p/aros/bugs/
 
 
 
@@ -96,7 +96,7 @@ Var snäll och rapportera alla buggar du hittar via buggrapportkanalen
 `AROS-Exec`__-forumet.
 
 __ nightly
-__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
+__ http://sourceforge.net/p/aros/bugs/
 __ http://aros-exec.org/
 
 

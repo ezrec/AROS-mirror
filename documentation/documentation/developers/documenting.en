@@ -279,7 +279,7 @@ Commit
 Before you commit the new or modified documents you should `build`__ both the
 HTML and WWW targets locally. Look for error messages and fix them. Check the
 result in a web browser. Normally, the changes are applied to
-http://www.aros.org within one day after a commit.
+http://aros.sourceforge.net/ within one day after a commit.
 
 __ building_
 
@@ -374,14 +374,14 @@ To build the website you will additionally need:
 MacOS X comes with Python pre-installed, but to build the website
 you will need:
 
-+ The `Darwinports`__ package
++ The `MacPorts`__ package
 
-+ The `Darwinports Python Imaging Library`__ 1.1.3
++ The `MacPorts Python Imaging Library`__ 1.1.3
 
 __ http://www.python.org/
 __ http://www.pythonware.com/products/pil/
-__ http://darwinports.com/
-__ http://py-pil.darwinports.com/
+__ https://www.macports.org/
+__ https://trac.macports.org/browser/trunk/dports/python/py-pil/
 
 
 Setting up

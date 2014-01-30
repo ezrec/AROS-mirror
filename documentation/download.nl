@@ -33,7 +33,7 @@ geïnstalleerd OS zoals Microsoft Windows, op een aangewezen partitie. Een
 snelgids en een aantal AROS PDF-handleidingen zijn bijgevoegd.
 
 __ http://live.icarosdesktop.org/
-__ http://virtualbox.org/
+__ https://www.virtualbox.org/
 
 
 AspireOS
@@ -46,7 +46,7 @@ AspireOS
 voor netbooks zoals de Acer Aspire One. Het tracht de dingen zo eenvoudig
 mogelijk te houden. De meegeleverde programma's zijn grondig getest.
 
-__ http://www.aspireos.com/
+__ https://www.aspireos.com/
 
 
 AROS Broadway
@@ -79,7 +79,7 @@ Deze compilaties worden onderhouden, dus gebruik a.u.b. de `bug tracker`__ om
 fouten te rapporteren.
 
 __ snapshots
-__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
+__ http://sourceforge.net/p/aros/bugs/
 
 
 
@@ -96,7 +96,7 @@ ontdekt middels de `bug tracker`__. Voor overige zaken kunt u met ons contact
 opnemen via de `AROS-Exec`__ forums.
 
 __ nightly
-__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
+__ http://sourceforge.net/p/aros/bugs/
 __ http://aros-exec.org/
 
 

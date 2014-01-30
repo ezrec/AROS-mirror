@@ -143,7 +143,7 @@ __ http://aros.sourceforge.net/contact.php#mailing-lists
 Перед тем как фиксировать новые или изменённые документы вам следует `создать`__
 локально копию HTML и WWW-контента. Следите за сообщениями об ошибках и исправляйте 
 их. Проверьте результат с помощью браузера. Обычно изменения добавляются на 
-http://www.aros.org спустя несколько часов после их передачи.
+http://aros.sourceforge.net/ спустя несколько часов после их передачи.
 
 __ building_
 
@@ -211,14 +211,14 @@ Building
 В MacOS X интерпретатор Python предустановлен по умолчанию, но для сборки сайта
 понадобятся:
 
-+ Пакет `Darwinports`__
++ Пакет `MacPorts`__
 
-+ `Darwinports Python Imaging Library`__ 1.1.3
++ `MacPorts Python Imaging Library`__ 1.1.3
 
 __ http://www.python.org/
 __ http://www.pythonware.com/products/pil/
-__ http://darwinports.com/
-__ http://py-pil.darwinports.com/
+__ https://www.macports.org/
+__ https://trac.macports.org/browser/trunk/dports/python/py-pil/
 
 Сборка
 ~~~~~~

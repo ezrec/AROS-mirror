@@ -142,7 +142,7 @@ Envío
 Antes que envíes los documentos nuevos o modificados deberías 
 `build`__ ambos targets HTML y WWW localmente. Busca los mensajes de
 error y repáralos. Comprueba el resultado en un navegador web. Lo normal
-es que los cambios sean aplicados a http://www.aros.org algunas horas
+es que los cambios sean aplicados a http://aros.sourceforge.net/ algunas horas
 después de su envío.
 
 __ building_
@@ -216,14 +216,14 @@ Para construir el sitio web necesitarás adicionalmente:
 MacOS X viene con Python pre-instalado, pero para compilar el
 sitio web necesitarás:
 
-+ The `Darwinports`__ package 
++ The `MacPorts`__ package 
 
-+ The `Darwinports Python Imaging Library`__ 1.1.3
++ The `MacPorts Python Imaging Library`__ 1.1.3
 
 __ http://www.python.org/
 __ http://www.pythonware.com/products/pil/
-__ http://darwinports.com/
-__ http://py-pil.darwinports.com/
+__ https://www.macports.org/
+__ https://trac.macports.org/browser/trunk/dports/python/py-pil/
 
 Setting up
 ~~~~~~~~~~

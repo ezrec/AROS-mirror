@@ -225,7 +225,7 @@ VM for MacOS
 """"""""""""
 
 The only option available for PowerPC Macs running OS 9 or 10.x is
-`Virtual PC <http://www.microsoft.com/mac/products/virtualpc/virtualpc.aspx?pid=virtualpc>`__,
+`Virtual PC <http://www.microsoft.com/mac/products?pid=virtualpc>`__,
 an i386 emulator. It does not support Intel Macs, however. And this VPC
 is a commercial product, and hence quite expensive. An alternative method to
 get it is to purchase Office 2004, which comes with a free copy of the latest

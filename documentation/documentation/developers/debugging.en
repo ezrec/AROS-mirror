@@ -500,7 +500,7 @@ Analysis of output
 It is best to analyze the output in graphical form. The best tool to do this
 is KCachegrind. Here is an example output from Callgrind opened in KCachegrind.
 
-.. image:: ../../images/kcachegrind.jpg
+.. image:: /images/kcachegrind.jpg
 
 -----------------
 Resource tracking

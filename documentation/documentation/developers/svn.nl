@@ -85,7 +85,7 @@ zijn o.a. `Notepad++ <http://notepad-plus.sourceforge.net>`__, TigerPad
 (uitgebreide notepad, gratis), `DOS Navigator OSP <http://dnosp.com/>`__, en vele anderen.
 Ook de eSvn client is beschikbaar, zoals eerder vermeld.
 
-__ http://tortoisesvn.sourceforge.net
+__ http://www.tortoisesvn.net/
 
 MacOS X
 -------

@@ -85,7 +85,7 @@ Windows
 (Кодировки - Преобразовать в UNIX-формат) и многие другие. Упомянутый выше 
 RapidSVN тоже это умеет.
 
-__ http://tortoisesvn.sourceforge.net
+__ http://www.tortoisesvn.net/
 __ http://tigerpad.narod.ru
 
 Mac OS X

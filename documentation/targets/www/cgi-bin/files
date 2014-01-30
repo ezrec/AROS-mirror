@@ -144,14 +144,14 @@ for date in dates:
         print '''
                     <td class="layout" align="center" bgcolor="%(color)s">
                         <b>%(year)s-%(month)s-%(day)s</b><br>
-                        [<a href="http://aros.sourceforge.net/downloads/nightly/%(date)s/logs">%(logsLabel)s</a>]
+                        [<a href="http://aros.sourceforge.net/downloads/nightly/%(date)s/logs/">%(logsLabel)s</a>]
                     </td>
         ''' % vars()
     if dltype == "nightly2":
         print '''
                     <td class="layout" align="center" bgcolor="%(color)s">
                         <b>%(year)s-%(month)s-%(day)s</b><br>
-                        [<a href="http://aros.sourceforge.net/downloads/nightly2/%(date)s/logs">%(logsLabel)s</a>]
+                        [<a href="http://aros.sourceforge.net/downloads/nightly2/%(date)s/logs/">%(logsLabel)s</a>]
                     </td>
         ''' % vars()
     elif dltype == "snapshots":

@@ -247,7 +247,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     statsPHP3 = '''
     <?php
         echo "<map name=\\"map\\">";
-              echo "<area shape=\\"rect\\" coords=\\"25,78,85,95\\" alt=\\"http://www.aros.org\\" href=\\"http://www.aros.org\\">";
+              echo "<area shape=\\"rect\\" coords=\\"25,78,85,95\\" alt=\\"http://www.aros.org\\" href=\\"http://aros.sourceforge.net/\\">";
               echo "<area shape=\\"rect\\" coords=\\"100,78,168,95\\" alt=\\"AROS-Exec\\" href=\\"http://aros-exec.org\\">";
               echo "<area shape=\\"rect\\" coords=\\"180,78,240,95\\" alt=\\"AROS-Exec Archives\\" href=\\"http://archives.aros-exec.org\\">";
               echo "<area shape=\\"rect\\" coords=\\"260,78,350,95\\" alt=\\"Power2People\\" href=\\"http://www.power2people.org\\">";
