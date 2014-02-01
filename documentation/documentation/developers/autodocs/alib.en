@@ -2158,7 +2158,7 @@ Notes
 See also
 ~~~~~~~~
 
-`intuition.library/NewObjectA() <./intuition#newobjecta>`_ `intuition.library/SetAttrsA() <./intuition#setattrsa>`_ `intuition.library/GetAttr() <./intuition#getattr>`_ `intuition.library/DisposeObject() <./intuition#disposeobject>`_ `DoMethodA()`_ `DoSuperMethodA()`_ "Basic Object-Oriented Programming System for Intuition" and the "boopsi Class Reference" Dokument. 
+`intuition.library/NewObjectA() <./intuition#newobjecta>`_ `intuition.library/SetAttrsA() <./intuition#setattrsa>`_ `intuition.library/GetAttr() <./intuition#getattr>`_ `intuition.library/DisposeObject() <./intuition#disposeobject>`_ `DoMethodA()`_ `DoSuperMethodA()`_ "Basic Object-Oriented Programming System for Intuition" and the "boopsi Class Reference" documentation. 
 
 ----------
 
@@ -2344,7 +2344,7 @@ Result
 See also
 ~~~~~~~~
 
-`intuition.library/NewObjectA() <./intuition#newobjecta>`_ `intuition.library/SetAttrsA() <./intuition#setattrsa>`_ `intuition.library/GetAttr() <./intuition#getattr>`_ `intuition.library/DisposeObject() <./intuition#disposeobject>`_ `DoMethodA()`_ `DoSuperMethodA()`_ "Basic Object-Oriented Programming System for Intuition" and the "boopsi Class Reference" Dokument. 
+`intuition.library/NewObjectA() <./intuition#newobjecta>`_ `intuition.library/SetAttrsA() <./intuition#setattrsa>`_ `intuition.library/GetAttr() <./intuition#getattr>`_ `intuition.library/DisposeObject() <./intuition#disposeobject>`_ `DoMethodA()`_ `DoSuperMethodA()`_ "Basic Object-Oriented Programming System for Intuition" and the "boopsi Class Reference" documentation. 
 
 ----------
 
@@ -3154,7 +3154,7 @@ Notes
 See also
 ~~~~~~~~
 
-`intuition.library/DisposeObject() <./intuition#disposeobject>`_ `intuition.library/SetAttrsA() <./intuition#setattrsa>`_ `intuition.library/GetAttr() <./intuition#getattr>`_ `intuition.library/MakeClass() <./intuition#makeclass>`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
+`intuition.library/DisposeObject() <./intuition#disposeobject>`_ `intuition.library/SetAttrsA() <./intuition#setattrsa>`_ `intuition.library/GetAttr() <./intuition#getattr>`_ `intuition.library/MakeClass() <./intuition#makeclass>`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" documentation. 
 
 ----------
 
@@ -4013,7 +4013,7 @@ Notes
 See also
 ~~~~~~~~
 
-`NewObject()`_ `SetAttrs()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
+`NewObject()`_ `SetAttrs()`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" documentation. 
 
 ----------
 
@@ -4192,7 +4192,7 @@ Notes
 See also
 ~~~~~~~~
 
-`intuition.library/NewObjectA() <./intuition#newobjecta>`_ `intuition.library/DisposeObject() <./intuition#disposeobject>`_ `intuition.library/GetAttr() <./intuition#getattr>`_ `intuition.library/MakeClass() <./intuition#makeclass>`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" Dokument. 
+`intuition.library/NewObjectA() <./intuition#newobjecta>`_ `intuition.library/DisposeObject() <./intuition#disposeobject>`_ `intuition.library/GetAttr() <./intuition#getattr>`_ `intuition.library/MakeClass() <./intuition#makeclass>`_ "Basic Object-Oriented Programming System for Intuition" and "boopsi Class Reference" documentation. 
 
 ----------
 
