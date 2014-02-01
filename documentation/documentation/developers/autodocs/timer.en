@@ -105,7 +105,7 @@ Notes
 See also
 ~~~~~~~~
 
-`exec.library/Abort() <./exec#abort>`_ `exec.library/SendIO() <./exec#sendio>`_ `exec.library/DoIO() <./exec#doio>`_ 
+`exec.library/AbortIO() <./exec#abortio>`_ `exec.library/SendIO() <./exec#sendio>`_ `exec.library/DoIO() <./exec#doio>`_ 
 
 ----------
 

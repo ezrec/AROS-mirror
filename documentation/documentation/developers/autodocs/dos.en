@@ -731,7 +731,6 @@ Function
 ~~~~~~~~
 ::
 
-
      Set up the first shell process.
 
      Currently, no DOS Packet arguments are used by this
@@ -747,14 +746,12 @@ Inputs
 ~~~~~~
 ::
 
-
-     dp -- startup arguments specified as a packet
+     dp - startup arguments specified as a packet
 
 
 Result
 ~~~~~~
 ::
-
 
      RETURN_OK on success, ERROR_* (from dp_Res2) on failure.
 
@@ -762,7 +759,6 @@ Result
 Notes
 ~~~~~
 ::
-
 
      This function is internal to AROS, and should never be
      called by user space.

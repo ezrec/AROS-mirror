@@ -282,7 +282,7 @@ Bugs
 See also
 ~~~~~~~~
 
-`graphics.library/AslRequest() <./graphics#aslrequest>`_ 
+`asl.library/AslRequest() <./asl#aslrequest>`_ 
 
 ----------
 

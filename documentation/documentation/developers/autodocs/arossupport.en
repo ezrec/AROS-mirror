@@ -486,7 +486,7 @@ Example
 See also
 ~~~~~~~~
 
-`exec.library/Open() <./exec#open>`_ `exec.library/Close() <./exec#close>`_ `ReadByte()`_ `ReadWord()`_ `ReadLong()`_ `ReadFloat()`_ `ReadString()`_ `ReadStruct()`_ `WriteByte()`_ `WriteWord()`_ `WriteLong()`_ `WriteFloat()`_ `WriteDouble()`_ `WriteString()`_ `WriteStruct()`_ 
+`dos.library/Open() <./dos#open>`_ `dos.library/Close() <./dos#close>`_ `ReadByte()`_ `ReadWord()`_ `ReadLong()`_ `ReadFloat()`_ `ReadString()`_ `ReadStruct()`_ `WriteByte()`_ `WriteWord()`_ `WriteLong()`_ `WriteFloat()`_ `WriteDouble()`_ `WriteString()`_ `WriteStruct()`_ 
 
 ----------
 
