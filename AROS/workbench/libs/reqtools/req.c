@@ -598,7 +598,11 @@ ULONG ASM SAVEDS GetString (
 	    glob->arg.buffer = glob->strinfo->Buffer;
 	    
 	    if (mode == ENTER_NUMBER && !showdef) *glob->arg.buffer = 0;
-	    if (invisible) *(ULONG *)(glob->strinfo->Extension->Pens) = 0;
+	    if (invisible)
+	    {
+		*(ULONG *)(glob->strinfo->Extension->Pens) = 0;
+		*(ULONG *)(glob->strinfo->Extension->ActivePens) = 0;
+	    }
 	}
 	
 	/* we do this here because there seems to be a bug in GO! :-( */
