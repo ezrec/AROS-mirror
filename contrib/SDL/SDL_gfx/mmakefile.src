@@ -1,4 +1,4 @@
-# Copyright © 2004, 2008, 2010, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2014, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
@@ -17,6 +17,9 @@ else
 DISABLE_MMX :=
 endif
 
+REPOSITORIES := http://www.ferzkopp.net/Software/SDL_gfx-2.0 \
+ ftp://ftp.netbsd.org/pub/pkgsrc/distfiles
+
 %fetch_and_build_gnu_development package=SDL_gfx version=2.0.22 patch=no \
-     package_repo=http://www.ferzkopp.net/Software/SDL_gfx-2.0/ \
+     package_repo=$(REPOSITORIES) \
      suffixes="tar.gz" extraoptions="$(DISABLE_MMX)"
