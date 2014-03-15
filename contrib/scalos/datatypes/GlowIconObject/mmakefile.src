@@ -19,7 +19,7 @@ USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -Wno-implicit-function-declaration
 
 %build_module mmake=contrib-scalos-datatypes-glowiconobject \
     modname=glowiconobject modtype=library modsuffix=datatype conffile="glowiconobject-aros.conf" \
-    files="$(FILES)" moduledir=datatypes prefix=$(TARGETDIR)
+    files="$(FILES)" moduledir=datatypes prefix=$(TARGETDIR) uselibs="z"
 
 
 %common
