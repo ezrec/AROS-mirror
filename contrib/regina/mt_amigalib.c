@@ -17,6 +17,7 @@
 
 #define DEBUG 0
 #include <aros/debug.h>
+#include <aros/symbolsets.h>
 
 #include <assert.h>
 
@@ -189,15 +190,29 @@ tsd_t *__regina_get_tsd(void)
       node->task = thistask;
       node->TSD = ReginaInitializeThread();
       AddTail((struct List *)__regina_tsdlist, (struct Node *)node);
-      on_exit(cleanup, node);
       D(bug("[mt_amigalib::__regina_get_tsd] new node=%p, TSD=%p\n", node, node->TSD));
    }
    else if (node->TSD==NULL) /* Was MTExit called on this task ? */
    {
       node->TSD = ReginaInitializeThread();
-      on_exit(cleanup, node);
       D(bug("[mt_amigalib::__regina_get_tsd] new TSD=%p\n", node->TSD));
    }
 
    return node->TSD;
 }
+
+/* Run cleanup on closing of per-task library base */
+void CloseLib(APTR base)
+{
+    struct Task *thistask = FindTask(NULL);
+    tsd_node_t *node;
+
+    node = (tsd_node_t *)GetHead(__regina_tsdlist);
+    while (node!=NULL && node->task!=thistask)
+       node = (tsd_node_t *)GetSucc(node);
+
+    if (node!=NULL)
+        cleanup(0, node);
+}
+
+ADD2CLOSELIB(CloseLib, 0);
