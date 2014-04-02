@@ -181,7 +181,7 @@ static LONG StartFile(struct RexxMsg *msg)
 {
    char text[300];
 
-   sprintf(text, "%s%sRexxMast SUBTASK %p", progdir,
+   sprintf(text, "\"%s%sRexxMast\" SUBTASK %p", progdir,
            progdir[strlen(progdir)-1] == ':' ? "" : "/",
            (void*)msg
    );
