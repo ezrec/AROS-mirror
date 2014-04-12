@@ -51,7 +51,8 @@
 #MM     workbench-libs-vega \
 #MM     workbench-libs-mesa \
 #MM     workbench-libs-glu \
-#MM     workbench-libs-egl
+#MM     workbench-libs-egl \
+#MM     workbench-libs-mesa-legacy
 
 #MM- includes-generate : \
 #MM     workbench-libs-amigaguide-includes \
