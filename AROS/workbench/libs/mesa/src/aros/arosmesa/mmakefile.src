@@ -10,6 +10,7 @@ include $(SRCDIR)/$(CURDIR)/../../mapi/glapi/sources.mak
 include $(SRCDIR)/$(CURDIR)/../../mapi/mapi/sources.mak
 
 #MM workbench-libs-mesa : includes linklibs-galliumauxiliary workbench-libs-gallium-linklib
+#MM workbench-libs-mesa-legacy : linklibs-mesa
 
 SHARED_LIB_SOURCES = \
             aros/emul_arosc \
