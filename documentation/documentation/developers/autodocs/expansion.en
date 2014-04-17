@@ -54,7 +54,7 @@ Function
      OS they may wish to boot from.
 
      The bootstrap will attempt to boot from the highest priority device
-     on the Expansion eb_BootNode list, and if that fails continue
+     on the Expansion BootNode list, and if that fails continue
      through the list until it can succeed.
 
      Floppy disk devices should always be given the highest priority, to

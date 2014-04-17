@@ -33,13 +33,13 @@ alib
 `NewLoadSegTags()`_                     `NewObject()`_                          `NewRawDoFmt()`_                        `NewRectRegion()`_                      
 `ObtainBestPen()`_                      `ObtainInfo()`_                         `OpenAmigaGuide()`_                     `OpenAmigaGuideAsync()`_                
 `OpenCatalog()`_                        `OpenScreenTags()`_                     `OpenWindowTags()`_                     `OpenWorkbenchObject()`_                
-`RangeRand()`_                          `ReAllocVec()`_                         `RefreshDTObject()`_                    `RefreshDTObjects()`_                   
-`ReleaseInfo()`_                        `RemoveAmigaGuideHost()`_               `SelectErrorOutput()`_                  `SendAmigaGuideCmd()`_                  
-`SendAmigaGuideContext()`_              `SetAmigaGuideAttrs()`_                 `SetAmigaGuideContext()`_               `SetAttrs()`_                           
-`SetDTAttrs()`_                         `SetGadgetAttrs()`_                     `SetInfo()`_                            `SetRexxVar()`_                         
-`SetRPAttrs()`_                         `SetSuperAttrs()`_                      `SetWindowPointer()`_                   `StrDup()`_                             
-`SystemTags()`_                         `TimeDelay()`_                          `UnLockBitMapTags()`_                   `VideoControlTags()`_                   
-`WorkbenchControl()`_                   
+`RangeRand()`_                          `RefreshDTObject()`_                    `RefreshDTObjects()`_                   `ReleaseInfo()`_                        
+`RemoveAmigaGuideHost()`_               `SelectErrorOutput()`_                  `SendAmigaGuideCmd()`_                  `SendAmigaGuideContext()`_              
+`SetAmigaGuideAttrs()`_                 `SetAmigaGuideContext()`_               `SetAttrs()`_                           `SetDTAttrs()`_                         
+`SetGadgetAttrs()`_                     `SetInfo()`_                            `SetRexxVar()`_                         `SetRPAttrs()`_                         
+`SetSuperAttrs()`_                      `SetWindowPointer()`_                   `StrDup()`_                             `SystemTags()`_                         
+`TimeDelay()`_                          `UnLockBitMapTags()`_                   `VideoControlTags()`_                   `WorkbenchControl()`_                   
+
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -3511,70 +3511,6 @@ Synopsis
      ULONG maxValue)
 
 
-
-----------
-
-ReAllocVec()
-============
-
-Synopsis
-~~~~~~~~
-::
-
-  APTR ReAllocVec(
-     APTR  oldmem,
-     ULONG newsize,
-     ULONG requirements)
-
-
-Function
-~~~~~~~~
-::
-
-     Change the size of an AllocVec:ed part of memory. The memory must
-     have been allocated by AllocVec(). If you reduce the
-     size, the old contents will be lost. If you enlarge the size,
-     the new contents will be undefined.
-
-
-Inputs
-~~~~~~
-::
-
-     oldmen - What you got from AllocVec().
-     newsize - The new size.
-     requirements - The (new) requirements.
-             Note that if no new block of memory is allocated, the
-             requirements are not considered.
-
-
-Result
-~~~~~~
-::
-
-     A pointer to the allocated memory or NULL. If you don't need the
-     memory anymore, you can pass this pointer to FreeVec().
-
-
-Notes
-~~~~~
-::
-
-     If you get NULL, the memory at oldmem will not have been freed and
-     can still be used.
-     Note that if no new block of memory is allocated, the requirements
-     are not considered.
-
-     This function must not be used in a shared library or in a
-     threaded application. (???)
-
-
-
-
-See also
-~~~~~~~~
-
-`exec.library/AllocVec() <./exec#allocvec>`_ `exec.library/FreeVec() <./exec#freevec>`_ `exec.library/CopyMem() <./exec#copymem>`_ 
 
 ----------
 
