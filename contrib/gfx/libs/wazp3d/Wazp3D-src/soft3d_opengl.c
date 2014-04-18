@@ -19,9 +19,9 @@
 #include <proto/dos.h>
 #include <proto/graphics.h>
 #include <proto/intuition.h>
-#include <GL/arosmesa.h>
+#include <GL/gla.h>
 #include <GL/gl.h>
-struct Library * MesaBase = NULL;
+struct Library * GLBase = NULL;
 UBYTE  overwinname[]={"Wazp3D overlay"};
 #endif
 /*==================================================================*/
@@ -462,7 +462,7 @@ struct HARD3D_context *HC=hc;
 	HFUNC(OS_CurrentContext)
 	if(hc!=currenthc)
 		{
-		AROSMesaMakeCurrent(HC->hglrc);
+		glAMakeCurrent(HC->hglrc);
 		currenthc=hc;
 		}
 }
@@ -513,11 +513,11 @@ ULONG IDCMPs=IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_RAWKEY | IDCMP_MOUSEMO
 	HFUNC(OS_StartGLoverlay)
 	REMP("AROS: HC %ld \n",HC);
 
-	if(!MesaBase)
-		MesaBase = OpenLibrary("mesa.library", 0L);
+	if(!GLBase)
+		GLBase = OpenLibrary("gl.library", 20L);
 
-	if(!MesaBase)
-		{ REMP("AROS: Cant open mesa.library\n"); return 0; }
+	if(!GLBase)
+		{ REMP("AROS: Cant open gl.library\n"); return 0; }
 	awin=(struct Window *)HC->awin;
 
 /* duplicate current Amiga window as a new "overlay" window  */
@@ -548,24 +548,24 @@ ULONG IDCMPs=IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_RAWKEY | IDCMP_MOUSEMO
 	REMP("AROS: mesawin <%s> at %ld %ld size %ldX%ld\n",mesawin->Title,mesawin->LeftEdge,mesawin->TopEdge,mesawin->Width,mesawin->Height);
 	REMP("AROS: mesawin (borders %ld %ld %ld %ld )\n"  ,mesawin->BorderLeft,mesawin->BorderTop,mesawin->BorderRight,mesawin->BorderBottom);
 
-	attributes[i].ti_Tag = AMA_Window;		attributes[i++].ti_Data = (IPTR)mesawin;
-	attributes[i].ti_Tag = AMA_Left;		attributes[i++].ti_Data = x;
-	attributes[i].ti_Tag = AMA_Top;		attributes[i++].ti_Data = y;
-	attributes[i].ti_Tag = AMA_Width;		attributes[i++].ti_Data = large;
-	attributes[i].ti_Tag = AMA_Height;		attributes[i++].ti_Data = high;
-	attributes[i].ti_Tag = AMA_DoubleBuf;	attributes[i++].ti_Data = GL_TRUE;
-	attributes[i].ti_Tag = AMA_RGBMode;		attributes[i++].ti_Data = GL_TRUE;
-	attributes[i].ti_Tag = AMA_NoDepth;		attributes[i++].ti_Data = GL_FALSE;
-	attributes[i].ti_Tag = AMA_NoStencil;	attributes[i++].ti_Data = GL_TRUE;
-	attributes[i].ti_Tag = AMA_NoAccum;		attributes[i++].ti_Data = GL_TRUE;
+	attributes[i].ti_Tag = GLA_Window;		attributes[i++].ti_Data = (IPTR)mesawin;
+	attributes[i].ti_Tag = GLA_Left;		attributes[i++].ti_Data = x;
+	attributes[i].ti_Tag = GLA_Top;		attributes[i++].ti_Data = y;
+	attributes[i].ti_Tag = GLA_Width;		attributes[i++].ti_Data = large;
+	attributes[i].ti_Tag = GLA_Height;		attributes[i++].ti_Data = high;
+	attributes[i].ti_Tag = GLA_DoubleBuf;	attributes[i++].ti_Data = GL_TRUE;
+	attributes[i].ti_Tag = GLA_RGBMode;		attributes[i++].ti_Data = GL_TRUE;
+	attributes[i].ti_Tag = GLA_NoDepth;		attributes[i++].ti_Data = GL_FALSE;
+	attributes[i].ti_Tag = GLA_NoStencil;	attributes[i++].ti_Data = GL_TRUE;
+	attributes[i].ti_Tag = GLA_NoAccum;		attributes[i++].ti_Data = GL_TRUE;
 	attributes[i].ti_Tag = TAG_DONE;
 
 /* So Context will be created with our hackrastport->BitMap */
-	HC->hglrc = AROSMesaCreateContext(attributes);
+	HC->hglrc = glACreateContext(attributes);
 	if(!HC->hglrc)
 		{ REMP("AROS: Cant create Mesa context\n"); return 0; }
 
-	AROSMesaMakeCurrent(HC->hglrc);
+	glAMakeCurrent(HC->hglrc);
 	REMP("AROS: HC->awin %ld HC->hglrc %ld HC->overwin %ld\n",HC->awin,HC->hglrc,HC->overwin);
 	return 1;
 }
@@ -587,11 +587,11 @@ int i=0;
 	HFUNC(OS_StartGL)
 	REMP("AROS: HC %ld \n",HC);
 
-	if(!MesaBase)
-		MesaBase = OpenLibrary("mesa.library", 0L);
+	if(!GLBase)
+		GLBase = OpenLibrary("gl.library", 0L);
 
-	if(!MesaBase)
-		{ REMP("AROS: Cant open mesa.library\n"); return 0; }
+	if(!GLBase)
+		{ REMP("AROS: Cant open gl.library\n"); return 0; }
 
 /* Current Amiga window : certainly the one we want */
 	mesawin=HC->awin;
@@ -600,23 +600,23 @@ int i=0;
 	REMP("AROS: mesawin <%s> at %ld %ld size %ldX%ld\n",mesawin->Title,mesawin->LeftEdge,mesawin->TopEdge,mesawin->Width,mesawin->Height);
 	REMP("AROS: mesawin (borders %ld %ld %ld %ld )\n"  ,mesawin->BorderLeft,mesawin->BorderTop,mesawin->BorderRight,mesawin->BorderBottom);
 
-	attributes[i].ti_Tag = AMA_Window;		attributes[i++].ti_Data = (IPTR)mesawin;
-	attributes[i].ti_Tag = AMA_Left;		attributes[i++].ti_Data = x;
-	attributes[i].ti_Tag = AMA_Top;		attributes[i++].ti_Data = y;
-	attributes[i].ti_Tag = AMA_Width;		attributes[i++].ti_Data = large;
-	attributes[i].ti_Tag = AMA_Height;		attributes[i++].ti_Data = high;
-	attributes[i].ti_Tag = AMA_DoubleBuf;	attributes[i++].ti_Data = GL_TRUE;
-	attributes[i].ti_Tag = AMA_RGBMode;		attributes[i++].ti_Data = GL_TRUE;
-	attributes[i].ti_Tag = AMA_NoDepth;		attributes[i++].ti_Data = GL_FALSE;
-	attributes[i].ti_Tag = AMA_NoStencil;	attributes[i++].ti_Data = GL_TRUE;
-	attributes[i].ti_Tag = AMA_NoAccum;		attributes[i++].ti_Data = GL_TRUE;
+	attributes[i].ti_Tag = GLA_Window;		attributes[i++].ti_Data = (IPTR)mesawin;
+	attributes[i].ti_Tag = GLA_Left;		attributes[i++].ti_Data = x;
+	attributes[i].ti_Tag = GLA_Top;		attributes[i++].ti_Data = y;
+	attributes[i].ti_Tag = GLA_Width;		attributes[i++].ti_Data = large;
+	attributes[i].ti_Tag = GLA_Height;		attributes[i++].ti_Data = high;
+	attributes[i].ti_Tag = GLA_DoubleBuf;	attributes[i++].ti_Data = GL_TRUE;
+	attributes[i].ti_Tag = GLA_RGBMode;		attributes[i++].ti_Data = GL_TRUE;
+	attributes[i].ti_Tag = GLA_NoDepth;		attributes[i++].ti_Data = GL_FALSE;
+	attributes[i].ti_Tag = GLA_NoStencil;	attributes[i++].ti_Data = GL_TRUE;
+	attributes[i].ti_Tag = GLA_NoAccum;		attributes[i++].ti_Data = GL_TRUE;
 	attributes[i].ti_Tag = TAG_DONE;
 
 /* WARNING: As Aros cant use a particular bitmap as Warp3D do but a window	*/
 /* so we create a fake rastport and use this rastport in the current window 	*/
 /* then this window is used to create the GL context 					*/
 /* This will have this effect on the internal AROSMesaContext *amesa :		*/
-/*    amesa->awin = (struct Window *)GetTagData(AMA_Window, 0, tagList);	*/
+/*    amesa->awin = (struct Window *)GetTagData(GLA_Window, 0, tagList);	*/
 /*	amesa->visible_rp = amesa->awin->RPort;						*/
 /*	Calculate rastport dimensions 							*/
 /*	amesa->visible_rp_width = amesa->visible_rp->Layer->bounds.MaxX - amesa->visible_rp->Layer->bounds.MinX + 1; */
@@ -635,7 +635,7 @@ int i=0;
 	Move(hackrastport->Layer->rp,0,0);
 
 /* So Context will be created with our hackrastport->BitMap */
-	HC->hglrc = AROSMesaCreateContext(attributes);
+	HC->hglrc = glACreateContext(attributes);
 
 /* Restaure the original window structure so windowing will still works */
 	mesawin->RPort=oldrastport;
@@ -643,7 +643,7 @@ int i=0;
 	if(!HC->hglrc)
 		{ REMP("AROS: Cant create Mesa context\n"); return 0; }
 
-	AROSMesaMakeCurrent(HC->hglrc);
+	glAMakeCurrent(HC->hglrc);
 	HC->overwin=0;
 	REMP("AROS: HC->awin %ld HC->hglrc %ld HC->overwin %ld\n",HC->awin,HC->hglrc,HC->overwin);
 	return 1;
@@ -660,12 +660,12 @@ struct HARD3D_context *HC=hc;
 	      CloseWindow(HC->overwin);
 
 	if(HC->hglrc!=NULL)
-		AROSMesaDestroyContext(HC->hglrc);
+		glADestroyContext(HC->hglrc);
 
 	if(HC->hackrastport!=NULL)
 		Libfree(HC->hackrastport);
 
-	CloseLibrary(MesaBase);
+	CloseLibrary(GLBase);
 
 	HC->hackrastport=NULL;
 	HC->hglrc=NULL;
@@ -686,9 +686,9 @@ short int  oldLeftEdge, oldTopEdge;
 
 	if(HC->UseOverlay)					/* in this case we drawn in overwin */
 		{
-	HFUNC(AROSMesaSwapBuffers)
-		AROSMesaSwapBuffers(HC->hglrc);
-	HFUNC(AROSMesaSwapBuffersOK)
+	HFUNC(glASwapBuffers)
+		glASwapBuffers(HC->hglrc);
+	HFUNC(glASwapBuffersOK)
 		}
 	else
 		{							/* else we drawn in back buffer	*/
@@ -704,7 +704,7 @@ short int  oldLeftEdge, oldTopEdge;
 		MoveWindow(mesawin,-oldLeftEdge,-oldTopEdge);
 #endif
 		mesawin->RPort=(struct RastPort *)HC->hackrastport;	/* use our rastport and bitmap */
-		AROSMesaSwapBuffers(HC->hglrc);				/* On Aros this will copy the back buffer to the current window */
+		glASwapBuffers(HC->hglrc);				/* On Aros this will copy the back buffer to the current window */
 
 #ifdef WINHACK
 		mesawin->LeftEdge=oldLeftEdge;		/* restore window */

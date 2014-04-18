@@ -12307,14 +12307,14 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_c.h SDL-1.2.15.aros/src/video/cgx/S
 +
 +#if SDL_VIDEO_OPENGL
 +#include <proto/exec.h>
-+#include <GL/arosmesa.h>
++#include <GL/gla.h>
 +#endif
 +
 +#define _THIS   SDL_VideoDevice *_this
 +
 +struct SDL_PrivateGLData {
 +#if SDL_VIDEO_OPENGL
-+	AROSMesaContext glctx;
++	GLAContext glctx;
 +#endif
 +};
 +
@@ -12391,18 +12391,18 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_CreateContext.c SDL-1.2.15.aros/src
 +
 +#include "SDL_config.h"
 +
-+/* AROSMesa implementation of SDL OpenGL support */
++/* GLA implementation of SDL OpenGL support */
 +
 +#include "SDL_cgxgl_c.h"
 +#include "SDL_cgxvideo.h"
 +
 +#if defined(PROTO_SDL_H) && SDL_VIDEO_OPENGL
 +#include "SDL_intern.h"
-+#define MesaBase_ptr SDLBase->GLBase_ptr
-+#define MesaBase *MesaBase_ptr
++#define GLBase_ptr SDLBase->GLBase_ptr
++#define GLBase *GLBase_ptr
 +#else
-+extern struct Library *MesaBase;
-+#define MesaBase_ptr &MesaBase
++extern struct Library *GLBase;
++#define GLBase_ptr &GLBase
 +#endif
 +
 +/* Create OpenGL context */
@@ -12417,21 +12417,21 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_CreateContext.c SDL-1.2.15.aros/src
 +    struct TagItem attributes [10];
 +    struct Window *win = (struct Window *)SDL_Window;
 +
-+    if (!MesaBase_ptr || !MesaBase)
++    if (!GLBase_ptr || !GLBase)
 +    {
-+        SDL_SetError("AROSMesa is not loaded");
++        SDL_SetError("gl.library is not loaded");
 +        return(-1);
 +    }
 +
 +    if ( this->gl_config.red_size   == 0 &&
 +            this->gl_config.blue_size  == 0 &&
 +            this->gl_config.green_size == 0 ) {
-+        SDL_SetError("AROSMesa does not work with indexed color");
++        SDL_SetError("gl.library does not work with indexed color");
 +        return(-1);
 +    }
 +
 +    if( this->gl_config.stereo ) {
-+        SDL_SetError("AROSMesa does not support stereo buffer");
++        SDL_SetError("gl.library does not support stereo buffer");
 +        return(-1);		
 +    }
 +    
@@ -12442,22 +12442,22 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_CreateContext.c SDL-1.2.15.aros/src
 +    }
 +
 +    /* Required window pointer  */
-+    attributes[i].ti_Tag = AMA_Window;	attributes[i++].ti_Data = (IPTR)win;
++    attributes[i].ti_Tag = GLA_Window;	attributes[i++].ti_Data = (IPTR)win;
 +
-+    /* this->gl_config.double_buffer - skipped, AROSMesa always double-buffer */
-+    /* this->gl_config.multisamplebuffers - currently not supported by Mesa */
-+    /* this->gl_config.multisamplesample - currently not supported by Mesa */
++    /* this->gl_config.double_buffer - skipped, GLA always double-buffer */
++    /* this->gl_config.multisamplebuffers - currently not supported */
++    /* this->gl_config.multisamplesample - currently not supported */
 +
 +    /* no depth buffer ? */
 +    if ( this->gl_config.depth_size == 0 ) 
 +    {
-+        attributes[i].ti_Tag = AMA_NoDepth;
++        attributes[i].ti_Tag = GLA_NoDepth;
 +        attributes[i++].ti_Data = GL_TRUE;
 +    }
 +    /* no stencil buffer ? */
 +    if ( this->gl_config.stencil_size == 0 )
 +    {
-+        attributes[i].ti_Tag = AMA_NoStencil;
++        attributes[i].ti_Tag = GLA_NoStencil;
 +        attributes[i++].ti_Data = GL_TRUE;
 +    }
 +    /* no accum buffer ? */
@@ -12465,14 +12465,14 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_CreateContext.c SDL-1.2.15.aros/src
 +        this->gl_config.accum_blue_size  == 0 &&
 +        this->gl_config.accum_green_size == 0 )
 +    {
-+        attributes[i].ti_Tag = AMA_NoAccum;
++        attributes[i].ti_Tag = GLA_NoAccum;
 +        attributes[i++].ti_Data = GL_TRUE;
 +    }
 +
 +    /* done */
 +    attributes[i].ti_Tag = TAG_DONE;
 +
-+    this->gl_data->glctx = AROSMesaCreateContext(attributes);
++    this->gl_data->glctx = glACreateContext(attributes);
 +    if ( this->gl_data->glctx == NULL ) {
 +        SDL_SetError("Couldn't create OpenGL context");
 +        return(-1);
@@ -12519,18 +12519,18 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_DestroyContext.c SDL-1.2.15.aros/sr
 +
 +#include "SDL_config.h"
 +
-+/* AROSMesa implementation of SDL OpenGL support */
++/* GLA implementation of SDL OpenGL support */
 +
 +#include "SDL_cgxgl_c.h"
 +#include "SDL_cgxvideo.h"
 +
 +#if defined(PROTO_SDL_H) && SDL_VIDEO_OPENGL
 +#include "SDL_intern.h"
-+#define MesaBase_ptr SDLBase->GLBase_ptr
-+#define MesaBase *MesaBase_ptr
++#define GLBase_ptr SDLBase->GLBase_ptr
++#define GLBase *GLBase_ptr
 +#else
-+extern struct Library *MesaBase;
-+#define MesaBase_ptr &MesaBase
++extern struct Library *GLBase;
++#define GLBase_ptr &GLBase
 +#endif
 +
 +/* Destroy OpenGL context */
@@ -12541,9 +12541,9 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_DestroyContext.c SDL-1.2.15.aros/sr
 +#endif
 +{
 +#if SDL_VIDEO_OPENGL
-+    if (MesaBase_ptr && MesaBase && (this->gl_data->glctx != NULL)) {
-+        AROSMesaMakeCurrent(NULL);
-+        AROSMesaDestroyContext(this->gl_data->glctx);
++    if (GLBase_ptr && GLBase && (this->gl_data->glctx != NULL)) {
++        glAMakeCurrent(NULL);
++        glADestroyContext(this->gl_data->glctx);
 +        this->gl_data->glctx = NULL;
 +    }
 +#endif
@@ -12582,18 +12582,18 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_GetAttribute.c SDL-1.2.15.aros/src/
 +
 +#include "SDL_config.h"
 +
-+/* AROSMesa implementation of SDL OpenGL support */
++/* GLA implementation of SDL OpenGL support */
 +
 +#include "SDL_cgxgl_c.h"
 +#include "SDL_cgxvideo.h"
 +
 +#if defined(PROTO_SDL_H) && SDL_VIDEO_OPENGL
 +#include "SDL_intern.h"
-+#define MesaBase_ptr SDLBase->GLBase_ptr
-+#define MesaBase *MesaBase_ptr
++#define GLBase_ptr SDLBase->GLBase_ptr
++#define GLBase *GLBase_ptr
 +#else
-+extern struct Library *MesaBase;
-+#define MesaBase_ptr &MesaBase
++extern struct Library *GLBase;
++#define GLBase_ptr &GLBase
 +#endif
 +
 +#if SDL_VIDEO_OPENGL
@@ -12605,7 +12605,7 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_GetAttribute.c SDL-1.2.15.aros/src/
 +{
 +    GLenum mesa_attrib;
 +
-+    if (!MesaBase_ptr || !MesaBase)
++    if (!GLBase_ptr || !GLBase)
 +        return -1;
 +
 +    switch(attrib) {
@@ -12653,7 +12653,7 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_GetAttribute.c SDL-1.2.15.aros/src/
 +            return -1;
 +    }
 +
-+    AROSMesaGetConfig(this->gl_data->glctx, mesa_attrib, value);
++    glAGetConfig(this->gl_data->glctx, mesa_attrib, value);
 +    return 0;
 +}
 +#endif /* SDL_VIDEO_OPENGL */
@@ -12691,18 +12691,18 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_GetProcAddress.c SDL-1.2.15.aros/sr
 +
 +#include "SDL_config.h"
 +
-+/* AROSMesa implementation of SDL OpenGL support */
++/* GLA implementation of SDL OpenGL support */
 +
 +#include "SDL_cgxgl_c.h"
 +#include "SDL_cgxvideo.h"
 +
 +#if defined(PROTO_SDL_H) && SDL_VIDEO_OPENGL
 +#include "SDL_intern.h"
-+#define MesaBase_ptr SDLBase->GLBase_ptr
-+#define MesaBase *MesaBase_ptr
++#define GLBase_ptr SDLBase->GLBase_ptr
++#define GLBase *GLBase_ptr
 +#else
-+extern struct Library *MesaBase;
-+#define MesaBase_ptr &MesaBase
++extern struct Library *GLBase;
++#define GLBase_ptr &GLBase
 +#endif
 +
 +#if SDL_VIDEO_OPENGL
@@ -12714,9 +12714,9 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_GetProcAddress.c SDL-1.2.15.aros/sr
 +{
 +    void *func = NULL;
 +
-+    if (MesaBase_ptr && MesaBase)
++    if (GLBase_ptr && GLBase)
 +    {
-+        func = AROSMesaGetProcAddress(proc);
++        func = glAGetProcAddress(proc);
 +    }
 +
 +    return func;
@@ -12841,18 +12841,18 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_MakeCurrent.c SDL-1.2.15.aros/src/v
 +
 +#include "SDL_config.h"
 +
-+/* AROSMesa implementation of SDL OpenGL support */
++/* GLA implementation of SDL OpenGL support */
 +
 +#include "SDL_cgxgl_c.h"
 +#include "SDL_cgxvideo.h"
 +
 +#if defined(PROTO_SDL_H) && SDL_VIDEO_OPENGL
 +#include "SDL_intern.h"
-+#define MesaBase_ptr SDLBase->GLBase_ptr
-+#define MesaBase *MesaBase_ptr
++#define GLBase_ptr SDLBase->GLBase_ptr
++#define GLBase *GLBase_ptr
 +#else
-+extern struct Library *MesaBase;
-+#define MesaBase_ptr &MesaBase
++extern struct Library *GLBase;
++#define GLBase_ptr &GLBase
 +#endif
 +
 +#if SDL_VIDEO_OPENGL
@@ -12863,10 +12863,10 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_MakeCurrent.c SDL-1.2.15.aros/src/v
 +int CGX_GL_MakeCurrentI(_THIS, struct SDLBase *SDLBase)
 +#endif
 +{
-+    if( !MesaBase_ptr || !MesaBase || this->gl_data->glctx == NULL)
++    if( !GLBase_ptr || !GLBase || this->gl_data->glctx == NULL)
 +        return -1;
 +
-+    AROSMesaMakeCurrent(this->gl_data->glctx);
++    glAMakeCurrent(this->gl_data->glctx);
 +    return 0;
 +}
 +#endif /* SDL_VIDEO_OPENGL */
@@ -12968,18 +12968,18 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_SwapBuffers.c SDL-1.2.15.aros/src/v
 +
 +#include "SDL_config.h"
 +
-+/* AROSMesa implementation of SDL OpenGL support */
++/* GLA implementation of SDL OpenGL support */
 +
 +#include "SDL_cgxgl_c.h"
 +#include "SDL_cgxvideo.h"
 +
 +#if defined(PROTO_SDL_H) && SDL_VIDEO_OPENGL
 +#include "SDL_intern.h"
-+#define MesaBase_ptr SDLBase->GLBase_ptr
-+#define MesaBase *MesaBase_ptr
++#define GLBase_ptr SDLBase->GLBase_ptr
++#define GLBase *GLBase_ptr
 +#else
-+extern struct Library *MesaBase;
-+#define MesaBase_ptr &MesaBase
++extern struct Library *GLBase;
++#define GLBase_ptr &GLBase
 +#endif
 +
 +#if SDL_VIDEO_OPENGL
@@ -12989,10 +12989,10 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_SwapBuffers.c SDL-1.2.15.aros/src/v
 +void CGX_GL_SwapBuffersI(_THIS, struct SDLBase *SDLBase)
 +#endif
 +{
-+    if (!MesaBase_ptr || !MesaBase)
++    if (!GLBase_ptr || !GLBase)
 +        return;
 +
-+    AROSMesaSwapBuffers(this->gl_data->glctx);
++    glASwapBuffers(this->gl_data->glctx);
 +}
 +#endif /* SDL_VIDEO_OPENGL */
 diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_UpdateContext.c SDL-1.2.15.aros/src/video/cgx/SDL_cgxgl_UpdateContext.c
@@ -13029,18 +13029,18 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_UpdateContext.c SDL-1.2.15.aros/src
 +
 +#include "SDL_config.h"
 +
-+/* AROSMesa implementation of SDL OpenGL support */
++/* GLA implementation of SDL OpenGL support */
 +
 +#include "SDL_cgxgl_c.h"
 +#include "SDL_cgxvideo.h"
 +
 +#if defined(PROTO_SDL_H) && SDL_VIDEO_OPENGL
 +#include "SDL_intern.h"
-+#define MesaBase_ptr SDLBase->GLBase_ptr
-+#define MesaBase *MesaBase_ptr
++#define GLBase_ptr SDLBase->GLBase_ptr
++#define GLBase *GLBase_ptr
 +#else
-+extern struct Library *MesaBase;
-+#define MesaBase_ptr &MesaBase
++extern struct Library *GLBase;
++#define GLBase_ptr &GLBase
 +#endif
 +
 +/* Attach context to another window */
@@ -13053,14 +13053,14 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxgl_UpdateContext.c SDL-1.2.15.aros/src
 +#if SDL_VIDEO_OPENGL
 +    struct TagItem tags[2];
 +    struct Window *win = (struct Window*)SDL_Window;
-+    if( !MesaBase_ptr || !MesaBase || this->gl_data->glctx == NULL ) {
++    if( !GLBase_ptr || !GLBase || this->gl_data->glctx == NULL ) {
 +            return -1; //should never happen
 +    }
-+    tags[0].ti_Tag = AMA_Window;
++    tags[0].ti_Tag = GLA_Window;
 +    tags[0].ti_Data = (IPTR)win;
 +    tags[1].ti_Tag = TAG_DONE;
 +
-+    AROSMesaSetRast(this->gl_data->glctx, tags);
++    glASetRast(this->gl_data->glctx, tags);
 +
 +    return 0;
 +#else

@@ -161,7 +161,7 @@ glutMainLoopEvent (void)
               {
                 D(bug("[AMGLUT] glutMainLoopEvent: First loop of window %d\n", w->amglutwin_num));
 
-                AROSMesaMakeCurrent(w->amglutwin_context);
+                glAMakeCurrent(w->amglutwin_context);
                 w->amglutwin_FlagReDisplay = GL_TRUE;
 
                 glutwin_ChangedVis = GL_TRUE;
@@ -190,7 +190,7 @@ glutMainLoopEvent (void)
                     if ((_glut_get_newmenu_params((GLUTmenu *)w->amglutwin_WindowGlutMenu, &menu_func, &menu_value, menuNode_UD)))
                     {
                       w->amglutwin_FlagIdle = GL_FALSE;
-                      if (w != __glutTask->AMGLUTTN_WindowCurrent) AROSMesaMakeCurrent(w->amglutwin_context);
+                      if (w != __glutTask->AMGLUTTN_WindowCurrent) glAMakeCurrent(w->amglutwin_context);
                       D(bug("[AMGLUT] glutMainLoopEvent: Calling menu callback func @ %x with value %d\n", menu_func, menu_value));
 
                       menu_func(menu_value);
@@ -210,7 +210,7 @@ glutMainLoopEvent (void)
 
                   w->amglutwin_FlagIdle = GL_FALSE;
                   glutwin_NeedsFlush = GL_TRUE;
-                  if (w != __glutTask->AMGLUTTN_WindowCurrent) AROSMesaMakeCurrent(w->amglutwin_context);
+                  if (w != __glutTask->AMGLUTTN_WindowCurrent) glAMakeCurrent(w->amglutwin_context);
                   w->reshape(w->amglutwin_width, w->amglutwin_height);
                 }
                 break;
@@ -269,7 +269,7 @@ glutMainLoopEvent (void)
                       w->amglutwin_FlagIdle = GL_FALSE;
                       w->amglutwin_mouseX = tmp_msg_mouseX;
                       w->amglutwin_mouseY = tmp_msg_mouseY;
-                      if (w != __glutTask->AMGLUTTN_WindowCurrent) AROSMesaMakeCurrent(w->amglutwin_context);
+                      if (w != __glutTask->AMGLUTTN_WindowCurrent) glAMakeCurrent(w->amglutwin_context);
                       w->special(specialKey, w->amglutwin_mouseX, w->amglutwin_mouseY);
                     }
                   }
@@ -281,7 +281,7 @@ glutMainLoopEvent (void)
                       w->amglutwin_FlagIdle = GL_FALSE;
                       w->amglutwin_mouseX = tmp_msg_mouseX;
                       w->amglutwin_mouseY = tmp_msg_mouseY;
-                      if (w != __glutTask->AMGLUTTN_WindowCurrent) AROSMesaMakeCurrent(w->amglutwin_context);
+                      if (w != __glutTask->AMGLUTTN_WindowCurrent) glAMakeCurrent(w->amglutwin_context);
                       w->keyboard(plainKey & 0xFF, w->amglutwin_mouseX, w->amglutwin_mouseY);
                     }
                   }
@@ -299,7 +299,7 @@ glutMainLoopEvent (void)
                     D(bug("[AMGLUT] glutMainLoopEvent: Calling w->motion\n"));
 
                     w->amglutwin_FlagIdle = GL_FALSE;
-                    if (w != __glutTask->AMGLUTTN_WindowCurrent) AROSMesaMakeCurrent(w->amglutwin_context);
+                    if (w != __glutTask->AMGLUTTN_WindowCurrent) glAMakeCurrent(w->amglutwin_context);
                     w->motion(w->amglutwin_mouseX, w->amglutwin_mouseY);
                   }
                 }
@@ -322,7 +322,7 @@ glutMainLoopEvent (void)
                     D(bug("[AMGLUT] glutMainLoopEvent: Calling w->passive\n"));
 
                     w->amglutwin_FlagIdle = GL_FALSE;
-                    if (w != __glutTask->AMGLUTTN_WindowCurrent) AROSMesaMakeCurrent(w->amglutwin_context);
+                    if (w != __glutTask->AMGLUTTN_WindowCurrent) glAMakeCurrent(w->amglutwin_context);
                     w->passive(w->amglutwin_mouseX, w->amglutwin_mouseY);
                     break;
                   }
@@ -350,7 +350,7 @@ glutMainLoopEvent (void)
                   }
 
                   w->amglutwin_FlagIdle = GL_FALSE;
-                  if (w != __glutTask->AMGLUTTN_WindowCurrent) AROSMesaMakeCurrent(w->amglutwin_context);
+                  if (w != __glutTask->AMGLUTTN_WindowCurrent) glAMakeCurrent(w->amglutwin_context);
                   w->mouse(mousebutt_button, mousebutt_state, w->amglutwin_mouseX, w->amglutwin_mouseY);
                 }
                 break;
@@ -363,7 +363,7 @@ glutMainLoopEvent (void)
               }
             case IDCMP_CLOSEWINDOW:
               {
-                if (w != __glutTask->AMGLUTTN_WindowCurrent) AROSMesaMakeCurrent(w->amglutwin_context);
+                if (w != __glutTask->AMGLUTTN_WindowCurrent) glAMakeCurrent(w->amglutwin_context);
                 if (w->destroy) {
                   w->amglutwin_FlagIdle = GL_FALSE;
                   w->destroy();
@@ -380,7 +380,7 @@ glutMainLoopEvent (void)
           if ((glutwin_ChangedVis == GL_TRUE) && (w->visibility)) {
              D(bug("[AMGLUT] glutMainLoopEvent: Calling w->visibility\n"));
 
-             if (w != __glutTask->AMGLUTTN_WindowCurrent) AROSMesaMakeCurrent(w->amglutwin_context);
+             if (w != __glutTask->AMGLUTTN_WindowCurrent) glAMakeCurrent(w->amglutwin_context);
 // TODO: Set the correct visibility here! (always sets visible atm!)
              w->amglutwin_FlagReDisplay = GL_TRUE;
              w->visibility(GLUT_VISIBLE);
@@ -391,7 +391,7 @@ glutMainLoopEvent (void)
             D(bug("[AMGLUT] glutMainLoopEvent: Calling w->display\n"));
 
             w->amglutwin_FlagReDisplay = GL_FALSE;
-            if (w != __glutTask->AMGLUTTN_WindowCurrent) AROSMesaMakeCurrent(w->amglutwin_context);
+            if (w != __glutTask->AMGLUTTN_WindowCurrent) glAMakeCurrent(w->amglutwin_context);
             w->display(); 
           }
           
@@ -414,7 +414,7 @@ glutMainLoopEvent (void)
 
     D(bug("[AMGLUT] glutMainLoopEvent: Calling global idle func\n"));
 
-    AROSMesaMakeCurrent(__glutTask->AMGLUTTN_WindowCurrent->amglutwin_context);
+    glAMakeCurrent(__glutTask->AMGLUTTN_WindowCurrent->amglutwin_context);
     _glut_idle_func();
     glutPostRedisplay();
     w->amglutwin_InternalMessage->Class = GLUT_MSG_WINDOWACTIVE;

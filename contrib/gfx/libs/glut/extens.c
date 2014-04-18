@@ -72,5 +72,5 @@ glutGetProcAddress (const char *procName)
    D(bug("[AMGLUT] In glutGetProcAddress()\n"));
 
    /* TODO - handle glut namespace */
-   return (GLUTproc)AROSMesaGetProcAddress(procName);
+   return (GLUTproc)glAGetProcAddress(procName);
 }

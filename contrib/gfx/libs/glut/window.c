@@ -210,18 +210,18 @@ glutCreateWindow (const char *title)
           D(bug("[AMGLUT] glutCreateWindow: Allocated internal window message @ %x\n", w->amglutwin_InternalMessage));
 
 
-          if ((w->amglutwin_context = AROSMesaCreateContextTags(
-              AMA_Window, (IPTR)w->amglutwin_Window,
-              AMA_DoubleBuf, (_glut_default.mode & GLUT_DOUBLE),
-              AMA_Left, w->amglutwin_Window->BorderLeft,
-              AMA_Top, w->amglutwin_Window->BorderTop,
-              AMA_Right, w->amglutwin_Window->BorderRight,
-              AMA_Bottom, w->amglutwin_Window->BorderBottom,
-              AMA_RGBMode, _glut_default.mode & GLUT_RGB,
-              AMA_NoStencil, !(_glut_default.mode & GLUT_STENCIL),
-              AMA_NoAccum, !(_glut_default.mode & GLUT_ACCUM),
-              AMA_NoDepth, !(_glut_default.mode & GLUT_DEPTH),
-              AMA_AlphaFlag, (_glut_default.mode & GLUT_ALPHA),
+          if ((w->amglutwin_context = glACreateContextTags(
+              GLA_Window, (IPTR)w->amglutwin_Window,
+              GLA_DoubleBuf, (_glut_default.mode & GLUT_DOUBLE),
+              GLA_Left, w->amglutwin_Window->BorderLeft,
+              GLA_Top, w->amglutwin_Window->BorderTop,
+              GLA_Right, w->amglutwin_Window->BorderRight,
+              GLA_Bottom, w->amglutwin_Window->BorderBottom,
+              GLA_RGBMode, _glut_default.mode & GLUT_RGB,
+              GLA_NoStencil, !(_glut_default.mode & GLUT_STENCIL),
+              GLA_NoAccum, !(_glut_default.mode & GLUT_ACCUM),
+              GLA_NoDepth, !(_glut_default.mode & GLUT_DEPTH),
+              GLA_AlphaFlag, (_glut_default.mode & GLUT_ALPHA),
               TAG_DONE,0)) == NULL)
           {
             D(bug("[AMGLUT] In glutCreateWindow: ERROR: Failed to create a GL Context\n"));
@@ -238,7 +238,7 @@ glutCreateWindow (const char *title)
           w->amglutwin_width =  _glut_default.width;
           w->amglutwin_height = _glut_default.height;
 
-          AROSMesaMakeCurrent(w->amglutwin_context);
+          glAMakeCurrent(w->amglutwin_context);
 
           D(bug("[AMGLUT] In glutCreateWindow: Window successfully opened\n"));
 
@@ -276,7 +276,7 @@ glutDestroyWindow (int win)
 
 	   if (w->amglutwin_context) 
 		{
-		  AROSMesaDestroyContext(w->amglutwin_context);
+		  glADestroyContext(w->amglutwin_context);
 		  w->amglutwin_context = NULL;
 		}
 
@@ -319,7 +319,7 @@ glutSwapBuffers (void)
     }
 
     glFlush();
-    AROSMesaSwapBuffers(__glutTask->AMGLUTTN_WindowCurrent->amglutwin_context);
+    glASwapBuffers(__glutTask->AMGLUTTN_WindowCurrent->amglutwin_context);
 
     if (__glutTask->AMGLUTTN_WindowCurrent->show_mouse) {
       /* XXX unscare mouse */
@@ -367,9 +367,9 @@ glutSetWindow (int win)
   {
     __glutTask->AMGLUTTN_WindowCurrent = w;
  
-    if (__glutTask->AMGLUTTN_WindowCurrent->amglutwin_context != AROSMesaGetCurrentContext())
+    if (__glutTask->AMGLUTTN_WindowCurrent->amglutwin_context != glAGetCurrentContext())
     {
-      AROSMesaMakeCurrent(__glutTask->AMGLUTTN_WindowCurrent->amglutwin_context);
+      glAMakeCurrent(__glutTask->AMGLUTTN_WindowCurrent->amglutwin_context);
     }
   }
 }

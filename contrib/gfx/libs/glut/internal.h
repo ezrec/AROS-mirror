@@ -44,7 +44,7 @@
 #define class c_class
 #endif
 
-#include <GL/arosmesa.h>
+#include <GL/gla.h>
 #include <GL/gl.h>
 
 #define MAX_WINDOWS     15 /* Obsolete */
@@ -139,7 +139,7 @@ typedef struct GLUTwindow {
    GLboolean              amglutwin_FlagIdle;
 
 /***** GL Related items */
-   AROSMesaContext        amglutwin_context;
+   GLAContext             amglutwin_context;
 
 /***** GLUT settable or visible window state. */
    GLboolean              amglutwin_Virgin;
