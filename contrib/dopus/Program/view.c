@@ -33,6 +33,7 @@ the existing commercial status of Directory Opus 5.
 #include "searchdata.h"
 #ifdef __AROS__
 #include <devices/rawkeycodes.h>
+#include <aros/macros.h>
 #else
 #include <devices/newmouse.h>
 //#include <proto/powerpacker.h>
@@ -1892,7 +1893,9 @@ int line;
     buf2);*/
   lsprintf((char *)textbuf,
     "%08lx: %08lx %08lx %08lx %08lx %s\n",line*16,
-    ((long *)hex)[0],((long *)hex)[1],((long *)hex)[2],((long *)hex)[3],buf2);
+    AROS_LONG2BE(((long *)hex)[0]),AROS_LONG2BE(((long *)hex)[1]),
+    AROS_LONG2BE(((long *)hex)[2]),AROS_LONG2BE(((long *)hex)[3]),buf2);
+
   if (c>-1) {
     for (b=c;b<46;b++)
       textbuf[b]=' ';
