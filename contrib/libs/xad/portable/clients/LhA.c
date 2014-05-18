@@ -31,10 +31,10 @@
   #define XADMASTERVERSION      13
 #endif
 
-XADCLIENTVERSTR("LhA 1.13 (21.02.2004)")
+XADCLIENTVERSTR("LhA 1.16 (07.02.2011)")
 
 #define LHA_VERSION             1
-#define LHA_REVISION            13
+#define LHA_REVISION            16
 
 #define LHASFX_VERSION          LHA_VERSION
 #define LHASFX_REVISION         LHA_REVISION
@@ -92,18 +92,24 @@ struct xadMasterBase *xadMasterBase)
   xadSTRPTR filename2 = 0, comment2 = 0;
   xadINT32 namesize = 0, dirsize = 0, commentsize = 0, groupsize = 0, usersize = 0;
   xadUINT32 userid = 0, groupid = 0;
-  xadINT32 time = 0, prot, err = 0;
+  xadINT32 time = 0, prot = -1, err = 0;
   xadUINT8 buf[128];
   xadSTRPTR buf2 = 0;
   xadUINT8 *bufptr;
   struct xadFileInfo *fi = 0;
+  xadSTRING os = 0;
 
   if(head[20] == 1)
+  {
     nextsize = EndGetI16(&head[25+head[21]]);
+    os = head[24+head[21]];
+  }
   else
   {
     nextsize = EndGetI16(&head[24]);
     time = EndGetI32(&head[15]);
+
+    if(head[20] >= 2) os = head[23];
   }
 
   prot = head[19];
@@ -128,7 +134,7 @@ struct xadMasterBase *xadMasterBase)
       {
 //      case 0x00: /* CRC-16 of header */ break;
       case 0x01: /* Filename */
-        if(!filename)
+        if(!filename&&nextsize>3)
         {
           if((filename = xadAllocVec(XADM (xadUINT32) nextsize-3, XADMEMF_ANY)))
           {
@@ -140,7 +146,7 @@ struct xadMasterBase *xadMasterBase)
         }
         break;
       case 0x02: /* Directoryname */
-        if(!dirname)
+        if(!dirname&&nextsize>3)
         {
           if((dirname = xadAllocVec(XADM (xadUINT32) nextsize-3, XADMEMF_ANY)))
           {
@@ -166,9 +172,10 @@ struct xadMasterBase *xadMasterBase)
             err = XADERR_NOMEMORY;
         }
         break;
+      case 0x40:
+        if (os == 0) os = 'M'; // force OS ID for MS-DOS protection bits
       case 0x50: /* File permission */
-        xadConvertProtection(XADM XAD_PROTUNIX, EndGetI16(&bufptr[1]), XAD_GETPROTAMIGA,
-        &prot, TAG_DONE);
+        prot = EndGetI16(&bufptr[1]);
         break;
       case 0x51: /* ID's */
         groupid = EndGetI16(&bufptr[1]);
@@ -238,7 +245,39 @@ struct xadMasterBase *xadMasterBase)
     TAG_IGNORE, commentsize, XAD_OBJPRIVINFOSIZE, sizeof(struct LhAPrivate)
     + groupsize + usersize, TAG_DONE)))
     {
-      fi->xfi_Protection = prot;
+      if(prot>=0)
+      {
+        switch(os)
+        {
+          case 'U': // UNIX
+            xadConvertProtection(XADM XAD_PROTUNIX, prot, XAD_GETPROTFILEINFO,
+              fi, TAG_DONE);
+          break;
+
+          case 'A': // Amiga
+            xadConvertProtection(XADM XAD_PROTAMIGA, prot, XAD_GETPROTFILEINFO,
+              fi, TAG_DONE);
+          break;
+
+          case 0: // Unknown/MS-DOS
+            /* I've set this to XAD_PROTAMIGA because header level 0 doesn't
+             * give the OS used to create the archive, so I have no idea what
+             * format the protection bits are in.  XAD_PROTMSDOS is safer but
+             * as I'm running on an Amiga, chances are the header level 0
+             * archive was created on an Amiga.  If there's a way of finding
+             * out, then this code can be modified.
+             */
+            xadConvertProtection(XADM XAD_PROTAMIGA, prot, XAD_GETPROTFILEINFO,
+              fi, TAG_DONE);
+          break;
+
+          default:
+            xadConvertProtection(XADM XAD_PROTMSDOS, prot, XAD_GETPROTFILEINFO,
+              fi, TAG_DONE);
+          break;
+        }
+      }
+
       if(time)
         xadConvertDates(XADM XAD_DATEUNIX, time, XAD_GETDATEXADDATE, &fi->xfi_Date, TAG_DONE);
       else
