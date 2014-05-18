@@ -1,5 +1,5 @@
 /*
-    Copyright © 2011, The AROS Development Team. 
+    Copyright © 2014, The AROS Development Team.
     All rights reserved.
     
     $Id$
@@ -172,7 +172,19 @@ static int Init(LIBBASETYPEPTR LIBBASE)
 
 static int Expunge(LIBBASETYPEPTR LIBBASE)
 {
+    struct DosLibrary *DOSBase = XADB(LIBBASE)->xmb_DOSBase;
+
     D(bug("[xadmaster.library]: %s()\n", __PRETTY_FUNCTION__));
+
+    xadFreeClients(XADB(LIBBASE));
+
+    if(XADB(LIBBASE)->xmb_ClientSegList)
+        UnLoadSeg(XADB(LIBBASE)->xmb_ClientSegList);
+
+    if(XADB(LIBBASE)->xmb_UtilityBase)
+        CloseLibrary((struct Library *)XADB(LIBBASE)->xmb_UtilityBase);
+    if(XADB(LIBBASE)->xmb_DOSBase)
+        CloseLibrary((struct Library *)XADB(LIBBASE)->xmb_DOSBase);
 
     return TRUE;
 }
