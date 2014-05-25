@@ -6,10 +6,11 @@ include $(TOP)/config/make.cfg
 
 #MM- grub2-arix-i386: arch-common-grub2 grub2-iso-setup
 
-bootloader-grub2-arix-i386: $(BINDIR)/boot/grub/grub.cfg
+bootloader-grub2-arix-i386: $(AROSARCHDIR)/grub/grub.cfg
 
-bootloader-grub2gfx-arix-i386: $(BINDIR)/boot/grub/grub.cfg
+bootloader-grub2gfx-arix-i386: $(AROSARCHDIR)/grub/grub.cfg
 
-$(BINDIR)/boot/grub/grub.cfg: grub.cfg
-		$(CP) $< $(BINDIR)/boot/grub/
+$(AROSARCHDIR)/grub/grub.cfg: grub.cfg
+		@$(ECHO) Generating $@...
+		@$(SED) -e 's#@arch@#$(AROS_DIR_ARCH)#g' < $< > $@
 
