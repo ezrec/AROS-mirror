@@ -13,47 +13,53 @@ endif
 
 #MM boot-arix: kernel-bootstrap-hosted
 
+BOOTSTRAPCONF := $(AROSARCHDIR)/AROSBootstrap.conf
+
 #MM
-boot-arix: $(BINDIR)/boot/AROSBootstrap.conf
+boot-arix: $(BOOTSTRAPCONF)
 
-$(BINDIR)/boot/AROSBootstrap.conf: mkbootconf.sh $(BINDIR)/boot AROSBootstrap.conf
-	@$(ECHO) "Writing    $@..."
-	@$(SRCDIR)/$(CURDIR)/mkbootconf.sh $(SRCDIR)/$(CURDIR) $(BSP) >$@
+$(BOOTSTRAPCONF): INPUT_FILE := $(SRCDIR)/$(CURDIR)/AROSBootstrap.conf
+$(BOOTSTRAPCONF): AROSBootstrap.conf
 
-$(BINDIR)/boot:
+$(BOOTSTRAPCONF): $(AROSARCHDIR)
+	@$(ECHO) Generating $@...
+	@$(SED) -e 's#@arch@#$(AROS_DIR_ARCH)#g' < $(INPUT_FILE) > $@
+
+$(AROSARCHDIR):
 	@$(ECHO) "Making     $@..."
-	@mkdir -p $(BINDIR)/boot
+	@mkdir -p $@
 
 # -------- Kickstart part --------
 
-#MM- kernel-arix: kernel-link-base
+#MM- kernel-arix: kernel-objs
 
 #MM- kernel-link-arix : \
 #MM     kernel-kernel-kobj              \
-#MM     kernel-hostlib-kobj             \
-#MM     kernel-battclock-kobj           \
-#MM     kernel-processor-kobj           \
-#MM     kernel-timer-kobj               \
-#MM     kernel-expansion-kobj           \
+#MM     kernel-hostlib                  \
+#MM     kernel-battclock                \
+#MM     kernel-processor                \
+#MM     kernel-timer                    \
+#MM     kernel-expansion                \
 #MM     kernel-exec-kobj                \
-#MM     kernel-unixio-kobj              \
-#MM     kernel-hidd-linuxfb-kobj        \
-#MM     kernel-hidd-linuxinput-kobj     \
-#MM     kernel-pci-kobj                 \
-#MM     hidd-pci-linux-kobj             \
-#MM     workbench-devs-hostdisk-kobj    \
+#MM     kernel-unixio                   \
+#MM     kernel-hidd-linuxfb             \
+#MM     kernel-hidd-linuxinput          \
+#MM     kernel-pci                      \
+#MM     hidd-pci-linux                  \
+#MM     workbench-devs-hostdisk         \
+#MM     workbench-devs-eth-unix         \
 #MM     linklibs
 
 # ---- ARIX board support package ----
 
-KDEVS   := timer hostdisk
-KLIBS   := exec expansion
+KDEVS   :=
+KLIBS   := exec
 KHNDLRS :=
-KHIDDS  := unixio linuxfb linuxinput pcilinux pci
-KRSRCS  := battclock hostlib processor
+KHIDDS  :=
+KRSRCS  :=
 
-%link_kickstart mmake=kernel-link-arix file=$(BINDIR)/boot/aros-bsp-$(BSP) \
+%link_kickstart mmake=kernel-link-arix file=$(AROSARCHDIR)/kernel \
     devs=$(KDEVS) handlers=$(KHNDLRS) hidds=$(KHIDDS) libs=$(KLIBS) res=$(KRSRCS) startup=$(KOBJSDIR)/kernel_resource.o \
-    uselibs="arossupport hiddstubs amiga autoinit arosc.static libinit m"
+    uselibs="hiddstubs"
 
 %common
