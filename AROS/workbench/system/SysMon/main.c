@@ -71,7 +71,7 @@ BOOL CreateApplication(struct SysMonData * smdata)
                             Child, ListviewObject, 
                                 MUIA_Listview_List, smdata->tasklist = ListObject,
                                     ReadListFrame,
-                                    MUIA_List_Format, "MIW=50 BAR,BAR,",
+                                    MUIA_List_Format, "MIW=50 BAR,BAR,BAR,",
                                     MUIA_List_ConstructHook, &smdata->tasklistconstructhook,
                                     MUIA_List_DestructHook, &smdata->tasklistdestructhook,
                                     MUIA_List_DisplayHook, &smdata->tasklistdisplayhook,
