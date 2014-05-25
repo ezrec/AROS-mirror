@@ -6,6 +6,7 @@
 #include <exec/execbase.h>
 #include <resources/task.h>
 #include <clib/alib_protos.h>
+#include <devices/timer.h>
 
 #include <proto/task.h>
 #include <proto/dos.h>
@@ -13,6 +14,7 @@
 #include "locale.h"
 
 #include "sysmon_intern.h"
+#include "etask.h"
 
 //#define DEBUG 1
 #include <aros/debug.h>
@@ -27,6 +29,7 @@ struct TaskInfo
     struct Task *Task;
     ULONG TimeCurrent;
     ULONG TimeLast;
+    struct timeval cputime;
 };
 
 VOID UpdateTasksInformation(struct SysMonData * smdata)
@@ -115,6 +118,7 @@ AROS_UFH3(struct TaskInfo *, TasksListConstructFunction,
         ti->TINode.ln_Type = curTask->tc_Node.ln_Type;
         ti->TINode.ln_Pri = (WORD)curTask->tc_Node.ln_Pri;
         ti->TINode.ln_Name = StrDup(curTask->tc_Node.ln_Name);
+        ti->cputime = GetIntETask(curTask)->iet_CpuTime;
 
         AddTail(&((struct SysMonData *)h->h_Data)->sm_TaskList, &ti->TINode);
     }
@@ -168,20 +172,35 @@ AROS_UFH3(VOID, TasksListDisplayFunction,
     AROS_USERFUNC_INIT
 
     static TEXT bufprio[8];
+    static TEXT bufcputime[24];
 
     if (ti)
     {
+        int h,m,s,ms;
+        long sec = ti->cputime.tv_sec;
+
+        ms = (ti->cputime.tv_micro + 5000) / 10000;
+        s = sec % 60;
+        sec /= 60;
+        m = sec % 60;
+        sec /= 60;
+        h = sec;
+
         __sprintf(bufprio, "%d", (LONG)ti->TINode.ln_Pri);
 
         strings[0] = ti->TINode.ln_Name;
         strings[1] = bufprio;
         strings[2] = ti->TINode.ln_Type == NT_TASK ? (STRPTR)_(MSG_TASK) : (STRPTR)_(MSG_PROCESS);
+
+        __sprintf(bufcputime, "%03d:%02d:%02d.%02d", h, m, s, ms);
+        strings[3] = bufcputime;
     }
     else
     {
         strings[0] = (STRPTR)_(MSG_TASK_NAME);
         strings[1] = (STRPTR)_(MSG_TASK_PRIORITY);
         strings[2] = (STRPTR)_(MSG_TASK_TYPE);
+        strings[3] = (STRPTR)_(MSG_TASK_CPUTIME);
     }
 
     AROS_USERFUNC_EXIT
