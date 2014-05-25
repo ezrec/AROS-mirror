@@ -22,6 +22,7 @@ for param in $cmdline ; do
   case $param in
     init=*      ) init=${param#init=}             ;;
     root=*      ) root=${param#root=}             ;;
+    archdir=*   ) archdir=${param#archdir=}       ;;
     rootdelay=* ) rootdelay=${param#rootdelay=}   ;;
     rootfstype=*) rootfstype=${param#rootfstype=} ;;
     rootflags=* ) rootflags=${param#rootflags=}   ;;
@@ -57,8 +58,8 @@ if [ "$root" = "sh" ]; then
     sh
 else
     cd /
-    ./boot/AROSBootstrap &> /dev/null
+    ./boot/AROSBootstrap archdir=$archdir &> /dev/null
     cd /boot-stage-2
-    ./boot/AROSBootstrap
+    ./$archdir/AROSBootstrap
     sh
 fi
