@@ -6543,7 +6543,9 @@ Notes
      If you want them to be the same CON: window, set SYS_Input to a
      filehandle on the CON: window and set SYS_Output to NULL. Then the
      shell will automatically set the output by opening CONSOLE: on that
-     handler.
+     handler. Note that SYS_Error also follows this rule, so passing it
+     set to NULL will automatically set the error by opening CONSOLE: on
+     that handler.
 
      If you specified SYS_Asynch, both the input and the output filehandles
      will be closed when the command is finished (even if this was your

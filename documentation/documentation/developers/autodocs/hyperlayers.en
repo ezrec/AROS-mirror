@@ -1545,4 +1545,13 @@ Inputs
      y  - y-coordinate
 
 
+Notes
+~~~~~
+::
+
+     The function does not lock Layer_Info structure. It is
+     the responsibility of the caller to issue the lock via
+     LockLayerInfo()/UnlockLayerInfo()
+
+
 

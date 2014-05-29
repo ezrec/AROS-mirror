@@ -269,7 +269,7 @@ Inputs
 ::
 
      memHandler - An Interrupt structure to add to the low memory
-                  handler list.
+          handler list.
 
 
 
@@ -719,11 +719,11 @@ Example
          mh->mh_First->mc_Bytes=POOLSIZE;
          mh->mh_Free=POOLSIZE;
          {
-             \* Use the pool *\
-             UBYTE *mem1,*mem2;
-             mem1=Allocate(mh,1000);
-             mem2=Allocate(mh,2000);
-             \* Do something with memory... *\
+         \* Use the pool *\
+         UBYTE *mem1,*mem2;
+         mem1=Allocate(mh,1000);
+         mem2=Allocate(mh,2000);
+         \* Do something with memory... *\
          }
          \* Free everything at once *\
          FreeMem(mh,sizeof(struct MemHeader)+POOLSIZE);
@@ -2847,10 +2847,10 @@ Inputs
 
      requirements - The type of the memory
      puddleSize   - The number of bytes that the pool expands by
-                    if it is too small.
+                if it is too small.
      threshSize   - Allocations beyond the threshSize are given
-                    directly to the system. threshSize must be
-                    smaller than or equal to the puddleSize.
+                directly to the system. threshSize must be
+                smaller than or equal to the puddleSize.
 
 
 Result
@@ -3799,7 +3799,7 @@ Inputs
 ::
 
      poolHeader - Handle of the memory pool
-     memory     - Pointer to the memory
+     memory       - Pointer to the memory
      memSize    - Size of the memory chunk
 
 

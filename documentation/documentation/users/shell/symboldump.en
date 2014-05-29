@@ -37,7 +37,7 @@ Function
 ::
 
 
-      Dumps debug symbols to the file "System:symbols.out" to be used with
+      Dumps debug symbols to the file "SYS:symbols.out" to be used with
       Callgrind. See "Debugging manual" at www.aros.org.
 
 

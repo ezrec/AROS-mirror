@@ -11,11 +11,122 @@ pci_hidd
 Classes
 -------
 
-+ `CLID_Hidd_PCIDevice`_
 + `CLID_Hidd_PCIDriver`_
++ `CLID_Hidd_PCIDevice`_
 + `CLID_Hidd_PCI`_
 
 ----------
+
+CLID_Hidd_PCIDriver
+-------------------
+
+========================================== ========================================== ========================================== ========================================== 
+`moHidd_PCIDriver_AddInterrupt`_           `moHidd_PCIDriver_RemoveInterrupt`_        
+========================================== ========================================== ========================================== ========================================== 
+
+-----------
+
+moHidd_PCIDriver_AddInterrupt
+=============================
+
+Synopsis
+~~~~~~~~
+::
+
+     OOP_Object *OOP_DoMethod(OOP_Object *obj, struct pHidd_PCIDriver_AddInterrupt *Msg);
+
+     OOP_Object *HIDD_PCIDriver_AddInterrupt(OOP_Object *obj, OOP_Object *device,
+                                             struct Interrupt *interrupt);
+
+
+Function
+~~~~~~~~
+::
+
+     Add interrupt handler for the specified device.
+
+     This method is present in order to provide abstraction for
+     different PCI implementations. Default implementation of
+     this method assumes 1:1 mapping between system interrupts
+     and PCI interrupts. However, on some machines this is not
+     true (an example is Amiga(tm) bridgeboards). In this case
+     you will have to provide alternate implementation of this
+     method.
+
+
+Inputs
+~~~~~~
+::
+
+     obj       - Pointer to your driver object.
+     device    - A pointer to the device object.
+     interrupt - Interrupt structure to add.
+
+
+Result
+~~~~~~
+::
+
+     TRUE it succesful or FALSE on failure.
+
+
+
+See also
+~~~~~~~~
+
+`moHidd_PCIDriver_RemoveInterrupt`_ 
+
+----------
+
+moHidd_PCIDriver_RemoveInterrupt
+================================
+
+Synopsis
+~~~~~~~~
+::
+
+     OOP_Object *OOP_DoMethod(OOP_Object *obj, struct pHidd_PCIDriver_RemoveInterrupt *Msg);
+
+     OOP_Object *HIDD_PCIDriver_RemoveInterrupt(OOP_Object *obj, OOP_Object *device,
+                                                struct Interrupt *interrupt);
+
+
+Function
+~~~~~~~~
+::
+
+     Remove interrupt handler from the specified device.
+
+     This method is present in order to provide abstraction for
+     different PCI implementations. Default implementation of
+     this method assumes 1:1 mapping between system interrupts
+     and PCI interrupts. However, on some machines this is not
+     true (an example is Amiga(tm) bridgeboards). In this case
+     you will have to provide alternate implementation of this
+     method.
+
+
+Inputs
+~~~~~~
+::
+
+     obj       - Pointer to your driver object.
+     device    - A pointer to the device object.
+     interrupt - Interrupt structure to remove.
+
+
+Result
+~~~~~~
+::
+
+     None.
+
+
+
+See also
+~~~~~~~~
+
+`moHidd_PCIDriver_AddInterrupt`_ 
 
 CLID_Hidd_PCIDevice
 -------------------
@@ -232,117 +343,6 @@ See also
 ~~~~~~~~
 
 `moHidd_PCIDevice_AddInterrupt`_ 
-
-CLID_Hidd_PCIDriver
--------------------
-
-========================================== ========================================== ========================================== ========================================== 
-`moHidd_PCIDriver_AddInterrupt`_           `moHidd_PCIDriver_RemoveInterrupt`_        
-========================================== ========================================== ========================================== ========================================== 
-
------------
-
-moHidd_PCIDriver_AddInterrupt
-=============================
-
-Synopsis
-~~~~~~~~
-::
-
-     OOP_Object *OOP_DoMethod(OOP_Object *obj, struct pHidd_PCIDriver_AddInterrupt *Msg);
-
-     OOP_Object *HIDD_PCIDriver_AddInterrupt(OOP_Object *obj, OOP_Object *device,
-                                             struct Interrupt *interrupt);
-
-
-Function
-~~~~~~~~
-::
-
-     Add interrupt handler for the specified device.
-
-     This method is present in order to provide abstraction for
-     different PCI implementations. Default implementation of
-     this method assumes 1:1 mapping between system interrupts
-     and PCI interrupts. However, on some machines this is not
-     true (an example is Amiga(tm) bridgeboards). In this case
-     you will have to provide alternate implementation of this
-     method.
-
-
-Inputs
-~~~~~~
-::
-
-     obj       - Pointer to your driver object.
-     device    - A pointer to the device object.
-     interrupt - Interrupt structure to add.
-
-
-Result
-~~~~~~
-::
-
-     TRUE it succesful or FALSE on failure.
-
-
-
-See also
-~~~~~~~~
-
-`moHidd_PCIDriver_RemoveInterrupt`_ 
-
-----------
-
-moHidd_PCIDriver_RemoveInterrupt
-================================
-
-Synopsis
-~~~~~~~~
-::
-
-     OOP_Object *OOP_DoMethod(OOP_Object *obj, struct pHidd_PCIDriver_RemoveInterrupt *Msg);
-
-     OOP_Object *HIDD_PCIDriver_RemoveInterrupt(OOP_Object *obj, OOP_Object *device,
-                                                struct Interrupt *interrupt);
-
-
-Function
-~~~~~~~~
-::
-
-     Remove interrupt handler from the specified device.
-
-     This method is present in order to provide abstraction for
-     different PCI implementations. Default implementation of
-     this method assumes 1:1 mapping between system interrupts
-     and PCI interrupts. However, on some machines this is not
-     true (an example is Amiga(tm) bridgeboards). In this case
-     you will have to provide alternate implementation of this
-     method.
-
-
-Inputs
-~~~~~~
-::
-
-     obj       - Pointer to your driver object.
-     device    - A pointer to the device object.
-     interrupt - Interrupt structure to remove.
-
-
-Result
-~~~~~~
-::
-
-     None.
-
-
-
-See also
-~~~~~~~~
-
-`moHidd_PCIDriver_AddInterrupt`_ 
 
 CLID_Hidd_PCI
 -------------
