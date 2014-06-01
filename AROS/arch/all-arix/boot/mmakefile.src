@@ -44,7 +44,7 @@ $(AROSARCHDIR):
 #MM     kernel-unixio                   \
 #MM     kernel-hidd-linuxfb             \
 #MM     kernel-hidd-linuxinput          \
-#MM     kernel-pci                      \
+#MM     kernel-hidd-pci                 \
 #MM     hidd-pci-linux                  \
 #MM     workbench-devs-hostdisk         \
 #MM     workbench-devs-eth-unix         \
