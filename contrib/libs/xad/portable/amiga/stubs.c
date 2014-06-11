@@ -4,10 +4,10 @@
 
 /* XPK stubs */
 
-LONG _xpkExamineTags (APTR XpkBase,struct XpkFib *fib,Tag tag,...)
+LONG _xpkExamineTags (APTR XpkBase,struct XpkFib *fib,xadTag tag,...)
 { return XpkExamine(fib,(struct TagItem *)&tag); }
 
-LONG _xpkUnpackTags(APTR XpkBase,ULONG tag,...)
+LONG _xpkUnpackTags(APTR XpkBase,xadTag tag,...)
 { return XpkUnpack((struct TagItem *)&tag); }
 
 /* XAD stubs */
