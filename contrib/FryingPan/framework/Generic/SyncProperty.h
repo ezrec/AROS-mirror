@@ -35,7 +35,7 @@ namespace GenNS
          old = RWSyncT<T>::Assign(val);
          if (old != val)
          {
-            Send(old, val);
+            DistributorT<T,T>::Send(old, val);
          }
          return old;
       };
@@ -48,7 +48,7 @@ namespace GenNS
          {
             if (old != val)
             {
-               Send(old, val);
+               DistributorT<T,T>::Send(old, val);
             }
          }
          return old;
