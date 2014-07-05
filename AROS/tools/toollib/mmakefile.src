@@ -23,13 +23,13 @@ FILES := \
 	toollib \
 	vstring
 
-#MM- linklibs : linklibs-toollib
-#MM linklibs-toollib : includes
+##MM- linklibs : linklibs-toollib
+##MM linklibs-toollib : includes
 
 %build_linklib mmake=linklibs-toollib libname=toollib files=$(FILES)
 
-#MM
-includes-copy : 
-	%copy_includes includes=$(HFILES) path=toollib
+##MM
+#includes-copy : 
+#	%copy_includes includes=$(HFILES) path=toollib
 
 %common

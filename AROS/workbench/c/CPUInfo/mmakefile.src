@@ -14,10 +14,10 @@ x86FILES := x86 \
 
 EXEDIR  := $(AROS_C)
 
-#MM workbench-c-cpuinfo : includes linklibs kernel-cpu-pc-i386
+##MM workbench-c-cpuinfo : includes linklibs kernel-cpu-pc-i386
 
-%build_prog mmake=workbench-c-cpuinfo \
-    progname=CPUInfo targetdir=$(EXEDIR) \
-    files="$(FILES) $(x86FILES)"
+#%build_prog mmake=workbench-c-cpuinfo \
+#    progname=CPUInfo targetdir=$(EXEDIR) \
+#    files="$(FILES) $(x86FILES)"
 
 %common
