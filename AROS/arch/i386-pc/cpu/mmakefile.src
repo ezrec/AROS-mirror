@@ -3,10 +3,10 @@ include $(TOP)/config/make.cfg
 
 FUNCTIONS := smp checkcpu
 
-%build_module mmake=kernel-cpu-pc-i386 \
-    modname=cpu modtype=resource \
-    files="cpu_init $(FUNCTIONS)"
+#%build_module mmake=kernel-cpu-pc-i386 \
+#    modname=cpu modtype=resource \
+#    files="cpu_init $(FUNCTIONS)"
 
-#MM kernel-cpu-pc-i386 : includes
-#MM kernel-cpu-pc-i386-kobj : includes
+##MM kernel-cpu-pc-i386 : includes
+##MM kernel-cpu-pc-i386-kobj : includes
 
