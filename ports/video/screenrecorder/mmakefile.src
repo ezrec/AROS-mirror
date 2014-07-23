@@ -14,7 +14,7 @@ include $(TOP)/config/make.cfg
 REPOSITORIES := http://archives.aros-exec.org/share/video/record/
 ARCHBASE     := screenrecorder-src-svn17
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Video/ScreenRecorder
-USER_CFLAGS  := -D__LOCALE_STDLIBBASE__
+USER_CFLAGS  := -D__LOCALE_STDLIBBASE__ -Wno-unused-but-set-variable
 USER_INCLUDES:= -I$(PORTSDIR)/screenrecorder/$(ARCHBASE)/include
 
 FILES := \
@@ -36,7 +36,7 @@ FILES := \
 
 %build_prog mmake=ports-video-screenrecorder progname=ScreenRecorder \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="mui jpeg z"
+    uselibs="jpeg z"
 
 %fetch mmake=ports-video-screenrecorder-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/screenrecorder \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2" \
