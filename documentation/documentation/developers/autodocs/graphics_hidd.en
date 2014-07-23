@@ -531,7 +531,7 @@ Notes
 
      Implementing screen scrolling does not enforce to implement screen composition, despite
      the composition is really based on scrolling (in case of composition scrolling a bitmap
-     off-display is expected to reveal another bitmap behing it instead of empty space).
+     off-display is expected to reveal another bitmap behind it instead of empty space).
 
 
 
@@ -700,7 +700,7 @@ Function
      of this attribute represents an offset from the physical edge of the display to the
      logical edge of the bitmap. This means that if a large bitmap scrolls upwards in
      order to reveal its bottom part, the offset will be negative. If the bitmap scrolls
-     downdards (possibly revealing another bitmap behind it), the offset will be positive.
+     downwards (possibly revealing another bitmap behind it), the offset will be positive.
 
      It's up to the display driver to set scroll limits. If the value of the attribute
      becomes unacceptable for any reason, the driver should adjust it and provide the real
@@ -713,7 +713,7 @@ Notes
 
      Implementing screen scrolling does not enforce to implement screen composition, despite
      the composition is really based on scrolling (in case of composition scrolling a bitmap
-     off-display is expected to reveal another bitmap behing it instead of empty space).
+     off-display is expected to reveal another bitmap behind it instead of empty space).
 
 
 
@@ -3488,7 +3488,7 @@ Inputs
 ::
 
      gfxHidd - A display driver object.
-     data    - a pointer to a HIDD_ViewPortDats structure.
+     data    - a pointer to a HIDD_ViewPortData structure.
 
 
 Result

@@ -2536,8 +2536,14 @@ Function
 ~~~~~~~~
 ::
 
-     Write a character to a file.
-     
+     Write a character to a file handle. 
+
+     The write is buffered.
+
+     If the file handle is an interactive stream,
+     the buffer is automatically flushed on a linefeed,
+     carriage return or ASCII NUL.
+
 
 Inputs
 ~~~~~~
@@ -2555,11 +2561,19 @@ Result
      IoErr() gives additional information in that case.
 
 
+Notes
+~~~~~
+::
+
+     You should use Flush() when switching between
+     buffered and unbuffered IO.
+
+
 
 See also
 ~~~~~~~~
 
-`FGetC()`_ `IoErr()`_ 
+`FGetC()`_ `IoErr()`_ `Flush()`_ `FWrite()`_ 
 
 ----------
 
@@ -2624,6 +2638,7 @@ Function
 ::
 
      Read a number of blocks from a file.
+     The read is buffered.
 
 
 Inputs
@@ -2693,7 +2708,7 @@ Result
 See also
 ~~~~~~~~
 
-`ReadArgs()`_ 
+`ReadArgs()`_ `FreeArgs()`_ `AllocDosObject()`_ `FreeDosObject()`_ 
 
 ----------
 
@@ -2790,6 +2805,11 @@ Inputs
 
 
 
+See also
+~~~~~~~~
+
+`AllocDosObject()`_ 
+
 ----------
 
 FWrite()
@@ -2809,7 +2829,8 @@ Function
 ~~~~~~~~
 ::
 
-     Write a number of blocks to a file.
+     Buffered write of a number of blocks to a stream. 
+     May write fewer blocks than requested.
 
 
 Inputs
@@ -2828,6 +2849,16 @@ Result
 
      The number of blocks written to the file or EOF on error. IoErr()
      gives additional information in case of an error.
+
+
+Notes
+~~~~~
+::
+
+     Some releases of AmigaOS may not clear IoErr(), while AROS
+     does. For full backwards compatibility, you may want to call
+     SetIoErr(0L) before FWrite() if you need to be able to check
+     the error code.
 
 
 
@@ -2862,6 +2893,11 @@ Result
      Pointer to argument string.
 
 
+
+See also
+~~~~~~~~
+
+`SetArgStr()`_ `RunCommand()`_ 
 
 ----------
 

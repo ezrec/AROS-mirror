@@ -532,7 +532,7 @@ Example
 
      Somewhere in your window's event handling loop:
 
-     case IDCMP_REFRESHWINDWOW:
+     case IDCMP_REFRESHWINDOW:
          BeginRefresh(mywindow);
          EndRefresh(mywindow, TRUE);
          break;
@@ -546,7 +546,7 @@ Notes
      BeginRefresh() and EndRefresh().
 
      BeginRefresh()/EndRefresh() should always be called when an
-     IDCMP_REFRESHWINDWOW message happens.
+     IDCMP_REFRESHWINDOW message happens.
 
 
 
