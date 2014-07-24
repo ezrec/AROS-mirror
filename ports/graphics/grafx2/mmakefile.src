@@ -15,7 +15,7 @@ include $(TOP)/config/make.cfg
 
 #MM  ports-graphics-grafx2-quick : ports-graphics-grafx2-fetch
 
-REPOSITORIES := http://grafx2.googlecode.com/files
+REPOSITORIES := http://pulkomandy.tk/projects/GrafX2/downloads
 ARCHBASE     := grafx2-2.4.2035-src
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/GrafX2
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
