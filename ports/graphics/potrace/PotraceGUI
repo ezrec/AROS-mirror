@@ -1,0 +1,120 @@
+-- PotraceGUI -- AmiLua/Zulu GUI for potrace
+-- $VER: PotraceGUI 1.0 (24.07.2014)
+-- This is Public Domain software; use at your own risk
+
+-- $Id$
+
+require "muidefs"
+require "muifuncs"
+require "muiasl"
+
+verbose = false
+
+outputformats = strarray.new("eps", "ps", "pdf", "pdfpage", "svg", "dxf", "geojson", "pgm", "gimppath", "xfig")
+papersizes = strarray.new("A4", "A3", "A5", "B5", "Letter", "Legal", "Tabloid", "Statement", "Executive", "Folio", "Quarto", "10x14")
+
+ok_id = 1
+infile_id = 3
+outfile_id = 4
+
+function main()
+  local outputformat_cyc = mui.CycleObject(mui.MUIA_Cycle_Entries, outputformats, mui.MUIA_Cycle_Active, 0)
+  local papersize_cyc = mui.CycleObject(mui.MUIA_Cycle_Entries, papersizes, mui.MUIA_Cycle_Active, 0)
+
+  local ok_btn = mui.SimpleButton("Call potrace")
+
+  local infile_btn = mui.SimpleButton("Infile")
+  local outfile_btn = mui.SimpleButton("Outfile")
+
+  local infile_str = mui.StringObject(mui.MUIA_Frame, mui.MUIV_Frame_String)
+  local outfile_str = mui.StringObject(mui.MUIA_Frame, mui.MUIV_Frame_String)
+
+  window = mui.WindowObject(
+    mui.MUIA_Window_Title, "PotraceGUI",
+    mui.MUIA_Window_RootObject, mui.VGroup(
+      mui.MUIA_Frame, mui.MUIV_Frame_Group,
+      mui.Child, mui.ColGroup(2,
+        mui.MUIA_Frame, mui.MUIV_Frame_Group,
+        mui.MUIA_FrameTitle, "Options",
+        mui.Child, mui.Label("Output Format"),
+        mui.Child, outputformat_cyc,
+        mui.Child, mui.Label("Paper size"),
+        mui.Child, papersize_cyc,
+        mui.Child, infile_btn,
+        mui.Child, infile_str,
+        mui.Child, outfile_btn,
+        mui.Child, outfile_str
+      ),
+      mui.Child, mui.RectangleObject( 
+        mui.MUIA_Rectangle_HBar, true,
+        mui.MUIA_FixHeight,      2
+      ),
+      mui.Child, ok_btn
+    )
+  )
+  app = mui.ApplicationObject(
+    mui.MUIA_Application_Description, "GUI for potrace",
+    mui.MUIA_Application_Window, window
+  )
+  assert(app:check(), "Cant create application")
+  window:doint(mui.MUIM_Notify, mui.MUIA_Window_CloseRequest, true,
+    app, 2, mui.MUIM_Application_ReturnID, mui.MUIV_Application_ReturnID_Quit)
+
+  ok_btn:doint(mui.MUIM_Notify, mui.MUIA_Pressed, false, app, 2, mui.MUIM_Application_ReturnID, ok_id)
+  infile_btn:doint(mui.MUIM_Notify, mui.MUIA_Pressed, false, app, 2, mui.MUIM_Application_ReturnID, infile_id)
+  outfile_btn:doint(mui.MUIM_Notify, mui.MUIA_Pressed, false, app, 2, mui.MUIM_Application_ReturnID, outfile_id)
+
+  window:set(mui.MUIA_Window_Open, true)
+
+  local running = true
+  local id,signals,file
+
+  while running do
+    id, signals = app:input()
+    if id == mui.MUIV_Application_ReturnID_Quit then
+      running = false
+    elseif id == ok_id then
+      local command = "potrace"
+      local format_opt = outputformats:get(outputformat_cyc:getint(mui.MUIA_Cycle_Active) + 1)
+      local papersize_opt = papersizes:get(papersize_cyc:getint(mui.MUIA_Cycle_Active) + 1)
+      local infile_opt = infile_str:getstr(mui.MUIA_String_Contents)
+      local outfile_opt = outfile_str:getstr(mui.MUIA_String_Contents)
+
+      if (infile_opt == "") or (outfile_opt == "") then
+        app:request(window, 0, "Error", "OK", "Input or output file name is missing")
+      else
+        command = command .. ' -b ' .. format_opt .. ' -P ' .. papersize_opt .. ' "' .. infile_opt .. '" -o "' .. outfile_opt .. '"'
+        if verbose then
+          print (command)
+        end
+        local retval = os.execute(command)
+        if not retval then
+          app:request(window, 0, "Error", "OK", "antiword returned error code " .. retval)
+        end
+      end
+    elseif id == infile_id then
+      file = mui.filerequest(
+        mui.ASLFR_TitleText, "Choose input file",
+        mui.ASLFR_RejectIcons, true,
+        mui.ASLFR_DoPatterns, true
+      )
+      if file then infile_str:set(mui.MUIA_String_Contents, file) end
+    elseif id == outfile_id then
+      file = mui.filerequest(
+        mui.ASLFR_TitleText, "Choose output file",
+        mui.ASLFR_DoSaveMode, true,
+        mui.ASLFR_RejectIcons, true
+      )
+      if file then outfile_str:set(mui.MUIA_String_Contents, file)
+      end
+    end
+    if running then mui.wait(signals) end
+  end
+end
+
+_, err = pcall(main)
+if err then print("Error: " .. err) end
+
+if app then app:dispose() end
+if outputformats then outputformats:dispose() end
+if papersizes then papersizes:dispose() end
