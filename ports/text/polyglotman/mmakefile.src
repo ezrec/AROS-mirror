@@ -36,7 +36,8 @@ MANTITLEPRINTF := '%s(%s) manual page'
 # relative link to pregenerated file in same directory
 MANREFPRINTF := '%s.%s'
 
-USER_CFLAGS  := -DVOLLIST=\"$(VOLLIST)\" -DMANTITLEPRINTF=\"$(MANTITLEPRINTF)\" -DMANREFPRINTF=\"$(MANREFPRINTF)\" -DPOLYGLOTMANVERSION=\"3.2\"
+USER_CFLAGS  := -DVOLLIST=\"$(VOLLIST)\" -DMANTITLEPRINTF=\"$(MANTITLEPRINTF)\" -DMANREFPRINTF=\"$(MANREFPRINTF)\" -DPOLYGLOTMANVERSION=\"3.2\" \
+    -Wno-comment -Wno-unused-variable -Wno-unused-but-set-variable
 
 FILES := $(PORTSDIR)/polyglotman/$(ARCHBASE)/rman
 
@@ -44,7 +45,8 @@ FILES := $(PORTSDIR)/polyglotman/$(ARCHBASE)/rman
     files=$(FILES) targetdir=$(TARGETDIR)
 
 %fetch mmake=ports-text-polyglotman-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/polyglotman \
-    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz"
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+    patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
 
 ICONS := PolyglotMan
 

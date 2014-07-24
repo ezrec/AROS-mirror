@@ -1,0 +1,618 @@
+diff -Naur rman-3.2/rman.c rman-3.2-aros/rman.c
+--- rman-3.2/rman.c	2014-07-24 10:15:44.844360093 +0200
++++ rman-3.2-aros/rman.c	2014-07-24 10:31:18.265448757 +0200
+@@ -59,14 +59,14 @@
+ enum command {
+ 
+ 	/*BEGINCHARTAGS,*/
+-	CHARTAB='\t',
++	CHARTAB='\t', CHARAT='@',
+ 	CHARPERIOD='.', CHARLSQUOTE='`', CHARRSQUOTE='\'', CHARGT='>', CHARLT='<',
+ 	CHARAMP='&', CHARBACKSLASH='\\', CHARDASH='-', CHARHAT='^', CHARVBAR='|',
+  	CHARNBSP=0xa0,	CHARCENT=0xa2, CHARSECT=0xa7, CHARCOPYR=0xa9, CHARNOT=0xac,
+  	CHARDAGGER=0xad, CHARREGTM=0xae, CHARDEG=0xb0, CHARPLUSMINUS=0xb1,
+  	CHARACUTE=0xb4, CHARBULLET=0xb7, CHAR14=0xbc, CHAR12=0xbd, CHAR34=0xbe,
+  	CHARMUL=0xd7, CHARDIV=0xf7,
+-	CHANGEBAR=0x100, CHARLQUOTE, CHARRQUOTE, 
++	CHANGEBAR=0x100, CHARLQUOTE, CHARRQUOTE,
+ 	/*ENDCHARTAGS,*/
+ 
+ 	/*BEGINFONTTAGS,*/
+@@ -248,6 +248,9 @@
+ int fIP=0;
+ 
+ 
++void source_command(char *p);
++void source_list(void) ;
++
+ 
+ /*** utility functions ***/
+ 
+@@ -441,7 +444,7 @@
+ 
+ 
+ 
+-
++
+ /*
+  * OUTPUT FORMATS
+  */
+@@ -673,7 +676,7 @@
+ 
+ 
+ 
+-
++
+ /*
+  * TkMan -- Tk format wrapped with commands
+  */
+@@ -804,7 +807,7 @@
+ 
+ 
+ 
+-
++
+ /*
+  * ASCII
+  */
+@@ -901,7 +904,7 @@
+ }
+ 
+ 
+-
++
+ /*
+  * Perl 5 pod ("plain old documentation")
+  */
+@@ -1057,7 +1060,7 @@
+ }
+ 
+ 
+-
++
+ void
+ Sections(enum command cmd) {
+ 
+@@ -1130,7 +1133,7 @@
+ }
+ 
+ 
+-
++
+ void
+ Roff(enum command cmd) {
+ 	switch (cmd) {
+@@ -1236,7 +1239,6 @@
+ }
+ 
+ 
+-
+ /*
+  * HTML
+  */
+@@ -1317,7 +1319,7 @@
+ 		printf("<html>\n<head>\n");
+ /*		printf("<isindex>\n");*/
+ 		/* better title possible? */
+-		printf("<title>"); printf(manTitle, manName, manSect); printf("</title>\n");
++		printf("<title>"); printf("%s(%s)",manName, manSect); printf("</title>\n"); //manTitle, 
+ 		printf("</head>\n<body bgcolor='white'>\n");
+ 		printf("<a href='#toc'>%s</a><p>\n", TABLEOFCONTENTS);
+ 		I=0;
+@@ -1520,7 +1522,283 @@
+ }
+ 
+ 
+-
++/*
++ * AmigaGuide
++ * by Chris Young <chris@unsatisfactorysoftware.co.uk>
++ */
++
++int agindent=0;
++
++void
++guide(enum command cmd) {
++	static int pre=0;
++	int i;
++	int lasttoc;
++	int subsec = 0;
++
++	/* always respond to these signals */
++	switch (cmd) {
++	   case CHARNBSP:
++	   case CHARLQUOTE:
++	   case CHARRQUOTE:
++	   case CHARLSQUOTE:
++	   case CHARRSQUOTE:
++	   case CHARPERIOD:
++	   case CHARDASH:
++	   case CHARBACKSLASH:
++	   case CHARVBAR:
++	   case CHARHAT:
++	   case CHARDAGGER:
++	   case CHARBULLET:
++	   case CHARPLUSMINUS:
++	   case CHARGT:
++	   case CHARLT:
++	   case CHARAMP:
++	   case CHARCENT:
++ 	   case CHARSECT:
++ 	   case CHARCOPYR:
++ 	   case CHARNOT:
++ 	   case CHARREGTM:
++ 	   case CHARDEG:
++ 	   case CHARACUTE:
++ 	   case CHAR14:
++ 	   case CHAR12:
++ 	   case CHAR34:
++ 	   case CHARMUL:
++ 	   case CHARDIV:
++		 putchar(cmd);
++		 break;
++		case CHARAT:
++		printf("\\@");
++		break;
++	   case CHARTAB:
++		printf("@{tab}");
++	   default:
++		break;
++	}
++
++	/* while in pre mode... */
++	if (pre) {
++		switch (cmd) {
++		   case ENDLINE:	I=0; CurLine++;
++ 				printf("\n"); break;
++		   case ENDTABLE:
++			if (fSource) {
++			  //printf("</table>\n");
++			} else {
++			  printf("@{body}\n"); pre=0; fQS=fIQS=fPara=1;
++			}
++			break;
++		   case ENDCODEBLOCK: printf("@{body}\n"); pre=0; break;
++		   case SHORTLINE:
++		   case ENDBODY:
++			printf("\n");
++			break;
++		   default:
++			/* nothing */
++			break;
++		}
++		return;
++	}
++
++	/* usual operation */
++	switch (cmd) {
++	   case BEGINDOC:
++		printf("@database %s\n",manName); //,manTitle, manName, manSect);
++		printf("@master \"%s.%s\"\n",manName,manSect);
++		printf("@remark \"%s %s\"\n", PROVENANCE,HOME);
++		printf("@wordwrap\n");
++		printf("@tab %d\n",TabStops);
++		I=0;
++		break;
++	   case ENDDOC:
++		/* header and footer wanted? */
++		if (fHeadfoot) {
++			printf("%s\n", HEADERANDFOOTER);
++			for (i=0; i<CRUFTS; i++) if (*cruft[i]) printf("%s\n", cruft[i]);
++		}
++
++		if (!tocc) {
++			/*printf("\n<h1>ERROR: Empty man page</h1>\n");*/
++		} else {
++			printf("@node main \"%s(%s)\"\n@next sect0\n",manName,manSect);
++			printf("@{b}%s@{ub}\n\n", TABLEOFCONTENTS);
++			for (i=0, lasttoc=BEGINSECTION; i<tocc; lasttoc=toc[i].type, i++) {
++				if (lasttoc!=toc[i].type) {
++					if (toc[i].type==BEGINSUBSECTION)
++					{
++						agindent+=3;
++ 						printf("@{lindent %d}\n",agindent);
++						subsec=1;
++					}
++					else
++					{
++						agindent-=3;
++						printf("@{lindent %d}\n",agindent);
++						subsec=0;
++					}
++				}
++				if(subsec==0)
++				{
++					printf("@{\"%s\" link sect%d}\n", toc[i].text,i);
++				}
++				else
++				{
++					printf("%s\n", toc[i].text);
++				}
++			}
++		}
++		printf("\n@endnode\n");
++		break;
++	   case BEGINBODY:
++		break;
++	   case ENDBODY:
++			printf("\n\n");
++		break;
++
++	   case COMMENTLINE: printf("\n@remark"); break;
++	   case BEGINCOMMENT: break;
++	   case ENDCOMMENT: printf("\n"); break;
++
++	   case BEGINSECTHEAD:
++		printf("\n@node sect%d \"", tocc);
++		break;
++	   case ENDSECTHEAD:
++		printf("\"\n");
++		break;
++	   case BEGINSUBSECTHEAD:
++		printf("\n\n@{b}");
++		break;
++	   case ENDSUBSECTHEAD:
++		printf("@{ub}\n\n");
++		break;
++	   case BEGINSECTION:	break;
++	   case ENDSECTION:
++		if (sectheadid==NAME && message!=NULL) printf(message);
++		printf("\n@endnode\n");
++		break;
++	   case BEGINSUBSECTION:	break;
++	   case ENDSUBSECTION:	break;
++
++	   case BEGINBULPAIR:
++		printf("\n");
++		break;
++	   case ENDBULPAIR:
++		printf("\n");
++		break;
++	   case BEGINBULLET:
++		printf("\n· ");
++		break;
++	   case ENDBULLET:
++		break;
++	   case BEGINBULTXT:
++			agindent+=3;
++			printf("@{lindent %d}\n",agindent);
++		break;
++	   case ENDBULTXT:
++			agindent-=3;
++			printf("@{lindent %d}\n",agindent);
++		break;
++
++	   case BEGINLINE:
++		/* trailing spaces already trimmed off, so look for eol now */
++		if (fCodeline) {
++		  printf("@{code}\n");
++		  for (i=0; i<scnt-indent; i++) printf(" ");		/* ? */
++		  tagc=0;
++		}
++		break;
++
++	   case ENDLINE:
++		if (fCodeline) { printf("@{body}\n"); fCodeline=0; }
++		I=0; CurLine++;
++		printf(" ");
++		break;
++
++	   case SHORTLINE:
++		if (fCodeline) { printf("@{body}\n"); fCodeline=0; }
++			printf("\n");
++		break;
++
++
++	   case BEGINTABLE:
++		if (fSource) {
++		} else {
++		  printf("@{code}\n"); pre=1; fQS=fIQS=fPara=0;
++		}
++		break;
++	   case ENDTABLE:
++		if (fSource) {
++		  //printf("</table>\n");
++		} else {
++		  printf("@{body}\n"); pre=0; fQS=fIQS=fPara=1;
++		}
++		break;
++	   case BEGINTABLELINE:		break;
++	   case ENDTABLELINE:		printf("\n"); break;
++	   case BEGINTABLEENTRY:
++		break;
++	   case ENDTABLEENTRY:
++		printf("@{tab}");
++		break;
++
++	   case BEGININDENT:
++			agindent+=3;
++			printf("@{lindent %d}\n",agindent);
++		 break;
++	   case ENDINDENT:
++						agindent-=3;
++ 						printf("@{lindent %d}\n",agindent);
++		break;
++
++	   case FONTSIZE:
++		// we can only change font for the entire document, so ignoring this
++		break;
++
++	   case BEGINBOLD:		printf("@{b}"); break;
++	   case ENDBOLD:		printf("@{ub}"); break;
++	   case BEGINITALICS:	printf("@{i}"); break;
++	   case ENDITALICS:		printf("@{ui}"); break;
++	   case BEGINBOLDITALICS:
++	   case BEGINCODE:		printf("@{code}"); break;
++	   case ENDBOLDITALICS:
++	   case ENDCODE:		printf("@{body}"); break;
++	   case BEGINCODEBLOCK:	printf("@{code}"); pre=1; break;
++	   case ENDCODEBLOCK:	printf("@{body}"); pre=0; break;
++	   case BEGINCENTER:		printf("@{jcenter}"); break;
++	   case ENDCENTER:		printf("@{jleft}"); break;
++	   case BEGINMANREF:
++		manrefextract(hitxt);
++		if (fmanRef) {
++			printf("@{\"");
++		}
++		else printf("@{i}");
++		break;
++	   case ENDMANREF:
++		if (fmanRef) printf("\" link %s%s%s/main}",href, manrefname, manrefsect); else printf("@{ui}");
++		break;
++	   case HR:		printf("\n%s\n",horizontalrule); break;
++
++		/* U (was B, I), strike -- all temporary until HTML 4.0's INS and DEL widespread */
++	   case BEGINDIFFA: printf("@{u}"); break;
++	   case ENDDIFFA: printf("@{uu}"); break;
++
++	   case BEGINDIFFD: //printf("<del><strike>"); break;
++	   case ENDDIFFD: //printf("</strike></del>"); break;
++	   case BEGINSC: case ENDSC:
++	   case BEGINY: case ENDY:
++	   case BEGINHEADER: case ENDHEADER:
++	   case BEGINFOOTER: case ENDFOOTER:
++	   case CHANGEBAR:
++		/* nothing */
++		break;
++	   default:
++		DefaultPara(cmd);
++	}
++}
++
++
++
+ /*
+  * DocBook XML
+  * improvements by Aaron Hawley applied 2003 June 5
+@@ -1754,7 +2032,7 @@
+ }
+ 
+ 
+-
++
+ /* generates MIME compliant to RFC 1563 */
+ 
+ void
+@@ -1950,7 +2228,7 @@
+ }
+ 
+ 
+-
++
+ /*
+  * LaTeX
+  */
+@@ -2119,7 +2397,7 @@
+ }
+ 
+ 
+-
++
+ /*
+  * Rich Text Format (RTF)
+  */
+@@ -2259,7 +2537,7 @@
+ }
+ 
+ 
+-
++
+ /*
+  * pointers to existing tools
+  */
+@@ -2279,7 +2557,7 @@
+ 
+ 
+ 
+-
++
+ /*
+  * Utilities common to both parses
+  */
+@@ -2358,7 +2636,7 @@
+ }
+ 
+ 
+-
++
+ /*
+  * PREFORMATTED PAGES PARSING
+  */
+@@ -3109,7 +3387,7 @@
+ }
+ 
+ 
+-
++
+ /*
+  * SOURCE CODE PARSING
+  *    for better transcription short of full nroff interpreter
+@@ -3586,8 +3864,67 @@
+ #define checkcmd(str)	strcmp(cmd,str)==0
+ 
+ int finnf=0;
++static int inComment=0;
++static int isComment=0;
++
++void
++source_line(char *p) {
++  /*stagadd(BEGINLINE);*/
++  char *cmd=p;
++  if (p==NULL) return;	/* bug somewhere else, but where? */
++
++  isComment = (/*checkcmd("") ||*/ checkcmd("\\\"") || /*DEC triple dot*/checkcmd(".."));
++  if (inComment && !isComment) { source_struct(ENDCOMMENT); inComment=0; }	/* special case to handle transition */
++
++#if 0
++  if (*p!='.' && *p!='\'' && !finlist) {
++    if (fsourceTab && !fosourceTab) {
++	 tblc=1; tbli=0; tableSep='\t';
++	 tbl[0][0]=tbl[0][1]=tbl[0][2]=tbl[0][3]=tbl[0][4]=tbl[0][5]=tbl[0][6]=tbl[0][7]=tbl[0][8]="l";
++	 source_struct(BEGINTABLE); finTable=1;
++    } else if (!fsourceTab && fosourceTab) {
++	 source_struct(ENDTABLE); finTable=0;
++    }
++    fosourceTab=fsourceTab;
++  }
++#endif
++
++  if (*p=='.' /*|| *p=='\''  -- normalized */) {	/* command == starts with "." */
++    p++;
++    supresseol=1;
++    source_command(p);
++
++  } else if (!*p) {		/* blank line */
++    /*source_command("P");*/
++    ncnt=1; source_struct(BEGINLINE); ncnt=0;	/* empty line => paragraph break */
++
++#if 0
++  } else if (fsourceTab && !finlist /* && pmode */) {	/* can't handle tabs, so try tables */
++    source_struct(BEGINTABLE);
++    tblcellformat = "l";
++    do {
++	 source_struct(BEGINTABLELINE);
++	 while (*p) {
++	   source_struct(BEGINTABLEENTRY);
++	   p = source_out0(p, '\t');
++	   source_struct(ENDTABLEENTRY);
++	 }
++	 source_struct(ENDTABLELINE);
++    } while ((p=source_gets())!=NULL && fsourceTab);
++    source_struct(ENDTABLE);
++    source_line(p);
++#endif
++
++  } else {			/* otherwise normal text */
++    source_out(p);
++    if (finnf || isspace(*cmd)) source_struct(SHORTLINE);
++  }
++
++  if (!supresseol && !finnf) { source_out(" "); if (finlist) source_list(); }
++  supresseol=0;
++  /*stagadd(ENDLINE);*/
++}
+ 
+-void source_line(char *p);
+ void
+ source_subfile(char *newin) {
+   char *p;
+@@ -3647,9 +3984,6 @@
+   finlist=0;
+ }
+ 
+-static int inComment=0;
+-static int isComment=0;
+-
+ void
+ source_command(char *p) {
+   static int lastif=1;
+@@ -4302,63 +4636,6 @@
+ }
+ 
+ 
+-void
+-source_line(char *p) {
+-  /*stagadd(BEGINLINE);*/
+-  char *cmd=p;
+-  if (p==NULL) return;	/* bug somewhere else, but where? */
+-
+-  isComment = (/*checkcmd("") ||*/ checkcmd("\\\"") || /*DEC triple dot*/checkcmd(".."));
+-  if (inComment && !isComment) { source_struct(ENDCOMMENT); inComment=0; }	/* special case to handle transition */
+-
+-#if 0
+-  if (*p!='.' && *p!='\'' && !finlist) {
+-    if (fsourceTab && !fosourceTab) {
+-	 tblc=1; tbli=0; tableSep='\t';
+-	 tbl[0][0]=tbl[0][1]=tbl[0][2]=tbl[0][3]=tbl[0][4]=tbl[0][5]=tbl[0][6]=tbl[0][7]=tbl[0][8]="l";
+-	 source_struct(BEGINTABLE); finTable=1;
+-    } else if (!fsourceTab && fosourceTab) {
+-	 source_struct(ENDTABLE); finTable=0;
+-    }
+-    fosourceTab=fsourceTab;
+-  }
+-#endif
+-
+-  if (*p=='.' /*|| *p=='\''  -- normalized */) {	/* command == starts with "." */
+-    p++;
+-    supresseol=1;
+-    source_command(p);
+-
+-  } else if (!*p) {		/* blank line */
+-    /*source_command("P");*/
+-    ncnt=1; source_struct(BEGINLINE); ncnt=0;	/* empty line => paragraph break */
+-
+-#if 0
+-  } else if (fsourceTab && !finlist /* && pmode */) {	/* can't handle tabs, so try tables */
+-    source_struct(BEGINTABLE);
+-    tblcellformat = "l";
+-    do {
+-	 source_struct(BEGINTABLELINE);
+-	 while (*p) {
+-	   source_struct(BEGINTABLEENTRY);
+-	   p = source_out0(p, '\t');
+-	   source_struct(ENDTABLEENTRY);
+-	 }
+-	 source_struct(ENDTABLELINE);
+-    } while ((p=source_gets())!=NULL && fsourceTab);
+-    source_struct(ENDTABLE);
+-    source_line(p);
+-#endif
+-
+-  } else {			/* otherwise normal text */
+-    source_out(p);
+-    if (finnf || isspace(*cmd)) source_struct(SHORTLINE);
+-  }
+-
+-  if (!supresseol && !finnf) { source_out(" "); if (finlist) source_list(); }
+-  supresseol=0;
+-  /*stagadd(ENDLINE);*/
+-}
+ 
+ 
+ void
+@@ -4522,7 +4799,7 @@
+ }
+ 
+ 
+-
++
+ /*
+  * STARTUP
+  */
+@@ -4550,6 +4827,7 @@
+ 
+ 		{ PostScript,	0,	0,	0,	0,	0,	0,	"PostScript:ps" },
+ 		{ FrameMaker,	0,	0,	0,	0,	0,	0,	"FrameMaker:Frame:Maker:MIF" },
++		{ guide,		1,	1,	1,	1,	1,	0,	"AmigaGuide:guide" },
+ 
+ 		{ NULL,		0,	0,	0,	0,	0,	0,	NULL }
+ 	};
+@@ -4610,7 +4888,7 @@
+ 	char strgetopt[80];
+ 	/* options with an arg must have a '<' in the description */
+ 	static struct { char letter; int arg; char *longnames; char *desc; } option[] = {
+-		{ 'f', 1, "filter", " <ASCII|roff|TkMan|Tk|Sections|HTML|XML|MIME|LaTeX|LaTeX2e|RTF|pod>" },
++		{ 'f', 1, "filter", " <ASCII|roff|TkMan|Tk|Sections|HTML|XML|MIME|LaTeX|LaTeX2e|RTF|pod|AmigaGuide>" },
+ 		{ 'S', 0, "source", "(ource of man page passed in)" },	/* autodetected */
+ 		{ 'F', 0, "formatted:format", "(ormatted man page passed in)" },	/* autodetected */
+ 
