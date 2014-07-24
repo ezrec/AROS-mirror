@@ -12,7 +12,7 @@ include $(TOP)/config/make.cfg
 #MM  ports-scientific-mathx-data ports-scientific-mathx-docs \
 #MM  ports-scientific-mathx-icons ports-scientific-mathx-makeimages \
 #MM  ports-scientific-mathx-rexx ports-scientific-mathx-cpy \
-#MM  ports-scientific-mathx-fetch
+#MM  ports-scientific-mathx-images ports-scientific-mathx-fetch
 
 #MM  ports-scientific-mathx-catalogs : ports-scientific-mathx-fetch
 
