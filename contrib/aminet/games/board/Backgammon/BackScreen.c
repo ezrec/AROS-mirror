@@ -715,7 +715,7 @@ void 	TextScreen ( char 	*stuff [],
   struct IntuiText	it = {1, 0, JAM1, 0, 0, NULL, NULL, NULL};
 
 
-  for (i=1 ; i<=num ; i++) {
+  for (i=1 ; i<num ; i++) {
     it.IText = stuff [i];
     if ((n = IntuiTextLength (&it)) > longest)
       longest = n;
