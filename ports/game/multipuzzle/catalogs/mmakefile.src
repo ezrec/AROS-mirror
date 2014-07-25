@@ -2,14 +2,13 @@
 
 include $(TOP)/config/make.cfg
 
-# The build_catalogs macro doesn't have the option for a source directory,
-# therefore we have to build the catalogs manually
-
 TARGETDIR    := $(AROS_CONTRIB)/Games/MultiPuzzle/Catalogs
 ARCHBASE     := multipuzzle-src-1.3.2
-LANGUAGES    := $(subst $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/, , $(basename $(call WILDCARD, $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/*.ct)))
-CTFILES      := $(addprefix $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/,$(addsuffix .ct,$(LANGUAGES)))
-CATALOGS     := $(addprefix $(TARGETDIR)/, $(addsuffix /MultiPuzzle.catalog, $(LANGUAGES)))
+CATALOGS     := $(TARGETDIR)/german/MultiPuzzle.catalog $(TARGETDIR)/french/MultiPuzzle.catalog $(TARGETDIR)/swedish/MultiPuzzle.catalog
+
+# Solve UTF-8/ISO8859 related issues
+CT_FRENCH    := $(wildcard $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/fran*ais.ct)
+
 
 #MM
 ports-game-multipuzzle-catalogs : ../multipuzzle_strings.h $(PORTSDIR)/multipuzzle/$(ARCHBASE)/multipuzzle_strings.c $(CATALOGS)
@@ -23,7 +22,18 @@ $(PORTSDIR)/multipuzzle/$(ARCHBASE)/multipuzzle_strings.c : $(PORTSDIR)/multipuz
 	$(MKDIR) $(GENDIR)/$(CURDIR)
 	$(FLEXCAT) $< $@=$(TOOLDIR)/C_c_orig.sd
 
-$(TARGETDIR)/%/MultiPuzzle.catalog : $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/%.ct $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/multipuzzle.cd
-	@$(ECHO) "Creating MultiPuzzle catalog for language $*."
-	@$(MKDIR) $(TARGETDIR)/$*
-	@$(FLEXCAT) $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/multipuzzle.cd $< CATALOG=$(TARGETDIR)/$*/MultiPuzzle.catalog
+
+$(TARGETDIR)/german/MultiPuzzle.catalog : $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/deutsch.ct $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/multipuzzle.cd
+	@$(ECHO) "Creating MultiPuzzle catalog for language German"
+	@$(MKDIR) $(TARGETDIR)/german
+	@$(FLEXCAT) $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/multipuzzle.cd $< CATALOG=$@
+
+$(TARGETDIR)/french/MultiPuzzle.catalog : $(CT_FRENCH) $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/multipuzzle.cd
+	@$(ECHO) "Creating MultiPuzzle catalog for language French"
+	@$(MKDIR) $(TARGETDIR)/french
+	@$(FLEXCAT) $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/multipuzzle.cd $< CATALOG=$@
+
+$(TARGETDIR)/swedish/MultiPuzzle.catalog : $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/svenska.ct $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/multipuzzle.cd
+	@$(ECHO) "Creating MultiPuzzle catalog for language Swedish"
+	@$(MKDIR) $(TARGETDIR)/swedish
+	@$(FLEXCAT) $(PORTSDIR)/multipuzzle/$(ARCHBASE)/catalogs/multipuzzle.cd $< CATALOG=$@
