@@ -1,7 +1,7 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-# #MM- contrib-games : contrib-games-lbreakout2
+#MM- contrib-games : contrib-games-lbreakout2
 #MM- lbreakout2 : contrib-games-lbreakout2
 #MM contrib-games-lbreakout2 : contrib-sdl workbench-libs-z workbench-libs-png-linklib
 
@@ -11,6 +11,6 @@ include $(TOP)/config/make.cfg
 %build_with_configure mmake=contrib-games-lbreakout2 nix=yes \
     extraoptions="--bindir='$$(PROGDIR)' --datarootdir='$$(PROGDIR)data' \
     --localstatedir='$$(PROGDIR)var' --docdir='$$(PROGDIR)docs' \
-    --disable-sdltest --disable-network  --with-docdir='$$(PROGDIR)docs' \
-    LIBS='-lvorbisfile -lvorbis -logg'" \
+    --disable-sdltest --with-docdir='$$(PROGDIR)docs' \
+    CFLAGS='-DSDL_NET_ENABLED' LIBS='-lvorbisfile -lvorbis -logg -lSDL_net'" \
     prefix=$(AROS_CONTRIB)/Games/LBreakout2 nix_dir_layout=no
