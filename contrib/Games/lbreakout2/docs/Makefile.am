@@ -8,10 +8,9 @@ warp.jpg screen.jpg
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(doc_dir)/lbreakout2
-	@for file in *.jpg; do\
-	  $(INSTALL_DATA) $$file $(DESTDIR)$(doc_dir)/lbreakout2/$$file;\
+	@for file in $(EXTRA_DIST); do\
+	  $(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(doc_dir)/lbreakout2/$$file;\
 	done
-	$(INSTALL_DATA) index.html $(DESTDIR)$(doc_dir)/lbreakout2/index.html
 
 win32-install-script:
 	@for file in $(EXTRA_DIST); do \

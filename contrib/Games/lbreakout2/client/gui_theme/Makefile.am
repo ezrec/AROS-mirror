@@ -9,7 +9,7 @@ edit.wav click.wav
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(inst_dir)/gui_theme
 	@for file in $(EXTRA_DIST); do \
-	  $(INSTALL_DATA) $$file $(DESTDIR)$(inst_dir)/gui_theme/$$file; \
+	  $(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(inst_dir)/gui_theme/$$file; \
 	done
 
 win32-install-script:

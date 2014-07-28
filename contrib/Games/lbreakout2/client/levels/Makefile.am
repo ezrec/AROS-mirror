@@ -136,7 +136,7 @@ SouthAfrica
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(inst_dir)/levels
 	@for file in $(EXTRA_DIST); do \
-	  $(INSTALL_DATA) $$file $(DESTDIR)$(inst_dir)/levels/$$file; \
+	  $(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(inst_dir)/levels/$$file; \
 	done
 
 win32-install-script:

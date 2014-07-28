@@ -8,8 +8,8 @@ bonus_magnet.wav malus_magnet.wav disable.wav
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(inst_dir)/sounds
-	@for file in *.wav; do\
-	  $(INSTALL_DATA) $$file $(DESTDIR)$(inst_dir)/sounds/$$file;\
+	@for file in $(EXTRA_DIST); do\
+	  $(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(inst_dir)/sounds/$$file;\
 	done
 
 win32-install-script:

@@ -19,7 +19,7 @@ SUBDIRS = AbsoluteB Oz Moiree Classic
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(inst_dir)/gfx
 	@for file in $(EXTRA_DIST); do\
-	  $(INSTALL_DATA) $$file $(DESTDIR)$(inst_dir)/gfx/$$file;\
+	  $(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(inst_dir)/gfx/$$file;\
 	done
 
 win32-install-script:

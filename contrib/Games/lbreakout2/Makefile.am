@@ -21,7 +21,7 @@ AUTOMAKE_OPTIONS = foreign
 # does not contain plus signs. :-)
 lbreakout2.desktop:
 	@sed -e "s+Icon=+Icon=$(datadir)/icons/lbreakout48.gif+" \
-	< lbreakout2.desktop.in > lbreakout2.desktop
+	< $(srcdir)/lbreakout2.desktop.in > lbreakout2.desktop
 
 win32text: $(WIN32_TEXT)
 	@echo Converting text files for win32 installer

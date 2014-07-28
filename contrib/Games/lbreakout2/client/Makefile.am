@@ -51,7 +51,7 @@ install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(inst_dir)
 	$(mkinstalldirs) $(DESTDIR)$(hi_dir)
 	if ! test -f $(DESTDIR)$(hi_dir)/lbreakout2.hscr; then \
-	  $(INSTALL_DATA) -m 666 empty.hscr $(DESTDIR)$(hi_dir)/lbreakout2.hscr; \
+	  $(INSTALL_DATA) -m 666 $(srcdir)/empty.hscr $(DESTDIR)$(hi_dir)/lbreakout2.hscr; \
 	fi;
 
 uninstall-local:
