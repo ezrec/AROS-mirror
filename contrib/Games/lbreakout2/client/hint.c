@@ -197,6 +197,7 @@ void hint_set( Hint *hint )
         /* must be in screen */
         if ( hint->rect.x + hint_balloon->w >= stk_display->w )
             hint->rect.x = stk_display->w - hint_balloon->w;
+		if ( hint->rect.y < 0 ) hint->rect.y = 0;
     }
 }
 

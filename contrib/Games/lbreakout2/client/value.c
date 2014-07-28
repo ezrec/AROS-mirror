@@ -37,18 +37,18 @@ void value_update_str( Value *value )
         case VALUE_KEY:
             if ( value->grab ) { strcpy( value->val_str, "???" ); break; }
             switch ( *value->val_int ) {
-                case SDLK_SPACE: strcpy( value->val_str, "Space" ); break;
-                case SDLK_LEFT: strcpy( value->val_str, "Left" ); break;
-                case SDLK_RIGHT: strcpy( value->val_str, "Right" ); break;
-                case SDLK_UP: strcpy( value->val_str, "Up" ); break;
-                case SDLK_DOWN: strcpy( value->val_str, "Down" ); break;
-                case SDLK_RSHIFT: strcpy( value->val_str, "Right Shift" ); break;
-                case SDLK_LSHIFT: strcpy( value->val_str, "Left Shift" ); break;
-                case SDLK_RCTRL: strcpy( value->val_str, "Right Ctrl" ); break;
-                case SDLK_LCTRL: strcpy( value->val_str, "Left Ctrl" ); break;
-                case SDLK_RALT: strcpy( value->val_str, "Right Alt" ); break;
-                case SDLK_LALT: strcpy( value->val_str, "Left Alt" ); break;
-                case SDLK_BACKSPACE: strcpy( value->val_str, "BackSpace" ); break;
+                case SDLK_SPACE: strcpy( value->val_str, _("Space") ); break;
+                case SDLK_LEFT: strcpy( value->val_str, _("Left") ); break;
+                case SDLK_RIGHT: strcpy( value->val_str, _("Right") ); break;
+                case SDLK_UP: strcpy( value->val_str, _("Up") ); break;
+                case SDLK_DOWN: strcpy( value->val_str, _("Down") ); break;
+                case SDLK_RSHIFT: strcpy( value->val_str, _("Right Shift") ); break;
+                case SDLK_LSHIFT: strcpy( value->val_str, _("Left Shift") ); break;
+                case SDLK_RCTRL: strcpy( value->val_str, _("Right Ctrl") ); break;
+                case SDLK_LCTRL: strcpy( value->val_str, _("Left Ctrl") ); break;
+                case SDLK_RALT: strcpy( value->val_str, _("Right Alt") ); break;
+                case SDLK_LALT: strcpy( value->val_str, _("Left Alt") ); break;
+                case SDLK_BACKSPACE: strcpy( value->val_str, _("BackSpace") ); break;
                 default:
                     if ( *value->val_int >= SDLK_a && *value->val_int <= SDLK_z )
                         sprintf( value->val_str, "'%c'", (char)toupper( *value->val_int ) );

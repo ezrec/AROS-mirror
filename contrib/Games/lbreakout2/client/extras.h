@@ -15,40 +15,12 @@
  *                                                                         *
  ***************************************************************************/
 
-typedef struct {
-    float       x, y;
-    float       alpha;
-    int         type; /* defined in lbreakout.h */
-    int         offset; /* offset in extra pic */
-    int         dir; /* extra will move to this direction */
-    SDL_Rect    update_rect; /* screen update region */
-} Extra;
+/* Play sounds and handle graphical effects. */
+void client_handle_collected_extra( Paddle *paddle, int extra_type );
 
-/*
-====================================================================
-Load and delete extra graphics
-====================================================================
-*/
-void extras_load();
-void extras_delete();
-/*
-====================================================================
-Reset extras
-====================================================================
-*/
-void extras_reset();
-/*
-====================================================================
-Create new extra at position
-====================================================================
-*/
-void extra_create( int type, int x, int y, int dir );
-/*
-====================================================================
-Use extra when paddle collected it
-====================================================================
-*/
-void extra_use( Paddle *paddle, int type );
+/* move the extras as in extras_update but do not collect them */
+void client_extras_update( int ms );
+
 /*
 ====================================================================
 Show, hide extras
@@ -60,16 +32,11 @@ void extras_show();
 void extras_alphashow( int alpha );
 /*
 ====================================================================
-Update extras
-====================================================================
-*/
-void extras_update( int ms );
-/*
-====================================================================
 Wall
 ====================================================================
 */
-void wall_hide();
-void wall_show();
-void wall_alphashow( int alpha );
-void wall_update( int ms );
+void walls_hide();
+void walls_show();
+void walls_alphashow( int alpha );
+void client_walls_update( int ms );
+

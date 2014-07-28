@@ -127,6 +127,7 @@ GuiWidget* gui_button_create(
     stk_surface_apply_wallpaper(
         widget->surface, 0,0,-1,height, 
         gui_theme->button_wallpaper_normal, -1 );
+    SDL_SetColorKey( widget->surface, 0,0 );
     widget->border = stk_surface_apply_frame(
             widget->surface, 0,0,-1,height,
             gui_theme->button_frame_normal );

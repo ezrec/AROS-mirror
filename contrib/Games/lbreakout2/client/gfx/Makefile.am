@@ -11,14 +11,15 @@ f_frame.png f_game.png \
 scroll_up.png scroll_down.png scroll_track.png \
 fr_hori.png fr_vert.png fr_luc.png \
 fr_llc.png fr_ruc.png fr_rlc.png confirm_buttons.png \
-win_icon.png cr_back.png warp.png nukeback.png
+win_icon.png cr_back.png warp.png nukeback.png \
+loading.png ammo.png
 
 SUBDIRS = AbsoluteB Oz Moiree Classic
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(inst_dir)/gfx
 	@for file in $(EXTRA_DIST); do\
-	  $(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(inst_dir)/gfx/$$file;\
+	  $(INSTALL_DATA) $$file $(DESTDIR)$(inst_dir)/gfx/$$file;\
 	done
 
 win32-install-script:

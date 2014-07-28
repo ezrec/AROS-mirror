@@ -16,6 +16,7 @@
  ***************************************************************************/
 
 #include "lbreakout.h"
+#include "../game/mathfuncs.h"
 #include "config.h"
 #include "shrapnells.h"
 
@@ -37,14 +38,16 @@ Local
 Create a single shrapnell and add to list.
 ====================================================================
 */
-void shrapnell_create( int x, int y, int w, int h, float vx, float vy )
+void shrapnell_create( SDL_Surface *surf, 
+    int sx, int sy, int sw, int sh, 
+    int px, int py, float vx, float vy )
 {
     Shrapnell *shr = calloc( 1, sizeof( Shrapnell ) );
-    shr->pic = stk_surface_create( SDL_SWSURFACE, w,h );
-    SDL_SetColorKey(shr->pic, 0, 0);
-    stk_surface_blit( offscreen, x, y,w,h, shr->pic, 0,0 );
-    shr->x = x;
-    shr->y = y;
+    shr->pic = stk_surface_create( SDL_SWSURFACE, sw,sh );
+    //SDL_SetColorKey(shr->pic, 0, 0);
+    stk_surface_blit( surf, sx, sy,sw,sh, shr->pic, 0,0 );
+    shr->x = px;
+    shr->y = py;
     shr->v.x = vx;
     shr->v.y = vy;
     shr->alpha = shr_start_alpha;
@@ -83,11 +86,14 @@ void shrapnells_delete()
 }
 /*
 ====================================================================
-Create shrapnells from position in offscreen. The vector imp is the 
+Create shrapnells from surface (surf,sx,sy,sw,sh) and put it to
+screen position (px,py). The vector imp is the 
 impuls and type the type of what caused the destruction.
 ====================================================================
 */
-void shrapnells_create( int x, int y, int w, int h, int type, Vector imp ) 
+void shrapnells_create( SDL_Surface *surf,
+    int sx, int sy, int sw, int sh, int px, int py, 
+    int type, Vector imp )
 {
     int i, j;
     int shr_w, shr_h;
@@ -106,112 +112,63 @@ void shrapnells_create( int x, int y, int w, int h, int type, Vector imp )
         case SHR_BY_NORMAL_BALL:
             vector_norm( &imp );
             imp.x *= 0.13; imp.y *= 0.13;
-            shrapnell_create( x, y, w, h, imp.x, imp.y );
+            shrapnell_create( surf, sx, sy, sw, sh, px, py,
+                              imp.x, imp.y );
             break;
         case SHR_BY_ENERGY_BALL:
             if ( config.anim == 1 ) {
                 /* low */
-                shrapnell_create( x, y, w, h, 0, 0 );
+                shrapnell_create( surf, sx, sy, sw, sh, px, py, 
+                                  0, 0 );
                 break;
             }
-            shr_w = w / 2;
-            shr_h = h / 2;
-            for ( i = 0; i < w; i += shr_w )
-                for ( j = 0; j < h; j += shr_h ) {
-                    v.x = ( x + ( w >> 1 ) ) - ( x + i + ( shr_w >> 1 ) );
-                    v.y = ( y + ( h >> 1 ) ) - ( y + j + ( shr_h >> 1 ) );
+            shr_w = sw / 2;
+            shr_h = sh / 2;
+            for ( i = 0; i < sw; i += shr_w )
+                for ( j = 0; j < sh; j += shr_h ) {
+                    v.x = ( sw >> 1 ) - ( i + ( shr_w >> 1 ) );
+                    v.y = ( sh >> 1 ) - ( j + ( shr_h >> 1 ) );
                     vector_norm( &v );
                     v.x *= 0.01; v.y *= 0.01;
-                    shrapnell_create( x + i, y + j, shr_w, shr_h, v.x, v.y );
+                    shrapnell_create( surf, 
+                            sx + i, sy + j, shr_w, shr_h,
+                            px + i, py + j, v.x, v.y );
                 }
             break;
         case SHR_BY_SHOT:
             if ( config.anim == 1 ) {
                 /* low */
-                shrapnell_create( x, y, w, h, 0, imp.y * 0.02 );
+                shrapnell_create( surf, sx, sy, sw, sh, 
+                        px, py, 0, imp.y * 0.02 );
                 break;
             }
-            shr_w = w / 8;
-            shr_h = h;
-            for ( i = 0; i < ( w >> 1 ); i += shr_w ) {
-                shrapnell_create( x + i, y, shr_w, shr_h, 0, imp.y * 0.002 * ( i + 1 ) );
-                shrapnell_create( x + w - shr_w - i, y, shr_w, shr_h, 0, imp.y * 0.002 * ( i + 1 ) );
+            shr_w = sw / 8;
+            shr_h = sh;
+            for ( i = 0; i < ( sw >> 1 ); i += shr_w ) {
+                shrapnell_create( surf, sx + i, sy, shr_w, shr_h, 
+                        px + i, py, 0, imp.y * 0.002 * ( i + 1 ) );
+                shrapnell_create( surf, sx + sw - shr_w - i, sy, 
+                        shr_w, shr_h, 
+                        px + sw - shr_w - i, py, 0, 
+                        imp.y * 0.002 * ( i + 1 ) );
             }
             break;
         case SHR_BY_EXPL:
             shr_w = config.anim == 3 ? 5 : 10;
             shr_h = config.anim == 3 ? 5 : 10;
-            for ( i = 0; i < w; i += shr_w )
-                for ( j = 0; j < h; j += shr_h ) {
+            for ( i = 0; i < sw; i += shr_w )
+                for ( j = 0; j < sh; j += shr_h ) {
                     dx = rand() % 2 == 0 ? 1 : -1;
                     dy = rand() % 2 == 0 ? 1 : -1;
-                    shrapnell_create( x + i, y + j, shr_w, shr_h, 
-                                      (float)( ( rand() % 6 ) + 5) / 100 * dx, (float)( ( rand() % 6 ) + 5) / 100 * dy );
+                    shrapnell_create( surf, 
+                            sx + i, sy + j, shr_w, shr_h, 
+                            px + i, py + j,
+                            (float)( ( rand() % 6 ) + 5) / 100 * dx, 
+                            (float)( ( rand() % 6 ) + 5) / 100 * dy );
                 }
             break;
     }
 }
-#ifdef _1
-/*
-====================================================================
-Create shrapnells from position in offscreen
-====================================================================
-*/
-void shrapnells_create( int x, int y, int w, int h, int res )
-{
-    int mod = config.anim;
-    int i, j;
-    int r;
-    int shr_w, shr_h, dx, dy;
-
-    /* no animations? */
-    if (!config.anim) return;
-
-    /* high/low resolution shrapnells? */
-    if ( res == SHR_LOW_RES )
-        r = rand() % 3;
-    else {
-        r = rand() % 5;
-        if (r == 4) r = 3;
-    }
-
-    /* check result */
-    switch (r) {
-        case 0:
-            shr_w = w / (8 * mod);
-            shr_h = h;
-            for (i = 0; i < (4 * mod); i++)
-                shrapnell_create(x + i * shr_w, y, shr_w, shr_h, -0.05 - i * 0.01, 0);
-            for (i = (4 * mod) - 1; i >= 0; i--)
-                shrapnell_create(x + w - (i + 1) * shr_w, y, shr_w, shr_h, 0.05 + i * 0.01, 0);
-            break;
-        case 1:
-            shr_w = w;
-            shr_h = h / (4 * mod);
-            for (i = 0; i < (2 * mod); i++)
-                shrapnell_create(x, y + i * shr_h, shr_w, shr_h, 0, -0.05 - i * 0.01);
-            for (i = (2 * mod) - 1; i >= 0; i--)
-                shrapnell_create(x, y + h - (i + 1) * shr_h, shr_w, shr_h, 0, 0.05 + i * 0.01);
-            break;
-        case 2:
-            shr_w = w / (8 * mod);
-            shr_h = h;
-            for (i = 0; i < (8 * mod); i++)
-                shrapnell_create(x + i * shr_w, y, shr_w, shr_h, 0, (1 - 2 * (i & 1)) * 0.1);
-            break;
-        case 3:
-            shr_w = config.anim == 1 ? 8 : 4;
-            shr_h = config.anim == 1 ? 8 : 4;
-            for (i = 0; i < w / shr_w; i++)
-                for (j = 0; j < h / shr_h; j++) {
-                    dx = rand() % 2 == 0 ? 1 : -1;
-                    dy = rand() % 2 == 0 ? 1 : -1;
-                    shrapnell_create(x + i * shr_w, y + j * shr_h, shr_w, shr_h, (float)(rand()%6+5) / 100 * dx, (float)(rand()%6+5) / 100 * dy);
-                 }
-            break;
-    }
-}
-#endif
 /*
 ====================================================================
 Remove all shrapnells
@@ -308,6 +265,7 @@ void exp_load()
     exp_w = exp_h = 60; /* hardcoded as we have various explosions in one file now */
     exp_count = exp_pic->h / exp_h;
     exp_frame_count = exp_pic->w / exp_w;
+    exps_set_dark( 0 );
 }
 void exps_clear()
 {

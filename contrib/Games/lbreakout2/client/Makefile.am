@@ -1,5 +1,4 @@
-
-DEFS = @network_flag@ @arch_flag@ @warp_flag@ @audio_flag@ @inst_flag@ @hi_inst_flag@ @DEFS@
+DEFS = @network_flag@ @sdlnet_flag@ @arch_flag@ @warp_flag@ @audio_flag@ @inst_flag@ @hi_inst_flag@ @locdir_flag@ @DEFS@
 
 lbreakout2res.o: win32.ico 
 	@echo "1 VERSIONINFO" > $(PACKAGE).rc
@@ -29,21 +28,21 @@ lbreakout2res.o: win32.ico
 
 bin_PROGRAMS = lbreakout2
 lbreakout2_SOURCES = credit.c shine.c extras.c balls.c shrapnells.c  \
-shots.c event.c paddle.c frame.c misc.c bricks.c difficulty.c player.c game.c \
-file.c levels.c config.c \
+shots.c event.c paddle.c frame.c misc.c bricks.c player.c \
+file.c config.c setselect.c \
 item.c menu.c manager.c value.c chart.c \
 editor.c help.c hint.c theme.c client.c client_recv.c \
-client_data.c client_game.c client_handlers.c comm.c \
+client_data.c client_handlers.c game.c comm.c slot.c \
 display.c main.c win32.ico
 lbreakout2_DEPENDENCIES = @win32_deps@
-lbreakout2_LDADD = @win32_deps@ ../common/libcommon.a ../gui/libGui.a @mixer_flag@ 
+lbreakout2_LDADD = @win32_deps@ ../common/libcommon.a ../gui/libGui.a ../game/libgame.a @mixer_flag@ @sdlnet_lib_flag@
 
 EXTRA_DIST = credit.h shine.h extras.h balls.h shrapnells.h  \
-shots.h event.h paddle.h frame.h misc.h bricks.h difficulty.h player.h game.h \
-file.h levels.h config.h lbreakout.h \
+shots.h event.h paddle.h frame.h misc.h bricks.h player.h \
+file.h config.h lbreakout.h setselect.h \
 item.h menu.h manager.h value.h chart.h \
 editor.h help.h hint.h theme.h client.h client_data.h \
-client_handlers.h comm.h \
+client_handlers.h game.h comm.h slot.h \
 display.h empty.hscr
 
 SUBDIRS = gfx sounds levels gui_theme
@@ -52,7 +51,7 @@ install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(inst_dir)
 	$(mkinstalldirs) $(DESTDIR)$(hi_dir)
 	if ! test -f $(DESTDIR)$(hi_dir)/lbreakout2.hscr; then \
-	  $(INSTALL_DATA) -m 666 $(srcdir)/empty.hscr $(DESTDIR)$(hi_dir)/lbreakout2.hscr; \
+	  $(INSTALL_DATA) -m 666 empty.hscr $(DESTDIR)$(hi_dir)/lbreakout2.hscr; \
 	fi;
 
 uninstall-local:

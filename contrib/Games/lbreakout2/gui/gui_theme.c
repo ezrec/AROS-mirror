@@ -32,7 +32,7 @@ stk_surface_set_path() is prepended.
 */
 
 GuiTheme* gui_theme_load( char *name )
-{ 
+{
     GuiTheme *theme = calloc( 1, sizeof( GuiTheme ) );
     if ( theme == 0 ) ABORT( "Out Of Memory" )
 

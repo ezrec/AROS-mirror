@@ -20,20 +20,9 @@
 #include <sys/stat.h>
 #include <dirent.h>
 
-#ifdef HAVE_CONFIG_H
-#include "../config.h"
-#endif
-
 #include "lbreakout.h"
-#include "file.h"
 #include "config.h"
 #include "theme.h"
-#include "levels.h"
-#include "player.h"
-#include "display.h"
-#include "paddle.h"
-#include "shrapnells.h"
-#include "bricks.h"
 
 extern SDL_Surface *stk_display;
 extern Config config;
@@ -70,13 +59,15 @@ SDL_Surface *paddle_pic = 0;
 SDL_Surface *paddle_shadow = 0;
 SDL_Surface *weapon_pic = 0;
 SDL_Surface *weapon_shadow = 0;
+SDL_Surface *ammo_pic = 0;
 #ifdef AUDIO_ENABLED
 StkSound *wav_expand = 0, *wav_shrink = 0, *wav_frozen = 0;
 #endif
 SDL_Surface *ball_pic = 0; /* ball pictures */
 SDL_Surface *ball_shadow = 0;
 #ifdef AUDIO_ENABLED
-StkSound *wav_reflect = 0;
+StkSound *wav_reflect_brick = 0;
+StkSound *wav_reflect_paddle = 0;
 StkSound *wav_attach = 0;
 #endif
 SDL_Surface *shot_pic = 0;
@@ -102,6 +93,7 @@ SDL_Surface *frame_mp_left = 0, *frame_mp_right = 0; /* multiplayer variants */
 SDL_Surface *frame_mp_left_shadow = 0, *frame_mp_right_shadow = 0;
 SDL_Surface *lamps = 0; /* life lamps */
 StkFont *display_font;
+StkFont *display_highlight_font;
 #ifdef AUDIO_ENABLED
 StkSound *wav_life_up = 0, *wav_life_down = 0;
 #endif
@@ -166,11 +158,9 @@ SDL_Surface* theme_load_surf( char *name )
     struct stat filestat;
     SDL_Surface *surf = 0;
     sprintf( theme_path, "%s/%s", theme_dir, name );
-    
     if ( stat( theme_path, &filestat ) == -1 || 
          ( surf = stk_surface_load( SDL_SWSURFACE | SDL_NONFATAL, theme_path ) ) == 0 )
         surf = stk_surface_load( SDL_SWSURFACE, name );
-    
     return surf;
 }
 #ifdef AUDIO_ENABLED
@@ -234,6 +224,8 @@ void theme_load_frame()
     lamps = theme_load_surf( "life.png" );
     display_font = theme_load_font_fixed( "f_frame.png", 32, 96, 8 );
     display_font->align = STK_FONT_ALIGN_RIGHT | STK_FONT_ALIGN_CENTER_Y;
+    display_highlight_font = theme_load_font_fixed( "f_small_white.png", 32, 96, 8 );
+    display_highlight_font->align = STK_FONT_ALIGN_RIGHT | STK_FONT_ALIGN_CENTER_Y;
 	
 	/* waves */
 #ifdef AUDIO_ENABLED
@@ -276,6 +268,9 @@ void theme_load_bkgnds()
             bkgnds[i] = stk_surface_load( SDL_SWSURFACE, theme_path );
         }
     }
+
+    for ( i = 0; i < bkgnd_count; i++ )
+	    SDL_SetColorKey( bkgnds[i], 0, 0x0 );
 }
 
 /*
@@ -441,6 +436,8 @@ void theme_load( char *name )
     weapon_pic = theme_load_surf( "weapon.png" );
     paddle_shadow = create_shadow( paddle_pic, 0, 0, paddle_pic->w, paddle_pic->h );
     weapon_shadow = create_shadow( weapon_pic, 0, 0, weapon_pic->w, weapon_pic->h );
+    ammo_pic = theme_load_surf( "ammo.png" );
+    SDL_SetColorKey( ammo_pic, SDL_SRCCOLORKEY, 0x0 );
     /* paddle sounds */
 #ifdef AUDIO_ENABLED
     wav_expand = theme_load_sound( "expand.wav" );
@@ -453,7 +450,8 @@ void theme_load( char *name )
     ball_shadow = create_shadow( ball_pic, 0, 0, ball_w, ball_h );
     /* ball sounds */
 #ifdef AUDIO_ENABLED
-    wav_reflect = theme_load_sound( "reflect.wav" );
+    wav_reflect_brick = theme_load_sound( "reflect_brick.wav" );
+    wav_reflect_paddle = theme_load_sound( "reflect_paddle.wav" );
     wav_attach = theme_load_sound( "attach.wav" );
 #endif
     /* shot gfx */
@@ -516,7 +514,7 @@ void theme_load( char *name )
             BRICK_HEIGHT );
         /* bricks must have been loaded at this point! */
         for ( i = 0; i < MAP_WIDTH - 2; i++ )
-            stk_surface_blit( brick_pic, BRICK_WIDTH, 0,
+            stk_surface_blit( brick_pic, 0, 0,
                 BRICK_WIDTH, BRICK_HEIGHT, 
                 wall_pic, i * BRICK_WIDTH, 0 );
     }
@@ -547,8 +545,8 @@ void theme_load( char *name )
     /* add version to background */
     mfont->align = STK_FONT_ALIGN_RIGHT | STK_FONT_ALIGN_BOTTOM;
     sprintf( aux, "v%s", VERSION );
-    stk_font_write( mfont, mbkgnd, mbkgnd->w - 2, stk_display->h - 2 - mfont->height, STK_OPAQUE, aux );
-    stk_font_write( mfont, mbkgnd, mbkgnd->w - 2, stk_display->h - 2, STK_OPAQUE, "http://www.lgames.sf.net" );
+    stk_font_write( mfont, mbkgnd, mbkgnd->w - 4, stk_display->h - 4 - mfont->height, STK_OPAQUE, aux );
+    stk_font_write( mfont, mbkgnd, mbkgnd->w - 4, stk_display->h - 4, STK_OPAQUE, "http://lgames.sf.net" );
     /* charts */
     /* load resources */
     cfont = theme_load_font_fixed( "f_small_yellow.png", 32, 96, 8 );
@@ -581,6 +579,7 @@ void theme_delete()
 #endif
     stk_surface_free( &paddle_pic );
     stk_surface_free( &weapon_pic );
+    stk_surface_free( &ammo_pic );
     stk_surface_free( &paddle_shadow );
     stk_surface_free( &weapon_shadow );
 #ifdef AUDIO_ENABLED
@@ -591,7 +590,8 @@ void theme_delete()
     stk_surface_free( &ball_pic );
     stk_surface_free( &ball_shadow );
 #ifdef AUDIO_ENABLED
-    stk_sound_free( &wav_reflect );
+    stk_sound_free( &wav_reflect_paddle );
+    stk_sound_free( &wav_reflect_brick );
     stk_sound_free( &wav_attach );
 #endif
     stk_surface_free( &shot_pic );
@@ -630,6 +630,7 @@ void theme_delete()
     stk_surface_free( &frame_top_shadow );
     stk_surface_free( &lamps );
     stk_font_free( &display_font );
+    stk_font_free( &display_highlight_font );
 #ifdef AUDIO_ENABLED
     stk_sound_free( &wav_life_up );
     stk_sound_free( &wav_life_down );
@@ -699,5 +700,5 @@ void theme_get_info( char *theme_name, char *text, int limit )
                 break;
     }
     else
-        strcpy_lt( text, "NO INFO AVAILABLE", limit );
+        strcpy_lt( text, _("NO INFO AVAILABLE"), limit );
 }

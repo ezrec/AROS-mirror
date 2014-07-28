@@ -32,17 +32,14 @@ void shrapnells_delete();
 
 /*
 ====================================================================
-Create shrapnells from position in offscreen. The vector imp is the 
+Create shrapnells from surface (surf,sx,sy,sw,sh) and put it to
+screen position (px,py). The vector imp is the 
 impuls and type the type of what caused the destruction.
 ====================================================================
 */
-enum {
-    SHR_BY_NORMAL_BALL = 0,
-    SHR_BY_ENERGY_BALL,
-    SHR_BY_SHOT,
-    SHR_BY_EXPL
-};
-void shrapnells_create( int x, int y, int w, int h, int type, Vector imp );
+void shrapnells_create( SDL_Surface *surf,
+    int sx, int sy, int sw, int sh, int px, int py, 
+    int type, Vector imp );
 /*
 ====================================================================
 Remove all shrapnells

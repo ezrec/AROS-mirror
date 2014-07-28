@@ -21,6 +21,7 @@
 extern SDL_Surface *offscreen;
 extern SDL_Surface *stk_display;
 extern StkFont *display_font;
+extern StkFont *display_highlight_font;
 
 List *displays = 0;
 
@@ -117,11 +118,17 @@ void displays_show()
 {
     int i;
     char str[64], numstr[10];
+    StkFont *font;
     Display *display;
     if ( displays == 0 ) return;
     list_reset( displays );
     display_font->align = STK_FONT_ALIGN_LEFT | STK_FONT_ALIGN_TOP;
+    display_highlight_font->align = STK_FONT_ALIGN_LEFT | STK_FONT_ALIGN_TOP;
     while ( ( display = list_next( displays ) ) ) {
+        if (display->is_highlighted)
+	  font = display_highlight_font;
+        else
+          font = display_font;
         strcpy( str, display->text );
         if ( display->digits > 0 ) {
             sprintf( numstr, "%i", (int)display->cur_value );
@@ -134,7 +141,7 @@ void displays_show()
                 display->w, display->h,
                 stk_display, display->x, display->y, 128 );
         }
-        stk_font_write( display_font, stk_display, 
+        stk_font_write( font, stk_display, 
             display->x + 2, display->y + 1, -1, str );
     }
 }
@@ -175,4 +182,13 @@ void display_set_text( Display *display, char *text )
 void display_set_value( Display *display, int value )
 {
     display->value = value;
+}
+void display_set_value_directly( Display *display, int value )
+{
+    display->cur_value = value; /* no smooth approaching of the dest value */  
+    display->value = value;
+}
+void display_set_highlight( Display *display, int on )
+{
+  display->is_highlighted = on;
 }

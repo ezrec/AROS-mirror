@@ -20,7 +20,7 @@
 Initiate credit.
 ====================================================================
 */
-void credit_init( char *name, char *author, int level );
+void credit_init( char *name, char *author, int level, int level_count );
 void credit_clear();
 /*
 ====================================================================

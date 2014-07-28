@@ -28,10 +28,10 @@ int chart_loaded = 0; /* true if highscore succesfully loaded */
 SDL_Rect chart_pos; /* used to store size. x,y is set when drawing */
 int chart_gap = 10;
 int chart_level_offset = 0; /* level offset (name's left aligned, score's right aligned) */
-char *cheader = "Name      Level Score";
 extern SDL_Surface *stk_display;
 extern Config config;
 extern StkFont *cfont, *chfont, *ccfont; /* normal, highlight and caption font */
+extern FILE *hi_dir_chart_file;
 
 /*
 ====================================================================
@@ -64,7 +64,7 @@ void chart_reset( Set_Chart *chart )
 Create/delete set chart.
 ====================================================================
 */
-Set_Chart* chart_set_create( char *name )
+Set_Chart* chart_set_create( const char *name )
 {
 	Set_Chart *chart = calloc( 1, sizeof( Set_Chart ) );
 	chart->name = strdup( name );
@@ -122,8 +122,16 @@ int chart_load_from_path( char *path )
     sprintf( file_name, "%s/%s", path, CHART_FILE_NAME );
 	/* clear chart list */
 	list_clear( charts );
-    /* open file */
-    file = fopen( file_name, "rb" );
+
+    if (!strcmp(path, HI_DIR) && hi_dir_chart_file) {
+        file = hi_dir_chart_file;
+        rewind(hi_dir_chart_file);
+    }
+    else {
+        /* open file */
+        file = fopen( file_name, "rb" );
+    }
+
     if ( file ) {
 		/* test if it's new format or old one. */
 		fread( aux, sizeof( char ), 3, file ); aux[3] = 0;
@@ -138,7 +146,7 @@ int chart_load_from_path( char *path )
 				if ( aux[0] != '>' ) break;
 				chart = calloc( 1, sizeof( Set_Chart ) );
 				/* get name: >>>name */
-				fscanf( file, ">>>%s\n", setname );
+				fscanf( file, ">>>%1023s\n", setname );
 				chart->name = strdup( setname );
 				/* entries */
 				chart_read_entries( file, file_name, chart );
@@ -148,25 +156,28 @@ int chart_load_from_path( char *path )
 		}
 		else {
 			/* old format: load single chart as 'Original' */
-			fprintf( stderr, "Converting highscore chart as format changed.\n" );
-			chart = chart_set_create( "Original" );
+			fprintf( stderr, _("Converting highscore chart as format changed.\n") );
+			chart = chart_set_create( "LBreakout2" );
 			chart_read_entries( file, file_name, chart );
 			list_add( charts, chart );
 		}
-        fclose( file );
+	if (file != hi_dir_chart_file)
+            fclose( file );
     }
     else {
-        fprintf( stderr, "Highscore chart doesn't exist in '%s'... creating new one.\n", path );
-		chart = chart_set_create( "Original" );
+        fprintf( stderr, _("Highscore chart doesn't exist in '%s'... creating new one.\n"), path );
+		chart = chart_set_create( "LBreakout2" );
 		list_add( charts, chart );
     }
-    /* test if writing is allowed without changing actual contents */
-    if ( ( file = fopen( file_name, "a" ) ) == 0 ) {
-        fprintf( stderr, "Write permission for '%s' denied.\n", file_name );
-        return 0;
+    if (file != hi_dir_chart_file) {
+        /* test if writing is allowed without changing actual contents */
+        if ( ( file = fopen( file_name, "a" ) ) == 0 ) {
+            fprintf( stderr, _("Write permission for '%s' denied.\n"), file_name );
+            return 0;
+        }
+        else
+            fclose( file );
     }
-    else
-        fclose( file );
     strcpy( chart_path, path );
     chart_loaded = 1;
     return 1;
@@ -186,27 +197,29 @@ this fails fall back to ~/.lbreakout and create highscore there.
 */
 void chart_load()
 {
+	chart_loaded = 0;
 	/* create list */
 	if ( charts ) list_delete( charts ); charts = 0;
 	charts = list_create( LIST_AUTO_DELETE, chart_set_delete );
     /* load highscore */
     if ( !chart_load_from_path( HI_DIR ) ) {
-        fprintf( stderr, "Unable to access highscore chart in '%s'.\n", HI_DIR );
-        fprintf( stderr, "Trying to use config directory '%s'.\n", config.dir_name );
+        fprintf( stderr, _("Unable to access highscore chart in '%s'.\n"), HI_DIR );
+        fprintf( stderr, _("Trying to use config directory '%s'.\n"), config.dir_name );
         if ( !chart_load_from_path( config.dir_name ) ) {
-            fprintf( stderr, "Unable to access highscore chart in config directory... won't be "
-                             "able to save any results. Sorry.\n" );
+            fprintf( stderr, _("Unable to access highscore chart in config directory... won't be "
+                             "able to save any results. Sorry.\n") );
             return;
         }
     }
-    printf( "Saving highscore chart in: %s\n", chart_path );
+    printf( _("Saving highscore chart in: %s\n"), chart_path );
     /* compute size and position stuff of highscore */
+    char *cheader = _("Name      Level Score");
     chart_pos.w = stk_font_string_width( ccfont, cheader );
     chart_pos.h = ccfont->height +  chart_gap + /* title + gap */
 			  cfont->height * CHART_ENTRY_COUNT + /* entries */
               chart_gap + /*gap between caption and entries */
               ccfont->height; /* caption size */
-    chart_level_offset = stk_font_string_width( ccfont, "name.-----" ) + stk_font_string_width( ccfont, "Level" ) / 2; /* level offset centered */
+    chart_level_offset = stk_font_string_width( ccfont, _("name.-----") ) + stk_font_string_width( ccfont, _("Level") ) / 2; /* level offset centered */
 }
 /*
 ====================================================================
@@ -231,10 +244,19 @@ void chart_save()
     if ( !chart_loaded ) return;
     /* full file name */
     sprintf( file_name, "%s/%s", chart_path, CHART_FILE_NAME );
-    /* open file */
-    file = fopen( file_name, "w" );
+
+    if (!strcmp(chart_path, HI_DIR) && hi_dir_chart_file) {
+        file = hi_dir_chart_file;
+        rewind(hi_dir_chart_file);
+    }
+    else {
+        /* open file */
+        if ((file = fopen( file_name, "r+" )) == NULL)
+            file = fopen( file_name, "w" ); /* either no access or it does not exist so try this */
+    }
+
     if ( !file ) {
-        fprintf( stderr, "??? Highscore chart loaded properly but cannot save?\n" );
+        fprintf( stderr, _("??? Highscore chart loaded properly but cannot save? (%s)\n"),file_name );
         return;
     }
 	/* save all charts */
@@ -244,7 +266,9 @@ void chart_save()
     	for ( i = 0; i < CHART_ENTRY_COUNT; i++ )
         	fprintf( file, "%s\n%i\n%i\n", chart->entries[i].name, chart->entries[i].level, chart->entries[i].score );
 	}		
-    fclose( file );
+
+    if (file != hi_dir_chart_file)
+        fclose( file );
 }
 /*
 ====================================================================
@@ -320,6 +344,7 @@ void chart_show( Set_Chart *chart, int x, int y, int w, int h )
         chart->name );
 	/* caption */
     ccfont->align = STK_FONT_ALIGN_LEFT | STK_FONT_ALIGN_TOP;
+    char *cheader = _("Name      Level Score");
     stk_font_write( ccfont, stk_display, 
         chart_pos.x, chart_pos.y + ccfont->height + chart_gap, -1, 
         cheader );
@@ -350,6 +375,52 @@ void chart_show( Set_Chart *chart, int x, int y, int w, int h )
 }
 /*
 ====================================================================
+Draw highscores centered in regio x,y,w,h but in a more compact way
+(no title). Also don't use chart_pos (except for x).
+====================================================================
+*/
+void chart_show_compact( Set_Chart *chart, int x, int y, int w, int h )
+{
+    int px = x + ( w - chart_pos.w ) / 2, py = y;
+    char number_buffer[24];
+    int entry_offset; /* y offset of entries */
+    StkFont *font;
+    int i;
+
+    /* caption */
+    ccfont->align = STK_FONT_ALIGN_LEFT | STK_FONT_ALIGN_TOP;
+    char *cheader = _("Name      Level Score");
+    stk_font_write( ccfont, stk_display, px, py, -1, cheader );
+	
+    /* get entry offset */
+    entry_offset = ( ccfont->height + 2) + py;
+	
+    /* entries */
+    for ( i = 0; i < CHART_ENTRY_COUNT; i++ ) {
+        font = cfont;
+        if ( chart->entries[i].new_entry ) font = chfont;
+        /* name */
+        font->align = STK_FONT_ALIGN_LEFT | STK_FONT_ALIGN_TOP;
+        stk_font_write( font, stk_display, 
+            px, entry_offset, -1, chart->entries[i].name );
+        /* level */
+        font->align = STK_FONT_ALIGN_CENTER_X | STK_FONT_ALIGN_TOP;
+        sprintf( number_buffer, "%i", chart->entries[i].level );
+        stk_font_write( font, stk_display, 
+            px + chart_level_offset, entry_offset, -1, number_buffer );
+        /* score */
+        font->align = STK_FONT_ALIGN_RIGHT | STK_FONT_ALIGN_TOP;
+        sprintf( number_buffer, "%i", chart->entries[i].score );
+        stk_font_write( font, stk_display, 
+            px + chart_pos.w, entry_offset, -1, number_buffer );
+        /* change offset */
+        entry_offset += font->height - 1;
+    }
+    { SDL_Rect region = { x, y, w, h };
+    stk_display_store_rect( &region ); }
+}
+/*
+====================================================================
 Clear all new_entry flags (done before new players are added
 to chart when game over).
 ====================================================================
@@ -371,7 +442,7 @@ Query set chart by this name or if not found create a new one
 by this name.
 ====================================================================
 */
-Set_Chart* chart_set_query( char *name )
+Set_Chart* chart_set_query( const char *name )
 {
 	Set_Chart *chart = 0;
 	list_reset( charts );
@@ -379,7 +450,7 @@ Set_Chart* chart_set_query( char *name )
 		if ( strequal( name, chart->name ) )
 			return chart;
 	/* not found so create it */
-	fprintf( stderr, "First chart query for '%s'. Creating this chart.\n", name );
+	//fprintf( stderr, _("First chart query for '%s'. Creating this chart.\n"), name );
 	chart = chart_set_create( name );
 	list_add( charts, chart );
 	return chart;
@@ -392,7 +463,7 @@ Query chart by id. If id is invalid return 0.
 Set_Chart* chart_set_query_id( int id )
 {
 	if ( id >= charts->count ) {
-		fprintf( stderr, "Chart index '%i' is out of range!\n", id );
+		fprintf( stderr, _("Chart index '%i' is out of range!\n"), id );
 		return 0;
 	}
 	return (Set_Chart*)list_get( charts, id );

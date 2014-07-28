@@ -20,22 +20,30 @@
 
 /*
 ====================================================================
-Connect to specified game server and open chatroom on success.
+Disconnect from current server if any.
+====================================================================
+*/
+void client_disconnect();
+	
+/*
+====================================================================
+Try to connect to a game server. Retry twice every three seconds
+or quit then.
 ====================================================================
 */
 void client_connect( GuiWidget *widget, GuiEvent *event );
 
 /*
 ====================================================================
-Close client chatroom and return to connect dialogue.
+Open/close the connection window.
 ====================================================================
 */
-void client_disconnect( 
-    GuiWidget *widget, GuiEvent *event );
-    
+void client_open_connect_window( GuiWidget *widget, GuiEvent *event );
+void client_close_connect_window( GuiWidget *widget, GuiEvent *event );
+
 /*
 ====================================================================
-Close connect dialogue and return to LBreakout's menu.
+Close chatroom and return to LBreakout's menu.
 ====================================================================
 */
 void client_quit( GuiWidget *widget, GuiEvent *event );

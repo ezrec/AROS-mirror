@@ -42,9 +42,13 @@ char *stk_audio_path = 0;
 SDL_Rect stk_srect, stk_drect;
 int stk_old_alpha = 0;
 int stk_audio_ok = 0;
-int stk_audio_mixchannel_count = 8;
+#ifdef AUDIO_ENABLED
+int stk_audio_mixchannel_count = MIX_CHANNELS;
+#else
+int stk_audio_mixchannel_count = 0;
+#endif
 int stk_audio_sound_enabled = 1;
-int stk_audio_sound_volume = 128;
+int stk_audio_sound_volume = 127;
 int stk_audio_buffer_size = 512;
 int stk_screenshot_id = 1;
 
@@ -101,7 +105,7 @@ static SDL_Surface *IMG_LoadPNG_RW(SDL_RWops *src)
 	 * the normal method of doing things with libpng).  REQUIRED unless you
 	 * set up your own error handlers in png_create_read_struct() earlier.
 	 */
-	if ( setjmp(*png_set_longjmp_fn(png_ptr, longjmp, sizeof (jmp_buf))) ) {
+	if ( setjmp(png_jmpbuf(png_ptr)) ) {
 		IMG_SetError("Error reading the PNG file.");
 		goto done;
 	}
@@ -166,14 +170,13 @@ static SDL_Surface *IMG_LoadPNG_RW(SDL_RWops *src)
 	/* Allocate the SDL surface to hold the image */
 	Rmask = Gmask = Bmask = Amask = 0 ; 
 	if ( color_type != PNG_COLOR_TYPE_PALETTE ) {
-		int ichannels = png_get_channels(png_ptr, info_ptr);
 		if ( SDL_BYTEORDER == SDL_LIL_ENDIAN ) {
 			Rmask = 0x000000FF;
 			Gmask = 0x0000FF00;
 			Bmask = 0x00FF0000;
-			Amask = (ichannels == 4) ? 0xFF000000 : 0;
+			Amask = (png_get_channels(png_ptr, info_ptr) == 4) ? 0xFF000000 : 0;
 		} else {
-		        int s = (ichannels == 4) ? 0 : 8;
+		        int s = (png_get_channels(png_ptr, info_ptr) == 4) ? 0 : 8;
 			Rmask = 0xFF000000 >> s;
 			Gmask = 0x00FF0000 >> s;
 			Bmask = 0x0000FF00 >> s;
@@ -219,9 +222,6 @@ static SDL_Surface *IMG_LoadPNG_RW(SDL_RWops *src)
 	/* Load the palette, if any */
 	palette = surface->format->palette;
 	if ( palette ) {
-	    png_colorp ipalette;
-	    int num_palette;
-
 	    if(color_type == PNG_COLOR_TYPE_GRAY) {
 		palette->ncolors = 256;
 		for(i = 0; i < 256; i++) {
@@ -229,12 +229,18 @@ static SDL_Surface *IMG_LoadPNG_RW(SDL_RWops *src)
 		    palette->colors[i].g = i;
 		    palette->colors[i].b = i;
 		}
-	    } else if (png_get_PLTE(png_ptr, info_ptr, &ipalette, &num_palette)) {
-		palette->ncolors = num_palette; 
-		for( i=0; i<num_palette; ++i ) {
-		    palette->colors[i].b = ipalette[i].blue;
-		    palette->colors[i].g = ipalette[i].green;
-		    palette->colors[i].r = ipalette[i].red;
+	    } else {
+		png_colorp file_palette;
+		int file_num_palette;
+		png_get_PLTE(png_ptr, info_ptr, &file_palette,
+			     &file_num_palette);
+		if (file_num_palette > 0 ) {
+		    palette->ncolors = file_num_palette;
+		    for( i=0; i<file_num_palette; ++i ) {
+		        palette->colors[i].b = file_palette[i].blue;
+		        palette->colors[i].g = file_palette[i].green;
+		        palette->colors[i].r = file_palette[i].red;
+		    }
 		}
 	    }
 	}
@@ -387,12 +393,10 @@ int stk_display_open( int flags, int width, int height, int depth )
     else { /* load window icon on first time setup */
 	SDL_Surface *icon;
 	icon = png_load(SRC_DIR "/gfx/win_icon.png");
-        if (icon != NULL) {
-	    SDL_SetColorKey(icon, SDL_SRCCOLORKEY, 0);
-	    SDL_WM_SetIcon(icon, NULL);
-        }
+	SDL_SetColorKey(icon, SDL_SRCCOLORKEY, 0);
+	SDL_WM_SetIcon(icon, NULL);
     }
-
+	    
     /* open new display */
     if ( ( depth = SDL_VideoModeOK( width, height, depth, flags ) ) == 0 ) {
         fprintf( stderr, "Requested mode %ix%i %s unavailable\n",
@@ -404,10 +408,10 @@ int stk_display_open( int flags, int width, int height, int depth )
         if ( ( stk_display = SDL_SetVideoMode( width, height, depth, flags ) ) == 0 )
             STK_ABORT( SDL_GetError() );
 
-#ifdef STK_DEBUG
+#ifdef STK_DEBUG				
     printf( "set display %ix%i %s\n",
             width, height, (flags&SDL_FULLSCREEN)?"Fullscreen":"Window" );
-
+        
     format = stk_display->format;
     printf("video mode format:\n");
     printf("Masks: R=%i, G=%i, B=%i\n", 
@@ -608,12 +612,6 @@ static int is_path_relative(char *path)
     int is_relative;
 #ifdef _WIN32    	
     is_relative = ((*path != '\\') && ((strchr(path,':') == NULL)));
-#elif defined(__AROS__)
-    is_relative = (strchr(path,':') == NULL);
-    #if defined(__NIX__)
-    is_relative = is_relative && (*path != '/');
-    #endif
-    printf("%s - %d\n", path, is_relative);
 #else			    
     is_relative = (*path != '/');
 #endif
@@ -672,9 +670,7 @@ SDL_Surface* stk_surface_load( int flags, char *format, ... )
     
     /* convert if display open */
     if ( stk_display ) {
-        converted_surface = 
-            SDL_ConvertSurface( surface, 
-                                stk_display->format, flags );
+        converted_surface = SDL_DisplayFormat( surface );
         if ( converted_surface == 0 ) {
             fprintf( stderr, "Conversion of %s failed: %s\n", 
                      path, SDL_GetError() );
@@ -1134,10 +1130,10 @@ contains 'b' for black 'w' for white and ' ' for transparent.
 SDL_Cursor* stk_cursor_create(
     int width, int height, int hot_x, int hot_y, char *source )
 {
-    char *mask = 0, *data = 0;
+    unsigned char *mask = 0, *data = 0;
     SDL_Cursor *cursor = 0;
     int i, j, k;
-    char data_byte, mask_byte;
+    unsigned char data_byte, mask_byte;
     int pot;
     /* create mask&data */
     mask = calloc( width * height / 8, sizeof ( char ) );
@@ -1304,7 +1300,7 @@ void stk_audio_set_sound_volume( int volume )
 {
     if ( !stk_audio_ok ) return;
     if ( volume < 0 ) volume = 0;
-    if ( volume > 128 ) volume = 128;
+    if ( volume > 127 ) volume = 127;
     stk_audio_sound_volume = volume;
 #ifdef AUDIO_ENABLED
     Mix_Volume( -1, volume ); /* all sound channels */
@@ -1422,10 +1418,38 @@ Play a sound.
 */
 void stk_sound_play( StkSound *sound )
 {
+    int channel;
 #ifdef AUDIO_ENABLED
     if ( stk_audio_ok && stk_audio_sound_enabled ) {
-        Mix_Volume( sound->channel, sound->volume );
-        Mix_PlayChannel( sound->channel, sound->chunk, 0 );
+        /* if channel is -1 use first free channel */
+        channel = sound->channel;
+        if ( channel == -1 )
+            channel = Mix_GroupAvailable(-1);
+        Mix_Volume( channel, stk_audio_sound_volume );
+        Mix_PlayChannel( channel, sound->chunk, 0 );
+    }
+#endif
+}
+/*
+====================================================================
+Play a sound at horizontal position x.
+====================================================================
+*/
+void stk_sound_play_x( int x, StkSound *sound )
+{
+    int channel;
+#ifdef AUDIO_ENABLED
+    if ( stk_audio_ok && stk_audio_sound_enabled ) {
+        x = (x - 40) * 255 / (640 - 40 - 40);
+        if (x < 0) x = 0;
+        if (x > 255) x = 255;
+        /* if channel is -1 use first free channel */
+        channel = sound->channel;
+        if ( channel == -1 )
+            channel = Mix_GroupAvailable(-1);
+        Mix_SetPanning( channel, 255 - x, x );
+        Mix_Volume( channel, stk_audio_sound_volume );
+        Mix_PlayChannel( channel, sound->chunk, 0 );
     }
 #endif
 }

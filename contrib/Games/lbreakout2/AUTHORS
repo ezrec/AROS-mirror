@@ -2,6 +2,11 @@ Michael Speck <kulkanie@gmx.net>
 
 **** Contributions ****
 
+Patch to add a very easy difficulty level for kids. - Zooko
+
+Patch to fix the insane speedup of balls after a SLOW/FAST
+bonus expired that came up in 2.5beta. - Mark Tomich
+
 Patch to load all themes from installation path. - Michal Cihar
 
 Fixes to make LBreakout run on FreeBSD. - Sammy Mannaert 

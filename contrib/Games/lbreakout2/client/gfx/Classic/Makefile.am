@@ -3,7 +3,7 @@ EXTRA_DIST = ABOUT
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(inst_dir)/gfx/Classic
 	@for file in $(EXTRA_DIST); do\
-	  $(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(inst_dir)/gfx/Classic/$$file;\
+	  $(INSTALL_DATA) $$file $(DESTDIR)$(inst_dir)/gfx/Classic/$$file;\
 	done
 
 win32-install-script:

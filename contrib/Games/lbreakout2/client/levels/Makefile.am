@@ -1,16 +1,142 @@
-EXTRA_DIST = Original AddOn-1 AddOn-2 MP_Arenas MP_Snapshots \
-Afl Chaos Holidays Megadoomer Runes Wolvie \
-Arcade Demons Hommage Pabelo Shimitar Zufallswelt \
-BeOS-4ever HereWeGo Kevin Ph33r TheGauntlet Bombs \
-HighBall LinuxFun R-World Twilight Lattsville OpenSource \
-Kazan-1 Abc Fly Flower Freek GreenWall Gatinha Composers Color \
-Yexter GreenWall2 Lapis SnyMaxx Pawset X IoriYagami Tricky \
-Silly
+# Use ls | grep -v Makefile | sed -e "s/$/ \\\\/" for update
+EXTRA_DIST = 1010011010 \
+Abc \
+Afl \
+Alex \
+Alexandre \
+AllNighter \
+Arcade \
+Arkanoid \
+BeOS-4ever \
+Bertrand \
+BigBang \
+Biolab428 \
+Blues \
+Bombs \
+CalendarFun \
+Celine \
+Chaos \
+Choices \
+Circle \
+Classique \
+Color \
+Composers \
+Cool \
+Crossing \
+D2K \
+Daves \
+Demons \
+Family \
+Fantaisie \
+FatalDoomsday \
+FatalDoomsday2 \
+Flower \
+Fly \
+Freek \
+FunCity \
+Gatinha \
+GreenWall \
+GreenWall2 \
+GreenWall3 \
+GreenWall4 \
+Hans \
+HereWeGo \
+Heroes \
+HighBall \
+Holidays \
+Hommage \
+Impossibility \
+Invisible \
+IoriYagami \
+Iris \
+IrrenhausAh \
+Izusiowe \
+JediAdventure \
+Kazan-1 \
+Kevin \
+KungFu \
+Lapis \
+Lattsville \
+LBreakout1 \
+LBreakout2 \
+LinuxFun \
+Lord \
+Maze \
+MegaMan2 \
+Megadoomer \
+MontyHall \
+N_Arenas \
+Nations \
+Negundoid \
+NES \
+NewOERG1 \
+N_Snapshots \
+ObiWan \
+OpenSource \
+OurWorld \
+Pabelo \
+Patience \
+Pawset \
+Ph33r \
+P.I.T.A. \
+PlayAgain \
+Popcorn \
+RichQuick \
+Runes \
+R-World \
+Sadistic \
+Shimitar \
+Silly \
+SkillShot \
+Smilies \
+SnyMaxx \
+StarWars \
+Symmetry \
+Symmetry-MKII \
+T.C.S. \
+TheEnd \
+TheGauntlet \
+TimeWaster \
+TrickShot \
+Tricky \
+Twilight \
+Vader \
+Weirdness \
+Wizi \
+Wolvie \
+WonderWalls \
+WTF \
+X \
+Yexter \
+Yoda \
+Zigies \
+Zooligan \
+Zufallswelt \
+EastEurope \
+WestEurope \
+OldGames \
+PCGames \
+Horror \
+Lattices \
+Madness \
+Asteroids \
+Memory \
+WestAsia \
+EastAsia \
+GreenBricks \
+NewBricks \
+AllWorld \
+NorthAfrica \
+Oceania	\
+SouthAmerica \
+MiddleAfrica \
+NorthAmerica \
+SouthAfrica 
 
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(inst_dir)/levels
 	@for file in $(EXTRA_DIST); do \
-	  $(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(inst_dir)/levels/$$file; \
+	  $(INSTALL_DATA) $$file $(DESTDIR)$(inst_dir)/levels/$$file; \
 	done
 
 win32-install-script:

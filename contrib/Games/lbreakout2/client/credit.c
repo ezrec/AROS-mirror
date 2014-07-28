@@ -24,9 +24,9 @@ extern SDL_Surface *offscreen;
 
 SDL_Surface *credit_bkgnd = 0;
 float       credit_alpha;
-float       credit_pms = 0.2;
+float       credit_pms = 0.5;
 int         credit_cur;
-int         credit_time = 4000;
+int         credit_time = 2000;
 int         credit_x, credit_y, credit_w, credit_h;
 char        credit_str[64];
 int         credit_status;
@@ -36,12 +36,16 @@ int         credit_status;
 Initiate credit.
 ====================================================================
 */
-void credit_init( char *name, char *author, int level )
+void credit_init( char *name, char *author, int level, int level_count )
 {
     credit_cur = 0; credit_alpha = 0; credit_status = 0;
 
     /* string */
-    sprintf( credit_str, "%s (%i) - %s", name, level + 1, author );
+    if ( level_count > 0 )
+        sprintf( credit_str, "%s (%i/%i) - %s", name, 
+                 level + 1, level_count, author );
+    else
+        sprintf( credit_str, "%s (%i) - %s", name, level + 1, author );
 
     /* position */
     credit_w = stk_font_string_width( font, credit_str ) + 4;

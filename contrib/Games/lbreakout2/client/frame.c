@@ -17,12 +17,8 @@
 
 #include "lbreakout.h"
 #include "config.h"
-#include "levels.h"
 #include "player.h"
 #include "display.h"
-#include "paddle.h"
-#include "bricks.h"
-#include "extras.h"
 #include "frame.h"
 
 extern SDL_Surface *stk_display;
@@ -48,22 +44,17 @@ int info_y; /* absolute position is info_y + info_offset */
 int info_offsets[EX_NUMBER]; /* offset at which extra info is displayed */
 int paddle_info_y[4];
 int paddle_info_offsets[EX_NUMBER]; /* specialized extras */
-extern int active[EX_NUMBER];
-extern int extra_time[EX_NUMBER];
 extern SDL_Surface *extra_pic;
 #ifdef AUDIO_ENABLED
 extern StkSound *wav_life_up, *wav_life_down;
 #endif
-extern int game_type;
-extern Paddle *paddles[4];
-extern int paddle_count;
 extern StkFont *display_font;
-extern int warp_ok; /* warp_limit/warp_ok is defined back at bricks.c */
 int warp_blink; 
 Delay warp_delay;
 int warp_x, warp_y;
 int warp_blinks;
 extern SDL_Surface *warp_pic;
+extern Game *game;
 
 /*
 ====================================================================
@@ -101,7 +92,7 @@ void frame_init()
 {
     /* setup position of extra info */
     info_x = stk_display->w - BRICK_WIDTH;
-    if ( game_type == GT_NETWORK ) {
+    if ( game->game_type == GT_NETWORK ) {
         /* general */
         info_y = 178;
         info_offsets[EX_METAL] = 26;
@@ -158,10 +149,12 @@ playing.
 */
 void frame_draw()
 {
-    SDL_Surface *fr_left = (game_type==GT_LOCAL)?frame_left:frame_mp_left;
-    SDL_Surface *fr_right = (game_type==GT_LOCAL)?frame_right:frame_mp_right;
-    SDL_Surface *fr_left_shadow = (game_type==GT_LOCAL)?frame_left_shadow:frame_mp_left_shadow;
-    SDL_Surface *fr_right_shadow = (game_type==GT_LOCAL)?frame_right_shadow:frame_mp_right_shadow;
+    SDL_Surface *fr_left = (game->game_type==GT_LOCAL)?frame_left:frame_mp_left;
+    SDL_Surface *fr_right = (game->game_type==GT_LOCAL)?frame_right:frame_mp_right;
+    SDL_Surface *fr_left_shadow = 
+	    (game->game_type==GT_LOCAL)?frame_left_shadow:frame_mp_left_shadow;
+    SDL_Surface *fr_right_shadow = 
+	    (game->game_type==GT_LOCAL)?frame_right_shadow:frame_mp_right_shadow;
     /* left and right part are always drawn */
     /* left part */
     stk_surface_alpha_blit( fr_left_shadow, 0,0,-1,-1,
@@ -170,7 +163,7 @@ void frame_draw()
     stk_surface_alpha_blit( fr_left_shadow, 0,0,-1,-1,
         bkgnd, shadow_size, shadow_size, SHADOW_ALPHA );
     stk_surface_blit( fr_left, 0,0,-1,-1, bkgnd, 0,0 );
-    if ( game_type == GT_LOCAL ) {
+    if ( game->game_type == GT_LOCAL ) {
         /* add top */
         stk_surface_alpha_blit( frame_top_shadow, 0,0,-1,-1,
             offscreen, fr_left->w + shadow_size, shadow_size, SHADOW_ALPHA );
@@ -225,7 +218,7 @@ game )
 */
 void frame_add_life()
 {
-	if ( !active[EX_DARKNESS] ) {
+	if ( !game->extra_active[EX_DARKNESS] ) {
         stk_surface_blit( lamps, 0, BRICK_HEIGHT, 
             BRICK_WIDTH, BRICK_HEIGHT,
             stk_display, 0, new_life_y );
@@ -233,7 +226,7 @@ void frame_add_life()
 	}		
     new_life_y -= BRICK_HEIGHT;
 #ifdef AUDIO_ENABLED
-    stk_sound_play( wav_life_up );
+    stk_sound_play_x( 20, wav_life_up );
 #endif
 }
 /*
@@ -245,13 +238,13 @@ void frame_remove_life()
 {
     new_life_y += BRICK_HEIGHT;
     if ( new_life_y >= stk_display->h ) return;
-	if ( !active[EX_DARKNESS] ) {
+	if ( !game->extra_active[EX_DARKNESS] ) {
         stk_surface_blit( lamps, 0, 0, BRICK_WIDTH, BRICK_HEIGHT,
             stk_display, 0, new_life_y );
         stk_display_store_drect();
 	}		
 #ifdef AUDIO_ENABLED
-    stk_sound_play( wav_life_down );
+    stk_sound_play_x( 20, wav_life_down );
 #endif
 }
 /*
@@ -264,15 +257,15 @@ void frame_info_hide()
     int i, j;
     if ( !config.bonus_info ) return;
     for ( i = 0; i < EX_NUMBER; i++ )
-        if ( info_offsets[i] > 0 && active[i] ) {
+        if ( info_offsets[i] > 0 && game->extra_active[i] ) {
             stk_surface_blit( offscreen, info_x, info_y + info_offsets[i],
                 BRICK_WIDTH, BRICK_HEIGHT,
                 stk_display, info_x, info_y + info_offsets[i] );
             stk_display_store_drect();
         }
     for ( i = 0; i < EX_NUMBER; i++ )
-        for ( j = 0; j < paddle_count; j++ )
-            if ( paddle_info_offsets[i] > 0 && paddles[j]->active[i] ) {
+        for ( j = 0; j < game->paddle_count; j++ )
+            if ( paddle_info_offsets[i] > 0 && game->paddles[j]->extra_active[i] ) {
                 stk_surface_blit( offscreen, info_x, 
                     paddle_info_y[j] + paddle_info_offsets[i],
                     BRICK_WIDTH, BRICK_HEIGHT,
@@ -287,7 +280,7 @@ void frame_info_show()
     if ( !config.bonus_info ) return;
     display_font->align = STK_FONT_ALIGN_CENTER_X | STK_FONT_ALIGN_CENTER_Y;
     for ( i = 0; i < EX_NUMBER; i++ ) {
-        if ( info_offsets[i] > 0 && active[i] ) {
+        if ( info_offsets[i] > 0 && game->extra_active[i] ) {
             /* picture */
             stk_surface_fill( 
                 stk_display, info_x, info_y + info_offsets[i], 
@@ -296,7 +289,7 @@ void frame_info_show()
                 BRICK_WIDTH, BRICK_HEIGHT,
                 stk_display, info_x, info_y + info_offsets[i], 128 );
             /* remaining extra_time */
-            sprintf(str, "%i", (extra_time[i] / 1000) + 1);
+            sprintf(str, "%i", (game->extra_time[i] / 1000) + 1);
             /* write text */
             stk_font_write( display_font, stk_display,
                         info_x + ( BRICK_WIDTH >> 1 ), info_y + info_offsets[i] + ( BRICK_HEIGHT >> 1 ),
@@ -304,9 +297,9 @@ void frame_info_show()
         }
 	}
     for ( i = 0; i < EX_NUMBER; i++ )
-        for ( j = 0; j < paddle_count; j++ )
-            if ( paddle_info_offsets[i] > 0 && paddles[j]->active[i] ) {
-                if ( i == EX_WALL && paddles[j]->extra_time[i] <= 0 ) continue;
+        for ( j = 0; j < game->paddle_count; j++ )
+            if ( paddle_info_offsets[i] > 0 && game->paddles[j]->extra_active[i] ) {
+                if ( i == EX_WALL && game->paddles[j]->extra_time[i] <= 0 ) continue;
                 /* picture */
                 stk_surface_fill( 
                     stk_display, info_x, paddle_info_y[j] + paddle_info_offsets[i], 
@@ -315,7 +308,7 @@ void frame_info_show()
                     BRICK_WIDTH, BRICK_HEIGHT,
                     stk_display, info_x, paddle_info_y[j] + paddle_info_offsets[i], 128 );
                 /* remaining extra_time */
-                sprintf(str, "%i", (paddles[j]->extra_time[i] / 1000) + 1);
+                sprintf(str, "%i", (game->paddles[j]->extra_time[i] / 1000) + 1);
                 /* write text */
                 stk_font_write( display_font, stk_display,
                             info_x + ( BRICK_WIDTH >> 1 ), 
@@ -331,29 +324,40 @@ Blink the warp icon.
 */
 void frame_warp_icon_hide()
 {
-    if ( !warp_ok ) return;
-    stk_surface_blit( offscreen, warp_x,warp_y,-1,-1,
-        stk_display, warp_x, warp_y );
-    stk_display_store_drect();
+        if ( game->game_type != GT_LOCAL ) return;
+	if ( game->level_type == LT_PINGPONG ) return;
+	if ( game->bricks_left > game->warp_limit ) return;
+	stk_surface_blit( offscreen, warp_x,warp_y,-1,-1,
+			stk_display, warp_x, warp_y );
+	stk_display_store_drect();
 }
 void frame_warp_icon_show()
 {
-    if ( !warp_ok ) return;
-    if ( !warp_blink ) return;
-    if ( !active[EX_DARKNESS] )
-        stk_surface_blit( warp_pic, 0,0,-1,-1,
-            stk_display, warp_x, warp_y );
-    else
-        stk_surface_alpha_blit( warp_pic, 0,0,-1,-1,
-            stk_display, warp_x, warp_y, 128 );
+        if ( game->game_type != GT_LOCAL ) return;
+	if ( game->level_type == LT_PINGPONG ) return;
+	if ( game->warp_limit == 0 ) return;
+	if ( game->bricks_left > game->warp_limit ) return;
+	if ( !warp_blink ) return;
+	if ( !game->extra_active[EX_DARKNESS] )
+		stk_surface_blit( warp_pic, 0,0,-1,-1,
+				stk_display, warp_x, warp_y );
+	else
+		stk_surface_alpha_blit( warp_pic, 0,0,-1,-1,
+				stk_display, warp_x, warp_y, 128 );
 }
 void frame_warp_icon_update( int ms )
 {
-    if ( !warp_ok ) return;
-    if ( warp_blinks == 0 ) return;
-    if ( delay_timed_out( &warp_delay, ms ) ) {
-        warp_blink = !warp_blink;
-        if ( warp_blink )
-            warp_blinks--;
-    }
+	//printf( "%i > %i\n", game->bricks_left, game->warp_limit );
+        if ( game->game_type != GT_LOCAL ) return;
+	if ( game->level_type == LT_PINGPONG ) return;
+	if ( game->bricks_left > game->warp_limit ) return;
+	if ( warp_blinks == 0 ) {
+		warp_blink = 1;
+		return;
+	}
+	if ( delay_timed_out( &warp_delay, ms ) ) {
+		warp_blink = !warp_blink;
+		if ( warp_blink )
+			warp_blinks--;
+	}
 }

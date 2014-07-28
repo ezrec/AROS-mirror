@@ -1,5 +1,5 @@
 /***************************************************************************
-                          game.c  -  description
+                          local_game.c  -  description
                              -------------------
     begin                : Thu Sep 6 2001
     copyright            : (C) 2001 by Michael Speck
@@ -16,11 +16,12 @@
  ***************************************************************************/
 
 #include "lbreakout.h"
+#include "../game/game.h"
+#include "../gui/gui.h"
+#include "client_data.h"
 #include "event.h"
 #include "config.h"
-#include "difficulty.h"
 #include "shrapnells.h"
-#include "levels.h"
 #include "player.h"
 #include "display.h"
 #include "paddle.h"
@@ -32,78 +33,70 @@
 #include "frame.h"
 #include "balls.h"
 #include "extras.h"
-#include "comm.h"
 #include "help.h"
 #include "game.h"
+#include "comm.h"
+#include "slot.h"
+#include "manager.h"
 
 SDL_Surface *bkgnd = 0; /* current background picture */
 extern SDL_Surface *nuke_bkgnd; /* nuke background */
 SDL_Surface *offscreen = 0; /* buffer with frame, background and bricks */
 extern StkFont *font; /* standard font */
-Player *player = 0; /* current player */
 extern Config config; /* lbreakout config struct */
 extern int stk_quit_request; /* terminate game */
 extern SDL_Surface *stk_display; 
-extern Brick bricks[MAP_WIDTH][MAP_HEIGHT];
 extern SDL_Surface *brick_pic;
-extern int keystate[SDLK_LAST];
-extern int buttonstate[STK_BUTTON_COUNT];
-extern int active[EX_NUMBER];
-extern int brick_count, brick_extra_count, warp_limit, warp_ok;
-extern char **levelset_names; /* names of all available levelsets */
-char *levelset_name = 0; /* pointer (may not be deleted) to the current levelset's name */
 extern int player_count;
 extern Player players[MAX_PLAYERS]; /* player infos */
 #ifdef AUDIO_ENABLED
 extern StkSound *wav_click;
 extern StkSound *wav_damn, *wav_dammit, *wav_wontgiveup, *wav_excellent, *wav_verygood;
 #endif
-extern List *exp_bricks;
-extern List *heal_bricks;
-extern List *levels;
+extern int ball_pic_x_offset;
+extern int paddle_cw;
+extern List *client_users;
+extern ClientUser *client_user;
+extern GuiWidget *list_users;
+extern char pause_chatter[CHAT_LINE_COUNT][CHAT_LINE_WIDTH];
+extern GuiWidget *gui_key_widget;
+extern GuiWidget *gui_clicked_widget;
+extern GuiWidget *gui_focused_widget;
+extern GuiWidget *dlg_pauseroom, *dlg_chatroom;
 
-/* shots_update returns a list of destroyed bricks */
-Brick_Pos shot_bricks[PADDLE_WEAPON_AMMO * 4];
-int shot_bricks_count = 0;
-
-/* grow stuff put here because of interaction between balls and bricks */
-extern int grow;
-extern int grow_mask[MAP_WIDTH][MAP_HEIGHT]; /* indicates which tiles are blocked by a ball */
-extern Brick_Conv brick_conv_table[BRICK_COUNT];
-extern int brick_count;
-extern List *balls;
-extern int ball_dia;
-extern int shadow_size;
-
-/*
-====================================================================
-Game settings (in singleplayer this equals the config settings
-but in multiplayer these are the remote hosts settings)
-====================================================================
-*/
-#ifdef NETWORK_ENABLED
-extern Net_Socket *client; /* client socket to the game server */
-Net_Socket *game_peer = 0; /* connection to remote player */
-#endif
-extern char client_error[128];
-int game_type = GT_LOCAL;
-int game_host = 0 ; /* true if you host the game */
-int game_challenger = 0 ; /* true if you challenged */
-Diff *game_diff = 0; /* game's difficulty */
-int game_rounds, game_frags, game_balls; /* multiplayer information */
-int level_type; /* type of current level */
-int game_cur_round; /* current round in level (up to game_rounds) */
-int game_match_won = 0; /* comm_handle sets this global so our client knows if he won */
-extern char mp_peer_name[16]; /* opponents name for multiplayer */
-extern char client_name[16]; /* our name as given by the server */
-Paddle *paddles[2] = { 0 }; /* paddle 0 is on bottom and paddle 1 is on top */
-Paddle *l_paddle = 0; /* that's the local paddle (handled by local events) */
-Paddle *r_paddle = 0; /* remote paddle (handled by net events) */
-int paddle_count = 0; /* all paddles */
+extern List *levelset_names;
+Player *cur_player = 0; /* current player */
+Paddle *l_paddle = 0; /* locally controlled paddle */
+Paddle *r_paddle = 0; /* remotely controlled paddle */
+LevelSet *game_set; /* set that is played */
+Game *local_game = 0; /* in a local game the remote side is faked in this
+			 game context to have just one main loop for both game
+			 types */
+Game *game = 0; /* local/network game context */
+int game_round; /* id of current round in network game */
+int game_stats[2][7]; /* network game stats */
+int stats_received = 0;
+int game_over = 0; /* network game is over */
+int allow_disintegrate = 1; /* wether Plane of Inner Stability may be entered */
+char best_name[32];
+int  best_score; /* result of first place in chart of local set */
+int  showing_best = 0; /* if true best score is shown, thus display should not be updated */
 Display *display_score[2]; /* either score or frags */
 Display *display_player[2]; /* player name and lifes or wins */
-Vector impact_vectors[180]; /* impact vectors for normal brick remove animation for
-                               client to save computation time */
+Display *bl_display; /* display some special data of bonus levels */
+extern int client_state;
+extern int warp_blinks, warp_blink;
+extern SDL_Surface *paddle_pic, *weapon_pic, *ball_pic, *extra_pic, *shot_pic;
+extern StkFont *display_font;
+extern int bkgnd_count;
+int bkgnd_ids[MAX_LEVELS]; /* random background ids changed everytime a game is started */
+int client_comm_delay; /* delay between communications */
+int no_comm_since; /* time passed this last comm */
+extern char client_name[16]; /* our local username */
+int gameSeed = 0; /* last used seed for freakout game */
+
+extern int current_player;
+extern Item *item_resume_0;
 
 /*
 ====================================================================
@@ -111,936 +104,802 @@ Locals
 ====================================================================
 */
 
-/* return values of breakout_run() */
-enum {
-    REQUEST_NONE = 0,
-    REQUEST_RESTART,
-    REQUEST_NUKE,
-    REQUEST_QUIT,
-    REQUEST_NEXT_LEVEL,
-    REQUEST_NEXT_PLAYER,
-    REQUEST_PAUSE,
-    REQUEST_NEXT_ROUND,
-    REQUEST_HELP,
-    REQUEST_WARP,
-    REQUEST_GAME_OVER,
-    REMOTE_QUIT,
-    REMOTE_PAUSE,
-    NET_ERROR
-};
 
-/*
-====================================================================
-Create all bricks by ids stored to grow_mask.
-====================================================================
-*/
-static void game_grow_bricks()
+/* initiate the level of the game context by using the player's
+ * snapshot. the snapshot must've been previously set either by 
+ * net update or locally. 'l_pos' is either PADDLE_BOTTOM or TOP
+ * indicating which paddle client controls in network game.
+ */
+static int init_level( Player *player, int l_pos )
 {
-    int i, j;
-    int px, py, refresh_w, refresh_h;
-	Ball *list_ball;
+	int length;
+	char str[32];
 
-    /* clear occupied grow parts -
-       the client doesn't need this as his grow mask
-       was send by the host */
-    if ( game_type == GT_LOCAL || game_host ) {
-        list_reset( balls );
-        while ( ( list_ball = list_next( balls ) ) != 0 )  {
-            grow_mask[(list_ball->x) / BRICK_WIDTH][(list_ball->y) / BRICK_HEIGHT] = -1;
-            grow_mask[(list_ball->x + ball_dia) / BRICK_WIDTH][(list_ball->y) / BRICK_HEIGHT] = -1;
-            grow_mask[(list_ball->x) / BRICK_WIDTH][(list_ball->y + ball_dia) / BRICK_HEIGHT] = -1;
-            grow_mask[(list_ball->x + ball_dia) / BRICK_WIDTH][(list_ball->y + ball_dia) / BRICK_HEIGHT] = -1;
-        }
-    }
-    /* refresh tile size */
-    refresh_w = BRICK_WIDTH + shadow_size;
-    refresh_h = BRICK_HEIGHT + shadow_size;
-    /* add bricks */
-    px = py = 0;
-    for ( j = 0; j < MAP_HEIGHT; j++ ) {
-        for ( i = 0; i < MAP_WIDTH; i++ ) {
-            if ( grow_mask[i][j] >= BRICK_GROW_FIRST && grow_mask[i][j] <= BRICK_GROW_LAST ) {
-                /* update net brick */
-                if ( game_type == GT_NETWORK && game_host )
-                    net_brick_set( i, j, BRICK_GROW, 0, vector_get(0,0), 0 );
-                /* add brick */
-                bricks[i][j].id = brick_conv_table[grow_mask[i][j]].id;
-                bricks[i][j].type = brick_conv_table[grow_mask[i][j]].type;
-                bricks[i][j].score = brick_conv_table[grow_mask[i][j]].score;
-                bricks[i][j].dur = brick_conv_table[grow_mask[i][j]].dur;
-                /* keep the extra that is already assigned to this position */
-                bricks[i][j].exp_time = -1;
-                bricks[i][j].heal_time = -1;
-                if ( !active[EX_DARKNESS] )
-                    brick_draw_complex( i, j, px, py );
-                /* add id to grown_brick mask */
-                player->grown_bricks[i][j] = brick_conv_table[grow_mask[i][j]].id;
-                /* adjust brick count */
-                if ( game_type == GT_LOCAL || game_host )
-                    brick_count++;
-                /* refresh */
-                if ( !active[EX_DARKNESS] ) {
-                    stk_surface_blit( offscreen, px, py, 
-                        refresh_w, refresh_h,
-                        stk_display, px, py );
-                    stk_display_store_drect();
-                }
-            }	
-            px += BRICK_WIDTH;
-        }            
-        py += BRICK_HEIGHT;
-        px  = 0;
-    }
-    grow = 0;
-    /* get new targets */
-    if ( game_type == GT_LOCAL || game_host )
-        balls_check_targets( -1, 0 );
-}
+    	/* init level by replacing with the players snapshot. this will
+	 * screw the total brick count thus stats are useless for local
+	 * game but they are not used anyway as the remote/local game
+	 * context contains the real stats */
+	if ( game->game_type == GT_LOCAL )
+		game_init( local_game, &player->snapshot );
+    game_init( game, &player->snapshot );
+    /* if special level copy the local game data as snapshot */
+    if ( game->game_type == GT_LOCAL )
+    if ( player->snapshot.type!=LT_NORMAL )
+        memcpy( game->bricks, local_game->bricks, sizeof(game->bricks) );
 
-/*
-====================================================================
-Enter nuke mode and allow player to disintegrate single bricks
-by spending 5% of his/her score.
-====================================================================
-*/
-static void game_nuke()
-{
-    char buf[128];
-    SDL_Event event;
-    int x,y,i,j,leave = 0;
-    SDL_Surface *buffer = 
-        stk_surface_create( SDL_SWSURFACE, stk_display->w, stk_display->h );
-    SDL_Surface *red_mask = 
-        stk_surface_create( SDL_SWSURFACE, BRICK_WIDTH, BRICK_HEIGHT );
-    stk_surface_fill( red_mask, 0,0,-1,-1, 0xFF0000 );
-    SDL_SetAlpha( red_mask, SDL_SRCALPHA, 128 );
-    SDL_SetColorKey(buffer, 0, 0);
+	/* initiate frame for game type */
+	frame_init();
 
-#ifdef AUDIO_ENABLED
-    stk_sound_play( wav_click );
-#endif
-    SDL_SetEventFilter(0);
-    event_clear_sdl_queue();
-    /* backup screen contents */
-    stk_surface_blit( stk_display, 0,0,-1,-1, buffer, 0,0 );
-    /* display bricks darkened */
-    stk_surface_blit( nuke_bkgnd, 0,0,-1,-1, 
-        stk_display, 0,0 );
-    for ( i = 1; i < MAP_WIDTH - 1; i++ )
-        for ( j = 1; j < MAP_HEIGHT - 1; j++ )
-            if ( bricks[i][j].id >= 0 )
-                stk_surface_alpha_blit( brick_pic,
-                    bricks[i][j].id * BRICK_WIDTH, 0,
-                    BRICK_WIDTH, BRICK_HEIGHT,
-                    stk_display,
-                    i*BRICK_WIDTH, j*BRICK_HEIGHT, 128 );
-    /* info */
-    font->align = STK_FONT_ALIGN_LEFT;
-    sprintf( buf, "Plane Of Inner Stability entered (Score: %i)",
-        player->score );
-    stk_font_write( font, stk_display,
-        BRICK_WIDTH, (MAP_HEIGHT-1)*BRICK_HEIGHT, 
-        128, buf );
-    /* show score of player */
-    stk_display_update( STK_UPDATE_ALL );
-            
-    x = y = -1;
-    while (!leave && !stk_quit_request) {
-        SDL_WaitEvent(&event);
-        switch ( event.type ) {
-            case SDL_QUIT: stk_quit_request = 1; break;
-            case SDL_MOUSEBUTTONUP:
-                if ( x != -1 ) {
-                    if ( confirm( font, 
-                        "Disintegrate Brick? (Costs 5% of your score.) y/n", 
-                        CONFIRM_YES_NO ) ) {
-                        /* implant a bomb to this brick and return */
-                        brick_start_expl( x,y, l_paddle );
-                        /* this brick won't give you score */
-                        bricks[x][y].score = 0;
-                        player->score -= (int)(0.05 * player->score);
-                        leave = 1;
-                    }
-                }
-                break;
-            case SDL_MOUSEMOTION:
-                if ( x != -1 ) {
-                    /* clear old selection */
-                    stk_surface_blit( nuke_bkgnd,
-                        x*BRICK_WIDTH, y*BRICK_HEIGHT,
-                        BRICK_WIDTH, BRICK_HEIGHT,
-                        stk_display, 
-                        x*BRICK_WIDTH, y*BRICK_HEIGHT );
-                    stk_surface_alpha_blit( brick_pic,
-                        bricks[x][y].id * BRICK_WIDTH, 0,
-                        BRICK_WIDTH, BRICK_HEIGHT,
-                        stk_display,
-                        x*BRICK_WIDTH, y*BRICK_HEIGHT, 128 );
-                    stk_display_store_drect();
-                    x = y = -1;
-                }
-                /* make new selection if brick */
-                i = event.motion.x / BRICK_WIDTH;
-                j = event.motion.y / BRICK_HEIGHT;
-                if ( i >= 1 && i <= MAP_WIDTH -2 )
-                if ( j >= 1 && j <= MAP_HEIGHT - 2 )
-                if ( bricks[i][j].id >= 0 ) {
-                    x = i; y = j;
-                    stk_surface_blit( red_mask, 0,0,-1,-1,
-                        stk_display,x*BRICK_WIDTH, y*BRICK_HEIGHT );
-                    stk_display_store_drect();
-                }
-                break;
-            case SDL_KEYDOWN:
-                if ( event.key.keysym.sym == SDLK_ESCAPE )
-                    leave = 1;
-                break;
-        }
-        stk_display_update( STK_UPDATE_RECTS );
-    }
-            
-    stk_surface_blit( buffer, 0,0,-1,-1, stk_display, 0,0 );
-    stk_display_update( STK_UPDATE_ALL );
-    SDL_FreeSurface(red_mask);
-    SDL_FreeSurface(buffer);
-    SDL_SetEventFilter(event_filter);
-}
+	/* create offscreen */
+	offscreen = stk_surface_create( SDL_SWSURFACE, stk_display->w, stk_display->h );
+	SDL_SetColorKey( offscreen, 0, 0 );
 
-/*
-====================================================================
-Initate current level from player's level resource pointer.
-Recreates offscreen (frame, background, bricks) and resets paddle,
-balls, extras. Do not add the bricks already removed:
-player->bricks[x][y] == 0.
-Return Value: True if successful
-====================================================================
-*/
-enum { WITH_CREDITS = 1 };
-static int game_init_level( Player *player, int with_credits )
-{
-    int ammo;
-    int i, j, k, length;
-#ifdef NETWORK_ENABLED    
-    Net_Msg msg;
-#endif
-    char str[32];
-    
-#ifdef NETWORK_ENABLED
-    /* the leveldata is provided by the challenger (which doesn't have
-       to equal the game_host) */
-    if ( game_type == GT_NETWORK ) {
-        if ( game_challenger ) {
-            net_init_msg( &msg, MSG_LEVEL_DATA );
-            if ( net_pack_string( &msg, player->level->author ) )
-            if ( net_pack_string( &msg, player->level->name ) )
-            if ( net_pack_raw( &msg, player->level->bricks, sizeof( player->level->bricks ) ) )
-            if ( net_pack_raw( &msg, player->level->extras, sizeof( player->level->extras ) ) )
-            if ( net_write_msg( game_peer, &msg ) ) {
-#ifdef GAME_DEBUG
-    printf( "level data sent to peer - awaiting READY...\n" );
-#endif
-                msg.type = MSG_NONE;
-                while ( 1 ) {
-                    if ( net_read_msg( game_peer, &msg, 10000 ) ) {
-                        if ( msg.type == MSG_DM_CLIENTDATA || msg.type == MSG_MP_CLIENTDATA )
-                            continue;
-                        if ( msg.type == MSG_DM_HOSTDATA || msg.type == MSG_MP_HOSTDATA )
-                            continue;
-                        if ( msg.type == MSG_GAME_EXITED ) {
-                            sprintf( client_error, "remote player has left the game" );
-                            break;
-                        }
-                        if ( msg.type != MSG_READY ) {
-                            strcpy( client_error, net_get_error() );
-                            if ( client_error[0] == 0 )
-                                sprintf( client_error, "remote player did not send a READY" );
-                        }
-                        break;
-                    }
-                    else {
-                        if ( client_error[0] == 0 )
-                            sprintf( client_error, "connection timed out" );
-                        break;
-                    }
-                }
-            }
-            if ( msg.type != MSG_READY )
-                return 0;
-#ifdef GAME_DEBUG
-    printf( "received!\n" );
-#endif
-        }
-        else {
-            msg.type = MSG_NONE;
-            /* receive stuff */
-#ifdef GAME_DEBUG
-    printf( "waiting for level data...\n" );
-#endif
-            while ( 1 ) {
-                if ( net_read_msg( game_peer, &msg, 10000 ) ) {
-                    if ( msg.type == MSG_DM_CLIENTDATA || msg.type == MSG_MP_CLIENTDATA )
-                        continue;
-                    if ( msg.type == MSG_DM_HOSTDATA || msg.type == MSG_MP_HOSTDATA )
-                        continue;
-                    if ( msg.type == MSG_GAME_EXITED ) {
-                        sprintf( client_error, "remote player has left the game" );
-                        break;
-                    }
-                    if ( msg.type != MSG_LEVEL_DATA ) {
-                        strcpy( client_error, net_get_error() );
-                        if ( client_error[0] == 0 )
-                            sprintf( client_error, "challenger did not send level data" );
-                    }
-                    break;
-                }
-                else {
-                    if ( client_error[0] == 0 )
-                        sprintf( client_error, "connection timed out" );
-                    break;
-                }
-            }
-            if ( msg.type != MSG_LEVEL_DATA )
-                return 0;
-#ifdef GAME_DEBUG
-    printf( "received!\n" );
-#endif
-            net_unpack_string( &msg, player->level->author, 31 );
-            net_unpack_string( &msg, player->level->name, 31 );
-            net_unpack_raw( &msg, player->level->bricks, &length, sizeof( player->level->bricks ) );
-            net_unpack_raw( &msg, player->level->extras, &length, sizeof( player->level->extras ) );
-            if ( length != sizeof( player->level->bricks ) ) {
-                sprintf( client_error, "Incompatible level size" );
-                return 0;
-            }
-#ifdef GAME_DEBUG
-    printf( "sending ready\n" );
-#endif
-            if ( !net_write_empty_msg( game_peer, MSG_READY ) )
-                return 0;
-        }
-    }
-#endif
-    
-    /* load bricks&extras from level data */
-    bricks_create( player->level );
-    
-    /* check if this is a deathmatch level */
-    if ( game_type == GT_NETWORK && brick_count == 0 )
-        level_type = LT_DEATHMATCH;
+	/* add&create background */
+	if ( game->game_type == GT_LOCAL )
+		bkgnd_draw( bkgnd, bkgnd_ids[player->level_id], 1 );
+	else
+		bkgnd_draw( bkgnd, -1, 1 );
+	/* add frame */
+	frame_draw();
+	/* add bricks */
+	bricks_draw();
+	/* draw lives */
+	if ( game->game_type == GT_LOCAL )
+		frame_draw_lives( player->lives, game->diff->max_lives );
+   
+	/* determine what is the local and what is the remote paddle and
+	 * connect the proper players with each paddle */
+	if ( game->game_type == GT_LOCAL ) {
+		l_paddle = game->paddles[PADDLE_BOTTOM];
+		l_paddle->player = player;
+		r_paddle = 0;
+	} else {
+		if ( l_pos == PADDLE_BOTTOM ) {
+			l_paddle = game->paddles[PADDLE_BOTTOM];
+			r_paddle = game->paddles[PADDLE_TOP];
+		} else {
+			l_paddle = game->paddles[PADDLE_TOP];
+			r_paddle = game->paddles[PADDLE_BOTTOM];
+		}
+		/* player 0 is always the local player */
+		l_paddle->player = &players[0];
+		r_paddle->player = &players[1];
+		
+		/* let top paddle use alternative graphics if any */
+		if ( paddle_pic->w > 3*paddle_cw )
+			game->paddles[PADDLE_TOP]->pic_x_offset = 3*paddle_cw;
+	}
+	player->paddle_id = l_pos;
+
+	/* displays */
+	if ( game->game_type == GT_LOCAL ) {
+		/* we put these displays to the old positions 
+		   at the top of the frame */
+		sprintf( str, "%s", player->name );
+		length = strlen(best_name);
+		if (strlen(player->name)>length )
+		  length = strlen(player->name);
+		length *= 8;
+		display_player[0] = displays_add( 402, 0,
+				length + 4, 16, str, player->lives, 0 );
+		display_score[0] = displays_add( stk_display->w - 52 - 76, 0,
+				76, 16, "", player->stats.total_score, 9 );
+		display_player[0]->use_alpha = 0;
+		display_score[0]->use_alpha = 0;
+        /* for special levels we need a small display in the right lower corner */
+        if (game->isBonusLevel)
+            bl_display = displays_add( 
+                    stk_display->w - BRICK_WIDTH - 20 - 76,
+                    ( MAP_HEIGHT - 1 ) * BRICK_HEIGHT + 2,
+                    76, 16, "", 0, 9 );
+        else
+            bl_display = 0;
+	} else {
+		/* wins */
+		sprintf( str, "%s ~x%i", 
+			game->paddles[0]->player->name, 
+			game->paddles[0]->player->stats.wins );
+		length = strlen( str ) * 8;
+		display_player[0] = displays_add( 
+			BRICK_WIDTH + 20, ( MAP_HEIGHT - 1 ) * BRICK_HEIGHT + 2,
+			length + 4, 16, str, 0, 0 );
+		sprintf( str, "%s ~x%i", 
+			game->paddles[1]->player->name, 
+			game->paddles[1]->player->stats.wins );
+		length = strlen( str ) * 8;
+		display_player[1] = displays_add( 
+			BRICK_WIDTH + 20, 2, length + 4, 16, str, 0, 0 );
+		/* scores */
+		display_score[0] = displays_add( 
+				stk_display->w - BRICK_WIDTH - 20 - 76,
+				( MAP_HEIGHT - 1 ) * BRICK_HEIGHT + 2,
+				76, 16, "", game->paddles[0]->score, 9 );
+		display_score[1] = displays_add( 
+				stk_display->w - BRICK_WIDTH - 20 - 76, 2,
+				76, 16, "", game->paddles[1]->score, 9 );
+	}
+
+	/* initiate credit */
+    if ( game->game_type == GT_LOCAL && game_set )
+	    credit_init( game->title, game->author, 
+            player->level_id, game_set->count );
     else
-        level_type = LT_NORMAL;
+	    credit_init( game->title, game->author, 
+            player->level_id, 0/*don't display info*/ );
 
-    /* remove cleared bricks (only need for singe player) */
-    if ( game_type == GT_LOCAL ) {
-        for ( i = 1; i < MAP_WIDTH - 1; i++ )
-            for ( j = 1; j < MAP_HEIGHT - 1; j++ ) {
-                if ( player->bricks[i][j] == -99 ) {
-                    /* initiate duration -- 0 means this brick was removed */
-                    if ( bricks[i][j].type == MAP_EMPTY )
-                        player->bricks[i][j] = 0;
-                    else
-                        player->bricks[i][j] = bricks[i][j].dur;
-                }
-                else
-                    if ( player->bricks[i][j] == 0 ) {
-                        if ( bricks[i][j].dur > 0 ) brick_count--;
-                        bricks[i][j].id = -1;
-                        bricks[i][j].dur = -1;
-                        bricks[i][j].type = MAP_EMPTY;
-                    }
-                    else 
-                        if ( bricks[i][j].type != MAP_BRICK_HEAL ) /* generative bricks are kept reset */
-                            if ( bricks[i][j].dur > 1 ) { 
-                                /*if multiple duration we need to use the player->bricks value */
-                                for ( k = 0; k < bricks[i][j].dur - player->bricks[i][j]; k++ )
-                                    bricks[i][j].id--;
-                                bricks[i][j].dur = player->bricks[i][j];
-                            }
-                /* regnerative bricks with a durability of less than three shall be added to the regen list */
-                if ( bricks[i][j].type == MAP_BRICK_HEAL && bricks[i][j].dur < 3 ) {
-                    bricks[i][j].mx = i;
-                    bricks[i][j].my = j;
-                    bricks[i][j].heal_time = BRICK_HEAL_TIME;
-                    list_add( heal_bricks, &bricks[i][j] );
-                }
-                if ( player->grown_bricks[i][j] ) {
-                    if ( bricks[i][j].type != MAP_EMPTY ) 
-                        fprintf( stderr, "WARNING: Grown brick is blocked by another brick at %i,%i.\n", i, j );
-                    else {
-                        /* add grown brick */
-                        bricks[i][j].id = player->grown_bricks[i][j];
-                        bricks[i][j].dur = 1;
-                        bricks[i][j].type = MAP_BRICK;
-                        brick_count++;
-                    }
-                }
-            }
-        /* check warp limit */
-        if ( brick_count <= warp_limit )
-            warp_ok = 1;
-    }
-    
-    /* initiate frame for game type */
-    frame_init();
-    
-    /* recreate offscreen */
-    if ( offscreen ) SDL_FreeSurface( offscreen );
-    offscreen = stk_surface_create( SDL_SWSURFACE, stk_display->w, stk_display->h );
-    SDL_SetColorKey( offscreen, 0, 0 );
+	/* show offscreen */
+	stk_surface_blit( offscreen, 0,0,-1,-1, stk_display, 0,0 );
 
-    /* add&create background */
-    if ( bkgnd ) SDL_FreeSurface( bkgnd );
-    bkgnd = bkgnd_draw( player->level->bkgnd_id );
-    /* add frame */
-    frame_draw();
-    /* add bricks */
-    bricks_draw();
-    /* draw lives */
-    if ( game_type == GT_LOCAL )
-        frame_draw_lives( player->lives, game_diff->max_lives );
-    
-    /* create paddles */
-    for ( i = 0; i < paddle_count; i++ )
-        paddle_delete( paddles[i] );
-    paddle_count = 0;
-    if ( game_type == GT_LOCAL ) {
-        paddles[0] = paddle_create( ( MAP_HEIGHT - 2 ) * BRICK_HEIGHT, 0 );
-        paddles[0]->player = player;
-        paddle_count = 1;
-        l_paddle = paddles[0];
-        r_paddle = 0;
-    }
-    else {
-        ammo = ( level_type == LT_DEATHMATCH ) ? game_balls : 0;
-        paddles[0] = paddle_create( ( MAP_HEIGHT - 2 ) * BRICK_HEIGHT, ammo );
-        paddles[1] = paddle_create( BRICK_HEIGHT + 2, ammo );
-        if ( game_challenger ) {
-            paddles[0]->player = &players[0];
-            paddles[1]->player = &players[1];
-            l_paddle = paddles[0];
-            r_paddle = paddles[1];
-        }
-        else {
-            paddles[0]->player = &players[1];
-            paddles[1]->player = &players[0];
-            l_paddle = paddles[1];
-            r_paddle = paddles[0];
-        }
-        paddle_count = 2;
-    }
-    
-    /* initiate special multiplayer vars */
-    if ( game_type == GT_NETWORK )
-        for ( i = 0; i < paddle_count; i++ ) {
-            paddles[i]->player->frags = 0;
-            paddles[i]->player->level_score = 0;
-        }
-    
-    /* statistics */
-    if ( game_type == GT_NETWORK && game_host )
-        for ( i = 0; i < paddle_count; i++ ) {
-            paddles[i]->player->bricks_total += brick_count;
-            paddles[i]->player->extras_total += brick_extra_count;
-        }
-        
-    /* reset the net data */
-    if ( game_type == GT_NETWORK )
-        comm_reset();
-    
-    /* displays */
-    displays_clear();
-    if ( game_type == GT_LOCAL ) {
-        /* we put these displays to the old positions 
-           at the top of the frame */
-        sprintf( str, "%s", player->name );
-        length = ( strlen( player->name ) ) * 8;
-        display_player[0] = displays_add( 402, 0,
-                                          length + 4, 16, str, player->lives, 0 );
-        display_score[0] = displays_add( stk_display->w - 52 - 76, 0,
-                                         76, 16, "", player->score, 9 );
-        display_player[0]->use_alpha = 0;
-        display_score[0]->use_alpha = 0;
-    }
-    else {
-        sprintf( str, "%s ~x%i", paddles[0]->player->name, paddles[0]->player->wins );
-        length = strlen( str ) * 8;
-        display_player[0] = displays_add( BRICK_WIDTH + 20, ( MAP_HEIGHT - 1 ) * BRICK_HEIGHT + 2,
-                                          length + 4, 16, str, 0, 0 );
-        sprintf( str, "%s ~x%i", paddles[1]->player->name, paddles[1]->player->wins );
-        length = strlen( str ) * 8;
-        display_player[1] = displays_add( BRICK_WIDTH + 20, 2,
-                                          length + 4, 16, str, 0, 0 );
-        if ( level_type == LT_NORMAL ) {
-            display_score[0] = displays_add( stk_display->w - BRICK_WIDTH - 20 - 76,
-                                             ( MAP_HEIGHT - 1 ) * BRICK_HEIGHT + 2,
-                                             76, 16, "", paddles[0]->player->level_score, 9 );
-            display_score[1] = displays_add( stk_display->w - BRICK_WIDTH - 20 - 76, 2,
-                                             76, 16, "", paddles[1]->player->level_score, 9 );
-        }
-        else {
-            display_score[0] = displays_add( stk_display->w - BRICK_WIDTH - 20 - 76, 
-                                             ( MAP_HEIGHT - 1 ) * BRICK_HEIGHT + 2,
-                                             76, 16, "Frags: ", paddles[0]->player->frags, 2 );
-            display_score[1] = displays_add( stk_display->w - BRICK_WIDTH - 20 - 76, 2,
-                                             76, 16, "Frags: ", paddles[1]->player->frags, 2 );
-        }
-    }
-    
-    /* event reset */
-    event_reset();
-    /* shots reset */
-    shots_reset();
-    /* reset balls */
-    balls_set_vel( game_diff->v_start, game_diff->v_change, game_diff->v_max );
-    balls_reset();
-    /* reset extras */
-    extras_reset();
-    /* reset shrapnells */
-    shrapnells_reset();
-    /* reset shine */
-    shine_reset();
-    /* reset explosions */
-    exps_clear();
-    exps_set_dark( 0 );
-    /* initiate credit */
-    if ( with_credits )
-        credit_init( player->level->name, player->level->author, levels_get_id( player->level ) );
-
-    /* show offscreen */
-    stk_surface_blit( offscreen, 0,0,-1,-1, stk_display, 0,0 );
-    /* no refresh rect as we want to use dim effect */
-    return 1;
+	/* no refresh rect as we want to use dim effect */
+	return 1;
 }
 
-/*
-====================================================================
-Display info about player.
-====================================================================
-*/
-static void player_info()
+static void finalize_level( void )
 {
-    int i;
-    char info[256], buf[32];
-    /* short info about actual player */
-    /* no info if this is the last active player */
-    if ( players_count() > 1 ) {
-        sprintf( info, "Next Player: %s##", player->name );
-        for ( i = 0; i < player_count; i++ ) {
-            /* add player and score */
-            sprintf( buf, "#%12s %10i", " ", 
-                     players[i].score );
-            strcpy( buf + 1, players[i].name );
-            buf[strlen(players[i].name)+1] = 32;
-            strcat( info, buf );
-        }
-        confirm( font, info, CONFIRM_ANY_KEY );
-    }
+	/* set alpha keys to OPAQUE */
+	SDL_SetAlpha( paddle_pic, 0,0 );
+	SDL_SetAlpha( weapon_pic, 0,0 );
+	SDL_SetAlpha( extra_pic, 0,0 );
+	SDL_SetAlpha( ball_pic, 0,0 );
+	SDL_SetAlpha( shot_pic, 0,0 );
+	SDL_SetAlpha( display_font->surface, 0,0 );
+
+	/* reset ball graphic */
+	ball_pic_x_offset = 0;
+	
+	/* reset shrapnells */
+	shrapnells_reset();
+	/* reset shine */
+	shine_reset();
+	/* reset explosions */
+	exps_clear();
+	exps_set_dark( 0 );
+
+	/* delete offscreen */
+	stk_surface_free( &offscreen );
+
+	/* clear credits */
+	credit_clear();
+	
+	/* clear displays */
+	displays_clear();
+	
+	/* clear game contexts */
+	if ( game->game_type == GT_LOCAL ) 
+		game_finalize( local_game );
+	game_finalize( game );
+}
+
+/* display formatted info + score table if multiple players */
+static void display_score_table( char *format, ... )
+{
+	va_list args;
+	int i;
+	char info[256], buf[32];
+
+	va_start( args, format );
+	vsnprintf( info, 64, format, args );
+	va_end( args );
+	
+	if ( player_count > 1 ) {
+		strcat( info, "##" );
+		for ( i = 0; i < player_count; i++ ) {
+			/* add player and score */
+			sprintf( buf, "#%12s %10i", " ", 
+					players[i].stats.total_score );
+			strcpy( buf + 1, players[i].name );
+			buf[strlen(players[i].name)+1] = 32;
+			strcat( info, buf );
+		}
+	}
+
+	display_text( font, info );
+	stk_display_update( STK_UPDATE_ALL );
+}
+
+static void display_bonus_level_score()
+{
+    double avgRatio = 0;
+    char info[256]; 
+    info[0] = 0;
+    if (local_game->blNumCompletedRuns==0) 
+        avgRatio = 0;
     else
-        stk_display_update( STK_UPDATE_ALL );
-}
-/*
-====================================================================
-Display final message.
-====================================================================
-*/
-static void final_info()
-{
-    int i;
-    char info[256], buf[32];
-    /* short info about actual player */
-    sprintf( info, "Game Over!##" );
-    for ( i = 0; i < player_count; i++ ) {
-        /* add player and score */
-        sprintf( buf, "#%12s %10i", " ", 
-                 players[i].score );
-        strcpy( buf + 1, players[i].name );
-        buf[strlen(players[i].name)+1] = 32;
-        strcat( info, buf );
+        avgRatio = local_game->blRatioSum/local_game->blNumCompletedRuns;
+    switch (local_game->level_type)
+    {
+        case LT_JUMPING_JACK:
+            display_text( font, _("%s, you hit %d Jumping Jacks!##Your average ratio: %5d%%#        Your score: %6d"),
+                      cur_player->name,local_game->blNumCompletedRuns,
+                      (int)(100.0*avgRatio),local_game->totalBonusLevelScore);
+            break;
+        case LT_OUTBREAK:
+            display_text( font, _("%s, you stopped %d Outbreaks!##Your average ratio: %5d%%#        Your score: %6d"),
+                      cur_player->name,local_game->blNumCompletedRuns,
+                      (int)(100.0*avgRatio),local_game->totalBonusLevelScore);
+            break;
+        case LT_BARRIER:
+            display_text( font, _("%s, you broke through %d Barriers!##Your average ratio: %5d%%#        Your score: %6d"),
+                      cur_player->name,local_game->blNumCompletedRuns,
+                      (int)(100.0*avgRatio),local_game->totalBonusLevelScore);
+            break;
+        case LT_SITTING_DUCKS:
+            display_text( font, _("%s, you shot %d Sitting Ducks!##Your score: %6d"),
+                      cur_player->name,local_game->blNumCompletedRuns,
+                      local_game->totalBonusLevelScore);
+            break;
+        case LT_HUNTER:
+            display_text( font, _("%s, you hunted down %d bricks!##Your average ratio: %5d%%#        Your score: %6d"),
+                      cur_player->name,local_game->blNumCompletedRuns,
+                      (int)(100.0*avgRatio),local_game->totalBonusLevelScore);
+            break;
+		case LT_DEFENDER:
+            display_text( font, _("%s, you stopped %d waves#killing a total of %d invaders!##Your average ratio: %5d%%#        Your score: %6d"),
+                      cur_player->name,local_game->blNumCompletedRuns,local_game->blTotalNumKilledInvaders,
+                      (int)(100.0*avgRatio),local_game->totalBonusLevelScore);
+			break;
     }
-    confirm( font, info, CONFIRM_ANY_KEY );
+    stk_display_update( STK_UPDATE_ALL );
 }
 
-/*
-====================================================================
-Runs Lbreakout until player looses ball or explicitly wishes
-to quit, restart. (just request! confirmation not done here)
-Assumes that the current offscreen was already displayed on screen
-by _level.
-====================================================================
-*/
-static int breakout_run() {
-    SDL_Event event;
-    int result = REQUEST_NONE;
-    int ms, i;
-    int min_time; /* a frame must last this number of milliseconds at minimum */
-    Brick *brick;
-    int top, bottom;
-    
-    /* clear communicator statistics */
-    if ( game_type == GT_NETWORK )
-        comm_clear_stats();
-    /* frame delay */
-    min_time = ( config.fps ) ? 10 : 0;
-    /* grab input if wanted */
-    event_grab_input();
-    /* run main loop */
-    event_reset();
-    stk_timer_reset(); ms = 1;
-    while( result == REQUEST_NONE ) {
-        /* events */
-        if ( event_poll( &event ) ) {
-            switch ( event.type ) {
-                case SDL_QUIT: stk_quit_request = 1; result = REQUEST_QUIT; break;
-                case SDL_KEYDOWN:
-                    if ( keystate[config.k_lfire] || keystate[config.k_rfire] )
-                        if ( weapon_installed( l_paddle ) )
-                            if ( !weapon_firing( l_paddle ) ) 
-                                weapon_start_fire( l_paddle );
-                    /* various requests */
-                    switch ( event.key.keysym.sym ) {
-                        case SDLK_F1:
-                        case SDLK_h:
-                            if ( game_type == GT_NETWORK ) break; /* only for single player */
-                            result = REQUEST_HELP;
-                            break;
-						case SDLK_q:
-                        case SDLK_ESCAPE: result = REQUEST_QUIT; break;
-                        case SDLK_r:
-                            if ( game_type == GT_NETWORK ) break; /* only for single player */
-                            result = REQUEST_RESTART;
-                            break;
-                        case SDLK_d:
-                            if ( game_type == GT_NETWORK ) break; /* only for single player */
-                            result = REQUEST_NUKE;
-                            break;
-                        case SDLK_f:
-                            event_ungrab_input();
-                            config.fullscreen = !config.fullscreen;
-                            stk_display_apply_fullscreen( config.fullscreen );
-                            /* redraw offscreen to get background */
-                            stk_surface_blit( offscreen, 0,0,-1,-1, 
-                                stk_display, 0,0 );
-                            stk_display_update( STK_UPDATE_ALL);
-                            event_grab_input();
-                            break;
-                        case SDLK_s:
-#ifdef AUDIO_ENABLED
-                            config.sound = !config.sound;
-                            stk_audio_enable_sound( config.sound );
-#endif
-                            break;
-                        case SDLK_a:
-                            config.anim++;
-                            if ( config.anim >= 4 ) config.anim = 0;
-                            break;
-                        case SDLK_TAB:
-                            stk_display_take_screenshot();
-                            break;
-                        case SDLK_t:
-                            break;
-                        case SDLK_p:
-                            result = REQUEST_PAUSE;
-                            break;
-                        default: 
-                            if ( game_type == GT_LOCAL )
-                                if ( event.key.keysym.sym == config.k_warp )
-                                    result = REQUEST_WARP;
-                            break;
-                    }
-                    break;
-                case SDL_KEYUP:
-                    /* stop firing shots */
-                    if ( weapon_firing( l_paddle ) )
-                        if ( !keystate[config.k_lfire] && !keystate[config.k_rfire] ) 
-                            weapon_stop_fire( l_paddle );
-                    /* may bring new balls to game */
-                    l_paddle->block_new_ball = 0;
-                    /* return balls that may do so */
-                    if ( event.key.keysym.sym == config.k_return )
-                        balls_return( l_paddle );
-                    break;
-                case SDL_MOUSEBUTTONDOWN:
-                    if ( buttonstate[STK_BUTTON_LEFT] && weapon_installed( l_paddle ) )
-                        if ( !weapon_firing( l_paddle ) ) 
-                            weapon_start_fire( l_paddle );
-                    break;
-                case SDL_MOUSEBUTTONUP:
-                    if ( weapon_firing( l_paddle ) )
-                        if ( !buttonstate[STK_BUTTON_LEFT] ) 
-                            weapon_stop_fire( l_paddle );
-                    if ( event.button.button == STK_BUTTON_MIDDLE )
-                        balls_return( l_paddle );
-                    l_paddle->block_new_ball = 0;
-                    break;
-            }
-        }
-        /* hide */
+/* begin frame by hiding all objects */
+static void begin_frame( void )
+{
+	int i;
+	
         displays_hide();
         frame_info_hide();
         extras_hide();
-        for ( i = 0; i < paddle_count; i++ )
-            paddle_hide( paddles[i] );
+        for ( i = 0; i < game->paddle_count; i++ ) {
+            paddle_hide( game->paddles[i] );
+	    paddle_ammo_hide( game->paddles[i] );
+	}
         balls_hide();
         shots_hide();
         shrapnells_hide();
-        wall_hide();
+        walls_hide();
         frame_warp_icon_hide();
         shine_hide();
         exps_hide();
         credit_hide();
-        /* handle sdl events for local paddle */
-        paddle_handle_events( l_paddle, ms );
-        /* handle remote events */
-        if ( game_type == GT_NETWORK )
-            if ( !comm_handle( ms, &result ) ) {
-                /* translate the comm result into breakout result */
-                switch ( result ) {
-                    case COMM_PAUSE: result = REMOTE_PAUSE; break;
-                    case COMM_QUIT: result = REMOTE_QUIT; break;
-                    case COMM_ERROR: result = NET_ERROR; break;
-                    case COMM_NEXT_ROUND: result = REQUEST_NEXT_ROUND; break;
-                    case COMM_GAME_OVER: result = REQUEST_GAME_OVER; break;
-                }
-                break;
-            }
-        /* update paddles */
-        for ( i = 0; i < paddle_count; i++ )
-            paddle_update( paddles[i], ms );
-        /* balls are only updated by host */
-        if ( game_type == GT_LOCAL || game_host ) {
-            if ( balls_update( ms, &top, &bottom ) ) {
-                /* balls were lost: 'top' balls at top and 'bottom' balls at bottom */
-                if ( game_type == GT_LOCAL && balls->count == 0 ) {
-                    /* all balls where lost */
-                    result = REQUEST_NEXT_PLAYER;
-                    player->lives--;
-                }
-                else
-                    if ( game_type == GT_NETWORK ) {
-                        if (level_type == LT_DEATHMATCH ) {
-                            /* adjust frags */
-                            paddles[0]->player->frags += top;
-                            paddles[1]->player->frags += bottom;
-                            paddles[0]->player->frags_total += top;
-                            paddles[1]->player->frags_total += bottom;
-                            /* limit reached? */
-                            if ( paddles[0]->player->frags >= game_frags || paddles[1]->player->frags >= game_frags ) {
-                                result = REQUEST_NEXT_ROUND;
-                            }
-                            else {
-                                /* allow firing these balls */
-                                paddles[0]->ammo += bottom;
-                                paddles[1]->ammo += top;
-                            }
-                        }
-                        else {
-                            /* in normal game we loose 10% score for each ball */
-                            /* only one ball may be fired back */
-                            if ( top ) {
-                                player_add_score( paddles[1]->player, -top * ( paddles[1]->player->level_score / 10 ) );
-                                if ( paddles[1]->ammo == 0 ) 
-                                    paddles[1]->ammo = 1;
-                            }
-                            if ( bottom ) {
-                                player_add_score( paddles[0]->player, -bottom * ( paddles[0]->player->level_score / 10 ) );
-                                if ( paddles[0]->ammo == 0 )
-                                    paddles[0]->ammo = 1;
-                            }
-                        }
-                    }
-            }
-        }
-        /* the shots are only handled by host. the client tells that
-           he is firing and receives the positions of all active shots */
-        if ( game_type == GT_LOCAL || game_host )
-            shots_update( ms, shot_bricks, &shot_bricks_count );
-        /* explosions and animations are drawn by client and host 
-           but for the client there is no effect in collecting an extra
-           or hitting a brick with a shot (the host has sent relevant 
-           results by comm_handle() */
-        extras_update( ms );
-        wall_update( ms );
-        shrapnells_update( ms );
-        frame_warp_icon_update( ms );
-        shine_update( ms );
-        exps_update( ms );
-        /* the display value is sent to the client so only
-           the host needs to update */
-        if ( game_type == GT_LOCAL || game_host )
-            displays_update( ms );
-        /* credits are unimportant and run for both */
-        credit_update( ms );
-        /* brick modifications - host only */
-        if ( game_type == GT_LOCAL || game_host ) {
-            /* bricks destroyed by shots */
-            for ( i = 0; i < shot_bricks_count; i++ )
-                balls_check_targets( shot_bricks[i].x, shot_bricks[i].y );
-            /* check if bricks were destroyed by explosion */
-            if ( exp_bricks->count > 0 ) {
-                list_reset( exp_bricks );
-                while ( ( brick = list_next( exp_bricks ) ) != 0 ) {
-                    brick->exp_time -= ms;
-                    if ( brick->exp_time <= 0 ) {
-                        brick->exp_time = -1;
-                        brick_remove( brick->mx, brick->my, SHR_BY_EXPL, 
-                                      vector_get( 0, 0 ), brick->exp_paddle );
-                        balls_check_targets( brick->mx, brick->my );
-                        list_delete_current( exp_bricks );
-                    }
-                }
-            }
-            /* check if bricks regenerate */
-            if ( heal_bricks->count > 0 ) {
-                list_reset( heal_bricks );
-                while ( ( brick = list_next( heal_bricks ) ) != 0 ) {
-                    /* skip brick if destroyed meanwhile */
-                    if ( brick->type != MAP_BRICK_HEAL ) {
-                        list_delete_current( heal_bricks );
-                        continue;
-                    }
-                    brick->heal_time -= ms;
-                    if ( brick->heal_time < 0 ) {
-                        brick->dur++;
-                        brick->id++;
-                        if ( game_type == GT_NETWORK && game_host )
-                            net_brick_set( brick->mx, brick->my, BRICK_HEAL, 
-                                           0, vector_get(0,0), 0 );
-                        /* redraw */
-                        if ( !active[EX_DARKNESS] ) {
-                            brick_draw( offscreen, brick->mx, brick->my, 0 );
-                            brick_draw( stk_display, brick->mx, brick->my, 0 );
-                            stk_display_store_drect();
-                        }
-                        if ( brick->dur < 3 ) {
-                            /* initate next healing step */
-                            brick->heal_time = BRICK_HEAL_TIME;
-                        }
-                        else {
-                            brick->heal_time = -1;
-                            list_delete_current( heal_bricks );
-                        }
-                    }
-                }
-            }
-            /* update ball speed */
-            if ( !active[EX_SLOW] && !active[EX_FAST] ) balls_inc_vel( ms );
-            /* check if all bricks where destroyed */
-            if ( brick_count == 0 && level_type == LT_NORMAL ) {
-                if ( game_type == GT_LOCAL )
-                    result = REQUEST_NEXT_LEVEL;
-                else
-                    if ( game_host )
-                        result = REQUEST_NEXT_ROUND;
-            }
-        }
-        /* check if there are growing bricks - the client
-           was sent the grow mask by the communicator */
-        if ( grow ) game_grow_bricks();
-        /* update score - host & client */
-        if ( game_type == GT_LOCAL ) {
-            display_set_value( display_score[0], paddles[0]->player->score );
-            display_set_value( display_player[0], paddles[0]->player->lives );
-        }
-        else {
-            if ( level_type == LT_NORMAL ) {
-                display_set_value( display_score[0], paddles[0]->player->level_score );
-                display_set_value( display_score[1], paddles[1]->player->level_score );
-            }
-            else {
-                display_set_value( display_score[0], paddles[0]->player->frags );
-                display_set_value( display_score[1], paddles[1]->player->frags );
-            }
-        }
-        /* client has no display animation */
-        if ( game_type == GT_NETWORK && !game_host ) {
-            display_score[0]->cur_value = display_score[0]->value;
-            display_score[1]->cur_value = display_score[1]->value;
-        }
-        /* show -- some things will be missing if darkness is enabled */
-        balls_show_shadow();
-        extras_show_shadow();
-        for ( i = 0; i < paddle_count; i++ )
-            paddle_show_shadow( paddles[i] );
-       	shots_show();
-        if ( config.debris_level == DEBRIS_BELOW_BALL ) {
-            exps_show();
-            if ( !active[EX_DARKNESS] ) {
-                shrapnells_show();
-                frame_info_show();
-            }
-        }	
-		if ( config.ball_level == BALL_ABOVE_BONUS )
-            extras_show();
-        balls_show();
-		if ( config.ball_level == BALL_BELOW_BONUS )
-            extras_show();
-        for ( i = 0; i < paddle_count; i++ )
-            paddle_show( paddles[i] );
-        if ( !active[EX_DARKNESS] ) wall_show();
-        shine_show();
-        if ( config.debris_level == DEBRIS_ABOVE_BALL ) {
-            exps_show();
-            if ( !active[EX_DARKNESS] ) {
-                shrapnells_show();
-                frame_info_show();
-            }
-        }	
-        frame_warp_icon_show();
-        displays_show();
-        credit_show();
-        /* update anything that was changed */
-        stk_display_update( STK_UPDATE_RECTS );
-        /* determine how long it took to draw the frame */
-        ms = stk_timer_get_time();
-        /* if we're below min_time we'll have to wait */
-        if ( ms < min_time ) {
-            SDL_Delay( min_time - ms );
-            ms += stk_timer_get_time();
-        }
-    }
-    /* release input */
-    event_ungrab_input();
-    /* print stats */
-    if ( game_type == GT_NETWORK )
-        comm_print_stats();
-    return result;
 }
-/*
-====================================================================
-Fade all animations until they disappear
-====================================================================
-*/
+
+/* end frame by drawing all objects and updating the screen */
+static void end_frame( void )
+{
+	int i;
+	
+	/* show -- some things will be missing if darkness is enabled */
+	balls_show_shadow();
+	extras_show_shadow();
+	for ( i = 0; i < game->paddle_count; i++ )
+		paddle_show_shadow( game->paddles[i] );
+	shots_show();
+	if ( config.debris_level == DEBRIS_BELOW_BALL ) {
+		exps_show();
+		if ( !game->extra_active[EX_DARKNESS] ) {
+			shrapnells_show();
+			frame_info_show();
+		}
+	}	
+	if ( config.ball_level == BALL_ABOVE_BONUS )
+		extras_show();
+	balls_show();
+	if ( config.ball_level == BALL_BELOW_BONUS )
+		extras_show();
+	for ( i = 0; i < game->paddle_count; i++ )
+		paddle_show( game->paddles[i] );
+	if ( !game->extra_active[EX_DARKNESS] ) walls_show();
+	shine_show();
+	if ( config.debris_level == DEBRIS_ABOVE_BALL ) {
+		exps_show();
+		if ( !game->extra_active[EX_DARKNESS] ) {
+			shrapnells_show();
+			frame_info_show();
+		}
+	}	
+	frame_warp_icon_show();
+	displays_show();
+	for ( i = 0; i < game->paddle_count; i++ )
+		paddle_ammo_show( game->paddles[i] );
+	credit_show();
+}
+
+/* grab/ungrab input of actual game */
+static void grab_input( int grab )
+{
+	if ( grab ) {
+		SDL_ShowCursor(0);
+		SDL_WM_GrabInput( SDL_GRAB_ON );
+		SDL_GetRelativeMouseState(0,0);
+	} else {
+		SDL_ShowCursor(1);
+		SDL_WM_GrabInput( SDL_GRAB_OFF );
+	}
+}
+
+/* switch client to new state */
+void set_state( int newstate )
+{
+	if ( client_state == newstate ) return;
+	
+	if ( newstate == CS_PLAY )
+		grab_input( 1 );
+	if ( client_state == CS_PLAY )
+		grab_input( 0 );
+	if ( client_state == CS_CONFIRM_WARP ||
+	     client_state == CS_CONFIRM_RESTART ||
+	     client_state == CS_CONFIRM_QUIT ||
+             client_state == CS_CONFIRM_CONTINUE ||
+	     client_state == CS_GET_READY ||
+	     client_state == CS_PAUSE ||
+	     client_state == CS_FINAL_PLAYER_INFO ||
+         client_state == CS_GET_READY_FOR_NEXT_LEVEL ||
+	     client_state == CS_RECV_LEVEL ||
+	     client_state == CS_ROUND_RESULT ||
+	     client_state == CS_RECV_STATS ||
+	     client_state == CS_FATAL_ERROR ) {
+		/* show offscreen */
+		if ( offscreen ) {
+			stk_surface_blit( offscreen, 0,0,-1,-1, stk_display, 0,0 );
+			end_frame();
+		}
+		/* do not refresh when coming from RECV_LEVEL as a GET_READY
+		 * will follow */
+		if ( client_state != CS_RECV_LEVEL )
+		if ( client_state != CS_ROUND_RESULT )
+		if ( client_state != CS_RECV_STATS );
+			stk_display_update( STK_UPDATE_ALL );
+	}
+
+	client_state = newstate;
+	stk_timer_reset();
+}
+
+/* Fade all animations until they disappear */
 static void fade_anims()
 {
-    float alpha = 255.0;
-    int ms, i;
-    stk_timer_reset();
-    if ( game_type == GT_LOCAL )
-        frame_remove_life();
-    while ( alpha > 0 ) {
-        displays_hide();
-        for ( i = 0; i < paddle_count; i++ )
-            paddle_hide( paddles[i] );
-        balls_hide();
-        extras_hide();
-        shrapnells_hide();
-        shots_hide();
-        wall_hide();
-        credit_hide();
-        ms = stk_timer_get_time();
-        alpha -= 0.5 * ms;
-        if ( alpha < 0 ) alpha = 0;
-        shrapnells_update( ms );
-        for ( i = 0; i < paddle_count; i++ )
-            paddle_alphashow( paddles[i], alpha );
-        balls_alphashow( alpha );
-        extras_alphashow( alpha );
-        shots_alphashow( alpha );
-        shrapnells_show();
-        wall_alphashow( alpha );
-        displays_show();
-        credit_alphashow( alpha );
-        stk_display_update( STK_UPDATE_RECTS );
+	float alpha = 255.0;
+	int ms, i;
+	stk_timer_reset();
+	if ( game->game_type == GT_LOCAL && game->winner != PADDLE_BOTTOM )
+		frame_remove_life();
+	while ( alpha > 0 ) {
+		displays_hide();
+		for ( i = 0; i < game->paddle_count; i++ )
+			paddle_hide( game->paddles[i] );
+		balls_hide();
+		extras_hide();
+		shrapnells_hide();
+		shots_hide();
+		walls_hide();
+		credit_hide();
+		ms = stk_timer_get_time();
+		alpha -= 0.3 * ms;
+		if ( alpha < 0 ) alpha = 0;
+		shrapnells_update( ms );
+		for ( i = 0; i < game->paddle_count; i++ )
+			paddle_alphashow( game->paddles[i], alpha );
+		balls_alphashow( alpha );
+		extras_alphashow( alpha );
+		shots_alphashow( alpha );
+		shrapnells_show();
+		walls_alphashow( alpha );
+		displays_show();
+		credit_alphashow( alpha );
+		stk_display_update( STK_UPDATE_RECTS );
+	}
+}
+
+void open_pause_chat( char *text )
+{
+	set_state( CS_PAUSE );
+	
+	/* clear pause_chatter */
+	memset( pause_chatter, 0, sizeof( pause_chatter ) );
+	/* clear global gui widgets */
+	gui_focused_widget = 0;
+	gui_clicked_widget = 0;
+	gui_key_widget = 0;
+	/* use 'text' as initial chatter */
+	client_add_pausechatter( text, 1 );
+	/* gray screen */
+	stk_surface_gray( stk_display, 0,0,-1,-1, 1 );
+	/* show pauseroom */
+	gui_widget_show( dlg_pauseroom );
+	stk_display_update( STK_UPDATE_ALL );
+
+	/* disable event filter */
+	SDL_SetEventFilter( 0 );
+	/* disable client_recv which is called as time event */
+	gui_widget_disable_event( dlg_chatroom, GUI_TIME_PASSED );
+}
+
+void close_pause_chat( void )
+{
+	gui_widget_hide( dlg_pauseroom );
+	set_state( CS_PLAY );
+
+	/* enable event filter */
+	SDL_SetEventFilter( event_filter );
+	gui_widget_enable_event( dlg_chatroom, GUI_TIME_PASSED );
+}
+
+/* Pause/unpause a local/network game. */
+static void client_set_pause( int pause )
+{
+  if (game_set==0) return; /* test level */
+  if (pause&&client_state==CS_PLAY)
+    {
+      /* in local game simply darken the screen, in
+       * network game enter the pausechatroom */
+      if ( game->game_type == GT_LOCAL ) {
+	set_state(CS_PAUSE);
+	display_text( font, _("Pause") );
+      }
+      else {
+	open_pause_chat( _("You have paused the game.") );
+	comm_send_short( MSG_PAUSE );
+      }
+    }
+  else if (!pause&&client_state==CS_PAUSE)
+    {
+      /* unpause (local game only)*/
+      if ( game->game_type == GT_LOCAL )
+	set_state(CS_PLAY);
+    }
+}
+
+/* modify the client and its state according to the key pressed */
+static int handle_default_key( int key, int *abort )
+{
+	SDL_Surface *buffer;
+	
+	switch ( key ) {
+		case SDLK_F1:
+		case SDLK_h:
+			if ( client_state != CS_PLAY ) break;
+			if ( game->game_type == GT_NETWORK ) break; /* only for single player */
+			grab_input(0);
+			help_run();
+			grab_input(1);
+			return 1;
+		case SDLK_q:
+		case SDLK_ESCAPE:
+			/* recv_stats or final_stats means we already broke up
+			 * the game so ESC will directly quit */
+			if ( client_state == CS_RECV_STATS || client_state == CS_FINAL_STATS ) {
+				*abort = 1;
+				break;
+			}
+
+			if ( client_state == CS_CONFIRM_QUIT ) break;
+			if ( client_state == CS_PAUSE ) break;
+                        if ( players_count() == 0 ) break; 
+			set_state(CS_CONFIRM_QUIT); 
+                        if ( game->game_type == GT_LOCAL && game_set != 0 /*not testing a level*/ )
+  			    display_text( font, _("Quit Game? y/n#(If yes, this game may be resumed later.#No highscore entry is created yet.)") );
+                        else
+  			    display_text( font,  _("Quit Game? y/n") );
+			return 1;
+		case SDLK_r:
+			if ( client_state != CS_PLAY ) break;
+			if ( game->game_type == GT_NETWORK ) break; /* only for single player */
+			if ( game_set == 0 ) break; /* test level */
+			if ( cur_player->lives < 2 ) break;
+			set_state(CS_CONFIRM_RESTART); 
+			display_text( font,  _("Restart Level? y/n") );
+			return 1;
+		case SDLK_d:
+			if ( client_state != CS_PLAY ) break;
+			if ( game->game_type == GT_NETWORK ) break; /* only for single player */
+			if ( !allow_disintegrate ) break;
+			if ( game->level_type != LT_NORMAL ) break; /* not in bonus levels */
+			grab_input(0);
+			game_nuke();
+			grab_input(1);
+			return 1;
+		case SDLK_f:
+			buffer = stk_surface_create( SDL_SWSURFACE, 640, 480 );
+			SDL_BlitSurface( stk_display, 0, buffer, 0 );
+			config.fullscreen = !config.fullscreen;
+			stk_display_apply_fullscreen( config.fullscreen );
+			SDL_BlitSurface( buffer, 0, stk_display, 0 );
+			stk_display_update( STK_UPDATE_ALL);
+			SDL_FreeSurface( buffer );
+			return 1;
+		case SDLK_s:
+#ifdef AUDIO_ENABLED
+			config.sound = !config.sound;
+			stk_audio_enable_sound( config.sound );
+#endif
+			return 1;
+		case SDLK_a:
+			config.anim++;
+			if ( config.anim >= 4 ) config.anim = 0;
+			return 1;
+		case SDLK_TAB:
+			stk_display_take_screenshot();
+			return 1;
+		case SDLK_t:
+			return 0;
+		case SDLK_p:
+			if ( client_state == CS_PLAY )
+			  client_set_pause(1);
+			else if (client_state==CS_PAUSE)
+			  client_set_pause(0);
+			return 1;
+		default: 
+			if ( client_state != CS_PLAY ) break;
+			if ( game->game_type != GT_LOCAL ) break;
+			if ( game->bricks_left > game->warp_limit ) break;
+			if ( game_set == 0 ) break; /* test level */
+			if ( game->level_type != LT_NORMAL ) break; /* not in bonus levels */
+			if ( key == config.k_warp ) {
+				set_state(CS_CONFIRM_WARP);
+				display_text( font,  _("Warp to next level? y/n") );
+				return 1;
+			}
+			break;
+	}
+	
+	return 0;
+}
+
+void update_bonus_level_display()
+{
+    /* Michael! What are you doing? You're messing this all up!
+       Who the fuck are you? 
+       Your conscience! You can do better! I can do this way
+       cleaner. I know! This is just another terrible hack. Stop it!
+       Shhiiiiit, who cares? It's too goddamn late you bastard. You should
+       have come up with that earlier. This game is down on its knees 
+       already. Dying from hacks spreading like cancer... */
+    switch (local_game->level_type)
+    {
+        case LT_JUMPING_JACK:
+            display_set_value(bl_display,(local_game->bricks[local_game->bl_jj_mx][local_game->bl_jj_my].exp_time+500)/1000);
+            break;
+        case LT_OUTBREAK:
+            display_set_value(bl_display,local_game->blCancerCount);
+            break;
+        case LT_BARRIER:
+            display_set_value(bl_display,local_game->blBarrierMaxMoves-local_game->blBarrierMoves);
+            break;
+        case LT_SITTING_DUCKS:
+            display_set_value(bl_display,local_game->blMaxScore);
+            break;
+        case LT_HUNTER:
+            display_set_value(bl_display,local_game->blHunterTimeLeft/1000);
+            break;
+        case LT_DEFENDER:
+            display_set_value(bl_display,local_game->blInvaderLimit-local_game->blNumKilledInvaders);
+            break;
+    }
+}
+        
+/* update local objects (shrapnells,extras,explosions...) and communicate
+ * every client_comm_delay seconds either with real or fake server */
+static void update_game( int ms )
+{
+	int i;
+	
+	/* run the fake server game */
+	if ( game->game_type == GT_LOCAL ) {
+		game_set_current( local_game );
+		game_update( ms );
+		game_set_current( game );
+	}
+		
+	/* local animations and movements */
+	for ( i = 0; i < game->paddle_count; i++ )
+		client_paddle_update( game->paddles[i], ms );
+	client_shots_update( ms );
+	client_balls_update( ms );
+	client_extras_update( ms );
+	client_walls_update( ms );
+	shrapnells_update( ms );
+	frame_warp_icon_update( ms );
+	shine_update( ms );
+	exps_update( ms );
+	displays_update( ms );
+	credit_update( ms );
+
+	/* communicate */
+	if ( (no_comm_since+=ms) >= client_comm_delay ) {
+		no_comm_since -= client_comm_delay;
+
+		/* send paddle state */
+		comm_send_paddle( l_paddle );
+	
+		/* receive game data from local or remote server and 
+		 * apply it to the game context. */
+		comm_recv();
+		
+		/* update score displays */
+		if (!showing_best)
+		  display_set_value( 
+			  display_score[0], 
+			  game->paddles[0]->player->stats.total_score + 
+			  game->paddles[0]->score );
+		if ( game->game_type == GT_NETWORK )
+			display_set_value( 
+				display_score[1], 
+				game->paddles[1]->player->stats.total_score + 
+				game->paddles[1]->score );
+
+        /* update bonus level information */
+        if (bl_display) update_bonus_level_display();
+	}
+}
+
+/* give us a damn or excellent depending on the outcome of the level.
+ * the result for network game must've been received already so that
+ * game::level_over and game::winner are valid entries. */
+static void play_speech( void )
+{
+#ifdef AUDIO_ENABLED
+	if ( !config.speech )
+		return;
+	if ( game->winner == -1 ) 
+		return; /* draw */
+	
+	if ( game->paddles[game->winner] == l_paddle ) {
+		if ( rand() % 2 )
+			stk_sound_play( wav_excellent );
+		else
+			stk_sound_play( wav_verygood );
+	} else {
+		if (!config.badspeech) /* no swearing! */
+			return;
+		if ( rand() % 2 )
+			stk_sound_play( wav_damn );
+		else
+			stk_sound_play( wav_dammit );
+	}
+#endif
+}
+
+/* check players of local game wether they entered a highscore */
+static void check_highscores( void )
+{
+	int i;
+	
+	chart_clear_new_entries();
+	for ( i = 0; i < config.player_count; i++ )
+		chart_add( 
+			chart_set_query(game_set->name), 
+			players[i].name, 
+			players[i].level_id + 1, 
+			players[i].stats.total_score );
+	chart_save();
+}
+
+/* init next network game round by displaying a message and switching
+ * to GET_READY. */
+void init_next_round( void )
+{
+	game_round++;
+	set_state( CS_GET_READY );
+	init_level( cur_player, cur_player->paddle_id );
+	display_text( font,
+		_("***** Round %i *****###You control the %s paddle in this level!#"
+		"To fire a ball keep the mouse button PRESSED.#Don't just click.###"
+		"Press any key when you are ready...###(You can pause the game with 'p' any time.)"
+		"###NOTE: Due to latency, bonuses on the server are closer than they "
+		"appear! I'll try to work on that."), 
+		game_round, cur_player->paddle_id==0?_("BOTTOM"):_("TOP") );
+}
+
+/* display a message about the winner */
+void finalize_round( void )
+{
+	if ( (char)game->winner == -1 )
+		display_text( font, _("DRAW") );
+	else {
+		game->paddles[game->winner]->player->stats.wins++;
+		if ( game->winner == cur_player->paddle_id )
+			display_text( font, _("You have won this round!") );
+		else
+			display_text( font, _("You have lost this round.") );
+	}
+	finalize_level();
+	set_state( CS_ROUND_RESULT );
+}
+
+/* display the final statistics. the first player is always this client
+ * and the second is the remote. */
+void display_final_stats( void )
+{
+	int win;
+
+	/* won this match? */
+	if ( game_stats[0][0] > game_stats[1][0] )
+		win = 1;
+	else
+	if ( game_stats[0][0] == game_stats[1][0] )
+		win = -1;
+	else
+		win = 0;
+	
+	/* build stats string */
+	display_text( font, 
+			_("             Result: %s              ##" \
+			"                  %12s %12s##" \
+			"Wins:             %12i %12i#" \
+			"Losses:           %12i %12i#" \
+			"Draws:            %12i %12i#" \
+			"#" \
+			"Total Score:      %12i %12i#" \
+			"#" \
+			"Balls Kept:       %11i%% %11i%%#" \
+			"Bricks Cleared:   %11i%% %11i%%#" \
+			"Extras Collected: %11i%% %11i%%##" \
+                        "(Press SPACE to continue)"),
+			win==1?_("VICTORY"):win==0?_(" DEFEAT"):_("   DRAW"),
+			players[0].name, players[1].name,
+			game_stats[0][0], game_stats[1][0],
+			game_stats[0][1], game_stats[1][1],
+			game_stats[0][2], game_stats[1][2],
+			game_stats[0][3], game_stats[1][3],
+			game_stats[0][4], game_stats[1][4],
+			game_stats[0][5], game_stats[1][5],
+			game_stats[0][6], game_stats[1][6] );
+}
+
+/* save data from local and local_game variables and update
+ * the menu hint. */
+void save_local_game( int slot_id )
+{
+    GameSlot gs;
+    int i;
+
+    memset( &gs, 0, sizeof(GameSlot) );
+    strcpy( gs.setname, game_set->name );
+    gs.diff = config.diff;
+    gs.player_count = config.player_count;
+    gs.cur_player = current_player;
+    for ( i = 0; i < MAX_PLAYERS; i++ )
+    {
+        strcpy( gs.player_names[i], config.player_names[i] );
+        gs.player_cur_level_id[i] = players[i].level_id;
+        gs.player_lives[i] = players[i].lives;
+        gs.player_scores[i] =  players[i].stats.total_score;
+    }
+    gs.gameSeed = gameSeed;
+    if ( !slot_save( slot_id, &gs ) )
+        fprintf( stderr, _("ERROR: couldn't save game!\n") );
+    slot_update_hint( slot_id, item_resume_0->hint );
+}
+
+/* check whether Shift is pressed to switch between own and highest score */
+void handle_display_switch()
+{
+  int modstate = 0;
+  modstate = SDL_GetModState();
+  if (!showing_best)
+    {
+      if (modstate&KMOD_RSHIFT||modstate&KMOD_LSHIFT)
+	{
+	  display_set_text( display_player[0], best_name );
+	  display_set_value_directly( display_score[0], best_score );
+	  display_set_highlight( display_player[0], 1 );
+	  display_set_highlight( display_score[0], 1 );
+	  showing_best = 1;
+	}
+    }
+  else
+    {
+      if (!(modstate&KMOD_RSHIFT||modstate&KMOD_LSHIFT))
+	{
+	  display_set_text( display_player[0], cur_player->name );
+	  display_set_value_directly( display_score[0],
+			     game->paddles[0]->player->stats.total_score +
+			     game->paddles[0]->score );
+	  display_set_highlight( display_player[0], 0 );
+	  display_set_highlight( display_score[0], 0 );
+	  showing_best = 0;
+	}
     }
 }
 
@@ -1050,435 +909,619 @@ Publics
 ====================================================================
 */
 
-/*
-====================================================================
-Load all static resources like frame, bricks, balls, extras...
-====================================================================
-*/
-void game_create()
+/* create various resources like shrapnells */
+void client_game_create()
 {
-    int i;
-    bricks_load();
-    ball_load();
-    shot_load();
-    extras_load();
-    frame_create();
-    shrapnells_init();
-    shine_load();
-    /* load names of all valid levelsets */
-    levelsets_load_names();
-    /* create vectors for all degrees in 2° steps */
-    for ( i = 0; i < 180; i++ ) {
-        impact_vectors[i].x = cos( 6.28 * i / 180 );
-        impact_vectors[i].y = sin( 6.28 * i / 180 );
-    }
+	frame_create();
+	shrapnells_init();
+	shine_load();
+	init_angles();
+
+	/* background */
+	bkgnd = stk_surface_create( SDL_SWSURFACE, 
+			stk_display->w, stk_display->h );
+	SDL_SetColorKey( bkgnd, 0, 0 );
+	stk_surface_fill( bkgnd, 0,0,-1,-1, 0x0 );
+
 }
-/*
-====================================================================
-Delete anything created by game_create();
-====================================================================
-*/
-void game_delete()
+void client_game_delete()
 {
-    int i;
-    bricks_delete();
-    for ( i = 0; i < paddle_count; i++ )
-        paddle_delete( paddles[i] );
-    paddle_count = 0;
-    displays_clear();
-    ball_delete();
-    shot_delete();
-    extras_delete();
-    frame_delete();
-    shrapnells_delete();
-    shine_delete();
-    /* free levelset names */
-    levelsets_delete_names();
-}
-/*
-====================================================================
-Initiates player and the first level. If channel is set the 
-multiplayer values are handled.
-Return Value: True if successful
-====================================================================
-*/
-int game_init( char *setname, int diff_level, 
-               Net_Socket *channel, int challenger, int host, int rounds, int frags, int balls )
-{
-    int i;
-    /* game type */
-    if ( channel == 0 )
-        game_type = GT_LOCAL;
-    else
-        game_type = GT_NETWORK;
-    /* load levels:
-     * multiplayer levels are only loaded by host,
-     * the client starts with an all empty set and receives the current level data
-     * over the connection
-     */
-    if ( game_type == GT_LOCAL || challenger ) {
-        if ( !levels_load( setname ) ) 
-            return 0;
-    }
-    else {
-        /* client needs just one level which is filled
-           with challengers leveldata in game_init_level */
-        levels_create_empty_set( 1 );
-    }
-	/* set global pointer to set name */
-	levelset_name = setname;
-    /* set difficulty */
-    game_diff = diff_get( diff_level );
-    /* initiate players */
-    players_clear();
-    if ( channel == 0 ) {
-        for ( i = 0; i < config.player_count; i++ )
-            player_add( config.player_names[i], game_diff->lives, levels_get_first() );
-    }
-    else {
-        player_add( client_name, game_diff->lives, levels_get_first() );
-        player_add( mp_peer_name, game_diff->lives, levels_get_first() );
-    }
-    player = players_get_first();
-    /* special multiplayer settings */
-#ifdef NETWORK_ENABLED
-    if ( game_type == GT_NETWORK ) {
-        game_peer = channel;
-        game_challenger = challenger;
-        game_host = host;
-        game_cur_round = 0;
-        game_rounds = rounds;
-        game_frags = frags;
-        game_balls = balls - 1; /* the player can always fire the initial ball */
-    }
-#endif
-    /* initiate level */
-    return game_init_level( player, WITH_CREDITS );
+	stk_surface_free( &bkgnd );
+	
+	displays_clear();
+	frame_delete();
+	shrapnells_delete();
+	shine_delete();
 }
 
-/*
-====================================================================
-Free all memory allocated by game_init()
-====================================================================
-*/
-void game_clear()
+/* create network/local game context and initiate game state:
+ * network needs to receive the level data and a local game
+ * has to load the next level */
+int client_game_init_local( const char *setname )
 {
-    stk_surface_free( &offscreen );
-    stk_surface_free( &bkgnd );
-    credit_clear();
+        Set_Chart *chart;
+	int i, warp_limit;
+
+	warp_limit = config.rel_warp_limit;
+	allow_disintegrate = 1;
+
+	/* the original levelsets do not need these workarounds */
+	if ( STRCMP( setname, "LBreakout2" ) || STRCMP( setname, "LBreakout1" ) ) {
+		warp_limit = 100;
+		allow_disintegrate = 0;
+	}
+	
+	/* the approach for a local game is to use the same
+	 * settings as a network game. the receiving of packets
+	 * is simply faked by a local_game context that
+	 * runs the game locally. but to use only one game loop
+	 * we do not use it directly but apply its modificiations
+	 * to game which is visualized */
+	local_game = game_create( GT_LOCAL, config.diff, warp_limit );
+	game_set_current( local_game );
+	game_set_convex_paddle( config.convex );
+	game_set_ball_auto_return( !config.return_on_click );
+	game_set_ball_random_angle( config.random_angle );
+    game_set_ball_accelerated_speed( config.maxballspeed_float );
+    local_game->localServerGame = 1;
+	
+	/* load levels:
+	 * only required for local games. in network both players
+	 * just require a single level that can store the incoming
+	 * data that is send by the server via the net.
+	 */
+	if ( !strcmp( setname, TOURNAMENT ) )
+	    game_set = levelset_load_all( levelset_names, gameSeed, config.addBonusLevels );
+	else
+		game_set = levelset_load( setname, ((config.addBonusLevels)?gameSeed:0) );
+	if ( game_set == 0 ) return 0;
+
+	/* load highest score so far if any */
+	chart = chart_set_query(setname);
+	strcpy(best_name,_("nobody")); best_score = 0;
+	if (chart)
+	  {
+	    strcpy(best_name,chart->entries[0].name);
+            best_score = chart->entries[0].score;
+	  }
+	
+	/* create client game context */
+	game = game_create( GT_LOCAL, config.diff, warp_limit );
+	game_set_current( game );
+	
+	/* a local game is not limited in its communication */
+	client_comm_delay = 0;
+	no_comm_since = 0;
+	
+	/* prepare warp icon at frame */
+	warp_blinks = 4; warp_blink = 1;
+	
+	/* set list of level background ids */
+	for ( i = 0; i < MAX_LEVELS; i++ )
+		bkgnd_ids[i] = rand() % bkgnd_count;
+	
+	/* initiate players */
+	players_clear();
+	for ( i = 0; i < config.player_count; i++ )
+		player_add( config.player_names[i], 
+			    game->diff->lives, 
+			    levelset_get_first( game_set ) );
+	cur_player = players_get_first();
+
+	/* init first level */
+	init_level( cur_player, PADDLE_BOTTOM );
+	
+	/* if only one player don't show score table */
+	client_state = CS_NONE;
+	if ( player_count > 1 )
+		set_state( CS_SCORE_TABLE );
+	else
+		set_state( CS_PLAY ); /* one player starts immediately */
+	return 1;
 }
-/*
-====================================================================
-Run game after first level was initiated. Initiates next levels,
-too.
-====================================================================
-*/
-void game_run()
+int client_game_init_network( char *opponent_name, int diff )
 {
-    int leave = 0;
-    int next_player = 0;
-    int result;
-    char str[64];
+	/* create an empty one level levelset. the server will send
+	 * the data into the level everytime we play. */
+	game_set = levelset_create_empty( 1, "empty", "empty" );
+	
+	/* create client game context */
+	game = game_create( GT_NETWORK, diff, 100 );
+	game_set_current( game );
+	game_round = 0; /* will be increased by init_next_round() */
+	game_over = 0;
+	
+	/* a network game communicates every 25 ms by default */
+	client_comm_delay = 25;
+	no_comm_since = 0;
+	
+	/* initiate players */
+	players_clear();
+	player_add( client_name, game->diff->lives, levelset_get_first( game_set ) );
+	player_add( opponent_name, game->diff->lives, levelset_get_first( game_set ) );
+	cur_player = players_get_first();
+
+	display_text( font, _("Receiving level data...") );
+	set_state( CS_RECV_LEVEL );
+	return 1;
+}
+
+/* create local game context and initiate game state
+ * as given from slot 'slot_id'. */
+int client_game_resume_local( int slot_id )
+{
     int i;
-#ifdef NETWORK_ENABLED
-    int win;
-    Net_Msg msg;
-    Player *winner;
-#endif
+    GameSlot gs;
+   
+    /* load saved game */
+    if ( !slot_load( slot_id, &gs ) ) return 0;
     
-    stk_display_fade( STK_FADE_IN, STK_FADE_DEFAULT_TIME );
-    if ( game_type == GT_LOCAL )
-        player_info();
-    else {
-#ifdef NETWORK_ENABLED
-        sprintf( str, "Round %i: Get Ready!", game_cur_round + 1 );
-        if ( !display_info( font, str, game_peer ) )
-            return;
-#endif
+    /* FIXME: config settings are overwritten for this */
+    config.diff = gs.diff;
+    config.player_count = gs.player_count;
+    for ( i = 0; i < config.player_count; i++ )
+        strcpy( config.player_names[i], gs.player_names[i] );
+    gameSeed = gs.gameSeed;
+
+    /* create local game where all players have full lives */
+    if ( !client_game_init_local( gs.setname ) ) return 0;
+
+    /* re-initiate players */
+    players_clear();
+    for ( i = 0; i < config.player_count; i++ )
+    {
+        /* name + lives */
+        player_add( config.player_names[i], 
+                gs.player_lives[i], 
+                levelset_get_first( game_set ) );
+        /* level */
+        player_init_level( &players[i], 
+                           game_set->levels[gs.player_cur_level_id[i]],
+                           gs.player_cur_level_id[i] );
+        /* score */
+        players[i].stats.total_score = gs.player_scores[i];
     }
-    while ( !leave && !stk_quit_request ) {
-        /* run game until player wants to quit or restart or lost the ball or reached next level */
-        result = breakout_run();
-        if ( game_type == GT_NETWORK ) {
-#ifdef NETWORK_ENABLED
-            /* separate handling for multiplayer */
-            switch ( result ) {
-                case REQUEST_GAME_OVER:
-                case REQUEST_NEXT_ROUND:
-                    if ( game_host ) {
-                        /* check the result */
-                        if ( level_type == LT_NORMAL ) {
-                            /* scores are updated automatically
-                               by player_add_score() */
-                            /* player with the highest levelscore wins */
-                            if ( players[0].level_score > players[1].level_score ) {
-                                winner = &players[0];
-                                players[0].wins++;
-                                players[1].losses++;
-                            }
-                            else {
-                                winner = &players[1];
-                                players[1].wins++;
-                                players[0].losses++;
-                            }
-                        }
-                        else {
-                            /* player who hit the frag limit wins */
-                            if ( players[0].frags >= game_frags ) {
-                                winner = &players[0];
-                                players[0].wins++;
-                                players[1].losses++;
-                            }
-                            else {
-                                winner = &players[1];
-                                players[1].wins++;
-                                players[0].losses++;
-                            }
-                        }
-                        /* send update to game server */
-                        if ( game_challenger )
-                            win = (winner == player);
-                        else 
-                            win = !(winner == player);
-                        if ( net_build_msg( &msg, MSG_WINNER, win ) )
-                            net_write_msg( client, &msg );
-                        /* next round */
-                        game_cur_round++;
-                        if ( game_cur_round == game_rounds ) {
-                            /* next level */
-                            player->level = levels_get_next( player->level );
-                            if ( !player->level ) {
-                                /* the game is over */
-                                leave = 1;
-                                client_error[0] = 0;
-                            }
-                            else
-                            if ( !game_init_level( player, 1 ) )
-                                leave = 1;
-                            game_cur_round = 0;
-                        }
-                        else {
-                            /* restart level */
-                            if ( !game_init_level( player, 1 ) )
-                                leave = 1;
-                        }
-                        /* inform client that round is over.
-                           if 'leave' is True the game is finished.
-                           pass if client won the round. */
-                        if ( !comm_send_round_over( leave, (winner!=player) ) )
-                            leave = 1;
-                    }
-                    else {
-                        /* game over? */
-                        if ( result == REQUEST_GAME_OVER ) {
-                            leave = 1;
-                            break;
-                        }
-                        /* update round index */
-                        game_cur_round++;
-                        if ( game_cur_round == game_rounds )
-                            game_cur_round = 0;
-                        /* check if we won (received by comm_handle) */
-                        winner = (game_match_won)?player:0;
-                        /* initiate level */
-                        if ( !game_init_level( player, 1 ) )
-                            leave = 1;
-                    }
-                    if ( !leave ) {
-                        /* get ready to kick ass! */
-                        if ( winner == player )
-                            sprintf( str, "You Won The Round!#Round %i: Get Ready!", game_cur_round + 1 );
-                        else
-                            sprintf( str, "You Lost The Round!#Round %i: Get Ready!", game_cur_round + 1 );
-                        if ( !display_info( font, str, game_peer ) )
-                            leave = 1;
-                    }
-                    break;
-                case REQUEST_QUIT:
-                    net_write_empty_msg( game_peer, MSG_GAME_EXITED );
-                    leave = 1;
-                    client_error[0] = 0;
-                    break;
-                case REMOTE_QUIT:
-                    confirm( font, "Remote player has left the game", CONFIRM_ANY_KEY );
-                    leave = 1;
-                    client_error[0] = 0;
-                    break;
-                case NET_ERROR:
-                    confirm( font, client_error, CONFIRM_ANY_KEY );
-                    leave = 1;
-                    break;
-                case REQUEST_PAUSE:
-                    if ( net_write_empty_msg( game_peer, MSG_PAUSE ) ) {
-                        if ( !comm_remote_pause( font, "You paused the game", game_peer ) ) {
-                            confirm( font, "Connection problems", CONFIRM_ANY_KEY );
-                            leave = 1;
-                        }
-                        comm_reinit_connection();
-                    }
-                    break;
-                case REMOTE_PAUSE:
-                    if ( !comm_remote_pause( font, "Remote player has paused the game", game_peer ) ) {
-                        confirm( font, "Connection problems", CONFIRM_ANY_KEY );
-                        leave = 1;
-                    }
-                    comm_reinit_connection();
-                    break;
-            }
-#endif
-        }
-        else
-        switch ( result ) {
-            case REQUEST_HELP:
-                help_run();
-                break;
-            case REQUEST_PAUSE:
-                confirm( font, "Pause", CONFIRM_PAUSE );
-                break;
-            case REQUEST_NUKE:
-                game_nuke();
-                break;
-            case REQUEST_QUIT:
-                if ( stk_quit_request || confirm( font, "Exit Game? y/n", CONFIRM_YES_NO ) )
-                    leave = 1;
-                break;
-            case REQUEST_WARP:
-                if ( brick_count > warp_limit )
-                    break;
-                if ( !confirm( font, "Warp To Next Level? y/n", CONFIRM_YES_NO ) )
-                    break;
-            case REQUEST_NEXT_LEVEL:
-#ifdef AUDIO_ENABLED
-                if ( config.speech ) {
-                    if ( rand() % 2 )
-                        stk_sound_play( wav_excellent );
-                    else
-                        stk_sound_play( wav_verygood );
-                }
-#endif
-                player->level = levels_get_next( player->level );
-                if ( player->level ) player->level_id++;
-                player_reset_bricks( player );
-                if ( !player->level ) {
-                    confirm( font, "Congratulations! No more levels left!", CONFIRM_ANY_KEY );
-                    /* player finished all levels so ''deactivate'' him */
-                    player->lives = 0;
-                    /* if this was the last player show congrats */
-                    if ( players_count() == 0 ) {
-                        /* congrats */
-                        final_info();
-                        leave = 1;
-                        break;
-                    }
-                    /*
-                    else {
-                        player = players_get_next();
-                        next_player = 1;
-                    }
-                    */
-                }
-                /* switch player in any case after level was finished so the other 
-                   players don't have to wait too long */
-                if ( player_count > 1 ) {
-                    player = players_get_next();
-                    next_player = 1;
-                }
-                if ( next_player ) {
-                    fade_anims();
-                    game_init_level( player, WITH_CREDITS );
-                    player_info();
-                    next_player = 0;
-                }
-                else {
-                    stk_display_fade( STK_FADE_OUT, STK_FADE_DEFAULT_TIME );
-                    game_init_level( player, WITH_CREDITS );
-                    stk_display_fade( STK_FADE_IN, STK_FADE_DEFAULT_TIME );
-                }
-                break;
-            case REQUEST_RESTART:
-                /* if there is only one life left this is a continue request */
-                if ( player->lives == 1 ) {
-                    if ( confirm( font , "Buy a continue? (Costs 50% score!) y/n", CONFIRM_YES_NO ) ) {
-                        player->score /= 2;
-                        player->lives += game_diff->lives;
-                    }
-                    else
-                        break;
-                }
-                else
-                    if ( !confirm( font, "Restart Level? y/n", CONFIRM_YES_NO ) ) 
-                        break;
-                player_reset_bricks( player );
-                player->lives--;
-            case REQUEST_NEXT_PLAYER:
-                /* if we got here the current player lost a life */
-#ifdef AUDIO_ENABLED
-                if ( result == REQUEST_NEXT_PLAYER && config.speech ) {
-                    if ( rand() % 2 )
-                        stk_sound_play( wav_damn );
-                    else
-                        stk_sound_play( wav_dammit );
-                }
-#endif
-                /* if he has no lives left but enough score to buy one he may do so
-                else he will be kicked out of the game as lives == 0 */
-                if ( player->lives == 0 ) {
-                    if ( confirm( font, "Buy a continue? (Costs 50% score!) y/n", CONFIRM_YES_NO ) ) {
-                        player->score /= 2;
-                        player->lives += game_diff->lives;
-#ifdef AUDIO_ENABLED
-                        if ( config.speech )
-                            stk_sound_play( wav_wontgiveup );
-#endif
-                    }
-                }
-                if ( players_count() >= 1 )
-                    player = players_get_next();
-                else {
-                    /* all players died - quit game */
-                    leave = 1;
-                    confirm( font, "Game Over!", CONFIRM_ANY_KEY );
-                    break;
-                }
-                fade_anims();
-                game_init_level( player, WITH_CREDITS );
-                player_info();
-                break;
-        }
-    }
-    stk_display_fade( STK_FADE_OUT, STK_FADE_DEFAULT_TIME );
-    /* add players to chart -- only local game */
-    if ( game_type == GT_LOCAL ) {
-        chart_clear_new_entries();
-        for ( i = 0; i < config.player_count; i++ )
-            chart_add( chart_set_query( levelset_name), players[i].name, players[i].level_id + 1, players[i].score );
-        /* and save... maybe it crashes and we don't want to loose highscore results, right? */
-        chart_save();
-    }
+    cur_player = players_set_current( gs.cur_player );
+    
+    /* init first level */
+    init_level( cur_player, PADDLE_BOTTOM );
+	
+    return 1;
 }
 
-/*
-====================================================================
-Test this level until ball gets lost.
-====================================================================
-*/
-void game_test_level( Level *level )
+/* create a one level game context for testing a level */
+int client_game_init_testing( Level *level )
 {
-    Player test_player;
-    /* initate testplayer */
-    strcpy( test_player.name, "Player" );
-    test_player.score = 0;
-    test_player.lives = 1;
-    test_player.level = level;
-    test_player.level->bkgnd_id = 1;
-    player_reset_bricks( &test_player );
-    player = &test_player;
-    /* difficulty */
-    game_diff = diff_get( config.diff );
-    /* init game */
-    game_init_level( player, 0 /* no credits */ );
-    /* run */
-    stk_display_fade( STK_FADE_IN, STK_FADE_DEFAULT_TIME );
-    breakout_run();
-    stk_display_fade( STK_FADE_OUT, STK_FADE_DEFAULT_TIME );
+	local_game = game_create( GT_LOCAL, config.diff, 100 );
+	game_set_current( local_game );
+	game_set_convex_paddle( config.convex );
+	game_set_ball_auto_return( !config.return_on_click );
+	game_set_ball_random_angle( config.random_angle );
+        game_set_ball_accelerated_speed( config.maxballspeed_float );
+    local_game->localServerGame = 1;
+	
+	game = game_create( GT_LOCAL, config.diff, 100 );
+	game_set_current( game );
+
+	players_clear();
+	player_add( config.player_names[0], game->diff->lives, level );
+	cur_player = players_get_first();
+
+	bkgnd_ids[0] = 0;
+
+	init_level( cur_player, PADDLE_BOTTOM );
+	
+	client_state = CS_NONE;
+	set_state( CS_PLAY ); 
+
+	return 1;
+}
+
+/* finalize a game and free anything allocated by init process */
+void client_game_finalize()
+{
+	players_clear();
+
+	if ( game && game->game_type == GT_LOCAL ) {
+		game_delete( &local_game );
+		levelset_delete( &game_set );
+	}
+	game_delete( &game );
+}
+
+/* run the state driven loop until game is broken up or finished */
+void client_game_run( void )
+{
+	int ms, frame_delay = config.fps?10:1;
+	int button_clicked, key_pressed;
+	SDL_Event event;
+	int abort = 0, i, j, penalty;
+	/* frame rate */
+	int frames = 0;
+	int frame_time = SDL_GetTicks();
+
+	event_clear_sdl_queue();
+	
+	stk_display_fade( STK_FADE_IN, STK_FADE_DEFAULT_TIME );
+	
+	stats_received = 0;
+	stk_timer_reset(); ms = 1;
+	while ( !abort && !stk_quit_request ) {
+		/* check wether an event occured */
+		button_clicked = key_pressed = 0;
+		if ( SDL_PollEvent( &event ) ) {
+			if ( client_state == CS_PAUSE && game->game_type == GT_NETWORK )
+				gui_dispatch_event( &event, ms );
+			else
+			if ( event.type == SDL_MOUSEBUTTONDOWN )
+				button_clicked = event.button.button;
+			else
+			if ( event.type == SDL_KEYDOWN ) {
+				key_pressed = event.key.keysym.sym;
+				if ( handle_default_key( key_pressed, &abort ) )
+					key_pressed = 0;
+			}
+			else
+			if (event.type == SDL_ACTIVEEVENT)
+		          {
+			    if (event.active.state == SDL_APPINPUTFOCUS ||
+				event.active.state == SDL_APPACTIVE )
+                            if (event.active.gain == 0 )
+			      client_set_pause(1);
+			  }
+		}
+		else if ( client_state == CS_PAUSE && game->game_type == GT_NETWORK )
+			gui_dispatch_event( 0, ms );
+
+		/* check whether Shift is pressed to switch between own and highest score */
+		if (game->game_type == GT_LOCAL)
+		  handle_display_switch();
+
+		/* let server know we're still alive except
+		 * in CS_PLAY as we send paddle updates there */
+		if ( game->game_type == GT_NETWORK )
+			comm_send_heartbeat();
+
+		/* handle client */
+		switch ( client_state ) {
+
+		case CS_FINAL_STATS:
+			if ( key_pressed==SDLK_SPACE ) abort = 1;
+			break;
+			
+		case CS_FATAL_ERROR:
+			/* after game was violently broken up the server
+			 * may still send the stats of the game so far */
+			if ( button_clicked || key_pressed ) {
+				SDL_Delay(250); /* give time to release button */
+				set_state( CS_RECV_STATS );
+				display_text( font, _("Receiving final stats...") );
+			}
+			break;
+			
+		case CS_FINAL_TABLE:
+			if ( button_clicked || key_pressed ) {
+				chart_load();
+				check_highscores();
+                                /* remove saved game */
+                                slot_delete( 0 );
+                                slot_update_hint( 0, item_resume_0->hint );
+				/* quit local game */
+				abort = 1;
+			}
+			break;
+
+		case CS_SCORE_TABLE:
+			/* show who's next player and scores in local game */
+			display_score_table( _("Next Player: %s"), cur_player->name );
+			set_state( CS_GET_READY );
+			break;
+        
+        case CS_BONUS_LEVEL_SCORE:
+            /* display total score from this level for player */
+            display_bonus_level_score();
+			set_state( CS_GET_READY_FOR_NEXT_LEVEL );
+            break;
+			
+		case CS_FINAL_PLAYER_INFO:
+			if ( button_clicked || key_pressed ) {
+				SDL_Delay(250); /* give time to release button */
+				set_state( CS_NEXT_PLAYER );
+			}
+			break;
+
+		case CS_RECV_LEVEL:
+			comm_recv();
+			if ( cur_player->next_level_received ) {
+				cur_player->next_level_received = 0;
+				cur_player->paddle_id = cur_player->next_paddle_id;
+				init_next_round();
+			}
+			break;
+
+		case CS_RECV_STATS:
+			comm_recv();
+			if ( stats_received ) {
+				set_state( CS_FINAL_STATS );
+				display_final_stats();
+			}
+			break;
+			
+		case CS_ROUND_RESULT:
+			if ( button_clicked || key_pressed ) {
+				SDL_Delay(250); /* give time to release button */
+				if ( game_over ) {
+					set_state( CS_RECV_STATS );
+					display_text( font, _("Receiving final stats...") );
+				} else {
+					set_state( CS_RECV_LEVEL );
+					display_text( font, _("Receiving level data...") );
+ 				}
+			}
+			break;
+			
+		case CS_GET_READY:
+			if ( button_clicked || key_pressed ) {
+				SDL_Delay(250); /* give time to release button */
+				comm_send_short( MSG_READY );
+				set_state( CS_PLAY );
+			}
+			break;
+
+		case CS_GET_READY_FOR_NEXT_LEVEL:
+			if ( button_clicked || key_pressed ) {
+				SDL_Delay(250); /* give time to release button */
+				set_state( CS_NEXT_LEVEL );
+			}
+			break;
+
+		case CS_PAUSE:
+			if ( game->game_type == GT_LOCAL ) break;
+
+			/* check wether pause chatroom has been closed
+			 * either by client or remote */
+			comm_recv();
+			break;
+			
+		case CS_PLAY:
+			/* hide objects */
+			begin_frame();
+			
+			/* apply events to local paddle */
+			paddle_handle_events( l_paddle, ms );
+
+			/* update local objects and communicate if
+			 * comm_delay ms have passed */
+			update_game( ms );
+			
+			/* show objects */
+			end_frame();
+
+			/* handle local level over */
+			if ( game->level_over ) {
+				if ( game->game_type == GT_LOCAL ) {
+					if ( game_set == 0 ) {
+						abort = 1; /* was a test level */
+						grab_input(0);
+						break;
+					}
+					if ( game->winner == PADDLE_BOTTOM )
+                    {
+                        if (local_game->isBonusLevel)
+                            set_state( CS_BONUS_LEVEL_SCORE );
+                        else
+                            set_state( CS_NEXT_LEVEL );
+                    }
+					else
+						set_state( CS_LOOSE_LIFE );
+				} else {
+					finalize_round();
+				}
+			}
+			break;
+
+		case CS_NEXT_LEVEL:
+			/* apply paddle stats to player */
+			game_set_current( local_game );
+			game_update_stats( PADDLE_BOTTOM, &cur_player->stats );
+			game_set_current( game );
+			/* init next level for player in local game */
+			cur_player->level_id++;
+			if ( cur_player->level_id >= game_set->count ) {
+				/* deactivate player */
+				cur_player->lives = 0;
+				display_text( font, 
+					_("You've cleared all levels...#Congratulations!!!") );
+				set_state( CS_FINAL_PLAYER_INFO );
+				break;
+			}
+			/* get snapshot for next init */
+			cur_player->snapshot = *game_set->levels[cur_player->level_id];
+			/* cycle players */
+			set_state( CS_NEXT_PLAYER );
+			break;
+
+		case CS_RESTART_LEVEL:
+			/* apply paddle stats to player */
+			game_set_current( local_game );
+			game_update_stats( PADDLE_BOTTOM, &cur_player->stats );
+			game_set_current( game );
+			/* reset level for next turn */
+			cur_player->snapshot = *game_set->levels[cur_player->level_id];
+			/* decrease lives (is checked that this wasn't the last one) */
+			cur_player->lives--;
+			/* cycle players */
+			set_state( CS_NEXT_PLAYER );
+			break;
+			
+		case CS_LOOSE_LIFE:
+			/* apply paddle stats to player */
+			game_set_current( local_game );
+			game_update_stats( PADDLE_BOTTOM, &cur_player->stats );
+			game_set_current( game );
+
+			/* remember level for next turn */
+			game_get_level_snapshot( &cur_player->snapshot );
+
+			/* decrease lives */
+			cur_player->lives--;
+			if ( cur_player->lives == 0 ) {
+				display_text( font, 
+					_("You've lost all lives...#Do you want to buy a continue#for 100%% of your score? y/n") );
+                                set_state( CS_CONFIRM_CONTINUE );
+				//set_state( CS_FINAL_PLAYER_INFO );
+				break;
+			}
+			set_state( CS_NEXT_PLAYER );
+			break;
+
+		case CS_NEXT_PLAYER:
+			/* game over? */
+			if ( players_count() == 0 ) {
+				display_score_table( _("Game Over!") );
+				set_state( CS_FINAL_TABLE );
+				break;
+			}
+			/* speak and fade */
+			play_speech();
+			fade_anims();
+			/* finalize current game context */
+			finalize_level();
+			/* set next player */
+			cur_player = players_get_next();
+			init_level( cur_player, PADDLE_BOTTOM );
+			if ( player_count > 1 )
+				set_state( CS_SCORE_TABLE );
+			else {
+				set_state( CS_PLAY ); /* one player starts immediately */
+				stk_display_update( STK_UPDATE_ALL );
+			}
+			break;
+		
+        case CS_CONFIRM_CONTINUE:
+		case CS_CONFIRM_QUIT:
+		case CS_CONFIRM_WARP:
+		case CS_CONFIRM_RESTART:
+			if ( key_pressed )
+            {
+                char *keyName = SDL_GetKeyName(key_pressed);
+                char *yesLetter = _("y"), *noLetter = _("n");
+                if ( strcmp(keyName,noLetter)==0||key_pressed==SDLK_ESCAPE ) {
+                    /* if denying continue... DIE!!! */
+                    if ( client_state == CS_CONFIRM_CONTINUE )
+                    {
+                        SDL_Delay(250); /* give time to release button */
+                        set_state( CS_NEXT_PLAYER );
+                        //set_state( CS_FINAL_PLAYER_INFO );
+                    }
+                    else
+                        set_state( CS_PLAY );
+                    break;
+                }
+                if ( strcmp(keyName, yesLetter) ) break;
+            } else break;
+			/* handle confirmed action */
+			SDL_Delay(250); /* give time to release button */
+			switch( client_state ) {
+                case CS_CONFIRM_CONTINUE:
+                    /* clear score and give full lives again */
+                    cur_player->lives = game->diff->lives;
+                    cur_player->stats.total_score = 0;
+                    set_state( CS_NEXT_PLAYER );
+                    break;
+				case CS_CONFIRM_QUIT:
+					comm_send_short( MSG_QUIT_GAME );
+					if ( game->game_type == GT_LOCAL ) {
+						/* apply paddle stats to player */
+						game_set_current( local_game );
+						game_update_stats( PADDLE_BOTTOM, &cur_player->stats );
+						game_set_current( game );
+                        /* no higscore check anymore as game is supposed to
+                         * be resumed until normal game over */
+						/* testing levels don't got for
+						 * high scores ***
+						if ( game_set ) {
+							check_highscores();
+						}*/
+                        /* save local game */
+                        if ( game_set != 0 /*not testing a level*/ )
+                            save_local_game( 0 );
+                        abort = 1;
+					}
+					else {
+						/* await game stats */
+						set_state( CS_RECV_STATS );
+						display_text( font, _("Receiving final stats...") );
+					}
+					break;
+				case CS_CONFIRM_WARP:
+					game->winner = -1; /* no speech */
+					local_game->winner = -1; /* not counted as win */
+                                        /* substract doubled score of remaining bricks */
+                                        penalty = 0;
+                                        for ( i = 0; i < MAP_WIDTH; i++ )
+                                            for ( j = 0; j < MAP_HEIGHT; j++ )
+                                                if ( local_game->bricks[i][j].dur != -1 )
+                                                    penalty += local_game->bricks[i][j].score;
+                                        printf( _("warp penalty: -%d\n"), penalty );
+                                        local_game->paddles[0]->score -= penalty;
+					set_state( CS_NEXT_LEVEL );
+					break;
+				case CS_CONFIRM_RESTART:
+					game->winner = -1; /* no speech */
+					local_game->winner = -1; /* not counted as win */
+					local_game->level_over = 1;
+					set_state( CS_RESTART_LEVEL );
+					break;
+			}
+			break;
+
+		}
+
+		/* update anything that was changed */
+		stk_display_update( STK_UPDATE_RECTS );
+
+		/* get time since last call and delay if below frame_delay */
+		ms = stk_timer_get_time();
+		if ( ms < frame_delay ) {
+			SDL_Delay( frame_delay - ms );
+			ms += stk_timer_get_time();
+		}
+		frames++;
+	}
+	finalize_level();
+	client_state = CLIENT_NONE;
+
+	stk_display_fade( STK_FADE_OUT, STK_FADE_DEFAULT_TIME );
+	if ( stk_quit_request )
+		comm_send_short( MSG_DISCONNECT );
+	else
+		comm_send_short( MSG_UNHIDE );
+
+	/* frame rate */
+	frame_time = SDL_GetTicks() - frame_time;
+	printf( _("Time: %.2f, Frames: %i -> FPS: %.2f\n"), 
+		(double)frame_time / 1000, frames, 1000.0*frames/frame_time );
+
+	event_clear_sdl_queue();
+
+	/* update the selected user and the user list in network as 
+	 * we received ADD/REMOVE_USER messages */
+	gui_list_update( list_users, client_users->count );
+	/* re-select current entry */
+	if ( client_user ) {
+		i = list_check( client_users, client_user );
+		if ( i != -1 )
+			gui_list_select( list_users, 0, i, 1 );
+	}
+}
+
+/* test a level until all balls got lost */
+void client_game_test_level( Level *level )
+{
+	stk_display_fade( STK_FADE_IN, STK_FADE_DEFAULT_TIME );
+	client_game_init_testing( level );
+	client_game_run();
+	client_game_finalize();
+	stk_display_fade( STK_FADE_OUT, STK_FADE_DEFAULT_TIME );
 }

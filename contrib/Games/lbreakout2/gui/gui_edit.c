@@ -106,7 +106,7 @@ static void default_event_handler(
                 gui_edit_handle_key( widget, 
                     event->key.keysym,
                     event->key.unicode );
-                stk_sound_play( gui_theme->type_sound );
+                //stk_sound_play( gui_theme->type_sound );
             }
             break;
         case GUI_KEY_RELEASED:
@@ -357,6 +357,7 @@ GuiWidget* gui_edit_create(
     /* create surface, wallpaper and frame it */
     widget->surface = stk_surface_create( 
         SDL_SWSURFACE, width, height );
+    SDL_SetColorKey( widget->surface, 0,0 );
     stk_surface_apply_wallpaper( widget->surface, 0,0,-1,-1,
         gui_theme->widget_wallpaper, STK_OPAQUE );
     widget->border = stk_surface_apply_frame(
@@ -421,7 +422,7 @@ void gui_edit_set_text( GuiWidget *widget, char *text )
 {
     if ( widget->type != GUI_EDIT ) return;
     /* copy text */
-    snprintf( widget->spec.edit.buffer, widget->spec.edit.size + 1, text );
+    snprintf( widget->spec.edit.buffer, widget->spec.edit.size + 1, "%s", text );
     widget->spec.edit.length = strlen( widget->spec.edit.buffer );
     /* reset */
     /* first character in first line */
@@ -455,7 +456,7 @@ int gui_edit_get_text(
     if ( length > limit )
         length = limit;
     if ( length )
-        snprintf( buffer, limit, widget->spec.edit.buffer );
+        snprintf( buffer, limit, "%s", widget->spec.edit.buffer );
     else
         buffer[0] = 0;
     return 1;
@@ -515,16 +516,19 @@ void gui_edit_set_filter( GuiWidget *widget, int type )
                 widget->spec.edit.filter[i] = 1;
             break;
         case GUI_EDIT_ALPHANUMERICAL:        
+        case GUI_EDIT_ALPHANUMERICAL2:        
         case GUI_EDIT_ALPHA:
             for ( i = 65, j = 97; i <= 90; i++, j++ ) {
                 widget->spec.edit.filter[i] = 1; 
                 widget->spec.edit.filter[j] = 1;
             }
-            if ( type == GUI_EDIT_ALPHANUMERICAL ) {
+            if ( type == GUI_EDIT_ALPHANUMERICAL || type == GUI_EDIT_ALPHANUMERICAL2 ) {
                 widget->spec.edit.filter[45] = 1;
                 for ( i = 48; i <= 57; i++ )
                     widget->spec.edit.filter[i] = 1;
             }
+            if ( type == GUI_EDIT_ALPHANUMERICAL2 )
+                widget->spec.edit.filter[95] = 1;
             break;
         case GUI_EDIT_NUMERICAL:
             for ( i = 48; i <= 57; i++ )

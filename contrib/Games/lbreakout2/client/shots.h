@@ -15,39 +15,6 @@
  *                                                                         *
  ***************************************************************************/
 
-typedef struct {
-    float   x, y;
-    float   cur_fr;
-    Target  target;
-    int     next_too; /* destroys right brick, too */
-    Paddle *paddle; /* paddle that initiated the shot */
-    int     dir; /* direction of shot depending on paddle */
-    int     get_target; /* if this is true shots_update() will compute the target
-                           and clear this flag */
-    SDL_Rect update_rect; /* screen update region */
-} Shot;
-
-/*
-====================================================================
-Load, delete shot graphics
-====================================================================
-*/
-void shot_load();
-void shot_delete();
-/*
-====================================================================
-Create new shot at position (centered).
-'signum' of direction determines into which direction the shot 
-vertically goes.
-====================================================================
-*/
-void shot_create( Paddle *paddle );
-/*
-====================================================================
-Delete all shots
-====================================================================
-*/
-void shots_reset();
 /*
 ====================================================================
 Hide and show shots
@@ -56,21 +23,7 @@ Hide and show shots
 void shots_hide();
 void shots_show();
 void shots_alphashow( int alpha );
-/*
-====================================================================
-Update position of shots and check if bricks get destroyed.
-A list of all destroyed bricks is returned (at maximum 
-PADDLE_WEAPON_AMMO * 4)
-====================================================================
-*/
-typedef struct {
-    int x, y;
-} Brick_Pos;
-void shots_update( int ms, Brick_Pos *bricks, int *count );
-/*
-====================================================================
-Set 'get_target' flag so target is updated next time 
-'shots_update' is called. -1 means to update all shots.
-====================================================================
-*/
-void shots_check_targets( int mx, int my );
+
+/* update animation of shots */
+void client_shots_update( int ms );
+

@@ -17,10 +17,11 @@
  
 #include "lbreakout.h"
 #include "config.h"
-#include "levels.h"
 #include "../gui/gui.h"
 #include "client_data.h"
 #include "client_handlers.h"
+#include "comm.h"
+#include "game.h"
 
 /*
 ====================================================================
@@ -34,7 +35,6 @@ extern List *client_channels;
 extern List *client_levelsets;
 extern char *client_levelset;
 extern ClientUser *client_user;
-extern ClientChannel *client_channel;
 extern char chatter[CHAT_LINE_COUNT][CHAT_LINE_WIDTH];
 extern GuiWidget *dlg_connect;
 extern GuiWidget *dlg_info;
@@ -47,6 +47,7 @@ extern GuiWidget *dlg_help;
 extern GuiWidget *label_info;
 extern GuiWidget *label_stats;
 extern GuiWidget *label_winner;
+extern GuiWidget *label_channel;
 extern GuiWidget *edit_server;
 extern GuiWidget *edit_username;
 extern GuiWidget *list_chatter;
@@ -61,9 +62,6 @@ extern int levelset_version, levelset_update;
 extern List *levels;
 extern void client_popup_info( char *format, ... );
 extern void client_run_game( int challenger );
-#ifdef NETWORK_ENABLED
-extern Net_Socket *game_peer;
-#endif
 extern int client_topic_count;
 extern char *client_helps[];
 extern Text *client_help_text;
@@ -73,14 +71,15 @@ extern Text *client_help_text;
 Client
 ====================================================================
 */
-char client_error[128]; /* error message */
 #ifdef NETWORK_ENABLED
-Net_Socket *client = 0; /* client socket to the game server */
+NetSocket client; /* client socket to the game server */
 #endif
+int client_is_connected; /* wether 'client' is a valid uplink */
+char client_error[128]; /* error message */
 int client_id; /* id assigned by server */
 char client_name[16]; /* our local username */
-char client_ip[NET_IP_SIZE]; /* local ip send when logging in to server */
 int client_state = CLIENT_NONE;
+int client_recv_limit;
 
 /*
 ====================================================================
@@ -96,119 +95,141 @@ int mp_levelset_update; /* version of levelset */
 int mp_level_count; /* number of levels in set */
 int mp_diff, mp_rounds, mp_frags, mp_balls; /* game configuration */
 
+extern void close_pause_chat( void );
+
 /*
 ====================================================================
-Connect to specified game server and open chatroom on success.
+Disconnect from current server if any.
 ====================================================================
 */
-void client_connect( GuiWidget *widget, GuiEvent *event )
+void client_disconnect()
 {
-    char *ptr;
-    char server[24];
 #ifdef NETWORK_ENABLED
-    int connected = 0;
-    Net_Msg msg;
-#endif
-    if ( event->type != GUI_CLICKED ) return;
-    /* extract ip and port */
-    gui_edit_get_text( edit_server, server, 24, 0, -1 );
-    ptr = strchr( server, ':' );
-    if ( !ptr )
-        snprintf( config.host, 16, server );
-    else {
-        ptr[0] = 0;
-        snprintf( config.host, 16, server );
-        ptr++;
-        config.port = atoi( ptr );
-    }
-    /* set user name */
-    gui_edit_get_text( edit_username, 
-        config.username, 16, 0,-1 );
-    /* open info window */
-    gui_label_set_text( label_info, 
-        "Connecting to %s at port %i...", config.host, config.port );
-    gui_widget_show( dlg_info );
-#ifdef NETWORK_ENABLED
-    /* try to connect */
-    client_error[0] = 0;
-    if ( ( client = net_connect( config.host, config.port ) ) ) {
-        /* send identification */
-        net_init_msg( &msg, MSG_IDENTIFY );
-        if ( !net_pack_int8( &msg, PROTOCOL ) ||
-             !net_pack_string( &msg, config.username ) || 
-             !net_write_msg( client, &msg ) )
-            sprintf( client_error, "%s\n", net_get_error() );
-        else
-            if ( net_read_msg( client, &msg, 8000 ) ) {
-                switch ( msg.type ) {
-                    case MSG_LOGIN_OKAY:
-                        net_unpack_int16( &msg, &client_id );
-                        net_unpack_string( &msg, client_name, 16 );
-                        net_unpack_string( &msg, client_ip, 
-                            NET_IP_SIZE );
-                        connected = 1;
-                        break;
-                    case MSG_ERROR:
-                        net_unpack_string( &msg, client_error, 127 );
-                        break;
-                    case MSG_DISCONNECT:
-                        strcpy( client_error, 
-                            "Server has disconnected" );
-                        break;
-                    default:
-                        sprintf( client_error, 
-                            "Unexpected message %i received", 
-                            msg.type );
-                        break;
-                }
-                
-            }
-            else
-                strcpy( client_error, "No response from server" );
-    }
-    else
-        strcpy( client_error, net_get_error() );
-    /* either display error or go to chatroom */
-    if ( !connected )
-        gui_label_set_text( label_info, "ERROR: %s", client_error );
-    else {
-        gui_widget_hide( dlg_info );
-        client_data_clear();
-        gui_widget_show( dlg_chatroom );
-    }
+	char buf[128];
+	
+	if ( !client_is_connected ) return;
+	
+	/* disconnect */
+	socket_print_stats( &client );
+	sprintf( buf, _("disconnected from %s"), 
+		 net_addr_to_string(&client.remote_addr) );
+	client_add_chatter( buf, 1 );
+	buf[0] = MSG_DISCONNECT;
+	client_transmit( CODE_BLUE, 1, buf );
+	client_is_connected = 0;
+	client_data_clear();
+	gui_label_set_text( label_channel, "MAIN" );
 #endif
 }
 
 /*
 ====================================================================
-Close client chatroom and return to connect dialogue.
+Try to connect to a game server. Retry twice every second
+or quit then.
 ====================================================================
 */
-void client_disconnect( 
+void client_connect( GuiWidget *widget, GuiEvent *event )
+{
+#ifdef NETWORK_ENABLED
+	NetAddr 	newaddr;
+	int		attempt = 0;
+	int		type;
+	char 		server[128];
+
+	if ( event->type != GUI_CLICKED ) return;
+
+	/* close the connect window */
+	gui_widget_hide( dlg_connect );
+
+	/* disconnect from current server */
+	client_disconnect();
+	
+	/* extract ip and port and build a new socket out of it */
+	gui_edit_get_text( edit_server, server, 128, 0, -1 );
+	snprintf( config.server, 64, "%s", server );
+	if ( !net_build_addr( &newaddr, server, 0 ) ) {
+		client_printf_chatter( 1, _("ERROR: address %s does not resolve"), config.server );
+		return;
+	}
+	socket_init( &client, &newaddr );
+
+	/* get username */
+	gui_edit_get_text( edit_username, 
+			config.username, 16, 0,-1 );
+	
+	/* build connect message */
+	msg_begin_writing( msgbuf, &msglen, 64 );
+	msg_write_int8( MSG_CONNECT );
+	msg_write_int8( PROTOCOL );
+	msg_write_string( config.username );
+	msg_write_string( _("unused") ); /* passwd */
+	
+	while ( attempt < 3 ) {
+		client_printf_chatter( 1, "%s: %s...", 
+			config.server, 
+			attempt==0?_("connecting"):_("retry") );
+		stk_display_update( STK_UPDATE_ALL );
+		net_transmit_connectionless( &newaddr, msglen, msgbuf );
+
+		SDL_Delay( 1000 );
+
+		while ( net_recv_packet() ) {
+			if ( msg_is_connectionless() )
+				msg_begin_connectionless_reading();
+			else
+			if ( !socket_process_header( &client ) ) 
+				continue;
+			
+			type = msg_read_int8();
+			switch ( type ) {
+				case MSG_LOGIN_OKAY:
+					client_id = msg_read_int32();
+					strcpy( client_name, msg_read_string() );
+					client_printf_chatter( 1, _("%s: connected!"), config.server );
+					client_is_connected = 1;
+					return;
+				case MSG_ERROR:
+					client_printf_chatter( 1, _("ERROR: connection refused: %s"),
+						msg_read_string() );
+					return;
+			}
+		}
+		
+		attempt++;
+	}
+	client_add_chatter( _("ERROR: server does not respond"), 1 );
+#endif
+}
+
+/*
+====================================================================
+Open/close the connection window.
+====================================================================
+*/
+void client_open_connect_window( 
     GuiWidget *widget, GuiEvent *event )
 {
-    if ( event->type == GUI_CLICKED ) {
-        gui_widget_hide( dlg_chatroom );
-#ifdef NETWORK_ENABLED
-        /* disconnect */
-        if ( client ) {
-            net_write_empty_msg( client, MSG_DISCONNECT );
-            net_close( client );
-            client = 0;
-        }
-#endif
-    }
+	if ( event->type == GUI_CLICKED )
+		gui_widget_show( dlg_connect );
+}
+void client_close_connect_window( 
+    GuiWidget *widget, GuiEvent *event )
+{
+	if ( event->type == GUI_CLICKED )
+		gui_widget_hide( dlg_connect );
 }
     
 /*
 ====================================================================
-Close connect dialogue and return to LBreakout's menu.
+Close chatroom and return to LBreakout's menu.
 ====================================================================
 */
 void client_quit( GuiWidget *widget, GuiEvent *event )
 {
-    if ( event->type == GUI_CLICKED )
-        gui_widget_hide( dlg_connect );
+	if ( event->type == GUI_CLICKED )
+		gui_widget_hide( dlg_chatroom );
+	/* disconnect is handled in client_run to cover
+	 * stk_quit_requests as well */
 }
 
 /*
@@ -219,26 +240,17 @@ Close the info window and clear state.
 void client_close_info( GuiWidget *widget, GuiEvent *event )
 {
 #ifdef NETWORK_ENABLED
-    Net_Msg msg;
-    if ( event->type == GUI_CLICKED ) {
-        gui_widget_hide( dlg_info );
-        switch ( client_state ) {
-            case CLIENT_AWAIT_TRANSFER_CONFIRMATION:
-                if ( net_build_msg( &msg, 
-                         MSG_CANCEL_TRANSFER, mp_peer_id ) )
-                    net_write_msg( client, &msg );
-                break;
-            case CLIENT_LISTEN:
-                net_write_empty_msg( client, MSG_CLOSE_TRANSFER );
-                break;
-            case CLIENT_AWAIT_ANSWER:
-                if ( net_build_msg( &msg, 
-                         MSG_CANCEL_CHALLENGE, mp_peer_id ) )
-                    net_write_msg( client, &msg );
-                break;
-        }
-        client_state = CLIENT_NONE;
-    }
+	if ( event->type == GUI_CLICKED ) {
+		gui_widget_hide( dlg_info );
+		msg_begin_writing( msgbuf, &msglen, 128 );
+		switch ( client_state ) {
+			case CLIENT_AWAIT_ANSWER:
+				msg_write_int8( MSG_CANCEL_GAME );
+				break;
+		}
+		client_transmit( CODE_BLUE, msglen, msgbuf );
+		client_state = CLIENT_NONE;
+	}
 #endif
 }
 
@@ -252,24 +264,30 @@ void client_send_chatter(
     GuiWidget *widget, GuiEvent *event )
 {
 #ifdef NETWORK_ENABLED
-    char buf[CHAT_MSG_LIMIT + 1];
-    Net_Msg msg;
-    if ( ( widget->type == GUI_EDIT && 
-         event->type == GUI_KEY_RELEASED &&
-         event->key.keysym == SDLK_RETURN ) ||
-         ( widget->type == GUI_BUTTON &&
-         event->type == GUI_CLICKED ) ) {
-        /* get message */
-        gui_edit_get_text( edit_chatter, 
-             buf, CHAT_MSG_LIMIT + 1, 0,-1 );
-        /* clear chat edit */
-        gui_edit_set_text( edit_chatter, "" );
-        /* check for server-sided commands */
-        /* deliver message to all users ... */
-        if ( !net_build_msg( &msg, MSG_CHAT, buf ) ||
-             !net_write_msg( client, &msg ) ) 
-            fprintf( stderr, "%s\n", net_get_error() );
-    }
+	char buf[MAX_CHATTER_SIZE + 1];
+	if ( (  widget->type == GUI_EDIT && 
+		event->type == GUI_KEY_RELEASED &&
+		event->key.keysym == SDLK_RETURN ) ||
+		( widget->type == GUI_BUTTON &&
+		event->type == GUI_CLICKED ) ) {
+		/* get message */
+		gui_edit_get_text( edit_chatter, 
+				buf, MAX_CHATTER_SIZE + 1, 0,-1 );
+		/* clear chat edit */
+		gui_edit_set_text( edit_chatter, "" );
+
+		msg_begin_writing( msgbuf, &msglen, MAX_MSG_SIZE );
+		/* a prepended '/' means this is a command */
+		if ( buf[0] == '/' ) {
+			msg_write_int8( MSG_COMMAND );
+			msg_write_string( buf+1 );
+		}
+		else {
+			msg_write_int8( MSG_CHATTER );
+			msg_write_string( buf );
+		}
+		client_transmit( CODE_BLUE, msglen, msgbuf );
+	}
 #endif
 }
 /*
@@ -281,25 +299,27 @@ void client_whisper_chatter(
     GuiWidget *widget, GuiEvent *event )
 {
 #ifdef NETWORK_ENABLED
-    char buf[CHAT_MSG_LIMIT + 1];
-    Net_Msg msg;
-    if ( event->type != GUI_CLICKED ) return;
-    /* get message */
-    gui_edit_get_text( edit_chatter, 
-         buf, CHAT_MSG_LIMIT + 1, 0,-1 );
-    /* send to selected user */
-    if ( client_user ) {
-        /* deliver message */
-        if ( !net_build_msg( &msg, MSG_WHISPER, 
-                             client_user->id, buf ) ||
-             !net_write_msg( client, &msg ) ) 
-            fprintf( stderr, "%s\n", net_get_error() );
-        /* clear chat edit */
-        gui_edit_set_text( edit_chatter, "" );
-    }
-    else
-        client_add_chatter( 
-            "You must selected a user to whisper!", 1 );
+	char buf[MAX_CHATTER_SIZE + 1];
+	
+	if ( event->type != GUI_CLICKED ) return;
+	
+	/* get message */
+	gui_edit_get_text( edit_chatter, 
+			buf, MAX_CHATTER_SIZE + 1, 0,-1 );
+	
+	/* send to selected user */
+	if ( client_user ) {
+		msg_begin_writing( msgbuf, &msglen, MAX_MSG_SIZE );
+		msg_write_int8( MSG_WHISPER );
+		msg_write_int32( client_user->id );
+		msg_write_string( buf );
+		client_transmit( CODE_BLUE, msglen, msgbuf );
+
+		/* clear chat edit */
+		gui_edit_set_text( edit_chatter, "" );
+	}
+	else
+		client_add_chatter( _("You must select a user to whisper!"), 1 );
 #endif
 }
 
@@ -336,51 +356,40 @@ Handle confirmation/cancelling of confirmation dialogue.
 void client_confirm( GuiWidget *widget, GuiEvent *event )
 {
 #ifdef NETWORK_ENABLED
-    Net_Msg msg;
-    if ( event->type != GUI_CLICKED ) return;
-    gui_widget_hide( dlg_confirm );
-    switch ( client_state ) {
-        case CLIENT_CONFIRM_TRANSFER:
-            if ( net_build_msg( &msg, 
-                     MSG_ACCEPT_SET, mp_peer_id ) )
-                net_write_msg( client, &msg );
-            /* prepare to receive levelcount levels */
-            levels_create_empty_set( mp_level_count );
-            list_first( levels ); /* set internal pointer to
-                first level */
-            client_popup_info( "Receiving levels..." );
-            client_state = CLIENT_RECEIVE;
-            break;
-        case CLIENT_ANSWER:
-            if ( net_build_msg( &msg, 
-                     MSG_ACCEPT_CHALLENGE, mp_peer_id ) ) {
-                net_write_msg( client, &msg );
-                client_state = CLIENT_PLAY;
-                client_run_game( 0 );
-            }
-            break;
-    }
+	if ( event->type != GUI_CLICKED ) return;
+	gui_widget_hide( dlg_confirm );
+	msg_begin_writing( msgbuf, &msglen, MAX_MSG_SIZE );
+	switch ( client_state ) {
+		case CLIENT_ANSWER:
+			msg_write_int8( MSG_ACCEPT_CHALLENGE );
+			client_transmit( CODE_BLUE, msglen, msgbuf );
+
+			/* play */
+			gui_disable_event_filter();
+			if ( client_game_init_network( mp_peer_name, mp_diff ) )
+				client_game_run();
+			client_game_finalize();
+			gui_enable_event_filter();
+
+			gui_widget_draw( dlg_chatroom );
+			stk_display_fade( STK_FADE_IN, STK_FADE_DEFAULT_TIME );
+			break;
+	}
 #endif
 }
 void client_cancel( GuiWidget *widget, GuiEvent *event )
 {
 #ifdef NETWORK_ENABLED
-    Net_Msg msg;
-    if ( event->type != GUI_CLICKED ) return;
-    gui_widget_hide( dlg_confirm );
-    switch ( client_state ) {
-        case CLIENT_CONFIRM_TRANSFER:
-            if ( net_build_msg( &msg,
-                     MSG_REJECT_SET, mp_peer_id ) )
-                net_write_msg( client, &msg );
-            break;
-        case CLIENT_ANSWER:
-            if ( net_build_msg( &msg, 
-                     MSG_REJECT_CHALLENGE, mp_peer_id ) )
-                net_write_msg( client, &msg );
-            break;
-    }
-    client_state = CLIENT_NONE;
+	if ( event->type != GUI_CLICKED ) return;
+	gui_widget_hide( dlg_confirm );
+	msg_begin_writing( msgbuf, &msglen, MAX_MSG_SIZE );
+	switch ( client_state ) {
+		case CLIENT_ANSWER:
+			msg_write_int8( MSG_REJECT_CHALLENGE );
+			break;
+	}
+	client_transmit( CODE_BLUE, msglen, msgbuf );
+	client_state = CLIENT_NONE;
 #endif
 }
 
@@ -392,47 +401,43 @@ Challenge selected user.
 void client_challenge( GuiWidget *widget, GuiEvent *event )
 {
 #ifdef NETWORK_ENABLED
-    Net_Msg msg;
-    if ( event->type != GUI_CLICKED ) return;
-    if ( client_user == 0 ) {
-        client_popup_info( 
-            "You must select a user for a challenge." );
-        return;
-    }
-    if ( client_levelset == 0 ) {
-        client_popup_info( 
-            "You must select a levelset for a challenge." );
-        return;
-    }
-    if ( client_user->id == client_id ) {
-        client_popup_info( 
-            "You can't challenge yourself." );
-        return;
-    }
-    strcpy( mp_peer_name, client_user->name );
-    mp_peer_id = client_user->id;
-    strcpy( mp_levelset, client_levelset );
-    mp_diff = config.mp_diff;
-    mp_rounds = config.mp_rounds;
-    mp_balls = config.mp_balls;
-    mp_frags = config.mp_frags;
-    /* challenger, challenged, levelset, diff, rounds, frags, balls */
-    net_init_msg( &msg, MSG_CHALLENGE );
-    if ( !net_pack_int16( &msg, client_id ) ||
-         !net_pack_int16( &msg, mp_peer_id ) ||
-         !net_pack_string( &msg, mp_levelset ) ||
-         !net_pack_int8( &msg, mp_diff ) ||
-         !net_pack_int8( &msg, mp_rounds ) ||
-         !net_pack_int8( &msg, mp_frags ) ||
-         !net_pack_int8( &msg, mp_balls ) ||
-         !net_write_msg( client, &msg ) )
-        fprintf( stderr, "%s\n", net_get_error() );
-    else {
-        client_popup_info( 
-            "You have challenged %s. Let's see what (s)he says...",
-            mp_peer_name );
-        client_state = CLIENT_AWAIT_ANSWER;
-    }
+	if ( event->type != GUI_CLICKED ) return;
+	
+	/* everything valid? */
+	if ( client_user == 0 ) {
+		client_popup_info( _("You must select a user for a challenge.") );
+		return;
+	}
+	if ( client_levelset == 0 ) {
+		client_popup_info( _("You must select a levelset for a challenge.") );
+		return;
+	}
+	if ( client_user->id == client_id ) {
+		client_popup_info( _("You can't challenge yourself.") );
+		return;
+	}
+	
+	strcpy( mp_peer_name, client_user->name );
+	mp_peer_id = client_user->id;
+	strcpy( mp_levelset, client_levelset );
+	mp_diff = config.mp_diff;
+	mp_rounds = config.mp_rounds;
+	mp_balls = config.mp_balls;
+	mp_frags = config.mp_frags;
+
+	/* challenger, challenged, levelset, diff, rounds, frags, balls */
+	msg_begin_writing( msgbuf, &msglen, MAX_MSG_SIZE );
+	msg_write_int8( MSG_OPEN_GAME );
+	msg_write_int32( mp_peer_id );
+	msg_write_string( mp_levelset );
+	msg_write_int8( mp_diff );
+	msg_write_int8( mp_rounds );
+	msg_write_int8( mp_frags );
+	msg_write_int8( mp_balls );
+	client_transmit( CODE_BLUE, msglen, msgbuf );
+	
+	client_popup_info( _("You have challenged %s. Let's see what (s)he says..."), mp_peer_name );
+	client_state = CLIENT_AWAIT_ANSWER;
 #endif
 }
 
@@ -462,93 +467,6 @@ void client_update_balls( GuiWidget *widget, GuiEvent *event )
     if ( event->type != GUI_CHANGED ) return;
     gui_spinbutton_get_value( widget, &config.mp_balls );
 }
-void client_update_port( GuiWidget *widget, GuiEvent *event )
-{
-    char aux[8];
-    if ( event->type != GUI_CHANGED ) return;
-    gui_edit_get_text( widget, aux, 8, 0, -1 );
-    config.client_game_port = atoi( aux );
-}
-
-/*
-====================================================================
-Allow user to transfer a levelset.
-====================================================================
-*/
-void client_listen( GuiWidget *widget, GuiEvent *event )
-{
-#ifdef NETWORK_ENABLED
-    Net_Msg msg;
-    if ( event->type != GUI_CLICKED ) return;
-    if ( client_user == 0 ) {
-        client_popup_info( 
-            "You must selected the user you want to listen to." );
-        return;
-    }
-    if ( net_build_msg( &msg, MSG_OPEN_TRANSFER, client_user->id ) &&
-         net_write_msg( client, &msg ) ) {
-        client_popup_info( 
-            "You're now listening to transfers from %s.", 
-            client_user->name );
-        client_state = CLIENT_LISTEN;
-    }
-    else
-        client_popup_info( "ERROR: %s", net_get_error() );
-#endif
-}
-
-/*
-====================================================================
-Initiate levelset transfer.
-====================================================================
-*/
-void client_transfer( GuiWidget *widget, GuiEvent *event )
-{
-#ifdef NETWORK_ENABLED
-    Net_Msg msg;
-    if ( event->type != GUI_CLICKED ) return;
-    if ( client_user == 0 ) {
-        client_popup_info( 
-            "You must selected the user to whom you "\
-            "want to transfer your levelset." );
-        return;
-    }
-    if ( client_levelset == 0 ) {
-        client_popup_info( 
-            "You must select the levelset you want to send." );
-        return;
-    }
-    if ( client_user->id == client_id ) {
-        client_popup_info( "You can't transfer to yourself." );
-        return;
-    }
-    if ( !levels_load( client_levelset ) ) {
-        client_add_chatter( "Can't find levelset?", 1 );
-        return;
-    }
-    /* initiate transfer */
-    net_init_msg( &msg, MSG_INIT_TRANSFER );
-    if ( !net_pack_int16( &msg, client_user->id ) ||
-         !net_pack_string( &msg, 
-              (client_levelset[0]=='~')?client_levelset+1:
-                                        client_levelset ) ||
-         !net_pack_int8( &msg, levelset_version ) ||
-         !net_pack_int8( &msg, levelset_update ) ||
-         !net_pack_int8( &msg, levels->count ) ||
-         !net_write_msg( client, &msg ) )
-        fprintf( stderr, "%s\n", net_get_error() );
-    else {
-        strcpy_lt( mp_peer_name, client_user->name, 15 );
-        mp_peer_id = client_user->id;
-        strcpy_lt( mp_levelset, client_levelset, 15 );
-        client_popup_info(
-            "You've offered the levelset %s to %s.#"\
-            "Awaiting confirmation...",  
-            mp_levelset, mp_peer_name );
-        client_state = CLIENT_AWAIT_TRANSFER_CONFIRMATION;
-    }
-#endif
-}
 
 /*
 ====================================================================
@@ -561,8 +479,7 @@ void client_select_channel( GuiWidget *widget, GuiEvent *event )
     /* select first channel (we always have MAIN) */
     gui_list_update( list_channels, client_channels->count );
     if ( client_channels->count > 0 ) {
-        client_channel = list_first( client_channels );
-        gui_edit_set_text( edit_channel, client_channel->name );
+        gui_edit_set_text( edit_channel, list_first( client_channels ) );
         gui_list_select( list_channels, 0,0, 1 );
     }
     gui_widget_show( dlg_channels );
@@ -576,13 +493,13 @@ Handle channel (un)selection.
 void client_handle_channel_list( 
     GuiWidget *widget, GuiEvent *event )
 {
+	char *name;
     /* if a channel is selected the name is copied into the edit.
        unselecting does not change anything. the channel by the 
        caption in the edit is opened on enter_channel() */
     if ( event->type == GUI_ITEM_SELECTED ) {
-        client_channel = list_get( client_channels, event->item.y );
-        if ( client_channel ) 
-            gui_edit_set_text( edit_channel, client_channel->name );
+        name = list_get( client_channels, event->item.y );
+        if ( name ) gui_edit_set_text( edit_channel, name );
     }
 }
 /*
@@ -593,24 +510,29 @@ Close channel selector or enter new channel.
 void client_enter_channel( GuiWidget *widget, GuiEvent *event )
 {
 #ifdef NETWORK_ENABLED
-    Net_Msg msg;
-    char buf[16];
-    if ( event->type != GUI_CLICKED ) return;
-    gui_widget_hide( dlg_channels );
-    client_state = CLIENT_NONE;
-    /* send name of channel we want to enter */
-    buf[0] = 0;
-    gui_edit_get_text( edit_channel, buf, 16, 0,-1 );
-    if ( net_build_msg( &msg, MSG_ENTER_CHANNEL, buf ) )
-        net_write_msg( client, &msg );
+	char buf[16];
+	
+	if ( event->type != GUI_CLICKED ) return;
+	
+	gui_widget_hide( dlg_channels );
+	client_state = CLIENT_NONE;
+	
+	/* retreive name of channel we want to enter */
+	buf[0] = 0;
+	gui_edit_get_text( edit_channel, buf, 16, 0,-1 );
+	
+	/* send it */
+	msg_begin_writing( msgbuf, &msglen, MAX_MSG_SIZE );
+	msg_write_int8( MSG_ENTER_CHANNEL );
+	msg_write_string( buf );
+	client_transmit( CODE_BLUE, msglen, msgbuf );
 #endif
 }
 void client_cancel_channel( GuiWidget *widget, GuiEvent *event )
 {
-    if ( event->type != GUI_CLICKED ) return;
-    gui_widget_hide( dlg_channels );
-    client_channel = 0;
-    client_state = CLIENT_NONE;
+	if ( event->type != GUI_CLICKED ) return;
+	gui_widget_hide( dlg_channels );
+	client_state = CLIENT_NONE;
 }
 
 /*
@@ -620,11 +542,11 @@ Close statistics
 */
 void client_close_stats( GuiWidget *widget, GuiEvent *event )
 {
-    if ( event->type != GUI_CLICKED ) return;
-    gui_widget_hide( dlg_stats );
-    client_state = CLIENT_NONE;
-    gui_label_set_text( label_stats, "Awaiting stats..." );
-    gui_label_set_text( label_winner, "..." );
+	if ( event->type != GUI_CLICKED ) return;
+	gui_widget_hide( dlg_stats );
+	client_state = CLIENT_NONE;
+	gui_label_set_text( label_stats, _("Awaiting stats...") );
+	gui_label_set_text( label_winner, "..." );
 }
 
 /*
@@ -635,24 +557,23 @@ Send chatter to gamepeer in pauseroom when ENTER was pressed.
 void client_send_pausechatter( GuiWidget *widget, GuiEvent *event )
 {
 #ifdef NETWORK_ENABLED
-    char buf[CHAT_MSG_LIMIT + 16];
-    Net_Msg msg;
-    if ( widget->type == GUI_EDIT && 
-         event->type == GUI_KEY_RELEASED &&
-         event->key.keysym == SDLK_RETURN ) {
-        /* get message */
-        sprintf( buf, "<%s>", client_name );
-        gui_edit_get_text( edit_pausechatter, 
-             buf+strlen(buf), CHAT_MSG_LIMIT + 1, 0,-1 );
-        /* clear chat edit */
-        gui_edit_set_text( edit_pausechatter, "" );
-        /* deliver message to remote ... */
-        if ( !net_build_msg( &msg, MSG_CHAT, buf ) ||
-             !net_write_msg( game_peer, &msg ) ) 
-            fprintf( stderr, "%s\n", net_get_error() );
-        else
-            client_add_pausechatter( buf, 0 );
-    }
+	char buf[MAX_CHATTER_SIZE + 1];
+	if ( widget->type == GUI_EDIT && 
+			event->type == GUI_KEY_RELEASED &&
+			event->key.keysym == SDLK_RETURN ) {
+		/* get message */
+		sprintf( buf, "<%s> ", client_name );
+		gui_edit_get_text( edit_pausechatter, 
+				buf+strlen(buf), MAX_CHATTER_SIZE + 1, 0,-1 );
+		/* clear chat edit */
+		gui_edit_set_text( edit_pausechatter, "" );
+		/* deliver message to remote ... */
+		msg_begin_writing( msgbuf, &msglen, MAX_MSG_SIZE );
+		msg_write_int8( MSG_CHATTER );
+		msg_write_string( buf );
+		client_transmit( CODE_BLUE, msglen, msgbuf );
+		client_add_pausechatter( buf, 0 );
+	}
 #endif
 }
 
@@ -663,8 +584,9 @@ Close pauseroom.
 */
 void client_close_pauseroom( GuiWidget *widget, GuiEvent *event )
 {
-    if ( event->type != GUI_CLICKED ) return;
-    gui_widget_hide( dlg_pauseroom );
+	if ( event->type != GUI_CLICKED ) return;
+	close_pause_chat();
+	comm_send_short( MSG_UNPAUSE );
 }
 
 /*
@@ -674,9 +596,9 @@ Popup help dialogue.
 */
 void client_popup_help( GuiWidget *widget, GuiEvent *event )
 {
-    if ( event->type != GUI_CLICKED ) return;
-    gui_widget_show( dlg_help );
-    client_state = CLIENT_HELP;
+	if ( event->type != GUI_CLICKED ) return;
+	gui_widget_show( dlg_help );
+	client_state = CLIENT_HELP;
 }
 /*
 ====================================================================
@@ -685,8 +607,8 @@ Close help dialogue.
 */
 void client_close_help( GuiWidget *widget, GuiEvent *event )
 {
-    if ( event->type != GUI_CLICKED ) return;
-    gui_widget_hide( dlg_help );
+	if ( event->type != GUI_CLICKED ) return;
+	gui_widget_hide( dlg_help );
 }
 /*
 ====================================================================
@@ -695,10 +617,10 @@ Select topic and display help text.
 */
 void client_handle_topic_list( GuiWidget *widget, GuiEvent *event )
 {
-    if ( event->type != GUI_ITEM_SELECTED ) return;
-    if ( event->item.y >= client_topic_count ) return;
-    if ( client_help_text ) delete_text( client_help_text );
-    client_help_text = 
-        create_text( client_helps[event->item.y], 41 );
-    gui_list_update( list_help, client_help_text->count );
+	if ( event->type != GUI_ITEM_SELECTED ) return;
+	if ( event->item.y >= client_topic_count ) return;
+	gui_list_goto( list_help, 0 );
+	if ( client_help_text ) delete_text( client_help_text );
+	client_help_text = create_text( client_helps[event->item.y], 41 );
+	gui_list_update( list_help, client_help_text->count );
 }

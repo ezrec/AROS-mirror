@@ -17,11 +17,15 @@
 
 #include <time.h>
 #include "lbreakout.h"
+#include "../game/game.h"
 #include "config.h"
 #include "event.h"
 #include "misc.h"
 
-extern SDL_Surface *stk_display;
+extern SDL_Surface *stk_display, *nuke_bkgnd, *brick_pic;
+extern Game *local_game, *game;
+extern Paddle *l_paddle;
+extern StkFont *font;
 extern SDL_Surface *offscreen;
 extern int stk_quit_request;
 int shadow_size = 8;
@@ -33,42 +37,32 @@ extern Config config;
 extern int bkgnd_count;
 extern SDL_Surface **bkgnds;
 
-char circle_msg[256];
-
 /*
 ====================================================================
 Load background according to id and draw background to offscreen.
 Return Value: loaded background surface
 ====================================================================
 */
-SDL_Surface* bkgnd_draw( int id )
+void bkgnd_draw( SDL_Surface *bkgnd, int id, int to_offscreen )
 {
-    SDL_Surface *bkgnd = 0;
-    SDL_Surface *pic = 0;
-    int i, j;
+	SDL_Surface *pic = 0;
+	int i, j;
 
 	if ( id >= bkgnd_count || id == -1 )
-        id = rand() % bkgnd_count;
-    
-    /* background is always the size of screen */
-    bkgnd = stk_surface_create( SDL_SWSURFACE, 
-        stk_display->w, stk_display->h );
-    SDL_SetColorKey( bkgnd, 0, 0 );
-    stk_surface_fill( bkgnd, 0,0,-1,-1, 0x0 );
+		id = rand() % bkgnd_count;
 
-    /* load background */
-    pic = bkgnds[id];
-    for ( i = 0; i < bkgnd->w; i += pic->w ) {
-        for ( j = 0; j < bkgnd->h; j += pic->h ) {
-            stk_surface_blit( pic, 0,0,-1,-1,
-                bkgnd, i, j);
-        }
-    }
+	/* load background */
+	pic = bkgnds[id];
+	for ( i = 0; i < bkgnd->w; i += pic->w ) {
+		for ( j = 0; j < bkgnd->h; j += pic->h ) {
+			stk_surface_blit( pic, 0,0,-1,-1,
+					bkgnd, i, j);
+		}
+	}
 
-    /* draw to offscreen */
-    stk_surface_blit( bkgnd, 0,0,-1,-1, offscreen, 0,0 );
-
-    return bkgnd;
+	/* draw to offscreen */
+	if (to_offscreen)
+		stk_surface_blit( bkgnd, 0,0,-1,-1, offscreen, 0,0 );
 }
 /*
 ====================================================================
@@ -104,7 +98,6 @@ int confirm( StkFont *font, char *str, int type )
     stk_sound_play( wav_click );
 #endif
 
-    event_block_motion( 1 );
     event_clear_sdl_queue();
 
     stk_surface_blit( stk_display, 0,0,-1,-1, buffer, 0,0 );
@@ -152,15 +145,19 @@ int confirm( StkFont *font, char *str, int type )
 					}
                 }
                 else
-                switch (event.key.keysym.sym) {
-                    case SDLK_y:
+                {
+                    char *keyName = SDL_GetKeyName(event.key.keysym.sym);
+                    char *yesLetter = _("y");
+                    char *noLetter = _("n");
+                    if (strcmp(keyName, yesLetter) == 0) {
                         go_on = 0;
                         ret = 1;
-                        break;
-                    case SDLK_ESCAPE:
-                    case SDLK_n:
+                    }
+                    else
+                    if (event.key.keysym.sym==SDLK_ESCAPE || strcmp(keyName, noLetter) == 0 ) {
                         go_on = 0;
                         ret = 0;
+                    }
                     default:
                         break;
                 }
@@ -174,7 +171,8 @@ int confirm( StkFont *font, char *str, int type )
     stk_display_update( STK_UPDATE_ALL );
     SDL_FreeSurface(buffer);
 
-    event_block_motion( 0 );
+    /* reset the relative position so paddle wont jump */
+    SDL_GetRelativeMouseState(0,0);
 
     return ret;
 }
@@ -189,8 +187,9 @@ Return Value: True if both peers clicked to continue, False if the
 connection was cancelled for some reason.
 ====================================================================
 */
-int display_info( StkFont *font, char *str, Net_Socket *peer )
+int display_info( StkFont *font, char *str, NetSocket *peer )
 {
+#if 0
     char error[128];
     Net_Msg msg;
     SDL_Event event;
@@ -203,7 +202,6 @@ int display_info( StkFont *font, char *str, Net_Socket *peer )
     stk_sound_play( wav_click );
 #endif
 
-    event_block_motion( 1 );
     event_clear_sdl_queue();
 
     stk_surface_blit( stk_display, 0,0,-1,-1, buffer, 0,0 );
@@ -212,7 +210,7 @@ int display_info( StkFont *font, char *str, Net_Socket *peer )
     stk_wait_for_input();
     net_write_empty_msg( peer, MSG_READY ); 
 	draw_confirm_screen( font, buffer, 
-                         "Waiting for remote answer..." );
+                         _("Waiting for remote answer...") );
     stk_display_update( STK_UPDATE_ALL );
     event_clear_sdl_queue();
     while ( !leave ) {
@@ -231,7 +229,7 @@ int display_info( StkFont *font, char *str, Net_Socket *peer )
                     break;
                 case MSG_GAME_EXITED:
                     ret = 0; leave = 1;
-                    sprintf( error, "remote player cancelled the game\n" );
+                    sprintf( error, /* xgettext:no-c-format */ _("remote player cancelled the game\n") );
                     confirm( font, error, CONFIRM_ANY_KEY );
                     break;
             }
@@ -246,8 +244,12 @@ int display_info( StkFont *font, char *str, Net_Socket *peer )
     stk_display_update( STK_UPDATE_ALL );
     SDL_FreeSurface(buffer);
     
-    event_block_motion( 0 );
+    /* reset the relative position so paddle wont jump */
+    SDL_GetRelativeMouseState(0,0);
+
     return ret;
+#endif
+    return 1;
 }
 #endif
 /*
@@ -275,202 +277,6 @@ SDL_Surface* create_shadow( SDL_Surface *surf, int x, int y, int w, int h )
     return shadow;
 }
 
-/*
-====================================================================
-Return vector struct with the specified coordinates.
-====================================================================
-*/
-Vector vector_get( float x, float y )
-{
-    Vector v = { x, y };
-    return v;
-}
-/*
-====================================================================
-Give vector the normed length of 1.
-====================================================================
-*/
-void vector_norm( Vector *v )
-{
-    float length;
-    if ( v->x == 0 && v->y == 0 ) return; /* NULL vector may not be normed */
-    length = sqrt( v->x * v->x + v->y * v->y );
-    v->x /= length;
-    v->y /= length;
-}
-/*
-====================================================================
-Return monotony of vector. If vertical return 0
-====================================================================
-*/
-float vector_monotony( Vector v )
-{
-    if ( v.x == 0 ) return 0;
-    return v.y / v.x;
-}
-/*
-====================================================================
-Set length of a vector.
-====================================================================
-*/
-void vector_set_length( Vector *v, float length )
-{
-    vector_norm( v );
-    v->x *= length; v->y *= length;
-}
-
-/*
-====================================================================
-Initiate a line struct.
-====================================================================
-*/
-void line_set( Line *line, float x, float y, float m )
-{
-    line->vertical = 0;
-    line->m = m;
-    line->n = y - m*x;
-}
-void line_set_vert( Line *line, float x )
-{
-    line->vertical = 1;
-    line->x = x;
-}
-void line_set_hori( Line *line, float y )
-{
-    line->vertical = 0;
-    line->m = 0;
-    line->n = y;
-}
-/*
-====================================================================
-Intersect lines and set 'pos' to intersecting point.
-Return Value: True if lines intersect.
-====================================================================
-*/
-int line_intersect( Line *line, Line *target, Coord *pos )
-{
-    /* reset pos */
-    pos->x = pos->y = 0;
-    /* if lines are parallel return False */
-    if ( line->vertical && target->vertical ) return 0; /* vertical parallels */ 
-    if ( !line->vertical &&  !target->vertical && line->m == target->m ) return 0; /* non-vertical parallels */
-    /* right now only one thing is supported: line horizontal */
-    if ( line->m == 0 && line->vertical == 0 ) {
-        pos->y = line->n;
-        if ( target->vertical )
-            pos->x = target->x;
-        else
-            pos->x = ( pos->y - target->n ) / target->m;
-        return 1;
-    }
-    if ( line->vertical ) {
-        if ( target->vertical ) return 0;
-        pos->x = line->x;
-        pos->y = target->m * pos->x + target->n;
-        return 1;
-    }
-    if ( target->vertical ) {
-        printf( "line_intersect: line non-vertical and target vertical not supported yet\n" );
-        return 1;
-    }
-    /* compute if both lines are neither vertical nor horizontal */
-    pos->x = ( line->n - target->n ) / ( target->m - line->m );
-    pos->y = line->m * pos->x + line->n;
-    return 1;
-}
-
-/*
-====================================================================
-Initiate a line struct.
-====================================================================
-*/
-void iline_set( ILine *line, int x, int y, int m_4096 )
-{
-    line->vertical = 0;
-    line->m_4096 = m_4096;
-    line->n = y - ((m_4096*x)>>12);
-}
-void iline_set_vert( ILine *line, int x )
-{
-    line->vertical = 1;
-    line->x = x;
-}
-void iline_set_hori( ILine *line, int y )
-{
-    line->vertical = 0;
-    line->m_4096 = 0;
-    line->n = y;
-}
-/*
-====================================================================
-Intersect lines and set 'pos' to intersecting point.
-Return Value: True if lines intersect.
-====================================================================
-*/
-int iline_intersect( ILine *line, ILine *target, ICoord *pos )
-{
-    /* reset pos */
-    pos->x = pos->y = 0;
-    /* if lines are parallel return False */
-    if ( line->vertical && target->vertical ) return 0; /* vertical parallels */ 
-    if ( !line->vertical &&  !target->vertical )
-    if ( line->m_4096 == target->m_4096 ) return 0; /* non-vertical parallels */
-    /* right now only one thing is supported: line horizontal */
-    if ( line->m_4096 == 0 && line->vertical == 0 ) {
-        pos->y = line->n;
-        if ( target->vertical )
-            pos->x = target->x;
-        else
-            pos->x = (( pos->y - target->n )<<12) / target->m_4096;
-        return 1;
-    }
-    if ( line->vertical ) {
-        if ( target->vertical ) return 0;
-        pos->x = line->x;
-        pos->y = ((target->m_4096 * pos->x)>>12) + target->n;
-        return 1;
-    }
-    if ( target->vertical ) {
-        printf( "line_intersect: line non-vertical and target vertical not supported yet\n" );
-        return 1;
-    }
-    /* compute if both lines are neither vertical nor horizontal */
-    pos->x = (( line->n - target->n )<<12) / ( target->m_4096 - line->m_4096 );
-    pos->y = ((line->m_4096 * pos->x)>>12) + line->n;
-    return 1;
-}
-
-/*
-====================================================================
-Intersect line pos+t*v with circle (x+m)²=r²
-Important length of v MUST be 1.
-Return Value: True if intersecting, Intersecting points
-====================================================================
-*/
-int circle_intersect( Vector m, int r, Vector pos, Vector v, Vector *t1, Vector *t2 )
-{
-    Vector delta = { pos.x - m.x, pos.y - m.y };
-    float  delta_v = delta.x * v.x + delta.y * v.y;
-    float dis = delta_v * delta_v + r * r - ( delta.x * delta.x + delta.y * delta.y );
-    float t;
-
-    if ( dis < 0 ) {
-#ifdef WITH_BUG_REPORT
-		sprintf( circle_msg, "Diskriminante < 0" );
-#endif		
-		return 0; 
-	}
-	dis = sqrt( dis );
-
-    t = -delta_v + dis;
-    t1->x = pos.x + t * v.x; t1->y = pos.y + t * v.y;
-    t = -delta_v - dis;
-    t2->x = pos.x + t * v.x; t2->y = pos.y + t * v.y;
-#ifdef WITH_BUG_REPORT
-	sprintf( circle_msg, "Intersection points: (%4.2f,%4.2f), (%4.2f,%4.2f)", t1->x, t1->y, t2->x, t2->y );
-#endif
-    return 1;
-}
 
 /*
 ====================================================================
@@ -488,8 +294,6 @@ int enter_string( StkFont *font, char *caption, char *edit, int limit )
     int length = strlen( edit );
 
     SDL_SetColorKey(buffer, 0, 0);
-
-    event_block_motion( 1 );
 
     stk_surface_blit( stk_display, 0,0,-1,-1, buffer, 0,0 );
     font->align = STK_FONT_ALIGN_CENTER_X | STK_FONT_ALIGN_CENTER_Y;
@@ -533,7 +337,8 @@ int enter_string( StkFont *font, char *caption, char *edit, int limit )
     stk_display_update( STK_UPDATE_ALL );
     SDL_FreeSurface(buffer);
 
-    event_block_motion( 0 );
+    /* reset the relative position so paddle wont jump */
+    SDL_GetRelativeMouseState(0,0);
 
     return ret;
 }
@@ -570,4 +375,145 @@ void  write_text_with_cursor( StkFont *fnt, SDL_Surface *dest,
     
        free(text_with_cursor);
     }
+}
+
+/*
+====================================================================
+Enter nuke mode and allow player to disintegrate single bricks
+by spending 5% of his/her score.
+====================================================================
+*/
+void game_nuke( void )
+{
+	char buf[128];
+	SDL_Event event;
+	int x,y,i,j,leave = 0;
+	SDL_Surface *buffer = 
+		stk_surface_create( SDL_SWSURFACE, stk_display->w, stk_display->h );
+	SDL_Surface *red_mask = 
+		stk_surface_create( SDL_SWSURFACE, BRICK_WIDTH, BRICK_HEIGHT );
+	stk_surface_fill( red_mask, 0,0,-1,-1, 0xFF0000 );
+	SDL_SetAlpha( red_mask, SDL_SRCALPHA, 128 );
+	SDL_SetColorKey(buffer, 0, 0);
+
+#ifdef AUDIO_ENABLED
+	stk_sound_play( wav_click );
+#endif
+	SDL_SetEventFilter(0);
+	event_clear_sdl_queue();
+	/* backup screen contents */
+	stk_surface_blit( stk_display, 0,0,-1,-1, buffer, 0,0 );
+	/* display bricks darkened */
+	stk_surface_blit( nuke_bkgnd, 0,0,-1,-1, 
+			stk_display, 0,0 );
+	for ( i = 1; i < MAP_WIDTH - 1; i++ )
+		for ( j = 1; j < MAP_HEIGHT - 1; j++ )
+			if ( game->bricks[i][j].id >= 0 )
+				stk_surface_alpha_blit( brick_pic,
+					game->bricks[i][j].id * BRICK_WIDTH, 0,
+					BRICK_WIDTH, BRICK_HEIGHT,
+					stk_display,
+					i*BRICK_WIDTH, j*BRICK_HEIGHT, 128 );
+	/* info */
+	font->align = STK_FONT_ALIGN_LEFT;
+	sprintf( buf, _("Plane Of Inner Stability entered (Score: %i)"),
+			l_paddle->player->stats.total_score + l_paddle->score );
+	stk_font_write( font, stk_display,
+			BRICK_WIDTH, (MAP_HEIGHT-1)*BRICK_HEIGHT, 
+			128, buf );
+	/* show score of player */
+	stk_display_update( STK_UPDATE_ALL );
+
+	x = y = -1;
+	while (!leave && !stk_quit_request) {
+		SDL_WaitEvent(&event);
+		switch ( event.type ) {
+			case SDL_QUIT: 
+				stk_quit_request = 1; 
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				if ( x != -1 )
+				if ( confirm( font, 
+					/* xgettext:no-c-format */ _("Disintegrate Brick? (Costs 5% of your score.) y/n"), 
+					CONFIRM_YES_NO ) ) {
+					/* implant a bomb to this brick and return */
+					game_set_current( local_game );
+					brick_start_expl( x,y, BRICK_EXP_TIME,
+							  local_game->paddles[0] );
+					local_game->bricks[x][y].score = 0;
+					game_set_current( game );
+					l_paddle->player->stats.total_score -= (int)(0.05 * 
+					       (l_paddle->score + 
+					        l_paddle->player->stats.total_score));
+					leave = 1;
+				}
+				break;
+			case SDL_MOUSEMOTION:
+				if ( x != -1 ) {
+					/* clear old selection */
+					stk_surface_blit( nuke_bkgnd,
+							x*BRICK_WIDTH, y*BRICK_HEIGHT,
+							BRICK_WIDTH, BRICK_HEIGHT,
+							stk_display, 
+							x*BRICK_WIDTH, y*BRICK_HEIGHT );
+					stk_surface_alpha_blit( brick_pic,
+							game->bricks[x][y].id * BRICK_WIDTH, 0,
+							BRICK_WIDTH, BRICK_HEIGHT,
+							stk_display,
+							x*BRICK_WIDTH, y*BRICK_HEIGHT, 128 );
+					stk_display_store_drect();
+					x = y = -1;
+				}
+				/* make new selection if brick */
+				i = event.motion.x / BRICK_WIDTH;
+				j = event.motion.y / BRICK_HEIGHT;
+				if ( i >= 1 && i <= MAP_WIDTH -2 )
+				if ( j >= 1 && j <= MAP_HEIGHT - 2 )
+				if ( game->bricks[i][j].id >= 0 ) {
+					x = i; y = j;
+					stk_surface_blit( red_mask, 0,0,-1,-1,
+					stk_display,x*BRICK_WIDTH, y*BRICK_HEIGHT );
+					stk_display_store_drect();
+				}
+				break;
+			case SDL_KEYDOWN:
+				if ( event.key.keysym.sym == SDLK_ESCAPE )
+					leave = 1;
+				break;
+		}
+		stk_display_update( STK_UPDATE_RECTS );
+	}
+
+	stk_surface_blit( buffer, 0,0,-1,-1, stk_display, 0,0 );
+	stk_display_update( STK_UPDATE_ALL );
+	SDL_FreeSurface(red_mask);
+	SDL_FreeSurface(buffer);
+	SDL_SetEventFilter(event_filter);
+}
+
+/* gray screen and display a formatted text, directly update the
+ * screen */
+void display_text( StkFont *font, char *format, ... )
+{
+	int i, y, x;
+	Text *text;
+	char buf[512];
+	va_list args;
+
+	va_start( args, format );
+	vsnprintf( buf, 512, format, args );
+	va_end( args );
+
+    stk_surface_gray( stk_display, 0,0,-1,-1, 2 );
+	text = create_text( buf, 60 );
+	font->align = STK_FONT_ALIGN_CENTER_X | STK_FONT_ALIGN_TOP;
+	y = (stk_display->h - text->count * font->height) / 2;
+	x = stk_display->w / 2;
+	for ( i = 0; i < text->count; i++ ) {
+		stk_font_write(font, stk_display, x, y, STK_OPAQUE, text->lines[i]);
+		y += font->height;
+	}
+	delete_text( text );
+
+	stk_display_update( STK_UPDATE_ALL );
 }

@@ -72,13 +72,15 @@ Select a character filter.
   alpha: A-Z,a-z
   numerical: -,0-9
   alphanumerical: A-Z,a-z,0-9
+  alphanumerical2: + underscores
 ====================================================================
 */
 enum {
     GUI_EDIT_DEFAULT = 0,
     GUI_EDIT_ALPHA,
     GUI_EDIT_NUMERICAL,
-    GUI_EDIT_ALPHANUMERICAL
+    GUI_EDIT_ALPHANUMERICAL,
+    GUI_EDIT_ALPHANUMERICAL2
 };
 void gui_edit_set_filter( GuiWidget *edit, int type );
 

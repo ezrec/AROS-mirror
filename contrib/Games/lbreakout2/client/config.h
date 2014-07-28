@@ -25,9 +25,6 @@ typedef struct {
     /* directory to save config and saved games */
     char dir_name[512];
     /* levels */
-    int levelset_id_local;
-    int levelset_count_local; /* save number of local game levelsets 
-                                 for safety (to reset id if count changed) */
     int levelset_id_home;
     int levelset_count_home; /* save number of levelsets for safety 
                                 (to reset id if count changed) */
@@ -39,6 +36,7 @@ typedef struct {
     int startlevel;
     int rel_warp_limit; /* percentage of bricks required to be destroyed 
                            before player may proceed to next level */
+    int addBonusLevels; /* add some bonus levels */
     /* controls */
     int k_left;
     int k_right;
@@ -47,17 +45,23 @@ typedef struct {
     int k_return; /* return ball on click on this key */
     int k_turbo; /* double paddle speed while this key is pressed */
     int k_warp; /* warp to next level */
+    int k_maxballspeed; /* go to maximum ball speed (while pressed) */
     int rel_motion; /* use relative mouse motion; motion_mod and invert need this enabled */
     int grab; /* keep mouse in window */
-    int motion_mod;
+    int i_motion_mod; /* motion_mod * 100 used to modify in the menu */
+    double motion_mod; /* multiplied with relative motion */
     int convex;
     int invert;
-    float key_speed; /* move with key_speed pix per sec when keys are used */
+    double key_speed; /* move with key_speed pix per sec when keys are used */
     int linear_corner; /* assume a 45° line for corner? */
+    int random_angle;
+    int maxballspeed_int1000; /* max ball speed in pixels/second */
+    float maxballspeed_float; /* per millisecond */
     /* sound */
     int sound;
     int volume; /* 1 - 8 */
     int speech; /* enable speech? */
+    int badspeech; /* if speech allowed, allow swearing? */
     int audio_buffer_size;
     /* graphics */
     int anim;
@@ -74,22 +78,15 @@ typedef struct {
     int theme_id; /* 0 == default theme */
     int theme_count; /* to check and properly reset id if number of themes changed */
     /* multiplayer */
-    char host[16];
-    int  port; /* remote address of server */
+    char server[64]; /* ip:port */
+    char local_port[8]; /* where to bind local UDP socket */
     char username[16]; /* username at server */
     int  mp_diff;   /* difficulty */
     int  mp_rounds; /* rounds per level in a levelset */
     int  mp_frags; /* points a player needs to win a round */
     int  mp_balls; /* maximum number of balls a player may fire */
-    int  client_game_port; /* port at which the client tries to run the direct connection */
+    int  recv_limit; /* number of packets parsed in one go */
 } Config;
-
-/* config directory name in home directory */
-#ifdef _WIN32
-#define CONFIG_DIR_NAME "lgames"
-#else
-#define CONFIG_DIR_NAME ".lgames"
-#endif
 
 /* set config to default */
 void config_reset();

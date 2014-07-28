@@ -126,6 +126,7 @@ GuiWidget *gui_progressbar_create(
     /* create surface, wallpaper and frame it */
     widget->surface = stk_surface_create( 
         SDL_SWSURFACE, width, height );
+    SDL_SetColorKey( widget->surface, 0,0 );
     stk_surface_apply_wallpaper( widget->surface, 0,0,-1,-1,
         gui_theme->widget_wallpaper, -1 );
     widget->border = stk_surface_apply_frame(

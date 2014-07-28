@@ -27,6 +27,7 @@ typedef struct {
     float cur_value; /* smoothly approximates destination 'value' */
     int use_alpha; /* if true we darken the background a bit. this 
                       is true by default */
+  int is_highlighted; /* use highlight font */
 } Display;
 
 /*
@@ -68,5 +69,7 @@ Modify display
 */
 void display_set_text( Display *display, char *text );
 void display_set_value( Display *display, int value );
+void display_set_value_directly( Display *display, int value );
+void display_set_highlight( Display *display, int on );
 
 #endif

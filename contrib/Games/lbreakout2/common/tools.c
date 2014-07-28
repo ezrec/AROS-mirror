@@ -22,7 +22,7 @@
 #include "tools.h"
 
 /* compares to strings and returns true if their first strlen(str1) chars are equal */
-int strequal( char *str1, char *str2 )
+int strequal( const char *str1, const char *str2 )
 {
     if ( strlen( str1 ) != strlen( str2 ) ) return 0;
     return ( !strncmp( str1, str2, strlen( str1 ) ) );
@@ -55,7 +55,7 @@ int delay_timed_out( Delay *delay, int ms )
 }
 
 
-inline void goto_tile( int *x, int *y, int d )
+void goto_tile( int *x, int *y, int d )
 {
     /*  0 -up, clockwise, 5 - left up */
     switch ( d ) {
@@ -196,7 +196,7 @@ Text* create_text( char *orig_str, int char_width )
 
     /* change some spaces to new_lines, so that the new text fits the wanted line_length */
     /* NOTE: '#' means new_line ! */
-    // if character with is 0 it's just a single line //
+    // if character width is 0 it's just a single line //
     if ( char_width > 0 ) {
         pos = 0;
         while ( pos < strlen( str ) ) {
@@ -351,4 +351,35 @@ void parse_version( char *string, int *version, int *update )
     }
     else
         *update = 0;
+}
+
+/* allocate memory or exit with error if out of it */
+void *salloc( int num, int size )
+{
+	void *ptr = calloc( num, size );
+	if ( ptr == 0 ) {
+		printf( "out of memory\n" );
+		exit(1);
+	}
+	return ptr;
+}
+
+/* print contents of pointer raw */
+void print_raw( int len, char *buf )
+{
+	int i;
+	for ( i = 0; i < len; i++ )
+		printf( "%02x ", (unsigned char) buf[i] );
+	printf( "\n" );
+}
+
+/* check whether a string does only contain letters, digits or
+ * underscores */
+int is_alphanum( char *str )
+{
+    int i;
+    for ( i = 0; i< strlen(str); i++ )
+        if ( !((str[i]>=48&&str[i]<=57)||(str[i]>=65&&str[i]<=90)||(str[i]>=97&&str[i]<=122)||str[i]=='_') )
+            return 0;
+    return 1;
 }

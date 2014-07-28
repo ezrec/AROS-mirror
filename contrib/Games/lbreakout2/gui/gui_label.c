@@ -186,6 +186,7 @@ GuiWidget* gui_label_create(
        contents is set by label_set_text() */
     widget->surface = stk_surface_create( 
         SDL_SWSURFACE, width, height );
+    SDL_SetColorKey( widget->surface, 0,0 );
     if ( with_frame )
         widget->border = stk_surface_apply_frame(
             widget->surface, 0, 0, -1, -1, 

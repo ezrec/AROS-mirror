@@ -16,24 +16,17 @@
  ***************************************************************************/
 
 #include "lbreakout.h"
-#include "chart.h"
-#include "config.h"
-#include "event.h"
-#include "levels.h"
-#include "player.h"
-#include "display.h"
-#include "paddle.h"
-#include "bricks.h"
-#include "extras.h"
-#include "frame.h"
+#include "../game/game.h"
 #include "game.h"
+#include "config.h"
+#include "bricks.h"
+#include "frame.h"
 #include "editor.h"
 
 SDL_Surface *sel_frame = 0, *buttons = 0;
 SDL_Surface *editor_bkgnd = 0; /* background (black with frame) of editor */
-enum  { EDITOR_LEVEL_LIMIT = 40 };
 char  edit_file_name[512]; /* full path of edited file */
-Level *edit_levels[EDITOR_LEVEL_LIMIT]; /* editor levels */
+Level *edit_levels[MAX_LEVELS]; /* editor levels */
 char edit_version[16]; /* version of edited set */
 int   edit_level_count; /* how many levels currently used? */
 int   edit_cur_level_id;
@@ -51,7 +44,7 @@ enum {
     /* tiles */
     BUTTON_NONE = 0,
     BUTTON_FIRST_BRICK,
-    BUTTON_LAST_BRICK = BUTTON_FIRST_BRICK + ( BRICK_COUNT ),
+    BUTTON_LAST_BRICK = BUTTON_FIRST_BRICK + ( BRICK_COUNT_REGULAR ),
     BUTTON_FIRST_EXTRA,
     BUTTON_LAST_EXTRA = BUTTON_FIRST_EXTRA + ( EX_NUMBER -1 ),
     BUTTON_EDIT,
@@ -79,7 +72,6 @@ extern SDL_Surface *extra_pic;
 extern SDL_Surface *brick_pic;
 extern StkFont *mfont; /* use menu's font to draw status */
 extern StkFont *font; /* use game's font to confirm */
-extern int motion, motion_x, motion_y, motion_button;
 extern Config config;
 extern int stk_quit_request;
 
@@ -140,7 +132,7 @@ void editor_switch_tiles()
         edit_sel_type = EDITOR_BRICK;
         /* button map & background */
         i = 0; j = 0;
-        while ( i + j * len < BRICK_COUNT ) {
+        while ( i + j * len < BRICK_COUNT_REGULAR ) {
             edit_buttons[x_off + i][y_off + j] = BUTTON_FIRST_BRICK + i + j * len;
             stk_surface_blit( brick_pic, ( i + j * len ) * BRICK_WIDTH, 0,
                 BRICK_WIDTH, BRICK_HEIGHT,
@@ -271,30 +263,30 @@ void editor_draw_status()
     int x = BRICK_WIDTH, y = ( MAP_HEIGHT - 1 ) * BRICK_HEIGHT - 2;
     int height = 10;
     /* locartion */
-    sprintf( str, "Location: %s", edit_file_name );
+    sprintf( str, _("Location: %s"), edit_file_name );
     mfont->align = STK_FONT_ALIGN_LEFT | STK_FONT_ALIGN_TOP;
     stk_font_write( mfont, stk_display, x, y, STK_OPAQUE, str );
     /* current level */
-    sprintf( str, "Current Level: %i/%i (Free: %i)", edit_cur_level_id + 1, edit_level_count, EDITOR_LEVEL_LIMIT - edit_level_count );
+    sprintf( str, _("Current Level: %i/%i (Free: %i)"), edit_cur_level_id + 1, edit_level_count, MAX_LEVELS - edit_level_count );
     mfont->align = STK_FONT_ALIGN_LEFT | STK_FONT_ALIGN_TOP;
     stk_font_write( mfont, stk_display, x, y + height, STK_OPAQUE, str );
     /* swap */
     mfont->align = STK_FONT_ALIGN_RIGHT | STK_FONT_ALIGN_TOP;
     if ( first_swap_level != -1 ) {
-        sprintf( str, "*** Level %i Marked For Swap ***", first_swap_level + 1 );
+        sprintf( str, _("*** Level %i Marked For Swap ***"), first_swap_level + 1 );
         stk_font_write( mfont, stk_display, stk_display->w - BRICK_WIDTH, y + height, STK_OPAQUE, str );
     }
     else {
         /* version */
-        sprintf( str, "Version: %s ", edit_version );
+        sprintf( str, _("Version: %s "), edit_version );
         stk_font_write( mfont, stk_display, stk_display->w - BRICK_WIDTH, y + height, STK_OPAQUE, str );
     }
     /* name and author */
     mfont->align = STK_FONT_ALIGN_LEFT | STK_FONT_ALIGN_TOP;
-    sprintf( str, "Title: %s", edit_cur_level->name );
+    sprintf( str, _("Title: %s"), edit_cur_level->name );
     stk_font_write( mfont, stk_display, BRICK_WIDTH + 2, ( MAP_HEIGHT - 5 ) * BRICK_HEIGHT + 5, STK_OPAQUE, str );
     mfont->align = STK_FONT_ALIGN_RIGHT | STK_FONT_ALIGN_TOP;
-    sprintf( str, "Author: %s", edit_cur_level->author );
+    sprintf( str, _("Author: %s"), edit_cur_level->author );
     stk_font_write( mfont, stk_display, stk_display->w - BRICK_WIDTH - 2, ( MAP_HEIGHT - 5 ) * BRICK_HEIGHT + 5, STK_OPAQUE, str );
 }
 /*
@@ -376,9 +368,9 @@ Free all editor levels
 void editor_clear_levels()
 {
     int i;
-    for ( i = 0; i < EDITOR_LEVEL_LIMIT; i++ )
+    for ( i = 0; i < MAX_LEVELS; i++ )
         if ( edit_levels[i] ) level_delete( edit_levels[i] );
-    memset( edit_levels, 0, sizeof( Level* ) * EDITOR_LEVEL_LIMIT );
+    memset( edit_levels, 0, sizeof( Level* ) * MAX_LEVELS );
     edit_level_count = 0;
 }
 /*
@@ -405,7 +397,7 @@ void editor_load_levels()
     /* if we got no level at all create an empty one */
     if ( edit_level_count == 0 ) {
         edit_level_count = 1;
-        edit_levels[0] = level_create_empty( "noname", "untitled" );
+        edit_levels[0] = level_create_empty( _("noname"), _("untitled") );
     }
     /* translate the character strings to editor info */
     for ( i = 0; i < edit_level_count; i++ )
@@ -489,7 +481,7 @@ void editor_handle_button( int type, int *full_update ) {
             }
             break;
         case BUTTON_LOAD:
-            if ( !confirm( font, "Discard All Changes? y/n", CONFIRM_YES_NO ) ) break;
+            if ( !confirm( font, _("Discard All Changes? y/n"), CONFIRM_YES_NO ) ) break;
             /* load levels and reset position if level doesn't exist */
             old_pos = edit_cur_level_id;
             editor_load_levels();
@@ -499,11 +491,11 @@ void editor_handle_button( int type, int *full_update ) {
             *full_update = 1;
             break;
         case BUTTON_SAVE:
-            if ( !confirm( font, "Save Changes? y/n", CONFIRM_YES_NO ) ) break;
+            if ( !confirm( font, _("Save Changes? y/n"), CONFIRM_YES_NO ) ) break;
             editor_save_levels();
             break;
         case BUTTON_CLEAR:
-            if ( !confirm( font, "Clear Level? y/n", CONFIRM_YES_NO ) ) break;
+            if ( !confirm( font, _("Clear Level? y/n"), CONFIRM_YES_NO ) ) break;
             author = strdup( edit_cur_level->author );
             name = strdup( edit_cur_level->name );
             level_delete( edit_levels[edit_cur_level_id] );
@@ -513,15 +505,15 @@ void editor_handle_button( int type, int *full_update ) {
             *full_update = 1;
             break;
         case BUTTON_ADD:
-            if ( edit_level_count == EDITOR_LEVEL_LIMIT ) break;
-            if ( !confirm( font, "Add Level? y/n", CONFIRM_YES_NO ) ) break;
+            if ( edit_level_count == MAX_LEVELS ) break;
+            if ( !confirm( font, _("Add Level? y/n"), CONFIRM_YES_NO ) ) break;
             edit_levels[edit_level_count] = level_create_empty( edit_levels[edit_level_count - 1]->author, edit_levels[edit_level_count - 1]->name );
             edit_level_count++;
             *full_update = 1;
             break;
         case BUTTON_INSERT:
-            if ( edit_level_count == EDITOR_LEVEL_LIMIT ) break;
-            if ( !confirm( font, "Insert Level? y/n", CONFIRM_YES_NO ) ) break;
+            if ( edit_level_count == MAX_LEVELS ) break;
+            if ( !confirm( font, _("Insert Level? y/n"), CONFIRM_YES_NO ) ) break;
             for ( i = edit_level_count; i > edit_cur_level_id; i-- )
                 edit_levels[i] = edit_levels[i - 1];
             edit_level_count++;
@@ -531,7 +523,7 @@ void editor_handle_button( int type, int *full_update ) {
             break;
         case BUTTON_DELETE:
             if ( edit_level_count == 1 ) break; /* last level may not be removed */
-            if ( !confirm( font, "Delete Level? y/n", CONFIRM_YES_NO ) ) break;
+            if ( !confirm( font, _("Delete Level? y/n"), CONFIRM_YES_NO ) ) break;
             level_delete( edit_levels[edit_cur_level_id] );
             for ( i = edit_cur_level_id; i < edit_level_count - 1; i++ )
                 edit_levels[i] = edit_levels[i + 1];
@@ -547,13 +539,13 @@ void editor_handle_button( int type, int *full_update ) {
             /* translate */
             editor_translate_level( edit_cur_level, INDICES_2_CHAR );
             /* run */
-            game_test_level( edit_cur_level );
+            client_game_test_level( edit_cur_level );
             /* translate back */
             editor_translate_level( edit_cur_level, CHAR_2_INDICES );
             *full_update = 1;
             break;
         case BUTTON_VERSION:
-            if ( enter_string( font, "Levelset Version:", edit_version, 8 ) ) {
+            if ( enter_string( font, _("Levelset Version:"), edit_version, 8 ) ) {
                 parse_version( edit_version, &version, &update );
                 sprintf( edit_version, "%i.%02i", version, update );
                 *full_update = 1;
@@ -646,15 +638,13 @@ void editor_handle_click( int x, int y, int set, int *full_update )
     /* name&author */
     strcpy( str, "" );
     if ( edit_buttons[x][y] == BUTTON_EDIT_AUTHOR )
-        if ( enter_string( font, "Author's Name:", str, 24 ) ) {
-            free( edit_cur_level->author );
-            edit_cur_level->author = strdup( str );
+        if ( enter_string( font, _("Author's Name:"), str, 24 ) ) {
+            snprintf( edit_cur_level->author, 31, "%s", str );
             *full_update = 1;
         }
     if ( edit_buttons[x][y] == BUTTON_EDIT_NAME )
-        if ( enter_string( font, "Title:", str, 24 ) ) {
-            free( edit_cur_level->name );
-            edit_cur_level->name = strdup( str );
+        if ( enter_string( font, _("Title:"), str, 24 ) ) {
+            snprintf( edit_cur_level->name, 31, "%s", str );
             *full_update = 1;
         }
     /* sel frame tile position */
@@ -679,7 +669,7 @@ void editor_create()
 {
     int i, j;
     /* clear all level pointers */
-    memset( edit_levels, 0, sizeof( Level* ) * EDITOR_LEVEL_LIMIT );
+    memset( edit_levels, 0, sizeof( Level* ) * MAX_LEVELS );
     /* load sel frame */
     sel_frame = stk_surface_load( SDL_SWSURFACE, "sel_frame.png" );
     /* load buttons */
@@ -769,16 +759,21 @@ void editor_run()
     int leave = 0;
     int ms;
     int last_switch_time = 0;
-    int full_update = 0;
+    int full_update = 0, set;
+	int x, y, xoff,yoff;
+	Uint8 buttonstate;
+   
+	/* reset any alpha keys */
+	SDL_SetAlpha( extra_pic, 0,0 );
     /* draw first time */
     editor_full_update();
     /* main loop */
     stk_timer_reset();
-    while ( !leave ) {
-        if ( event_poll( &event ) ) {
+    while ( !leave && !stk_quit_request ) {
+        if ( SDL_PollEvent( &event ) ) {
             switch ( event.type ) {
                 case SDL_QUIT: leave = 1; stk_quit_request = 1; break;
-                case SDL_MOUSEBUTTONUP:
+                case SDL_MOUSEBUTTONDOWN:
                     editor_handle_click( event.button.x / BRICK_WIDTH,
                                          event.button.y / BRICK_HEIGHT,
                                          (event.button.button == STK_BUTTON_LEFT),
@@ -787,7 +782,7 @@ void editor_run()
                 case SDL_KEYDOWN:
                     switch ( event.key.keysym.sym ) {
                         case SDLK_ESCAPE:
-                            if ( confirm( font, "Quit Editor? y/n", CONFIRM_YES_NO ) ) leave = 1;
+                            if ( confirm( font, _("Quit Editor? y/n"), CONFIRM_YES_NO ) ) leave = 1;
                             break;
                         case SDLK_LEFT: editor_handle_button( BUTTON_PREV, &full_update ); break;
                         case SDLK_RIGHT: editor_handle_button( BUTTON_NEXT, &full_update ); break;
@@ -803,12 +798,12 @@ void editor_run()
                 default: break;
             }
         }
-        /* mouse motion is extra */
-        if ( motion && motion_button ) {
-            editor_handle_click( motion_x / BRICK_WIDTH,
-                                 motion_y / BRICK_HEIGHT,
-                                 (motion_button == STK_BUTTON_LEFT),
-                                 &full_update );
+        /* mouse motion is handled directly */
+	buttonstate = SDL_GetRelativeMouseState( &xoff, &yoff );
+	if ( (xoff || yoff) && buttonstate ) {
+		buttonstate = SDL_GetMouseState( &x, &y );
+		set = 0; if ( buttonstate & SDL_BUTTON(1) ) set = 1;
+		editor_handle_click( x / BRICK_WIDTH, y / BRICK_HEIGHT, set, &full_update );
         }
         ms = stk_timer_get_time();
         if ( ( last_switch_time -= ms ) <= 0 ) {

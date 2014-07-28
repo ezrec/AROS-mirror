@@ -1,3 +1,260 @@
+2.6.4:
+- fixed crash caused by long config path (2012/06/19 Kees Cook)
+- fixed gettext related compile error (2012/06/19 Colin Tuckley)
+- added another bunch of levelsets from Olaf Friedrich (2012/01/22 MS)
+- added bunch of new levelsets (2011/06/10 MS)
+
+2.6.3:
+- fixed compiler warnings (2011/03/08 MS)
+- fixed bug in loading levelsets formated in DOS (2011/03/07 MS)
+- added comfortable levelset selection (2011/03/07 MS)
+- fixed compile issue with libpng-1.5 (2011/03/02 Thomas Klausner)
+- improved french localisation (2011/03/02 stormi)
+
+2.6.2:
+- added some new levelsets and updates (2010/10/05 MS)
+- do not consider grown bricks for warp limit (2010/10/05 MS)
+- fixed possible highscore loss on write error (2010/10/05 MS)
+- fixed broken compilation with audio disabled (2010/10/04 Petr Pisar)
+
+2.6.1:
+- fixed missing font transparency in help screen (24/12/09 MS)
+- fixed bug in menus's level set list that prevented first few entries
+  to show up (24/12/09 MS)
+- fixed odd sound sample rates (all are 22050 now) (24/12/09 AM)
+- fixed english translation issues (23/12/09 CT)
+
+2.6:
+- added XDG desktop file (09/10/26 PT)
+- fixed compiling on Fedora (09/10/26 SG)
+- fixed GNU_SOURCE warning (09/10/26 MS)
+- added new levelsets (09/10/26 MS)
+- added hidden config option badspeech to disable swearing by default
+  (09/10/26 MS)
+- improved french translation (08/08/24 K.C.)
+- drop group rights on startup (linux only) to improve security (access
+  to highscore) (08/03/29 HG)
+- bugfix: update levelset tooltip when changing selection with left/right
+arrows (08/03/29 HG)
+- added improved spec file for building RPMs (07/10/10 SG)
+- configure now works for win32 (07/01/20 DY)
+
+2.6beta-7:
+- french translation added (06/08/27 K.C.)
+
+2.6beta-6:
+- added a hint for building on OS/2 to the README (06/05/27 DY)
+- improved some german translations (06/05/26 MS)
+- create some server bots per default (06/05/26 MS)
+- adjusted fcntl call in net.c to work with kernel 2.6+ (and hopefully still 
+  for lower versions... if not use SDL_net) (06/05/26 MS)
+- use text from server option "-m" directly as welcome message if a file
+  by that name was not found (06/05/26 MS)
+- read highscores file before adding new scores for usage with NFS 
+  (06/05/12 netfab)
+- inline removed from function declarations to ensure global access 
+  (06/04/01 PM)
+- removed -Wall from CC arguments for better portability 
+  (06/04/01 PM)
+
+2.6beta-5:
+- i18n for yes/no confirmation by y/n (05/11/29 M.S.)
+- added some more missing strings to i18n (05/11/20 M.S.)
+- leaving game by window manager's close button works in quick help 
+  (05/11/20 M.S.)
+- switching fullscreen/windowed mode works in quick help (05/11/20 M.S.)
+- added gettext-comments for those strings that use % but not as format
+  modifiers to prevent errors when making gmo files (05/11/20 M.S.)
+
+2.6beta-4:
+- added german localization (05/11/13 R.S.)
+- removed client/client_game.c from POTFILES.in (05/10/31 M.S.)
+- changed 'src' to 'client' directory in POTFILES.in (05/10/31 M.S.)
+
+2.6beta-3:
+- added missing common/gettext.h (05/10/20 M.S.)
+
+2.6beta-2:
+- i18n support for client (05/10/19 M.S.)
+- fixed some more s(n)printf bugs (05/05/22 U.H.)
+
+2.6beta:
+- added several new levelsets (05/05/15 M.S.)
+- disabled AC_PROG_STRIP from win32 build process since autotools in SuSE
+  does not like it??? (05/05/15 M.S.)
+- moved AC_CANONICAL_HOST to beginning of configure.in (05/05/15 M.S.) 
+- finished bonus level DEFENDER (05/05/15 M.S.)
+- added bonus level DEFENDER (05/04/6 M.S.)
+- added bonus level HUNTER (05/04/01 M.S.)
+- freakout levelset has bonus levels (05/04/01 M.S.)
+- original levelset has bonus levels (05/04/01 M.S.)
+- added bonus level SITTING_DUCKS (05/03/31 M.S.)
+- made additional bonus levels optional (05/03/30 M.S.)
+- normal levelsets get a bonus level every four normal levels 
+  (05/03/30 M.S.)
+- setting sound volume has effect (05/03/28 M.S.)
+- added bonus levels JUMPING_JACK, OUTBREAK and BARRIER 
+  (05/03/28 M.S.)
+- security issue fixed: bad sprintf/scanf calls could lead to crashes
+  or potential security problems (05/02/14 U.H.)
+
+2.5.2:
+- added a different sound for balls reflected from the paddle
+  (05/01/13 M.S.)
+- bugfix: acceleration of balls by middle mouse button now works in
+  the testing mode of the editor (previously the balls got stuck in
+  mid-air) (05/01/13 M.S.)
+- the game will be paused if the input focus is lost or the
+  application is iconfied (05/01/13 M.S.)
+- when the 'sticky' bonus runs out, all attached balls will be
+  detached (05/01/13 M.S.)
+- when pressing either left or right shift, the name and score of
+  the first chart entry of this set will be displayed at the upper
+  right-hand side display of the frame instead of your name and
+  score (05/01/12 M.S.)	
+- if a paddle is frozen and the mouse is moved, the paddle will no
+  longer jump after thawing (05/01/12 M.S.)
+- when a paddle turns invisible due to the 'ghost paddle'-malus, all
+  attached balls will be detached (05/01/12 M.S.)
+- re-implemented explosion animation for bricks directly hit by an 
+  explosive ball (05/01/12 M.S.)
+
+2.5.1: 
+- only levelsets from the install directory are used for 
+  Freakout (04/06/25 M.S.)
+- order of Freakout levels is saved (04/09/22 M.S.)
+- bugfix: balls will not start in next level with max speed when
+  the middle mouse button was pressed while clearing the last
+  brick of a level (04/09/22 M.S.)
+- bonus floor uses proper brick image (blue energy wall instead 
+  of normal wall) (04/09/22 M.S.)
+- replaced chaos bricks in level 7 of N_Snapshots with normal
+  wall bricks (04/09/22 M.S.)
+- to continue when viewing final network stats only SPACE is
+  allowed (04/09/22 M.S.)
+- re-added continue option for single player mode, however
+  with 100% score loss this time (04/09/22 M.S.)
+
+2.5:
+- added additional network support via SDL_net for portability 
+  (04/08/07 M.S.)
+- bug fixed: game crashed when quitting testing mode in the 
+  editor (04/08/06 M.S.)
+- removed 5000 points bonus for completing a level. instead
+  the score of the remaining destructible bricks is substracted
+  as a penalty when warping to the next level (04/08/06 M.S.)
+- generation of bug message is disabled (04/06/24 M.S.)
+- sounds are played stereo in a local game and partially stereo
+  in a network game (04/06/24 Greg, M.S.)
+
+2.5beta-8:
+- admin bot commands are documented in the help (04/06/19 M.S.)
+- number of online users is displayed when logging in to server
+  (04/06/19 M.S.)
+- the number of bricks to be cleared for warp is not re-computed
+  when a ball is lost but always based on the initial number
+  of normal bricks (04/06/17 M.S.)
+- saved game is removed when game is over (either all lives lost
+  or all levels completed) (04/06/17 M.S.)
+- game cannot be quit by 'q' or ESCAPE when all lives are lost
+  (the player would get an extra life this way) (04/06/17 M.S.)
+- new server option to add some paddle bots (04/06/17 M.S.)
+- message about continue is not displayed in network game 
+  (04/06/16 M.S.)
+- network bot with variable paddle speed (04/06/16 M.S.)
+- missing include added to gui.c (04/06/15 M.S.)
+
+2.5beta-7:
+- configure option --with-hiscore-path has been replaced with
+  autoconf option --localstatedir (04/06/14 M.S.)
+- data files will be installed to $datadir/lbreakout2 instead
+  of $datadir/games/lbreakout2 (04/06/14 M.S.)
+- renamed configure option --with-doc-path to --with-docdir
+  (04/06/14 M.S.)
+- bugfix: test mode of editor crashed when trying to get the total
+  number of levels; there were none at all (04/06/14 M.S.)
+
+2.5beta-6:
+- network usernames must be alphanumerical (04/06/12 M.S.)
+- fixed the 'snprintf'-bug that made the server exploitable to 
+  formatted shellcode (04/06/12 M.S.)
+- credits show total number of levels (04/06/12 M.S.)
+- animations are now built directly from the brick graphics, using
+  their color key, and not from the screen; thus animations are now
+  transparent where the bricks are transparent, e.g. in theme
+  'Aquarium' (04/06/12 M.S.)
+
+2.5beta-5:
+- changed URL from www.lgames.org to lgames.sf.net in the README
+  (04/05/15 M.S.)
+- if a game has been quit before it was over, it can now be resumed 
+  (04/05/15 M.S.)
+- default key 'd' is now blocked instead of normal key 'c' 
+  (04/05/14 M.S.)
+- pressing the middle mouse button or the speedup key will 
+  accelerate all balls to maximum velocity until button/key
+  is released again (04/05/13 M.S.)
+- a 5000 points bonus is added if a level was completely
+  cleared (not finished by warp) (04/05/13 M.S.)
+- warp option is disabled in network game (04/05/13 M.S.)
+- added hint on how to switch between the bricks/bonus set when 
+  starting the editor (04/05/13 M.S.)
+
+2.5beta-4:
+- changed URL from www.lgames.org to lgames.sf.net (04/01/31 M.S.)
+
+2.5beta-3:
+- updated the quick hint of menu option 'Difficulty' (03/06/28 M.S.)
+- added a VERY easy difficulty level for young kids (03/06/28 Zooko)
+- invisible bricks do not vanish after being hit if the player 
+  dies then (03/06/27 M.S.)
+- speedup_level initiated correctly (03/06/27 M.T.)
+
+2.5beta-2:
+- fixed a bug in masking of ball speed vector which had the balls
+  stopped in midair not moving any further (03/06/18 M.S.)
+- minimum keyboard input speed is now 100 (03/06/16 M.S.)
+- missing inclusion for FreeBSD added (03/06/16 S.M.)
+
+2.5beta:
+- complete rewrite of network code (03/05/.. M.S.)
+- added 8 new levels to 'Original' for a total of 25 levels and
+  renamed it to 'LBreakout2' (03/05/25 M.S.)
+- correct size of temporary string buffer in write_text_with_cursor()
+  which fixes crash while editing author/title in the level editor 
+  (03/05/25 M.S.)
+- 'warp' and 'disintegrate' do not apply for the levelsets
+  'Original' and 'LBreakout1' (03/05/22 M.S.)
+- separated levelset 'Original' from the other sets (03/05/22 M.S.)
+- added the levelset of LBreakout1 as first add-on (03/05/22 M.S.)
+- melted 'Original', 'AddOn-1', 'AddOn-2' into a tighter levelset 
+  'Original' (03/05/22 M.S.)
+- the option of buying a continue has been removed (03/05/20 M.S.)
+- paddle can drop to 'middle size' 0 (03/05/20 M.S.)
+- paddle size in medium difficulty decreased by one (03/05/20 M.S.)
+- plasma weapon can fire permanently at a slower fire rate 
+  (03/05/20 M.S.)
+- modified bonus times to reflect the original values (03/05/20 M.S.)
+- close button of window manager works in level editor (03/05/18 M.S.)
+- reduced multiplayer ball respawn time to 5 seconds (03/05/17 M.S.)
+- backgrounds have no colorkey (03/05/17 M.S.)
+- multiplayer score table is also displayed if only one player remains
+  or the game is broken up (03/04/27 M.S.)
+- on entering editor effects of extras are reset (03/04/27 M.S.)
+- menu option 'key speed' is now in pixels per seconds and has moved
+  to the submenu 'controls' (03/04/23 M.S.)
+- input is always grabbed and relative mouse motion is always used,
+  therefore their menu options were removed (03/04/23 M.S.)
+- simplified internal handling of paddle fire buttons (03/04/23 M.S.)
+- after 10 seconds penalty a player gets a new ball in a non-pingpong
+  multiplayer level when it has lost its (03/04/23 M.S.)
+- balls no longer 'sink' into the sticky paddle (03/04/23 M.S.)
+- description of menu options removed from documentation as each
+  has a context-sensitive helpbox at runtime (03/04/23 M.S.)
+- simplified input handling by dropping all the stupid stuff and
+  sticking directly to SDL's functions (03/04/23 M.S.)
+- added a 'loading' graphic at the beginning (03/04/08 M.S.)
+
 2.4.1:
 - unlimited number of backgrounds for themes (03/03/08 M.S.)
 - if a levelset is selected its highscore chart is shown (03/02/27 M.S.)

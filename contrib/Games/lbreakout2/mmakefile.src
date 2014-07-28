@@ -1,7 +1,7 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-#MM- contrib-games : contrib-games-lbreakout2
+# #MM- contrib-games : contrib-games-lbreakout2
 #MM- lbreakout2 : contrib-games-lbreakout2
 #MM contrib-games-lbreakout2 : contrib-sdl workbench-libs-z workbench-libs-png-linklib
 

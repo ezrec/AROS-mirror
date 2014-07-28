@@ -1,5 +1,3 @@
-dnl SDL Stuff
-
 # Configure paths for SDL
 # Sam Lantinga 9/21/99
 # stolen from Manish Singh
@@ -10,7 +8,7 @@ dnl SDL Stuff
 dnl AM_PATH_SDL([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND]]])
 dnl Test for SDL, and define SDL_CFLAGS and SDL_LIBS
 dnl
-AC_DEFUN(AM_PATH_SDL,
+AC_DEFUN([AM_PATH_SDL],
 [dnl 
 dnl Get the cflags and libraries from the sdl-config script
 dnl
@@ -34,7 +32,9 @@ AC_ARG_ENABLE(sdltest, [  --disable-sdltest       Do not try to compile and run 
      fi
   fi
 
-  AC_PATH_PROG(SDL_CONFIG, sdl-config, no)
+  AC_REQUIRE([AC_CANONICAL_TARGET])
+  PATH="$prefix/bin:$prefix/usr/bin:$PATH"
+  AC_PATH_PROG(SDL_CONFIG, sdl-config, no, [$PATH])
   min_sdl_version=ifelse([$1], ,0.11.0,$1)
   AC_MSG_CHECKING(for SDL - version >= $min_sdl_version)
   no_sdl=""
@@ -107,6 +107,12 @@ int main (int argc, char *argv[])
     }
   else
     {
+      printf("\n*** 'sdl-config --version' returned %d.%d.%d, but the minimum version\n", $sdl_major_version, $sdl_minor_version, $sdl_micro_version);
+      printf("*** of SDL required is %d.%d.%d. If sdl-config is correct, then it is\n", major, minor, micro);
+      printf("*** best to upgrade to the required version.\n");
+      printf("*** If sdl-config was wrong, set the environment variable SDL_CONFIG\n");
+      printf("*** to point to the correct copy of sdl-config, and remove the file\n");
+      printf("*** config.cache before re-running configure\n");
       return 1;
     }
 }
@@ -136,6 +142,11 @@ int main (int argc, char *argv[])
           AC_TRY_LINK([
 #include <stdio.h>
 #include "SDL.h"
+
+int main(int argc, char *argv[])
+{ return 0; }
+#undef  main
+#define main K_and_R_C_main
 ],      [ return 0; ],
         [ echo "*** The test program compiled, but did not run. This usually means"
           echo "*** that the run-time linker is not finding SDL or finding the wrong"
@@ -162,26 +173,3 @@ int main (int argc, char *argv[])
   AC_SUBST(SDL_LIBS)
   rm -f conf.sdltest
 ])
-
-dnl
-dnl Search for specific programs
-dnl
-
-dnl zip to pakcage win32 installer
-AC_DEFUN(AC_PROG_ZIP,[
-AC_CHECK_PROG(ZIP, zip, zip)
-test -z "${ZIP}" && AC_MSG_ERROR(zip was not found on this system)
-])
-				       
-dnl strip reduces executable size by getting rid of extreneous symbols
-AC_DEFUN(AC_PROG_STRIP,[
-AC_CHECK_PROG(STRIP, strip, strip)
-test -z "${STRIP}" && AC_MSG_ERROR(strip was not found on this system)
-])
-
-dnl Inno Setup 2 iscc is the win32 installer script compiler
-AC_DEFUN(AC_PROG_ISCC,[
-AC_CHECK_PROG(ISCC, iscc, iscc)
-test -z "${ISCC}" && AC_MSG_ERROR(Inno Setup 2 iscc was not found on this system)
-])
-

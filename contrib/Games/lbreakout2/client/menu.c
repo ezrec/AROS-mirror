@@ -21,7 +21,6 @@ List *menus = 0; /* list of menus used to delete them later */
 extern StkFont *mfont, *mhfont, *mcfont;
 extern int gap_height; /* gap size between items */
 extern Menu *cur_menu;
-extern int motion, motion_x, motion_y; /* mouse motion event */
 #ifdef AUDIO_ENABLED
 extern StkSound *wav_menu_motion, *wav_menu_click;
 #endif
@@ -154,6 +153,7 @@ int menu_handle_event( Menu *menu, SDL_Event *event )
     int result = ACTION_NONE;
     Item *item, *old_item;
     int item_used;
+    int x, y, xoff, yoff;
     void (*callback)(void);
     /* if value::grab is set do only except keyup events */
     if ( menu->cur_item && menu->cur_item->type == ITEM_KEY && menu->cur_item->value->grab ) {
@@ -201,6 +201,9 @@ int menu_handle_event( Menu *menu, SDL_Event *event )
                     case SDLK_RIGHT:
                         if ( !menu->cur_item ) break;
                         item_used = 1;
+                        /* callback */
+                        callback = menu->cur_item->callback;
+                        /* action */
                         switch ( menu->cur_item->type ) {
                             case ITEM_SWITCH:
                             case ITEM_SWITCH_X:
@@ -209,14 +212,19 @@ int menu_handle_event( Menu *menu, SDL_Event *event )
                                 break;
                             default: item_used = 0; break;
                         }
+                        if ( item_used ) {
 #ifdef AUDIO_ENABLED
-                        if ( item_used )
                             stk_sound_play( wav_menu_click );
 #endif
+                            if ( callback ) (callback)();
+                        }
                         break;
                     case SDLK_LEFT:
                         if ( !menu->cur_item ) break;
                         item_used = 1;
+                        /* callback */
+                        callback = menu->cur_item->callback;
+                        /* action */
                         switch ( menu->cur_item->type ) {
                             case ITEM_SWITCH:
                             case ITEM_SWITCH_X:
@@ -225,10 +233,12 @@ int menu_handle_event( Menu *menu, SDL_Event *event )
                                 break;
                             default: item_used = 0; break;
                         }
+                        if ( item_used ) {
 #ifdef AUDIO_ENABLED
-                        if ( item_used )
                             stk_sound_play( wav_menu_click );
 #endif
+                            if ( callback ) (callback)();
+                        }
                         break;
                     case SDLK_UP:
                         menu_up( menu );
@@ -282,26 +292,28 @@ int menu_handle_event( Menu *menu, SDL_Event *event )
                 }
                 break;
         }
-    /* mouse motion is handled by event_filter so check motion */
-    if ( motion ) {
-        /* select item mouse pointer is on */
-        old_item = menu->cur_item;
-        menu_unselect_cur_item( menu );
-        list_reset( menu->items );
-        while( ( item = list_next( menu->items ) ) )
-            if ( item_focus( item, motion_x, motion_y ) ) {
-                menu_select_item( menu, item );
-                if ( old_item != menu->cur_item ) {
+    /* mouse motion is handled directly */
+    SDL_GetRelativeMouseState( &xoff, &yoff );
+    if ( xoff != 0 || yoff != 0 ) {
+	    SDL_GetMouseState( &x, &y );
+	    /* select item mouse pointer is on */
+	    old_item = menu->cur_item;
+	    menu_unselect_cur_item( menu );
+	    list_reset( menu->items );
+	    while( ( item = list_next( menu->items ) ) )
+		    if ( item_focus( item, x, y ) ) {
+			    menu_select_item( menu, item );
+			    if ( old_item != menu->cur_item ) {
 #ifdef AUDIO_ENABLED
-                    stk_sound_play( wav_menu_motion );
+				    stk_sound_play( wav_menu_motion );
 #endif
-                }
-                break;
-            }
-        if ( menu->cur_item ) 
-            hint_set( menu->cur_item->hint );
-        else
-            hint_set( 0 );
+			    }
+			    break;
+		    }
+	    if ( menu->cur_item ) 
+		    hint_set( menu->cur_item->hint );
+	    else
+		    hint_set( 0 );
     }
     return result;
 }

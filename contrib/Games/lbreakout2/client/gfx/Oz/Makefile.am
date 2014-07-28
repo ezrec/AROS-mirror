@@ -6,7 +6,7 @@ README
 install-data-local:
 	$(mkinstalldirs) $(DESTDIR)$(inst_dir)/gfx/Oz
 	@for file in $(EXTRA_DIST); do\
-	  $(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$(inst_dir)/gfx/Oz/$$file;\
+	  $(INSTALL_DATA) $$file $(DESTDIR)$(inst_dir)/gfx/Oz/$$file;\
 	done
 
 win32-install-script:

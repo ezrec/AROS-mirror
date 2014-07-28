@@ -45,7 +45,7 @@
 #define SQUARE( x ) ((x)*(x))
 
 /* compares to strings and returns true if their first strlen(str1) chars are equal */
-int strequal( char *str1, char *str2 );
+int strequal( const char *str1, const char *str2 );
 
 /* delete lines */
 void delete_lines( char **lines, int line_number );
@@ -114,5 +114,16 @@ update.
 ====================================================================
 */
 void parse_version( char *string, int *version, int *update );
+
+
+/* allocate memory or exit with error if out of it */
+void *salloc( int num, int size );
+
+/* print contents of pointer raw */
+void print_raw( int len, char *buf );
+
+/* check whether a string does only contain letters, digits or
+ * underscores */
+int is_alphanum( char *str );
 
 #endif
