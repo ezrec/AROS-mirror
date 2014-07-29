@@ -4,7 +4,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-development-gui: contrib-development-gui-muibuilder
+#MM- contrib-development : contrib-development-gui-muibuilder
 
 #MM- contrib-development-gui-muibuilder: \
 #MM		contrib-development-gui-muibuilder-modules \
@@ -14,16 +14,16 @@ include $(TOP)/config/make.cfg
 #MM		contrib-development-gui-muibuilder-demos \
 #MM		contrib-development-gui-muibuilder-src
 
-RELEASEDIR := $(AROSDIR)/Extras/Development/MUIBuilder
+TARGETDIR := $(AROSDIR)/Extras/Development/MUIBuilder
 
 %copy_dir_recursive mmake=contrib-development-gui-muibuilder-images \
-        src=Images dst=$(RELEASEDIR)/Images
+        src=Images dst=$(TARGETDIR)/Images
 
 %copy_dir_recursive mmake=contrib-development-gui-muibuilder-docs \
-        src=Documentations dst=$(RELEASEDIR)/Documentations
+        src=Documentations dst=$(TARGETDIR)/Documentations
 
 %copy_dir_recursive mmake=contrib-development-gui-muibuilder-demos \
-        src=BuilderSave dst=$(RELEASEDIR)/BuilderSave
+        src=BuilderSave dst=$(TARGETDIR)/BuilderSave
 
 FILES := COPYING COPYING.LIB ChangeLog History.info MUIBuilder.info \
 	 BuilderSave.info Documentations.info History ReadMe ReadMe.info \
@@ -31,6 +31,6 @@ FILES := COPYING COPYING.LIB ChangeLog History.info MUIBuilder.info \
 
 
 %copy_files_q mmake=contrib-development-gui-muibuilder \
-        files=$(FILES) dst=$(RELEASEDIR)
+        files=$(FILES) dst=$(TARGETDIR)
 
 %common
