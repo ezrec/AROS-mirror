@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-game : ports-game-$(AROS_TARGET_CPU)
 
-#MM- ports-game-i386 : ports-game-koules
+#MM- ports-game-i386 : ports-game-wormwars
 #MM- ports-game-arm : ports-game-wormwars
 
 #MM  ports-game-wormwars : includes linklibs \
@@ -26,7 +26,7 @@ include $(TOP)/config/make.cfg
 
 
 REPOSITORIES := http://archives.aros-exec.org/share/game/misc/
-ARCHBASE     := wormwars-src-8.85
+ARCHBASE     := wormwars-src-8.86
 TARGETDIR    := $(AROS_CONTRIB)/Games/WormWars
 USER_CFLAGS  := -DNO_PRAGMAS -D__STORM__ -D__chip= -DAMIGA \
                 -Wno-implicit-function-declaration -Wno-unknown-pragmas -Wno-parentheses
