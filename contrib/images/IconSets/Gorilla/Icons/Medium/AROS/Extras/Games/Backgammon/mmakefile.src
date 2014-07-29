@@ -1,0 +1,12 @@
+# Copyright © 2014, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- iconset-Gorilla-contrib-icons-extras-games : iconset-Gorilla-contrib-icons-extras-games-backgammon
+
+ICONS := Backgammon
+
+#MM- iconset-Gorilla-contrib-icons-extras-games-clean : iconset-Gorilla-contrib-icons-extras-games-backgammon-clean
+
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games-backgammon icons=$(ICONS) dir=$(AROS_CONTRIB)/Games/Backgammon
