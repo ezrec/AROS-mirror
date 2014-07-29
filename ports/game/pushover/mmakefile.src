@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-# #MM- ports-game : ports-game-pushover
+#MM- ports-game : ports-game-pushover
 
 #MM- ports-game-pushover : \
 #MM     contrib-sdl \
