@@ -47,7 +47,7 @@ CPYFILES := DOC STRATEGY COPYING README
 ports-game-sdlscavenger-install :
 	$(MKDIR) $(TARGETDIR)/data
 	$(CP) $(PORTSDIR)/sdlscavenger/$(ARCHBASE)/data/*.lbm $(TARGETDIR)/data
-	$(CP) $(PORTSDIR)/sdlscavenger/$(ARCHBASE)/data/*.raw $(TARGETDIR)/data
+	$(CP) $(PORTSDIR)/sdlscavenger/$(ARCHBASE)/data/*.wav $(TARGETDIR)/data
 	$(CP) $(PORTSDIR)/sdlscavenger/$(ARCHBASE)/data/*.scl $(TARGETDIR)/data
 	$(MKDIR) $(TARGETDIR)/.scavenger
 	$(CP) $(PORTSDIR)/sdlscavenger/$(ARCHBASE)/data/*rc $(TARGETDIR)/.scavenger
