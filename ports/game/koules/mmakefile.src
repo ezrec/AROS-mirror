@@ -19,7 +19,7 @@ include $(TOP)/config/make.cfg
 
 
 REPOSITORIES := http://archives.aros-exec.org/share/game/action/
-ARCHBASE     := koules-src-1.16
+ARCHBASE     := koules-src-1.17
 TARGETDIR    := $(AROS_CONTRIB)/Games/Koules
 
 FILES := source/framebuffer source/koules source/menu source/amiga source/gameplan
