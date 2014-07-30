@@ -78,7 +78,7 @@ Pabelo \
 Patience \
 Pawset \
 Ph33r \
-P.I.T.A. \
+P.I.T.A \
 PlayAgain \
 Popcorn \
 RichQuick \
@@ -93,7 +93,7 @@ SnyMaxx \
 StarWars \
 Symmetry \
 Symmetry-MKII \
-T.C.S. \
+T.C.S \
 TheEnd \
 TheGauntlet \
 TimeWaster \
