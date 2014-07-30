@@ -1,0 +1,63 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-devel : ports-devel-bwbasic
+
+#MM- ports-devel-bwbasic : \
+#MM    ports-devel-bwbasic-examples \
+#MM    ports-devel-bwbasic-files \
+#MM    ports-devel-bwbasic-fetch \
+#MM    ports-devel-bwbasic-drawericon
+
+ARCHBASE     := bwbasic-2.60
+TARGETDIR    := $(AROS_CONTRIB)/Development/BWBasic
+REPOSITORIES := sf://bwbasic
+
+FILES := \
+	bwbasic \
+	bwb_int \
+	bwb_tbl \
+	bwb_cmd \
+	bwb_prn \
+	bwb_exp \
+	bwb_var \
+	bwb_inp \
+	bwb_fnc \
+	bwb_cnd \
+	bwb_ops \
+	bwb_dio \
+	bwb_str \
+	bwb_elx \
+	bwb_mth \
+	bwb_stc \
+	bwb_par \
+	bwx_tty
+
+FILES := $(addprefix $(PORTSDIR)/bwbasic/$(ARCHBASE)/,$(FILES))
+
+USER_CFLAGS : -DHAVE_STRING=1 -DHAVE_STDLIB=1 -DHAVE_UNISTD=1 -DHAVE_RAISE=1
+
+%build_prog mmake=ports-devel-bwbasic progname=BWBasic \
+    files=$(FILES) targetdir=$(TARGETDIR)
+
+
+%fetch mmake=ports-devel-bwbasic-fetch archive=$(ARCHBASE) \
+    destination=$(PORTSDIR)/bwbasic/$(ARCHBASE) \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip"
+
+
+ICONS := BWBasic
+
+%build_icons mmake=ports-devel-bwbasic-drawericon \
+	icons=$(ICONS) dir=$(TARGETDIR)/..
+
+
+%copy_dir_recursive mmake=ports-devel-bwbasic-examples \
+    src=$(PORTSDIR)/bwbasic/$(ARCHBASE)/bwbtest dst=$(TARGETDIR)/bwbtest
+
+CPFILES := bwbasic.doc COPYING example.bas README
+%copy_files_q mmake=ports-devel-bwbasic-files files=$(CPFILES) \
+    src=$(PORTSDIR)/bwbasic/$(ARCHBASE) dst=$(TARGETDIR)
+
+%common
