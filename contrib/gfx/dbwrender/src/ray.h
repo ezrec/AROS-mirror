@@ -36,12 +36,18 @@
 #include <math.h>
 #include <stdio.h>
 #include <setjmp.h>
+#include <stdlib.h>
+#include <string.h>
 
 #ifdef IBM_PC
 #include <malloc.h>
 #endif
 
+#ifdef __AROS__
+#define VERSION "RAY v1.02 040102 (AROS)\n Copyright (C) 1989 J. Lowery and D. Wecker - all rights reserved\n"
+#else
 #define VERSION "RAY v1.02 040102 (WIN32)\n Copyright (C) 1989 J. Lowery and D. Wecker - all rights reserved\n"
+#endif
 
 #define pi 3.141592654
 
@@ -150,7 +156,7 @@ fracvert;
 #define ERROR( str ) { fprintf( stderr, "%s\n", str ); exit(0); }
 
 #ifndef IBM_PC
-extern char *malloc();
+extern void *malloc();
 #endif
 
 extern long time();

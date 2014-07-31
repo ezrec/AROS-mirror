@@ -31,6 +31,11 @@
  *                                                                      *
  ************************************************************************/
 
+#ifdef __AROS__
+#include <proto/exec.h>
+#include <dos/dos.h>
+#endif
+
 #define MODULE_RAY
 #include "ray.h"
 
@@ -472,6 +477,14 @@ char    *argv;
                }
                else 
                {
+                    #if defined(__AROS__)
+                    if(SetSignal(0L,SIGBREAKF_CTRL_C) & SIGBREAKF_CTRL_C)
+                    {
+                         printf("\nCTRL C Received");
+                         fprintf(fpout,"\nCTRL C Received");
+                         goto OPERATOR_ABORT;
+                    }
+                    #else
                     if (kbhit())
                          if (getch() == 0x1B)
                          {
@@ -479,6 +492,7 @@ char    *argv;
                               fprintf(fpout,"\nESCAPE Received");
                               goto OPERATOR_ABORT;
                          }
+                    #endif
                     do_raytrace();
                }
                curtime = time(0L);

@@ -1,0 +1,28 @@
+# Copyright © 1995-2014, The AROS Development Team. All rights reserved.
+# $Id$
+#
+# Makefile to make DBWRender.
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-gfx-dbwrender : \
+#MM    contrib-gfx-dbwrender-render contrib-gfx-dbwrender-display
+
+#MM contrib-gfx-dbwrender-render : includes linklibs
+#MM contrib-gfx-dbwrender-display : includes linklibs
+
+EXEDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/DBWRender
+
+FILES := cal ext fil hit int mth ray rnd tex val
+USER_CFLAGS := -Wno-unused-variable -Wno-implicit-function-declaration
+
+%build_prog mmake=contrib-gfx-dbwrender-render \
+    progname=dbwrender targetdir=$(EXEDIR) files=$(FILES)
+
+FILES := arosdisplay
+USER_CFLAGS :=
+
+%build_prog mmake=contrib-gfx-dbwrender-display \
+    progname=display targetdir=$(EXEDIR) files=$(FILES)
+
+%common

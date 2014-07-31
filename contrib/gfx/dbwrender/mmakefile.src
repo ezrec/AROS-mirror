@@ -1,0 +1,17 @@
+# Copyright © 1995-2014, The AROS Development Team. All rights reserved.
+# $Id$
+#
+# Makefile to make DBWRender.
+
+include $(TOP)/config/make.cfg
+
+FILES := brick.dat COPYING glass1.dat glass2.dat glass.dat \
+glassorig.dat island.dat moonover.dat ray.txt README.txt
+
+EXEDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/DBWRender
+
+#MM- contrib-gfx : contrib-gfx-dbwrender
+
+%copy_files_q mmake=contrib-gfx-dbwrender files=$(FILES) src=. dst=$(EXEDIR)
+
+%common
