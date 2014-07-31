@@ -1,13 +1,19 @@
 // AROS display for DBWRender output files
 
+// FIXME: PNG files have wrong byte order
+
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/intuition.h>
 #include <proto/cybergraphics.h>
+#include <proto/gadtools.h>
+#include <proto/asl.h>
 
 #include <cybergraphx/cybergraphics.h>
 
+#include <png.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <png.h>
 
@@ -20,22 +26,46 @@ LONG height = 0;
 APTR* lines = 0;
 APTR bits = 0;
 struct Window *window;
+APTR *my_VisualInfo;
+struct Menu *menuStrip;
+TEXT filename[1024];
+struct FileRequester *filereq;
+
+struct NewMenu mynewmenu[] =
+{
+    { NM_TITLE, "Project",        0 , 0, 0, 0,},
+    {  NM_ITEM, "Save As PNG...","S", 0, 0, 0,},
+    {  NM_ITEM, "About",         "?", 0, 0, 0,},
+    {  NM_ITEM, "Quit...",       "Q", 0, 0, 0,},
+    {   NM_END, NULL,             0 , 0, 0, 0,}
+};
+
+
 
 void clean_exit(const char* msg)
 {
     LONG i;
-    if (window) CloseWindow(window);
+
+    if (window)
+    {
+        ClearMenuStrip(window);
+        CloseWindow(window);
+    }
+    if (menuStrip) FreeMenus(menuStrip);
+    if (my_VisualInfo) FreeVisualInfo(my_VisualInfo);
+
     for (i=0; i<MAX_LINES; i++)
     {
         FreeVec(lines[i]);
     }
+    FreeAslRequest(filereq);
     FreeVec(lines);
     FreeVec(bits);
 
     if (msg)
     {
         PutStr(msg);
-        Flush(Output());
+        PutStr("\n");
         exit(1);
     }
     exit(0);
@@ -53,7 +83,10 @@ void readFile(const char* name)
 
     FRead(f, &width, sizeof (LONG), 1);
     FRead(f, &height, sizeof (LONG), 1);
-    LONG len = width*3;
+    if (width < 1 || width > 3000 || height < 1 || height > 3000)
+        clean_exit("wrong dimensions");
+
+    LONG len = width * 3;
 
     for (i = 0; i < height; i++)
     {
@@ -75,7 +108,7 @@ void readFile(const char* name)
         }
     }
 
-    fclose(f);
+    Close(f);
 }
 
 void createBitmap(void)
@@ -120,6 +153,73 @@ void createBitmap(void)
     WritePixelArray(bits, 0, 0, width * 3, window->RPort, 0, 0, width, height, RECTFMT_RGB);
 }
 
+void save(void)
+{
+    LONG y;
+
+    if (filereq == NULL)
+    {
+        filereq = (struct FileRequester *)AllocAslRequest(ASL_FileRequest, NULL);
+        if ( ! filereq) clean_exit("Can't allocate filerequester");
+    }
+
+    if (AslRequestTags(filereq, 
+        ASLFR_TitleText,        "Save AS PNG...",
+        ASLFR_DoPatterns,       TRUE,
+        ASLFR_DoSaveMode,       TRUE,
+        TAG_END))
+    {
+        strcpy(filename, filereq->rf_Dir);
+        if ( ! AddPart(filename, filereq->rf_File, sizeof(filename)))
+        {
+            clean_exit("AddPart() failed\n");
+        }
+        printf("filename %s\n", filename);
+        FILE *f = fopen(filename, "wb");
+        if (f == 0)
+            clean_exit("Could not open output PNG file");
+
+        png_structp pngp = png_create_write_struct(PNG_LIBPNG_VER_STRING, (png_voidp)0, 0, 0);
+        if (pngp == 0)
+            clean_exit("Could not create PNG write structure");
+        png_infop infop = png_create_info_struct(pngp);
+        if (infop == 0)
+            clean_exit("Could not create PNG info structure");
+
+        if (setjmp(png_jmpbuf(pngp)))
+            clean_exit("Could not write PNG file");
+
+        png_init_io(pngp, f);
+        png_set_IHDR(pngp, infop, width, height, 8, PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
+            PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+        png_set_bgr(pngp);
+
+        png_bytep* rows = AllocVec(sizeof(png_bytep) * height, MEMF_ANY);
+        for (y = 0; y < height; y++)
+            rows[y] = bits+(3 * y * width);
+        png_set_rows(pngp, infop, rows);
+
+        png_write_png(pngp, infop, PNG_TRANSFORM_IDENTITY, 0);
+
+        FreeVec(rows);
+        png_destroy_write_struct(&pngp, &infop);
+        fclose(f);
+    }
+}
+
+void showAbout(void)
+{
+    struct EasyStruct myES =
+    {
+        sizeof (struct EasyStruct),
+        0,
+        "About",
+        "Viewer for DBWRender TMP files",
+        "OK"
+    };
+    EasyRequestArgs(NULL, &myES, NULL, NULL);
+}
+
 void createWindow(void)
 {
     window = OpenWindowTags(NULL,
@@ -134,11 +234,27 @@ void createWindow(void)
         WA_GimmeZeroZero, TRUE,
         WA_DepthGadget,   TRUE,
         WA_SmartRefresh,  TRUE,
-        WA_IDCMP,         IDCMP_CLOSEWINDOW,
+        WA_IDCMP,         IDCMP_CLOSEWINDOW | IDCMP_MENUPICK,
         TAG_END);
 
-    if (! window) clean_exit("Can't open window\n");
+    if (! window) clean_exit("Can't open window");
 
+    if (! (my_VisualInfo = GetVisualInfo(window->WScreen, TAG_END)))
+    {
+        clean_exit("Can't get visualinfo");
+    }
+    if (! (menuStrip = CreateMenus(mynewmenu, TAG_END)))
+    {
+        clean_exit("Can't create menus");
+    }
+    if (! (LayoutMenus(menuStrip, my_VisualInfo, TAG_END)))
+    {
+        clean_exit("Can't layout menus");
+    }
+    if (! (SetMenuStrip(window, menuStrip)))
+    {
+        clean_exit("Can't set menustrip");
+    }
 }
 
 void msgLoop(void)
@@ -146,6 +262,10 @@ void msgLoop(void)
     struct IntuiMessage *imsg;
     struct MsgPort *port = window->UserPort;
     ULONG iclass;
+    UWORD menuNumber;
+    UWORD menuNum;
+    UWORD itemNum;
+    struct MenuItem *item;
     BOOL terminated = FALSE;
 
     while (! terminated)
@@ -155,13 +275,40 @@ void msgLoop(void)
         while ((imsg = (struct IntuiMessage *)GetMsg(port)) != NULL)
         {
             iclass = imsg->Class;
-            ReplyMsg((struct Message *)imsg);
             switch (iclass)
             {
                 case IDCMP_CLOSEWINDOW:
                     terminated = TRUE;
                     break;
+                case IDCMP_MENUPICK:
+                    menuNumber = imsg->Code;
+                    while ((menuNumber != MENUNULL) && (!terminated))
+                    {
+                        item = ItemAddress(menuStrip, menuNumber);
+
+                        menuNum = MENUNUM(menuNumber);
+                        itemNum = ITEMNUM(menuNumber);
+
+                        if (menuNum == 0)
+                        {
+                            switch (itemNum)
+                            {
+                                case 0:
+                                    save();
+                                    break;
+                                case 1:
+                                    showAbout();
+                                    break;
+                                case 2:
+                                    terminated = TRUE;
+                                    break;
+                            }
+                        }
+                        menuNumber = item->NextSelect;
+                    }
+                    break;
             }
+            ReplyMsg((struct Message *)imsg);
         }
     }
 }

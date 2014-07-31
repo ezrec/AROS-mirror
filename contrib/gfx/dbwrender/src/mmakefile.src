@@ -23,6 +23,6 @@ FILES := arosdisplay
 USER_CFLAGS :=
 
 %build_prog mmake=contrib-gfx-dbwrender-display \
-    progname=display targetdir=$(EXEDIR) files=$(FILES)
+    progname=display targetdir=$(EXEDIR) files=$(FILES) uselibs="png"
 
 %common
