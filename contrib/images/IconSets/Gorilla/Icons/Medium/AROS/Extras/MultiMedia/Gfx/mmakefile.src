@@ -1,11 +1,11 @@
-# Copyright © 2004, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2014, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(TOP)/config/make.cfg
 
 #MM- iconset-Gorilla-contrib-icons-extras-mmedia : iconset-Gorilla-contrib-icons-extras-mmedia-gfx
 
-ICONS := POVRay XaoS
+ICONS := DBWRender POVRay XaoS
 
 #MM- iconset-Gorilla-contrib-icons-extras-mmedia-clean : iconset-Gorilla-contrib-icons-extras-mmedia-gfx-clean
 %build_icons mmake=iconset-Gorilla-contrib-icons-extras-mmedia-gfx icons=$(ICONS) dir=$(AROS_CONTRIB)/MultiMedia/Gfx
