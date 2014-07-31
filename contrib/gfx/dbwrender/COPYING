@@ -1,0 +1,114 @@
+		 DBW_RENDER GENERAL PUBLIC LICENSE
+		Copyright (C) 1987 David B. Wecker
+
+Everyone is permitted to copy and distribute verbatim copies
+of this license, but changing it is not allowed.
+
+			COPYING POLICIES
+
+  1. 	You may copy and distribute verbatim copies of DBW_Render source
+	code as you receive it, in any medium, provided that you
+        conspicuously and appropriately publish on each file a valid
+        copyright notice such as "Copyright (C) 1987 David B. Wecker",
+        containing the year of last change and name of copyright holder for
+        the file in question; keep intact the notices on all files that
+        refer to this License Agreement and to the absence of any warranty;
+        and give any other recipients of the DBW_Render program a copy of
+        this License Agreement along with the program.
+
+  2. 	You may modify your copy or copies of DBW_Render source code or any
+	portion of it, and copy and distribute such modifications under the
+	terms of Paragraph 1 above, provided that you also do the following:
+
+    a) 	cause the modified files to carry prominent notices stating
+    	who last changed such files and the date of any change; and
+
+    b) 	cause the whole of any work that you distribute or publish,
+    	that in whole or in part contains or is a derivative of DBW_Render
+    	or any part thereof, to be freely distributed and licensed to all
+	third parties on terms identical to those contained in this License
+	Agreement (except that you may choose to grant more extensive
+        warranty protection to third parties, at your option).
+
+    c) 	cause modified programs when started running in the simplest and
+	usual way, to print an announcement including a valid copyright
+	notice ("Copyright (C)", the year of authorship, and all copyright
+	owners' names).
+
+  3. 	You may copy and distribute DBW_Render or any portion of it in
+	compiled, executable or object code form under the terms of
+        Paragraphs 1 and 2 above provided that you do the following:
+
+    a) 	cause each such copy of DBW_Render to be accompanied by the
+    	corresponding machine-readable source code; or
+
+    b) 	cause each such copy of DBW_Render to be accompanied by all
+	documentation along with a copy of this General Public License
+	(which should be referred to explicitly in the documentation).
+
+  4. 	You may not copy, sublicense, distribute or transfer DBW_Render
+	except as expressly provided under this License Agreement.  Any
+        attempt otherwise to copy, sublicense, distribute or transfer
+        DBW_Render is void and your rights to use DBW_Render under this
+        License agreement shall be automatically terminated.  However,
+        parties who have received computer software programs from you with
+        this License Agreement will not have their licenses terminated so
+        long as such parties remain in full compliance.
+
+
+			CONTRIBUITIONS
+
+  1.	All contributions will be used for program maintenance, development
+	and distribution.
+
+  2.	Any user who sends a contribution to David B. Wecker (hereafter
+	referred to as "the original author") will be added to a distribution
+	list of	registered users. This distribution list will be used for
+	mailings of bug fixes, enhancements and announcements of future
+	software.
+
+  3.	This package may be obtained from the original author for a
+	(suggested) contribution of $18.00 (in North America), please
+        increase accordingly for over-seas orders. This will register you
+        as a user, and will add you to the distribution list.
+
+  4.	If copies are obtained from other than the original author, a
+	(suggested) contribution of $10.00 should be sent to the original
+	author to insure continued maintenance (and adding yourself to the
+	distribution list).
+
+
+			   NO WARRANTY
+
+  BECAUSE DBW_RENDER IS LICENSED FREE OF CHARGE, WE PROVIDE ABSOLUTELY
+NO WARRANTY, TO THE EXTENT PERMITTED BY APPLICABLE STATE LAW. EXCEPT
+WHEN OTHERWISE STATED IN WRITING, DAVID B. WECKER AND/OR OTHER PARTIES
+PROVIDE DBW_RENDER "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
+EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
+ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH
+YOU. SHOULD THE DBW_RENDER PROGRAMS PROVE DEFECTIVE, YOU ASSUME THE COST
+OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
+
+ IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW WILL DAVID B. WECKER,
+AND/OR ANY OTHER PARTY WHO MAY MODIFY AND REDISTRIBUTE DBW_RENDER AS
+PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY LOST
+PROFITS, LOST MONIES, OR OTHER SPECIAL, INCIDENTAL OR CONSEQUENTIAL
+DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE (INCLUDING BUT NOT
+LIMITED TO LOSS OF DATA OR DATA BEING RENDERED INACCURATE OR LOSSES
+SUSTAINED BY THIRD PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH
+PROGRAMS NOT DISTRIBUTED BY DAVID B. WECKER) THE PROGRAM,
+EVEN IF YOU HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES, OR FOR
+ANY CLAIM BY ANY OTHER PARTY.
+
+
+Your comments and suggestions about the licensing policies and the
+software are welcome!  Please contact:
+
+	Dave B. Wecker
+	115 Palm Springs Drive
+	Colorado Springs, CO 80908
+
+	ARPA:	wecker%cookie.dec.com@decwrl.dec.com
+	USENET:	decwrl.dec.com!cookie.dec.com!wecker
+

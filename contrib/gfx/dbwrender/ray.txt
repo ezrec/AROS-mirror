@@ -1,0 +1,855 @@
+/************************************************************************
+ *									*
+ *		    Copyright (c) 1987, David B. Wecker			*
+ *			    All Rights Reserved				*
+ *									*
+ * This file is part of DBW_Render					*
+ *									*
+ * DBW_Render is distributed in the hope that it will be useful, but	*
+ * WITHOUT ANY WARRANTY. No author or distributor accepts		*
+ * responsibility to anyone for the consequences of using it or for	*
+ * whether it serves any particular purpose or works at all, unless	*
+ * he says so in writing. Refer to the DBW_Render General Public	*
+ * License for full details.						*
+ *									*
+ * Everyone is granted permission to copy, modify and redistribute	*
+ * DBW_Render, but only under the conditions described in the		*
+ * DBW_Render General Public License. A copy of this license is		*
+ * supposed to have been given to you along with DBW_Render so you	*
+ * can know your rights and responsibilities. It should be in a file	*
+ * named COPYING. Among other things, the copyright notice and this	*
+ * notice must be preserved on all copies.				*
+ ************************************************************************/
+
+ Sections
+ ~~~~~~~~
+    Announcement	- announcement of software availability
+    Included		- what's in the package
+    Background Info	- what is this package?
+    Running RAY		- how to run the ray tracer
+    Running DISPLAY	- how to run the display program
+    Creating a .DAT file- what goes into the input file (the hardest part)
+    Source file info	- how to rebuild the package
+
+ Announcement
+ ~~~~~~~~~~~~
+If you liked the ray traced images previously distributed... you're
+going to LOVE DBW_Render. This package is a FULL re-implementation of the Ray
+Tracer that I've been using on VAXen to create all those images. By adding
+AI-heuristics, elapsed time to compute an image is orders of magnitude faster
+than a VAX-780.
+
+ Included:
+ ~~~~~~~~~
+	RAY	- ray tracing program
+	DISPLAY	- display program for RAY's output
+	*.DAT	- sample input files
+	*.c	- all C sources for the package
+	*.h	- all C include files for the package
+	RAY.TXT	- full documentation for the package
+	COPYING - General License Agreement
+
+Please read the General License Agreement (file: COPYING) before proceeding.
+
+ Background Information
+ ~~~~~~~~~~ ~~~~~~~~~~~
+The DBW_Render package uses an algorithm called Distributed Ray Tracing.
+In addition to neatly solving the hidden surface problem, ray tracing
+(in general) affords the opportunity for doing excellent (that is,
+highly realistic) shading and illumination calculations.
+
+This package is written in C and runs on any Windows system. The RAY
+program knows how to create images composed of four primitive geometric
+objects: spheres, parallelograms, triangles, and flat circular rings
+(disks with holes in them). Some of the features of the program are:
+
+	Determination of correct shadows cast by arbitrarily shaped objects,
+	onto arbitrarily shaped objects, due to arbitrarily placed light
+	sources.
+
+	Diffuse and specular reflections (with arbitrary levels of gloss or
+	polish).  Rudimentary modeling of object-to-object diffusely 
+        reflected light is also implemented, that among other things 
+        accurately simulates color bleed effects from adjacent contrasting 
+        colored objects.
+
+	Mirror reflections, including varying levels of mirror smoothness
+	or perfection.
+
+	Refraction and translucency (which is akin to variable microscopic
+	smoothness, like the surface of etched glass).
+
+	Two types of light sources: purely directional (parallel rays from
+	infinity) of constant intensity, and spherical sources (like light
+	bulbs, which cast penumbral shadows as a function of radius and
+	distance) where intensity is determined by the inverse square law.
+
+	Photographic depth-of-field.  That is, the virtual camera may be
+	focused on a particular object in the scene, and the virtual
+	camera's aperture can be manipulated to affect the sharpness of
+	foreground and background objects.
+
+	Solid texturing.  Normally, a particular object (say a sphere) is
+	considered to have constant properties (like color) over the entire
+	surface of the object, often resulting in fake looking objects.
+	Solid texturing is a way to algorithmically change the surface
+	properties of an object (thus the entire surface area is no longer of
+	constant nature) to try and model some real world material.
+	Currently the program has built in rules for modelling wood, marble,
+	bricks, snow covered scenes, water (with arbitrary wave sources),
+	plus more abstract things like color blend functions.
+
+	Fractals.  The program implements what's known as recursive triangle
+	subdivision, which creates all manners of natural looking surface
+	shapes (like broken rock, mountains, etc.).  The character of the
+	fractal surface (degree of detail, roughness, etc.) is controlled by
+	parameters fed to the program.
+
+	AI heuristics to complete computation of a scene within a user
+	specified length of time.
+
+When the RAY program runs, it reads a sort of command file, that contains a
+geometric description of the scene to be rendered, plus desired global 
+lighting conditions, camera parameters, etc.  Then the program computes for 
+a long time, writing each scan line to disk as it computes it. The format of
+a scanline (in the .TMP) file is:
+
+	<line  number>	-   4 bytes long
+	<red   pixels>	- 320 bytes long (7 bits per pixel)
+	<green pixels>	- 320 bytes long
+	<blue  pixels>  - 320 bytes long
+
+For an entire screen (600 scan lines) this file is 1,452,024 bytes. A second
+program is run (DISPLAY) to display the output, and optionally save it as a
+PNG image file.
+
+In all, the DBW_Render package represents about 4000 lines of C code. 
+It is largely based on original algorithms for the VAX by Tom Dahl and
+Tone Engel at Digital Equipment Corporation. The AMIGA version has taken
+several months to create.
+
+ Running RAY
+ ~~~~~~~~~~~
+
+REMINDER:	BEFORE RUNNING ANYTHING MAKE SURE YOU BACKUP THIS DISK!!!
+
+Once you have an input file (described below in the "Creating a .DAT file"
+section) you can run the ray tracer. Remember that the output of the
+Ray Tracer (for a full screen) will be over a megabyte in length, so make
+sure you have enough free space on the disk you are running on.
+
+If you have a file called GLASS.DAT for input, you can type:
+
+	> ray glass
+
+The program will start running. All of the options are in the .DAT file.
+See the file GLASS.DAT (distributed with the package) for an example.
+As the program runs, it will write to the file GLASS.TMP. If you want
+different names for the input and output files, then run the program with
+no parameters:
+
+	> ray
+
+at which point you will be prompted for the input file:
+
+	Scene description file?
+
+to which you could answer GLASS.DAT. The program will then ask for the
+name of the output file:
+
+	File name to save picture (.tmp)?
+
+to which you could answer GLASS.TMP
+
+The program will now compute the picture. Note that 4 extra scan lines
+before and after your scene are ALWAYS computed, so if you told the program
+to do a full screen (command "& 0 600" in the command file) you will notice
+that the program will start at scan line -4 and will and at scan line 603.
+This is due to one requirement of the AI-heuristics to fill a scan line cache
+before output can occur.
+
+When the program finishes, it will give you a bunch of statistics about
+the picture. One of the most interesting is the number of pixels GUESSED as
+opposed to the number of pixels COMPUTED. This will give you and idea of how
+high a quality output to expect (0 guessed = perfect). These numbers are
+affected by the amount of time you give the program to compute the
+picture in ("R" command in the command file).
+
+ Running DISPLAY
+ ~~~~~~~ ~~~~~~~
+After RAY has completed, the output .TMP file (or files) may be viewed with
+DISPLAY.  Multiple files may be given to DISPLAY for several reasons:
+
+	1) The machine crashed and so you have one partial file and another
+	   that has the rest of the scan lines in it.
+
+	2) You decided to do the picture in strips and have a seperate file
+	   for each strip.
+
+	3) You did the entire picture, but there are blurry scan lines around
+	   complex objects (like light sources) because you didn't give it
+	   enough time... so you recomputed the bad sections allowing more
+	   time.
+
+These will become clearer as we do the examples. To run the program, type:
+
+	> display glass
+
+this will open file GLASS.TMP (which was output from RAY), open a window
+and show the generated image.
+
+If the SAVE button is clicked, you will be prompted for a file name to save
+the image as a PNG image file.
+
+If we had several input files, we could type:
+
+	> display glass1 glass2 glass
+
+In this example we are using multiple input files. The program will ALWAYS
+use scanlines from files earlier in the command line (if possible). So for
+example, GLASS.TMP contains a complete picture. GLASS1.TMP and GLASS2.TMP
+contain scanlines around the light sources (that are blurry in GLASS.TMP)
+but with a higher resolution of 24 hours (so that they're much better).
+
+ Creating a .DAT file
+ ~~~~~~~~ ~ ~~~~ ~~~~
+Okay, now the hard part: the contents of the script input file.  The
+file is a standard ASCII text file, with each line forming a separate
+object or command to RAY.  The lines begin with a command character
+(which is CASE SENSITIVE).  The command characters are:
+
+R   Set resolution (optional, if missing, program will default to 12.0 hours)
+D   Set the overall width and height of the image, in pixels
+N   Global index of refraction (optional, default = 1.0)
+Z   Produce 2D histogram, rather than true image (default true image)
+a   Set overriding ambient proportion factor (default not overridden)
+A   Set antialiasing parameters (default no antialiasing)
+F   Set lens focus and aperture for depth of field (default infinite depth)
+M   Set global diffuse lighting parameters (default off)
+&   Define scan-line region of image to generate
+*,! comment, ignored
+b   Set background color
+w   Define a wave source
+g   Define a color blend texture
+n   Define a snowfall texture
+k   Define a 3D checkerboard texture
+H   Set global haze parameters (default no haze)
+f   Define fractal surface parameters
+m   Define a marble texture
+d   Define a wood texture
+e   Set the eye (camera) view parameters
+l   Define a directional light source
+L   Define a spherical light source
+{   Start an extent
+}   Terminate an extent
+s   Specify a spherical object
+t   Specify a planar triangular object
+x   Specify a fractal triangular object
+q   Specify a planar paralleligram object
+r   Specify a planar ring (annular) object
+
+First, all color values consist of three numbers that range from 0 to 1.
+The color components are specified BLUE, GREEN, RED.
+
+All position/direction values are three numbers ranging in whatever numbering
+system you want.  The numbers are X, Y, Z order.  Assuming you are
+looking into the screen in the negative Z direction, positive X is to
+the right, positive Y is up, and positive Z is out from the screen.
+
+Okay, on to the specifics of the parameters that each command character
+requires.  First are listed all the general (environmental) commands, then 
+are listed the commands that create objects to be rendered in the scene.
+
+		Global index of refraction (optional, default = 1.0)
+N INDEX
+    This single value is taken to be the index of refraction of "the
+    air", or put another way of the space between and outside of all
+    objects.
+
+		Set resolution (optional, default = 12.0 hours)
+R RESOLUTION
+    The RESOLUTION value controls the MAXIMUM amount of time that a full
+    screen (400 scanlines) is allowed to take. This number should typically
+    be between 1.0 and 30.0 hours. The more time you give the program the
+    better the picture will be that you get.
+
+		Set width and height (optional, default = 800X600)
+D WIDTH HEIGHT
+    WIDTH and HEIGHT give the width and height of the image to be generated,
+    in pixels.
+
+		Produce 2D histogram, rather than true image
+Z FLAG
+    Normally, the contents of the .TMP file that the ray tracer produces
+    is a binary pixel version of the described scene.  However, for the
+    purposes of doing performance tuning of an antialiased scene, you can
+    include the command "Z 1" in the script file.  If done, the image file
+    that the ray tracer generates will not be the color scene that it 
+    normally is, but instead will be a sort of 2D histogram of how much 
+    computation each pixel in the scene consumed, displayed as a gray scale
+    (the brighter the pixel, the more computation).  Note that this command 
+    is only meaningfull if non-default values for the "A" command have been
+    used.  By default, basically an equal amount of time is spent on each 
+    pixel, (thus an image with Z set to 1 would come out a flat gray) but 
+    the "A" command tells the ray tracer to concentrate on certain types of
+    details in the scene to produce alias-free images.  Using the Z command 
+    with a parameter of 1 will allow you to see just where the ray tracer 
+    decided to spend more time, smoothing edges, etc.
+
+		Set overriding ambient proportion factor
+a FACTOR
+    As described below, each object in the scene contains parameters that
+    control how bright the object appears if no light is shining on it.  Thus
+    you can set some objects to appear brigher when in shadow that other
+    objects.  As an alternative, you can specify the "a" command with a
+    parameter from 0 to 1, and this will cause the ambient color of all
+    objects in the scene to be a fraction of their diffuse brightness.
+    When the "a" command is used, the BGR ambient values for each object are
+    ignored (but they must still be specified).  A reasonable starting point
+    would be to set FACTOR from between .1 and .2.
+
+		Set antialiasing parameters
+A COUNT THRESHHOLD
+    By default, the ray tracer computes one ray into the scene for each pixel
+    in the image (so a 320X4000 image computes ~128K rays).  Quite often, 
+    some unpleasant side effects of the digital generation process become 
+    apparent in a scene generated with one ray per pixel, for example 
+    diagonal lines are rendered as a sequence of discrete stairsteps -- the 
+    dreaded jaggies.  Such false features are called aliasing defects.  There
+    are numerous techniques devised to try to reduce the magnitude of these 
+    defects, collectively referred to as the process of anti-aliasing.
+    (There are many other types of aliasing defects besides jaggies.  An 
+    example of another "defect" is the razor-sharp shadows that are 
+    traditionally found in computer generated imagery -- real-world shadows 
+    are always at least a teensy bit diffuse.)
+
+    The COUNT parameter determines how many rays will be traced for each 
+    pixel in the scene -- the more, the better, but the slower the computing.
+    A good starting value is 4. What happens is that a bunch of rays (e.g. 4)
+    are sent into the pixel cone at random -- they are "distributed" across 
+    the horizontal and vertical dimensions.  Thus, this ray tracer is said to
+    implement Distributed Ray Tracing.
+
+    The THRESHHOLD value relates to a rather complicated feature in the ray
+    tracer called Statistically Optimized Distributed Ray Tracing.  The way
+    this works is that the program computes the intensities of the bunch of
+    rays that are distributed into the pixel.  In this example, say there are
+    four rays in the bunch.  The program computes the statistical variance of
+    the four resulting intensities.  If the variance is small, the odds are
+    that the portion of the scene being imaged is a smooth patch.
+    Thus a good approximation to the ideal intensity of that pixel has been
+    computed.  But let's say that the pixel happens to fall on a diagonal 
+    edge. Some of the distributed rays will be cast to one side of the edge,
+    and some of them to the other.  Thus the variance will be high.  The 
+    program looks at this, and if the variance is past the THRESHHOLD value,
+    will distribute another group of (in this case) four rays into the pixel.
+    Then the variance of the eight rays will be examined, and the process 
+    repeated until the required smoothness has been reached (or some 
+    arbitrarily large number of rays have been cast, and the process halts).
+    Setting THRESHHOLD to value of 1.0 or higher generally will force no 
+    extra groups of rays to be cast, beyond the initial group of COUNT rays.
+    Meaningfull values of THRESHHOLD generally fall in the .0001 to .1 range.
+
+		Set lens focus and aperture for depth of field
+F APERTURE FOCUS
+    This command is optional; if omitted, the scene will be rendered such
+    that all objects will be in perfect focus (a pin-hole camera effect).
+    With this command, you can add depth-of-field effects to a scene (though
+    at great computation speed degradation, as described below).
+    The APERTURE parameter specifies the radius of the hypothetical lens
+    in the camera that is taking the picture of the scene.  FOCUS sets the
+    distance from the camera (or eye) at which objects will appear in perfect
+    focus.  The magnitude of both values depends upon the coordinate system
+    in use by your scene, of course, but here is an example for determining a
+    reasonable camera aperture.  Say that one unit of distance represents an
+    inch.  Assume you set the focus distance to 100 inches; with this scale,
+    a reasonable value for aperture is 0.5 to 2.0.
+
+    In order to achieve a good quality smooth blurring of the foreground and
+    background, you will need to set the antialiasing parameters up from 
+    their defaults (with the A command).  A good start would be 20 to 30 
+    rays per pixel; the THRESHHOLD value doesn't matter much; it could be 
+    set to 1.
+
+		Set global diffuse lighting parameters
+M COUNT NUMERATOR DENOMINATOR
+    This command relates to the realistic propagation of light as it reflects
+    from object to object in the scene.  Traditionally, computer lighting
+    models operate such that if an object is directly visible from a light
+    source, then the surface of the object is colored according to the
+    material's properties, the color and strength of the light, etc.  For
+    those objects or portions of objects that are not in the path of a light
+    source (aka are in shadow), they are rendered black.  Well, this is
+    usually artificial looking, and so a constant dim color is assigned to
+    areas in shadow.  (In fact, this program has provisions for this as well,
+    the ambient parameters of each object, plus the "a" command.)
+
+    But in reality, shadows are filled in with light bounced off walls, etc.
+    The M command can be employed to model this diffuse propagation of light
+    from object to object.  (Sadly, once again performance suffers
+    significantly if you choose to do this, since a great deal of information
+    about the scene needs to be collected and analyzed to determine how the
+    shadow fill-in should occur.)  How this program does this is to, for each
+    pixel, sample extra rays from the surface being rendered, out into the
+    scene in random directions to see what other nearby surfaces are acting
+    as reflectors, etc.  The COUNT parameter controls how many samples to
+    take per pixel; values from 10 on up are okay, but 100 or more are needed
+    to render smooth color bleeding from surface to surface, etc.
+    The NUMERATOR and DENOMINATOR derive from the recursive nature of the
+    ray tracing process: in the process of calculating a ray on the surface
+    being rendered, assume the ray strikes an adjacent surface.  Well, from
+    THAT surface, another COUNT set of rays will ne sampled, to determine
+    ITS color, etc.; thus the process exponentially generates rays that need
+    to be computed.  To avoid this recursive growth, the number of sample 
+    rays that are done per recursion level is scaled from the initial COUNT 
+    value, according to the supplied NUMERATOR and DENOMINATOR values.  For
+    example values of 1 and 2 respectively will reduce by half the number of
+    samples taken at each recursion level.  Normally, even this is not a fast
+    enough decay, so 1/3 or 1/4 is better, without much noticable loss in 
+    resulting color fidelity.  In fact, setting NUMERATOR to 0 is not 
+    unreasonable.
+
+		Define scan-line region of image to generate
+& FIRST LAST
+    If this command is omitted, the entire image bitmap will be calculated
+    (all 400 scan lines).   This command tells the program only to produce
+    those scans from FIRST to LAST-1 inclusive.  Once done, the resulting
+    fragment images can be combined into one whole image file.   In this way,
+    a particularly complex scene may be distributed into a number of CPUs,
+    resulting in shorter elapsed generation time. Picture merging is
+    accomplished by DISPLAY).
+
+		Set background color
+b BLUE GREEN RED
+    The simple color value that will be displayed if no objects are
+    visible at a given point in the scene.
+
+		Define a wave source
+w CENTERX CENTERY CENTERZ  WAVELENGTH AMPLITUDE DAMP PROPAGATE
+    A number of features in the program use wave sources as a basis for
+    calculating various effects (most notably the production of rippled
+    surfaces, such as water).  You can define up to 100 wave sources per
+    scene.  There is only one "wave source table" stored by the program;
+    all of the features that use waves use the same waves.
+    The first three values specify the coordinate from which the concentric
+    wave fronts emanate from.  WAVELENGTH sets the crest-to-crest distance
+    for the wave.  The AMPLITUDE value determines, in an abstract manner,
+    the height of the wave at the origin.  The height is not specified in
+    normal distance units; rather it is a fixed scale frational value, in the
+    approximate range of 0.1 (small, flat waves) to 0.5 (strong waves).
+    The DAMP value controls the damping of successive trains of waves.  The
+    value 1.0 means no damping; the waves will contine out to infinity from
+    the source.  Value 0.7 means that successive crests will be 70% the 
+    height of the preceeding crest.  The PROPAGATE value controls what phase
+    the wave starts broadcasting at; the value ranges from 0.0 (starting at a
+    crest at the origin) through 0.5 (180 degrees out of phase -- a trough)
+    and back to 1.0 (a crest).  This can be used in sequenced frames to
+    produce moving waves.
+
+		Define a color blend texture
+g BCOLOR GCOLOR RCOLOR  START RANGE
+    Normally, an object is solidly and uniformly colored across its entire
+    surface.  This command lets you define a blend function which can be
+    applied to any object, in such a manner that the color of the object
+    will vary as a function of altitude (Y coordinate).  For example, a
+    sphere could be blue at the south pole, and yellow at the north pole,
+    with the color smoothly changing in the middle.
+    You can define up to ten blends per scene.
+    The three COLOR values specify the target color that the surface will
+    blend to with increasing Y coordinate (the initial color of the object
+    at low Y coordinate values is taken from the diffuse coeficients of
+    the object, as defined a ways below in the section on object properties).
+    The START value defines the low-Y coordinate where blending starts;
+    surface points below this Y level will be colored with the objects
+    diffuse coeficients.  The blending continues from START, continuing for
+    RANGE units upward.  At the level of START+RANGE, the blend would have
+    saturated out at the new COLOR value.  Points above START+RANGE will
+    maintain the new COLOR.  As an example, consider a sphere of radius
+    100 units positioned at the origin.  If START was set to -33, and RANGE
+    was set to 66, the result would be that the lower third of the sphere
+    would be its base diffuse color; the middle third would gradually change
+    color up until at the +33 level the color would attain the new COLOR;
+    the upper third of the sphere would maintain the new COLOR.
+
+		Define a snowfall texture
+n START ALTITUDERANGE ALTFACTOR THRESHHOLD
+    This texture function is similar to the above blend texture.  It is
+    still under development.  This is intended to be used with the fratcal
+    surface capabilities described below.  The theory is that this will
+    distribute snow onto an object, the nature of which varies according to
+    the local surface slope and altitude.
+    START is the lower bound below which there can be no snowfall
+    accumulation, even on level surfaces.  Points on the surface above the
+    level of START+ALTITUDERANGE generally are solidly blanketed with snow.
+    ALTFACTOR is a scaler that lets you determine how important altitude is
+    in determining snow cover; value 0 means it is irrelevant (thus it is 
+    just a function of local surface slope).  Values above 1.0 generally 
+    result in a faster buildup of snow at the low end of the ALTITUDERANGE 
+    scale.  THRESHHOLD controls when a surface will be solidly blanketed, if
+    it meets the threshhold test.  Values for this parameter range from 0.0
+    (at which everything from START and above will be solidly coated,
+    regardless of slope) to 1.0, where coverage will be a continuous function
+    of slope and altitude.  Values around .4 result in surfaces from about
+    40 degrees of slope and flatter to be solidly covered.
+
+		Define a 3D checkerboard texture
+k BCOLOR GCOLOR RCOLOR  X Y Z  JUNK1 JUNK2 JUNK3
+    You can define up to 10 checker textures per scene.
+    This texture function determines the color of points on the surface of
+    an object, using a 1- (layer), 2- (checker, column), or 3-dimensional
+    (block) model.  As the points on the surface of an object are colored,
+    this texture function can be used to determine whether the color of the
+    point in question is the object's base diffuse color, or is a different
+    specified color (controlled the three COLOR parameters to this command).
+    To determine whether the surface point is inside or outside which color
+    region, the X Y Z pattern size values are checked.  The X parameter
+    defines the width of successive layers from left to right; Y defines the
+    width of successive layers from top to bottom; Z is for front to back.
+    Note that one or more X Y or Z values can be set to 0.  This will cancel
+    any variation in the pattern in the corresponding dimention. For example,
+    if X and Z are set to 10 but Y is 0, the effect will be of square
+    vertical columns of alternating color.  If only Y were non-zero, the
+    effect would be of horizontal layers of alternating color.  Setting all
+    three to non-zero creates a solid 3D block pattern.  The width of the 
+    layers in X Y and Z need not be the same (so you can make long flat
+    blocks, for example).
+    JUNK1, JUNK2, and JUNK3 are currently not used and should be set to 0.
+
+		Set global haze parameters
+H BCOLOR GCOLOR RCOLOR  DISTANCE
+    If this command is omitted, the color of each pixel in the scene is not
+    affected by how far the rendered surface is from the eyepoint.  By using
+    this haze command, you can cause objects in the distance to be
+    progressively tinted to a specified target haze color (the three COLOR
+    values).  Objects that are DISTANCE units or farther from the eyepoint
+    will be completely tinted or blended to the haze color and thus will
+    become effectively invisible.  Objects closer than this distance will be
+    continuously tinted from their true local color to the haze color, in
+    a linear manner as a function of distance.
+
+		Define fractal surface parameters
+f RECURSIONLEVEL  XSCALE YSCALE ZSCALE  FINALTEXTURE
+    This texture can only be applied to 'x' objects as defined below.
+    The ray tracer so far only knows how to render a small set of primitive
+    object shapes, one of which is the three-sided polygon (triangle).
+    As described in the 'x' command below, the ray tracer does have the
+    capability to algorithmically generate compound objects that are
+    constructed out of large numbers of adjacent triangles forming what
+    is called a stochastic surface (often thought of as a fractal surface,
+    though in fact the relationship to the mathemacits of fractals is
+    limited).  This command defines parameters that the ray tracer uses in
+    constructing the mesh of triangular surface patches.
+
+    You can define up to 10 fractal textures per scene.  In order to define
+    a fractal surface, you must also define at least one wave source with
+    the "w" command (the reason for this apparently unrelated need will be
+    explained).  The general fractal construction procedure is based on
+    recursive triangle subdivision, applying complex coordinate shifts when
+    determining the vertices of the subdivision triangles.  You start with
+    one master triangle that controls the gross size and orientation of the
+    final surface.  The original triangle is split into four triangles (by
+    bisecting the three sides and connecting the midpoints).  The corners of
+    the new triangles are then shifted in space, and they are recursively
+    subdivided in turn, to the desired level.  The RECUSIONLEVEL sets this
+    depth; the higher the depth, the finer the resulting surface, but the
+    slower the image will take to compute (on the order of four times with
+    each successive level).  Plus larger level values require substantial
+    quantities of address space to contain the generated triangle data (on
+    the order of thousands of 512-byte memory pages for a level of 7,
+    for example... so BE CAREFUL!).
+
+    The X Y and ZSCALE values allow you to emphasize distortion differenly in
+    the three dimensions (X and Z of 1.0, with Y of 3.0 results in three 
+    times as much vertical relief as horizontal, for example).  Values of 0
+    for a scale parameter cause the sub-triangles to not move in the 
+    indicated dimension (X and Y of 0 will make the resulting surface 
+    maintain a triangular silhouette as seen from above).
+
+    The FINALTEXTURE value will be assigned as the texture function number
+    for each of the sub-triangles (see the description of texture function
+    values for objects below).  Basically, this allows you to apply a uniform
+    texture to the entire fractal object: a smooth color gradiation, a
+    checkerboard, etc.
+
+    As mentioned above, to get a good rough fractal surface, you need to
+    also define a small number of wave sources.  A good starting point is
+    to specify five or six wave sources, whose actual XYZ coordinates are
+    scattered about the scene.  Giving them different wavelenghts and
+    amplitudes will increase the fluctuation in the surface.  Generally,
+    the damping should be small (values of or near 1.0).  The actual manner
+    in which the waves are utilized in constructing the sub triangle vertices
+    is beyond convenient description; suffice it to say that there is NO
+    randomness involved, and that different wave patters will produce
+    markedly different fractal surfaces.  Experment.
+
+		Define a marble texture
+m BVEINCOLOR GVEINCOLOR RVEINCOLOR XSCALE TURBULENCE SQUEEZE
+    You can define up to ten marble textures per scene.  This texture
+    relies on your having defined at least one wave source, for reasons
+    described below.
+
+    The marble is modelled as a base substance that has intrusions of a 
+    second substance into the base.  The base color is determined by the 
+    diffuse coefficients for the object.  The intrusion color is specified 
+    in the three VEINCOLOR parameters.  The actual color for the surface of 
+    the marble object is a complex blending function of the two starting 
+    colors.
+
+    The basic formula for making the intrusions (veins) is to start with
+    equally spaced vertical layers (spaced along the X axis).  The spacing is
+    determined by the XSCALE parameter (good values are from 0.1 to 1).  Then
+    turbulence is applied to the layers, deforming them into myriad whorls 
+    and streaks, etc.  The amount of turbulence is set by the TURBULENCE 
+    parameter (values from 1.0 to 3.0 are nice).  The rough thickness of the
+    streaks is determined by the SQUEEZE parameter (which must be an integer
+    -- no fractional component).  The value 1 means leave them normal width; 
+    2 means twice as thin; 3 means four times as thin; 4 means eight times, 
+    etc.  Another way to think of SQUEEZE is that it affects how fast the 
+    blending occurs from the base to the vein color.
+
+    The turbulence is controlled by (of all things) the wave sources that you
+    have defined in the scene.  Unfortunately, the correspondence between a
+    particular wave source and a particular turbulent result is almost
+    impossible to predict (but it IS possible; there is no randomness
+    involved).  All that can really be done is to give guidelines for general
+    wave parameter values.  First, four or five wave sources are needed.  The
+    wave centers should be well distributed around the scene. The wavelengths
+    should vary amongst the source a good amount (some should be five or six
+    times the wavelength of other sources).  Not much damping should be 
+    applied (values from 1.0 down to 0.95 perhaps).
+
+		Define a wood texture
+d BCOLOR GCOLOR RCOLOR THICKSCALE RINGSCALE TURBULENCE SQUEEZE
+    You can define up to ten wood textures per scene.  This texture
+    relies on your having defined at least one wave source, just like for
+    the marble textures listed above.  In fact, at this time wood is modelled
+    very similarly to marble, except that where marble consists of parallel
+    layers of base material, wood consists of concentric cylinders of base
+    material (aligned along the Y axis).  The RINGSCALE parameter is
+    analogous to XSCALE for marble; TURBULENCE and SQUEEZE are the same.
+    THICKSCALE basically controls how faint or strong the grain is rendered;
+    values above 1.0 enhance the grain; values less than 1.0 subdue the 
+    grain.
+
+		Set the eye (camera) view parameters
+e XPOS YPOS ZPOS  XVIEW YVIEW ZVIEW  XUP YUP ZUP
+    First triple sets the position of the eyepoint.  Second triple
+    defines the direction (relative to that point) that the eye will
+    look along to define what is visible.  The length of this vector
+    determines the "wide-andle vs. telephoto" effect.  To guage what
+    different lengths mean, at the tip of the VIEW vector the screen is
+    projected as if it were 256 units horizontally by 170 units
+    vertically.  Thus the magnitude of the numbers you choose for XYZ
+    points interact with the view vector length to determine the cone
+    of visibility.  The third triple is the direction you want to be
+    "up"; usually 0 1 0 is what you want.
+
+		Define a directional light source
+l BLUE GREEN RED  XDIR YDIR ZDIR
+    The first triple is the color and intesity of the light (1 1 1 would
+    be bright white; 0.5 0 0.5 would be dim magenta).  The second triple
+    is the direction from which the light is comming.  For example 1 0 0
+    would mean the light is comming in straight along the X axis (from
+    positive to negative).  You can have at most 100 light sources per
+    scene (many light sources sloooows things down -- two is
+    reasonable!).
+
+		Define a spherical light source
+l BLUE GREEN RED  XCENTER YCENTER ZCENTER  DISTANCESCALE  RADIUS
+    The first triple is the color and base intensity of the light, just as
+    for directional light sources.  The second triple is the XYZ coordionate
+    of the center of the spherical light source; it can be anywhere inside
+    or outside of the visible scene.  (Note that if the center is within the
+    scene, it is not a visible object per-se.  For example, if you wanted a
+    lightbulb, you would place the spherical light source where you wanted
+    it, and also place a transparent sphere at the same coordinates and with
+    the same radius.)  The DISTANCESCALE relates to the inverse-square law
+    with which the brightness of the light diminishes within the scene.  To
+    explain how to set a value for DISTSCALE, consider the following example.
+    Say you wanted a full-intensity white lightbulb (i.e. its nominal BGR
+    values would be 1 1 1) to shine onto a table.  If the table were, say,
+    37 units of distance from the light coordinate, then you'd want to set
+    DISTSCALE to 37 in order that the table would be fully illuminated. Thus,
+    objects closer to the light that 37 would appear very bright (indeed,
+    probably "overexposed") while objects farther than 37 units from the 
+    light would become increasingly dimly lit.  RADIUS is the radius of the
+    light emitting sphere; 0.0 would be a point light source.  (Note that 
+    point light sources are faster to compute.)  Also note that non-zero 
+    radius light sources cast penumbral shadows, though to be effective you
+    will need to increase the antialias parameters defined by the "A" 
+    command.
+
+Now for the actual objects that compose a scene.  You can about a thousand
+objects max per scene.  All objects have the same basic properties available
+to them.  Specifically, the first portion of the command line for any
+object starts with:
+
+@ TEX FUZZ MIRROR IDX TRA_B TRA_G TRA_R  AMB_B AMB_G AMB_R  DIF_B DIF_G DIF_R
+    "@" is the object command character (s,q,x,t,r).
+
+    TEX is an integer value that specified what texture function should be
+    applied to this object.  Value 0 means no texture (plain, boring evenly
+    colored flat surface).  Positive values select from among the supported
+    texture functions, as follows:
+
+	Value	Texture function
+	-----	----------------
+	1: 	Y axis color gradiation
+		Compute the color at each point on the surface as a function
+		of the point's Y coordinate.  Starting at Y=0, the color
+		belnds from red to blue to green and back to red at Y=20.
+		The colors repeat evern 20 units in Y.
+
+	3: 	Mottled diffuse
+		The brightness of the surface of the object varies to
+		form a mottled pattern.  This texture requires some wave
+		sources to be defined.
+
+	4:	Wavy surface
+		The surface will be rendered as being criss-crossed by
+		overlapping waves.  If reflectivity is turned on for the
+		object, the reflections will be rippled, etc.
+
+	5:	Brick pattern
+		The object will be rendered as if it were carved out of
+		bricks.  The brick size is currently hardwired to be
+		height=3.0, width=8.0, depth=4.0, mortar thickness=0.5.
+		The color of the bricks is determined by the diffuse
+		coefficients for the object; the color of the mortar is
+		hardwired at BLUE=0.8, GREEN=0.85, RED=0.99.  The bricks
+		are aligned with the coordinate system.
+
+	10..19:	Single Wave
+		This is like texture 4, except that the surface is rippled
+		by only one wave (rather than all of them with texture 4).
+		Texture 10 means use the first wave, texture 11 means use
+		the second wave, etc. up to 19 for the tenth wave.
+
+	20..29:	Marble
+		Render the object as if it were carved out of marble.  The
+		marble texture chosen depends on the texture number: texture
+		20 uses the first marble defined, texture 21 uses the second
+		marble defined, etc.
+
+	40..49:	Wood
+		Render the object as if it were carved out of wood.  The
+		wood texture chosen depends on the texture number: texture
+		20 uses the first wood defined, texture 21 uses the second
+		wood defined, etc.
+
+	50..59:	Checkered
+		Color the surface of the object according the the chosen
+		checkerboard texture.  Texture 50 uses the first defined
+		checker pattern, etc.
+
+	60..69:	Fractal
+		This isn't a texture per se (in so far as most other
+		textures operate by changing the color of surface points of
+		the object).  This texture determines what fractal surface
+                contours should be applied to this object.  This texture
+		type may only be specified for object type X (fractal
+		objects). Texture 60 uses the first defined fractal type,
+		etc.
+
+	70..79:	Smooth blend
+		Render the surface of the object as a blend between the
+		objects normal diffuse color, and the specified blend texture
+		color.  Texture 70 uses the first defined blend texture, etc.
+
+	80..89:	Snow
+		Color the surface of the object by applying the chosen 
+	        snowfall texture.  Texture 80 uses the first defined snow 
+                texture, etc.
+
+    FUZZ is a pseudo-texture factor 0 to 1 that applies a random fuzz to
+    the surface of the object.  This can be used in a number of ways: to
+    model soft surfaces like tennis balls; to form imperfectly reflecting
+    mirrors, to form translucent (etched) glass, etc.
+
+    MIRROR is a 0 to 1 value where 0 means no specular and mirror
+    reflection, and 1 means 100% specular & mirror reflection.
+
+    IDX is the index of refraction for the object.  This is only relevant if
+    the transparency for the object is non-zero.
+
+    TRA_B, _G, _R is the transparency of the object in each color band.
+    0 means opaque, 1 means 100% transparent.
+
+    AMB_B, _G, _R is the ambient light value for the object, 0 to 1.  0
+    means no pseudo-ambient light, 1 means VERY strong ambient light
+    (generally not useful so strong -- washes the object out).
+
+    DIF_B, _G, _R is the diffuse reflection values 0 to 1 for the object
+    in the color bands.  For example, glass has virtually zero diffuse
+    reflection, while chaulk has very high (near 1) diffuse reflection.
+    The diffuse coefficients determine the color of the object (in 
+    conjunction with the color of the light sources).
+
+From the above, notice that non-rational objects can be created.  For
+example, a ball that is 100% transparent AND 100% reflective.
+
+Now onto each object.  The parameters below FOLLOW (appear to the right
+of) all of the above property parameters.
+
+s CENTERX CENTERY CENTERZ  RADIUS
+    Sphere.  Self-explanetory.
+
+q POSX POSY POSZ  VE_X VE_Y VE_Z  VP_X VP_Y VP_Z
+    Parallelogram.
+    The position triple defines a corner of the parallelogram.  The
+    second and third triple are two vectors that define the two sides of
+    the object adjacent to and relative to the defining point.  Here's
+    the hard part: the order of the two vectors matters.  To try to put
+    it simply, the VE vector is the one on the left when viewed from
+    "above," and the VP vector is the one on the right.  In another way,
+    the VP vector is clockwise from the VE vector.  If the two vectors
+    are reversed, the object will appear invisble.  So you may have to
+    experiment by reversing them.  Note that the two vectors do not have
+    to be orthogonal.
+
+t POSX POSY POSZ  VE_X VE_Y VE_Z  VP_X VP_Y VP_Z
+    Triangle.
+    Same as for a parallelegram, except that the VE, VP vectors define
+    the two sides of the triangle.
+
+x POSX POSY POSZ  POS1X POS1Y POS1Z  POS2X POS2Y POS2Z
+    Fractal.
+    This is very much like a triangle, except that whereas the second and
+    third set of XYZ values for triangles are relative to the base position
+    of the triangle, for a fractal object all three XYZ triples are absolute
+    object space positions.
+
+r CENTERX CENTERY CENTERZ VE_X VE_Y VE_Z  VP_X VP_Y VP_Z  MINRAD MAXRAD
+    Ring (or annullus).
+    Rings are sort of like parallelograms.  The first triple defines the
+    center of the ring.  The VE and VP triples radiate from that point
+    and define the plane of the ring.  It is undefined as to what
+    happens if the two vectors are not orthogonal.  MINRAD is the inside
+    radius of the ring (which may be zero, forming a disk); MAXRAD is
+    the outside radius of the ring.
+
+The { and } command lines may be placed around any arbitrary set of
+object command lines.  This allows RENDER to do optimized ray tracing by
+calculating extent spheres around the indicated primitive objects and
+then checking ray intersections with the extent sphere rather than
+one-by-one with all the inner objects.  Extents may be nested.
+
+ Source file information
+ ~~~~~~ ~~~~ ~~~~~~~~~~~
+Source code is kept in its own directory:
+
+	src/
+		makefile
+		ray.h	    - all global definitaions
+		ray.c	    - main module of ray tracer
+		val.c	    - current intensity value of an object
+		hit.c	    - calculate if an object gets hit by a ray
+		tex.c	    - calculate the texture of an object
+		ext.c	    - handle extents ({,} commands)
+		rnd.c	    - random number table
+		mth.c	    - perform vector and matrix math
+		fil.c	    - file i/o
+		int.c	    - find intersections with objects
+		cal.c	    - top level object calculations
+		display.cpp - source for display package
+
