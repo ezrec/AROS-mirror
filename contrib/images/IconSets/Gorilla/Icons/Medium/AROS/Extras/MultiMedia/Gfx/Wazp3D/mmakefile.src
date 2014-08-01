@@ -1,0 +1,11 @@
+# Copyright © 2004-2014, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- iconset-Gorilla-contrib-icons-extras-mmedia-gfx : iconset-Gorilla-contrib-icons-extras-mmedia-gfx-wazp3d
+
+ICONS := CoW3D WarpTest
+
+#MM- iconset-Gorilla-contrib-icons-extras-mmedia-gfx-clean : iconset-Gorilla-contrib-icons-extras-mmedia-gfx-wazp3d-clean
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-mmedia-gfx-wazp3d icons=$(ICONS) dir=$(AROS_CONTRIB)/MultiMedia/Gfx/Wazp3D
