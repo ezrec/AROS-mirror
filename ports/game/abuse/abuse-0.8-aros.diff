@@ -1,6 +1,6 @@
-diff -Naur abuse-0.8-orig/configure abuse-0.8/configure
---- abuse-0.8-orig/configure	2013-10-05 11:22:35.229956738 +0200
-+++ abuse-0.8/configure	2013-10-05 18:15:29.383155739 +0200
+diff -ruN abuse-0.8/configure abuse-0.8.aros/configure
+--- abuse-0.8/configure	2011-05-09 12:06:36.000000000 +0100
++++ abuse-0.8.aros/configure	2014-08-01 06:52:22.063683052 +0100
 @@ -16121,7 +16121,7 @@
  if test "${ac_cv_my_have_sdl_mixer}" = "no"; then
    as_fn_error $? "*** SDL_mixer not found!" "$LINENO" 5
@@ -48,9 +48,21 @@ diff -Naur abuse-0.8-orig/configure abuse-0.8/configure
  
  ac_config_files="$ac_config_files Makefile src/Makefile src/lisp/Makefile src/net/Makefile src/imlib/Makefile src/sdlport/Makefile data/Makefile doc/Makefile doc/abuse.6 doc/abuse-tool.6"
  
-diff -Naur abuse-0.8-orig/src/game.cpp abuse-0.8/src/game.cpp
---- abuse-0.8-orig/src/game.cpp	2013-10-05 11:22:35.269956739 +0200
-+++ abuse-0.8/src/game.cpp	2013-10-05 18:15:29.383155739 +0200
+diff -ruN abuse-0.8/src/demo.h abuse-0.8.aros/src/demo.h
+--- abuse-0.8/src/demo.h	2011-05-02 12:55:06.000000000 +0100
++++ abuse-0.8.aros/src/demo.h	2014-08-01 12:21:36.596308992 +0100
+@@ -44,7 +44,7 @@
+ 
+ 
+ 
+-extern int32_t last_demo_mx,last_demo_my,last_demo_mbut;
++extern int last_demo_mx,last_demo_my,last_demo_mbut;
+ //extern ulong demo_tick_on;
+ #endif
+ 
+diff -ruN abuse-0.8/src/game.cpp abuse-0.8.aros/src/game.cpp
+--- abuse-0.8/src/game.cpp	2011-05-09 12:22:03.000000000 +0100
++++ abuse-0.8.aros/src/game.cpp	2014-08-01 06:52:22.063683052 +0100
 @@ -62,6 +62,31 @@
  #define SHIFT_RIGHT_DEFAULT 0
  #define SHIFT_DOWN_DEFAULT 30
@@ -83,9 +95,9 @@ diff -Naur abuse-0.8-orig/src/game.cpp abuse-0.8/src/game.cpp
  extern CrcManager *net_crcs;
  
  Game *the_game = NULL;
-diff -Naur abuse-0.8-orig/src/innet.cpp abuse-0.8/src/innet.cpp
---- abuse-0.8-orig/src/innet.cpp	2013-10-05 11:22:35.269956739 +0200
-+++ abuse-0.8/src/innet.cpp	2013-10-05 18:15:29.383155739 +0200
+diff -ruN abuse-0.8/src/innet.cpp abuse-0.8.aros/src/innet.cpp
+--- abuse-0.8/src/innet.cpp	2011-05-02 12:55:06.000000000 +0100
++++ abuse-0.8.aros/src/innet.cpp	2014-08-01 06:52:22.063683052 +0100
 @@ -290,13 +290,13 @@
  {
    if (prot)
@@ -102,9 +114,9 @@ diff -Naur abuse-0.8-orig/src/innet.cpp abuse-0.8/src/innet.cpp
                  if (new_sock)
                  {
                    uint8_t client_type;
-diff -Naur abuse-0.8-orig/src/intsect.cpp abuse-0.8/src/intsect.cpp
---- abuse-0.8-orig/src/intsect.cpp	2013-10-05 11:22:35.281956740 +0200
-+++ abuse-0.8/src/intsect.cpp	2013-10-05 18:15:29.383155739 +0200
+diff -ruN abuse-0.8/src/intsect.cpp abuse-0.8.aros/src/intsect.cpp
+--- abuse-0.8/src/intsect.cpp	2011-05-02 12:55:06.000000000 +0100
++++ abuse-0.8.aros/src/intsect.cpp	2014-08-01 06:52:22.063683052 +0100
 @@ -12,6 +12,7 @@
  #   include "config.h"
  #endif
@@ -113,9 +125,23 @@ diff -Naur abuse-0.8-orig/src/intsect.cpp abuse-0.8/src/intsect.cpp
  #include <stdlib.h>
  
  void pushback(int32_t x1,int32_t y1,int32_t &x2,int32_t &y2,
-diff -Naur abuse-0.8-orig/src/net/fileman.cpp abuse-0.8/src/net/fileman.cpp
---- abuse-0.8-orig/src/net/fileman.cpp	2013-10-05 11:22:35.281956740 +0200
-+++ abuse-0.8/src/net/fileman.cpp	2013-10-05 18:15:29.383155739 +0200
+diff -ruN abuse-0.8/src/level.cpp abuse-0.8.aros/src/level.cpp
+--- abuse-0.8/src/level.cpp	2011-05-02 12:55:06.000000000 +0100
++++ abuse-0.8.aros/src/level.cpp	2014-08-01 12:34:17.144383557 +0100
+@@ -2637,8 +2637,8 @@
+ 
+   if (blockx2>=foreground_width()) { x2=tl*foreground_width()-1; }
+   if (blocky2>=foreground_height()) { y2=th*foreground_height()-1; }
+-  blockx1=Max(blockx1,0);
+-  blocky1=Max(blocky1,0);
++  blockx1=Max((int)x1,0);
++  blocky1=Max((int)y1,0);
+ 
+   if ((blockx1>blockx2) || (blocky1>blocky2)) return ;
+ 
+diff -ruN abuse-0.8/src/net/fileman.cpp abuse-0.8.aros/src/net/fileman.cpp
+--- abuse-0.8/src/net/fileman.cpp	2011-05-02 12:55:06.000000000 +0100
++++ abuse-0.8.aros/src/net/fileman.cpp	2014-08-01 06:52:22.063683052 +0100
 @@ -143,7 +143,7 @@
      read_total=size_to_read>(READ_PACKET_SIZE-2) ? (READ_PACKET_SIZE-2) : size_to_read;
  
@@ -143,9 +169,9 @@ diff -Naur abuse-0.8-orig/src/net/fileman.cpp abuse-0.8/src/net/fileman.cpp
  
        if (size_read!=packet_size)
        {
-diff -Naur abuse-0.8-orig/src/net/gserver.cpp abuse-0.8/src/net/gserver.cpp
---- abuse-0.8-orig/src/net/gserver.cpp	2013-10-05 11:22:35.281956740 +0200
-+++ abuse-0.8/src/net/gserver.cpp	2013-10-05 18:15:29.383155739 +0200
+diff -ruN abuse-0.8/src/net/gserver.cpp abuse-0.8.aros/src/net/gserver.cpp
+--- abuse-0.8/src/net/gserver.cpp	2011-05-02 12:55:06.000000000 +0100
++++ abuse-0.8.aros/src/net/gserver.cpp	2014-08-01 06:52:22.063683052 +0100
 @@ -334,7 +334,7 @@
  int game_server::end_reload(int disconnect)  // notify evryone you've reloaded the level (at server request)
  {
@@ -164,9 +190,9 @@ diff -Naur abuse-0.8-orig/src/net/gserver.cpp abuse-0.8/src/net/gserver.cpp
  
    for (; c; c=c->next)
    {
-diff -Naur abuse-0.8-orig/src/net/sock.h abuse-0.8/src/net/sock.h
---- abuse-0.8-orig/src/net/sock.h	2013-10-05 11:22:35.281956740 +0200
-+++ abuse-0.8/src/net/sock.h	2013-10-05 18:15:29.383155739 +0200
+diff -ruN abuse-0.8/src/net/sock.h abuse-0.8.aros/src/net/sock.h
+--- abuse-0.8/src/net/sock.h	2011-04-22 11:15:13.000000000 +0100
++++ abuse-0.8.aros/src/net/sock.h	2014-08-01 06:52:22.063683052 +0100
 @@ -36,8 +36,8 @@
    virtual void read_unselectable()   { ; }
    virtual void write_selectable()    { ; }
@@ -187,9 +213,9 @@ diff -Naur abuse-0.8-orig/src/net/sock.h abuse-0.8/src/net/sock.h
    virtual void cleanup() { ; }                // should do any needed pre-exit cleanup stuff
    net_socket *connect_to_server(char const *&server_name, int port, int force_port=0,
                  net_socket::socket_type sock_type=net_socket::SOCKET_SECURE);
-diff -Naur abuse-0.8-orig/src/net/tcpip.cpp abuse-0.8/src/net/tcpip.cpp
---- abuse-0.8-orig/src/net/tcpip.cpp	2013-10-05 11:22:35.281956740 +0200
-+++ abuse-0.8/src/net/tcpip.cpp	2013-10-05 18:15:29.383155739 +0200
+diff -ruN abuse-0.8/src/net/tcpip.cpp abuse-0.8.aros/src/net/tcpip.cpp
+--- abuse-0.8/src/net/tcpip.cpp	2011-05-02 12:55:06.000000000 +0100
++++ abuse-0.8.aros/src/net/tcpip.cpp	2014-08-01 06:52:22.063683052 +0100
 @@ -317,7 +317,7 @@
    if (sock_type==net_socket::SOCKET_SECURE)
      s=new tcp_socket(socket_fd);
@@ -262,9 +288,9 @@ diff -Naur abuse-0.8-orig/src/net/tcpip.cpp abuse-0.8/src/net/tcpip.cpp
  //{{{ Revision Log
  /*//////////////////////////////////////////////////////////////////////
  $Log$
-diff -Naur abuse-0.8-orig/src/net/tcpip.h abuse-0.8/src/net/tcpip.h
---- abuse-0.8-orig/src/net/tcpip.h	2013-10-05 11:22:35.281956740 +0200
-+++ abuse-0.8/src/net/tcpip.h	2013-10-05 18:15:29.383155739 +0200
+diff -ruN abuse-0.8/src/net/tcpip.h abuse-0.8.aros/src/net/tcpip.h
+--- abuse-0.8/src/net/tcpip.h	2011-05-02 12:55:06.000000000 +0100
++++ abuse-0.8.aros/src/net/tcpip.h	2014-08-01 06:52:22.063683052 +0100
 @@ -26,8 +26,10 @@
  #   include <stdio.h>
  #   include <string.h>
@@ -354,9 +380,9 @@ diff -Naur abuse-0.8-orig/src/net/tcpip.h abuse-0.8/src/net/tcpip.h
    {
      sockaddr_in host;
      memset( (char*) &host,0, sizeof(host));
-diff -Naur abuse-0.8-orig/src/sdlport/setup.cpp abuse-0.8/src/sdlport/setup.cpp
---- abuse-0.8-orig/src/sdlport/setup.cpp	2013-10-05 11:22:35.289956741 +0200
-+++ abuse-0.8/src/sdlport/setup.cpp	2013-10-05 18:15:29.383155739 +0200
+diff -ruN abuse-0.8/src/sdlport/setup.cpp abuse-0.8.aros/src/sdlport/setup.cpp
+--- abuse-0.8/src/sdlport/setup.cpp	2011-05-09 08:58:30.000000000 +0100
++++ abuse-0.8.aros/src/sdlport/setup.cpp	2014-08-01 06:52:22.063683052 +0100
 @@ -27,6 +27,9 @@
  #include <sys/stat.h>
  #include <signal.h>
@@ -397,9 +423,9 @@ diff -Naur abuse-0.8-orig/src/sdlport/setup.cpp abuse-0.8/src/sdlport/setup.cpp
  
      // Set the datadir to a default value
      // (The current directory)
-diff -Naur abuse-0.8-orig/src/sdlport/video.cpp abuse-0.8/src/sdlport/video.cpp
---- abuse-0.8-orig/src/sdlport/video.cpp	2013-10-05 11:22:35.289956741 +0200
-+++ abuse-0.8/src/sdlport/video.cpp	2013-10-05 22:13:57.051848188 +0200
+diff -ruN abuse-0.8/src/sdlport/video.cpp abuse-0.8.aros/src/sdlport/video.cpp
+--- abuse-0.8/src/sdlport/video.cpp	2011-05-02 12:55:06.000000000 +0100
++++ abuse-0.8.aros/src/sdlport/video.cpp	2014-08-01 06:52:22.063683052 +0100
 @@ -24,6 +24,8 @@
  
  #include <SDL.h>
