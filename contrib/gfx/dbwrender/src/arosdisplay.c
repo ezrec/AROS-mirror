@@ -1,7 +1,5 @@
 // AROS display for DBWRender output files
 
-// FIXME: PNG files have wrong byte order
-
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/intuition.h>
@@ -20,11 +18,13 @@
 #define MAX_PATH 1024
 #define MAX_LINES 1200
 
-LONG width = 0;
-LONG height = 0;
+char *version = "display 1.0 (31.07.2014)";
 
-APTR* lines = 0;
-APTR bits = 0;
+LONG width;
+LONG height;
+
+APTR *lines;
+APTR bits;
 struct Window *window;
 APTR *my_VisualInfo;
 struct Menu *menuStrip;
@@ -75,7 +75,38 @@ void readFile(const char* name)
 {
     LONG i;
 
-    BPTR f = Open(name, MODE_OLDFILE);
+    filename[0] = '\0';
+    if (name == NULL)
+    {
+        if (filereq == NULL)
+        {
+            filereq = (struct FileRequester *)AllocAslRequest(ASL_FileRequest, NULL);
+            if ( ! filereq) clean_exit("Can't allocate filerequester");
+        }
+
+        if (AslRequestTags(filereq, 
+            ASLFR_TitleText,        "Save AS PNG...",
+            ASLFR_DoPatterns,       TRUE,
+            ASLFR_InitialPattern,   "#?.tmp",
+            TAG_END))
+        {
+            strcpy(filename, filereq->rf_Dir);
+            if ( ! AddPart(filename, filereq->rf_File, sizeof(filename)))
+            {
+                clean_exit("AddPart() failed\n");
+            }
+        }
+        else
+        {
+            clean_exit(0); // requester cancelled
+        }
+    }
+    else
+    {
+        strlcpy(filename, name, sizeof (filename));
+    }
+
+    BPTR f = Open(filename, MODE_OLDFILE);
     if (f == 0)
     {
         clean_exit("Could not open input TMP file");
@@ -84,7 +115,10 @@ void readFile(const char* name)
     FRead(f, &width, sizeof (LONG), 1);
     FRead(f, &height, sizeof (LONG), 1);
     if (width < 1 || width > 3000 || height < 1 || height > 3000)
+    {
+        Close(f);
         clean_exit("wrong dimensions");
+    }
 
     LONG len = width * 3;
 
@@ -130,9 +164,9 @@ void createBitmap(void)
             UBYTE *src = lines[y];
             for (x = 0; x < width; x++)
             {
-                r = *(src+(2*width));
+                r = *(src+(0*width));
                 g = *(src+(1*width));
-                b = *(src+(0*width));
+                b = *(src+(2*width));
                 src++;
 
                 *(dest++) = b<<1;
@@ -150,7 +184,7 @@ void createBitmap(void)
             }
         }
     }
-    WritePixelArray(bits, 0, 0, width * 3, window->RPort, 0, 0, width, height, RECTFMT_RGB);
+    WritePixelArray(bits, 0, 0, width * 3, window->RPort, 0, 0, width, height, RECTFMT_BGR24);
 }
 
 void save(void)
@@ -167,6 +201,8 @@ void save(void)
         ASLFR_TitleText,        "Save AS PNG...",
         ASLFR_DoPatterns,       TRUE,
         ASLFR_DoSaveMode,       TRUE,
+        ASLFR_InitialFile,      "",
+        ASLFR_InitialPattern,   "",
         TAG_END))
     {
         strcpy(filename, filereq->rf_Dir);
@@ -174,7 +210,6 @@ void save(void)
         {
             clean_exit("AddPart() failed\n");
         }
-        printf("filename %s\n", filename);
         FILE *f = fopen(filename, "wb");
         if (f == 0)
             clean_exit("Could not open output PNG file");
@@ -224,7 +259,7 @@ void createWindow(void)
 {
     window = OpenWindowTags(NULL,
         //WA_Left,          0,
-        //WA_Top,           0,
+        WA_Top,           20,
         WA_InnerWidth,    width,
         WA_InnerHeight,   height,
         WA_Title,         "DBWRender Display",
@@ -321,7 +356,11 @@ int main(int argc, char **argv)
         clean_exit("Can't allocate memory");
     }
 
-    if (argc == 2)
+    if (argc < 2)
+    {
+        readFile(NULL);
+    }
+    else if (argc == 2)
     {
         readFile(argv[1]);
     }

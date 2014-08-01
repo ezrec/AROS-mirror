@@ -1,0 +1,10 @@
+Quick Guide
+===========
+
+Rendering a scene
+dbwrender <file>.dat
+It can be interrupted by <CTRL> + C
+
+Viewing the result
+display <file>.dat.tmp
+It has a menu option to save fles in PNG format.

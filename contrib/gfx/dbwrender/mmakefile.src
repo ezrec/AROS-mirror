@@ -6,12 +6,20 @@
 include $(TOP)/config/make.cfg
 
 FILES := brick.dat COPYING glass1.dat glass2.dat glass.dat \
-glassorig.dat island.dat moonover.dat ray.txt README.txt
+glassorig.dat island.dat moonover.dat ray.txt README.txt README.AROS
 
 EXEDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/DBWRender
 
 #MM- contrib-gfx : contrib-gfx-dbwrender
 
 %copy_files_q mmake=contrib-gfx-dbwrender files=$(FILES) src=. dst=$(EXEDIR)
+
+#MM- contrib-gfx-dbwrender-clean : \
+#MM    contrib-gfx-dbwrender-render-clean \
+#MM    contrib-gfx-dbwrender-display-clean
+
+#MM- contrib-gfx-dbwrender-quick : \
+#MM    contrib-gfx-dbwrender-render-quick \
+#MM    contrib-gfx-dbwrender-display-quick
 
 %common
