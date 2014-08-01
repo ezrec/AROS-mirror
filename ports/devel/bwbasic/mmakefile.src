@@ -9,6 +9,8 @@ include $(TOP)/config/make.cfg
 #MM    ports-devel-bwbasic-files \
 #MM    ports-devel-bwbasic-fetch \
 #MM    ports-devel-bwbasic-drawericon
+#MM    ports-devel-bwbasic-examples : ports-devel-bwbasic-fetch
+#MM    ports-devel-bwbasic-files : ports-devel-bwbasic-fetch
 
 ARCHBASE     := bwbasic-2.60
 TARGETDIR    := $(AROS_CONTRIB)/Development/BWBasic
