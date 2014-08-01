@@ -1,6 +1,6 @@
-diff -Naur blobwars-1.19-orig/src/CReplayData.cpp blobwars-1.19/src/CReplayData.cpp
---- blobwars-1.19-orig/src/CReplayData.cpp	2013-10-14 19:13:21.625006360 +0200
-+++ blobwars-1.19/src/CReplayData.cpp	2013-10-14 19:31:42.849059657 +0200
+diff -ruN blobwars-1.19/src/CReplayData.cpp blobwars-1.19.aros/src/CReplayData.cpp
+--- blobwars-1.19/src/CReplayData.cpp	2011-04-17 15:56:56.000000000 +0100
++++ blobwars-1.19.aros/src/CReplayData.cpp	2014-08-01 12:40:12.222154071 +0100
 @@ -38,7 +38,11 @@
  
  void ReplayData::printReplayInformation()
@@ -13,9 +13,9 @@ diff -Naur blobwars-1.19-orig/src/CReplayData.cpp blobwars-1.19/src/CReplayData.
  	printf("Recorded on : %s", asctime(timeinfo));
  	printf("Map         : %s\n", header.map);
  	printf("Score       : %d\n", header.score);
-diff -Naur blobwars-1.19-orig/src/headers.h blobwars-1.19/src/headers.h
---- blobwars-1.19-orig/src/headers.h	2013-10-14 19:13:21.621006360 +0200
-+++ blobwars-1.19/src/headers.h	2013-10-14 19:35:01.533069219 +0200
+diff -ruN blobwars-1.19/src/headers.h blobwars-1.19.aros/src/headers.h
+--- blobwars-1.19/src/headers.h	2011-04-17 15:56:56.000000000 +0100
++++ blobwars-1.19.aros/src/headers.h	2014-08-01 12:40:12.222154071 +0100
 @@ -35,6 +35,12 @@
  #ifndef SDL_GetGamma
  extern DECLSPEC int SDLCALL SDL_GetGamma(float *red, float *green, float *blue);
@@ -38,9 +38,9 @@ diff -Naur blobwars-1.19-orig/src/headers.h blobwars-1.19/src/headers.h
  #include <libintl.h>
  #define _(string) gettext(string)
  #else
-diff -Naur blobwars-1.19-orig/src/init.cpp blobwars-1.19/src/init.cpp
---- blobwars-1.19-orig/src/init.cpp	2013-10-14 19:13:21.621006360 +0200
-+++ blobwars-1.19/src/init.cpp	2013-10-14 19:47:43.073106130 +0200
+diff -ruN blobwars-1.19/src/init.cpp blobwars-1.19.aros/src/init.cpp
+--- blobwars-1.19/src/init.cpp	2011-04-17 15:56:56.000000000 +0100
++++ blobwars-1.19.aros/src/init.cpp	2014-08-01 12:40:12.222154071 +0100
 @@ -92,6 +92,12 @@
  #if UNIX
  void setupUserHomeDirectory()
@@ -67,3 +67,15 @@ diff -Naur blobwars-1.19-orig/src/init.cpp blobwars-1.19/src/init.cpp
  
  	snprintf(dir, sizeof dir, "%s/.parallelrealities", userHome);
  	if ((mkdir(dir, S_IRWXU|S_IRWXG|S_IROTH|S_IXOTH) != 0) && (errno != EEXIST))
+diff -ruN blobwars-1.19/src/mapEditor.cpp blobwars-1.19.aros/src/mapEditor.cpp
+--- blobwars-1.19/src/mapEditor.cpp	2011-04-17 15:56:56.000000000 +0100
++++ blobwars-1.19.aros/src/mapEditor.cpp	2014-08-01 12:42:53.566867275 +0100
+@@ -242,7 +242,7 @@
+ 		fclose(fp);
+ 	}
+ 	
+-	printf("Saved %s (%d)\n", name, SDL_GetTicks());
++	printf("Saved %s (%d)\n", name, (int)SDL_GetTicks());
+ }
+ 
+ void collectMapData()
