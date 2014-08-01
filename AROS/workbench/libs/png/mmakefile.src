@@ -13,7 +13,7 @@ USER_CFLAGS := -Wno-deprecated-declarations
 
 %build_module mmake=workbench-libs-png \
     modname=png modtype=library conffile=$(SRCDIR)/$(CURDIR)/png_au.conf \
-    files="$(FILES)" uselibs="z"
+    files="$(FILES) posixc_startup" uselibs="z"
 
 
 #MM- linklibs: linklibs-png-nostdio

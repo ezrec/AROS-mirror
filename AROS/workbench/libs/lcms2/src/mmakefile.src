@@ -38,6 +38,6 @@ USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include
 
 %build_module mmake=workbench-libs-lcms2 \
   modname=lcms2 modtype=library conffile=$(SRCDIR)/$(CURDIR)/lcms2_au.conf \
-  files="$(FILES)"
+  files="$(FILES) stdcio_startup"
 
 %common
