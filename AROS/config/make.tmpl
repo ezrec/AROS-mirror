@@ -885,6 +885,7 @@ TMP_DEPLIBS := $(foreach lib,$(TMP_LIBS), \
 ifeq (%(linker),target)
 %(prog) : CMD:=$(TARGET_CC)
 %(prog) : STRIPCMD:=$(TARGET_STRIP)
+%(prog) : TMP_EXTRA_LDFLAGS += -newclib
 endif
 ifeq (%(linker),host)
 %(prog) : CMD:=$(HOST_CC)
@@ -923,6 +924,8 @@ endif
 ifeq (%(detach),yes)
     TMP_EXTRA_LDFLAGS += $(DETACH_LDFLAGS)
 endif
+
+TMP_EXTRA_LDFLAGS += -newclib
 
 # Make a list of the lib files the programs depend on.
 # In LDFLAGS remove white space between -L and directory
@@ -1012,7 +1015,7 @@ else
                     -L/usr/lib $(addprefix -l,%(usehostlibs))
 endif 
 %(module) : %(objs) %(endobj) $(TMP_DEPLIBS) $(USER_DEPLIBS)
-	%link_module_q cmd=%(cmd) err=$(ERR) endtag=$(ENDTAG) objs=$(OBJS) libs=$(LIBS) objdir=$(OBJDIR) ldflags="$(LDFLAGS) -nostdc"
+	%link_module_q cmd=%(cmd) err=$(ERR) endtag=$(ENDTAG) objs=$(OBJS) libs=$(LIBS) objdir=$(OBJDIR) ldflags="$(LDFLAGS) -nostdc -newclib"
 
 %end
 #------------------------------------------------------------------------------
@@ -2690,15 +2693,15 @@ ifeq (%(compiler),target)
         CXXFLAGS="$(DEBUG_CFLAGS) $(OPTIMIZATION_CFLAGS)" \
         CPP="$(TARGET_CPP)" \
         CXXCPP="$(TARGET_CPP)" \
-        CC="$(TARGET_CC) $(TARGET_CFLAGS) -L$(AROS_DEVELOPMENT)/lib -I$(AROS_DEVELOPMENT)/include %(extracflags) $(ISA_FLAGS) $(%(mmake)-nix) $(%(mmake)-s_flag)"\
-        CXX="$(TARGET_CXX) $(TARGET_CFLAGS) -L$(AROS_DEVELOPMENT)/lib -I$(AROS_DEVELOPMENT)/include %(extracflags) $(ISA_FLAGS) $(%(mmake)-nix) $(%(mmake)-s_flag)"\
+        CC="$(TARGET_CC) $(TARGET_CFLAGS) -L$(AROS_DEVELOPMENT)/lib -I$(AROS_DEVELOPMENT)/include %(extracflags) $(ISA_FLAGS) -newclib $(%(mmake)-nix) $(%(mmake)-s_flag)"\
+        CXX="$(TARGET_CXX) $(TARGET_CFLAGS) -L$(AROS_DEVELOPMENT)/lib -I$(AROS_DEVELOPMENT)/include %(extracflags) $(ISA_FLAGS) -newclib $(%(mmake)-nix) $(%(mmake)-s_flag)"\
         AS="$(TARGET_AS)" CC_FOR_BUILD="$(HOST_CC)" RANLIB="$(RANLIB)" AR="$(AR_PLAIN)" STRIP="$(STRIP_PLAIN)"\
         TARGET_CC="$(KERNEL_CC) $(KERNEL_CFLAGS) $(%(mmake)-s_flag)"\
         TARGET_AS="$(TARGET_AS)" OBJCOPY="$(OBJCOPY)"\
         TARGET_RANLIB="$(RANLIB)" TARGET_STRIP="$(STRIP_PLAIN)"\
         TARGET_NM="$(NM_PLAIN)" \
-        CC_FOR_TARGET="$(TARGET_CC) $(TARGET_CFLAGS) -L$(AROS_DEVELOPMENT)/lib -I$(AROS_DEVELOPMENT)/include %(extracflags) $(ISA_FLAGS) $(%(mmake)-nix) $(%(mmake)-s_flag)"\
-        CXX_FOR_TARGET="$(TARGET_CXX) $(TARGET_CFLAGS) -L$(AROS_DEVELOPMENT)/lib -I$(AROS_DEVELOPMENT)/include %(extracflags) $(ISA_FLAGS) $(%(mmake)-nix) $(%(mmake)-s_flag)"
+        CC_FOR_TARGET="$(TARGET_CC) $(TARGET_CFLAGS) -L$(AROS_DEVELOPMENT)/lib -I$(AROS_DEVELOPMENT)/include %(extracflags) $(ISA_FLAGS) -newclib $(%(mmake)-nix) $(%(mmake)-s_flag)"\
+        CXX_FOR_TARGET="$(TARGET_CXX) $(TARGET_CFLAGS) -L$(AROS_DEVELOPMENT)/lib -I$(AROS_DEVELOPMENT)/include %(extracflags) $(ISA_FLAGS) -newclib $(%(mmake)-nix) $(%(mmake)-s_flag)"
     %(mmake)-config_opts += --build=$(AROS_HOST_CPU)-$(AROS_HOST_ARCH)\
         --host=$(AROS_TARGET_CPU)-aros\
         --target=$(AROS_TARGET_CPU)-aros\
@@ -3244,7 +3247,7 @@ endif
 
 %(file): KOBJS := $(KOBJS)
 %(file): LDFLAGS := $(TMP_LDFLAGS) $(NOSTARTUP_LDFLAGS) \
-                    -nostdc -nosysbase -Wl,-Ur
+                    -nostdc -nosysbase -newclib -Wl,-Ur
 %(file): LDLIBS := $(addprefix -l, %(uselibs))
 %(file): $(KOBJS) $(DEPLIBS) | $(TMP_DIRS)
 	@$(ECHO) "Kickstart  $(subst $(TARGETDIR)/,,$@)..."
