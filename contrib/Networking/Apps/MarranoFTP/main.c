@@ -227,11 +227,6 @@ struct DOSBase *DOSBase;
 struct SysBase *SysBase;
 #endif
 
-#ifdef __AROS__
-extern struct Library *MUIMasterBase;
-extern struct IntuitionBase *IntuitionBase;
-#endif
-
 struct Library 		*SocketBase;
 struct Device 	   	*TimerBase;
 struct timerequest 	*g_TimerIO;
@@ -717,16 +712,6 @@ struct Hook QueueDisplayHook =
 
 static BOOL OpenLibs()
 {
-    // Caf needs dos.library
-#ifdef __AROS__
-    DOSBase = (struct DosLibrary *) OpenLibrary(DOSNAME, 0);
-#else
-    DOSBase = (struct DOSBase *) OpenLibrary(DOSNAME, 0);
-    IFFParseBase = (struct IFFParseBase *) OpenLibrary("iffparse.library", 0);
-#endif
-    if (!DOSBase)
-            return FALSE;
-
     // Caf stuff...
 #ifdef DEBUG
 //	SetDebugFile("ram:marranoftp.log");
@@ -735,15 +720,6 @@ static BOOL OpenLibs()
 //	CafDebugInit(CAF_DEBUG_FILE | CAF_DEBUG_STDOUT);
     CafDebugInit(CAF_DEBUG_STDOUT);
 #endif
-
-#ifdef DEBUGLV3
-    DebugOutput("OpenLibs(): Opened dos.library\n");
-#endif
-
-    if (!IFFParseBase) {
-        printf("Cannot open iffparse.library\n");
-        return FALSE;
-    }
 
 #ifndef NO_SOCKETLIB
     SocketBase = (struct Library *) OpenLibrary("bsdsocket.library", 0);
@@ -755,25 +731,6 @@ static BOOL OpenLibs()
         DebugOutput("OpenLibs(): Opened bsdsocket.library\n");
 #endif
     }
-#endif
-
-    MUIMasterBase = OpenLibrary("muimaster.library", 0);
-    if (MUIMasterBase == 0) {
-        printf("Failed to open Muimaster library\n");
-        return FALSE;
-    }
-
-#ifdef DEBUGLV3
-    DebugOutput("OpenLibs(): Opened Muimaster library\n");
-#endif
-
-    IntuitionBase = (struct IntuitionBase *) OpenLibrary("intuition.library", 0);
-    if (IntuitionBase == 0) {
-        printf("Failed to open intuition library\n");
-        return FALSE;
-    }
-#ifdef DEBUGLV3
-    DebugOutput("OpenLibs(): Opened intuition library\n");
 #endif
 
     g_TimerMP = CreateMsgPort();
@@ -818,31 +775,9 @@ static BOOL CloseLibs()
         g_TimerMP = 0;
     }
 
-#ifndef __AROS__
-    if (IFFParseBase) {
-        CloseLibrary((struct Library *) IFFParseBase);
-        IFFParseBase = 0;
-    }
-#endif
-
-    if (DOSBase) {
-        CloseLibrary((struct Library *) DOSBase);
-        DOSBase = 0;
-    }
-
     if (SocketBase) {
         CloseLibrary(SocketBase);
         SocketBase = 0;
-    }
-
-    if (MUIMasterBase != 0) {
-        CloseLibrary(MUIMasterBase);
-        MUIMasterBase = 0;
-    }
-
-    if (IntuitionBase != 0) {
-        CloseLibrary((struct Library *) IntuitionBase);
-        IntuitionBase = 0;
     }
 
     return TRUE;
@@ -855,11 +790,6 @@ static BOOL Init()
     LocalView *lv  = &cn->lv;
     RemoteView *rv = &cn->rv;
     BOOL b_flag = TRUE;
-
-    MUIMasterBase = 0;
-    IntuitionBase = 0;
-    SocketBase = 0;
-    DOSBase = 0;
 
     // Initialize everything
     caf_memset(&g_listen_timer, 0, sizeof(TimerVal));
