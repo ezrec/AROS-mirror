@@ -13,9 +13,6 @@ AD=amiga/
 CD=common/
 AR=aros/
 
-MAKEFILE=mmakefile.src
-
-
 
 DEFINES=-DVERSION=$(VERSION) -DDISKVERSION=$(DISKVERSION) \
         -DPLAYERPRI=$(PLAYERPRI) -DVERSION_LETTER="" \
@@ -117,7 +114,8 @@ USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/$(AD) -I$(SRCDIR)/$(CURDIR)/$(AR) \
     files=$(FILES) uselibs="realtime"
 
 #MM
-setup-contrib-radium : setup $(AROS_CONTRIB)/radium/Execute.Me
+contrib-radium : $(EXEDIR)/Execute.Me
 
-$(AROS_CONTRIB)/radium/Execute.Me : RADIUM.RUN
+$(EXEDIR)/Execute.Me : $(SRCDIR)/$(CURDIR)/RADIUM.RUN
+	$(MKDIR) $(EXEDIR)
 	$(CP) $< $@
