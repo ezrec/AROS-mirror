@@ -581,7 +581,7 @@ high_score_t high_scores[MAXHIGHSCORES];
 	}
 	break;
     case 'G': case 'g':
-	if (*game_over) {
+	if (*game_over == 2) {
 	    *game_view = 0;
 	    clear_display();
 	    redraw_game(grid,npiece,piece,score,rows,*game_view,high_scores);
