@@ -64,6 +64,17 @@ diff -urN gcc-4.6.4/fixincludes/configure.ac gcc-4.6.4.new/fixincludes/configure
  	i?86-*-msdosdjgpp* | \
  	i?86-*-mingw32* | \
  	x86_64-*-mingw32* | \
+diff -urN gcc-4.6.4/gcc/c-family/c-opts.c gcc-4.6.4.new/gcc/c-family/c-opts.c
+--- gcc-4.6.4/gcc/c-family/c-opts.c	2011-01-26 07:48:04.000000000 +0100
++++ gcc-4.6.4.new/gcc/c-family/c-opts.c	2013-12-08 13:14:25.000000000 +0100
+@@ -303,7 +303,6 @@
+ 	    error ("-I- specified twice");
+ 	  quote_chain_split = true;
+ 	  split_quote_chain ();
+-	  inform (input_location, "obsolete option -I- used, please use -iquote instead");
+ 	}
+       break;
+ 
 diff -urN gcc-4.6.4/gcc/config/arm/aros.h gcc-4.6.4.new/gcc/config/arm/aros.h
 --- gcc-4.6.4/gcc/config/arm/aros.h	1969-12-31 19:00:00.000000000 -0500
 +++ gcc-4.6.4.new/gcc/config/arm/aros.h	2013-12-02 20:22:15.904776124 -0500
