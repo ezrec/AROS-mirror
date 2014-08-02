@@ -1,18 +1,11 @@
-# Copyright © 2004, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2014, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(TOP)/config/make.cfg
 
 #MM- iconset-Gorilla-contrib-icons-extras-networking : iconset-Gorilla-contrib-icons-extras-networking-apps
-#MM- iconset-Gorilla-contrib-icons-extras-networking-apps : iconset-Gorilla-contrib-icons-aircos
-##MM- iconset-Gorilla-contrib-icons-extras-networking-apps : iconset-Gorilla-contrib-icons-owb
-#MM- iconset-Gorilla-contrib-icons-extras-networking-apps : iconset-Gorilla-contrib-icons-marranoftp
 
-AIRCOSICON := AiRcOS
-OWBICON := OWB
-MARRANOFTPICON := MarranoFTP
+ICONS := AAEDT AiRcOS MarranoFTP OWB WGet
 
 #MM- iconset-Gorilla-contrib-icons-extras-networking-clean : iconset-Gorilla-contrib-icons-extras-networking-apps-clean
-%build_icons mmake=iconset-Gorilla-contrib-icons-aircos icons=$(AIRCOSICON) dir=$(AROS_CONTRIB)/Networking/Apps
-%build_icons mmake=iconset-Gorilla-contrib-icons-owb icons=$(OWBICON) dir=$(AROS_CONTRIB)/Networking/Apps
-%build_icons mmake=iconset-Gorilla-contrib-icons-marranoftp icons=$(MARRANOFTPICON) dir=$(AROS_CONTRIB)/Networking/Apps
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-networking-apps icons=$(ICONS) dir=$(AROS_CONTRIB)/Networking/Apps

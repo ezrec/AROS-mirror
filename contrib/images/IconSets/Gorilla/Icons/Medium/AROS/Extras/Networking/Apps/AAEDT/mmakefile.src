@@ -1,12 +1,13 @@
-# Copyright © 2004, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2014, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(TOP)/config/make.cfg
 
-#MM- iconset-Gorilla-contrib-icons-aaedt : iconset-Gorilla-contrib-icons-aaedt-app
+#MM- iconset-Gorilla-contrib-icons-extras-networking-apps : iconset-Gorilla-contrib-icons-extras-networking-apps-aaedt
 
 ICONS := AAEDT
 
-%build_icons mmake=iconset-Gorilla-contrib-icons-aaedt-app \
+#MM- iconset-Gorilla-contrib-icons-extras-networking-apps-clean : iconset-Gorilla-contrib-icons-apps-aaedt-clean
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-networking-apps-aaedt \
              icons=$(ICONS) dir=$(AROS_CONTRIB)/Networking/Apps/AAEDT
 
