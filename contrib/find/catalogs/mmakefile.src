@@ -1,9 +1,0 @@
-# Copyright © 2012, The AROS Development Team. All rights reserved.
-# $Id$
-
-include $(TOP)/config/make.cfg
-
-CATDIR := $(AROS_CONTRIB)/Utilities/Filetool/Find/Catalogs
-
-%build_catalogs mmake=contrib-find-catalogs \
-            name=Find subdir= dir=$(CATDIR)
