@@ -46,7 +46,9 @@ USER_CFLAGS : -DHAVE_STRING=1 -DHAVE_STDLIB=1 -DHAVE_UNISTD=1 -DHAVE_RAISE=1
 
 %fetch mmake=ports-devel-bwbasic-fetch archive=$(ARCHBASE) \
     destination=$(PORTSDIR)/bwbasic/$(ARCHBASE) \
-    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip"
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip" \
+    patches_specs=bwbasic-2.60-aros.diff:$(ARCHBASE):-p1
+
 
 
 ICONS := BWBasic
