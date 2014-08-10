@@ -8,14 +8,14 @@
 REPOSITORIES := http://curl.haxx.se/download \
  http://ftp.sunet.se/pub/www/utilities/curl
 
-%fetch_and_build_gnu_development package=curl version=7.19.2 \
+%fetch_and_build_gnu_development package=curl version=7.37.1 \
     patch=yes package_repo="$(REPOSITORIES)" \
-    extraoptions="--without-random CPPFLAGS='-D__BSD_VISIBLE=1'" \
+    extraoptions="--without-random --disable-ntlm-wb CPPFLAGS='-D__BSD_VISIBLE=1'" \
     postconfigure="development-curl-fixconfig"
 
 #MM
 development-curl-fixconfig :
-	for file in $(GENDIR)/$(CURDIR)/curl/lib/config.h $(GENDIR)/$(CURDIR)/curl/src/config.h; \
+	for file in $(GENDIR)/$(CURDIR)/curl/lib/curl_config.h; \
 	do \
 	$(SED) -i -e 's@/\* #undef HAVE_SOCKET \*/@#define HAVE_SOCKET 1@' $$file; \
 	$(SED) -i -e 's@/\* #undef HAVE_SELECT \*/@#define HAVE_SELECT 1@' $$file; \
@@ -34,6 +34,7 @@ development-curl-fixconfig :
 	$(SED) -i -e 's@/\* #undef HAVE_GETHOSTNAME \*/@#define HAVE_GETHOSTNAME 1@' $$file; \
 	$(SED) -i -e 's@/\* #undef HAVE_PROTOBYNAME \*/@#define HAVE_PROTOBYNAME 1@' $$file; \
 	$(SED) -i -e 's@/\* #undef HAVE_INET_ADDR \*/@#define HAVE_INET_ADDR 1@' $$file; \
-	$(SED) -i -e 's@/\* #undef HAVE_IOCTLSOCKET_CASE \*/@#define HAVE_IOCTLSOCKET_CASE 1@' $$file; \
+	$(SED) -i -e 's@/\* #undef HAVE_CLOSESOCKET_CAMEL \*/@#define HAVE_CLOSESOCKET_CAMEL 1@' $$file; \
+	$(SED) -i -e 's@/\* #undef HAVE_IOCTLSOCKET_CAMEL \*/@#define HAVE_IOCTLSOCKET_CAMEL 1@' $$file; \
 	$(SED) -i -e 's@#define HAVE_O_NONBLOCK 1@/\* #undef HAVE_O_NONBLOCK \*/@' $$file; \
 	done

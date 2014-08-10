@@ -1,6 +1,0 @@
-This is a port of curl-7.9.12 to AROS operating system. It's based on
-earlier curl-7.17.1 port done by Rob Norris.
-
-Stanislaw Szymczyk
-sszymczy@gmail.com
-
