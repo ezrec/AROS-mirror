@@ -4,7 +4,7 @@
 -include $(TOP)/config/make.cfg
 
 REPOSITORIES = http://www.openssl.org/source
-ARCHBASE := openssl-0.9.8j
+ARCHBASE := openssl-1.0.1g
 OPENSSL_SOURCE := $(PORTSDIR)/openssl/$(ARCHBASE)
 OPENSSL_BUILD_DIR := $(GENDIR)/$(CURDIR)
 
@@ -15,8 +15,8 @@ OPENSSL_BUILD_DIR := $(GENDIR)/$(CURDIR)
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
 
-# after patch creation remove diff about openssl-0.9.8j/test/ssltest.c
-# it is a sym linked file and would be patched twice it cannot easily
+# After patch creation remove diff about test/ssltest.c and include/openssl/e_os2.h
+# These are sym linked files and would be patched twice. They cannot easily
 # be excluded without breaking other things
 %create_patch mmake=contrib-networking-openssl-create-patch \
     archive=$(ARCHBASE) destination=$(PORTSDIR)/openssl \

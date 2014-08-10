@@ -1,7 +1,0 @@
-This is a port of openssl-0.9.8j to AROS operating system. It's based on
-earlier openssl-0.9.8g port done by Rob Norris. Some bugs were fixed and
-support for building on x86-64 AROS was added.
-
-Stanislaw Szymczyk
-sszymczy@gmail.com
-
