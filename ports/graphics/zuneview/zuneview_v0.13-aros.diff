@@ -1,0 +1,103 @@
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Histdisp.c ZuneView_v0.13/ZuneView/src/mcc_Histdisp.c
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_Histdisp.c	2014-08-10 18:00:45.453666767 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_Histdisp.c	2014-08-10 18:10:18.044615098 +0200
+@@ -23,6 +23,7 @@
+ #include <graphics/gfxmacros.h>
+ #include <libraries/mui.h>
+ #include <datatypes/pictureclass.h>
++#include <clib/alib_protos.h>
+ #include <string.h>
+ #include <math.h>
+ #include <stdlib.h>
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Matrix.c ZuneView_v0.13/ZuneView/src/mcc_Matrix.c
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_Matrix.c	2014-08-10 18:00:45.452666767 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_Matrix.c	2014-08-10 18:09:52.245617427 +0200
+@@ -16,6 +16,7 @@
+ #include <proto/intuition.h>
+ #include <libraries/mui.h>
+ #include <proto/utility.h>
++#include <clib/alib_protos.h>
+ 
+ #include "mcc_Matrix.h"
+ 
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Pictdisp.c ZuneView_v0.13/ZuneView/src/mcc_Pictdisp.c
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_Pictdisp.c	2014-08-10 18:00:45.452666767 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_Pictdisp.c	2014-08-10 18:07:02.419632751 +0200
+@@ -26,13 +26,14 @@
+ #include <graphics/gfxmacros.h>
+ #include <libraries/mui.h>
+ #include <datatypes/pictureclass.h>
++#include <clib/alib_protos.h>
+ #include <math.h>
+ #include <string.h>
+ #include <stdlib.h>
+ 
+ #include "mcc_Pictdisp.h"
+ #include "mcc_Thumbgroup.h"
+-#include "Zuneview.h"
++#include "ZuneView.h"
+ #include "PictureFunctions.h"
+ 
+ /* Local prototypes and macros */
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_ScrollerPict.c ZuneView_v0.13/ZuneView/src/mcc_ScrollerPict.c
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_ScrollerPict.c	2014-08-10 18:00:45.453666767 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_ScrollerPict.c	2014-08-10 18:09:31.727619278 +0200
+@@ -16,6 +16,7 @@
+ #include <proto/intuition.h>
+ #include <libraries/mui.h>
+ #include <proto/utility.h>
++#include <clib/alib_protos.h>
+ 
+ #include "ZuneView.h"
+ #include "mcc_Pictdisp.h"
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbdisp.c ZuneView_v0.13/ZuneView/src/mcc_Thumbdisp.c
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbdisp.c	2014-08-10 18:00:45.452666767 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_Thumbdisp.c	2014-08-10 18:07:34.621629845 +0200
+@@ -22,6 +22,7 @@
+ #include <graphics/gfxmacros.h>
+ #include <libraries/mui.h>
+ #include <datatypes/pictureclass.h>
++#include <clib/alib_protos.h>
+ #include <string.h>
+ 
+ #include "mcc_Thumbdisp.h"
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbgroup.c ZuneView_v0.13/ZuneView/src/mcc_Thumbgroup.c
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbgroup.c	2014-08-10 18:00:45.452666767 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_Thumbgroup.c	2014-08-10 18:09:07.682621448 +0200
+@@ -21,8 +21,9 @@
+ #include <stdio.h>
+ #include <devices/timer.h>
+ #include <devices/rawkeycodes.h>
++#include <clib/alib_protos.h>
+ 
+-#include "zuneview.h"
++#include "ZuneView.h"
+ #include "mcc_Thumbdisp.h"
+ #include "mcc_Thumbnail.h"
+ #include "mcc_Thumbgroup.h"
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbnail.c ZuneView_v0.13/ZuneView/src/mcc_Thumbnail.c
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbnail.c	2014-08-10 18:00:45.453666767 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_Thumbnail.c	2014-08-10 18:08:24.659625330 +0200
+@@ -17,9 +17,10 @@
+ #include <proto/intuition.h>
+ #include <libraries/mui.h>
+ #include <proto/utility.h>
++#include <clib/alib_protos.h>
+ #include <string.h>
+ 
+-#include "zuneview.h"
++#include "ZuneView.h"
+ #include "mcc_Thumbdisp.h"
+ #include "mcc_Thumbnail.h"
+ 
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/PictureFunctions.c ZuneView_v0.13/ZuneView/src/PictureFunctions.c
+--- ZuneView_v0.13-orig/ZuneView/src/PictureFunctions.c	2014-08-10 18:00:45.453666767 +0200
++++ ZuneView_v0.13/ZuneView/src/PictureFunctions.c	2014-08-10 18:05:46.311639619 +0200
+@@ -23,6 +23,7 @@
+ #include <graphics/gfxmacros.h>
+ #include <libraries/mui.h>
+ #include <datatypes/pictureclass.h>
++#include <clib/alib_protos.h>
+ #include <string.h>
+ #include <math.h>
+ 

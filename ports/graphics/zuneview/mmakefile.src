@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-##MM- ports-graphics : ports-graphics-zuneview
+#DISABLED #MM- ports-graphics : ports-graphics-zuneview
 
 #MM  ports-graphics-zuneview : \
 #MM    includes linklibs ports-graphics-zuneview-fetch \
@@ -12,7 +12,7 @@ include $(TOP)/config/make.cfg
 #MM  ports-graphics-zuneview-quick : ports-graphics-zuneview-fetch
 
 REPOSITORIES := sf://zunetools
-ARCHBASE     := ZuneView_v0.12
+ARCHBASE     := ZuneView_v0.13
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/ZuneView
 
 USER_CFLAGS  := -Wno-parentheses -Wno-unused-but-set-variable
@@ -40,7 +40,7 @@ FILES := $(addprefix $(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView/src/,$(FILES))
 
 %fetch mmake=ports-graphics-zuneview-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/zuneview/$(ARCHBASE) \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip" \
-    patches_specs=zuneview_v0.12-aros.diff:$(ARCHBASE):-p1 \
+    patches_specs=zuneview_v0.13-aros.diff:$(ARCHBASE):-p1
 
 
 
