@@ -1,0 +1,50 @@
+diff -ruN cairo-1.12.14/configure cairo-1.12.14-aros/configure
+--- cairo-1.12.14/configure	2013-02-10 14:39:19.000000000 +0100
++++ cairo-1.12.14-aros/configure	2014-08-08 19:23:11.065996836 +0200
+@@ -26342,7 +26342,7 @@
+ 
+ 
+ 
+-  use_png=no
++  use_png=yes
+ 
+   if test "x$png_REQUIRES" = x; then
+     # libpng13 is GnuWin32's libpng-1.2.8 :-(
+diff -ruN cairo-1.12.14/Makefile.am cairo-1.12.14-aros/Makefile.am
+--- cairo-1.12.14/Makefile.am	2012-04-19 14:17:34.000000000 +0200
++++ cairo-1.12.14-aros/Makefile.am	2014-08-08 19:23:11.065996836 +0200
+@@ -20,7 +20,7 @@
+ SUBDIRS = src doc util
+ # libpng is required for our test programs
+ if CAIRO_HAS_PNG_FUNCTIONS
+-SUBDIRS += boilerplate test perf
++SUBDIRS += 
+ endif
+ 
+ configure: cairo-version.h
+diff -ruN cairo-1.12.14/Makefile.in cairo-1.12.14-aros/Makefile.in
+--- cairo-1.12.14/Makefile.in	2013-02-10 14:39:17.000000000 +0100
++++ cairo-1.12.14-aros/Makefile.in	2014-08-08 19:23:11.065996836 +0200
+@@ -80,7 +80,7 @@
+ TESTS =
+ check_PROGRAMS =
+ # libpng is required for our test programs
+-@CAIRO_HAS_PNG_FUNCTIONS_TRUE@am__append_1 = boilerplate test perf
++@CAIRO_HAS_PNG_FUNCTIONS_TRUE@am__append_1 = 
+ subdir = .
+ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+ am__aclocal_m4_deps = $(top_srcdir)/build/aclocal.cairo.m4 \
+diff -ruN cairo-1.12.14/src/cairo-mutex-impl-private.h cairo-1.12.14-aros/src/cairo-mutex-impl-private.h
+--- cairo-1.12.14/src/cairo-mutex-impl-private.h	2010-06-13 21:58:21.000000000 +0200
++++ cairo-1.12.14-aros/src/cairo-mutex-impl-private.h	2014-08-08 19:23:11.065996836 +0200
+@@ -156,6 +156,10 @@
+  *   poke around cairo-mutex-private.h for possible solutions.
+  */
+ 
++#if defined(__AROS__)
++#define CAIRO_NO_MUTEX 1
++#endif
++
+ #if CAIRO_NO_MUTEX
+ 
+ /* No mutexes */

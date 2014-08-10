@@ -3,7 +3,9 @@
 
 -include $(TOP)/config/make.cfg
 
-%fetch_and_build_gnu_development package=cairo version=1.12.0 patch=yes \
+#MM- development-cairo : workbench-libs-freetype-complete development-fontconfig
+
+%fetch_and_build_gnu_development package=cairo version=1.12.14 patch=yes \
     package_repo=http://cairographics.org/releases/ \
-    suffixes="tar.gz" extraoptions="--disable-shared --disable-xlib --disable-xcb"
+    suffixes="tar.xz" extraoptions="--disable-shared --disable-xlib --disable-xcb png_CFLAGS=' ' png_LIBS='-lpng' pixman_CFLAGS='-I$(AROS_DEVELOPMENT)/include/pixman-1' pixman_LIBS='-lpixman' FREETYPE_LIBS='-lfreetype2'"
 
