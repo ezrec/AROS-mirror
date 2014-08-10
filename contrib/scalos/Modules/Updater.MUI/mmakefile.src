@@ -9,7 +9,8 @@ include $(TOP)/config/make.cfg
 #MM     linklibs \
 #MM     contrib-scalos-modules-updater-locale \
 #MM     iconset-Gorilla-contrib-icons-extras-scalos-modules \
-#MM     contrib-scalos-library-includes
+#MM     contrib-scalos-library-includes \
+#MM     contrib-curl
 
 FILES := Updater
 
