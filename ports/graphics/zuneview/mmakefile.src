@@ -1,0 +1,59 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+##MM- ports-graphics : ports-graphics-zuneview
+
+#MM  ports-graphics-zuneview : \
+#MM    includes linklibs ports-graphics-zuneview-fetch \
+#MM    ports-graphics-zuneview-drawericon \
+#MM    ports-graphics-zuneview-cpy
+
+#MM  ports-graphics-zuneview-quick : ports-graphics-zuneview-fetch
+
+REPOSITORIES := sf://zunetools
+ARCHBASE     := ZuneView_v0.12
+TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/ZuneView
+
+USER_CFLAGS  := -Wno-parentheses -Wno-unused-but-set-variable
+USER_INCLUDES:= -I$(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView/src
+
+FILES := \
+ZuneView \
+    ListTreeHooks \
+    PictureFunctions \
+    FilterFunctions \
+    mcc_Pictdisp \
+    mcc_Thumbdisp \
+    mcc_Thumbnail \
+    mcc_Thumbgroup \
+    mcc_ScrollerPict \
+    mcc_Matrix \
+    mcc_Histdisp \
+    exif
+FILES := $(addprefix $(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView/src/,$(FILES))
+
+%build_prog mmake=ports-graphics-zuneview progname=ZuneView \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs="mui png z freetype2"
+
+
+%fetch mmake=ports-graphics-zuneview-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/zuneview/$(ARCHBASE) \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip" \
+    patches_specs=zuneview_v0.12-aros.diff:$(ARCHBASE):-p1 \
+
+
+
+ICONS := ZuneView
+
+%build_icons mmake=ports-graphics-zuneview-drawericon \
+    icons=$(ICONS) dir=$(TARGETDIR)/..
+
+
+CPFILES := ZuneView.info
+
+%copy_files_q mmake=ports-graphics-zuneview-cpy files=$(CPFILES) src=$(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView \
+    dst=$(TARGETDIR)
+
+
+%common

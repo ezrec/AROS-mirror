@@ -1,0 +1,109 @@
+diff -Naur ZuneView_v0.12-orig/ZuneView/src/mcc_Histdisp.c ZuneView_v0.12/ZuneView/src/mcc_Histdisp.c
+--- ZuneView_v0.12-orig/ZuneView/src/mcc_Histdisp.c	2014-08-10 10:32:35.900093189 +0200
++++ ZuneView_v0.12/ZuneView/src/mcc_Histdisp.c	2014-08-10 10:43:10.435035931 +0200
+@@ -22,6 +22,7 @@
+ #include <graphics/rpattr.h>
+ #include <graphics/gfxmacros.h>
+ #include <libraries/mui.h>
++#include <clib/alib_protos.h>
+ #include <datatypes/pictureclass.h>
+ #include <string.h>
+ #include <math.h>
+diff -Naur ZuneView_v0.12-orig/ZuneView/src/mcc_Matrix.c ZuneView_v0.12/ZuneView/src/mcc_Matrix.c
+--- ZuneView_v0.12-orig/ZuneView/src/mcc_Matrix.c	2014-08-10 10:32:35.900093189 +0200
++++ ZuneView_v0.12/ZuneView/src/mcc_Matrix.c	2014-08-10 10:42:38.628038801 +0200
+@@ -15,6 +15,7 @@
+ #include <proto/muimaster.h>
+ #include <proto/intuition.h>
+ #include <libraries/mui.h>
++#include <clib/alib_protos.h>
+ #include <proto/utility.h>
+ 
+ #include "mcc_Matrix.h"
+diff -Naur ZuneView_v0.12-orig/ZuneView/src/mcc_Pictdisp.c ZuneView_v0.12/ZuneView/src/mcc_Pictdisp.c
+--- ZuneView_v0.12-orig/ZuneView/src/mcc_Pictdisp.c	2014-08-10 10:32:35.899093189 +0200
++++ ZuneView_v0.12/ZuneView/src/mcc_Pictdisp.c	2014-08-10 10:38:18.346062288 +0200
+@@ -26,13 +26,14 @@
+ #include <graphics/gfxmacros.h>
+ #include <libraries/mui.h>
+ #include <datatypes/pictureclass.h>
++#include <clib/alib_protos.h>
+ #include <math.h>
+ #include <string.h>
+ #include <stdlib.h>
+ 
+ #include "mcc_Pictdisp.h"
+ #include "mcc_Thumbgroup.h"
+-#include "Zuneview.h"
++#include "ZuneView.h"
+ #include "PictureFunctions.h"
+ 
+ /* Local prototypes and macros */
+diff -Naur ZuneView_v0.12-orig/ZuneView/src/mcc_ScrollerPict.c ZuneView_v0.12/ZuneView/src/mcc_ScrollerPict.c
+--- ZuneView_v0.12-orig/ZuneView/src/mcc_ScrollerPict.c	2014-08-10 10:32:35.900093189 +0200
++++ ZuneView_v0.12/ZuneView/src/mcc_ScrollerPict.c	2014-08-10 10:42:04.764041857 +0200
+@@ -15,6 +15,7 @@
+ #include <proto/muimaster.h>
+ #include <proto/intuition.h>
+ #include <libraries/mui.h>
++#include <clib/alib_protos.h>
+ #include <proto/utility.h>
+ 
+ #include "ZuneView.h"
+diff -Naur ZuneView_v0.12-orig/ZuneView/src/mcc_Thumbdisp.c ZuneView_v0.12/ZuneView/src/mcc_Thumbdisp.c
+--- ZuneView_v0.12-orig/ZuneView/src/mcc_Thumbdisp.c	2014-08-10 10:32:35.899093189 +0200
++++ ZuneView_v0.12/ZuneView/src/mcc_Thumbdisp.c	2014-08-10 10:39:01.986058350 +0200
+@@ -22,6 +22,7 @@
+ #include <graphics/gfxmacros.h>
+ #include <libraries/mui.h>
+ #include <datatypes/pictureclass.h>
++#include <clib/alib_protos.h>
+ #include <string.h>
+ 
+ #include "mcc_Thumbdisp.h"
+diff -Naur ZuneView_v0.12-orig/ZuneView/src/mcc_Thumbgroup.c ZuneView_v0.12/ZuneView/src/mcc_Thumbgroup.c
+--- ZuneView_v0.12-orig/ZuneView/src/mcc_Thumbgroup.c	2014-08-10 10:32:35.899093189 +0200
++++ ZuneView_v0.12/ZuneView/src/mcc_Thumbgroup.c	2014-08-10 10:41:29.210045065 +0200
+@@ -16,13 +16,14 @@
+ #include <proto/muimaster.h>
+ #include <proto/intuition.h>
+ #include <libraries/mui.h>
++#include <clib/alib_protos.h>
+ #include <proto/utility.h>
+ #include <string.h>
+ #include <stdio.h>
+ #include <devices/timer.h>
+ #include <devices/rawkeycodes.h>
+ 
+-#include "zuneview.h"
++#include "ZuneView.h"
+ #include "mcc_Thumbdisp.h"
+ #include "mcc_Thumbnail.h"
+ #include "mcc_Thumbgroup.h"
+diff -Naur ZuneView_v0.12-orig/ZuneView/src/mcc_Thumbnail.c ZuneView_v0.12/ZuneView/src/mcc_Thumbnail.c
+--- ZuneView_v0.12-orig/ZuneView/src/mcc_Thumbnail.c	2014-08-10 10:32:35.900093189 +0200
++++ ZuneView_v0.12/ZuneView/src/mcc_Thumbnail.c	2014-08-10 10:40:16.770051602 +0200
+@@ -16,10 +16,11 @@
+ #include <proto/muimaster.h>
+ #include <proto/intuition.h>
+ #include <libraries/mui.h>
++#include <clib/alib_protos.h>
+ #include <proto/utility.h>
+ #include <string.h>
+ 
+-#include "zuneview.h"
++#include "ZuneView.h"
+ #include "mcc_Thumbdisp.h"
+ #include "mcc_Thumbnail.h"
+ 
+diff -Naur ZuneView_v0.12-orig/ZuneView/src/PictureFunctions.c ZuneView_v0.12/ZuneView/src/PictureFunctions.c
+--- ZuneView_v0.12-orig/ZuneView/src/PictureFunctions.c	2014-08-10 10:32:35.900093189 +0200
++++ ZuneView_v0.12/ZuneView/src/PictureFunctions.c	2014-08-10 10:34:44.481081587 +0200
+@@ -23,6 +23,7 @@
+ #include <graphics/gfxmacros.h>
+ #include <libraries/mui.h>
+ #include <datatypes/pictureclass.h>
++#include <clib/alib_protos.h>
+ #include <string.h>
+ #include <math.h>
+ 
