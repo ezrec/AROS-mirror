@@ -3,7 +3,7 @@
 
 -include $(TOP)/config/make.cfg
 
-#MM- contrib-networking-curl : contrib-networking-openssl development-curl
+#MM- contrib-curl : contrib-openssl development-curl
 
 REPOSITORIES := http://curl.haxx.se/download \
  http://ftp.sunet.se/pub/www/utilities/curl

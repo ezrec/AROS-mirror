@@ -1,6 +1,0 @@
-# Copyright 2011, The AROS Development Team. All rights reserved.
-# $Id$
-
-#MM- contrib-networking-libs : \
-#MM     contrib-networking-curl \
-#MM     contrib-networking-openssl

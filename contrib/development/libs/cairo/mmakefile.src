@@ -3,7 +3,10 @@
 
 -include $(TOP)/config/make.cfg
 
-#MM- development-cairo : workbench-libs-freetype-complete development-fontconfig
+#MM- contrib-development : contrib-cairo
+#MM- contrib-cairo : development-cairo
+
+#MM- development-cairo : workbench-libs-freetype-complete contrib-fontconfig
 
 %fetch_and_build_gnu_development package=cairo version=1.12.14 patch=yes \
     package_repo=http://cairographics.org/releases/ \

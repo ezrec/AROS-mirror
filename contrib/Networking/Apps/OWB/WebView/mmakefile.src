@@ -23,7 +23,7 @@ ifneq ($(AROS_TARGET_CPU),arm)
     endif
 endif
 
-#MM- aros-tcpip-apps-owb-libs : contrib-fontconfig contrib-networking-curl SDL-aros development-SDL_gfx-quick contrib-sqlite contrib-libxslt aros-tcpip-apps-owb-libs-$(AROS_TARGET_CPU)
+#MM- aros-tcpip-apps-owb-libs : contrib-fontconfig contrib-curl SDL-aros development-SDL_gfx-quick contrib-sqlite contrib-libxslt aros-tcpip-apps-owb-libs-$(AROS_TARGET_CPU)
 #MM- aros-tcpip-apps-owb-libs-i386: contrib-icu4c
 #MM- aros-tcpip-apps-owb-libs-x86_64: contrib-icu4c
 #MM- aros-tcpip-apps-owb-webview : aros-tcpip-apps-owb-libs aros-tcpip-apps-owb-webview-fetch aros-tcpip-apps-owb-webview-setup aros-tcpip-apps-owb-webview-build aros-tcpip-apps-owb-webview-install

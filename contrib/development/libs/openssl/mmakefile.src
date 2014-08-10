@@ -8,17 +8,17 @@ ARCHBASE := openssl-1.0.1g
 OPENSSL_SOURCE := $(PORTSDIR)/openssl/$(ARCHBASE)
 OPENSSL_BUILD_DIR := $(GENDIR)/$(CURDIR)
 
-#MM- contrib-networking-openssl : contrib-networking-openssl-fetch contrib-networking-openssl-setup contrib-networking-openssl-configure contrib-networking-openssl-build contrib-networking-openssl-install
+#MM- contrib-openssl : contrib-openssl-fetch contrib-openssl-setup contrib-openssl-configure contrib-openssl-build contrib-openssl-install
 
 
-%fetch mmake=contrib-networking-openssl-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/openssl \
+%fetch mmake=contrib-openssl-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/openssl \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
 
 # After patch creation remove diff about test/ssltest.c and include/openssl/e_os2.h
 # These are sym linked files and would be patched twice. They cannot easily
 # be excluded without breaking other things
-%create_patch mmake=contrib-networking-openssl-create-patch \
+%create_patch mmake=contrib-openssl-create-patch \
     archive=$(ARCHBASE) destination=$(PORTSDIR)/openssl \
     excludes="fips_aes_data Makefile.org.orig include"
 
@@ -31,7 +31,7 @@ $(OPENSSL_BUILD_DIR)/.links-created : $(TOP)/$(CURDIR)/mmakefile
 	$(TOUCH) $@;
 
 #MM
-contrib-networking-openssl-setup : $(OPENSSL_BUILD_DIR)/.links-created
+contrib-openssl-setup : $(OPENSSL_BUILD_DIR)/.links-created
 
 $(OPENSSL_BUILD_DIR)/.build-configured : $(OPENSSL_BUILD_DIR)/.links-created
 	$(RM) $@
@@ -40,7 +40,7 @@ $(OPENSSL_BUILD_DIR)/.build-configured : $(OPENSSL_BUILD_DIR)/.links-created
 	$(TOUCH) $@;
 
 #MM
-contrib-networking-openssl-configure : $(OPENSSL_BUILD_DIR)/.build-configured
+contrib-openssl-configure : $(OPENSSL_BUILD_DIR)/.build-configured
 
 $(OPENSSL_BUILD_DIR)/.build-flag : $(OPENSSL_BUILD_DIR)/.build-configured
 	$(RM) $@
@@ -49,7 +49,7 @@ $(OPENSSL_BUILD_DIR)/.build-flag : $(OPENSSL_BUILD_DIR)/.build-configured
 	$(TOUCH) $@
 
 #MM
-contrib-networking-openssl-build : $(OPENSSL_BUILD_DIR)/.build-flag
+contrib-openssl-build : $(OPENSSL_BUILD_DIR)/.build-flag
 
 $(OPENSSL_BUILD_DIR)/.install-flag : $(OPENSSL_BUILD_DIR)/.build-flag
 	$(RM) $@
@@ -58,4 +58,4 @@ $(OPENSSL_BUILD_DIR)/.install-flag : $(OPENSSL_BUILD_DIR)/.build-flag
 	$(TOUCH) $@
 
 #MM
-contrib-networking-openssl-install : $(OPENSSL_BUILD_DIR)/.install-flag
+contrib-openssl-install : $(OPENSSL_BUILD_DIR)/.install-flag
