@@ -372,6 +372,30 @@ diff -ruN openssl-1.0.1g/crypto/des/speed.c openssl-1.0.1g-aros/crypto/des/speed
  #include <signal.h>
  #define crypt(c,s) (des_crypt((c),(s)))
  #endif
+diff -ruN openssl-1.0.1g/crypto/engine/eng_rsax.c openssl-1.0.1g-aros/crypto/engine/eng_rsax.c
+--- openssl-1.0.1g/crypto/engine/eng_rsax.c	2014-03-17 17:14:20.000000000 +0100
++++ openssl-1.0.1g-aros/crypto/engine/eng_rsax.c	2014-08-11 21:20:57.219377501 +0200
+@@ -79,7 +79,7 @@
+ #undef COMPILE_RSAX
+ 
+ #if (defined(__x86_64) || defined(__x86_64__) || \
+-     defined(_M_AMD64) || defined (_M_X64)) && !defined(OPENSSL_NO_ASM)
++     defined(_M_AMD64) || defined (_M_X64)) && !defined(OPENSSL_NO_ASM) && !defined(__AROS__)
+ #define COMPILE_RSAX
+ static ENGINE *ENGINE_rsax (void);
+ #endif
+diff -ruN openssl-1.0.1g/crypto/evp/e_rc4_hmac_md5.c openssl-1.0.1g-aros/crypto/evp/e_rc4_hmac_md5.c
+--- openssl-1.0.1g/crypto/evp/e_rc4_hmac_md5.c	2014-03-17 17:14:20.000000000 +0100
++++ openssl-1.0.1g-aros/crypto/evp/e_rc4_hmac_md5.c	2014-08-11 21:20:16.055376793 +0200
+@@ -100,7 +100,7 @@
+ 	return 1;
+ 	}
+ 
+-#if	!defined(OPENSSL_NO_ASM) &&	( \
++#if	!defined(OPENSSL_NO_ASM) && !defined(__AROS__)&&	( \
+ 	defined(__x86_64)	|| defined(__x86_64__)	|| \
+ 	defined(_M_AMD64)	|| defined(_M_X64)	|| \
+ 	defined(__INTEL__)		) && \
 diff -ruN openssl-1.0.1g/crypto/idea/idea_spd.c openssl-1.0.1g-aros/crypto/idea/idea_spd.c
 --- openssl-1.0.1g/crypto/idea/idea_spd.c	2014-03-17 17:14:20.000000000 +0100
 +++ openssl-1.0.1g-aros/crypto/idea/idea_spd.c	2014-08-06 17:20:51.711347624 +0200
