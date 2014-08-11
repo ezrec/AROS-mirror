@@ -36,5 +36,10 @@ development-curl-fixconfig :
 	$(SED) -i -e 's@/\* #undef HAVE_INET_ADDR \*/@#define HAVE_INET_ADDR 1@' $$file; \
 	$(SED) -i -e 's@/\* #undef HAVE_CLOSESOCKET_CAMEL \*/@#define HAVE_CLOSESOCKET_CAMEL 1@' $$file; \
 	$(SED) -i -e 's@/\* #undef HAVE_IOCTLSOCKET_CAMEL \*/@#define HAVE_IOCTLSOCKET_CAMEL 1@' $$file; \
-	$(SED) -i -e 's@#define HAVE_O_NONBLOCK 1@/\* #undef HAVE_O_NONBLOCK \*/@' $$file; \
+	$(SED) -i -e 's@/\* #undef HAVE_IOCTLSOCKET_CAMEL_FIONBIO \*/@#define HAVE_IOCTLSOCKET_CAMEL_FIONBIO 1@' $$file; \
+	$(SED) -i -e 's@#define HAVE_FCNTL 1@/\* #undef HAVE_FCNTL \*/@' $$file; \
+	$(SED) -i -e 's@#define HAVE_FCNTL_O_NONBLOCK 1@/\* #undef HAVE_FCNTL_O_NONBLOCK \*/@' $$file; \
+	$(SED) -i -e 's@#define HAVE_IOCTL 1@/\* #undef HAVE_IOCTL \*/@' $$file; \
+	$(SED) -i -e 's@#define HAVE_IOCTL_FIONBIO 1@/\* #undef HAVE_IOCTL_FIONBIO \*/@' $$file; \
+	$(SED) -i -e 's@#define HAVE_IOCTL_SIOCGIFADDR 1@/\* #undef HAVE_IOCTL_SIOCGIFADDR \*/@' $$file; \
 	done

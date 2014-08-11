@@ -658,9 +658,34 @@ diff -ruN curl-7.37.1/lib/multi.c curl-7.37.1-aros/lib/multi.c
  #include <curl/curl.h>
  
  #include "urldata.h"
+diff -ruN curl-7.37.1/lib/nonblock.c curl-7.37.1-aros/lib/nonblock.c
+--- curl-7.37.1/lib/nonblock.c	2014-06-11 19:52:29.000000000 +0200
++++ curl-7.37.1-aros/lib/nonblock.c	2014-08-06 18:37:05.803426136 +0200
+@@ -37,6 +37,10 @@
+ #include <inet.h>
+ #endif
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++
+ #include "nonblock.h"
+ 
+ /*
+@@ -76,8 +80,8 @@
+ #elif defined(HAVE_IOCTLSOCKET_CAMEL_FIONBIO)
+ 
+   /* Amiga */
+-  long flags = nonblock ? 1L : 0L;
+-  return IoctlSocket(sockfd, FIONBIO, flags);
++  int flags = nonblock ? 1L : 0L;
++  return IoctlSocket(sockfd, FIONBIO, &flags);
+ 
+ #elif defined(HAVE_SETSOCKOPT_SO_NONBLOCK)
+ 
 diff -ruN curl-7.37.1/lib/select.c curl-7.37.1-aros/lib/select.c
 --- curl-7.37.1/lib/select.c	2014-06-11 19:52:29.000000000 +0200
-+++ curl-7.37.1-aros/lib/select.c	2014-08-05 20:20:50.085223541 +0200
++++ curl-7.37.1-aros/lib/select.c	2014-08-06 18:37:05.803426136 +0200
 @@ -35,6 +35,10 @@
  #include <socket.h>
  #endif
