@@ -207,11 +207,11 @@ diff -ruN openssl-1.0.1g/Configure openssl-1.0.1g-aros/Configure
  "uClinux-dist64","$ENV{'CC'}:\$(CFLAGS)::-D_REENTRANT::\$(LDFLAGS) \$(LDLIBS):SIXTY_FOUR_BIT_LONG:${no_asm}:$ENV{'LIBSSL_dlfcn'}:linux-shared:-fPIC:-shared:.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR):$ENV{'RANLIB'}::",
  
 +##### AROS
-+"aros-i386-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -g -Wall $ENV{'AROS_CFLAGS'}:::AROS::BN_LLONG ${x86_gcc_des} ${x86_gcc_opts}:${x86_elf_asm}::::::$ENV{'AROS_RANLIB'}",
-+"aros-x86_64-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -DMD32_REG_T=int -g -Wall $ENV{'AROS_CFLAGS'}:::AROS::SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
-+"aros-ppc-cross","$ENV{'AROS_CC'}:-DB_ENDIAN -g -Wall $ENV{'AROS_CFLAGS'}:::AROS::BN_LLONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
-+"aros-arm-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -g -Wall $ENV{'AROS_CFLAGS'}:::AROS::BN_LLONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
-+"aros-m68k-cross","$ENV{'AROS_CC'}:-DB_ENDIAN -g -Wall $ENV{'AROS_CFLAGS'} -Wno-unused-but-set-variable -Wno-unused-variable -Wno-format:::AROS::BN_LLONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
++"aros-i386-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -Wall $ENV{'AROS_CFLAGS'}:::AROS::BN_LLONG ${x86_gcc_des} ${x86_gcc_opts}:${x86_elf_asm}::::::$ENV{'AROS_RANLIB'}",
++"aros-x86_64-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -DMD32_REG_T=int -Wall $ENV{'AROS_CFLAGS'}:::AROS::SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
++"aros-ppc-cross","$ENV{'AROS_CC'}:-DB_ENDIAN -Wall $ENV{'AROS_CFLAGS'}:::AROS::BN_LLONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
++"aros-arm-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -Wall $ENV{'AROS_CFLAGS'}:::AROS::BN_LLONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
++"aros-m68k-cross","$ENV{'AROS_CC'}:-DB_ENDIAN -Wall $ENV{'AROS_CFLAGS'} -Wno-unused-but-set-variable -Wno-unused-variable -Wno-format:::AROS::BN_LLONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
 +
  );
  
