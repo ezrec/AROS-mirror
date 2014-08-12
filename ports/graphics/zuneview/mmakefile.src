@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#DISABLED #MM- ports-graphics : ports-graphics-zuneview
+#MM- ports-graphics : ports-graphics-zuneview
 
 #MM  ports-graphics-zuneview : \
 #MM    includes linklibs ports-graphics-zuneview-fetch \

@@ -1,6 +1,75 @@
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/ConvMatrixes.h ZuneView_v0.13/ZuneView/src/ConvMatrixes.h
+--- ZuneView_v0.13-orig/ZuneView/src/ConvMatrixes.h	2014-08-12 09:01:10.219365882 +0200
++++ ZuneView_v0.13/ZuneView/src/ConvMatrixes.h	2014-08-12 09:02:49.031366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: ConvMatrixes.h $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/exif.c ZuneView_v0.13/ZuneView/src/exif.c
+--- ZuneView_v0.13-orig/ZuneView/src/exif.c	2014-08-12 09:01:10.217365882 +0200
++++ ZuneView_v0.13/ZuneView/src/exif.c	2014-08-12 09:02:49.031366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **       $Filename: exif.c $
+ **       $Release: 0 $
+-**       $Revision: 13 $
++**       $Revision: 14 $
+ **       $Date: 2014 $
+ **
+ **       (C) Copyright 2013-2014 Yannick Erb
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/exif.h ZuneView_v0.13/ZuneView/src/exif.h
+--- ZuneView_v0.13-orig/ZuneView/src/exif.h	2014-08-12 09:01:10.219365882 +0200
++++ ZuneView_v0.13/ZuneView/src/exif.h	2014-08-12 09:02:49.031366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **       $Filename: exif.h $
+ **       $Release: 0 $
+-**       $Revision: 13 $
++**       $Revision: 14 $
+ **       $Date: 2014 $
+ **
+ **       (C) Copyright 2013-2014 Yannick Erb
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/ListTreeHooks.c ZuneView_v0.13/ZuneView/src/ListTreeHooks.c
+--- ZuneView_v0.13-orig/ZuneView/src/ListTreeHooks.c	2014-08-12 09:01:10.219365882 +0200
++++ ZuneView_v0.13/ZuneView/src/ListTreeHooks.c	2014-08-12 09:02:49.032366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: ListTreeHooks.c $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/ListTreeHooks.h ZuneView_v0.13/ZuneView/src/ListTreeHooks.h
+--- ZuneView_v0.13-orig/ZuneView/src/ListTreeHooks.h	2014-08-12 09:01:10.219365882 +0200
++++ ZuneView_v0.13/ZuneView/src/ListTreeHooks.h	2014-08-12 09:02:49.032366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: ListTreeHooks.h $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
 diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Histdisp.c ZuneView_v0.13/ZuneView/src/mcc_Histdisp.c
---- ZuneView_v0.13-orig/ZuneView/src/mcc_Histdisp.c	2014-08-10 18:00:45.453666767 +0200
-+++ ZuneView_v0.13/ZuneView/src/mcc_Histdisp.c	2014-08-10 18:10:18.044615098 +0200
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_Histdisp.c	2014-08-12 09:01:10.219365882 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_Histdisp.c	2014-08-12 09:02:49.032366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: mcc_Histdisp.c $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
 @@ -23,6 +23,7 @@
  #include <graphics/gfxmacros.h>
  #include <libraries/mui.h>
@@ -9,9 +78,30 @@ diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Histdisp.c ZuneView_v0.13/ZuneVi
  #include <string.h>
  #include <math.h>
  #include <stdlib.h>
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Histdisp.h ZuneView_v0.13/ZuneView/src/mcc_Histdisp.h
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_Histdisp.h	2014-08-12 09:01:10.218365882 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_Histdisp.h	2014-08-12 09:02:49.032366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: mcc_Histdisp.h $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
 diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Matrix.c ZuneView_v0.13/ZuneView/src/mcc_Matrix.c
---- ZuneView_v0.13-orig/ZuneView/src/mcc_Matrix.c	2014-08-10 18:00:45.452666767 +0200
-+++ ZuneView_v0.13/ZuneView/src/mcc_Matrix.c	2014-08-10 18:09:52.245617427 +0200
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_Matrix.c	2014-08-12 09:01:10.218365882 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_Matrix.c	2014-08-12 09:02:49.032366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: mcc_Matrix.c $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
 @@ -16,6 +16,7 @@
  #include <proto/intuition.h>
  #include <libraries/mui.h>
@@ -20,10 +110,31 @@ diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Matrix.c ZuneView_v0.13/ZuneView
  
  #include "mcc_Matrix.h"
  
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Matrix.h ZuneView_v0.13/ZuneView/src/mcc_Matrix.h
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_Matrix.h	2014-08-12 09:01:10.219365882 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_Matrix.h	2014-08-12 09:02:49.032366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: mcc_Matrix.h $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
 diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Pictdisp.c ZuneView_v0.13/ZuneView/src/mcc_Pictdisp.c
---- ZuneView_v0.13-orig/ZuneView/src/mcc_Pictdisp.c	2014-08-10 18:00:45.452666767 +0200
-+++ ZuneView_v0.13/ZuneView/src/mcc_Pictdisp.c	2014-08-10 18:07:02.419632751 +0200
-@@ -26,13 +26,14 @@
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_Pictdisp.c	2014-08-12 09:01:10.218365882 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_Pictdisp.c	2014-08-12 09:02:49.032366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: mcc_Pictdisp.c $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
+@@ -26,18 +26,19 @@
  #include <graphics/gfxmacros.h>
  #include <libraries/mui.h>
  #include <datatypes/pictureclass.h>
@@ -39,9 +150,215 @@ diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Pictdisp.c ZuneView_v0.13/ZuneVi
  #include "PictureFunctions.h"
  
  /* Local prototypes and macros */
+ struct ImageData *New_ImageData(void);										/* Creates an empty image struct */
+-struct ImageData *Free_ImageDataNext(struct ImageData *ImData);				/* Free Image struct and returns pointer to next image */
++struct ImageData *Free_ImageData(struct ImageData *ImData);				    /* Free Image struct and returns pointer to next image */
+ struct ImageData *First_ImageData(struct ImageData *ImData);				/* Returns pointer to first image struct */
+ void FreeNexts_ImageData(struct ImageData *ImData);							/* Free all successor image struts */
+ void FreeAll_ImageData(struct ImageData *ImData);							/* Free ALL image structs (including prevs and nexts) */
+@@ -207,6 +208,8 @@
+ 		data->CurrentImage->Height  = tmpheight;
+ 		data->CurrentImage->Pitch	= tmppitch;
+ 		data->CurrentImage->Depth   = tmpdepth;
++        if (data->sourcefile)   FreeVec(data->sourcefile);
++        data->sourcefile = NULL;
+ 	}
+ 
+ 	return((ULONG)obj);
+@@ -248,13 +251,18 @@
+ 					if ((data->sourcefile==NULL) || (strcmp((STRPTR)tag->ti_Data, data->sourcefile)!=0))
+ 					{
+ 						/* We need to free up the memory and reload the new picture */
+-						if (data->CurrentImage)	FreeAll_ImageData(data->CurrentImage);
+-						if (data->sourcefile)	FreeVec(data->sourcefile);
+-						if (data->DispImage)
+-						{
+-							FreeVec(data->DispImage);
+-							data->DispImage = NULL;
+-						}					
++						if (data->sourcefile)
++                        {
++                            FreeVec(data->sourcefile);
++                            data->sourcefile = NULL;
++                        }
++                        if (data->CurrentImage)	FreeAll_ImageData(data->CurrentImage);
++                        if (data->DispImage)
++                        {
++                            FreeVec(data->DispImage);
++                            data->DispImage = NULL;
++                        }
++                        
+ 						data->sourcefile = AllocVec(strlen((char *)tag->ti_Data) + 1, MEMF_ANY);
+ 						data->CurrentImage = New_ImageData();				
+ 						strcpy((char *)data->sourcefile, (char *)tag->ti_Data);
+@@ -474,6 +482,8 @@
+ 		data->CurrentImage->Height = tmpheight;
+ 		data->CurrentImage->Pitch  = tmppitch;
+ 		data->CurrentImage->Depth  = tmpdepth;
++        if (data->sourcefile)   FreeVec(data->sourcefile);
++        data->sourcefile = NULL;
+ 		ClearSelection(&data->Sel);
+ 		MUI_Redraw(obj,MADF_DRAWOBJECT);
+ 	}
+@@ -756,33 +766,54 @@
+                 
+ 				/* display the picture at the centre of the gadget */
+ 				if (data->DispImage)
+-				{
+-					DoMethod(	obj,MUIM_DrawBackground, 
+-								_mleft(obj), _mtop(obj),
+-								_mwidth(obj), _mheight(obj), 
+-								0, 0, 0);
+-					
+-					/* Start by drawing the background */
++				{					
+ 					SetDrMd( _rp(obj), JAM2);
++
++                    /* Start by drawing the background */
++					if (_mheight(obj) > data->DispHeight)
++					{
++						DoMethod(	obj,MUIM_DrawBackground, 
++									_mleft(obj), _mtop(obj),
++									_mwidth(obj), (_mheight(obj) - data->DispHeight) / 2, 
++									0, 0, 0);					
++						DoMethod(	obj,MUIM_DrawBackground, 
++									_mleft(obj), _mtop(obj) + (_mheight(obj) - data->DispHeight) / 2 + data->DispHeight,
++									_mwidth(obj), (_mheight(obj) - data->DispHeight) / 2, 
++									0, 0, 0);					
++                    }
++					if (_mwidth(obj) > data->DispWidth)
++					{
++						DoMethod(	obj,MUIM_DrawBackground, 
++									_mleft(obj), _mtop(obj),
++									(_mwidth(obj) - data->DispWidth) / 2, _mheight(obj), 
++									0, 0, 0);					
++						DoMethod(	obj,MUIM_DrawBackground, 
++									_mleft(obj) + (_mwidth(obj) - data->DispWidth) / 2 + data->DispWidth, _mtop(obj),
++									(_mwidth(obj) - data->DispWidth) / 2, _mheight(obj), 
++									0, 0, 0);
++					}
++                    
++                    /* Draw checkerboard background if requested */
+                     if (data->CheckBG == TRUE)
+                     {
+-                        SetAfPt( _rp(obj), (UWORD *)checkerboard, 4);
+                         SetRPAttrs( _rp(obj),
+                                     RPTAG_PenMode, FALSE,
+                                     RPTAG_FgColor, 0x00FFFFFF,
+                                     RPTAG_BgColor, 0x00000000,
+                                     TAG_DONE);
++                        SetAfPt( _rp(obj), (UWORD *)checkerboard, 4);
+                         RectFill ( 	_rp(obj),
+                                     _mleft(obj) +  (_mwidth(obj) - data->DispWidth) / 2,
+                                     _mtop(obj) + (_mheight(obj) - data->DispHeight) / 2,
+                                     _mleft(obj) +  (_mwidth(obj) - data->DispWidth) / 2 + data->DispWidth - 1,
+                                     _mtop(obj) + (_mheight(obj) - data->DispHeight) / 2 + data->DispHeight - 1);
++                        SetRPAttrs( _rp(obj),
++                                    RPTAG_PenMode, TRUE,
++                                    TAG_DONE);
++                        SetAfPt( _rp(obj), (UWORD *)NULL, 0);
+                     }
+-					SetRPAttrs( _rp(obj),
+-								RPTAG_PenMode, TRUE,
+-								TAG_DONE);
+-					SetAfPt( _rp(obj), (UWORD *)NULL, 0);
+-
++                    
++                    /* And finally draw the picture */
+ 					WritePixelArrayAlpha(	(APTR) data->DispImage,
+ 											0, 0, data->DispWidth * 4,
+ 											_rp(obj),
+@@ -790,11 +821,19 @@
+ 											_mtop(obj) + (_mheight(obj) - data->DispHeight) / 2,
+ 											data->DispWidth, data->DispHeight,
+ 											0xFFFFFFFF);
+-									
++	
+ 					/* We've also erased selection */
+ 					data->Sel.Erase = FALSE;
+ 				}
+ 			}
++            else
++            {
++                /* When no image data is available just update the background */
++                DoMethod(	obj,MUIM_DrawBackground, 
++                            _mleft(obj), _mtop(obj),
++                            _mwidth(obj), _mheight(obj), 
++                            0, 0, 0);
++            }
+ 		}
+     
+         if (data->Sel.Erase)
+@@ -1976,16 +2015,19 @@
+ 	return(ImData);
+ }
+ 
+-struct ImageData *Free_ImageDataNext(struct ImageData *ImData)
++struct ImageData *Free_ImageData(struct ImageData *ImData)
+ {
+ 	struct ImageData *Next = NULL;
+ 	
+-	if (ImData)
++	if (ImData != NULL)
+ 	{
+-		Next = ImData->Next;
++        if (ImData->Next != NULL)
++        {
++            Next = ImData->Next;
++            Next->Prev = NULL;
++        }
+ 		if (ImData->Data) FreeVec(ImData->Data);
+ 		FreeVec(ImData);
+-		Next->Prev = NULL;
+ 	}
+ 	
+ 	return(Next);
+@@ -2005,7 +2047,7 @@
+ 
+ void FreeNexts_ImageData(struct ImageData *ImData)
+ {
+-	while ((ImData = Free_ImageDataNext(ImData)) != NULL);
++	while ((ImData = Free_ImageData(ImData)) != NULL);
+ }
+ 
+ void FreeAll_ImageData(struct ImageData *ImData)
+@@ -2027,10 +2069,11 @@
+ 	New->Prev   = *Current;
+ 	*Current = New;
+ 
++    /* remove history when memory gets low */
+ 	First = First_ImageData(New);
+ 	while ((First != NULL) && (AvailMem(MEMF_ANY) < (64 << 20)) && (First != New))
+ 	{
+-		First = Free_ImageDataNext(First);
++		First = Free_ImageData(First);
+ 	}
+ 	
+ }
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Pictdisp.h ZuneView_v0.13/ZuneView/src/mcc_Pictdisp.h
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_Pictdisp.h	2014-08-12 09:01:10.219365882 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_Pictdisp.h	2014-08-12 09:02:49.033366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: mcc_Pictdisp.h $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
 diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_ScrollerPict.c ZuneView_v0.13/ZuneView/src/mcc_ScrollerPict.c
---- ZuneView_v0.13-orig/ZuneView/src/mcc_ScrollerPict.c	2014-08-10 18:00:45.453666767 +0200
-+++ ZuneView_v0.13/ZuneView/src/mcc_ScrollerPict.c	2014-08-10 18:09:31.727619278 +0200
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_ScrollerPict.c	2014-08-12 09:01:10.219365882 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_ScrollerPict.c	2014-08-12 09:02:49.033366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: mcc_ScrollerPict.c $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
 @@ -16,6 +16,7 @@
  #include <proto/intuition.h>
  #include <libraries/mui.h>
@@ -50,9 +367,30 @@ diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_ScrollerPict.c ZuneView_v0.13/Zu
  
  #include "ZuneView.h"
  #include "mcc_Pictdisp.h"
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_ScrollerPict.h ZuneView_v0.13/ZuneView/src/mcc_ScrollerPict.h
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_ScrollerPict.h	2014-08-12 09:01:10.218365882 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_ScrollerPict.h	2014-08-12 09:02:49.033366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: mcc_ScrollerPict.h $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
 diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbdisp.c ZuneView_v0.13/ZuneView/src/mcc_Thumbdisp.c
---- ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbdisp.c	2014-08-10 18:00:45.452666767 +0200
-+++ ZuneView_v0.13/ZuneView/src/mcc_Thumbdisp.c	2014-08-10 18:07:34.621629845 +0200
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbdisp.c	2014-08-12 09:01:10.217365882 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_Thumbdisp.c	2014-08-12 09:02:49.033366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: mcc_Thumbdisp.c $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
 @@ -22,6 +22,7 @@
  #include <graphics/gfxmacros.h>
  #include <libraries/mui.h>
@@ -61,9 +399,30 @@ diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbdisp.c ZuneView_v0.13/ZuneV
  #include <string.h>
  
  #include "mcc_Thumbdisp.h"
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbdisp.h ZuneView_v0.13/ZuneView/src/mcc_Thumbdisp.h
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbdisp.h	2014-08-12 09:01:10.218365882 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_Thumbdisp.h	2014-08-12 09:02:49.033366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: mcc_Thumbdisp.h $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
 diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbgroup.c ZuneView_v0.13/ZuneView/src/mcc_Thumbgroup.c
---- ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbgroup.c	2014-08-10 18:00:45.452666767 +0200
-+++ ZuneView_v0.13/ZuneView/src/mcc_Thumbgroup.c	2014-08-10 18:09:07.682621448 +0200
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbgroup.c	2014-08-12 09:01:10.217365882 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_Thumbgroup.c	2014-08-12 09:02:49.033366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: mcc_Thumbgroup.c $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
 @@ -21,8 +21,9 @@
  #include <stdio.h>
  #include <devices/timer.h>
@@ -75,9 +434,30 @@ diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbgroup.c ZuneView_v0.13/Zune
  #include "mcc_Thumbdisp.h"
  #include "mcc_Thumbnail.h"
  #include "mcc_Thumbgroup.h"
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbgroup.h ZuneView_v0.13/ZuneView/src/mcc_Thumbgroup.h
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbgroup.h	2014-08-12 09:01:10.218365882 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_Thumbgroup.h	2014-08-12 09:02:49.033366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: mcc_Thumbgroup.h $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
 diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbnail.c ZuneView_v0.13/ZuneView/src/mcc_Thumbnail.c
---- ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbnail.c	2014-08-10 18:00:45.453666767 +0200
-+++ ZuneView_v0.13/ZuneView/src/mcc_Thumbnail.c	2014-08-10 18:08:24.659625330 +0200
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbnail.c	2014-08-12 09:01:10.218365882 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_Thumbnail.c	2014-08-12 09:02:49.033366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: mcc_Thumbnail.c $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
 @@ -17,9 +17,10 @@
  #include <proto/intuition.h>
  #include <libraries/mui.h>
@@ -90,9 +470,30 @@ diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbnail.c ZuneView_v0.13/ZuneV
  #include "mcc_Thumbdisp.h"
  #include "mcc_Thumbnail.h"
  
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbnail.h ZuneView_v0.13/ZuneView/src/mcc_Thumbnail.h
+--- ZuneView_v0.13-orig/ZuneView/src/mcc_Thumbnail.h	2014-08-12 09:01:10.218365882 +0200
++++ ZuneView_v0.13/ZuneView/src/mcc_Thumbnail.h	2014-08-12 09:02:49.033366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: mcc_Thumbnail.h $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
 diff -Naur ZuneView_v0.13-orig/ZuneView/src/PictureFunctions.c ZuneView_v0.13/ZuneView/src/PictureFunctions.c
---- ZuneView_v0.13-orig/ZuneView/src/PictureFunctions.c	2014-08-10 18:00:45.453666767 +0200
-+++ ZuneView_v0.13/ZuneView/src/PictureFunctions.c	2014-08-10 18:05:46.311639619 +0200
+--- ZuneView_v0.13-orig/ZuneView/src/PictureFunctions.c	2014-08-12 09:01:10.218365882 +0200
++++ ZuneView_v0.13/ZuneView/src/PictureFunctions.c	2014-08-12 09:02:49.034366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: PictureFunctions.c $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
 @@ -23,6 +23,7 @@
  #include <graphics/gfxmacros.h>
  #include <libraries/mui.h>
@@ -101,3 +502,136 @@ diff -Naur ZuneView_v0.13-orig/ZuneView/src/PictureFunctions.c ZuneView_v0.13/Zu
  #include <string.h>
  #include <math.h>
  
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/PictureFunctions.h ZuneView_v0.13/ZuneView/src/PictureFunctions.h
+--- ZuneView_v0.13-orig/ZuneView/src/PictureFunctions.h	2014-08-12 09:01:10.218365882 +0200
++++ ZuneView_v0.13/ZuneView/src/PictureFunctions.h	2014-08-12 09:02:49.034366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **         $Filename: PictureFunctions.h $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/ZuneView.c ZuneView_v0.13/ZuneView/src/ZuneView.c
+--- ZuneView_v0.13-orig/ZuneView/src/ZuneView.c	2014-08-12 09:01:10.218365882 +0200
++++ ZuneView_v0.13/ZuneView/src/ZuneView.c	2014-08-12 09:02:49.034366117 +0200
+@@ -1,14 +1,14 @@
+ /*
+ **         $Filename: ZuneView.c $
+ **         $Release: 0 $
+-**         $Revision: 13 $
++**         $Revision: 14 $
+ **         $Date: 2014 $
+ **
+ **         (C) Copyright 2013-2014 Yannick Erb
+ **         AROS Public License
+ */
+ 
+-#define VERSION 	"0.13"
++#define VERSION 	"0.14"
+ #define DATE		"August 2014"
+ #define COPYRIGHT	"2013 - 2014"
+ 
+@@ -1791,13 +1791,14 @@
+     char vol[128];
+     char dispvol[128];
+     int i;
+-    struct DosList 	*dlist;
++    struct DosList 	*dlist, *dl, *dlsave;
+ 	char *name = NULL;
+ 	ULONG len = 0;
+         
+-    dlist = LockDosList(LDF_READ | LDF_VOLUMES | LDF_ASSIGNS);
+-    
+-    while ((dlist = NextDosEntry(dlist, LDF_VOLUMES | LDF_ASSIGNS)) != NULL)
++    dlsave = LockDosList(LDF_READ | LDF_VOLUMES | LDF_ASSIGNS);
++      
++    dlist = dlsave;
++    while ((dlist = NextDosEntry(dlist, LDF_VOLUMES)) != NULL)
+     {
+         if (dlist->dol_Name)
+         {
+@@ -1808,34 +1809,48 @@
+                 vol[i] = name[i];
+             vol[len] = '\0';
+             strcat(vol,":");
+-            sprintf(dispvol, "\033i%s", vol);
++            sprintf(dispvol, "\033b%s", vol);
+             DoMethod(DirList,MUIM_NListtree_Insert,dispvol,vol,NULL,MUIV_NListtree_Insert_PrevNode_Sorted,TNF_LIST);
+         }
+-        
+-        if (dlist->dol_Type == DLT_VOLUME)
+-        {
+-            struct DosList *dl = LockDosList(LDF_DEVICES | LDF_READ);
+ 
+-            while ((dl = NextDosEntry(dl, LDF_DEVICES)))
++        dl = LockDosList(LDF_DEVICES | LDF_READ);
++
++        while ((dl = NextDosEntry(dl, LDF_DEVICES)))
++        {
++            /* This works for most filesystems */
++            if (dl->dol_Task == dlist->dol_Task)
+             {
+-                /* This works for most filesystems */
+-                if (dl->dol_Task == dlist->dol_Task)
+-                {
+-                    STRPTR devname = AROS_BSTR_ADDR(dl->dol_Name);
+-                    ULONG devlen = AROS_BSTR_strlen(dl->dol_Name);
++                STRPTR devname = AROS_BSTR_ADDR(dl->dol_Name);
++                ULONG devlen = AROS_BSTR_strlen(dl->dol_Name);
+ 
+-                    for (i=0; i<devlen; i++)
+-                        vol[i] = devname[i];
+-                    vol[devlen] = '\0';
+-                    strcat(vol,":");
+-                    sprintf(dispvol, "\033i%s", vol);
+-                    DoMethod(DirList,MUIM_NListtree_Insert,dispvol,vol,NULL,MUIV_NListtree_Insert_PrevNode_Sorted,TNF_LIST);
+-                    break;
+-                }
++                for (i=0; i<devlen; i++)
++                    vol[i] = devname[i];
++                vol[devlen] = '\0';
++                strcat(vol,":");
++                sprintf(dispvol, "\033b%s", vol);
++                DoMethod(DirList,MUIM_NListtree_Insert,dispvol,vol,NULL,MUIV_NListtree_Insert_PrevNode_Head,TNF_LIST);
++                break;
+             }
++        }
++
++        UnLockDosList(LDF_DEVICES | LDF_READ);
++    }
++    
++    dlist = dlsave;
++    while ((dlist = NextDosEntry(dlist, LDF_ASSIGNS)) != NULL)
++    {
++        if (dlist->dol_Name)
++        {
++            name = AROS_BSTR_ADDR(dlist->dol_Name);
++            len = MAX(127, AROS_BSTR_strlen(dlist->dol_Name));
+ 
+-            UnLockDosList(LDF_DEVICES | LDF_READ);
+-       }
++            for (i=0; i<len; i++)
++                vol[i] = name[i];
++            vol[len] = '\0';
++            strcat(vol,":");
++            sprintf(dispvol, "%s", vol);
++            DoMethod(DirList,MUIM_NListtree_Insert,dispvol,vol,NULL,MUIV_NListtree_Insert_PrevNode_Sorted,TNF_LIST);
++        }
+     }
+     
+     UnLockDosList(LDF_READ | LDF_VOLUMES | LDF_ASSIGNS);
+diff -Naur ZuneView_v0.13-orig/ZuneView/src/ZuneView.h ZuneView_v0.13/ZuneView/src/ZuneView.h
+--- ZuneView_v0.13-orig/ZuneView/src/ZuneView.h	2014-08-12 09:01:10.217365882 +0200
++++ ZuneView_v0.13/ZuneView/src/ZuneView.h	2014-08-12 09:02:49.034366117 +0200
+@@ -1,7 +1,7 @@
+ /*
+ **       $Filename: ZuneView.h $
+ **       $Release: 0 $
+-**       $Revision: 13 $
++**       $Revision: 14 $
+ **       $Date: 2014 $
+ **
+ **       (C) Copyright 2013-2014 Yannick Erb
