@@ -1,22 +1,18 @@
 #   $Id$
 #
 
-#
-# This is just temporarily. Gc is really a linklib.
-#
-
 include $(TOP)/config/make.cfg
 
-FILES := alloc reclaim allchblk misc mach_dep os_dep mark_rts headers mark obj_map blacklst finalize new_hblk real_malloc dyn_load dbg_mlc malloc stubborn checksums typd_mlc ptr_chck mallocx tests/test
+#MM- contrib-development : contrib-development-libs-gc
 
-EXEDIR := $(AROS_CONTRIB)/gc
+#MM contrib-development-libs-gc : includes
 
-USER_CFLAGS := -O2 -Wunused -Wall -Uunix -Ulinux -U__linux__ -DATOMIC_UNCOLLECTABLE -DSILENT -Iinclude
+FILES := alloc reclaim allchblk misc mach_dep os_dep mark_rts \
+    headers mark obj_map blacklst finalize new_hblk real_malloc \
+    dyn_load dbg_mlc malloc stubborn checksums typd_mlc ptr_chck mallocx
 
-#MM contrib-gc : includes linklibs setup-contrib-gc
+USER_CFLAGS := -Wunused -Wall -Uunix -Ulinux -U__linux__ -DATOMIC_UNCOLLECTABLE -DSILENT -I$(SRCDIR)/$(CURDIR)/include
 
-%build_prog mmake=contrib-gc \
-    progname=gctest targetdir=$(EXEDIR) \
-    files=$(FILES)
+%build_linklib mmake=contrib-development-libs-gc libname=gc files=$(FILES)
 
 %common

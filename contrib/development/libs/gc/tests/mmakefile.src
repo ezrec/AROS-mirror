@@ -1,0 +1,20 @@
+#   $Id$
+#
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-development-libs-gc : contrib-development-libs-gc-tests
+
+#MM contrib-development-libs-gc-tests : includes linklibs
+
+TARGETDIR := $(AROS_TESTS)/gc
+
+FILES := leak_test test
+#thread_leak_test trace_test
+
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../include
+
+%build_progs mmake=contrib-development-libs-gc-tests files=$(FILES) \
+    targetdir=$(TARGETDIR) uselibs=gc
+
+%common
