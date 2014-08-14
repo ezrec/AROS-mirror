@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 
 #MM- contrib-development-libs-gc : contrib-development-libs-gc-tests
 
-#MM contrib-development-libs-gc-tests : includes linklibs
+#MM contrib-development-libs-gc-tests : contrib-development-libs-gc includes linklibs
 
 TARGETDIR := $(AROS_TESTS)/gc
 
