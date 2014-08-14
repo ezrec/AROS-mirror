@@ -3,7 +3,11 @@
 
 include $(TOP)/config/make.cfg
 
+# TODO: find out why it fails for x86_64
+
+ifneq ($(AROS_TARGET_CPU), x86_64)
 #MM- contrib-development : contrib-development-libs-gc
+endif
 
 #MM contrib-development-libs-gc : includes contrib-development-libs-gc-linklib
 
