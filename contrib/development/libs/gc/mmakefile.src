@@ -5,11 +5,15 @@ include $(TOP)/config/make.cfg
 
 # TODO: find out why it fails for x86_64
 
-ifneq ($(AROS_TARGET_CPU), x86_64)
 #MM- contrib-development : contrib-development-libs-gc
-endif
 
-#MM contrib-development-libs-gc : includes contrib-development-libs-gc-linklib
+#MM- contrib-development-libs-gc : contrib-development-libs-gc-$(AROS_TARGET_CPU)
+
+#MM- contrib-development-libs-gc-m68k : contrib-development-libs-gc-common
+#MM- contrib-development-libs-gc-i386 : contrib-development-libs-gc-common
+#MM- contrib-development-libs-gc-arm : contrib-development-libs-gc-common
+
+#MM- contrib-development-libs-gc-common : includes contrib-development-libs-gc-linklib
 
 FILES := alloc reclaim allchblk misc mach_dep os_dep mark_rts \
     headers mark obj_map blacklst finalize new_hblk real_malloc \

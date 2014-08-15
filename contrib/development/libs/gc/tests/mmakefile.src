@@ -3,11 +3,9 @@
 
 include $(TOP)/config/make.cfg
 
-ifneq ($(AROS_TARGET_CPU), x86_64)
-#MM- contrib-development-libs-gc : contrib-development-libs-gc-tests
+#MM- contrib-development-libs-gc-common : contrib-development-libs-gc-tests
 
 #MM contrib-development-libs-gc-tests : contrib-development-libs-gc includes linklibs
-
 
 TARGETDIR := $(AROS_TESTS)/gc
 
@@ -18,7 +16,5 @@ USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)/../include
 
 %build_progs mmake=contrib-development-libs-gc-tests files=$(FILES) \
     targetdir=$(TARGETDIR) uselibs=gc
-
-endif
 
 %common
