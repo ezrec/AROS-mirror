@@ -1,5 +1,6 @@
 ## version $VER: ScreenRecoder.catalog 1.0 (02.08.2012)
 ## language français
+## codeset 0
 ;
 MSG_OK_REQ_GAD
 *_OK
