@@ -953,7 +953,7 @@ mGradientNew(struct IClass *cl,Object *obj,struct opSet *msg)
             MUIA_Group_Horiz, TRUE,
 
             Child, vgrad = (Object *)gradientfieldObject,
-                MUIA_ShortHelp,           (IPTR)tr(Msg_Popback_VertGradientHelp),
+                MUIA_ShortHelp,           (IPTR)tr(MSG_Popback_VertGradientHelp),
                 ButtonFrame,
                 MUIA_Background,          MUII_ButtonBack,
                 MUIA_InputMode,           MUIV_InputMode_Immediate,
@@ -963,7 +963,7 @@ mGradientNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
             Child, VGroup,
                 Child, hgrad = (Object *)gradientfieldObject,
-                    MUIA_ShortHelp,  (IPTR)tr(Msg_Popback_HorizGradientHelp),
+                    MUIA_ShortHelp,  (IPTR)tr(MSG_Popback_HorizGradientHelp),
                     ButtonFrame,
                     MUIA_Background, MUII_ButtonBack,
                     MUIA_InputMode,  MUIV_InputMode_Immediate,
@@ -979,11 +979,11 @@ mGradientNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
                 Child, HGroup,
                     Child, HSpace(0),
-                    Child, oclabel(Msg_Popback_From),
+                    Child, oclabel(MSG_Popback_From),
                     Child, HSpace(0),
-                    Child, swap = obutton(Msg_Popback_Swap,Msg_Popback_SwapHelp),
+                    Child, swap = obutton(MSG_Popback_Swap,MSG_Popback_SwapHelp),
                     Child, HSpace(0),
-                    Child, oclabel(Msg_Popback_To),
+                    Child, oclabel(MSG_Popback_To),
                     Child, HSpace(0),
                 End,
             End,
@@ -1205,10 +1205,10 @@ mBackNew(struct IClass *cl,Object *obj,struct opSet *msg)
     {
       static const char *titles[5];
 
-      titles[0] = tr(Msg_Popback_Pattern);
-      titles[1] = tr(Msg_Popback_Color);
-      titles[2] = tr(Msg_Popback_Bitmap);
-      titles[3] = tr(Msg_Popback_Gradient);
+      titles[0] = tr(MSG_Popback_Pattern);
+      titles[1] = tr(MSG_Popback_Color);
+      titles[2] = tr(MSG_Popback_Bitmap);
+      titles[3] = tr(MSG_Popback_Gradient);
       titles[4] = NULL;
 
       useGradient = TRUE;
@@ -1218,9 +1218,9 @@ mBackNew(struct IClass *cl,Object *obj,struct opSet *msg)
     {
       static const char *ngtitles[4];
 
-      ngtitles[0] = tr(Msg_Popback_Pattern);
-      ngtitles[1] = tr(Msg_Popback_Color);
-      ngtitles[2] = tr(Msg_Popback_Bitmap);
+      ngtitles[0] = tr(MSG_Popback_Pattern);
+      ngtitles[1] = tr(MSG_Popback_Color);
+      ngtitles[2] = tr(MSG_Popback_Bitmap);
       ngtitles[3] = NULL;
 
       useGradient = FALSE;

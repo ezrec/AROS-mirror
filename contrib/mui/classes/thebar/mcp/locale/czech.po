@@ -1,0 +1,906 @@
+# Translation catalog description file (pot-style)
+# $Id$
+# 
+# version 26
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: MCC TheBar\n"
+"Report-Msgid-Bugs-To: http://sf.net/p/thebar-mcc/\n"
+"POT-Creation-Date: 2014-02-23 14:21+0100\n"
+"PO-Revision-Date: 2014-02-23 13:30+0000\n"
+"Last-Translator: damato <mail@jens-maus.de>\n"
+"Language-Team: Czech (http://www.transifex.com/projects/p/thebar/language/cs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Catalog-Name: TheBar_mcp\n"
+"Language: cs\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+msgctxt "MSG_Reg_Colors (1//)"
+msgid "Colors"
+msgstr "Barvy"
+
+msgctxt "MSG_Reg_Appearance (2//)"
+msgid "Appearance"
+msgstr "Vzhled"
+
+msgctxt "MSG_Reg_Spacing (3//)"
+msgid "Spacing"
+msgstr "Odstup"
+
+msgctxt "MSG_Reg_Options (4//)"
+msgid "Options"
+msgstr "Možnosti"
+
+msgctxt "MSG_Title_Backgrounds (100//)"
+msgid "Backgrounds"
+msgstr "Pozadí"
+
+msgctxt "MSG_GroupBackground (101//)"
+msgid "Bar"
+msgstr "Panel"
+
+msgctxt "MSG_GroupBackground_Help (102//)"
+msgid "Bar background."
+msgstr "Definuje pozadí panelu."
+
+msgctxt "MSG_GroupBackground_Title (103//)"
+msgid "Bar background"
+msgstr "Vyberte pozadí panelu"
+
+msgctxt "MSG_UseGroupBackground (104//)"
+msgid "Active"
+msgstr "Aktivní"
+
+msgctxt "MSG_UseGroupBackground_Help (105//)"
+msgid ""
+"If selected, the bar gets\n"
+"your preferred background,\n"
+"otherwise it gets its\n"
+"parent background."
+msgstr "Aktivuje definované pozadí panelu."
+
+msgctxt "MSG_ButtonBackground (106//)"
+msgid "Buttons"
+msgstr "Tlačítka"
+
+msgctxt "MSG_ButtonBackground_Help (107//)"
+msgid "Active buttons background."
+msgstr "Definuje pozadí aktivních tlačítek."
+
+msgctxt "MSG_ButtonBackground_Title (108//)"
+msgid "Active buttons background"
+msgstr "Vyberte pozadí aktivních tlačítek"
+
+msgctxt "MSG_UseButtonBackground (109//)"
+msgid "Active"
+msgstr "Aktivní"
+
+msgctxt "MSG_UseButtonBackground_Help (110//)"
+msgid ""
+"If selected, the buttons get\n"
+"your preferred background,\n"
+"otherwise they get their\n"
+"parent background."
+msgstr "Aktivuje definované pozadí tlačítek."
+
+msgctxt "MSG_Title_Frame (111//)"
+msgid "Buttons frame"
+msgstr "Rámeček tlačítka"
+
+msgctxt "MSG_FrameShinePen (112//)"
+msgid "Shine"
+msgstr "Světlá\nhrana"
+
+msgctxt "MSG_FrameShinePen_Help (113//)"
+msgid "Active buttons frame shine pen."
+msgstr "Definuje barvu světlé hrany aktivního tlačítka."
+
+msgctxt "MSG_FrameShinePen_Title (114//)"
+msgid "Frame shine pen"
+msgstr "Vyberte barvu světlé hrany"
+
+msgctxt "MSG_FrameShadowPen (115//)"
+msgid "Shadow"
+msgstr "Tmavá\nhrana"
+
+msgctxt "MSG_FrameShadowPen_Help (116//)"
+msgid "Active buttons frame shadow pen."
+msgstr "Definuje barvu tmavé hrany aktivního tlačítka."
+
+msgctxt "MSG_FrameShadowPen_Title (117//)"
+msgid "Frame shadow pen"
+msgstr "Vyberte barvu tmavé hrany"
+
+msgctxt "MSG_FrameStyle_Recessed (118//)"
+msgid "Recessed"
+msgstr "Vtlačený rámeček"
+
+msgctxt "MSG_FrameStyle_Normal (119//)"
+msgid "Normal"
+msgstr "Normální rámeček"
+
+msgctxt "MSG_FrameStyle (120//)"
+msgid "Style"
+msgstr "Styl"
+
+msgctxt "MSG_FrameStyle_Help (121//)"
+msgid "Active buttons frame style."
+msgstr "Definuje styl rámečku aktivních tlačítek."
+
+msgctxt "MSG_Title_Disabled (122//)"
+msgid "Disabled buttons"
+msgstr "Neaktivní tlačítka"
+
+msgctxt "MSG_DisabledBody (123//)"
+msgid "Body"
+msgstr "Plocha"
+
+msgctxt "MSG_DisabledBody_Help (124//)"
+msgid ""
+"Disabled buttons body pen. It is used as\n"
+"main pen for disabled buttons in Shape\n"
+"mode and as grid pen for disabled\n"
+"buttons in Grid modes."
+msgstr "Definuje barvu pozadí neaktivního tlačítka, která\nposléze určuje jeho výsledný vzhled."
+
+msgctxt "MSG_DisabledBody_Title (125//)"
+msgid "Body pen"
+msgstr "Vyberte barvu plochy neaktivního tlačítka"
+
+msgctxt "MSG_DisabledShadow (126//)"
+msgid "Shadow"
+msgstr "Tmavá\nhrany"
+
+msgctxt "MSG_DisabledShadow_Help (127//)"
+msgid ""
+"Disabled buttons shadow pen. It is used as\n"
+"secondary pen for disabled buttons in Shape\n"
+"mode and as text pen for disabled buttons\n"
+"in Grid modes."
+msgstr "Definuje barvu tmavé hrany neaktivního tlačítka."
+
+msgctxt "MSG_DisabledShadow_Title (128//)"
+msgid "Shadow pen"
+msgstr "Vyberte barvu tmavé hrany neaktivního tlačítka"
+
+msgctxt "MSG_Title_BarSpacer (129//)"
+msgid "Bar spacer"
+msgstr "Oddělovač"
+
+msgctxt "MSG_BarSpacerShinePen (130//)"
+msgid "Shine"
+msgstr "Světlá\nhrana"
+
+msgctxt "MSG_BarSpacerShinePen_Help (131//)"
+msgid "Bar spacer shine pen."
+msgstr "Definuje barvu světlé hrany oddělovače."
+
+msgctxt "MSG_BarSpacerShinePen_Title (132//)"
+msgid "Spacer shine pen"
+msgstr "Vyberte barvu světlé hrany oddělovače"
+
+msgctxt "MSG_BarSpacerShadowPen (133//)"
+msgid "Shadow"
+msgstr "Tmavá\nhrana"
+
+msgctxt "MSG_BarSpacerShadowPen_Help (134//)"
+msgid "Bar spacer shadow pen."
+msgstr "Definuje barvu tmavé hrany oddělovače."
+
+msgctxt "MSG_BarSpacerShadowPen_Title (135//)"
+msgid "Spacer shadow pen"
+msgstr "Vyberte barvu tmavé hrany oddělovače"
+
+msgctxt "MSG_Title_BarFrame (136//)"
+msgid "Bar frame"
+msgstr "Rámeček panelu"
+
+msgctxt "MSG_BarFrameShine (137//)"
+msgid "Shine"
+msgstr "Světlá\nhrana"
+
+msgctxt "MSG_BarFrameShine_Help (138//)"
+msgid "Bar frame shine pen."
+msgstr "Definuje barvu světlé hrany panelu."
+
+msgctxt "MSG_BarFrameShine_Title (139//)"
+msgid "Frame shine pen"
+msgstr "Vyberte barvu světlé hrany panelu"
+
+msgctxt "MSG_BarFrameShadow (140//)"
+msgid "Shadow"
+msgstr "Tmavá\nhrana"
+
+msgctxt "MSG_BarFrameShadow_Help (141//)"
+msgid "Bar frame shadow pen."
+msgstr "Definuje barvu tmavé hrany panelu."
+
+msgctxt "MSG_BarFrameShadow_Title (142//)"
+msgid "Frame shadow pen"
+msgstr "Vyberte barvu tmavé hrany panelu"
+
+msgctxt "MSG_Title_DragBar (143//)"
+msgid "DragBar"
+msgstr "Táhlo"
+
+msgctxt "MSG_DragBarShine (144//)"
+msgid "Shine"
+msgstr "Světlá\nhrana"
+
+msgctxt "MSG_DragBarShine_Help (145//)"
+msgid "DragBar shine pen."
+msgstr "Definuje barvu světlé hrany lišty."
+
+msgctxt "MSG_DragBarShine_Title (146//)"
+msgid "DragBar shine pen"
+msgstr "Vyberte barvu světlé hrany lišty"
+
+msgctxt "MSG_DragBarShadow (147//)"
+msgid "Shadow"
+msgstr "Tmavá\nhrana"
+
+msgctxt "MSG_DragBarShadow_Help (148//)"
+msgid "DragBar shadow pen."
+msgstr "Definuje barvu tmavé hrany lišty."
+
+msgctxt "MSG_DragBarShadow_Title (149//)"
+msgid "DragBar shadow pen"
+msgstr "Vyberte barvu tmavé hrany lišty"
+
+msgctxt "MSG_DragBarFill (150//)"
+msgid "Fill"
+msgstr "Výplňová\nbarva"
+
+msgctxt "MSG_DragBarFill_Help (151//)"
+msgid "DragBar fill pen."
+msgstr "Pero pro výplň plochy."
+
+msgctxt "MSG_DragBarFill_Title (152//)"
+msgid "DragBar fill pen"
+msgstr "Pero pro výplň plochy"
+
+msgctxt "MSG_UseDragBarFill (153//)"
+msgid "Use"
+msgstr "Použít"
+
+msgctxt "MSG_UseDragBarFill_Help (154//)"
+msgid ""
+"If selected, the dragbar fill\n"
+"pen is used."
+msgstr "Aktivuje zobrazené vybrané výplňové barvy."
+
+msgctxt "MSG_Frame (155//)"
+msgid "Frame"
+msgstr "Rámeček"
+
+msgctxt "MSG_Frame_Help (156//)"
+msgid "Bar frame"
+msgstr "Definuje vzhled rámečku panelu."
+
+msgctxt "MSG_Frame_Title (157//)"
+msgid "Bar frame"
+msgstr "Vyberte rámeček panelu"
+
+msgctxt "MSG_TextFont (200//)"
+msgid "Text"
+msgstr "Textová tlačítka"
+
+msgctxt "MSG_TextFont_Help (201//)"
+msgid "Text only buttons font."
+msgstr "Definuje písmo pro textová tlačítka."
+
+msgctxt "MSG_TextGfxFont (202//)"
+msgid "TextGfx"
+msgstr "Ikony s textem"
+
+msgctxt "MSG_TextGfxFont_Help (203//)"
+msgid "Text and image buttons font."
+msgstr "Definuje písmo pro kombinaci ikon s textem."
+
+msgctxt "MSG_ViewMode (204//)"
+msgid "View mode"
+msgstr "Režim zobrazení"
+
+msgctxt "MSG_ViewMode_Help (205//)"
+msgid "Adjust the appearance of the buttons."
+msgstr "Definuje vzhled tlačítek na panelu."
+
+msgctxt "MSG_Appearance_Text (206//)"
+msgid ""
+"The options below are used by TheBar if and only if the\n"
+"object requested for it at creation time. It means that\n"
+"if the programmer didn't decide otherwise, they are simply\n"
+"ignored."
+msgstr "Veškeré uvedené možnosti se uplatní pouze tehdy,\npokud to daný program používající TheBar umožní."
+
+msgctxt "MSG_TextGfx (207//)"
+msgid "Icons and text"
+msgstr "Ikony s textem"
+
+msgctxt "MSG_Gfx (208//)"
+msgid "Icons only"
+msgstr "Pouze ikony"
+
+msgctxt "MSG_Text (209//)"
+msgid "Text only"
+msgstr "Pouze text"
+
+msgctxt "MSG_Borderless (210//)"
+msgid "Borderless"
+msgstr "Zobrazit tlačítka bez rámečku"
+
+msgctxt "MSG_Borderless_Help (211//)"
+msgid "If selected, buttons are borderless."
+msgstr "Vypne zobrazení rámečku okolo tlačítek."
+
+msgctxt "MSG_Sunny (212//)"
+msgid "Highlight"
+msgstr "Obarvit vybrané tlačítko"
+
+msgctxt "MSG_Sunny_Help (213//)"
+msgid ""
+"If selected, buttons, normally in black\n"
+"and white, are colored when the\n"
+"mouse is over them."
+msgstr "Obarví vybrané tlačítko (tj. takové, na které\nnajedete šipkou myši)."
+
+msgctxt "MSG_Raised (214//)"
+msgid "Raised"
+msgstr "Orámovat vybrané tlačítko"
+
+msgctxt "MSG_Raised_Help (215//)"
+msgid ""
+"If selected, buttons, normally frameless,\n"
+"are framed when the mouse is over them."
+msgstr "Orámuje vybrané tlačítko (tj. takové, na které\nnajedete šipkou myši)."
+
+msgctxt "MSG_Scaled (216//)"
+msgid "Scaled"
+msgstr "Zvětšit vybrané tlačítko"
+
+msgctxt "MSG_Scaled_Help (217//)"
+msgid "If selected, buttons are scaled."
+msgstr "Zvětší vybrané tlačítko (tj. takové, na které\nnajedete šipkou myši)."
+
+msgctxt "MSG_BarSpacer (218//)"
+msgid "Force Bar spacer"
+msgstr "Zobrazit oddělovač"
+
+msgctxt "MSG_BarSpacer_Help (219//)"
+msgid ""
+"If selected, a bar spacer is used\n"
+"for all kind of separators."
+msgstr "Oddělovač usnadní vizuálně oddělit jednotlivá\ntlačítka na panelu."
+
+msgctxt "MSG_EnableKeys (220//)"
+msgid "Enable keys"
+msgstr "Zobrazit klávesové zkratky"
+
+msgctxt "MSG_EnableKeys_Help (221//)"
+msgid ""
+"If selected, buttons short cuts\n"
+"are active."
+msgstr "Aktivuje klávesové zkratky pro jednotlivá tlačítka."
+
+msgctxt "MSG_LabelPos (222//)"
+msgid "Labels at"
+msgstr "Textové popisky"
+
+msgctxt "MSG_LabelPos_Help (223//)"
+msgid ""
+"Adjust the position of text in\n"
+"Icons and text buttons."
+msgstr "Definuje pozici textu v režimu \"Ikony s textem\"."
+
+msgctxt "MSG_LabelPos_Bottom (224//)"
+msgid "Bottom"
+msgstr "Pod ikonami"
+
+msgctxt "MSG_LabelPos_Top (225//)"
+msgid "Top"
+msgstr "Nad ikonami"
+
+msgctxt "MSG_LabelPos_Right (226//)"
+msgid "Right"
+msgstr "Vpravo od ikony"
+
+msgctxt "MSG_LabelPos_Left (227//)"
+msgid "Left"
+msgstr "Vlevo od ikony"
+
+msgctxt "MSG_Title_GroupSpacing (300//)"
+msgid "Bar"
+msgstr "Panel"
+
+msgctxt "MSG_HorizGroupSpacing (301//)"
+msgid "Horiz"
+msgstr "Vodorovně"
+
+msgctxt "MSG_HorizGroupSpacing_Help (302//)"
+msgid "Pixels between two buttons in a bar row."
+msgstr "Definuje odstup dvou tlačítek na panelu."
+
+msgctxt "MSG_VertGroupSpacing (303//)"
+msgid "Vert"
+msgstr "Svisle"
+
+msgctxt "MSG_VertGroupSpacing_Help (304//)"
+msgid "Pixels between two bar rows."
+msgstr "Definuje odstup mezi dvěma panely."
+
+msgctxt "MSG_BarSpacerSpacing (305//)"
+msgid "Bar"
+msgstr "Oddělovač"
+
+msgctxt "MSG_BarSpacerSpacing_Help (306//)"
+msgid ""
+"Pixels between a Bar spacer\n"
+"and the previous/next object."
+msgstr "Definuje odstup oddělovače od vedlejšího objektu."
+
+msgctxt "MSG_Title_InnerSpacing (307//)"
+msgid "Buttons"
+msgstr "Tlačítka"
+
+msgctxt "MSG_HorizInnerSpacing (308//)"
+msgid "Horiz"
+msgstr "Vodorovně"
+
+msgctxt "MSG_HorizInnerSpacing_Help (309//)"
+msgid ""
+"Pixels between the left/right frame\n"
+"border and the button contents."
+msgstr "Definuje odstup levého, příp. pravého okraje\nrámečku tlačítka od obrázku či textu uvnitř."
+
+msgctxt "MSG_TopInnerSpacing (310//)"
+msgid "Top"
+msgstr "Shora"
+
+msgctxt "MSG_TopInnerSpacing_Help (311//)"
+msgid ""
+"Pixels between the top frame border\n"
+"and the button contents."
+msgstr "Definuje odstup horního okraje rámečku tlačítka\nod obrázku či textu uvnitř."
+
+msgctxt "MSG_BottomInnerSpacing (312//)"
+msgid "Bottom"
+msgstr "Zdola"
+
+msgctxt "MSG_BottomInnerSpacing_Help (313//)"
+msgid ""
+"Pixels between the bottom frame border\n"
+"and the button contents."
+msgstr "Definuje odstup dolního okraje rámečku tlačítka\nod obrázku či textu uvnitř."
+
+msgctxt "MSG_Title_BarFrameSpacing (314//)"
+msgid "Bar frame"
+msgstr "Rámeček panelu"
+
+msgctxt "MSG_LeftBarFrameSpacing (315//)"
+msgid "Left"
+msgstr "Zleva"
+
+msgctxt "MSG_LeftBarFrameSpacing_Help (316//)"
+msgid ""
+"Pixels between the left frame border\n"
+"and the bar contents."
+msgstr "Definuje odstup levého okraje rámečku panelu\nod obsahu, tj. tlačítek uvnitř."
+
+msgctxt "MSG_RightBarFrameSpacing (317//)"
+msgid "Right"
+msgstr "Zprava"
+
+msgctxt "MSG_RightBarFrameSpacing_Help (318//)"
+msgid ""
+"Pixels between the right frame border\n"
+"and the bar contents."
+msgstr "Definuje odstup pravého okraje rámečku panelu\nod obsahu, tj. tlačítek uvnitř."
+
+msgctxt "MSG_TopBarFrameSpacing (319//)"
+msgid "Top"
+msgstr "Shora"
+
+msgctxt "MSG_TopBarFrameSpacing_Help (320//)"
+msgid ""
+"Pixels between the top frame border\n"
+"and the bar contents."
+msgstr "Definuje odstup horního okraje rámečku panelu\nod obsahu, tj. tlačítek uvnitř."
+
+msgctxt "MSG_BottomBarFrameSpacing (321//)"
+msgid "Bottom"
+msgstr "Zdola"
+
+msgctxt "MSG_BottomBarFrameSpacing_Help (322//)"
+msgid ""
+"Pixels between the bottom frame border\n"
+"and the bar contents."
+msgstr "Definuje odstup dolního okraje rámečku panelu\nod obsahu, tj. tlačítek uvnitř."
+
+msgctxt "MSG_Title_TextGfxSpacing (323//)"
+msgid "Text/Gfx"
+msgstr "Text a ikony"
+
+msgctxt "MSG_HorizTextGfxSpacing (324//)"
+msgid "Horiz"
+msgstr "Vodorovně"
+
+msgctxt "MSG_HorizTextGfxSpacing_Help (325//)"
+msgid ""
+"Pixels between an image and\n"
+"its left/right placed label."
+msgstr "Definuje odstup obrázku od textového popisku\numístěného vlevo, příp. vpravo."
+
+msgctxt "MSG_VertTextGfxSpacing (326//)"
+msgid "Vert"
+msgstr "Svisle"
+
+msgctxt "MSG_VertTextGfxSpacing_Help (327//)"
+msgid ""
+"Pixels between an image and\n"
+"its bottom/top placed label."
+msgstr "Definuje odstup obrázku od textového popisku\numístěného dole, příp. nahoře."
+
+msgctxt "MSG_Precision_Gui (400//)"
+msgid "Bad"
+msgstr "Nízká"
+
+msgctxt "MSG_Precision_Icon (401//)"
+msgid "Poor"
+msgstr "Střední"
+
+msgctxt "MSG_Precision_Image (402//)"
+msgid "Good"
+msgstr "Dobrá"
+
+msgctxt "MSG_Precision_Exact (403//)"
+msgid "Best"
+msgstr "Nejvyšší"
+
+msgctxt "MSG_Precision (404//)"
+msgid "Quality"
+msgstr "Kvalita obrázku"
+
+msgctxt "MSG_Precision_Help (405//)"
+msgid "Precision to use when obtaining pens."
+msgstr "Definuje způsob přidělování barev obrázku."
+
+msgctxt "MSG_Event_IntuiTicks (406//)"
+msgid "IntuiTicks"
+msgstr "IntuiTicks"
+
+msgctxt "MSG_Event_MouseMove (407//)"
+msgid "MouseMove"
+msgstr "Přesun myši"
+
+msgctxt "MSG_Event (408//)"
+msgid "Event"
+msgstr "Událost"
+
+msgctxt "MSG_Event_Help (409//)"
+msgid ""
+"How to verify if the mouse is over a button:\n"
+"- IntuiTicks: it is verified periodically\n"
+"- MouseMove: it is verified at every mouse move\n"
+"- MouseObject, it is verified at when the mouse\n"
+"over a new object"
+msgstr "Metoda zjišťování pozice myši nad tlačítky.\n- \"IntuiTicks\": periodicky\n- \"Přesun myši\": při každém pohybu myši\n- \"MouseObject\": pouze nad objekty"
+
+msgctxt "MSG_Scale (410//)"
+msgid "Scale"
+msgstr "Míra zvětšení"
+
+msgctxt "MSG_Scale_Help (411//)"
+msgid "Scale factor for scaled images."
+msgstr "Definuje míru změny velikosti 'zvětšených' obrázků."
+
+msgctxt "MSG_SpecialSelect (412//)"
+msgid "Special select"
+msgstr "Posunout obsah vybraného tlačítka"
+
+msgctxt "MSG_SpecialSelect_Help (413//)"
+msgid ""
+"If selected, button contents are moved\n"
+"when they are selected or active."
+msgstr "Zapne posun tlačítka při výběru nebo aktivaci."
+
+msgctxt "MSG_TextOverUseShine (414//)"
+msgid "Special text"
+msgstr "Zvýraznit text aktivního tlačítka"
+
+msgctxt "MSG_TextOverUseShine_Help (415//)"
+msgid ""
+"If selected, active buttons labels\n"
+"are drawn with the shine pen."
+msgstr "Zapne zvýraznění textového popisku aktivního\ntlačítka barvou určenou pro světlé hrany."
+
+msgctxt "MSG_IgnoreSelImages (416//)"
+msgid "Ignore selected images"
+msgstr "Ignorovat vybrané obrazky"
+
+msgctxt "MSG_IgnoreSelImages_Help (417//)"
+msgid ""
+"If selected, selected images\n"
+"are ignored."
+msgstr "Zapne ignorování vybraných obrázků."
+
+msgctxt "MSG_IgnoreDisImages (418//)"
+msgid "Ignore disabled images"
+msgstr "Ignorovat neaktivní obrázky"
+
+msgctxt "MSG_IgnoreDisImages_Help (419//)"
+msgid ""
+"If selected, disabled images\n"
+"are ignored."
+msgstr "Zapne ignorování neaktivních obrázků."
+
+msgctxt "MSG_DisMode_Shape (420//)"
+msgid "Shape"
+msgstr "Překrýt vzorem"
+
+msgctxt "MSG_DisMode_Grid (421//)"
+msgid "Grid"
+msgstr "Překrýt prostou mřížkou"
+
+msgctxt "MSG_DisMode_FullGrid (422//)"
+msgid "Full grid"
+msgstr "Překrýt plnou mřížkou"
+
+msgctxt "MSG_DisMode (423//)"
+msgid "Disable"
+msgstr "Neaktivní tlačítka"
+
+msgctxt "MSG_DisMode_Help (424//)"
+msgid "How to render disabled buttons."
+msgstr "Definuje způsob zobrazení neaktivních tlačítek."
+
+msgctxt "MSG_DontMove (425//)"
+msgid "Don't move"
+msgstr "Neposouvat obsah tlačítka při aktivaci"
+
+msgctxt "MSG_DontMove_Help (426//)"
+msgid ""
+"If selected, the contents of the buttons\n"
+"is not moved when they are active."
+msgstr "Vypne posunutí obsahu tlačítka při aktivaci."
+
+msgctxt "MSG_DisMode_Sunny (427//)"
+msgid "Grey"
+msgstr "Zešednout"
+
+msgctxt "MSG_NtRaiseActive (428//)"
+msgid "Don't raise active buttons"
+msgstr "Vypnout orámování aktivních tlačítek"
+
+msgctxt "MSG_NtRaiseActive_Help (429//)"
+msgid "If selected, active buttons are not raised."
+msgstr "Vypne zobrazení rámečku kolem aktivního tlačítka."
+
+msgctxt "MSG_SpacersSize (430//)"
+msgid "Spacers size"
+msgstr "Velikost oddělovače"
+
+msgctxt "MSG_SpacersSize_Help (431//)"
+msgid "Size of spacers."
+msgstr "Definuje šířku oddělovače vzhledem k tlačítku."
+
+msgctxt "MSG_SpacersSize_Quarter (432//)"
+msgid "Quarter of a button"
+msgstr "1/4 tlačítka"
+
+msgctxt "MSG_SpacersSize_Half (433//)"
+msgid "Half of a button"
+msgstr "1/2 tlačítka"
+
+msgctxt "MSG_SpacersSize_One (434//)"
+msgid "As a button"
+msgstr "Celé tlačítko"
+
+msgctxt "MSG_Event_MouseObject (435//)"
+msgid "MouseObject"
+msgstr "MouseObjekt"
+
+msgctxt "MSG_DisMode_Blend (436//)"
+msgid "Blend"
+msgstr "Prolnout s pozadím"
+
+msgctxt "MSG_DisMode_BlendGrey (437//)"
+msgid "Blend grey"
+msgstr "Prolnout (odstíny šedi)"
+
+msgctxt "MSG_Item_Defaults (500//)"
+msgid "Reset to defaults"
+msgstr "Výchozí stav"
+
+msgctxt "MSG_NoMUI20Event_Help (502//)"
+msgid ""
+"How to verify if the mouse is over a button:\n"
+"- IntuiTicks: it is verified periodically\n"
+"- MouseMove: it is verified at every mouse move"
+msgstr "Metoda zjišťování pozice myši nad tlačítky.\n- \"IntuiTicks\": periodicky\n- \"Přesun myši\": při každém pohybu myši"
+
+msgctxt "MSG_SpacersSize_None (503//)"
+msgid "None"
+msgstr "Bez mezery"
+
+msgctxt "MSG_SpacersSize_OnePoint (504//)"
+msgid "One point"
+msgstr "Jedna linka"
+
+msgctxt "MSG_SpacersSize_TwoPoint (505//)"
+msgid "Two points"
+msgstr "Dvě linky"
+
+msgctxt "MSG_Info_Translator (603//)"
+msgid "<EMPTY>"
+msgstr "Český překlad: Vít Šindlář"
+
+msgctxt "MSG_Item_Globals (604//)"
+msgid "Reset to global"
+msgstr "Obnovit výchozí"
+
+msgctxt "MSG_Item_LastSaved (605//)"
+msgid "Last saved"
+msgstr "Naposledy uložené"
+
+msgctxt "MSG_Item_Restore (606//)"
+msgid "Restore"
+msgstr "Obnovit předchozí"
+
+msgctxt "MSG_Pop_OK (700//)"
+msgid "OK"
+msgstr "OK"
+
+msgctxt "MSG_Pop_OK_Help (701//)"
+msgid "Accept changes."
+msgstr "Potvrdí provedené změny."
+
+msgctxt "MSG_Pop_Cancel (702//)"
+msgid "Cancel"
+msgstr "Zrušit"
+
+msgctxt "MSG_Pop_Cancel_Help (703//)"
+msgid "Exit without changing."
+msgstr "Ukončí program bez provedených změny."
+
+msgctxt "MSG_Popback_Pattern (710//)"
+msgid "Pattern"
+msgstr "Vzor"
+
+msgctxt "MSG_Popback_Color (711//)"
+msgid "Color"
+msgstr "Barva"
+
+msgctxt "MSG_Popback_Bitmap (712//)"
+msgid "Bitmap"
+msgstr "Obrázek"
+
+msgctxt "MSG_Popback_Gradient (713//)"
+msgid "Gradient"
+msgstr "Barevný přechod"
+
+msgctxt "MSG_Popback_HorizGradient (714//)"
+msgid "Horizontal"
+msgstr "Vodorovný"
+
+msgctxt "MSG_Popback_HorizGradientHelp (715//)"
+msgid ""
+"If selected, you get a\n"
+"horizontal gradient."
+msgstr "Vodorovný barevný přechod."
+
+msgctxt "MSG_Popback_VertGradient (716//)"
+msgid "Vertical"
+msgstr "Svislý"
+
+msgctxt "MSG_Popback_VertGradientHelp (717//)"
+msgid ""
+"If selected, you get a\n"
+"vertical gradient."
+msgstr "Svislý barevný přechod."
+
+msgctxt "MSG_Popback_From (718//)"
+msgid "From color"
+msgstr "Výchozí barva"
+
+msgctxt "MSG_Popback_To (719//)"
+msgid "To color"
+msgstr "Cílová barva"
+
+msgctxt "MSG_Popback_Swap (720//)"
+msgid "Swap"
+msgstr "Prohodit"
+
+msgctxt "MSG_Popback_SwapHelp (721//)"
+msgid "Swaps from/to colors."
+msgstr "Prohození dvou vybraných barev."
+
+msgctxt "MSG_Poppen_MUI (800//)"
+msgid "MUI"
+msgstr "MUI"
+
+msgctxt "MSG_Poppen_Colormap (801//)"
+msgid "Colormap"
+msgstr "Barevná mapa"
+
+msgctxt "MSG_Poppen_RGB (802//)"
+msgid "RGB"
+msgstr "RGB"
+
+msgctxt "MSG_Poppen_Shine (803//)"
+msgid "Shine"
+msgstr "Světlá barva"
+
+msgctxt "MSG_Poppen_Halfshine (804//)"
+msgid "Halfshine"
+msgstr "Polosvětlá barva"
+
+msgctxt "MSG_Poppen_Background (805//)"
+msgid "Background"
+msgstr "Barva pozadí"
+
+msgctxt "MSG_Poppen_Halfshadow (806//)"
+msgid "Halfshadow"
+msgstr "Polotmavá barva"
+
+msgctxt "MSG_Poppen_Shadow (807//)"
+msgid "Shadow"
+msgstr "Tmavá barva"
+
+msgctxt "MSG_Poppen_Text (808//)"
+msgid "Text"
+msgstr "Barva textu"
+
+msgctxt "MSG_Poppen_Fill (809//)"
+msgid "Fill"
+msgstr "Výplňová barva"
+
+msgctxt "MSG_Poppen_Mark (810//)"
+msgid "Mark"
+msgstr "Označovací barva"
+
+msgctxt "MSG_Poppen_ColorMapHelp (811//)"
+msgid "Select a screen color entry."
+msgstr "Vyberte požadovanou barvu obrazovky."
+
+msgctxt "MSG_ColoradjustRed (900//)"
+msgid "Red"
+msgstr "Červená"
+
+msgctxt "MSG_Coloradjust_RedHelp (901//)"
+msgid "The red component of the color."
+msgstr "Červená složka barevného spektra."
+
+msgctxt "MSG_ColoradjustGreen (902//)"
+msgid "Green"
+msgstr "Zelená"
+
+msgctxt "MSG_Coloradjust_GreenHelp (903//)"
+msgid "The green component of the color."
+msgstr "Zelená složka barevného spektra."
+
+msgctxt "MSG_ColoradjustBlue (904//)"
+msgid "Blue"
+msgstr "Modrá"
+
+msgctxt "MSG_Coloradjust_BlueHelp (905//)"
+msgid "The blue component of the color."
+msgstr "Modrá složka barevného spektra."
+
+msgctxt "MSG_Coloradjust_WheelAbbr (906//)"
+msgid "GCBMRY"
+msgstr "GCBMRY"
+
+msgctxt "MSG_Coloradjust_WheelHelp (907//)"
+msgid "Move the mouse to select a color."
+msgstr "Kliknutím vyberte požadovanou barvu."
+
+msgctxt "MSG_Coloradjust_GradientHelp (908//)"
+msgid "The brightness of the color."
+msgstr "Definuje jasovou složku barvy."
+
+msgctxt "MSG_PrefsShortHelp (1000//)"
+msgid "Next generation tool bar class."
+msgstr "Externí třída MUI pro panely nové generace."

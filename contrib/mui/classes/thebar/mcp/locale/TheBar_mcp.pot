@@ -1,0 +1,905 @@
+# Translation catalog description file (pot-style)
+# $Id: TheBar_mcp.pot 479 2014-04-05 18:25:12Z damato $
+#
+# version 26
+msgid ""
+msgstr ""
+"Project-Id-Version: MCC TheBar\n"
+"Report-Msgid-Bugs-To: http://sf.net/p/thebar-mcc/\n"
+"POT-Creation-Date: 2014-02-23 14:21+0100\n"
+"PO-Revision-Date: 2014-02-23 13:22+0000\n"
+"Last-Translator: damato <mail@jens-maus.de>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Catalog-Name: TheBar_mcp\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "MSG_Reg_Colors (1//)"
+msgid "Colors"
+msgstr "Colors"
+
+msgctxt "MSG_Reg_Appearance (2//)"
+msgid "Appearance"
+msgstr "Appearance"
+
+msgctxt "MSG_Reg_Spacing (3//)"
+msgid "Spacing"
+msgstr "Spacing"
+
+msgctxt "MSG_Reg_Options (4//)"
+msgid "Options"
+msgstr "Options"
+
+msgctxt "MSG_Title_Backgrounds (100//)"
+msgid "Backgrounds"
+msgstr "Backgrounds"
+
+msgctxt "MSG_GroupBackground (101//)"
+msgid "Bar"
+msgstr "Bar"
+
+msgctxt "MSG_GroupBackground_Help (102//)"
+msgid "Bar background."
+msgstr "Bar background."
+
+msgctxt "MSG_GroupBackground_Title (103//)"
+msgid "Bar background"
+msgstr "Bar background"
+
+msgctxt "MSG_UseGroupBackground (104//)"
+msgid "Active"
+msgstr "Active"
+
+msgctxt "MSG_UseGroupBackground_Help (105//)"
+msgid ""
+"If selected, the bar gets\n"
+"your preferred background,\n"
+"otherwise it gets its\n"
+"parent background."
+msgstr "If selected, the bar gets\nyour preferred background,\notherwise it gets its\nparent background."
+
+msgctxt "MSG_ButtonBackground (106//)"
+msgid "Buttons"
+msgstr "Buttons"
+
+msgctxt "MSG_ButtonBackground_Help (107//)"
+msgid "Active buttons background."
+msgstr "Active buttons background."
+
+msgctxt "MSG_ButtonBackground_Title (108//)"
+msgid "Active buttons background"
+msgstr "Active buttons background"
+
+msgctxt "MSG_UseButtonBackground (109//)"
+msgid "Active"
+msgstr "Active"
+
+msgctxt "MSG_UseButtonBackground_Help (110//)"
+msgid ""
+"If selected, the buttons get\n"
+"your preferred background,\n"
+"otherwise they get their\n"
+"parent background."
+msgstr "If selected, the buttons get\nyour preferred background,\notherwise they get their\nparent background."
+
+msgctxt "MSG_Title_Frame (111//)"
+msgid "Buttons frame"
+msgstr "Buttons frame"
+
+msgctxt "MSG_FrameShinePen (112//)"
+msgid "Shine"
+msgstr "Shine"
+
+msgctxt "MSG_FrameShinePen_Help (113//)"
+msgid "Active buttons frame shine pen."
+msgstr "Active buttons frame shine pen."
+
+msgctxt "MSG_FrameShinePen_Title (114//)"
+msgid "Frame shine pen"
+msgstr "Frame shine pen"
+
+msgctxt "MSG_FrameShadowPen (115//)"
+msgid "Shadow"
+msgstr "Shadow"
+
+msgctxt "MSG_FrameShadowPen_Help (116//)"
+msgid "Active buttons frame shadow pen."
+msgstr "Active buttons frame shadow pen."
+
+msgctxt "MSG_FrameShadowPen_Title (117//)"
+msgid "Frame shadow pen"
+msgstr "Frame shadow pen"
+
+msgctxt "MSG_FrameStyle_Recessed (118//)"
+msgid "Recessed"
+msgstr "Recessed"
+
+msgctxt "MSG_FrameStyle_Normal (119//)"
+msgid "Normal"
+msgstr "Normal"
+
+msgctxt "MSG_FrameStyle (120//)"
+msgid "Style"
+msgstr "Style"
+
+msgctxt "MSG_FrameStyle_Help (121//)"
+msgid "Active buttons frame style."
+msgstr "Active buttons frame style."
+
+msgctxt "MSG_Title_Disabled (122//)"
+msgid "Disabled buttons"
+msgstr "Disabled buttons"
+
+msgctxt "MSG_DisabledBody (123//)"
+msgid "Body"
+msgstr "Body"
+
+msgctxt "MSG_DisabledBody_Help (124//)"
+msgid ""
+"Disabled buttons body pen. It is used as\n"
+"main pen for disabled buttons in Shape\n"
+"mode and as grid pen for disabled\n"
+"buttons in Grid modes."
+msgstr "Disabled buttons body pen. It is used as\nmain pen for disabled buttons in Shape\nmode and as grid pen for disabled\nbuttons in Grid modes."
+
+msgctxt "MSG_DisabledBody_Title (125//)"
+msgid "Body pen"
+msgstr "Body pen"
+
+msgctxt "MSG_DisabledShadow (126//)"
+msgid "Shadow"
+msgstr "Shadow"
+
+msgctxt "MSG_DisabledShadow_Help (127//)"
+msgid ""
+"Disabled buttons shadow pen. It is used as\n"
+"secondary pen for disabled buttons in Shape\n"
+"mode and as text pen for disabled buttons\n"
+"in Grid modes."
+msgstr "Disabled buttons shadow pen. It is used as\nsecondary pen for disabled buttons in Shape\nmode and as text pen for disabled buttons\nin Grid modes."
+
+msgctxt "MSG_DisabledShadow_Title (128//)"
+msgid "Shadow pen"
+msgstr "Shadow pen"
+
+msgctxt "MSG_Title_BarSpacer (129//)"
+msgid "Bar spacer"
+msgstr "Bar spacer"
+
+msgctxt "MSG_BarSpacerShinePen (130//)"
+msgid "Shine"
+msgstr "Shine"
+
+msgctxt "MSG_BarSpacerShinePen_Help (131//)"
+msgid "Bar spacer shine pen."
+msgstr "Bar spacer shine pen."
+
+msgctxt "MSG_BarSpacerShinePen_Title (132//)"
+msgid "Spacer shine pen"
+msgstr "Spacer shine pen"
+
+msgctxt "MSG_BarSpacerShadowPen (133//)"
+msgid "Shadow"
+msgstr "Shadow"
+
+msgctxt "MSG_BarSpacerShadowPen_Help (134//)"
+msgid "Bar spacer shadow pen."
+msgstr "Bar spacer shadow pen."
+
+msgctxt "MSG_BarSpacerShadowPen_Title (135//)"
+msgid "Spacer shadow pen"
+msgstr "Spacer shadow pen"
+
+msgctxt "MSG_Title_BarFrame (136//)"
+msgid "Bar frame"
+msgstr "Bar frame"
+
+msgctxt "MSG_BarFrameShine (137//)"
+msgid "Shine"
+msgstr "Shine"
+
+msgctxt "MSG_BarFrameShine_Help (138//)"
+msgid "Bar frame shine pen."
+msgstr "Bar frame shine pen."
+
+msgctxt "MSG_BarFrameShine_Title (139//)"
+msgid "Frame shine pen"
+msgstr "Frame shine pen"
+
+msgctxt "MSG_BarFrameShadow (140//)"
+msgid "Shadow"
+msgstr "Shadow"
+
+msgctxt "MSG_BarFrameShadow_Help (141//)"
+msgid "Bar frame shadow pen."
+msgstr "Bar frame shadow pen."
+
+msgctxt "MSG_BarFrameShadow_Title (142//)"
+msgid "Frame shadow pen"
+msgstr "Frame shadow pen"
+
+msgctxt "MSG_Title_DragBar (143//)"
+msgid "DragBar"
+msgstr "DragBar"
+
+msgctxt "MSG_DragBarShine (144//)"
+msgid "Shine"
+msgstr "Shine"
+
+msgctxt "MSG_DragBarShine_Help (145//)"
+msgid "DragBar shine pen."
+msgstr "DragBar shine pen."
+
+msgctxt "MSG_DragBarShine_Title (146//)"
+msgid "DragBar shine pen"
+msgstr "DragBar shine pen"
+
+msgctxt "MSG_DragBarShadow (147//)"
+msgid "Shadow"
+msgstr "Shadow"
+
+msgctxt "MSG_DragBarShadow_Help (148//)"
+msgid "DragBar shadow pen."
+msgstr "DragBar shadow pen."
+
+msgctxt "MSG_DragBarShadow_Title (149//)"
+msgid "DragBar shadow pen"
+msgstr "DragBar shadow pen"
+
+msgctxt "MSG_DragBarFill (150//)"
+msgid "Fill"
+msgstr "Fill"
+
+msgctxt "MSG_DragBarFill_Help (151//)"
+msgid "DragBar fill pen."
+msgstr "DragBar fill pen."
+
+msgctxt "MSG_DragBarFill_Title (152//)"
+msgid "DragBar fill pen"
+msgstr "DragBar fill pen"
+
+msgctxt "MSG_UseDragBarFill (153//)"
+msgid "Use"
+msgstr "Use"
+
+msgctxt "MSG_UseDragBarFill_Help (154//)"
+msgid ""
+"If selected, the dragbar fill\n"
+"pen is used."
+msgstr "If selected, the dragbar fill\npen is used."
+
+msgctxt "MSG_Frame (155//)"
+msgid "Frame"
+msgstr "Frame"
+
+msgctxt "MSG_Frame_Help (156//)"
+msgid "Bar frame"
+msgstr "Bar frame"
+
+msgctxt "MSG_Frame_Title (157//)"
+msgid "Bar frame"
+msgstr "Bar frame"
+
+msgctxt "MSG_TextFont (200//)"
+msgid "Text"
+msgstr "Text"
+
+msgctxt "MSG_TextFont_Help (201//)"
+msgid "Text only buttons font."
+msgstr "Text only buttons font."
+
+msgctxt "MSG_TextGfxFont (202//)"
+msgid "TextGfx"
+msgstr "TextGfx"
+
+msgctxt "MSG_TextGfxFont_Help (203//)"
+msgid "Text and image buttons font."
+msgstr "Text and image buttons font."
+
+msgctxt "MSG_ViewMode (204//)"
+msgid "View mode"
+msgstr "View mode"
+
+msgctxt "MSG_ViewMode_Help (205//)"
+msgid "Adjust the appearance of the buttons."
+msgstr "Adjust the appearance of the buttons."
+
+msgctxt "MSG_Appearance_Text (206//)"
+msgid ""
+"The options below are used by TheBar if and only if the\n"
+"object requested for it at creation time. It means that\n"
+"if the programmer didn't decide otherwise, they are simply\n"
+"ignored."
+msgstr "The options below are used by TheBar if and only if the\nobject requested for it at creation time. It means that\nif the programmer didn't decide otherwise, they are simply\nignored."
+
+msgctxt "MSG_TextGfx (207//)"
+msgid "Icons and text"
+msgstr "Icons and text"
+
+msgctxt "MSG_Gfx (208//)"
+msgid "Icons only"
+msgstr "Icons only"
+
+msgctxt "MSG_Text (209//)"
+msgid "Text only"
+msgstr "Text only"
+
+msgctxt "MSG_Borderless (210//)"
+msgid "Borderless"
+msgstr "Borderless"
+
+msgctxt "MSG_Borderless_Help (211//)"
+msgid "If selected, buttons are borderless."
+msgstr "If selected, buttons are borderless."
+
+msgctxt "MSG_Sunny (212//)"
+msgid "Highlight"
+msgstr "Highlight"
+
+msgctxt "MSG_Sunny_Help (213//)"
+msgid ""
+"If selected, buttons, normally in black\n"
+"and white, are colored when the\n"
+"mouse is over them."
+msgstr "If selected, buttons, normally in black\nand white, are colored when the\nmouse is over them."
+
+msgctxt "MSG_Raised (214//)"
+msgid "Raised"
+msgstr "Raised"
+
+msgctxt "MSG_Raised_Help (215//)"
+msgid ""
+"If selected, buttons, normally frameless,\n"
+"are framed when the mouse is over them."
+msgstr "If selected, buttons, normally frameless,\nare framed when the mouse is over them."
+
+msgctxt "MSG_Scaled (216//)"
+msgid "Scaled"
+msgstr "Scaled"
+
+msgctxt "MSG_Scaled_Help (217//)"
+msgid "If selected, buttons are scaled."
+msgstr "If selected, buttons are scaled."
+
+msgctxt "MSG_BarSpacer (218//)"
+msgid "Force Bar spacer"
+msgstr "Force Bar spacer"
+
+msgctxt "MSG_BarSpacer_Help (219//)"
+msgid ""
+"If selected, a bar spacer is used\n"
+"for all kind of separators."
+msgstr "If selected, a bar spacer is used\nfor all kind of separators."
+
+msgctxt "MSG_EnableKeys (220//)"
+msgid "Enable keys"
+msgstr "Enable keys"
+
+msgctxt "MSG_EnableKeys_Help (221//)"
+msgid ""
+"If selected, buttons short cuts\n"
+"are active."
+msgstr "If selected, buttons short cuts\nare active."
+
+msgctxt "MSG_LabelPos (222//)"
+msgid "Labels at"
+msgstr "Labels at"
+
+msgctxt "MSG_LabelPos_Help (223//)"
+msgid ""
+"Adjust the position of text in\n"
+"Icons and text buttons."
+msgstr "Adjust the position of text in\nIcons and text buttons."
+
+msgctxt "MSG_LabelPos_Bottom (224//)"
+msgid "Bottom"
+msgstr "Bottom"
+
+msgctxt "MSG_LabelPos_Top (225//)"
+msgid "Top"
+msgstr "Top"
+
+msgctxt "MSG_LabelPos_Right (226//)"
+msgid "Right"
+msgstr "Right"
+
+msgctxt "MSG_LabelPos_Left (227//)"
+msgid "Left"
+msgstr "Left"
+
+msgctxt "MSG_Title_GroupSpacing (300//)"
+msgid "Bar"
+msgstr "Bar"
+
+msgctxt "MSG_HorizGroupSpacing (301//)"
+msgid "Horiz"
+msgstr "Horiz"
+
+msgctxt "MSG_HorizGroupSpacing_Help (302//)"
+msgid "Pixels between two buttons in a bar row."
+msgstr "Pixels between two buttons in a bar row."
+
+msgctxt "MSG_VertGroupSpacing (303//)"
+msgid "Vert"
+msgstr "Vert"
+
+msgctxt "MSG_VertGroupSpacing_Help (304//)"
+msgid "Pixels between two bar rows."
+msgstr "Pixels between two bar rows."
+
+msgctxt "MSG_BarSpacerSpacing (305//)"
+msgid "Bar"
+msgstr "Bar"
+
+msgctxt "MSG_BarSpacerSpacing_Help (306//)"
+msgid ""
+"Pixels between a Bar spacer\n"
+"and the previous/next object."
+msgstr "Pixels between a Bar spacer\nand the previous/next object."
+
+msgctxt "MSG_Title_InnerSpacing (307//)"
+msgid "Buttons"
+msgstr "Buttons"
+
+msgctxt "MSG_HorizInnerSpacing (308//)"
+msgid "Horiz"
+msgstr "Horiz"
+
+msgctxt "MSG_HorizInnerSpacing_Help (309//)"
+msgid ""
+"Pixels between the left/right frame\n"
+"border and the button contents."
+msgstr "Pixels between the left/right frame\nborder and the button contents."
+
+msgctxt "MSG_TopInnerSpacing (310//)"
+msgid "Top"
+msgstr "Top"
+
+msgctxt "MSG_TopInnerSpacing_Help (311//)"
+msgid ""
+"Pixels between the top frame border\n"
+"and the button contents."
+msgstr "Pixels between the top frame border\nand the button contents."
+
+msgctxt "MSG_BottomInnerSpacing (312//)"
+msgid "Bottom"
+msgstr "Bottom"
+
+msgctxt "MSG_BottomInnerSpacing_Help (313//)"
+msgid ""
+"Pixels between the bottom frame border\n"
+"and the button contents."
+msgstr "Pixels between the bottom frame border\nand the button contents."
+
+msgctxt "MSG_Title_BarFrameSpacing (314//)"
+msgid "Bar frame"
+msgstr "Bar frame"
+
+msgctxt "MSG_LeftBarFrameSpacing (315//)"
+msgid "Left"
+msgstr "Left"
+
+msgctxt "MSG_LeftBarFrameSpacing_Help (316//)"
+msgid ""
+"Pixels between the left frame border\n"
+"and the bar contents."
+msgstr "Pixels between the left frame border\nand the bar contents."
+
+msgctxt "MSG_RightBarFrameSpacing (317//)"
+msgid "Right"
+msgstr "Right"
+
+msgctxt "MSG_RightBarFrameSpacing_Help (318//)"
+msgid ""
+"Pixels between the right frame border\n"
+"and the bar contents."
+msgstr "Pixels between the right frame border\nand the bar contents."
+
+msgctxt "MSG_TopBarFrameSpacing (319//)"
+msgid "Top"
+msgstr "Top"
+
+msgctxt "MSG_TopBarFrameSpacing_Help (320//)"
+msgid ""
+"Pixels between the top frame border\n"
+"and the bar contents."
+msgstr "Pixels between the top frame border\nand the bar contents."
+
+msgctxt "MSG_BottomBarFrameSpacing (321//)"
+msgid "Bottom"
+msgstr "Bottom"
+
+msgctxt "MSG_BottomBarFrameSpacing_Help (322//)"
+msgid ""
+"Pixels between the bottom frame border\n"
+"and the bar contents."
+msgstr "Pixels between the bottom frame border\nand the bar contents."
+
+msgctxt "MSG_Title_TextGfxSpacing (323//)"
+msgid "Text/Gfx"
+msgstr "Text/Gfx"
+
+msgctxt "MSG_HorizTextGfxSpacing (324//)"
+msgid "Horiz"
+msgstr "Horiz"
+
+msgctxt "MSG_HorizTextGfxSpacing_Help (325//)"
+msgid ""
+"Pixels between an image and\n"
+"its left/right placed label."
+msgstr "Pixels between an image and\nits left/right placed label."
+
+msgctxt "MSG_VertTextGfxSpacing (326//)"
+msgid "Vert"
+msgstr "Vert"
+
+msgctxt "MSG_VertTextGfxSpacing_Help (327//)"
+msgid ""
+"Pixels between an image and\n"
+"its bottom/top placed label."
+msgstr "Pixels between an image and\nits bottom/top placed label."
+
+msgctxt "MSG_Precision_Gui (400//)"
+msgid "Bad"
+msgstr "Bad"
+
+msgctxt "MSG_Precision_Icon (401//)"
+msgid "Poor"
+msgstr "Poor"
+
+msgctxt "MSG_Precision_Image (402//)"
+msgid "Good"
+msgstr "Good"
+
+msgctxt "MSG_Precision_Exact (403//)"
+msgid "Best"
+msgstr "Best"
+
+msgctxt "MSG_Precision (404//)"
+msgid "Quality"
+msgstr "Quality"
+
+msgctxt "MSG_Precision_Help (405//)"
+msgid "Precision to use when obtaining pens."
+msgstr "Precision to use when obtaining pens."
+
+msgctxt "MSG_Event_IntuiTicks (406//)"
+msgid "IntuiTicks"
+msgstr "IntuiTicks"
+
+msgctxt "MSG_Event_MouseMove (407//)"
+msgid "MouseMove"
+msgstr "MouseMove"
+
+msgctxt "MSG_Event (408//)"
+msgid "Event"
+msgstr "Event"
+
+msgctxt "MSG_Event_Help (409//)"
+msgid ""
+"How to verify if the mouse is over a button:\n"
+"- IntuiTicks: it is verified periodically\n"
+"- MouseMove: it is verified at every mouse move\n"
+"- MouseObject, it is verified at when the mouse\n"
+"over a new object"
+msgstr "How to verify if the mouse is over a button:\n- IntuiTicks: it is verified periodically\n- MouseMove: it is verified at every mouse move\n- MouseObject, it is verified at when the mouse\nover a new object"
+
+msgctxt "MSG_Scale (410//)"
+msgid "Scale"
+msgstr "Scale"
+
+msgctxt "MSG_Scale_Help (411//)"
+msgid "Scale factor for scaled images."
+msgstr "Scale factor for scaled images."
+
+msgctxt "MSG_SpecialSelect (412//)"
+msgid "Special select"
+msgstr "Special select"
+
+msgctxt "MSG_SpecialSelect_Help (413//)"
+msgid ""
+"If selected, button contents are moved\n"
+"when they are selected or active."
+msgstr "If selected, button contents are moved\nwhen they are selected or active."
+
+msgctxt "MSG_TextOverUseShine (414//)"
+msgid "Special text"
+msgstr "Special text"
+
+msgctxt "MSG_TextOverUseShine_Help (415//)"
+msgid ""
+"If selected, active buttons labels\n"
+"are drawn with the shine pen."
+msgstr "If selected, active buttons labels\nare drawn with the shine pen."
+
+msgctxt "MSG_IgnoreSelImages (416//)"
+msgid "Ignore selected images"
+msgstr "Ignore selected images"
+
+msgctxt "MSG_IgnoreSelImages_Help (417//)"
+msgid ""
+"If selected, selected images\n"
+"are ignored."
+msgstr "If selected, selected images\nare ignored."
+
+msgctxt "MSG_IgnoreDisImages (418//)"
+msgid "Ignore disabled images"
+msgstr "Ignore disabled images"
+
+msgctxt "MSG_IgnoreDisImages_Help (419//)"
+msgid ""
+"If selected, disabled images\n"
+"are ignored."
+msgstr "If selected, disabled images\nare ignored."
+
+msgctxt "MSG_DisMode_Shape (420//)"
+msgid "Shape"
+msgstr "Shape"
+
+msgctxt "MSG_DisMode_Grid (421//)"
+msgid "Grid"
+msgstr "Grid"
+
+msgctxt "MSG_DisMode_FullGrid (422//)"
+msgid "Full grid"
+msgstr "Full grid"
+
+msgctxt "MSG_DisMode (423//)"
+msgid "Disable"
+msgstr "Disable"
+
+msgctxt "MSG_DisMode_Help (424//)"
+msgid "How to render disabled buttons."
+msgstr "How to render disabled buttons."
+
+msgctxt "MSG_DontMove (425//)"
+msgid "Don't move"
+msgstr "Don't move"
+
+msgctxt "MSG_DontMove_Help (426//)"
+msgid ""
+"If selected, the contents of the buttons\n"
+"is not moved when they are active."
+msgstr "If selected, the contents of the buttons\nis not moved when they are active."
+
+msgctxt "MSG_DisMode_Sunny (427//)"
+msgid "Grey"
+msgstr "Grey"
+
+msgctxt "MSG_NtRaiseActive (428//)"
+msgid "Don't raise active buttons"
+msgstr "Don't raise active buttons"
+
+msgctxt "MSG_NtRaiseActive_Help (429//)"
+msgid "If selected, active buttons are not raised."
+msgstr "If selected, active buttons are not raised."
+
+msgctxt "MSG_SpacersSize (430//)"
+msgid "Spacers size"
+msgstr "Spacers size"
+
+msgctxt "MSG_SpacersSize_Help (431//)"
+msgid "Size of spacers."
+msgstr "Size of spacers."
+
+msgctxt "MSG_SpacersSize_Quarter (432//)"
+msgid "Quarter of a button"
+msgstr "Quarter of a button"
+
+msgctxt "MSG_SpacersSize_Half (433//)"
+msgid "Half of a button"
+msgstr "Half of a button"
+
+msgctxt "MSG_SpacersSize_One (434//)"
+msgid "As a button"
+msgstr "As a button"
+
+msgctxt "MSG_Event_MouseObject (435//)"
+msgid "MouseObject"
+msgstr "MouseObject"
+
+msgctxt "MSG_DisMode_Blend (436//)"
+msgid "Blend"
+msgstr "Blend"
+
+msgctxt "MSG_DisMode_BlendGrey (437//)"
+msgid "Blend grey"
+msgstr "Blend grey"
+
+msgctxt "MSG_Item_Defaults (500//)"
+msgid "Reset to defaults"
+msgstr "Reset to defaults"
+
+msgctxt "MSG_NoMUI20Event_Help (502//)"
+msgid ""
+"How to verify if the mouse is over a button:\n"
+"- IntuiTicks: it is verified periodically\n"
+"- MouseMove: it is verified at every mouse move"
+msgstr "How to verify if the mouse is over a button:\n- IntuiTicks: it is verified periodically\n- MouseMove: it is verified at every mouse move"
+
+msgctxt "MSG_SpacersSize_None (503//)"
+msgid "None"
+msgstr "None"
+
+msgctxt "MSG_SpacersSize_OnePoint (504//)"
+msgid "One point"
+msgstr "One point"
+
+msgctxt "MSG_SpacersSize_TwoPoint (505//)"
+msgid "Two points"
+msgstr "Two points"
+
+msgctxt "MSG_Info_Translator (603//)"
+msgid "<EMPTY>"
+msgstr "<EMPTY>"
+
+msgctxt "MSG_Item_Globals (604//)"
+msgid "Reset to global"
+msgstr "Reset to global"
+
+msgctxt "MSG_Item_LastSaved (605//)"
+msgid "Last saved"
+msgstr "Last saved"
+
+msgctxt "MSG_Item_Restore (606//)"
+msgid "Restore"
+msgstr "Restore"
+
+msgctxt "MSG_Pop_OK (700//)"
+msgid "OK"
+msgstr "OK"
+
+msgctxt "MSG_Pop_OK_Help (701//)"
+msgid "Accept changes."
+msgstr "Accept changes."
+
+msgctxt "MSG_Pop_Cancel (702//)"
+msgid "Cancel"
+msgstr "Cancel"
+
+msgctxt "MSG_Pop_Cancel_Help (703//)"
+msgid "Exit without changing."
+msgstr "Exit without changing."
+
+msgctxt "MSG_Popback_Pattern (710//)"
+msgid "Pattern"
+msgstr "Pattern"
+
+msgctxt "MSG_Popback_Color (711//)"
+msgid "Color"
+msgstr "Color"
+
+msgctxt "MSG_Popback_Bitmap (712//)"
+msgid "Bitmap"
+msgstr "Bitmap"
+
+msgctxt "MSG_Popback_Gradient (713//)"
+msgid "Gradient"
+msgstr "Gradient"
+
+msgctxt "MSG_Popback_HorizGradient (714//)"
+msgid "Horizontal"
+msgstr "Horizontal"
+
+msgctxt "MSG_Popback_HorizGradientHelp (715//)"
+msgid ""
+"If selected, you get a\n"
+"horizontal gradient."
+msgstr "If selected, you get a\nhorizontal gradient."
+
+msgctxt "MSG_Popback_VertGradient (716//)"
+msgid "Vertical"
+msgstr "Vertical"
+
+msgctxt "MSG_Popback_VertGradientHelp (717//)"
+msgid ""
+"If selected, you get a\n"
+"vertical gradient."
+msgstr "If selected, you get a\nvertical gradient."
+
+msgctxt "MSG_Popback_From (718//)"
+msgid "From color"
+msgstr "From color"
+
+msgctxt "MSG_Popback_To (719//)"
+msgid "To color"
+msgstr "To color"
+
+msgctxt "MSG_Popback_Swap (720//)"
+msgid "Swap"
+msgstr "Swap"
+
+msgctxt "MSG_Popback_SwapHelp (721//)"
+msgid "Swaps from/to colors."
+msgstr "Swaps from/to colors."
+
+msgctxt "MSG_Poppen_MUI (800//)"
+msgid "MUI"
+msgstr "MUI"
+
+msgctxt "MSG_Poppen_Colormap (801//)"
+msgid "Colormap"
+msgstr "Colormap"
+
+msgctxt "MSG_Poppen_RGB (802//)"
+msgid "RGB"
+msgstr "RGB"
+
+msgctxt "MSG_Poppen_Shine (803//)"
+msgid "Shine"
+msgstr "Shine"
+
+msgctxt "MSG_Poppen_Halfshine (804//)"
+msgid "Halfshine"
+msgstr "Halfshine"
+
+msgctxt "MSG_Poppen_Background (805//)"
+msgid "Background"
+msgstr "Background"
+
+msgctxt "MSG_Poppen_Halfshadow (806//)"
+msgid "Halfshadow"
+msgstr "Halfshadow"
+
+msgctxt "MSG_Poppen_Shadow (807//)"
+msgid "Shadow"
+msgstr "Shadow"
+
+msgctxt "MSG_Poppen_Text (808//)"
+msgid "Text"
+msgstr "Text"
+
+msgctxt "MSG_Poppen_Fill (809//)"
+msgid "Fill"
+msgstr "Fill"
+
+msgctxt "MSG_Poppen_Mark (810//)"
+msgid "Mark"
+msgstr "Mark"
+
+msgctxt "MSG_Poppen_ColorMapHelp (811//)"
+msgid "Select a screen color entry."
+msgstr "Select a screen color entry."
+
+msgctxt "MSG_ColoradjustRed (900//)"
+msgid "Red"
+msgstr "Red"
+
+msgctxt "MSG_Coloradjust_RedHelp (901//)"
+msgid "The red component of the color."
+msgstr "The red component of the color."
+
+msgctxt "MSG_ColoradjustGreen (902//)"
+msgid "Green"
+msgstr "Green"
+
+msgctxt "MSG_Coloradjust_GreenHelp (903//)"
+msgid "The green component of the color."
+msgstr "The green component of the color."
+
+msgctxt "MSG_ColoradjustBlue (904//)"
+msgid "Blue"
+msgstr "Blue"
+
+msgctxt "MSG_Coloradjust_BlueHelp (905//)"
+msgid "The blue component of the color."
+msgstr "The blue component of the color."
+
+msgctxt "MSG_Coloradjust_WheelAbbr (906//)"
+msgid "GCBMRY"
+msgstr "GCBMRY"
+
+msgctxt "MSG_Coloradjust_WheelHelp (907//)"
+msgid "Move the mouse to select a color."
+msgstr "Move the mouse to select a color."
+
+msgctxt "MSG_Coloradjust_GradientHelp (908//)"
+msgid "The brightness of the color."
+msgstr "The brightness of the color."
+
+msgctxt "MSG_PrefsShortHelp (1000//)"
+msgid "Next generation tool bar class."
+msgstr "Next generation tool bar class."

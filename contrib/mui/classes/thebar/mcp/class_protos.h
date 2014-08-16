@@ -33,24 +33,19 @@ Object * VARARGS68K DoSuperNew(struct IClass *cl, Object *obj, ...);
 int stch_l(const char *chr_ptr, long *u_ptr);
 #endif
 
-Object *obutton(ULONG text,ULONG help);
-Object *ocycle(STRPTR *array,ULONG key,ULONG help);
-Object *ocheck(ULONG key,ULONG help);
-Object *oslider(ULONG key,ULONG help,LONG min,LONG max);
-Object *opop(ULONG type,ULONG key);
-Object *opoppen(ULONG key,ULONG title,ULONG help);
-Object *opopfri(ULONG key,ULONG title,ULONG help);
-Object *opopback(ULONG gradient,ULONG key,ULONG title,ULONG help);
-Object *opopframe(ULONG key,ULONG title,ULONG help);
+Object *obutton(const void *text, const void *help);
+Object *ocycle(STRPTR *array, const void *key, const void *help);
+Object *ocheck(const void *key, const void *help);
+Object *oslider(const void *key, const void *help, LONG min, LONG max);
+Object *opop(ULONG type, const void *key);
+Object *opoppen(const void *key, const void *title, const void *help);
+Object *opopfri(const void *key, const void *title, const void *help);
+Object *opopback(ULONG gradient, const void *key, const void *title, const void *help);
+Object *opopframe(const void *key, const void *title, const void *help);
 #if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
 void drawGradient(Object *obj, struct MUIS_TheBar_Gradient *grad);
 #endif
-
-/* loc.c */
-struct Catalog *openCatalogVR(CONST_STRPTR name,ULONG minVer,ULONG minRev);
-void initStrings(void);
-STRPTR tr(ULONG id);
-ULONG getKeyChar(STRPTR string);
+ULONG getKeyChar(const char *string);
 
 #if !defined(__amigaos4__) && !defined(__MORPHOS__) && !defined(__AROS__)
 /* coloradjust.c */

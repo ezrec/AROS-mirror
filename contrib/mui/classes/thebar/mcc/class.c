@@ -25,6 +25,10 @@
 #include "private.h"
 #include "version.h"
 
+#if defined(__amigaos4__)
+#include <dos/obsolete.h>
+#endif
+
 /***********************************************************************/
 
 #ifndef PDTA_AlphaChannel

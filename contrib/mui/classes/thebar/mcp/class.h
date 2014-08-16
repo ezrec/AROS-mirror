@@ -99,7 +99,6 @@ extern struct MUI_CustomClass *lib_poppen;
 extern struct MUI_CustomClass *lib_popbackground;
 #endif
 
-extern struct Catalog         *lib_cat;
 extern ULONG                  lib_flags;
 
 /* lib_flags */
@@ -368,7 +367,7 @@ Object *MUI_NewObject(CONST_STRPTR classname,Tag tag1,...);
 #define MUIC_Crawling "Crawling.mcc"
 #endif
 
-#ifndef CrawlingObject 
+#ifndef CrawlingObject
 #define CrawlingObject MUI_NewObject(MUIC_Crawling
 #endif
 
@@ -379,18 +378,18 @@ struct  MUIP_CreateDragImage { STACKED ULONG MethodID; STACKED LONG touchx; STAC
 struct MUI_DragImage
 {
     struct BitMap *bm;
-    WORD width;  
+    WORD width;
     WORD height;
-    WORD touchx; 
+    WORD touchx;
     WORD touchy;
     ULONG flags;
 };
 
 #endif
 
-#ifndef MUIM_DeleteDragImage 
+#ifndef MUIM_DeleteDragImage
 #define MUIM_DeleteDragImage 0x80423037UL
-struct MUIP_DeleteDragImage {STACKED ULONG MethodID; STACKED struct MUI_DragImage *di;}; 
+struct MUIP_DeleteDragImage {STACKED ULONG MethodID; STACKED struct MUI_DragImage *di;};
 #endif
 
 /***********************************************************************/

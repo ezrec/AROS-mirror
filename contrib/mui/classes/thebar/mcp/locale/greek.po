@@ -1,0 +1,906 @@
+# Translation catalog description file (pot-style)
+# $Id$
+# 
+# version 26
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: MCC TheBar\n"
+"Report-Msgid-Bugs-To: http://sf.net/p/thebar-mcc/\n"
+"POT-Creation-Date: 2014-02-23 14:21+0100\n"
+"PO-Revision-Date: 2014-02-23 13:31+0000\n"
+"Last-Translator: damato <mail@jens-maus.de>\n"
+"Language-Team: Greek (http://www.transifex.com/projects/p/thebar/language/el/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Catalog-Name: TheBar_mcp\n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgctxt "MSG_Reg_Colors (1//)"
+msgid "Colors"
+msgstr "Χρώματα"
+
+msgctxt "MSG_Reg_Appearance (2//)"
+msgid "Appearance"
+msgstr "Εμφάνιση"
+
+msgctxt "MSG_Reg_Spacing (3//)"
+msgid "Spacing"
+msgstr "Aπόσταση"
+
+msgctxt "MSG_Reg_Options (4//)"
+msgid "Options"
+msgstr "Επιλογές"
+
+msgctxt "MSG_Title_Backgrounds (100//)"
+msgid "Backgrounds"
+msgstr "Φόντο"
+
+msgctxt "MSG_GroupBackground (101//)"
+msgid "Bar"
+msgstr "Μπάρα"
+
+msgctxt "MSG_GroupBackground_Help (102//)"
+msgid "Bar background."
+msgstr "Φόντο μπάρας."
+
+msgctxt "MSG_GroupBackground_Title (103//)"
+msgid "Bar background"
+msgstr "Φόντο μπάρας"
+
+msgctxt "MSG_UseGroupBackground (104//)"
+msgid "Active"
+msgstr "Ενεργό"
+
+msgctxt "MSG_UseGroupBackground_Help (105//)"
+msgid ""
+"If selected, the bar gets\n"
+"your preferred background,\n"
+"otherwise it gets its\n"
+"parent background."
+msgstr "Αν επιλεχτεί, η μπάρα κάνει λήψη του\nπροτεινόμενου φόντου σας, αλλιώς\nγίνεται λήψη του γονικού φόντου."
+
+msgctxt "MSG_ButtonBackground (106//)"
+msgid "Buttons"
+msgstr "Κουμπιά"
+
+msgctxt "MSG_ButtonBackground_Help (107//)"
+msgid "Active buttons background."
+msgstr "Φόντο ενεργών κουμπιών."
+
+msgctxt "MSG_ButtonBackground_Title (108//)"
+msgid "Active buttons background"
+msgstr "Φόντο ενεργών κουμπιών"
+
+msgctxt "MSG_UseButtonBackground (109//)"
+msgid "Active"
+msgstr "Ενεργό"
+
+msgctxt "MSG_UseButtonBackground_Help (110//)"
+msgid ""
+"If selected, the buttons get\n"
+"your preferred background,\n"
+"otherwise they get their\n"
+"parent background."
+msgstr "Αν επιλεχτεί, τα κουμπιά κάνουν λήψη\nτου προτεινόμενου φόντου σας, αλλιώς\nγίνεται λήψη του γονικού φόντου."
+
+msgctxt "MSG_Title_Frame (111//)"
+msgid "Buttons frame"
+msgstr "Πλαίσιο κουμπιών"
+
+msgctxt "MSG_FrameShinePen (112//)"
+msgid "Shine"
+msgstr "Λάμψη"
+
+msgctxt "MSG_FrameShinePen_Help (113//)"
+msgid "Active buttons frame shine pen."
+msgstr "Πένα λάμψης πλαισίου για ενεργά κουμπιά."
+
+msgctxt "MSG_FrameShinePen_Title (114//)"
+msgid "Frame shine pen"
+msgstr "Πένα λάμψης πλαισίου"
+
+msgctxt "MSG_FrameShadowPen (115//)"
+msgid "Shadow"
+msgstr "Σκιά"
+
+msgctxt "MSG_FrameShadowPen_Help (116//)"
+msgid "Active buttons frame shadow pen."
+msgstr "Πένα σκιάς πλαισίου για ενεργά κουμπιά."
+
+msgctxt "MSG_FrameShadowPen_Title (117//)"
+msgid "Frame shadow pen"
+msgstr "Πένα σκιάς πλαισίου"
+
+msgctxt "MSG_FrameStyle_Recessed (118//)"
+msgid "Recessed"
+msgstr "Eσοχή"
+
+msgctxt "MSG_FrameStyle_Normal (119//)"
+msgid "Normal"
+msgstr "Κανονική"
+
+msgctxt "MSG_FrameStyle (120//)"
+msgid "Style"
+msgstr "Στύλ"
+
+msgctxt "MSG_FrameStyle_Help (121//)"
+msgid "Active buttons frame style."
+msgstr "Στύλ πλαισίου για ενεργά κουμπιά."
+
+msgctxt "MSG_Title_Disabled (122//)"
+msgid "Disabled buttons"
+msgstr "Απενεργοποιημένα κουμπιά"
+
+msgctxt "MSG_DisabledBody (123//)"
+msgid "Body"
+msgstr "Σώμα"
+
+msgctxt "MSG_DisabledBody_Help (124//)"
+msgid ""
+"Disabled buttons body pen. It is used as\n"
+"main pen for disabled buttons in Shape\n"
+"mode and as grid pen for disabled\n"
+"buttons in Grid modes."
+msgstr "Πένα σώματος για απενεργοποιημένα κουμπιά. Χρησιμοποιείται\nως η κύρια πένα για απενεργοποιημένα κουμπιά σε κατάσταση\nσχήματος και ως πένα πλέγματος για απενεργοποιημένα κουμπιά\nσε καταστάσεις πλέγματος."
+
+msgctxt "MSG_DisabledBody_Title (125//)"
+msgid "Body pen"
+msgstr "Πένα σώματος"
+
+msgctxt "MSG_DisabledShadow (126//)"
+msgid "Shadow"
+msgstr "Σκιά"
+
+msgctxt "MSG_DisabledShadow_Help (127//)"
+msgid ""
+"Disabled buttons shadow pen. It is used as\n"
+"secondary pen for disabled buttons in Shape\n"
+"mode and as text pen for disabled buttons\n"
+"in Grid modes."
+msgstr "Πένα σκιάς για απενεργοποιημένα κουμπιά. Χρησιμοποιείται\nως η δευτερεύουσα πένα για απενεργοποιημένα κουμπιά σε\nκατάσταση σχήματος και ως πένα κειμένου για απενεργοποιημένα\nκουμπιά σε κατάσταση πλέγματος."
+
+msgctxt "MSG_DisabledShadow_Title (128//)"
+msgid "Shadow pen"
+msgstr "Πένα σκιάς"
+
+msgctxt "MSG_Title_BarSpacer (129//)"
+msgid "Bar spacer"
+msgstr "Διαχωριστικό μπάρας"
+
+msgctxt "MSG_BarSpacerShinePen (130//)"
+msgid "Shine"
+msgstr "Λάμψη"
+
+msgctxt "MSG_BarSpacerShinePen_Help (131//)"
+msgid "Bar spacer shine pen."
+msgstr "Πένα λάμψης για διαχωριστική μπάρα."
+
+msgctxt "MSG_BarSpacerShinePen_Title (132//)"
+msgid "Spacer shine pen"
+msgstr "Πένα λάμψης διαχωριστικού"
+
+msgctxt "MSG_BarSpacerShadowPen (133//)"
+msgid "Shadow"
+msgstr "Σκιά"
+
+msgctxt "MSG_BarSpacerShadowPen_Help (134//)"
+msgid "Bar spacer shadow pen."
+msgstr "Πένα σκιάς για διαχωριστική μπάρα."
+
+msgctxt "MSG_BarSpacerShadowPen_Title (135//)"
+msgid "Spacer shadow pen"
+msgstr "Πένα σκιάς διαχωριστικού"
+
+msgctxt "MSG_Title_BarFrame (136//)"
+msgid "Bar frame"
+msgstr "Πλαίσιο μπάρας"
+
+msgctxt "MSG_BarFrameShine (137//)"
+msgid "Shine"
+msgstr "Λάμψη"
+
+msgctxt "MSG_BarFrameShine_Help (138//)"
+msgid "Bar frame shine pen."
+msgstr "Πένα λάμψης για πλαίσιο μπάρας."
+
+msgctxt "MSG_BarFrameShine_Title (139//)"
+msgid "Frame shine pen"
+msgstr "Πένα λάμψης πλαισίου"
+
+msgctxt "MSG_BarFrameShadow (140//)"
+msgid "Shadow"
+msgstr "Σκιά"
+
+msgctxt "MSG_BarFrameShadow_Help (141//)"
+msgid "Bar frame shadow pen."
+msgstr "Πένα σκιάς για πλαίσιο μπάρας."
+
+msgctxt "MSG_BarFrameShadow_Title (142//)"
+msgid "Frame shadow pen"
+msgstr "Πένα σκιάς πλαισίου"
+
+msgctxt "MSG_Title_DragBar (143//)"
+msgid "DragBar"
+msgstr "Μπάρα μεταφοράς"
+
+msgctxt "MSG_DragBarShine (144//)"
+msgid "Shine"
+msgstr "Λάμψη"
+
+msgctxt "MSG_DragBarShine_Help (145//)"
+msgid "DragBar shine pen."
+msgstr "Πένα λάμψης για μπάρα μεταφοράς."
+
+msgctxt "MSG_DragBarShine_Title (146//)"
+msgid "DragBar shine pen"
+msgstr "Πένα λάμψης μπάρας μεταφοράς."
+
+msgctxt "MSG_DragBarShadow (147//)"
+msgid "Shadow"
+msgstr "Σκιά"
+
+msgctxt "MSG_DragBarShadow_Help (148//)"
+msgid "DragBar shadow pen."
+msgstr "Πένα σκιάς για μπάρα μεταφοράς."
+
+msgctxt "MSG_DragBarShadow_Title (149//)"
+msgid "DragBar shadow pen"
+msgstr "Πένα σκιάς μπάρας μεταφοράς"
+
+msgctxt "MSG_DragBarFill (150//)"
+msgid "Fill"
+msgstr "Συμπλήρωση"
+
+msgctxt "MSG_DragBarFill_Help (151//)"
+msgid "DragBar fill pen."
+msgstr "Πένα συμπλήρωσης για μπάρα μεταφοράς."
+
+msgctxt "MSG_DragBarFill_Title (152//)"
+msgid "DragBar fill pen"
+msgstr "Πένα συμπλήρωσης μπάρας μεταφοράς"
+
+msgctxt "MSG_UseDragBarFill (153//)"
+msgid "Use"
+msgstr "Χρήση"
+
+msgctxt "MSG_UseDragBarFill_Help (154//)"
+msgid ""
+"If selected, the dragbar fill\n"
+"pen is used."
+msgstr "Αν επιλεχτεί, θα χρησιμοποιηθεί η πένα\nσυμπλήρωσης της μπάρας μεταφοράς."
+
+msgctxt "MSG_Frame (155//)"
+msgid "Frame"
+msgstr "Πλαίσιο"
+
+msgctxt "MSG_Frame_Help (156//)"
+msgid "Bar frame"
+msgstr "Πλαίσιο για μπάρα."
+
+msgctxt "MSG_Frame_Title (157//)"
+msgid "Bar frame"
+msgstr "Πλαίσιο μπάρας"
+
+msgctxt "MSG_TextFont (200//)"
+msgid "Text"
+msgstr "Κείμενο"
+
+msgctxt "MSG_TextFont_Help (201//)"
+msgid "Text only buttons font."
+msgstr "Γραμματοσειρά μόνο για κουμπιά κειμένου."
+
+msgctxt "MSG_TextGfxFont (202//)"
+msgid "TextGfx"
+msgstr "Γραφικά & Κείμενο"
+
+msgctxt "MSG_TextGfxFont_Help (203//)"
+msgid "Text and image buttons font."
+msgstr "Γραμματοσειρά για κουμπιά κειμένου και γραφικών."
+
+msgctxt "MSG_ViewMode (204//)"
+msgid "View mode"
+msgstr "Κατάσταση προβολής"
+
+msgctxt "MSG_ViewMode_Help (205//)"
+msgid "Adjust the appearance of the buttons."
+msgstr "Τροποποιήστε την εμφάνιση των κουμπιών."
+
+msgctxt "MSG_Appearance_Text (206//)"
+msgid ""
+"The options below are used by TheBar if and only if the\n"
+"object requested for it at creation time. It means that\n"
+"if the programmer didn't decide otherwise, they are simply\n"
+"ignored."
+msgstr "Οι παρακάτω επιλογές χρησιμοποιούνται από την TheBar εάν και\nμόνο εάν κλήθηκε από το αντικείμενο κατά την δημιουργία του.\nΑυτό σημαίνει ότι αν ο προγραμματιστής αποφάσισε αλλιώς, απλά\nοι επιλογές αυτές θα αγνοηθούν."
+
+msgctxt "MSG_TextGfx (207//)"
+msgid "Icons and text"
+msgstr "Εικονίδια και κείμενο"
+
+msgctxt "MSG_Gfx (208//)"
+msgid "Icons only"
+msgstr "Μόνο εικονίδια"
+
+msgctxt "MSG_Text (209//)"
+msgid "Text only"
+msgstr "Μόνο κείμενο"
+
+msgctxt "MSG_Borderless (210//)"
+msgid "Borderless"
+msgstr "Χωρίς περίγραμμα"
+
+msgctxt "MSG_Borderless_Help (211//)"
+msgid "If selected, buttons are borderless."
+msgstr "Αν επιλεχτεί, τα κουμπιά θα είναι χωρίς περίγραμμα."
+
+msgctxt "MSG_Sunny (212//)"
+msgid "Highlight"
+msgstr "Μαρκάρισμα"
+
+msgctxt "MSG_Sunny_Help (213//)"
+msgid ""
+"If selected, buttons, normally in black\n"
+"and white, are colored when the\n"
+"mouse is over them."
+msgstr "Αν επιλεχτεί, τα κουμπιά, συνήθως σε μαύρο\nκαι άσπρο χρώμα, θα χρωματιστούν όταν το\nποντίκι θα βρίσκεται από πάνω τους."
+
+msgctxt "MSG_Raised (214//)"
+msgid "Raised"
+msgstr "Υψωμένα"
+
+msgctxt "MSG_Raised_Help (215//)"
+msgid ""
+"If selected, buttons, normally frameless,\n"
+"are framed when the mouse is over them."
+msgstr "Αν επιλεχτεί, τα κουμπιά, συνήθως χωρίς πλαίσιο, θα\nεμφανίζουν ένα πλαίσιο όταν το ποντίκι θα βρίσκεται\nαπό πάνω τους."
+
+msgctxt "MSG_Scaled (216//)"
+msgid "Scaled"
+msgstr "Διαβαθμησμένα"
+
+msgctxt "MSG_Scaled_Help (217//)"
+msgid "If selected, buttons are scaled."
+msgstr "Αν επιλεχτεί, τα κουμπιά θα είναι διαβαθμησμένα."
+
+msgctxt "MSG_BarSpacer (218//)"
+msgid "Force Bar spacer"
+msgstr "Εξαναγκασμός διαχωριστικού μπάρας"
+
+msgctxt "MSG_BarSpacer_Help (219//)"
+msgid ""
+"If selected, a bar spacer is used\n"
+"for all kind of separators."
+msgstr "Αν επιλεχτεί, θα χρησιμοποιηθεί ένα διαχωριστικό\nμπάρας για όλα τα είδη διαχωριστικών."
+
+msgctxt "MSG_EnableKeys (220//)"
+msgid "Enable keys"
+msgstr "Ενεργοποίηση πλήκτρων"
+
+msgctxt "MSG_EnableKeys_Help (221//)"
+msgid ""
+"If selected, buttons short cuts\n"
+"are active."
+msgstr "Αν επιλεχτεί, θα ενεργοποιηθούν οι\nσυντομεύσεις των κουμπιών."
+
+msgctxt "MSG_LabelPos (222//)"
+msgid "Labels at"
+msgstr "Ετικέτες σε"
+
+msgctxt "MSG_LabelPos_Help (223//)"
+msgid ""
+"Adjust the position of text in\n"
+"Icons and text buttons."
+msgstr "Τροποποιήστε την θέση του κειμένου στα\nεικονίδια και στα κουμπιά κειμένου."
+
+msgctxt "MSG_LabelPos_Bottom (224//)"
+msgid "Bottom"
+msgstr "Τέρμα"
+
+msgctxt "MSG_LabelPos_Top (225//)"
+msgid "Top"
+msgstr "Κορυφή"
+
+msgctxt "MSG_LabelPos_Right (226//)"
+msgid "Right"
+msgstr "Δεξιά"
+
+msgctxt "MSG_LabelPos_Left (227//)"
+msgid "Left"
+msgstr "Αριστερά"
+
+msgctxt "MSG_Title_GroupSpacing (300//)"
+msgid "Bar"
+msgstr "Μπάρα"
+
+msgctxt "MSG_HorizGroupSpacing (301//)"
+msgid "Horiz"
+msgstr "Οριζόντια"
+
+msgctxt "MSG_HorizGroupSpacing_Help (302//)"
+msgid "Pixels between two buttons in a bar row."
+msgstr "Απόσταση μεταξύ δυο κουμπιών σε\nμια γραμμή μπάρας σε pixels."
+
+msgctxt "MSG_VertGroupSpacing (303//)"
+msgid "Vert"
+msgstr "Κάθετα"
+
+msgctxt "MSG_VertGroupSpacing_Help (304//)"
+msgid "Pixels between two bar rows."
+msgstr "Απόσταση μεταξύ δύο γραμμών μπάρας σε pixels."
+
+msgctxt "MSG_BarSpacerSpacing (305//)"
+msgid "Bar"
+msgstr "Μπάρα"
+
+msgctxt "MSG_BarSpacerSpacing_Help (306//)"
+msgid ""
+"Pixels between a Bar spacer\n"
+"and the previous/next object."
+msgstr "Απόσταση μεταξύ ενός διαχωριστικού μπάρας και\nτου προηγούμενου/επόμενου αντικειμένου σε pixels."
+
+msgctxt "MSG_Title_InnerSpacing (307//)"
+msgid "Buttons"
+msgstr "Κουμπιά"
+
+msgctxt "MSG_HorizInnerSpacing (308//)"
+msgid "Horiz"
+msgstr "Οριζόντια"
+
+msgctxt "MSG_HorizInnerSpacing_Help (309//)"
+msgid ""
+"Pixels between the left/right frame\n"
+"border and the button contents."
+msgstr "Απόσταση μεταξύ του αριστερού/δεξιού περιγράμματος\nπλαισίου και στα περιεχόμενα των κουμπιών, σε pixels."
+
+msgctxt "MSG_TopInnerSpacing (310//)"
+msgid "Top"
+msgstr "Κορυφή"
+
+msgctxt "MSG_TopInnerSpacing_Help (311//)"
+msgid ""
+"Pixels between the top frame border\n"
+"and the button contents."
+msgstr "Απόσταση μεταξύ του πιο πάνω περιγράμματος\nπλαισίου και στα περιεχόμενα των κουμπιών, σε pixels."
+
+msgctxt "MSG_BottomInnerSpacing (312//)"
+msgid "Bottom"
+msgstr "Τέρμα"
+
+msgctxt "MSG_BottomInnerSpacing_Help (313//)"
+msgid ""
+"Pixels between the bottom frame border\n"
+"and the button contents."
+msgstr "Απόσταση μεταξύ του πιο κάτω περιγράμματος\nπλαισίου και στα περιεχόμενα των κουμπιών, σε pixels."
+
+msgctxt "MSG_Title_BarFrameSpacing (314//)"
+msgid "Bar frame"
+msgstr "Πλαίσιο μπάρας"
+
+msgctxt "MSG_LeftBarFrameSpacing (315//)"
+msgid "Left"
+msgstr "Αριστερό"
+
+msgctxt "MSG_LeftBarFrameSpacing_Help (316//)"
+msgid ""
+"Pixels between the left frame border\n"
+"and the bar contents."
+msgstr "Απόσταση μεταξύ του αριστερού περιγράμματος\nπλαισίου και στα περιεχόμενα της μπάρας, σε pixels."
+
+msgctxt "MSG_RightBarFrameSpacing (317//)"
+msgid "Right"
+msgstr "Δεξί"
+
+msgctxt "MSG_RightBarFrameSpacing_Help (318//)"
+msgid ""
+"Pixels between the right frame border\n"
+"and the bar contents."
+msgstr "Απόσταση μεταξύ του δεξιού περιγράμματος\nπλαισίου και στα περιεχόμενα της μπάρας, σε pixels."
+
+msgctxt "MSG_TopBarFrameSpacing (319//)"
+msgid "Top"
+msgstr "Κορυφή"
+
+msgctxt "MSG_TopBarFrameSpacing_Help (320//)"
+msgid ""
+"Pixels between the top frame border\n"
+"and the bar contents."
+msgstr "Απόσταση μεταξύ του πιο πάνω περιγράμματος\nπλαισίου και στα περιεχόμενα της μπάρας, σε pixels."
+
+msgctxt "MSG_BottomBarFrameSpacing (321//)"
+msgid "Bottom"
+msgstr "Τέρμα"
+
+msgctxt "MSG_BottomBarFrameSpacing_Help (322//)"
+msgid ""
+"Pixels between the bottom frame border\n"
+"and the bar contents."
+msgstr "Απόσταση μεταξύ του πιο κάτω περιγράμματος\nπλαισίου και στα περιεχόμενα της μπάρας, σε pixels."
+
+msgctxt "MSG_Title_TextGfxSpacing (323//)"
+msgid "Text/Gfx"
+msgstr "Κείμενο/Γραφικά"
+
+msgctxt "MSG_HorizTextGfxSpacing (324//)"
+msgid "Horiz"
+msgstr "Οριζόντια"
+
+msgctxt "MSG_HorizTextGfxSpacing_Help (325//)"
+msgid ""
+"Pixels between an image and\n"
+"its left/right placed label."
+msgstr "Απόσταση μεταξύ μιας εικόνας και στην\nαριστερή/δεξιά μεριά ετικέτας της, σε pixels."
+
+msgctxt "MSG_VertTextGfxSpacing (326//)"
+msgid "Vert"
+msgstr "Κάθετα"
+
+msgctxt "MSG_VertTextGfxSpacing_Help (327//)"
+msgid ""
+"Pixels between an image and\n"
+"its bottom/top placed label."
+msgstr "Απόσταση μεταξύ μιας εικόνας και στην\nκάτω/πάνω μεριά ετικέτας της, σε pixels."
+
+msgctxt "MSG_Precision_Gui (400//)"
+msgid "Bad"
+msgstr "Κακή"
+
+msgctxt "MSG_Precision_Icon (401//)"
+msgid "Poor"
+msgstr "Φτωχή"
+
+msgctxt "MSG_Precision_Image (402//)"
+msgid "Good"
+msgstr "Καλή"
+
+msgctxt "MSG_Precision_Exact (403//)"
+msgid "Best"
+msgstr "Καλύτερη"
+
+msgctxt "MSG_Precision (404//)"
+msgid "Quality"
+msgstr "Ποιοτική"
+
+msgctxt "MSG_Precision_Help (405//)"
+msgid "Precision to use when obtaining pens."
+msgstr "Χρήση ακριβείας κατά την απόκτηση μιας πένας."
+
+msgctxt "MSG_Event_IntuiTicks (406//)"
+msgid "IntuiTicks"
+msgstr "IntuiTicks"
+
+msgctxt "MSG_Event_MouseMove (407//)"
+msgid "MouseMove"
+msgstr "Κίνηση"
+
+msgctxt "MSG_Event (408//)"
+msgid "Event"
+msgstr "Συμβάν"
+
+msgctxt "MSG_Event_Help (409//)"
+msgid ""
+"How to verify if the mouse is over a button:\n"
+"- IntuiTicks: it is verified periodically\n"
+"- MouseMove: it is verified at every mouse move\n"
+"- MouseObject, it is verified at when the mouse\n"
+"over a new object"
+msgstr "Πως θα επαληθεύσετε αν το ποντίκι είναι πάνω από ένα κουμπί:\n- IntuiTicks: επαληθεύεται περιοδικά\n- Κίνηση: επαληθεύεται σε κάθε μετακίνηση του ποντικιού\n- Αντικείμενο: επαληθεύεται όταν το ποντίκι βρίσκεται πάνω\nαπό ένα καινούργιο αντικείμενο"
+
+msgctxt "MSG_Scale (410//)"
+msgid "Scale"
+msgstr "Διαβάθμιση"
+
+msgctxt "MSG_Scale_Help (411//)"
+msgid "Scale factor for scaled images."
+msgstr "Συντελεστής διαβάθμισης για διαβαθμισμένες εικόνες."
+
+msgctxt "MSG_SpecialSelect (412//)"
+msgid "Special select"
+msgstr "Ειδική επιλογή"
+
+msgctxt "MSG_SpecialSelect_Help (413//)"
+msgid ""
+"If selected, button contents are moved\n"
+"when they are selected or active."
+msgstr "Αν επιλεχτεί, μετακινούνται τα περιεχόμενα των\nκουμπιών όταν έχουν επιλεχτεί ή είναι ενεργά."
+
+msgctxt "MSG_TextOverUseShine (414//)"
+msgid "Special text"
+msgstr "Ειδικό κείμενο"
+
+msgctxt "MSG_TextOverUseShine_Help (415//)"
+msgid ""
+"If selected, active buttons labels\n"
+"are drawn with the shine pen."
+msgstr "Αν επιλεχτεί, οι ενεργές ετικέτες των κουμπιών\nθα σχεδιαστούν με την πένα λάμψης."
+
+msgctxt "MSG_IgnoreSelImages (416//)"
+msgid "Ignore selected images"
+msgstr "Αγνόηση επιλεγμένων εικόνων"
+
+msgctxt "MSG_IgnoreSelImages_Help (417//)"
+msgid ""
+"If selected, selected images\n"
+"are ignored."
+msgstr "Αν επιλεχτεί, οι επιλεγμένες\nεικόνες θα αγνοηθούν."
+
+msgctxt "MSG_IgnoreDisImages (418//)"
+msgid "Ignore disabled images"
+msgstr "Αγνόηση ανενεργών εικόνων"
+
+msgctxt "MSG_IgnoreDisImages_Help (419//)"
+msgid ""
+"If selected, disabled images\n"
+"are ignored."
+msgstr "Αν επιλεχτεί, οι ανενεργές\nεικόνες θα αγνοηθούν."
+
+msgctxt "MSG_DisMode_Shape (420//)"
+msgid "Shape"
+msgstr "Σχήμα"
+
+msgctxt "MSG_DisMode_Grid (421//)"
+msgid "Grid"
+msgstr "Πλέγμα"
+
+msgctxt "MSG_DisMode_FullGrid (422//)"
+msgid "Full grid"
+msgstr "Πλήρες πλέγμα"
+
+msgctxt "MSG_DisMode (423//)"
+msgid "Disable"
+msgstr "Απενεργοποίηση"
+
+msgctxt "MSG_DisMode_Help (424//)"
+msgid "How to render disabled buttons."
+msgstr "Πως να αποδίδετε απενεργοποιημένα κουμπιά."
+
+msgctxt "MSG_DontMove (425//)"
+msgid "Don't move"
+msgstr "Χωρίς κίνηση"
+
+msgctxt "MSG_DontMove_Help (426//)"
+msgid ""
+"If selected, the contents of the buttons\n"
+"is not moved when they are active."
+msgstr "Αν επιλεχτεί, τα περιεχόμενα των κουμπιών\nδεν θα μετακινηθούν όταν αυτά είναι ενεργά."
+
+msgctxt "MSG_DisMode_Sunny (427//)"
+msgid "Grey"
+msgstr "Γκρί"
+
+msgctxt "MSG_NtRaiseActive (428//)"
+msgid "Don't raise active buttons"
+msgstr "Μη ύψωση ενεργών κουμπιών"
+
+msgctxt "MSG_NtRaiseActive_Help (429//)"
+msgid "If selected, active buttons are not raised."
+msgstr "Αν επιλεχτεί, τα ενεργά κουμπιά δεν θα υψωθούν."
+
+msgctxt "MSG_SpacersSize (430//)"
+msgid "Spacers size"
+msgstr "Μέγεθος διαχωριστών"
+
+msgctxt "MSG_SpacersSize_Help (431//)"
+msgid "Size of spacers."
+msgstr "Μέγεθος των διαχωριστών."
+
+msgctxt "MSG_SpacersSize_Quarter (432//)"
+msgid "Quarter of a button"
+msgstr "Σε ένα τέταρτο μέγεθος ενός κουμπιού"
+
+msgctxt "MSG_SpacersSize_Half (433//)"
+msgid "Half of a button"
+msgstr "Σε μισό μέγεθος ενός κουμπιού"
+
+msgctxt "MSG_SpacersSize_One (434//)"
+msgid "As a button"
+msgstr "Ως ένα κουμπί"
+
+msgctxt "MSG_Event_MouseObject (435//)"
+msgid "MouseObject"
+msgstr "Αντικείμενο"
+
+msgctxt "MSG_DisMode_Blend (436//)"
+msgid "Blend"
+msgstr "Ανάμειξη"
+
+msgctxt "MSG_DisMode_BlendGrey (437//)"
+msgid "Blend grey"
+msgstr "Ανάμειξη γκρί"
+
+msgctxt "MSG_Item_Defaults (500//)"
+msgid "Reset to defaults"
+msgstr "Επαναφορά στα προεπιλεγμένα"
+
+msgctxt "MSG_NoMUI20Event_Help (502//)"
+msgid ""
+"How to verify if the mouse is over a button:\n"
+"- IntuiTicks: it is verified periodically\n"
+"- MouseMove: it is verified at every mouse move"
+msgstr "Πως να επαληθεύσετε αν το ποντίκι είναι πάνω από ενα κουμπί:\n- IntuiTicks: επαληθεύετε περιοδικά\n- Κίνηση: επαληθεύετε σε κάθε κίνηση του ποντικιού"
+
+msgctxt "MSG_SpacersSize_None (503//)"
+msgid "None"
+msgstr "Κανένα"
+
+msgctxt "MSG_SpacersSize_OnePoint (504//)"
+msgid "One point"
+msgstr "Ένας πόντος"
+
+msgctxt "MSG_SpacersSize_TwoPoint (505//)"
+msgid "Two points"
+msgstr "Δυο πόντοι"
+
+msgctxt "MSG_Info_Translator (603//)"
+msgid "<EMPTY>"
+msgstr "Ελληνική μετάφραση: Αντώνης Ηλιάκης"
+
+msgctxt "MSG_Item_Globals (604//)"
+msgid "Reset to global"
+msgstr "Επαναφορά στις γενικές ρυθμίσεις"
+
+msgctxt "MSG_Item_LastSaved (605//)"
+msgid "Last saved"
+msgstr "Τελευταία αποθήκευση"
+
+msgctxt "MSG_Item_Restore (606//)"
+msgid "Restore"
+msgstr "Επαναφορά"
+
+msgctxt "MSG_Pop_OK (700//)"
+msgid "OK"
+msgstr "ΟΚ"
+
+msgctxt "MSG_Pop_OK_Help (701//)"
+msgid "Accept changes."
+msgstr "Δεχτείτε τις αλλαγές."
+
+msgctxt "MSG_Pop_Cancel (702//)"
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+msgctxt "MSG_Pop_Cancel_Help (703//)"
+msgid "Exit without changing."
+msgstr "Κάντε έξοδο χωρίς αλλαγές."
+
+msgctxt "MSG_Popback_Pattern (710//)"
+msgid "Pattern"
+msgstr "Μοτίβο"
+
+msgctxt "MSG_Popback_Color (711//)"
+msgid "Color"
+msgstr "Χρώμα"
+
+msgctxt "MSG_Popback_Bitmap (712//)"
+msgid "Bitmap"
+msgstr "Bitmap"
+
+msgctxt "MSG_Popback_Gradient (713//)"
+msgid "Gradient"
+msgstr "Διαβάθμιση"
+
+msgctxt "MSG_Popback_HorizGradient (714//)"
+msgid "Horizontal"
+msgstr "Οριζόντια"
+
+msgctxt "MSG_Popback_HorizGradientHelp (715//)"
+msgid ""
+"If selected, you get a\n"
+"horizontal gradient."
+msgstr "Αν επιλεχτεί, θα κάνετε λήψη\nμιας οριζόντιας διαβάθμισης."
+
+msgctxt "MSG_Popback_VertGradient (716//)"
+msgid "Vertical"
+msgstr "Κάθετα"
+
+msgctxt "MSG_Popback_VertGradientHelp (717//)"
+msgid ""
+"If selected, you get a\n"
+"vertical gradient."
+msgstr "Αν επιλεχτεί, θα κάνετε λήψη\nμιας κάθετης διαβάθμισης."
+
+msgctxt "MSG_Popback_From (718//)"
+msgid "From color"
+msgstr "Από χρώμα"
+
+msgctxt "MSG_Popback_To (719//)"
+msgid "To color"
+msgstr "Σε χρώμα"
+
+msgctxt "MSG_Popback_Swap (720//)"
+msgid "Swap"
+msgstr "Ανταλλαγή"
+
+msgctxt "MSG_Popback_SwapHelp (721//)"
+msgid "Swaps from/to colors."
+msgstr "Ανταλλαγή από/σε χρώματα."
+
+msgctxt "MSG_Poppen_MUI (800//)"
+msgid "MUI"
+msgstr "MUI"
+
+msgctxt "MSG_Poppen_Colormap (801//)"
+msgid "Colormap"
+msgstr "Χρώματα"
+
+msgctxt "MSG_Poppen_RGB (802//)"
+msgid "RGB"
+msgstr "RGB"
+
+msgctxt "MSG_Poppen_Shine (803//)"
+msgid "Shine"
+msgstr "Λάμψη"
+
+msgctxt "MSG_Poppen_Halfshine (804//)"
+msgid "Halfshine"
+msgstr "Μισή-λάμψη"
+
+msgctxt "MSG_Poppen_Background (805//)"
+msgid "Background"
+msgstr "Φόντο"
+
+msgctxt "MSG_Poppen_Halfshadow (806//)"
+msgid "Halfshadow"
+msgstr "Μισή-σκιά"
+
+msgctxt "MSG_Poppen_Shadow (807//)"
+msgid "Shadow"
+msgstr "Σκιά"
+
+msgctxt "MSG_Poppen_Text (808//)"
+msgid "Text"
+msgstr "Κείμνο"
+
+msgctxt "MSG_Poppen_Fill (809//)"
+msgid "Fill"
+msgstr "Συμπλήρωση"
+
+msgctxt "MSG_Poppen_Mark (810//)"
+msgid "Mark"
+msgstr "Μαρκάρισμα"
+
+msgctxt "MSG_Poppen_ColorMapHelp (811//)"
+msgid "Select a screen color entry."
+msgstr "Επιλέξτε μια είσοδο χρώματος οθόνης."
+
+msgctxt "MSG_ColoradjustRed (900//)"
+msgid "Red"
+msgstr "Κόκκινο"
+
+msgctxt "MSG_Coloradjust_RedHelp (901//)"
+msgid "The red component of the color."
+msgstr "Το κόκκινο στοιχείο του χρώματος."
+
+msgctxt "MSG_ColoradjustGreen (902//)"
+msgid "Green"
+msgstr "Πράσινο"
+
+msgctxt "MSG_Coloradjust_GreenHelp (903//)"
+msgid "The green component of the color."
+msgstr "Το πράσινο στοιχείο του χρώματος."
+
+msgctxt "MSG_ColoradjustBlue (904//)"
+msgid "Blue"
+msgstr "Μπλέ"
+
+msgctxt "MSG_Coloradjust_BlueHelp (905//)"
+msgid "The blue component of the color."
+msgstr "Το μπλέ στοιχείο του χρώματος."
+
+msgctxt "MSG_Coloradjust_WheelAbbr (906//)"
+msgid "GCBMRY"
+msgstr "GCBMRY"
+
+msgctxt "MSG_Coloradjust_WheelHelp (907//)"
+msgid "Move the mouse to select a color."
+msgstr "Μετακινήστε το ποντίκι για να επιλέξετε ένα χρώμα."
+
+msgctxt "MSG_Coloradjust_GradientHelp (908//)"
+msgid "The brightness of the color."
+msgstr "Η φωτεινότητα του χρώματος."
+
+msgctxt "MSG_PrefsShortHelp (1000//)"
+msgid "Next generation tool bar class."
+msgstr "Εργαλείο μπάρας επόμενης γενιάς."

@@ -54,6 +54,10 @@
 #include <SDI_stdarg.h>
 #include <SDI_hook.h>
 
+#if defined(__amigaos4__)
+#include <hardware/blit.h>
+#endif
+
 #include "debug.h"
 
 /****************************************************************************/
@@ -197,7 +201,7 @@ struct  MUIP_Backfill        { STACKED ULONG MethodID; STACKED LONG left; STACKE
 #define MUIA_CustomBackfill  0x80420a63UL
 #endif
 
-#ifndef MUIM_CustomBackfill  
+#ifndef MUIM_CustomBackfill
 #define MUIM_CustomBackfill  MUIM_Backfill
 #endif
 

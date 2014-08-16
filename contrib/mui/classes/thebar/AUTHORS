@@ -2,8 +2,7 @@
 
  TheBar.mcc - Next Generation Toolbar MUI Custom Class
  Copyright (C) 2003-2008 Alfonso Ranieri
-
- TheBar is developed by TheBar.mcc Open Source Team
+ Copyright (C) 2005-2013 by TheBar.mcc Open Source Team
 
  This library is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -17,7 +16,7 @@
 
  TheBar class Support Site:  http://www.sf.net/projects/thebar
 
- $Id: AUTHORS 388 2010-09-08 06:47:14Z mandi78 $
+ $Id: AUTHORS 466 2013-12-14 08:30:32Z damato $
 
 ***************************************************************************/
 
@@ -26,15 +25,15 @@ design provided by the following people:
 
 Alfonso Ranieri    <alforan@tin.it>
 Gianfranco Gignina <sh1nkur0@libero.it>
-Jens Langner       <Jens.Langner@light-speed.de>
+Jens Maus          <mail@jens-maus.de>
 Matthias Rustler   <mrustler@gmx.de>
-Thore Boeckelmann  <thboeckel@users.sourceforge.net>
+Thore Böckelmann   <tboeckel@gmx.de>
 
 Translations provided and maintained by following people:
 
 Czech:     Vit Sindlar <sindlarv at centrum dot cz>
 French:    Alexandre Balaban
-German:    Jens Langner <Jens.Langner@light-speed.de>, Hans-Jörg Ottinger
+German:    Jens Maus <mail@jens-maus.de>, Thore Böckelmann <tboeckel@gmx.de>, Hans-Jörg Ottinger
 Italian:   Alfonso Ranieri <alforan@tin.it>
 Polish:    Mariusz Danilewicz <mandi@interia.pl>
 Swedish:   Pär Boberg <pbobbenb@spray.se>

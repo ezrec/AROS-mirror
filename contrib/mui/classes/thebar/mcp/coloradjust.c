@@ -63,13 +63,13 @@ mColorWheelNew(struct IClass *cl,Object *obj,struct opSet *msg)
 {
     if((obj = (Object *)DoSuperNew(cl,obj,
             MUIA_FillArea,         FALSE,
-            MUIA_ShortHelp,        tr(Msg_Coloradjust_WheelHelp),
+            MUIA_ShortHelp,        tr(MSG_Coloradjust_WheelHelp),
             MUIA_Boopsi_ClassID,   "colorwheel.gadget",
             MUIA_Boopsi_MinWidth,  30,
             MUIA_Boopsi_MinHeight, 30,
             MUIA_Boopsi_TagScreen, WHEEL_Screen,
             WHEEL_Screen,          NULL,
-            WHEEL_Abbrv,           tr(Msg_Coloradjust_WheelAbbr),
+            WHEEL_Abbrv,           tr(MSG_Coloradjust_WheelAbbr),
             GA_Left,               0,
             GA_Top,                0,
             GA_Width,              0,
@@ -278,7 +278,7 @@ mGradientSliderNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
     if((obj = (Object *)DoSuperNew(cl,obj,
             MUIA_FillArea,         FALSE,
-            MUIA_ShortHelp,        tr(Msg_Coloradjust_GradientHelp),
+            MUIA_ShortHelp,        tr(MSG_Coloradjust_GradientHelp),
             MUIA_Boopsi_ClassID,   "gradientslider.gadget",
             MUIA_Boopsi_MaxWidth,  18,
             GRAD_CurVal,           0xffff,
@@ -554,9 +554,9 @@ mColoradjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
         }
 
         o = (Object *)VGroup,
-            Child, (IPTR)(data->red   = oslider(0,Msg_Coloradjust_RedHelp,0,255)),
-            Child, (IPTR)(data->green = oslider(0,Msg_Coloradjust_GreenHelp,0,255)),
-            Child, (IPTR)(data->blue  = oslider(0,Msg_Coloradjust_BlueHelp,0,255)),
+            Child, (IPTR)(data->red   = oslider(0,MSG_Coloradjust_RedHelp,0,255)),
+            Child, (IPTR)(data->green = oslider(0,MSG_Coloradjust_GreenHelp,0,255)),
+            Child, (IPTR)(data->blue  = oslider(0,MSG_Coloradjust_BlueHelp,0,255)),
             Child, HGroup,
                 MUIA_Group_HorizSpacing, 1,
                 Child, (IPTR)(data->colorwheel = (Object *)colorwheelObject, End),

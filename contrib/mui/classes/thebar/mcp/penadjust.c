@@ -100,14 +100,14 @@ mPenslistSetup(struct IClass *cl,Object *obj,Msg msg)
 
     static const char *pens[9];
 
-    pens[0] = tr(Msg_Poppen_Shine);
-    pens[1] = tr(Msg_Poppen_Halfshine);
-    pens[2] = tr(Msg_Poppen_Background);
-    pens[3] = tr(Msg_Poppen_Halfshadow);
-    pens[4] = tr(Msg_Poppen_Shadow);
-    pens[5] = tr(Msg_Poppen_Text);
-    pens[6] = tr(Msg_Poppen_Fill);
-    pens[7] = tr(Msg_Poppen_Mark);
+    pens[0] = tr(MSG_Poppen_Shine);
+    pens[1] = tr(MSG_Poppen_Halfshine);
+    pens[2] = tr(MSG_Poppen_Background);
+    pens[3] = tr(MSG_Poppen_Halfshadow);
+    pens[4] = tr(MSG_Poppen_Shadow);
+    pens[5] = tr(MSG_Poppen_Text);
+    pens[6] = tr(MSG_Poppen_Fill);
+    pens[7] = tr(MSG_Poppen_Mark);
     pens[8] = NULL;
 
     if (!DoSuperMethodA(cl,obj,msg)) return FALSE;
@@ -249,9 +249,9 @@ mPenadjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
 
     static const char *titles[4];
 
-    titles[0] = tr(Msg_Poppen_MUI);
-    titles[1] = tr(Msg_Poppen_Colormap);
-    titles[2] = tr(Msg_Poppen_RGB);
+    titles[0] = tr(MSG_Poppen_MUI);
+    titles[1] = tr(MSG_Poppen_Colormap);
+    titles[2] = tr(MSG_Poppen_RGB);
     titles[3] = NULL;
 
     if((obj = (Object *)DoSuperNew(cl,obj,
@@ -264,7 +264,7 @@ mPenadjustNew(struct IClass *cl,Object *obj,struct opSet *msg)
             /* Colormap */
             Child, VGroup,
                 Child, owspace(1),
-                Child, (IPTR)(colormap = oslider(0,Msg_Poppen_ColorMapHelp,-128,127)),
+                Child, (IPTR)(colormap = oslider(0,MSG_Poppen_ColorMapHelp,-128,127)),
                 Child, owspace(1),
             End,
 

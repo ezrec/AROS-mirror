@@ -20,7 +20,7 @@
 ** TheBar class Support Site: http://www.sf.net/projects/thebar
 **
 ** $Id$
-** $URL: svn://svn.code.sf.net/p/thebar/code/releases/26.12/include/mui/TheBar_mcc.h $
+** $URL: svn://svn.code.sf.net/p/thebar/code/releases/26.15/include/mui/TheBar_mcc.h $
 **
 **/
 

@@ -2,8 +2,57 @@
 MUI TheBar MCC class - ChangeLog
 --------------------------------
 
-$Id: ChangeLog 457 2013-04-25 15:49:12Z damato $
-$URL: svn://svn.code.sf.net/p/thebar/code/releases/26.12/ChangeLog $
+$Id: ChangeLog 478 2014-04-05 12:10:40Z damato $
+$URL: svn://svn.code.sf.net/p/thebar/code/releases/26.15/ChangeLog $
+
+#### v26.15 RELEASE ###########################################################
+
+2014-04-05 Jens Maus <mail@jens-maus.de>
+
+  * misc: final 26.15 release preparations
+
+2014-04-01 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/locale: added a new header line to the .po files to specify a correct
+    name for the generated .catalog file.
+  * mcp/misc: fixed case of catalog identifiers due to the recent change in
+    FlexCat.
+
+2014-02-23 Jens Maus <mail@jens-maus.de>
+
+  * mcp/locale: all catalog translations have now been moved to use the free
+    services of transifex (http://www.transifex.com/projects/p/thebar/)
+
+#### v26.14 RELEASE ###########################################################
+
+2013-12-17 Jens Maus <mail@jens-maus.de>
+
+  * misc: final 26.14 release preparations
+  * mcp/C_C.sd, mcp/Makefile.dep: fixed an incorrect include statement which
+    caused the whole mcp build to fail when cross-compiled on Linux.
+
+#### v26.13 RELEASE ###########################################################
+
+2013-12-14 Jens Maus <mail@jens-maus.de>
+
+  * misc: final 26.13 release preparations
+
+2013-06-14 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp/class.c: place the prefs group into a Scrollgroup object for MUI 3.x,
+    because the recent changes made the group too tall for low screen
+    resolutions. MUI 4.x does this itself already. This closes #22.
+
+2013-05-14 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcc/Makefile: reworked the dependency generation to correctly respect the
+    different object directories for TheBar.mcc and TheBarVirt.mcc.
+
+2013-05-05 Thore Böckelmann <tboeckel@gmx.de>
+
+  * mcp: completely reworked the locale support. The former version was overly
+    complicated and even worse did look up all strings twice without reusing the
+    results from the first scan.
 
 #### v26.12 RELEASE ###########################################################
 

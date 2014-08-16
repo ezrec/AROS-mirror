@@ -277,9 +277,9 @@ mOpen(struct IClass *cl,Object *obj, UNUSED Msg msg)
                     MUIA_Popbackground_Gradient, data->flags & FLG_Gradient,
                 End),
                 Child, HGroup,
-                    Child, (IPTR)(ok = obutton(Msg_Pop_OK,Msg_Pop_OK_Help)),
+                    Child, (IPTR)(ok = obutton(MSG_Pop_OK,MSG_Pop_OK_Help)),
                     Child, (IPTR)HSpace(0),
-                    Child, (IPTR)(cancel = obutton(Msg_Pop_Cancel,Msg_Pop_Cancel_Help)),
+                    Child, (IPTR)(cancel = obutton(MSG_Pop_Cancel,MSG_Pop_Cancel_Help)),
                 End,
             End,
         End;

@@ -98,3 +98,9 @@ struct InstData
 #define LIB_VERSION_IS_AT_LEAST(lib, minver, minrev)  VERSION_IS_AT_LEAST(((struct Library *)(lib))->lib_Version, ((struct Library *)(lib))->lib_Revision, minver, minrev)
 
 /***************************************************************************/
+
+#ifndef MUIA_Scrollgroup_AutoBars
+#define MUIA_Scrollgroup_AutoBars           0x8042f50e /* V20 isg BOOL              */
+#endif
+
+/***************************************************************************/
