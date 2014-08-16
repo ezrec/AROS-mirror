@@ -27,7 +27,7 @@ INCLUDE_FILES := ../include/mui/TheBar_mcc.h
 %copy_includes path=mui dir=../include/mui
 
 TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_TheBar/Locale/Catalogs
-LANGUAGES := $(basename $(notdir $(wildcard $(SRCDIR)/$(CURDIR)/locale/*.po)))
+LANGUAGES := $(basename $(notdir $(call WILDCARD,$(SRCDIR)/$(CURDIR)/locale/*.po)))
 CATALOGS := $(addprefix $(TARGETDIR)/,$(addsuffix /TheBar_mcp.catalog,$(LANGUAGES)))
 
 #MM
