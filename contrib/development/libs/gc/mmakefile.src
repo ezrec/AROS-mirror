@@ -3,15 +3,14 @@
 
 include $(TOP)/config/make.cfg
 
-# TODO: find out why it fails for x86_64
+# TODO: find out why it fails for x86_64/m68k & ARM (see include/private/gcconfig.h)
 
 #MM- contrib-development : contrib-development-libs-gc
 
 #MM- contrib-development-libs-gc : contrib-development-libs-gc-$(AROS_TARGET_CPU)
 
-#MM- contrib-development-libs-gc-m68k : contrib-development-libs-gc-common
+#MM- contrib-development-libs-gc-ppc : contrib-development-libs-gc-common
 #MM- contrib-development-libs-gc-i386 : contrib-development-libs-gc-common
-#MM- contrib-development-libs-gc-arm : contrib-development-libs-gc-common
 
 #MM- contrib-development-libs-gc-common : includes contrib-development-libs-gc-linklib
 
