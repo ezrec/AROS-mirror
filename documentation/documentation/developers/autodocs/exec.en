@@ -30,23 +30,24 @@ exec
 `FindTaskByPID()`_                      `Forbid()`_                             `FreeEntry()`_                          `FreeMem()`_                            
 `FreePooled()`_                         `FreeSignal()`_                         `FreeTaskStorageSlot()`_                `FreeTrap()`_                           
 `FreeVec()`_                            `FreeVecPooled()`_                      `GetCC()`_                              `GetMsg()`_                             
-`GetTaskStorageSlot()`_                 `InitCode()`_                           `InitResident()`_                       `InitSemaphore()`_                      
-`InitStruct()`_                         `Insert()`_                             `MakeFunctions()`_                      `MakeLibrary()`_                        
-`NewAddTask()`_                         `NewAllocEntry()`_                      `NewCreateTaskA()`_                     `NewMinList()`_                         
-`NewStackSwap()`_                       `ObtainQuickVector()`_                  `ObtainSemaphoreList()`_                `ObtainSemaphoreShared()`_              
-`OldOpenLibrary()`_                     `OpenDevice()`_                         `OpenLibrary()`_                        `OpenResource()`_                       
-`Permit()`_                             `Procure()`_                            `PutMsg()`_                             `RawDoFmt()`_                           
-`ReadGayle()`_                          `ReleaseSemaphore()`_                   `ReleaseSemaphoreList()`_               `RemDevice()`_                          
-`RemHead()`_                            `RemIntServer()`_                       `RemLibrary()`_                         `RemMemHandler()`_                      
-`Remove()`_                             `RemPort()`_                            `RemResetCallback()`_                   `RemResource()`_                        
-`RemSemaphore()`_                       `RemTail()`_                            `RemTask()`_                            `ReplyMsg()`_                           
-`Reschedule()`_                         `RestoreTaskStorage()`_                 `SaveTaskStorage()`_                    `Schedule()`_                           
-`SendIO()`_                             `SetExcept()`_                          `SetFunction()`_                        `SetIntVector()`_                       
-`SetSignal()`_                          `SetSR()`_                              `SetTaskPri()`_                         `SetTaskStorageSlot()`_                 
-`ShutdownA()`_                          `Signal()`_                             `StackSwap()`_                          `SumKickData()`_                        
-`SumLibrary()`_                         `SuperState()`_                         `Supervisor()`_                         `Switch()`_                             
-`TypeOfMem()`_                          `UserState()`_                          `Vacate()`_                             `VNewRawDoFmt()`_                       
-`Wait()`_                               `WaitIO()`_                             `WaitPort()`_                           
+`GetParentTaskStorageSlot()`_           `GetTaskStorageSlot()`_                 `InitCode()`_                           `InitResident()`_                       
+`InitSemaphore()`_                      `InitStruct()`_                         `Insert()`_                             `MakeFunctions()`_                      
+`MakeLibrary()`_                        `NewAddTask()`_                         `NewAllocEntry()`_                      `NewCreateTaskA()`_                     
+`NewMinList()`_                         `NewStackSwap()`_                       `ObtainQuickVector()`_                  `ObtainSemaphoreList()`_                
+`ObtainSemaphoreShared()`_              `OldOpenLibrary()`_                     `OpenDevice()`_                         `OpenLibrary()`_                        
+`OpenResource()`_                       `Permit()`_                             `Procure()`_                            `PutMsg()`_                             
+`RawDoFmt()`_                           `ReadGayle()`_                          `ReleaseSemaphore()`_                   `ReleaseSemaphoreList()`_               
+`RemDevice()`_                          `RemHead()`_                            `RemIntServer()`_                       `RemLibrary()`_                         
+`RemMemHandler()`_                      `Remove()`_                             `RemPort()`_                            `RemResetCallback()`_                   
+`RemResource()`_                        `RemSemaphore()`_                       `RemTail()`_                            `RemTask()`_                            
+`ReplyMsg()`_                           `Reschedule()`_                         `RestoreTaskStorage()`_                 `SaveTaskStorage()`_                    
+`Schedule()`_                           `SendIO()`_                             `SetExcept()`_                          `SetFunction()`_                        
+`SetIntVector()`_                       `SetSignal()`_                          `SetSR()`_                              `SetTaskPri()`_                         
+`SetTaskStorageSlot()`_                 `ShutdownA()`_                          `Signal()`_                             `StackSwap()`_                          
+`SumKickData()`_                        `SumLibrary()`_                         `SuperState()`_                         `Supervisor()`_                         
+`Switch()`_                             `TypeOfMem()`_                          `UserState()`_                          `Vacate()`_                             
+`VNewRawDoFmt()`_                       `Wait()`_                               `WaitIO()`_                             `WaitPort()`_                           
+
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -981,9 +982,7 @@ Notes
 ::
 
      After this function SetTaskStorageSlot(slot) may be used to store
-     values with each slot. Data stored in a slot will be duplicated when
-     a Task creates another Task. It is left up to the caller to implement
-     a mechanism to check if this copied value is invalid.
+     values with each slot.
 
 
 
@@ -4058,6 +4057,55 @@ See also
 ~~~~~~~~
 
 `WaitPort()`_ `PutMsg()`_ 
+
+----------
+
+GetParentTaskStorageSlot()
+==========================
+
+Synopsis
+~~~~~~~~
+::
+
+ IPTR GetParentTaskStorageSlot();
+
+Function
+~~~~~~~~
+::
+
+     Get a value for a task storage slot of parent task.
+
+
+Inputs
+~~~~~~
+::
+
+     id - slot ID returned from AllocTaskStorageSlot().
+
+
+Result
+~~~~~~
+::
+
+     Value stored by SetTaskStorageSlot() on parent task, or
+     (IPTR)NULL if the slot was never used.
+
+
+Notes
+~~~~~
+::
+
+     Since you are accessing value of another task, the value
+     might be invalid/freed by the time this function returns.
+     To be sure value is still valid, call this function under
+     Forbid().
+
+
+
+See also
+~~~~~~~~
+
+`AllocTaskStorageSlot()`_ `FreeTaskStorageSlot()`_ `SetTaskStorageSlot()`_ `GetTaskStorageSlot()`_ 
 
 ----------
 

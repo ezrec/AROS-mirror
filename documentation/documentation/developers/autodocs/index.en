@@ -8,6 +8,7 @@ Autodocs for Modules
 + `alib <alib>`_
 + `amigaguide <amigaguide>`_
 + `aros <aros>`_
++ `arosmesa <arosmesa>`_
 + `arossupport <arossupport>`_
 + `asl <asl>`_
 + `battclock <battclock>`_
@@ -74,4 +75,5 @@ Autodocs for Modules
 + `unixio_hidd <unixio_hidd>`_
 + `utility <utility>`_
 + `uuid <uuid>`_
++ `vega <vega>`_
 + `workbench <workbench>`_

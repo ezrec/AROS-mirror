@@ -1891,9 +1891,9 @@ Synopsis
 ::
 
   char * fgets(
-     char * buffer,
-     int    size,
-     FILE * stream)
+ char * buffer,
+ int    size,
+ FILE * stream)
 
 
 Function

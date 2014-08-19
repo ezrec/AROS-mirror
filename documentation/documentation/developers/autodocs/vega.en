@@ -1,6 +1,6 @@
-=======
-console
-=======
+====
+vega
+====
 
 .. This document is automatically generated. Don't edit it!
 
@@ -9,35 +9,27 @@ console
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`CDInputHandler()`_                     `RawKeyConvert()`_                      
+`GetOpenVGStateTrackerApi()`_           
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
 
-CDInputHandler()
-================
+GetOpenVGStateTrackerApi()
+==========================
 
 Synopsis
 ~~~~~~~~
 ::
 
- struct InputEvent * CDInputHandler(
-          struct InputEvent * events,
-          APTR _cdihdata );
+  APTR GetOpenVGStateTrackerApi(
 
-
-----------
-
-RawKeyConvert()
-===============
-
-Synopsis
+Function
 ~~~~~~~~
 ::
 
- LONG RawKeyConvert(
-          struct InputEvent * events,
-          STRPTR buffer,
-          struct KeyMap * keyMap );
+     This is a PRIVATE function used by egl.library to receive pointer to
+     api structure of OpenVG. Do not use this function in your application.
+     OpenVG context is created using EGL API.
+
 
 
