@@ -783,7 +783,9 @@ def create_module_docs():
                 os.path.join(topdir, "arch", "all-hosted"),
                 os.path.join(topdir, "arch", "all-pc"),
                 os.path.join(topdir, "arch", "m68k-amiga"),
-                os.path.join(topdir, "workbench", "libs") )
+                os.path.join(topdir, "workbench", "libs"),
+                os.path.join(topdir, "workbench/libs/mesa/src/aros"),
+                os.path.join(topdir, "workbench/libs/mesa/src/gallium/state_trackers") )
     for dir in srcdirs:
         create_lib_docs_dir(dir, targetdir, module_titles)
 
@@ -875,7 +877,6 @@ def create_shell_docs():
                 os.path.join(topdir, "workbench", "c", "Partition"),
                 os.path.join(topdir, "workbench", "c", "Decoration"),
                 os.path.join(topdir, "workbench", "c", "iprefs") )
-                
     targetdir = os.path.join("documentation", "users", "shell") # relative to main build script
     shell_titles = ("Name","Format","Template","Synopsis","Location","Function",
         "Inputs","Tags","Result","Example","Notes","Bugs","See also")  # The titles we want
