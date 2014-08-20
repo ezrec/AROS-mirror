@@ -1,0 +1,130 @@
+## version $VER: VPDF.catalog 1.0 (24.02.2012)
+## codeset 0
+## language polski
+## chunk AUTH Michal Zukowski
+;
+MSG_APPLICATION_DESCRIPTION
+Przegl±darka dokumentów PDF
+;
+MSG_PRINTER_RANGE
+Zakres
+;Print Range
+;
+MSG_PRINTER_PAGES
+Strony:
+;Pages:
+;
+MSG_PRINTER_FIRSTPAGE
+Od:
+;First Page:
+;
+MSG_PRINTER_LASTPAGE
+Do:
+;Last Page:
+;
+MSG_PRINTER_MANUAL
+Wybór rêczny:
+;Manual Selection
+;
+MSG_PRINTER_RESET
+Ustawienia domy¶lne
+;Reset
+;
+MSG_PRINTER_REVERSE
+Odwróæ kolejno¶æ
+;Reverse Pages
+;
+MSG_PRINTER_ORIENTATION
+U³o¿enie strony
+;Page Orientation
+;
+MSG_PRINTER_COPIES
+Kopie:
+;Copies:
+;
+MSG_PRINTER_COLLATE
+Sortuj
+;Collate
+;
+MSG_PRINTER_SCALING
+Skalowanie:
+;Page Scaling:
+;
+MSG_PRINTER_PAGESPERSHEET
+Stron na arkusz:
+;Pages per Sheet:
+;
+MSG_PRINTER_ORDER
+Kolejno¶æ stron:
+;Pages Order:
+;
+MSG_PRINTER_AUTOROTATE
+Wycentruj i obróæ automatycznie
+;Auto Rotate and Center
+;
+MSG_PRINTER_DRIVER
+Sterownik
+;Driver
+;
+MSG_PRINTER_PREFERENCES
+Preferencje druku
+;Printer
+;
+MSG_PRINTER_WINTITLE
+VPDF · Drukowanie dokumentu
+;VPDF · Print Document
+;
+MSG_PRINTER_PRINT
+Drukuj
+;Print
+;
+MSG_PRINTER_CANCEL
+Poniechaj
+;Cancel
+MSG_PRINTER_OUTPUT
+Wyj¶cie:
+;Output:
+MSG_PRINTER_ODD
+Nieparzyste
+;Odd
+;
+MSG_PRINTER_EVEN
+Parzyste
+;Even
+;
+MSG_PRINTER_ODDEVEN
+Parzyste i nieparzyste
+;Odd and Even
+;
+MSG_PRINTER_NONE
+Brak
+;None
+;
+MSG_PRINTER_BEST
+Najlepsze
+;Best
+;
+MSG_PRINTER_MULTIPLE
+Wiele stron na kartce
+;Multiple pages per sheet
+;
+MSG_PRINTER_CUSTOM
+U¿ytkownika
+;Custom
+;
+MSG_PRINTER_HORIZONTAL
+Poziomo
+;Horizontal
+;
+MSG_PRINTER_VERTICAL
+Pionowo
+;Vertical
+;
+MSG_PRINTER_HORIZONTALREVERT
+Poziomo, odwrotnie
+;Horizontal reversed
+;
+MSG_PRINTER_VERTICALREVERT
+Pionowo, odwrotnie
+;Vertical reversed
+;

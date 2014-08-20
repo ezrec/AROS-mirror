@@ -1,0 +1,98 @@
+;
+; VPDF locales
+;
+MSG_APPLICATION_DESCRIPTION (//)
+PDF Viewer
+;
+MSG_PRINTER_RANGE (//)
+Print Range
+;
+MSG_PRINTER_PAGES (//)
+Pages:
+;
+MSG_PRINTER_FIRSTPAGE (//)
+First Page:
+;
+MSG_PRINTER_LASTPAGE (//)
+Last Page:
+;
+MSG_PRINTER_MANUAL (//)
+Manual Selection
+;
+MSG_PRINTER_RESET (//)
+Reset
+;
+MSG_PRINTER_REVERSE (//)
+Reverse Pages
+;
+MSG_PRINTER_ORIENTATION (//)
+Page Orientation
+;
+MSG_PRINTER_COPIES (//)
+Copies:
+;
+MSG_PRINTER_COLLATE (//)
+Collate
+;
+MSG_PRINTER_SCALING (//)
+Page Scaling:
+;
+MSG_PRINTER_PAGESPERSHEET (//)
+Pages per Sheet:
+;
+MSG_PRINTER_ORDER (//)
+Pages Order:
+;
+MSG_PRINTER_AUTOROTATE (//)
+Auto Rotate and Center
+;
+MSG_PRINTER_DRIVER (//)
+Driver
+;
+MSG_PRINTER_PREFERENCES (//)
+Printer Preferences
+;
+MSG_PRINTER_WINTITLE (//)
+VPDF · Print Document
+;
+MSG_PRINTER_PRINT (//)
+Print
+;
+MSG_PRINTER_CANCEL (//)
+Cancel
+;
+MSG_PRINTER_OUTPUT (//)
+Output:
+MSG_PRINTER_ODD (//)
+Odd
+;
+MSG_PRINTER_EVEN (//)
+Even
+;
+MSG_PRINTER_ODDEVEN (//)
+Odd and Even
+;
+MSG_PRINTER_NONE (//)
+None
+;
+MSG_PRINTER_BEST (//)
+Best
+;
+MSG_PRINTER_MULTIPLE (//)
+Multiple pages per sheet
+;
+MSG_PRINTER_CUSTOM (//)
+Custom
+;
+MSG_PRINTER_HORIZONTAL (//)
+Horizontal
+;
+MSG_PRINTER_VERTICAL (//)
+Vertical
+;
+MSG_PRINTER_HORIZONTALREVERT (//)
+Horizontal reversed
+;
+MSG_PRINTER_VERTICALREVERT (//)
+Vertical reversed
+;
