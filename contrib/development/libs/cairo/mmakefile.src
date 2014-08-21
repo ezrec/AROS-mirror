@@ -10,5 +10,5 @@
 
 %fetch_and_build_gnu_development package=cairo version=1.12.14 patch=yes \
     package_repo=http://cairographics.org/releases/ \
-    suffixes="tar.xz" extraoptions="--disable-shared --disable-xlib --disable-xcb png_CFLAGS=' ' png_LIBS='-lpng' pixman_CFLAGS='-I$(AROS_DEVELOPMENT)/include/pixman-1' pixman_LIBS='-lpixman' FREETYPE_LIBS='-lfreetype2'"
+    suffixes="tar.xz" extraoptions="--enable-ft --disable-shared --disable-xlib --disable-xcb png_CFLAGS=' ' png_LIBS='-lpng' pixman_CFLAGS='-I$(AROS_DEVELOPMENT)/include/pixman-1' pixman_LIBS='-lpixman' FREETYPE_LIBS='-lfreetype2'"
 
