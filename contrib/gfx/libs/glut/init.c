@@ -116,7 +116,8 @@ static void initAROSMesaGLUTBase()
 {
     /* Trick to build linklib from module sources */
     AMGLInternalBase = AllocVec(sizeof(struct AROSMesaGLUTBase), MEMF_CLEAR|MEMF_PUBLIC);
-    
+    D(bug("[AMGLUT] %s: InternalBase @ 0x%p\n", __PRETTY_FUNCTION__, AMGLInternalBase));
+
     AMGLInit(AMGLInternalBase);
     AMGLOpen(AMGLInternalBase);
 }
