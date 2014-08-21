@@ -1,0 +1,20 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-vpdf-poppler-fofi : includes
+
+FILES := FoFiBase \
+	FoFiEncodings \
+	FoFiTrueType \
+	FoFiType1C \
+	FoFiType1 \
+	FoFiIdentifier
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/VPDF/libs
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../poppler
+
+%build_linklib mmake=contrib-vpdf-poppler-fofi libname=fofi \
+  cxxfiles=$(FILES) libdir=$(TARGETDIR)
+
+%common

@@ -1,0 +1,80 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-vpdf-poppler-poppler : includes development-cairo
+
+FILES := Annot \
+	JPXStream \
+	DCTStream \
+	Array \
+	BuiltinFont \
+	BuiltinFontTables \
+	Catalog \
+	CharCodeToUnicode \
+	CMap \
+	Error \
+	Dict \
+	Decrypt \
+	DateInfo \
+	Gfx \
+	Function \
+	FontInfo \
+	Form \
+	FontEncodingTables \
+	FileSpec \
+	JArithmeticDecoder \
+	GlobalParams \
+	GfxState \
+	GfxFont \
+	Object \
+	NameToCharCode \
+	Movie \
+	Link \
+	Lexer \
+	JBIG2Stream \
+	Page \
+	OutputDev \
+	Outline \
+	OptionalContent \
+	PopplerCache \
+	PDFDocEncoding \
+	PDFDoc \
+	Parser \
+	PageTransition \
+	Stream \
+	PSTokenizer \
+	PreScanOutputDev \
+	ProfileData \
+	Sound \
+	TextOutputDev \
+	PSOutputDev \
+	XRef \
+	UnicodeTypeTable \
+	UnicodeMap \
+	XpdfPluginAPI \
+	SecurityHandler \
+	PageLabelInfo \
+	CairoOutputDev \
+	CairoRescaleBox \
+	CairoFontEngine \
+	CachedFile \
+	Rendition \
+	ViewerPreferences \
+	Linearization \
+	Hints \
+	FlateStream \
+	SplashOutputDev \
+	UTF
+
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/VPDF/libs
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../goo -I$(AROS_INCLUDES)/cairo
+USER_CFLAGS := -frtti
+#CFLAGS := -frtti $(USER_INCLUDES)
+USER_LDFLAGS := -frtti
+
+%build_linklib mmake=contrib-vpdf-poppler-poppler libname=poppler \
+  cxxfiles=$(FILES) libdir=$(TARGETDIR)
+
+%common

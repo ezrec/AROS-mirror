@@ -1,0 +1,34 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-vpdf-poppler-splash : includes
+
+FILES := Splash \
+	SplashFontFileID \
+	SplashBitmap \
+	SplashClip \
+	SplashFont \
+	SplashFontEngine \
+	SplashFontFile \
+	SplashFTFont \
+	SplashFTFontEngine \
+	SplashFTFontFile \
+	SplashPath \
+	SplashPattern \
+	SplashScreen \
+	SplashState \
+	SplashT1Font \
+	SplashT1FontEngine \
+	SplashT1FontFile \
+	SplashXPath \
+	SplashXPathScanner
+
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/VPDF/libs
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../poppler
+
+%build_linklib mmake=contrib-vpdf-poppler-splash libname=poppler-splash \
+  cxxfiles=$(FILES) libdir=$(TARGETDIR)
+
+%common

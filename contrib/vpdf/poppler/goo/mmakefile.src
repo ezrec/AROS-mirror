@@ -1,0 +1,33 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-vpdf-poppler-goo : includes
+
+FILES := gfile \
+	gmempp   \
+	GooHash  \
+	GooList  \
+	GooTimer \
+	FixedPoint \
+	ImgWriter  \
+	PNGWriter  \
+	JpegWriter \
+	gstrtod    \
+	gmem       \
+	GooString  \
+	grandom
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/VPDF/libs
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../poppler
+USER_CFLAGS := -D__MORPHOS__
+
+%build_linklib mmake=contrib-vpdf-poppler-goo libname=goo \
+  cxxfiles=$(FILES) libdir=$(TARGETDIR)
+
+%common
+
+# FIXME: hint from Morphos Makefile
+# build with lower optimization level. these are using isdigit() and it can miscompile (write some smarter rule for these?)
+#gstrtod.o: gstrtod.cc
+#	$(CC) $(CFLAGS) -O1 $(INCLUDES) -c $*.cc
