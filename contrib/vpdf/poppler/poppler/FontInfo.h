@@ -6,6 +6,8 @@
 // Copyright (C) 2005-2008, 2010, 2011 Albert Astals Cid <aacid@kde.org>
 // Copyright (C) 2005 Brad Hards <bradh@frogmouth.net>
 // Copyright (C) 2009 Pino Toscano <pino@kde.org>
+// Copyright (C) 2012 Adrian Johnson <ajohnson@redneon.com>
+// Copyright (C) 2013 Thomas Freitag <Thomas.Freitag@alfa.de>
 //
 // To see a description of the changes please see the Changelog file that
 // came with your tarball or type make ChangeLog if you are building from git
@@ -48,14 +50,16 @@ public:
   };
     
   // Constructor.
-  FontInfo(GfxFont *fontA, PDFDoc *doc);
+  FontInfo(GfxFont *fontA, XRef *xrefA);
   // Copy constructor
   FontInfo(FontInfo& f);
   // Destructor.
   ~FontInfo();
 
   GooString *getName()      { return name; };
+  GooString *getSubstituteName() { return substituteName; };
   GooString *getFile()      { return file; };
+  GooString *getEncoding()      { return encoding; };
   Type       getType()      { return type; };
   GBool      getEmbedded()  { return emb; };
   GBool      getSubset()    { return subset; };
@@ -65,7 +69,9 @@ public:
 
 private:
   GooString *name;
+  GooString *substituteName;
   GooString *file;
+  GooString *encoding;
   Type type;
   GBool emb;
   GBool subset;
@@ -91,7 +97,7 @@ private:
   std::set<int> fonts;
   std::set<int> visitedObjects;
 
-  void scanFonts(Dict *resDict, GooList *fontsList);
+  void scanFonts(XRef *xrefA, Dict *resDict, GooList *fontsList);
 };
 
 #endif

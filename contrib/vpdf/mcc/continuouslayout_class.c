@@ -143,6 +143,10 @@ DEFNEW
 DEFDISP
 {
 	GETDATA;
+	
+	if (data->views != NULL)
+		free(data->views);
+	
 	return DOSUPER;
 }
 
@@ -295,9 +299,13 @@ METHOD continuouslayoutHandleEvent(struct IClass *cl,Object *obj,struct MUIP_Han
 				case IDCMP_MOUSEBUTTONS:
 					if (_isinobject(obj, msg->imsg->MouseX, msg->imsg->MouseY) && msg->imsg->Code == SELECTDOWN)
 					{
-						data->clickx = msg->imsg->MouseX;
-						data->clicky = msg->imsg->MouseY;
-						data->eh.ehn_Events |= IDCMP_MOUSEMOVE;
+						// TODO: this is not optimal as it assumes about a parent but let it be for now...
+						if (xget(objFindContainerByAttribute(obj, MUIA_DocumentView_DragAction), MUIA_DocumentView_DragAction) == MUIV_DocumentView_DragAction_Scroll)
+						{
+							data->clickx = msg->imsg->MouseX;
+							data->clicky = msg->imsg->MouseY;
+							data->eh.ehn_Events |= IDCMP_MOUSEMOVE;
+						}
 					}
 					else
 					{
@@ -478,7 +486,7 @@ METHOD continuouslayoutRelayout(struct IClass *cl, Object *obj, struct MUIP_Cont
 			width = data->scaling >> 16;
 			SetAttrs(data->views[i],
 				MUIA_PageView_LayoutWidth, width,
-				MUIA_PageView_LayoutHeight, (int)(width * (float)mediaheight / mediawidth),
+				MUIA_PageView_LayoutHeight, (int)(width * (float)fpheight / fpwidth),
 				MUIA_PageView_Rotation, data->rotation,
 				TAG_DONE);
 		}

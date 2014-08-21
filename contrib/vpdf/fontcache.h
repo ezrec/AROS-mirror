@@ -69,6 +69,7 @@ enum {
 	//FC_PROPORTIONAL,
 	FC_SPACING,
 	FC_SERIF,
+	FC_LAST_CRITERIA,
 };
 
 static int fcelementpriority[] = {
@@ -89,6 +90,7 @@ static int fcelementpriority[] = {
 	//{FC_PROPORTIONAL,	91},
 	90,
 	89,
+	0,
 };
 
 
@@ -120,14 +122,16 @@ int fcPatternAddInteger(struct fontpattern *pat, int element, int value);
 int fcPatternAddExcludingInteger(struct fontpattern *pat, int element, int value);
 char *fcPatternGetString(struct fontpattern *pat, int element, int id);
 int fcPatternGetInteger(struct fontpattern *pat, int element, int id);
+struct patternentry *fcPatternGetEntry(struct fontpattern *pat, int element, int id);
 struct fontpattern *fcPatternAlloc(void);
 void fcPatternDestroy(struct fontpattern *fd);
 struct fontcache *fcCreate(char *directories[]);
 void fcDestroy(struct fontcache *cache);
-struct fontpattern *fcMatch(struct fontcache *cache, struct fontpattern *pat);
+struct fontpattern *fcMatch(struct fontcache *cache, struct fontpattern *pat, int *matchingcriteria);
 
 struct fontcache *fcLoad(char *fname);
 int fcSave(struct fontcache *fontcache, char *fname);
+int fcAddPattern(struct fontcache *fontcache, struct fontpattern *pat);
 
 #ifdef __cplusplus
 }

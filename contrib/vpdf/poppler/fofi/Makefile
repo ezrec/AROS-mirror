@@ -4,10 +4,11 @@ OBJS= FoFiBase.o \
 	FoFiEncodings.o \
 	FoFiTrueType.o \
 	FoFiType1C.o \
-	FoFiType1.o
+	FoFiType1.o  \
+	FoFiIdentifier.o
 
 TARGET = libfofi.a
-INCLUDES = -I. -I..
+INCLUDES = -I. -I.. -I../poppler
 
 $(TARGET): $(OBJS)
 	$(AR) $(TARGET) $(OBJS)

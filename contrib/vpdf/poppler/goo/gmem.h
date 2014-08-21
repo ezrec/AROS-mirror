@@ -14,7 +14,7 @@
 // under GPL version 2 or later
 //
 // Copyright (C) 2005 Takashi Iwai <tiwai@suse.de>
-// Copyright (C) 2007-2009 Albert Astals Cid <aacid@kde.org>
+// Copyright (C) 2007-2010 Albert Astals Cid <aacid@kde.org>
 // Copyright (C) 2008 Jonathan Kew <jonathan_kew@sil.org>
 //
 // To see a description of the changes please see the Changelog file that
@@ -26,23 +26,7 @@
 #define GMEM_H
 
 #include <stdio.h>
-#include <poppler/poppler-config.h>
-
-#if USE_EXCEPTIONS
-
-class GMemException {
-public:
-  GMemException() {}
-  ~GMemException() {}
-};
-
-#define GMEM_EXCEP throw(GMemException)
-
-#else // USE_EXCEPTIONS
-
-#define GMEM_EXCEP
-
-#endif // USE_EXCEPTIONS
+#include "../poppler/poppler-config.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -52,17 +36,15 @@ extern "C" {
  * Same as malloc, but prints error message and exits if malloc()
  * returns NULL.
  */
-extern void *gmalloc(size_t size) GMEM_EXCEP;
-extern void *gmalloc_checkoverflow(size_t size) GMEM_EXCEP;
+extern void *gmalloc(size_t size);
+extern void *gmalloc_checkoverflow(size_t size);
 
 /*
  * Same as realloc, but prints error message and exits if realloc()
  * returns NULL.  If <p> is NULL, calls malloc instead of realloc().
  */
-extern void *grealloc(void *p, size_t size) GMEM_EXCEP;
-extern void *grealloc_checkoverflow(size_t size) GMEM_EXCEP;
-
-void gMemValidate(void);
+extern void *grealloc(void *p, size_t size);
+extern void *grealloc_checkoverflow(size_t size);
 
 /*
  * These are similar to gmalloc and grealloc, but take an object count
@@ -72,14 +54,12 @@ void gMemValidate(void);
  * The gmallocn_checkoverflow variant returns NULL instead of exiting
  * the application if a overflow is detected
  */
-extern void *gmallocn(int nObjs, int objSize) GMEM_EXCEP;
-extern void *gmallocn_checkoverflow(int nObjs, int objSize) GMEM_EXCEP;
-extern void *gmallocn3(int a, int b, int c) GMEM_EXCEP;
-extern void *gmallocn3_checkoverflow(int a, int b, int c) GMEM_EXCEP;
-extern void *greallocn(void *p, int nObjs, int objSize) GMEM_EXCEP;
-extern void *greallocn_checkoverflow(void *p, int nObjs, int objSize) GMEM_EXCEP;
-
-void gvalidate(void *p);
+extern void *gmallocn(int nObjs, int objSize);
+extern void *gmallocn_checkoverflow(int nObjs, int objSize);
+extern void *gmallocn3(int a, int b, int c);
+extern void *gmallocn3_checkoverflow(int a, int b, int c);
+extern void *greallocn(void *p, int nObjs, int objSize);
+extern void *greallocn_checkoverflow(void *p, int nObjs, int objSize);
 
 /*
  * Same as free, but checks for and ignores NULL pointers.
@@ -98,7 +78,7 @@ extern void gMemReport(FILE *f);
 /*
  * Allocate memory and copy a string into it.
  */
-extern char *copyString(char *s);
+extern char *copyString(const char *s);
 
 /*
  * Allocate memory and copy a limited-length string to it.

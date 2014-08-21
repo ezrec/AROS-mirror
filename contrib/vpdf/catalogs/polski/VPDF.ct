@@ -112,19 +112,118 @@ MSG_PRINTER_CUSTOM
 U¿ytkownika
 ;Custom
 ;
-MSG_PRINTER_HORIZONTAL
-Poziomo
-;Horizontal
+MSG_PRINTER_HORIZONTAL_VERTICAL
+Poziomo-Pionowo
+MSG_PRINTER_HORIZONTAL_VERTICALREVERSED
+Poziomo-Pionowo,odwrotnie
+MSG_PRINTER_HORIZONTALREVERSED_VERTICAL
+Poziomo,odwrotnie-Pionowo
+MSG_PRINTER_HORIZONTALREVERSED_VERTICAL_REVERSED
+Poziomo,odwrotnie-Pionowo ,odwrotnie
+MSG_PRINTER_VERTICAL_HORIZONTAL
+Pionowo-Poziomo
+MSG_PRINTER_VERTICALREVERSED_HORIZONTAL
+Pionowo,odwrotnie-Poziomo
+MSG_PRINTER_VERTICAL_HORIZONTALREVERSED
+Pionowo-Poziomo,odwrotnie
+MSG_PRINTER_VERTICAL_REVERSED_HORIZONTALREVERSED
+Pionowo,odwrotnie-Poziomo,odwrotnie
+MSG_PRINTER_ABORT
+Przerwij
+;Abort
 ;
-MSG_PRINTER_VERTICAL
-Pionowo
-;Vertical
+MSG_MENU_PROJECT
+Projekt
 ;
-MSG_PRINTER_HORIZONTALREVERT
-Poziomo, odwrotnie
-;Horizontal reversed
-;
-MSG_PRINTER_VERTICALREVERT
-Pionowo, odwrotnie
-;Vertical reversed
-;
+MSG_MENU_NEWWIN
+Nowe okno...
+MSG_MENU_NEWTAB
+Nowa zak³adka
+MSG_MENU_FILE
+Otwórz plik...
+MSG_MENU_RECENT
+Otwórz ostatnie...
+MSG_MENU_PRINT
+Drukuj...
+MSG_MENU_ABOUT
+O programie...
+MSG_MENU_QUIT
+Skoñcz
+MSG_MENU_EDIT
+Edycja
+MSG_MENU_COPY
+Kopiuj
+MSG_MENU_LOG
+Logi...
+MSG_MENU_SETTINGS
+Ustawienia
+MSG_MENU_SETTINGS_SETTINGS
+Preferencje...
+MSG_MENU_SETTINGS_SAVE
+Zapisz jako domy¶lne
+MSG_MENU_SETTINGS_MUI
+MUI...
+MSG_MENU_WINDOWS
+Okna
+MSG_NOFILE
+Brak pliku
+MSG_SAVE
+Zapi_sz
+MSG_CANCEL
+Ponie_chaj
+MSG_USE
+_U¿yj
+MSG_WINDOWS
+Okna
+MSG_SETTINGS_LAYOUT
+Uk³ad:
+MSG_SETTINGS_SCALING
+Skalowanie:
+MSG_SETTINGS_OUTLINE
+Pokazuj podgl±d zawarto¶ci
+MSG_SETTINGS_DOCUMENT
+Dokument
+MSG_SETTINGS_LOGWINDOW
+Pokazuj okno logów przy starcie
+MSG_REQ_OPEN
+Wybierz plik...
+MSG_REQ_SAVE
+Wybierz plik do zapisu...
+MSG_REQ_DRAWER
+Wybierz katalog...
+MSG_TOOLBAR_ZOOMIN
+Przybli¿
+MSG_TOOLBAR_ZOOMOUT
+Oddal
+MSG_TOOLBAR_COUNTERCLOCKWISE
+Obrót w lewo
+MSG_TOOLBAR_CLOCKWISE
+Obrót w prawo
+MSG_TOOLBAR_MARK
+Zaznaczanie
+MSG_TOOLBAR_SCROLL
+Skrolowanie
+MSG_TOOLBAR_OUTLINE
+Spis tre¶ci
+MSG_TOOLBAR_FITPAGE
+Do strony
+MSG_TOOLBAR_FITWIDTH
+Do szeroko¶ci
+MSG_TOOLBAR_SINGLE
+Pojedyncze
+MSG_TOOLBAR_CONTINUOUS
+Ci±g³e
+MSG_TOOLBAR_FACING
+Przystaj±ce
+MSG_TOOLBAR_CONT_FACING
+Ci±g³e przystaj±ce
+MSG_SEARCH_NEXT
+_Nastêpny
+MSG_SEARCH_PREV
+_Poprzedni
+MSG_SEARCH_END
+Koniec dokumentu
+MSG_SEARCH_LABEL
+Szukaj:
+MSG_SLIDER_PAGE
+Strona %ld

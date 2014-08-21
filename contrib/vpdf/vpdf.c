@@ -10,6 +10,7 @@
 #include <proto/dos.h>
 #include <proto/exec.h>
 #include <proto/locale.h>
+#include <proto/icon.h>
 
 #if 0
 #include <exec/execbase.h>
@@ -105,12 +106,12 @@ static void cleanupclasses(void)
 	}
 }
 
-static Object *app = NULL;
+static Object *_app = NULL;
 
 void vpdfErrorFunction(int pos, char *message)
 {
-	if (app != NULL && message != NULL)
-		DoMethod(app, MUIM_Application_PushMethod, app, 3, MUIM_VPDF_LogMessage, MUIV_VPDF_LogMessage_Error, strdup(message));
+	if (_app != NULL && message != NULL)
+		DoMethod(_app, MUIM_Application_PushMethod, _app, 3, MUIM_VPDF_LogMessage, MUIV_VPDF_LogMessage_Error, strdup(message));
 }
 
 static void MessageAddFile(struct MsgPort *port, struct MsgPort *replyport, struct RexxMsg *rexxmsg, STRPTR file)
@@ -300,6 +301,7 @@ int main(int argc, char *argv[])
 					{
 						int opened = 0;
 						DoMethod(app, MUIM_Application_Load, MUIV_Application_Load_ENV);
+						_app = app;
 
 						if(argc)
 						{

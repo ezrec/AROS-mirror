@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <limits.h>
+#include <string.h>
 #include <constructor.h>
 #include <intuition/pointerclass.h>
 
@@ -34,6 +35,7 @@
 
 #include "util.h"
 #include "poppler.h"
+#include "../locale.h"
 
 
 struct Data
@@ -45,6 +47,9 @@ struct Data
 	Object *btnRotateRight;
 	Object *btnRotateLeft;
 	Object *btnLayouts[4];
+	Object *btnOutline;
+	Object *btnDragScroll;
+	Object *btnDragMark;
 
 	Object *document;
 	int zoomid;
@@ -62,16 +67,12 @@ enum
 
 struct layoutmode
 {
-	char *name;
+	char name[128];
 	int mode;
 };
 
-static struct layoutmode layoutmodes[] = {
-	{"Single", MUIV_DocumentView_Layout_Single},
-	{"Continuous", MUIV_DocumentView_Layout_ContinuousSingle},
-	{"Facing", MUIV_DocumentView_Layout_Facing},
-	{"Continuous Facing", MUIV_DocumentView_Layout_ContinuousFacing},
-};
+static struct layoutmode layoutmodes[4];
+
 
 /*
  * MUI Standard methods
@@ -105,9 +106,18 @@ static Object *layoutbutton(char *label, UBYTE *image)
 
 DEFNEW
 {
-	Object *btnZoomIn, *btnZoomOut, *btnLayouts[4], *strZoom, *btnRotateLeft, *btnRotateRight;
-	Object *btnZoomPopup;
+	Object *btnZoomIn, *btnZoomOut, *btnLayouts[4], *strZoom, *btnRotateLeft, *btnRotateRight, *btnOutline;
+	Object *btnZoomPopup, *btnDragMark, *btnDragScroll;
 
+	layoutmodes[0].mode = MUIV_DocumentView_Layout_Single;
+	layoutmodes[1].mode = MUIV_DocumentView_Layout_ContinuousSingle;
+	layoutmodes[2].mode = MUIV_DocumentView_Layout_Facing;
+	layoutmodes[3].mode = MUIV_DocumentView_Layout_ContinuousFacing;
+	strncpy(layoutmodes[0].name,  LOCSTR( MSG_TOOLBAR_SINGLE ),128);
+	strncpy(layoutmodes[1].name,  LOCSTR( MSG_TOOLBAR_CONTINUOUS  ),128);
+	strncpy(layoutmodes[2].name,  LOCSTR( MSG_TOOLBAR_FACING  ),128);
+	strncpy(layoutmodes[3].name,  LOCSTR( MSG_TOOLBAR_CONT_FACING  ),128);
+	
 	obj = DoSuperNew(cl, obj,
 			MUIA_Group_Horiz, TRUE,
 			Child, strZoom = TextObject,
@@ -129,14 +139,14 @@ DEFNEW
 				MUIA_Weight, 1,
 				Child, btnZoomIn = RawimageObject, 
 										MUIA_Rawimage_Data, button_zoomin,
-										MUIA_ShortHelp, "Zoom In", 
+										MUIA_ShortHelp, LOCSTR( MSG_TOOLBAR_ZOOMIN  ),
 										MUIA_Frame, MUIV_Frame_Button,
 										MUIA_InputMode, MUIV_InputMode_RelVerify,
 										MUIA_Background, MUII_ButtonBack,
 										End,
 				Child, btnZoomOut = RawimageObject, 
 										MUIA_Rawimage_Data, button_zoomout,
-										MUIA_ShortHelp, "Zoom Out", 
+										MUIA_ShortHelp, LOCSTR( MSG_TOOLBAR_ZOOMOUT  ),
 										MUIA_Frame, MUIV_Frame_Button,
 										MUIA_InputMode, MUIV_InputMode_RelVerify,
 										MUIA_Background, MUII_ButtonBack,
@@ -144,25 +154,55 @@ DEFNEW
 				End,
 				
 			Child, HSpace(0),
+						
 			Child, btnRotateLeft = RawimageObject, 
 										MUIA_Rawimage_Data, button_rotatecounterclockwise,
-										MUIA_ShortHelp, "Rotate counterclockwise", 
+										MUIA_ShortHelp, LOCSTR( MSG_TOOLBAR_CLOCKWISE ), 
 										MUIA_Frame, MUIV_Frame_Button,
 										MUIA_InputMode, MUIV_InputMode_RelVerify,
 										MUIA_Background, MUII_ButtonBack,
 										End,
 			Child, btnRotateRight = RawimageObject,
 										MUIA_Rawimage_Data, button_rotateclockwise,
-										MUIA_ShortHelp, "Rotate clockwise",
+										MUIA_ShortHelp, LOCSTR( MSG_TOOLBAR_COUNTERCLOCKWISE), 
 										MUIA_Frame, MUIV_Frame_Button,
 										MUIA_InputMode, MUIV_InputMode_RelVerify,
 										MUIA_Background, MUII_ButtonBack,
 										End,
 			Child, HSpace(0),
+
 			Child, btnLayouts[0] = layoutbutton(layoutmodes[0].name, button_singlepage),
 			Child, btnLayouts[1] = layoutbutton(layoutmodes[1].name, button_singlepagecont),
 			Child, btnLayouts[2] = layoutbutton(layoutmodes[2].name, button_doublepage),
 			Child, btnLayouts[3] = layoutbutton(layoutmodes[3].name, button_doublepagecont),
+			
+			Child, HSpace(0),
+			
+			Child, HGroup,
+				MUIA_Weight, 1,
+				Child, btnDragMark = TextObject,
+										MUIA_Frame                , MUIV_Frame_Button,      
+										MUIA_Text_Contents        , LOCSTR( MSG_TOOLBAR_MARK), 
+										MUIA_InputMode            , MUIV_InputMode_Toggle,
+										MUIA_Background           , MUII_ButtonBack,
+										End,
+				Child, btnDragScroll = TextObject,
+										MUIA_Frame                , MUIV_Frame_Button,      
+										MUIA_Text_Contents        , LOCSTR( MSG_TOOLBAR_SCROLL), 
+										MUIA_InputMode            , MUIV_InputMode_Toggle,
+										MUIA_Background           , MUII_ButtonBack,
+										MUIA_Selected             , TRUE,
+										End,
+				End,
+				
+			Child, HSpace(0),
+			
+			Child, btnOutline = TextObject,
+									MUIA_Frame                , MUIV_Frame_Button,      
+									MUIA_Text_Contents        , LOCSTR( MSG_TOOLBAR_OUTLINE), 
+									MUIA_InputMode            , MUIV_InputMode_Toggle,
+									MUIA_Background           , MUII_ButtonBack,
+									End,
 		TAG_MORE, INITTAGS);
 
 	if (obj != NULL)
@@ -173,12 +213,18 @@ DEFNEW
 		memset(data, 0, sizeof(struct Data));
 		data->strZoom = strZoom;
 		data->btnZoomPopup = btnZoomPopup;
+		data->btnDragMark = btnDragMark;
+		data->btnDragScroll = btnDragScroll;
 		memcpy(data->btnLayouts, btnLayouts, sizeof(btnLayouts));
 
 		FORTAG(INITTAGS)
 		{
 			case MUIA_Toolbar_DocumentView:
 				data->document = (Object*)tag->ti_Data;
+				break;
+				
+			case MUIA_DocumentView_Outline:
+				nnset(btnOutline, MUIA_Selected, tag->ti_Data);
 				break;
 		}
 		NEXTTAG
@@ -189,6 +235,11 @@ DEFNEW
 		
 		DoMethod(btnRotateLeft, MUIM_Notify, MUIA_Pressed, FALSE, obj, 1, MUIM_DocumentView_RotateLeft);
 		DoMethod(btnRotateRight, MUIM_Notify, MUIA_Pressed, FALSE, obj, 1, MUIM_DocumentView_RotateRight);
+
+		DoMethod(btnOutline, MUIM_Notify, MUIA_Selected, MUIV_EveryTime, obj, 2, MUIM_Toolbar_ToggleOutline, MUIV_TriggerValue);
+
+		DoMethod(btnDragMark, MUIM_Notify, MUIA_Selected, MUIV_EveryTime, obj, 2, MUIM_Toolbar_DragAction, MUIV_DocumentView_DragAction_Mark);
+		DoMethod(btnDragScroll, MUIM_Notify, MUIA_Selected, MUIV_EveryTime, obj, 2, MUIM_Toolbar_DragAction, MUIV_DocumentView_DragAction_Scroll);
 
 		for(i=0; i<4; i++)
 			DoMethod(btnLayouts[i], MUIM_Notify, MUIA_Selected, TRUE, obj, 2, MUIM_Toolbar_Layout, i);
@@ -225,9 +276,9 @@ DEFMMETHOD(Cleanup)
 static char *zoomFormat(int zoomid, char *buffer, int buffersize)
 {
 	if (zoomid == MEN_ZOOM_FITPAGE)
-		snprintf(buffer, buffersize, "Fit page");
+		snprintf(buffer, buffersize,  LOCSTR( MSG_TOOLBAR_FITPAGE));
 	else if (zoomid == MEN_ZOOM_FITWIDTH)
-		snprintf(buffer, buffersize, "Fit width");
+		snprintf(buffer, buffersize,   LOCSTR( MSG_TOOLBAR_FITWIDTH));
 	else
 	{
 		float zoom = presets[zoomid - MEN_ZOOM_PRESET0] / 100.0f;
@@ -251,7 +302,7 @@ DEFSET
 		case MUIA_Toolbar_DocumentView:
 			data->document = (Object*)tag->ti_Data;
 
-			/* update state depending on assigned document view. for now only layout mode */
+			/* update state depending on assigned document view. for now only layout mode + outlines */
 
 			for(i=0; i<4; i++)
 				nnset(data->btnLayouts[i], MUIA_Selected, layoutmodes[i].mode == xget(data->document, MUIA_DocumentView_Layout));
@@ -472,6 +523,26 @@ DEFMMETHOD(DocumentView_RotateRight)
 	return DoMethodA(data->document, msg);
 }
 
+DEFMMETHOD(Toolbar_ToggleOutline)
+{
+	GETDATA;
+	set(data->document, MUIA_DocumentView_Outline, msg->visible);
+	return TRUE;
+}
+
+DEFMMETHOD(Toolbar_DragAction)
+{
+	GETDATA;
+	
+	if (msg->dragaction == MUIV_DocumentView_DragAction_Mark)
+		nnset(data->btnDragScroll, MUIA_Selected, FALSE);
+	else
+		nnset(data->btnDragMark, MUIA_Selected, FALSE);
+	
+	set(data->document, MUIA_DocumentView_DragAction, msg->dragaction);
+	return TRUE;
+}
+
 BEGINMTABLE
 	DECMMETHOD(Setup)
 	DECMMETHOD(Cleanup)
@@ -484,6 +555,8 @@ BEGINMTABLE
 	DECMMETHOD(Toolbar_ZoomPopup)
 	DECMMETHOD(DocumentView_RotateLeft)
 	DECMMETHOD(DocumentView_RotateRight)
+	DECMMETHOD(Toolbar_ToggleOutline)
+	DECMMETHOD(Toolbar_DragAction)
 ENDMTABLE
 
 DECSUBCLASS_NC(MUIC_Group, ToolbarClass)

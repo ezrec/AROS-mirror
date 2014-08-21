@@ -1,7 +1,7 @@
 # "show" Makefile
 
 CXX=ppc-morphos-g++-4
-CC=ppc-morphos-gcc-4
+CC=ppc-morphos-gcc
 LD=ppc-morphos-gcc-4
 SHELL = /bin/sh
 
@@ -52,19 +52,19 @@ else
 endif
 
 #selection between shared libs and staticly linnked
-OBJS = vpdf.o poppler_io.o poppler.o window.o application.o logger.o settings.o fontcache.o arrowstring_class.o  pagenumberclass.o printer.o locale.o
+OBJS = locale.o  vpdf.o poppler_io.o poppler.o clipboard.o window.o application.o logger.o settings.o fontcache.o arrowstring_class.o  pagenumberclass.o printer.o  poppler_printer.o printer_image.o
 
 #selection between shared libs and staticly linnked
 CAIRO_LIBS = ${FONTCONFIGLIB} -lcairo
-POPPLER_LIBS = -lpoppler -lgoo -lfofi
+POPPLER_LIBS = -lpoppler -lgoo -lfofi -lpoppler-splash
 #LIBS_SHARED = -L../poppler-0.11.1/poppler/.libs/ -lpoppler-cairo -lfontconfig -lcairo -lpoppler -lfontconfig -lfreetype-2.3.8 -lexpat -L../showgirls/system -L../showgirls/mcc -L../lairecvs/morphos/morphoswb/apps/showgirls/system -lsystem -lmuiclasses -lsystem -lmoto -L. -ljpeg_shared -lpng_shared -I../showgirls  -ldebug -lsyscall -ljpeg_shared -lpng_shared -liconv
 #LIBS_SHARED = -L../poppler-0.11.1/poppler/.libs/ $(CAIRO_LIBS) -lpoppler -lfontconfig -lfreetypeauto -lexpat -L../showgirls/system -L../showgirls/mcc -L../lairecvs/morphos/morphoswb/apps/showgirls/system -lsystem -lmuiclasses -lsystem -lmoto -L. -ljpeg_shared -lpng_shared -I../showgirls  -ldebug -lsyscall -ljpeg_shared -lpng_shared -liconv
-LIBS_SHARED = -Lpoppler/poppler/ -Lpoppler/fofi/ -Lpoppler/goo $(CAIRO_LIBS) -L../showgirls/system -L../showgirls/mcc -L../../libs/fontconfig/MorphOS/lib/libnix -L../../libs/cairo/cairo-src/MorphOS/lib/libnix -L../../libs/freetype/library/lib -L. -I../showgirls -lmuiclasses -lsystem -ldebug
-LIBS=$(LIBS_SHARED) $(POPPLER_LIBS) $(CAIRO_LIBS) -lsystem -lfreetypeauto -ljpeg_shared -lstdc++ -lm -ldebug
+LIBS_SHARED = -Lpoppler/poppler/ -Lpoppler/fofi/ -Lpoppler/splash -Lpoppler/goo $(CAIRO_LIBS) -L../showgirls/system -L../showgirls/mcc -L../../libs/fontconfig/MorphOS/lib/libnix -L../../libs/cairo/cairo-src/MorphOS/lib/libnix -L../../libs/freetype/library/lib -L. -I../showgirls -lmuiclasses -lsystem -ldebug -lsyscall
+LIBS=$(LIBS_SHARED) $(POPPLER_LIBS) $(CAIRO_LIBS) -lsystem -lfreetypeauto -ljpeg_shared -lstdc++ -lm -ldebug -lsyscall
 
 .PHONY: all install install-iso clean
 
-all: libs version.h  $(OBJS)
+all: catalogs libs version.h  $(OBJS)
 	make -C poppler
 	make -C mcc
 	$(LD) $(CPPFLAGS) -o vpdf.db $(OBJS) $(LIBS)
@@ -76,6 +76,7 @@ fontcache: fontcache.c
 	ppc-morphos-gcc-4.4.4 $(CPPFLAGS) -o fontcache fontcache.o $(LIBS_SHARED) -lfreetypeauto
 
 test: test.o
+	path
 	ppc-morphos-gcc-4.4.4 $(CPPFLAGS) -o test.exe test.o $(LIBS)
 
 libs:
@@ -128,9 +129,25 @@ install-iso: all
 	cp vpdf $(ISOPATH)Applications/VPDF/VPDF
 	cp vpdf.info $(ISOPATH)Applications/VPDF/VPDF.info
 	for i in `find $(ISOPATH)Applications/VPDF/ -name "CVS"`; do rm -rf $$i; done
+	for language in $(CATALOGS); \
+	do \
+		cp -f catalogs/$$language/$(APPLICATION).catalog  $(ISOPATH)/MorphOS/Locale/Catalogs/$$language/; \
+	done
 
+install: all
+	mkdir -p /sys/Applications/VPDF
+	mkdir -p /sys/Applications/VPDF/Fonts
+	cp -r fonts/* /sys/Applications/VPDF/Fonts
+	cp vpdf /sys/Applications/VPDF/VPDF
+	cp vpdf.info /sys/Applications/VPDF/VPDF.info
+	for i in `find /sys/Applications/VPDF/ -name "CVS"`; do rm -rf $$i; done
+	for language in $(CATALOGS); \
+	do \
+		cp -f catalogs/$$language/$(APPLICATION).catalog /MOSSYS/Locale/Catalogs/$$language/; \
+	done
+	
 source: $(APPLICATION)_strings.h
-	(cd .. && tar -cf $(SOURCEPATH)vpdf.tar vpdf)
+	(cd .. && tar --exclude "*.info" -cf $(SOURCEPATH)vpdf.tar vpdf)
 
 	(cd ../showgirls/system && tar --transform "s,^,vpdf/system/," -rf $(SOURCEPATH)vpdf.tar altivec.h chunky.h data.h directory.h dlist.h file.h functions.h gentexture.h loadpng.h loadsunrast.h memory.h system.h timer.h)
 	(cd ../showgirls/system && tar --transform "s,^,vpdf/system/," -rf $(SOURCEPATH)vpdf.tar altivec.c directory.c dlist.c file.c functions.c init.c memory.c timer.c)
@@ -166,18 +183,21 @@ bz2: all
 
 FORCE:
 
+
 vpdf.o:		    vpdf.c mcc/classes.h poppler.h version.h locale.h VPDF_strings.h
 application.o:	application.c application.h poppler.h
 logger.o:		logger.c mcc/classes.h application.h
 settings.o:		settings.c mcc/classes.h settings.h
-poppler.o:		poppler.cpp poppler.h
+poppler.o:		poppler.cpp poppler.h poppler_device.h
+poppler_printer.o:		poppler_printer.cpp poppler_device.h poppler_printer.h
 poppler_io.o:	poppler_io.cpp poppler_io.h
 fontcache.o:	fontcache.c fcstr.c fontcache.h
-printer.o:      printer.c mcc/classes.h VPDF_strings.h
+printer.o:      printer.c mcc/classes.h VPDF_strings.h poppler_printer.h
 pagenumberclass.o: pagenumberclass.c pagenumberclass.h
 arrowstring_class.o: arrowstring_class.c arrowstring_class.h
 printer.o: 		printer.c VPDF_strings.h
-
+clipboard.o:    clipboard.c clipboard.h
+printer_image.o:  printer_image.c  printer_image.h
 
 #  locale
 #

@@ -92,6 +92,7 @@ DEFNEW
 {
 	obj = DoSuperNew(cl, obj,
 			MUIA_Listtree_DisplayHook, &outline_displayfunc_hook,
+			MUIA_Frame, MUIV_Frame_InputList,
 			TAG_MORE, INITTAGS);
 
 	if (obj != NULL)

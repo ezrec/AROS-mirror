@@ -67,6 +67,7 @@ DEFNEW
 
 	obj = DoSuperNew(cl, obj,
 				MUIA_Group_Horiz, FALSE,
+				MUIA_Frame, MUIV_Frame_InputList,   // to make it consistent with tree view
 				Child, HGroup,
 					Child, grpDisplay = VGroup, End,
 					End,

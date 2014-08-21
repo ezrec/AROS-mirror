@@ -40,6 +40,47 @@
 #define TEXTOUT_WORD_LIST 1
 #endif
 
+/* Use single precision arithmetic in the Splash backend */
+#ifndef USE_FLOAT
+#define USE_FLOAT 1
+#endif
+
+/* Use libjpeg instead of builtin jpeg decoder. */
+#ifndef ENABLE_LIBJPEG
+#define ENABLE_LIBJPEG 1
+#endif
+
+/* Build against libtiff. */
+#ifndef ENABLE_LIBTIFF
+#define ENABLE_LIBTIFF 1
+#endif
+
+/* Build against libpng. */
+#ifndef ENABLE_LIBPNG
+#define ENABLE_LIBPNG 1
+#endif
+
+/* Use zlib instead of builtin zlib decoder. */
+#ifndef ENABLE_ZLIB
+#define ENABLE_ZLIB 1
+#endif
+
+/* Define to 1 if you have the <dirent.h> header file, and it defines `DIR'.
+   */
+#ifndef HAVE_DIRENT_H
+#define HAVE_DIRENT_H 1
+#endif
+
+/* Defines if gettimeofday is available on your system */
+#ifndef HAVE_GETTIMEOFDAY
+#define HAVE_GETTIMEOFDAY 1
+#endif
+
+/* Have FreeType2 include files */
+#ifndef HAVE_FREETYPE_H
+#define HAVE_FREETYPE_H 1
+#endif
+
 // Also, there's a couple of preprocessor symbols in the header files
 // that are used but never defined: DISABLE_OUTLINE, DEBUG_MEM and
 

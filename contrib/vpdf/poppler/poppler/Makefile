@@ -58,10 +58,13 @@ OBJS=  Annot.o \
 	Rendition.o \
 	ViewerPreferences.o \
 	Linearization.o \
-	Hints.o
+	Hints.o \
+	FlateStream.o \
+	SplashOutputDev.o \
+	UTF.o
 
 TARGET = libpoppler.a
-INCLUDES = $(GLOBAL_INCLUDES) -I. -I.. -I../fofi -I../goo -I../../../../libs/cairo/cairo-src/MorphOS/include/cairo
+INCLUDES = $(GLOBAL_INCLUDES) -I. -I.. -I../fofi -I../goo -I../../../../libs/cairo/cairo-src/MorphOS/include/cairo -I../../../../libs/jpeg6b/libjpeg
 
 # For building with the public SDK
 INCLUDES += -I ../../include -I../../include/cairo

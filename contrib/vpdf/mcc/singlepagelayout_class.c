@@ -61,6 +61,7 @@ struct Data
 
 	int scaling;
 	int rotation;
+	int scrollable;
 	float zoom;
 };
 
@@ -156,6 +157,8 @@ DEFDISP
 	for(i=0; i<data->pagesnum; i++)
 		MUI_DisposeObject(data->views[i]);
 
+	free(data->views);
+
 	/* now dispose all pages */
 
 	return DOSUPER;
@@ -203,7 +206,7 @@ DEFSET
 			int prevpage = data->page - 1;
 			int newpage = tag->ti_Data - 1;
 			data->page = tag->ti_Data;
-			kprintf("-----------------setpage:%d\n", newpage);
+			
 			/* check if there is a need to repopulate group */
 
 			if (newpage / data->columns != prevpage / data->columns)
@@ -249,7 +252,6 @@ DEFSET
 			data->rotation = tag->ti_Data;
 			relayout = TRUE;
 			break;
-
 
 	}
 	NEXTTAG
@@ -319,9 +321,13 @@ METHOD singlepagelayoutHandleEvent(struct IClass *cl,Object *obj,struct MUIP_Han
 				case IDCMP_MOUSEBUTTONS:
 					if (_isinobject(obj, msg->imsg->MouseX, msg->imsg->MouseY) && msg->imsg->Code == SELECTDOWN)
 					{
-						data->clickx = msg->imsg->MouseX;
-						data->clicky = msg->imsg->MouseY;
-						data->eh.ehn_Events |= IDCMP_MOUSEMOVE;
+						// TODO: this is not optimal as it assumes about a parent but let it be for now...
+						if (xget(objFindContainerByAttribute(obj, MUIA_DocumentView_DragAction), MUIA_DocumentView_DragAction) == MUIV_DocumentView_DragAction_Scroll)
+						{
+							data->clickx = msg->imsg->MouseX;
+							data->clicky = msg->imsg->MouseY;
+							data->eh.ehn_Events |= IDCMP_MOUSEMOVE;
+						}
 					}
 					else
 					{

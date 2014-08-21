@@ -6,6 +6,8 @@
 #include "classes.h"
 
 #define	MUIA_Search_DocumentView  	 ( MUIA_Search_TagBase + 1 )
+#define	MUIA_Search_Info		  	 ( MUIA_Search_TagBase + 2 )
+
 #define	MUIM_Search_Search           ( MUIM_Search_Dummy + 1 )
 
 struct MUIP_Search_Search{ULONG MethodID; STRPTR phrase; LONG direction;};

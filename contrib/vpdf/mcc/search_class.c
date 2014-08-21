@@ -35,6 +35,7 @@
 
 #include "util.h"
 #include "poppler.h"
+#include "../locale.h"
 
 struct Data
 {
@@ -69,14 +70,16 @@ DEFNEW
 
 	obj = DoSuperNew(cl, obj,
 						MUIA_Group_Horiz, TRUE,
+						Child, LLabel1( LOCSTR( MSG_SEARCH_LABEL  )),
 						Child, strPhrase = StringObject,
 							MUIA_Frame, MUIV_Frame_String,
 							MUIA_Textinput_RemainActive, TRUE,
 							MUIA_Weight, 500,
 							End,
-						Child, btnPrev = SimpleButton("_Prev"),
-						Child, btnNext = SimpleButton("_Next"),
+						Child, btnPrev = SimpleButton( LOCSTR( MSG_SEARCH_PREV  )),
+						Child, btnNext = SimpleButton( LOCSTR( MSG_SEARCH_NEXT  )),
 						Child, txtInfo = TextObject,
+							MUIA_FixWidthTxt, LOCSTR( MSG_SEARCH_END  ),
 							MUIA_Text_Contents, "",
 							End,
 						TAG_MORE, INITTAGS);
@@ -114,6 +117,10 @@ DEFSET
 		case MUIA_Search_DocumentView:
 			data->objDocumentView = (Object*)tag->ti_Data;
 			break;
+
+		case MUIA_Search_Info:
+			set(data->txtInfo, MUIA_Text_Contents, tag->ti_Data);
+			break;
 	}
 	NEXTTAG;
 
@@ -149,6 +156,9 @@ DEFMMETHOD(Search_Search)
 	int page = xget(data->objDocumentView, MUIA_DocumentView_Page);
 	double x1, y1, x2, y2;
 	float v[4];
+	int result;
+	int done = FALSE;
+	int scannedpages = 0;
 
 	if (phrase == NULL)
 		phrase = (char*)xget(data->strPhrase, MUIA_String_Contents);
@@ -156,31 +166,61 @@ DEFMMETHOD(Search_Search)
 	if (*phrase == '\0')
 		return FALSE;
 
-	if (pdfSearch(doc, &page, phrase, msg->direction, &x1, &y1, &x2, &y2))
+	while(done == FALSE)
 	{
-		Object *pageview = DoMethod(data->objDocumentView, MUIM_DocumentView_FindViewForPage, page);
+		char status[64];
+		
+		snprintf(status, sizeof(status), "Page %d/%d", page, pdfGetPagesNum(doc));
+		set(data->txtInfo, MUIA_Text_Contents, status);
 
-		v[0] = x1;
-		v[1] = y1;
-		v[2] = x2;
-		v[3] = y2;
+		result = pdfSearch(doc, &page, phrase, msg->direction, &x1, &y1, &x2, &y2);
 
-		if (data->prevpage != page && data->prevpage != 0)
+		if (result == PDFSEARCH_NEXTPAGE || result == PDFSEARCH_NOTFOUND)
 		{
-			Object *pageview = DoMethod(data->objDocumentView, MUIM_DocumentView_FindViewForPage, data->prevpage);
-			DoMethod(pageview, MUIM_PageView_RemoveMarker, MUIV_PageView_RemoveMarker_All);
+			scannedpages++;
+			if (scannedpages > pdfGetPagesNum(doc)) /* searched whole document and nothing found */
+			{
+				set(data->txtInfo, MUIA_Text_Contents, "Not Found");
+				return FALSE;
+			}
+				
+			if (msg->direction < 0 && page == 1) /* end of document */
+				page = pdfGetPagesNum(doc);
+			else if (msg->direction > 0 && page == pdfGetPagesNum(doc))
+				page = 1;
+			else
+				page += msg->direction;
+						
 		}
-		else
+		else if (result == PDFSEARCH_FOUND)
 		{
-			DoMethod(pageview, MUIM_PageView_RemoveMarker, MUIV_PageView_RemoveMarker_All);
+			Object *pageview = DoMethod(data->objDocumentView, MUIM_DocumentView_FindViewForPage, page);
+
+			v[0] = x1;
+			v[1] = y1;
+			v[2] = x2;
+			v[3] = y2;
+
+			if (data->prevpage != page && data->prevpage != 0)
+			{
+				Object *pageview = DoMethod(data->objDocumentView, MUIM_DocumentView_FindViewForPage, data->prevpage);
+				DoMethod(pageview, MUIM_PageView_RemoveMarker, MUIV_PageView_RemoveMarker_All);
+			}
+			else
+			{
+				DoMethod(pageview, MUIM_PageView_RemoveMarker, MUIV_PageView_RemoveMarker_All);
+			}
+
+			set(data->objDocumentView, MUIA_DocumentView_Page, page);
+			DoMethod(pageview, MUIM_PageView_AddMarker, MUIV_PageView_AddMarker_New, v, 0xc0c0c0c0);
+			DoMethod(pageview, MUIM_PageView_Update, -1, -1, -1, -1);
+			data->prevpage = page;
+			set(data->txtInfo, MUIA_Text_Contents, "");
+			return TRUE;
 		}
 
-		set(data->objDocumentView, MUIA_DocumentView_Page, page);
-		DoMethod(pageview, MUIM_PageView_AddMarker, MUIV_PageView_AddMarker_New, v, 0xc0c0c0c0);
-		DoMethod(pageview, MUIM_PageView_Update, -1, -1, -1, -1);
-		data->prevpage = page;
 	}
-
+	
 	return 0;
 }
 

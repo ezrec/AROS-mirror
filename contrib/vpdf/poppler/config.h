@@ -86,8 +86,8 @@
 /* Define if you have POSIX threads libraries and header files. */
 /* #undef HAVE_PTHREAD */
 
-/* Use splash for rendering. */
-/* #undef HAVE_SPLASH */
+/* Use splash for rendering. kiero: also used by PSOutputDev!! */
+#define HAVE_SPLASH 1
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #define HAVE_STDINT_H 1
@@ -203,6 +203,8 @@
 
 /* Define to 1 if the X Window System is missing or not being used. */
 #define X_DISPLAY_MISSING 1
+
+#define WORDS_BIGENDIAN 1
 
 /*
  * jpeg.h needs HAVE_BOOLEAN, when the system uses boolean in system

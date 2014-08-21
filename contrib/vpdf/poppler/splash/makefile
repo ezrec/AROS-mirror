@@ -21,7 +21,7 @@ OBJS=  Splash.o \
 	SplashXPathScanner.o
 
 TARGET = libpoppler-splash.a
-INCLUDES = -I. -I.. -I../fofi -I../goo -I../../../../libs/cairo/cairo-src/MorphOS/include/cairo
+INCLUDES = $(GLOBAL_INCLUDES) -I. -I.. -I../fofi -I../goo -I../../../../libs/cairo/cairo-src/MorphOS/include/cairo
 
 $(TARGET): $(OBJS)
 	$(AR) $(TARGET) $(OBJS)

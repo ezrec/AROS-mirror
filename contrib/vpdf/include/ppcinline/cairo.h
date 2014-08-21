@@ -155,14 +155,6 @@
 		(((void (*)(cairo_t *, double *, double *))*(void**)(__base - 238))(__t__p0, __t__p1, __t__p2));\
 	})
 
-#define cairo_ps_surface_get_eps(__p0) \
-	({ \
-		cairo_surface_t * __t__p0 = __p0;\
-		long __base = (long)(CAIRO_BASE_NAME);\
-		__asm volatile("mr 12,%0": :"r"(__base):"r12");\
-		(((cairo_bool_t (*)(cairo_surface_t *))*(void**)(__base - 2116))(__t__p0));\
-	})
-
 #define cairo_scaled_font_create(__p0, __p1, __p2, __p3) \
 	({ \
 		cairo_font_face_t * __t__p0 = __p0;\
@@ -172,6 +164,14 @@
 		long __base = (long)(CAIRO_BASE_NAME);\
 		__asm volatile("mr 12,%0": :"r"(__base):"r12");\
 		(((cairo_scaled_font_t *(*)(cairo_font_face_t *, const cairo_matrix_t *, const cairo_matrix_t *, const cairo_font_options_t *))*(void**)(__base - 712))(__t__p0, __t__p1, __t__p2, __t__p3));\
+	})
+
+#define cairo_ps_surface_get_eps(__p0) \
+	({ \
+		cairo_surface_t * __t__p0 = __p0;\
+		long __base = (long)(CAIRO_BASE_NAME);\
+		__asm volatile("mr 12,%0": :"r"(__base):"r12");\
+		(((cairo_bool_t (*)(cairo_surface_t *))*(void**)(__base - 2116))(__t__p0));\
 	})
 
 #define cairo_ft_font_options_substitute(__p0, __p1) \

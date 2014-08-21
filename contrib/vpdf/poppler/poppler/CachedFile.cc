@@ -7,6 +7,7 @@
 // Copyright 2009 Stefan Thomas <thomas@eload24.com>
 // Copyright 2010, 2011 Hib Eris <hib@hiberis.nl>
 // Copyright 2010 Albert Astals Cid <aacid@kde.org>
+// Copyright (C) 2013 Julien Nabet <serval2412@yahoo.fr>
 //
 //========================================================================
 
@@ -33,7 +34,7 @@ CachedFile::CachedFile(CachedFileLoader *cachedFileLoaderA, GooString *uriA)
     chunks->resize(length/CachedFileChunkSize + 1);
   }
   else {
-    error(-1, "Failed to initialize file cache for '%s'.", uri->getCString());
+    error(errInternal, -1, "Failed to initialize file cache for '{0:t}'.", uri);
     chunks->resize(0);
   }
 }
@@ -213,7 +214,7 @@ size_t CachedFileWriter::write(const char *ptr, size_t size)
   while (len) {
     if (chunks) {
       if (offset == CachedFileChunkSize) {
-         it++;
+         ++it;
          if (it == (*chunks).end()) return written;
          offset = 0;
       }

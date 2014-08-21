@@ -77,6 +77,9 @@
 #define FT_Get_Sfnt_Table(__p0, __p1) \
 	(((void *(*)(FT_Face , FT_Sfnt_Tag ))*(void**)((long)(FREETYPE_BASE_NAME) - 634))(__p0, __p1))
 
+#define FT_Outline_EmboldenXY(__p0, __p1, __p2) \
+	(((FT_Error (*)(FT_Outline *, FT_Pos , FT_Pos ))*(void**)((long)(FREETYPE_BASE_NAME) - 1102))(__p0, __p1, __p2))
+
 #define FT_Outline_New_Internal(__p0, __p1, __p2, __p3) \
 	(((FT_Error (*)(FT_Memory , FT_UInt , FT_Int , FT_Outline *))*(void**)((long)(FREETYPE_BASE_NAME) - 430))(__p0, __p1, __p2, __p3))
 
@@ -107,11 +110,11 @@
 #define FTC_Manager_Reset(__p0) \
 	(((void (*)(FTC_Manager ))*(void**)((long)(FREETYPE_BASE_NAME) - 238))(__p0))
 
-#define FT_Reference_Face(__p0) \
-	(((FT_Error (*)(FT_Face ))*(void**)((long)(FREETYPE_BASE_NAME) - 1090))(__p0))
-
 #define FT_List_Insert(__p0, __p1) \
 	(((void (*)(FT_List , FT_ListNode ))*(void**)((long)(FREETYPE_BASE_NAME) - 328))(__p0, __p1))
+
+#define FT_Reference_Face(__p0) \
+	(((FT_Error (*)(FT_Face ))*(void**)((long)(FREETYPE_BASE_NAME) - 1090))(__p0))
 
 #define FT_Outline_Reverse(__p0) \
 	(((void (*)(FT_Outline *))*(void**)((long)(FREETYPE_BASE_NAME) - 478))(__p0))
@@ -130,6 +133,9 @@
 
 #define FT_Get_Advance(__p0, __p1, __p2, __p3) \
 	(((FT_Error (*)(FT_Face , FT_UInt , FT_Int32 , FT_Fixed *))*(void**)((long)(FREETYPE_BASE_NAME) - 1036))(__p0, __p1, __p2, __p3))
+
+#define FT_Property_Set(__p0, __p1, __p2, __p3) \
+	(((FT_Error (*)(FT_Library , const FT_String *, const FT_String *, const void *))*(void**)((long)(FREETYPE_BASE_NAME) - 1108))(__p0, __p1, __p2, __p3))
 
 #define FT_Set_Var_Design_Coordinates(__p0, __p1, __p2) \
 	(((FT_Error (*)(FT_Face , FT_UInt , FT_Fixed *))*(void**)((long)(FREETYPE_BASE_NAME) - 712))(__p0, __p1, __p2))
@@ -197,11 +203,11 @@
 #define FT_Set_Char_Size(__p0, __p1, __p2, __p3, __p4) \
 	(((FT_Error (*)(FT_Face , FT_F26Dot6 , FT_F26Dot6 , FT_UInt , FT_UInt ))*(void**)((long)(FREETYPE_BASE_NAME) - 82))(__p0, __p1, __p2, __p3, __p4))
 
-#define FT_Select_Size(__p0, __p1) \
-	(((FT_Error (*)(FT_Face , FT_Int ))*(void**)((long)(FREETYPE_BASE_NAME) - 790))(__p0, __p1))
-
 #define FT_Done_Face(__p0) \
 	(((FT_Error (*)(FT_Face ))*(void**)((long)(FREETYPE_BASE_NAME) - 76))(__p0))
+
+#define FT_Select_Size(__p0, __p1) \
+	(((FT_Error (*)(FT_Face , FT_Int ))*(void**)((long)(FREETYPE_BASE_NAME) - 790))(__p0, __p1))
 
 #define FT_Get_Char_Index(__p0, __p1) \
 	(((FT_UInt (*)(FT_Face , FT_ULong ))*(void**)((long)(FREETYPE_BASE_NAME) - 148))(__p0, __p1))
@@ -269,11 +275,11 @@
 #define FT_OpenType_Validate(__p0, __p1, __p2, __p3, __p4, __p5, __p6) \
 	(((FT_Error (*)(FT_Face , FT_UInt , FT_Bytes *, FT_Bytes *, FT_Bytes *, FT_Bytes *, FT_Bytes *))*(void**)((long)(FREETYPE_BASE_NAME) - 748))(__p0, __p1, __p2, __p3, __p4, __p5, __p6))
 
-#define FT_Get_Glyph_Name(__p0, __p1, __p2, __p3) \
-	(((FT_Error (*)(FT_Face , FT_UInt , FT_Pointer , FT_UInt ))*(void**)((long)(FREETYPE_BASE_NAME) - 124))(__p0, __p1, __p2, __p3))
-
 #define FT_New_Memory_Face(__p0, __p1, __p2, __p3, __p4) \
 	(((FT_Error (*)(FT_Library , const FT_Byte *, FT_Long , FT_Long , FT_Face *))*(void**)((long)(FREETYPE_BASE_NAME) - 52))(__p0, __p1, __p2, __p3, __p4))
+
+#define FT_Get_Glyph_Name(__p0, __p1, __p2, __p3) \
+	(((FT_Error (*)(FT_Face , FT_UInt , FT_Pointer , FT_UInt ))*(void**)((long)(FREETYPE_BASE_NAME) - 124))(__p0, __p1, __p2, __p3))
 
 #define FT_Activate_Size(__p0) \
 	(((FT_Error (*)(FT_Size ))*(void**)((long)(FREETYPE_BASE_NAME) - 538))(__p0))
@@ -310,6 +316,9 @@
 
 #define FT_Set_Debug_Hook(__p0, __p1, __p2) \
 	(((void (*)(FT_Library , FT_UInt , FT_DebugHook_Func ))*(void**)((long)(FREETYPE_BASE_NAME) - 406))(__p0, __p1, __p2))
+
+#define FT_Property_Get(__p0, __p1, __p2, __p3) \
+	(((FT_Error (*)(FT_Library , const FT_String *, const FT_String *, void *))*(void**)((long)(FREETYPE_BASE_NAME) - 1114))(__p0, __p1, __p2, __p3))
 
 #define FT_Stroker_Export(__p0, __p1) \
 	(((void (*)(FT_Stroker , FT_Outline *))*(void**)((long)(FREETYPE_BASE_NAME) - 910))(__p0, __p1))

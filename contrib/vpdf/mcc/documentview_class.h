@@ -12,6 +12,8 @@
 #define	MUIA_DocumentView_PDFDocument  	   ( MUIA_DocumentView_TagBase + 4 )
 #define	MUIA_DocumentView_Layout           ( MUIA_DocumentView_TagBase + 5 )
 #define	MUIA_DocumentView_RenderPriority   ( MUIA_DocumentView_TagBase + 6 )
+#define MUIA_DocumentView_Outline          ( MUIA_DocumentView_TagBase + 7 )
+#define MUIA_DocumentView_DragAction       ( MUIA_DocumentView_TagBase + 8 )
 
 #define	MUIM_DocumentView_Render		   ( MUIM_DocumentView_Dummy + 1 )
 #define	MUIM_DocumentView_EnqueueRender	   ( MUIM_DocumentView_Dummy + 2 )
@@ -21,7 +23,8 @@
 #define	MUIM_DocumentView_RotateRight      ( MUIM_DocumentView_Dummy + 6 )
 #define	MUIM_DocumentView_RotateLeft       ( MUIM_DocumentView_Dummy + 7 )
 #define MUIM_DocumentView_UpdateAnnotations (MUIM_DocumentView_Dummy + 8 )
-
+#define MUIM_DocumentView_ClearSelection   ( MUIM_DocumentView_Dummy + 9 )
+#define MUIM_DocumentView_SelectionCopy    ( MUIM_DocumentView_Dummy + 10)
 
 #define	DocumentViewObject   NewObject( getDocumentViewClass() , NULL
 
@@ -32,12 +35,18 @@ struct MUIP_DocumentView_Layout{ULONG MethodID; LONG layout;};
 struct MUIP_DocumentView_FindViewForPage{ULONG MethodID; LONG page;};
 struct MUIP_DocumentView_RotateRight{ULONG MethodID;};
 struct MUIP_DocumentView_RotateLeft{ULONG MethodID;};
+struct MUIP_DocumentView_ClearSelection{ULONG MethodID;};
 struct MUIP_DocumentView_UpdateAnnotations{ULONG MethodID; int page;};
+struct MUIP_DocumentView_SelectionCopy{ULONG MethodID;};
 
 #define MUIV_DocumentView_Layout_Single 0
 #define MUIV_DocumentView_Layout_ContinuousSingle 1
 #define MUIV_DocumentView_Layout_Facing 2
 #define MUIV_DocumentView_Layout_ContinuousFacing 3
+
+#define MUIV_DocumentView_DragAction_Scroll 0
+#define MUIV_DocumentView_DragAction_Mark 1
+
 
 DEFCLASS(DocumentView);
 

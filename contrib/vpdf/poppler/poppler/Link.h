@@ -16,6 +16,7 @@
 // Copyright (C) 2006, 2008 Pino Toscano <pino@kde.org>
 // Copyright (C) 2008 Hugo Mercier <hmercier31@gmail.com>
 // Copyright (C) 2010, 2011 Carlos Garcia Campos <carlosgc@gnome.org>
+// Copyright (C) 2012 Tobias Koening <tobias.koenig@kdab.com>
 //
 // To see a description of the changes please see the Changelog file that
 // came with your tarball or type make ChangeLog if you are building from git
@@ -51,7 +52,7 @@ enum LinkActionKind {
   actionURI,			// URI
   actionNamed,			// named action
   actionMovie,			// movie action
-  actionRendition,
+  actionRendition,		// rendition action
   actionSound,			// sound action
   actionJavaScript,		// JavaScript action
   actionOCGState,               // Set-OCG-State action
@@ -129,8 +130,10 @@ private:
   double left, bottom;		// position
   double right, top;
   double zoom;			// zoom factor
-  GBool changeLeft, changeTop;	// for destXYZ links, which position
-  GBool changeZoom;		//   components to change
+  GBool changeLeft, changeTop;	// which position components to change:
+  GBool changeZoom;		//   destXYZ uses all three;
+				//   destFitH/BH use changeTop;
+				//   destFitV/BV use changeLeft
   GBool ok;			// set if created successfully
 
   LinkDest(LinkDest *dest);
@@ -317,6 +320,16 @@ private:
 
 class LinkRendition: public LinkAction {
 public:
+  /**
+   * Describes the possible rendition operations.
+   */
+  enum RenditionOperation {
+    NoRendition,
+    PlayRendition,
+    StopRendition,
+    PauseRendition,
+    ResumeRendition
+  };
 
   LinkRendition(Object *Obj);
 
@@ -332,7 +345,7 @@ public:
   GBool hasScreenAnnot() { return screenRef.isRef(); }
   Ref getScreenAnnot() { return screenRef.getRef(); }
 
-  int getOperation() { return operation; }
+  RenditionOperation getOperation() { return operation; }
 
   MediaRendition* getMedia() { return media; }
 
@@ -342,7 +355,7 @@ private:
 
   Object screenRef;
   Object renditionObj;
-  int operation;
+  RenditionOperation operation;
 
   MediaRendition* media;
 

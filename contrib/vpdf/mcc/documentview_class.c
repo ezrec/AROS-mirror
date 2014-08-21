@@ -7,6 +7,8 @@
 #include <libraries/mui.h>
 
 #include <libraries/asl.h>
+#include <libraries/charsets.h>
+#include <libraries/locale.h>
 #include <workbench/workbench.h>
 
 #include <proto/exec.h>
@@ -51,9 +53,11 @@
 #include "search_class.h"
 #include "annotation_class.h"
 #include "toolbar_class.h"
+#include "clipboard.h"
 
 #include "system/chunky.h"
 #include "system/gentexture.h"
+#include "../locale.h"
 
 struct Data
 {
@@ -64,6 +68,8 @@ struct Data
 	Object *grpDisplay;
 	Object *grpSearch;
 	Object *grpToolbar;
+	Object *grpOutline;
+	int dragaction;
 	int layoutmode;
 	int renderpriority;
 	char *filename;
@@ -73,6 +79,7 @@ struct Data
 
 };
 
+#define D(x)
 #define gFalse 0
 #define ANNOTLIST_INVALID 0
 #define ANNOTLIST_EMPTY ((void*)-1)
@@ -129,7 +136,9 @@ DEFNEW
 					Child, grpDisplay = VGroup, End,
 					Child, balBalance = BalanceObject, End,
 					Child, grpOutlines = VGroup,
+						MUIA_ShowMe, GetTagData(MUIA_DocumentView_Outline, TRUE, INITTAGS),
 						MUIA_Group_PageMode, TRUE,
+						MUIA_Frame, MUIV_Frame_Group,
 						MUIA_Weight, 30,
 						Child, grpOutlinesTitles = MUI_NewObject(MUIC_Title,
 							TAG_DONE),
@@ -143,14 +152,16 @@ DEFNEW
 							MUIA_Slider_Min,1,
 							MUIA_Slider_Max,100,
 							MUIA_Weight,200,
-							MUIA_Numeric_Format,"page %ld",
+							MUIA_Numeric_Format,  LOCSTR( MSG_SLIDER_PAGE  ),
 							MUIA_CycleChain, TRUE,
 							End,
+						Child, HSpace(5),
 						Child, grpSearch = SearchObject,
 							End,
 						End,
 					End,
 				Child, grpToolbar = ToolbarObject,
+					MUIA_DocumentView_Outline, GetTagData(MUIA_DocumentView_Outline, TRUE, INITTAGS),
 					End,
 
 				TAG_MORE, INITTAGS);
@@ -161,6 +172,7 @@ DEFNEW
 		int outlinenum = 0;
 		int i;
 		
+		data->dragaction = MUIV_DocumentView_DragAction_Scroll;
 		data->rotation = MUIV_DocumentLayout_Rotation_None;
 		data->filename = strdup((char*)GetTagData(MUIA_DocumentView_FileName, NULL, INITTAGS));
 		data->renderer = (Object*)GetTagData(MUIA_DocumentView_Renderer, NULL, INITTAGS);
@@ -216,7 +228,10 @@ DEFNEW
 			else
 			{
 				MUI_DisposeObject(outline);
+				outline = NULL;
 			}
+			
+			data->grpOutline = grpOutlines;
 		}
 
 		{
@@ -228,6 +243,14 @@ DEFNEW
 			DoMethod(grpOutlines, OM_ADDMEMBER, thumbnails);
 			if (outlinenum > 0)
 				DoMethod(grpOutlinesTitles, OM_ADDMEMBER, TextObject, MUIA_Text_Contents, "Thumbnails", End);
+				
+			outlinenum++;
+		}
+
+		if (outlinenum == 1)
+		{
+			DoMethod(grpOutlines, OM_REMMEMBER, grpOutlinesTitles);
+			MUI_DisposeObject(grpOutlinesTitles);
 		}
 
 		/* attach toolbar to the document view */
@@ -282,6 +305,16 @@ DEFSET
 			DoMethod(obj, MUIM_DocumentView_Layout, tag->ti_Data); /* this will set layoutmode */
 			break;
 
+		case MUIA_DocumentView_Outline:
+			if (data->grpOutline != NULL)
+				set(data->grpOutline, MUIA_ShowMe, tag->ti_Data);
+			break;
+
+		case MUIA_DocumentView_DragAction:
+			data->dragaction = tag->ti_Data;
+			break;
+
+
 	}
 	NEXTTAG
 
@@ -313,6 +346,10 @@ DEFGET
 		case MUIA_DocumentView_FileName:
 			*(ULONG*)msg->opg_Storage = (ULONG)data->filename;
 			return TRUE;
+			
+		case MUIA_DocumentView_DragAction:
+			*(ULONG*)msg->opg_Storage = (ULONG)data->dragaction;
+			return TRUE;
 	}
 
 	return(DOSUPER);
@@ -337,9 +374,9 @@ DEFMMETHOD(Cleanup)
 	GETDATA;
 
 	/* remove all pending pages from renderer */
-	kprintf("cleanup renderer for view %p\n", data->layoutgroup);
+	D(kprintf("cleanup renderer for view %p\n", data->layoutgroup));
 	DoMethod(data->renderer, MUIM_Renderer_Remove, MUIV_Renderer_Remove_All, data->layoutgroup);
-	kprintf("   ..cleanup done\n");
+	D(kprintf("   ..cleanup done\n"));
 	
 	if (data->eh.ehn_Object != NULL)
 	{
@@ -374,9 +411,9 @@ DEFMMETHOD(DocumentView_Layout)
 	LONG page = xget(data->layoutgroup, MUIA_DocumentLayout_Page);
 	LONG pagenum;
 
-	kprintf("cleanup renderer for view %p\n", data->layoutgroup);
+	D(kprintf("cleanup renderer for view %p\n", data->layoutgroup));
 	DoMethod(data->renderer, MUIM_Renderer_Remove, MUIV_Renderer_Remove_All, data->layoutgroup);
-	kprintf("   ..cleanup done\n");
+	D(kprintf("   ..cleanup done\n"));
 
 	grpDisplayChild = (Object*)DoMethod(data->grpDisplay, MUIM_Family_GetChild, MUIV_Family_GetChild_First);
 	DoMethod(data->grpDisplay, MUIM_Group_InitChange);
@@ -564,6 +601,54 @@ DEFMMETHOD(DocumentView_UpdateAnnotations)
 	return TRUE;
 }
 
+DEFMMETHOD(DocumentView_ClearSelection)
+{
+	GETDATA;
+	int pagenum;
+	
+	for(pagenum=1; pagenum<=pdfGetPagesNum(data->doc); pagenum++)
+	{
+		Object *pageview = (Object*)DoMethod(data->layoutgroup, MUIM_DocumentLayout_FindViewForPage, pagenum);
+		if (pageview != NULL)
+		{
+			DoMethod(pageview, MUIM_PageView_ClearSelection);
+		}
+	}
+	
+
+	return TRUE;
+}
+
+DEFMMETHOD(DocumentView_SelectionCopy)
+{
+	GETDATA;
+	int pagenum;
+	
+	for(pagenum=1; pagenum<=pdfGetPagesNum(data->doc); pagenum++)
+	{
+	
+		Object *pageview = (Object*)DoMethod(data->layoutgroup, MUIM_DocumentLayout_FindViewForPage, pagenum);
+		if (pageview != NULL)
+		{
+			struct MUIP_PageView_GetSelection msg;
+			msg.MethodID = MUIM_PageView_GetSelection;
+			if (DoMethodA(pageview, &msg))
+			{
+				struct pdfSelectionText *selection =  pdfBuildTextForSelection(data->doc, pagenum, msg.region.x1, msg.region.y1, msg.region.x2, msg.region.y2);
+				if (selection != NULL)
+				{
+					clipboard_write_text(selection->utf8, CODESET_UTF8);
+					pdfDisposeTextForSelection(data->doc, selection);
+				}
+				return TRUE;
+			}
+		}
+	}
+	
+
+	return FALSE;
+}
+
 BEGINMTABLE
 	DECNEW
 	DECSET
@@ -578,6 +663,8 @@ BEGINMTABLE
 	DECMMETHOD(DocumentView_RotateRight)
 	DECMMETHOD(DocumentView_RotateLeft)
 	DECMMETHOD(DocumentView_UpdateAnnotations)
+	DECMMETHOD(DocumentView_ClearSelection)
+	DECMMETHOD(DocumentView_SelectionCopy)
 
 ENDMTABLE
 

@@ -6,6 +6,7 @@
 //
 // Copyright 2008, 2010 Albert Astals Cid <aacid@kde.org>
 // Copyright 2011 Daniel Glöckner <daniel-gl@gmx.net>
+// Copyright 2013 Adrian Johnson <ajohnson@redneon.com>
 //
 // Licensed under GPLv2 or later
 //
@@ -29,10 +30,10 @@ public:
   virtual StreamKind getKind() { return strJPX; }
   virtual void reset();
   virtual void close();
-  virtual int getPos();
+  virtual Goffset getPos();
   virtual int getChar();
   virtual int lookChar();
-  virtual GooString *getPSFilter(int psLevel, char *indent);
+  virtual GooString *getPSFilter(int psLevel, const char *indent);
   virtual GBool isBinary(GBool last = gTrue);
   virtual void getImageParams(int *bitsPerComponent, StreamColorSpaceMode *csMode);
 

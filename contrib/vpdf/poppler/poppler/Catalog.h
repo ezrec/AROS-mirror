@@ -14,12 +14,14 @@
 // under GPL version 2 or later
 //
 // Copyright (C) 2005 Kristian Høgsberg <krh@redhat.com>
-// Copyright (C) 2005, 2007, 2009-2011 Albert Astals Cid <aacid@kde.org>
+// Copyright (C) 2005, 2007, 2009-2011, 2013 Albert Astals Cid <aacid@kde.org>
 // Copyright (C) 2005 Jonathan Blandford <jrb@redhat.com>
 // Copyright (C) 2005, 2006, 2008 Brad Hards <bradh@frogmouth.net>
 // Copyright (C) 2007 Julien Rebetez <julienr@svn.gnome.org>
 // Copyright (C) 2008, 2011 Pino Toscano <pino@kde.org>
 // Copyright (C) 2010 Hib Eris <hib@hiberis.nl>
+// Copyright (C) 2012 Fabio D'Urso <fabiodurso@hotmail.it>
+// Copyright (C) 2013 Thomas Freitag <Thomas.Freitag@alfa.de>
 //
 // To see a description of the changes please see the Changelog file that
 // came with your tarball or type make ChangeLog if you are building from git
@@ -33,10 +35,13 @@
 #pragma interface
 #endif
 
+#include "poppler-config.h"
 #include "Object.h"
+#include "goo/GooMutex.h"
 
 #include <vector>
 
+class PDFDoc;
 class XRef;
 class Object;
 class Page;
@@ -93,7 +98,7 @@ class Catalog {
 public:
 
   // Constructor.
-  Catalog(XRef *xrefA);
+  Catalog(PDFDoc *docA);
 
   // Destructor.
   ~Catalog();
@@ -152,6 +157,14 @@ public:
 
   OCGs *getOptContentConfig() { return optContent; }
 
+  enum FormType
+  {
+    NoForm,
+    AcroForm,
+    XfaForm
+  };
+
+  FormType getFormType();
   Form* getForm();
 
   ViewerPreferences *getViewerPreferences();
@@ -185,6 +198,7 @@ private:
   // Get page label info.
   PageLabelInfo *getPageLabelInfo();
 
+  PDFDoc *doc;
   XRef *xref;			// the xref table for this PDF file
   Page **pages;			// array of pages
   Ref *pageRefs;		// object ID for each page
@@ -221,6 +235,9 @@ private:
   NameTree *getDestNameTree();
   NameTree *getEmbeddedFileNameTree();
   NameTree *getJSNameTree();
+#if MULTITHREADED
+  GooMutex mutex;
+#endif
 
 };
 

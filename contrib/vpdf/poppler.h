@@ -7,7 +7,6 @@
 extern "C" {
 #endif /* __cplusplus */
 
-
 void *pdfNew(const char *fname);
 void pdfConvertUserToDevice(void *_ctx, double *x, double *y);
 void pdfConvertDeviceToUser(void *_ctx, int page, double x, double y, int *ux, int *uy);
@@ -56,6 +55,12 @@ int pdfGetActionPageFromLink(void *_doc, void *_link);
 
 int pdfSearch(void *_ctx, int *page, char *phrase, int direction, double *x1, double *y1, double *x2, double *y2);
 
+enum {
+	PDFSEARCH_FOUND = 1,
+	PDFSEARCH_NOTFOUND,
+	PDFSEARCH_NEXTPAGE,
+};
+
 /* locking (too lowlevel?) */
 
 void pdfLock(void *_ctx);
@@ -85,15 +90,6 @@ struct pdfAttribute
 struct pdfAttribute *pdfGetAttr(void *_ctx, int property);
 void pdfFreeAttr(void *_ctx, struct pdfAttribute *attr);
 
-/* printing (PS) and Turboprint */
-
-// based on radiobuttons from printer class
-#define VPDF_PRINT_POSTSCRIPT 0
-#define VPDF_PRINT_TURBOPRINT 1
-
-void *pdfPrintInit(void *_ctx, const char *path, int first, int last, int format);
-int pdfPrintPage(void *_pctx, int page, int center);
-void pdfPrintEnd(void *_pctx);
 
 /* annotations */
 
@@ -110,6 +106,49 @@ struct pdfAnnotation
 };
 
 struct MinList *pdfGetAnnotations(void *_ctx, int page);
+
+struct searchresult
+{
+	struct MinNode n;
+	double x1, y1, x2, y2;		// bounding rectangle in pdf points
+};
+
+/* selection */
+
+
+struct pdfSelectionRectangle
+{
+	double x1, y1, x2, y2;		// bounding rectangle in pdf points
+};
+
+struct pdfSelectionRegion
+{
+	int numrects;
+	struct pdfSelectionRectangle rectangles[0];
+};
+
+struct pdfSelectionRegion *pdfBuildRegionForSelection(void *_ctx, int page, double x1, double y1, double x2, double y2, struct pdfSelectionRegion *previous);
+void pdfDisposeRegionForSelection(void *_ctx, struct pdfSelectionRegion *region);
+
+struct pdfSelectionText
+{
+	char utf8[0];
+};
+
+struct pdfSelectionText *pdfBuildTextForSelection(void *_ctx, int page, double x1, double y1, double x2, double y2);
+void pdfDisposeTextForSelection(void *_ctx, struct pdfSelectionText *text);
+
+
+/* internals (TODO: should not be exposed! */ 
+
+struct searchcontext
+{
+	struct MinList searchresultlist;
+	struct searchresult *currentsearchresult; // current node on a page;
+	int page;
+	char *phrase;						// on which page we are currently searching
+};
+
 
 
 #ifdef __cplusplus

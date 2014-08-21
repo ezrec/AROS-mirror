@@ -23,6 +23,7 @@
 #define	MUIM_VPDF_SettingsApply      (MUIM_VPDF_Dummy + 15)
 #define	MUIM_VPDF_About              (MUIM_VPDF_Dummy + 16)
 #define	MUIM_VPDF_PrintDocument      (MUIM_VPDF_Dummy + 17)
+#define	MUIM_VPDF_SelectionCopy      (MUIM_VPDF_Dummy + 18)
 
 struct MUIP_VPDF_OpenFile{ULONG MethodID; int windowid; char *filename; int mode;};  // mode is MUIV_VPDFWindow_OpenFile_XXX
 struct MUIP_VPDF_CreateTab{ULONG MethodID; int windowid;};
@@ -42,7 +43,7 @@ struct MUIP_VPDF_SettingsCancel{ULONG MethodID;};
 struct MUIP_VPDF_SettingsApply{ULONG MethodID; int sgroup;};
 struct MUIP_VPDF_About{ULONG MethodID; int sgroup;};
 struct MUIP_VPDF_PrintDocument{ULONG MethodID;};
-
+struct MUIP_VPDF_SelectionCopy{ULONG MethodID;};
 
 #define MUIV_VPDF_RequestFile_Load 1
 #define MUIV_VPDF_RequestFile_Save 2

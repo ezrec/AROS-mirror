@@ -29,7 +29,7 @@ static FT_Library ftLibrary;
 void kprintf(char *fmt,...);
 
 
-#define D(x)
+#define D(x) 
 //#define FcDebug() 0xffffffffUL
 #define FcDebug() 0
 #define FcResultMatch TRUE
@@ -164,6 +164,21 @@ int fcPatternGetInteger(struct fontpattern *pat, int element, int id)
 	}
     	
 	return 0;	
+}
+
+struct patternentry *fcPatternGetEntry(struct fontpattern *pat, int element, int id)
+{
+	struct patternentry *pe;
+	
+	ITERATELIST(pe, &pat->entries)
+	{
+		if (pe->element == element && pe->id == id)
+		{
+			return pe;
+		}
+	}
+    	
+	return NULL;	
 }
 
 
@@ -2062,7 +2077,7 @@ struct fontcache *fcCreate(char *directories[])
 	return cache;
 }
 
-struct fontpattern *fcMatch(struct fontcache *cache, struct fontpattern *pat)
+struct fontpattern *fcMatch(struct fontcache *cache, struct fontpattern *pat, int *matchingcriteria)
 {
 	struct fontpattern *cpat;
 	struct fontpattern *bestmatch = NULL;
@@ -2073,6 +2088,7 @@ struct fontpattern *fcMatch(struct fontcache *cache, struct fontpattern *pat)
 	ITERATELIST(cpat, &cache->entries)
 	{
 		struct patternentry *cpe, *pe;
+		int cmatchingcriteria[FC_LAST_CRITERIA] = {0};
 		int weight = 0;
 		
 		ITERATELIST(pe, &pat->entries)	/* pe - for each entry in criteria pattern. assume that caller is not stupid and doesn't pass elements with 0-weight */
@@ -2124,10 +2140,12 @@ struct fontpattern *fcMatch(struct fontcache *cache, struct fontpattern *pat)
 					}
 					else
 					{
-					/* if only excluding attributes were found earlier (<0) then we automaticly bump it to be >0 */
+						/* if only excluding attributes were found earlier (<0) then we automaticly bump it to be >0 */
 						weight += fcelementpriority[cpe->element];
 						if (weight < 0)
 							weight = 1;
+							
+						cmatchingcriteria[cpe->element] = TRUE;
 					}
 						
 					break;
@@ -2139,6 +2157,8 @@ struct fontpattern *fcMatch(struct fontcache *cache, struct fontpattern *pat)
 		{
 			bestmatch = cpat;
 			bestmatchweight = weight;
+			if (matchingcriteria != NULL)
+				memcpy(matchingcriteria, cmatchingcriteria, sizeof(cmatchingcriteria));
 		}
 	}
 	
@@ -2311,6 +2331,16 @@ struct fontcache *fcLoad(char *fname)
 	return fontcache;
 }
 
+int fcAddPattern(struct fontcache *fontcache, struct fontpattern *pat)
+{
+	if (fontcache != NULL && pat != NULL)
+	{
+		ADDTAIL(&fontcache->entries, pat);
+		return TRUE;
+	}
+	return FALSE;
+}
+
 
 #ifdef STANDALONE
 int main(void)
@@ -2344,7 +2374,7 @@ int main(void)
 			fcPatternAddString(pat, FC_FAMILY, "Times");
 			//fcPatternAddString(pat, FC_FILE, "n019003l.pfb");
 			
-			cpat = fcMatch(cache, pat);
+			cpat = fcMatch(cache, pat, NULL);
 			if (cpat != NULL)
 			{
 				char *name = fcPatternGetString(cpat, FC_FILE, 0);
@@ -2363,7 +2393,7 @@ int main(void)
 			//fcPatternAddString(pat, FC_FAMILY, "Helvetica");
 			fcPatternAddString(pat, FC_FILE, "n019003l.pfb");
 			
-			cpat = fcMatch(cache, pat);
+			cpat = fcMatch(cache, pat, NULL);
 			if (cpat != NULL)
 			{
 				char *name = fcPatternGetString(cpat, FC_FILE, 0);

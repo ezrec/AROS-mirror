@@ -7,6 +7,8 @@
 //
 // Copyright (C) 2008-2009 Carlos Garcia Campos <carlosgc@gnome.org>
 // Copyright (C) 2009 Kovid Goyal <kovid@kovidgoyal.net>
+// Copyright (C) 2012 Albert Astals Cid <aacid@kde.org>
+// Copyright (C) 2012 Hib Eris <hib@hiberis.nl>
 //
 // To see a description of the changes please see the Changelog file that
 // came with your tarball or type make ChangeLog if you are building from git
@@ -79,6 +81,28 @@ EmbFile::~EmbFile()
   m_objStr.free();
 }
 
+GBool EmbFile::save(const char *path) {
+  FILE *f;
+  GBool ret;
+
+  if (!(f = fopen(path, "wb"))) {
+    return gFalse;
+  }
+  ret = save2(f);
+  fclose(f);
+  return ret;
+}
+
+GBool EmbFile::save2(FILE *f) {
+  int c;
+
+  m_objStr.streamReset();
+  while ((c = m_objStr.streamGetChar()) != EOF) {
+    fputc(c, f);
+  }
+  return gTrue;
+}
+
 FileSpec::FileSpec(Object *fileSpecA)
 {
   ok = gTrue;
@@ -92,7 +116,7 @@ FileSpec::FileSpec(Object *fileSpecA)
   if (!getFileSpecName(fileSpecA, &obj1)) {
     ok = gFalse;
     obj1.free();
-    error(-1, "Invalid FileSpec");
+    error(errSyntaxError, -1, "Invalid FileSpec");
     return;
   }
 
@@ -104,7 +128,7 @@ FileSpec::FileSpec(Object *fileSpecA)
       if (!obj1.dictLookupNF("F", &fileStream)->isRef()) {
         ok = gFalse;
         fileStream.free();
-        error(-1, "Invalid FileSpec: Embedded file stream is not an indirect reference");
+        error(errSyntaxError, -1, "Invalid FileSpec: Embedded file stream is not an indirect reference");
         obj1.free();
         return;
       }
@@ -129,6 +153,9 @@ FileSpec::~FileSpec()
 
 EmbFile *FileSpec::getEmbeddedFile()
 {
+  if(!ok)
+    return NULL;
+
   if (embFile)
     return embFile;
 
@@ -203,19 +230,19 @@ GBool getFileSpecNameForPlatform (Object *fileSpec, Object *fileName)
       if (!fileSpec->dictLookup("F", fileName)->isString ()) {
         fileName->free();
 #ifdef _WIN32
-	char *platform = "DOS";
+	const char *platform = "DOS";
 #else
-	char *platform = "Unix";
+	const char *platform = "Unix";
 #endif
 	if (!fileSpec->dictLookup(platform, fileName)->isString ()) {
 	  fileName->free();
-	  error(-1, "Illegal file spec");
+	  error(errSyntaxError, -1, "Illegal file spec");
 	  return gFalse;
 	}
       }
     }
   } else {
-    error(-1, "Illegal file spec");
+    error(errSyntaxError, -1, "Illegal file spec");
     return gFalse;
   }
 

@@ -8,7 +8,6 @@
 
 #define	MUIA_PageView_Width			   (MUIA_PageView_TagBase + 1)
 #define	MUIA_PageView_Height		   (MUIA_PageView_TagBase + 2)
-#define	MUIA_PageView_Image			   (MUIA_PageView_TagBase + 3)
 #define	MUIA_PageView_Region           (MUIA_PageView_TagBase + 8)
 #define	MUIA_PageView_HasRegion        (MUIA_PageView_TagBase + 9)
 #define	MUIA_PageView_Page             (MUIA_PageView_TagBase +10)
@@ -36,8 +35,18 @@
 #define	MUIM_PageView_Flush       	   (MUIM_PageView_Dummy + 4)
 #define	MUIM_PageView_AddAnnotation	   (MUIM_PageView_Dummy + 5)
 #define	MUIM_PageView_RemoveAnnotation (MUIM_PageView_Dummy + 6)
+#define MUIM_PageView_ClearSelection   (MUIM_PageView_Dummy + 7)
+#define MUIM_PageView_GetSelection     (MUIM_PageView_Dummy + 8)
 
 #define	PageViewObject   NewObject( getPageViewClass() , NULL
+
+struct PageViewSelectionRegion
+{
+	float x1;
+	float x2;
+	float y1;
+	float y2;
+};
 
 struct MUIP_PageView_Update {ULONG MethodID; int x; int y; int width; int height;};
 struct MUIP_PageView_AddMarker {ULONG MethodID; int id; float *coords; unsigned int color;};
@@ -45,6 +54,9 @@ struct MUIP_PageView_RemoveMarker {ULONG MethodID; unsigned int id;};
 struct MUIP_PageView_AddAnnotation {ULONG MethodID; Object *obj; float *coords;};
 struct MUIP_PageView_RemoveAnnotation {ULONG MethodID; Object *obj;};
 struct MUIP_PageView_Flush {ULONG MethodID; };
+struct MUIP_PageView_ClearSelection {ULONG MethodID; };
+struct MUIP_PageView_GetSelection {ULONG MethodID; struct PageViewSelectionRegion region;};
+
 
 #define MUIV_PageView_AddMarker_New -1
 #define MUIV_PageView_RemoveMarker_All -1
@@ -64,6 +76,7 @@ struct PageViewRegion
 	int y1;
 	int y2;
 };
+
 
 DEFCLASS(PageView);
 

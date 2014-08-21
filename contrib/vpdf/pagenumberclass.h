@@ -18,6 +18,8 @@
 #define MUIM_VPDFNumberGeneratorFirst                  (MUIM_VPDFNumberGenerator_Dummy + 1)
 #define MUIM_VPDFNumberGeneratorNext                   (MUIM_VPDFNumberGenerator_Dummy + 2)
 
+#define MUIV_VPDFNumberGeneratorEndPos                 -1
+
 struct MUIP_VPDFNumberGeneratorFirst{ULONG MethodID; LONG reverse;};
 struct MUIP_VPDFNumberGeneratorNext{ULONG MethodID;};
 

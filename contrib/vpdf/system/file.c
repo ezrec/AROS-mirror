@@ -274,8 +274,6 @@ static Texture *LoadDTPicture(char *fname, int chkpixfmt)
 	Texture	*txt = NULL;
 	int	alpha;
 
-	//__timerGlobalStart();
-
 	if (chkpixfmt !=CHK_PIXFMT_ARGB8888 && chkpixfmt != CHK_PIXFMT_RGB888)
 		return NULL;
 
@@ -334,10 +332,6 @@ static Texture *LoadDTPicture(char *fname, int chkpixfmt)
 		}
     }
 
-	//printf("time:%f\n",__timerGlobalGet(1.0f));
-	//__timerGlobalStart();
-
-
 	/* get datatype */
 
 	{
@@ -359,7 +353,6 @@ static Texture *LoadDTPicture(char *fname, int chkpixfmt)
 
 	txt = txtCreate(bmhd->bmh_Width, bmhd->bmh_Height, chkpixfmt);
 
-	//printf("time2:%f\n",__timerGlobalGet(1.0f));
 	//__timerGlobalStart();
 
 	if (txt == NULL)
@@ -498,10 +491,7 @@ static Texture *LoadDTPicture(char *fname, int chkpixfmt)
 		DoMethodA(dt_object, (Msg)&pdtmsg);
     }
 
-	//printf("time3:%f\n",__timerGlobalGet(1.0f));
-	//__timerGlobalStart();
     DisposeDTObject(dt_object);
-	//printf("time4:%f\n",__timerGlobalGet(1.0f));
 	return	txt;
 }
 
@@ -525,7 +515,8 @@ static Texture *LoadDTPictureTRUE32(char *fname)
 
 /// static LoadReggaePictureTRUE32()
 
-static Texture *LoadReggaePicture(char *fname, int chkpixfmt)
+//static Texture *LoadReggaePicture(char *fname, int chkpixfmt)
+Texture *LoadReggaePicture(char *fname, int chkpixfmt)
 {
 	Texture *txt = NULL;
 	APTR fileobj = MultimediaBase != NULL ? MediaNewObjectTags(
@@ -564,7 +555,17 @@ static Texture *LoadReggaePicture(char *fname, int chkpixfmt)
 							for(i=0; i<height; i++)
 							{
 								DoMethod(fileobj, MMM_Pull, 0, buffer, width * 4);
-								convertRGB888_to_ARGB8888(buffer, txt->image->data.b + width * 3 * i, width, 1);
+								switch(chkpixfmt)
+								{
+									case CHK_PIXFMT_RGB888:
+										convertARGB8888_to_RGB888(buffer, txt->image->data.b + width * 3 * i, width, 1);
+										break;
+									case CHK_PIXFMT_RGBA8888:
+										convertARGB8888_to_RGBA8888(buffer, txt->image->data.b + width * 4 * i, width, 1);
+										break;
+									default:
+										/* handle this earlier... */
+								}
 							}
 
 							mfree(buffer);

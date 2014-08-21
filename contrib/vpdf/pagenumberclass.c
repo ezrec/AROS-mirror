@@ -26,7 +26,7 @@
 
 typedef struct
 {
- char type;
+  char type;
   int min;
   int max;
   int page_number;
@@ -212,7 +212,7 @@ DEFMMETHOD(VPDFNumberGeneratorNext)
 			}
 		break;
 		default:
-			return -1;  // end of page list
+			return MUIV_VPDFNumberGeneratorEndPos;  // end of page list
 		break;
 		}
 	}
@@ -248,9 +248,9 @@ DEFMMETHOD(VPDFNumberGeneratorNext)
 			}
 		}
 		else
-			return -1;
+			return MUIV_VPDFNumberGeneratorEndPos;
 	}
-	return -1;
+	return MUIV_VPDFNumberGeneratorEndPos;
 }
 
 

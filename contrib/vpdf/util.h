@@ -6,6 +6,10 @@
 #include <proto/intuition.h>
 #include <dos/dosextens.h>
 
+#ifndef _parent
+#define _parent(obj) ((Object*)xget(obj, MUIA_Parent))
+#endif
+
 static inline LONG xget(void *object, ULONG attr)
 {
 	LONG a = 0;
@@ -44,6 +48,24 @@ static inline LONG isDirPath(char *path)
 	}
 	return FALSE;
 }
+
+/* find container (parent object) which contains object with given attribute supported */
+
+static inline Object *objFindContainerByAttribute(Object *obj, ULONG attribute)
+{
+	unsigned int v;
+
+	while (obj != NULL)
+	{
+		unsigned int ret = get(obj, attribute, &v);
+		if (ret)
+			return obj;
+
+		obj = _parent(obj);
+	}
+	return NULL;
+}
+
 
 /// Morphos specific hook stuff
 
@@ -220,10 +242,6 @@ struct  MUIP_Group_Balance                  { ULONG MethodID; Object *bal; LONG 
 #ifndef MUIM_Virtgroup_MakeVisible
 #define MUIM_Virtgroup_MakeVisible          0x8042d2d2 /* private */ /* V4  */
 struct  MUIP_Virtgroup_MakeVisible          { ULONG MethodID; Object *obj; ULONG flags; }; /* private */
-#endif
-
-#ifndef _parent
-#define _parent(obj) ((Object*)xget(obj, MUIA_Parent))
 #endif
 
 #ifndef MUIA_Title_Sortable

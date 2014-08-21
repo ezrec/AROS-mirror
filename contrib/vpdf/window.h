@@ -5,6 +5,7 @@
 
 #define MUIA_VPDFWindow_ID           (MUIA_VPDFWindow_TagBase + 1)
 #define MUIA_VPDFWindow_PDFDocument  (MUIA_VPDFWindow_TagBase + 2) // [..G]
+#define MUIA_VPDFWindow_ActiveDocumentView  (MUIA_VPDFWindow_TagBase + 3) // [..G]
 
 #define	MUIM_VPDFWindow_OpenFile	       (MUIM_VPDF_Dummy + 1)
 #define	MUIM_VPDFWindow_CreateTab	       (MUIM_VPDF_Dummy + 2)

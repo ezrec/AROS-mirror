@@ -651,5 +651,19 @@ FT_Error   FTC_ImageCache_New( FTC_Manager      manager,
                         void         *value,
                         FT_Long       value_len );
 
+  FT_Error FT_Outline_EmboldenXY( FT_Outline*  outline,
+                         FT_Pos       xstrength,
+                         FT_Pos       ystrength );
+
+  FT_Error FT_Property_Set( FT_Library        library,
+                   const FT_String*  module_name,
+                   const FT_String*  property_name,
+                   const void*       value );
+
+  FT_Error FT_Property_Get( FT_Library        library,
+                   const FT_String*  module_name,
+                   const FT_String*  property_name,
+                   void*             value );
+
 #endif /* CLIB_FREETYPE_PROTOS_H */
 

@@ -48,8 +48,9 @@
 typedef	struct ThbImage_s
 {
 	unsigned char *data;
-	short width;
-	short height;
+	int width;
+	int height;
+	int bpp;				// can be 1 or 4
 } ThbImage;
 
 struct markernode {
@@ -67,6 +68,12 @@ struct annotationnode {
 	Object *obj;
 };
 
+struct lasso {
+	int enabled;
+	struct markernode marker;
+	struct pdfSelectionRegion *oldregion;
+};
+
 struct Data
 {
 	ThbImage *image;
@@ -77,7 +84,6 @@ struct Data
 	int moveregion;
 	int offsetx, offsety;
 	int markmx, markmy;
-	int hasregion;
 	int pointertype;
 	int mousedown;
 	int markAspect;
@@ -95,8 +101,10 @@ struct Data
 	int information;
 	int ispreview;
 	int rotation;
-	int quiet;
 
+	int quiet;
+	
+	struct lasso lasso;
 	struct MinList markerlist;
 	struct MinList annotationlist;
 
@@ -121,18 +129,21 @@ DEFDISP
 	free(data->image);
 	ReleaseSemaphore(&data->sema);
 
+	if (data->lasso.oldregion != NULL)
+		pdfDisposeRegionForSelection(data->doc, data->lasso.oldregion);
+
 	/* remove all markers and annotations (only links to annotation objects!) */
 
 	while(!ISLISTEMPTY(&data->markerlist))
 	{
-		struct markernode *mn = GetHead(&data->markerlist);
+		struct markernode *mn = (struct markernode*)GetHead(&data->markerlist);
         REMOVE(mn);
 		free(mn);
 	}
 
 	while(!ISLISTEMPTY(&data->annotationlist))
 	{
-		struct annotationnode *an = GetHead(&data->annotationlist);
+		struct annotationnode *an = (struct annotationnode*)GetHead(&data->annotationlist);
 		REMOVE(an);
 		free(an);
 	}
@@ -216,35 +227,6 @@ DEFNEW
 					data->rotation = tag->ti_Data;
 					break;
 		
-				case MUIA_PageView_Image:
-				{
-					ChkImage *img = (ChkImage*)tag->ti_Data;
-
-					if (img != NULL)
-					{
-						/* convert image into optimized form */
-
-						ThbImage *timg = calloc(1, sizeof(ThbImage));
-
-						timg->width = img->width;
-						timg->height = img->height;
-						timg->data = malloc(timg->width * timg->height * 3);
-
-						if (timg->data != NULL)
-							memcpy(timg->data, img->data.p, timg->width * timg->height * 3);
-						else
-						{
-							free(timg);
-							timg = NULL;
-						}
-
-						data->image = timg;
-					}
-					break;
-				}
-				case MUIA_PageView_HasRegion:
-					data->hasregion = tag->ti_Data;
-					break;
 				case MUIA_PageView_PDFDocument:
 					data->doc = (void*)tag->ti_Data;
 					break;
@@ -311,6 +293,20 @@ METHOD riCleanup(struct IClass *cl,Object *obj,Msg msg)
 
 void kprintf(char *fmt,...);
 
+static void rendermarker(struct Data *data, struct RastPort *rp, struct markernode *mn, int x0, int y0)
+{
+	int x1 = mn->ux1, y1 = mn->uy1;
+	int x2 = mn->ux2, y2 = mn->uy2;
+						
+	SetRPAttrs(rp, RPTAG_PenMode, FALSE, RPTAG_FgColor, 0xffff0000, TAG_DONE);
+	RectFill(rp, x0 + x1 - 2, y0 + y2 - 2, x0 + x2 + 2, y0 + y2 - 1);
+	RectFill(rp, x0 + x1 - 2, y0 + y1 + 1, x0 + x2 + 2, y0 + y1 + 2);
+	RectFill(rp, x0 + x1 - 2, y0 + y2, x0 + x1 - 1, y0 + y1);
+	RectFill(rp, x0 + x2 + 1, y0 + y2, x0 + x2 + 2, y0 + y1);
+
+	ProcessPixelArray(rp, x0 + x1 - 1, y0 + y2 - 1, x2 - x1, y1 - y2, POP_DARKEN, 10, NULL);
+}
+
 METHOD riDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
 	unsigned int rc = DOSUPER;
@@ -375,10 +371,10 @@ METHOD riDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 				{
 					width = data->refreshrect.MaxX - data->refreshrect.MinX;
 					height = data->refreshrect.MaxY - data->refreshrect.MinY;
-					WritePixelArray(image->data, data->refreshrect.MinX, data->refreshrect.MinY, image->width * 4, _rp(obj), x0 + data->refreshrect.MinX, y0 + data->refreshrect.MinY, width, height, RECTFMT_ARGB);
+					WritePixelArray(image->data, data->refreshrect.MinX, data->refreshrect.MinY, image->width * image->bpp, _rp(obj), x0 + data->refreshrect.MinX, y0 + data->refreshrect.MinY, width, height, image->bpp == 4 ? RECTFMT_ARGB : RECTFMT_GREY8);
 				}
 				else
-					WritePixelArray(image->data, 0, 0, image->width * 4, _rp(obj), x0, y0, width, height, RECTFMT_ARGB);
+					WritePixelArray(image->data, 0, 0, image->width * image->bpp, _rp(obj), x0, y0, width, height, data->image->bpp == 4 ? RECTFMT_ARGB : RECTFMT_GREY8);
 
 				/* draw remaining area with background */
 
@@ -441,17 +437,15 @@ METHOD riDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 								
 					ITERATELIST(mn, &data->markerlist)
 					{
-						int x1 = mn->ux1, y1 = mn->uy1;
-						int x2 = mn->ux2, y2 = mn->uy2;
-											
-						SetRPAttrs(_rp(obj), RPTAG_PenMode, FALSE, RPTAG_FgColor, 0xffff0000, TAG_DONE);
-						RectFill(_rp(obj), x0 + x1 - 2, y0 + y2 - 2, x0 + x2 + 2, y0 + y2 - 1);
-						RectFill(_rp(obj), x0 + x1 - 2, y0 + y1 + 1, x0 + x2 + 2, y0 + y1 + 2);
-						RectFill(_rp(obj), x0 + x1 - 2, y0 + y2, x0 + x1 - 1, y0 + y1);
-						RectFill(_rp(obj), x0 + x2 + 1, y0 + y2, x0 + x2 + 2, y0 + y1);
-
-						ProcessPixelArray(_rp(obj), x0 + x1 - 1, y0 + y2 - 1, x2 - x1, y1 - y2, POP_DARKEN, 10, NULL);
+						rendermarker(data, _rp(obj), mn, x0, y0);
 					}
+				}
+				
+				/* render lasso */
+				
+				if (data->lasso.enabled)
+				{
+					rendermarker(data, _rp(obj), &data->lasso.marker, x0, y0);	
 				}
 			}
 
@@ -474,6 +468,53 @@ METHOD riDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 	}
 
 	return rc;
+}
+
+////
+
+/// render selection region
+
+static void renderselectionregion(Object *obj, struct Data *data, struct pdfSelectionRegion *selection)
+{
+	if (selection != NULL && data->image != NULL && data->image->data != NULL)
+	{
+		int i;
+		for(i=0; i<selection->numrects; i++)
+		{
+			int px, py;
+			int pw, ph;
+			
+			int x, y;
+			struct pdfSelectionRectangle *rect = &selection->rectangles[i];
+
+			if (1)
+			for(y=rect->y1 * data->image->height; y<=rect->y2 * data->image->height; y++)
+			{
+				if (data->image->bpp == 4)
+				{
+					unsigned int *img = (unsigned int*)data->image->data;
+					int width = data->image->width;
+									
+					for(x=rect->x1 * data->image->width; x<=rect->x2 * data->image->width; x++)
+					{
+						if (x >= 0 && y >= 0 && x < data->image->width && y < data->image->height)
+							img[x + width * y] = 0x00ffffff ^ img[x + width * y];
+					}
+				}
+				else if (data->image->bpp == 1)
+				{
+					unsigned char *img = (unsigned char*)data->image->data;
+					int width = data->image->width;
+									
+					for(x=rect->x1 * data->image->width; x<=rect->x2 * data->image->width; x++)
+					{
+						if (x >= 0 && y >= 0 && x < data->image->width && y < data->image->height)
+							img[x + width * y] = 0xff ^ img[x + width * y];
+					}
+				}
+			}
+		}
+	}
 }
 
 ////
@@ -598,6 +639,45 @@ static void updatemarkers(Object *obj, struct Data *data, int all)
 			
 			SetAttrs(an->obj, MUIA_Annotation_PosX, an->ux1, MUIA_Annotation_PosY, an->uy1, TAG_DONE);
 		}
+	
+		/* lasso. ignore page rotation as it can't change when marker is enabled */
+	
+		{
+			struct markernode *mn = &data->lasso.marker;
+			//pdfConvertDeviceToUser(data->doc, data->page, mn->x1, mn->y1, &mn->ux1, &mn->uy1);
+			//pdfConvertDeviceToUser(data->doc, data->page, mn->x2, mn->y2, &mn->ux2, &mn->uy2);
+			
+			float ox1 = mn->x1 - 0.5f, oy1 = mn->y1 - 0.5f;
+			float ox2 = mn->x2 - 0.5f, oy2 = mn->y2 - 0.5f;
+			float x1, x2, y1, y2;
+			float t;
+			
+			x1 = ox1; y1 = oy1;
+			x2 = ox2; y2 = oy2;
+						
+			if (x1 > x2) /*can happen for lasso */
+			{
+				t = x1;
+				x1 = x2;
+				x2 = t;
+			}
+			if (y1 < y2)
+			{
+				t = y1;
+				y1 = y2;
+				y2 = t;
+			}
+			
+			x1 += 0.5f; y1 += 0.5f;
+			x2 += 0.5f; y2 += 0.5f;
+			
+			mn->ux1 = x1 * data->image->width;
+			mn->uy1 = y1 * data->image->height;
+			mn->ux2 = x2 * data->image->width;
+			mn->uy2 = y2 * data->image->height;
+			mn->valid = TRUE;
+		}
+		
 	}
 	//pdfRelease(data->doc);
 }
@@ -634,52 +714,6 @@ DEFSET
 		case MUIA_PageView_Quiet:
 			data->quiet = tag->ti_Data;
 			break;
-
-		case MUIA_PageView_Image: /* OBSOLETE */
-		
-			/* delete old image if present and create new. can NOT refresh display! */
-
-			ObtainSemaphore(&data->sema);
-
-			if (tag->ti_Data == NULL)
-			{
-				if (data->image != NULL)
-				{
-					mfree(data->image->data);
-					data->image->data = NULL;
-				}
-			}
-			else
-			{
-				if (data->image == NULL)
-				{
-					ChkImage *img = (ChkImage*)tag->ti_Data;
-
-					data->image = calloc(1, sizeof(ThbImage));
-
-					data->region.x1 = 0;
-					data->region.y1 = 0;
-					data->region.x2 = img->width - 1;
-					data->region.y2 = img->height - 1;
-				}
-
-				if (data->image != NULL)
-				{
-					ChkImage *img = (ChkImage*)tag->ti_Data;
-
-					data->image->width = img->width;
-					data->image->height = img->height;
-					data->image->data = mmalloc(img->width * img->height * 4);
-					if (data->image->data != NULL)
-						memcpy(data->image->data, img->data.p, img->width * img->height * 4);
-				}
-
-				updatemarkers(obj, data, TRUE);
-			}
-				
-			ReleaseSemaphore(&data->sema);
-
-			break;
 			
 		case MUIA_PageView_PDFBitmap:
 		
@@ -712,22 +746,62 @@ DEFSET
 				if (data->image != NULL)
 				{
 					struct pdfBitmap *bm = (struct pdfBitmap*)tag->ti_Data;
+					int isgrayscale = TRUE;
+					int x, y;
 					
+					for(y=0; y<bm->height; y++)
+					{
+						unsigned char *src = bm->data + bm->stride * y;
+						unsigned int rowdiff = 0;
+						for(x=bm->width; x>0; x--)
+						{
+							int r = src[1];
+							int g = src[2];
+							int b = src[3];
+							int different = (r | g | b)  - (r & g & b);	// hopefuly this works and is faster than two conditions
+																		// when equal both terms should be equal so diff == 0	
+																		// also, when different it will always be > 0
+																		
+							rowdiff += different;	
+							src += 4;					
+						}
+						
+						if (rowdiff != 0)
+						{
+							isgrayscale = FALSE;
+							break;
+						}						
+					}
+					
+					D(kprintf("image is grayscale:%d\n", isgrayscale));
+										
 					data->image->width = bm->width;
 					data->image->height = bm->height;
-					data->image->data = mmalloc(bm->width * bm->height * 4);
+					data->image->bpp = isgrayscale ? 1 : 4;
+					data->image->data = mmalloc(bm->width * bm->height * data->image->bpp);
 					if (data->image->data != NULL)
 					{
-						int i;
+						int i, j;
 						for(i=0; i<bm->height; i++)
 						{
-							unsigned char *ptr = bm->data + bm->stride * i;
-							memcpy((unsigned int*)data->image->data + i * bm->width, ptr, bm->width * 4);
+							unsigned char *src = bm->data + bm->stride * i;
+							if (isgrayscale == FALSE)
+								memcpy((unsigned int*)data->image->data + i * bm->width, src, bm->width * 4);
+							else
+							{
+								unsigned char *dst = data->image->data + data->image->width * i;
+								for(j=bm->width; j>0; j--)
+								{
+									*dst++ = src[1];
+									src += 4;
+								}
+							}
 						}
 					}
 				}
 
 				updatemarkers(obj, data, TRUE);
+				renderselectionregion(obj, data, data->lasso.oldregion);
 			}
 				
 			ReleaseSemaphore(&data->sema);
@@ -834,155 +908,6 @@ DEFMMETHOD(PageView_Update)
 
 ///	handleevent
 
-static void rectSetCorner(struct Data *data, struct PageViewRegion *r, int corner, int x, int y, int aspect)
-{
-	if (corner >= 1 && corner <= 9)
-	{
-		switch (corner)
-		{
-			case 1:
-				r->x1 = x;
-				r->y1 = y;
-				break;
-			case 2:
-				r->x2 = x;
-				r->y1 = y;
-				break;
-			case 3:
-				r->x2 = x;
-				r->y2 = y;
-				break;
-			case 4:
-				r->x1 = x;
-				r->y2 = y;
-				break;
-			case 5:
-				r->y1 = y;
-				break;
-			case 6:
-				r->x2 = x;
-				break;
-			case 7:
-				r->y2 = y;
-				break;
-			case 8:
-				r->x1 = x;
-				break;
-			case 9: // special case for whole area movement
-			{
-				int dx = x - data->markmx;
-				int dy = y - data->markmy;
-
-				if (dx < 0) // clip to left
-					if (r->x1 < -dx)
-						dx = -r->x1;
-
-				if (dy < 0) // clip to top
-					if (r->y1 < -dy)
-						dy = -r->y1;
-
-				if (dx > 0) // clip to right
-					if (r->x2 + dx >= data->image->width)
-						dx = data->image->width - r->x2 - 1;
-
-				if (dy > 0) // clip to bottom
-					if (r->y2 + dy >= data->image->height)
-						dy = data->image->height - r->y2 - 1;
-
-				r->x1 += dx;
-				r->x2 += dx;
-				r->y1 += dy;
-				r->y2 += dy;
-
-				data->markmx = x;
-				data->markmy = y;
-			}
-			break;
-		}
-	}
-	if (aspect)
-	{
-		int width, height;
-
-		width = r->x2 - r->x1 + 1;
-		height = r->y2 - r->y1 + 1;
-
-		switch (corner)
-		{
-			case 1:
-				r->x1 = r->x2 - width;
-				r->y1 = r->y2 - height;
-				break;
-			case 2:
-				r->x2 = r->x1 + width;
-				r->y1 = r->y2 - height;
-				break;
-			case 3:
-				r->x2 = r->x1 + width;
-				r->y2 = r->y1 + height;
-				break;
-			case 4:
-				r->x1 = r->x2 - width;
-				r->y2 = r->y1 + height;
-				break;
-		}
-
-		//width = data->image->width * (r->y2 - r->y1 + 1) / data->image->height;
-		//height = data->image->height * (r->x2 - r->x1 + 1) / data->image->width;
-
-		switch (corner)
-		{
-			case 5:
-			case 7:
-				r->x2 = r->x1 + (height / data->markAspect);
-				break;
-
-			case 6:
-			case 8:
-				r->y2 = r->y1 + (width * data->markAspect);
-				break;
-		}
-	}
-
-	if (r->x2 < r->x1)
-		r->x2 = r->x1;
-	if (r->y2 < r->y1)
-		r->y2 = r->y1;
-}
-
-static int rectFindClosestHandle(struct Data *data, struct PageViewRegion *r, int x, int y, int aspect)
-{
-	int	d[9];
-	int i, m = INT_MAX, ind = 0;
-
-	d[0] = iabs(r->x1 - x) + iabs(r->y1 - y);
-	d[1] = iabs(r->x2 - x) + iabs(r->y1 - y);
-	d[2] = iabs(r->x2 - x) + iabs(r->y2 - y);
-	d[3] = iabs(r->x1 - x) + iabs(r->y2 - y);
-	d[4] = iabs(((r->x1 + r->x2) / 2) - x) + iabs(r->y1 - y);
-	d[5] = iabs(r->x2 - x) + iabs((r->y1 + r->y2) / 2 - y);
-	d[6] = iabs(((r->x1 + r->x2) / 2) - x) + iabs(r->y2 - y);
-	d[7] = iabs(r->x1 - x) + iabs((r->y1 + r->y2) / 2 - y);
-	d[8] = iabs(((r->x1 + r->x2) / 2) - x) + iabs((r->y1 + r->y2) / 2 - y);
-
-	/* closest */
-
-	for(i = 0; i < 9; i++)
-	{
-		if (d[i] < m)
-		{
-			m = d[ i ];
-			ind = i;
-		}
-	}
-
-	ind++;
-
-	data->markmx = x;
-	data->markmy = y;
-	return ind;
-}
-
 METHOD riHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
 {
 	#define _between(a,x,b) ((x)>=(a) && (x)<=(b))
@@ -1011,22 +936,23 @@ METHOD riHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
 						if (_isinimage(obj, msg->imsg->MouseX, msg->imsg->MouseY))
 						{
 							data->mousedown = TRUE;
-							if (data->hasregion)
+							if (data->ispreview == FALSE && data->lasso.enabled == FALSE && xget(objFindContainerByAttribute(obj, MUIA_DocumentView_DragAction), MUIA_DocumentView_DragAction) == MUIV_DocumentView_DragAction_Mark) /* first coord */
 							{
-								data->mx = mx;
-								data->my = my;
-								data->moveregion = rectFindClosestHandle(data, &data->region, mx, my, 0);
-								rectSetCorner(data, &data->region, data->moveregion, mx, my, 0);
-
-								set(obj, MUIA_PageView_Region, (ULONG)&data->region);
+								/* clear selection on all previous pages */
+								
+								DoMethod(objFindContainerByAttribute(obj, MUIA_DocumentView_DragAction), MUIM_DocumentView_ClearSelection);							
+							
+								data->lasso.marker.x1 = data->lasso.marker.x2 = (float)mx / data->image->width;
+								data->lasso.marker.y1 = data->lasso.marker.y2 = (float)my / data->image->height;
+								data->lasso.enabled = TRUE;
 							}
 						}
 					}
 					else if (msg->imsg->Code == SELECTUP)
 					{
-						if (data->hasregion)
+						if (data->lasso.enabled)
 						{
-							data->moveregion = 0;
+							data->lasso.enabled = FALSE;
 						}
 						else if (data->ready && !data->ispreview)
 						{
@@ -1072,6 +998,33 @@ METHOD riHandleEvent(struct IClass *cl,Object *obj,struct MUIP_HandleEvent *msg)
 				{
 					int mx = max(0, msg->imsg->MouseX - _left(obj) - data->offsetx);
 					int my = max(0, msg->imsg->MouseY - _top(obj) - data->offsety);
+					
+					if (data->lasso.enabled)
+					{
+						struct pdfSelectionRegion *selection;
+						
+						data->lasso.marker.x2 = min(1.0, (float)mx / data->image->width);
+						data->lasso.marker.y2 = min(1.0, (float)my / data->image->height);
+						
+						/* fetch selection from pdf document */
+						
+						if (data->lasso.oldregion != NULL)
+						{
+							renderselectionregion(obj, data, data->lasso.oldregion);
+							pdfDisposeRegionForSelection(data->doc, data->lasso.oldregion);
+						}
+						
+						selection = pdfBuildRegionForSelection(data->doc, data->page, data->lasso.marker.x1, data->lasso.marker.y1, data->lasso.marker.x2, data->lasso.marker.y2, NULL);
+						if (selection != NULL)
+						{
+							renderselectionregion(obj, data, selection);							
+							data->lasso.oldregion = selection;
+						}
+						
+						updatemarkers(obj, data, TRUE);
+						MUI_Redraw(obj, MADF_DRAWUPDATE);
+						return MUI_EventHandlerRC_Eat;
+					}
 					#if 0
 					/* find area over which we are and setup appropriate pointer */
 					if (data->hasregion && data->moveregion == 0)
@@ -1169,7 +1122,7 @@ DEFMMETHOD(Show)
 		data->flushmethodid = 0;
 	}
 
-	if ((1 ||data->hasregion) && data->eh.ehn_Object == NULL)
+	if ((1) && data->eh.ehn_Object == NULL)
 	{
 		data->eh.ehn_Object = obj;
 		data->eh.ehn_Class  = cl;
@@ -1204,8 +1157,7 @@ DEFMMETHOD(PageView_Flush)
 		DoMethod(_win(obj), MUIM_Window_RemEventHandler, &data->eh);
 		data->eh.ehn_Object = NULL;
 	}
-
-
+	
 	data->flushmethodid = 0;
 	ReleaseSemaphore(&data->sema);
 
@@ -1328,6 +1280,47 @@ DEFMMETHOD(PageView_RemoveAnnotation)
 
 ////
 
+/// clearselection
+
+DEFMMETHOD(PageView_ClearSelection)
+{
+	GETDATA;
+	
+	if (data->lasso.oldregion != NULL)
+	{
+		renderselectionregion(obj, data, data->lasso.oldregion);
+		pdfDisposeRegionForSelection(data->doc, data->lasso.oldregion);
+		
+		if (data->image != NULL && data->image->data != NULL) /* also have to refresh here! */
+			MUI_Redraw(obj, MADF_DRAWUPDATE);
+	}
+	data->lasso.oldregion = NULL;
+	data->lasso.marker.x2 = data->lasso.marker.x1;
+	data->lasso.marker.y2 = data->lasso.marker.y1;
+	
+	
+	return TRUE;
+}
+
+////
+
+/// clearselection
+
+DEFMMETHOD(PageView_GetSelection)
+{
+	GETDATA;
+	
+	if (data->lasso.oldregion == NULL)
+		return FALSE;
+	
+	msg->region.x1 = data->lasso.marker.x1; msg->region.y1 = data->lasso.marker.y1;
+	msg->region.x2 = data->lasso.marker.x2; msg->region.y2 = data->lasso.marker.y2;	
+	
+	return TRUE;
+}
+
+////
+
 BEGINMTABLE
 	case MUIM_Draw:				return(riDraw(cl,obj,(APTR)msg));
 	case MUIM_Setup:			return(riSetup(cl,obj,(APTR)msg));
@@ -1347,7 +1340,8 @@ BEGINMTABLE
 	DECMMETHOD(PageView_RemoveAnnotation)
 	DECMMETHOD(PageView_Update)
 	DECMMETHOD(PageView_Flush)
-
+	DECMMETHOD(PageView_ClearSelection)
+	DECMMETHOD(PageView_GetSelection)
 ENDMTABLE
 
 DECSUBCLASS_NC(MUIC_Area, PageViewClass)

@@ -139,14 +139,6 @@ void  __cairo_device_to_user(cairo_t *, double *, double *) =
 	"\tblrl";
 #define cairo_device_to_user(__p0, __p1, __p2) __cairo_device_to_user((__p0), (__p1), (__p2))
 
-cairo_bool_t  __cairo_ps_surface_get_eps(cairo_surface_t *) =
-	"\tlis\t11,CairoBase@ha\n"
-	"\tlwz\t12,CairoBase@l(11)\n"
-	"\tlwz\t0,-2116(12)\n"
-	"\tmtlr\t0\n"
-	"\tblrl";
-#define cairo_ps_surface_get_eps(__p0) __cairo_ps_surface_get_eps((__p0))
-
 cairo_scaled_font_t * __cairo_scaled_font_create(cairo_font_face_t *, const cairo_matrix_t *, const cairo_matrix_t *, const cairo_font_options_t *) =
 	"\tlis\t11,CairoBase@ha\n"
 	"\tlwz\t12,CairoBase@l(11)\n"
@@ -154,6 +146,14 @@ cairo_scaled_font_t * __cairo_scaled_font_create(cairo_font_face_t *, const cair
 	"\tmtlr\t0\n"
 	"\tblrl";
 #define cairo_scaled_font_create(__p0, __p1, __p2, __p3) __cairo_scaled_font_create((__p0), (__p1), (__p2), (__p3))
+
+cairo_bool_t  __cairo_ps_surface_get_eps(cairo_surface_t *) =
+	"\tlis\t11,CairoBase@ha\n"
+	"\tlwz\t12,CairoBase@l(11)\n"
+	"\tlwz\t0,-2116(12)\n"
+	"\tmtlr\t0\n"
+	"\tblrl";
+#define cairo_ps_surface_get_eps(__p0) __cairo_ps_surface_get_eps((__p0))
 
 void  __cairo_ft_font_options_substitute(const cairo_font_options_t *, FcPattern *) =
 	"\tlis\t11,CairoBase@ha\n"

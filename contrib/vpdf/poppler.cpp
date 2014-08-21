@@ -4,10 +4,11 @@
 
 //#define USE_SPLASH
 
+#define AROS_ALMOST_COMPATIBLE
+
 #include "Object.h"
 
 #include <proto/charsets.h>
-#define AROS_ALMOST_COMPATIBLE
 #define _NO_PPCINLINE
 #include <proto/keymap.h>
 #include <proto/exec.h>
@@ -18,11 +19,7 @@
 #include <exec/lists.h>
 #include <constructor.h>
 
-// turboprint includes
-#include <devices/printer.h>
-#include <devices/prtbase.h>
-#include <datatypes/datatypesclass.h>
-#include "turboprint.h"
+
 
 #define USE_FLOAT 1
 #include <poppler-config.h>
@@ -54,71 +51,24 @@
 
 #include "poppler.h"
 #include "poppler_io.h"
+#include "poppler_device.h"
 
 extern struct Library *LocaleBase;
 #define LOCALE_BASE_NAME LocaleBase
 
 #warning TODO: make the semaphore per-document
-static struct SignalSemaphore semaphore;
+
+struct SignalSemaphore semaphore;
 
 extern struct Library *CairoBase;
 
-struct searchresult
-{
-	struct MinNode n;
-	double x1, y1, x2, y2;		// bounding rectangle in pdf points
-};
+/* all of this is just to not having to expose GBool in ppoppler.h... */
 
-struct searchcontext
+struct abortcallbackcontext
 {
-	MinList searchresultlist;
-	struct searchresult *currentsearchresult; // current node on a page;
-	int page;
-	char *phrase;						// on which page we are currently searching
-};
-
-#ifdef USE_SPLASH
-struct devicecontext
-{
-	PDFDoc *doc;
-	BaseStream *stream;
-	SplashOutputDev *dev;
-	struct searchcontext search;
-	int pagesnum;
-	float documentwidth, documentheight;
-};
-#else
-struct devicecontext
-{
-	PDFDoc *doc;
-	BaseStream *stream;
-	CairoOutputDev *dev;
-	cairo_surface_t *surface;
-	cairo_t *cairo;
-	struct searchcontext search;
-	int pagesnum;
-	float documentwidth, documentheight;
-};
-#endif
-
-struct printercontext
-{
-	ULONG format;
-	PDFDoc *doc;
-
-	PSOutputDev *dev;
-	BPTR file;
-
-	cairo_surface_t *surface;
-	cairo_t *cairo;
-	CairoOutputDev *cairo_dev;
-	struct MsgPort *PrinterMP;
-	union printerIO *PIO;
-	struct PrinterData *PD;
-	struct TPExtIODRP ExtIoDrp;
-	BOOL TP_Installed;
-	UWORD TPVersion;
-	int last_page;
+	int	(*userfunction)(void *);
+	void *userdata;
+	struct devicecontext *ctx;
 };
 
 /* this is bit hacky but we can't/shouldn't use boopsi in poppler.c */
@@ -129,17 +79,15 @@ extern "C" {
 	void vpdfErrorFunction(int pos, char *message);
 };
 
-static void	pdfErrorFunction(int pos, char *msg, va_list args)
+static void	pdfErrorFunction(void *data, ErrorCategory category, Goffset pos, char *msg)
 {
-	char buffer[512];
-	vsnprintf(buffer, sizeof(buffer), msg, args);
-	vpdfErrorFunction(pos, buffer);
+	vpdfErrorFunction(pos, msg);
 }
 
 static CONSTRUCTOR_P(init_poppler, 0)
 {
 	InitSemaphore(&semaphore);
-	setErrorFunction(pdfErrorFunction);
+	setErrorCallback(pdfErrorFunction, NULL);
 	return 0;
 }
 
@@ -273,6 +221,7 @@ void *pdfNew(const char *fname)
 			globalParams = new GlobalParams();
 			globalParams->setScreenType(screenClustered);
 			globalParams->setScreenSize(3);
+			//globalParams->setPSBinary(true);
 		}
 
 		CachedFile *cachedFile = new CachedFile(new StdCacheLoader(), new GooString(fname));
@@ -298,13 +247,12 @@ void *pdfNew(const char *fname)
 		paperColor[2] = 255;
 
 		ctx->dev = new SplashOutputDev(splashModeRGB8, 4, gFalse, paperColor);
-		ctx->dev->startDoc(ctx->doc->getXRef());
+		ctx->dev->startDoc(ctx->doc);
 #else
 		ctx->dev = new CairoOutputDev();
 		ctx->dev->setPrinting(false);
 		ctx->surface = NULL;
-		Catalog *catalog = ctx->doc->getCatalog();
-		ctx->dev->startDoc(ctx->doc->getXRef(), catalog);
+		ctx->dev->startDoc(ctx->doc);
 #endif
 		D(kprintf("media_box:%f,%f\n", ctx->doc->getPageMediaWidth(1), ctx->doc->getPageMediaHeight(1)));
 		D(kprintf("media_box:%f, %f\n", pdfGetPageMediaWidth(ctx, 1), pdfGetPageMediaHeight(ctx, 1)));
@@ -357,6 +305,9 @@ void pdfDelete(void *_ctx)
 	D(kprintf("delete output device:%p. base:%p\n", ctx->dev, CairoBase));
 	if(ctx->dev != NULL)
 		delete ctx->dev;
+
+	if (ctx->selection_dev != NULL)
+		delete ctx->selection_dev;
 
 #ifndef USE_SPLASH
 	D(kprintf("delete surface:%p. base:%p\n", ctx->surface, CairoBase));
@@ -428,9 +379,13 @@ int	pdfGetPagesNum(void *_ctx)
 	return ctx->pagesnum;
 }
 
-static GBool renderabortchk(void *data)
+static GBool abortcheckcbk_wrapper(void *data)
 {
-	D(printf("abort check...\n"));
+	struct abortcallbackcontext *abortctx = (struct abortcallbackcontext*)data;
+	if (abortctx->userfunction != NULL)
+		return (GBool)abortctx->userfunction(abortctx->userdata);
+
+	//D(printf("abort check...\n"));
 	return 0;
 }
 
@@ -446,7 +401,7 @@ static void applyrotation(int *width, int *height, int rotation)
 }
 
 int pdfDisplayPageSlice(void *_ctx, int page, double scale, int rotate,
-                        int	useMediaBox, int crop, int printing, int sliceX, int sliceY, int sliceW, int sliceH, int (*abortcheckcbk)(void *), void *abortcheckcbkdata)
+						int	useMediaBox, int crop, int printing, int sliceX, int sliceY, int sliceW, int sliceH, int (*abortcheckcbk)(void *), void *abortcheckcbkdata)
 {
 	ENTER_SECTION
 
@@ -508,7 +463,13 @@ int pdfDisplayPageSlice(void *_ctx, int page, double scale, int rotate,
 	//printf("render:%d, %d, crop:%d, %d\n", width, height, cropwidth, cropheight);
 	try
 	{
-		pdfpage->displaySlice(ctx->dev, 72 * scale, 72 * scale, rotate, gTrue, gFalse, sliceX, sliceY, sliceW, sliceH, printing, ctx->doc->getCatalog(), abortcheckcbk, abortcheckcbkdata);
+		struct abortcallbackcontext abortctx;
+		abortctx.userfunction = abortcheckcbk;
+		abortctx.userdata = abortcheckcbkdata;
+		abortctx.ctx = ctx;
+
+		pdfpage->displaySlice(ctx->dev, 72 * scale, 72 * scale, rotate, gTrue, gFalse, sliceX, sliceY, sliceW, sliceH,
+			printing, abortcheckcbk_wrapper, &abortctx);
 		rc = TRUE;
 	}
 	catch(...)
@@ -525,298 +486,11 @@ int pdfDisplayPageSlice(void *_ctx, int page, double scale, int rotate,
 	ctx->cairo = NULL;
 #endif
 	//doc->displayPage(dev, page, hDPI, vDPI, rotate, useMediaBox, crop, printing);
+	
 	LEAVE_SECTION
 	return rc;
 }
 
-static void outputstreamfunc(void *stream, char *data, int len)
-{
-	struct printercontext *pctx = (struct printercontext*)stream;
-	Write(pctx->file, data, len);
-}
-
-void *pdfPrintInit(void *_ctx, const char *path, int first, int last, int format)
-{
-	struct devicecontext *ctx = (struct devicecontext*)_ctx;
-	struct printercontext *pctx = (struct printercontext*)calloc(1, sizeof(*pctx));
-
-	if(pctx != NULL)
-	{
-		if(format == VPDF_PRINT_POSTSCRIPT)
-		{
-			try
-			{
-				pctx->format = format;
-				pctx->doc = ctx->doc;
-				pctx->file = Open(path, MODE_NEWFILE);
-				if(pctx->file != NULL)
-				{
-					pctx->dev = new PSOutputDev(outputstreamfunc, pctx, "vpdf ps document output", pctx->doc, pctx->doc->getXRef(), pctx->doc->getCatalog(),
-					                            first, last, psModePS);
-				}
-				else
-				{
-					free(pctx);
-					return NULL;
-				}
-				//pctx->dev->startDoc(pctx->doc->getXRef());
-			}
-			catch(...)
-			{
-				if(pctx->file != NULL)
-					Close(pctx->file);
-
-				if(pctx->dev != NULL)
-					delete pctx->dev;
-
-				free(pctx);
-				pctx = NULL;
-			}
-		}
-		else
-		{
-			pctx->format = format;
-			pctx->PrinterMP = NULL;
-			pctx->PIO = NULL;
-			pctx->doc = ctx->doc;
-			pctx->surface = NULL;
-			
-			if((pctx->PrinterMP = (struct MsgPort*)CreateMsgPort()))
-			{
-				if((pctx->PIO = (union printerIO *)CreateIORequest(pctx->PrinterMP, sizeof(union printerIO))))
-				{
-					if(!(OpenDevice((STRPTR)"printer.device", 0, (struct IORequest *)pctx->PIO, 0)))
-					{
-						pctx->PD = (struct PrinterData *)pctx->PIO->iodrp.io_Device;
-						pctx->TP_Installed = (((ULONG *)(pctx->PD->pd_OldStk))[2] == TPMATCHWORD);
-						struct PrinterData *PD = pctx->PD;
-						pctx->TPVersion = pctx->PIO->iodrp.io_Device->dd_Library.lib_Version;
-						//	pctx->TPIdString = (char*)(pctx->PIO->iodrp.io_Device->dd_Library.lib_IdString);
-
-						if(pctx->TP_Installed && pctx->TPVersion >= 39)
-						{
-							// Cairo device init 
-							pctx->cairo_dev = new CairoOutputDev();
-							pctx->cairo_dev->setPrinting(false);
-							pctx->surface = NULL;
-							Catalog *catalog = pctx->doc->getCatalog();
-							pctx->cairo_dev->startDoc(pctx->doc->getXRef(), catalog);
-							
-							D(kprintf("PrinterName = '%s', Version=%u, Revision=%u\n",
-							   PD->pd_SegmentData->ps_PED.ped_PrinterName, PD->pd_SegmentData->ps_Version,
-							   PD->pd_SegmentData->ps_Revision));
-						    D(kprintf("PrinterClass=%u, ColorClass=%u\n",
-							   PD->pd_SegmentData->ps_PED.ped_PrinterClass, PD->pd_SegmentData->ps_PED.ped_ColorClass));
-						    D(kprintf("MaxColumns=%u, NumCharSets=%u, NumRows=%u\n",
-							   PD->pd_SegmentData->ps_PED.ped_MaxColumns, PD->pd_SegmentData->ps_PED.ped_NumCharSets, PD->pd_SegmentData->ps_PED.ped_NumRows));
-						    D(kprintf("MaxXDots=%lu, MaxYDots=%lu, XDotsInch=%u, YDotsInch=%u\n",
-							   PD->pd_SegmentData->ps_PED.ped_MaxXDots, PD->pd_SegmentData->ps_PED.ped_MaxYDots,
-							   PD->pd_SegmentData->ps_PED.ped_XDotsInch, PD->pd_SegmentData->ps_PED.ped_YDotsInch));
-							   
-							D(kprintf("PrintAspect: %d\n",  PD->pd_Preferences.PrintAspect));
-							
-							pctx->last_page = -1; // indicate that we haven't printed anything yet
-							pctx->cairo = NULL;
-							return pctx;
-						}
-					}
-					CloseDevice((struct IORequest *)pctx->PIO);
-				}
-				DeleteIORequest((struct IORequest *)pctx->PIO);
-			}
-			DeleteMsgPort(pctx->PrinterMP);
-
-			return NULL;
-		}
-	}
-	return pctx;
-}
-
-
-int pdfPrintPage(void *_pctx, int page, int center)
-{
-	struct printercontext *pctx = (struct printercontext*)_pctx;
-	ENTER_SECTION
-	try
-	{
-		if(pctx->format == VPDF_PRINT_POSTSCRIPT)
-			pctx->doc->displayPage(pctx->dev, page, 72, 72, 0, gTrue, gFalse, gTrue);
-		else
-		{
-			struct RastPort MyRastPort;
-			struct BitMap MyBitMap;
-			char not_changed = FALSE;
-			int dpi_x = pctx->PD->pd_SegmentData->ps_PED.ped_XDotsInch;
-			int dpi_y = pctx->PD->pd_SegmentData->ps_PED.ped_YDotsInch;
-
-			struct pdfBitmap bm;
-			Page *pdfpage = pctx->doc->getCatalog()->getPage(page);
-			int width = round((pdfpage->getMediaWidth()/72.0)*25.4)*dpi_x/25.4;
-			int height = round((pdfpage->getMediaHeight()/72.0)*25.4)*dpi_y/25.4;
-
-
-			// check if we had to create new surface
-			if(pctx->surface != NULL)
-			{
-				if(cairo_image_surface_get_width(pctx->surface) != width || cairo_image_surface_get_height(pctx->surface) != height)
-				{
-					cairo_surface_destroy(pctx->surface);
-					pctx->surface = cairo_image_surface_create(CAIRO_FORMAT_RGB24, width, height);
-					D(kprintf(" wrong sizes - new surface ok\n"));
-				}
-				else
-				{
-					not_changed = TRUE;
-					D(kprintf(" not changed ok\n"));
-				}
-			}
-			else
-			{
-				pctx->surface = cairo_image_surface_create(CAIRO_FORMAT_RGB24, width, height);
-						D(kprintf(" bnew surgace ok\n"));
-			}
-			
-			if(pctx->surface == NULL)
-			{
-				LEAVE_SECTION
-				return FALSE;
-			}
-			
-			if (pctx->last_page != page)
-			{
-				pctx->cairo_dev->setCairo(NULL);
-				if (pctx->cairo)
-					cairo_destroy(pctx->cairo);
-				pctx->cairo = cairo_create(pctx->surface);
-				cairo_save(pctx->cairo);
-				cairo_set_source_rgb(pctx->cairo,  1., 1., 1);
-				cairo_paint(pctx->cairo);
-				cairo_restore(pctx->cairo);
-				pctx->cairo_dev->setCairo(pctx->cairo);
-				D(kprintf(" setCairo ok\n"));
-				pctx->doc->displayPage(pctx->cairo_dev, page, dpi_x, dpi_y, 0, gTrue, gFalse, gTrue);
-				D(kprintf(" displayPage ok\n"));
-			}
-			
-			InitRastPort(&MyRastPort);
-			MyRastPort.BitMap = &MyBitMap;
-			// we need only one BitPlane, because it's chunky format
-			InitBitMap(&MyBitMap, 1, width, height);
-			MyBitMap.BytesPerRow = width * 3;
-			MyBitMap.Planes[0] = cairo_image_surface_get_data(pctx->surface);
-
-			if (pctx->last_page != page)
-			{
-				int i, j;
-				LONG pixel, *ARGB_ptr;
-				char *tmp2;
-
-				ARGB_ptr = (LONG *)cairo_image_surface_get_data(pctx->surface);
-				tmp2 = (char *)ARGB_ptr; 
-			
-				// RGBA to RGB inline conversion
-				for(j = 0; j < height; j++)
-				{
-					for(i = 0; i < width; i++)
-					{
-						pixel = *ARGB_ptr++;
-						*tmp2++ = (pixel & 0xFF0000) >> 16;
-						*tmp2++ = (pixel & 0xFF00) >> 8;
-						*tmp2++ = (pixel & 0xFF);
-					}
-				}
-				D(kprintf(" conversion run ok\n"));
-			}
-			
-			pctx->PIO->iodrp.io_Command = PRD_TPEXTDUMPRPORT;
-			pctx->PIO->iodrp.io_RastPort = &MyRastPort;
-			pctx->PIO->iodrp.io_SrcX = 0;  			// x offset in rastport to start printing from
-			pctx->PIO->iodrp.io_SrcY = 0;  			// y offset in rastpoty to start printing from
-			pctx->PIO->iodrp.io_SrcWidth = width;	// width of rastport
-			pctx->PIO->iodrp.io_SrcHeight = height; // height of rastport
-			pctx->PIO->iodrp.io_DestCols = (LONG)((round((pdfpage->getMediaWidth()/72.0)*25.4)/25.4) * 1000.);  // width in printer pixels format
-			pctx->PIO->iodrp.io_DestRows = (LONG)((round((pdfpage->getMediaHeight()/72.0)*25.4)/25.4) * 1000.);	// height in printer pixel format
-			pctx->PIO->iodrp.io_Special = SPECIAL_MILROWS | SPECIAL_MILCOLS | (center)?SPECIAL_CENTER:0; 	
-																				// save aspect ratio of picture, 
-																				// turn on inches input for above fields
-			// new: io.Modes must point to a new Structure (ExtIoDrp)
-			pctx->PIO->iodrp.io_Modes = (ULONG)&pctx->ExtIoDrp;
-
-			// fill in the new structure
-			pctx->ExtIoDrp.PixAspX = 1;   // for the correct aspect ratio
-			pctx->ExtIoDrp.PixAspY = 1;   // normally the values of the monitor-structure
-
-			pctx->PD->pd_Preferences.PrintFlags = (pctx->PD->pd_Preferences.PrintFlags & ~DIMENSIONS_MASK) | IGNORE_DIMENSIONS;
-
-			//if(data->img.bpp == 24)
-			{
-				pctx->ExtIoDrp.Mode = TPFMT_RGB24;
-				pctx->PIO->iodrp.io_ColorMap = 0;
-				DoIO((struct IORequest *)pctx->PIO);
-			}
-			/*
-			else
-			{
-				int i;
-				ExtIoDrp.Mode = TPFMT_Chunky8;
-				PD->pd_Preferences.PrintShade = SHADE_GREYSCALE;
-				// PD->pd_Preferences.PrintAspect = ASPECT_HORIZ;
-				PIO->iodrp.io_ColorMap = GetColorMap(256L);
-				for(i = 0 ; i < 256 ; i++)
-					SetRGB32CM(PIO->iodrp.io_ColorMap, i, i << 24, i << 24, i << 24);
-
-				DoIO((struct IORequest *)PIO);
-				FreeColorMap(PIO->iodrp.io_ColorMap);
-			}*/
-		}
-	}
-	catch(...)
-	{
-		LEAVE_SECTION
-		return 0;
-	}
-	LEAVE_SECTION
-	return 1;
-}
-
-void pdfPrintEnd(void *_pctx)
-{
-	struct printercontext *pctx = (struct printercontext*)_pctx;
-	if(pctx != NULL)
-	{
-		if(pctx->format == VPDF_PRINT_POSTSCRIPT)
-		{
-			if(pctx->dev != NULL)
-				delete pctx->dev;
-
-			if(pctx->file != NULL)
-				Close(pctx->file);
-		}
-		else // turboprint
-		{
-			if (pctx->cairo)
-			{
-				cairo_destroy(pctx->cairo);
-				pctx->cairo = NULL;	
-			}
-			if(pctx->surface)
-			{
-				cairo_surface_destroy(pctx->surface);
-			}
-			if(pctx->cairo_dev)
-			{
-				pctx->cairo_dev->setCairo(NULL);
-				delete pctx->dev;
-			}
-		
-			CloseDevice((struct IORequest *)pctx->PIO);
-			DeleteIORequest((struct IORequest *)pctx->PIO);
-			DeleteMsgPort(pctx->PrinterMP);
-		}
-
-		free(pctx);
-	}
-}
 
 unsigned char *pdfGetBitmapRowData(void *_ctx, int row)
 {
@@ -861,6 +535,140 @@ void pdfGetBitmap(void *_ctx, struct pdfBitmap *bm)
 	bm->data = cairo_image_surface_get_data(ctx->surface);
 }
 
+void pdfDisposeRegionForSelection(void *_ctx, struct pdfSelectionRegion *region)
+{
+	free(region);
+}
+
+void pdfDisposeTextForSelection(void *_ctx, struct pdfSelectionText *text)
+{
+	free(text);
+}
+
+struct pdfSelectionRegion *pdfBuildRegionForSelection(void *_ctx, int page, double x1, double y1, double x2, double y2, struct pdfSelectionRegion *previous)
+{
+	ENTER_SECTION
+
+	struct devicecontext *ctx = (struct devicecontext*)_ctx;
+	Page *pdfpage = ctx->doc->getCatalog()->getPage(page);
+	double cropwidth = pdfGetPageMediaWidth(ctx, page);
+	double cropheight = pdfGetPageMediaHeight(ctx, page);
+
+	TextOutputDev *text_dev;
+	
+	if (ctx->selection_dev == NULL)
+		text_dev = ctx->selection_dev = new TextOutputDev(NULL, gTrue, 0, gFalse, gFalse);
+	else
+		text_dev = ctx->selection_dev;
+	
+	if (page != ctx->selection_pagenum)
+		pdfpage->display(text_dev, 72, 72, 0, gTrue, gTrue, gFalse);
+	
+	ctx->selection_pagenum = page;
+	
+	PDFRectangle rect(x1 * cropwidth, y1 * cropheight, x2 * cropwidth, y2 * cropheight);
+	GooList *list = text_dev->getSelectionRegion(&rect, selectionStyleGlyph, 1.0f);
+	
+	/* use gfx.lib region functions to merge all pdf rectangles. this sucks a bit but hopefuly using scaled coords will be fine */
+	
+	struct Region *region = NewRegion();
+	int i;
+	const float scale = (float)(1<<12);
+	
+	D(kprintf("source region:%f, %f, %f, %f\n", x1,y1,x2,y2));
+	
+	for (i = 0; i < list->getLength(); i++)
+	{
+		Rectangle rect;
+		
+		PDFRectangle *selection_rect = (PDFRectangle *) list->get(i);
+		rect.MinX      = (int)(selection_rect->x1 * scale / cropwidth);
+		rect.MinY      = (int)(selection_rect->y1 * scale / cropheight);
+		rect.MaxX      = rect.MinX + (int)((selection_rect->x2 - selection_rect->x1) * scale / cropwidth);
+		rect.MaxY      = rect.MinY + (int)((selection_rect->y2 - selection_rect->y1) * scale / cropheight);
+		D(kprintf("reg:%d, %d, %d, %d, %f, %f, %f, %f\n", rect.MinX, rect.MinY, rect.MaxX, rect.MaxY, selection_rect->x1/cropwidth, selection_rect->y1/cropheight, selection_rect->x2/cropwidth, selection_rect->y2/cropheight));
+				
+		OrRectRegion(region, &rect);
+		delete selection_rect;
+	}
+	
+	/* convert gfx.lib region to pdfregion and return to the caller */
+	
+	delete list;
+	
+	int numrects = 0;
+	RegionRectangle *rrect;
+	
+	D(kprintf("count regions...\n"));
+	for(numrects = 0, rrect = region->RegionRectangle; rrect != NULL; rrect = rrect->Next, numrects++) {}; 
+	
+	struct pdfSelectionRegion *selection = (struct pdfSelectionRegion*)malloc(sizeof(struct pdfSelectionRegion) + numrects * sizeof(struct pdfSelectionRectangle));
+	if (selection != NULL)
+	{
+		rrect = region->RegionRectangle;
+		int rectind = 0;
+		D(kprintf("build selection rectangles...\n"));
+		while(rrect != NULL)
+		{
+			int px, py;
+			int pw, ph;
+			
+			int x, y;
+			Rectangle rect = rrect->bounds;
+			struct pdfSelectionRectangle *pdfrect = &selection->rectangles[rectind++];
+			
+			rect.MinX += region->bounds.MinX;
+			rect.MinY += region->bounds.MinY;
+			rect.MaxX += region->bounds.MinX;
+			rect.MaxY += region->bounds.MinY;
+				
+			pdfrect->x1 = rect.MinX / scale;
+			pdfrect->y1 = rect.MinY / scale;
+			pdfrect->x2 = rect.MaxX / scale;
+			pdfrect->y2 = rect.MaxY / scale;
+			rrect = rrect->Next;
+		}
+		
+		selection->numrects = numrects;
+	}
+		
+	DisposeRegion(region);
+	
+	LEAVE_SECTION
+	
+	return selection;
+}
+
+struct pdfSelectionText *pdfBuildTextForSelection(void *_ctx, int page, double x1, double y1, double x2, double y2)
+{
+	ENTER_SECTION
+
+	struct devicecontext *ctx = (struct devicecontext*)_ctx;
+	Page *pdfpage = ctx->doc->getCatalog()->getPage(page);
+	double cropwidth = pdfGetPageMediaWidth(ctx, page);
+	double cropheight = pdfGetPageMediaHeight(ctx, page);
+
+	TextOutputDev *text_dev = new TextOutputDev(NULL, gTrue, 0, gFalse, gFalse);
+	pdfpage->display(text_dev, 72, 72, 0, gTrue, gTrue, gFalse);
+	PDFRectangle rect(x1 * cropwidth, y1 * cropheight, x2 * cropwidth, y2 * cropheight);
+	GooString *text = text_dev->getSelectionText(&rect, selectionStyleGlyph);
+		
+	delete text_dev;
+		
+	struct pdfSelectionText *selection = (struct pdfSelectionText*)malloc(sizeof(struct pdfSelectionText) + text->getLength() + 1);
+	if (selection != NULL)
+	{
+		memcpy(selection->utf8, text->getCString(), text->getLength());
+		selection->utf8[text->getLength()] = 0;
+	}
+		
+	delete text;
+	
+	LEAVE_SECTION
+	
+	return selection;
+}
+
 static int actionGetPage(void *_doc, void *_action)
 {
 	PDFDoc *doc = (PDFDoc*)_doc;
@@ -903,9 +711,13 @@ static int actionGetPage(void *_doc, void *_action)
 				return ret;
 			}
 
+			#if 0
+			// this is a case where only getNamedDest() is not NULL but no idea how to handle that yet - kiero
+
 			//char *buff = convertToANSI(link_goto->getNamedDest());
 			//printf("%s\n", buff);
 			//printf("goto link. isok:%d\n", link_goto->getDest()->isOk());
+
 			if(link_goto->getDest()->isPageRef() == FALSE)
 			{
 				LEAVE_SECTION
@@ -921,6 +733,7 @@ static int actionGetPage(void *_doc, void *_action)
 				LEAVE_SECTION
 				return page;
 			}
+			#endif
 		}
 		else
 		{
@@ -1155,7 +968,7 @@ void *pdfFindLink(void *_ctx, int pagenum, int x, int y)
 	}
 
 
-	links = new Links(page->getAnnots(catalog));
+	links = new Links(page->getAnnots());
 	obj.free();
 
 	if(links == NULL)
@@ -1182,6 +995,8 @@ void *pdfFindLink(void *_ctx, int pagenum, int x, int y)
 			link = links->getLink(i);
 			link_action = link->getAction();
 
+			if (link_action == NULL)
+				continue;
 
 			switch(link_action->getKind())
 			{
@@ -1307,7 +1122,7 @@ void pdfListLinks(void *_ctx, int pagenum)
 		return;
 	}
 
-	links = new Links(page->getAnnots(catalog));
+	links = new Links(page->getAnnots());
 	obj.free();
 
 	if(links == NULL)
@@ -1438,17 +1253,9 @@ int pdfSearch(void *_ctx, int *page, char *phrase, int direction, double *x1, do
 	struct devicecontext *ctx = (struct devicecontext*)_ctx;
 	int found = FALSE;
 
-	/* if page differs then repeast searching */
-
-	if(ctx->search.phrase == NULL || 0 != strcmp(ctx->search.phrase, phrase) || ctx->search.page != *page || (ctx->search.currentsearchresult != NULL && nextsearchresult(ctx, direction) == NULL))
+	if((ctx->search.phrase == NULL || 0 == strcmp(ctx->search.phrase, phrase)) && ctx->search.page == *page && (ctx->search.currentsearchresult != NULL && nextsearchresult(ctx, direction) == NULL))
 	{
-		if(ctx->search.page == *page)
-			*page += direction > 0 ? 1 : -1;
-
-		if(*page > ctx->doc->getNumPages())
-			*page = 1;
-		else if(*page < 1)
-			*page = ctx->doc->getNumPages();
+		/* if same search criteria, same page but no more results */
 
 		free(ctx->search.phrase);
 
@@ -1460,23 +1267,40 @@ int pdfSearch(void *_ctx, int *page, char *phrase, int direction, double *x1, do
 		}
 
 		ctx->search.phrase = strdup(phrase);
-		ctx->search.page = direction > 0 ? 0 : ctx->doc->getNumPages() + 1;
+		ctx->search.currentsearchresult = NULL;
+		LEAVE_SECTION
+		return PDFSEARCH_NEXTPAGE; 
+	
+	}
+	else if(ctx->search.phrase == NULL || 0 != strcmp(ctx->search.phrase, phrase) || ctx->search.page != *page)
+	{
+		/* if new phrase or new page fill the list with new results */
+
+		free(ctx->search.phrase);
+
+		while(!IsListEmpty((struct List*)&ctx->search.searchresultlist))
+		{
+			struct searchresult *srn = (struct searchresult*)GetHead(&ctx->search.searchresultlist);
+			REMOVE(srn);
+			free(srn);
+		}
+
+		ctx->search.phrase = strdup(phrase);
+		ctx->search.page = *page;
 		ctx->search.currentsearchresult = NULL;
 
 		/* new search */
 
 		WCHAR *phraseUCS4 = convertToUCS4(phrase);
-		TextOutputDev *text_dev = new TextOutputDev(NULL, gTrue, gFalse, gFalse);
-
-		while(*page <= ctx->doc->getNumPages() && *page >= 1 && found == FALSE)
+		TextOutputDev *text_dev = new TextOutputDev(NULL, gTrue, 0, gFalse, gFalse);
+		
 		{
 			double xMin, yMin, xMax, yMax;
 			double height;
 			Page *pdfpage = ctx->doc->getCatalog()->getPage(*page);
 
 			pdfpage->display(text_dev, 72, 72, 0,
-			                 gTrue, gTrue, gFalse,
-			                 ctx->doc->getCatalog());
+							 gTrue, gTrue, gFalse);
 
 			height = pdfpage->getMediaHeight();
 
@@ -1487,6 +1311,7 @@ int pdfSearch(void *_ctx, int *page, char *phrase, int direction, double *x1, do
 			                         gFalse, gTrue, // startAtTop, stopAtBottom
 			                         gTrue, gFalse, // startAtLast, stopAtLast
 			                         gFalse, gFalse, // caseSensitive, backwards
+									 gFalse,        // wholeWord
 			                         &xMin, &yMin, &xMax, &yMax))
 			{
 				double ctm[6];
@@ -1506,30 +1331,38 @@ int pdfSearch(void *_ctx, int *page, char *phrase, int direction, double *x1, do
 				ADDTAIL(&ctx->search.searchresultlist, searchresult);
 				found = TRUE;
 			}
+		}
+		
+		delete text_dev;
+		free(phraseUCS4);
 
-			if(found == FALSE)
-				*page += direction > 0 ? 1 : -1;
-		};
-
-		if(found)
+		if (found == FALSE)
+		{
+			LEAVE_SECTION
+			return PDFSEARCH_NEXTPAGE;
+		}
+		
+		if (found)
 		{
 			if(direction > 0)
 				ctx->search.currentsearchresult = (struct searchresult*)GetHead(&ctx->search.searchresultlist);
 			else
 				ctx->search.currentsearchresult = (struct searchresult*)GetTail(&ctx->search.searchresultlist);
+				
 			ctx->search.page = *page;
 		}
 
-		delete text_dev;
-		free(phraseUCS4);
 	}
-	else if(ctx->search.phrase != NULL && 0 == strcmp(ctx->search.phrase, phrase) && ctx->search.page == *page && nextsearchresult(ctx, direction) != NULL)
+	else if(ctx->search.phrase != NULL && 0 == strcmp(ctx->search.phrase, phrase) && ctx->search.page == *page && ctx->search.currentsearchresult != NULL && nextsearchresult(ctx, direction) != NULL)
 	{
+
+		/* same phrase, same page and not empty pool of results */
+
 		ctx->search.currentsearchresult = nextsearchresult(ctx, direction);
 		found = TRUE;
 	}
 
-	if(ctx->search.currentsearchresult != NULL)
+	if (ctx->search.currentsearchresult != NULL)
 	{
 		*x1 = ctx->search.currentsearchresult->x1;
 		*y1 = ctx->search.currentsearchresult->y1;
@@ -1538,7 +1371,7 @@ int pdfSearch(void *_ctx, int *page, char *phrase, int direction, double *x1, do
 	}
 
 	LEAVE_SECTION
-	return found;
+	return found ? PDFSEARCH_FOUND : PDFSEARCH_NOTFOUND;
 }
 
 static char *goo_string_to_utf8(GooString *s)
@@ -1646,7 +1479,7 @@ struct MinList *pdfGetAnnotations(void *_ctx, int page)
 	ENTER_SECTION
 	struct devicecontext *ctx = (struct devicecontext*)_ctx; 
 	Page *pdfpage = ctx->doc->getCatalog()->getPage(page);
-	Annots *annots = pdfpage->getAnnots(ctx->doc->getCatalog());
+	Annots *annots = pdfpage->getAnnots();
 
 	if (annots == NULL || annots->getNumAnnots() == 0)
 	{

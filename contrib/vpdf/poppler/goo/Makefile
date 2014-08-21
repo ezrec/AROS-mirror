@@ -12,9 +12,10 @@ OBJS=  gfile.o \
 	gstrtod.o    \
 	gmem.o       \
 	GooString.o  \
+	grandom.o
 
 TARGET = libgoo.a
-INCLUDES = -I. -I..
+INCLUDES = -I. -I.. -I../poppler
 
 $(TARGET): $(OBJS)
 	$(AR) $(TARGET) $(OBJS)

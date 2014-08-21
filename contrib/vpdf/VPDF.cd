@@ -84,15 +84,117 @@ Multiple pages per sheet
 MSG_PRINTER_CUSTOM (//)
 Custom
 ;
-MSG_PRINTER_HORIZONTAL (//)
-Horizontal
+MSG_PRINTER_HORIZONTAL_VERTICAL (//)
+Horizontal-Vertical
+MSG_PRINTER_HORIZONTAL_VERTICALREVERSED (//)
+Horizontal - Vertical Reversed
+MSG_PRINTER_HORIZONTALREVERSED_VERTICAL (//)
+Horizontal Reversed-Vertical
+MSG_PRINTER_HORIZONTALREVERSED_VERTICAL_REVERSED (//)
+Horizontal Reversed-Vertical Reversed
+MSG_PRINTER_VERTICAL_HORIZONTAL (//)
+Vertical-Horizontal
+MSG_PRINTER_VERTICALREVERSED_HORIZONTAL (//)
+Vertical Reversed-Horizontal
+MSG_PRINTER_VERTICAL_HORIZONTALREVERSED (//)
+Vertical-Horizontal Reversed
+MSG_PRINTER_VERTICAL_REVERSED_HORIZONTALREVERSED (//)
+Vertical Reversed-Horizontal Reversed
+MSG_PRINTER_ABORT (//)
+Abort
 ;
-MSG_PRINTER_VERTICAL (//)
-Vertical
+MSG_MENU_PROJECT (//)
+Project
 ;
-MSG_PRINTER_HORIZONTALREVERT (//)
-Horizontal reversed
-;
-MSG_PRINTER_VERTICALREVERT (//)
-Vertical reversed
-;
+MSG_MENU_NEWWIN (//)
+New Window...
+MSG_MENU_NEWTAB (//)
+New Tab
+MSG_MENU_FILE (//)
+Open File...
+MSG_MENU_RECENT (//)
+Open Recent...
+MSG_MENU_PRINT (//)
+Print...
+MSG_MENU_ABOUT (//)
+About...
+MSG_MENU_QUIT (//)
+Quit
+MSG_MENU_EDIT (//)
+Edit
+MSG_MENU_COPY (//)
+Copy
+MSG_MENU_LOG (//)
+Log...
+MSG_MENU_SETTINGS (//)
+Settings
+MSG_MENU_SETTINGS_SETTINGS (//)
+Settings...
+MSG_MENU_SETTINGS_SAVE (//)
+Save as Default
+MSG_MENU_SETTINGS_MUI (//)
+MUI...
+MSG_MENU_WINDOWS (//)
+Windows
+MSG_NOFILE (//)
+No file loaded.
+MSG_SAVE (//)
+_Save
+MSG_CANCEL (//)
+_Cancel
+MSG_USE (//)
+_Use
+MSG_WINDOWS (//)
+Windows
+MSG_SETTINGS_LAYOUT (//)
+Layout:
+MSG_SETTINGS_SCALING (//)
+Scaling:
+MSG_SETTINGS_OUTLINE (//)
+Open document outline
+MSG_SETTINGS_DOCUMENT (//)
+Document
+MSG_SETTINGS_LOGWINDOW (//)
+Open log window automatically
+MSG_REQ_OPEN (//)
+Select File to Open...
+MSG_REQ_SAVE (//)
+Select File to Save...
+MSG_REQ_DRAWER (//)
+Select Drawer...
+MSG_TOOLBAR_ZOOMIN (//)
+Zoom In
+MSG_TOOLBAR_ZOOMOUT (//)
+Zoom Out
+MSG_TOOLBAR_COUNTERCLOCKWISE (//)
+Rotate counterclockwise
+MSG_TOOLBAR_CLOCKWISE (//)
+Rotate clockwise
+MSG_TOOLBAR_MARK (//)
+Mark
+MSG_TOOLBAR_SCROLL (//)
+Scroll
+MSG_TOOLBAR_OUTLINE (//)
+Outline
+MSG_TOOLBAR_FITPAGE (//)
+Fit Page
+MSG_TOOLBAR_FITWIDTH (//)
+Fit Width
+MSG_TOOLBAR_SINGLE (//)
+Single
+MSG_TOOLBAR_CONTINUOUS (//)
+Continuous
+MSG_TOOLBAR_FACING (//)
+Facing
+MSG_TOOLBAR_CONT_FACING (//)
+Continuous Facing
+MSG_SEARCH_NEXT (//)
+_Next
+MSG_SEARCH_PREV (//)
+_Prev
+MSG_SEARCH_END (//)
+End of Document
+MSG_SEARCH_LABEL (//)
+Search:
+MSG_SLIDER_PAGE (//)
+Page %ld
