@@ -924,7 +924,7 @@ void DaemonCode(LIBBASETYPEPTR LIBBASE)
 }
 
 static void TaskCode(struct ata_Bus *, struct Task*, struct SignalSemaphore*);
-static void ata_Interrupt(HIDDT_IRQ_Handler *, HIDDT_IRQ_HwInfo *);
+static AROS_INTP(ata_Interrupt);
 
 /*
  * Make a task for given bus alive.
@@ -991,7 +991,6 @@ int ata_InitBusTask(struct ata_Bus *bus, struct SignalSemaphore *ready)
 
 static int CreateInterrupt(struct ata_Bus *bus)
 {
-    struct OOP_Object *o;
     int retval = 0;
 
     if (bus->ab_IntHandler)
@@ -1000,25 +999,14 @@ static int CreateInterrupt(struct ata_Bus *bus)
             Prepare nice interrupt for our bus. Even if interrupt sharing is enabled,
             it should work quite well
         */
-        bus->ab_IntHandler->h_Node.ln_Pri = 10;
-        bus->ab_IntHandler->h_Node.ln_Name = bus->ab_Task->tc_Node.ln_Name;
-        bus->ab_IntHandler->h_Code = ata_Interrupt;
-        bus->ab_IntHandler->h_Data = bus;
 
-        o = OOP_NewObject(NULL, CLID_Hidd_IRQ, NULL);
-        if (o)
-        {
-            struct pHidd_IRQ_AddHandler __msg__ = {
-                mID:            OOP_GetMethodID(IID_Hidd_IRQ, moHidd_IRQ_AddHandler),
-                handlerinfo:    bus->ab_IntHandler,
-                id:             bus->ab_IRQ,
-            }, *msg = &__msg__;
+        bus->ab_IntHandler->is_Node.ln_Type = NT_INTERRUPT;
+        bus->ab_IntHandler->is_Node.ln_Pri  = 10;
+        bus->ab_IntHandler->is_Node.ln_Name = bus->ab_Task->tc_Node.ln_Name;
+        bus->ab_IntHandler->is_Code         = (VOID_FUNC)ata_Interrupt;
+        bus->ab_IntHandler->is_Data         = bus;
 
-            if (OOP_DoMethod((OOP_Object *)o, (OOP_Msg)msg))
-                retval = 1;
-
-            OOP_DisposeObject((OOP_Object *)o);
-        }
+        AddIntServer(INTB_KERNEL + bus->ab_IRQ, bus->ab_IntHandler);
     }
 
     return retval;
@@ -1116,11 +1104,14 @@ static void TaskCode(struct ata_Bus *bus, struct Task* parent, struct SignalSema
     }
 }
 
-static void ata_Interrupt(HIDDT_IRQ_Handler *irq, HIDDT_IRQ_HwInfo *hw)
+static AROS_INTH1(ata_Interrupt, struct ata_Bus *, bus)
 {
-    struct ata_Bus *bus = (struct ata_Bus *)irq->h_Data;
+    AROS_INTFUNC_INIT
 
     ata_HandleIRQ(bus);
+    return 0;
+
+    AROS_INTFUNC_EXIT
 }
 
 /* vim: set ts=4 sw=4 :*/
