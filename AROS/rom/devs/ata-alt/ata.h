@@ -53,7 +53,8 @@ Lang: English
 #include <aros/bootloader.h>
 #include "include/scsicmds.h"
 
-#include <hidd/irq.h>
+#include <oop/oop.h>
+#include <exec/interrupts.h>
 #include <asm/io.h>
 
 #define MAX_DEVICEBUSES		2
@@ -152,7 +153,7 @@ struct ata_Bus
    struct ata_Unit         *ab_Units[MAX_BUSUNITS];    /* Units on the bus */
    struct ata_Unit         *ab_SelectedUnit;    /* Currently selected unit */
 
-   HIDDT_IRQ_Handler       *ab_IntHandler;
+   struct Interrupt        *ab_IntHandler;
    ULONG                   ab_IntCnt;
 
    struct Task             *ab_Task;       /* Bus task handling all not-immediate transactions */

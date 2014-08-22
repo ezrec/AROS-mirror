@@ -137,80 +137,65 @@ BOOL ata_RegisterVolume(ULONG StartCyl, ULONG EndCyl, struct ata_Unit *unit)
 {
     struct ExpansionBase *ExpansionBase;
     struct DeviceNode *devnode;
-    IPTR *pp;
-    TEXT dosdevname[4] = "HD0", *handler;
-    UWORD len;
+    TEXT dosdevname[4] = "HD0";
+    const ULONG IdDOS = AROS_MAKE_ID('D','O','S','\001');
+    const ULONG IdCDVD = AROS_MAKE_ID('C','D','V','D');
 
     ExpansionBase = (struct ExpansionBase *)OpenLibrary("expansion.library",
                                                         40L);
 
     if (ExpansionBase)
     {
-        pp = AllocMem(24*sizeof(IPTR), MEMF_PUBLIC | MEMF_CLEAR);
+        IPTR pp[24];
 
-        if (pp)
+        /* This should be dealt with using some sort of volume manager or such. */
+        switch (unit->au_DevType)
         {
-            /* This should be dealt with using some sort of volume manager or such. */
-            switch (unit->au_DevType)
-            {
-                case DG_DIRECT_ACCESS:
-                    break;
-                case DG_CDROM:
-                    dosdevname[0] = 'C';
-                    break;
-                default:
-                    D(bug("[ATA>>]:-ata_RegisterVolume called on unknown devicetype\n"));
-            }
+            case DG_DIRECT_ACCESS:
+                break;
+            case DG_CDROM:
+                dosdevname[0] = 'C';
+                break;
+            default:
+                D(bug("[ATA>>]:-ata_RegisterVolume called on unknown devicetype\n"));
+        }
 
-            if (unit->au_UnitNum < 10)
-                dosdevname[2] += unit->au_UnitNum % 10;
-            else
-                dosdevname[2] = 'A' - 10 + unit->au_UnitNum;
-            pp[0] = (IPTR)dosdevname;
-            pp[1] = (IPTR)MOD_NAME_STRING;
-            pp[2] = unit->au_UnitNum;
-            pp[DE_TABLESIZE + 4] = DE_BOOTBLOCKS;
-            pp[DE_SIZEBLOCK + 4] = 1 << (unit->au_SectorShift - 2);
-            pp[DE_NUMHEADS + 4] = unit->au_Heads;
-            pp[DE_SECSPERBLOCK + 4] = 1;
-            pp[DE_BLKSPERTRACK + 4] = unit->au_Sectors;
-            pp[DE_RESERVEDBLKS + 4] = 2;
-            pp[DE_LOWCYL + 4] = StartCyl;
-            pp[DE_HIGHCYL + 4] = EndCyl;
-            pp[DE_NUMBUFFERS + 4] = 10;
-            pp[DE_BUFMEMTYPE + 4] = MEMF_PUBLIC | MEMF_CHIP;
-            pp[DE_MAXTRANSFER + 4] = 0x00200000;
-            pp[DE_MASK + 4] = 0x7FFFFFFE;
-            pp[DE_BOOTPRI + 4] = ((!unit->au_DevType) ? 0 : 10);
-            pp[DE_DOSTYPE + 4] = 0x444F5301;
-            pp[DE_BOOTBLOCKS + 4] = 2;
-            devnode = MakeDosNode(pp);
+        if (unit->au_UnitNum < 10)
+            dosdevname[2] += unit->au_UnitNum % 10;
+        else
+            dosdevname[2] = 'A' - 10 + unit->au_UnitNum;
 
-            if (devnode)
-            {
-                if(unit->au_DevType == DG_DIRECT_ACCESS)
-                    handler = "afs.handler";
-                else
-                    handler = "cdrom.handler";
-                len = strlen(handler);
-                if ((devnode->dn_Handler =
-                     MKBADDR(AllocMem(AROS_BSTR_MEMSIZE4LEN(len),
-                                      MEMF_PUBLIC | MEMF_CLEAR
-                             )
-                     )
-                ))
-                {
-                    CopyMem(handler, AROS_BSTR_ADDR(devnode->dn_Handler), len);
-                    AROS_BSTR_setstrlen(devnode->dn_Handler, len);
+        pp[0]           = (IPTR)dosdevname;
+        pp[1]           = (IPTR)MOD_NAME_STRING;
+        pp[2]           = unit->au_UnitNum;
+        pp[DE_TABLESIZE    + 4] = DE_BOOTBLOCKS;
+        pp[DE_SIZEBLOCK    + 4] = 1 << (unit->au_SectorShift - 2);
+        pp[DE_NUMHEADS     + 4] = unit->au_Heads;
+        pp[DE_SECSPERBLOCK + 4] = 1;
+        pp[DE_BLKSPERTRACK + 4] = unit->au_Sectors;
+        pp[DE_RESERVEDBLKS + 4] = 2;
+        pp[DE_LOWCYL       + 4] = StartCyl;
+        pp[DE_HIGHCYL      + 4] = EndCyl;
+        pp[DE_NUMBUFFERS   + 4] = 10;
+        pp[DE_BUFMEMTYPE   + 4] = MEMF_PUBLIC | MEMF_31BIT;
+        pp[DE_MAXTRANSFER  + 4] = 0x00200000;
+        pp[DE_MASK         + 4] = 0x7FFFFFFE;
+        pp[DE_BOOTPRI      + 4] = ((unit->au_DevType == DG_DIRECT_ACCESS) ? 0 : 10);
+        pp[DE_DOSTYPE      + 4] = ((unit->au_DevType == DG_DIRECT_ACCESS) ? IdDOS : IdCDVD);
+        pp[DE_CONTROL      + 4] = 0;
+        pp[DE_BOOTBLOCKS   + 4] = 2;
 
-                    D(bug("[ATA>>]:-ata_RegisterVolume: '%s' with StartCyl=%d, EndCyl=%d .. ",
-                          &(devnode->dn_Ext.dn_AROS.dn_DevName[0]), StartCyl, EndCyl));
-                    AddBootNode(pp[DE_BOOTPRI + 4], 0, devnode, 0);
-                    D(bug("done\n"));
-                    
-                    return TRUE;
-                }
-            }
+        devnode = MakeDosNode(pp);
+
+        if (devnode)
+        {
+            D(bug("[ATA>>]:-ata_RegisterVolume: '%b', type=0x%08lx with StartCyl=%d, EndCyl=%d .. ",
+                  devnode->dn_Name, pp[DE_DOSTYPE + 4], StartCyl, EndCyl));
+
+            AddBootNode(pp[DE_BOOTPRI + 4], ADNF_STARTPROC, devnode, NULL);
+            D(bug("done\n"));
+
+            return TRUE;
         }
 
         CloseLibrary((struct Library *)ExpansionBase);
@@ -278,7 +263,7 @@ static void ata_RegisterBus(IPTR IOBase, IPTR IOAlt, IPTR INTLine,
     ab->ab_Timeout      = 0;
     ab->ab_Units[0]     = NULL;
     ab->ab_Units[1]     = NULL;
-    ab->ab_IntHandler   = (HIDDT_IRQ_Handler *)AllocVecPooled(a->ATABase->ata_MemPool, sizeof(HIDDT_IRQ_Handler));
+    ab->ab_IntHandler   = (struct Interrup *)AllocVecPooled(a->ATABase->ata_MemPool, sizeof(struct Interrupt));
     ab->ab_Task         = NULL;
     ab->ab_HandleIRQ    = NULL;
 
@@ -956,5 +941,4 @@ static int close
 ADD2INITLIB(ata_init, 0)
 ADD2OPENDEV(open, 0)
 ADD2CLOSEDEV(close, 0)
-ADD2LIBS("irq.hidd", 0, static struct Library *, __irqhidd)
 /* vim: set ts=8 sts=4 et : */

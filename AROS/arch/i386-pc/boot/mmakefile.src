@@ -42,6 +42,7 @@ KLIBS   := exec
 #MM	kernel-pc-acpica   		\
 #MM	kernel-pc-hpet     		\
 #MM	kernel-ata      		\
+#MM     kernel-ata-alt                  \
 #MM     kernel-hidd-pciata              \
 #MM	kernel-ahci      		\
 #MM	kernel-pc-i386-serial     	\
