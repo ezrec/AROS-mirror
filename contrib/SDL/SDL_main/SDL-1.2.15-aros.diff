@@ -14102,7 +14102,7 @@ diff -ruN SDL-1.2.15/src/video/cgx/SDL_cgxvideo.c SDL-1.2.15.aros/src/video/cgx/
 +
 +/* This is a special flag that tells video mode change code to not to drop existing
 +	GL context. */
-+#define SDL_KEEP_GL_CONTEXT	0x00000100
++#define SDL_KEEP_GL_CONTEXT	0x00100000
 +
 +#if !defined(PROTO_SDL_H)
 +static SDL_VideoDevice *CGX_CreateDevice(int devindex);
