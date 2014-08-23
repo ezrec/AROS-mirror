@@ -3,9 +3,9 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- contrib-sdl : SDL-aros
-#MM- SDL-aros-lib : contrib-sdl-sdl-main-fetch SDL-aros-sharedlib
-##MM- SDL-aros-lib : contrib-sdl-sdl-main-fetch SDL-aros-staticlib
+#MM- contrib-sdl : SDL-aros development-SDL_gfx development-SDL_image development-SDL_mixer development-SDL_net development-SDL_sound development-SDL_ttf
+##MM- SDL-aros-lib : contrib-sdl-sdl-main-fetch SDL-aros-sharedlib
+#MM- SDL-aros-lib : contrib-sdl-sdl-main-fetch SDL-aros-staticlib SDL-aros-staticlib-postbuild
 #MM- SDL-aros : SDL-aros-lib SDL-aros-tests
 ##MM- SDL-aros-tests : SDL-aros-standardtests SDL-aros-gltests
 
@@ -23,103 +23,115 @@ ARCHBASE     := SDL-$(ARCHVER)
 
 ARCHSRCDIR := $(PORTSDIR)/SDL/$(ARCHBASE)
 
+SDLSRCDIR := $(SRCDIR)/$(CURDIR)/$(ARCHBASE)
+
 %create_patch mmake=sdl_main-patch archive=$(ARCHBASE) suffixes="tar.gz" destination=$(PORTSDIR)/SDL
 
 TESTEXEDIR := $(AROS_TESTS)/SDL
 
 FILES := \
-    $(ARCHSRCDIR)/src/SDL \
-    $(ARCHSRCDIR)/src/SDL_error \
-    $(ARCHSRCDIR)/src/SDL_fatal \
-    $(ARCHSRCDIR)/src/audio/SDL_audio \
-    $(ARCHSRCDIR)/src/audio/SDL_audiocvt \
-    $(ARCHSRCDIR)/src/audio/SDL_audiodev \
-    $(ARCHSRCDIR)/src/audio/SDL_mixer \
-    $(ARCHSRCDIR)/src/audio/SDL_mixer_MMX \
-    $(ARCHSRCDIR)/src/audio/SDL_mixer_MMX_VC \
-    $(ARCHSRCDIR)/src/audio/SDL_mixer_m68k \
-    $(ARCHSRCDIR)/src/audio/SDL_wave \
-    $(ARCHSRCDIR)/src/audio/dummy/SDL_dummyaudio \
-    $(ARCHSRCDIR)/src/audio/ahi/SDL_ahiaudio \
-    $(ARCHSRCDIR)/src/audio/disk/SDL_diskaudio \
-    $(ARCHSRCDIR)/src/cdrom/SDL_cdrom \
-    $(ARCHSRCDIR)/src/cdrom/aros/SDL_syscdrom \
-    $(ARCHSRCDIR)/src/cpuinfo/SDL_cpuinfo \
-    $(ARCHSRCDIR)/src/events/SDL_active \
-    $(ARCHSRCDIR)/src/events/SDL_events \
-    $(ARCHSRCDIR)/src/events/SDL_expose \
-    $(ARCHSRCDIR)/src/events/SDL_keyboard \
-    $(ARCHSRCDIR)/src/events/SDL_mouse \
-    $(ARCHSRCDIR)/src/events/SDL_quit \
-    $(ARCHSRCDIR)/src/events/SDL_resize \
-    $(ARCHSRCDIR)/src/file/SDL_rwops \
-    $(ARCHSRCDIR)/src/joystick/SDL_joystick \
-    $(ARCHSRCDIR)/src/joystick/aros/SDL_sysjoystick \
-    $(ARCHSRCDIR)/src/loadso/dummy/SDL_sysloadso \
-    $(ARCHSRCDIR)/src/stdlib/SDL_getenv \
-    $(ARCHSRCDIR)/src/stdlib/SDL_iconv \
-    $(ARCHSRCDIR)/src/stdlib/SDL_malloc \
-    $(ARCHSRCDIR)/src/stdlib/SDL_qsort \
-    $(ARCHSRCDIR)/src/stdlib/SDL_stdlib \
-    $(ARCHSRCDIR)/src/stdlib/SDL_string \
-    $(ARCHSRCDIR)/src/thread/aros/SDL_syscond \
-    $(ARCHSRCDIR)/src/thread/aros/SDL_sysmutex \
-    $(ARCHSRCDIR)/src/thread/aros/SDL_syssem \
-    $(ARCHSRCDIR)/src/thread/aros/SDL_systhread \
-    $(ARCHSRCDIR)/src/thread/aros/SDL_thread \
-    $(ARCHSRCDIR)/src/timer/SDL_timer \
-    $(ARCHSRCDIR)/src/timer/aros/SDL_systimer \
-    $(ARCHSRCDIR)/src/video/SDL_RLEaccel \
-    $(ARCHSRCDIR)/src/video/SDL_blit \
-    $(ARCHSRCDIR)/src/video/SDL_blit_0 \
-    $(ARCHSRCDIR)/src/video/SDL_blit_1 \
-    $(ARCHSRCDIR)/src/video/SDL_blit_A \
-    $(ARCHSRCDIR)/src/video/SDL_blit_N \
-    $(ARCHSRCDIR)/src/video/SDL_bmp \
-    $(ARCHSRCDIR)/src/video/SDL_cursor \
-    $(ARCHSRCDIR)/src/video/SDL_gamma \
-    $(ARCHSRCDIR)/src/video/SDL_pixels \
-    $(ARCHSRCDIR)/src/video/SDL_stretch \
-    $(ARCHSRCDIR)/src/video/SDL_surface \
-    $(ARCHSRCDIR)/src/video/SDL_video \
-    $(ARCHSRCDIR)/src/video/SDL_yuv \
-    $(ARCHSRCDIR)/src/video/SDL_yuv_mmx \
-    $(ARCHSRCDIR)/src/video/SDL_yuv_sw \
-    $(ARCHSRCDIR)/src/video/dummy/SDL_nullevents \
-    $(ARCHSRCDIR)/src/video/dummy/SDL_nullmouse \
-    $(ARCHSRCDIR)/src/video/dummy/SDL_nullvideo \
-    $(ARCHSRCDIR)/src/video/cgx/SDL_cgxevents \
-    $(ARCHSRCDIR)/src/video/cgx/SDL_cgxmouse \
-    $(ARCHSRCDIR)/src/video/cgx/SDL_cgxaccel \
-    $(ARCHSRCDIR)/src/video/cgx/SDL_cgxgl_LoadLibrary \
-    $(ARCHSRCDIR)/src/video/cgx/SDL_cgxgl_Quit \
-    $(ARCHSRCDIR)/src/video/cgx/SDL_cgxgl_CreateContext \
-    $(ARCHSRCDIR)/src/video/cgx/SDL_cgxgl_DestroyContext \
-    $(ARCHSRCDIR)/src/video/cgx/SDL_cgxgl_UpdateContext \
-    $(ARCHSRCDIR)/src/video/cgx/SDL_cgxgl_MakeCurrent \
-    $(ARCHSRCDIR)/src/video/cgx/SDL_cgxgl_SwapBuffers \
-    $(ARCHSRCDIR)/src/video/cgx/SDL_cgxgl_GetProcAddress \
-    $(ARCHSRCDIR)/src/video/cgx/SDL_cgxgl_GetAttribute \
-    $(ARCHSRCDIR)/src/video/cgx/SDL_cgximage \
-    $(ARCHSRCDIR)/src/video/cgx/SDL_cgxmodes \
-    $(ARCHSRCDIR)/src/video/cgx/SDL_cgxvideo \
-    $(ARCHSRCDIR)/src/video/cgx/SDL_cgxwm
+    $(ARCHBASE)/src/SDL \
+    $(ARCHBASE)/src/SDL_error \
+    $(ARCHBASE)/src/SDL_fatal \
+    $(ARCHBASE)/src/audio/SDL_audio \
+    $(ARCHBASE)/src/audio/SDL_audiocvt \
+    $(ARCHBASE)/src/audio/SDL_audiodev \
+    $(ARCHBASE)/src/audio/SDL_mixer \
+    $(ARCHBASE)/src/audio/SDL_mixer_MMX \
+    $(ARCHBASE)/src/audio/SDL_mixer_MMX_VC \
+    $(ARCHBASE)/src/audio/SDL_mixer_m68k \
+    $(ARCHBASE)/src/audio/SDL_wave \
+    $(ARCHBASE)/src/audio/dummy/SDL_dummyaudio \
+    $(ARCHBASE)/src/audio/ahi/SDL_ahiaudio \
+    $(ARCHBASE)/src/audio/disk/SDL_diskaudio \
+    $(ARCHBASE)/src/cdrom/SDL_cdrom \
+    $(ARCHBASE)/src/cdrom/aros/SDL_syscdrom \
+    $(ARCHBASE)/src/cpuinfo/SDL_cpuinfo \
+    $(ARCHBASE)/src/events/SDL_active \
+    $(ARCHBASE)/src/events/SDL_events \
+    $(ARCHBASE)/src/events/SDL_expose \
+    $(ARCHBASE)/src/events/SDL_keyboard \
+    $(ARCHBASE)/src/events/SDL_mouse \
+    $(ARCHBASE)/src/events/SDL_quit \
+    $(ARCHBASE)/src/events/SDL_resize \
+    $(ARCHBASE)/src/file/SDL_rwops \
+    $(ARCHBASE)/src/joystick/SDL_joystick \
+    $(ARCHBASE)/src/joystick/aros/SDL_sysjoystick \
+    $(ARCHBASE)/src/loadso/dummy/SDL_sysloadso \
+    $(ARCHBASE)/src/stdlib/SDL_getenv \
+    $(ARCHBASE)/src/stdlib/SDL_iconv \
+    $(ARCHBASE)/src/stdlib/SDL_malloc \
+    $(ARCHBASE)/src/stdlib/SDL_qsort \
+    $(ARCHBASE)/src/stdlib/SDL_stdlib \
+    $(ARCHBASE)/src/stdlib/SDL_string \
+    $(ARCHBASE)/src/thread/aros/SDL_syscond \
+    $(ARCHBASE)/src/thread/aros/SDL_sysmutex \
+    $(ARCHBASE)/src/thread/aros/SDL_syssem \
+    $(ARCHBASE)/src/thread/aros/SDL_systhread \
+    $(ARCHBASE)/src/thread/aros/SDL_thread \
+    $(ARCHBASE)/src/timer/SDL_timer \
+    $(ARCHBASE)/src/timer/aros/SDL_systimer \
+    $(ARCHBASE)/src/video/SDL_RLEaccel \
+    $(ARCHBASE)/src/video/SDL_blit \
+    $(ARCHBASE)/src/video/SDL_blit_0 \
+    $(ARCHBASE)/src/video/SDL_blit_1 \
+    $(ARCHBASE)/src/video/SDL_blit_A \
+    $(ARCHBASE)/src/video/SDL_blit_N \
+    $(ARCHBASE)/src/video/SDL_bmp \
+    $(ARCHBASE)/src/video/SDL_cursor \
+    $(ARCHBASE)/src/video/SDL_gamma \
+    $(ARCHBASE)/src/video/SDL_pixels \
+    $(ARCHBASE)/src/video/SDL_stretch \
+    $(ARCHBASE)/src/video/SDL_surface \
+    $(ARCHBASE)/src/video/SDL_video \
+    $(ARCHBASE)/src/video/SDL_yuv \
+    $(ARCHBASE)/src/video/SDL_yuv_mmx \
+    $(ARCHBASE)/src/video/SDL_yuv_sw \
+    $(ARCHBASE)/src/video/dummy/SDL_nullevents \
+    $(ARCHBASE)/src/video/dummy/SDL_nullmouse \
+    $(ARCHBASE)/src/video/dummy/SDL_nullvideo \
+    $(ARCHBASE)/src/video/cgx/SDL_cgxevents \
+    $(ARCHBASE)/src/video/cgx/SDL_cgxmouse \
+    $(ARCHBASE)/src/video/cgx/SDL_cgxaccel \
+    $(ARCHBASE)/src/video/cgx/SDL_cgxgl_LoadLibrary \
+    $(ARCHBASE)/src/video/cgx/SDL_cgxgl_Quit \
+    $(ARCHBASE)/src/video/cgx/SDL_cgxgl_CreateContext \
+    $(ARCHBASE)/src/video/cgx/SDL_cgxgl_DestroyContext \
+    $(ARCHBASE)/src/video/cgx/SDL_cgxgl_UpdateContext \
+    $(ARCHBASE)/src/video/cgx/SDL_cgxgl_MakeCurrent \
+    $(ARCHBASE)/src/video/cgx/SDL_cgxgl_SwapBuffers \
+    $(ARCHBASE)/src/video/cgx/SDL_cgxgl_GetProcAddress \
+    $(ARCHBASE)/src/video/cgx/SDL_cgxgl_GetAttribute \
+    $(ARCHBASE)/src/video/cgx/SDL_cgximage \
+    $(ARCHBASE)/src/video/cgx/SDL_cgxmodes \
+    $(ARCHBASE)/src/video/cgx/SDL_cgxvideo \
+    $(ARCHBASE)/src/video/cgx/SDL_cgxwm
 
 SDLINCDIR := $(AROS_DEVELOPMENT)/include/SDL
 
 USER_INCLUDES := -I$(SDLINCDIR) -I$(ARCHSRCDIR) -I$(ARCHSRCDIR)/src -DSDL_AROS_SHARED
 
-%build_module mmake=SDL-aros-sharedlib \
-    modname=SDL modtype=library \
-    files="$(ARCHSRCDIR)/aros_init $(FILES)" conffile=$(ARCHSRCDIR)/SDL.conf \
-    uselibs="GL iconv"
+#%build_module mmake=SDL-aros-sharedlib \
+#    modname=SDL modtype=library \
+#    files="$(ARCHSRCDIR)/aros_init $(FILES)" conffile=$(ARCHSRCDIR)/SDL.conf \
+#    uselibs="GL iconv"
 
-#MM SDL-aros-staticlib : SDL-aros-includes
+#MM SDL-aros-staticlib : SDL-aros-includes SDL-aros-staticlib-prebuild \
+#MM  workbench-devs-AHI workbench-libs-mesa-linklib \
+#MM  development-libiconv SDL-aros-config
 
 USER_INCLUDES := -I$(SDLINCDIR) -I$(ARCHSRCDIR) -I$(ARCHSRCDIR)/src
 
-%build_linklib mmake=SDL-aros-staticlib libname=SDL_static \
-    files="$(FILES)"
+%build_linklib mmake=SDL-aros-staticlib libname=SDL \
+    files="$(FILES) gl_stubs"
+
+#MM
+SDL-aros-staticlib-prebuild : contrib-sdl-sdl-main-fetch
+	$(CP) -r $(ARCHSRCDIR) $(SRCDIR)/$(CURDIR)
+
+#MM
+SDL-aros-staticlib-postbuild : SDL-aros-staticlib
+	$(RM) $(SDLSRCDIR)
 
 #MM SDL-aros-standardtests : includes linklibs SDL-aros-lib SDL-aros-tests-copyfiles
 #MM SDL-aros-gltests : includes linklibs SDL-aros-lib SDL-aros-tests-copyfiles
@@ -225,12 +237,12 @@ SDL-aros-config : \
     $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros-sdl-config \
     $(AROS_DEVELOPMENT)/bin/sdl-config
 
-$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros-sdl-config: $(ARCHSRCDIR)/aros/sdl-config
+$(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros-sdl-config: $(SRCDIR)/$(CURDIR)/sdl-config
 	@$(SED) 's,prefix=/Development,prefix=$(AROS_DEVELOPMENT),g' $< > $@
 	@$(CHMOD) a+x $@
 	ln -sf $@ $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)/sdl-config
 
-$(AROS_DEVELOPMENT)/bin/sdl-config: $(ARCHSRCDIR)/aros/sdl-config
+$(AROS_DEVELOPMENT)/bin/sdl-config: $(SRCDIR)/$(CURDIR)/sdl-config
 	%mkdir_q dir=$(AROS_DEVELOPMENT)/bin
 	@$(CP) $< $@
 	@$(CHMOD) a+x $@
