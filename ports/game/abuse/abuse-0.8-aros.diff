@@ -6,7 +6,7 @@ diff -ruN abuse-0.8/configure abuse-0.8.aros/configure
    as_fn_error $? "*** SDL_mixer not found!" "$LINENO" 5
  fi
 -LIBS="$LIBS -lSDL_mixer"
-+LIBS="$LIBS -lSDL_mixer -lvorbisfile -lvorbis -logg"
++LIBS="$LIBS -lSDL_mixer -lvorbisfile -lvorbis -logg -lSDL -lm"
  
  if test "${enable_debug}" = "yes"; then
  
