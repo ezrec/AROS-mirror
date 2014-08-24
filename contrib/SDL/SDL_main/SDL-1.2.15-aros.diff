@@ -9532,7 +9532,7 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_syssem.c SDL-1.2.15-aros/src/thread/aro
 diff -ruN SDL-1.2.15/src/thread/aros/SDL_systhread.c SDL-1.2.15-aros/src/thread/aros/SDL_systhread.c
 --- SDL-1.2.15/src/thread/aros/SDL_systhread.c	1970-01-01 01:00:00.000000000 +0100
 +++ SDL-1.2.15-aros/src/thread/aros/SDL_systhread.c	2014-08-23 18:00:57.036780027 +0200
-@@ -0,0 +1,170 @@
+@@ -0,0 +1,173 @@
 +/*
 +    SDL - Simple DirectMedia Layer
 +    Copyright (C) 1997-2006 Sam Lantinga
@@ -9588,13 +9588,15 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_systhread.c SDL-1.2.15-aros/src/thread/
 +#include "SDL_intern.h"
 +
 +#define SDL_numthreads SDLBase->SDL_numthreads
++void __aros_setoffsettable(void *base);
 +#endif
 +
 +Uint32 RunThread(char *args)
 +{
-+	thread_args *data=(thread_args *)atol(args);
++	thread_args *data=FindTask(NULL)->tc_UserData;
 +#if defined(PROTO_SDL_H)
-+        struct SDLBase __unused *SDLBase = data->base;
++	/* Have child use parent library base */
++	__aros_setoffsettable(data->base);
 +#endif
 +	struct Task *Father;
 +
@@ -9648,6 +9650,7 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_systhread.c SDL-1.2.15-aros/src/thread/
 +					NP_StackSize, (IPTR)(thisTask->tc_SPUpper - thisTask->tc_SPLower),
 +					NP_Entry, (IPTR)RunThread,
 +					args ? NP_Arguments : TAG_IGNORE, (IPTR)buffer,
++					NP_UserData, args,
 +#endif
 +					NP_CloseOutput, FALSE,
 +					TAG_DONE);
@@ -9994,7 +9997,7 @@ diff -ruN SDL-1.2.15/src/thread/aros/SDL_thread.c SDL-1.2.15-aros/src/thread/aro
 +	/* Get the thread id */
 +	args = (thread_args *)data;
 +#if defined(PROTO_SDL_H)
-+        struct SDLBase *SDLBase = args->base;
++        struct SDLBase *SDLBase = (struct SDLBase *)__aros_getbase_SDLBase();
 +#endif
 +	/* Perform any system-dependent setup
 +	   - this function cannot fail, and cannot use SDL_SetError()
