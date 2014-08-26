@@ -12,8 +12,11 @@
 
 struct MUIP_Search_Search{ULONG MethodID; STRPTR phrase; LONG direction;};
 
-
+#if defined(__AROS__)
+#define SearchObject   BOOPSIOBJMACRO_START( getSearchClass() )
+#else
 #define	SearchObject   NewObject( getSearchClass() , NULL
+#endif
 
 #define MUIV_Search_Search_Next 0
 #define MUIV_Search_Search_Previous 1

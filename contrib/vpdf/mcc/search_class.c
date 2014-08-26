@@ -73,7 +73,10 @@ DEFNEW
 						Child, LLabel1( LOCSTR( MSG_SEARCH_LABEL  )),
 						Child, strPhrase = StringObject,
 							MUIA_Frame, MUIV_Frame_String,
+#if defined(MUIA_Textinput_RemainActive)
+// FIXME: AROS
 							MUIA_Textinput_RemainActive, TRUE,
+#endif
 							MUIA_Weight, 500,
 							End,
 						Child, btnPrev = SimpleButton( LOCSTR( MSG_SEARCH_PREV  )),

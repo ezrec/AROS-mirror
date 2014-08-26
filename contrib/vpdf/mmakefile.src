@@ -1,0 +1,37 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-vpdf : includes linklibs
+
+CFILES := \
+    locale \
+    vpdf \
+    clipboard \
+    window \
+    application \
+    logger \
+    settings \
+    fontcache \
+    arrowstring_class \
+    pagenumberclass \
+    printer \
+    printer_image
+
+CPPFILES := \
+    poppler_io \
+    poppler_printer
+
+
+#    poppler \
+
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/VPDF
+USER_INCLUDES := -fno-permissive -I$(SRCDIR)/$(CURDIR)/poppler/poppler -I$(SRCDIR)/$(CURDIR)/poppler \
+    -I$(SRCDIR)/$(CURDIR)/aros/include -I$(AROS_INCLUDES)/cairo -idirafter $(SRCDIR)/$(CURDIR)/include
+USER_CFLAGS := -D__LOCALE_STDLIBBASE__ -DMUI_OBSOLETE -frtti -fno-permissive -fexceptions
+
+%build_prog mmake=contrib-vpdf progname=VPDF files=$(CFILES) cxxfiles=$(CPPFILES) \
+    targetdir=$(TARGETDIR) uselibs=
+
+%common

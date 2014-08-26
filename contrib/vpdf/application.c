@@ -1,4 +1,8 @@
 
+#if defined(__AROS__)
+#define MUIMASTER_YES_INLINE_STDARG
+#endif
+
 /// System includes
 #define AROS_ALMOST_COMPATIBLE
 #include <proto/muimaster.h>
@@ -27,14 +31,16 @@
 #include <proto/utility.h>
 
 #include <proto/datatypes.h>
-#include <clib/dtclass_protos.h>
+#include <proto/dtclass.h>
 #include <datatypes/pictureclass.h>
 #include <devices/rawkeycodes.h>
 
 #include <libraries/gadtools.h>
 
+#if defined(__MORPHOS__)
 #include <emul/emulregs.h>
 #include <emul/emulinterface.h>
+#endif
 ////
 
 #include <private/vapor/vapor.h>
@@ -99,6 +105,8 @@ enum
 	REXX_APPTOFRONT
 };
 
+#if defined(__MORPHOS__)
+// FIXME: AROS doesn't support REXX in MUI but AmigaOS4 does
 static LONG Rexx(void);
 static const struct EmulLibEntry RexxEmul = { TRAP_LIB, 0, (void (*)())&Rexx };
 REXXHOOK(RexxHookAbout, REXX_ABOUT);
@@ -114,6 +122,7 @@ static const struct MUI_Command rexxcommands[] =
 	{ "APPTOFRONT",		"APPTOFRONT/S",			1, (struct Hook *)&RexxHookAppToFront 	 },
 	{ NULL,				NULL,					0, NULL							}
 };
+#endif
 
 /* credits */
 
@@ -201,8 +210,10 @@ DEFNEW
        
                 End,
                     
-                    
+
+#if !defined(__AROS__)
 						MUIA_Application_Commands, &rexxcommands,
+#endif
 						MUIA_Application_Window, settingswin = WindowObject,
 							MUIA_Window_Title,"VPDF · Setttings",
 							MUIA_Window_Width, MUIV_Window_Width_Screen(30),
@@ -548,6 +559,8 @@ DEFMMETHOD(VPDF_RequestFile)
 
 static void setuprecent(Object *obj, struct Data *data)
 {
+#if !defined(__AROS__)
+// FIXME: AROS
 	int i;
 	Object *o;
 	DoMethod(menu[MEN_OPEN_RECENT] , MUIM_Menustrip_InitChange);
@@ -570,6 +583,7 @@ static void setuprecent(Object *obj, struct Data *data)
 	}
 
 	DoMethod(menu[MEN_OPEN_RECENT], MUIM_Menustrip_ExitChange);
+#endif
 }
 
 /* this method finds window which was last activated, not currently active one! */
@@ -934,6 +948,8 @@ DEFMMETHOD(DragDrop)
 
 static LONG Rexx(void)
 {
+#if !defined(__AROS__)
+// FIXME: AROS
 	struct Hook *h = (struct Hook*)(APTR)REG_A0;
 	Object *obj = (Object*)REG_A2;
 	IPTR *params = (IPTR*)REG_A1;
@@ -966,7 +982,7 @@ static LONG Rexx(void)
 		case REXX_APPTOFRONT:
 			break;
 	}
-
+#endif
 	return 0;
 }
 

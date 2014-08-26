@@ -1,4 +1,8 @@
 
+#if defined(__AROS__)
+#define MUIMASTER_YES_INLINE_STDARG
+#endif
+
 /// System includes
 #define AROS_ALMOST_COMPATIBLE
 #include <proto/muimaster.h>
@@ -28,14 +32,16 @@
 #include <proto/utility.h>
 
 #include <proto/datatypes.h>
-#include <clib/dtclass_protos.h>
+#include <proto/dtclass.h>
 #include <datatypes/pictureclass.h>
 #include <devices/rawkeycodes.h>
 
 #include <libraries/gadtools.h>
 
+#if !defined(__AROS__)
 #include <emul/emulregs.h>
 #include <emul/emulinterface.h>
+#endif
 ////
 
 #include <private/vapor/vapor.h>
@@ -80,8 +86,11 @@ DEFNEW
     MUIA_Frame, MUIV_Frame_Register,
     MUIA_Group_PageMode, TRUE,
     Child, grpTitles = NewObject(getTitleClass(), NULL,
+#if !defined(__AROS__)
+// FIXME: AROS
     MUIA_Title_Closable, TRUE,
     MUIA_Title_Sortable, TRUE,
+#endif
     TAG_DONE),
     End,
     TAG_MORE, INITTAGS);
@@ -116,7 +125,7 @@ DEFMMETHOD(VPDFWindow_CreateTab)
     DoMethod(data->grpTitles, MUIM_Family_AddTail, VPDFTitleButtonObject,
              Child, TextObject,
              MUIA_Text_Contents, LOCSTR( MSG_NOFILE ) ,
-			 MUIA_Text_Copy, TRUE,
+			 // MUIA_Text_Copy, TRUE, // acc. to MUI4 autodocs that's already the default
              End,
     End);
 

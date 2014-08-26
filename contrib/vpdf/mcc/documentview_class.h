@@ -26,7 +26,11 @@
 #define MUIM_DocumentView_ClearSelection   ( MUIM_DocumentView_Dummy + 9 )
 #define MUIM_DocumentView_SelectionCopy    ( MUIM_DocumentView_Dummy + 10)
 
+#if defined(__AROS__)
+#define DocumentViewObject   BOOPSIOBJMACRO_START( getDocumentViewClass() )
+#else
 #define	DocumentViewObject   NewObject( getDocumentViewClass() , NULL
+#endif
 
 struct MUIP_DocumentView_Render{ULONG MethodID;};
 struct MUIP_DocumentView_EnqueueRender{ULONG MethodID; LONG page;};

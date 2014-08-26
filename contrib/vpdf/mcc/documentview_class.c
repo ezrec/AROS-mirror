@@ -1,3 +1,6 @@
+#if defined(__AROS__)
+#define MUIMASTER_YES_INLINE_STDARG
+#endif
 
 #define SYSTEM_PRIVATE 1
 
@@ -7,7 +10,11 @@
 #include <libraries/mui.h>
 
 #include <libraries/asl.h>
+
+#if !defined(__AROS__)
 #include <libraries/charsets.h>
+#endif
+
 #include <libraries/locale.h>
 #include <workbench/workbench.h>
 
@@ -31,14 +38,16 @@
 #include <proto/alib.h>
 #include <proto/utility.h>
 
-#include <clib/dtclass_protos.h>
+#include <proto/dtclass.h>
 #include <datatypes/pictureclass.h>
 #include <devices/rawkeycodes.h>
 
 #include <libraries/gadtools.h>
 
+#if defined(__MORPHOS__)
 #include <emul/emulregs.h>
 #include <emul/emulinterface.h>
+#endif
 ////
 
 #include <private/vapor/vapor.h>

@@ -1,0 +1,30 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-vpdf-mcc : includes
+
+FILES := \
+		pageview_class \
+		documentview_class \
+		outlineview_class \
+		continuouslayout_class \
+		singlepagelayout_class \
+		toolbar_class \
+		renderer_class \
+		title_class \
+		search_class \
+		thumbnaillist_class \
+		lay_class \
+		annotation_class \
+		toolbar_images
+
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/VPDF/libs
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../aros/include -I$(SRCDIR)/$(CURDIR)/.. -idirafter $(SRCDIR)/$(CURDIR)/../include
+USER_CFLAGS := -DMUI_OBSOLETE
+
+%build_linklib mmake=contrib-vpdf-mcc libname=muiclasses \
+  files=$(FILES) libdir=$(TARGETDIR)
+
+%common

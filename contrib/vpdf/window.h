@@ -28,8 +28,14 @@ struct MUIP_VPDFWindow_AttachView{ULONG MethodID; int tabind; Object *docview; O
 
 #define MUIV_VPDFWindow_AttachView_CurrentTabIfEmpty -1
 
+#if defined(__AROS__)
+#define VPDFWindowObject BOOPSIOBJMACRO_START(getVPDFWindowClass())
+#define VPDFTitleButtonObject BOOPSIOBJMACRO_START(getVPDFTitleButtonClass())
+#else
 #define	VPDFWindowObject   NewObject(getVPDFWindowClass(), NULL
 #define	VPDFTitleButtonObject   NewObject(getVPDFTitleButtonClass(), NULL
+#endif
+
 DEFCLASS(VPDFWindow);
 DEFCLASS(VPDFTitleButton);
 

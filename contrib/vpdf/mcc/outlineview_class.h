@@ -14,7 +14,11 @@
 
 struct MUIP_OutlineView_NewEntrySelected {ULONG MethodID; APTR entry;};
 
+#if defined(__AROS__)
+#define OutlineViewObject   BOOPSIOBJMACRO_START( getOutlineViewClass() )
+#else
 #define	OutlineViewObject   NewObject( getOutlineViewClass() , NULL
+#endif
 
 DEFCLASS(OutlineView);
 

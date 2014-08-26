@@ -10,6 +10,10 @@
 #define _parent(obj) ((Object*)xget(obj, MUIA_Parent))
 #endif
 
+#if defined(__AROS__)
+IPTR DoSuperNew(struct IClass *cl, Object *obj, IPTR tag1, ...);
+#endif
+
 static inline LONG xget(void *object, ULONG attr)
 {
 	LONG a = 0;
@@ -24,10 +28,12 @@ static inline int sxget(void *object, LONG attr)
 	return a[ 0 ];
 }
 
+#if !defined(__AROS__)
 #define nfset(obj, attr, val) \
 	SetAttrs(obj, MUIA_Group_Forward, FALSE, \
 					attr, val, \
 					TAG_DONE)
+#endif
 
 #define getstr(obj) ((char *)xget(obj, MUIA_String_Contents))
 
@@ -108,15 +114,26 @@ TRAP_LIB, 0, (void (*)(void))n }; \
 static const struct Hook n ## Hook = { { NULL,NULL }, (void*)&n ## Func,NULL,NULL };\
 void	n(void)
 
+#elif __AROS__
+
+#define M_HOOK(n, y, z) \
+static void n##_func(struct Hook *h, y, z); \
+static struct Hook n ## Hook = \
+{ \
+    0, 0, HookEntry, ( HOOKFUNC ) n##_func \
+}; \
+\
+static void n##_func( struct Hook *h, y, z )
+
 #else
 #define M_HOOK(n, y, z) \
 static void ASM SAVEDS n##_func(__reg(a0, struct Hook *h), \
-__reg(a2, y), __reg(a1, z));
-static struct Hook n ## Hook =
-{
-    0, 0, ( HOOKFUNC ) n##_func
-}
-;
+__reg(a2, y), __reg(a1, z)); \
+static struct Hook n ## Hook = \
+{ \
+    0, 0, ( HOOKFUNC ) n##_func \
+} \
+; \
 \
 static void ASM SAVEDS n##_func( __reg( a0, struct Hook *h ), \
                                  __reg( a2, y ), __reg( a1, z ) )
@@ -171,12 +188,14 @@ static void ASM SAVEDS n##_func( __reg( a0, struct Hook *h ), \
 #define METHOD static ULONG
 #define PUBLIC_METHOD ULONG
 
+#if !defined(__AROS__)
 struct MUI_RGBcolor
 {
 	ULONG red;
 	ULONG green;
 	ULONG blue;
 };
+#endif
 
 #ifndef MUIA_Pendisplay_RGBcolor
 #define MUIA_Pendisplay_RGBcolor            0x8042a1a9 /* V11 isg struct MUI_RGBcolor * */
@@ -262,6 +281,10 @@ struct  MUIP_Virtgroup_MakeVisible          { ULONG MethodID; Object *obj; ULONG
 
 #ifndef MUIF_PUSHMETHOD_VERIFY
 #define MUIF_PUSHMETHOD_VERIFY       (1<<30UL)
+#endif
+
+#if !defined(CODESET_UTF8)
+#define CODESET_UTF8   1
 #endif
 
 #endif

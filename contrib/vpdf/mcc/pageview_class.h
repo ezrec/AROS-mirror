@@ -38,7 +38,11 @@
 #define MUIM_PageView_ClearSelection   (MUIM_PageView_Dummy + 7)
 #define MUIM_PageView_GetSelection     (MUIM_PageView_Dummy + 8)
 
+#if defined(__AROS__)
+#define PageViewObject   BOOPSIOBJMACRO_START( getPageViewClass() )
+#else
 #define	PageViewObject   NewObject( getPageViewClass() , NULL
+#endif
 
 struct PageViewSelectionRegion
 {

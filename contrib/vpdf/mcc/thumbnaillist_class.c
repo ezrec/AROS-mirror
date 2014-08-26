@@ -1,3 +1,8 @@
+#if defined(__AROS__)
+#define MUIMASTER_YES_INLINE_STDARG
+#include <aros/debug.h>
+#endif
+
 #define SYSTEM_PRIVATE 1
 
 /// System includes
@@ -27,14 +32,16 @@
 #include <proto/alib.h>
 #include <proto/utility.h>
 
-#include <clib/dtclass_protos.h>
+#include <proto/dtclass.h>
 #include <datatypes/pictureclass.h>
 #include <devices/rawkeycodes.h>
 
 #include <libraries/gadtools.h>
 
+#if defined(__MORPHOS__)
 #include <emul/emulregs.h>
 #include <emul/emulinterface.h>
+#endif
 ////
 
 #include <private/vapor/vapor.h>

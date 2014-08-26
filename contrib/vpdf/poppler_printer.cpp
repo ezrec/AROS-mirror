@@ -1,7 +1,9 @@
 
 #include "Object.h"
 
+#if defined(__MORPHOS__)
 #include <proto/charsets.h>
+#endif
 #define AROS_ALMOST_COMPATIBLE
 #define _NO_PPCINLINE
 #include <proto/keymap.h>
@@ -10,7 +12,12 @@
 #include <proto/graphics.h>
 #include <proto/iffparse.h>
 #include <dos/stdio.h>
+#if defined(__AROS__)
+#include <aros/debug.h>
+#define KPrintF kprintf
+#else
 #include <clib/debug_protos.h>
+#endif
 #include <exec/semaphores.h>
 #include <exec/lists.h>
 #include <prefs/prefhdr.h>
@@ -139,7 +146,7 @@ int get_pagesize()
                 CloseIFF(iffhandle);
                 
             }
-            Close (iffhandle->iff_Stream);
+            Close ((BPTR)iffhandle->iff_Stream);
         }
         FreeIFF(iffhandle);
     }

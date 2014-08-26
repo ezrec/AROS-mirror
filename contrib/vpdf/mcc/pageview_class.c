@@ -1103,7 +1103,12 @@ DEFMMETHOD(Hide)
 	   we just push the method and if show is called right after it then flush
 	   is canceled.*/
 
+#if defined(__AROS__)
+    // FIXME: implement MUIV_PushMethod_Delay in Zune/AROS
+	data->flushmethodid = DoMethod(_app(obj), MUIM_Application_PushMethod, obj, 1, MUIM_PageView_Flush);
+#else
 	data->flushmethodid = DoMethod(_app(obj), MUIM_Application_PushMethod, obj, 1 | MUIV_PushMethod_Delay(150), MUIM_PageView_Flush);
+#endif
 	D(kprintf("cleanup:%d\n", data->page));
 	return DOSUPER;
 }

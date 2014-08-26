@@ -29,7 +29,11 @@ struct MUIP_VPDFPrinter_PrinterPrefs{ULONG MethodID;};
 struct MUIP_VPDFPrinter_HideCollate{ULONG MethodID; ULONG copies;};
 struct MUIP_VPDFPrinter_Error{ULONG MethodID;};
 
+#if defined(__AROS__)
+#define VPDFPrinterObject BOOPSIOBJMACRO_START(getVPDFPrinterClass())
+#else
 #define	VPDFPrinterObject   NewObject(getVPDFPrinterClass(), NULL
+#endif
 
 DEFCLASS(VPDFPrinter);
 

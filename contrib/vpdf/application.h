@@ -56,7 +56,11 @@ struct MUIP_VPDF_SelectionCopy{ULONG MethodID;};
 #define MUIV_VPDF_LogMessage_Warning 1
 #define MUIV_VPDF_LogMessage_Error 2
 
+#if defined(__AROS__)
+#define VPDFObject BOOPSIOBJMACRO_START(getVPDFClass())
+#else
 #define	VPDFObject   NewObject(getVPDFClass(), NULL
+#endif
 DEFCLASS(VPDF);
 
 enum

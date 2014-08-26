@@ -10,6 +10,11 @@
 #include "../macros/vapor.h"
 #include <emul/emulregs.h>
 */
+
+#include <proto/alib.h>
+#include <proto/muimaster.h>
+#include <proto/utility.h>
+
 #include <string.h>
 #include <private/vapor/vapor.h>
 #include "arrowstring_class.h"

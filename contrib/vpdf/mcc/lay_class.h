@@ -8,7 +8,11 @@
 #define	MUIA_Lay_Center     	     ( MUIA_Lay_TagBase + 3 )
 #define	MUIA_Lay_KeepPosition        ( MUIA_Lay_TagBase + 4 )
 
+#if defined(__AROS__)
+#define LayObject BOOPSIOBJMACRO_START( getLayClass() )
+#else
 #define	LayObject NewObject(getLayClass(), NULL
+#endif
 
 DEFCLASS(Lay);
 

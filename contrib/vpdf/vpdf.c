@@ -1,4 +1,7 @@
 
+#if defined(__AROS__)
+#define MUIMASTER_YES_INLINE_STDARG
+#endif
 
 #define SYSTEM_PRIVATE
 #define SYSTEM_REALLY_PRIVATE

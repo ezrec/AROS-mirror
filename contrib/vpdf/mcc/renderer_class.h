@@ -21,7 +21,11 @@ struct MUIP_Renderer_Remove{ULONG MethodID; LONG pageIndex; Object *grpLayout;};
 
 /* */
 
+#if defined(__AROS__)
+#define RendererObject   BOOPSIOBJMACRO_START( getRendererClass() )
+#else
 #define RendererObject   NewObject(getRendererClass() , NULL
+#endif
 
 DEFCLASS(Renderer);
 

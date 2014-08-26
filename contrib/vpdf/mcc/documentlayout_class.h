@@ -48,9 +48,15 @@ struct MUIP_SinglePageLayout_Relayout {ULONG MethodID;};
 
 /* */
 
+#if defined(__AROS__)
+#define ContinuousLayoutObject   BOOPSIOBJMACRO_START(getContinuousLayoutClass())
+#define ContinuousDynamicLayoutObject   BOOPSIOBJMACRO_START(getContinuousDynamicLayoutClass())
+#define SinglePageLayoutObject   BOOPSIOBJMACRO_START(getSinglePageLayoutClass())
+#else
 #define ContinuousLayoutObject   NewObject(getContinuousLayoutClass() , NULL
 #define ContinuousDynamicLayoutObject   NewObject(getContinuousDynamicLayoutClass() , NULL
 #define SinglePageLayoutObject   NewObject(getSinglePageLayoutClass() , NULL
+#endif
 
 DEFCLASS(ContinuousLayout);
 DEFCLASS(ContinuousDynamicLayout);

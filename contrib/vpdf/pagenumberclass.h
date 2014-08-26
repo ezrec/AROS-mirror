@@ -23,8 +23,11 @@
 struct MUIP_VPDFNumberGeneratorFirst{ULONG MethodID; LONG reverse;};
 struct MUIP_VPDFNumberGeneratorNext{ULONG MethodID;};
 
+#if defined(__AROS__)
+#define VPDFNumberGenerator BOOPSIOBJMACRO_START(getVPDFNumberGeneratorClass())
+#else
 #define	VPDFNumberGenerator   NewObject(getVPDFNumberGeneratorClass(), NULL
-
+#endif
 
 
 DEFCLASS(VPDFNumberGenerator);

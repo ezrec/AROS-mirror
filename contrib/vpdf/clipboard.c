@@ -14,10 +14,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <devices/clipboard.h>
+#if defined(__AROS__)
+// FIXMDE: AROS
+#define CODESET_UTF8 1
+#else
 #include <libraries/charsets.h>
+#endif
 #include <libraries/locale.h>
 #include <proto/alib.h>
+#if !defined(__AROS__)
 #include <proto/charsets.h>
+#endif
 #include <proto/datatypes.h>
 #include <proto/dos.h>
 #include <proto/exec.h>
@@ -195,6 +202,8 @@ static void clips_write(CONST_STRPTR stext, LONG slen, CONST_STRPTR utext, LONG 
 
 VOID clipboard_write_text(CONST_STRPTR string, ULONG codeset)
 {
+#if !defined(__AROS__)
+// FIXME: AROS (maybe codesets.library)
 	if (string)
 	{
 		struct Library *CharsetsBase = OpenLibrary("charsets.library", 52);
@@ -248,5 +257,6 @@ VOID clipboard_write_text(CONST_STRPTR string, ULONG codeset)
 			CloseLibrary(CharsetsBase);
 		}
 	}
+#endif
 }
 

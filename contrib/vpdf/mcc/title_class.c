@@ -183,7 +183,10 @@ DECMMETHOD(Hide)
 DECMMETHOD(Show)
 DECMMETHOD(DragDrop)
 DECMMETHOD(DragQuery)
+#if !defined(__AROS__)
+// FIXME: AROS
 DECMMETHOD(Title_Close)
+#endif
 ENDMTABLE
 
 DECSUBCLASS_NC(MUIC_Title, TitleClass)

@@ -18,7 +18,11 @@ struct MUIP_Toolbar_Layout {ULONG MethodID; LONG layout;};
 struct MUIP_Toolbar_DragAction {ULONG MethodID; LONG dragaction;};
 struct MUIP_Toolbar_ToggleOutline {ULONG MethodID; LONG visible; };
 
+#if defined(__AROS__)
+#define ToolbarObject   BOOPSIOBJMACRO_START( getToolbarClass() )
+#else
 #define	ToolbarObject   NewObject( getToolbarClass() , NULL
+#endif
 
 DEFCLASS(Toolbar);
 

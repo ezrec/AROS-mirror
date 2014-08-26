@@ -1,4 +1,8 @@
 
+#if defined(__AROS__)
+#define MUIMASTER_YES_INLINE_STDARG
+#endif
+
 /// System includes
 #define AROS_ALMOST_COMPATIBLE
 #include <proto/muimaster.h>
@@ -26,14 +30,16 @@
 #include <proto/utility.h>
 
 #include <proto/datatypes.h>
-#include <clib/dtclass_protos.h>
+#include <proto/dtclass.h>
 #include <datatypes/pictureclass.h>
 #include <devices/rawkeycodes.h>
 
 #include <libraries/gadtools.h>
 
+#if defined(__MORPHOS__)
 #include <emul/emulregs.h>
 #include <emul/emulinterface.h>
+#endif
 ////
 
 #include <private/vapor/vapor.h>

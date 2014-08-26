@@ -14,7 +14,11 @@
 #define MUIM_VPDFSettings_FromObjects (MUIM_VPDFSettings_Dummy + 5)
 #define MUIM_VPDFSettings_ToObjects   (MUIM_VPDFSettings_Dummy + 6)
 
+#if defined(__AROS__)
+#define VPDFSettingsObject BOOPSIOBJMACRO_START(getVPDFSettingsClass())
+#else
 #define	VPDFSettingsObject NewObject(getVPDFSettingsClass(), NULL
+#endif
 
 #define MUIA_VPDFSettings_First       (MUIA_VPDF_TagBase + 32)
 #define MUIA_VPDFSettings_Layout      (MUIA_VPDF_TagBase + 33)

@@ -1,3 +1,7 @@
+#if defined(__AROS__)
+#define MUIMASTER_YES_INLINE_STDARG
+#endif
+
 /// System includes
 #define AROS_ALMOST_COMPATIBLE
 #include <proto/muimaster.h>
@@ -167,7 +171,10 @@ DEFNEW
 							MUIA_Group_Child, MUI_NewObject(MUIC_Text,
 								MUIA_Text_Contents,  LOCSTR( MSG_PRINTER_FIRSTPAGE  ),
 								MUIA_Text_PreParse, "\33r",
+#if !defined(__AROS__)
+// FIXMI: AROS
 								MUIA_Frame, MUIV_Frame_SliderKnob,
+#endif
 								MUIA_FramePhantomHoriz, TRUE,
 							TAG_END),
 						TAG_END),
@@ -177,7 +184,10 @@ DEFNEW
 							MUIA_Group_Child, MUI_NewObject(MUIC_Text,
 								MUIA_Text_Contents,  LOCSTR( MSG_PRINTER_LASTPAGE  ),
 								MUIA_Text_PreParse, "\33r",
+#if !defined(__AROS__)
+// FIXMI: AROS
 								MUIA_Frame, MUIV_Frame_SliderKnob,
+#endif
 								MUIA_FramePhantomHoriz, TRUE,
 							TAG_END),
 						TAG_END),

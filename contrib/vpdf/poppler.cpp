@@ -8,7 +8,9 @@
 
 #include "Object.h"
 
+#if defined(__MORPHOS__)
 #include <proto/charsets.h>
+#endif
 #define _NO_PPCINLINE
 #include <proto/keymap.h>
 #include <proto/exec.h>

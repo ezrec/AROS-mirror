@@ -475,9 +475,12 @@ DEFMMETHOD(Toolbar_ZoomPopup)
 		}
 	}
 
-	menZoom = MenustripObject, Child, menZoom, End,
+	menZoom = MenustripObject, Child, menZoom, End;
 
+#if defined(MUIM_Menustrip_Popup)
+    // FIXME: AROS doesn't have MUIM_Menustrip_Popup
 	id = DoMethod(menZoom, MUIM_Menustrip_Popup, data->btnZoomPopup, 0 , _left(data->btnZoomPopup),_bottom(data->btnZoomPopup)+1);
+#endif
 
 	if (id != 0)
 	{

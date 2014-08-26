@@ -28,11 +28,17 @@ DEFNEW
 	obj = DoSuperNew(cl, obj,
 				MUIA_Group_Horiz, FALSE,
 				MUIA_Alpha, 50,
+#if defined(MUIA_Floating)
+// FIXME: AROS
 				MUIA_Floating, TRUE,
+#endif
 				MUIA_ShowMe, FALSE,
 				Child, StringObject,
 					MUIA_Frame, MUIV_Frame_String,
+#if defined(MUIA_Textinput_Multiline)
+// FIXME: AROS
 					MUIA_Textinput_Multiline, 5,
+#endif
 					MUIA_String_Contents, contents,
 					End,
 				TAG_MORE, INITTAGS);
@@ -83,6 +89,8 @@ DEFMMETHOD(Layout)
 	if (imgwidth < prvwidth)
 		x0 += (prvwidth - imgwidth) / 2;
 		
+#if defined(__MORPHOS__)
+// FIXME: AROS
 	msg->left = data->x + x0;
 	msg->top = data->y + y0;
 	
@@ -91,6 +99,7 @@ DEFMMETHOD(Layout)
 
 	if (msg->width > 200)
 		msg->width = 200;
+#endif
 	
 	return DOSUPER;
 }

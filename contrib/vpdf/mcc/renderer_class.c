@@ -3,6 +3,7 @@
 
 /// System includes
 #define AROS_ALMOST_COMPATIBLE
+#include <clib/macros.h>
 #include <proto/muimaster.h>
 #include <libraries/mui.h>
 
@@ -31,8 +32,10 @@
 #include <clib/debug_protos.h>
 #include <devices/rawkeycodes.h>
 
+#if defined(__MORPHOS__)
 #include <emul/emulregs.h>
 #include <emul/emulinterface.h>
+#endif
 ////
 
 #include <private/vapor/vapor.h>

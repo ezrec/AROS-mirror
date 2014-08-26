@@ -17,7 +17,11 @@
 
 struct MUIP_Annotation_Toggle{ULONG MethodID;};
 
+#if defined(__AROS__)
+#define AnnotationObject BOOPSIOBJMACRO_START( getAnnotationClass() )
+#else
 #define	AnnotationObject NewObject(getAnnotationClass(), NULL
+#endif
 
 DEFCLASS(Annotation);
 

@@ -100,9 +100,12 @@
 		switch (msg->MethodID) \
 		{
 
+#elif __AROS__
+#define BEGINMTABLE static ULONG dispatch( struct IClass *cl, Object *obj, Msg msg){switch(msg->MethodID){
+#define BEGINMTABLE2(name) static ULONG name##_dispatch( struct IClass *cl, Object *obj, Msg msg){switch(msg->MethodID){
 #else
 #define BEGINMTABLE static ULONG dispatch( __reg(a0, struct IClass *cl), __reg(a2, Object *obj), __reg(a1, Msg msg)){switch(msg->MethodID){
-#define BEGINMTABLE2(name) static ULONG name##_Dispatcher( __reg(a0, struct IClass *cl), __reg(a2, Object *obj), __reg(a1, Msg msg)){switch(msg->MethodID){
+#define BEGINMTABLE2(name) static ULONG name##_dispatch( __reg(a0, struct IClass *cl), __reg(a2, Object *obj), __reg(a1, Msg msg)){switch(msg->MethodID){
 #endif /* !__MORPHOS__ */
 #else
 #define BEGINMTABLE static ULONG __asm __saveds dispatch( register __a0 struct IClass *cl, register __a2  Object *obj, register __a1 Msg msg ){switch(msg->MethodID){
@@ -340,6 +343,13 @@
 	return (n##_GATE2((void *)REG_A0, (void *)REG_A2, (void *)REG_A1)); } \
 	static struct Hook n##_hook = { { 0, 0}, (void *)&n, (void *)&n##_GATE2 }; \
 	static LONG n##_GATE2(struct Hook *h, y, z)
+#elif __AROS__
+#define DEFHOOK(n) static struct Hook n##_hook={0,0,HookEntry,(HOOKFUNC)n##_func}
+
+#define MUI_HOOK(n, y, z) \
+	static LONG n##_func(struct Hook *h, y, z); \
+	static struct Hook n##_hook = { 0, 0, HookEntry,(HOOKFUNC)n##_func }; \
+	static LONG n##_func(struct Hook *h, y, z)
 #else
 #define DEFHOOK(n) static struct Hook n##_hook={0,0,(HOOKFUNC)n##_func}
 
