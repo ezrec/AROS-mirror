@@ -6,6 +6,10 @@ removal if you want.
 
 ----------------------------------------------------------------------------
 
+10 Aug 2014: contrib/gfx/cairo
+
+  Removed because there is a more up-to-date port in development/libs/cairo.
+
 31 Aug 2013: contrib/freetype1
 
   Removed because of freetype2 in workbench/libs.
