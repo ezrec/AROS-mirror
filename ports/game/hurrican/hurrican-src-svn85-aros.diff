@@ -1,0 +1,48 @@
+diff -Naur hurrican-src-svn85-orig/src/SDLPort/SDL_fmod.c hurrican-src-svn85/src/SDLPort/SDL_fmod.c
+--- hurrican-src-svn85-orig/src/SDLPort/SDL_fmod.c	2014-08-29 03:46:26.923835527 +0200
++++ hurrican-src-svn85/src/SDLPort/SDL_fmod.c	2014-08-29 04:17:54.169665228 +0200
+@@ -281,7 +281,11 @@
+     if ((inputmode & FSOUND_LOADMEMORY) == FSOUND_LOADMEMORY)
+     {
+ #if 1
+-        SDL_RWops* sdl_rw = SDL_RWFromConstMem( (const void*)filename, length );
++#if defined(__AROS__)
++        SDL_RWops* sdl_rw = SDL_RWFromMem( (const void*)filename, length );
++#else
++        SDL_RWops* sdl_rw = SDL_RWFromConstMem( (const void*)filename, length );
++#endif
+ 		chunk = Mix_LoadWAV_RW(sdl_rw, 1);
+ #else
+         chunk = Mix_QuickLoad_WAV( (Uint8*)filename );
+diff -Naur hurrican-src-svn85-orig/src/SDLPort/SDL_port.h hurrican-src-svn85/src/SDLPort/SDL_port.h
+--- hurrican-src-svn85-orig/src/SDLPort/SDL_port.h	2014-08-29 03:46:26.923835527 +0200
++++ hurrican-src-svn85/src/SDLPort/SDL_port.h	2014-08-29 03:50:32.959813325 +0200
+@@ -41,11 +41,13 @@
+ 
+ #define CONST       const
+ #ifndef __WIN32__
++#ifndef __AROS__
+ #define FALSE       false
+ #define TRUE        true
+ typedef bool        BOOL;
+ typedef float       FLOAT;
+ typedef int32_t     LONG;
++#endif
+ typedef uint32_t    DWORD, UINT;
+ typedef char*       LPSTR;
+ typedef const char* LPCTSTR;
+diff -Naur hurrican-src-svn85-orig/src/SDLPort/texture.cpp hurrican-src-svn85/src/SDLPort/texture.cpp
+--- hurrican-src-svn85-orig/src/SDLPort/texture.cpp	2014-08-29 03:46:26.923835527 +0200
++++ hurrican-src-svn85/src/SDLPort/texture.cpp	2014-08-29 04:19:26.075656935 +0200
+@@ -194,7 +194,11 @@
+     }
+     else            // Load from memory
+     {
++#if defined(__AROS__)
++        SDL_RWops* sdl_rw = SDL_RWFromMem( (const void*)path, size );
++#else
+         SDL_RWops* sdl_rw = SDL_RWFromConstMem( (const void*)path, size );
++#endif
+ 
+         if (sdl_rw != NULL)
+         {
