@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#DISABLED #MM- ports-game : ports-game-hurrican
+#MM- ports-game : ports-game-hurrican
 
 #MM  ports-game-hurrican : \
 #MM  includes \
@@ -10,6 +10,7 @@ include $(TOP)/config/make.cfg
 #MM  contrib-sdl \
 #MM  contrib-sdl-sdl-image \
 #MM  contrib-sdl-sdl-mixer \
+#MM  development-libmodplug \
 #MM  ports-game-hurrican-data \
 #MM  ports-game-hurrican-lang \
 #MM  ports-game-hurrican-drawericon \
@@ -45,10 +46,10 @@ REPOSITORIES_DATA := http://archives.aros-exec.org/share/game/action
 ####################################################################################################
 # build program
 
-USER_CFLAGS  := -DPLATFORM_SDL -DENABLE_CONSOLE_COMMANDS -DDEBUG -DUSE_GL1 -fexceptions -fpermissive
-# -DUSE_MODPLUG 
+USER_CFLAGS  := -DPLATFORM_SDL -DENABLE_CONSOLE_COMMANDS -DUSE_MODPLUG -DDEBUG -DUSE_GL1 -fexceptions -fpermissive
 USER_INCLUDES:= -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/SDLPort -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/cml \
-    -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src -I$(AROS_INCLUDES)/SDL -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/unrarlib040/unrarlib
+    -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src -I$(AROS_INCLUDES)/SDL -I$(AROS_INCLUDES)/libmodplug \
+    -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/unrarlib040/unrarlib
 
 SDL_CFILES := SDLPort/SDL_fmod
 
@@ -247,7 +248,7 @@ CFILES := $(addprefix $(PORTSDIR)/hurrican/$(ARCHBASE)/src/,$(UNRAR_CFILES) $(SD
 
 %build_prog mmake=ports-game-hurrican progname=Hurrican \
     files=$(CFILES) cxxfiles=$(CXXFILES) targetdir=$(TARGETDIR) \
-    uselibs="stdc++ SDL_mixer vorbisfile vorbis ogg SDL_image png z jpeg SDL GL"
+    uselibs="stdc++ SDL_mixer modplug vorbisfile vorbis ogg SDL_image png z jpeg SDL GL"
 
 
 ####################################################################################################
