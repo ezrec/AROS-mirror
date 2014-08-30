@@ -1,0 +1,12 @@
+# Copyright © 2012, The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+#MM- contrib-development : contrib-libmodplug
+#MM- contrib-libmodplug : development-libmodplug
+
+%fetch_and_build_gnu_development package=libmodplug version=0.8.8.5 patch=no \
+    package_repo=sf://modplug-xmms \
+    suffixes="tar.gz" extraoptions=""
+
