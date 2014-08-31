@@ -280,10 +280,17 @@ struct  MUIP_Virtgroup_MakeVisible          { ULONG MethodID; Object *obj; ULONG
 #endif
 
 #ifndef MUIF_PUSHMETHOD_VERIFY
+// FIXME: AROS
 #define MUIF_PUSHMETHOD_VERIFY       (1<<30UL)
 #endif
 
-#if !defined(CODESET_UTF8)
+#ifndef MUIA_Menuitem_CopyStrings
+// FIXME: AROS
+#define MUIA_Menuitem_CopyStrings           0x8042dc1b /* V16 ..g BOOL              */
+#endif
+
+#ifndef CODESET_UTF8
+// FIXME: AROS
 #define CODESET_UTF8   1
 #endif
 

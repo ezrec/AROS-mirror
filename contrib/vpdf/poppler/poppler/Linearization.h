@@ -38,7 +38,7 @@ public:
 
 private:
 
-  Object linDict;
+  PObject linDict;
 
 };
 

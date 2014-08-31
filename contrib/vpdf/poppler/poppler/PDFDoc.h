@@ -139,7 +139,7 @@ public:
   GooString *readMetadata() { return catalog->readMetadata(); }
 
   // Return the structure tree root object.
-  Object *getStructTreeRoot() { return catalog->getStructTreeRoot(); }
+  PObject *getStructTreeRoot() { return catalog->getStructTreeRoot(); }
 
   // Get page.
   Page *getPage(int page);
@@ -220,8 +220,8 @@ public:
   GBool isLinearized();
 
   // Return the document's Info dictionary (if any).
-  Object *getDocInfo(Object *obj) { return xref->getDocInfo(obj); }
-  Object *getDocInfoNF(Object *obj) { return xref->getDocInfoNF(obj); }
+  PObject *getDocInfo(PObject *obj) { return xref->getDocInfo(obj); }
+  PObject *getDocInfoNF(PObject *obj) { return xref->getDocInfoNF(obj); }
 
   // Return the PDF version specified by the file.
   int getPDFMajorVersion() { return pdfMajorVersion; }
@@ -245,11 +245,11 @@ public:
   void *getGUIData() { return guiData; }
 
   // rewrite pageDict with MediaBox, CropBox and new page CTM
-  void replacePageDict(int pageNo, int rotate, PDFRectangle *mediaBox, PDFRectangle *cropBox, Object *pageCTM);
+  void replacePageDict(int pageNo, int rotate, PDFRectangle *mediaBox, PDFRectangle *cropBox, PObject *pageCTM);
   void markPageObjects(Dict *pageDict, XRef *xRef, XRef *countRef, Guint numOffset);
   // write all objects used by pageDict to outStr
   Guint writePageObjects(OutStream *outStr, XRef *xRef, Guint numOffset, GBool combine = gFalse);
-  static void writeObject (Object *obj, OutStream* outStr, XRef *xref, Guint numOffset, Guchar *fileKey,
+  static void writeObject (PObject *obj, OutStream* outStr, XRef *xref, Guint numOffset, Guchar *fileKey,
                            CryptAlgorithm encAlgorithm, int keyLength, int objNum, int objGen);
   static void writeHeader(OutStream *outStr, int major, int minor);
 
@@ -264,7 +264,7 @@ public:
 private:
   // insert referenced objects in XRef
   void markDictionnary (Dict* dict, XRef *xRef, XRef *countRef, Guint numOffset);
-  void markObject (Object *obj, XRef *xRef, XRef *countRef, Guint numOffset);
+  void markObject (PObject *obj, XRef *xRef, XRef *countRef, Guint numOffset);
   static void writeDictionnary (Dict* dict, OutStream* outStr, XRef *xRef, Guint numOffset, Guchar *fileKey,
                                 CryptAlgorithm encAlgorithm, int keyLength, int objNum, int objGen);
 
@@ -272,7 +272,7 @@ private:
   static Goffset writeObjectHeader (Ref *ref, OutStream* outStr);
   static void writeObjectFooter (OutStream* outStr);
 
-  void writeObject (Object *obj, OutStream* outStr, Guchar *fileKey, CryptAlgorithm encAlgorithm,
+  void writeObject (PObject *obj, OutStream* outStr, Guchar *fileKey, CryptAlgorithm encAlgorithm,
                     int keyLength, int objNum, int objGen)
   { writeObject(obj, outStr, getXRef(), 0, fileKey, encAlgorithm, keyLength, objNum, objGen); }
   void writeDictionnary (Dict* dict, OutStream* outStr, Guchar *fileKey, CryptAlgorithm encAlgorithm,

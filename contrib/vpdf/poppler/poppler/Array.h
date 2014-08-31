@@ -56,23 +56,23 @@ public:
   int getLength() { return length; }
 
   // Copy array with new xref
-  Object *copy(XRef *xrefA, Object *obj);
+  PObject *copy(XRef *xrefA, PObject *obj);
 
   // Add an element.
-  void add(Object *elem);
+  void add(PObject *elem);
 
   // Remove an element by position
   void remove(int i);
 
   // Accessors.
-  Object *get(int i, Object *obj, int resursion = 0);
-  Object *getNF(int i, Object *obj);
+  PObject *get(int i, PObject *obj, int resursion = 0);
+  PObject *getNF(int i, PObject *obj);
   GBool getString(int i, GooString *string);
 
 private:
 
   XRef *xref;			// the xref table for this PDF file
-  Object *elems;		// array of elements
+  PObject *elems;		// array of elements
   int size;			// size of <elems> array
   int length;			// number of elements in array
   int ref;			// reference count

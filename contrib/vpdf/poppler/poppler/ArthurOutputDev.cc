@@ -274,7 +274,7 @@ void ArthurOutputDev::updateFont(GfxState *state)
   SplashFontFile *fontFile;
   SplashFontSrc *fontsrc = NULL;
   FoFiTrueType *ff;
-  Object refObj, strObj;
+  PObject refObj, strObj;
   GooString *fileName;
   char *tmpBuf;
   int tmpBufLen;
@@ -681,7 +681,7 @@ void ArthurOutputDev::endTextObject(GfxState *state)
 }
 
 
-void ArthurOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
+void ArthurOutputDev::drawImageMask(GfxState *state, PObject *ref, Stream *str,
 				    int width, int height, GBool invert,
 				    GBool interpolate, GBool inlineImg)
 {
@@ -758,7 +758,7 @@ void ArthurOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
 }
 
 //TODO: lots more work here.
-void ArthurOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
+void ArthurOutputDev::drawImage(GfxState *state, PObject *ref, Stream *str,
 				int width, int height,
 				GfxImageColorMap *colorMap,
 				GBool interpolate, int *maskColors, GBool inlineImg)

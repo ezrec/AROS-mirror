@@ -83,7 +83,7 @@ public:
   FormField *getField () { return field; }
   FormFieldType getType() { return type; }
 
-  Object* getObj() { return &obj; }
+  PObject* getObj() { return &obj; }
   Ref getRef() { return ref; }
 
   void setChildNum (unsigned i) { childNum = i; }
@@ -117,12 +117,12 @@ public:
 #endif
 
 protected:
-  FormWidget(PDFDoc *docA, Object *aobj, unsigned num, Ref aref, FormField *fieldA);
+  FormWidget(PDFDoc *docA, PObject *aobj, unsigned num, Ref aref, FormField *fieldA);
 
   AnnotWidget *widget;
   FormField* field;
   FormFieldType type;
-  Object obj;
+  PObject obj;
   Ref ref;
   PDFDoc *doc;
   XRef *xref;
@@ -147,7 +147,7 @@ protected:
 
 class FormWidgetButton: public FormWidget {
 public:
-  FormWidgetButton(PDFDoc *docA, Object *dict, unsigned num, Ref ref, FormField *p);
+  FormWidgetButton(PDFDoc *docA, PObject *dict, unsigned num, Ref ref, FormField *p);
   ~FormWidgetButton ();
 
   FormButtonType getButtonType() const;
@@ -170,7 +170,7 @@ protected:
 
 class FormWidgetText: public FormWidget {
 public:
-  FormWidgetText(PDFDoc *docA, Object *dict, unsigned num, Ref ref, FormField *p);
+  FormWidgetText(PDFDoc *docA, PObject *dict, unsigned num, Ref ref, FormField *p);
   //return the field's content (UTF16BE)
   GooString* getContent() ;
   //return a copy of the field's content (UTF16BE)
@@ -199,7 +199,7 @@ protected:
 
 class FormWidgetChoice: public FormWidget {
 public:
-  FormWidgetChoice(PDFDoc *docA, Object *dict, unsigned num, Ref ref, FormField *p);
+  FormWidgetChoice(PDFDoc *docA, PObject *dict, unsigned num, Ref ref, FormField *p);
   ~FormWidgetChoice();
 
   int getNumChoices();
@@ -240,7 +240,7 @@ protected:
 
 class FormWidgetSignature: public FormWidget {
 public:
-  FormWidgetSignature(PDFDoc *docA, Object *dict, unsigned num, Ref ref, FormField *p);
+  FormWidgetSignature(PDFDoc *docA, PObject *dict, unsigned num, Ref ref, FormField *p);
   void updateWidgetAppearance();
 protected:
   FormFieldSignature *parent;
@@ -255,13 +255,13 @@ protected:
 
 class FormField {
 public:
-  FormField(PDFDoc *docA, Object *aobj, const Ref& aref, FormField *parent, std::set<int> *usedParents, FormFieldType t=formUndef);
+  FormField(PDFDoc *docA, PObject *aobj, const Ref& aref, FormField *parent, std::set<int> *usedParents, FormFieldType t=formUndef);
 
   virtual ~FormField();
 
   // Accessors.
   FormFieldType getType() { return type; }
-  Object* getObj() { return &obj; }
+  PObject* getObj() { return &obj; }
   Ref getRef() { return ref; }
 
   void setReadOnly (bool b) { readOnly = b; }
@@ -292,14 +292,14 @@ public:
 
 
  protected:
-  void _createWidget (Object *obj, Ref aref);
+  void _createWidget (PObject *obj, Ref aref);
   void createChildren(std::set<int> *usedParents);
   void updateChildrenAppearance();
 
   FormFieldType type;           // field type
   Ref ref;
   bool terminal;
-  Object obj;
+  PObject obj;
   PDFDoc *doc;
   XRef *xref;
   FormField **children;
@@ -329,7 +329,7 @@ private:
 
 class FormFieldButton: public FormField {
 public:
-  FormFieldButton(PDFDoc *docA, Object *dict, const Ref& ref, FormField *parent, std::set<int> *usedParents);
+  FormFieldButton(PDFDoc *docA, PObject *dict, const Ref& ref, FormField *parent, std::set<int> *usedParents);
 
   FormButtonType getButtonType () { return btype; }
 
@@ -366,7 +366,7 @@ protected:
   int size;
   int active_child; //only used for combo box
   bool noAllOff;
-  Object appearanceState; // V
+  PObject appearanceState; // V
 };
 
 //------------------------------------------------------------------------
@@ -375,7 +375,7 @@ protected:
 
 class FormFieldText: public FormField {
 public:
-  FormFieldText(PDFDoc *docA, Object *dict, const Ref& ref, FormField *parent, std::set<int> *usedParents);
+  FormFieldText(PDFDoc *docA, PObject *dict, const Ref& ref, FormField *parent, std::set<int> *usedParents);
   
   GooString* getContent () { return content; }
   GooString* getContentCopy ();
@@ -413,7 +413,7 @@ protected:
 
 class FormFieldChoice: public FormField {
 public:
-  FormFieldChoice(PDFDoc *docA, Object *aobj, const Ref& ref, FormField *parent, std::set<int> *usedParents);
+  FormFieldChoice(PDFDoc *docA, PObject *aobj, const Ref& ref, FormField *parent, std::set<int> *usedParents);
 
   virtual ~FormFieldChoice();
 
@@ -482,7 +482,7 @@ protected:
 
 class FormFieldSignature: public FormField {
 public:
-  FormFieldSignature(PDFDoc *docA, Object *dict, const Ref& ref, FormField *parent, std::set<int> *usedParents);
+  FormFieldSignature(PDFDoc *docA, PObject *dict, const Ref& ref, FormField *parent, std::set<int> *usedParents);
 
   virtual ~FormFieldSignature();
 
@@ -499,25 +499,25 @@ public:
 
 class Form {
 public:
-  Form(PDFDoc *docA, Object* acroForm);
+  Form(PDFDoc *docA, PObject* acroForm);
 
   ~Form();
 
   // Look up an inheritable field dictionary entry.
-  static Object *fieldLookup(Dict *field, const char *key, Object *obj);
+  static PObject *fieldLookup(Dict *field, const char *key, PObject *obj);
   
   /* Creates a new Field of the type specified in obj's dict.
      used in Form::Form and FormField::FormField */
-  static FormField *createFieldFromDict (Object* obj, PDFDoc *docA, const Ref& aref, FormField *parent, std::set<int> *usedParents);
+  static FormField *createFieldFromDict (PObject* obj, PDFDoc *docA, const Ref& aref, FormField *parent, std::set<int> *usedParents);
 
-  Object *getObj () const { return acroForm; }
+  PObject *getObj () const { return acroForm; }
   GBool getNeedAppearances () const { return needAppearances; }
   int getNumFields() const { return numFields; }
   FormField* getRootField(int i) const { return rootFields[i]; }
   GooString* getDefaultAppearance() const { return defaultAppearance; }
   VariableTextQuadding getTextQuadding() const { return quadding; }
   GfxResources* getDefaultResources() const { return defaultResources; }
-  Object* getDefaultResourcesObj() { return &resDict; }
+  PObject* getDefaultResourcesObj() { return &resDict; }
 
   FormWidget* findWidgetByRef (Ref aref);
 
@@ -528,10 +528,10 @@ private:
   int size;
   PDFDoc *doc;
   XRef* xref;
-  Object *acroForm;
+  PObject *acroForm;
   GBool needAppearances;
   GfxResources *defaultResources;
-  Object resDict;
+  PObject resDict;
 
   // Variable Text
   GooString *defaultAppearance;

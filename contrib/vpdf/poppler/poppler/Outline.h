@@ -40,7 +40,7 @@ class LinkAction;
 class Outline {
 public:
 
-  Outline(Object *outlineObj, XRef *xref);
+  Outline(PObject *outlineObj, XRef *xref);
   ~Outline();
 
   GooList *getItems() { return items; }
@@ -59,7 +59,7 @@ public:
   OutlineItem(Dict *dict, XRef *xrefA);
   ~OutlineItem();
 
-  static GooList *readItemList(Object *firstItemRef, Object *lastItemRef,
+  static GooList *readItemList(PObject *firstItemRef, PObject *lastItemRef,
 			     XRef *xrefA);
 
   void open();
@@ -78,9 +78,9 @@ private:
   Unicode *title;
   int titleLen;
   LinkAction *action;
-  Object firstRef;
-  Object lastRef;
-  Object nextRef;
+  PObject firstRef;
+  PObject lastRef;
+  PObject nextRef;
   GBool startsOpen;
   GooList *kids;	// NULL if this item is closed or has no kids,
 			// otherwise a list of OutlineItem

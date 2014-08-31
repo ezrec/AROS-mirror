@@ -38,8 +38,8 @@
 
 //------------------------------------------------------------------------
 
-Outline::Outline(Object *outlineObj, XRef *xref) {
-  Object first, last;
+Outline::Outline(PObject *outlineObj, XRef *xref) {
+  PObject first, last;
 
   items = NULL;
   if (!outlineObj->isDict()) {
@@ -61,7 +61,7 @@ Outline::~Outline() {
 //------------------------------------------------------------------------
 
 OutlineItem::OutlineItem(Dict *dict, XRef *xrefA) {
-  Object obj1;
+  PObject obj1;
   GooString *s;
   int i;
 
@@ -128,13 +128,13 @@ OutlineItem::~OutlineItem() {
   nextRef.free();
 }
 
-GooList *OutlineItem::readItemList(Object *firstItemRef, Object *lastItemRef,
+GooList *OutlineItem::readItemList(PObject *firstItemRef, PObject *lastItemRef,
 				 XRef *xrefA) {
   GooList *items;
   char* alreadyRead;
   OutlineItem *item;
-  Object obj;
-  Object *p;
+  PObject obj;
+  PObject *p;
 
   if (!lastItemRef->isRef())
     return NULL;

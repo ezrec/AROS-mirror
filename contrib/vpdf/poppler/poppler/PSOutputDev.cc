@@ -1383,7 +1383,7 @@ PSOutputDev::~PSOutputDev() {
 void PSOutputDev::writeHeader(int firstPage, int lastPage,
 			      PDFRectangle *mediaBox, PDFRectangle *cropBox,
 			      int pageRotate, char *psTitle) {
-  Object info, obj1;
+  PObject info, obj1;
   PSOutPaperSize *size;
   double x1, y1, x2, y2;
   int i;
@@ -1533,8 +1533,8 @@ void PSOutputDev::writeDocSetup(PDFDoc *doc, Catalog *catalog,
   Page *page;
   Dict *resDict;
   Annots *annots;
-  Object *acroForm;
-  Object obj1, obj2, obj3;
+  PObject *acroForm;
+  PObject obj1, obj2, obj3;
   GooString *s;
   int pg, i;
 
@@ -1651,7 +1651,7 @@ void PSOutputDev::writeTrailer() {
 }
 
 void PSOutputDev::setupResources(Dict *resDict) {
-  Object xObjDict, xObjRef, xObj, patDict, patRef, pat, resObj;
+  PObject xObjDict, xObjRef, xObj, patDict, patRef, pat, resObj;
   Ref ref0;
   GBool skip;
   int i;
@@ -1732,7 +1732,7 @@ void PSOutputDev::setupResources(Dict *resDict) {
 }
 
 void PSOutputDev::setupFonts(Dict *resDict) {
-  Object obj1, obj2;
+  PObject obj1, obj2;
   Ref r;
   GfxFontDict *gfxFontDict;
   GfxFont *font;
@@ -1992,7 +1992,7 @@ void PSOutputDev::setupFont(GfxFont *font, Dict *parentResDict) {
 
 void PSOutputDev::setupEmbeddedType1Font(Ref *id, GooString *psName) {
   static const char hexChar[17] = "0123456789abcdef";
-  Object refObj, strObj, obj1, obj2, obj3;
+  PObject refObj, strObj, obj1, obj2, obj3;
   Dict *dict;
   int length1, length2, length3;
   int c;
@@ -2599,7 +2599,7 @@ void PSOutputDev::setupType3Font(GfxFont *font, GooString *psName,
 				 Dict *parentResDict) {
   Dict *resDict;
   Dict *charProcs;
-  Object charProc;
+  PObject charProc;
   Gfx *gfx;
   PDFRectangle box;
   double *m;
@@ -2725,7 +2725,7 @@ GooString *PSOutputDev::makePSFontName(GfxFont *font, Ref *id) {
 }
 
 void PSOutputDev::setupImages(Dict *resDict) {
-  Object xObjDict, xObj, xObjRef, subtypeObj, maskObj, maskRef;
+  PObject xObjDict, xObj, xObjRef, subtypeObj, maskObj, maskRef;
   Ref imgID;
   int i, j;
 
@@ -2936,7 +2936,7 @@ void PSOutputDev::setupImage(Ref id, Stream *str, GBool mask) {
 }
 
 void PSOutputDev::setupForms(Dict *resDict) {
-  Object xObjDict, xObj, xObjRef, subtypeObj;
+  PObject xObjDict, xObj, xObjRef, subtypeObj;
   int i;
 
   if (!preload) {
@@ -2967,9 +2967,9 @@ void PSOutputDev::setupForms(Dict *resDict) {
   xObjDict.free();
 }
 
-void PSOutputDev::setupForm(Ref id, Object *strObj) {
+void PSOutputDev::setupForm(Ref id, PObject *strObj) {
   Dict *dict, *resDict;
-  Object matrixObj, bboxObj, resObj, obj1;
+  PObject matrixObj, bboxObj, resObj, obj1;
   double m[6], bbox[4];
   PDFRectangle box;
   Gfx *gfx;
@@ -3067,7 +3067,7 @@ GBool PSOutputDev::checkPageSlice(Page *page, double /*hDPI*/, double /*vDPI*/,
   GfxState *state;
   SplashBitmap *bitmap;
   Stream *str0, *str;
-  Object obj;
+  PObject obj;
   Guchar *p;
   Guchar col[4];
   double hDPI2, vDPI2;
@@ -4179,7 +4179,7 @@ void PSOutputDev::eoFill(GfxState *state) {
   writePS("f*\n");
 }
 
-GBool PSOutputDev::tilingPatternFillL1(GfxState *state, Catalog *cat, Object *str,
+GBool PSOutputDev::tilingPatternFillL1(GfxState *state, Catalog *cat, PObject *str,
 				       double *pmat, int paintType, int tilingType, Dict *resDict,
 				       double *mat, double *bbox,
 				       int x0, int y0, int x1, int y1,
@@ -4261,7 +4261,7 @@ GBool PSOutputDev::tilingPatternFillL1(GfxState *state, Catalog *cat, Object *st
   return gTrue;
 }
 
-GBool PSOutputDev::tilingPatternFillL2(GfxState *state, Catalog *cat, Object *str,
+GBool PSOutputDev::tilingPatternFillL2(GfxState *state, Catalog *cat, PObject *str,
 				       double *pmat, int paintType, int tilingType, Dict *resDict,
 				       double *mat, double *bbox,
 				       int x0, int y0, int x1, int y1,
@@ -4310,7 +4310,7 @@ GBool PSOutputDev::tilingPatternFillL2(GfxState *state, Catalog *cat, Object *st
   return gTrue;
 }
 
-GBool PSOutputDev::tilingPatternFill(GfxState *state, Gfx *gfxA, Catalog *cat, Object *str,
+GBool PSOutputDev::tilingPatternFill(GfxState *state, Gfx *gfxA, Catalog *cat, PObject *str,
 				     double *pmat, int paintType, int tilingType, Dict *resDict,
 				     double *mat, double *bbox,
 				     int x0, int y0, int x1, int y1,
@@ -4963,7 +4963,7 @@ void PSOutputDev::endTextObject(GfxState *state) {
   }
 }
 
-void PSOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
+void PSOutputDev::drawImageMask(GfxState *state, PObject *ref, Stream *str,
 				int width, int height, GBool invert,
 				GBool interpolate, GBool inlineImg) {
   int len;
@@ -4988,7 +4988,7 @@ void PSOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
   }
 }
 
-void PSOutputDev::setSoftMaskFromImageMask(GfxState *state, Object *ref, Stream *str,
+void PSOutputDev::setSoftMaskFromImageMask(GfxState *state, PObject *ref, Stream *str,
 				int width, int height, GBool invert,
 				GBool inlineImg, double *baseMatrix) {
   if (level != psLevel1 && level != psLevel1Sep) {
@@ -5002,7 +5002,7 @@ void PSOutputDev::unsetSoftMaskFromImageMask(GfxState * state, double *baseMatri
   }
 }
 
-void PSOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
+void PSOutputDev::drawImage(GfxState *state, PObject *ref, Stream *str,
 			    int width, int height, GfxImageColorMap *colorMap,
 			    GBool interpolate, int *maskColors, GBool inlineImg) {
   int len;
@@ -5033,7 +5033,7 @@ void PSOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
   t3Cacheable = gFalse;
 }
 
-void PSOutputDev::drawMaskedImage(GfxState *state, Object *ref, Stream *str,
+void PSOutputDev::drawMaskedImage(GfxState *state, PObject *ref, Stream *str,
 				  int width, int height,
 				  GfxImageColorMap *colorMap,
 				  GBool interpolate,
@@ -5068,7 +5068,7 @@ void PSOutputDev::drawMaskedImage(GfxState *state, Object *ref, Stream *str,
   t3Cacheable = gFalse;
 }
 
-void PSOutputDev::doImageL1(Object *ref, GfxImageColorMap *colorMap,
+void PSOutputDev::doImageL1(PObject *ref, GfxImageColorMap *colorMap,
 			    GBool invert, GBool inlineImg,
 			    Stream *str, int width, int height, int len,
 			    int *maskColors, Stream *maskStr,
@@ -5225,7 +5225,7 @@ void PSOutputDev::doImageL1(Object *ref, GfxImageColorMap *colorMap,
   }
 }
 
-void PSOutputDev::doImageL1Sep(Object *ref, GfxImageColorMap *colorMap,
+void PSOutputDev::doImageL1Sep(PObject *ref, GfxImageColorMap *colorMap,
 			       GBool invert, GBool inlineImg,
 			       Stream *str, int width, int height, int len,
 			       int *maskColors, Stream *maskStr,
@@ -5452,7 +5452,7 @@ void PSOutputDev::maskToClippingPath(Stream *maskStr, int maskWidth, int maskHei
   maskStr->close();
 }
 
-void PSOutputDev::doImageL2(Object *ref, GfxImageColorMap *colorMap,
+void PSOutputDev::doImageL2(PObject *ref, GfxImageColorMap *colorMap,
 			    GBool invert, GBool inlineImg,
 			    Stream *str, int width, int height, int len,
 			    int *maskColors, Stream *maskStr,
@@ -5916,7 +5916,7 @@ void PSOutputDev::doImageL2(Object *ref, GfxImageColorMap *colorMap,
 }
 
 //~ this doesn't currently support OPI
-void PSOutputDev::doImageL3(Object *ref, GfxImageColorMap *colorMap,
+void PSOutputDev::doImageL3(PObject *ref, GfxImageColorMap *colorMap,
 			    GBool invert, GBool inlineImg,
 			    Stream *str, int width, int height, int len,
 			    int *maskColors, Stream *maskStr,
@@ -6563,7 +6563,7 @@ void PSOutputDev::dumpColorSpaceL2(GfxColorSpace *colorSpace,
 
 #if OPI_SUPPORT
 void PSOutputDev::opiBegin(GfxState *state, Dict *opiDict) {
-  Object dict;
+  PObject dict;
 
   if (globalParams->getPSOPI()) {
     opiDict->lookup("2.0", &dict);
@@ -6582,7 +6582,7 @@ void PSOutputDev::opiBegin(GfxState *state, Dict *opiDict) {
 }
 
 void PSOutputDev::opiBegin20(GfxState *state, Dict *dict) {
-  Object obj1, obj2, obj3, obj4;
+  PObject obj1, obj2, obj3, obj4;
   double width, height, left, right, top, bottom;
   int w, h;
   int i;
@@ -6694,7 +6694,7 @@ void PSOutputDev::opiBegin20(GfxState *state, Dict *dict) {
 }
 
 void PSOutputDev::opiBegin13(GfxState *state, Dict *dict) {
-  Object obj1, obj2;
+  PObject obj1, obj2;
   int left, right, top, bottom, samples, bits, width, height;
   double c, m, y, k;
   double llx, lly, ulx, uly, urx, ury, lrx, lry;
@@ -6936,7 +6936,7 @@ void PSOutputDev::opiTransform(GfxState *state, double x0, double y0,
 }
 
 void PSOutputDev::opiEnd(GfxState *state, Dict *opiDict) {
-  Object dict;
+  PObject dict;
 
   if (globalParams->getPSOPI()) {
     opiDict->lookup("2.0", &dict);

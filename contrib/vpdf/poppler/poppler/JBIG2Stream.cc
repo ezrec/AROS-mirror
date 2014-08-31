@@ -1167,7 +1167,7 @@ JBIG2CodeTable::~JBIG2CodeTable() {
 // JBIG2Stream
 //------------------------------------------------------------------------
 
-JBIG2Stream::JBIG2Stream(Stream *strA, Object *globalsStreamA):
+JBIG2Stream::JBIG2Stream(Stream *strA, PObject *globalsStreamA):
   FilterStream(strA)
 {
   pageBitmap = NULL;

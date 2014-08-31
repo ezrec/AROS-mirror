@@ -46,8 +46,8 @@ MovieActivationParameters::MovieActivationParameters() {
 MovieActivationParameters::~MovieActivationParameters() {
 }
 
-void MovieActivationParameters::parseMovieActivation(Object* aDict) {
-  Object obj1;
+void MovieActivationParameters::parseMovieActivation(PObject* aDict) {
+  PObject obj1;
 
   if (!aDict->dictLookup("Start", &obj1)->isNull()) {
     if (obj1.isInt()) {
@@ -64,7 +64,7 @@ void MovieActivationParameters::parseMovieActivation(Object* aDict) {
     } else if (obj1.isArray()) {
       Array* a = obj1.getArray();
 
-      Object tmp;
+      PObject tmp;
       a->get(0, &tmp);
       if (tmp.isInt()) {
         start.units = tmp.getInt();
@@ -91,7 +91,7 @@ void MovieActivationParameters::parseMovieActivation(Object* aDict) {
     } else if (obj1.isArray()) {
       Array* a = obj1.getArray();
 
-      Object tmp;
+      PObject tmp;
       a->get(0, &tmp);
       if (tmp.isInt()) {
         duration.units = tmp.getInt();
@@ -152,7 +152,7 @@ void MovieActivationParameters::parseMovieActivation(Object* aDict) {
 
     Array* scale = obj1.getArray();
     if (scale->getLength() >= 2) {
-      Object tmp;
+      PObject tmp;
       if (scale->get(0, &tmp)->isInt()) {
         znum = tmp.getInt();
       }
@@ -168,7 +168,7 @@ void MovieActivationParameters::parseMovieActivation(Object* aDict) {
   if (aDict->dictLookup("FWPosition", &obj1)->isArray()) {
     Array* pos = obj1.getArray();
     if (pos->getLength() >= 2) {
-      Object tmp;
+      PObject tmp;
       if (pos->get(0, &tmp)->isNum()) {
         xPosition = tmp.getNum();
       }
@@ -182,14 +182,14 @@ void MovieActivationParameters::parseMovieActivation(Object* aDict) {
   obj1.free();
 }
 
-void Movie::parseMovie (Object *movieDict) {
+void Movie::parseMovie (PObject *movieDict) {
   fileName = NULL;
   rotationAngle = 0;
   width = -1;
   height = -1;
   showPoster = gFalse;
 
-  Object obj1, obj2;
+  PObject obj1, obj2;
   if (getFileSpecNameForPlatform(movieDict->dictLookup("F", &obj1), &obj2)) {
     fileName = obj2.getString()->copy();
     obj2.free();
@@ -204,7 +204,7 @@ void Movie::parseMovie (Object *movieDict) {
   if (movieDict->dictLookup("Aspect", &obj1)->isArray()) {
     Array* aspect = obj1.getArray();
     if (aspect->getLength() >= 2) {
-      Object tmp;
+      PObject tmp;
       if( aspect->get(0, &tmp)->isNum() ) {
         width = (int)floor( aspect->get(0, &tmp)->getNum() + 0.5 );
       }
@@ -244,7 +244,7 @@ Movie::~Movie() {
   poster.free();
 }
 
-Movie::Movie(Object *movieDict) {
+Movie::Movie(PObject *movieDict) {
   ok = gTrue;
 
   if (movieDict->isDict())
@@ -253,7 +253,7 @@ Movie::Movie(Object *movieDict) {
     ok = gFalse;
 }
 
-Movie::Movie(Object *movieDict, Object *aDict) {
+Movie::Movie(PObject *movieDict, PObject *aDict) {
   ok = gTrue;
 
   if (movieDict->isDict()) {

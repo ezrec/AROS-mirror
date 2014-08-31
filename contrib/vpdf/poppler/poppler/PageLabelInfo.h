@@ -23,17 +23,17 @@
 
 class PageLabelInfo {
 public:
-  PageLabelInfo(Object *tree, int numPages);
+  PageLabelInfo(PObject *tree, int numPages);
   ~PageLabelInfo();
   GBool labelToIndex(GooString *label, int *index);
   GBool indexToLabel(int index, GooString *label);
 
 private:
-  void parse(Object *tree);
+  void parse(PObject *tree);
 
 private:
   struct Interval {
-    Interval(Object *dict, int baseA);
+    Interval(PObject *dict, int baseA);
     ~Interval();
     GooString *prefix;
     enum NumberStyle {

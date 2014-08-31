@@ -54,7 +54,7 @@ GooList *FontInfoScanner::scan(int nPages) {
   Page *page;
   Dict *resDict;
   Annots *annots;
-  Object obj1;
+  PObject obj1;
   int lastPage;
 
   if (currentPage > doc->getNumPages()) {
@@ -93,7 +93,7 @@ GooList *FontInfoScanner::scan(int nPages) {
 }
 
 void FontInfoScanner::scanFonts(XRef *xrefA, Dict *resDict, GooList *fontsList) {
-  Object obj1, obj2, objDict, resObj;
+  PObject obj1, obj2, objDict, resObj;
   Ref r;
   GfxFontDict *gfxFontDict;
   GfxFont *font;
@@ -166,7 +166,7 @@ void FontInfoScanner::scanFonts(XRef *xrefA, Dict *resDict, GooList *fontsList) 
 
 FontInfo::FontInfo(GfxFont *font, XRef *xref) {
   GooString *origName;
-  Object fontObj, toUnicodeObj;
+  PObject fontObj, toUnicodeObj;
   int i;
 
   fontRef = *font->getID();

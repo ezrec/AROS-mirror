@@ -23,7 +23,7 @@
 
 class EmbFile {
 public:
-  EmbFile(Object *efStream);
+  EmbFile(PObject *efStream);
   ~EmbFile();
 
   int size() { return m_size; }
@@ -43,12 +43,12 @@ private:
   GooString *m_modDate;
   GooString *m_checksum;
   GooString *m_mimetype;
-  Object m_objStr;
+  PObject m_objStr;
 };
 
 class FileSpec {
 public:
-  FileSpec(Object *fileSpec);
+  FileSpec(PObject *fileSpec);
   ~FileSpec();
 
   GBool isOk() { return ok; }
@@ -61,16 +61,16 @@ public:
 private:
   GBool ok;
 
-  Object fileSpec;
+  PObject fileSpec;
 
   GooString *fileName;         // F, UF, DOS, Mac, Unix
   GooString *platformFileName;
-  Object fileStream;           // Ref to F entry in UF
+  PObject fileStream;           // Ref to F entry in UF
   EmbFile *embFile;
   GooString *desc;             // Desc
 };
 
-GBool getFileSpecName (Object *fileSpec, Object *fileName);
-GBool getFileSpecNameForPlatform (Object *fileSpec, Object *fileName);
+GBool getFileSpecName (PObject *fileSpec, PObject *fileName);
+GBool getFileSpecNameForPlatform (PObject *fileSpec, PObject *fileName);
 
 #endif /* FILE_SPEC_H */

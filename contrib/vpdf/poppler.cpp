@@ -55,6 +55,12 @@
 #include "poppler_io.h"
 #include "poppler_device.h"
 
+#if defined(__AROS__)
+#include <wchar.h>
+typedef wchar_t WCHAR;
+#include <aros/debug.h>
+#endif
+
 extern struct Library *LocaleBase;
 #define LOCALE_BASE_NAME LocaleBase
 
@@ -62,7 +68,10 @@ extern struct Library *LocaleBase;
 
 struct SignalSemaphore semaphore;
 
+#if defined(__MORPHOS__)
+// AROS has static linklib
 extern struct Library *CairoBase;
+#endif
 
 /* all of this is just to not having to expose GBool in ppoppler.h... */
 
@@ -134,16 +143,25 @@ static DESTRUCTOR_P(cleanup_poppler, 0)
 static char *convertUTF16ToANSI(unsigned char *string, int length)
 {
 	char *buff = (char*)calloc(1, length + 1);
+#if defined(__AROS__)
+	// FIXME: AROS
+#else
 	if(buff != NULL)
 		ConvertTagList((unsigned char*)string + 2, length * 2 - 2, buff, length + 1, MIBENUM_UTF_16BE, MIBENUM_SYSTEM, NULL);
+#endif
+
 	return buff;
 }
 
 static char *convertUTF32ToANSI(Unicode *string, int length)
 {
 	char *buff = (char*)calloc(1, length + 1);
+#if defined(__AROS__)
+	// FIXME: AROS
+#else
 	if(buff != NULL)
 		ConvertTagList((unsigned char*)string, length * 4, buff, length + 1, MIBENUM_UTF_32BE, MIBENUM_SYSTEM, NULL);
+#endif
 
 	return buff;
 }
@@ -155,11 +173,15 @@ static WCHAR *convertToUCS4(const char *string)
 	size_t i;
 
 	WCHAR *buff = (WCHAR*)calloc(sizeof(WCHAR), length + 1);
+#if defined(__AROS__)
+	// FIXME: AROS
+#else
 	if(buff != NULL)
 	{
 		for(i = 0; i < length; i++)
 			buff[i] = ToUCS4(string[i], NULL);
 	}
+#endif
 
 	return buff;
 }
@@ -201,7 +223,7 @@ void *pdfNew(const char *fname)
 //StackFrame[-1].LR-> Address 0x26870dd4 -> vpdf Hunk 1 Offset 0x00001284
 //StackFrame[-2].LR-> Address 0x2686ff34 -> vpdf Hunk 1 Offset 0x000003e4
 
-#ifndef USE_SPLASH
+#if !defined(__AROS__) && !defined(USE_SPLASH)
 	kprintf("Cairo Base:%p. sema:%p, %p, %p\n", CairoBase, &semaphore, foo, &foo);
 #endif
 
@@ -215,7 +237,7 @@ void *pdfNew(const char *fname)
 	try
 	{
 		int i;
-		Object obj;
+		PObject obj;
 		obj.initNull();
 
 		if(globalParams == NULL)
@@ -945,7 +967,7 @@ void *pdfFindLink(void *_ctx, int pagenum, int x, int y)
 {
 	struct devicecontext *ctx = (struct devicecontext*)_ctx;
 	Links *links;
-	Object obj;
+	PObject obj;
 	Page *page;
 
 	double width, height;
@@ -1103,7 +1125,7 @@ void pdfListLinks(void *_ctx, int pagenum)
 	struct devicecontext *ctx = (struct devicecontext*)_ctx;
 
 	Links *links;
-	Object obj;
+	PObject obj;
 
 	double width, height;
 	ENTER_SECTION
@@ -1293,7 +1315,11 @@ int pdfSearch(void *_ctx, int *page, char *phrase, int direction, double *x1, do
 
 		/* new search */
 
+#if defined(__AROS__)
+// FIXME: AROS
+#else
 		WCHAR *phraseUCS4 = convertToUCS4(phrase);
+
 		TextOutputDev *text_dev = new TextOutputDev(NULL, gTrue, 0, gFalse, gFalse);
 		
 		{
@@ -1337,7 +1363,7 @@ int pdfSearch(void *_ctx, int *page, char *phrase, int direction, double *x1, do
 		
 		delete text_dev;
 		free(phraseUCS4);
-
+#endif
 		if (found == FALSE)
 		{
 			LEAVE_SECTION
@@ -1410,7 +1436,7 @@ static char *info_dict_get_string(Dict *info_dict, const char *key)
 {
 	GooString *goo_value;
 	char *result;
-	Object obj;
+	PObject obj;
 
 	if(!info_dict->lookup((char *)key, &obj)->isString())
 	{
@@ -1441,7 +1467,7 @@ struct pdfAttribute *pdfGetAttr(void *_ctx, int property)
 {
 	ENTER_SECTION
 	struct devicecontext *ctx = (struct devicecontext*)_ctx;
-	Object obj;
+	PObject obj;
 	struct pdfAttribute *ret = NULL;
 
 	ctx->doc->getDocInfo(&obj);

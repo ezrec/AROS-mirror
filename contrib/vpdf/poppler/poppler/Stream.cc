@@ -165,9 +165,9 @@ GooString *Stream::getPSFilter(int psLevel, const char *indent) {
   return new GooString();
 }
 
-Stream *Stream::addFilters(Object *dict, int recursion) {
-  Object obj, obj2;
-  Object params, params2;
+Stream *Stream::addFilters(PObject *dict, int recursion) {
+  PObject obj, obj2;
+  PObject params, params2;
   Stream *str;
   int i;
 
@@ -209,7 +209,7 @@ Stream *Stream::addFilters(Object *dict, int recursion) {
   return str;
 }
 
-Stream *Stream::makeFilter(char *name, Stream *str, Object *params, int recursion, Object *dict) {
+Stream *Stream::makeFilter(char *name, Stream *str, PObject *params, int recursion, PObject *dict) {
   int pred;			// parameters
   int colors;
   int bits;
@@ -218,7 +218,7 @@ Stream *Stream::makeFilter(char *name, Stream *str, Object *params, int recursio
   GBool endOfLine, byteAlign, endOfBlock, black;
   int columns, rows;
   int colorXform;
-  Object globals, obj;
+  PObject globals, obj;
 
   if (!strcmp(name, "ASCIIHexDecode") || !strcmp(name, "AHx")) {
     str = new ASCIIHexStream(str);
@@ -410,7 +410,7 @@ void FileOutStream::printf(const char *format, ...)
 // BaseStream
 //------------------------------------------------------------------------
 
-BaseStream::BaseStream(Object *dictA, Goffset lengthA) {
+BaseStream::BaseStream(PObject *dictA, Goffset lengthA) {
   dict = *dictA;
   length = lengthA;
 }
@@ -765,7 +765,7 @@ GBool StreamPredictor::getNextLine() {
 //------------------------------------------------------------------------
 
 FileStream::FileStream(GooFile* fileA, Goffset startA, GBool limitedA,
-		       Goffset lengthA, Object *dictA):
+		       Goffset lengthA, PObject *dictA):
     BaseStream(dictA, lengthA) {
   file = fileA;
   offset = start = startA;
@@ -786,7 +786,7 @@ BaseStream *FileStream::copy() {
 }
 
 Stream *FileStream::makeSubStream(Goffset startA, GBool limitedA,
-				  Goffset lengthA, Object *dictA) {
+				  Goffset lengthA, PObject *dictA) {
   return new FileStream(file, startA, limitedA, lengthA, dictA);
 }
 
@@ -853,7 +853,7 @@ void FileStream::moveStart(Goffset delta) {
 //------------------------------------------------------------------------
 
 CachedFileStream::CachedFileStream(CachedFile *ccA, Goffset startA,
-        GBool limitedA, Goffset lengthA, Object *dictA)
+        GBool limitedA, Goffset lengthA, PObject *dictA)
   : BaseStream(dictA, lengthA)
 {
   cc = ccA;
@@ -878,7 +878,7 @@ BaseStream *CachedFileStream::copy() {
 }
 
 Stream *CachedFileStream::makeSubStream(Goffset startA, GBool limitedA,
-        Goffset lengthA, Object *dictA)
+        Goffset lengthA, PObject *dictA)
 {
   cc->incRefCnt();
   return new CachedFileStream(cc, startA, limitedA, lengthA, dictA);
@@ -956,7 +956,7 @@ void CachedFileStream::moveStart(Goffset delta)
 // MemStream
 //------------------------------------------------------------------------
 
-MemStream::MemStream(char *bufA, Goffset startA, Goffset lengthA, Object *dictA):
+MemStream::MemStream(char *bufA, Goffset startA, Goffset lengthA, PObject *dictA):
     BaseStream(dictA, lengthA) {
   buf = bufA;
   start = startA;
@@ -977,7 +977,7 @@ BaseStream *MemStream::copy() {
 }
 
 Stream *MemStream::makeSubStream(Goffset startA, GBool limited,
-				 Goffset lengthA, Object *dictA) {
+				 Goffset lengthA, PObject *dictA) {
   MemStream *subStr;
   Goffset newLength;
 
@@ -1039,7 +1039,7 @@ void MemStream::moveStart(Goffset delta) {
 // EmbedStream
 //------------------------------------------------------------------------
 
-EmbedStream::EmbedStream(Stream *strA, Object *dictA,
+EmbedStream::EmbedStream(Stream *strA, PObject *dictA,
 			 GBool limitedA, Goffset lengthA):
     BaseStream(dictA, lengthA) {
   str = strA;
@@ -1056,7 +1056,7 @@ BaseStream *EmbedStream::copy() {
 }
 
 Stream *EmbedStream::makeSubStream(Goffset start, GBool limitedA,
-				   Goffset lengthA, Object *dictA) {
+				   Goffset lengthA, PObject *dictA) {
   error(errInternal, -1, "Called makeSubStream() on EmbedStream");
   return NULL;
 }
@@ -2426,7 +2426,7 @@ static const int dctZigZag[64] = {
   63
 };
 
-DCTStream::DCTStream(Stream *strA, int colorXformA, Object *dict, int recursion):
+DCTStream::DCTStream(Stream *strA, int colorXformA, PObject *dict, int recursion):
     FilterStream(strA) {
   int i, j;
 

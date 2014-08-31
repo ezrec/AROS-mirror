@@ -64,7 +64,7 @@ struct XRefEntry {
   int gen;
   XRefEntryType type;
   int flags;
-  Object obj; //if this entry was updated, obj will contains the updated object
+  PObject obj; //if this entry was updated, obj will contains the updated object
 
   enum Flag {
     // Regular flags
@@ -96,7 +96,7 @@ public:
   // Constructor, create an empty XRef, used for PDF writing
   XRef();
   // Constructor, create an empty XRef but with info dict, used for PDF writing
-  XRef(Object *trailerDictA);
+  XRef(PObject *trailerDictA);
   // Constructor.  Read xref table from stream.
   XRef(BaseStream *strA, Goffset pos, Goffset mainXRefEntriesOffsetA = 0, GBool *wasReconstructed = NULL, GBool reconstruct = false);
 
@@ -140,14 +140,14 @@ public:
   int getPermFlags() { return permFlags; }
 
   // Get catalog object.
-  Object *getCatalog(Object *obj);
+  PObject *getCatalog(PObject *obj);
 
   // Fetch an indirect reference.
-  Object *fetch(int num, int gen, Object *obj, int recursion = 0);
+  PObject *fetch(int num, int gen, PObject *obj, int recursion = 0);
 
   // Return the document's Info dictionary (if any).
-  Object *getDocInfo(Object *obj);
-  Object *getDocInfoNF(Object *obj);
+  PObject *getDocInfo(PObject *obj);
+  PObject *getDocInfoNF(PObject *obj);
 
   // Return the number of objects in the xref table.
   int getNumObjects() { return size; }
@@ -173,11 +173,11 @@ public:
 
   // Direct access.
   XRefEntry *getEntry(int i, GBool complainIfMissing = gTrue);
-  Object *getTrailerDict() { return &trailerDict; }
+  PObject *getTrailerDict() { return &trailerDict; }
 
   // Write access
-  void setModifiedObject(Object* o, Ref r);
-  Ref addIndirectObject (Object* o);
+  void setModifiedObject(PObject* o, Ref r);
+  Ref addIndirectObject (PObject* o);
   void removeIndirectObject(Ref r);
   void add(int num, int gen,  Goffset offs, GBool used);
 
@@ -201,7 +201,7 @@ private:
   int rootNum, rootGen;		// catalog dict
   GBool ok;			// true if xref table is valid
   int errCode;			// error code (if <ok> is false)
-  Object trailerDict;		// trailer dictionary
+  PObject trailerDict;		// trailer dictionary
   Goffset *streamEnds;		// 'endstream' positions - only used in
 				//   damaged files
   int streamEndsLen;		// number of valid entries in streamEnds
@@ -234,7 +234,7 @@ private:
   GBool constructXRef(GBool *wasReconstructed, GBool needCatalogDict = gFalse);
   GBool parseEntry(Goffset offset, XRefEntry *entry);
   void readXRefUntil(int untilEntryNum, std::vector<int> *xrefStreamObjsNum = NULL);
-  void markUnencrypted(Object *obj);
+  void markUnencrypted(PObject *obj);
 
   class XRefWriter {
   public:
@@ -256,11 +256,11 @@ private:
   // XRefWriter subclass that writes a XRef stream
   class XRefStreamWriter: public XRefWriter {
   public:
-    XRefStreamWriter(Object *index, GooString *stmBuf, int offsetSize);
+    XRefStreamWriter(PObject *index, GooString *stmBuf, int offsetSize);
     void startSection(int first, int count);
     void writeEntry(Goffset offset, int gen, XRefEntryType type);
   private:
-    Object *index;
+    PObject *index;
     GooString *stmBuf;
     int offsetSize;
   };

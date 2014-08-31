@@ -43,8 +43,8 @@
 // SecurityHandler
 //------------------------------------------------------------------------
 
-SecurityHandler *SecurityHandler::make(PDFDoc *docA, Object *encryptDictA) {
-  Object filterObj;
+SecurityHandler *SecurityHandler::make(PDFDoc *docA, PObject *encryptDictA) {
+  PObject filterObj;
   SecurityHandler *secHdlr;
 #ifdef ENABLE_PLUGINS
   XpdfSecurityHandler *xsh;
@@ -142,15 +142,15 @@ public:
 };
 
 StandardSecurityHandler::StandardSecurityHandler(PDFDoc *docA,
-						 Object *encryptDictA):
+						 PObject *encryptDictA):
   SecurityHandler(docA)
 {
-  Object versionObj, revisionObj, lengthObj;
-  Object ownerKeyObj, userKeyObj, ownerEncObj, userEncObj;
-  Object permObj, fileIDObj, fileIDObj1;
-  Object cryptFiltersObj, streamFilterObj, stringFilterObj;
-  Object cryptFilterObj, cfmObj, cfLengthObj;
-  Object encryptMetadataObj;
+  PObject versionObj, revisionObj, lengthObj;
+  PObject ownerKeyObj, userKeyObj, ownerEncObj, userEncObj;
+  PObject permObj, fileIDObj, fileIDObj1;
+  PObject cryptFiltersObj, streamFilterObj, stringFilterObj;
+  PObject cryptFilterObj, cfmObj, cfLengthObj;
+  PObject encryptMetadataObj;
 
   ok = gFalse;
   fileID = NULL;
@@ -383,7 +383,7 @@ GBool StandardSecurityHandler::authorize(void *authData) {
 //------------------------------------------------------------------------
 
 ExternalSecurityHandler::ExternalSecurityHandler(PDFDoc *docA,
-						 Object *encryptDictA,
+						 PObject *encryptDictA,
 						 XpdfSecurityHandler *xshA):
   SecurityHandler(docA)
 {

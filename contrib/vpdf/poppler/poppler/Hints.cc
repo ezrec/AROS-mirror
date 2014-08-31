@@ -106,7 +106,7 @@ void Hints::readTables(BaseStream *str, Linearization *linearization, XRef *xref
   hintsLength2 = linearization->getHintsLength2();
 
   Parser *parser;
-  Object obj;
+  PObject obj;
 
   int bufLength = hintsLength + hintsLength2;
 

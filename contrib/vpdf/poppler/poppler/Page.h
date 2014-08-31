@@ -105,7 +105,7 @@ public:
 	? separationInfo.getDict() : (Dict *)NULL; }
   Dict *getResourceDict()
     { return resources.isDict() ? resources.getDict() : (Dict *)NULL; }
-  void replaceResource(Object obj1) 
+  void replaceResource(PObject obj1) 
   {  resources.free(); obj1.copy(&resources); }
 
   // Clip all other boxes to the MediaBox.
@@ -122,13 +122,13 @@ private:
   PDFRectangle trimBox;
   PDFRectangle artBox;
   int rotate;
-  Object lastModified;
-  Object boxColorInfo;
-  Object group;
-  Object metadata;
-  Object pieceInfo;
-  Object separationInfo;
-  Object resources;
+  PObject lastModified;
+  PObject boxColorInfo;
+  PObject group;
+  PObject metadata;
+  PObject pieceInfo;
+  PObject separationInfo;
+  PObject resources;
 };
 
 //------------------------------------------------------------------------
@@ -178,7 +178,7 @@ public:
   Dict *getResourceDictCopy(XRef *xrefA);
 
   // Get annotations array.
-  Object *getAnnots(Object *obj, XRef *xrefA = NULL) { return annotsObj.fetch((xrefA == NULL) ? xref : xrefA, obj); }
+  PObject *getAnnots(PObject *obj, XRef *xrefA = NULL) { return annotsObj.fetch((xrefA == NULL) ? xref : xrefA, obj); }
   // Add a new annotation to the page
   void addAnnot(Annot *annot);
   // Remove an existing annotation from the page
@@ -191,14 +191,14 @@ public:
   Annots *getAnnots(XRef *xrefA = NULL);
 
   // Get contents.
-  Object *getContents(Object *obj) { return contents.fetch(xref, obj); }
+  PObject *getContents(PObject *obj) { return contents.fetch(xref, obj); }
 
   // Get thumb.
-  Object *getThumb(Object *obj) { return thumb.fetch(xref, obj); }
+  PObject *getThumb(PObject *obj) { return thumb.fetch(xref, obj); }
   GBool loadThumb(unsigned char **data, int *width, int *height, int *rowstride);
 
   // Get transition.
-  Object *getTrans(Object *obj) { return trans.fetch(xref, obj); }
+  PObject *getTrans(PObject *obj) { return trans.fetch(xref, obj); }
 
   // Get form.
   FormPageWidgets *getFormWidgets();
@@ -209,7 +209,7 @@ public:
   double getDuration() { return duration; }
 
   // Get actions
-  Object *getActions(Object *obj) { return actions.fetch(xref, obj); }
+  PObject *getActions(PObject *obj) { return actions.fetch(xref, obj); }
 
   Gfx *createGfx(OutputDev *out, double hDPI, double vDPI,
 		 int rotate, GBool useMediaBox, GBool crop,
@@ -258,16 +258,16 @@ private:
 
   PDFDoc *doc;
   XRef *xref;			// the xref table for this PDF file
-  Object pageObj;               // page dictionary
+  PObject pageObj;               // page dictionary
   Ref pageRef;                  // page reference
   int num;			// page number
   PageAttrs *attrs;		// page attributes
   Annots *annots;               // annotations
-  Object annotsObj;		// annotations array
-  Object contents;		// page contents
-  Object thumb;			// page thumbnail
-  Object trans;			// page transition
-  Object actions;		// page addiction actions
+  PObject annotsObj;		// annotations array
+  PObject contents;		// page contents
+  PObject thumb;			// page thumbnail
+  PObject trans;			// page transition
+  PObject actions;		// page addiction actions
   double duration;              // page duration
   GBool ok;			// true if page is valid
 #if MULTITHREADED

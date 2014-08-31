@@ -13,6 +13,7 @@ FILES := FoFiBase \
 
 TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/VPDF/libs
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../poppler
+USER_CFLAGS := -D__MORPHOS__ -frtti -fexceptions -fcheck-new
 
 %build_linklib mmake=contrib-vpdf-poppler-fofi libname=fofi \
   cxxfiles=$(FILES) libdir=$(TARGETDIR)

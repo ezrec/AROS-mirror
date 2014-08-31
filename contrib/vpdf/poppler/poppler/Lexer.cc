@@ -75,7 +75,7 @@ static const long long LongLongSafeLimit = (LLONG_MAX - 9) / 10;
 //------------------------------------------------------------------------
 
 Lexer::Lexer(XRef *xrefA, Stream *str) {
-  Object obj;
+  PObject obj;
 
   lookCharLastValueCached = LOOK_VALUE_NOT_CACHED;
   xref = xrefA;
@@ -88,8 +88,8 @@ Lexer::Lexer(XRef *xrefA, Stream *str) {
   curStr.streamReset();
 }
 
-Lexer::Lexer(XRef *xrefA, Object *obj) {
-  Object obj2;
+Lexer::Lexer(XRef *xrefA, PObject *obj) {
+  PObject obj2;
 
   lookCharLastValueCached = LOOK_VALUE_NOT_CACHED;
   xref = xrefA;
@@ -159,7 +159,7 @@ int Lexer::lookChar() {
   }
 }
 
-Object *Lexer::getObj(Object *obj, int objNum) {
+PObject *Lexer::getObj(PObject *obj, int objNum) {
   char *p;
   int c, c2;
   GBool comment, neg, done, overflownInteger, overflownLongLong;
@@ -586,7 +586,7 @@ Object *Lexer::getObj(Object *obj, int objNum) {
   return obj;
 }
 
-Object *Lexer::getObj(Object *obj, const char *cmdA) {
+PObject *Lexer::getObj(PObject *obj, const char *cmdA) {
   char *p;
   int c;
   GBool comment;

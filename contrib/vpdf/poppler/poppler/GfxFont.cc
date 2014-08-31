@@ -203,7 +203,7 @@ GfxFont *GfxFont::makeFont(XRef *xref, const char *tagA, Ref idA, Dict *fontDict
   Ref embFontIDA;
   GfxFontType typeA;
   GfxFont *font;
-  Object obj1;
+  PObject obj1;
 
   // get base font name
   nameA = NULL;
@@ -283,7 +283,7 @@ GfxFontType GfxFont::getFontType(XRef *xref, Dict *fontDict, Ref *embID) {
   GfxFontType t, expectedType;
   FoFiIdentifierType fft;
   Dict *fontDict2;
-  Object subtype, fontDesc, obj1, obj2, obj3, obj4;
+  PObject subtype, fontDesc, obj1, obj2, obj3, obj4;
   GBool isType0, err;
 
   t = fontUnknownType;
@@ -464,7 +464,7 @@ GfxFontType GfxFont::getFontType(XRef *xref, Dict *fontDict, Ref *embID) {
 }
 
 void GfxFont::readFontDescriptor(XRef *xref, Dict *fontDict) {
-  Object obj1, obj2, obj3, obj4;
+  PObject obj1, obj2, obj3, obj4;
   double t;
   int i;
 
@@ -588,7 +588,7 @@ void GfxFont::readFontDescriptor(XRef *xref, Dict *fontDict) {
 CharCodeToUnicode *GfxFont::readToUnicodeCMap(Dict *fontDict, int nBits,
 					      CharCodeToUnicode *ctu) {
   GooString *buf;
-  Object obj1;
+  PObject obj1;
 
   if (!fontDict->lookup("ToUnicode", &obj1)->isStream()) {
     obj1.free();
@@ -613,7 +613,7 @@ GfxFontLoc *GfxFont::locateFont(XRef *xref, GBool ps) {
   SysFontType sysFontType;
   GooString *path, *base14Name, *substName;
   PSFontParam16 *psFont16;
-  Object refObj, embFontObj;
+  PObject refObj, embFontObj;
   int substIdx, fontNum;
   GBool embed;
 
@@ -887,7 +887,7 @@ GfxFontLoc *GfxFont::getExternalFont(GooString *path, GBool cid) {
 
 char *GfxFont::readEmbFontFile(XRef *xref, int *len) {
   char *buf;
-  Object obj1, obj2;
+  PObject obj1, obj2;
   Stream *str;
 
   obj1.initRef(embFontID.num, embFontID.gen);
@@ -935,7 +935,7 @@ Gfx8BitFont::Gfx8BitFont(XRef *xref, const char *tagA, Ref idA, GooString *nameA
   double mul;
   int firstChar, lastChar;
   Gushort w;
-  Object obj1, obj2, obj3;
+  PObject obj1, obj2, obj3;
   int n, i, a, b, m;
 
   refCnt = 1;
@@ -1708,7 +1708,7 @@ Dict *Gfx8BitFont::getCharProcs() {
   return charProcs.isDict() ? charProcs.getDict() : (Dict *)NULL;
 }
 
-Object *Gfx8BitFont::getCharProc(int code, Object *proc) {
+PObject *Gfx8BitFont::getCharProc(int code, PObject *proc) {
   if (enc[code] && charProcs.isDict()) {
     charProcs.dictLookup(enc[code], proc);
   } else {
@@ -1744,8 +1744,8 @@ GfxCIDFont::GfxCIDFont(XRef *xref, const char *tagA, Ref idA, GooString *nameA,
   GfxFont(tagA, idA, nameA, typeA, embFontIDA)
 {
   Dict *desFontDict;
-  Object desFontDictObj;
-  Object obj1, obj2, obj3, obj4, obj5, obj6;
+  PObject desFontDictObj;
+  PObject obj1, obj2, obj3, obj4, obj5, obj6;
   CharCodeToUnicode *utu;
   CharCode c;
   Unicode *uBuf;
@@ -2471,7 +2471,7 @@ double GfxCIDFont::getWidth (char* s, int len) {
 
 GfxFontDict::GfxFontDict(XRef *xref, Ref *fontDictRef, Dict *fontDict) {
   int i;
-  Object obj1, obj2;
+  PObject obj1, obj2;
   Ref r;
 
   numFonts = fontDict->getLength();

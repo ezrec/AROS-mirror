@@ -50,14 +50,14 @@ public:
 
   // Construct a lexer for a stream or array of streams (assumes obj
   // is either a stream or array of streams).
-  Lexer(XRef *xrefA, Object *obj);
+  Lexer(XRef *xrefA, PObject *obj);
 
   // Destructor.
   ~Lexer();
 
   // Get the next object from the input stream.
-  Object *getObj(Object *obj, int objNum = -1);
-  Object *getObj(Object *obj, const char *cmdA);
+  PObject *getObj(PObject *obj, int objNum = -1);
+  PObject *getObj(PObject *obj, const char *cmdA);
 
   // Skip to the beginning of the next line in the input stream.
   void skipToNextLine();
@@ -98,7 +98,7 @@ private:
 
   Array *streams;		// array of input streams
   int strPtr;			// index of current stream
-  Object curStr;		// current stream
+  PObject curStr;		// current stream
   GBool freeArray;		// should lexer free the streams array?
   char tokBuf[tokBufSize];	// temporary token buffer
 

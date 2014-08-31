@@ -43,14 +43,14 @@ MediaWindowParameters::MediaWindowParameters() {
 MediaWindowParameters::~MediaWindowParameters() {
 }
 
-void MediaWindowParameters::parseFWParams(Object* obj) {
-  Object tmp;
+void MediaWindowParameters::parseFWParams(PObject* obj) {
+  PObject tmp;
 
   if (obj->dictLookup("D", &tmp)->isArray()) {
     Array * dim = tmp.getArray();
     
     if (dim->getLength() >= 2) {
-      Object dd;
+      PObject dd;
       if (dim->get(0, &dd)->isInt()) {
 	width = dd.getInt();
       }
@@ -147,9 +147,9 @@ MediaParameters::MediaParameters() {
 MediaParameters::~MediaParameters() {
 }
 
-void MediaParameters::parseMediaPlayParameters(Object* obj) {
+void MediaParameters::parseMediaPlayParameters(PObject* obj) {
   
-  Object tmp;
+  PObject tmp;
 
   if (obj->dictLookup("V", &tmp)->isInt()) {
     volume = tmp.getInt();
@@ -178,7 +178,7 @@ void MediaParameters::parseMediaPlayParameters(Object* obj) {
   // duration parsing
   // duration's default value is set to 0, which means : intrinsinc media duration
   if (obj->dictLookup("D", &tmp)->isDict()) {
-    Object oname, ddict, tmp2;
+    PObject oname, ddict, tmp2;
     if (tmp.dictLookup("S", &oname)->isName()) {
       char* name = oname.getName();
       if (!strcmp(name, "F"))
@@ -210,8 +210,8 @@ void MediaParameters::parseMediaPlayParameters(Object* obj) {
 
 }
 
-void MediaParameters::parseMediaScreenParameters(Object* obj) {
-  Object tmp;
+void MediaParameters::parseMediaScreenParameters(PObject* obj) {
+  PObject tmp;
 
   if (obj->dictLookup("W", &tmp)->isInt()) {
     int t = tmp.getInt();
@@ -229,7 +229,7 @@ void MediaParameters::parseMediaScreenParameters(Object* obj) {
   if (obj->dictLookup("B", &tmp)->isArray()) {
     Array* color = tmp.getArray();
 
-    Object component;
+    PObject component;
     
     color->get(0, &component);
     bgColor.r = component.getNum();
@@ -253,7 +253,7 @@ void MediaParameters::parseMediaScreenParameters(Object* obj) {
   tmp.free();
 
   if (windowParams.type == MediaWindowParameters::windowFloating) {
-    Object winDict;
+    PObject winDict;
     if (obj->dictLookup("F",&winDict)->isDict()) {
       windowParams.parseFWParams(&winDict);
     }
@@ -272,8 +272,8 @@ MediaRendition::~MediaRendition() {
   }
 }
 
-MediaRendition::MediaRendition(Object* obj) {
-  Object tmp, tmp2;
+MediaRendition::MediaRendition(PObject* obj) {
+  PObject tmp, tmp2;
   GBool hasClip = gFalse;
 
   ok = gTrue;
@@ -289,14 +289,14 @@ MediaRendition::MediaRendition(Object* obj) {
     hasClip = gTrue;
     if (tmp2.dictLookup("S", &tmp)->isName()) {
       if (!strcmp(tmp.getName(), "MCD")) { // media clip data
-        Object obj1, obj2;
+        PObject obj1, obj2;
 	if (tmp2.dictLookup("D", &obj1)->isDict()) {
 	  if (obj1.dictLookup("F", &obj2)->isString()) {
 	    fileName = obj2.getString()->copy();
 	  }
 	  obj2.free();
 	  if (obj1.dictLookup("EF", &obj2)->isDict()) {
-	    Object embedded;
+	    PObject embedded;
 	    if (obj2.dictLookup("F", &embedded)->isStream()) {
 	      isEmbedded = gTrue;
 	      embeddedStream = embedded.getStream();
@@ -336,7 +336,7 @@ MediaRendition::MediaRendition(Object* obj) {
   //
   // parse Media Play Parameters
   if (obj->dictLookup("P", &tmp2)->isDict()) { // media play parameters
-    Object params;
+    PObject params;
     if (tmp2.dictLookup("MH", &params)->isDict()) {
       MH.parseMediaPlayParameters(&params);
     }
@@ -354,7 +354,7 @@ MediaRendition::MediaRendition(Object* obj) {
   //
   // parse Media Screen Parameters
   if (obj->dictLookup("SP", &tmp2)->isDict()) { // media screen parameters
-    Object params;
+    PObject params;
     if (tmp2.dictLookup("MH", &params)->isDict()) {
       MH.parseMediaScreenParameters(&params);
     }

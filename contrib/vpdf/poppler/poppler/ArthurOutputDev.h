@@ -135,10 +135,10 @@ public:
   virtual void endTextObject(GfxState *state);
 
   //----- image drawing
-  virtual void drawImageMask(GfxState *state, Object *ref, Stream *str,
+  virtual void drawImageMask(GfxState *state, PObject *ref, Stream *str,
 			     int width, int height, GBool invert,
 			     GBool interpolate, GBool inlineImg);
-  virtual void drawImage(GfxState *state, Object *ref, Stream *str,
+  virtual void drawImage(GfxState *state, PObject *ref, Stream *str,
 			 int width, int height, GfxImageColorMap *colorMap,
 			 GBool interpolate, int *maskColors, GBool inlineImg);
 

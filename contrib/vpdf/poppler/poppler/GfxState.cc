@@ -256,9 +256,9 @@ GfxColorSpace::GfxColorSpace() {
 GfxColorSpace::~GfxColorSpace() {
 }
 
-GfxColorSpace *GfxColorSpace::parse(Object *csObj, OutputDev *out, int recursion) {
+GfxColorSpace *GfxColorSpace::parse(PObject *csObj, OutputDev *out, int recursion) {
   GfxColorSpace *cs;
-  Object obj1;
+  PObject obj1;
 
   if (recursion > colorSpaceRecursionLimit) {
     error(errSyntaxError, -1, "Loop detected in color space objects");
@@ -656,7 +656,7 @@ static const double xyzrgb[3][3] = {
 
 GfxColorSpace *GfxCalGrayColorSpace::parse(Array *arr) {
   GfxCalGrayColorSpace *cs;
-  Object obj1, obj2, obj3;
+  PObject obj1, obj2, obj3;
 
   arr->get(1, &obj1);
   if (!obj1.isDict()) {
@@ -974,7 +974,7 @@ GfxColorSpace *GfxCalRGBColorSpace::copy() {
 
 GfxColorSpace *GfxCalRGBColorSpace::parse(Array *arr) {
   GfxCalRGBColorSpace *cs;
-  Object obj1, obj2, obj3;
+  PObject obj1, obj2, obj3;
   int i;
 
   arr->get(1, &obj1);
@@ -1325,7 +1325,7 @@ GfxColorSpace *GfxLabColorSpace::copy() {
 
 GfxColorSpace *GfxLabColorSpace::parse(Array *arr) {
   GfxLabColorSpace *cs;
-  Object obj1, obj2, obj3;
+  PObject obj1, obj2, obj3;
 
   arr->get(1, &obj1);
   if (!obj1.isDict()) {
@@ -1632,7 +1632,7 @@ GfxColorSpace *GfxICCBasedColorSpace::parse(Array *arr, OutputDev *out, int recu
   int nCompsA;
   GfxColorSpace *altA;
   Dict *dict;
-  Object obj1, obj2, obj3;
+  PObject obj1, obj2, obj3;
   int i;
 
   if (arr->getLength() < 2) {
@@ -1703,7 +1703,7 @@ GfxColorSpace *GfxICCBasedColorSpace::parse(Array *arr, OutputDev *out, int recu
   cs = new GfxICCBasedColorSpace(nCompsA, altA, &iccProfileStreamA);
   if (dict->lookup("Range", &obj2)->isArray() &&
       obj2.arrayGetLength() == 2 * nCompsA) {
-    Object obj4;
+    PObject obj4;
     for (i = 0; i < nCompsA; ++i) {
       obj2.arrayGet(2*i, &obj3);
       obj2.arrayGet(2*i+1, &obj4);
@@ -1997,7 +1997,7 @@ GfxColorSpace *GfxIndexedColorSpace::parse(Array *arr, OutputDev *out, int recur
   GfxIndexedColorSpace *cs;
   GfxColorSpace *baseA;
   int indexHighA;
-  Object obj1;
+  PObject obj1;
   char *s;
   int n, i, j;
 
@@ -2233,7 +2233,7 @@ GfxColorSpace *GfxSeparationColorSpace::parse(Array *arr, OutputDev *out, int re
   GooString *nameA;
   GfxColorSpace *altA;
   Function *funcA;
-  Object obj1;
+  PObject obj1;
 
   if (arr->getLength() != 4) {
     error(errSyntaxWarning, -1, "Bad Separation color space");
@@ -2483,7 +2483,7 @@ GfxColorSpace *GfxDeviceNColorSpace::parse(Array *arr, OutputDev *out, int recur
   GooString *namesA[gfxColorMaxComps];
   GfxColorSpace *altA;
   Function *funcA;
-  Object obj1, obj2;
+  PObject obj1, obj2;
   int i;
   GooList *separationList = new GooList();
 
@@ -2532,7 +2532,7 @@ GfxColorSpace *GfxDeviceNColorSpace::parse(Array *arr, OutputDev *out, int recur
     if (obj2.isDict()) {
       Dict *colorants = obj2.getDict();
       for (i = 0; i < colorants->getLength(); i++) {
-        Object obj3;
+        PObject obj3;
         colorants->getVal(i, &obj3);
         if (obj3.isArray()) {
           separationList->append(GfxSeparationColorSpace::parse(obj3.getArray(), out, recursion));
@@ -2746,7 +2746,7 @@ GfxColorSpace *GfxPatternColorSpace::copy() {
 GfxColorSpace *GfxPatternColorSpace::parse(Array *arr, OutputDev *out, int recursion) {
   GfxPatternColorSpace *cs;
   GfxColorSpace *underA;
-  Object obj1;
+  PObject obj1;
 
   if (arr->getLength() != 1 && arr->getLength() != 2) {
     error(errSyntaxWarning, -1, "Bad Pattern color space");
@@ -2800,9 +2800,9 @@ GfxPattern::GfxPattern(int typeA) {
 GfxPattern::~GfxPattern() {
 }
 
-GfxPattern *GfxPattern::parse(Object *obj, OutputDev *out) {
+GfxPattern *GfxPattern::parse(PObject *obj, OutputDev *out) {
   GfxPattern *pattern;
-  Object obj1;
+  PObject obj1;
 
   if (obj->isDict()) {
     obj->dictLookup("PatternType", &obj1);
@@ -2825,14 +2825,14 @@ GfxPattern *GfxPattern::parse(Object *obj, OutputDev *out) {
 // GfxTilingPattern
 //------------------------------------------------------------------------
 
-GfxTilingPattern *GfxTilingPattern::parse(Object *patObj) {
+GfxTilingPattern *GfxTilingPattern::parse(PObject *patObj) {
   GfxTilingPattern *pat;
   Dict *dict;
   int paintTypeA, tilingTypeA;
   double bboxA[4], matrixA[6];
   double xStepA, yStepA;
-  Object resDictA;
-  Object obj1, obj2;
+  PObject resDictA;
+  PObject obj1, obj2;
   int i;
 
   if (!patObj->isStream()) {
@@ -2909,8 +2909,8 @@ GfxTilingPattern *GfxTilingPattern::parse(Object *patObj) {
 
 GfxTilingPattern::GfxTilingPattern(int paintTypeA, int tilingTypeA,
 				   double *bboxA, double xStepA, double yStepA,
-				   Object *resDictA, double *matrixA,
-				   Object *contentStreamA):
+				   PObject *resDictA, double *matrixA,
+				   PObject *contentStreamA):
   GfxPattern(1)
 {
   int i;
@@ -2943,11 +2943,11 @@ GfxPattern *GfxTilingPattern::copy() {
 // GfxShadingPattern
 //------------------------------------------------------------------------
 
-GfxShadingPattern *GfxShadingPattern::parse(Object *patObj, OutputDev *out) {
+GfxShadingPattern *GfxShadingPattern::parse(PObject *patObj, OutputDev *out) {
   Dict *dict;
   GfxShading *shadingA;
   double matrixA[6];
-  Object obj1, obj2;
+  PObject obj1, obj2;
   int i;
 
   if (!patObj->isDict()) {
@@ -3029,11 +3029,11 @@ GfxShading::~GfxShading() {
   }
 }
 
-GfxShading *GfxShading::parse(Object *obj, OutputDev *out) {
+GfxShading *GfxShading::parse(PObject *obj, OutputDev *out) {
   GfxShading *shading;
   Dict *dict;
   int typeA;
-  Object obj1;
+  PObject obj1;
 
   if (obj->isDict()) {
     dict = obj->getDict();
@@ -3105,7 +3105,7 @@ GfxShading *GfxShading::parse(Object *obj, OutputDev *out) {
 }
 
 GBool GfxShading::init(Dict *dict, OutputDev *out) {
-  Object obj1, obj2;
+  PObject obj1, obj2;
   int i;
 
   dict->lookup("ColorSpace", &obj1);
@@ -3137,7 +3137,7 @@ GBool GfxShading::init(Dict *dict, OutputDev *out) {
   hasBBox = gFalse;
   if (dict->lookup("BBox", &obj1)->isArray()) {
     if (obj1.arrayGetLength() == 4) {
-      Object obj3, obj4, obj5;
+      PObject obj3, obj4, obj5;
       obj1.arrayGet(0, &obj2);
       obj1.arrayGet(1, &obj3);
       obj1.arrayGet(2, &obj4);
@@ -3222,7 +3222,7 @@ GfxFunctionShading *GfxFunctionShading::parse(Dict *dict, OutputDev *out) {
   double matrixA[6];
   Function *funcsA[gfxColorMaxComps];
   int nFuncsA;
-  Object obj1, obj2;
+  PObject obj1, obj2;
   int i;
 
   x0A = y0A = 0;
@@ -3542,13 +3542,13 @@ GfxAxialShading *GfxAxialShading::parse(Dict *dict, OutputDev *out) {
   Function *funcsA[gfxColorMaxComps];
   int nFuncsA;
   GBool extend0A, extend1A;
-  Object obj1, obj2;
+  PObject obj1, obj2;
   int i;
 
   x0A = y0A = x1A = y1A = 0;
   if (dict->lookup("Coords", &obj1)->isArray() &&
       obj1.arrayGetLength() == 4) {
-    Object obj3, obj4, obj5;
+    PObject obj3, obj4, obj5;
     obj1.arrayGet(0, &obj2);
     obj1.arrayGet(1, &obj3);
     obj1.arrayGet(2, &obj4);
@@ -3573,7 +3573,7 @@ GfxAxialShading *GfxAxialShading::parse(Dict *dict, OutputDev *out) {
   t1A = 1;
   if (dict->lookup("Domain", &obj1)->isArray() &&
       obj1.arrayGetLength() == 2) {
-    Object obj3;
+    PObject obj3;
     obj1.arrayGet(0, &obj2);
     obj1.arrayGet(1, &obj3);
     if (obj2.isNum() && obj3.isNum()) {
@@ -3750,7 +3750,7 @@ GfxRadialShading *GfxRadialShading::parse(Dict *dict, OutputDev *out) {
   Function *funcsA[gfxColorMaxComps];
   int nFuncsA;
   GBool extend0A, extend1A;
-  Object obj1, obj2;
+  PObject obj1, obj2;
   int i;
 
   x0A = y0A = r0A = x1A = y1A = r1A = 0;
@@ -4281,7 +4281,7 @@ GfxGouraudTriangleShading *GfxGouraudTriangleShading::parse(int typeA,
   Guint x, y, flag;
   Guint c[gfxColorMaxComps];
   GfxShadingBitBuf *bitBuf;
-  Object obj1, obj2;
+  PObject obj1, obj2;
   int i, j, k, state;
 
   if (dict->lookup("BitsPerCoordinate", &obj1)->isInt()) {
@@ -4626,7 +4626,7 @@ GfxPatchMeshShading *GfxPatchMeshShading::parse(int typeA, Dict *dict,
   double c[4][gfxColorMaxComps];
   Guint ci;
   GfxShadingBitBuf *bitBuf;
-  Object obj1, obj2;
+  PObject obj1, obj2;
   int i, j;
 
   if (dict->lookup("BitsPerCoordinate", &obj1)->isInt()) {
@@ -5164,14 +5164,14 @@ GfxShading *GfxPatchMeshShading::copy() {
 // GfxImageColorMap
 //------------------------------------------------------------------------
 
-GfxImageColorMap::GfxImageColorMap(int bitsA, Object *decode,
+GfxImageColorMap::GfxImageColorMap(int bitsA, PObject *decode,
 				   GfxColorSpace *colorSpaceA) {
   GfxIndexedColorSpace *indexedCS;
   GfxSeparationColorSpace *sepCS;
   int maxPixel, indexHigh;
   Guchar *indexedLookup;
   Function *sepFunc;
-  Object obj;
+  PObject obj;
   double x[gfxColorMaxComps];
   double y[gfxColorMaxComps];
   int i, j, k;
@@ -6441,8 +6441,8 @@ GfxState *GfxState::restore() {
   return oldState;
 }
 
-GBool GfxState::parseBlendMode(Object *obj, GfxBlendMode *mode) {
-  Object obj2;
+GBool GfxState::parseBlendMode(PObject *obj, GfxBlendMode *mode) {
+  PObject obj2;
   int i, j;
 
   if (obj->isName()) {

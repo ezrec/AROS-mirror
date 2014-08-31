@@ -32,7 +32,7 @@ struct MovieActivationParameters {
   ~MovieActivationParameters();
 
   // parse from a "Movie Activation" dictionary
-  void parseMovieActivation(Object* actObj);
+  void parseMovieActivation(PObject* actObj);
 
   enum MovieRepeatMode {
     repeatModeOnce,
@@ -69,8 +69,8 @@ struct MovieActivationParameters {
 
 class Movie {
  public:
-  Movie(Object *objMovie, Object *objAct);
-  Movie(Object *objMovie);
+  Movie(PObject *objMovie, PObject *objAct);
+  Movie(PObject *objMovie);
   ~Movie();
 
   GBool isOk() { return ok; }
@@ -81,7 +81,7 @@ class Movie {
   Gushort getRotationAngle() { return rotationAngle; }
   void getAspect (int *widthA, int *heightA) { *widthA = width; *heightA = height; }
 
-  Object *getPoster(Object *obj) { return poster.copy(obj); }
+  PObject *getPoster(PObject *obj) { return poster.copy(obj); }
   GBool getShowPoster() { return showPoster; }
 
   GBool getUseFloatingWindow() { return MA.floatingWindow; }
@@ -90,7 +90,7 @@ class Movie {
   Movie* copy();
 
  private:
-  void parseMovie (Object *movieDict);
+  void parseMovie (PObject *movieDict);
 
   GBool ok;
 
@@ -98,7 +98,7 @@ class Movie {
   int width;                               // Aspect
   int height;                              // Aspect
 
-  Object poster;
+  PObject poster;
   GBool showPoster;
 
   GooString* fileName;

@@ -1,6 +1,6 @@
 //========================================================================
 //
-// Object.cc
+// PObject.cc
 //
 // Copyright 1996-2003 Glyph & Cog, LLC
 //
@@ -36,7 +36,7 @@
 #include "XRef.h"
 
 //------------------------------------------------------------------------
-// Object
+// PObject
 //------------------------------------------------------------------------
 
 static const char *objTypeNames[numObjTypes] = {
@@ -58,36 +58,36 @@ static const char *objTypeNames[numObjTypes] = {
 };
 
 #ifdef DEBUG_MEM
-int Object::numAlloc[numObjTypes] =
+int PObject::numAlloc[numObjTypes] =
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 #endif
 
-Object *Object::initArray(XRef *xref) {
+PObject *PObject::initArray(XRef *xref) {
   initObj(objArray);
   array = new Array(xref);
   return this;
 }
 
-Object *Object::initDict(XRef *xref) {
+PObject *PObject::initDict(XRef *xref) {
   initObj(objDict);
   dict = new Dict(xref);
   return this;
 }
 
-Object *Object::initDict(Dict *dictA) {
+PObject *PObject::initDict(Dict *dictA) {
   initObj(objDict);
   dict = dictA;
   dict->incRef();
   return this;
 }
 
-Object *Object::initStream(Stream *streamA) {
+PObject *PObject::initStream(Stream *streamA) {
   initObj(objStream);
   stream = streamA;
   return this;
 }
 
-Object *Object::copy(Object *obj) {
+PObject *PObject::copy(PObject *obj) {
   *obj = *this;
   switch (type) {
   case objString:
@@ -117,12 +117,12 @@ Object *Object::copy(Object *obj) {
   return obj;
 }
 
-Object *Object::fetch(XRef *xref, Object *obj, int recursion) {
+PObject *PObject::fetch(XRef *xref, PObject *obj, int recursion) {
   return (type == objRef && xref) ?
          xref->fetch(ref.num, ref.gen, obj, recursion) : copy(obj);
 }
 
-void Object::free() {
+void PObject::free() {
   switch (type) {
   case objString:
     delete string;
@@ -157,12 +157,12 @@ void Object::free() {
   type = objNone;
 }
 
-const char *Object::getTypeName() {
+const char *PObject::getTypeName() {
   return objTypeNames[type];
 }
 
-void Object::print(FILE *f) {
-  Object obj;
+void PObject::print(FILE *f) {
+  PObject obj;
   int i;
 
   switch (type) {
@@ -231,7 +231,7 @@ void Object::print(FILE *f) {
   }
 }
 
-void Object::memCheck(FILE *f) {
+void PObject::memCheck(FILE *f) {
 #ifdef DEBUG_MEM
   int i;
   int t;

@@ -67,8 +67,8 @@ class PopplerObjectCache
     PopplerObjectCache (int cacheSizeA, XRef *xrefA);
     ~PopplerObjectCache();
 
-    Object *put(const Ref &ref);
-    Object *lookup(const Ref &ref, Object *obj);
+    PObject *put(const Ref &ref);
+    PObject *lookup(const Ref &ref, PObject *obj);
 
   private:
     XRef *xref;

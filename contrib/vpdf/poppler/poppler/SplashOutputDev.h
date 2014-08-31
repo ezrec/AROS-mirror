@@ -237,7 +237,7 @@ public:
   virtual void stroke(GfxState *state);
   virtual void fill(GfxState *state);
   virtual void eoFill(GfxState *state);
-  virtual GBool tilingPatternFill(GfxState *state, Gfx *gfx, Catalog *catalog, Object *str,
+  virtual GBool tilingPatternFill(GfxState *state, Gfx *gfx, Catalog *catalog, PObject *str,
 				  double *pmat, int paintType, int tilingType, Dict *resDict,
 				  double *mat, double *bbox,
 				  int x0, int y0, int x1, int y1,
@@ -264,24 +264,24 @@ public:
   virtual void endTextObject(GfxState *state);
 
   //----- image drawing
-  virtual void drawImageMask(GfxState *state, Object *ref, Stream *str,
+  virtual void drawImageMask(GfxState *state, PObject *ref, Stream *str,
 			     int width, int height, GBool invert,
 			     GBool interpolate, GBool inlineImg);
   virtual void setSoftMaskFromImageMask(GfxState *state,
-					Object *ref, Stream *str,
+					PObject *ref, Stream *str,
 					int width, int height, GBool invert,
 					GBool inlineImg, double *baseMatrix);
   virtual void unsetSoftMaskFromImageMask(GfxState *state, double *baseMatrix);
-  virtual void drawImage(GfxState *state, Object *ref, Stream *str,
+  virtual void drawImage(GfxState *state, PObject *ref, Stream *str,
 			 int width, int height, GfxImageColorMap *colorMap,
 			 GBool interpolate, int *maskColors, GBool inlineImg);
-  virtual void drawMaskedImage(GfxState *state, Object *ref, Stream *str,
+  virtual void drawMaskedImage(GfxState *state, PObject *ref, Stream *str,
 			       int width, int height,
 			       GfxImageColorMap *colorMap,
 			       GBool interpolate,
 			       Stream *maskStr, int maskWidth, int maskHeight,
 			       GBool maskInvert, GBool maskInterpolate);
-  virtual void drawSoftMaskedImage(GfxState *state, Object *ref, Stream *str,
+  virtual void drawSoftMaskedImage(GfxState *state, PObject *ref, Stream *str,
 				   int width, int height,
 				   GfxImageColorMap *colorMap,
 				   GBool interpolate,

@@ -57,7 +57,7 @@ public:
   virtual ~Function();
 
   // Construct a function.  Returns NULL if unsuccessful.
-  static Function *parse(Object *funcObj);
+  static Function *parse(PObject *funcObj);
 
   // Initialize the entries common to all function types.
   GBool init(Dict *dict);
@@ -89,7 +89,7 @@ public:
   virtual GBool isOk() = 0;
 
 protected:
-  static Function *parse(Object *funcObj, std::set<int> *usedParents);
+  static Function *parse(PObject *funcObj, std::set<int> *usedParents);
 
   Function(const Function *func);
 
@@ -125,7 +125,7 @@ private:
 class SampledFunction: public Function {
 public:
 
-  SampledFunction(Object *funcObj, Dict *dict);
+  SampledFunction(PObject *funcObj, Dict *dict);
   virtual ~SampledFunction();
   virtual Function *copy() { return new SampledFunction(this); }
   virtual int getType() { return 0; }
@@ -169,7 +169,7 @@ private:
 class ExponentialFunction: public Function {
 public:
 
-  ExponentialFunction(Object *funcObj, Dict *dict);
+  ExponentialFunction(PObject *funcObj, Dict *dict);
   virtual ~ExponentialFunction();
   virtual Function *copy() { return new ExponentialFunction(this); }
   virtual int getType() { return 2; }
@@ -198,7 +198,7 @@ private:
 class StitchingFunction: public Function {
 public:
 
-  StitchingFunction(Object *funcObj, Dict *dict, std::set<int> *usedParents);
+  StitchingFunction(PObject *funcObj, Dict *dict, std::set<int> *usedParents);
   virtual ~StitchingFunction();
   virtual Function *copy() { return new StitchingFunction(this); }
   virtual int getType() { return 3; }
@@ -230,7 +230,7 @@ private:
 class PostScriptFunction: public Function {
 public:
 
-  PostScriptFunction(Object *funcObj, Dict *dict);
+  PostScriptFunction(PObject *funcObj, Dict *dict);
   virtual ~PostScriptFunction();
   virtual Function *copy() { return new PostScriptFunction(this); }
   virtual int getType() { return 4; }

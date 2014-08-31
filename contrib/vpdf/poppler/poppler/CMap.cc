@@ -62,7 +62,7 @@ static int getCharFromStream(void *data) {
 
 //------------------------------------------------------------------------
 
-CMap *CMap::parse(CMapCache *cache, GooString *collectionA, Object *obj) {
+CMap *CMap::parse(CMapCache *cache, GooString *collectionA, PObject *obj) {
   CMap *cMap;
   GooString *cMapNameA;
 
@@ -115,7 +115,7 @@ CMap *CMap::parse(CMapCache *cache, GooString *collectionA,
 }
 
 CMap *CMap::parse(CMapCache *cache, GooString *collectionA, Stream *str) {
-  Object obj1;
+  PObject obj1;
   CMap *cMap;
 
   cMap = new CMap(collectionA->copy(), NULL);
@@ -357,7 +357,7 @@ void CMap::useCMap(CMapCache *cache, char *useName) {
   subCMap->decRefCnt();
 }
 
-void CMap::useCMap(CMapCache *cache, Object *obj) {
+void CMap::useCMap(CMapCache *cache, PObject *obj) {
   CMap *subCMap;
 
   subCMap = CMap::parse(cache, collection, obj);

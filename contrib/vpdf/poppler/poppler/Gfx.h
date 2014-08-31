@@ -101,7 +101,7 @@ struct Operator {
   char name[4];
   int numArgs;
   TchkType tchk[maxArgs];
-  void (Gfx::*func)(Object args[], int numArgs);
+  void (Gfx::*func)(PObject args[], int numArgs);
 };
 
 //------------------------------------------------------------------------
@@ -113,27 +113,27 @@ public:
   ~GfxResources();
 
   GfxFont *lookupFont(char *name);
-  GBool lookupXObject(char *name, Object *obj);
-  GBool lookupXObjectNF(char *name, Object *obj);
-  GBool lookupMarkedContentNF(char *name, Object *obj);
-  void lookupColorSpace(const char *name, Object *obj);
+  GBool lookupXObject(char *name, PObject *obj);
+  GBool lookupXObjectNF(char *name, PObject *obj);
+  GBool lookupMarkedContentNF(char *name, PObject *obj);
+  void lookupColorSpace(const char *name, PObject *obj);
   GfxPattern *lookupPattern(char *name, OutputDev *out);
   GfxShading *lookupShading(char *name, OutputDev *out);
-  GBool lookupGState(char *name, Object *obj);
-  GBool lookupGStateNF(char *name, Object *obj);
+  GBool lookupGState(char *name, PObject *obj);
+  GBool lookupGStateNF(char *name, PObject *obj);
 
   GfxResources *getNext() { return next; }
 
 private:
 
   GfxFontDict *fonts;
-  Object xObjDict;
-  Object colorSpaceDict;
-  Object patternDict;
-  Object shadingDict;
-  Object gStateDict;
+  PObject xObjDict;
+  PObject colorSpaceDict;
+  PObject patternDict;
+  PObject shadingDict;
+  PObject gStateDict;
   PopplerObjectCache gStateCache;
-  Object propertiesDict;
+  PObject propertiesDict;
   GfxResources *next;
 };
 
@@ -162,11 +162,11 @@ public:
   XRef *getXRef() { return xref; }
 
   // Interpret a stream or array of streams.
-  void display(Object *obj, GBool topLevel = gTrue);
+  void display(PObject *obj, GBool topLevel = gTrue);
 
   // Display an annotation, given its appearance (a Form XObject),
   // border style, and bounding box (in default user space).
-  void drawAnnot(Object *str, AnnotBorder *border, AnnotColor *aColor,
+  void drawAnnot(PObject *str, AnnotBorder *border, AnnotColor *aColor,
 		 double xMin, double yMin, double xMax, double yMax, int rotate);
 
   // Save graphics state.
@@ -186,7 +186,7 @@ public:
 
   GBool checkTransparencyGroup(Dict *resDict);
 
-  void drawForm(Object *str, Dict *resDict, double *matrix, double *bbox,
+  void drawForm(PObject *str, Dict *resDict, double *matrix, double *bbox,
 	       GBool transpGroup = gFalse, GBool softMask = gFalse,
 	       GfxColorSpace *blendingColorSpace = NULL,
 	       GBool isolated = gFalse, GBool knockout = gFalse,
@@ -234,73 +234,73 @@ private:
   static Operator opTab[];	// table of operators
 
   void go(GBool topLevel);
-  void execOp(Object *cmd, Object args[], int numArgs);
+  void execOp(PObject *cmd, PObject args[], int numArgs);
   Operator *findOp(char *name);
-  GBool checkArg(Object *arg, TchkType type);
+  GBool checkArg(PObject *arg, TchkType type);
   Goffset getPos();
 
   int bottomGuard();
 
   // graphics state operators
-  void opSave(Object args[], int numArgs);
-  void opRestore(Object args[], int numArgs);
-  void opConcat(Object args[], int numArgs);
-  void opSetDash(Object args[], int numArgs);
-  void opSetFlat(Object args[], int numArgs);
-  void opSetLineJoin(Object args[], int numArgs);
-  void opSetLineCap(Object args[], int numArgs);
-  void opSetMiterLimit(Object args[], int numArgs);
-  void opSetLineWidth(Object args[], int numArgs);
-  void opSetExtGState(Object args[], int numArgs);
-  void doSoftMask(Object *str, GBool alpha,
+  void opSave(PObject args[], int numArgs);
+  void opRestore(PObject args[], int numArgs);
+  void opConcat(PObject args[], int numArgs);
+  void opSetDash(PObject args[], int numArgs);
+  void opSetFlat(PObject args[], int numArgs);
+  void opSetLineJoin(PObject args[], int numArgs);
+  void opSetLineCap(PObject args[], int numArgs);
+  void opSetMiterLimit(PObject args[], int numArgs);
+  void opSetLineWidth(PObject args[], int numArgs);
+  void opSetExtGState(PObject args[], int numArgs);
+  void doSoftMask(PObject *str, GBool alpha,
 		  GfxColorSpace *blendingColorSpace,
 		  GBool isolated, GBool knockout,
 		  Function *transferFunc, GfxColor *backdropColor);
-  void opSetRenderingIntent(Object args[], int numArgs);
+  void opSetRenderingIntent(PObject args[], int numArgs);
 
   // color operators
-  void opSetFillGray(Object args[], int numArgs);
-  void opSetStrokeGray(Object args[], int numArgs);
-  void opSetFillCMYKColor(Object args[], int numArgs);
-  void opSetStrokeCMYKColor(Object args[], int numArgs);
-  void opSetFillRGBColor(Object args[], int numArgs);
-  void opSetStrokeRGBColor(Object args[], int numArgs);
-  void opSetFillColorSpace(Object args[], int numArgs);
-  void opSetStrokeColorSpace(Object args[], int numArgs);
-  void opSetFillColor(Object args[], int numArgs);
-  void opSetStrokeColor(Object args[], int numArgs);
-  void opSetFillColorN(Object args[], int numArgs);
-  void opSetStrokeColorN(Object args[], int numArgs);
+  void opSetFillGray(PObject args[], int numArgs);
+  void opSetStrokeGray(PObject args[], int numArgs);
+  void opSetFillCMYKColor(PObject args[], int numArgs);
+  void opSetStrokeCMYKColor(PObject args[], int numArgs);
+  void opSetFillRGBColor(PObject args[], int numArgs);
+  void opSetStrokeRGBColor(PObject args[], int numArgs);
+  void opSetFillColorSpace(PObject args[], int numArgs);
+  void opSetStrokeColorSpace(PObject args[], int numArgs);
+  void opSetFillColor(PObject args[], int numArgs);
+  void opSetStrokeColor(PObject args[], int numArgs);
+  void opSetFillColorN(PObject args[], int numArgs);
+  void opSetStrokeColorN(PObject args[], int numArgs);
 
   // path segment operators
-  void opMoveTo(Object args[], int numArgs);
-  void opLineTo(Object args[], int numArgs);
-  void opCurveTo(Object args[], int numArgs);
-  void opCurveTo1(Object args[], int numArgs);
-  void opCurveTo2(Object args[], int numArgs);
-  void opRectangle(Object args[], int numArgs);
-  void opClosePath(Object args[], int numArgs);
+  void opMoveTo(PObject args[], int numArgs);
+  void opLineTo(PObject args[], int numArgs);
+  void opCurveTo(PObject args[], int numArgs);
+  void opCurveTo1(PObject args[], int numArgs);
+  void opCurveTo2(PObject args[], int numArgs);
+  void opRectangle(PObject args[], int numArgs);
+  void opClosePath(PObject args[], int numArgs);
 
   // path painting operators
-  void opEndPath(Object args[], int numArgs);
-  void opStroke(Object args[], int numArgs);
-  void opCloseStroke(Object args[], int numArgs);
-  void opFill(Object args[], int numArgs);
-  void opEOFill(Object args[], int numArgs);
-  void opFillStroke(Object args[], int numArgs);
-  void opCloseFillStroke(Object args[], int numArgs);
-  void opEOFillStroke(Object args[], int numArgs);
-  void opCloseEOFillStroke(Object args[], int numArgs);
+  void opEndPath(PObject args[], int numArgs);
+  void opStroke(PObject args[], int numArgs);
+  void opCloseStroke(PObject args[], int numArgs);
+  void opFill(PObject args[], int numArgs);
+  void opEOFill(PObject args[], int numArgs);
+  void opFillStroke(PObject args[], int numArgs);
+  void opCloseFillStroke(PObject args[], int numArgs);
+  void opEOFillStroke(PObject args[], int numArgs);
+  void opCloseEOFillStroke(PObject args[], int numArgs);
   void doPatternFill(GBool eoFill);
   void doPatternStroke();
   void doPatternText();
-  void doPatternImageMask(Object *ref, Stream *str, int width, int height,
+  void doPatternImageMask(PObject *ref, Stream *str, int width, int height,
 			  GBool invert, GBool inlineImg);
   void doTilingPatternFill(GfxTilingPattern *tPat,
 			   GBool stroke, GBool eoFill, GBool text);
   void doShadingPatternFill(GfxShadingPattern *sPat,
 			    GBool stroke, GBool eoFill, GBool text);
-  void opShFill(Object args[], int numArgs);
+  void opShFill(PObject args[], int numArgs);
   void doFunctionShFill(GfxFunctionShading *shading);
   void doFunctionShFill1(GfxFunctionShading *shading,
 			 double x0, double y0,
@@ -322,59 +322,59 @@ private:
   void doEndPath();
 
   // path clipping operators
-  void opClip(Object args[], int numArgs);
-  void opEOClip(Object args[], int numArgs);
+  void opClip(PObject args[], int numArgs);
+  void opEOClip(PObject args[], int numArgs);
 
   // text object operators
-  void opBeginText(Object args[], int numArgs);
-  void opEndText(Object args[], int numArgs);
+  void opBeginText(PObject args[], int numArgs);
+  void opEndText(PObject args[], int numArgs);
 
   // text state operators
-  void opSetCharSpacing(Object args[], int numArgs);
-  void opSetFont(Object args[], int numArgs);
-  void opSetTextLeading(Object args[], int numArgs);
-  void opSetTextRender(Object args[], int numArgs);
-  void opSetTextRise(Object args[], int numArgs);
-  void opSetWordSpacing(Object args[], int numArgs);
-  void opSetHorizScaling(Object args[], int numArgs);
+  void opSetCharSpacing(PObject args[], int numArgs);
+  void opSetFont(PObject args[], int numArgs);
+  void opSetTextLeading(PObject args[], int numArgs);
+  void opSetTextRender(PObject args[], int numArgs);
+  void opSetTextRise(PObject args[], int numArgs);
+  void opSetWordSpacing(PObject args[], int numArgs);
+  void opSetHorizScaling(PObject args[], int numArgs);
 
   // text positioning operators
-  void opTextMove(Object args[], int numArgs);
-  void opTextMoveSet(Object args[], int numArgs);
-  void opSetTextMatrix(Object args[], int numArgs);
-  void opTextNextLine(Object args[], int numArgs);
+  void opTextMove(PObject args[], int numArgs);
+  void opTextMoveSet(PObject args[], int numArgs);
+  void opSetTextMatrix(PObject args[], int numArgs);
+  void opTextNextLine(PObject args[], int numArgs);
 
   // text string operators
-  void opShowText(Object args[], int numArgs);
-  void opMoveShowText(Object args[], int numArgs);
-  void opMoveSetShowText(Object args[], int numArgs);
-  void opShowSpaceText(Object args[], int numArgs);
+  void opShowText(PObject args[], int numArgs);
+  void opMoveShowText(PObject args[], int numArgs);
+  void opMoveSetShowText(PObject args[], int numArgs);
+  void opShowSpaceText(PObject args[], int numArgs);
   void doShowText(GooString *s);
   void doIncCharCount(GooString *s);
 
   // XObject operators
-  void opXObject(Object args[], int numArgs);
-  void doImage(Object *ref, Stream *str, GBool inlineImg);
-  void doForm(Object *str);
+  void opXObject(PObject args[], int numArgs);
+  void doImage(PObject *ref, Stream *str, GBool inlineImg);
+  void doForm(PObject *str);
 
   // in-line image operators
-  void opBeginImage(Object args[], int numArgs);
+  void opBeginImage(PObject args[], int numArgs);
   Stream *buildImageStream();
-  void opImageData(Object args[], int numArgs);
-  void opEndImage(Object args[], int numArgs);
+  void opImageData(PObject args[], int numArgs);
+  void opEndImage(PObject args[], int numArgs);
 
   // type 3 font operators
-  void opSetCharWidth(Object args[], int numArgs);
-  void opSetCacheDevice(Object args[], int numArgs);
+  void opSetCharWidth(PObject args[], int numArgs);
+  void opSetCacheDevice(PObject args[], int numArgs);
 
   // compatibility operators
-  void opBeginIgnoreUndef(Object args[], int numArgs);
-  void opEndIgnoreUndef(Object args[], int numArgs);
+  void opBeginIgnoreUndef(PObject args[], int numArgs);
+  void opEndIgnoreUndef(PObject args[], int numArgs);
 
   // marked content operators
-  void opBeginMarkedContent(Object args[], int numArgs);
-  void opEndMarkedContent(Object args[], int numArgs);
-  void opMarkPoint(Object args[], int numArgs);
+  void opBeginMarkedContent(PObject args[], int numArgs);
+  void opEndMarkedContent(PObject args[], int numArgs);
+  void opMarkPoint(PObject args[], int numArgs);
   GfxState *saveStateStack();
   void restoreStateStack(GfxState *oldState);
   GBool contentIsHidden();

@@ -199,7 +199,7 @@ public:
   virtual GfxColorSpaceMode getMode() = 0;
 
   // Construct a color space.  Returns NULL if unsuccessful.
-  static GfxColorSpace *parse(Object *csObj, OutputDev *out, int recursion = 0);
+  static GfxColorSpace *parse(PObject *csObj, OutputDev *out, int recursion = 0);
 
   // Convert to gray, RGB, or CMYK.
   virtual void getGray(GfxColor *color, GfxGray *gray) = 0;
@@ -709,7 +709,7 @@ public:
   GfxPattern(int typeA);
   virtual ~GfxPattern();
 
-  static GfxPattern *parse(Object *obj, OutputDev *out);
+  static GfxPattern *parse(PObject *obj, OutputDev *out);
 
   virtual GfxPattern *copy() = 0;
 
@@ -727,7 +727,7 @@ private:
 class GfxTilingPattern: public GfxPattern {
 public:
 
-  static GfxTilingPattern *parse(Object *patObj);
+  static GfxTilingPattern *parse(PObject *patObj);
   virtual ~GfxTilingPattern();
 
   virtual GfxPattern *copy();
@@ -740,22 +740,22 @@ public:
   Dict *getResDict()
     { return resDict.isDict() ? resDict.getDict() : (Dict *)NULL; }
   double *getMatrix() { return matrix; }
-  Object *getContentStream() { return &contentStream; }
+  PObject *getContentStream() { return &contentStream; }
 
 private:
 
   GfxTilingPattern(int paintTypeA, int tilingTypeA,
 		   double *bboxA, double xStepA, double yStepA,
-		   Object *resDictA, double *matrixA,
-		   Object *contentStreamA);
+		   PObject *resDictA, double *matrixA,
+		   PObject *contentStreamA);
 
   int paintType;
   int tilingType;
   double bbox[4];
   double xStep, yStep;
-  Object resDict;
+  PObject resDict;
   double matrix[6];
-  Object contentStream;
+  PObject contentStream;
 };
 
 //------------------------------------------------------------------------
@@ -765,7 +765,7 @@ private:
 class GfxShadingPattern: public GfxPattern {
 public:
 
-  static GfxShadingPattern *parse(Object *patObj, OutputDev *out);
+  static GfxShadingPattern *parse(PObject *patObj, OutputDev *out);
   virtual ~GfxShadingPattern();
 
   virtual GfxPattern *copy();
@@ -792,7 +792,7 @@ public:
   GfxShading(GfxShading *shading);
   virtual ~GfxShading();
 
-  static GfxShading *parse(Object *obj, OutputDev *out);
+  static GfxShading *parse(PObject *obj, OutputDev *out);
 
   virtual GfxShading *copy() = 0;
 
@@ -1103,7 +1103,7 @@ class GfxImageColorMap {
 public:
 
   // Constructor.
-  GfxImageColorMap(int bitsA, Object *decode, GfxColorSpace *colorSpaceA);
+  GfxImageColorMap(int bitsA, PObject *decode, GfxColorSpace *colorSpaceA);
 
   // Destructor.
   ~GfxImageColorMap();
@@ -1517,7 +1517,7 @@ public:
   GBool isParentState(GfxState *state) { return saved == state || (saved && saved->isParentState(state)); }
 
   // Misc
-  GBool parseBlendMode(Object *obj, GfxBlendMode *mode);
+  GBool parseBlendMode(PObject *obj, GfxBlendMode *mode);
 
   ReusablePathIterator *getReusablePath() { return new ReusablePathIterator(path); }
 private:

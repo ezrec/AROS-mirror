@@ -121,7 +121,7 @@ class ObjectKey : public PopplerCacheKey {
 
 class ObjectItem : public PopplerCacheItem {
   public:
-    ObjectItem(Object *obj)
+    ObjectItem(PObject *obj)
     {
       obj->copy(&item);
     }
@@ -131,7 +131,7 @@ class ObjectItem : public PopplerCacheItem {
       item.free();
     }
 
-    Object item;
+    PObject item;
 };
 
 PopplerObjectCache::PopplerObjectCache(int cacheSize, XRef *xrefA) {
@@ -143,8 +143,8 @@ PopplerObjectCache::~PopplerObjectCache() {
   delete cache;
 }
 
-Object *PopplerObjectCache::put(const Ref &ref) {
-  Object obj;
+PObject *PopplerObjectCache::put(const Ref &ref) {
+  PObject obj;
   xref->fetch(ref.num, ref.gen, &obj);
 
   ObjectKey *key = new ObjectKey(ref.num, ref.gen);
@@ -155,7 +155,7 @@ Object *PopplerObjectCache::put(const Ref &ref) {
   return &item->item;
 }
 
-Object *PopplerObjectCache::lookup(const Ref &ref, Object *obj) {
+PObject *PopplerObjectCache::lookup(const Ref &ref, PObject *obj) {
   ObjectKey key(ref.num, ref.gen);
   ObjectItem *item = static_cast<ObjectItem *>(cache->lookup(key));
 

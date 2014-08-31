@@ -72,10 +72,10 @@ public:
   virtual LinkActionKind getKind() = 0;
 
   // Parse a destination (old-style action) name, string, or array.
-  static LinkAction *parseDest(Object *obj);
+  static LinkAction *parseDest(PObject *obj);
 
   // Parse an action dictionary.
-  static LinkAction *parseAction(Object *obj, GooString *baseURI = NULL);
+  static LinkAction *parseAction(PObject *obj, GooString *baseURI = NULL);
 };
 
 //------------------------------------------------------------------------
@@ -147,7 +147,7 @@ class LinkGoTo: public LinkAction {
 public:
 
   // Build a LinkGoTo from a destination (dictionary, name, or string).
-  LinkGoTo(Object *destObj);
+  LinkGoTo(PObject *destObj);
 
   // Destructor.
   virtual ~LinkGoTo();
@@ -177,7 +177,7 @@ public:
 
   // Build a LinkGoToR from a file spec (dictionary) and destination
   // (dictionary, name, or string).
-  LinkGoToR(Object *fileSpecObj, Object *destObj);
+  LinkGoToR(PObject *fileSpecObj, PObject *destObj);
 
   // Destructor.
   virtual ~LinkGoToR();
@@ -208,7 +208,7 @@ class LinkLaunch: public LinkAction {
 public:
 
   // Build a LinkLaunch from an action dictionary.
-  LinkLaunch(Object *actionObj);
+  LinkLaunch(PObject *actionObj);
 
   // Destructor.
   virtual ~LinkLaunch();
@@ -235,7 +235,7 @@ class LinkURI: public LinkAction {
 public:
 
   // Build a LinkURI given the URI (string) and base URI.
-  LinkURI(Object *uriObj, GooString *baseURI);
+  LinkURI(PObject *uriObj, GooString *baseURI);
 
   // Destructor.
   virtual ~LinkURI();
@@ -260,7 +260,7 @@ class LinkNamed: public LinkAction {
 public:
 
   // Build a LinkNamed given the action name.
-  LinkNamed(Object *nameObj);
+  LinkNamed(PObject *nameObj);
 
   virtual ~LinkNamed();
 
@@ -289,7 +289,7 @@ public:
     operationTypeStop
   };
 
-  LinkMovie(Object *obj);
+  LinkMovie(PObject *obj);
   virtual ~LinkMovie();
 
   virtual GBool isOk() { return annotRef.num >= 0 || annotTitle != NULL; }
@@ -331,7 +331,7 @@ public:
     ResumeRendition
   };
 
-  LinkRendition(Object *Obj);
+  LinkRendition(PObject *Obj);
 
   virtual ~LinkRendition();
 
@@ -340,7 +340,7 @@ public:
   virtual LinkActionKind getKind() { return actionRendition; }
 
   GBool hasRenditionObject() { return renditionObj.isDict(); }
-  Object* getRenditionObject() { return &renditionObj; }
+  PObject* getRenditionObject() { return &renditionObj; }
 
   GBool hasScreenAnnot() { return screenRef.isRef(); }
   Ref getScreenAnnot() { return screenRef.getRef(); }
@@ -353,8 +353,8 @@ public:
 
 private:
 
-  Object screenRef;
-  Object renditionObj;
+  PObject screenRef;
+  PObject renditionObj;
   RenditionOperation operation;
 
   MediaRendition* media;
@@ -369,7 +369,7 @@ private:
 class LinkSound: public LinkAction {
 public:
 
-  LinkSound(Object *soundObj);
+  LinkSound(PObject *soundObj);
 
   virtual ~LinkSound();
 
@@ -400,7 +400,7 @@ class LinkJavaScript: public LinkAction {
 public:
 
   // Build a LinkJavaScript given the action name.
-  LinkJavaScript(Object *jsObj);
+  LinkJavaScript(PObject *jsObj);
 
   virtual ~LinkJavaScript();
 
@@ -419,7 +419,7 @@ private:
 //------------------------------------------------------------------------
 class LinkOCGState: public LinkAction {
 public:
-  LinkOCGState(Object *obj);
+  LinkOCGState(PObject *obj);
 
   virtual ~LinkOCGState();
 

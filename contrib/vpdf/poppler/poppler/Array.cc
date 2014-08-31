@@ -65,11 +65,11 @@ Array::~Array() {
 #endif
 }
 
-Object *Array::copy(XRef *xrefA, Object *obj) {
+PObject *Array::copy(XRef *xrefA, PObject *obj) {
   arrayLocker();
   obj->initArray(xrefA);
   for (int i = 0; i < length; ++i) {
-    Object obj1;
+    PObject obj1;
     obj->arrayAdd(elems[i].copy(&obj1));
   }
   return obj;
@@ -87,7 +87,7 @@ int Array::decRef() {
   return ref;
 }
 
-void Array::add(Object *elem) {
+void Array::add(PObject *elem) {
   arrayLocker();
   if (length == size) {
     if (length == 0) {
@@ -95,7 +95,7 @@ void Array::add(Object *elem) {
     } else {
       size *= 2;
     }
-    elems = (Object *)greallocn(elems, size, sizeof(Object));
+    elems = (PObject *)greallocn(elems, size, sizeof(PObject));
   }
   elems[length] = *elem;
   ++length;
@@ -114,7 +114,7 @@ void Array::remove(int i) {
   memmove( elems + i, elems + i + 1, sizeof(elems[0]) * (length - i) );
 }
 
-Object *Array::get(int i, Object *obj, int recursion) {
+PObject *Array::get(int i, PObject *obj, int recursion) {
   if (i < 0 || i >= length) {
 #ifdef DEBUG_MEM
     abort();
@@ -125,7 +125,7 @@ Object *Array::get(int i, Object *obj, int recursion) {
   return elems[i].fetch(xref, obj, recursion);
 }
 
-Object *Array::getNF(int i, Object *obj) {
+PObject *Array::getNF(int i, PObject *obj) {
   if (i < 0 || i >= length) {
 #ifdef DEBUG_MEM
     abort();
@@ -138,7 +138,7 @@ Object *Array::getNF(int i, Object *obj) {
 
 GBool Array::getString(int i, GooString *string)
 {
-  Object obj;
+  PObject obj;
 
   if (getNF(i, &obj)->isString()) {
     string->clear();

@@ -42,7 +42,7 @@
 
 struct DictEntry {
   char *key;
-  Object val;
+  PObject val;
 };
 
 class Dict {
@@ -64,10 +64,10 @@ public:
   int getLength() { return length; }
 
   // Add an entry.  NB: does not copy key.
-  void add(char *key, Object *val);
+  void add(char *key, PObject *val);
 
   // Update the value of an existing entry, otherwise create it
-  void set(const char *key, Object *val);
+  void set(const char *key, PObject *val);
   // Remove an entry. This invalidate indexes
   void remove(const char *key);
 
@@ -76,14 +76,14 @@ public:
 
   // Look up an entry and return the value.  Returns a null object
   // if <key> is not in the dictionary.
-  Object *lookup(const char *key, Object *obj, int recursion = 0);
-  Object *lookupNF(const char *key, Object *obj);
+  PObject *lookup(const char *key, PObject *obj, int recursion = 0);
+  PObject *lookupNF(const char *key, PObject *obj);
   GBool lookupInt(const char *key, const char *alt_key, int *value);
 
   // Iterative accessors.
   char *getKey(int i);
-  Object *getVal(int i, Object *obj);
-  Object *getValNF(int i, Object *obj);
+  PObject *getVal(int i, PObject *obj);
+  PObject *getValNF(int i, PObject *obj);
 
   // Set the xref pointer.  This is only used in one special case: the
   // trailer dictionary, which is read before the xref table is

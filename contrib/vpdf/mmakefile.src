@@ -2,7 +2,12 @@
 
 include $(TOP)/config/make.cfg
 
-#MM contrib-vpdf : includes linklibs
+#MM contrib-vpdf : includes linklibs \
+#MM    contrib-vpdf-poppler-fifo \
+#MM    contrib-vpdf-poppler-goo \
+#MM    contrib-vpdf-poppler-poppler \
+#MM    contrib-vpdf-poppler-splash \
+#MM    contrib-vpdf-mcc
 
 CFILES := \
     locale \
@@ -12,26 +17,33 @@ CFILES := \
     application \
     logger \
     settings \
-    fontcache \
     arrowstring_class \
     pagenumberclass \
     printer \
-    printer_image
+    printer_image \
+    fcstr \
+    system/functions \
+    system/directory \
+    system/dlist \
+    system/init \
+    system/timer \
+    aros/aros
 
 CPPFILES := \
     poppler_io \
+    poppler \
     poppler_printer
 
-
-#    poppler \
+#    fontcache \
 
 
 TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/VPDF
-USER_INCLUDES := -fno-permissive -I$(SRCDIR)/$(CURDIR)/poppler/poppler -I$(SRCDIR)/$(CURDIR)/poppler \
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/poppler/poppler -I$(SRCDIR)/$(CURDIR)/poppler -I$(SRCDIR)/$(CURDIR)/system \
     -I$(SRCDIR)/$(CURDIR)/aros/include -I$(AROS_INCLUDES)/cairo -idirafter $(SRCDIR)/$(CURDIR)/include
-USER_CFLAGS := -D__LOCALE_STDLIBBASE__ -DMUI_OBSOLETE -frtti -fno-permissive -fexceptions
+USER_CFLAGS := -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__ -DMUI_OBSOLETE -frtti -fpermissive -fexceptions -fcheck-new
+USER_LDFLAGS := -L$(TARGETDIR)/libs
 
 %build_prog mmake=contrib-vpdf progname=VPDF files=$(CFILES) cxxfiles=$(CPPFILES) \
-    targetdir=$(TARGETDIR) uselibs=
+    targetdir=$(TARGETDIR) uselibs="rexxsyslib muiclasses poppler fofi goo poppler-splash cairo pixman fontconfig freetype2 iconv xml2 jpeg z stdc++"
 
 %common

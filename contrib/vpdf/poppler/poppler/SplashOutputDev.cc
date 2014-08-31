@@ -1816,7 +1816,7 @@ void SplashOutputDev::doUpdateFont(GfxState *state) {
   SplashFontFile *fontFile;
   SplashFontSrc *fontsrc = NULL;
   FoFiTrueType *ff;
-  Object refObj, strObj;
+  PObject refObj, strObj;
   GooString *fileName;
   char *tmpBuf;
   int tmpBufLen;
@@ -2660,7 +2660,7 @@ GBool SplashOutputDev::imageMaskSrc(void *data, SplashColorPtr line) {
   return gTrue;
 }
 
-void SplashOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
+void SplashOutputDev::drawImageMask(GfxState *state, PObject *ref, Stream *str,
 				    int width, int height, GBool invert,
 				    GBool interpolate, GBool inlineImg) {
   double *ctm;
@@ -2706,7 +2706,7 @@ void SplashOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
 }
 
 void SplashOutputDev::setSoftMaskFromImageMask(GfxState *state,
-					       Object *ref, Stream *str,
+					       PObject *ref, Stream *str,
 					       int width, int height,
 					       GBool invert,
 					       GBool inlineImg, double *baseMatrix) {
@@ -3112,7 +3112,7 @@ GBool SplashOutputDev::tilingBitmapSrc(void *data, SplashColorPtr colorLine,
   return gTrue;
 }
 
-void SplashOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
+void SplashOutputDev::drawImage(GfxState *state, PObject *ref, Stream *str,
 				int width, int height,
 				GfxImageColorMap *colorMap,
 				GBool interpolate,
@@ -3374,7 +3374,7 @@ GBool SplashOutputDev::maskedImageSrc(void *data, SplashColorPtr colorLine,
   return gTrue;
 }
 
-void SplashOutputDev::drawMaskedImage(GfxState *state, Object *ref,
+void SplashOutputDev::drawMaskedImage(GfxState *state, PObject *ref,
 				      Stream *str, int width, int height,
 				      GfxImageColorMap *colorMap,
 				      GBool interpolate,
@@ -3382,7 +3382,7 @@ void SplashOutputDev::drawMaskedImage(GfxState *state, Object *ref,
 				      int maskHeight, GBool maskInvert,
 				      GBool maskInterpolate) {
   GfxImageColorMap *maskColorMap;
-  Object maskDecode, decodeLow, decodeHigh;
+  PObject maskDecode, decodeLow, decodeHigh;
   double *ctm;
   SplashCoord mat[6];
   SplashOutMaskedImageData imgData;
@@ -3551,7 +3551,7 @@ void SplashOutputDev::drawMaskedImage(GfxState *state, Object *ref,
   }
 }
 
-void SplashOutputDev::drawSoftMaskedImage(GfxState *state, Object *ref,
+void SplashOutputDev::drawSoftMaskedImage(GfxState *state, PObject *ref,
 					  Stream *str, int width, int height,
 					  GfxImageColorMap *colorMap,
 					  GBool interpolate,
@@ -4107,7 +4107,7 @@ void SplashOutputDev::setFreeTypeHinting(GBool enable, GBool enableSlightHinting
   enableSlightHinting = enableSlightHintingA;
 }
 
-GBool SplashOutputDev::tilingPatternFill(GfxState *state, Gfx *gfxA, Catalog *catalog, Object *str,
+GBool SplashOutputDev::tilingPatternFill(GfxState *state, Gfx *gfxA, Catalog *catalog, PObject *str,
 					double *ptm, int paintType, int /*tilingType*/, Dict *resDict,
 					double *mat, double *bbox,
 					int x0, int y0, int x1, int y1,

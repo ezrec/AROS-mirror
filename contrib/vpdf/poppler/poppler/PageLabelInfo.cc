@@ -21,8 +21,8 @@
 #include "PageLabelInfo.h"
 #include "PageLabelInfo_p.h"
 
-PageLabelInfo::Interval::Interval(Object *dict, int baseA) {
-  Object obj;
+PageLabelInfo::Interval::Interval(PObject *dict, int baseA) {
+  PObject obj;
 
   style = None;
   if (dict->dictLookup("S", &obj)->isName()) {
@@ -59,7 +59,7 @@ PageLabelInfo::Interval::~Interval() {
   delete prefix;
 }
 
-PageLabelInfo::PageLabelInfo(Object *tree, int numPages) {
+PageLabelInfo::PageLabelInfo(PObject *tree, int numPages) {
   int i;
   Interval *interval, *next;
 
@@ -85,9 +85,9 @@ PageLabelInfo::~PageLabelInfo() {
   }
 }
 
-void PageLabelInfo::parse(Object *tree) {
-  Object nums, obj;
-  Object kids, kid, limits, low, high;
+void PageLabelInfo::parse(PObject *tree) {
+  PObject nums, obj;
+  PObject kids, kid, limits, low, high;
   int i, base;
   Interval *interval;
 

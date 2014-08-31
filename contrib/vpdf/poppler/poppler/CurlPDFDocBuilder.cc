@@ -24,7 +24,7 @@ PDFDoc *
 CurlPDFDocBuilder::buildPDFDoc(const GooString &uri,
         GooString *ownerPassword, GooString *userPassword, void *guiDataA)
 {
-    Object obj;
+    PObject obj;
 
     CachedFile *cachedFile = new CachedFile(
         new CurlCachedFileLoader(), uri.copy());

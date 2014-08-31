@@ -67,9 +67,9 @@
 //------------------------------------------------------------------------
 
 Catalog::Catalog(PDFDoc *docA) {
-  Object catDict, pagesDict, pagesDictRef;
-  Object obj, obj2;
-  Object optContentProps;
+  PObject catDict, pagesDict, pagesDictRef;
+  PObject obj, obj2;
+  PObject optContentProps;
 
 #if MULTITHREADED
   gInitMutex(&mutex);
@@ -188,11 +188,11 @@ Catalog::~Catalog() {
 GooString *Catalog::readMetadata() {
   GooString *s;
   Dict *dict;
-  Object obj;
+  PObject obj;
 
   catalogLocker();
   if (metadata.isNone()) {
-    Object catDict;
+    PObject catDict;
 
     xref->getCatalog(&catDict);
     if (catDict.isDict()) {
@@ -253,13 +253,13 @@ GBool Catalog::cachePageTree(int page)
 
   if (pagesList == NULL) {
 
-    Object catDict;
+    PObject catDict;
     Ref pagesRef;
 
     xref->getCatalog(&catDict);
 
     if (catDict.isDict()) {
-      Object pagesDictRef;
+      PObject pagesDictRef;
       if (catDict.dictLookupNF("Pages", &pagesDictRef)->isRef() &&
           pagesDictRef.getRefNum() >= 0 &&
           pagesDictRef.getRefNum() < xref->getNumObjects()) {
@@ -277,7 +277,7 @@ GBool Catalog::cachePageTree(int page)
       return gFalse;
     }
 
-    Object obj;
+    PObject obj;
     catDict.dictLookup("Pages", &obj);
     catDict.free();
     // This should really be isDict("Pages"), but I've seen at least one
@@ -321,7 +321,7 @@ GBool Catalog::cachePageTree(int page)
     if (pagesList->empty()) return gFalse;
 
     pagesDict = pagesList->back();
-    Object kids;
+    PObject kids;
     pagesDict->lookup("Kids", &kids);
     if (!kids.isArray()) {
       error(errSyntaxError, -1, "Kids object (page {0:d}) is wrong type ({1:s})",
@@ -345,7 +345,7 @@ GBool Catalog::cachePageTree(int page)
        continue;
     }
 
-    Object kidRef;
+    PObject kidRef;
     kids.arrayGetNF(kidsIdx, &kidRef);
     if (!kidRef.isRef()) {
       error(errSyntaxError, -1, "Kid object (page {0:d}) is not an indirect reference ({1:s})",
@@ -370,7 +370,7 @@ GBool Catalog::cachePageTree(int page)
       continue;
     }
 
-    Object kid;
+    PObject kid;
     kids.arrayGet(kidsIdx, &kid);
     kids.free();
     if (kid.isDict("Page") || (kid.isDict() && !kid.getDict()->hasKey("Kids"))) {
@@ -433,7 +433,7 @@ int Catalog::findPage(int num, int gen) {
 
 LinkDest *Catalog::findDest(GooString *name) {
   LinkDest *dest;
-  Object obj1, obj2;
+  PObject obj1, obj2;
   GBool found;
 
   // try named destination dictionary then name tree
@@ -478,19 +478,19 @@ LinkDest *Catalog::findDest(GooString *name) {
 
 FileSpec *Catalog::embeddedFile(int i)
 {
-    Object efDict;
-    Object obj;
+    PObject efDict;
+    PObject obj;
     catalogLocker();
     obj = getEmbeddedFileNameTree()->getValue(i);
     FileSpec *embeddedFile = 0;
     if (obj.isRef()) {
-      Object fsDict;
+      PObject fsDict;
       embeddedFile = new FileSpec(obj.fetch(xref, &fsDict));
       fsDict.free();
     } else if (obj.isDict()) {
       embeddedFile = new FileSpec(&obj);
     } else {
-      Object null;
+      PObject null;
       embeddedFile = new FileSpec(&null);
     }
     return embeddedFile;
@@ -498,7 +498,7 @@ FileSpec *Catalog::embeddedFile(int i)
 
 GooString *Catalog::getJS(int i)
 {
-  Object obj;
+  PObject obj;
   // getJSNameTree()->getValue(i) returns a shallow copy of the object so we
   // do not need to free it
   catalogLocker();
@@ -508,7 +508,7 @@ GooString *Catalog::getJS(int i)
     obj.free();
     return 0;
   }
-  Object obj2;
+  PObject obj2;
   if (!obj.dictLookup("S", &obj2)->isName()) {
     obj2.free();
     obj.free();
@@ -540,7 +540,7 @@ Catalog::PageMode Catalog::getPageMode() {
   catalogLocker();
   if (pageMode == pageModeNull) {
 
-    Object catDict, obj;
+    PObject catDict, obj;
 
     pageMode = pageModeNone;
 
@@ -576,7 +576,7 @@ Catalog::PageLayout Catalog::getPageLayout() {
   catalogLocker();
   if (pageLayout == pageLayoutNull) {
 
-    Object catDict, obj;
+    PObject catDict, obj;
 
     pageLayout = pageLayoutNone;
 
@@ -627,7 +627,7 @@ NameTree::~NameTree()
 
 NameTree::Entry::Entry(Array *array, int index) {
     if (!array->getString(index, &name) || !array->getNF(index + 1, &value)) {
-      Object aux;
+      PObject aux;
       array->get(index, &aux);
       if (aux.isString() && array->getNF(index + 1, &value) )
       {
@@ -657,14 +657,14 @@ void NameTree::addEntry(Entry *entry)
   ++length;
 }
 
-void NameTree::init(XRef *xrefA, Object *tree) {
+void NameTree::init(XRef *xrefA, PObject *tree) {
   xref = xrefA;
   parse(tree);
 }
 
-void NameTree::parse(Object *tree) {
-  Object names;
-  Object kids, kid;
+void NameTree::parse(PObject *tree) {
+  PObject names;
+  PObject kids, kid;
   int i;
 
   if (!tree->isDict())
@@ -700,7 +700,7 @@ int NameTree::Entry::cmp(const void *voidKey, const void *voidEntry)
   return key->cmp(&entry->name);
 }
 
-GBool NameTree::lookup(GooString *name, Object *obj)
+GBool NameTree::lookup(GooString *name, PObject *obj)
 {
   Entry **entry;
 
@@ -716,12 +716,12 @@ GBool NameTree::lookup(GooString *name, Object *obj)
   }
 }
 
-Object NameTree::getValue(int index)
+PObject NameTree::getValue(int index)
 {
   if (index < length) {
     return entries[index]->value;
   } else {
-    return Object();
+    return PObject();
   }
 }
 
@@ -776,7 +776,7 @@ int Catalog::getNumPages()
   catalogLocker();
   if (numPages == -1)
   {
-    Object catDict, pagesDict, obj;
+    PObject catDict, pagesDict, obj;
 
     xref->getCatalog(&catDict);
     if (!catDict.isDict()) {
@@ -817,8 +817,8 @@ PageLabelInfo *Catalog::getPageLabelInfo()
 {
   catalogLocker();
   if (!pageLabelInfo) {
-    Object catDict;
-    Object obj;
+    PObject catDict;
+    PObject obj;
 
     xref->getCatalog(&catDict);
     if (!catDict.isDict()) {
@@ -837,12 +837,12 @@ PageLabelInfo *Catalog::getPageLabelInfo()
   return pageLabelInfo;
 }
 
-Object *Catalog::getStructTreeRoot()
+PObject *Catalog::getStructTreeRoot()
 {
   catalogLocker();
   if (structTreeRoot.isNone())
   {
-     Object catDict;
+     PObject catDict;
 
      xref->getCatalog(&catDict);
      if (catDict.isDict()) {
@@ -857,12 +857,12 @@ Object *Catalog::getStructTreeRoot()
   return &structTreeRoot;
 }
 
-Object *Catalog::getOutline()
+PObject *Catalog::getOutline()
 {
   catalogLocker();
   if (outline.isNone())
   {
-     Object catDict;
+     PObject catDict;
 
      xref->getCatalog(&catDict);
      if (catDict.isDict()) {
@@ -877,12 +877,12 @@ Object *Catalog::getOutline()
   return &outline;
 }
 
-Object *Catalog::getDests()
+PObject *Catalog::getDests()
 {
   catalogLocker();
   if (dests.isNone())
   {
-     Object catDict;
+     PObject catDict;
 
      xref->getCatalog(&catDict);
      if (catDict.isDict()) {
@@ -899,7 +899,7 @@ Object *Catalog::getDests()
 
 Catalog::FormType Catalog::getFormType()
 {
-  Object xfa;
+  PObject xfa;
   FormType res = NoForm;
 
   if (acroForm.isDict()) {
@@ -941,11 +941,11 @@ ViewerPreferences *Catalog::getViewerPreferences()
   return viewerPrefs;
 }
 
-Object *Catalog::getNames()
+PObject *Catalog::getNames()
 {
   if (names.isNone())
   {
-     Object catDict;
+     PObject catDict;
 
      xref->getCatalog(&catDict);
      if (catDict.isDict()) {
@@ -967,7 +967,7 @@ NameTree *Catalog::getDestNameTree()
     destNameTree = new NameTree();
 
     if (getNames()->isDict()) {
-       Object obj;
+       PObject obj;
 
        getNames()->dictLookup("Dests", &obj);
        destNameTree->init(xref, &obj);
@@ -986,7 +986,7 @@ NameTree *Catalog::getEmbeddedFileNameTree()
     embeddedFileNameTree = new NameTree();
 
     if (getNames()->isDict()) {
-       Object obj;
+       PObject obj;
 
        getNames()->dictLookup("EmbeddedFiles", &obj);
        embeddedFileNameTree->init(xref, &obj);
@@ -1005,7 +1005,7 @@ NameTree *Catalog::getJSNameTree()
     jsNameTree = new NameTree();
 
     if (getNames()->isDict()) {
-       Object obj;
+       PObject obj;
 
        getNames()->dictLookup("JavaScript", &obj);
        jsNameTree->init(xref, &obj);

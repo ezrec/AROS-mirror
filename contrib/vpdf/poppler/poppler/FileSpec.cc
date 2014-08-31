@@ -27,7 +27,7 @@
 
 #include "FileSpec.h"
 
-EmbFile::EmbFile(Object *efStream)
+EmbFile::EmbFile(PObject *efStream)
 {
   m_size = -1;
   m_createDate = NULL;
@@ -42,16 +42,16 @@ EmbFile::EmbFile(Object *efStream)
     Dict *dataDict = efStream->streamGetDict();
 
     // subtype is normally the mimetype
-    Object subtypeName;
+    PObject subtypeName;
     if (dataDict->lookup("Subtype", &subtypeName)->isName()) {
       m_mimetype = new GooString(subtypeName.getName());
     }
     subtypeName.free();
 
     // paramDict corresponds to Table 3.42 in the PDF1.6 spec
-    Object paramDict;
+    PObject paramDict;
     if (dataDict->lookup("Params", &paramDict)->isDict()) {
-      Object paramObj;
+      PObject paramObj;
       if (paramDict.dictLookup("ModDate", &paramObj)->isString())
         m_modDate = new GooString(paramObj.getString());
       paramObj.free();
@@ -103,7 +103,7 @@ GBool EmbFile::save2(FILE *f) {
   return gTrue;
 }
 
-FileSpec::FileSpec(Object *fileSpecA)
+FileSpec::FileSpec(PObject *fileSpecA)
 {
   ok = gTrue;
   fileName = NULL;
@@ -112,7 +112,7 @@ FileSpec::FileSpec(Object *fileSpecA)
   desc = NULL;
   fileSpecA->copy(&fileSpec);
 
-  Object obj1;
+  PObject obj1;
   if (!getFileSpecName(fileSpecA, &obj1)) {
     ok = gFalse;
     obj1.free();
@@ -159,7 +159,7 @@ EmbFile *FileSpec::getEmbeddedFile()
   if (embFile)
     return embFile;
 
-  Object obj1;
+  PObject obj1;
   XRef *xref = fileSpec.getDict()->getXRef();
   embFile = new EmbFile(fileStream.fetch(xref, &obj1));
   obj1.free();
@@ -172,7 +172,7 @@ GooString *FileSpec::getFileNameForPlatform()
   if (platformFileName)
     return platformFileName;
 
-  Object obj1;
+  PObject obj1;
   if (getFileSpecNameForPlatform(&fileSpec, &obj1))
     platformFileName = obj1.getString()->copy();
   obj1.free();
@@ -180,7 +180,7 @@ GooString *FileSpec::getFileNameForPlatform()
   return platformFileName;
 }
 
-GBool getFileSpecName (Object *fileSpec, Object *fileName)
+GBool getFileSpecName (PObject *fileSpec, PObject *fileName)
 {
   if (fileSpec->isString()) {
     fileSpec->copy(fileName);
@@ -217,7 +217,7 @@ GBool getFileSpecName (Object *fileSpec, Object *fileName)
   return gFalse;
 }
 
-GBool getFileSpecNameForPlatform (Object *fileSpec, Object *fileName)
+GBool getFileSpecNameForPlatform (PObject *fileSpec, PObject *fileName)
 {
   if (fileSpec->isString()) {
     fileSpec->copy(fileName);

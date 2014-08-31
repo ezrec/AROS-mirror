@@ -98,13 +98,13 @@ public:
 
   // Get the <objIdx>th object from this stream, which should be
   // object number <objNum>, generation 0.
-  Object *getObject(int objIdx, int objNum, Object *obj);
+  PObject *getObject(int objIdx, int objNum, PObject *obj);
 
 private:
 
   int objStrNum;		// object number of the object stream
   int nObjects;			// number of objects in the stream
-  Object *objs;			// the objects (length = nObjects)
+  PObject *objs;			// the objects (length = nObjects)
   int *objNums;			// the object numbers (length = nObjects)
   GBool ok;
 };
@@ -144,7 +144,7 @@ ObjectStream::ObjectStream(XRef *xref, int objStrNumA, int recursion) {
   Stream *str;
   Parser *parser;
   Goffset *offsets;
-  Object objStr, obj1, obj2;
+  PObject objStr, obj1, obj2;
   Goffset first;
   int i;
 
@@ -183,13 +183,13 @@ ObjectStream::ObjectStream(XRef *xref, int objStrNumA, int recursion) {
   }
 
   // this is an arbitrary limit to avoid integer overflow problems
-  // in the 'new Object[nObjects]' call (Acrobat apparently limits
+  // in the 'new PObject[nObjects]' call (Acrobat apparently limits
   // object streams to 100-200 objects)
   if (nObjects > 1000000) {
     error(errSyntaxError, -1, "Too many objects in an object stream");
     goto err1;
   }
-  objs = new Object[nObjects];
+  objs = new PObject[nObjects];
   objNums = (int *)gmallocn(nObjects, sizeof(int));
   offsets = (Goffset *)gmallocn(nObjects, sizeof(Goffset));
 
@@ -266,7 +266,7 @@ ObjectStream::~ObjectStream() {
   gfree(objNums);
 }
 
-Object *ObjectStream::getObject(int objIdx, int objNum, Object *obj) {
+PObject *ObjectStream::getObject(int objIdx, int objNum, PObject *obj) {
   if (objIdx < 0 || objIdx >= nObjects || objNum != objNums[objIdx]) {
     return obj->initNull();
   }
@@ -303,7 +303,7 @@ XRef::XRef() {
   init();
 }
 
-XRef::XRef(Object *trailerDictA) {
+XRef::XRef(PObject *trailerDictA) {
   init();
 
   if (trailerDictA->isDict())
@@ -311,7 +311,7 @@ XRef::XRef(Object *trailerDictA) {
 }
 
 XRef::XRef(BaseStream *strA, Goffset pos, Goffset mainXRefEntriesOffsetA, GBool *wasReconstructed, GBool reconstruct) {
-  Object obj;
+  PObject obj;
 
   init();
   mainXRefEntriesOffset = mainXRefEntriesOffsetA;
@@ -521,7 +521,7 @@ int XRef::resize(int newSize)
  */
 GBool XRef::readXRef(Goffset *pos, std::vector<Goffset> *followedXRefStm, std::vector<int> *xrefStreamObjsNum) {
   Parser *parser;
-  Object obj;
+  PObject obj;
   GBool more;
 
   // start up a parser, parse one token
@@ -578,7 +578,7 @@ GBool XRef::readXRef(Goffset *pos, std::vector<Goffset> *followedXRefStm, std::v
 GBool XRef::readXRefTable(Parser *parser, Goffset *pos, std::vector<Goffset> *followedXRefStm, std::vector<int> *xrefStreamObjsNum) {
   XRefEntry entry;
   GBool more;
-  Object obj, obj2;
+  PObject obj, obj2;
   Goffset pos2;
   int first, n, i;
 
@@ -726,7 +726,7 @@ GBool XRef::readXRefStream(Stream *xrefStr, Goffset *pos) {
   Dict *dict;
   int w[3];
   GBool more;
-  Object obj, obj2, idx;
+  PObject obj, obj2, idx;
   int newSize, first, n, i;
 
   dict = xrefStr->getDict();
@@ -893,7 +893,7 @@ GBool XRef::readXRefStreamSection(Stream *xrefStr, int *w, int first, int n) {
 // Attempt to construct an xref table for a damaged file.
 GBool XRef::constructXRef(GBool *wasReconstructed, GBool needCatalogDict) {
   Parser *parser;
-  Object newTrailerDict, obj;
+  PObject newTrailerDict, obj;
   char buf[256];
   Goffset pos;
   int num, gen;
@@ -1121,8 +1121,8 @@ GBool XRef::okToAssemble(GBool ignoreOwnerPW) {
   return (!ignoreOwnerPW && ownerPasswordOk) || (permFlags & permAssemble);
 }
 
-Object *XRef::getCatalog(Object *catalog) {
-  Object *obj = fetch(rootNum, rootGen, catalog);
+PObject *XRef::getCatalog(PObject *catalog) {
+  PObject *obj = fetch(rootNum, rootGen, catalog);
   if (obj->isDict()) {
     return obj;
   }
@@ -1131,10 +1131,10 @@ Object *XRef::getCatalog(Object *catalog) {
   return (ok) ? fetch(rootNum, rootGen, catalog) : obj;
 }
 
-Object *XRef::fetch(int num, int gen, Object *obj, int recursion) {
+PObject *XRef::fetch(int num, int gen, PObject *obj, int recursion) {
   XRefEntry *e;
   Parser *parser;
-  Object obj1, obj2, obj3;
+  PObject obj1, obj2, obj3;
 
   xrefLocker();
   // check for bogus ref - this can happen in corrupted PDF files
@@ -1264,12 +1264,12 @@ void XRef::unlock() {
 #endif
 }
 
-Object *XRef::getDocInfo(Object *obj) {
+PObject *XRef::getDocInfo(PObject *obj) {
   return trailerDict.dictLookup("Info", obj);
 }
 
 // Added for the pdftex project.
-Object *XRef::getDocInfoNF(Object *obj) {
+PObject *XRef::getDocInfoNF(PObject *obj) {
   return trailerDict.dictLookupNF("Info", obj);
 }
 
@@ -1346,7 +1346,7 @@ void XRef::add(int num, int gen, Goffset offs, GBool used) {
   }
 }
 
-void XRef::setModifiedObject (Object* o, Ref r) {
+void XRef::setModifiedObject (PObject* o, Ref r) {
   xrefLocker();
   if (r.num < 0 || r.num >= size) {
     error(errInternal, -1,"XRef::setModifiedObject on unknown ref: {0:d}, {1:d}\n", r.num, r.gen);
@@ -1358,7 +1358,7 @@ void XRef::setModifiedObject (Object* o, Ref r) {
   e->setFlag(XRefEntry::Updated, gTrue);
 }
 
-Ref XRef::addIndirectObject (Object* o) {
+Ref XRef::addIndirectObject (PObject* o) {
   int entryIndexToUse = -1;
   for (int i = 1; entryIndexToUse == -1 && i < size; ++i) {
     XRefEntry *e = getEntry(i, false /* complainIfMissing */);
@@ -1466,14 +1466,14 @@ void XRef::writeTableToFile(OutStream* outStr, GBool writeAllEntries) {
   writeXRef(&writer, writeAllEntries);
 }
 
-XRef::XRefStreamWriter::XRefStreamWriter(Object *indexA, GooString *stmBufA, int offsetSizeA) {
+XRef::XRefStreamWriter::XRefStreamWriter(PObject *indexA, GooString *stmBufA, int offsetSizeA) {
   index = indexA;
   stmBuf = stmBufA;
   offsetSize = offsetSizeA;
 }
 
 void XRef::XRefStreamWriter::startSection(int first, int count) {
-  Object obj;
+  PObject obj;
   index->arrayAdd( obj.initInt(first) );
   index->arrayAdd( obj.initInt(count) );
 }
@@ -1504,7 +1504,7 @@ void XRef::XRefPreScanWriter::writeEntry(Goffset offset, int gen, XRefEntryType 
 }
 
 void XRef::writeStreamToBuffer(GooString *stmBuf, Dict *xrefDict, XRef *xref) {
-  Object index;
+  PObject index;
   index.initArray(xref);
   stmBuf->clear();
 
@@ -1517,7 +1517,7 @@ void XRef::writeStreamToBuffer(GooString *stmBuf, Dict *xrefDict, XRef *xref) {
   XRefStreamWriter writer(&index, stmBuf, offsetSize);
   writeXRef(&writer, gFalse);
 
-  Object obj1, obj2;
+  PObject obj1, obj2;
   xrefDict->set("Type", obj1.initName("XRef"));
   xrefDict->set("Index", &index);
   obj2.initArray(xref);
@@ -1531,12 +1531,12 @@ GBool XRef::parseEntry(Goffset offset, XRefEntry *entry)
 {
   GBool r;
 
-  Object obj;
+  PObject obj;
   obj.initNull();
   Parser parser = Parser(NULL, new Lexer(NULL,
      str->makeSubStream(offset, gFalse, 20, &obj)), gTrue);
 
-  Object obj1, obj2, obj3;
+  PObject obj1, obj2, obj3;
   if (((parser.getObj(&obj1)->isInt()) ||
        parser.getObj(&obj1)->isInt64()) &&
       (parser.getObj(&obj2)->isInt()) &&
@@ -1640,8 +1640,8 @@ XRefEntry *XRef::getEntry(int i, GBool complainIfMissing)
 }
 
 // Recursively sets the Unencrypted flag in all referenced xref entries
-void XRef::markUnencrypted(Object *obj) {
-  Object obj1;
+void XRef::markUnencrypted(PObject *obj) {
+  PObject obj1;
 
   switch (obj->getType()) {
     case objArray:
@@ -1722,14 +1722,14 @@ void XRef::scanSpecialFlags() {
   }
 
   // Mark objects referred from the Encrypt dict as Unencrypted
-  Object obj;
+  PObject obj;
   markUnencrypted(trailerDict.dictLookupNF("Encrypt", &obj));
   obj.free();
 }
 
 void XRef::markUnencrypted() {
   // Mark objects referred from the Encrypt dict as Unencrypted
-  Object obj;
+  PObject obj;
   trailerDict.dictLookupNF("Encrypt", &obj);
   if (obj.isRef()) {
     XRefEntry *e = getEntry(obj.getRefNum());

@@ -96,7 +96,7 @@ void PDFRectangle::clipTo(PDFRectangle *rect) {
 //------------------------------------------------------------------------
 
 PageAttrs::PageAttrs(PageAttrs *attrs, Dict *dict) {
-  Object obj1;
+  PObject obj1;
   PDFRectangle mBox;
   const GBool isPage = dict->is("Page");
 
@@ -205,7 +205,7 @@ void PageAttrs::clipBoxes() {
 GBool PageAttrs::readBox(Dict *dict, const char *key, PDFRectangle *box) {
   PDFRectangle tmp;
   double t;
-  Object obj1, obj2;
+  PObject obj1, obj2;
   GBool ok;
 
   dict->lookup(key, &obj1);
@@ -262,7 +262,7 @@ GBool PageAttrs::readBox(Dict *dict, const char *key, PDFRectangle *box) {
 //------------------------------------------------------------------------
 
 Page::Page(PDFDoc *docA, int numA, Dict *pageDict, Ref pageRefA, PageAttrs *attrsA, Form *form) {
-  Object tmp;
+  PObject tmp;
 	
 #if MULTITHREADED
   gInitMutex(&mutex);
@@ -369,7 +369,7 @@ Dict *Page::getResourceDictCopy(XRef *xrefA) {
 }
 
 void Page::replaceXRef(XRef *xrefA) {
-  Object obj1;
+  PObject obj1;
   Dict *pageDict = pageObj.getDict()->copy(xrefA);
   xref = xrefA;
   trans.free();
@@ -397,7 +397,7 @@ void Page::replaceXRef(XRef *xrefA) {
 
 Annots *Page::getAnnots(XRef *xrefA) {
   if (!annots) {
-    Object obj;
+    PObject obj;
     annots = new Annots(doc, num, getAnnots(&obj, (xrefA == NULL) ? xref : xrefA));
     obj.free();
   }
@@ -406,8 +406,8 @@ Annots *Page::getAnnots(XRef *xrefA) {
 }
 
 void Page::addAnnot(Annot *annot) {
-  Object obj1;
-  Object tmp;
+  PObject obj1;
+  PObject tmp;
   Ref annotRef = annot->getRef ();
 
   // Make sure we have annots before adding the new one
@@ -447,7 +447,7 @@ void Page::addAnnot(Annot *annot) {
 
 void Page::removeAnnot(Annot *annot) {
   Ref annotRef = annot->getRef();
-  Object annArray;
+  PObject annArray;
 
   pageLocker();
   getAnnots(&annArray);
@@ -455,7 +455,7 @@ void Page::removeAnnot(Annot *annot) {
     int idx = -1;
     // Get annotation position
     for (int i = 0; idx == -1 && i < annArray.arrayGetLength(); ++i) {
-      Object tmp;
+      PObject tmp;
       if (annArray.arrayGetNF(i, &tmp)->isRef()) {
         Ref currAnnot = tmp.getRef();
         if (currAnnot.num == annotRef.num && currAnnot.gen == annotRef.gen) {
@@ -556,7 +556,7 @@ void Page::displaySlice(OutputDev *out, double hDPI, double vDPI,
                         void *annotDisplayDecideCbkData,
                         GBool copyXRef) {
   Gfx *gfx;
-  Object obj;
+  PObject obj;
   Annots *annotList;
   int i;
   
@@ -616,7 +616,7 @@ void Page::displaySlice(OutputDev *out, double hDPI, double vDPI,
 }
 
 void Page::display(Gfx *gfx) {
-  Object obj;
+  PObject obj;
 
   contents.fetch(xref, &obj);
   if (!obj.isNull()) {
@@ -633,7 +633,7 @@ GBool Page::loadThumb(unsigned char **data_out,
 {
   unsigned int pixbufdatasize;
   int width, height, bits;
-  Object obj1, fetched_thumb;
+  PObject obj1, fetched_thumb;
   Dict *dict;
   GfxColorSpace *colorSpace;
   GBool success = gFalse;

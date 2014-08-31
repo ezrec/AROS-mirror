@@ -240,7 +240,7 @@ public:
   virtual AnnotBorderStyle getStyle() const { return style; }
 
 protected:
-  GBool parseDashArray(Object *dashObj);
+  GBool parseDashArray(PObject *dashObj);
 
   AnnotBorderType type;
   double width;
@@ -259,7 +259,7 @@ public:
   AnnotBorderArray();
   AnnotBorderArray(Array *array);
 
-  void writeToObject(XRef *xref, Object *dest) const;
+  void writeToObject(XRef *xref, PObject *dest) const;
 
   void setHorizontalCorner(double hc) { horizontalCorner = hc; }
   void setVerticalCorner(double vc) { verticalCorner = vc; }
@@ -314,7 +314,7 @@ public:
   AnnotColorSpace getSpace() const { return (AnnotColorSpace) length; }
   const double *getValues() const { return values; }
 
-  void writeToObject(XRef *xref, Object *dest) const;
+  void writeToObject(XRef *xref, PObject *dest) const;
 
 private:
 
@@ -371,11 +371,11 @@ public:
     appearDown
   };
 
-  AnnotAppearance(PDFDoc *docA, Object *dict);
+  AnnotAppearance(PDFDoc *docA, PObject *dict);
   ~AnnotAppearance();
 
   // State is ignored if no subdictionary is present
-  void getAppearanceStream(AnnotAppearanceType type, const char *state, Object *dest);
+  void getAppearanceStream(AnnotAppearanceType type, const char *state, PObject *dest);
 
   // Access keys in normal appearance subdictionary (N)
   GooString * getStateKey(int i);
@@ -389,14 +389,14 @@ public:
   GBool referencesStream(Ref targetStreamRef);
 
 private:
-  static GBool referencesStream(Object *stateObj, Ref targetStreamRef);
+  static GBool referencesStream(PObject *stateObj, Ref targetStreamRef);
   void removeStream(Ref refToStream);
-  void removeStateStreams(Object *state);
+  void removeStateStreams(PObject *state);
 
 protected:
   PDFDoc *doc;
   XRef *xref;                   // the xref table for this PDF file
-  Object appearDict;            // Annotation's AP
+  PObject appearDict;            // Annotation's AP
 };
 
 //------------------------------------------------------------------------
@@ -538,7 +538,7 @@ public:
 
   Annot(PDFDoc *docA, PDFRectangle *rectA);
   Annot(PDFDoc *docA, Dict *dict);
-  Annot(PDFDoc *docA, Dict *dict, Object *obj);
+  Annot(PDFDoc *docA, Dict *dict, PObject *obj);
   GBool isOk() { return ok; }
 
   void incRefCnt();
@@ -546,7 +546,7 @@ public:
 
   virtual void draw(Gfx *gfx, GBool printing);
   // Get the resource dict of the appearance stream
-  virtual Object *getAppearanceResDict(Object *dest);
+  virtual PObject *getAppearanceResDict(PObject *dest);
 
   GBool match(Ref *refA)
     { return ref.num == refA->num && ref.gen == refA->gen; }
@@ -601,7 +601,7 @@ public:
   GBool inRect(double x, double y) const;
 
 private:
-  void readArrayNum(Object *pdfArray, int key, double *value);
+  void readArrayNum(PObject *pdfArray, int key, double *value);
   // write vStr[i:j[ in appearBuf
 
   void initialize (PDFDoc *docA, Dict *dict);
@@ -619,22 +619,22 @@ protected:
 		  double *width, double widthLimit, int *charCount,
 		  GBool noReencode);
   void writeString(GooString *str, GooString *appearBuf);
-  void createForm(double *bbox, GBool transparencyGroup, Object *resDict, Object *aStream);
-  void createResourcesDict(const char *formName, Object *formStream, const char *stateName,
-			   double opacity, const char *blendMode, Object *resDict);
+  void createForm(double *bbox, GBool transparencyGroup, PObject *resDict, PObject *aStream);
+  void createResourcesDict(const char *formName, PObject *formStream, const char *stateName,
+			   double opacity, const char *blendMode, PObject *resDict);
   GBool isVisible(GBool printing);
   int getRotation() const;
 
   // Updates the field key of the annotation dictionary
   // and sets M to the current time
-  void update(const char *key, Object *value);
+  void update(const char *key, PObject *value);
 
   // Delete appearance streams and reset appearance state
   void invalidateAppearance();
 
   int refCnt;
 
-  Object annotObj;
+  PObject annotObj;
   
   // required data
   AnnotSubtype type;                // Annotation type
@@ -647,12 +647,12 @@ protected:
   GooString *modified;              // M
   Guint flags;                      // F (must be a 32 bit unsigned int)
   AnnotAppearance *appearStreams;   // AP
-  Object appearance;     // a reference to the Form XObject stream
+  PObject appearance;     // a reference to the Form XObject stream
                          //   for the normal appearance
   AnnotAppearanceBBox *appearBBox;  // BBox of generated appearance
   GooString *appearState;           // AS
   int treeKey;                      // Struct Parent;
-  Object oc;                        // OC
+  PObject oc;                        // OC
 
   PDFDoc *doc;
   XRef *xref;			// the xref table for this PDF file
@@ -676,12 +676,12 @@ protected:
 class AnnotPopup: public Annot {
 public:
   AnnotPopup(PDFDoc *docA, PDFRectangle *rect);
-  AnnotPopup(PDFDoc *docA, Dict *dict, Object *obj);
+  AnnotPopup(PDFDoc *docA, Dict *dict, PObject *obj);
   ~AnnotPopup();
 
-  Object *getParent(Object *obj) { return parent.fetch (xref, obj); }
-  Object *getParentNF(Object *obj) { return &parent; }
-  void setParent(Object *parentA);
+  PObject *getParent(PObject *obj) { return parent.fetch (xref, obj); }
+  PObject *getParentNF(PObject *obj) { return &parent; }
+  void setParent(PObject *parentA);
   void setParent(Annot *parentA);
   GBool getOpen() const { return open; }
   void setOpen(GBool openA);
@@ -689,7 +689,7 @@ public:
 protected:
   void initialize(PDFDoc *docA, Dict *dict);
 
-  Object parent; // Parent
+  PObject parent; // Parent
   GBool open;   // Open
 };
 
@@ -705,7 +705,7 @@ public:
   };
 
   AnnotMarkup(PDFDoc *docA, PDFRectangle *rect);
-  AnnotMarkup(PDFDoc *docA, Dict *dict, Object *obj);
+  AnnotMarkup(PDFDoc *docA, Dict *dict, PObject *obj);
   virtual ~AnnotMarkup();
 
   // getters
@@ -742,7 +742,7 @@ protected:
   AnnotExternalDataType exData; // ExData
 
 private:
-  void initialize(PDFDoc *docA, Dict *dict, Object *obj);
+  void initialize(PDFDoc *docA, Dict *dict, PObject *obj);
 };
 
 //------------------------------------------------------------------------
@@ -765,7 +765,7 @@ public:
   };
 
   AnnotText(PDFDoc *docA, PDFRectangle *rect);
-  AnnotText(PDFDoc *docA, Dict *dict, Object *obj);
+  AnnotText(PDFDoc *docA, Dict *dict, PObject *obj);
   ~AnnotText();
 
   virtual void draw(Gfx *gfx, GBool printing);
@@ -798,7 +798,7 @@ private:
 class AnnotMovie: public Annot {
  public:
   AnnotMovie(PDFDoc *docA, PDFRectangle *rect, Movie *movieA);
-  AnnotMovie(PDFDoc *docA, Dict *dict, Object *obj);
+  AnnotMovie(PDFDoc *docA, Dict *dict, PObject *obj);
   ~AnnotMovie();
 
   virtual void draw(Gfx *gfx, GBool printing);
@@ -822,7 +822,7 @@ class AnnotScreen: public Annot {
  public:
 
   AnnotScreen(PDFDoc *docA, PDFRectangle *rect);
-  AnnotScreen(PDFDoc *docA, Dict *dict, Object *obj);
+  AnnotScreen(PDFDoc *docA, Dict *dict, PObject *obj);
   ~AnnotScreen();
 
   GooString* getTitle() { return title; }
@@ -840,7 +840,7 @@ class AnnotScreen: public Annot {
   AnnotAppearanceCharacs* appearCharacs; // MK
 
   LinkAction *action;                    // A
-  Object additionalActions;              // AA
+  PObject additionalActions;              // AA
 };
 
 //------------------------------------------------------------------------
@@ -858,7 +858,7 @@ public:
   };
 
   AnnotLink(PDFDoc *docA, PDFRectangle *rect);
-  AnnotLink(PDFDoc *docA, Dict *dict, Object *obj);
+  AnnotLink(PDFDoc *docA, Dict *dict, PObject *obj);
   virtual ~AnnotLink();
 
   virtual void draw(Gfx *gfx, GBool printing);
@@ -900,11 +900,11 @@ public:
   };
 
   AnnotFreeText(PDFDoc *docA, PDFRectangle *rect, GooString *da);
-  AnnotFreeText(PDFDoc *docA, Dict *dict, Object *obj);
+  AnnotFreeText(PDFDoc *docA, Dict *dict, PObject *obj);
   ~AnnotFreeText();
 
   virtual void draw(Gfx *gfx, GBool printing);
-  virtual Object *getAppearanceResDict(Object *dest);
+  virtual PObject *getAppearanceResDict(PObject *dest);
   virtual void setContents(GooString *new_content);
 
   void setAppearanceString(GooString *new_string);
@@ -964,11 +964,11 @@ public:
   };
 
   AnnotLine(PDFDoc *docA, PDFRectangle *rect);
-  AnnotLine(PDFDoc *docA, Dict *dict, Object *obj);
+  AnnotLine(PDFDoc *docA, Dict *dict, PObject *obj);
   ~AnnotLine();
 
   virtual void draw(Gfx *gfx, GBool printing);
-  virtual Object *getAppearanceResDict(Object *dest);
+  virtual PObject *getAppearanceResDict(PObject *dest);
   virtual void setContents(GooString *new_content);
 
   void setVertices(double x1, double y1, double x2, double y2);
@@ -1030,7 +1030,7 @@ class AnnotTextMarkup: public AnnotMarkup {
 public:
 
   AnnotTextMarkup(PDFDoc *docA, PDFRectangle *rect, AnnotSubtype subType);
-  AnnotTextMarkup(PDFDoc *docA, Dict *dict, Object *obj);
+  AnnotTextMarkup(PDFDoc *docA, Dict *dict, PObject *obj);
   virtual ~AnnotTextMarkup();
 
   virtual void draw(Gfx *gfx, GBool printing);
@@ -1057,7 +1057,7 @@ class AnnotStamp: public AnnotMarkup {
 public:
 
   AnnotStamp(PDFDoc *docA, PDFRectangle *rect);
-  AnnotStamp(PDFDoc *docA, Dict *dict, Object *obj);
+  AnnotStamp(PDFDoc *docA, Dict *dict, PObject *obj);
   ~AnnotStamp();
 
   void setIcon(GooString *new_icon);
@@ -1080,7 +1080,7 @@ class AnnotGeometry: public AnnotMarkup {
 public:
 
   AnnotGeometry(PDFDoc *docA, PDFRectangle *rect, AnnotSubtype subType);
-  AnnotGeometry(PDFDoc *docA, Dict *dict, Object *obj);
+  AnnotGeometry(PDFDoc *docA, Dict *dict, PObject *obj);
   ~AnnotGeometry();
 
   virtual void draw(Gfx *gfx, GBool printing);
@@ -1116,7 +1116,7 @@ public:
   };
 
   AnnotPolygon(PDFDoc *docA, PDFRectangle *rect, AnnotSubtype subType);
-  AnnotPolygon(PDFDoc *docA, Dict *dict, Object *obj);
+  AnnotPolygon(PDFDoc *docA, Dict *dict, PObject *obj);
   ~AnnotPolygon();
 
   virtual void draw(Gfx *gfx, GBool printing);
@@ -1166,7 +1166,7 @@ public:
   };
 
   AnnotCaret(PDFDoc *docA, PDFRectangle *rect);
-  AnnotCaret(PDFDoc *docA, Dict *dict, Object *obj);
+  AnnotCaret(PDFDoc *docA, Dict *dict, PObject *obj);
   ~AnnotCaret();
 
   void setSymbol(AnnotCaretSymbol new_symbol);
@@ -1191,7 +1191,7 @@ class AnnotInk: public AnnotMarkup {
 public:
 
   AnnotInk(PDFDoc *docA, PDFRectangle *rect);
-  AnnotInk(PDFDoc *docA, Dict *dict, Object *obj);
+  AnnotInk(PDFDoc *docA, Dict *dict, PObject *obj);
   ~AnnotInk();
 
   virtual void draw(Gfx *gfx, GBool printing);
@@ -1226,13 +1226,13 @@ class AnnotFileAttachment: public AnnotMarkup {
 public:
 
   AnnotFileAttachment(PDFDoc *docA, PDFRectangle *rect, GooString *filename);
-  AnnotFileAttachment(PDFDoc *docA, Dict *dict, Object *obj);
+  AnnotFileAttachment(PDFDoc *docA, Dict *dict, PObject *obj);
   ~AnnotFileAttachment();
 
   virtual void draw(Gfx *gfx, GBool printing);
 
   // getters
-  Object *getFile() { return &file; }
+  PObject *getFile() { return &file; }
   GooString *getName() const { return name; }
 
 private:
@@ -1240,7 +1240,7 @@ private:
   void initialize(PDFDoc *docA, Dict *dict);
 
   // required
-  Object file;      // FS
+  PObject file;      // FS
 
   // optional
   GooString *name;  // Name
@@ -1254,7 +1254,7 @@ class AnnotSound: public AnnotMarkup {
 public:
 
   AnnotSound(PDFDoc *docA, PDFRectangle *rect, Sound *soundA);
-  AnnotSound(PDFDoc *docA, Dict *dict, Object *obj);
+  AnnotSound(PDFDoc *docA, Dict *dict, PObject *obj);
   ~AnnotSound();
 
   virtual void draw(Gfx *gfx, GBool printing);
@@ -1288,8 +1288,8 @@ public:
     highlightModePush     // P,T
   };
 
-  AnnotWidget(PDFDoc *docA, Dict *dict, Object *obj);
-  AnnotWidget(PDFDoc *docA, Dict *dict, Object *obj, FormField *fieldA);
+  AnnotWidget(PDFDoc *docA, Dict *dict, PObject *obj);
+  AnnotWidget(PDFDoc *docA, Dict *dict, PObject *obj, FormField *fieldA);
   virtual ~AnnotWidget();
 
   virtual void draw(Gfx *gfx, GBool printing);
@@ -1323,7 +1323,7 @@ private:
   AnnotWidgetHighlightMode mode;          // H  (Default I)
   AnnotAppearanceCharacs *appearCharacs;  // MK
   LinkAction *action;                     // A
-  Object additionalActions;               // AA
+  PObject additionalActions;               // AA
   // inherited  from Annot
   // AnnotBorderBS border;                // BS
   Dict *parent;                           // Parent
@@ -1378,7 +1378,7 @@ class Annot3D: public Annot {
 public:
 
   Annot3D(PDFDoc *docA, PDFRectangle *rect);
-  Annot3D(PDFDoc *docA, Dict *dict, Object *obj);
+  Annot3D(PDFDoc *docA, Dict *dict, PObject *obj);
   ~Annot3D();
 
   // getters
@@ -1398,7 +1398,7 @@ class Annots {
 public:
 
   // Build a list of Annot objects and call setPage on them
-  Annots(PDFDoc *docA, int page, Object *annotsObj);
+  Annots(PDFDoc *docA, int page, PObject *annotsObj);
 
   ~Annots();
 
@@ -1409,7 +1409,7 @@ public:
   GBool removeAnnot(Annot *annot);
 
 private:
-  Annot* createAnnot(Dict* dict, Object *obj);
+  Annot* createAnnot(Dict* dict, PObject *obj);
   Annot *findAnnot(Ref *ref);
 
   PDFDoc *doc;

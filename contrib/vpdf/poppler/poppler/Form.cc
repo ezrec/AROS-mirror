@@ -71,7 +71,7 @@ static GooString *convertToUtf16(GooString *pdfDocEncodingString)
 }
 
 
-FormWidget::FormWidget(PDFDoc *docA, Object *aobj, unsigned num, Ref aref, FormField *fieldA)
+FormWidget::FormWidget(PDFDoc *docA, PObject *aobj, unsigned num, Ref aref, FormField *fieldA)
 {
   ref = aref;
   ID = 0;
@@ -101,7 +101,7 @@ void FormWidget::createWidgetAnnotation() {
   if (widget)
     return;
 
-  Object obj1;
+  PObject obj1;
   obj1.initRef(ref.num, ref.gen);
   widget = new AnnotWidget(doc, obj.getDict(), &obj1, field);
   obj1.free();
@@ -156,14 +156,14 @@ LinkAction *FormWidget::getActivationAction() {
   return widget ? widget->getAction() : NULL;
 }
 
-FormWidgetButton::FormWidgetButton (PDFDoc *docA, Object *aobj, unsigned num, Ref ref, FormField *p) :
+FormWidgetButton::FormWidgetButton (PDFDoc *docA, PObject *aobj, unsigned num, Ref ref, FormField *p) :
 	FormWidget(docA, aobj, num, ref, p)
 {
   type = formButton;
   parent = static_cast<FormFieldButton*>(field);
   onStr = NULL;
 
-  Object obj1, obj2;
+  PObject obj1, obj2;
 
   // Find the name of the ON state in the AP dictionnary
   // The reference say the Off state, if it existe, _must_ be stored in the AP dict under the name /Off
@@ -233,7 +233,7 @@ GBool FormWidgetButton::getState ()
 }
 
 
-FormWidgetText::FormWidgetText (PDFDoc *docA, Object *aobj, unsigned num, Ref ref, FormField *p) :
+FormWidgetText::FormWidgetText (PDFDoc *docA, PObject *aobj, unsigned num, Ref ref, FormField *p) :
 	FormWidget(docA, aobj, num, ref, p)
 {
   type = formText;
@@ -306,7 +306,7 @@ void FormWidgetText::setContent(GooString* new_content)
   parent->setContentCopy(new_content);
 }
 
-FormWidgetChoice::FormWidgetChoice(PDFDoc *docA, Object *aobj, unsigned num, Ref ref, FormField *p) :
+FormWidgetChoice::FormWidgetChoice(PDFDoc *docA, PObject *aobj, unsigned num, Ref ref, FormField *p) :
 	FormWidget(docA, aobj, num, ref, p)
 {
   type = formChoice;
@@ -430,7 +430,7 @@ bool FormWidgetChoice::isListBox () const
   return parent->isListBox();
 }
 
-FormWidgetSignature::FormWidgetSignature(PDFDoc *docA, Object *aobj, unsigned num, Ref ref, FormField *p) :
+FormWidgetSignature::FormWidgetSignature(PDFDoc *docA, PObject *aobj, unsigned num, Ref ref, FormField *p) :
 	FormWidget(docA, aobj, num, ref, p)
 {
   type = formSignature;
@@ -447,7 +447,7 @@ void FormWidgetSignature::updateWidgetAppearance()
 // FormField
 //========================================================================
 
-FormField::FormField(PDFDoc *docA, Object *aobj, const Ref& aref, FormField *parentA, std::set<int> *usedParents, FormFieldType ty)
+FormField::FormField(PDFDoc *docA, PObject *aobj, const Ref& aref, FormField *parentA, std::set<int> *usedParents, FormFieldType ty)
 {
   doc = docA;
   xref = doc->getXRef();
@@ -468,12 +468,12 @@ FormField::FormField(PDFDoc *docA, Object *aobj, const Ref& aref, FormField *par
 
   ref = aref;
 
-  Object obj1;
+  PObject obj1;
   //childs
   if (dict->lookup("Kids", &obj1)->isArray()) {
     // Load children
     for (int i = 0 ; i < obj1.arrayGetLength(); i++) {
-      Object childRef, childObj;
+      PObject childRef, childObj;
 
       if (!obj1.arrayGetNF(i, &childRef)->isRef()) {
         error (errSyntaxError, -1, "Invalid form field renference");
@@ -489,7 +489,7 @@ FormField::FormField(PDFDoc *docA, Object *aobj, const Ref& aref, FormField *par
 
       const Ref ref = childRef.getRef();
       if (usedParents->find(ref.num) == usedParents->end()) {
-        Object obj2, obj3;
+        PObject obj2, obj3;
         // Field child: it could be a form field or a widget or composed dict
         if (childObj.dictLookupNF("Parent", &obj2)->isRef() || childObj.dictLookup("Parent", &obj3)->isDict()) {
           // Child is a form field or composed dict
@@ -641,7 +641,7 @@ void FormField::createWidgetAnnotations() {
   }
 }
 
-void FormField::_createWidget (Object *obj, Ref aref)
+void FormField::_createWidget (PObject *obj, Ref aref)
 {
   terminal = true;
   numChildren++;
@@ -685,8 +685,8 @@ FormWidget* FormField::findWidgetByRef (Ref aref)
 }
 
 GooString* FormField::getFullyQualifiedName() {
-  Object obj1, obj2;
-  Object parent;
+  PObject obj1, obj2;
+  PObject parent;
   GooString *parent_name;
   GooString *full_name;
   GBool unicode_encoded = gFalse;
@@ -787,7 +787,7 @@ void FormField::updateChildrenAppearance()
 //------------------------------------------------------------------------
 // FormFieldButton
 //------------------------------------------------------------------------
-FormFieldButton::FormFieldButton(PDFDoc *docA, Object *aobj, const Ref& ref, FormField *parent, std::set<int> *usedParents)
+FormFieldButton::FormFieldButton(PDFDoc *docA, PObject *aobj, const Ref& ref, FormField *parent, std::set<int> *usedParents)
   : FormField(docA, aobj, ref, parent, usedParents, formButton)
 {
   Dict* dict = obj.getDict();
@@ -797,7 +797,7 @@ FormFieldButton::FormFieldButton(PDFDoc *docA, Object *aobj, const Ref& ref, For
   numSiblings = 0;
   appearanceState.initNull();
 
-  Object obj1;
+  PObject obj1;
   btype = formButtonCheck; 
   if (Form::fieldLookup(dict, "Ff", &obj1)->isInt()) {
     int flags = obj1.getInt();
@@ -947,7 +947,7 @@ GBool FormFieldButton::getState(char *state) {
 }
 
 void FormFieldButton::updateState(char *state) {
-  Object obj1;
+  PObject obj1;
 
   appearanceState.free();
   appearanceState.initName(state);
@@ -967,11 +967,11 @@ FormFieldButton::~FormFieldButton()
 //------------------------------------------------------------------------
 // FormFieldText
 //------------------------------------------------------------------------
-FormFieldText::FormFieldText(PDFDoc *docA, Object *aobj, const Ref& ref, FormField *parent, std::set<int> *usedParents)
+FormFieldText::FormFieldText(PDFDoc *docA, PObject *aobj, const Ref& ref, FormField *parent, std::set<int> *usedParents)
   : FormField(docA, aobj, ref, parent, usedParents, formText)
 {
   Dict* dict = obj.getDict();
-  Object obj1;
+  PObject obj1;
   content = NULL;
   multiline = password = fileSelect = doNotSpellCheck = doNotScroll = comb = richText = false;
   maxLen = 0;
@@ -1044,7 +1044,7 @@ void FormFieldText::setContentCopy (GooString* new_content)
     }
   }
 
-  Object obj1;
+  PObject obj1;
   obj1.initString(content ? content->copy() : new GooString(""));
   obj.getDict()->set("V", &obj1);
   xref->setModifiedObject(&obj, ref);
@@ -1060,7 +1060,7 @@ FormFieldText::~FormFieldText()
 //------------------------------------------------------------------------
 // FormFieldChoice
 //------------------------------------------------------------------------
-FormFieldChoice::FormFieldChoice(PDFDoc *docA, Object *aobj, const Ref& ref, FormField *parent, std::set<int> *usedParents)
+FormFieldChoice::FormFieldChoice(PDFDoc *docA, PObject *aobj, const Ref& ref, FormField *parent, std::set<int> *usedParents)
   : FormField(docA, aobj, ref, parent, usedParents, formChoice)
 {
   numChoices = 0;
@@ -1069,7 +1069,7 @@ FormFieldChoice::FormFieldChoice(PDFDoc *docA, Object *aobj, const Ref& ref, For
   topIdx = 0;
 
   Dict* dict = obj.getDict();
-  Object obj1;
+  PObject obj1;
 
   combo = edit = multiselect = doNotSpellCheck = doCommitOnSelChange = false;
 
@@ -1093,7 +1093,7 @@ FormFieldChoice::FormFieldChoice(PDFDoc *docA, Object *aobj, const Ref& ref, For
   obj1.free();
 
   if (dict->lookup("Opt", &obj1)->isArray()) {
-    Object obj2;
+    PObject obj2;
 
     numChoices = obj1.arrayGetLength();
     choices = new ChoiceOpt[numChoices];
@@ -1103,7 +1103,7 @@ FormFieldChoice::FormFieldChoice(PDFDoc *docA, Object *aobj, const Ref& ref, For
       if (obj1.arrayGet(i, &obj2)->isString()) {
         choices[i].optionName = obj2.getString()->copy();
       } else if (obj2.isArray()) { // [Export_value, Displayed_text]
-        Object obj3;
+        PObject obj3;
 
         if (obj2.arrayGetLength() < 2) {
           error(errSyntaxError, -1, "FormWidgetChoice:: invalid Opt entry -- array's length < 2\n");
@@ -1135,7 +1135,7 @@ FormFieldChoice::FormFieldChoice(PDFDoc *docA, Object *aobj, const Ref& ref, For
   // do the opposite. We do the same.
   if (Form::fieldLookup(dict, "I", &obj1)->isArray()) {
     for (int i = 0; i < obj1.arrayGetLength(); i++) {
-      Object obj2;
+      PObject obj2;
       if (obj1.arrayGet(i, &obj2)->isInt() && obj2.getInt() >= 0 && obj2.getInt() < numChoices) {
         choices[obj2.getInt()].selected = true;
       }
@@ -1173,7 +1173,7 @@ FormFieldChoice::FormFieldChoice(PDFDoc *docA, Object *aobj, const Ref& ref, For
     } else if (obj1.isArray()) {
       for (int i = 0; i < numChoices; i++) {
         for (int j = 0; j < obj1.arrayGetLength(); j++) {
-          Object obj2;
+          PObject obj2;
           obj1.arrayGet(j, &obj2);
           GBool matches = gFalse;
 
@@ -1219,7 +1219,7 @@ void FormFieldChoice::print(int indent)
 #endif
 
 void FormFieldChoice::updateSelection() {
-  Object objV, objI, obj1;
+  PObject objV, objI, obj1;
   objI.initNull();
 
   if (edit && editedChoice) {
@@ -1363,7 +1363,7 @@ GooString *FormFieldChoice::getSelectedChoice() {
 //------------------------------------------------------------------------
 // FormFieldSignature
 //------------------------------------------------------------------------
-FormFieldSignature::FormFieldSignature(PDFDoc *docA, Object *dict, const Ref& ref, FormField *parent, std::set<int> *usedParents)
+FormFieldSignature::FormFieldSignature(PDFDoc *docA, PObject *dict, const Ref& ref, FormField *parent, std::set<int> *usedParents)
   : FormField(docA, dict, ref, parent, usedParents, formSignature)
 {
 }
@@ -1385,9 +1385,9 @@ void FormFieldSignature::print(int indent)
 // Form
 //------------------------------------------------------------------------
 
-Form::Form(PDFDoc *docA, Object* acroFormA)
+Form::Form(PDFDoc *docA, PObject* acroFormA)
 {
-  Object obj1;
+  PObject obj1;
 
   doc = docA;
   xref = doc->getXRef();
@@ -1427,10 +1427,10 @@ Form::Form(PDFDoc *docA, Object* acroFormA)
   acroForm->dictLookup("Fields", &obj1);
   if (obj1.isArray()) {
     Array *array = obj1.getArray();
-    Object obj2;
+    PObject obj2;
     
     for(int i=0; i<array->getLength(); i++) {
-      Object oref;
+      PObject oref;
       array->get(i, &obj2);
       array->getNF(i, &oref);
       if (!oref.isRef()) {
@@ -1480,9 +1480,9 @@ Form::~Form() {
 }
 
 // Look up an inheritable field dictionary entry.
-static Object *fieldLookup(Dict *field, const char *key, Object *obj, std::set<int> *usedParents) {
+static PObject *fieldLookup(Dict *field, const char *key, PObject *obj, std::set<int> *usedParents) {
   Dict *dict;
-  Object parent;
+  PObject parent;
 
   dict = field;
   if (!dict->lookup(key, obj)->isNull()) {
@@ -1495,7 +1495,7 @@ static Object *fieldLookup(Dict *field, const char *key, Object *obj, std::set<i
     if (usedParents->find(ref.num) == usedParents->end()) {
       usedParents->insert(ref.num);
 
-      Object obj2;
+      PObject obj2;
       parent.fetch(dict->getXRef(), &obj2);
       if (obj2.isDict()) {
         fieldLookup(obj2.getDict(), key, obj, usedParents);
@@ -1513,14 +1513,14 @@ static Object *fieldLookup(Dict *field, const char *key, Object *obj, std::set<i
   return obj;
 }
 
-Object *Form::fieldLookup(Dict *field, const char *key, Object *obj) {
+PObject *Form::fieldLookup(Dict *field, const char *key, PObject *obj) {
   std::set<int> usedParents;
   return ::fieldLookup(field, key, obj, &usedParents);
 }
 
-FormField *Form::createFieldFromDict (Object* obj, PDFDoc *docA, const Ref& pref, FormField *parent, std::set<int> *usedParents)
+FormField *Form::createFieldFromDict (PObject* obj, PDFDoc *docA, const Ref& pref, FormField *parent, std::set<int> *usedParents)
 {
-    Object obj2;
+    PObject obj2;
     FormField *field;
 
     if (Form::fieldLookup(obj->getDict (), "FT", &obj2)->isName("Btn")) {

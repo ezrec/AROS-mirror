@@ -68,7 +68,7 @@ int JPXStream::getChar() {
 
 void JPXStream::init()
 {
-  Object oLen;
+  PObject oLen;
   if (getDict()) getDict()->lookup("Length", &oLen);
 
   int bufSize = BUFFER_INITIAL_SIZE;

@@ -458,7 +458,7 @@ void GlobalParams::setupBaseFonts(char * dir)
 
     if (file != NULL) {
       Parser *parser;
-      Object obj1, obj2;
+      PObject obj1, obj2;
 
       obj1.initNull();
       parser = new Parser(NULL,
@@ -472,7 +472,7 @@ void GlobalParams::setupBaseFonts(char * dir)
 	if (obj1.isName()) {
 	  // Substitutions
 	  if (obj2.isDict()) {
-	    Object obj3;
+	    PObject obj3;
 	    obj2.getDict()->lookup("Path", &obj3);
 	    if (obj3.isString())
 	      addFontFile(new GooString(obj1.getName()), obj3.getString()->copy());

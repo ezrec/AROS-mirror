@@ -31,7 +31,7 @@ class OCDisplayNode;
 class OCGs {
 public:
 
-  OCGs(Object *ocgObject, XRef *xref);
+  OCGs(PObject *ocgObject, XRef *xref);
   ~OCGs();
 
   // Is OCGS valid?
@@ -51,12 +51,12 @@ public:
   Array* getRBGroupsArray() 
     { return (rbgroups.isArray() && rbgroups.arrayGetLength()) ? rbgroups.getArray() : NULL; }
 
-  bool optContentIsVisible( Object *dictRef );
+  bool optContentIsVisible( PObject *dictRef );
 
 private:
   GBool ok;
 
-  GBool evalOCVisibilityExpr(Object *expr, int recursion);
+  GBool evalOCVisibilityExpr(PObject *expr, int recursion);
   bool allOn( Array *ocgArray );
   bool allOff( Array *ocgArray );
   bool anyOn( Array *ocgArray );
@@ -64,8 +64,8 @@ private:
 
   GooList *optionalContentGroups;
 
-  Object order;
-  Object rbgroups;
+  PObject order;
+  PObject rbgroups;
   XRef *m_xref;
   OCDisplayNode *display; // root node of display tree
 };
@@ -114,7 +114,7 @@ private:
 class OCDisplayNode {
 public:
 
-  static OCDisplayNode *parse(Object *obj, OCGs *oc, XRef *xref, int recursion = 0);
+  static OCDisplayNode *parse(PObject *obj, OCGs *oc, XRef *xref, int recursion = 0);
   OCDisplayNode();
   ~OCDisplayNode();
 

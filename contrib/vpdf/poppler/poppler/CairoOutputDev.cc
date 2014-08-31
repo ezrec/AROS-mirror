@@ -826,7 +826,7 @@ void CairoOutputDev::eoFill(GfxState *state) {
 
 }
 
-GBool CairoOutputDev::tilingPatternFill(GfxState *state, Gfx *gfxA, Catalog *cat, Object *str,
+GBool CairoOutputDev::tilingPatternFill(GfxState *state, Gfx *gfxA, Catalog *cat, PObject *str,
 					double *pmat, int paintType, int /*tilingType*/, Dict *resDict,
 					double *mat, double *bbox,
 					int x0, int y0, int x1, int y1,
@@ -1806,7 +1806,7 @@ CairoOutputDev::getFilterForSurface(cairo_surface_t *image,
   return CAIRO_FILTER_BILINEAR;
 }
 
-void CairoOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
+void CairoOutputDev::drawImageMask(GfxState *state, PObject *ref, Stream *str,
 				   int width, int height, GBool invert,
 				   GBool interpolate, GBool inlineImg) {
 
@@ -1860,7 +1860,7 @@ void CairoOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
 
 }
 
-void CairoOutputDev::setSoftMaskFromImageMask(GfxState *state, Object *ref, Stream *str,
+void CairoOutputDev::setSoftMaskFromImageMask(GfxState *state, PObject *ref, Stream *str,
 				   int width, int height, GBool invert,
 				   GBool inlineImg, double *baseMatrix) {
 
@@ -1935,7 +1935,7 @@ void CairoOutputDev::unsetSoftMaskFromImageMask(GfxState *state, double *baseMat
   clearSoftMask(state);
 }
 
-void CairoOutputDev::drawImageMaskRegular(GfxState *state, Object *ref, Stream *str,
+void CairoOutputDev::drawImageMaskRegular(GfxState *state, PObject *ref, Stream *str,
 					  int width, int height, GBool invert,
 					  GBool interpolate, GBool inlineImg) {
   unsigned char *buffer;
@@ -2042,7 +2042,7 @@ cleanup:
 }
 
 
-void CairoOutputDev::drawImageMaskPrescaled(GfxState *state, Object *ref, Stream *str,
+void CairoOutputDev::drawImageMaskPrescaled(GfxState *state, PObject *ref, Stream *str,
 					    int width, int height, GBool invert,
 					    GBool interpolate, GBool inlineImg) {
   unsigned char *buffer;
@@ -2332,7 +2332,7 @@ void CairoOutputDev::drawImageMaskPrescaled(GfxState *state, Object *ref, Stream
   delete imgStr;
 }
 
-void CairoOutputDev::drawMaskedImage(GfxState *state, Object *ref,
+void CairoOutputDev::drawMaskedImage(GfxState *state, PObject *ref,
 				     Stream *str, int width, int height,
 				     GfxImageColorMap *colorMap,
 				     GBool interpolate,
@@ -2489,7 +2489,7 @@ cleanup:
 
 
 //XXX: is this affect by AIS(alpha is shape)?
-void CairoOutputDev::drawSoftMaskedImage(GfxState *state, Object *ref, Stream *str,
+void CairoOutputDev::drawSoftMaskedImage(GfxState *state, PObject *ref, Stream *str,
 					 int width, int height,
 					 GfxImageColorMap *colorMap,
 					 GBool interpolate,
@@ -2676,11 +2676,11 @@ GBool CairoOutputDev::getStreamData (Stream *str, char **buffer, int *length)
   return gTrue;
 }
 
-void CairoOutputDev::setMimeData(Stream *str, Object *ref, cairo_surface_t *image)
+void CairoOutputDev::setMimeData(Stream *str, PObject *ref, cairo_surface_t *image)
 {
   char *strBuffer;
   int len;
-  Object obj;
+  PObject obj;
 
   if (!printing || !(str->getKind() == strDCT || str->getKind() == strJPX))
     return;
@@ -2875,7 +2875,7 @@ public:
 
 };
 
-void CairoOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
+void CairoOutputDev::drawImage(GfxState *state, PObject *ref, Stream *str,
 			       int widthA, int heightA,
 			       GfxImageColorMap *colorMap,
 			       GBool interpolate,
@@ -3026,7 +3026,7 @@ void CairoImageOutputDev::getBBox(GfxState *state, int width, int height,
   *y2 = *y1 + scaledHeight;
 }
 
-void CairoImageOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
+void CairoImageOutputDev::drawImageMask(GfxState *state, PObject *ref, Stream *str,
 					int width, int height, GBool invert,
 					GBool interpolate, GBool inlineImg)
 {
@@ -3056,7 +3056,7 @@ void CairoImageOutputDev::drawImageMask(GfxState *state, Object *ref, Stream *st
   }
 }
 
-void CairoImageOutputDev::setSoftMaskFromImageMask(GfxState *state, Object *ref, Stream *str,
+void CairoImageOutputDev::setSoftMaskFromImageMask(GfxState *state, PObject *ref, Stream *str,
                                                    int width, int height, GBool invert,
                                                    GBool inlineImg, double *baseMatrix)
 {
@@ -3089,7 +3089,7 @@ void CairoImageOutputDev::setSoftMaskFromImageMask(GfxState *state, Object *ref,
   }
 }
 
-void CairoImageOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
+void CairoImageOutputDev::drawImage(GfxState *state, PObject *ref, Stream *str,
 				    int width, int height, GfxImageColorMap *colorMap,
 				    GBool interpolate, int *maskColors, GBool inlineImg)
 {
@@ -3119,7 +3119,7 @@ void CairoImageOutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
   }
 }
 
-void CairoImageOutputDev::drawSoftMaskedImage(GfxState *state, Object *ref, Stream *str,
+void CairoImageOutputDev::drawSoftMaskedImage(GfxState *state, PObject *ref, Stream *str,
 					      int width, int height,
 					      GfxImageColorMap *colorMap,
 					      GBool interpolate,
@@ -3155,7 +3155,7 @@ void CairoImageOutputDev::drawSoftMaskedImage(GfxState *state, Object *ref, Stre
   }
 }
 
-void CairoImageOutputDev::drawMaskedImage(GfxState *state, Object *ref, Stream *str,
+void CairoImageOutputDev::drawMaskedImage(GfxState *state, PObject *ref, Stream *str,
 					  int width, int height,
 					  GfxImageColorMap *colorMap,
 					  GBool interpolate,

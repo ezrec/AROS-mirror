@@ -31,8 +31,10 @@ void InitSystem( int argc , char *argv[] )
 	DataTypesBase = OpenLibrary("datatypes.library", 0);
 	ParamsInit(argc, argv);
 	TimerInit();
+#if defined(__MORPHOS__)
 	AltivecInit();
 	MemoryInit();
+#endif
 	ConversionInit();
 
 	atexit(&ExitSystem);

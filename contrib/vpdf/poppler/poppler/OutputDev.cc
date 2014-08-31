@@ -95,7 +95,7 @@ GBool OutputDev::beginType3Char(GfxState *state, double x, double y,
   return gFalse;
 }
 
-void OutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
+void OutputDev::drawImageMask(GfxState *state, PObject *ref, Stream *str,
 			      int width, int height, GBool invert,
 			      GBool interpolate, GBool inlineImg) {
   int i, j;
@@ -110,7 +110,7 @@ void OutputDev::drawImageMask(GfxState *state, Object *ref, Stream *str,
 }
 
 void OutputDev::setSoftMaskFromImageMask(GfxState *state,
-					 Object *ref, Stream *str,
+					 PObject *ref, Stream *str,
 					 int width, int height, GBool invert,
 					 GBool inlineImg, double *baseMatrix) {
   drawImageMask(state, ref, str, width, height, invert, gFalse, inlineImg);
@@ -120,7 +120,7 @@ void OutputDev::unsetSoftMaskFromImageMask(GfxState *state, double *baseMatrix) 
   return;
 }
 
-void OutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
+void OutputDev::drawImage(GfxState *state, PObject *ref, Stream *str,
 			  int width, int height, GfxImageColorMap *colorMap,
 			  GBool interpolate, int *maskColors, GBool inlineImg) {
   int i, j;
@@ -135,7 +135,7 @@ void OutputDev::drawImage(GfxState *state, Object *ref, Stream *str,
   }
 }
 
-void OutputDev::drawMaskedImage(GfxState *state, Object *ref, Stream *str,
+void OutputDev::drawMaskedImage(GfxState *state, PObject *ref, Stream *str,
 				int width, int height,
 				GfxImageColorMap *colorMap,
 				GBool interpolate,
@@ -146,7 +146,7 @@ void OutputDev::drawMaskedImage(GfxState *state, Object *ref, Stream *str,
   drawImage(state, ref, str, width, height, colorMap, interpolate, NULL, gFalse);
 }
 
-void OutputDev::drawSoftMaskedImage(GfxState *state, Object *ref, Stream *str,
+void OutputDev::drawSoftMaskedImage(GfxState *state, PObject *ref, Stream *str,
 				    int width, int height,
 				    GfxImageColorMap *colorMap,
 				    GBool interpolate,

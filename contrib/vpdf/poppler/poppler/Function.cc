@@ -57,16 +57,16 @@ Function::Function() {
 Function::~Function() {
 }
 
-Function *Function::parse(Object *funcObj) {
+Function *Function::parse(PObject *funcObj) {
   std::set<int> usedParents;
   return parse(funcObj, &usedParents);
 }
 
-Function *Function::parse(Object *funcObj, std::set<int> *usedParents) {
+Function *Function::parse(PObject *funcObj, std::set<int> *usedParents) {
   Function *func;
   Dict *dict;
   int funcType;
-  Object obj1;
+  PObject obj1;
 
   if (funcObj->isStream()) {
     dict = funcObj->streamGetDict();
@@ -118,7 +118,7 @@ Function::Function(const Function *func) {
 }
 
 GBool Function::init(Dict *dict) {
-  Object obj1, obj2;
+  PObject obj1, obj2;
   int i;
 
   //----- Domain
@@ -222,11 +222,11 @@ void IdentityFunction::transform(double *in, double *out) {
 // SampledFunction
 //------------------------------------------------------------------------
 
-SampledFunction::SampledFunction(Object *funcObj, Dict *dict) {
+SampledFunction::SampledFunction(PObject *funcObj, Dict *dict) {
   Stream *str;
   int sampleBits;
   double sampleMul;
-  Object obj1, obj2;
+  PObject obj1, obj2;
   Guint buf, bitMask;
   int bits;
   Guint s;
@@ -554,8 +554,8 @@ GBool SampledFunction::hasDifferentResultSet(Function *func) {
 // ExponentialFunction
 //------------------------------------------------------------------------
 
-ExponentialFunction::ExponentialFunction(Object *funcObj, Dict *dict) {
-  Object obj1, obj2;
+ExponentialFunction::ExponentialFunction(PObject *funcObj, Dict *dict) {
+  PObject obj1, obj2;
   int i;
 
   ok = gFalse;
@@ -679,8 +679,8 @@ void ExponentialFunction::transform(double *in, double *out) {
 // StitchingFunction
 //------------------------------------------------------------------------
 
-StitchingFunction::StitchingFunction(Object *funcObj, Dict *dict, std::set<int> *usedParents) {
-  Object obj1, obj2;
+StitchingFunction::StitchingFunction(PObject *funcObj, Dict *dict, std::set<int> *usedParents) {
+  PObject obj1, obj2;
   int i;
 
   ok = gFalse;
@@ -1162,7 +1162,7 @@ void PSStack::roll(int n, int j) {
   }
 }
 
-PostScriptFunction::PostScriptFunction(Object *funcObj, Dict *dict) {
+PostScriptFunction::PostScriptFunction(PObject *funcObj, Dict *dict) {
   Stream *str;
   int codePtr;
   GooString *tok;

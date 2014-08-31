@@ -386,7 +386,7 @@ CairoFreeTypeFont::~CairoFreeTypeFont() { }
 
 CairoFreeTypeFont *CairoFreeTypeFont::create(GfxFont *gfxFont, XRef *xref,
 					     FT_Library lib, GBool useCIDs) {
-  Object refObj, strObj;
+  PObject refObj, strObj;
   GooString *fileName;
   char *fileNameC;
   char *font_data;
@@ -606,7 +606,7 @@ _render_type3_glyph (cairo_scaled_font_t  *scaled_font,
 		     cairo_text_extents_t *metrics)
 {
   Dict *charProcs;
-  Object charProc;
+  PObject charProc;
   CairoOutputDev *output_dev;
   cairo_matrix_t matrix, invert_y_axis;
   double *mat;
@@ -682,7 +682,7 @@ _render_type3_glyph (cairo_scaled_font_t  *scaled_font,
 CairoType3Font *CairoType3Font::create(GfxFont *gfxFont, PDFDoc *doc,
 				       CairoFontEngine *fontEngine,
 				       GBool printing, XRef *xref) {
-  Object refObj, strObj;
+  PObject refObj, strObj;
   type3_font_info_t *info;
   cairo_font_face_t *font_face;
   Ref ref;

@@ -43,7 +43,7 @@
 
 class PDFDoc;
 class XRef;
-class Object;
+class PObject;
 class Page;
 class PageAttrs;
 struct Ref;
@@ -62,11 +62,11 @@ class NameTree {
 public:
   NameTree();
   ~NameTree();
-  void init(XRef *xref, Object *tree);
-  GBool lookup(GooString *name, Object *obj);
+  void init(XRef *xref, PObject *tree);
+  GBool lookup(GooString *name, PObject *obj);
   int numEntries() { return length; };
   // iterator accessor, note it returns a shallow copy, do not free the object
-  Object getValue(int i);
+  PObject getValue(int i);
   GooString *getName(int i);
 
 private:
@@ -74,16 +74,16 @@ private:
     Entry(Array *array, int index);
     ~Entry();
     GooString name;
-    Object value;
+    PObject value;
     void free();
     static int cmp(const void *key, const void *entry);
   };
 
-  void parse(Object *tree);
+  void parse(PObject *tree);
   void addEntry(Entry *entry);
 
   XRef *xref;
-  Object *root;
+  PObject *root;
   Entry **entries;
   int size, length; // size is the number of entries in
                     // the array of Entry*
@@ -123,7 +123,7 @@ public:
   GooString *readMetadata();
 
   // Return the structure tree root object.
-  Object *getStructTreeRoot();
+  PObject *getStructTreeRoot();
 
   // Find a page, given its object ID.  Returns page number, or 0 if
   // not found.
@@ -133,7 +133,7 @@ public:
   // NULL if <name> is not a destination.
   LinkDest *findDest(GooString *name);
 
-  Object *getDests();
+  PObject *getDests();
 
   // Get the number of embedded files
   int numEmbeddedFiles() { return getEmbeddedFileNameTree()->numEntries(); }
@@ -151,9 +151,9 @@ public:
   GBool labelToIndex(GooString *label, int *index);
   GBool indexToLabel(int index, GooString *label);
 
-  Object *getOutline();
+  PObject *getOutline();
 
-  Object *getAcroForm() { return &acroForm; }
+  PObject *getAcroForm() { return &acroForm; }
 
   OCGs *getOptContentConfig() { return optContent; }
 
@@ -211,17 +211,17 @@ private:
   ViewerPreferences *viewerPrefs;
   int numPages;			// number of pages
   int pagesSize;		// size of pages array
-  Object dests;			// named destination dictionary
-  Object names;			// named names dictionary
+  PObject dests;			// named destination dictionary
+  PObject names;			// named names dictionary
   NameTree *destNameTree;	// named destination name-tree
   NameTree *embeddedFileNameTree;  // embedded file name-tree
   NameTree *jsNameTree;		// Java Script name-tree
   GooString *baseURI;		// base URI for URI-type links
-  Object metadata;		// metadata stream
-  Object structTreeRoot;	// structure tree root dictionary
-  Object outline;		// outline dictionary
-  Object acroForm;		// AcroForm dictionary
-  Object viewerPreferences;     // ViewerPreference dictionary
+  PObject metadata;		// metadata stream
+  PObject structTreeRoot;	// structure tree root dictionary
+  PObject outline;		// outline dictionary
+  PObject acroForm;		// AcroForm dictionary
+  PObject viewerPreferences;     // ViewerPreference dictionary
   OCGs *optContent;		// Optional Content groups
   GBool ok;			// true if catalog is valid
   PageLabelInfo *pageLabelInfo; // info about page labels
@@ -229,9 +229,9 @@ private:
   PageLayout pageLayout;	// page layout
 
   GBool cachePageTree(int page); // Cache first <page> pages.
-  Object *findDestInTree(Object *tree, GooString *name, Object *obj);
+  PObject *findDestInTree(PObject *tree, GooString *name, PObject *obj);
 
-  Object *getNames();
+  PObject *getNames();
   NameTree *getDestNameTree();
   NameTree *getEmbeddedFileNameTree();
   NameTree *getJSNameTree();

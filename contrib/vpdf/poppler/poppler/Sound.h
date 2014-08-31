@@ -20,7 +20,7 @@
 #define Sound_H
 
 class GooString;
-class Object;
+class PObject;
 class Stream;
 
 //------------------------------------------------------------------------
@@ -40,13 +40,13 @@ enum SoundEncoding {
 class Sound
 {
 public:
-  // Try to parse the Object s
-  static Sound *parseSound(Object *s);
+  // Try to parse the PObject s
+  static Sound *parseSound(PObject *s);
 
   // Destructor
   ~Sound();
 
-  Object *getObject() { return streamObj; }
+  PObject *getObject() { return streamObj; }
   Stream *getStream();
 
   SoundKind getSoundKind() { return kind; }
@@ -59,10 +59,10 @@ public:
   Sound *copy();
 
 private:
-  // Create a sound. The Object obj is ensured to be a Stream with a Dict
-  Sound(Object *obj, bool readAttrs = true);
+  // Create a sound. The PObject obj is ensured to be a Stream with a Dict
+  Sound(PObject *obj, bool readAttrs = true);
 
-  Object *streamObj;
+  PObject *streamObj;
   SoundKind kind;
   GooString *fileName;
   double samplingRate;

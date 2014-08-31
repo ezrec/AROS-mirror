@@ -60,7 +60,7 @@ enum PageTransitionDirection {
 class PageTransition {
 public:
   // Construct a Page Transition.
-  PageTransition (Object *trans);
+  PageTransition (PObject *trans);
 
   // Destructor.
   ~PageTransition ();

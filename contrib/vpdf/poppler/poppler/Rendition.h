@@ -32,7 +32,7 @@ struct MediaWindowParameters {
   ~MediaWindowParameters();
 
   // parse from a floating window parameters dictionary
-  void parseFWParams(Object* obj);
+  void parseFWParams(PObject* obj);
 
   enum MediaWindowType {
     windowFloating = 0,
@@ -73,9 +73,9 @@ struct MediaParameters {
   ~MediaParameters();
 
   // parse from a "Media Play Parameters" dictionary
-  void parseMediaPlayParameters(Object* playObj);
+  void parseMediaPlayParameters(PObject* playObj);
   // parse from a "Media Screen Parameters" dictionary
-  void parseMediaScreenParameters(Object* screenObj);
+  void parseMediaScreenParameters(PObject* screenObj);
 
   enum MediaFittingPolicy {
     fittingMeet = 0,
@@ -117,7 +117,7 @@ struct MediaParameters {
 
 class MediaRendition {
  public:
-  MediaRendition(Object *obj);
+  MediaRendition(PObject *obj);
   ~MediaRendition();
 
   GBool isOk () { return ok; }

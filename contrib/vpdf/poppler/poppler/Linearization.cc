@@ -19,7 +19,7 @@
 Linearization::Linearization (BaseStream *str)
 {
   Parser *parser;
-  Object obj1, obj2, obj3, obj5;
+  PObject obj1, obj2, obj3, obj5;
 
   linDict.initNull();
 
@@ -69,7 +69,7 @@ Guint Linearization::getHintsOffset()
 {
   int hintsOffset;
 
-  Object obj1, obj2;
+  PObject obj1, obj2;
   if (linDict.isDict() &&
       linDict.dictLookup("H", &obj1)->isArray() &&
       obj1.arrayGetLength()>=2 &&
@@ -90,7 +90,7 @@ Guint Linearization::getHintsLength()
 {
   int hintsLength;
 
-  Object obj1, obj2;
+  PObject obj1, obj2;
   if (linDict.isDict() &&
       linDict.dictLookup("H", &obj1)->isArray() &&
       obj1.arrayGetLength()>=2 &&
@@ -111,7 +111,7 @@ Guint Linearization::getHintsOffset2()
 {
   int hintsOffset2 = 0; // default to 0
 
-  Object obj1, obj2;
+  PObject obj1, obj2;
   if (linDict.isDict() &&
       linDict.dictLookup("H", &obj1)->isArray() &&
       obj1.arrayGetLength()>=4) {
@@ -133,7 +133,7 @@ Guint Linearization::getHintsLength2()
 {
   int hintsLength2 = 0; // default to 0
 
-  Object obj1, obj2;
+  PObject obj1, obj2;
   if (linDict.isDict() &&
       linDict.dictLookup("H", &obj1)->isArray() &&
       obj1.arrayGetLength()>=4) {

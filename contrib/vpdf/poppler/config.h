@@ -193,10 +193,14 @@
 #define VERSION "0.14.1"
 
 /* Use fontconfig font configuration backend */
-//#define WITH_FONTCONFIGURATION_FONTCONFIG 1
+#if defined(__AROS__)
+#define WITH_FONTCONFIGURATION_FONTCONFIG 1
+#endif
 
 /* Use MorphOS font configuration backend */
+#if defined(__MORPHOS__)
 #define WITH_FONTCONFIGURATION_MORPHOS 1
+#endif
 
 /* Use win32 font configuration backend */
 /* #undef WITH_FONTCONFIGURATION_WIN32 */
@@ -204,7 +208,13 @@
 /* Define to 1 if the X Window System is missing or not being used. */
 #define X_DISPLAY_MISSING 1
 
+#if defined(__AROS__)
+#if AROS_BIG_ENDIAN
 #define WORDS_BIGENDIAN 1
+#endif
+#else
+#define WORDS_BIGENDIAN 1
+#endif
 
 /*
  * jpeg.h needs HAVE_BOOLEAN, when the system uses boolean in system

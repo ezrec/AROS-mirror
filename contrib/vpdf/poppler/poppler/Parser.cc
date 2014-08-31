@@ -60,19 +60,19 @@ Parser::~Parser() {
   delete lexer;
 }
 
-Object *Parser::getObj(Object *obj, int recursion)
+PObject *Parser::getObj(PObject *obj, int recursion)
 {
   return getObj(obj, gFalse, NULL, cryptRC4, 0, 0, 0, recursion);
 }
 
-Object *Parser::getObj(Object *obj, GBool simpleOnly,
+PObject *Parser::getObj(PObject *obj, GBool simpleOnly,
            Guchar *fileKey,
 		       CryptAlgorithm encAlgorithm, int keyLength,
 		       int objNum, int objGen, int recursion,
 		       GBool strict) {
   char *key;
   Stream *str;
-  Object obj2;
+  PObject obj2;
   int num;
   DecryptStream *decrypt;
   GooString *s, *s2;
@@ -188,11 +188,11 @@ err:
 
 }
 
-Stream *Parser::makeStream(Object *dict, Guchar *fileKey,
+Stream *Parser::makeStream(PObject *dict, Guchar *fileKey,
 			   CryptAlgorithm encAlgorithm, int keyLength,
 			   int objNum, int objGen, int recursion,
                            GBool strict) {
-  Object obj;
+  PObject obj;
   BaseStream *baseStr;
   Stream *str;
   Goffset length;

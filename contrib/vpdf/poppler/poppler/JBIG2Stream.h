@@ -46,7 +46,7 @@ class JBIG2MMRDecoder;
 class JBIG2Stream: public FilterStream {
 public:
 
-  JBIG2Stream(Stream *strA, Object *globalsStreamA);
+  JBIG2Stream(Stream *strA, PObject *globalsStreamA);
   virtual ~JBIG2Stream();
   virtual StreamKind getKind() { return strJBIG2; }
   virtual void reset();
@@ -130,7 +130,7 @@ private:
   GBool readULong(Guint *x);
   GBool readLong(int *x);
 
-  Object globalsStream;
+  PObject globalsStream;
   Guint pageW, pageH, curPageH;
   Guint pageDefPixel;
   JBIG2Bitmap *pageBitmap;

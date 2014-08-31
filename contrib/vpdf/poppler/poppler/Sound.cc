@@ -23,12 +23,12 @@
 #include "Stream.h"
 #include "FileSpec.h"
 
-Sound *Sound::parseSound(Object *obj)
+Sound *Sound::parseSound(PObject *obj)
 {
-  // let's try to see if this Object is a Sound, according to the PDF specs
+  // let's try to see if this PObject is a Sound, according to the PDF specs
   // (section 9.2)
   Stream *str = NULL;
-  // the Object must be a Stream
+  // the PObject must be a Stream
   if (obj->isStream()) {
     str = obj->getStream();
   } else {
@@ -38,7 +38,7 @@ Sound *Sound::parseSound(Object *obj)
   Dict *dict = str->getDict();
   if (dict == NULL)
     return NULL;
-  Object tmp;
+  PObject tmp;
   // the Dict must have the 'R' key of type num
   dict->lookup("R", &tmp);
   if (tmp.isNum()) {
@@ -48,9 +48,9 @@ Sound *Sound::parseSound(Object *obj)
   }
 }
 
-Sound::Sound(Object *obj, bool readAttrs)
+Sound::Sound(PObject *obj, bool readAttrs)
 {
-  streamObj = new Object();
+  streamObj = new PObject();
   streamObj->initNull();
   obj->copy(streamObj);
 
@@ -62,11 +62,11 @@ Sound::Sound(Object *obj, bool readAttrs)
 
   if (readAttrs)
   {
-    Object tmp;
+    PObject tmp;
     Dict *dict = streamObj->getStream()->getDict();
     dict->lookup("F", &tmp);
     if (!tmp.isNull()) {
-      Object obj1;
+      PObject obj1;
       // valid 'F' key -> external file
       kind = soundExternal;
       if (getFileSpecNameForPlatform (&tmp, &obj1)) {

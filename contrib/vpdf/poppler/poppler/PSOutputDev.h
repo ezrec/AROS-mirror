@@ -231,7 +231,7 @@ public:
   virtual void stroke(GfxState *state);
   virtual void fill(GfxState *state);
   virtual void eoFill(GfxState *state);
-  virtual GBool tilingPatternFill(GfxState *state, Gfx *gfx, Catalog *cat, Object *str,
+  virtual GBool tilingPatternFill(GfxState *state, Gfx *gfx, Catalog *cat, PObject *str,
 				  double *pmat, int paintType, int tilingType, Dict *resDict,
 				  double *mat, double *bbox,
 				  int x0, int y0, int x1, int y1,
@@ -252,18 +252,18 @@ public:
   virtual void endTextObject(GfxState *state);
 
   //----- image drawing
-  virtual void drawImageMask(GfxState *state, Object *ref, Stream *str,
+  virtual void drawImageMask(GfxState *state, PObject *ref, Stream *str,
 			     int width, int height, GBool invert,
 			     GBool interpolate, GBool inlineImg);
   virtual void setSoftMaskFromImageMask(GfxState *state,
-					Object *ref, Stream *str,
+					PObject *ref, Stream *str,
 					int width, int height, GBool invert,
 					GBool inlineImg, double *baseMatrix);
   virtual void unsetSoftMaskFromImageMask(GfxState *state, double *baseMatrix);
-  virtual void drawImage(GfxState *state, Object *ref, Stream *str,
+  virtual void drawImage(GfxState *state, PObject *ref, Stream *str,
 			 int width, int height, GfxImageColorMap *colorMap,
 			 GBool interpolate, int *maskColors, GBool inlineImg);
-  virtual void drawMaskedImage(GfxState *state, Object *ref, Stream *str,
+  virtual void drawMaskedImage(GfxState *state, PObject *ref, Stream *str,
 			       int width, int height,
 			       GfxImageColorMap *colorMap,
 			       GBool interpolate,
@@ -335,27 +335,27 @@ private:
   void setupImages(Dict *resDict);
   void setupImage(Ref id, Stream *str, GBool mask);
   void setupForms(Dict *resDict);
-  void setupForm(Ref id, Object *strObj);
+  void setupForm(Ref id, PObject *strObj);
   void addProcessColor(double c, double m, double y, double k);
   void addCustomColor(GfxSeparationColorSpace *sepCS);
   void doPath(GfxPath *path);
   void maskToClippingPath(Stream *maskStr, int maskWidth, int maskHeight, GBool maskInvert);
-  void doImageL1(Object *ref, GfxImageColorMap *colorMap,
+  void doImageL1(PObject *ref, GfxImageColorMap *colorMap,
 		 GBool invert, GBool inlineImg,
 		 Stream *str, int width, int height, int len,
 		 int *maskColors, Stream *maskStr,
 		 int maskWidth, int maskHeight, GBool maskInvert);
-  void doImageL1Sep(Object *ref, GfxImageColorMap *colorMap,
+  void doImageL1Sep(PObject *ref, GfxImageColorMap *colorMap,
 		    GBool invert, GBool inlineImg,
 		    Stream *str, int width, int height, int len,
 		    int *maskColors, Stream *maskStr,
 		    int maskWidth, int maskHeight, GBool maskInvert);
-  void doImageL2(Object *ref, GfxImageColorMap *colorMap,
+  void doImageL2(PObject *ref, GfxImageColorMap *colorMap,
 		 GBool invert, GBool inlineImg,
 		 Stream *str, int width, int height, int len,
 		 int *maskColors, Stream *maskStr,
 		 int maskWidth, int maskHeight, GBool maskInvert);
-  void doImageL3(Object *ref, GfxImageColorMap *colorMap,
+  void doImageL3(PObject *ref, GfxImageColorMap *colorMap,
 		 GBool invert, GBool inlineImg,
 		 Stream *str, int width, int height, int len,
 		 int *maskColors, Stream *maskStr,
@@ -363,12 +363,12 @@ private:
   void dumpColorSpaceL2(GfxColorSpace *colorSpace,
 			GBool genXform, GBool updateColors,
 			GBool map01);
-  GBool tilingPatternFillL1(GfxState *state, Catalog *cat, Object *str,
+  GBool tilingPatternFillL1(GfxState *state, Catalog *cat, PObject *str,
 			    double *pmat, int paintType, int tilingType, Dict *resDict,
 			    double *mat, double *bbox,
 			    int x0, int y0, int x1, int y1,
 			    double xStep, double yStep);
-  GBool tilingPatternFillL2(GfxState *state, Catalog *cat, Object *str,
+  GBool tilingPatternFillL2(GfxState *state, Catalog *cat, PObject *str,
 			    double *pmat, int paintType, int tilingType, Dict *resDict,
 			    double *mat, double *bbox,
 			    int x0, int y0, int x1, int y1,

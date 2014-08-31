@@ -108,7 +108,7 @@ Dict *Dict::copy(XRef *xrefA) {
   for (int i=0; i<length; i++) {
     if (dictA->entries[i].val.getType() == objDict) {
        Dict *dict = dictA->entries[i].val.getDict();
-       Object obj;
+       PObject obj;
        obj.initDict(dict->copy(xrefA));
        dictA->entries[i].val.free();
        dictA->entries[i].val = obj;
@@ -143,7 +143,7 @@ int Dict::decRef() {
   return ref;
 }
 
-void Dict::add(char *key, Object *val) {
+void Dict::add(char *key, PObject *val) {
   dictLocker();
   if (sorted) {
     // We use add on very few occasions so
@@ -227,7 +227,7 @@ void Dict::remove(const char *key) {
   }
 }
 
-void Dict::set(const char *key, Object *val) {
+void Dict::set(const char *key, PObject *val) {
   DictEntry *e;
   if (val->isNull()) {
     remove(key);
@@ -250,13 +250,13 @@ GBool Dict::is(const char *type) {
   return (e = find("Type")) && e->val.isName(type);
 }
 
-Object *Dict::lookup(const char *key, Object *obj, int recursion) {
+PObject *Dict::lookup(const char *key, PObject *obj, int recursion) {
   DictEntry *e;
 
   return (e = find(key)) ? e->val.fetch(xref, obj, recursion) : obj->initNull();
 }
 
-Object *Dict::lookupNF(const char *key, Object *obj) {
+PObject *Dict::lookupNF(const char *key, PObject *obj) {
   DictEntry *e;
 
   return (e = find(key)) ? e->val.copy(obj) : obj->initNull();
@@ -264,7 +264,7 @@ Object *Dict::lookupNF(const char *key, Object *obj) {
 
 GBool Dict::lookupInt(const char *key, const char *alt_key, int *value)
 {
-  Object obj1;
+  PObject obj1;
   GBool success = gFalse;
   
   lookup ((char *) key, &obj1);
@@ -286,10 +286,10 @@ char *Dict::getKey(int i) {
   return entries[i].key;
 }
 
-Object *Dict::getVal(int i, Object *obj) {
+PObject *Dict::getVal(int i, PObject *obj) {
   return entries[i].val.fetch(xref, obj);
 }
 
-Object *Dict::getValNF(int i, Object *obj) {
+PObject *Dict::getValNF(int i, PObject *obj) {
   return entries[i].val.copy(obj);
 }

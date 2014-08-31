@@ -81,7 +81,7 @@ void PreScanOutputDev::eoFill(GfxState *state) {
 	state->getFillOpacity(), state->getBlendMode());
 }
 
-GBool PreScanOutputDev::tilingPatternFill(GfxState *state, Gfx *gfx, Catalog *catalog, Object *str,
+GBool PreScanOutputDev::tilingPatternFill(GfxState *state, Gfx *gfx, Catalog *catalog, PObject *str,
 					  double *pmat, int paintType, int /*tilingType*/, Dict *resDict,
 					double *mat, double *bbox,
 					int x0, int y0, int x1, int y1,
@@ -191,7 +191,7 @@ GBool PreScanOutputDev::beginType3Char(GfxState * /*state*/, double /*x*/, doubl
 void PreScanOutputDev::endType3Char(GfxState * /*state*/) {
 }
 
-void PreScanOutputDev::drawImageMask(GfxState *state, Object * /*ref*/, Stream *str,
+void PreScanOutputDev::drawImageMask(GfxState *state, PObject * /*ref*/, Stream *str,
 				     int width, int height, GBool /*invert*/,
 				     GBool /*interpolate*/, GBool inlineImg) {
   int i, j;
@@ -213,7 +213,7 @@ void PreScanOutputDev::drawImageMask(GfxState *state, Object * /*ref*/, Stream *
   }
 }
 
-void PreScanOutputDev::drawImage(GfxState *state, Object * /*ref*/, Stream *str,
+void PreScanOutputDev::drawImage(GfxState *state, PObject * /*ref*/, Stream *str,
 				 int width, int height,
 				 GfxImageColorMap *colorMap,
 				 GBool /*interpolate*/, int * /*maskColors*/, GBool inlineImg) {
@@ -249,7 +249,7 @@ void PreScanOutputDev::drawImage(GfxState *state, Object * /*ref*/, Stream *str,
   }
 }
 
-void PreScanOutputDev::drawMaskedImage(GfxState *state, Object * /*ref*/,
+void PreScanOutputDev::drawMaskedImage(GfxState *state, PObject * /*ref*/,
 				       Stream * /*str*/,
 				       int /*width*/, int /*height*/,
 				       GfxImageColorMap *colorMap,
@@ -279,7 +279,7 @@ void PreScanOutputDev::drawMaskedImage(GfxState *state, Object * /*ref*/,
   gdi = gFalse;
 }
 
-void PreScanOutputDev::drawSoftMaskedImage(GfxState * /*state*/, Object * /*ref*/,
+void PreScanOutputDev::drawSoftMaskedImage(GfxState * /*state*/, PObject * /*ref*/,
 					   Stream * /*str*/,
 					   int /*width*/, int /*height*/,
 					   GfxImageColorMap *colorMap,

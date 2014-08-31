@@ -225,13 +225,13 @@ public:
 
   // Add filters to this stream according to the parameters in <dict>.
   // Returns the new stream.
-  Stream *addFilters(Object *dict, int recursion = 0);
+  Stream *addFilters(PObject *dict, int recursion = 0);
 
 private:
   virtual GBool hasGetChars() { return false; }
   virtual int getChars(int nChars, Guchar *buffer);
 
-  Stream *makeFilter(char *name, Stream *str, Object *params, int recursion = 0, Object *dict = NULL);
+  Stream *makeFilter(char *name, Stream *str, PObject *params, int recursion = 0, PObject *dict = NULL);
 
   int ref;			// reference count
 #if MULTITHREADED
@@ -305,11 +305,11 @@ private:
 class BaseStream: public Stream {
 public:
 
-  BaseStream(Object *dictA, Goffset lengthA);
+  BaseStream(PObject *dictA, Goffset lengthA);
   virtual ~BaseStream();
   virtual BaseStream *copy() = 0;
   virtual Stream *makeSubStream(Goffset start, GBool limited,
-				Goffset length, Object *dict) = 0;
+				Goffset length, PObject *dict) = 0;
   virtual void setPos(Goffset pos, int dir = 0) = 0;
   virtual GBool isBinary(GBool last = gTrue) { return last; }
   virtual BaseStream *getBaseStream() { return this; }
@@ -325,7 +325,7 @@ public:
 protected:
 
   Goffset length;
-  Object dict;
+  PObject dict;
 };
 
 //------------------------------------------------------------------------
@@ -446,11 +446,11 @@ class FileStream: public BaseStream {
 public:
 
   FileStream(GooFile* fileA, Goffset startA, GBool limitedA,
-	     Goffset lengthA, Object *dictA);
+	     Goffset lengthA, PObject *dictA);
   virtual ~FileStream();
   virtual BaseStream *copy();
   virtual Stream *makeSubStream(Goffset startA, GBool limitedA,
-				Goffset lengthA, Object *dictA);
+				Goffset lengthA, PObject *dictA);
   virtual StreamKind getKind() { return strFile; }
   virtual void reset();
   virtual void close();
@@ -516,11 +516,11 @@ class CachedFileStream: public BaseStream {
 public:
 
   CachedFileStream(CachedFile *ccA, Goffset startA, GBool limitedA,
-	     Goffset lengthA, Object *dictA);
+	     Goffset lengthA, PObject *dictA);
   virtual ~CachedFileStream();
   virtual BaseStream *copy();
   virtual Stream *makeSubStream(Goffset startA, GBool limitedA,
-				Goffset lengthA, Object *dictA);
+				Goffset lengthA, PObject *dictA);
   virtual StreamKind getKind() { return strCachedFile; }
   virtual void reset();
   virtual void close();
@@ -559,11 +559,11 @@ private:
 class MemStream: public BaseStream {
 public:
 
-  MemStream(char *bufA, Goffset startA, Goffset lengthA, Object *dictA);
+  MemStream(char *bufA, Goffset startA, Goffset lengthA, PObject *dictA);
   virtual ~MemStream();
   virtual BaseStream *copy();
   virtual Stream *makeSubStream(Goffset start, GBool limited,
-				Goffset lengthA, Object *dictA);
+				Goffset lengthA, PObject *dictA);
   virtual StreamKind getKind() { return strWeird; }
   virtual void reset();
   virtual void close();
@@ -608,11 +608,11 @@ private:
 class EmbedStream: public BaseStream {
 public:
 
-  EmbedStream(Stream *strA, Object *dictA, GBool limitedA, Goffset lengthA);
+  EmbedStream(Stream *strA, PObject *dictA, GBool limitedA, Goffset lengthA);
   virtual ~EmbedStream();
   virtual BaseStream *copy();
   virtual Stream *makeSubStream(Goffset start, GBool limitedA,
-				Goffset lengthA, Object *dictA);
+				Goffset lengthA, PObject *dictA);
   virtual StreamKind getKind() { return str->getKind(); }
   virtual void reset() {}
   virtual int getChar();
@@ -862,7 +862,7 @@ struct DCTHuffTable {
 class DCTStream: public FilterStream {
 public:
 
-  DCTStream(Stream *strA, int colorXformA, Object *dict, int recursion);
+  DCTStream(Stream *strA, int colorXformA, PObject *dict, int recursion);
   virtual ~DCTStream();
   virtual StreamKind getKind() { return strDCT; }
   virtual void reset();

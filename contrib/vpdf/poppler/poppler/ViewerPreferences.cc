@@ -19,7 +19,7 @@ ViewerPreferences::ViewerPreferences(Dict *prefDict)
 {
   init();
 
-  Object obj;
+  PObject obj;
 
   if (prefDict->lookup("HideToolbar", &obj)->isBool()) {
     hideToolbar = obj.getBool();

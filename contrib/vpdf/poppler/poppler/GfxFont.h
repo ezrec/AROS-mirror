@@ -334,7 +334,7 @@ public:
   Dict *getCharProcs();
 
   // Return the Type 3 CharProc for the character associated with <code>.
-  Object *getCharProc(int code, Object *proc);
+  PObject *getCharProc(int code, PObject *proc);
 
   // Return the Type 3 Resources dictionary, or NULL if none.
   Dict *getResources();
@@ -350,8 +350,8 @@ private:
   GBool hasEncoding;
   GBool usesMacRomanEnc;
   double widths[256];		// character widths
-  Object charProcs;		// Type 3 CharProcs dictionary
-  Object resources;		// Type 3 Resources dictionary
+  PObject charProcs;		// Type 3 CharProcs dictionary
+  PObject resources;		// Type 3 Resources dictionary
 
   friend class GfxFont;
 };

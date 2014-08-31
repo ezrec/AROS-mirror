@@ -35,7 +35,7 @@
 
 //------------------------------------------------------------------------
 
-OCGs::OCGs(Object *ocgObject, XRef *xref) :
+OCGs::OCGs(PObject *ocgObject, XRef *xref) :
   m_xref(xref)
 {
   // we need to parse the dictionary here, and build optionalContentGroups
@@ -43,7 +43,7 @@ OCGs::OCGs(Object *ocgObject, XRef *xref) :
   optionalContentGroups = new GooList();
   display = NULL;
 
-  Object ocgList;
+  PObject ocgList;
   ocgObject->dictLookup("OCGs", &ocgList);
   if (!ocgList.isArray()) {
     error(errSyntaxError, -1, "Expected the optional content group list, but wasn't able to find it, or it isn't an Array");
@@ -54,7 +54,7 @@ OCGs::OCGs(Object *ocgObject, XRef *xref) :
 
   // we now enumerate over the ocgList, and build up the optionalContentGroups list.
   for(int i = 0; i < ocgList.arrayGetLength(); ++i) {
-    Object ocg;
+    PObject ocg;
     ocgList.arrayGet(i, &ocg);
     if (!ocg.isDict()) {
       ocg.free();
@@ -71,7 +71,7 @@ OCGs::OCGs(Object *ocgObject, XRef *xref) :
     optionalContentGroups->append(thisOptionalContentGroup);
   }
 
-  Object defaultOcgConfig;
+  PObject defaultOcgConfig;
   ocgObject->dictLookup("D", &defaultOcgConfig);
   if (!defaultOcgConfig.isDict()) {
     error(errSyntaxError, -1, "Expected the default config, but wasn't able to find it, or it isn't a Dictionary");
@@ -81,7 +81,7 @@ OCGs::OCGs(Object *ocgObject, XRef *xref) :
     return;
   }
 
-  Object baseState;
+  PObject baseState;
   defaultOcgConfig.dictLookup("BaseState", &baseState);
   if (baseState.isName("OFF")) {
     for (int i = 0; i < optionalContentGroups->getLength(); ++i) {
@@ -93,12 +93,12 @@ OCGs::OCGs(Object *ocgObject, XRef *xref) :
   }
   baseState.free();
 
-  Object on;
+  PObject on;
   defaultOcgConfig.dictLookup("ON", &on);
   if (on.isArray()) {
     // ON is an optional element
     for (int i = 0; i < on.arrayGetLength(); ++i) {
-      Object reference;
+      PObject reference;
       on.arrayGetNF(i, &reference);
       if (!reference.isRef()) {
 	// there can be null entries
@@ -116,12 +116,12 @@ OCGs::OCGs(Object *ocgObject, XRef *xref) :
   }
   on.free();
 
-  Object off;
+  PObject off;
   defaultOcgConfig.dictLookup("OFF", &off);
   if (off.isArray()) {
     // OFF is an optional element
     for (int i = 0; i < off.arrayGetLength(); ++i) {
-      Object reference;
+      PObject reference;
       off.arrayGetNF(i, &reference);
       if (!reference.isRef()) {
 	// there can be null entries
@@ -187,14 +187,14 @@ OCDisplayNode *OCGs::getDisplayRoot()
   return display;
 }
 
-bool OCGs::optContentIsVisible( Object *dictRef )
+bool OCGs::optContentIsVisible( PObject *dictRef )
 {
-  Object dictObj;
+  PObject dictObj;
   Dict *dict;
-  Object dictType;
-  Object ocg;
-  Object policy;
-  Object ve;
+  PObject dictType;
+  PObject ocg;
+  PObject policy;
+  PObject ve;
   bool result = true;
 
   if (dictRef->isNull())
@@ -256,9 +256,9 @@ bool OCGs::optContentIsVisible( Object *dictRef )
   return result;
 }
 
-GBool OCGs::evalOCVisibilityExpr(Object *expr, int recursion) {
+GBool OCGs::evalOCVisibilityExpr(PObject *expr, int recursion) {
   OptionalContentGroup *ocg;
-  Object expr2, op, obj;
+  PObject expr2, op, obj;
   GBool ret;
   int i;
 
@@ -317,7 +317,7 @@ GBool OCGs::evalOCVisibilityExpr(Object *expr, int recursion) {
 bool OCGs::allOn( Array *ocgArray )
 {
   for (int i = 0; i < ocgArray->getLength(); ++i) {
-    Object ocgItem;
+    PObject ocgItem;
     ocgArray->getNF(i, &ocgItem);
     if (ocgItem.isRef()) {
       OptionalContentGroup* oc = findOcgByRef( ocgItem.getRef() );      
@@ -332,7 +332,7 @@ bool OCGs::allOn( Array *ocgArray )
 bool OCGs::allOff( Array *ocgArray )
 {
   for (int i = 0; i < ocgArray->getLength(); ++i) {
-    Object ocgItem;
+    PObject ocgItem;
     ocgArray->getNF(i, &ocgItem);
     if (ocgItem.isRef()) {
       OptionalContentGroup* oc = findOcgByRef( ocgItem.getRef() );      
@@ -347,7 +347,7 @@ bool OCGs::allOff( Array *ocgArray )
 bool OCGs::anyOn( Array *ocgArray )
 {
   for (int i = 0; i < ocgArray->getLength(); ++i) {
-    Object ocgItem;
+    PObject ocgItem;
     ocgArray->getNF(i, &ocgItem);
     if (ocgItem.isRef()) {
       OptionalContentGroup* oc = findOcgByRef( ocgItem.getRef() );      
@@ -362,7 +362,7 @@ bool OCGs::anyOn( Array *ocgArray )
 bool OCGs::anyOff( Array *ocgArray )
 {
   for (int i = 0; i < ocgArray->getLength(); ++i) {
-    Object ocgItem;
+    PObject ocgItem;
     ocgArray->getNF(i, &ocgItem);
     if (ocgItem.isRef()) {
       OptionalContentGroup* oc = findOcgByRef( ocgItem.getRef() );      
@@ -378,8 +378,8 @@ bool OCGs::anyOff( Array *ocgArray )
 
 OptionalContentGroup::OptionalContentGroup(Dict *ocgDict) : m_name(NULL)
 {
-  Object obj1, obj2, obj3;
-  Object ocgName;
+  PObject obj1, obj2, obj3;
+  PObject ocgName;
   ocgDict->lookup("Name", &ocgName);
   if (!ocgName.isString()) {
     error(errSyntaxWarning, -1, "Expected the name of the OCG, but wasn't able to find it, or it isn't a String");
@@ -444,9 +444,9 @@ OptionalContentGroup::~OptionalContentGroup()
 
 //------------------------------------------------------------------------
 
-OCDisplayNode *OCDisplayNode::parse(Object *obj, OCGs *oc,
+OCDisplayNode *OCDisplayNode::parse(PObject *obj, OCGs *oc,
 				    XRef *xref, int recursion) {
-  Object obj2, obj3;
+  PObject obj2, obj3;
   OptionalContentGroup *ocgA;
   OCDisplayNode *node, *child;
   int i;

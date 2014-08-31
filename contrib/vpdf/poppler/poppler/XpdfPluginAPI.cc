@@ -34,8 +34,8 @@
 //------------------------------------------------------------------------
 
 //~ This should use a pool of Objects; change xpdfFreeObj to match.
-static Object *allocObj() {
-  return (Object *)gmalloc(sizeof(Object));
+static PObject *allocObj() {
+  return (PObject *)gmalloc(sizeof(PObject));
 }
 
 //------------------------------------------------------------------------
@@ -43,142 +43,142 @@ static Object *allocObj() {
 //------------------------------------------------------------------------
 
 XpdfObject _xpdfGetInfoDict(XpdfDoc doc) {
-  Object *obj;
+  PObject *obj;
 
   obj = allocObj();
   return (XpdfObject)((PDFDoc *)doc)->getDocInfo(obj);
 }
 
 XpdfObject _xpdfGetCatalog(XpdfDoc doc) {
-  Object *obj;
+  PObject *obj;
 
   obj = allocObj();
   return (XpdfObject)((PDFDoc *)doc)->getXRef()->getCatalog(obj);
 }
 
 //------------------------------------------------------------------------
-// Object access functions.
+// PObject access functions.
 //------------------------------------------------------------------------
 
 XpdfBool _xpdfObjIsBool(XpdfObject obj) {
-  return (XpdfBool)((Object *)obj)->isBool();
+  return (XpdfBool)((PObject *)obj)->isBool();
 }
 
 XpdfBool _xpdfObjIsInt(XpdfObject obj) {
-  return (XpdfBool)((Object *)obj)->isInt();
+  return (XpdfBool)((PObject *)obj)->isInt();
 }
 
 XpdfBool _xpdfObjIsReal(XpdfObject obj) {
-  return (XpdfBool)((Object *)obj)->isReal();
+  return (XpdfBool)((PObject *)obj)->isReal();
 }
 
 XpdfBool _xpdfObjIsNumber(XpdfObject obj) {
-  return (XpdfBool)((Object *)obj)->isNum();
+  return (XpdfBool)((PObject *)obj)->isNum();
 }
 
 XpdfBool _xpdfObjIsString(XpdfObject obj) {
-  return (XpdfBool)((Object *)obj)->isString();
+  return (XpdfBool)((PObject *)obj)->isString();
 }
 
 XpdfBool _xpdfObjIsName(XpdfObject obj) {
-  return (XpdfBool)((Object *)obj)->isName();
+  return (XpdfBool)((PObject *)obj)->isName();
 }
 
 XpdfBool _xpdfObjIsNull(XpdfObject obj) {
-  return (XpdfBool)((Object *)obj)->isNull();
+  return (XpdfBool)((PObject *)obj)->isNull();
 }
 
 XpdfBool _xpdfObjIsArray(XpdfObject obj) {
-  return (XpdfBool)((Object *)obj)->isArray();
+  return (XpdfBool)((PObject *)obj)->isArray();
 }
 
 XpdfBool _xpdfObjIsDict(XpdfObject obj) {
-  return (XpdfBool)((Object *)obj)->isDict();
+  return (XpdfBool)((PObject *)obj)->isDict();
 }
 
 XpdfBool _xpdfObjIsStream(XpdfObject obj) {
-  return (XpdfBool)((Object *)obj)->isStream();
+  return (XpdfBool)((PObject *)obj)->isStream();
 }
 
 XpdfBool _xpdfObjIsRef(XpdfObject obj) {
-  return (XpdfBool)((Object *)obj)->isRef();
+  return (XpdfBool)((PObject *)obj)->isRef();
 }
 
 XpdfBool _xpdfBoolValue(XpdfObject obj) {
-  return (XpdfBool)((Object *)obj)->getBool();
+  return (XpdfBool)((PObject *)obj)->getBool();
 }
 
 int _xpdfIntValue(XpdfObject obj) {
-  if (!((Object *)obj)->isInt()) {
+  if (!((PObject *)obj)->isInt()) {
     return 0;
   }
-  return ((Object *)obj)->getInt();
+  return ((PObject *)obj)->getInt();
 }
 
 double _xpdfRealValue(XpdfObject obj) {
-  if (!((Object *)obj)->isReal()) {
+  if (!((PObject *)obj)->isReal()) {
     return 0;
   }
-  return ((Object *)obj)->getReal();
+  return ((PObject *)obj)->getReal();
 }
 
 double _xpdfNumberValue(XpdfObject obj) {
-  if (!((Object *)obj)->isNum()) {
+  if (!((PObject *)obj)->isNum()) {
     return 0;
   }
-  return ((Object *)obj)->getNum();
+  return ((PObject *)obj)->getNum();
 }
 
 int _xpdfStringLength(XpdfObject obj) {
-  if (!((Object *)obj)->isString()) {
+  if (!((PObject *)obj)->isString()) {
     return 0;
   }
-  return ((Object *)obj)->getString()->getLength();
+  return ((PObject *)obj)->getString()->getLength();
 }
 
 char *_xpdfStringValue(XpdfObject obj) {
-  if (!((Object *)obj)->isString()) {
+  if (!((PObject *)obj)->isString()) {
     return 0;
   }
-  return ((Object *)obj)->getString()->getCString();
+  return ((PObject *)obj)->getString()->getCString();
 }
 
 char *_xpdfNameValue(XpdfObject obj) {
-  if (!((Object *)obj)->isName()) {
+  if (!((PObject *)obj)->isName()) {
     return NULL;
   }
-  return ((Object *)obj)->getName();
+  return ((PObject *)obj)->getName();
 }
 
 int _xpdfArrayLength(XpdfObject obj) {
-  if (!((Object *)obj)->isArray()) {
+  if (!((PObject *)obj)->isArray()) {
     return 0;
   }
-  return ((Object *)obj)->arrayGetLength();
+  return ((PObject *)obj)->arrayGetLength();
 }
 
 XpdfObject _xpdfArrayGet(XpdfObject obj, int idx) {
-  Object *elem;
+  PObject *elem;
 
   elem = allocObj();
-  if (!((Object *)obj)->isArray()) {
+  if (!((PObject *)obj)->isArray()) {
     return (XpdfObject)elem->initNull();
   }
-  return (XpdfObject)((Object *)obj)->arrayGet(idx, elem);
+  return (XpdfObject)((PObject *)obj)->arrayGet(idx, elem);
 }
 
 XpdfObject _xpdfDictGet(XpdfObject obj, char *key) {
-  Object *elem;
+  PObject *elem;
 
   elem = allocObj();
-  if (!((Object *)obj)->isDict()) {
+  if (!((PObject *)obj)->isDict()) {
     return (XpdfObject)elem->initNull();
   }
-  return (XpdfObject)((Object *)obj)->dictLookup(key, elem);
+  return (XpdfObject)((PObject *)obj)->dictLookup(key, elem);
 }
 
 void _xpdfFreeObj(XpdfObject obj) {
-  ((Object *)obj)->free();
+  ((PObject *)obj)->free();
   gfree(obj);
 }
 

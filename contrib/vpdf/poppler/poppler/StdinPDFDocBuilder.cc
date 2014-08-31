@@ -23,7 +23,7 @@ PDFDoc *
 StdinPDFDocBuilder::buildPDFDoc(const GooString &uri, GooString *ownerPassword,
                                     GooString *userPassword, void *guiDataA)
 {
-  Object obj;
+  PObject obj;
 
   obj.initNull();
   CachedFile *cachedFile = new CachedFile(new StdinCacheLoader(), NULL);

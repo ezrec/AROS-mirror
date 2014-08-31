@@ -23,7 +23,7 @@
 #include <libraries/mui.h>
 #include <workbench/startup.h>
 #include <clib/alib_protos.h>
-#include <clib/rexxsyslib_protos.h>
+#include <proto/rexxsyslib.h>
 
 #include "util.h"
 #include "version.h"

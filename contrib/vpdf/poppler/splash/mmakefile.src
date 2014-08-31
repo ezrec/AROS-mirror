@@ -27,6 +27,7 @@ FILES := Splash \
 
 TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/VPDF/libs
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../poppler
+USER_CFLAGS := -D__MORPHOS__ -frtti -fexceptions -fcheck-new
 
 %build_linklib mmake=contrib-vpdf-poppler-splash libname=poppler-splash \
   cxxfiles=$(FILES) libdir=$(TARGETDIR)

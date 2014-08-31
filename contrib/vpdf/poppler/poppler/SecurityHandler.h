@@ -43,7 +43,7 @@ struct XpdfSecurityHandler;
 class SecurityHandler {
 public:
 
-  static SecurityHandler *make(PDFDoc *docA, Object *encryptDictA);
+  static SecurityHandler *make(PDFDoc *docA, PObject *encryptDictA);
 
   SecurityHandler(PDFDoc *docA);
   virtual ~SecurityHandler();
@@ -106,7 +106,7 @@ protected:
 class StandardSecurityHandler: public SecurityHandler {
 public:
 
-  StandardSecurityHandler(PDFDoc *docA, Object *encryptDictA);
+  StandardSecurityHandler(PDFDoc *docA, PObject *encryptDictA);
   virtual ~StandardSecurityHandler();
 
   virtual GBool isUnencrypted();
@@ -148,7 +148,7 @@ private:
 class ExternalSecurityHandler: public SecurityHandler {
 public:
 
-  ExternalSecurityHandler(PDFDoc *docA, Object *encryptDictA,
+  ExternalSecurityHandler(PDFDoc *docA, PObject *encryptDictA,
 			  XpdfSecurityHandler *xshA);
   virtual ~ExternalSecurityHandler();
 
@@ -167,7 +167,7 @@ public:
 
 private:
 
-  Object encryptDict;
+  PObject encryptDict;
   XpdfSecurityHandler *xsh;
   void *docData;
   int permFlags;

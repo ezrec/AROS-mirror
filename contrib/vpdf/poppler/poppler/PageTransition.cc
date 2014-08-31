@@ -28,8 +28,8 @@
 // PageTransition
 //------------------------------------------------------------------------
 
-PageTransition::PageTransition (Object *trans) {
-  Object obj;
+PageTransition::PageTransition (PObject *trans) {
+  PObject obj;
   Dict *dict;
 
   type = transitionReplace;

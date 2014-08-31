@@ -51,7 +51,7 @@
 // LinkAction
 //------------------------------------------------------------------------
 
-LinkAction *LinkAction::parseDest(Object *obj) {
+LinkAction *LinkAction::parseDest(PObject *obj) {
   LinkAction *action;
 
   action = new LinkGoTo(obj);
@@ -62,9 +62,9 @@ LinkAction *LinkAction::parseDest(Object *obj) {
   return action;
 }
 
-LinkAction *LinkAction::parseAction(Object *obj, GooString *baseURI) {
+LinkAction *LinkAction::parseAction(PObject *obj, GooString *baseURI) {
   LinkAction *action;
-  Object obj2, obj3, obj4;
+  PObject obj2, obj3, obj4;
 
   if (!obj->isDict()) {
       error(errSyntaxWarning, -1, "parseAction: Bad annotation action for URI '{0:s}'",
@@ -151,7 +151,7 @@ LinkAction *LinkAction::parseAction(Object *obj, GooString *baseURI) {
 //------------------------------------------------------------------------
 
 LinkDest::LinkDest(Array *a) {
-  Object obj1, obj2;
+  PObject obj1, obj2;
 
   // initialize fields
   left = bottom = right = top = zoom = 0;
@@ -395,7 +395,7 @@ LinkDest::LinkDest(LinkDest *dest) {
 // LinkGoTo
 //------------------------------------------------------------------------
 
-LinkGoTo::LinkGoTo(Object *destObj) {
+LinkGoTo::LinkGoTo(PObject *destObj) {
   dest = NULL;
   namedDest = NULL;
 
@@ -430,13 +430,13 @@ LinkGoTo::~LinkGoTo() {
 // LinkGoToR
 //------------------------------------------------------------------------
 
-LinkGoToR::LinkGoToR(Object *fileSpecObj, Object *destObj) {
+LinkGoToR::LinkGoToR(PObject *fileSpecObj, PObject *destObj) {
   fileName = NULL;
   dest = NULL;
   namedDest = NULL;
 
   // get file name
-  Object obj1;
+  PObject obj1;
   if (getFileSpecNameForPlatform (fileSpecObj, &obj1)) {
     fileName = obj1.getString()->copy();
     obj1.free();
@@ -476,8 +476,8 @@ LinkGoToR::~LinkGoToR() {
 // LinkLaunch
 //------------------------------------------------------------------------
 
-LinkLaunch::LinkLaunch(Object *actionObj) {
-  Object obj1, obj2, obj3;
+LinkLaunch::LinkLaunch(PObject *actionObj) {
+  PObject obj1, obj2, obj3;
 
   fileName = NULL;
   params = NULL;
@@ -539,7 +539,7 @@ LinkLaunch::~LinkLaunch() {
 // LinkURI
 //------------------------------------------------------------------------
 
-LinkURI::LinkURI(Object *uriObj, GooString *baseURI) {
+LinkURI::LinkURI(PObject *uriObj, GooString *baseURI) {
   GooString *uri2;
   int n;
   char c;
@@ -586,7 +586,7 @@ LinkURI::~LinkURI() {
 // LinkNamed
 //------------------------------------------------------------------------
 
-LinkNamed::LinkNamed(Object *nameObj) {
+LinkNamed::LinkNamed(PObject *nameObj) {
   name = NULL;
   if (nameObj->isName()) {
     name = new GooString(nameObj->getName());
@@ -603,11 +603,11 @@ LinkNamed::~LinkNamed() {
 // LinkMovie
 //------------------------------------------------------------------------
 
-LinkMovie::LinkMovie(Object *obj) {
+LinkMovie::LinkMovie(PObject *obj) {
   annotRef.num = -1;
   annotTitle = NULL;
 
-  Object tmp;
+  PObject tmp;
   if (obj->dictLookupNF("Annotation", &tmp)->isRef()) {
     annotRef = tmp.getRef();
   }
@@ -652,7 +652,7 @@ LinkMovie::~LinkMovie() {
 // LinkSound
 //------------------------------------------------------------------------
 
-LinkSound::LinkSound(Object *soundObj) {
+LinkSound::LinkSound(PObject *soundObj) {
   volume = 1.0;
   sync = gFalse;
   repeat = gFalse;
@@ -660,7 +660,7 @@ LinkSound::LinkSound(Object *soundObj) {
   sound = NULL;
   if (soundObj->isDict())
   {
-    Object tmp;
+    PObject tmp;
     // volume
     soundObj->dictLookup("Volume", &tmp);
     if (tmp.isNum()) {
@@ -700,14 +700,14 @@ LinkSound::~LinkSound() {
 // LinkRendition
 //------------------------------------------------------------------------
 
-LinkRendition::LinkRendition(Object *obj) {
+LinkRendition::LinkRendition(PObject *obj) {
   operation = NoRendition;
   media = NULL;
   js = NULL;
   int operationCode = -1;
 
   if (obj->isDict()) {
-    Object tmp;
+    PObject tmp;
 
     if (!obj->dictLookup("JS", &tmp)->isNull()) {
       if (tmp.isString()) {
@@ -727,7 +727,7 @@ LinkRendition::LinkRendition(Object *obj) {
       if (!js && (operationCode < 0 || operationCode > 4)) {
         error(errSyntaxWarning, -1, "Invalid Rendition Action: unrecognized operation valued: {0:d}", operationCode);
       } else {
-        Object obj1;
+        PObject obj1;
 
         // retrieve rendition object
         if (obj->dictLookup("R", &renditionObj)->isDict()) {
@@ -782,7 +782,7 @@ LinkRendition::~LinkRendition() {
 // LinkJavaScript
 //------------------------------------------------------------------------
 
-LinkJavaScript::LinkJavaScript(Object *jsObj) {
+LinkJavaScript::LinkJavaScript(PObject *jsObj) {
   js = NULL;
 
   if (jsObj->isString()) {
@@ -804,8 +804,8 @@ LinkJavaScript::~LinkJavaScript() {
 //------------------------------------------------------------------------
 // LinkOCGState
 //------------------------------------------------------------------------
-LinkOCGState::LinkOCGState(Object *obj) {
-  Object obj1;
+LinkOCGState::LinkOCGState(PObject *obj) {
+  PObject obj1;
 
   stateList = new GooList();
   preserveRB = gTrue;
@@ -814,7 +814,7 @@ LinkOCGState::LinkOCGState(Object *obj) {
     StateList *stList = NULL;
 
     for (int i = 0; i < obj1.arrayGetLength(); ++i) {
-      Object obj2;
+      PObject obj2;
 
       obj1.arrayGetNF(i, &obj2);
       if (obj2.isName()) {
