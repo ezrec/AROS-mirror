@@ -9,6 +9,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#if defined(__AROS__)
+#include <clib/arossupport_protos.h>
+#endif
+
 #include <proto/alib.h>
 #include <proto/utility.h>
 ////
@@ -47,7 +51,7 @@ struct Data
 	PageNumberItem pages_bitmap[1024];
 };
 
-#define D(x)
+#define D(x) x
 
 DEFNEW
 {

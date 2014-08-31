@@ -29,7 +29,7 @@ static FT_Library ftLibrary;
 void kprintf(char *fmt,...);
 
 
-#define D(x) 
+#define D(x) x
 //#define FcDebug() 0xffffffffUL
 #define FcDebug() 0
 #define FcResultMatch TRUE

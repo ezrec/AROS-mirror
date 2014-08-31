@@ -272,7 +272,7 @@ public:
 #ifdef WIN32
   void scanWindowsFonts(GooString *winFontDir);
 #endif
-#if defined(WITH_FONTCONFIGURATION_FONTCONFIG) || defined(__MORPHOS__)
+#if defined(WITH_FONTCONFIGURATION_FONTCONFIG) || defined(__MORPHOS__) || defined(__AROS__)
   void addFcFont(SysFontInfo *si) {fonts->append(si);}
 #endif
 private:
@@ -1327,7 +1327,7 @@ fin:
   return path;
 }
 
-#elif defined(__MORPHOS__)
+#elif defined(__MORPHOS__) || defined(__AROS__)
 
 GooString *GlobalParams::findBase14FontFile(GooString *base14Name, GfxFont *font) {
   SysFontType type;

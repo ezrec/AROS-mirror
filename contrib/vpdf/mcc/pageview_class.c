@@ -111,7 +111,7 @@ struct Data
 	struct SignalSemaphore sema;
 };
 
-#define D(x)
+#define D(x) x
 
 /*
  * MUI Standard methods

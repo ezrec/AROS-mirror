@@ -20,7 +20,7 @@ FILES := gfile \
 
 TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/VPDF/libs
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../poppler
-USER_CFLAGS := -D__MORPHOS__ -frtti -fexceptions -fcheck-new
+USER_CFLAGS := -frtti -fexceptions -fcheck-new
 
 %build_linklib mmake=contrib-vpdf-poppler-goo libname=goo \
   cxxfiles=$(FILES) libdir=$(TARGETDIR)

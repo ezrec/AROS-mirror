@@ -350,7 +350,7 @@ SplashError SplashBitmap::writeImgFile(SplashImageFileFormat format, char *fileN
 }
 
 SplashError SplashBitmap::writeImgFile(SplashImageFileFormat format, FILE *f, int hDPI, int vDPI, const char *compressionString) {
-  #ifndef __MORPHOS__
+  #if !defined(__MORPHOS__) && !defined(__AROS__)
 
   ImgWriter *writer;
 	SplashError e;

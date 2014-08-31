@@ -144,7 +144,7 @@ private:
   GooFile(HANDLE handleA): handle(handleA) {}
   HANDLE handle;
 
-#elif defined(__MORPHOS__)
+#elif defined(__MORPHOS__) || defined(__AROS__)
 
    ~GooFile() { fclose(file); }
   GooFile(FILE *f, int size) : file(f), fileoffset(0), filesize(size) {}

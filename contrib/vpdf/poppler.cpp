@@ -84,7 +84,7 @@ struct abortcallbackcontext
 
 /* this is bit hacky but we can't/shouldn't use boopsi in poppler.c */
 
-#define D(x)
+#define D(x) x
 
 extern "C" {
 	void vpdfErrorFunction(int pos, char *message);
@@ -330,15 +330,17 @@ void pdfDelete(void *_ctx)
 
 	ENTER_SECTION
 
-	D(kprintf("delete output device:%p. base:%p\n", ctx->dev, CairoBase));
+
+	D(kprintf("delete output device:%p.\n", ctx->dev));
+
 	if(ctx->dev != NULL)
 		delete ctx->dev;
 
 	if (ctx->selection_dev != NULL)
 		delete ctx->selection_dev;
 
-#ifndef USE_SPLASH
-	D(kprintf("delete surface:%p. base:%p\n", ctx->surface, CairoBase));
+#if !defined(USE_SPLASH)
+	D(kprintf("delete surface:%p.\n", ctx->surface));
 
 	if(ctx->surface != NULL)
 	{

@@ -641,7 +641,7 @@ GooFile* GooFile::open(const wchar_t *fileName) {
   return handle == INVALID_HANDLE_VALUE ? NULL : new GooFile(handle);
 }
 
-#elif defined(__MORPHOS__)
+#elif defined(__MORPHOS__) || defined(__AROS__)
 
 #include <proto/dos.h>
 #include <dos/dos.h>

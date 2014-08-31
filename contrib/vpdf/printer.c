@@ -79,7 +79,7 @@ struct Data
 };
 
 
-#define D(x)
+#define D(x) x
 void kprintf(char *fmt,...);
 
 static STRPTR oddeven[4] = {NULL};

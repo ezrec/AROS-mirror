@@ -30,6 +30,10 @@
 #include <proto/utility.h>
 
 #include <clib/debug_protos.h>
+#if defined(__AROS__)
+#include <clib/arossupport_protos.h>
+#endif
+
 #include <devices/rawkeycodes.h>
 
 #if defined(__MORPHOS__)
@@ -72,7 +76,7 @@ struct Data
 
 #define gFalse 0
 
-#define D(x)
+#define D(x) x
 
 //struct Library *CairoBase;
 //struct Library *FontConfigBase;

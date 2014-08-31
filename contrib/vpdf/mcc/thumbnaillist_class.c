@@ -1,6 +1,6 @@
 #if defined(__AROS__)
 #define MUIMASTER_YES_INLINE_STDARG
-#include <aros/debug.h>
+#include <clib/arossupport_protos.h>
 #endif
 
 #define SYSTEM_PRIVATE 1

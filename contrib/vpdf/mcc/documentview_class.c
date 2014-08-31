@@ -1,5 +1,6 @@
 #if defined(__AROS__)
 #define MUIMASTER_YES_INLINE_STDARG
+#include <clib/arossupport_protos.h>
 #endif
 
 #define SYSTEM_PRIVATE 1
@@ -88,7 +89,7 @@ struct Data
 
 };
 
-#define D(x)
+#define D(x) x
 #define gFalse 0
 #define ANNOTLIST_INVALID 0
 #define ANNOTLIST_EMPTY ((void*)-1)
