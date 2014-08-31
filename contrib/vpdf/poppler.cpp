@@ -99,7 +99,11 @@ static CONSTRUCTOR_P(init_poppler, 0)
 {
 	InitSemaphore(&semaphore);
 	setErrorCallback(pdfErrorFunction, NULL);
+#if defined(__AROS__)
+	return TRUE;
+#else
 	return 0;
+#endif
 }
 
 static DESTRUCTOR_P(cleanup_poppler, 0)

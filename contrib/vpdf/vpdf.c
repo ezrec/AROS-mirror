@@ -160,9 +160,9 @@ static void MessageAddFile(struct MsgPort *port, struct MsgPort *replyport, stru
 
 int main(int argc, char *argv[])
 {
+#if 0
 	struct ExecBase *MySysBase = *(unsigned int*)4;
 	
-#if 0
 	/* make us halt on first hit! */
 	{
 		struct Task *this = FindTask(NULL);

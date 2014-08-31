@@ -7,7 +7,8 @@ include $(TOP)/config/make.cfg
 #MM    contrib-vpdf-poppler-goo \
 #MM    contrib-vpdf-poppler-poppler \
 #MM    contrib-vpdf-poppler-splash \
-#MM    contrib-vpdf-mcc
+#MM    contrib-vpdf-mcc \
+#MM    contrib-vpdf-test
 
 CFILES := \
     locale \
@@ -34,7 +35,7 @@ CPPFILES := \
     poppler \
     poppler_printer
 
-#    fontcache \
+# fontcache
 
 
 TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/VPDF
@@ -45,5 +46,9 @@ USER_LDFLAGS := -L$(TARGETDIR)/libs
 
 %build_prog mmake=contrib-vpdf progname=VPDF files=$(CFILES) cxxfiles=$(CPPFILES) \
     targetdir=$(TARGETDIR) uselibs="rexxsyslib muiclasses poppler fofi goo poppler-splash cairo pixman fontconfig freetype2 iconv xml2 jpeg z stdc++"
+
+
+%copy_dir_recursive mmake=contrib-vpdf-test src=test dst=$(TARGETDIR)/test
+
 
 %common
