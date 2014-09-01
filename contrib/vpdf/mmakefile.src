@@ -3,7 +3,7 @@
 include $(TOP)/config/make.cfg
 
 #MM contrib-vpdf : includes linklibs \
-#MM    contrib-vpdf-poppler-fifo \
+#MM    contrib-vpdf-poppler-fofi \
 #MM    contrib-vpdf-poppler-goo \
 #MM    contrib-vpdf-poppler-poppler \
 #MM    contrib-vpdf-poppler-splash \
@@ -22,7 +22,6 @@ CFILES := \
     pagenumberclass \
     printer \
     printer_image \
-    fcstr \
     system/functions \
     system/directory \
     system/dlist \
