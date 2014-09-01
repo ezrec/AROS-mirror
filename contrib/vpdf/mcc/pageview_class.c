@@ -1104,6 +1104,7 @@ DEFMMETHOD(Hide)
 	   is canceled.*/
 
 #if defined(__AROS__)
+    kprintf("[Pageview::Hide] not implemented\n");
     // FIXME: implement MUIV_PushMethod_Delay in Zune/AROS
 	data->flushmethodid = DoMethod(_app(obj), MUIM_Application_PushMethod, obj, 1, MUIM_PageView_Flush);
 #else

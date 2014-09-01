@@ -24,6 +24,10 @@
 #include <cybergraphx/cybergraphics.h>
 #undef	 SYSTEM_PRIVATE
 
+#if defined(__AROS__)
+#include <clib/arossupport_protos.h>
+#endif
+
 #include <private/vapor/vapor.h>
 #include <mui/Rawimage_mcc.h>
 
@@ -477,8 +481,10 @@ DEFMMETHOD(Toolbar_ZoomPopup)
 
 	menZoom = MenustripObject, Child, menZoom, End;
 
-#if defined(MUIM_Menustrip_Popup)
+#if defined(__AROS__)
+    kprintf("[Toolbar_ZoomPopup] not implemented\n");
     // FIXME: AROS doesn't have MUIM_Menustrip_Popup
+#else
 	id = DoMethod(menZoom, MUIM_Menustrip_Popup, data->btnZoomPopup, 0 , _left(data->btnZoomPopup),_bottom(data->btnZoomPopup)+1);
 #endif
 

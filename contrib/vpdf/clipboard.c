@@ -17,6 +17,7 @@
 #if defined(__AROS__)
 // FIXMDE: AROS
 #define CODESET_UTF8 1
+#include <clib/arossupport_protos.h>
 #else
 #include <libraries/charsets.h>
 #endif
@@ -202,8 +203,10 @@ static void clips_write(CONST_STRPTR stext, LONG slen, CONST_STRPTR utext, LONG 
 
 VOID clipboard_write_text(CONST_STRPTR string, ULONG codeset)
 {
-#if !defined(__AROS__)
+#if defined(__AROS__)
+    kprintf("[clipboard_write_text] not implemented\n");
 // FIXME: AROS (maybe codesets.library)
+#else
 	if (string)
 	{
 		struct Library *CharsetsBase = OpenLibrary("charsets.library", 52);

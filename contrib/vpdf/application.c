@@ -37,6 +37,10 @@
 
 #include <libraries/gadtools.h>
 
+#if defined(__AROS__)
+#include <clib/arossupport_protos.h>
+#endif
+
 #if defined(__MORPHOS__)
 #include <emul/emulregs.h>
 #include <emul/emulinterface.h>
@@ -559,8 +563,10 @@ DEFMMETHOD(VPDF_RequestFile)
 
 static void setuprecent(Object *obj, struct Data *data)
 {
-#if !defined(__AROS__)
-// FIXME: AROS
+#if defined(__AROS__)
+    kprintf("[setuprecent] not implemented\n");
+    // FIXME: AROS
+#else
 	int i;
 	Object *o;
 	DoMethod(menu[MEN_OPEN_RECENT] , MUIM_Menustrip_InitChange);
@@ -948,8 +954,10 @@ DEFMMETHOD(DragDrop)
 
 static LONG Rexx(void)
 {
-#if !defined(__AROS__)
-// FIXME: AROS
+#if defined(__AROS__)
+    kprintf("[Rexx] not implemented\n");
+    // FIXME: AROS
+#else
 	struct Hook *h = (struct Hook*)(APTR)REG_A0;
 	Object *obj = (Object*)REG_A2;
 	IPTR *params = (IPTR*)REG_A1;

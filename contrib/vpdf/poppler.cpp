@@ -148,6 +148,7 @@ static char *convertUTF16ToANSI(unsigned char *string, int length)
 {
 	char *buff = (char*)calloc(1, length + 1);
 #if defined(__AROS__)
+    kprintf("[convertUTF16ToANSI] not implemented\n");
 	// FIXME: AROS
 #else
 	if(buff != NULL)
@@ -161,6 +162,7 @@ static char *convertUTF32ToANSI(Unicode *string, int length)
 {
 	char *buff = (char*)calloc(1, length + 1);
 #if defined(__AROS__)
+    kprintf("[convertUTF32ToANSI] not implemented\n");
 	// FIXME: AROS
 #else
 	if(buff != NULL)
@@ -178,6 +180,7 @@ static WCHAR *convertToUCS4(const char *string)
 
 	WCHAR *buff = (WCHAR*)calloc(sizeof(WCHAR), length + 1);
 #if defined(__AROS__)
+    kprintf("[convertToUCS4] not implemented\n");
 	// FIXME: AROS
 #else
 	if(buff != NULL)
@@ -1322,6 +1325,7 @@ int pdfSearch(void *_ctx, int *page, char *phrase, int direction, double *x1, do
 		/* new search */
 
 #if defined(__AROS__)
+    kprintf("[pdfSearch] not implemented\n");
 // FIXME: AROS
 #else
 		WCHAR *phraseUCS4 = convertToUCS4(phrase);

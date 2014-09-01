@@ -7,6 +7,10 @@
 #include <private/vapor/vapor.h>
 #include <proto/utility.h>
 
+#if defined(__AROS__)
+#include <clib/arossupport_protos.h>
+#endif
+
 #include "annotation_class.h"
 #include "pageview_class.h"
 #include "util.h"
@@ -89,8 +93,10 @@ DEFMMETHOD(Layout)
 	if (imgwidth < prvwidth)
 		x0 += (prvwidth - imgwidth) / 2;
 		
-#if defined(__MORPHOS__)
-// FIXME: AROS
+#if defined(__AROS__)
+    kprintf("[Annotation::Layout] not implemented\n");
+    // FIXME: AROS
+#else
 	msg->left = data->x + x0;
 	msg->top = data->y + y0;
 	
