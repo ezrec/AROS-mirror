@@ -26,7 +26,7 @@ TARGETDIR    := $(AROS_CONTRIB)/Games/Hurrican
 ####################################################################################################
 # fetch source
 
-REPOSITORIES := http://www.mazze-online.de/aros/ports-src
+REPOSITORIES := http://archives.aros-exec.org/share/game/action
 ARCHBASE     := hurrican-src-svn85
 
 %fetch mmake=ports-game-hurrican-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/hurrican \
@@ -37,10 +37,8 @@ ARCHBASE     := hurrican-src-svn85
 ####################################################################################################
 # fetch data
 
-REPOSITORIES_DATA := http://archives.aros-exec.org/share/game/action
-
 %fetch mmake=ports-game-hurrican-data-fetch archive=hurrican-data destination=$(PORTSDIR)/hurrican \
-    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES_DATA) suffixes="zip"
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip"
 
 
 ####################################################################################################
