@@ -6,13 +6,14 @@ include $(TOP)/config/make.cfg
 
 FILES := \
     libinit \
-    functions
+    functions \
+    stubs-aros
 
 #MM contrib-development-gui-muibuilder-libs : includes linklib
 
 EXEDIR := $(AROSDIR)/Extras/Development/MUIBuilder/Libs
 
-USER_CFLAGS += -I$(AROS_INCLUDES)/SDI
+USER_CFLAGS += -I$(AROS_INCLUDES)/SDI -DAROS_ABI_V1
 
 %build_module_simple mmake=contrib-development-gui-muibuilder-libs \
     modname=muibuilder modtype=library moduledir=$(EXEDIR) \

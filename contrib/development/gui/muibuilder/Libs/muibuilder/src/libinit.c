@@ -25,6 +25,7 @@
 
 #include "lib.h"
 #include "version.h"
+#include "lib_protos.h"
 
 #include <exec/resident.h>
 #include <proto/exec.h>
@@ -57,26 +58,6 @@ static const char UserLibName[] = "muibuilder.library";
 static const char UserLibID[]   = "$VER: muibuilder.library " LIB_REV_STRING " [" SYSTEMSHORT "/" CPU "] (" LIB_DATE ") " LIB_COPYRIGHT;
 
 /****************************************************************************/
-
-LIBPROTO(MB_Open, BOOL);
-LIBPROTO(MB_Close, void);
-
-LIBPROTO(MB_GetA, void, REG(a1, struct TagItem * TagList));
-#if defined(__amigaos4__)
-LIBPROTOVA(MB_Get, void, ...);
-#else
-LIBPROTOVA(MB_Get, void, REG(a1, Tag tag1), ...);
-#endif
-
-LIBPROTO(MB_GetVarInfoA, void, REG(d0, ULONG varnb), REG(a1, struct TagItem * TagList));
-#if defined(__amigaos4__)
-LIBPROTOVA(MB_GetVarInfo, void, ULONG varnb, ...);
-#else
-LIBPROTOVA(MB_GetVarInfo, void, REG(d0, ULONG varnb), REG(a1, Tag tag1), ...);
-#endif
-
-LIBPROTO(MB_GetNextCode, void, REG(a0, ULONG * type), REG(a1, char ** code));
-LIBPROTO(MB_GetNextNotify, void, REG(a0, ULONG * type), REG(a1, char ** code));
 
 #define libvector LFUNC_FAS(MB_Open)            \
                   LFUNC_FA_(MB_Close)           \

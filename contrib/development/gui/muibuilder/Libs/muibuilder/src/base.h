@@ -23,6 +23,13 @@
 
 ***************************************************************************/
 
+#ifndef BASE_H
+#define BASE_H
+
+#include <exec/libraries.h>
+#include <exec/semaphores.h>
+#include <dos/bptr.h>
+
 struct LibraryHeader
 {
   struct Library          libBase;
@@ -35,4 +42,15 @@ struct LibraryHeader
 
 extern struct LibraryHeader* MUIBBase;
 
+#if defined(__amigaos4__)
+#define __BASE_OR_IFACE_TYPE	struct MUIBIFace *
+#define __BASE_OR_IFACE_VAR		IMUIB
+#else
+#define __BASE_OR_IFACE_TYPE	struct LibraryHeader *
+#define __BASE_OR_IFACE_VAR		MUIBBase
+#endif
+#define __BASE_OR_IFACE			__BASE_OR_IFACE_TYPE __BASE_OR_IFACE_VAR
+
 /***************************************************************************/
+
+#endif

@@ -105,7 +105,8 @@ ULONG freeBase(struct LibraryHeader * lib)
 }
 
 
-LIBFUNC BOOL MB_Open(void)
+//LIBPROTO BOOL MB_Open(void)
+LIBPROTO(MB_Open, BOOL, REG(a6, UNUSED __BASE_OR_IFACE))
 {
     BPTR TMPfile;
     BOOL success = TRUE;
@@ -284,7 +285,8 @@ LIBFUNC BOOL MB_Open(void)
     return success;
 }
 
-LIBFUNC void MB_Close(void)
+//LIBPROTO void MB_Close(void)
+LIBPROTO(MB_Close, void, REG(a6, UNUSED __BASE_OR_IFACE))
 {
     if (rights)
     {
@@ -303,7 +305,8 @@ LIBFUNC void MB_Close(void)
     }
 }
 
-LIBFUNC void MB_GetA(REG(a1, struct TagItem *TagList))
+//LIBPROTO void MB_GetA(REG(a1, struct TagItem *TagList))
+LIBPROTO(MB_GetA, void, REG(a6, UNUSED __BASE_OR_IFACE), REG(a1, struct TagItem *TagList))
 {
     BOOL *TagBool;
     char **TagString;
@@ -353,8 +356,8 @@ LIBFUNC void MB_GetA(REG(a1, struct TagItem *TagList))
         *TagInt = varnum;
 }
 
-LIBFUNC void MB_GetVarInfoA(REG(d0, ULONG varnb),
-                            REG(a1, struct TagItem *TagList))
+//LIBPROTO void MB_GetVarInfoA(REG(d0, ULONG varnb), REG(a1, struct TagItem *TagList))
+LIBPROTO(MB_GetVarInfoA, void, REG(a6, UNUSED __BASE_OR_IFACE), REG(d0, ULONG varnb), REG(a1, struct TagItem *TagList))
 {
     char **TagString;
     LONG *TagInt;
@@ -421,7 +424,8 @@ LIBFUNC void MB_GetVarInfoA(REG(d0, ULONG varnb),
     }
 }
 
-LIBFUNC void MB_GetNextCode(REG(a0, ULONG * type), REG(a1, char **code))
+//LIBPROTO void MB_GetNextCode(REG(a0, ULONG * type), REG(a1, char **code))
+LIBPROTO(MB_GetNextCode, void, REG(a6, UNUSED __BASE_OR_IFACE), REG(a0, ULONG * type), REG(a1, char **code))
 {
     char *typecode;
 
@@ -442,7 +446,8 @@ LIBFUNC void MB_GetNextCode(REG(a0, ULONG * type), REG(a1, char **code))
     }
 }
 
-LIBFUNC void MB_GetNextNotify(REG(a0, ULONG * type), REG(a1, char **code))
+//LIBPROTO void MB_GetNextNotify(REG(a0, ULONG * type), REG(a1, char **code))
+LIBPROTO(MB_GetNextNotify, void, REG(a6, UNUSED __BASE_OR_IFACE), REG(a0, ULONG * type), REG(a1, char **code))
 {
     char *typecode;
 

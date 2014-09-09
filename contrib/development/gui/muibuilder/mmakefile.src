@@ -4,7 +4,7 @@
 
 include $(TOP)/config/make.cfg
 
-#DISABLED #MM- contrib-development : contrib-development-gui-muibuilder
+#MM- contrib-development : contrib-development-gui-muibuilder
 
 #MM- contrib-development-gui-muibuilder: \
 #MM		contrib-development-gui-muibuilder-modules \

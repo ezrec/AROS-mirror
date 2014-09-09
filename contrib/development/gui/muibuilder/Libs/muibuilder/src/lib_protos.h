@@ -27,6 +27,7 @@
 #define _LIB_PROTOS_H
 
 #include "SDI_lib.h"
+#include "base.h"
 
 /* init.c */
 ULONG freeBase(struct LibraryHeader* lib);
@@ -80,24 +81,58 @@ struct Node *GetTail(struct List *list);
 #endif
 
 
-LIBPROTO(MB_Open, BOOL);
-LIBPROTO(MB_Close, void);
+LIBPROTO(MB_Open,  BOOL, REG(a6, UNUSED __BASE_OR_IFACE));
+LIBPROTO(MB_Close, void, REG(a6, UNUSED __BASE_OR_IFACE));
+LIBPROTO(MB_GetA,  void, REG(a6, UNUSED __BASE_OR_IFACE), REG(a1, struct TagItem * TagList));
 
-LIBPROTO(MB_GetA, void, REG(a1, struct TagItem * TagList));
 #if defined(__amigaos4__)
-LIBPROTOVA(MB_Get, void, ...);
+LIBPROTOVA(MB_Get, void, REG(a6, UNUSED __BASE_OR_IFACE), ...);
 #else
-LIBPROTOVA(MB_Get, void, REG(a1, Tag tag1), ...);
+LIBPROTOVA(MB_Get, void, REG(a6, UNUSED __BASE_OR_IFACE), REG(a1, Tag tag1), ...);
 #endif
 
-LIBPROTO(MB_GetVarInfoA, void, REG(d0, ULONG varnb), REG(a1, struct TagItem * TagList));
+LIBPROTO(MB_GetVarInfoA, void, REG(a6, UNUSED __BASE_OR_IFACE), REG(d0, ULONG varnb), REG(a1, struct TagItem * TagList));
+
 #if defined(__amigaos4__)
-LIBPROTOVA(MB_GetVarInfo, void, ULONG varnb, ...);
+LIBPROTOVA(MB_GetVarInfo, void, REG(a6, UNUSED __BASE_OR_IFACE), ULONG varnb, ...);
 #else
-LIBPROTOVA(MB_GetVarInfo, void, REG(d0, ULONG varnb), REG(a1, Tag tag1), ...);
+LIBPROTOVA(MB_GetVarInfo, void, REG(a6, UNUSED __BASE_OR_IFACE), REG(d0, ULONG varnb), REG(a1, Tag tag1), ...);
 #endif
 
-LIBPROTO(MB_GetNextCode, void, REG(a0, ULONG * type), REG(a1, char ** code));
-LIBPROTO(MB_GetNextNotify, void, REG(a0, ULONG * type), REG(a1, char ** code));
+LIBPROTO(MB_GetNextCode,   void, REG(a6, UNUSED __BASE_OR_IFACE), REG(a0, ULONG * type), REG(a1, char ** code));
+LIBPROTO(MB_GetNextNotify, void, REG(a6, UNUSED __BASE_OR_IFACE), REG(a0, ULONG * type), REG(a1, char ** code));
+
+#if defined(__AROS__)
+AROS_LD0(BOOL, MB_Open,
+    struct LibraryHeader *, __BASE_OR_IFACE_VAR, 0, LIBSTUB
+);
+
+AROS_LD0(void, MB_Close,
+    struct LibraryHeader *, __BASE_OR_IFACE_VAR, 0, LIBSTUB
+);
+
+AROS_LD1(void, MB_GetA,
+    AROS_LDA(struct TagItem *, ___TagList, A1),
+    struct LibraryHeader *, __BASE_OR_IFACE_VAR, 0, LIBSTUB
+);
+
+AROS_LD2(void, MB_GetVarInfoA,
+    AROS_LDA(ULONG, ___varnb, D0),
+    AROS_LDA(struct TagItem *, ___TagList, A1),
+    struct LibraryHeader *, __BASE_OR_IFACE_VAR, 0, LIBSTUB
+);
+
+AROS_LD2(void, MB_GetNextCode,
+    AROS_LDA(ULONG *, ___type, A0),
+    AROS_LDA(char **, ___code, A1),
+    struct LibraryHeader *, __BASE_OR_IFACE_VAR, 0, LIBSTUB
+);
+
+AROS_LD2(void, MB_GetNextNotify,
+    AROS_LDA(ULONG *, ___type, A0),
+    AROS_LDA(char **, ___code, A1),
+    struct LibraryHeader *, __BASE_OR_IFACE_VAR, 0, LIBSTUB
+);
+#endif /* __AROS__ */
 
 #endif /* _LIB_PROTOS_H */
