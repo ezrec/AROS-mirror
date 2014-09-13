@@ -1,0 +1,8 @@
+2014.09.12
+
+ABI_V0 branch is no longer used as source of ABIV0 compatible system
+builds. The branch is left for reference only. Please do not commit
+any new code to it.
+
+To get the latest source codes for ABIV0 compatible system, please
+checkout the latest ABI_V0-on-trunk-YYYYMMDD branch.
