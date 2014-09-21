@@ -53,7 +53,7 @@ BASE_CFLAGS=-Dstricmp=strcasecmp
 DEBUG_CFLAGS=$(CFLAGS) $(BASE_CFLAGS) -g
 
 AROSCFLAGS=-DAROS $(RELEASE_CFLAGS)
-AROSLDFLAGS=-L$(AROS_LIB) -lamiga -lautoinit -nix
+AROSLDFLAGS=-L$(AROS_LIB) -lamiga -lautoinit -nix -newclib
 
 DO_CC=$(CC) $(CFLAGS) -o $@ -c $<
 DO_DEBUG_CC=$(CC) $(DEBUG_CFLAGS) -o $@ -c $<
