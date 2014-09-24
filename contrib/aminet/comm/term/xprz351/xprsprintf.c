@@ -7,15 +7,11 @@
 #include <stdlib.h>
 #include <stddef.h>
 
-AROS_UFH2S(void, cpy_func,
-    AROS_UFHA(UBYTE, chr, D0),
-    AROS_UFHA(STRPTR *, strPtrPtr, A3))
+STRPTR *cpy_func(STRPTR *strPtrPtr, UBYTE chr)
 {
-	AROS_USERFUNC_INIT
-	
 	*(*strPtrPtr)++ = chr;
-	
-	AROS_USERFUNC_EXIT
+
+	return strPtrPtr;
 }
 
 void xprsprintf(STRPTR Buffer, STRPTR FormatString, ... )
