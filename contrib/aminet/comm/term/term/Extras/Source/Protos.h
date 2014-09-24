@@ -417,14 +417,7 @@ VOID Decrypt(UBYTE *Source, LONG SourceLen, UBYTE *Destination, UBYTE *Key, LONG
 BOOL CursorPanelConfig(struct Configuration *LocalConfig, struct CursorKeys *CursorKeys, STRPTR LastCursorKeys, struct Window *Parent, BOOL *ChangedPtr);
 
 /* CustomRequest.c */
-#ifdef __AROS__
-AROS_UFP2(VOID, CustomStuffText,
-	AROS_UFPA(UBYTE, Char, D0),
-	AROS_UFPA(IPTR *, Data, A3));
-AROS_UFP2(VOID, CustomCountChar,
-	AROS_UFPA(UBYTE, Char, D0),
-	AROS_UFPA(IPTR *, Data, A3));
-#else
+#ifndef __AROS__
 VOID SAVE_DS ASM CustomStuffText(REG(a3) LONG *Data, REG(d0) UBYTE Char);
 VOID ASM CustomCountChar(REG(a3) LONG *Count, REG(d0) UBYTE Char);
 #endif

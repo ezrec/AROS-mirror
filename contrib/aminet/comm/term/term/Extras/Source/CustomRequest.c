@@ -81,14 +81,9 @@ CentreWindow(struct Screen *Screen,WORD Width,WORD Height,WORD *Left,WORD *Top)
 VOID SAVE_DS ASM
 CustomStuffText(REG(a3) LONG *Data,REG(d0) UBYTE Char)
 #else
-AROS_UFH2(VOID, CustomStuffText,
- AROS_UFHA(UBYTE          , Char, D0),
- AROS_UFHA(IPTR *         , Data, A3))
+static APTR CustomStuffText(IPTR *Data, UBYTE Char)
 #endif
 {
-#ifdef __AROS__
-    AROS_USERFUNC_INIT
-#endif
 	struct IntuiText *IText;
 	STRPTR Buffer;
 
@@ -146,7 +141,7 @@ AROS_UFH2(VOID, CustomStuffText,
 	Data[0] = (IPTR)Buffer;						/* Remember for next char */
 
 #ifdef __AROS__
-    AROS_USERFUNC_EXIT
+	return Data;
 #endif
 }
 
@@ -154,20 +149,16 @@ AROS_UFH2(VOID, CustomStuffText,
 VOID ASM
 CustomCountChar(REG(a3) LONG *Count,REG(d0) UBYTE Char)
 #else
-AROS_UFH2(VOID, CustomCountChar,
- AROS_UFHA(UBYTE         , Char , D0),
- AROS_UFHA(IPTR *        , Count, A3))
+static APTR CustomCountChar(IPTR *Count, UBYTE Char)
 #endif
 {
-#ifdef __AROS__
-    AROS_USERFUNC_INIT
-#endif
 	if(Char == Count[2] || Char == '\0')	/* Count the number of lines */
 		Count[1]++;
 
 	Count[0]++;								/* Count the number of characters in total */
+
 #ifdef __AROS__
-    AROS_USERFUNC_EXIT
+	return Count;
 #endif
 }
 
@@ -317,11 +308,15 @@ ShowInfo(struct Window *Parent,CONST_STRPTR Title,CONST_STRPTR Continue,CONST_ST
 
 				GadgetData[6] = 0;
 
+#ifdef __AROS__
+				VNewRawDoFmt(Continue,(PUTCHAR)CustomStuffText,GadgetData,NULL);
+#else
 				#ifdef USE_GLUE
 					RawDoFmt(Continue,NULL,(PUTCHAR)CustomStuffTextGlue,GadgetData);
 				#else
 					RawDoFmt(Continue,NULL,(PUTCHAR)CustomStuffText,GadgetData);
 				#endif	/* USE_GLUE */
+#endif
 
 				DistY = 2;
 				DistX = (DistY * DrawInfo->dri_Resolution.Y) / DrawInfo->dri_Resolution.X;
