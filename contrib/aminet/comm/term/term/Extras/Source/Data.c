@@ -15,7 +15,9 @@ BOOL			 DebugFlag;
 
 	/* Libraries. */
 
+#ifndef __AROS__
 struct ExecBase		*SysBase;
+#endif
 struct DosLibrary	*DOSBase;
 struct Library		*GTLayoutBase;
 
