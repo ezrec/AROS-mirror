@@ -1,0 +1,13 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-print-a2ps : ports-print-a2ps-icons
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Print
+ICONS     := A2ps
+
+%build_icons mmake=ports-print-a2ps-icons \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+%common

@@ -6,6 +6,7 @@ include $(TOP)/config/make.cfg
 #MM- ports-game-sdlscavenger : ports-game-sdlscavenger-icons
 
 ICONS     := SdlScavenger DOC
-TARGETDIR := $(AROS_CONTRIB)/Games/SdlScavenger
+TARGETDIR := $(AROS_CONTRIB)/Games
 
-%build_icons mmake=ports-game-sdlscavenger-icons icons=$(ICONS) dir=$(TARGETDIR)
+%build_icons mmake=ports-game-sdlscavenger-icons \
+    icons=$(ICONS) dir=$(TARGETDIR)

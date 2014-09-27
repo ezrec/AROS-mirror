@@ -1,0 +1,11 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game-defendguin-icons : ports-game-defendguin-icons-defendguin
+
+ICONS     := Defendguin
+TARGETDIR := $(AROS_CONTRIB)/Games/Defendguin
+
+%build_icons mmake=ports-game-defendguin-icons-defendguin \
+icons=$(ICONS) dir=$(TARGETDIR)

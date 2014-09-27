@@ -12,8 +12,7 @@ include $(TOP)/config/make.cfg
 #MM     ports-game-blobwars-gfx \
 #MM     ports-game-blobwars-music \
 #MM     ports-game-blobwars-sound \
-#MM     ports-game-blobwars-fetch \
-#MM     ports-game-blobwars-drawericon
+#MM     ports-game-blobwars-fetch
 
 #MM ports-game-blobwars-bin : includes linklibs \
 #MM     contrib-sdl \
@@ -181,13 +180,6 @@ MAPFILES  := $(addprefix $(PORTSDIR)/$(ARCHBASE)/$(ARCHBASE)-$(VERSION)/src/,$(M
 %fetch mmake=ports-game-blobwars-fetch archive=$(ARCHBASE)-$(VERSION) destination=$(PORTSDIR)/$(ARCHBASE) \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=blobwars-1.19-aros.diff:$(ARCHBASE)-$(VERSION):-p1
-
-#############################################################################################################
-
-ICONS := Blobwars
-
-%build_icons mmake=ports-game-blobwars-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 #############################################################################################################
 

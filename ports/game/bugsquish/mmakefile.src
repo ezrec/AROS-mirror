@@ -7,7 +7,7 @@ include $(TOP)/config/make.cfg
 #MM  ports-game-bugsquish : includes linklibs contrib-sdl \
 #MM    contrib-sdl-sdl-image contrib-sdl-sdl-mixer \
 #MM    ports-game-bugsquish-data ports-game-bugsquish-cpy \
-#MM    ports-game-bugsquish-drawericon ports-game-bugsquish-fetch
+#MM    ports-game-bugsquish-fetch
 
 #MM  ports-game-bugsquish-data : ports-game-bugsquish-fetch
 
@@ -31,11 +31,6 @@ FILES := $(PORTSDIR)/bugsquish/$(ARCHBASE)/bugsquish
 %fetch mmake=ports-game-bugsquish-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/bugsquish \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=bugsquish-0.0.6-aros.diff:$(ARCHBASE):-p1
-
-ICONS := Bugsquish
-
-%build_icons mmake=ports-game-bugsquish-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %copy_dir_recursive mmake=ports-game-bugsquish-data src=$(PORTSDIR)/bugsquish/$(ARCHBASE)/data \
     dst=$(TARGETDIR)/data

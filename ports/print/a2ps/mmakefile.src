@@ -4,8 +4,6 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-print : ports-print-a2ps
 
-#MM- ports-print-a2ps : ports-print-a2ps-drawericon
-
 PACKAGE      := a2ps
 VERSION      := 4.14
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Print/A2ps
@@ -15,12 +13,6 @@ REPOSITORIES := gnu://a2ps
 	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
 	patch=yes nix=yes nix_dir_layout=no package_repo=$(REPOSITORIES) \
 	extraoptions="--datarootdir='$$(PROGDIR)share' --sysconfdir='$$(PROGDIR)etc'"
-
-
-ICONS := A2ps
-
-%build_icons mmake=ports-print-a2ps-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 #MM

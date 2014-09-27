@@ -1,0 +1,13 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game-wormwars : ports-game-wormwars-icons
+
+TARGETDIR := $(AROS_CONTRIB)/Games
+ICONS     := WormWars
+
+%build_icons mmake=ports-game-wormwars-icons \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+%common

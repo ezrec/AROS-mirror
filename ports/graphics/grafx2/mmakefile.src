@@ -7,7 +7,7 @@ include $(TOP)/config/make.cfg
 #MM  ports-graphics-grafx2 : includes linklibs contrib-sdl \
 #MM    contrib-sdl-sdl-image contrib-sdl-sdl-ttf contrib-development-lua \
 #MM    ports-graphics-grafx2-fetch ports-graphics-grafx2-docs \
-#MM    ports-graphics-grafx2-data ports-graphics-grafx2-drawericon
+#MM    ports-graphics-grafx2-data
 
 #MM  ports-graphics-grafx2-docs : ports-graphics-grafx2-fetch
 
@@ -88,13 +88,6 @@ FILES := $(addprefix $(PORTSDIR)/grafx2/$(ARCHBASE)/grafx2/src/,$(FILES))
 %fetch mmake=ports-graphics-grafx2-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/grafx2/$(ARCHBASE) \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz" \
     patches_specs=grafx2-2.4.2035-src.diff::-p1
-
-############################################################################################################
-
-ICONS := GrafX2
-
-%build_icons mmake=ports-graphics-grafx2-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 ############################################################################################################
 

@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 #MM- ports-game : ports-game-xpired
 
 #MM- ports-game-xpired : ports-game-xpiredbin ports-game-xpiredit \
-#MM  ports-game-xpired-drawericon ports-game-xpired-cpy \
+#MM  ports-game-xpired-cpy \
 #MM  ports-game-xpired-img ports-game-xpired-snd ports-game-xpired-fetch
 
 #MM  ports-game-xpiredbin : includes linklibs contrib-sdl \
@@ -39,11 +39,6 @@ USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cf
 %fetch mmake=ports-game-xpired-fetch archive=$(ARCHBASE)-linux_source destination=$(PORTSDIR)/xpired/$(ARCHBASE) \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=xpired-1.22-aros.diff:$(ARCHBASE):-p1
-
-ICONS := Xpired
-
-%build_icons mmake=ports-game-xpired-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %copy_dir_recursive mmake=ports-game-xpired-img src=$(PORTSDIR)/xpired/$(ARCHBASE)/src/img \
 dst=$(TARGETDIR)/data/img

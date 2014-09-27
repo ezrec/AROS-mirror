@@ -1,0 +1,14 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-devel-cflow : ports-devel-cflow-icons
+
+TARGETDIR := $(AROS_CONTRIB)/Development
+ICONS     := CFlow
+
+%build_icons mmake=ports-devel-cflow-icons \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+
+%common

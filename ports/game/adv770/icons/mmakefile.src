@@ -1,0 +1,13 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game-adv770 : ports-game-adv770-icons
+
+TARGETDIR := $(AROS_CONTRIB)/Games
+ICONS     := Adv770
+
+%build_icons mmake=ports-game-adv770-icons \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+%common

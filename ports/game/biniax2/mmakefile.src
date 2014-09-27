@@ -13,7 +13,6 @@ include $(TOP)/config/make.cfg
 #MM  contrib-sdl-sdl-net \
 #MM  ports-game-biniax2-data \
 #MM  ports-game-biniax2-cpy \
-#MM  ports-game-biniax2-drawericon \
 #MM  ports-game-biniax2-fetch
 
 #MM- ports-game-biniax2-data : ports-game-biniax2-fetch
@@ -45,11 +44,6 @@ FILES := \
 %fetch mmake=ports-game-biniax2-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/biniax2/biniax2-1.30 \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=biniax2-1.30-aros.diff:$(ARCHBASE):-p1
-
-ICONS := Biniax2
-
-%build_icons mmake=ports-game-biniax2-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %copy_dir_recursive mmake=ports-game-biniax2-data src=$(PORTSDIR)/biniax2/biniax2-1.30/data \
     dst=$(TARGETDIR)/data

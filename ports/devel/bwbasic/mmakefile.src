@@ -7,10 +7,10 @@ include $(TOP)/config/make.cfg
 #MM- ports-devel-bwbasic : \
 #MM    ports-devel-bwbasic-examples \
 #MM    ports-devel-bwbasic-files \
-#MM    ports-devel-bwbasic-fetch \
-#MM    ports-devel-bwbasic-drawericon
-#MM    ports-devel-bwbasic-examples : ports-devel-bwbasic-fetch
-#MM    ports-devel-bwbasic-files : ports-devel-bwbasic-fetch
+#MM    ports-devel-bwbasic-fetch
+
+#MM  ports-devel-bwbasic-examples : ports-devel-bwbasic-fetch
+#MM  ports-devel-bwbasic-files : ports-devel-bwbasic-fetch
 
 ARCHBASE     := bwbasic-2.61
 TARGETDIR    := $(AROS_CONTRIB)/Development/BWBasic
@@ -47,13 +47,6 @@ USER_CFLAGS : -DHAVE_STRING=1 -DHAVE_STDLIB=1 -DHAVE_UNISTD=1 -DHAVE_RAISE=1
 %fetch mmake=ports-devel-bwbasic-fetch archive=$(ARCHBASE) \
     destination=$(PORTSDIR)/bwbasic/$(ARCHBASE) \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip"
-
-
-
-ICONS := BWBasic
-
-%build_icons mmake=ports-devel-bwbasic-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 %copy_dir_recursive mmake=ports-devel-bwbasic-examples \

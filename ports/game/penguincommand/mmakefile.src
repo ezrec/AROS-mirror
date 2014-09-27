@@ -4,7 +4,7 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-game : ports-game-penguincommand
 
-#MM- ports-game-penguincommand : contrib-sdl ports-game-penguincommand-drawericon
+#MM- ports-game-penguincommand : contrib-sdl
 
 PACKAGE      := penguin-command
 VERSION      := 1.6.11
@@ -15,12 +15,6 @@ REPOSITORIES := sf://penguin-command
 	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
 	patch=yes package_repo=$(REPOSITORIES) nix=no nix_dir_layout=no \
 	extraoptions="--program-transform-name='s/penguin-command/PenguinCommand/' --datadir='$$(PROGDIR)data' --mandir='$$(PROGDIR)man'"
-
-
-ICONS := PenguinCommand
-
-%build_icons mmake=ports-game-penguincommand-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 #MM

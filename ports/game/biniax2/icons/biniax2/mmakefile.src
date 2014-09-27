@@ -1,0 +1,11 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game-biniax2-icons : ports-game-biniax2-icons-biniax2
+
+ICONS     := Biniax2
+TARGETDIR := $(AROS_CONTRIB)/Games/Biniax2
+
+%build_icons mmake=ports-game-biniax2-icons \
+    icons=$(ICONS) dir=$(TARGETDIR)

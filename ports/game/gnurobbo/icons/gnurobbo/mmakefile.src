@@ -1,0 +1,11 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game-gnurobbo-icons : ports-game-gnurobbo-icons-gnurobbo
+
+ICONS     := GnuRobbo README
+TARGETDIR := $(AROS_CONTRIB)/Games/GnuRobbo
+
+%build_icons mmake=ports-game-gnurobbo-icons \
+icons=$(ICONS) dir=$(TARGETDIR)

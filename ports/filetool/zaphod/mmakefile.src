@@ -9,7 +9,7 @@ include $(TOP)/config/make.cfg
 
 #MM  ports-filetool-zaphod : includes linklibs ports-filetool-zaphod-catalogs \
 #MM  ports-filetool-fetch ports-filetool-zaphod-docs ports-filetool-zaphod-fonts \
-#MM  ports-filetool-zaphod-drawericon ports-filetool-zaphod-icons ports-filetool-zaphod-cpy
+#MM  ports-filetool-zaphod-icons ports-filetool-zaphod-cpy
 
 #MM  ports-filetool-zaphod-catalogs : ports-filetool-zaphod-fetch
 
@@ -42,12 +42,6 @@ FILES := $(addprefix $(PORTSDIR)/zaphod/$(ARCHBASE)/,$(FILES))
 
 %fetch mmake=ports-filetool-zaphod-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/zaphod \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
-
-
-ICONS := Zaphod
-
-%build_icons mmake=ports-filetool-zaphod-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 #MM

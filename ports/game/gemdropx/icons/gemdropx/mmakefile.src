@@ -1,0 +1,11 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game-gemdropx-icons : ports-game-gemdropx-icons-gemdropx
+
+ICONS     := GemDropX README.txt
+TARGETDIR := $(AROS_CONTRIB)/Games/GemDropX
+
+%build_icons mmake=ports-game-gemdropx-icons-gemdropx \
+icons=$(ICONS) dir=$(TARGETDIR)

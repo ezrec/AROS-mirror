@@ -1,0 +1,13 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-filetool-zaphod : ports-filetool-zaphod-icons
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Filetool
+ICONS     := Zaphod
+
+%build_icons mmake=ports-filetool-zaphod-icons \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+%common

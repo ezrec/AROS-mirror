@@ -5,6 +5,7 @@ include $(TOP)/config/make.cfg
 #MM- ports-graphics-grafx2 : ports-graphics-grafx2-icons
 
 ICONS     := GrafX2
-TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/GrafX2
+TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Gfx
 
-%build_icons mmake=ports-graphics-grafx2-icons icons=$(ICONS) dir=$(TARGETDIR)
+%build_icons mmake=ports-graphics-grafx2-icons \
+icons=$(ICONS) dir=$(TARGETDIR)

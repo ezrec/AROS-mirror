@@ -1,0 +1,13 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-graphics-zuneview : ports-graphics-zuneview-icons
+
+TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Gfx
+ICONS     := ZuneView
+
+%build_icons mmake=ports-graphics-zuneview-icons \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+%common

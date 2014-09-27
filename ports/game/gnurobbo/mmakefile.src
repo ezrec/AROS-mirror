@@ -7,7 +7,7 @@ include $(TOP)/config/make.cfg
 #MM  ports-game-gnurobbo : includes linklibs contrib-sdl \
 #MM    contrib-sdl-sdl-image contrib-sdl-sdl-ttf \
 #MM    ports-game-gnurobbo-data ports-game-gnurobbo-cpy \
-#MM    ports-game-gnurobbo-drawericon ports-game-gnurobbo-fetch
+#MM    ports-game-gnurobbo-fetch
 
 #MM  ports-game-gnurobbo-data : ports-game-gnurobbo-fetch
 
@@ -42,11 +42,6 @@ FILES := \
 %fetch mmake=ports-game-gnurobbo-fetch archive=$(ARCHBASE)-source destination=$(PORTSDIR)/gnurobbo \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=gnurobbo-0.66-aros.diff:$(ARCHBASE):-p1
-
-ICONS := GnuRobbo
-
-%build_icons mmake=ports-game-gnurobbo-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %copy_dir_recursive mmake=ports-game-gnurobbo-data src=$(PORTSDIR)/gnurobbo/$(ARCHBASE)/data \
     dst=$(TARGETDIR)/data

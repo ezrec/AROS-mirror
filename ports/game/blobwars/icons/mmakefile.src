@@ -5,6 +5,7 @@ include $(TOP)/config/make.cfg
 #MM- ports-game-blobwars : ports-game-blobwars-icons
 
 ICONS     := Blobwars
-TARGETDIR := $(AROS_CONTRIB)/Games/Blobwars
+TARGETDIR := $(AROS_CONTRIB)/Games
 
-%build_icons mmake=ports-game-blobwars-icons icons=$(ICONS) dir=$(TARGETDIR)
+%build_icons mmake=ports-game-blobwars-icons \
+    icons=$(ICONS) dir=$(TARGETDIR)

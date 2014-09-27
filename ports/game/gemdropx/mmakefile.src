@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 #MM  ports-game-gemdropx : includes linklibs contrib-sdl \
 #MM  ports-game-gemdropx-data ports-game-gemdropx-cpy \
-#MM  ports-game-gemdropx-drawericon ports-game-gemdropx-fetch
+#MM  ports-game-gemdropx-fetch
 
 #MM  ports-game-gemdropx-data : ports-game-gemdropx-fetch
 
@@ -28,11 +28,6 @@ FILES := $(PORTSDIR)/gemdropx/$(ARCHBASE)/gemdropx
 %fetch mmake=ports-game-gemdropx-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/gemdropx \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=gemdropx-0.9-aros.diff:$(ARCHBASE):-p1
-
-ICONS := GemDropX
-
-%build_icons mmake=ports-game-gemdropx-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %copy_dir_recursive mmake=ports-game-gemdropx-data src=$(PORTSDIR)/gemdropx/$(ARCHBASE)/data \
     dst=$(TARGETDIR)/data

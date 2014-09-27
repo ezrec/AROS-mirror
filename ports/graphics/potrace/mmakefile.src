@@ -4,7 +4,7 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-graphics : ports-graphics-potrace
 
-#MM- ports-graphics-potrace : ports-graphics-potrace-drawericon ports-graphics-potrace-cpy
+#MM- ports-graphics-potrace : ports-graphics-potrace-cpy
 
 PACKAGE      := potrace
 VERSION      := 1.11
@@ -16,11 +16,6 @@ REPOSITORIES := sf://potrace
 	patch=no package_repo=$(REPOSITORIES) \
 	extraoptions="--enable-metric --enable-a4"
 
-
-ICONS := Potrace
-
-%build_icons mmake=ports-graphics-potrace-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %copy_files_q mmake=ports-graphics-potrace-cpy files=PotraceGUI src=. dst=$(TARGETDIR)
 

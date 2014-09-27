@@ -6,7 +6,6 @@ include $(TOP)/config/make.cfg
 
 #MM  ports-graphics-zuneview : \
 #MM    includes linklibs ports-graphics-zuneview-fetch \
-#MM    ports-graphics-zuneview-drawericon \
 #MM    ports-graphics-zuneview-cpy
 
 #MM  ports-graphics-zuneview-quick : ports-graphics-zuneview-fetch
@@ -41,13 +40,6 @@ FILES := $(addprefix $(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView/src/,$(FILES))
 %fetch mmake=ports-graphics-zuneview-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/zuneview/$(ARCHBASE) \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip" \
     patches_specs=zuneview_v0.13-aros.diff:$(ARCHBASE):-p1
-
-
-
-ICONS := ZuneView
-
-%build_icons mmake=ports-graphics-zuneview-drawericon \
-    icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 CPFILES := ZuneView.info

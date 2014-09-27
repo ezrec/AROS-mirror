@@ -9,7 +9,7 @@ include $(TOP)/config/make.cfg
 #MM- ports-game-arm : ports-game-koules
 
 #MM  ports-game-koules : includes linklibs workbench-libs-lowlevel ports-game-koules-cpy \
-#MM  ports-game-koules-drawericon ports-game-koules-data ports-game-koules-fetch
+#MM  ports-game-koules-data ports-game-koules-fetch
 
 #MM  ports-game-koules-data : ports-game-koules-fetch
 
@@ -32,12 +32,6 @@ FILES := $(addprefix $(PORTSDIR)/koules/$(ARCHBASE)/,$(FILES))
 
 %fetch mmake=ports-game-koules-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/koules \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
-
-
-ICONS := Koules
-
-%build_icons mmake=ports-game-koules-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 %copy_dir_recursive mmake=ports-game-koules-data src=$(PORTSDIR)/koules/$(ARCHBASE)/sounds \

@@ -1,0 +1,13 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-devel-ctags : ports-devel-ctags-icons
+
+TARGETDIR := $(AROS_CONTRIB)/Development
+ICONS     := Ctags
+
+%build_icons mmake=ports-devel-ctags-icons \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+%common

@@ -4,7 +4,7 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-game : ports-game-ltris
 
-#MM- ports-game-ltris : contrib-sdl ports-game-ltris-drawericon
+#MM- ports-game-ltris : contrib-sdl
 
 PACKAGE      := ltris
 VERSION      := 1.0.18
@@ -38,12 +38,6 @@ FILES := AUTHORS ChangeLog COPYING NEWS TODO
 %copy_dir_recursive mmake=ports-game-ltris-install-snd \
     src=$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/src/sounds \
     dst=$(TARGETDIR)/share/ltris/sounds excludefiles="Makefile.in Makefile.am"
-
-
-ICONS := LTris
-
-%build_icons mmake=ports-game-ltris-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 #MM

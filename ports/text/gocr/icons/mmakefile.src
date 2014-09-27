@@ -1,0 +1,13 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-text-gocr : ports-text-gocr-icons
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Text
+ICONS     := Gocr
+
+%build_icons mmake=ports-text-gocr-icons \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+%common

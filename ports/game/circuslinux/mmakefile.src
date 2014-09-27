@@ -7,7 +7,7 @@ include $(TOP)/config/make.cfg
 #MM  ports-game-circuslinux : includes linklibs contrib-sdl \
 #MM    contrib-sdl-sdl-image \
 #MM    ports-game-circuslinux-data ports-game-circuslinux-cpy \
-#MM    ports-game-circuslinux-drawericon ports-game-circuslinux-fetch
+#MM    ports-game-circuslinux-fetch
 
 #MM  ports-game-circuslinux-data : ports-game-circuslinux-fetch
 
@@ -31,11 +31,6 @@ FILES := $(PORTSDIR)/circuslinux/$(ARCHBASE)/circuslinux
 %fetch mmake=ports-game-circuslinux-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/circuslinux \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=circuslinux-1.0.3-aros.diff:$(ARCHBASE):-p1
-
-ICONS := CircusLinux
-
-%build_icons mmake=ports-game-circuslinux-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %copy_dir_recursive mmake=ports-game-circuslinux-data src=$(PORTSDIR)/circuslinux/$(ARCHBASE)/data \
     dst=$(TARGETDIR)/data excludefiles="Makefile.in Makefile.am"

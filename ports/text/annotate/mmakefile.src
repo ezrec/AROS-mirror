@@ -9,7 +9,6 @@ include $(TOP)/config/make.cfg
 #MM ports-text-annotate : includes linklibs \
 #MM    workbench-libs-expat \
 #MM    ports-text-annotate-fetch \
-#MM    ports-text-annotate-drawericon \
 #MM    ports-text-annotate-release
 
 #MM  ports-text-annotate-quick : ports-text-annotate-fetch
@@ -53,12 +52,6 @@ FILES := $(addprefix $(PORTSDIR)/annotate/$(ARCHBASE)/src/,$(FILES))
 %fetch mmake=ports-text-annotate-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/annotate \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
 
-############################################################################################
-
-ICONS := Annotate
-
-%build_icons mmake=ports-text-annotate-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 ############################################################################################
 

@@ -5,6 +5,7 @@ include $(TOP)/config/make.cfg
 #MM- ports-game-abuse : ports-game-abuse-icons
 
 ICONS     := Abuse
-TARGETDIR := $(AROS_CONTRIB)/Games/Abuse
+TARGETDIR := $(AROS_CONTRIB)/Games
 
-%build_icons mmake=ports-game-abuse-icons icons=$(ICONS) dir=$(TARGETDIR)
+%build_icons mmake=ports-game-abuse-icons \
+icons=$(ICONS) dir=$(TARGETDIR)

@@ -1,0 +1,15 @@
+# Copyright © 2004, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-video-screenrecorder-icons : ports-video-screenrecorder-icons-screenrecorder
+
+ICONS     := ScreenRecorder
+TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Video/ScreenRecorder
+
+%build_icons mmake=ports-video-screenrecorder-icons-screenrecorder \
+    image=$(ICONS)-$(AROS_TARGET_ICONSET).png \
+    icons=$(ICONS) dir=$(TARGETDIR)
+
+%common

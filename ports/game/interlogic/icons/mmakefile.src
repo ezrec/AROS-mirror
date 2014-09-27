@@ -4,7 +4,8 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-game-interlogic : ports-game-interlogic-icons
 
-ICONS     := InterLogic README
-TARGETDIR := $(AROS_CONTRIB)/Games/InterLogic
+ICONS     := InterLogic
+TARGETDIR := $(AROS_CONTRIB)/Games
 
-%build_icons mmake=ports-game-interlogic-icons icons=$(ICONS) dir=$(TARGETDIR)
+%build_icons mmake=ports-game-interlogic-icons \
+    icons=$(ICONS) dir=$(TARGETDIR)

@@ -1,0 +1,11 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-graphics-potrace-icons : ports-graphics-potrace-icons-potrace
+
+ICONS     := PotraceGUI
+TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/Potrace
+
+%build_icons mmake=ports-graphics-potrace-icons \
+    icons=$(ICONS) dir=$(TARGETDIR)

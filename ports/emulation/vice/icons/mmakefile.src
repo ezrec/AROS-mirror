@@ -1,0 +1,13 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-emulation-vice : ports-emulation-vice-icons
+
+TARGETDIR := $(AROS_CONTRIB)/Emu
+ICONS     := Vice
+
+%build_icons mmake=ports-emulation-vice-icons \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+%common

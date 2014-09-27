@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 # #MM- ports-game : ports-game-adv770
 
 #MM  ports-game-adv770 : includes linklibs ports-game-adv770-fetch \
-#MM  ports-game-adv770-cpy ports-game-adv770-drawericon
+#MM  ports-game-adv770-cpy
 
 #MM  ports-game-adv770-quick : ports-game-adv770-fetch
 
@@ -27,12 +27,6 @@ FILES := $(addprefix $(PORTSDIR)/adv770/$(ARCHBASE)/acode/adv770/src/,$(FILES))
 %fetch mmake=ports-game-adv770-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/adv770/$(ARCHBASE) \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz" \
     patches_specs=adv770c-aros.diff:adv770c:-p1
-
-
-ICONS := Adv770
-
-%build_icons mmake=ports-game-adv770-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 %copy_files_q mmake=ports-game-adv770-cpy files=README.txt src=$(PORTSDIR)/adv770/$(ARCHBASE)/acode/adv770/src \

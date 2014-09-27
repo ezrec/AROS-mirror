@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 #MM  ports-text-antiword : includes linklibs ports-text-antiword-fetch \
 #MM  ports-text-antiword-docs ports-text-antiword-data \
-#MM  ports-text-antiword-drawericon ports-text-antiword-cpy
+#MM  ports-text-antiword-cpy
 
 #MM  ports-text-antiword-docs : ports-text-antiword-fetch
 
@@ -80,11 +80,6 @@ FILES := \
 %fetch mmake=ports-text-antiword-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/antiword \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=antiword-0.37-aros.diff:antiword-0.37:-p1
-
-ICONS := Antiword
-
-%build_icons mmake=ports-text-antiword-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %copy_dir_recursive mmake=ports-text-antiword-docs src=$(PORTSDIR)/antiword/antiword-0.37/Docs \
     dst=$(TARGETDIR)/Docs

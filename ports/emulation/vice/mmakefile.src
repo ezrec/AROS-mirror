@@ -4,8 +4,6 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-emulation : ports-emulation-vice
 
-#MM- ports-emulation-vice : ports-emulation-vice-drawericon
-
 PACKAGE      := vice
 VERSION      := 2.4
 TARGETDIR    := $(AROS_CONTRIB)/Emu/Vice
@@ -20,6 +18,7 @@ REPOSITORIES := sf://vice-emu/releases
 
 #MM
 ports-emulation-vice-install :
+	$(MKDIR) $(TARGETDIR)
 	$(CP) $(GENDIR)/$(CURDIR)/vice/src/x64		                        $(TARGETDIR)/x64
 	$(CP) $(GENDIR)/$(CURDIR)/vice/src/x64dtv	                        $(TARGETDIR)/x64dtv
 	$(CP) $(GENDIR)/$(CURDIR)/vice/src/x128		                        $(TARGETDIR)/x128
@@ -86,11 +85,6 @@ ports-emulation-vice-install :
 
 	$(CP) $(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/src/arch/amigaos/info-files/xvic.exe.info	"$(TARGETDIR)/xvic.info"
 	$(CP) $(TARGETDIR)/xvic.info									"$(TARGETDIR)/xvic (no sound).info"
-
-
-ICONS := Vice
-%build_icons mmake=ports-emulation-vice-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 #MM

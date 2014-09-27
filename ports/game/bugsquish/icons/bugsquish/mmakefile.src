@@ -1,0 +1,11 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game-bugsquish-icons : ports-game-bugsquish-icons-bugsquish
+
+ICONS     := Bugsquish README.txt
+TARGETDIR := $(AROS_CONTRIB)/Games/Bugsquish
+
+%build_icons mmake=ports-game-bugsquish-icons-bugsquish \
+icons=$(ICONS) dir=$(TARGETDIR)

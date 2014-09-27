@@ -3,9 +3,12 @@
 
 include $(TOP)/config/make.cfg
 
-ICONS := ScreenRecorder
-EXEDIR  := $(AROS_CONTRIB)/MultiMedia/Video/ScreenRecorder
+#MM- ports-video-screenrecorder : ports-video-screenrecorder-icons
+
+ICONS     := ScreenRecorder
+TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Video
 
 %build_icons mmake=ports-video-screenrecorder-icons \
-    image=$(ICONS)-$(AROS_TARGET_ICONSET).png \
-    icons=$(ICONS) dir=$(EXEDIR)
+    icons=$(ICONS) dir=$(TARGETDIR)
+
+%common

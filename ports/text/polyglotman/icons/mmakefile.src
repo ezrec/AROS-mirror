@@ -1,0 +1,13 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-text-polyglotman : ports-text-polyglotman-icons
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Text
+ICONS     := PolyglotMan
+
+%build_icons mmake=ports-text-polyglotman-icons \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+%common

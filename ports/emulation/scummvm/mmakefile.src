@@ -2,11 +2,10 @@
 
 include $(TOP)/config/make.cfg
 
-# #MM- ports-game : ports-emulation-scummvm
+#DISABLED #MM- ports-game : ports-emulation-scummvm
 
 #MM- ports-emulation-scummvm : \
-#MM     contrib-sdl \
-#MM     ports-emulation-scummvm-drawericon
+#MM     contrib-sdl
 
 PACKAGE      := scummvm
 VERSION      := 1.6.0
@@ -18,12 +17,6 @@ REPOSITORIES := sf://scummvm
     patch=yes package_repo=$(REPOSITORIES) nix=no nix_dir_layout=no \
     extracflags="" \
     extraoptions="--enable-verbose-build --disable-all-engines"
-
-
-ICONS := Scummvm
-
-%build_icons mmake=ports-emulation-scummvm-drawericon \
-    icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 #MM

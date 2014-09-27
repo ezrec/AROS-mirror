@@ -8,7 +8,7 @@ include $(TOP)/config/make.cfg
 
 #MM  ports-game-magnetic : includes linklibs \
 #MM  ports-game-magnetic-data ports-game-magnetic-cpy \
-#MM  ports-game-magnetic-drawericon ports-game-magnetic-fetch
+#MM  ports-game-magnetic-fetch
 
 #MM  ports-game-magnetic-data : ports-game-magnetic-fetch
 
@@ -29,12 +29,6 @@ FILES := $(addprefix $(PORTSDIR)/magnetic/$(ARCHBASE)/,$(FILES))
 
 %fetch mmake=ports-game-magnetic-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/magnetic \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
-
-
-ICONS := Magnetic
-
-%build_icons mmake=ports-game-magnetic-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 %copy_dir_recursive mmake=ports-game-magnetic-data src=$(PORTSDIR)/magnetic/$(ARCHBASE)/Scripts \

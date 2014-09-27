@@ -4,7 +4,8 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-game-magnetic : ports-game-magnetic-icons
 
-ICONS     := Magnetic README.txt
-TARGETDIR := $(AROS_CONTRIB)/Games/Magnetic
+ICONS     := Magnetic
+TARGETDIR := $(AROS_CONTRIB)/Games
 
-%build_icons mmake=ports-game-magnetic-icons icons=$(ICONS) dir=$(TARGETDIR)
+%build_icons mmake=ports-game-magnetic-icons \
+    icons=$(ICONS) dir=$(TARGETDIR)

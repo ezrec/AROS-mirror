@@ -1,0 +1,13 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-text-annotate : ports-text-annotate-icons
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Text
+ICONS     := Annotate
+
+%build_icons mmake=ports-text-annotate-icons \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+%common

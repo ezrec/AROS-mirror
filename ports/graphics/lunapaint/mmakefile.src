@@ -8,7 +8,7 @@ include $(TOP)/config/make.cfg
 ##MM- ports-graphics-arm : ports-graphics-lunapaint
 
 #MM  ports-graphics-lunapaint : includes linklibs workbench-libs-freetype-linklib ports-graphics-lunapaint-fetch \
-#MM  ports-graphics-lunapaint-data ports-graphics-lunapaint-drawericon \
+#MM  ports-graphics-lunapaint-data \
 #MM  ports-graphics-lunapaint-cpy \
 #MM  ports-graphics-lunapaint-catalogs \
 #MM  ports-graphics-lunapaint-deficon
@@ -60,11 +60,6 @@ FILES := $(addprefix $(PORTSDIR)/lunapaint/$(ARCHBASE)/,$(FILES))
     patches_specs=lunapaint-0.5.patch:lunapaint-0.5:-p1 \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
 
-
-ICONS := Lunapaint
-
-%build_icons mmake=ports-graphics-lunapaint-drawericon \
-    icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %build_icons mmake=ports-graphics-lunapaint-deficon \
     icons=$(DEFICON) dir=$(AROS_ENVARC)/SYS

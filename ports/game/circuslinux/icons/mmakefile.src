@@ -4,7 +4,8 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-game-circuslinux : ports-game-circuslinux-icons
 
-ICONS     := CircusLinux README.txt
-TARGETDIR := $(AROS_CONTRIB)/Games/CircusLinux
+ICONS     := CircusLinux
+TARGETDIR := $(AROS_CONTRIB)/Games
 
-%build_icons mmake=ports-game-circuslinux-icons icons=$(ICONS) dir=$(TARGETDIR)
+%build_icons mmake=ports-game-circuslinux-icons \
+icons=$(ICONS) dir=$(TARGETDIR)

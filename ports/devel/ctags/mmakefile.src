@@ -4,8 +4,6 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-devel : ports-devel-ctags
 
-#MM- ports-devel-ctags : ports-devel-ctags-drawericon
-
 PACKAGE      := ctags
 VERSION      := 5.8
 TARGETDIR    := $(AROS_CONTRIB)/Development/Ctags
@@ -16,12 +14,6 @@ REPOSITORIES := sf://ctags
 	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
 	patch=yes package_repo=$(REPOSITORIES) \
 	extraoptions="CPPFLAGS=-DAMIGA --enable-shell-globbing=no --disable-external-sort"
-
-
-ICONS := Ctags
-
-%build_icons mmake=ports-devel-ctags-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 #MM

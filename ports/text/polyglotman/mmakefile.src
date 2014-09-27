@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 #MM- ports-text : ports-text-polyglotman
 
 #MM  ports-text-polyglotman : includes linklibs ports-text-polyglotman-fetch \
-#MM  ports-text-polyglotman-contrib ports-text-polyglotman-drawericon ports-text-polyglotman-cpy
+#MM  ports-text-polyglotman-contrib ports-text-polyglotman-cpy
 
 #MM  ports-text-polyglotman-contrib : ports-text-polyglotman-fetch
 
@@ -47,11 +47,6 @@ FILES := $(PORTSDIR)/polyglotman/$(ARCHBASE)/rman
 %fetch mmake=ports-text-polyglotman-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/polyglotman \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
-
-ICONS := PolyglotMan
-
-%build_icons mmake=ports-text-polyglotman-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 %copy_dir_recursive mmake=ports-text-polyglotman-contrib src=$(PORTSDIR)/polyglotman/$(ARCHBASE)/contrib \
     dst=$(TARGETDIR)/Contrib

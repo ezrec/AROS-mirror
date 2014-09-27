@@ -8,8 +8,7 @@ include $(TOP)/config/make.cfg
 #MM     contrib-sdl \
 #MM     contrib-sdl-sdl-mixer \
 #MM     contrib-development-libs-libintl \
-#MM     contrib-development-lua \
-#MM     ports-game-pushover-drawericon
+#MM     contrib-development-lua
 
 PACKAGE      := pushover
 VERSION      := 0.0.5
@@ -20,12 +19,6 @@ REPOSITORIES := sf://pushover
     package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
     patch=yes package_repo=$(REPOSITORIES) nix=yes nix_dir_layout=no \
     extraoptions="--datarootdir='$$(PROGDIR)/share' --program-transform-name='s/.*/Pushover/' DEPS_CFLAGS='-fexceptions -I$(AROS_DEVELOPMENT)/include/SDL -I$(AROS_DEVELOPMENT)/include/lua' DEPS_LIBS='-lSDL_mixer -lvorbisfile -lvorbis -logg -lpng -llua -lfreetype2 -lintl -liconv -lz -lSDL'"
-
-
-ICONS := Pushover
-
-%build_icons mmake=ports-game-pushover-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 #MM

@@ -4,8 +4,6 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-devel : ports-devel-cflow
 
-#MM- ports-devel-cflow : ports-devel-cflow-drawericon
-
 PACKAGE      := cflow
 VERSION      := 1.4
 TARGETDIR    := $(AROS_CONTRIB)/Development/CFlow
@@ -15,12 +13,6 @@ REPOSITORIES := gnu://cflow
 	package=$(PACKAGE) version=$(VERSION) suffixes="tar.bz2" \
 	patch=yes package_repo=$(REPOSITORIES) \
 	extraoptions=""
-
-
-ICONS := CFlow
-
-%build_icons mmake=ports-devel-cflow-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 #MM

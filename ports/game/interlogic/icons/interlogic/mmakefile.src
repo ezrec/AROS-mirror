@@ -1,0 +1,11 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game-interlogic-icons : ports-game-interlogic-icons-interlogic
+
+ICONS     := InterLogic README
+TARGETDIR := $(AROS_CONTRIB)/Games/InterLogic
+
+%build_icons mmake=ports-game-interlogic-icons-interlogic \
+icons=$(ICONS) dir=$(TARGETDIR)

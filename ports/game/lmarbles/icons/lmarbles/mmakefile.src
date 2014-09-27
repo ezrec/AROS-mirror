@@ -1,0 +1,11 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game-lmarbles-icons : ports-game-lmarbles-icons-lmarbles
+
+ICONS     := LMarbles
+TARGETDIR := $(AROS_CONTRIB)/Games/LMarbles
+
+%build_icons mmake=ports-game-lmarbles-icons-lmarbles \
+    icons=$(ICONS) dir=$(TARGETDIR)

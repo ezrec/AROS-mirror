@@ -10,7 +10,6 @@ include $(TOP)/config/make.cfg
 
 #MM  ports-game-wormwars : includes linklibs \
 #MM     ports-game-wormwars-cpy \
-#MM     ports-game-wormwars-drawericon \
 #MM     ports-game-wormwars-fx \
 #MM     ports-game-wormwars-fonts \
 #MM     ports-game-wormwars-catalogs \
@@ -41,12 +40,6 @@ FILES := $(addprefix $(PORTSDIR)/wormwars/$(ARCHBASE)/,$(FILES))
 
 %fetch mmake=ports-game-wormwars-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/wormwars \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
-
-
-ICONS := WormWars
-
-%build_icons mmake=ports-game-wormwars-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 %copy_dir_recursive mmake=ports-game-wormwars-fx src=$(PORTSDIR)/wormwars/$(ARCHBASE)/fx \

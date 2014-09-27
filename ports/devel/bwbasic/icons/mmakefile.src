@@ -1,0 +1,14 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-devel-bwbasic : ports-devel-bwbasic-icons
+
+TARGETDIR := $(AROS_CONTRIB)/Development
+ICONS     := BWBasic
+
+%build_icons mmake=ports-devel-bwbasic-icons \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+
+%common

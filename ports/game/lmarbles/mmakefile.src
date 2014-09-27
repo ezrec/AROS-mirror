@@ -4,7 +4,7 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-game : ports-game-lmarbles
 
-#MM- ports-game-lmarbles : contrib-sdl ports-game-lmarbles-drawericon
+#MM- ports-game-lmarbles : contrib-sdl
 
 PACKAGE      := lmarbles
 VERSION      := 1.0.8
@@ -51,12 +51,6 @@ ports-game-lmarbles-install-var : $(TARGETDIR)/var
 
 $(TARGETDIR)/var :
 	%mkdir_q dir=$@
-
-
-ICONS := LMarbles
-
-%build_icons mmake=ports-game-lmarbles-drawericon \
-    icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 #MM

@@ -1,0 +1,13 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-audio-abcm2ps : ports-audio-abcm2ps-icons
+
+TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Audio
+ICONS     := Abcm2ps
+
+%build_icons mmake=ports-audio-abcm2ps-icons \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+%common

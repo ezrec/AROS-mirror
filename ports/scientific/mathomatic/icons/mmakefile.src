@@ -5,6 +5,9 @@ include $(TOP)/config/make.cfg
 #MM- ports-scientific-mathomatic : ports-scientific-mathomatic-icons
 
 ICONS     := Mathomatic
-TARGETDIR := $(AROS_CONTRIB)/Utilities/Scientific/Mathomatic
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Scientific
 
-%build_icons mmake=ports-scientific-mathomatic-icons icons=$(ICONS) dir=$(TARGETDIR)
+%build_icons mmake=ports-scientific-mathomatic-icons \
+    icons=$(ICONS) dir=$(TARGETDIR)
+
+%common

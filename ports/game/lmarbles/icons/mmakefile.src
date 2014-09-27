@@ -5,6 +5,7 @@ include $(TOP)/config/make.cfg
 #MM- ports-game-lmarbles : ports-game-lmarbles-icons
 
 ICONS     := LMarbles
-TARGETDIR := $(AROS_CONTRIB)/Games/LMarbles
+TARGETDIR := $(AROS_CONTRIB)/Games
 
-%build_icons mmake=ports-game-lmarbles-icons icons=$(ICONS) dir=$(TARGETDIR)
+%build_icons mmake=ports-game-lmarbles-icons \
+    icons=$(ICONS) dir=$(TARGETDIR)

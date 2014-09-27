@@ -6,8 +6,7 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-game-abuse : \
 #MM     contrib-sdl \
-#MM     contrib-sdl-sdl-mixer \
-#MM     ports-game-abuse-drawericon
+#MM     contrib-sdl-sdl-mixer
 
 PACKAGE      := abuse
 VERSION      := 0.8
@@ -18,12 +17,6 @@ REPOSITORIES := http://abuse.zoy.org/raw-attachment/wiki/download
 	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
 	patch=yes package_repo=$(REPOSITORIES) nix=no nix_dir_layout=no \
 	extraoptions="--with-assetdir='$$(PROGDIR)share/games/abuse'"
-
-
-ICONS := Abuse
-
-%build_icons mmake=ports-game-abuse-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 #MM

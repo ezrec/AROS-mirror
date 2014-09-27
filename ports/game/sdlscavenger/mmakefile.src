@@ -5,7 +5,7 @@ include $(TOP)/config/make.cfg
 #MM- ports-game : ports-game-sdlscavenger
 
 #MM  ports-game-sdlscavenger : includes linklibs contrib-sdl ports-game-sdlscavenger-fetch \
-#MM  ports-game-sdlscavenger-install ports-game-sdlscavenger-cpy ports-game-sdlscavenger-drawericon
+#MM  ports-game-sdlscavenger-install ports-game-sdlscavenger-cpy
 
 #MM  ports-game-sdlscavenger-install  : ports-game-sdlscavenger-fetch
 
@@ -32,11 +32,6 @@ FILES := \
 %fetch mmake=ports-game-sdlscavenger-fetch archive=$(ARCHBASE).1_2010_11_5 destination=$(PORTSDIR)/sdlscavenger \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz" \
     patches_specs=sdlscavenger-145-aros.diff:$(ARCHBASE):-p1
-
-ICONS := SdlScavenger
-
-%build_icons mmake=ports-game-sdlscavenger-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 CPYFILES := DOC STRATEGY COPYING README
 

@@ -1,0 +1,11 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game-vectoroids-icons : ports-game-vectoroids-icons-vectoroids
+
+ICONS     := Vectoroids
+TARGETDIR := $(AROS_CONTRIB)/Games/Vectoroids
+
+%build_icons mmake=ports-game-vectoroids-icons \
+    icons=$(ICONS) dir=$(TARGETDIR)

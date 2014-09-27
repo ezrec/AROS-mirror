@@ -8,7 +8,7 @@ include $(TOP)/config/make.cfg
 #MM- ports-game-arm : ports-game-multipuzzle
 
 #MM  ports-game-multipuzzle : includes linklibs ports-game-multipuzzle-cpy \
-#MM  ports-game-multipuzzle-drawericon ports-game-multipuzzle-catalogs ports-game-multipuzzle-fetch
+#MM  ports-game-multipuzzle-catalogs ports-game-multipuzzle-fetch
 
 #MM  ports-game-multipuzzle-cpy : ports-game-multipuzzle-fetch
 
@@ -31,12 +31,6 @@ USER_INCLUDES := -I.
 
 %fetch mmake=ports-game-multipuzzle-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/multipuzzle \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
-
-
-ICONS := MultiPuzzle
-
-%build_icons mmake=ports-game-multipuzzle-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 CPYFILES := beach.ilbm multipuzzle.guide multipuzzle.info

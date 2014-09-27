@@ -1,0 +1,22 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-graphics-lunapaint : \
+#MM     ports-graphics-lunapaint-icons \
+#MM     ports-graphics-lunapaint-deficon
+
+TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Gfx
+ICONS     := Lunapaint
+
+%build_icons mmake=ports-graphics-lunapaint-icons \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+
+TARGETDIR := $(AROS_PREFS)/SYS
+ICONS     := def_Lunapaint
+
+%build_icons mmake=ports-graphics-lunapaint-deficon \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+%common

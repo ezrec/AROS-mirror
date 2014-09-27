@@ -5,11 +5,12 @@ include $(TOP)/config/make.cfg
 #MM- ports-video : ports-video-screenrecorder
 
 #MM  ports-video-screenrecorder : includes linklibs workbench-devs-AHI \
-#MM  ports-video-screenrecorder-fetch \
-#MM  ports-video-screenrecorder-catalogs \
-#MM  ports-video-screenrecorder-icons \
-#MM  ports-video-screenrecorder-drawericon ports-video-screenrecorder-cpy \
-#MM  ports-video-screenrecorder-fetch
+#MM      ports-video-screenrecorder-catalogs \
+#MM      ports-video-screenrecorder-cpy \
+#MM      ports-video-screenrecorder-fetch
+
+#MM- ports-video-screenrecorder-catalogs : ports-video-screenrecorder-fetch
+
 
 REPOSITORIES := http://archives.aros-exec.org/share/video/record/
 ARCHBASE     := screenrecorder-src-svn17
@@ -45,10 +46,6 @@ FILES := \
 %create_patch mmake=ports-video-screenrecorder-create-patch \
     archive=$(ARCHBASE) destination=$(PORTSDIR)/screenrecorder
 
-ICONS := ScreenRecorder
-
-%build_icons mmake=ports-video-screenrecorder-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 CPYFILES := ScreenRecorder.info
 

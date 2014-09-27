@@ -4,7 +4,8 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-text-antiword : ports-text-antiword-icons
 
-ICONS     := AntiwordGUI
-TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/Antiword
+ICONS     := Antiword
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Text
 
-%build_icons mmake=ports-text-antiword-icons icons=$(ICONS) dir=$(TARGETDIR)
+%build_icons mmake=ports-text-antiword-icons \
+icons=$(ICONS) dir=$(TARGETDIR)

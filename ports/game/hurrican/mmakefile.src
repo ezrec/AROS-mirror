@@ -13,7 +13,6 @@ include $(TOP)/config/make.cfg
 #MM  development-libmodplug \
 #MM  ports-game-hurrican-data \
 #MM  ports-game-hurrican-lang \
-#MM  ports-game-hurrican-drawericon \
 #MM  ports-game-hurrican-fetch
 
 #MM  ports-game-hurrican-data : ports-game-hurrican-data-fetch
@@ -247,15 +246,6 @@ CFILES := $(addprefix $(PORTSDIR)/hurrican/$(ARCHBASE)/src/,$(UNRAR_CFILES) $(SD
 %build_prog mmake=ports-game-hurrican progname=Hurrican \
     files=$(CFILES) cxxfiles=$(CXXFILES) targetdir=$(TARGETDIR) \
     uselibs="stdc++ SDL_mixer modplug vorbisfile vorbis ogg SDL_image png z jpeg SDL GL"
-
-
-####################################################################################################
-# create drawer icon
-
-ICONS := Hurrican
-
-%build_icons mmake=ports-game-hurrican-drawericon \
-	icons=$(ICONS) dir=$(TARGETDIR)/..
 
 
 ####################################################################################################
