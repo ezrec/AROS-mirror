@@ -8,7 +8,7 @@ Koordinace
 
 Roz¹iøování
 ===========
-+ Ola "4pLaY" Jensen
++ Ola "4pLaY" Stokka
 + Matt Parsons
 
 HIDD subsystém

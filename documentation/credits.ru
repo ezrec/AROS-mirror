@@ -11,7 +11,7 @@
 "Духовенство" =)
 ================
 
-+ Ola "4pLaY" Jensen
++ Ola "4pLaY" Stokka
 + Matt Parsons
 
 
