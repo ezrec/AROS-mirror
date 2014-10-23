@@ -9,13 +9,13 @@ cgfx
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`AllocCModeListTagList()`_              `BestCModeIDTagList()`_                 `BltTemplateAlpha()`_                   `CModeRequestTagList()`_                
-`CVideoCtrlTagList()`_                  `DoCDrawMethodTagList()`_               `ExtractColor()`_                       `FillPixelArray()`_                     
-`FreeCModeList()`_                      `GetCyberIDAttr()`_                     `GetCyberMapAttr()`_                    `InvertPixelArray()`_                   
-`IsCyberModeID()`_                      `LockBitMapTagList()`_                  `MovePixelArray()`_                     `ProcessPixelArray()`_                  
-`ReadPixelArray()`_                     `ReadRGBPixel()`_                       `ScalePixelArray()`_                    `UnLockBitMap()`_                       
-`UnLockBitMapTagList()`_                `WriteLUTPixelArray()`_                 `WritePixelArray()`_                    `WritePixelArrayAlpha()`_               
-`WriteRGBPixel()`_                      
+`AllocCModeListTagList()`_              `BestCModeIDTagList()`_                 `BltBitMapAlpha()`_                     `BltBitMapRastPortAlpha()`_             
+`BltTemplateAlpha()`_                   `CModeRequestTagList()`_                `CVideoCtrlTagList()`_                  `DoCDrawMethodTagList()`_               
+`ExtractColor()`_                       `FillPixelArray()`_                     `FreeCModeList()`_                      `GetCyberIDAttr()`_                     
+`GetCyberMapAttr()`_                    `InvertPixelArray()`_                   `IsCyberModeID()`_                      `LockBitMapTagList()`_                  
+`MovePixelArray()`_                     `ProcessPixelArray()`_                  `ReadPixelArray()`_                     `ReadRGBPixel()`_                       
+`ScalePixelArray()`_                    `UnLockBitMap()`_                       `UnLockBitMapTagList()`_                `WriteLUTPixelArray()`_                 
+`WritePixelArray()`_                    `WritePixelArrayAlpha()`_               `WriteRGBPixel()`_                      
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -148,6 +148,70 @@ See also
 ~~~~~~~~
 
 `graphics.library/BestModeIDA() <./graphics#bestmodeida>`_ 
+
+----------
+
+BltBitMapAlpha()
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG BltBitMapAlpha(
+          struct BitMap * srcBitMap,
+          WORD srcX,
+          WORD srcY,
+          struct BitMap * destBitMap,
+          WORD destX,
+          WORD destY,
+          WORD sizeX,
+          WORD sizeY,
+          struct TagItem * taglist );
+ 
+ ULONG BltBitMapAlphaTags(
+          struct BitMap * srcBitMap,
+          WORD srcX,
+          WORD srcY,
+          struct BitMap * destBitMap,
+          WORD destX,
+          WORD destY,
+          WORD sizeX,
+          WORD sizeY,
+          TAG tag, ... );
+
+
+----------
+
+BltBitMapRastPortAlpha()
+========================
+
+Synopsis
+~~~~~~~~
+::
+
+ ULONG BltBitMapRastPortAlpha(
+          struct BitMap * srcBitMap,
+          WORD srcX,
+          WORD srcY,
+          struct RastPort * destRP,
+          WORD destX,
+          WORD destY,
+          WORD sizeX,
+          WORD sizeY,
+          struct TagItem * taglist );
+ 
+ ULONG BltBitMapRastPortAlphaTags(
+          struct BitMap * srcBitMap,
+          WORD srcX,
+          WORD srcY,
+          struct RastPort * destRP,
+          WORD destX,
+          WORD destY,
+          WORD sizeX,
+          WORD sizeY,
+          TAG tag, ... );
+
 
 ----------
 

@@ -697,8 +697,9 @@ Function
 ::
 
      Get a specific method function for a specific object and 
-     a specific interface. This a direct pointer to the method implementation.
-     The pointer should ONLY be used on the object you aquired.
+     a specific interface. This a direct pointer to the method
+     implementation. The pointer should ONLY be used on the object you
+     acquired.
 
 
 Inputs
@@ -1235,8 +1236,7 @@ Inputs
      object  - pointer to a object in whih we
                want to set attributes.
               
-     tagList -  List of attributes an their new values.
-
+     tagList -  List of attributes and their new values.
 
 
 Result
