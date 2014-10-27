@@ -19,8 +19,8 @@ Amiga-computers. Dit zou ook interessant moeten zijn voor mensen die
 WinUAE gebruiken om oude Amiga-applicaties te draaien. De 
 uitwisselbaarheid is zodanig dat de AROS-ROM-image zelfs originele 
 Workbench-schijven kan opstarten, zo oud als V1.3. Deze ontwikkeling zal 
-hopelijk ook leiden tot een verbeterde integratie van originele Amiga-
-software in AROS voor x86 -en andere platformen.
+hopelijk ook leiden tot een verbeterde integratie van originele
+Amiga-software in AROS voor x86 -en andere platformen.
 
 De platformondersteuning van AROS is tevens in andere richtingen verder 
 uitgebreid. Er is een Linux-hosted ARM-conversie verschenen, en nieuwe 
@@ -44,8 +44,8 @@ stuurprogramma met hardwarematig-versnelde alpha-blending.
 Een opmerkelijke grafische feature uit ons Amiga-erfgoed heeft ook in 
 AROS zijn opwachting gemaakt: de meeste inherente grafisch 
 stuurprogramma's ondersteunen nu het slepen en schuiven van schermen. 
-Daaronder vallen zowel onze stuurprogramma's voor nVidia- en Intel GMA-
-chipsets als het generieke VESA-stuurprogramma.
+Daaronder vallen zowel onze stuurprogramma's voor nVidia- en Intel
+GMA-chipsets als het generieke VESA-stuurprogramma.
 
 Afgezien van de grafisch stuurprogramma's heeft AROS ook een aantal 
 extra grafische libraries gekregen: egl.library en openvg.library. 
@@ -80,9 +80,9 @@ gehad. Inherente grafisch stuurprogramma's worden nu over het algemeen
 automatisch geactiveerd voor grafische kaarten die worden herkend en de 
 AC97- en HDAudio-geluidsdrivers hoeven normaliter voor gebruik niet meer 
 met de hand geconfigureerd te worden. En eindelijk zit AROS niet meer 
-opgescheept met een onveranderbare muiswijzer: de gebruikte standaard-
-wijzer kan nu worden ingesteld met een programma waar de voorkeur van de 
-muiswijzer kan worden aangegeven en applicaties kunnen de muiswijzer 
+opgescheept met een onveranderbare muiswijzer: de gebruikte
+standaard-wijzer kan nu worden ingesteld met een programma waar de voorkeur
+van de muiswijzer kan worden aangegeven en applicaties kunnen de muiswijzer 
 aanpassen naar gelang de situatie. De AROS shell is geavanceerder 
 geworden, en heeft nu een schuifbare uitvoergeschiedenis, alsmede 
 ondersteuning voor meer modi en zijn er een aantal fouten hersteld. 
@@ -95,12 +95,10 @@ Verdere ontwikkelingen
 ----------------------
 
 AROS heeft er nu een derde distributie bijgekregen, naast de regelmatig 
-bijgewerkte `Icaros Desktop <http://www.icarosdesktop.org/>`__ en `AROS 
-Broadway <http://www.aros-broadway.de/>`__. De nieuwe `AspireOS-
-distributie <http://www.aspireos.com/>`__ richt zich voornamelijk op 
-de Acer Aspire One 110 en 150 netbooks, maar kan ook interessant zijn 
-voor gebruikers van andere pc's die op zoek zijn naar een lichtgewicht-
-distributie.
+bijgewerkte `Icaros Desktop`__ en `AROS Broadway`__. De nieuwe
+`AspireOS-distributie`__ richt zich voornamelijk op de Acer Aspire One
+110 en 150 netbooks, maar kan ook interessant zijn voor gebruikers van
+andere pc's die op zoek zijn naar een lichtgewicht-distributie.
 
 Afgelopen maanden zijn vele applicaties en spellen aan de software-
 selectie van AROS toegevoegd. Enkele hoogtepunten van applicaties zijn 
@@ -109,3 +107,9 @@ Super Tux Kart (met een populaire Kitty kart!) maken goed gebruik van de
 grafische 3D verbeteringen in AROS, terwijl ook veel 2D-spelen, zoals 
 Giana's Return en Mega Mario, toegevoegd zijn. We hebben ook een aantal 
 emulatoren toegevoegd voor nog meer retro-speel-plezier.
+
+
+__ http://www.icarosdesktop.org/
+__ http://www.aros-broadway.de/
+__ https://www.aspireos.com/
+
