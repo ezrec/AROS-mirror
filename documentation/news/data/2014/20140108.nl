@@ -27,7 +27,7 @@ Raspberry Pi
 
 In 2012 berichtten we dat AROS ook draaide op de Raspberry Pi, maar alleen als
 gastsysteem bovenop Linux. In 2013 ontstond een hoofdsysteem-versie van AROS
-voor dit compacte en alomtegenwoordige platform, met ondersteuning vor USB,
+voor dit compacte en alomtegenwoordige platform, met ondersteuning voor USB,
 SD-kaart en beeld (althans, met behulp van dezelfde gesloten programmatuur waar
 Linux ook op gebaseerd is).
 
@@ -35,8 +35,8 @@ Linux ook op gebaseerd is).
 Scalos overgebracht
 -------------------
 
-Het Wanderer/Workbench-alternatief `Scalos` is overgebracht naar AROS. Op het
-moment is het alleen beschikbaar in de nachtcompilaties van `ABIv1` voor het
+Het Wanderer/Workbench-alternatief `Scalos`__ is overgebracht naar AROS. Op het
+moment is het alleen beschikbaar in de nachtcompilaties van `ABIv1`__ voor het
 i386-platform. Scalos kan ofwel opgestart worden als een toepassing vanaf
 *Extras:Scalos* of het kan Wanderer vervangen door in ``S:Startup-Sequence``
 ``Wanderer:Wanderer`` te vervangen door ``Scalos:Scalos EMU``.
@@ -48,10 +48,10 @@ __ http://aros.sourceforge.net/nightly1.php
 Geluidsstuurders
 ----------------
 
-Er zijn drie stuurders bijgekomen voor VIA geluidsbestuurders, en wel voor een
+Er zijn drie stuurders bijgekomen voor VIA geluidsregelaars, en wel voor een
 aantal van hun Envy24-, Envy24HT- en AC97-chipsets. De overeenstemming van onze
 HD-geluidsstuurder is ook vergroot en die ondersteunt nu ook een groter bereik
-aan bestuurders en omzetters.
+aan regelaars en omzetters.
 
 
 Varia
