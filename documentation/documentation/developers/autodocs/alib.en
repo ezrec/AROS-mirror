@@ -1141,15 +1141,16 @@ Function
 ~~~~~~~~
 ::
 
-     Create an extended IORequest structure. This structure can
-     be freed with DeleteExtIO().
+     Create an extended IORequest structure. This structure must be freed
+     with DeleteExtIO().
 
 
 Inputs
 ~~~~~~
 ::
 
-     port - MsgPort to be signaled on events
+     port - MsgPort to be signaled on events. May be NULL, in which case
+         no IORequest is allocated.
      iosize - Size of the structure
 
 
@@ -1157,14 +1158,14 @@ Result
 ~~~~~~
 ::
 
-     A pointer to the new IORequest structure.
+     A pointer to the new IORequest structure, or NULL.
 
 
 
 See also
 ~~~~~~~~
 
-`CreateStdIO()`_ `DeleteExtIO()`_ 
+`CreateStdIO()`_ `DeleteExtIO()`_ `DeleteStdIO()`_ 
 
 ----------
 
@@ -1313,29 +1314,30 @@ Function
 ~~~~~~~~
 ::
 
-     Create a standard IORequest structure. The structire
-     can be freed with DeleteStdIO().
+     Create a standard IORequest structure. The structure must be freed
+     with DeleteStdIO().
 
 
 Inputs
 ~~~~~~
 ::
 
-     port - The port to be signaled on events.
+     port - The port to be signaled on events. May be NULL, in which case
+         no IORequest is allocated.
 
 
 Result
 ~~~~~~
 ::
 
-     A pointer to the new IORequest structure.
+     A pointer to the new IORequest structure, or NULL.
 
 
 
 See also
 ~~~~~~~~
 
-`CreateExtIO()`_ `DeleteStdIO()`_ 
+`CreateExtIO()`_ `DeleteExtIO()`_ `DeleteStdIO()`_ 
 
 ----------
 
@@ -1408,8 +1410,7 @@ Inputs
 ~~~~~~
 ::
 
-     ioreq - The returnvalue of CreateExtIO(). Must be
-         non-NULL.
+     ioreq - The return value of CreateExtIO(). May be NULL.
 
 
 Result
@@ -1423,7 +1424,7 @@ Result
 See also
 ~~~~~~~~
 
-`CreateStdIO()`_ `CreateExtIO()`_ 
+`CreateStdIO()`_ `CreateExtIO()`_ `DeleteStdIO()`_ 
 
 ----------
 
@@ -1489,8 +1490,7 @@ Inputs
 ~~~~~~
 ::
 
-     io - The value returned by CreateStdIO(). Must be
-         non-NULL.
+     io - The value returned by CreateStdIO(). May be NULL.
 
 
 Result
@@ -1500,11 +1500,19 @@ Result
      None.
 
 
+Notes
+~~~~~
+::
+
+     Invalidates values of certain fields, to assure the developer
+     doesn't depend on them remaining valid after the structure is freed.
+
+
 
 See also
 ~~~~~~~~
 
-`CreateStdIO()`_ 
+`CreateStdIO()`_ `CreateExtIO()`_ `DeleteExtIO()`_ 
 
 ----------
 
