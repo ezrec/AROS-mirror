@@ -19,6 +19,7 @@ ICU_EXTRA_OPTS := \
         --enable-tests=no \
         --enable-samples=no \
         --enable-extras=no \
+        --enable-threads=no \
         --with-data-packaging=static \
         --host=$(AROS_TARGET_CPU)-aros \
         --with-cross-build=$(CROSSTOOLSDIR)/tools/crosstools/$(ICU_PKGNAME)
