@@ -28,5 +28,5 @@ TARGET_CXXFLAGS := $(subst -Wno-pointer-sign,, $(subst -Werror-implicit-function
 
 %fetch_and_build mmake=contrib-icu4c-complete package=$(ICU_PKGNAME) version=$(ICU_PKGVERSION)-src \
 	package_repo="$(ICU_REPOSITORY)" suffixes="tgz" \
-	patch=yes srcdir=icu builddir=source prefix=$(AROS_DEVELOPMENT) \
+	patch=yes srcdir=icu builddir=source prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development nix=yes \
 	extraoptions="$(ICU_EXTRA_OPTS)"
