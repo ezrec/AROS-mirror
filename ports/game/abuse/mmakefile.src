@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- ports-game : ports-game-abuse
+##MM- ports-game : ports-game-abuse
 
 #MM- ports-game-abuse : \
 #MM     contrib-sdl \
