@@ -133,14 +133,13 @@ Requirements
 
 .. Note::
 
-    Although AROS can be installed to a hard drive, please be aware that the
-    installer is known to contain bugs. It should not remove or wipe any
-    partitions if not asked to do so, but this cannot be guaranteed.
-    So please note that generally you **should not** install AROS on a
-    working machine whose HD contains valuable data, as there is a real
-    possibility of data loss. We take no responsibility for any
-    data loss that occurs. Any bug reports on the installation
-    process will however be appreciated.
+    AROS can be installed to a hard drive, and its installer won't remove or
+    wipe any partitions if not asked to do so. However, note that it's always
+    unwise to install an operating system on a working machine whose HD
+    contains valuable data. We'd advise you to make a backup of your data
+    beforehand (always a good thing to do), and we cannot take responsibility
+    for damage that occurs. Any bug reports on the installation  process will
+    however be appreciated.
 
 You will need a *PCI-based* PC-AT (based on i486 or later) with PS/2
 or USB mouse, PS/2, AT or USB keyboard, IDE hard disk and CD-ROM on parallel
@@ -283,16 +282,15 @@ a while.
 Installing to hard drive
 """"""""""""""""""""""""
 
-Well, note that you have been **WARNED** that HD installation is in the
-testing stage at the moment and can be **dangerous** to your data, so make
-sure the PC you're using for install does not contain anything you can't live
-without, or have a full backup. Using a virtual machine is recommended, as it
-minimises any possible risk and allows AROS to be used and tested on any
-working machine.
-There are many free VMs available now, such as VirtualPC, Q, QEMU and VMWare,
-which are known to work with AROS. You can also use VmwAROS preinstalled
-environment to try it out.
-
+Note that you have been WARNED that AROS is still in development. Though
+harddisk installation is well-developed by now; there is still an off chance
+that it may corrupt existing partitions. If you want to be as safe as possible,
+install AROS on its own harddisk. Other options would be: Making a full backup
+beforehand, using a PC which does not contain anything you can't live without,
+or use a virtual machine.
+There are many free VMs available, such as VirtualPC, Q, QEMU and VMWare, which
+are known to work with AROS. You can also use VmwAROS preinstalled environment
+to try it out. 
 
 
 Getting ready
