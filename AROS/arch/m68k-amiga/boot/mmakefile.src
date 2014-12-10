@@ -116,7 +116,7 @@ ROMLOC_rom := 0x0f80000
 FILES=start early debug mmu
 AFILES=rom_entry rom_init cpu_detect superstack_swap
 
-KLIBS   := exec aros dos utility oop expansion partition debug z-rom
+KLIBS   := exec aros dos utility oop expansion partition debug
 KDEVS   := timer input keyboard console trackdisk gameport audio ata
 KHNDLRS := con afs ram
 KHIDDS  := hiddclass graphics keyboard mouse amigakbd amigamouse amigavideo uaegfx ata_gayle
@@ -141,7 +141,7 @@ AFILES  := ext_entry
 
 KLIBS   :=  keymap graphics layers intuition gadtools icon workbench \
             mathffp mathieeesingbas freeanim lowlevel nonvolatile nvdisk \
-            setpatch
+            setpatch z-rom
 KDEVS   := cd
 KHNDLRS := cdfs
 KHIDDS  :=

@@ -8,7 +8,6 @@ include $(TOP)/config/make.cfg
 #MM           workbench-c-m68k
 #MM bootdisk-amiga-m68k-quick : bootdisk-amiga-m68k-quick
 
-
 ELF2HUNK_FILES := \
     $(AROS_DIR_ARCH)/AROSBootstrap \
     C/Assign \
@@ -99,5 +98,154 @@ $(GENDIR)/$(CURDIR)/install-$(AROS_HOST_ARCH)-$(AROS_HOST_CPU): $(SRCDIR)/$(CURD
 	@$(MKDIR) -p $(GENDIR)/$(CURDIR)
 	@$(HOST_CC) $(HOST_CFLAGS) $(SRCDIR)/$(CURDIR)/install.c -o $(GENDIR)/$(CURDIR)/install-$(AROS_HOST_ARCH)-$(AROS_HOST_CPU)
 
+## Wanderer disk image
+
+ADFPREP_DEST_DIR := $(AROSDIR)/ADF-Prep
+WANDERER_SRC_DIR  := $(SRCDIR)/$(CURDIR)/wanderer
+WANDERER_DEST_DIR  := $(ADFPREP_DEST_DIR)/Wanderer
+
+WANDERER_FILES := \
+	Disk.info \
+	C/AddBuffers \
+	C/Assign \
+	C/Copy \
+	C/Delete \
+	C/Dir \
+	C/IPrefs \
+	C/MakeDir \
+	C/Rename \
+	C/SetClock \
+	Classes/Zune/Floattext.mui \
+	Classes/Zune/IconDrawerList.mui \
+	Classes/Zune/IconImage.mcc \
+	Classes/Zune/IconList.mui \
+	Classes/Zune/IconListview.mui \
+	Classes/Zune/IconVolumeList.mui \
+	Classes/Zune/Popasl.mui \
+	Classes/Zune/PrefsEditor.mcc \
+	Classes/Zune/PrefsWindow.mcc \
+	Classes/Zune/SystemPrefsWindow.mcc \
+	Classes/Zune/Popasl.mui \
+	Classes/Zune/Popimage.mui \
+	Classes/Zune/Scrollgroup.mui \
+	Classes/Zune/TextEditor.mcc \
+	Classes/Zune/Virtgroup.mui \
+	Prefs.info \
+	Prefs/Env-Archive/SYS/pointer.prefs \
+	Prefs/Env-Archive/SYS/Wanderer/global.prefs \
+	Prefs/ScreenMode \
+	Prefs/ScreenMode.info \
+	Prefs/Wanderer \
+	Prefs/Wanderer.info \
+	Libs/stdc.library \
+	Libs/asl.library \
+	Libs/commodities.library \
+	Libs/coolimages.library \
+	Libs/cybergraphics.library \
+	Libs/datatypes.library \
+	Libs/diskfont.library \
+	Libs/gadtools.library \
+	Libs/icon.library \
+	Libs/iffparse.library \
+	Libs/locale.library \
+	Libs/kms.library \
+	Libs/muimaster.library \
+	Libs/rexxsyslib.library \
+	Libs/workbench.library \
+	S/Shell-Startup \
+	S/Startup-Sequence \
+	System/Wanderer/Wanderer \
+	System/Wanderer/Tools/Delete \
+	System/Wanderer/Tools/DiskInfo \
+	System/Wanderer/Tools/ExecuteCommand \
+	System/Wanderer/Tools/Info \
+	System/Wanderer/Tools/WBNewDrawer \
+	System/Wanderer/Tools/WBRename \
+	Tools/Editor \
+	Tools/Debug/sashimi \
+
+WANDERER_DEST_FILES := $(foreach f, $(WANDERER_FILES), $(WANDERER_DEST_DIR)/$(f))
+
+#MM
+wanderer-setup-amiga-m68k :
+	-$(RM) -rf $(WANDERER_DEST_DIR)
+	@$(MKDIR) -p $(WANDERER_DEST_DIR)
+	@$(MKDIR) -p $(WANDERER_DEST_DIR)/Devs/Keymaps
+	@$(MKDIR) -p $(WANDERER_DEST_DIR)/Fonts
+	@$(MKDIR) -p $(WANDERER_DEST_DIR)/L
+	@$(MKDIR) -p $(WANDERER_DEST_DIR)/Locale
+	@$(MKDIR) -p $(WANDERER_DEST_DIR)/Prefs/Env-Archive/SYS/Wanderer
+	@$(MKDIR) -p $(WANDERER_DEST_DIR)/S
+	@$(MKDIR) -p $(WANDERER_DEST_DIR)/Utilities
+	@$(MKDIR) -p $(WANDERER_DEST_DIR)/System/Themes/os3.1
+
+#MM
+wanderer-amiga-m68k: $(DISTDIR)/wanderer-amiga-m68k.adf
+
+.PHONY: wanderer-amiga-m68k-quick
+
+GZIP = gzip
+
+#MM
+wanderer-amiga-m68k-quick : wanderer-setup-amiga-m68k wanderer-amiga-m68k
+
+## NOTE: .gz extensions are removed on purpose. LoadSeg + z-rom.library will figure out
+## based on magic bytes.
+
+$(DISTDIR)/wanderer-amiga-m68k.adf: \
+	    wanderer-setup-amiga-m68k \
+	    $(WANDERER_DEST_FILES) \
+	$(GENDIR)/$(CURDIR)/install-$(AROS_HOST_ARCH)-$(AROS_HOST_CPU)
+	@$(MKDIR) -p "$(DISTDIR)"
+	$(RM) $@
+	$(GZIP) $(WANDERER_DEST_DIR)/C/*
+	$(GZIP) $(WANDERER_DEST_DIR)/Classes/Zune/*
+	$(GZIP) $(WANDERER_DEST_DIR)/Libs/*
+	$(GZIP) $(WANDERER_DEST_DIR)/Prefs/ScreenMode
+	$(GZIP) $(WANDERER_DEST_DIR)/Prefs/Wanderer
+	$(GZIP) $(WANDERER_DEST_DIR)/System/Wanderer/Tools/Delete
+	$(GZIP) $(WANDERER_DEST_DIR)/System/Wanderer/Tools/DiskInfo
+	$(GZIP) $(WANDERER_DEST_DIR)/System/Wanderer/Tools/ExecuteCommand
+	$(GZIP) $(WANDERER_DEST_DIR)/System/Wanderer/Tools/Info
+	$(GZIP) $(WANDERER_DEST_DIR)/System/Wanderer/Tools/WBNewDrawer
+	$(GZIP) $(WANDERER_DEST_DIR)/System/Wanderer/Tools/WBRename
+	$(GZIP) $(WANDERER_DEST_DIR)/System/Wanderer/Wanderer
+	$(GZIP) $(WANDERER_DEST_DIR)/Tools/Editor
+	$(GZIP) $(WANDERER_DEST_DIR)/Tools/Debug/sashimi
+	rename 's/\.gz$///' `find $(WANDERER_DEST_DIR) -name '*.gz'`
+	$(COPYTOAFS) $@ --type OFS --name "AROS Wanderer" --size 1760 $(WANDERER_DEST_DIR)
+	$(GENDIR)/$(CURDIR)/install-$(AROS_HOST_ARCH)-$(AROS_HOST_CPU) $@
+
+$(WANDERER_DEST_DIR)/% : $(AROSDIR)/%
+	%mkdirs_q $(dir $@)
+	@$(ELF2HUNK) $< $@
+
+$(WANDERER_DEST_DIR)/Disk.info: $(SRCDIR)/$(CURDIR)/AROSBoot.info.src $(SRCDIR)/$(CURDIR)/AROSBoot.png
+	%mkdirs_q $(dir $@)
+	@$(ILBMTOICON) --no-iff $^ $@
+
+$(WANDERER_DEST_DIR)/Prefs/*.info: $(SRCDIR)/$(CURDIR)/Tool.info.src $(SRCDIR)/$(CURDIR)/Tool.png
+	%mkdirs_q $(dir $@)
+	@$(ILBMTOICON) --no-iff $^ $@
+
+$(WANDERER_DEST_DIR)/Prefs.info: $(WANDERER_SRC_DIR)/Prefs.info.src $(WANDERER_SRC_DIR)/Prefs.png
+	%mkdirs_q $(dir $@)
+	@$(ILBMTOICON) --no-iff $^ $@
+
+$(WANDERER_DEST_DIR)/S/Startup-Sequence: $(SRCDIR)/$(CURDIR)/wanderer/S/Startup-Sequence
+	@$(CP) $< $@
+	@$(CHMOD) +x $@
+
+$(WANDERER_DEST_DIR)/Prefs/Env-Archive/SYS/pointer.prefs: $(SRCDIR)/$(CURDIR)/wanderer/Prefs/Env-Archive/SYS/pointer.prefs
+	@$(CP) $< $@
+	@$(CHMOD) +x $@
+
+$(WANDERER_DEST_DIR)/Prefs/Env-Archive/SYS/Wanderer/global.prefs: $(SRCDIR)/$(CURDIR)/wanderer/Prefs/Env-Archive/SYS/Wanderer/global.prefs
+	@$(CP) $< $@
+	@$(CHMOD) +x $@
+
+#MM
+clean ::
+	-$(RM) $(TESTS)
 
 %common

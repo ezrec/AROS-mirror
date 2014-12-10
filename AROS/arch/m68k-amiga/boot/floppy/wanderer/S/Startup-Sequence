@@ -1,0 +1,47 @@
+SetClock LOAD
+
+FailAt 21
+
+AddBuffers >NIL: DF0: 15
+
+Resident C:Makedir PURE
+Resident C:Assign PURE
+
+Makedir RAM:Clipboards
+If NOT EXISTS RAM:T
+    Makedir RAM:T
+EndIf
+If NOT EXISTS RAM:ENV
+    Makedir RAM:ENV
+    Assign ENV: RAM:ENV
+EndIf
+
+Assign T:       RAM:T
+Assign CLIPS:   RAM:Clipboards
+
+Assign KEYMAPS: DEVS:Keymaps
+Assign LOCALE:  SYS:Locale
+Assign LIBS:    SYS:Classes ADD
+Assign FONTS:   SYS:Fonts
+Assign HELP:    LOCALE:Help DEFER
+Assign THEMES:  SYS:System/Themes >NIL:
+Assign IMAGES:  SYS:System/Images DEFER
+Assign WANDERER: SYS:System/Wanderer DEFER
+
+Path C: SYS:System S: SYS:Prefs SYS:Tools SYS:Utilities QUIET
+
+Copy >NIL: ENVARC: ENV: ALL NOPRO NOREQ PAT ~(def_#?.info)
+
+If EXISTS ENV:SYS/theme.var
+    Assign THEME: ${SYS/theme.var}
+else
+    Assign THEME: THEMES:OS3.1/
+endif
+
+IPrefs
+
+WANDERER:Wanderer
+
+If NOT ERROR
+    EndCLI >NIL:
+EndIf
