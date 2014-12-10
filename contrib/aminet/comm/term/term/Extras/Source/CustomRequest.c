@@ -293,7 +293,9 @@ ShowInfo(struct Window *Parent,CONST_STRPTR Title,CONST_STRPTR Continue,CONST_ST
 				struct Gadget *Previous;
 				LONG ID,Last,i;
 				ULONG PrevTag;
-
+#ifdef __AROS__
+                                va_list empty_va_list;
+#endif
 				ID			= 0;
 				Last		= GadgetInformation[1] - 1;
 
@@ -309,7 +311,7 @@ ShowInfo(struct Window *Parent,CONST_STRPTR Title,CONST_STRPTR Continue,CONST_ST
 				GadgetData[6] = 0;
 
 #ifdef __AROS__
-				VNewRawDoFmt(Continue,(PUTCHAR)CustomStuffText,GadgetData,NULL);
+				VNewRawDoFmt(Continue,(PUTCHAR)CustomStuffText,GadgetData, empty_va_list);
 #else
 				#ifdef USE_GLUE
 					RawDoFmt(Continue,NULL,(PUTCHAR)CustomStuffTextGlue,GadgetData);
