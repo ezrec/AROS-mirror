@@ -1,6 +1,6 @@
 diff -ruN OWB-r1097/BAL/Events/WebCore/AROS/BCEventHandlerAROS.cpp OWB-r1097.aros/BAL/Events/WebCore/AROS/BCEventHandlerAROS.cpp
 --- OWB-r1097/BAL/Events/WebCore/AROS/BCEventHandlerAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Events/WebCore/AROS/BCEventHandlerAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Events/WebCore/AROS/BCEventHandlerAROS.cpp	2014-12-14 04:04:56.129576875 +0000
 @@ -0,0 +1,131 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -135,7 +135,7 @@ diff -ruN OWB-r1097/BAL/Events/WebCore/AROS/BCEventHandlerAROS.cpp OWB-r1097.aro
 +}
 diff -ruN OWB-r1097/BAL/Events/WebCore/AROS/BCEventLoopAROS.cpp OWB-r1097.aros/BAL/Events/WebCore/AROS/BCEventLoopAROS.cpp
 --- OWB-r1097/BAL/Events/WebCore/AROS/BCEventLoopAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Events/WebCore/AROS/BCEventLoopAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Events/WebCore/AROS/BCEventLoopAROS.cpp	2014-12-14 04:04:56.129576875 +0000
 @@ -0,0 +1,32 @@
 +/*
 + * Copyright (C) 2008 Nuanti Ltd.
@@ -171,7 +171,7 @@ diff -ruN OWB-r1097/BAL/Events/WebCore/AROS/BCEventLoopAROS.cpp OWB-r1097.aros/B
 +} // namespace WebCore
 diff -ruN OWB-r1097/BAL/Events/WebCore/AROS/BCKeyboardCodesAROS.h OWB-r1097.aros/BAL/Events/WebCore/AROS/BCKeyboardCodesAROS.h
 --- OWB-r1097/BAL/Events/WebCore/AROS/BCKeyboardCodesAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Events/WebCore/AROS/BCKeyboardCodesAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Events/WebCore/AROS/BCKeyboardCodesAROS.h	2014-12-14 04:04:56.129576875 +0000
 @@ -0,0 +1,545 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -720,7 +720,7 @@ diff -ruN OWB-r1097/BAL/Events/WebCore/AROS/BCKeyboardCodesAROS.h OWB-r1097.aros
 +#endif
 diff -ruN OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformKeyboardEventAROS.cpp OWB-r1097.aros/BAL/Events/WebCore/AROS/BCPlatformKeyboardEventAROS.cpp
 --- OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformKeyboardEventAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Events/WebCore/AROS/BCPlatformKeyboardEventAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Events/WebCore/AROS/BCPlatformKeyboardEventAROS.cpp	2014-12-14 04:05:00.928626298 +0000
 @@ -0,0 +1,300 @@
 +/*
 + * Copyright (C) 2008 Joerg Strohmayer
@@ -1024,7 +1024,7 @@ diff -ruN OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformKeyboardEventAROS.cpp OWB-
 +}
 diff -ruN OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformMouseEventAROS.cpp OWB-r1097.aros/BAL/Events/WebCore/AROS/BCPlatformMouseEventAROS.cpp
 --- OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformMouseEventAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Events/WebCore/AROS/BCPlatformMouseEventAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Events/WebCore/AROS/BCPlatformMouseEventAROS.cpp	2014-12-14 04:05:00.928626298 +0000
 @@ -0,0 +1,84 @@
 +/*
 + * Copyright (C) 2008 Joerg Strohmayer
@@ -1112,7 +1112,7 @@ diff -ruN OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformMouseEventAROS.cpp OWB-r10
 +}
 diff -ruN OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformWheelEventAROS.cpp OWB-r1097.aros/BAL/Events/WebCore/AROS/BCPlatformWheelEventAROS.cpp
 --- OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformWheelEventAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Events/WebCore/AROS/BCPlatformWheelEventAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Events/WebCore/AROS/BCPlatformWheelEventAROS.cpp	2014-12-14 04:05:00.928626298 +0000
 @@ -0,0 +1,109 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
@@ -1225,7 +1225,7 @@ diff -ruN OWB-r1097/BAL/Events/WebCore/AROS/BCPlatformWheelEventAROS.cpp OWB-r10
 +
 diff -ruN OWB-r1097/BAL/Events/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Events/WebCore/CMakeLists.txt
 --- OWB-r1097/BAL/Events/WebCore/CMakeLists.txt	2009-10-06 09:13:04.000000000 +0100
-+++ OWB-r1097.aros/BAL/Events/WebCore/CMakeLists.txt	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Events/WebCore/CMakeLists.txt	2014-12-14 04:05:00.929626308 +0000
 @@ -28,3 +28,9 @@
  
      aux_source_directory(${BAL_DIR}/Events/WebCore/SDL WEBCORE_SRC)
@@ -1238,7 +1238,7 @@ diff -ruN OWB-r1097/BAL/Events/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Events/
 +endif(USE_GRAPHICS_AROS)
 diff -ruN OWB-r1097/BAL/Events/WebCore/WK/BCPlatformKeyboardEventWK.h OWB-r1097.aros/BAL/Events/WebCore/WK/BCPlatformKeyboardEventWK.h
 --- OWB-r1097/BAL/Events/WebCore/WK/BCPlatformKeyboardEventWK.h	2009-08-14 16:35:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Events/WebCore/WK/BCPlatformKeyboardEventWK.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Events/WebCore/WK/BCPlatformKeyboardEventWK.h	2014-12-14 04:05:00.929626308 +0000
 @@ -63,6 +63,10 @@
  class BMessage;
  #endif
@@ -1274,7 +1274,7 @@ diff -ruN OWB-r1097/BAL/Events/WebCore/WK/BCPlatformKeyboardEventWK.h OWB-r1097.
  } // namespace WebCore
 diff -ruN OWB-r1097/BAL/Events/WebCore/WK/BCPlatformMouseEventWK.h OWB-r1097.aros/BAL/Events/WebCore/WK/BCPlatformMouseEventWK.h
 --- OWB-r1097/BAL/Events/WebCore/WK/BCPlatformMouseEventWK.h	2009-09-15 07:54:14.000000000 +0100
-+++ OWB-r1097.aros/BAL/Events/WebCore/WK/BCPlatformMouseEventWK.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Events/WebCore/WK/BCPlatformMouseEventWK.h	2014-12-14 04:05:00.929626308 +0000
 @@ -36,7 +36,6 @@
  #if PLATFORM(QT)
  QT_BEGIN_NAMESPACE
@@ -1307,7 +1307,7 @@ diff -ruN OWB-r1097/BAL/Events/WebCore/WK/BCPlatformMouseEventWK.h OWB-r1097.aro
          IntPoint m_globalPosition;
 diff -ruN OWB-r1097/BAL/Events/WebCore/WK/BCPlatformWheelEventWK.h OWB-r1097.aros/BAL/Events/WebCore/WK/BCPlatformWheelEventWK.h
 --- OWB-r1097/BAL/Events/WebCore/WK/BCPlatformWheelEventWK.h	2009-09-25 16:25:08.000000000 +0100
-+++ OWB-r1097.aros/BAL/Events/WebCore/WK/BCPlatformWheelEventWK.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Events/WebCore/WK/BCPlatformWheelEventWK.h	2014-12-14 04:05:00.929626308 +0000
 @@ -54,6 +54,10 @@
  class BMessage;
  #endif
@@ -1332,7 +1332,7 @@ diff -ruN OWB-r1097/BAL/Events/WebCore/WK/BCPlatformWheelEventWK.h OWB-r1097.aro
          IntPoint m_globalPosition;
 diff -ruN OWB-r1097/BAL/Facilities/WebCore/AROS/BCFileChooserAROS.cpp OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCFileChooserAROS.cpp
 --- OWB-r1097/BAL/Facilities/WebCore/AROS/BCFileChooserAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCFileChooserAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCFileChooserAROS.cpp	2014-12-14 04:05:00.930626318 +0000
 @@ -0,0 +1,53 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
@@ -1389,7 +1389,7 @@ diff -ruN OWB-r1097/BAL/Facilities/WebCore/AROS/BCFileChooserAROS.cpp OWB-r1097.
 +}
 diff -ruN OWB-r1097/BAL/Facilities/WebCore/AROS/BCLanguageAROS.cpp OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCLanguageAROS.cpp
 --- OWB-r1097/BAL/Facilities/WebCore/AROS/BCLanguageAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCLanguageAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCLanguageAROS.cpp	2014-12-14 04:05:00.930626318 +0000
 @@ -0,0 +1,43 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -1436,7 +1436,7 @@ diff -ruN OWB-r1097/BAL/Facilities/WebCore/AROS/BCLanguageAROS.cpp OWB-r1097.aro
 +}
 diff -ruN OWB-r1097/BAL/Facilities/WebCore/AROS/BCLanguageAROS.h OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCLanguageAROS.h
 --- OWB-r1097/BAL/Facilities/WebCore/AROS/BCLanguageAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCLanguageAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCLanguageAROS.h	2014-12-14 04:05:00.930626318 +0000
 @@ -0,0 +1,40 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -1480,7 +1480,7 @@ diff -ruN OWB-r1097/BAL/Facilities/WebCore/AROS/BCLanguageAROS.h OWB-r1097.aros/
 +#endif
 diff -ruN OWB-r1097/BAL/Facilities/WebCore/AROS/BCLoggingAROS.cpp OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCLoggingAROS.cpp
 --- OWB-r1097/BAL/Facilities/WebCore/AROS/BCLoggingAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCLoggingAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCLoggingAROS.cpp	2014-12-14 04:05:01.303630160 +0000
 @@ -0,0 +1,41 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -1525,7 +1525,7 @@ diff -ruN OWB-r1097/BAL/Facilities/WebCore/AROS/BCLoggingAROS.cpp OWB-r1097.aros
 +} // namespace WebCore
 diff -ruN OWB-r1097/BAL/Facilities/WebCore/AROS/BCMIMETypeRegistryAROS.cpp OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCMIMETypeRegistryAROS.cpp
 --- OWB-r1097/BAL/Facilities/WebCore/AROS/BCMIMETypeRegistryAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCMIMETypeRegistryAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCMIMETypeRegistryAROS.cpp	2014-12-14 04:05:01.303630160 +0000
 @@ -0,0 +1,75 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -1604,7 +1604,7 @@ diff -ruN OWB-r1097/BAL/Facilities/WebCore/AROS/BCMIMETypeRegistryAROS.cpp OWB-r
 +}
 diff -ruN OWB-r1097/BAL/Facilities/WebCore/AROS/BCSSLKeyGeneratorAROS.cpp OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCSSLKeyGeneratorAROS.cpp
 --- OWB-r1097/BAL/Facilities/WebCore/AROS/BCSSLKeyGeneratorAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCSSLKeyGeneratorAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Facilities/WebCore/AROS/BCSSLKeyGeneratorAROS.cpp	2014-12-14 04:05:01.304630170 +0000
 @@ -0,0 +1,53 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -1661,7 +1661,7 @@ diff -ruN OWB-r1097/BAL/Facilities/WebCore/AROS/BCSSLKeyGeneratorAROS.cpp OWB-r1
 +
 diff -ruN OWB-r1097/BAL/Facilities/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Facilities/WebCore/CMakeLists.txt
 --- OWB-r1097/BAL/Facilities/WebCore/CMakeLists.txt	2009-10-06 09:13:04.000000000 +0100
-+++ OWB-r1097.aros/BAL/Facilities/WebCore/CMakeLists.txt	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Facilities/WebCore/CMakeLists.txt	2014-12-14 04:05:01.304630170 +0000
 @@ -38,3 +38,9 @@
  
      aux_source_directory(${BAL_DIR}/Facilities/WebCore/SDL WEBCORE_SRC)   
@@ -1674,7 +1674,7 @@ diff -ruN OWB-r1097/BAL/Facilities/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Fac
 +endif(USE_GRAPHICS_AROS)
 diff -ruN OWB-r1097/BAL/Facilities/WebCore/WK/BCMIMETypeRegistryWK.cpp OWB-r1097.aros/BAL/Facilities/WebCore/WK/BCMIMETypeRegistryWK.cpp
 --- OWB-r1097/BAL/Facilities/WebCore/WK/BCMIMETypeRegistryWK.cpp	2009-09-15 07:54:14.000000000 +0100
-+++ OWB-r1097.aros/BAL/Facilities/WebCore/WK/BCMIMETypeRegistryWK.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Facilities/WebCore/WK/BCMIMETypeRegistryWK.cpp	2014-12-14 04:05:01.304630170 +0000
 @@ -121,6 +121,9 @@
          "image/bmp",
          "image/vnd.microsoft.icon",    // ico
@@ -1687,7 +1687,7 @@ diff -ruN OWB-r1097/BAL/Facilities/WebCore/WK/BCMIMETypeRegistryWK.cpp OWB-r1097
      for (size_t i = 0; i < sizeof(types) / sizeof(types[0]); ++i) {
 diff -ruN OWB-r1097/BAL/Filesystem/WebCore/Posix/BCFileSystemPosix.cpp OWB-r1097.aros/BAL/Filesystem/WebCore/Posix/BCFileSystemPosix.cpp
 --- OWB-r1097/BAL/Filesystem/WebCore/Posix/BCFileSystemPosix.cpp	2009-05-06 16:25:57.000000000 +0100
-+++ OWB-r1097.aros/BAL/Filesystem/WebCore/Posix/BCFileSystemPosix.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Filesystem/WebCore/Posix/BCFileSystemPosix.cpp	2014-12-14 04:05:01.304630170 +0000
 @@ -128,7 +128,7 @@
  
  String pathByAppendingComponent(const String& path, const String& component)
@@ -1699,7 +1699,7 @@ diff -ruN OWB-r1097/BAL/Filesystem/WebCore/Posix/BCFileSystemPosix.cpp OWB-r1097
          return path + "/" + component;
 diff -ruN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontCacheFreetype.cpp OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontCacheFreetype.cpp
 --- OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontCacheFreetype.cpp	2009-06-05 14:35:11.000000000 +0100
-+++ OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontCacheFreetype.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontCacheFreetype.cpp	2014-12-14 04:05:01.304630170 +0000
 @@ -41,8 +41,13 @@
  
  void FontCache::platformInit()
@@ -1748,7 +1748,7 @@ diff -ruN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontCacheFreetype.cpp OWB-r1097
          // FIXME: FT_Done_Face(face); we should clean the face correctly the FT_Face but we can't do that here...
 diff -ruN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontFreetype.cpp OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontFreetype.cpp
 --- OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontFreetype.cpp	2009-06-05 14:35:11.000000000 +0100
-+++ OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontFreetype.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontFreetype.cpp	2014-12-14 04:05:01.305630180 +0000
 @@ -55,7 +55,7 @@
      Uint32 rmask, gmask, bmask, amask;
      // SDL interprets each pixel as a 32-bit number, so our masks must depend
@@ -1778,7 +1778,7 @@ diff -ruN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontFreetype.cpp OWB-r1097.aros
      if (!img) {
 diff -ruN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.cpp OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.cpp
 --- OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.cpp	2009-07-27 12:56:09.000000000 +0100
-+++ OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.cpp	2014-12-14 04:05:01.305630180 +0000
 @@ -34,6 +34,7 @@
  #include "FontDescription.h"
  #include <ft2build.h>
@@ -1878,7 +1878,7 @@ diff -ruN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.cpp OW
  }
 diff -ruN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.h OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.h
 --- OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.h	2009-07-27 12:56:09.000000000 +0100
-+++ OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.h	2014-12-14 04:05:01.305630180 +0000
 @@ -31,6 +31,8 @@
  #include "GlyphBuffer.h"
  #include "FontDescription.h"
@@ -1909,7 +1909,7 @@ diff -ruN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCFontPlatformDataFreetype.h OWB-
  };
 diff -ruN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCSimpleFontDataFreetype.cpp OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCSimpleFontDataFreetype.cpp
 --- OWB-r1097/BAL/Fonts/WebCore/Freetype/BCSimpleFontDataFreetype.cpp	2009-06-05 14:35:11.000000000 +0100
-+++ OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCSimpleFontDataFreetype.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Fonts/WebCore/Freetype/BCSimpleFontDataFreetype.cpp	2014-12-14 04:05:01.305630180 +0000
 @@ -72,11 +72,13 @@
  void SimpleFontData::platformDestroy()
  {
@@ -1926,7 +1926,7 @@ diff -ruN OWB-r1097/BAL/Fonts/WebCore/Freetype/BCSimpleFontDataFreetype.cpp OWB-
      }
 diff -ruN OWB-r1097/BAL/Fonts/WebCore/WK/BCFontCacheWK.h OWB-r1097.aros/BAL/Fonts/WebCore/WK/BCFontCacheWK.h
 --- OWB-r1097/BAL/Fonts/WebCore/WK/BCFontCacheWK.h	2009-09-21 15:00:57.000000000 +0100
-+++ OWB-r1097.aros/BAL/Fonts/WebCore/WK/BCFontCacheWK.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Fonts/WebCore/WK/BCFontCacheWK.h	2014-12-14 04:05:01.306630190 +0000
 @@ -92,9 +92,10 @@
      size_t inactiveFontDataCount();
      void purgeInactiveFontData(int count = INT_MAX);
@@ -1941,7 +1941,7 @@ diff -ruN OWB-r1097/BAL/Fonts/WebCore/WK/BCFontCacheWK.h OWB-r1097.aros/BAL/Font
      FontPlatformData* getSimilarFontPlatformData(const Font&);
 diff -ruN OWB-r1097/BAL/Geolocation/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Geolocation/WebCore/CMakeLists.txt
 --- OWB-r1097/BAL/Geolocation/WebCore/CMakeLists.txt	2009-09-16 16:49:28.000000000 +0100
-+++ OWB-r1097.aros/BAL/Geolocation/WebCore/CMakeLists.txt	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Geolocation/WebCore/CMakeLists.txt	2014-12-14 04:05:01.306630190 +0000
 @@ -16,4 +16,9 @@
          create_include_link(${BAL_DIR}/Geolocation/WebCore/Mock BAL)
          aux_source_directory(${BAL_DIR}/Geolocation/WebCore/Mock WEBCORE_SRC)
@@ -1954,7 +1954,7 @@ diff -ruN OWB-r1097/BAL/Geolocation/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Ge
  endif(ENABLE_GEOLOCATION)
 diff -ruN OWB-r1097/BAL/Graphics/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Graphics/WebCore/CMakeLists.txt
 --- OWB-r1097/BAL/Graphics/WebCore/CMakeLists.txt	2009-10-14 14:25:22.000000000 +0100
-+++ OWB-r1097.aros/BAL/Graphics/WebCore/CMakeLists.txt	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Graphics/WebCore/CMakeLists.txt	2014-12-14 04:05:01.306630190 +0000
 @@ -26,11 +26,11 @@
      aux_source_directory(${GRAPHICS_DIR}/Qt WEBCORE_SRC)
  endif(USE_GRAPHICS_QT)
@@ -1971,7 +1971,7 @@ diff -ruN OWB-r1097/BAL/Graphics/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Graph
  if(ENABLE_FILTERS)
 diff -ruN OWB-r1097/BAL/Graphics/WebCore/SDL/BCApplyTransparencySDL.h OWB-r1097.aros/BAL/Graphics/WebCore/SDL/BCApplyTransparencySDL.h
 --- OWB-r1097/BAL/Graphics/WebCore/SDL/BCApplyTransparencySDL.h	2009-02-11 16:41:27.000000000 +0000
-+++ OWB-r1097.aros/BAL/Graphics/WebCore/SDL/BCApplyTransparencySDL.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Graphics/WebCore/SDL/BCApplyTransparencySDL.h	2014-12-14 04:05:01.306630190 +0000
 @@ -39,7 +39,7 @@
      Uint32 rmask, gmask, bmask, amask;
      /* SDL interprets each pixel as a 32-bit number, so our masks must depend
@@ -1991,7 +1991,7 @@ diff -ruN OWB-r1097/BAL/Graphics/WebCore/SDL/BCApplyTransparencySDL.h OWB-r1097.
      uint32_t alpha = 0;
 diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/ImageDecoder/WebCore/CMakeLists.txt
 --- OWB-r1097/BAL/ImageDecoder/WebCore/CMakeLists.txt	2009-10-06 09:13:04.000000000 +0100
-+++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/CMakeLists.txt	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/CMakeLists.txt	2014-12-14 04:05:01.306630190 +0000
 @@ -35,3 +35,10 @@
      aux_source_directory(${BAL_DIR}/ImageDecoder/WebCore/WK WEBCORE_SRC)
      aux_source_directory(${BAL_DIR}/ImageDecoder/WebCore/SDL WEBCORE_SRC)
@@ -2005,7 +2005,7 @@ diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/I
 +endif(USE_GRAPHICS_AROS)
 diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp OWB-r1097.aros/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp
 --- OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.cpp	2014-12-14 04:05:01.307630201 +0000
 @@ -0,0 +1,154 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk.
@@ -2163,7 +2163,7 @@ diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderW
 +#endif // PLATFORM(AROS)
 diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.h OWB-r1097.aros/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.h
 --- OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderWK.h	2014-12-14 04:05:01.307630201 +0000
 @@ -0,0 +1,64 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk.
@@ -2231,7 +2231,7 @@ diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/Datatype/WK/BCDatatypeImageDecoderW
 +#endif
 diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/PNG/WK/BCPNGImageDecoderWK.cpp OWB-r1097.aros/BAL/ImageDecoder/WebCore/PNG/WK/BCPNGImageDecoderWK.cpp
 --- OWB-r1097/BAL/ImageDecoder/WebCore/PNG/WK/BCPNGImageDecoderWK.cpp	2009-08-19 12:59:14.000000000 +0100
-+++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/PNG/WK/BCPNGImageDecoderWK.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/PNG/WK/BCPNGImageDecoderWK.cpp	2014-12-14 04:05:01.370630850 +0000
 @@ -100,7 +100,7 @@
          m_decodingSizeOnly = sizeOnly;
  
@@ -2311,7 +2311,7 @@ diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/PNG/WK/BCPNGImageDecoderWK.cpp OWB-
  
 diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/SDL/BCImageDecoderSDL.cpp OWB-r1097.aros/BAL/ImageDecoder/WebCore/SDL/BCImageDecoderSDL.cpp
 --- OWB-r1097/BAL/ImageDecoder/WebCore/SDL/BCImageDecoderSDL.cpp	2009-08-31 11:33:08.000000000 +0100
-+++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/SDL/BCImageDecoderSDL.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/SDL/BCImageDecoderSDL.cpp	2014-12-14 04:05:01.370630850 +0000
 @@ -35,7 +35,7 @@
      Uint32 rmask, gmask, bmask, amask;
      /* SDL interprets each pixel as a 32-bit number, so our masks must depend
@@ -2323,7 +2323,7 @@ diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/SDL/BCImageDecoderSDL.cpp OWB-r1097
      bmask = 0x0000ff00;
 diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/WK/BCImageDecoderWK.cpp OWB-r1097.aros/BAL/ImageDecoder/WebCore/WK/BCImageDecoderWK.cpp
 --- OWB-r1097/BAL/ImageDecoder/WebCore/WK/BCImageDecoderWK.cpp	2009-08-31 11:33:08.000000000 +0100
-+++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/WK/BCImageDecoderWK.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/ImageDecoder/WebCore/WK/BCImageDecoderWK.cpp	2014-12-14 04:05:01.371630860 +0000
 @@ -21,6 +21,7 @@
  #include "config.h"
  
@@ -2403,7 +2403,7 @@ diff -ruN OWB-r1097/BAL/ImageDecoder/WebCore/WK/BCImageDecoderWK.cpp OWB-r1097.a
  }
 diff -ruN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.cpp OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.cpp
 --- OWB-r1097/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.cpp	2014-12-14 04:05:01.371630860 +0000
 @@ -0,0 +1,420 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
@@ -2827,7 +2827,7 @@ diff -ruN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS
 +}
 diff -ruN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.h OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.h
 --- OWB-r1097/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS.h	2014-12-14 04:05:01.371630860 +0000
 @@ -0,0 +1,115 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -2946,7 +2946,7 @@ diff -ruN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCLocalizedStringsAROS
 +#endif
 diff -ruN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.cpp OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.cpp
 --- OWB-r1097/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.cpp	2014-12-14 04:05:01.406631220 +0000
 @@ -0,0 +1,45 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -2995,7 +2995,7 @@ diff -ruN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInt
 +}
 diff -ruN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.h OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.h
 --- OWB-r1097/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInternalICUAROS.h	2014-12-14 04:05:01.406631220 +0000
 @@ -0,0 +1,41 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -3040,7 +3040,7 @@ diff -ruN OWB-r1097/BAL/Internationalization/WebCore/AROS/BCTextBreakIteratorInt
 +#endif
 diff -ruN OWB-r1097/BAL/Internationalization/WebCore/AROS/strings.h OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/strings.h
 --- OWB-r1097/BAL/Internationalization/WebCore/AROS/strings.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/strings.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Internationalization/WebCore/AROS/strings.h	2014-12-14 04:05:01.407631231 +0000
 @@ -0,0 +1,640 @@
 +/****************************************************************
 +   This file was created automatically by `FlexCat 2.4'
@@ -3684,7 +3684,7 @@ diff -ruN OWB-r1097/BAL/Internationalization/WebCore/AROS/strings.h OWB-r1097.ar
 +#endif
 diff -ruN OWB-r1097/BAL/Internationalization/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Internationalization/WebCore/CMakeLists.txt
 --- OWB-r1097/BAL/Internationalization/WebCore/CMakeLists.txt	2009-10-06 09:13:04.000000000 +0100
-+++ OWB-r1097.aros/BAL/Internationalization/WebCore/CMakeLists.txt	2013-07-10 07:54:24.000000000 +0100
++++ OWB-r1097.aros/BAL/Internationalization/WebCore/CMakeLists.txt	2014-12-14 04:05:01.407631231 +0000
 @@ -37,6 +37,12 @@
      aux_source_directory(${BAL_DIR}/Internationalization/WebCore/Generic WEBCORE_SRC)
  endif(USE_I18N_GENERIC)
@@ -3700,7 +3700,7 @@ diff -ruN OWB-r1097/BAL/Internationalization/WebCore/CMakeLists.txt OWB-r1097.ar
      create_include_link(${BAL_DIR}/Internationalization/WebCore/Qt BAL/qt)
 diff -ruN OWB-r1097/BAL/Internationalization/WebCore/ICU/BCTextEncodingDetectorICU.cpp OWB-r1097.aros/BAL/Internationalization/WebCore/ICU/BCTextEncodingDetectorICU.cpp
 --- OWB-r1097/BAL/Internationalization/WebCore/ICU/BCTextEncodingDetectorICU.cpp	2009-03-27 17:37:38.000000000 +0000
-+++ OWB-r1097.aros/BAL/Internationalization/WebCore/ICU/BCTextEncodingDetectorICU.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Internationalization/WebCore/ICU/BCTextEncodingDetectorICU.cpp	2014-12-14 04:05:01.407631231 +0000
 @@ -53,7 +53,7 @@
      UNUSED_PARAM(hintEncodingName);
      return false;
@@ -3712,7 +3712,7 @@ diff -ruN OWB-r1097/BAL/Internationalization/WebCore/ICU/BCTextEncodingDetectorI
      if (U_FAILURE(status))
 diff -ruN OWB-r1097/BAL/Media/WebCore/AROS/BCSoundAROS.cpp OWB-r1097.aros/BAL/Media/WebCore/AROS/BCSoundAROS.cpp
 --- OWB-r1097/BAL/Media/WebCore/AROS/BCSoundAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Media/WebCore/AROS/BCSoundAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Media/WebCore/AROS/BCSoundAROS.cpp	2014-12-14 04:05:01.407631231 +0000
 @@ -0,0 +1,42 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
@@ -3758,7 +3758,7 @@ diff -ruN OWB-r1097/BAL/Media/WebCore/AROS/BCSoundAROS.cpp OWB-r1097.aros/BAL/Me
 +}
 diff -ruN OWB-r1097/BAL/Media/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Media/WebCore/CMakeLists.txt
 --- OWB-r1097/BAL/Media/WebCore/CMakeLists.txt	2009-10-06 09:13:04.000000000 +0100
-+++ OWB-r1097.aros/BAL/Media/WebCore/CMakeLists.txt	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Media/WebCore/CMakeLists.txt	2014-12-14 04:05:01.407631231 +0000
 @@ -39,3 +39,7 @@
      endif(ENABLE_VIDEO)
          aux_source_directory(${BAL_DIR}/Media/WebCore/SDL WEBCORE_SRC)
@@ -3769,7 +3769,7 @@ diff -ruN OWB-r1097/BAL/Media/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Media/We
 +endif(USE_GRAPHICS_AROS)
 diff -ruN OWB-r1097/BAL/Memory/WTF/BCFastMallocWTF.cpp OWB-r1097.aros/BAL/Memory/WTF/BCFastMallocWTF.cpp
 --- OWB-r1097/BAL/Memory/WTF/BCFastMallocWTF.cpp	2009-10-05 11:36:03.000000000 +0100
-+++ OWB-r1097.aros/BAL/Memory/WTF/BCFastMallocWTF.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Memory/WTF/BCFastMallocWTF.cpp	2014-12-14 04:05:01.408631241 +0000
 @@ -192,10 +192,11 @@
  #if FORCE_SYSTEM_MALLOC
  
@@ -3787,7 +3787,7 @@ diff -ruN OWB-r1097/BAL/Memory/WTF/BCFastMallocWTF.cpp OWB-r1097.aros/BAL/Memory
  namespace WTF {
 diff -ruN OWB-r1097/BAL/Memory/WTF/BCTCSystemAllocWTF.cpp OWB-r1097.aros/BAL/Memory/WTF/BCTCSystemAllocWTF.cpp
 --- OWB-r1097/BAL/Memory/WTF/BCTCSystemAllocWTF.cpp	2009-07-29 12:38:23.000000000 +0100
-+++ OWB-r1097.aros/BAL/Memory/WTF/BCTCSystemAllocWTF.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Memory/WTF/BCTCSystemAllocWTF.cpp	2014-12-14 04:05:01.408631241 +0000
 @@ -52,8 +52,10 @@
  #else
  #include <errno.h>
@@ -3801,7 +3801,7 @@ diff -ruN OWB-r1097/BAL/Memory/WTF/BCTCSystemAllocWTF.cpp OWB-r1097.aros/BAL/Mem
  #define MAP_ANONYMOUS MAP_ANON
 diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCAuthenticationChallengeCurl.h OWB-r1097.aros/BAL/Network/WebCore/Curl/BCAuthenticationChallengeCurl.h
 --- OWB-r1097/BAL/Network/WebCore/Curl/BCAuthenticationChallengeCurl.h	2008-12-10 09:32:50.000000000 +0000
-+++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCAuthenticationChallengeCurl.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCAuthenticationChallengeCurl.h	2014-12-14 04:05:01.409631251 +0000
 @@ -39,8 +39,9 @@
      {
      }
@@ -3815,7 +3815,7 @@ diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCAuthenticationChallengeCurl.h OWB
  
 diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCCookieManagerCurl.cpp OWB-r1097.aros/BAL/Network/WebCore/Curl/BCCookieManagerCurl.cpp
 --- OWB-r1097/BAL/Network/WebCore/Curl/BCCookieManagerCurl.cpp	2009-10-16 19:40:05.000000000 +0100
-+++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCCookieManagerCurl.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCCookieManagerCurl.cpp	2014-12-14 04:05:01.409631251 +0000
 @@ -79,7 +79,7 @@
  bool CookieManager::shouldRejectForSecurityReason(const ParsedCookie* cookie, const KURL& url)
  {
@@ -3882,7 +3882,7 @@ diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCCookieManagerCurl.cpp OWB-r1097.a
                  curMap = new CookieMap();
 diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCCookieParserCurl.cpp OWB-r1097.aros/BAL/Network/WebCore/Curl/BCCookieParserCurl.cpp
 --- OWB-r1097/BAL/Network/WebCore/Curl/BCCookieParserCurl.cpp	2009-08-14 16:35:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCCookieParserCurl.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCCookieParserCurl.cpp	2014-12-14 04:05:01.409631251 +0000
 @@ -316,9 +316,16 @@
      if (!res->domain() || !res->domain().length())
          res->setDomain("." + m_defaultCookieURL.host());
@@ -3905,7 +3905,7 @@ diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCCookieParserCurl.cpp OWB-r1097.ar
  }
 diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.cpp OWB-r1097.aros/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.cpp
 --- OWB-r1097/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.cpp	2008-12-10 09:32:50.000000000 +0000
-+++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.cpp	2014-12-14 04:05:01.409631251 +0000
 @@ -110,4 +110,14 @@
      return m_formDataElementIndex < elements.size();
  }
@@ -3923,7 +3923,7 @@ diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.cpp OWB-r1097.
  } // namespace WebCore
 diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.h OWB-r1097.aros/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.h
 --- OWB-r1097/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.h	2008-12-10 09:32:50.000000000 +0000
-+++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.h	2014-12-14 04:05:01.409631251 +0000
 @@ -47,6 +47,7 @@
  
      size_t read(void* ptr, size_t blockSize, size_t numberOfBlocks);
@@ -3934,7 +3934,7 @@ diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCFormDataStreamCurl.h OWB-r1097.ar
      // We can hold a weak reference to our ResourceHandle as it holds a strong reference
 diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleCurl.cpp OWB-r1097.aros/BAL/Network/WebCore/Curl/BCResourceHandleCurl.cpp
 --- OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleCurl.cpp	2009-10-16 19:40:05.000000000 +0100
-+++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCResourceHandleCurl.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCResourceHandleCurl.cpp	2014-12-14 04:05:01.410631261 +0000
 @@ -238,20 +238,87 @@
      response = syncLoader.resourceResponse();
  }
@@ -4032,7 +4032,7 @@ diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleCurl.cpp OWB-r1097.
  void ResourceHandle::receivedCancellation(const AuthenticationChallenge&)
 diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.cpp OWB-r1097.aros/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.cpp
 --- OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.cpp	2009-10-16 19:40:05.000000000 +0100
-+++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.cpp	2014-12-14 04:05:01.410631261 +0000
 @@ -50,13 +50,18 @@
  #include <wtf/Threading.h>
  #include <wtf/Vector.h>
@@ -4198,7 +4198,7 @@ diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.cpp OWB
          HTTPHeaderMap customHeaders = job->request().httpHeaderFields();
 diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.h OWB-r1097.aros/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.h
 --- OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.h	2009-08-12 21:20:06.000000000 +0100
-+++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.h	2014-12-14 04:05:01.410631261 +0000
 @@ -73,6 +73,7 @@
      Vector<ResourceHandle*> m_resourceHandleList;
      const CString m_certificatePath;
@@ -4209,7 +4209,7 @@ diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/BCResourceHandleManagerCurl.h OWB-r
  }
 diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/CookieDatabaseBackingStore/BCCookieDatabaseBackingStoreCurl.cpp OWB-r1097.aros/BAL/Network/WebCore/Curl/CookieDatabaseBackingStore/BCCookieDatabaseBackingStoreCurl.cpp
 --- OWB-r1097/BAL/Network/WebCore/Curl/CookieDatabaseBackingStore/BCCookieDatabaseBackingStoreCurl.cpp	2009-08-14 16:35:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Network/WebCore/Curl/CookieDatabaseBackingStore/BCCookieDatabaseBackingStoreCurl.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Network/WebCore/Curl/CookieDatabaseBackingStore/BCCookieDatabaseBackingStoreCurl.cpp	2014-12-14 04:05:01.411631272 +0000
 @@ -131,7 +131,7 @@
  
      // Binds all the values
@@ -4221,7 +4221,7 @@ diff -ruN OWB-r1097/BAL/Network/WebCore/Curl/CookieDatabaseBackingStore/BCCookie
          LOG_ERROR("Cannot update cookie");
 diff -ruN OWB-r1097/BAL/Network/WebCore/WK/BCResourceHandleInternalWK.h OWB-r1097.aros/BAL/Network/WebCore/WK/BCResourceHandleInternalWK.h
 --- OWB-r1097/BAL/Network/WebCore/WK/BCResourceHandleInternalWK.h	2009-09-16 16:49:28.000000000 +0100
-+++ OWB-r1097.aros/BAL/Network/WebCore/WK/BCResourceHandleInternalWK.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Network/WebCore/WK/BCResourceHandleInternalWK.h	2014-12-14 04:05:01.411631272 +0000
 @@ -108,6 +108,8 @@
              , m_shouldIncludeExpectHeader(true)
              , m_cancelled(false)
@@ -4242,7 +4242,7 @@ diff -ruN OWB-r1097/BAL/Network/WebCore/WK/BCResourceHandleInternalWK.h OWB-r109
          SoupMessage* m_msg;
 diff -ruN OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp OWB-r1097.aros/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp
 --- OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp	2014-12-14 04:05:01.411631272 +0000
 @@ -0,0 +1,165 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
@@ -4411,7 +4411,7 @@ diff -ruN OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.cpp OWB-r1097.aros/
 +}
 diff -ruN OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.h OWB-r1097.aros/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.h
 --- OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.h	2014-12-14 04:05:01.411631272 +0000
 @@ -0,0 +1,86 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -4501,7 +4501,7 @@ diff -ruN OWB-r1097/BAL/Timer/WebCore/AROS/BCSharedTimerAROS.h OWB-r1097.aros/BA
 +#endif
 diff -ruN OWB-r1097/BAL/Timer/WebCore/AROS/BCSystemTimeAROS.cpp OWB-r1097.aros/BAL/Timer/WebCore/AROS/BCSystemTimeAROS.cpp
 --- OWB-r1097/BAL/Timer/WebCore/AROS/BCSystemTimeAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Timer/WebCore/AROS/BCSystemTimeAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Timer/WebCore/AROS/BCSystemTimeAROS.cpp	2014-12-14 04:05:01.411631272 +0000
 @@ -0,0 +1,41 @@
 +/*
 + * Copyright (C) 2006 Apple Computer, Inc.  All rights reserved.
@@ -4546,7 +4546,7 @@ diff -ruN OWB-r1097/BAL/Timer/WebCore/AROS/BCSystemTimeAROS.cpp OWB-r1097.aros/B
 +}
 diff -ruN OWB-r1097/BAL/Timer/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Timer/WebCore/CMakeLists.txt
 --- OWB-r1097/BAL/Timer/WebCore/CMakeLists.txt	2009-03-09 15:37:11.000000000 +0000
-+++ OWB-r1097.aros/BAL/Timer/WebCore/CMakeLists.txt	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Timer/WebCore/CMakeLists.txt	2014-12-14 04:05:01.412631282 +0000
 @@ -18,3 +18,7 @@
      aux_source_directory(${BAL_DIR}/Timer/WebCore/Qt WEBCORE_SRC)
  endif(USE_TIMER_QT)
@@ -4555,9 +4555,25 @@ diff -ruN OWB-r1097/BAL/Timer/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Timer/We
 +    create_include_link(${BAL_DIR}/Timer/WebCore/AROS BAL)
 +    aux_source_directory(${BAL_DIR}/Timer/WebCore/AROS WEBCORE_SRC)
 +endif(USE_TIMER_AROS)
+diff -ruN OWB-r1097/BAL/Types/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Types/WebCore/CMakeLists.txt
+--- OWB-r1097/BAL/Types/WebCore/CMakeLists.txt	2009-09-15 07:54:14.000000000 +0100
++++ OWB-r1097.aros/BAL/Types/WebCore/CMakeLists.txt	2014-12-14 04:05:01.412631282 +0000
+@@ -25,3 +25,12 @@
+         ${TYPES_DIR}/SDL/BCKURLSDL.cpp
+     )
+ endif(USE_GRAPHICS_SDL)
++
++if(USE_GRAPHICS_AROS)
++    create_include_link(${TYPES_DIR}/SDL BAL)
++    list(APPEND WEBCORE_SRC
++        ${TYPES_DIR}/SDL/BCIconSDL.cpp
++        ${TYPES_DIR}/SDL/BCSharedBufferSDL.cpp
++        ${TYPES_DIR}/SDL/BCKURLSDL.cpp
++    )
++endif(USE_GRAPHICS_AROS)
 diff -ruN OWB-r1097/BAL/Types/WTF/BCTCSpinLockWTF.h OWB-r1097.aros/BAL/Types/WTF/BCTCSpinLockWTF.h
 --- OWB-r1097/BAL/Types/WTF/BCTCSpinLockWTF.h	2009-10-06 09:13:04.000000000 +0100
-+++ OWB-r1097.aros/BAL/Types/WTF/BCTCSpinLockWTF.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Types/WTF/BCTCSpinLockWTF.h	2014-12-14 04:05:01.412631282 +0000
 @@ -33,7 +33,7 @@
  #ifndef TCMALLOC_INTERNAL_SPINLOCK_H__
  #define TCMALLOC_INTERNAL_SPINLOCK_H__
@@ -4599,25 +4615,110 @@ diff -ruN OWB-r1097/BAL/Types/WTF/BCTCSpinLockWTF.h OWB-r1097.aros/BAL/Types/WTF
  #else
  
  #include <pthread.h>
-diff -ruN OWB-r1097/BAL/Types/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Types/WebCore/CMakeLists.txt
---- OWB-r1097/BAL/Types/WebCore/CMakeLists.txt	2009-09-15 07:54:14.000000000 +0100
-+++ OWB-r1097.aros/BAL/Types/WebCore/CMakeLists.txt	2013-07-10 07:53:52.000000000 +0100
-@@ -25,3 +25,12 @@
-         ${TYPES_DIR}/SDL/BCKURLSDL.cpp
-     )
- endif(USE_GRAPHICS_SDL)
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectAROS.cpp	2014-12-14 04:05:01.412631282 +0000
+@@ -0,0 +1,40 @@
++/*
++ * Copyright (C) 2008 Pleyo.  All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ *
++ * 1.  Redistributions of source code must retain the above copyright
++ *     notice, this list of conditions and the following disclaimer.
++ * 2.  Redistributions in binary form must reproduce the above copyright
++ *     notice, this list of conditions and the following disclaimer in the
++ *     documentation and/or other materials provided with the distribution.
++ * 3.  Neither the name of Pleyo nor the names of
++ *     its contributors may be used to endorse or promote products derived
++ *     from this software without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY PLEYO AND ITS CONTRIBUTORS "AS IS" AND ANY
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED. IN NO EVENT SHALL PLEYO OR ITS CONTRIBUTORS BE LIABLE FOR ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
++ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
 +
-+if(USE_GRAPHICS_AROS)
-+    create_include_link(${TYPES_DIR}/SDL BAL)
-+    list(APPEND WEBCORE_SRC
-+        ${TYPES_DIR}/SDL/BCIconSDL.cpp
-+        ${TYPES_DIR}/SDL/BCSharedBufferSDL.cpp
-+        ${TYPES_DIR}/SDL/BCKURLSDL.cpp
-+    )
-+endif(USE_GRAPHICS_AROS)
++#include "config.h"
++#include "AccessibilityObject.h"
++
++namespace WebCore {
++
++#if HAVE(ACCESSIBILITY)
++bool AccessibilityObject::accessibilityIgnoreAttachment() const
++{
++    return false;
++}
++#endif
++} // namespace WebCore
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectWrapperAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectWrapperAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectWrapperAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectWrapperAROS.cpp	2014-12-14 04:05:01.412631282 +0000
+@@ -0,0 +1,53 @@
++/*
++ * Copyright (C) 2008 Pleyo.  All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ *
++ * 1.  Redistributions of source code must retain the above copyright
++ *     notice, this list of conditions and the following disclaimer.
++ * 2.  Redistributions in binary form must reproduce the above copyright
++ *     notice, this list of conditions and the following disclaimer in the
++ *     documentation and/or other materials provided with the distribution.
++ * 3.  Neither the name of Pleyo nor the names of
++ *     its contributors may be used to endorse or promote products derived
++ *     from this software without specific prior written permission.
++ *
++ * THIS SOFTWARE IS PROVIDED BY PLEYO AND ITS CONTRIBUTORS "AS IS" AND ANY
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED. IN NO EVENT SHALL PLEYO OR ITS CONTRIBUTORS BE LIABLE FOR ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
++ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#include "config.h"
++#include "AccessibilityObject.h"
++#include "RefCounted.h"
++
++class AccessibilityObjectWrapper {
++};
++
++
++namespace WebCore {
++
++
++#if HAVE(ACCESSIBILITY)
++AccessibilityObjectWrapper* AccessibilityObject::wrapper() const 
++{ 
++    return m_wrapper; 
++}
++
++void AccessibilityObject::setWrapper(AccessibilityObjectWrapper* wrapper)
++{
++    m_wrapper = wrapper;
++}
++#endif
++
++}
++
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCAXObjectCacheAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCAXObjectCacheAROS.cpp
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCAXObjectCacheAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCAXObjectCacheAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCAXObjectCacheAROS.cpp	2014-12-14 04:05:01.484632024 +0000
 @@ -0,0 +1,57 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -4676,110 +4777,9 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCAXObjectCacheAROS.cpp OWB-r1097.a
 +}
 +#endif
 +} // namespace WebCore
-diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectAROS.cpp	2013-07-10 07:53:52.000000000 +0100
-@@ -0,0 +1,40 @@
-+/*
-+ * Copyright (C) 2008 Pleyo.  All rights reserved.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions
-+ * are met:
-+ *
-+ * 1.  Redistributions of source code must retain the above copyright
-+ *     notice, this list of conditions and the following disclaimer.
-+ * 2.  Redistributions in binary form must reproduce the above copyright
-+ *     notice, this list of conditions and the following disclaimer in the
-+ *     documentation and/or other materials provided with the distribution.
-+ * 3.  Neither the name of Pleyo nor the names of
-+ *     its contributors may be used to endorse or promote products derived
-+ *     from this software without specific prior written permission.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY PLEYO AND ITS CONTRIBUTORS "AS IS" AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL PLEYO OR ITS CONTRIBUTORS BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+#include "config.h"
-+#include "AccessibilityObject.h"
-+
-+namespace WebCore {
-+
-+#if HAVE(ACCESSIBILITY)
-+bool AccessibilityObject::accessibilityIgnoreAttachment() const
-+{
-+    return false;
-+}
-+#endif
-+} // namespace WebCore
-diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectWrapperAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectWrapperAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectWrapperAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCAccessibilityObjectWrapperAROS.cpp	2013-07-10 07:53:52.000000000 +0100
-@@ -0,0 +1,53 @@
-+/*
-+ * Copyright (C) 2008 Pleyo.  All rights reserved.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions
-+ * are met:
-+ *
-+ * 1.  Redistributions of source code must retain the above copyright
-+ *     notice, this list of conditions and the following disclaimer.
-+ * 2.  Redistributions in binary form must reproduce the above copyright
-+ *     notice, this list of conditions and the following disclaimer in the
-+ *     documentation and/or other materials provided with the distribution.
-+ * 3.  Neither the name of Pleyo nor the names of
-+ *     its contributors may be used to endorse or promote products derived
-+ *     from this software without specific prior written permission.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY PLEYO AND ITS CONTRIBUTORS "AS IS" AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL PLEYO OR ITS CONTRIBUTORS BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+#include "config.h"
-+#include "AccessibilityObject.h"
-+#include "RefCounted.h"
-+
-+class AccessibilityObjectWrapper {
-+};
-+
-+
-+namespace WebCore {
-+
-+
-+#if HAVE(ACCESSIBILITY)
-+AccessibilityObjectWrapper* AccessibilityObject::wrapper() const 
-+{ 
-+    return m_wrapper; 
-+}
-+
-+void AccessibilityObject::setWrapper(AccessibilityObjectWrapper* wrapper)
-+{
-+    m_wrapper = wrapper;
-+}
-+#endif
-+
-+}
-+
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCClipboardAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCClipboardAROS.cpp
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCClipboardAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCClipboardAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCClipboardAROS.cpp	2014-12-14 04:05:01.485632034 +0000
 @@ -0,0 +1,147 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -4930,7 +4930,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCClipboardAROS.cpp OWB-r1097.aros/
 +}
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCClipboardAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCClipboardAROS.h
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCClipboardAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCClipboardAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCClipboardAROS.h	2014-12-14 04:05:01.485632034 +0000
 @@ -0,0 +1,76 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -5010,7 +5010,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCClipboardAROS.h OWB-r1097.aros/BA
 +#endif
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCContextMenuAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCContextMenuAROS.cpp
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCContextMenuAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCContextMenuAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCContextMenuAROS.cpp	2014-12-14 04:05:01.485632034 +0000
 @@ -0,0 +1,107 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk.
@@ -5121,7 +5121,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCContextMenuAROS.cpp OWB-r1097.aro
 +}
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCContextMenuItemAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCContextMenuItemAROS.cpp
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCContextMenuItemAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCContextMenuItemAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCContextMenuItemAROS.cpp	2014-12-14 04:05:01.485632034 +0000
 @@ -0,0 +1,200 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk.
@@ -5325,7 +5325,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCContextMenuItemAROS.cpp OWB-r1097
 +}
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCCursorAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCCursorAROS.cpp
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCCursorAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCCursorAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCCursorAROS.cpp	2014-12-14 04:05:01.485632034 +0000
 @@ -0,0 +1,371 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
@@ -5700,7 +5700,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCCursorAROS.cpp OWB-r1097.aros/BAL
 +}
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCCursorAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCCursorAROS.h
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCCursorAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCCursorAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCCursorAROS.h	2014-12-14 04:05:01.486632044 +0000
 @@ -0,0 +1,104 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -5808,7 +5808,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCCursorAROS.h OWB-r1097.aros/BAL/W
 +#endif // Cursor_h
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCDragControllerAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCDragControllerAROS.cpp
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCDragControllerAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCDragControllerAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCDragControllerAROS.cpp	2014-12-14 04:05:01.486632044 +0000
 @@ -0,0 +1,76 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -5888,7 +5888,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCDragControllerAROS.cpp OWB-r1097.
 +}
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCFrameAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCFrameAROS.cpp
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCFrameAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCFrameAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCFrameAROS.cpp	2014-12-14 04:05:01.486632044 +0000
 @@ -0,0 +1,42 @@
 +/*
 + * Copyright (C) 2006 Apple Computer, Inc.  All rights reserved.
@@ -5934,7 +5934,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCFrameAROS.cpp OWB-r1097.aros/BAL/
 +}
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.cpp
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.cpp	2014-12-14 04:05:01.486632044 +0000
 @@ -0,0 +1,287 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
@@ -6225,7 +6225,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.cpp OWB-r1097.aros
 +}
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.h
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.h	2014-12-14 04:05:01.486632044 +0000
 @@ -0,0 +1,79 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -6308,7 +6308,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardAROS.h OWB-r1097.aros/B
 +#endif // Pasteboard_h
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardHelperAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPasteboardHelperAROS.h
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardHelperAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPasteboardHelperAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPasteboardHelperAROS.h	2014-12-14 04:05:01.486632044 +0000
 @@ -0,0 +1,54 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -6366,7 +6366,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPasteboardHelperAROS.h OWB-r1097.
 +#endif // PasteboardHelper_h
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformMenuDescriptionAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPlatformMenuDescriptionAROS.h
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformMenuDescriptionAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPlatformMenuDescriptionAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPlatformMenuDescriptionAROS.h	2014-12-14 04:05:01.487632054 +0000
 @@ -0,0 +1,40 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -6410,7 +6410,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformMenuDescriptionAROS.h OWB
 +#endif // PlatformMenuDescription_h
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.cpp
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.cpp	2014-12-14 04:05:01.487632054 +0000
 @@ -0,0 +1,84 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
@@ -6498,7 +6498,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.cpp OWB-r1097.
 +} // namespace WebCore
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.h
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.h	2014-12-14 04:05:01.487632054 +0000
 @@ -0,0 +1,53 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -6555,7 +6555,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPlatformScreenAROS.h OWB-r1097.ar
 +#endif // PlatformScreen_h
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.cpp
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.cpp	2014-12-14 04:05:01.487632054 +0000
 @@ -0,0 +1,253 @@
 +/*
 + * Copyright (C) 2009 Stanislaw Szymczyk
@@ -6812,7 +6812,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.cpp OWB-r1097.aros/
 +}
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.h
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.h	2014-12-14 04:05:01.487632054 +0000
 @@ -0,0 +1,84 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -6900,7 +6900,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCPopupMenuAROS.h OWB-r1097.aros/BA
 +#endif
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.cpp
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.cpp	2014-12-14 04:05:01.488632065 +0000
 @@ -0,0 +1,510 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -7414,7 +7414,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.cpp OWB-r1097.aro
 +}
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.h
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.h	2014-12-14 04:05:01.488632065 +0000
 @@ -0,0 +1,136 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -7552,9 +7552,338 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCRenderThemeAROS.h OWB-r1097.aros/
 +}
 +
 +#endif
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.cpp
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.cpp	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.cpp	2014-12-14 04:05:01.488632065 +0000
+@@ -0,0 +1,260 @@
++/*
++ * Copyright (C) 2008 Apple Inc. All Rights Reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ *
++ * THIS SOFTWARE IS PROVIDED BY APPLE INC. ``AS IS'' AND ANY
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
++ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL APPLE INC. OR
++ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
++ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
++ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
++ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
++ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#include "config.h"
++#include "ScrollbarThemeAROS.h"
++
++#include "BALBase.h"
++#include "ChromeClient.h"
++#include "Frame.h"
++#include "FrameView.h"
++#include "GraphicsContext.h"
++#include "Logging.h"
++#include "Page.h"
++#include "PlatformMouseEvent.h"
++#include "GraphicsContext.h"
++#include "Scrollbar.h"
++#include "ScrollbarClient.h"
++#include "Settings.h"
++
++namespace WebCore {
++
++// Constants used to figure the drag rect outside which we should snap the
++// scrollbar thumb back to its origin.  These calculations are based on
++// observing the behavior of the MSVC8 main window scrollbar + some
++// guessing/extrapolation.
++static const int kOffEndMultiplier = 3;
++static const int kOffSideMultiplier = 8;
++
++
++ScrollbarTheme* ScrollbarTheme::nativeTheme()
++{
++    static ScrollbarThemeBal theme;
++    return &theme;
++}
++
++ScrollbarThemeBal::~ScrollbarThemeBal()
++{
++}
++
++
++int ScrollbarThemeBal::scrollbarThickness(ScrollbarControlSize controlSize)
++{
++    BalNotImplemented();
++    return 11;
++}
++
++bool ScrollbarThemeBal::hasThumb(Scrollbar* scrollbar)
++{
++    return thumbLength(scrollbar) > 0;
++}
++
++IntRect ScrollbarThemeBal::backButtonRect(Scrollbar* scrollbar, ScrollbarPart part, bool)
++{
++    if (part == BackButtonEndPart)
++        return IntRect();
++
++    // Our desired rect is essentially 17x17.
++
++    // Our actual rect will shrink to half the available space when
++    // we have < 34 pixels left.  This allows the scrollbar
++    // to scale down and function even at tiny sizes.
++    int thickness = scrollbarThickness();
++    if (scrollbar->orientation() == HorizontalScrollbar)
++        return IntRect(scrollbar->x(), scrollbar->y(),
++                       scrollbar->width() < 2 * thickness ? scrollbar->width() / 2 : thickness, thickness);
++    return IntRect(scrollbar->x(), scrollbar->y(),
++                   thickness, scrollbar->height() < 2 * thickness ? scrollbar->height() / 2 : thickness);
++}
++
++IntRect ScrollbarThemeBal::forwardButtonRect(Scrollbar* scrollbar, ScrollbarPart part, bool)
++{
++    if (part == ForwardButtonStartPart)
++        return IntRect();
++
++    // Our desired rect is essentially 17x17.
++
++    // Our actual rect will shrink to half the available space when
++    // we have < 34 pixels left.  This allows the scrollbar
++    // to scale down and function even at tiny sizes.
++    int thickness = scrollbarThickness();
++    if (scrollbar->orientation() == HorizontalScrollbar) {
++        int w = scrollbar->width() < 2 * thickness ? scrollbar->width() / 2 : thickness;
++        return IntRect(scrollbar->x() + scrollbar->width() - w, scrollbar->y(), w, thickness);
++    }
++
++    int h = scrollbar->height() < 2 * thickness ? scrollbar->height() / 2 : thickness;
++    return IntRect(scrollbar->x(), scrollbar->y() + scrollbar->height() - h, thickness, h);
++}
++
++IntRect ScrollbarThemeBal::trackRect(Scrollbar* scrollbar, bool)
++{
++    int thickness = scrollbarThickness();
++    if (scrollbar->orientation() == HorizontalScrollbar) {
++        if (scrollbar->width() < 2 * thickness)
++            return IntRect();
++        return IntRect(scrollbar->x() + thickness, scrollbar->y(), scrollbar->width() - 2 * thickness, thickness);
++    }
++    if (scrollbar->height() < 2 * thickness)
++        return IntRect();
++    return IntRect(scrollbar->x(), scrollbar->y() + thickness, thickness, scrollbar->height() - 2 * thickness);
++}
++
++void ScrollbarThemeBal::paintButton(GraphicsContext* context, Scrollbar* scrollbar, const IntRect& rect, ScrollbarPart part)
++{
++    context->save();
++    bool start = (part == BackButtonStartPart);
++    static RefPtr<WebCore::Image> left = Image::loadPlatformResource("/ScrollbarTheme/left");
++    if (!left->isNull()) {
++        IntPoint startPos(rect.location());
++        if (start) {
++            if (scrollbar->orientation() == HorizontalScrollbar)
++                context->drawImage(left.get(), startPos);
++            else {
++                static RefPtr<WebCore::Image> up = Image::loadPlatformResource("/ScrollbarTheme/up");
++                context->drawImage(up.get(), startPos);
++            }
++        } else {
++            if (scrollbar->orientation() == HorizontalScrollbar) {
++                static RefPtr<WebCore::Image> right = Image::loadPlatformResource("/ScrollbarTheme/right");
++                context->drawImage(right.get(), startPos);
++            } else {
++                static RefPtr<WebCore::Image> down = Image::loadPlatformResource("/ScrollbarTheme/down");
++                context->drawImage(down.get(), startPos);
++            }
++        }
++    } else {
++        context->drawRect(rect);
++        context->fillRect(IntRect(rect.x() + 1, rect.y() + 1, rect.width() - 2, rect.height() - 2), Color::gray);
++
++        if (start) {
++            if (scrollbar->orientation() == HorizontalScrollbar) {
++                context->drawLine(IntPoint(rect.right(), rect.y()), IntPoint(rect.x() - 1, (rect.bottom() + rect.y())/2));
++                context->drawLine(IntPoint(rect.right(), rect.bottom()), IntPoint(rect.x() - 1, (rect.bottom() + rect.y())/2));
++            } else {
++                context->drawLine(IntPoint(rect.x(), rect.bottom()), IntPoint((rect.x() + rect.right())/2, rect.y() + 1));
++                context->drawLine(IntPoint(rect.right() - 1, rect.bottom()), IntPoint((rect.x() + rect.right())/2, rect.y() + 1));
++            }
++        } else {
++            if (scrollbar->orientation() == HorizontalScrollbar) {
++                context->drawLine(IntPoint(rect.x(), rect.y()), IntPoint(rect.right() - 1, (rect.bottom() + rect.y())/2));
++                context->drawLine(IntPoint(rect.x(), rect.bottom()), IntPoint(rect.right() - 1, (rect.bottom() + rect.y())/2));
++            } else {
++                context->drawLine(IntPoint(rect.x(), rect.y()), IntPoint((rect.x() + rect.right())/2, rect.bottom() - 1));
++                context->drawLine(IntPoint(rect.right(), rect.y()), IntPoint((rect.x() + rect.right())/2, rect.bottom() - 1));
++            }
++        }
++    }
++    context->restore();
++}
++
++void ScrollbarThemeBal::paintThumb(GraphicsContext* context, Scrollbar* scrollbar, const IntRect& rect)
++{
++    context->save();
++    if (scrollbar->orientation() == HorizontalScrollbar) {
++        static RefPtr<WebCore::Image> thumbH = Image::loadPlatformResource("/ScrollbarTheme/thumbH");
++        if (!thumbH->isNull()) {
++            static RefPtr<WebCore::Image> thumbHL = Image::loadPlatformResource("/ScrollbarTheme/thumbHL");
++            static RefPtr<WebCore::Image> thumbHR = Image::loadPlatformResource("/ScrollbarTheme/thumbHR");
++            IntPoint startPos(rect.location());
++            IntPoint endPos(rect.right() - thumbHR->width(), rect.y());
++            IntRect destRect(rect.x() + thumbHL->width() - 1, rect.y(), rect.width() - thumbHR->width() - thumbHL->width() + 1, rect.height());
++
++            context->drawImage(thumbHL.get(), startPos);
++            context->drawTiledImage(thumbH.get(), destRect, IntPoint(0, 0), IntSize(thumbH->width(), thumbH->height()));
++            context->drawImage(thumbHR.get(), endPos);
++
++        } else {
++            context->drawRect(rect);
++            context->fillRect(IntRect(rect.x() + 1, rect.y() + 1, rect.width() - 2, rect.height() - 2), Color::gray);
++        }
++    } else {
++        static RefPtr<WebCore::Image> thumbV = Image::loadPlatformResource("/ScrollbarTheme/thumbV");
++        if (!thumbV->isNull()) {
++            static RefPtr<WebCore::Image> thumbVU = Image::loadPlatformResource("/ScrollbarTheme/thumbVU");
++            static RefPtr<WebCore::Image> thumbVD = Image::loadPlatformResource("/ScrollbarTheme/thumbVD");
++            IntPoint startPos(rect.location());
++            IntPoint endPos(rect.x(), rect.bottom() - thumbVD->height());
++            IntRect destRect(rect.x(), rect.y() + thumbVU->height(), rect.width(), rect.height() - thumbVU->height() - thumbVD->height());
++
++            context->drawImage(thumbVU.get(), startPos);
++            context->drawTiledImage(thumbV.get(), destRect, IntPoint(0, 0), IntSize(thumbV->width(), thumbV->height()));
++            context->drawImage(thumbVD.get(), endPos);
++        } else {
++            context->drawRect(rect);
++            context->fillRect(IntRect(rect.x() + 1, rect.y() + 1, rect.width() - 2, rect.height() - 2), Color::gray);
++        }
++    }
++    context->restore();
++}
++
++
++void ScrollbarThemeBal::paintTrackBackground(GraphicsContext* context, Scrollbar* scrollbar, const IntRect& rect)
++{
++    // Just assume a forward track part.  We only paint the track as a single piece when there is no thumb.
++    if (!hasThumb(scrollbar))
++        paintTrackPiece(context, scrollbar, rect, ForwardTrackPart);
++}
++
++bool ScrollbarThemeBal::invalidateOnMouseEnterExit()
++{
++    return false;
++}
++
++void ScrollbarThemeBal::themeChanged()
++{
++}
++
++bool ScrollbarThemeBal::shouldCenterOnThumb(Scrollbar*, const PlatformMouseEvent& evt)
++{
++    return evt.shiftKey() && evt.button() == LeftButton;
++}
++
++void ScrollbarThemeBal::paintTrackPiece(GraphicsContext* context, Scrollbar* scrollbar, const IntRect& rect, ScrollbarPart partType)
++{
++    context->save();
++
++    static RefPtr<WebCore::Image> bg = Image::loadPlatformResource("/ScrollbarTheme/bg");
++    if (!bg->isNull()) {
++        if (scrollbar->orientation() == HorizontalScrollbar) {
++            static RefPtr<WebCore::Image> bgh = Image::loadPlatformResource("/ScrollbarTheme/bgh");
++            IntRect destRect(rect.x() - 1, rect.y(), rect.width() + 2, rect.height());
++            context->drawTiledImage(bgh.get(), destRect, IntPoint(0, 0), IntSize(bgh->width(), bgh->height()));
++        } else {
++            IntRect destRect(rect.x(), rect.y() - 1, rect.width(), rect.height() + 2 );
++            context->drawTiledImage(bg.get(), destRect, IntPoint(0, 0), IntSize(bg->width(), bg->height()));
++        }
++    } else {
++        context->fillRect(rect, Color::white);
++        if (scrollbar->orientation() == HorizontalScrollbar)
++            context->drawLine(IntPoint(rect.x(), (rect.bottom() + rect.y()) / 2), IntPoint(rect.right(), (rect.bottom() + rect.y()) / 2));
++        else
++            context->drawLine(IntPoint((rect.right() + rect.x()) / 2, rect.y()), IntPoint((rect.right() + rect.x()) / 2, rect.bottom()));
++    }
++    context->restore();
++}
++
++
++}
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.h
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.h	2014-12-14 04:05:01.488632065 +0000
+@@ -0,0 +1,61 @@
++/*
++ * Copyright (C) 2008 Apple Inc. All Rights Reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ *
++ * THIS SOFTWARE IS PROVIDED BY APPLE INC. ``AS IS'' AND ANY
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
++ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
++ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL APPLE INC. OR
++ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
++ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
++ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
++ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
++ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
++ */
++
++#ifndef ScrollbarThemeBal_h
++#define ScrollbarThemeBal_h
++
++#include "ScrollbarThemeComposite.h"
++
++namespace WebCore {
++
++class ScrollbarThemeBal : public ScrollbarThemeComposite {
++public:
++    ScrollbarThemeBal() {};
++    virtual ~ScrollbarThemeBal();
++
++    virtual int scrollbarThickness(ScrollbarControlSize = RegularScrollbar);
++
++    virtual void themeChanged();
++    
++    virtual bool invalidateOnMouseEnterExit();
++    
++protected:
++    virtual bool hasButtons(Scrollbar*) { return true; }
++    virtual bool hasThumb(Scrollbar*);
++
++    virtual IntRect backButtonRect(Scrollbar*, ScrollbarPart, bool painting = false);
++    virtual IntRect forwardButtonRect(Scrollbar*, ScrollbarPart, bool painting = false);
++    virtual IntRect trackRect(Scrollbar*, bool painting = false);
++
++    virtual bool shouldCenterOnThumb(Scrollbar*, const PlatformMouseEvent&);
++
++    virtual void paintTrackBackground(GraphicsContext*, Scrollbar*, const IntRect&);
++    virtual void paintTrackPiece(GraphicsContext*, Scrollbar*, const IntRect&, ScrollbarPart);
++    virtual void paintButton(GraphicsContext*, Scrollbar*, const IntRect&, ScrollbarPart);
++    virtual void paintThumb(GraphicsContext*, Scrollbar*, const IntRect&);
++};
++
++}
++#endif
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.cpp
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.cpp	2014-12-14 04:05:01.489632075 +0000
 @@ -0,0 +1,47 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -7605,7 +7934,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.cpp OWB-r1097.aros
 +} // Namespace WebCore
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.h
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.h	2014-12-14 04:05:01.489632075 +0000
 @@ -0,0 +1,300 @@
 +/*
 + * Copyright (C) 2004, 2006, 2007, 2008 Apple Inc. All rights reserved.
@@ -7907,338 +8236,9 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollViewAROS.h OWB-r1097.aros/B
 +} // namespace WebCore
 +
 +#endif // ScrollView_h
-diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.cpp
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.cpp	2013-07-10 07:53:52.000000000 +0100
-@@ -0,0 +1,260 @@
-+/*
-+ * Copyright (C) 2008 Apple Inc. All Rights Reserved.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions
-+ * are met:
-+ * 1. Redistributions of source code must retain the above copyright
-+ *    notice, this list of conditions and the following disclaimer.
-+ * 2. Redistributions in binary form must reproduce the above copyright
-+ *    notice, this list of conditions and the following disclaimer in the
-+ *    documentation and/or other materials provided with the distribution.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY APPLE INC. ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL APPLE INC. OR
-+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
-+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+#include "config.h"
-+#include "ScrollbarThemeAROS.h"
-+
-+#include "BALBase.h"
-+#include "ChromeClient.h"
-+#include "Frame.h"
-+#include "FrameView.h"
-+#include "GraphicsContext.h"
-+#include "Logging.h"
-+#include "Page.h"
-+#include "PlatformMouseEvent.h"
-+#include "GraphicsContext.h"
-+#include "Scrollbar.h"
-+#include "ScrollbarClient.h"
-+#include "Settings.h"
-+
-+namespace WebCore {
-+
-+// Constants used to figure the drag rect outside which we should snap the
-+// scrollbar thumb back to its origin.  These calculations are based on
-+// observing the behavior of the MSVC8 main window scrollbar + some
-+// guessing/extrapolation.
-+static const int kOffEndMultiplier = 3;
-+static const int kOffSideMultiplier = 8;
-+
-+
-+ScrollbarTheme* ScrollbarTheme::nativeTheme()
-+{
-+    static ScrollbarThemeBal theme;
-+    return &theme;
-+}
-+
-+ScrollbarThemeBal::~ScrollbarThemeBal()
-+{
-+}
-+
-+
-+int ScrollbarThemeBal::scrollbarThickness(ScrollbarControlSize controlSize)
-+{
-+    BalNotImplemented();
-+    return 11;
-+}
-+
-+bool ScrollbarThemeBal::hasThumb(Scrollbar* scrollbar)
-+{
-+    return thumbLength(scrollbar) > 0;
-+}
-+
-+IntRect ScrollbarThemeBal::backButtonRect(Scrollbar* scrollbar, ScrollbarPart part, bool)
-+{
-+    if (part == BackButtonEndPart)
-+        return IntRect();
-+
-+    // Our desired rect is essentially 17x17.
-+
-+    // Our actual rect will shrink to half the available space when
-+    // we have < 34 pixels left.  This allows the scrollbar
-+    // to scale down and function even at tiny sizes.
-+    int thickness = scrollbarThickness();
-+    if (scrollbar->orientation() == HorizontalScrollbar)
-+        return IntRect(scrollbar->x(), scrollbar->y(),
-+                       scrollbar->width() < 2 * thickness ? scrollbar->width() / 2 : thickness, thickness);
-+    return IntRect(scrollbar->x(), scrollbar->y(),
-+                   thickness, scrollbar->height() < 2 * thickness ? scrollbar->height() / 2 : thickness);
-+}
-+
-+IntRect ScrollbarThemeBal::forwardButtonRect(Scrollbar* scrollbar, ScrollbarPart part, bool)
-+{
-+    if (part == ForwardButtonStartPart)
-+        return IntRect();
-+
-+    // Our desired rect is essentially 17x17.
-+
-+    // Our actual rect will shrink to half the available space when
-+    // we have < 34 pixels left.  This allows the scrollbar
-+    // to scale down and function even at tiny sizes.
-+    int thickness = scrollbarThickness();
-+    if (scrollbar->orientation() == HorizontalScrollbar) {
-+        int w = scrollbar->width() < 2 * thickness ? scrollbar->width() / 2 : thickness;
-+        return IntRect(scrollbar->x() + scrollbar->width() - w, scrollbar->y(), w, thickness);
-+    }
-+
-+    int h = scrollbar->height() < 2 * thickness ? scrollbar->height() / 2 : thickness;
-+    return IntRect(scrollbar->x(), scrollbar->y() + scrollbar->height() - h, thickness, h);
-+}
-+
-+IntRect ScrollbarThemeBal::trackRect(Scrollbar* scrollbar, bool)
-+{
-+    int thickness = scrollbarThickness();
-+    if (scrollbar->orientation() == HorizontalScrollbar) {
-+        if (scrollbar->width() < 2 * thickness)
-+            return IntRect();
-+        return IntRect(scrollbar->x() + thickness, scrollbar->y(), scrollbar->width() - 2 * thickness, thickness);
-+    }
-+    if (scrollbar->height() < 2 * thickness)
-+        return IntRect();
-+    return IntRect(scrollbar->x(), scrollbar->y() + thickness, thickness, scrollbar->height() - 2 * thickness);
-+}
-+
-+void ScrollbarThemeBal::paintButton(GraphicsContext* context, Scrollbar* scrollbar, const IntRect& rect, ScrollbarPart part)
-+{
-+    context->save();
-+    bool start = (part == BackButtonStartPart);
-+    static RefPtr<WebCore::Image> left = Image::loadPlatformResource("/ScrollbarTheme/left");
-+    if (!left->isNull()) {
-+        IntPoint startPos(rect.location());
-+        if (start) {
-+            if (scrollbar->orientation() == HorizontalScrollbar)
-+                context->drawImage(left.get(), startPos);
-+            else {
-+                static RefPtr<WebCore::Image> up = Image::loadPlatformResource("/ScrollbarTheme/up");
-+                context->drawImage(up.get(), startPos);
-+            }
-+        } else {
-+            if (scrollbar->orientation() == HorizontalScrollbar) {
-+                static RefPtr<WebCore::Image> right = Image::loadPlatformResource("/ScrollbarTheme/right");
-+                context->drawImage(right.get(), startPos);
-+            } else {
-+                static RefPtr<WebCore::Image> down = Image::loadPlatformResource("/ScrollbarTheme/down");
-+                context->drawImage(down.get(), startPos);
-+            }
-+        }
-+    } else {
-+        context->drawRect(rect);
-+        context->fillRect(IntRect(rect.x() + 1, rect.y() + 1, rect.width() - 2, rect.height() - 2), Color::gray);
-+
-+        if (start) {
-+            if (scrollbar->orientation() == HorizontalScrollbar) {
-+                context->drawLine(IntPoint(rect.right(), rect.y()), IntPoint(rect.x() - 1, (rect.bottom() + rect.y())/2));
-+                context->drawLine(IntPoint(rect.right(), rect.bottom()), IntPoint(rect.x() - 1, (rect.bottom() + rect.y())/2));
-+            } else {
-+                context->drawLine(IntPoint(rect.x(), rect.bottom()), IntPoint((rect.x() + rect.right())/2, rect.y() + 1));
-+                context->drawLine(IntPoint(rect.right() - 1, rect.bottom()), IntPoint((rect.x() + rect.right())/2, rect.y() + 1));
-+            }
-+        } else {
-+            if (scrollbar->orientation() == HorizontalScrollbar) {
-+                context->drawLine(IntPoint(rect.x(), rect.y()), IntPoint(rect.right() - 1, (rect.bottom() + rect.y())/2));
-+                context->drawLine(IntPoint(rect.x(), rect.bottom()), IntPoint(rect.right() - 1, (rect.bottom() + rect.y())/2));
-+            } else {
-+                context->drawLine(IntPoint(rect.x(), rect.y()), IntPoint((rect.x() + rect.right())/2, rect.bottom() - 1));
-+                context->drawLine(IntPoint(rect.right(), rect.y()), IntPoint((rect.x() + rect.right())/2, rect.bottom() - 1));
-+            }
-+        }
-+    }
-+    context->restore();
-+}
-+
-+void ScrollbarThemeBal::paintThumb(GraphicsContext* context, Scrollbar* scrollbar, const IntRect& rect)
-+{
-+    context->save();
-+    if (scrollbar->orientation() == HorizontalScrollbar) {
-+        static RefPtr<WebCore::Image> thumbH = Image::loadPlatformResource("/ScrollbarTheme/thumbH");
-+        if (!thumbH->isNull()) {
-+            static RefPtr<WebCore::Image> thumbHL = Image::loadPlatformResource("/ScrollbarTheme/thumbHL");
-+            static RefPtr<WebCore::Image> thumbHR = Image::loadPlatformResource("/ScrollbarTheme/thumbHR");
-+            IntPoint startPos(rect.location());
-+            IntPoint endPos(rect.right() - thumbHR->width(), rect.y());
-+            IntRect destRect(rect.x() + thumbHL->width() - 1, rect.y(), rect.width() - thumbHR->width() - thumbHL->width() + 1, rect.height());
-+
-+            context->drawImage(thumbHL.get(), startPos);
-+            context->drawTiledImage(thumbH.get(), destRect, IntPoint(0, 0), IntSize(thumbH->width(), thumbH->height()));
-+            context->drawImage(thumbHR.get(), endPos);
-+
-+        } else {
-+            context->drawRect(rect);
-+            context->fillRect(IntRect(rect.x() + 1, rect.y() + 1, rect.width() - 2, rect.height() - 2), Color::gray);
-+        }
-+    } else {
-+        static RefPtr<WebCore::Image> thumbV = Image::loadPlatformResource("/ScrollbarTheme/thumbV");
-+        if (!thumbV->isNull()) {
-+            static RefPtr<WebCore::Image> thumbVU = Image::loadPlatformResource("/ScrollbarTheme/thumbVU");
-+            static RefPtr<WebCore::Image> thumbVD = Image::loadPlatformResource("/ScrollbarTheme/thumbVD");
-+            IntPoint startPos(rect.location());
-+            IntPoint endPos(rect.x(), rect.bottom() - thumbVD->height());
-+            IntRect destRect(rect.x(), rect.y() + thumbVU->height(), rect.width(), rect.height() - thumbVU->height() - thumbVD->height());
-+
-+            context->drawImage(thumbVU.get(), startPos);
-+            context->drawTiledImage(thumbV.get(), destRect, IntPoint(0, 0), IntSize(thumbV->width(), thumbV->height()));
-+            context->drawImage(thumbVD.get(), endPos);
-+        } else {
-+            context->drawRect(rect);
-+            context->fillRect(IntRect(rect.x() + 1, rect.y() + 1, rect.width() - 2, rect.height() - 2), Color::gray);
-+        }
-+    }
-+    context->restore();
-+}
-+
-+
-+void ScrollbarThemeBal::paintTrackBackground(GraphicsContext* context, Scrollbar* scrollbar, const IntRect& rect)
-+{
-+    // Just assume a forward track part.  We only paint the track as a single piece when there is no thumb.
-+    if (!hasThumb(scrollbar))
-+        paintTrackPiece(context, scrollbar, rect, ForwardTrackPart);
-+}
-+
-+bool ScrollbarThemeBal::invalidateOnMouseEnterExit()
-+{
-+    return false;
-+}
-+
-+void ScrollbarThemeBal::themeChanged()
-+{
-+}
-+
-+bool ScrollbarThemeBal::shouldCenterOnThumb(Scrollbar*, const PlatformMouseEvent& evt)
-+{
-+    return evt.shiftKey() && evt.button() == LeftButton;
-+}
-+
-+void ScrollbarThemeBal::paintTrackPiece(GraphicsContext* context, Scrollbar* scrollbar, const IntRect& rect, ScrollbarPart partType)
-+{
-+    context->save();
-+
-+    static RefPtr<WebCore::Image> bg = Image::loadPlatformResource("/ScrollbarTheme/bg");
-+    if (!bg->isNull()) {
-+        if (scrollbar->orientation() == HorizontalScrollbar) {
-+            static RefPtr<WebCore::Image> bgh = Image::loadPlatformResource("/ScrollbarTheme/bgh");
-+            IntRect destRect(rect.x() - 1, rect.y(), rect.width() + 2, rect.height());
-+            context->drawTiledImage(bgh.get(), destRect, IntPoint(0, 0), IntSize(bgh->width(), bgh->height()));
-+        } else {
-+            IntRect destRect(rect.x(), rect.y() - 1, rect.width(), rect.height() + 2 );
-+            context->drawTiledImage(bg.get(), destRect, IntPoint(0, 0), IntSize(bg->width(), bg->height()));
-+        }
-+    } else {
-+        context->fillRect(rect, Color::white);
-+        if (scrollbar->orientation() == HorizontalScrollbar)
-+            context->drawLine(IntPoint(rect.x(), (rect.bottom() + rect.y()) / 2), IntPoint(rect.right(), (rect.bottom() + rect.y()) / 2));
-+        else
-+            context->drawLine(IntPoint((rect.right() + rect.x()) / 2, rect.y()), IntPoint((rect.right() + rect.x()) / 2, rect.bottom()));
-+    }
-+    context->restore();
-+}
-+
-+
-+}
-diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.h
---- OWB-r1097/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCScrollbarThemeAROS.h	2013-07-10 07:53:52.000000000 +0100
-@@ -0,0 +1,61 @@
-+/*
-+ * Copyright (C) 2008 Apple Inc. All Rights Reserved.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions
-+ * are met:
-+ * 1. Redistributions of source code must retain the above copyright
-+ *    notice, this list of conditions and the following disclaimer.
-+ * 2. Redistributions in binary form must reproduce the above copyright
-+ *    notice, this list of conditions and the following disclaimer in the
-+ *    documentation and/or other materials provided with the distribution.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY APPLE INC. ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL APPLE INC. OR
-+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
-+ * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-+ */
-+
-+#ifndef ScrollbarThemeBal_h
-+#define ScrollbarThemeBal_h
-+
-+#include "ScrollbarThemeComposite.h"
-+
-+namespace WebCore {
-+
-+class ScrollbarThemeBal : public ScrollbarThemeComposite {
-+public:
-+    ScrollbarThemeBal() {};
-+    virtual ~ScrollbarThemeBal();
-+
-+    virtual int scrollbarThickness(ScrollbarControlSize = RegularScrollbar);
-+
-+    virtual void themeChanged();
-+    
-+    virtual bool invalidateOnMouseEnterExit();
-+    
-+protected:
-+    virtual bool hasButtons(Scrollbar*) { return true; }
-+    virtual bool hasThumb(Scrollbar*);
-+
-+    virtual IntRect backButtonRect(Scrollbar*, ScrollbarPart, bool painting = false);
-+    virtual IntRect forwardButtonRect(Scrollbar*, ScrollbarPart, bool painting = false);
-+    virtual IntRect trackRect(Scrollbar*, bool painting = false);
-+
-+    virtual bool shouldCenterOnThumb(Scrollbar*, const PlatformMouseEvent&);
-+
-+    virtual void paintTrackBackground(GraphicsContext*, Scrollbar*, const IntRect&);
-+    virtual void paintTrackPiece(GraphicsContext*, Scrollbar*, const IntRect&, ScrollbarPart);
-+    virtual void paintButton(GraphicsContext*, Scrollbar*, const IntRect&, ScrollbarPart);
-+    virtual void paintThumb(GraphicsContext*, Scrollbar*, const IntRect&);
-+};
-+
-+}
-+#endif
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.cpp
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.cpp	2014-12-14 04:05:01.489632075 +0000
 @@ -0,0 +1,60 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -8302,7 +8302,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.cpp OWB-r1097
 +}
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.h
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.h	2014-12-14 04:05:01.489632075 +0000
 @@ -0,0 +1,58 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -8364,7 +8364,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCSearchPopupMenuAROS.h OWB-r1097.a
 +#endif
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCWidgetAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCWidgetAROS.cpp
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/BCWidgetAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCWidgetAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/BCWidgetAROS.cpp	2014-12-14 04:05:01.489632075 +0000
 @@ -0,0 +1,129 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -8495,9 +8495,17 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/BCWidgetAROS.cpp OWB-r1097.aros/BAL
 +}
 +
 +}
+diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/exceptions.txt OWB-r1097.aros/BAL/Widgets/WebCore/AROS/exceptions.txt
+--- OWB-r1097/BAL/Widgets/WebCore/AROS/exceptions.txt	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/exceptions.txt	2014-12-14 04:05:01.490632085 +0000
+@@ -0,0 +1,4 @@
++BCClipboardAROS.h ClipboardAROS.h
++BCRenderThemeAROS.h RenderThemeAROS.h
++BCScrollbarThemeAROS.h ScrollbarThemeAROS.h
++PasteboardHelperAROS.h PasteboardHelperAROS.h
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.cpp OWB-r1097.aros/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.cpp
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.cpp	2014-12-14 04:05:01.490632085 +0000
 @@ -0,0 +1,54 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -8555,7 +8563,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.cpp OWB-r1097.
 +}
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.h OWB-r1097.aros/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.h
 --- OWB-r1097/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.h	2014-12-14 04:05:01.490632085 +0000
 @@ -0,0 +1,57 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -8614,17 +8622,9 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/PasteboardHelperAROS.h OWB-r1097.ar
 +}
 +
 +#endif // PasteboardHelperAROS_h
-diff -ruN OWB-r1097/BAL/Widgets/WebCore/AROS/exceptions.txt OWB-r1097.aros/BAL/Widgets/WebCore/AROS/exceptions.txt
---- OWB-r1097/BAL/Widgets/WebCore/AROS/exceptions.txt	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/AROS/exceptions.txt	2013-07-10 07:53:52.000000000 +0100
-@@ -0,0 +1,4 @@
-+BCClipboardAROS.h ClipboardAROS.h
-+BCRenderThemeAROS.h RenderThemeAROS.h
-+BCScrollbarThemeAROS.h ScrollbarThemeAROS.h
-+PasteboardHelperAROS.h PasteboardHelperAROS.h
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Widgets/WebCore/CMakeLists.txt
 --- OWB-r1097/BAL/Widgets/WebCore/CMakeLists.txt	2009-10-06 09:13:04.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/CMakeLists.txt	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/CMakeLists.txt	2014-12-14 04:05:01.490632085 +0000
 @@ -31,4 +31,10 @@
      aux_source_directory(${WIDGETS_DIR}/SDL WEBCORE_SRC)
  endif(USE_GRAPHICS_SDL)
@@ -8638,7 +8638,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/CMakeLists.txt OWB-r1097.aros/BAL/Widget
  aux_source_directory(${WIDGETS_DIR}/WK WEBCORE_SRC)
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuItemWK.h OWB-r1097.aros/BAL/Widgets/WebCore/WK/BCContextMenuItemWK.h
 --- OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuItemWK.h	2009-09-18 16:34:57.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/WK/BCContextMenuItemWK.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/WK/BCContextMenuItemWK.h	2014-12-14 04:05:01.490632085 +0000
 @@ -59,12 +59,21 @@
      enum ContextMenuAction {
          ContextMenuItemTagNoAction=0, // This item is not actually in WebUIDelegate.h
@@ -8705,7 +8705,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuItemWK.h OWB-r1097.aros/
      private:
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuWK.cpp OWB-r1097.aros/BAL/Widgets/WebCore/WK/BCContextMenuWK.cpp
 --- OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuWK.cpp	2009-10-05 11:36:03.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/WK/BCContextMenuWK.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/WK/BCContextMenuWK.cpp	2014-12-14 04:05:01.491632096 +0000
 @@ -259,12 +259,20 @@
      ContextMenuItem OpenLinkItem(ActionType, ContextMenuItemTagOpenLink, contextMenuItemTagOpenLink());
      ContextMenuItem OpenLinkInNewWindowItem(ActionType, ContextMenuItemTagOpenLinkInNewWindow, 
@@ -8809,7 +8809,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuWK.cpp OWB-r1097.aros/BA
          case ContextMenuItemTagSearchInSpotlight:
 diff -ruN OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuWK.h OWB-r1097.aros/BAL/Widgets/WebCore/WK/BCContextMenuWK.h
 --- OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuWK.h	2009-07-15 19:00:34.000000000 +0100
-+++ OWB-r1097.aros/BAL/Widgets/WebCore/WK/BCContextMenuWK.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/BAL/Widgets/WebCore/WK/BCContextMenuWK.h	2014-12-14 04:05:01.491632096 +0000
 @@ -36,6 +36,10 @@
  #include <wtf/RetainPtr.h>
  #elif PLATFORM(QT)
@@ -8833,7 +8833,7 @@ diff -ruN OWB-r1097/BAL/Widgets/WebCore/WK/BCContextMenuWK.h OWB-r1097.aros/BAL/
  }
 diff -ruN OWB-r1097/Base/AROS/BALTypeAROS.h OWB-r1097.aros/Base/AROS/BALTypeAROS.h
 --- OWB-r1097/Base/AROS/BALTypeAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/Base/AROS/BALTypeAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/Base/AROS/BALTypeAROS.h	2014-12-14 04:05:01.491632096 +0000
 @@ -0,0 +1,82 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -8919,7 +8919,7 @@ diff -ruN OWB-r1097/Base/AROS/BALTypeAROS.h OWB-r1097.aros/Base/AROS/BALTypeAROS
 +#endif
 diff -ruN OWB-r1097/Base/BALBase.h OWB-r1097.aros/Base/BALBase.h
 --- OWB-r1097/Base/BALBase.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/Base/BALBase.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/Base/BALBase.h	2014-12-14 04:05:01.491632096 +0000
 @@ -0,0 +1,75 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -8998,7 +8998,7 @@ diff -ruN OWB-r1097/Base/BALBase.h OWB-r1097.aros/Base/BALBase.h
 +#endif
 diff -ruN OWB-r1097/Base/BALBase.h.in OWB-r1097.aros/Base/BALBase.h.in
 --- OWB-r1097/Base/BALBase.h.in	2009-03-24 14:43:00.000000000 +0000
-+++ OWB-r1097.aros/Base/BALBase.h.in	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/Base/BALBase.h.in	2014-12-14 04:05:01.492632106 +0000
 @@ -57,6 +57,10 @@
  #include "SDL/BALTypeSDL.h"
  #endif
@@ -9012,7 +9012,7 @@ diff -ruN OWB-r1097/Base/BALBase.h.in OWB-r1097.aros/Base/BALBase.h.in
  #endif
 diff -ruN OWB-r1097/Base/NotImplemented.h OWB-r1097.aros/Base/NotImplemented.h
 --- OWB-r1097/Base/NotImplemented.h	2009-01-16 14:33:31.000000000 +0000
-+++ OWB-r1097.aros/Base/NotImplemented.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/Base/NotImplemented.h	2014-12-14 04:05:01.492632106 +0000
 @@ -29,7 +29,7 @@
  #include "Logging.h"
  #include <Assertions.h>
@@ -9022,9 +9022,41 @@ diff -ruN OWB-r1097/Base/NotImplemented.h OWB-r1097.aros/Base/NotImplemented.h
      #define supressNotImplementedWarning() getenv("DISABLE_NI_WARNING")
  #elif PLATFORM(QT)
      #include <QByteArray>
+diff -ruN OWB-r1097/Base/owb-config.h OWB-r1097.aros/Base/owb-config.h
+--- OWB-r1097/Base/owb-config.h	1970-01-01 01:00:00.000000000 +0100
++++ OWB-r1097.aros/Base/owb-config.h	2014-12-14 04:05:01.492632106 +0000
+@@ -0,0 +1,10 @@
++#ifndef OWB_CONFIG_H
++#define OWB_CONFIG_H
++
++#define BOOKMARKLET_INSTALL_PATH "PROGDIR:bookmarklet/"
++#define OWB_DATA "PROGDIR:config/"
++#define INSTALL_PREFIX "PROGDIR:"
++#define RESOURCE_PATH "PROGDIR:resources"
++
++#endif //OWB_CONFIG_H
++
+diff -ruN OWB-r1097/Base/owb-config.h.in OWB-r1097.aros/Base/owb-config.h.in
+--- OWB-r1097/Base/owb-config.h.in	2008-12-08 20:05:27.000000000 +0000
++++ OWB-r1097.aros/Base/owb-config.h.in	2014-12-14 04:05:01.492632106 +0000
+@@ -1,10 +1,10 @@
+ #ifndef OWB_CONFIG_H
+ #define OWB_CONFIG_H
+ 
+-#define BOOKMARKLET_INSTALL_PATH "${CMAKE_INSTALL_PREFIX}/share/owb/bookmarklet/"
+-#define OWB_DATA "${WITH_OWB_CONFIG_DIR}"
+-#define INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}"
+-#define RESOURCE_PATH "${CMAKE_INSTALL_PREFIX}/share/webkit-owb/resources/"
++#define BOOKMARKLET_INSTALL_PATH "PROGDIR:bookmarklet/"
++#define OWB_DATA "PROGDIR:config/"
++#define INSTALL_PREFIX "PROGDIR:"
++#define RESOURCE_PATH "PROGDIR:resources"
+ 
+ #endif //OWB_CONFIG_H
+ 
 diff -ruN OWB-r1097/Base/WebKitTypes.h OWB-r1097.aros/Base/WebKitTypes.h
 --- OWB-r1097/Base/WebKitTypes.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/Base/WebKitTypes.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/Base/WebKitTypes.h	2014-12-14 04:05:01.492632106 +0000
 @@ -0,0 +1,210 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -9238,7 +9270,7 @@ diff -ruN OWB-r1097/Base/WebKitTypes.h OWB-r1097.aros/Base/WebKitTypes.h
 +#endif
 diff -ruN OWB-r1097/Base/WebKitTypes.h.in OWB-r1097.aros/Base/WebKitTypes.h.in
 --- OWB-r1097/Base/WebKitTypes.h.in	2009-03-24 14:34:03.000000000 +0000
-+++ OWB-r1097.aros/Base/WebKitTypes.h.in	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/Base/WebKitTypes.h.in	2014-12-14 04:05:01.492632106 +0000
 @@ -167,6 +167,35 @@
  } BalPoint;
  typedef SDL_Rect BalRectangle;
@@ -9275,41 +9307,9 @@ diff -ruN OWB-r1097/Base/WebKitTypes.h.in OWB-r1097.aros/Base/WebKitTypes.h.in
  #elif PLATFORM(@CUSTOMER@)
  #include "@WEBKIT_TYPES_CUSTOMER_INCLUDE@"
  
-diff -ruN OWB-r1097/Base/owb-config.h OWB-r1097.aros/Base/owb-config.h
---- OWB-r1097/Base/owb-config.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/Base/owb-config.h	2013-07-10 07:53:52.000000000 +0100
-@@ -0,0 +1,10 @@
-+#ifndef OWB_CONFIG_H
-+#define OWB_CONFIG_H
-+
-+#define BOOKMARKLET_INSTALL_PATH "PROGDIR:bookmarklet/"
-+#define OWB_DATA "PROGDIR:config/"
-+#define INSTALL_PREFIX "PROGDIR:"
-+#define RESOURCE_PATH "PROGDIR:resources"
-+
-+#endif //OWB_CONFIG_H
-+
-diff -ruN OWB-r1097/Base/owb-config.h.in OWB-r1097.aros/Base/owb-config.h.in
---- OWB-r1097/Base/owb-config.h.in	2008-12-08 20:05:27.000000000 +0000
-+++ OWB-r1097.aros/Base/owb-config.h.in	2013-07-10 07:53:52.000000000 +0100
-@@ -1,10 +1,10 @@
- #ifndef OWB_CONFIG_H
- #define OWB_CONFIG_H
- 
--#define BOOKMARKLET_INSTALL_PATH "${CMAKE_INSTALL_PREFIX}/share/owb/bookmarklet/"
--#define OWB_DATA "${WITH_OWB_CONFIG_DIR}"
--#define INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}"
--#define RESOURCE_PATH "${CMAKE_INSTALL_PREFIX}/share/webkit-owb/resources/"
-+#define BOOKMARKLET_INSTALL_PATH "PROGDIR:bookmarklet/"
-+#define OWB_DATA "PROGDIR:config/"
-+#define INSTALL_PREFIX "PROGDIR:"
-+#define RESOURCE_PATH "PROGDIR:resources"
- 
- #endif //OWB_CONFIG_H
- 
 diff -ruN OWB-r1097/Base/wtf/Platform.h OWB-r1097.aros/Base/wtf/Platform.h
 --- OWB-r1097/Base/wtf/Platform.h	2009-10-16 19:40:05.000000000 +0100
-+++ OWB-r1097.aros/Base/wtf/Platform.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/Base/wtf/Platform.h	2014-12-14 04:05:01.493632116 +0000
 @@ -47,6 +47,15 @@
  #undef  WTF_PLATFORM_MACPORT
  #endif
@@ -9359,9 +9359,205 @@ diff -ruN OWB-r1097/Base/wtf/Platform.h OWB-r1097.aros/Base/wtf/Platform.h
  #define WTF_USE_JSVALUE64 1
  #elif PLATFORM(ARM) || PLATFORM(PPC64)
  #define WTF_USE_JSVALUE32 1
+diff -ruN OWB-r1097/cmake/AddGlobalCompilerFlags.cmake OWB-r1097.aros/cmake/AddGlobalCompilerFlags.cmake
+--- OWB-r1097/cmake/AddGlobalCompilerFlags.cmake	2009-10-14 14:25:22.000000000 +0100
++++ OWB-r1097.aros/cmake/AddGlobalCompilerFlags.cmake	2014-12-14 04:05:01.493632116 +0000
+@@ -1,6 +1,6 @@
+ if(CMAKE_COMPILER_IS_GNUCXX)
+-    set(CMAKE_C_FLAGS "-Wall -W -Wcast-align -Wchar-subscripts -Wreturn-type -Wformat -Wformat-security -Wno-format-y2k -Wundef -Wmissing-format-attribute -Wpointer-arith -Wwrite-strings -Wno-unused-parameter -Wno-parentheses -fPIC")
+-    set(CMAKE_CXX_FLAGS "-Wall -W -Wcast-align -Wchar-subscripts -Wreturn-type -Wformat -Wformat-security -Wno-format-y2k -Wundef -Wmissing-format-attribute -Wpointer-arith -Wwrite-strings -Wno-unused-parameter -Wno-parentheses -fvisibility-inlines-hidden -fPIC")
++    set(CMAKE_C_FLAGS "-Uunix -U__unix -U__unix__ -Wall -W -Wcast-align -Wchar-subscripts -Wreturn-type -Wformat -Wformat-security -Wno-format-y2k -Wmissing-format-attribute -Wpointer-arith -Wwrite-strings -Wno-unused-parameter -Wno-parentheses")
++    set(CMAKE_CXX_FLAGS "-Uunix -U__unix -U__unix__ -Wall -W -Wcast-align -Wchar-subscripts -Wreturn-type -Wformat -Wformat-security -Wno-format-y2k -Wmissing-format-attribute -Wpointer-arith -Wwrite-strings -Wno-unused-parameter -Wno-parentheses -fvisibility-inlines-hidden")
+     if(ENABLE_DEBUG)
+         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
+         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+@@ -28,6 +28,10 @@
+     add_definitions(-DWTF_USE_SOUP=1)
+ endif(USE_NETWORK_SOUP)
+ 
++if(ENABLE_3D_RENDERING)
++    add_definitions(-DENABLE_3D_RENDERING)
++endif(ENABLE_3D_RENDERING)
++
+ if(ENABLE_DEBUG)
+     add_definitions(-DUSE_SYSTEM_MALLOC)
+ else (ENABLE_DEBUG)
+@@ -120,6 +124,11 @@
+     add_definitions(-DWTF_PLATFORM_BAL=1)
+ endif(USE_GRAPHICS_AMIGAOS4)
+ 
++if(USE_GRAPHICS_AROS)
++    add_definitions(-DWTF_PLATFORM_AROS=1)
++    add_definitions(-DWTF_PLATFORM_BAL=1)
++endif(USE_GRAPHICS_AROS)
++
+ if(USE_I18N_GENERIC)
+     add_definitions(-DWTF_USE_BALI18N=1)
+ endif(USE_I18N_GENERIC)
+diff -ruN OWB-r1097/cmake/CheckBaseDependencies.cmake OWB-r1097.aros/cmake/CheckBaseDependencies.cmake
+--- OWB-r1097/cmake/CheckBaseDependencies.cmake	2009-09-15 09:59:14.000000000 +0100
++++ OWB-r1097.aros/cmake/CheckBaseDependencies.cmake	2014-12-14 04:05:01.493632116 +0000
+@@ -17,7 +17,7 @@
+ endif(NOT GPERF_EXECUTABLE)
+ 
+ IF(NOT WIN32)
+-    pkg_check_modules(OWB_BASE_DEPS REQUIRED libxml-2.0>=2.6)
++#    pkg_check_modules(OWB_BASE_DEPS REQUIRED libxml-2.0>=2.6)
+ ELSE(NOT WIN32)
+     ## Pkg-config under cygwin gives to cmake .a lib and we need .lib for Visual Studio projects. 
+     find_path(LIB_XML2_PATH libxml2.lib ${WINLIB_LIB_PATH})
+diff -ruN OWB-r1097/cmake/CheckPlatformFonts.cmake OWB-r1097.aros/cmake/CheckPlatformFonts.cmake
+--- OWB-r1097/cmake/CheckPlatformFonts.cmake	2009-10-06 09:13:04.000000000 +0100
++++ OWB-r1097.aros/cmake/CheckPlatformFonts.cmake	2014-12-14 04:05:01.493632116 +0000
+@@ -13,8 +13,8 @@
+ 
+ if(USE_FONTS STREQUAL "FREETYPE")
+     IF(NOT WIN32)
+-        pkg_check_modules(FONTCONFIG REQUIRED fontconfig>=2.4)
+-        pkg_check_modules(FREETYPE REQUIRED freetype2>=9.0)
++#        pkg_check_modules(FONTCONFIG REQUIRED fontconfig>=2.4)
++#        pkg_check_modules(FREETYPE REQUIRED freetype2>=9.0)
+     ELSE(NOT WIN32)
+         ## We haven't got a good pkg-config under Windows so we let cmake search libs
+         find_path(FONTCONFIG_INCLUDE_DIRS fontconfig.h ${WINLIB_INC_PATH} ${WINLIB_INC_PATH}/fontconfig)
+diff -ruN OWB-r1097/cmake/CheckPlatformGraphics.cmake OWB-r1097.aros/cmake/CheckPlatformGraphics.cmake
+--- OWB-r1097/cmake/CheckPlatformGraphics.cmake	2009-10-06 09:13:04.000000000 +0100
++++ OWB-r1097.aros/cmake/CheckPlatformGraphics.cmake	2014-12-14 04:05:01.494632127 +0000
+@@ -47,3 +47,15 @@
+     
+     set(REQUIREMENT "sdl >= 1.2.10")
+ endif(USE_GRAPHICS STREQUAL "SDL")
++
++if(${USE_GRAPHICS} STREQUAL "AROS")
++#    pkg_check_modules(SDL REQUIRED sdl>=1.2.10)
++    include(FindSDL_gfx)
++    set(GRAPHICS_INCLUDE_DIRS ${SDL_INCLUDE_DIRS} ${SDLGFX_INCLUDE_DIR})
++    set(GRAPHICS_LIBRARIES ${SDL_LDFLAGS} ${SDLGFX_LIBRARY})
++
++    set(USE_GRAPHICS_AROS TRUE)
++    mark_as_advanced(USE_GRAPHICS_AROS)
++    
++    set(REQUIREMENT "sdl >= 1.2.10")
++endif(${USE_GRAPHICS} STREQUAL "AROS")
+diff -ruN OWB-r1097/cmake/CheckPlatformImageDecoder.cmake OWB-r1097.aros/cmake/CheckPlatformImageDecoder.cmake
+--- OWB-r1097/cmake/CheckPlatformImageDecoder.cmake	2009-09-15 09:59:14.000000000 +0100
++++ OWB-r1097.aros/cmake/CheckPlatformImageDecoder.cmake	2014-12-14 04:05:01.494632127 +0000
+@@ -1,6 +1,6 @@
+ if(NOT HAS_CUSTOMER)
+     IF(NOT WIN32)
+-        pkg_check_modules(PNG12 REQUIRED libpng12)
++#        pkg_check_modules(PNG12 REQUIRED libpng12)
+         find_package(JPEG QUIET REQUIRED)
+     ELSE(NOT WIN32)
+         ## We haven't got a good pkg-config under Windows so we let cmake search libs
+diff -ruN OWB-r1097/cmake/CheckPlatformInternationalization.cmake OWB-r1097.aros/cmake/CheckPlatformInternationalization.cmake
+--- OWB-r1097/cmake/CheckPlatformInternationalization.cmake	2009-09-15 09:59:14.000000000 +0100
++++ OWB-r1097.aros/cmake/CheckPlatformInternationalization.cmake	2014-12-14 04:05:01.494632127 +0000
+@@ -22,10 +22,10 @@
+ 
+ if(USE_I18N STREQUAL "ICU")
+     IF(NOT WIN32)
+-        find_package(ICU REQUIRED)
+-        if(NOT ICU_FOUND)
+-            message(FATAL_ERROR "icu package not found. Install it to be able to compile owb.")
+-        endif(NOT ICU_FOUND)
++#        find_package(ICU REQUIRED)
++#        if(NOT ICU_FOUND)
++#            message(FATAL_ERROR "icu package not found. Install it to be able to compile owb.")
++#        endif(NOT ICU_FOUND)
+     ELSE(NOT WIN32)
+         ## We haven't got a good pkg-config under Windows so we let cmake search libs
+         find_path(ICU_INC pwin32.h ${WINLIB_INC_PATH} ${WINLIB_INC_PATH}/icu ${WINLIB_INC_PATH}/unicode)
+diff -ruN OWB-r1097/cmake/CheckPlatformNetwork.cmake OWB-r1097.aros/cmake/CheckPlatformNetwork.cmake
+--- OWB-r1097/cmake/CheckPlatformNetwork.cmake	2009-09-23 14:00:11.000000000 +0100
++++ OWB-r1097.aros/cmake/CheckPlatformNetwork.cmake	2014-12-14 04:05:01.494632127 +0000
+@@ -1,6 +1,6 @@
+ if(USE_NETWORK STREQUAL "CURL")
+     IF(NOT WIN32)
+-        pkg_check_modules(CURL REQUIRED libcurl>=7.15)
++#        pkg_check_modules(CURL REQUIRED libcurl>=7.15)
+     ELSE(NOT WIN32)
+         ## We haven't got a good pkg-config under Windows so we let cmake search libs
+         find_path(CURL_INCLUDE_DIRS curl.h ${WINLIB_INC_PATH} ${WINLIB_INC_PATH}/curl)    
+diff -ruN OWB-r1097/cmake/CheckPlatformTimer.cmake OWB-r1097.aros/cmake/CheckPlatformTimer.cmake
+--- OWB-r1097/cmake/CheckPlatformTimer.cmake	2009-02-11 16:41:27.000000000 +0000
++++ OWB-r1097.aros/cmake/CheckPlatformTimer.cmake	2014-12-14 04:05:01.494632127 +0000
+@@ -20,3 +20,8 @@
+     set(USE_TIMER_QT TRUE)
+     mark_as_advanced(USE_TIMER_QT)
+ endif(USE_TIMER STREQUAL "QT")
++
++if(${USE_TIMER} STREQUAL "AROS")
++    set(USE_TIMER_AROS TRUE)
++    mark_as_advanced(USE_TIMER_AROS)
++endif(${USE_TIMER} STREQUAL "AROS")
+diff -ruN OWB-r1097/cmake/CheckSqlite3.cmake OWB-r1097.aros/cmake/CheckSqlite3.cmake
+--- OWB-r1097/cmake/CheckSqlite3.cmake	2008-10-04 18:41:49.000000000 +0100
++++ OWB-r1097.aros/cmake/CheckSqlite3.cmake	2014-12-14 04:05:01.495632137 +0000
+@@ -1,5 +1,5 @@
+ if(ENABLE_DATABASE)
+-    pkg_check_modules(SQLITE3 REQUIRED sqlite3>=3.0)
++#    pkg_check_modules(SQLITE3 REQUIRED sqlite3>=3.0)
+     set(DATABASE_INCLUDE_DIRS ${SQLITE3_INCLUDE_DIRS})
+     set(DATABASE_LIBRARIES ${SQLITE3_LIBRARIES})
+ endif(ENABLE_DATABASE)
+diff -ruN OWB-r1097/cmake/CheckXSLT.cmake OWB-r1097.aros/cmake/CheckXSLT.cmake
+--- OWB-r1097/cmake/CheckXSLT.cmake	2009-09-15 09:59:14.000000000 +0100
++++ OWB-r1097.aros/cmake/CheckXSLT.cmake	2014-12-14 04:05:01.495632137 +0000
+@@ -1,6 +1,6 @@
+ if(ENABLE_XSLT)
+     IF(NOT WIN32)
+-        pkg_check_modules(LIBXSLT REQUIRED libxslt>=1.1.7)
++#        pkg_check_modules(LIBXSLT REQUIRED libxslt>=1.1.7)
+     ELSE(NOT WIN32)
+         ## Pkg-config under cygwin gives to cmake .a lib and we need .lib for Visual Studio projects. 
+         find_path(LIB_XSLT_PATH libxslt.lib ${WINLIB_LIB_PATH})
+diff -ruN OWB-r1097/cmake/ConfigureBuildSDL.cmake OWB-r1097.aros/cmake/ConfigureBuildSDL.cmake
+--- OWB-r1097/cmake/ConfigureBuildSDL.cmake	2009-10-16 19:40:05.000000000 +0100
++++ OWB-r1097.aros/cmake/ConfigureBuildSDL.cmake	2014-12-14 04:05:01.495632137 +0000
+@@ -7,7 +7,7 @@
+     set(ARCH ${PROCESSOR})
+ endif(UNIX)
+ 
+-set(ENABLE_DEBUG ON CACHE BOOLEAN "Enable debug support" FORCE)
++set(ENABLE_DEBUG OFF CACHE BOOLEAN "Enable debug support" FORCE)
+ set(ENABLE_TESTS ON CACHE BOOLEAN "Enable tests" FORCE)
+ 
+ set(ENABLE_3D_CANVAS ON CACHE BOOLEAN "Enable 3D canvas support" FORCE)
+diff -ruN OWB-r1097/cmake/SetCMakeVars.cmake OWB-r1097.aros/cmake/SetCMakeVars.cmake
+--- OWB-r1097/cmake/SetCMakeVars.cmake	2009-08-12 21:20:06.000000000 +0100
++++ OWB-r1097.aros/cmake/SetCMakeVars.cmake	2014-12-14 04:05:01.495632137 +0000
+@@ -22,6 +22,14 @@
+     )
+ endif(USE_GRAPHICS_SDL)
+ 
++if(USE_GRAPHICS_AROS)
++    list(APPEND API_HEADER
++        ${OWB_SOURCE_DIR}/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.h
++        ${OWB_SOURCE_DIR}/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.h
++        ${OWB_SOURCE_DIR}/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.h
++    )
++endif(USE_GRAPHICS_AROS)
++
+ list(APPEND BASE_INCLUDE_DIRS
+     ${OWB_SOURCE_DIR}
+     ${OWB_SOURCE_DIR}/Base
+@@ -103,6 +111,12 @@
+     ${NETWORK_LIBRARIES}
+     ${THREADS_LIBRARIES}
+     ${TIMER_LIBRARIES}
++    codesets
++    amiga
++    arosc
++    m
++    mui
++    thread
+ )
+ 
+ if(ENABLE_DATABASE)
 diff -ruN OWB-r1097/CMakeLists.txt OWB-r1097.aros/CMakeLists.txt
 --- OWB-r1097/CMakeLists.txt	2009-10-14 14:25:22.000000000 +0100
-+++ OWB-r1097.aros/CMakeLists.txt	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/CMakeLists.txt	2014-12-14 04:05:01.495632137 +0000
 @@ -72,11 +72,11 @@
  
  set(USE_FILESYSTEM_ACCESS "POSIX" CACHE STRING "Choose the filesystem access method, options are: GLIB POSIX QT")
@@ -9379,7 +9575,7 @@ diff -ruN OWB-r1097/CMakeLists.txt OWB-r1097.aros/CMakeLists.txt
  
 diff -ruN OWB-r1097/JavaScriptCore/CMakeLists.txt OWB-r1097.aros/JavaScriptCore/CMakeLists.txt
 --- OWB-r1097/JavaScriptCore/CMakeLists.txt	2009-10-09 15:58:16.000000000 +0100
-+++ OWB-r1097.aros/JavaScriptCore/CMakeLists.txt	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/JavaScriptCore/CMakeLists.txt	2014-12-14 04:05:01.496632147 +0000
 @@ -76,6 +76,8 @@
  # Tests compilation.                             #
  ##################################################
@@ -9397,7 +9593,7 @@ diff -ruN OWB-r1097/JavaScriptCore/CMakeLists.txt OWB-r1097.aros/JavaScriptCore/
 +endif(ENABLE_TESTS)
 diff -ruN OWB-r1097/JavaScriptCore/interpreter/Interpreter.cpp OWB-r1097.aros/JavaScriptCore/interpreter/Interpreter.cpp
 --- OWB-r1097/JavaScriptCore/interpreter/Interpreter.cpp	2009-10-12 11:20:21.000000000 +0100
-+++ OWB-r1097.aros/JavaScriptCore/interpreter/Interpreter.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/JavaScriptCore/interpreter/Interpreter.cpp	2014-12-14 04:05:01.496632147 +0000
 @@ -2497,7 +2497,7 @@
                  double dValue = 0;
                  JSValue jsValue = callFrame->r(value).jsValue();
@@ -9422,7 +9618,7 @@ diff -ruN OWB-r1097/JavaScriptCore/interpreter/Interpreter.cpp OWB-r1097.aros/Ja
                  exceptionValue = createInvalidParamError(callFrame, "Function.prototype.apply", arguments, vPC - callFrame->codeBlock()->instructions().begin(), callFrame->codeBlock());
 diff -ruN OWB-r1097/JavaScriptCore/interpreter/RegisterFile.cpp OWB-r1097.aros/JavaScriptCore/interpreter/RegisterFile.cpp
 --- OWB-r1097/JavaScriptCore/interpreter/RegisterFile.cpp	2009-09-23 14:00:11.000000000 +0100
-+++ OWB-r1097.aros/JavaScriptCore/interpreter/RegisterFile.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/JavaScriptCore/interpreter/RegisterFile.cpp	2014-12-14 04:05:01.497632157 +0000
 @@ -40,7 +40,7 @@
      VirtualFree(m_buffer, DWORD(m_commitEnd) - DWORD(m_buffer), MEM_DECOMMIT);
  #endif
@@ -9434,7 +9630,7 @@ diff -ruN OWB-r1097/JavaScriptCore/interpreter/RegisterFile.cpp OWB-r1097.aros/J
      fastFree(m_buffer);
 diff -ruN OWB-r1097/JavaScriptCore/runtime/Arguments.cpp OWB-r1097.aros/JavaScriptCore/runtime/Arguments.cpp
 --- OWB-r1097/JavaScriptCore/runtime/Arguments.cpp	2009-08-28 13:59:49.000000000 +0100
-+++ OWB-r1097.aros/JavaScriptCore/runtime/Arguments.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/JavaScriptCore/runtime/Arguments.cpp	2014-12-14 04:05:01.497632157 +0000
 @@ -71,7 +71,7 @@
      }
  
@@ -9455,7 +9651,7 @@ diff -ruN OWB-r1097/JavaScriptCore/runtime/Arguments.cpp OWB-r1097.aros/JavaScri
          if (!d->deletedArguments[i])
 diff -ruN OWB-r1097/JavaScriptCore/runtime/CMakeLists.txt OWB-r1097.aros/JavaScriptCore/runtime/CMakeLists.txt
 --- OWB-r1097/JavaScriptCore/runtime/CMakeLists.txt	2009-10-09 15:58:16.000000000 +0100
-+++ OWB-r1097.aros/JavaScriptCore/runtime/CMakeLists.txt	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/JavaScriptCore/runtime/CMakeLists.txt	2014-12-14 04:05:01.497632157 +0000
 @@ -62,7 +62,7 @@
      runtime/Lookup.cpp
      runtime/MathObject.cpp
@@ -9467,7 +9663,7 @@ diff -ruN OWB-r1097/JavaScriptCore/runtime/CMakeLists.txt OWB-r1097.aros/JavaScr
      runtime/NumberConstructor.cpp
 diff -ruN OWB-r1097/JavaScriptCore/runtime/Collector.cpp OWB-r1097.aros/JavaScriptCore/runtime/Collector.cpp
 --- OWB-r1097/JavaScriptCore/runtime/Collector.cpp	2009-10-09 15:58:16.000000000 +0100
-+++ OWB-r1097.aros/JavaScriptCore/runtime/Collector.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/JavaScriptCore/runtime/Collector.cpp	2014-12-14 04:05:01.498632168 +0000
 @@ -95,6 +95,10 @@
  #include <malloc.h>
  #include <proto/exec.h>
@@ -9490,7 +9686,7 @@ diff -ruN OWB-r1097/JavaScriptCore/runtime/Collector.cpp OWB-r1097.aros/JavaScri
      static size_t stackSize = 0;
 diff -ruN OWB-r1097/JavaScriptCore/runtime/JSONObject.cpp OWB-r1097.aros/JavaScriptCore/runtime/JSONObject.cpp
 --- OWB-r1097/JavaScriptCore/runtime/JSONObject.cpp	2009-08-28 13:59:49.000000000 +0100
-+++ OWB-r1097.aros/JavaScriptCore/runtime/JSONObject.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/JavaScriptCore/runtime/JSONObject.cpp	2014-12-14 04:05:01.498632168 +0000
 @@ -720,7 +720,7 @@
              }
              case ArrayEndVisitMember: {
@@ -9502,7 +9698,7 @@ diff -ruN OWB-r1097/JavaScriptCore/runtime/JSONObject.cpp OWB-r1097.aros/JavaScr
                  else {
 diff -ruN OWB-r1097/JavaScriptCore/runtime/JSString.h OWB-r1097.aros/JavaScriptCore/runtime/JSString.h
 --- OWB-r1097/JavaScriptCore/runtime/JSString.h	2009-10-16 19:40:05.000000000 +0100
-+++ OWB-r1097.aros/JavaScriptCore/runtime/JSString.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/JavaScriptCore/runtime/JSString.h	2014-12-14 04:05:01.498632168 +0000
 @@ -260,7 +260,7 @@
          if (isString())
              return static_cast<JSString*>(asCell())->value();
@@ -9514,7 +9710,7 @@ diff -ruN OWB-r1097/JavaScriptCore/runtime/JSString.h OWB-r1097.aros/JavaScriptC
          if (isTrue())
 diff -ruN OWB-r1097/JavaScriptCore/runtime/JSValue.h OWB-r1097.aros/JavaScriptCore/runtime/JSValue.h
 --- OWB-r1097/JavaScriptCore/runtime/JSValue.h	2009-10-05 11:36:03.000000000 +0100
-+++ OWB-r1097.aros/JavaScriptCore/runtime/JSValue.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/JavaScriptCore/runtime/JSValue.h	2014-12-14 04:05:01.498632168 +0000
 @@ -663,7 +663,7 @@
              u.asDouble = d;
              return;
@@ -9533,21 +9729,9 @@ diff -ruN OWB-r1097/JavaScriptCore/runtime/JSValue.h OWB-r1097.aros/JavaScriptCo
      }
  
      inline bool JSValue::isNumber() const
-diff -ruN OWB-r1097/JavaScriptCore/runtime/MarkStack.h OWB-r1097.aros/JavaScriptCore/runtime/MarkStack.h
---- OWB-r1097/JavaScriptCore/runtime/MarkStack.h	2009-09-28 10:13:12.000000000 +0100
-+++ OWB-r1097.aros/JavaScriptCore/runtime/MarkStack.h	2013-07-10 07:53:52.000000000 +0100
-@@ -153,7 +153,7 @@
-                 ASSERT(0 == (size % MarkStack::pageSize()));
-                 if (size == m_allocated)
-                     return;
--#if PLATFORM(WIN) || PLATFORM(SYMBIAN)
-+#if PLATFORM(WIN) || PLATFORM(SYMBIAN) || PLATFORM(AROS)
-                 // We cannot release a part of a region with VirtualFree.  To get around this,
-                 // we'll release the entire region and reallocate the size that we want.
-                 releaseStack(m_data, m_allocated);
 diff -ruN OWB-r1097/JavaScriptCore/runtime/MarkStackAROS.cpp OWB-r1097.aros/JavaScriptCore/runtime/MarkStackAROS.cpp
 --- OWB-r1097/JavaScriptCore/runtime/MarkStackAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/JavaScriptCore/runtime/MarkStackAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/JavaScriptCore/runtime/MarkStackAROS.cpp	2014-12-14 04:05:01.499632178 +0000
 @@ -0,0 +1,40 @@
 +/*
 +    Copyright (C) 2009 Stanislaw Szymczyk
@@ -9589,9 +9773,21 @@ diff -ruN OWB-r1097/JavaScriptCore/runtime/MarkStackAROS.cpp OWB-r1097.aros/Java
 +}
 +
 +}
+diff -ruN OWB-r1097/JavaScriptCore/runtime/MarkStack.h OWB-r1097.aros/JavaScriptCore/runtime/MarkStack.h
+--- OWB-r1097/JavaScriptCore/runtime/MarkStack.h	2009-09-28 10:13:12.000000000 +0100
++++ OWB-r1097.aros/JavaScriptCore/runtime/MarkStack.h	2014-12-14 04:05:01.499632178 +0000
+@@ -153,7 +153,7 @@
+                 ASSERT(0 == (size % MarkStack::pageSize()));
+                 if (size == m_allocated)
+                     return;
+-#if PLATFORM(WIN) || PLATFORM(SYMBIAN)
++#if PLATFORM(WIN) || PLATFORM(SYMBIAN) || PLATFORM(AROS)
+                 // We cannot release a part of a region with VirtualFree.  To get around this,
+                 // we'll release the entire region and reallocate the size that we want.
+                 releaseStack(m_data, m_allocated);
 diff -ruN OWB-r1097/JavaScriptCore/runtime/Operations.h OWB-r1097.aros/JavaScriptCore/runtime/Operations.h
 --- OWB-r1097/JavaScriptCore/runtime/Operations.h	2009-08-21 14:44:56.000000000 +0100
-+++ OWB-r1097.aros/JavaScriptCore/runtime/Operations.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/JavaScriptCore/runtime/Operations.h	2014-12-14 04:05:01.499632178 +0000
 @@ -212,7 +212,7 @@
  
          if (rightIsNumber & leftIsString) {
@@ -9603,7 +9799,7 @@ diff -ruN OWB-r1097/JavaScriptCore/runtime/Operations.h OWB-r1097.aros/JavaScrip
              if (!value)
 diff -ruN OWB-r1097/JavaScriptCore/wtf/TCSpinLock.h OWB-r1097.aros/JavaScriptCore/wtf/TCSpinLock.h
 --- OWB-r1097/JavaScriptCore/wtf/TCSpinLock.h	2009-09-25 16:25:08.000000000 +0100
-+++ OWB-r1097.aros/JavaScriptCore/wtf/TCSpinLock.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/JavaScriptCore/wtf/TCSpinLock.h	2014-12-14 04:05:01.499632178 +0000
 @@ -189,6 +189,31 @@
    }
  }
@@ -9636,23 +9832,9 @@ diff -ruN OWB-r1097/JavaScriptCore/wtf/TCSpinLock.h OWB-r1097.aros/JavaScriptCor
  #else
  
  #include <pthread.h>
-diff -ruN OWB-r1097/WebCore/CMakeLists.txt OWB-r1097.aros/WebCore/CMakeLists.txt
---- OWB-r1097/WebCore/CMakeLists.txt	2009-10-07 16:28:50.000000000 +0100
-+++ OWB-r1097.aros/WebCore/CMakeLists.txt	2013-07-10 07:53:52.000000000 +0100
-@@ -510,3 +510,10 @@
- )
- add_library(webcore STATIC ${WEBCORE_SRC})
- add_dependencies(webcore jsc)
-+
-+install(DIRECTORY ${OWB_SOURCE_DIR}/WebCore/Resources/
-+    DESTINATION share/webkit-owb/resources
-+    PATTERN ".svn" EXCLUDE
-+    PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
-+)
-+
 diff -ruN OWB-r1097/WebCore/bindings/js/CMakeLists.txt OWB-r1097.aros/WebCore/bindings/js/CMakeLists.txt
 --- OWB-r1097/WebCore/bindings/js/CMakeLists.txt	2009-10-14 14:25:22.000000000 +0100
-+++ OWB-r1097.aros/WebCore/bindings/js/CMakeLists.txt	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebCore/bindings/js/CMakeLists.txt	2014-12-14 04:05:01.500632188 +0000
 @@ -252,5 +252,11 @@
      )
  endif(ENABLE_EVENTSOURCE)
@@ -9665,9 +9847,75 @@ diff -ruN OWB-r1097/WebCore/bindings/js/CMakeLists.txt OWB-r1097.aros/WebCore/bi
 +
  include(bindings/js/Customer/CMakeLists.txt OPTIONAL)
  
+diff -ruN OWB-r1097/WebCore/CMakeLists.txt OWB-r1097.aros/WebCore/CMakeLists.txt
+--- OWB-r1097/WebCore/CMakeLists.txt	2009-10-07 16:28:50.000000000 +0100
++++ OWB-r1097.aros/WebCore/CMakeLists.txt	2014-12-14 04:05:01.500632188 +0000
+@@ -510,3 +510,10 @@
+ )
+ add_library(webcore STATIC ${WEBCORE_SRC})
+ add_dependencies(webcore jsc)
++
++install(DIRECTORY ${OWB_SOURCE_DIR}/WebCore/Resources/
++    DESTINATION share/webkit-owb/resources
++    PATTERN ".svn" EXCLUDE
++    PERMISSIONS OWNER_READ GROUP_READ WORLD_READ
++)
++
+diff -ruN OWB-r1097/WebCore/css/CSSGrammar.y OWB-r1097.aros/WebCore/css/CSSGrammar.y
+--- OWB-r1097/WebCore/css/CSSGrammar.y	2009-08-07 12:39:58.000000000 +0100
++++ OWB-r1097.aros/WebCore/css/CSSGrammar.y	2014-12-14 04:05:01.500632188 +0000
+@@ -51,13 +51,11 @@
+ #define YYMAXDEPTH 10000
+ #define YYDEBUG 0
+ 
+-// FIXME: Replace with %parse-param { CSSParser* parser } once we can depend on bison 2.x
+-#define YYPARSE_PARAM parser
+-#define YYLEX_PARAM parser
+-
+ %}
+ 
+ %pure_parser
++%parse-param { CSSParser* parser }
++%lex-param { CSSParser* parser }
+ 
+ %union {
+     bool boolean;
+@@ -85,7 +83,7 @@
+ 
+ %{
+ 
+-static inline int cssyyerror(const char*)
++static inline int cssyyerror(void*, const char*)
+ {
+     return 1;
+ }
+diff -ruN OWB-r1097/WebCore/css/CSSParser.cpp OWB-r1097.aros/WebCore/css/CSSParser.cpp
+--- OWB-r1097/WebCore/css/CSSParser.cpp	2009-10-16 19:40:05.000000000 +0100
++++ OWB-r1097.aros/WebCore/css/CSSParser.cpp	2014-12-14 04:05:01.502632209 +0000
+@@ -81,7 +81,7 @@
+ extern int cssyydebug;
+ #endif
+ 
+-extern int cssyyparse(void* parser);
++extern int cssyyparse(WebCore::CSSParser*);
+ 
+ using namespace std;
+ using namespace WTF;
+diff -ruN OWB-r1097/WebCore/dom/make_names.pl OWB-r1097.aros/WebCore/dom/make_names.pl
+--- OWB-r1097/WebCore/dom/make_names.pl	2009-08-24 12:41:30.000000000 +0100
++++ OWB-r1097.aros/WebCore/dom/make_names.pl	2014-12-14 04:05:01.506632250 +0000
+@@ -46,7 +46,7 @@
+ my %attrs = ();
+ my %parameters = ();
+ my $extraDefines = 0;
+-my $preprocessor = "/usr/bin/gcc -E -P -x c++";
++my $preprocessor = "/usr/bin/gcc -E -x c++";
+ 
+ GetOptions(
+     'tags=s' => \$tagsFile, 
 diff -ruN OWB-r1097/WebCore/dom/XMLTokenizerLibxml2.cpp OWB-r1097.aros/WebCore/dom/XMLTokenizerLibxml2.cpp
 --- OWB-r1097/WebCore/dom/XMLTokenizerLibxml2.cpp	2009-10-09 15:58:16.000000000 +0100
-+++ OWB-r1097.aros/WebCore/dom/XMLTokenizerLibxml2.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebCore/dom/XMLTokenizerLibxml2.cpp	2014-12-14 04:05:01.507632260 +0000
 @@ -887,7 +887,7 @@
      if (m_parserStopped)
          return;
@@ -9686,21 +9934,9 @@ diff -ruN OWB-r1097/WebCore/dom/XMLTokenizerLibxml2.cpp OWB-r1097.aros/WebCore/d
      free(m);
  #endif
  }
-diff -ruN OWB-r1097/WebCore/dom/make_names.pl OWB-r1097.aros/WebCore/dom/make_names.pl
---- OWB-r1097/WebCore/dom/make_names.pl	2009-08-24 12:41:30.000000000 +0100
-+++ OWB-r1097.aros/WebCore/dom/make_names.pl	2013-07-10 07:53:52.000000000 +0100
-@@ -46,7 +46,7 @@
- my %attrs = ();
- my %parameters = ();
- my $extraDefines = 0;
--my $preprocessor = "/usr/bin/gcc -E -P -x c++";
-+my $preprocessor = "/usr/bin/gcc -E -x c++";
- 
- GetOptions(
-     'tags=s' => \$tagsFile, 
 diff -ruN OWB-r1097/WebCore/loader/CachedImage.cpp OWB-r1097.aros/WebCore/loader/CachedImage.cpp
 --- OWB-r1097/WebCore/loader/CachedImage.cpp	2009-06-19 16:17:54.000000000 +0100
-+++ OWB-r1097.aros/WebCore/loader/CachedImage.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebCore/loader/CachedImage.cpp	2014-12-14 04:05:01.507632260 +0000
 @@ -113,7 +113,7 @@
  
  static Image* brokenImage()
@@ -9712,7 +9948,7 @@ diff -ruN OWB-r1097/WebCore/loader/CachedImage.cpp OWB-r1097.aros/WebCore/loader
  
 diff -ruN OWB-r1097/WebCore/loader/FrameLoader.cpp OWB-r1097.aros/WebCore/loader/FrameLoader.cpp
 --- OWB-r1097/WebCore/loader/FrameLoader.cpp	2009-10-16 19:40:05.000000000 +0100
-+++ OWB-r1097.aros/WebCore/loader/FrameLoader.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebCore/loader/FrameLoader.cpp	2014-12-14 04:05:01.508632271 +0000
 @@ -47,6 +47,7 @@
  #include "EditorClient.h"
  #include "Element.h"
@@ -9737,7 +9973,7 @@ diff -ruN OWB-r1097/WebCore/loader/FrameLoader.cpp OWB-r1097.aros/WebCore/loader
      bool sameURL = shouldTreatURLAsSameAsCurrent(newURL);
 diff -ruN OWB-r1097/WebCore/loader/MainResourceLoader.cpp OWB-r1097.aros/WebCore/loader/MainResourceLoader.cpp
 --- OWB-r1097/WebCore/loader/MainResourceLoader.cpp	2009-10-16 19:40:05.000000000 +0100
-+++ OWB-r1097.aros/WebCore/loader/MainResourceLoader.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebCore/loader/MainResourceLoader.cpp	2014-12-14 04:05:01.508632271 +0000
 @@ -77,7 +77,11 @@
  
      if (!cancelled()) {
@@ -9751,9 +9987,20 @@ diff -ruN OWB-r1097/WebCore/loader/MainResourceLoader.cpp OWB-r1097.aros/WebCore
          
          releaseResources();
      }
+diff -ruN OWB-r1097/WebCore/page/ChromeClient.h OWB-r1097.aros/WebCore/page/ChromeClient.h
+--- OWB-r1097/WebCore/page/ChromeClient.h	2009-10-07 16:28:50.000000000 +0100
++++ OWB-r1097.aros/WebCore/page/ChromeClient.h	2014-12-14 04:05:01.508632271 +0000
+@@ -88,6 +88,7 @@
+         // should not be shown to the user until the ChromeClient of the newly
+         // created Page has its show method called.
+         virtual Page* createWindow(Frame*, const FrameLoadRequest&, const WindowFeatures&) = 0;
++        virtual Page* createTab(Frame*, const FrameLoadRequest&) = 0;
+         virtual void show() = 0;
+ 
+         virtual bool canRunModal() = 0;
 diff -ruN OWB-r1097/WebCore/page/Chrome.cpp OWB-r1097.aros/WebCore/page/Chrome.cpp
 --- OWB-r1097/WebCore/page/Chrome.cpp	2009-09-21 15:00:57.000000000 +0100
-+++ OWB-r1097.aros/WebCore/page/Chrome.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebCore/page/Chrome.cpp	2014-12-14 04:05:01.508632271 +0000
 @@ -167,6 +167,20 @@
      return newPage;
  }
@@ -9777,7 +10024,7 @@ diff -ruN OWB-r1097/WebCore/page/Chrome.cpp OWB-r1097.aros/WebCore/page/Chrome.c
      m_client->show();
 diff -ruN OWB-r1097/WebCore/page/Chrome.h OWB-r1097.aros/WebCore/page/Chrome.h
 --- OWB-r1097/WebCore/page/Chrome.h	2009-09-21 15:00:57.000000000 +0100
-+++ OWB-r1097.aros/WebCore/page/Chrome.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebCore/page/Chrome.h	2014-12-14 04:05:01.509632281 +0000
 @@ -83,6 +83,7 @@
          void takeFocus(FocusDirection) const;
  
@@ -9786,20 +10033,9 @@ diff -ruN OWB-r1097/WebCore/page/Chrome.h OWB-r1097.aros/WebCore/page/Chrome.h
          void show() const;
  
          bool canRunModal() const;
-diff -ruN OWB-r1097/WebCore/page/ChromeClient.h OWB-r1097.aros/WebCore/page/ChromeClient.h
---- OWB-r1097/WebCore/page/ChromeClient.h	2009-10-07 16:28:50.000000000 +0100
-+++ OWB-r1097.aros/WebCore/page/ChromeClient.h	2013-07-10 07:53:52.000000000 +0100
-@@ -88,6 +88,7 @@
-         // should not be shown to the user until the ChromeClient of the newly
-         // created Page has its show method called.
-         virtual Page* createWindow(Frame*, const FrameLoadRequest&, const WindowFeatures&) = 0;
-+        virtual Page* createTab(Frame*, const FrameLoadRequest&) = 0;
-         virtual void show() = 0;
- 
-         virtual bool canRunModal() = 0;
 diff -ruN OWB-r1097/WebCore/page/ContextMenuController.cpp OWB-r1097.aros/WebCore/page/ContextMenuController.cpp
 --- OWB-r1097/WebCore/page/ContextMenuController.cpp	2009-10-05 11:36:03.000000000 +0100
-+++ OWB-r1097.aros/WebCore/page/ContextMenuController.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebCore/page/ContextMenuController.cpp	2014-12-14 04:05:01.509632281 +0000
 @@ -120,6 +120,15 @@
      }
  }
@@ -9853,7 +10089,7 @@ diff -ruN OWB-r1097/WebCore/page/ContextMenuController.cpp OWB-r1097.aros/WebCor
          break;
 diff -ruN OWB-r1097/WebCore/page/EventHandler.cpp OWB-r1097.aros/WebCore/page/EventHandler.cpp
 --- OWB-r1097/WebCore/page/EventHandler.cpp	2009-10-02 14:41:19.000000000 +0100
-+++ OWB-r1097.aros/WebCore/page/EventHandler.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebCore/page/EventHandler.cpp	2014-12-14 04:05:01.509632281 +0000
 @@ -1876,7 +1876,7 @@
      // Context menu events shouldn't select text in GTK+ applications or in Chromium.
      // FIXME: This should probably be configurable by embedders. Consider making it a WebPreferences setting.
@@ -9865,7 +10101,7 @@ diff -ruN OWB-r1097/WebCore/page/EventHandler.cpp OWB-r1097.aros/WebCore/page/Ev
          // If the selection is non-editable, we do word selection to make it easier to use the contextual menu items
 diff -ruN OWB-r1097/WebCore/page/Settings.cpp OWB-r1097.aros/WebCore/page/Settings.cpp
 --- OWB-r1097/WebCore/page/Settings.cpp	2009-10-12 11:20:21.000000000 +0100
-+++ OWB-r1097.aros/WebCore/page/Settings.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebCore/page/Settings.cpp	2014-12-14 04:05:01.510632291 +0000
 @@ -52,6 +52,13 @@
  bool Settings::gShouldUseHighResolutionTimers = true;
  #endif
@@ -9911,7 +10147,7 @@ diff -ruN OWB-r1097/WebCore/page/Settings.cpp OWB-r1097.aros/WebCore/page/Settin
      m_usesEncodingDetector = usesEncodingDetector;
 diff -ruN OWB-r1097/WebCore/page/Settings.h OWB-r1097.aros/WebCore/page/Settings.h
 --- OWB-r1097/WebCore/page/Settings.h	2009-10-12 11:20:21.000000000 +0100
-+++ OWB-r1097.aros/WebCore/page/Settings.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebCore/page/Settings.h	2014-12-14 04:05:01.510632291 +0000
 @@ -275,6 +275,19 @@
          bool experimentalWebSocketsEnabled() const { return m_experimentalWebSocketsEnabled; }
  #endif
@@ -9948,7 +10184,7 @@ diff -ruN OWB-r1097/WebCore/page/Settings.h OWB-r1097.aros/WebCore/page/Settings
  } // namespace WebCore
 diff -ruN OWB-r1097/WebCore/plugins/CMakeLists.txt OWB-r1097.aros/WebCore/plugins/CMakeLists.txt
 --- OWB-r1097/WebCore/plugins/CMakeLists.txt	2009-07-20 16:37:14.000000000 +0100
-+++ OWB-r1097.aros/WebCore/plugins/CMakeLists.txt	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebCore/plugins/CMakeLists.txt	2014-12-14 04:05:01.510632291 +0000
 @@ -48,6 +48,14 @@
              plugins/SDL/PluginViewSDL.cpp
          )
@@ -9966,7 +10202,7 @@ diff -ruN OWB-r1097/WebCore/plugins/CMakeLists.txt OWB-r1097.aros/WebCore/plugin
           plugins/PluginDataNone.cpp
 diff -ruN OWB-r1097/WebCore/plugins/PluginView.cpp OWB-r1097.aros/WebCore/plugins/PluginView.cpp
 --- OWB-r1097/WebCore/plugins/PluginView.cpp	2009-10-16 19:40:05.000000000 +0100
-+++ OWB-r1097.aros/WebCore/plugins/PluginView.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebCore/plugins/PluginView.cpp	2014-12-14 04:05:01.510632291 +0000
 @@ -1185,7 +1185,7 @@
  {
      static RefPtr<Image> nullPluginImage;
@@ -9990,7 +10226,7 @@ diff -ruN OWB-r1097/WebCore/plugins/PluginView.cpp OWB-r1097.aros/WebCore/plugin
  }
 diff -ruN OWB-r1097/WebCore/plugins/PluginViewNone.cpp OWB-r1097.aros/WebCore/plugins/PluginViewNone.cpp
 --- OWB-r1097/WebCore/plugins/PluginViewNone.cpp	2009-10-05 11:36:03.000000000 +0100
-+++ OWB-r1097.aros/WebCore/plugins/PluginViewNone.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebCore/plugins/PluginViewNone.cpp	2014-12-14 04:05:01.511632302 +0000
 @@ -25,6 +25,7 @@
  
  #include "config.h"
@@ -10038,9 +10274,522 @@ diff -ruN OWB-r1097/WebCore/plugins/PluginViewNone.cpp OWB-r1097.aros/WebCore/pl
  }
  
  void PluginView::halt()
+diff -ruN OWB-r1097/WebCore/xml/XPathGrammar.y OWB-r1097.aros/WebCore/xml/XPathGrammar.y
+--- OWB-r1097/WebCore/xml/XPathGrammar.y	2009-07-17 16:00:45.000000000 +0100
++++ OWB-r1097.aros/WebCore/xml/XPathGrammar.y	2014-12-14 04:05:01.511632302 +0000
+@@ -36,6 +36,7 @@
+ #include "XPathParser.h"
+ #include "XPathPath.h"
+ #include "XPathPredicate.h"
++#include "XPathStep.h"
+ #include "XPathVariableReference.h"
+ #include <wtf/FastMalloc.h>
+ 
+@@ -46,8 +47,6 @@
+ #define YYLTYPE_IS_TRIVIAL 1
+ #define YYDEBUG 0
+ #define YYMAXDEPTH 10000
+-#define YYPARSE_PARAM parserParameter
+-#define PARSER static_cast<Parser*>(parserParameter)
+ 
+ using namespace WebCore;
+ using namespace XPath;
+@@ -55,6 +54,7 @@
+ %}
+ 
+ %pure_parser
++%parse-param { WebCore::XPath::Parser* parser }
+ 
+ %union
+ {
+@@ -73,7 +73,7 @@
+ %{
+ 
+ static int xpathyylex(YYSTYPE* yylval) { return Parser::current()->lex(yylval); }
+-static void xpathyyerror(const char*) { }
++static void xpathyyerror(void*, const char*) { }
+     
+ %}
+ 
+@@ -120,7 +120,7 @@
+ Expr:
+     OrExpr
+     {
+-        PARSER->m_topExpr = $1;
++        parser->m_topExpr = $1;
+     }
+     ;
+ 
+@@ -140,7 +140,7 @@
+     '/'
+     {
+         $$ = new LocationPath;
+-        PARSER->registerParseNode($$);
++        parser->registerParseNode($$);
+     }
+     |
+     '/' RelativeLocationPath
+@@ -152,7 +152,7 @@
+     {
+         $$ = $2;
+         $$->insertFirstStep($1);
+-        PARSER->unregisterParseNode($1);
++        parser->unregisterParseNode($1);
+     }
+     ;
+ 
+@@ -161,22 +161,22 @@
+     {
+         $$ = new LocationPath;
+         $$->appendStep($1);
+-        PARSER->unregisterParseNode($1);
+-        PARSER->registerParseNode($$);
++        parser->unregisterParseNode($1);
++        parser->registerParseNode($$);
+     }
+     |
+     RelativeLocationPath '/' Step
+     {
+         $$->appendStep($3);
+-        PARSER->unregisterParseNode($3);
++        parser->unregisterParseNode($3);
+     }
+     |
+     RelativeLocationPath DescendantOrSelf Step
+     {
+         $$->appendStep($2);
+         $$->appendStep($3);
+-        PARSER->unregisterParseNode($2);
+-        PARSER->unregisterParseNode($3);
++        parser->unregisterParseNode($2);
++        parser->unregisterParseNode($3);
+     }
+     ;
+ 
+@@ -185,58 +185,58 @@
+     {
+         if ($2) {
+             $$ = new Step(Step::ChildAxis, *$1, *$2);
+-            PARSER->deletePredicateVector($2);
++            parser->deletePredicateVector($2);
+         } else
+             $$ = new Step(Step::ChildAxis, *$1);
+-        PARSER->deleteNodeTest($1);
+-        PARSER->registerParseNode($$);
++        parser->deleteNodeTest($1);
++        parser->registerParseNode($$);
+     }
+     |
+     NAMETEST OptionalPredicateList
+     {
+         String localName;
+         String namespaceURI;
+-        if (!PARSER->expandQName(*$1, localName, namespaceURI)) {
+-            PARSER->m_gotNamespaceError = true;
++        if (!parser->expandQName(*$1, localName, namespaceURI)) {
++            parser->m_gotNamespaceError = true;
+             YYABORT;
+         }
+         
+         if ($2) {
+             $$ = new Step(Step::ChildAxis, Step::NodeTest(Step::NodeTest::NameTest, localName, namespaceURI), *$2);
+-            PARSER->deletePredicateVector($2);
++            parser->deletePredicateVector($2);
+         } else
+             $$ = new Step(Step::ChildAxis, Step::NodeTest(Step::NodeTest::NameTest, localName, namespaceURI));
+-        PARSER->deleteString($1);
+-        PARSER->registerParseNode($$);
++        parser->deleteString($1);
++        parser->registerParseNode($$);
+     }
+     |
+     AxisSpecifier NodeTest OptionalPredicateList
+     {
+         if ($3) {
+             $$ = new Step($1, *$2, *$3);
+-            PARSER->deletePredicateVector($3);
++            parser->deletePredicateVector($3);
+         } else
+             $$ = new Step($1, *$2);
+-        PARSER->deleteNodeTest($2);
+-        PARSER->registerParseNode($$);
++        parser->deleteNodeTest($2);
++        parser->registerParseNode($$);
+     }
+     |
+     AxisSpecifier NAMETEST OptionalPredicateList
+     {
+         String localName;
+         String namespaceURI;
+-        if (!PARSER->expandQName(*$2, localName, namespaceURI)) {
+-            PARSER->m_gotNamespaceError = true;
++        if (!parser->expandQName(*$2, localName, namespaceURI)) {
++            parser->m_gotNamespaceError = true;
+             YYABORT;
+         }
+ 
+         if ($3) {
+             $$ = new Step($1, Step::NodeTest(Step::NodeTest::NameTest, localName, namespaceURI), *$3);
+-            PARSER->deletePredicateVector($3);
++            parser->deletePredicateVector($3);
+         } else
+             $$ = new Step($1, Step::NodeTest(Step::NodeTest::NameTest, localName, namespaceURI));
+-        PARSER->deleteString($2);
+-        PARSER->registerParseNode($$);
++        parser->deleteString($2);
++        parser->registerParseNode($$);
+     }
+     |
+     AbbreviatedStep
+@@ -261,23 +261,23 @@
+         else if (*$1 == "comment")
+             $$ = new Step::NodeTest(Step::NodeTest::CommentNodeTest);
+ 
+-        PARSER->deleteString($1);
+-        PARSER->registerNodeTest($$);
++        parser->deleteString($1);
++        parser->registerNodeTest($$);
+     }
+     |
+     PI '(' ')'
+     {
+         $$ = new Step::NodeTest(Step::NodeTest::ProcessingInstructionNodeTest);
+-        PARSER->deleteString($1);        
+-        PARSER->registerNodeTest($$);
++        parser->deleteString($1);        
++        parser->registerNodeTest($$);
+     }
+     |
+     PI '(' LITERAL ')'
+     {
+         $$ = new Step::NodeTest(Step::NodeTest::ProcessingInstructionNodeTest, $3->stripWhiteSpace());
+-        PARSER->deleteString($1);        
+-        PARSER->deleteString($3);
+-        PARSER->registerNodeTest($$);
++        parser->deleteString($1);        
++        parser->deleteString($3);
++        parser->registerNodeTest($$);
+     }
+     ;
+ 
+@@ -295,14 +295,14 @@
+     {
+         $$ = new Vector<Predicate*>;
+         $$->append(new Predicate($1));
+-        PARSER->unregisterParseNode($1);
+-        PARSER->registerPredicateVector($$);
++        parser->unregisterParseNode($1);
++        parser->registerPredicateVector($$);
+     }
+     |
+     PredicateList Predicate
+     {
+         $$->append(new Predicate($2));
+-        PARSER->unregisterParseNode($2);
++        parser->unregisterParseNode($2);
+     }
+     ;
+ 
+@@ -317,7 +317,7 @@
+     SLASHSLASH
+     {
+         $$ = new Step(Step::DescendantOrSelfAxis, Step::NodeTest(Step::NodeTest::AnyNodeTest));
+-        PARSER->registerParseNode($$);
++        parser->registerParseNode($$);
+     }
+     ;
+ 
+@@ -325,13 +325,13 @@
+     '.'
+     {
+         $$ = new Step(Step::SelfAxis, Step::NodeTest(Step::NodeTest::AnyNodeTest));
+-        PARSER->registerParseNode($$);
++        parser->registerParseNode($$);
+     }
+     |
+     DOTDOT
+     {
+         $$ = new Step(Step::ParentAxis, Step::NodeTest(Step::NodeTest::AnyNodeTest));
+-        PARSER->registerParseNode($$);
++        parser->registerParseNode($$);
+     }
+     ;
+ 
+@@ -339,8 +339,8 @@
+     VARIABLEREFERENCE
+     {
+         $$ = new VariableReference(*$1);
+-        PARSER->deleteString($1);
+-        PARSER->registerParseNode($$);
++        parser->deleteString($1);
++        parser->registerParseNode($$);
+     }
+     |
+     '(' Expr ')'
+@@ -351,15 +351,15 @@
+     LITERAL
+     {
+         $$ = new StringExpression(*$1);
+-        PARSER->deleteString($1);
+-        PARSER->registerParseNode($$);
++        parser->deleteString($1);
++        parser->registerParseNode($$);
+     }
+     |
+     NUMBER
+     {
+         $$ = new Number($1->toDouble());
+-        PARSER->deleteString($1);
+-        PARSER->registerParseNode($$);
++        parser->deleteString($1);
++        parser->registerParseNode($$);
+     }
+     |
+     FunctionCall
+@@ -371,8 +371,8 @@
+         $$ = createFunction(*$1);
+         if (!$$)
+             YYABORT;
+-        PARSER->deleteString($1);
+-        PARSER->registerParseNode($$);
++        parser->deleteString($1);
++        parser->registerParseNode($$);
+     }
+     |
+     FUNCTIONNAME '(' ArgumentList ')'
+@@ -380,9 +380,9 @@
+         $$ = createFunction(*$1, *$3);
+         if (!$$)
+             YYABORT;
+-        PARSER->deleteString($1);
+-        PARSER->deleteExpressionVector($3);
+-        PARSER->registerParseNode($$);
++        parser->deleteString($1);
++        parser->deleteExpressionVector($3);
++        parser->registerParseNode($$);
+     }
+     ;
+ 
+@@ -391,14 +391,14 @@
+     {
+         $$ = new Vector<Expression*>;
+         $$->append($1);
+-        PARSER->unregisterParseNode($1);
+-        PARSER->registerExpressionVector($$);
++        parser->unregisterParseNode($1);
++        parser->registerExpressionVector($$);
+     }
+     |
+     ArgumentList ',' Argument
+     {
+         $$->append($3);
+-        PARSER->unregisterParseNode($3);
++        parser->unregisterParseNode($3);
+     }
+     ;
+ 
+@@ -414,9 +414,9 @@
+         $$ = new Union;
+         $$->addSubExpression($1);
+         $$->addSubExpression($3);
+-        PARSER->unregisterParseNode($1);
+-        PARSER->unregisterParseNode($3);
+-        PARSER->registerParseNode($$);
++        parser->unregisterParseNode($1);
++        parser->unregisterParseNode($3);
++        parser->registerParseNode($$);
+     }
+     ;
+ 
+@@ -432,9 +432,9 @@
+     {
+         $3->setAbsolute(true);
+         $$ = new Path(static_cast<Filter*>($1), $3);
+-        PARSER->unregisterParseNode($1);
+-        PARSER->unregisterParseNode($3);
+-        PARSER->registerParseNode($$);
++        parser->unregisterParseNode($1);
++        parser->unregisterParseNode($3);
++        parser->registerParseNode($$);
+     }
+     |
+     FilterExpr DescendantOrSelf RelativeLocationPath
+@@ -442,10 +442,10 @@
+         $3->insertFirstStep($2);
+         $3->setAbsolute(true);
+         $$ = new Path(static_cast<Filter*>($1), $3);
+-        PARSER->unregisterParseNode($1);
+-        PARSER->unregisterParseNode($2);
+-        PARSER->unregisterParseNode($3);
+-        PARSER->registerParseNode($$);
++        parser->unregisterParseNode($1);
++        parser->unregisterParseNode($2);
++        parser->unregisterParseNode($3);
++        parser->registerParseNode($$);
+     }
+     ;
+ 
+@@ -455,9 +455,9 @@
+     PrimaryExpr PredicateList
+     {
+         $$ = new Filter($1, *$2);
+-        PARSER->unregisterParseNode($1);
+-        PARSER->deletePredicateVector($2);
+-        PARSER->registerParseNode($$);
++        parser->unregisterParseNode($1);
++        parser->deletePredicateVector($2);
++        parser->registerParseNode($$);
+     }
+     ;
+ 
+@@ -467,9 +467,9 @@
+     OrExpr OR AndExpr
+     {
+         $$ = new LogicalOp(LogicalOp::OP_Or, $1, $3);
+-        PARSER->unregisterParseNode($1);
+-        PARSER->unregisterParseNode($3);
+-        PARSER->registerParseNode($$);
++        parser->unregisterParseNode($1);
++        parser->unregisterParseNode($3);
++        parser->registerParseNode($$);
+     }
+     ;
+ 
+@@ -479,9 +479,9 @@
+     AndExpr AND EqualityExpr
+     {
+         $$ = new LogicalOp(LogicalOp::OP_And, $1, $3);
+-        PARSER->unregisterParseNode($1);
+-        PARSER->unregisterParseNode($3);
+-        PARSER->registerParseNode($$);
++        parser->unregisterParseNode($1);
++        parser->unregisterParseNode($3);
++        parser->registerParseNode($$);
+     }
+     ;
+ 
+@@ -491,9 +491,9 @@
+     EqualityExpr EQOP RelationalExpr
+     {
+         $$ = new EqTestOp($2, $1, $3);
+-        PARSER->unregisterParseNode($1);
+-        PARSER->unregisterParseNode($3);
+-        PARSER->registerParseNode($$);
++        parser->unregisterParseNode($1);
++        parser->unregisterParseNode($3);
++        parser->registerParseNode($$);
+     }
+     ;
+ 
+@@ -503,9 +503,9 @@
+     RelationalExpr RELOP AdditiveExpr
+     {
+         $$ = new EqTestOp($2, $1, $3);
+-        PARSER->unregisterParseNode($1);
+-        PARSER->unregisterParseNode($3);
+-        PARSER->registerParseNode($$);
++        parser->unregisterParseNode($1);
++        parser->unregisterParseNode($3);
++        parser->registerParseNode($$);
+     }
+     ;
+ 
+@@ -515,17 +515,17 @@
+     AdditiveExpr PLUS MultiplicativeExpr
+     {
+         $$ = new NumericOp(NumericOp::OP_Add, $1, $3);
+-        PARSER->unregisterParseNode($1);
+-        PARSER->unregisterParseNode($3);
+-        PARSER->registerParseNode($$);
++        parser->unregisterParseNode($1);
++        parser->unregisterParseNode($3);
++        parser->registerParseNode($$);
+     }
+     |
+     AdditiveExpr MINUS MultiplicativeExpr
+     {
+         $$ = new NumericOp(NumericOp::OP_Sub, $1, $3);
+-        PARSER->unregisterParseNode($1);
+-        PARSER->unregisterParseNode($3);
+-        PARSER->registerParseNode($$);
++        parser->unregisterParseNode($1);
++        parser->unregisterParseNode($3);
++        parser->registerParseNode($$);
+     }
+     ;
+ 
+@@ -535,9 +535,9 @@
+     MultiplicativeExpr MULOP UnaryExpr
+     {
+         $$ = new NumericOp($2, $1, $3);
+-        PARSER->unregisterParseNode($1);
+-        PARSER->unregisterParseNode($3);
+-        PARSER->registerParseNode($$);
++        parser->unregisterParseNode($1);
++        parser->unregisterParseNode($3);
++        parser->registerParseNode($$);
+     }
+     ;
+ 
+@@ -548,8 +548,8 @@
+     {
+         $$ = new Negative;
+         $$->addSubExpression($2);
+-        PARSER->unregisterParseNode($2);
+-        PARSER->registerParseNode($$);
++        parser->unregisterParseNode($2);
++        parser->registerParseNode($$);
+     }
+     ;
+ 
+diff -ruN OWB-r1097/WebCore/xml/XPathParser.cpp OWB-r1097.aros/WebCore/xml/XPathParser.cpp
+--- OWB-r1097/WebCore/xml/XPathParser.cpp	2008-12-10 09:32:50.000000000 +0000
++++ OWB-r1097.aros/WebCore/xml/XPathParser.cpp	2014-12-14 04:05:01.512632312 +0000
+@@ -35,20 +35,17 @@
+ #include "XPathEvaluator.h"
+ #include "XPathException.h"
+ #include "XPathNSResolver.h"
++#include "XPathPath.h"
+ #include "XPathStep.h"
+ #include <wtf/StdLibExtras.h>
+ 
+-int xpathyyparse(void*);
+-
++using namespace WebCore;
+ using namespace WTF;
+ using namespace Unicode;
++using namespace XPath;
+ 
+-namespace WebCore {
+-namespace XPath {
+-
+-class LocationPath;
+-
+-#include "XPathGrammar.h"    
++extern int xpathyyparse(WebCore::XPath::Parser*);
++#include "XPathGrammar.h"
+ 
+ Parser* Parser::currentParser = 0;
+     
+@@ -476,6 +473,7 @@
+     Parser* oldParser = currentParser;
+     currentParser = this;
+     int parseError = xpathyyparse(this);
++
+     currentParser = oldParser;
+ 
+     if (parseError) {
+@@ -630,7 +628,4 @@
+     delete t;
+ }
+ 
+-}
+-}
+-
+ #endif // ENABLE(XPATH)
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.cpp
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.cpp	2014-12-14 04:05:01.512632312 +0000
 @@ -0,0 +1,106 @@
 +#include <wtf/OwnPtr.h>
 +#include "WebDownload.h"
@@ -10150,7 +10899,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.cpp OW
 +}
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.h
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.h	2014-12-14 04:05:01.513632322 +0000
 @@ -0,0 +1,41 @@
 +#ifndef _DOWNLOADDELEGATEAROS_H
 +#define _DOWNLOADDELEGATEAROS_H
@@ -10195,7 +10944,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateAROS.h OWB-
 +#endif
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.cpp
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.cpp	2014-12-14 04:05:01.513632322 +0000
 @@ -0,0 +1,75 @@
 +#include "WebDownload.h"
 +
@@ -10274,7 +11023,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.cpp OW
 +);
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.h
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.h	2014-12-14 04:05:01.586633074 +0000
 @@ -0,0 +1,37 @@
 +#ifndef _DOWNLOADDELEGATEZUNE_H
 +#define _DOWNLOADDELEGATEZUNE_H
@@ -10315,7 +11064,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.h OWB-
 +#endif
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune_private.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune_private.h
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune_private.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune_private.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune_private.h	2014-12-14 04:05:01.586633074 +0000
 @@ -0,0 +1,6 @@
 +#ifndef _DOWNLOADDELEGATEZUNE_PRIVATE_H
 +#define _DOWNLOADDELEGATEZUNE_PRIVATE_H
@@ -10325,7 +11074,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune_privat
 +#endif
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.cpp
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.cpp	2014-12-14 04:05:01.586633074 +0000
 @@ -0,0 +1,139 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -10468,7 +11217,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.cpp OWB-
 +}
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.h
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.h	2014-12-14 04:05:01.586633074 +0000
 @@ -0,0 +1,87 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -10559,7 +11308,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/PolicyDelegateAROS.h OWB-r1
 +#endif // PolicyDelegateAROS_h
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.cpp
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.cpp	2014-12-14 04:05:01.587633084 +0000
 @@ -0,0 +1,363 @@
 +#include "config.h"
 +#include "Settings.h"
@@ -10926,7 +11675,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.cpp OWB-
 +)
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.h
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.h	2014-12-14 04:05:01.587633084 +0000
 @@ -0,0 +1,60 @@
 +#ifndef _WEBPREFERENCESZUNE_H
 +#define _WEBPREFERENCESZUNE_H
@@ -10990,7 +11739,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.h OWB-r1
 +#endif
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune_private.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune_private.h
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune_private.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune_private.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune_private.h	2014-12-14 04:05:01.587633084 +0000
 @@ -0,0 +1,11 @@
 +#ifndef _WEBPREFERENCESZUNEZUNE_PRIVATE_H
 +#define _WEBPREFERENCESZUNEZUNE_PRIVATE_H
@@ -11005,7 +11754,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune_private.
 +#endif
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.cpp
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.cpp	2014-12-14 04:05:01.587633084 +0000
 @@ -0,0 +1,482 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -11491,7 +12240,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.cpp OWB-r109
 +
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.h
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.h	2014-12-14 04:05:01.587633084 +0000
 @@ -0,0 +1,146 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -11641,7 +12390,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewPrivate.h OWB-r1097.
 +#endif
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.cpp
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.cpp	2014-12-14 04:05:01.588633095 +0000
 @@ -0,0 +1,1089 @@
 +#define MUIMASTER_YES_INLINE_STDARG
 +
@@ -12734,7 +13483,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.cpp OWB-r1097.a
 +ADD2EXIT(SDL_Shutdown, -1);
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.h
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.h	2014-12-14 04:05:01.588633095 +0000
 @@ -0,0 +1,106 @@
 +#ifndef _BROWSER_H
 +#define _BROWSER_H
@@ -12844,7 +13593,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.h OWB-r1097.aro
 +#endif /* _BROWSER_H */
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune_private.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune_private.h
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune_private.h	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune_private.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune_private.h	2014-12-14 04:05:01.588633095 +0000
 @@ -0,0 +1,41 @@
 +#ifndef _WEBVIEW_PRIVATE_H_
 +#define _WEBVIEW_PRIVATE_H_
@@ -12889,7 +13638,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune_private.h OWB-r
 +#endif /* _WEBVIEW_PRIVATE_H_ */
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/DefaultPolicyDelegate.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/DefaultPolicyDelegate.h
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/DefaultPolicyDelegate.h	2008-12-12 09:10:48.000000000 +0000
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/DefaultPolicyDelegate.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/DefaultPolicyDelegate.h	2014-12-14 04:05:01.589633105 +0000
 @@ -78,7 +78,7 @@
       * @endcode
       */
@@ -12901,7 +13650,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/DefaultPolicyDelegate.h OWB-r109
       * DefaultPolicyDelegate default constructor
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebDownload.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebDownload.cpp
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/WebDownload.cpp	2009-08-10 16:04:47.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebDownload.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebDownload.cpp	2014-12-14 04:05:01.589633105 +0000
 @@ -100,7 +100,7 @@
      WebCore::String suggestedFilename = webResponse->suggestedFilename();
      if(suggestedFilename.length() == 0)
@@ -12921,7 +13670,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebDownload.cpp OWB-r1097.aros/W
      m_priv->currentSize = 0;
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebFrame.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebFrame.cpp
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/WebFrame.cpp	2009-10-07 16:28:50.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebFrame.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebFrame.cpp	2014-12-14 04:05:01.589633105 +0000
 @@ -31,6 +31,7 @@
  
  #include "DefaultPolicyDelegate.h"
@@ -13009,7 +13758,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebFrame.cpp OWB-r1097.aros/WebK
  {
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebFrame.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebFrame.h
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/WebFrame.h	2009-10-02 14:41:19.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebFrame.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebFrame.h	2014-12-14 04:05:01.590633115 +0000
 @@ -494,10 +494,8 @@
  
      /**
@@ -13024,7 +13773,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebFrame.h OWB-r1097.aros/WebKit
       * Get the frame url
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebURLAuthenticationChallenge.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebURLAuthenticationChallenge.cpp
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/WebURLAuthenticationChallenge.cpp	2009-02-27 17:11:08.000000000 +0000
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebURLAuthenticationChallenge.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebURLAuthenticationChallenge.cpp	2014-12-14 04:05:01.590633115 +0000
 @@ -65,12 +65,7 @@
  
  void WebURLAuthenticationChallenge::initWithProtectionSpace(WebURLProtectionSpace* space, WebURLCredential* proposedCredential, int previousFailureCount, WebURLResponse* failureResponse, WebError* error, WebURLAuthenticationChallengeSender* sender)
@@ -13041,7 +13790,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebURLAuthenticationChallenge.cp
  void WebURLAuthenticationChallenge::initWithAuthenticationChallenge(WebURLAuthenticationChallenge* challenge, WebURLAuthenticationChallengeSender* sender)
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebView.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebView.cpp
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/WebView.cpp	2009-10-16 19:40:05.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebView.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebView.cpp	2014-12-14 04:05:01.590633115 +0000
 @@ -128,6 +128,18 @@
  #include <proto/intuition.h>
  #include <proto/layout.h>
@@ -13230,7 +13979,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebView.cpp OWB-r1097.aros/WebKi
  
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebView.h OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebView.h
 --- OWB-r1097/WebKit/OrigynWebBrowser/Api/WebView.h	2009-10-16 19:40:05.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebView.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/Api/WebView.h	2014-12-14 04:05:01.591633126 +0000
 @@ -40,6 +40,7 @@
   */
  #include "WebKitTypes.h"
@@ -13250,7 +13999,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/Api/WebView.h OWB-r1097.aros/WebKit/
       *  clearDirtyRegion 
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/CMakeLists.txt OWB-r1097.aros/WebKit/OrigynWebBrowser/CMakeLists.txt
 --- OWB-r1097/WebKit/OrigynWebBrowser/CMakeLists.txt	2009-09-15 09:59:14.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/CMakeLists.txt	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/CMakeLists.txt	2014-12-14 04:05:01.591633126 +0000
 @@ -39,6 +39,20 @@
      )
  endif(USE_GRAPHICS_SDL)
@@ -13291,7 +14040,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/CMakeLists.txt OWB-r1097.aros/WebKit
  
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.cpp
 --- OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.cpp	2009-10-16 19:40:05.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.cpp	2014-12-14 04:05:01.592633136 +0000
 @@ -61,9 +61,21 @@
  #include <intuition/gadgetclass.h>
  #include <reaction/reaction_macros.h>
@@ -13482,7 +14231,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.cpp O
  bool WebChromeClient::setCursor(WebCore::PlatformCursorHandle cursor)
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.h OWB-r1097.aros/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.h
 --- OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.h	2009-10-14 14:25:22.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.h	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.h	2014-12-14 04:05:01.592633136 +0000
 @@ -62,6 +62,7 @@
      virtual void takeFocus(WebCore::FocusDirection);
  
@@ -13493,7 +14242,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebChromeClient.h OWB
      virtual bool canRunModal();
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebFrameLoaderClient.cpp OWB-r1097.aros/WebKit/OrigynWebBrowser/WebCoreSupport/WebFrameLoaderClient.cpp
 --- OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebFrameLoaderClient.cpp	2009-10-16 19:40:05.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/WebCoreSupport/WebFrameLoaderClient.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/WebCoreSupport/WebFrameLoaderClient.cpp	2014-12-14 04:05:01.592633136 +0000
 @@ -90,6 +90,13 @@
  #include <proto/layout.h>
  #include <gadgets/clicktab.h>
@@ -13513,8 +14262,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebFrameLoaderClient.
  void WebFrameLoaderClient::dispatchDidReceiveAuthenticationChallenge(DocumentLoader* loader, unsigned long identifier, const AuthenticationChallenge& challenge)
  {
 -    //ASSERT(challenge.sourceHandle());
-+    ASSERT(challenge.sourceHandle());
- 
+-
 -    /*WebView* webView = m_webFrame->webView();
 -    COMPtr<IWebResourceLoadDelegate> resourceLoadDelegate;
 -    if (SUCCEEDED(webView->resourceLoadDelegate(&resourceLoadDelegate))) {
@@ -13522,7 +14270,8 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebFrameLoaderClient.
 -        if (SUCCEEDED(resourceLoadDelegate->didReceiveAuthenticationChallenge(webView, identifier, webChallenge.get(), getWebDataSource(loader))))
 -            return;
 -    }*/
--
++    ASSERT(challenge.sourceHandle());
+ 
 -    // If the ResourceLoadDelegate doesn't exist or fails to handle the call, we tell the ResourceHandle
 -    // to continue without credential - this is the best approximation of Mac behavior
 -    //challenge.sourceHandle()->receivedRequestToContinueWithoutCredential(challenge);
@@ -13571,9 +14320,9 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/WebCoreSupport/WebFrameLoaderClient.
  
 diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/webkit-owb.pc OWB-r1097.aros/WebKit/OrigynWebBrowser/webkit-owb.pc
 --- OWB-r1097/WebKit/OrigynWebBrowser/webkit-owb.pc	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/WebKit/OrigynWebBrowser/webkit-owb.pc	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKit/OrigynWebBrowser/webkit-owb.pc	2014-12-14 04:05:01.592633136 +0000
 @@ -0,0 +1,11 @@
-+prefix=/home/weissms/media/data/aros/build/sam440-ppc/bin/sam440-ppc/AROS/Development
++prefix=/home/Nick/Developer/AROS/wip_builds/pc-x86_64/bin/pc-x86_64/AROS/Development
 +exec_prefix=${prefix}
 +libdir=${prefix}/lib
 +includedir=${prefix}/include
@@ -13586,7 +14335,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/webkit-owb.pc OWB-r1097.aros/WebKit/
 +Cflags: -DWTF_PLATFORM_AROS -I${includedir}/webkit-owb
 diff -ruN OWB-r1097/WebKitTools/OWBLauncher/AROS/main.cpp OWB-r1097.aros/WebKitTools/OWBLauncher/AROS/main.cpp
 --- OWB-r1097/WebKitTools/OWBLauncher/AROS/main.cpp	1970-01-01 01:00:00.000000000 +0100
-+++ OWB-r1097.aros/WebKitTools/OWBLauncher/AROS/main.cpp	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKitTools/OWBLauncher/AROS/main.cpp	2014-12-14 04:05:01.593633146 +0000
 @@ -0,0 +1,116 @@
 +/*
 + * Copyright (C) 2008 Pleyo.  All rights reserved.
@@ -13706,7 +14455,7 @@ diff -ruN OWB-r1097/WebKitTools/OWBLauncher/AROS/main.cpp OWB-r1097.aros/WebKitT
 +}
 diff -ruN OWB-r1097/WebKitTools/OWBLauncher/CMakeLists.txt OWB-r1097.aros/WebKitTools/OWBLauncher/CMakeLists.txt
 --- OWB-r1097/WebKitTools/OWBLauncher/CMakeLists.txt	2009-10-06 09:13:04.000000000 +0100
-+++ OWB-r1097.aros/WebKitTools/OWBLauncher/CMakeLists.txt	2013-07-10 07:53:52.000000000 +0100
++++ OWB-r1097.aros/WebKitTools/OWBLauncher/CMakeLists.txt	2014-12-14 04:05:01.593633146 +0000
 @@ -43,13 +43,20 @@
      add_executable(owb EXCLUDE_FROM_ALL SDL/main.cpp)
  endif(USE_GRAPHICS_SDL)
@@ -13729,199 +14478,3 @@ diff -ruN OWB-r1097/WebKitTools/OWBLauncher/CMakeLists.txt OWB-r1097.aros/WebKit
  if (ENABLE_ORIGYNSUITE)
      target_link_libraries(owb
          origynsuite
-diff -ruN OWB-r1097/cmake/AddGlobalCompilerFlags.cmake OWB-r1097.aros/cmake/AddGlobalCompilerFlags.cmake
---- OWB-r1097/cmake/AddGlobalCompilerFlags.cmake	2009-10-14 14:25:22.000000000 +0100
-+++ OWB-r1097.aros/cmake/AddGlobalCompilerFlags.cmake	2013-07-10 07:53:52.000000000 +0100
-@@ -1,6 +1,6 @@
- if(CMAKE_COMPILER_IS_GNUCXX)
--    set(CMAKE_C_FLAGS "-Wall -W -Wcast-align -Wchar-subscripts -Wreturn-type -Wformat -Wformat-security -Wno-format-y2k -Wundef -Wmissing-format-attribute -Wpointer-arith -Wwrite-strings -Wno-unused-parameter -Wno-parentheses -fPIC")
--    set(CMAKE_CXX_FLAGS "-Wall -W -Wcast-align -Wchar-subscripts -Wreturn-type -Wformat -Wformat-security -Wno-format-y2k -Wundef -Wmissing-format-attribute -Wpointer-arith -Wwrite-strings -Wno-unused-parameter -Wno-parentheses -fvisibility-inlines-hidden -fPIC")
-+    set(CMAKE_C_FLAGS "-Uunix -U__unix -U__unix__ -Wall -W -Wcast-align -Wchar-subscripts -Wreturn-type -Wformat -Wformat-security -Wno-format-y2k -Wmissing-format-attribute -Wpointer-arith -Wwrite-strings -Wno-unused-parameter -Wno-parentheses")
-+    set(CMAKE_CXX_FLAGS "-Uunix -U__unix -U__unix__ -Wall -W -Wcast-align -Wchar-subscripts -Wreturn-type -Wformat -Wformat-security -Wno-format-y2k -Wmissing-format-attribute -Wpointer-arith -Wwrite-strings -Wno-unused-parameter -Wno-parentheses -fvisibility-inlines-hidden")
-     if(ENABLE_DEBUG)
-         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g")
-         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
-@@ -28,6 +28,10 @@
-     add_definitions(-DWTF_USE_SOUP=1)
- endif(USE_NETWORK_SOUP)
- 
-+if(ENABLE_3D_RENDERING)
-+    add_definitions(-DENABLE_3D_RENDERING)
-+endif(ENABLE_3D_RENDERING)
-+
- if(ENABLE_DEBUG)
-     add_definitions(-DUSE_SYSTEM_MALLOC)
- else (ENABLE_DEBUG)
-@@ -120,6 +124,11 @@
-     add_definitions(-DWTF_PLATFORM_BAL=1)
- endif(USE_GRAPHICS_AMIGAOS4)
- 
-+if(USE_GRAPHICS_AROS)
-+    add_definitions(-DWTF_PLATFORM_AROS=1)
-+    add_definitions(-DWTF_PLATFORM_BAL=1)
-+endif(USE_GRAPHICS_AROS)
-+
- if(USE_I18N_GENERIC)
-     add_definitions(-DWTF_USE_BALI18N=1)
- endif(USE_I18N_GENERIC)
-diff -ruN OWB-r1097/cmake/CheckBaseDependencies.cmake OWB-r1097.aros/cmake/CheckBaseDependencies.cmake
---- OWB-r1097/cmake/CheckBaseDependencies.cmake	2009-09-15 09:59:14.000000000 +0100
-+++ OWB-r1097.aros/cmake/CheckBaseDependencies.cmake	2013-07-10 07:53:52.000000000 +0100
-@@ -17,7 +17,7 @@
- endif(NOT GPERF_EXECUTABLE)
- 
- IF(NOT WIN32)
--    pkg_check_modules(OWB_BASE_DEPS REQUIRED libxml-2.0>=2.6)
-+#    pkg_check_modules(OWB_BASE_DEPS REQUIRED libxml-2.0>=2.6)
- ELSE(NOT WIN32)
-     ## Pkg-config under cygwin gives to cmake .a lib and we need .lib for Visual Studio projects. 
-     find_path(LIB_XML2_PATH libxml2.lib ${WINLIB_LIB_PATH})
-diff -ruN OWB-r1097/cmake/CheckPlatformFonts.cmake OWB-r1097.aros/cmake/CheckPlatformFonts.cmake
---- OWB-r1097/cmake/CheckPlatformFonts.cmake	2009-10-06 09:13:04.000000000 +0100
-+++ OWB-r1097.aros/cmake/CheckPlatformFonts.cmake	2013-07-10 07:53:52.000000000 +0100
-@@ -13,8 +13,8 @@
- 
- if(USE_FONTS STREQUAL "FREETYPE")
-     IF(NOT WIN32)
--        pkg_check_modules(FONTCONFIG REQUIRED fontconfig>=2.4)
--        pkg_check_modules(FREETYPE REQUIRED freetype2>=9.0)
-+#        pkg_check_modules(FONTCONFIG REQUIRED fontconfig>=2.4)
-+#        pkg_check_modules(FREETYPE REQUIRED freetype2>=9.0)
-     ELSE(NOT WIN32)
-         ## We haven't got a good pkg-config under Windows so we let cmake search libs
-         find_path(FONTCONFIG_INCLUDE_DIRS fontconfig.h ${WINLIB_INC_PATH} ${WINLIB_INC_PATH}/fontconfig)
-diff -ruN OWB-r1097/cmake/CheckPlatformGraphics.cmake OWB-r1097.aros/cmake/CheckPlatformGraphics.cmake
---- OWB-r1097/cmake/CheckPlatformGraphics.cmake	2009-10-06 09:13:04.000000000 +0100
-+++ OWB-r1097.aros/cmake/CheckPlatformGraphics.cmake	2013-07-10 07:53:52.000000000 +0100
-@@ -47,3 +47,15 @@
-     
-     set(REQUIREMENT "sdl >= 1.2.10")
- endif(USE_GRAPHICS STREQUAL "SDL")
-+
-+if(${USE_GRAPHICS} STREQUAL "AROS")
-+#    pkg_check_modules(SDL REQUIRED sdl>=1.2.10)
-+    include(FindSDL_gfx)
-+    set(GRAPHICS_INCLUDE_DIRS ${SDL_INCLUDE_DIRS} ${SDLGFX_INCLUDE_DIR})
-+    set(GRAPHICS_LIBRARIES ${SDL_LDFLAGS} ${SDLGFX_LIBRARY})
-+
-+    set(USE_GRAPHICS_AROS TRUE)
-+    mark_as_advanced(USE_GRAPHICS_AROS)
-+    
-+    set(REQUIREMENT "sdl >= 1.2.10")
-+endif(${USE_GRAPHICS} STREQUAL "AROS")
-diff -ruN OWB-r1097/cmake/CheckPlatformImageDecoder.cmake OWB-r1097.aros/cmake/CheckPlatformImageDecoder.cmake
---- OWB-r1097/cmake/CheckPlatformImageDecoder.cmake	2009-09-15 09:59:14.000000000 +0100
-+++ OWB-r1097.aros/cmake/CheckPlatformImageDecoder.cmake	2013-07-10 07:53:52.000000000 +0100
-@@ -1,6 +1,6 @@
- if(NOT HAS_CUSTOMER)
-     IF(NOT WIN32)
--        pkg_check_modules(PNG12 REQUIRED libpng12)
-+#        pkg_check_modules(PNG12 REQUIRED libpng12)
-         find_package(JPEG QUIET REQUIRED)
-     ELSE(NOT WIN32)
-         ## We haven't got a good pkg-config under Windows so we let cmake search libs
-diff -ruN OWB-r1097/cmake/CheckPlatformInternationalization.cmake OWB-r1097.aros/cmake/CheckPlatformInternationalization.cmake
---- OWB-r1097/cmake/CheckPlatformInternationalization.cmake	2009-09-15 09:59:14.000000000 +0100
-+++ OWB-r1097.aros/cmake/CheckPlatformInternationalization.cmake	2013-07-10 07:53:52.000000000 +0100
-@@ -22,10 +22,10 @@
- 
- if(USE_I18N STREQUAL "ICU")
-     IF(NOT WIN32)
--        find_package(ICU REQUIRED)
--        if(NOT ICU_FOUND)
--            message(FATAL_ERROR "icu package not found. Install it to be able to compile owb.")
--        endif(NOT ICU_FOUND)
-+#        find_package(ICU REQUIRED)
-+#        if(NOT ICU_FOUND)
-+#            message(FATAL_ERROR "icu package not found. Install it to be able to compile owb.")
-+#        endif(NOT ICU_FOUND)
-     ELSE(NOT WIN32)
-         ## We haven't got a good pkg-config under Windows so we let cmake search libs
-         find_path(ICU_INC pwin32.h ${WINLIB_INC_PATH} ${WINLIB_INC_PATH}/icu ${WINLIB_INC_PATH}/unicode)
-diff -ruN OWB-r1097/cmake/CheckPlatformNetwork.cmake OWB-r1097.aros/cmake/CheckPlatformNetwork.cmake
---- OWB-r1097/cmake/CheckPlatformNetwork.cmake	2009-09-23 14:00:11.000000000 +0100
-+++ OWB-r1097.aros/cmake/CheckPlatformNetwork.cmake	2013-07-10 07:53:52.000000000 +0100
-@@ -1,6 +1,6 @@
- if(USE_NETWORK STREQUAL "CURL")
-     IF(NOT WIN32)
--        pkg_check_modules(CURL REQUIRED libcurl>=7.15)
-+#        pkg_check_modules(CURL REQUIRED libcurl>=7.15)
-     ELSE(NOT WIN32)
-         ## We haven't got a good pkg-config under Windows so we let cmake search libs
-         find_path(CURL_INCLUDE_DIRS curl.h ${WINLIB_INC_PATH} ${WINLIB_INC_PATH}/curl)    
-diff -ruN OWB-r1097/cmake/CheckPlatformTimer.cmake OWB-r1097.aros/cmake/CheckPlatformTimer.cmake
---- OWB-r1097/cmake/CheckPlatformTimer.cmake	2009-02-11 16:41:27.000000000 +0000
-+++ OWB-r1097.aros/cmake/CheckPlatformTimer.cmake	2013-07-10 07:53:52.000000000 +0100
-@@ -20,3 +20,8 @@
-     set(USE_TIMER_QT TRUE)
-     mark_as_advanced(USE_TIMER_QT)
- endif(USE_TIMER STREQUAL "QT")
-+
-+if(${USE_TIMER} STREQUAL "AROS")
-+    set(USE_TIMER_AROS TRUE)
-+    mark_as_advanced(USE_TIMER_AROS)
-+endif(${USE_TIMER} STREQUAL "AROS")
-diff -ruN OWB-r1097/cmake/CheckSqlite3.cmake OWB-r1097.aros/cmake/CheckSqlite3.cmake
---- OWB-r1097/cmake/CheckSqlite3.cmake	2008-10-04 18:41:49.000000000 +0100
-+++ OWB-r1097.aros/cmake/CheckSqlite3.cmake	2013-07-10 07:53:52.000000000 +0100
-@@ -1,5 +1,5 @@
- if(ENABLE_DATABASE)
--    pkg_check_modules(SQLITE3 REQUIRED sqlite3>=3.0)
-+#    pkg_check_modules(SQLITE3 REQUIRED sqlite3>=3.0)
-     set(DATABASE_INCLUDE_DIRS ${SQLITE3_INCLUDE_DIRS})
-     set(DATABASE_LIBRARIES ${SQLITE3_LIBRARIES})
- endif(ENABLE_DATABASE)
-diff -ruN OWB-r1097/cmake/CheckXSLT.cmake OWB-r1097.aros/cmake/CheckXSLT.cmake
---- OWB-r1097/cmake/CheckXSLT.cmake	2009-09-15 09:59:14.000000000 +0100
-+++ OWB-r1097.aros/cmake/CheckXSLT.cmake	2013-07-10 07:53:52.000000000 +0100
-@@ -1,6 +1,6 @@
- if(ENABLE_XSLT)
-     IF(NOT WIN32)
--        pkg_check_modules(LIBXSLT REQUIRED libxslt>=1.1.7)
-+#        pkg_check_modules(LIBXSLT REQUIRED libxslt>=1.1.7)
-     ELSE(NOT WIN32)
-         ## Pkg-config under cygwin gives to cmake .a lib and we need .lib for Visual Studio projects. 
-         find_path(LIB_XSLT_PATH libxslt.lib ${WINLIB_LIB_PATH})
-diff -ruN OWB-r1097/cmake/ConfigureBuildSDL.cmake OWB-r1097.aros/cmake/ConfigureBuildSDL.cmake
---- OWB-r1097/cmake/ConfigureBuildSDL.cmake	2009-10-16 19:40:05.000000000 +0100
-+++ OWB-r1097.aros/cmake/ConfigureBuildSDL.cmake	2013-07-10 07:53:52.000000000 +0100
-@@ -7,7 +7,7 @@
-     set(ARCH ${PROCESSOR})
- endif(UNIX)
- 
--set(ENABLE_DEBUG ON CACHE BOOLEAN "Enable debug support" FORCE)
-+set(ENABLE_DEBUG OFF CACHE BOOLEAN "Enable debug support" FORCE)
- set(ENABLE_TESTS ON CACHE BOOLEAN "Enable tests" FORCE)
- 
- set(ENABLE_3D_CANVAS ON CACHE BOOLEAN "Enable 3D canvas support" FORCE)
-diff -ruN OWB-r1097/cmake/SetCMakeVars.cmake OWB-r1097.aros/cmake/SetCMakeVars.cmake
---- OWB-r1097/cmake/SetCMakeVars.cmake	2009-08-12 21:20:06.000000000 +0100
-+++ OWB-r1097.aros/cmake/SetCMakeVars.cmake	2013-07-10 07:53:52.000000000 +0100
-@@ -22,6 +22,14 @@
-     )
- endif(USE_GRAPHICS_SDL)
- 
-+if(USE_GRAPHICS_AROS)
-+    list(APPEND API_HEADER
-+        ${OWB_SOURCE_DIR}/WebKit/OrigynWebBrowser/Api/AROS/WebViewZune.h
-+        ${OWB_SOURCE_DIR}/WebKit/OrigynWebBrowser/Api/AROS/DownloadDelegateZune.h
-+        ${OWB_SOURCE_DIR}/WebKit/OrigynWebBrowser/Api/AROS/WebPreferencesZune.h
-+    )
-+endif(USE_GRAPHICS_AROS)
-+
- list(APPEND BASE_INCLUDE_DIRS
-     ${OWB_SOURCE_DIR}
-     ${OWB_SOURCE_DIR}/Base
-@@ -103,6 +111,12 @@
-     ${NETWORK_LIBRARIES}
-     ${THREADS_LIBRARIES}
-     ${TIMER_LIBRARIES}
-+    codesets
-+    amiga
-+    arosc
-+    m
-+    mui
-+    thread
- )
- 
- if(ENABLE_DATABASE)
