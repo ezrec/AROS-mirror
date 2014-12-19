@@ -25,6 +25,7 @@ EXTRAOPTS := \
     $(GCC_EXTRAOPTS)
 
 %fetch_and_build_gnu_development package=gcc version=$(GCC_VERSION) patch=yes \
+    package_repo="$(GNU_REPOSITORY)/gcc/gcc-$(GCC_VERSION)" \
     extraoptions=$(EXTRAOPTS) \
     postinstall=contrib-gnu-gcc-deletefixed
 
