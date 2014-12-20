@@ -30,8 +30,9 @@ How to access AROS' disk images from hosted flavors of AROS
 -----------------------------------------------------------
 
 Copy the disk image to the DiskImages directory in AROS (SYS:DiskImages, e.g.
-bin/linux-i386/AROS/DiskImages) and rename it to "Unit0". After starting AROS,
-you can mount the disk image with::
+bin/linux-i386/AROS/DiskImages - (the drawer must be created if it doesn't
+exist).) and rename it to "Unit0". After starting AROS, you can mount the disk
+image with::
 
     > mount AFD0:
 
@@ -159,25 +160,21 @@ How to mount an ISO image on AROS; how to update nightly builds that way
 + Copy the ISO into sys:DiskImages (the drawer must be created if it doesn't
   exist).
 + Rename ISO to Unit0 in that dir.
-+ You must add this to your Devs:Mountlist ::
++ Go to Sys:Storage/DOSDrivers and double click ISO0.
++ To mount the ISO automatically after each reboot, drag or copy ISO0 from 
+  Sys:Storage/DOSDrivers to Sys:Devs/DOSDrivers.
 
-    ISO:
-    FileSystem = cdrom.handler
-    Device = fdsk.device
-    Unit = 0
-
-+ Then mount ISO:
-  You can copy anything from ISO:. Additionally, you can create a script to
-  update your nightly build like this::
++ You can now copy anything from ISO0:. Additionally, you can create a script
+  to update your nightly build like this::
 
         copy ISO:boot/aros-pc-i386.gz sys:boot/
         copy ISO:C sys:C all quiet
         copy ISO:Classes sys:Classes all quiet
         copy ISO:Demos sys:Demos all quiet
 
-And so on for each directory except Prefs, Extras:Networking/Stacks, and
-devs:mountlist itself. Prefs have to be kept if you want it. Also you can set
-AROSTcp to keep its settings in separate directory.
+And so on for each directory except Prefs, and Extras:Networking/Stacks. Prefs
+have to be kept if you want it. Also you can set AROSTcp to keep its settings
+in separate directory.
 
 If you want to write all over, just do::
 
