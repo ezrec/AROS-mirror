@@ -84,6 +84,7 @@ Inputs
      LFORMAT       --  Specify the list output in printf-style
      ALL           --  List the contents of directories recursively
 
+
      The following attributes of the LFORMAT strings are available
 
      %A  --  file attributes
@@ -91,7 +92,7 @@ Inputs
      %C  --  file comment
      %D  --  modification date
      %E  --  file extension
-     %F  --  volume name
+     %F  --  absolute file path, with volume label
      %K  --  file key block number
      %L  --  size of file in bytes
      %M  --  file name without extension
@@ -99,6 +100,16 @@ Inputs
      %P  --  file path
      %S  --  superceded by %N and %P; obsolete
      %T  --  modification time
+
+
+     Additionally, the following modifiers, each optional, can be used,
+     in this order, following the % character:
+
+     left-justify         --  minus sign
+     field width minumum  --  value
+     value width maximum  --  dot value
+
+     Value width maximum is not available for all numeric fields.
 
 
 Result
@@ -115,17 +126,27 @@ Example
 
 
      1> List C:
-     Directory "C:" on Wednesday 12-Dec-99
-     AddBuffers                  444 --p-rwed 02-Sep-99 11:51:31
-     Assign                     3220 --p-rwed 02-Sep-99 11:51:31
-     Avail                       728 --p-rwed 02-Sep-99 11:51:31
-     Copy                       3652 --p-rwed 02-Sep-99 11:51:31
-     Delete                     1972 --p-rwed 02-Sep-99 11:51:31
-     Execute                    4432 --p-rwed 02-Sep-99 11:51:31
-     List                       5108 --p-rwed 02-Sep-99 11:51:31
-     Installer                109956 ----rwed 02-Sep-99 11:51:31
-     Which                      1068 --p-rwed 02-Sep-99 11:51:31
-     9 files - 274 blocks used        
+     Directory "c:" on Wednesday 12/18/14:
+     Assign                             6548 ---rwed Saturday    01:12:16
+     Copy                              17772 ---rwed Saturday    01:12:24
+     AddBuffers                         5268 ---rwed Saturday    01:14:46
+     Avail                              8980 ---rwed Saturday    01:14:51
+     Delete                             8756 ---rwed Saturday    01:14:59
+     Install                           13024 ---rwed Saturday    01:15:09
+     List                              20228 ---rwed Today       12:06:38
+     Which                              7840 ---rwed Saturday    01:16:09
+     8 file - 167 blocks used
+     1>        
+     1> List C: lformat "[%10.5M] -- >-4b<"
+     [     Assig] -- >13  <
+     [      Copy] -- >35  <
+     [     AddBu] -- >11  <
+     [     Avail] -- >18  <
+     [     Delet] -- >18  <
+     [     Insta] -- >26  <
+     [      List] -- >40  <
+     [     Which] -- >16  <
+     1> 
 
 
 See also
