@@ -512,7 +512,6 @@ int execve(const char *filename, char *const argv[], char *const envp[])
         FUNC;
 
         /* Calculate the size of filename and all args, including spaces and quotes */
-        size = 0;
         for (cur = (char **)argv+1; *cur; cur++)
         {
             size += strlen(*cur) + 1
@@ -672,6 +671,10 @@ int execve(const char *filename, char *const argv[], char *const envp[])
                 SYS_Output,    ((struct Process *)thisTask)->pr_COS,
                 SYS_Error,     ((struct Process *)thisTask)->pr_CES,
               TAG_DONE);
+            if (lastresult == -1)
+                errno = ENOMEM;
+            else
+                errno = 0;
 #else
             if (fname){
 
@@ -698,11 +701,14 @@ int execve(const char *filename, char *const argv[], char *const envp[])
 
                         lastresult=RunCommand(seglist,__get_default_stack_size(),
                                               full,strlen(full));
+                        if (lastresult == -1)
+                            errno = ENOMEM;
+                        else
+                            errno = 0;
 
                         FindTask(NULL)->tc_Node.ln_Name = oldtaskname;
                         SetProgramName(oldtaskname);
 
-                        errno=0;
 #ifndef __AROS__
                     }
                     else
@@ -883,6 +889,12 @@ exchild(struct op *t, int flags,
 #else
                 Wait(SIGF_CHILD);
 #endif
+        }
+        else
+        {
+            lastresult = -1;
+            errno = ENOMEM;
+            errorf("%s: %s", t->args[0], strerror(errno));
         }
 
         free(name);
