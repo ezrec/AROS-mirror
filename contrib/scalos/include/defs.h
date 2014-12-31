@@ -264,6 +264,11 @@
 		(hook).h_Entry = (HOOKFUNC)func
 	#define HOOKFUNC_DEF(func) \
 		(HOOKFUNC)func, NULL
+#elif __AROS__ //__amigaos4__
+	#define SETHOOKFUNC(hook, func) \
+		(hook).h_Entry = (HOOKFUNC)func
+	#define HOOKFUNC_DEF(func) \
+		(HOOKFUNC)func, NULL
 #else //__amigaos4__
 	#define SETHOOKFUNC(hook, func) \
 		(hook).h_Entry = (HOOKFUNC)HookEntry; \
@@ -1783,35 +1788,35 @@
 
 	#define	M68KFUNC_P1_PROTO(returntype, funcname, 	\
 			register1, type1, name1) 		\
-		returntype funcname( 				\
-			type1 name1)
+		AROS_UFP1(returntype, funcname, 		\
+			AROS_UFPA(type1, name1, register1))
 
 	#define	M68KFUNC_P2_PROTO(returntype, funcname, 	\
 			register1, type1, name1, 		\
 			register2, type2, name2) 		\
-		returntype funcname( 				\
-			type1 name1,				\
-			type2 name2)
+		AROS_UFP2(returntype, funcname, 		\
+			AROS_UFPA(type1, name1, register1),	\
+			AROS_UFPA(type2, name2, register2))
 
 	#define	M68KFUNC_P3_PROTO(returntype, funcname, 	\
 			register1, type1, name1, 		\
 			register2, type2, name2, 		\
 			register3, type3, name3) 		\
-		returntype funcname( 				\
-			type1 name1,				\
-			type2 name2,				\
-			type3 name3)
+		AROS_UFP3(returntype, funcname, 		\
+			AROS_UFPA(type1, name1, register1),	\
+			AROS_UFPA(type2, name2, register2),	\
+			AROS_UFPA(type3, name3, register3))
 
 	#define	M68KFUNC_P4_PROTO(returntype, funcname, 	\
 			register1, type1, name1, 		\
 			register2, type2, name2, 		\
 			register3, type3, name3, 		\
 			register4, type4, name4) 		\
-		returntype funcname( 				\
-			type1 name1,				\
-			type2 name2,				\
-			type3 name3,				\
-			type4 name4)
+		AROS_UFP4(returntype, funcname, 		\
+			AROS_UFPA(type1, name1, register1),	\
+			AROS_UFPA(type2, name2, register2),	\
+			AROS_UFPA(type3, name3, register3),	\
+			AROS_UFPA(type4, name4, register4))
 
 	#define	M68KFUNC_P5_PROTO(returntype, funcname, 	\
 			register1, type1, name1, 		\
@@ -1819,12 +1824,12 @@
 			register3, type3, name3, 		\
 			register4, type4, name4, 		\
 			register5, type5, name5) 		\
-		returntype funcname( 				\
-			type1 name1,				\
-			type2 name2,				\
-			type3 name3,				\
-			type4 name4,				\
-			type5 name5)
+		AROS_UFP5(returntype, funcname, 		\
+			AROS_UFPA(type1, name1, register1),	\
+			AROS_UFPA(type2, name2, register2),	\
+			AROS_UFPA(type3, name3, register3),	\
+			AROS_UFPA(type4, name4, register4),	\
+			AROS_UFPA(type5, name5, register5))
 
 	#define	M68KFUNC_P6_PROTO(returntype, funcname, 	\
 			register1, type1, name1, 		\
@@ -1833,13 +1838,13 @@
 			register4, type4, name4, 		\
 			register5, type5, name5, 		\
 			register6, type6, name6) 		\
-		returntype funcname( 				\
-			type1 name1,				\
-			type2 name2,				\
-			type3 name3,				\
-			type4 name4,				\
-			type5 name5,				\
-			type6 name6)
+		AROS_UFP6(returntype funcname, 			\
+			AROS_UFPA(type1, name1, register1),	\
+			AROS_UFPA(type2, name2, register2),	\
+			AROS_UFPA(type3, name3, register3),	\
+			AROS_UFPA(type4, name4, register4),	\
+			AROS_UFPA(type5, name5, register5),	\
+			AROS_UFPA(type6, name6, register6))
 
 	#define	M68KFUNC_P7_PROTO(returntype, funcname, 	\
 			register1, type1, name1, 		\
@@ -1849,14 +1854,14 @@
 			register5, type5, name5, 		\
 			register6, type6, name6, 		\
 			register7, type7, name7) 		\
-		returntype funcname( 				\
-			type1 name1,				\
-			type2 name2,				\
-			type3 name3,				\
-			type4 name4,				\
-			type5 name5,				\
-			type6 name6,				\
-			type7 name7)
+		AROS_UFP7(returntype funcname, 			\
+			AROS_UFPA(type1, name1, register1),	\
+			AROS_UFPA(type2, name2, register2),	\
+			AROS_UFPA(type3, name3, register3),	\
+			AROS_UFPA(type4, name4, register4),	\
+			AROS_UFPA(type5, name5, register5),	\
+			AROS_UFPA(type6, name6, register6),	\
+			AROS_UFPA(type7, name7, register7))
 
 	#define	M68KFUNC_P8_PROTO(returntype, funcname, 	\
 			register1, type1, name1, 		\
@@ -1867,15 +1872,15 @@
 			register6, type6, name6, 		\
 			register7, type7, name7, 		\
 			register8, type8, name8) 		\
-		returntype funcname( 				\
-			type1 name1,				\
-			type2 name2,				\
-			type3 name3,				\
-			type4 name4,				\
-			type5 name5,				\
-			type6 name6,				\
-			type7 name7,				\
-			type8 name8)
+		AROS_UFP8(returntype, funcname, 		\
+			AROS_UFPA(type1, name1, register1),	\
+			AROS_UFPA(type2, name2, register2),	\
+			AROS_UFPA(type3, name3, register3),	\
+			AROS_UFPA(type4, name4, register4),	\
+			AROS_UFPA(type5, name5, register5),	\
+			AROS_UFPA(type6, name6, register6),	\
+			AROS_UFPA(type7, name7, register7),	\
+			AROS_UFPA(type8, name8, register8))
 
 	#define	M68KFUNC_P9_PROTO(returntype, funcname, 	\
 			register1, type1, name1, 		\
@@ -1887,54 +1892,58 @@
 			register7, type7, name7, 		\
 			register8, type8, name8, 		\
 			register9, type9, name9) 		\
-		returntype funcname( 				\
-			type1 name1,				\
-			type2 name2,				\
-			type3 name3,				\
-			type4 name4,				\
-			type5 name5,				\
-			type6 name6,				\
-			type7 name7,				\
-			type8 name8,				\
-			type9 name9)
+		AROS_UFP9(returntype, funcname, 		\
+			AROS_UFPA(type1, name1, register1),	\
+			AROS_UFPA(type2, name2, register2),	\
+			AROS_UFPA(type3, name3, register3),	\
+			AROS_UFPA(type4, name4, register4),	\
+			AROS_UFPA(type5, name5, register5),	\
+			AROS_UFPA(type6, name6, register6),	\
+			AROS_UFPA(type7, name7, register7),	\
+			AROS_UFPA(type8, name8, register8),	\
+			AROS_UFPA(type9, name9, register9))
 
 //======================================================
 
 	#define	M68KFUNC_P1(returntype, funcname, 		\
 			register1, type1, name1) 		\
-		M68KFUNC_P1_PROTO(returntype, funcname, 	\
-			register1, type1, name1) 		\
-			{
+		AROS_UFH1(returntype, funcname, 		\
+			AROS_UFPA(type1, name1, register1))	\
+		{						\
+			AROS_USERFUNC_INIT
 
 	#define	M68KFUNC_P2(returntype, funcname, 		\
 			register1, type1, name1, 		\
 			register2, type2, name2) 		\
-		M68KFUNC_P2_PROTO(returntype, funcname, 	\
-			register1, type1, name1, 		\
-			register2, type2, name2) 		\
-			{
+		AROS_UFH2(returntype, funcname, 		\
+			AROS_UFHA(type1, name1, register1),	\
+			AROS_UFHA(type2, name2, register2))	\
+		{						\
+			AROS_USERFUNC_INIT
 
 	#define	M68KFUNC_P3(returntype, funcname, 		\
 			register1, type1, name1, 		\
 			register2, type2, name2, 		\
 			register3, type3, name3) 		\
-		M68KFUNC_P3_PROTO(returntype, funcname, 	\
-			register1, type1, name1, 		\
-			register2, type2, name2, 		\
-			register3, type3, name3) 		\
-			{
+		AROS_UFH3(returntype, funcname, 		\
+			AROS_UFHA(type1, name1, register1),	\
+			AROS_UFHA(type2, name2, register2),	\
+			AROS_UFHA(type3, name3, register3))	\
+		{						\
+			AROS_USERFUNC_INIT
 
 	#define	M68KFUNC_P4(returntype, funcname,		\
 			register1, type1, name1,		\
 			register2, type2, name2,		\
 			register3, type3, name3,		\
 			register4, type4, name4)		\
-		M68KFUNC_P4_PROTO(returntype, funcname,		\
-			register1, type1, name1,		\
-			register2, type2, name2,		\
-			register3, type3, name3,		\
-			register4, type4, name4)		\
-			{
+		AROS_UFH4(returntype, funcname, 		\
+			AROS_UFHA(type1, name1, register1),	\
+			AROS_UFHA(type2, name2, register2),	\
+			AROS_UFHA(type3, name3, register3),	\
+			AROS_UFHA(type4, name4, register4))	\
+		{						\
+			AROS_USERFUNC_INIT
 
 	#define	M68KFUNC_P5(returntype, funcname,		\
 			register1, type1, name1,		\
@@ -1942,13 +1951,14 @@
 			register3, type3, name3,		\
 			register4, type4, name4,		\
 			register5, type5, name5)		\
-		M68KFUNC_P5_PROTO(returntype, funcname,		\
-			register1, type1, name1,		\
-			register2, type2, name2,		\
-			register3, type3, name3,		\
-			register4, type4, name4,		\
-			register5, type5, name5)		\
-			{
+		AROS_UFH5(returntype, funcname, 		\
+			AROS_UFHA(type1, name1, register1),	\
+			AROS_UFHA(type2, name2, register2),	\
+			AROS_UFHA(type3, name3, register3),	\
+			AROS_UFHA(type4, name4, register4),	\
+			AROS_UFHA(type5, name5, register5))	\
+		{						\
+			AROS_USERFUNC_INIT
 
 	#define	M68KFUNC_P6(returntype, funcname,		\
 			register1, type1, name1,		\
@@ -1957,14 +1967,15 @@
 			register4, type4, name4,		\
 			register5, type5, name5,		\
 			register6, type6, name6)		\
-		M68KFUNC_P6_PROTO(returntype, funcname,		\
-			register1, type1, name1,		\
-			register2, type2, name2,		\
-			register3, type3, name3,		\
-			register4, type4, name4,		\
-			register5, type5, name5,		\
-			register6, type6, name6)		\
-			{
+		AROS_UFH6(returntype, funcname, 		\
+			AROS_UFHA(type1, name1, register1),	\
+			AROS_UFHA(type2, name2, register2),	\
+			AROS_UFHA(type3, name3, register3),	\
+			AROS_UFHA(type4, name4, register4),	\
+			AROS_UFHA(type5, name5, register5),	\
+			AROS_UFHA(type6, name6, register6))	\
+		{						\
+			AROS_USERFUNC_INIT
 
 	#define	M68KFUNC_P7(returntype, funcname,		\
 			register1, type1, name1,		\
@@ -1974,15 +1985,16 @@
 			register5, type5, name5,		\
 			register6, type6, name6,		\
 			register7, type7, name7)		\
-		M68KFUNC_P7_PROTO(returntype, funcname,		\
-			register1, type1, name1,		\
-			register2, type2, name2,		\
-			register3, type3, name3,		\
-			register4, type4, name4,		\
-			register5, type5, name5,		\
-			register6, type6, name6,		\
-			register7, type7, name7)		\
-			{
+		AROS_UFH7(returntype, funcname, 		\
+			AROS_UFHA(type1, name1, register1),	\
+			AROS_UFHA(type2, name2, register2),	\
+			AROS_UFHA(type3, name3, register3),	\
+			AROS_UFHA(type4, name4, register4),	\
+			AROS_UFHA(type5, name5, register5),	\
+			AROS_UFHA(type6, name6, register6),	\
+			AROS_UFHA(type7, name7, register7))	\
+		{						\
+			AROS_USERFUNC_INIT
 
 	#define	M68KFUNC_P8(returntype, funcname,		\
 			register1, type1, name1,		\
@@ -1993,16 +2005,17 @@
 			register6, type6, name6,		\
 			register7, type7, name7,		\
 			register8, type8, name8)		\
-		M68KFUNC_P8_PROTO(returntype, funcname,		\
-			register1, type1, name1,		\
-			register2, type2, name2,		\
-			register3, type3, name3,		\
-			register4, type4, name4,		\
-			register5, type5, name5,		\
-			register6, type6, name6,		\
-			register7, type7, name7,		\
-			register8, type8, name8)		\
-			{
+		AROS_UFH8(returntype, funcname, 		\
+			AROS_UFHA(type1, name1, register1),	\
+			AROS_UFHA(type2, name2, register2),	\
+			AROS_UFHA(type3, name3, register3),	\
+			AROS_UFHA(type4, name4, register4),	\
+			AROS_UFHA(type5, name5, register5),	\
+			AROS_UFHA(type6, name6, register6),	\
+			AROS_UFHA(type7, name7, register7),	\
+			AROS_UFHA(type8, name8, register8))	\
+		{						\
+			AROS_USERFUNC_INIT
 
 	#define	M68KFUNC_P9(returntype, funcname,		\
 			register1, type1, name1,		\
@@ -2014,21 +2027,23 @@
 			register7, type7, name7,		\
 			register8, type8, name8,		\
 			register9, type9, name9)		\
-		M68KFUNC_P9_PROTO(returntype, funcname,		\
-			register1, type1, name1,		\
-			register2, type2, name2,		\
-			register3, type3, name3,		\
-			register4, type4, name4,		\
-			register5, type5, name5,		\
-			register6, type6, name6,		\
-			register7, type7, name7,		\
-			register8, type8, name8,		\
-			register9, type9, name9)		\
-			{
+		AROS_UFH9(returntype, funcname, 		\
+			AROS_UFHA(type1, name1, register1),	\
+			AROS_UFHA(type2, name2, register2),	\
+			AROS_UFHA(type3, name3, register3),	\
+			AROS_UFHA(type4, name4, register4),	\
+			AROS_UFHA(type5, name5, register5),	\
+			AROS_UFHA(type6, name6, register6),	\
+			AROS_UFHA(type7, name7, register7),	\
+			AROS_UFHA(type8, name8, register8),	\
+			AROS_UFHA(type9, name9, register9))	\
+		{						\
+			AROS_USERFUNC_INIT
 
 	//=======================================================
 
 	#define	M68KFUNC_END 					\
+				AROS_USERFUNC_EXIT		\
 			}
 
 	//======================================================
