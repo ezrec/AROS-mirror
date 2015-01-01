@@ -81,7 +81,7 @@ HOOKPROTONHNO(memlist_dsp2func, void, struct NList_DisplayMessage *msg)
 }
 MakeStaticHook(memlist_dsp2hook, memlist_dsp2func);
 
-STATIC LONG memlist_cmp2colfunc( struct MemoryEntry *me1,
+STATIC SIPTR memlist_cmp2colfunc( struct MemoryEntry *me1,
                                  struct MemoryEntry *me2,
                                  ULONG column )
 {
@@ -99,7 +99,7 @@ STATIC LONG memlist_cmp2colfunc( struct MemoryEntry *me1,
 
 HOOKPROTONHNO(memlist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
-    LONG cmp;
+    SIPTR cmp;
     struct MemoryEntry *me1, *me2;
     ULONG col1, col2;
 
@@ -158,12 +158,12 @@ STATIC void IterateList( void (* callback)( struct MemoryEntry *me, void *userDa
     ITERATE_LIST(&SysBase->MemList, struct MemHeader *, mh) {
         if ((me = AllocVec(sizeof(struct MemoryEntry), MEMF_CLEAR)) != NULL) {
             me->me_Header = mh;
-            _snprintf(me->me_Address, sizeof(me->me_Address), "$%08lx", mh);
+            _snprintf(me->me_Address, sizeof(me->me_Address), "$%p", mh);
             stccpy(me->me_Name, nonetest(mh->mh_Node.ln_Name), sizeof(me->me_Name));
             stccpy(me->me_Type, GetNodeType(mh->mh_Node.ln_Type), sizeof(me->me_Type));
             _snprintf(me->me_Pri, sizeof(me->me_Pri), "%4ld", mh->mh_Node.ln_Pri);
-            _snprintf(me->me_Lower, sizeof(me->me_Lower), "$%08lx", mh->mh_Lower);
-            _snprintf(me->me_Upper, sizeof(me->me_Upper), "$%08lx", mh->mh_Upper);
+            _snprintf(me->me_Lower, sizeof(me->me_Lower), "$%p", mh->mh_Lower);
+            _snprintf(me->me_Upper, sizeof(me->me_Upper), "$%p", mh->mh_Upper);
             _snprintf(me->me_Attributes, sizeof(me->me_Attributes), "$%04lx", mh->mh_Attributes);
 
             AddTail((struct List *)&tmplist, (struct Node *)me);

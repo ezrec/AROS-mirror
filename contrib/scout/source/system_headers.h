@@ -80,6 +80,9 @@
 #include <exec/execbase.h>
 #include <exec/libraries.h>
 #include <exec/memory.h>
+#if defined(__AROS__)
+#include <exec/memheaderext.h>
+#endif
 #include <exec/ports.h>
 #include <exec/resident.h>
 #include <exec/semaphores.h>

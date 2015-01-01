@@ -28,6 +28,7 @@
 struct MemoryDetailWinData {
     char mdwd_Title[WINDOW_TITLE_LENGTH];
     APTR mdwd_Texts[12];
+    APTR mdwd_ChunkListview;
     APTR mdwd_ChunkList;
     struct MemoryEntry *mdwd_Memory;
     APTR mdwd_MemoryPool;
@@ -111,7 +112,7 @@ HOOKPROTONHNO(memmorelist_dsp2func, void, struct NList_DisplayMessage *msg)
 }
 MakeStaticHook(memmorelist_dsp2hook, memmorelist_dsp2func);
 
-STATIC LONG memmorelist_cmp2colfunc( struct MemoryFreeEntry *mfe1,
+STATIC SIPTR memmorelist_cmp2colfunc( struct MemoryFreeEntry *mfe1,
                                      struct MemoryFreeEntry *mfe2,
                                      ULONG column )
 {
@@ -125,7 +126,7 @@ STATIC LONG memmorelist_cmp2colfunc( struct MemoryFreeEntry *mfe1,
 
 HOOKPROTONHNO(memmorelist_cmp2func, LONG, struct NList_CompareMessage *msg)
 {
-    LONG cmp;
+    SIPTR cmp;
     struct MemoryFreeEntry *mfe1, *mfe2;
     ULONG col1, col2;
 
@@ -160,32 +161,54 @@ STATIC void SetDetails( struct IClass *cl,
     struct MemoryDetailWinData *mdwd = INST_DATA(cl, obj);
     struct MemoryEntry *me = mdwd->mdwd_Memory;
     struct MemHeader *mh = me->me_Header;
-    IPTR total, inuse;
+    IPTR total, inuse, largest = 0;
 
     total = (IPTR)mh->mh_Upper - (IPTR)mh->mh_Lower;
     inuse = total - (IPTR)mh->mh_Free;
 
     MySetContents(mdwd->mdwd_Texts[ 0], "%s", me->me_Name);
-    MySetContents(mdwd->mdwd_Texts[ 1], "$%08lx", mh);
+    MySetContents(mdwd->mdwd_Texts[ 1], "$%p", mh);
     MySetContents(mdwd->mdwd_Texts[ 2], "%s", GetNodeType(mh->mh_Node.ln_Type));
     MySetContents(mdwd->mdwd_Texts[ 3], "%ld", mh->mh_Node.ln_Pri);
-    MySetContents(mdwd->mdwd_Texts[ 4], "$%08lx", mh->mh_Lower);
-    MySetContents(mdwd->mdwd_Texts[ 5], "$%08lx", mh->mh_Upper);
-    MySetContents(mdwd->mdwd_Texts[ 6], "$%08lx", mh->mh_First);
+    MySetContents(mdwd->mdwd_Texts[ 4], "$%p", mh->mh_Lower);
+    MySetContents(mdwd->mdwd_Texts[ 5], "$%p", mh->mh_Upper);
+    MySetContents(mdwd->mdwd_Texts[ 6], "$%p", mh->mh_First);
+
+#if defined(__AROS__)
+    if (!IsManagedMem(mh))
+        largest = AvailMem(MEMF_LARGEST | mh->mh_Attributes);
+    else
+    {
+        MySetContents(mdwd->mdwd_Texts[ 6], "%s", "N/A");
+        if (((struct MemHeaderExt *)mh)->mhe_Avail)
+            largest = ((struct MemHeaderExt *)mh)->mhe_Avail((struct MemHeaderExt *)mh, MEMF_LARGEST | mh->mh_Attributes);
+    }
+#else
+    largest = AvailMem(MEMF_LARGEST | mh->mh_Attributes);
+#endif
+
+#if defined(__AROS__) && (__WORDSIZE == 64)
+    MySetContents(mdwd->mdwd_Texts[ 7], "%15llD", inuse);
+    MySetContents(mdwd->mdwd_Texts[ 8], "%15llD", mh->mh_Free);
+    MySetContents(mdwd->mdwd_Texts[ 9], "%15llD", total);
+    MySetContents(mdwd->mdwd_Texts[10], "%15llD", largest);
+#else
     MySetContents(mdwd->mdwd_Texts[ 7], "%12lD", inuse);
     MySetContents(mdwd->mdwd_Texts[ 8], "%12lD", mh->mh_Free);
     MySetContents(mdwd->mdwd_Texts[ 9], "%12lD", total);
-    MySetContents(mdwd->mdwd_Texts[10], "%12lD", AvailMem(MEMF_LARGEST | mh->mh_Attributes));
+    MySetContents(mdwd->mdwd_Texts[10], "%12lD", largest);
+#endif
+
     set(mdwd->mdwd_Texts[11], MUIA_FlagsButton_Flags, mh->mh_Attributes);
 
     DoMethod(mdwd->mdwd_ChunkList, MUIM_NList_Clear);
 
-    if (me->me_Header->mh_First) {
+    if (mh->mh_First) {
         struct MemChunk *mc;
         struct MemoryFreeEntry *mfel;
         IPTR mccnt;
 
-        mc = me->me_Header->mh_First;
+        mc = mh->mh_First;
         mccnt = 0;
         while (mc) {
             mccnt++;
@@ -195,14 +218,23 @@ STATIC void SetDetails( struct IClass *cl,
 
         if ((mfel = tbAllocVecPooled(mdwd->mdwd_MemoryPool, mccnt * sizeof(struct MemoryFreeEntry))) != NULL) {
             struct MemoryFreeEntry *mfe;
+
+#if defined(__AROS__)
+            if (!IsManagedMem(mh))
+            {
+#endif
             set(mdwd->mdwd_ChunkList, MUIA_NList_Quiet, TRUE);
 
-            mc = me->me_Header->mh_First;
+            mc = mh->mh_First;
             mfe = mfel;
             while (mc != NULL && mccnt > 0) {
-                _snprintf(mfe->mfe_Lower, sizeof(mfe->mfe_Lower), "$%08lx", mc);
-                _snprintf(mfe->mfe_Upper, sizeof(mfe->mfe_Upper), "$%08lx", (IPTR)mc + mc->mc_Bytes);
+                _snprintf(mfe->mfe_Lower, sizeof(mfe->mfe_Lower), "$%p", mc);
+                _snprintf(mfe->mfe_Upper, sizeof(mfe->mfe_Upper), "$%p", (IPTR)mc + mc->mc_Bytes);
+#if defined(__AROS__) && (__WORDSIZE == 64)
+                _snprintf(mfe->mfe_Size, sizeof(mfe->mfe_Size), "%15llD", mc->mc_Bytes);
+#else
                 _snprintf(mfe->mfe_Size, sizeof(mfe->mfe_Size), "%12lD", mc->mc_Bytes);
+#endif
 
                 InsertBottomEntry(mdwd->mdwd_ChunkList, mfe);
 
@@ -213,6 +245,15 @@ STATIC void SetDetails( struct IClass *cl,
             }
 
             set(mdwd->mdwd_ChunkList, MUIA_NList_Quiet, FALSE);
+#if defined(__AROS__)
+        }
+        else
+        {
+            /* we cannot obtain the chunk list for managed memory! */
+            set(mdwd->mdwd_ChunkListview, MUIA_Disabled, TRUE);
+        }
+            
+#endif
         }
     }
 
@@ -223,7 +264,7 @@ STATIC IPTR mNew( struct IClass *cl,
                    Object *obj,
                    struct opSet *msg )
 {
-    APTR group, texts[12], exitButton, chunklist;
+    APTR group, texts[12], exitButton, chunklistview, chunklist;
 
     if ((obj = (Object *)DoSuperNew(cl, obj,
         MUIA_HelpNode, "Memory",
@@ -270,7 +311,7 @@ STATIC IPTR mNew( struct IClass *cl,
                         End,
                         Child, (IPTR)VGroup,
                             GroupFrameT(txtMemoryChunks),
-                            Child, (IPTR)MyNListviewObject(&chunklist, MakeID('.','M','L','V'), "BAR,BAR,BAR P=" MUIX_R, NULL, NULL, &memmorelist_dsp2hook, &memmorelist_cmp2hook, FALSE),
+                            Child, (IPTR)(chunklistview = MyNListviewObject(&chunklist, MakeID('.','M','L','V'), "BAR,BAR,BAR P=" MUIX_R, NULL, NULL, &memmorelist_dsp2hook, &memmorelist_cmp2hook, FALSE)),
                         End,
                     End,
                 End,
@@ -284,6 +325,7 @@ STATIC IPTR mNew( struct IClass *cl,
         APTR parent;
 
         CopyMemQuick(texts, mdwd->mdwd_Texts, sizeof(mdwd->mdwd_Texts));
+        mdwd->mdwd_ChunkListview = chunklistview;
         mdwd->mdwd_ChunkList = chunklist;
         mdwd->mdwd_MemoryPool = tbCreatePool(MEMF_CLEAR, 4096, 4096);
 
