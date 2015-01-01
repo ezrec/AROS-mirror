@@ -181,7 +181,7 @@ STATIC void SetDetails( struct IClass *cl,
     {
         MySetContents(mdwd->mdwd_Texts[ 6], "%s", "N/A");
         if (((struct MemHeaderExt *)mh)->mhe_Avail)
-            largest = ((struct MemHeaderExt *)mh)->mhe_Avail((struct MemHeaderExt *)mh, MEMF_LARGEST | mh->mh_Attributes);
+            largest = ((struct MemHeaderExt *)mh)->mhe_Avail((struct MemHeaderExt *)mh, MEMF_LARGEST);
     }
 #else
     largest = AvailMem(MEMF_LARGEST | mh->mh_Attributes);
@@ -203,6 +203,11 @@ STATIC void SetDetails( struct IClass *cl,
 
     DoMethod(mdwd->mdwd_ChunkList, MUIM_NList_Clear);
 
+#if defined(__AROS__)
+    if (!IsManagedMem(mh))
+    {
+#endif
+
     if (mh->mh_First) {
         struct MemChunk *mc;
         struct MemoryFreeEntry *mfel;
@@ -218,13 +223,7 @@ STATIC void SetDetails( struct IClass *cl,
 
         if ((mfel = tbAllocVecPooled(mdwd->mdwd_MemoryPool, mccnt * sizeof(struct MemoryFreeEntry))) != NULL) {
             struct MemoryFreeEntry *mfe;
-
-#if defined(__AROS__)
-            if (!IsManagedMem(mh))
-            {
-#endif
             set(mdwd->mdwd_ChunkList, MUIA_NList_Quiet, TRUE);
-
             mc = mh->mh_First;
             mfe = mfel;
             while (mc != NULL && mccnt > 0) {
@@ -243,19 +242,18 @@ STATIC void SetDetails( struct IClass *cl,
 
                 mc = mc->mc_Next;
             }
-
             set(mdwd->mdwd_ChunkList, MUIA_NList_Quiet, FALSE);
-#if defined(__AROS__)
-        }
-        else
-        {
-            /* we cannot obtain the chunk list for managed memory! */
-            set(mdwd->mdwd_ChunkListview, MUIA_Disabled, TRUE);
-        }
-            
-#endif
         }
     }
+
+#if defined(__AROS__)
+    }
+    else
+    {
+        /* we cannot obtain the chunk list for managed memory! */
+        set(mdwd->mdwd_ChunkListview, MUIA_Disabled, TRUE);
+    }
+#endif
 
     set(obj, MUIA_Window_Title, MyGetChildWindowTitle(txtMemoryDetailTitle, me->me_Name, mdwd->mdwd_Title, sizeof(mdwd->mdwd_Title)));
 }
