@@ -142,7 +142,8 @@ int main(int argc, char** argv)
                 { url ? NP_Arguments : TAG_IGNORE, (IPTR) url },
                 { NP_Cli, TRUE },
                 { NP_FreeSeglist, TRUE },
-                { NP_CommandName, (IPTR) "owb" }
+                { NP_CommandName, (IPTR) "owb" },
+                { TAG_DONE, 0 }
             };
 
             struct Process *owbProc = CreateNewProc(tags);
