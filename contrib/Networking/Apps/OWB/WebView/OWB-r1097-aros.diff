@@ -9628,6 +9628,45 @@ diff -ruN OWB-r1097/JavaScriptCore/interpreter/RegisterFile.cpp OWB-r1097.aros/J
      fastFree(m_buffer);
  #else
      fastFree(m_buffer);
+diff -ruN OWB-r1097/JavaScriptCore/parser/Grammar.y OWB-r1097.aros/JavaScriptCore/parser/Grammar.y
+--- OWB-r1097/JavaScriptCore/parser/Grammar.y	2009-10-09 16:58:16.000000000 +0200
++++ OWB-r1097.aros/JavaScriptCore/parser/Grammar.y	2015-01-01 16:57:13.726923914 +0100
+@@ -1,4 +1,6 @@
+-%pure_parser
++%pure-parser
++%parse-param { void* globalPtr }
++%lex-param { void* globalPtr }
+ 
+ %{
+ 
+@@ -49,7 +51,7 @@
+ #define YYERROR_VERBOSE
+ #endif
+ 
+-int jscyyerror(const char*);
++int jscyyerror(void*, void*, const char*);
+ 
+ static inline bool allowAutomaticSemicolon(JSC::Lexer&, int);
+ 
+@@ -86,9 +88,6 @@
+ 
+ #endif
+ 
+-#define YYPARSE_PARAM globalPtr
+-#define YYLEX_PARAM globalPtr
+-
+ template <typename T> inline NodeDeclarationInfo<T> createNodeDeclarationInfo(T node,
+     ParserArenaData<DeclarationStacks::VarStack>* varDecls,
+     ParserArenaData<DeclarationStacks::FunctionStack>* funcDecls,
+@@ -2069,7 +2068,7 @@
+ }
+ 
+ // Called by yyparse on error.
+-int yyerror(const char*)
++int yyerror(void*, void *, const char*)
+ {
+     return 1;
+ }
 diff -ruN OWB-r1097/JavaScriptCore/runtime/Arguments.cpp OWB-r1097.aros/JavaScriptCore/runtime/Arguments.cpp
 --- OWB-r1097/JavaScriptCore/runtime/Arguments.cpp	2009-08-28 13:59:49.000000000 +0100
 +++ OWB-r1097.aros/JavaScriptCore/runtime/Arguments.cpp	2014-12-14 05:09:18.935451655 +0000
@@ -9874,7 +9913,8 @@ diff -ruN OWB-r1097/WebCore/css/CSSGrammar.y OWB-r1097.aros/WebCore/css/CSSGramm
 -
  %}
  
- %pure_parser
+-%pure_parser
++%pure-parser
 +%parse-param { CSSParser* parser }
 +%lex-param { CSSParser* parser }
  
