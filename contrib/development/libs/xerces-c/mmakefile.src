@@ -3,6 +3,5 @@
 #MM- contrib-xerces-c : development-xerces-c
 
 %fetch_and_build_gnu_development package=xerces-c version=3.1.1 \
-    patch="yes" suffixes="tar.gz" package_repo="http://www.apache.net.pl//xerces/c/3/sources/" \
+    patch="yes" suffixes="tar.gz" package_repo="http://mirror.vorboss.net/apache//xerces/c/3/sources/" \
     extraoptions="--disable-network --enable-transcoder-gnuiconv --enable-msgloader-inmemory --disable-threads"
-
