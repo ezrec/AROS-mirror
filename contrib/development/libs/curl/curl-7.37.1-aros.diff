@@ -375,7 +375,7 @@ diff -ruN curl-7.37.1/lib/aros.c curl-7.37.1-aros/lib/aros.c
 +#include <proto/bsdsocket.h>
 +#include <bsdsocket/socketbasetags.h>
 +
-+extern struct Library *SocketBase;
++struct Library * __attribute__((weak)) SocketBase = NULL;
 +
 +void aros_cleanup()
 +{
