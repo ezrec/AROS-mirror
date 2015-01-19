@@ -23,6 +23,18 @@ diff -urN grep-2.5.1/configure grep-2.5.1-aros/configure
  do
  as_ac_Header=`echo "ac_cv_header_$ac_header" | $as_tr_sh`
  if eval "test \"\${$as_ac_Header+set}\" = set"; then
+diff -ruN grep-2.5.1/doc/grep.texi grep-2.5.1.aros/doc/grep.texi
+--- grep-2.5.1/doc/grep.texi    2002-01-22 14:20:04.000000000 +0100
++++ grep-2.5.1.aros/doc/grep.texi       2015-01-19 22:17:07.768232354 +0100
+@@ -288,7 +288,7 @@
+ Print a usage message briefly summarizing these command-line options
+ and the bug-reporting address, then exit.
+ 
+-@itemx --binary-files=@var{type}
++@item --binary-files=@var{type}
+ @opindex --binary-files
+ @cindex binary files
+ If the first few bytes of a file indicate that the file contains binary
 diff -urN grep-2.5.1/src/dfa.c grep-2.5.1-aros/src/dfa.c
 --- grep-2.5.1/src/dfa.c	2001-09-26 18:57:55.000000000 +0200
 +++ grep-2.5.1-aros/src/dfa.c	2011-07-10 23:41:03.000000000 +0200
