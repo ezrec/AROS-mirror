@@ -3,30 +3,45 @@
 
 -include $(TOP)/config/make.cfg
 
-#MM- contrib-gnu : contrib-gnu-gcc
+##MM- contrib-gnu : contrib-gnu-gcc
 #MM- contrib-gnu-gcc : development-collect-aros development-gcc
 #MM- development-gcc : development-gmp development-mpfr development-mpc
 
 GCC_VERSION     = $(TARGET_GCC_VER)
-GCC_LANGUAGES = c,c++,objc
 
-ifneq (,$(findstring $(AROS_TARGET_CPU),arm))
-GCC_EXTRAOPTS := CFLAGS=-I$(AROS_DEVELOPMENT)/include \
-    --with-arch=$(GCC_DEFAULT_CPU) --with-fpu=$(GCC_DEFAULT_FPU) --with-float=$(GCC_DEFAULT_FLOAT_ABI) --with-mode=arm
-else
-GCC_EXTRAOPTS := CFLAGS=-I$(AROS_DEVELOPMENT)/include
+GCC_LANGUAGES:=c,c++
+ifneq (no-objc,$OBJC_TARGET)
+GCC_LANGUAGES:=$(GCC_LANGUAGES),objc
+endif
+ifneq (no-java,$JAVA_TARGET)
+GCC_LANGUAGES:=$(GCC_LANGUAGES),java
 endif
 
-EXTRAOPTS := \
-    --enable-languages=$(GCC_LANGUAGES) --enable-longlong --disable-sjlj-exceptions \
-    --enable-version-specific-runtime-libs --disable-libssp --disable-libstdcxx-pch \
-    --with-sysroot=/Development --with-build-sysroot=$(AROS_DEVELOPMENT) \
-    --with-dwarf2 --enable-frame-pointer\
-    $(GCC_EXTRAOPTS)
+GCC_EXTRAOPTS := CFLAGS=-I$(AROS_DEVELOPMENT)/include
+
+# ARM requires additional flags to determine CPU type and FP model
+ifneq (,$(findstring $(AROS_TARGET_CPU),arm))
+GCC_EXTRA_OPTS += --with-arch=$(GCC_DEFAULT_CPU)
+GCC_EXTRA_OPTS += --with-float=$(GCC_DEFAULT_FLOAT_ABI)
+GCC_EXTRA_OPTS += --with-fpu=$(GCC_DEFAULT_FPU)
+GCC_EXTRA_OPTS += --with-mode=arm
+endif
+
+GCC_EXTRA_OPTS += --with-sysroot=/Development
+GCC_EXTRA_OPTS += --with-build-sysroot=$(AROS_DEVELOPMENT)
+GCC_EXTRA_OPTS += --enable-languages=$(strip $(GCC_LANGUAGES))
+GCC_EXTRA_OPTS += --enable-long-long
+GCC_EXTRA_OPTS += --enable-version-specific-runtime-libs
+GCC_EXTRA_OPTS += --disable-sjlj-exceptions
+GCC_EXTRA_OPTS += --disable-tls
+GCC_EXTRA_OPTS += --with-dwarf2
+GCC_EXTRA_OPTS += --enable-frame-pointer
+GCC_EXTRA_OPTS += --disable-libssp
+GCC_EXTRA_OPTS += --disable-libstdcxx-pch
 
 %fetch_and_build_gnu_development package=gcc version=$(GCC_VERSION) patch=yes \
     package_repo="$(GNU_REPOSITORY)/gcc/gcc-$(GCC_VERSION)" \
-    extraoptions=$(EXTRAOPTS) \
+    extraoptions=$(GCC_EXTRA_OPTS) \
     postinstall=contrib-gnu-gcc-deletefixed
 
 #MM
