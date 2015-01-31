@@ -37,12 +37,11 @@ USER_CFLAGS := -DUSE_PROTO_INCLUDES \
 	       -D__chip="" \
 	       -D__stdargs="" \
 	       -D__asm=""
-	 	 
+USER_LDFLAGS := -static
+
 EXEDIR := $(AROS_CONTRIB)/Misc/aminet/FileX
 
 #MM aminet-disk-moni-filex : includes linklibs setup-filex-catalogs
-
-USER_LDFLAGS := -nostdc
 
 %build_prog mmake=aminet-disk-moni-filex \
     progname=FileX targetdir=$(EXEDIR) \
