@@ -6,6 +6,8 @@ include $(TOP)/config/make.cfg
 #MM- contrib-gfx-libs-guigfx : linklibs contrib-gfx-libs-render 
 #MM- contrib-gfx-libs-guigfx-includes : includes
 
+USER_LDFLAGS := -static
+
 FILES := guigfx_bitmap 		\
 	 guigfx_colorhandle 	\
 	 guigfx_convolve 	\
