@@ -27,6 +27,7 @@ USER_CFLAGS := -D__DOPUS_NOLIBBASE__ -I$(DOPUSDIR)/Development/include
 
 # TODO: Remove and clean the compiler warnings!
 USER_CFLAGS += -Wno-error
+USER_LDFLAGS := -static
 
 %build_module mmake=dopus-library \
     modname=dopus modtype=library prefix=$(DOPUSDIR) \
