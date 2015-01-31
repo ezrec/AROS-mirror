@@ -109,6 +109,7 @@ LINKLIB_FILES = \
 	varargfuncs
 
 USER_CFLAGS := -Wno-parentheses
+USER_LDFLAGS := -static
 
 #MM- aminet-dev-gui-gtlayout : aminet-dev-gui-gtlayout-test
 #MM aminet-dev-gui-gtlayout-test : linklibs-aminet-dev-gui-gtlayout
