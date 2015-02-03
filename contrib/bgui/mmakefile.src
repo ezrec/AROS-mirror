@@ -2,6 +2,7 @@ include $(TOP)/config/make.cfg
 include $(SRCDIR)/$(CURDIR)/make.cfg
 
 USER_CFLAGS := -DENHANCED $(PARANOIA_CFLAGS)
+USER_LDFLAGS := -static
 
 OS_INCLUDES_DIR := $(AROS_INCLUDES)
 INCLUDES_DIR    := $(AROS_INCLUDES)
