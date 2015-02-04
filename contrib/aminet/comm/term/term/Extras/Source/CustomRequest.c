@@ -294,7 +294,7 @@ ShowInfo(struct Window *Parent,CONST_STRPTR Title,CONST_STRPTR Continue,CONST_ST
 				LONG ID,Last,i;
 				ULONG PrevTag;
 #ifdef __AROS__
-                                va_list empty_va_list;
+                                va_list empty_va_list = { 0 };
 #endif
 				ID			= 0;
 				Last		= GadgetInformation[1] - 1;
