@@ -140,7 +140,8 @@ float       Rnd_table[] =
 
 float rnd() 
 {
-     Rnd_index = ++Rnd_index % 500;
+     Rnd_index++;
+     Rnd_index %= 500;
      return(Rnd_table[Rnd_index]);
 }
 

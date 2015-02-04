@@ -136,7 +136,8 @@ vector p;
 float  *t;
 {
      float aa,bb,cc,radical,a2,b2,c2,dist1,dist2;
-     vector otop,oeye,p1,p2,opoint1,opoint2;
+     vector otop __attribute__ ((unused));
+     vector oeye,p1,p2,opoint1,opoint2;
 
      /*
       *   translate bottom of cylinder to 0,0,0

@@ -193,7 +193,12 @@ vector     f,t,d;
 
 long curstack()          /* return stack position */
 {
+#if !defined(__AROS__)
      char    dummy[5];
      return((long)(dummy));
+#else
+    struct Task *thisTask = (struct Task *)FindTask(NULL);
+    return (long)(thisTask->tc_SPReg);
+#endif
 }
 

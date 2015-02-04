@@ -264,7 +264,7 @@ float  pointdist;
      all_intersects(p,d,1);  /* Compute all intersections */
 
      while (occlude && (atten[0] > 0.01 || atten[1] > 0.01 || atten[2] > 0.01))
-          if (occlude = get_next_intersection(hitnext,best_p,&best_t)) 
+          if ((occlude = get_next_intersection(hitnext,best_p,&best_t)))
           {
                if (light[lit].kind == 0 || best_t <= pointdist) 
                {

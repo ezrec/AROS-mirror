@@ -102,7 +102,7 @@ unsigned char cache[9][MAXX][3];
 int           computes[MAXX];
 
 
-guess2(col,sum,val,dis,xdir,ydir)
+int guess2(col,sum,val,dis,xdir,ydir)
 int     col,*sum,dis,xdir,ydir;
 int     val[3];
 {
@@ -316,7 +316,7 @@ void do_raytrace()
      computes[col] = curr_runs;
 }
 
-main(argc,argv)
+int main(argc,argv)
 int     argc;
 char    *argv;
 {
@@ -605,5 +605,6 @@ OPERATOR_ABORT:
             ((float)sort_size) / (float)sorts);
      fprintf(fpout,"Maximum stack size         = %ld\n",stacktop);
 
+     return 0;
 }
 

@@ -71,7 +71,7 @@ int         ambientlight;
      node        *bouncenp,
      *occlude;
      vector      light_atten[MAXLIT];
-     int         l_objcounter;
+     int         l_objcounter = 0;
      float       l_distances[MAXOBJ];
      node        *l_objpairs[MAXOBJ];
      vector      l_points[MAXOBJ];
@@ -237,7 +237,7 @@ int         ambientlight;
                                 transparency[1] > 0.01 ||
                                 transparency[2] > 0.01)) 
                               {
-                                   if (occlude = get_next_intersection(hitnext,best_p,&best_t)) 
+                                   if ((occlude = get_next_intersection(hitnext,best_p,&best_t)))
                                    {
                                         /* pseudolight intersects an object,see if any passes through */
                                         if (occlude == bouncenp)

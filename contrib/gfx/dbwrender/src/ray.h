@@ -44,6 +44,7 @@
 #endif
 
 #ifdef __AROS__
+#include <exec/tasks.h>
 #define VERSION "RAY v1.02 040102 (AROS)\n Copyright (C) 1989 J. Lowery and D. Wecker - all rights reserved\n"
 #else
 #define VERSION "RAY v1.02 040102 (WIN32)\n Copyright (C) 1989 J. Lowery and D. Wecker - all rights reserved\n"
