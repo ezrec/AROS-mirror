@@ -57,6 +57,6 @@ void main(void)
   {
     if(!(i&7))
       printf("\n");
-    printf("0x%02lX%s", mask[i], i < 256/8-1 ? "," : "\n};\n");
+    printf("0x%02lX%s", (long unsigned int)mask[i], i < 256/8-1 ? "," : "\n};\n");
   }
 }

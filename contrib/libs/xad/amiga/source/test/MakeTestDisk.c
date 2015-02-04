@@ -40,8 +40,8 @@ void main(void)
 
 	for(i = 0; i < 1760; ++i)
 	{
-	  sprintf(Label, "SecLabel * %4ld", i);
-	  sprintf(buf, "***** Block Number %4ld *****", i);
+	  sprintf(Label, "SecLabel * %4ld", (long int)i);
+	  sprintf(buf, "***** Block Number %4ld *****", (long int)i);
 	  for(j = 30; j < 512; ++j)
 	    buf[j] = i ^ j;
 	
@@ -54,7 +54,7 @@ void main(void)
 	  ioreq->iotd_Count = 0xFFFFFFFF;
 	  if((j = DoIO(((struct IORequest *) ioreq))))
 	  {
-	    printf("Error %ld with block %ld\n", j, i);
+	    printf("Error %ld with block %ld\n", (long int)j, (long int)i);
 	    break;
 	  }
 	}

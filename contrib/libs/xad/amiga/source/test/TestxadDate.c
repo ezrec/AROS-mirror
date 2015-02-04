@@ -28,7 +28,11 @@ struct xadMasterBase *xadMasterBase;
 void dotest(ULONG a, ULONG b, ULONG c)
 {
   struct xadDate xd;
-  struct TagItem ti[] = {XAD_DATEXADDATE, (ULONG) &xd, XAD_GETDATEXADDATE, (ULONG) &xd, TAG_DONE, 0};
+  struct TagItem ti[] = {
+          { XAD_DATEXADDATE, (IPTR) &xd},
+          { XAD_GETDATEXADDATE, (IPTR) &xd},
+          { TAG_DONE, 0}
+      };
 
   xd.xd_Micros = 0;
   xd.xd_Year = c;
@@ -46,16 +50,27 @@ void dotest(ULONG a, ULONG b, ULONG c)
   xd.xd_Month, xd.xd_Year, xd.xd_WeekDay);
 }
 
-void dotest2(ULONG tag, ULONG a, ULONG tr)
+void dotest2(IPTR tag, IPTR a, IPTR tr)
 {
   struct xadDate xd;
   ULONG i, f;
-  struct TagItem ti[] = {tag, a, XAD_MAKELOCALDATE, tr, XAD_GETDATEXADDATE,
-  	(ULONG) &xd, TAG_DONE, 0};
-  struct TagItem ti2[] = {XAD_GETDATEUNIX, (ULONG) &i, XAD_MAKEGMTDATE, tr,
-  	XAD_DATEXADDATE, (ULONG) &xd, TAG_DONE, 0};
-  struct TagItem ti3[] = {XAD_GETDATEAMIGA, (ULONG) &f, XAD_DATEXADDATE,
-  	(ULONG) &xd, TAG_DONE, 0};
+  struct TagItem ti[] = {
+          { tag, a},
+          { XAD_MAKELOCALDATE, tr},
+          { XAD_GETDATEXADDATE, (IPTR) &xd},
+          { TAG_DONE, 0}
+      };
+  struct TagItem ti2[] = {
+            { XAD_GETDATEUNIX, (IPTR) &i},
+            { XAD_MAKEGMTDATE, tr},
+            { XAD_DATEXADDATE, (IPTR) &xd},
+            { TAG_DONE, 0}
+        };
+  struct TagItem ti3[] = {
+            { XAD_GETDATEAMIGA, (IPTR) &f},
+            { XAD_DATEXADDATE, (IPTR) &xd},
+            {TAG_DONE, 0}
+        };
 
   if((xadConvertDatesA(ti)))
     Printf("err\n");
@@ -87,7 +102,7 @@ void main(void)
     dotest2(XAD_DATEAMIGA,0x00000000,0);
     dotest2(XAD_DATEAMIGA,0x7FFFFFFF,0);
     dotest2(XAD_DATEAMIGA,0xFFFFFFFF,0);
-    dotest2(XAD_DATEDATESTAMP,(ULONG) &d,0);
+    dotest2(XAD_DATEDATESTAMP,(IPTR) &d,0);
 
     CloseLibrary((struct Library *) xadMasterBase);
   }
