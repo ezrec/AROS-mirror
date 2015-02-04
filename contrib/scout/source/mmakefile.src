@@ -10,7 +10,7 @@ EXE := Scout
 EXEDIR := $(AROS_CONTRIB)/System/Scout
 
 USER_INCLUDES := -D_UTMP_H_ -I$(SRCDIR)/$(CURDIR) -idirafter$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/classes -I$(SRCDIR)/$(CURDIR)/tbLib
-USER_LDFLAGS  := -L$(EXEDIR)/libs
+USER_LDFLAGS  := -L$(EXEDIR)/libs -static
 USER_CFLAGS   := -D__BSD_VISIBLE=1
 
 FILES := \
