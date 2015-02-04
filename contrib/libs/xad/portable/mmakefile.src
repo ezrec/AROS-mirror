@@ -40,6 +40,7 @@ FILES = \
 USER_CFLAGS := -DHAVE_STDINT_H
 USER_CFLAGS += -D__DOS_NOLIBBASE__ -D__UTILITY_NOLIBBASE__ -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/ -I$(SRCDIR)/$(CURDIR)/amiga
 USER_CFLAGS += -Wno-uninitialized -Wno-parentheses $(ARRAY_BOUNDS_CFLAGS)
+USER_LDFLAGS := -static
 
 #MM- contrib-pack-xadmaster : xadmaster-library
 #MM- xadmaster-library : includes xadmaster-includes
