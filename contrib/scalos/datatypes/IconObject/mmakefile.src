@@ -19,6 +19,7 @@ USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include \
     -idirafter $(SRCDIR)/$(CURDIR)/../../include
 
 USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -Wno-implicit-function-declaration
+USER_LDFLAGS := -static
 
 %build_module mmake=contrib-scalos-datatypes-iconobject \
     modname=iconobject modtype=library modsuffix=datatype conffile="iconobject-aros.conf" \

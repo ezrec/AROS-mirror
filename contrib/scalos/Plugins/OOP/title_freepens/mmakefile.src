@@ -17,6 +17,7 @@ USER_INCLUDES := \
     -idirafter $(SRCDIR)/$(CURDIR)/../../../include
 
 USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__
+USER_LDFLAGS := -static
 
 %build_module mmake=contrib-scalos-plugins-oop-titlefreepens \
     modname=title_freepens modtype=library modsuffix=plugin conffile=titlefreepens-aros.conf \

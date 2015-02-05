@@ -15,6 +15,7 @@ USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include \
     -idirafter $(SRCDIR)/$(CURDIR)/../../include
 
 USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -Wno-implicit-function-declaration
+USER_LDFLAGS := -static
 
 %build_module mmake=contrib-scalos-datatypes-amigaiconobj35 \
     modname=amigaiconobj35 modtype=library modsuffix=datatype conffile="amigaiconobj35-aros.conf" \

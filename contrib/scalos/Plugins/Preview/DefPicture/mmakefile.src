@@ -18,6 +18,7 @@ USER_INCLUDES := \
     -idirafter $(SRCDIR)/$(CURDIR)/../../../include
 
 USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__
+USER_LDFLAGS := -static
 
 %build_module mmake=contrib-scalos-plugins-preview-defpicture \
     modname=defpicture modtype=library modsuffix=pvplugin conffile=defpicture-aros.conf \
