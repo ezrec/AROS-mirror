@@ -15,6 +15,10 @@ TARGETDIR     := $(AROS_CONTRIB)/Zune/MCC_Popph
 
 #MM contrib-zune-classes-popph-class : includes linklibs
 
+%build_prog mmake=contrib-zune-classes-popph-demo progname=Popph-Demo \
+    files="popph_demo" targetdir=$(TARGETDIR)/Demos
+
+USER_LDFLAGS := -static
 
 %build_module \
     mmake=contrib-zune-classes-popph-class \
@@ -22,17 +26,10 @@ TARGETDIR     := $(AROS_CONTRIB)/Zune/MCC_Popph
     files=$(FILES) conffile=$(SRCDIR)/$(CURDIR)/popph.conf \
     moduledir=Extras/Zune/MCC_Popph/Classes/Zune
 
-
 #MM includes-copy
 %copy_includes path=mui
 
-
-%build_prog mmake=contrib-zune-classes-popph-demo progname=Popph-Demo \
-    files="popph_demo" targetdir=$(TARGETDIR)/Demos
-
-
 %copy_files_q mmake=contrib-zune-classes-popph-doc files=mcc_popplaceholder.doc dst=$(TARGETDIR)/Doc
-
 
 #MM contrib-zune-classes-popph-clean : contrib-zune-classes-popph-class-clean
 
