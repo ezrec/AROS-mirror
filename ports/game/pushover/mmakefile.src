@@ -18,8 +18,7 @@ REPOSITORIES := sf://pushover
 %fetch_and_build mmake=ports-game-pushover prefix=$(TARGETDIR) \
     package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
     patch=yes package_repo=$(REPOSITORIES) nix=yes nix_dir_layout=no \
-    extraoptions="--datarootdir='$$(PROGDIR)/share' --program-transform-name='s/.*/Pushover/' DEPS_CFLAGS='-fexceptions -I$(AROS_DEVELOPMENT)/include/SDL -I$(AROS_DEVELOPMENT)/include/lua' DEPS_LIBS='-lSDL_mixer -lvorbisfile -lvorbis -logg -lpng -llua -lfreetype2 -lintl -liconv -lz -lSDL'"
-
+    extraoptions="--datarootdir='$$(PROGDIR)/share' --program-transform-name='s/.*/Pushover/' DEPS_CFLAGS='-fexceptions -I$(AROS_DEVELOPMENT)/include/SDL -I$(AROS_DEVELOPMENT)/include/lua' DEPS_LIBS='-static-libstdc++ -lSDL_mixer -lvorbisfile -lvorbis -logg -lpng -llua -lfreetype2 -lintl -liconv -lz -lSDL'"
 
 #MM
 ports-game-pushover-clean :
