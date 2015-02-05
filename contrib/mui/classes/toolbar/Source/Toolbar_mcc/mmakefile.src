@@ -5,6 +5,7 @@ include $(TOP)/config/make.cfg
 
 USER_INCLUDES = -I$(SRCDIR)/$(CURDIR)/../../../commonaros
 USER_CFLAGS := $(PARANOIA_CFLAGS)
+USER_LDFLAGS := -static
 
 FILES := Dispatcher \
 	 Draw \
@@ -18,7 +19,6 @@ FILES := Dispatcher \
 %build_module_simple mmake=contrib-zune-classes-toolbar-class \
   modname=Toolbar modtype=mcc moduledir=$(AROS_CONTRIB)/Zune/MCC_Toolbar/Classes/Zune/ \
   files="library $(FILES)"
-
 
 #MM includes-copy
 

@@ -5,6 +5,7 @@ include $(TOP)/config/make.cfg
 
 USER_INCLUDES = -I$(SRCDIR)/$(CURDIR)/../../../commonaros
 USER_CFLAGS := $(PARANOIA_CFLAGS)
+USER_LDFLAGS := -static
 
 FILES := library \
       	 Dispatcher \
