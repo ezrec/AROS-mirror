@@ -15,6 +15,7 @@ FILES := library \
 USER_INCLUDES := -idirafter $(SRCDIR)/$(CURDIR)/../../include
 USER_CFLAGS := -DNO_INLINE_STDARG -DAROS_ABI_V1
 USER_CFLAGS += $(PARANOIA_CFLAGS)
+USER_LDFLAGS := -static
 
 %build_module_simple mmake=contrib-zune-classes-thebutton-mcc \
   modname=TheButton modtype=mcc moduledir=$(AROS_CONTRIB)/Zune/MCC_TheBar/Classes/Zune \
