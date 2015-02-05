@@ -11,12 +11,13 @@ VERSION      := 0.5.1
 TARGETDIR    := $(AROS_CONTRIB)/Games/KoboDeluxe
 REPOSITORIES := http://www.olofson.net/kobodl/download
 
+USER_CFLAGS := -static-libstdc++ -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION) -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/graphics -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/eel -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/data/sfx -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/sound
+
 %fetch_and_build mmake=ports-game-kobodl prefix=$(TARGETDIR) \
     package=$(PACKAGE) version=$(VERSION) suffixes="tar.bz2" \
     patch=yes package_repo=$(REPOSITORIES) nix=yes nix_dir_layout=no \
-    extracflags="-I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION) -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/graphics -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/eel -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/data/sfx -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/sound" \
+    extracflags="$(USER_CFLAGS)" \
     extraoptions="--datarootdir='$$(PROGDIR)share' --sharedstatedir='$$(PROGDIR)com' --localstatedir='$$(PROGDIR)var' --program-transform-name='s/.*/KoboDL/'" 
-
 
 #MM
 ports-game-kobodl-clean :
