@@ -47,6 +47,7 @@ USER_CFLAGS  := -DPLATFORM_SDL -DENABLE_CONSOLE_COMMANDS -DUSE_MODPLUG -DDEBUG -
 USER_INCLUDES:= -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/SDLPort -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/cml \
     -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src -I$(AROS_INCLUDES)/SDL -I$(AROS_INCLUDES)/libmodplug \
     -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/unrarlib040/unrarlib
+USER_LDFLAGS := -static-libstdc++
 
 SDL_CFILES := SDLPort/SDL_fmod
 
