@@ -266,7 +266,9 @@ struct MUIS_Popbackground_Status
 #define popbackObject           NewObject(lib_popbackground->mcc_Class,NULL
 
 #define superget(cl,obj,tag,storage)    DoSuperMethod(cl,obj,OM_GET,tag,(IPTR)(storage))
+#if !defined(superset)
 #define superset(cl,obj,tag,val)        SetSuperAttrs(cl,obj,tag,(IPTR)(val),TAG_DONE)
+#endif
 #define addconfigitem(cfg,value,size,item) DoMethod(cfg,MUIM_Dataspace_Add,(IPTR)(value),size,item)
 
 #undef get
