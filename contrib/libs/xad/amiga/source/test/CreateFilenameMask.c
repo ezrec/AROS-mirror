@@ -36,7 +36,7 @@ void fillmask(unsigned char *mask, char *bytes)
   }
 }
 
-void main(void)
+int main(void)
 {
   int i;
 
@@ -59,4 +59,5 @@ void main(void)
       printf("\n");
     printf("0x%02lX%s", (long unsigned int)mask[i], i < 256/8-1 ? "," : "\n};\n");
   }
+  return 0;
 }

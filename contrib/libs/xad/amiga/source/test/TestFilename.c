@@ -33,7 +33,7 @@ void PrintString(STRPTR str)
     Printf("%s\n", str);
 }
 
-void main(void)
+int main(void)
 {
   UBYTE buffer[300];
   STRPTR a, b, c;
@@ -60,4 +60,5 @@ void main(void)
     /* test the functions */
     CloseLibrary((struct Library *)xadMasterBase);
   }
+  return 0;
 }

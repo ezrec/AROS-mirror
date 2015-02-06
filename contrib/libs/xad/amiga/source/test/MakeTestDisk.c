@@ -23,7 +23,7 @@
 #include <proto/exec.h>
 #include <devices/trackdisk.h>
 
-void main(void)
+int main(void)
 {
   struct MsgPort *port;
       
@@ -65,4 +65,5 @@ void main(void)
     } /* CreatIORequest */
     DeleteMsgPort(port);
   } /* CreateMsgPort */
+  return 0;
 }

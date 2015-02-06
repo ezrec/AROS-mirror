@@ -84,7 +84,7 @@ void dotest2(IPTR tag, IPTR a, IPTR tr)
   xd.xd_Minute, xd.xd_Second);
 }
 
-void main(void)
+int main(void)
 {
   if((xadMasterBase = (struct xadMasterBase *)
   OpenLibrary("xadmaster.library", 1)))
@@ -108,4 +108,6 @@ void main(void)
   }
   else
     Printf("err2\n");
+
+  return 0;
 }

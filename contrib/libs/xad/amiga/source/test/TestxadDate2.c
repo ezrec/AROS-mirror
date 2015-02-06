@@ -110,7 +110,7 @@ void dotest3(ULONG d, ULONG m, ULONG y, ULONG h, ULONG min, ULONG sec, STRPTR tx
     xd2.xd_Hour, xd2.xd_Minute, xd2.xd_Second, xd2.xd_WeekDay, txt);
 }
 
-void main(void)
+int main(void)
 {
   if((xadMasterBase = (struct xadMasterBase *)
   OpenLibrary("xadmaster.library", 1)))
@@ -160,4 +160,6 @@ void main(void)
   }
   else
     Printf("Could not open library\n");
+
+  return 0;
 }

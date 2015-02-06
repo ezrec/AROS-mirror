@@ -25,7 +25,7 @@
 
 struct xadMasterBase *xadMasterBase;
 
-void main(void)
+int main(void)
 {
   if((xadMasterBase = (struct xadMasterBase *)
   OpenLibrary("xadmaster.library", 1)))
@@ -74,4 +74,6 @@ void main(void)
   }
   else
     Printf("Could not open library\n");
+
+  return 0;
 }
