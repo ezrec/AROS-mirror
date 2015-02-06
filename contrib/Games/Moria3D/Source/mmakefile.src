@@ -24,7 +24,7 @@ Moria3D : $(EXE)
 	@$(NOP)
 
 $(EXE) : $(OBJS)
-	$(CC) $(CFLAGS) -o $(EXE) $(OBJS) $(ARCHIVE) $(LIBS)
+	$(CC) $(SYSROOT_FLAG) $(CFLAGS) -o $(EXE) $(OBJS) $(ARCHIVE) $(LIBS)
 
 #MM
 Moria3D-setup :
@@ -37,41 +37,41 @@ Moria3D-clean :
 $(GENDIR)/$(CURDIR)/Moveing.o : Moveing.c MyTypes.h Moveing.h   \
 	Level.h MyMath.h Clean.h   \
 	Gfx.h
-	$(CC) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Moveing.c -o $@
+	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Moveing.c -o $@
 
 $(GENDIR)/$(CURDIR)/Moria3D.o : Moria3D.c MyTypes.h Level.h   \
 	MyMath.h Clean.h Init.h   \
 	Moveing.h Gfx.h
-	$(CC) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Moria3D.c -o $@
+	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Moria3D.c -o $@
 
 $(GENDIR)/$(CURDIR)/Clean.o : Clean.c MyTypes.h Clean.h
-	$(CC) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Clean.c -o $@
+	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Clean.c -o $@
 
 $(GENDIR)/$(CURDIR)/Gfx.o : Gfx.c MyTypes.h Level.h   \
 	MyMath.h Clean.h Init.h   \
 	Moveing.h Gfx.h Timer.h
-	$(CC) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Gfx.c -o $@
+	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Gfx.c -o $@
 
 $(GENDIR)/$(CURDIR)/Level.o : Level.c Clean.h MyTypes.h   \
 	MyMath.h Level.h
-	$(CC) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Level.c -o $@
+	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Level.c -o $@
 
 $(GENDIR)/$(CURDIR)/Init.o : Init.c MyTypes.h Init.h   \
 	MyMath.h Level.h Clean.h   \
 	Moveing.h
-	$(CC) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Init.c -o $@
+	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Init.c -o $@
 
 $(GENDIR)/$(CURDIR)/MyMath.o : MyMath.c MyMath.h MyTypes.h	 \
 	Level.h Clean.h
-	$(CC) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/MyMath.c -o $@
+	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/MyMath.c -o $@
 
 $(GENDIR)/$(CURDIR)/Version.o : Version.c
-	$(CC) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Version.c -o $@
+	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Version.c -o $@
 
 $(GENDIR)/$(CURDIR)/Timer.o : Timer.c Timer.h
-	$(CC) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Timer.c -o $@
+	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Timer.c -o $@
 
 $(GENDIR)/$(CURDIR)/math.o : math.c
-	$(CC) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/math.c -o $@
+	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/math.c -o $@
 
 #END OF FILE#
