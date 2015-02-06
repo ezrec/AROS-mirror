@@ -822,7 +822,7 @@ static SAVEDS(void) INTERRUPT IconToolTipProcess(struct ToolTipStart *startArg)
 	struct IOStdReq  *inputRequest = NULL;
 	BOOL inputOpen = FALSE;
 	BOOL handlerAdded = FALSE;
-	static struct Hook GetStringHook;
+	static struct Hook GetStringHook  __attribute__ ((unused));
 	STATIC_PATCHFUNC(ttInputHandler)
 	struct ToolTipSignalData *sData = NULL;
 	struct ttInfo tti;

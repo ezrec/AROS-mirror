@@ -89,13 +89,13 @@ long _stack = 16384;		// minimum stack size, used by SAS/C startup code
 		ButtonFrame,\
 		MUIA_CycleChain, TRUE, \
 		MUIA_Font, MUIV_Font_Button,\
-		MUIA_Text_Contents, name,\
-		MUIA_Text_PreParse, "\33c",\
-		MUIA_Text_HiChar  , key,\
-		MUIA_ControlChar  , key,\
+		MUIA_Text_Contents, (IPTR)name,\
+		MUIA_Text_PreParse, (IPTR)"\33c",\
+		MUIA_Text_HiChar  , (IPTR)key,\
+		MUIA_ControlChar  , (IPTR)key,\
 		MUIA_InputMode    , MUIV_InputMode_RelVerify,\
 		MUIA_Background   , MUII_ButtonBack,\
-		MUIA_ShortHelp, HelpText,\
+		MUIA_ShortHelp, (IPTR)HelpText,\
 		End
 
 struct ResultsListEntry
@@ -355,7 +355,7 @@ static struct MUI_CustomClass *myPopObjectClass;
 
 int main(int argc, char *argv[])
 {
-	LONG win_opened;
+	LONG win_opened = 0;
 	
 	WBenchMsg = (argc == 0) ? (struct WBStartup *)argv : NULL;
 
@@ -393,223 +393,223 @@ int main(int argc, char *argv[])
 		}
 
 	APP_Main = ApplicationObject,
-		MUIA_Application_Title,		GetLocString(MSGID_TITLENAME),
-		MUIA_Application_Version,	"$VER: Scalos Find.module V" VERS_MAJOR "." VERS_MINOR " (" __DATE__ ") " COMPILER_STRING,
-		MUIA_Application_Copyright,	"© The Scalos Team, 2008" CURRENTYEAR,
-		MUIA_Application_Author,	"The Scalos Team",
-		MUIA_Application_Description,	"Scalos Find module",
-		MUIA_Application_Base,		"SCALOS_FIND_MODULE",
+		MUIA_Application_Title,		(IPTR)GetLocString(MSGID_TITLENAME),
+		MUIA_Application_Version,	(IPTR)"$VER: Scalos Find.module V" VERS_MAJOR "." VERS_MINOR " (" __DATE__ ") " COMPILER_STRING,
+		MUIA_Application_Copyright,	(IPTR)"© The Scalos Team, 2008" CURRENTYEAR,
+		MUIA_Application_Author,	(IPTR)"The Scalos Team",
+		MUIA_Application_Description,	(IPTR)"Scalos Find module",
+		MUIA_Application_Base,		(IPTR)"SCALOS_FIND_MODULE",
 
-		SubWindow, WIN_Main = WindowObject,
-			MUIA_Window_Title, GetLocString(MSGID_TITLENAME),
+		SubWindow, (IPTR)(WIN_Main = WindowObject,
+			MUIA_Window_Title, (IPTR)GetLocString(MSGID_TITLENAME),
 			MUIA_Window_ID,	MAKE_ID('M','A','I','N'),
 			MUIA_Window_AppWindow, TRUE,
 
-			WindowContents, VGroup,
+			WindowContents, (IPTR)VGroup,
 
-				Child, HGroup,
-					Child, VGroup,
-						Child, ColGroup(2),
-							Child, Label1(GetLocString(MSGID_POPSTRING_NAME)),
-							Child, PopObjectPattern = PopObject,
-								MUIA_Popstring_Button, MyPopButton(MUII_PopUp),
-								MUIA_Popstring_String, StringFilePattern = StringObject,
+				Child, (IPTR)HGroup,
+					Child, (IPTR)VGroup,
+						Child, (IPTR)ColGroup(2),
+							Child, (IPTR)Label1(GetLocString(MSGID_POPSTRING_NAME)),
+							Child, (IPTR)(PopObjectPattern = PopObject,
+								MUIA_Popstring_Button, (IPTR)MyPopButton(MUII_PopUp),
+								MUIA_Popstring_String, (IPTR)(StringFilePattern = StringObject,
 									StringFrame,
 									MUIA_CycleChain, TRUE,
-									MUIA_String_Contents, SEARCH_PATTERN_DEFAULT,
-									End, //StringObject
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_POPSTRING_NAME_SHORTHELP),
-								MUIA_Popobject_Object, VGroup,
-									Child, NListviewObject,
-										MUIA_NListview_NList, NListPatternHistory = PersistentNListObject,
+									MUIA_String_Contents, (IPTR)SEARCH_PATTERN_DEFAULT,
+									End), //StringObject
+								MUIA_ShortHelp, (IPTR)GetLocString(MSGID_POPSTRING_NAME_SHORTHELP),
+								MUIA_Popobject_Object, (IPTR)VGroup,
+									Child, (IPTR)NListviewObject,
+										MUIA_NListview_NList, (IPTR)(NListPatternHistory = PersistentNListObject,
 											MUIA_ObjectID, OBJID_NLIST_NAME,
-											MUIA_ContextMenu, ContextMenuPatternPopup,
+											MUIA_ContextMenu, (IPTR)ContextMenuPatternPopup,
 											MUIA_NList_Exports, MUIV_NList_Exports_All,
 											MUIA_NList_Imports, MUIV_NList_Imports_All,
 											MUIA_NList_ConstructHook, MUIV_NList_ConstructHook_String,
 											MUIA_NList_DestructHook, MUIV_NList_DestructHook_String,
-											End, //NListObject
+											End), //NListObject
 										End, //NListviewObject
 									End, //VGroup
-								End, //PopobjectObject
+								End), //PopobjectObject
 
-							Child, Label1(GetLocString(MSGID_POPSTRING_TEXT)),
-							Child, PopObjectContents = PopObject,
-								MUIA_Popstring_Button, MyPopButton(MUII_PopUp),
-								MUIA_Popstring_String, StringFileContents = StringObject,
+							Child, (IPTR)Label1(GetLocString(MSGID_POPSTRING_TEXT)),
+							Child, (IPTR)(PopObjectContents = PopObject,
+								MUIA_Popstring_Button, (IPTR)MyPopButton(MUII_PopUp),
+								MUIA_Popstring_String, (IPTR)(StringFileContents = StringObject,
 									StringFrame,
 									MUIA_CycleChain, TRUE,
-									MUIA_String_Contents, SEARCH_CONTENTS_DEFAULT,
-									End, //StringObject
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_POPSTRING_TEXT_SHORTHELP),
-								MUIA_Popobject_Object, VGroup,
-									Child, NListviewObject,
-										MUIA_NListview_NList, NListContentsHistory = PersistentNListObject,
+									MUIA_String_Contents, (IPTR)SEARCH_CONTENTS_DEFAULT,
+									End), //StringObject
+								MUIA_ShortHelp, (IPTR) GetLocString(MSGID_POPSTRING_TEXT_SHORTHELP),
+								MUIA_Popobject_Object, (IPTR)VGroup,
+									Child, (IPTR)NListviewObject,
+										MUIA_NListview_NList, (IPTR)(NListContentsHistory = PersistentNListObject,
 											MUIA_ObjectID, OBJID_NLIST_TEXT,
-											MUIA_ContextMenu, ContextMenuContentsPopup,
+											MUIA_ContextMenu, (IPTR)ContextMenuContentsPopup,
 											MUIA_NList_Exports, MUIV_NList_Exports_All,
 											MUIA_NList_Imports, MUIV_NList_Imports_All,
 											MUIA_NList_ConstructHook, MUIV_NList_ConstructHook_String,
 											MUIA_NList_DestructHook, MUIV_NList_DestructHook_String,
-											End, //NListObject
+											End), //NListObject
 										End, //NListviewObject
 									End, //VGroup
-								End, //PopobjectObject
+								End), //PopobjectObject
 
-							Child, Label1(GetLocString(MSGID_POPSTRING_TYPE)),
-							Child, PopObjectFiletypes = PopObject,
-								MUIA_Popstring_Button, MyPopButton(MUII_PopUp),
-								MUIA_Popstring_String, StringFileType = StringObject,
+							Child, (IPTR)Label1(GetLocString(MSGID_POPSTRING_TYPE)),
+							Child, (IPTR)(PopObjectFiletypes = PopObject,
+								MUIA_Popstring_Button, (IPTR)MyPopButton(MUII_PopUp),
+								MUIA_Popstring_String, (IPTR)(StringFileType = StringObject,
 									StringFrame,
 									MUIA_CycleChain, TRUE,
-									MUIA_String_Contents, SEARCH_FILETYPE_DEFAULT,
-									End, //StringObject
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_POPSTRING_TYPE_SHORTHELP),
-								MUIA_Popobject_WindowHook, &FileTypesPopupWindowHook,
-								MUIA_Popobject_Object, VGroup,
-									Child, NListviewObject,
+									MUIA_String_Contents, (IPTR)SEARCH_FILETYPE_DEFAULT,
+									End), //StringObject
+								MUIA_ShortHelp, (IPTR) GetLocString(MSGID_POPSTRING_TYPE_SHORTHELP),
+								MUIA_Popobject_WindowHook, (IPTR)&FileTypesPopupWindowHook,
+								MUIA_Popobject_Object, (IPTR)VGroup,
+									Child, (IPTR)NListviewObject,
 										MUIA_CycleChain, TRUE,
-										MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_LISTVIEW_FILETYPES),
-										MUIA_NListview_NList, ListtreeFileTypes = FileTypesNListTreeObject,
+										MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_LISTVIEW_FILETYPES),
+										MUIA_NListview_NList, (IPTR)(ListtreeFileTypes = FileTypesNListTreeObject,
 											MUIA_Background, MUII_ListBack,
-											MUIA_NListtree_DisplayHook, &FileTypesDisplayHook,
-											MUIA_NListtree_ConstructHook, &FileTypesConstructHook,
-											MUIA_NListtree_DestructHook, &FileTypesDestructHook,
+											MUIA_NListtree_DisplayHook, (IPTR)&FileTypesDisplayHook,
+											MUIA_NListtree_ConstructHook, (IPTR)&FileTypesConstructHook,
+											MUIA_NListtree_DestructHook, (IPTR)&FileTypesDestructHook,
 											MUIA_NListtree_FindNameHook, MUIV_NListtree_FindNameHook_PartCaseInsensitive,
 											MUIA_NListtree_EmptyNodes, TRUE,
 											MUIA_NListtree_AutoVisible, MUIV_NListtree_AutoVisible_Expand,
-											MUIA_ContextMenu, ContextMenuFileTypes,
-											End, //myFileTypesNListTreeClass
+											MUIA_ContextMenu, (IPTR)ContextMenuFileTypes,
+											End), //myFileTypesNListTreeClass
 										End, //NListviewObject
-									Child, GroupFindFiletype = HGroup,
+									Child, (IPTR)(GroupFindFiletype = HGroup,
 										GroupFrame,
-										Child, ButtonHideFind = TextObject,
+										Child, (IPTR)(ButtonHideFind = TextObject,
 											MUIA_Weight, 10,
 											ButtonFrame,
 											MUIA_CycleChain, TRUE,
 #if defined(MUII_Close)
-											MUIA_Text_Contents, MUIX_C "\33I[6:" STR(MUII_Close) "]",
+											MUIA_Text_Contents, (IPTR) MUIX_C "\33I[6:" STR(MUII_Close) "]",
 #else
-											MUIA_Text_Contents, MUIX_C "\33I[6:" STR(MUII_TapeStop) "]",
+											MUIA_Text_Contents, (IPTR) MUIX_C "\33I[6:" STR(MUII_TapeStop) "]",
 #endif
 											MUIA_InputMode, MUIV_InputMode_RelVerify,
 											MUIA_Background, MUII_ButtonBack,
-											MUIA_ShortHelp, GetLocString(MSGID_BUTTON_FIND_HIDE_SHORTHELP),
-											End,
+											MUIA_ShortHelp, (IPTR)GetLocString(MSGID_BUTTON_FIND_HIDE_SHORTHELP),
+											End),
 
-										Child, StringFindFileType = StringObject,
+										Child, (IPTR)(StringFindFileType = StringObject,
 											MUIA_CycleChain, TRUE,
 											StringFrame,
-											End, //StringObject
-										Child, ButtonFindNextFileType = KeyButtonHelp(GetLocString(MSGID_BUTTON_FIND_NEXT),
+											End), //StringObject
+										Child, (IPTR)(ButtonFindNextFileType = KeyButtonHelp(GetLocString(MSGID_BUTTON_FIND_NEXT),
 											*GetLocString(MSGID_BUTTON_FIND_NEXT_KEY),
-											GetLocString(MSGID_BUTTON_FIND_NEXT_SHORTHELP)),
-										End, //HGroup
+											GetLocString(MSGID_BUTTON_FIND_NEXT_SHORTHELP))),
+										End), //HGroup
 									End, //VGroup
-								End, //PopobjectObject
+								End), //PopobjectObject
 
 							End, //ColGroup
 
-						Child, VGroup,
+						Child, (IPTR)VGroup,
 							MUIA_FrameTitle, (ULONG) GetLocString(MSGID_GROUP_SOURCES),
 							GroupFrame,
 							MUIA_Background, MUII_GroupBack,
 
-							Child, NListviewSources = NListviewObject,
-								MUIA_NListview_NList, NListSources = NListObject,
+							Child, (IPTR)(NListviewSources = NListviewObject,
+								MUIA_NListview_NList, (IPTR)(NListSources = NListObject,
 									MUIA_CycleChain, TRUE,
 									MUIA_NList_ConstructHook, MUIV_NList_ConstructHook_String,
 									MUIA_NList_DestructHook, MUIV_NList_DestructHook_String,
-									End, //NListObject
-								End, //NListviewObject
+									End), //NListObject
+								End), //NListviewObject
 
-							Child, HGroup,
-								Child, PopAslNewSource = PopaslObject,
+							Child, (IPTR)HGroup,
+								Child, (IPTR)(PopAslNewSource = PopaslObject,
 									MUIA_CycleChain, TRUE,
 									MUIA_Popasl_Type, ASL_FileRequest,
-									MUIA_Popstring_Button, MyPopButton(MUII_PopDrawer),
-									MUIA_Popstring_String, StringNewSource = StringObject,
+									MUIA_Popstring_Button, (IPTR)MyPopButton(MUII_PopDrawer),
+									MUIA_Popstring_String, (IPTR)(StringNewSource = StringObject,
 										StringFrame,
 										MUIA_CycleChain, TRUE,
-									End, //StringObject
+									End), //StringObject
 
-									ASLFR_TitleText, (ULONG) GetLocString(MSGID_GROUP_SOURCES_ASLTITLE),
+									ASLFR_TitleText, (IPTR) GetLocString(MSGID_GROUP_SOURCES_ASLTITLE),
 									ASLFR_DrawersOnly, TRUE,
-									ASLFR_IntuiMsgFunc, &IntuiMessageHook,
-									End, //PopaslObject
+									ASLFR_IntuiMsgFunc, (IPTR)&IntuiMessageHook,
+									End), //PopaslObject
 
-								Child, ButtonAddSource = KeyButtonHelp(GetLocString(MSGID_BUTTON_ADD),
+								Child, (IPTR)(ButtonAddSource = KeyButtonHelp(GetLocString(MSGID_BUTTON_ADD),
 									*GetLocString(MSGID_BUTTON_ADD_KEY),
-		                                                        GetLocString(MSGID_BUTTON_ADD_SHORTHELP)),
-								Child, ButtonRemoveSource = KeyButtonHelp(GetLocString(MSGID_BUTTON_REMOVE),
+		                                                        GetLocString(MSGID_BUTTON_ADD_SHORTHELP))),
+								Child, (IPTR)(ButtonRemoveSource = KeyButtonHelp(GetLocString(MSGID_BUTTON_REMOVE),
 									*GetLocString(MSGID_BUTTON_REMOVE_KEY),
-									GetLocString(MSGID_BUTTON_REMOVE_SHORTHELP)),
+									GetLocString(MSGID_BUTTON_REMOVE_SHORTHELP))),
 								End, //HGroup
 							End, //VGroup
 						End, //VGroup
 
-					Child, BalanceObject,
+					Child, (IPTR)BalanceObject,
 						End, // BalanceObject
 
-					Child, VGroup,
-						MUIA_FrameTitle, (ULONG) GetLocString(MSGID_GROUP_RESULTS),
+					Child, (IPTR)VGroup,
+						MUIA_FrameTitle, (IPTR) GetLocString(MSGID_GROUP_RESULTS),
 						GroupFrame,
 						MUIA_Background, MUII_GroupBack,
 
-						Child, NListviewObject,
+						Child, (IPTR)NListviewObject,
 							//MUIA_CycleChain, TRUE,
 							MUIA_NListview_Horiz_ScrollBar, MUIV_NListview_HSB_FullAuto,
-							MUIA_NListview_NList, NListResults = FindResultsNListObject,
+							MUIA_NListview_NList, (IPTR)(NListResults = FindResultsNListObject,
 								MUIA_CycleChain, TRUE,
-								MUIA_NList_Format, "BAR,BAR,",
-								MUIA_NList_ConstructHook2, &ResultsConstructHook,
-								MUIA_NList_DestructHook2, &ResultsDestructHook,
-								MUIA_NList_DisplayHook2, &ResultsDisplayHook,
-								MUIA_NList_CompareHook2, &ResultsCompareHook,
-								MUIA_NList_CopyEntryToClipHook2, &ResultsCopyEntryToClipHook,
+								MUIA_NList_Format, (IPTR)"BAR,BAR,",
+								MUIA_NList_ConstructHook2, (IPTR)&ResultsConstructHook,
+								MUIA_NList_DestructHook2, (IPTR)&ResultsDestructHook,
+								MUIA_NList_DisplayHook2, (IPTR)&ResultsDisplayHook,
+								MUIA_NList_CompareHook2, (IPTR)&ResultsCompareHook,
+								MUIA_NList_CopyEntryToClipHook2, (IPTR)&ResultsCopyEntryToClipHook,
 								MUIA_NList_TitleSeparator, TRUE,
 								MUIA_NList_Title, TRUE,
 								MUIA_NList_SortType, 0,
-								MUIA_ContextMenu, ContextMenuResults,
+								MUIA_ContextMenu, (IPTR)ContextMenuResults,
 								MUIA_NList_TitleMark, MUIV_NList_TitleMark_Down | 0,
-								End, //NListObject
+								End), //NListObject
 							End, //NListviewObject
 
 	                                        End, //VGroup
 
 					End, // HGroup
 
-				Child, TextCurrentFile = TextObject,
-					MUIA_Text_Contents, "",
-					End, //TextObject
+				Child, (IPTR)(TextCurrentFile = TextObject,
+					MUIA_Text_Contents, (IPTR)"",
+					End), //TextObject
 
-				Child, ColGroup(2),
-					Child, ButtonSearch = KeyButtonHelp(GetLocString(MSGID_BUTTON_SEARCH),
+				Child, (IPTR)ColGroup(2),
+					Child, (IPTR)(ButtonSearch = KeyButtonHelp(GetLocString(MSGID_BUTTON_SEARCH),
 						*GetLocString(MSGID_BUTTON_SEARCH_KEY),
-						GetLocString(MSGID_BUTTON_SEARCH_SHORTHELP)),
-					Child, ButtonStop = KeyButtonHelp(GetLocString(MSGID_BUTTON_STOP),
+						GetLocString(MSGID_BUTTON_SEARCH_SHORTHELP))),
+					Child, (IPTR)(ButtonStop = KeyButtonHelp(GetLocString(MSGID_BUTTON_STOP),
 						*GetLocString(MSGID_BUTTON_STOP_KEY),
-						GetLocString(MSGID_BUTTON_STOP_SHORTHELP)),
+						GetLocString(MSGID_BUTTON_STOP_SHORTHELP))),
 					End, //ColGroup
 				End, //VGroup
-			End, //WindowObject
+			End), //WindowObject
 
-		MUIA_Application_Menustrip, MenustripObject,
-			Child, MenuObjectT(GetLocString(MSGID_MENU_PROJECT)),
+		MUIA_Application_Menustrip, (IPTR)MenustripObject,
+			Child, (IPTR)MenuObjectT((IPTR)GetLocString(MSGID_MENU_PROJECT)),
 
-				Child, MenuAbout = MenuitemObject,
-					MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_ABOUT),
-				End,
-				Child, MenuAboutMUI = MenuitemObject,
-					MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_ABOUTMUI),
-				End,
-				Child, MenuitemObject,
+				Child, (IPTR)(MenuAbout = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_ABOUT),
+				End),
+				Child, (IPTR)(MenuAboutMUI = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_ABOUTMUI),
+				End),
+				Child, (IPTR)MenuitemObject,
 					MUIA_Menuitem_Title, -1,
 				End,
-				Child, MenuQuit = MenuitemObject,
-					MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_QUIT),
-					MUIA_Menuitem_Shortcut, GetLocString(MSGID_MENU_PROJECT_QUIT_SHORT),
-				End,
+				Child, (IPTR)(MenuQuit = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_QUIT),
+					MUIA_Menuitem_Shortcut, (IPTR)GetLocString(MSGID_MENU_PROJECT_QUIT_SHORT),
+				End),
 					
 			End, //MenuObjectT
 
@@ -1344,7 +1344,7 @@ static SAVEDS(void) INTERRUPT SelectSourceHookFunc(struct Hook *hook, Object *o,
 
 static SAVEDS(void) INTERRUPT RemoveSourceHookFunc(struct Hook *hook, Object *o, Msg msg)
 {
-	LONG pos;
+	LONG pos=0;
 
 	get(NListSources, MUIA_NList_Active, &pos);
 
@@ -1783,7 +1783,7 @@ static SAVEDS(ULONG) INTERRUPT FileTypesDisplayHookFunc(struct Hook *hook, APTR 
 
 static SAVEDS(LONG) INTERRUPT HideFindHookFunc(struct Hook *hook, Object *o, Msg msg)
 {
-	LONG isVisible;
+	LONG isVisible = 0;
 
 	(void) hook;
 	(void) o;
@@ -2106,7 +2106,7 @@ static SAVEDS(VOID) INTERRUPT ClearHistoryHookFunc(struct Hook *hook, Object *o,
 static void StartSearch(void)
 {
 	static ULONG Searching = 0;
-	ULONG Entries, n;
+	ULONG Entries = 0, n;
 	CONST_STRPTR FilePattern = NULL;
 	CONST_STRPTR FileContents = NULL;
 	CONST_STRPTR FileType = NULL;
@@ -2640,8 +2640,8 @@ BOOL CheckMCCVersion(CONST_STRPTR name, ULONG minver, ULONG minrev)
 
 	while (1)
 		{
-		ULONG ver;
-		ULONG rev;
+		ULONG ver = 0;
+		ULONG rev = 0;
 		struct Library *base;
 		char libname[256];
 

@@ -1035,7 +1035,7 @@ static LONG DoFileTransMove(Class *cl, Object *o, struct FileTransOp *fto)
 
 		oldDir = CurrentDir(fto->fto_SrcDirLock);
 
-		if (IconLock = Lock(Name, SHARED_LOCK))
+		if ((IconLock = Lock(Name, SHARED_LOCK)))
 			{
 			UnLock(IconLock);
 

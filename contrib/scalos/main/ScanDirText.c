@@ -260,7 +260,7 @@ struct ScaIconNode *TextWindowReadIcon(struct internalScaWindowTask *iwt,
 
 					stccpy(IconFileName, rild.rild_Name, MAX_FileName);
 					SafeStrCat(IconFileName, ".info", MAX_FileName);
-					if (IconLock = Lock(IconFileName, ACCESS_READ))
+					if ((IconLock = Lock(IconFileName, ACCESS_READ)))
 						{
 						hasIcon = TRUE;
 						UnLock(IconLock);

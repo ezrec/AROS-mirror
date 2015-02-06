@@ -991,7 +991,7 @@ static SAVEDS(ULONG) AsyncArexxToolStart(struct ARexxToolStartArg *arg, struct S
 		if (NULL == RxMsg)
 			break;
 
-		RxMsg->rm_Args[0] = arg->asa_ProgName;
+		RxMsg->rm_Args[0] = (IPTR)arg->asa_ProgName;
 
 		RxMsg->rm_Action = RXCOMM;
 

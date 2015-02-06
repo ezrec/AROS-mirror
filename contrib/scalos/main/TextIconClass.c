@@ -573,10 +573,12 @@ static ULONG TextIcon_Layout(Class *cl, Object *o, Msg msg)
 
 static ULONG TextIcon_Draw(Class *cl, Object *o, Msg msg)
 {
+#if (0)
 	static const struct ARGB NumFile = { (UBYTE) ~0, 70, 70, 70 };
 	static const struct ARGB DenomFile =  { (UBYTE) ~0, 80, 80, 80 };
 	static const struct ARGB NumDrawer = { (UBYTE) ~0, 65, 70, 65 };
 	static const struct ARGB DenomDrawer =  { (UBYTE) ~0, 80, 80, 80 };
+#endif
 	struct ExtGadget *gg = (struct ExtGadget *) o;
 	struct iopDraw *iop = (struct iopDraw *) msg;
 	struct TextIClassInst *inst = INST_DATA(cl, o);
@@ -586,7 +588,9 @@ static ULONG TextIcon_Draw(Class *cl, Object *o, Msg msg)
 	UBYTE FgColorUnselected, FgColor;
 	UBYTE BgColor;
 	WORD FontBaseline;
+#if (0)
 	struct ARGB Num, Denom;
+#endif
 	ULONG BmRight;
 	struct Rectangle HighlightRect;
 
@@ -651,8 +655,10 @@ static ULONG TextIcon_Draw(Class *cl, Object *o, Msg msg)
 
 	d1(KPrintF("%s/%s/%ld: HighlightRect.MinX=%ld  HighlightRect.MaxX=%ld\n", __FILE__, __FUNC__, __LINE__, HighlightRect.MinX, HighlightRect.MaxX));
 
+#if (0)
 	Num = (inst->txicl_rild.rild_Type < 0) ? NumFile : NumDrawer;
 	Denom = (inst->txicl_rild.rild_Type < 0) ? DenomFile : DenomDrawer;
+#endif
 
 	BmRight = GetBitMapAttr(iop->iopd_RastPort->BitMap, BMA_WIDTH);
 

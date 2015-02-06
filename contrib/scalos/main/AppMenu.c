@@ -190,9 +190,9 @@ void AppMenu_DisposeAppMenuInfo(struct AppMenuInfo *ami)
 		ami->ami_Magic = 0;
 
 		if (ami->ami_NewMenu.nm_CommKey)
-			FreeCopyString(ami->ami_NewMenu.nm_CommKey);
+			FreeCopyString((STRPTR)ami->ami_NewMenu.nm_CommKey);
 		if (ami->ami_NewMenu.nm_Label && NM_BARLABEL != ami->ami_NewMenu.nm_Label)
-			FreeCopyString(ami->ami_NewMenu.nm_Label);
+			FreeCopyString((STRPTR)ami->ami_NewMenu.nm_Label);
 
 		ScalosFree(ami);
 		}

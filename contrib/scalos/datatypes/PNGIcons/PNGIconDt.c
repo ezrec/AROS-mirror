@@ -392,7 +392,7 @@ static ULONG DtDispose(Class *cl, Object *o, Msg msg)
 		inst->id_ToolTypes = NULL;
 		}
 
-	while (ttnode = (struct TTNode *) RemTail(&inst->id_ToolTypesList))
+	while ((ttnode = (struct TTNode *) RemTail(&inst->id_ToolTypesList)))
 		{
 		d1(kprintf("%s/%s/%ld:  ttnode=%08lx\n", __FILE__, __FUNC__, __LINE__, ttnode));
 		MyFreeVecPooled(ttnode);

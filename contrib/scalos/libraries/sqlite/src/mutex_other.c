@@ -262,15 +262,16 @@ static int otherMutexTry(sqlite3_mutex *p)
 */
 static void otherMutexLeave(sqlite3_mutex *p)
 {
-	struct Task *tid;
-
-	d1(KPrintF(__FILE__ "/%s/%ld: p=%08lx\n", __FUNC__, __LINE__, p));
-	assert( p );
-	assert( p->nRef > 0 );
-	tid = FindTask(NULL);
-	assert( p->owner==tid );
-	p->nRef--;
-	assert( p->nRef==0 || p->id==SQLITE_MUTEX_RECURSIVE );
+	d1(
+            struct Task *tid;
+            KPrintF(__FILE__ "/%s/%ld: p=%08lx\n", __FUNC__, __LINE__, p);
+            assert( p );
+            assert( p->nRef > 0 );
+            tid = FindTask(NULL);
+            assert( p->owner==tid );
+            p->nRef--;
+            assert( p->nRef==0 || p->id==SQLITE_MUTEX_RECURSIVE );
+        )
 	ReleaseSemaphore(&p->sema);
 	d1(KPrintF(__FILE__ "/%s/%ld: p=%08lx\n", __FUNC__, __LINE__, p));
 }

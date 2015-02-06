@@ -2838,7 +2838,9 @@ static int flattenSubquery(
 
   /* Authorize the subquery */
   pParse->zAuthContext = pSubitem->zName;
+#if !defined(__AROS__)
   sqlite3AuthCheck(pParse, SQLITE_SELECT, 0, 0, 0);
+#endif
   pParse->zAuthContext = zSavedAuthContext;
 
   /* If the sub-query is a compound SELECT statement, then (by restrictions

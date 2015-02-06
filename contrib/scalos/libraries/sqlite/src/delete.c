@@ -226,7 +226,11 @@ void sqlite3DeleteFrom(
 ){
   Vdbe *v;               /* The virtual database engine */
   Table *pTab;           /* The table from which records will be deleted */
+#if defined(__AROS__)
+  const char *zDb __attribute__ ((unused));
+#else
   const char *zDb;       /* Name of database holding pTab */
+#endif
   int end, addr = 0;     /* A couple addresses of generated code */
   int i;                 /* Loop counter */
   WhereInfo *pWInfo;     /* Information about the WHERE clause */

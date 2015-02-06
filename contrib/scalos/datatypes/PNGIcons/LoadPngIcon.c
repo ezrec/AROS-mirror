@@ -403,7 +403,7 @@ void HandleIconHunk(struct InstanceData *inst, const UBYTE *Data, size_t Length)
 				inst->id_ToolTypes[ttCount] = NULL;
 				tts = (char *) (&inst->id_ToolTypes[ttCount + 1]);
 
-				while (ttnode = (struct TTNode *) RemTail(&inst->id_ToolTypesList))
+				while ((ttnode = (struct TTNode *) RemTail(&inst->id_ToolTypesList)))
 					{
 					inst->id_ToolTypes[--ttCount] = tts;
 

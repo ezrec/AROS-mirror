@@ -158,7 +158,11 @@ static int lookupName(
   struct SrcList_item *pItem;       /* Use for looping over pSrcList items */
   struct SrcList_item *pMatch = 0;  /* The matching pSrcList item */
   NameContext *pTopNC = pNC;        /* First namecontext in the list */
+#if defined(__AROS__)
+  Schema *pSchema __attribute__ ((unused)) = 0;
+#else
   Schema *pSchema = 0;              /* Schema of the expression */
+#endif
   int isTrigger = 0;
 
   assert( pNC );     /* the name context cannot be NULL. */
@@ -521,7 +525,9 @@ static int resolveExprStep(Walker *pWalker, Expr *pExpr){
       int no_such_func = 0;       /* True if no such function exists */
       int wrong_num_args = 0;     /* True if wrong number of arguments */
       int is_agg = 0;             /* True if is an aggregate function */
+#ifndef SQLITE_OMIT_AUTHORIZATION
       int auth;                   /* Authorization to use the function */
+#endif
       int nId;                    /* Number of characters in function name */
       const char *zId;            /* The function name. */
       FuncDef *pDef;              /* Information about the function */

@@ -4695,7 +4695,7 @@ static SAVEDS(ULONG) MoveToStart(APTR aptr, struct SM_RunProcess *msg)
 
 					snprintf(ProgramIcon, sizeof(ProgramIcon), "%s.info", SrcName);
 
-					if (IconLock = Lock(ProgramIcon, SHARED_LOCK))
+					if ((IconLock = Lock(ProgramIcon, SHARED_LOCK)))
 						{
 						UnLock(IconLock);
 

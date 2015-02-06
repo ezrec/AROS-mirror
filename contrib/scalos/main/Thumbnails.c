@@ -745,7 +745,7 @@ void FlushThumbnailEntries(struct internalScaWindowTask *iwt)
 	struct ThumbnailIcon *tni;
 
 	ScalosObtainSemaphore(&iwt->iwt_ThumbnailIconSemaphore);
-	while (tni = (struct ThumbnailIcon *) RemHead(&iwt->iwt_ThumbnailIconList))
+	while ((tni = (struct ThumbnailIcon *) RemHead(&iwt->iwt_ThumbnailIconList)))
 		{
 		FreeThumbnailEntry(tni);
 		}

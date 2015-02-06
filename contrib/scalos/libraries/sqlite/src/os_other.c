@@ -310,7 +310,7 @@ static int otherDelete(sqlite3_vfs *pVfs, const char *zFilename, int syncDir)
 */
 static int otherAccess(sqlite3_vfs *pVfs, const char *zFilename, int flags, int *pResOut)
 {
-	BPTR fLock = NULL;
+	BPTR fLock = BNULL;
 	int exists = 0;
 
 	d1(KPrintF(__FILE__ "/%s/%ld: zFilename=<%s>  flags=%08lx\n", __FUNC__, __LINE__, zFilename, flags));
@@ -539,7 +539,7 @@ static int otherClose(sqlite3_file *pId)
 
 		d1(KPrintF(__FILE__ "/%s/%ld: \n", __FUNC__, __LINE__));
 
-		if (NULL == pFile->h)
+		if (BNULL == pFile->h)
 			break;
 
 		do	{
@@ -698,7 +698,7 @@ static int otherSeek(sqlite3_file *id, sqlite3_int64 offset)
 //	LONG upperBits = offset>>32;
 	LONG lowerBits = offset & 0xffffffff;
 	LONG rc;
-	LONG Pos, OldPos;
+	LONG Pos, OldPos __attribute__ ((unused));
 
 	d1(KPrintF(__FILE__ "/%s/%ld: offset=%ld\n", __FUNC__, __LINE__, lowerBits));
 #ifdef SQLITE_TEST
@@ -1336,7 +1336,7 @@ static ULONG hash_nocase(CONST_STRPTR s)
 
 	assert(s);
 
-	while (c = *s++)
+	while ((c = *s++))
 		{
 		h = hashadd(h, toupper(c));
 		}

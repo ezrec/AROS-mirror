@@ -928,7 +928,7 @@ static ULONG DtNewImage(Class *cl, Object *o, struct iopNewImage *ioni)
 
 static ULONG DtClone(Class *cl, Object *o, struct iopCloneIconObject *iocio)
 {
-	struct InstanceData *inst = INST_DATA(cl, o);
+	d1(struct InstanceData *inst = INST_DATA(cl, o);)
 
 	d1(KPrintF("%s/%ld:  START o=%08lx  inst=%08lx\n", __FUNC__, __LINE__, o, inst));
 

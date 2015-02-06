@@ -91,7 +91,7 @@ int main(void)
 	iconify = argarray[3] ? TRUE : FALSE;
 
 	// If first argument isn't a drawer or a volume, opendrawer will use its parent path. 
-	if (lock_Path = Lock((STRPTR)argarray[0], SHARED_LOCK))
+	if ((lock_Path = Lock((STRPTR)argarray[0], SHARED_LOCK)))
 		{
 		Examine(lock_Path, info);
 		if (info->fib_DirEntryType < 0)

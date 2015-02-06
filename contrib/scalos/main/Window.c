@@ -849,7 +849,7 @@ static SAVEDS(void) AsyncARexxMenuCmdStart(APTR xarg, struct SM_RunProcess *msg)
 			break;
 			}
 
-		RxMsg->rm_Args[0] = BuffPtr;
+		RxMsg->rm_Args[0] = (IPTR)BuffPtr;
 
 		// copy command name (up to first chStop)
 		while (*pName && chStop != *pName && BuffLen > 1)
@@ -869,7 +869,7 @@ static SAVEDS(void) AsyncARexxMenuCmdStart(APTR xarg, struct SM_RunProcess *msg)
 		if (*pName)
 			{
 			// rm_Arg[1] gets remainder of command line
-			RxMsg->rm_Args[1] = (STRPTR) pName;
+			RxMsg->rm_Args[1] = (IPTR) pName;
 			ArgCount++;
 			d1(kprintf("%s/%s/%ld: rm_Args[1] = <%s>\n", __FILE__, __FUNC__, __LINE__, RxMsg->rm_Args[1]));
 			}
@@ -1090,10 +1090,10 @@ static STRPTR InsertARexxArgs(struct internalScaWindowTask *iwt, STRPTR Buffer,
 
 			DoMethod(iwt->iwt_WindowTask.mt_MainObject, SCCM_IconWin_MakeWBArg, in, args);
 
-			RxMsg->rm_Args[ArgIndex] = Buffer;
+			RxMsg->rm_Args[ArgIndex] = (IPTR)Buffer;
 			Buffer = InsertName(Buffer, BuffLen, &args[0]);
 
-			RxMsg->rm_Args[ArgIndex] = stpblk(RxMsg->rm_Args[ArgIndex]);	// skip blanks at argument start
+			RxMsg->rm_Args[ArgIndex] = (IPTR)stpblk((char *)RxMsg->rm_Args[ArgIndex]);	// skip blanks at argument start
 
 			(*ArgCount)++;
 
@@ -1112,11 +1112,11 @@ static STRPTR InsertARexxArgs(struct internalScaWindowTask *iwt, STRPTR Buffer,
 
 			for (n=0; *BuffLen > 2 && n < iArgCount && n <= MAXRMARG; n++, ArgIndex++, (*ArgCount)++)
 				{
-				RxMsg->rm_Args[ArgIndex] = Buffer;
+				RxMsg->rm_Args[ArgIndex] = (IPTR)Buffer;
 
 				Buffer = InsertName(Buffer, BuffLen, &args[n]);
 
-				RxMsg->rm_Args[ArgIndex] = stpblk(RxMsg->rm_Args[ArgIndex]);	// skip blanks at argument start
+				RxMsg->rm_Args[ArgIndex] = (IPTR)stpblk((char *)RxMsg->rm_Args[ArgIndex]);	// skip blanks at argument start
 
 				if (*BuffLen > 2)
 					{

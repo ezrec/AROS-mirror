@@ -274,14 +274,14 @@ static struct IconNode *IconNode_New( CONST_STRPTR base_name, struct IconObjectB
 	d1(kprintf(__FILE__ "/%s/%ld:  name=<%s>\n",
 		__FUNC__, __LINE__, base_name));
 
-	if( node = (struct IconNode *) MyAllocVecPooled(sizeof(struct IconNode)))
+	if ((node = (struct IconNode *) MyAllocVecPooled(sizeof(struct IconNode))))
 		{
 		STRPTR name;
 
 		memset(node, 0, sizeof(struct IconNode));
 
 		/* make some space for the datatype library's pathname */
-		if( node->Node.ln_Name = name = MyAllocVecPooled(DT_NAME_LEN + strlen( base_name )) )
+		if ((node->Node.ln_Name = name = MyAllocVecPooled(DT_NAME_LEN + strlen( base_name ))))
 			{
 			/* make datatype's pathname from descriptor's basename */
 			/* name = 'datatypes/' + base_name + '.datatype */
@@ -419,14 +419,14 @@ static BOOL ReadClassList( struct IconObjectBase *IconObjectBase )
 
 	d1(kprintf(__FILE__ "/%s/%ld:  START\n", __FUNC__, __LINE__));
 
-	if( lock = Lock( DATATYPES_PATH "datatypes", SHARED_LOCK ) )
+	if ((lock = Lock( DATATYPES_PATH "datatypes", SHARED_LOCK )))
 		{
 		BPTR olddir = CurrentDir( lock );
 		struct FileInfoBlock *fib;
 
 		d1(kprintf(__FILE__ "/%s/%ld:  Lock(%s) OK\n", __FUNC__, __LINE__, DATATYPES_PATH));
 
-		if( fib = (struct FileInfoBlock *) AllocDosObject( DOS_FIB, TAG_DONE ) )
+		if ((fib = (struct FileInfoBlock *) AllocDosObject( DOS_FIB, TAG_DONE )))
 			{
 			if( Examine( lock, fib ) )
 				{
@@ -468,7 +468,7 @@ static VOID FreeClassList( struct IconObjectBase *IconObjectBase )
 
 	d1(kprintf(__FILE__ "/%s/%ld:\n", __FUNC__, __LINE__));
 
-	while (n1 = (struct IconNode *) RemHead(&IconObjectBase->iob_ClassList))
+	while ((n1 = (struct IconNode *) RemHead(&IconObjectBase->iob_ClassList)))
 		{
 		if ( n1->in_LibBase )
 			{

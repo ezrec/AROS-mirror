@@ -247,9 +247,11 @@ static BOOL ScaleARGB(Class *cl, Object *o, struct IconObjectARGB *img,
 static void EraseIconText(Class *cl, Object *o, struct RastPort *rp, WORD x, WORD y);
 static void DrawIconTextRect(Class *cl, Object *o, struct RastPort *rp, WORD x, WORD y);
 
+#if (0)
 static void DumpMaskPlane(const struct IconObjectMask *Mask);
 static void DumpMask(const struct IconObjectMask *Mask);
 static void DumpMaskBM(const struct IconObjectMask *Mask);
+#endif
 
 //----------------------------------------------------------------------------
 
@@ -861,7 +863,7 @@ static ULONG DtRender(Class *cl, Object *o, struct gpRender *gpr)
 
 static ULONG DtErase(Class *cl, Object *o, struct iopErase *iope)
 {
-	struct InstanceData *inst = INST_DATA(cl, o);
+	d1(struct InstanceData *inst = INST_DATA(cl, o);)
 	struct ExtGadget *gg = (struct ExtGadget *) o;
 
 	d1(KPrintF("%s/%s/%ld:  o=%08lx  inst=%08lx\n", __FILE__, __FUNC__, __LINE__, o, inst));
@@ -3866,6 +3868,7 @@ static void DrawIconTextRect(Class *cl, Object *o, struct RastPort *rp, WORD x, 
 		}
 }
 
+#if (0)
 //-----------------------------------------------------------------------------
 static void DumpMaskPlane(const struct IconObjectMask *Mask)
 {
@@ -3951,6 +3954,7 @@ static void DumpMaskBM(const struct IconObjectMask *Mask)
 		}
 }
 //-----------------------------------------------------------------------------
+#endif
 
 #if !defined(__SASC)
 // Replacement for SAS/C library functions

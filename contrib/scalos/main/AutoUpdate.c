@@ -858,7 +858,7 @@ ULONG TextWindowCheckUpdate(struct internalScaWindowTask *iwt)
 				// Check if icon found since last update.
 				stccpy(fileName, cud->cud_IconName, MAX_FileName);	// +jmc+
 				SafeStrCat(fileName, ".info", MAX_FileName);		// +jmc+
-				if (IconLock = Lock(fileName, SHARED_LOCK))		// +jmc+
+				if ((IconLock = Lock(fileName, SHARED_LOCK)))	// +jmc+
 					{
 					UnLock(IconLock);				// +jmc+
 					d1(kprintf("%s/%s/%ld: Test icon=<%s>\n", __FILE__, __FUNC__, __LINE__, TestIcon));

@@ -442,7 +442,11 @@ void sqlite3Insert(
   sqlite3 *db;          /* The main database structure */
   Table *pTab;          /* The table to insert into.  aka TABLE */
   char *zTab;           /* Name of the table into which we are inserting */
-  const char *zDb;      /* Name of the database holding this table */
+#if defined(__AROS__)
+  const char *zDb __attribute__ ((unused));
+#else
+   const char *zDb;      /* Name of the database holding this table */
+#endif
   int i, j, idx;        /* Loop counters */
   Vdbe *v;              /* Generate code into this virtual machine */
   Index *pIdx;          /* For looping over indices of the table */

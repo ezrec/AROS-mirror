@@ -315,7 +315,11 @@ static const struct ScalosPrefs DefaultPrefs =
 	IEQUALIFIER_CONTROL,			// pref_SingleWindowLassoQualifier
 	FALSE,					// pref_PopupApplySelectedAlways
 
+#if defined(__AROS__)
+	{ { 0 }, { 200000 } },                          // pref_ClickDelay
+#else
 	{ 0, 200000 },                          // pref_ClickDelay
+#endif
 
 	IDTV_IconType_NewIcon | IDTV_IconType_ColorIcon,	// pref_SupportedIconTypes
 

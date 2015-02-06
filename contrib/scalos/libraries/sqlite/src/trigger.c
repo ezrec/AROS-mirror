@@ -96,7 +96,9 @@ void sqlite3BeginTrigger(
   int iDb;                /* The database to store the trigger in */
   Token *pName;           /* The unqualified db name */
   DbFixer sFix;           /* State vector for the DB fixer */
+#ifndef SQLITE_OMIT_AUTHORIZATION
   int iTabDb;             /* Index of the database holding pTab */
+#endif
 
   assert( pName1!=0 );   /* pName1->z might be NULL, but not pName1 itself */
   assert( pName2!=0 );
@@ -211,9 +213,8 @@ void sqlite3BeginTrigger(
         " trigger on table: %S", pTableName, 0);
     goto trigger_cleanup;
   }
-  iTabDb = sqlite3SchemaToIndex(db, pTab->pSchema);
-
 #ifndef SQLITE_OMIT_AUTHORIZATION
+  iTabDb = sqlite3SchemaToIndex(db, pTab->pSchema);
   {
     int code = SQLITE_CREATE_TRIGGER;
     const char *zDb = db->aDb[iTabDb].zName;
@@ -540,17 +541,19 @@ static Table *tableOfTrigger(Trigger *pTrigger){
 ** Drop a trigger given a pointer to that trigger. 
 */
 void sqlite3DropTriggerPtr(Parse *pParse, Trigger *pTrigger){
+#ifndef SQLITE_OMIT_AUTHORIZATION
   Table   *pTable;
-  Vdbe *v;
   sqlite3 *db = pParse->db;
+#endif
+  Vdbe *v;
   int iDb;
 
   iDb = sqlite3SchemaToIndex(pParse->db, pTrigger->pSchema);
   assert( iDb>=0 && iDb<db->nDb );
+#ifndef SQLITE_OMIT_AUTHORIZATION
   pTable = tableOfTrigger(pTrigger);
   assert( pTable );
   assert( pTable->pSchema==pTrigger->pSchema || iDb==1 );
-#ifndef SQLITE_OMIT_AUTHORIZATION
   {
     int code = SQLITE_DROP_TRIGGER;
     const char *zDb = db->aDb[iDb].zName;
@@ -561,11 +564,11 @@ void sqlite3DropTriggerPtr(Parse *pParse, Trigger *pTrigger){
       return;
     }
   }
-#endif
 
   /* Generate code to destroy the database record of the trigger.
   */
   assert( pTable!=0 );
+#endif
   if( (v = sqlite3GetVdbe(pParse))!=0 ){
     int base;
     static const VdbeOpList dropTrigger[] = {
