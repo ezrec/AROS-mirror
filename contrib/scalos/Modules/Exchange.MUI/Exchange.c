@@ -819,10 +819,10 @@ static SAVEDS(void) INTERRUPT RescanHookFunc(struct Hook *hook, Object *obj, Msg
 		set(NListCxList, MUIA_NList_Quiet, MUIV_NList_Quiet_Full);
 		DoMethod(NListCxList, MUIM_NList_Clear);
 
-                d1(
-                    res = CxCopyBrokerList(&BrokerCopyList);
-                    KPrintF("%s/%s/%ld: CxCopyBrokerList returned %ld\n", __FILE__, __FUNC__, __LINE__, res);
-                )
+                d1(res =)
+                    CxCopyBrokerList(&BrokerCopyList);
+
+                d1(KPrintF("%s/%s/%ld: CxCopyBrokerList returned %ld\n", __FILE__, __FUNC__, __LINE__, res);)
 
 		for (bc = (struct BrokerCopy *) BrokerCopyList.lh_Head;
 			bc != (struct BrokerCopy *) &BrokerCopyList.lh_Tail;
