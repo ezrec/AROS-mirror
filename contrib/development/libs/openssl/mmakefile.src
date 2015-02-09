@@ -1,4 +1,4 @@
-# Copyright © 2008-2013, The AROS Development Team. All rights reserved.
+# Copyright © 2008-2015, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
@@ -36,7 +36,7 @@ contrib-openssl-setup : $(OPENSSL_BUILD_DIR)/.links-created
 $(OPENSSL_BUILD_DIR)/.build-configured : $(OPENSSL_BUILD_DIR)/.links-created
 	$(RM) $@
 	cd $(OPENSSL_BUILD_DIR); \
-	env -i PATH=$(PATH) AROS_CC="$(TARGET_CC)" AROS_CFLAGS="$(CONFIG_CFLAGS) $(UNUSED_BUT_SET_VARIABLE_CFLAGS) -Wno-unused-variable $(FORMAT_SECURITY_CFLAGS)" AROS_RANLIB="$(RANLIB)" ./Configure "aros-$(AROS_TARGET_CPU)-cross" no-threads no-sse2 --prefix=/Development --openssldir=/Development/etc/ssl
+	env -i PATH=$(PATH) AROS_CC="$(TARGET_CC)" AROS_CFLAGS="$(CONFIG_CFLAGS) $(UNUSED_BUT_SET_VARIABLE_CFLAGS) -Wno-unused-variable $(FORMAT_SECURITY_CFLAGS)" AROS_RANLIB="$(RANLIB)" AR="$(AR_PLAIN)" ./Configure "aros-$(AROS_TARGET_CPU)-cross" no-threads no-sse2 --prefix=/Development --openssldir=/Development/etc/ssl
 	$(TOUCH) $@;
 
 #MM
