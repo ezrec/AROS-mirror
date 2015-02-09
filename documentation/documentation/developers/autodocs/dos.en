@@ -973,7 +973,7 @@ Synopsis
 ::
 
  struct Process * CreateNewProc(
-          const struct TagItem * tags );
+          struct TagItem * tags );
  
  struct Process * CreateNewProcTags(
           TAG tag, ... );

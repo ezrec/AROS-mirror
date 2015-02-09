@@ -149,7 +149,7 @@ Synopsis
  ULONG AddDisplayDriverA(
           APTR gfxclass,
           struct TagItem * attrs,
-          const struct TagItem * tags );
+          struct TagItem * tags );
  
  ULONG AddDisplayDriver(
           APTR gfxclass,

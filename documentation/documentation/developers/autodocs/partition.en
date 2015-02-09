@@ -340,7 +340,7 @@ Synopsis
 
  void GetFileSystemAttrsA(
           struct Node * handle,
-          const struct TagItem * taglist );
+          struct TagItem * taglist );
  
  void GetFileSystemAttrs(
           struct Node * handle,
@@ -404,7 +404,7 @@ Synopsis
 
  LONG GetPartitionAttrs(
           struct PartitionHandle * ph,
-          const struct TagItem * taglist );
+          struct TagItem * taglist );
  
  LONG GetPartitionAttrsTags(
           struct PartitionHandle * ph,
@@ -480,7 +480,7 @@ Synopsis
 
  LONG GetPartitionTableAttrs(
           struct PartitionHandle * root,
-          const struct TagItem * taglist );
+          struct TagItem * taglist );
  
  LONG GetPartitionTableAttrsTags(
           struct PartitionHandle * root,

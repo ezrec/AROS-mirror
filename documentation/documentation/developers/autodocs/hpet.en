@@ -126,7 +126,7 @@ Synopsis
 
  BOOL GetUnitAttrsA(
           ULONG unit,
-          const struct TagItem * tags );
+          struct TagItem * tags );
  
  BOOL GetUnitAttrs(
           ULONG unit,

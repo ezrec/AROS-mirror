@@ -521,7 +521,7 @@ Synopsis
 
  struct DiskObject * GetIconTagList(
           CONST_STRPTR name,
-          const struct TagItem * tags );
+          struct TagItem * tags );
  
  struct DiskObject * GetIconTags(
           CONST_STRPTR name,

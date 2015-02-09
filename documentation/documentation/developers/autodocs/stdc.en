@@ -47,12 +47,12 @@ stdc
 `strncmp()`_                            `strncpy()`_                            `strndup()`_                            `strpbrk()`_                            
 `strrchr()`_                            `strrev()`_                             `strsep()`_                             `strspn()`_                             
 `strstr()`_                             `strtod()`_                             `strtoimax()`_                          `strtok()`_                             
-`strtok_r()`_                           `strtol()`_                             `strtoll()`_                            `strtoul()`_                            
-`strtoull()`_                           `strtoumax()`_                          `strupr()`_                             `strxfrm()`_                            
-`system()`_                             `time()`_                               `tmpfile()`_                            `tmpnam()`_                             
-`ungetc()`_                             `vfprintf()`_                           `vfscanf()`_                            `vprintf()`_                            
-`vscanf()`_                             `vsnprintf()`_                          `vsprintf()`_                           `vsscanf()`_                            
-`wcstombs()`_                           `wctomb()`_                             
+`strtok_r()`_                           `strtol()`_                             `strtold()`_                            `strtoll()`_                            
+`strtoul()`_                            `strtoull()`_                           `strtoumax()`_                          `strupr()`_                             
+`strxfrm()`_                            `system()`_                             `time()`_                               `tmpfile()`_                            
+`tmpnam()`_                             `ungetc()`_                             `vfprintf()`_                           `vfscanf()`_                            
+`vprintf()`_                            `vscanf()`_                             `vsnprintf()`_                          `vsprintf()`_                           
+`vsscanf()`_                            `wcstombs()`_                           `wctomb()`_                             
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -7802,6 +7802,72 @@ See also
 ~~~~~~~~
 
 `atof()`_ `atoi()`_ `atol()`_ `strtod()`_ `strtoul()`_ 
+
+----------
+
+strtold()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  long double strtold(
+     const char * str,
+     char      ** endptr)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert a string of digits into a long double.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string which should be converted. Leading
+             whitespace are ignored. The number may be prefixed
+             by a '+' or '-'. An 'e' or 'E' introduces the exponent.
+             Komma is only allowed before exponent.
+     endptr - If this is non-NULL, then the address of the first
+             character after the number in the string is stored
+             here.
+
+
+Result
+~~~~~~
+::
+
+     The value of the string. The first character after the number
+     is returned in *endptr, if endptr is non-NULL. If no digits can
+     be converted, *endptr contains str (if non-NULL) and 0 is
+     returned.
+
+
+Notes
+~~~~~
+::
+
+     We make the compiler do an internal conversion from a double
+     to a long double. Because of this we lose a some precision, but for 
+     now it works.
+
+
+Bugs
+~~~~
+::
+
+     NAN is not handled at the moment
+
+
+
+See also
+~~~~~~~~
+
+`strtod()`_ 
 
 ----------
 
