@@ -2,8 +2,8 @@
 Contribute
 ==========
 
-:Authors:   Adam Chodorowski
-:Copyright: Copyright © 1995-2007, The AROS Development Team
+:Authors:   Adam Chodorowski, Neil Cafferkey
+:Copyright: Copyright © 1995-2015, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -29,45 +29,39 @@ Programming
 
 + Implementing or improving hardware device drivers:
 
-  - AROS/m68k-pp:
-
-    + Graphics
-    + Input (touchscreen, buttons)
-    + Sound
-
   - AROS/i386-pc:
 
-    + Specific graphic card drivers (we only have general, not very well
-      accelerated ones). A short wish list:
+    + Graphic card drivers:
 
-      - nVidia TNT/TNT2/GeForce (started, but incomplete)
-      - S3 Virge
-      - Matrox Millenium
+      - nVidia chipsets
+      - Intel HD Graphics
+      - AMD Radeon
 
-    + missing USB classes
-    + SCSI
-    + Specific IDE chip sets
-    + Sound
+    + Missing USB classes
+    + Specific SATA and PATA chipsets.
+    + Improved HD Audio support.
+    + Ethernet and WiFi drivers.
+    + Bluetooth
+    + CardBus and PCMCIA.
     + ...anything else you can think of.
+
+  - AROS/m68k-amiga:
+
+    + Native graphics optimisations
 
   - Generic printer support.
 
 + Porting to other architectures. Some examples of hardware for which no
   maintained AROS port exists or has been started:
 
-  - Amiga, both m68k and PowerPC.
-  - Atari.
-  - HP 300 series.
-  - SUN Sparc.
-  - iPaq.
+  - AmigaOne
+  - Raspberry Pi
   - Macintosh, both m68k and PowerPC.
 
 + Implementing missing Preferences editors:
 
   - Overscan
   - Palette
-  - Pointer
-  - Printer
 
 + Improving the C link library
 
@@ -95,16 +89,14 @@ Programming
 
 + Porting third-party programs:
 
-  - Text editors, like ViM and Emacs.
-  - The development tool chain, which includes GCC, make, binutils and other
-    GNU development tools.
-  - AmigaOS Open Source software, like SimpleMail, YAM, Jabbwerwocky
+  - Multi-platform applications such as LibreOffice, GIMP, AbiWord.
+  - AmigaOS Open Source software.
 
 
 Documentation
 -------------
 
-+ Writing user documentation. This consists of writing an general User's
++ Writing user documentation. This consists of writing a general User's
   Guide for novices and experts, and also reference documentation for all
   standard AROS programs.
 
@@ -165,26 +157,19 @@ The Subversion repository
 
 The AROS repository is running on a password protected Subversion server,
 which means that you need to request access to it to be able to collaborate in
-the development. The passwords are in encrypted form, which you can generate
-with our `online password encryption tool`__.
+the development.
 
-Please mail the encrypted password together with your preferred user name and
-your real name to `Aaron Digulla`__ and wait for a reply. To facilitate a
-quick response, please set the subject to "Access to the AROS SVN server" and
-the body to "Please add <user name> <password>", e.g.::
-
-    Please add digulla xx1LtbDbOY4/E
-
-Use exactly this phrase and don't forget to include your real name! It might
-take a couple of days, as Aaron is quite busy, so please be patient. If you
-don't get a reply within a week, you're welcome to send a reminder.
+Please email your request to the `Subversion administrator`__. Your 
+mail should include your real name and preferred user name. An account 
+will then be created with a temporary password. Once you receive 
+notification of account creation, you can change your password through 
+the `trac interface`__.
 
 For information on how to use the AROS SVN server, please read "`Working with
 SVN`__". Even if you already know how to use SVN it is useful to look through
 that page, as it contains information and tips specific to the AROS repository
 (such as how to log into it).
 
-__ http://aros.sourceforge.net/tools/password.html
-__ mailto:digulla@aros.org?subject=[Access%20to%20the%20AROS%20SVN%20server]
+__ mailto:caffer@cs.ucc.ie?subject=[Access%20to%20the%20AROS%20SVN%20server]
+__ https://trac.aros.org/
 __ svn
- 
