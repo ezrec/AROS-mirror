@@ -31,12 +31,6 @@ The goal of the AROS project is it to create an OS which:
 
 5. Improves upon the functionality of AmigaOS.
 
-To reach this goal, we use a number of techniques. First of all, we make
-heavy use of the Internet. You can participate in our project even if you
-can write only one single OS function. The most current version of the
-source is accessible 24 hours per day and patches can be merged into it at
-any time. A small database with open tasks makes sure work is not duplicated.
-
 
 History
 =======

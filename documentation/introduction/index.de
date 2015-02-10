@@ -3,7 +3,7 @@ Kurze Einführung in AROS
 ========================
 
 :Authors:   Aaron Digulla, Stefan Rieken, Matt Parsons, Adam Chodorowski 
-:Copyright: Copyright © 1995-2009, The AROS Development Team
+:Copyright: Copyright © 1995-2015, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Fertig
@@ -29,13 +29,6 @@ Das Ziel des AROS-Projekts ist es, ein Betriebssystem zu erzeugen, welches:
    Softwareentwicklung zu vereinfachen.
 
 5. die Funktionalität von AmigaOS erweitert.
-
-Um dieses Ziel zu erreichen, verwenden wir verschiedene Methoden. Hauptsächlich
-machen wir starken Gebrauch vom Internet. Du kannst Dich an unserem Projekt
-beteiligen, selbst wenn Du nur eine einzelne Betriebssystemfunktion schreiben
-kannst. Die aktuelle Version des Quellkodes ist 24 Stunden je Tag verfügbar
-und Verbesserungen können jederzeit eingefügt werden. Eine kleine Datenbank
-mit offenen Aufgaben verhindert, dass Arbeit doppelt gemacht wird.
 
 
 Geschichte
