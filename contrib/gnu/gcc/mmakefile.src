@@ -35,7 +35,6 @@ GCC_EXTRA_OPTS += --enable-version-specific-runtime-libs
 GCC_EXTRA_OPTS += --disable-sjlj-exceptions
 GCC_EXTRA_OPTS += --disable-tls
 GCC_EXTRA_OPTS += --disable-plugins
-GCC_EXTRA_OPTS += --disable-objc-gc
 GCC_EXTRA_OPTS += --with-dwarf2
 GCC_EXTRA_OPTS += --enable-frame-pointer
 GCC_EXTRA_OPTS += --disable-libssp
