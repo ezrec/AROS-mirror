@@ -1,4 +1,4 @@
-# Copyright © 2004, 2008, 2010-2012, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2015, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
@@ -7,8 +7,11 @@
 #MM- contrib-gnu-binutils : crosstools development-binutils
 #MM- development-binutils : workbench-libs-z
 
-EXTRAOPTS := --with-sysroot=/Development --with-build-sysroot=$(AROS_DEVELOPMENT)
+BINUTILS_VERSION     = $(TARGET_BINUTILS_VER)
 
-%fetch_and_build_gnu_development package=binutils version=2.23.2 patch=yes \
-    extraoptions=$(EXTRAOPTS)
+BINUTILS_EXTRAOPTS := --with-sysroot=/Development
+BINUTILS_EXTRAOPTS += --with-build-sysroot=$(AROS_DEVELOPMENT)
+
+%fetch_and_build_gnu_development package=binutils version=$(BINUTILS_VERSION) patch=yes \
+    extraoptions=$(BINUTILS_EXTRAOPTS)
 
