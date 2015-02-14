@@ -5,9 +5,10 @@ Shell Commands
 ==============
 
 + `Introduction <introduction>`_
++ `Scripts <scripts>`_
 
-+ Commands
-
+Commands
+--------
 ================================================= ================================================= ================================================= ================================================= ================================================= 
 `addbuffers <addbuffers>`_                        `adddatatypes <adddatatypes>`_                    `alias <alias>`_                                  `arosmondrvs <arosmondrvs>`_                      `ask <ask>`_                                      
 `assign <assign>`_                                `automount <automount>`_                          `avail <avail>`_                                  `beep <beep>`_                                    `binddrivers <binddrivers>`_                      
@@ -32,5 +33,3 @@ Shell Commands
 `uuidgen <uuidgen>`_                              `version <version>`_                              `wait <wait>`_                                    `waitforport <waitforport>`_                      `waitx <waitx>`_                                  
 `which <which>`_                                  `why <why>`_                                      
 ================================================= ================================================= ================================================= ================================================= ================================================= 
-
-+ `Scripts <scripts>`_

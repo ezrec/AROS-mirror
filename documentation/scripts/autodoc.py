@@ -487,13 +487,14 @@ class shelldoclist:
         filehandle.write("==============\n")
         filehandle.write("Shell Commands\n")
         filehandle.write("==============\n\n")
-        filehandle.write("+ `Introduction <introduction>`_\n\n")
+        filehandle.write("+ `Introduction <introduction>`_\n")
+        filehandle.write("+ `Scripts <scripts>`_\n\n")
 
-        filehandle.write("+ Commands\n\n")
+        filehandle.write("Commands\n")
+        filehandle.write("--------\n")
 
         write_index(filehandle, targetdir)
 
-        filehandle.write("\n+ `Scripts <scripts>`_\n")
     
     def write(self, targetdir, titles):
         """Write autodocs to directory.
