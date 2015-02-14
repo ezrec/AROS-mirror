@@ -491,7 +491,7 @@ class shelldoclist:
 
         filehandle.write("+ Commands\n\n")
 
-        write_index(filehandle, targetdir, 4)
+        write_index(filehandle, targetdir)
 
         filehandle.write("\n+ `Scripts <scripts>`_\n")
     
@@ -635,7 +635,7 @@ class appsdoclist(shelldoclist):
         filehandle.write("==============\n")
         filehandle.write("Applications\n")
         filehandle.write("==============\n\n")
-        write_index(filehandle, targetdir, 0)
+        write_index(filehandle, targetdir)
         filehandle.close()
 
 
@@ -752,23 +752,33 @@ class hidddoclist:
             filehandle.close()
 
 
-def write_index(filehandle, targetdir, indent):
+def write_index(filehandle, targetdir):
     """Append directory listing to index file
     
     Arguments:
     
     filehandle - file where directory listing should be appended
     targedir - directory which should be listed
-    indent - number of spaces before output
     """
         
     files = os.listdir(targetdir)
     files.sort()
 
+    tablesep = (("=" * 49) + " ") * 5
+    filehandle.write(tablesep + "\n")
+    docnr = 1
     for doc in files:
-        if doc[-3:] == ".en" and doc[:5] != "index" and doc != ".svn" and doc[:12] != "introduction":
+        if doc[-3:] == ".en" and doc[:5] != "index" and doc != ".svn" and doc != "scripts" and doc[:12] != "introduction":
             docname = doc[:-3]
-            filehandle.write("%s+ `%s <%s>`_\n" %(indent * " ", docname, docname))
+            tocname = "`%s <%s>`_" %(docname, docname)
+            tocname = tocname.ljust(50)
+            filehandle.write(tocname)
+            if (docnr) % 5 == 0:
+                filehandle.write("\n")
+            docnr = docnr + 1
+    filehandle.write("\n" + tablesep + "\n")
+
+
     
 def create_module_docs():
     """Create the module docs.
@@ -817,7 +827,7 @@ def create_module_docs():
     filehandle.write("======================\n\n")
     filehandle.write(".. This document is automatically generated. Don't edit it!\n\n")
 
-    write_index(filehandle, targetdir, 0)
+    write_index(filehandle, targetdir)
     filehandle.close()
     print "Done"
 

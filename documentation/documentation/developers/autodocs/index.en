@@ -4,76 +4,20 @@ Autodocs for Modules
 
 .. This document is automatically generated. Don't edit it!
 
-+ `acpi <acpi>`_
-+ `alib <alib>`_
-+ `amigaguide <amigaguide>`_
-+ `aros <aros>`_
-+ `arosmesa <arosmesa>`_
-+ `arossupport <arossupport>`_
-+ `asl <asl>`_
-+ `battclock <battclock>`_
-+ `bootloader <bootloader>`_
-+ `bsdsocket <bsdsocket>`_
-+ `bullet <bullet>`_
-+ `camd <camd>`_
-+ `cgfx <cgfx>`_
-+ `cgxbootpic <cgxbootpic>`_
-+ `cgxvideo <cgxvideo>`_
-+ `commodities <commodities>`_
-+ `console <console>`_
-+ `coolimages <coolimages>`_
-+ `datatypes <datatypes>`_
-+ `debug <debug>`_
-+ `diskfont <diskfont>`_
-+ `dos <dos>`_
-+ `efi <efi>`_
-+ `exec <exec>`_
-+ `expansion <expansion>`_
-+ `gadtools <gadtools>`_
-+ `gallium <gallium>`_
-+ `graphics <graphics>`_
-+ `graphics_hidd <graphics_hidd>`_
-+ `hidd_hidd <hidd_hidd>`_
-+ `hostlib <hostlib>`_
-+ `hpet <hpet>`_
-+ `hyperlayers <hyperlayers>`_
-+ `icon <icon>`_
-+ `identify <identify>`_
-+ `iffparse <iffparse>`_
-+ `input <input>`_
-+ `intuition <intuition>`_
-+ `kbd_hidd <kbd_hidd>`_
-+ `kernel <kernel>`_
-+ `keymap <keymap>`_
-+ `kms <kms>`_
-+ `locale <locale>`_
-+ `lowlevel <lowlevel>`_
-+ `mathffp <mathffp>`_
-+ `mathieeedoubbas <mathieeedoubbas>`_
-+ `mathieeedoubtrans <mathieeedoubtrans>`_
-+ `mathieeesingbas <mathieeesingbas>`_
-+ `mathieeesingtrans <mathieeesingtrans>`_
-+ `mathtrans <mathtrans>`_
-+ `misc <misc>`_
-+ `mouse_hidd <mouse_hidd>`_
-+ `muimaster <muimaster>`_
-+ `muiscreen <muiscreen>`_
-+ `nonvolatile <nonvolatile>`_
-+ `oop <oop>`_
-+ `partition <partition>`_
-+ `pci_hidd <pci_hidd>`_
-+ `posixc <posixc>`_
-+ `processor <processor>`_
-+ `prometheus <prometheus>`_
-+ `realtime <realtime>`_
-+ `reqtools <reqtools>`_
-+ `rexxsupport <rexxsupport>`_
-+ `rexxsyslib <rexxsyslib>`_
-+ `setpatch <setpatch>`_
-+ `stdc <stdc>`_
-+ `timer <timer>`_
-+ `unixio_hidd <unixio_hidd>`_
-+ `utility <utility>`_
-+ `uuid <uuid>`_
-+ `vega <vega>`_
-+ `workbench <workbench>`_
+================================================= ================================================= ================================================= ================================================= ================================================= 
+`acpi <acpi>`_                                    `alib <alib>`_                                    `amigaguide <amigaguide>`_                        `aros <aros>`_                                    `arosmesa <arosmesa>`_                            
+`arossupport <arossupport>`_                      `asl <asl>`_                                      `battclock <battclock>`_                          `bootloader <bootloader>`_                        `bsdsocket <bsdsocket>`_                          
+`bullet <bullet>`_                                `camd <camd>`_                                    `cgfx <cgfx>`_                                    `cgxbootpic <cgxbootpic>`_                        `cgxvideo <cgxvideo>`_                            
+`commodities <commodities>`_                      `console <console>`_                              `coolimages <coolimages>`_                        `datatypes <datatypes>`_                          `debug <debug>`_                                  
+`diskfont <diskfont>`_                            `dos <dos>`_                                      `efi <efi>`_                                      `exec <exec>`_                                    `expansion <expansion>`_                          
+`gadtools <gadtools>`_                            `gallium <gallium>`_                              `graphics <graphics>`_                            `graphics_hidd <graphics_hidd>`_                  `hidd_hidd <hidd_hidd>`_                          
+`hostlib <hostlib>`_                              `hpet <hpet>`_                                    `hyperlayers <hyperlayers>`_                      `icon <icon>`_                                    `identify <identify>`_                            
+`iffparse <iffparse>`_                            `input <input>`_                                  `intuition <intuition>`_                          `kbd_hidd <kbd_hidd>`_                            `kernel <kernel>`_                                
+`keymap <keymap>`_                                `kms <kms>`_                                      `locale <locale>`_                                `lowlevel <lowlevel>`_                            `mathffp <mathffp>`_                              
+`mathieeedoubbas <mathieeedoubbas>`_              `mathieeedoubtrans <mathieeedoubtrans>`_          `mathieeesingbas <mathieeesingbas>`_              `mathieeesingtrans <mathieeesingtrans>`_          `mathtrans <mathtrans>`_                          
+`misc <misc>`_                                    `mouse_hidd <mouse_hidd>`_                        `muimaster <muimaster>`_                          `muiscreen <muiscreen>`_                          `nonvolatile <nonvolatile>`_                      
+`oop <oop>`_                                      `partition <partition>`_                          `pci_hidd <pci_hidd>`_                            `posixc <posixc>`_                                `processor <processor>`_                          
+`prometheus <prometheus>`_                        `realtime <realtime>`_                            `reqtools <reqtools>`_                            `rexxsupport <rexxsupport>`_                      `rexxsyslib <rexxsyslib>`_                        
+`setpatch <setpatch>`_                            `stdc <stdc>`_                                    `timer <timer>`_                                  `unixio_hidd <unixio_hidd>`_                      `utility <utility>`_                              
+`uuid <uuid>`_                                    `vega <vega>`_                                    `workbench <workbench>`_                          
+================================================= ================================================= ================================================= ================================================= ================================================= 
