@@ -5,15 +5,15 @@
 
 #MM- contrib-gnu : contrib-gnu-gcc
 #MM- contrib-gnu-gcc : development-collect-aros development-gcc
-#MM- development-gcc : development-gmp development-mpfr development-mpc
+#MM- development-gcc : development-gmp development-mpfr development-mpc contrib-development-libs-gc
 
 GCC_VERSION     = $(TARGET_GCC_VER)
 
 GCC_LANGUAGES:=c,c++
-ifneq (no-objc,$OBJC_TARGET)
+ifneq (no-objc,$(OBJC_TARGET))
 GCC_LANGUAGES:=$(GCC_LANGUAGES),objc
 endif
-ifneq (no-java,$JAVA_TARGET)
+ifneq (no-java,$(JAVA_TARGET))
 GCC_LANGUAGES:=$(GCC_LANGUAGES),java
 endif
 
@@ -34,6 +34,7 @@ GCC_EXTRA_OPTS += --enable-long-long
 GCC_EXTRA_OPTS += --enable-version-specific-runtime-libs
 GCC_EXTRA_OPTS += --disable-sjlj-exceptions
 GCC_EXTRA_OPTS += --disable-tls
+GCC_EXTRA_OPTS += --disable-objc-gc
 GCC_EXTRA_OPTS += --disable-plugins
 GCC_EXTRA_OPTS += --with-dwarf2
 GCC_EXTRA_OPTS += --enable-frame-pointer
