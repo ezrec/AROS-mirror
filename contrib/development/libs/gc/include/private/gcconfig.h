@@ -209,6 +209,14 @@
 #   endif
 #   define mach_type_known
 # endif
+# if defined(__AROS__) && defined(__arm__)
+#    define ARM32
+#    define mach_type_known
+# endif
+# if defined(__AROS__) && defined(mc68000)
+#   define M68K
+#   define mach_type_known
+# endif
 # if defined(__AROS__) && (defined(i386) || defined(__i386__))
 #   define I386
 #   define mach_type_known
