@@ -1,25 +1,92 @@
-#   $Id$
-#
+# Copyright © 2015, The AROS Development Team. All rights reserved.
+# $Id$
 
-include $(TOP)/config/make.cfg
+-include $(TOP)/config/make.cfg
 
-# TODO: find out why it fails for x86_64/m68k & ARM (see include/private/gcconfig.h)
+REPOSITORIES = github://ivmai/bdwgc/archive
+ARCHBASE := gc7_4_2
+PATCHSPEC := $(ARCHBASE)-aros.diff:bdwgc-$(ARCHBASE):-p1
+
+GC_SOURCE := $(PORTSDIR)/gc/bdwgc-$(ARCHBASE)
+GC_BUILDDIR := $(GENDIR)/$(CURDIR)
+GC_EXEDIR := $(AROS_DEVELOPMENT)
+
+GC_BUILDTYPE := Release
+##GC_BUILDTYPE := RelWithDebInfo
+
+GC_CFLAGS := $(CFLAGS) -Wno-error
+GC_CXXFLAGS := $(subst -Wno-pointer-sign,,$(GC_CFLAGS))
+
+GC_CC = $(strip $(subst distcc,,$(subst ccache,,$(TARGET_CC))))
+
+ifneq (,)
+GC_EXTRA_OPTS := \
+        -Denable_cplusplus=YES \
+        -Denable_gcj_support=YES
+endif
 
 #MM- contrib-development : contrib-development-libs-gc
 
-#MM- contrib-development-libs-gc : contrib-development-libs-gc-$(AROS_TARGET_CPU)
+#MM- contrib-development-libs-gc : contrib-development-libs-gc-install
 
-#MM- contrib-development-libs-gc-ppc : contrib-development-libs-gc-common
-#MM- contrib-development-libs-gc-i386 : contrib-development-libs-gc-common
+#MM contrib-development-libs-gc-setup : contrib-development-libs-gc-dirs includes-copy contrib-development-libs-gc-fetch
+#MM contrib-development-libs-gc-build : contrib-development-libs-gc-setup
+#MM contrib-development-libs-gc-install : contrib-development-libs-gc-build
 
-#MM- contrib-development-libs-gc-common : includes contrib-development-libs-gc-linklib
+#MM- contrib-development-libs-gc-quick : contrib-development-libs-gc-build
 
-FILES := alloc reclaim allchblk misc mach_dep os_dep mark_rts \
-    headers mark obj_map blacklst finalize new_hblk real_malloc \
-    dyn_load dbg_mlc malloc stubborn checksums typd_mlc ptr_chck mallocx
+%fetch mmake=contrib-development-libs-gc-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/gc \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+    patches_specs=$(PATCHSPEC)
 
-USER_CFLAGS := -Wunused -Wall -Uunix -Ulinux -U__linux__ -DATOMIC_UNCOLLECTABLE -DSILENT -I$(SRCDIR)/$(CURDIR)/include
+%create_patch mmake=contrib-development-libs-gc-create-patch \
+    archive=$(ARCHBASE) srcdir=bdwgc-$(ARCHBASE) destination=$(PORTSDIR)/gc
 
-%build_linklib mmake=contrib-development-libs-gc-linklib libname=gc files=$(FILES)
+$(GC_BUILDDIR)/.configure_flag : $(TOP)/$(CURDIR)/mmakefile
+	%mkdir_q dir=$(GC_BUILDDIR)
+	cd $(GC_BUILDDIR); \
+	cmake $(GC_EXTRA_OPTS) \
+        -DCMAKE_SYSTEM_PROCESSOR=$(AROS_TARGET_CPU) \
+        -DCMAKE_SYSTEM_PROCESSOR=$(AROS_TARGET_CPU) \
+        -DCMAKE_MODULE_PATH=$(GC_SOURCE)/cmake \
+        -DCMAKE_SYSTEM_NAME=AROS \
+        -DCMAKE_SYSTEM_VERSION=1 \
+        -DBUILD_SHARED_LIBS=OFF \
+        -DCMAKE_AR=$(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-ar \
+        -DCMAKE_C_COMPILER="$(GC_CC)" \
+        -DCMAKE_C_COMPILER_WORKS:INTERNAL=TRUE \
+        -DCMAKE_CXX_COMPILER="$(TARGET_CXX)" \
+        -DCMAKE_CXX_COMPILER_WORKS:INTERNAL=TRUE \
+        -DCMAKE_INSTALL_PREFIX=$(GC_EXEDIR) \
+        -DCMAKE_BUILD_TYPE=$(GC_BUILDTYPE) \
+        -DCMAKE_LIBRARY_PATH_FLAG=$(AROS_DEVELOPMENT)/lib \
+        -DCMAKE_C_FLAGS="$(GC_CFLAGS)" \
+        -DCMAKE_CXX_FLAGS="$(GC_CXXFLAGS)" \
+        $(GC_SOURCE)
+	$(TOUCH) $@
+	
+#MM
+contrib-development-libs-gc-setup : $(GC_BUILDDIR)/.configure_flag
+
+$(GC_BUILDDIR)/.build_flag : $(GC_BUILDDIR)/.configure_flag
+	cd $(GC_BUILDDIR); \
+	$(MAKE)
+	$(TOUCH) $@
+
+#MM
+contrib-development-libs-gc-build : $(GC_BUILDDIR)/.build_flag
+
+$(GC_BUILDDIR)/.install_flag : $(GC_BUILDDIR)/.build_flag
+	$(CP) $(GC_BUILDDIR)/libgc-lib.a $(GC_EXEDIR)/lib/libgc.a; \
+	$(CP) $(GC_BUILDDIR)/libgcmt-lib.a $(GC_EXEDIR)/lib/libgcmt.a; \
+	$(CP) $(GC_BUILDDIR)/tests/gctest $(AROS_TESTS)/gc/gctest
+	$(TOUCH) $@
+
+#MM
+contrib-development-libs-gc-install : $(GC_BUILDDIR)/.install_flag
+
+#MM
+contrib-development-libs-gc-dirs :
+	%mkdirs_q $(GC_BUILDDIR) $(AROS_TESTS)/gc
 
 %common
