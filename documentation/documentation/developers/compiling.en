@@ -9,7 +9,7 @@ Compiling AROS
             + Aaron Digulla
             + Adam Chodorowski
             + Neil Cafferkey
-:Copyright: Copyright (C) 2001-2013, The AROS Development Team
+:Copyright: Copyright (C) 2001-2015, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -116,8 +116,7 @@ Sources
 =======
 
 You can download the AROS sources either from the `download page`__ or by
-using SVN (which requires that you `apply for access`__ though; see
-`subversion documentation`__ as well).
+using SVN (see `subversion documentation`__).
 
 Extract or download ``source`` package sources into a directory of your
 choice. If you want to build contributed software as well, extract or
@@ -125,7 +124,6 @@ download ``contrib`` package sources into a ``./contrib`` subdirectory
 of your ``source`` package directory tree.
 
 __ ../../download
-__ ../../documentation/developers/contribute#the-subversion-repository
 __ ../../documentation/developers/svn
 
 
@@ -186,24 +184,26 @@ The following options are available for hosted builds:
     significant performance gain, but it might not work very well if you are
     using a remote display.
 
-You cannot cross compile these ports.
+You cannot cross compile these ports, although you can build 32-bit 
+versions on a 64-bit host by providing an option such as 
+``--target=linux-i386``.
 
 
 Native AROS/i386-pc
 """""""""""""""""""
 
 To build the i386-pc port, you have to start configure with this target
-option::
+option:
 
 ``--target=pc-i386``.
 
-Additionally, the following i386-pc-specific options are available::
+Additionally, the following i386-pc-specific options are available:
 
-    ``--with-serial-debug=N [default: disabled]``
-        Enable serial debug, sending the output to port ``N``.
+``--with-serial-debug=N [default: disabled]``
+    Enable serial debug, sending the output to port ``N``.
 
-    ``--with-bootloader=NAME [default: grub2]``
-        Use a specific bootloader.
+``--with-bootloader=NAME [default: grub2]``
+    Use a specific bootloader.
 
 
 
@@ -228,6 +228,10 @@ run::
 
     > gmake
 
+After you've made "make" once, and some changes were made to the files, you
+can use quick compilation of changes using a ``make <target-name>-quick``
+command.
+
 
 Hosted AROS/i386-linux or AROS/i386-freebsd
 """""""""""""""""""""""""""""""""""""""""""
@@ -241,11 +245,10 @@ additionally also run the following to properly set-up the keyboard support::
 Native AROS/i386-pc
 """""""""""""""""""
 
-If you are building the native i386-pc port, you will find a bootable floppy
-image at ``bin/pc-i386/gen/rom/boot/aros.bin`` after the compilation has
-finished. Additionally, you can create a bootable ISO image by running::
+If you are building the native i386-pc port, you should complete
+compilation by creating a bootable ISO image::
 
-    > make bootiso-pc-i386
+    > make bootiso
 
 The ISO image can be found at ``distfiles/aros-pc-i386.iso``.
 
@@ -255,7 +258,7 @@ The ISO image can be found at ``distfiles/aros-pc-i386.iso``.
 Building AROS on AROS
 =====================
 
-Since 2008-11-17, it's possible to build i386-pc and x86_64-pc AROS on
+It's possible to build i386-pc and x86_64-pc AROS on
 AROS. Only building on SFS partitions is currently possible. To do this,
 you need to install a few additional packages from The AROS Archives (file
 names for i386 architecture):
@@ -268,7 +271,7 @@ names for i386 architecture):
 Install these packages by unpacking them in the parent directory of
 Development::
 
-    > Cd Development:/
+    > CD Development:/
     > tar -xzf RAM:autoconf-2.62.i386.tar.gz
     > tar -xzf RAM:automake-1.9.6.all.tar.gz
     > tar -xzf RAM:perl-5.7.2.i386-aros.tar.gz
@@ -278,30 +281,28 @@ Now download and unpack the AROS source code and contributed software source
 code. To unpack, you need to have bzip2 installed. In nightly builds it
 should be present in Extras:Misc/aminet/C/bzip2. Instead of using bzip2 to
 manually unpack sources you can copy bzip2 to bin: and let tar take care of
-this::
+this (change the date embedded within the file names)::
 
     > Copy Extras:Misc/aminet/C/bzip2 bin:
     > tar --exclude=contrib -xjf AROS-20081117-source.tar.bz2
 
 Note the --exclude=contrib option. It's necessary because there's a symbolic
 link named contrib in the source code snapshots pointing to a non-existent
-Contrib directory. Once it's extracted to SFS file system, there's no way to
-delete it without removing the whole directory, so it's best to skip it.
+Contrib directory. Once it's extracted to the SFS file system, there's no
+way to delete it without removing the whole directory, so it's best to skip
+it.
 
-Contributed software is not guaranteed to build on AROS, except the special
-set of packages contained in the Necessary directory. It's recommended to
-extract only this directory when building AROS on AROS and copy it somewhere
-inside the unpacked AROS source tree. The suggested location is the Contrib
-directory::
+Contributed software is not guaranteed to build on AROS, but if you want to
+try, you should extract these sources inside the main sources as follows::
 
-    > tar -xjf AROS-20081117-contrib-source.tar.bz2 AROS-20081117-contrib-source/necessary
-    > MakeDir AROS-20081117-source/contrib
-    > Rename AROS-20081117-contrib-source/necessary AROS-20081117-source/contrib/necessary
+    > CD AROS-20081117-source
+    > tar -xjf AROS-20081117-contrib-source.tar.bz2
+    > Rename AROS-20081117-contrib-source contrib
 
 Now run the configure script, with the appropriate target, CFLAGS, LDFLAGS
 and host-side strip command::
 
-    > Cd AROS-20081117-source
+    > CD AROS-20081117-source
     > bin:sh
     > ./configure --target=pc-i386 LDFLAGS="-nix" CFLAGS="-nix -I/Development/netinclude"
       aros_host_strip="strip --strip-unneeded"
@@ -326,32 +327,6 @@ the resulting binaries by making the boot ISO target is not yet possible.
 
 Appendix
 ========
-
-Building several targets from the same source
----------------------------------------------
-
-If you intend to compile several different targets from one source tree,
-then you first have to go through the configuration step for each of your
-targets.
-You can add targets at any time you want. The last target specified to
-configure is the default target.
-
-To select a specific target when building, simply run make, like this::
-
-    > AROS_TARGET_ARCH=$ARCH AROS_TARGET_CPU=$CPU make
-
-Where ``$ARCH`` is the architecture of the wanted build, and ``$CPU`` is the
-CPU. E.g., to build AROS/i386-pc you would run::
-
-    > AROS_TARGET_ARCH=pc AROS_TARGET_CPU=i386 make
-
-If you are building several ports that use the same CPU, you only have to
-specify ``AROS_TARGET_ARCH`` as the CPU will stay the same.
-
-After you've made "make" once, and some changes were made to the files, you
-can use quick compilation of changes using make <target-name>-quick command.
-
-
 
 Building AROS in different directories
 --------------------------------------
@@ -418,13 +393,33 @@ reconfigure, or identify and copy changes into another working copy.
 
 
 
+Building several targets from the same source
+---------------------------------------------
+
+If you intend to compile several different targets from one source 
+tree, you should compile outside the source tree (see the previous 
+subsection). For example, you could place your souces in ``AROS/src``, 
+and create a directory for your 32-bit Linux-hosted build at 
+``AROS/linux-i386``::
+
+    > cd AROS
+    > mkdir linux-i386
+    > cd linux-i386
+    > ../src/configure --target=linux-i386
+    > make
+
+If you then want to also build for 64-bit Linux and Amiga, you can 
+create the directories ``AROS/linux-x86_64`` and ``AROS/amiga-m68k``, 
+and perform similar steps to those above.
+
+
 Compiling HowTos
 -----------------
 
 This step-by-step guide will describe how to prepare the development
-environment and compile AROS on Ubuntu Linux 6.10 "Edgy Eft". Let's assume
+environment and compile Linux-hosted AROS on Ubuntu Linux 14.04. Let's assume
 you have a CD image (iso) from an Ubuntu site and have installed the system
-from it. Also, you should set it so it'll access the Internet.
+from it. Also, you should set it up to access the Internet.
 
 
 Getting the needed packages
@@ -433,8 +428,14 @@ Getting the needed packages
 Because the Live CD misses needed packages we have to get them from the
 Internet::
 
-    > sudo apt-get install subversion gcc-3.4 gawk bison flex netpbm autoconf automake1.4
-    libx11-dev libc6-dev
+    > sudo apt-get install subversion g++ libpng12-dev libx11-dev
+    libgl1-mesa-dev gawk bison flex netpbm automake cmake gperf
+
+If you are using the 64-bit version of Ubuntu, you will need some 
+extra packages, and a small fix::
+
+    > sudo apt-get install gcc-multilib libxxf86vm1:i386
+    > sudo touch /usr/include/bits/predefs.h
 
 You will need to enter your user password at the prompt.
 
@@ -473,17 +474,16 @@ In brief, the commands you must use are the following::
 Configure and compile AROS sources
 """"""""""""""""""""""""""""""""""
 
-First we will set parameters and configure::
+First we will configure::
 
-      > export CC="gcc-3.4"
-      > ./configure
+      > ./configure --target=linux-i386
 
 Then, type::
 
       > make
 
-This may take a while (up to some hours on slow machines) :)
-But once it finishes, you will have a compiled AROS-hosted.
-Please note that you might need Internet access during the build,
-as it tries to download the latest EUAE and GNU sources.
+This may take a while (up to some hours on slow machines).
+But once it finishes, you will have a compiled Linux-hosted AROS.
+Please note that you will need Internet access during the build,
+as it downloads sources from various servers.
 
