@@ -29,6 +29,7 @@ endif
 
 GCC_EXTRA_OPTS += --with-sysroot=/Development
 GCC_EXTRA_OPTS += --with-build-sysroot=$(AROS_DEVELOPMENT)
+GCC_EXTRA_OPTS += --with-native-system-header-dir=/include
 GCC_EXTRA_OPTS += --enable-languages=$(strip $(GCC_LANGUAGES))
 GCC_EXTRA_OPTS += --enable-long-long
 GCC_EXTRA_OPTS += --enable-version-specific-runtime-libs
