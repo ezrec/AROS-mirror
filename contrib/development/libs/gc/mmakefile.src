@@ -17,7 +17,7 @@ endif
 
 #MM- contrib-development : contrib-development-libs-gc
 
-#MM contrib-development-libs-gc : contrib-development-libs-gc-dirs includes-copy contrib-development-libs-gc-fetch
+#MM contrib-development-libs-gc : includes-copy contrib-development-libs-gc-fetch
 
 %fetch mmake=contrib-development-libs-gc-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/gc \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
@@ -28,9 +28,5 @@ endif
 
 %build_with_cmake mmake=contrib-development-libs-gc		\
 	srcdir=$(GC_SOURCE) prefix="$(AROS_DEVELOPMENT)"
-
-#MM
-contrib-development-libs-gc-dirs :
-	%mkdirs_q $(GC_BUILDDIR) $(AROS_TESTS)/gc
 
 %common
