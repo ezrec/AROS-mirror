@@ -1,106 +1,185 @@
 #ifndef _AL_SOURCE_H_
 #define _AL_SOURCE_H_
 
-#define AL_NUM_SOURCE_PARAMS    128
+#define MAX_SENDS                 4
 
-/* This cannot be changed without working on the code! */
-#define MAX_SENDS                 1
-
-#include "alFilter.h"
+#include "alMain.h"
 #include "alu.h"
-#include "AL/al.h"
-
-#define AL_DIRECT_FILTER                                   0x20005
-#define AL_AUXILIARY_SEND_FILTER                           0x20006
-#define AL_AIR_ABSORPTION_FACTOR                           0x20007
-#define AL_ROOM_ROLLOFF_FACTOR                             0x20008
-#define AL_CONE_OUTER_GAINHF                               0x20009
-#define AL_DIRECT_FILTER_GAINHF_AUTO                       0x2000A
-#define AL_AUXILIARY_SEND_FILTER_GAIN_AUTO                 0x2000B
-#define AL_AUXILIARY_SEND_FILTER_GAINHF_AUTO               0x2000C
+#include "alFilter.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#define SRC_HISTORY_BITS   (6)
+#define SRC_HISTORY_LENGTH (1<<SRC_HISTORY_BITS)
+#define SRC_HISTORY_MASK   (SRC_HISTORY_LENGTH-1)
+
+extern enum Resampler DefaultResampler;
+
+extern const ALsizei ResamplerPadding[ResamplerMax];
+extern const ALsizei ResamplerPrePadding[ResamplerMax];
+
+
 typedef struct ALbufferlistitem
 {
-    ALuint                   buffer;
-    ALuint                   bufferstate;
-    ALuint                   flag;
+    struct ALbuffer         *buffer;
     struct ALbufferlistitem *next;
+    struct ALbufferlistitem *prev;
 } ALbufferlistitem;
+
+typedef struct HrtfState {
+    ALboolean Moving;
+    ALuint Counter;
+    ALIGN(16) ALfloat History[MaxChannels][SRC_HISTORY_LENGTH];
+    ALIGN(16) ALfloat Values[MaxChannels][HRIR_LENGTH][2];
+    ALuint Offset;
+} HrtfState;
+
+typedef struct HrtfParams {
+    ALfloat Gain;
+    ALfloat Dir[3];
+    ALIGN(16) ALfloat Coeffs[MaxChannels][HRIR_LENGTH][2];
+    ALIGN(16) ALfloat CoeffStep[HRIR_LENGTH][2];
+    ALuint Delay[MaxChannels][2];
+    ALint DelayStep[2];
+    ALuint IrSize;
+} HrtfParams;
+
+typedef struct DirectParams {
+    ALfloat (*OutBuffer)[BUFFERSIZE];
+    ALfloat *ClickRemoval;
+    ALfloat *PendingClicks;
+
+    struct {
+        HrtfParams Params;
+        HrtfState *State;
+    } Hrtf;
+
+    /* A mixing matrix. First subscript is the channel number of the input data
+     * (regardless of channel configuration) and the second is the channel
+     * target (eg. FrontLeft). Not used with HRTF. */
+    ALfloat Gains[MaxChannels][MaxChannels];
+
+    /* A low-pass filter, using 2 chained one-pole filters. */
+    FILTER iirFilter;
+    ALfloat history[MaxChannels*2];
+} DirectParams;
+
+typedef struct SendParams {
+    struct ALeffectslot *Slot;
+
+    /* Gain control, which applies to all input channels to a single (mono)
+     * output buffer. */
+    ALfloat Gain;
+
+    /* A low-pass filter, using 2 chained one-pole filters. */
+    FILTER iirFilter;
+    ALfloat history[MaxChannels*2];
+} SendParams;
+
 
 typedef struct ALsource
 {
-    ALfloat      flPitch;
-    ALfloat      flGain;
-    ALfloat      flOuterGain;
-    ALfloat      flMinGain;
-    ALfloat      flMaxGain;
-    ALfloat      flInnerAngle;
-    ALfloat      flOuterAngle;
-    ALfloat      flRefDistance;
-    ALfloat      flMaxDistance;
-    ALfloat      flRollOffFactor;
-    ALfloat      vPosition[3];
-    ALfloat      vVelocity[3];
-    ALfloat      vOrientation[3];
-    ALboolean    bHeadRelative;
-    ALboolean    bLooping;
-    ALenum       DistanceModel;
+    /** Source properties. */
+    volatile ALfloat   Pitch;
+    volatile ALfloat   Gain;
+    volatile ALfloat   OuterGain;
+    volatile ALfloat   MinGain;
+    volatile ALfloat   MaxGain;
+    volatile ALfloat   InnerAngle;
+    volatile ALfloat   OuterAngle;
+    volatile ALfloat   RefDistance;
+    volatile ALfloat   MaxDistance;
+    volatile ALfloat   RollOffFactor;
+    volatile ALfloat   Position[3];
+    volatile ALfloat   Velocity[3];
+    volatile ALfloat   Orientation[3];
+    volatile ALboolean HeadRelative;
+    volatile ALboolean Looping;
+    volatile enum DistanceModel DistanceModel;
+    volatile ALboolean DirectChannels;
 
-    ALuint       ulBufferID;
+    volatile ALboolean DryGainHFAuto;
+    volatile ALboolean WetGainAuto;
+    volatile ALboolean WetGainHFAuto;
+    volatile ALfloat   OuterGainHF;
 
-    ALboolean    inuse;
-    ALboolean    play;
-    ALenum       state;
-    ALuint       position;
-    ALuint       position_fraction;
+    volatile ALfloat AirAbsorptionFactor;
+    volatile ALfloat RoomRolloffFactor;
+    volatile ALfloat DopplerFactor;
 
-    struct ALbufferlistitem *queue; // Linked list of buffers in queue
-    ALuint       BuffersInQueue;    // Number of buffers in queue
+    enum Resampler Resampler;
 
-    ALuint TotalBufferDataSize; // Total amount of data contained in the buffers queued for this source
-    ALuint BuffersPlayed;       // Number of buffers played on this loop
+    /**
+     * Last user-specified offset, and the offset type (bytes, samples, or
+     * seconds).
+     */
+    ALdouble Offset;
+    ALenum   OffsetType;
 
-    ALfilter DirectFilter;
+    /** Source type (static, streaming, or undetermined) */
+    volatile ALint SourceType;
+
+    /** Source state (initial, playing, paused, or stopped) */
+    volatile ALenum state;
+    ALenum new_state;
+
+    /**
+     * Source offset in samples, relative to the currently playing buffer, NOT
+     * the whole queue, and the fractional (fixed-point) offset to the next
+     * sample.
+     */
+    ALuint position;
+    ALuint position_fraction;
+
+    /** Source Buffer Queue info. */
+    ALbufferlistitem *queue;
+    ALuint BuffersInQueue;
+    ALuint BuffersPlayed;
+
+    /** Current buffer sample info. */
+    ALuint NumChannels;
+    ALuint SampleSize;
+
+    /** Direct filter and auxiliary send info. */
+    ALfloat DirectGain;
+    ALfloat DirectGainHF;
 
     struct {
         struct ALeffectslot *Slot;
-        ALfilter WetFilter;
-        FILTER iirFilter;
+        ALfloat Gain;
+        ALfloat GainHF;
     } Send[MAX_SENDS];
 
-    ALboolean DryGainHFAuto;
-    ALboolean WetGainAuto;
-    ALboolean WetGainHFAuto;
-    ALfloat   OuterGainHF;
+    /** HRTF info. */
+    HrtfState Hrtf;
 
-    FILTER iirFilter;
+    /** Current target parameters used for mixing. */
+    struct {
+        ResamplerFunc Resample;
+        DryMixerFunc DryMix;
+        WetMixerFunc WetMix;
 
-    ALfloat AirAbsorptionFactor;
+        ALint Step;
 
-    ALfloat RoomRolloffFactor;
+        DirectParams Direct;
 
-    ALfloat DopplerFactor;
+        SendParams Send[MAX_SENDS];
+    } Params;
+    /** Source needs to update its mixing parameters. */
+    volatile ALenum NeedsUpdate;
 
-    // Index to itself
-    ALuint source;
+    /** Method to update mixing parameters. */
+    ALvoid (*Update)(struct ALsource *self, const ALCcontext *context);
 
-    ALint  lOffset;
-    ALint  lOffsetType;
-
-    // Source Type (Static, Streaming, or Undetermined)
-    ALint  lSourceType;
-
-    // Current gains, which are ramped while mixed
-    ALfloat DryGains[OUTPUTCHANNELS];
-    ALfloat WetGain;
-    ALboolean FirstStart;
-
-    struct ALsource *next;
+    /** Self ID */
+    ALuint id;
 } ALsource;
+#define ALsource_Update(s,a)                 ((s)->Update(s,a))
+
+ALvoid SetSourceState(ALsource *Source, ALCcontext *Context, ALenum state);
+ALboolean ApplyOffset(ALsource *Source);
 
 ALvoid ReleaseALSources(ALCcontext *Context);
 

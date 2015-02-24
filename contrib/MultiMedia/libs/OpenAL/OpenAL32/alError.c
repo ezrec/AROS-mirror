@@ -20,40 +20,52 @@
 
 #include "config.h"
 
+#include <signal.h>
+
 #include "alMain.h"
 #include "AL/alc.h"
 #include "alError.h"
 
-ALAPI ALenum ALAPIENTRY alGetError(ALvoid)
+ALboolean TrapALError = AL_FALSE;
+
+ALvoid alSetError(ALCcontext *Context, ALenum errorCode)
 {
-	ALCcontext *Context;
-	ALenum errorCode;
-
-	Context = alcGetCurrentContext();
-	SuspendContext(Context);
-
-	if (Context)
-	{
-		errorCode = Context->LastError;
-		Context->LastError = AL_NO_ERROR;
-	}
-	else
-		errorCode = AL_INVALID_OPERATION;
-
-	ProcessContext(Context);
-
-	return errorCode;
+    if(TrapALError)
+    {
+#ifdef _WIN32
+        /* DebugBreak will cause an exception if there is no debugger */
+        if(IsDebuggerPresent())
+            DebugBreak();
+#elif defined(SIGTRAP)
+        raise(SIGTRAP);
+#endif
+    }
+    CompExchangeInt(&Context->LastError, AL_NO_ERROR, errorCode);
 }
 
-ALvoid alSetError(ALenum errorCode)
+AL_API ALenum AL_APIENTRY alGetError(void)
 {
-	ALCcontext *Context;
+    ALCcontext *Context;
+    ALenum errorCode;
 
-	Context=alcGetCurrentContext();
-	SuspendContext(Context);
+    Context = GetContextRef();
+    if(!Context)
+    {
+        if(TrapALError)
+        {
+#ifdef _WIN32
+            if(IsDebuggerPresent())
+                DebugBreak();
+#elif defined(SIGTRAP)
+            raise(SIGTRAP);
+#endif
+        }
+        return AL_INVALID_OPERATION;
+    }
 
-	if (Context && Context->LastError == AL_NO_ERROR)
-		Context->LastError = errorCode;
+    errorCode = ExchangeInt(&Context->LastError, AL_NO_ERROR);
 
-	ProcessContext(Context);
+    ALCcontext_DecRef(Context);
+
+    return errorCode;
 }

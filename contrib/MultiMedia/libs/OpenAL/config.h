@@ -4,7 +4,28 @@
 #include <aros/cpu.h>
 
 /* Define to the library version */
-#define ALSOFT_VERSION "1.7.411"
+#define ALSOFT_VERSION "1.15.1"
+
+/* Define any available alignment declaration */
+#define ALIGN(x) __attribute__((aligned(x)))
+
+/* Define to the appropriate 'restrict' keyword */
+#define RESTRICT
+
+/* Define if we have the C11 aligned_alloc function */
+#undef HAVE_ALIGNED_ALLOC
+
+/* Define if we have the posix_memalign function */
+#undef HAVE_POSIX_MEMALIGN
+
+/* Define if we have the _aligned_malloc function */
+#undef HAVE__ALIGNED_MALLOC
+
+/* Define if we have SSE CPU extensions */
+#undef HAVE_SSE
+
+/* Define if we have ARM Neon CPU extensions */
+#undef HAVE_NEON
 
 /* Define if we have the AHI backend */
 #define HAVE_AHI

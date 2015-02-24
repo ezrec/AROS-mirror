@@ -1,53 +1,58 @@
 #ifndef _AL_AUXEFFECTSLOT_H_
 #define _AL_AUXEFFECTSLOT_H_
 
-#include "AL/al.h"
+#include "alMain.h"
 #include "alEffect.h"
-#include "alFilter.h"
-#include "alReverb.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define AL_EFFECTSLOT_EFFECT                               0x0001
-#define AL_EFFECTSLOT_GAIN                                 0x0002
-#define AL_EFFECTSLOT_AUXILIARY_SEND_AUTO                  0x0003
+typedef struct ALeffectState {
+    ALvoid (*Destroy)(struct ALeffectState *State);
+    ALboolean (*DeviceUpdate)(struct ALeffectState *State, ALCdevice *Device);
+    ALvoid (*Update)(struct ALeffectState *State, ALCdevice *Device, const struct ALeffectslot *Slot);
+    ALvoid (*Process)(struct ALeffectState *State, ALuint SamplesToDo, const ALfloat *RESTRICT SamplesIn, ALfloat (*RESTRICT SamplesOut)[BUFFERSIZE]);
+} ALeffectState;
 
-#define AL_EFFECTSLOT_NULL                                 0x0000
 
 typedef struct ALeffectslot
 {
     ALeffect effect;
 
-    ALfloat Gain;
-    ALboolean AuxSendAuto;
+    volatile ALfloat   Gain;
+    volatile ALboolean AuxSendAuto;
 
-    ALverbState *ReverbState;
+    volatile ALenum NeedsUpdate;
+    ALeffectState *EffectState;
 
-    ALuint refcount;
+    ALIGN(16) ALfloat WetBuffer[1][BUFFERSIZE];
 
-    // Index to itself
-    ALuint effectslot;
+    ALfloat ClickRemoval[1];
+    ALfloat PendingClicks[1];
 
-    struct ALeffectslot *next;
+    RefCount ref;
+
+    /* Self ID */
+    ALuint id;
 } ALeffectslot;
 
-ALvoid AL_APIENTRY alGenAuxiliaryEffectSlots(ALsizei n, ALuint *effectslots);
-ALvoid AL_APIENTRY alDeleteAuxiliaryEffectSlots(ALsizei n, ALuint *effectslots);
-ALboolean AL_APIENTRY alIsAuxiliaryEffectSlot(ALuint effectslot);
 
-ALvoid AL_APIENTRY alAuxiliaryEffectSloti(ALuint effectslot, ALenum param, ALint iValue);
-ALvoid AL_APIENTRY alAuxiliaryEffectSlotiv(ALuint effectslot, ALenum param, ALint *piValues);
-ALvoid AL_APIENTRY alAuxiliaryEffectSlotf(ALuint effectslot, ALenum param, ALfloat flValue);
-ALvoid AL_APIENTRY alAuxiliaryEffectSlotfv(ALuint effectslot, ALenum param, ALfloat *pflValues);
-
-ALvoid AL_APIENTRY alGetAuxiliaryEffectSloti(ALuint effectslot, ALenum param, ALint *piValue);
-ALvoid AL_APIENTRY alGetAuxiliaryEffectSlotiv(ALuint effectslot, ALenum param, ALint *piValues);
-ALvoid AL_APIENTRY alGetAuxiliaryEffectSlotf(ALuint effectslot, ALenum param, ALfloat *pflValue);
-ALvoid AL_APIENTRY alGetAuxiliaryEffectSlotfv(ALuint effectslot, ALenum param, ALfloat *pflValues);
-
+ALenum InitEffectSlot(ALeffectslot *slot);
 ALvoid ReleaseALAuxiliaryEffectSlots(ALCcontext *Context);
+
+ALeffectState *NoneCreate(void);
+ALeffectState *ReverbCreate(void);
+ALeffectState *EchoCreate(void);
+ALeffectState *ModulatorCreate(void);
+ALeffectState *DedicatedCreate(void);
+
+#define ALeffectState_Destroy(a)        ((a)->Destroy((a)))
+#define ALeffectState_DeviceUpdate(a,b) ((a)->DeviceUpdate((a),(b)))
+#define ALeffectState_Update(a,b,c)     ((a)->Update((a),(b),(c)))
+#define ALeffectState_Process(a,b,c,d)  ((a)->Process((a),(b),(c),(d)))
+
+ALenum InitializeEffect(ALCdevice *Device, ALeffectslot *EffectSlot, ALeffect *effect);
 
 #ifdef __cplusplus
 }

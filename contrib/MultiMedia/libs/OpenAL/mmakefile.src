@@ -1,0 +1,62 @@
+#   $Id$
+#
+#   Generate libopenal.a
+#
+include $(TOP)/config/make.cfg
+
+#MM- contrib-multimedia : contrib-openal
+
+#MM- contrib-openal : contrib-openal-linklib
+
+#MM contrib-openal-linklib : includes contrib-openal-includes workbench-devs-AHI
+
+OPENAL32_FILES = \
+        alAuxEffectSlot \
+        alBuffer \
+        alEffect \
+        alError \
+        alExtension \
+        alFilter \
+        alListener \
+        alSource \
+        alState \
+        alThunk
+
+ALC_FILES = \
+        ALc \
+        ALu \
+        helpers \
+        alcConfig \
+        alcDedicated \
+        alcEcho \
+        alcModulator \
+        alcReverb \
+        alcRing \
+        alcThread \
+        bs2b \
+        hrtf \
+        mixer \
+        mixer_c \
+        panning
+
+ALCBACKEND_FILES = \
+        loopback \
+        null \
+        ahi \
+        wave
+
+OPENAL_FILES = \
+        $(addprefix OpenAL32/, $(OPENAL32_FILES)) \
+        $(addprefix Alc/, $(ALC_FILES)) \
+        $(addprefix Alc/backends/, $(ALCBACKEND_FILES))
+
+USER_INCLUDES := \
+        -I$(SRCDIR)/$(CURDIR)/OpenAL32/Include \
+        -I$(SRCDIR)/$(CURDIR)
+
+USER_CFLAGS += -DAL_ALEXT_PROTOTYPES 
+
+%build_linklib mmake=contrib-openal-linklib libname=openal \
+    files="$(OPENAL_FILES)"
+
+%common

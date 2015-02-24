@@ -4,13 +4,16 @@
 include $(TOP)/config/make.cfg
 
 FILES   :=  openal-info
-                
-EXEDIR  := $(AROSDIR)/Tests
+DISABLEDFILES   :=  allatency alreverb alstream
 
-#MM- contrib-openal-openal-info : contrib-openal-linklib
+EXEDIR  := $(AROSDIR)/Tests/OpenAL
 
-%build_progs mmake=contrib-openal-openal-info \
+##MM- contrib-openal : contrib-openal-examples
+
+#MM- contrib-openal-examples : contrib-openal-linklib
+
+%build_progs mmake=contrib-openal-examples \
     targetdir=$(EXEDIR) \
-    files="$(FILES)" uselibs="OpenAL"
+    files="$(FILES)" uselibs="openal pthread"
 
 %common

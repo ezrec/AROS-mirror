@@ -1,22 +1,24 @@
 #ifndef _AL_LISTENER_H_
 #define _AL_LISTENER_H_
 
-#include "AL/al.h"
+#include "alMain.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define AL_METERS_PER_UNIT                                 0x20004
+typedef struct ALlistener {
+    volatile ALfloat Position[3];
+    volatile ALfloat Velocity[3];
+    volatile ALfloat Forward[3];
+    volatile ALfloat Up[3];
+    volatile ALfloat Gain;
+    volatile ALfloat MetersPerUnit;
 
-typedef struct ALlistener_struct
-{
-    ALfloat Position[3];
-    ALfloat Velocity[3];
-    ALfloat Forward[3];
-    ALfloat Up[3];
-    ALfloat Gain;
-    ALfloat MetersPerUnit;
+    struct {
+        ALfloat Matrix[4][4];
+        ALfloat Velocity[3];
+    } Params;
 } ALlistener;
 
 #ifdef __cplusplus

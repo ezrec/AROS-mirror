@@ -1,59 +1,35 @@
 #ifndef _AL_EFFECT_H_
 #define _AL_EFFECT_H_
 
-#include "AL/al.h"
+#include "alMain.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define AL_EFFECT_TYPE                                     0x8001
-
-#define AL_EFFECT_NULL                                     0x0000
-#define AL_EFFECT_REVERB                                   0x0001
-#define AL_EFFECT_CHORUS                                   0x0002
-#define AL_EFFECT_DISTORTION                               0x0003
-#define AL_EFFECT_ECHO                                     0x0004
-#define AL_EFFECT_FLANGER                                  0x0005
-#define AL_EFFECT_FREQUENCY_SHIFTER                        0x0006
-#define AL_EFFECT_VOCAL_MORPHER                            0x0007
-#define AL_EFFECT_PITCH_SHIFTER                            0x0008
-#define AL_EFFECT_RING_MODULATOR                           0x0009
-#define AL_EFFECT_AUTOWAH                                  0x000A
-#define AL_EFFECT_COMPRESSOR                               0x000B
-#define AL_EFFECT_EQUALIZER                                0x000C
-
-#define AL_REVERB_DENSITY                                  0x0001
-#define AL_REVERB_DIFFUSION                                0x0002
-#define AL_REVERB_GAIN                                     0x0003
-#define AL_REVERB_GAINHF                                   0x0004
-#define AL_REVERB_DECAY_TIME                               0x0005
-#define AL_REVERB_DECAY_HFRATIO                            0x0006
-#define AL_REVERB_REFLECTIONS_GAIN                         0x0007
-#define AL_REVERB_REFLECTIONS_DELAY                        0x0008
-#define AL_REVERB_LATE_REVERB_GAIN                         0x0009
-#define AL_REVERB_LATE_REVERB_DELAY                        0x000A
-#define AL_REVERB_AIR_ABSORPTION_GAINHF                    0x000B
-#define AL_REVERB_ROOM_ROLLOFF_FACTOR                      0x000C
-#define AL_REVERB_DECAY_HFLIMIT                            0x000D
-
-
 enum {
-    REVERB = 0,
+    EAXREVERB = 0,
+    REVERB,
+    ECHO,
+    MODULATOR,
+    DEDICATED,
+
     MAX_EFFECTS
 };
 extern ALboolean DisabledEffects[MAX_EFFECTS];
 
+extern ALfloat ReverbBoost;
+extern ALboolean EmulateEAXReverb;
 
-typedef struct ALeffect_struct
+typedef struct ALeffect
 {
     // Effect type (AL_EFFECT_NULL, ...)
     ALenum type;
 
     struct {
+        // Shared Reverb Properties
         ALfloat Density;
         ALfloat Diffusion;
-
         ALfloat Gain;
         ALfloat GainHF;
         ALfloat DecayTime;
@@ -65,29 +41,71 @@ typedef struct ALeffect_struct
         ALfloat AirAbsorptionGainHF;
         ALfloat RoomRolloffFactor;
         ALboolean DecayHFLimit;
+
+        // Additional EAX Reverb Properties
+        ALfloat GainLF;
+        ALfloat DecayLFRatio;
+        ALfloat ReflectionsPan[3];
+        ALfloat LateReverbPan[3];
+        ALfloat EchoTime;
+        ALfloat EchoDepth;
+        ALfloat ModulationTime;
+        ALfloat ModulationDepth;
+        ALfloat HFReference;
+        ALfloat LFReference;
     } Reverb;
 
-    // Index to itself
-    ALuint effect;
+    struct {
+        ALfloat Delay;
+        ALfloat LRDelay;
 
-    struct ALeffect_struct *next;
+        ALfloat Damping;
+        ALfloat Feedback;
+
+        ALfloat Spread;
+    } Echo;
+
+    struct {
+        ALfloat Frequency;
+        ALfloat HighPassCutoff;
+        ALint Waveform;
+    } Modulator;
+
+    struct {
+        ALfloat Gain;
+    } Dedicated;
+
+    void (*SetParami)(struct ALeffect *effect, ALCcontext *context, ALenum param, ALint val);
+    void (*SetParamiv)(struct ALeffect *effect, ALCcontext *context, ALenum param, const ALint *vals);
+    void (*SetParamf)(struct ALeffect *effect, ALCcontext *context, ALenum param, ALfloat val);
+    void (*SetParamfv)(struct ALeffect *effect, ALCcontext *context, ALenum param, const ALfloat *vals);
+
+    void (*GetParami)(struct ALeffect *effect, ALCcontext *context, ALenum param, ALint *val);
+    void (*GetParamiv)(struct ALeffect *effect, ALCcontext *context, ALenum param, ALint *vals);
+    void (*GetParamf)(struct ALeffect *effect, ALCcontext *context, ALenum param, ALfloat *val);
+    void (*GetParamfv)(struct ALeffect *effect, ALCcontext *context, ALenum param, ALfloat *vals);
+
+    /* Self ID */
+    ALuint id;
 } ALeffect;
 
-ALvoid AL_APIENTRY alGenEffects(ALsizei n, ALuint *effects);
-ALvoid AL_APIENTRY alDeleteEffects(ALsizei n, ALuint *effects);
-ALboolean AL_APIENTRY alIsEffect(ALuint effect);
+#define ALeffect_SetParami(x, c, p, v)  ((x)->SetParami((x),(c),(p),(v)))
+#define ALeffect_SetParamiv(x, c, p, v) ((x)->SetParamiv((x),(c),(p),(v)))
+#define ALeffect_SetParamf(x, c, p, v)  ((x)->SetParamf((x),(c),(p),(v)))
+#define ALeffect_SetParamfv(x, c, p, v) ((x)->SetParamfv((x),(c),(p),(v)))
 
-ALvoid AL_APIENTRY alEffecti(ALuint effect, ALenum param, ALint iValue);
-ALvoid AL_APIENTRY alEffectiv(ALuint effect, ALenum param, ALint *piValues);
-ALvoid AL_APIENTRY alEffectf(ALuint effect, ALenum param, ALfloat flValue);
-ALvoid AL_APIENTRY alEffectfv(ALuint effect, ALenum param, ALfloat *pflValues);
+#define ALeffect_GetParami(x, c, p, v)  ((x)->GetParami((x),(c),(p),(v)))
+#define ALeffect_GetParamiv(x, c, p, v) ((x)->GetParamiv((x),(c),(p),(v)))
+#define ALeffect_GetParamf(x, c, p, v)  ((x)->GetParamf((x),(c),(p),(v)))
+#define ALeffect_GetParamfv(x, c, p, v) ((x)->GetParamfv((x),(c),(p),(v)))
 
-ALvoid AL_APIENTRY alGetEffecti(ALuint effect, ALenum param, ALint *piValue);
-ALvoid AL_APIENTRY alGetEffectiv(ALuint effect, ALenum param, ALint *piValues);
-ALvoid AL_APIENTRY alGetEffectf(ALuint effect, ALenum param, ALfloat *pflValue);
-ALvoid AL_APIENTRY alGetEffectfv(ALuint effect, ALenum param, ALfloat *pflValues);
+static __inline ALboolean IsReverbEffect(ALenum type)
+{ return type == AL_EFFECT_REVERB || type == AL_EFFECT_EAXREVERB; }
 
-ALvoid ReleaseALEffects(ALvoid);
+ALenum InitEffect(ALeffect *effect);
+ALvoid ReleaseALEffects(ALCdevice *device);
+
+ALvoid LoadReverbPreset(const char *name, ALeffect *effect);
 
 #ifdef __cplusplus
 }
