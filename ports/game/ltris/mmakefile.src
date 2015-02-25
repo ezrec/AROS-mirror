@@ -7,14 +7,14 @@ include $(TOP)/config/make.cfg
 #MM- ports-game-ltris : contrib-sdl
 
 PACKAGE      := ltris
-VERSION      := 1.0.18
+VERSION      := 1.0.19
 TARGETDIR    := $(AROS_CONTRIB)/Games/LTris
 REPOSITORIES := sf://lgames
 
 %fetch_and_build mmake=ports-game-ltris prefix=$(TARGETDIR) \
     package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
     patch=yes package_repo=$(REPOSITORIES) nix=yes nix_dir_layout=no \
-    extracflags="" install_target= postinstall=ports-game-ltris-install \
+    extracflags="-std=gnu89" install_target= postinstall=ports-game-ltris-install \
     extraoptions="--datarootdir='$$(PROGDIR)share' LIBS='-lvorbisfile -lvorbis -logg'" 
 
 

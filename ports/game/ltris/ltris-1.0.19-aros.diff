@@ -1,6 +1,6 @@
-diff -Naur ltris-1.0.18-orig/Makefile.in ltris-1.0.18/Makefile.in
---- ltris-1.0.18-orig/Makefile.in	2013-10-12 13:30:39.667648187 +0200
-+++ ltris-1.0.18/Makefile.in	2011-10-29 12:50:23.000000000 +0200
+diff -Naur ltris-1.0.19-orig/Makefile.in ltris-1.0.19/Makefile.in
+--- ltris-1.0.19-orig/Makefile.in	2013-10-12 13:30:39.667648187 +0200
++++ ltris-1.0.19/Makefile.in	2011-10-29 12:50:23.000000000 +0200
 @@ -233,10 +233,9 @@
  SUBDIRS = intl m4 po src icons
  EXTRA_DIST = config.rpath  AUTHORS COPYING ChangeLog INSTALL \
@@ -43,9 +43,9 @@ diff -Naur ltris-1.0.18-orig/Makefile.in ltris-1.0.18/Makefile.in
  # Tell versions [3.59,3.63) of GNU make to not export all variables.
  # Otherwise a system limit (for SysV at least) may be exceeded.
  .NOEXPORT:
-diff -Naur ltris-1.0.18-orig/src/config.c ltris-1.0.18/src/config.c
---- ltris-1.0.18-orig/src/config.c	2013-10-12 13:30:39.675648187 +0200
-+++ ltris-1.0.18/src/config.c	2011-10-29 12:50:23.000000000 +0200
+diff -Naur ltris-1.0.19-orig/src/config.c ltris-1.0.19/src/config.c
+--- ltris-1.0.19-orig/src/config.c	2013-10-12 13:30:39.675648187 +0200
++++ ltris-1.0.19/src/config.c	2011-10-29 12:50:23.000000000 +0200
 @@ -38,11 +38,15 @@
  /* check if config directory exists; if not create it and set config_dir */
  void config_check_dir()
@@ -62,9 +62,9 @@ diff -Naur ltris-1.0.18-orig/src/config.c ltris-1.0.18/src/config.c
      if ( opendir( config.dir_name ) == 0 ) {
          fprintf( stderr, "couldn't find/open config directory '%s'\n", config.dir_name );
          fprintf( stderr, "attempting to create it... " );
-diff -Naur ltris-1.0.18-orig/src/manager.c ltris-1.0.18/src/manager.c
---- ltris-1.0.18-orig/src/manager.c	2013-10-12 13:30:39.675648187 +0200
-+++ ltris-1.0.18/src/manager.c	2011-10-29 12:50:23.000000000 +0200
+diff -Naur ltris-1.0.19-orig/src/manager.c ltris-1.0.19/src/manager.c
+--- ltris-1.0.19-orig/src/manager.c	2013-10-12 13:30:39.675648187 +0200
++++ ltris-1.0.19/src/manager.c	2011-10-29 12:50:23.000000000 +0200
 @@ -143,7 +143,11 @@
          return;
      }
