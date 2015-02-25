@@ -71,30 +71,6 @@ int main(int argc, char **argv)
         output("Allocation failed!\n");
     }
 
-    output("\nTesting AllocMem(4096, MEMF_ANY|MEMF_REVERSE) ...\n");
-    if ((block0 = AllocMem(4096, MEMF_ANY|MEMF_REVERSE)) != NULL)
-    {
-        output("Allocated at 0x%p, available memory: %lu bytes\n", block0, (unsigned long)AvailMem(MEMF_ANY));
-     
-        /* This test actually proves that we don't hit for example MMIO region */
-        *((volatile ULONG *)block0) = 0xC0DEBAD;
-        if (*((volatile ULONG *)block0) != 0xC0DEBAD)
-            output("Invalid memory allocated!!!\n");
-     
-        AccessTest(block0 + 4096);
-     
-        if (!leak)
-        {
-            output("Freeing the block...\n");
-            FreeMem(block0, 4096);
-            output("Done, available memory: %lu bytes\n", (unsigned long)AvailMem(MEMF_ANY));
-        }
-    }
-    else
-    {
-        output("Allocation failed!\n");
-    }
-    
     start = block0 + 1027;	/* Add some none-round displacement to make the life harder */
     output("\nTesting AllocAbs(4096, 0x%p) ...\n", start);
     if ((block1 = AllocAbs(4096, start)) != NULL)
@@ -134,6 +110,30 @@ int main(int argc, char **argv)
         {
             output("Allocation failed!\n");
         }
+    }
+
+    output("\nTesting AllocMem(4096, MEMF_ANY|MEMF_REVERSE) ...\n");
+    if ((block0 = AllocMem(4096, MEMF_ANY|MEMF_REVERSE)) != NULL)
+    {
+        output("Allocated at 0x%p, available memory: %lu bytes\n", block0, (unsigned long)AvailMem(MEMF_ANY));
+
+        /* This test actually proves that we don't hit for example MMIO region */
+        *((volatile ULONG *)block0) = 0xC0DEBAD;
+        if (*((volatile ULONG *)block0) != 0xC0DEBAD)
+            output("Invalid memory allocated!!!\n");
+
+        AccessTest(block0 + 4096);
+
+        if (!leak)
+        {
+            output("Freeing the block...\n");
+            FreeMem(block0, 4096);
+            output("Done, available memory: %lu bytes\n", (unsigned long)AvailMem(MEMF_ANY));
+        }
+    }
+    else
+    {
+        output("Allocation failed!\n");
     }
 
     output("\nFinal available memory: %lu bytes\n", (unsigned long)AvailMem(MEMF_ANY));
