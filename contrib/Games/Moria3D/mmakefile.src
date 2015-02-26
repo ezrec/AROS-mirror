@@ -1,6 +1,8 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
+#MM- contrib-games-moria3d : Moria3D-setup
+
 FILES := $(call WILDCARD, Levels/Level* Levels/Mission* Levels/Story*) \
 	 $(call WILDCARD, Textures/*.256) \
 	 Missions

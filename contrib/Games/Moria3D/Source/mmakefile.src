@@ -1,77 +1,18 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-LIBS	:= -L$(AROS_LIB) -lamiga -larossupport -lautoinit -lstdc
+#MM- contrib-games : contrib-games-cxhextris
 
-INSTDIR := $(AROS_CONTRIB)/Games/Moria3D
-EXE	:= $(INSTDIR)/Moria3D
+MORIA_FILES := Moveing \
+	Moria3D \
+	Clean \
+	Gfx \
+	Level \
+	Init \
+	MyMath \
+	Version \
+	Timer
 
-OBJS := $(GENDIR)/$(CURDIR)/Moveing.o \
-	$(GENDIR)/$(CURDIR)/Moria3D.o \
-	$(GENDIR)/$(CURDIR)/Clean.o \
-	$(GENDIR)/$(CURDIR)/Gfx.o \
-	$(GENDIR)/$(CURDIR)/Level.o \
-	$(GENDIR)/$(CURDIR)/Init.o \
-	$(GENDIR)/$(CURDIR)/MyMath.o \
-	$(GENDIR)/$(CURDIR)/Version.o \
-	$(GENDIR)/$(CURDIR)/Timer.o
-
-.PHONY : Moria3D
-
-#MM- contrib-games : Moria3D
-#MM Moria3D : Moria3D-setup
-Moria3D : $(EXE)
-	@$(NOP)
-
-$(EXE) : $(OBJS)
-	$(CC) $(SYSROOT_FLAG) $(CFLAGS) -o $(EXE) $(OBJS) $(ARCHIVE) $(LIBS)
-
-#MM
-Moria3D-setup :
-	%mkdirs_q $(GENDIR)/$(CURDIR)
-
-#MM
-Moria3D-clean :
-	rm -f $(OBJS) $(EXE)
-
-$(GENDIR)/$(CURDIR)/Moveing.o : Moveing.c MyTypes.h Moveing.h   \
-	Level.h MyMath.h Clean.h   \
-	Gfx.h
-	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Moveing.c -o $@
-
-$(GENDIR)/$(CURDIR)/Moria3D.o : Moria3D.c MyTypes.h Level.h   \
-	MyMath.h Clean.h Init.h   \
-	Moveing.h Gfx.h
-	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Moria3D.c -o $@
-
-$(GENDIR)/$(CURDIR)/Clean.o : Clean.c MyTypes.h Clean.h
-	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Clean.c -o $@
-
-$(GENDIR)/$(CURDIR)/Gfx.o : Gfx.c MyTypes.h Level.h   \
-	MyMath.h Clean.h Init.h   \
-	Moveing.h Gfx.h Timer.h
-	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Gfx.c -o $@
-
-$(GENDIR)/$(CURDIR)/Level.o : Level.c Clean.h MyTypes.h   \
-	MyMath.h Level.h
-	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Level.c -o $@
-
-$(GENDIR)/$(CURDIR)/Init.o : Init.c MyTypes.h Init.h   \
-	MyMath.h Level.h Clean.h   \
-	Moveing.h
-	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Init.c -o $@
-
-$(GENDIR)/$(CURDIR)/MyMath.o : MyMath.c MyMath.h MyTypes.h	 \
-	Level.h Clean.h
-	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/MyMath.c -o $@
-
-$(GENDIR)/$(CURDIR)/Version.o : Version.c
-	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Version.c -o $@
-
-$(GENDIR)/$(CURDIR)/Timer.o : Timer.c Timer.h
-	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/Timer.c -o $@
-
-$(GENDIR)/$(CURDIR)/math.o : math.c
-	$(CC) $(SYSROOT_FLAG) $(CFLAGS) $(INCL) -c $(SRCDIR)/$(CURDIR)/math.c -o $@
-
-#END OF FILE#
+%build_prog mmake=contrib-games-moria3d \
+    progname=Moria3D targetdir=$(AROS_CONTRIB)/Games/Moria3D \
+    files="$(MORIA_FILES)"
