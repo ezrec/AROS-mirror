@@ -1,7 +1,7 @@
 # $Id$
 include $(TOP)/config/make.cfg
 
-#MM- contrib-games : contrib-games-cxhextris
+#MM- contrib-games : contrib-games-moria3d
 
 MORIA_FILES := Moveing \
 	Moria3D \
