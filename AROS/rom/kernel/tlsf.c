@@ -1002,7 +1002,6 @@ tlsf_area_t * init_memory_area(void * memory, IPTR size)
 void tlsf_add_memory(struct MemHeaderExt *mhe, void *memory, IPTR size)
 {
     tlsf_t *tlsf = (tlsf_t *)mhe->mhe_UserData;
-    BOOL adjusted = FALSE;
 
     D(nbug("[Kernel:TLSF] %s(%p, %p, %u)\n", __PRETTY_FUNCTION__, tlsf, memory, size));
 
