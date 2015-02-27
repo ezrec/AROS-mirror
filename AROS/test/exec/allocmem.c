@@ -16,19 +16,16 @@
  */
 #define output printf
 
-static BOOL trash = FALSE;
-static BOOL leak  = FALSE;
-
-static inline void AccessTest(ULONG *ptr)
+static inline void AccessTest(ULONG *ptr, BOOL trash)
 {
     if (!trash)
-	return;
+        return;
 
     ptr[-1] = 0x40302010;	/* This should NOT cause mungwall warning */
     ptr[0]  = 0x01020304;	/* This SHOULD produce mungwall warning   */
 }
 
-static void test_allocabs(APTR block0)
+static void test_allocabs(APTR block0, BOOL trash, BOOL leak, BOOL notlsf)
 {
     APTR start, block1;
     const ULONG allocsize = 4096;
@@ -39,7 +36,7 @@ static void test_allocabs(APTR block0)
     {
         output("Allocated at 0x%p, available memory: %lu bytes\n", block1, (unsigned long)AvailMem(MEMF_ANY));
 
-        AccessTest(start + allocsize);
+        AccessTest(start + allocsize, trash);
 
         if (!leak)
         {
@@ -62,11 +59,20 @@ static void test_allocabs(APTR block0)
         {
             output("Allocated at 0x%p, available memory: %lu bytes\n", block1, (unsigned long)AvailMem(MEMF_ANY));
 
-            AccessTest(start + allocsize);
+            AccessTest(start + allocsize, trash);
 
             output("Freeing the block at 0x%p of %lu bytes...\n", start, (unsigned long)allocsize);
-            FreeMem(start, allocsize);
-            output("Done, available memory: %lu bytes\n", (unsigned long)AvailMem(MEMF_ANY));
+            if (notlsf)
+            {
+                FreeMem(start, allocsize);
+                output("Done, available memory: %lu bytes\n", (unsigned long)AvailMem(MEMF_ANY));
+            }
+            else
+            {
+                FreeMem(block1, allocsize + start - block1);
+                output("NOT SUPPORTED UNDER TLSF, freeing using returned address\n");
+                output("Done, available memory: %lu bytes\n", (unsigned long)AvailMem(MEMF_ANY));
+            }
         }
         else
         {
@@ -79,6 +85,9 @@ int main(int argc, char **argv)
 {
     int i;
     APTR block0;
+    BOOL trash  = FALSE;
+    BOOL leak   = FALSE;
+    BOOL notlsf = FALSE;
 
     /*
      * Do some memory trashing if started with "trash" argument.
@@ -88,9 +97,12 @@ int main(int argc, char **argv)
     for (i = 1; i < argc; i++)
     {
         if (!strcmp(argv[i], "trash"))
-	    trash = TRUE;
-	else if (!strcmp(argv[i], "leak"))
-	    leak = TRUE;
+            trash = TRUE;
+        else if (!strcmp(argv[i], "leak"))
+            leak = TRUE;
+        else if (!strcmp(argv[i], "notlsf"))
+            notlsf = TRUE;
+
     }
 
     /* We Forbid() in order to see how our allocations influence free memory size */
@@ -104,7 +116,7 @@ int main(int argc, char **argv)
     {
         output("Allocated at 0x%p, available memory: %lu bytes\n", block0, (unsigned long)AvailMem(MEMF_ANY));
         
-        AccessTest(block0 + 256 * 1024);
+        AccessTest(block0 + 256 * 1024, trash);
      
         if (!leak)
         {
@@ -118,7 +130,7 @@ int main(int argc, char **argv)
         output("Allocation failed!\n");
     }
 
-    test_allocabs(block0);
+    test_allocabs(block0, trash, leak, notlsf);
 
     output("\nTesting AllocMem(4096, MEMF_ANY|MEMF_REVERSE) ...\n");
     if ((block0 = AllocMem(4096, MEMF_ANY|MEMF_REVERSE)) != NULL)
@@ -130,7 +142,7 @@ int main(int argc, char **argv)
         if (*((volatile ULONG *)block0) != 0xC0DEBAD)
             output("Invalid memory allocated!!!\n");
 
-        AccessTest(block0 + 4096);
+        AccessTest(block0 + 4096, trash);
 
         if (!leak)
         {
