@@ -3,7 +3,8 @@
 
 -include $(TOP)/config/make.cfg
 
-REPOSITORIES = http://www.openssl.org/source
+REPOSITORIES = http://www.openssl.org/source/old/1.0.1/ \
+ ftp://mirror.switch.ch/mirror/openssl/source/old/1.0.1/
 ARCHBASE := openssl-1.0.1g
 OPENSSL_SOURCE := $(PORTSDIR)/openssl/$(ARCHBASE)
 OPENSSL_BUILD_DIR := $(GENDIR)/$(CURDIR)
