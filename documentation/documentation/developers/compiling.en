@@ -39,6 +39,7 @@ The following software is required for compiling AROS:
 + CMake
 + gperf
 + Patch
++ sed
 + C library development files (libc)
 + Common utilities, like cp, mv, sort, uniq, head, ...
 
@@ -76,6 +77,7 @@ set of required software listed earlier:
 + gawk
 + py-pil
 + wget
++ gsed
 + autoconf (if using XCode 2.4 or earlier)
 
 These can be installed with, for example::
