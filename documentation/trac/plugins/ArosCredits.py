@@ -17,7 +17,7 @@ class ArosCreditsMacro(WikiMacroBase):
     #    return ['BROWSER_VIEW', 'FILE_VIEW']
 
 
-    def expand_macro(self, formatter, name, content, args=None):
+    def expand_macro(self, formatter, name, text, args=None):
         rm = RepositoryManager(self.env)
         reponame, repos, path = rm.get_repository_by_path("/AROS/trunk/AROS/workbench/system/AboutAROS/db/credits")
         node = repos.get_node(path, repos.youngest_rev)

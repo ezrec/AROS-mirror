@@ -1005,7 +1005,7 @@ Result
 ~~~~~~
 ::
 
-     Wether this message is OK.
+     Whether this message is OK.
 
 
 
@@ -2746,9 +2746,18 @@ Synopsis
 ::
 
   APTR LibAllocAligned(
-     ULONG memSize,
+     IPTR memSize,
      ULONG requirements,
      IPTR  alignBytes)
+
+
+Function
+~~~~~~~~
+::
+
+     Allocate a memory block with a start address and size that are
+     multiples of a power-of-two. The returned memory must be freed using
+     FreeMem().
 
 
 Inputs
@@ -2765,23 +2774,24 @@ Result
 ~~~~~~
 ::
 
-
-     Pointer to the newly alloctated area, or
-     NULL if no saisfying memory can be found.
-
-     Free this pointer using FreeMem(..., memSize)
+     Pointer to the newly allocated area, or NULL if no satisfying memory
+     can be found.
 
 
 Notes
 ~~~~~
 ::
 
-
      If alignBytes is not a power of two, NULL is returned.
 
      If memSize is not a multiple of alignBytes, NULL is returned.
 
 
+
+See also
+~~~~~~~~
+
+exec.library/AllocMem exec.library/FreeMem(). 
 
 ----------
 

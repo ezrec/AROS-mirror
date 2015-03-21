@@ -643,6 +643,7 @@ Function
 ::
 
      Allocate some memory from the system memory pool at a given address.
+     The memory must be freed with FreeMem().
 
 
 Inputs
@@ -658,7 +659,7 @@ Result
 ::
 
      A pointer to some memory including the requested bytes or NULL if
-     the memory couldn't be allocated
+     the memory couldn't be allocated.
 
 
 
@@ -4756,15 +4757,22 @@ Inputs
                  and current bounds of the stack you wish to use.
      entry   -   Address of the function to call.
      args    -   A structure (actually an array) containing up to 8
-                 function arguments
+                 function arguments. May be NULL.
 
 
 Result
 ~~~~~~
 ::
 
-     A value actually returned by your function. The function will be
-     running on a new stack.
+     The value returned by your function.
+
+
+Notes
+~~~~~
+::
+
+     This function is mostly compatible with MorphOS's NewPPCStackSwap()
+     function.
 
 
 Bugs

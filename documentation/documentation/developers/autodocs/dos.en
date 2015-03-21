@@ -5319,7 +5319,8 @@ Result
 ~~~~~~
 ::
 
-     The return code from the program. See also IoErr().
+     The return code from the program, or -1 if the command could not be
+     started (e.g. no memory for the stack). See also IoErr().
 
 
 Notes
