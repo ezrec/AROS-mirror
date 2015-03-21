@@ -1,0 +1,475 @@
+===========
+mui_classes
+===========
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_
+
+----------
+
+Classes
+-------
+
++ `Colorfield.mui`_
++ `List.mui`_
+
+----------
+
+Colorfield.mui
+--------------
+
+========================================== ========================================== ========================================== ========================================== 
+`MUIA_Colorfield_Blue`_                    `MUIA_Colorfield_Green`_                   `MUIA_Colorfield_Pen`_                     `MUIA_Colorfield_Red`_                     
+`MUIA_Colorfield_RGB`_                     
+========================================== ========================================== ========================================== ========================================== 
+
+-----------
+
+MUIA_Colorfield_Blue
+====================
+
+Synopsis
+~~~~~~~~
+::
+
+     [ISG], ULONG
+
+
+Function
+~~~~~~~~
+::
+
+     The blue component of the color field as an unsigned 32-bit value
+     (0 to 0xFFFFFFFF).
+
+
+Notes
+~~~~~
+::
+
+     MUI V4
+
+
+
+See also
+~~~~~~~~
+
+`MUIA_Colorfield_RGB`_ `MUIA_Colorfield_Red`_ `MUIA_Colorfield_Green`_ 
+
+----------
+
+MUIA_Colorfield_Green
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+     [ISG], ULONG
+
+
+Function
+~~~~~~~~
+::
+
+     The green component of the color field as an unsigned 32-bit value
+     (0 to 0xFFFFFFFF).
+
+
+Notes
+~~~~~
+::
+
+     MUI V4
+
+
+
+See also
+~~~~~~~~
+
+`MUIA_Colorfield_RGB`_ `MUIA_Colorfield_Red`_ `MUIA_Colorfield_Blue`_ 
+
+----------
+
+MUIA_Colorfield_Pen
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+     [ISG], ULONG
+
+
+Function
+~~~~~~~~
+::
+
+     The used pen. If not set explicitly, a new one is obtained
+     automatically.
+
+     This attribute was incorrectly documented as gettable-only in the MUI
+     documentation.
+
+
+Notes
+~~~~~
+::
+
+     MUI V4
+
+
+
+----------
+
+MUIA_Colorfield_Red
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+     [ISG], ULONG
+
+
+Function
+~~~~~~~~
+::
+
+     The red component of the color field as an unsigned 32-bit value
+     (0 to 0xFFFFFFFF).
+
+
+Notes
+~~~~~
+::
+
+     MUI V4
+
+
+
+See also
+~~~~~~~~
+
+`MUIA_Colorfield_RGB`_ `MUIA_Colorfield_Green`_ `MUIA_Colorfield_Blue`_ 
+
+----------
+
+MUIA_Colorfield_RGB
+===================
+
+Synopsis
+~~~~~~~~
+::
+
+     [ISG], ULONG *
+
+
+Function
+~~~~~~~~
+::
+
+     The red, green and blue components of the color field as an array of
+     unsigned 32-bit values (0 to 0xFFFFFFFF).
+
+
+Notes
+~~~~~
+::
+
+     MUI V4
+
+
+
+See also
+~~~~~~~~
+
+`MUIA_Colorfield_Red`_ `MUIA_Colorfield_Green`_ `MUIA_Colorfield_Blue`_ 
+
+List.mui
+--------
+
+========================================== ========================================== ========================================== ========================================== 
+`MUIA_List_CompareHook`_                   `MUIA_List_MultiTestHook`_                 `MUIM_DragQuery`_                          `MUIM_Layout`_                             
+`MUIM_List_Clear`_                         `MUIM_List_Compare`_                       `MUIM_List_Jump`_                          `MUIM_List_Move`_                          
+`MUIM_List_Sort`_                          
+========================================== ========================================== ========================================== ========================================== 
+
+-----------
+
+MUIA_List_CompareHook
+=====================
+
+Synopsis
+~~~~~~~~
+::
+
+     [IS.], struct Hook *
+
+
+Function
+~~~~~~~~
+::
+
+     The provided hook indicates the sort ordering of two list entries.
+     The hook receives list-entry data pointers as its second and third
+     arguments. The hook should return a negative value if the first entry
+     should be placed before the second entry, a positive value if the
+     first entry should be placed after the second entry, and zero if the
+     entries are equal.
+
+     In addition to being used internally for sorting operations, this hook
+     will be called when MUIM_List_Compare is externally invoked.
+
+     If this attribute is not specified or is set to NULL, all list entries
+     must be strings.
+
+
+Notes
+~~~~~
+::
+
+     MUI V4
+
+
+
+----------
+
+MUIA_List_MultiTestHook
+=======================
+
+Synopsis
+~~~~~~~~
+::
+
+     [IS.], struct Hook *
+
+
+Function
+~~~~~~~~
+::
+
+     The provided hook indicates whether a particular list entry
+     may be multiselected. The hook receives the list-entry data pointer as
+     its third argument, and returns a Boolean value. If this attribute is
+     not specified or is set to NULL, all list entries are considered
+     multi-selectable.
+
+     Whenever an entry is about to be selected, this hook is called if
+     there are other entries already selected. If the hook returns TRUE,
+     the entry may be multi-selected; if the hook returns FALSE, the entry
+     remains unselected.
+
+     Additionally, if a non-multi-selectable entry has been selected (as
+     the only selected entry in the list), any attempt to select an
+     additional entry will fail.
+
+
+Notes
+~~~~~
+::
+
+     MUI V4
+
+
+
+----------
+
+MUIM_DragQuery
+==============
+
+
+----------
+
+MUIM_Layout
+===========
+
+
+----------
+
+MUIM_List_Clear
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+     DoMethod(obj, MUIM_List_Clear);
+
+
+Function
+~~~~~~~~
+::
+
+     Removes all entries from the list.
+
+
+Notes
+~~~~~
+::
+
+     MUI V4
+
+
+
+----------
+
+MUIM_List_Compare
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+     DoMethod(obj, MUIM_List_Compare, APTR entry1, APTR entry2,
+         LONG sort_type1, LONG sort_type2);
+
+
+Function
+~~~~~~~~
+::
+
+     Compare two list entries according to the current comparison hook
+     (MUIA_List_CompareHook).
+
+
+Inputs
+~~~~~~
+::
+
+     entry1 - the first entry data.
+     entry2 - the second entry data.
+     sort_type1 - undocumented.
+     sort_type2 - undocumented.
+
+
+Notes
+~~~~~
+::
+
+     MUI V20
+
+
+
+See also
+~~~~~~~~
+
+`MUIA_List_CompareHook`_ MUIM_List_Sort. 
+
+----------
+
+MUIM_List_Jump
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+     DoMethod(obj, MUIM_List_Jump, LONG pos);
+
+
+Function
+~~~~~~~~
+::
+
+     Scrolls the list so that a particular entry is visible.
+
+
+Inputs
+~~~~~~
+::
+
+     pos - index of entry that should become visible, or one of these
+         special values:
+             MUIV_List_Jump_Active: show the active entry.
+             MUIV_List_Jump_Top: show the first entry.
+             MUIV_List_Jump_Bottom: show the last entry.
+             MUIV_List_Jump_Up: show the previous hidden entry.
+             MUIV_List_Jump_Down: show the next hidden entry.
+
+
+Notes
+~~~~~
+::
+
+     MUI V4
+
+
+
+----------
+
+MUIM_List_Move
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+     DoMethod(obj, MUIM_List_Move, LONG from, LONG to);
+
+
+Function
+~~~~~~~~
+::
+
+     Move a list entry to a new position.
+
+
+Inputs
+~~~~~~
+::
+
+     from - the current index of the entry that should be moved, or one of
+         these special values:
+             MUIV_List_Move_Active: the active entry.
+             MUIV_List_Move_Top: the first entry.
+             MUIV_List_Move_Bottom: the last entry.
+     to - the index of the entry's new position, or one of
+         these special values:
+             MUIV_List_Move_Active: the active entry.
+             MUIV_List_Move_Top: the first entry.
+             MUIV_List_Move_Bottom: the last entry.
+
+
+Notes
+~~~~~
+::
+
+     MUI V9
+
+
+
+----------
+
+MUIM_List_Sort
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+     DoMethod(obj, MUIM_List_Sort);
+
+
+Function
+~~~~~~~~
+::
+
+     Sort the list's entries according to the current comparison hook
+     (MUIA_List_CompareHook).
+
+
+Notes
+~~~~~
+::
+
+     MUI V4
+
+
+
+See also
+~~~~~~~~
+
+`MUIA_List_CompareHook`_ MUIM_List_Compare. 
+

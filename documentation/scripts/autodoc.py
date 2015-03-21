@@ -687,7 +687,7 @@ class hidddoclist:
                             else:
                                 self.doclist[classname] = [ad]    
                         else:
-                            raise ValueError("hidd doc has no LOCATION")
+                            raise ValueError("'%s' hidd doc has no LOCATION" % (ad.docname))
                         
                 filehandle.close()
 
@@ -819,6 +819,12 @@ def create_module_docs():
                 os.path.join(topdir, "rom", "devs", "ata") )
     for dir in srcdirs:
         create_hidd_docs_dir(dir, targetdir, module_titles)
+
+    # add muimaster classes
+    docpath = os.path.join(topdir, "workbench", "libs", "muimaster", "classes")
+    hidddocs = hidddoclist()
+    hidddocs.read(docpath, "mui_classes")
+    hidddocs.write(targetdir, module_titles)
 
     # print index file
     filehandle = open(os.path.join(targetdir, "index.en"), "w")
