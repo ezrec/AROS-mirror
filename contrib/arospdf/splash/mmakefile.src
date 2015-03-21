@@ -1,0 +1,36 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-arospdf-splash : includes
+
+CXX_FILES := \
+	Splash \
+	SplashBitmap \
+	SplashClip \
+	SplashFTFont \
+	SplashFTFontEngine \
+	SplashFTFontFile \
+	SplashFont \
+	SplashFontEngine \
+	SplashFontFile \
+	SplashFontFileID \
+	SplashPath \
+	SplashPattern \
+	SplashScreen \
+	SplashState \
+	SplashT1Font \
+	SplashT1FontEngine \
+	SplashT1FontFile \
+	SplashXPath \
+	SplashXPathScanner
+
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/AROSPDF/libs
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../goo -I$(SRCDIR)/$(CURDIR)/../fofi
+USER_CFLAGS := -Wno-write-strings -DHAVE_CONFIG_H
+
+%build_linklib mmake=contrib-arospdf-splash libname=splash \
+  cxxfiles=$(CXX_FILES) libdir=$(TARGETDIR)
+
+%common

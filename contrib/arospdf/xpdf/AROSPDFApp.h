@@ -16,6 +16,7 @@
 #include <libraries/asl.h>
 #include <proto/asl.h>
 #include <proto/dos.h>
+#include <proto/alib.h>
 #include "gtypes.h"
 #include "SplashTypes.h"
 #include <string.h>

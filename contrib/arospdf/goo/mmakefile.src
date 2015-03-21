@@ -1,0 +1,26 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-arospdf-goo : includes
+
+CXX_FILES = \
+	GHash \
+	GList \
+	GString \
+	gmem \
+	gmempp \
+	gfile \
+	FixedPoint
+
+C_FILES = \
+	parseargs
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/AROSPDF/libs
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/..
+USER_CFLAGS := -Wno-write-strings -DHAVE_CONFIG_H
+
+%build_linklib mmake=contrib-arospdf-goo libname=Goo \
+  files=$(C_FILES) cxxfiles=$(CXX_FILES) libdir=$(TARGETDIR)
+
+%common

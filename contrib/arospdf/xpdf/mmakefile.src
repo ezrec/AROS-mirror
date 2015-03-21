@@ -1,0 +1,31 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-arospdf : contrib-arospdf-xpdf
+
+#MM contrib-arospdf-xpdf : includes linklibs \
+#MM     contrib-arospdf-fofi \
+#MM     contrib-arospdf-goo \
+#MM     contrib-arospdf-splash
+
+XPDF_CXX := Annot Array BuiltinFont BuiltinFontTables Catalog \
+	CharCodeToUnicode CMap CoreOutputDev Decrypt Dict \
+	Error FontEncodingTables Function Gfx GfxFont \
+	GfxState GlobalParams JArithmeticDecoder JBIG2Stream \
+	JPXStream Lexer Link NameToCharCode Object Outline \
+	OutputDev Page Parser PDFCore PDFDoc PDFDocEncoding \
+	PreScanOutputDev PSOutputDev PSTokenizer SecurityHandler \
+	SplashOutputDev Stream TextOutputDev UnicodeMap \
+	UnicodeTypeTable AROSPDFApp arospdf AROSSplashOutputDev \
+	XRef
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/AROSPDF
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../goo -I$(SRCDIR)/$(CURDIR)/../splash -I$(SRCDIR)/$(CURDIR)/../fofi
+USER_CFLAGS := -Wno-write-strings -fpermissive -DHAVE_CONFIG_H
+USER_LDFLAGS := -L$(TARGETDIR)/libs
+
+%build_prog mmake=contrib-arospdf-xpdf progname=arospdf files= cxxfiles=$(XPDF_CXX) \
+    targetdir=$(TARGETDIR) uselibs="fofi Goo splash"
+
+%common
