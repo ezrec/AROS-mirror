@@ -1,0 +1,1 @@
+g++ -g -fpermissive -O2 -DHAVE_CONFIG_H -I.. -I./../goo -I./../fofi -I./../splash -I.           -c AROSPDFApp.cc

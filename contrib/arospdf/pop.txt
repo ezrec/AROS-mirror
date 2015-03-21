@@ -1,0 +1,16 @@
+cd goo; make
+make[1]: Entering directory `/System/xpdf-3.02/goo'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/System/xpdf-3.02/goo'
+cd fofi; make
+make[1]: Entering directory `/System/xpdf-3.02/fofi'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/System/xpdf-3.02/fofi'
+cd splash; make
+make[1]: Entering directory `/System/xpdf-3.02/splash'
+make[1]: Nothing to be done for `all'.
+make[1]: Leaving directory `/System/xpdf-3.02/splash'
+cd xpdf; make all-no-x
+make[1]: Entering directory `/System/xpdf-3.02/xpdf'
+g++ -g -O2 -DHAVE_CONFIG_H -I.. -I./../goo -I./../fofi -I./../splash -I.  -o xpdf Annot.o Array.o BuiltinFont.o BuiltinFontTables.o Catalog.o CharCodeToUnicode.o CMap.o CoreOutputDev.o Decrypt.o Dict.o Error.o FontEncodingTables.o Function.o Gfx.o GfxFont.o GfxState.o GlobalParams.o JArithmeticDecoder.o JBIG2Stream.o JPXStream.o Lexer.o Link.o NameToCharCode.o Object.o Outline.o OutputDev.o Page.o Parser.o PDFCore.o PDFDoc.o PDFDocEncoding.o PreScanOutputDev.o PSOutputDev.o PSTokenizer.o SecurityHandler.x.o AROSSplashOutputDev.o Stream.o TextOutputDev.o UnicodeMap.o UnicodeTypeTable.o arospdf.o AROSPDFApp.o  -L../goo -lGoo -L../splash -lsplash   -L../fofi -lfofi -L../goo -lGoo -lm
+make[1]: Leaving directory `/System/xpdf-3.02/xpdf'

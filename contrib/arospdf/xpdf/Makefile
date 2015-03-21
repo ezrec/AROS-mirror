@@ -1,0 +1,257 @@
+#========================================================================
+#
+# Xpdf Makefile
+#
+# Copyright 1996-2003 Glyph & Cog, LLC
+#
+#========================================================================
+
+SHELL = /bin/sh
+
+prefix = /usr/local
+srcdir = .
+
+
+GOOSRCDIR = $(srcdir)/../goo
+GOOLIBDIR = ../goo
+FOFISRCDIR = $(srcdir)/../fofi
+FOFILIBDIR = ../fofi
+SPLASHSRCDIR = $(srcdir)/../splash
+SPLASHLIBDIR = ../splash
+
+CXXFLAGS = -g -fpermissive -Wno-write-strings -O2 -DHAVE_CONFIG_H -I.. -I$(GOOSRCDIR) -I$(FOFISRCDIR) -I$(SPLASHSRCDIR) -I$(srcdir)          
+
+LDFLAGS = -L/Development/lib
+
+T1LIBS = -lt1
+FTLIBS = -lfreetype2shared
+
+XLIBS = 
+
+SPLASHLIBS = -L$(SPLASHLIBDIR) -lsplash
+
+OTHERLIBS =   \
+	-L$(FOFILIBDIR) -lfofi \
+	-L$(GOOLIBDIR) -lGoo
+
+CXX = g++
+
+LIBPREFIX = lib
+EXE = 
+
+#------------------------------------------------------------------------
+
+.SUFFIXES: .cc
+
+.cc.o:
+	$(CXX) $(CXXFLAGS) -c $<
+
+#------------------------------------------------------------------------
+
+CXX_SRC = \
+	$(srcdir)/Annot.cc \
+	$(srcdir)/Array.cc \
+	$(srcdir)/BuiltinFont.cc \
+	$(srcdir)/BuiltinFontTables.cc \
+	$(srcdir)/CMap.cc \
+	$(srcdir)/Catalog.cc \
+	$(srcdir)/CharCodeToUnicode.cc \
+	$(srcdir)/CoreOutputDev.cc \
+	$(srcdir)/Decrypt.cc \
+	$(srcdir)/Dict.cc \
+	$(srcdir)/Error.cc \
+	$(srcdir)/FontEncodingTables.cc \
+	$(srcdir)/Function.cc \
+	$(srcdir)/Gfx.cc \
+	$(srcdir)/GfxFont.cc \
+	$(srcdir)/GfxState.cc \
+	$(srcdir)/GlobalParams.cc \
+	$(srcdir)/ImageOutputDev.cc \
+	$(srcdir)/JArithmeticDecoder.cc \
+	$(srcdir)/JBIG2Stream.cc \
+	$(srcdir)/JPXStream.cc \
+	$(srcdir)/Lexer.cc \
+	$(srcdir)/Link.cc \
+	$(srcdir)/NameToCharCode.cc \
+	$(srcdir)/Object.cc \
+	$(srcdir)/Outline.cc \
+	$(srcdir)/OutputDev.cc \
+	$(srcdir)/PDFCore.cc \
+	$(srcdir)/PDFDoc.cc \
+	$(srcdir)/PDFDocEncoding.cc \
+	$(srcdir)/PSOutputDev.cc \
+	$(srcdir)/PSTokenizer.cc \
+	$(srcdir)/Page.cc \
+	$(srcdir)/Parser.cc \
+	$(srcdir)/PreScanOutputDev.cc \
+	$(srcdir)/SecurityHandler.cc \
+	$(srcdir)/SplashOutputDev.cc \
+	$(srcdir)/Stream.cc \
+	$(srcdir)/TextOutputDev.cc \
+	$(srcdir)/UnicodeMap.cc \
+	$(srcdir)/UnicodeTypeTable.cc \
+	$(srcdir)/XPDFApp.cc \
+	$(srcdir)/XPDFCore.cc \
+	$(srcdir)/XPDFTree.cc \
+	$(srcdir)/XPDFViewer.cc \
+	$(srcdir)/XpdfPluginAPI.cc \
+	$(srcdir)/XRef.cc \
+	$(srcdir)/pdftops.cc \
+	$(srcdir)/pdftotext.cc \
+	$(srcdir)/pdfinfo.cc \
+	$(srcdir)/pdffonts.cc \
+	$(srcdir)/pdftoppm.cc \
+	$(srcdir)/pdfimages.cc \
+	$(srcdir)/xpdf.cc \
+	$(srcdir)/AROSPDFApp.cc \
+	$(srcdir)/arospdf.cc \
+	$(srcdir)/AROSSplashOutputDev.cc 
+	
+#------------------------------------------------------------------------
+
+all: xpdf$(EXE) pdftops$(EXE) pdftotext$(EXE) pdfinfo$(EXE) \
+	pdffonts$(EXE) pdftoppm$(EXE) pdfimages$(EXE)
+
+all-no-x: pdftops$(EXE) pdftotext$(EXE) pdfinfo$(EXE) pdffonts$(EXE) \
+	pdfimages$(EXE)
+
+#------------------------------------------------------------------------
+
+XPDF_OBJS = Annot.o Array.o BuiltinFont.o BuiltinFontTables.o Catalog.o \
+	CharCodeToUnicode.o CMap.o CoreOutputDev.o Decrypt.o Dict.o \
+	Error.o FontEncodingTables.o Function.o Gfx.o GfxFont.o \
+	GfxState.o GlobalParams.o JArithmeticDecoder.o JBIG2Stream.o \
+	JPXStream.o Lexer.o Link.o NameToCharCode.o Object.o Outline.o \
+	OutputDev.o Page.o Parser.o PDFCore.o PDFDoc.o PDFDocEncoding.o \
+	PreScanOutputDev.o PSOutputDev.o PSTokenizer.o SecurityHandler.o \
+	SplashOutputDev.o Stream.o TextOutputDev.o UnicodeMap.o \
+	UnicodeTypeTable.o AROSPDFApp.o arospdf.o AROSSplashOutputDev.o \
+	XRef.o
+XPDF_LIBS = -lmui -lmuimaster -larosm -L$(GOOLIBDIR) -lGoo $(SPLASHLIBS) $(T1LIBS) $(FTLIBS) \
+	$(XLIBS) $(OTHERLIBS)
+
+xpdf$(EXE): $(XPDF_OBJS) $(GOOLIBDIR)/$(LIBPREFIX)Goo.a
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o arospdf$(EXE) $(XPDF_OBJS) $(XPDF_LIBS)
+
+#------------------------------------------------------------------------
+
+PDFTOPS_OBJS = Annot.o Array.o BuiltinFont.o BuiltinFontTables.o \
+	Catalog.o CharCodeToUnicode.o CMap.o Decrypt.o Dict.o Error.o \
+	FontEncodingTables.o Function.o Gfx.o GfxFont.o \
+	GfxState.o GlobalParams.o JArithmeticDecoder.o JBIG2Stream.o \
+	JPXStream.o Lexer.o Link.o NameToCharCode.o Outline.o Object.o \
+	OutputDev.o Page.o Parser.o PDFDoc.o PDFDocEncoding.o \
+	PreScanOutputDev.o PSOutputDev.o PSTokenizer.o SecurityHandler.o \
+	SplashOutputDev.o Stream.o UnicodeMap.o XpdfPluginAPI.o XRef.o \
+	pdftops.o
+PDFTOPS_LIBS = -L$(GOOLIBDIR) -lGoo $(SPLASHLIBS) $(T1LIBS) $(FTLIBS) \
+	$(OTHERLIBS) -larosm
+
+pdftops$(EXE): $(PDFTOPS_OBJS) $(GOOLIBDIR)/$(LIBPREFIX)Goo.a
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o pdftops$(EXE) $(PDFTOPS_OBJS) \
+		$(PDFTOPS_LIBS)
+
+#------------------------------------------------------------------------
+
+PDFTOTEXT_OBJS = Annot.o Array.o BuiltinFont.o BuiltinFontTables.o \
+	Catalog.o CharCodeToUnicode.o CMap.o Decrypt.o Dict.o Error.o \
+	FontEncodingTables.o Function.o Gfx.o GfxFont.o \
+	GfxState.o GlobalParams.o JArithmeticDecoder.o JBIG2Stream.o \
+	JPXStream.o Lexer.o Link.o NameToCharCode.o Object.o Outline.o \
+	OutputDev.o Page.o Parser.o PDFDoc.o PDFDocEncoding.o PSTokenizer.o \
+	SecurityHandler.o Stream.o TextOutputDev.o UnicodeMap.o \
+	UnicodeTypeTable.o XpdfPluginAPI.o XRef.o pdftotext.o
+PDFTOTEXT_LIBS = -L$(GOOLIBDIR) -lGoo $(OTHERLIBS) -larosm
+
+pdftotext$(EXE): $(PDFTOTEXT_OBJS) $(GOOLIBDIR)/$(LIBPREFIX)Goo.a
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o pdftotext$(EXE) $(PDFTOTEXT_OBJS) \
+		$(PDFTOTEXT_LIBS)
+
+#------------------------------------------------------------------------
+
+PDFINFO_OBJS = Annot.o Array.o BuiltinFont.o BuiltinFontTables.o \
+	Catalog.o CharCodeToUnicode.o CMap.o Decrypt.o Dict.o Error.o \
+	FontEncodingTables.o Function.o Gfx.o GfxFont.o \
+	GfxState.o GlobalParams.o JArithmeticDecoder.o JBIG2Stream.o \
+	JPXStream.o Lexer.o Link.o NameToCharCode.o Object.o Outline.o \
+	OutputDev.o Page.o Parser.o PDFDoc.o PDFDocEncoding.o PSTokenizer.o \
+	SecurityHandler.o Stream.o UnicodeMap.o XpdfPluginAPI.o XRef.o \
+	pdfinfo.o
+PDFINFO_LIBS = -L$(GOOLIBDIR) -lGoo $(OTHERLIBS) -larosm
+
+pdfinfo$(EXE): $(PDFINFO_OBJS) $(GOOLIBDIR)/$(LIBPREFIX)Goo.a
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o pdfinfo$(EXE) $(PDFINFO_OBJS) \
+		$(PDFINFO_LIBS)
+
+#------------------------------------------------------------------------
+
+PDFFONTS_OBJS = Annot.o Array.o BuiltinFont.o BuiltinFontTables.o \
+	Catalog.o CharCodeToUnicode.o CMap.o Decrypt.o Dict.o Error.o \
+	FontEncodingTables.o Function.o Gfx.o GfxFont.o \
+	GfxState.o GlobalParams.o JArithmeticDecoder.o JBIG2Stream.o \
+	JPXStream.o Lexer.o Link.o NameToCharCode.o Object.o Outline.o \
+	OutputDev.o Page.o Parser.o PDFDoc.o PDFDocEncoding.o PSTokenizer.o \
+	SecurityHandler.o Stream.o UnicodeMap.o XpdfPluginAPI.o XRef.o \
+	pdffonts.o
+PDFFONTS_LIBS = -L$(GOOLIBDIR) -lGoo $(OTHERLIBS) -larosm
+
+pdffonts$(EXE): $(PDFFONTS_OBJS) $(GOOLIBDIR)/$(LIBPREFIX)Goo.a
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o pdffonts$(EXE) $(PDFFONTS_OBJS) \
+		$(PDFFONTS_LIBS)
+
+#------------------------------------------------------------------------
+
+PDFTOPPM_OBJS = Annot.o Array.o BuiltinFont.o BuiltinFontTables.o \
+	Catalog.o CharCodeToUnicode.o CMap.o Decrypt.o Dict.o Error.o \
+	FontEncodingTables.o Function.o Gfx.o GfxFont.o GfxState.o \
+	GlobalParams.o JArithmeticDecoder.o JBIG2Stream.o JPXStream.o \
+	Lexer.o Link.o NameToCharCode.o Object.o Outline.o OutputDev.o \
+	Page.o Parser.o PDFDoc.o PDFDocEncoding.o PSTokenizer.o \
+	SecurityHandler.o SplashOutputDev.o Stream.o TextOutputDev.o \
+	UnicodeMap.o UnicodeTypeTable.o XpdfPluginAPI.o XRef.o pdftoppm.o
+PDFTOPPM_LIBS = -L$(GOOLIBDIR) -lGoo $(SPLASHLIBS) $(T1LIBS) $(FTLIBS) \
+	$(OTHERLIBS) -larosm
+
+pdftoppm$(EXE): $(PDFTOPPM_OBJS) $(GOOLIBDIR)/$(LIBPREFIX)Goo.a
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o pdftoppm$(EXE) $(PDFTOPPM_OBJS) \
+		$(PDFTOPPM_LIBS)
+
+#------------------------------------------------------------------------
+
+PDFIMAGES_OBJS = Annot.o Array.o BuiltinFont.o BuiltinFontTables.o \
+	Catalog.o CharCodeToUnicode.o CMap.o Decrypt.o Dict.o Error.o \
+	FontEncodingTables.o Function.o Gfx.o GfxFont.o GfxState.o \
+	GlobalParams.o ImageOutputDev.o JArithmeticDecoder.o \
+	JBIG2Stream.o JPXStream.o Lexer.o Link.o NameToCharCode.o Object.o \
+	Outline.o OutputDev.o Page.o Parser.o PDFDoc.o PDFDocEncoding.o \
+	PSTokenizer.o SecurityHandler.o Stream.o UnicodeMap.o \
+	XpdfPluginAPI.o XRef.o pdfimages.o
+PDFIMAGES_LIBS = -L$(GOOLIBDIR) -lGoo $(OTHERLIBS) -larosm
+
+pdfimages$(EXE): $(PDFIMAGES_OBJS) $(GOOLIBDIR)/$(LIBPREFIX)Goo.a
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o pdfimages$(EXE) $(PDFIMAGES_OBJS) \
+		$(PDFIMAGES_LIBS)
+
+#------------------------------------------------------------------------
+
+SecurityHandler.x.o: SecurityHandler.cc
+	$(CXX) $(CXXFLAGS) -DHAVE_XPDFCORE -c -o SecurityHandler.x.o \
+		SecurityHandler.cc
+
+#------------------------------------------------------------------------
+
+clean:
+	rm -f $(XPDF_OBJS) xpdf$(EXE)
+	rm -f $(PDFTOPS_OBJS) pdftops$(EXE)
+	rm -f $(PDFTOTEXT_OBJS) pdftotext$(EXE)
+	rm -f $(PDFINFO_OBJS) pdfinfo$(EXE)
+	rm -f $(PDFFONTS_OBJS) pdffonts$(EXE)
+	rm -f $(PDFTOPPM_OBJS) pdftoppm$(EXE)
+	rm -f $(PDFIMAGES_OBJS) pdfimages$(EXE)
+
+#------------------------------------------------------------------------
+
+depend:
+	$(CXX) $(CXXFLAGS) -MM $(CXX_SRC) >Makefile.dep
+
+include Makefile.dep
