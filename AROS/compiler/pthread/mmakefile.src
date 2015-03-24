@@ -3,9 +3,9 @@ include $(TOP)/config/make.cfg
 #MM- core-linklibs : linklibs-pthread
 #MM linklibs-pthreads : includes
 
-%copy_includes includes="pthread.h sched.h"
+%copy_includes includes="pthread.h sched.h semaphore.h"
 
-LINKLIBFILES := pthread sched
+LINKLIBFILES := pthread sched semaphore
 LIBRARYFILES := 
 
 #%build_module mmake=compiler-pthread \
