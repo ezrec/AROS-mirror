@@ -2,6 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
+#MM- contrib : contrib-arospdf
 #MM- contrib-arospdf : contrib-arospdf-xpdf
 
 #MM contrib-arospdf-xpdf : includes linklibs \
