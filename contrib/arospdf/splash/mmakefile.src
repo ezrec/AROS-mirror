@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#MM contrib-arospdf-splash : includes
+#MM contrib-arospdf-splash : includes development-t1lib
 
 CXX_FILES := \
 	Splash \

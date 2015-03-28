@@ -1,0 +1,13 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+FILES := Package-Startup
+
+#MM- contrib-arospdf : contrib-arospdf-startupfiles contrib-arospdf-envpackage
+
+#MM
+contrib-arospdf-envpackage :
+	$(ECHO) "Extras:Utilities/Text/AROSPDF" >$(AROS_PACKAGES)/AROSPDF
+
+%copy_files_q mmake=contrib-arospdf-startupfiles dst=$(AROS_CONTRIB)/Utilities/Text/AROSPDF/S

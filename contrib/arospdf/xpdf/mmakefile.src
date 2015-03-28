@@ -2,12 +2,14 @@
 
 include $(TOP)/config/make.cfg
 
-#MM contrib-arospdf : contrib-arospdf-xpdf
+#MM- contrib-arospdf : contrib-arospdf-xpdf
 
 #MM contrib-arospdf-xpdf : includes linklibs \
 #MM     contrib-arospdf-fofi \
 #MM     contrib-arospdf-goo \
-#MM     contrib-arospdf-splash
+#MM     contrib-arospdf-splash \
+#MM     contrib-arospdf-fonts \
+#MM     contrib-arospdf-resources
 
 XPDF_CXX := Annot Array BuiltinFont BuiltinFontTables Catalog \
 	CharCodeToUnicode CMap CoreOutputDev Decrypt Dict \
@@ -25,7 +27,11 @@ USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../goo -I$(SRCDI
 USER_CFLAGS := -Wno-write-strings -fpermissive -DHAVE_CONFIG_H
 USER_LDFLAGS := -L$(TARGETDIR)/libs
 
-%build_prog mmake=contrib-arospdf-xpdf progname=arospdf files= cxxfiles=$(XPDF_CXX) \
-    targetdir=$(TARGETDIR) uselibs="fofi Goo splash"
+%build_prog mmake=contrib-arospdf-xpdf progname=AROSPDF files= cxxfiles=$(XPDF_CXX) \
+    targetdir=$(TARGETDIR) uselibs="fofi Goo splash t1 freetype2"
+
+%copy_dir_recursive mmake=contrib-arospdf-fonts src=fonts dst=$(TARGETDIR)/fonts
+
+%copy_dir_recursive mmake=contrib-arospdf-resources src=resources dst=$(TARGETDIR)/resources
 
 %common
