@@ -1,0 +1,18 @@
+# Copyright © 2015, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-development : contrib-development-libs-t1lib
+
+#MM- contrib-development-libs-t1lib : development-t1lib
+
+REPOSITORIES := ftp://sunsite.unc.edu/pub/Linux/libs/graphics/
+
+%fetch_and_build_gnu_development package=t1lib version=5.1.2 \
+    patch=yes package_repo="$(REPOSITORIES)" \
+    extracflags="-DT1_AA_TYPE16=short -DT1_AA_TYPE32=int -DT1_AA_TYPE64=long" \
+    extraoptions=""
+
+#FIXME: T1_AA_TYPE64 must be long long
+#How can the space char between the two "long" inserted?
