@@ -72,36 +72,37 @@ int main(int argc, char *argv[]) {
   int exitCode;
 
   exitCode = 99;
-	fileName=NULL;
-	if (argc>1) {
-		// parse args
-		ok = parseArgs(argDesc, &argc, argv);
-		if (!ok || printVersion || printHelp) {
-			fprintf(stderr, "AROSpdf version %s\n", xpdfVersion);
-			fprintf(stderr, "%s\n", xpdfCopyright);
-			if (!printVersion) {
-				printUsage("AROSpdf", "<PDF-file>", argDesc);
-			}
-			goto err0;
-		}
-		if (argc==2) 
-		fileName = new GString(argv[1]);
-		else   fileName=NULL;
-	}
-	
-	if (argc==0) {
-		fileName=NULL;
-		struct WBStartup *startup = NULL;
-		startup = (struct WBStartup *) argv;
-		if (startup != NULL) {
-			if (startup->sm_NumArgs >1)
-			{
-				/* FIXME: all arguments but the first are ignored */
-				cd = CurrentDir(startup->sm_ArgList[1].wa_Lock);
-				fileName = new GString(startup->sm_ArgList[1].wa_Name);
-			}
-		}
-	}
+  fileName=NULL;
+  if (argc>1) {
+    // parse args
+    ok = parseArgs(argDesc, &argc, argv);
+    if (!ok || printVersion || printHelp) {
+      fprintf(stderr, "AROSpdf version %s\n", xpdfVersion);
+      fprintf(stderr, "%s\n", xpdfCopyright);
+      if (!printVersion) {
+        printUsage("AROSpdf", "<PDF-file>", argDesc);
+      }
+      goto err0;
+    }
+    if (argc==2) 
+      fileName = new GString(argv[1]);
+    else
+      fileName=NULL;
+  }
+  
+  if (argc==0) {
+    fileName=NULL;
+    struct WBStartup *startup = NULL;
+    startup = (struct WBStartup *) argv;
+    if (startup != NULL) {
+      if (startup->sm_NumArgs >1)
+      {
+        /* FIXME: all arguments but the first are ignored */
+        cd = CurrentDir(startup->sm_ArgList[1].wa_Lock);
+        fileName = new GString(startup->sm_ArgList[1].wa_Name);
+      }
+    }
+  }
 
 
   // read config file
@@ -139,9 +140,9 @@ int main(int argc, char *argv[]) {
   }
   
   if (fileName != NULL)
-  app = new AROSPDFApp(fileName, ownerPW, userPW);
-	else
-	    app = new AROSPDFApp();
+    app = new AROSPDFApp(fileName, ownerPW, userPW);
+  else
+    app = new AROSPDFApp();
   if (!app->isOk()) {
     bug("Not ok?\n");
     exitCode = 1;
@@ -149,13 +150,14 @@ int main(int argc, char *argv[]) {
   }
   exitCode = app->run();
   app->quit();
- err1:
+err1:
   delete app;
   delete globalParams;
- err0:
+err0:
   // check for memory leaks
   xObject::memCheck(stderr);
   gMemReport(stderr);
-  if (cd != NULL)  CurrentDir(cd);
+  if (cd != NULL)
+    CurrentDir(cd);
   return exitCode;
 }

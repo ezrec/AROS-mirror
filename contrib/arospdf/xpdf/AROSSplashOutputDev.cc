@@ -36,16 +36,16 @@
 //------------------------------------------------------------------------
 
 AROSSplashOutputDev::AROSSplashOutputDev(struct RastPort *visualA,
-				       GBool reverseVideoA, 
-				       SplashColor paperColorA,
-				       GBool incrementalUpdateA,
-				       void (*redrawCbkA)(void *data),
-				       void *redrawCbkDataA):
+                                         GBool reverseVideoA, 
+                                         SplashColor paperColorA,
+                                         GBool incrementalUpdateA,
+                                         void (*redrawCbkA)(void *data),
+                                         void *redrawCbkDataA):
   SplashOutputDev(splashModeRGB8, 4, reverseVideoA, paperColorA)
 {
-  Gulong mask;
-  int r, g, b, n, m;
-  GBool ok;
+  //Gulong mask;
+  //int r, g, b, n, m;
+  //GBool ok;
   incrementalUpdate = incrementalUpdateA;
   visual = visualA;
   redrawCbk = redrawCbkA;
@@ -60,19 +60,19 @@ AROSSplashOutputDev::~AROSSplashOutputDev() {
 }
 
 void AROSSplashOutputDev::drawChar(GfxState *state, double x, double y,
-				  double dx, double dy,
-				  double originX, double originY,
-				  CharCode code, int nBytes, 
-				  Unicode *u, int uLen) {
+                                   double dx, double dy,
+                                   double originX, double originY,
+                                   CharCode code, int nBytes, 
+                                   Unicode *u, int uLen) {
   text->addChar(state, x, y, dx, dy, code, nBytes, u, uLen);
   SplashOutputDev::drawChar(state, x, y, dx, dy, originX, originY,
-			    code, nBytes, u, uLen);
+          code, nBytes, u, uLen);
 }
 
 GBool AROSSplashOutputDev::beginType3Char(GfxState *state, double x, double y,
-					 double dx, double dy,
-					 CharCode code, int nBytes,
-					 Unicode *u, int uLen) {
+                                          double dx, double dy,
+                                          CharCode code, int nBytes,
+                                          Unicode *u, int uLen) {
   text->addChar(state, x, y, dx, dy, code, nBytes, u, uLen);
   return SplashOutputDev::beginType3Char(state, x, y, dx, dy, code, u, uLen);
 } 
@@ -108,17 +108,18 @@ void AROSSplashOutputDev::updateFont(GfxState *state) {
 
 //draw to our bitmap?
 void AROSSplashOutputDev::redraw(int srcX, int srcY, int destX, int destY,
-				int width, int height, int destW, int destH) {
+                                 int width, int height, int destW, int destH) {
 
-  register int x, y;
-  register int w, h; 
-  int bw, r, g, b;
-  Gulong pixel;
+  //int x, y;
+  //int w, h; 
+  int bw;
+  //int r, g, b;
+  //Gulong pixel;
   SplashColorPtr dataPtr;
-  Guchar *p;
-  unsigned char rgb;
-  w = width;
-  h = height;
+  //Guchar *p;
+  //unsigned char rgb;
+  //w = width;
+  //h = height;
 
   bw = getBitmap()->getRowSize();
   dataPtr = getBitmap()->getDataPtr();
@@ -128,10 +129,10 @@ void AROSSplashOutputDev::redraw(int srcX, int srcY, int destX, int destY,
 }
 
 GBool AROSSplashOutputDev::findText(Unicode *s, int len,
-				 GBool startAtTop, GBool stopAtBottom,
-				 GBool startAtLast, GBool stopAtLast,
-				 int *xMin, int *yMin,
-				 int *xMax, int *yMax) {
+                                    GBool startAtTop, GBool stopAtBottom,
+                                    GBool startAtLast, GBool stopAtLast,
+                                    int *xMin, int *yMin,
+                                    int *xMax, int *yMax) {
 //   double xMin1, yMin1, xMax1, yMax1;
   
 //   xMin1 = (double)*xMin;
@@ -151,6 +152,5 @@ GBool AROSSplashOutputDev::findText(Unicode *s, int len,
 }
 
 GString *AROSSplashOutputDev::getText(int xMin, int yMin, int xMax, int yMax) {
-  return text->getText((double)xMin, (double)yMin,
-		       (double)xMax, (double)yMax);
+  return text->getText((double)xMin, (double)yMin, (double)xMax, (double)yMax);
 }
