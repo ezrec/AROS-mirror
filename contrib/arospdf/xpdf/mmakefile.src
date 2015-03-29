@@ -3,7 +3,22 @@
 include $(TOP)/config/make.cfg
 
 #MM- contrib : contrib-arospdf
-#MM- contrib-arospdf : contrib-arospdf-xpdf
+
+#MM- contrib-arospdf : \
+#MM     contrib-arospdf-xpdf \
+#MM     contrib-arospdf-pdftops \
+#MM     contrib-arospdf-pdftotext \
+#MM     contrib-arospdf-pdfinfo \
+#MM     contrib-arospdf-pdffonts \
+#MM     contrib-arospdf-pdftoppm \
+#MM     contrib-arospdf-pdfimages
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/AROSPDF
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../goo -I$(SRCDIR)/$(CURDIR)/../splash -I$(SRCDIR)/$(CURDIR)/../fofi
+USER_CFLAGS := -Wno-write-strings -fpermissive -DHAVE_CONFIG_H
+USER_LDFLAGS := -L$(TARGETDIR)/libs
+
+################################################################################
 
 #MM contrib-arospdf-xpdf : includes linklibs \
 #MM     contrib-arospdf-fofi \
@@ -12,7 +27,7 @@ include $(TOP)/config/make.cfg
 #MM     contrib-arospdf-fonts \
 #MM     contrib-arospdf-resources
 
-XPDF_CXX := Annot Array BuiltinFont BuiltinFontTables Catalog \
+CXXFILES := Annot Array BuiltinFont BuiltinFontTables Catalog \
 	CharCodeToUnicode CMap CoreOutputDev Decrypt Dict \
 	Error FontEncodingTables Function Gfx GfxFont \
 	GfxState GlobalParams JArithmeticDecoder JBIG2Stream \
@@ -23,13 +38,124 @@ XPDF_CXX := Annot Array BuiltinFont BuiltinFontTables Catalog \
 	UnicodeTypeTable AROSPDFApp arospdf AROSSplashOutputDev \
 	XRef
 
-TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/AROSPDF
-USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../goo -I$(SRCDIR)/$(CURDIR)/../splash -I$(SRCDIR)/$(CURDIR)/../fofi
-USER_CFLAGS := -Wno-write-strings -fpermissive -DHAVE_CONFIG_H
-USER_LDFLAGS := -L$(TARGETDIR)/libs
-
-%build_prog mmake=contrib-arospdf-xpdf progname=AROSPDF files= cxxfiles=$(XPDF_CXX) \
+%build_prog mmake=contrib-arospdf-xpdf progname=AROSPDF files= cxxfiles=$(CXXFILES) \
     targetdir=$(TARGETDIR) uselibs="fofi Goo splash t1 freetype2"
+
+################################################################################
+
+#MM contrib-arospdf-pdftops : includes linklibs \
+#MM     contrib-arospdf-fofi \
+#MM     contrib-arospdf-goo \
+#MM     contrib-arospdf-splash \
+#MM     contrib-arospdf-fonts \
+#MM     contrib-arospdf-resources
+
+CXXFILES := Annot Array BuiltinFont BuiltinFontTables \
+	Catalog CharCodeToUnicode CMap Decrypt Dict Error \
+	FontEncodingTables Function Gfx GfxFont \
+	GfxState GlobalParams JArithmeticDecoder JBIG2Stream \
+	JPXStream Lexer Link NameToCharCode Outline Object \
+	OutputDev Page Parser PDFDoc PDFDocEncoding \
+	PreScanOutputDev PSOutputDev PSTokenizer SecurityHandler \
+	SplashOutputDev Stream UnicodeMap XpdfPluginAPI XRef \
+	pdftops
+
+%build_prog mmake=contrib-arospdf-pdftops progname=pdftops files= cxxfiles=$(CXXFILES) \
+    targetdir=$(TARGETDIR) uselibs="fofi Goo splash t1 freetype2"
+
+################################################################################
+
+#MM contrib-arospdf-pdftotext : includes linklibs \
+#MM     contrib-arospdf-fofi \
+#MM     contrib-arospdf-goo
+
+CXXFILES := Annot Array BuiltinFont BuiltinFontTables \
+	Catalog CharCodeToUnicode CMap Decrypt Dict Error \
+	FontEncodingTables Function Gfx GfxFont \
+	GfxState GlobalParams JArithmeticDecoder JBIG2Stream \
+	JPXStream Lexer Link NameToCharCode Object Outline \
+	OutputDev Page Parser PDFDoc PDFDocEncoding PSTokenizer \
+	SecurityHandler Stream TextOutputDev UnicodeMap \
+	UnicodeTypeTable XpdfPluginAPI XRef pdftotext
+
+%build_prog mmake=contrib-arospdf-pdftotext progname=pdftotext files= cxxfiles=$(CXXFILES) \
+    targetdir=$(TARGETDIR) uselibs="fofi Goo"
+
+################################################################################
+
+#MM contrib-arospdf-pdfinfo : includes linklibs \
+#MM     contrib-arospdf-fofi \
+#MM     contrib-arospdf-goo
+
+CXXFILES := Annot Array BuiltinFont BuiltinFontTables \
+	Catalog CharCodeToUnicode CMap Decrypt Dict Error \
+	FontEncodingTables Function Gfx GfxFont \
+	GfxState GlobalParams JArithmeticDecoder JBIG2Stream \
+	JPXStream Lexer Link NameToCharCode Object Outline \
+	OutputDev Page Parser PDFDoc PDFDocEncoding PSTokenizer \
+	SecurityHandler Stream UnicodeMap XpdfPluginAPI XRef \
+	pdfinfo
+
+%build_prog mmake=contrib-arospdf-pdfinfo progname=pdfinfo files= cxxfiles=$(CXXFILES) \
+    targetdir=$(TARGETDIR) uselibs="fofi Goo"
+
+################################################################################
+
+#MM contrib-arospdf-pdffonts : includes linklibs \
+#MM     contrib-arospdf-fofi \
+#MM     contrib-arospdf-goo
+
+CXXFILES := Annot Array BuiltinFont BuiltinFontTables \
+	Catalog CharCodeToUnicode CMap Decrypt Dict Error \
+	FontEncodingTables Function Gfx GfxFont \
+	GfxState GlobalParams JArithmeticDecoder JBIG2Stream \
+	JPXStream Lexer Link NameToCharCode Object Outline \
+	OutputDev Page Parser PDFDoc PDFDocEncoding PSTokenizer \
+	SecurityHandler Stream UnicodeMap XpdfPluginAPI XRef \
+	pdffonts
+
+%build_prog mmake=contrib-arospdf-pdffonts progname=pdffonts files= cxxfiles=$(CXXFILES) \
+    targetdir=$(TARGETDIR) uselibs="fofi Goo"
+
+################################################################################
+
+#MM contrib-arospdf-pdftoppm : includes linklibs \
+#MM     contrib-arospdf-fofi \
+#MM     contrib-arospdf-goo \
+#MM     contrib-arospdf-splash \
+#MM     contrib-arospdf-fonts
+
+CXXFILES := Annot Array BuiltinFont BuiltinFontTables \
+	Catalog CharCodeToUnicode CMap Decrypt Dict Error \
+	FontEncodingTables Function Gfx GfxFont GfxState \
+	GlobalParams JArithmeticDecoder JBIG2Stream JPXStream \
+	Lexer Link NameToCharCode Object Outline OutputDev \
+	Page Parser PDFDoc PDFDocEncoding PSTokenizer \
+	SecurityHandler SplashOutputDev Stream TextOutputDev \
+	UnicodeMap UnicodeTypeTable XpdfPluginAPI XRef pdftoppm
+
+%build_prog mmake=contrib-arospdf-pdftoppm progname=pdftoppm files= cxxfiles=$(CXXFILES) \
+    targetdir=$(TARGETDIR) uselibs="fofi Goo splash t1 freetype2"
+
+################################################################################
+
+#MM contrib-arospdf-pdfimages : includes linklibs \
+#MM     contrib-arospdf-fofi \
+#MM     contrib-arospdf-goo
+
+CXXFILES := Annot Array BuiltinFont BuiltinFontTables \
+	Catalog CharCodeToUnicode CMap Decrypt Dict Error \
+	FontEncodingTables Function Gfx GfxFont GfxState \
+	GlobalParams ImageOutputDev JArithmeticDecoder \
+	JBIG2Stream JPXStream Lexer Link NameToCharCode Object \
+	Outline OutputDev Page Parser PDFDoc PDFDocEncoding \
+	PSTokenizer SecurityHandler Stream UnicodeMap \
+	XpdfPluginAPI XRef pdfimages
+
+%build_prog mmake=contrib-arospdf-pdfimages progname=pdfimages files= cxxfiles=$(CXXFILES) \
+    targetdir=$(TARGETDIR) uselibs="fofi Goo"
+
+################################################################################
 
 %copy_dir_recursive mmake=contrib-arospdf-fonts src=fonts dst=$(TARGETDIR)/fonts
 
