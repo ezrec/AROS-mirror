@@ -56,7 +56,7 @@ static struct NewMenu MenuData1[]=
   {NM_END,   NULL,                      0, 0, 0,  (APTR)0           },
 };
 
-static struct Hook myhook;
+static struct Hook sliderhook;
 static struct Hook buttonhook;
 static struct Hook menuhook;
 
@@ -288,17 +288,7 @@ BOOPSI_DISPATCHER(IPTR, MyDispatcher, cl, obj, msg)
 BOOPSI_DISPATCHER_END
 
 void AROSPDFApp::OpenFile(GString *fileNameA, GString *ownerPWA, GString *userPWA) {
-  //int pw, ph;
-
-  if (docLoaded) {
-    delete doc;
-    ready=FALSE;
-    docLoaded=FALSE;
-  } else {
-    dispW=BITMAPX;
-    dispH=BITMAPY;
-  }
-  doc = new PDFDoc(fileNameA, ownerPWA, userPWA);
+  PDFDoc *newdoc = new PDFDoc(fileNameA, ownerPWA, userPWA);
   if (userPWA) {
     delete userPWA;
   }
@@ -306,23 +296,31 @@ void AROSPDFApp::OpenFile(GString *fileNameA, GString *ownerPWA, GString *userPW
     delete ownerPWA;
   }
 
-  if (!doc->isOk()) {
-    fprintf(stderr, "error opening document\n");
-    ok = gFalse;
-    delete doc;
-    return;
-  }
-  GString * title = new GString("AROSPDF - ");
-  title->append(fileNameA);
-  SetAttrs(wnd,MUIA_Window_Title,title->getCString() ,TAG_DONE);
-  delete title;
-  resolution = 100;
-  page = 1;
-  posX = 0;
-  posY = 0;
+  if (newdoc->isOk()) {
+    if (docLoaded) {
+      delete doc;
+      ready=FALSE;
+      docLoaded=FALSE;
+    } else {
+      dispW=BITMAPX;
+      dispH=BITMAPY;
+    }
+    doc = newdoc;
+    GString * title = new GString("AROSPDF - ");
+    title->append(fileNameA);
+    SetAttrs(wnd,MUIA_Window_Title,title->getCString() ,TAG_DONE);
+    delete title;
+    resolution = 100;
+    page = 1;
+    posX = 0;
+    posY = 0;
 
-  splashOut->startDoc(doc->getXRef());
-  JumpToPage(1);
+    splashOut->startDoc(doc->getXRef());
+    JumpToPage(1);
+  } else {
+    MUI_Request(muiapp, wnd, 0, "AROSPDF", "Continue", "Can't open file '%s'", fileNameA->getCString());
+    delete newdoc;
+  }
 }
 
 void AROSPDFApp::BackFillFullScreen() {
@@ -470,24 +468,14 @@ void AROSPDFApp::quit() {
 }
 
 int AROSPDFApp::run() {
-  //int oldX, oldY;
-  //int pw, ph;
-  ULONG sigs=0;
   // Check that the window opened
   if (XGET(wnd, MUIA_Window_Open)) {
-    // Main loop
-    while((LONG)DoMethod(muiapp, MUIM_Application_NewInput, (IPTR)&sigs) != MUIV_Application_ReturnID_Quit) {
-      if (sigs) {
-        sigs = Wait(sigs | SIGBREAKF_CTRL_C);
-        if (sigs & SIGBREAKF_CTRL_C)
-          break;
-      }
-    }
+    DoMethod(muiapp, MUIM_Application_Execute);
   }
   return 0;
 }
 
-AROS_UFH3(ULONG, myfunction,
+AROS_UFH3(ULONG, sliderfunction,
 AROS_UFHA(struct Hook *, h, A0),
 AROS_UFHA(Object *, object, A2),
 AROS_UFHA(APTR *, msg, A1)) {
@@ -638,17 +626,20 @@ int AROSPDFApp::initAROS() {
   FitWidth=FALSE;
   BestFit=FALSE;
   FullScreen=FALSE;
+  dobj = GetDiskObject("PROGDIR:AROSPDF");
   mcc = MUI_CreateCustomClass(NULL,MUIC_Area,NULL,sizeof(struct CustomImageData),MyDispatcher);
   // GUI creation    
   muiapp = ApplicationObject,
     MUIA_Application_Title  , "AROSPDF",
-    MUIA_Application_Version , "$VER: AROSPDF-0.2.1 (2009/07/15)",
-    MUIA_Application_Copyright , "©2009, Craig Kiesau",
+    MUIA_Application_Version , "$VER: AROSPDF 0.3 (30.3.2015)",
+    MUIA_Application_Copyright , "(C) 2009, Craig Kiesau",
     MUIA_Application_Author  , "Craig Kiesau",
     MUIA_Application_Description, "A PDF viewer",
     MUIA_Application_Base  , "APDF",
+    MUIA_Application_DiskObject, (IPTR)dobj,
     SubWindow, wnd = WindowObject,
       MUIA_Window_Title, "AROSPDF",
+      MUIA_Window_ID, MAKE_ID('P', 'D', 'F', 'W'),
       MUIA_Window_Width, 640,
       MUIA_Window_Height, 480,
       MUIA_Window_Menustrip, menustrip=MUI_MakeObject(MUIO_MenustripNM,MenuData1,0),
@@ -718,14 +709,14 @@ int AROSPDFApp::initAROS() {
   End;
 
   if (muiapp != NULL) {
-    myhook.h_Entry = (HOOKFUNC)myfunction;
+    sliderhook.h_Entry = (HOOKFUNC)sliderfunction;
     menuhook.h_Entry = (HOOKFUNC)menufunction;
     buttonhook.h_Entry = (HOOKFUNC)buttonhookfunc;
 
     DoMethod(vslider, MUIM_Notify, MUIA_Prop_First, MUIV_EveryTime,
-      (IPTR)vslider, 5, MUIM_CallHook, (IPTR)&myhook,(AROSPDFApp *)this,1,MUIV_TriggerValue);
+      (IPTR)vslider, 5, MUIM_CallHook, (IPTR)&sliderhook,(AROSPDFApp *)this,1,MUIV_TriggerValue);
     DoMethod(hslider, MUIM_Notify, MUIA_Prop_First, MUIV_EveryTime,
-      (IPTR)hslider, 5, MUIM_CallHook, (IPTR)&myhook,(AROSPDFApp *)this,2,MUIV_TriggerValue);
+      (IPTR)hslider, 5, MUIM_CallHook, (IPTR)&sliderhook,(AROSPDFApp *)this,2,MUIV_TriggerValue);
     DoMethod(wnd, MUIM_Notify, MUIA_Window_MenuAction, MUIV_EveryTime,
       (IPTR)wnd, 4, MUIM_CallHook, (IPTR)&menuhook, (AROSPDFApp *)this, MUIV_TriggerValue);
     DoMethod(butFirst,MUIM_Notify,MUIA_Pressed,FALSE,(IPTR)muiapp,4,MUIM_CallHook,(IPTR)&buttonhook,(AROSPDFApp*)this,1);
@@ -770,6 +761,8 @@ void AROSPDFApp::exitAROS()
     CloseScreen(fsscreen);
   MUI_DisposeObject(muiapp);
   MUI_DeleteCustomClass(mcc);
+  if (dobj)
+    FreeDiskObject(dobj);
 }
 
 void AROSPDFApp::redraw(AROSPDFApp *data)

@@ -16,6 +16,7 @@
 #include <libraries/asl.h>
 #include <proto/asl.h>
 #include <proto/dos.h>
+#include <proto/icon.h>
 #include <proto/alib.h>
 #include "gtypes.h"
 #include "SplashTypes.h"
@@ -89,6 +90,7 @@ private:
   struct Screen *origscreen;
   ULONG pen1;
   struct MUI_CustomClass *mcc;
+  struct DiskObject *dobj;
 };
 
 #endif

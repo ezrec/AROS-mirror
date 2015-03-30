@@ -143,14 +143,8 @@ int main(int argc, char *argv[]) {
     app = new AROSPDFApp(fileName, ownerPW, userPW);
   else
     app = new AROSPDFApp();
-  if (!app->isOk()) {
-    bug("Not ok?\n");
-    exitCode = 1;
-    goto err1;
-  }
   exitCode = app->run();
   app->quit();
-err1:
   delete app;
   delete globalParams;
 err0:
