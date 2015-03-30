@@ -40,6 +40,8 @@ The following software is required for compiling AROS:
 + gperf
 + Patch
 + sed
++ Perl
++ Switch.pm
 + C library development files (libc)
 + Common utilities, like cp, mv, sort, uniq, head, ...
 
@@ -432,6 +434,7 @@ Internet::
 
     > sudo apt-get install subversion g++ libpng12-dev libx11-dev
     libgl1-mesa-dev gawk bison flex netpbm automake cmake gperf
+    libswitch-perl
 
 If you are using the 64-bit version of Ubuntu, you will need some 
 extra packages, and a small fix::
