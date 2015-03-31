@@ -7,7 +7,7 @@ include $(TOP)/config/make.cfg
 #MM- ports-graphics-potrace : ports-graphics-potrace-cpy
 
 PACKAGE      := potrace
-VERSION      := 1.11
+VERSION      := 1.12
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/Potrace
 REPOSITORIES := sf://potrace
 
