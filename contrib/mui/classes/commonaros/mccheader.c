@@ -443,19 +443,13 @@ BOOL UserLibOpen(struct Library *base)
 {
     #ifdef SUPERCLASS
     
-    AROS_UFP3(IPTR, _Dispatcher,
-        AROS_UFPA(struct IClass *,m cl, A0),
-        AROS_UFPA(Object *, obj, A2),
-        AROS_UFPA(Msg, msg, A1));
+    DISPATCHERPROTO(_Dispatcher);
 
     #endif
 
     #ifdef SUPERCLASSP
 
-    AROS_UFP3(IPTR, _DispatcherP,
-        AROS_UFPA(struct IClass *,m cl, A0),
-        AROS_UFPA(Object *, obj, A2),
-        AROS_UFPA(Msg, msg, A1));
+    DISPATCHERPROTO(_DispatcherP);
         
     #endif
 
@@ -479,13 +473,13 @@ BOOL UserLibOpen(struct Library *base)
 
         #ifdef SUPERCLASS
 
-        ThisClass = MUI_CreateCustomClass(base,SUPERCLASS,NULL,sizeof(struct INSTDATA),AROS_ASMSYMNAME(_Dispatcher));
+         ThisClass = MUI_CreateCustomClass(base,SUPERCLASS,NULL,sizeof(struct INSTDATA),ENTRY(_Dispatcher));
 
         if ( ThisClass )
         #endif
         {
             #ifdef SUPERCLASSP
-            if ((ThisClassP = MUI_CreateCustomClass(base,SUPERCLASSP,NULL,sizeof(struct INSTDATAP),AROS_ASMSYMNAME(_DispatcherP))))
+            if ((ThisClassP = MUI_CreateCustomClass(base,SUPERCLASSP,NULL,sizeof(struct INSTDATAP),ENTRY(_DispatcherP))))
             #endif
             {
                 #ifdef SUPERCLASS
