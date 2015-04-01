@@ -6,6 +6,7 @@ include $(TOP)/config/make.cfg
 
 #MM contrib-scalos-main : \
 #MM     linklibs \
+#MM     contrib-gfx-libs-guigfx-includes \
 #MM     contrib-scalos-main-locale \
 #MM     contrib-scalos-main-msgid \
 #MM     contrib-scalos-main-icon \
