@@ -53,8 +53,8 @@ getString(REG(d0) LONG id)
 
 /***********************************************************************/
 
-ULONG ASM
-getKeyChar(REG(a0) STRPTR string)
+char ASM
+getKeyChar(REG(a0) CONST_STRPTR string)
 {
     ULONG res = 0;
 

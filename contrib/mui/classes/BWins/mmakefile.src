@@ -2,10 +2,11 @@
 
 include $(TOP)/config/make.cfg
 
-##MM- contrib-zune-classes : contrib-zune-classes-bwin
+#MM- contrib-zune-classes : contrib-zune-classes-bwin
 
 #MM- contrib-zune-classes-bwin : contrib-zune-classes-bwin-mcc \
-#MM  contrib-zune-classes-bwin-mcp contrib-zune-classes-bwin-demos
+#MM  contrib-zune-classes-bwin-mcp 
+#DISABLED as they need speedbar class to be present: contrib-zune-classes-bwin-demos
 
 TARGETDIR := $(AROS_CONTRIB)/Zune/MCC_Bwin
 

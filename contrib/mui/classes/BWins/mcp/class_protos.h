@@ -7,14 +7,16 @@ void ASM freeBase ( void );
 BOOL ASM initBase ( void );
 
 /* snprintf.c */
-#ifndef __AROS__
+#ifdef __AROS__
+#include <stdio.h>
+#else
 int STDARGS snprintf ( char *buf , int size , char *fmt , ...);
 #endif
 
 /* loc.c */
 void ASM initStrings ( void );
 CONST_STRPTR ASM getString ( REG (d0 )LONG id );
-ULONG ASM getKeyChar ( REG (a0 )STRPTR string );
+char ASM getKeyChar ( REG (a0 )CONST_STRPTR string );
 
 /* shape.c */
 BOOL ASM initShape ( void );
