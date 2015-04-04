@@ -1,0 +1,28 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-emulation : ports-emulation-dosbox
+
+#MM- ports-emulation-dosbox : contrib-sdl ports-emulation-dosbox-cpy
+
+PACKAGE      := dosbox
+VERSION      := 0.74
+TARGETDIR    := $(AROS_CONTRIB)/Emu/DOSBox
+REPOSITORIES := sf://dosbox
+
+%fetch_and_build mmake=ports-emulation-dosbox prefix=$(TARGETDIR) \
+	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
+	patch=no package_repo=$(REPOSITORIES) nix=no nix_dir_layout=no \
+    extracflags="-fpermissive" \
+	extraoptions="--datarootdir='$$(PROGDIR)data'"
+
+
+%copy_files_q mmake=ports-emulation-dosbox-cpy files=dosbox-0.74.conf src=. dst=$(TARGETDIR)/.dosbox
+
+#MM
+ports-emulation-dosbox-clean :
+	$(RM) $(TARGETDIR)
+	$(RM) $(GENDIR)/$(CURDIR)
+
+%common

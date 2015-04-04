@@ -1,0 +1,59 @@
+diff -Naur dosbox-0.74-orig/include/dos_inc.h dosbox-0.74/include/dos_inc.h
+--- dosbox-0.74-orig/include/dos_inc.h	2015-04-02 17:03:51.676953489 +0200
++++ dosbox-0.74/include/dos_inc.h	2010-05-10 20:59:04.000000000 +0200
+@@ -28,6 +28,8 @@
+ #include "mem.h"
+ #endif
+ 
++#include <stddef.h>
++
+ #ifdef _MSC_VER
+ #pragma pack (1)
+ #endif
+diff -Naur dosbox-0.74-orig/include/setup.h dosbox-0.74/include/setup.h
+--- dosbox-0.74-orig/include/setup.h	2015-04-02 17:03:51.676953489 +0200
++++ dosbox-0.74/include/setup.h	2010-05-10 20:59:04.000000000 +0200
+@@ -42,6 +42,7 @@
+ #include <string>
+ #endif
+ 
++#include <stdio.h>
+ 
+ class Hex {
+ private:
+diff -Naur dosbox-0.74-orig/src/hardware/serialport/misc_util.cpp dosbox-0.74/src/hardware/serialport/misc_util.cpp
+--- dosbox-0.74-orig/src/hardware/serialport/misc_util.cpp	2015-04-02 17:03:51.684953638 +0200
++++ dosbox-0.74/src/hardware/serialport/misc_util.cpp	2010-05-10 20:59:04.000000000 +0200
+@@ -21,6 +21,10 @@
+ 
+ #include "config.h"
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++
+ #if C_MODEM
+ 
+ /*****************************************************************************/
+diff -Naur dosbox-0.74-orig/src/misc/cross.cpp dosbox-0.74/src/misc/cross.cpp
+--- dosbox-0.74-orig/src/misc/cross.cpp	2015-04-02 17:03:51.677953512 +0200
++++ dosbox-0.74/src/misc/cross.cpp	2010-05-10 20:59:04.000000000 +0200
+@@ -62,6 +62,8 @@
+ #elif defined(MACOSX)
+ 	in = "~/Library/Preferences";
+ 	ResolveHomedir(in);
++#elif defined(__AROS__)
++	in = "PROGDIR:.dosbox";
+ #else
+ 	in = "~/.dosbox";
+ 	ResolveHomedir(in);
+@@ -89,6 +91,9 @@
+ 	in = "~/Library/Preferences/";
+ 	ResolveHomedir(in);
+ 	//Don't create it. Assume it exists
++#elif defined(__AROS__)
++	in = "PROGDIR:.dosbox";
++	mkdir(in.c_str(),0700);
+ #else
+ 	in = "~/.dosbox";
+ 	ResolveHomedir(in);

@@ -1,0 +1,11 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-emulation-dosbox : ports-emulation-dosbox-icons
+
+ICONS     := DOSBox
+TARGETDIR := $(AROS_CONTRIB)/Emu
+
+%build_icons mmake=ports-emulation-dosbox-icons \
+    icons=$(ICONS) dir=$(TARGETDIR)
