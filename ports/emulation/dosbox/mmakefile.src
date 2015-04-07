@@ -13,7 +13,7 @@ REPOSITORIES := sf://dosbox
 
 %fetch_and_build mmake=ports-emulation-dosbox prefix=$(TARGETDIR) \
 	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
-	patch=no package_repo=$(REPOSITORIES) nix=no nix_dir_layout=no \
+	patch=yes package_repo=$(REPOSITORIES) nix=no nix_dir_layout=no \
     extracflags="-fpermissive" \
 	extraoptions="--datarootdir='$$(PROGDIR)data'"
 
