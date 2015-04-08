@@ -1,0 +1,306 @@
+dnl Process this file with autoconf to produce a configure script.
+dnl Copyright 1998-2005 Glyph & Cog, LLC
+
+AC_INIT(apdf/apdf.c)
+AC_CONFIG_HEADER(aconf.h)
+
+SERVER_OPTIONS=""
+CLIENT_OPTIONS=""
+BUILD_CLIENT="yes"
+BUILD_SERVER="yes"
+BUILD_PLUGIN="yes"
+CLIENT_CPU="604e"
+SERVER_CPU="604e"
+
+dnl ##### Optional features.
+AC_ARG_ENABLE(opi,
+[  --enable-opi            include support for OPI comments],
+SERVER_OPTIONS="$SERVER_OPTIONS -DOPI_SUPPORT=1")
+AC_ARG_ENABLE(wordlist,
+[  --enable-wordlist       include support for building word lists],
+SERVER_OPTIONS="$SERVER_OPTIONS -DTEXTOUT_WORD_LIST=1")
+AC_ARG_ENABLE(client,
+AC_ARG_ENABLE(fixedpoint,
+[  --enable-fixedpoint     use fixed point (instead of floating point) arithmetic],
+AC_DEFINE(USE_FIXEDPOINT))
+[  --disable-client        don't build the client],
+if test "$enableval" = no; then
+  BUILD_CLIENT="no"
+fi)
+AC_ARG_ENABLE(server,
+[  --disable-server        don't build the server],
+if test "$enableval" = no; then
+  BUILD_SERVER="no"
+fi)
+AC_ARG_ENABLE(plugin,
+[  --disable-plugin        don't include the plugin in default targets],
+if test "$enableval" = no; then
+  BUILD_PLUGIN="no"
+fi)
+AC_ARG_WITH(cpu,
+[  --with-cpu=x            build the server for cpu x (x=603e,604e,...)],
+SERVER_CPU="$withval")
+AC_ARG_WITH(client-cpu,
+[  --with-client-cpu=x     build the client for cpu x (x=603e,604e,...)],
+CLIENT_CPU="$withval")
+AC_ARG_ENABLE(memdebug,
+[  --enable-memdebug       server memory management debugging],
+SERVER_OPTIONS="$SERVER_OPTIONS -DDEBUGMEM -DDEBUG_MEM")
+AC_ARG_ENABLE(custom-mem,
+[  --disable-custom-mem    don't use custom memory manager],
+if test "$enableval" = no; then
+  SERVER_OPTIONS="$SERVER_OPTIONS -DNO_CUSTOM_MEM"
+fi)
+AC_SUBST(SERVER_OPTIONS)
+AC_SUBST(CLIENT_OPTIONS)
+
+
+dnl ##### Check for host.
+
+AC_CANONICAL_HOST
+case "${host}" in
+	p*pc-*-morphos*)
+	  echo "Building Apdf for MorphOS"
+	  MORPHOS="yes"
+	  case "$CLIENT_CPU" in
+	    680*0)
+	      CLIENT_CPU="604e"
+	      ;;
+	  esac
+	  ;;
+
+	*-*-amigaos*)
+	  AC_MSG_ERROR(Building for AmigaOS no longer supported.)
+	  ;;
+
+	m68*-*-*)
+	  AC_MSG_ERROR(Building for 680x0 no longer supported.)
+	  ;;
+esac
+
+dnl ######
+CLIENT_CFLAGS="$CFLAGS -O2 -mcpu=$CLIENT_CPU -mmultiple -noixemul"
+SERVER_CFLAGS="-O2 -mcpu=$SERVER_CPU -mmultiple -noixemul"
+SERVER_CXXFLAGS="$SERVER_CFLAGS"
+SERVER_CFLAGS="$CFLAGS $SERVER_CFLAGS"
+if printenv CXXFLAGS; then
+  SERVER_CXXFLAGS="$CXXFLAGS $SERVER_CXXFLAGS"
+else
+  SERVER_CXXFLAGS="$CFLAGS $SERVER_CXXFLAGS"
+fi
+
+SERVER_LDFLAGS="$SERVER_LDFLAGS $LDFLAGS"
+CLIENT_LDFLAGS="$CLIENT_LDFLAGS $LDFLAGS"
+
+AC_SUBST(SERVER_CFLAGS)
+AC_SUBST(SERVER_CXXFLAGS)
+AC_SUBST(CLIENT_CFLAGS)
+
+CLIENT_LDFLAGS="$LDFLAGS -noixemul"
+SERVER_LDFLAGS="$LDFLAGS -noixemul"
+
+AC_SUBST(CLIENT_LDFLAGS)
+AC_SUBST(SERVER_LDFLAGS)
+
+AC_PROG_CC
+AC_PROG_CXX
+
+CLIENT_CC="$CC"
+CLIENT_STRIP="strip"
+
+AC_SUBST(CLIENT_CC)
+AC_SUBST(CLIENT_STRIP)
+
+SERVER_CC="$CC"
+SERVER_CXX="$CXX"
+SERVER_STRIP="strip"
+SERVER_AR="ar rc"
+SERVER_RANLIB="ranlib"
+
+AC_SUBST(SERVER_CC)
+AC_SUBST(SERVER_CXX)
+AC_SUBST(SERVER_AR)
+AC_SUBST(SERVER_RANLIB)
+AC_SUBST(SERVER_STRIP)
+
+CLIENT_LIBS=""
+SERVER_LIBS=""
+
+AC_SUBST(CLIENT_LIBS)
+AC_SUBST(SERVER_LIBS)
+
+EXE=""
+LIBPREFIX="lib"
+UP_DIR=""
+AC_SUBST(EXE)
+AC_SUBST(LIBPREFIX)
+AC_SUBST(UP_DIR)
+
+if test "$BUILD_CLIENT"; then
+    echo Variables used for client:
+    echo CC= $CLIENT_CC
+    echo STRIP= $CLIENT_STRIP
+    echo CFLAGS= $CLIENT_CFLAGS
+    echo LDFLAGS= $CLIENT_LDFLAGS
+    echo LIBS= $CLIENT_LIBS
+    dnl AC_MSG_CHECKING(Checking if the C compiler works)
+    dnl AC_LANG_C
+    dnl ac_link='${CLIENT_CC} -o conftest $CLIENT_CFLAGS $CLIENT_LDFLAGS conftest.$ac_ext $CLIENT_LIBS 1>&5'
+    dnl AC_TRY_LINK([#include <stdlib.h>],[exit(EXIT_SUCCESS);],tmp=yes,tmp=no)
+    dnl AC_MSG_RESULT($tmp)
+    dnl if test "$tmp" = no; then
+    dnl     AC_MSG_ERROR(The client can not be built with the given options.)
+    dnl fi
+fi
+
+if test "$BUILD_SERVER"; then
+    echo Variables used for server:
+    echo CC= $SERVER_CC
+    echo CXX= $SERVER_CXX
+    echo AR= $SERVER_AR
+    echo RANLIB= $SERVER_RANLIB
+    echo STRIP= $SERVER_STRIP
+    echo CFLAGS= $SERVER_CFLAGS
+    echo CXXFLAGS= $SERVER_CXXFLAGS
+    echo LDFLAGS= $SERVER_LDFLAGS
+    echo LIBS= $SERVER_LIBS
+    dnl AC_MSG_CHECKING(Checking if the C compiler works)
+    dnl AC_LANG_C
+    dnl ac_link='${SERVER_CC} -o conftest $SERVER_CFLAGS $SERVER_LDFLAGS conftest.$ac_ext $SERVER_LIBS 1>&5'
+    dnl AC_TRY_LINK([#include <stdlib.h>],[exit(EXIT_SUCCESS);],tmp=yes,tmp=no)
+    dnl AC_MSG_RESULT($tmp)
+    dnl if test "$tmp" = no; then
+    dnl     AC_MSG_ERROR(The server can not be built with the given options.)
+    dnl fi
+    dnl AC_MSG_CHECKING(Checking if the C++ compiler works)
+    dnl AC_LANG_CPLUSPLUS
+    dnl ac_link='${SERVER_CXX} -o conftest $SERVER_CXXFLAGS $SERVER_LDFLAGS conftest.$ac_ext $SERVER_LIBS 1>&5'
+    dnl AC_TRY_LINK([#include <stdlib.h>],[exit(EXIT_SUCCESS);],tmp=yes,tmp=no)
+    dnl AC_MSG_RESULT($tmp)
+    dnl if test "$tmp" = no; then
+    dnl     AC_MSG_ERROR(The server can not be built with the given options.)
+    dnl fi
+fi
+
+
+dnl ##### Client defines
+CLIENT_DEFS="-DMORPHOS"
+AC_SUBST(CLIENT_DEFS)
+
+dnl ##### Server defines
+SERVER_DEFS=""
+dnl if test "$BUILD_SERVER" = yes; then
+dnl   CC="$SERVER_CC"
+dnl   CFLAGS="$SERVER_FLAGS"
+dnl   OPTIONS="$SERVER_OPTIONS"
+dnl   AC_LANG_C
+dnl   ac_link='${SERVER_CC} -o conftest $SERVER_CFLAGS $SERVER_LDFLAGS conftest.$ac_ext $SERVER_LIBS 1>&5; chmod 744 conftest'
+dnl 
+dnl dnl ##### Check for broken atoi()
+dnl   AC_CACHE_CHECK([whether atoi() is buggy],
+dnl     apdf_cv_func_atoi_broken,
+dnl     AC_TRY_RUN([
+dnl       #include <stdlib.h>
+dnl       int main() {
+dnl 	exit(atoi("010")!=10);
+dnl       }
+dnl     ],apdf_cv_func_atoi_broken=no,apdf_cv_func_atoi_broken=yes,
+dnl     apdf_cv_func_atoi_broken=no))
+dnl   if test "$apdf_cv_func_atoi_broken" = yes; then
+dnl     SERVER_DEFS="$SERVER_DEFS -DBUGGY_ATOI"
+dnl   fi
+dnl 
+dnl dnl ##### Check for broken __divdi3()
+dnl   AC_CACHE_CHECK([whether long long division is buggy],
+dnl     apdf_cv_func_divdi3_broken,
+dnl     AC_TRY_RUN([
+dnl       #include <stdlib.h>
+dnl       long long f(long long x,long long y);
+dnl       int main() {
+dnl 	exit(f(0x100000000LL,0x1000000)!=256);
+dnl       }
+dnl       long long f(long long x,long long y) {
+dnl 	  return x/y;
+dnl       }
+dnl     ],apdf_cv_func_divdi3_broken=no,apdf_cv_func_divdi3_broken=yes,apdf_cv_func_divdi3_broken=no))
+dnl   if test "$apdf_cv_func_divdi3_broken" = yes; then
+dnl     SERVER_DEFS="$SERVER_DEFS -DBUGGY_DIVDI3"
+dnl   fi
+dnl 
+dnl dnl ##### Check for broken long long >> 16
+dnl   AC_CACHE_CHECK([whether long long right shift is buggy],
+dnl     apdf_cv_func_llrsh16_broken,
+dnl     AC_TRY_RUN([
+dnl       #include <stdlib.h>
+dnl       long long f(long long x);
+dnl       int main() {
+dnl 	exit(f(-1ll)!=-1ll);
+dnl       }
+dnl       long long f(long long x) {
+dnl 	  return x>>16;
+dnl       }
+dnl     ],apdf_cv_func_llrsh16_broken=no,apdf_cv_func_llrsh16_broken=yes,apdf_cv_func_llrsh16_broken=no))
+dnl   if test "$apdf_cv_func_llrsh16_broken" = yes; then
+dnl     SERVER_DEFS="$SERVER_DEFS -DBUGGY_LONGLONGRSHIFT16"
+dnl   fi
+dnl 
+dnl fi
+AC_SUBST(SERVER_DEFS)
+
+
+dnl ##### Build CPU dependent names
+ARCHIVE="Apdf_$SERVER_CPU"
+if printenv ARCHIVENAME; then
+  ARCHIVE="$ARCHIVENAME"
+else
+  ARCHIVE="${ARCHIVE}.lha"
+fi
+AC_SUBST(ARCHIVE)
+
+PROC="$SERVER_CPU"
+if printenv PROCNAME; then
+  PROC="$PROCNAME"
+else
+  PROC="${PROC}"
+fi
+AC_SUBST(PROC)
+
+PROCTYPE="ppc"
+AC_SUBST(PROCTYPE)
+
+APDF="Apdf"
+VPDF="Vpdf.VPlug"
+VPDF2="Vpdf.module"
+AC_SUBST(APDF)
+AC_SUBST(VPDF)
+AC_SUBST(VPDF2)
+
+APDF_TARGETS="$APDF"
+dnl disabled for now
+dnl if test "$BUILD_PLUGIN" = yes; then
+dnl   APDF_TARGETS="$APDF_TARGETS $VPDF $VPDF2"
+dnl fi
+AC_SUBST(APDF_TARGETS)
+
+dnl ##### Write the makefiles.
+MAKEFILES="Makefile server/version.cc"
+TARGETS=""
+if test "$BUILD_CLIENT"=yes; then
+  MAKEFILES="$MAKEFILES apdf/Makefile"
+  TARGETS="$TARGETS client"
+fi
+if test "$BUILD_SERVER"=yes; then
+  MAKEFILES="$MAKEFILES server/Makefile xpdf/Makefile goo/Makefile fofi/Makefile freetype2/Makefile"
+  TARGETS="$TARGETS server"
+fi
+AC_SUBST(TARGETS)
+
+AC_OUTPUT($MAKEFILES)
+
+echo >apdf/Makefile.dep
+echo >goo/Makefile.dep
+echo >freetype2/Makefile.dep
+echo >xpdf/Makefile.dep
+echo >server/Makefile.dep
+echo >fofi/Makefile.dep
+

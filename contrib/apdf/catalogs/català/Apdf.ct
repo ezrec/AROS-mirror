@@ -1,0 +1,1112 @@
+## version $VER: Apdf.catalog 1.0 (18.1.2000)
+## codeset 0
+## language català
+;
+;#version 1
+;#basename Apdf
+;##version $VER: Apdf.catalog 1.1 (6.1.2001)
+;##name Apdf.catalog
+;
+;   *_WIN  = window title
+;   *_GAD  = gadget label
+;   *_HELP = help bubble contents
+;   *_ERR  = error message
+;   *_MENU = menu item
+;
+; Some entries begin with a character and a \0. This
+; means that the first character is used as a keyboard
+; shortcut. It should be part of the string that follows,
+; to be underlined.
+; In some other strings, the keyboard shortcut is specified
+; by a '_' preceding the letter.
+;
+MSG_OPEN_REQ_TITLE
+Obrir...
+; Open...
+;
+MSG_OPEN_REQ_POS
+Obrir
+; Open
+;
+MSG_OPEN_REQ_NEG
+Cancel·lar
+; Cancel
+;
+MSG_EXECUTE_REQ
+Executo l'ordre?
+; Execute command?
+;
+MSG_EXECUTE_REQ_ANSWERS
+D'acord|Cancel·lar
+; Ok|Cancel
+;
+MSG_COMMODITY_DESCRIPTION
+Visualitzador de documents PDF
+; PDF documents viewer
+;
+MSG_GLOBAL_SETTINGS_WIN
+Paràmetres globals
+; Global settings
+;
+MSG_SETTINGS_SAVE_GAD
+De_sar
+; _Save
+;
+MSG_SETTINGS_USE_GAD
+_Emprar
+; _Use
+;
+MSG_SETTINGS_CANCEL_GAD
+_Cancel·lar
+; _Cancel
+;
+MSG_LOG_WIN
+Fitxer de registre
+; Log
+;
+MSG_LOG_AUTO_OPEN_GAD
+a\x00Obrir automàticament
+; a\0Auto open
+;
+MSG_LOG_CLEAR_GAD
+Es_borrar
+; _Clear
+;
+MSG_USED_MODULE
+Mòdul emprat:
+; Used module:
+;
+MSG_ABORT_GAD
+_Avortar
+; _Abort
+;
+MSG_ABORTED
+Avortat.
+; Aborted.
+;
+MSG_BACK_GAD
+E_ndarrere
+; _Back
+;
+MSG_FORWARD_GAD
+Enda_vant
+; _Forward
+;
+MSG_PAGE_GAD
+Pàgina
+; Page
+;
+MSG_ZOOM_GAD
+z\x00Zoom
+; z\0Zoom
+;
+MSG_SEARCH_GAD
+s\x00Cercar
+; s\0Search
+;
+MSG_NEXT_GAD
+Se_güent
+; _Next
+;
+MSG_SEARCHING
+S'està cercant...
+; Searching...
+;
+MSG_NOT_FOUND
+No s'ha trobat
+; Not found
+;
+MSG_OUTLINES_WIN
+Esquemes
+; Outlines
+;
+MSG_LOADING
+Carregant...
+; Loading...
+;
+MSG_SAVE_MODE_PS_LEV2
+Postscript (nivell 2)
+; Postscript (level 2)
+;
+MSG_SAVE_MODE_PS_LEV1
+Postscript (nivell 1)
+; Postscript (level 1)
+;
+MSG_SAVE_MODE_TEXT
+Text
+; Text
+;
+MSG_SAVE_MODE_PBM_PPM_IMAGES
+Imatges PBM/PPM
+; PBM/PPM images
+;
+MSG_SAVE_MODE_PBM_PPM_JPEG_IMAGES
+Imatges PBM/PPM/JPEG
+; PBM/PPM/JPEG images
+;
+MSG_SAVE_WIN
+Desar com...
+; Save as...
+;
+MSG_SAVE_FILE_GAD
+Fitxer
+; File
+;
+MSG_SAVE_FILE_HELP
+Nom del fitxer de destinació.
+; Name of the destination file.
+;
+MSG_SELECT_FILE_NAME_REQ
+Selecciona un nom de fitxer...
+; Select a file name...
+;
+MSG_SAVE_MODE_GAD
+Mode
+; Mode
+;
+MSG_SAVE_MODE_HELP
+Desar el mode:\nEls modes postscript ho desan tot.\nEl mode text només desa el text com\nun fitxer ASCI.\n- Els modes d'imatges només desan\nles imatges incrustades.
+; Save mode:\n- Postscript modes save all.\n- Text mode saves only text as a\nplain ASCII file.\n- Images modes save only embedded\nimages.
+;
+MSG_FIRST_PAGE_GAD
+Primera pàgina
+; First page
+;
+MSG_LAST_PAGE_GAD
+Última pàgina
+; Last page
+;
+MSG_SAVE_ZOOM_GAD
+Zoom
+; Zoom
+;
+MSG_SAVE_ROTATE_GAD
+Rotació
+; Rotate
+;
+MSG_SAVE_SAVE_GAD
+De_sar
+; _Save
+;
+MSG_SAVE_CANCEL_GAD
+_Cancel·lar
+; _Cancel
+;
+MSG_SAVING
+Desant...
+; Saving...
+;
+MSG_SAVED
+Desat.
+; Saved.
+;
+MSG_DOCPREFS_GENERAL_PAGE
+General
+; General
+;
+MSG_DOCPREFS_FONTMAP_PAGE
+Mapa tipogràfic
+; Fontmap
+;
+MSG_DOCPREFS_OPEN_PAGE_GAD
+Pàgina
+; Page
+;
+MSG_DOCPREFS_OPEN_PAGE_HELP
+El número de pàgina amb la\nque s'ha d'obrir el document.
+; Page at which the document\nshould be opened.
+;
+MSG_DOCPREFS_ZOOM_GAD
+Zoom
+; Zoom
+;
+MSG_DOCPREFS_ZOOM_HELP
+Valor inicial del zoom.
+; Initial zoom value.
+;
+MSG_DOCPREFS_ROTATE_GAD
+Rotació
+; Rotate
+;
+MSG_DOCPREFS_ROTATE_HELP
+Valor iniciar de la rotació.
+; Initial rotate value.
+;
+MSG_DOCPREFS_ANTIALIASING_GAD
+Anti-aliasing
+; Anti-aliasing
+;
+MSG_DOCPREFS_ANTIALIASING_HELP
+Estats inicials dels\nparàmetres de l'anti-aliasing.
+; Initial states of the\nanti-aliasing parameters.
+;
+MSG_DOCPREFS_AA_TEXT_GAD
+Text
+; Text
+;
+MSG_DOCPREFS_AA_FILL_GAD
+Emplenar
+; Fill
+;
+MSG_DOCPREFS_AA_STROKE_GAD
+Traç
+; Stroke
+;
+MSG_DOCPREFS_CROPBOX_GAD
+Calaix d'escapçament
+; Crop-box
+;
+MSG_DOCPREFS_CROPBOX_HELP
+Estat inicial del\ncalaix d'escapçament.
+; Initial state of the\ncrop-box.
+;
+MSG_DOCPREFS_CB_LEFT_GAD
+Esquerre
+; Left
+;
+MSG_DOCPREFS_CB_TOP_GAD
+Superior
+; Top
+;
+MSG_DOCPREFS_CB_RIGHT_GAD
+Dreta
+; Right
+;
+MSG_DOCPREFS_CB_BOTTOM_GAD
+Inferior
+; Bottom
+;
+MSG_DOCPREFS_CB_GRAB_GAD
+Grab
+; Grab
+;
+MSG_DOCPREFS_CB_GRAB_HELP
+Arrossega i deixa anar aquest\nbotó dins una vista d'aquest\ndocument per copiar els valors\ndel calaix d'escapçament.
+; Drag-drop this button into\na view of this document to\ncopy the crop-box values.
+;
+MSG_REQ_OK
+D'acord
+; Ok
+;
+MSG_FONTS_WIN
+Tipografies
+; Fonts
+;
+MSG_FONTS_REMOVE
+_Eliminar
+; _Remove
+;
+MSG_FONTS_CLEAR
+Es_borrar
+; _Clear
+;
+MSG_FONTS_SCAN
+Escane_jar
+; _Scan
+;
+MSG_FONTS_SCANNING
+Escanejant...
+; Scanning...
+;
+MSG_FONTMAP_PDFFONT
+\eu\ebTipografia PDF
+; \33u\33bPDF font
+;
+MSG_FONTMAP_SUBSTITUTED_FONT
+\eu\ebTipografia substituida
+; \33u\33bSubstituted font
+;
+MSG_FONTMAP_TYPE
+\eu\ebTipus
+; \33u\33bType
+;
+MSG_FONTMAP_HELP
+Mapatge entre els noms de les\ntipografies PDF i els actuals\nfitxers tipogràfics.
+; Map between PDF font names\nand actual font files.
+;
+MSG_FONTMAP_ADD_GAD
+_afegir
+; _Add
+;
+MSG_FONTMAP_REMOVE_GAD
+E_liminar
+; _Remove
+;
+MSG_FONTMAP_PDFFONT_GAD
+Tipografia _PDF
+; _PDF font
+;
+MSG_FONTMAP_FONT_GAD
+_Tipografia
+; _Font
+;
+MSG_FONTMAP_SELECT_FONT_REQ
+Selecciona una tipografia...
+; Select a font...
+;
+MSG_FONTMAP_TYPE_GAD
+Tip_us
+; _Type
+;
+MSG_FONTINFO_PDFFONT
+\eu\ebTipografia PDF
+; \33u\33bPDF font
+;
+MSG_FONTINFO_TYPE
+\eu\ebTipus
+; \33u\33bType
+;
+MSG_FONTINFO_EMB
+\eu\ebInc
+; \33u\33bEmb
+;
+MSG_FONTINFO_PROPERTIES
+\eu\ebPropietats
+; \33u\33bProperties
+;
+MSG_FONTINFO_HELP
+Llista de les tipografies\nemprades en el document,\namb les seves propietats.\nPots arrossegar i deixar\nanar les entrades en la\nllista del mapa tipogràfic.
+; List of fonts used in the\ndocument, with their properties.\nYou can drag-drop the entries in\nfontmap listviews.
+;
+MSG_PREFS_LOADALL
+Carregar-ho tot
+; Load all
+;
+MSG_FIT_PAGE
+Adaptar la pàgina
+; Fit page
+;
+MSG_FIT_WIDTH
+Adaptar l'amplada
+; Fit width
+;
+MSG_PREFS_ABOUT_PAGE
+Sobre
+; About
+;
+MSG_PREFS_GENERAL_PAGE
+General
+; General
+;
+MSG_PREFS_FONT_DIRS_PAGE
+Directori tipogràfic
+; Font dirs
+;
+MSG_PREFS_FONTMAP_PAGE
+Mapa tipogràfic
+; Font map
+;
+MSG_PREFS_ADVANCED_PAGE
+Avançat
+; Advanced
+;
+MSG_PREFS_AUTO_OPEN_GAD
+_Obrir auto. el fitxer de registre
+; _Auto open log
+;
+MSG_PREFS_AUTO_OPEN_HELP
+Estat inicial de l'artilugi\n"Obrir automàticament" de\nla finestra de registre.
+; Initial state of the \"Auto open\"\ngadget of the log window.
+;
+MSG_PREFS_DISKOBJ_GAD
+Objecte de disc
+; DiskObject
+;
+MSG_PREFS_DISKOBJ_HELP
+Icona emprada al iconificar.
+; Icon used when iconified.
+;
+MSG_PREFS_GZIPCMD_GAD
+Ordre Gzip
+; Gzip command
+;
+MSG_PREFS_GZIPCMD_HELP
+Ordre emprada per la\ndescompactació LZW\nCridada amb <fitxer>.Z i\nhauria de produir un <fitxer>
+; Command used for\nLZW decompression\nCalled with <file>.Z and\nshould produce <file>
+;
+MSG_PREFS_TMPDIR_GAD
+Directori temporal
+; Temp. directory
+;
+MSG_PREFS_TMPDIR_HELP
+Directori emprat per emmagatzemar\nfitxers massa grans per cabre en\nla catxé.\nNo té cap mena de sentit emprar\naquí el disc RAM !
+; Directory used to store files\ntoo big to fit in the cache\nUsing a RAM disk here doesn't\nmake sense !
+;
+MSG_PREFS_TMPDIR_REQ
+Selecciona un directori...
+; Select a directory...
+;
+MSG_PREFS_URLCMD_GAD
+Ordre URL
+; URL command
+;
+MSG_PREFS_URLCMD_HELP
+Ordre emprada quan\ns'activa una URL.\nS'hauria d'afegir un "%s" que\nfos reemplaçat per la URL.
+; Command used when an\nURL is activated.\nShould contain a \"%s\" that\nwill be replaced by the URL.
+;
+MSG_PREFS_PRTDEV_GAD
+Dispositiu d'impressió
+; Print device
+;
+MSG_PREFS_PRTDEV_HELP
+Dispositiu emprat per l'impressió\ndels fitxers Postscript.
+; Device used to print\nPostscript files.
+;
+MSG_PREFS_DEFICON_GAD
+Icona per defecte
+; Default icon
+;
+MSG_PREFS_DEFICON_HELP
+És una icona afegida als documents que\nno en tenen cap quan es desen els\nparàmetres específics del document.
+; Icon added to documents that\ndon't have one when saving\ndocument specific settings.
+;
+MSG_PREFS_SELECTCOLOR_GAD
+Selecció del color
+; Selection color
+;
+MSG_PREFS_SELECTCOLOR_HELP
+És el color emprat per\ndibuixar el calaix de\nselecció.
+; Color used to draw the\nselection box.
+;
+MSG_PREFS_SELECTCOLOR_REQ
+Selecció del color
+; Selection color
+;
+MSG_PREFS_ZOOM_GAD
+Zoom
+; Zoom
+;
+MSG_PREFS_ZOOM_HELP
+Valor inicial del zoom.
+; Initial zoom value.
+;
+MSG_PREFS_ANTIALIASING_GAD
+Anti-aliasing
+; Anti-aliasing
+;
+MSG_PREFS_ANTIALIASING_HELP
+Estat inicial dels paràmetres\nde l'anti-aliasing.
+; Initial state of the\nanti-aliasing parameters.
+;
+MSG_PREFS_AATEXT_GAD
+_Text
+; _Text
+;
+MSG_PREFS_AAFILL_GAD
+E_mplenar
+; _Fill
+;
+MSG_PREFS_AASTROKE_GAD
+Tra_ç
+; _Stroke
+;
+MSG_PREFS_FONTDIRS_HELP
+Llista dels directoris cercats\nper les tipografies Type1/trueType.
+; List of directories searched\nfor Type1/TrueType fonts.
+;
+MSG_PREFS_FONTDIR_REQ
+Selecciona un directori de tipografies...
+; Select a font directory...
+;
+MSG_PREFS_FONTDIR_NEW_GAD
+_Nou
+; _New
+;
+MSG_PREFS_FONTDIR_REMOVE_GAD
+E_liminar
+; _Remove
+;
+MSG_PREFS_MODULEDIR_GAD
+Directori dels mòduls
+; Modules directory
+;
+MSG_PREFS_MODULEDIR_HELP
+És el directori que conté els mòduls.
+; Directory containing the modules.
+;
+MSG_PREFS_MODULEDIR_REQ
+Selecciona el directori dels mòduls...
+; Select the modules directory...
+;
+MSG_PREFS_MODULE_GAD
+Mòdul
+; Module
+;
+MSG_PREFS_MODULE_HELP
+Mòdul emprat per la descodificació.\nProbablement no hauràs de definir-lo.
+; Module used for PDF decoding.\nYou probably don't need to set this.
+;
+MSG_PREFS_MODULE_REQ
+Selecciona un mòdul...
+; Select a module...
+;
+MSG_PREFS_MAXCOLORS_GAD
+N° de colors màxim per imatge
+; Max colors per picture
+;
+MSG_PREFS_MAXCOLORS_HELP
+Número màxim de colors emprats\nquan es remapatge una imatge.\n(Ignorat en pantalles TrueColor.)
+; Maximum number of colors\nused when remapping a picture.\n(Ignored on TrueColor screens.)
+;
+MSG_PREFS_CACHESZ_GAD
+Mida de la catxé
+; Cache size
+;
+MSG_PREFS_CACHESZ_HELP
+Mida màxima de la catxé per fitxer.\n"Carregar-ho tot" significa: carregar\ntot el fitxer en la memòria.
+; Maximum cache size per file.\n\"Load all\" means: load\nthe whole file in memory.
+;
+MSG_PREFS_CACHEBLOCSZ_GAD
+Mida del bloc de la catxé
+; Cache block size
+;
+MSG_PREFS_CACHEBLOCSZ_HELP
+Mida del bloc de la catxé.\nIgnorat en el mode\n"Carregar-ho tot".
+; Size of a cache block.\nIgnored in \"Load all\" mode.
+;
+MSG_SAVEAS_REQ
+Desar com...
+; Save as...
+;
+MSG_SAVEAS_REQ_POS
+Desar
+; Save
+;
+MSG_SAVEAS_REQ_NEG
+Cancel·lar
+; Cancel
+;
+MSG_ERROR_REQ
+Error
+; Error
+;
+MSG_LOADING_PLOBJ
+\ecCarregant...
+; \33cLoading...
+;
+MSG_LOAD_ERR
+\ecError
+; \33cError
+;
+MSG_INFO_TITLE
+Títol
+; Title
+;
+MSG_INFO_AUTHOR
+Autor
+; Author
+;
+MSG_INFO_SUBJECT
+Assumpte
+; Subject
+;
+MSG_INFO_CREATOR
+Document creat per
+; Document created by
+;
+MSG_INFO_PRODUCER
+Fitxer PDF produït per
+; PDF file produced by
+;
+MSG_INFO_KEYWORDS
+Paraules clau
+; Keywords
+;
+MSG_INFO_CREATION_DATE
+Data de creació
+; Creation date
+;
+MSG_INFO_MODDATE
+Última modificació
+; Last modification
+;
+MSG_INFO_NUMPAGES
+Pàgines
+; Pages
+;
+MSG_INFO_ENCRYPTED
+Encriptació
+; Encrypted
+;
+MSG_INFO_PRINTING
+Permesa l'impressió
+; Printing allowed
+;
+MSG_INFO_COPY
+Permès copiar/enganxar
+; Copy/paste allowed
+;
+MSG_INFO_YES
+Sí
+; Yes
+;
+MSG_INFO_NO
+No
+; No
+;
+MSG_SIDES_GAD
+
+; Sides
+;
+MSG_SIDES_HELP
+
+; Choose the page sides to print.
+;
+MSG_SIDES_BOTH
+
+; Both
+;
+MSG_SIDES_EVEN
+
+; Even
+;
+MSG_SIDES_ODD
+
+; Odd
+;
+MSG_LOG_AUTO_OPEN_HELP
+
+; Open this window everytime\na message is added?
+;
+MSG_ENTER_PASSWORD_WIN
+
+; Enter password
+;
+MSG_PASSWORD_OK
+
+; Ok
+;
+MSG_PASSWORD_CANCEL
+
+; Cancel
+;
+MSG_INFO_LINEARIZED
+
+; Optimized
+;
+MSG_PREFS_DEFAULT_PARAMS_TITLE
+
+; Default parameters
+;
+MSG_PREFS_CONTINUOUS_GAD
+
+; _Continuous
+;
+MSG_PREFS_CONTINUOUS_HELP
+
+; Initial state of the\n\"Continuous\" parameter.
+;
+MSG_PREFS_DISPLAY_MODE_GAD
+
+; Display mode
+;
+MSG_PREFS_DISPLAY_MODE_HELP
+
+; Initial state of the\ndisplay mode parameter.
+;
+MSG_PREFS_DISPMODE_ONEPASS
+
+; One pass
+;
+MSG_PREFS_DISPMODE_TEXTFIRST
+
+; Text first
+;
+MSG_PREFS_DISPMODE_PROGRESSIVE
+
+; Progressive
+;
+MSG_PREFS_COLUMNS_GAD
+
+; Columns
+;
+MSG_PREFS_COLUMNS_HELP
+
+; Initial number\nof columns.
+;
+MSG_PREFS_ROWS_GAD
+
+; Rows
+;
+MSG_PREFS_ROWS_HELP
+
+; Initial number\nof rows.
+;
+MSG_DOCPREFS_CONTINUOUS_GAD
+
+; _Continuous
+;
+MSG_DOCPREFS_CONTINUOUS_HELP
+
+; Initial state of the\n\"Continuous\" parameter.
+;
+MSG_DOCPREFS_DISPLAY_MODE_GAD
+
+; Display mode
+;
+MSG_DOCPREFS_DISPLAY_MODE_HELP
+
+; Initial state of the\ndisplay mode parameter.
+;
+MSG_DOCPREFS_DISPMODE_ONEPASS
+
+; One pass
+;
+MSG_DOCPREFS_DISPMODE_TEXTFIRST
+
+; Text first
+;
+MSG_DOCPREFS_DISPMODE_PROGRESSIVE
+
+; Progressive
+;
+MSG_DOCPREFS_COLUMNS_GAD
+
+; Columns
+;
+MSG_DOCPREFS_COLUMNS_HELP
+
+; Initial number\nof columns.
+;
+MSG_DOCPREFS_ROWS_GAD
+
+; Rows
+;
+MSG_DOCPREFS_ROWS_HELP
+
+; Initial number\nof rows.
+;
+MSG_DOCPREFS_TOOLBAR_GAD
+
+; Show tool bar
+;
+MSG_DOCPREFS_TOOLBAR_HELP
+
+; Should the tool bar\nbe shown at startup?
+;
+MSG_DOCPREFS_NAVBAR_GAD
+
+; Show navigation bar
+;
+MSG_DOCPREFS_NAVBAR_HELP
+
+; Should the navigation bar\nbe shown at startup?
+;
+MSG_PREFS_MAKE_BITMAP_GAD
+
+; Make _BitMap
+;
+MSG_PREFS_MAKE_BITMAP_HELP
+
+; Build a BitMap from the page graphics\nafter rendering. If you have enough free\ngraphic memory, this gives a better\nscrolling speed.
+;
+MSG_PREFS_SPARE_MEM_GAD
+
+; _Spare memory
+;
+MSG_PREFS_SPARE_MEM_HELP
+
+; Never use more than 3 bytes per pixel\nwhen building true color page data.\nIf not checked, use the screen's native\nformat, which might need 4 bytes per pixel,\nbut is usually faster.
+;
+MSG_PREFS_UPDATE_TIME_GAD
+
+; Update time
+;
+MSG_PREFS_UPDATE_TIME_HELP
+
+; Delay between refreshes in\nprogressive display mode.
+;
+MSG_PREFS_ICON_REQ
+
+; Choose an icon
+;
+MSG_PREFS_DEFICON_REQ
+
+; Choose an icon
+;
+MSG_OWNERPW_GAD
+
+; Owner password
+;
+MSG_USERPW_GAD
+
+; User password
+;
+MSG_PREFS_EXTOUTLINES_GAD
+
+; Separate outlines
+;
+MSG_PREFS_EXTOUTLINES_HELP
+
+; Should outlines appear in an\nexternal window or inside the main\nwindow ?
+;
+MSG_PREFS_OPENOUTLINES_GAD
+
+; Open outlines
+;
+MSG_PREFS_OPENOUTLINES_HELP
+
+; Open outlines automatically ?
+;
+MSG_DOCPREFS_OUTLINES_GAD
+
+; Open outlines
+;
+MSG_DOCPREFS_OUTLINES_HELP
+
+; Open outlines automatically ?
+;
+;
+; Errors.
+;
+MSG_ERROR_ERR
+Error
+; Error
+;
+MSG_REQUIRES_68020_ERR
+Apdf requereix almenys un 68020.\n
+; Apdf requires at least a 68020.\n
+;
+MSG_REQUIRES_3_0_ERR
+Apdf requereix almenys l'AmigaOS 3.0.\n
+; Apdf requires at least AmgaOS 3.0.\n
+;
+MSG_NO_MUIMASTER_ERR
+No puc obrir la "muimaster.library".\n
+; Can't open \"muimaster.library\".\n
+;
+MSG_CANT_CREATE_CC_ERR
+No puc crear la classe pròpia.\n
+; Can't create custom class.\n
+;
+MSG_CANT_CREATE_CONFIG_OBJ_ERR
+No puc crear l'objecte de configuració.\n
+; Can't create config object.\n
+;
+; Printed before DOS error messages. Should end with a trailing space.
+MSG_ERROR_HEADER_ERR
+Error: 
+; Error:\x20
+;
+MSG_CANT_FIND_MODULE_ERR
+No trobo cap dels següents mòduls:\n
+; Can't find any of the following modules:\n
+;
+MSG_CANT_CREATE_SERVER_ERR
+No puc crear el servidor.\n
+; Can't create server.\n
+;
+MSG_SERVER_INIT_ERR
+No s'ha pogut inicialitzar el servidor.\n
+; Server initialization failed.\n
+;
+MSG_CANT_CREATE_MUI_APP_ERR
+No puc crear l'aplicació del MUI.\n
+; Can't create MUI application.\n
+;
+MSG_CANT_LOAD_DOC_ERR
+No puc carregar el document.\n
+; Can't load document.\n
+;
+MSG_CANT_SAVE_PREFS_ERR
+No puc desar les preferències.\n
+; Can't save prefs.\n
+;
+MSG_SAVE_ERR
+Error al desar.
+; Save error.
+;
+MSG_CANT_SAVE_ERR
+No puc desar el fitxer.
+; Can't save file.
+;
+;
+; Menus.
+; If the second character is '\0', the first one is
+; taken as a keyboard shortcut, and the label starts
+; at character 3.
+;
+MSG_PROJECT_MENU
+Projecte
+; Project
+;
+MSG_ABOUT_MENU
+?\x00Sobre...
+; ?\0About...
+;
+MSG_ABOUT_MUI_MENU
+Sobre el MUI...
+; About MUI...
+;
+MSG_NEW_DOC_MENU
+N\x00Document Nou...
+; N\0New document...
+;
+MSG_NEW_VIEW_MENU
+V\x00Nova vista
+; V\0New view
+;
+MSG_OPEN_MENU
+O\x00Obrir...
+; O\0Open...
+;
+MSG_SAVEAS_MENU
+A\x00Desar com...
+; A\0Save as...
+;
+MSG_PRINT_MENU
+P\x00Imprimir...
+; P\0Print...
+;
+MSG_HIDE_MENU
+H\x00Amagar
+; H\0Hide
+;
+MSG_QUIT_MENU
+Q\x00Sortir
+; Q\0Quit
+;
+MSG_EDIT_MENU
+Editar
+; Edit
+;
+MSG_COPY_MENU
+C\x00Copiar
+; C\0Copy
+;
+MSG_VIEW_MENU
+Visualitzar
+; View
+;
+MSG_REFRESH_MENU
+Refrescar
+; Refresh
+;
+MSG_CROP_MENU
+K\x00Escapçar
+; K\0Crop
+;
+MSG_UNCROP_MENU
+Desfer l'escapçament
+; U\0UnCrop
+;
+MSG_ROTATE_LEFT_MENU
+L\x00Rotar a l'esquerre
+; L\0Rotate left
+;
+MSG_ROTATE_RIGHT_MENU
+R\x00Rotar a la dreta
+; R\0Rotate right
+;
+MSG_INFO_MENU
+Informacions...
+; Informations...
+;
+MSG_OUTLINES_MENU
+Esquemes...
+; Outlines...
+;
+MSG_FONTS_MENU
+Tipografies...
+; Fonts...
+;
+MSG_ERRORS_LOG_MENU
+Fitxer d'errors...
+; Errors log...
+;
+MSG_SETTINGS_MENU
+Paràmetres
+; Settings
+;
+MSG_GLOBAL_SETTINGS_MENU
+Paràmetres globals...
+; Global settings...
+;
+MSG_DOC_SETTINGS_MENU
+Paràmetres del document...
+; Document settings...
+;
+MSG_MUI_MENU
+MUI...
+; MUI...
+;
+MSG_TEXT_AA_MENU
+Anti-aliasing de text
+; Text anti-aliasing
+;
+MSG_STROKE_AA_MENU
+Anti-aliasing del traç
+; Strokes anti-aliasing
+;
+MSG_FILL_AA_MENU
+Anti-aliasing d'emplenar
+; Fills anti-aliasing
+;
+; The following entries are for the plugin context menu.
+MSG_PDF_OPERATIONS_MENU
+Operacions PDF
+; PDF operations
+;
+MSG_SAVE_FILE_TO_MENU
+Desar el fitxer a...
+; Save file to...
+;
+MSG_ZOOM_MENU
+Zoom
+; Zoom
+;
+MSG_ADD_ROW_MENU
+
+; Add row
+;
+MSG_ADD_COLUMN_MENU
+
+; Add column
+;
+MSG_REM_ROW_MENU
+
+; Remove row
+;
+MSG_REM_COLUMN_MENU
+
+; Remove column
+;
+MSG_CONTINUOUS_MENU
+
+; Continuous
+;
+MSG_DISPLAY_MODE_MENU
+
+; Display mode
+;
+MSG_ONE_PASS_MENU
+
+; One pass
+;
+MSG_TEXT_FIRST_MENU
+
+; Text first
+;
+MSG_PROGRESSIVE_MENU
+
+; Progressive
+;
+MSG_SHOW_NAV_BAR_MENU
+
+; Show navigation bar
+;
+MSG_SHOW_TOOL_BAR_MENU
+
+; Show tool bar
+;
+MSG_SAVE_FORM_AS_MENU
+
+; Save form as...
+;
+MSG_IMPORT_FDF_MENU
+
+; Import FDF file...
+;
+MSG_FULL_SCREEN_MENU
+
+; Full screen

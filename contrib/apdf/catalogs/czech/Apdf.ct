@@ -1,0 +1,1112 @@
+## version $VER: Apdf.catalog 1.0 (18.1.2000)
+## codeset 0
+## language czech
+;
+;#version 1
+;#basename Apdf
+;##version $VER: Apdf.catalog 1.1 (6.1.2001)
+;##name Apdf.catalog
+;
+;   *_WIN  = window title
+;   *_GAD  = gadget label
+;   *_HELP = help bubble contents
+;   *_ERR  = error message
+;   *_MENU = menu item
+;
+; Some entries begin with a character and a \0. This
+; means that the first character is used as a keyboard
+; shortcut. It should be part of the string that follows,
+; to be underlined.
+; In some other strings, the keyboard shortcut is specified
+; by a '_' preceding the letter.
+;
+MSG_OPEN_REQ_TITLE
+Otevêít...
+; Open...
+;
+MSG_OPEN_REQ_POS
+Otevêít
+; Open
+;
+MSG_OPEN_REQ_NEG
+Zruîit
+; Cancel
+;
+MSG_EXECUTE_REQ
+Opravdu provést pêíkaz?
+; Execute command?
+;
+MSG_EXECUTE_REQ_ANSWERS
+Ok|Zruîit
+; Ok|Cancel
+;
+MSG_COMMODITY_DESCRIPTION
+Prohlíùeç dokumentû PDF
+; PDF documents viewer
+;
+MSG_GLOBAL_SETTINGS_WIN
+Globální nastavení
+; Global settings
+;
+MSG_SETTINGS_SAVE_GAD
+_Uloùit
+; _Save
+;
+MSG_SETTINGS_USE_GAD
+_Pouùít
+; _Use
+;
+MSG_SETTINGS_CANCEL_GAD
+_Zruîit
+; _Cancel
+;
+MSG_LOG_WIN
+Záznam
+; Log
+;
+MSG_LOG_AUTO_OPEN_GAD
+a\x00Autom. otevêít
+; a\0Auto open
+;
+MSG_LOG_CLEAR_GAD
+_Smazat
+; _Clear
+;
+MSG_USED_MODULE
+Pouùité moduly:
+; Used module:
+;
+MSG_ABORT_GAD
+Pê_eruîit
+; _Abort
+;
+MSG_ABORTED
+Pêeruîeno.
+; Aborted.
+;
+MSG_BACK_GAD
+_Dozadu
+; _Back
+;
+MSG_FORWARD_GAD
+D_opêedu
+; _Forward
+;
+MSG_PAGE_GAD
+Strana
+; Page
+;
+MSG_ZOOM_GAD
+z\x00Zvëtîení
+; z\0Zoom
+;
+MSG_SEARCH_GAD
+s\x00Vyhledávání
+; s\0Search
+;
+MSG_NEXT_GAD
+_Dalîí
+; _Next
+;
+MSG_SEARCHING
+Vyhledávání...
+; Searching...
+;
+MSG_NOT_FOUND
+Nenalezeno
+; Not found
+;
+MSG_OUTLINES_WIN
+Obrysy
+; Outlines
+;
+MSG_LOADING
+Naçítání...
+; Loading...
+;
+MSG_SAVE_MODE_PS_LEV2
+
+; Postscript (level 2)
+;
+MSG_SAVE_MODE_PS_LEV1
+
+; Postscript (level 1)
+;
+MSG_SAVE_MODE_TEXT
+
+; Text
+;
+MSG_SAVE_MODE_PBM_PPM_IMAGES
+Obrázky PBM/PPM
+; PBM/PPM images
+;
+MSG_SAVE_MODE_PBM_PPM_JPEG_IMAGES
+Obrázky PBM/PPM/JPEG
+; PBM/PPM/JPEG images
+;
+MSG_SAVE_WIN
+Uloùit jako...
+; Save as...
+;
+MSG_SAVE_FILE_GAD
+Soubor
+; File
+;
+MSG_SAVE_FILE_HELP
+Název cílového souboru.
+; Name of the destination file.
+;
+MSG_SELECT_FILE_NAME_REQ
+Urçete název souboru
+; Select a file name...
+;
+MSG_SAVE_MODE_GAD
+Mód
+; Mode
+;
+MSG_SAVE_MODE_HELP
+Výstupní formát:\n- ve formátu Postscript je uloùeno vîe\n- ve formátu text uloùí pouze text\njako çistý ASCII soubor.\n- ve formátu obrázky uloùí pouze vloùené\nobrázky.
+; Save mode:\n- Postscript modes save all.\n- Text mode saves only text as a\nplain ASCII file.\n- Images modes save only embedded\nimages.
+;
+MSG_FIRST_PAGE_GAD
+První strana
+; First page
+;
+MSG_LAST_PAGE_GAD
+Poslední strana
+; Last page
+;
+MSG_SAVE_ZOOM_GAD
+Zvëtîení
+; Zoom
+;
+MSG_SAVE_ROTATE_GAD
+Rotace
+; Rotate
+;
+MSG_SAVE_SAVE_GAD
+_Uloùit
+; _Save
+;
+MSG_SAVE_CANCEL_GAD
+_Zruîit
+; _Cancel
+;
+MSG_SAVING
+Ukládání...
+; Saving...
+;
+MSG_SAVED
+Uloùeno.
+; Saved.
+;
+MSG_DOCPREFS_GENERAL_PAGE
+Hlavní
+; General
+;
+MSG_DOCPREFS_FONTMAP_PAGE
+Mapa fontû
+; Fontmap
+;
+MSG_DOCPREFS_OPEN_PAGE_GAD
+Stránka
+; Page
+;
+MSG_DOCPREFS_OPEN_PAGE_HELP
+Na které stranë se má dokument otevêít.
+; Page at which the document\nshould be opened.
+;
+MSG_DOCPREFS_ZOOM_GAD
+Zvëtîení
+; Zoom
+;
+MSG_DOCPREFS_ZOOM_HELP
+Poçáteçní hodnota zvëtîení.
+; Initial zoom value.
+;
+MSG_DOCPREFS_ROTATE_GAD
+Rotace
+; Rotate
+;
+MSG_DOCPREFS_ROTATE_HELP
+Poçáteçní hodnota rotace.
+; Initial rotate value.
+;
+MSG_DOCPREFS_ANTIALIASING_GAD
+Vyhlazování
+; Anti-aliasing
+;
+MSG_DOCPREFS_ANTIALIASING_HELP
+Poçáteçní stav parametrû vyhlazování.
+; Initial states of the\nanti-aliasing parameters.
+;
+MSG_DOCPREFS_AA_TEXT_GAD
+
+; Text
+;
+MSG_DOCPREFS_AA_FILL_GAD
+Výplñ
+; Fill
+;
+MSG_DOCPREFS_AA_STROKE_GAD
+Kêivka
+; Stroke
+;
+MSG_DOCPREFS_CROPBOX_GAD
+Rámeçek
+; Crop-box
+;
+MSG_DOCPREFS_CROPBOX_HELP
+Poçáteçní stav rámeçku.
+; Initial state of the\ncrop-box.
+;
+MSG_DOCPREFS_CB_LEFT_GAD
+Vlevo
+; Left
+;
+MSG_DOCPREFS_CB_TOP_GAD
+Nahoêe
+; Top
+;
+MSG_DOCPREFS_CB_RIGHT_GAD
+Vpravo
+; Right
+;
+MSG_DOCPREFS_CB_BOTTOM_GAD
+Dole
+; Bottom
+;
+MSG_DOCPREFS_CB_GRAB_GAD
+Sejmout
+; Grab
+;
+MSG_DOCPREFS_CB_GRAB_HELP
+Pêesuñte toto tlaçítko na náhled\ndokumentu, çímù zkopírujete hodnoty\nrámeçku.
+; Drag-drop this button into\na view of this document to\ncopy the crop-box values.
+;
+MSG_REQ_OK
+
+; Ok
+;
+MSG_FONTS_WIN
+Fonty
+; Fonts
+;
+MSG_FONTS_REMOVE
+Odst_ranit
+; _Remove
+;
+MSG_FONTS_CLEAR
+_Vymazat
+; _Clear
+;
+MSG_FONTS_SCAN
+_Prohledat
+; _Scan
+;
+MSG_FONTS_SCANNING
+Prohledávání...
+; Scanning...
+;
+MSG_FONTMAP_PDFFONT
+
+; \33u\33bPDF font
+;
+MSG_FONTMAP_SUBSTITUTED_FONT
+\eu\ebNahrazený font
+; \33u\33bSubstituted font
+;
+MSG_FONTMAP_TYPE
+\eu\ebTyp
+; \33u\33bType
+;
+MSG_FONTMAP_HELP
+Mapa mezi názvy fontû PDF\na aktuálními názvy souborû fontû.
+; Map between PDF font names\nand actual font files.
+;
+MSG_FONTMAP_ADD_GAD
+Pêid_at
+; _Add
+;
+MSG_FONTMAP_REMOVE_GAD
+Odst_ranit
+; _Remove
+;
+MSG_FONTMAP_PDFFONT_GAD
+
+; _PDF font
+;
+MSG_FONTMAP_FONT_GAD
+
+; _Font
+;
+MSG_FONTMAP_SELECT_FONT_REQ
+Zvolte font
+; Select a font...
+;
+MSG_FONTMAP_TYPE_GAD
+_Typ
+; _Type
+;
+MSG_FONTINFO_PDFFONT
+
+; \33u\33bPDF font
+;
+MSG_FONTINFO_TYPE
+\eu\ebTyp
+; \33u\33bType
+;
+MSG_FONTINFO_EMB
+\eu\ebVloùený
+; \33u\33bEmb
+;
+MSG_FONTINFO_PROPERTIES
+\eu\ebVlastnosti
+; \33u\33bProperties
+;
+MSG_FONTINFO_HELP
+Seznam fontû, pouùitých\nv dokumentu s jejich vlastnostmi.\nMûùete pêesunut tyto poloùky\ndo seznamu mapy fontû.
+; List of fonts used in the\ndocument, with their properties.\nYou can drag-drop the entries in\nfontmap listviews.
+;
+MSG_PREFS_LOADALL
+Naçíst vîe
+; Load all
+;
+MSG_FIT_PAGE
+Celá strana
+; Fit page
+;
+MSG_FIT_WIDTH
+Plná îíêka
+; Fit width
+;
+MSG_PREFS_ABOUT_PAGE
+O programu
+; About
+;
+MSG_PREFS_GENERAL_PAGE
+Hlavní
+; General
+;
+MSG_PREFS_FONT_DIRS_PAGE
+Umístëní fontû
+; Font dirs
+;
+MSG_PREFS_FONTMAP_PAGE
+Mapa fontû
+; Font map
+;
+MSG_PREFS_ADVANCED_PAGE
+Rozîíêené
+; Advanced
+;
+MSG_PREFS_AUTO_OPEN_GAD
+_Autom. otevêení záznamu
+; _Auto open log
+;
+MSG_PREFS_AUTO_OPEN_HELP
+Poçáteçní stav tlaçítka "Autom. otevêít"\nokna záznamu.
+; Initial state of the \"Auto open\"\ngadget of the log window.
+;
+MSG_PREFS_DISKOBJ_GAD
+Aplikaçní ikona
+; DiskObject
+;
+MSG_PREFS_DISKOBJ_HELP
+Ikona pouùitá pêi ikonifikaci.
+; Icon used when iconified.
+;
+MSG_PREFS_GZIPCMD_GAD
+Pêíkaz Gzip
+; Gzip command
+;
+MSG_PREFS_GZIPCMD_HELP
+Pêíkaz pouùívaný pro LZW dekompresi.\nJe volán s parametrem <soubor>.Z a\nvytváêí <soubor>
+; Command used for\nLZW decompression\nCalled with <file>.Z and\nshould produce <file>
+;
+MSG_PREFS_TMPDIR_GAD
+Doçasný adresáê
+; Temp. directory
+;
+MSG_PREFS_TMPDIR_HELP
+Adresáê pouùívaný k ukládání souborû\npêíliî velkých pro cache.\nNastavení RAM zde tedy nemá ùádný význam!
+; Directory used to store files\ntoo big to fit in the cache\nUsing a RAM disk here doesn't\nmake sense !
+;
+MSG_PREFS_TMPDIR_REQ
+Zvolte adresáê
+; Select a directory...
+;
+MSG_PREFS_URLCMD_GAD
+Pêíkaz URL
+; URL command
+;
+MSG_PREFS_URLCMD_HELP
+Pêíkaz pouùívaný pêi aktivovaci URL.\nÊetëzec "%s" je argumentem, za který\nse doplní dané URL.
+; Command used when an\nURL is activated.\nShould contain a \"%s\" that\nwill be replaced by the URL.
+;
+MSG_PREFS_PRTDEV_GAD
+Zaêízení pro tisk
+; Print device
+;
+MSG_PREFS_PRTDEV_HELP
+Zaêízení pouùívané pro tisk\npostscriptových souborû.
+; Device used to print\nPostscript files.
+;
+MSG_PREFS_DEFICON_GAD
+Základní ikona
+; Default icon
+;
+MSG_PREFS_DEFICON_HELP
+Ikona pêidaná k dokumentu v pêípadë,\nùe ten ùádnou ikonu nemá a zároveñ je\nukládáno specifické nastavení dokumentu.
+; Icon added to documents that\ndon't have one when saving\ndocument specific settings.
+;
+MSG_PREFS_SELECTCOLOR_GAD
+Barva rámeçku výbëru
+; Selection color
+;
+MSG_PREFS_SELECTCOLOR_HELP
+Barva pouùitá pro kreslení\nrámeçku s výbërem.
+; Color used to draw the\nselection box.
+;
+MSG_PREFS_SELECTCOLOR_REQ
+Barva rámeçku výberu
+; Selection color
+;
+MSG_PREFS_ZOOM_GAD
+Zvëtîení
+; Zoom
+;
+MSG_PREFS_ZOOM_HELP
+Poçáteçní hodnota zvëtîení.
+; Initial zoom value.
+;
+MSG_PREFS_ANTIALIASING_GAD
+Vyhlazování
+; Anti-aliasing
+;
+MSG_PREFS_ANTIALIASING_HELP
+Poçáteçní stav parametrû vyhlazování.
+; Initial state of the\nanti-aliasing parameters.
+;
+MSG_PREFS_AATEXT_GAD
+
+; _Text
+;
+MSG_PREFS_AAFILL_GAD
+_Výplñ
+; _Fill
+;
+MSG_PREFS_AASTROKE_GAD
+_Kêivka
+; _Stroke
+;
+MSG_PREFS_FONTDIRS_HELP
+Seznam adresáêû, které se budou\nprohledávat pro zjiîtëní fontû typu\nType1 nebo TrueType.
+; List of directories searched\nfor Type1/TrueType fonts.
+;
+MSG_PREFS_FONTDIR_REQ
+Zvolte adresáê s fonty
+; Select a font directory...
+;
+MSG_PREFS_FONTDIR_NEW_GAD
+_Nový
+; _New
+;
+MSG_PREFS_FONTDIR_REMOVE_GAD
+_Odstranit
+; _Remove
+;
+MSG_PREFS_MODULEDIR_GAD
+Adresáê s moduly
+; Modules directory
+;
+MSG_PREFS_MODULEDIR_HELP
+Adresáê obsahující moduly programu
+; Directory containing the modules.
+;
+MSG_PREFS_MODULEDIR_REQ
+Zvolte adresáê s moduly
+; Select the modules directory...
+;
+MSG_PREFS_MODULE_GAD
+Îifrovací modul
+; Module
+;
+MSG_PREFS_MODULE_HELP
+Modul pouùitý pro dekódování PDF.\nZde nemusíte zadávat nic.
+; Module used for PDF decoding.\nYou probably don't need to set this.
+;
+MSG_PREFS_MODULE_REQ
+Zvolte modul
+; Select a module...
+;
+MSG_PREFS_MAXCOLORS_GAD
+Max. poçet barev
+; Max colors per picture
+;
+MSG_PREFS_MAXCOLORS_HELP
+Maximální poçet barev pouùitých\npêi remapování obrázkû.\n(Ignorováno je-li barevná hloubka\nobrazovky vëtîí neù 16 bitû.)
+; Maximum number of colors\nused when remapping a picture.\n(Ignored on TrueColor screens.)
+;
+MSG_PREFS_CACHESZ_GAD
+Velikost cache
+; Cache size
+;
+MSG_PREFS_CACHESZ_HELP
+Maximální velikost cache na soubor.\n"Naçíst vîe" znamená naçtení celého\nsouboru do pamëti.
+; Maximum cache size per file.\n\"Load all\" means: load\nthe whole file in memory.
+;
+MSG_PREFS_CACHEBLOCSZ_GAD
+Velikost bloku cache
+; Cache block size
+;
+MSG_PREFS_CACHEBLOCSZ_HELP
+Velikost bloku cache.\nIgnorováno pêi pouùití "Naçíst vîe".
+; Size of a cache block.\nIgnored in \"Load all\" mode.
+;
+MSG_SAVEAS_REQ
+Uloùit jako...
+; Save as...
+;
+MSG_SAVEAS_REQ_POS
+Uloùit
+; Save
+;
+MSG_SAVEAS_REQ_NEG
+Zruîit
+; Cancel
+;
+MSG_ERROR_REQ
+Chyba
+; Error
+;
+MSG_LOADING_PLOBJ
+\ecNaçítá se...
+; \33cLoading...
+;
+MSG_LOAD_ERR
+\ecChyba
+; \33cError
+;
+MSG_INFO_TITLE
+Název
+; Title
+;
+MSG_INFO_AUTHOR
+Autor
+; Author
+;
+MSG_INFO_SUBJECT
+Pêedmët
+; Subject
+;
+MSG_INFO_CREATOR
+Dokument vytvoêen v
+; Document created by
+;
+MSG_INFO_PRODUCER
+Soubor PDF vytvoêen v
+; PDF file produced by
+;
+MSG_INFO_KEYWORDS
+Klíçová slova
+; Keywords
+;
+MSG_INFO_CREATION_DATE
+Datum vytvoêení
+; Creation date
+;
+MSG_INFO_MODDATE
+Poslední zmëna
+; Last modification
+;
+MSG_INFO_NUMPAGES
+Poçet stran
+; Pages
+;
+MSG_INFO_ENCRYPTED
+Îifrování
+; Encrypted
+;
+MSG_INFO_PRINTING
+Lze tisknout
+; Printing allowed
+;
+MSG_INFO_COPY
+Lze kopírovat/vloùit
+; Copy/paste allowed
+;
+MSG_INFO_YES
+Ano
+; Yes
+;
+MSG_INFO_NO
+Ne
+; No
+;
+MSG_SIDES_GAD
+
+; Sides
+;
+MSG_SIDES_HELP
+
+; Choose the page sides to print.
+;
+MSG_SIDES_BOTH
+
+; Both
+;
+MSG_SIDES_EVEN
+
+; Even
+;
+MSG_SIDES_ODD
+
+; Odd
+;
+MSG_LOG_AUTO_OPEN_HELP
+
+; Open this window everytime\na message is added?
+;
+MSG_ENTER_PASSWORD_WIN
+
+; Enter password
+;
+MSG_PASSWORD_OK
+
+; Ok
+;
+MSG_PASSWORD_CANCEL
+
+; Cancel
+;
+MSG_INFO_LINEARIZED
+
+; Optimized
+;
+MSG_PREFS_DEFAULT_PARAMS_TITLE
+
+; Default parameters
+;
+MSG_PREFS_CONTINUOUS_GAD
+
+; _Continuous
+;
+MSG_PREFS_CONTINUOUS_HELP
+
+; Initial state of the\n\"Continuous\" parameter.
+;
+MSG_PREFS_DISPLAY_MODE_GAD
+
+; Display mode
+;
+MSG_PREFS_DISPLAY_MODE_HELP
+
+; Initial state of the\ndisplay mode parameter.
+;
+MSG_PREFS_DISPMODE_ONEPASS
+
+; One pass
+;
+MSG_PREFS_DISPMODE_TEXTFIRST
+
+; Text first
+;
+MSG_PREFS_DISPMODE_PROGRESSIVE
+
+; Progressive
+;
+MSG_PREFS_COLUMNS_GAD
+
+; Columns
+;
+MSG_PREFS_COLUMNS_HELP
+
+; Initial number\nof columns.
+;
+MSG_PREFS_ROWS_GAD
+
+; Rows
+;
+MSG_PREFS_ROWS_HELP
+
+; Initial number\nof rows.
+;
+MSG_DOCPREFS_CONTINUOUS_GAD
+
+; _Continuous
+;
+MSG_DOCPREFS_CONTINUOUS_HELP
+
+; Initial state of the\n\"Continuous\" parameter.
+;
+MSG_DOCPREFS_DISPLAY_MODE_GAD
+
+; Display mode
+;
+MSG_DOCPREFS_DISPLAY_MODE_HELP
+
+; Initial state of the\ndisplay mode parameter.
+;
+MSG_DOCPREFS_DISPMODE_ONEPASS
+
+; One pass
+;
+MSG_DOCPREFS_DISPMODE_TEXTFIRST
+
+; Text first
+;
+MSG_DOCPREFS_DISPMODE_PROGRESSIVE
+
+; Progressive
+;
+MSG_DOCPREFS_COLUMNS_GAD
+
+; Columns
+;
+MSG_DOCPREFS_COLUMNS_HELP
+
+; Initial number\nof columns.
+;
+MSG_DOCPREFS_ROWS_GAD
+
+; Rows
+;
+MSG_DOCPREFS_ROWS_HELP
+
+; Initial number\nof rows.
+;
+MSG_DOCPREFS_TOOLBAR_GAD
+
+; Show tool bar
+;
+MSG_DOCPREFS_TOOLBAR_HELP
+
+; Should the tool bar\nbe shown at startup?
+;
+MSG_DOCPREFS_NAVBAR_GAD
+
+; Show navigation bar
+;
+MSG_DOCPREFS_NAVBAR_HELP
+
+; Should the navigation bar\nbe shown at startup?
+;
+MSG_PREFS_MAKE_BITMAP_GAD
+
+; Make _BitMap
+;
+MSG_PREFS_MAKE_BITMAP_HELP
+
+; Build a BitMap from the page graphics\nafter rendering. If you have enough free\ngraphic memory, this gives a better\nscrolling speed.
+;
+MSG_PREFS_SPARE_MEM_GAD
+
+; _Spare memory
+;
+MSG_PREFS_SPARE_MEM_HELP
+
+; Never use more than 3 bytes per pixel\nwhen building true color page data.\nIf not checked, use the screen's native\nformat, which might need 4 bytes per pixel,\nbut is usually faster.
+;
+MSG_PREFS_UPDATE_TIME_GAD
+
+; Update time
+;
+MSG_PREFS_UPDATE_TIME_HELP
+
+; Delay between refreshes in\nprogressive display mode.
+;
+MSG_PREFS_ICON_REQ
+
+; Choose an icon
+;
+MSG_PREFS_DEFICON_REQ
+
+; Choose an icon
+;
+MSG_OWNERPW_GAD
+
+; Owner password
+;
+MSG_USERPW_GAD
+
+; User password
+;
+MSG_PREFS_EXTOUTLINES_GAD
+
+; Separate outlines
+;
+MSG_PREFS_EXTOUTLINES_HELP
+
+; Should outlines appear in an\nexternal window or inside the main\nwindow ?
+;
+MSG_PREFS_OPENOUTLINES_GAD
+
+; Open outlines
+;
+MSG_PREFS_OPENOUTLINES_HELP
+
+; Open outlines automatically ?
+;
+MSG_DOCPREFS_OUTLINES_GAD
+
+; Open outlines
+;
+MSG_DOCPREFS_OUTLINES_HELP
+
+; Open outlines automatically ?
+;
+;
+; Errors.
+;
+MSG_ERROR_ERR
+Chyba
+; Error
+;
+MSG_REQUIRES_68020_ERR
+Apdf vyùaduje minimálnë 68020.\n
+; Apdf requires at least a 68020.\n
+;
+MSG_REQUIRES_3_0_ERR
+Apdf vyùaduje minimálnë AmigaOS 3.0.\n
+; Apdf requires at least AmgaOS 3.0.\n
+;
+MSG_NO_MUIMASTER_ERR
+Nelze otevêít "muimaster.library".\n
+; Can't open \"muimaster.library\".\n
+;
+MSG_CANT_CREATE_CC_ERR
+Nelze vytvoêit klientskou têídu.\n
+; Can't create custom class.\n
+;
+MSG_CANT_CREATE_CONFIG_OBJ_ERR
+Nelze vytvoêit konfiguraçní objekt.\n
+; Can't create config object.\n
+;
+; Printed before DOS error messages. Should end with a trailing space.
+MSG_ERROR_HEADER_ERR
+Chyba: 
+; Error:\x20
+;
+MSG_CANT_FIND_MODULE_ERR
+Nelze nalézt ani jeden z následujících modulû:\n
+; Can't find any of the following modules:\n
+;
+MSG_CANT_CREATE_SERVER_ERR
+Nelze vytvoêit server.\n
+; Can't create server.\n
+;
+MSG_SERVER_INIT_ERR
+Inicializace serveru selhala.\n
+; Server initialization failed.\n
+;
+MSG_CANT_CREATE_MUI_APP_ERR
+Nelze vytvoêit aplikaci MUI.\n
+; Can't create MUI application.\n
+;
+MSG_CANT_LOAD_DOC_ERR
+Nelze naçíst dokument.\n
+; Can't load document.\n
+;
+MSG_CANT_SAVE_PREFS_ERR
+Nelze uloùit nastavení.\n
+; Can't save prefs.\n
+;
+MSG_SAVE_ERR
+Chyba pêi ukládání.
+; Save error.
+;
+MSG_CANT_SAVE_ERR
+Nelze uloùit soubor.
+; Can't save file.
+;
+;
+; Menus.
+; If the second character is '\0', the first one is
+; taken as a keyboard shortcut, and the label starts
+; at character 3.
+;
+MSG_PROJECT_MENU
+Projekt
+; Project
+;
+MSG_ABOUT_MENU
+?\x00O programu...
+; ?\0About...
+;
+MSG_ABOUT_MUI_MENU
+O rozhraní MUI...
+; About MUI...
+;
+MSG_NEW_DOC_MENU
+N\x00Nový dokument...
+; N\0New document...
+;
+MSG_NEW_VIEW_MENU
+V\x00Nový pohled
+; V\0New view
+;
+MSG_OPEN_MENU
+O\x00Otevêít...
+; O\0Open...
+;
+MSG_SAVEAS_MENU
+A\x00Uloùit jako...
+; A\0Save as...
+;
+MSG_PRINT_MENU
+P\x00Tisknout...
+; P\0Print...
+;
+MSG_HIDE_MENU
+H\x00Skrýt
+; H\0Hide
+;
+MSG_QUIT_MENU
+Q\x00Ukonçit
+; Q\0Quit
+;
+MSG_EDIT_MENU
+Úpravy
+; Edit
+;
+MSG_COPY_MENU
+C\x00Kopírovat
+; C\0Copy
+;
+MSG_VIEW_MENU
+Prohlíùení
+; View
+;
+MSG_REFRESH_MENU
+Aktualizovat
+; Refresh
+;
+MSG_CROP_MENU
+K\x00Oêíznout
+; K\0Crop
+;
+MSG_UNCROP_MENU
+U\x00Zruîit oêíznutí
+; U\0UnCrop
+;
+MSG_ROTATE_LEFT_MENU
+L\x00Rotovat vlevo
+; L\0Rotate left
+;
+MSG_ROTATE_RIGHT_MENU
+R\x00Rotovat vpravo
+; R\0Rotate right
+;
+MSG_INFO_MENU
+Informace...
+; Informations...
+;
+MSG_OUTLINES_MENU
+Obrysy...
+; Outlines...
+;
+MSG_FONTS_MENU
+Seznam fontû...
+; Fonts...
+;
+MSG_ERRORS_LOG_MENU
+Záznam chyb...
+; Errors log...
+;
+MSG_SETTINGS_MENU
+Nastavení
+; Settings
+;
+MSG_GLOBAL_SETTINGS_MENU
+Globální nastavení...
+; Global settings...
+;
+MSG_DOC_SETTINGS_MENU
+Nastavení dokumentu...
+; Document settings...
+;
+MSG_MUI_MENU
+Rozhraní MUI...
+; MUI...
+;
+MSG_TEXT_AA_MENU
+Vyhlazení textu
+; Text anti-aliasing
+;
+MSG_STROKE_AA_MENU
+Vyhlazení çar, kêivek
+; Strokes anti-aliasing
+;
+MSG_FILL_AA_MENU
+Vyhlazení výplní
+; Fills anti-aliasing
+;
+; The following entries are for the plugin context menu.
+MSG_PDF_OPERATIONS_MENU
+Zpracování PDF
+; PDF operations
+;
+MSG_SAVE_FILE_TO_MENU
+Uloùit soubor do...
+; Save file to...
+;
+MSG_ZOOM_MENU
+Zvëtîení
+; Zoom
+;
+MSG_ADD_ROW_MENU
+
+; Add row
+;
+MSG_ADD_COLUMN_MENU
+
+; Add column
+;
+MSG_REM_ROW_MENU
+
+; Remove row
+;
+MSG_REM_COLUMN_MENU
+
+; Remove column
+;
+MSG_CONTINUOUS_MENU
+
+; Continuous
+;
+MSG_DISPLAY_MODE_MENU
+
+; Display mode
+;
+MSG_ONE_PASS_MENU
+
+; One pass
+;
+MSG_TEXT_FIRST_MENU
+
+; Text first
+;
+MSG_PROGRESSIVE_MENU
+
+; Progressive
+;
+MSG_SHOW_NAV_BAR_MENU
+
+; Show navigation bar
+;
+MSG_SHOW_TOOL_BAR_MENU
+
+; Show tool bar
+;
+MSG_SAVE_FORM_AS_MENU
+
+; Save form as...
+;
+MSG_IMPORT_FDF_MENU
+
+; Import FDF file...
+;
+MSG_FULL_SCREEN_MENU
+
+; Full screen

@@ -1,0 +1,74 @@
+#========================================================================
+#
+# Main xpdf Makefile.
+#
+# Copyright 1996-2003 Glyph & Cog, LLC
+#
+#========================================================================
+
+SHELL = /bin/sh
+
+DESTDIR =
+
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+srcdir = @srcdir@
+
+EXE = @EXE@
+
+.PHONY: all client server clean depend
+
+all: @TARGETS@
+
+apdf/Makefile: $(srcdir)/apdf/Makefile.in
+	./config.status --file=apdf/Makefile
+	cd apdf; $(MAKE) depend
+
+goo/Makefile: $(srcdir)/goo/Makefile.in
+	./config.status --file=goo/Makefile
+	cd goo; $(MAKE) depend
+
+fofi/Makefile: $(srcdir)/fofi/Makefile.in
+	./config.status --file=fofi/Makefile
+	cd fofi; $(MAKE) depend
+
+freetype2/Makefile: $(srcdir)/freetype2/Makefile.in
+	./config.status --file=freetype2/Makefile
+	cd freetype2; $(MAKE) depend
+
+server/Makefile: $(srcdir)/server/Makefile.in
+	./config.status --file=server/Makefile
+	cd server; $(MAKE) depend
+
+server/version.cc: $(srcdir)/server/version.cc.in
+	./config.status --file=server/version.cc
+
+xpdf/Makefile: $(srcdir)/xpdf/Makefile.in
+	./config.status --file=xpdf/Makefile
+	cd xpdf; $(MAKE) depend
+
+client: apdf/Makefile
+	cd apdf; $(MAKE)
+
+server: goo/Makefile fofi/Makefile freetype2/Makefile server/Makefile server/version.cc xpdf/Makefile
+	cd goo; $(MAKE)
+	cd @UP_DIR@fofi; $(MAKE)
+	cd @UP_DIR@freetype2; $(MAKE)
+	cd @UP_DIR@xpdf; $(MAKE) xpdflib
+	cd @UP_DIR@server; $(MAKE)
+
+clean:
+	-cd goo; $(MAKE) clean
+	-cd @UP_DIR@fofi; $(MAKE) clean
+	-cd @UP_DIR@freetype2; $(MAKE) clean
+	-cd @UP_DIR@xpdf; $(MAKE) clean
+	-cd @UP_DIR@server; $(MAKE) clean
+	-cd @UP_DIR@apdf; $(MAKE) clean
+
+depend:
+	cd goo; $(MAKE) depend
+	cd @UP_DIR@fofi; $(MAKE) depend
+	cd @UP_DIR@freetype2; $(MAKE) depend
+	cd @UP_DIR@xpdf; $(MAKE) depend
+	cd @UP_DIR@server; $(MAKE) depend
+	cd @UP_DIR@apdf; $(MAKE) depend

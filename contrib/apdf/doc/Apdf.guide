@@ -1,0 +1,1295 @@
+@database "Apdf.guide"
+@author "Emmanuel Lesueur"
+@(c) "Copyright © 1999-2005 Emmanuel Lesueur"
+@$VER: Apdf.guide 3.4 (31.10.2005)
+@width 72
+@wordwrap
+
+@node Main "Apdf.guide"
+
+			    Apdf 3.4
+			 Vpdf.VPlug 2.4
+
+       Adapted from Xpdf 3.01 - ©1996-2005 Glyph & Cog, LLC
+
+		       by Emmanuel Lesueur
+
+
+
+
+		@{" Introduction " link introduction}
+		@{" System requirements " link systreq}
+
+		@{" Installation " link installation}
+		@{" Configuration " link configuration}
+		@{" Starting Apdf " link starting}
+		@{" Usage " link usage}
+
+		@{" Fonts " link fonts}
+		@{" Cache " link cache}
+
+		@{" Questions and answers" link faq}
+		@{" Known problems " link prob}
+
+		@{" Legal stuff " link legal}
+		@{" Distribution " link distribution}
+		@{" Source " link source}
+		@{" Support " link support}
+		@{" Future " link future}
+		@{" Thanks " link thanks}
+		@{" History " link history}
+
+
+@endnode
+
+@node introduction "Introduction"
+
+Apdf is a port of Derek B. Noonburg's PDF viewer, xpdf 3.01. It can read
+PDF version 1.5 files.
+
+Vpdf.VPlug is a PDF plugin for Voyager 3.1+, Oliver Wagner's web browser.
+
+@endnode
+
+
+@node systreq "System requirements"
+
+To use Apdf, you need a HiColor or TrueColor graphic mode.
+
+@endnode
+
+
+@node installation "Installation"
+
+Use the supplied installer script to install  Apdf  and/or  the  Voyager
+plugin.   Then   load   the   Test.pdf  document  to  check  your  fonts
+configuration.
+
+To uninstall Apdf, just delete its directory.
+
+To uninstall the plugin, delete  Vpdf.VPlug  and  Data/Vpdf.config  from
+Voyager's "Plugins" subdirectory.
+
+@endnode
+
+
+@node configuration "Configuration"
+
+There is one important  thing  to configure to make Apdf or the  Voyager
+plugin usable: the font map.
+
+The install script should have taken care of the  fonts,  provided  that
+you had either the Apdf_fonts.lha archive or a Ghostscript installation.
+You can check that with the test.pdf document. If this doesn't work, see
+@{"Fonts" link fonts}.
+
+@endnode
+
+
+
+@node starting "Starting Apdf"
+
+    @{u}From CLI:@{uu}
+
+Just type "Apdf" in a shell to start Apdf.  A  requester  asking  for  a
+document  will  open.  To  view the file "myfile.pdf", you can also type
+"Apdf myfile.pdf".
+
+The complete command template is:
+
+      PDFFILE,P=PAGE/K,Z=ZOOM/N/K,C=CONFIG/K,MODULE/K,NOPOWERUP/S
+
+    PDFFILE       is the name of the file to display.
+
+    PAGE          is the page to display. If the document uses
+		  custom page labels, this argument should either
+		  be one of those custom labels, or a decimal
+		  number preceded by the "#" sign (to override
+		  the custom scheme). Defaults to the first page.
+
+    ZOOM          is the zoom factor, from -5 to 5. Defaults to 1.
+
+    CONFIG        is the name of the configuration file to use.
+		  Defaults to "PROGDIR:Apdf.config".
+
+    MODULE        is the name of the 68k or PPC module to use.
+		  Defaults to whatever is the most suited for the
+		  configuration among the modules in "PROGDIR:".
+
+    NOPOWERUP     tells Apdf not to try to use a PPC module.
+
+    PUBSCREEN     specify the public screen to use.
+
+Before parsing the arguments, Apdf will look in its icon and then in the
+document's  icon  for  tooltypes with those names (except "PDFFILE"). If
+some are found, their values override the defaults values.
+
+
+    @{u}From Ambient:@{uu}
+
+To start Apdf from Ambient, double click on its  icon.  This  will
+open a requester where you can select the document do view. You can also
+click once on Apdf's icon and double click on  the  PDF  document  while
+holding  the shift key, or Apdf can be used as the default tool of a PDF
+document.
+
+Apdf supports the "PAGE", "ZOOM", "CONFIG", "MODULE",  "NOPOWERUP",  and
+"PUBSCREEN"  tooltypes  with  the  same meaning as the corresponding cli
+arguments The tool types stored in Apdf's icon are read first,  and  are
+overridden by those of the document's icon.
+
+A document icon can also contain  other  tooltypes,  configured  in  the
+@{"Document Settings" link docsettings}.
+
+To quit Apdf, just close its window. You  can  also  use  the  commodity
+interface, send a "QUIT" command from ARexx, or send a CTRL-C signal.
+
+@endnode
+
+
+@node fontmapsyntax "FONTMAP"
+
+Note: the fontmap format has changed ! Since  Apdf  can  no  longer  use
+Amiga fonts, the old fontmaps are useless anyway.
+
+
+FONTMAP arguments use the following format:
+
+	pdf_font_name/actual_font_file[type]
+
+Possible types are:
+
+	'T1' for Type1 fonts.
+	'TT' for TrueType fonts.
+
+There @{b}must@{ub} be a type field.
+
+@endnode
+
+
+@node fonts "Fonts"
+
+Apdf no longer uses the standard Amiga  font  system  to  display  text.
+Instead  it  as  internal  support for Type1/1C and TrueType fonts. This
+allows higher quality rendering and  support  for  embedded  fonts,  but
+requires  that you install some of those fonts. This also means that the
+fontmaps used by previous versions can no longer be used with Apdf  2.0.
+However,  given  the  support for embedded fonts, fontmaps are much less
+useful now.
+
+You can find freely distributable Type1 fonts in the  fonts  archive  of
+the Ghostscript distribution, or in the Apdf_fonts.lha archive, which is
+a subset of the Ghostscript fonts archive. You should at  least  install
+equivalents for the following 14 fonts PostScript fonts:
+
+     PostScript font     |  Ghostscript equivalent
+-------------------------+--------------------------
+  Helvetica              |      n019003l.pfb
+  Helvetica-Bold         |      n019004l.pfb
+  Helvetica-Oblique      |      n019023l.pfb
+  Helvetica-BoldOblique  |      n019024l.pfb
+  Times-Roman            |      n021003l.pfb
+  Times-Bold             |      n021004l.pfb
+  Times-Italic           |      n021023l.pfb
+  Times-BoldItalic       |      n021024l.pfb
+  Courier                |      n022003l.pfb
+  Courier-Bold           |      n022004l.pfb
+  Courier-Oblique        |      n022023l.pfb
+  Courier-BoldOblique    |      n022024l.pfb
+  Symbol                 |      s050000l.pfb
+  ZapfDingbats           |      d050000l.pfb
+
+The fonts in the right column are those in the Apdf_fonts.lha archive.
+
+
+It may also be a good  idea  to  install  the  following  25  additional
+Postscript  fonts,  although  the PDF specifications don't require them,
+since they are often used. They also have equivalents in the Ghostscript
+fonts archive (except for the Helvetica-Condensed family, AFAIK).
+
+
+     PostScript font            |  Ghostscript equivalent
+--------------------------------+--------------------------
+  AvantGarde-Book               |     a010013l.pfb
+  AvantGarde-BookOblique        |     a010033l.pfb
+  AvantGarde-Demi               |     a010015l.pfb
+  AvantGarde-DemiOblique        |     a010035l.pfb
+  Bookman-Demi                  |     b018015l.pfb
+  Bookman-DemiItalic            |     b018035l.pfb
+  Bookman-Light                 |     b018012l.pfb
+  Bookman-LightItalic           |     b018032l.pfb
+  Helvetica-Narrow              |     n019043l.pfb
+  Helvetica-Narrow-Oblique      |     n019063l.pfb
+  Helvetica-Narrow-Bold         |     n019044l.pfb
+  Helvetica-Narrow-BoldOblique  |     n019064l.pfb
+  NewCenturySchlbk-Roman        |     c059013l.pfb
+  NewCenturySchlbk-Italic       |     c059033l.pfb
+  NewCenturySchlbk-Bold         |     c059016l.pfb
+  NewCenturySchlbk-BoldItalic   |     c059036l.pfb
+  Palatino-Roman                |     p052003l.pfb
+  Palatino-Italic               |     p052023l.pfb
+  Palatino-Bold                 |     p052004l.pfb
+  Palatino-BoldItalic           |     p052024l.pfb
+  Helvetica-Condensed           |
+  Helvetica-Condensed-Bold      |
+  Helvetica-Condensed-Oblique   |
+  Helvetica-Condensed-BoldObl   |
+  ZapfChancery-MediumItalic     |     z003034l.pfb
+
+
+If you have the original Postscript fonts,  and  their  filenames  match
+exactly  the  names in the left columns above (optionally with ".pfa" or
+".pfb" appended), you don't need to configure a fontmap.
+
+If you use the Ghostscript  replacements,  either  from  the  Apdf_fonts
+archive  or  from  the Ghostscript distribution, the installation script
+builds the fontmap automatically.
+
+In any other cases, you have to configure the  fontmap  yourself.  There
+are two things to do:
+
+1) go the "Global settings" menu entry, and then  to  the  @{"Fonts  dirs" link glbprf_fontdirs}.
+page, and enter the list of directories that contain your fonts.
+
+2) go to the "Font map" page of the same window and see @{"here" link fontmap}.
+
+
+
+Below is a complete description of the way Apdf selects the font to use.
+It  may  seem  complex, but it is quite simple to use. You don't have to
+read this explanation to use Apdf, but it can help  you  build  powerful
+fontmaps.
+
+
+When a document asks for the font "XYZ" (e.g.  "Helvetica")  of  type  T
+(e.g. Type1), Apdf does the following:
+
+1) look in the current fontmap for "XYZ" (the document-specific  fontmap
+first,  and  then  the  global  one  if  necessary). If it is found, use
+replace  "XYZ"  by  the  name  given  in  the  fontmap  and  T  by   the
+corresponding type, and go on.
+
+2) if "XYZ" was not in the fontmap, and the  font  is  embedded  in  the
+document  and  T=Type1,  Type1C,  Type3,  or TrueType, use this embedded
+font.
+
+3) otherwise if T=Type1 or TrueType, in each  directory  listed  in  the
+"font dirs" listview in the preference window do:
+     - try to open file "XYZ". If found use that font.
+     - otherwise, if "XYZ" does not contain an extension (e.g.  ".pfb"),
+       try to open "XYZ.pfb" or "XYZ.pfa" (if T=Type1), and "XYZ.ttf" if
+       (T=TrueType). If one is found, use it.
+
+4) otherwise, look at the properties specified in the document  for  the
+font: fixed width, serif, script, all caps, small caps, italic, or bold.
+Apdf builds a font name by concatenating the property  names  above,  in
+the  above  order, separated by ", ", and enclosed between "« " and " »"
+(e.g. a font that has the "bold" and "small caps" properties, would lead
+to  the name "« small caps, bold »"). Then the name built is searched in
+the fontmap (document specific one first, then global one, and then  the
+internal  one  (*)), and if it is found, "XYZ" is replaced by the mapped
+font, and points 1) and 3) are repeated.
+
+5) if there is still no font found, point 4) is repeated, ignoring
+the "small caps" property, then ignoring also the "all caps" property,
+and then the "script" property.
+
+
+
+(*) The internal fontmap contains the following entries:
+  «  »                          -> Helvetica
+  « italic »                    -> Helvetica-Oblique
+  « bold »                      -> Helvetica-Bold
+  « italic, bold »              -> Helvetica-BoldOblique
+  « serif »                     -> Times-Roman
+  « serif, italic »             -> Times-Italic
+  « serif, bold »               -> Times-Bold
+  « serif, italic, bold »       -> Times-BoldItalic
+  « fixed width »               -> Courier
+  « fixed width, italic »       -> Courier-Oblique
+  « fixed width, bold »         -> Courier-Bold
+  « fixed width, italic, bold » -> Courier-BoldOblique
+
+@endnode
+
+
+@node cache "Cache"
+
+Apdf implements a basic caching system to  speed  up  document  loading.
+This   system  can  be  controlled  by  two  parameters,  CACHESIZE  and
+CACHEBLOCKSIZE, that represent memory amounts in Kbytes. Setting them to
+"good" values can improve Apdf's performance a lot.
+
+CACHESIZE determines the maximum amount of memory that is used  by  Apdf
+for  caching  purposes. If CACHESIZE is zero, or if a document's size is
+smaller than CACHESIZE, the document will be fully loaded in memory  and
+kept there until you quit Apdf or load another document.
+
+If CACHESIZE if non-zero or if the document is too big, Apdf  will  keep
+at most N=CACHESIZE/CACHEBLOCKSIZE blocks of BLOCKSIZE Kbytes in memory.
+When a part of the file that is not in memory is needed and Apdf already
+has the maximum number of blocks, it frees the one that was not accessed
+for the longest period, and replaces it by the new one.
+
+In any cases, Apdf won't use more memory than what is actually needed.
+
+The parameters that give  the  best  performance  depend  on  a  lot  of
+factors, such as:
+
+- the disk speed,
+- the filesystem (FFS is slow)
+- the parameters of the filesystem (block size, buffers,...),
+- whether or a caching program is used,
+- the speed of the processor,
+- the particular document you are trying to load.
+
+Depending on your system, you'll have to try different settings to  find
+which parameters are the best for you. Some rules of thumb are:
+
+- If you have lots of memory and don't have a  too  slow  disk,  setting
+CACHESIZE=0 is probably the fastest.
+- otherwise, the bigger CACHESIZE is the better.
+- using too big values for CACHEBLOCKSIZE can reduce the speed.
+- the ratio CACHESIZE/CACHEBLOCKSIZE should be "big enough".
+
+By default, Apdf uses CACHESIZE=256 and CACHEBLOCKSIZE=4.
+
+@endnode
+
+
+@node usage "Usage"
+
+	@{" Main window " link mainwin}
+	@{" Menus " link menus}
+	@{" Keyboard shortcuts " link shortcuts}
+	@{" Save window " link savewin}
+	@{" Global settings window " link glbsettings}
+	@{" Document settings window " link docsettings}
+	@{" Fonts windows " link scanfonts}
+	@{" ARexx " link arexx}
+	@{" MUI " link mui}
+
+@endnode
+
+
+@node mainwin "Main window"
+
+The current page of the document is displayed in the upper part  of  the
+window.  Dragging  the mouse with the left button pressed selects a part
+of the text. You can copy the text selected to the  clipboard  with  the
+'Copy'  menu.  You  can  also use the selection box as a "crop box" (see
+@{"Menu" link menus}/Crop).
+
+Pressing the left mouse button while holding the CTRL  key,  or  holding
+the  middle  mouse  button, magnifies the part of the document under the
+mouse. The "lens" follows the mouse until the button is released.
+
+If the mouse is moved over a link, its destination will be displayed  in
+the lower right corner of the window. Clicking on the link activates it.
+If the link is an URL, the command specified with the URLCmd  option  is
+called.
+
+The gadgets let you choose the current page and zoom factor. The  "Back"
+and  "Forward"  buttons  allows navigation inside the history of already
+displayed pages.
+
+You can enter a string to search in the 'Search' gadget. The  search  is
+not case sensitive. It starts after the current selected area, or at the
+top of the page if nothing is selected. If the end of  the  document  is
+reached before the string is found, the begining of the document will be
+searched, until the position where the search started. If the string  is
+found,  it  will be selected. Pressing the 'Next' button will search the
+next occurence of the same string.
+
+Dropping an icon in the main window loads the corresponding document.
+
+@endnode
+
+
+@node menus "Menus"
+
+  Project:
+
+    "About"        - show some informations about Apdf/Xpdf.
+    "About MUI"    - show the standard MUI information window.
+    "New Document" - open a new document in a new window.
+    "New View"     - open another window with the same document.
+    "Open"         - open a new document in the current window.
+    "Save as"      - open the @{"Save window" link savewin}.
+    "Print"        - open the @{"Save window" link savewin} with filename
+		     set to the device selected in the
+		     @{"Global Settings/General" link glbprf_general} window and mode
+		     set to "Postscript".
+		     @{b}Attn: you must have a Postscript printer, or a
+		     device that transparently converts postscript for
+		     your printer for this to work.@{ub}
+    "Save form as" - save the content of the fields of a PDF form to a
+		     FDF file.
+    "Import FDF"   - fill a PDF form with the content of a FDF file.
+    "Hide"         - iconify Apdf.
+    "Quit"         - quit.
+
+  Edit:
+
+    "Copy"         - copy the selected text in the clipboard.
+
+  View:
+
+    "Refresh"      - redraw the current page. Useful if you use the
+		     "fit page" or "fit width" zoom modes, resize your
+		     window, and want the page to be scaled accordingly.
+    "Crop"         - cut the current view along the selected box.
+    "UnCrop"       - restore the full page size.
+    "Rotate left"  - rotate the view 90° on the left.
+    "Rotate right" - rotate the view 90° on the right.
+    "Add row"      |
+    "Remove row"   | control the number and layout of visible pages.
+    "Add column"   |
+    "Remove column"|
+    "Informations" - show some informations about the document.
+    "Outlines"     - show the document outlines, if available.
+    "Fonts"        - shows the fonts used in the document. See @{"here" link scanfonts}.
+    "Error log"    - show the latest error messages.
+
+  Settings:
+
+    "Global Settings"       - open the @{"Global Settings window" link glbsettings}.
+    "Document Settings"     - open the @{"Document Settings window" link docsettings}.
+    "MUI"                   - open the @{"MUI" link mui} preference editor.
+    "Text anti-aliasing"    - control @{"anti-aliasing" link aa} for the text.
+    "Strokes anti-aliasing" - control @{"anti-aliasing" link aa} for lines drawing.
+    "Fills anti-aliasing"   - control @{"anti-aliasing" link aa} for polygon filling.
+    "Continuous"            - display the document as a big vertical strip
+			    - containing all pages.
+    "Display mode"          - choose the way the pages are rendered:
+	  "One pass"            - render the whole page in memory and
+				  update the display only when done.
+	  "Text first"          - first display the page ignoring all
+				  inline pictures, then build the full
+				  page image in memory and update when
+				  done.
+	  "Progressive"         - render the page in memory in one go,
+				  but periodically update the display
+				  to show the current state.
+    "Show navigation bar"   - show/hide the first line of buttons (page
+			      number slider and history navigation).
+    "Show tool bar"         - show/hide the second line of buttons (zoom
+			      selection, search tool, URL display).
+    "Full screen"           - switch to full screen mode: don't display
+			      any window or gadget.
+
+@endnode
+
+
+@node aa "Anti-aliasing"
+
+Apdf now has a basic anti-aliasing system. Anti-aliasing is a  technique
+that  makes  use of color shades to make the resolution seem higher than
+it actually is.
+
+The implementation used in Apdf is really basic, and  assumes  that  the
+graphic element to render is put on a uniform background. If this is not
+the case, anti-aliasing can make things look worse  instead  of  improve
+them. In that case, you should turn anti-aliasing off.
+
+Also note that anti-aliasing will probably not look good on screens with
+low depth, or low resolution.
+
+@endnode
+
+
+@node shortcuts "Keyboard shortcuts"
+
+The following shortcuts are supported in the main window @{b}when the active
+object  is  the  document  page@{ub}.  That  means that if a string gadget is
+active you have to deactivate it first with the appropriate MUI shortcut
+(Ctrl-Tab by default).
+
+space       - scroll down, skipping to next page if needed.
+backspace   - scroll up, returning to previous page if needed.
+'+'         - increase the zoom factor.
+'-'         - decrease the zoom factor.
+'l'         - rotate left.
+'r'         - rotate right.
+'c'         - crop.
+'u'         - uncrop.
+shift+Fn    - set a bookmark
+Fn          - got to a bookmark
+
+The following MUI shortcuts (configured by the  MUI  preference  editor)
+are also recognized:
+
+Up   - scroll up, returning to previous page if needed.
+Down - scroll down, skipping to next page if needed.
+PgUp - previous page.
+PgDn - next page.
+Home - first page.
+End  - last page.
+
+Also, the middle mouse button, or  Ctrl+left  mouse  button,  trigger  a
+magnification lens.
+
+Note that pressing the Help key over a gadget loads  the  page  of  this
+guide related to it (if Apdf.guide is in PROGDIR:).
+
+@endnode
+
+
+@node savewin "Save window"
+
+This window allows you to select parameters to save  a  part  of  a  PDF
+document in another format.
+
+There are several possible save modes:
+
+In "text" mode, all  the  graphics/pictures/fonts...  are  ignored.  The
+resulting file will contain plain ASCII text.
+
+In "image" mode, the text is ignored. In this  mode,  apdf  outputs  one
+file  per  image  in the selected pages. If the filename selected in the
+"file" gadget is "abc", the resulting files will be named "abc-nnn.xxx",
+where  nnn  is  a  number  and  xxx  is  either  "ppm", "pbm", or "jpg",
+according  to  the  picture  format  used.  If  the  selected  mode   is
+"PBM/PPM/JPEG",  and  a  picture  is stored in the DCT format in the PDF
+file, it is saved as a jpeg file.  Otherwise,  monochrome  pictures  are
+saved  as  PBM  files  and  non-monochrome  ones as PPM files. There are
+datatypes on Aminet for all those formats.
+
+In "Postscript" mode, both text and graphics are saved. The  "Postscript
+level  1"  mode  creates  files  that are bigger and in which images are
+converted to black and white,  but  which  can  be  used  with  level  1
+printers.
+
+The zoom and rotation parameters are only used in Postscript mode.
+
+@endnode
+
+
+@node arexx "ARexx interface"
+
+In addition to the standard ARexx commands provided by MUI, Apdf has the
+following:
+
+    OPEN    FILE/A,P=PAGE/K,Z=ZOOM/N/K,R=ROTATE/N/K
+
+It opens the specified  PDF  file  in  a  new  window,  with  the  given
+parameters.
+
+@endnode
+
+
+@node glbsettings "Global Settings Window"
+
+The global settings window let you configure  some  parameters  used  by
+Apdf.  Those  settings  are saved in a config file:"PROGDIR:Apdf.config"
+for   Apdf   (unless   overriden   by   the   CONFIG   tooltype),    and
+"PROGDIR:Plugins/Data/Vpdf.config" for the plugin.
+
+This window is organized as a register containing four pages:
+
+    @{" General " link glbprf_general}
+    @{" Font directories " link glbprf_fontdirs}
+    @{" Font map " link fontmap}
+    @{" Advanced " link glbprf_advanced}
+
+Below are the three buttons usually found in configuration windows:
+
+"Save"   - make the new settings active and save them in the config file
+"Use"    - make the new settings active.
+"Cancel" - close the settings window, forgetting all changes.
+
+@endnode
+
+
+@node glbprf_general "General Settings"
+
+This page lets you adjust the following settings:
+
+* URL command. (Apdf only)
+
+  This is the command used when you  activate  a  URL  style  link.  The
+string  entered  should  contain a "%s", that is replaced by the URL. It
+should name a command that starts your prefered Web browser. Defaults to
+"OpenURL %s".
+
+* Temp. directory. (Plugin only)
+
+  Directory used to store temporary files. Don't use a  RAM  disk  here,
+use a big cache size instead.
+
+* Print device.
+
+  The device used as destination when you select the "Print" menu  item.
+This  device  should  be  able  to  print  Postscript  files.  To  use a
+Postscript printer, this may be "PAR:". To  use  with  Turboprint,  this
+should be "PS:". Defaults to "PRT:".
+
+* Default icon. (Apdf only)
+
+  This icon is added to documents that don't have one,  when  trying  to
+save  document  specific  settings.  Don't  include  the ".info" suffix.
+Defaults to "ENV:Sys/def_pdf".
+
+* Selection color.
+
+  The color used to draw the selection box. Defaults to red.
+
+* Anti-aliasing.
+
+  The  three  checkboxes  reflects  the  state  that  should  have   the
+anti-aliasing parameters at program startup.
+
+* Auto open log. (Apdf only)
+
+  If this gadget is checked, the Log window is opened  everytime  a  new
+message  is  added  to  it. If it is not, you will not be warned when an
+error occurs (you can still view the  messages  by  opening  the  window
+yourself via the "Open log" menu).
+
+* Continuous.
+
+  The initial state of the "Continuous" menu item.
+
+* Display mode.
+
+  The initial display mode.
+
+* Columns.
+
+  The default number of columns.
+
+* Rows.
+
+  The default number of rows.
+
+
+@endnode
+
+
+@node glbprf_fontdirs "Font directories"
+
+This page contains the list of directories in which Apdf  searches  when
+it  need fonts. These directories should contain Type1 (.pfa or .pfb) or
+TrueType (.ttf) fonts. You @{b}must@{ub} set at least a valid entry in this list,
+or Apdf won't be able to display any text that has not its font embedded
+in the document.
+
+See @{"Fonts" link fonts} for details.
+
+@endnode
+
+
+@node fontmap "Font map"
+
+The fontmaps let you describe the relation between font  names  as  they
+are  given in PDF documents (Postscript font names), and font files that
+should be used to actually display the text.
+
+For instance, if you use the fonts in the Ghostscript distribution,  the
+name  of the file that contain a replacement for the "Helvetica" font is
+"n019003l.pfb". As Apdf can not guess that, you have to tell it. This is
+done  by adding a fontmap line, with "PDF Font" set to "Helvetica" (case
+sensitive), "Font" set to "n019003l.pfb" (case insensitive,  as  it's  a
+filename),  and  "Type"  set to "Type1" (Apdf could guess that last bit,
+but it currently doesn't).
+
+If font's filename is equal to its PDF name (upto  case  and  a  ".pfa",
+".pfb", or ".ttf" extension), there is no need to enter that font in the
+fontmap.
+
+
+PDF specifications require that the following 14 fonts are available:
+
+  Helvetica, Helvetica-Bold, Helvetica-Oblique, Helvetica-BoldOblique
+  Times-Roman, Times-Bold, Times-Italic, Times-BoldItalic
+  Courier, Courier-Bold, Courier-Oblique, Courier-BoldOblique
+  Symbol, ZapfDingbats
+
+So:
+  - If you have those Type1 fonts,  with  filenames  matching  the  font
+names, you don't need a fontmap.
+  - If  you  have  the  Ghostscript  replacements,   either   from   the
+Ghostscript  distribution,  or from the Apdf_fonts.lha archive, the main
+Apdf archive contains  a  config  file  that  already  has  the  correct
+fontmap.  The installer script should have installed that config file as
+the default one.
+  - Otherwise, you have to  enter  a  fontmap  for  those  14  fonts  by
+yourself.
+
+There are two fontmaps:  the global one in the @{"General Settings" link glbsettings} window,
+and a document specific one, in the @{"Document Settings" link docsettings} window.
+
+
+See @{"Fonts" link fonts} for details.
+
+@endnode
+
+
+@node glbprf_advanced "Advanced Settings"
+
+This page lets you adjust the following settings:
+
+* Modules directory.
+
+  This is the directory where modules are searched. For Apdf, changes to
+this setting are not applied until the program is quitted and restarted.
+For the Voyager plugin, they are applied immediately only if  no  module
+has  been  loaded  yet  (indicated  on  the  "About"  page of the plugin
+preference  object).   Defaults   to   PROGDIR:   for   Apdf,   and   to
+PROGDIR:Plugins for the Voyager plugin.
+
+* Module.
+
+  This is the module used by Apdf to decode PDF files. Usually Apdf uses
+the  one  in  the  modules  directory  that is the "best match" for your
+hardware. You can use this setting to override this choice.  Changes  to
+this  setting  are  applied  as  with  the  "Modules  dir" parameter. Be
+careful: setting this parameter to an invalid filename will  cause  Apdf
+to  refuse  to  start.  You'll  have to explicitely use the CLI "MODULE"
+argument to override this setting, to be able to start Apdf and  make  a
+correction. The plugin doesn't have this problem.
+
+* DiskObject. (Apdf only)
+
+  This is the name of the icon used when Apdf is iconified, without  the
+".info"  suffix.  Changes to this setting are not applied to the current
+session. Quit & restart. Defaults to "PROGDIR:Apdf".
+
+* Max colors per picture.
+
+  This is the maximum number of colors that Apdf should try to  allocate
+when  remapping  inline  images. Note that this does not limit the total
+number of colors that Apdf allocates to show a  page.  First  because  a
+page  can  contain  several  inline  pictures, and second because colors
+allocated to draw text, draw lines, fill polygons, or for  anti-aliasing
+are  not  concerned.  This parameter is ignored in HiColor and TrueColor
+modes. Defaults to 16.
+
+* Cache size & cache block size.
+
+  Control cache parameters. Setting the "Cache size"  slider  completely
+on the right ("Load all" position) means: completely load documents into
+memory. See @{"Cache" link cache} for details.
+
+* Make BitMap.
+
+  After building a page image in fast RAM, build a Cybergraphics  BitMap
+from  it.  This  allows  the  graphic  card's  blitter  to  be  used for
+subsequent rendering of this page (and  thus,  e.g.  faster  scrolling),
+*if*  there  is  enough  free  graphic  memory. Keep in mind that such a
+bitmap can be *big*, and that this option only wastes time if it doesn't
+fit  in  the card's memory together with the screen bitmap. If in doubt,
+leave this gadget unchecked.
+
+* Spare memory.
+
+  Don't use more than 3 bytes per pixel for internal representation of a
+page  image,  even if the screen's native format uses 4 bytes per pixel.
+This is slower, but requires less memory. If you really  want  to  spare
+memory,  you  should  consider using a 15/16 bits screen mode instead (2
+bytes per pixel).
+
+* Update delay.
+
+  Delay between two  graphic  updates  in  "Progressive"  display  mode.
+Refreshing the display takes time, so setting this too low increases the
+overall time needed to fully  display  the  page.  On  the  other  hand,
+setting  it  too high will make you wait more before anything appears on
+the page.
+
+@endnode
+
+
+@node docsettings "Document Settings Window"
+
+The document settings window let you configure  some  document  specific
+parameters.  Those  settings  are  saved  as tooltypes in the document's
+icon.
+
+This window is organized as a register containing two pages:
+
+    @{" General " link docprf_general}
+    @{" Font map " link fontmap}
+
+Below are two buttons:
+
+"Save"   - save the settings in the document icon.
+"Use"    - make the new settings active.
+
+@endnode
+
+
+@node docprf_general "General document settings"
+
+This page lets you adjust the following settings, with the tooltype used
+to save them:
+
+* Page (PAGE=p).
+
+  The page at which the document should be opened by default.
+
+* Zoom (ZOOM=z, z=-5,...,5, FITPAGE, or FITWIDTH).
+
+  The zoom factor to use by default for this document.
+
+* Rotate (ROTATE=r, r=0, 90, 180, or 270).
+
+  The rotation parameter to use by default for this document.
+
+* Anti-aliasing (ANTIALIASING=flags, flags among TEXT, FILL, and STROKE,
+separated by "|").
+
+  The  three  checkboxes  reflects  the  state  that  should  have   the
+anti-aliasing parameters when opening this document.
+
+* Crop box (MARGINS=left/top/right/bottom).
+
+  The margins to use when opening this document. You probably don't want
+to  set  numeric values directly, here. Instead, set the crop box in one
+of the views of this document, and drag-drop the "Grab" button  in  that
+view.
+
+
+Note that those settings only have effect when a document is loaded,  so
+the "Use" button is useless for this page.
+
+@endnode
+
+
+@node scanfonts "Fonts window"
+
+This window lets you view the list of fonts used by  a  document,  or  a
+part of it, and their properties. This helps configuring fontmaps.
+
+Select a page range with the two sliders at the bottom  of  the  window,
+and  press  the "Scan" button. The list of fonts used in this page range
+will be added to the list.
+
+The columns of the list contains the following informations:
+
+ - PDF font: the name of the PDF font. This is the  name  to  use  in  a
+fontmap to associate a file to this font.
+
+ - Type: the type of this font (Type0, Type1, Type1C,  Type3,  TrueType,
+or unknown). Apdf can't handle Type0 fonts.
+
+ - Emb: checked if the font is embedded in  the  document.  You  usually
+don't  want to use fontmaps to substitute an external font when the font
+is embedded, unless it is of type Type0.
+
+ - Properties: various properties of the font (serif, italic,  ...).  It
+is  usually  better  to substitute a font with matching properties. Note
+that lots of documents don't contain the correct properties for  the  14
+base  fonts  (see @{"Fonts" link fonts}), and this is allowed by the PDF specifications.
+Some documents also don't include valid descriptions for  the  Arial  or
+TimesNewRoman fonts, or for embedded fonts, and this is not correct.
+
+Dropping an entry of this listview into a fontmap listview  will  add  a
+new entry with the "PDF font" field set.
+
+@endnode
+
+
+@node mui "MUI"
+
+Apdf using @{"MUI" link "Readme.mui/Main"}, it supports all features  common  to  MUI  applications,
+such   as   configuration,  screen  handling,  iconification,  commodity
+interface, arexx... See MUI documentation for details.
+
+@endnode
+
+
+@node morphos "MorphOS"
+
+MorphOS is  an  operating  system  for  PowerPC  boards,  containing  an
+AmigaOS(tm)  emulation  box. It allows running system-friendly Amiga 68k
+programs, together with native PowerPC programs, in an  AmigaOS(tm)-like
+environment. It allows mixing 68k and PPC code without the slowdowns due
+to context-switches that both PowerUp and WarpUp have.
+
+When run under MorphOS, Apdf is a fully PowerPC  native  program  (while
+the  user  interface  is  68k  code  with  PowerUp/WarpUp).  For optimal
+performances, also install the PowerPC version of MUI for MorphOS.
+
+See http://www.morphos.de for more details.
+
+@endnode
+
+
+@node faq "Questions and answers"
+
+
+Q: I only get black and white pictures. Where are the colors ?
+
+A: You are using a colormapped screen mode (i.e. 8 bits or less). These
+modes are only supported using gray levels in Apdf 3.1, as the new
+graphic engine is oriented toward Hi/TrueColor modes. Proper support
+for those modes may or may not be restored later, don't hold your
+breath. And please *don't* mail me to complain about that.
+
+
+Q: Where is the decryption module ?
+
+A: You don't need one anymore.
+
+
+Q: Apdf only shows blank pages. What's the problem ?
+
+A: The font directories or the fontmap are not correctly configured. Use
+the test.pdf document to check that. See @{"Fonts" link fonts}.
+
+
+Q: I use the  PPC  version  on  my  CSPPC  604e/233,  and  Apdf  crashes
+randomly. What's the problem ?
+
+A: You may be suffering of the "LR bug", which seems to be a consequence
+of  overheating.  Check  hard/misc/CSPPC233Fix.lha  on  Aminet.  If that
+doesn't solve your problem, please report it.
+
+
+Q: The 'Back' and 'Forward' buttons don't work.
+
+A: Yes, they do. They are for @{b}history@{ub} navigation, not to go  to
+the  previous/next  page. Click in the page number slider, left or right
+of the knob for that.
+
+
+Q: Can you add direct printing support ?
+
+A: Maybe later. You should  really  use  Ghostscript  for  printing  PDF
+documents  anyway.  If  I  add this feature, it will not give results as
+good as what Ghostscript does, because the graphic engine of Apdf is too
+limited  to  handle  resolutions  as  high as what typical printers have
+nowadays, and I have no intention to rewrite this engine.
+
+
+Q: Can you add a 'saving as iff' feature ?
+
+A: Maybe later. Ghostscript can save to various image formats too.
+
+
+Q: The 'save as jpeg' feature doesn't work.
+
+A: Yes it does.  It  isn't  meant to  save the whole page, only embedded
+images.
+
+
+Q: How can I make Apdf as fast as possible ?
+
+A: - avoid color mapped graphic modes (depth <= 8). The best  choice  is
+probably  to  use 15 or 16 bits modes. 24 or 32 bits modes are fast too,
+but use more memory.
+   - Set the @{"Advanced settings/Cache size" link glbprf_advanced} gadget on "Load all".
+Don't expect miracles from 68k processors though. While 68040/68060  can
+handle  text-only  pages quite fast, they will be slow on pages with big
+embedded pictures. A PowerPC processor is a big win here.
+
+@endnode
+
+
+@node prob "Known problems"
+
+Known bugs (hopefully harmless):
+
+- When stroke anti-aliasing is on, sometimes the space between two lines
+is filled when it should not.
+
+- When a path is used for clipping and stroked, some edges may disappear
+(especially horizontal edges).
+
+
+Not really bugs, but non-optimal behaviour:
+
+- Patterns are not implemented for thick or anti-aliased lines yet.
+
+@endnode
+
+
+@node legal "Legal informations"
+
+The PDF data structures, operators, and specification are copyright 1995
+Adobe Systems Inc.
+
+Xpdf is © 1996-2005 by Glyph & Cog, LLC.
+See http://www.foolabs.com/xpdf/
+
+Amiga specific parts of Apdf are © 1999-2005 by Emmanuel Lesueur.
+
+Apdf uses @{"MUI" link "Readme.mui/Main"}. MUI is © 1992-2005 by Stefan Stuntz.
+
+Apdf uses some parts of  the  release  2.1.2  of  the  FreeType  project
+(© 1996-2002 by David Turner, Robert Wilhelm, and Werner Lemberg). See
+http://www.freetype.org
+
+The font embedded in the Test.pdf document is "Utopia Medium", and is:
+Copyright (c) 1989 Adobe Systems Incorporated
+Utopia (R)
+Utopia is a registered trademark of Adobe Systems Incorporated
+
+Voyager 3.0 is © 1995-1999 Oliver Wagner. See http://www.vapor.com
+
+
+@endnode
+
+
+@node distribution "Distribution"
+
+Apdf is released under the @{"GNU General Public License version 2" link "Copying/Main"}.
+
+The fonts from  the  Apdf_fonts.lha  come  from  Ghostscript,  and  have
+different   distribution   conditions:   they  are  released  under  the
+@{"Aladdin Free Public License" link "fonts/PUBLIC/Main"}.
+
+@endnode
+
+
+@node source "Source"
+
+The  source  code  for  Apdf  can   be   found   on   Aminet,   in   the
+gfx/show/Apdf_src.lha archive. You need a fairly complete GeekGadget
+environment to recompile Apdf.
+
+@endnode
+
+
+@node support "Support"
+
+Send bug reports to lesueur@club-internet.fr.
+
+Please make sure that you have read the @{"Questions and answers" link faq} and
+the @{"Known problems" link prob} sections, first.
+
+Apdf now has a support page at
+
+	http://elesueur.free.fr/Apdf/
+
+This page will be updated to contain the list of reported bugs, possible
+workarounds (if any), and possibly beta releases. The main releases will
+still be uploaded to Aminet, though.
+
+
+The WWW address for the original Xpdf is
+
+	http://www.foolabs.com/xpdf/
+
+
+@{b}Important:@{ub}
+
+Before reporting that the plugin does not work, make sure that you have
+read @{"this" link introduction}.
+
+@endnode
+
+
+@node future "Future"
+
+The following things are currently planed:
+
+    - fix the known bugs.
+    - enhance the anti-aliasing, to avoid thick gray horizontal or
+vertical lines instead of thin black lines.
+    - article threads.
+    - color separation.
+    - add a 'save as iff' option.
+
+
+Some things that would be nice to implement, but are not currently on my
+"To do" list:
+
+    - thumbnails.
+    - sound and movie annotations.
+    - Javascript.
+    - a PDF datatype.
+    - printing directly from Apdf, without the need for Ghostscript.
+
+@endnode
+
+
+@node thanks "Thanks"
+
+Many thanks to all the people who made the freely available software  on
+which Apdf is based (see @{" Legal informations " link legal}):
+
+- Derek Noonburg, for Xpdf.
+
+- David Turner,  Robert Wilhelm,  and Werner Lemberg  for  the  FreeType
+project.
+
+
+The test.pdf document was generated with the  help  of  FastIO  Systems'
+ClibPDF library (http://www.fastio.com).
+
+Thanks to Oliver Wagner and David Gerber for V³ and their help with  the
+plugin.
+
+Thanks to Luca Longone for the icons.
+
+Thanks to the @{" ATO " link "ATO.readme/Main"} for the catalog translations.
+
+@endnode
+
+
+@node history "History"
+
+3.4
+ - Incorporated xpdf-3.01 changes.
+ - No longer uses ppc.library under MorphOS.
+ - Mouse wheel support.
+ - Option to put outlines in the main window.
+ - Option to automatically display the outlines.
+ 
+3.3
+ - Small fixes.
+ 
+3.2
+ - Incorporated xpdf-3.00 changes, so that Apdf now supports PDF 1.5.
+ - Support for negative page numbers.
+ - gzip is no longer needed.
+ - Support for encryption is now builtin.
+ - Support for dash patterns on thick lines.
+
+3.1
+ - Incorporated xpdf-2.00 changes.
+ - Switched to the freetype 2 to handle fonts (type1, truetype, etc.).
+ - Now uses the freetype rasterizer instead of the T1lib one.
+ - Rewrote the graphics engine. Now all text and vector graphics use
+   real anti-aliasing, taking the actual background into account, which
+   gives much better picture quality.
+   Down side: 8 bits (or lower) modes are currently only supported through
+   gray levels. This may or may not change, don't write to me about that.
+ - Added the ability to view several pages at once.
+ - Added a 'continuous' mode.
+ - Added a 'full screen' mode.
+ - Added support for reading (some) annotations.
+ - Added (incomplete) support for PDF forms.
+ - Added some progressive display modes.
+ - Made the PDF decoding asynchronous, so that most actions can be
+   performed without waiting for the display be completed.
+ - Added support for rotated pictures.
+ - Added support to take advantage of linearized files.
+ - Added support for password protected files (untested).
+ - Added options to hide the gadgets at the bottom of the window.
+ - MorphOS version.
+ - Added direct support for all cybergraphics pixel formats (this
+   means in particular that 15/16 bits modes are handled faster, and
+   use much less memory).
+ - Added an option to save/print only even or odd pages.
+ - Improved TrueType fonts encoding handling.
+ - Added a simple bookmark system: shift-Fn marks the current page, Fn
+   goes back to it.
+ - Asynchrounous I/O.
+ - Added an update mode to the installer script & fixed a bug.
+ - Added a PUBSCREEN tooltype/argument.
+ - The installer script can now recognize and configure fonts from the
+   Windows distribution of AcrobatReader 3, 4, and 5.
+ - Lots of other minor changes/bugfixes.
+
+2.2
+ - Removed "fit page" as the plugin default zoom mode. It
+   can be set in the prefs window.
+ - Fixed several PS conversion problem.
+ - Fixed a nasty crash with AGA and big bitmaps.
+ - Removed the borders around the lens.
+
+2.1 (internal release)
+ - Fixed some localization bugs.
+ - Fixed a problem with non standard date formats.
+ - Added a "Print" entry in the plugin context menu.
+ - Fixed a problem with PS conversion.
+ - Removed the virtual group in "fit page" zoom mode.
+ - Fixed miter join style.
+ - Enhanced the installer script.
+ - Enabled keyboard control of the outlines list.
+ - Fixed a problem with AGA support.
+ - Fixed a bug in the info window.
+
+2.0 (internal release)
+ - Based on xpdf-0.90, which has basic support for PDF 1.3
+ - Graphic engine completely rewritten:
+   * internal support for Type1, Type3, and TrueType fonts,
+   * support for embeded Type1, Type1C, and TrueType fonts.
+   * anti-aliased fonts and graphics.
+   * support for all text rendering modes (i.e. outlining and
+     using text as clipping path).
+   * support for font rotation.
+   * faster, especially on PowerPC processors.
+   * no longer uses any chip RAM.
+   * Amiga fonts no longer supported.
+   * Removed the use of PortLists functions. The PPC version
+     should work with the ppclib emulation for WarpUp now.
+ - GUI code completely reorganised, which allows:
+   * ability to view as many pages of the same document as
+     permitted by available memory.
+   * ability to view as many documents as permitted by
+     available memory.
+ - Added a Voyager plugin.
+ - Added a history of viewed pages.
+ - Added two zoom modes ("fit page" and "fit width").
+ - Support for document outlines.
+ - Added a window showing basic informations about a document.
+ - Added a "crop" function to suppress unused margins.
+ - Added page rotation functions.
+ - Speeded up the inline pictures rendering.
+ - Fixed a stupid bug in color quantization code, which made it
+   much slower than it should have been.
+ - File paths translation, which should improve the handling
+   of inter-documents links.
+ - Implemented a custom memory manager (faster).
+ - Added magnification.
+ - Added a configure script to make recompilation easier.
+ - Added a preferences editor, and replaced the tooltypes-based
+   configuration by a config file.
+ - Added an 'OPEN' ARexx command.
+ - Added context dependent help.
+ - Isolated encryption stuff in an external module.
+ - Isolated LZW decompression in an external module.
+ - Added support for page labels.
+ - Error messages now go into a log window.
+ - Localization.
+
+
+1.3
+ - Fixed bug: Apdf used to scan one page more than it should in
+   the fontmap/scan function. Could lead to crash/enforcer hits
+   if the last page of the document was included in the scan range.
+ - Fixed bug: Apdf put the internal defaults in the default fontmap,
+   overriding the user defaults.
+ - Now calls GetDiskObjectNew to get the default icon for a document
+   that has none, when the icon specified by the DEFICON parameter
+   does not exist.
+ - Added a menu item shortcut for iconification.
+ - Fixed a bug in the gzip patch.
+ - Increased the update rate of the progress gauges.
+ - Added CPU informations in the "About" requester.
+ - Now checks that it is run on the correct CPU (may still crash
+   on 68000 or 68010, though).
+ - Worked around a bug in the Workbench "default tool" code.
+ - Fixed the DEFICON default value.
+
+1.2 (some parts of the preceding release were incorectly marked 1.1,
+     so this release is 1.2 to avoid confusion)
+ - Added a 68020/68030 archive, since the 68060 one doesn't work
+   on those processors.
+ - Added a basic cache system. Improves the speed a lot !
+ - Starting Apdf with no argument now opens a requester.
+ - Added support for documents with variable page size.
+ - Added support for rotated pages.
+ - Added progress bar and abort to the "search", "save", and "scan"
+   functions.
+ - URLCMD now defaults to "OpenURL %s".
+ - Added Up/Down MUI shortcuts.
+ - Added AppWindow support.
+ - Added the DISKOBJECT argument.
+ - Page changes scroll back to the top of the page.
+ - Fontmap scans no longer add several times the same entry.
+ - The scan window now opens with sliders preset to the current page.
+ - Added a "Print" menu, equivalent to "Save as" PRT: in postscript
+   mode. @{b}Attn: this will only work if you have a Postscript printer
+   or a printer driver that can interpret Postscript.@{ub}
+ - The PPC task is no longer started at priority -1.
+
+1.0-1.1
+ - First release.
+
+@endnode
+

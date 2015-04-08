@@ -1,0 +1,1112 @@
+## version $VER: Apdf.catalog 1.0 (18.1.2000)
+## codeset 0
+## language italiano
+;
+;#version 1
+;#basename Apdf
+;##version $VER: Apdf.catalog 1.1 (6.1.2001)
+;##name Apdf.catalog
+;
+;   *_WIN  = window title
+;   *_GAD  = gadget label
+;   *_HELP = help bubble contents
+;   *_ERR  = error message
+;   *_MENU = menu item
+;
+; Some entries begin with a character and a \0. This
+; means that the first character is used as a keyboard
+; shortcut. It should be part of the string that follows,
+; to be underlined.
+; In some other strings, the keyboard shortcut is specified
+; by a '_' preceding the letter.
+;
+MSG_OPEN_REQ_TITLE
+Apri...
+; Open...
+;
+MSG_OPEN_REQ_POS
+Apri
+; Open
+;
+MSG_OPEN_REQ_NEG
+Annulla
+; Cancel
+;
+MSG_EXECUTE_REQ
+Eseguire comando ?
+; Execute command?
+;
+MSG_EXECUTE_REQ_ANSWERS
+Ok|Annulla
+; Ok|Cancel
+;
+MSG_COMMODITY_DESCRIPTION
+Visualizzatore di file PDF
+; PDF documents viewer
+;
+MSG_GLOBAL_SETTINGS_WIN
+Settaggi globali
+; Global settings
+;
+MSG_SETTINGS_SAVE_GAD
+_Salva
+; _Save
+;
+MSG_SETTINGS_USE_GAD
+_Usa
+; _Use
+;
+MSG_SETTINGS_CANCEL_GAD
+_Annulla
+; _Cancel
+;
+MSG_LOG_WIN
+Registro
+; Log
+;
+MSG_LOG_AUTO_OPEN_GAD
+a\x00Apertura automatica
+; a\0Auto open
+;
+MSG_LOG_CLEAR_GAD
+_Pulisci
+; _Clear
+;
+MSG_USED_MODULE
+Modulo usato
+; Used module:
+;
+MSG_ABORT_GAD
+_Interrompi
+; _Abort
+;
+MSG_ABORTED
+Interrotto.
+; Aborted.
+;
+MSG_BACK_GAD
+_Indietro
+; _Back
+;
+MSG_FORWARD_GAD
+_Avanti
+; _Forward
+;
+MSG_PAGE_GAD
+Pagina
+; Page
+;
+MSG_ZOOM_GAD
+z\x00Ingrandimento
+; z\0Zoom
+;
+MSG_SEARCH_GAD
+c\x00Cerca
+; s\0Search
+;
+MSG_NEXT_GAD
+_Prossimo
+; _Next
+;
+MSG_SEARCHING
+Ricerca in corso...
+; Searching...
+;
+MSG_NOT_FOUND
+Non trovato
+; Not found
+;
+MSG_OUTLINES_WIN
+
+; Outlines
+;
+MSG_LOADING
+Caricamento...
+; Loading...
+;
+MSG_SAVE_MODE_PS_LEV2
+
+; Postscript (level 2)
+;
+MSG_SAVE_MODE_PS_LEV1
+
+; Postscript (level 1)
+;
+MSG_SAVE_MODE_TEXT
+Testo
+; Text
+;
+MSG_SAVE_MODE_PBM_PPM_IMAGES
+Immagine PBM/PPM
+; PBM/PPM images
+;
+MSG_SAVE_MODE_PBM_PPM_JPEG_IMAGES
+Immagine PBM/PPM/JPEG
+; PBM/PPM/JPEG images
+;
+MSG_SAVE_WIN
+Salva come...
+; Save as...
+;
+MSG_SAVE_FILE_GAD
+
+; File
+;
+MSG_SAVE_FILE_HELP
+Nome del file di destinazione.
+; Name of the destination file.
+;
+MSG_SELECT_FILE_NAME_REQ
+Scegli il nome di un file...
+; Select a file name...
+;
+MSG_SAVE_MODE_GAD
+Modo
+; Mode
+;
+MSG_SAVE_MODE_HELP
+Modalità di salvataggio:\n- Modo postscript salva tutto.\n- Modo testo salva solo il testo come\nun file di testo ASCII.\n- Modo immagine salva solo le immagini\ncontenute nel documento.
+; Save mode:\n- Postscript modes save all.\n- Text mode saves only text as a\nplain ASCII file.\n- Images modes save only embedded\nimages.
+;
+MSG_FIRST_PAGE_GAD
+Prima pagina
+; First page
+;
+MSG_LAST_PAGE_GAD
+Ultima pagina
+; Last page
+;
+MSG_SAVE_ZOOM_GAD
+Ingrandimento
+; Zoom
+;
+MSG_SAVE_ROTATE_GAD
+Ruota
+; Rotate
+;
+MSG_SAVE_SAVE_GAD
+_Salva
+; _Save
+;
+MSG_SAVE_CANCEL_GAD
+_Annulla
+; _Cancel
+;
+MSG_SAVING
+Salvataggio...
+; Saving...
+;
+MSG_SAVED
+Salvato.
+; Saved.
+;
+MSG_DOCPREFS_GENERAL_PAGE
+Generali
+; General
+;
+MSG_DOCPREFS_FONTMAP_PAGE
+Mappa caratteri
+; Fontmap
+;
+MSG_DOCPREFS_OPEN_PAGE_GAD
+Pagina
+; Page
+;
+MSG_DOCPREFS_OPEN_PAGE_HELP
+Pagina a cui il documento\ndovrà essere aperto.
+; Page at which the document\nshould be opened.
+;
+MSG_DOCPREFS_ZOOM_GAD
+Ingrandimento
+; Zoom
+;
+MSG_DOCPREFS_ZOOM_HELP
+Valore iniziale di ingrandimento.
+; Initial zoom value.
+;
+MSG_DOCPREFS_ROTATE_GAD
+Ruota
+; Rotate
+;
+MSG_DOCPREFS_ROTATE_HELP
+Valore iniziale di rotazione.
+; Initial rotate value.
+;
+MSG_DOCPREFS_ANTIALIASING_GAD
+Smussatura
+; Anti-aliasing
+;
+MSG_DOCPREFS_ANTIALIASING_HELP
+Stato iniziale dei parametri\ndi smussatura.
+; Initial states of the\nanti-aliasing parameters.
+;
+MSG_DOCPREFS_AA_TEXT_GAD
+Testo
+; Text
+;
+MSG_DOCPREFS_AA_FILL_GAD
+Riempimento
+; Fill
+;
+MSG_DOCPREFS_AA_STROKE_GAD
+Linee
+; Stroke
+;
+MSG_DOCPREFS_CROPBOX_GAD
+Riquadro\ndelimitazione
+; Crop-box
+;
+MSG_DOCPREFS_CROPBOX_HELP
+Valori iniziali\ndel riquadro
+; Initial state of the\ncrop-box.
+;
+MSG_DOCPREFS_CB_LEFT_GAD
+Sinistra
+; Left
+;
+MSG_DOCPREFS_CB_TOP_GAD
+Alto
+; Top
+;
+MSG_DOCPREFS_CB_RIGHT_GAD
+Destra
+; Right
+;
+MSG_DOCPREFS_CB_BOTTOM_GAD
+Basso
+; Bottom
+;
+MSG_DOCPREFS_CB_GRAB_GAD
+Cattura
+; Grab
+;
+MSG_DOCPREFS_CB_GRAB_HELP
+Trascina questo pulsante\nin una finestra del documento\nper copiare i valori del riquadro.
+; Drag-drop this button into\na view of this document to\ncopy the crop-box values.
+;
+MSG_REQ_OK
+
+; Ok
+;
+MSG_FONTS_WIN
+Caratteri
+; Fonts
+;
+MSG_FONTS_REMOVE
+_Rimuovi
+; _Remove
+;
+MSG_FONTS_CLEAR
+_Pulisci
+; _Clear
+;
+MSG_FONTS_SCAN
+_Esamina
+; _Scan
+;
+MSG_FONTS_SCANNING
+Esamino...
+; Scanning...
+;
+MSG_FONTMAP_PDFFONT
+\eu\ebCarattere PDF
+; \33u\33bPDF font
+;
+MSG_FONTMAP_SUBSTITUTED_FONT
+\eu\ebCarattere sostitutivo
+; \33u\33bSubstituted font
+;
+MSG_FONTMAP_TYPE
+\eu\ebTipo
+; \33u\33bType
+;
+MSG_FONTMAP_HELP
+Mappa tra i caratteri PDF\ne i caratteri presenti nel sistema.
+; Map between PDF font names\nand actual font files.
+;
+MSG_FONTMAP_ADD_GAD
+_Aggiungi
+; _Add
+;
+MSG_FONTMAP_REMOVE_GAD
+_Rimuovi
+; _Remove
+;
+MSG_FONTMAP_PDFFONT_GAD
+Carattere _PDF
+; _PDF font
+;
+MSG_FONTMAP_FONT_GAD
+_Carattere
+; _Font
+;
+MSG_FONTMAP_SELECT_FONT_REQ
+Scegli un carattere...
+; Select a font...
+;
+MSG_FONTMAP_TYPE_GAD
+_Tipo
+; _Type
+;
+MSG_FONTINFO_PDFFONT
+\eu\ebCarattere PDF
+; \33u\33bPDF font
+;
+MSG_FONTINFO_TYPE
+\eu\ebTipo
+; \33u\33bType
+;
+MSG_FONTINFO_EMB
+\eu\ebIncorp.
+; \33u\33bEmb
+;
+MSG_FONTINFO_PROPERTIES
+\eu\ebProprietà
+; \33u\33bProperties
+;
+MSG_FONTINFO_HELP
+Lista dei caratteri usati nel\ndocumento, con le loro proprietà.\nPuoi trascinare le voci nella finestra\ndella mappatura dei file.
+; List of fonts used in the\ndocument, with their properties.\nYou can drag-drop the entries in\nfontmap listviews.
+;
+MSG_PREFS_LOADALL
+Carica tutto
+; Load all
+;
+MSG_FIT_PAGE
+Adatta dimensione alla pagina
+; Fit page
+;
+MSG_FIT_WIDTH
+Adatta dimensione alla larghezza
+; Fit width
+;
+MSG_PREFS_ABOUT_PAGE
+Informazioni...
+; About
+;
+MSG_PREFS_GENERAL_PAGE
+Generale
+; General
+;
+MSG_PREFS_FONT_DIRS_PAGE
+Directory caratteri
+; Font dirs
+;
+MSG_PREFS_FONTMAP_PAGE
+Mappa caratteri
+; Font map
+;
+MSG_PREFS_ADVANCED_PAGE
+Avanzato
+; Advanced
+;
+MSG_PREFS_AUTO_OPEN_GAD
+_Apri registro automaticamente
+; _Auto open log
+;
+MSG_PREFS_AUTO_OPEN_HELP
+Stato iniziale del pulsante\n"Apertura automatica".
+; Initial state of the \"Auto open\"\ngadget of the log window.
+;
+MSG_PREFS_DISKOBJ_GAD
+AppIcon
+; DiskObject
+;
+MSG_PREFS_DISKOBJ_HELP
+Icona da usare quando iconificato.
+; Icon used when iconified.
+;
+MSG_PREFS_GZIPCMD_GAD
+Comando Gzip
+; Gzip command
+;
+MSG_PREFS_GZIPCMD_HELP
+Comando usato per \nla decompressione LZW\nLanciato con <file>.Z\nproduce il <file>
+; Command used for\nLZW decompression\nCalled with <file>.Z and\nshould produce <file>
+;
+MSG_PREFS_TMPDIR_GAD
+Directory temporanea
+; Temp. directory
+;
+MSG_PREFS_TMPDIR_HELP
+Directory usata per salvare i files\ntroppo grossi per stare nella cache.\nUsare un RAM disk qui non ha senso!
+; Directory used to store files\ntoo big to fit in the cache\nUsing a RAM disk here doesn't\nmake sense !
+;
+MSG_PREFS_TMPDIR_REQ
+Scegli una directory...
+; Select a directory...
+;
+MSG_PREFS_URLCMD_GAD
+Apertura URL
+; URL command
+;
+MSG_PREFS_URLCMD_HELP
+Comando usato quando una\nURL viene attivata.\nDeve contenere un "%s" che\nsarà sostituito dalla URL.
+; Command used when an\nURL is activated.\nShould contain a \"%s\" that\nwill be replaced by the URL.
+;
+MSG_PREFS_PRTDEV_GAD
+Dispositivo di stampa
+; Print device
+;
+MSG_PREFS_PRTDEV_HELP
+Dispositivo usato per la stampa\ndi file Postscript.
+; Device used to print\nPostscript files.
+;
+MSG_PREFS_DEFICON_GAD
+Icona predefinita
+; Default icon
+;
+MSG_PREFS_DEFICON_HELP
+Icona aggiunta ai documenti che\nnon ne hanno una quando vengono\nsalvati i settaggi specifici del documento.
+; Icon added to documents that\ndon't have one when saving\ndocument specific settings.
+;
+MSG_PREFS_SELECTCOLOR_GAD
+Colore della selezione
+; Selection color
+;
+MSG_PREFS_SELECTCOLOR_HELP
+Colore usato per disegnare\nil riquadro di selezione.
+; Color used to draw the\nselection box.
+;
+MSG_PREFS_SELECTCOLOR_REQ
+Scegli colore
+; Selection color
+;
+MSG_PREFS_ZOOM_GAD
+Ingrandimento
+; Zoom
+;
+MSG_PREFS_ZOOM_HELP
+Valore iniziale dell'ingrandimento.
+; Initial zoom value.
+;
+MSG_PREFS_ANTIALIASING_GAD
+Smussatura
+; Anti-aliasing
+;
+MSG_PREFS_ANTIALIASING_HELP
+Stato iniziale dei\nparametri di smussatura.
+; Initial state of the\nanti-aliasing parameters.
+;
+MSG_PREFS_AATEXT_GAD
+_Testo
+; _Text
+;
+MSG_PREFS_AAFILL_GAD
+_Riempimento
+; _Fill
+;
+MSG_PREFS_AASTROKE_GAD
+_Linee
+; _Stroke
+;
+MSG_PREFS_FONTDIRS_HELP
+Lista delle directory in cui\ncercare i caratteri Type1/TrueType.
+; List of directories searched\nfor Type1/TrueType fonts.
+;
+MSG_PREFS_FONTDIR_REQ
+Scegli una directory per i caratteri...
+; Select a font directory...
+;
+MSG_PREFS_FONTDIR_NEW_GAD
+_Nuovo
+; _New
+;
+MSG_PREFS_FONTDIR_REMOVE_GAD
+_Rimuovi
+; _Remove
+;
+MSG_PREFS_MODULEDIR_GAD
+Directory dei moduli
+; Modules directory
+;
+MSG_PREFS_MODULEDIR_HELP
+Directory che contiene i moduli.
+; Directory containing the modules.
+;
+MSG_PREFS_MODULEDIR_REQ
+Scegli la directory dei moduli...
+; Select the modules directory...
+;
+MSG_PREFS_MODULE_GAD
+Modulo
+; Module
+;
+MSG_PREFS_MODULE_HELP
+Modulo usato per la decodifica PDF\nProbabilmente non hai bisogno di\nmodificare questa opzione.
+; Module used for PDF decoding.\nYou probably don't need to set this.
+;
+MSG_PREFS_MODULE_REQ
+Scegli un modulo...
+; Select a module...
+;
+MSG_PREFS_MAXCOLORS_GAD
+N. massimo di colori per immagine
+; Max colors per picture
+;
+MSG_PREFS_MAXCOLORS_HELP
+Numero massimo di colori\nusati nella rimappatura delle\nimmagini (ignorati su schermi TrueColor).
+; Maximum number of colors\nused when remapping a picture.\n(Ignored on TrueColor screens.)
+;
+MSG_PREFS_CACHESZ_GAD
+Dimensione cache
+; Cache size
+;
+MSG_PREFS_CACHESZ_HELP
+Dimensione massima della cache\nper ogni file.\n"Carica tutto" significa: carica\ntutto il file in memoria.
+; Maximum cache size per file.\n\"Load all\" means: load\nthe whole file in memory.
+;
+MSG_PREFS_CACHEBLOCSZ_GAD
+Dimensione blocchi della cache
+; Cache block size
+;
+MSG_PREFS_CACHEBLOCSZ_HELP
+Dimensione dei blocchi\ndella cache.\nIgnorato se in modalità\n"Carica tutto"
+; Size of a cache block.\nIgnored in \"Load all\" mode.
+;
+MSG_SAVEAS_REQ
+Salva come...
+; Save as...
+;
+MSG_SAVEAS_REQ_POS
+Salva
+; Save
+;
+MSG_SAVEAS_REQ_NEG
+Annulla
+; Cancel
+;
+MSG_ERROR_REQ
+Errore
+; Error
+;
+MSG_LOADING_PLOBJ
+\ecCaricamento...
+; \33cLoading...
+;
+MSG_LOAD_ERR
+\ecErrore
+; \33cError
+;
+MSG_INFO_TITLE
+Titolo
+; Title
+;
+MSG_INFO_AUTHOR
+Autore
+; Author
+;
+MSG_INFO_SUBJECT
+Oggetto
+; Subject
+;
+MSG_INFO_CREATOR
+Documento creato da
+; Document created by
+;
+MSG_INFO_PRODUCER
+File PDF prodotto da
+; PDF file produced by
+;
+MSG_INFO_KEYWORDS
+Parole chiave
+; Keywords
+;
+MSG_INFO_CREATION_DATE
+Data creazione
+; Creation date
+;
+MSG_INFO_MODDATE
+Ultima modifica
+; Last modification
+;
+MSG_INFO_NUMPAGES
+Pagine
+; Pages
+;
+MSG_INFO_ENCRYPTED
+Crittato
+; Encrypted
+;
+MSG_INFO_PRINTING
+Stampa permessa
+; Printing allowed
+;
+MSG_INFO_COPY
+Copia/incolla permessi
+; Copy/paste allowed
+;
+MSG_INFO_YES
+Si
+; Yes
+;
+MSG_INFO_NO
+
+; No
+;
+MSG_SIDES_GAD
+
+; Sides
+;
+MSG_SIDES_HELP
+
+; Choose the page sides to print.
+;
+MSG_SIDES_BOTH
+
+; Both
+;
+MSG_SIDES_EVEN
+
+; Even
+;
+MSG_SIDES_ODD
+
+; Odd
+;
+MSG_LOG_AUTO_OPEN_HELP
+
+; Open this window everytime\na message is added?
+;
+MSG_ENTER_PASSWORD_WIN
+
+; Enter password
+;
+MSG_PASSWORD_OK
+
+; Ok
+;
+MSG_PASSWORD_CANCEL
+
+; Cancel
+;
+MSG_INFO_LINEARIZED
+
+; Optimized
+;
+MSG_PREFS_DEFAULT_PARAMS_TITLE
+
+; Default parameters
+;
+MSG_PREFS_CONTINUOUS_GAD
+
+; _Continuous
+;
+MSG_PREFS_CONTINUOUS_HELP
+
+; Initial state of the\n\"Continuous\" parameter.
+;
+MSG_PREFS_DISPLAY_MODE_GAD
+
+; Display mode
+;
+MSG_PREFS_DISPLAY_MODE_HELP
+
+; Initial state of the\ndisplay mode parameter.
+;
+MSG_PREFS_DISPMODE_ONEPASS
+
+; One pass
+;
+MSG_PREFS_DISPMODE_TEXTFIRST
+
+; Text first
+;
+MSG_PREFS_DISPMODE_PROGRESSIVE
+
+; Progressive
+;
+MSG_PREFS_COLUMNS_GAD
+
+; Columns
+;
+MSG_PREFS_COLUMNS_HELP
+
+; Initial number\nof columns.
+;
+MSG_PREFS_ROWS_GAD
+
+; Rows
+;
+MSG_PREFS_ROWS_HELP
+
+; Initial number\nof rows.
+;
+MSG_DOCPREFS_CONTINUOUS_GAD
+
+; _Continuous
+;
+MSG_DOCPREFS_CONTINUOUS_HELP
+
+; Initial state of the\n\"Continuous\" parameter.
+;
+MSG_DOCPREFS_DISPLAY_MODE_GAD
+
+; Display mode
+;
+MSG_DOCPREFS_DISPLAY_MODE_HELP
+
+; Initial state of the\ndisplay mode parameter.
+;
+MSG_DOCPREFS_DISPMODE_ONEPASS
+
+; One pass
+;
+MSG_DOCPREFS_DISPMODE_TEXTFIRST
+
+; Text first
+;
+MSG_DOCPREFS_DISPMODE_PROGRESSIVE
+
+; Progressive
+;
+MSG_DOCPREFS_COLUMNS_GAD
+
+; Columns
+;
+MSG_DOCPREFS_COLUMNS_HELP
+
+; Initial number\nof columns.
+;
+MSG_DOCPREFS_ROWS_GAD
+
+; Rows
+;
+MSG_DOCPREFS_ROWS_HELP
+
+; Initial number\nof rows.
+;
+MSG_DOCPREFS_TOOLBAR_GAD
+
+; Show tool bar
+;
+MSG_DOCPREFS_TOOLBAR_HELP
+
+; Should the tool bar\nbe shown at startup?
+;
+MSG_DOCPREFS_NAVBAR_GAD
+
+; Show navigation bar
+;
+MSG_DOCPREFS_NAVBAR_HELP
+
+; Should the navigation bar\nbe shown at startup?
+;
+MSG_PREFS_MAKE_BITMAP_GAD
+
+; Make _BitMap
+;
+MSG_PREFS_MAKE_BITMAP_HELP
+
+; Build a BitMap from the page graphics\nafter rendering. If you have enough free\ngraphic memory, this gives a better\nscrolling speed.
+;
+MSG_PREFS_SPARE_MEM_GAD
+
+; _Spare memory
+;
+MSG_PREFS_SPARE_MEM_HELP
+
+; Never use more than 3 bytes per pixel\nwhen building true color page data.\nIf not checked, use the screen's native\nformat, which might need 4 bytes per pixel,\nbut is usually faster.
+;
+MSG_PREFS_UPDATE_TIME_GAD
+
+; Update time
+;
+MSG_PREFS_UPDATE_TIME_HELP
+
+; Delay between refreshes in\nprogressive display mode.
+;
+MSG_PREFS_ICON_REQ
+
+; Choose an icon
+;
+MSG_PREFS_DEFICON_REQ
+
+; Choose an icon
+;
+MSG_OWNERPW_GAD
+
+; Owner password
+;
+MSG_USERPW_GAD
+
+; User password
+;
+MSG_PREFS_EXTOUTLINES_GAD
+
+; Separate outlines
+;
+MSG_PREFS_EXTOUTLINES_HELP
+
+; Should outlines appear in an\nexternal window or inside the main\nwindow ?
+;
+MSG_PREFS_OPENOUTLINES_GAD
+
+; Open outlines
+;
+MSG_PREFS_OPENOUTLINES_HELP
+
+; Open outlines automatically ?
+;
+MSG_DOCPREFS_OUTLINES_GAD
+
+; Open outlines
+;
+MSG_DOCPREFS_OUTLINES_HELP
+
+; Open outlines automatically ?
+;
+;
+; Errors.
+;
+MSG_ERROR_ERR
+Errore
+; Error
+;
+MSG_REQUIRES_68020_ERR
+Apdf richiede almeno un 68020.\n
+; Apdf requires at least a 68020.\n
+;
+MSG_REQUIRES_3_0_ERR
+Apdf richiede almeno AmigaOS 3.0.\n
+; Apdf requires at least AmgaOS 3.0.\n
+;
+MSG_NO_MUIMASTER_ERR
+Non posso aprire la "muimaster.library".\n
+; Can't open \"muimaster.library\".\n
+;
+MSG_CANT_CREATE_CC_ERR
+Non posso creare le classi custom.\n
+; Can't create custom class.\n
+;
+MSG_CANT_CREATE_CONFIG_OBJ_ERR
+Con posso creare il "config object".\n
+; Can't create config object.\n
+;
+; Printed before DOS error messages. Should end with a trailing space.
+MSG_ERROR_HEADER_ERR
+Errore: 
+; Error:\x20
+;
+MSG_CANT_FIND_MODULE_ERR
+Non riesco a trovare nessuno dei seguenti moduli:\n
+; Can't find any of the following modules:\n
+;
+MSG_CANT_CREATE_SERVER_ERR
+Non posso creare il server.\n
+; Can't create server.\n
+;
+MSG_SERVER_INIT_ERR
+Inizializzazione del server fallita.\n
+; Server initialization failed.\n
+;
+MSG_CANT_CREATE_MUI_APP_ERR
+Non posso creare l'applicazione MUI.\n
+; Can't create MUI application.\n
+;
+MSG_CANT_LOAD_DOC_ERR
+Non posso caricare il documento.\n
+; Can't load document.\n
+;
+MSG_CANT_SAVE_PREFS_ERR
+Non posso salvare le preferenze.\n
+; Can't save prefs.\n
+;
+MSG_SAVE_ERR
+Errore nel salvataggio.
+; Save error.
+;
+MSG_CANT_SAVE_ERR
+Non posso salvare il file.
+; Can't save file.
+;
+;
+; Menus.
+; If the second character is '\0', the first one is
+; taken as a keyboard shortcut, and the label starts
+; at character 3.
+;
+MSG_PROJECT_MENU
+Progetto
+; Project
+;
+MSG_ABOUT_MENU
+?\x00Informazioni...
+; ?\0About...
+;
+MSG_ABOUT_MUI_MENU
+Informazioni su MUI...
+; About MUI...
+;
+MSG_NEW_DOC_MENU
+N\x00Nuovo documento...
+; N\0New document...
+;
+MSG_NEW_VIEW_MENU
+V\x00Nuova vista
+; V\0New view
+;
+MSG_OPEN_MENU
+O\x00Apri...
+; O\0Open...
+;
+MSG_SAVEAS_MENU
+A\x00Salva come...
+; A\0Save as...
+;
+MSG_PRINT_MENU
+P\x00Stampa...
+; P\0Print...
+;
+MSG_HIDE_MENU
+H\x00Nascondi
+; H\0Hide
+;
+MSG_QUIT_MENU
+Q\x00Esci
+; Q\0Quit
+;
+MSG_EDIT_MENU
+Modifica
+; Edit
+;
+MSG_COPY_MENU
+C\x00Copia
+; C\0Copy
+;
+MSG_VIEW_MENU
+Vista
+; View
+;
+MSG_REFRESH_MENU
+Aggiorna
+; Refresh
+;
+MSG_CROP_MENU
+K\x00Ritaglia
+; K\0Crop
+;
+MSG_UNCROP_MENU
+U\x00Pagina intera
+; U\0UnCrop
+;
+MSG_ROTATE_LEFT_MENU
+L\x00Ruota a sinistra
+; L\0Rotate left
+;
+MSG_ROTATE_RIGHT_MENU
+R\x00Ruota a destra
+; R\0Rotate right
+;
+MSG_INFO_MENU
+Informazioni...
+; Informations...
+;
+MSG_OUTLINES_MENU
+Contorni...
+; Outlines...
+;
+MSG_FONTS_MENU
+Caratteri...
+; Fonts...
+;
+MSG_ERRORS_LOG_MENU
+Registro errori...
+; Errors log...
+;
+MSG_SETTINGS_MENU
+Settaggi
+; Settings
+;
+MSG_GLOBAL_SETTINGS_MENU
+Settaggi globali...
+; Global settings...
+;
+MSG_DOC_SETTINGS_MENU
+Settaggi documento...
+; Document settings...
+;
+MSG_MUI_MENU
+
+; MUI...
+;
+MSG_TEXT_AA_MENU
+Testo smussato
+; Text anti-aliasing
+;
+MSG_STROKE_AA_MENU
+Linee smussate
+; Strokes anti-aliasing
+;
+MSG_FILL_AA_MENU
+Riempimenti smussati
+; Fills anti-aliasing
+;
+; The following entries are for the plugin context menu.
+MSG_PDF_OPERATIONS_MENU
+Operazioni su PDF
+; PDF operations
+;
+MSG_SAVE_FILE_TO_MENU
+Salva file come...
+; Save file to...
+;
+MSG_ZOOM_MENU
+Ingrandimento
+; Zoom
+;
+MSG_ADD_ROW_MENU
+
+; Add row
+;
+MSG_ADD_COLUMN_MENU
+
+; Add column
+;
+MSG_REM_ROW_MENU
+
+; Remove row
+;
+MSG_REM_COLUMN_MENU
+
+; Remove column
+;
+MSG_CONTINUOUS_MENU
+
+; Continuous
+;
+MSG_DISPLAY_MODE_MENU
+
+; Display mode
+;
+MSG_ONE_PASS_MENU
+
+; One pass
+;
+MSG_TEXT_FIRST_MENU
+
+; Text first
+;
+MSG_PROGRESSIVE_MENU
+
+; Progressive
+;
+MSG_SHOW_NAV_BAR_MENU
+
+; Show navigation bar
+;
+MSG_SHOW_TOOL_BAR_MENU
+
+; Show tool bar
+;
+MSG_SAVE_FORM_AS_MENU
+
+; Save form as...
+;
+MSG_IMPORT_FDF_MENU
+
+; Import FDF file...
+;
+MSG_FULL_SCREEN_MENU
+
+; Full screen

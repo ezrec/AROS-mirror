@@ -1,0 +1,154 @@
+#========================================================================
+#
+# Apdf server Makefile
+#
+# Copyright 1999-2001 Emmanuel Lesueur
+#
+#========================================================================
+
+srcdir = @srcdir@
+VPATH = @srcdir@
+
+GOOSRCDIR = $(srcdir)/../goo
+XPDFSRCDIR = $(srcdir)/../xpdf
+TTSRCDIR = $(srcdir)/../freetype2
+
+XPDFLIBDIR = ../xpdf
+GOOLIBDIR = ../goo
+FOFILIBDIR = ../fofi
+TTLIBDIR = ../freetype2
+
+CXXFLAGS = @SERVER_CXXFLAGS@ @SERVER_DEFS@ @SERVER_OPTIONS@ \
+	   -I$(GOOSRCDIR) -I$(srcdir) -I$(XPDFSRCDIR) -I$(srcdir)/.. -I.. \
+	   -I$(TTSRCDIR)/include \
+	   -DPROC="\"@PROC@\""
+LDFLAGS = @SERVER_LDFLAGS@
+
+OTHERLIBS = @SERVER_LIBS@ #-L$(srcdir)/../../../libs/freetype/objs -lfreetype
+
+CXX = @SERVER_CXX@
+#STRIP = @SERVER_STRIP@
+#STRIP68K = echo
+
+LIBPREFIX = @LIBPREFIX@
+
+#------------------------------------------------------------------------
+
+%.o: $(srcdir)/%.cc
+	$(CXX) $(CXXFLAGS) -c $<
+
+%.o: $(srcdir)/%.c
+	$(CXX) $(CXXFLAGS) -c $<
+
+#------------------------------------------------------------------------
+
+SRC =   $(srcdir)/stub.cc \
+	$(srcdir)/io_client_mos.cc \
+	$(srcdir)/servermos.cc \
+	$(srcdir)/mystdio.cc \
+	$(srcdir)/Apdfcommon.cc \
+	$(srcdir)/AOutputDev.cc \
+	$(srcdir)/FreeType.cc \
+	$(srcdir)/FontOutputDev.cc \
+	$(srcdir)/OutputFontCache.cc \
+	$(srcdir)/server.cc \
+	$(srcdir)/path.cc \
+	$(srcdir)/gfx.cc \
+	$(srcdir)/pixfmt.cc \
+#	$(srcdir)/libppc.c \
+#	$(srcdir)/lib68k.c \
+#	$(srcdir)/rasterize_8.cc \
+#	$(srcdir)/rasterize_16.cc \
+#	$(srcdir)/rasterize_24.cc \
+#	$(srcdir)/rasterize_32.cc
+#	$(srcdir)/Type3.cc \
+
+#------------------------------------------------------------------------
+
+OBJS =  stub.o \
+	io_client_mos.o \
+	servermos.o \
+	mystdio.o \
+	Apdfcommon.o \
+	AOutputDev.o \
+	FreeType.o \
+	FontOutputDev.o \
+	OutputFontCache.o \
+	version.o \
+	server.o \
+	path.o \
+	gfx.o \
+	pixfmt.o \
+#	Type3.o \
+
+#------------------------------------------------------------------------
+
+all: apdf_module
+
+apdf_module: Apdf_@PROC@.module
+
+gfx: gfx8 gfx16 gfx24 gfx32
+
+gfx8: ApdfGfx8_@PROC@.module
+
+gfx16: ApdfGfx16_@PROC@.module
+
+gfx24: ApdfGfx24_@PROC@.module
+
+gfx32: ApdfGfx32_@PROC@.module
+
+#------------------------------------------------------------------------
+
+ApdfGfx8_@PROC@.module: lib@PROCTYPE@.o rasterize_8.o
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -nostartfiles -o $@ $^ -lm
+
+ApdfGfx16_@PROC@.module: lib@PROCTYPE@.o rasterize_16.o
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -nostartfiles -o $@ $^ -lm
+
+ApdfGfx24_@PROC@.module: lib@PROCTYPE@.o rasterize_24.o
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -nostartfiles -o $@ $^ -lm
+
+ApdfGfx32_@PROC@.module: lib@PROCTYPE@.o rasterize_32.o
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -nostartfiles -o $@ $^ -lm
+
+rasterize_8.o:
+	$(CXX) $(CXXFLAGS) -fno-exceptions -c $<
+
+rasterize_16.o:
+	$(CXX) $(CXXFLAGS) -fno-exceptions -c $<
+
+rasterize_24.o:
+	$(CXX) $(CXXFLAGS) -fno-exceptions -c $<
+
+rasterize_32.o:
+	$(CXX) $(CXXFLAGS) -fno-exceptions -c $<
+
+#------------------------------------------------------------------------
+
+APDF_LIBS = -L$(XPDFLIBDIR) -lxpdf -L$(FOFILIBDIR) -lfofi -L$(GOOLIBDIR) -lGoo \
+	    -L$(TTLIBDIR) -lttf $(OTHERLIBS) 
+
+Apdf_@PROC@.module: $(OBJS) $(FOFILIBDIR)/libfofi.a $(XPDFLIBDIR)/libxpdf.a $(GOOLIBDIR)/libGoo.a \
+	$(TTLIBDIR)/libttf.a 
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(OBJS) $(APDF_LIBS)
+#        $(CXX) $(CXXFLAGS) -o t:apdf.elf -Xlinker --script -Xlinker $(srcdir)/myelf32ppc $(OBJS) $(APDF_LIBS)
+#        dev:c++/linker/linker t:apdf.elf to $@ strip
+#        rm t:apdf.elf
+
+#------------------------------------------------------------------------
+
+clean:
+	rm -f $(OBJS) *.module
+
+#------------------------------------------------------------------------
+
+depend:
+	$(CXX) $(CXXFLAGS) -MM $(SRC) | sed "s, $(srcdir), \$$(srcdir),g" >Makefile.dep
+
+#------------------------------------------------------------------------
+
+version.o: version.cc
+
+#------------------------------------------------------------------------
+
+include Makefile.dep

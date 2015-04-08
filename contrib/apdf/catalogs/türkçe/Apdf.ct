@@ -1,0 +1,1112 @@
+## version $VER: Apdf.catalog 1.0 (18.1.2000)
+## codeset 0
+## language türkçe
+;
+;#version 1
+;#basename Apdf
+;##version $VER: Apdf.catalog 1.1 (6.1.2001)
+;##name Apdf.catalog
+;
+;   *_WIN  = window title
+;   *_GAD  = gadget label
+;   *_HELP = help bubble contents
+;   *_ERR  = error message
+;   *_MENU = menu item
+;
+; Some entries begin with a character and a \0. This
+; means that the first character is used as a keyboard
+; shortcut. It should be part of the string that follows,
+; to be underlined.
+; In some other strings, the keyboard shortcut is specified
+; by a '_' preceding the letter.
+;
+MSG_OPEN_REQ_TITLE
+Aç...
+; Open...
+;
+MSG_OPEN_REQ_POS
+Aç
+; Open
+;
+MSG_OPEN_REQ_NEG
+Vazgeç
+; Cancel
+;
+MSG_EXECUTE_REQ
+Komutu çalýþtýrayým mý?
+; Execute command?
+;
+MSG_EXECUTE_REQ_ANSWERS
+Ok|Vazgeç
+; Ok|Cancel
+;
+MSG_COMMODITY_DESCRIPTION
+PDF Döküman Gösterici
+; PDF documents viewer
+;
+MSG_GLOBAL_SETTINGS_WIN
+Global ayarlar
+; Global settings
+;
+MSG_SETTINGS_SAVE_GAD
+_Kaydet
+; _Save
+;
+MSG_SETTINGS_USE_GAD
+K_ullan
+; _Use
+;
+MSG_SETTINGS_CANCEL_GAD
+_Vazgeç
+; _Cancel
+;
+MSG_LOG_WIN
+
+; Log
+;
+MSG_LOG_AUTO_OPEN_GAD
+a\x00Otomatik aç
+; a\0Auto open
+;
+MSG_LOG_CLEAR_GAD
+_Temizle
+; _Clear
+;
+MSG_USED_MODULE
+Kullanýlan modül
+; Used module:
+;
+MSG_ABORT_GAD
+_Durdur
+; _Abort
+;
+MSG_ABORTED
+Durduruldu
+; Aborted.
+;
+MSG_BACK_GAD
+_Geri
+; _Back
+;
+MSG_FORWARD_GAD
+Ý_leri
+; _Forward
+;
+MSG_PAGE_GAD
+Sayfa
+; Page
+;
+MSG_ZOOM_GAD
+
+; z\0Zoom
+;
+MSG_SEARCH_GAD
+s\x00Arama
+; s\0Search
+;
+MSG_NEXT_GAD
+_Bir Sonraki
+; _Next
+;
+MSG_SEARCHING
+Arýyorum...
+; Searching...
+;
+MSG_NOT_FOUND
+Bulunamadý
+; Not found
+;
+MSG_OUTLINES_WIN
+Dýþ hatlar
+; Outlines
+;
+MSG_LOADING
+Yükleniyor...
+; Loading...
+;
+MSG_SAVE_MODE_PS_LEV2
+Postscript (düzey 2)
+; Postscript (level 2)
+;
+MSG_SAVE_MODE_PS_LEV1
+Postscript (düzey 1)
+; Postscript (level 1)
+;
+MSG_SAVE_MODE_TEXT
+Metin
+; Text
+;
+MSG_SAVE_MODE_PBM_PPM_IMAGES
+PBM/PPM imajlar
+; PBM/PPM images
+;
+MSG_SAVE_MODE_PBM_PPM_JPEG_IMAGES
+PBM/PPM/JPEG imajlar
+; PBM/PPM/JPEG images
+;
+MSG_SAVE_WIN
+Ýsmiyle kaydet...
+; Save as...
+;
+MSG_SAVE_FILE_GAD
+Dosya
+; File
+;
+MSG_SAVE_FILE_HELP
+Hedef dosyasýnýn ismi
+; Name of the destination file.
+;
+MSG_SELECT_FILE_NAME_REQ
+Bir dosya ismi seçin...
+; Select a file name...
+;
+MSG_SAVE_MODE_GAD
+Mod
+; Mode
+;
+MSG_SAVE_MODE_HELP
+Kayýt modu:\n- Postscript modu hepsini kaydeder.\n- Metin modu metni\nASCII dosyasý olarak kaydeder\n- Imaj modu sadece gömülü\nimajlarý kaydeder.
+; Save mode:\n- Postscript modes save all.\n- Text mode saves only text as a\nplain ASCII file.\n- Images modes save only embedded\nimages.
+;
+MSG_FIRST_PAGE_GAD
+Ýlk sayfa
+; First page
+;
+MSG_LAST_PAGE_GAD
+Son sayfa
+; Last page
+;
+MSG_SAVE_ZOOM_GAD
+Büyültme
+; Zoom
+;
+MSG_SAVE_ROTATE_GAD
+Döndürme
+; Rotate
+;
+MSG_SAVE_SAVE_GAD
+_Kaydet
+; _Save
+;
+MSG_SAVE_CANCEL_GAD
+_Vazgeç
+; _Cancel
+;
+MSG_SAVING
+Kaydediyorum...
+; Saving...
+;
+MSG_SAVED
+Kaydedildi.
+; Saved.
+;
+MSG_DOCPREFS_GENERAL_PAGE
+Genel
+; General
+;
+MSG_DOCPREFS_FONTMAP_PAGE
+Font haritasý
+; Fontmap
+;
+MSG_DOCPREFS_OPEN_PAGE_GAD
+Sayfa
+; Page
+;
+MSG_DOCPREFS_OPEN_PAGE_HELP
+Dökümanýn açýlamasý gereken\nsayfa numarasý.
+; Page at which the document\nshould be opened.
+;
+MSG_DOCPREFS_ZOOM_GAD
+Büyült
+; Zoom
+;
+MSG_DOCPREFS_ZOOM_HELP
+Ýlk büyültme deðeri
+; Initial zoom value.
+;
+MSG_DOCPREFS_ROTATE_GAD
+Döndür
+; Rotate
+;
+MSG_DOCPREFS_ROTATE_HELP
+Ýlk döndürme deðeri
+; Initial rotate value.
+;
+MSG_DOCPREFS_ANTIALIASING_GAD
+
+; Anti-aliasing
+;
+MSG_DOCPREFS_ANTIALIASING_HELP
+Anti-aliasing parametrelerinin\nilk durumlarý.
+; Initial states of the\nanti-aliasing parameters.
+;
+MSG_DOCPREFS_AA_TEXT_GAD
+Metin
+; Text
+;
+MSG_DOCPREFS_AA_FILL_GAD
+Doldur
+; Fill
+;
+MSG_DOCPREFS_AA_STROKE_GAD
+Baskýlý
+; Stroke
+;
+MSG_DOCPREFS_CROPBOX_GAD
+Kesme-Kutusu
+; Crop-box
+;
+MSG_DOCPREFS_CROPBOX_HELP
+Kesme-kutusunun\ndurumu.
+; Initial state of the\ncrop-box.
+;
+MSG_DOCPREFS_CB_LEFT_GAD
+Sol
+; Left
+;
+MSG_DOCPREFS_CB_TOP_GAD
+Üst
+; Top
+;
+MSG_DOCPREFS_CB_RIGHT_GAD
+Sað
+; Right
+;
+MSG_DOCPREFS_CB_BOTTOM_GAD
+Dip
+; Bottom
+;
+MSG_DOCPREFS_CB_GRAB_GAD
+Kap
+; Grab
+;
+MSG_DOCPREFS_CB_GRAB_HELP
+Bu düðmeyi kesme-kutusu\ndeðerlerini kopyalamak için\ndökümana sürükleyip býrakýn.
+; Drag-drop this button into\na view of this document to\ncopy the crop-box values.
+;
+MSG_REQ_OK
+
+; Ok
+;
+MSG_FONTS_WIN
+Fontlar
+; Fonts
+;
+MSG_FONTS_REMOVE
+Çýk_ar
+; _Remove
+;
+MSG_FONTS_CLEAR
+_Temizle
+; _Clear
+;
+MSG_FONTS_SCAN
+Ta_ra
+; _Scan
+;
+MSG_FONTS_SCANNING
+Taranýyor...
+; Scanning...
+;
+MSG_FONTMAP_PDFFONT
+
+; \33u\33bPDF font
+;
+MSG_FONTMAP_SUBSTITUTED_FONT
+\eu\ebYedek font
+; \33u\33bSubstituted font
+;
+MSG_FONTMAP_TYPE
+\eu\ebTip
+; \33u\33bType
+;
+MSG_FONTMAP_HELP
+PDF font isimleri ve güncel\n\font dosyalarý arasýndaki harita.
+; Map between PDF font names\nand actual font files.
+;
+MSG_FONTMAP_ADD_GAD
+_Ekle
+; _Add
+;
+MSG_FONTMAP_REMOVE_GAD
+Çý_kar
+; _Remove
+;
+MSG_FONTMAP_PDFFONT_GAD
+
+; _PDF font
+;
+MSG_FONTMAP_FONT_GAD
+
+; _Font
+;
+MSG_FONTMAP_SELECT_FONT_REQ
+Bir font seçin...
+; Select a font...
+;
+MSG_FONTMAP_TYPE_GAD
+_Tip
+; _Type
+;
+MSG_FONTINFO_PDFFONT
+
+; \33u\33bPDF font
+;
+MSG_FONTINFO_TYPE
+\eu\ebTip
+; \33u\33bType
+;
+MSG_FONTINFO_EMB
+
+; \33u\33bEmb
+;
+MSG_FONTINFO_PROPERTIES
+\eu\ebÖzellikler
+; \33u\33bProperties
+;
+MSG_FONTINFO_HELP
+Dökümanda kullanýlan fontlarýn\nözellikleriyle listesi.\nGiriþleri font haritasý listesine\nsürükleyip býrakabilirsiniz.
+; List of fonts used in the\ndocument, with their properties.\nYou can drag-drop the entries in\nfontmap listviews.
+;
+MSG_PREFS_LOADALL
+Hepsini Yükle
+; Load all
+;
+MSG_FIT_PAGE
+Sayfaya Sýðdýr
+; Fit page
+;
+MSG_FIT_WIDTH
+Geniþliðe sýðdýr
+; Fit width
+;
+MSG_PREFS_ABOUT_PAGE
+Hakkýnda
+; About
+;
+MSG_PREFS_GENERAL_PAGE
+Genel
+; General
+;
+MSG_PREFS_FONT_DIRS_PAGE
+Font dizinleri
+; Font dirs
+;
+MSG_PREFS_FONTMAP_PAGE
+Font haritasý
+; Font map
+;
+MSG_PREFS_ADVANCED_PAGE
+Usta
+; Advanced
+;
+MSG_PREFS_AUTO_OPEN_GAD
+_Otomatik log açma
+; _Auto open log
+;
+MSG_PREFS_AUTO_OPEN_HELP
+"Otomatik açma" düðmesinin log\npenceresinde ilk durumu.
+; Initial state of the \"Auto open\"\ngadget of the log window.
+;
+MSG_PREFS_DISKOBJ_GAD
+DiskObjesi
+; DiskObject
+;
+MSG_PREFS_DISKOBJ_HELP
+Simgeleþtirmede kullanýlan ikon.
+; Icon used when iconified.
+;
+MSG_PREFS_GZIPCMD_GAD
+Gzip komutu
+; Gzip command
+;
+MSG_PREFS_GZIPCMD_HELP
+LZW sýkýþtýrmasý\niçin kullanýlan komut.\n<dosya>.Z ile çaðrýlýr ve\n<dosya> olarak açar.
+; Command used for\nLZW decompression\nCalled with <file>.Z and\nshould produce <file>
+;
+MSG_PREFS_TMPDIR_GAD
+Geçici dizin
+; Temp. directory
+;
+MSG_PREFS_TMPDIR_HELP
+Dosyalarý saklayacak dizin\nkaþeye sýðmayacak kadar geniþ\nBurada RAM disk kullanmak anlamsýz !
+; Directory used to store files\ntoo big to fit in the cache\nUsing a RAM disk here doesn't\nmake sense !
+;
+MSG_PREFS_TMPDIR_REQ
+Bir dizin seçin...
+; Select a directory...
+;
+MSG_PREFS_URLCMD_GAD
+URL komutu
+; URL command
+;
+MSG_PREFS_URLCMD_HELP
+Bir URL aktif olunca\nkullanýlacak komut.\nURL ile yer deðiþecek bir\n\\"%s" içermelidir.
+; Command used when an\nURL is activated.\nShould contain a \"%s\" that\nwill be replaced by the URL.
+;
+MSG_PREFS_PRTDEV_GAD
+Yazýcý cihazý
+; Print device
+;
+MSG_PREFS_PRTDEV_HELP
+Postscript dosyalarý\n\bastýrmak için kullanýlacak cihaz.
+; Device used to print\nPostscript files.
+;
+MSG_PREFS_DEFICON_GAD
+Standart ikon
+; Default icon
+;
+MSG_PREFS_DEFICON_HELP
+Ýkonu olmayan dökümana\nkayýt sýrasýnda ikon eklendi\n;Icon added to documents that\n;don't have one when saving\n;document specific settings.
+; Icon added to documents that\ndon't have one when saving\ndocument specific settings.
+;
+MSG_PREFS_SELECTCOLOR_GAD
+Seçim rengi
+; Selection color
+;
+MSG_PREFS_SELECTCOLOR_HELP
+Seçme kutusunu çizmek\niçin kullanýlan renk.
+; Color used to draw the\nselection box.
+;
+MSG_PREFS_SELECTCOLOR_REQ
+Seçim rengi
+; Selection color
+;
+MSG_PREFS_ZOOM_GAD
+Büyüt
+; Zoom
+;
+MSG_PREFS_ZOOM_HELP
+Ýlk Büyültme deðeri
+; Initial zoom value.
+;
+MSG_PREFS_ANTIALIASING_GAD
+
+; Anti-aliasing
+;
+MSG_PREFS_ANTIALIASING_HELP
+Anti-aliasing parametrelerinin\nilk durumu.
+; Initial state of the\nanti-aliasing parameters.
+;
+MSG_PREFS_AATEXT_GAD
+_Metin
+; _Text
+;
+MSG_PREFS_AAFILL_GAD
+_Doldur
+; _Fill
+;
+MSG_PREFS_AASTROKE_GAD
+_Vurgula
+; _Stroke
+;
+MSG_PREFS_FONTDIRS_HELP
+Type1/TrueType fontlarý için\n\aranýlan dizinler listesi.
+; List of directories searched\nfor Type1/TrueType fonts.
+;
+MSG_PREFS_FONTDIR_REQ
+Bir font dizini seçin...
+; Select a font directory...
+;
+MSG_PREFS_FONTDIR_NEW_GAD
+_Yeni
+; _New
+;
+MSG_PREFS_FONTDIR_REMOVE_GAD
+Çý_kar
+; _Remove
+;
+MSG_PREFS_MODULEDIR_GAD
+Modüller dizini
+; Modules directory
+;
+MSG_PREFS_MODULEDIR_HELP
+Modülleri içeren dizin.
+; Directory containing the modules.
+;
+MSG_PREFS_MODULEDIR_REQ
+Modül dizinini seçin...
+; Select the modules directory...
+;
+MSG_PREFS_MODULE_GAD
+Modül
+; Module
+;
+MSG_PREFS_MODULE_HELP
+PDF dekodu için kullanýlan modül.\nMuhtemelen bunu ayarlamak zorunda deðilsiniz.
+; Module used for PDF decoding.\nYou probably don't need to set this.
+;
+MSG_PREFS_MODULE_REQ
+Bir modül seçin...
+; Select a module...
+;
+MSG_PREFS_MAXCOLORS_GAD
+Resim baþýna maksimum renk
+; Max colors per picture
+;
+MSG_PREFS_MAXCOLORS_HELP
+Bir resmi haritalarken\nkullanýlacak renk sayýsý.\n(TrueColor ekranda gözardý edilir)
+; Maximum number of colors\nused when remapping a picture.\n(Ignored on TrueColor screens.)
+;
+MSG_PREFS_CACHESZ_GAD
+Kaþe boyutu
+; Cache size
+;
+MSG_PREFS_CACHESZ_HELP
+Dosya baþýna maksimum kaþe boyutu.\n\\"Hepsini Yükle": bütün dosyayý\n\belleðe yükle anlamýnda.
+; Maximum cache size per file.\n\"Load all\" means: load\nthe whole file in memory.
+;
+MSG_PREFS_CACHEBLOCSZ_GAD
+Kaþe blok boyutu
+; Cache block size
+;
+MSG_PREFS_CACHEBLOCSZ_HELP
+Kaþe block boyutu.\n\\"Hepsini Yükle"modunda\ngöz ardý edilir.
+; Size of a cache block.\nIgnored in \"Load all\" mode.
+;
+MSG_SAVEAS_REQ
+Ýsmiyle Kaydet...
+; Save as...
+;
+MSG_SAVEAS_REQ_POS
+Kaydet
+; Save
+;
+MSG_SAVEAS_REQ_NEG
+Vazgeç
+; Cancel
+;
+MSG_ERROR_REQ
+Hata
+; Error
+;
+MSG_LOADING_PLOBJ
+\ecYükleniyor...
+; \33cLoading...
+;
+MSG_LOAD_ERR
+\ecHata
+; \33cError
+;
+MSG_INFO_TITLE
+Baþlýk
+; Title
+;
+MSG_INFO_AUTHOR
+Yazar
+; Author
+;
+MSG_INFO_SUBJECT
+Konu
+; Subject
+;
+MSG_INFO_CREATOR
+Dökümaný yaratan
+; Document created by
+;
+MSG_INFO_PRODUCER
+PDF dosyasýný yaratan
+; PDF file produced by
+;
+MSG_INFO_KEYWORDS
+Anahtar kelimeler
+; Keywords
+;
+MSG_INFO_CREATION_DATE
+Yapým tarihi
+; Creation date
+;
+MSG_INFO_MODDATE
+En son deðiþtirme
+; Last modification
+;
+MSG_INFO_NUMPAGES
+Sayfalar
+; Pages
+;
+MSG_INFO_ENCRYPTED
+Þifresi çözülmüþ
+; Encrypted
+;
+MSG_INFO_PRINTING
+Basýma izin verilmiþ
+; Printing allowed
+;
+MSG_INFO_COPY
+Kopyala/Yapýþtýra izin verilmiþ
+; Copy/paste allowed
+;
+MSG_INFO_YES
+Evet
+; Yes
+;
+MSG_INFO_NO
+Hayýr
+; No
+;
+MSG_SIDES_GAD
+
+; Sides
+;
+MSG_SIDES_HELP
+
+; Choose the page sides to print.
+;
+MSG_SIDES_BOTH
+
+; Both
+;
+MSG_SIDES_EVEN
+
+; Even
+;
+MSG_SIDES_ODD
+
+; Odd
+;
+MSG_LOG_AUTO_OPEN_HELP
+
+; Open this window everytime\na message is added?
+;
+MSG_ENTER_PASSWORD_WIN
+
+; Enter password
+;
+MSG_PASSWORD_OK
+
+; Ok
+;
+MSG_PASSWORD_CANCEL
+
+; Cancel
+;
+MSG_INFO_LINEARIZED
+
+; Optimized
+;
+MSG_PREFS_DEFAULT_PARAMS_TITLE
+
+; Default parameters
+;
+MSG_PREFS_CONTINUOUS_GAD
+
+; _Continuous
+;
+MSG_PREFS_CONTINUOUS_HELP
+
+; Initial state of the\n\"Continuous\" parameter.
+;
+MSG_PREFS_DISPLAY_MODE_GAD
+
+; Display mode
+;
+MSG_PREFS_DISPLAY_MODE_HELP
+
+; Initial state of the\ndisplay mode parameter.
+;
+MSG_PREFS_DISPMODE_ONEPASS
+
+; One pass
+;
+MSG_PREFS_DISPMODE_TEXTFIRST
+
+; Text first
+;
+MSG_PREFS_DISPMODE_PROGRESSIVE
+
+; Progressive
+;
+MSG_PREFS_COLUMNS_GAD
+
+; Columns
+;
+MSG_PREFS_COLUMNS_HELP
+
+; Initial number\nof columns.
+;
+MSG_PREFS_ROWS_GAD
+
+; Rows
+;
+MSG_PREFS_ROWS_HELP
+
+; Initial number\nof rows.
+;
+MSG_DOCPREFS_CONTINUOUS_GAD
+
+; _Continuous
+;
+MSG_DOCPREFS_CONTINUOUS_HELP
+
+; Initial state of the\n\"Continuous\" parameter.
+;
+MSG_DOCPREFS_DISPLAY_MODE_GAD
+
+; Display mode
+;
+MSG_DOCPREFS_DISPLAY_MODE_HELP
+
+; Initial state of the\ndisplay mode parameter.
+;
+MSG_DOCPREFS_DISPMODE_ONEPASS
+
+; One pass
+;
+MSG_DOCPREFS_DISPMODE_TEXTFIRST
+
+; Text first
+;
+MSG_DOCPREFS_DISPMODE_PROGRESSIVE
+
+; Progressive
+;
+MSG_DOCPREFS_COLUMNS_GAD
+
+; Columns
+;
+MSG_DOCPREFS_COLUMNS_HELP
+
+; Initial number\nof columns.
+;
+MSG_DOCPREFS_ROWS_GAD
+
+; Rows
+;
+MSG_DOCPREFS_ROWS_HELP
+
+; Initial number\nof rows.
+;
+MSG_DOCPREFS_TOOLBAR_GAD
+
+; Show tool bar
+;
+MSG_DOCPREFS_TOOLBAR_HELP
+
+; Should the tool bar\nbe shown at startup?
+;
+MSG_DOCPREFS_NAVBAR_GAD
+
+; Show navigation bar
+;
+MSG_DOCPREFS_NAVBAR_HELP
+
+; Should the navigation bar\nbe shown at startup?
+;
+MSG_PREFS_MAKE_BITMAP_GAD
+
+; Make _BitMap
+;
+MSG_PREFS_MAKE_BITMAP_HELP
+
+; Build a BitMap from the page graphics\nafter rendering. If you have enough free\ngraphic memory, this gives a better\nscrolling speed.
+;
+MSG_PREFS_SPARE_MEM_GAD
+
+; _Spare memory
+;
+MSG_PREFS_SPARE_MEM_HELP
+
+; Never use more than 3 bytes per pixel\nwhen building true color page data.\nIf not checked, use the screen's native\nformat, which might need 4 bytes per pixel,\nbut is usually faster.
+;
+MSG_PREFS_UPDATE_TIME_GAD
+
+; Update time
+;
+MSG_PREFS_UPDATE_TIME_HELP
+
+; Delay between refreshes in\nprogressive display mode.
+;
+MSG_PREFS_ICON_REQ
+
+; Choose an icon
+;
+MSG_PREFS_DEFICON_REQ
+
+; Choose an icon
+;
+MSG_OWNERPW_GAD
+
+; Owner password
+;
+MSG_USERPW_GAD
+
+; User password
+;
+MSG_PREFS_EXTOUTLINES_GAD
+
+; Separate outlines
+;
+MSG_PREFS_EXTOUTLINES_HELP
+
+; Should outlines appear in an\nexternal window or inside the main\nwindow ?
+;
+MSG_PREFS_OPENOUTLINES_GAD
+
+; Open outlines
+;
+MSG_PREFS_OPENOUTLINES_HELP
+
+; Open outlines automatically ?
+;
+MSG_DOCPREFS_OUTLINES_GAD
+
+; Open outlines
+;
+MSG_DOCPREFS_OUTLINES_HELP
+
+; Open outlines automatically ?
+;
+;
+; Errors.
+;
+MSG_ERROR_ERR
+Hata
+; Error
+;
+MSG_REQUIRES_68020_ERR
+Apdf en az 68020 gerektirir.\n
+; Apdf requires at least a 68020.\n
+;
+MSG_REQUIRES_3_0_ERR
+Apdf en az AmigaOS 3.0 gerektirir.\n
+; Apdf requires at least AmgaOS 3.0.\n
+;
+MSG_NO_MUIMASTER_ERR
+"muimaster.library" açýlamýyor.
+; Can't open \"muimaster.library\".\n
+;
+MSG_CANT_CREATE_CC_ERR
+Custom sýnýf yaratýlamýyor.\n
+; Can't create custom class.\n
+;
+MSG_CANT_CREATE_CONFIG_OBJ_ERR
+Config objesi yaratýlamýyor.\n
+; Can't create config object.\n
+;
+; Printed before DOS error messages. Should end with a trailing space.
+MSG_ERROR_HEADER_ERR
+Hata: 
+; Error:\x20
+;
+MSG_CANT_FIND_MODULE_ERR
+Aþaðýdaki modüllerden herhangi birisi bulunamýyor:\n
+; Can't find any of the following modules:\n
+;
+MSG_CANT_CREATE_SERVER_ERR
+Sunucu yaratýlamýyor.\n
+; Can't create server.\n
+;
+MSG_SERVER_INIT_ERR
+Sunucu açýlýþý baþarýsýz.\n
+; Server initialization failed.\n
+;
+MSG_CANT_CREATE_MUI_APP_ERR
+MUI uygulamasý yaratýlamýyor.\n
+; Can't create MUI application.\n
+;
+MSG_CANT_LOAD_DOC_ERR
+Döküman yüklenemiyor.\n
+; Can't load document.\n
+;
+MSG_CANT_SAVE_PREFS_ERR
+Ayarlar kaydedilemiyor.\n
+; Can't save prefs.\n
+;
+MSG_SAVE_ERR
+Kayýt hatasý.
+; Save error.
+;
+MSG_CANT_SAVE_ERR
+Dosya kaydedilemiyor.
+; Can't save file.
+;
+;
+; Menus.
+; If the second character is '\0', the first one is
+; taken as a keyboard shortcut, and the label starts
+; at character 3.
+;
+MSG_PROJECT_MENU
+Proje
+; Project
+;
+MSG_ABOUT_MENU
+?\x00Hakkýnda...
+; ?\0About...
+;
+MSG_ABOUT_MUI_MENU
+MUI Hakkýnda
+; About MUI...
+;
+MSG_NEW_DOC_MENU
+N\x00Yeni döküman...
+; N\0New document...
+;
+MSG_NEW_VIEW_MENU
+V\x00Yeni görüntü
+; V\0New view
+;
+MSG_OPEN_MENU
+O\x00Aç...
+; O\0Open...
+;
+MSG_SAVEAS_MENU
+A\x00Ýsmiyle kaydet...
+; A\0Save as...
+;
+MSG_PRINT_MENU
+P\x00Bastýr...
+; P\0Print...
+;
+MSG_HIDE_MENU
+H\x00Gizle
+; H\0Hide
+;
+MSG_QUIT_MENU
+Q\x00Çýk
+; Q\0Quit
+;
+MSG_EDIT_MENU
+
+; Edit
+;
+MSG_COPY_MENU
+C\x00Kopyala
+; C\0Copy
+;
+MSG_VIEW_MENU
+Göster
+; View
+;
+MSG_REFRESH_MENU
+Tazele
+; Refresh
+;
+MSG_CROP_MENU
+K\x00Kes
+; K\0Crop
+;
+MSG_UNCROP_MENU
+U\x00Kesme
+; U\0UnCrop
+;
+MSG_ROTATE_LEFT_MENU
+L\x00Sola döndür
+; L\0Rotate left
+;
+MSG_ROTATE_RIGHT_MENU
+R\x00Saða döndür
+; R\0Rotate right
+;
+MSG_INFO_MENU
+Bilgiler...
+; Informations...
+;
+MSG_OUTLINES_MENU
+Dýþ hatlar...
+; Outlines...
+;
+MSG_FONTS_MENU
+Fontlar...
+; Fonts...
+;
+MSG_ERRORS_LOG_MENU
+Hatalar logu...
+; Errors log...
+;
+MSG_SETTINGS_MENU
+Ayarlar
+; Settings
+;
+MSG_GLOBAL_SETTINGS_MENU
+Global ayarlar...
+; Global settings...
+;
+MSG_DOC_SETTINGS_MENU
+Döküman ayarlarý...
+; Document settings...
+;
+MSG_MUI_MENU
+
+; MUI...
+;
+MSG_TEXT_AA_MENU
+Metin anti-aliasing
+; Text anti-aliasing
+;
+MSG_STROKE_AA_MENU
+Vurgulu anti-aliasing
+; Strokes anti-aliasing
+;
+MSG_FILL_AA_MENU
+Dolgu anti-aliasing
+; Fills anti-aliasing
+;
+; The following entries are for the plugin context menu.
+MSG_PDF_OPERATIONS_MENU
+PDF iþlemleri
+; PDF operations
+;
+MSG_SAVE_FILE_TO_MENU
+Dosyasýna kaydet...
+; Save file to...
+;
+MSG_ZOOM_MENU
+Büyüt
+; Zoom
+;
+MSG_ADD_ROW_MENU
+
+; Add row
+;
+MSG_ADD_COLUMN_MENU
+
+; Add column
+;
+MSG_REM_ROW_MENU
+
+; Remove row
+;
+MSG_REM_COLUMN_MENU
+
+; Remove column
+;
+MSG_CONTINUOUS_MENU
+
+; Continuous
+;
+MSG_DISPLAY_MODE_MENU
+
+; Display mode
+;
+MSG_ONE_PASS_MENU
+
+; One pass
+;
+MSG_TEXT_FIRST_MENU
+
+; Text first
+;
+MSG_PROGRESSIVE_MENU
+
+; Progressive
+;
+MSG_SHOW_NAV_BAR_MENU
+
+; Show navigation bar
+;
+MSG_SHOW_TOOL_BAR_MENU
+
+; Show tool bar
+;
+MSG_SAVE_FORM_AS_MENU
+
+; Save form as...
+;
+MSG_IMPORT_FDF_MENU
+
+; Import FDF file...
+;
+MSG_FULL_SCREEN_MENU
+
+; Full screen

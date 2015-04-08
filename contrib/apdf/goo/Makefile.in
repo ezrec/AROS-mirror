@@ -1,0 +1,71 @@
+#========================================================================
+#
+# Goo library Makefile
+#
+# Copyright 1996-2003 Glyph & Cog, LLC
+#
+#========================================================================
+
+SHELL = /bin/sh
+
+srcdir = @srcdir@
+VPATH = @srcdir@
+
+CFLAGS = @SERVER_CFLAGS@ @SERVER_DEFS@ @SERVER_OPTIONS@ -I$(srcdir) -I$(srcdir)/.. -I..
+CXXFLAGS = @SERVER_CXXFLAGS@ @SERVER_DEFS@ @SERVER_OPTIONS@ -I$(srcdir) -I$(srcdir)/.. -I..
+
+CC = @SERVER_CC@
+CXX = @SERVER_CXX@
+AR = @SERVER_AR@
+RANLIB = @SERVER_RANLIB@
+
+LIBPREFIX = @LIBPREFIX@
+
+#------------------------------------------------------------------------
+
+.SUFFIXES: .c .cc
+
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+
+.cc.o:
+	$(CXX) $(CXXFLAGS) -c $<
+
+#------------------------------------------------------------------------
+
+CXX_SRC = \
+	$(srcdir)/GHash.cc \
+	$(srcdir)/GList.cc \
+	$(srcdir)/GString.cc \
+	$(srcdir)/gmempp.cc \
+	$(srcdir)/gmem2.cc \
+	$(srcdir)/gfile.cc \
+	$(srcdir)/FixedPoint.cc \
+	$(srcdir)/gdebug.cc
+
+C_SRC = \
+	$(srcdir)/parseargs.c
+
+#------------------------------------------------------------------------
+
+GOO_CXX_OBJS = GHash.o GList.o GString.o gmempp.o gmem2.o gfile.o FixedPoint.o gdebug.o
+GOO_C_OBJS = parseargs.o
+GOO_OBJS = $(GOO_CXX_OBJS) $(GOO_C_OBJS)
+
+$(LIBPREFIX)Goo.a: $(GOO_OBJS)
+	rm -f $(LIBPREFIX)Goo.a
+	$(AR) $(LIBPREFIX)Goo.a $(GOO_OBJS)
+	$(RANLIB) $(LIBPREFIX)Goo.a
+
+#------------------------------------------------------------------------
+
+clean:
+	rm -f $(GOO_OBJS) $(LIBPREFIX)Goo.a
+
+#------------------------------------------------------------------------
+
+depend:
+	$(CXX) $(CXXFLAGS) -MM $(CXX_SRC) | sed "s, $(srcdir), \$$(srcdir),g" >Makefile.dep
+	$(CC) $(CFLAGS) -MM $(C_SRC) | sed "s, $(srcdir), \$$(srcdir),g" >>Makefile.dep
+
+include Makefile.dep

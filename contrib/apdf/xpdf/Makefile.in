@@ -1,0 +1,162 @@
+#========================================================================
+#
+# Xpdf Makefile
+#
+# Copyright 1996-2003 Glyph & Cog, LLC
+#
+#========================================================================
+
+prefix = @prefix@
+srcdir = @srcdir@
+VPATH = @srcdir@
+
+APDFSRCDIR = ../../apdf
+GOOSRCDIR = $(srcdir)/../goo
+GOOLIBDIR = ../goo
+FOFISRCDIR = $(srcdir)/../fofi
+FOFILIBDIR = ../fofi
+SPLASHSRCDIR = $(srcdir)/../splash
+SPLASHLIBDIR = ../splash
+T1LIBDIR = ../type1
+TTLIBDIR = ../freetype
+
+CXXFLAGS = @SERVER_CXXFLAGS@ @SERVER_DEFS@ @SERVER_OPTIONS@ \
+	   -I$(GOOSRCDIR) -I$(FOFISRCDIR) -I$(SPLASHSRCDIR) -I$(srcdir) -I$(srcdir)/.. -I..
+
+CXX = @SERVER_CXX@
+AR = @SERVER_AR@
+RANLIB = @SERVER_RANLIB@
+
+LIBPREFIX = @LIBPREFIX@
+EXE = @EXE@
+
+#------------------------------------------------------------------------
+
+%.o: $(srcdir)/%.cc
+	$(CXX) $(CXXFLAGS) -c $<
+
+#------------------------------------------------------------------------
+
+CXX_SRC = \
+	$(srcdir)/AcroForm.cc \
+	$(srcdir)/Action.cc \
+	$(srcdir)/Annotations.cc \
+	$(srcdir)/Array.cc \
+	$(srcdir)/BuiltinFont.cc \
+	$(srcdir)/BuiltinFontTables.cc \
+	$(srcdir)/CMap.cc \
+	$(srcdir)/Catalog.cc \
+	$(srcdir)/CharCodeToUnicode.cc \
+	$(srcdir)/CoreOutputDev.cc \
+	$(srcdir)/Decrypt.cc \
+	$(srcdir)/Dict.cc \
+	$(srcdir)/FDFForm.cc \
+	$(srcdir)/FontCache.cc \
+	$(srcdir)/FontEncodingTables.cc \
+	$(srcdir)/FontMap.cc \
+	$(srcdir)/Function.cc \
+	$(srcdir)/Gfx.cc \
+	$(srcdir)/GfxFont.cc \
+	$(srcdir)/GfxState.cc \
+	$(srcdir)/Hints.cc \
+	$(srcdir)/ImageOutputDev.cc \
+	$(srcdir)/JArithmeticDecoder.cc \
+	$(srcdir)/JBIG2Stream.cc \
+	$(srcdir)/JPXStream.cc \
+	$(srcdir)/Lexer.cc \
+	$(srcdir)/NameToCharCode.cc \
+	$(srcdir)/NumberTree.cc \
+	$(srcdir)/Object.cc \
+	$(srcdir)/Outline2.cc \
+	$(srcdir)/OutputDev.cc \
+	$(srcdir)/PDFCore.cc \
+	$(srcdir)/PDFDoc.cc \
+	$(srcdir)/PDFDocEncoding.cc \
+	$(srcdir)/PSOutputDev.cc \
+	$(srcdir)/PSTokenizer.cc \
+	$(srcdir)/Page.cc \
+	$(srcdir)/PageLabel.cc \
+	$(srcdir)/Parser.cc \
+	$(srcdir)/PartsVec.cc \
+ 	$(srcdir)/SecurityHandler.cc \
+	$(srcdir)/Stream.cc \
+	$(srcdir)/TextOutputDev.cc \
+	$(srcdir)/UnicodeMap.cc \
+	$(srcdir)/UnicodeTypeTable.cc \
+	$(srcdir)/XRef.cc
+
+OBJS = \
+	AcroForm.o \
+	Action.o \
+	Annotations.o \
+	Array.o \
+	BuiltinFont.o \
+	BuiltinFontTables.o \
+	CMap.o \
+	Catalog.o \
+	CharCodeToUnicode.o \
+	CoreOutputDev.o \
+	Decrypt.o \
+	Dict.o \
+	FDFForm.o \
+	FontCache.o \
+	FontEncodingTables.o \
+	FontMap.o \
+	Function.o \
+	Gfx.o \
+	GfxFont.o \
+	GfxState.o \
+	GlobalParams.o \
+	Hints.o \
+	ImageOutputDev.o \
+	JArithmeticDecoder.o \
+	JBIG2Stream.o \
+	JPXStream.o \
+	Lexer.o \
+	NameToCharCode.o \
+	NumberTree.o \
+	Object.o \
+	Outline2.o \
+	OutputDev.o \
+	PDFCore.o \
+	PDFDoc.o \
+	PDFDocEncoding.o \
+	PSOutputDev.o \
+	PSTokenizer.o \
+	Page.o \
+	PageLabel.o \
+	Parser.o \
+	PartsVec.o \
+	SecurityHandler.o \
+	Stream.o \
+	TextOutputDev.o \
+	UnicodeMap.o \
+	UnicodeTypeTable.o \
+	XRef.o
+
+#------------------------------------------------------------------------
+
+xpdflib: $(LIBPREFIX)xpdf.a
+
+$(LIBPREFIX)xpdf.a: $(OBJS)
+	rm -f $(LIBPREFIX)xpdf.a
+	$(AR) $(LIBPREFIX)xpdf.a $(OBJS)
+	$(RANLIB) $(LIBPREFIX)xpdf.a
+
+#------------------------------------------------------------------------
+
+SecurityHandler.x.o: SecurityHandler.cc
+	$(CXX) $(CXXFLAGS) -DHAVE_XPDFCORE -c -o SecurityHandler.x.o \
+		SecurityHandler.cc
+
+#------------------------------------------------------------------------
+
+clean:
+	rm -f $(OBJS) $(LIBPREFIX)xpdf.a *.bak
+
+#------------------------------------------------------------------------
+
+depend:
+	$(CXX) $(CXXFLAGS) -MM $(CXX_SRC) | sed "s, $(srcdir), \$$(srcdir),g" >Makefile.dep
+
+include Makefile.dep
