@@ -9,6 +9,7 @@
 #include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <exec/memory.h>
 #include <dos/dosextens.h>
 #include <dos/dostags.h>

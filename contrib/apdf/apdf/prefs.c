@@ -30,7 +30,7 @@
 #include "prefs.h"
 #include "fontmap.h"
 #include "docbitmap.h"
-#define CATCOMP_BLOCK
+#define CATCOMP_ARRAY
 #include "msgs.h"
 
 #define DB(x)   x
@@ -49,22 +49,16 @@ int spare_mem;
 extern struct Catalog *catalog;
 
 const char *getString(int n) {
-    LONG *l;
-    UWORD *w;
-    STRPTR str;
+    int i;
 
-    l=(LONG *)CatCompBlock;
-
-    while(*l!=n) {
-	w=(UWORD *)(l+1);
-	l=(LONG *)((ULONG)l+*w+6);
+    if(LocaleBase) {
+	for (i = 0;  i < sizeof(CatCompArray) / sizeof(CatCompArray[0]); i++) {
+	    if (n == CatCompArray[i].cca_ID) {
+		return GetCatalogStr(catalog, i, CatCompArray[i].cca_Str);
+	    }
+	}
     }
-    str=(STRPTR)((ULONG)l+6);
-
-    if(LocaleBase)
-	str=GetCatalogStr(catalog,n,str);
-
-    return str;
+    return "";
 }
 
 const char *getKString(int n) {

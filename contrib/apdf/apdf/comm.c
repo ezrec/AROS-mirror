@@ -14,6 +14,7 @@
 #include <proto/exec.h>
 #include <proto/muimaster.h>
 #include <proto/intuition.h>
+#include <proto/alib.h>
 #include "comm.h"
 #include "AComm.h"
 

@@ -193,7 +193,7 @@ static int zoom_arg=-1;
 static LONG args[NARGS];
 
 
-#if defined(__SASC) || defined(__libnix__) || defined(MORPHOS)
+#if defined(__SASC) || defined(__libnix__) || defined(MORPHOS) || defined(__AROS__)
 char __stdiowin[]="CON://600/200/Apdf/AUTO/WAIT/CLOSE";
 extern struct WBStartup *_WBenchMsg;
 
@@ -1258,7 +1258,7 @@ static struct MUI_Command rexxcmds[]={
     {NULL,NULL,0,NULL}
 };
 
-int main() {
+int main(int argc, char **argv) {
 
     Object *saveprefsobj,*useprefsobj,*cancelprefsobj;
     Object *clearlogobj,*autoopenobj,*win;
@@ -1276,10 +1276,12 @@ int main() {
 
     /* This test is probably useless. If run on 68000 or */
     /* 68010, we have probably already crashed at this point. */
+#ifndef __AROS__
     if(!(SysBase->AttnFlags&AFF_68020)) {
 	printf(STR(MSG_REQUIRES_68020_ERR));
 	exit(EXIT_FAILURE);
     }
+#endif
 
     olddir=CurrentDir(0);
     CurrentDir(olddir);
@@ -1365,6 +1367,8 @@ int main() {
 	    printf("I don't understand the startup method !?\n");
 	    exit(EXIT_FAILURE);
 	}
+#elif defined(__AROS__)
+//FIXME AROS
 #else
 	/* adapt for other compilers/libraries */
 	exit(EXIT_FAILURE);
@@ -1432,6 +1436,8 @@ int main() {
 	//TODO: cpu check
 	*pmodule++="Apdf_604e.module";
 	*pmodule++="Apdf_603e.module";
+#elif defined(__AROS__)
+	*pmodule++="Apdf_aros.module";
 #else
 #  if defined(HAVE_POWERUP)
 	if(PPCLibBase) {
@@ -1704,6 +1710,8 @@ int main() {
 		    "Apdf "apdfVersion
 #ifdef __MORPHOS__
 		    " for MorphOS"
+#elif defined(__AROS__)
+		    " for AROS"
 #endif
 		    "\n%s \"%s\"\n\n"
 		    "%s";

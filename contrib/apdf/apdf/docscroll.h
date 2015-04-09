@@ -9,6 +9,8 @@
 #ifndef DOCSCROLL_H
 #define DOCSCROLL_H
 
+#include <dos/bptr.h>
+
 #ifndef MYTAG_START
 #   define MYTAG_START       TAG_USER
 #endif

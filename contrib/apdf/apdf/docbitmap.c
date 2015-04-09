@@ -15,7 +15,12 @@
 #include <dos/dostags.h>
 #include <exec/nodes.h>
 #include <exec/execbase.h>
+
+#ifdef __AROS__
+#else
 #include <mui/textinput_mcc.h>
+#endif
+
 #include <cybergraphx/cybergraphics.h>
 #include <workbench/startup.h>
 #include <workbench/workbench.h>
@@ -799,6 +804,9 @@ Static void handle_events(struct IClass *cl,Object *obj,struct ActionInfo *p) {
 	    get(obj,MUIA_Height,&h);
 	    x+=(w-dat->prms.width-dat->bleft-dat->bright-dat->xspacing)/2+dat->bleft+t->x-dat->prms.xoffset;
 	    y+=(h-dat->prms.height-dat->btop-dat->bbottom-dat->yspacing)/2+dat->btop+t->y-dat->prms.yoffset;
+#ifdef __AROS__
+//FIXME AROS
+#else
 	    dat->str_obj=MUI_NewObject(t->multiline?MUIC_Textinputscroll:MUIC_Textinput,
 		MUIA_Frame,/*t->multiline?MUIV_Frame_None:*/MUIV_Frame_String,
 		MUIA_Textinputscroll_UseWinBorder,TRUE,
@@ -809,6 +817,7 @@ Static void handle_events(struct IClass *cl,Object *obj,struct ActionInfo *p) {
 		MUIA_Textinput_Format,t->quadding==1?MUIV_Textinput_Format_Center:(t->quadding==2?MUIV_Textinput_Format_Right:MUIV_Textinput_Format_Left),
 		MUIA_CycleChain,TRUE,
 	    TAG_END);
+#endif
 	    dat->text_obj=WindowObject,
 		MUIA_Window_Borderless,!t->multiline,
 		MUIA_Window_CloseGadget,t->multiline,
@@ -867,12 +876,16 @@ Static void handle_events(struct IClass *cl,Object *obj,struct ActionInfo *p) {
 	    x+=(w-dat->prms.width-dat->bleft-dat->bright-dat->xspacing)/2+dat->bleft+t->x-dat->prms.xoffset;
 	    y+=(h-dat->prms.height-dat->btop-dat->bbottom-dat->yspacing)/2+dat->btop+t->y-dat->prms.yoffset;
 	    if(t->editflag) {
+#ifdef __AROS__
+//FIXME AROS
+#else
 		dat->str_obj=TextinputObject,
 		    StringFrame,
 		    MUIA_Textinput_Contents,t->value,
 		    MUIA_Textinput_Format,t->quadding==1?MUIV_Textinput_Format_Center:(t->quadding==2?MUIV_Textinput_Format_Right:MUIV_Textinput_Format_Left),
 		    MUIA_CycleChain,TRUE,
 		    End;
+#endif
 	    }
 	    dat->text_obj=WindowObject,
 		MUIA_Window_Borderless,TRUE,

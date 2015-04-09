@@ -21,6 +21,7 @@
 #include <proto/intuition.h>
 #include <proto/utility.h>
 #include <proto/icon.h>
+#include <proto/alib.h>
 #include "AComm.h"
 #include "Apdf.h"
 #include "document.h"

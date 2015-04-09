@@ -23,6 +23,10 @@
 #   define SAVEDS   __saveds
 #   define ASM      __asm
 #   define REG(r,a) register __ ## r a
+#elif defined(__AROS__)
+#   define SAVEDS
+#   define ASM
+#   define REG(r,a) a
 #elif defined(__GNUC__)
 #   define SAVEDS
 #   define ASM
@@ -87,6 +91,56 @@ ULONG myDoMethod(void *, ULONG, ULONG, ULONG, ULONG, ULONG, ULONG, ULONG, ULONG,
 /*#define CoerceMethod(cl, obj, tags...) \
 	({ULONG _tags[] = { tags }; CoerceMethodA((cl), (obj), (APTR)_tags);})*/
 #define CoerceMethod(cl, obj, m) ({ ULONG t=m; CoerceMethodA(cl,obj,&t); })
+
+#elif defined(__AROS__)
+
+#include <intuition/classes.h>
+
+#   define BEGIN_HOOK(R,name,T1,p1,T2,p2,T3,p3) \
+    AROS_UFH3(R, name##_func, \
+    AROS_UFHA(T1, p1, A0), \
+    AROS_UFHA(T2, p2, A2), \
+    AROS_UFHA(T3, p3, A1)) \
+    { \
+        AROS_USERFUNC_INIT \
+
+#   define END_HOOK(name) \
+        AROS_USERFUNC_EXIT \
+    } \
+    struct Hook name##_hook={{NULL,NULL},(ULONG(*)())name##_func};
+
+#   define BEGIN_STATIC_HOOK(R,name,T1,p1,T2,p2,T3,p3) \
+    AROS_UFH3S(R, name##_func, \
+    AROS_UFHA(T1, p1, A0), \
+    AROS_UFHA(T2, p2, A2), \
+    AROS_UFHA(T3, p3, A1)) \
+    { \
+        AROS_USERFUNC_INIT \
+
+#   define END_STATIC_HOOK(name) \
+        AROS_USERFUNC_EXIT \
+    } \
+    static struct Hook name##_hook={{NULL,NULL},(ULONG(*)())name##_func};
+
+#   define BEGIN_DISPATCHER(name,p1,p2,p3) \
+    BOOPSI_DISPATCHER(IPTR,name,p1,p2,p3) \
+    {
+
+#   define END_DISPATCHER(name) \
+    } \
+    BOOPSI_DISPATCHER_END
+
+#define DoMethod2(o,a1) DoMethod(o,a1)
+#define DoMethod3(o,a1,a2) DoMethod(o,a1,a2)
+#define DoMethod4(o,a1,a2,a3) DoMethod(o,a1,a2,a3)
+#define DoMethod5(o,a1,a2,a3,a4) DoMethod(o,a1,a2,a3,a4)
+#define DoMethod6(o,a1,a2,a3,a4,a5) DoMethod(o,a1,a2,a3,a4,a5)
+#define DoMethod7(o,a1,a2,a3,a4,a5,a6) DoMethod(o,a1,a2,a3,a4,a5,a6)
+#define DoMethod8(o,a1,a2,a3,a4,a5,a6,a7) DoMethod(o,a1,a2,a3,a4,a5,a6,a7)
+#define DoMethod9(o,a1,a2,a3,a4,a5,a6,a7,a8) DoMethod(o,a1,a2,a3,a4,a5,a6,a7,a8)
+#define DoMethod10(o,a1,a2,a3,a4,a5,a6,a7,a8,a9) DoMethod(o,a1,a2,a3,a4,a5,a6,a7,a8,a9)
+#define DoMethod11(o,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10) DoMethod(o,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10)
+#define DoMethod12(o,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11) DoMethod(o,a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11)
 
 #else /* MORPHOS */
 

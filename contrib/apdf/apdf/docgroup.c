@@ -12,13 +12,30 @@
 #include <string.h>
 #include <libraries/mui.h>
 #include <libraries/iffparse.h>
-#include <mui/Listtree_mcc.h>
-#ifndef MUIV_Listtree_Insert_PrevNode_Tail
-#   define MUIV_Listtree_Insert_PrevNode_Tail MUIV_Lt_Insert_PrevNode_Tail
-#   define MUIV_Listtree_DoubleClick_Off MUIV_Lt_DoubleClick_Off
-#   define MUIV_Listtree_Insert_ListNode_Root MUIV_Lt_Insert_ListNode_Root
-#   define MUIV_Listtree_Active_Off MUIV_Lt_Active_Off
+
+#ifdef __AROS__
+#   include <mui/NListtree_mcc.h>
+#   define MUIA_Listtree_EmptyNodes MUIA_NListtree_EmptyNodes
+#   define MUIA_Listtree_DoubleClick MUIA_NListtree_DoubleClick
+#   define MUIA_Listtree_Active MUIA_NListtree_Active
+#   define MUIA_Listtree_DuplicateNodeName MUIA_NListtree_DuplicateNodeName
+#   define MUIV_Listtree_DoubleClick_Off MUIV_NListtree_DoubleClick_Off
+#   define MUIV_Listtree_Active_Off MUIV_NListtree_Active_Off
+#   define MUIV_Listtree_Insert_PrevNode_Tail MUIV_NListtree_Insert_PrevNode_Tail
+#   define MUIV_Listtree_Insert_ListNode_Root MUIV_NListtree_Insert_ListNode_Root
+#   define MUIM_Listtree_Insert MUIM_NListtree_Insert
+#   define ListtreeObject NListtreeObject
+#   define MUIS_Listtree_TreeNode MUI_NListtree_TreeNode
+#else
+#   include <mui/Listtree_mcc.h>
+#   ifndef MUIV_Listtree_Insert_PrevNode_Tail
+#       define MUIV_Listtree_Insert_PrevNode_Tail MUIV_Lt_Insert_PrevNode_Tail
+#       define MUIV_Listtree_DoubleClick_Off MUIV_Lt_DoubleClick_Off
+#       define MUIV_Listtree_Insert_ListNode_Root MUIV_Lt_Insert_ListNode_Root
+#       define MUIV_Listtree_Active_Off MUIV_Lt_Active_Off
+#   endif
 #endif
+
 #include <dos/dostags.h>
 #include <exec/nodes.h>
 #include <exec/execbase.h>
@@ -720,7 +737,11 @@ Static ULONG dgOpenOutlines(struct IClass *cl,Object *obj) {
 		    MUIA_Font,MUIV_Font_Fixed,
 		    MUIA_Background,MUII_ListBack,
 		    MUIA_Listtree_EmptyNodes,TRUE,
+#ifdef __AROS__
+//FIXME AROS
+#else
 		    MUIA_Listtree_DuplicateNodeName,FALSE,
+#endif
 		    MUIA_Listtree_DoubleClick,MUIV_Listtree_DoubleClick_Off,
 		    End,
 		MUIA_Weight,20,
