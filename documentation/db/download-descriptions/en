@@ -54,6 +54,10 @@ amiga-m68k-contrib:
     This archive contains all the contributed programs,
     compiled for the m68k architecture, for use with the
     Amiga port.
+amiga-m68k-ports:
+    This archive contains applications and games which are built
+    from external sources for the m68k architecture. Because of its
+    size the archive will only be updated from time to time on the snapshots page.
 darwin-i386-system:
     The hosted version for Darwin and MacOS X on the i386 platform. This
     should work on all Intel MacOS X versions starting from 10.4. It requires
@@ -136,15 +140,30 @@ efika-chrp-ppc-boot-iso:
 raspi-armhf:
     The native version for ARMv6 based Raspberry Pi computers.
     Contains all files needed to boot from a FAT formatted sd-card.
+raspi-armhf-ports:
+    This archive contains applications and games which are built
+    from external sources for the armhf architecture (both hosted
+    and native). Because of its size the archive will only be updated
+    from time to time on the snapshots page.
 pc-i386-contrib:
     This archive contains all the contributed programs,
     compiled for the i386 architecture. They will work in
     both the appropriate hosted (e.g. i386-linux) and native
     (i386-pc) version.
+pc-i386-ports:
+    This archive contains applications and games which are built
+    from external sources for the i386 architecture (both hosted
+    and native). Because of its size the archive will only be updated
+    from time to time on the snapshots page.
 pc-x86_64-contrib:
     This archive contains all the contributed programs,
     compiled for the x86_64 architecture, for use with the
     x86_64 native version.
+pc-x86_64-ports:
+    This archive contains applications and games which are built
+    from external sources for the x86-64 architecture (both hosted
+    and native). Because of its size the archive will only be updated
+    from time to time on the snapshots page.
 linux-ppc-contrib:
     This archive contains all the contributed programs,
     compiled for the PowerPC architecture, for use with the

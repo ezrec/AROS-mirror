@@ -32,6 +32,8 @@ elif dltype == "nightly2":
     colorTH      = Color( 0xA0, 0x00, 0xFF )  # Table headers
 elif dltype == "snapshots":
     colorTH      = Color( 0xA0, 0xE0, 0xFF )  # Table headers
+elif dltype == "snapshots2":
+    colorTH      = Color( 0xA0, 0xE0, 0xFF )  # Table headers
 
 colorBG      = Color( 0xEE, 0xEE, 0xEE )  # Background of page
 colorTD      = colorBG                    # Table cells
@@ -154,7 +156,7 @@ for date in dates:
                         [<a href="http://aros.sourceforge.net/downloads/nightly2/%(date)s/logs/">%(logsLabel)s</a>]
                     </td>
         ''' % vars()
-    elif dltype == "snapshots":
+    elif dltype == "snapshots" or dltype == "snapshots2":
         print '''
                     <td class="layout" align="center" bgcolor="%(color)s">
                         <b>%(year)s-%(month)s-%(day)s</b>

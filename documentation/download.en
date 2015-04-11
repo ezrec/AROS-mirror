@@ -79,6 +79,14 @@ __ snapshots
 __ http://sourceforge.net/p/aros/bugs/
 
 
+Snapshots (ABIv1)
+=================
+
+`Snapshots`__ are non-periodic, non-automated builds of AROS. They are done
+by developers who can't set up a nightly build for some reason.
+
+__ snapshots1
+
 
 Nightly Builds
 ==============
