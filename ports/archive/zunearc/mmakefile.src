@@ -1,0 +1,40 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-archive : ports-archive-zunearc
+
+#MM  ports-archive-zunearc : \
+#MM    includes linklibs ports-archive-zunearc-fetch \
+#MM    ports-archive-zunearc-cpy \
+#MM    ports-archive-zunearc-cpyicons
+
+#MM  ports-archive-zunearc-quick : ports-archive-zunearc-fetch
+
+REPOSITORIES := sf://zunetools
+ARCHBASE     := ZuneARC_v1.4
+TARGETDIR    := $(AROS_CONTRIB)/Utilities/Archive/ZuneARC
+
+USER_CFLAGS  := -Wno-parentheses -Wno-unused-but-set-variable -Wno-unused-variable
+
+FILES := $(PORTSDIR)/zunearc/$(ARCHBASE)/ZuneARC/source/ZuneARC
+
+%build_prog mmake=ports-archive-zunearc progname=ZuneARC \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs=""
+
+
+%fetch mmake=ports-archive-zunearc-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/zunearc/$(ARCHBASE) \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip"
+
+
+CPFILES := ZuneARC.info ZuneARC.cfg ZuneARC_oldlha.cfg
+
+%copy_files_q mmake=ports-archive-zunearc-cpy files=$(CPFILES) src=$(PORTSDIR)/zunearc/$(ARCHBASE)/ZuneARC \
+    dst=$(TARGETDIR)
+
+
+%copy_dir_recursive mmake=ports-archive-zunearc-cpyicons \
+    src=$(PORTSDIR)/zunearc/$(ARCHBASE)/ZuneARC/Icons dst=$(TARGETDIR)/Icons
+
+%common

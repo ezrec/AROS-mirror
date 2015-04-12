@@ -1,0 +1,13 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-archive-zunearc : ports-archive-zunearc-icons
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Archive
+ICONS     := ZuneARC
+
+%build_icons mmake=ports-archive-zunearc-icons \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+%common
