@@ -1,0 +1,35 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-apdf-server : includes linklibs
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/Apdf
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../goo -I$(SRCDIR)/$(CURDIR)/../xpdf -I$(SRCDIR)/$(CURDIR)/../freetype2/include
+USER_CFLAGS := -fexceptions -fpermissive
+
+# USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../goo -I$(SRCDIR)/$(CURDIR)/../splash -I$(SRCDIR)/$(CURDIR)/../fofi
+# USER_CFLAGS := -Wno-implicit-function-declaration -Wno-unused-variable -Wno-parentheses \
+#   -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__
+# USER_CFLAGS := -Wno-write-strings -fpermissive -DHAVE_CONFIG_H
+# USER_LDFLAGS := -L$(TARGETDIR)/libs
+
+SRC := \
+	stub \
+	io_client_68k \
+	server68k \
+	mystdio \
+	Apdfcommon \
+	AOutputDev \
+	FreeType \
+	FontOutputDev \
+	OutputFontCache \
+	server \
+	path \
+	gfx \
+	pixfmt
+
+%build_prog mmake=contrib-apdf-server progname=Apdf_aros.module files= cxxfiles="$(SRC)" \
+    targetdir=$(TARGETDIR) uselibs=""
+
+%common

@@ -928,7 +928,12 @@ void DashPathBuilder::line(double x, double y)
 		double x1 = ux * l1;
 		double y1 = uy * l1;
 
-		APath::Part* p = ds.is_on() ? APath::line(x1, y1) : APath::move(x1, y1);
+		APath::Part* p;
+		if (ds.is_on()) {
+			p = APath::line(x1, y1);
+		} else {
+			p = APath::move(x1, y1);
+		}
 		path = APath::join(path, p);
 
 		totx += x1;
@@ -943,7 +948,12 @@ void DashPathBuilder::line(double x, double y)
 
 	if (x || y)
 	{
-		APath::Part* p = ds.is_on() ? APath::line(x, y) : APath::move(x, y);
+		APath::Part* p;
+		if (ds.is_on()) {
+			p = APath::line(x, y);
+		} else {
+			p = APath::move(x, y);
+		}
 		path = APath::join(path, p);
 		ds.advance(int(l * (1 << DashState::fract_bits)));
 	}

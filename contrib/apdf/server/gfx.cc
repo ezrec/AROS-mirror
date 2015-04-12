@@ -853,7 +853,7 @@ void AGfxState::pop_clip()
 void AGfxState::add_clip(int x1, int y1, int x2, int y2)
 {
 	DEBUG_GFXSTATE_CLIP(dprintf("AGfxState::add_clip: (%d,%d)-(%d,%d)\n", x1, y1, x2, y2));
-	auto_ptr<ClipState> s(new ClipState);
+	std::auto_ptr<ClipState> s(new ClipState);
 	s->prev = clip;
 	s->mask = NULL;
 	s->bitmap = bitmap;
@@ -872,7 +872,7 @@ void AGfxState::add_clip(int x, int y, ARegion *mask)
 		mask->width, mask->height, mask->x0, mask->y0));
 	DEBUG_GFXSTATE_CLIP(dprintf("AGfxState::add_clip: bitmap %p %d×%d, offset %d,%d\n",
 		bitmap, bitmap->width, bitmap->height, bitmap->xoffset, bitmap->yoffset));
-	auto_ptr<ClipState> s(new ClipState);
+	std::auto_ptr<ClipState> s(new ClipState);
 	s->prev = clip;
 	s->mask = mask;
 	s->mask_x = x;
@@ -932,7 +932,7 @@ void AGfxState::stroke(int x, int y, APath* path, Color c, double lw, CapStyle c
 	}
 	else if (lw)
 	{
-		auto_ptr<APath> path1;
+		std::auto_ptr<APath> path1;
 		if (ds.is_solid())
 		{
 			path1 = path->thicken(lw, cap, join, ml);
@@ -942,7 +942,7 @@ void AGfxState::stroke(int x, int y, APath* path, Color c, double lw, CapStyle c
 			path1 = path->make_dashes(ds);
 			path1 = path1->thicken(lw, cap, join, ml);
 		}
-		auto_ptr<ARegion> region(path1->make_region());
+		std::auto_ptr<ARegion> region(path1->make_region());
 		if (region.get())
 			bitmap->fill(x, y, region.get(), c);
 	}

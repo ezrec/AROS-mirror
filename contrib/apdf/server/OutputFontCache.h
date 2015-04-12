@@ -13,6 +13,8 @@
 #pragma interface
 #endif
 
+#include <math.h>
+
 #include "Object.h"
 #include "GfxFont.h"
 
