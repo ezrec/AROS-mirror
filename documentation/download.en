@@ -66,17 +66,36 @@ __ http://www.natami-news.de/html/distribution_download.html
 
 
 
-Snapshots
-=========
+Nightly Builds (ABIv1)
+======================
 
-`Snapshots`__ are non-periodic, non-automated builds of AROS. They are done
-by developers who can't set up a nightly build for some reason.
+`Nightly builds`__ are done, as the name implies, every night, directly
+from the Subversion tree, and they contain the latest code. However,
+they have not been tested in any way and may contain bugs. Most of the
+time, though, they work just fine.
 
-These ports are not unmaintained, so please use the `bug tracker`__ to report
-bugs.
+These builds are based ond sources of the new `ABI`__. **They are not 
+compatible with existing AROS distributions or with the AROS software
+available from The AROS Archives or Aminet.**
 
-__ snapshots
+Please report bugs you may discover while using these builds through the
+`bug tracker`__. For any other necessity, please feel free to contact us
+through the `AROS-Exec`__ forums.
+
+__ nightly1
+__ http://en.wikipedia.org/wiki/Application_binary_interface
 __ http://sourceforge.net/p/aros/bugs/
+__ http://aros-exec.org/
+
+
+Nightly Builds (ABIv0)
+======================
+
+Because almost all available AROS software and distributions are
+for the old ABIv0 ABI, we keep `these builds`__ for the i386 platform.
+
+__ nightly
+
 
 
 Snapshots (ABIv1)
@@ -85,38 +104,17 @@ Snapshots (ABIv1)
 `Snapshots`__ are non-periodic, non-automated builds of AROS. They are done
 by developers who can't set up a nightly build for some reason.
 
+These ports are not unmaintained, so please use the `bug tracker`__ to report
+bugs.
+
 __ snapshots1
-
-
-Nightly Builds
-==============
-
-`Nightly builds`__ are done, as the name implies, every night, directly
-from the Subversion tree, and they contain the latest code. However,
-they have not been tested in any way and may contain bugs. Most of the
-time, though, they work just fine.
-
-Please report bugs you may discover while using these builds through the
-`bug tracker`__. For any other necessity, please feel free to contact us
-through the `AROS-Exec`__ forums.
-
-__ nightly
 __ http://sourceforge.net/p/aros/bugs/
-__ http://aros-exec.org/
 
 
+Snapshots (ABIv0)
+=================
 
-Nightly Builds (ABIv1)
-======================
+As with the nightly builds we keep a set of `snapshots`__ which are based
+on sources of the ABIv0 branch on a seprate download page.
 
-AROS is currently transitioning to a new `ABI`__. An extra set of nightly
-builds is made based on this experimental source tree, but `these builds`__
-are only useful for developers who want to check the progress of the ABI
-transition. **They are not compatible with existing AROS distributions
-or with the AROS software available from The AROS Archives or Aminet.**
-Users wishing to try new features or bug fixes that are not yet
-available in distributions should only use the normal nightly builds.
-
-__ http://en.wikipedia.org/wiki/Application_binary_interface
-__ nightly1
-
+__ snapshots
