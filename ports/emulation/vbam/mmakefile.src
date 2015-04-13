@@ -1,0 +1,38 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-emulation : ports-emulation-vbam
+
+#MM  ports-emulation-vbam : \
+#MM  includes \
+#MM  linklibs \
+#MM  contrib-sdl \
+#MM  ports-emulation-vbam-fetch
+
+REPOSITORIES := sf://vbam
+ARCHBASE     := vba-m-SVN1292-sources
+TARGETDIR    := $(AROS_CONTRIB)/Emu/Vbam
+USER_CFLAGS  := -fpermissive
+
+VBA_OPTIONS := \
+    -DZLIB_LIBRARY=$(AROS_DEVELOPMENT)/lib/libz.a \
+    -DZLIB_INCLUDE_DIR=$(AROS_DEVELOPMENT)/include \
+    -DPNG_LIBRARY=$(AROS_DEVELOPMENT)/lib/libpng.a \
+    -DPNG_PNG_INCLUDE_DIR=$(AROS_DEVELOPMENT)/include \
+    -DOPENGL_gl_LIBRARY=$(AROS_DEVELOPMENT)/lib/libGL.a \
+    -DSDL_LIBRARY=$(AROS_DEVELOPMENT)/lib/libSDL.a \
+    -DSDL_INCLUDE_DIR=$(AROS_DEVELOPMENT)/include/SDL \
+    -DENABLE_GTK:BOOL=OFF \
+    -DDATA_INSTALL_DIR=$(TARGETDIR)/etc \
+    -DSYSCONFDIR=$(TARGETDIR)/etc
+
+%build_with_cmake mmake=ports-emulation-vbam \
+    srcdir=$(PORTSDIR)/vbam/$(ARCHBASE)/sources prefix=$(TARGETDIR) \
+    extraoptions=$(VBA_OPTIONS) installoptions=
+
+%fetch mmake=ports-emulation-vbam-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/vbam/$(ARCHBASE) \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip" \
+    patches_specs=vba-m-SVN1292-sources-aros.diff:$(ARCHBASE):-p1
+
+%common

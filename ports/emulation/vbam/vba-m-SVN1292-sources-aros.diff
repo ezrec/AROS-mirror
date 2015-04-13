@@ -1,0 +1,120 @@
+diff -Naur vba-m-SVN1292-sources-orig/sources/CMakeLists.txt vba-m-SVN1292-sources/sources/CMakeLists.txt
+--- vba-m-SVN1292-sources-orig/sources/CMakeLists.txt	2015-04-13 19:54:10.320159059 +0200
++++ vba-m-SVN1292-sources/sources/CMakeLists.txt	2015-04-13 21:34:30.921228163 +0200
+@@ -342,6 +342,8 @@
+     )
+ 	IF( WIN32 )
+ 		INSTALL(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/vbam${CMAKE_EXECUTABLE_SUFFIX} DESTINATION bin)
++	ELSEIF( AROS )
++		INSTALL(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/vbam DESTINATION .)
+ 	ELSE( WIN32 )
+ 		INSTALL(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/vbam DESTINATION bin)
+ 	ENDIF( WIN32 )
+@@ -365,7 +367,7 @@
+     endif( ENABLE_NLS )
+ endif( ENABLE_GTK OR ENABLE_WX )
+ INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/vba-over.ini DESTINATION ${DATA_INSTALL_DIR})
+-IF(NOT APPLE)
++IF(NOT APPLE AND NOT AROS)
+     INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/gtk/icons/ DESTINATION share/icons/hicolor PATTERN ".svn" EXCLUDE)
+ ENDIF(NOT APPLE)
+ SET(CPACK_GENERATOR "ZIP")
+diff -Naur vba-m-SVN1292-sources-orig/sources/fex/fex/Data_Reader.cpp vba-m-SVN1292-sources/sources/fex/fex/Data_Reader.cpp
+--- vba-m-SVN1292-sources-orig/sources/fex/fex/Data_Reader.cpp	2015-04-13 19:54:10.143161913 +0200
++++ vba-m-SVN1292-sources/sources/fex/fex/Data_Reader.cpp	2015-04-13 19:56:17.122767809 +0200
+@@ -411,7 +411,11 @@
+ 		return NULL;
+ 	
+ 	size_t needed = 0;
++#ifdef __AROS__
++	size_t mmax = strlen( wpath );
++#else
+ 	size_t mmax = wcslen( wpath );
++#endif
+ 	if ( mmax <= 0 )
+ 		return NULL;
+ 
+diff -Naur vba-m-SVN1292-sources-orig/sources/src/common/Patch.cpp vba-m-SVN1292-sources/sources/src/common/Patch.cpp
+--- vba-m-SVN1292-sources-orig/sources/src/common/Patch.cpp	2015-04-13 19:54:10.208161209 +0200
++++ vba-m-SVN1292-sources/sources/src/common/Patch.cpp	2015-04-13 20:13:47.834060148 +0200
+@@ -11,6 +11,11 @@
+ typedef off_t __off64_t; /* off_t is 64 bits on BSD. */
+ #define	fseeko64 fseeko
+ #define	ftello64 ftello
++#elif defined(__AROS__)
++#include <exec/types.h>
++typedef QUAD __off64_t;
++#define	fseeko64 fseeko
++#define	ftello64 ftello
+ #else
+ typedef off64_t __off64_t;
+ #endif /* __APPLE__ || BSD */
+diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/debugger-expr-yacc.cpp vba-m-SVN1292-sources/sources/src/gba/debugger-expr-yacc.cpp
+--- vba-m-SVN1292-sources-orig/sources/src/gba/debugger-expr-yacc.cpp	2015-04-13 19:54:10.278159865 +0200
++++ vba-m-SVN1292-sources/sources/src/gba/debugger-expr-yacc.cpp	2015-04-13 20:22:27.423265146 +0200
+@@ -126,7 +126,7 @@
+   
+ #include "../System.h"
+ #include "GBA.h"
+-#include "../Common/Port.h"
++#include "../common/Port.h"
+ 
+ #include <string>
+ #include <map>
+diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/ereader.cpp vba-m-SVN1292-sources/sources/src/gba/ereader.cpp
+--- vba-m-SVN1292-sources-orig/sources/src/gba/ereader.cpp	2015-04-13 19:54:10.278159865 +0200
++++ vba-m-SVN1292-sources/sources/src/gba/ereader.cpp	2015-04-13 20:24:23.593696330 +0200
+@@ -1,6 +1,6 @@
+ #include <stdio.h>
+ #include <locale>
+-#include <malloc.h>
++#include <stdlib.h>
+ #include <string.h>
+ 
+ #include "GBA.h"
+diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/GBALink.cpp vba-m-SVN1292-sources/sources/src/gba/GBALink.cpp
+--- vba-m-SVN1292-sources-orig/sources/src/gba/GBALink.cpp	2015-04-13 19:54:10.278159865 +0200
++++ vba-m-SVN1292-sources/sources/src/gba/GBALink.cpp	2015-04-13 20:25:48.394550998 +0200
+@@ -3,12 +3,7 @@
+ #include <string.h>
+ #include <stdio.h>
+ 
+-// malloc.h does not seem to exist on Mac OS 10.7
+-#ifdef __APPLE__
+ #include <stdlib.h>
+-#else
+-#include <malloc.h>
+-#endif
+ 
+ #ifdef _MSC_VER
+ #define snprintf _snprintf
+diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/remote.cpp vba-m-SVN1292-sources/sources/src/gba/remote.cpp
+--- vba-m-SVN1292-sources-orig/sources/src/gba/remote.cpp	2015-04-13 19:54:10.279159846 +0200
++++ vba-m-SVN1292-sources/sources/src/gba/remote.cpp	2015-04-13 20:29:12.934788397 +0200
+@@ -29,6 +29,10 @@
+ # define write _write
+ #endif // _WIN32
+ 
++#ifdef __AROS__
++struct Library *SocketBase;
++#endif
++
+ #include "remote.h"
+ #include "BreakpointStructures.h"
+ #include "GBA.h"
+diff -Naur vba-m-SVN1292-sources-orig/sources/src/sdl/SDL.cpp vba-m-SVN1292-sources/sources/src/sdl/SDL.cpp
+--- vba-m-SVN1292-sources-orig/sources/src/sdl/SDL.cpp	2015-04-13 19:54:10.266160095 +0200
++++ vba-m-SVN1292-sources/sources/src/sdl/SDL.cpp	2015-04-13 20:52:58.200948827 +0200
+@@ -507,6 +507,12 @@
+         return f;
+     }
+   }
++#elif defined(__AROS__)
++  fprintf(stdout, "Searching executable directory\n");
++  sprintf(path, "PROGDIR:etc/%s", name);
++  f = fopen(path, "r");
++  if(f != NULL)
++    return f;
+ #else // ! _WIN32
+   fprintf(stdout, "Searching data directory: %s\n", PKGDATADIR);
+   sprintf(path, "%s%c%s", PKGDATADIR, FILE_SEP, name);

@@ -1,0 +1,11 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#DISABLED #MM- ports-emulation-vbam-icons : ports-emulation-vbam-vbam-icons
+
+ICONS     := Vbam
+TARGETDIR := $(AROS_CONTRIB)/Emu/Vbam
+
+%build_icons mmake=ports-emulation-vbam-vbam-icons \
+    icons=$(ICONS) dir=$(TARGETDIR)
