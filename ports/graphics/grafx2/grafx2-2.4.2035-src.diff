@@ -1,6 +1,19 @@
+diff -Naur grafx2-2.4.2035-src-orig/grafx2/src/fileformats.c grafx2-2.4.2035-src/grafx2/src/fileformats.c
+--- grafx2-2.4.2035-src-orig/grafx2/src/fileformats.c	2012-09-15 19:57:46.000000000 +0200
++++ grafx2-2.4.2035-src/grafx2/src/fileformats.c	2015-04-15 20:26:23.765808646 +0200
+@@ -4066,7 +4066,8 @@
+                       context->Palette[x].G=palette[x].green;
+                       context->Palette[x].B=palette[x].blue;
+                     }
+-                    free(palette);
++                    //free(palette);
++                    // disabled because it causes memory corruption on AROS
+                     palette = NULL;
+                   }
+                   if (color_type != PNG_COLOR_TYPE_RGB && color_type != PNG_COLOR_TYPE_RGB_ALPHA)
 diff -Naur grafx2-2.4.2035-src-orig/grafx2/src/hotkeys.c grafx2-2.4.2035-src/grafx2/src/hotkeys.c
 --- grafx2-2.4.2035-src-orig/grafx2/src/hotkeys.c	2012-09-29 00:10:04.000000000 +0200
-+++ grafx2-2.4.2035-src/grafx2/src/hotkeys.c	2013-09-25 20:41:04.042260988 +0200
++++ grafx2-2.4.2035-src/grafx2/src/hotkeys.c	2015-04-15 20:19:04.904738196 +0200
 @@ -621,7 +621,7 @@
    true,
    SDLK_b, // B
