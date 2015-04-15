@@ -2,10 +2,11 @@
 
 include $(TOP)/config/make.cfg
 
-##MM- ports-graphics : ports-graphics-$(AROS_TARGET_CPU)
+#MM- ports-graphics : ports-graphics-$(AROS_TARGET_CPU)
 
-##MM- ports-graphics-i386 : ports-graphics-lunapaint
-##MM- ports-graphics-arm : ports-graphics-lunapaint
+#MM- ports-graphics-i386 : ports-graphics-lunapaint
+#MM- ports-graphics-m68k : ports-graphics-lunapaint
+#MM- ports-graphics-arm : ports-graphics-lunapaint
 
 #MM  ports-graphics-lunapaint : includes linklibs workbench-libs-freetype-linklib ports-graphics-lunapaint-fetch \
 #MM  ports-graphics-lunapaint-data \
@@ -17,7 +18,7 @@ include $(TOP)/config/make.cfg
 
 #MM  ports-graphics-lunapaint-quick : ports-graphics-lunapaint-fetch
 
-REPOSITORIES := http://download.berlios.de/lunapaintami
+REPOSITORIES := sf://lunapaintami.berlios
 ARCHBASE     := lunapaint-0.5
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/Lunapaint
 DEFICON      := def_Lunapaint
@@ -47,9 +48,13 @@ FILES := \
 	src/core/effects \
 	src/core/color \
 	src/core/drawtools \
-	src/core/canvas \
+	src/core/canvascp \
 	src/core/tools
 FILES := $(addprefix $(PORTSDIR)/lunapaint/$(ARCHBASE)/,$(FILES))
+
+# canvas.c exist in both core and app. We must copy one because %build_prog "flattens" the directories
+$(PORTSDIR)/lunapaint/$(ARCHBASE)/src/core/canvascp.c : $(PORTSDIR)/lunapaint/$(ARCHBASE)/src/core/canvas.c
+	$(CP) $< $@
 
 %build_prog mmake=ports-graphics-lunapaint progname=Lunapaint \
     files=$(FILES) targetdir=$(TARGETDIR) \
