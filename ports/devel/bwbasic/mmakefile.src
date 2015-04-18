@@ -5,6 +5,7 @@ include $(TOP)/config/make.cfg
 #MM- ports-devel : ports-devel-bwbasic
 
 #MM- ports-devel-bwbasic : \
+#MM    includes linklibs \
 #MM    ports-devel-bwbasic-examples \
 #MM    ports-devel-bwbasic-files \
 #MM    ports-devel-bwbasic-fetch
@@ -38,7 +39,6 @@ FILES := \
 
 FILES := $(addprefix $(PORTSDIR)/bwbasic/$(ARCHBASE)/,$(FILES))
 
-USER_CFLAGS : -DHAVE_STRING=1 -DHAVE_STDLIB=1 -DHAVE_UNISTD=1 -DHAVE_RAISE=1
 
 %build_prog mmake=ports-devel-bwbasic progname=BWBasic \
     files=$(FILES) targetdir=$(TARGETDIR)
