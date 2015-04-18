@@ -7,6 +7,9 @@ include $(TOP)/config/make.cfg
 #MM  ports-emulation-vbam : \
 #MM  includes \
 #MM  linklibs \
+#MM  workbench-libs-z \
+#MM  workbench-libs-png \
+#MM  workbench-libs-gl \
 #MM  contrib-sdl \
 #MM  ports-emulation-vbam-fetch
 
