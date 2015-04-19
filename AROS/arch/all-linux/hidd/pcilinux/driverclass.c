@@ -166,9 +166,9 @@ IPTR PCILx__Hidd_PCIDriver__MapPCI(OOP_Class *cl, OOP_Object *o,
 VOID PCILx__Hidd_PCIDriver__UnmapPCI(OOP_Class *cl, OOP_Object *o,
     struct pHidd_PCIDriver_UnmapPCI *msg)
 {
+#if defined(__x86_64__) || defined(__i386__)
     IPTR offs = (IPTR)msg->CPUAddress;
     ULONG size = msg->Length;
-#if defined(__x86_64__) || defined(__i386__)
     syscall2(91, offs, size);
 #else
 #endif
