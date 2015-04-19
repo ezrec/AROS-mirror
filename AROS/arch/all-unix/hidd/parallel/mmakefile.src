@@ -5,6 +5,7 @@ FILES       := ParallelClass ParallelUnitClass
 
 USER_CFLAGS := -DAROS_ARCHITECTURE="\"$(AROS_TARGET_PLATFORM)\"" \
 	      -isystem $(GENINCDIR) $(KERNEL_INCLUDES)
+USER_LDFLAGS := -static
 
 %build_module mmake=workbench-hidd-unix-parallel \
   modname=parallel modtype=hidd \
