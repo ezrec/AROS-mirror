@@ -27,6 +27,7 @@
 #include <proto/utility.h>
 #include <aros/libcall.h>
 #include <aros/symbolsets.h>
+#include <aros/stdc/stdio.h>
 
 #define timeval sys_timeval
 
@@ -42,7 +43,6 @@
 #include <linux/if_ether.h>
 
 #include <poll.h>
-#include <stdio.h>
 
 #undef timeval
 
