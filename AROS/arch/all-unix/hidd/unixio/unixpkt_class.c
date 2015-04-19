@@ -108,7 +108,7 @@ struct uioPacket {
 
 *****************************************************************************************/
 
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
 #include <net/if.h>
 #include <linux/if_ether.h>
 #include <linux/if_packet.h>
@@ -182,7 +182,7 @@ IPTR UXIO__Hidd_UnixIO__OpenPacket(OOP_Class *cl, OOP_Object *o, struct pHidd_Un
 
     HostLib_Lock();
 
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
     retval = (IPTR)linux_OpenPacket(data->SysIFace, msg->Interface);
     AROS_HOST_BARRIER
 #else
@@ -324,7 +324,7 @@ IPTR UXIO__Hidd_UnixIO__RecvPacket(OOP_Class *cl, OOP_Object *o, struct pHidd_Un
         if (user)
             HostLib_Lock();
 
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
         do
         {
             retval = data->SysIFace->recvfrom(pd->fd, (void *)msg->Buffer, (size_t)msg->Length, MSG_DONTWAIT, NULL, NULL);
@@ -413,7 +413,7 @@ IPTR UXIO__Hidd_UnixIO__SendPacket(OOP_Class *cl, OOP_Object *o, struct pHidd_Un
         if (user)
             HostLib_Lock();
 
-#ifdef HOST_OS_linux
+#if defined(HOST_OS_linux) || defined(HOST_OS_arix)
         struct sockaddr_ll device = {};
 
         device.sll_ifindex = pd->ifindex;
