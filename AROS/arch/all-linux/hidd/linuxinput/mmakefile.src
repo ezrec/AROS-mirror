@@ -5,6 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 FILES := linuxinput_init startup linuxinput_inputtask mouseclass kbdclass
 
 USER_INCLUDES := -isystem $(GENINCDIR) $(KERNEL_INCLUDES)
+USER_LDFLAGS := -static
 
 %build_module mmake=kernel-hidd-linuxinput \
   modname=linuxinput modtype=hidd \
