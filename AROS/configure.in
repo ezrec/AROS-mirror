@@ -898,6 +898,15 @@ case "$target_os" in
                 pci_hidd_target="hidd-pci-linux"
                 kernel_tool_prefix=""
                 ;;
+            *powerpc*|*ppc*)
+                aros_target_cpu="ppc"
+                aros_object_format="elf32ppc"
+                aros_flavour="emulation"
+                aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Dppc -D__linux__"
+                aros_default_wbdepth=8
+                gcc_target_cpu="ppc"
+                pci_hidd_target="hidd-pci-linux"
+                ;;
             *)
                 AC_MSG_ERROR("Unknown CPU for Arix -- $target_cpu")
                 ;;
