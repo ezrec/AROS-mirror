@@ -46,6 +46,7 @@ debugging-manual: Manual para la depuración
 reference:        Referencia
 specifications:   Especificaciones
 ui-style-guide:   Guía de Estilo de la IU
+testing:          Testing
 documenting:      Documentación
 porting:          Porting
 translating:      Traducción

@@ -46,6 +46,7 @@ debugging-manual: Руководство по отладке
 reference:        Справочная информация
 specifications:   Определения
 ui-style-guide:   Руководство по интерфейсу (UI Style)
+testing:          Testing
 documenting:      Документирование
 porting:          Портирование
 translating:      Перевод

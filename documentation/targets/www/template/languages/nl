@@ -46,6 +46,7 @@ debugging-manual: Debugging Gids
 reference:        Referenties
 specifications:   Specificaties
 ui-style-guide:   UI Stijl Gids
+testing:          Testing
 documenting:      Documenteren
 porting:          Overzetten
 translating:      Vertalen

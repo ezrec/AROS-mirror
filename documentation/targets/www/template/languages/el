@@ -46,6 +46,7 @@ debugging-manual: Οδηγός Debugging
 reference:        Αναφορά
 specifications:   Προδιαγραφές
 ui-style-guide:   Οδηγός στυλ διασύνδεσης χρήστη
+testing:          Testing
 documenting:      Τεκμηριώνοντας
 porting:          Μεταφέροντας
 translating:      Μεταφράζοντας

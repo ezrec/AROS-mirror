@@ -47,6 +47,7 @@ reference:        Referenssit
 # FIXME: above
 specifications:   Spesifikaatioita
 ui-style-guide:   UI tyyliopas
+testing:          Testing
 documenting:      Dokumentointi
 porting:          Porting
 translating:      Tulkitseminen

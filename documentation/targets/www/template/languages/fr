@@ -46,6 +46,7 @@ debugging-manual: Manuel de Debogage
 reference:        Référence
 specifications:   Spécifications
 ui-style-guide:   UI Style Guide
+testing:          Testing
 documenting:      Documentation
 porting:          Porting
 translating:      Traduction

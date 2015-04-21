@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright (C) 2002-2012, The AROS Development Team. All rights reserved.
+# Copyright (C) 2002-2015, The AROS Development Team. All rights reserved.
 # $Id$
 
 import os
@@ -110,6 +110,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                 A( _N['reference'], href=makeURL( 'documentation/developers/autodocs/index', lang ) ),
                 A( _N['specifications'], href=makeURL( 'documentation/developers/specifications/', lang ) ),
                 A( _N['ui-style-guide'], href=makeURL( 'documentation/developers/ui', lang ) ),
+                A( _N['testing'], href=makeURL( 'documentation/developers/testing/', lang ) ),
                 A( _N['documenting'], href=makeURL( 'documentation/developers/documenting', lang ) ),
                 A( _N['porting'], href=makeURL( 'documentation/developers/porting', lang ) ),
                 A( _N['translating'], href=makeURL( 'documentation/developers/translating', lang ) ),

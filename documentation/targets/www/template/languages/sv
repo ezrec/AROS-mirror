@@ -46,6 +46,7 @@ debugging-manual: Manual för buggfixning
 reference:        Referens
 specifications:   Specifikationer
 ui-style-guide:   UI Style Guide    
+testing:          Testing
 documenting:      Dokumentering
 porting:          Porting
 translating:      Översättning

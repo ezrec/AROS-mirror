@@ -1,0 +1,51 @@
+========================
+Zune Test Specifications
+========================
+
+:Author:    Neil Cafferkey
+:Copyright: Copyright © 2015, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+
+The sections below describe test cases to confirm the basic functionality of 
+Zune classes using the main Zune test program. The standard location of this 
+program in binary distributions is 'Tests/Zune/test'.
+
+Pendisplay
+==========
+
+#. Go to the Color tab.
+#. Go to the Pens subtab.
+#. Check the left Pendisplay is the "Shine" colour (usually off-white).
+   [tests **MUIA_Pendisplay_Spec[I]**]
+#. Check the pen spec is "m0".
+   [tests **MUIA_Pendisplay_Spec[G]**]
+#. Check the right Pendisplay shows light blue.
+   [tests **MUIA_Pendisplay_RGBcolor[I]**]
+#. Go to the Colors subtab.
+#. Adjust the colour in the Coloradjust object.
+#. Go back to the Pens subtab.
+#. Check the left Pendisplay shows the new colour.
+   [tests **MUIA_Pendisplay_RGBcolor[S]**]
+#. Check the Poppen shows the new colour.
+   [tests **MUIA_Pendisplay_RGBcolor[G]**]
+#. Check the pen number has changed.
+   [tests **MUIA_Pendisplay_Pen[G]**]
+#. Select the 'Reference' checkbox.
+#. Change the pen spec to "m7".
+#. Check the left Pendisplay is the "Mark" colour (usually peach).
+   [tests **MUIA_Pendisplay_Spec[S]**]
+#. Check the right Pendisplay is the same colour as the left one.
+   [tests **MUIA_Pendisplay_Reference[S]**]
+#. Enter "253" in the 'Pen' box, and press return.
+#. Check the left Pendisplay area has changed colour (usually to green).
+   [tests **MUIM_Pendisplay_SetColormap**]
+#. Press the 'Shine' button.
+#. Check that the left Pendisplay shows the Shine colour.
+   [tests **MUIM_Pendisplay_SetMUIPen**]
+#. Press the 'Yellow' button.
+#. Check the left Pendisplay shows yellow.
+   [tests **MUIM_Pendisplay_SetRGB**]
+
+Untested attributes: **MUIA_Pendisplay_Reference[IG]**
+
