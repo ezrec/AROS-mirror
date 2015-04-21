@@ -924,7 +924,7 @@ typedef enum {
    
 struct MUI_PenSpec
 {
-    UBYTE ps_buf[32];
+    UBYTE buf[32];
 };
 
 
