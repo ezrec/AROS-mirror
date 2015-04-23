@@ -10,13 +10,12 @@ PACKAGE      := dosbox
 VERSION      := 0.74
 TARGETDIR    := $(AROS_CONTRIB)/Emu/DOSBox
 REPOSITORIES := sf://dosbox
+USER_CFLAGS  := -fexceptions -fpermissive
 
 %fetch_and_build mmake=ports-emulation-dosbox prefix=$(TARGETDIR) \
 	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
 	patch=yes package_repo=$(REPOSITORIES) nix=no nix_dir_layout=no \
-    extracflags="-fpermissive" \
-	extraoptions="--datarootdir='$$(PROGDIR)data'"
-
+	extracflags="$(USER_CFLAGS)" extraoptions="--datarootdir='$$(PROGDIR)data'"
 
 %copy_files_q mmake=ports-emulation-dosbox-cpy files=dosbox-0.74.conf src=. dst=$(TARGETDIR)/.dosbox
 
