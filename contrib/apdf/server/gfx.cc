@@ -932,7 +932,12 @@ void AGfxState::stroke(int x, int y, APath* path, Color c, double lw, CapStyle c
 	}
 	else if (lw)
 	{
+#ifdef __AROS__
+		// FIXME AROS
+		APath * path1;
+#else
 		std::auto_ptr<APath> path1;
+#endif
 		if (ds.is_solid())
 		{
 			path1 = path->thicken(lw, cap, join, ml);

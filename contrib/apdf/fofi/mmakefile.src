@@ -1,0 +1,21 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM contrib-apdf-fofi : includes
+
+FILES := \
+	FoFiBase \
+	FoFiEncodings \
+	FoFiTrueType \
+	FoFiType1 \
+	FoFiType1C
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/Apdf/libs
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../aros \
+    -I$(SRCDIR)/$(CURDIR)/../goo
+
+%build_linklib mmake=contrib-apdf-fofi libname=fofi \
+  cxxfiles=$(FILES) libdir=$(TARGETDIR)
+
+%common

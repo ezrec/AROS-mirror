@@ -12,7 +12,7 @@
 
 #include <aconf.h>
 
-#if defined(__MORPHOS__)
+#if defined(__MORPHOS__) || defined(__AROS__)
 #  include <stdio.h>
 #  include "../server/mystdio.h"
 #  include <string.h>
@@ -62,7 +62,7 @@
 
 GString *getHomeDir() {
   //---------- Amiga ----------
-#ifdef __AMIGA__
+#if defined(__AMIGA__) || defined(__AROS__)
     return new GString("PROGDIR:");
 #elif VMS
   //---------- VMS ----------
@@ -120,7 +120,7 @@ GString *getCurrentDir() {
   if (strcpy(buf, "@"))
 #elif defined(MACOS)
   if (strcpy(buf, ":"))
-#elif defined(__AMIGA__)
+#elif defined(__AMIGA__) || defined(__AROS__)
   if (GetCurrentDirName(buf, sizeof(buf)))
 #else
   if (getcwd(buf, sizeof(buf)))
@@ -185,7 +185,7 @@ GString *appendToPath(GString *path, char *fileName) {
   path->append(buf);
   return path;
 
-#elif defined(__AMIGA__)
+#elif defined(__AMIGA__) || defined(__AROS__)
   // --------- Amiga ----------
   char buf[256];
   strncpy(buf, path->getCString(), sizeof(buf)-1);
@@ -328,7 +328,7 @@ GString *grabPath(char *fileName) {
     return new GString(fileName, p + 1 - fileName);
   return new GString();
 
-#elif defined(__AMIGA__)
+#elif defined(__AMIGA__) || defined(__AROS__)
   //---------- Amiga ------------
   return new GString(fileName, PathPart(fileName) - fileName);
 
@@ -368,7 +368,7 @@ GBool isAbsolutePath(char *path) {
   //---------- OS/2+EMX and Win32 ----------
   return path[0] == '/' || path[0] == '\\' || path[1] == ':';
 
-#elif defined(__AMIGA__)
+#elif defined(__AMIGA__) || defined(__AROS__)
   //--------- Amiga -----------
   return strchr(path, ':')!=NULL;
 
@@ -413,7 +413,7 @@ GString *makePathAbsolute(GString *path) {
   path->append(buf);
   return path;
 
-#elif defined(__AMIGA__)
+#elif defined(__AMIGA__) || defined(__AROS__)
   //---------- Amiga -----------
   char buf[256];
   GetCurrentDirName(buf, sizeof(buf));
@@ -510,7 +510,7 @@ GBool openTempFile(GString **name, FILE **f, char *mode, char *ext) {
     return gFalse;
   }
   return gTrue;
-#elif defined(VMS) || defined(__EMX__) || defined(WIN32) || defined(ACORN) || defined(MACOS) || defined(__AMIGA__)
+#elif defined(VMS) || defined(__EMX__) || defined(WIN32) || defined(ACORN) || defined(MACOS) || defined(__AMIGA__) || defined(__AROS__)
   //---------- non-Unix ----------
   char *s;
 
@@ -586,7 +586,7 @@ GBool executeCommand(char *cmd) {
 }
 
 char *getLine(char *buf, int size, myFILE *f) {
-#ifdef AMIGA
+#if defined(AMIGA) || defined(__AROS__)
   return (char *)myfgets(buf, size, f);
 #else
   int c, i;

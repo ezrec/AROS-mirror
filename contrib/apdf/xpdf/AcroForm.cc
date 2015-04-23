@@ -13,6 +13,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 #include "gmem.h"
 #include "GString.h"
 #include "Error.h"
