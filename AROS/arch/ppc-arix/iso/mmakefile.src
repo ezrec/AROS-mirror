@@ -1,0 +1,53 @@
+# $Id$
+include $(TOP)/config/make.cfg
+
+.PHONY: $(DISTDIR)/aros$(AROS_TARGET_SUFFIX)-arix-ppc.iso
+
+TARGET_ISO := $(DISTDIR)/aros$(AROS_TARGET_SUFFIX)-arix-ppc.iso
+
+#MM bootiso-arix-ppc :	AROS-complete		\
+#MM			bootloader-$(AROS_TARGET_BOOTLOADER)-arix-ppc \
+#MM			bootiso-arix-ppc-linux-kernel
+
+bootiso-arix-ppc: $(AROSDIR)/.backdrop $(TARGET_ISO)
+
+$(AROSDIR)/.backdrop: $(SRCDIR)/workbench/.backdrop
+		@$(CP) $< $@
+
+#MM
+bootiso-arix-ppc-quick: $(TARGET_ISO)
+
+.PHONY: bootiso-arix-ppc-quick
+
+#ifeq ($(AROS_TARGET_BOOTLOADER),grub)
+#BOOTLOADER_ELTORITO_REL := $(AROS_DIR_ARCH)/grub/iso9660_stage1_5
+#endif
+
+BOOT_FILES := AROSBootstrap kernel # initrd.img-no-kmods vmlinuz-3.2.6-lfs-7.1
+ISO_DEPS := $(addprefix $(AROSARCHDIR)/, $(BOOT_FILES))
+
+$(warning BOOTLOADER_ELTORITO_REL = $(BOOTLOADER_ELTORITO_REL))
+$(warning LANG = $(LANG))
+
+#BOOTISO := -b $(BOOTLOADER_ELTORITO_REL) \
+#           -c boot/boot.catalog \
+#           -boot-load-size 4 \
+#           -boot-info-table
+
+
+$(TARGET_ISO): $(ISO_DEPS)
+	%mkdirs_q $(AROSDIR)/S
+	@$(CP) $(SRCDIR)/workbench/s/Startup-Sequence $(AROSDIR)/S/Startup-Sequence
+	@$(MKDIR) -p "$(DISTDIR)"
+	@mkisofs -f \
+		-o $@ \
+		$(BOOTISO) \
+		-allow-leading-dots \
+		-iso-level 4 \
+                -V "AROS Live CD" \
+                -publisher "The AROS Dev Team" \
+		-p "The AROS Dev Team (www.aros.org)" \
+		-sysid "AROS-$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)" \
+                -l -J -r \
+		$(AROSDIR)
+
