@@ -1,0 +1,13 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-text-vim : ports-text-vim-icons
+
+TARGETDIR := $(AROS_CONTRIB)/Utilities/Text
+ICONS     := Vim
+
+%build_icons mmake=ports-text-vim-icons \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+%common

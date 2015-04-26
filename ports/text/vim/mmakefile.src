@@ -1,0 +1,48 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#DISABLED #MM- ports-text : ports-text-vim
+
+#MM ports-text-vim : includes linklibs \
+#MM    ports-text-vim-runtime \
+#MM    ports-text-vim-fetch
+
+#MM  ports-text-vim-runtime : ports-text-vim-fetch
+#MM  ports-text-vim-quick : ports-text-vim-fetch
+
+REPOSITORIES := ftp://ftp.vim.org/pub/vim/unix
+ARCHBASE     := vim-7.2
+TARGETDIR    := $(AROS_CONTRIB)/Utilities/Text/Vim
+USER_CFLAGS  := -pipe -O2 --no-strict-aliasing -Wall -I$(PORTSDIR)/vim/vim72/src/proto \
+             -DUSE_TMPNAM -DFEAT_MBYTE -DFEAT_GUI -DFEAT_ASL -DFEAT_BROWSE \
+             -DFEAT_MOUSE -DHAVE_STDARG_H -DFEAT_HUGE \
+	     -DDFLT_RUNTIMEPATH=\"PROGDIR:runtime\" \
+	     -UAMIGA -U_AMIGA -DAROS
+
+FILES := \
+    buffer charset diff digraph edit eval ex_cmds ex_cmds2 \
+    ex_docmd ex_eval ex_getln fileio fold getchar hardcopy \
+    hashtab main mark memfile memline menu message misc1 \
+    misc2 move mbyte normal ops option os_aros popupmnu \
+    quickfix regexp screen search spell syntax tag term \
+    ui undo window version gui_aros gui
+
+FILES := $(addprefix $(PORTSDIR)/vim/vim72/src/,$(FILES))
+
+%build_prog mmake=ports-text-vim \
+    progname=Vim targetdir=$(TARGETDIR) \
+    files=$(FILES) uselibs=""
+
+############################################################################################
+
+%fetch mmake=ports-text-vim-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/vim \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2" \
+    patches_specs=vim72-aros.diff:vim72:-p1
+
+############################################################################################
+
+%copy_dir_recursive mmake=ports-text-vim-runtime src=$(PORTSDIR)/vim/vim72/runtime \
+    dst=$(TARGETDIR)/runtime
+
+%common
