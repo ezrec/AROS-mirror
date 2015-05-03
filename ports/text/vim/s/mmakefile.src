@@ -1,0 +1,17 @@
+#   $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-text-vim 	: ports-text-vim-startup
+#MM- ports-text-vim-xxd : ports-text-vim-startup
+
+#MM- ports-text-vim-startup : workbench-prefs-envarc \
+#MM  ports-text-vim-startupfiles \
+#MM  ports-text-vim-envpackage
+
+#MM
+ports-text-vim-envpackage :
+	$(ECHO) "Extras:Utilities/Text/Vim" >$(AROS_PACKAGES)/Vim
+
+FILES := Package-Startup
+%copy_files_q mmake=ports-text-vim-startupfiles dst=$(AROS_CONTRIB)/Utilities/Text/Vim/S

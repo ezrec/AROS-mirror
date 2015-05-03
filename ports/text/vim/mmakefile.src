@@ -6,15 +6,19 @@ include $(TOP)/config/make.cfg
 
 #MM ports-text-vim : includes linklibs \
 #MM    ports-text-vim-runtime \
+#MM    ports-text-vim-xxd \
 #MM    ports-text-vim-fetch
 
+#MM  ports-text-vim-xxd : includes linklibs ports-text-vim-fetch
 #MM  ports-text-vim-runtime : ports-text-vim-fetch
 #MM  ports-text-vim-quick : ports-text-vim-fetch
+
+#MM  ports-text-vim-clean : ports-text-vim-xxd-clean
 
 REPOSITORIES := ftp://ftp.vim.org/pub/vim/unix
 ARCHBASE     := vim-7.2
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Text/Vim
-USER_CFLAGS  := -pipe -O2 --no-strict-aliasing -Wall -I$(PORTSDIR)/vim/vim72/src/proto \
+USER_CFLAGS  := --no-strict-aliasing -I$(PORTSDIR)/vim/vim72/src/proto \
              -DUSE_TMPNAM -DFEAT_MBYTE -DFEAT_GUI -DFEAT_ASL -DFEAT_BROWSE \
              -DFEAT_MOUSE -DHAVE_STDARG_H -DFEAT_HUGE \
 	     -DDFLT_RUNTIMEPATH=\"PROGDIR:runtime\" \
@@ -32,6 +36,16 @@ FILES := $(addprefix $(PORTSDIR)/vim/vim72/src/,$(FILES))
 
 %build_prog mmake=ports-text-vim \
     progname=Vim targetdir=$(TARGETDIR) \
+    files=$(FILES) uselibs=""
+
+############################################################################################
+
+USER_CFLAGS := -UAMIGA -U_AMIGA -DAROS
+
+FILES := $(PORTSDIR)/vim/vim72/src/xxd/xxd
+
+%build_prog mmake=ports-text-vim-xxd \
+    progname=xxd targetdir=$(TARGETDIR) \
     files=$(FILES) uselibs=""
 
 ############################################################################################
