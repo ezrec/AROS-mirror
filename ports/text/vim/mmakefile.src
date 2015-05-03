@@ -2,7 +2,7 @@
 
 include $(TOP)/config/make.cfg
 
-#DISABLED #MM- ports-text : ports-text-vim
+#MM- ports-text : ports-text-vim
 
 #MM ports-text-vim : includes linklibs \
 #MM    ports-text-vim-runtime \

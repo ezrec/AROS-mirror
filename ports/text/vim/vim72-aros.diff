@@ -1,6 +1,6 @@
 diff -Naur vim72-orig/src/edit.c vim72/src/edit.c
---- vim72-orig/src/edit.c	2015-04-26 10:11:05.166298471 +0200
-+++ vim72/src/edit.c	2015-04-26 10:12:03.584828227 +0200
+--- vim72-orig/src/edit.c	2015-05-03 10:52:53.356491550 +0200
++++ vim72/src/edit.c	2015-05-02 10:19:49.494388233 +0200
 @@ -675,7 +675,7 @@
  	}
  
@@ -47,8 +47,8 @@ diff -Naur vim72-orig/src/edit.c vim72/src/edit.c
      return OK;
  }
 diff -Naur vim72-orig/src/eval.c vim72/src/eval.c
---- vim72-orig/src/eval.c	2015-04-26 10:11:05.165298479 +0200
-+++ vim72/src/eval.c	2015-04-26 10:12:03.584828227 +0200
+--- vim72-orig/src/eval.c	2015-05-03 10:52:53.355491529 +0200
++++ vim72/src/eval.c	2015-05-02 10:19:49.496388233 +0200
 @@ -18,7 +18,7 @@
  
  #if defined(FEAT_EVAL) || defined(PROTO)
@@ -111,8 +111,8 @@ diff -Naur vim72-orig/src/eval.c vim72/src/eval.c
  	    return &pos;
  	}
 diff -Naur vim72-orig/src/ex_cmds2.c vim72/src/ex_cmds2.c
---- vim72-orig/src/ex_cmds2.c	2015-04-26 10:11:05.169298447 +0200
-+++ vim72/src/ex_cmds2.c	2015-04-26 10:12:03.584828227 +0200
+--- vim72-orig/src/ex_cmds2.c	2015-05-03 10:52:53.366491756 +0200
++++ vim72/src/ex_cmds2.c	2015-05-02 10:19:49.496388233 +0200
 @@ -2595,7 +2595,7 @@
      char_u	**files;
      int		i;
@@ -132,8 +132,8 @@ diff -Naur vim72-orig/src/ex_cmds2.c vim72/src/ex_cmds2.c
  #endif
  
 diff -Naur vim72-orig/src/ex_cmds.c vim72/src/ex_cmds.c
---- vim72-orig/src/ex_cmds.c	2015-04-26 10:11:05.164298487 +0200
-+++ vim72/src/ex_cmds.c	2015-04-26 10:12:03.584828227 +0200
+--- vim72-orig/src/ex_cmds.c	2015-05-03 10:52:53.354491508 +0200
++++ vim72/src/ex_cmds.c	2015-05-02 10:19:49.497388232 +0200
 @@ -1468,7 +1468,7 @@
  	    save_nwr = no_wait_return;
  	    if (swapping_screen())
@@ -178,8 +178,8 @@ diff -Naur vim72-orig/src/ex_cmds.c vim72/src/ex_cmds.c
  			    update_screen(SOME_VALID);
  			    highlight_match = FALSE;
 diff -Naur vim72-orig/src/ex_docmd.c vim72/src/ex_docmd.c
---- vim72-orig/src/ex_docmd.c	2015-04-26 10:11:05.170298439 +0200
-+++ vim72/src/ex_docmd.c	2015-04-26 10:12:03.584828227 +0200
+--- vim72-orig/src/ex_docmd.c	2015-05-03 10:52:53.367491777 +0200
++++ vim72/src/ex_docmd.c	2015-05-02 10:19:49.497388232 +0200
 @@ -8527,7 +8527,7 @@
  
      RedrawingDisabled = 0;
@@ -208,8 +208,8 @@ diff -Naur vim72-orig/src/ex_docmd.c vim72/src/ex_docmd.c
  		if (*p == ':')
  		    *s++ = '-';
 diff -Naur vim72-orig/src/ex_getln.c vim72/src/ex_getln.c
---- vim72-orig/src/ex_getln.c	2015-04-26 10:11:05.164298487 +0200
-+++ vim72/src/ex_getln.c	2015-04-26 10:12:03.584828227 +0200
+--- vim72-orig/src/ex_getln.c	2015-05-03 10:52:53.353491488 +0200
++++ vim72/src/ex_getln.c	2015-05-02 10:19:49.498388232 +0200
 @@ -1769,7 +1769,7 @@
  # endif
  	    curwin->w_botline = old_botline;
@@ -220,8 +220,8 @@ diff -Naur vim72-orig/src/ex_getln.c vim72/src/ex_getln.c
  	    if (i != 0)
  	    {
 diff -Naur vim72-orig/src/feature.h vim72/src/feature.h
---- vim72-orig/src/feature.h	2015-04-26 10:11:05.169298447 +0200
-+++ vim72/src/feature.h	2015-04-26 10:12:03.585828220 +0200
+--- vim72-orig/src/feature.h	2015-05-03 10:52:53.367491777 +0200
++++ vim72/src/feature.h	2015-05-02 10:19:49.498388232 +0200
 @@ -60,7 +60,8 @@
   */
  #if !defined(FEAT_TINY) && !defined(FEAT_SMALL) && !defined(FEAT_NORMAL) \
@@ -251,8 +251,8 @@ diff -Naur vim72-orig/src/feature.h vim72/src/feature.h
  #  define FEAT_MOUSE_XTERM
  # endif
 diff -Naur vim72-orig/src/fileio.c vim72/src/fileio.c
---- vim72-orig/src/fileio.c	2015-04-26 10:11:05.167298463 +0200
-+++ vim72/src/fileio.c	2015-04-26 10:12:03.585828220 +0200
+--- vim72-orig/src/fileio.c	2015-05-03 10:52:53.357491570 +0200
++++ vim72/src/fileio.c	2015-05-02 10:19:49.499388232 +0200
 @@ -6099,7 +6099,7 @@
      int		n;
      char	*errmsg = NULL;
@@ -293,8 +293,8 @@ diff -Naur vim72-orig/src/fileio.c vim72/src/fileio.c
  	keep_filetype = FALSE;
  #endif
 diff -Naur vim72-orig/src/getchar.c vim72/src/getchar.c
---- vim72-orig/src/getchar.c	2015-04-26 10:11:05.169298447 +0200
-+++ vim72/src/getchar.c	2015-04-26 10:12:03.585828220 +0200
+--- vim72-orig/src/getchar.c	2015-05-03 10:52:53.366491756 +0200
++++ vim72/src/getchar.c	2015-05-02 10:19:49.499388232 +0200
 @@ -2275,7 +2275,7 @@
  			    keylen = 0;
  			if (keylen == 0)	/* no matching terminal code */
@@ -305,8 +305,8 @@ diff -Naur vim72-orig/src/getchar.c vim72/src/getchar.c
  					       typebuf.tb_off] & 0xff) == CSI)
  			    {
 diff -Naur vim72-orig/src/globals.h vim72/src/globals.h
---- vim72-orig/src/globals.h	2015-04-26 10:11:05.170298439 +0200
-+++ vim72/src/globals.h	2015-04-26 10:12:03.585828220 +0200
+--- vim72-orig/src/globals.h	2015-05-03 10:52:53.368491797 +0200
++++ vim72/src/globals.h	2015-05-02 10:19:49.499388232 +0200
 @@ -1481,7 +1481,7 @@
  EXTERN char_u e_sandbox[]	INIT(= N_("E48: Not allowed in sandbox"));
  #endif
@@ -318,8 +318,8 @@ diff -Naur vim72-orig/src/globals.h vim72/src/globals.h
  #endif
 diff -Naur vim72-orig/src/gui_aros.c vim72/src/gui_aros.c
 --- vim72-orig/src/gui_aros.c	1970-01-01 01:00:00.000000000 +0100
-+++ vim72/src/gui_aros.c	2015-04-26 23:58:38.914346282 +0200
-@@ -0,0 +1,2533 @@
++++ vim72/src/gui_aros.c	2015-05-03 10:39:18.129602037 +0200
+@@ -0,0 +1,2589 @@
 +/* vi:set ts=8 sts=4 sw=4:
 + *
 + * VIM - Vi IMproved by Bram Moolenaar
@@ -359,7 +359,7 @@ diff -Naur vim72-orig/src/gui_aros.c vim72/src/gui_aros.c
 +#include "vim.h"
 +#include "gui_aros.h"
 +
-+#define DEBUG 10
++//#define DEBUG 10
 +#include <aros/debug.h>
 +#include <devices/rawkeycodes.h>
 +
@@ -1759,7 +1759,7 @@ diff -Naur vim72-orig/src/gui_aros.c vim72/src/gui_aros.c
 +                                 SA_Overscan, OSCAN_TEXT,
 +                                 SA_LikeWorkbench , TRUE,
 +                                 SA_AutoScroll, TRUE,
-+                                 SA_Title, (ULONG) VIM_VERSION_LONG,
++                                 SA_Title, (IPTR) VIM_VERSION_LONG,
 +                                 TAG_DONE
 +                               );
 +
@@ -1804,6 +1804,7 @@ diff -Naur vim72-orig/src/gui_aros.c vim72/src/gui_aros.c
 +        gui_mch_clear_all();
 +    }
 +    gui.menu = NULL;
++    gui.visualinfo = GetVisualInfo(gui.screen, NULL);
 +
 +    menuPtr = (struct NewMenu *) malloc(GUI_MCH_NBR_MENUS * sizeof(struct NewMenu));
 +    memset(menuPtr, 0, GUI_MCH_NBR_MENUS * sizeof(struct NewMenu));
@@ -1938,6 +1939,8 @@ diff -Naur vim72-orig/src/gui_aros.c vim72/src/gui_aros.c
 +
 +        if(menuPtr) free(menuPtr);
 +			cur_menu_nbr = 0;
++
++        if (gui.visualinfo) FreeVisualInfo(gui.visualinfo);
 +
 +        gui.window = NULL;
 +        gui.in_use = FALSE;
@@ -2630,7 +2633,7 @@ diff -Naur vim72-orig/src/gui_aros.c vim72/src/gui_aros.c
 +   ---------------------------------------------------------- */
 +int search_insert_idx(vimmenu_T *parent, char *name)
 +{
-+    D(bug("search_insert_idx parent %s name %s\n", parent->name, name));
++    //D(bug("search_insert_idx parent %s name %s\n", parent->name, name));
 +
 +    int i;
 +    int j;
@@ -2646,7 +2649,7 @@ diff -Naur vim72-orig/src/gui_aros.c vim72/src/gui_aros.c
 +        {
 +            parent_exist = TRUE;
 +            i++;
-+            D(bug("(FOUND: %s/%s %d %d)\n", parent->name, name, i, cur_menu_nbr ));
++            //D(bug("(FOUND: %s/%s %d %d)\n", parent->name, name, i, cur_menu_nbr ));
 +            break;
 +        }
 +    }
@@ -2667,7 +2670,7 @@ diff -Naur vim72-orig/src/gui_aros.c vim72/src/gui_aros.c
 +                    if(oldmenu->parent) continue;
 +                }
 +                    
-+                D(bug(" (INSERT: %s/%s %d %d)\n", parent->name, name, i, cur_menu_nbr));
++                //D(bug(" (INSERT: %s/%s %d %d)\n", parent->name, name, i, cur_menu_nbr));
 +                /* Prepare slot for insertion */
 +                for(j = cur_menu_nbr - 1; j >= i; j--)
 +                {
@@ -2741,7 +2744,6 @@ diff -Naur vim72-orig/src/gui_aros.c vim72/src/gui_aros.c
 +{
 +    D(bug("gui_mch_add_menu name %s\n", menu->name));
 +    struct NewMenu *menubar = NULL;
-+    int entry_type = NM_ITEM;
 +    int entry_idx;
 +
 +    if (menu_is_popup(menu->name))
@@ -2757,12 +2759,12 @@ diff -Naur vim72-orig/src/gui_aros.c vim72/src/gui_aros.c
 +
 +        if (menu_is_separator(menu->name))
 +        {
-+            menubar->nm_Type = entry_type;
++            menubar->nm_Type = NM_ITEM;
 +            menubar->nm_Label = NM_BARLABEL;
 +        }
 +        else
 +        {
-+            menubar->nm_Type = entry_type;
++            menubar->nm_Type = NM_ITEM;
 +            menubar->nm_Label = menu->dname;
 +        }
 +    }
@@ -2784,48 +2786,102 @@ diff -Naur vim72-orig/src/gui_aros.c vim72/src/gui_aros.c
 +
 +void gui_mch_enable_menu(int flag)
 +{
-+
++    D(bug("gui_mch_enable_menu flag %d\n", flag));
 +}
 +
 +void gui_mch_set_menu_pos(int x, int y, int w, int h)
 +{
-+
++    D(bug("gui_mch_set_menu_pos\n"));
 +}
 +
 +void gui_mch_destroy_menu(vimmenu_T *menu)
 +{
 +    D(bug("gui_mch_destroy_menu name %s\n", menu->name));
-+    ClearMenuStrip(gui.window);
-+    if(gui.menu) FreeMenus(gui.menu);
-+    gui.menu = NULL;
++
++    int i, j;
++
++    if (menu_is_popup(menu->name))
++    {
++        return;
++    }
++
++    if (gui.menu)
++    {
++        ClearMenuStrip(gui.window);
++        FreeMenus(gui.menu);
++        gui.menu = NULL;
++    }
++
++    for(i = 0; i < cur_menu_nbr; i++)
++    {
++        if (menuPtr[i].nm_UserData == menu)
++        {
++            D(bug("(FOUND: %s %d %d)\n", menu->name, i, cur_menu_nbr));
++            if(menuPtr[i].nm_Label != NM_BARLABEL)
++            {
++                if (menuPtr[i].nm_Label) free((void *) menuPtr[i].nm_Label);
++            }
++            if (menuPtr[i].nm_CommKey)
++            {
++                free((void *) menuPtr[i].nm_CommKey);
++            }
++
++            for (j = i; j < cur_menu_nbr - 1; j++)
++            {
++                memcpy(&menuPtr[j], &menuPtr[j + 1], sizeof(struct NewMenu));
++            }
++
++            // FIXME: what about childs?
++
++            cur_menu_nbr--;
++
++            if (cur_menu_nbr >= 0)
++            {
++                memset(&menuPtr[cur_menu_nbr], 0, sizeof(struct NewMenu));
++            }
++
++            break;
++        }
++    }
 +}
 +
 +void gui_mch_menu_grey(vimmenu_T *menu, int grey)
 +{
-+
++    //D(bug("gui_mch_menu_grey name %s grey %d\n", menu->name, grey));
 +}
 +
 +void gui_mch_menu_hidden(vimmenu_T *menu, int hidden)
 +{
 +    D(bug("gui_mch_menu_hidden\n"));
-+    ClearMenuStrip(gui.window);
-+    if(gui.menu) FreeMenus(gui.menu);
-+    gui.menu = NULL;
++    //ClearMenuStrip(gui.window);
++    //if(gui.menu) FreeMenus(gui.menu);
++    //gui.menu = NULL;
 +}
 +
 +void gui_mch_draw_menubar(void)
 +{
 +    D(bug("gui_mch_draw_menubar\n"));
-+    APTR vi;
++
++    if (gui.menu)
++    {
++        D(bug("Menu is already set! Clearing it.\n"));
++        ClearMenuStrip(gui.window);
++        FreeMenus(gui.menu);
++        gui.menu = NULL;
++    }
 +
 +    gui.menu = CreateMenus(menuPtr, TAG_END);
-+    if(gui.menu)
++    if (gui.menu)
 +    {
-+        vi = GetVisualInfo(gui.screen, NULL);
-+        LayoutMenus(gui.menu, vi,
-+                              GTMN_NewLookMenus, TRUE,
-+                              TAG_END);
-+        SetMenuStrip(gui.window, gui.menu);
++        if (gui.visualinfo)
++        {
++            if (LayoutMenus(gui.menu, gui.visualinfo,
++                                      GTMN_NewLookMenus, TRUE,
++                                      TAG_END))
++            {
++                SetMenuStrip(gui.window, gui.menu);
++            }
++        }
 +    }
 +}
 +
@@ -2855,7 +2911,7 @@ diff -Naur vim72-orig/src/gui_aros.c vim72/src/gui_aros.c
 +}
 diff -Naur vim72-orig/src/gui_aros.h vim72/src/gui_aros.h
 --- vim72-orig/src/gui_aros.h	1970-01-01 01:00:00.000000000 +0100
-+++ vim72/src/gui_aros.h	2015-04-26 10:12:03.585828220 +0200
++++ vim72/src/gui_aros.h	2015-05-02 10:19:49.500388232 +0200
 @@ -0,0 +1,35 @@
 +/* vi:set ts=8 sts=4 sw=4:
 + *
@@ -2893,8 +2949,8 @@ diff -Naur vim72-orig/src/gui_aros.h vim72/src/gui_aros.h
 +
 +#endif
 diff -Naur vim72-orig/src/gui.c vim72/src/gui.c
---- vim72-orig/src/gui.c	2015-04-26 10:11:05.169298447 +0200
-+++ vim72/src/gui.c	2015-04-26 10:12:03.585828220 +0200
+--- vim72-orig/src/gui.c	2015-05-03 10:52:53.367491777 +0200
++++ vim72/src/gui.c	2015-05-02 10:19:49.501388232 +0200
 @@ -139,7 +139,7 @@
  		/* The read returns when the child closes the pipe (or when
  		 * the child dies for some reason). */
@@ -4312,8 +4368,8 @@ diff -Naur vim72-orig/src/gui.c vim72/src/gui.c
  gui_handle_drop(x, y, modifiers, fnames, count)
      int		x;
 diff -Naur vim72-orig/src/gui.h vim72/src/gui.h
---- vim72-orig/src/gui.h	2015-04-26 10:11:05.172298423 +0200
-+++ vim72/src/gui.h	2015-04-26 10:12:03.585828220 +0200
+--- vim72-orig/src/gui.h	2015-05-03 10:52:53.369491818 +0200
++++ vim72/src/gui.h	2015-05-02 15:33:11.961709444 +0200
 @@ -134,7 +134,7 @@
  #define SBAR_HORIZ	    1
  
@@ -4351,7 +4407,7 @@ diff -Naur vim72-orig/src/gui.h vim72/src/gui.h
      int		row;		    /* Current cursor row in GUI display */
      int		cursor_col;	    /* Physical cursor column in GUI display */
      int		cursor_row;	    /* Physical cursor row in GUI display */
-@@ -464,6 +478,15 @@
+@@ -464,6 +478,16 @@
      int		visibility;	    /* Is window partially/fully obscured? */
  #endif
  
@@ -4362,14 +4418,15 @@ diff -Naur vim72-orig/src/gui.h vim72/src/gui.h
 +    struct TextFont *textfont;      /* a pointer to the font structure */
 +    scrollbar_T *sel_bargad;
 +    GuiFont currFont;       /* Current font */
++    APTR visualinfo;
 +#endif
 +
  #ifdef RISCOS
      int		window_handle;
      char_u	*window_title;
 diff -Naur vim72-orig/src/main.c vim72/src/main.c
---- vim72-orig/src/main.c	2015-04-26 10:11:05.164298487 +0200
-+++ vim72/src/main.c	2015-04-26 10:12:03.586828212 +0200
+--- vim72-orig/src/main.c	2015-05-03 10:52:53.354491508 +0200
++++ vim72/src/main.c	2015-05-02 10:19:49.502388231 +0200
 @@ -290,7 +290,6 @@
      clip_init(FALSE);		/* Initialise clipboard stuff */
      TIME_MSG("clipboard setup");
@@ -4856,7 +4913,7 @@ diff -Naur vim72-orig/src/main.c vim72/src/main.c
  #endif
 diff -Naur vim72-orig/src/Make_aros.mak vim72/src/Make_aros.mak
 --- vim72-orig/src/Make_aros.mak	1970-01-01 01:00:00.000000000 +0100
-+++ vim72/src/Make_aros.mak	2015-04-26 10:12:03.586828212 +0200
++++ vim72/src/Make_aros.mak	2015-05-02 10:19:49.502388231 +0200
 @@ -0,0 +1,31 @@
 +# Makefile for AROS
 +
@@ -4890,8 +4947,8 @@ diff -Naur vim72-orig/src/Make_aros.mak vim72/src/Make_aros.mak
 +clean:
 +	$(RM) -fv $(OBJS) $(PRG)
 diff -Naur vim72-orig/src/mbyte.c vim72/src/mbyte.c
---- vim72-orig/src/mbyte.c	2015-04-26 10:11:05.165298479 +0200
-+++ vim72/src/mbyte.c	2015-04-26 10:12:03.586828212 +0200
+--- vim72-orig/src/mbyte.c	2015-05-03 10:52:53.355491529 +0200
++++ vim72/src/mbyte.c	2015-05-02 10:19:49.502388231 +0200
 @@ -45,19 +45,19 @@
   * text manipulation, buffers, etc.  Conversion has to be done when characters
   * in another encoding are received or send:
@@ -4980,8 +5037,8 @@ diff -Naur vim72-orig/src/mbyte.c vim72/src/mbyte.c
  /*
   * Do conversion on typed input characters in-place.
 diff -Naur vim72-orig/src/memfile.c vim72/src/memfile.c
---- vim72-orig/src/memfile.c	2015-04-26 10:11:05.164298487 +0200
-+++ vim72/src/memfile.c	2015-04-26 10:12:03.586828212 +0200
+--- vim72-orig/src/memfile.c	2015-05-03 10:52:53.354491508 +0200
++++ vim72/src/memfile.c	2015-05-02 10:19:49.503388231 +0200
 @@ -56,19 +56,6 @@
  # endif
  #endif
@@ -5879,8 +5936,8 @@ diff -Naur vim72-orig/src/memfile.c vim72/src/memfile.c
      }
  }
 diff -Naur vim72-orig/src/memline.c vim72/src/memline.c
---- vim72-orig/src/memline.c	2015-04-26 10:11:05.167298463 +0200
-+++ vim72/src/memline.c	2015-04-26 10:12:03.586828212 +0200
+--- vim72-orig/src/memline.c	2015-05-03 10:52:53.357491570 +0200
++++ vim72/src/memline.c	2015-05-02 10:19:49.503388231 +0200
 @@ -277,9 +277,9 @@
       * When 'updatecount' is non-zero swap file may be opened later.
       */
@@ -5921,8 +5978,8 @@ diff -Naur vim72-orig/src/memline.c vim72/src/memline.c
  	    /*
  	     * on the Amiga mch_getperm() will return -1 when the file exists
 diff -Naur vim72-orig/src/menu.c vim72/src/menu.c
---- vim72-orig/src/menu.c	2015-04-26 10:11:05.165298479 +0200
-+++ vim72/src/menu.c	2015-04-26 10:12:03.586828212 +0200
+--- vim72-orig/src/menu.c	2015-05-03 10:52:53.355491529 +0200
++++ vim72/src/menu.c	2015-05-02 10:19:49.503388231 +0200
 @@ -16,7 +16,7 @@
  
  #if defined(FEAT_MENU) || defined(PROTO)
@@ -5950,8 +6007,8 @@ diff -Naur vim72-orig/src/menu.c vim72/src/menu.c
  	menu = menu->next;
  	++idx;
 diff -Naur vim72-orig/src/misc1.c vim72/src/misc1.c
---- vim72-orig/src/misc1.c	2015-04-26 10:11:05.170298439 +0200
-+++ vim72/src/misc1.c	2015-04-26 10:12:03.586828212 +0200
+--- vim72-orig/src/misc1.c	2015-05-03 10:52:53.367491777 +0200
++++ vim72/src/misc1.c	2015-05-02 10:19:49.504388230 +0200
 @@ -3789,7 +3789,7 @@
  		/* if var[] ends in a path separator and tail[] starts
  		 * with it, skip a character */
@@ -5980,8 +6037,8 @@ diff -Naur vim72-orig/src/misc1.c vim72/src/misc1.c
      retval = vim_strchr(path, ':');
      if (retval == NULL)
 diff -Naur vim72-orig/src/misc2.c vim72/src/misc2.c
---- vim72-orig/src/misc2.c	2015-04-26 10:11:05.165298479 +0200
-+++ vim72/src/misc2.c	2015-04-26 10:12:03.586828212 +0200
+--- vim72-orig/src/misc2.c	2015-05-03 10:52:53.355491529 +0200
++++ vim72/src/misc2.c	2015-05-02 10:19:49.505388230 +0200
 @@ -3502,47 +3502,47 @@
      if (mouse && (State == HITRETURN || State == ASKMORE))
      {
@@ -6079,8 +6136,8 @@ diff -Naur vim72-orig/src/misc2.c vim72/src/misc2.c
  #endif
      return file_name;
 diff -Naur vim72-orig/src/move.c vim72/src/move.c
---- vim72-orig/src/move.c	2015-04-26 10:11:05.171298431 +0200
-+++ vim72/src/move.c	2015-04-26 10:12:03.586828212 +0200
+--- vim72-orig/src/move.c	2015-05-03 10:52:53.368491797 +0200
++++ vim72/src/move.c	2015-05-02 10:19:49.505388230 +0200
 @@ -66,13 +66,13 @@
      check_cursor_moved(wp);
      if (wp->w_valid & VALID_CROW)
@@ -6319,8 +6376,8 @@ diff -Naur vim72-orig/src/move.c vim72/src/move.c
      /*
       * Next make sure that w_cline_row is valid.
 diff -Naur vim72-orig/src/netbeans.c vim72/src/netbeans.c
---- vim72-orig/src/netbeans.c	2015-04-26 10:11:05.165298479 +0200
-+++ vim72/src/netbeans.c	2015-04-26 10:12:03.586828212 +0200
+--- vim72-orig/src/netbeans.c	2015-05-03 10:52:53.355491529 +0200
++++ vim72/src/netbeans.c	2015-05-02 10:19:49.505388230 +0200
 @@ -2145,7 +2145,7 @@
  
  	    /* gui_update_cursor(TRUE, FALSE); */
@@ -6331,8 +6388,8 @@ diff -Naur vim72-orig/src/netbeans.c vim72/src/netbeans.c
  	    setcursor();
  	    out_flush();
 diff -Naur vim72-orig/src/normal.c vim72/src/normal.c
---- vim72-orig/src/normal.c	2015-04-26 10:11:05.166298471 +0200
-+++ vim72/src/normal.c	2015-04-26 10:12:03.587828204 +0200
+--- vim72-orig/src/normal.c	2015-05-03 10:52:53.356491550 +0200
++++ vim72/src/normal.c	2015-05-02 10:19:49.506388230 +0200
 @@ -7651,7 +7651,7 @@
  	    VIsual = curwin->w_cursor;
  	    curwin->w_cursor = tpos;
@@ -6343,8 +6400,8 @@ diff -Naur vim72-orig/src/normal.c vim72/src/normal.c
  	     * When called from normal "g" command: start Select mode when
  	     * 'selectmode' contains "cmd".  When called for K_SELECT, always
 diff -Naur vim72-orig/src/ops.c vim72/src/ops.c
---- vim72-orig/src/ops.c	2015-04-26 10:11:05.170298439 +0200
-+++ vim72/src/ops.c	2015-04-26 10:12:03.587828204 +0200
+--- vim72-orig/src/ops.c	2015-05-03 10:52:53.367491777 +0200
++++ vim72/src/ops.c	2015-05-02 10:19:49.507388230 +0200
 @@ -2748,31 +2748,31 @@
  {
      if (y_current->y_array != NULL)
@@ -6401,8 +6458,8 @@ diff -Naur vim72-orig/src/ops.c vim72/src/ops.c
      }
  }
 diff -Naur vim72-orig/src/option.c vim72/src/option.c
---- vim72-orig/src/option.c	2015-04-26 10:11:05.165298479 +0200
-+++ vim72/src/option.c	2015-04-26 10:12:03.587828204 +0200
+--- vim72-orig/src/option.c	2015-05-03 10:52:53.355491529 +0200
++++ vim72/src/option.c	2015-05-02 10:19:49.507388230 +0200
 @@ -1441,7 +1441,7 @@
  				 * ( and ) are used in text separating fnames */
  			    (char_u *)"@,48-57,/,\\,.,-,_,+,,,#,$,%,{,},[,],:,@-@,!,~,=",
@@ -6440,8 +6497,8 @@ diff -Naur vim72-orig/src/option.c vim72/src/option.c
  				 (char_u *)"'20,<50,s10,h,rdf0:,rdf1:,rdf2:"}
  # else
 diff -Naur vim72-orig/src/option.h vim72/src/option.h
---- vim72-orig/src/option.h	2015-04-26 10:11:05.169298447 +0200
-+++ vim72/src/option.h	2015-04-26 10:12:03.587828204 +0200
+--- vim72-orig/src/option.h	2015-05-03 10:52:53.366491756 +0200
++++ vim72/src/option.h	2015-05-02 10:19:49.508388230 +0200
 @@ -15,7 +15,7 @@
   * The "%f|%l| %m" one is used for when the contents of the quickfix window is
   * written to a file.
@@ -6462,7 +6519,7 @@ diff -Naur vim72-orig/src/option.h vim72/src/option.h
  EXTERN int	p_stmp;		/* 'shelltemp' */
 diff -Naur vim72-orig/src/os_aros.c vim72/src/os_aros.c
 --- vim72-orig/src/os_aros.c	1970-01-01 01:00:00.000000000 +0100
-+++ vim72/src/os_aros.c	2015-04-26 20:11:11.916410099 +0200
++++ vim72/src/os_aros.c	2015-05-02 10:19:49.508388230 +0200
 @@ -0,0 +1,1167 @@
 +/* vi:set ts=8 sts=4 sw=4:
 + *
@@ -7633,7 +7690,7 @@ diff -Naur vim72-orig/src/os_aros.c vim72/src/os_aros.c
 +}
 diff -Naur vim72-orig/src/os_aros.h vim72/src/os_aros.h
 --- vim72-orig/src/os_aros.h	1970-01-01 01:00:00.000000000 +0100
-+++ vim72/src/os_aros.h	2015-04-26 20:18:37.761393121 +0200
++++ vim72/src/os_aros.h	2015-05-02 10:19:49.508388230 +0200
 @@ -0,0 +1,183 @@
 +/* vi:set ts=8 sts=4 sw=4:
 + *
@@ -7819,8 +7876,8 @@ diff -Naur vim72-orig/src/os_aros.h vim72/src/os_aros.h
 +#define mch_chdir(s) chdir(s)
 +#define vim_mkdir(x, y) mch_mkdir(x)
 diff -Naur vim72-orig/src/popupmnu.c vim72/src/popupmnu.c
---- vim72-orig/src/popupmnu.c	2015-04-26 10:11:05.170298439 +0200
-+++ vim72/src/popupmnu.c	2015-04-26 10:12:03.587828204 +0200
+--- vim72-orig/src/popupmnu.c	2015-05-03 10:52:53.368491797 +0200
++++ vim72/src/popupmnu.c	2015-05-02 10:19:49.508388230 +0200
 @@ -641,7 +641,7 @@
  			if (resized)
  			{
@@ -7832,7 +7889,7 @@ diff -Naur vim72-orig/src/popupmnu.c vim72/src/popupmnu.c
  			/* Update the screen before drawing the popup menu.
 diff -Naur vim72-orig/src/proto/gui_aros.pro vim72/src/proto/gui_aros.pro
 --- vim72-orig/src/proto/gui_aros.pro	1970-01-01 01:00:00.000000000 +0100
-+++ vim72/src/proto/gui_aros.pro	2015-04-26 10:12:03.588828195 +0200
++++ vim72/src/proto/gui_aros.pro	2015-05-02 10:19:49.508388230 +0200
 @@ -0,0 +1,72 @@
 +    /* gui_aros.c */
 +void gui_mch_add_menu_item __ARGS((vimmenu_T *menu, int idx));
@@ -7907,8 +7964,8 @@ diff -Naur vim72-orig/src/proto/gui_aros.pro vim72/src/proto/gui_aros.pro
 +long_u gui_mch_get_rgb __ARGS((guicolor_T pixel));
 +/* vim: set ft=c : */
 diff -Naur vim72-orig/src/proto/move.pro vim72/src/proto/move.pro
---- vim72-orig/src/proto/move.pro	2015-04-26 10:11:05.171298431 +0200
-+++ vim72/src/proto/move.pro	2015-04-26 10:12:03.588828195 +0200
+--- vim72-orig/src/proto/move.pro	2015-05-03 10:52:53.369491818 +0200
++++ vim72/src/proto/move.pro	2015-05-02 10:19:49.508388230 +0200
 @@ -1,6 +1,6 @@
  /* move.c */
  void update_topline_redraw __ARGS((void));
@@ -7919,7 +7976,7 @@ diff -Naur vim72-orig/src/proto/move.pro vim72/src/proto/move.pro
  void changed_window_setting __ARGS((void));
 diff -Naur vim72-orig/src/proto/os_aros.pro vim72/src/proto/os_aros.pro
 --- vim72-orig/src/proto/os_aros.pro	1970-01-01 01:00:00.000000000 +0100
-+++ vim72/src/proto/os_aros.pro	2015-04-26 10:12:03.588828195 +0200
++++ vim72/src/proto/os_aros.pro	2015-05-02 10:19:49.510388229 +0200
 @@ -0,0 +1,46 @@
 +/* os_aros.c */
 +void win_resize_on __ARGS((void));
@@ -7968,8 +8025,8 @@ diff -Naur vim72-orig/src/proto/os_aros.pro vim72/src/proto/os_aros.pro
 +int mch_setenv __ARGS((char *var, char *value, int x));
 +/* vim: set ft=c : */
 diff -Naur vim72-orig/src/proto.h vim72/src/proto.h
---- vim72-orig/src/proto.h	2015-04-26 10:11:05.172298423 +0200
-+++ vim72/src/proto.h	2015-04-26 10:12:03.588828195 +0200
+--- vim72-orig/src/proto.h	2015-05-03 10:52:53.369491818 +0200
++++ vim72/src/proto.h	2015-05-02 10:19:49.510388229 +0200
 @@ -32,9 +32,12 @@
  #  define XImage int
  # endif
@@ -7994,8 +8051,8 @@ diff -Naur vim72-orig/src/proto.h vim72/src/proto.h
  # endif
  # include "ui.pro"
 diff -Naur vim72-orig/src/quickfix.c vim72/src/quickfix.c
---- vim72-orig/src/quickfix.c	2015-04-26 10:11:05.166298471 +0200
-+++ vim72/src/quickfix.c	2015-04-26 10:12:03.589828187 +0200
+--- vim72-orig/src/quickfix.c	2015-05-03 10:52:53.356491550 +0200
++++ vim72/src/quickfix.c	2015-05-02 10:19:49.510388229 +0200
 @@ -2363,7 +2363,7 @@
      curwin->w_cursor.lnum = qi->qf_lists[qi->qf_curlist].qf_index;
      curwin->w_cursor.col = 0;
@@ -8024,8 +8081,8 @@ diff -Naur vim72-orig/src/quickfix.c vim72/src/quickfix.c
  		/* read window status report and redraw before message */
      (void)char_avail();
 diff -Naur vim72-orig/src/screen.c vim72/src/screen.c
---- vim72-orig/src/screen.c	2015-04-26 10:11:05.170298439 +0200
-+++ vim72/src/screen.c	2015-04-26 10:12:03.589828187 +0200
+--- vim72-orig/src/screen.c	2015-05-03 10:52:53.367491777 +0200
++++ vim72/src/screen.c	2015-05-02 10:19:49.510388229 +0200
 @@ -1935,7 +1935,7 @@
  	{
  	    recursive = TRUE;
@@ -8045,8 +8102,8 @@ diff -Naur vim72-orig/src/screen.c vim72/src/screen.c
  	 * up, so use delete-line command */
  			    line_count == 1 ||
 diff -Naur vim72-orig/src/structs.h vim72/src/structs.h
---- vim72-orig/src/structs.h	2015-04-26 10:11:05.166298471 +0200
-+++ vim72/src/structs.h	2015-04-26 10:12:03.589828187 +0200
+--- vim72-orig/src/structs.h	2015-05-03 10:52:53.357491570 +0200
++++ vim72/src/structs.h	2015-05-02 10:19:49.511388229 +0200
 @@ -10,6 +10,9 @@
   * This file contains various definitions of structures that are used by Vim
   */
@@ -8077,8 +8134,8 @@ diff -Naur vim72-orig/src/structs.h vim72/src/structs.h
 +
 +#endif
 diff -Naur vim72-orig/src/tag.c vim72/src/tag.c
---- vim72-orig/src/tag.c	2015-04-26 10:11:05.164298487 +0200
-+++ vim72/src/tag.c	2015-04-26 10:12:03.590828179 +0200
+--- vim72-orig/src/tag.c	2015-05-03 10:52:53.354491508 +0200
++++ vim72/src/tag.c	2015-05-02 10:19:49.511388229 +0200
 @@ -3397,7 +3397,7 @@
  simplify_filename(filename)
      char_u	*filename;
@@ -8098,8 +8155,8 @@ diff -Naur vim72-orig/src/tag.c vim72/src/tag.c
  
  /*
 diff -Naur vim72-orig/src/term.c vim72/src/term.c
---- vim72-orig/src/term.c	2015-04-26 10:11:05.165298479 +0200
-+++ vim72/src/term.c	2015-04-26 10:12:03.590828179 +0200
+--- vim72-orig/src/term.c	2015-05-03 10:52:53.355491529 +0200
++++ vim72/src/term.c	2015-05-02 10:19:49.512388229 +0200
 @@ -10,7 +10,7 @@
   *
   * term.c: functions for controlling the terminal
@@ -8204,8 +8261,8 @@ diff -Naur vim72-orig/src/term.c vim72/src/term.c
  		if (pum_visible())
  		{
 diff -Naur vim72-orig/src/termlib.c vim72/src/termlib.c
---- vim72-orig/src/termlib.c	2015-04-26 10:11:05.169298447 +0200
-+++ vim72/src/termlib.c	2015-04-26 10:12:03.590828179 +0200
+--- vim72-orig/src/termlib.c	2015-05-03 10:52:53.366491756 +0200
++++ vim72/src/termlib.c	2015-05-02 10:19:49.512388229 +0200
 @@ -13,7 +13,7 @@
  #include "vim.h"
  #include "termlib.pro"
@@ -8234,8 +8291,8 @@ diff -Naur vim72-orig/src/termlib.c vim72/src/termlib.c
  	    tcap++;
  	    tmp = strchr(tcap, '/');
 diff -Naur vim72-orig/src/ui.c vim72/src/ui.c
---- vim72-orig/src/ui.c	2015-04-26 10:11:05.165298479 +0200
-+++ vim72/src/ui.c	2015-04-26 10:12:03.590828179 +0200
+--- vim72-orig/src/ui.c	2015-05-03 10:52:53.355491529 +0200
++++ vim72/src/ui.c	2015-05-02 10:19:49.512388229 +0200
 @@ -1691,13 +1691,13 @@
      long    maxlen;
  {
@@ -8265,8 +8322,8 @@ diff -Naur vim72-orig/src/ui.c vim72/src/ui.c
  #endif
  #if defined(UNIX) || defined(OS2) || defined(VMS) || defined(MACOS_X_UNIX)
 diff -Naur vim72-orig/src/undo.c vim72/src/undo.c
---- vim72-orig/src/undo.c	2015-04-26 10:11:05.165298479 +0200
-+++ vim72/src/undo.c	2015-04-26 10:12:03.590828179 +0200
+--- vim72-orig/src/undo.c	2015-05-03 10:52:53.355491529 +0200
++++ vim72/src/undo.c	2015-05-02 10:19:49.512388229 +0200
 @@ -576,7 +576,7 @@
  	 * then u_alloc_line would have to allocate a block larger than 32K
  	 */
@@ -8277,8 +8334,8 @@ diff -Naur vim72-orig/src/undo.c vim72/src/undo.c
  
      /*
 diff -Naur vim72-orig/src/version.c vim72/src/version.c
---- vim72-orig/src/version.c	2015-04-26 10:11:05.170298439 +0200
-+++ vim72/src/version.c	2015-04-26 10:12:03.590828179 +0200
+--- vim72-orig/src/version.c	2015-05-03 10:52:53.368491797 +0200
++++ vim72/src/version.c	2015-05-02 10:19:49.512388229 +0200
 @@ -9,7 +9,7 @@
  
  #include "vim.h"
@@ -8407,8 +8464,8 @@ diff -Naur vim72-orig/src/version.c vim72/src/version.c
  
      /* Add the version number to the version line. */
 diff -Naur vim72-orig/src/version.h vim72/src/version.h
---- vim72-orig/src/version.h	2015-04-26 10:11:05.164298487 +0200
-+++ vim72/src/version.h	2015-04-26 10:12:03.590828179 +0200
+--- vim72-orig/src/version.h	2015-05-03 10:52:53.354491508 +0200
++++ vim72/src/version.h	2015-05-02 10:19:49.512388229 +0200
 @@ -13,19 +13,19 @@
   * This doesn't use string concatenation, some compilers don't support it.
   */
@@ -8456,7 +8513,7 @@ diff -Naur vim72-orig/src/version.h vim72/src/version.h
 +#define VIM_VERSION_LONG_DATE "VIM - Vi IMproved 7.2 (2009 Dec 3, compiled "
 diff -Naur vim72-orig/src/vim48x48.png vim72/src/vim48x48.png
 --- vim72-orig/src/vim48x48.png	1970-01-01 01:00:00.000000000 +0100
-+++ vim72/src/vim48x48.png	2015-04-26 10:12:03.590828179 +0200
++++ vim72/src/vim48x48.png	2015-05-02 10:19:49.512388229 +0200
 @@ -0,0 +1,5 @@
 +âPNG
 +
@@ -8465,8 +8522,8 @@ diff -Naur vim72-orig/src/vim48x48.png vim72/src/vim48x48.png
 +Ìù∑î¸î†`›\6Œ¿¢ÁsÄ¥ò!ƒdØ¬n‡nΩ›∞@W€Á¶ÙNx◊vÖB*·FÎ¿2†∞˚©ÿlk…¢A¶++!ƒ[·©‹ «≈,=â=Ä1cX!ewlCmk Â?∑Ãv.|]K—›!ê_4Hä    IENDÆB`Ç
 \ No newline at end of file
 diff -Naur vim72-orig/src/vim.h vim72/src/vim.h
---- vim72-orig/src/vim.h	2015-04-26 10:11:05.169298447 +0200
-+++ vim72/src/vim.h	2015-04-26 14:45:20.515120107 +0200
+--- vim72-orig/src/vim.h	2015-05-03 10:52:53.367491777 +0200
++++ vim72/src/vim.h	2015-05-02 10:19:49.513388229 +0200
 @@ -95,6 +95,7 @@
      || defined(FEAT_GUI_MAC) \
      || defined(FEAT_GUI_W32) \
@@ -8559,8 +8616,8 @@ diff -Naur vim72-orig/src/vim.h vim72/src/vim.h
 +
  #endif /* VIM__H */
 diff -Naur vim72-orig/src/window.c vim72/src/window.c
---- vim72-orig/src/window.c	2015-04-26 10:11:05.166298471 +0200
-+++ vim72/src/window.c	2015-04-26 10:12:03.590828179 +0200
+--- vim72-orig/src/window.c	2015-05-03 10:52:53.356491550 +0200
++++ vim72/src/window.c	2015-05-02 10:19:49.513388229 +0200
 @@ -3178,7 +3178,7 @@
  win_alloc_first()
  {
