@@ -7,7 +7,7 @@ include $(TOP)/config/make.cfg
 
 #MM- contrib-development-libs-t1lib : development-t1lib
 
-REPOSITORIES := ftp://sunsite.unc.edu/pub/Linux/libs/graphics/
+REPOSITORIES := ftp://sunsite.unc.edu/pub/Linux/libs/graphics/ http://www.mazze-online.de/aros/ports-src/
 
 %fetch_and_build_gnu_development package=t1lib version=5.1.2 \
     patch=yes package_repo="$(REPOSITORIES)" \
