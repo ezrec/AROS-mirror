@@ -1,77 +1,77 @@
-## version $VER: ScreenRecoder.catalog 1.0 (10.05.2015)
-## language français
+## version $VER: screenrecorder.catalog 1.1 (10.5.15)
 ## codeset 0
+## language deutsch
 ;
 MSG_OK_REQ_GAD
-*_OK
+*_Ok
 ; *_OK
 ;
 MSG_OK_GAD
-_OK
+_Ok
 ; _OK
 ;
 MSG_START_RECORDING_KEYDEF_GAD
-Enregi_strer :
+_Starte Aufnahme:
 ; _Start recording:
 ;
 MSG_STOP_RECORDING_KEYDEF_GAD
-Cesser d'en_registrer :
+Stoppe _Aufnahme:
 ; Stop _recording:
 ;
 MSG_MATCH_PATTERN_GAD
-_Titre de la fenêtre :
+Übereinsti_mmender Fenstertitel:
 ; _Match window title:
 ;
 MSG_IGNORE_RECORDER_WINDOWS_GAD
-_Ignorer les fenêtres de ScreenRecorder
+_Ignoriere Aufnahmefenster
 ; _Ignore recorder windows
 ;
 MSG_RECORD_ONLY_WHEN_SCREEN_VISIBLE_GAD
-N'enregistrer que lorsque l'écran est _visible
+Nur aufnehmen, wenn Bil_dschirm sichtbar
 ; Record only when screen is _visible
 ;
 MSG_RECORD_MOUSE_GAD
-Enregistrer autour du _pointeur
+Aufnahme rund um die _Maus
 ; Record around _mouse
 ;
 MSG_ACTIVE_RECORDING_GAD
-N'enregistrer que depuis l'écran _actif
+Aufnahme immer vom _aktiven Bildschirm
 ; Record always from an _active screen
 ;
 MSG_RECORDING_FORMAT_GAD
-_Format d'enregistrement :
+Aufnahme_format:
 ; Recording _format:
 ;
 MSG_FRAMERATE_GAD
-Tram_es :
+Bildfr_equenz:
 ; Fram_erate:
 ;
 MSG_SCALING_GAD
-Echelle_s :
+_Skalierung:
 ; _Scaling:
 ;
 MSG_PRIORITY_GAD
-_Priorité :
+_Priorität:
 ; _Priority:
 ;
 MSG_QUALITY_GAD
-_Quality :
+_Qualität:
 ; _Quality:
 ;
 MSG_MOUSE_CAPTURE_ZONE_GAD
-_Zone de capture du pointeur :
+Mauszeigerfang_zone:
 ; Mouse capture _zone:
 ;
 MSG_RECORDING_DIR_GAD
-Répertoire _d'enregistrement
+Aufnahme_verzeichnis
 ; Record _dir
 ;
 MSG_START_RECORDING_GAD
-Enregistre
+_Nimm auf
 ; _Record
 ;
 MSG_STOP_RECORDING_GAD
-Stop
+_Stoppe
 ; _Stop
 ;
 MSG_MOUSE_CAPTURE_ZONE_FORMAT
@@ -79,15 +79,15 @@ MSG_MOUSE_CAPTURE_ZONE_FORMAT
 ; %ld pix
 ;
 MSG_SCREEN_NAME
-Nom
+Name
 ; Name
 ;
 MSG_SCREEN_FRAMERATE
-T/S
+FPS
 ; FPS
 ;
 MSG_SCREEN_DISPLAY_ENGINE
-Moteur de rendu
+Display-Engine
 ; Display Engine
 ;
 MSG_SCREEN_STATUS
@@ -95,19 +95,19 @@ Status
 ; Status
 ;
 MSG_RECORDING
-enregistre
+Aufzeichnung läuft
 ; recording
 ;
 MSG_STANDARD_DISPLAY_ENGINE
-standard
+Standard
 ; Standard
 ;
 MSG_ENHANCED_DISPLAY_ENGINE
-amélioré
+Verbessert
 ; Enhanced
 ;
 MSG_DEFAULT_SCREEN_TITLE
-[sans nom]
+[ohne Namen]
 ; [no name]
 ;
 MSG_DEFAULT_FRAMERATE
@@ -119,7 +119,7 @@ MSG_SCREEN_FRAMERATE_FORMAT
 ; %3d.%02d Hz
 ;
 MSG_DESCRIPTION
-Enregistre des vidéos
+Videos vom Bildschirm aufzeichnen
 ; Record videos
 ;
 MSG_TITLE
@@ -127,7 +127,7 @@ Screen Recorder
 ; Screen Recorder
 ;
 MSG_SETTINGS_GLOBAL_KEYDEFS
-Raccourcis clavier globaux
+Globale Tastenkürzel
 ; Global key shortcuts
 ;
 MSG_FPS_NORMAL
@@ -135,11 +135,11 @@ Normal
 ; Normal
 ;
 MSG_FPS_HALF
-moitié
+Halbe Größe
 ; Halve
 ;
 MSG_FPS_QUARTER
-Quart
+Viertel Größe
 ; Quarter
 ;
 MSG_FPS_10
@@ -155,15 +155,15 @@ MSG_FPS_1
 ; 1 FPS
 ;
 MSG_SCALING_NONE
-Pas d'échelle
+Keine Skalierung
 ; No scaling
 ;
 MSG_SCALING_HALF
-Moitié de taille
+Halbe Größe
 ; Half size
 ;
 MSG_SCALING_QUARTER
-Quart de taille
+Viertel Größe
 ; Quarter size
 ;
 MSG_SCALING_1024X768
@@ -195,74 +195,74 @@ MNG
 ; MNG
 ;
 MSG_PRIORITY_NORMAL
-Normale
+Normal
 ; Normal
 ;
 MSG_PRIORITY_HIGH
-Haute
+Hoch
 ; High
 ;
 MSG_PRIORITY_LOW
-Basse
+Niedrig
 ; Low
 ;
 MSG_VIDEO_QUALITY_BEST
-Meilleure
+Beste
 ; Best
 ;
 MSG_VIDEO_QUALITY_EXCELLENT
-Excellente
+Ausgezeichnet
 ; Excellent
 ;
 MSG_VIDEO_QUALITY_GOOD
-Bonne
+Gut
 ; Good
 ;
 MSG_VIDEO_QUALITY_POOR
-Médiocre
+Arm
 ; Poor
 ;
 MSG_VIDEO_QUALITY_BAD
-Mauvaise
+Schlecht
 ; Bad
 ;
 MSG_MENU_PROJECT_TITLE
-Projet
+Projekt
 ; Project
 ;
 MSG_MENU_PROJECT_ABOUT
-?\0A propos
+?\0Über ...
 ; ?\0About
 ;
 MSG_MENU_PROJECT_QUIT
-Q\0Quitter
+Q\0Beenden
 ; Q\0Quit
 ;
 MSG_MENU_SETTINGS_TITLE
-Paramètres
+Einstellungen
 ; Settings
 ;
 MSG_MENU_SETTINGS_APP
-S\0Application...
+S\0Anwendung ...
 ; S\0Application...
 ;
 MSG_MENU_SETTINGS_MUI
-MUI...
+MUI ...
 ; MUI...
 ;
 MSG_DIR_NOT_ACCESSIBLE
-Impossible de démarrer l'enregistrement car \n%s\n n'est pas accessible.
+Kann die Aufnahme nicht starten, weil das Verzeichnis\n%s unzugänglich ist.
 ; Can not start recording because directory\n%s\nis not accessible.
 ;
 MSG_ABOUT
-\033c%s\n\nEcrit par %s\n%s\n\nIcône par %s
+\ec%s\n\nGeschrieben von %s\n%s\n\nPiktogramm von %s
 ; \033c%s\n\nWritten by %s\n%s\n\nIcon by %s
 ;
 MSG_MINIMUM_REQUIREMENTS
-Ce programme requiert un Amiga et un 68020 avec un coprocesseur ou mieux.
+Dieses Programm benötigt einen Amiga mit 68020 und FPU oder besser.
 ; This program requires an AMIGA with 68020 and FPU or better.
 ;
 MSG_WINDOW_TITLE_SETTINGS
-Paramètres
+Einstellungen
 ; Settings
 ;
