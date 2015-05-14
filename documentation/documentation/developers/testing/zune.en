@@ -74,4 +74,102 @@ Pendisplay
 #. Check the left Pendisplay shows yellow.
    [tests **MUIM_Pendisplay_SetRGB**]
 
-Untested attributes: **MUIA_Pendisplay_Reference[IG]**
+Untested attributes: **MUIA_Pendisplay_Reference[IG]**.
+
+String
+======
+
+#. Go to the Text tab.
+#. Go to the String subtab.
+#. Check that none of the test strings are disabled.
+   [tests **MUIA_String_Format[G]**, **MUIA_String_Secret[G]**]
+#. Click in the first string.
+#. Press the return key to advance to the second string.
+   [tests **MUIA_String_AdvanceOnCR[I]**]
+#. Check that the cursor is on the fourth character.
+   [tests **MUIA_String_BufferPos[I]**]
+#. Untick 'Advance on CR'.
+#. Click in each of the test strings to check that their alignment is as
+   described.
+   [tests **MUIA_String_Format[I]**]
+#. Type "u*" in the first string gadget.
+#. Check that exactly "u" appears in the string gadget, and that a
+   display-beep occurs.
+   [tests **MUIA_String_Accept[I]**]
+#. Type "?." in the second string gadget.
+#. Check that exactly "." appears in the string gadget, and that a
+   display-beep occurs.
+   [tests **MUIA_String_Reject[I]**]
+#. Check that "aeiou?." appears in the 'Acceptable characters' string gadget.
+   [tests **MUIA_String_Contents[I]**]
+#. Check that exactly "\*?" appears in the 'Unacceptable characters' string
+   gadget.
+   [tests **MUIA_String_Contents[S]**]
+#. Clear the first and second strings.
+#. Remove "." from the 'Acceptable characters' string.
+#. Type "i.e." in the second string gadget.
+#. Check that exactly "ie" appears in the string gadget, and that two
+   display-beeps occur.
+   [tests **MUIA_String_Contents[G]**, **MUIA_String_Accept[SG]**]
+#. Append "o" to the 'Unacceptable characters' string.
+#. Type "eo" in the third string gadget.
+#. Check that exactly "e" appears in the string gadget, and that a
+   display-beep occurs.
+   [tests **MUIA_String_Contents[G]**, **MUIA_String_Reject[SG]**]
+#. Type "aeiou!" in the secret string.
+#. Check that exactly "\*\*\*\*" appears.
+   [tests **MUIA_String_Secret[I]**]
+#. Tick 'Accept all characters'.
+#. Type "hello world" in the first string.
+#. Check that only "hello wo" appears.
+   [tests **MUIA_String_MaxLen[I]**]
+#. Check that the 'Maximum string length' field contains "8".
+   [tests **MUIA_String_MaxLen[G]**]
+#. Type "Hello" in the third string.
+#. Set the 'Cursor position' slider to 2.
+#. Click in the second string.
+#. Press the return key.
+#. Check that the cursor disappears (and doesn't appear in any other string).
+   [tests **MUIA_String_AdvanceOnCR[SG]**]
+#. Click in the second string.
+#. Press the tab key to advance to the third string.
+#. Check that the cursor is on the third character.
+   [tests **MUIA_String_BufferPos[SG]**]
+#. Press the cursor down key three times.
+#. Go to the 'List' tab.
+#. Go to the 'Single Column (1)' subtab.
+#. Check that 'Banana' is the active entry in the 'No Multiselect' list.
+   [tests **MUIA_String_AttachedList[I]**]
+#. Go back to the 'Text' tab.
+#. Untick 'Attach list'.
+#. Click in the second string.
+#. Press the cursor up key once.
+#. Go to the 'List' tab.
+#. Check that 'Banana' is still the active entry in the 'No Multiselect' list.
+   [tests **MUIA_String_AttachedList[SG]**]
+#. Go back to the 'Text' tab.
+#. Tick 'Attach list'.
+#. Click in the second string.
+#. Press the cursor up key once.
+#. Go to the 'List' tab.
+#. Check that 'Apple' is the active entry in the 'No Multiselect' list.
+   [tests **MUIA_String_AttachedList[SG]**]
+#. Go back to the 'Text' tab.
+#. Check that the 'Centered' string contains "123".
+   [tests **MUIA_String_Integer[I]**]
+#. Click in the 'Centered' string.
+#. Press the return key.
+#. Check that the 'Integer value' string contains "123".
+   [tests **MUIA_String_Integer[SG]**]
+#. Enter "12345678" in the 'Narrow' string.
+#. Move the 'Display position' slider to 3.
+#. Check that the first character shown in the 'Narrow' string is '4'.
+   [tests **MUIA_String_DisplayPos[SG]**]
+#. Click in the 'Secret' string.
+#. Press the return key.
+#. Check that the 'Plaintext' string contains "aeiu".
+   [tests **MUIA_String_Acknowledge[G]**]
+
+Untested attributes:
+**MUIA_String_EditHook[ISG]**,
+**MUIA_String_LonelyEditHook[ISG]**,
