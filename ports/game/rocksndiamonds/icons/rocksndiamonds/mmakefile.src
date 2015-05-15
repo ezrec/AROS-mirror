@@ -1,0 +1,11 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+# #MM- ports-game-rocksndiamonds-icons : ports-game-rocksndiamonds-icons-rocksndiamonds
+
+ICONS     := Rocksndiamonds
+TARGETDIR := $(AROS_CONTRIB)/Games/Rocksndiamonds
+
+%build_icons mmake=ports-game-rocksndiamonds-icons \
+    icons=$(ICONS) dir=$(TARGETDIR)

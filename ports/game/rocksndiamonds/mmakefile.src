@@ -1,0 +1,179 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- ports-game : ports-game-rocksndiamonds
+
+#MM  ports-game-rocksndiamonds : \
+#MM  includes \
+#MM  linklibs \
+#MM  contrib-sdl \
+#MM  contrib-sdl-sdl-image \
+#MM  contrib-sdl-sdl-mixer \
+#MM  contrib-sdl-sdl-net \
+#MM  ports-game-rocksndiamonds-libgame \
+#MM  ports-game-rocksndiamonds-libgame_em \
+#MM  ports-game-rocksndiamonds-libgame_sp \
+#MM  ports-game-rocksndiamonds-graphics \
+#MM  ports-game-rocksndiamonds-levels \
+#MM  ports-game-rocksndiamonds-music \
+#MM  ports-game-rocksndiamonds-sounds \
+#MM  ports-game-rocksndiamonds-docs \
+#MM  ports-game-rocksndiamonds-cpy \
+#MM  ports-game-rocksndiamonds-fetch
+
+#MM  ports-game-rocksndiamonds-libgame : ports-game-rocksndiamonds-fetch
+#MM  ports-game-rocksndiamonds-libgame_em : ports-game-rocksndiamonds-fetch
+#MM  ports-game-rocksndiamonds-libgame_sp : ports-game-rocksndiamonds-fetch
+#MM  ports-game-rocksndiamonds-graphics : ports-game-rocksndiamonds-fetch
+#MM  ports-game-rocksndiamonds-levels : ports-game-rocksndiamonds-fetch
+#MM  ports-game-rocksndiamonds-music : ports-game-rocksndiamonds-fetch
+#MM  ports-game-rocksndiamonds-sounds : ports-game-rocksndiamonds-fetch
+#MM  ports-game-rocksndiamonds-docs : ports-game-rocksndiamonds-fetch
+#MM  ports-game-rocksndiamonds-cpy : ports-game-rocksndiamonds-fetch
+
+#MM  ports-game-rocksndiamonds-clean : \
+#MM  ports-game-rocksndiamonds-libgame-clean \
+#MM  ports-game-rocksndiamonds-libgame_em-clean \
+#MM  ports-game-rocksndiamonds-libgame_sp-clean
+
+
+REPOSITORIES := http://www.artsoft.org/RELEASES/unix/rocksndiamonds
+ARCHBASE     := rocksndiamonds-3.3.1.2
+TARGETDIR    := $(AROS_CONTRIB)/Games/Rocksndiamonds
+USER_CFLAGS  := -DTARGET_SDL -DRO_GAME_DIR=\"/PROGDIR/Data_RO\" -DRW_GAME_DIR=\"/PROGDIR/Data_RW\"
+USER_INCLUDES:= -I$(AROS_INCLUDES)/SDL
+USER_LDFLAGS := -L$(TARGETDIR)/lib
+
+###################################################################################################
+
+FILES := 		\
+	main		\
+	conf_gfx	\
+	conf_snd	\
+	conf_mus	\
+	conf_hlp	\
+	init		\
+	config		\
+	events		\
+	tools		\
+	screens		\
+	game		\
+	editor		\
+	files		\
+	tape		\
+	cartoons	\
+	network		\
+	netserv
+FILES := $(addprefix $(PORTSDIR)/rocksndiamonds/$(ARCHBASE)/src/,$(FILES))
+
+%build_prog mmake=ports-game-rocksndiamonds progname=Rocksndiamonds \
+    files=$(FILES) targetdir=$(TARGETDIR) nix=yes \
+    uselibs="game game_sp game_em SDL SDL_mixer vorbisfile vorbis ogg SDL_net SDL_image png jpeg"
+
+###################################################################################################
+
+FILES := 		\
+	system		\
+	gadgets		\
+	text		\
+	sound		\
+	joystick	\
+	snapshot	\
+	toons		\
+	pcx		\
+	image		\
+	random		\
+	hash		\
+	setup		\
+	misc		\
+	msdos		\
+	x11		\
+	sdl
+FILES := $(addprefix $(PORTSDIR)/rocksndiamonds/$(ARCHBASE)/src/libgame/,$(FILES))
+
+%build_linklib mmake=ports-game-rocksndiamonds-libgame libname=game files=$(FILES) \
+  objdir=$(GENDIR)/$(CURDIR)/libgame libdir=$(TARGETDIR)/lib
+
+###################################################################################################
+
+FILES := 		\
+	cave		\
+	convert		\
+	graphics	\
+	init		\
+	input		\
+	main		\
+	sound		\
+	synchro_1	\
+	synchro_2	\
+	synchro_3	\
+	tab_generate	\
+	ulaw_generate
+FILES := $(addprefix $(PORTSDIR)/rocksndiamonds/$(ARCHBASE)/src/game_em/,$(FILES))
+
+%build_linklib mmake=ports-game-rocksndiamonds-libgame_em libname=game_em files=$(FILES) \
+  objdir=$(GENDIR)/$(CURDIR)/libgame_em libdir=$(TARGETDIR)/lib
+
+###################################################################################################
+
+FILES := 			\
+	init			\
+	file			\
+	main			\
+	vb_lib			\
+	ASM			\
+	BugsTerminals		\
+	DDScrollBuffer		\
+	DDSpriteBuffer		\
+	Display			\
+	DoGameStuff		\
+	Electrons		\
+	Explosions		\
+	Globals			\
+	Infotrons		\
+	InitGameConditions	\
+	Input			\
+	MainForm		\
+	MainGameLoop		\
+	Murphy			\
+	OrangeDisk		\
+	SnikSnaks		\
+	Sound			\
+	Zonk
+FILES := $(addprefix $(PORTSDIR)/rocksndiamonds/$(ARCHBASE)/src/game_sp/,$(FILES))
+
+%build_linklib mmake=ports-game-rocksndiamonds-libgame_sp libname=game_sp files=$(FILES) \
+  objdir=$(GENDIR)/$(CURDIR)/libgame_sp libdir=$(TARGETDIR)/lib
+
+###################################################################################################
+
+%fetch mmake=ports-game-rocksndiamonds-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/rocksndiamonds \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+    patches_specs=rocksndiamonds-3.3.1.2-aros.diff:$(ARCHBASE):-p1
+
+###################################################################################################
+
+%copy_dir_recursive mmake=ports-game-rocksndiamonds-graphics src=$(PORTSDIR)/rocksndiamonds/$(ARCHBASE)/graphics \
+    dst=$(TARGETDIR)/Data_RO/graphics
+
+%copy_dir_recursive mmake=ports-game-rocksndiamonds-levels src=$(PORTSDIR)/rocksndiamonds/$(ARCHBASE)/levels \
+    dst=$(TARGETDIR)/Data_RO/levels
+
+%copy_dir_recursive mmake=ports-game-rocksndiamonds-music src=$(PORTSDIR)/rocksndiamonds/$(ARCHBASE)/music \
+    dst=$(TARGETDIR)/Data_RO/music
+
+%copy_dir_recursive mmake=ports-game-rocksndiamonds-sounds src=$(PORTSDIR)/rocksndiamonds/$(ARCHBASE)/sounds \
+    dst=$(TARGETDIR)/Data_RO/sounds
+
+%copy_dir_recursive mmake=ports-game-rocksndiamonds-docs src=$(PORTSDIR)/rocksndiamonds/$(ARCHBASE)/docs \
+    dst=$(TARGETDIR)/Docs
+
+###################################################################################################
+
+CPYFILES := ChangeLog COPYING CREDITS README rocksndiamonds.1
+
+%copy_files_q mmake=ports-game-rocksndiamonds-cpy files=$(CPYFILES) src=$(PORTSDIR)/rocksndiamonds/$(ARCHBASE) \
+    dst=$(TARGETDIR)
+
+%common

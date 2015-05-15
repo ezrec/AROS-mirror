@@ -1,0 +1,42 @@
+diff -Naur rocksndiamonds-3.3.1.2-orig/src/libgame/platform.h rocksndiamonds-3.3.1.2/src/libgame/platform.h
+--- rocksndiamonds-3.3.1.2-orig/src/libgame/platform.h	2015-05-15 12:08:51.706453468 +0200
++++ rocksndiamonds-3.3.1.2/src/libgame/platform.h	2015-05-15 14:54:51.114457809 +0200
+@@ -46,6 +46,12 @@
+ #define PLATFORM_STRING "AmigaOS"
+ #endif
+ 
++#if defined(__AROS__)
++#define PLATFORM_AROS
++#undef  PLATFORM_STRING
++#define PLATFORM_STRING "AROS"
++#endif
++
+ #if defined(__BEOS__)
+ #define PLATFORM_BEOS
+ #undef  PLATFORM_STRING
+diff -Naur rocksndiamonds-3.3.1.2-orig/src/libgame/setup.c rocksndiamonds-3.3.1.2/src/libgame/setup.c
+--- rocksndiamonds-3.3.1.2-orig/src/libgame/setup.c	2015-05-15 12:08:51.705453479 +0200
++++ rocksndiamonds-3.3.1.2/src/libgame/setup.c	2015-05-15 16:18:17.602553132 +0200
+@@ -1312,6 +1312,8 @@
+     if (!SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, 0, dir)))
+       strcpy(dir, ".");
+   }
++#elif defined(PLATFORM_AROS)
++  dir = "/PROGDIR";
+ #elif defined(PLATFORM_UNIX)
+   if (dir == NULL)
+   {
+diff -Naur rocksndiamonds-3.3.1.2-orig/src/screens.c rocksndiamonds-3.3.1.2/src/screens.c
+--- rocksndiamonds-3.3.1.2-orig/src/screens.c	2015-05-15 12:08:51.706453468 +0200
++++ rocksndiamonds-3.3.1.2/src/screens.c	2015-05-15 15:05:40.572229588 +0200
+@@ -3024,8 +3024,10 @@
+ 	    sdl_version_linked->minor,
+ 	    sdl_version_linked->patch);
+ 
++#if !defined(PLATFORM_AROS)
+   SDL_IMAGE_VERSION(&sdl_version_compiled);
+   sdl_version_linked = IMG_Linked_Version();
++#endif
+ 
+   ystart2 += ystep;
+   DrawTextF(xstart1, ystart2, font_text, "SDL_image");
