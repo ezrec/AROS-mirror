@@ -65,6 +65,7 @@ struct LibCInterface
     ssize_t (*sendto)(int sockfd, const void *buf, size_t len, int flags, const struct sockaddr *dest_addr, socklen_t addrlen);
     ssize_t (*recvfrom)(int sockfd, void *buf, size_t len, int flags,struct sockaddr *src_addr, socklen_t *addrlen);
     int     (*bind)(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+    off_t   (*lseek)(int fd, off_t offset, int whence);
 };
 
 /* For simplicity, our library base is our static data */
