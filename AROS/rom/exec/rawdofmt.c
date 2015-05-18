@@ -283,15 +283,15 @@ APTR InternalRawDoFmt(CONST_STRPTR FormatString, APTR DataStream, VOID_FUNC PutC
 		    break;
 		{
 		    IPTR number = 0; int base;
-		    static const char digits[] = "0123456789ABCDEF";
+		    const char *digits;
 
 		    case 'p':
 		    case 'P':
 			fill = '0';
 			minwidth = sizeof(APTR)*2;
 			size = 'i';
-		    case 'x':
 		    case 'X':
+		    case 'x':
 		        base   = 16;
 			number = fetch_number(size, 1);
 
@@ -313,6 +313,12 @@ APTR InternalRawDoFmt(CONST_STRPTR FormatString, APTR DataStream, VOID_FUNC PutC
   		        number = fetch_number(size, 1);
 
 		    do_number:
+
+                        if (*FormatString == 'X' ||
+                            *FormatString == 'P')
+                            digits = "0123456789abcdef";
+		        else
+		            digits = "0123456789ABCDEF";
 
 		        buf = &cbuf[CBUFSIZE];
 			do
@@ -449,7 +455,8 @@ APTR InternalRawDoFmt(CONST_STRPTR FormatString, APTR DataStream, VOID_FUNC PutC
 				   'd' signed decimal number.
 				   's' C string. NULL terminated.
 				   'u' unsigned decimal number.
-				   'x' unsigned hexadecimal number.
+				   'x' unsigned hexadecimal number, upper case.
+				   'X' unsigned hexadecimal number, lower case.
 				   'P' pointer. Size depends on the architecture.
 				   'p' The same as 'P', for AmigaOS v4 compatibility.
 
