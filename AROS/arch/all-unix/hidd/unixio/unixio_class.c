@@ -534,6 +534,91 @@ int UXIO__Hidd_UnixIO__CloseFile(OOP_Class *cl, OOP_Object *o, struct pHidd_Unix
 /*****************************************************************************************
 
     NAME
+        moHidd_UnixIO_SeekFile
+
+    SYNOPSIS
+        OOP_DoMethod(OOP_Object *obj, struct pHidd_UnixIO_SeekFile *msg);
+
+        LONG Hidd_UnixIO_SeekFile(OOP_Object *obj, int fd, LONG offset, int whence, int *errno_ptr);
+
+    LOCATION
+        unixio.hidd
+
+    FUNCTION
+        Seek the position in a UNIX file descriptor.
+
+    INPUTS
+        obj       - A pointer to a UnixIO object.
+        fd        - A file descriptor to read from.
+        offset    - An offset to seek
+        whence    - SEEK_SET, SEEK_CUR, or SEEK_END
+	errno_ptr - An optional pointer to a location where error code (a value of UNIX
+		    errno variable) will be written.
+
+    RESULT
+	Final location or -1 if error happened.
+
+    NOTES
+	If there's no errno pointer supplied read operation will be automatically repeated if one
+	of EINTR or EAGAIN error happens. If you supplied valid own errno_ptr you should be ready
+	to handle these conditions yourself.
+
+	This method can be called from within interrupts.
+
+    EXAMPLE
+
+    BUGS
+
+    SEE ALSO
+	moHidd_UnixIO_WriteFile
+
+    INTERNALS
+
+    TODO
+
+*****************************************************************************************/
+IPTR UXIO__Hidd_UnixIO__SeekFile(OOP_Class *cl, OOP_Object *o, struct pHidd_UnixIO_SeekFile *msg)
+{
+    struct unixio_base *data = UD(cl);
+    LONG retval = -1;
+    volatile int err = EINVAL;
+
+    if (msg->FD != -1)
+    {
+        int user = !KrnIsSuper();
+
+    	if (user)
+    	    HostLib_Lock();
+
+    	do
+	{
+    	    retval = data->SysIFace->lseek((long)msg->FD, (off_t)msg->offset, (int)msg->whence);
+    	    AROS_HOST_BARRIER
+
+    	    err = *data->uio_Public.uio_ErrnoPtr;
+    	    D(kprintf(" UXIO__Hidd_UnixIO__SeekFile: retval %d errno %d offset %d whence %d\n", retval, err, (int)msg->offset, msg->whence));
+
+    	    if (msg->ErrNoPtr)
+    	    	break;
+
+	} while((err == EINTR) || (err == EAGAIN));
+
+	if (user)
+	    HostLib_Unlock();
+    }
+
+    if (msg->ErrNoPtr)
+    	*msg->ErrNoPtr = err;
+    
+    D(if (retval == -1) kprintf("UXIO__Hidd_UnixIO__SeekFile: retval %d errno %d offset %d whence %d\n", retval, err, (int)msg->offset, msg->whence));
+    
+    return retval;
+}
+
+
+/*****************************************************************************************
+
+    NAME
         moHidd_UnixIO_ReadFile
 
     SYNOPSIS
@@ -1108,6 +1193,7 @@ static const char *libc_symbols[] =
     "sendto",
     "recvfrom",
     "bind",
+    "lseek",
     NULL
 };
 
