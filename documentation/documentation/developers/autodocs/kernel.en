@@ -12,12 +12,14 @@ kernel
 `KrnAddExceptionHandler()`_             `KrnAddIRQHandler()`_                   `KrnAllocPages()`_                      `KrnBug()`_                             
 `KrnCause()`_                           `KrnCli()`_                             `KrnCreateContext()`_                   `KrnDeleteContext()`_                   
 `KrnDispatch()`_                        `KrnDisplayAlert()`_                    `KrnFormatStr()`_                       `KrnFreePages()`_                       
-`KrnGetBootInfo()`_                     `KrnGetCPUCount()`_                     `KrnGetCPUNumber()`_                    `KrnGetScheduler()`_                    
-`KrnGetSystemAttr()`_                   `KrnInitMemory()`_                      `KrnIsSuper()`_                         `KrnMapGlobal()`_                       
-`KrnMayGetChar()`_                      `KrnModifyIRQHandler()`_                `KrnObtainInput()`_                     `KrnPutChar()`_                         
-`KrnReleaseInput()`_                    `KrnRemExceptionHandler()`_             `KrnRemIRQHandler()`_                   `KrnSchedule()`_                        
-`KrnSetProtection()`_                   `KrnSetScheduler()`_                    `KrnStatMemoryA()`_                     `KrnSti()`_                             
-`KrnSwitch()`_                          `KrnUnmapGlobal()`_                     `KrnVirtualToPhysical()`_               
+`KrnGetBootInfo()`_                     `KrnGetCPUCount()`_                     `KrnGetCPUMask()`_                      `KrnGetCPUNumber()`_                    
+`KrnGetScheduler()`_                    `KrnGetSystemAttr()`_                   `KrnInitMemory()`_                      `KrnIsSuper()`_                         
+`KrnMapGlobal()`_                       `KrnMayGetChar()`_                      `KrnModifyIRQHandler()`_                `KrnObtainInput()`_                     
+`KrnPutChar()`_                         `KrnReleaseInput()`_                    `KrnRemExceptionHandler()`_             `KrnRemIRQHandler()`_                   
+`KrnSchedule()`_                        `KrnSetProtection()`_                   `KrnSetScheduler()`_                    `KrnSpinInit()`_                        
+`KrnSpinIsLocked()`_                    `KrnSpinLock()`_                        `KrnSpinTryLock()`_                     `KrnSpinUnLock()`_                      
+`KrnStatMemoryA()`_                     `KrnSti()`_                             `KrnSwitch()`_                          `KrnUnmapGlobal()`_                     
+`KrnVirtualToPhysical()`_               
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -640,6 +642,45 @@ Result
 
 ----------
 
+KrnGetCPUMask()
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ uint32_t KrnGetCPUMask(
+          uint32_t id );
+
+Function
+~~~~~~~~
+::
+
+     Return the affinity mask for the specified CPU number 
+
+
+Inputs
+~~~~~~
+::
+
+     CPU number (as returned by KrnGetCPUNumber())
+
+
+Result
+~~~~~~
+::
+
+     CPU's affinity mask
+
+
+
+See also
+~~~~~~~~
+
+`KrnGetCPUNumber()`_ 
+
+----------
+
 KrnGetCPUNumber()
 =================
 
@@ -647,7 +688,7 @@ Synopsis
 ~~~~~~~~
 ::
 
- unsigned int KrnGetCPUNumber();
+ uint32_t KrnGetCPUNumber();
 
 Function
 ~~~~~~~~
@@ -1134,6 +1175,90 @@ Synopsis
 
  void KrnSetScheduler(
           KRN_SchedType sched );
+
+
+----------
+
+KrnSpinInit()
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnSpinInit(
+          spinlock_t * lock );
+
+
+----------
+
+KrnSpinIsLocked()
+=================
+
+Synopsis
+~~~~~~~~
+::
+
+ int KrnSpinIsLocked(
+          spinlock_t * lock );
+
+
+----------
+
+KrnSpinLock()
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ spinlock_t * KrnSpinLock(
+          spinlock_t * lock,
+          struct Hook * failhook,
+          ULONG mode );
+
+Inputs
+~~~~~~
+::
+
+     lock      - spinlock to lock
+     failhook  - called if the lock is already held
+     mode      - type of lock to obtain.
+
+
+Result
+~~~~~~
+::
+
+     returns a pointer to the spinlock "handle".
+
+
+
+----------
+
+KrnSpinTryLock()
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ spinlock_t * KrnSpinTryLock(
+          spinlock_t * lock,
+          ULONG mode );
+
+
+----------
+
+KrnSpinUnLock()
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ void KrnSpinUnLock(
+          spinlock_t * lock );
 
 
 ----------

@@ -2423,7 +2423,7 @@ Inputs
 ::
 
      tid     --  The ID of the task to orphan, or 0 for all tasks. Note
-                 that this is NOT the pointer to the task.
+                 that it is NOT the pointer to the task.
 
 
 Result
@@ -2461,7 +2461,7 @@ Inputs
 ~~~~~~
 ::
 
-     tid     --  The ID of the task to examine. Note that this is _NOT_
+     tid     --  The ID of the task to examine. Note that it is _NOT_
                  a task pointer.
 
 
@@ -2499,7 +2499,7 @@ Function
 ::
 
      Wait for either a specific child task, or any child task to finish.
-     If you specify tid = 0, then this call will return when any child
+     If you specify tid = 0, then the call will return when any child
      task exits, otherwise it will not return until the requested task
      finishes.
 

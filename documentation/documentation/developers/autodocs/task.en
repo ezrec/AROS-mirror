@@ -1,0 +1,177 @@
+====
+task
+====
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_
+
+----------
+
+======================================= ======================================= ======================================= ======================================= 
+`LockTaskList()`_                       `NextTaskEntry()`_                      `QueryTaskTagList()`_                   `UnLockTaskList()`_                     
+
+======================================= ======================================= ======================================= ======================================= 
+
+-----------
+
+LockTaskList()
+==============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct TaskList * LockTaskList(
+          ULONG flags );
+
+Inputs
+~~~~~~
+::
+
+     flags - 
+
+
+Result
+~~~~~~
+::
+
+     Handle to the task list. This is not a direct pointer
+     to the first list element but to a pseudo element instead.
+
+
+
+See also
+~~~~~~~~
+
+`UnLockTaskList()`_ NextTaskEntry(). 
+
+----------
+
+NextTaskEntry()
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Task * NextTaskEntry(
+          struct TaskList * tlist,
+          ULONG flags );
+
+Function
+~~~~~~~~
+::
+
+     Looks for the next task list entry with the right type. The list
+     must be locked for this.
+
+
+Inputs
+~~~~~~
+::
+
+     tlist - the value given by LockTaskList()
+     flags - the same flags as given to LockTaskList() or a subset
+             of them.
+
+
+Result
+~~~~~~
+::
+
+     Pointer to task entry found or NULL if the are no more entries.
+
+
+
+See also
+~~~~~~~~
+
+`LockTaskList()`_ UnLockTaskList(). 
+
+----------
+
+QueryTaskTagList()
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ void QueryTaskTagList(
+          struct Task * task,
+          struct TagItem * tagList );
+ 
+ void QueryTaskTags(
+          struct Task * task,
+          TAG tag, ... );
+
+Function
+~~~~~~~~
+::
+
+
+     Provides information about selected system Task
+ 
+
+Inputs
+~~~~~~
+::
+
+
+     Function takes an array of tags. Data is returned for each tag. See
+     specific tag description.
+
+
+Tags
+~~~~
+::
+
+
+     TaskTag_CPUNumber - (IPTR *) Returns the CPU Number the task is currently running on
+     TaskTag_CPUAffinity - (IPTR *) Returns the CPU Affinity mask
+     TaskTag_CPUTime - (struct timeval *) Returns the amount of cpu time a task has used .
+     TaskTag_StartTime - (struct timeval *) Returns the time the task was launched .
+
+
+Result
+~~~~~~
+::
+
+
+     None
+
+
+
+----------
+
+UnLockTaskList()
+================
+
+Synopsis
+~~~~~~~~
+::
+
+ void UnLockTaskList(
+          ULONG flags );
+
+Function
+~~~~~~~~
+::
+
+     Frees a lock on the task lists given by LockTaskList().
+
+
+Inputs
+~~~~~~
+::
+
+     flags - the same value as given to LockTaskList().
+
+
+
+See also
+~~~~~~~~
+
+`LockTaskList()`_ NextTaskEntry(). 
+
