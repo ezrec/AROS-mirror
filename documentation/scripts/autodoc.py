@@ -821,10 +821,10 @@ def create_module_docs():
         create_hidd_docs_dir(dir, targetdir, module_titles)
 
     # add muimaster classes
-    docpath = os.path.join(topdir, "workbench", "libs", "muimaster", "classes")
-    hidddocs = hidddoclist()
-    hidddocs.read(docpath, "mui_classes")
-    hidddocs.write(targetdir, module_titles)
+    #docpath = os.path.join(topdir, "workbench", "libs", "muimaster", "classes")
+    #hidddocs = hidddoclist()
+    #hidddocs.read(docpath, "mui_classes")
+    #hidddocs.write(targetdir, module_titles)
 
     # print index file
     filehandle = open(os.path.join(targetdir, "index.en"), "w")
