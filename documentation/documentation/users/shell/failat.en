@@ -76,3 +76,11 @@ Example
      less than the return code limit.
 
 
+Notes
+~~~~~
+::
+
+     If this command is called in a script that is executed from another
+     script, the new fail level will be inherited by the parent script.
+
+

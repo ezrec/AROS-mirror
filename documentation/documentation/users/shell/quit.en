@@ -49,3 +49,11 @@ Inputs
      RC   --  the return code. Defaults to 0.
 
 
+Notes
+~~~~~
+::
+
+     If this command is called in a script that is executed from another
+     script, the entire series of nested scripts will stop.
+
+

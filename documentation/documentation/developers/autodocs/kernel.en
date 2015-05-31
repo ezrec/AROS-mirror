@@ -745,6 +745,8 @@ Function
 
        KATTR_Architecture [.G] (char *)        - Name of architecture the kernel built for.
 
+       KATTR_PeripheralBase [.G] IPTR   - IO Base address for ARM peripherals
+
 
 Inputs
 ~~~~~~

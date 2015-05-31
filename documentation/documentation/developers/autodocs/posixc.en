@@ -6453,8 +6453,8 @@ Function
 ::
 
      Store information about the operating system in the structure pointed 
-     by name.
-     
+     to by name.
+
 
 Inputs
 ~~~~~~

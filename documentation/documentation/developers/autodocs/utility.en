@@ -179,7 +179,7 @@ Function
 ~~~~~~~~
 ::
 
-     Allocate a new NamedObject and initializes it as requested.
+     Allocates a new NamedObject and initializes it as requested.
      This object can then be used as an object in a name space.
      Optionally you give this object a name space, and use it to
      nest name spaces. You can also allocate some memory which is
