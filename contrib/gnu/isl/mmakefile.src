@@ -1,0 +1,17 @@
+# Copyright © 2015 The AROS Development Team. All rights reserved.
+# $Id$
+
+-include $(TOP)/config/make.cfg
+
+ISL_VERSION=0.14
+ISL_PKGNAME := isl
+ISL_REPOSITORY :=  ftp://gcc.gnu.org/pub/gcc/infrastructure
+
+ISL_EXTRA_OPTS := \
+        --without-piplib \
+        --disable-shared
+
+%fetch_and_build mmake=contrib-gnu-isl package=$(ISL_PKGNAME) version=$(ISL_VERSION) \
+	package_repo="$(ISL_REPOSITORY)" \
+	patch=no  prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development nix=yes \
+	extraoptions="$(ISL_EXTRA_OPTS)"
