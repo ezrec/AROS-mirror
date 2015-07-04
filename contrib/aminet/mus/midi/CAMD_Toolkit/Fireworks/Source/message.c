@@ -46,12 +46,6 @@ LONG MessageA(UBYTE *Msg,UBYTE *Options,APTR Args)
 /* Show non-blocking (asynchronous) message */
 /*------------------------------------------*/
 
-struct MsgData
-{
-	UBYTE *Msg;
-	UBYTE *Options;
-	APTR Args;
-};
 
 void AsyncMessageFunction(struct Globals *glob, struct Prefs *pref, APTR UserData)
 {
@@ -60,38 +54,31 @@ void AsyncMessageFunction(struct Globals *glob, struct Prefs *pref, APTR UserDat
 	MessageA(md->Msg, md->Options, md->Args);
 }
 
+#if !defined(__AROS__)
 LONG __stdargs AsyncMessage(struct Globals *glob, TaskFlag flg, UBYTE *Msg,UBYTE *Options,...)
 {
 	BOOL req = FALSE;
 	struct MsgData md;
-	
+
 	va_list Args;
 	va_start(Args,Options);
-	
+
 	// if (Options) if (strchr(Options,'|')) req = TRUE;
 	if (Options) req = TRUE;
-	
+
 	if (IntuitionBase && (WBMode || req))
 	{
 		md.Msg = Msg;
 		md.Options= Options;
-#if defined(__AROS__) && defined(__ARM_ARCH__)
-        #warning "TODO: fix va_arg usage for ARM"
-		md.Args = NULL;
-#else
 		md.Args = Args;
-#endif
 
 		if (!StartAsyncTask(glob, NULL, "Fireworks messaging task", flg, &AsyncMessageFunction, &md, sizeof(struct MsgData)))
 		{
-#if defined(__AROS__) && defined(__ARM_ARCH__)
-        #warning "TODO: fix va_arg usage for ARM"
-#else
-			MessageA(Msg,Options,Args);
-#endif
+			MessageA(Msg,Options,md.Args);
 		}
 	}
 	va_end(Args);
 	
 	return(0);
 }
+#endif

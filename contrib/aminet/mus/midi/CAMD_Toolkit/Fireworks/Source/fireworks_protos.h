@@ -3,18 +3,11 @@
 
 #include "fireworks.h"
 
-
                              /* fireworks.c */
 
 void BusyPointer(struct Globals *glob, struct Prefs *pref);
 void NormalPointer(struct Globals *glob, struct Prefs *pref);
 
-                              /* message.c */
-
-#define Message(Msg, Options, Args...) \
-({ IPTR args[] = { AROS_PP_VARIADIC_CAST2IPTR(Args) }; MessageA(Msg, Options, args); })
-LONG           MessageA(UBYTE *Msg,UBYTE *Options,APTR Args);
-LONG __stdargs AsyncMessage(struct Globals *glob, TaskFlag flg, UBYTE *Msg,UBYTE *Options,...);
                                /* timer.c */
 
 struct timerequest *OpenTimer(void);
@@ -25,11 +18,48 @@ LONG HowOldIsTimestamp(ULONG timestamp);
                                /* async.c */
 
 BOOL StartAsyncTask(struct Globals *glob, struct Prefs *pref, UBYTE *TaskName, TaskFlag flg, APTR AsyncFunction, APTR UserData, ULONG UDLength);
+void AsyncMessageFunction(struct Globals *glob, struct Prefs *pref, APTR UserData);
 
 BOOL AllocAsync(struct Globals *glob, TaskFlag flg);
 void FreeAsync(struct Globals *glob, TaskFlag flg);
 BOOL AskAsync(struct Globals *glob);
 void WaitAsync(struct Globals *glob);
+
+                              /* message.c */
+
+struct MsgData
+{
+	UBYTE *Msg;
+	UBYTE *Options;
+	APTR Args;
+};
+
+LONG           MessageA(UBYTE *Msg, UBYTE *Options, APTR Args);
+#define Message(Msg, Options, Args...) \
+({ IPTR args[] = { AROS_PP_VARIADIC_CAST2IPTR(Args) }; MessageA(Msg, Options, args); })
+
+#if !defined(__AROS__)
+LONG __stdargs AsyncMessage(struct Globals *glob, TaskFlag flg, UBYTE *Msg, UBYTE *Options,...);
+#else
+#define AsyncMessage(glob, flg, msg, options...) \
+({ \
+    IPTR tmpargs[] = { AROS_PP_VARIADIC_CAST2IPTR(options) }; \
+    APTR args = 0; \
+    struct MsgData md; \
+    if (sizeof(tmpargs) > 1) \
+        args = &tmpargs[1]; \
+    if (IntuitionBase && (WBMode || tmpargs[0])) \
+    { \
+            md.Msg = msg; \
+            md.Options = (APTR)tmpargs[0]; \
+            md.Args = args; \
+            if (!StartAsyncTask(glob, NULL, "Fireworks messaging task", flg, &AsyncMessageFunction, &md, sizeof(struct MsgData))) \
+            { \
+                    MessageA(msg, (APTR)tmpargs[0], args); \
+            } \
+    } \
+})
+#endif
 
                               /* libopen.c */
 
