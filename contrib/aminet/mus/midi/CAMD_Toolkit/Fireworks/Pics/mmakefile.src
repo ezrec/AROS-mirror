@@ -1,0 +1,10 @@
+#   $Id: mmakefile.src 48342 2013-10-28 07:59:49Z mazze $
+#
+
+include $(TOP)/config/make.cfg
+
+EXEDIR := $(AROS_CONTRIB)/Misc/aminet/CAMD
+
+#MM- aminet-mus-midi-CAMD_Toolkit-Fireworks : CAMD_Toolkit-Fireworks-Pics
+
+%copy_files_q mmake=CAMD_Toolkit-Fireworks-Pics files="$(call WILDCARD, *.Pic *.info)" dst=$(EXEDIR)

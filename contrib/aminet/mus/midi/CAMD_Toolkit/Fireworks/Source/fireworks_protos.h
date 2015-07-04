@@ -46,7 +46,7 @@ LONG __stdargs AsyncMessage(struct Globals *glob, TaskFlag flg, UBYTE *Msg, UBYT
     IPTR tmpargs[] = { AROS_PP_VARIADIC_CAST2IPTR(options) }; \
     APTR args = 0; \
     struct MsgData md; \
-    if (sizeof(tmpargs) > 1) \
+    if (sizeof(tmpargs) > sizeof(IPTR)) \
         args = &tmpargs[1]; \
     if (IntuitionBase && (WBMode || tmpargs[0])) \
     { \

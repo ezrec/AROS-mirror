@@ -24,7 +24,7 @@ ULONG MyMainFullRequest( CONST_STRPTR, CONST_STRPTR, APTR );
 ({ \
     IPTR tmpargs[] = { AROS_PP_VARIADIC_CAST2IPTR(ButtonText) }; \
     APTR args = 0; \
-    if (sizeof(tmpargs) > 1) \
+    if (sizeof(tmpargs) > sizeof(IPTR)) \
         args = &tmpargs[1]; \
     MyMainFullRequest(Text, (CONST_STRPTR)tmpargs[0], args); \
 })
@@ -32,7 +32,7 @@ ULONG MyMainFullRequest( CONST_STRPTR, CONST_STRPTR, APTR );
 ({ \
     IPTR tmpargs[] = { AROS_PP_VARIADIC_CAST2IPTR(ButtonText) }; \
     APTR args = 0; \
-    if (sizeof(tmpargs) > 1) \
+    if (sizeof(tmpargs) > sizeof(IPTR)) \
         args = &tmpargs[1]; \
     MyMainFullRequest(GetStr(Text), GetStr((CONST_STRPTR)tmpargs[0]), args); \
 })

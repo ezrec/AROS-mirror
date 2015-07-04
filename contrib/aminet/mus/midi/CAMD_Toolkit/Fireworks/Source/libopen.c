@@ -10,7 +10,9 @@ extern void __stdargs __fpterm(void);
 
 /* Library bases */
 
+#if !defined(__AROS__)
 struct ExecBase			*SysBase;
+#endif
 struct DosLibrary		*DOSBase;
 struct GfxBase			*GfxBase;
 struct Library			*LayersBase;
