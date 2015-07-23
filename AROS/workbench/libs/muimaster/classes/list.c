@@ -697,6 +697,7 @@ IPTR List__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
     LONG new_entries_active = MUIV_List_Active_Off;
     struct TagItem rectattrs[2] = {{TAG_IGNORE, TAG_IGNORE }, {TAG_DONE, TAG_DONE}};
     Object *group, *vert, *area;
+    IPTR cyclechain;
 
     /* search for MUIA_Frame as it has to be passed to rectangle object */
     for (tags = msg->ops_AttrList; (tag = NextTagItem(&tags));)
@@ -710,9 +711,12 @@ IPTR List__OM_NEW(struct IClass *cl, Object *obj, struct opSet *msg)
         }
     }
 
+    cyclechain =
+        (IPTR) GetTagData(MUIA_CycleChain, (IPTR) 0, msg->ops_AttrList);
+
     obj = (Object *) DoSuperNewTags(cl, obj, NULL,
         MUIA_Group_Horiz, FALSE,
-//        MUIA_CycleChain, cyclechain,
+        MUIA_CycleChain, cyclechain,
         MUIA_InnerLeft, 0,
         MUIA_InnerRight, 0,
         MUIA_Font, MUIV_Font_List,
