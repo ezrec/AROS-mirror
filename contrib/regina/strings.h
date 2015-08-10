@@ -24,7 +24,11 @@ typedef struct strengtype {
 #ifdef CHECK_MEMORY                     /* FGC: Test                         */
    char *value;
 #else
-   char value[4] ;
+   union
+   {
+      void **ptr;
+      char value[sizeof(void *)];
+   };
 #endif
 } streng ;
 

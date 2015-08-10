@@ -90,7 +90,7 @@
  * file-scope variable, in order to optimize a bit. This way, we have
  * to neither allocate space for it, or deallocate it.
  */
-static const streng nullstring={ 0, 0, "" } ;
+static const streng nullstring={ 0, 0, { .ptr = 0} } ;
 
 /*
  * This is an implementation of the strstr() function, for the 'streng'

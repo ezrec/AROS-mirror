@@ -930,7 +930,7 @@ streng *arexx_compress( tsd_t *TSD, cparamboxptr parm1 )
 }
 
 
-static const streng T_str = { 1, 1, "T" };
+static const streng T_str = { 1, 1, { .value = "T" } };
 static const parambox T_parm = { NULL, 0, (streng *)&T_str };
 
 streng *arexx_trim( tsd_t *TSD, cparamboxptr parm1 )
@@ -1082,7 +1082,7 @@ streng *arexx_freespace( tsd_t *TSD, cparamboxptr parm1 )
    if ( parm1->value->len != sizeof(void *) )
       exiterror( ERR_INCORRECT_CALL, 0 );
 
-   Free_TSD( TSD, *((void **)parm1->value->value) );
+   Free_TSD( TSD, *(parm1->value->ptr) );
 
    return nullstringptr();
 }
@@ -1104,7 +1104,7 @@ streng *arexx_import( tsd_t *TSD, cparamboxptr parm1 )
   if ( parm1->value->len != sizeof(void *) )
     exiterror( ERR_INCORRECT_CALL, 0 );
 
-  memptr = *((void **)parm1->value->value);
+  memptr = *(parm1->value->ptr);
 
   parm2 = parm1->next;
   if ( parm2 == NULL || parm2->value == NULL || parm2->value->len == 0 )
@@ -1134,7 +1134,7 @@ streng *arexx_export( tsd_t *TSD, cparamboxptr parm1 )
 
   if ( parm1->value == NULL || parm1->value->len == 0 )
     exiterror( ERR_INCORRECT_CALL, 21, "EXPORT", 1 );
-  memptr = *((void **)parm1->value->value);
+  memptr = *(parm1->value->ptr);
 
   parm2 = parm1->next;
   if ( parm2 != NULL )
@@ -1195,7 +1195,7 @@ streng *arexx_storage( tsd_t *TSD, cparamboxptr parm1 )
 
   if ( parm1->value == NULL || parm1->value->len == 0 )
     exiterror( ERR_INCORRECT_CALL, 21, "STORAGE", 1 );
-  memptr = *((void **)parm1->value->value);
+  memptr = *(parm1->value->ptr);
 
   parm2 = parm1->next;
   if ( parm2 != NULL )
