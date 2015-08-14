@@ -8,5 +8,5 @@
 
 #MM- libiconv-includes : contrib-libiconv
 
-%fetch_and_build_gnu_development package=libiconv version=1.13.1 patch=no \
+%fetch_and_build_gnu_development package=libiconv version=1.14 patch=no \
     suffixes="tar.gz"
