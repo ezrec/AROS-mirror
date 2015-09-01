@@ -10,7 +10,7 @@ PACKAGE      := dosbox
 VERSION      := 0.74
 TARGETDIR    := $(AROS_CONTRIB)/Emu/DOSBox
 REPOSITORIES := sf://dosbox
-USER_CFLAGS  := -fexceptions -fpermissive
+USER_CFLAGS  := -fexceptions -fpermissive -static-libstdc++
 
 %fetch_and_build mmake=ports-emulation-dosbox prefix=$(TARGETDIR) \
 	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
