@@ -1,6 +1,18 @@
-diff -Naur rocksndiamonds-3.3.1.2-orig/src/libgame/platform.h rocksndiamonds-3.3.1.2/src/libgame/platform.h
---- rocksndiamonds-3.3.1.2-orig/src/libgame/platform.h	2015-05-15 12:08:51.706453468 +0200
-+++ rocksndiamonds-3.3.1.2/src/libgame/platform.h	2015-05-15 14:54:51.114457809 +0200
+diff -ruN rocksndiamonds-3.3.1.2/src/init.c rocksndiamonds-3.3.1.2.aros/src/init.c
+--- rocksndiamonds-3.3.1.2/src/init.c	2013-11-23 19:17:27.000000000 +0000
++++ rocksndiamonds-3.3.1.2.aros/src/init.c	2015-09-01 00:55:19.186223015 +0100
+@@ -257,7 +257,7 @@
+   gadgets_initialized = TRUE;
+ }
+ 
+-inline void InitElementSmallImagesScaledUp(int graphic)
++static inline void InitElementSmallImagesScaledUp(int graphic)
+ {
+ #if 0
+   struct FileInfo *fi = getImageListEntryFromImageID(graphic);
+diff -ruN rocksndiamonds-3.3.1.2/src/libgame/platform.h rocksndiamonds-3.3.1.2.aros/src/libgame/platform.h
+--- rocksndiamonds-3.3.1.2/src/libgame/platform.h	2007-03-08 17:16:21.000000000 +0000
++++ rocksndiamonds-3.3.1.2.aros/src/libgame/platform.h	2015-09-01 00:35:38.348093317 +0100
 @@ -46,6 +46,12 @@
  #define PLATFORM_STRING "AmigaOS"
  #endif
@@ -14,9 +26,9 @@ diff -Naur rocksndiamonds-3.3.1.2-orig/src/libgame/platform.h rocksndiamonds-3.3
  #if defined(__BEOS__)
  #define PLATFORM_BEOS
  #undef  PLATFORM_STRING
-diff -Naur rocksndiamonds-3.3.1.2-orig/src/libgame/setup.c rocksndiamonds-3.3.1.2/src/libgame/setup.c
---- rocksndiamonds-3.3.1.2-orig/src/libgame/setup.c	2015-05-15 12:08:51.705453479 +0200
-+++ rocksndiamonds-3.3.1.2/src/libgame/setup.c	2015-05-15 16:18:17.602553132 +0200
+diff -ruN rocksndiamonds-3.3.1.2/src/libgame/setup.c rocksndiamonds-3.3.1.2.aros/src/libgame/setup.c
+--- rocksndiamonds-3.3.1.2/src/libgame/setup.c	2013-11-13 00:13:27.000000000 +0000
++++ rocksndiamonds-3.3.1.2.aros/src/libgame/setup.c	2015-09-01 00:35:38.349093329 +0100
 @@ -1312,6 +1312,8 @@
      if (!SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, 0, dir)))
        strcpy(dir, ".");
@@ -26,9 +38,9 @@ diff -Naur rocksndiamonds-3.3.1.2-orig/src/libgame/setup.c rocksndiamonds-3.3.1.
  #elif defined(PLATFORM_UNIX)
    if (dir == NULL)
    {
-diff -Naur rocksndiamonds-3.3.1.2-orig/src/screens.c rocksndiamonds-3.3.1.2/src/screens.c
---- rocksndiamonds-3.3.1.2-orig/src/screens.c	2015-05-15 12:08:51.706453468 +0200
-+++ rocksndiamonds-3.3.1.2/src/screens.c	2015-05-15 15:05:40.572229588 +0200
+diff -ruN rocksndiamonds-3.3.1.2/src/screens.c rocksndiamonds-3.3.1.2.aros/src/screens.c
+--- rocksndiamonds-3.3.1.2/src/screens.c	2013-11-19 21:06:36.000000000 +0000
++++ rocksndiamonds-3.3.1.2.aros/src/screens.c	2015-09-01 00:35:38.350093341 +0100
 @@ -3024,8 +3024,10 @@
  	    sdl_version_linked->minor,
  	    sdl_version_linked->patch);
