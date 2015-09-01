@@ -149,8 +149,13 @@ FILES := $(addprefix $(PORTSDIR)/rocksndiamonds/$(ARCHBASE)/src/game_sp/,$(FILES
 ###################################################################################################
 
 %fetch mmake=ports-game-rocksndiamonds-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/rocksndiamonds \
-    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
-    patches_specs=rocksndiamonds-3.3.1.2-aros.diff:$(ARCHBASE):-p1
+    archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+    patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
+
+%create_patch mmake=ports-game-rocksndiamonds-create-patch \
+    archive="$(ARCHBASE)" \
+    suffixes="tar.gz" \
+    destination="$(PORTSDIR)/rocksndiamonds"
 
 ###################################################################################################
 
