@@ -29,6 +29,7 @@
 
 #include "alMain.h"
 #include "alu.h"
+#include "threads.h"
 
 #ifndef WAVE_FORMAT_IEEE_FLOAT
 #define WAVE_FORMAT_IEEE_FLOAT  0x0003
@@ -38,10 +39,9 @@
 typedef struct {
     // MMSYSTEM Device
     volatile ALboolean killNow;
-    HANDLE  WaveThreadEvent;
-    HANDLE  WaveThread;
-    DWORD   WaveThreadID;
-    volatile LONG WaveBuffersCommitted;
+    althrd_t thread;
+
+    RefCount WaveBuffersCommitted;
     WAVEHDR WaveBuffer[4];
 
     union {
@@ -55,87 +55,102 @@ typedef struct {
 } WinMMData;
 
 
-static ALCchar **PlaybackDeviceList;
-static ALuint  NumPlaybackDevices;
-static ALCchar **CaptureDeviceList;
-static ALuint  NumCaptureDevices;
+TYPEDEF_VECTOR(al_string, vector_al_string)
+static vector_al_string PlaybackDevices;
+static vector_al_string CaptureDevices;
+
+static void clear_devlist(vector_al_string *list)
+{
+    VECTOR_FOR_EACH(al_string, *list, al_string_deinit);
+    VECTOR_RESIZE(*list, 0);
+}
 
 
 static void ProbePlaybackDevices(void)
 {
+    al_string *iter, *end;
+    ALuint numdevs;
     ALuint i;
 
-    for(i = 0;i < NumPlaybackDevices;i++)
-        free(PlaybackDeviceList[i]);
+    clear_devlist(&PlaybackDevices);
 
-    NumPlaybackDevices = waveOutGetNumDevs();
-    PlaybackDeviceList = realloc(PlaybackDeviceList, sizeof(ALCchar*) * NumPlaybackDevices);
-    for(i = 0;i < NumPlaybackDevices;i++)
+    numdevs = waveOutGetNumDevs();
+    VECTOR_RESERVE(PlaybackDevices, numdevs);
+    for(i = 0;i < numdevs;i++)
     {
-        WAVEOUTCAPS WaveCaps;
+        WAVEOUTCAPSW WaveCaps;
+        al_string dname;
 
-        PlaybackDeviceList[i] = NULL;
-        if(waveOutGetDevCaps(i, &WaveCaps, sizeof(WaveCaps)) == MMSYSERR_NOERROR)
+        AL_STRING_INIT(dname);
+        if(waveOutGetDevCapsW(i, &WaveCaps, sizeof(WaveCaps)) == MMSYSERR_NOERROR)
         {
-            char name[1024];
-            ALuint count, j;
-
-            count = 0;
+            ALuint count = 0;
             do {
-                if(count == 0)
-                    snprintf(name, sizeof(name), "%s", WaveCaps.szPname);
-                else
-                    snprintf(name, sizeof(name), "%s #%d", WaveCaps.szPname, count+1);
+                al_string_copy_wcstr(&dname, WaveCaps.szPname);
+                if(count != 0)
+                {
+                    char str[64];
+                    snprintf(str, sizeof(str), " #%d", count+1);
+                    al_string_append_cstr(&dname, str);
+                }
                 count++;
 
-                for(j = 0;j < i;j++)
+                iter = VECTOR_ITER_BEGIN(PlaybackDevices);
+                end = VECTOR_ITER_END(PlaybackDevices);
+                for(;iter != end;iter++)
                 {
-                    if(strcmp(name, PlaybackDeviceList[j]) == 0)
+                    if(al_string_cmp(*iter, dname) == 0)
                         break;
                 }
-            } while(j != i);
+            } while(iter != end);
 
-            PlaybackDeviceList[i] = strdup(name);
+            TRACE("Got device \"%s\", ID %u\n", al_string_get_cstr(dname), i);
         }
+        VECTOR_PUSH_BACK(PlaybackDevices, dname);
     }
 }
 
 static void ProbeCaptureDevices(void)
 {
+    al_string *iter, *end;
+    ALuint numdevs;
     ALuint i;
 
-    for(i = 0;i < NumCaptureDevices;i++)
-        free(CaptureDeviceList[i]);
+    clear_devlist(&CaptureDevices);
 
-    NumCaptureDevices = waveInGetNumDevs();
-    CaptureDeviceList = realloc(CaptureDeviceList, sizeof(ALCchar*) * NumCaptureDevices);
-    for(i = 0;i < NumCaptureDevices;i++)
+    numdevs = waveInGetNumDevs();
+    VECTOR_RESERVE(CaptureDevices, numdevs);
+    for(i = 0;i < numdevs;i++)
     {
-        WAVEINCAPS WaveInCaps;
+        WAVEINCAPSW WaveCaps;
+        al_string dname;
 
-        CaptureDeviceList[i] = NULL;
-        if(waveInGetDevCaps(i, &WaveInCaps, sizeof(WAVEINCAPS)) == MMSYSERR_NOERROR)
+        AL_STRING_INIT(dname);
+        if(waveInGetDevCapsW(i, &WaveCaps, sizeof(WaveCaps)) == MMSYSERR_NOERROR)
         {
-            char name[1024];
-            ALuint count, j;
-
-            count = 0;
+            ALuint count = 0;
             do {
-                if(count == 0)
-                    snprintf(name, sizeof(name), "%s", WaveInCaps.szPname);
-                else
-                    snprintf(name, sizeof(name), "%s #%d", WaveInCaps.szPname, count+1);
+                al_string_copy_wcstr(&dname, WaveCaps.szPname);
+                if(count != 0)
+                {
+                    char str[64];
+                    snprintf(str, sizeof(str), " #%d", count+1);
+                    al_string_append_cstr(&dname, str);
+                }
                 count++;
 
-                for(j = 0;j < i;j++)
+                iter = VECTOR_ITER_BEGIN(CaptureDevices);
+                end = VECTOR_ITER_END(CaptureDevices);
+                for(;iter != end;iter++)
                 {
-                    if(strcmp(name, CaptureDeviceList[j]) == 0)
+                    if(al_string_cmp(*iter, dname) == 0)
                         break;
                 }
-            } while(j != i);
+            } while(iter != end);
 
-            CaptureDeviceList[i] = strdup(name);
+            TRACE("Got device \"%s\", ID %u\n", al_string_get_cstr(dname), i);
         }
+        VECTOR_PUSH_BACK(CaptureDevices, dname);
     }
 }
 
@@ -146,38 +161,27 @@ static void ProbeCaptureDevices(void)
     Posts a message to 'PlaybackThreadProc' everytime a WaveOut Buffer is completed and
     returns to the application (for more data)
 */
-static void CALLBACK WaveOutProc(HWAVEOUT device, UINT msg, DWORD_PTR instance, DWORD_PTR param1, DWORD_PTR param2)
+static void CALLBACK WaveOutProc(HWAVEOUT UNUSED(device), UINT msg, DWORD_PTR instance, DWORD_PTR param1, DWORD_PTR UNUSED(param2))
 {
     ALCdevice *Device = (ALCdevice*)instance;
     WinMMData *data = Device->ExtraData;
 
-    (void)device;
-    (void)param2;
-
     if(msg != WOM_DONE)
         return;
 
-    InterlockedDecrement(&data->WaveBuffersCommitted);
-    PostThreadMessage(data->WaveThreadID, msg, 0, param1);
+    DecrementRef(&data->WaveBuffersCommitted);
+    PostThreadMessage(data->thread, msg, 0, param1);
 }
 
-/*
-    PlaybackThreadProc
-
-    Used by "MMSYSTEM" Device.  Called when a WaveOut buffer has used up its
-    audio data.
-*/
-static DWORD WINAPI PlaybackThreadProc(LPVOID param)
+FORCE_ALIGN static int PlaybackThreadProc(void *arg)
 {
-    ALCdevice *Device = (ALCdevice*)param;
+    ALCdevice *Device = (ALCdevice*)arg;
     WinMMData *data = Device->ExtraData;
-    LPWAVEHDR WaveHdr;
-    ALuint FrameSize;
+    WAVEHDR *WaveHdr;
     MSG msg;
 
-    FrameSize = FrameSizeFromDevFmt(Device->FmtChans, Device->FmtType);
-
     SetRTPriority();
+    althrd_setname(althrd_current(), MIXER_THREAD_NAME);
 
     while(GetMessage(&msg, NULL, 0, 0))
     {
@@ -186,24 +190,20 @@ static DWORD WINAPI PlaybackThreadProc(LPVOID param)
 
         if(data->killNow)
         {
-            if(data->WaveBuffersCommitted == 0)
+            if(ReadRef(&data->WaveBuffersCommitted) == 0)
                 break;
             continue;
         }
 
-        WaveHdr = ((LPWAVEHDR)msg.lParam);
-        aluMixData(Device, WaveHdr->lpData, WaveHdr->dwBufferLength/FrameSize);
+        WaveHdr = ((WAVEHDR*)msg.lParam);
+        aluMixData(Device, WaveHdr->lpData, WaveHdr->dwBufferLength /
+                                            data->Format.nBlockAlign);
 
         // Send buffer back to play more data
         waveOutWrite(data->WaveHandle.Out, WaveHdr, sizeof(WAVEHDR));
-        InterlockedIncrement(&data->WaveBuffersCommitted);
+        IncrementRef(&data->WaveBuffersCommitted);
     }
 
-    // Signal Wave Thread completed event
-    if(data->WaveThreadEvent)
-        SetEvent(data->WaveThreadEvent);
-
-    ExitThread(0);
     return 0;
 }
 
@@ -213,36 +213,26 @@ static DWORD WINAPI PlaybackThreadProc(LPVOID param)
     Posts a message to 'CaptureThreadProc' everytime a WaveIn Buffer is completed and
     returns to the application (with more data)
 */
-static void CALLBACK WaveInProc(HWAVEIN device, UINT msg, DWORD_PTR instance, DWORD_PTR param1, DWORD_PTR param2)
+static void CALLBACK WaveInProc(HWAVEIN UNUSED(device), UINT msg, DWORD_PTR instance, DWORD_PTR param1, DWORD_PTR UNUSED(param2))
 {
     ALCdevice *Device = (ALCdevice*)instance;
     WinMMData *data = Device->ExtraData;
 
-    (void)device;
-    (void)param2;
-
     if(msg != WIM_DATA)
         return;
 
-    InterlockedDecrement(&data->WaveBuffersCommitted);
-    PostThreadMessage(data->WaveThreadID, msg, 0, param1);
+    DecrementRef(&data->WaveBuffersCommitted);
+    PostThreadMessage(data->thread, msg, 0, param1);
 }
 
-/*
-    CaptureThreadProc
-
-    Used by "MMSYSTEM" Device.  Called when a WaveIn buffer had been filled with new
-    audio data.
-*/
-static DWORD WINAPI CaptureThreadProc(LPVOID param)
+static int CaptureThreadProc(void *arg)
 {
-    ALCdevice *Device = (ALCdevice*)param;
+    ALCdevice *Device = (ALCdevice*)arg;
     WinMMData *data = Device->ExtraData;
-    LPWAVEHDR WaveHdr;
-    ALuint FrameSize;
+    WAVEHDR *WaveHdr;
     MSG msg;
 
-    FrameSize = FrameSizeFromDevFmt(Device->FmtChans, Device->FmtType);
+    althrd_setname(althrd_current(), "alsoft-record");
 
     while(GetMessage(&msg, NULL, 0, 0))
     {
@@ -253,19 +243,15 @@ static DWORD WINAPI CaptureThreadProc(LPVOID param)
         if(data->killNow)
             break;
 
-        WaveHdr = ((LPWAVEHDR)msg.lParam);
-        WriteRingBuffer(data->Ring, (ALubyte*)WaveHdr->lpData, WaveHdr->dwBytesRecorded/FrameSize);
+        WaveHdr = ((WAVEHDR*)msg.lParam);
+        WriteRingBuffer(data->Ring, (ALubyte*)WaveHdr->lpData,
+                        WaveHdr->dwBytesRecorded/data->Format.nBlockAlign);
 
         // Send buffer back to capture more data
         waveInAddBuffer(data->WaveHandle.In, WaveHdr, sizeof(WAVEHDR));
-        InterlockedIncrement(&data->WaveBuffersCommitted);
+        IncrementRef(&data->WaveBuffersCommitted);
     }
 
-    // Signal Wave Thread completed event
-    if(data->WaveThreadEvent)
-        SetEvent(data->WaveThreadEvent);
-
-    ExitThread(0);
     return 0;
 }
 
@@ -273,24 +259,26 @@ static DWORD WINAPI CaptureThreadProc(LPVOID param)
 static ALCenum WinMMOpenPlayback(ALCdevice *Device, const ALCchar *deviceName)
 {
     WinMMData *data = NULL;
-    UINT DeviceID = 0;
+    const al_string *iter, *end;
+    UINT DeviceID;
     MMRESULT res;
-    ALuint i = 0;
 
-    if(!PlaybackDeviceList)
+    if(VECTOR_SIZE(PlaybackDevices) == 0)
         ProbePlaybackDevices();
 
     // Find the Device ID matching the deviceName if valid
-    for(i = 0;i < NumPlaybackDevices;i++)
+    iter = VECTOR_ITER_BEGIN(PlaybackDevices);
+    end = VECTOR_ITER_END(PlaybackDevices);
+    for(;iter != end;iter++)
     {
-        if(PlaybackDeviceList[i] &&
-           (!deviceName || strcmp(deviceName, PlaybackDeviceList[i]) == 0))
+        if(!al_string_empty(*iter) &&
+           (!deviceName || al_string_cmp_cstr(*iter, deviceName) == 0))
         {
-            DeviceID = i;
+            DeviceID = (UINT)(iter - VECTOR_ITER_BEGIN(PlaybackDevices));
             break;
         }
     }
-    if(i == NumPlaybackDevices)
+    if(iter == end)
         return ALC_INVALID_VALUE;
 
     data = calloc(1, sizeof(*data));
@@ -332,20 +320,10 @@ retry_open:
         goto failure;
     }
 
-    data->WaveThreadEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-    if(data->WaveThreadEvent == NULL)
-    {
-        ERR("CreateEvent failed: %lu\n", GetLastError());
-        goto failure;
-    }
-
-    Device->DeviceName = strdup(PlaybackDeviceList[DeviceID]);
+    al_string_copy(&Device->DeviceName, VECTOR_ELEM(PlaybackDevices, DeviceID));
     return ALC_NO_ERROR;
 
 failure:
-    if(data->WaveThreadEvent)
-        CloseHandle(data->WaveThreadEvent);
-
     if(data->WaveHandle.Out)
         waveOutClose(data->WaveHandle.Out);
 
@@ -359,9 +337,6 @@ static void WinMMClosePlayback(ALCdevice *device)
     WinMMData *data = (WinMMData*)device->ExtraData;
 
     // Close the Wave device
-    CloseHandle(data->WaveThreadEvent);
-    data->WaveThreadEvent = 0;
-
     waveOutClose(data->WaveHandle.Out);
     data->WaveHandle.Out = 0;
 
@@ -429,11 +404,11 @@ static ALCboolean WinMMStartPlayback(ALCdevice *device)
     ALint BufferSize;
     ALuint i;
 
-    data->WaveThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)PlaybackThreadProc, (LPVOID)device, 0, &data->WaveThreadID);
-    if(data->WaveThread == NULL)
+    data->killNow = AL_FALSE;
+    if(althrd_create(&data->thread, PlaybackThreadProc, device) != althrd_success)
         return ALC_FALSE;
 
-    data->WaveBuffersCommitted = 0;
+    InitRef(&data->WaveBuffersCommitted, 0);
 
     // Create 4 Buffers
     BufferSize  = device->UpdateSize*device->NumUpdates / 4;
@@ -444,12 +419,12 @@ static ALCboolean WinMMStartPlayback(ALCdevice *device)
     {
         memset(&data->WaveBuffer[i], 0, sizeof(WAVEHDR));
         data->WaveBuffer[i].dwBufferLength = BufferSize;
-        data->WaveBuffer[i].lpData = ((i==0) ? (LPSTR)BufferData :
+        data->WaveBuffer[i].lpData = ((i==0) ? (CHAR*)BufferData :
                                       (data->WaveBuffer[i-1].lpData +
                                        data->WaveBuffer[i-1].dwBufferLength));
         waveOutPrepareHeader(data->WaveHandle.Out, &data->WaveBuffer[i], sizeof(WAVEHDR));
         waveOutWrite(data->WaveHandle.Out, &data->WaveBuffer[i], sizeof(WAVEHDR));
-        InterlockedIncrement(&data->WaveBuffersCommitted);
+        IncrementRef(&data->WaveBuffersCommitted);
     }
 
     return ALC_TRUE;
@@ -461,19 +436,12 @@ static void WinMMStopPlayback(ALCdevice *device)
     void *buffer = NULL;
     int i;
 
-    if(data->WaveThread == NULL)
+    if(data->killNow)
         return;
 
     // Set flag to stop processing headers
     data->killNow = AL_TRUE;
-
-    // Wait for signal that Wave Thread has been destroyed
-    WaitForSingleObjectEx(data->WaveThreadEvent, 5000, FALSE);
-
-    CloseHandle(data->WaveThread);
-    data->WaveThread = 0;
-
-    data->killNow = AL_FALSE;
+    althrd_join(data->thread, &i);
 
     // Release the wave buffers
     for(i = 0;i < 4;i++)
@@ -488,28 +456,31 @@ static void WinMMStopPlayback(ALCdevice *device)
 
 static ALCenum WinMMOpenCapture(ALCdevice *Device, const ALCchar *deviceName)
 {
+    const al_string *iter, *end;
     ALbyte *BufferData = NULL;
     DWORD CapturedDataSize;
     WinMMData *data = NULL;
-    UINT DeviceID = 0;
     ALint BufferSize;
+    UINT DeviceID;
     MMRESULT res;
     ALuint i;
 
-    if(!CaptureDeviceList)
+    if(VECTOR_SIZE(CaptureDevices) == 0)
         ProbeCaptureDevices();
 
     // Find the Device ID matching the deviceName if valid
-    for(i = 0;i < NumCaptureDevices;i++)
+    iter = VECTOR_ITER_BEGIN(CaptureDevices);
+    end = VECTOR_ITER_END(CaptureDevices);
+    for(;iter != end;iter++)
     {
-        if(CaptureDeviceList[i] &&
-           (!deviceName || strcmp(deviceName, CaptureDeviceList[i]) == 0))
+        if(!al_string_empty(*iter) &&
+           (!deviceName || al_string_cmp_cstr(*iter, deviceName) == 0))
         {
-            DeviceID = i;
+            DeviceID = (UINT)(iter - VECTOR_ITER_BEGIN(CaptureDevices));
             break;
         }
     }
-    if(i == NumCaptureDevices)
+    if(iter == end)
         return ALC_INVALID_VALUE;
 
     switch(Device->FmtChans)
@@ -563,13 +534,6 @@ static ALCenum WinMMOpenCapture(ALCdevice *Device, const ALCchar *deviceName)
         goto failure;
     }
 
-    data->WaveThreadEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-    if(data->WaveThreadEvent == NULL)
-    {
-        ERR("CreateEvent failed: %lu\n", GetLastError());
-        goto failure;
-    }
-
     // Allocate circular memory buffer for the captured audio
     CapturedDataSize = Device->UpdateSize*Device->NumUpdates;
 
@@ -581,7 +545,7 @@ static ALCenum WinMMOpenCapture(ALCdevice *Device, const ALCchar *deviceName)
     if(!data->Ring)
         goto failure;
 
-    data->WaveBuffersCommitted = 0;
+    InitRef(&data->WaveBuffersCommitted, 0);
 
     // Create 4 Buffers of 50ms each
     BufferSize = data->Format.nAvgBytesPerSec / 20;
@@ -595,27 +559,23 @@ static ALCenum WinMMOpenCapture(ALCdevice *Device, const ALCchar *deviceName)
     {
         memset(&data->WaveBuffer[i], 0, sizeof(WAVEHDR));
         data->WaveBuffer[i].dwBufferLength = BufferSize;
-        data->WaveBuffer[i].lpData = ((i==0) ? (LPSTR)BufferData :
+        data->WaveBuffer[i].lpData = ((i==0) ? (CHAR*)BufferData :
                                       (data->WaveBuffer[i-1].lpData +
                                        data->WaveBuffer[i-1].dwBufferLength));
         data->WaveBuffer[i].dwFlags = 0;
         data->WaveBuffer[i].dwLoops = 0;
         waveInPrepareHeader(data->WaveHandle.In, &data->WaveBuffer[i], sizeof(WAVEHDR));
         waveInAddBuffer(data->WaveHandle.In, &data->WaveBuffer[i], sizeof(WAVEHDR));
-        InterlockedIncrement(&data->WaveBuffersCommitted);
+        IncrementRef(&data->WaveBuffersCommitted);
     }
 
-    data->WaveThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)CaptureThreadProc, (LPVOID)Device, 0, &data->WaveThreadID);
-    if (data->WaveThread == NULL)
+    if(althrd_create(&data->thread, CaptureThreadProc, Device) != althrd_success)
         goto failure;
 
-    Device->DeviceName = strdup(CaptureDeviceList[DeviceID]);
+    al_string_copy(&Device->DeviceName, VECTOR_ELEM(CaptureDevices, DeviceID));
     return ALC_NO_ERROR;
 
 failure:
-    if(data->WaveThread)
-        CloseHandle(data->WaveThread);
-
     if(BufferData)
     {
         for(i = 0;i < 4;i++)
@@ -625,9 +585,6 @@ failure:
 
     if(data->Ring)
         DestroyRingBuffer(data->Ring);
-
-    if(data->WaveThreadEvent)
-        CloseHandle(data->WaveThreadEvent);
 
     if(data->WaveHandle.In)
         waveInClose(data->WaveHandle.In);
@@ -645,15 +602,12 @@ static void WinMMCloseCapture(ALCdevice *Device)
 
     /* Tell the processing thread to quit and wait for it to do so. */
     data->killNow = AL_TRUE;
-    PostThreadMessage(data->WaveThreadID, WM_QUIT, 0, 0);
+    PostThreadMessage(data->thread, WM_QUIT, 0, 0);
 
-    WaitForSingleObjectEx(data->WaveThreadEvent, 5000, FALSE);
+    althrd_join(data->thread, &i);
 
     /* Make sure capture is stopped and all pending buffers are flushed. */
     waveInReset(data->WaveHandle.In);
-
-    CloseHandle(data->WaveThread);
-    data->WaveThread = 0;
 
     // Release the wave buffers
     for(i = 0;i < 4;i++)
@@ -668,9 +622,6 @@ static void WinMMCloseCapture(ALCdevice *Device)
     data->Ring = NULL;
 
     // Close the Wave device
-    CloseHandle(data->WaveThreadEvent);
-    data->WaveThreadEvent = 0;
-
     waveInClose(data->WaveHandle.In);
     data->WaveHandle.In = 0;
 
@@ -704,6 +655,17 @@ static ALCuint WinMMAvailableSamples(ALCdevice *Device)
 }
 
 
+static inline void AppendAllDevicesList2(const al_string *name)
+{
+    if(!al_string_empty(*name))
+        AppendAllDevicesList(al_string_get_cstr(*name));
+}
+static inline void AppendCaptureDeviceList2(const al_string *name)
+{
+    if(!al_string_empty(*name))
+        AppendCaptureDeviceList(al_string_get_cstr(*name));
+}
+
 static const BackendFuncs WinMMFuncs = {
     WinMMOpenPlayback,
     WinMMClosePlayback,
@@ -716,59 +678,39 @@ static const BackendFuncs WinMMFuncs = {
     WinMMStopCapture,
     WinMMCaptureSamples,
     WinMMAvailableSamples,
-    ALCdevice_LockDefault,
-    ALCdevice_UnlockDefault,
     ALCdevice_GetLatencyDefault
 };
 
 ALCboolean alcWinMMInit(BackendFuncs *FuncList)
 {
+    VECTOR_INIT(PlaybackDevices);
+    VECTOR_INIT(CaptureDevices);
+
     *FuncList = WinMMFuncs;
     return ALC_TRUE;
 }
 
 void alcWinMMDeinit()
 {
-    ALuint i;
+    clear_devlist(&PlaybackDevices);
+    VECTOR_DEINIT(PlaybackDevices);
 
-    for(i = 0;i < NumPlaybackDevices;i++)
-        free(PlaybackDeviceList[i]);
-    free(PlaybackDeviceList);
-    PlaybackDeviceList = NULL;
-
-    NumPlaybackDevices = 0;
-
-
-    for(i = 0;i < NumCaptureDevices;i++)
-        free(CaptureDeviceList[i]);
-    free(CaptureDeviceList);
-    CaptureDeviceList = NULL;
-
-    NumCaptureDevices = 0;
+    clear_devlist(&CaptureDevices);
+    VECTOR_DEINIT(CaptureDevices);
 }
 
 void alcWinMMProbe(enum DevProbe type)
 {
-    ALuint i;
-
     switch(type)
     {
         case ALL_DEVICE_PROBE:
             ProbePlaybackDevices();
-            for(i = 0;i < NumPlaybackDevices;i++)
-            {
-                if(PlaybackDeviceList[i])
-                    AppendAllDevicesList(PlaybackDeviceList[i]);
-            }
+            VECTOR_FOR_EACH(const al_string, PlaybackDevices, AppendAllDevicesList2);
             break;
 
         case CAPTURE_DEVICE_PROBE:
             ProbeCaptureDevices();
-            for(i = 0;i < NumCaptureDevices;i++)
-            {
-                if(CaptureDeviceList[i])
-                    AppendCaptureDeviceList(CaptureDeviceList[i]);
-            }
+            VECTOR_FOR_EACH(const al_string, CaptureDevices, AppendCaptureDeviceList2);
             break;
     }
 }

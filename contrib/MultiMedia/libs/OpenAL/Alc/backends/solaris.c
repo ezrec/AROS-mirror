@@ -33,6 +33,8 @@
 
 #include "alMain.h"
 #include "alu.h"
+#include "threads.h"
+#include "compat.h"
 
 #include <sys/audioio.h>
 
@@ -43,15 +45,16 @@ static const char *solaris_driver = "/dev/audio";
 
 typedef struct {
     int fd;
-    volatile int killNow;
-    ALvoid *thread;
 
     ALubyte *mix_data;
     int data_size;
+
+    volatile int killNow;
+    althrd_t thread;
 } solaris_data;
 
 
-static ALuint SolarisProc(ALvoid *ptr)
+static int SolarisProc(void *ptr)
 {
     ALCdevice *Device = (ALCdevice*)ptr;
     solaris_data *data = (solaris_data*)Device->ExtraData;
@@ -59,6 +62,7 @@ static ALuint SolarisProc(ALvoid *ptr)
     int wrote;
 
     SetRTPriority();
+    althrd_setname(althrd_current(), MIXER_THREAD_NAME);
 
     frameSize = FrameSizeFromDevFmt(Device->FmtChans, Device->FmtType);
 
@@ -82,7 +86,7 @@ static ALuint SolarisProc(ALvoid *ptr)
                     break;
                 }
 
-                Sleep(1);
+                al_nssleep(0, 1000000);
                 continue;
             }
 
@@ -115,7 +119,7 @@ static ALCenum solaris_open_playback(ALCdevice *device, const ALCchar *deviceNam
         return ALC_INVALID_VALUE;
     }
 
-    device->DeviceName = strdup(deviceName);
+    al_string_copy_cstr(&device->DeviceName, deviceName);
     device->ExtraData = data;
     return ALC_NO_ERROR;
 }
@@ -207,8 +211,8 @@ static ALCboolean solaris_start_playback(ALCdevice *device)
     data->data_size = device->UpdateSize * FrameSizeFromDevFmt(device->FmtChans, device->FmtType);
     data->mix_data = calloc(1, data->data_size);
 
-    data->thread = StartThread(SolarisProc, device);
-    if(data->thread == NULL)
+    data->killNow = 0;
+    if(althrd_create(&data->thread, SolarisProc, device) != althrd_success)
     {
         free(data->mix_data);
         data->mix_data = NULL;
@@ -221,15 +225,14 @@ static ALCboolean solaris_start_playback(ALCdevice *device)
 static void solaris_stop_playback(ALCdevice *device)
 {
     solaris_data *data = (solaris_data*)device->ExtraData;
+    int res;
 
-    if(!data->thread)
+    if(data->killNow)
         return;
 
     data->killNow = 1;
-    StopThread(data->thread);
-    data->thread = NULL;
+    althrd_join(data->thread, &res);
 
-    data->killNow = 0;
     if(ioctl(data->fd, AUDIO_DRAIN) < 0)
         ERR("Error draining device: %s\n", strerror(errno));
 
@@ -250,8 +253,6 @@ static const BackendFuncs solaris_funcs = {
     NULL,
     NULL,
     NULL,
-    ALCdevice_LockDefault,
-    ALCdevice_UnlockDefault,
     ALCdevice_GetLatencyDefault
 };
 

@@ -20,13 +20,6 @@
 
 #include "config.h"
 
-#include <devices/ahi.h>
-#include <dos/dos.h>
-#include <proto/exec.h>
-#include <proto/dos.h>
-
-#undef Lock
-
 #include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -40,311 +33,309 @@
 
 #include "alMain.h"
 #include "alu.h"
+#include "threads.h"
+#include "compat.h"
 
-static const ALCchar AHIDevice[] = "AHI default";
+#include "backends/base.h"
 
-#define PLAYERTASK_NAME       "OpenAL Audio Task"
-#define PLAYERTASK_PRIORITY   10
+#include <devices/ahi.h>
+#include <proto/exec.h>
 
-typedef struct {
-	struct MsgPort *mp;
-	struct AHIRequest *AHIReqs[2];
-	APTR PlayerBuffer[2];
-	APTR tmpBuf;
-	unsigned int bsize;
-	unsigned int ahifmt;
-	int nch;
-	int bps;
-	int freq;
-	struct Process *proc;
-	struct Task * parent;
-	int signal;
-	int num_frags; // Since AHI doesn't report the fragment size, emulate it
-} ahi_data;
+static const ALCchar ahi_device[] = "AHI Default";
 
-static ALuint AHIProc(ALvoid *ptr)
-{
-    ALCdevice *pDevice = (ALCdevice*)(FindTask(NULL))->tc_UserData;
-    ahi_data *data = (ahi_data*)pDevice->ExtraData;
-    struct AHIRequest *AHIReqs[2];
-    APTR PlayerBuffer[2];
-    ULONG AHICurBuf = 0;
-    UWORD AHIOtherBuf = AHICurBuf^1;
-    UBYTE *BufferPointer;
-    BOOL AHIReqSent[2] = {FALSE, FALSE};
+static const char *ahi_driver = "ahi.device";
 
-    data->mp->mp_SigTask = FindTask(NULL);
-    data->mp->mp_SigBit = AllocSignal(-1);
-    data->mp->mp_Flags = PA_SIGNAL;
-    
-    AHIReqs[0] = data->AHIReqs[0];
-    AHIReqs[1] = data->AHIReqs[1];
-    PlayerBuffer[0] = data->PlayerBuffer[0];
-    PlayerBuffer[1] = data->PlayerBuffer[1];
-    AHICurBuf=0;
-    BufferPointer = PlayerBuffer[0];
+typedef struct ALCplaybackAHI {
+	DERIVE_FROM_TYPE(ALCbackend);
 
-    while (!(SetSignal(0,0) & SIGF_CHILD))
-    {
-            struct AHIRequest *req = AHIReqs[AHICurBuf];
-            AHIOtherBuf = AHICurBuf^1;
+	int ahi_fmt;
 
-//		SuspendContext(NULL);
-            aluMixData(pDevice, data->tmpBuf, pDevice->UpdateSize);
-//		ProcessContext(NULL);
+	struct MsgPort *ahip;
+	struct AHIRequest *ahir[2];
+	struct AHIRequest *link;
 
-            memcpy(BufferPointer, data->tmpBuf, pDevice->UpdateSize);
+	ALubyte *mix_data[2];
+	int data_size;
 
-            if (AHIReqSent[AHICurBuf])
-            {
-                    if (req->ahir_Std.io_Data)
-                    {
-                            WaitIO((struct IORequest *)req);
-                            req->ahir_Std.io_Data = NULL;
+	volatile int killNow;
+	althrd_t thread;
+} ALCplaybackAHI;
 
-                            GetMsg(data->mp);
-                            GetMsg(data->mp);
-                    }
-            }
+static int ALCplaybackAHI_mixerProc(void *ptr);
 
-            if (pDevice->FmtType == 1) {
-                    int i = data->bsize;
-                    unsigned char *ptr = (unsigned char*)PlayerBuffer[AHICurBuf];
-                    while (i--) *ptr++ ^= 0x80;
-            }
+static void ALCplaybackAHI_Construct(ALCplaybackAHI *self, ALCdevice *device);
+static DECLARE_FORWARD(ALCplaybackAHI, ALCbackend, void, Destruct)
+static ALCenum ALCplaybackAHI_open(ALCplaybackAHI *self, const ALCchar *name);
+static void ALCplaybackAHI_close(ALCplaybackAHI *self);
+static ALCboolean ALCplaybackAHI_reset(ALCplaybackAHI *self);
+static ALCboolean ALCplaybackAHI_start(ALCplaybackAHI *self);
+static void ALCplaybackAHI_stop(ALCplaybackAHI *self);
+static DECLARE_FORWARD2(ALCplaybackAHI, ALCbackend, ALCenum, captureSamples, ALCvoid*, ALCuint)
+static DECLARE_FORWARD(ALCplaybackAHI, ALCbackend, ALCuint, availableSamples)
+static DECLARE_FORWARD(ALCplaybackAHI, ALCbackend, ALint64, getLatency)
+static DECLARE_FORWARD(ALCplaybackAHI, ALCbackend, void, lock)
+static DECLARE_FORWARD(ALCplaybackAHI, ALCbackend, void, unlock)
+DECLARE_DEFAULT_ALLOCATORS(ALCplaybackAHI)
+DEFINE_ALCBACKEND_VTABLE(ALCplaybackAHI);
 
-            req->ahir_Std.io_Message.mn_Node.ln_Pri = 127;
-            req->ahir_Std.io_Command = CMD_WRITE;
-            req->ahir_Std.io_Data = PlayerBuffer[AHIOtherBuf];
-            req->ahir_Std.io_Length = data->bsize;
-            req->ahir_Std.io_Offset = 0;
-            req->ahir_Frequency = data->freq;
-            req->ahir_Type = data->ahifmt;
-            req->ahir_Volume = 0x10000;
-            req->ahir_Position = 0x8000;
-            req->ahir_Link = (AHIReqSent[AHIOtherBuf] && !CheckIO((struct IORequest *) AHIReqs[AHIOtherBuf])) ? AHIReqs[AHIOtherBuf] : NULL; //join;
-    SendIO((struct IORequest*)req);
+static int ALCplaybackAHI_mixerProc(void *ptr) {
+	ALCplaybackAHI *self = (ALCplaybackAHI*)ptr;
+	ALCdevice *device = STATIC_CAST(ALCbackend, self)->mDevice;
+	struct MsgPort *ahip = self->ahip;
+	ALint frameSize;
+	ALint cb = 0;
 
-            AHIReqSent[AHICurBuf] = TRUE;
-            AHICurBuf = AHIOtherBuf;
+    SetRTPriority();
+    althrd_setname(althrd_current(), MIXER_THREAD_NAME);
 
-            BufferPointer = PlayerBuffer[AHICurBuf];
-    }
+	ahip->mp_SigTask = FindTask(NULL);
+	ahip->mp_SigBit = AllocSignal(-1);
+	ahip->mp_Flags = PA_SIGNAL;
 
-    if (AHIReqs[AHIOtherBuf]) {
-            WaitIO((struct IORequest*)AHIReqs[AHIOtherBuf]);
-    }
+	frameSize = FrameSizeFromDevFmt(device->FmtChans, device->FmtType);
 
-    data->mp->mp_Flags = PA_IGNORE;
-    FreeSignal(data->mp->mp_SigBit);
-    data->mp->mp_SigTask = NULL;
-    data->mp->mp_SigBit = -1;
+	while(!self->killNow && device->Connected) {
+		ALint len = self->data_size;
+		ALubyte *WritePtr = self->mix_data[cb];
+		struct AHIRequest *ahir = self->ahir[cb];
 
-    /* Simulate NP_NotifyOnDeath */
-    Signal(data->parent, 1 << data->signal);
+		aluMixData(device, WritePtr, len/frameSize);
 
-    return 0;
+		ahir->ahir_Std.io_Message.mn_Node.ln_Pri = 127;
+		ahir->ahir_Std.io_Command = CMD_WRITE;
+		ahir->ahir_Std.io_Data    = WritePtr;
+		ahir->ahir_Std.io_Length  = len;
+		ahir->ahir_Frequency = device->Frequency;
+		ahir->ahir_Type      = self->ahi_fmt;
+		ahir->ahir_Volume    = 0x10000;
+		ahir->ahir_Position  = 0x8000;
+		ahir->ahir_Link      = self->link;
+	   	SendIO((struct IORequest*)ahir);
+
+		if(self->link != NULL) {
+			WaitIO((struct IORequest*)self->link);
+		}
+
+		self->link = ahir;
+		cb ^= 1;
+	}
+
+	if(self->link != NULL) {
+		WaitIO((struct IORequest*)self->link);
+	}
+
+	ahip->mp_Flags = PA_IGNORE;
+	FreeSignal(ahip->mp_SigBit);
+	ahip->mp_SigTask = NULL;
+	ahip->mp_SigBit = -1;
+
+	return 0;
 }
 
-static ALCenum ahi_open_playback(ALCdevice *device, const ALCchar *deviceName)
-{
-	ahi_data *data;
+static void ALCplaybackAHI_Construct(ALCplaybackAHI *self, ALCdevice *device) {
+	ALCbackend_Construct(STATIC_CAST(ALCbackend, self), device);
+	SET_VTABLE2(ALCplaybackAHI, ALCbackend, self);
+}
 
-	if(deviceName)
+static int get_ahi_format(ALCdevice *device) {
+	switch(ChannelsFromDevFmt(device->FmtChans)) {
+	case 1:
+		switch(device->FmtType) {
+		case DevFmtUByte:
+			device->FmtType = DevFmtByte;
+		case DevFmtByte:
+			return AHIST_M8S;
+		case DevFmtUShort:
+			device->FmtType = DevFmtShort;
+		case DevFmtShort:
+			return AHIST_M16S;
+		case DevFmtUInt:
+		case DevFmtFloat:
+			device->FmtType = DevFmtInt;
+		case DevFmtInt:
+			return AHIST_M32S;
+		default:
+			break;
+		}
+		break;
+	case 2:
+		switch(device->FmtType) {
+		case DevFmtUByte:
+			device->FmtType = DevFmtByte;
+		case DevFmtByte:
+			return AHIST_S8S;
+		case DevFmtUShort:
+			device->FmtType = DevFmtShort;
+		case DevFmtShort:
+			return AHIST_S16S;
+		case DevFmtUInt:
+		case DevFmtFloat:
+			device->FmtType = DevFmtInt;
+		case DevFmtInt:
+			return AHIST_S32S;
+		default:
+			break;
+		}
+		break;
+	default:
+		break;
+	}
+	ERR("Unknown format?! chans: %d type: %d\n", device->FmtChans, device->FmtType);
+	return -1;
+}
+
+static ALCenum ALCplaybackAHI_open(ALCplaybackAHI *self, const ALCchar *name) {
+	ALCdevice *device = STATIC_CAST(ALCbackend, self)->mDevice;
+
+	if(!name)
+		name = ahi_device;
+	else if(strcmp(name, ahi_device) != 0)
+		return ALC_INVALID_VALUE;
+
+	self->killNow = 0;
+
+	self->ahi_fmt = get_ahi_format(device);
+	if(self->ahi_fmt == -1)
+		return ALC_INVALID_VALUE;
+
+	self->ahip = CreateMsgPort();
+
+	self->ahir[0] = (struct AHIRequest*)CreateIORequest(self->ahip, sizeof(struct AHIRequest));
+	if(self->ahir[0] == NULL) {
+		return ALC_OUT_OF_MEMORY;
+	}
+
+	self->ahir[0]->ahir_Version = 4;
+
+	if(OpenDevice("ahi.device", AHI_DEFAULT_UNIT, (struct IORequest *)self->ahir[0], 0)
+		!= 0)
 	{
-            if(strcmp(deviceName, AHIDevice) != 0)
-                    return ALC_INVALID_VALUE;
-	} else
-		deviceName = AHIDevice;
-
-	data = (ahi_data*)calloc(1, sizeof(ahi_data));
-	if (data == NULL) {
-		return ALC_FALSE;
+		return ALC_OUT_OF_MEMORY;
 	}
 
-	device->ExtraData = data;
-        device->DeviceName = (ALCchar *)deviceName;
-
-	data->mp = CreateMsgPort();
-	data->AHIReqs[0] = (struct AHIRequest*)CreateIORequest(data->mp, sizeof(struct AHIRequest));
-	data->AHIReqs[1] = (struct AHIRequest*)CreateIORequest(data->mp, sizeof(struct AHIRequest));
-	if (data->AHIReqs[0] == NULL || data->AHIReqs[1] == NULL) {
-		return ALC_INVALID_VALUE;
+	self->ahir[1] = (struct AHIRequest*)CreateIORequest(self->ahip, sizeof(struct AHIRequest));
+	if(self->ahir[1] == NULL) {
+		return ALC_OUT_OF_MEMORY;
 	}
 
-	data->AHIReqs[0]->ahir_Version = 4;
-	if (OpenDevice("ahi.device", 0, (struct IORequest*)data->AHIReqs[0], 0)) {
-		data->AHIReqs[0]->ahir_Std.io_Device = NULL;
-		ERR("Failed to open ahi.device\n");
-		return ALC_INVALID_VALUE;
-	}
-	CopyMem(data->AHIReqs[0], data->AHIReqs[1], sizeof(struct AHIRequest));
-
-	data->nch = ChannelsFromDevFmt(device->FmtChans);
-
-	if (data->nch == 1) {
-		switch (device->FmtType) {
-			case DevFmtByte:
-				data->ahifmt = AHIST_M8S;
-				break;
-			case DevFmtUShort:
-				data->ahifmt = AHIST_M16S;
-				break;
-			case DevFmtUInt:
-				data->ahifmt = AHIST_M32S;
-				break;
-                        case DevFmtUByte:
-                        case DevFmtShort:
-                        case DevFmtInt:
-                        case DevFmtFloat:
-			default:
-				ERR("Unknown format?! %d\n", device->FmtType);
-				return ALC_INVALID_VALUE;
-		}
-	} else if (data->nch == 2) {
-		switch (device->FmtType) {
-			case DevFmtByte:
-				data->ahifmt = AHIST_S8S;
-				break;
-			case DevFmtUShort:
-				data->ahifmt = AHIST_S16S;
-				break;
-			case DevFmtUInt:
-				data->ahifmt = AHIST_S32S;
-				break;
-                        case DevFmtUByte:
-                        case DevFmtShort:
-                        case DevFmtInt:
-                        case DevFmtFloat:
-			default:
-				ERR("Unknown format?! %d\n", device->FmtType);
-				return ALC_INVALID_VALUE;
-		}
-	} else {
-		ERR("Unknown format?! %d\n", device->FmtType);
-		return ALC_INVALID_VALUE;
-	}
-
-	data->freq = device->Frequency;
-	
-	data->bsize = (data->freq / 10) * data->nch * device->FmtType;
-	data->PlayerBuffer[0] = AllocVec(data->bsize, MEMF_PUBLIC);
-	data->PlayerBuffer[1] = AllocVec(data->bsize, MEMF_PUBLIC);
-	data->tmpBuf          = AllocVec(data->bsize, MEMF_PUBLIC);  
-	if (data->PlayerBuffer[0] == NULL || data->PlayerBuffer[1] == NULL || data->tmpBuf == NULL) {
-		return ALC_INVALID_VALUE;
-	}
-
-	data->signal = AllocSignal(-1);
-	data->parent = FindTask(NULL);
-	data->proc = CreateNewProcTags(
-		NP_UserData,				device,
-		NP_Entry,					AHIProc,
-//ORIG CODE		NP_Child,					TRUE,
-		NP_Name,					PLAYERTASK_NAME,
-		NP_Priority,				PLAYERTASK_PRIORITY,
-		NP_StackSize,				40960,
-//ORIG CODE		NP_NotifyOnDeathSigTask,	IExec->FindTask(NULL),
-//ORIG CODE		NP_NotifyOnDeathSignalBit,	data->signal,
-		TAG_END);
-	if (data->proc == NULL) {
-		return ALC_INVALID_VALUE;
-	}
+	al_string_copy_cstr(&device->DeviceName, name);
 
 	return ALC_NO_ERROR;
 }
 
-static void ahi_close_playback(ALCdevice *device)
-{
-	ahi_data *data = (ahi_data*)device->ExtraData;
-	if (data) 
-	{
-		if (data->proc) {
-			Signal(&data->proc->pr_Task, SIGF_CHILD);
-			Wait(1 << data->signal);
-//ORIG CODE			Delay(100); //Wait to be sure that audio task has finished its work..
-			data->proc = NULL;
-			FreeSignal(data->signal);
-			data->signal = -1;
-		}
-		FreeVec(data->PlayerBuffer[0]);
-		FreeVec(data->PlayerBuffer[1]);
-		FreeVec(data->tmpBuf);
-		data->PlayerBuffer[0] = data->PlayerBuffer[1] = data->tmpBuf = NULL;
-		
-		if (data->AHIReqs[0])
-		{
-			if (!CheckIO((struct IORequest *) data->AHIReqs[0]))
-			{
-				AbortIO((struct IORequest *) data->AHIReqs[0]);
-				WaitIO((struct IORequest *) data->AHIReqs[0]);
-			}
-		}
+static void ALCplaybackAHI_close(ALCplaybackAHI *self) {
+	CloseDevice((struct IORequest*)self->ahir[0]);
+	DeleteIORequest(self->ahir[1]);
+	DeleteIORequest(self->ahir[0]);
+	self->ahir[0] = self->ahir[1] = NULL;
 
-		if(data->AHIReqs[1])
-		{ // Only if the second request was started
-			if (!CheckIO((struct IORequest *) data->AHIReqs[1]))
-			{
-    			AbortIO((struct IORequest *) data->AHIReqs[1]);
-    			WaitIO((struct IORequest *) data->AHIReqs[1]);
-			}
-		}
-		
-		if (data->AHIReqs[0] && data->AHIReqs[0]->ahir_Std.io_Device) {
-			CloseDevice((struct IORequest*)data->AHIReqs[0]);
-			data->AHIReqs[0]->ahir_Std.io_Device = NULL;
-		}
-		DeleteIORequest(data->AHIReqs[0]);
-		DeleteIORequest(data->AHIReqs[1]);
-		data->AHIReqs[0] = data->AHIReqs[1] = NULL;
-		DeleteMsgPort(data->mp);
-		data->mp = NULL;
-		free(data);
-		device->ExtraData = NULL;
+	DeleteMsgPort(self->ahip);
+	self->ahip = NULL;
+
+	self->ahi_fmt = -1;
+}
+
+static ALCboolean ALCplaybackAHI_reset(ALCplaybackAHI *self) {
+	ALCdevice *device = STATIC_CAST(ALCbackend, self)->mDevice;
+
+	self->ahi_fmt = get_ahi_format(device);
+	if(self->ahi_fmt == -1)
+		return ALC_FALSE;
+
+	SetDefaultChannelOrder(device);
+
+	return ALC_TRUE;
+}
+
+static ALCboolean ALCplaybackAHI_start(ALCplaybackAHI *self) {
+	ALCdevice *device = STATIC_CAST(ALCbackend, self)->mDevice;
+
+	self->data_size = device->UpdateSize * FrameSizeFromDevFmt(device->FmtChans, device->FmtType);
+
+	self->mix_data[0] = AllocVec(self->data_size, MEMF_ANY);
+	self->mix_data[1] = AllocVec(self->data_size, MEMF_ANY);
+
+	if(self->mix_data[0] != NULL && self->mix_data[1] != NULL) {
+		self->killNow = 0;
+		if(althrd_create(&self->thread, ALCplaybackAHI_mixerProc, self) == althrd_success)
+			return ALC_TRUE;
+	}
+
+	FreeVec(self->mix_data[1]);
+	FreeVec(self->mix_data[0]);
+	self->mix_data[0] = self->mix_data[1] = NULL;
+
+	return ALC_FALSE;
+}
+
+static void ALCplaybackAHI_stop(ALCplaybackAHI *self) {
+	int res;
+
+	if(self->killNow)
+		return;
+
+	self->killNow = 1;
+	althrd_join(self->thread, &res);
+
+	FreeVec(self->mix_data[1]);
+	FreeVec(self->mix_data[0]);
+	self->mix_data[0] = self->mix_data[1] = NULL;
+}
+
+typedef struct ALCahiBackendFactory {
+	DERIVE_FROM_TYPE(ALCbackendFactory);
+} ALCahiBackendFactory;
+#define ALCAHIBACKENDFACTORY_INITIALIZER { { GET_VTABLE2(ALCahiBackendFactory, ALCbackendFactory) } }
+
+ALCbackendFactory *ALCahiBackendFactory_getFactory(void);
+
+static ALCboolean ALCahiBackendFactory_init(ALCahiBackendFactory *self);
+static DECLARE_FORWARD(ALCahiBackendFactory, ALCbackendFactory, void, deinit)
+static ALCboolean ALCahiBackendFactory_querySupport(ALCahiBackendFactory *self, ALCbackend_Type type);
+static void ALCahiBackendFactory_probe(ALCahiBackendFactory *self, enum DevProbe type);
+static ALCbackend* ALCahiBackendFactory_createBackend(ALCahiBackendFactory *self, ALCdevice *device, ALCbackend_Type type);
+DEFINE_ALCBACKENDFACTORY_VTABLE(ALCahiBackendFactory);
+
+ALCbackendFactory *ALCahiBackendFactory_getFactory(void) {
+	static ALCahiBackendFactory factory = ALCAHIBACKENDFACTORY_INITIALIZER;
+	return STATIC_CAST(ALCbackendFactory, &factory);
+}
+
+ALCboolean ALCahiBackendFactory_init(ALCahiBackendFactory* UNUSED(self)) {
+	ConfigValueStr("ahi", "device", &ahi_driver);
+
+	return ALC_TRUE;
+}
+
+ALCboolean ALCahiBackendFactory_querySupport(ALCahiBackendFactory* UNUSED(self), ALCbackend_Type type) {
+	if(type == ALCbackend_Playback)
+		return ALC_TRUE;
+	return ALC_FALSE;
+}
+
+void ALCahiBackendFactory_probe(ALCahiBackendFactory* UNUSED(self), enum DevProbe type) {
+	switch(type) {
+		case ALL_DEVICE_PROBE:
+			AppendAllDevicesList(ahi_device);
+			break;
+		case CAPTURE_DEVICE_PROBE:
+			break;
 	}
 }
 
-static ALCenum ahi_open_capture(ALCdevice *Device, const ALCchar *deviceName)
-{
-	return ALC_INVALID_VALUE;
-}
+ALCbackend* ALCahiBackendFactory_createBackend(ALCahiBackendFactory* UNUSED(self), ALCdevice *device, ALCbackend_Type type) {
+	if(type == ALCbackend_Playback) {
+		ALCplaybackAHI *backend;
 
-static const BackendFuncs ahi_funcs = {
-    ahi_open_playback,
-    ahi_close_playback,
-    NULL, //ahi_reset_playback
-    NULL, //ahi_start_playback
-    NULL, //ahi_stop_playback
-    ahi_open_capture,
-    NULL, //ahi_close_capture,
-    NULL, //ahi_start_capture,
-    NULL, //ahi_stop_capture,
-    NULL, //ahi_capture_samples,
-    NULL, //ahi_available_samples,
-    ALCdevice_LockDefault,
-    ALCdevice_UnlockDefault,
-    ALCdevice_GetLatencyDefault
-};
+		backend = ALCplaybackAHI_New(sizeof(*backend));
+		if(!backend) return NULL;
+		memset(backend, 0, sizeof(*backend));
 
-ALCboolean alc_ahi_init(BackendFuncs *func_list)
-{
-    *func_list = ahi_funcs;
-    return ALC_TRUE;
-}
+		ALCplaybackAHI_Construct(backend, device);
 
-void alc_ahi_deinit(void)
-{
-}
-
-void alc_ahi_probe(enum DevProbe type)
-{
-    switch(type)
-    {
-        case ALL_DEVICE_PROBE:
-            AppendAllDevicesList(AHIDevice);
-            break;
-        case CAPTURE_DEVICE_PROBE:
-            break;
+		return STATIC_CAST(ALCbackend, backend);
     }
+
+    return NULL;
 }
 

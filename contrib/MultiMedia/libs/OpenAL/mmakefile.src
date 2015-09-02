@@ -10,6 +10,14 @@ include $(TOP)/config/make.cfg
 
 #MM contrib-openal-linklib : includes contrib-openal-includes workbench-devs-AHI
 
+USER_INCLUDES := \
+        -I$(SRCDIR)/$(CURDIR) \
+        -I$(SRCDIR)/$(CURDIR)/Include \
+        -I$(SRCDIR)/$(CURDIR)/OpenAL32/Include \
+        -I$(SRCDIR)/$(CURDIR)/Alc
+
+USER_CFLAGS := -std=gnu99 -O3 -ffast-math -Wall -DAL_ALEXT_PROTOTYPES 
+
 OPENAL32_FILES = \
         alAuxEffectSlot \
         alBuffer \
@@ -17,44 +25,75 @@ OPENAL32_FILES = \
         alError \
         alExtension \
         alFilter \
+        alFontsound \
         alListener \
+        alMidi \
+        alPreset \
+        alSoundfont \
         alSource \
         alState \
-        alThunk
+        alThunk \
+        sample_cvt
+
+ALC_MIXER_FILES = \
+        mixer \
+        mixer_c
+
+ifeq ($(AROS_TARGET_CPU),x86_64)
+ALC_MIXER_FILES += mixer_sse mixer_sse2
+##mixer_sse41
+USER_CFLAGS += -msse -mfpmath=sse
+endif
 
 ALC_FILES = \
         ALc \
         ALu \
-        helpers \
         alcConfig \
-        alcDedicated \
-        alcEcho \
-        alcModulator \
-        alcReverb \
-        alcRing \
-        alcThread \
         bs2b \
+        helpers \
         hrtf \
-        mixer \
-        mixer_c \
+        $(ALC_MIXER_FILES) \
         panning
 
+ALCEFFECTS_FILES = \
+        autowah \
+        chorus \
+        compressor \
+        dedicated \
+        distortion \
+        echo \
+        equalizer \
+        flanger \
+        modulator \
+        ef_null \
+        reverb
+
+ALCMIDI_FILES = \
+        m_base \
+        dummy \
+        fluidsynth \
+        sf2load \
+        soft
+
 ALCBACKEND_FILES = \
+        ahi \
+        base \
         loopback \
         null \
-        ahi \
         wave
+
+COMMON_FILES = \
+        threads \
+        rwlock \
+        uintmap
 
 OPENAL_FILES = \
         $(addprefix OpenAL32/, $(OPENAL32_FILES)) \
         $(addprefix Alc/, $(ALC_FILES)) \
-        $(addprefix Alc/backends/, $(ALCBACKEND_FILES))
-
-USER_INCLUDES := \
-        -I$(SRCDIR)/$(CURDIR)/OpenAL32/Include \
-        -I$(SRCDIR)/$(CURDIR)
-
-USER_CFLAGS += -DAL_ALEXT_PROTOTYPES 
+        $(addprefix Alc/backends/, $(ALCBACKEND_FILES)) \
+        $(addprefix Alc/effects/, $(ALCEFFECTS_FILES)) \
+        $(addprefix Alc/midi/, $(ALCMIDI_FILES)) \
+        $(addprefix common/, $(COMMON_FILES))
 
 %build_linklib mmake=contrib-openal-linklib libname=openal \
     files="$(OPENAL_FILES)"

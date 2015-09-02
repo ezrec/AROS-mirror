@@ -1,28 +1,40 @@
-# OpenAL config file. Options that are not under a block or are under the
-# [general] block are for general, non-backend-specific options. Blocks may
-# appear multiple times, and duplicated options will take the last value
-# specified.
+# OpenAL config file.
+#
+# Option blocks may appear multiple times, and duplicated options will take the
+# last value specified. Environment variables may be specified within option
+# values, and are automatically substituted when the config file is loaded.
+# Environment variable names may only contain alpha-numeric characters (a-z,
+# A-Z, 0-9) and underscores (_), and are prefixed with $. For example,
+# specifying "$HOME/file.ext" would typically result in something like
+# "/home/user/file.ext". To specify an actual "$" character, use "$$".
+#
 # The system-wide settings can be put in /etc/openal/alsoft.conf and user-
-# specific override settings in ~/.alsoftrc.
-# For Windows, these settings should go into %AppData%\alsoft.ini
-
+# specific override settings in $HOME/.alsoftrc.
+# For Windows, these settings should go into $AppData\alsoft.ini
+#
 # Option and block names are case-insenstive. The supplied values are only
 # hints and may not be honored (though generally it'll try to get as close as
 # possible). Note: options that are left unset may default to app- or system-
 # specified values. These are the current available settings:
 
+##
+## General stuff
+##
+[general]
+
 ## disable-cpu-exts:
-#  Disables use of the listed CPU extensions. Certain methods may utilize CPU
-#  extensions when detected, and this option is useful for preventing those
-#  extensions from being used. The available extensions are: sse, neon.
-#  Specifying 'all' disables use of all extensions.
+#  Disables use of specialized methods that use specific CPU intrinsics.
+#  Certain methods may utilize CPU extensions for improved performance, and
+#  this option is useful for preventing some or all of those methods from being
+#  used. The available extensions are: sse, sse2, sse4.1, and neon. Specifying
+#  'all' disables use of all such specialized methods.
 #disable-cpu-exts =
 
 ## channels:
 #  Sets the output channel configuration. If left unspecified, one will try to
 #  be detected from the system, and defaulting to stereo. The available values
 #  are: mono, stereo, quad, surround51, surround61, surround71
-#channels = stereo
+#channels =
 
 ## sample-type:
 #  Sets the output sample type. Currently, all mixing is done with 32-bit float
@@ -45,15 +57,19 @@
 
 ## hrtf_tables
 #  Specifies a comma-separated list of files containing HRTF data sets. The
-#  listed data sets can be used in place of or in addiiton to the the built-in
-#  set. The format of the files are described in hrtf.txt. The filenames may
-#  contain these markers, which will be replaced as needed:
+#  format of the files are described in hrtf.txt. The filenames may contain
+#  these markers, which will be replaced as needed:
 #  %r - Device sampling rate
 #  %% - Percent sign (%)
-#  So if this is set to "kemar-%r-diffuse.mhr", it will try to open
-#  "kemar-44100-diffuse.mhr" if the device is using 44100hz output, or
-#  "kemar-48000-diffuse.mhr" if the device is using 48000hz output, etc.
-#hrtf_tables =
+#  The listed files are relative to system-dependant data directories. On
+#  Windows this is:
+#  $AppData\openal\hrtf
+#  And on other systems, it's (in order):
+#  $XDG_DATA_HOME/openal/hrtf  (defaults to $HOME/.local/share/openal/hrtf)
+#  $XDG_DATA_DIRS/openal/hrtf  (defaults to /usr/local/share/openal/hrtf and
+#                               /usr/share/openal/hrtf)
+#  An absolute path may also be specified, if the given file is elsewhere.
+#hrtf_tables = default-%r.mhr
 
 ## cf_level:
 #  Sets the crossfeed level for stereo output. Valid values are:
@@ -77,8 +93,9 @@
 #wide-stereo = false
 
 ## frequency:
-#  Sets the output frequency.
-#frequency = 44100
+#  Sets the output frequency. If left unspecified it will try to detect a
+#  default from the system, otherwise it will default to 44100.
+#frequency =
 
 ## resampler:
 #  Selects the resampler used when mixing sources. Valid values are:
@@ -117,17 +134,17 @@
 ## drivers:
 #  Sets the backend driver list order, comma-seperated. Unknown backends and
 #  duplicated names are ignored. Unlisted backends won't be considered for use
-#  unless the list is ended with a comma (eg. 'oss,' will list OSS first
-#  followed by all other available backends, while 'oss' will list OSS only).
-#  Backends prepended with - won't be available for use (eg. '-oss,' will allow
-#  all available backends except OSS). An empty list means the default.
-#drivers = pulse,alsa,core,oss,solaris,sndio,mmdevapi,dsound,winmm,port,opensl,null,wave
+#  unless the list is ended with a comma (e.g. 'oss,' will try OSS first before
+#  other backends, while 'oss' will try OSS only). Backends prepended with -
+#  won't be considered for use (e.g. '-oss,' will try all available backends
+#  except OSS). An empty list means to try all backends.
+#drivers =
 
 ## excludefx:
 #  Sets which effects to exclude, preventing apps from using them. This can
 #  help for apps that try to use effects which are too CPU intensive for the
-#  system to handle. Available effects are: eaxreverb,reverb,echo,modulator,
-#  dedicated
+#  system to handle. Available effects are: eaxreverb,reverb,autowah,chorus,
+#  compressor,distortion,echo,equalizer,flanger,modulator,dedicated
 #excludefx =
 
 ## slots:
@@ -184,6 +201,29 @@
 #trap-al-error = false
 
 ##
+## MIDI stuff (EXPERIMENTAL)
+##
+[midi]
+
+## soundfont:
+#  A default soundfont (sf2 format). Used when an app requests the system
+#  default. The listed file is relative to system-dependant data directories.
+#  On Windows this is:
+#  $AppData\openal\soundfonts
+#  And on other systems, it's (in order):
+#  $XDG_DATA_HOME/openal/soundfonts
+#  $XDG_DATA_DIRS/openal/soundfonts
+#  An absolute path may also be specified, if the given file is elsewhere.
+#soundfont =
+
+## volume:
+#  Additional attenuation applied to MIDI output, expressed in decibels. This
+#  is used to help keep the mix from clipping, and so must be 0 or less. The
+#  value is logarithmic, so -6 will be about half amplitude, and -12 about
+#  1/4th. The default is roughly -13.9794 (0.2, or 1/5th).
+#volume =
+
+##
 ## Reverb effect stuff (includes EAX reverb)
 ##
 [reverb]
@@ -200,6 +240,24 @@
 #  reverb processing is a bit more CPU intensive than standard, so this option
 #  allows a simpler effect to be used at the loss of some quality.
 #emulate-eax = false
+
+##
+## PulseAudio backend stuff
+##
+[pulse]
+
+## spawn-server:
+#  Attempts to autospawn a PulseAudio server whenever needed (initializing the
+#  backend, enumerating devices, etc). Setting autospawn to false in Pulse's
+#  client.conf will still prevent autospawning even if this is set to true.
+#spawn-server = true
+
+## allow-moves:
+#  Allows PulseAudio to move active streams to different devices. Note that the
+#  device specifier (seen by applications) will not be updated when this
+#  occurs, and neither will the AL device configuration (sample rate, format,
+#  etc).
+#allow-moves = false
 
 ##
 ## ALSA backend stuff
@@ -270,6 +328,19 @@
 #device = /dev/audio
 
 ##
+## QSA backend stuff
+##
+[qsa]
+
+## device:
+#  Sets the device name for the default playback device.
+#device = default
+
+## capture:
+#  Sets the device name for the default capture device.
+#capture = default
+
+##
 ## MMDevApi backend stuff
 ##
 [mmdevapi]
@@ -298,23 +369,6 @@
 #  Sets the device index for capture. Negative values will use the default as
 #  given by PortAudio itself.
 #capture = -1
-
-##
-## PulseAudio backend stuff
-##
-[pulse]
-
-## spawn-server:
-#  Attempts to spawn a PulseAudio server when requesting to open a PulseAudio
-#  device. Setting autospawn to false in PulseAudio's client.conf will still
-#  prevent autospawning even if this is set to true.
-#spawn-server = true
-
-## allow-moves:
-#  Allows PulseAudio to move active streams to different devices. Note that the
-#  device specifier seen by applications will not be updated when this occurs,
-#  and neither will the AL device configuration (sample rate, format, etc).
-#allow-moves = false
 
 ##
 ## Wave File Writer stuff

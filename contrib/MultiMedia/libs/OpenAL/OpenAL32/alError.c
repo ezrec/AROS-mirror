@@ -22,6 +22,11 @@
 
 #include <signal.h>
 
+#ifdef HAVE_WINDOWS_H
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
+
 #include "alMain.h"
 #include "AL/alc.h"
 #include "alError.h"
@@ -30,6 +35,7 @@ ALboolean TrapALError = AL_FALSE;
 
 ALvoid alSetError(ALCcontext *Context, ALenum errorCode)
 {
+    ALenum curerr = AL_NO_ERROR;
     if(TrapALError)
     {
 #ifdef _WIN32
@@ -40,7 +46,7 @@ ALvoid alSetError(ALCcontext *Context, ALenum errorCode)
         raise(SIGTRAP);
 #endif
     }
-    CompExchangeInt(&Context->LastError, AL_NO_ERROR, errorCode);
+    ATOMIC_COMPARE_EXCHANGE_STRONG(ALenum, &Context->LastError, &curerr, errorCode);
 }
 
 AL_API ALenum AL_APIENTRY alGetError(void)
@@ -63,7 +69,7 @@ AL_API ALenum AL_APIENTRY alGetError(void)
         return AL_INVALID_OPERATION;
     }
 
-    errorCode = ExchangeInt(&Context->LastError, AL_NO_ERROR);
+    errorCode = ATOMIC_EXCHANGE(ALenum, &Context->LastError, AL_NO_ERROR);
 
     ALCcontext_DecRef(Context);
 

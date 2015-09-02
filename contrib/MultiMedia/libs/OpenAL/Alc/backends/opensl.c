@@ -28,60 +28,11 @@
 
 
 #include <SLES/OpenSLES.h>
-#if 1
 #include <SLES/OpenSLES_Android.h>
-#else
-extern SLAPIENTRY const SLInterfaceID SL_IID_ANDROIDSIMPLEBUFFERQUEUE;
-
-struct SLAndroidSimpleBufferQueueItf_;
-typedef const struct SLAndroidSimpleBufferQueueItf_ * const * SLAndroidSimpleBufferQueueItf;
-
-typedef void (*slAndroidSimpleBufferQueueCallback)(SLAndroidSimpleBufferQueueItf caller, void *pContext);
-
-typedef struct SLAndroidSimpleBufferQueueState_ {
-    SLuint32 count;
-    SLuint32 index;
-} SLAndroidSimpleBufferQueueState;
-
-
-struct SLAndroidSimpleBufferQueueItf_ {
-    SLresult (*Enqueue) (
-        SLAndroidSimpleBufferQueueItf self,
-        const void *pBuffer,
-        SLuint32 size
-    );
-    SLresult (*Clear) (
-        SLAndroidSimpleBufferQueueItf self
-    );
-    SLresult (*GetState) (
-        SLAndroidSimpleBufferQueueItf self,
-        SLAndroidSimpleBufferQueueState *pState
-    );
-    SLresult (*RegisterCallback) (
-        SLAndroidSimpleBufferQueueItf self,
-        slAndroidSimpleBufferQueueCallback callback,
-        void* pContext
-    );
-};
-
-#define SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE ((SLuint32) 0x800007BD)
-
-typedef struct SLDataLocator_AndroidSimpleBufferQueue {
-    SLuint32 locatorType;
-    SLuint32 numBuffers;
-} SLDataLocator_AndroidSimpleBufferQueue;
-
-#endif
 
 /* Helper macros */
-#define SLObjectItf_Realize(a,b)        ((*(a))->Realize((a),(b)))
-#define SLObjectItf_GetInterface(a,b,c) ((*(a))->GetInterface((a),(b),(c)))
-#define SLObjectItf_Destroy(a)          ((*(a))->Destroy((a)))
-
-#define SLEngineItf_CreateOutputMix(a,b,c,d,e)       ((*(a))->CreateOutputMix((a),(b),(c),(d),(e)))
-#define SLEngineItf_CreateAudioPlayer(a,b,c,d,e,f,g) ((*(a))->CreateAudioPlayer((a),(b),(c),(d),(e),(f),(g)))
-
-#define SLPlayItf_SetPlayState(a,b) ((*(a))->SetPlayState((a),(b)))
+#define VCALL(obj, func)  ((*(obj))->func((obj), EXTRACT_VCALL_ARGS
+#define VCALL0(obj, func)  ((*(obj))->func((obj) EXTRACT_VCALL_ARGS
 
 
 typedef struct {
@@ -97,6 +48,7 @@ typedef struct {
 
     void *buffer;
     ALuint bufferSize;
+    ALuint curBuffer;
 
     ALuint frameSize;
 } osl_data;
@@ -152,9 +104,15 @@ static const char *res_str(SLresult result)
         case SL_RESULT_UNKNOWN_ERROR: return "Unknown error";
         case SL_RESULT_OPERATION_ABORTED: return "Operation aborted";
         case SL_RESULT_CONTROL_LOST: return "Control lost";
+#ifdef SL_RESULT_READONLY
         case SL_RESULT_READONLY: return "ReadOnly";
+#endif
+#ifdef SL_RESULT_ENGINEOPTION_UNSUPPORTED
         case SL_RESULT_ENGINEOPTION_UNSUPPORTED: return "Engine option unsupported";
+#endif
+#ifdef SL_RESULT_SOURCE_SINK_INCOMPATIBLE
         case SL_RESULT_SOURCE_SINK_INCOMPATIBLE: return "Source/Sink incompatible";
+#endif
     }
     return "Unknown error code";
 }
@@ -169,12 +127,16 @@ static void opensl_callback(SLAndroidSimpleBufferQueueItf bq, void *context)
 {
     ALCdevice *Device = context;
     osl_data *data = Device->ExtraData;
+    ALvoid *buf;
     SLresult result;
 
-    aluMixData(Device, data->buffer, data->bufferSize/data->frameSize);
+    buf = (ALbyte*)data->buffer + data->curBuffer*data->bufferSize;
+    aluMixData(Device, buf, data->bufferSize/data->frameSize);
 
-    result = (*bq)->Enqueue(bq, data->buffer, data->bufferSize);
+    result = VCALL(bq,Enqueue)(buf, data->bufferSize);
     PRINTERR(result, "bq->Enqueue");
+
+    data->curBuffer = (data->curBuffer+1) % Device->NumUpdates;
 }
 
 
@@ -197,33 +159,33 @@ static ALCenum opensl_open_playback(ALCdevice *Device, const ALCchar *deviceName
     PRINTERR(result, "slCreateEngine");
     if(SL_RESULT_SUCCESS == result)
     {
-        result = SLObjectItf_Realize(data->engineObject, SL_BOOLEAN_FALSE);
+        result = VCALL(data->engineObject,Realize)(SL_BOOLEAN_FALSE);
         PRINTERR(result, "engine->Realize");
     }
     if(SL_RESULT_SUCCESS == result)
     {
-        result = SLObjectItf_GetInterface(data->engineObject, SL_IID_ENGINE, &data->engine);
+        result = VCALL(data->engineObject,GetInterface)(SL_IID_ENGINE, &data->engine);
         PRINTERR(result, "engine->GetInterface");
     }
     if(SL_RESULT_SUCCESS == result)
     {
-        result = SLEngineItf_CreateOutputMix(data->engine, &data->outputMix, 0, NULL, NULL);
+        result = VCALL(data->engine,CreateOutputMix)(&data->outputMix, 0, NULL, NULL);
         PRINTERR(result, "engine->CreateOutputMix");
     }
     if(SL_RESULT_SUCCESS == result)
     {
-        result = SLObjectItf_Realize(data->outputMix, SL_BOOLEAN_FALSE);
+        result = VCALL(data->outputMix,Realize)(SL_BOOLEAN_FALSE);
         PRINTERR(result, "outputMix->Realize");
     }
 
     if(SL_RESULT_SUCCESS != result)
     {
         if(data->outputMix != NULL)
-            SLObjectItf_Destroy(data->outputMix);
+            VCALL0(data->outputMix,Destroy)();
         data->outputMix = NULL;
 
         if(data->engineObject != NULL)
-            SLObjectItf_Destroy(data->engineObject);
+            VCALL0(data->engineObject,Destroy)();
         data->engineObject = NULL;
         data->engine = NULL;
 
@@ -231,7 +193,7 @@ static ALCenum opensl_open_playback(ALCdevice *Device, const ALCchar *deviceName
         return ALC_INVALID_VALUE;
     }
 
-    Device->DeviceName = strdup(deviceName);
+    al_string_copy_cstr(&Device->DeviceName, deviceName);
     Device->ExtraData = data;
 
     return ALC_NO_ERROR;
@@ -243,13 +205,13 @@ static void opensl_close_playback(ALCdevice *Device)
     osl_data *data = Device->ExtraData;
 
     if(data->bufferQueueObject != NULL)
-        SLObjectItf_Destroy(data->bufferQueueObject);
+        VCALL0(data->bufferQueueObject,Destroy)();
     data->bufferQueueObject = NULL;
 
-    SLObjectItf_Destroy(data->outputMix);
+    VCALL0(data->outputMix,Destroy)();
     data->outputMix = NULL;
 
-    SLObjectItf_Destroy(data->engineObject);
+    VCALL0(data->engineObject,Destroy)();
     data->engineObject = NULL;
     data->engine = NULL;
 
@@ -293,7 +255,8 @@ static ALCboolean opensl_reset_playback(ALCdevice *Device)
     format_pcm.bitsPerSample = BytesFromDevFmt(Device->FmtType) * 8;
     format_pcm.containerSize = format_pcm.bitsPerSample;
     format_pcm.channelMask = GetChannelMask(Device->FmtChans);
-    format_pcm.endianness = SL_BYTEORDER_NATIVE;
+    format_pcm.endianness = IS_LITTLE_ENDIAN ? SL_BYTEORDER_LITTLEENDIAN :
+                                               SL_BYTEORDER_BIGENDIAN;
 
     audioSrc.pLocator = &loc_bufq;
     audioSrc.pFormat = &format_pcm;
@@ -305,21 +268,21 @@ static ALCboolean opensl_reset_playback(ALCdevice *Device)
 
 
     if(data->bufferQueueObject != NULL)
-        SLObjectItf_Destroy(data->bufferQueueObject);
+        VCALL0(data->bufferQueueObject,Destroy)();
     data->bufferQueueObject = NULL;
 
-    result = SLEngineItf_CreateAudioPlayer(data->engine, &data->bufferQueueObject, &audioSrc, &audioSnk, 1, &id, &req);
+    result = VCALL(data->engine,CreateAudioPlayer)(&data->bufferQueueObject, &audioSrc, &audioSnk, 1, &id, &req);
     PRINTERR(result, "engine->CreateAudioPlayer");
     if(SL_RESULT_SUCCESS == result)
     {
-        result = SLObjectItf_Realize(data->bufferQueueObject, SL_BOOLEAN_FALSE);
+        result = VCALL(data->bufferQueueObject,Realize)(SL_BOOLEAN_FALSE);
         PRINTERR(result, "bufferQueue->Realize");
     }
 
     if(SL_RESULT_SUCCESS != result)
     {
         if(data->bufferQueueObject != NULL)
-            SLObjectItf_Destroy(data->bufferQueueObject);
+            VCALL0(data->bufferQueueObject,Destroy)();
         data->bufferQueueObject = NULL;
 
         return ALC_FALSE;
@@ -336,18 +299,18 @@ static ALCboolean opensl_start_playback(ALCdevice *Device)
     SLresult result;
     ALuint i;
 
-    result = SLObjectItf_GetInterface(data->bufferQueueObject, SL_IID_BUFFERQUEUE, &bufferQueue);
+    result = VCALL(data->bufferQueueObject,GetInterface)(SL_IID_BUFFERQUEUE, &bufferQueue);
     PRINTERR(result, "bufferQueue->GetInterface");
     if(SL_RESULT_SUCCESS == result)
     {
-        result = (*bufferQueue)->RegisterCallback(bufferQueue, opensl_callback, Device);
+        result = VCALL(bufferQueue,RegisterCallback)(opensl_callback, Device);
         PRINTERR(result, "bufferQueue->RegisterCallback");
     }
     if(SL_RESULT_SUCCESS == result)
     {
         data->frameSize = FrameSizeFromDevFmt(Device->FmtChans, Device->FmtType);
         data->bufferSize = Device->UpdateSize * data->frameSize;
-        data->buffer = calloc(1, data->bufferSize);
+        data->buffer = calloc(Device->NumUpdates, data->bufferSize);
         if(!data->buffer)
         {
             result = SL_RESULT_MEMORY_FAILURE;
@@ -359,25 +322,27 @@ static ALCboolean opensl_start_playback(ALCdevice *Device)
     {
         if(SL_RESULT_SUCCESS == result)
         {
-            result = (*bufferQueue)->Enqueue(bufferQueue, data->buffer, data->bufferSize);
+            ALvoid *buf = (ALbyte*)data->buffer + i*data->bufferSize;
+            result = VCALL(bufferQueue,Enqueue)(buf, data->bufferSize);
             PRINTERR(result, "bufferQueue->Enqueue");
         }
     }
+    data->curBuffer = 0;
     if(SL_RESULT_SUCCESS == result)
     {
-        result = SLObjectItf_GetInterface(data->bufferQueueObject, SL_IID_PLAY, &player);
+        result = VCALL(data->bufferQueueObject,GetInterface)(SL_IID_PLAY, &player);
         PRINTERR(result, "bufferQueue->GetInterface");
     }
     if(SL_RESULT_SUCCESS == result)
     {
-        result = SLPlayItf_SetPlayState(player, SL_PLAYSTATE_PLAYING);
+        result = VCALL(player,SetPlayState)(SL_PLAYSTATE_PLAYING);
         PRINTERR(result, "player->SetPlayState");
     }
 
     if(SL_RESULT_SUCCESS != result)
     {
         if(data->bufferQueueObject != NULL)
-            SLObjectItf_Destroy(data->bufferQueueObject);
+            VCALL0(data->bufferQueueObject,Destroy)();
         data->bufferQueueObject = NULL;
 
         free(data->buffer);
@@ -394,6 +359,25 @@ static ALCboolean opensl_start_playback(ALCdevice *Device)
 static void opensl_stop_playback(ALCdevice *Device)
 {
     osl_data *data = Device->ExtraData;
+    SLPlayItf player;
+    SLAndroidSimpleBufferQueueItf bufferQueue;
+    SLresult result;
+
+    result = VCALL(data->bufferQueueObject,GetInterface)(SL_IID_PLAY, &player);
+    PRINTERR(result, "bufferQueue->GetInterface");
+    if(SL_RESULT_SUCCESS == result)
+    {
+        result = VCALL(player,SetPlayState)(SL_PLAYSTATE_STOPPED);
+        PRINTERR(result, "player->SetPlayState");
+    }
+
+    result = VCALL(data->bufferQueueObject,GetInterface)(SL_IID_BUFFERQUEUE, &bufferQueue);
+    PRINTERR(result, "bufferQueue->GetInterface");
+    if(SL_RESULT_SUCCESS == result)
+    {
+        result = VCALL0(bufferQueue,Clear)();
+        PRINTERR(result, "bufferQueue->Clear");
+    }
 
     free(data->buffer);
     data->buffer = NULL;
@@ -413,8 +397,6 @@ static const BackendFuncs opensl_funcs = {
     NULL,
     NULL,
     NULL,
-    ALCdevice_LockDefault,
-    ALCdevice_UnlockDefault,
     ALCdevice_GetLatencyDefault
 };
 

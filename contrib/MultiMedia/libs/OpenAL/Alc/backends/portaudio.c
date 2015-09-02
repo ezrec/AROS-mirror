@@ -26,6 +26,7 @@
 
 #include "alMain.h"
 #include "alu.h"
+#include "compat.h"
 
 #include <portaudio.h>
 
@@ -35,7 +36,7 @@ static const ALCchar pa_device[] = "PortAudio Default";
 
 #ifdef HAVE_DYNLOAD
 static void *pa_handle;
-#define MAKE_FUNC(x) static typeof(x) * p##x
+#define MAKE_FUNC(x) static __typeof(x) * p##x
 MAKE_FUNC(Pa_Initialize);
 MAKE_FUNC(Pa_Terminate);
 MAKE_FUNC(Pa_GetErrorText);
@@ -44,6 +45,7 @@ MAKE_FUNC(Pa_StopStream);
 MAKE_FUNC(Pa_OpenStream);
 MAKE_FUNC(Pa_CloseStream);
 MAKE_FUNC(Pa_GetDefaultOutputDevice);
+MAKE_FUNC(Pa_GetDefaultInputDevice);
 MAKE_FUNC(Pa_GetStreamInfo);
 #undef MAKE_FUNC
 
@@ -55,6 +57,7 @@ MAKE_FUNC(Pa_GetStreamInfo);
 #define Pa_OpenStream                  pPa_OpenStream
 #define Pa_CloseStream                 pPa_CloseStream
 #define Pa_GetDefaultOutputDevice      pPa_GetDefaultOutputDevice
+#define Pa_GetDefaultInputDevice       pPa_GetDefaultInputDevice
 #define Pa_GetStreamInfo               pPa_GetStreamInfo
 #endif
 
@@ -96,6 +99,7 @@ static ALCboolean pa_load(void)
         LOAD_FUNC(Pa_OpenStream);
         LOAD_FUNC(Pa_CloseStream);
         LOAD_FUNC(Pa_GetDefaultOutputDevice);
+        LOAD_FUNC(Pa_GetDefaultInputDevice);
         LOAD_FUNC(Pa_GetStreamInfo);
 #undef LOAD_FUNC
 
@@ -127,30 +131,22 @@ typedef struct {
 } pa_data;
 
 
-static int pa_callback(const void *inputBuffer, void *outputBuffer,
-                       unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo *timeInfo,
-                       const PaStreamCallbackFlags statusFlags, void *userData)
+static int pa_callback(const void *UNUSED(inputBuffer), void *outputBuffer,
+                       unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo *UNUSED(timeInfo),
+                       const PaStreamCallbackFlags UNUSED(statusFlags), void *userData)
 {
     ALCdevice *device = (ALCdevice*)userData;
-
-    (void)inputBuffer;
-    (void)timeInfo;
-    (void)statusFlags;
 
     aluMixData(device, outputBuffer, framesPerBuffer);
     return 0;
 }
 
-static int pa_capture_cb(const void *inputBuffer, void *outputBuffer,
-                         unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo *timeInfo,
-                         const PaStreamCallbackFlags statusFlags, void *userData)
+static int pa_capture_cb(const void *inputBuffer, void *UNUSED(outputBuffer),
+                         unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo *UNUSED(timeInfo),
+                         const PaStreamCallbackFlags UNUSED(statusFlags), void *userData)
 {
     ALCdevice *device = (ALCdevice*)userData;
     pa_data *data = (pa_data*)device->ExtraData;
-
-    (void)outputBuffer;
-    (void)timeInfo;
-    (void)statusFlags;
 
     WriteRingBuffer(data->ring, inputBuffer, framesPerBuffer);
     return 0;
@@ -219,7 +215,7 @@ retry_open:
     }
 
     device->ExtraData = data;
-    device->DeviceName = strdup(deviceName);
+    al_string_copy_cstr(&device->DeviceName, deviceName);
 
     return ALC_NO_ERROR;
 }
@@ -325,7 +321,7 @@ static ALCenum pa_open_capture(ALCdevice *device, const ALCchar *deviceName)
     data->params.device = -1;
     if(!ConfigValueInt("port", "capture", &data->params.device) ||
        data->params.device < 0)
-        data->params.device = Pa_GetDefaultOutputDevice();
+        data->params.device = Pa_GetDefaultInputDevice();
     data->params.suggestedLatency = 0.0f;
     data->params.hostApiSpecificStreamInfo = NULL;
 
@@ -361,7 +357,7 @@ static ALCenum pa_open_capture(ALCdevice *device, const ALCchar *deviceName)
         goto error;
     }
 
-    device->DeviceName = strdup(deviceName);
+    al_string_copy_cstr(&device->DeviceName, deviceName);
 
     device->ExtraData = data;
     return ALC_NO_ERROR;
@@ -380,6 +376,9 @@ static void pa_close_capture(ALCdevice *device)
     err = Pa_CloseStream(data->stream);
     if(err != paNoError)
         ERR("Error closing stream: %s\n", Pa_GetErrorText(err));
+
+    DestroyRingBuffer(data->ring);
+    data->ring = NULL;
 
     free(data);
     device->ExtraData = NULL;
@@ -431,8 +430,6 @@ static const BackendFuncs pa_funcs = {
     pa_stop_capture,
     pa_capture_samples,
     pa_available_samples,
-    ALCdevice_LockDefault,
-    ALCdevice_UnlockDefault,
     ALCdevice_GetLatencyDefault
 };
 

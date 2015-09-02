@@ -1,8 +1,13 @@
 #include "config.h"
 
-#ifdef HAVE_XMMINTRIN_H
-#include <xmmintrin.h>
+#ifdef IN_IDE_PARSER
+/* KDevelop's parser won't recognize these defines that get added by the -msse
+ * switch used to compile this source. Without them, xmmintrin.h fails to
+ * declare anything. */
+#define __MMX__
+#define __SSE__
 #endif
+#include <xmmintrin.h>
 
 #include "AL/al.h"
 #include "AL/alc.h"
@@ -14,13 +19,13 @@
 #include "mixer_defs.h"
 
 
-static __inline void ApplyCoeffsStep(ALuint Offset, ALfloat (*RESTRICT Values)[2],
-                                     const ALuint IrSize,
-                                     ALfloat (*RESTRICT Coeffs)[2],
-                                     const ALfloat (*RESTRICT CoeffStep)[2],
-                                     ALfloat left, ALfloat right)
+static inline void ApplyCoeffsStep(ALuint Offset, ALfloat (*restrict Values)[2],
+                                   const ALuint IrSize,
+                                   ALfloat (*restrict Coeffs)[2],
+                                   const ALfloat (*restrict CoeffStep)[2],
+                                   ALfloat left, ALfloat right)
 {
-    const __m128 lrlr = { left, right, left, right };
+    const __m128 lrlr = _mm_setr_ps(left, right, left, right);
     __m128 coeffs, deltas, imp0, imp1;
     __m128 vals = _mm_setzero_ps();
     ALuint i;
@@ -76,12 +81,12 @@ static __inline void ApplyCoeffsStep(ALuint Offset, ALfloat (*RESTRICT Values)[2
     }
 }
 
-static __inline void ApplyCoeffs(ALuint Offset, ALfloat (*RESTRICT Values)[2],
-                                 const ALuint IrSize,
-                                 ALfloat (*RESTRICT Coeffs)[2],
-                                 ALfloat left, ALfloat right)
+static inline void ApplyCoeffs(ALuint Offset, ALfloat (*restrict Values)[2],
+                               const ALuint IrSize,
+                               ALfloat (*restrict Coeffs)[2],
+                               ALfloat left, ALfloat right)
 {
-    const __m128 lrlr = { left, right, left, right };
+    const __m128 lrlr = _mm_setr_ps(left, right, left, right);
     __m128 vals = _mm_setzero_ps();
     __m128 coeffs;
     ALuint i;
@@ -133,72 +138,65 @@ static __inline void ApplyCoeffs(ALuint Offset, ALfloat (*RESTRICT Values)[2],
 #undef SUFFIX
 
 
-void MixDirect_SSE(const DirectParams *params, const ALfloat *RESTRICT data, ALuint srcchan,
-  ALuint OutPos, ALuint SamplesToDo, ALuint BufferSize)
+void Mix_SSE(const ALfloat *data, ALuint OutChans, ALfloat (*restrict OutBuffer)[BUFFERSIZE],
+             MixGains *Gains, ALuint Counter, ALuint OutPos, ALuint BufferSize)
 {
-    ALfloat (*RESTRICT DryBuffer)[BUFFERSIZE] = params->OutBuffer;
-    ALfloat *RESTRICT ClickRemoval = params->ClickRemoval;
-    ALfloat *RESTRICT PendingClicks = params->PendingClicks;
-    ALfloat DrySend;
-    ALuint pos;
+    ALfloat gain, step;
+    __m128 gain4, step4;
     ALuint c;
 
-    for(c = 0;c < MaxChannels;c++)
+    for(c = 0;c < OutChans;c++)
     {
-        __m128 gain;
+        ALuint pos = 0;
+        gain = Gains[c].Current;
+        step = Gains[c].Step;
+        if(step != 1.0f && Counter > 0)
+        {
+            /* Mix with applying gain steps in aligned multiples of 4. */
+            if(BufferSize-pos > 3 && Counter-pos > 3)
+            {
+                gain4 = _mm_setr_ps(
+                    gain,
+                    gain * step,
+                    gain * step * step,
+                    gain * step * step * step
+                );
+                step4 = _mm_set1_ps(step * step * step * step);
+                do {
+                    const __m128 val4 = _mm_load_ps(&data[pos]);
+                    __m128 dry4 = _mm_load_ps(&OutBuffer[c][OutPos+pos]);
+                    dry4 = _mm_add_ps(dry4, _mm_mul_ps(val4, gain4));
+                    gain4 = _mm_mul_ps(gain4, step4);
+                    _mm_store_ps(&OutBuffer[c][OutPos+pos], dry4);
+                    pos += 4;
+                } while(BufferSize-pos > 3 && Counter-pos > 3);
+                gain = _mm_cvtss_f32(gain4);
+            }
+            /* Mix with applying left over gain steps that aren't aligned multiples of 4. */
+            for(;pos < BufferSize && pos < Counter;pos++)
+            {
+                OutBuffer[c][OutPos+pos] += data[pos]*gain;
+                gain *= step;
+            }
+            if(pos == Counter)
+                gain = Gains[c].Target;
+            Gains[c].Current = gain;
+            /* Mix until pos is aligned with 4 or the mix is done. */
+            for(;pos < BufferSize && (pos&3) != 0;pos++)
+                OutBuffer[c][OutPos+pos] += data[pos]*gain;
+        }
 
-        DrySend = params->Gains[srcchan][c];
-        if(DrySend < 0.00001f)
+        if(!(gain > GAIN_SILENCE_THRESHOLD))
             continue;
-
-        if(OutPos == 0)
-            ClickRemoval[c] -= data[0]*DrySend;
-
-        gain = _mm_set1_ps(DrySend);
-        for(pos = 0;pos < BufferSize-3;pos += 4)
+        gain4 = _mm_set1_ps(gain);
+        for(;BufferSize-pos > 3;pos += 4)
         {
             const __m128 val4 = _mm_load_ps(&data[pos]);
-            __m128 dry4 = _mm_load_ps(&DryBuffer[c][OutPos+pos]);
-            dry4 = _mm_add_ps(dry4, _mm_mul_ps(val4, gain));
-            _mm_store_ps(&DryBuffer[c][OutPos+pos], dry4);
+            __m128 dry4 = _mm_load_ps(&OutBuffer[c][OutPos+pos]);
+            dry4 = _mm_add_ps(dry4, _mm_mul_ps(val4, gain4));
+            _mm_store_ps(&OutBuffer[c][OutPos+pos], dry4);
         }
         for(;pos < BufferSize;pos++)
-            DryBuffer[c][OutPos+pos] += data[pos]*DrySend;
-
-        if(OutPos+pos == SamplesToDo)
-            PendingClicks[c] += data[pos]*DrySend;
+            OutBuffer[c][OutPos+pos] += data[pos]*gain;
     }
-}
-
-
-void MixSend_SSE(const SendParams *params, const ALfloat *RESTRICT data,
-  ALuint OutPos, ALuint SamplesToDo, ALuint BufferSize)
-{
-    ALeffectslot *Slot = params->Slot;
-    ALfloat (*RESTRICT WetBuffer)[BUFFERSIZE] = Slot->WetBuffer;
-    ALfloat *RESTRICT WetClickRemoval = Slot->ClickRemoval;
-    ALfloat *RESTRICT WetPendingClicks = Slot->PendingClicks;
-    const ALfloat WetGain = params->Gain;
-    __m128 gain;
-    ALuint pos;
-
-    if(WetGain < 0.00001f)
-        return;
-
-    if(OutPos == 0)
-        WetClickRemoval[0] -= data[0] * WetGain;
-
-    gain = _mm_set1_ps(WetGain);
-    for(pos = 0;pos < BufferSize-3;pos+=4)
-    {
-        const __m128 val4 = _mm_load_ps(&data[pos]);
-        __m128 wet4 = _mm_load_ps(&WetBuffer[0][OutPos+pos]);
-        wet4 = _mm_add_ps(wet4, _mm_mul_ps(val4, gain));
-        _mm_store_ps(&WetBuffer[0][OutPos+pos], wet4);
-    }
-    for(;pos < BufferSize;pos++)
-        WetBuffer[0][OutPos+pos] += data[pos] * WetGain;
-
-    if(OutPos+pos == SamplesToDo)
-        WetPendingClicks[0] += data[pos] * WetGain;
 }

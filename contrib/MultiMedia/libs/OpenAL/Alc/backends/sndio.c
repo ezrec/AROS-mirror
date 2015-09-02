@@ -26,6 +26,7 @@
 
 #include "alMain.h"
 #include "alu.h"
+#include "threads.h"
 
 #include <sndio.h>
 
@@ -46,11 +47,11 @@ typedef struct {
     ALsizei data_size;
 
     volatile int killNow;
-    ALvoid *thread;
+    althrd_t thread;
 } sndio_data;
 
 
-static ALuint sndio_proc(ALvoid *ptr)
+static int sndio_proc(void *ptr)
 {
     ALCdevice *device = ptr;
     sndio_data *data = device->ExtraData;
@@ -58,6 +59,7 @@ static ALuint sndio_proc(ALvoid *ptr)
     size_t wrote;
 
     SetRTPriority();
+    althrd_setname(althrd_current(), MIXER_THREAD_NAME);
 
     frameSize = FrameSizeFromDevFmt(device->FmtChans, device->FmtType);
 
@@ -109,7 +111,7 @@ static ALCenum sndio_open_playback(ALCdevice *device, const ALCchar *deviceName)
         return ALC_INVALID_VALUE;
     }
 
-    device->DeviceName = strdup(deviceName);
+    al_string_copy_cstr(&device->DeviceName, deviceName);
     device->ExtraData = data;
 
     return ALC_NO_ERROR;
@@ -222,8 +224,8 @@ static ALCboolean sndio_start_playback(ALCdevice *device)
     data->data_size = device->UpdateSize * FrameSizeFromDevFmt(device->FmtChans, device->FmtType);
     data->mix_data = calloc(1, data->data_size);
 
-    data->thread = StartThread(sndio_proc, device);
-    if(data->thread == NULL)
+    data->killNow = 0;
+    if(althrd_create(&data->thread, sndio_proc, device) != althrd_success)
     {
         sio_stop(data->sndHandle);
         free(data->mix_data);
@@ -237,15 +239,14 @@ static ALCboolean sndio_start_playback(ALCdevice *device)
 static void sndio_stop_playback(ALCdevice *device)
 {
     sndio_data *data = device->ExtraData;
+    int res;
 
-    if(!data->thread)
+    if(data->killNow)
         return;
 
     data->killNow = 1;
-    StopThread(data->thread);
-    data->thread = NULL;
+    althrd_join(data->thread, &res);
 
-    data->killNow = 0;
     if(!sio_stop(data->sndHandle))
         ERR("Error stopping device\n");
 
@@ -266,8 +267,6 @@ static const BackendFuncs sndio_funcs = {
     NULL,
     NULL,
     NULL,
-    ALCdevice_LockDefault,
-    ALCdevice_UnlockDefault,
     ALCdevice_GetLatencyDefault
 };
 
