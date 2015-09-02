@@ -1323,7 +1323,7 @@ Tags
                                            if BIDTAG_ViewPort is passed: vp->RasInfo->BitMap->Depth,
                                            else 1.
      BIDTAG_NominalWidth (UWORD),
-     BIDTAG_NominalHeight (UWORD)        - Aspect radio. Default:
+     BIDTAG_NominalHeight (UWORD)        - Aspect ratio. Default:
                                            if BIDTAG_SourceID: SourceID NominalDimensionInfo
                                            if BIDTAG_ViewPort: vp->DWidth and vp->DHeight
                                            or 640 x 200.

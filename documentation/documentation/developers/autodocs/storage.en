@@ -1,0 +1,43 @@
+=======
+storage
+=======
+
+.. This document is automatically generated. Don't edit it!
+
+`Index <index>`_
+
+----------
+
+======================================= ======================================= ======================================= ======================================= 
+`AllocateID()`_                         
+======================================= ======================================= ======================================= ======================================= 
+
+-----------
+
+AllocateID()
+============
+
+Synopsis
+~~~~~~~~
+::
+
+ struct Storage_IDNode * AllocateID(
+          char * ID );
+
+Function
+~~~~~~~~
+::
+
+     Allocate a unit/volume ID.
+
+
+Inputs
+~~~~~~
+::
+
+     ID - base ID to allocate. If no unit is specified (e.g. ID = "CD"), a new
+     ID for that family will be allocated (e.g "CD0", "CD1", etc). If an ID unit _is_
+     specified, and it is allready allocated - a new ID will be created (e.g. "CD0_1")
+
+
+
