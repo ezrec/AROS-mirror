@@ -218,6 +218,8 @@ static ALCenum ALCplaybackAHI_open(ALCplaybackAHI *self, const ALCchar *name) {
 		return ALC_OUT_OF_MEMORY;
 	}
 
+        CopyMem(self->ahir[0], self->ahir[1], sizeof(struct AHIRequest));
+
 	al_string_copy_cstr(&device->DeviceName, name);
 
 	return ALC_NO_ERROR;
