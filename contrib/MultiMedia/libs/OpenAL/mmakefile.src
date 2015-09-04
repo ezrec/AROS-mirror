@@ -12,7 +12,7 @@ include $(TOP)/config/make.cfg
 
 USER_INCLUDES := \
         -I$(SRCDIR)/$(CURDIR) \
-        -I$(SRCDIR)/$(CURDIR)/Include \
+        -iquote $(SRCDIR)/$(CURDIR)/include \
         -I$(SRCDIR)/$(CURDIR)/OpenAL32/Include \
         -I$(SRCDIR)/$(CURDIR)/Alc
 
