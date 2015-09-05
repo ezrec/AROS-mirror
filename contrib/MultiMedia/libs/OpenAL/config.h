@@ -5,9 +5,6 @@
 /* Define to the library version */
 #define ALSOFT_VERSION "1.16.0"
 
-/* Define any available alignment declaration */
-#define ALIGN(x) _Alignas(x)
-
 /* Define if we have the C11 aligned_alloc function */
 /* #undef HAVE_ALIGNED_ALLOC */
 
@@ -85,6 +82,7 @@
 /* Define to the size of a long long int type */
 #define SIZEOF_LONG_LONG 8
 
+#if __GNUC__ > 4
 /* Define if we have C99 variable-length array support */
 #define HAVE_C99_VLA 1
 
@@ -96,6 +94,14 @@
 
 /* Define if we have C11 _Alignas support */
 #define HAVE_C11_ALIGNAS 1
+#endif
+
+/* Define any available alignment declaration */
+#if defined(HAVE_C11_ALIGNAS)
+#define ALIGN(x) _Alignas(x)
+#else
+#define ALIGN(x) __attribute__((aligned(x)))
+#endif
 
 /* Define if we have C11 _Atomic support */
 /* #undef HAVE_C11_ATOMIC 1 */
