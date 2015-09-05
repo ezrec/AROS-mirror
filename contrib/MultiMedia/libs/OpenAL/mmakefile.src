@@ -4,7 +4,7 @@
 #
 include $(TOP)/config/make.cfg
 
-#MM- contrib-multimedia : contrib-openal
+##MM- contrib-multimedia : contrib-openal
 
 #MM- contrib-openal : contrib-openal-linklib
 
