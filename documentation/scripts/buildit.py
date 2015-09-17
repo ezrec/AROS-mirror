@@ -132,7 +132,9 @@ def makePictures():
                 output += '<a name=%s>\n' % name
                 output += convertWWW( pathAltLang( 'overview', lang, path), lang, options )
 
-                for pictureName in os.listdir( path ):
+                pictureNames = os.listdir( path )
+                pictureNames.sort()
+                for pictureName in pictureNames:
                     picturePath = os.path.join( path, pictureName )
                     pictureFormat = os.path.splitext( pictureName )[1][1:]
                     if pictureName == '.svn' or os.path.isdir( picturePath ): continue
