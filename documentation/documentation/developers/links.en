@@ -3,7 +3,7 @@ Links
 =====
 
 :Authors:   Aaron Digulla, Adam Chodorowski
-:Copyright: Copyright © 1995-2006, The AROS Development Team
+:Copyright: Copyright © 1995-2015, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -12,7 +12,7 @@ Links
 
 Device drivers development
 --------------------------
-+ `USB 2.0 specifications`__
++ `USB specifications`__
 
   The official source of USB information. Not really easy to grasp, but
   mandatory if you want to know all about USB.
@@ -49,7 +49,7 @@ Executable file formats
   time; but it *does* contain some interesting ideas. Definitely something
   we would like to see in AROS.
 
-__ http://www.nondot.org/sabre/os/files/Executables/ELF.pdf
+__ https://refspecs.linuxbase.org/elf/elf.pdf
 __ http://greywire.8m.com/greywire/amigasde.htm
 
 
@@ -82,7 +82,7 @@ Miscellaneous operating system resources
   quite a lot of details on higher level things and some good references to
   useful books, tools and sources.
 
-__ http://www.nondot.org/sabre/os/articles/
+__ http://www.oldlinux.org/Linux.old/study/sabre/os/articles/
 __ http://www.rcollins.org/articles/pmbasics/tspec_a1_doc.html
 __ http://files.osdev.org/mirrors/geezer/osd/index.htm
 __ http://wiki.osdev.org/Main_Page
@@ -97,13 +97,6 @@ Tools
   BOOPSI, it consists of both a shared library to handle the runtime and a
   precompiler to allow for an easier syntax.
 
-+ `Geek Gadgets`__
-
-  Ports of the most common GNU tools to Amiga, giving you a complete Unix-like
-  environment on Amiga. Includes all common GNU development tools, like
-  binutils, GCC, grep, gawk, autoconf, automake, bison, cvs, flex, perl and
-  much more.
-
 + `Martin Blom's cross-compiler`__
 
   A cross-compiler suite by Martin Blom based on GCC for cross-compiling
@@ -113,7 +106,6 @@ Tools
 
 
 __ http://oop4a.benderirc.de/oop4a_e.html
-__ http://ftp.back2roots.org/geekgadgets/
 __ http://www.lysator.liu.se/~lcs/files/gg-cross/
 __ http://www.whoosh777.com/amiga-68k-x-x86-aros-gcc.html
 
