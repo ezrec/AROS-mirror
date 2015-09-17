@@ -3,7 +3,7 @@ Links
 =====
 
 :Authors:   Aaron Digulla, Adam Chodorowski, Matthias Rustler
-:Copyright: Copyright (C) 1995-2009, The AROS Development Team
+:Copyright: Copyright (C) 1995-2015, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -14,43 +14,35 @@ Links
 AROS resources
 ==============
 
-+ `Power2People`__
-
-  Power2People is a grass roots support group for AROS.
-
-+ `AROS-Exec`__
-
-  AROS Community website, forums, news, galleries.
-
++ `Power2People`__ is a grass roots support group for AROS.
++ `AROS-Exec`__ is a community website with forums, news, galleries.
++ `AROS World`__ is a new AROS website, intended to be the user community website.
 + `AROS software archive`__
-
-+ `AROS Aminet Section`__
-
-+ `AROS on ohloh.net`__
-
-  OHLOH is showing AROS development activity in a nice graphical way.
-
-+ `AROS for Amiga`__
-
-  AfA OS replaces AmigaOS core libraries with their more advanced AROS counterparts.
-
-+ `AROS World`__
-
-  A new AROS website, intended to be the user community website.
-
++ `AROS software on Aminet`__
++ `Development statistics from openhub.net`__
++ `Planet AROS`__ aggregates various blogs
++ `AROS for Amiga`__ replaces AmigaOS core libraries with their more advanced AROS counterparts.
 + `AROS on Wikipedia`__
-
 + `AROS documentation on WikiBooks`__
++ `AROS on Google+`__
++ `Bszili's ports`__
++ `Yannickescu's ports`__
++ `Serk118uk's ports`__
 
 __ http://www.power2people.org/
 __ http://aros-exec.org
+__ http://arosworld.org
 __ http://archives.aros-exec.org/
 __ http://aros.aminet.net/
 __ http://www.ohloh.net/p/aros?p=AROS
+__ http://planet-aros.heimstetten.net/
 __ http://amidevcpp.amiga-world.de/afa_binarie_upload.php
-__ http://arosworld.org
 __ http://en.wikipedia.org/wiki/AROS_Research_Operating_System
 __ http://en.wikibooks.org/wiki/Aros
+__ https://plus.google.com/u/0/communities/102339819113712301695
+__ http://bszili.morphos.me/
+__ http://www.dusabledanslherbe.eu:8080/AROSPage/
+__ http://serk118.blogspot.co.uk/
 
 
 Articles about AROS
@@ -79,9 +71,11 @@ Articles that mention AROS
 Title                                            Author          Date
 ===============================================  ==============  ==========
 `"Climbing the Kernel Mountain"`__               Emmanuel Marty  2002-08-13
+`"10 best alternative operating systems"`__      PC Plus         unknown
 ===============================================  ==============  ==========
 
 __ http://www.osnews.com/story/1532&page=1
+__ http://www.techradar.com/news/software/operating-systems/10-best-alternative-operating-systems-934484
 
 If you know some article that mentions AROS that we haven't listed here,
 please contact_ us so we can add it. Thanks.
@@ -91,7 +85,6 @@ Homepages of developers
 =======================
 
 + `Aaron Digulla`__
-+ `Adam Chodorowski`__
 + `Krzysztof Smiechowicz`__
 + `Lennard voor den Dag`__
 + `Martin Steigerwald`__
@@ -101,12 +94,11 @@ Homepages of developers
 + `Oliver Brunner`__
 
 __ http://www.philmann-dark.de/
-__ http://www.chodorowski.com/
 __ http://www.aros3d.org/
 __ http://ldp.home.xs4all.nl/
 __ http://www.lichtvoll.de
 __ http://www.mazze-online.de/
-__ http://msaros.blogspot.com
+__ http://meehow.de/
 __ http://kalamatee.blogspot.com/
 __ http://homes.hallertau.net/~oli/
 
@@ -121,7 +113,7 @@ Miscellaneous
   A great nostalgia site where you can find licensed and free Amiga games.
 
 
-__ http://www.back2roots.org/
+__ http://back2roots.abime.net/
 
 
 .. _contact: contact
