@@ -3,7 +3,7 @@ Sponsors
 ========
 
 :Authors:   Aaron Digulla, Adam Chodorowski
-:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Copyright: Copyright © 1995-2015, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -43,6 +43,7 @@ resources:
 
 + Yann Vernier
 + Randal Vice
++ Stephen Jones
 
 
 The following organizations and individuals have sponsored development work:
@@ -62,10 +63,13 @@ The following organizations and individuals have sponsored development work:
 + Joshua Dolan
 + Matthew Parsons
 + Jean-Pierre Rivière
++ Stephen Jones
++ Pascal Papara
++ `ACube Systems Slr`__
 
 __ http://www.trustsec.de/
 __ http://www.genesi-tech.com/
 __ http://sourceforge.net/
 __ http://www.power2people.org/
-__ http://amiga.no/
-
+__ http://amiga.zone/index.php?side=hovedsiden
+__ http://acube-systems.biz/
