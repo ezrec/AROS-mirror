@@ -69,7 +69,6 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
         Tree \
         ( [
             A( _N['status'], href=makeURL('introduction/status/everything', lang ) ),
-            A( _N['screenshots'], href=makeURL( 'pictures/screenshots/', lang) ),
             A( _N['ports'], href=makeURL( 'introduction/ports', lang ) ),
             A( _N['license'], href='%(BASE)slicense.html' )
         ] ),
@@ -77,6 +76,15 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
     P ( contents = [
         Img( src = '%(ROOT)simages/pointer.png', alt = 'pointer' ),
         A(  _N['download'], href=makeURL( 'download', lang ) )]),
+        BR(),
+    P ( contents = [
+        Img( src = '%(ROOT)simages/pointer.png', alt = 'pointer' ),
+        _N['pictures']]),
+        Tree \
+        ( [
+            A( _N['screenshots'], href=makeURL( 'pictures/screenshots/', lang) ),
+            A( _N['developers'], href=makeURL( 'pictures/developers/', lang ) ),
+        ] ),
         BR(),
     P ( contents = [
         Img( src = '%(ROOT)simages/pointer.png', alt = 'pointer' ),
@@ -135,15 +143,6 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
      P ( contents = [
         Img( src = '%(ROOT)simages/pointer.png', alt = 'pointer' ),
         A( _N['acknowledgements'], href=makeURL( 'acknowledgements', lang ) )]),
-        BR(),
-    P ( contents = [
-        Img( src = '%(ROOT)simages/pointer.png', alt = 'pointer' ),
-        _N['pictures']]),
-        Tree \
-        ( [
-            A( _N['developers'], href=makeURL( 'pictures/developers/', lang ) ),
-            A( _N['developers-together'], href=makeURL( 'pictures/developers-together/', lang ) )
-        ] ),
         BR(),
     P ( contents = [
         Img( src = '%(ROOT)simages/pointer.png', alt = 'pointer' ),

@@ -105,7 +105,6 @@ def processPicture( src, depth ):
 def makePictures():
     DIRECTORIES = [ 
         'pictures/developers', 
-        'pictures/developers-together', 
         'pictures/screenshots' 
     ]
 

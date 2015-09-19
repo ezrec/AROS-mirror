@@ -37,12 +37,12 @@ contribute:       Contribute
 roadmap:          Roadmap
 bug-tracker:      Bug Tracker
 feature-requests: Feature Requests
-working-with-subversion: Working with Subversion
+working-with-subversion: Subversion
 compiling:        Compiling
-application-development-manual: Application Development Manual
-zune-application-development-manual: Zune Application Development Manual
-system-development-manual:      System Development Manual
-debugging-manual: Debugging Manual
+application-development-manual: Application Development
+zune-application-development-manual: Zune Application Development
+system-development-manual:      System Development
+debugging-manual: Debugging
 reference:        Reference
 specifications:   Specifications
 ui-style-guide:   UI Style Guide
