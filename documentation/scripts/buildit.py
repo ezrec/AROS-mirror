@@ -128,7 +128,7 @@ def makePictures():
                 path = os.path.join( root, name )
                 if name == '.svn' or not os.path.isdir( path ): continue
 
-                output += '<a name=%s>\n' % name
+                output += '\n<div style="clear:left">\n<a name=%s>\n' % name
                 output += convertWWW( pathAltLang( 'overview', lang, path), lang, options )
 
                 pictureNames = os.listdir( path )
@@ -145,7 +145,7 @@ def makePictures():
                         lang
                     )
 
-                output += '</a>'
+                output += '</a>\n</div>\n'
 
             if lang == DEFAULTLANG:
                 strings = {

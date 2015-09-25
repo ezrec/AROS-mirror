@@ -22,26 +22,20 @@ def makePicture( path, description, language ):
     thumbnail = root + os.path.join( directory, 'thumbnails', filename )
     path      = root + path
 
-    result = Table \
-    (
-        cellpadding = 4, cellspacing = 0, border = 1, width = '100%%',
-        contents = TR \
-        ( [
-            TD( width = '328', contents = A( href = path, contents = Img( src = thumbnail ) ) ),
-            TD \
-            ( 
-                width = '*', contents =
-                [ 
-                    description, BR(), '&nbsp;&nbsp;&nbsp;&nbsp;', 
-                    A \
-                    (
-                        href = path,
-                        contents = config.get( 'misc', 'large-image' )
-                    )
-                ]
-            )
-        ] )
+    result = Div \
+    ( \
+        style = "margin: 5px; padding: 5px; border: 1px solid #000000; height: 300; width: 300; float: left; text-align: center;",
+        contents = \
+        ( \
+            [ \
+                A \
+                ( \
+                    href = path,
+                    contents = Img( src = thumbnail, style = "display: inline; margin: 5px; border: 1px solid #ffffff"),
+                ),
+                Div( contents = description, style = "text-align: center; font-weight: normal; width: auto; margin: 5px;"),
+            ]
+        ),
     )
     
     return str( result )
-

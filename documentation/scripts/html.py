@@ -233,6 +233,10 @@ class P( Standard ):
     def __init__( self, contents=None, **attributes ):
         Standard.__init__( self, 'p', attributes, contents )
 
+class Div( Standard ):
+    def __init__( self, contents=None, **attributes ):
+        Standard.__init__( self, 'div', attributes, contents )
+
 class BR( Node ):
     def __str__( self ):
         return '<br>'
