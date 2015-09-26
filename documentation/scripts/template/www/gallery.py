@@ -24,7 +24,7 @@ def makePicture( path, description, language ):
 
     result = Div \
     ( \
-        style = "margin: 5px; padding: 5px; border: 1px solid #000000; height: 300; width: 300; float: left; text-align: center;",
+        style = "margin: 4px; padding: 2px; border: 1px solid #000000; height: 400; width: 320; float: left; text-align: center;",
         contents = \
         ( \
             [ \
