@@ -24,7 +24,40 @@ body {
 
 div.document {
     padding: 0px 10px 0px 10px }
-    
+
+
+div.gallerygroup {
+	clear: left;
+}
+
+div.gallery {
+	margin: 4px;
+	padding: 2px;
+	border: 1px solid #000000;
+	height: 400;
+	width: 320;
+	float: left;
+	text-align: center;
+}
+
+div.gallery img {
+	display: inline;
+	margin: 5px;
+	border: 1px solid #ffffff;
+}
+
+div.gallery a:hover img {
+    border:1px solid #0000ff;
+}
+
+div.gallerydesc {
+	text-align: center;
+	font-weight: normal;
+	width: auto;
+	margin: 5px;
+}
+
+
 /*h1 {
     padding:            2px              ;
     border:             thin solid black ;

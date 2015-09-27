@@ -24,16 +24,16 @@ def makePicture( path, description, language ):
 
     result = Div \
     ( \
-        style = "margin: 4px; padding: 2px; border: 1px solid #000000; height: 400; width: 320; float: left; text-align: center;",
+        CLASS = "gallery",
         contents = \
         ( \
             [ \
                 A \
                 ( \
                     href = path,
-                    contents = Img( src = thumbnail, style = "display: inline; margin: 5px; border: 1px solid #ffffff"),
+                    contents = Img( src = thumbnail),
                 ),
-                Div( contents = description, style = "text-align: center; font-weight: normal; width: auto; margin: 5px;"),
+                Div( contents = description, CLASS = "gallerydesc"),
             ]
         ),
     )

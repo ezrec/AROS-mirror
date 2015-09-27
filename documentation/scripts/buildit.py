@@ -128,7 +128,7 @@ def makePictures():
                 path = os.path.join( root, name )
                 if name == '.svn' or not os.path.isdir( path ): continue
 
-                output += '\n<div style="clear:left">\n<a name=%s>\n' % name
+                output += '\n<div class="gallerygroup">\n<a name=%s>\n' % name
                 output += convertWWW( pathAltLang( 'overview', lang, path), lang, options )
 
                 pictureNames = os.listdir( path )
