@@ -4,24 +4,29 @@ Developers Resources
 
 + `How to contribute`__
 + `Roadmap`__
-+ `SVN access and usage`__
++ `Bug tracker on Sourceforge`__
++ `Feature requests on Sourceforge`__
++ `Subversion access and usage`__
 + `How to compile`__
 + `Applications development manual`__
 + `Zune Applications development manual`__
 + `System development manual`__
 + `PCI subsystem manual`__
 + `Debugging manual`__
-+ `Reference`__
++ `API Reference`__
 + `Specifications`__
-+ `UI style guide`__
++ `User interface style guide`__
++ `Testing`__
 + `Documenting`__
-+ `Porting`__
++ `Porting software to AROS`__
 + `Translating`__
 + `Summaries`__
 + `Useful links`__
 
 __ contribute
 __ roadmap
+__ http://sourceforge.net/p/aros/bugs/
+__ http://sourceforge.net/p/aros/feature-requests/
 __ svn
 __ compiling
 __ app-dev/index
@@ -32,9 +37,9 @@ __ debugging
 __ autodocs/index
 __ specifications/index
 __ ui
+__ testing/index
 __ documenting
 __ porting
 __ translating
 __ summaries/index
 __ links
-
