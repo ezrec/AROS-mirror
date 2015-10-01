@@ -1,0 +1,17 @@
+=========================
+September 2015 Highlights
+=========================
+
+:Author:   Krzysztof Smiechowicz
+:Date:     2015-10-01
+
+In September most changes went into Zune, AROS MUI replacement. Krzysztof
+Smiechowicz fixed a number of bugs in List class, fixed flickering when
+changing pages in Group class and improved Title class not to overwrite
+the developer provideded labels. Neil Cafferkey extended the automatic
+test suite for List class and made a number of fixes in this class.
+
+Outside of Zune topics, Nick Andrews updated AROS OpenAL port to
+version 1.16.0 and pictures sections of AROS website has been
+updated thanks to Matthias Rustler.
+
