@@ -1,4 +1,4 @@
-# Copyright © 2008-2011, The AROS Development Team. All rights reserved.
+# Copyright © 2008-2015, The AROS Development Team. All rights reserved.
 # $Id$
 
 -include $(TOP)/config/make.cfg
@@ -6,5 +6,8 @@
 #MM- contrib-pack : contrib-pack-lzo
 #MM- contrib-pack-lzo : development-lzo
 
+REPOSITORIES := http://www.oberhumer.com/opensource/lzo/download \
+    http://pkgs.fedoraproject.org/repo/pkgs/lzo/lzo-2.03.tar.gz/0c3d078c2e8ea5a88971089a2f02a726/
+
 %fetch_and_build_gnu_development package=lzo version=2.03 patch=yes \
-	package_repo="http://www.oberhumer.com/opensource/lzo/download" suffixes="tar.gz"
+    package_repo=$(REPOSITORIES) suffixes="tar.gz"
