@@ -44,15 +44,16 @@ stdc
 `strcoll()`_                            `strcpy()`_                             `strcspn()`_                            `strdup()`_                             
 `strerror()`_                           `strftime()`_                           `strlcat()`_                            `strlcpy()`_                            
 `strlen()`_                             `strlwr()`_                             `strncasecmp()`_                        `strncat()`_                            
-`strncmp()`_                            `strncpy()`_                            `strndup()`_                            `strpbrk()`_                            
-`strrchr()`_                            `strrev()`_                             `strsep()`_                             `strspn()`_                             
-`strstr()`_                             `strtod()`_                             `strtoimax()`_                          `strtok()`_                             
-`strtok_r()`_                           `strtol()`_                             `strtold()`_                            `strtoll()`_                            
-`strtoul()`_                            `strtoull()`_                           `strtoumax()`_                          `strupr()`_                             
-`strxfrm()`_                            `system()`_                             `time()`_                               `tmpfile()`_                            
-`tmpnam()`_                             `ungetc()`_                             `vfprintf()`_                           `vfscanf()`_                            
-`vprintf()`_                            `vscanf()`_                             `vsnprintf()`_                          `vsprintf()`_                           
-`vsscanf()`_                            `wcstombs()`_                           `wctomb()`_                             
+`strncmp()`_                            `strncpy()`_                            `strndup()`_                            `strnlen()`_                            
+`strpbrk()`_                            `strrchr()`_                            `strrev()`_                             `strsep()`_                             
+`strspn()`_                             `strstr()`_                             `strtod()`_                             `strtoimax()`_                          
+`strtok()`_                             `strtok_r()`_                           `strtol()`_                             `strtold()`_                            
+`strtoll()`_                            `strtoul()`_                            `strtoull()`_                           `strtoumax()`_                          
+`strupr()`_                             `strxfrm()`_                            `system()`_                             `time()`_                               
+`tmpfile()`_                            `tmpnam()`_                             `ungetc()`_                             `vfprintf()`_                           
+`vfscanf()`_                            `vprintf()`_                            `vscanf()`_                             `vsnprintf()`_                          
+`vsprintf()`_                           `vsscanf()`_                            `wcstombs()`_                           `wctomb()`_                             
+
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -7105,6 +7106,42 @@ Result
 ::
 
      A copy of the string which can be freed with free().
+
+
+
+----------
+
+strnlen()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  size_t strnlen(
+     const char * ptr, size_t n)
+
+
+Function
+~~~~~~~~
+::
+
+     Calculate the length of a string (without the terminating 0 byte).
+
+
+Inputs
+~~~~~~
+::
+
+     ptr - The string to get its length for
+     n - The max length
+
+
+Result
+~~~~~~
+::
+
+     The length of the string.
 
 
 
