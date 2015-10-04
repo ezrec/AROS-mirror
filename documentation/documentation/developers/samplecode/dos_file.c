@@ -25,7 +25,7 @@ int main(void)
 
     while (FGets(infile, buffer, sizeof(buffer)))
     {
-        if (FPuts(outfile, buffer)) // FPuts returns 0 on error
+        if (FPuts(outfile, buffer)) // FPuts returns EOF on error
         {
             goto cleanup;
         }
