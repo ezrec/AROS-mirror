@@ -118,7 +118,7 @@ zune;penadjust;Penadjust.mui;2012-07-17
 zune;virtgroup;Virtgroup.mui;2012-07-17
 zune;scrollgroup;Scrollgroup.mui;2013-09-20
 zune;scrollbar;Scrollbar.mui;2012-07-17
-zune;listview;Listview.mui;2014-01-23
+zune;listview;Listview.mui;2015-10-06
 zune;radio;Radio.mui;2012-07-17
 zune;cycle;Cycle.mui;2012-07-17
 zune;coloradjust;ColorAdjust.mui;2012-07-17
@@ -2943,7 +2943,7 @@ scrollgroup;MUIA_Scrollgroup_UseWinBorder;1;1;2
 scrollgroup;MUIA_Scrollgroup_VertBar;1;1;2
 scrollbar;MUIA_Scrollbar_Type;1;1;2
 listview;MUIA_Listview_ClickColumn;1;1;2
-listview;MUIA_Listview_DefClickColumn;1;1;0
+listview;MUIA_Listview_DefClickColumn;1;1;2
 listview;MUIA_Listview_DoubleClick;1;1;2
 listview;MUIA_Listview_DragType;1;1;0
 listview;MUIA_Listview_Input;1;1;2
