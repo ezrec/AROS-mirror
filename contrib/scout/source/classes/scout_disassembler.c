@@ -426,52 +426,47 @@ STATIC IPTR mDisassemble( struct IClass *cl,
             Disassemble(&ds);
         } else {
             LONG size;
-            UWORD *addr;
+            UBYTE *addr;
 
             if (!dwd->dwd_ForceHexDump) {
                 RawDoFmt(msgCannotOpenDisasmLibrary, NULL, (void(*)(void))&_putchar, &dc);
             }
 
-            addr = (UWORD *)dwd->dwd_Address;
+            addr = (UBYTE *)dwd->dwd_Address;
             size = dwd->dwd_Range;
-            if (size & 1) size++;
             while (size > 0) {
                 LONG s;
-                ULONG word;
-                UWORD memory[8];
+                UWORD i;
 
                 RawDoFmt("$%08lx:", (APTR)&addr, (void(*)(void))&_putchar, &dc);
-                CopyMemQuick(addr, memory, sizeof(memory));
 
                 s = size;
-                for (word = 0; word < 8; word++) {
+                for (i = 0; i < 16; i++) {
                     ULONG data;
 
-                    data = memory[word];
 
-                    RawDoFmt(" %04lx", (APTR)&data, (void(*)(void))&_putchar, &dc);
+                    if (i % 2 == 0)
+                        RawDoFmt(" ", NULL, (void(*)(void))&_putchar, &dc);
+                    if (s > 0) {
+                        data = addr[i];
+                        RawDoFmt("%02lx", (APTR)&data, (void(*)(void))&_putchar, &dc);
+                    }
+                    else
+                        RawDoFmt("  ", NULL, (void(*)(void))&_putchar, &dc);
 
-                    s -= 2;
-                    if (s <= 0) break;
+                    s--;
                 }
 
-                if (s <= 0 && size < 16) {
-                    for (word = 0; word < (16 - size) / 2; word++) RawDoFmt("     ", NULL, (void(*)(void))&_putchar, &dc);
-                }
                 RawDoFmt("    ", NULL, (void(*)(void))&_putchar, &dc);
 
                 s = size;
-                for (word = 0; word < 8; word++) {
-                    UWORD data;
-                    ULONG bytes[2];
+                for (i = 0; i < 16; i++) {
+                    UBYTE ch = addr[i];
+                    if (!isprint(ch))
+                        ch = '.';
+                    RawDoFmt("%lc", (APTR)&ch, (void(*)(void))&_putchar, &dc);
 
-                    data = memory[word];
-                    bytes[0] = isprint((data >> 8) & 0xff) ? ((data >> 8) & 0xff) : '.';
-                    bytes[1] = isprint(data & 0xff) ? (data & 0xff) : '.';
-
-                    RawDoFmt("%lc%lc", (APTR)&bytes, (void(*)(void))&_putchar, &dc);
-
-                    s -= 2;
+                    s--;
                     if (s <= 0) {
                         break;
                     }
@@ -479,7 +474,7 @@ STATIC IPTR mDisassemble( struct IClass *cl,
 
                 RawDoFmt("\n", NULL, (void(*)(void))&_putchar, &dc);
 
-                addr += 8;
+                addr += 16;
                 size -= 16;
             }
         }
