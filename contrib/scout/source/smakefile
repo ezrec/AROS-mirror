@@ -95,7 +95,6 @@ OBJECTS=$(OBJDIR)/startup.o \
    $(OBJDIR)/$(CLASSESDIR)/monitor_button.o \
    $(OBJDIR)/$(CLASSESDIR)/task_button.o \
    $(OBJDIR)/$(CLASSESDIR)/port_button.o \
-   $(OBJDIR)/hexdump.o \
    $(OBJDIR)/scout_cat.o \
    $(OBJDIR)/SmartReadArgs.o \
    $(OBJDIR)/all_sas.o
@@ -173,7 +172,6 @@ HEADERS=system_headers.h startup.h Scout.h \
    classes/flags_button.h \
    classes/task_button.h \
    classes/port_button.h \
-   hexdump.h \
    scout_cat.h \
    SmartReadArgs.h
 
@@ -232,8 +230,6 @@ $(OBJDIR)/scout_logo.o: scout_logo.c scout_logo.h
 $(OBJDIR)/scout_net.o: scout_net.c scout_net.h
 
 $(OBJDIR)/i64.o: i64.c i64.h
-
-$(OBJDIR)/hexdump.o: hexdump.c hexdump.h
 
 $(OBJDIR)/SmartReadArgs.o: SmartReadArgs.c SmartReadArgs.h
 

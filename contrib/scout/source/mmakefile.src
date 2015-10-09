@@ -91,7 +91,6 @@ FILES := \
    classes/flags_button \
    classes/monitor_button \
    classes/task_button \
-   hexdump \
    startup \
    scout_cat \
    SmartReadArgs \

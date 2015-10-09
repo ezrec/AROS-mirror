@@ -133,7 +133,6 @@ OBJECTS=$(OBJDIR)/prestartup.o \
    $(OBJDIR)/$(CLASSESDIR)/flags_button.o \
    $(OBJDIR)/$(CLASSESDIR)/monitor_button.o \
    $(OBJDIR)/$(CLASSESDIR)/task_button.o \
-   $(OBJDIR)/hexdump.o \
    $(OBJDIR)/scout_cat.o \
    $(OBJDIR)/SmartReadArgs.o \
    $(OBJDIR)/all_gcc.o \
@@ -207,7 +206,6 @@ HEADERS=system_headers.h startup.h scout.h \
    $(CLASSESDIR)/disassembler_button.h \
    $(CLASSESDIR)/flags_button.h \
    $(CLASSESDIR)/task_button.h \
-   hexdump.h \
    scout_cat.h \
    SmartReadArgs.h \
    include/extra.h

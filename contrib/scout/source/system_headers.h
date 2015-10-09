@@ -327,7 +327,6 @@
     #endif
 #endif
 
-#include "hexdump.h"
 #include "extra.h"
 
 #if !defined(__amigaos4__) //|| !defined(__NEW_TIMEVAL_DEFINITION_USED__)
