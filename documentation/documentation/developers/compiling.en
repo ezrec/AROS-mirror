@@ -80,6 +80,7 @@ set of required software listed earlier:
 + py-pil
 + wget
 + gsed
++ cmake
 + autoconf (if using XCode 2.4 or earlier)
 
 These can be installed with, for example::
