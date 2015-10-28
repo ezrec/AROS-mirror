@@ -1,0 +1,28 @@
+# $Id$
+#
+# Makefile for traceroute
+
+include $(TOP)/config/make.cfg
+
+FILES  := socket_autoinit traceroute
+DOCFILES := traceroute.guide traceroute.guide.info
+
+EXEDIR := $(AROS_CONTRIB)/Networking/Apps/traceroute
+
+USER_CFLAGS := \
+        -DAMITCP \
+        -DDIRECTED_BROADCAST \
+        -D__BSD_VISIBLE=1
+
+##MM- aros-tcpip-apps : aros-tcpip-apps-traceroute
+#MM aros-tcpip-apps-traceroute : includes linklibs aros-tcpip-apps-traceroute-readme
+
+#MM- aros-tcpip-apps : aros-tcpip-apps-marranoftp
+
+%build_prog mmake=aros-tcpip-apps-traceroute \
+    progname=traceroute targetdir=$(EXEDIR) \
+    files=$(FILES)
+
+%copy_files_q mmake=aros-tcpip-apps-traceroute-readme files=$(DOCFILES) dst="$(EXEDIR)/"
+
+%common
