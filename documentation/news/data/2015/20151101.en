@@ -1,0 +1,31 @@
+=======================
+October 2015 Highlights
+=======================
+
+:Author:   Krzysztof Smiechowicz
+:Date:     2015-11-01
+
+October saw two interesting new developements in Linux hosted
+AROS landscape. First, Krzysztof Smiechowicz started implementation
+of audio driver based in ALSA subsystem. Linux hosted AROS has
+been without sound for a long time - since the OSS system in Linux has
+been deprecated. First alpha version has been released. Driver is
+developed based on a bounty. Secondly, Jyrki Koivisto began work
+on USB driver that communicates with Linux usb subsystem and makes USB
+devices available from Poseidon.
+
+Neil Cafferkey continued his work on Zune, AROS MUI replacement, by
+adding more test cases focusing on MUI List and Listview classes.
+Together with extending the tests, a few small fixes have been implemnented.
+
+Last but not least, Oliver Brunner ported traceroute utility based
+on request from community.
+
+Outside of AROS Development Team, the community received updates to two AROS
+distributions. Olaf Schoenweiss updated his AROS m68k distribution "AROS
+Vision" to version 2.6.9. and Pascal Papara released another preview
+build of his AROS i386 distribution "AROS Broadway", working towards version
+1.0. Pascal also achieved one more nice milestone with 500 users beeing
+registered in his cross platform IndieGO AppStore that is available also
+for AROS.
+
