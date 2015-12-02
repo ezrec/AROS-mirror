@@ -1,0 +1,29 @@
+========================
+November 2015 Highlights
+========================
+
+:Author:   Krzysztof Smiechowicz
+:Date:     2015-11-02
+
+Two major developments related to Linux hosted version of AROS
+reached significant milestones in November. Jyrki Koivisto
+continued development of the USB driver that communicates directly
+to Linux USB subsystem and brought it to a state where storage
+devices now can be accessed on the AROS side. Second development,
+the ALSA based AHI driver developed by Krzysztof Smiechowicz
+reached release level and is now included in the AROS nightly
+builds. It replaces the obsolete OSS based driver. This development
+was done based on bounty hosted by Power2People.org and this
+bounty has been closed as well.
+
+While on topic of bounties, a bounty to deliver a working
+implementation of FUSE filesystem and read/write driver for
+NTFS filesystem has been completed by Frederik Wikstrom. The
+bounty was also hosted by Power2People.org. The sources of
+the port are not yet integrated into AROS, but are freely
+available on GitHub.
+
+To close the November highlights, Neil Cafferkey continued
+his work on improving Zune and making it more compatible with
+MUI.
+
