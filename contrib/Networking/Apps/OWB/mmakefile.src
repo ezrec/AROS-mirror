@@ -9,7 +9,7 @@ USER_CFLAGS := -DZUNE_BUILTIN_SCROLLGROUP=0 -DWTF_PLATFORM_AROS=1
 
 %build_prog mmake=aros-tcpip-apps-startowb \
     files="startowb locale" targetdir=$(EXEDIR) \
-    progname="startowb" uselibs="fontconfig xml2 freetype2.static z iconv"
+    progname="startowb" uselibs="fontconfig xml2 freetype2.static z iconv pthread"
 
 FILES :=               \
 	tabs/tab           \
@@ -62,7 +62,7 @@ USER_CFLAGS := -DZUNE_BUILTIN_SCROLLGROUP=0 -DMUIMASTER_YES_INLINE_STDARG \
     -I$(AROS_INCLUDES)/webkit-owb
 
 %build_prog mmake=aros-tcpip-apps-owb progname=owb targetdir=$(EXEDIR) \
-            files="$(FILES)" uselibs="webkit-owb webcore wtf jsc webkit-owb $(I18N_LIBS) codesets thread xml2 fontconfig freetype2.static SDL SDL_gfx GL png jpeg curl iconv z mui ssl crypto sqlite3 xslt thread stdc++"
+            files="$(FILES)" uselibs="webkit-owb webcore wtf jsc webkit-owb $(I18N_LIBS) codesets thread xml2 fontconfig freetype2.static SDL SDL_gfx GL png jpeg curl iconv z mui ssl crypto sqlite3 xslt thread stdc++ pthread"
 
 ICONS := back.png close.png download.png find.png forward.png go.png home.png preferences.png reload.png search.png stop.png bookmarks.png logo.png
 
