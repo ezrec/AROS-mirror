@@ -84,7 +84,7 @@ zune;family;Family.mui;2009-06-11
 zune;menustrip;Menustrip.mui;2009-06-12
 zune;menu;Menu.mui;2009-06-12
 zune;menuitem;Menuitem.mui;2009-06-12
-zune;application;Application.mui;2009-06-18
+zune;application;Application.mui;2015-12-22
 zune;window;Window.mui;2013-07-09
 zune;aboutmui;Aboutmui.mui;2009-06-25
 zune;area;Area.mui;2013-09-06
@@ -2534,7 +2534,7 @@ application;MUIA_Version;1;1;2
 application;MUIA_Revision;1;1;2
 application;MUIM_Application_AboutMUI;1;1;2
 application;MUIM_Application_AddInputHandler;1;1;2
-application;MUIM_Application_CheckRefresh;1;1;0
+application;MUIM_Application_CheckRefresh;1;1;2
 application;MUIM_Application_GetMenuCheck;1;1;0
 application;MUIM_Application_GetMenuState;1;1;0
 application;MUIM_Application_Input;1;1;2
