@@ -3,6 +3,8 @@
 #MM- contrib-sqlite : development-sqlite-amalgamation
 
 %fetch_and_build_gnu_development package=sqlite-amalgamation version=3.7.3 \
-    suffixes="tar.gz" package_repo="http://www.sqlite.org/" srcdir=sqlite-3.7.3 \
-    patch="yes" extraoptions="--disable-threadsafe --disable-dynamic-extensions"
+    suffixes="tar.gz" \
+    package_repo="http://www.sqlite.org/ http://www2.sqlite.org/" \
+    srcdir=sqlite-3.7.3 patch="yes" \
+    extraoptions="--disable-threadsafe --disable-dynamic-extensions"
 
