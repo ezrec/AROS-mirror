@@ -1536,15 +1536,4 @@ static LONG SameName(CONST_STRPTR Name1, CONST_STRPTR Name2, size_t MaxLen)
 
 //-----------------------------------------------------------------------------
 
-#if defined(__AROS__)
-
-#include <aros/symbolsets.h>
-
-ADD2INITLIB(PreferencesInit, 0);
-ADD2EXPUNGELIB(PreferencesCleanup, 0);
-ADD2OPENLIB(PreferencesOpen, 0);
-
-#endif
-
-//-----------------------------------------------------------------------------
 
