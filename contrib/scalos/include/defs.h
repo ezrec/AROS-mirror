@@ -264,11 +264,6 @@
 		(hook).h_Entry = (HOOKFUNC)func
 	#define HOOKFUNC_DEF(func) \
 		(HOOKFUNC)func, NULL
-#elif __AROS__ //__amigaos4__
-	#define SETHOOKFUNC(hook, func) \
-		(hook).h_Entry = (HOOKFUNC)func
-	#define HOOKFUNC_DEF(func) \
-		(HOOKFUNC)func, NULL
 #else //__amigaos4__
 	#define SETHOOKFUNC(hook, func) \
 		(hook).h_Entry = (HOOKFUNC)HookEntry; \
