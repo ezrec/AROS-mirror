@@ -249,6 +249,21 @@
 	#define DISPATCHER_REF(Name) &GATE##Name##_Dispatcher
 	#define DISPATCHER_END }
 
+#elif __AROS__ //__MORPHOS__
+	#define DISPATCHERPROTO(Name)  \
+		AROS_UFP3(IPTR, Name##Dispatcher, \
+			AROS_UFPA(struct IClass *, cl, A0), \
+			AROS_UFPA(Object *, obj, A2), \
+			AROS_UFPA(Msg, msg, A1))
+	#define DISPATCHER(Name) \
+		AROS_UFH3(IPTR, Name##Dispatcher, \
+			AROS_UFHA(struct IClass *, cl, A0), \
+	 		AROS_UFHA(Object *, obj, A2), \
+	  		AROS_UFHA(Msg, msg, A1)) \
+		{ AROS_USERFUNC_INIT
+	#define DISPATCHER_REF(Name) Name##Dispatcher
+	#define DISPATCHER_END AROS_USERFUNC_EXIT }
+
 #else //__MORPHOS__
 	#define	DISPATCHER_PROTO(Name) \
 		static SAVEDS(ULONG) ASM Name##Dispatcher(REG(a0, struct IClass *cl), REG(a2, Object *obj), REG(a1, Msg msg))
