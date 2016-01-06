@@ -5,6 +5,7 @@ Archiv zpráv
 Tady mù¾e¹ najít staré zpravodajské èlánky, které byly publikovány na tomto webu
 bìhem leto¹ního roku i døívìj¹ích let. K shlédnutí jsou zprávy z následujících let:
 
++ `2016 <2016>`__
 + `2015 <2015>`__
 + `2014 <2014>`__
 + `2012 <2012>`__
