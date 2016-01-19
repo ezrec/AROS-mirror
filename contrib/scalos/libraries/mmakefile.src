@@ -1,0 +1,10 @@
+# Metamakefile for AROS build-system
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-scalos-libraries : \
+#MM     contrib-scalos-libraries-iconobject \
+#MM     contrib-scalos-libraries-preferences \
+#MM     contrib-scalos-libraries-scalosgfx \
+#MM     contrib-scalos-libraries-sqlite3
+

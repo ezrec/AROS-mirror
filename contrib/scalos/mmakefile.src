@@ -10,7 +10,8 @@ include $(TOP)/config/make.cfg
 #MM- contrib-scalos : \
 #MM     contrib-scalos-cpy \
 #MM     contrib-scalos-extras \
-#MM     contrib-scalos-theme
+#MM     contrib-scalos-theme \
+#MM     contrib-scalos-libraries
 
 FILES1 := gpl-3.0.txt GPLsrc History LEGAL lgpl-3.0.txt readme.txt 
 %copy_files_q mmake=contrib-scalos-cpy files=$(FILES1) \
