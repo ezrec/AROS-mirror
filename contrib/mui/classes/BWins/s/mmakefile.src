@@ -1,0 +1,17 @@
+#   $Id: 
+include $(TOP)/config/make.cfg
+
+FILES := Package-Startup Package-Shutdown
+
+#MM- contrib-zune-classes-bwin-startup : workbench-prefs-envarc contrib-zune-classes-bwin-startupfiles \
+#MM  contrib-zune-classes-bwin-envpackage
+
+#MM
+contrib-zune-classes-bwin-envpackage :
+	$(ECHO) "Extras:Zune/MCC_BWin" >$(AROS_PACKAGES)/MCC_BWin
+
+#MM- contrib-zune-classes-bwin-class    : contrib-zune-classes-bwin-startup
+
+#MM- contrib-zune-classes-bwin-mcp      : contrib-zune-classes-bwin-startup
+
+%copy_files_q mmake=contrib-zune-classes-bwin-startupfiles dst=$(AROS_CONTRIB)/Zune/MCC_BWin/s

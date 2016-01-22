@@ -864,8 +864,12 @@ mContextMenuBuild(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct M
         pmset(PM_FindItem(menu,MBAR4),PM_Hidden,!data->ID);
 
         get(_win(obj),MUIA_Window_Window,&win);
-
+#if defined(__amigaos4__)
         hook.h_Entry = (HOOKFUNC)pmenuFunc;
+#else
+        hook.h_Entry = HookEntry;
+        hook.h_SubEntry = (HOOKFUNC)pmenuFunc;
+#endif
         hook.h_Data  = data;
         PM_OpenPopupMenu(win,PM_Menu,        menu,
                              PM_MenuHandler, &hook,

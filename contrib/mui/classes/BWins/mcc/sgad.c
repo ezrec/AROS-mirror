@@ -20,26 +20,21 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 /***************************************************************************/
 
 #ifdef __AROS__
-AROS_UFH3S(IPTR, dispatcher,
-AROS_UFHA(Class * , cl , A0),
-AROS_UFHA(Object *, obj, A2),
-AROS_UFHA(Msg     , msg, A1))
-{
-    AROS_USERFUNC_INIT
+static BOOPSI_DISPATCHER(IPTR,dispatcher,cl,obj,msg)
 #else
 static ULONG ASM SAVEDS
 dispatcher(REG(a0) Class *cl,REG(a2) Object *obj,REG(a1) Msg msg )
-{
 #endif
+{
     switch (msg->MethodID)
     {
         case OM_NEW: return mNew(cl,obj,(APTR)msg);
         default:     return DoSuperMethodA(cl,obj,msg);
     }
-#ifdef __AROS__
-    AROS_USERFUNC_EXIT
-#endif
 }
+#ifdef __AROS__
+    BOOPSI_DISPATCHER_END
+#endif
 
 /*******************************************************************/
 
