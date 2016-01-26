@@ -68,12 +68,14 @@
 
     if ((ptr = AllocMem(memSize + alignMask, requirements))) {
         APTR aptr = (APTR)((((IPTR)ptr) + alignMask) & ~alignMask);
-        if (aptr != ptr) {
-            Forbid();
-            FreeMem(ptr, memSize + alignMask);
-            ptr = AllocAbs(memSize, aptr);
-            Permit();
-        }
+        /* Always free the initial memory and allocate exact size at required
+         * location, otherwise the begin and end non allocated parts would be
+         * lost when doing FreeMem() with memSize.
+         */
+         Forbid();
+         FreeMem(ptr, memSize + alignMask);
+         ptr = AllocAbs(memSize, aptr);
+         Permit();
     }
 
     return ptr;
