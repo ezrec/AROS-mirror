@@ -28,7 +28,7 @@ static ULONG packTable[] =
     PACK_STARTTABLE(MUIA_BWin_Base),
 
     PACK_ENTRY(MUIA_BWin_Base,MUIA_BWin_Save,pack,save,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(MUIA_BWin_Base,MUIA_BWin_Background,pack,back,PKCTRL_LONG|PKCTRL_PACKONLY),
+    PACK_ENTRY(MUIA_BWin_Base,MUIA_BWin_Background,pack,back,PKCTRL_IPTR|PKCTRL_PACKONLY),
     PACK_ENTRY(MUIA_BWin_Base,MUIA_BWin_InnerLeft,pack,ls,PKCTRL_LONG|PKCTRL_PACKONLY),
     PACK_ENTRY(MUIA_BWin_Base,MUIA_BWin_InnerTop,pack,rs,PKCTRL_LONG|PKCTRL_PACKONLY),
     PACK_ENTRY(MUIA_BWin_Base,MUIA_BWin_InnerRight,pack,ts,PKCTRL_LONG|PKCTRL_PACKONLY),
@@ -48,7 +48,7 @@ static ULONG packTable[] =
 
 
     PACK_NEWOFFSET(WindowContents),
-    PACK_ENTRY(WindowContents,WindowContents,pack,root,PKCTRL_LONG|PKCTRL_PACKONLY),
+    PACK_ENTRY(WindowContents,WindowContents,pack,root,PKCTRL_IPTR|PKCTRL_PACKONLY),
 
 
     PACK_NEWOFFSET(MUIA_Window_ID),
