@@ -66,8 +66,8 @@ ULONG utTable[] =
 {
     PACK_STARTTABLE(MUIA_Urltext_Base),
 
-    PACK_ENTRY(MUIA_Urltext_Base,MUIA_Urltext_Url,urltextPackTags,url,PKCTRL_LONG|PKCTRL_PACKONLY),
-    PACK_ENTRY(MUIA_Urltext_Base,MUIA_Urltext_Text,urltextPackTags,text,PKCTRL_LONG|PKCTRL_PACKONLY),
+    PACK_ENTRY(MUIA_Urltext_Base,MUIA_Urltext_Url,urltextPackTags,url,PKCTRL_IPTR|PKCTRL_PACKONLY),
+    PACK_ENTRY(MUIA_Urltext_Base,MUIA_Urltext_Text,urltextPackTags,text,PKCTRL_IPTR|PKCTRL_PACKONLY),
 
     PACK_LONGBIT(MUIA_Urltext_Base,MUIA_Urltext_DoVisitedPen,urltextPackTags,flags,PKCTRL_BIT|PKCTRL_PACKONLY,UTFLG_DoVisitedPen),
     PACK_LONGBIT(MUIA_Urltext_Base,MUIA_Urltext_FallBack,urltextPackTags,flags,PKCTRL_BIT|PKCTRL_PACKONLY,UTFLG_Fallback),
