@@ -11,12 +11,14 @@ VERSION      := 0.5.1
 TARGETDIR    := $(AROS_CONTRIB)/Games/KoboDeluxe
 REPOSITORIES := http://www.olofson.net/kobodl/download
 
-USER_CFLAGS := -static-libstdc++ -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION) -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/graphics -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/eel -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/data/sfx -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/sound
+KOBDL_COMMONFLAGS := -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION) -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/graphics -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/eel -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/data/sfx -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/sound
+USER_CFLAGS := $(KOBDL_COMMONFLAGS)
+USER_CXXFLAGS := -static-libstdc++ $(KOBDL_COMMONFLAGS)
 
 %fetch_and_build mmake=ports-game-kobodl prefix=$(TARGETDIR) \
     package=$(PACKAGE) version=$(VERSION) suffixes="tar.bz2" \
     patch=yes package_repo=$(REPOSITORIES) nix=yes nix_dir_layout=no \
-    extracflags="$(USER_CFLAGS)" \
+    extracflags="$(USER_CFLAGS)" extracxxflags="$(USER_CXXFLAGS)" \
     extraoptions="--datarootdir='$$(PROGDIR)share' --sharedstatedir='$$(PROGDIR)com' --localstatedir='$$(PROGDIR)var' --program-transform-name='s/.*/KoboDL/'" 
 
 #MM
