@@ -43,7 +43,10 @@ ARCHBASE     := hurrican-src-svn85
 ####################################################################################################
 # build program
 
-USER_CFLAGS  := -DPLATFORM_SDL -DENABLE_CONSOLE_COMMANDS -DUSE_MODPLUG -DDEBUG -DUSE_GL1 -fexceptions -fpermissive
+HURRICAN_COMMONFLAGS := -DPLATFORM_SDL -DENABLE_CONSOLE_COMMANDS -DUSE_MODPLUG -DDEBUG -DUSE_GL1 -fexceptions -fpermissive
+USER_CFLAGS  := $(HURRICAN_COMMONFLAGS)
+USER_CXXFLAGS := $(HURRICAN_COMMONFLAGS)
+
 USER_INCLUDES:= -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/SDLPort -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/cml \
     -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src -I$(AROS_INCLUDES)/SDL -I$(AROS_INCLUDES)/libmodplug \
     -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/unrarlib040/unrarlib
