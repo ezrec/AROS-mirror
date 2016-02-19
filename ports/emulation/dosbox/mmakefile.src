@@ -4,18 +4,18 @@ include $(TOP)/config/make.cfg
 
 #MM- ports-emulation : ports-emulation-dosbox
 
-#MM- ports-emulation-dosbox : contrib-sdl ports-emulation-dosbox-cpy
+#MM- ports-emulation-dosbox : contrib-sdl contrib-sdl-sdl-sound ports-emulation-dosbox-cpy
 
 PACKAGE      := dosbox
 VERSION      := 0.74
 TARGETDIR    := $(AROS_CONTRIB)/Emu/DOSBox
 REPOSITORIES := sf://dosbox
-USER_CFLAGS  := -fexceptions -fpermissive -static-libstdc++
+USER_CXXFLAGS  := -fexceptions -fpermissive -static-libstdc++
 
 %fetch_and_build mmake=ports-emulation-dosbox prefix=$(TARGETDIR) \
 	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
 	patch=yes package_repo=$(REPOSITORIES) nix=no nix_dir_layout=no \
-	extracflags="$(USER_CFLAGS)" extraoptions="--datarootdir='$$(PROGDIR)data'"
+	extracxxflags="$(USER_CXXFLAGS)" extraoptions="--datarootdir='$$(PROGDIR)data'"
 
 %copy_files_q mmake=ports-emulation-dosbox-cpy files=dosbox-0.74.conf src=. dst=$(TARGETDIR)/.dosbox
 
