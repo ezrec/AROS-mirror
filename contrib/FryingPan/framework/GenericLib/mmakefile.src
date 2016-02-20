@@ -4,7 +4,7 @@ include $(TOP)/config/make.cfg
 
 FILES := LibWrapper_aros Library
 
-USER_CFLAGS := -isystem $(SRCDIR)/$(CURDIR)/..
+USER_CXXFLAGS := -isystem $(SRCDIR)/$(CURDIR)/..
 
 %build_linklib mmake=contrib-fryingpan-framework-genericlib \
  libname="Library" cxxfiles="$(FILES)"

@@ -22,6 +22,9 @@ CXXFILES := \
 USER_CFLAGS := -isystem $(SRCDIR)/$(CURDIR)/../framework \
  -isystem $(SRCDIR)/$(CURDIR)/..
 
+USER_CXXFLAGS := -isystem $(SRCDIR)/$(CURDIR)/../framework \
+ -isystem $(SRCDIR)/$(CURDIR)/..
+
 %build_prog mmake=contrib-fryingpan-expat \
  progname="expat2.library" targetdir=$(DESTDIR) files="$(FILES)" \
  cxxfiles="$(CXXFILES)" uselibs="Generic Library C"

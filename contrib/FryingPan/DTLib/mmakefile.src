@@ -32,7 +32,7 @@ CXXFILES := \
  rCUESession \
  rNRGSession
 
-USER_CFLAGS := -isystem $(SRCDIR)/$(CURDIR)/.. \
+USER_CXXFLAGS := -isystem $(SRCDIR)/$(CURDIR)/.. \
  -isystem $(SRCDIR)/$(CURDIR)/../framework
 
 %build_prog mmake=contrib-fryingpan-dtlib progname="dtlibio.module" \

@@ -44,9 +44,9 @@ CXXFILES := \
  OptIndex \
  CDText
 
-USER_CFLAGS := -isystem $(SRCDIR)/$(CURDIR)/../framework
+USER_CXXFLAGS := -isystem $(SRCDIR)/$(CURDIR)/../framework
 
-USER_CFLAGS += -Wno-attributes
+USER_CXXFLAGS += -Wno-attributes
 
 %build_prog mmake=contrib-fryingpan-optical progname="Optical" \
  targetdir=$(DESTDIR) files= cxxfiles="$(CXXFILES)" \

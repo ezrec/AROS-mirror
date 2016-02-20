@@ -46,7 +46,7 @@ CXXFILES := \
  Components/FileReq \
  Components/MUIPictureClass \
 
-USER_CFLAGS := -isystem $(SRCDIR)/$(CURDIR)/../../framework \
+USER_CXXFLAGS := -isystem $(SRCDIR)/$(CURDIR)/../../framework \
  -isystem $(SRCDIR)/$(CURDIR)/../..
 
 %build_prog mmake=contrib-fryingpan-fp-guimui \
