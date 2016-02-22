@@ -43,6 +43,7 @@ CXXFILES := \
  new \
  StartCode
 
+USER_CFLAGS := -isystem $(SRCDIR)/$(CURDIR)/..
 USER_CXXFLAGS := -isystem $(SRCDIR)/$(CURDIR)/..
 
 %build_linklib mmake=contrib-fryingpan-framework-libc libname="C" \
