@@ -4035,14 +4035,14 @@ Function
 ~~~~~~~~
 ::
 
-     Set a the value of the name rexx variable.
+     Set the value of the named Rexx variable.
 
 
 Inputs
 ~~~~~~
 ::
 
-     msg - A rexx message generated from a running rexx script
+     msg - A Rexx message generated from a running Rexx script
      varname - The name of the variable to set the value
      value - a pointer to the beginning of the value to set
      length - the length of the value argument
@@ -4052,7 +4052,7 @@ Result
 ~~~~~~
 ::
 
-     0 when succes, otherwise a rexx error value is returned.
+     0 when success, otherwise a Rexx error value is returned.
 
 
 

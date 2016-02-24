@@ -37,8 +37,8 @@ Function
 ::
 
 
-     Find and print the location of a specific program or directory.
-     Resident programs are marked as RESIDENT if they are not
+     Find and print the location of a specific program.
+     Resident programs are marked as RES if they are not
      internal resident in which case they are marked as INTERNAL.
 
      Which searches the resident list, the current directory,
@@ -52,12 +52,27 @@ Inputs
 ::
 
 
-     FILE   --  the command/directory to search for
+     FILE   --  the command to search for
      NORES  --  don't include resident programs in the search
      RES    --  consider resident programs only
      ALL    --  find all locations of the FILE. This may cause the
                 printing of the same location several times, for
                 instance if the current directory is C: and the
                 FILE was found in C:
+
+
+Notes
+~~~~~
+::
+
+
+     For compatibility reasons these cases are handled specially:
+     
+     Absolute path:
+         Prints the expanded path if it exists and is a file 
+         and no RES argument is given.
+         
+     Path which ends with a ':':
+         Prints the expanded path if it exists and no RES argument is given.
 
 
