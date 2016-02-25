@@ -1,0 +1,67 @@
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- contrib-gfx : contrib-gfx-$(AROS_TARGET_CPU)
+
+#MM- contrib-gfx-i386 : contrib-gfx-lunapaint
+#DISABLED #MM- contrib-gfx-m68k : contrib-gfx-lunapaint
+#MM- contrib-gfx-arm : contrib-gfx-lunapaint
+
+#MM  contrib-gfx-lunapaint : includes linklibs workbench-libs-freetype-linklib \
+#MM  contrib-gfx-lunapaint-data \
+#MM  contrib-gfx-lunapaint-cpy \
+#MM  contrib-gfx-lunapaint-catalogs \
+#MM  contrib-gfx-lunapaint-deficon
+
+TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/Lunapaint
+DEFICON      := def_Lunapaint
+
+# Next version of Lunapaint shouldn't need -fgnu89-inline anymore
+USER_CFLAGS  := -fgnu89-inline -fno-strict-aliasing
+USER_INCLUDES:= -I$(SRCDIR)/$(CURDIR)/src
+
+FILES := \
+	src/main \
+	src/math/math \
+	src/app/events \
+	src/app/gui \
+	src/app/text_to_brush \
+	src/app/toolbox \
+	src/app/preferences \
+	src/app/new_image \
+	src/app/layers \
+	src/app/parts \
+	src/app/canvas \
+	src/app/export_import \
+	src/app/project \
+	src/app/animation \
+	src/app/about_window \
+	src/app/palette_editor \
+	src/app/locale \
+	src/core/effects \
+	src/core/color \
+	src/core/drawtools \
+	src/core/canvas2 \
+	src/core/tools
+
+%build_prog mmake=contrib-gfx-lunapaint progname=Lunapaint \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs="mui png z freetype2"
+
+
+%build_icons mmake=contrib-gfx-lunapaint-deficon \
+    icons=$(DEFICON) dir=$(AROS_ENVARC)/SYS
+
+
+%copy_dir_recursive mmake=contrib-gfx-lunapaint-data src=data \
+    dst=$(TARGETDIR)/data
+
+
+CPFILES := BUGS Changelog COPYING default.palette Lunapaint.info lunapaint.prefs README TODO
+
+%copy_files_q mmake=contrib-gfx-lunapaint-cpy files=$(CPFILES) src=. \
+    dst=$(TARGETDIR)
+
+
+%common

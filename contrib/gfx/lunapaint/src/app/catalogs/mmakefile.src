@@ -1,0 +1,12 @@
+# Copyright © 2016, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/Lunapaint/Catalogs
+
+%build_catalogs mmake=contrib-gfx-lunapaint-catalogs \
+    name=Lunapaint source=$(SRCDIR)/$(CURDIR)/../strings.h \
+    subdir= dir=$(TARGETDIR)
+
+FIXME: it shouldn't be necessary to create strings.h in SRCDIR

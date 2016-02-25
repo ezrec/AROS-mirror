@@ -671,7 +671,7 @@ void exportDT ( int w, int h, unsigned int *buffer, unsigned char *filename, con
 
 static void png_user_write( png_structp png_ptr, png_bytep data, png_size_t length )
 {
-    Write ( png_ptr->io_ptr, data, length );
+    Write ( png_get_io_ptr(png_ptr), data, length );
 }
 static void png_user_flush( png_structp png_ptr )
 {
