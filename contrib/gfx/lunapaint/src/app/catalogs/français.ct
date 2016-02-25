@@ -1,0 +1,610 @@
+## version $VER: Lunapaint.catalog 1.0 (25.01.2011)
+## language français
+## codeset 0
+;
+;
+MSG_APPNAME
+Lunapaint
+;
+MSG_APPDESC
+Un logiciel de dessin 64bits pour AROS
+;
+MSG_MENU_PROJECT
+Projet
+;
+MSG_MENU_NEW
+Nouveau
+;
+MSG_MENU_LOAD
+Ouvrir...
+;
+MSG_MENU_LOAD_DT
+Ouvrir image datatype...
+;
+MSG_MENU_SAVE
+Sauver
+;
+MSG_MENU_SAVE_AS
+Sauver sous...
+;
+MSG_MENU_REVERT
+Revenir
+;
+MSG_MENU_IMPORT
+Importer image
+;
+MSG_MENU_EXPORT
+Exporter projet
+;
+MSG_MENU_INFO
+Informations...
+;
+MSG_MENU_ABOUT
+À propos...
+;
+MSG_MENU_QUIT
+Quitter
+;
+MSG_MENU_EDIT
+Édition
+;
+MSG_MENU_ZOOMIN
+Zoom avant
+;
+MSG_MENU_ZOOMOUT
+Zoom arrière
+;
+MSG_MENU_SHOWALL
+Tout montrer
+;
+MSG_MENU_CP_SW
+Copier vers tampon
+;
+MSG_MENU_SWAP
+Échanger le tampon
+;
+MSG_MENU_FLIPV
+Retourner verticalement
+;
+MSG_MENU_FLIPH
+Retourner horizontalement
+;
+MSG_MENU_CLEARL
+Effacer la couche active
+;Clear active layer
+;
+MSG_MENU_NXT_COLOR
+Couleur suivante
+;Next palette color
+;
+MSG_MENU_PRV_COLOR
+Couleur précédente
+;Previous palette color
+;
+MSG_MENU_PAL_ED
+Éditeur de palette
+;
+MSG_MENU_LAYER_OFFSET
+Décalage de la couche
+;
+MSG_MENU_RENDER_TEXT
+Texte vers brosse
+;
+MSG_MENU_FLIPBV
+Retourner brosse vertic.
+;
+MSG_MENU_FLIPBH
+Retourner brosse horz.
+;
+MSG_MENU_ROT_BRSH
+Tourner brosse 90°
+;
+MSG_MENU_TOOLS
+Outils
+;
+MSG_MENU_DRAW
+Dessin
+;
+MSG_MENU_LINE
+Ligne
+;
+MSG_MENU_RECT
+Rectangle
+;
+MSG_MENU_CIRCLE
+Cercle
+;
+MSG_MENU_GET_BRSH
+Brosse
+;
+MSG_MENU_FILL
+Remplir
+;
+MSG_MENU_COLOR_PICK
+Pipette
+;
+MSG_MENU_PAINTMODES
+Peinture
+;
+MSG_MENU_NORMAL
+Normal
+;
+MSG_MENU_COLOR
+Couleur
+;
+MSG_MENU_COLORIZE
+Coloriser
+;
+MSG_MENU_LIGHTEN
+Éclaicir
+;
+MSG_MENU_DARKEN
+Assombrir
+;
+MSG_MENU_BLUR
+Estomper
+;
+MSG_MENU_SMUDGE
+Brouiller
+;
+MSG_MENU_ERASE
+Effacer
+;
+MSG_MENU_UNERASE
+Refaire
+;
+MSG_MENU_ANIMATION
+Animation
+;
+MSG_MENU_NXT_FR
+Trame suivante
+;
+MSG_MENU_PRV_FR
+Trame précédente
+;
+MSG_MENU_ONION
+Pelure d'oignon
+;
+MSG_MENU_TOGGLE
+Fenêtre d'animation
+;
+MSG_MENU_WINDOWS
+Fenêtres
+;
+MSG_MENU_TG_LY
+Fenêtre des couches
+;
+MSG_MENU_TG_FULLSC
+Plein écran
+;
+MSG_MENU_FILTERS
+Filtres
+;
+MSG_MENU_SOON
+Bientôt ...
+;
+MSG_MENU_PREFS
+Préférences...
+;
+MSG_MENU_PRG_PREF
+Préférences
+;
+MSG_WIN_ALERT
+Alert
+;
+MSG_SCR_ALERT
+Alerte
+;
+MSG_BUTTON_OK
+OK
+;
+MSG_PREFS_ALERT
+L'écran ne peut changer si vous avez\ndes planches ouvertes.\nFermez toutes les fenêtres et essayez de nouveau.
+;The screenmode can't be changed if you\nhave open canvas windows. Please\nclose any windows and save/use again.
+;
+MSG_PREFS_WIN
+Préférences
+;
+MSG_PREFS_WIN_SCR
+Préférences d'écran
+;
+MSG_PREFS_GENERAL
+Générales
+;
+MSG_PREFS_VIEW
+Vue
+;
+MSG_PREFS_WAND_USE
+Utiliser le Wanderer
+;
+MSG_PREFS_WAND_CLONE
+Cloner le Wanderer
+;
+MSG_PREFS_CHECKERS
+Échiquier
+;
+MSG_PREFS_BLACK
+Noir
+;
+MSG_PREFS_GRAY
+Gris
+;
+MSG_PREFS_WHITE
+Blanc
+;
+MSG_PREFS_LAYERS
+Couches
+;
+MSG_PREFS_SAVE
+Sauver
+;
+MSG_PREFS_USE
+Utiliser
+;
+MSG_PREFS_CANCEL
+Annuler
+;
+MSG_PRJ_SCR
+Propriétés du projet
+;
+MSG_PRJ_WIN
+Propriétés du projet
+;
+MSG_PRJ_NAME
+Nom :
+;
+MSG_PRJ_AUTHOR
+Auteur :
+;
+MSG_PRJ_ALERT_NOLUNA
+Ce n'est pas un fichier Lunapaint
+;
+MSG_ABOUT_WIN
+À propos de Lunapaint
+;
+MSG_ABOUT_SCR
+À propos de Lunapaint
+;
+MSG_ABOUT_CLOSE
+Fermer
+;
+MSG_ANIM_NOONION
+Sans peau d'oignon
+;
+MSG_ANIM_SIMPLEONION
+Peau d'oignon simple
+;
+MSG_ANIM_CONTROL
+Contrôle de l'animation
+;
+MSG_CANVAS_FRAME
+Trame : %d/%d
+;
+MSG_CANVAS_LAYER
+Couche : %d/%d
+;
+MSG_CANVAS_ZOOM
+Zoom : x%d
+;
+MSG_CANVAS_UNNAMED
+Sans titre
+;
+MSG_CANVAS_LAYER2
+Couche : 0/0
+;
+MSG_CANVAS_FRAME2
+Trame : 0/0
+;
+MSG_CANVAS_ZOOM2
+Zoom : 0/0
+;
+MSG_EXPORT_JPEG
+JPEG
+;
+MSG_EXPORT_PNG
+PNG
+;
+MSG_EXPORT_RAW64
+RAW64
+;
+MSG_EXPORT_RAW32
+RAW32
+;
+MSG_EXPORT_ACTIV_LAYER
+Couche active
+;
+MSG_EXPORT_FLAT_LAYER
+Aplatir les couches
+;
+MSG_EXPORT_ONE_FRAME
+Exporter une trame
+;
+MSG_EXPORT_FRAMES
+Exporter des trames
+;
+MSG_EXPORT_FILEPERFRAME
+Un fichier par trame
+;
+MSG_EXPORT_STRIP
+Un déroulé
+;
+MSG_EXPORT_SCR
+Export du projet
+;
+MSG_EXPORT_WIN
+Export du projet
+;
+MSG_EXPORT_FILENAME
+Fichier :
+;
+MSG_EXPORT_DT
+Datatype :
+;
+MSG_EXPORT_EXPORT
+Exporter
+;
+MSG_EXPORT_CANCEL
+Annuler
+;
+MSG_EXPORT_FRAMERANGE
+Definir le n° de trame :
+;
+MSG_IMPORT_SCR
+Importer une image
+;
+MSG_IMPORT_WIN
+Importer une image
+;
+MSG_IMPORT_FILENAME
+Fichier :
+;
+MSG_IMPORT_ACTIV_LAYER
+Importer dans la couche active
+;
+MSG_IMPORT_DT
+Datatype :
+;
+MSG_IMPORT_IMPORT
+Importer
+;
+MSG_IMPORT_CANCEL
+Annnuler
+;
+MSG_LAYERS_HIDDEN
+Cachée
+;
+MSG_LAYERS_SHOWN
+Visible
+;
+MSG_LAYERS_WIN
+Couches
+;
+MSG_LAYERs_BB_ADD
+Ajouter
+;
+MSG_LAYERs_BB_DEL
+Supprimer
+;
+MSG_LAYERs_BB_SWAP
+Échanger
+;
+MSG_LAYER_BB_COPY
+Copier
+;
+MSG_LAYER_BB_MERGE
+Joindre
+;
+MSG_NEW_IMAGE_SCR
+Nouveau projet
+;
+MSG_NEW_IMAGE_WIN
+Nouveau projet
+;
+MSG_NEW_IMAGE_PRJNAME
+Nom :
+;
+MSG_NEW_IMAGE_UNNAMED
+Sans titre
+;
+MSG_NEW_IMAGE_TEMPLATES
+Taille des patrons :
+;
+MSG_NEW_IMAGE_CANVASW
+Largeur de la planche :
+;
+MSG_NEW_IMAGE_CANVASH
+Hauteur de la planche :
+;
+MSG_NEW_IMAGE_NB_FRAMES
+Nombre de trames :
+;
+MSG_NEW_IMAGE_OK
+OK
+;
+MSG_NEW_IMAGE_CANCEL
+Annuler
+;
+MSG_PALETTE_WIN
+Editeur de palette
+;
+MSG_PALETTE_COPY
+Copier
+;
+MSG_PALETTE_PASTE
+Coller
+;
+MSG_PALETTE_CLEAR
+Effacer
+;
+MSG_PALETTE_REVERSE
+Renverser
+;
+MSG_PALETTE_SWAP
+Échanger
+;
+MSG_PALETTE_SPREAD
+Diffuser
+;
+MSG_PALETTE_WEB
+Palette Web
+;
+MSG_PALETTE_LOAD
+Ouvrir
+;
+MSG_PALETTE_SAVE
+Sauver
+;
+MSG_PALETTE__USE
+Utiliser
+;
+MSG_TEXT_WIN
+Texte vers Brosse
+;
+MSG_TEXT_SCR
+Texte vers brosse
+;
+MSG_TEXT_SIZE
+Taille :
+;
+MSG_TEXT_FONTS
+Fontes :
+;
+MSG_TEXT_SELECT
+Choisir
+;
+MSG_TEXT_ENTER
+Texte :
+;
+MSG_TEXT_RENDER
+Rendu
+;
+MSG_TOOLBOX_DRAW
+Dessiner
+;
+MSG_TOOLBOX_FILL
+Remplir
+;
+MSG_TOOLBOX_BOTH
+Ensemble
+;
+MSG_TOOLBOX_ADD
+Ajouter
+;
+MSG_TOOLBOX_LOCK
+Vérouiller
+;
+MSG_TOOLBOX_GRIDOFF
+Grille
+;
+MSG_TOOLBOX_GRIDON
+Sans grille
+;
+MSG_TOOLBOX_NORMAL
+Normal
+;
+MSG_TOOLBOX_COLOR
+Couleur
+;
+MSG_TOOLBOX_BLUR
+Estomper
+;
+MSG_TOOLBOX_SMUDGE
+Brouiller
+;
+MSG_TOOLBOX_LIGHTEN
+Éclaircir
+;
+MSG_TOOLBOX_DARKEN
+Foncer
+;
+MSG_TOOLBOX_COLORIZE
+Coloriser
+;
+MSG_TOOLBOX_ERASE
+Effacer
+;
+MSG_TOOLBOX_UNERASE
+Refaire
+;
+MSG_TOOLBOX_64B
+64-bit
+;
+MSG_TOOLBOX_PALETTE
+Palette
+;
+MSG_TOOLBOX_WIN
+Décalage couche
+;
+MSG_TOOLBOX_SCR
+Décalage couche
+;
+MSG_TOOLBOX_COOR
+Écrivez SVP les coordonnées avec lesquelles\nvous voulez décaler la couche\active.
+;Please write in the coordinates\nby which you want to skew the\nactive layer.
+;
+MSG_TOOLBOX_XOFFSET
+Décalage X :
+;
+MSG_TOOLBOX_YOFFSET
+Décalage Y :
+;
+MSG_TOOLBOX_OK
+OK
+;
+MSG_TOOLBOX_CANCEL
+Annuler
+;
+MSG_TOOLBOX
+Boîte à outils
+;
+MSG_TOOLBOX_BRUSHS
+Taille :
+;
+MSG_TOOLBOX_STEP
+Pas :
+;
+MSG_TOOLBOX_OPACITY
+Opacité :
+;
+MSG_TOOLBOX_POWER
+Force :
+;
+MSG_TOOLBOX_PAINT
+Peinture :
+;
+MSG_TOOLBOX_DRAWFILL
+Dessiner :
+;
+MSG_TOOLBOX_ALPHA
+Alpha:
+;
+MSG_TOOLBOX_BRUSHSH
+Forme:
+;
+MSG_TOOLBOX_FLOOD
+Remplir
+;
+MSG_TOOLBOX_LINE
+Ligne
+;
+MSG_TOOLBOX_RECTANGLE
+Rectangle
+;
+MSG_TOOLBOX_CIRCLE
+Cercle
+;
+MSG_TOOLBOX_CUT
+Couper
+;
+MSG_TOOLBOX_PICK
+Pipette
+;
+MSG_LAYERS_OPACITY
+Opacité : %d%s
+;
+MSG_CORE_LAYER_EMPTY
+Couche vide
+;
+MSG_CORE_LAYER_NEW
+Nouvelle couche
+;

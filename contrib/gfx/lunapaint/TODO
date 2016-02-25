@@ -1,0 +1,23 @@
+TODO - 0.3.3
+ 
+ * DONE Trails on brushes
+ * DONE Global keyboard shortcuts
+ * DONE Fullscreen editing
+ * DONE Fixed layer stack order
+ 
+TODO - 0.3.4
+
+ * Fix redrawing of canvas around image when moving windows over it
+ * Implement configurable "activate windows on hover"
+ * Fix crash sometimes when loading a unknown file format
+ * Fix flimmer on scrolling layers
+ * Optimize usage of text buffer size (now it has a bounding box)
+ * Add font preview area
+ * 64-bit raw export again
+ * Redo rendering engine in canvas.c to also work with drawtools.c (canvas/)
+ * Make brushes and canvas use same pixel effects (central blending engine)
+ * Brightness/Contrast/Gamma "filter"
+ * Dropshadow filter
+ * ASL Requestors in their own processes
+ * Guassian blur filter
+ * Simple undo/redo like in dpaint

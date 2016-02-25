@@ -1,0 +1,601 @@
+;
+MSG_APPNAME (//)
+Lunapaint
+;
+MSG_APPDESC (//)
+A 64-bit paint application for AROS
+;
+MSG_MENU_PROJECT (//)
+Project
+;
+MSG_MENU_NEW (//)
+New project
+;
+MSG_MENU_LOAD (//)
+Load project...
+;
+MSG_MENU_LOAD_DT (//)
+Load datatype image...
+;
+MSG_MENU_SAVE (//)
+Save project
+;
+MSG_MENU_SAVE_AS (//)
+Save project as...
+;
+MSG_MENU_REVERT (//)
+Revert
+;
+MSG_MENU_IMPORT (//)
+Import image
+;
+MSG_MENU_EXPORT (//)
+Export project
+;
+MSG_MENU_INFO (//)
+Project information...
+;
+MSG_MENU_ABOUT (//)
+About Lunapaint...
+;
+MSG_MENU_QUIT (//)
+Quit
+;
+MSG_MENU_EDIT (//)
+Edit
+;
+MSG_MENU_ZOOMIN (//)
+Zoom in
+;
+MSG_MENU_ZOOMOUT (//)
+Zoom out
+;
+MSG_MENU_SHOWALL (//)
+Show all
+;
+MSG_MENU_CP_SW (//)
+Copy to swap
+;
+MSG_MENU_SWAP (//)
+Swap buffers
+;
+MSG_MENU_FLIPV (//)
+Flip vertically
+;
+MSG_MENU_FLIPH (//)
+Flip horizontally
+;
+MSG_MENU_CLEARL (//)
+Clear active layer
+;
+MSG_MENU_NXT_COLOR (//)
+Next palette color
+;
+MSG_MENU_PRV_COLOR (//)
+Previous palette color
+;
+MSG_MENU_PAL_ED (//)
+Palette editor
+;
+MSG_MENU_LAYER_OFFSET (//)
+Set layer offset
+;
+MSG_MENU_RENDER_TEXT (//)
+Render text to brush
+;
+MSG_MENU_FLIPBV (//)
+Flip brush vertically
+;
+MSG_MENU_FLIPBH (//)
+Flip brush horizontally
+;
+MSG_MENU_ROT_BRSH (//)
+Rotate brush 90°
+;
+MSG_MENU_TOOLS (//)
+Tools
+;
+MSG_MENU_DRAW (//)
+Draw
+;
+MSG_MENU_LINE (//)
+Line
+;
+MSG_MENU_RECT (//)
+Rectangle
+;
+MSG_MENU_CIRCLE (//)
+Circle
+;
+MSG_MENU_GET_BRSH (//)
+Get brush
+;
+MSG_MENU_FILL (//)
+Fill
+;
+MSG_MENU_COLOR_PICK (//)
+Color picker
+;
+MSG_MENU_PAINTMODES (//)
+Paint modes
+;
+MSG_MENU_NORMAL (//)
+Normal
+;
+MSG_MENU_COLOR (//)
+Color
+;
+MSG_MENU_COLORIZE (//)
+Colorize
+;
+MSG_MENU_LIGHTEN (//)
+Lighten
+;
+MSG_MENU_DARKEN (//)
+Darken
+;
+MSG_MENU_BLUR (//)
+Blur
+;
+MSG_MENU_SMUDGE (//)
+Smudge
+;
+MSG_MENU_ERASE (//)
+Erase
+;
+MSG_MENU_UNERASE (//)
+UnErase
+;
+MSG_MENU_ANIMATION (//)
+Animation
+;
+MSG_MENU_NXT_FR (//)
+Next frame
+;
+MSG_MENU_PRV_FR (//)
+Previous frame
+;
+MSG_MENU_ONION (//)
+Onion skin on/off
+;
+MSG_MENU_TOGGLE (//)
+Toggle animation window
+;
+MSG_MENU_WINDOWS (//)
+Windows
+;
+MSG_MENU_TG_LY (//)
+Toggle layers window
+;
+MSG_MENU_TG_FULLSC (//)
+Toggle fullscreen editing
+;
+MSG_MENU_FILTERS (//)
+Filters
+;
+MSG_MENU_SOON (//)
+Soon...
+;
+MSG_MENU_PREFS (//)
+Preferences...
+;
+MSG_MENU_PRG_PREF (//)
+Program preferences
+;
+MSG_WIN_ALERT (//)
+Alert
+;
+MSG_SCR_ALERT (//)
+Alert
+;
+MSG_BUTTON_OK (//)
+OK
+;
+MSG_PREFS_ALERT (//)
+The screenmode can't be changed if you\nhave open canvas windows. Please\nclose any windows and save/use again.
+;
+MSG_PREFS_WIN (//)
+Preferences
+;
+MSG_PREFS_WIN_SCR (//)
+Screen preferences
+;
+MSG_PREFS_GENERAL (//)
+General
+;
+MSG_PREFS_VIEW (//)
+View
+;
+MSG_PREFS_WAND_USE (//)
+Use Wanderer
+;
+MSG_PREFS_WAND_CLONE (//)
+Clone Wanderer (//)
+;
+MSG_PREFS_CHECKERS (//)
+Checkers
+;
+MSG_PREFS_BLACK (//)
+Black
+;
+MSG_PREFS_GRAY (//)
+Gray
+;
+MSG_PREFS_WHITE (//)
+White
+;
+MSG_PREFS_LAYERS (//)
+Layers
+;
+MSG_PREFS_SAVE (//)
+Save
+;
+MSG_PREFS_USE (//)
+Use
+;
+MSG_PREFS_CANCEL (//)
+Cancel
+;
+MSG_PRJ_SCR (//)
+Project properties
+;
+MSG_PRJ_WIN (//)
+Project properties
+;
+MSG_PRJ_NAME (//)
+Project name:
+;
+MSG_PRJ_AUTHOR (//)
+Author:
+;
+MSG_PRJ_ALERT_NOLUNA (//)
+File isn't a Lunapaint file
+;
+MSG_ABOUT_WIN (//)
+About Lunapaint
+;
+MSG_ABOUT_SCR (//)
+About Lunapaint
+;
+MSG_ABOUT_CLOSE (//)
+Close window
+;
+MSG_ANIM_NOONION (//)
+No onion skin
+;
+MSG_ANIM_SIMPLEONION (//)
+Simple onion skin
+;
+MSG_ANIM_CONTROL (//)
+Animation Control
+;
+MSG_CANVAS_FRAME (//)
+Frame: %d/%d
+;
+MSG_CANVAS_LAYER (//)
+Layer: %d/%d
+;
+MSG_CANVAS_ZOOM (//)
+Zoom: x%d
+;
+MSG_CANVAS_UNNAMED (//)
+Unnamed image
+;
+MSG_CANVAS_LAYER2 (//)
+Layer: 0/0
+;
+MSG_CANVAS_FRAME2 (//)
+Frame: 0/0
+;
+MSG_CANVAS_ZOOM2 (//)
+Zoom: 0/0
+;
+MSG_EXPORT_JPEG (//)
+JPEG
+;
+MSG_EXPORT_PNG (//)
+PNG
+;
+MSG_EXPORT_RAW64 (//)
+RAW64
+;
+MSG_EXPORT_RAW32 (//)
+RAW32
+;
+MSG_EXPORT_ACTIV_LAYER (//)
+Current active layer
+;
+MSG_EXPORT_FLAT_LAYER (//)
+Flatten layers
+;
+MSG_EXPORT_ONE_FRAME (//)
+Export one frame
+;
+MSG_EXPORT_FRAMES (//)
+Export frames
+;
+MSG_EXPORT_FILEPERFRAME (//)
+One file pr. frame
+;
+MSG_EXPORT_STRIP (//)
+One vertical strip
+;
+MSG_EXPORT_SCR (//)
+Export project
+;
+MSG_EXPORT_WIN (//)
+Export project
+;
+MSG_EXPORT_FILENAME (//)
+Filename:
+;
+MSG_EXPORT_DT (//)
+Datatype:
+;
+MSG_EXPORT_EXPORT (//)
+Export
+;
+MSG_EXPORT_CANCEL (//)
+Cancel
+;
+MSG_EXPORT_FRAMERANGE (//)
+Define frame range:
+;
+MSG_IMPORT_SCR (//)
+Import image
+;
+MSG_IMPORT_WIN (//)
+Import image
+;
+MSG_IMPORT_FILENAME (//)
+Filename:
+;
+MSG_IMPORT_ACTIV_LAYER (//)
+Import onto current active layer
+;
+MSG_IMPORT_DT (//)
+Datatype:
+;
+MSG_IMPORT_IMPORT (//)
+Import
+;
+MSG_IMPORT_CANCEL (//)
+Cancel
+;
+MSG_LAYERS_HIDDEN (//)
+Hidden
+;
+MSG_LAYERS_SHOWN (//)
+Shown
+;
+MSG_LAYERS_WIN (//)
+Layers
+;
+MSG_LAYERs_BB_ADD (//)
+Add layer
+;
+MSG_LAYERs_BB_DEL (//)
+Delete layer
+;
+MSG_LAYERs_BB_SWAP (//)
+Swap layer
+;
+MSG_LAYER_BB_COPY (//)
+Copy layer
+;
+MSG_LAYER_BB_MERGE (//)
+Merge layer
+;
+MSG_NEW_IMAGE_SCR (//)
+New Lunapaint Project
+;
+MSG_NEW_IMAGE_WIN (//)
+New Lunapaint Project
+;
+MSG_NEW_IMAGE_PRJNAME (//)
+Project name:
+;
+MSG_NEW_IMAGE_UNNAMED (//)
+Unnamed project
+;
+MSG_NEW_IMAGE_TEMPLATES (//)
+Size templates:
+;
+MSG_NEW_IMAGE_CANVASW (//)
+Canvas width:
+;
+MSG_NEW_IMAGE_CANVASH (//)
+Canvas height:
+;
+MSG_NEW_IMAGE_NB_FRAMES (//)
+Number of frames:
+;
+MSG_NEW_IMAGE_OK (//)
+OK
+;
+MSG_NEW_IMAGE_CANCEL (//)
+Cancel
+;
+MSG_PALETTE_WIN (//)
+Palette Editor
+;
+MSG_PALETTE_COPY (//)
+Copy
+;
+MSG_PALETTE_PASTE (//)
+Paste
+;
+MSG_PALETTE_CLEAR (//)
+Clear
+;
+MSG_PALETTE_REVERSE (//)
+Reverse
+;
+MSG_PALETTE_SWAP (//)
+Swap
+;
+MSG_PALETTE_SPREAD (//)
+Spread
+;
+MSG_PALETTE_WEB (//)
+Set Web Color
+;
+MSG_PALETTE_LOAD (//)
+Load
+;
+MSG_PALETTE_SAVE (//)
+Save
+;
+MSG_PALETTE__USE (//)
+Use
+;
+MSG_TEXT_WIN (//)
+Render text to brush buffer
+;
+MSG_TEXT_SCR (//)
+Render text to brush buffer
+;
+MSG_TEXT_SIZE (//)
+Size:
+;
+MSG_TEXT_FONTS (//)
+Fonts:
+;
+MSG_TEXT_SELECT (//)
+Select font
+;
+MSG_TEXT_ENTER (//)
+Enter text
+;
+MSG_TEXT_RENDER (//)
+Render
+;
+MSG_TOOLBOX_DRAW (//)
+Draw
+;
+MSG_TOOLBOX_FILL (//)
+Fill
+;
+MSG_TOOLBOX_BOTH (//)
+Both
+;
+MSG_TOOLBOX_ADD (//)
+Add
+;
+MSG_TOOLBOX_LOCK (//)
+Lock
+;
+MSG_TOOLBOX_GRIDOFF (//)
+Grid off
+;
+MSG_TOOLBOX_GRIDON (//)
+Grid on
+;
+MSG_TOOLBOX_NORMAL (//)
+Normal
+;
+MSG_TOOLBOX_COLOR (//)
+Color
+;
+MSG_TOOLBOX_BLUR (//)
+Blur
+;
+MSG_TOOLBOX_SMUDGE (//)
+Smudge
+;
+MSG_TOOLBOX_LIGHTEN (//)
+Lighten
+;
+MSG_TOOLBOX_DARKEN (//)
+Darken
+;
+MSG_TOOLBOX_COLORIZE (//)
+Colorize
+;
+MSG_TOOLBOX_ERASE (//)
+Erase
+;
+MSG_TOOLBOX_UNERASE (//)
+Unerase
+;
+MSG_TOOLBOX_64B (//)
+64-bit
+;
+MSG_TOOLBOX_PALETTE (//)
+Palette
+;
+MSG_TOOLBOX_WIN (//)
+Set layer offset
+;
+MSG_TOOLBOX_SCR (//)
+Set layer offset
+;
+MSG_TOOLBOX_COOR (//)
+Please write in the coordinates\nby which you want to skew the\nactive layer.
+;
+MSG_TOOLBOX_XOFFSET (//)
+X Offset:
+;
+MSG_TOOLBOX_YOFFSET (//)
+Y Offset:
+;
+MSG_TOOLBOX_OK (//)
+OK
+;
+MSG_TOOLBOX_CANCEL (//)
+Cancel
+;
+MSG_TOOLBOX (//)
+Toolbox
+;
+MSG_TOOLBOX_BRUSHS (//)
+Brushsize:
+;
+MSG_TOOLBOX_STEP (//)
+Step:
+;
+MSG_TOOLBOX_OPACITY (//)
+Opacity:
+;
+MSG_TOOLBOX_POWER (//)
+Power:
+;
+MSG_TOOLBOX_PAINT (//)
+Paintmode:
+;
+MSG_TOOLBOX_DRAWFILL (//)
+Draw/Fill:
+;
+MSG_TOOLBOX_ALPHA (//)
+Alpha:
+;
+MSG_TOOLBOX_BRUSHSH (//)
+Brush shape:
+;
+MSG_TOOLBOX_FLOOD (//)
+Flood fill
+;
+MSG_TOOLBOX_LINE (//)
+Line
+;
+MSG_TOOLBOX_RECTANGLE (//)
+Rectangle
+;
+MSG_TOOLBOX_CIRCLE (//)
+Circle
+;
+MSG_TOOLBOX_CUT (//)
+Cut out brush
+;
+MSG_TOOLBOX_PICK (//)
+Pick color
+;
+MSG_LAYERS_OPACITY (//)
+Opacity: %d%s
+;
+MSG_CORE_LAYER_EMPTY (//)
+Empty layer
+;
+MSG_CORE_LAYER_NEW (//)
+New Layer
+;

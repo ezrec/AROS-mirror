@@ -1,0 +1,4 @@
+* When launching lunapaint twice, it crashes
+* Crash sometimes when loading a unknown file format
+* PNG saving of images now seem inverted
+

@@ -1,0 +1,66 @@
+Installation
+------------
+
+1. Make sure you've got proper width and height screensize values
+   in the prefs app found in sys:prefs/screenmode - if not you will
+   get a wierd screen opened when you run Lunapaint.
+
+2. Setup an assign in s:user-startup
+
+   assign Lunapaint: Disk:Path/Lunapaint
+
+   The assign is very important, also for Lunapaint's datafiles!
+
+3. Copy the Lunapaint/ folder to Disk:Path/
+
+4. run the program by double clicking its icon or
+   typing this in a shell: "Lunapaint:Lunapaint"
+        
+   Thas's all!
+
+DPaint like keyboard shortcuts
+------------------------------
+
+From Lunapaint v0.3.1 there are DPaint like keys in the canvas window
+for easier painting. These are currently:
+
+ A          - Toggle antialiasing
+ G          - Toggle grid
+ D          - Draw
+ F          - Fill
+ R          - Rectangle
+ C          - Circles
+ B          - Clip brush
+ O          - Color picker
+ .          - Next palette color
+ ,          - Prev palette color
+ SPACE      - Toggle 64-bit and snap palette mode
+ J          - Swap screen
+ X          - Flip brush horiz
+ Y          - Flip brush vert
+ Z          - Rotate brush 90 degs
+ +          - Increase brushsize
+ -          - Decrease brushsize (has issues on norwegian keyboard)
+ KP ,       - 1x1 brush
+ KO ENTER   - 100x100 brush
+ KP 1       - Brushopacity 5
+ KP 2       - Brushopacity 10
+ KP 3       - Brushopacity 30
+ KP 4       - Brushopacity 60
+ KP 5       - Brushopacity 128
+ KP 6       - Brushopacity 256
+ F1         - Paintmode NORMAL
+ F2         - Paintmode COLOR
+ F3         - Paintmode COLORIZE
+ F4         - Paintmode LIGHTEN
+ F5         - Paintmode DARKEN
+ F6         - Paintmode ERASE
+ F7         - Paintmode UNERASE
+ F8         - Paintmode BLUR
+ F9         - Paintmode SMUDGE
+ F11				- Toggle fullscreen
+ F12				- Hide toolbar
+ ARROWS     - Navigate image
+
+ 
+ 

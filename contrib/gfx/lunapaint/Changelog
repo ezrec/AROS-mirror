@@ -1,0 +1,194 @@
+Lunapaint v0.5
+  * Fixed: store animation frames like xx0001, xx0010, xx0100 instead
+    of xx1, xx10, xx100.
+  * Fixed: Use SDI macros for easier porting.
+  * added the locale (whole)
+  * now doesn't crash more at double start
+  * added CycleChain here and there
+  * made a default (Gorilla) icon for Lunapaint project files
+  * windows, toolbox save their position/geometry (finished)
+  * menu toggle check/un-check (not finished: no feedback)
+  * opens a project when double-click on icon (not finished)
+
+Lunapaint v0.4
+
+ * Fixed: Use AddPart for correct combination of drawer and file
+ * Fixed: Print error message when project file doesn't start with
+          magic word during loading a project
+ * NEW:   Added loading of projects from the command line.
+ * Fixed: Use PROGDIR: instead of LUNAPAINT:
+
+Lunapaint v0.3.3b
+ 
+ * Fixed: Loosing keyboard shortcuts
+ * Fixed: Being able to hide toolbox when we have no publicscreen and no 
+   canvas window (losing the lunapaint gui effectively)
+ * Fixed: Font in layer rendering changing on redraw to non aa font
+
+Lunapaint v0.3.3
+
+ * Fixed: Merging of two layers (transparent areas)
+ * Fixed: Trails on brushes when scrolling / zooming (not everywhere)
+ * NEW: Global keyboard shortcuts
+ * NEW: Fullscreen editing like dpaint/ppaint/tvpaint
+ * NEW: Toggle toolbox
+ * NEW: Global keyboard shortcuts (wip)
+ * Fixed: Fixed layer stack order (top layers listed first like in gimp)
+
+Lunapaint v0.3.2 2007-03-04
+
+ * Fixed: Locked redraw of canvas window is now gone
+ * Fixed: Delayed refresh where not needed removed
+ * Fixed: Animation memleak/artifacts
+ * Fixed: Finally completely squashed freezing in floodfill and filled shapes
+ * Fixed: Askminmax issue for canvas area
+ * Fixed: That scrollbars gets set properly on changing between canvas windows
+ * Fixed: Fonts are now loaded and rendered in AROS native
+ * Fixed: Circles now redraw properly, also with bigger brushsizes
+ * NEW: Accelerated scrolling for layers
+ * NEW: Erase works in "8-bit" mode
+ * NEW: Some new keyboards shorts for 64-bit mode, antialias and grid
+ * NEW: Canvas window uses window borders and saves space
+
+Lunapaint v0.3.1
+
+ * Fixed: Reworked intuition menu a bit
+ * Fixed: Some logic when using sliders and buttons in the toolbox
+ * Fixed: Now you can click outside ASL requester w/o crash
+ * Fixed: Faster painting with some optimalizations
+ * Fixed: Toolpreview/artifaces from tools don't stay when scrolling
+ * Fixed: Made floodfill use 24-bit presicion instead of 64 (for pixellers)
+ * Fixed: Filling over erased areas works
+ * Fixed: A problem with non antialiased brushes leaking
+ * Fixed: Speed optimalization in all blending routines (and elsewhere)
+ * Fixed: Leaks with project saving/loading (no more!)
+ * Fixed: Checks file header if it's a lunapaint project (no more crash)
+ * NEW: Saving of first primitive layer objects
+ * NEW: Start of deluxePaint-like keyboard shortcuts (feel at home!)
+ * NEW: Render text to brush buffer with freetype 2
+ * NEW: Z rotation of brushes
+ * NEW: Layer opacity controls, names
+ * NEW: Layer drawing shows alpha and layer names / opacity / visibility
+ * NEW: Canvas drawing is asyncronous when it is benefitting from it
+
+Lunapaint v0.3 2006-12-24
+
+ * Fixed: Toolbox is severely cleaned up
+ * Fixed: Palette editor doesn't have artifacts anymore
+ * Fixed: Palette editor is synced with toolbox palette
+ * Fixed: Made draw aim a bit more precise on fill, colorpicker and clipbrushes
+ * Fixed: All tools are ajusted to new coordinate precision
+ * Fixed: Lines now draw from point a to b properly
+ * Fixed: Optimized antialiasing - flawless rendering =)
+ * Fixed: Optimized brush preview a bit
+ * Fixed: Optimized all drawing
+ * Fixed: Optimized layer drawing routines (speedup)
+ * NEW: Paintmode "Color" for painting with clipbrushes as normal brushes
+ * NEW: Double click on toolbox palette to edit colors
+ * NEW: Palette editor now accessible through intuition menu
+ * NEW: Filled rectangles
+ * NEW: Filled circles (plain fill routine not using aa atm)
+ * NEW: Filled freehand shapes with brush tool (weak aa but still)
+ * NEW: Choose to draw filled, or filled with draw or only draw (not perfect!)
+ * NEW: Layers window is more compact with icons
+ * NEW: Rectangles and circles now show if painting with effects
+ * NEW: Opacitymodes ADD and KEEP
+
+Lunapaint v0.2.9 2006-11-19
+
+ * Fixed: Clip brush can select the whole canvas
+ * Fixed: Memleak in animation GUI code
+ * Fixed: Small memleak in project save/load
+ * Fixed: Wrong file mode when writing in some instances
+ * Fixed: Some small changes to getFilename ( )
+ * NEW: Preference window (limited for now)
+ * NEW: Change screen (wanderer/clone)
+ * NEW: Change layer transparancy background
+ * NEW: Alert window for some errors..
+ * NEW: Some size templates for new projects
+ * NEW: Flip brush vertically/horizontally
+
+Lunapaint v0.2.8 - 2006-11-11
+
+ * Fixed: No more flood fill bugs
+ * Fixed: Coordinate allignment
+ * Fixed: Precision with grid
+ * Fixed: Cyclechain on input fields
+ * Fixed: ~90k mem leak (due to wierd OM_REMMEMBER behaviour in zune)
+ * Fixed: Full cleanup of toolbox, should also be friendly to smaller screenmodes
+ * Fixed: Cleaned up image window
+ * Fixed: Strange layers window behaviour fixed
+ * NEW: Prepared prefs window
+ * NEW: Checkes instead of lines for background
+ * NEW: Brush preview
+
+Lunapaint v0.2.7 - 2006-11-05 
+
+ * Fixed: Layer redraw upon resize
+ * Fixed: Draw tool bug
+ * Fixed: Redraw bug (when using swap screen)
+ * NEW: Cycle through the palette with WIN+Z and WIN+X
+
+Lunapaint v0.2.6 - 2006-11-05
+
+* Fixed: Faster flood fill
+* NEW: Resizable toolbar
+* NEW: Reordered toolbar gui a bit
+* NEW: Icons for toolbar buttons 
+* Fixed: IPTR internal cleanup
+* NEW: Nicer about window..
+* NEW: Export project to PNG!
+* NEW: Brush steps
+* NEW: Better do understand clipbrush behaviour
+
+Lunapaint v0.2.5 - 2006-10-08
+
+* Fixed: optimized scrolling 
+* Fixed: Better centering on zoom in/out
+* Fixed: optimized redraw (askminmax)
+* Fixed: crash when closing a window
+* Fixed: crash when closing the pubscreen
+* NEW: Recessed buttons if active tool
+* NEW: Colorpicker tool (works in Snap to palette mode and 64-bit mode)
+* NEW: Dotted line around active color in palette
+
+Lunapaint v0.2.4 - 2006-09-24
+
+* Fixed: Colorize works correctly (WILL be further perfected later)
+* Fixed: Lighten and darken pays notice to the colors they darken and lighten (better)
+* Fixed: More BOOPSI compliance internally (IPTR)
+* Fixed: Crash on canceling loading of a datatype project
+* !Regression: No 64-bit exporting due to reprogramming
+* NEW: Snap to palette
+* NEW: Chosen color is not directly connected to palette
+* NEW: Rewritten scroll routine makes fluid scrolling a reality
+* NEW: Unerase tool! Recover erased areas [WIP]
+* NEW: Export with flattened layers (wasn't implemented before)
+* NEW: Animation export, vertical strip for programmers and one image pr. frame for making gif animations etc
+
+Lunapaint v0.2.3 - 2006-09-09
+
+* Fixed: circles to be more accurate with grid
+* Fixed: layer deletion code to delete properly
+* Fixed: Layers list out properly when working with several image windows
+* Fixed: Adding a layer in an animation doesn't mess up the project
+* NEW: Added author field to project info
+* NEW: Layers and animation controls in separate windows
+* NEW: Load in images through datatypes
+
+
+Lunapaint v0.2.2 - 2006-08-19
+
+* Added Revert (to compensate for the lack of undo/redo)
+* Painting with antialising rewritten
+* Brush generation rewritten
+* Blending rewritten
+* Tool previews are more accurate and realtime
+* All paintmodes rewritten
+* Fixed: Animation crash
+* Fixed: Canvas crash / painting / zooming
+* Fixed: Big memleaks
+* NEW: Rectangle tool
+* NEW: Circle tool
+* NEW: Clipbrush tool (now there's a use of the swap buffer)
+* NEW: Alter grid size
