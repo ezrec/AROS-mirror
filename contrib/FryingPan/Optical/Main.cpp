@@ -49,8 +49,8 @@ unsigned long DoLibMethodA(unsigned long *parm)
    switch (*parm) {
       case DRV_ScanDevice:       return Drive::ScanDevice((char*)parm[1]);
       case DRV_FreeScanResults:  return Drive::FreeScanResults((ScanData*)parm[1]);
-      case DRV_NewDrive:         return (ULONG)DriveSpool::GetInstance()->NewClient((char*)parm[1], parm[2]);
-      case DRV_CloneDrive:       return (ULONG)DriveSpool::GetInstance()->CloneClient(drv);
+      case DRV_NewDrive:         return (IPTR)DriveSpool::GetInstance()->NewClient((char*)parm[1], parm[2]);
+      case DRV_CloneDrive:       return (IPTR)DriveSpool::GetInstance()->CloneClient(drv);
       case DRV_EndDrive:         DriveSpool::GetInstance()->DelClient(drv); return 0;
       case DRV_GetAttr:          return drv->GetDriveAttrs(parm[2]);
       case DRV_GetAttrs:         return drv->GetDriveAttrs((struct TagItem*)&parm[2]);
@@ -90,33 +90,33 @@ void CleanUp(void)
 void showDetails(const IOptItem *di)
 {
    DOS->VPrintf("%s %ld\n", ARRAY(
-            di->getItemType() == Item_Disc ? (int)"Disc" :
-            di->getItemType() == Item_Session ? (int)"Session" :
-            di->getItemType() == Item_Track ? (int)"Track" :
-            di->getItemType() == Item_Index ? (int)"Index" : (int)"Unknown",
+            di->getItemType() == Item_Disc ? (IPTR)"Disc" :
+            di->getItemType() == Item_Session ? (IPTR)"Session" :
+            di->getItemType() == Item_Track ? (IPTR)"Track" :
+            di->getItemType() == Item_Index ? (IPTR)"Index" : (IPTR)"Unknown",
             di->getItemNumber()
             ));
 
    DOS->VPrintf("\tLocation   : %ld - %ld (%ld blocks)\n", ARRAY(di->getStartAddress(), di->getEndAddress(), di->getBlockCount()));
-   DOS->VPrintf("\tType       : %s\n", ARRAY(di->getDataType() == Data_Unknown   ? (int)"Unknown" :
-            di->getDataType() == Data_Audio     ? (int)"Audio" :
-            di->getDataType() == Data_Mode1     ? (int)"Data, Mode 1" :
-            di->getDataType() == Data_Mode2     ? (int)"Data, Mode 2" :
-            di->getDataType() == Data_Mode2Form1? (int)"Data, Mode 2, Form 1" :
-            di->getDataType() == Data_Mode2Form2? (int)"Data, Mode 2, Form 2" :
-            (int)"Illegal track type."));
+   DOS->VPrintf("\tType       : %s\n", ARRAY(di->getDataType() == Data_Unknown   ? (IPTR)"Unknown" :
+            di->getDataType() == Data_Audio     ? (IPTR)"Audio" :
+            di->getDataType() == Data_Mode1     ? (IPTR)"Data, Mode 1" :
+            di->getDataType() == Data_Mode2     ? (IPTR)"Data, Mode 2" :
+            di->getDataType() == Data_Mode2Form1? (IPTR)"Data, Mode 2, Form 1" :
+            di->getDataType() == Data_Mode2Form2? (IPTR)"Data, Mode 2, Form 2" :
+            (IPTR)"Illegal track type."));
    DOS->VPrintf("\tSec Size   : %ld bytes\n", ARRAY(di->getSectorSize()));
-   DOS->VPrintf("\tBlank      : %s\n", ARRAY(di->isBlank()       ? (int)"Yes"         : (int)"No"));
-   DOS->VPrintf("\tIncomplete : %s\n", ARRAY(di->isComplete()    ? (int)"No"          : (int)"Yes"));
-   DOS->VPrintf("\tCDText     : %s\n", ARRAY(di->hasCDText()     ? (int)"Available"   : (int)"Unavailable"));
+   DOS->VPrintf("\tBlank      : %s\n", ARRAY(di->isBlank()       ? (IPTR)"Yes"         : (IPTR)"No"));
+   DOS->VPrintf("\tIncomplete : %s\n", ARRAY(di->isComplete()    ? (IPTR)"No"          : (IPTR)"Yes"));
+   DOS->VPrintf("\tCDText     : %s\n", ARRAY(di->hasCDText()     ? (IPTR)"Available"   : (IPTR)"Unavailable"));
    if (di->hasCDText()) 
    {
-      DOS->VPrintf("\t- Artist   : %s\n", ARRAY((int)di->getCDTArtist()));
-      DOS->VPrintf("\t- Title    : %s\n", ARRAY((int)di->getCDTTitle()));
-      DOS->VPrintf("\t- Message  : %s\n", ARRAY((int)di->getCDTMessage()));
-      DOS->VPrintf("\t- Lyrics   : %s\n", ARRAY((int)di->getCDTLyrics()));
-      DOS->VPrintf("\t- Composer : %s\n", ARRAY((int)di->getCDTComposer()));
-      DOS->VPrintf("\t- Director : %s\n", ARRAY((int)di->getCDTDirector()));
+      DOS->VPrintf("\t- Artist   : %s\n", ARRAY((IPTR)di->getCDTArtist()));
+      DOS->VPrintf("\t- Title    : %s\n", ARRAY((IPTR)di->getCDTTitle()));
+      DOS->VPrintf("\t- Message  : %s\n", ARRAY((IPTR)di->getCDTMessage()));
+      DOS->VPrintf("\t- Lyrics   : %s\n", ARRAY((IPTR)di->getCDTLyrics()));
+      DOS->VPrintf("\t- Composer : %s\n", ARRAY((IPTR)di->getCDTComposer()));
+      DOS->VPrintf("\t- Director : %s\n", ARRAY((IPTR)di->getCDTDirector()));
    }
 }
 
@@ -224,7 +224,7 @@ int main()
 
    if (rda != NULL) 
    {
-      dcl = DoLibMethodA(ARRAY(DRV_NewDrive, (int)arg.drive, *arg.unit));
+      dcl = DoLibMethodA(ARRAY(DRV_NewDrive, (IPTR)arg.drive, *arg.unit));
    } 
    else 
    {
@@ -302,8 +302,8 @@ int main()
       DOS->VPrintf("Please insert a disc (unless it is already inserted).\n", 0);
 
       DoLibMethodA(ARRAY( DRV_GetAttrs,           dcl,
-                        DRA_Disc_NumTracks,     (int)&num,
-                        DRA_Disc_Contents,      (int)&di,
+                        DRA_Disc_NumTracks,     (IPTR)&num,
+                        DRA_Disc_Contents,      (IPTR)&di,
                         TAG_DONE,               0));
 
       DOS->VPrintf("Number of tracks: %ld\n", ARRAY(num));
@@ -331,25 +331,25 @@ int main()
    {
       int         num;
       num = DoLibMethodA(ARRAY(DRV_GetAttr, dcl, DRA_Disc_IsWritable));
-      DOS->VPrintf("Disc is %swritable.\n", ARRAY(num? (int)"" : (int)"not "));
+      DOS->VPrintf("Disc is %swritable.\n", ARRAY(num? (IPTR)"" : (IPTR)"not "));
    }
    else if (arg.check_erasable) 
    {
       int         num;
       num = DoLibMethodA(ARRAY(DRV_GetAttr, dcl, DRA_Disc_IsErasable));
-      DOS->VPrintf("Disc is %serasable.\n", ARRAY(num? (int)"" : (int)"not "));
+      DOS->VPrintf("Disc is %serasable.\n", ARRAY(num? (IPTR)"" : (IPTR)"not "));
    }
    else if (arg.check_formatable) 
    {
       int         num;
       num = DoLibMethodA(ARRAY(DRV_GetAttr, dcl, DRA_Disc_IsFormatable));
-      DOS->VPrintf("Disc is %sformatable.\n", ARRAY(num? (int)"" : (int)"not "));
+      DOS->VPrintf("Disc is %sformatable.\n", ARRAY(num? (IPTR)"" : (IPTR)"not "));
    }
    else if (arg.check_overwritable) 
    {
       int         num;
       num = DoLibMethodA(ARRAY(DRV_GetAttr, dcl, DRA_Disc_IsOverwritable));
-      DOS->VPrintf("Disc is %soverwritable.\n", ARRAY(num? (int)"" : (int)"not "));
+      DOS->VPrintf("Disc is %soverwritable.\n", ARRAY(num? (IPTR)"" : (IPTR)"not "));
    }
    else if ((arg.layout_track) || (arg.write_image))
    {
@@ -393,7 +393,7 @@ int main()
           */
          if (0 != d)
          {
-            DOS->VPrintf("Accessing file %s\n", ARRAY((ULONG)arg.data));
+            DOS->VPrintf("Accessing file %s\n", ARRAY((IPTR)arg.data));
             fh = DOS->Open(arg.data, MODE_OLDFILE);
             if (0 != fh)
             {
@@ -413,7 +413,7 @@ int main()
           */
          for (int i=0; i<a; i++)
          {
-            DOS->VPrintf("Accessing file %s\n", ARRAY((ULONG)arg.audio[i]));
+            DOS->VPrintf("Accessing file %s\n", ARRAY((IPTR)arg.audio[i]));
             fh = DOS->Open(arg.audio[i], MODE_OLDFILE);
             if (0 != fh)
             {
@@ -437,14 +437,14 @@ int main()
             
          DOS->VPrintf("Lying tracks...\n", 0);
    
-         num = DoLibMethodA(ARRAY(DRV_LayoutTracks, dcl, (int)disc));
+         num = DoLibMethodA(ARRAY(DRV_LayoutTracks, dcl, (IPTR)disc));
    
          DOS->VPrintf("Layout returned: %ld\n", ARRAY(num));
    
          if (arg.write_image)
          {
             DOS->VPrintf("Preparing for upload...\n", 0);
-            num = DoLibMethodA(ARRAY(DRV_UploadLayout, dcl, (int)disc));
+            num = DoLibMethodA(ARRAY(DRV_UploadLayout, dcl, (IPTR)disc));
             if (!num) 
             {
                for (int i=0; i<t; i++)
@@ -463,12 +463,12 @@ int main()
                      
                   if ((d) && (!i))
                   {
-                     DOS->VPrintf("Opening file: %s\n", ARRAY((ULONG)arg.data));
+                     DOS->VPrintf("Opening file: %s\n", ARRAY((IPTR)arg.data));
                      fh = DOS->Open(arg.data, MODE_OLDFILE);\
                   }
                   else                     
                   {
-                     DOS->VPrintf("Opening file: %s\n", ARRAY((ULONG)arg.audio[i-d]));
+                     DOS->VPrintf("Opening file: %s\n", ARRAY((IPTR)arg.audio[i-d]));
                      fh = DOS->Open(arg.audio[i-d], MODE_OLDFILE);
                   }
                      
@@ -478,7 +478,7 @@ int main()
                      size  = rem > count ? count : rem;
                      DOS->Read(fh, buf, size * trak->getSectorSize());
 
-                     num = DoLibMethodA(ARRAY(DRV_WriteSequential, dcl, (int)buf, size));
+                     num = DoLibMethodA(ARRAY(DRV_WriteSequential, dcl, (IPTR)buf, size));
                      sec += size;
                      rem -= size;
                      if (num) break;
@@ -520,8 +520,8 @@ int main()
          {
             DOS->VPrintf("Please insert a disc (unless it is already inserted).\n", 0);
             DoLibMethodA(ARRAY( DRV_GetAttrs,           dcl,
-                              DRA_Disc_NumTracks,     (int)&num,
-                              DRA_Disc_Contents,      (int)&di,
+                              DRA_Disc_NumTracks,     (IPTR)&num,
+                              DRA_Disc_Contents,      (IPTR)&di,
                               TAG_DONE,               0));
             if (num >= *arg.read_track) 
             {
@@ -555,7 +555,7 @@ int main()
                      {
                         int len = (rsec > 32) ? 32 : rsec;
 
-                        DoLibMethodA(ARRAY( DRV_ReadTrackRelative, dcl, (int)trak, csec, len, (int)buff));
+                        DoLibMethodA(ARRAY( DRV_ReadTrackRelative, dcl, (IPTR)trak, csec, len, (IPTR)buff));
                         DOS->Write(fh, buff, len*trak->getSectorSize());
 
                         rsec -= len;
@@ -577,8 +577,8 @@ int main()
 
       DOS->VPrintf("Please insert a disc (unless it is already inserted).\n", 0);
 
-      for (DoLibMethodA(ARRAY(DRV_GetAttrs, dcl, DRA_Disc_NextWritableTrack, (int)&di, TAG_DONE, 0)); di;
-         DoLibMethodA(ARRAY(DRV_GetAttrs, dcl, DRA_Disc_NextWritableTrack, (int)&di, TAG_DONE, 0)))
+      for (DoLibMethodA(ARRAY(DRV_GetAttrs, dcl, DRA_Disc_NextWritableTrack, (IPTR)&di, TAG_DONE, 0)); di;
+         DoLibMethodA(ARRAY(DRV_GetAttrs, dcl, DRA_Disc_NextWritableTrack, (IPTR)&di, TAG_DONE, 0)))
       {
          DOS->VPrintf("Track %ld\n", ARRAY(di->getItemNumber()));
          if (di->isIncremental())
@@ -589,15 +589,15 @@ int main()
          {
             DOS->VPrintf("\tLocation   : %ld - %ld (%ld blocks written, %ld blocks total)\n", ARRAY(di->getStartAddress(), di->getEndAddress(), 0, di->getBlockCount()));
          }
-         DOS->VPrintf("\tType       : %s\n", ARRAY(  di->getDataType() == Data_Unknown     ? (int)"Unknown" :
-                                                di->getDataType() == Data_Audio       ? (int)"Audio" :
-                                                di->getDataType() == Data_Mode1       ? (int)"Data, Mode 1" :
-                                                di->getDataType() == Data_Mode2       ? (int)"Data, Mode 2" :
-                                                di->getDataType() == Data_Mode2Form1  ? (int)"Data, Mode 2, Form 1" :
-                                                di->getDataType() == Data_Mode2Form2  ? (int)"Data, Mode 2, Form 2" :
-                                                                                        (int)"Illegal track type."));
+         DOS->VPrintf("\tType       : %s\n", ARRAY(  di->getDataType() == Data_Unknown     ? (IPTR)"Unknown" :
+                                                di->getDataType() == Data_Audio       ? (IPTR)"Audio" :
+                                                di->getDataType() == Data_Mode1       ? (IPTR)"Data, Mode 1" :
+                                                di->getDataType() == Data_Mode2       ? (IPTR)"Data, Mode 2" :
+                                                di->getDataType() == Data_Mode2Form1  ? (IPTR)"Data, Mode 2, Form 1" :
+                                                di->getDataType() == Data_Mode2Form2  ? (IPTR)"Data, Mode 2, Form 2" :
+                                                                                        (IPTR)"Illegal track type."));
          DOS->VPrintf("\tSec Size   : %ld bytes\n", ARRAY(di->getSectorSize()));
-         DOS->VPrintf("\tBlank      : %s\n", ARRAY(di->isBlank() == 1 ? (int)"Yes" : (int)"No"));
+         DOS->VPrintf("\tBlank      : %s\n", ARRAY(di->isBlank() == 1 ? (IPTR)"Yes" : (IPTR)"No"));
       }
    }
    else if (arg.start) 
@@ -654,8 +654,8 @@ int main()
       DOS->VPrintf("Please insert a disc (unless it is already inserted).\n", 0);
 
       DoLibMethodA(ARRAY( DRV_GetAttrs,           dcl,
-                        DRA_Disc_NumTracks,     (int)&num,
-                        DRA_Disc_Contents,      (int)&di,
+                        DRA_Disc_NumTracks,     (IPTR)&num,
+                        DRA_Disc_Contents,      (IPTR)&di,
                         TAG_DONE,               0));
 
       DOS->VPrintf("Number of tracks: %ld\n", ARRAY(num));

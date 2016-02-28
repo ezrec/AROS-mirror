@@ -145,8 +145,8 @@ public:
    CfgHardware         *GetHardwareConfig()
       {  return hwconfig;                    };
 
-   ULONG                            GetDriveAttrs(ULONG, ULONG);
-   ULONG                            SetDriveAttrs(ULONG, ULONG);
+   IPTR                            GetDriveAttrs(IPTR, IPTR);
+   IPTR                            SetDriveAttrs(IPTR, IPTR);
 
    ULONG                            SetDriveAttrs(TagItem*);
    unsigned long                    HandleMessages(unsigned long Cmd, unsigned long *Msg);
@@ -247,8 +247,8 @@ class DriveClient
    ULONG             GetDriveStatus(void);
    ULONG             Send(ULONG*);
    ULONG             WaitForDisc(int lDuration);
-   ULONG             GetDriveAttrs(TagItem*);
-   ULONG             GetDriveAttrs(ULONG);
+   IPTR             GetDriveAttrs(TagItem*);
+   IPTR             GetDriveAttrs(IPTR);
 };
 
 class DriveSpool 

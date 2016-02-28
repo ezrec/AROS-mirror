@@ -661,7 +661,7 @@ long Drive::LockDrive(long lLockType)
 }
 
 
-ULONG Drive::GetDriveAttrs(ULONG tag, ULONG attr)
+IPTR Drive::GetDriveAttrs(IPTR tag, IPTR attr)
 {
    if (drive_status == DRT_DriveStatus_NotOpened)
       return 0;
@@ -678,7 +678,7 @@ ULONG Drive::GetDriveAttrs(ULONG tag, ULONG attr)
           break;
 
       case DRA_DeviceName:                   
-          res = (int)drive_name.Data();
+          res = (IPTR)drive_name.Data();
           break;
 
       case DRA_UnitNumber:                   
@@ -715,7 +715,7 @@ ULONG Drive::GetDriveAttrs(ULONG tag, ULONG attr)
           break;
 
       case DRA_Drive_SenseData:
-          res = (int)driveio->Sense();
+          res = (IPTR)driveio->Sense();
           break;
 
       case DRA_Drive_Status:
@@ -735,19 +735,19 @@ ULONG Drive::GetDriveAttrs(ULONG tag, ULONG attr)
           break;
 
       case DRA_Drive_Vendor:                 
-          res = (int)((inquiry) ? inquiry->VendorID() : "");
+          res = (IPTR)((inquiry) ? inquiry->VendorID() : "");
           break;
 
       case DRA_Drive_Product:                
-          res = (int)((inquiry) ? inquiry->ProductID() : "");
+          res = (IPTR)((inquiry) ? inquiry->ProductID() : "");
           break;
 
       case DRA_Drive_Version:                
-          res = (int)((inquiry) ? inquiry->ProductVersion() : "");
+          res = (IPTR)((inquiry) ? inquiry->ProductVersion() : "");
           break;
 
       case DRA_Drive_Firmware:               
-          res = (int)((inquiry) ? inquiry->FirmwareVersion() : "");
+          res = (IPTR)((inquiry) ? inquiry->FirmwareVersion() : "");
           break;
 
       case DRA_Drive_ReadsMedia:             
@@ -812,7 +812,7 @@ ULONG Drive::GetDriveAttrs(ULONG tag, ULONG attr)
           break;
 
       case DRA_Disc_Contents:                
-          res = d ? (ULONG)d->GetContents() : 0;
+          res = d ? (IPTR)d->GetContents() : 0;
           break;
 
       case DRA_Disc_SubType:                 
@@ -864,7 +864,7 @@ ULONG Drive::GetDriveAttrs(ULONG tag, ULONG attr)
           break;
 
       case DRA_Disc_NextWritableTrack:       
-         res = d ? (uint32)d->GetNextWritableTrack((IOptItem*)attr) : 0;
+         res = d ? (IPTR)d->GetNextWritableTrack((IOptItem*)attr) : 0;
          break;
 
       case DRA_Disc_WriteMethod:             
@@ -876,7 +876,7 @@ ULONG Drive::GetDriveAttrs(ULONG tag, ULONG attr)
          break;
 
       case DRA_Disc_Vendor:                  
-         res = d ? (int)d->DiscVendor() : 0;
+         res = d ? (IPTR)d->DiscVendor() : 0;
          break;
 
       default:
@@ -888,7 +888,7 @@ ULONG Drive::GetDriveAttrs(ULONG tag, ULONG attr)
    return res;
 }
 
-ULONG Drive::SetDriveAttrs(ULONG tag, ULONG value)
+IPTR Drive::SetDriveAttrs(IPTR tag, IPTR value)
 {
    if (drive_status == DRT_DriveStatus_NotOpened)
       return (unsigned)ODE_NoHandler;
@@ -1042,14 +1042,14 @@ ULONG Drive::ScanDevice(char* sDeviceName)
       case stYes:
          {
             _D(Lvl_Warning, "Device is harmful.");
-            request("Error", "Device %s is considered harmful\nOperation aborted.", "Ok", ARRAY((int)sDeviceName));
+            request("Error", "Device %s is considered harmful\nOperation aborted.", "Ok", ARRAY((IPTR)sDeviceName));
          }
          break;
 
       case stUnknown:
          {
             _D(Lvl_Warning, "Device is not recorded yet.");
-            if (0 == request("Warning", "Device %s is not known and may be harmful.\nDo you want to continue?", "Yes|No", ARRAY((int)sDeviceName)))
+            if (0 == request("Warning", "Device %s is not known and may be harmful.\nDo you want to continue?", "Yes|No", ARRAY((IPTR)sDeviceName)))
             {
                Cfg->Drivers()->addDevice(sDeviceName, true);
                break;
@@ -1059,10 +1059,10 @@ ULONG Drive::ScanDevice(char* sDeviceName)
          
       case stNo:
          {
-            _D(Lvl_Info, "Scanning device %s...", (int)sDeviceName);
+            _D(Lvl_Info, "Scanning device %s...", (IPTR)sDeviceName);
             for (int i=0; i<8; i++)
             {
-               _D(Lvl_Info, "Accessing device %s, unit %ld...", (int)sDeviceName, i);
+               _D(Lvl_Info, "Accessing device %s, unit %ld...", (IPTR)sDeviceName, i);
                if (pIO->OpenDev(sDeviceName, i))
                {
                   pInq = new cmd_Inquiry(pIO);
@@ -1276,7 +1276,7 @@ int DriveIO::Exec(SCSICommand *scmd)
 
       att++;
       if (att>= scmd->MaxAttempts()) break;
-      _D(Lvl_Debug, "%s: %08lx", (int)scmd->CmdName(), sense->SCSIError());
+      _D(Lvl_Debug, "%s: %08lx", (IPTR)scmd->CmdName(), sense->SCSIError());
       if ((err = scmd->onLoop())!=ODE_OK) break;
    } while (true);
 
@@ -1350,7 +1350,7 @@ DriveClient *DriveSpool::NewClient(char* drv, int unit)
 {
    Drive       *el=0;
 
-   _D(Lvl_Info, "Adding a client for drive at: %s.%ld", (ULONG)drv, unit);
+   _D(Lvl_Info, "Adding a client for drive at: %s.%ld", (IPTR)drv, unit);
 
    if (drive_list) el = drive_list->FindDrive(drv, unit);
    if (!el)        el = Drive::OpenDrive(drive_list, drv, unit);
@@ -1421,7 +1421,7 @@ ULONG DriveClient::Send(ULONG *msg)
    return drive->SendMessage(msg);
 }
 
-ULONG DriveClient::GetDriveAttrs(TagItem *ti)
+IPTR DriveClient::GetDriveAttrs(TagItem *ti)
 {
    TagItem  *t;
    
@@ -1435,7 +1435,7 @@ ULONG DriveClient::GetDriveAttrs(TagItem *ti)
    return 0x0;
 }
 
-ULONG DriveClient::GetDriveAttrs(ULONG tag)
+IPTR DriveClient::GetDriveAttrs(IPTR tag)
 {
    long lRet = drive->GetDriveAttrs(tag, 0UL);
    return lRet;
