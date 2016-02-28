@@ -32,6 +32,7 @@ CXXFILES := \
 
 USER_CXXFLAGS := -isystem $(SRCDIR)/$(CURDIR)/../framework \
  -isystem $(SRCDIR)/$(CURDIR)/..
+USER_LDFLAGS := -static-libstdc++
 
 %build_prog mmake=contrib-fryingpan-isobuilder \
  progname="isobuilder.module" targetdir=$(DESTDIR) files= \

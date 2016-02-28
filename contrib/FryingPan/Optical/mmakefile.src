@@ -47,6 +47,7 @@ CXXFILES := \
 USER_CXXFLAGS := -isystem $(SRCDIR)/$(CURDIR)/../framework
 
 USER_CXXFLAGS += -Wno-attributes
+USER_LDFLAGS := -static-libstdc++
 
 %build_prog mmake=contrib-fryingpan-optical progname="Optical" \
  targetdir=$(DESTDIR) files= cxxfiles="$(CXXFILES)" \

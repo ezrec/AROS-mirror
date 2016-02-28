@@ -34,6 +34,8 @@ CXXFILES := \
 USER_CXXFLAGS := -isystem $(SRCDIR)/$(CURDIR)/../../framework \
  -isystem $(SRCDIR)/$(CURDIR)/../..
 
+USER_LDFLAGS := -static-libstdc++
+
 %build_prog mmake=contrib-fryingpan-fp-engine \
  progname="fryingpan.engine" targetdir=$(DESTDIR) files= \
- cxxfiles="$(CXXFILES)" uselibs="Generic Library C" usestartup=no
+ cxxfiles="$(CXXFILES)" uselibs="Generic Library C"

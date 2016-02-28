@@ -34,6 +34,7 @@ CXXFILES := \
 
 USER_CXXFLAGS := -isystem $(SRCDIR)/$(CURDIR)/.. \
  -isystem $(SRCDIR)/$(CURDIR)/../framework
+USER_LDFLAGS := -static-libstdc++
 
 %build_prog mmake=contrib-fryingpan-dtlib progname="dtlibio.module" \
  targetdir=$(DESTDIR) files= cxxfiles="$(CXXFILES)" uselibs="Generic Library C"
