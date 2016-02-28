@@ -131,8 +131,8 @@ bool                 wCUESession::setUp()
       
       String f;
       f.FormatStr("\n\nTRACK %ld %s\n", ARRAY(it->getItemNumber(), 
-               it->getDataType() == Data_Audio ? (int)"AUDIO" :
-               it->getDataType() == Data_Mode1 ? (int)"MODE1/2352" : (int)"MODE2/2352"));
+               it->getDataType() == Data_Audio ? (IPTR)"AUDIO" :
+               it->getDataType() == Data_Mode1 ? (IPTR)"MODE1/2352" : (IPTR)"MODE2/2352"));
 
       DOS->FPuts(fcue, f.Data());     
  

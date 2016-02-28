@@ -110,7 +110,7 @@ bool                 wSplitISOData::writeData(void* pBuff, int pLen)
    if (current_file == 0)
    {
       String *sn = new String();
-      sn->FormatStr("%s.%03ld", ARRAY((int)name_base.Data(), current_ext));
+      sn->FormatStr("%s.%03ld", ARRAY((IPTR)name_base.Data(), current_ext));
       
       names << sn;
       current_file = DOS->Lock(sn->Data(), ACCESS_READ);
@@ -119,7 +119,7 @@ bool                 wSplitISOData::writeData(void* pBuff, int pLen)
          DOS->UnLock(current_file);
          current_file = 0;
 
-         res = request("Warning", "Requested to write to file\n%s\nbut same entry already exists.\nDo you want to overwrite existing entry?", "Yes|No", ARRAY((int)sn->Data()));
+         res = request("Warning", "Requested to write to file\n%s\nbut same entry already exists.\nDo you want to overwrite existing entry?", "Yes|No", ARRAY((IPTR)sn->Data()));
          if (res == 0)
          {
             return false;
