@@ -157,15 +157,15 @@ void ClName::rebuild()
    if (bShortForm)
    {
       if (lFileVersion == 1)
-         sName.FormatStr("%s", ARRAY((int)sFileName.Data()));
+         sName.FormatStr("%s", ARRAY((IPTR)sFileName.Data()));
       else
-         sName.FormatStr("%s.%03ld", ARRAY((int)sFileName.Data(), lFileVersion));
+         sName.FormatStr("%s.%03ld", ARRAY((IPTR)sFileName.Data(), lFileVersion));
    }
    else
    {
       if (aLevel == ISOLevel_1)
       {
-         sName.FormatStr("%s.%s;%ld", ARRAY((int)sFileName.Data(), (int)sFileExtension.Data(), lFileVersion));
+         sName.FormatStr("%s.%s;%ld", ARRAY((IPTR)sFileName.Data(), (IPTR)sFileExtension.Data(), lFileVersion));
       }
       else
       {

@@ -70,7 +70,7 @@ int main()
    LibrarySpool::Init();
 
    pDesc->setApplicationID("The Frying Pan - Amiga CD and DVD recording software");
-   DOS->VPrintf("ISO ID: %32s\n\n", ARRAY((int)pDesc->getApplicationID()));
+   DOS->VPrintf("ISO ID: %32s\n\n", ARRAY((IPTR)pDesc->getApplicationID()));
 
    DOS->VPrintf("731 / 721 size: %ld / %ld\n", ARRAY(sizeof(val731), sizeof(val721)));   
    DOS->VPrintf("733 / 723 size: %ld / %ld\n", ARRAY(sizeof(val733), sizeof(val723)));  
