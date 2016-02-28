@@ -55,7 +55,7 @@ bool MUIPopDOSDevice::onOpen()
 
    while (NULL != (dn = (DeviceNode*)DOS->NextDosEntry((DosList*)dn, LDF_DEVICES)))
    {
-      if ((int)dn->dn_Startup > 1024)
+      if ((IPTR)dn->dn_Startup > 1024)
       {
          s = new String();
          s->BstrCpy(dn->dn_Name);

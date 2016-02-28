@@ -39,9 +39,9 @@ extern "C"
 
    struct Library               *LIB_Init(struct Library *pOurBase, void *pSegList, struct ExecBase *pSysBase);
    struct Library               *LIB_Open(void);
-   uint                          LIB_Close(void);
-   uint                          LIB_Expunge(void);
-   uint                          LIB_Reserved(void);
+   IPTR                          LIB_Close(void);
+   IPTR                          LIB_Expunge(void);
+   IPTR                          LIB_Reserved(void);
    extern struct LibInitStruct   LIB_InitStruct;
 #ifdef __cplusplus
 };

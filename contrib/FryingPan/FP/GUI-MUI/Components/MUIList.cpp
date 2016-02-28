@@ -47,8 +47,8 @@ unsigned long *MUIList::getObject()
 
    list = NListObject,
       InputListFrame,
-      MUIA_NList_Title,          (int)"Title",
-      MUIA_NList_Format,         (int)format.Data(),
+      MUIA_NList_Title,          (IPTR)"Title",
+      MUIA_NList_Format,         (IPTR)format.Data(),
       MUIA_NList_MultiSelect,    multiSelect ? MUIV_NList_MultiSelect_Default : MUIV_NList_MultiSelect_None,
       MUIA_NList_DragSortable,   dragSortable,
    End;
@@ -56,7 +56,7 @@ unsigned long *MUIList::getObject()
    if (list != NULL)
    {
       listview = NListviewObject,
-         MUIA_NListview_NList,      (int)list,
+         MUIA_NListview_NList,      (IPTR)list,
       End;
       nlist = true;
 
@@ -68,7 +68,7 @@ unsigned long *MUIList::getObject()
       listview = ListviewObject,
          MUIA_Listview_List,        list = ListObject,
             InputListFrame,
-            MUIA_List_Format,          (int)format.Data(),
+            MUIA_List_Format,          (IPTR)format.Data(),
             MUIA_List_Title,           "Title",
          End,
          MUIA_Listview_MultiSelect, multiSelect ? MUIV_Listview_MultiSelect_Default : MUIV_Listview_MultiSelect_None,
@@ -88,7 +88,7 @@ void MUIList::setConstructHook(const Hook* hook)
 
    Intuition->SetAttrsA(list, (TagItem*)ARRAY(
       nlist ? MUIA_NList_ConstructHook : MUIA_List_ConstructHook,
-         (int)hook,
+         (IPTR)hook,
       TAG_DONE,
          0
    ));
@@ -101,7 +101,7 @@ void MUIList::setDestructHook(const Hook* hook)
 
    Intuition->SetAttrsA(list, (TagItem*)ARRAY(
       nlist ? MUIA_NList_DestructHook : MUIA_List_DestructHook,
-         (int)hook,
+         (IPTR)hook,
       TAG_DONE,
          0
    ));
@@ -114,7 +114,7 @@ void MUIList::setDisplayHook(const Hook* hook)
 
    Intuition->SetAttrsA(list, (TagItem*)ARRAY(
       nlist ? MUIA_NList_DisplayHook : MUIA_List_DisplayHook,
-         (int)hook,
+         (IPTR)hook,
       TAG_DONE,
          0
    ));
@@ -170,11 +170,11 @@ void MUIList::addItem(void* item)
    {
       if (nlist)
       {
-         DoMtd(list, ARRAY(MUIM_NList_InsertSingle, (int)item, (unsigned)MUIV_NList_Insert_Bottom));
+         DoMtd(list, ARRAY(MUIM_NList_InsertSingle, (IPTR)item, (IPTR)MUIV_NList_Insert_Bottom));
       }
       else
       {
-         DoMtd(list, ARRAY(MUIM_List_InsertSingle, (int)item, (unsigned)MUIV_List_Insert_Bottom));
+         DoMtd(list, ARRAY(MUIM_List_InsertSingle, (IPTR)item, (IPTR)MUIV_List_Insert_Bottom));
       }
    }
 }
@@ -205,17 +205,17 @@ VectorT<void*> &MUIList::getSelectedItems()
 
       while (true)
       {
-         DoMtd(list, ARRAY(MUIM_NList_NextSelected, (int)&nextSel));
+         DoMtd(list, ARRAY(MUIM_NList_NextSelected, (IPTR)&nextSel));
          if (nextSel == MUIV_NList_NextSelected_End)
             break;
-         DoMtd(list, ARRAY(MUIM_NList_GetEntry, nextSel, (int)&data));
+         DoMtd(list, ARRAY(MUIM_NList_GetEntry, nextSel, (IPTR)&data));
          selected << data;
       }
    }
    else
    {
       void* data;
-      DoMtd(list, ARRAY(MUIM_List_GetEntry, (unsigned)MUIV_List_GetEntry_Active, (int)&data));
+      DoMtd(list, ARRAY(MUIM_List_GetEntry, (IPTR)MUIV_List_GetEntry_Active, (IPTR)&data));
       selected << data;
    }
    

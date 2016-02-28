@@ -77,7 +77,7 @@ void JobUpload::execute()
       tracks[i]->setUp();
    }
 
-   res = pOptical->OptDoMethodA(ARRAY(DRV_LayoutTracks, Drive, (int)disc));
+   res = pOptical->OptDoMethodA(ARRAY(DRV_LayoutTracks, Drive, (IPTR)disc));
 
    if (res == ODE_OK)
    {
@@ -85,7 +85,7 @@ void JobUpload::execute()
       currBlock = 0;
 
       pOptical->OptDoMethodA(ARRAY(DRV_LockDrive, Drive, DRT_LockDrive_Write));
-      res = pOptical->OptDoMethodA(ARRAY(DRV_UploadLayout, Drive, (int)disc));
+      res = pOptical->OptDoMethodA(ARRAY(DRV_UploadLayout, Drive, (IPTR)disc));
       
       for (currTrack=0; currTrack<tracks.Count(); currTrack++)
       {
@@ -111,7 +111,7 @@ void JobUpload::execute()
          }
          else
          {
-            request("ERROR", "Unable to allocate memory (%ld x %ld = %ld bytes)!\nOperation aborted.", "Ok", ARRAY(secsize, pktsize, secsize*pktsize));
+            request("ERROR", "Unable to allocate memory (%ld x %ld = %ld bytes)!\nOperation aborted.", "Ok", ARRAY(secsize, pktsize, (IPTR)secsize*pktsize));
             break;
          }
 
@@ -149,7 +149,7 @@ uint32 JobUpload::onData(void* mem, int sectors)
    }
 
    currBlock += sectors;
-   ret = (EOpticalError)pOptical->OptDoMethodA(ARRAY(DRV_WriteSequential, Drive, (int)mem, sectors));
+   ret = (EOpticalError)pOptical->OptDoMethodA(ARRAY(DRV_WriteSequential, Drive, (IPTR)mem, sectors));
 
    switch (ret)
    {
@@ -296,7 +296,7 @@ uint32 JobUpload::onData(void* mem, int sectors)
    if (ret != ODE_OK)
    {
       operation += "\nwhile transferring\n%ld sectors from %08lx";
-      request("Error during write", operation.Data(), "Abort", ARRAY(sectors, (int)mem));
+      request("Error during write", operation.Data(), "Abort", ARRAY(sectors, (IPTR)mem));
    }
 
    return (ret == ODE_OK);

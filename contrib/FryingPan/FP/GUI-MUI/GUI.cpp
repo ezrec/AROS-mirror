@@ -297,8 +297,8 @@ bool GUI::start()
    }
    else
    {
-      DoMtd((Object *)pWin,  ARRAY(MUIM_Notify, MUIA_Window_CloseRequest, MUIV_EveryTime, (int)pApp, 2, MUIM_Application_ReturnID, (unsigned)MUIV_Application_ReturnID_Quit));
-      DoMtd((Object *)gauge, ARRAY(MUIM_Notify, MUIA_Pressed,             false,          (int)pApp, 2, MUIM_CallHook,             (int)hShowHide.GetHook()));
+      DoMtd((Object *)pWin,  ARRAY(MUIM_Notify, MUIA_Window_CloseRequest, MUIV_EveryTime, (IPTR)pApp, 2, MUIM_Application_ReturnID, (IPTR)MUIV_Application_ReturnID_Quit));
+      DoMtd((Object *)gauge, ARRAY(MUIM_Notify, MUIA_Pressed,             false,          (IPTR)pApp, 2, MUIM_CallHook,             (IPTR)hShowHide.GetHook()));
       (*Glb.CurrentEngine) << hEngineChanged.GetHook();
       Select->setHook(hPager.GetHook());
    }
@@ -328,7 +328,7 @@ bool GUI::start()
    update();
 
    _dx(Lvl_Info, "Entering main loop");
-   while (DoMtd((Object *)pApp, ARRAY(MUIM_Application_NewInput, (int)&signals)) != (unsigned)MUIV_Application_ReturnID_Quit)
+   while (DoMtd((Object *)pApp, ARRAY(MUIM_Application_NewInput, (IPTR)&signals)) != (IPTR)MUIV_Application_ReturnID_Quit)
    {
       if (signals)
          signals = Exec->Wait(signals | pTimer->GetSignals() | pMsgPort->GetSignals());
@@ -418,7 +418,7 @@ uint32 GUI::doChangePage(void*, long page)
 {
    _dx(Lvl_Info, "Flipping page to %ld", page);
    Intuition->SetAttrsA(pages, (TagItem*)ARRAY(
-      MUIA_Group_ActivePage,  page-1,
+      MUIA_Group_ActivePage,  (IPTR)page-1,
       TAG_DONE,               0
    ));
 

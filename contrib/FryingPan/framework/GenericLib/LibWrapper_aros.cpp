@@ -43,11 +43,11 @@ struct Library *LIB_Init(Library *pOurBase, void *pSegList, ExecBase *pSysBase)
    if (true == Lib_SetUp())
       return OurBase;
    
-   FreeMem((void*)((ULONG)(OurBase) - OurBase->lib_NegSize), OurBase->lib_NegSize + OurBase->lib_PosSize);
+   FreeMem((void*)((IPTR)(OurBase) - OurBase->lib_NegSize), OurBase->lib_NegSize + OurBase->lib_PosSize);
    return 0;
 }
 
-uint LIB_Expunge(void)
+IPTR LIB_Expunge(void)
 {
    if (OurBase->lib_OpenCnt)
    {
@@ -61,9 +61,9 @@ uint LIB_Expunge(void)
    Remove(&OurBase->lib_Node);
    Permit();
 
-   FreeMem((void*)((ULONG)(OurBase) - OurBase->lib_NegSize), OurBase->lib_NegSize + OurBase->lib_PosSize);
+   FreeMem((void*)((IPTR)(OurBase) - OurBase->lib_NegSize), OurBase->lib_NegSize + OurBase->lib_PosSize);
 
-   return (ULONG)SegList;
+   return (IPTR)SegList;
 }
 
 struct Library *LIB_Open(void)
@@ -75,7 +75,7 @@ struct Library *LIB_Open(void)
    return OurBase;
 }
 
-uint LIB_Close(void) 
+IPTR LIB_Close(void) 
 {
    if (OurBase->lib_OpenCnt == 0)
       return 0;
@@ -90,7 +90,7 @@ uint LIB_Close(void)
    return 0;
 }
 
-uint LIB_Reserved(void)
+IPTR LIB_Reserved(void)
 {
    return 0;
 }

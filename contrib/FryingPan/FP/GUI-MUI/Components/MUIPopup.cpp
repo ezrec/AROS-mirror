@@ -62,10 +62,10 @@ unsigned long *MUIPopup::getObject()
 
    if (name.Length() != 0)
    {
-      DoMtd(all, ARRAY(OM_ADDMEMBER, (int)(label = (Object *)muiLabel(name, 0, 0, Align_Right))));
+      DoMtd(all, ARRAY(OM_ADDMEMBER, (IPTR)(label = (Object *)muiLabel(name, 0, 0, Align_Right))));
    }
 
-   DoMtd(all, ARRAY(OM_ADDMEMBER, (int)(
+   DoMtd(all, ARRAY(OM_ADDMEMBER, (IPTR)(
             popup = PopobjectObject,
                MUIA_Popstring_String,              display = (Object *)getPopDisplay(),
                MUIA_Popobject_Object,              object  = (Object *)getPopObject(),

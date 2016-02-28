@@ -190,11 +190,11 @@ uint32 MUITracks::onButton(BtnId id, void* option)
    {
       case Btn_CompositionType:
          {
-            int32 sel = (int)option;
+            IPTR sel = (IPTR)option;
             DoMtd((Object *)page, ARRAY(MUIM_Set, MUIA_Group_ActivePage, sel));
-            if ((int)option == 0)
+            if ((IPTR)option == 0)
                Glb.WriteSelection = Globals::Select_Tracks;
-            else if ((int)option == 1)
+            else if ((IPTR)option == 1)
                Glb.WriteSelection = Globals::Select_Session;
          };
          break;

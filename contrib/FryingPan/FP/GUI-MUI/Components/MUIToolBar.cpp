@@ -189,7 +189,7 @@ unsigned long *MUIToolBar::createButton(const MUIToolBar::Button *def)
          MUIA_UserData,       def->id,
          MUIA_Frame,          showFrames ? MUIV_Frame_ImageButton : MUIV_Frame_None,
          MUIA_Group_Spacing,  0,
-         MUIA_ContextMenu,    (int)menu->getObject(),
+         MUIA_ContextMenu,    (IPTR)menu->getObject(),
       End;
    }
    else
@@ -206,26 +206,26 @@ unsigned long *MUIToolBar::createButton(const MUIToolBar::Button *def)
 
    if (Label_None == labelPosition)
    {
-      DoMtd((Object *)btn, ARRAY(OM_ADDMEMBER, (int)image));
+      DoMtd((Object *)btn, ARRAY(OM_ADDMEMBER, (IPTR)image));
    }
    else if ((Label_Left == labelPosition) || (Label_Top == labelPosition))
    {
-      DoMtd((Object *)btn, ARRAY(OM_ADDMEMBER, (int)label));
+      DoMtd((Object *)btn, ARRAY(OM_ADDMEMBER, (IPTR)label));
       if (true == showImages)
       {
-         DoMtd((Object *)btn, ARRAY(OM_ADDMEMBER, (int)image));
+         DoMtd((Object *)btn, ARRAY(OM_ADDMEMBER, (IPTR)image));
       }
    }
    else
    {
       if (true == showImages)
       {
-         DoMtd((Object *)btn, ARRAY(OM_ADDMEMBER, (int)image));
+         DoMtd((Object *)btn, ARRAY(OM_ADDMEMBER, (IPTR)image));
       }
-      DoMtd((Object *)btn, ARRAY(OM_ADDMEMBER, (int)label));
+      DoMtd((Object *)btn, ARRAY(OM_ADDMEMBER, (IPTR)label));
    }
 
-   DoMtd((Object *)btn, ARRAY(MUIM_Notify, MUIA_Selected, true, (int)btn, 3, MUIM_CallHook, (int)hCallBack.GetHook(), def->id));
+   DoMtd((Object *)btn, ARRAY(MUIM_Notify, MUIA_Selected, true, (IPTR)btn, 3, MUIM_CallHook, (IPTR)hCallBack.GetHook(), def->id));
 
    return btn;
 }
@@ -301,7 +301,7 @@ void MUIToolBar::rebuildGadgets()
    for (int i=0; i<buttons.Count(); i++)
    {
       unsigned long *elem = buttons[i];
-      DoMtd((Object *)all, ARRAY(OM_REMMEMBER, (int)elem));
+      DoMtd((Object *)all, ARRAY(OM_REMMEMBER, (IPTR)elem));
    }
 
    buttons.Empty();
@@ -325,7 +325,7 @@ void MUIToolBar::rebuildGadgets()
 
    for (int i=0; i<buttons.Count(); i++)
    {
-      DoMtd((Object *)all, ARRAY(OM_ADDMEMBER, (int)buttons[i]));
+      DoMtd((Object *)all, ARRAY(OM_ADDMEMBER, (IPTR)buttons[i]));
    }
 
    DoMtd((Object *)all, ARRAY(MUIM_Group_ExitChange));

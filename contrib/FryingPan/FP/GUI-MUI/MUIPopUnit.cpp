@@ -95,7 +95,7 @@ unsigned long MUIPopUnit::construct(void*, void* arg)
    e->product  = d->sd_DeviceName;
    e->lun      = d->sd_Unit;
 
-   e->name.FormatStr("%ld: %s - %s", ARRAY(e->lun, (long)e->vendor.Data(), (long)e->product.Data()));
+   e->name.FormatStr("%ld: %s - %s", ARRAY(e->lun, (IPTR)e->vendor.Data(), (IPTR)e->product.Data()));
 
    return (unsigned long)e;
 }
@@ -141,11 +141,11 @@ void MUIPopUnit::setValue(const void* val)
 
    while (true)
    {
-      DoMtd((Object *)list, ARRAY(MUIM_NList_GetEntry, i, (int)&e));
+      DoMtd((Object *)list, ARRAY(MUIM_NList_GetEntry, i, (IPTR)&e));
       if (NULL   == e)
          break;
 
-      if (e->lun == (int)val)
+      if (e->lun == (IPTR)val)
          break;
       i++;
    }

@@ -249,7 +249,7 @@ bool Engine::setInhibited(String& device, bool state)
 
    while (NULL != (dn = (DeviceNode*)DOS->NextDosEntry((DosList*)dn, LDF_DEVICES)))
    {
-      if ((int)dn->dn_Startup > 1024)
+      if ((IPTR)dn->dn_Startup > 1024)
       {
          s.BstrCpy(dn->dn_Name);
          if (s == device)
@@ -514,11 +514,11 @@ void Engine::readContents()
       int32 rec, era, fmt, ovw;
 
       pOptical->OptDoMethodA(ARRAY(DRV_GetAttrs, drv, 
-            DRA_Disc_IsWritable,    (int)&rec, 
-            DRA_Disc_IsErasable,    (int)&era, 
-            DRA_Disc_IsFormatable,  (int)&fmt,
-            DRA_Disc_IsOverwritable,(int)&ovw,
-            DRA_Disc_Size,          (int)&lDiscSize,
+            DRA_Disc_IsWritable,    (IPTR)&rec, 
+            DRA_Disc_IsErasable,    (IPTR)&era, 
+            DRA_Disc_IsFormatable,  (IPTR)&fmt,
+            DRA_Disc_IsOverwritable,(IPTR)&ovw,
+            DRA_Disc_Size,          (IPTR)&lDiscSize,
             TAG_DONE,               0));
 
       bRecordable    = rec ? true : false;
@@ -648,7 +648,7 @@ bool Engine::openDevice(const char* name, int lun)
       if (strlen(name) == 0)
          return false;
 
-      pdrv = pOptical->OptDoMethodA(ARRAY(DRV_NewDrive, (int)name, lun));
+      pdrv = pOptical->OptDoMethodA(ARRAY(DRV_NewDrive, (IPTR)name, lun));
 
       Drive.Assign(pdrv);
    }
@@ -959,9 +959,9 @@ const char* Engine::findMatchingDOSDevice()
 
    while (NULL != (dn = (DeviceNode*)DOS->NextDosEntry((DosList*)dn, LDF_DEVICES)))
    {
-      if ((int)dn->dn_Startup > 1024)
+      if ((IPTR)dn->dn_Startup > 1024)
       {
-         fs = (FileSysStartupMsg*)((int)dn->dn_Startup << 2);
+         fs = (FileSysStartupMsg*)((IPTR)dn->dn_Startup << 2);
          if ((fs != 0) && (fs->fssm_Device))
          {
             s.BstrCpy(dn->dn_Name);

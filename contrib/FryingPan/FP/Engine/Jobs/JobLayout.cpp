@@ -72,7 +72,7 @@ void JobLayout::execute()
       return;
    }
 
-   res = (EOpticalError)pOptical->OptDoMethodA(ARRAY(DRV_LayoutTracks, Drive, (int)disc));
+   res = (EOpticalError)pOptical->OptDoMethodA(ARRAY(DRV_LayoutTracks, Drive, (IPTR)disc));
 
    analyse(res);
 }
@@ -88,7 +88,7 @@ void JobLayout::analyse(EOpticalError ret)
       uint32 ssize, scurr;
       String suff = "kB";
 
-      pOptical->OptDoMethodA(ARRAY(DRV_GetAttrs, Drive, DRA_Disc_Size, (int)&size, TAG_DONE, 0));
+      pOptical->OptDoMethodA(ARRAY(DRV_GetAttrs, Drive, DRA_Disc_Size, (IPTR)&size, TAG_DONE, 0));
       numblocks = size;
 
       if (size == 0)

@@ -96,7 +96,7 @@ Track::Track(const char* name)
 
       if (rc != DT_OK)
       {
-         request(regHook->getName(), "An error occured while opening the file:\n%s\nOperation will be aborted.", "Ok", ARRAY((int)s));
+         request(regHook->getName(), "An error occured while opening the file:\n%s\nOperation will be aborted.", "Ok", ARRAY((IPTR)s));
       }
    }
 }

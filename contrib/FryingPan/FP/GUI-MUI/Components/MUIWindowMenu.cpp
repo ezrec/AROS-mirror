@@ -55,8 +55,8 @@ void MUIWindowMenu::addItem(const char *tTitle, long lParam, const char* tShort)
                      ((tShort != 0) && (tShort[0] != 0)) ? MUIA_Menuitem_Shortcut : TAG_IGNORE, tShort,
                   End;
 
-   DoMtd(pObj, ARRAY(MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime, (int)pObj, 3, MUIM_CallHook, (int)hLocal.GetHook(), lParam));
-   DoMtd(pMenu, ARRAY(MUIM_Family_AddTail, (int)pObj)); 
+   DoMtd(pObj, ARRAY(MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime, (IPTR)pObj, 3, MUIM_CallHook, (IPTR)hLocal.GetHook(), lParam));
+   DoMtd(pMenu, ARRAY(MUIM_Family_AddTail, (IPTR)pObj)); 
 }
 
 void MUIWindowMenu::addSeparator()
@@ -65,7 +65,7 @@ void MUIWindowMenu::addSeparator()
                      MUIA_Menuitem_Title,    0xffffffff,
                   End;
 
-   DoMtd(pMenu, ARRAY(MUIM_Family_AddTail, (int)pObj)); 
+   DoMtd(pMenu, ARRAY(MUIM_Family_AddTail, (IPTR)pObj)); 
 }
 
 void MUIWindowMenu::addChoice(const char *tTitle, bool bSelected, long lParam, const char* tShort)
@@ -78,9 +78,9 @@ void MUIWindowMenu::addChoice(const char *tTitle, bool bSelected, long lParam, c
                      MUIA_UserData,          lParam,
                   End;
 
-   DoMtd(pObj, ARRAY(MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime, (int)pObj, 3, MUIM_CallHook, (int)hLocal.GetHook(), lParam));
+   DoMtd(pObj, ARRAY(MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime, (IPTR)pObj, 3, MUIM_CallHook, (IPTR)hLocal.GetHook(), lParam));
 
-   DoMtd(pMenu, ARRAY(MUIM_Family_AddTail, (int)pObj)); 
+   DoMtd(pMenu, ARRAY(MUIM_Family_AddTail, (IPTR)pObj)); 
 }
 
 void MUIWindowMenu::addRadio(const char *tTitle)
@@ -90,7 +90,7 @@ void MUIWindowMenu::addRadio(const char *tTitle)
                      MUIA_UserData,       0xffffffff,
                   End;
 
-   DoMtd(pMenu, ARRAY(MUIM_Family_AddTail, (int)pObj)); 
+   DoMtd(pMenu, ARRAY(MUIM_Family_AddTail, (IPTR)pObj)); 
    pRadio = pObj;
 }
 
@@ -108,9 +108,9 @@ void MUIWindowMenu::addRadioOption(const char *tTitle, bool bSelected, long lPar
                      MUIA_Menuitem_Exclude,  0xffffffff,
                   End;
 
-   DoMtd(pObj, ARRAY(MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime, (int)pObj, 3, MUIM_CallHook, (int)hLocal.GetHook(), lParam));
+   DoMtd(pObj, ARRAY(MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime, (IPTR)pObj, 3, MUIM_CallHook, (IPTR)hLocal.GetHook(), lParam));
 
-   DoMtd(pRadio, ARRAY(MUIM_Family_AddTail, (int)pObj)); 
+   DoMtd(pRadio, ARRAY(MUIM_Family_AddTail, (IPTR)pObj)); 
 }
 
 void MUIWindowMenu::setHook(const Hook *pNotify)
@@ -125,5 +125,5 @@ void MUIWindowMenu::addMenu(const char *tTitle)
       MUIA_Menuitem_Enabled,   true,
    End,
 
-   DoMtd(pMain, ARRAY(MUIM_Family_AddTail, (int)pMenu)); 
+   DoMtd(pMain, ARRAY(MUIM_Family_AddTail, (IPTR)pMenu)); 
 }

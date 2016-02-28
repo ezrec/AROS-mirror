@@ -47,19 +47,19 @@ unsigned long *MUITree::getObject()
 
    list = NListtreeObject,
       InputListFrame,
-      MUIA_NListtree_Format,        (int)format.Data(),    
+      MUIA_NListtree_Format,        (IPTR)format.Data(),    
       MUIA_NListtree_Title,         true,
       MUIA_NListtree_MultiSelect,   multiselect,
-      MUIA_NListtree_ConstructHook, (int)hHkConstruct.GetHook(),
-      MUIA_NListtree_DestructHook,  (int)hHkDestruct.GetHook(),
-      MUIA_NListtree_DisplayHook,   (int)hHkDisplay.GetHook(),
+      MUIA_NListtree_ConstructHook, (IPTR)hHkConstruct.GetHook(),
+      MUIA_NListtree_DestructHook,  (IPTR)hHkDestruct.GetHook(),
+      MUIA_NListtree_DisplayHook,   (IPTR)hHkDisplay.GetHook(),
       MUIA_NListtree_DragDropSort,  false,
    End;
 
    if (list != 0)
    {
       listview = NListviewObject,
-         MUIA_NListview_NList,      (int)list,
+         MUIA_NListview_NList,      (IPTR)list,
       End;
    
       DoMtd(list, ARRAY(MUIM_Notify, MUIA_NListtree_Active, MUIV_EveryTime, (uint32)list, 2, MUIM_CallHook, (uint32)hHkSelect.GetHook()));
@@ -182,7 +182,7 @@ unsigned long MUITree::addEntry(unsigned long parent, void* entry, bool opened)
    if (0 == parent)
       parent = MUIV_NListtree_Insert_ListNode_Root;
 
-   return DoMtd((Object *)list, ARRAY(MUIM_NListtree_Insert, (int)"*", (int)entry, parent, (unsigned)MUIV_NListtree_Insert_PrevNode_Tail, TNF_LIST | (opened ? TNF_OPEN : 0)));
+   return DoMtd((Object *)list, ARRAY(MUIM_NListtree_Insert, (IPTR)"*", (IPTR)entry, parent, (IPTR)MUIV_NListtree_Insert_PrevNode_Tail, TNF_LIST | (opened ? TNF_OPEN : 0)));
 }
 
 void MUITree::clear()

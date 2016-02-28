@@ -45,7 +45,7 @@ void JobUploadSession::execute()
     * reason: if someone wants to record a disc image, this image already carries the layout details.
     */
 
-   res = pOptical->OptDoMethodA(ARRAY(DRV_UploadLayout, Drive, (int)disc));
+   res = pOptical->OptDoMethodA(ARRAY(DRV_UploadLayout, Drive, (IPTR)disc));
 
    numBlocks = 0;
    currBlock = 0;
@@ -73,7 +73,7 @@ void JobUploadSession::execute()
          {
             uint32 trns = 16 < size ? 16 : size;
             reader->readData(disc, memblk, trns);
-            res = (EOpticalError)pOptical->OptDoMethodA(ARRAY(DRV_WriteSequential, Drive, (int)memblk, trns));
+            res = (EOpticalError)pOptical->OptDoMethodA(ARRAY(DRV_WriteSequential, Drive, (IPTR)memblk, trns));
             currBlock += trns;
             size -= trns;
             
@@ -119,7 +119,7 @@ uint32 JobUploadSession::onData(void* mem, int sectors)
    }
 
    currBlock += sectors;
-   ret = (EOpticalError)pOptical->OptDoMethodA(ARRAY(DRV_WriteSequential, Drive, (int)mem, sectors));
+   ret = (EOpticalError)pOptical->OptDoMethodA(ARRAY(DRV_WriteSequential, Drive, (IPTR)mem, sectors));
 
    switch (ret)
    {
@@ -266,7 +266,7 @@ uint32 JobUploadSession::onData(void* mem, int sectors)
    if (ret != ODE_OK)
    {
       operation += "\nwhile transferring\n%ld sectors from %08lx";
-      request("Error during write", operation.Data(), "Abort", ARRAY(sectors, (int)mem));
+      request("Error during write", operation.Data(), "Abort", ARRAY(sectors, (IPTR)mem));
    }
 
    return (ret == ODE_OK);

@@ -78,10 +78,10 @@ MUIPictureClass::~MUIPictureClass()
    }
 }
 
-uint32 MUIPictureClass::DoMtd(Object *obj, uint32 *msg)
+IPTR MUIPictureClass::DoMtd(Object *obj, uint32 *msg)
 {
    uint16  *minmax;
-   int      k;
+   IPTR      k;
 
    switch (msg[0]) 
    {
@@ -90,10 +90,10 @@ uint32 MUIPictureClass::DoMtd(Object *obj, uint32 *msg)
             if (!(obj = (Object *)DoSuperMtd(parent, obj, msg))) 
                return 0;
 
-            k = (int)Utility->GetTagData(MUIA_Picture_NormalImage, 0, (TagItem*)msg[1]);
+            k = (IPTR)Utility->GetTagData(MUIA_Picture_NormalImage, 0, (TagItem*)msg[1]);
             if (k != 0)
                image1 = (char*)k;
-            k = (int)Utility->GetTagData(MUIA_Picture_SelectedImage, 0, (TagItem*)msg[1]);
+            k = (IPTR)Utility->GetTagData(MUIA_Picture_SelectedImage, 0, (TagItem*)msg[1]);
             if (k != 0)
                image2 = (char*)k;
 
@@ -102,7 +102,7 @@ uint32 MUIPictureClass::DoMtd(Object *obj, uint32 *msg)
 
             openImages();
 
-            return (ULONG)obj;
+            return (IPTR)obj;
          }
          break;
 
@@ -117,7 +117,7 @@ uint32 MUIPictureClass::DoMtd(Object *obj, uint32 *msg)
                if (dtimg1 != 0)
                {
                   dt->SetDTAttrsA(dtimg1, 0, 0, (TagItem*)ARRAY(
-                     PDTA_Screen,         (int32)_screen(obj), 
+                     PDTA_Screen,         (IPTR)_screen(obj), 
                      PDTA_DestMode,       PMODE_V43, 
                      PDTA_UseFriendBitMap,true,
                      TAG_DONE,            0));
@@ -127,7 +127,7 @@ uint32 MUIPictureClass::DoMtd(Object *obj, uint32 *msg)
                if (dtimg2 != 0)
                {
                   dt->SetDTAttrsA(dtimg2, 0, 0, (TagItem*)ARRAY(
-                     PDTA_Screen,         (int32)_screen(obj), 
+                     PDTA_Screen,         (IPTR)_screen(obj), 
                      PDTA_DestMode,       PMODE_V43, 
                      PDTA_UseFriendBitMap,true,
                      TAG_DONE,            0));
@@ -229,7 +229,7 @@ uint32 MUIPictureClass::DoMtd(Object *obj, uint32 *msg)
 
 
             drawinfo = dt->ObtainDTDrawInfoA(o, (TagItem*)ARRAY(
-               PDTA_Screen,   (int32)_screen(obj),
+               PDTA_Screen,   (IPTR)_screen(obj),
                TAG_DONE,      0));
 
             if (drawinfo != 0)
@@ -249,7 +249,7 @@ uint32 MUIPictureClass::DoMtd(Object *obj, uint32 *msg)
             else
             {
                dt->GetDTAttrsA(o, (TagItem*)ARRAY(
-                        PDTA_DestBitMap,     (int32)&bitmap,
+                        PDTA_DestBitMap,     (IPTR)&bitmap,
                         TAG_DONE,            0));
                if ((0 != bitmap) && (0 != GfxBase))
                {
@@ -276,15 +276,15 @@ void MUIPictureClass::openImages()
 
 
    dtimg1 = dt->NewDTObjectA((APTR)image1.Data(), (TagItem*)ARRAY(
-            DTA_GroupID,      (uint32)GID_PICTURE,
+            DTA_GroupID,      (IPTR)GID_PICTURE,
             PDTA_Remap,       true,
-            OBP_Precision,    (uint32)PRECISION_EXACT,
+            OBP_Precision,    (IPTR)PRECISION_EXACT,
             TAG_DONE,         0));
 
    dtimg2 = dt->NewDTObjectA((APTR)image2.Data(), (TagItem*)ARRAY(
-            DTA_GroupID,      (uint32)GID_PICTURE,
+            DTA_GroupID,      (IPTR)GID_PICTURE,
             PDTA_Remap,       true,
-            OBP_Precision,    (uint32)PRECISION_EXACT,
+            OBP_Precision,    (IPTR)PRECISION_EXACT,
             TAG_DONE,         0));
 
    width  = 0x7fff;
@@ -295,7 +295,7 @@ void MUIPictureClass::openImages()
       BitMapHeader *bmhd;
 
       dt->GetDTAttrsA(dtimg1, (TagItem*)ARRAY(
-         PDTA_BitMapHeader,   (int32)&bmhd,
+         PDTA_BitMapHeader,   (IPTR)&bmhd,
          TAG_DONE,            0));
 
       width  = width  < bmhd->bmh_Width ? width : bmhd->bmh_Width;
@@ -307,7 +307,7 @@ void MUIPictureClass::openImages()
       BitMapHeader *bmhd;
 
       dt->GetDTAttrsA(dtimg1, (TagItem*)ARRAY(
-         PDTA_BitMapHeader,   (int32)&bmhd,
+         PDTA_BitMapHeader,   (IPTR)&bmhd,
          TAG_DONE,            0));
 
       width  = width  < bmhd->bmh_Width ? width : bmhd->bmh_Width;

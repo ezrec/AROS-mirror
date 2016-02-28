@@ -70,11 +70,11 @@ const char* FileReq::saveReq()
    FileRequester* req    = (FileRequester*)MUIMaster->MUI_AllocAslRequest(ASL_FileRequest, 0);
    TagItem        tags[] =
    {
-      { ASLFR_TitleText,        (int)title.Data()     },
+      { ASLFR_TitleText,        (IPTR)title.Data()     },
       { ASLFR_DoSaveMode,       true                  },
       { ASLFR_DoMultiSelect,    false                 },
       { ASLFR_DrawersOnly,      dirsOnly              },
-      { ASLFR_InitialDrawer,    (int)lastPath.Data()  },
+      { ASLFR_InitialDrawer,    (IPTR)lastPath.Data()  },
       { TAG_DONE,               0                     },
    };
 
@@ -120,11 +120,11 @@ VectorT<const char*> &FileReq::openReq()
    FileRequester* req    = (FileRequester*)MUIMaster->MUI_AllocAslRequest(ASL_FileRequest, 0);
    TagItem        tags[] =
    {
-      { ASLFR_TitleText,        (int)title.Data()     },
+      { ASLFR_TitleText,        (IPTR)title.Data()     },
       { ASLFR_DoSaveMode,       false                 },
       { ASLFR_DoMultiSelect,    multiSelect           },
       { ASLFR_DrawersOnly,      dirsOnly              },
-      { ASLFR_InitialDrawer,    (int)lastPath.Data()  },
+      { ASLFR_InitialDrawer,    (IPTR)lastPath.Data()  },
       { TAG_DONE,               0                     }
    };
 

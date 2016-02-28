@@ -69,7 +69,7 @@ const char* MUISpeedSelect::dupstr(const char* str)
 void MUISpeedSelect::rebuildCycle(DiscSpeed *speeds, uint16 currspd)
 {
    DoMtd((Object *)cyclegroup, ARRAY(MUIM_Group_InitChange));
-   DoMtd((Object *)cyclegroup, ARRAY(OM_REMMEMBER, (int)cycle));
+   DoMtd((Object *)cyclegroup, ARRAY(OM_REMMEMBER, (IPTR)cycle));
 
    this->names.ForEach(&vecDeleteName).Empty();
    this->speeds.Empty();
@@ -107,7 +107,7 @@ void MUISpeedSelect::rebuildCycle(DiscSpeed *speeds, uint16 currspd)
       TAG_DONE,            0
    ));
 
-   DoMtd((Object *)cyclegroup, ARRAY(OM_ADDMEMBER, (int)cycle));
+   DoMtd((Object *)cyclegroup, ARRAY(OM_ADDMEMBER, (IPTR)cycle));
    DoMtd((Object *)cyclegroup, ARRAY(MUIM_Group_ExitChange));
 }
 

@@ -73,7 +73,7 @@ uint32 *MUI::muiButton(const char* contents, char key, int id)
       MUIA_InputMode,         MUIV_InputMode_RelVerify,
    End;
 
-   DoMtd(btn, ARRAY(MUIM_Notify, MUIA_Pressed, false, (int)btn, 4, MUIM_CallHook, (int)gateBtns.GetHook(), id, 0));
+   DoMtd(btn, ARRAY(MUIM_Notify, MUIA_Pressed, false, (IPTR)btn, 4, MUIM_CallHook, (IPTR)gateBtns.GetHook(), id, 0));
 
    muiElements << new elemAssoc(T_Button, id, (uint32 *)btn);
 
@@ -89,7 +89,7 @@ uint32 *MUI::muiCycle(const char** contents, char key, int id, int active)
       MUIA_ControlChar,       key,
    End;
 
-   DoMtd(btn, ARRAY(MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime, (int)btn, 4, MUIM_CallHook, (int)gateBtns.GetHook(), id, MUIV_TriggerValue));
+   DoMtd(btn, ARRAY(MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime, (IPTR)btn, 4, MUIM_CallHook, (IPTR)gateBtns.GetHook(), id, MUIV_TriggerValue));
 
    Intuition->SetAttrsA(btn, (TagItem*)ARRAY(
       MUIA_Cycle_Active,      active,
@@ -142,7 +142,7 @@ uint32 *MUI::muiCheckBox(const char* name, char key, int id, Alignment align, bo
       MUIA_ControlChar,       key,
    End;
 
-   DoMtd((Object *)all, ARRAY(MUIM_Notify, MUIA_Selected, MUIV_EveryTime, (int)all, 4, MUIM_CallHook, (int)gateBtns.GetHook(), id, MUIV_TriggerValue));
+   DoMtd((Object *)all, ARRAY(MUIM_Notify, MUIA_Selected, MUIV_EveryTime, (IPTR)all, 4, MUIM_CallHook, (IPTR)gateBtns.GetHook(), id, MUIV_TriggerValue));
 
    muiElements << new elemAssoc(T_CheckBox, id, all);
 
@@ -162,7 +162,7 @@ uint32 *MUI::muiSlider(int32 min, int32 max, int32 level, char key, int id)
       MUIA_ControlChar,       key,
    End;
 
-   DoMtd((Object *)slider, ARRAY(MUIM_Notify, MUIA_Numeric_Value, MUIV_EveryTime, (int)slider, 4, MUIM_CallHook, (int)gateBtns.GetHook(), id, MUIV_TriggerValue));
+   DoMtd((Object *)slider, ARRAY(MUIM_Notify, MUIA_Numeric_Value, MUIV_EveryTime, (IPTR)slider, 4, MUIM_CallHook, (IPTR)gateBtns.GetHook(), id, MUIV_TriggerValue));
 
    muiElements << new elemAssoc(T_Slider, id, slider);
    return slider;
@@ -275,21 +275,21 @@ void MUI::muiSetText(int id, const char *text)
          {
             case T_Label:
                Intuition->SetAttrsA(muiElements[i]->elem, (TagItem*)ARRAY(
-                  MUIA_Text_Contents,     (int)text,
+                  MUIA_Text_Contents,     (IPTR)text,
                   TAG_DONE,               0
                ));
                break;
          
             case T_String:
                Intuition->SetAttrsA(muiElements[i]->elem, (TagItem*)ARRAY(
-                  MUIA_String_Contents,   (int)text,
+                  MUIA_String_Contents,   (IPTR)text,
                   TAG_DONE,               0
                ));
                break;
 
             case T_Gauge:
                Intuition->SetAttrsA(muiElements[i]->elem, (TagItem*)ARRAY(
-                  MUIA_Gauge_InfoText,    (int)text,
+                  MUIA_Gauge_InfoText,    (IPTR)text,
                   TAG_DONE,               0
                ));
                break;
@@ -316,7 +316,7 @@ uint32 *MUI::muiString(const char* contents, char key, int id, Alignment align)
 
    muiElements << new elemAssoc(T_String, id, all);
 
-   DoMtd((Object *)all, ARRAY(MUIM_Notify, MUIA_String_Acknowledge, MUIV_EveryTime, (int)all, 4, MUIM_CallHook, (int)gateBtns.GetHook(), id, MUIV_TriggerValue));
+   DoMtd((Object *)all, ARRAY(MUIM_Notify, MUIA_String_Acknowledge, MUIV_EveryTime, (IPTR)all, 4, MUIM_CallHook, (IPTR)gateBtns.GetHook(), id, MUIV_TriggerValue));
    muiSetText(id, contents);
    return all;
 }

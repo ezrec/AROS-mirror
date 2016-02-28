@@ -107,7 +107,7 @@ uint32 MUIDriveSelect::btnHook(int32 id, void* data)
 void MUIDriveSelect::rebuildCycle()
 {
    DoMtd((Object *)cyclegroup, ARRAY(MUIM_Group_InitChange));
-   DoMtd((Object *)cyclegroup, ARRAY(OM_REMMEMBER, (int)cycle));
+   DoMtd((Object *)cyclegroup, ARRAY(OM_REMMEMBER, (IPTR)cycle));
    for (int i=0; i<4; i++)
    {
       names[i] = Glb.Engines[i]->getName();
@@ -120,7 +120,7 @@ void MUIDriveSelect::rebuildCycle()
       TAG_DONE,            0
    ));
 
-   DoMtd((Object *)cyclegroup, ARRAY(OM_ADDMEMBER, (int)cycle));
+   DoMtd((Object *)cyclegroup, ARRAY(OM_ADDMEMBER, (IPTR)cycle));
    DoMtd((Object *)cyclegroup, ARRAY(MUIM_Group_ExitChange));
 }
 

@@ -225,7 +225,7 @@ unsigned long MUIPopISOElement::buttonHandler(int id, void* data)
          {
             if (browser == 0)
                break;
-            switch ((int)data)
+            switch ((IPTR)data)
             {
                case 0:
                   browser->getRoot()->setISOLevel(ClName::ISOLevel_1);

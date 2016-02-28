@@ -162,7 +162,7 @@ extern "C"
          if (0 == request("ASSERTION FAILED!", "Assertion failed. "     \
                                       "Please report.\nCondition:\n" #expr          \
                                       "\nOccurence:\n%s\n" __FILE__ ", line %ld\n",     \
-                                      "Continue|Abort", ARRAY((int)(__PRETTY_FUNCTION__), __LINE__)))           \
+                                      "Continue|Abort", ARRAY((IPTR)(__PRETTY_FUNCTION__), __LINE__)))           \
             abort();      \
       }        
 
@@ -172,7 +172,7 @@ extern "C"
          if (0 == request("ASSERTION FAILED!", "Assertion failed. "                \
                                       "Please report.\nCondition:\n" #expr                            \
                                       "\nOccurence:\n" __FILE__ ", line %ld\n"                        \
-                                      "Message:\n%s" , "Continue|Abort", ARRAY(__LINE__, (int)msg)))  \
+                                      "Message:\n%s" , "Continue|Abort", ARRAY(__LINE__, (IPTR)msg)))  \
             abort();             \
       }        
 #else
