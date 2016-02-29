@@ -2,8 +2,8 @@
 AROS Debugging Manual
 =====================
 
-:Authors:   David Le Corfec
-:Copyright: Copyright (C) 2004-2013, The AROS Development Team
+:Authors:   David Le Corfec, Matthias Rustler, Krzysztof Smiechowic
+:Copyright: Copyright (C) 2004-2016, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Work in progress.
@@ -67,6 +67,12 @@ you can try to ``./configure --enable-debug --with-optimization=-O2``.
 
 GDB must be started from the directory where the file .gdbinit exists, not
 from the boot subdirectory.
+
+..  Note::
+    Look out for any warnings when GDB is started. These may indicate that 
+    the .gdbinit file providing AROS-specific features was not loaded due to 
+    GDB's security features. Instructions for fixing this problem will 
+    usually be indicated within the warning.
 
 
 Live debugging
