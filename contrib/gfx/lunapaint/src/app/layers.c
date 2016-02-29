@@ -430,7 +430,7 @@ IPTR _Layers_MUIM_ChangeOnionskin ( Class *CLASS, Object *self, Msg msg )
     return 0;
 }
 
-DISPATCHERPROTO(LayersClass)
+BOOPSI_DISPATCHER(IPTR, LayersClass, cl, obj, msg)
 {
     switch ( msg->MethodID )
     {
@@ -451,7 +451,7 @@ DISPATCHERPROTO(LayersClass)
     }
 
 }
-
+BOOPSI_DISPATCHER_END
 
 
 void Init_LayersWindow ( )
@@ -597,18 +597,18 @@ void Init_LayersWindow ( )
     );
 
     // Layer opacity
-    changeOpacityHook.h_Entry = ( HOOKFUNC )&changeOpacityFunc;
-    changeVisibilityHook.h_Entry = ( HOOKFUNC )&changeVisibilityFunc;
+    MakeStaticHook(changeOpacityHook, &changeOpacityFunc);
+    MakeStaticHook(changeVisibilityHook, &changeVisibilityFunc);
     DoMethod (
         LayerOpacity, MUIM_Notify, MUIA_Numeric_Value, MUIV_EveryTime,
         ( IPTR )LayerOpacity, 2, MUIM_CallHook, &changeOpacityHook
     );
-    acknowledgeOpacity.h_Entry = ( HOOKFUNC )&acknowledgeOpacityFunc;
+    MakeStaticHook(acknowledgeOpacity, &acknowledgeOpacityFunc);
     DoMethod (
         LayerOpacityValue, MUIM_Notify, MUIA_String_Acknowledge, MUIV_EveryTime,
         ( IPTR )LayerOpacityValue, 2, MUIM_CallHook, &acknowledgeOpacity
     );
-    acknowledgeLayName.h_Entry = ( HOOKFUNC )&acknowledgeLayNameFunc;
+    MakeStaticHook(acknowledgeLayName, &acknowledgeLayNameFunc);
     DoMethod (
         LayerName, MUIM_Notify, MUIA_String_Acknowledge, MUIV_EveryTime,
         ( IPTR )LayerName, 2, MUIM_CallHook, &acknowledgeLayName

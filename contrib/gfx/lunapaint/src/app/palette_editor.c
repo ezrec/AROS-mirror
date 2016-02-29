@@ -110,7 +110,7 @@ HOOKPROTONHNO(rgbslider_func, ULONG, int *param)
     Dispatcher for our palette area
 */
 
-DISPATCHERPROTO(PaletteArea)
+BOOPSI_DISPATCHER(IPTR, PaletteArea, cl, obj, msg)
 {
     switch ( msg->MethodID )
     {
@@ -208,6 +208,7 @@ DISPATCHERPROTO(PaletteArea)
     }
     return ( IPTR )0;
 }
+BOOPSI_DISPATCHER_END
 
 IPTR PaletteRedraw ( int colorIndex )
 {
@@ -606,10 +607,10 @@ void Init_PaletteWindow ( )
 void Init_PaletteMethods ( )
 {
     // Setup hooks
-    rgbslider_hook.h_Entry = ( HOOKFUNC )&rgbslider_func;
-    paletteLoad_hook.h_Entry = ( HOOKFUNC )&paletteLoad_func;
-    paletteSave_hook.h_Entry = ( HOOKFUNC )&paletteSave_func;
-    paletteClose_hook.h_Entry = ( HOOKFUNC )&paletteClose_func;
+    MakeStaticHook(rgbslider_hook, &rgbslider_func);
+    MakeStaticHook(paletteLoad_hook, &paletteLoad_func);
+    MakeStaticHook(paletteSave_hook, &paletteSave_func);
+    MakeStaticHook(paletteClose_hook, &paletteClose_func);
 
     // Set initial slider positions
     struct rgbData colors = paletteColorToRGB ( globalPalette[ currColor ] );

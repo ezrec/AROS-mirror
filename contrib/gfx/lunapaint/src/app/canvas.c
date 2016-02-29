@@ -38,10 +38,17 @@ Object *fullscreenGroup;
 /*
     Change project info
 */
-
+#ifdef __AROS__
+AROS_UFH2(void, projFunc,
+   AROS_UFHA(struct Hook *, hook, A0),
+   AROS_UFHA(int *, param, A1)
+   )
+{
+   AROS_USERFUNC_INIT
+#else
 HOOKPROTONHNO(projFunc, void, int *param)
 {
-
+#endif
     // We allocate but do not deallocate as
     // this var is freed by Zune when it becomes part
     // of it
@@ -52,7 +59,9 @@ HOOKPROTONHNO(projFunc, void, int *param)
     get ( lst->projName, MUIA_String_Contents, &projectName );
     set ( lst->win, MUIA_Window_Title, projectName );
     set ( lst->projectWin, MUIA_Window_Open, FALSE );
-
+#ifdef __AROS__
+   AROS_USERFUNC_EXIT
+#endif
 }
 
 
@@ -60,7 +69,7 @@ HOOKPROTONHNO(projFunc, void, int *param)
 /*
     Dispatcher for our RGBitmapObject
 */
-DISPATCHERPROTO(RGBitmapDispatcher)
+BOOPSI_DISPATCHER(IPTR, RGBitmapDispatcher, cl, obj, msg)
 {
     switch ( msg->MethodID )
     {
@@ -82,6 +91,8 @@ DISPATCHERPROTO(RGBitmapDispatcher)
     }
     return ( IPTR )NULL;
 }
+BOOPSI_DISPATCHER_END
+
 
 /******************************************************************************
     Public functions

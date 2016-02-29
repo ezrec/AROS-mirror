@@ -51,9 +51,22 @@ HOOKPROTONHNO(EnableKeyboard_func, void, int *param)
 
 }
 
+// Ready hooks
+MakeHook(EnableKeyboard_hook, EnableKeyboard_func);
+MakeHook(DisableKeyboard_hook, DisableKeyboard_func);
 
+#ifdef __AROS__
+AROS_UFH3(struct InputEvent *, handleEvents,
+   AROS_UFHA(struct Hook *, hook, A0),
+   AROS_UFHA(APTR, obj, A2),
+   AROS_UFHA(APTR, param, A1)
+   )
+{
+   AROS_USERFUNC_INIT
+#else
 HOOKPROTO(handleEvents, struct InputEvent *, APTR obj, APTR param) 
 {
+#endif
    struct InputEvent *event = (struct InputEvent *)hook; 
 
     if ( event )
@@ -80,13 +93,13 @@ HOOKPROTO(handleEvents, struct InputEvent *, APTR obj, APTR param)
     }
 
     return event;
+#ifdef __AROS__
+   AROS_USERFUNC_EXIT
+#endif
 }
 
 BOOL InitEvents ( )
 {
-    // Ready hooks
-    EnableKeyboard_hook.h_Entry = ( HOOKFUNC )EnableKeyboard_func;
-    DisableKeyboard_hook.h_Entry = ( HOOKFUNC )DisableKeyboard_func;
 
     /* Setup all parts */
     gameInputPort = CreateMsgPort ( );

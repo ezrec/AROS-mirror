@@ -122,7 +122,7 @@ HOOKPROTONHNO(brushOptions_func, void, int *param)
     DoMethod ( tbxAreaPalette, MUIM_Luna_Canvas_AlterBrushShape );
 }
 
-DISPATCHERPROTO(tbxPreview)
+BOOPSI_DISPATCHER(IPTR, tbxPreview, cl, obj, msg)
 { 
 
   switch ( msg->MethodID )
@@ -134,7 +134,7 @@ DISPATCHERPROTO(tbxPreview)
     }
     return ( IPTR )NULL;
 }
-
+BOOPSI_DISPATCHER_END
 
 void prevPaletteColor ( )
 {
@@ -206,7 +206,7 @@ IPTR tbxPaintPreview ( )
     return ( IPTR )NULL;
 }
 
-DISPATCHERPROTO(tbxPalette)
+BOOPSI_DISPATCHER(IPTR, tbxPalette, cl, obj, msg)
 {
     switch ( msg->MethodID )
     {
@@ -382,7 +382,7 @@ DISPATCHERPROTO(tbxPalette)
     }
     return ( IPTR )0;
 }
-
+BOOPSI_DISPATCHER_END
 
 IPTR tbxPaletteRedraw ( )
 {
@@ -897,10 +897,10 @@ void Exit_ToolboxWindow ( )
 void Init_ToolboxMethods ( )
 {
     // Set up our hooks
-    getMenu_hook.h_Entry = ( HOOKFUNC )&getMenu_func;
-    brushOptions_hook.h_Entry = ( HOOKFUNC )&brushOptions_func;
-    getFill_hook.h_Entry = ( HOOKFUNC )&getFill_func;
-    getOpacMode_hook.h_Entry = ( HOOKFUNC )&getOpacMode_func;
+    MakeStaticHook(getMenu_hook, &getMenu_func);
+    MakeStaticHook(brushOptions_hook, &brushOptions_func);
+    MakeStaticHook(getFill_hook, &getFill_func);
+    MakeStaticHook(getOpacMode_hook, &getOpacMode_func);
 
     // Methods
     DoMethod (
