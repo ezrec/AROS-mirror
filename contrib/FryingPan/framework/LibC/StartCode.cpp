@@ -221,7 +221,7 @@ void _error(const char* text, unsigned long* args)
 
    if (0 != __InternalIntuitionBase)
       EasyRequestArgs(0, (struct EasyStruct*)&es, 0, (void*)args);
-   else
+   else if (0 != __InternalDOSBase)
       VFPrintf(stdout, (char*)text, args);
 }
 
