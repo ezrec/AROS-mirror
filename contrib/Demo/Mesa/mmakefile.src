@@ -3,24 +3,18 @@
 
 include $(TOP)/config/make.cfg
 
-FILES 	    :=  bounce \
-                gearbox \
-                gears \
-                morph3d \
-                glinfo \
-                arbfslight \
-                ray \
-                spectex \
-                eglgears \
-                
 EXEDIR      := $(AROS_CONTRIB)/Demos/Mesa
 
 #MM- demo-mesa-prerequisites : workbench-libs-mesa-linklib workbench-libs-glu-linklib \
-#MM     contrib-gfx-libs-glut demo-mesa-images contrib-gfx-libs-eglut \
+#MM     contrib-gfx-libs-glut demo-mesa-images
+
+#MM- demo-mesa-egl-prerequisites : demo-mesa-prerequisites contrib-gfx-libs-eglut \
 #MM     workbench-libs-vega-linklibs workbench-libs-egl-linklib
 
 #MM demo-mesa : demo-mesa-prerequisites demo-mesa-teapot demo-mesa-fire demo-mesa-textures \
-#MM     demo-mesa-tunnel demo-mesa-ipers demo-mesa-reflect demo-mesa-lion
+#MM     demo-mesa-tunnel demo-mesa-ipers demo-mesa-reflect
+
+#MM demo-mesa-egl : demo-mesa-egl-prerequisites demo-mesa-lion
 
 #MM demo-mesa-teapot : demo-mesa-prerequisites
 #MM demo-mesa-fire : demo-mesa-prerequisites
@@ -28,11 +22,23 @@ EXEDIR      := $(AROS_CONTRIB)/Demos/Mesa
 #MM demo-mesa-tunnel : demo-mesa-prerequisites
 #MM demo-mesa-ipers : demo-mesa-prerequisites
 #MM demo-mesa-reflect : demo-mesa-prerequisites
-#MM demo-mesa-lion : demo-mesa-prerequisites
+#MM demo-mesa-lion : demo-mesa-egl-prerequisites
+
+# GL/GLUT Demos
+
+GLDEMOFILES 	    := \
+                bounce \
+                gearbox \
+                gears \
+                morph3d \
+                glinfo \
+                arbfslight \
+                ray \
+                spectex
 
 %build_progs mmake=demo-mesa \
     targetdir=$(EXEDIR) \
-    files="$(FILES)" uselibs="glut eglut GL GLU EGL"
+    files="$(GLDEMOFILES)" uselibs="glut GL GLU"
 
 %build_prog mmake=demo-mesa-teapot \
     targetdir=$(EXEDIR) progname="teapot" \
@@ -57,6 +63,15 @@ EXEDIR      := $(AROS_CONTRIB)/Demos/Mesa
 %build_prog mmake=demo-mesa-reflect \
     targetdir=$(EXEDIR) progname="reflect" \
     files="reflect readtex showbuffer" uselibs="glut GL GLU"
+
+# EGL/EGLUT Demos
+
+EGLDEMOFILES 	    := \
+                eglgears
+
+%build_progs mmake=demo-mesa-egl \
+    targetdir=$(EXEDIR) \
+    files="$(EGLDEMOFILES)" uselibs="glut eglut GL GLU EGL"
 
 %build_prog mmake=demo-mesa-lion \
     targetdir=$(EXEDIR) progname="lion" \
