@@ -21,7 +21,7 @@ include $(TOP)/config/make.cfg
 REPOSITORIES := sf://vbam
 ARCHBASE     := vba-m-SVN1292-sources
 TARGETDIR    := $(AROS_CONTRIB)/Emu/Vbam
-USER_CFLAGS  := -fpermissive -static-libstdc++
+USER_CXXFLAGS  := -fpermissive -static-libstdc++
 
 VBA_OPTIONS := \
     -DZLIB_LIBRARY=$(AROS_DEVELOPMENT)/lib/libz.a \
