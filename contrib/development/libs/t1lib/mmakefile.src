@@ -9,8 +9,8 @@ include $(TOP)/config/make.cfg
 
 REPOSITORIES := ftp://sunsite.unc.edu/pub/Linux/libs/graphics/ http://www.mazze-online.de/aros/ports-src/
 
-ENV_FLAGS := T1_AA_TYPE16="-DT1_AA_TYPE16=short" T1_AA_TYPE32="-DT1_AA_TYPE32=int" T1_AA_TYPE64="-DT1_AA_TYPE64=\"long long\""
+T1_ENVFLAGS := T1_AA_TYPE16="-DT1_AA_TYPE16=short" T1_AA_TYPE32="-DT1_AA_TYPE32=int" T1_AA_TYPE64="-DT1_AA_TYPE64=\"long long\""
 
 %fetch_and_build_gnu_development package=t1lib version=5.1.2 \
     patch=yes package_repo="$(REPOSITORIES)" \
-    config_env_extra="$(ENV_FLAGS)"
+    config_env_extra="$(T1_ENVFLAGS)"
