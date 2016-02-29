@@ -45,10 +45,10 @@ void dotest(ULONG a, ULONG b, ULONG c)
   xd.xd_Month, xd.xd_Year, xd.xd_WeekDay);
 }
 
-void dotest2(ULONG tag, ULONG a, ULONG tr)
+void dotest2(IPTR tag, IPTR a, IPTR tr)
 {
   struct xadDate xd;
-  ULONG i, f;
+  IPTR i, f;
 
   if(xadConvertDates(tag, a, XAD_MAKELOCALDATE, tr, XAD_GETDATEXADDATE, &xd,
   TAG_DONE))
@@ -129,7 +129,7 @@ int main(void)
     dotest2(XAD_DATEAMIGA,0x7FFFFFFF,0);
     dotest2(XAD_DATEAMIGA,0xFFFFFFFF,0);
     dotest2(XAD_DATEMAC,0x7c25b080,0);
-    dotest2(XAD_DATEDATESTAMP,(ULONG) &d,0);
+    dotest2(XAD_DATEDATESTAMP,(IPTR) &d,0);
     Printf("Boundary tests, no local time conversion\n"
     "Test date             Amiga date              Unix date               MSDOS date\n");
     dotest3(31,12,1969,23,59,58,0);

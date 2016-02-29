@@ -36,7 +36,7 @@ int main(void)
     for(i = 0; i < 40; ++i)
       buf[i] = i;
 
-    Printf("Bufferposition = %08lx (long aligned: %s)\n", buf, (((LONG)buf)&3) ? "NO" : "YES");
+    Printf("Bufferposition = %p (long aligned: %s)\n", buf, (((IPTR)buf)&3) ? "NO" : "YES");
 
     xadCopyMem(buf, buf+10, 30);
     Printf("CopyMemLong forward (0->10, size 30)\n");

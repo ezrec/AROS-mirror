@@ -50,7 +50,7 @@ int main(void)
 	  ioreq->iotd_Req.io_Data    = buf;
 	  ioreq->iotd_Req.io_Length  = 512;
 	  ioreq->iotd_Req.io_Offset  = i * 512;
-	  ioreq->iotd_SecLabel = (ULONG) Label;
+	  ioreq->iotd_SecLabel = (IPTR) Label;
 	  ioreq->iotd_Count = 0xFFFFFFFF;
 	  if((j = DoIO(((struct IORequest *) ioreq))))
 	  {
