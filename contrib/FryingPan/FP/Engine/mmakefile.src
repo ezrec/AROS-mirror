@@ -31,11 +31,10 @@ CXXFILES := \
  Jobs/JobISORemItem \
  Jobs/JobISOMakeDir
 
-USER_CXXFLAGS := -isystem $(SRCDIR)/$(CURDIR)/../../framework \
- -isystem $(SRCDIR)/$(CURDIR)/../..
-
+USER_CXXFLAGS := -fno-rtti -fno-exceptions -isystem $(SRCDIR)/$(CURDIR)/../../framework \
+ -isystem $(SRCDIR)/$(CURDIR)/../.. 
 USER_LDFLAGS := -static-libstdc++
 
 %build_prog mmake=contrib-fryingpan-fp-engine \
  progname="fryingpan.engine" targetdir=$(DESTDIR) files= \
- cxxfiles="$(CXXFILES)" uselibs="Generic Library C"
+ cxxfiles="$(CXXFILES)" uselibs="Generic Library C" usestartup=no

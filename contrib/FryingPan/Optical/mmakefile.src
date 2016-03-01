@@ -44,9 +44,7 @@ CXXFILES := \
  OptIndex \
  CDText
 
-USER_CXXFLAGS := -isystem $(SRCDIR)/$(CURDIR)/../framework
-
-USER_CXXFLAGS += -Wno-attributes
+USER_CXXFLAGS :=  -fno-rtti -fno-exceptions -Wno-attributes -isystem $(SRCDIR)/$(CURDIR)/../framework
 USER_LDFLAGS := -static-libstdc++
 
 %build_prog mmake=contrib-fryingpan-optical progname="Optical" \

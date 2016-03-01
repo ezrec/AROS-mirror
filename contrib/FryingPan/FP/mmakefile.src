@@ -15,8 +15,8 @@ DESTDIR := $(AROS_CONTRIB)/FryingPan
 
 FILES := ../framework/Startup/Startup_aros Main Application Globals
 
-USER_CXXFLAGS := -isystem $(SRCDIR)/$(CURDIR)/../framework -fno-builtin
+USER_CXXFLAGS := -fno-rtti -fno-exceptions -isystem $(SRCDIR)/$(CURDIR)/../framework -fno-builtin
 USER_LDFLAGS := -static-libstdc++
 
 %build_prog mmake=contrib-fryingpan-fp progname="FryingPan" \
- targetdir=$(DESTDIR) files="" cxxfiles="$(FILES)" uselibs="C Generic"
+ targetdir=$(DESTDIR) files="" cxxfiles="$(FILES)" uselibs="C Generic" usestartup=no

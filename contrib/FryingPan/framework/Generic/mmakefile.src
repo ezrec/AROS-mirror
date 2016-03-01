@@ -35,8 +35,7 @@ FILES := \
  SumCRC \
  Locale
 
-USER_CXXFLAGS := -isystem $(SRCDIR)/$(CURDIR)/..
-USER_CXXFLAGS += -fpermissive
+USER_CXXFLAGS := -fno-rtti -fno-exceptions -fpermissive -isystem $(SRCDIR)/$(CURDIR)/..
 
 %build_linklib mmake=contrib-fryingpan-framework-generic \
  libname="Generic" files= cxxfiles="$(FILES)"
