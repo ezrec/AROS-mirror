@@ -49,8 +49,8 @@ Object *MUIWindowMenu::getObject()
 
 void MUIWindowMenu::addItem(const char *tTitle, long lParam, const char* tShort)
 {
-   Object *pObj = MenuitemObject,
-                     MUIA_Menuitem_Title,    tTitle,
+   Object *pObj = MenuObject,
+                     MUIA_Menu_Title,    tTitle,
                      MUIA_UserData,          lParam,
                      ((tShort != 0) && (tShort[0] != 0)) ? MUIA_Menuitem_Shortcut : TAG_IGNORE, tShort,
                   End;
@@ -61,8 +61,8 @@ void MUIWindowMenu::addItem(const char *tTitle, long lParam, const char* tShort)
 
 void MUIWindowMenu::addSeparator()
 {
-   Object *pObj = MenuitemObject,
-                     MUIA_Menuitem_Title,    0xffffffff,
+   Object *pObj = MenuObject,
+                     MUIA_Menu_Title,    0xffffffff,
                   End;
 
    DoMtd(pMenu, ARRAY(MUIM_Family_AddTail, (IPTR)pObj)); 
@@ -70,8 +70,8 @@ void MUIWindowMenu::addSeparator()
 
 void MUIWindowMenu::addChoice(const char *tTitle, bool bSelected, long lParam, const char* tShort)
 {
-   Object *pObj = MenuitemObject,
-                     MUIA_Menuitem_Title,    tTitle,
+   Object *pObj = MenuObject,
+                     MUIA_Menu_Title,    tTitle,
                      MUIA_Menuitem_Checked,  bSelected,
                      MUIA_Menuitem_Checkit,  true,
                      ((tShort != 0) && (tShort[0] != 0)) ? MUIA_Menuitem_Shortcut : TAG_IGNORE, tShort,
@@ -85,8 +85,8 @@ void MUIWindowMenu::addChoice(const char *tTitle, bool bSelected, long lParam, c
 
 void MUIWindowMenu::addRadio(const char *tTitle)
 {
-   Object *pObj = MenuitemObject,
-                     MUIA_Menuitem_Title, tTitle,
+   Object *pObj = MenuObject,
+                     MUIA_Menu_Title, tTitle,
                      MUIA_UserData,       0xffffffff,
                   End;
 
@@ -99,8 +99,8 @@ void MUIWindowMenu::addRadioOption(const char *tTitle, bool bSelected, long lPar
    ASSERT(pRadio != NULL);
    if (pRadio == NULL)
       return;
-   Object *pObj = MenuitemObject,
-                     MUIA_Menuitem_Title,    tTitle,
+   Object *pObj = MenuObject,
+                     MUIA_Menu_Title,    tTitle,
                      MUIA_Menuitem_Checked,  bSelected,
                      MUIA_Menuitem_Checkit,  true,
                      MUIA_UserData,          lParam,
@@ -120,8 +120,8 @@ void MUIWindowMenu::setHook(const Hook *pNotify)
 
 void MUIWindowMenu::addMenu(const char *tTitle)
 {
-   pMenu = MenuitemObject,
-      MUIA_Menuitem_Title,     tTitle,
+   pMenu = MenuObject,
+      MUIA_Menu_Title,     tTitle,
       MUIA_Menuitem_Enabled,   true,
    End,
 

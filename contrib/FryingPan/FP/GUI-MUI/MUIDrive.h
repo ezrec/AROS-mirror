@@ -92,7 +92,7 @@ protected:
    MUIPopUnit                *popUnit;
 
    String                     sDevice;
-   int                        lUnit;
+   IPTR                        lUnit;
 protected:
    HookT<MUIDrive, int, void*>            hHkButtonHook;
    DbgHandler                *getDebug();

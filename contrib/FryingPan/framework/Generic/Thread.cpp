@@ -44,10 +44,10 @@ void Thread::Create()
    Message  *m = 0;
    MsgPort  *p = 0;
                
-   ULONG tags[] = {
-      NP_Entry,      (ULONG)&__proc_init_code,
+   IPTR tags[] = {
+      NP_Entry,      (IPTR)&__proc_init_code,
       NP_StackSize,  65536,
-      NP_Name,       (unsigned long)hName.Data(),
+      NP_Name,       (IPTR)hName.Data(),
       NP_CodeType,   CODETYPE_PPC,
       TAG_DONE,      0
    };

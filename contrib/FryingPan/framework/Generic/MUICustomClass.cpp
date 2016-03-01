@@ -121,11 +121,11 @@ MUICustomClass::~MUICustomClass()
       MUIMaster->MUI_DeleteCustomClass(pMUIClass);
 }
    
-Object *MUICustomClass::Create(unsigned long lTag1, ...)
+Object *MUICustomClass::Create(IPTR lTag1, ...)
 {
    va_list        ap;
-   unsigned long *params = new unsigned long [128];
-   int            pos = 0;
+   IPTR *params = new IPTR [128];
+   IPTR           pos = 0;
    
    va_start(ap, lTag1);
    
@@ -133,12 +133,12 @@ Object *MUICustomClass::Create(unsigned long lTag1, ...)
 
    while (params[pos++] != 0)
    {
-      params[pos++]    = va_arg(ap, unsigned long);      // data
-      params[pos  ]    = va_arg(ap, unsigned long);      // tag
+      params[pos++]    = va_arg(ap, IPTR);      // data
+      params[pos  ]    = va_arg(ap, IPTR);      // tag
       ASSERT(pos < 128);
    }
 
-   pos = (int)Intuition->NewObjectA(pClass, 0, (struct TagItem*)params);
+   pos = (IPTR)Intuition->NewObjectA(pClass, 0, (struct TagItem*)params);
 
    delete [] params;
    return (Object*)pos;

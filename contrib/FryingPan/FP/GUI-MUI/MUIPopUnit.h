@@ -39,7 +39,7 @@ protected:
    Globals                         &Glb;
    String                           sDevice;
    String                           sTemp;
-   int                              unit;
+   IPTR                              unit;
 
 protected:
    virtual bool                     onOpen();

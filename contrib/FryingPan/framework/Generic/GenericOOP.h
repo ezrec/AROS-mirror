@@ -31,13 +31,13 @@ namespace GenNS
    public:
                               GenericOOP();
       virtual                ~GenericOOP();  
-      virtual uint32          DoMtd(Object* pObject, uint32 *pMsg);
-      virtual uint32          DoSuperMtd(IClass *pClass, Object* pObject, uint32 *pMsg);
-      virtual uint32         *NewObj(char* Name, uint32 FirstTag, ...);
-      virtual uint32         *NewObj(Class* cls, uint32 FirstTag, ...);
-      virtual void            DisposeObj(uint32 *obj);
-      virtual void            AddChildObj(Object *parent, uint32 *child);
-      virtual void            RemChildObj(Object *parent, uint32 *child);
+      virtual IPTR          DoMtd(Object* pObject, IPTR *pMsg);
+      virtual IPTR          DoSuperMtd(IClass *pClass, Object* pObject, IPTR *pMsg);
+      virtual IPTR         NewObj(char* Name, IPTR FirstTag, ...);
+      virtual IPTR         NewObj(Class* cls, IPTR FirstTag, ...);
+      virtual void            DisposeObj(IPTR *obj);
+      virtual void            AddChildObj(Object *parent, IPTR *child);
+      virtual void            RemChildObj(Object *parent, IPTR *child);
    };
 };
 #endif

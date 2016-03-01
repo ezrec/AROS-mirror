@@ -28,40 +28,40 @@
 
 using namespace GenNS;
 
-Object *GenericMUI::MUI_MakeObjectX(long Name, ...)
+Object *GenericMUI::MUI_MakeObjectX(IPTR Name, ...)
 {
    va_list ap;
-   unsigned long *params = new unsigned long [128];
-   int pos = 0;
+   IPTR *params = new IPTR [128];
+   IPTR pos = 0;
    va_start(ap, Name);
       
-   while ((params[pos++] = va_arg(ap, unsigned long)) != 0)
+   while ((params[pos++] = va_arg(ap, IPTR)) != 0)
    {
-      params[pos++] = va_arg(ap, unsigned long);
+      params[pos++] = va_arg(ap, IPTR);
       ASSERT(pos < 128);
    }
       
-   pos = (int)MUIMaster->MUI_MakeObjectA(Name, (unsigned long*)params);
+   pos = (IPTR)MUIMaster->MUI_MakeObjectA(Name, (IPTR *)params);
    delete [] params;
    return (Object*)pos;
 }
    
-Object *GenericMUI::MUI_NewObject(const char* Name, unsigned long FirstTag, ...)          // me hates mos for that.
+Object *GenericMUI::MUI_NewObject(const char* Name, IPTR FirstTag, ...)          // me hates mos for that.
 {
    va_list ap;
-   unsigned long *params = new unsigned long [128];
-   int pos = 0;
+   IPTR *params = new IPTR [128];
+   IPTR pos = 0;
    va_start(ap, FirstTag);
       
    params[pos] = FirstTag;
    while (params[pos++] != 0)
    {
-      params[pos++] = va_arg(ap, unsigned long);
-      params[pos] = va_arg(ap, unsigned long);         
+      params[pos++] = va_arg(ap, IPTR);
+      params[pos] = va_arg(ap, IPTR);         
       ASSERT(pos < 128);
    }
       
-   pos = (int)MUIMaster->MUI_NewObjectA(Name, (struct TagItem*)params);
+   pos = (IPTR)MUIMaster->MUI_NewObjectA(Name, (struct TagItem*)params);
    delete [] params;
    return (Object*)pos;
 }

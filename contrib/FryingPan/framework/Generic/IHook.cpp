@@ -27,7 +27,7 @@
 using namespace GenNS;
 
 #if defined (__AROS__) || defined (__AMIGAOS4__)
-uint32 IHook::subCaller(Hook *pHook, uint32 pObject, uint32 pMessage)
+IPTR IHook::subCaller(Hook *pHook, IPTR pObject, IPTR pMessage)
 {
    return ((IHook*)pHook->h_Data)->Call(pObject, pMessage);
 }
@@ -65,7 +65,7 @@ void IHook::Initialize()
    hMOSCall[1]       =  (unsigned long)&subCaller;
    hHook.h_Entry     =  (unsigned long(*)())&hMOSCall;
 #else
-   hHook.h_Entry     =  (unsigned long(*)())&subCaller;
+   hHook.h_Entry     =  (APTR(*)())&subCaller;
 #endif
    hHook.h_SubEntry  =  0;
 

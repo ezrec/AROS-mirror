@@ -43,9 +43,6 @@ typedef signed char        int8;    /**< @brief signed 8bit integer  */
 typedef signed long        sint;    /**< @brief architecture specific signed int: sizeof(s_int) = sizeof(void*) */
 typedef unsigned long      uint;    /**< @brief architecture specific unsigned int: sizeof(u_int) = sizeof(void*) */
 
-typedef uint*              sized_iptr; /**< @brief type returned by #SIZEARRAY to differentiate it from normal pointers */
-typedef uint*              iptr;       /**< @brief type returned by #ARRAY to differentiate it from normal pointers */
-
 /* platform specific includes */
 #if defined(__AROS__)
 #include <stddef.h>
@@ -60,6 +57,9 @@ typedef unsigned int size_t;
 #else
 #error no size_t defined
 #endif
+
+typedef uint*              sized_iptr; /**< @brief type returned by #SIZEARRAY to differentiate it from normal pointers */
+typedef uint*              iptr;       /**< @brief type returned by #ARRAY to differentiate it from normal pointers */
 
 #define PACKED __attribute__((packed))
 
@@ -81,7 +81,7 @@ enum TriState
 #define ARRAY(arg...) \
    ((iptr) \
       ({ \
-         uint __parm[] = {arg}; \
+         IPTR __parm[] = {arg}; \
          &__parm; \
       }))
 
@@ -92,7 +92,7 @@ enum TriState
 #define SIZEARRAY(arg...) \
    ((sized_iptr) \
       ({ \
-         uint __parm[] = {0, arg}; \
+         IPTR __parm[] = {0, arg}; \
          __parm[0] = sizeof(__parm) / sizeof(__parm[0]) - 1; \
          &__parm[1]; \
       }))
@@ -105,7 +105,7 @@ enum TriState
 #define TAGARRAY(arg...) \
    ((struct TagItem*) \
       ({ \
-         uint __parm[] = {arg, TAG_DONE, TAG_DONE}; \
+         IPTR __parm[] = {arg, TAG_DONE, TAG_DONE}; \
          &__parm; \
        }))
 

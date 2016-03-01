@@ -63,15 +63,15 @@ extern "C"
    };      
 
 #define LIB_FT_Begin                            \
-   uint LIB_FuncTable[] =                       \
+   IPTR LIB_FuncTable[] =                       \
    {                                            \
-      (uint) &LIB_Open,                         \
-      (uint) &LIB_Close,                        \
-      (uint) &LIB_Expunge,                      \
-      (uint) &LIB_Reserved,
+      (IPTR) &LIB_Open,                         \
+      (IPTR) &LIB_Close,                        \
+      (IPTR) &LIB_Expunge,                      \
+      (IPTR) &LIB_Reserved,
 // }
 
-#define LIB_FT_Function(f) (uint) &f,
+#define LIB_FT_Function(f) (IPTR) &f,
 
 // { LIB_FT_End
 #define LIB_FT_End                              \

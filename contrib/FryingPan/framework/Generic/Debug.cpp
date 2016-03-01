@@ -146,7 +146,7 @@ void DbgHandler::InitH()
    i->AddPath(j->Data());
    DOS->DeleteFile(i->Data());
    fh1 = DOS->Open(i->Data(), MODE_READWRITE);
-   i->FormatStr("con:0/10//80/Debug: %s/auto/close/wait", ARRAY((ULONG)name.Data()));
+   i->FormatStr("con:0/10//80/Debug: %s/auto/close/wait", ARRAY((IPTR)name.Data()));
    if (!silent) fh2 = DOS->Open(i->Data(), MODE_NEWFILE);
    delete i;
    delete j;
@@ -184,8 +184,8 @@ void DbgHandler::PutDate() const
 
    DOS->DateStamp(&CDT.dat_Stamp);
    DOS->DateToStr(&CDT);
-   if (fh2 != 0) DOS->VFPrintf(fh2, "[%s] ", ARRAY((ULONG)&TM));
-   if (fh1 != 0) DOS->VFPrintf(fh1, "[%s] ", ARRAY((ULONG)&TM));
+   if (fh2 != 0) DOS->VFPrintf(fh2, "[%s] ", ARRAY((IPTR)&TM));
+   if (fh1 != 0) DOS->VFPrintf(fh1, "[%s] ", ARRAY((IPTR)&TM));
 }
 
 void DbgHandler::DoAsync(DbgLevel l, char* sFmtString, sized_iptr vFmtArgs, void* bMemBlock, int lMemLen) const

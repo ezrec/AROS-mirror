@@ -28,7 +28,7 @@ void* memset(void* dest, int c, size_t count)
    c&=255;
    pat = (c<<24) | (c<<16) | (c<<8) | c;
 
-   while (((int)ptr)&3 && count)
+   while (((IPTR)ptr)&3 && count)
    {
       *ptr++ = c;
       --count;

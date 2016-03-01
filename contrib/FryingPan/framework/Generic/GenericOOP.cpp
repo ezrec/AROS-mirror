@@ -27,70 +27,70 @@
 
 using namespace GenNS;
 
-uint32 GenericOOP::DoMtd(Object* pObject, uint32 *pMsg)
+IPTR GenericOOP::DoMtd(Object* pObject, IPTR *pMsg)
 {
    return Utility->CallHookPkt((const Hook*)OCLASS(pObject), pObject, pMsg);
 }
 
-uint32 GenericOOP::DoSuperMtd(IClass *pClass, Object* pObject, uint32 *pMsg)
+IPTR GenericOOP::DoSuperMtd(IClass *pClass, Object* pObject, IPTR *pMsg)
 {
    return Utility->CallHookPkt((Hook*)pClass->cl_Super, pObject, pMsg);
 }
 
-uint32 *GenericOOP::NewObj(char* Name, uint32 FirstTag, ...)          // me hates mos for that.
+IPTR GenericOOP::NewObj(char* Name, IPTR FirstTag, ...)          // me hates mos for that.
 {
    va_list ap;
-   uint32 *params = new uint32 [128];
-   int pos = 0;
+   IPTR *params = new IPTR [128];
+   IPTR pos = 0;
    va_start(ap, FirstTag);
       
    params[pos] = FirstTag;
    while (params[pos++] != 0)
    {
-      params[pos++] = va_arg(ap, unsigned long);
-      params[pos] = va_arg(ap, unsigned long);         
+      params[pos++] = va_arg(ap, IPTR);
+      params[pos] = va_arg(ap, IPTR);         
       ASSERT(pos < 128);
    }
 
-   pos = (int)Intuition->NewObjectA(0, Name, (struct TagItem*)params);
+   pos = (IPTR)Intuition->NewObjectA(0, Name, (struct TagItem*)params);
    delete [] params;
-   return (uint32*)pos;
+   return pos;
 }
 
-uint32 *GenericOOP::NewObj(Class* cls, uint32 FirstTag, ...)          // me hates mos for that.
+IPTR GenericOOP::NewObj(Class* cls, IPTR FirstTag, ...)          // me hates mos for that.
 {
    va_list ap;
-   uint32 *params = new uint32 [128];
-   int pos = 0;
+   IPTR *params = new IPTR [128];
+   IPTR pos = 0;
    va_start(ap, FirstTag);
       
    params[pos] = FirstTag;
    while (params[pos++] != 0)
    {
-      params[pos++] = va_arg(ap, unsigned long);
-      params[pos] = va_arg(ap, unsigned long);         
+      params[pos++] = va_arg(ap, IPTR);
+      params[pos] = va_arg(ap, IPTR);         
       ASSERT(pos < 128);
    }
 
-   pos = (int)Intuition->NewObjectA((IClass*)cls, 0, (struct TagItem*)params);
+   pos = (IPTR)Intuition->NewObjectA((IClass*)cls, 0, (struct TagItem*)params);
    
    delete [] params;
-   return (uint32*)pos;
+   return pos;
 }
 
-void GenericOOP::DisposeObj(uint32 *obj)
+void GenericOOP::DisposeObj(IPTR *obj)
 {
    Intuition->DisposeObject(obj);
 }
 
-void GenericOOP::AddChildObj(Object *parent, uint32 *child)
+void GenericOOP::AddChildObj(Object *parent, IPTR *child)
 {
-   DoMtd(parent, ARRAY(OM_ADDMEMBER, (uint32)child));
+   DoMtd(parent, ARRAY(OM_ADDMEMBER, (IPTR)child));
 }
 
-void GenericOOP::RemChildObj(Object *parent, uint32 *child)
+void GenericOOP::RemChildObj(Object *parent, IPTR *child)
 {
-   DoMtd(parent, ARRAY(OM_REMMEMBER, (uint32)child));
+   DoMtd(parent, ARRAY(OM_REMMEMBER, (IPTR)child));
 }
 
 GenericOOP::~GenericOOP()

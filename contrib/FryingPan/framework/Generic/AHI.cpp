@@ -150,7 +150,7 @@ unsigned long AHI::subProcess(Thread *pThis, void*)
          AudioID *pID = new AudioID;
 
          pAHI->AHI_GetAudioAttrsA(i, 0, (TagItem*)ARRAY(
-                  AHIDB_Name,       (int)&pID->name, 
+                  AHIDB_Name,       (IPTR)&pID->name, 
                   AHIDB_BufferLen,  63,
                   0,                0));
 
@@ -263,7 +263,7 @@ bool AHI::do_SetAudio(AudioID* newID)
       AHIA_MixFreq,        44100,
       AHIA_Channels,       numChannels,
       AHIA_Sounds,         256,
-      AHIA_SoundFunc,      (int)hHkSound.GetHook(),
+      AHIA_SoundFunc,      (IPTR)hHkSound.GetHook(),
       TAG_DONE,            0
    ));
 
