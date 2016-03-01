@@ -605,7 +605,7 @@ void swapLayers ( struct oCanvas *canv )
     // Temporarily store some values
     unsigned long long int *tmp = curr->buf;
     char opacity = curr->opacity;
-    unsigned char *name = curr->name;
+    char *name = curr->name;
     BOOL visible = curr->visible;
 
     // New data

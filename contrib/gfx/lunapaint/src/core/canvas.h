@@ -25,6 +25,8 @@
 #define _canvas_h_
 #define MAXLAYERS 8
 
+#include <proto/exec.h>
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -42,6 +44,7 @@
 #include "common.h"
 #include "math/math.h"
 #include "../app/locale.h"
+#include "../app/parts.h"
 
 // Use this to interrupt redrawing
 extern BOOL abortRedraw;
@@ -297,5 +300,3 @@ void addListValue ( double x, double y, struct ValueList **lst );
 void freeValueList ( struct ValueList **lst );
 
 #endif
-
-

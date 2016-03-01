@@ -42,6 +42,7 @@ a b ##PPC(void) { struct IClass * c = (APTR)REG_A0; APTR d = (APTR)REG_A2; Msg e
 
 #define BOOPSI_DISPATCHER_END }
 
+#include <exec/types.h>
 ULONG XGET(APTR, ULONG);
 APTR ImageButton(CONST_STRPTR text, CONST_STRPTR image);
 

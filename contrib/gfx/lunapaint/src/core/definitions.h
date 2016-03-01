@@ -103,7 +103,7 @@ struct gfxbuffer {
     struct gfxbuffer *nextbuf;
     BOOL visible;
     char opacity;
-    unsigned char *name;
+    char *name;
     unsigned long long int *buf;
 };
 
