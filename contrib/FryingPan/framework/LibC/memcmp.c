@@ -20,12 +20,19 @@
 #include "LibC.h"
 #include <proto/exec.h>
 
-void* memcpy(void* dest, const void* src, size_t length)
+int memcmp(const void* src, const void* dst, size_t length)
 {
-#ifndef __amigaos4__
-   CopyMem((void*)src, (void*)dest, length);
-#else
-   IExec->CopyMem((void*)src, (void*)dest, length);
-#endif
-   return dest;
+   register int diff;
+   register unsigned char *mem1 = (unsigned char*)src;
+   register unsigned char *mem2 = (unsigned char*)dst;
+   
+   while (length--)
+   {
+      diff = *mem1 - *mem2;
+      if (diff)
+         return diff;
+      mem1++;
+      mem2++;
+   }
+   return 0;
 }
