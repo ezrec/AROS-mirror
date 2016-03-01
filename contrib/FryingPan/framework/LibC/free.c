@@ -33,15 +33,15 @@ void free(void* pMem)
 #ifndef DEBUG
    pMem  = &((void**)pMem)[-2];
    pPool = ((void**)pMem)[0];
-   lSize = ((long*)pMem)[1];
+   lSize = ((IPTR *)pMem)[1];
 #else
    pMem  = &((void**)pMem)[-(2+(128>>3))];
    pPool = ((void**)pMem)[0];
-   lSize = ((long*)pMem)[1];
+   lSize = ((IPTR *)pMem)[1];
 
    {
-      uint32 *pMem1 = &((uint32*)pMem)[2+(128>>3)];
-      uint32 *pMem2 = &((uint32*)pMem)[lSize>>2];
+      IPTR *pMem1 = &((IPTR *)pMem)[2+(128>>3)];
+      IPTR *pMem2 = &((IPTR *)pMem)[lSize>>2];
       uint32 i;
 
       for (i=1; i<=(128>>3); i++)

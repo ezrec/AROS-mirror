@@ -23,7 +23,7 @@
 void *realloc(void* mem, size_t len)
 {
    void          *newmem = malloc(len);
-   unsigned long *oldmem = (unsigned long*)mem;
+   IPTR *oldmem = (IPTR *)mem;
    // verify in case new block is smaller than the last one
    // 8 extra bytes are included for memory block header (pool & len)
 

@@ -30,7 +30,7 @@
 
 void* malloc(size_t lSize)
 {
-   uint32 *pMem = 0;
+   IPTR *pMem = 0;
 
    if (0 == lSize)
       return 0;
@@ -42,11 +42,11 @@ void* malloc(size_t lSize)
 #ifndef DEBUG
 #ifndef __amigaos4__
       ObtainSemaphore(&__InternalSemaphore);                   // we wait only for our tasks!
-      pMem = (uint32*)AllocPooled(__InternalMemPool, lSize);   // Get memory
+      pMem = (IPTR*)AllocPooled(__InternalMemPool, lSize);   // Get memory
       ReleaseSemaphore(&__InternalSemaphore);                  // and free sem.
 #else
       IExec->ObtainSemaphore(&__InternalSemaphore);                   // we wait only for our tasks!
-      pMem = (uint32*)IExec->AllocPooled(__InternalMemPool, lSize);   // Get memory
+      pMem = (IPTR*)IExec->AllocPooled(__InternalMemPool, lSize);   // Get memory
       IExec->ReleaseSemaphore(&__InternalSemaphore);                  // and free sem.
 #endif
 
@@ -58,16 +58,16 @@ void* malloc(size_t lSize)
       }      
 #else
       uint32 i;
-      uint32 *pMem2 = 0;
+      IPTR *pMem2 = 0;
       lSize += 128;
 
 #ifndef __amigaos4__
       ObtainSemaphore(&__InternalSemaphore);                   // we wait only for our tasks!
-      pMem = (uint32*)AllocPooled(__InternalMemPool, lSize);   // Get memory
+      pMem = (IPTR*)AllocPooled(__InternalMemPool, lSize);   // Get memory
       ReleaseSemaphore(&__InternalSemaphore);                  // and free sem.
 #else
       IExec->ObtainSemaphore(&__InternalSemaphore);                   // we wait only for our tasks!
-      pMem = (uint32*)IExec->AllocPooled(__InternalMemPool, lSize);   // Get memory
+      pMem = (IPTR*)IExec->AllocPooled(__InternalMemPool, lSize);   // Get memory
       IExec->ReleaseSemaphore(&__InternalSemaphore);                  // and free sem.
 #endif
       if (0 != pMem)
@@ -98,7 +98,7 @@ void* malloc(size_t lSize)
 
 void* malloc_pooled(void* pPool, size_t lSize)
 {
-   uint32 *pMem = 0;
+   IPTR *pMem = 0;
 
    if (0 == lSize)
       return 0;
@@ -109,32 +109,32 @@ void* malloc_pooled(void* pPool, size_t lSize)
    {      
 #ifndef DEBUG
 #ifndef __amigaos4__
-      pMem = (uint32*)AllocPooled(pPool, lSize+8);             // Get memory. I assume we dont need syncing here.
+      pMem = (IPTR*)AllocPooled(pPool, lSize+8);             // Get memory. I assume we dont need syncing here.
 #else
-      pMem = (uint32*)IExec->AllocPooled(pPool, lSize+8);             // Get memory. I assume we dont need syncing here.
+      pMem = (IPTR*)IExec->AllocPooled(pPool, lSize+8);             // Get memory. I assume we dont need syncing here.
 #endif
 
       if (0 != pMem)
       {
-         pMem[0] = (uint32)pPool;                              // set mem pool
+         pMem[0] = (IPTR)pPool;                              // set mem pool
          pMem[1] = lSize;                                      // set mem size
          pMem    = &pMem[2];                                   // set mem handle
       }      
 #else
       uint32 i;
-      uint32 *pMem2 = 0;
+      IPTR *pMem2 = 0;
       lSize += 128;
 
 #ifndef __amigaos4__
-      pMem = (uint32*)AllocPooled(pPool, lSize);   // Get memory
+      pMem = (IPTR*)AllocPooled(pPool, lSize);   // Get memory
 #else
-      pMem = (uint32*)IExec->AllocPooled(pPool, lSize);   // Get memory
+      pMem = (IPTR*)IExec->AllocPooled(pPool, lSize);   // Get memory
 #endif
 
       if (0 != pMem)
       {
          pMem2   = &pMem[lSize>>2];
-         pMem[0] = (uint32)pPool;                              // set mem pool
+         pMem[0] = (IPTR)pPool;                              // set mem pool
          pMem[1] = lSize;                                      // set mem size
          pMem    = &pMem[2+(128>>3)];                          // set mem handle
       }      
