@@ -352,6 +352,9 @@ static struct MUI_CustomClass *ControlBarGadgetsListClass;
 STRPTR ProgramName = "";
 static struct DiskObject *PrefsDiskObject = NULL;
 
+static BOOL ReadWritePrefsInitDone = FALSE;
+static BOOL PrefsPluginsInitDone = FALSE;
+
 static BOOL ShowSplashWindow = TRUE;
 static BOOL SkipPrefsPlugins = FALSE;
 
@@ -3281,8 +3284,10 @@ DISPATCHER_END
 
 static VOID Cleanup(struct SCAModule *app)
 {
-	ReadWritePrefsCleanup();
-	PrefsPluginsCleanup();
+	if (ReadWritePrefsInitDone)
+		ReadWritePrefsCleanup();
+	if (PrefsPluginsInitDone)
+		PrefsPluginsCleanup();
 
 	if (app->Obj[WIN_ABOUT_MORPHOS])
 		{
@@ -3772,6 +3777,7 @@ static BOOL Init(struct SCAModule *app)
 			MsgBox("PrefsPluginsInit() failed", "Error", NULL);
 			break;
 			}
+		PrefsPluginsInitDone = TRUE;
 
 		WBScreen = LockPubScreen("Workbench");
 		if (NULL == WBScreen)
@@ -3808,6 +3814,7 @@ static BOOL Init(struct SCAModule *app)
 			MsgBox("ReadWritePrefsInit() failed.", "Error", NULL);
 			break;
 			}
+		ReadWritePrefsInitDone = TRUE;
 
 		// --- Everything opened fine
 		Success = TRUE;
@@ -3822,7 +3829,7 @@ static BOOL Init(struct SCAModule *app)
 // --- A Simple Message Requester
 VOID MsgBox(char *message, char *title, struct SCAModule *app)
 {
-	if(MUIMasterBase && app->Obj[APPLICATION])
+	if(MUIMasterBase && app && app->Obj[APPLICATION])
 	{
 		MUI_Request(app->Obj[APPLICATION],
 			NULL,
