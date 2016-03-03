@@ -44,7 +44,7 @@ Result
 See also
 ~~~~~~~~
 
-`UnLockTaskList()`_ NextTaskEntry(). 
+`UnLockTaskList()`_ `NextTaskEntry()`_ 
 
 ----------
 
@@ -87,7 +87,7 @@ Result
 See also
 ~~~~~~~~
 
-`LockTaskList()`_ UnLockTaskList(). 
+`LockTaskList()`_ `UnLockTaskList()`_ 
 
 ----------
 
@@ -173,5 +173,5 @@ Inputs
 See also
 ~~~~~~~~
 
-`LockTaskList()`_ NextTaskEntry(). 
+`LockTaskList()`_ `NextTaskEntry()`_ 
 
