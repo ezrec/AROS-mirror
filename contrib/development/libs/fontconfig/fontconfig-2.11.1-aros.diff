@@ -206,7 +206,7 @@ diff -ruN fontconfig-2.11.1/src/fccfg.c fontconfig-2.11.1-aros/src/fccfg.c
  #endif
  
 +#ifdef __AROS__
-+    if ((FcChar8 *) strchr((const char *) url, ':'))
++    if (strchr((const char *) url, ':'))
 +        goto absolute_path;
 +#endif
 +
@@ -295,7 +295,7 @@ diff -ruN fontconfig-2.11.1/src/fcstr.c fontconfig-2.11.1-aros/src/fcstr.c
      return FcStrCanonAbsoluteFilename (full);
  #else
 -    if (s[0] == '/')
-+    if (s[0] == '/' || (FcChar8 *) strchr((const char *) s, ':'))
++    if (s[0] == '/' || strchr((const char *) s, ':'))
  	return FcStrCanonAbsoluteFilename (s);
      else
      {
