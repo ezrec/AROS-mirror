@@ -45,7 +45,7 @@ The following software is required for compiling AROS:
 + C library development files (libc)
 + Common utilities, like cp, mv, sort, uniq, head, ...
 
-To compile the hosted i386-linux or i386-freebsd ports, the following are
+To compile the hosted Linux or FreeBSD ports, the following are
 also required:
 
 + X11 development headers and libraries
@@ -421,10 +421,11 @@ and perform similar steps to those above.
 Compiling HowTos
 -----------------
 
-This step-by-step guide will describe how to prepare the development
-environment and compile Linux-hosted AROS on Ubuntu Linux 14.04. Let's assume
-you have a CD image (iso) from an Ubuntu site and have installed the system
-from it. Also, you should set it up to access the Internet.
+This step-by-step guide will describe how to prepare the development 
+environment and compile 32-bit Linux-hosted AROS on Ubuntu Linux 14.04. 
+Let's assume you have a CD image (iso) from an Ubuntu site and have 
+installed the system from it. Also, you should set it up to access the 
+Internet.
 
 
 Getting the needed packages
@@ -435,7 +436,7 @@ Internet::
 
     > sudo apt-get install subversion g++ libpng12-dev libx11-dev
     libgl1-mesa-dev gawk bison flex netpbm automake cmake gperf
-    libswitch-perl
+    libswitch-perl libasound2-dev
 
 If you are using the 64-bit version of Ubuntu, you will need some 
 extra packages, and a small fix::
