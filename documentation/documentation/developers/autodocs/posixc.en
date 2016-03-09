@@ -5772,6 +5772,27 @@ Synopsis
      sigset_t *set)
 
 
+Function
+~~~~~~~~
+::
+
+     Initialise the signal set
+
+
+Inputs
+~~~~~~
+::
+
+     Set to initialise
+
+
+Result
+~~~~~~
+::
+
+     "0" for success, "-1" for failure (errno contains error)
+
+
 
 ----------
 
