@@ -11886,9 +11886,9 @@ diff -Naur SDL-1.2.15-orig/src/video/cgx/SDL_cgxevents.c SDL-1.2.15/src/video/cg
 +
 +	    /* Loosing app & mouse focus */
 +	    case IDCMP_INACTIVEWINDOW:
-+	    	/* If mouse is grabbed, request explicit activation */
-+	    	if (this->hidden->GrabMouse)
-+	    		this->hidden->ExplicitFocusActivation = 1;
++			/* If mouse is grabbed, request explicit activation */
++			if (this->hidden->GrabMouse)
++				this->hidden->ExplicitFocusActivation = 1;
 +			posted = CGX_FocusActivate(this, FALSE);
 +			this->hidden->WindowActive = 0;
 +			break;
