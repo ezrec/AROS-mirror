@@ -16,7 +16,8 @@ USER_INCLUDES := \
         -I$(SRCDIR)/$(CURDIR)/OpenAL32/Include \
         -I$(SRCDIR)/$(CURDIR)/Alc
 
-USER_CFLAGS := -std=gnu99 -O3 -ffast-math -Wall -DAL_ALEXT_PROTOTYPES 
+NOWARN_FLAGS := -Wno-array-bounds
+USER_CFLAGS := -std=gnu99 -O3 -ffast-math -Wall $(NOWARN_FLAGS) -DAL_ALEXT_PROTOTYPES 
 
 OPENAL32_FILES = \
         alAuxEffectSlot \
