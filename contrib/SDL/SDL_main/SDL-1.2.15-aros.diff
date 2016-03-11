@@ -9123,7 +9123,7 @@ diff -Naur SDL-1.2.15-orig/src/thread/aros/SDL_syssem.c SDL-1.2.15/src/thread/ar
 +
 +			sem->sem_value = -1;
 +
-+			while (!IsListEmpty((struct List *) &sem->waitlist))
++			while (!IsListEmpty(&sem->waitlist))
 +			{
 +				struct waitnode *wn;
 +				int res;
