@@ -516,7 +516,7 @@ extern struct CharNode *WidthNode, *KernNode;
   }
   if ((WidthWnd) && (WidthNode == node)) CloseWidthWnd(FALSE);
   if ((KernWnd) && (KernNode == node)) CloseKernWnd(FALSE);
-  if (node->chln_UndoChar.chr_Data);
+  if (node->chln_UndoChar.chr_Data)
   {
     FreeVec(node->chln_UndoChar.chr_Data);
     node->chln_UndoChar.chr_Data = NULL;
