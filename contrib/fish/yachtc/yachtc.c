@@ -734,67 +734,67 @@ USHORT cur_player;
    /* position score gadget */
  
 
-     ScoreGadget.LeftEdge = VLINL + (VLINS*cur_player) + 4;
+   ScoreGadget.LeftEdge = VLINL + (VLINS*cur_player) + 4;
    /*   AddGadget(BdWdw,&ScoreGadget,-1); */
 
-/* show possible scores to let player select */
+   /* show possible scores to let player select */
 
 
 
-for (row = 0; row <17; row ++)
-   if (scores[row] == -1)
-   {
-      SetAPen (BdRp,BGRP);   /* erase dots with bg pen */
-      ShowDots (row,cur_player);
-      SetAPen (BdRp,BLUP);   /* possible scores in green */
-      score = Evaluate(bones,row);
-      ShowScore (score,row,cur_player);
-   }
+   for (row = 0; row <17; row ++)
+      if (scores[row] == -1)
+      {
+         SetAPen (BdRp,BGRP);   /* erase dots with bg pen */
+         ShowDots (row,cur_player);
+         SetAPen (BdRp,BLUP);   /* possible scores in green */
+         score = Evaluate(bones,row);
+         ShowScore (score,row,cur_player);
+      }
 
 
    /* wait  until user clicks on a score of an unused category */
    while( ( (row=IMsg()) > 17) || (scores[row] != -1 ) );
 
 
-SetAPen (BdRp,BLKP);   /* selected scores in black */
-score = Evaluate(bones,row);   /* evaluate row selected */
-ShowScore (scores[row]=score,row,cur_player);   /* print in black */
+   SetAPen (BdRp,BLKP);   /* selected scores in black */
+   score = Evaluate(bones,row);   /* evaluate row selected */
+   ShowScore (scores[row]=score,row,cur_player);   /* print in black */
 
 
-if (row<7)
+   if (row<7)
    {
-   ClearRow(7,cur_player);
-   ShowScore (scores[7]+=score,7,cur_player);   /* do upper sub-total */
+      ClearRow(7,cur_player);
+      ShowScore (scores[7]+=score,7,cur_player);   /* do upper sub-total */
    }
-else
+   else
    {
-   ClearRow(18,cur_player);
-   ShowScore (scores[18]+=score,18,cur_player);   /* or else lower total */
+      ClearRow(18,cur_player);
+      ShowScore (scores[18]+=score,18,cur_player);   /* or else lower total */
    }
-if (scores[7] > BONUS) 
+   if (scores[7] > BONUS) 
    {
-   ClearRow(8,cur_player);
-   ShowScore (scores[8] = 35, 8, cur_player);   /* check for bonus */
+      ClearRow(8,cur_player);
+      ShowScore (scores[8] = 35, 8, cur_player);   /* check for bonus */
    }
 
-/*add sub-totals to total and display  */
+   /*add sub-totals to total and display  */
 
-ClearRow(20,cur_player);
-ShowScore (scores[20]=scores[7]+scores[8]+scores[18],20,cur_player);
+   ClearRow(20,cur_player);
+   ShowScore (scores[20]=scores[7]+scores[8]+scores[18],20,cur_player);
    
 
 
-for (row = 0; row <17; row ++)
-   if (scores[row] == -1)
-   {
-      SetAPen (BdRp,BGRP);   /* erase scores with bg pen */
-      score = Evaluate(bones,row);
-      ShowScore (score,row,cur_player);
-      SetAPen (BdRp,BLKP);   /* draw dots in black pen */
+   for (row = 0; row <17; row ++)
+      if (scores[row] == -1)
+      {
+         SetAPen (BdRp,BGRP);   /* erase scores with bg pen */
+         score = Evaluate(bones,row);
+         ShowScore (score,row,cur_player);
+         SetAPen (BdRp,BLKP);   /* draw dots in black pen */
 
 
-      ShowDots (row,cur_player);
-   }
+         ShowDots (row,cur_player);
+      }
 
 }
 
