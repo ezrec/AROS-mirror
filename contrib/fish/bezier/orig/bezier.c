@@ -102,7 +102,7 @@ char *av[];
     WORD pt = -1;
     WORD ptarray[4][2];
 
-    WORD gy, gg = 0;
+    WORD gy = 0, gg = 0;
     XPI *po;
 
     exiterr(!openlibs(INTUITION_LIB|GRAPHICS_LIB), "unable to open libs");
@@ -116,7 +116,7 @@ char *av[];
     setpoint(ptarray, 3, 60, 60);
     setbounds(ptarray);
     while (notdone) {
-	short mx, my, mm = 0;
+	short mx = 0, my = 0, mm = 0;
 	WaitPort(Win->UserPort);
 	while ((mess = (struct IntuiMessage *)GetMsg(Win->UserPort))) {
 	    switch(mess->Class) {
