@@ -663,7 +663,7 @@ LTP_DetermineSize(LayoutHandle *Handle,ObjectNode *Node)
 
 					Width = TextLength(&Handle->RPort,"AA",2);
 
-					if(Width < 2 * Handle->GlyphWidth);
+					if(Width < 2 * Handle->GlyphWidth)
 						Width = 2 * Handle->GlyphWidth;
 
 					if(Width < 2 * Handle->GlyphHeight)
