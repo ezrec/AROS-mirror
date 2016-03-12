@@ -1214,7 +1214,7 @@ ScreenPanel(struct Window *Parent,struct Configuration *LocalConfig)
 									PaletteSetup(PrivateConfig);
 								else
 								{
-									if(PrivateConfig->ScreenConfig->ColourMode != PrivateConfig->ScreenConfig->ColourMode)
+									if(PrivateConfig->ScreenConfig->PenColourMode != PrivateConfig->ScreenConfig->ColourMode)
 										Default2CurrentPalette(PrivateConfig);
 								}
 
