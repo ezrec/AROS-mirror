@@ -33,7 +33,7 @@
 
 ******************************************************************************/
 
-static const char version[] = "$VER: Wumpus 0.2 (16.09.1997)\n";
+static const char version[] __attribute__((used)) = "$VER: Wumpus 0.2 (16.09.1997)\n";
 
 #include "WumpusIncl.h"
 
