@@ -1271,7 +1271,8 @@ METHOD(FrameClassRender, struct bmRender *, bmr)
                b -= dv;
 	       if(dh>0
 	       && t<=b)
-		  BRectFill(bi, r - dh + 1, t, r, b);   r -= dh;
+		  BRectFill(bi, r - dh + 1, t, r, b);
+               r -= dh;
 	       if (shine >= 0)  BSetDPenA(bi, shine);
 	       if(dv>0
 	       && l<=r)
