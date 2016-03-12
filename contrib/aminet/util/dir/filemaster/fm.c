@@ -729,35 +729,41 @@ D(bug("fm.c 685...........\n"));
 
 #ifdef V39
   if (fmmain.betaversion)
-{
-D(bug("fm.c 707...........\n"));  
+  {
+    D(bug("fm.c 707...........\n"));  
     sformat (fmmain.fmtitle, "FileMaster %ld.%ld BETA '020", fmmain.version,
              fmmain.revision);
 
-}
+  }
   else
-D(bug("fm.c 713...........\n"));  
+  {
+    D(bug("fm.c 713...........\n"));  
     sformat (fmmain.fmtitle, "FileMaster %ld.%ld '020", fmmain.version,
 	     fmmain.revision);
+  }
 #else
 D(bug(" fm.c 718.......\n")); 
 
-
   if (fmmain.betaversion)
-{
-  sformat (fmmain.fmtitle, "FileMaster %ld.%ld %ld", fmmain.version, fmmain.revision, fmmain.betaversion);
+  {
+    sformat (fmmain.fmtitle, "FileMaster %ld.%ld %ld", fmmain.version, fmmain.revision, fmmain.betaversion);
+  }
   else
-  sformat (fmmain.fmtitle, "FileMaster %ld.%ld", fmmain.version, fmmain.revision);
-}
+  {
+    sformat (fmmain.fmtitle, "FileMaster %ld.%ld", fmmain.version, fmmain.revision);
+  }
 #endif
 
   if (fmmain.regname[0])
+  {
     sformat (fmmain.fmtitlename, "%s %s %s", fmmain.fmtitle, getstring (MSG_MAIN_REGISTERED), fmmain.regname);
+  }
   else
-D(bug(" fm.c 732.......\n"));  
+  {
+    D(bug(" fm.c 732.......\n"));  
 
     sformat (fmmain.fmtitlename, "%s %s", fmmain.fmtitle, getstring (MSG_MAIN_UNREGISTERED));
-
+  }
   longtodatestring (fmmain.fmdate, *((ULONG *) & fmname[8]));
 
   return (1);
