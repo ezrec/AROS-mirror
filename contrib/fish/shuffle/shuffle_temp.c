@@ -458,11 +458,10 @@ void SetUpValues(void)
  bp2[4] =  0     ; bp2[5] = h - 1;
  for(i = 0;i < info.resolution[info.res].x_res;i++)
  {
-  for(v = 0;v < info.resolution[info.res].y_res;v++,n)
+  for(v = 0;v < info.resolution[info.res].y_res;v++,n++)
   {
    info.solved[i][v]  = n;
    info.current[i][v] = n;
-   n++;
   }
  }  
  SliceBoard();
