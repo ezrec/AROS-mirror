@@ -103,7 +103,8 @@ char *argv[];
 			if (buf[x]==',' || buf[x]==0) break;
 		}
 		strncpy(datfile,buf,x);
-		if (x>13) x=13; datfile[x]=0;
+		if (x>13) x=13;
+                datfile[x]=0;
 		strcpy(TimeZones[a].name,datfile); TimeZones[a].time=atof(&buf[x+1]);
 	}
 	fclose(in);
