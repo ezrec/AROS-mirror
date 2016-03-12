@@ -419,7 +419,9 @@ static const int EndingKing[64]=
 
 static int pawncover[9]={-60,-30,0,5,30,30,30,30,30};
 static const int factor[9]={7,8,8,7,6,5,4,2,0};
+#if !defined(__AROS__)
 static const BitBoard Corner[2]={ 0xC3C3000000000000ULL,0x000000000000C3C3ULL};
+#endif
 
 int ScoreK(int side)
 {
@@ -703,8 +705,10 @@ return s;
 
 static const BitBoard nn[2]={0x4200000000000000ULL,0x0000000000000042ULL};
 static const BitBoard bb[2]={0x2400000000000000ULL,0x0000000000000024ULL};
+#if !defined(__AROS__)
 static const BitBoard rr[2]={0x8100000000000000ULL,0x0000000000000081ULL};
 static const BitBoard corner=0xC3C300000000C3C3ULL;
+#endif
 
 int ScoreDev(int side)
 {
