@@ -124,8 +124,8 @@ METHOD(GroupClassLayout,struct bmLayout *,bml)
 	struct IBox *bounds;
 
 	bml->bml_Flags|=BLF_CUSTOM_GROUP;
-  if(DoSuperMethodA(cl, obj, (Msg)bml)==0)
-	return(0);
+	if(DoSuperMethodA(cl, obj, (Msg)bml)==0)
+		return(0);
 	if(gd->GotConstraints==FALSE)
 		return(FALSE);
 	if(GetAttr(BT_InnerBox,obj,(IPTR *)&bounds)==FALSE)
