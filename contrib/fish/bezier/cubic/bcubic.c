@@ -348,7 +348,7 @@ int wy;
     short x, y;
 
     pt = 0;
-    for (i = 0; i < 16; ++i) {
+    for (i = 0; i < 4; ++i) {
 	translate(Pmatrix[0][0][i], Pmatrix[1][0][i], Pmatrix[2][0][i], &x, &y);
 	x -= wx;
 	y -= wy;
@@ -515,7 +515,7 @@ void plotcontrolpts()
     short x, y;
 
     SetAPen(Rp, 1);
-    for (i = 0; i < 16; ++i) {
+    for (i = 0; i < 4; ++i) {
 	translate(Pmatrix[0][0][i], Pmatrix[1][0][i], Pmatrix[2][0][i], &x, &y);
 	Move(Rp, x - 2, y + 0);
 	Draw(Rp, x + 2, y + 0);
