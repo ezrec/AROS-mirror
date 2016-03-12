@@ -288,7 +288,7 @@ HighlightActiveEntry(PhoneListContext *Context,BOOL Activate)
 			IsLast			= (Node->Entry->Count == -1) || (Node->Entry->Count == Count - 1);
 			Disabled		= FALSE;
 			LocalConfig		= Node->Entry->Config;
-			RatesValid		= (!IsListEmpty((struct List *)&Node->Entry->TimeDateList) && !Node->Entry->Header->NoRates);
+			RatesValid		= (!IsListEmpty(&Node->Entry->TimeDateList) && !Node->Entry->Header->NoRates);
 		}
 		else
 		{
@@ -2560,7 +2560,7 @@ PhonePanel(ULONG InitialQualifier)
 									{
 										BOOL HadToFill = FALSE;
 
-										if(IsListEmpty((struct List *)&Context->SelectedNode->Entry->TimeDateList))
+										if(IsListEmpty(&Context->SelectedNode->Entry->TimeDateList))
 										{
 											struct TimeDateNode *TimeDateNode;
 
@@ -2578,7 +2578,7 @@ PhonePanel(ULONG InitialQualifier)
 												Context->SelectedNode->Entry->Header->NoRates = TRUE;	/* Sorry, guv'nor */
 										}
 
-										if(!IsListEmpty((struct List *)&Context->SelectedNode->Entry->TimeDateList))
+										if(!IsListEmpty(&Context->SelectedNode->Entry->TimeDateList))
 											Result = RatePanel(Context->EditWindow,Context->PhoneHandle,Context->SelectedNode->Entry,NULL);
 										else
 											Result = FALSE;
