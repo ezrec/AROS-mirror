@@ -461,6 +461,7 @@ static WORD
 init (void)
 {
   APTR winptr;
+  ULONG *fm_date;
   WORD aa;
   UBYTE *ptr1, *ptr3;
   struct Screen *wbscr;
@@ -764,7 +765,8 @@ D(bug(" fm.c 718.......\n"));
 
     sformat (fmmain.fmtitlename, "%s %s", fmmain.fmtitle, getstring (MSG_MAIN_UNREGISTERED));
   }
-  longtodatestring (fmmain.fmdate, *((ULONG *) & fmname[8]));
+  fm_date = (ULONG *) & fmname[8]
+  longtodatestring (fmmain.fmdate, *fm_date);
 
   return (1);
 }
