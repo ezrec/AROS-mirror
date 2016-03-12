@@ -239,7 +239,8 @@ void loadAll(ULONG mode,UBYTE *title)
     while((*s == ' ') || (*s == '\n'))*s-- = '\0';
     switch(*id)
     {
-     case     '_' : if(!stricmp(id,"_pmode"))
+     case     '_' :
+                    if(!stricmp(id,"_pmode"))
                     {
                      edit.pmode = 1;
                      GT_SetGadgetAttrs(Project0Gadgets[GDX_mode],Project0Wnd,NULL,
@@ -253,22 +254,26 @@ void loadAll(ULONG mode,UBYTE *title)
                      GTCY_Active,1,TAG_DONE);   
                     }
                     break;
-     case     '#' : if( (edit.l_c == 1) && 
+     case     '#' :
+                    if( (edit.l_c == 1) && 
                         (*(id + 1)    ) &&
                         (!(FindName(&winfo.class,id + 1)))
                       )
                       newclass(id + 1);
-                      winfo.currentclass = (struct classnode *)FindName(&winfo.class,id + 1);
+                    winfo.currentclass = (struct classnode *)FindName(&winfo.class,id + 1);
                     break;
-     case     '?' : if((edit.l_c == 1) && 
+     case     '?' :
+                    if((edit.l_c == 1) && 
                        (*(id + 1)    ) &&
                        (!(FindName(&winfo.currentclass->cl_Words,id + 1)))
                       )
                       newword(id + 1);
                     break;
-     case     ';' : break;
+     case     ';' :
+                    break;
      case     '+' :  
-     default      : if(
+     default      :
+                    if(
                        (edit.l_p == 1) && 
                        (*id          ) &&
                        (!(FindName(&winfo.pattern,id)))
