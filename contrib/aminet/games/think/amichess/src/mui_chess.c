@@ -1010,7 +1010,7 @@ static ULONG Dispatcher(register __a0 struct IClass *cl,register __a2 Object *ob
 {
 #endif
 
-ULONG retva = TRUEl;
+ULONG retval = TRUE;
 switch(msg->MethodID)
 	{
 	case OM_NEW:
