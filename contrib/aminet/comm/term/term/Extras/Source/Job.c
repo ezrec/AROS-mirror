@@ -162,7 +162,7 @@ GetNextJob(JobNode *Job)
 STATIC JobNode *
 GetFirstJob(JobQueue *Queue)
 {
-	if(IsListEmpty((struct List *)&Queue->ReadyList))
+	if(IsListEmpty(&Queue->ReadyList))
 		return(NULL);
 	else
 		return((JobNode *)Queue->ReadyList.mlh_Head);
