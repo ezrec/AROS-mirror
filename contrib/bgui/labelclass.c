@@ -246,7 +246,7 @@ METHOD(LabelClassSetCustom, struct rmAttr *, ra)
 {
    LD               *ld = (LD *)INST_DATA(cl, obj);
    struct TextFont  *tf;
-   Tag               attr = ra->ra_Attr->ti_Tag;
+   IPTR              attr = ra->ra_Attr->ti_Tag;
    IPTR              data = ra->ra_Attr->ti_Data;
 
    switch (attr)
