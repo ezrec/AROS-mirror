@@ -127,7 +127,7 @@ char *av[];
     WORD au = 0;
     LONG  delay = 0;
 
-    WORD gy, gg = 0;
+    WORD gy = 0, gg = 0;
     XPI *po;
 
     if (ac >= 2) {
@@ -148,7 +148,7 @@ char *av[];
     setpoint(ptarray, 3, 60, 60);
     setbounds(ptarray);
     while (notdone) {
-	WORD mx, my, mm = 0;
+	WORD mx = 0, my = 0, mm = 0;
 	if (au == 0) {
 	    WaitPort(Win->UserPort);
 	} else {
