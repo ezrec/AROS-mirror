@@ -143,12 +143,12 @@ int 	Eval (BYTE   Board [26])
       Ysum -= i * temp;
 
   for (i=0 ; (i <= 24) && (Board[i] <= 0) ; i++); /* first occurence of me	*/
-    me = i;
+  me = i;
 
   for (i=25; (i >= 1) && (Board[i] >= 0) ; i--); /* first occurence of you	*/
-    you = i;
+  you = i;
 
- 			GameStat = BackGame;	/* default case				*/
+  GameStat = BackGame;	/* default case				*/
   if (Ysum > Msum+10) 	GameStat = Running;	/* if closer to winning than them	*/
   if (you > 18)		GameStat = Blocking;	/* if an opponent is within the bounds	*/
   if (me > you)		GameStat = Pegging;	/* if complete separation		*/
