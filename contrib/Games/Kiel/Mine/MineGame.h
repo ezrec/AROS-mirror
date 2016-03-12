@@ -310,7 +310,7 @@ clearwin();
 
     for(a=1;a<=Anzahl;a++)
     {
-      while(Karte[x=random(1,width)][y=random(1,height)]);
+      while(Karte[x=random(1,width)][y=random(1,height)])
         Karte[x][y]=TRUE;
     }
 

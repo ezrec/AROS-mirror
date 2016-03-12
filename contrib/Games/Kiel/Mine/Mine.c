@@ -36,7 +36,7 @@
 
 ******************************************************************************/
 
-static const char version[] = "$VER: Mine 0.6 (14.02.2000)\n";
+static const char version[] __attribute__((used)) = "$VER: Mine 0.6 (14.02.2000)\n";
 
 #include "MineIncl.h"
 
