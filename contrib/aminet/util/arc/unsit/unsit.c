@@ -667,7 +667,7 @@ int check_access(char *fname) {
 unsigned short
 write_file(char *fname, long ibytes, long obytes, unsigned char type) {
     unsigned short crc;
-    int i, n, ch, lastch;
+    int i, n, ch, lastch = 0;
     FILE *outf;
     char temp[256];
 
