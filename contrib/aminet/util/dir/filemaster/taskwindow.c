@@ -135,7 +135,7 @@ void updatetasknumbers(struct ListInfo *li)
 WORD cnt;
 
 if(!li) {
-	for(cnt=0;cnt<LISTS;cnt++) {
+	for(cnt=0;cnt<WINDOWLISTS;cnt++) {
 		if(fmmain.li[cnt]) {
 			fmmain.li[cnt]->taskgadget.UserData=(APTR)(IPTR)(fmmain.li[cnt]->list->listnumber+'0');
 			ongadget(&fmmain.li[cnt]->taskgadget,LISTGADGETS);
