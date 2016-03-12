@@ -32,7 +32,7 @@
 
 ******************************************************************************/
 
-static const char version[] = "$VER: Rotate 0.1 (14.02.2000)\n";
+static const char version[] __attribute__((used)) = "$VER: Rotate 0.1 (14.02.2000)\n";
 
 #include "includes.h"
 #include "defines.h"
