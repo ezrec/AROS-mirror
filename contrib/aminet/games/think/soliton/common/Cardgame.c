@@ -665,10 +665,15 @@ static int getRank(int nr, int *suit)
 {
   int r = 0;
 
-       if (nr >= 2  && nr <= 14) {r = nr;      *suit = 0;}
-  else if (nr >= 15 && nr <= 27) {r = nr - 13; *suit = 1;}
-  else if (nr >= 28 && nr <= 40) {r = nr - 26; *suit = 2;}
-  else if (nr >= 41 && nr <= 53) {r = nr - 39; *suit = 3;}
+#if (1)
+  *suit = 0;
+#else
+  if (nr >= 2  && nr <= 14) {r = nr;      *suit = 0;}
+  else
+#endif
+      if (nr >= 15 && nr <= 27) {r = nr - 13; *suit = 1;}
+      else if (nr >= 28 && nr <= 40) {r = nr - 26; *suit = 2;}
+      else if (nr >= 41 && nr <= 53) {r = nr - 39; *suit = 3;}
 
   return r;
 }
