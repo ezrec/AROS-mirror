@@ -529,12 +529,15 @@ DeleteSerial()
 	 */
 
 CONST_STRPTR
-GetSerialError(LONG Error,BOOL *ResetPtr)
+GetSerialError(LONG Error, BOOL *ResetPtr)
 {
 	BOOL Reset;
 	LONG ID;
 
-	Reset	= FALSE;
+        if (!ResetPtr)
+            ResetPtr = &Reset;
+
+	*ResetPtr	= FALSE;
 	ID		= -1;
 
 	switch(Error)
@@ -554,19 +557,19 @@ GetSerialError(LONG Error,BOOL *ResetPtr)
 
 		case SerErr_BaudMismatch:
 
-			Reset = TRUE;
+			*ResetPtr = TRUE;
 			ID = MSG_SERIAL_ERROR_BAUDMISMATCH_TXT;
 			break;
 
 		case SerErr_BufErr:
 
-			Reset = TRUE;
+			*ResetPtr = TRUE;
 			ID = MSG_SERIAL_ERROR_BUFERR_TXT;
 			break;
 
 		case SerErr_InvParam:
 
-			Reset = TRUE;
+			*ResetPtr = TRUE;
 			ID = MSG_SERIAL_ERROR_INVPARAM_TXT;
 			break;
 
@@ -577,7 +580,7 @@ GetSerialError(LONG Error,BOOL *ResetPtr)
 
 		case SerErr_ParityErr:
 
-			Reset = TRUE;
+			*ResetPtr = TRUE;
 			ID = MSG_SERIAL_ERROR_PARITYERR_TXT;
 			break;
 
@@ -588,7 +591,7 @@ GetSerialError(LONG Error,BOOL *ResetPtr)
 
 		case SerErr_BufOverflow:
 
-			Reset = TRUE;
+			*ResetPtr = TRUE;
 			ID = MSG_SERIAL_ERROR_BUFOVERFLOW_TXT;
 			break;
 
@@ -607,9 +610,6 @@ GetSerialError(LONG Error,BOOL *ResetPtr)
 
 	if(ID != -1)
 	{
-		if(ResetPtr)
-			*ResetPtr = Reset;
-
 		return(LocaleString(ID));
 	}
 	else
@@ -891,7 +891,7 @@ ReconfigureSerial(struct Window *Window,struct SerialSettings *SerialConfig)
 
 					/* Get the error message. */
 
-				if(!(String = GetSerialError(Error,&Reset)))
+				if(!(String = GetSerialError(Error, &Reset)))
 					String = LocaleString(MSG_SERIAL_ERROR_DEVBUSY_TXT);
 
 					/* Build the device name/unit number string. */
