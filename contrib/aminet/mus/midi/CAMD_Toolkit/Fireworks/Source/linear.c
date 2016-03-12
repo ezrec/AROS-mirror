@@ -105,7 +105,7 @@ BOOL Lin_IsIdle(APTR data)
 {
 	struct LinData *ld = (struct LinData*) data;
 	
-	if (IsListEmpty((struct List*)&ld->CrackerList))
+	if (IsListEmpty(&ld->CrackerList))
 		return(TRUE);
 	else
 		return(FALSE);
