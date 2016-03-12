@@ -20,14 +20,17 @@ void comment_out(CHAR *top)      // outputs comment if present
    if (head.HEAD_FLAGS & ACE_COMM)
    {                             // comment present?
       if (head.HEAD_TYPE == MAIN_BLK)
-      {                          // get begin and size of comment data
+      {
+         UCHAR*mcs_ptr = (UCHAR *)&(mhead).AV+(mhead).AV_SIZE;
+         // get begin and size of comment data
          comm = MCOMM;
-         comm_cpr_size = MCOMM_SIZE;
+         comm_cpr_size = BUF2WORD(mcs_ptr);
       }
       else
       {
+         UCHAR*fcs_ptr = (UCHAR *)&(fhead).FNAME+(fhead).FNAME_SIZE;
          comm = FCOMM;
-         comm_cpr_size = FCOMM_SIZE;
+         comm_cpr_size = BUF2WORD(fcs_ptr);
       }                          // limit comment size if too big
       i = sizeof(head) - (INT)(comm - (CHAR*) &head);
       if (comm_cpr_size > i)
