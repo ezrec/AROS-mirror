@@ -466,7 +466,7 @@ ChangeState(LONG Type,LONG Default,struct PhoneNode *Node)
 
 				/* Nothing in this list? */
 
-			if(IsListEmpty((struct List *)&Node->Entry->TimeDateList))
+			if(IsListEmpty(&Node->Entry->TimeDateList))
 			{
 				struct TimeDateNode *TimeDateNode;
 
