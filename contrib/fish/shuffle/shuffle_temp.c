@@ -304,13 +304,16 @@ void Play(void)
            switch(code)
            {
             case 'a'    :
-            case 'A'    : DisplayReq(&a1); 
+            case 'A'    :
+                          DisplayReq(&a1); 
                           break;
             case 'h'    :
-            case 'H'    : DisplayReq(&h1);
+            case 'H'    :
+                          DisplayReq(&h1);
                           break;
             case 's'    :
-            case 'S'    : ntext.TopEdge  = 40;
+            case 'S'    :
+                          ntext.TopEdge  = 40;
                           ntext.LeftEdge = 40;
                           ntext.NextText = &s2;
                           sprintf(number,"%3ld",(long)info.moves);
@@ -318,8 +321,9 @@ void Play(void)
                           break;
             case 0x1b   :
             case 'Q'    :
-            case 'q'    : if( EasyRequestArgs(info.wd,&ExitReq,NULL,NULL) == 1)
-                          end = TRUE;
+            case 'q'    :
+                          if( EasyRequestArgs(info.wd,&ExitReq,NULL,NULL) == 1)
+                           end = TRUE;
                           break;
             default     : break;
            }
@@ -327,31 +331,38 @@ void Play(void)
       case IDCMP_RAWKEY :
            switch(code)
            {
-            case 0x5f   : DisplayReq(&h1);
+            case 0x5f   :
+                          DisplayReq(&h1);
                           break;
-            case 0x45   : end = TRUE;
+            case 0x45   :
+                          end = TRUE;
                           break;
-            case 0x4c   : if(info.mode == MODE_GAP)
+            case 0x4c   :
+                          if(info.mode == MODE_GAP)
                            MoveRect(DIR_UP);
                           else
                            MoveRect(DIR_DOWN);
                           break;
-            case 0x4d   : if(info.mode == MODE_GAP)
+            case 0x4d   :
+                          if(info.mode == MODE_GAP)
                            MoveRect(DIR_DOWN);
                           else
                            MoveRect(DIR_UP);
                           break;
-            case 0x4f   : if(info.mode == MODE_GAP)
+            case 0x4f   :
+                          if(info.mode == MODE_GAP)
                            MoveRect(DIR_LEFT);
                           else
                            MoveRect(DIR_RIGHT);
                           break;
-            case 0x4e   : if(info.mode == MODE_GAP)
+            case 0x4e   :
+                          if(info.mode == MODE_GAP)
                            MoveRect(DIR_RIGHT);
                           else
                            MoveRect(DIR_LEFT);
                           break;
-            default     : break;
+            default     :
+                          break;
            }
         break;
       case IDCMP_MOUSEBUTTONS :
