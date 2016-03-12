@@ -215,7 +215,7 @@ ULONG longi1, longi2, len1;
 ULONG ifflen;
 WORD fbmhd=0,fmodeid=0,fcmap=0,retcode=0;
 
-ULONG cmaplen;
+ULONG cmaplen = 0;
 WORD wide,high,deep,sdeep;
 WORD apu1;
 
