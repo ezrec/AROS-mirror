@@ -66,7 +66,7 @@ CreateEditorHandle(PhoneListContext *Context,BOOL Activate)
 		IsLast			= (Node->Entry->Count == -1 || Node->Entry->Count == Count - 1);
 		Disabled		= FALSE;
 		LocalConfig		= Node->Entry->Config;
-		RatesValid		= (!IsListEmpty((struct List *)&Node->Entry->TimeDateList) && !Node->Entry->Header->NoRates);
+		RatesValid		= (!IsListEmpty(&Node->Entry->TimeDateList) && !Node->Entry->Header->NoRates);
 	}
 	else
 	{
