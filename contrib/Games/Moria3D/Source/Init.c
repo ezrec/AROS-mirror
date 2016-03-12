@@ -127,7 +127,7 @@ int16 InitLibs(void)
 	}
 	else
 	    RemoveCleanNode(IntNode);
-	    CleanExit("Could not open GFX.library!");
+        CleanExit("Could not open GFX.library!");
     }
     else
 	CleanExit("Could not open INT.library!");
