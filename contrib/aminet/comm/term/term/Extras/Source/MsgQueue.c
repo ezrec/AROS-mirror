@@ -45,7 +45,7 @@ GetMsgItem(struct MsgQueue *Queue)
 
 			/* Any item available? */
 
-		if(!IsListEmpty((struct List *)&Queue->MsgList))
+		if(!IsListEmpty(&Queue->MsgList))
 		{
 				/* Remove the first item */
 
@@ -53,7 +53,7 @@ GetMsgItem(struct MsgQueue *Queue)
 
 				/* Are there any tasks waiting for the queue to become smaller? */
 
-			if(!IsListEmpty((struct List *)&Queue->WaitList))
+			if(!IsListEmpty(&Queue->WaitList))
 			{
 				struct SemaphoreRequest *WaitRequest = (struct SemaphoreRequest *)Queue->WaitList.mlh_Head;
 
