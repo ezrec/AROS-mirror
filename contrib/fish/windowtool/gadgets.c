@@ -56,7 +56,7 @@ struct TagItem    WindowTags[] = {
     {WA_MinHeight,     11},
     {WA_MaxWidth,      611},
     {WA_MaxHeight,     137},
-    {WA_Zoom,          (Tag)Zoom},
+    {WA_Zoom,          (IPTR)Zoom},
     {TAG_DONE }};
 
 struct IntuiText  IText[] = { {
