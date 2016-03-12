@@ -654,7 +654,7 @@ new_game (
       struct IntuiMessage  *msg;
       
       field_delete (field);
-      if (digital_display);
+      if (digital_display)
          counter_delete (time_counter);
       
       SetAPen (main_win->RPort, gui_pens[BACKGROUNDPEN]);
