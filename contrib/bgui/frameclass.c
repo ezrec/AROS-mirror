@@ -1262,18 +1262,21 @@ METHOD(FrameClassRender, struct bmRender *, bmr)
 	       if (shine >= 0)  BSetDPenA(bi, shine);
 	       if(dh>0
 	       && t<=b)
-		  BRectFill(bi, l, t, l + dh - 1, b);   l += dh;
+		  BRectFill(bi, l, t, l + dh - 1, b);
+               l += dh;
 	       if (shadow >= 0) BSetDPenA(bi, shadow);
 	       if(dv>0
 	       && l<=r)
-		  BRectFill(bi, l, b - dv + 1, r, b);   b -= dv;
+		  BRectFill(bi, l, b - dv + 1, r, b);
+               b -= dv;
 	       if(dh>0
 	       && t<=b)
 		  BRectFill(bi, r - dh + 1, t, r, b);   r -= dh;
 	       if (shine >= 0)  BSetDPenA(bi, shine);
 	       if(dv>0
 	       && l<=r)
-		  BRectFill(bi, l, t, r, t + dv - 1);   t += dv;
+		  BRectFill(bi, l, t, r, t + dv - 1);
+               t += dv;
 	       tv -= dv;
 	       th -= dh;
 	       
