@@ -57,8 +57,8 @@ extern struct Library * BGUIBase;
 //
 //	CONSTANTS
 //
-const static char	VersTag[]		= VERSTAG,
-					PrefDir[]		= "SYS:Prefs/Presets";
+const static char VersTag[] __attribute__((used))       = VERSTAG,
+                  PrefDir[]                             = "SYS:Prefs/Presets";
 
 const static UBYTE	Cycle2Frame[]	= {
 	FRTYPE_BUTTON,
