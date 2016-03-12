@@ -150,7 +150,7 @@ BOOL Par_IsIdle(APTR data)
 {
 	struct ParData *pd = (struct ParData*) data;
 	
-	if (IsListEmpty((struct List*)&pd->CrackerList))
+	if (IsListEmpty(&pd->CrackerList))
 		return(TRUE);
 	else
 		return(FALSE);
