@@ -124,7 +124,8 @@ void ComputeMap(void)
 	for ( j=0; j<256; j++ )
 	{
 	    k=128+(HMap[((i+256)&0xFF00)+((j+1)&255)]-HMap[i+j])*4;
-	    if ( k<0 ) k=0; if (k>255) k=255;
+	    if ( k<0 ) k=0;
+            if (k>255) k=255;
 	    CMap[i+j]=k;
 	}
 }
