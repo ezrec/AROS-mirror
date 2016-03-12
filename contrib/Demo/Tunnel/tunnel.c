@@ -188,9 +188,9 @@ void refresh () {
 	* ( tmp++ ) = * ( texture + (y<<7) + x );
       }
 
-    if (truecolor)
-    {
-	WriteLUTPixelArray(buffer,
+  if (truecolor)
+  {
+    WriteLUTPixelArray(buffer,
 			   0,
 			   0,
 			   W,
@@ -201,18 +201,18 @@ void refresh () {
 			   W,
 			   H,
 			   CTABFMT_XRGB8);
-    }
-    else if (mustremap)
-    {
-	LONG i;
-	UBYTE *src = buffer;
-	UBYTE *dest = buffer_remapped;
+  }
+  else if (mustremap)
+  {
+    LONG i;
+    UBYTE *src = buffer;
+    UBYTE *dest = buffer_remapped;
 
-	for(i = 0; i < W * H; i++)
-	{
-	    *dest++ = remaptable[*src++];
-	}
-	WriteChunkyPixels(rp,
+    for(i = 0; i < W * H; i++)
+    {
+      *dest++ = remaptable[*src++];
+    }
+    WriteChunkyPixels(rp,
 	    	    	  win->BorderLeft,
 			  win->BorderTop,
 			  win->BorderLeft + W - 1,
@@ -220,17 +220,17 @@ void refresh () {
 			  buffer_remapped,
 			  W);
 
-    }
-    else
-    {
-	WriteChunkyPixels(rp,
+  }
+  else
+  {
+    WriteChunkyPixels(rp,
 	    	    	  win->BorderLeft,
 			  win->BorderTop,
 			  win->BorderLeft + W - 1,
 			  win->BorderTop + H - 1,
 			  buffer,
 			  W);
-    }
+  }
 
 }
 
