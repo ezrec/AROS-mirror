@@ -670,80 +670,80 @@ case NORMAL_NORMAL:
                         z->exp = locy.exp;
                 }
 
-                if (locx.sign ^ locy.sign ^ operation)
+        if (locx.sign ^ locy.sign ^ operation)
+        {
+                /*
+                ** Signs are different, subtract mantissas
+                */
+                borrow = 0;
+                for (i=(INTERNAL_FPF_PRECISION-1); i>=0; i--)
+                        Sub16Bits(&borrow,
+                                &z->mantissa[i],
+                                locx.mantissa[i],
+                                locy.mantissa[i]);
+
+                if (borrow)
                 {
-                        /*
-                        ** Signs are different, subtract mantissas
+                        /* The y->mantissa was larger than the
+                        ** x->mantissa leaving a negative
+                        ** result.  Change the result back to
+                        ** an unsigned number and flip the
+                        ** sign flag.
                         */
+                        z->sign = locy.sign ^ operation;
                         borrow = 0;
                         for (i=(INTERNAL_FPF_PRECISION-1); i>=0; i--)
+                        {
                                 Sub16Bits(&borrow,
                                         &z->mantissa[i],
-                                        locx.mantissa[i],
-                                        locy.mantissa[i]);
-
-                        if (borrow)
-                        {
-                                /* The y->mantissa was larger than the
-                                ** x->mantissa leaving a negative
-                                ** result.  Change the result back to
-                                ** an unsigned number and flip the
-                                ** sign flag.
-                                */
-                                z->sign = locy.sign ^ operation;
-                                borrow = 0;
-                                for (i=(INTERNAL_FPF_PRECISION-1); i>=0; i--)
-                                {
-                                        Sub16Bits(&borrow,
-                                                &z->mantissa[i],
-                                                0,
-                                                z->mantissa[i]);
-                                }
+                                        0,
+                                        z->mantissa[i]);
                         }
-                        else
-                        {
-                                /* The assumption made above
-                                ** (i.e. x->mantissa >= y->mantissa)
-                                ** was correct.  Therefore, do nothing.
-                                ** z->sign = x->sign;
-                                */
-                        }
-
-                        if (IsMantissaZero(z->mantissa))
-                        {
-                                z->type = IFPF_IS_ZERO;
-                                z->sign = 0; /* positive */
-                        }
-                        else
-                                if (locx.type == IFPF_IS_NORMAL ||
-                                         locy.type == IFPF_IS_NORMAL)
-                                {
-                                        normalize(z);
-                                }
                 }
                 else
                 {
-                        /* signs are the same, add mantissas */
-                        carry = 0;
-                        for (i=(INTERNAL_FPF_PRECISION-1); i>=0; i--)
-                        {
-                                Add16Bits(&carry,
-                                        &z->mantissa[i],
-                                        locx.mantissa[i],
-                                        locy.mantissa[i]);
-                        }
+                        /* The assumption made above
+                        ** (i.e. x->mantissa >= y->mantissa)
+                        ** was correct.  Therefore, do nothing.
+                        ** z->sign = x->sign;
+                        */
+                }
 
-                        if (carry)
+                if (IsMantissaZero(z->mantissa))
+                {
+                        z->type = IFPF_IS_ZERO;
+                        z->sign = 0; /* positive */
+                }
+                else
+                        if (locx.type == IFPF_IS_NORMAL ||
+                                 locy.type == IFPF_IS_NORMAL)
                         {
-                                z->exp++;
-                                carry=0;
-                                ShiftMantRight1(&carry,z->mantissa);
-                                z->mantissa[0] |= 0x8000;
-                                z->type = IFPF_IS_NORMAL;
+                                normalize(z);
                         }
-                        else
-                                if (z->mantissa[0] & 0x8000)
-                                        z->type = IFPF_IS_NORMAL;
+        }
+        else
+        {
+                /* signs are the same, add mantissas */
+                carry = 0;
+                for (i=(INTERNAL_FPF_PRECISION-1); i>=0; i--)
+                {
+                        Add16Bits(&carry,
+                                &z->mantissa[i],
+                                locx.mantissa[i],
+                                locy.mantissa[i]);
+                }
+
+                if (carry)
+                {
+                        z->exp++;
+                        carry=0;
+                        ShiftMantRight1(&carry,z->mantissa);
+                        z->mantissa[0] |= 0x8000;
+                        z->type = IFPF_IS_NORMAL;
+                }
+                else
+                        if (z->mantissa[0] & 0x8000)
+                                z->type = IFPF_IS_NORMAL;
         }
         break;
 
