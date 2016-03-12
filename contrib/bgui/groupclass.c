@@ -804,12 +804,13 @@ METHOD(GroupClassNew, struct opSet *, ops)
 
       if (invert)
       {
-         n1 = ((struct List *)&gd->gd_Members)->lh_Head;
+         sstruct List *membList = (struct List *)&gd->gd_Members;
+         n1 = membList->lh_Head;
 
          while ((n2 = n1->ln_Succ)->ln_Succ)
          {
             Remove(n2);
-            AddHead((struct List *)&gd->gd_Members, n2);
+            AddHead(membList, n2);
          };
       };
 
