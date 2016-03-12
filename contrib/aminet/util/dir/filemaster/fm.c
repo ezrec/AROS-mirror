@@ -765,7 +765,7 @@ D(bug(" fm.c 718.......\n"));
 
     sformat (fmmain.fmtitlename, "%s %s", fmmain.fmtitle, getstring (MSG_MAIN_UNREGISTERED));
   }
-  fm_date = (ULONG *) & fmname[8]
+  fm_date = (ULONG *) &fmname[8];
   longtodatestring (fmmain.fmdate, *fm_date);
 
   return (1);
