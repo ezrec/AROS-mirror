@@ -108,8 +108,18 @@ error:
 
 /*================================================================*/
 
+#if defined(__AROS__)
+static inline ULONG makecolor(UBYTE val)
+{
+    return (val << 24) | (val << 16) | (val << 8) | (val);
+}
+#else
+#define makecolor(val)     ((val) * 0x01010101)
+#endif
+
 int Graphics_init ( unsigned int win_width, unsigned int win_height )
 {
+   ULONG newcol;
    int i, j;
 
    window_width  = win_width;
@@ -178,7 +188,7 @@ int Graphics_init ( unsigned int win_width, unsigned int win_height )
    /* red */
    for ( i=0, j=0; i<64; i++, j++ )
    {
-      coltable[1 + i * 3]     = j * 4 * 0x01010101;
+      coltable[1 + i * 3]     = makecolor(j * 4);
       coltable[1 + i * 3 + 1] = 0;
       coltable[1 + i * 3 + 2] = 0;
    }
@@ -187,7 +197,7 @@ int Graphics_init ( unsigned int win_width, unsigned int win_height )
    for ( i=64, j=0; i<128; i++, j++ )
    {
       coltable[1 + i * 3]     = 0;
-      coltable[1 + i * 3 + 1] = j * 4 * 0x01010101;
+      coltable[1 + i * 3 + 1] = makecolor(j * 4);
       coltable[1 + i * 3 + 2] = 0;
    }
    
@@ -196,22 +206,23 @@ int Graphics_init ( unsigned int win_width, unsigned int win_height )
    {
       coltable[1 + i * 3]     = 0;
       coltable[1 + i * 3 + 1] = 0;
-      coltable[1 + i * 3 + 2] = j * 4 * 0x01010101;
+      coltable[1 + i * 3 + 2] = makecolor(j * 4);
    }
 
    /* white */
    for ( i=192, j=0; i<256; i++, j++ )
    {
-      coltable[1 + i * 3]     = j * 4 * 0x01010101;
-      coltable[1 + i * 3 + 1] = j * 4 * 0x01010101;
-      coltable[1 + i * 3 + 2] = j * 4 * 0x01010101;
+      newcol = makecolor(j * 4);
+      coltable[1 + i * 3]     = newcol;
+      coltable[1 + i * 3 + 1] = newcol;
+      coltable[1 + i * 3 + 2] = newcol;
    }
 
    /* yellow */
-   
-   coltable[1 + 192 * 3]     = 255UL * 0x01010101;
-   coltable[1 + 192 * 3 + 1] = 255UL * 0x01010101;
-   coltable[1 + 192 * 3 + 2] = 128UL * 0x01010101;
+   newcol = makecolor(255UL);
+   coltable[1 + 192 * 3]     = newcol;
+   coltable[1 + 192 * 3 + 1] = newcol;
+   coltable[1 + 192 * 3 + 2] = makecolor(128UL);
 
    LoadRGB32(&scr->ViewPort, coltable);
 
