@@ -324,6 +324,18 @@ struct CharNode
   Object *chln_ToolBar, *chln_WinGroup;
 };
 
+static inline void TFSETLONG(APTR addr, ULONG val)
+{
+   ULONG *ptr = (ULONG *)addr;
+    *ptr = val;
+};
+
+static inline void TFSETWORD(APTR addr, UWORD val)
+{
+   UWORD *ptr = (UWORD *)addr;
+    *ptr = val;
+};
+
 struct CharNode *OpenCharWin(ULONG charnum,struct IBox size);
 void CloseCharWin(struct CharNode *node);
 Object *CreateSysImage(ULONG which,struct DrawInfo *dri);

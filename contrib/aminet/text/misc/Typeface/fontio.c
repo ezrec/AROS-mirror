@@ -417,6 +417,7 @@ BPTR fontfile, contfile, lock;
   if (filesize % 4 > 0) filesize = ((filesize/4)+1)*4;
   if ((buffer = AllocVec(filesize,MEMF_CLEAR)) != NULL)
   {
+    ULONG *df_lnname;
     longptr = (ULONG *)buffer;
     *longptr++ = LONG2BE(0x000003F3);		/* Hunk structure */
     *longptr++ = LONG2BE(0x00000000);
@@ -435,8 +436,8 @@ BPTR fontfile, contfile, lock;
 
     dfh = (struct FileDiskFontHeader *)longptr;
     dfh->dfh_DF_ln_Type = NT_FONT;
-    *(ULONG *)dfh->dfh_DF_ln_Name = LONG2BE((LONG)((IPTR)dfh->dfh_Name-hunkstart));
-    *(UWORD *)dfh->dfh_FileID = WORD2BE(DFH_ID);
+    TFSETLONG(dfh->dfh_DF_ln_Name, LONG2BE((LONG)((IPTR)dfh->dfh_Name-hunkstart)));
+    TFSETWORD(dfh->dfh_FileID, WORD2BE(DFH_ID));
     sprintf(dfh->dfh_Name,"$VER: %s%d 39.0 (%s)",FontName,(int)Height,datestr);
 
     fontdataptr = ((UBYTE *)dfh)+sizeof(struct FileDiskFontHeader);
@@ -453,8 +454,9 @@ BPTR fontfile, contfile, lock;
 #endif
 
     dfh->dfh_TF_tf_Message_mn_Node_ln_Type = NT_FONT;
-    *(ULONG *)dfh->dfh_TF_tf_Message_mn_Node_ln_Name = *(ULONG *)dfh->dfh_DF_ln_Name;
-    *(UWORD *)dfh->dfh_TF_tf_YSize = WORD2BE(Height);
+    df_lnname = (ULONG *)dfh->dfh_DF_ln_Name;
+    TFSETLONG(dfh->dfh_TF_tf_Message_mn_Node_ln_Name, *df_lnname);
+    TFSETWORD(dfh->dfh_TF_tf_YSize, WORD2BE(Height));
     if (Normal == FALSE)
     {
       if (Bold) dfh->dfh_TF_tf_Style |= FSF_BOLD;
@@ -475,19 +477,19 @@ BPTR fontfile, contfile, lock;
 	dfh->dfh_TF_tf_Flags |= FPF_WIDEDOT;
 	break;
     }
-    *(UWORD *)dfh->dfh_TF_tf_XSize = WORD2BE(Width);
-    *(UWORD *)dfh->dfh_TF_tf_Baseline = WORD2BE(Baseline);
-    *(UWORD *)dfh->dfh_TF_tf_BoldSmear = WORD2BE(Smear);
+    TFSETWORD(dfh->dfh_TF_tf_XSize, WORD2BE(Width));
+    TFSETWORD(dfh->dfh_TF_tf_Baseline, WORD2BE(Baseline));
+    TFSETWORD(dfh->dfh_TF_tf_BoldSmear, WORD2BE(Smear));
     dfh->dfh_TF_tf_LoChar = FirstChar;
     dfh->dfh_TF_tf_HiChar = LastChar;
-    *(ULONG *)dfh->dfh_TF_tf_CharData = LONG2BE((ULONG)((IPTR)fontdataptr-hunkstart));
-    *(UWORD *)dfh->dfh_TF_tf_Modulo = WORD2BE(bitwidth/8);
-    *(ULONG *)dfh->dfh_TF_tf_CharLoc = LONG2BE((ULONG)((IPTR)fontlocptr-hunkstart));
+    TFSETLONG(dfh->dfh_TF_tf_CharData, LONG2BE((ULONG)((IPTR)fontdataptr-hunkstart)));
+    TFSETWORD(dfh->dfh_TF_tf_Modulo, WORD2BE(bitwidth/8));
+    TFSETLONG(dfh->dfh_TF_tf_CharLoc, LONG2BE((ULONG)((IPTR)fontlocptr-hunkstart)));
     if (tables)
     {
-      *(ULONG *)dfh->dfh_TF_tf_CharSpace = LONG2BE((LONG)((IPTR)fontkernptr-hunkstart));
-      *(ULONG *)dfh->dfh_TF_tf_CharKern = LONG2BE(
-	(ULONG)((IPTR)fontkernptr+(numchars*2)-hunkstart));
+      TFSETLONG(dfh->dfh_TF_tf_CharSpace, LONG2BE((LONG)((IPTR)fontkernptr-hunkstart)));
+      TFSETLONG(dfh->dfh_TF_tf_CharKern, LONG2BE(
+	(ULONG)((IPTR)fontkernptr+(numchars*2)-hunkstart)));
     }
     for (i = FirstChar, offbit = 0; i < LastChar+1; i++)
     {
@@ -631,12 +633,7 @@ ULONG retcode;
   req.es_TextFormat = text;
   req.es_GadgetFormat = gadgets;
   va_start(va,gadgets);
-#if defined(__AROS__) && defined(__ARM_ARCH__)
-  #warning "TODO: fix va_arg usage for ARM"
-  retcode = 0;
-#else
-  retcode = EasyRequestArgs(SaveWnd,&req,NULL,va);
-#endif
+  retcode = EasyRequestArgs(SaveWnd,&req,NULL, va_arg(va, APTR));
   va_end(va);
   WindowReady(SaveWndObj);
   return (retcode);

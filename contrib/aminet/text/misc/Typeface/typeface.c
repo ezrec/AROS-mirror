@@ -1394,12 +1394,7 @@ struct EasyStruct req =
   req.es_TextFormat = text;
   req.es_GadgetFormat = gadgets;
   va_start(va,gadgets);
-#if defined(__AROS__) && defined(__ARM_ARCH__)
-  #warning "TODO: fix va_arg usage for ARM"
-  req_return = 0;
-#else
-  req_return = EasyRequestArgs(FontWnd,&req,NULL,va);
-#endif
+  req_return = EasyRequestArgs(FontWnd,&req,NULL,va_arg(va, APTR));
   va_end(va);
   WakeWindows();
   return req_return;
