@@ -346,7 +346,7 @@ UBYTE   mask[LARGE];
 
 	MLOOP(7)						/* for the 7 test-rectangles */
 	NLOOP(50)						/* for the test-rectangle size */
-		zspan[n*m]=zvalues[n];			/* fill zspan with same z values as the test-rectangles */
+		zspan[n*m]=zvalues[m];			/* fill zspan with same z values as the test-rectangles */
 
 	PatchW3D_WriteZSpan(context,0,40,LARGE,zspan,mask); 	/* draw a zspan in the midle of the test-rectangles */
 

@@ -387,7 +387,7 @@ void PrintST(struct SOFT3D_texture *ST)
 #ifdef WAZP3DDEBUG
 	if(ST==NULL) return;
 	if (!Wazp3D->DebugST.ON) return;
-	Libprintf("SOFT3D_texture(%ld) %s  pt %ld NextST(%ld) TexFlags %ld \n",(ULONG)ST,ST->name,(ULONG)ST->pt,(ULONG)ST->nextST,(ULONG)ST->TexFlags);
+	Libprintf("SOFT3D_texture(%ld) %s  pt %ld NextST(%ld) TexFlags %ld \n",(IPTR)ST,ST->name,(IPTR)ST->pt,(IPTR)ST->nextST,(ULONG)ST->TexFlags);
 #else
 	return;
 #endif
@@ -2050,8 +2050,10 @@ register union oper3D Add;
 SREM(PixelsOne_One24)
 	while(0<size--)
 	{
-	Tmp1.L.RGBA32=*( (ULONG *)DST1 );
-	Tmp2.L.RGBA32=*( (ULONG *)DST2 );
+        ULONG *_dst1 = (ULONG *)DST1;
+        ULONG *_dst2 = (ULONG *)DST2;
+	Tmp1.L.RGBA32=*_dst1;
+	Tmp2.L.RGBA32=*_dst2;
 
 	ADD8(SRC1R,Tmp1.B.RGBA[0],Tmp1.B.RGBA[0])
 	ADD8(SRC1G,Tmp1.B.RGBA[1],Tmp1.B.RGBA[1])
@@ -2061,8 +2063,8 @@ SREM(PixelsOne_One24)
 	ADD8(SRC2G,Tmp2.B.RGBA[1],Tmp2.B.RGBA[1])
 	ADD8(SRC2B,Tmp2.B.RGBA[2],Tmp2.B.RGBA[2])
 
-	*( (ULONG *)DST1 )=Tmp1.L.RGBA32;
-	*( (ULONG *)DST2 )=Tmp2.L.RGBA32;
+	*_dst1=Tmp1.L.RGBA32;
+	*_dst2=Tmp2.L.RGBA32;
 	Frag+=2;
 	}
 }
@@ -2485,7 +2487,19 @@ BlendDone:
 /*=============================================================*/
 /* v52: Optimized 32 bits PixelsIn/Out */
 /*=============================================================*/
-#define COLOR32(x) (*(ULONG *)x)
+
+static inline void SetCOLOR32(APTR dst, ULONG color)
+{
+    ULONG *_dst = (ULONG *)dst;
+    *_dst = color;
+}
+
+static inline ULONG COLOR32(APTR src)
+{
+    ULONG *_src = (ULONG *)src;
+    return *_src;
+}
+
 /*=============================================================*/
 void PixelsInBGRA(struct SOFT3D_context *SC)
 {
@@ -2504,8 +2518,8 @@ register UBYTE temp;
 	SWAP(Color0.B.RGBA[0],Color0.B.RGBA[2]);
 	SWAP(Color1.B.RGBA[0],Color1.B.RGBA[2]);
 
-	COLOR32(Frag[0].BufferRGBA)=Color0.L.RGBA32;
-	COLOR32(Frag[1].BufferRGBA)=Color1.L.RGBA32;
+	SetCOLOR32(Frag[0].BufferRGBA, Color0.L.RGBA32);
+	SetCOLOR32(Frag[1].BufferRGBA, Color1.L.RGBA32);
 	Frag+=2;
 	}
 }
@@ -2526,8 +2540,8 @@ register union rgba3D Color1;
 	Color0.L.RGBA32=(Color0.B.RGBA[0]+(Color0.L.RGBA32<<8));
 	Color1.L.RGBA32=(Color1.B.RGBA[0]+(Color1.L.RGBA32<<8));
 
-	COLOR32(Frag[0].BufferRGBA)=Color0.L.RGBA32;
-	COLOR32(Frag[1].BufferRGBA)=Color1.L.RGBA32;
+	SetCOLOR32(Frag[0].BufferRGBA, Color0.L.RGBA32);
+	SetCOLOR32(Frag[1].BufferRGBA, Color1.L.RGBA32);
 	Frag+=2;
 	}
 }
@@ -2552,8 +2566,8 @@ register UBYTE temp;
 	SWAP(Color1.B.RGBA[0],Color1.B.RGBA[3]);
 	SWAP(Color1.B.RGBA[1],Color1.B.RGBA[2]);
 
-	COLOR32(Frag[0].BufferRGBA)=Color0.L.RGBA32;
-	COLOR32(Frag[1].BufferRGBA)=Color1.L.RGBA32;
+	SetCOLOR32(Frag[0].BufferRGBA, Color0.L.RGBA32);
+	SetCOLOR32(Frag[1].BufferRGBA, Color1.L.RGBA32);
 	Frag+=2;
 	}
 }
@@ -2572,10 +2586,10 @@ register UBYTE temp;
 
 	while(0<size4--)
 	{
-	COLOR32(Frag[0].Image8)=Color0.L.RGBA32;
-	COLOR32(Frag[1].Image8)=Color0.L.RGBA32;
-	COLOR32(Frag[2].Image8)=Color0.L.RGBA32;
-	COLOR32(Frag[3].Image8)=Color0.L.RGBA32;
+	SetCOLOR32(Frag[0].Image8, Color0.L.RGBA32);
+	SetCOLOR32(Frag[1].Image8, Color0.L.RGBA32);
+	SetCOLOR32(Frag[2].Image8, Color0.L.RGBA32);
+	SetCOLOR32(Frag[3].Image8, Color0.L.RGBA32);
 	Frag+=4;
 	}
 }
@@ -2592,10 +2606,10 @@ register union rgba3D Color0;
 
 	while(0<size4--)
 	{
-	COLOR32(Frag[0].Image8)=Color0.L.RGBA32;
-	COLOR32(Frag[1].Image8)=Color0.L.RGBA32;
-	COLOR32(Frag[2].Image8)=Color0.L.RGBA32;
-	COLOR32(Frag[3].Image8)=Color0.L.RGBA32;
+	SetCOLOR32(Frag[0].Image8, Color0.L.RGBA32);
+	SetCOLOR32(Frag[1].Image8, Color0.L.RGBA32);
+	SetCOLOR32(Frag[2].Image8, Color0.L.RGBA32);
+	SetCOLOR32(Frag[3].Image8, Color0.L.RGBA32);
 	Frag+=4;
 	}
 }
@@ -2614,10 +2628,10 @@ register UBYTE temp;
 
 	while(0<size4--)
 	{
-	COLOR32(Frag[0].Image8)=Color0.L.RGBA32;
-	COLOR32(Frag[1].Image8)=Color0.L.RGBA32;
-	COLOR32(Frag[2].Image8)=Color0.L.RGBA32;
-	COLOR32(Frag[3].Image8)=Color0.L.RGBA32;
+	SetCOLOR32(Frag[0].Image8, Color0.L.RGBA32);
+	SetCOLOR32(Frag[1].Image8, Color0.L.RGBA32);
+	SetCOLOR32(Frag[2].Image8, Color0.L.RGBA32);
+	SetCOLOR32(Frag[3].Image8, Color0.L.RGBA32);
 	Frag+=4;
 	}
 }
@@ -2639,8 +2653,8 @@ register UBYTE temp;
 	SWAP(Color0.B.RGBA[0],Color0.B.RGBA[2]);
 	SWAP(Color1.B.RGBA[0],Color1.B.RGBA[2]);
 
-	COLOR32(Frag[0].Image8)=Color0.L.RGBA32;
-	COLOR32(Frag[1].Image8)=Color1.L.RGBA32;
+	SetCOLOR32(Frag[0].Image8, Color0.L.RGBA32);
+	SetCOLOR32(Frag[1].Image8, Color1.L.RGBA32);
 	Frag+=2;
 	}
 }
@@ -2661,8 +2675,8 @@ register union rgba3D Color1;
 	Color0.L.RGBA32=((Color0.B.RGBA[3]<<24)+(Color0.L.RGBA32>>8));
 	Color1.L.RGBA32=((Color1.B.RGBA[3]<<24)+(Color1.L.RGBA32>>8));
 
-	COLOR32(Frag[0].Image8)=Color0.L.RGBA32;
-	COLOR32(Frag[1].Image8)=Color1.L.RGBA32;
+	SetCOLOR32(Frag[0].Image8, Color0.L.RGBA32);
+	SetCOLOR32(Frag[1].Image8, Color1.L.RGBA32);
 	Frag+=2;
 	}
 }
@@ -2687,8 +2701,8 @@ register UBYTE temp;
 	SWAP(Color1.B.RGBA[0],Color1.B.RGBA[3]);
 	SWAP(Color1.B.RGBA[1],Color1.B.RGBA[2]);
 
-	COLOR32(Frag[0].Image8)=Color0.L.RGBA32;
-	COLOR32(Frag[1].Image8)=Color1.L.RGBA32;
+	SetCOLOR32(Frag[0].Image8, Color0.L.RGBA32);
+	SetCOLOR32(Frag[1].Image8, Color1.L.RGBA32);
 	Frag+=2;
 	}
 }
@@ -2720,10 +2734,10 @@ register union rgba3D Color0;
 	Color0.L.RGBA32=COLOR32(Frag[0].BufferRGBA);
 	while(0<size4--)
 	{
-	COLOR32(Frag[0].Image8)=Color0.L.RGBA32;
-	COLOR32(Frag[1].Image8)=Color0.L.RGBA32;
-	COLOR32(Frag[2].Image8)=Color0.L.RGBA32;
-	COLOR32(Frag[3].Image8)=Color0.L.RGBA32;
+	SetCOLOR32(Frag[0].Image8, Color0.L.RGBA32);
+	SetCOLOR32(Frag[1].Image8, Color0.L.RGBA32);
+	SetCOLOR32(Frag[2].Image8, Color0.L.RGBA32);
+	SetCOLOR32(Frag[3].Image8, Color0.L.RGBA32);
 	Frag+=4;
 	}
 
@@ -2765,8 +2779,8 @@ register union rgba3D Color1;
 	Color1.B.RGBA[1]=Frag[1].Tex8[1];
 	Color1.B.RGBA[0]=Frag[1].Tex8[2];
 
-	COLOR32(Frag[0].Image8)=Color0.L.RGBA32;
-	COLOR32(Frag[1].Image8)=Color1.L.RGBA32;
+	SetCOLOR32(Frag[0].Image8, Color0.L.RGBA32);
+	SetCOLOR32(Frag[1].Image8, Color1.L.RGBA32);
 	Frag+=2;
 	}
 }
@@ -2792,8 +2806,8 @@ register union rgba3D Color1;
 	Color1.B.RGBA[2]=Frag[1].Tex8[1];
 	Color1.B.RGBA[3]=Frag[1].Tex8[2];
 
-	COLOR32(Frag[0].Image8)=Color0.L.RGBA32;
-	COLOR32(Frag[1].Image8)=Color1.L.RGBA32;
+	SetCOLOR32(Frag[0].Image8, Color0.L.RGBA32);
+	SetCOLOR32(Frag[1].Image8, Color1.L.RGBA32);
 	Frag+=2;
 	}
 }
@@ -4028,7 +4042,7 @@ struct SOFT3D_texture *ST=state->ST;
 SFUNCTION(SOFT3D_SetDrawState)
 	if(Wazp3D->DebugSOFT3D.ON)
 		{
-		Libprintf(" state:Changed%ld UseTex%ld ST%ld ZMode%ld TexEnvMode%ld BlendMode%ld UseGouraud%ld UseFog%ld\n",(ULONG)state->Changed,(ULONG)state->UseTex,(ULONG)state->ST,(ULONG)state->ZMode,(ULONG)state->TexEnvMode,(ULONG)state->BlendMode,(ULONG)state->UseGouraud,(ULONG)state->UseFog);
+		Libprintf(" state:Changed%ld UseTex%ld ST%ld ZMode%ld TexEnvMode%ld BlendMode%ld UseGouraud%ld UseFog%ld\n",(ULONG)state->Changed,(ULONG)state->UseTex,(IPTR)state->ST,(ULONG)state->ZMode,(ULONG)state->TexEnvMode,(ULONG)state->BlendMode,(ULONG)state->UseGouraud,(ULONG)state->UseFog);
 		PrintST(state->ST);
 		Libprintf(" CurrentRGBA: %ld %ld %ld %ld\n",(ULONG)state->CurrentRGBA[0],(ULONG)state->CurrentRGBA[1],(ULONG)state->CurrentRGBA[2],(ULONG)state->CurrentRGBA[3]);
 		}
@@ -5938,7 +5952,7 @@ SFUNCTION(SOFT3D_CreateTexture)
 
 #ifdef WAZP3DDEBUG
 	if(Wazp3D->DebugSOFT3D.ON)
-		Libprintf("Tex<%s> ST%ld HT%ld gltex%ld\n",ST->name,(ULONG)ST,(ULONG)&ST->HT,(ULONG)ST->HT.gltex);
+		Libprintf("Tex<%s> ST%ld HT%ld gltex%ld\n",ST->name,(IPTR)ST,(IPTR)&ST->HT,(ULONG)ST->HT.gltex);
 
 	if(Wazp3D->DebugST.ON)
 	if(Wazp3D->DebugSOFT3D.ON)
@@ -6230,25 +6244,25 @@ SwapBuffers
 
 	if(Wazp3D->DebugClipper.ON)
 	{
-	SVARF(SC->ClipMin.x);
-	SVARF(SC->ClipMax.x);
-	SVARF(SC->ClipMin.y);
-	SVARF(SC->ClipMax.y);
-	SVARF(SC->ClipMin.z);
-	SVARF(SC->ClipMax.z);
+            SVARF(SC->ClipMin.x);
+            SVARF(SC->ClipMax.x);
+            SVARF(SC->ClipMin.y);
+            SVARF(SC->ClipMax.y);
+            SVARF(SC->ClipMin.z);
+            SVARF(SC->ClipMax.z);
 
-	if(SC->state.ST!=NULL)
-		PrintST(SC->state.ST);
+            if(SC->state.ST!=NULL)
+                    PrintST(SC->state.ST);
 
-		Wazp3D->DebugPoint.ON=TRUE;
-		REM(CLIPPER: original points)
-		NLOOP(SC->PolyPnb)
-			PrintP(&SC->PolyP[n]);
-		REM(-------: clipped points)
-		NLOOP(Pnb)
-			PrintP2(&PN[n]);
-		REM(=======================)
-		Wazp3D->DebugPoint.ON=FALSE;
+            Wazp3D->DebugPoint.ON=TRUE;
+            REM(CLIPPER: original points)
+            NLOOP(SC->PolyPnb)
+                    PrintP(&SC->PolyP[n]);
+            REM(-------: clipped points)
+            NLOOP(Pnb)
+                    PrintP2(&PN[n]);
+            REM(=======================)
+            Wazp3D->DebugPoint.ON=FALSE;
 	}
 	SC->PolyPnb=Pnb;
 	Libmemcpy(SC->PolyP,PN,SC->PolyPnb*PSIZE);
@@ -6269,7 +6283,7 @@ LONG ratio2;
 LONG offset;
 
 #ifdef WAZP3DDEBUG
-	if(Wazp3D->DebugSOFT3D.ON) Libprintf("ReduceBitmap/%ld %ldX%ld %ldbits >from %ld to %ld\n",(ULONG)ratio,(ULONG)large,(ULONG)high,(ULONG)bits,(ULONG)pt,(ULONG)pt2);
+	if(Wazp3D->DebugSOFT3D.ON) Libprintf("ReduceBitmap/%ld %ldX%ld %ldbits >from %ld to %ld\n",(ULONG)ratio,(ULONG)large,(ULONG)high,(ULONG)bits,(IPTR)pt,(IPTR)pt2);
 #endif
 	if(pt ==NULL) return;
 	if(pt2==NULL) return;
@@ -6335,7 +6349,7 @@ ULONG size;
 	reduction=2;
 next_mipmap:
 #ifdef WAZP3DDEBUG
-	if(Wazp3D->DebugSOFT3D.ON) Libprintf("MipMap %ldX%ld = %ld (%ld)\n",(ULONG)large,(ULONG)high,(ULONG)size,(ULONG)ptmm);
+	if(Wazp3D->DebugSOFT3D.ON) Libprintf("MipMap %ldX%ld = %ld (%ld)\n",(ULONG)large,(ULONG)high,(ULONG)size,(IPTR)ptmm);
 #endif
 	ReduceBitmap(ST->pt,ptmm,ST->large,ST->high,ST->bits,reduction);
 	level++;
@@ -6893,7 +6907,7 @@ UBYTE *Image8;					/* = bitmap memory  */
 	if(SC->ImageBuffer32!=NULL)		/* So we dont write to a bitmap but to an RGBA buffer called "ImageBuffer32" */
 		return(TRUE);
 
-	SC->bmHandle=LockBitMapTags((APTR)SC->bm,LBMI_BASEADDRESS,(ULONG)&Image8, TAG_DONE);
+	SC->bmHandle=LockBitMapTags((APTR)SC->bm,LBMI_BASEADDRESS,(IPTR)&Image8, TAG_DONE);
 	return(SC->bmHandle!=NULL);
 #else
 	return(TRUE);

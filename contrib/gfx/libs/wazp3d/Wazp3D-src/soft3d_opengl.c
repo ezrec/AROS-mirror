@@ -34,6 +34,8 @@ UBYTE  overwinname[]={"Wazp3D overlay"};
 #include <string.h>
 #include <ctype.h>
 /*=============================================================*/
+#include "Wazp3D.h"
+/*=============================================================*/
 /* For OpenGL we define the Warp3D types here so it dont need any Amiga includes */
 #define W3D_REPLACE             1
 #define W3D_DECAL               2
@@ -85,7 +87,6 @@ UBYTE  overwinname[]={"Wazp3D overlay"};
 /*=============================================================*/
 #define W3D_NOW	 255				/* NO W-inding : for Gallium/GL wrapping	*/
 #define W3D_PRIMITIVE_POLYGON	9999		/* True polygon: for Gallium/GL wrapping	*/
-#define BLENDREPLACE (W3D_ONE*16+W3D_ZERO)
 #define BLENDALPHA   (W3D_SRC_ALPHA*16 + W3D_ONE_MINUS_SRC_ALPHA)
 #define BLENDFASTALPHA  187			/* 187 is an unused BlendMode			*/
 #define BLENDNOALPHA    59			/* 59  is an unused BlendMode			*/
@@ -113,44 +114,6 @@ struct Amigawindow
 /*  [...] 					 		more Amiga stuff here not used from OpenGL side */
 };
 /*==================================================================*/
-struct state3D	/* v52: now all is described in a drawing state */
-{
-	unsigned char Changed;
-	unsigned char ZMode;
-	unsigned char BlendMode;
-	unsigned char TexEnvMode;
-
-	unsigned char PerspMode;
-	unsigned char CullingMode;
-	unsigned char FogMode;
-	unsigned char UseGouraud;
-
-	unsigned char UseTex;
-	unsigned char UseFog;
-	unsigned char pad3;
-	unsigned char pad4;
-
-	unsigned char CurrentRGBA[4];
-	unsigned char EnvRGBA[4];
-	unsigned char FogRGBA[4];
-	unsigned char BackRGBA[4];
-
-	unsigned long PointSize;
-	unsigned long LineSize;
-	float FogZmin;
-	float FogZmax;
-	float FogDensity;
-	void* ST;
-	unsigned long gltex;	/* GL texture */
-};
-/*=============================================================*/
-struct point3D{
-	float x,y,z;
-	float u,v;
-	float w;
-	unsigned char RGBA[4];
-};
-/*=============================================================*/
 struct TexCoord4f{
     float s,t,r,q;
 };
@@ -163,14 +126,16 @@ struct TexCoord4f{
 #define NLOOP(nbre) for(n=0;n<nbre;n++)
 #define REMP        if(HC->DebugHard) Libprintf
 #define HFUNC(name) REMP(#name"\n");
+#ifdef REM
+#undef REM
+#endif
 #define REM(name)   REMP(#name"\n");
+#ifdef VAR
+#undef VAR
+#endif
 #define VAR(var)    REMP(#var "=%ld\n",var);
 #define SWAPW(a) (unsigned short int )(((unsigned short int )a>>8)+((((unsigned short int )a&0xff)<<8)))
 #define SWAPL(a) (unsigned long  int )(((unsigned long int )a>>24)+(((unsigned long int )a&0xff0000)>>8)+(((unsigned long int )a&0xff00)<<8)+(((unsigned long int )a&0xff)<<24))
-void LibAlert(unsigned char *text);
-void Libprintf(const unsigned char *string, ...);
-void Libsprintf(unsigned char *buffer,const unsigned char *string, ...);
-void PrintP(struct point3D *P);
 void ReorderBitmap(unsigned char  *rgba,unsigned short large,unsigned short high);
 /*==================================================================*/
 void *currenthc=NULL;			/* to detect if need to change context */
@@ -528,7 +493,7 @@ ULONG IDCMPs=IDCMP_CLOSEWINDOW | IDCMP_VANILLAKEY | IDCMP_RAWKEY | IDCMP_MOUSEMO
 	WA_InnerHeight,	high,
 	WA_Left,		awin->LeftEdge,
 	WA_Top,		awin->TopEdge,
-	WA_Title,		(ULONG)overwinname,
+	WA_Title,		(IPTR)overwinname,
 	WA_DragBar,		FALSE,
 	WA_CloseGadget,	FALSE,
 	WA_GimmeZeroZero,	TRUE,
@@ -842,19 +807,19 @@ VAR(gltex)
 
 	VAR(glformat)
 	UseMip=0;
-if(UseMip)
-	{
-	level=0;
-	pt2=pt;
-	size=large * high * bits / 8;
-next_mipmap:
-	glTexImage2D(GL_TEXTURE_2D,level,bits/8,large,high, 0, glformat, GL_UNSIGNED_BYTE,pt2);
-	pt2=&(pt2[size]);
-	level++;large=large/2;high=high/2;size=size/4;
-	if (high>0) goto next_mipmap;
-	}
-else
-	glTexImage2D(GL_TEXTURE_2D, 0,bits/8,large,high, 0, glformat, GL_UNSIGNED_BYTE,pt);
+        if(UseMip)
+        {
+                level=0;
+                pt2=pt;
+                size=large * high * bits / 8;
+        next_mipmap:
+                glTexImage2D(GL_TEXTURE_2D,level,bits/8,large,high, 0, glformat, GL_UNSIGNED_BYTE,pt2);
+                pt2=&(pt2[size]);
+                level++;large=large/2;high=high/2;size=size/4;
+                if (high>0) goto next_mipmap;
+        }
+        else
+            glTexImage2D(GL_TEXTURE_2D, 0,bits/8,large,high, 0, glformat, GL_UNSIGNED_BYTE,pt);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D,0);
 }

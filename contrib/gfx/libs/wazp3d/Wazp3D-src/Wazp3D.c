@@ -179,7 +179,7 @@ UBYTE name[40];
 	Write(file,name,Libstrlen(name));
 }
 /*==========================================================================*/
-void ph(ULONG x)				/* emulate printf() as hexa */
+void ph(IPTR x)				/* emulate printf() as hexa */
 {
 LONG high,low;
 WORD n;
@@ -206,7 +206,7 @@ void PrintME(struct memory3D *ME)
 {
 UBYTE *wall;
 	wall=ME->pt;wall=wall+ME->size;
-	Libprintf("[ME %ld nextME %ld\t] pt=%ld \tsize=%ld \t<%s> \t[%ld]\n ",(ULONG)ME,(ULONG)ME->nextME,(ULONG)ME->pt,(ULONG)ME->size,ME->name,(ULONG)wall[0]);
+	Libprintf("[ME %ld nextME %ld\t] pt=%ld \tsize=%ld \t<%s> \t[%ld]\n ",(IPTR)ME,(IPTR)ME->nextME,(IPTR)ME->pt,(ULONG)ME->size,ME->name,(ULONG)wall[0]);
 }
 #else
 #define PrintME()
@@ -264,7 +264,7 @@ UBYTE *wall;
 #ifdef WAZP3DDEBUG
 	ListMemoryUsage();
 	if(Wazp3D->DebugMemUsage.ON)
-		Libprintf("MYmalloc() OK give pt: %ld (up to %ld) for <%s> \n",(ULONG)ME->pt,(ULONG)&ME->pt[ME->size],ME->name);
+		Libprintf("MYmalloc() OK give pt: %ld (up to %ld) for <%s> \n",(IPTR)ME->pt,(IPTR)&ME->pt[ME->size],ME->name);
 #endif
 	return(ME->pt);
 }
@@ -279,7 +279,7 @@ UBYTE *Bpt=pt;
 	if(pt==NULL) return;
 #ifdef WAZP3DDEBUG
 	if(Wazp3D->DebugMemUsage.ON)
-		Libprintf("Will free() memory at %ld\n",(ULONG)pt);
+		Libprintf("Will free() memory at %ld\n",(IPTR)pt);
 #endif
 	ME =(struct memory3D *)(Bpt - sizeof(struct memory3D) );
 	thisME->nextME=firstME;
@@ -292,7 +292,7 @@ UBYTE *Bpt=pt;
 		else
 			thisME->nextME=ME->nextME;
 #ifdef WAZP3DDEBUG
-		if(Wazp3D->DebugMemUsage.ON) Libprintf("MYfree() OK for pt: %ld was <%s>\n",(ULONG)ME->pt,ME->name);
+		if(Wazp3D->DebugMemUsage.ON) Libprintf("MYfree() OK for pt: %ld was <%s>\n",(IPTR)ME->pt,ME->name);
 		Libfree(ME);
 		ListMemoryUsage();
 #else
@@ -303,7 +303,7 @@ UBYTE *Bpt=pt;
 	thisME=thisME->nextME;
 	}
 #ifdef WAZP3DDEBUG
-		if(Wazp3D->DebugMemUsage.ON) Libprintf("MYfree() ME %ld not found ==> not allocated pt: %ld  !!!!\n",(ULONG)ME,(ULONG)pt);
+		if(Wazp3D->DebugMemUsage.ON) Libprintf("MYfree() ME %ld not found ==> not allocated pt: %ld  !!!!\n",(IPTR)ME,(IPTR)pt);
 #endif
 }
 /*==================================================================================*/
@@ -333,7 +333,7 @@ while (!terminated)
 
 				if(ThisB->CycleNb!=0)
 				{
-				GT_GetGadgetAttrs(gad, mywin, NULL,GTCY_Active,(ULONG)&value,TAG_DONE);
+				GT_GetGadgetAttrs(gad, mywin, NULL,GTCY_Active,(IPTR)&value,TAG_DONE);
 				ThisB->ON=value;
 				}
 				else
@@ -372,9 +372,9 @@ ULONG value;
 
 	Wazp3D->PrefsIsOpened=TRUE;
 #ifdef WAZP3DDEBUG
-	Bnb=((LONG)&Wazp3D->DebugMemUsage -(LONG)&Wazp3D->HardwareLie)/sizeof(struct button3D)+1;
+	Bnb=((IPTR)&Wazp3D->DebugMemUsage -(IPTR)&Wazp3D->HardwareLie)/sizeof(struct button3D)+1;
 #else
-	Bnb=((LONG)&Wazp3D->DebugWazp3D  - (LONG)&Wazp3D->HardwareLie)/sizeof(struct button3D);
+	Bnb=((IPTR)&Wazp3D->DebugWazp3D  - (IPTR)&Wazp3D->HardwareLie)/sizeof(struct button3D);
 #endif
 	Wazp3D->DebugWazp3D.ON=LibDebug;
 
@@ -408,7 +408,7 @@ NLOOP(Bnb)
 		ng.ng_Width 	   = 24+120;
 		ng.ng_LeftEdge	=  x-120;
 		value 		   = B[n].ON;
-		gad = CreateGadget(CYCLE_KIND 	 , gad, &ng, GTCY_Labels,(ULONG)B[n].cyclenames,GTCY_Active,value, TAG_DONE);
+		gad = CreateGadget(CYCLE_KIND 	 , gad, &ng, GTCY_Labels,(IPTR)B[n].cyclenames,GTCY_Active,value, TAG_DONE);
 		}
 	else
 		{
@@ -420,12 +420,12 @@ NLOOP(Bnb)
 			{
 			if ( (mywin = OpenWindowTags(NULL,
 					WA_Title,  Wazp3DPrefsNameTag ,
-					WA_Gadgets, (ULONG)  glist,	  WA_AutoAdjust,	TRUE,
+					WA_Gadgets, (IPTR)  glist,	  WA_AutoAdjust,	TRUE,
 					WA_InnerWidth,	   260+220,	  WA_InnerHeight,	20+12*Bnb/2,
 					WA_DragBar,	TRUE,	  WA_DepthGadget,   TRUE,
 					WA_Activate,   TRUE,	  WA_CloseGadget,   TRUE,
 					WA_IDCMP, IDCMP_CLOSEWINDOW |IDCMP_REFRESHWINDOW | BUTTONIDCMP,
-					WA_PubScreen,  (ULONG) mysc,
+					WA_PubScreen,  (IPTR) mysc,
 					TAG_END)) != NULL )
 				{
 				GT_RefreshWindow(mywin, NULL);
@@ -534,7 +534,7 @@ void PrintWT(struct WAZP3D_texture *WT)
 {
 #ifdef WAZP3DDEBUG
 	if (!Wazp3D->DebugWT.ON) return;
-	Libprintf("WAZP3D_texture(%ld) %ldX%ldX%ld  pt%ld ST<%ld> NextWT<%ld> \n",(ULONG)WT,(ULONG)WT->large,(ULONG)WT->high,(ULONG)WT->bits,(ULONG)WT->pt,(ULONG)WT->ST,(ULONG)WT->nextWT);
+	Libprintf("WAZP3D_texture(%ld) %ldX%ldX%ld  pt%ld ST<%ld> NextWT<%ld> \n",(IPTR)WT,(ULONG)WT->large,(ULONG)WT->high,(ULONG)WT->bits,(IPTR)WT->pt,(IPTR)WT->ST,(IPTR)WT->nextWT);
 #else
 	return;
 #endif
@@ -659,7 +659,7 @@ REM(SetTexStates)
 		WC->state.TexEnvMode=0;				/* no tex ==> no TexEnv effect */
 
 /* define PerspMode */
-		WC->state.PerspMode=Wazp3D->PerspMode.ON;		/* default: do perspective for edges only */
+        WC->state.PerspMode=Wazp3D->PerspMode.ON;		/* default: do perspective for edges only */
 	if(!StateON(W3D_PERSPECTIVE))					/* if perspective not enabled in Warp3D */
 		WC->state.PerspMode=0;
 VAR(WC->state.BlendMode)
@@ -1151,7 +1151,7 @@ WORD Bnb,n,x,large;
 	Libstrcpy(Wazp3D->DebugMemList.name,"Debug MemList");
 	Libstrcpy(Wazp3D->DebugMemUsage.name,"Debug MemUsage");
 
-	Bnb=((LONG)&Wazp3D->DebugMemUsage -(LONG)&Wazp3D->HardwareLie)/sizeof(struct button3D)+1;
+	Bnb=((IPTR)&Wazp3D->DebugMemUsage -(IPTR)&Wazp3D->HardwareLie)/sizeof(struct button3D)+1;
 /* get names for cycle-gadgets */
 	NLOOP(Bnb)
 		{
@@ -2084,7 +2084,8 @@ W3D_Context	*W3D_CreateContext(ULONG *error, struct TagItem *taglist)
 {
 W3D_Context	*context;
 struct WAZP3D_context *WC;
-ULONG tag,data;
+Tag tag;
+IPTR data;
 UWORD n;
 ULONG EnableMask,DisableMask;
 ULONG AllStates=~0;
@@ -2848,7 +2849,7 @@ ULONG supported=W3D_TEXFMT_SUPPORTED+W3D_TEXFMT_FAST+W3D_TEXFMT_ARGBFAST;
 	return(support);
 }
 /*==========================================================================*/
-BOOL ScreenModeFilterC(struct Hook* hook,APTR object,APTR message)
+BOOL ScreenModeFilterC(struct Hook* hook,APTR object,IPTR message)
 {
 ULONG ID=(ULONG)message;
 struct DimensionInfo dims;
@@ -2892,7 +2893,7 @@ ULONG ok;
 AROS_UFH3(BOOL, ScreenModeFilterASM,
 AROS_UFHA(struct Hook *,hook,A0),
 AROS_UFHA(APTR ,object , A2),
-AROS_UFHA(APTR ,message, A1))
+AROS_UFHA(IPTR ,message, A1))
 {
 	AROS_USERFUNC_INIT
 	return ScreenModeFilterC(hook,object,message);
@@ -2918,8 +2919,8 @@ BOOL ScreenModeFilterASM(struct Hook* hook __asm("a0"), APTR object __asm("a2"),
 ULONG W3D_RequestMode(struct TagItem *taglist)
 {
 W3D_Driver *driver;
-ULONG tag,data;
-ULONG size,format,drivertype,ModeID=INVALID_ID;
+Tag tag;
+IPTR data, size,format,drivertype,ModeID=INVALID_ID;
 #ifndef __AROS__
 struct Library *AslBase;
 #endif
@@ -2984,8 +2985,8 @@ struct Hook filter;
 #endif
 	if((requester = (struct ScreenModeRequester *)AllocAslRequestTags(
 	ASL_ScreenModeRequest,
-	ASLSM_TitleText,(ULONG) "Wazp3D Screen Modes ",
-	ASLSM_FilterFunc,(ULONG)&filter,
+	ASLSM_TitleText,(IPTR) "Wazp3D Screen Modes ",
+	ASLSM_FilterFunc,(IPTR)&filter,
 	TAG_DONE )))
 		{
 		ModeID=INVALID_ID;
@@ -3109,7 +3110,8 @@ W3D_Texture	*W3D_AllocTexObj(W3D_Context *context, ULONG *error,struct TagItem *
 W3D_Texture *texture=NULL;
 struct WAZP3D_context *WC;
 struct WAZP3D_texture *WT;
-ULONG tag,data;
+Tag tag;
+IPTR data;
 ULONG n;
 APTR *MipPt=NULL;
 ULONG size;
@@ -4494,7 +4496,7 @@ SREM(setting the bitmap)
 		Wazp3D->Renderer.ON=1;	/* soft to bitmap : as SOFT3D.DLL cant do a WritePixelArray(Image)*/
 		}
 
-	bmHandle=LockBitMapTags((APTR)bm,LBMI_BASEADDRESS,(ULONG)&WC->bmdata, TAG_DONE);
+	bmHandle=LockBitMapTags((APTR)bm,LBMI_BASEADDRESS,(IPTR)&WC->bmdata, TAG_DONE);
 	WC->bmformat = GetCyberMapAttr(bm,CYBRMATTR_PIXFMT);
 	UnLockBitMap(bmHandle);
 	if(Wazp3D->Renderer.ON==1)	/* soft to bitmap */
@@ -5183,7 +5185,7 @@ LONG n;
 	WC->Pnb=0;
 	SetTexStates(context,triangles->tex);
 NLOOP(triangles->vertexcount)
-	GetVertex(WC,triangles->v[n]);
+                GetVertex(WC,triangles->v[n]);
 
 	DrawPrimitive(context,W3D_PRIMITIVE_TRIFAN);
 	WRETURN(W3D_SUCCESS);
@@ -5198,7 +5200,7 @@ LONG n;
 	WC->Pnb=0;
 	SetTexStates(context,triangles->tex);
 NLOOP(triangles->vertexcount)
-	GetVertex(WC,triangles->v[n]);
+                GetVertex(WC,triangles->v[n]);
 
 	DrawPrimitive(context,W3D_PRIMITIVE_TRISTRIP);
 	WRETURN(W3D_SUCCESS);
@@ -5249,12 +5251,12 @@ void W3D_FreeScreenmodeList(W3D_ScreenMode *list)
 /*==========================================================================*/
 ULONG 		W3D_BestModeID(struct TagItem *taglist)
 {
-ULONG tag,data;
-ULONG driver,ModeID;
+Tag tag;
+IPTR data, driver,ModeID;
 ULONG large,high,bits;
 
 	WAZP3DFUNCTION(80);
-	driver=(ULONG)&Wazp3D->driver;
+	driver=(IPTR)&Wazp3D->driver;
 	large	=320;
 	high	=240;
 	bits  =32;
@@ -5989,7 +5991,7 @@ ULONG format=texture->texfmtsrc;
 void 		PrintAllFunctionsAdresses(void)
 {
 #ifdef WAZP3DDEBUG
-#define  VARH(var) { Libprintf(" " #var " Adresse="); ph((ULONG)var); Libprintf("\n"); }
+#define  VARH(var) { Libprintf(" " #var " Adresse="); ph((IPTR)var); Libprintf("\n"); }
 
 
 		VARH(W3D_CreateContext)
