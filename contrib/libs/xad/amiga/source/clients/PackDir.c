@@ -219,7 +219,8 @@ xadERROR PackDir_GetInfo(struct xadArchiveInfo *ai, XADBASE) {
    */
   q = NULL;
   for (p = &state->names[0][0]; *p; p++) {
-    if (*p == '$' && p[1] == '.') q = p+2; if (*p == '.') *p = '/';
+    if (*p == '$' && p[1] == '.') q = p+2;
+    if (*p == '.') *p = '/';
   }
   if (q) {p = &state->names[0][0]; while ((*p++ = *q++));}
 
