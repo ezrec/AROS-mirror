@@ -15,7 +15,8 @@ USER_INCLUDES := -I$(PORTSDIR)/netpbm/$(ARCHBASE) \
                  -I$(PORTSDIR)/netpbm/$(ARCHBASE)/lib \
                  -I$(PORTSDIR)/netpbm/$(ARCHBASE)/lib/util \
                  -I$(PORTSDIR)/netpbm/$(ARCHBASE)converter/ppm
-USER_CFLAGS := -Wno-uninitialized $(UNUSED_BUT_SET_VARIABLE_CFLAGS) -Wno-format
+NOWARN_FLAGS := -Wno-misleading-indentation -Wno-uninitialized -Wno-format
+USER_CFLAGS := $(NOWARN_FLAGS) $(UNUSED_BUT_SET_VARIABLE_CFLAGS)
 
 DIR := $(PORTSDIR)/netpbm/$(ARCHBASE)/
 
