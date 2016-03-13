@@ -28,7 +28,7 @@ CXX_FILES := \
 
 TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/AROSPDF/libs
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../goo -I$(SRCDIR)/$(CURDIR)/../fofi
-NOWARN_FLAGS := -Wno-write-strings -Wno-unused-but-set-variable
+NOWARN_FLAGS := -Wno-write-strings -Wno-unused-variable -Wno-unused-but-set-variable
 USER_CFLAGS :=  $(NOWARN_FLAGS) -DHAVE_CONFIG_H
 USER_CXXFLAGS :=  $(NOWARN_FLAGS) -DHAVE_CONFIG_H
 
