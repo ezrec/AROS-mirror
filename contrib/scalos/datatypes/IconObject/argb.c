@@ -122,7 +122,7 @@ void ARGB_Draw(Class *cl, Object *o, struct iopDraw *opd, LONG x, LONG y)
 							ImgHeader,
 							x + inst->iobj_imgleft, y + inst->iobj_imgtop,
 							&SrcSize,
-							SCALOSGFX_BlitARGBHilight, (ULONG) &K,
+							SCALOSGFX_BlitARGBHilight, (IPTR) &K,
 							SCALOSGFX_BlitARGBTransparency, 200,
 							SCALOSGFX_BlitARGBNoAlpha, TRUE,
 							TAG_END);
@@ -152,7 +152,7 @@ void ARGB_Draw(Class *cl, Object *o, struct iopDraw *opd, LONG x, LONG y)
 							ImgHeader,
 							x + inst->iobj_imgleft, y + inst->iobj_imgtop,
 							&SrcSize,
-							SCALOSGFX_BlitARGBHilight, (ULONG) &K,
+							SCALOSGFX_BlitARGBHilight, (IPTR) &K,
 							SCALOSGFX_BlitARGBTransparency, 200,
 							TAG_END);
 						}

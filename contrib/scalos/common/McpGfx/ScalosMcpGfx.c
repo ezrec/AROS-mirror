@@ -129,7 +129,7 @@ void McpGfxRectFill(struct RastPort *rp,
 		ULONG PatSize;
 
 		PatSize = GetTagData(IA_APatSize, 0, TagList);
-		Pattern = (UWORD *) GetTagData(IA_APattern, (ULONG) NULL, TagList);
+		Pattern = (UWORD *) GetTagData(IA_APattern, (IPTR) NULL, TagList);
 
 		if (PatSize && Pattern)
 			{

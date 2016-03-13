@@ -123,7 +123,7 @@ static struct SignalSemaphore MemPoolSemaphore;
 
 static Class *IconObjectClass;
 
-static const ULONG packTable[] =
+static ULONG packTable[] =
 	{
 	PACK_STARTTABLE(IDTA_TAGBASE),
 	PACK_ENTRY(IDTA_TAGBASE, IDTA_UserFlags, 		InstanceData, iobj_UserFlags, 				PKCTRL_ULONG | PKCTRL_PACKUNPACK),
@@ -175,7 +175,7 @@ static const ULONG packTable[] =
 //----------------------------------------------------------------------------
 
 // must be public for AROS
-SAVEDS(ULONG) INTERRUPT IconObjectDispatcher(Class *cl, Object *o, Msg msg);
+SAVEDS(IPTR) INTERRUPT IconObjectDispatcher(Class *cl, Object *o, Msg msg);
 
 //-----------------------------------------------------------------------------
 
@@ -272,12 +272,12 @@ char ALIGNED libIdString[] = "$VER: iconobject.datatype "
 //-----------------------------------------------------------------------------
 
 #ifdef __AROS__
-AROS_LH0(ULONG, ObtainInfoEngine,
+AROS_LH0(IPTR, ObtainInfoEngine,
     struct Library *, libBase, 5, Iconobj
 )
 {
 	AROS_LIBFUNC_INIT
-	return (ULONG) IconObjectClass;
+	return (IPTR) IconObjectClass;
 	AROS_LIBFUNC_EXIT
 }
 #else
@@ -540,9 +540,9 @@ ULONG CloseDatatype(struct IconObjectDtLibBase *dtLib)
 
 //-----------------------------------------------------------------------------
 
-SAVEDS(ULONG) INTERRUPT IconObjectDispatcher(Class *cl, Object *o, Msg msg)
+SAVEDS(IPTR) INTERRUPT IconObjectDispatcher(Class *cl, Object *o, Msg msg)
 {
-	ULONG Result;
+	IPTR Result;
 
 	d1(kprintf("%s/%s/%ld:  cl=%08lx  o=%08lx  msg=%08lx  MethodID=%08ld\n", __FILE__, __FUNC__, __LINE__,
 		 cl, o, msg, msg->MethodID));
@@ -561,7 +561,7 @@ SAVEDS(ULONG) INTERRUPT IconObjectDispatcher(Class *cl, Object *o, Msg msg)
 				o = NULL;
 				}
 			}
-		Result = (ULONG) o;
+		Result = (IPTR) o;
 		break;
 
 	case OM_DISPOSE:
@@ -1545,14 +1545,14 @@ static ULONG DtGet(Class *cl, Object *o, struct opGet *opg)
 	struct TagItem AttrList[2];
 
 	AttrList[0].ti_Tag = opg->opg_AttrID;
-	AttrList[0].ti_Data = (ULONG) opg->opg_Storage;
+	AttrList[0].ti_Data = (IPTR) opg->opg_Storage;
 	AttrList[1].ti_Tag = TAG_END;
 	UnpackStructureTags(inst, packTable, AttrList);
 
 	switch (opg->opg_AttrID)
 		{
 	case IDTA_Text:
-		*opg->opg_Storage = (ULONG) inst->iobj_text;
+		*opg->opg_Storage = (IPTR) inst->iobj_text;
 		break;
 
 	case IDTA_LayoutFlags:
@@ -1560,67 +1560,67 @@ static ULONG DtGet(Class *cl, Object *o, struct opGet *opg)
 		break;
 
 	case IDTA_DefaultTool:
-		*opg->opg_Storage = (ULONG) inst->iobj_defaulttool;
+		*opg->opg_Storage = (IPTR) inst->iobj_defaulttool;
 		break;
 
 	case IDTA_ToolWindow:
-		*opg->opg_Storage = (ULONG) inst->iobj_ToolWindow;
+		*opg->opg_Storage = (IPTR) inst->iobj_ToolWindow;
 		break;
 
 	case IDTA_Mask_Normal:
-		*opg->opg_Storage = (ULONG) ((inst->iobj_NormalMask.iom_MaskBM && (IDTA_BACKFILL_NONE == inst->iobj_BackfillPenNorm))
+		*opg->opg_Storage = (IPTR) ((inst->iobj_NormalMask.iom_MaskBM && (IDTA_BACKFILL_NONE == inst->iobj_BackfillPenNorm))
 			? inst->iobj_NormalMask.iom_MaskBM->Planes[0] : NULL);
 		break;
 
 	case IDTA_Mask_Selected:
-		*opg->opg_Storage = (ULONG) ((inst->iobj_SelectedMask.iom_MaskBM && (IDTA_BACKFILL_NONE == inst->iobj_BackfillPenSel))
+		*opg->opg_Storage = (IPTR) ((inst->iobj_SelectedMask.iom_MaskBM && (IDTA_BACKFILL_NONE == inst->iobj_BackfillPenSel))
 			? inst->iobj_SelectedMask.iom_MaskBM->Planes[0] : NULL);
 		break;
 
 	case IDTA_MaskBM_Normal:
-		*opg->opg_Storage = (ULONG) ((IDTA_BACKFILL_NONE == inst->iobj_BackfillPenNorm) ? inst->iobj_NormalMask.iom_MaskBM : NULL);
+		*opg->opg_Storage = (IPTR) ((IDTA_BACKFILL_NONE == inst->iobj_BackfillPenNorm) ? inst->iobj_NormalMask.iom_MaskBM : NULL);
 		break;
 
 	case IDTA_MaskBM_Selected:
-		*opg->opg_Storage = (ULONG) ((IDTA_BACKFILL_NONE == inst->iobj_BackfillPenSel) ? inst->iobj_SelectedMask.iom_MaskBM : NULL);
+		*opg->opg_Storage = (IPTR) ((IDTA_BACKFILL_NONE == inst->iobj_BackfillPenSel) ? inst->iobj_SelectedMask.iom_MaskBM : NULL);
 		break;
 
 	case IDTA_AlphaChannel:
-		*opg->opg_Storage = (ULONG) inst->iobj_NormalARGB.iargb_AlphaChannel;
+		*opg->opg_Storage = (IPTR) inst->iobj_NormalARGB.iargb_AlphaChannel;
 		break;
 
 	case IDTA_SelAlphaChannel:
-		*opg->opg_Storage = (ULONG) inst->iobj_SelectedARGB.iargb_AlphaChannel;
+		*opg->opg_Storage = (IPTR) inst->iobj_SelectedARGB.iargb_AlphaChannel;
 		break;
 
 	case IDTA_ARGBImageData:
-		*opg->opg_Storage = (ULONG) &inst->iobj_NormalARGB.iargb_ARGBimage;
+		*opg->opg_Storage = (IPTR) &inst->iobj_NormalARGB.iargb_ARGBimage;
 		d1(KPrintF("%s/%s/%ld: argbh=%08lx  argb_ImageData=%08lx\n", \
 			__FILE__, __FUNC__, __LINE__, &inst->iobj_NormalARGB.iargb_ARGBimage,
 			inst->iobj_NormalARGB.iargb_ARGBimage.argb_ImageData));
 		break;
 
 	case IDTA_SelARGBImageData:
-		*opg->opg_Storage = (ULONG) &inst->iobj_SelectedARGB.iargb_ARGBimage;
+		*opg->opg_Storage = (IPTR) &inst->iobj_SelectedARGB.iargb_ARGBimage;
 		d1(KPrintF("%s/%s/%ld: argbh=%08lx  argb_ImageData=%08lx\n", \
 			__FILE__, __FUNC__, __LINE__, &inst->iobj_SelectedARGB.iargb_ARGBimage,
 			inst->iobj_SelectedARGB.iargb_ARGBimage.argb_ImageData));
 		break;
 
 	case IDTA_ToolTypes:
-		*opg->opg_Storage = (ULONG) inst->iobj_tooltypes;
+		*opg->opg_Storage = (IPTR) inst->iobj_tooltypes;
 		break;
 
 	case DTA_Name:
-		*opg->opg_Storage = (ULONG) inst->iobj_name;
+		*opg->opg_Storage = (IPTR) inst->iobj_name;
 		break;
 
 	case IDTA_UnscaledWidth:
-		*opg->opg_Storage = (ULONG) inst->iobj_UnscaledWidth;
+		*opg->opg_Storage = (IPTR) inst->iobj_UnscaledWidth;
 		break;
 
 	case IDTA_UnscaledHeight:
-		*opg->opg_Storage = (ULONG) inst->iobj_UnscaledHeight;
+		*opg->opg_Storage = (IPTR) inst->iobj_UnscaledHeight;
 		break;
 
 	case IDTA_WindowRect:
@@ -1634,9 +1634,9 @@ static ULONG DtGet(Class *cl, Object *o, struct opGet *opg)
 				inst->iobj_winrect.Width, inst->iobj_winrect.Height));
 
 			if (0 != inst->iobj_winrect.Width && 0 != inst->iobj_winrect.Height)
-				*opg->opg_Storage = (ULONG) &inst->iobj_winrect;
+				*opg->opg_Storage = (IPTR) &inst->iobj_winrect;
 			else
-				*opg->opg_Storage = (ULONG) NULL;
+				*opg->opg_Storage = (IPTR) NULL;
 			break;
 		default:
 			result = 0;
