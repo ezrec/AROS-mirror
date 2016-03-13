@@ -196,13 +196,13 @@ STATIC void IterateList( void (* callback)( struct AudioModeEntry *ame, void *us
                             ame->ame_ModeID = id;
                             _snprintf(ame->ame_Id, sizeof(ame->ame_Id), "$%08lx", id);
 
-                            AHI_GetAudioAttrs(id, NULL, AHIDB_Name, (Tag)ame->ame_Name,
+                            AHI_GetAudioAttrs(id, NULL, AHIDB_Name, (IPTR)ame->ame_Name,
                                                         AHIDB_BufferLen, sizeof(ame->ame_Name),
                                                         TAG_DONE);
-                            AHI_GetAudioAttrs(id, NULL, AHIDB_Bits, (Tag)&bits,
-                                                        AHIDB_MinMixFreq, (Tag)&minfreq,
-                                                        AHIDB_MaxMixFreq, (Tag)&maxfreq,
-                                                        AHIDB_Frequencies, (Tag)&numfreqs,
+                            AHI_GetAudioAttrs(id, NULL, AHIDB_Bits, (IPTR)&bits,
+                                                        AHIDB_MinMixFreq, (IPTR)&minfreq,
+                                                        AHIDB_MaxMixFreq, (IPTR)&maxfreq,
+                                                        AHIDB_Frequencies, (IPTR)&numfreqs,
                                                         TAG_DONE);
                             _snprintf(ame->ame_Bits, sizeof(ame->ame_Bits), "%3lD", bits);
                             if (numfreqs > 1) {
