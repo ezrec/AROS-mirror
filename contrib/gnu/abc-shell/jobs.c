@@ -666,7 +666,7 @@ j_waitj(Job *j,
         if (flags & JW_ASYNCNOTIFY)
                 j->flags |= JF_W_ASYNCNOTIFY;
 
-                flags |= JW_STOPPEDWAIT;
+        flags |= JW_STOPPEDWAIT;
 
         while ((volatile int) j->state == PRUNNING ||
                 ((flags & JW_STOPPEDWAIT) && (volatile int) j->state == PSTOPPED))
