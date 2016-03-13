@@ -88,7 +88,7 @@ static Class *AmigaIconObj35Class;
 
 //----------------------------------------------------------------------------
 
-SAVEDS(ULONG) INTERRUPT AmigaIconObj35Dispatcher(Class *cl, Object *o, Msg msg);
+SAVEDS(IPTR) INTERRUPT AmigaIconObj35Dispatcher(Class *cl, Object *o, Msg msg);
 
 //-----------------------------------------------------------------------------
 
@@ -140,12 +140,12 @@ char ALIGNED libIdString[] = "$VER: amigaiconobj35.datatype "
 //----------------------------------------------------------------------------
 
 #ifdef __AROS__
-AROS_LH0(ULONG, ObtainInfoEngine,
+AROS_LH0(IPTR, ObtainInfoEngine,
     struct Library *, libBase, 5, AmigaIconobj35
 )
 {
 	AROS_LIBFUNC_INIT
-	return (ULONG) AmigaIconObj35Class;
+	return (IPTR) AmigaIconObj35Class;
 	AROS_LIBFUNC_EXIT
 }
 #else
@@ -429,9 +429,9 @@ ULONG CloseDatatype(struct AmigaIconObj35DtLibBase *dtLib)
 
 //-----------------------------------------------------------------------------
 
-SAVEDS(ULONG) INTERRUPT AmigaIconObj35Dispatcher(Class *cl, Object *o, Msg msg)
+SAVEDS(IPTR) INTERRUPT AmigaIconObj35Dispatcher(Class *cl, Object *o, Msg msg)
 {
-	ULONG Result;
+	IPTR Result;
 
 	switch (msg->MethodID)
 		{
@@ -447,7 +447,7 @@ SAVEDS(ULONG) INTERRUPT AmigaIconObj35Dispatcher(Class *cl, Object *o, Msg msg)
 				o = NULL;
 				}
 			}
-		Result = (ULONG) o;
+		Result = (IPTR) o;
 		break;
 
 	case OM_DISPOSE:
@@ -518,7 +518,7 @@ static BOOL DtNew(Class *cl, Object *o, struct opSet *ops)
 		inst->aio_ImageLeft = GetTagData(IDTA_InnerLeft, 0, ops->ops_AttrList);
 		inst->aio_ImageTop  = GetTagData(IDTA_InnerTop,  0, ops->ops_AttrList);
 
-		inst->aio_RenderHook = (struct Hook *) GetTagData(IDTA_RenderHook, (ULONG) NULL,  ops->ops_AttrList);
+		inst->aio_RenderHook = (struct Hook *) GetTagData(IDTA_RenderHook, (IPTR) NULL,  ops->ops_AttrList);
 
 		if (FindTagItem(IDTA_CloneIconObject, ops->ops_AttrList))
 			{
@@ -555,7 +555,7 @@ static BOOL DtNew(Class *cl, Object *o, struct opSet *ops)
 				if (NULL == IconName)
 					break;
 
-				inst->aio_DiskObject = (struct DiskObject *) GetTagData(AIDTA_Icon, (ULONG) NULL, ops->ops_AttrList);
+				inst->aio_DiskObject = (struct DiskObject *) GetTagData(AIDTA_Icon, (IPTR) NULL, ops->ops_AttrList);
 				d1(kprintf("%s/%ld:  o=%08lx  aio_DiskObject=%08lx\n", __FUNC__, __LINE__, o, inst->aio_DiskObject));
 				if (inst->aio_DiskObject)
 					{
@@ -590,27 +590,27 @@ static BOOL DtNew(Class *cl, Object *o, struct opSet *ops)
 
 			// IconControlA()
 			IconControl(inst->aio_DiskObject,
-				ICONCTRLA_IsPaletteMapped, (ULONG) &TempData.tmp_ispalmapped,
+				ICONCTRLA_IsPaletteMapped, (IPTR) &TempData.tmp_ispalmapped,
 				TAG_END);
 			d1(kprintf("%s/%ld:  o=%08lx  ispalmapped=%ld\n", __FUNC__, __LINE__, o, TempData.tmp_ispalmapped));
 
 			if (TempData.tmp_ispalmapped)
 				{
 				IconControl(inst->aio_DiskObject,
-					ICONCTRLA_GetHeight, (ULONG) &TempData.tmp_height,
-					ICONCTRLA_GetWidth, (ULONG) &TempData.tmp_width,
+					ICONCTRLA_GetHeight, (IPTR) &TempData.tmp_height,
+					ICONCTRLA_GetWidth, (IPTR) &TempData.tmp_width,
 
-					ICONCTRLA_GetFrameless, (ULONG) &inst->aio_Borderless,
+					ICONCTRLA_GetFrameless, (IPTR) &inst->aio_Borderless,
 
-					ICONCTRLA_GetImageData1, (ULONG) &inst->aio_Image1.aiomi_ImageData,
-					ICONCTRLA_GetPaletteSize1, (ULONG) &inst->aio_Image1.aiomi_PaletteSize,
-					ICONCTRLA_GetPalette1, (ULONG) &inst->aio_Image1.aiomi_Palette,
-					ICONCTRLA_GetTransparentColor1, (ULONG) &inst->aio_Image1.aiomi_TransparentColor,
+					ICONCTRLA_GetImageData1, (IPTR) &inst->aio_Image1.aiomi_ImageData,
+					ICONCTRLA_GetPaletteSize1, (IPTR) &inst->aio_Image1.aiomi_PaletteSize,
+					ICONCTRLA_GetPalette1, (IPTR) &inst->aio_Image1.aiomi_Palette,
+					ICONCTRLA_GetTransparentColor1, (IPTR) &inst->aio_Image1.aiomi_TransparentColor,
 
-					ICONCTRLA_GetImageData2, (ULONG) &inst->aio_Image2.aiomi_ImageData,
-					ICONCTRLA_GetPaletteSize2, (ULONG) &inst->aio_Image2.aiomi_PaletteSize,
-					ICONCTRLA_GetPalette2, (ULONG) &inst->aio_Image2.aiomi_Palette,
-					ICONCTRLA_GetTransparentColor2, (ULONG) &inst->aio_Image2.aiomi_TransparentColor,
+					ICONCTRLA_GetImageData2, (IPTR) &inst->aio_Image2.aiomi_ImageData,
+					ICONCTRLA_GetPaletteSize2, (IPTR) &inst->aio_Image2.aiomi_PaletteSize,
+					ICONCTRLA_GetPalette2, (IPTR) &inst->aio_Image2.aiomi_Palette,
+					ICONCTRLA_GetTransparentColor2, (IPTR) &inst->aio_Image2.aiomi_TransparentColor,
 					TAG_END);
 
 				inst->aio_fIsPaletteMapped = TRUE;
@@ -640,12 +640,12 @@ static BOOL DtNew(Class *cl, Object *o, struct opSet *ops)
 				ULONG *ARGBData1 = NULL, *ARGBData2 = NULL;
 
 				IconControl(inst->aio_DiskObject,
-					ICONCTRLA_GetHeight, (ULONG) &TempData.tmp_height,
-					ICONCTRLA_GetWidth, (ULONG) &TempData.tmp_width,
-					ICONCTRLA_GetImageMask1, (ULONG) &Mask1,
-					ICONCTRLA_GetImageMask2, (ULONG) &Mask2,
-					ICONCTRLA_GetARGBImageData1, (ULONG) &ARGBData1,
-					ICONCTRLA_GetARGBImageData2, (ULONG) &ARGBData2,
+					ICONCTRLA_GetHeight, (IPTR) &TempData.tmp_height,
+					ICONCTRLA_GetWidth, (IPTR) &TempData.tmp_width,
+					ICONCTRLA_GetImageMask1, (IPTR) &Mask1,
+					ICONCTRLA_GetImageMask2, (IPTR) &Mask2,
+					ICONCTRLA_GetARGBImageData1, (IPTR) &ARGBData1,
+					ICONCTRLA_GetARGBImageData2, (IPTR) &ARGBData2,
 					TAG_END);
 				d1(KPrintF("%s/%ld:  o=%08lx  Mask1=%08lx  Mask2=%08lx\n",
 					__FUNC__, __LINE__, o, Mask1, Mask2));
@@ -666,7 +666,7 @@ static BOOL DtNew(Class *cl, Object *o, struct opSet *ops)
 
 					SetAttrs(o,
 						IDTA_CopyARGBImageData,	TRUE,
-						IDTA_ARGBImageData, (ULONG) &argbh,
+						IDTA_ARGBImageData, (IPTR) &argbh,
 						TAG_END);
 					}
 				if (Mask1)
@@ -689,7 +689,7 @@ static BOOL DtNew(Class *cl, Object *o, struct opSet *ops)
 
 					SetAttrs(o,
 						IDTA_CopySelARGBImageData, TRUE,
-						IDTA_SelARGBImageData, (ULONG) &argbh,
+						IDTA_SelARGBImageData, (IPTR) &argbh,
 						TAG_END);
 					}
 				if (Mask2)
@@ -742,21 +742,21 @@ static BOOL DtNew(Class *cl, Object *o, struct opSet *ops)
 					IDTA_Flags, inst->aio_DiskObject->do_DrawerData->dd_Flags,
 					IDTA_WinCurrentX, inst->aio_DiskObject->do_DrawerData->dd_CurrentX,
 					IDTA_WinCurrentY, inst->aio_DiskObject->do_DrawerData->dd_CurrentY,
-					IDTA_WindowRect, (ULONG) &inst->aio_DiskObject->do_DrawerData->dd_NewWindow,
+					IDTA_WindowRect, (IPTR) &inst->aio_DiskObject->do_DrawerData->dd_NewWindow,
 					TAG_END);
 				}
 
 			SetAttrs(o,
-				IDTA_Mask_Normal, (ULONG) inst->aio_Image1.aiomi_Mask,
-				IDTA_Mask_Selected, (ULONG) inst->aio_Image2.aiomi_Mask,
+				IDTA_Mask_Normal, (IPTR) inst->aio_Image1.aiomi_Mask,
+				IDTA_Mask_Selected, (IPTR) inst->aio_Image2.aiomi_Mask,
 				IDTA_Width_Mask_Normal, inst->aio_MappedWidth,
 				IDTA_Height_Mask_Normal, inst->aio_MappedHeight,
 				IDTA_Width_Mask_Selected, inst->aio_MappedWidth,
 				IDTA_Height_Mask_Selected, inst->aio_MappedHeight,
 
-				IDTA_ToolTypes, (ULONG) inst->aio_DiskObject->do_ToolTypes,
+				IDTA_ToolTypes, (IPTR) inst->aio_DiskObject->do_ToolTypes,
 				IDTA_Stacksize, inst->aio_DiskObject->do_StackSize,
-				IDTA_DefaultTool, (ULONG) inst->aio_DiskObject->do_DefaultTool,
+				IDTA_DefaultTool, (IPTR) inst->aio_DiskObject->do_DefaultTool,
 				IDTA_Type, inst->aio_DiskObject->do_Type,
 				IDTA_Borderless, inst->aio_Borderless,
 				TAG_END);
@@ -804,7 +804,7 @@ static ULONG DtSet(Class *cl, Object *o, struct opSet *ops)
 	struct InstanceData *inst = INST_DATA(cl, o);
 	ULONG Result;
 
-	inst->aio_RenderHook = (struct Hook *) GetTagData(IDTA_RenderHook, (ULONG) inst->aio_RenderHook, ops->ops_AttrList);
+	inst->aio_RenderHook = (struct Hook *) GetTagData(IDTA_RenderHook, (IPTR) inst->aio_RenderHook, ops->ops_AttrList);
 
 	if (inst->aio_DoNotFreeDiskObject)
 		{
@@ -840,11 +840,11 @@ static ULONG DtGet(Class *cl, Object *o, struct opGet *opg)
 		break;
 
 	case AIDTA_Icon:
-		*opg->opg_Storage = (ULONG) inst->aio_DiskObject;
+		*opg->opg_Storage = (IPTR) inst->aio_DiskObject;
 		break;
 
 	case IDTA_Extention:
-		*opg->opg_Storage = (ULONG) ".info";
+		*opg->opg_Storage = (IPTR) ".info";
 		break;
 
 	default:
@@ -937,7 +937,7 @@ static ULONG DtDraw(Class *cl, Object *o, struct iopDraw *iopd)
 			static struct TagItem EmptyTagList[] = { { TAG_END } };
 			LONG x, y;
 			STRPTR IconText;
-			ULONG FgPen = 1;
+			IPTR FgPen = 1;
 			struct AppIconRenderMsg arm;
 			struct Region *IconRegion;
 			struct Region *OldDamageList = NULL;
@@ -1052,6 +1052,7 @@ static ULONG DtWrite(Class *cl, Object *o, struct iopWrite *iopw)
 	struct ExtGadget *gg = (struct ExtGadget *) o;
 	struct WriteData wd;
 	struct DrawerData *OrigDrawerData;
+	IPTR val;
 	LONG Result = RETURN_OK;
 	ULONG NeedUpdateWB;
 
@@ -1061,15 +1062,15 @@ static ULONG DtWrite(Class *cl, Object *o, struct iopWrite *iopw)
 
 	memset(&wd, 0, sizeof(wd));
 
-	GetAttr(IDTA_Type, 		o, &wd.aiowd_Type);
-	GetAttr(IDTA_ViewModes, 	o, &wd.aiowd_ViewModes);
-	GetAttr(IDTA_Flags, 		o, &wd.aiowd_Flags);
-	GetAttr(IDTA_WinCurrentX, 	o, &wd.aiowd_CurrentX);
-	GetAttr(IDTA_WinCurrentY, 	o, &wd.aiowd_CurrentY);
-	GetAttr(IDTA_WindowRect, 	o, (ULONG *) &wd.aiowd_WindowRect);
-	GetAttr(IDTA_Stacksize, 	o, &wd.aiowd_StackSize);
-	GetAttr(IDTA_ToolTypes, 	o, (ULONG *) &wd.aiowd_ToolTypes);
-	GetAttr(IDTA_DefaultTool, 	o, (ULONG *) &wd.aiowd_DefaultTool);
+	GetAttr(IDTA_Type, 		o, &val); wd.aiowd_Type = val;
+	GetAttr(IDTA_ViewModes, 	o, &val); wd.aiowd_ViewModes = val;
+	GetAttr(IDTA_Flags, 		o, &val); wd.aiowd_Flags = val;
+	GetAttr(IDTA_WinCurrentX, 	o, &val); wd.aiowd_CurrentX = val;
+	GetAttr(IDTA_WinCurrentY, 	o, &val); wd.aiowd_CurrentY = val;
+	GetAttr(IDTA_WindowRect, 	o, &val); wd.aiowd_WindowRect = (APTR)val;
+	GetAttr(IDTA_Stacksize, 	o, &val); wd.aiowd_StackSize = val;
+	GetAttr(IDTA_ToolTypes, 	o, &val); wd.aiowd_ToolTypes = (APTR)val;
+	GetAttr(IDTA_DefaultTool, 	o, &val); wd.aiowd_DefaultTool = (APTR)val;
 
 	ExchangeAttrs(inst->aio_DiskObject, &wd);
 
@@ -1136,8 +1137,8 @@ static ULONG DtWrite(Class *cl, Object *o, struct iopWrite *iopw)
 	if (inst->aio_Image2.aiomi_ImageData)
 		{
 		IconControl(inst->aio_DiskObject,
-			ICONCTRLA_SetImageData2, (ULONG) inst->aio_Image2.aiomi_ImageData,
-			ICONCTRLA_SetTransparentColor2, (ULONG) inst->aio_Image2.aiomi_TransparentColor,
+			ICONCTRLA_SetImageData2, (IPTR) inst->aio_Image2.aiomi_ImageData,
+			ICONCTRLA_SetTransparentColor2, (IPTR) inst->aio_Image2.aiomi_TransparentColor,
 			TAG_END);
 
 		d1(kprintf("%s/%ld:  PaletteSize2=%lu\n", __FUNC__, __LINE__, inst->aio_Image2.aiomi_PaletteSize));
@@ -1145,8 +1146,8 @@ static ULONG DtWrite(Class *cl, Object *o, struct iopWrite *iopw)
 		if (inst->aio_Image2.aiomi_PaletteSize)
 			{
 			IconControl(inst->aio_DiskObject,
-				ICONCTRLA_SetPaletteSize2, (ULONG) inst->aio_Image2.aiomi_PaletteSize,
-				ICONCTRLA_SetPalette2, (ULONG) inst->aio_Image2.aiomi_Palette,
+				ICONCTRLA_SetPaletteSize2, (IPTR) inst->aio_Image2.aiomi_PaletteSize,
+				ICONCTRLA_SetPalette2, (IPTR) inst->aio_Image2.aiomi_Palette,
 				TAG_END);
 			}
 		}
@@ -1156,10 +1157,10 @@ static ULONG DtWrite(Class *cl, Object *o, struct iopWrite *iopw)
 
 	// IconControlA()
 	IconControl(inst->aio_DiskObject,
-		ICONCTRLA_SetImageData1, (ULONG) inst->aio_Image1.aiomi_ImageData,
-		ICONCTRLA_SetPaletteSize1, (ULONG) inst->aio_Image1.aiomi_PaletteSize,
-		ICONCTRLA_SetPalette1, (ULONG) inst->aio_Image1.aiomi_Palette,
-		ICONCTRLA_SetTransparentColor1, (ULONG) inst->aio_Image1.aiomi_TransparentColor,
+		ICONCTRLA_SetImageData1, (IPTR) inst->aio_Image1.aiomi_ImageData,
+		ICONCTRLA_SetPaletteSize1, (IPTR) inst->aio_Image1.aiomi_PaletteSize,
+		ICONCTRLA_SetPalette1, (IPTR) inst->aio_Image1.aiomi_Palette,
+		ICONCTRLA_SetTransparentColor1, (IPTR) inst->aio_Image1.aiomi_TransparentColor,
 		ICONCTRLA_SetWidth, inst->aio_MappedWidth,
 		ICONCTRLA_SetHeight, inst->aio_MappedHeight,
 		TAG_END);
@@ -1222,8 +1223,8 @@ static ULONG DtNewImage(Class *cl, Object *o, struct iopNewImage *ioni)
 	d1(KPrintF("%s/%ld:  o=%08lx  aio_ImageMask2=%08lx\n", __FUNC__, __LINE__, o, inst->aio_Image1.aiomi_Mask));
 
 	SetAttrs(o,
-		IDTA_Mask_Normal, (ULONG) inst->aio_Image1.aiomi_Mask,
-		IDTA_Mask_Selected, (ULONG) inst->aio_Image2.aiomi_Mask,
+		IDTA_Mask_Normal, (IPTR) inst->aio_Image1.aiomi_Mask,
+		IDTA_Mask_Selected, (IPTR) inst->aio_Image2.aiomi_Mask,
 		IDTA_Width_Mask_Normal, inst->aio_MappedWidth,
 		IDTA_Height_Mask_Normal, inst->aio_MappedHeight,
 		IDTA_Width_Mask_Selected, inst->aio_MappedWidth,
@@ -1497,7 +1498,7 @@ static void MyDrawIconState(struct InstanceData *inst, struct RastPort *rp,
 	// DrawIconStateA()
 	DrawIconState(rp, inst->aio_DiskObject, NULL,
 		inst->aio_ImageLeft, inst->aio_ImageTop, State,
-		ICONDRAWA_DrawInfo, (ULONG) drawInfo,
+		ICONDRAWA_DrawInfo, (IPTR) drawInfo,
 		ICONDRAWA_Frameless, TRUE,
 		ICONDRAWA_Borderless, TRUE,
 		ICONDRAWA_EraseBackground, FALSE,
