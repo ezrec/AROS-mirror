@@ -84,43 +84,43 @@ STATIC void SetDetails( struct IClass *cl,
                         MySetContents(amdwd->amdwd_Texts[ 0], ame->ame_Name);
                         MySetContents(amdwd->amdwd_Texts[ 1], ame->ame_Id);
 
-                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Driver, (Tag)tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
+                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Driver, (IPTR)tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
                         MySetContents(amdwd->amdwd_Texts[ 2], "DEVS:AHI/%s.audio", tmp);
 
-                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Version, (Tag)tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
+                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Version, (IPTR)tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
                         MySetContentsHealed(amdwd->amdwd_Texts[ 3], "%s", tmp);
 
-                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Author, (Tag)tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
+                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Author, (IPTR)tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
                         MySetContentsHealed(amdwd->amdwd_Texts[ 4], "%s", tmp);
 
-                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Copyright, (Tag)tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
+                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Copyright, (IPTR)tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
                         MySetContentsHealed(amdwd->amdwd_Texts[ 5], "%s", tmp);
 
-                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Annotation, (Tag)tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
+                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Annotation, (IPTR)tmp, AHIDB_BufferLen, PATH_LENGTH, TAG_DONE);
                         MySetContentsHealed(amdwd->amdwd_Texts[ 6], "%s", tmp);
 
-                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Bits, (Tag)&bits,
-                                                                 AHIDB_MaxChannels, (Tag)&maxchannels,
-                                                                 AHIDB_MinMixFreq, (Tag)&minfreq,
-                                                                 AHIDB_MaxMixFreq, (Tag)&maxfreq,
-                                                                 AHIDB_MaxMixFreq, (Tag)&maxfreq,
-                                                                 AHIDB_Frequencies, (Tag)&numfreqs,
-                                                                 AHIDB_MaxPlaySamples, (Tag)&maxplaysamp,
-                                                                 AHIDB_MaxRecordSamples, (Tag)&maxrecsamp,
-                                                                 AHIDB_Volume, (Tag)&volume,
-                                                                 AHIDB_Stereo, (Tag)&stereo,
-                                                                 AHIDB_Panning, (Tag)&panning,
-                                                                 AHIDB_HiFi, (Tag)&hifi,
-                                                                 AHIDB_PingPong, (Tag)&pingpong,
-                                                                 AHIDB_Record, (Tag)&record,
-                                                                 AHIDB_FullDuplex, (Tag)&fullduplex,
-                                                                 AHIDB_Realtime, (Tag)&realtime,
-                                                                 AHIDB_MinMonitorVolume, (Tag)&minmonivol,
-                                                                 AHIDB_MaxMonitorVolume, (Tag)&maxmonivol,
-                                                                 AHIDB_MinInputGain, (Tag)&mininputgain,
-                                                                 AHIDB_MaxInputGain, (Tag)&maxinputgain,
-                                                                 AHIDB_MinOutputVolume, (Tag)&minoutputvol,
-                                                                 AHIDB_MaxOutputVolume, (Tag)&maxoutputvol,
+                        AHI_GetAudioAttrs(ame->ame_ModeID, NULL, AHIDB_Bits, (IPTR)&bits,
+                                                                 AHIDB_MaxChannels, (IPTR)&maxchannels,
+                                                                 AHIDB_MinMixFreq, (IPTR)&minfreq,
+                                                                 AHIDB_MaxMixFreq, (IPTR)&maxfreq,
+                                                                 AHIDB_MaxMixFreq, (IPTR)&maxfreq,
+                                                                 AHIDB_Frequencies, (IPTR)&numfreqs,
+                                                                 AHIDB_MaxPlaySamples, (IPTR)&maxplaysamp,
+                                                                 AHIDB_MaxRecordSamples, (IPTR)&maxrecsamp,
+                                                                 AHIDB_Volume, (IPTR)&volume,
+                                                                 AHIDB_Stereo, (IPTR)&stereo,
+                                                                 AHIDB_Panning, (IPTR)&panning,
+                                                                 AHIDB_HiFi, (IPTR)&hifi,
+                                                                 AHIDB_PingPong, (IPTR)&pingpong,
+                                                                 AHIDB_Record, (IPTR)&record,
+                                                                 AHIDB_FullDuplex, (IPTR)&fullduplex,
+                                                                 AHIDB_Realtime, (IPTR)&realtime,
+                                                                 AHIDB_MinMonitorVolume, (IPTR)&minmonivol,
+                                                                 AHIDB_MaxMonitorVolume, (IPTR)&maxmonivol,
+                                                                 AHIDB_MinInputGain, (IPTR)&mininputgain,
+                                                                 AHIDB_MaxInputGain, (IPTR)&maxinputgain,
+                                                                 AHIDB_MinOutputVolume, (IPTR)&minoutputvol,
+                                                                 AHIDB_MaxOutputVolume, (IPTR)&maxoutputvol,
                                                                  TAG_DONE);
 
                         MySetContents(amdwd->amdwd_Texts[ 7], "%lD", bits);
