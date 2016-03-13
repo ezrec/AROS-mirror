@@ -7,7 +7,8 @@ include $(TOP)/config/make.cfg
 EXE := wget
 TARGETDIR := $(AROS_CONTRIB)/Networking/Apps/WGet
 
-USER_CFLAGS := -DHAVE_CONFIG_H -DAMIGA -D__amigaos__ -D__BUILDER="\"AROS Dev Team\"" \
+NOWARN_FLAGS := -Wno-strict-aliasing
+USER_CFLAGS := $(NOWARN_FLAGS) -DHAVE_CONFIG_H -DAMIGA -D__amigaos__ -D__BUILDER="\"AROS Dev Team\"" \
         -D__BSD_VISIBLE=1 -DVERSION="\"1.10.2.aros\""
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/../aros
 
