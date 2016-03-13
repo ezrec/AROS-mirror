@@ -1403,7 +1403,7 @@ static void removeButton(struct IClass *cl, Object *obj, struct Button *button)
   }
 
   // cleanup the notifyListClone
-  if(IsListEmpty((struct List *)&button->notifyListClone) == FALSE)
+  if(IsListEmpty(&button->notifyListClone) == FALSE)
   {
     struct MinNode *notifyNode;
 
@@ -2088,7 +2088,7 @@ static IPTR mNew(struct IClass *cl,Object *obj,struct opSet *msg)
     pt.spacer   = pt.stripCols = pt.stripRows = pt.stripHSpace = pt.stripVSpace = -1;
     pt.flags    = FLG_EnableKeys;
 
-    PackStructureTags(&pt,ptable,attrs);
+    PackStructureTags(&pt, (ULONG *)ptable,attrs);
 
     if (pt.viewMode>=MUIV_TheBar_ViewMode_Last)
         pt.viewMode = MUIV_TheBar_ViewMode_Text;
