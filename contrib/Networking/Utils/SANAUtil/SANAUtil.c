@@ -104,7 +104,7 @@ struct SpecialStatData {
 
 char ProgName[] = "SANAutil";
 
-static const char VersionString[] =
+static const char VersionString[] __attribute__((used)) =
    "$VER: SANAutil " VERSION "." REVISION " (" DATE ")";
 
 char Prog_Template[] =
