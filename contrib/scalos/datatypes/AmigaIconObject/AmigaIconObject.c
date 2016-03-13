@@ -86,7 +86,7 @@ static Class *AmigaIconObjectClass;
 
 //----------------------------------------------------------------------------
 
-SAVEDS(ULONG) INTERRUPT AmigaIconObjectDispatcher(Class *cl, Object *o, Msg msg);
+SAVEDS(IPTR) INTERRUPT AmigaIconObjectDispatcher(Class *cl, Object *o, Msg msg);
 
 //-----------------------------------------------------------------------------
 
@@ -121,12 +121,12 @@ char ALIGNED libIdString[] = "$VER: amigaiconobject.datatype "
 //----------------------------------------------------------------------------
 
 #ifdef __AROS__
-AROS_LH0(ULONG, ObtainInfoEngine,
+AROS_LH0(IPTR, ObtainInfoEngine,
     struct Library *, libBase, 5, Amigaiconobject
 )
 {
 	AROS_LIBFUNC_INIT
-	return (ULONG) AmigaIconObjectClass;
+	return (IPTR) AmigaIconObjectClass;
 	AROS_LIBFUNC_EXIT
 }
 #else
@@ -383,7 +383,7 @@ ULONG CloseDatatype(struct AmigaIconObjectDtLibBase *dtLib)
 
 //-----------------------------------------------------------------------------
 
-SAVEDS(ULONG) INTERRUPT AmigaIconObjectDispatcher(Class *cl, Object *o, Msg msg)
+SAVEDS(IPTR) INTERRUPT AmigaIconObjectDispatcher(Class *cl, Object *o, Msg msg)
 {
 	ULONG Result;
 
@@ -401,7 +401,7 @@ SAVEDS(ULONG) INTERRUPT AmigaIconObjectDispatcher(Class *cl, Object *o, Msg msg)
 				o = NULL;
 				}
 			}
-		Result = (ULONG) o;
+		Result = (IPTR) o;
 		break;
 
 	case OM_DISPOSE:
@@ -475,7 +475,7 @@ static BOOL DtNew(Class *cl, Object *o, struct opSet *ops)
 				{
 				STRPTR IconName;
 
-				inst->aio_DiskObject = (struct DiskObject *) GetTagData(AIDTA_Icon, (ULONG) NULL, ops->ops_AttrList);
+				inst->aio_DiskObject = (struct DiskObject *) GetTagData(AIDTA_Icon, (IPTR) NULL, ops->ops_AttrList);
 				d1(kprintf("%s/%ld:  o=%08lx  aio_DiskObject=%08lx\n", __FUNC__, __LINE__, o, inst->aio_DiskObject));
 				if (inst->aio_DiskObject)
 					{
@@ -541,14 +541,14 @@ static BOOL DtNew(Class *cl, Object *o, struct opSet *ops)
 					IDTA_Flags, inst->aio_DiskObject->do_DrawerData->dd_Flags,
 					IDTA_WinCurrentX, inst->aio_DiskObject->do_DrawerData->dd_CurrentX,
 					IDTA_WinCurrentY, inst->aio_DiskObject->do_DrawerData->dd_CurrentY,
-					IDTA_WindowRect, (ULONG) &inst->aio_DiskObject->do_DrawerData->dd_NewWindow,
+					IDTA_WindowRect, (IPTR) &inst->aio_DiskObject->do_DrawerData->dd_NewWindow,
 					TAG_END);
 				}
 
 			SetAttrs(o,
-				IDTA_ToolTypes, (ULONG) inst->aio_DiskObject->do_ToolTypes,
+				IDTA_ToolTypes, (IPTR) inst->aio_DiskObject->do_ToolTypes,
 				IDTA_Stacksize, inst->aio_DiskObject->do_StackSize,
-				IDTA_DefaultTool, (ULONG) inst->aio_DiskObject->do_DefaultTool,
+				IDTA_DefaultTool, (IPTR) inst->aio_DiskObject->do_DefaultTool,
 				IDTA_Type, inst->aio_DiskObject->do_Type,
 				TAG_END);
 			}
@@ -635,11 +635,11 @@ static ULONG DtGet(Class *cl, Object *o, struct opGet *opg)
 		break;
 
 	case AIDTA_Icon:
-		*opg->opg_Storage = (ULONG) inst->aio_DiskObject;
+		*opg->opg_Storage = (IPTR) inst->aio_DiskObject;
 		break;
 
 	case IDTA_Extention:
-		*opg->opg_Storage = (ULONG) ".info";
+		*opg->opg_Storage = (IPTR) ".info";
 		break;
 
 	default:
@@ -723,7 +723,7 @@ static ULONG DtLayout(Class *cl, Object *o, struct iopLayout *iopl)
 
 			SetDrMd(rp, JAM1 | COMPLEMENT);
 			GetRPAttrs(rp, 
-				RPTAG_WriteMask, (ULONG) &OldWriteMask,
+				RPTAG_WriteMask, (IPTR) &OldWriteMask,
 				TAG_END);
 			if (SelImg)
 				SetWriteMask(rp, SelImg->PlanePick);
@@ -827,6 +827,7 @@ static ULONG DtWrite(Class *cl, Object *o, struct iopWrite *iopw)
 	struct ExtGadget *gg = (struct ExtGadget *) o;
 	struct WriteData wd;
 	struct DrawerData *OrigDrawerData;
+        IPTR val;
 	ULONG NeedUpdateWB;
 	LONG Result = RETURN_OK;
 
@@ -836,15 +837,15 @@ static ULONG DtWrite(Class *cl, Object *o, struct iopWrite *iopw)
 
 	NeedUpdateWB = GetTagData(ICONA_NotifyWorkbench, FALSE, iopw->iopw_Tags);
 
-	GetAttr(IDTA_Type, 		o, &wd.aiowd_Type);
-	GetAttr(IDTA_ViewModes, 	o, &wd.aiowd_ViewModes);
-	GetAttr(IDTA_Flags, 		o, &wd.aiowd_Flags);
-	GetAttr(IDTA_WinCurrentX, 	o, &wd.aiowd_CurrentX);
-	GetAttr(IDTA_WinCurrentY, 	o, &wd.aiowd_CurrentY);
-	GetAttr(IDTA_WindowRect, 	o, (ULONG *) &wd.aiowd_WindowRect);
-	GetAttr(IDTA_Stacksize, 	o, &wd.aiowd_StackSize);
-	GetAttr(IDTA_ToolTypes, 	o, (ULONG *) &wd.aiowd_ToolTypes);
-	GetAttr(IDTA_DefaultTool, 	o, (ULONG *) &wd.aiowd_DefaultTool);
+	GetAttr(IDTA_Type, 		o, &val); wd.aiowd_Type = val;
+	GetAttr(IDTA_ViewModes, 	o, &val); wd.aiowd_ViewModes = val;
+	GetAttr(IDTA_Flags, 		o, &val); wd.aiowd_Flags = val;
+	GetAttr(IDTA_WinCurrentX, 	o, &val); wd.aiowd_CurrentX = val;
+	GetAttr(IDTA_WinCurrentY, 	o, &val); wd.aiowd_CurrentY = val;
+	GetAttr(IDTA_WindowRect, 	o, &val); wd.aiowd_WindowRect = (APTR)val;
+	GetAttr(IDTA_Stacksize, 	o, &val); wd.aiowd_StackSize = val;
+	GetAttr(IDTA_ToolTypes, 	o, &val); wd.aiowd_ToolTypes = (APTR)val;
+	GetAttr(IDTA_DefaultTool, 	o, &val); wd.aiowd_DefaultTool = (APTR)val;
 
 	ExchangeAttrs(inst->aio_DiskObject, &wd);
 
