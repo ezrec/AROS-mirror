@@ -336,9 +336,9 @@ struct ARGB *AllocARGB(ULONG Width, ULONG Height, struct ScalosGfxBase *ScalosGf
 void FillARGBFromBitMap(struct ARGBHeader *argbh, struct BitMap *srcBM,
 	PLANEPTR MaskPlane)
 {
-	ULONG PixFmt;
-	ULONG BytesPerRow;
-	ULONG BytesPerPixel;
+	IPTR PixFmt;
+	IPTR BytesPerRow;
+	IPTR BytesPerPixel;
 	const UBYTE *src;
 	struct ARGB *dest;
 	APTR handle;
@@ -349,10 +349,10 @@ void FillARGBFromBitMap(struct ARGBHeader *argbh, struct BitMap *srcBM,
 	d1(KPrintF("%s/%ld:  Width=%ld  Height=%ld\n", __FUNC__, __LINE__, argbh->argb_Width, argbh->argb_Height));
 
 	handle = LockBitMapTags(srcBM,
-		LBMI_PIXFMT, (ULONG) &PixFmt,
-		LBMI_BASEADDRESS, (ULONG) &src,
-		LBMI_BYTESPERROW, (ULONG) &BytesPerRow,
-		LBMI_BYTESPERPIX, (ULONG) &BytesPerPixel,
+		LBMI_PIXFMT, (IPTR) &PixFmt,
+		LBMI_BASEADDRESS, (IPTR) &src,
+		LBMI_BYTESPERROW, (IPTR) &BytesPerRow,
+		LBMI_BYTESPERPIX, (IPTR) &BytesPerPixel,
 		TAG_END);
 
 	d1(KPrintF(__FILE__ "/%s/%ld: handle=%08lx\n", __FUNC__, __LINE__, handle));

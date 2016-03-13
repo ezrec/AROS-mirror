@@ -450,7 +450,7 @@ LIBFUNC_P4(struct ScalosBitMapAndColor *, LIBScalosGfxMedianCut,
 	flags = GetTagData(SCALOSGFX_MedianCutFlags, 0, tagList);
 	floyd = flags & SCALOSGFXFLAGF_MedianCut_FloydSteinberg;
 	ReservedColors = GetTagData(SCALOSGFX_MedianCutReservedColors, 0, tagList);
-	friendBM = (struct BitMap *) GetTagData(SCALOSGFX_MedianCutFriendBitMap, (ULONG)NULL, tagList);
+	friendBM = (struct BitMap *) GetTagData(SCALOSGFX_MedianCutFriendBitMap, (IPTR)NULL, tagList);
 
 	d1(KPrintF(__FILE__ "/%s/%ld:  flags=%08lx  ReservedColors=%lu\n", __FUNC__, __LINE__, flags, ReservedColors));
 
@@ -655,7 +655,7 @@ LIBFUNC_P7(VOID, LIBScalosGfxBlitARGBAlphaTagList,
 	ULONG Trans;
 	ULONG NoAlpha;
 
-	K = (const struct ARGB *) GetTagData(SCALOSGFX_BlitARGBHilight, (ULONG) NULL, tagList);
+	K = (const struct ARGB *) GetTagData(SCALOSGFX_BlitARGBHilight, (IPTR) NULL, tagList);
 	Trans = GetTagData(SCALOSGFX_BlitARGBTransparency, 255, tagList);
 	NoAlpha	= GetTagData(SCALOSGFX_BlitARGBNoAlpha, FALSE, tagList);
 
@@ -710,8 +710,8 @@ LIBFUNC_P8(VOID, LIBScalosGfxBlitIcon,
 	const UBYTE *Alpha;
 	ULONG Trans;
 
-	K = (const struct ARGB *) GetTagData(SCALOSGFX_BlitIconHilight, (ULONG) NULL, tagList);
-	Alpha = (const UBYTE *) GetTagData(SCALOSGFX_BlitIconAlpha, (ULONG) NULL, tagList);
+	K = (const struct ARGB *) GetTagData(SCALOSGFX_BlitIconHilight, (IPTR) NULL, tagList);
+	Alpha = (const UBYTE *) GetTagData(SCALOSGFX_BlitIconAlpha, (IPTR) NULL, tagList);
 	Trans = GetTagData(SCALOSGFX_BlitIconTransparency, 255, tagList);
 
 	if (Alpha)

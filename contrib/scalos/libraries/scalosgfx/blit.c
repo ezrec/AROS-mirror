@@ -307,17 +307,17 @@ static SAVEDS(ULONG) INTERRUPT ARGBRectMultHookFunc(struct Hook *hook, Object *o
 	struct RastPort *rp = (struct RastPort *) o;
 	struct DoHookClipRectMsg *dhcr = (struct DoHookClipRectMsg *) msg;
 	struct ARGBMultData *amd = (struct ARGBMultData *) hook->h_Data;
-	ULONG PixFmt;
-	ULONG BytesPerRow;
-	ULONG BytesPerPixel;
+	IPTR PixFmt;
+	IPTR BytesPerRow;
+	IPTR BytesPerPixel;
 	APTR Addr;
 	APTR handle;
 
 	handle = LockBitMapTags(rp->BitMap,
-		LBMI_PIXFMT, (ULONG) &PixFmt,
-		LBMI_BYTESPERROW, (ULONG) &BytesPerRow,
-		LBMI_BYTESPERPIX, (ULONG) &BytesPerPixel,
-		LBMI_BASEADDRESS, (ULONG) &Addr,
+		LBMI_PIXFMT, (IPTR) &PixFmt,
+		LBMI_BYTESPERROW, (IPTR) &BytesPerRow,
+		LBMI_BYTESPERPIX, (IPTR) &BytesPerPixel,
+		LBMI_BASEADDRESS, (IPTR) &Addr,
 		TAG_END);
 
 	d1(KPrintF(__FILE__ "/%s/%ld: handle=%08lx\n", __FUNC__, __LINE__, handle));
@@ -768,17 +768,17 @@ static SAVEDS(ULONG) INTERRUPT BlitARGBAlphaHookFunc(struct Hook *hook, Object *
 	struct RastPort *rp = (struct RastPort *) o;
 	struct DoHookClipRectMsg *dhcr = (struct DoHookClipRectMsg *) msg;
 	struct BlitARGBAlphaData *baa = (struct BlitARGBAlphaData *) hook->h_Data;
-	ULONG PixFmt;
-	ULONG BytesPerRow;
-	ULONG BytesPerPixel;
+	IPTR PixFmt;
+	IPTR BytesPerRow;
+	IPTR BytesPerPixel;
 	APTR Addr;
 	APTR handle;
 
 	handle = LockBitMapTags(rp->BitMap,
-		LBMI_PIXFMT, (ULONG) &PixFmt,
-		LBMI_BYTESPERROW, (ULONG) &BytesPerRow,
-		LBMI_BYTESPERPIX, (ULONG) &BytesPerPixel,
-		LBMI_BASEADDRESS, (ULONG) &Addr,
+		LBMI_PIXFMT, (IPTR) &PixFmt,
+		LBMI_BYTESPERROW, (IPTR) &BytesPerRow,
+		LBMI_BYTESPERPIX, (IPTR) &BytesPerPixel,
+		LBMI_BASEADDRESS, (IPTR) &Addr,
 		TAG_END);
 
 	d1(KPrintF(__FILE__ "/%s/%ld: handle=%08lx\n", __FUNC__, __LINE__, handle));
@@ -1380,17 +1380,17 @@ static SAVEDS(ULONG) INTERRUPT BlitARGBAlphaKTHookFunc(struct Hook *hook, Object
 	struct RastPort *rp = (struct RastPort *) o;
 	struct DoHookClipRectMsg *dhcr = (struct DoHookClipRectMsg *) msg;
 	struct BlitARGBAlphaData *baa = (struct BlitARGBAlphaData *) hook->h_Data;
-	ULONG PixFmt;
-	ULONG BytesPerRow;
-	ULONG BytesPerPixel;
+	IPTR PixFmt;
+	IPTR BytesPerRow;
+	IPTR BytesPerPixel;
 	APTR Addr;
 	APTR handle;
 
 	handle = LockBitMapTags(rp->BitMap,
-		LBMI_PIXFMT, (ULONG) &PixFmt,
-		LBMI_BYTESPERROW, (ULONG) &BytesPerRow,
-		LBMI_BYTESPERPIX, (ULONG) &BytesPerPixel,
-		LBMI_BASEADDRESS, (ULONG) &Addr,
+		LBMI_PIXFMT, (IPTR) &PixFmt,
+		LBMI_BYTESPERROW, (IPTR) &BytesPerRow,
+		LBMI_BYTESPERPIX, (IPTR) &BytesPerPixel,
+		LBMI_BASEADDRESS, (IPTR) &Addr,
 		TAG_END);
 
 	d1(KPrintF(__FILE__ "/%s/%ld: handle=%08lx\n", __FUNC__, __LINE__, handle));
@@ -2042,17 +2042,17 @@ static SAVEDS(ULONG) INTERRUPT BlitARGBKTHookFunc(struct Hook *hook, Object *o, 
 	struct RastPort *rp = (struct RastPort *) o;
 	struct DoHookClipRectMsg *dhcr = (struct DoHookClipRectMsg *) msg;
 	struct BlitARGBAlphaData *baa = (struct BlitARGBAlphaData *) hook->h_Data;
-	ULONG PixFmt;
-	ULONG BytesPerRow;
-	ULONG BytesPerPixel;
+	IPTR PixFmt;
+	IPTR BytesPerRow;
+	IPTR BytesPerPixel;
 	APTR Addr;
 	APTR handle;
 
 	handle = LockBitMapTags(rp->BitMap,
-		LBMI_PIXFMT, (ULONG) &PixFmt,
-		LBMI_BYTESPERROW, (ULONG) &BytesPerRow,
-		LBMI_BYTESPERPIX, (ULONG) &BytesPerPixel,
-		LBMI_BASEADDRESS, (ULONG) &Addr,
+		LBMI_PIXFMT, (IPTR) &PixFmt,
+		LBMI_BYTESPERROW, (IPTR) &BytesPerRow,
+		LBMI_BYTESPERPIX, (IPTR) &BytesPerPixel,
+		LBMI_BASEADDRESS, (IPTR) &Addr,
 		TAG_END);
 
 	d1(KPrintF(__FILE__ "/%s/%ld: handle=%08lx\n", __FUNC__, __LINE__, handle));
@@ -2768,17 +2768,17 @@ static SAVEDS(ULONG) INTERRUPT BlitTransparentKHookFunc(struct Hook *hook, Objec
 	struct RastPort *rp = (struct RastPort *) o;
 	struct DoHookClipRectMsg *dhcr = (struct DoHookClipRectMsg *) msg;
 	struct BlitTransparentKData *btk = (struct BlitTransparentKData *) hook->h_Data;
-	ULONG PixFmt;
-	ULONG BytesPerRow;
-	ULONG BytesPerPixel;
+	IPTR PixFmt;
+	IPTR BytesPerRow;
+	IPTR BytesPerPixel;
 	APTR Addr;
 	APTR handle;
 
 	handle = LockBitMapTags(rp->BitMap,
-		LBMI_PIXFMT, (ULONG) &PixFmt,
-		LBMI_BYTESPERROW, (ULONG) &BytesPerRow,
-		LBMI_BYTESPERPIX, (ULONG) &BytesPerPixel,
-		LBMI_BASEADDRESS, (ULONG) &Addr,
+		LBMI_PIXFMT, (IPTR) &PixFmt,
+		LBMI_BYTESPERROW, (IPTR) &BytesPerRow,
+		LBMI_BYTESPERPIX, (IPTR) &BytesPerPixel,
+		LBMI_BASEADDRESS, (IPTR) &Addr,
 		TAG_END);
 
 	d1(KPrintF(__FILE__ "/%s/%ld: handle=%08lx\n", __FUNC__, __LINE__, handle));
@@ -3098,17 +3098,17 @@ static SAVEDS(ULONG) INTERRUPT BlitTransparentHookFunc(struct Hook *hook, Object
 	struct RastPort *rp = (struct RastPort *) o;
 	struct DoHookClipRectMsg *dhcr = (struct DoHookClipRectMsg *) msg;
 	struct BlitTransparentData *bt = (struct BlitTransparentData *) hook->h_Data;
-	ULONG PixFmt;
-	ULONG BytesPerRow;
-	ULONG BytesPerPixel;
+	IPTR PixFmt;
+	IPTR BytesPerRow;
+	IPTR BytesPerPixel;
 	APTR Addr;
 	APTR handle;
 
 	handle = LockBitMapTags(rp->BitMap,
-		LBMI_PIXFMT, (ULONG) &PixFmt,
-		LBMI_BYTESPERROW, (ULONG) &BytesPerRow,
-		LBMI_BYTESPERPIX, (ULONG) &BytesPerPixel,
-		LBMI_BASEADDRESS, (ULONG) &Addr,
+		LBMI_PIXFMT, (IPTR) &PixFmt,
+		LBMI_BYTESPERROW, (IPTR) &BytesPerRow,
+		LBMI_BYTESPERPIX, (IPTR) &BytesPerPixel,
+		LBMI_BASEADDRESS, (IPTR) &Addr,
 		TAG_END);
 
 	d1(KPrintF(__FILE__ "/%s/%ld: handle=%08lx\n", __FUNC__, __LINE__, handle));
@@ -3525,17 +3525,17 @@ static SAVEDS(ULONG) INTERRUPT BlitTransparentAlphaHookFunc(struct Hook *hook, O
 	struct RastPort *rp = (struct RastPort *) o;
 	struct DoHookClipRectMsg *dhcr = (struct DoHookClipRectMsg *) msg;
 	struct BlitTransparentAlphaData *bta = (struct BlitTransparentAlphaData *) hook->h_Data;
-	ULONG PixFmt;
-	ULONG BytesPerRow;
-	ULONG BytesPerPixel;
+	IPTR PixFmt;
+	IPTR BytesPerRow;
+	IPTR BytesPerPixel;
 	APTR Addr;
 	APTR handle;
 
 	handle = LockBitMapTags(rp->BitMap,
-		LBMI_PIXFMT, (ULONG) &PixFmt,
-		LBMI_BYTESPERROW, (ULONG) &BytesPerRow,
-		LBMI_BYTESPERPIX, (ULONG) &BytesPerPixel,
-		LBMI_BASEADDRESS, (ULONG) &Addr,
+		LBMI_PIXFMT, (IPTR) &PixFmt,
+		LBMI_BYTESPERROW, (IPTR) &BytesPerRow,
+		LBMI_BYTESPERPIX, (IPTR) &BytesPerPixel,
+		LBMI_BASEADDRESS, (IPTR) &Addr,
 		TAG_END);
 
 	d1(KPrintF(__FILE__ "/%s/%ld: handle=%08lx\n", __FUNC__, __LINE__, handle));
@@ -4134,17 +4134,17 @@ static SAVEDS(ULONG) INTERRUPT BlitTransparentAlphaKHookFunc(struct Hook *hook, 
 	struct RastPort *rp = (struct RastPort *) o;
 	struct DoHookClipRectMsg *dhcr = (struct DoHookClipRectMsg *) msg;
 	struct BlitTransparentAlphaKData *btak = (struct BlitTransparentAlphaKData *) hook->h_Data;
-	ULONG PixFmt;
-	ULONG BytesPerRow;
-	ULONG BytesPerPixel;
+	IPTR PixFmt;
+	IPTR BytesPerRow;
+	IPTR BytesPerPixel;
 	APTR Addr;
 	APTR handle;
 
 	handle = LockBitMapTags(rp->BitMap,
-		LBMI_PIXFMT, (ULONG) &PixFmt,
-		LBMI_BYTESPERROW, (ULONG) &BytesPerRow,
-		LBMI_BYTESPERPIX, (ULONG) &BytesPerPixel,
-		LBMI_BASEADDRESS, (ULONG) &Addr,
+		LBMI_PIXFMT, (IPTR) &PixFmt,
+		LBMI_BYTESPERROW, (IPTR) &BytesPerRow,
+		LBMI_BYTESPERPIX, (IPTR) &BytesPerPixel,
+		LBMI_BASEADDRESS, (IPTR) &Addr,
 		TAG_END);
 
 	d1(KPrintF(__FILE__ "/%s/%ld: handle=%08lx\n", __FUNC__, __LINE__, handle));
