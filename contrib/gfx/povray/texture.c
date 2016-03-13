@@ -1191,10 +1191,9 @@ void Post_Textures(TEXTURE *Textures)
         case BITMAP_PATTERN:
 
           for (Material = Layer->Materials; Material != NULL; Material = Material->Next_Material)
-
             Post_Textures(Material);
 
-            break;
+          break;
       }
   
       if ((Map=Layer->Blend_Map) != NULL)
