@@ -48,8 +48,10 @@
 #define NODESUBSYS_LENGTH   32
 #define NODESUBTYPE_LENGTH  32
 
-#define ITERATE_LIST(list, type, node)                  for (node = (type)((struct List *)(list))->lh_Head; ((struct Node *)node)->ln_Succ; node = (type)((struct Node *)node)->ln_Succ)
-#define ITERATE_LIST_REVERSE(list, type, node)          for (node = (type)((struct List *)(list))->lh_TailPred; ((struct Node *)node)->ln_Pred; node = (type)((struct Node *)node)->ln_Pred)
+#define ITERATE_LIST(list, type, node) \
+    struct List *tmpList = (struct List *)list; \
+    for (node = (type)tmpList->lh_Head; ((struct Node *)node)->ln_Succ; node = (type)((struct Node *)node)->ln_Succ)
+#define ITERATE_LIST_REVERSE(list, type, node)          for (node = (type)(list)->lh_TailPred; ((struct Node *)node)->ln_Pred; node = (type)((struct Node *)node)->ln_Pred)
 
 #define MakeID(a,b,c,d)     ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
 
