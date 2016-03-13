@@ -665,9 +665,9 @@ static xadUINT16 DMSmktbl(struct DMSTableData *t)
           t->tbl[i++] = (xadUINT16) t->c;
         return (xadUINT16) t->c;
       }
-      t->c = -1;
-      t->len++;
-      t->bit >>= 1;
+    t->c = -1;
+    t->len++;
+    t->bit >>= 1;
   }
   t->depth++;
   if(t->depth < t->maxdepth)
@@ -1322,8 +1322,11 @@ XADGETINFO(DMS)
   !xadHookAccess(XADM XADAC_READ, sizeof(struct DMSHeader), &h, ai))
   {
     if(!testDMSTrack((struct DMSTrack *) &h, xadMasterBase))
+    {
+      struct DMSTrack *ht = (struct DMSTrack *)&h;
       err = xadHookAccess(XADM XADAC_INPUTSEEK, sizeof(struct DMSTrack)+
-      sizeof(struct DMSHeader)+EndGetM16(((struct DMSTrack *)&h)->CMODE_Packed), 0, ai);
+      sizeof(struct DMSHeader)+EndGetM16(ht->CMODE_Packed), 0, ai);
+    }
     else
     {
       if(!DMS_RecogData(sizeof(struct DMSHeader), (xadPTR) &h, xadMasterBase))
