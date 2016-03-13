@@ -59,7 +59,7 @@ ULONG Toolbar_KillNotifyObj(struct IClass *cl,Object *obj, UNUSED struct MUIP_To
 {
   struct Toolbar_Data *data = (struct Toolbar_Data *)INST_DATA(cl, obj);
 
-  while(!IsListEmpty((struct List *)&data->NotifyList))
+  while(!IsListEmpty(&data->NotifyList))
   {
     struct ToolbarNotify *notify = (struct ToolbarNotify *)RemHead((struct List *)&data->NotifyList);
 

@@ -641,7 +641,7 @@ ULONG Toolbar_Cleanup(struct IClass *cl, Object *obj, Msg msg)
   data->NormalIP = NULL; data->SelectIP = NULL; data->GhostIP = NULL;
   data->NormalBM = NULL; data->SelectBM = NULL; data->GhostBM = NULL;
 
-  while(!IsListEmpty((struct List *)&data->ToolList))
+  while(!IsListEmpty(&data->ToolList))
   {
     struct TB_Element *elem = (struct TB_Element *)RemHead((struct List *)&data->ToolList);
     if(elem)
