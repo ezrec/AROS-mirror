@@ -31,9 +31,10 @@ FILES :=			\
 	pixman-general		\
 	pixman-noop
 
+NOWARN_FLAGS := -Wno-unused-local-typedefs -Wno-format -Wno-uninitialized -Wno-unused-function
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/../aros
-USER_CFLAGS := -DHAVE_CONFIG_H -DPIXMAN_NO_TLS \
-	       -Wno-format -Wno-uninitialized -Wno-unused-function
+USER_CFLAGS := $(NOWARN_FLAGS) -DHAVE_CONFIG_H -DPIXMAN_NO_TLS
+	       
 
 #MM contrib-gfx-libs-pixman-includes : includes-copy
 
