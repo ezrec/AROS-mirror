@@ -463,7 +463,7 @@ static int Muiobj_request(lua_State *L)
   if (lua_gettop(L) != 6)
     luaL_error(L, "Muiobj_request: number of parameters must be 6");
   APTR app = NULL;
-  if (lua_isuserdata(L, 1));
+  if (lua_isuserdata(L, 1))
       app = toMui(L, 1);
   APTR win = NULL;
   if (lua_isuserdata(L, 2))
