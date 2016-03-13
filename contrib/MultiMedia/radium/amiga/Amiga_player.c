@@ -195,7 +195,7 @@ APTR CreatePlayer(Tag tag, ...){
 #endif
 
 bool SAVEDS Amiga_initplayer1(void){
-	LONG playererrorcode;
+	IPTR playererrorcode = 0;
 	APTR lockhandle;
 
 	playertaskname=malloc(500);
