@@ -90,14 +90,14 @@ extern T_UTILITYBASE __UtilityBase;
 
 //----------------------------------------------------------------------------
 
-SAVEDS(ULONG) INTERRUPT PngIconDispatcher(Class *cl, Object *obj, Msg msg);
+SAVEDS(IPTR) INTERRUPT PngIconDispatcher(Class *cl, Object *obj, Msg msg);
 
 static BOOL DtNew(Class *cl, Object *o, struct opSet *ops);
 static ULONG DtDispose(Class *cl, Object *o, Msg msg);
 static ULONG DtGet(Class *cl, Object *o, struct opGet *opg);
 static ULONG DtWrite(Class *cl, Object *o, struct iopWrite *opw);
 static ULONG DtNewImage(Class *cl, Object *o, struct iopNewImage *iopw);
-static ULONG DtClone(Class *cl, Object *o, struct iopCloneIconObject *iocio);
+static IPTR DtClone(Class *cl, Object *o, struct iopCloneIconObject *iocio);
 
 static CONST_STRPTR GetFileNameForDefaultIcon(ULONG IconType);
 static BOOL IsPiDiskObject(const struct DiskObject *icon);
@@ -122,12 +122,12 @@ char ALIGNED libIdString[] = "$VER: pngiconobject.datatype "
 //----------------------------------------------------------------------------
 
 #ifdef __AROS__
-AROS_LH0(ULONG, ObtainInfoEngine,
+AROS_LH0(IPTR, ObtainInfoEngine,
     struct Library *, libBase, 5, PNGIconobject
 )
 {
 	AROS_LIBFUNC_INIT
-	return (ULONG) PngIconClass;
+	return (IPTR) PngIconClass;
 	AROS_LIBFUNC_EXIT
 }
 #else
@@ -148,9 +148,9 @@ void _XCEXIT(long x)
 
 //----------------------------------------------------------------------------
 
-SAVEDS(ULONG) INTERRUPT PngIconDispatcher(Class *cl, Object *o, Msg msg)
+SAVEDS(IPTR) INTERRUPT PngIconDispatcher(Class *cl, Object *o, Msg msg)
 {
-	ULONG Result;
+	IPTR Result;
 
 	d1(KPrintF("%s/%s/%ld:  cl=%08lx  o=%08lx  msg=%08lx\n", __FILE__, __FUNC__, __LINE__, cl, o, msg));
 
@@ -167,7 +167,7 @@ SAVEDS(ULONG) INTERRUPT PngIconDispatcher(Class *cl, Object *o, Msg msg)
 				o = NULL;
 				}
 			}
-		Result = (ULONG) o;
+		Result = (IPTR) o;
 		break;
 
 	case OM_DISPOSE:
@@ -241,10 +241,10 @@ static BOOL DtNew(Class *cl, Object *o, struct opSet *ops)
 				}
 			else
 				{
-				FileName = (CONST_STRPTR) GetTagData(DTA_Name, (ULONG)NULL, (struct TagItem *)ops->ops_AttrList);
+				FileName = (CONST_STRPTR) GetTagData(DTA_Name, (IPTR)NULL, (struct TagItem *)ops->ops_AttrList);
 				}
 
-			wba = (const struct WBArg *) GetTagData(IDTA_IconLocation, (ULONG) NULL, ops->ops_AttrList);
+			wba = (const struct WBArg *) GetTagData(IDTA_IconLocation, (IPTR) NULL, ops->ops_AttrList);
 
 			inst->id_CurrentX = inst->id_CurrentY = NO_ICON_POSITION;
 
@@ -252,7 +252,7 @@ static BOOL DtNew(Class *cl, Object *o, struct opSet *ops)
 
 			if (FindTagItem(AIDTA_Icon, ops->ops_AttrList))
 				{
-				struct DiskObject *icon = (struct DiskObject *) GetTagData(AIDTA_Icon, (ULONG)NULL, (struct TagItem *)ops->ops_AttrList);
+				struct DiskObject *icon = (struct DiskObject *) GetTagData(AIDTA_Icon, (IPTR)NULL, (struct TagItem *)ops->ops_AttrList);
 				struct PiIconSpecial *ispc;
 
 				d1(kprintf("%s/%s/%ld:  DiskObject=%08lx\n", __FILE__, __FUNC__, __LINE__, icon));
@@ -298,7 +298,7 @@ static BOOL DtNew(Class *cl, Object *o, struct opSet *ops)
 				if ('\0' == *FileName)
 					break;
 
-				IconFh = GetTagData(DTA_Handle, 0, ops->ops_AttrList);
+				IconFh = (BPTR)GetTagData(DTA_Handle, 0, ops->ops_AttrList);
 
 				d1(KPrintF("%s/%s/%ld:  FileName=<%s>\n", __FILE__, __FUNC__, __LINE__, FileName));
 				TIMESTAMP_d1();
@@ -416,6 +416,7 @@ static ULONG DtWrite(Class *cl, Object *o, struct iopWrite *opw)
 	struct IBox *WindowRect = NULL;
 	struct ARGBHeader *NrmARGBImage = &inst->id_NormalImage;
 	struct ARGBHeader *SelARGBImage = &inst->id_SelectedImage;
+        IPTR val;
 	ULONG ViewModes;
 	ULONG NeedUpdateWB;
 	LONG Result = RETURN_OK;
@@ -423,18 +424,18 @@ static ULONG DtWrite(Class *cl, Object *o, struct iopWrite *opw)
 	d1(KPrintF("%s/%s/%ld:  id_Type=%lu\n", __FILE__, __FUNC__, __LINE__, inst->id_Type));
 	d1(KPrintF("%s/%s/%ld:  ImgData=%08lx  WorkBuffer=%08lx\n", __FILE__, __FUNC__, __LINE__, inst->id_NormalImage.argb_ImageData));
 
-	GetAttr(IDTA_Type, 		o, &inst->id_Type);
-	GetAttr(IDTA_ViewModes, 	o, &ViewModes);
-	GetAttr(IDTA_Flags, 		o, &inst->id_DrawerData.dd_Flags);
-	GetAttr(IDTA_WinCurrentX, 	o, (ULONG *) &inst->id_DrawerData.dd_CurrentX);
-	GetAttr(IDTA_WinCurrentY, 	o, (ULONG *) &inst->id_DrawerData.dd_CurrentY);
-	GetAttr(IDTA_WindowRect, 	o, (APTR) &WindowRect);
-	GetAttr(IDTA_Stacksize, 	o, &inst->id_StackSize);
-	GetAttr(IDTA_ToolTypes, 	o, (ULONG *) &inst->id_ToolTypes);
-	GetAttr(IDTA_DefaultTool, 	o, (ULONG *) &inst->id_DefaultTool);
-	GetAttr(IDTA_ToolWindow,	o, (ULONG *) &inst->id_ToolWindow);
-	GetAttr(IDTA_ARGBImageData,	o, (APTR) &NrmARGBImage);
-	GetAttr(IDTA_SelARGBImageData,	o, (APTR) &SelARGBImage);
+	GetAttr(IDTA_Type, 		o, &val); inst->id_Type = val;
+	GetAttr(IDTA_ViewModes, 	o, &val); ViewModes = val;
+	GetAttr(IDTA_Flags, 		o, &val); inst->id_DrawerData.dd_Flags = val;
+	GetAttr(IDTA_WinCurrentX, 	o, &val); inst->id_DrawerData.dd_CurrentX = val;
+	GetAttr(IDTA_WinCurrentY, 	o, &val); inst->id_DrawerData.dd_CurrentY = val;
+	GetAttr(IDTA_WindowRect, 	o, &val); WindowRect = (APTR)val;
+	GetAttr(IDTA_Stacksize, 	o, &val); inst->id_StackSize = val;
+	GetAttr(IDTA_ToolTypes, 	o, &val); inst->id_ToolTypes = (APTR)val;
+	GetAttr(IDTA_DefaultTool, 	o, &val); inst->id_DefaultTool = (APTR)val;
+	GetAttr(IDTA_ToolWindow,	o, &val); inst->id_ToolWindow = (APTR)val;
+	GetAttr(IDTA_ARGBImageData,	o, &val); NrmARGBImage = (APTR)val;
+	GetAttr(IDTA_SelARGBImageData,	o, &val); SelARGBImage = (APTR)val;
 
 	inst->id_DrawerData.dd_ViewModes = ViewModes;
 
@@ -526,7 +527,7 @@ static ULONG DtNewImage(Class *cl, Object *o, struct iopNewImage *ioni)
 
 //-----------------------------------------------------------------------------
 
-static ULONG DtClone(Class *cl, Object *o, struct iopCloneIconObject *iocio)
+static IPTR DtClone(Class *cl, Object *o, struct iopCloneIconObject *iocio)
 {
 	struct InstanceData *inst = INST_DATA(cl, o);
 	Object *oClone;
@@ -648,7 +649,7 @@ static ULONG DtClone(Class *cl, Object *o, struct iopCloneIconObject *iocio)
 
 	d1(KPrintF("%s/%s/%ld:  END o=%08lx  inst=%08lx  oClone=%08lx\n", __FILE__, __FUNC__, __LINE__, o, inst, oClone));
 
-	return (ULONG) oClone;
+	return (IPTR) oClone;
 }
 
 //-----------------------------------------------------------------------------
@@ -1235,11 +1236,11 @@ static void SetParentAttributes(Class *cl, Object *o)
 
 	SetAttrs(o,
 		IDTA_CopyARGBImageData,	FALSE,
-		IDTA_ARGBImageData,	(ULONG) &inst->id_NormalImage,
-		IDTA_ToolTypes,		(ULONG) inst->id_ToolTypes,
+		IDTA_ARGBImageData,	(IPTR) &inst->id_NormalImage,
+		IDTA_ToolTypes,		(IPTR) inst->id_ToolTypes,
 		IDTA_Stacksize,		inst->id_StackSize,
-		IDTA_DefaultTool,	(ULONG) inst->id_DefaultTool,
-		IDTA_ToolWindow,	(ULONG) inst->id_ToolWindow,
+		IDTA_DefaultTool,	(IPTR) inst->id_DefaultTool,
+		IDTA_ToolWindow,	(IPTR) inst->id_ToolWindow,
 		IDTA_Type, 		inst->id_Type,
 		TAG_END);
 
@@ -1247,7 +1248,7 @@ static void SetParentAttributes(Class *cl, Object *o)
 		{
 		SetAttrs(o,
 			IDTA_CopySelARGBImageData, FALSE,
-			IDTA_SelARGBImageData,	   (ULONG) &inst->id_SelectedImage,
+			IDTA_SelARGBImageData,	   (IPTR) &inst->id_SelectedImage,
 			TAG_END);
 		}
 
@@ -1263,7 +1264,7 @@ static void SetParentAttributes(Class *cl, Object *o)
 			__FUNC__, __LINE__, inst->id_DrawerData.dd_Flags, inst->id_DrawerData.dd_ViewModes));
 
 		SetAttrs(o,
-			IDTA_WindowRect,	(ULONG) &inst->id_DrawerData.dd_NewWindow,
+			IDTA_WindowRect,	(IPTR) &inst->id_DrawerData.dd_NewWindow,
 			IDTA_WinCurrentX,	inst->id_DrawerData.dd_CurrentX,
 			IDTA_WinCurrentY,	inst->id_DrawerData.dd_CurrentY,
 			IDTA_Flags, 		inst->id_DrawerData.dd_Flags,
