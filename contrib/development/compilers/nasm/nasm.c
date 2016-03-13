@@ -950,7 +950,7 @@ static void assemble_file (char *fname)
 				  "invalid segment name on pass two");
 		} else
 		    in_abs_seg = FALSE;
-		    location.segment = seg;
+		location.segment = seg;
 		break;
 	      case 2:	       /* [EXTERN label] */
 		q = value;
