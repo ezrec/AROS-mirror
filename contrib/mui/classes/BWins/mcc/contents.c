@@ -65,7 +65,7 @@ layoutFun(REG(a0) struct Hook *h,REG(a2) Object *obj,REG(a1) struct MUI_LayoutMs
         {
             ULONG ls, rs, ts, bs, dragBar, size, dbt;
             ULONG          root = 0;
-            UWORD minWidth, defWidth, maxWidth, minHeight, defHeight, maxHeight, over;
+            UWORD minWidth, defWidth, maxWidth, minHeight, defHeight, maxHeight, over __unused;
 
             ls = (data->ls>=0) ? data->ls : data->uls;
             rs = (data->rs>=0) ? data->rs : data->urs;
@@ -816,7 +816,7 @@ mContextMenuBuild(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct M
     if (flags & FLG_PMenu)
     {
         struct Hook hook;
-        struct Window *win;
+        struct Window *win = NULL;
 
         if ((flags & FLG_NoHideItem) && (flags & FLG_NoCloseItem))
         {
