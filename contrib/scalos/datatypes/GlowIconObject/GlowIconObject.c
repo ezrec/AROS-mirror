@@ -92,7 +92,7 @@ static Class *GlowIconObjectClass;
 //----------------------------------------------------------------------------
 // Standard library functions
 
-SAVEDS(ULONG) INTERRUPT GlowIconObjectDispatcher(Class *cl, Object *o, Msg msg);
+SAVEDS(IPTR) INTERRUPT GlowIconObjectDispatcher(Class *cl, Object *o, Msg msg);
 
 //-----------------------------------------------------------------------------
 
@@ -104,7 +104,7 @@ static ULONG DtLayout(Class *cl, Object *o, struct iopLayout *iopl);
 static ULONG DtFreeLayout(Class *cl, Object *o, struct iopFreeLayout *opf);
 static ULONG DtWrite(Class *cl, Object *o, struct iopWrite *iopw);
 static ULONG DtNewImage(Class *cl, Object *o, struct iopNewImage *iopw);
-static ULONG DtClone(Class *cl, Object *o, struct iopCloneIconObject *iocio);
+static IPTR DtClone(Class *cl, Object *o, struct iopCloneIconObject *iocio);
 
 //----------------------------------------------------------------------------
 
@@ -190,12 +190,12 @@ static struct Hook StreamHook =
 //----------------------------------------------------------------------------
 
 	#ifdef __AROS__
-AROS_LH0(ULONG, ObtainInfoEngine,
+AROS_LH0(IPTR, ObtainInfoEngine,
     struct Library *, libBase, 5, GlowIconobject
 )
 {
 	AROS_LIBFUNC_INIT
-	return (ULONG) GlowIconObjectClass;
+	return (IPTR) GlowIconObjectClass;
 	AROS_LIBFUNC_EXIT
 }
 #else
@@ -509,9 +509,9 @@ ULONG CloseDatatype(struct GlowIconObjectDtLibBase *dtLib)
 
 //-----------------------------------------------------------------------------
 
-SAVEDS(ULONG) INTERRUPT GlowIconObjectDispatcher(Class *cl, Object *o, Msg msg)
+SAVEDS(IPTR) INTERRUPT GlowIconObjectDispatcher(Class *cl, Object *o, Msg msg)
 {
-	ULONG Result;
+	IPTR Result;
 
 	d1(kprintf("%s/%s/%ld:  MethodID=%08lx o=%08lx\n", __FILE__, __FUNC__, __LINE__, msg->MethodID, o));
 
@@ -529,7 +529,7 @@ SAVEDS(ULONG) INTERRUPT GlowIconObjectDispatcher(Class *cl, Object *o, Msg msg)
 				o = NULL;
 				}
 			}
-		Result = (ULONG) o;
+		Result = (IPTR) o;
 		break;
 
 	case OM_DISPOSE:
@@ -612,7 +612,7 @@ static BOOL DtNew(Class *cl, Object *o, struct opSet *ops)
 		if (0 != DefIconType)
 			break;
 
-		if (NULL != (struct DiskObject *) GetTagData(AIDTA_Icon, (ULONG) NULL, ops->ops_AttrList))
+		if (NULL != (struct DiskObject *) GetTagData(AIDTA_Icon, (IPTR) NULL, ops->ops_AttrList))
 			break;
 
 		if (FindTagItem(IDTA_CloneIconObject, ops->ops_AttrList))
@@ -821,11 +821,11 @@ static ULONG DtGet(Class *cl, Object *o, struct opGet *opg)
 		break;
 
 	case AIDTA_Icon:
-		*opg->opg_Storage = (ULONG) inst->aio_DiskObject;
+		*opg->opg_Storage = (IPTR) inst->aio_DiskObject;
 		break;
 
 	case IDTA_Extention:
-		*opg->opg_Storage = (ULONG) ".info";
+		*opg->opg_Storage = (IPTR) ".info";
 		break;
 
 	default:
@@ -1190,7 +1190,7 @@ static ULONG DtNewImage(Class *cl, Object *o, struct iopNewImage *ioni)
 
 //-----------------------------------------------------------------------------
 
-static ULONG DtClone(Class *cl, Object *o, struct iopCloneIconObject *iocio)
+static IPTR DtClone(Class *cl, Object *o, struct iopCloneIconObject *iocio)
 {
 	struct InstanceData *inst = INST_DATA(cl, o);
 	Object *oClone;
@@ -1379,7 +1379,7 @@ static ULONG DtClone(Class *cl, Object *o, struct iopCloneIconObject *iocio)
 
 	d1(KPrintF("%s/%ld:  END o=%08lx  inst=%08lx  oClone=%08lx\n", __FUNC__, __LINE__, o, inst, oClone));
 
-	return (ULONG) oClone;
+	return (IPTR) oClone;
 }
 
 //-----------------------------------------------------------------------------
@@ -2070,7 +2070,7 @@ static BOOL ReadStandardIcon(struct InstanceData *inst, BPTR fd)
 
 		d1(kprintf("%s/%s/%ld: DiskObject read Ok, size=%ld.\n", __FILE__, __FUNC__, __LINE__, sizeof(struct DiskObject)));
 
-		FileFormatRevision = ((ULONG) inst->aio_DiskObject->do_Gadget.UserData) & WB_DISKREVISIONMASK;
+		FileFormatRevision = ((IPTR) inst->aio_DiskObject->do_Gadget.UserData) & WB_DISKREVISIONMASK;
 
 		d1(kprintf("%s/%s/%ld: do_Magic=%04lx  Version=%04lx\n", __FILE__, __FUNC__, __LINE__, inst->aio_DiskObject->do_Magic, inst->aio_DiskObject->do_Version));
 
@@ -3528,7 +3528,7 @@ static void GenerateNormalImageMask(Class *cl, Object *o)
 
 	d1(KPrintF("%s/%s/%ld:  MaskNormal=%08lx\n", __FILE__, __FUNC__, __LINE__, MaskNormal));
 
-	SetAttrs(o, IDTA_Mask_Normal, (ULONG) MaskNormal,
+	SetAttrs(o, IDTA_Mask_Normal, (IPTR) MaskNormal,
 		IDTA_Width_Mask_Normal, inst->aio_Image1->nim_Width,
 		IDTA_Height_Mask_Normal, inst->aio_Image1->nim_Height,
 		TAG_END);
@@ -3551,7 +3551,7 @@ static void GenerateSelectedImageMask(Class *cl, Object *o)
 
 	d1(KPrintF("%s/%s/%ld:  MaskSelected=%08lx\n", __FILE__, __FUNC__, __LINE__, MaskSelected));
 
-	SetAttrs(o, IDTA_Mask_Selected, (ULONG) MaskSelected,
+	SetAttrs(o, IDTA_Mask_Selected, (IPTR) MaskSelected,
 		IDTA_Width_Mask_Selected, inst->aio_Image2->nim_Width,
 		IDTA_Height_Mask_Selected, inst->aio_Image2->nim_Height,
 		TAG_END);
@@ -3777,7 +3777,7 @@ static void SetParentAttributes(Class *cl, Object *o)
 		// 32bit GlowIcon
 		SetAttrs(o,
 			IDTA_CopyARGBImageData,	FALSE,
-			IDTA_ARGBImageData, (ULONG) &inst->aio_Image1->nim_ARGBheader,
+			IDTA_ARGBImageData, (IPTR) &inst->aio_Image1->nim_ARGBheader,
 			TAG_END);
 		}
 	TIMESTAMP_d1();
@@ -3786,7 +3786,7 @@ static void SetParentAttributes(Class *cl, Object *o)
 		// 32bit GlowIcon
 		SetAttrs(o,
 			IDTA_CopySelARGBImageData, FALSE,
-			IDTA_SelARGBImageData, (ULONG) &inst->aio_Image2->nim_ARGBheader,
+			IDTA_SelARGBImageData, (IPTR) &inst->aio_Image2->nim_ARGBheader,
 			TAG_END);
 		}
 
@@ -3809,14 +3809,14 @@ static void SetParentAttributes(Class *cl, Object *o)
 			IDTA_Flags, inst->aio_DiskObject->do_DrawerData->dd_Flags,
 			IDTA_WinCurrentX, inst->aio_DiskObject->do_DrawerData->dd_CurrentX,
 			IDTA_WinCurrentY, inst->aio_DiskObject->do_DrawerData->dd_CurrentY,
-			IDTA_WindowRect, (ULONG) &inst->aio_DiskObject->do_DrawerData->dd_NewWindow,
+			IDTA_WindowRect, (IPTR) &inst->aio_DiskObject->do_DrawerData->dd_NewWindow,
 			TAG_END);
 		}
 	TIMESTAMP_d1();
 	SetAttrs(o,
-		IDTA_ToolTypes, (ULONG) inst->aio_DiskObject->do_ToolTypes,
+		IDTA_ToolTypes, (IPTR) inst->aio_DiskObject->do_ToolTypes,
 		IDTA_Stacksize, inst->aio_DiskObject->do_StackSize,
-		IDTA_DefaultTool, (ULONG) inst->aio_DiskObject->do_DefaultTool,
+		IDTA_DefaultTool, (IPTR) inst->aio_DiskObject->do_DefaultTool,
 		IDTA_Type, inst->aio_DiskObject->do_Type,
 		IDTA_Borderless, inst->aio_Borderless,
 		TAG_END);
@@ -3844,21 +3844,21 @@ static BOOL ReadConvertStandardIcon(BPTR fd, struct DiskObject *dobj)
 			dobj->do_Gadget.Flags = SCA_BE2WORD(*(WORD *)(block + 16));
 			dobj->do_Gadget.Activation = SCA_BE2WORD(*(WORD *)(block + 18));
 			dobj->do_Gadget.GadgetType = SCA_BE2WORD(*(WORD *)(block + 20));
-			dobj->do_Gadget.GadgetRender = (APTR)SCA_BE2LONG(*(LONG *)(block + 22));
-			dobj->do_Gadget.SelectRender = (APTR)SCA_BE2LONG(*(LONG *)(block + 26));
-			dobj->do_Gadget.GadgetText = (APTR)SCA_BE2LONG(*(LONG *)(block + 30));
+			dobj->do_Gadget.GadgetRender = (APTR)0 + SCA_BE2LONG(*(IPTR *)(block + 22));
+			dobj->do_Gadget.SelectRender = (APTR)0 + SCA_BE2LONG(*(IPTR *)(block + 26));
+			dobj->do_Gadget.GadgetText = (APTR)0 + SCA_BE2LONG(*(IPTR *)(block + 30));
 			dobj->do_Gadget.MutualExclude = SCA_BE2LONG(*(LONG *)(block + 34));
-			dobj->do_Gadget.SpecialInfo = (APTR)SCA_BE2LONG(*(LONG *)(block + 38));
+			dobj->do_Gadget.SpecialInfo = (APTR)0 + SCA_BE2LONG(*(IPTR *)(block + 38));
 			dobj->do_Gadget.GadgetID = SCA_BE2WORD(*(WORD *)(block + 42));
-			dobj->do_Gadget.UserData = (APTR)SCA_BE2LONG(*(LONG *)(block + 44));
+			dobj->do_Gadget.UserData = (APTR)0 + SCA_BE2LONG(*(IPTR *)(block + 44));
 			dobj->do_Type = *(BYTE *)(block + 48);
 			// Ignore 1
-			dobj->do_DefaultTool = (APTR)SCA_BE2LONG(*(LONG *)(block + 50));
-			dobj->do_ToolTypes = (APTR)SCA_BE2LONG(*(LONG *)(block + 54));
+			dobj->do_DefaultTool = (APTR)0 + SCA_BE2LONG(*(IPTR *)(block + 50));
+			dobj->do_ToolTypes = (APTR)0 + SCA_BE2LONG(*(IPTR *)(block + 54));
 			dobj->do_CurrentX = SCA_BE2LONG(*(LONG *)(block + 58));
 			dobj->do_CurrentY = SCA_BE2LONG(*(LONG *)(block + 62));
-			dobj->do_DrawerData = (APTR)SCA_BE2LONG(*(LONG *)(block + 66));
-			dobj->do_ToolWindow = (APTR)SCA_BE2LONG(*(LONG *)(block + 70));
+			dobj->do_DrawerData = (APTR)0 + SCA_BE2LONG(*(IPTR *)(block + 66));
+			dobj->do_ToolWindow = (APTR)0 + SCA_BE2LONG(*(IPTR *)(block + 70));
 			dobj->do_StackSize = SCA_BE2LONG(*(LONG *)(block + 74));
 
 			success = TRUE;
@@ -3888,21 +3888,21 @@ static BOOL WriteConvertStandardIcon(BPTR fd, struct DiskObject *dobj)
 		*(WORD *)(block + 16) = SCA_WORD2BE(dobj->do_Gadget.Flags);
 		*(WORD *)(block + 18) = SCA_WORD2BE(dobj->do_Gadget.Activation);
 		*(WORD *)(block + 20) = SCA_WORD2BE(dobj->do_Gadget.GadgetType);
-		*(LONG *)(block + 22) = SCA_LONG2BE((LONG)dobj->do_Gadget.GadgetRender);
-		*(LONG *)(block + 26) = SCA_LONG2BE((LONG)dobj->do_Gadget.SelectRender);
-		*(LONG *)(block + 30) = SCA_LONG2BE((LONG)dobj->do_Gadget.GadgetText);
+		*(LONG *)(block + 22) = SCA_LONG2BE((IPTR)dobj->do_Gadget.GadgetRender);
+		*(LONG *)(block + 26) = SCA_LONG2BE((IPTR)dobj->do_Gadget.SelectRender);
+		*(LONG *)(block + 30) = SCA_LONG2BE((IPTR)dobj->do_Gadget.GadgetText);
 		*(LONG *)(block + 34) = SCA_LONG2BE(dobj->do_Gadget.MutualExclude);
-		*(LONG *)(block + 38) = SCA_LONG2BE((LONG)dobj->do_Gadget.SpecialInfo);
+		*(LONG *)(block + 38) = SCA_LONG2BE((IPTR)dobj->do_Gadget.SpecialInfo);
 		*(WORD *)(block + 42) = SCA_WORD2BE(dobj->do_Gadget.GadgetID);
-		*(LONG *)(block + 44) = SCA_LONG2BE((LONG)dobj->do_Gadget.UserData);
+		*(LONG *)(block + 44) = SCA_LONG2BE((IPTR)dobj->do_Gadget.UserData);
 		*(BYTE *)(block + 48) = dobj->do_Type;
 		// Ignore 1
-		*(LONG *)(block + 50) = SCA_LONG2BE((LONG)dobj->do_DefaultTool);
-		*(LONG *)(block + 54) = SCA_LONG2BE((LONG)dobj->do_ToolTypes);
+		*(LONG *)(block + 50) = SCA_LONG2BE((IPTR)dobj->do_DefaultTool);
+		*(LONG *)(block + 54) = SCA_LONG2BE((IPTR)dobj->do_ToolTypes);
 		*(LONG *)(block + 58) = SCA_LONG2BE(dobj->do_CurrentX);
 		*(LONG *)(block + 62) = SCA_LONG2BE(dobj->do_CurrentY);
-		*(LONG *)(block + 66) = SCA_LONG2BE((LONG)dobj->do_DrawerData);
-		*(LONG *)(block + 70) = SCA_LONG2BE((LONG)dobj->do_ToolWindow);
+		*(LONG *)(block + 66) = SCA_LONG2BE((IPTR)dobj->do_DrawerData);
+		*(LONG *)(block + 70) = SCA_LONG2BE((IPTR)dobj->do_ToolWindow);
 		*(LONG *)(block + 74) = SCA_LONG2BE(dobj->do_StackSize);
 
 		if (78 == FWrite(fd, block, 1, 78))
@@ -3999,10 +3999,10 @@ static BOOL ReadConvertImage(BPTR fd, struct Image *img)
 			img->Width = SCA_BE2WORD(*(WORD *)(block + 4));
 			img->Height = SCA_BE2WORD(*(WORD *)(block + 6));
 			img->Depth = SCA_BE2WORD(*(WORD *)(block + 8));
-			img->ImageData = (APTR)SCA_BE2LONG(*(LONG *)(block + 10));
+			img->ImageData = (APTR)0 + SCA_BE2LONG(*(IPTR *)(block + 10));
 			img->PlanePick = *(BYTE *)(block + 14);
 			img->PlaneOnOff = *(BYTE *)(block + 15);
-			img->NextImage = (APTR)SCA_BE2LONG(*(LONG *)(block + 16));
+			img->NextImage = (APTR)0 + SCA_BE2LONG(*(IPTR *)(block + 16));
 
 			success = TRUE;
 			}
@@ -4028,10 +4028,10 @@ static BOOL WriteConvertImage(BPTR fd, struct Image *img)
 		*(WORD *)(block + 4) = SCA_WORD2BE(img->Width);
 		*(WORD *)(block + 6) = SCA_WORD2BE(img->Height);
 		*(WORD *)(block + 8) = SCA_WORD2BE(img->Depth);
-		*(LONG *)(block + 10) = SCA_LONG2BE((LONG)img->ImageData);
+		*(LONG *)(block + 10) = SCA_LONG2BE((IPTR)img->ImageData);
 		*(BYTE *)(block + 14) = img->PlanePick;
 		*(BYTE *)(block + 15) = img->PlaneOnOff;
-		*(LONG *)(block + 16) = SCA_LONG2BE((LONG)img->NextImage);
+		*(LONG *)(block + 16) = SCA_LONG2BE((IPTR)img->NextImage);
 
 		if (20 == FWrite(fd, block, 1, 20))
 			success = TRUE;
