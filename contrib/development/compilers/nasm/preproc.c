@@ -1057,7 +1057,7 @@ static int if_condition (Token *tline, int i)
 	    }
 	    if (smacro_defined(tline->text, 0, NULL, 1))
 		j = TRUE;
-		tline = tline->next;
+	    tline = tline->next;
 	}
 	if (i == PP_IFNDEF || i == PP_ELIFNDEF)
 	    j = !j;
