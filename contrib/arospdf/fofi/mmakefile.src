@@ -13,7 +13,9 @@ FILES := \
 
 TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/AROSPDF/libs
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../goo
-USER_CFLAGS := -Wno-write-strings -DHAVE_CONFIG_H
+NOWARN_FLAGS := -Wno-write-strings
+USER_CFLAGS := $(NOWARN_FLAGS) -DHAVE_CONFIG_H
+USER_CXXFLAGS := $(NOWARN_FLAGS)  -DHAVE_CONFIG_H
 
 %build_linklib mmake=contrib-arospdf-fofi libname=fofi \
   cxxfiles=$(FILES) libdir=$(TARGETDIR)
