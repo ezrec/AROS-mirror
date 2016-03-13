@@ -442,7 +442,7 @@ mDraw(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Draw *ms
     struct RastPort          srp;
     struct RastPort *rp;
     ULONG           activate = data->flags & BFLG_Activate;
-    WORD            l, t, r, b, w, h;
+    WORD            l, t, r, b, w __unused, h;
     UBYTE           shine = MUIPEN(activate ? data->shine : data->nashine),
                              shadow = MUIPEN(activate ? data->shadow : data->nashadow);
 
