@@ -82,8 +82,10 @@ void WidthAndHeight(void)
     {
         if (fread(buffer, 1, 26, fh))
         {
-            height = MB_BE2WORD(*((UWORD *) &buffer[22]));
-            width = MB_BE2WORD(*((UWORD *) &buffer[20]));
+            UWORD *height_ptr= (UWORD *) &buffer[22];
+            UWORD *width_ptr= (UWORD *) &buffer[20];
+            height = MB_BE2WORD(*height_ptr);
+            width = MB_BE2WORD(*width_ptr);
         }
         fclose(fh);
     }
