@@ -92,13 +92,13 @@ opopImage(REG(d0) ULONG type,REG(d1) ULONG key,REG(d2) ULONG title,REG(d3) ULONG
 
 /***********************************************************************/
 
-static ULONG ASM
+static IPTR ASM
 mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
     if (obj = (Object *)DoSuperMethodA(cl,obj,(APTR)msg))
     {
         struct data *data = INST_DATA(cl,obj);
-        char        buf[128], *t;
+        char        buf[128], *t, *dragstr, *closestr, *sizestr;
         Object      *prefs, *trans;
 
         snprintf(buf,sizeof(buf),getString(MCPMSG_Info_First),"\33bBWin " VRSTRING "\33n (" DATE ")\33n");
@@ -118,6 +118,10 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
                 End,
             End;
         else trans = NULL;
+
+        dragstr = getString(MCPMSG_DragBarType);
+        sizestr = getString(MCPMSG_SizeType);
+        closestr = getString(MCPMSG_CloseType);
 
         if (prefs = VGroup,
 
@@ -192,8 +196,8 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
                                     End,
                                 End,
 
-                                Child, FreeLabel(t = getString(MCPMSG_DragBarType)),
-                                Child, data->dragBarType = ocycle(shapeStrings,t,MCPMSG_DragBarType_Help),
+                                Child, FreeLabel(dragstr),
+                                Child, data->dragBarType = ocycle(shapeStrings, dragstr,MCPMSG_DragBarType_Help),
                                 Child, data->nadragBarType = ocycle(shapeStrings,NULL,MCPMSG_DragBarType_Help),
                             End,  // dragbar
 
@@ -232,8 +236,8 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
                                     End,
                                 End,
 
-                                Child, FreeLabel(t = getString(MCPMSG_SizeType)),
-                                Child, data->sizeType = ocycle(shapeStrings,t,MCPMSG_SizeType_Help),
+                                Child, FreeLabel(sizestr),
+                                Child, data->sizeType = ocycle(shapeStrings,sizestr,MCPMSG_SizeType_Help),
                                 Child, data->nasizeType = ocycle(shapeStrings,NULL,MCPMSG_SizeType_Help),
 
                             End, // size
@@ -276,8 +280,8 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
                                         End,
                                     End,
 
-                                    Child, FreeLabel(t = getString(MCPMSG_CloseType)),
-                                    Child, ocycle(shapeStrings,t,MCPMSG_CloseType_Help),
+                                    Child, FreeLabel(closestr),
+                                    Child, ocycle(shapeStrings,closestr,MCPMSG_CloseType_Help),
                                     Child, ocycle(shapeStrings,NULL,MCPMSG_CloseType_Help),
                                 End,
                             End, // close
@@ -363,7 +367,7 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
         }
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 /***********************************************************************/
@@ -505,8 +509,8 @@ mGadgetsToConfig(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MU
 {
     struct data *data = INST_DATA(cl,obj);
     Object      *cfg = msg->configdata;
-    APTR                 ptr;
-    ULONG                val, v;
+    APTR                 ptr = NULL;
+    IPTR                val = 0, v;
 
     /*if (lib_flags & BASEFLG_Avoid)
     {

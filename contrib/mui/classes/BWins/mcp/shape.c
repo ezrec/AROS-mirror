@@ -26,7 +26,7 @@ DoSuperNew(struct IClass *cl,Object *obj,Tag tag1,...)
 
 /***********************************************************************/
 
-static ULONG ASM
+static IPTR ASM
 mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 {
     struct TagItem *attrs = msg->ops_AttrList;
@@ -42,12 +42,12 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
         data->type = GetTagData(MUIA_BWin_Type,MUIDEF_BWin_Type,attrs);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 /***************************************************************************/
 
-static SAVEDS ULONG ASM
+static SAVEDS IPTR ASM
 mStringify(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Numeric_Stringify *msg)
 {
     struct shape_data *data = INST_DATA(cl,obj);
@@ -71,7 +71,7 @@ mStringify(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct MUIP_Num
             break;
     }
 
-    return (ULONG)data->buf;
+    return (IPTR)data->buf;
 }
 
 /***************************************************************************/

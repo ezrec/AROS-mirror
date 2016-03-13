@@ -2,7 +2,7 @@
 #define _CLASS_PROTOS_H
 
 /* init.c */
-ULONG ASM SAVEDS query ( REG (d0 )LONG which );
+IPTR ASM SAVEDS query ( REG (d0 )LONG which );
 void ASM freeBase ( void );
 BOOL ASM initBase ( void );
 

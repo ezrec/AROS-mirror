@@ -6,16 +6,16 @@
 
 /***********************************************************************/
 
-ULONG ASM SAVEDS
+IPTR ASM SAVEDS
 query(REG(d0) LONG which)
 {
     switch (which)
     {
         case MUIV_Query_MCP:
-            return (ULONG)lib_class;
+            return (IPTR)lib_class;
 
         case MUIV_Query_MCPImage:
-            return (ULONG)BodychunkObject,
+            return (IPTR)BodychunkObject,
                 MUIA_FixWidth,              BWIN_WIDTH,
                 MUIA_FixHeight,             BWIN_HEIGHT,
                 MUIA_Bitmap_Width,          BWIN_WIDTH,
