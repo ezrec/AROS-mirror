@@ -15,7 +15,8 @@ include $(TOP)/config/make.cfg
 
 TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/AROSPDF
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../goo -I$(SRCDIR)/$(CURDIR)/../splash -I$(SRCDIR)/$(CURDIR)/../fofi
-USER_CXXFLAGS := -Wno-write-strings -fpermissive -DHAVE_CONFIG_H
+NOWARN_FLAGS := -Wno-write-strings -Wno-permissive
+USER_CXXFLAGS := -fpermissive $(NOWARN_FLAGS) -DHAVE_CONFIG_H
 USER_LDFLAGS := -static-libstdc++ -L$(TARGETDIR)/libs
 
 ################################################################################
