@@ -6,8 +6,7 @@
 #MM- contrib-pack : contrib-pack-lzo
 #MM- contrib-pack-lzo : development-lzo
 
-REPOSITORIES := http://www.oberhumer.com/opensource/lzo/download \
-    http://pkgs.fedoraproject.org/repo/pkgs/lzo/lzo-2.03.tar.gz/0c3d078c2e8ea5a88971089a2f02a726/
+REPOSITORIES := http://www.oberhumer.com/opensource/lzo/download
 
-%fetch_and_build_gnu_development package=lzo version=2.03 patch=yes \
+%fetch_and_build_gnu_development package=lzo version=2.09 patch=no \
     package_repo=$(REPOSITORIES) suffixes="tar.gz"
