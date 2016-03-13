@@ -1335,7 +1335,7 @@ static void CAB_QTMfree(CABSTATE) {
  * - extra_bits states how many bits of offset-from-base data is needed.
  */
 static xadUINT32 position_base[51];
-static xadUINT8 extra_bits[51];
+static xadUINT8 extra_bits[51 + 1];
 
 
 static xadINT32 CAB_LZXinit(CABSTATE, int window) {
@@ -1361,7 +1361,8 @@ static xadINT32 CAB_LZXinit(CABSTATE, int window) {
 
   /* initialise static tables */
   for (i=0, j=0; i <= 50; i += 2) {
-    extra_bits[i] = extra_bits[i+1] = j; /* 0,0,0,0,1,1,2,2,3,3... */
+    extra_bits[i] = j; /* 0,0,0,0,1,1,2,2,3,3... */
+    extra_bits[i+1] = j;
     if ((i != 0) && (j < 17)) j++; /* 0,0,1,2,3,4...15,16,17,17,17,17... */
   }
   for (i=0, j=0; i <= 50; i++) {
