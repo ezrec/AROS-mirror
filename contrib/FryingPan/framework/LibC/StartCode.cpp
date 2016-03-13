@@ -200,7 +200,7 @@ void __main()
 {
 }
 
-void _error(const char* text, unsigned long* args)
+void _error(const char* text, IPTR args)
 {
 #ifndef __AMIGAOS4__
    struct Library* DOSBase       = __InternalDOSBase;
@@ -210,18 +210,18 @@ void _error(const char* text, unsigned long* args)
    struct IntuitionIFace  *IIntuition  = __InternalIntuitionIFace;
 #endif
    // 20! really 20 -- OS4 has some extra fields, and i am preserving space.
-   const unsigned long es[] = 
+   const IPTR es[] = 
    { 
       20,                              // size
       0,                               // window
-      (unsigned long)"<< ERROR >>",    // title
-      (unsigned long)text,             // body
-      (unsigned long)"OK"              // gadgets
+      (IPTR)"<< ERROR >>",    // title
+      (IPTR)text,             // body
+      (IPTR)"OK"              // gadgets
    };
 
    if (0 != __InternalIntuitionBase)
       EasyRequestArgs(0, (struct EasyStruct*)&es, 0, (void*)args);
    else if (0 != __InternalDOSBase)
-      VFPrintf(stdout, (char*)text, args);
+      VFPrintf(stdout, (char*)text, (const IPTR*)args);
 }
 

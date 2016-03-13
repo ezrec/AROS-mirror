@@ -459,7 +459,7 @@ bool                  rMP3Audio::readData(const IOptItem* item, void* buff, int 
          // if anything fails, do not return garbage, ok?
          lSamples = pMPEGA->MPEGA_decode_frame(pStream, pPCM);
          _D(Lvl_Info, "%s: Decoding MPEGA frames (stream %lx, buffer %lx): %ld",
-               (int)__PRETTY_FUNCTION__,
+               (IPTR)__PRETTY_FUNCTION__,
                (int)pStream,
                (int)pPCM,
                lSamples);
@@ -470,7 +470,7 @@ bool                  rMP3Audio::readData(const IOptItem* item, void* buff, int 
                lErrors++;
                if (lErrors == 64)
                {
-                  request("Info", "Its been 64 'faulty' frames now and most likely it is going to increase\nI doubt this is the problem with MP3 file (but who knows?)\nIf problem persists, mail the brilliant author of your mpega.library\nI keep getting %ld.", "Proceed", ARRAY(lSamples));
+                  request("Info", "Its been 64 'faulty' frames now and most likely it is going to increase\nI doubt this is the problem with MP3 file (but who knows?)\nIf problem persists, mail the brilliant author of your mpega.library\nI keep getting %ld.", "Proceed", ARRAY((IPTR)lSamples));
                }
             }
             lSamples = MPEGA_PCM_SIZE;

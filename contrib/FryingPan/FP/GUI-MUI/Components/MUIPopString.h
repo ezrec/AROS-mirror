@@ -37,41 +37,41 @@ protected:
 protected:
    Object                          *listview;
    Object                          *list;
-   const void                      *value;
+   IPTR                             value;
    Object                          *string;
-   HookAttrT<void*, void*>          hCallback;
+   HookAttrT<IPTR, IPTR>            hCallback;
    String                           sCols;
    int                              lCols;
    VectorT<const char*>             sColNames;
 
 protected:
-   HookT<MUIPopString, int, void*>           hHkBtnHook;
-   HookT<MUIPopString, void*, void*>         hHkConstruct;
-   HookT<MUIPopString, void*, void*>         hHkDestruct;
-   HookT<MUIPopString, const char**, void*>  hHkDisplay;
+   HookT<MUIPopString, IPTR, IPTR>          hHkBtnHook;
+   HookT<MUIPopString, IPTR, IPTR>          hHkConstruct;
+   HookT<MUIPopString, IPTR, IPTR>          hHkDestruct;
+   HookT<MUIPopString, const char**, IPTR>  hHkDisplay;
 
 protected:
    virtual bool                     onOpen();
    virtual bool                     onClose();
-   virtual unsigned long           *getPopDisplay();
-   virtual unsigned long           *getPopButton();
-   virtual unsigned long           *getPopObject();
-   virtual unsigned long            buttonHandler(int id, void* data);
+   virtual IPTR                     getPopDisplay();
+   virtual IPTR                     getPopButton();
+   virtual IPTR                     getPopObject();
+   virtual IPTR                     buttonHandler(IPTR id, IPTR data);
 
 protected:
-   virtual unsigned long            construct(void*, void* arg);
-   virtual unsigned long            destruct(void*, void* arg);
-   virtual unsigned long            display(const char** arr, void* arg);
+   virtual IPTR                     construct(IPTR, IPTR arg);
+   virtual IPTR                     destruct(IPTR, IPTR arg);
+   virtual IPTR                     display(const char** arr, IPTR arg);
    virtual const char              *toString(const void* arg);
 public:
                                     MUIPopString(const char* name, int cols=1, const char** names=0);
    virtual                         ~MUIPopString();                                    
-   virtual void                     setValue(const void* string);
-   virtual unsigned long           *getObject();
-   virtual const void              *getValue();
+   virtual void                     setValue(IPTR val);
+   virtual IPTR                     getObject();
+   virtual IPTR                     getValue();
    virtual void                     clearList();
-   virtual void                     addEntry(const void*);
-   virtual const void              *getSelectedEntry();
+   virtual void                     addEntry(const IPTR);
+   virtual const IPTR               getSelectedEntry();
 };
 
 #endif

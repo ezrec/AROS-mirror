@@ -40,25 +40,25 @@ protected:
    bool                    multiSelect;
    bool                    dragSortable;
    String                  format;
-   VectorT<void*>          selected;
-   HookAttrT<void*, void*>        hOnSelect;
-   HookAttrT<void*, AppMessage*>  hOnWBDrop;
-   HookAttrT<void*, void*>        hOnSort;
+   VectorT<IPTR>           selected;
+   HookAttrT<IPTR, IPTR>          hOnSelect;
+   HookAttrT<IPTR, AppMessage*>   hOnWBDrop;
+   HookAttrT<IPTR, IPTR>          hOnSort;
 
 protected:
-   HookT<MUIList, void*, void*>        hHkOnSelect;         //
-   HookT<MUIList, void*, AppMessage**> hHkOnWBDrop;         //
-   HookT<MUIList, void*, void*>        hHkOnDragSort;       // will call with new vector as param.
+   HookT<MUIList, IPTR, IPTR>          hHkOnSelect;         //
+   HookT<MUIList, IPTR, AppMessage**>  hHkOnWBDrop;         //
+   HookT<MUIList, IPTR, IPTR>          hHkOnDragSort;       // will call with new vector as param.
 
 protected:
-   uint32                  onSelect(void*, void*);
-   uint32                  onWBDrop(void*, AppMessage**);
-   uint32                  onDragSort(void*, void*);
+   IPTR                    onSelect(IPTR, IPTR);
+   IPTR                    onWBDrop(IPTR, AppMessage**);
+   IPTR                    onDragSort(IPTR, IPTR);
 
 public:
                            MUIList(const char *format, bool bMultiSelect=false);
    virtual                ~MUIList(); 
-   virtual unsigned long  *getObject();
+   virtual IPTR            getObject();
    virtual void            setConstructHook(const Hook* hook);
    virtual void            setDestructHook(const Hook* hook);
    virtual void            setDisplayHook(const Hook* hook);
@@ -66,9 +66,9 @@ public:
    virtual void            setWBDropHook(const Hook* hook);
    virtual void            setDragSortHook(const Hook* hook);
 
-   virtual void            addItem(void* item);
+   virtual void            addItem(IPTR item);
    virtual void            clear();
-   virtual VectorT<void*> &getSelectedItems();
+   virtual VectorT<IPTR>  &getSelectedItems();
 
    virtual void            setEnabled(bool enabled);
    virtual void            setDragSortable(bool sortable);

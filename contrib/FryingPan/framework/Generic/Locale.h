@@ -57,12 +57,12 @@ namespace GenNS
       class ::LocaleIFace       *locale;
       struct ::Locale           *lang;
       locale_set                 deflt;
-      HashT<uint32, locale_set>  hash;
+      HashT<IPTR, locale_set>  hash;
 
    public:
       struct LocaleSet 
       {
-         uint32      key;
+         IPTR      key;
          const char* value;
          const char* locale_id;
 
@@ -77,10 +77,10 @@ namespace GenNS
                         Localization(LocaleSet set[] = 0, const char* group=0);
       virtual          ~Localization();
       void              Add(LocaleSet set[], const char* group=0);
-      const String&     operator[] (uint key);
-      const String&     Str(uint key);
-      const char        Accel(uint key);        // give back single char
-      const char*       Shortcut(uint key);     // give back complete string
+      const String&     operator[] (IPTR key);
+      const String&     Str(IPTR key);
+      const char        Accel(IPTR key);        // give back single char
+      const char*       Shortcut(IPTR key);     // give back complete string
       bool              ReadCatalog(const char* name, sint version=0);
 
       bool              ExportCD(const char* filename, sint version=0);

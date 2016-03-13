@@ -20,7 +20,7 @@
 #ifndef _MUICOMPONENTS_PICTURECLASS_H_
 #define _MUICOMPONENTS_PICTURECLASS_H_
 
-#include <Generic/GenericOOP.h>
+#include <Generic/GenericBOOPSI.h>
 #include <Generic/String.h>
 #include <Generic/LibrarySpool.h>
 #include <libclass/datatypes.h>
@@ -28,7 +28,7 @@
 
 using namespace GenNS;
 
-class MUIPictureClass : public GenericOOP
+class MUIPictureClass : public GenericBOOPSI
 {
 public:
    enum Tags
@@ -56,7 +56,7 @@ protected:
 public:
                      MUIPictureClass(IClass* parent);
    virtual          ~MUIPictureClass();                  
-   virtual uint32    DoMtd(Object *obj, uint32 *msg);
+   virtual IPTR      DoMtd(Object *obj, IPTR msg);
 };
 
 #endif

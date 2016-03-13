@@ -59,7 +59,7 @@ bool MUIPopUnit::onOpen()
 
    while (NULL != t)
    {
-      addEntry(t);
+      addEntry((IPTR)t);
       t = t->sd_Next;
    }
 
@@ -81,7 +81,7 @@ void MUIPopUnit::setDevice(const char *device)
    onOpen();
 }
 
-unsigned long MUIPopUnit::construct(void*, void* arg)
+IPTR MUIPopUnit::construct(IPTR, IPTR arg)
 {
    ASSERT(arg != NULL);
    if (NULL == arg)
@@ -95,18 +95,18 @@ unsigned long MUIPopUnit::construct(void*, void* arg)
    e->product  = d->sd_DeviceName;
    e->lun      = d->sd_Unit;
 
-   e->name.FormatStr("%ld: %s - %s", ARRAY(e->lun, (IPTR)e->vendor.Data(), (IPTR)e->product.Data()));
+   e->name.FormatStr("%ld: %s - %s", ARRAY((IPTR)e->lun, (IPTR)e->vendor.Data(), (IPTR)e->product.Data()));
 
-   return (unsigned long)e;
+   return (IPTR)e;
 }
 
-unsigned long MUIPopUnit::destruct(void*, void* arg)
+IPTR MUIPopUnit::destruct(IPTR, IPTR arg)
 {
    delete (Entry*)arg;
    return 0;
 }
 
-unsigned long MUIPopUnit::display(const char** arr, void* arg)
+IPTR MUIPopUnit::display(const char** arr, IPTR arg)
 {
    if (NULL == arg)
    {
@@ -129,15 +129,15 @@ const char *MUIPopUnit::toString(const void* arg)
    return ((Entry*)arg)->name.Data();
 }
 
-const void* MUIPopUnit::getValue()
+IPTR MUIPopUnit::getValue()
 {
-   return (void*)unit;
+   return (IPTR)unit;
 }
    
-void MUIPopUnit::setValue(const void* val)
+void MUIPopUnit::setValue(IPTR val)
 {
    int      i=0;
-   Entry   *e;
+   Entry   *e = NULL;
 
    while (true)
    {
@@ -145,18 +145,17 @@ void MUIPopUnit::setValue(const void* val)
       if (NULL   == e)
          break;
 
-      if (e->lun == (IPTR)val)
+      if (e->lun == (int)val)
          break;
       i++;
    }
 
    if (NULL != e)
    {
-      MUIPopText::setValue(e->name.Data());
+      MUIPopText::setValue((IPTR)e->name.Data());
    }
    else
    {
-      MUIPopText::setValue("");
+      MUIPopText::setValue((IPTR)"");
    }
 }
-

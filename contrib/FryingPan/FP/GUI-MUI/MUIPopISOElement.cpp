@@ -127,19 +127,19 @@ bool MUIPopISOElement::onClose()
    return true;
 }
 
-unsigned long *MUIPopISOElement::getPopDisplay()
+IPTR MUIPopISOElement::getPopDisplay()
 {
    string = muiString("", 0, ID_String); 
    return string;
   
 }
 
-unsigned long *MUIPopISOElement::getPopButton()
+IPTR MUIPopISOElement::getPopButton()
 {
-   return (unsigned long *)PopButton(MUII_PopUp);
+   return (IPTR)PopButton(MUII_PopUp);
 }
 
-unsigned long *MUIPopISOElement::getPopObject()
+IPTR MUIPopISOElement::getPopObject()
 {
    static const char* titles[3] = 
    {
@@ -152,7 +152,7 @@ unsigned long *MUIPopISOElement::getPopObject()
    if (page != 0)
       return page;
 
-   page = (uint32 *)RegisterGroup(titles),
+   page = (IPTR)RegisterGroup(titles),
       Child,         getElemSettings(),
       Child,         getISOSettings(),
    End;
@@ -160,17 +160,17 @@ unsigned long *MUIPopISOElement::getPopObject()
    return page;
 }
 
-void MUIPopISOElement::setValue(const void* string)
+void MUIPopISOElement::setValue(IPTR val)
 {
-   muiSetText(ID_String, (const char*)string);
+   muiSetText(ID_String, (const char*)val);
 }
 
-const void *MUIPopISOElement::getValue()
+IPTR MUIPopISOElement::getValue()
 {
-   return value.Data();
+   return (IPTR)value.Data();
 }
 
-unsigned long MUIPopISOElement::buttonHandler(int id, void* data)
+IPTR MUIPopISOElement::buttonHandler(IPTR id, IPTR data)
 {
    switch ((BtnID)id)
    {
@@ -322,13 +322,13 @@ unsigned long MUIPopISOElement::buttonHandler(int id, void* data)
    return 0;
 }
 
-unsigned long *MUIPopISOElement::getObject()
+IPTR MUIPopISOElement::getObject()
 {
    MUIPopup::getObject();
-   return (unsigned long *)all;
+   return (IPTR)all;
 }
 
-uint32 *MUIPopISOElement::getISOSettings()
+IPTR MUIPopISOElement::getISOSettings()
 {
    static const char* levels[4] =
    {
@@ -338,7 +338,7 @@ uint32 *MUIPopISOElement::getISOSettings()
    levels[1] = Glb.Loc[loc_ISOLevel2];
    levels[2] = Glb.Loc[loc_ISOLevel3];
 
-   return (uint32 *)VGroup,
+   return (IPTR)VGroup,
       Child,         ColGroup(2),
          MUIA_Group_SameSize, true,
 
@@ -525,9 +525,9 @@ void MUIPopISOElement::setElement(ClElement *pElem)
    }
 }
 
-uint32 *MUIPopISOElement::getElemSettings()
+IPTR MUIPopISOElement::getElemSettings()
 {
-   return (uint32 *)VGroup,
+   return (IPTR)VGroup,
       Child,         ColGroup(2),
          MUIA_Group_SameSize, true,
 
@@ -583,5 +583,3 @@ void MUIPopISOElement::setEnabled(bool enabled)
 {
    Intuition->SetAttrsA(all, (TagItem*)ARRAY(MUIA_Disabled, !enabled, TAG_DONE, 0));
 }
-
-

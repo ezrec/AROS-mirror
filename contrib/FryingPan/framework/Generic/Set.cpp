@@ -26,7 +26,7 @@ Set::Set()
    val = 0;
 }
 
-Set::Set(uint32 val)
+Set::Set(IPTR val)
 {
    *this = val;
 }
@@ -35,44 +35,44 @@ Set::~Set()
 {
 }
 
-Set& Set::operator << (uint32 set)
+Set& Set::operator << (IPTR set)
 {
    val |= set;
    return *this;
 }
 
-Set& Set::operator >> (uint32 set)
+Set& Set::operator >> (IPTR set)
 {
    val &= ~set;
    return *this;
 }
 
-bool Set::ContainsAll(uint32 set)
+bool Set::ContainsAll(IPTR set)
 {
    if ((val & set) == set)
       return true;
    return false;
 }
 
-bool Set::ContainsAny(uint32 set)
+bool Set::ContainsAny(IPTR set)
 {
    if ((val & set) != 0)
       return true;
    return false;
 }
 
-Set::operator uint32 ()
+Set::operator IPTR ()
 {
    return val;
 }
 
-Set& Set::operator = (uint32 set)
+Set& Set::operator = (IPTR set)
 {
    val = set;
    return *this;
 }
 
-bool Set::operator == (uint32 set)
+bool Set::operator == (IPTR set)
 {
    if (val == set)
       return true;

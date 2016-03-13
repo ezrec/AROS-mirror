@@ -85,23 +85,23 @@ bool MUIPopAction::onClose()
    return true;
 }
 
-unsigned long *MUIPopAction::getPopDisplay()
+IPTR MUIPopAction::getPopDisplay()
 {
-   return (unsigned long *)RectangleObject,
+   return (IPTR)RectangleObject,
       MUIA_FixWidth,  0,
       MUIA_FixHeight, 0,
       MUIA_Weight,    0,
    End;
 }
 
-unsigned long *MUIPopAction::getPopButton()
+IPTR MUIPopAction::getPopButton()
 {
-   return (unsigned long *)PopButton(MUII_PopUp);
+   return (IPTR)PopButton(MUII_PopUp);
 }
 
-unsigned long *MUIPopAction::getPopObject()
+IPTR MUIPopAction::getPopObject()
 {
-   return (unsigned long *)VGroup,
+   return (IPTR)VGroup,
       GroupFrameT(Glb.Loc[loc_QuickAction].Data()),
       Child,            ColGroup(2),
          GroupFrameT(Glb.Loc[loc_MediaInfo].Data()),
@@ -122,16 +122,16 @@ unsigned long *MUIPopAction::getPopObject()
    End;
 }
 
-void MUIPopAction::setValue(const void* )
+void MUIPopAction::setValue(IPTR)
 {
 }
 
-const void *MUIPopAction::getValue()
+IPTR MUIPopAction::getValue()
 {
    return 0;
 }
 
-unsigned long MUIPopAction::buttonHandler(int id, void* data)
+IPTR MUIPopAction::buttonHandler(IPTR id, IPTR data)
 {
    IEngine *pEng = Glb.CurrentEngine->ObtainRead();
    switch (id)
@@ -295,4 +295,3 @@ void MUIPopAction::update()
 
    Glb.CurrentEngine->Release();
 }
-

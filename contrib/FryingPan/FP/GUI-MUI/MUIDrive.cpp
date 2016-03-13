@@ -149,9 +149,9 @@ MUIDrive::~MUIDrive()
    delete Config;
 }
 
-unsigned long *MUIDrive::getObject()
+IPTR MUIDrive::getObject()
 {
-   _dx(Lvl_Info, "Retrieving page content (%08lx)", (uint)all);
+   _dx(Lvl_Info, "Retrieving page content (%08lx)", (IPTR)all);
    if (NULL != all)
       return all;
 
@@ -160,7 +160,7 @@ unsigned long *MUIDrive::getObject()
    if (popDevice == 0)
    {
       _dx(Lvl_Info, "Setting up PopDevice");
-      popDevice = new MUIPopDevice(Glb.Loc[loc_DrivePopDevice], (const char**)ARRAY((uint)Glb.Loc[loc_ColDevDevices].Data(), 0));
+      popDevice = new MUIPopDevice(Glb.Loc[loc_DrivePopDevice], (const char**)ARRAY((IPTR)Glb.Loc[loc_ColDevDevices].Data(), 0));
       popDevice->setID(ID_DeviceSelect);
       popDevice->setCallbackHook(hHkButtonHook.GetHook());
    }
@@ -169,16 +169,16 @@ unsigned long *MUIDrive::getObject()
    {
       _dx(Lvl_Info, "Setting up PopUnit");
       popUnit   = new MUIPopUnit(Glb, Glb.Loc[loc_DrivePopUnit], (const char**)ARRAY(
-               (uint)Glb.Loc[loc_ColUnitNumber].Data(),
-               (uint)Glb.Loc[loc_ColUnitVendor].Data(),
-               (uint)Glb.Loc[loc_ColUnitDrive].Data(),
+               (IPTR)Glb.Loc[loc_ColUnitNumber].Data(),
+               (IPTR)Glb.Loc[loc_ColUnitVendor].Data(),
+               (IPTR)Glb.Loc[loc_ColUnitDrive].Data(),
                0));
       popUnit->setID(ID_UnitSelect);
       popUnit->setCallbackHook(hHkButtonHook.GetHook());
    }
 
    _dx(Lvl_Info, "Building main page");
-   all = (long unsigned int *)VGroup,
+   all = (IPTR)VGroup,
       GroupFrame,
       Child,                  RectangleObject,
          MUIA_Weight,            1,
@@ -256,7 +256,7 @@ unsigned long *MUIDrive::getObject()
 
    End;
 
-   _dx(Lvl_Info, "Page created (%08lx)", (uint)all);
+   _dx(Lvl_Info, "Page created (%08lx)", (IPTR)all);
    return all;
 }
 
@@ -288,9 +288,9 @@ void MUIDrive::update()
    lUnit    = eng->getUnit();
 
    _dx(Lvl_Info, "Updating device and unit popups");
-   popDevice->setValue(sDevice.Data());
+   popDevice->setValue((IPTR)sDevice.Data());
    popUnit->setDevice(sDevice.Data());
-   popUnit->setValue((void*)lUnit);
+   popUnit->setValue(lUnit);
 
    if (eng->isOpened())
    {
@@ -440,7 +440,7 @@ String MUIDrive::mediaToString(unsigned long val)
       e = true;
    }
 
-   _dx(Lvl_Info, "Media string: %s", (uint)s.Data());
+   _dx(Lvl_Info, "Media string: %s", (IPTR)s.Data());
    return s;
 }
 
@@ -456,7 +456,7 @@ String MUIDrive::dataToString(unsigned long val)
    if (val & DRT_Can_Read_CDAudio)
       s += "CD-Audio, ";
 
-   _dx(Lvl_Info, "Data string: %s", (uint)s.Data());
+   _dx(Lvl_Info, "Data string: %s", (IPTR)s.Data());
 
    return s;
 }
@@ -480,11 +480,11 @@ String MUIDrive::speedsToString(DiscSpeed *speeds)
       s += t;
    }
    
-   _dx(Lvl_Info, "String: %s", (uint)s.Data());
+   _dx(Lvl_Info, "String: %s", (IPTR)s.Data());
    return s;
 }
 
-unsigned long MUIDrive::buttonHook(int id, void* data)
+IPTR MUIDrive::buttonHook(IPTR id, IPTR data)
 {
    switch (id)
    {
@@ -499,7 +499,7 @@ unsigned long MUIDrive::buttonHook(int id, void* data)
          {
             bool  res;
 
-            lUnit = (long)data;
+            lUnit = (IPTR)data;
             IEngine *peng = Glb.CurrentEngine->ObtainRead();
             res = peng->openDevice(sDevice, lUnit);
             Glb.CurrentEngine->Release();

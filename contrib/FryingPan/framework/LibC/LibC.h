@@ -84,7 +84,7 @@ extern "C"
    extern void    __cleanup();                     // cleanup proc, call it from your lib expunge. REQUIRES VALID EXECBASE
    extern int     main();
 
-   extern void    _error(const char*, iptr);
+   extern void    _error(const char*, IPTR);
 
    /* regular c code */
    extern void*   malloc(size_t size);
@@ -128,11 +128,11 @@ extern "C"
    extern int64   __moddi3(int64, int64);
 
 #ifndef CLIB_INTUITION_PROTOS_H
-   sint          DoMethodA(Object* obj, iptr message);
-   sint          DoSuperMethodA(Class* cl, Object* obj, iptr message);
+   IPTR          DoMethodA(Object* obj, IPTR message);
+   IPTR          DoSuperMethodA(Class* cl, Object* obj, IPTR message);
 #endif
 
-   int32          request(const char* title, const char* body, const char* gads, const iptr params);
+   int32          request(const char* title, const char* body, const char* gads, const IPTR params);
 
    const struct Allocator* SLAB_Init(uint8 last_shift, const uint32 config_array[]);
    void  SLAB_Cleanup(const struct Allocator*);

@@ -42,11 +42,11 @@ protected:
       ID_PostEject
    };
 protected:
-   uint32             *all;
+   IPTR                       all;
    MUISpeedSelect            *speedselect;
    ConfigParser              *Config;
 
-   HookT<MUIRecord, BtnID, int32>    hBtnHook;
+   HookT<MUIRecord, BtnID, IPTR>    hBtnHook;
 
 protected:
    Globals                   &Glb;
@@ -56,7 +56,7 @@ protected:
    bool                       do_posteject;
 
 protected:
-   uint32                     btnClicked(BtnID button, int32 state);
+   IPTR                       btnClicked(BtnID button, IPTR state);
 
 public:
    /*
@@ -70,7 +70,7 @@ public:
                              ~MUIRecord();
    bool                       start();
    void                       stop();
-   uint32                    *getObject();
+   virtual IPTR               getObject();
    void                       update();
 };
 

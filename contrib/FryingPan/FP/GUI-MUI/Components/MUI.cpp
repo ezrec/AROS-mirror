@@ -39,7 +39,7 @@ bool MUI::freeItem(elemAssoc* const &item)
    return true;
 }
 
-uint32 *MUI::muiLabel(const char* contents, char key, int id, Alignment align)
+IPTR MUI::muiLabel(const char* contents, char key, int id, Alignment align)
 {
    Object *all;
    
@@ -53,12 +53,12 @@ uint32 *MUI::muiLabel(const char* contents, char key, int id, Alignment align)
                                                         "\033c",
    End;
    
-   muiElements << new elemAssoc(T_Label, id, (uint32 *)all);
+   muiElements << new elemAssoc(T_Label, id, (IPTR)all);
 
-   return (uint32 *)all;
+   return (IPTR)all;
 }
 
-uint32 *MUI::muiButton(const char* contents, char key, int id)
+IPTR MUI::muiButton(const char* contents, char key, int id)
 {
    Object *btn;
    
@@ -75,12 +75,12 @@ uint32 *MUI::muiButton(const char* contents, char key, int id)
 
    DoMtd(btn, ARRAY(MUIM_Notify, MUIA_Pressed, false, (IPTR)btn, 4, MUIM_CallHook, (IPTR)gateBtns.GetHook(), id, 0));
 
-   muiElements << new elemAssoc(T_Button, id, (uint32 *)btn);
+   muiElements << new elemAssoc(T_Button, id, (IPTR)btn);
 
-   return (uint32 *)btn;
+   return (IPTR)btn;
 }
 
-uint32 *MUI::muiCycle(const char** contents, char key, int id, int active)
+IPTR MUI::muiCycle(const char** contents, char key, int id, int active)
 {
    Object *btn;
    
@@ -96,13 +96,16 @@ uint32 *MUI::muiCycle(const char** contents, char key, int id, int active)
       TAG_DONE,               0
    ));
 
-   muiElements << new elemAssoc(T_Cycle, id, (uint32 *)btn);
-   return (uint32 *)btn;
+   muiElements << new elemAssoc(T_Cycle, id, (IPTR)btn);
+   return (IPTR)btn;
 }
 
-unsigned long MUI::gateButtons(iptr btn, iptr idptr)
+IPTR MUI::gateButtons(IPTR btn, IPTR idptr)
 {
-   return cbButtonHook(idptr[0], (iptr)idptr[1]);
+    IPTR tmp1, tmp2;
+    tmp1 = ((IPTR *)idptr)[0];
+    tmp2 = ((IPTR *)idptr)[2];
+   return cbButtonHook(tmp1, tmp2);
 }
 
 void MUI::setButtonCallBack(const Hook *hook)
@@ -110,11 +113,11 @@ void MUI::setButtonCallBack(const Hook *hook)
    cbButtonHook = hook;
 }
 
-uint32 *MUI::muiCheckBox(const char* name, char key, int id, Alignment align, bool state)
+IPTR MUI::muiCheckBox(const char* name, char key, int id, Alignment align, bool state)
 {
-   unsigned long *all;
-   unsigned long *checkbox;
-   unsigned long *label = 0;
+   IPTR all;
+   IPTR checkbox;
+   IPTR label = 0;
 
    if (0 != name)
    {
@@ -125,7 +128,7 @@ uint32 *MUI::muiCheckBox(const char* name, char key, int id, Alignment align, bo
       label    = muiLabel("", 0, ID_Default, align);
    }
 
-   checkbox = (unsigned long *)ImageObject,
+   checkbox = (IPTR)ImageObject,
       ImageButtonFrame,
       MUIA_Image_Spec,        MUII_CheckMark,
       MUIA_Background,        MUII_ButtonBack,
@@ -134,7 +137,7 @@ uint32 *MUI::muiCheckBox(const char* name, char key, int id, Alignment align, bo
       MUIA_Weight,            0,
    End;
 
-   all = (unsigned long *)HGroup,
+   all = (IPTR)HGroup,
       MUIA_InputMode,         MUIV_InputMode_Toggle,
       MUIA_ShowSelState,      false,
       Child,                  (align == Align_Left) ? checkbox : label,
@@ -151,11 +154,11 @@ uint32 *MUI::muiCheckBox(const char* name, char key, int id, Alignment align, bo
    return all;
 }
 
-uint32 *MUI::muiSlider(int32 min, int32 max, int32 level, char key, int id)
+IPTR MUI::muiSlider(int32 min, int32 max, int32 level, char key, int id)
 {
-   unsigned long *slider;
+   IPTR slider;
 
-   slider = (unsigned long *)SliderObject,
+   slider = (IPTR)SliderObject,
       MUIA_Numeric_Min,       min,
       MUIA_Numeric_Max,       max,
       MUIA_Numeric_Value,     level,
@@ -168,9 +171,9 @@ uint32 *MUI::muiSlider(int32 min, int32 max, int32 level, char key, int id)
    return slider;
 }
 
-uint32 *MUI::muiBar(const char *name, bool vertical)
+IPTR MUI::muiBar(const char *name, bool vertical)
 {
-   return (uint32 *)RectangleObject,
+   return (IPTR)RectangleObject,
       MUIA_Rectangle_HBar,       !vertical,
       MUIA_Rectangle_VBar,       vertical,
       MUIA_Rectangle_BarTitle,   name,
@@ -185,7 +188,7 @@ void MUI::muiSetEnabled(int id, bool enabled)
    {
       if (muiElements[i]->id == id)
       {
-         Intuition->SetAttrsA(muiElements[i]->elem, (TagItem*)ARRAY(
+         Intuition->SetAttrsA((Object *)muiElements[i]->elem, (TagItem*)ARRAY(
             MUIA_Disabled,    !enabled,
             TAG_DONE,         0
          ));
@@ -202,14 +205,14 @@ void MUI::muiSetSelected(int id, int selected)
          switch (muiElements[i]->type)
          {
             case T_CheckBox:
-               Intuition->SetAttrsA(muiElements[i]->elem, (TagItem*)ARRAY(
+               Intuition->SetAttrsA((Object *)muiElements[i]->elem, (TagItem*)ARRAY(
                   MUIA_Selected,    selected,
                   TAG_DONE,         0
                ));
                break;
          
             case T_Cycle:
-               Intuition->SetAttrsA(muiElements[i]->elem, (TagItem*)ARRAY(
+               Intuition->SetAttrsA((Object *)muiElements[i]->elem, (TagItem*)ARRAY(
                   MUIA_Cycle_Active,selected,
                   TAG_DONE,         0
                ));
@@ -228,7 +231,7 @@ void MUI::muiSetVisible(int id, bool visible)
    {
       if (muiElements[i]->id == id)
       {
-         Intuition->SetAttrsA(muiElements[i]->elem, (TagItem*)ARRAY(
+         Intuition->SetAttrsA((Object *)muiElements[i]->elem, (TagItem*)ARRAY(
             MUIA_ShowMe,      visible,
             TAG_DONE,         0
          ));
@@ -236,7 +239,7 @@ void MUI::muiSetVisible(int id, bool visible)
    }
 }
 
-void MUI::muiSetValue(int id, int value)
+void MUI::muiSetValue(int id, IPTR value)
 {
    for (int i=0; i<muiElements.Count(); i++)
    {
@@ -245,15 +248,15 @@ void MUI::muiSetValue(int id, int value)
          switch (muiElements[i]->type)
          {
             case T_Gauge:
-               Intuition->SetAttrsA(muiElements[i]->elem, (TagItem*)ARRAY(
-                  MUIA_Gauge_Current,     (int)value,
+               Intuition->SetAttrsA((Object *)muiElements[i]->elem, (TagItem*)ARRAY(
+                  MUIA_Gauge_Current,     value,
                   TAG_DONE,               0
                ));
                break;
 
             case T_Slider:
-               Intuition->SetAttrsA(muiElements[i]->elem, (TagItem*)ARRAY(
-                  MUIA_Numeric_Value,     (int)value,
+               Intuition->SetAttrsA((Object *)muiElements[i]->elem, (TagItem*)ARRAY(
+                  MUIA_Numeric_Value,     value,
                   TAG_DONE,               0
                ));
                break;
@@ -274,21 +277,21 @@ void MUI::muiSetText(int id, const char *text)
          switch (muiElements[i]->type)
          {
             case T_Label:
-               Intuition->SetAttrsA(muiElements[i]->elem, (TagItem*)ARRAY(
+               Intuition->SetAttrsA((Object *)muiElements[i]->elem, (TagItem*)ARRAY(
                   MUIA_Text_Contents,     (IPTR)text,
                   TAG_DONE,               0
                ));
                break;
          
             case T_String:
-               Intuition->SetAttrsA(muiElements[i]->elem, (TagItem*)ARRAY(
+               Intuition->SetAttrsA((Object *)muiElements[i]->elem, (TagItem*)ARRAY(
                   MUIA_String_Contents,   (IPTR)text,
                   TAG_DONE,               0
                ));
                break;
 
             case T_Gauge:
-               Intuition->SetAttrsA(muiElements[i]->elem, (TagItem*)ARRAY(
+               Intuition->SetAttrsA((Object *)muiElements[i]->elem, (TagItem*)ARRAY(
                   MUIA_Gauge_InfoText,    (IPTR)text,
                   TAG_DONE,               0
                ));
@@ -301,11 +304,11 @@ void MUI::muiSetText(int id, const char *text)
    }
 }
 
-uint32 *MUI::muiString(const char* contents, char key, int id, Alignment align)
+IPTR MUI::muiString(const char* contents, char key, int id, Alignment align)
 {
-   unsigned long *all;
+   IPTR all;
 
-   all = (unsigned long *)StringObject,
+   all = (IPTR)StringObject,
       StringFrame,
       MUIA_String_AdvanceOnCR,   true,
       MUIA_ControlChar,          key,
@@ -321,11 +324,11 @@ uint32 *MUI::muiString(const char* contents, char key, int id, Alignment align)
    return all;
 }
 
-uint32 *MUI::muiGauge(const char* contents, int id)
+IPTR MUI::muiGauge(const char* contents, int id)
 {
-   unsigned long *all;
+   IPTR all;
 
-   all = (unsigned long *)GaugeObject,
+   all = (IPTR)GaugeObject,
       GaugeFrame,
       MUIA_Gauge_Horiz,          true,
       MUIA_Gauge_InfoText,       contents,
@@ -338,10 +341,9 @@ uint32 *MUI::muiGauge(const char* contents, int id)
    return all;
 }
 
-uint32 *MUI::muiSpace(int weight)
+IPTR MUI::muiSpace(int weight)
 {
-   return (uint32 *)RectangleObject,
+   return (IPTR)RectangleObject,
       MUIA_Weight,      weight,
    End;
 }
-

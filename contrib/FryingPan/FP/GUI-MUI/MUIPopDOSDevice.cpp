@@ -60,7 +60,7 @@ bool MUIPopDOSDevice::onOpen()
          s = new String();
          s->BstrCpy(dn->dn_Name);
 
-         addEntry(s->Data());
+         addEntry((IPTR)s->Data());
          data << s;
       }
    }

@@ -20,10 +20,10 @@
 #include <proto/intuition.h>
 #include "LibC.h"
 
-int32 request(const char* title, const char* message, const char* gadgets, const iptr params)
+int32 request(const char* title, const char* message, const char* gadgets, const IPTR params)
 {
    // 20! really 20 -- OS4 has some extra fields, and i am preserving space.
-   const unsigned long es[] = { 20, 0, (unsigned long)title, (unsigned long)message, (unsigned long)gadgets};
+   const IPTR es[] = { 20, 0, (IPTR)title, (IPTR)message, (IPTR)gadgets};
 #ifndef __amigaos4__
    register struct Library *IntuitionBase = __InternalIntuitionBase;
    if (__InternalIntuitionBase)

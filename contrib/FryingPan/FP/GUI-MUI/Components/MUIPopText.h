@@ -26,7 +26,7 @@
 class MUIPopText : public MUIPopString
 {
 protected:
-   virtual unsigned long           *getPopDisplay();
+   virtual IPTR                     getPopDisplay();
 public:
                                     MUIPopText(const char* name, int cols=1, const char** names=0);
    virtual                         ~MUIPopText();

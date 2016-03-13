@@ -98,7 +98,7 @@ protected:
    DiscSpeed                 *writeSpeeds;
    uint16                     readSpeed;
    uint16                     writeSpeed;
-   uint32                     lDiscSize;
+   IPTR                     lDiscSize;
 
    RWSyncT<Job*>              hJob;
    String                     sJobName;

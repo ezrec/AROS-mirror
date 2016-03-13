@@ -40,10 +40,10 @@ MUIList::~MUIList()
 {
 }
 
-unsigned long *MUIList::getObject()
+IPTR MUIList::getObject()
 {
    if (listview != NULL)
-      return (unsigned long *)listview;
+      return (IPTR)listview;
 
    list = NListObject,
       InputListFrame,
@@ -60,8 +60,8 @@ unsigned long *MUIList::getObject()
       End;
       nlist = true;
 
-      DoMtd(list, ARRAY(MUIM_Notify, MUIA_NList_Active,           (uint32)MUIV_EveryTime, (uint32)list, 2, MUIM_CallHook, (uint32)hHkOnSelect.GetHook()));
-      DoMtd(list, ARRAY(MUIM_Notify, MUIA_NList_DragSortInsert,   (uint32)MUIV_EveryTime, (uint32)list, 2, MUIM_CallHook, (uint32)hHkOnDragSort.GetHook()));
+      DoMtd(list, ARRAY(MUIM_Notify, MUIA_NList_Active,           (IPTR)MUIV_EveryTime, (IPTR)list, 2, MUIM_CallHook, (IPTR)hHkOnSelect.GetHook()));
+      DoMtd(list, ARRAY(MUIM_Notify, MUIA_NList_DragSortInsert,   (IPTR)MUIV_EveryTime, (IPTR)list, 2, MUIM_CallHook, (IPTR)hHkOnDragSort.GetHook()));
    }
    else
    {
@@ -74,11 +74,11 @@ unsigned long *MUIList::getObject()
          MUIA_Listview_MultiSelect, multiSelect ? MUIV_Listview_MultiSelect_Default : MUIV_Listview_MultiSelect_None,
       End;
       nlist = false;
-      DoMtd(list, ARRAY(MUIM_Notify, MUIA_List_Active, MUIV_EveryTime, (uint32)list, 2, MUIM_CallHook, (uint32)hHkOnSelect.GetHook()));
+      DoMtd(list, ARRAY(MUIM_Notify, MUIA_List_Active, MUIV_EveryTime, (IPTR)list, 2, MUIM_CallHook, (IPTR)hHkOnSelect.GetHook()));
    }
 
-   DoMtd(list, ARRAY(MUIM_Notify, MUIA_AppMessage,   (uint32)MUIV_EveryTime, (uint32)list, 3, MUIM_CallHook, (uint32)hHkOnWBDrop.GetHook(), MUIV_TriggerValue));
-   return (unsigned long *)listview;
+   DoMtd(list, ARRAY(MUIM_Notify, MUIA_AppMessage,   (IPTR)MUIV_EveryTime, (IPTR)list, 3, MUIM_CallHook, (IPTR)hHkOnWBDrop.GetHook(), MUIV_TriggerValue));
+   return (IPTR)listview;
 }
 
 void MUIList::setConstructHook(const Hook* hook)
@@ -125,56 +125,56 @@ void MUIList::setSelectionHook(const Hook* hook)
    hOnSelect = hook;
 }
 
-uint32 MUIList::onSelect(void*, void*)
+IPTR MUIList::onSelect(IPTR, IPTR)
 {
-   void* data;
+   IPTR data = 0;
 
    if (nlist)
    {
-      DoMtd(list, ARRAY(MUIM_NList_GetEntry, (uint32)MUIV_NList_GetEntry_Active, (uint32)&data));
+      DoMtd(list, ARRAY(MUIM_NList_GetEntry, (IPTR)MUIV_NList_GetEntry_Active, (IPTR)&data));
    }
    else
    {
-      DoMtd(list, ARRAY(MUIM_List_GetEntry, (uint32)MUIV_List_GetEntry_Active, (uint32)&data));
+      DoMtd(list, ARRAY(MUIM_List_GetEntry, (IPTR)MUIV_List_GetEntry_Active, (IPTR)&data));
    }
 
    return hOnSelect.Call(data, data);
 }
 
-uint32 MUIList::onWBDrop(void*, AppMessage**m)
+IPTR MUIList::onWBDrop(IPTR, AppMessage**m)
 {
-   return hOnWBDrop(*m, *m);
+   return hOnWBDrop(*(IPTR *)m, *m);
 }
 
-uint32 MUIList::onDragSort(void*, void*)
+IPTR MUIList::onDragSort(IPTR, IPTR)
 {
-   VectorT<void*> vec;
-   void* data;
+   VectorT<IPTR> vec;
+   IPTR data = 0;
 
 // FIXME: onDragSort method still does not work - lack of support on NList side
    request("Info", "Drag Sort", "Ok", 0);
 
    for (int32 i=0; ; i++)
    {
-      DoMtd(list, ARRAY(MUIM_NList_GetEntry, i, (int32)&data));
+      DoMtd(list, ARRAY(MUIM_NList_GetEntry, i, (IPTR)&data));
       if (data == 0)
          break;
       vec << data;
    }  
-   return hOnSort.Call(&vec, &vec); 
+   return hOnSort.Call((IPTR)&vec, (IPTR)&vec); 
 }
 
-void MUIList::addItem(void* item)
+void MUIList::addItem(IPTR item)
 {
    if (NULL != list)
    {
       if (nlist)
       {
-         DoMtd(list, ARRAY(MUIM_NList_InsertSingle, (IPTR)item, (IPTR)MUIV_NList_Insert_Bottom));
+         DoMtd(list, ARRAY(MUIM_NList_InsertSingle, item, (IPTR)MUIV_NList_Insert_Bottom));
       }
       else
       {
-         DoMtd(list, ARRAY(MUIM_List_InsertSingle, (IPTR)item, (IPTR)MUIV_List_Insert_Bottom));
+         DoMtd(list, ARRAY(MUIM_List_InsertSingle, item, (IPTR)MUIV_List_Insert_Bottom));
       }
    }
 }
@@ -194,19 +194,19 @@ void MUIList::clear()
    }
 }
 
-VectorT<void*> &MUIList::getSelectedItems()
+VectorT<IPTR> &MUIList::getSelectedItems()
 {
    selected.Empty();
 
    if (nlist)
    {
-      long nextSel = MUIV_NList_NextSelected_Start;
-      void* data;
+      IPTR nextSel = (IPTR)MUIV_NList_NextSelected_Start;
+      IPTR data = 0;
 
       while (true)
       {
          DoMtd(list, ARRAY(MUIM_NList_NextSelected, (IPTR)&nextSel));
-         if (nextSel == MUIV_NList_NextSelected_End)
+         if (nextSel == (IPTR)MUIV_NList_NextSelected_End)
             break;
          DoMtd(list, ARRAY(MUIM_NList_GetEntry, nextSel, (IPTR)&data));
          selected << data;
@@ -214,7 +214,7 @@ VectorT<void*> &MUIList::getSelectedItems()
    }
    else
    {
-      void* data;
+      IPTR data;
       DoMtd(list, ARRAY(MUIM_List_GetEntry, (IPTR)MUIV_List_GetEntry_Active, (IPTR)&data));
       selected << data;
    }
@@ -247,4 +247,3 @@ void MUIList::setDragSortable(bool sortable)
          TAG_DONE,                  0));
    }
 }
-

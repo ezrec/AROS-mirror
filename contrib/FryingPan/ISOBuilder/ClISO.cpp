@@ -131,7 +131,7 @@ void ClISO::remDataHook(const Hook *pHook)
    hDataHooks >> pHook;
 }
 
-unsigned long ClISO::fDataPass(void* Data, long lSize)
+unsigned long ClISO::fDataPass(IPTR Data, long lSize)
 {
    // when returns something different than 0, we should abort at once!
    // fill up data buffer.
@@ -142,7 +142,7 @@ unsigned long ClISO::fDataPass(void* Data, long lSize)
       lSize = 0;
       for (int i=0; i<hDataHooks.Count(); i++)
       {
-         Utility->CallHookPkt(const_cast<Hook*>(hDataHooks[i]), pMemBlk, (void*)lCurrentPos);
+         Utility->CallHookPkt(const_cast<Hook*>(hDataHooks[i]), pMemBlk, (IPTR)lCurrentPos);
       }
       return true;
    }
@@ -151,19 +151,19 @@ unsigned long ClISO::fDataPass(void* Data, long lSize)
    
    if (lLen > (lMemBlkSize - lCurrentPos))      // make sure we
       lLen = lMemBlkSize - lCurrentPos;         // don't go too far
-   Exec->CopyMem(Data, &((char*)pMemBlk)[lCurrentPos], lLen);
+   Exec->CopyMem((void *)Data, &((char*)pMemBlk)[lCurrentPos], lLen);
    lCurrentPos += lLen;
    lSize       -= lLen;
-   Data         = &((char*)Data)[lLen];         // move pointer
+   Data         = (IPTR)&((char*)Data)[lLen];         // move pointer
 
    if (lCurrentPos == lMemBlkSize)
    {     
       // pass the data block to receivers      
-      unsigned long lRes;
+      IPTR lRes;
       lCurrentPos = 0;
       for (int i=0; i<hDataHooks.Count(); i++)
       {
-         lRes = Utility->CallHookPkt(const_cast<Hook*>(hDataHooks[i]), pMemBlk, (void*)(lMemBlkSize >> 11));
+         lRes = Utility->CallHookPkt(const_cast<Hook*>(hDataHooks[i]), pMemBlk, (IPTR)(lMemBlkSize >> 11));
          if (false == lRes)
          {
             // ask if we should abort!!!
@@ -215,7 +215,7 @@ bool ClISO::generate()
 
    lMemBlkSize = 32768;
    lCurrentPos = 0;
-   pMemBlk     = new char[lMemBlkSize];
+   pMemBlk     = (IPTR) new char[lMemBlkSize];
    if (!pMemBlk)
       return false;
 

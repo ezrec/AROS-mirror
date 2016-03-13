@@ -64,41 +64,41 @@ protected:
 
 protected:
    Globals                   &Glb;
-   unsigned long             *all;
+   IPTR                       all;
    ConfigParser              *Config;
 
-   unsigned long             *vendor;
-   unsigned long             *product;
-   unsigned long             *version;
+   IPTR                       vendor;
+   IPTR                       product;
+   IPTR                       version;
 
-   unsigned long             *mechanism;
-   unsigned long             *readmedia;
-   unsigned long             *writemedia;
-   unsigned long             *writedata;
-   unsigned long             *burnproof;
-   unsigned long             *isrc;  
-   unsigned long             *mcn;    
-   unsigned long             *audiostream;
-   unsigned long             *testwrite;
-   unsigned long             *multisession;
-   unsigned long             *buffersize; 
-   unsigned long             *cdtext;    
-   unsigned long             *readspeeds; 
-   unsigned long             *writespeeds;
-   unsigned long             *state;          
-   uint                      *audioplayback;
+   IPTR                       mechanism;
+   IPTR                       readmedia;
+   IPTR                       writemedia;
+   IPTR                       writedata;
+   IPTR                       burnproof;
+   IPTR                       isrc;  
+   IPTR                       mcn;    
+   IPTR                       audiostream;
+   IPTR                       testwrite;
+   IPTR                       multisession;
+   IPTR                       buffersize; 
+   IPTR                       cdtext;    
+   IPTR                       readspeeds; 
+   IPTR                       writespeeds;
+   IPTR                       state;          
+   IPTR                       audioplayback;
 
    MUIPopDevice              *popDevice;
    MUIPopUnit                *popUnit;
 
    String                     sDevice;
-   IPTR                        lUnit;
+   IPTR                       lUnit;
 protected:
-   HookT<MUIDrive, int, void*>            hHkButtonHook;
+   HookT<MUIDrive, IPTR, IPTR>    hHkButtonHook;
    DbgHandler                *getDebug();
 
 protected:
-   virtual unsigned long      buttonHook(int id, void* data);
+   virtual IPTR               buttonHook(IPTR id, IPTR data);
    virtual String             mechanismToString(DRT_Mechanism);
    virtual String             mediaToString(unsigned long);
    virtual String             dataToString(unsigned long);
@@ -111,7 +111,7 @@ public:
    virtual bool               start();
    virtual void               update();
    virtual void               stop();
-   virtual unsigned long     *getObject();
+   virtual IPTR               getObject();
 
 };
 

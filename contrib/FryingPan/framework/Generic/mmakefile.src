@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 
 FILES := \
  DynList \
- GenericOOP \
+ GenericBOOPSI \
  GenericMUI \
  MUICustomClass \
  LibrarySpool \
@@ -35,7 +35,8 @@ FILES := \
  SumCRC \
  Locale
 
-USER_CXXFLAGS := -fno-rtti -fno-exceptions -fpermissive -isystem $(SRCDIR)/$(CURDIR)/..
+NOWARN_FLAGS := -Wno-nonnull-compare
+USER_CXXFLAGS := $(NOWARN_FLAGS) -fno-rtti -fno-exceptions -fpermissive -isystem $(SRCDIR)/$(CURDIR)/..
 
 %build_linklib mmake=contrib-fryingpan-framework-generic \
  libname="Generic" files= cxxfiles="$(FILES)"

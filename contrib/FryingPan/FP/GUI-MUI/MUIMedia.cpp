@@ -159,7 +159,7 @@ void MUIMedia::stop()
 {
 }
 
-uint32 *MUIMedia::getObject()
+IPTR MUIMedia::getObject()
 {
    if (NULL != all)
       return all;
@@ -170,7 +170,7 @@ uint32 *MUIMedia::getObject()
    preptypes[1] = Glb.Loc[loc_Action_Complete].Data();
    preptypes[2] = 0;
 
-   all = (uint32 *)VGroup,
+   all = (IPTR)VGroup,
       GroupFrame,
       Child,                  RectangleObject,
          MUIA_Weight,            1,
@@ -233,7 +233,7 @@ uint32 *MUIMedia::getObject()
    return all;
 }
 
-uint32 MUIMedia::buttonClicked(BtnID id, int32 state)
+IPTR MUIMedia::buttonClicked(BtnID id, IPTR state)
 {
    IEngine *pEng = Glb.CurrentEngine->ObtainRead();
    switch (id)
@@ -643,8 +643,8 @@ String MUIMedia::sizeToString()
 
       s.FormatStr("%ld.%02ld%s", ARRAY(
                size,
-               ((fsize * 100) >> 10) % 100,
-               (int32)pfx.Data()
+               (IPTR)((fsize * 100) >> 10) % 100,
+               (IPTR)pfx.Data()
       ));
    }
 

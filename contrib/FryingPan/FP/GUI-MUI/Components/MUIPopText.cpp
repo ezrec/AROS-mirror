@@ -32,11 +32,10 @@ MUIPopText::~MUIPopText()
 {
 }
 
-unsigned long *MUIPopText::getPopDisplay()
+IPTR MUIPopText::getPopDisplay()
 {
-   return (unsigned long *)VGroup,
+   return (IPTR)VGroup,
       StringFrame,
       Child,         muiLabel("", 0, ID_String, Align_Left),
    End;
 }
-

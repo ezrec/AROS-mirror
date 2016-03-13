@@ -92,7 +92,7 @@ DbgHandler *MUITracksSession::getDebug()
    return Glb.dbg;
 }
 
-unsigned long *MUITracksSession::getObject()
+IPTR MUITracksSession::getObject()
 {
    if (NULL != all)
       return all;
@@ -107,7 +107,7 @@ unsigned long *MUITracksSession::getObject()
    target->setCallbackHook(hHkButton.GetHook());
 
 
-   all = (long unsigned int *)VGroup,
+   all = (IPTR)VGroup,
       GroupFrame,
       Child,                     tracks->getObject(),
       Child,                     target->getObject(),
@@ -135,22 +135,22 @@ void MUITracksSession::stop()
 //   Config->setValue(Cfg_TargetDir, (char*)target->getValue());
 }
 
-unsigned long MUITracksSession::construct(void*, const IOptItem* item)
+IPTR MUITracksSession::construct(IPTR, const IOptItem* item)
 {
    Entry *e = new Entry;
    e->item = item;
    e->item->claim();
-   return (unsigned long)e;
+   return (IPTR)e;
 }
 
-unsigned long MUITracksSession::destruct(void*, Entry* e)
+IPTR MUITracksSession::destruct(IPTR, Entry* e)
 {
    e->item->dispose();
    delete e;
    return 0;
 }
 
-unsigned long MUITracksSession::display(const char** arr, Entry* e)
+IPTR MUITracksSession::display(const char** arr, Entry* e)
 {
    if (NULL == e)
    {
@@ -254,12 +254,12 @@ void MUITracksSession::update()
       const IOptItem * item = eng->getSessionContents();
       _d(Lvl_Info, "Clearing old items");
       tracks->clear();
-      _d(Lvl_Info, "Recursively adding new items (if any). Disc structure at %08lx", (int)item);
+      _d(Lvl_Info, "Recursively adding new items (if any). Disc structure at %08lx", (IPTR)item);
       addRecurse(0, item);
    }
    else
    {
-      _d(Lvl_Error, "%s: No engine! Do we have a leak?", (int)__PRETTY_FUNCTION__);
+      _d(Lvl_Error, "%s: No engine! Do we have a leak?", (IPTR)__PRETTY_FUNCTION__);
    }
 
    _d(Lvl_Info, "Sessions page updated.");
@@ -267,15 +267,15 @@ void MUITracksSession::update()
    Glb.CurrentEngine->Release();
 }
 
-void MUITracksSession::addRecurse(unsigned long parent, const IOptItem* data)
+void MUITracksSession::addRecurse(IPTR parent, const IOptItem* data)
 {
-   uint32 item;
+   IPTR item;
 
    if (data == 0)
       return;
 
-   _d(Lvl_Info, "Adding item %08lx of type %ld to tree", (int)data, data->getItemType());
-   item = tracks->addEntry(parent, const_cast<IOptItem*>(data), true);
+   _d(Lvl_Info, "Adding item %08lx of type %ld to tree", (IPTR)data, data->getItemType());
+   item = tracks->addEntry(parent, (IPTR)data, true);
 
    _d(Lvl_Info, "Item branch: %08lx", item);
    _d(Lvl_Info, "This item has %ld children, that will be added now.", data->getChildCount());
@@ -288,7 +288,7 @@ void MUITracksSession::addRecurse(unsigned long parent, const IOptItem* data)
    _d(Lvl_Info, "All children have been added");
 }
 
-uint32 MUITracksSession::button(BtnID id, void* data)
+IPTR MUITracksSession::button(BtnID id, IPTR data)
 {
    IEngine *eng = Glb.CurrentEngine->ObtainRead();
 
@@ -310,5 +310,3 @@ const char *MUITracksSession::getName()
 {
    return Glb.Loc[loc_Name];
 }
-
-

@@ -142,9 +142,9 @@ bool                 wCUESession::setUp()
 
          f.FormatStr("\tINDEX %ld %ld:%02ld:%02ld\n", ARRAY(
                idx->getItemNumber(),                 // NOTE:
-               (idx->getStartAddress()) / 75 / 60,   // this is an offset within actual file!
-               (idx->getStartAddress()) / 75 % 60,   // and since we create one large file
-               (idx->getStartAddress()) % 75));      // this is the real offset :]
+               (IPTR)(idx->getStartAddress()) / 75 / 60,   // this is an offset within actual file!
+               (IPTR)(idx->getStartAddress()) / 75 % 60,   // and since we create one large file
+               (IPTR)(idx->getStartAddress()) % 75));      // this is the real offset :]
          DOS->FPuts(fcue, f.Data());
       }
 

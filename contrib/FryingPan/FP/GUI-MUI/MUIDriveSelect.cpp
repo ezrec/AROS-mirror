@@ -60,7 +60,7 @@ MUIDriveSelect::MUIDriveSelect(ConfigParser* parent, Globals &glb) :
    currentdrive = Config->getValue("CurrentDrive", currentdrive);
 }
 
-uint32 MUIDriveSelect::btnHook(int32 id, void* data)
+IPTR MUIDriveSelect::btnHook(IPTR id, IPTR data)
 {
    switch (id)
    {
@@ -74,7 +74,7 @@ uint32 MUIDriveSelect::btnHook(int32 id, void* data)
             // causes SwitchDrive()!
             rebuildCycle();
 
-            Intuition->SetAttrsA(pager, (TagItem*)ARRAY(
+            Intuition->SetAttrsA((Object *)pager, (TagItem*)ARRAY(
                MUIA_Group_ActivePage,     0,
                TAG_DONE,                  0
             ));
@@ -83,7 +83,7 @@ uint32 MUIDriveSelect::btnHook(int32 id, void* data)
 
       case ID_SwitchDrive:
          {
-            long which = (long)data;
+            IPTR which = data;
             Glb.CurrentEngine->Assign(Glb.Engines[which]);
             currentdrive = which;
          }
@@ -93,7 +93,7 @@ uint32 MUIDriveSelect::btnHook(int32 id, void* data)
          {
             IEngine *eng = Glb.CurrentEngine->ObtainRead();
             muiSetText(ID_DriveName, eng->getName());
-            Intuition->SetAttrsA(pager, (TagItem*)ARRAY(
+            Intuition->SetAttrsA((Object *)pager, (TagItem*)ARRAY(
                MUIA_Group_ActivePage,     1,
                TAG_DONE,                  0
             ));
@@ -115,8 +115,8 @@ void MUIDriveSelect::rebuildCycle()
    names[4] = 0;
    cycle = muiCycle(names, ' ', ID_SwitchDrive, currentdrive);
 
-   Intuition->SetAttrsA(cycle, (TagItem*)ARRAY(
-      MUIA_ContextMenu,    (long)menu->getObject(),
+   Intuition->SetAttrsA((Object *)cycle, (TagItem*)ARRAY(
+      MUIA_ContextMenu,    (IPTR)menu->getObject(),
       TAG_DONE,            0
    ));
 
@@ -144,7 +144,7 @@ void MUIDriveSelect::stop()
    menu = 0;
 }
 
-uint32 *MUIDriveSelect::getObject()
+IPTR MUIDriveSelect::getObject()
 {
    if (menu == 0)
    {
@@ -157,8 +157,8 @@ uint32 *MUIDriveSelect::getObject()
    }
 
    cycle = 0;
-   pager = (uint32 *)PageGroup,
-      Child,               cyclegroup = (uint32 *)VGroup,
+   pager = (IPTR)PageGroup,
+      Child,               cyclegroup = (IPTR)VGroup,
       End,
       Child,               VGroup,
          Child,               string = muiString("", 0, ID_DriveName),

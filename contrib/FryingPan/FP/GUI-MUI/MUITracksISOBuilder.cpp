@@ -106,7 +106,7 @@ MUITracksISOBuilder::~MUITracksISOBuilder()
    delete Config;
 }
 
-uint32 *MUITracksISOBuilder::getObject()
+IPTR MUITracksISOBuilder::getObject()
 {
    if (NULL != all)
       return all;
@@ -133,7 +133,7 @@ uint32 *MUITracksISOBuilder::getObject()
    req->setPath(Config->getValue(Cfg_LastSourcePath, ""));
 
 
-   all = (uint32 *)VGroup,
+   all = (IPTR)VGroup,
       Child,                  HGroup,
          Child,                  dirs->getObject(),
 
@@ -207,7 +207,7 @@ void MUITracksISOBuilder::showTree(IBrowser *b)
    dirs->clear();
 
    addTreeEntries(0, b->getRoot());
-   dirs->showObject(b->getCurrDir(), true);
+   dirs->showObject((IPTR)b->getCurrDir(), true);
 }
 
 void MUITracksISOBuilder::showContents(IBrowser *b)
@@ -218,11 +218,11 @@ void MUITracksISOBuilder::showContents(IBrowser *b)
 
    for (int32 i=0; i<d->getChildrenCount(); i++)
    {
-      files->addItem(d->getChild(i));
+      files->addItem((IPTR)d->getChild(i));
    }
 }
 
-uint32 MUITracksISOBuilder::treeDisplayHook(const char** arr, ClDirectory* elem)
+IPTR MUITracksISOBuilder::treeDisplayHook(const char** arr, ClDirectory* elem)
 {
    if (elem != 0)
    {
@@ -235,9 +235,9 @@ uint32 MUITracksISOBuilder::treeDisplayHook(const char** arr, ClDirectory* elem)
    return 0;
 }
 
-void MUITracksISOBuilder::addTreeEntries(uint32 parent, ClDirectory* elem)
+void MUITracksISOBuilder::addTreeEntries(IPTR parent, ClDirectory* elem)
 {
-   parent = dirs->addEntry(parent, elem);
+   parent = dirs->addEntry(parent, (IPTR)elem);
    for (int32 i=0; i<elem->getChildrenCount(); i++)
    {
       if (elem->getChild(i)->isDirectory())
@@ -247,7 +247,7 @@ void MUITracksISOBuilder::addTreeEntries(uint32 parent, ClDirectory* elem)
    }
 }
 
-uint32 MUITracksISOBuilder::button(BtnID id, void* data)
+IPTR MUITracksISOBuilder::button(BtnID id, IPTR data)
 {
    IEngine *eng = Glb.CurrentEngine->ObtainRead();
    IBrowser *b = eng->getISOBrowser();
@@ -287,7 +287,7 @@ uint32 MUITracksISOBuilder::button(BtnID id, void* data)
    return 0;
 }
 
-uint32 MUITracksISOBuilder::treeSelect(ClDirectory* dir, void*)
+IPTR MUITracksISOBuilder::treeSelect(ClDirectory* dir, IPTR)
 {
    IEngine *eng = Glb.CurrentEngine->ObtainRead();
    IBrowser *b = eng->getISOBrowser();
@@ -302,7 +302,7 @@ uint32 MUITracksISOBuilder::treeSelect(ClDirectory* dir, void*)
    return 0;
 }
 
-uint32 MUITracksISOBuilder::elemSelect(Entry* elem, void*)
+IPTR MUITracksISOBuilder::elemSelect(Entry* elem, IPTR)
 {
    if (elem != NULL)
    {
@@ -315,21 +315,21 @@ uint32 MUITracksISOBuilder::elemSelect(Entry* elem, void*)
    return 0;
 }
 
-uint32 MUITracksISOBuilder::filesConstruct(void*, ClElement* clelem)
+IPTR MUITracksISOBuilder::filesConstruct(IPTR, ClElement* clelem)
 {
    Entry *e = new Entry;
    e->elem = clelem;
 
-   return (uint32)e;
+   return (IPTR)e;
 }
 
-uint32 MUITracksISOBuilder::filesDestruct(void*, Entry* e)
+IPTR MUITracksISOBuilder::filesDestruct(IPTR, Entry* e)
 {
    delete e;
    return 0;
 }
 
-uint32 MUITracksISOBuilder::filesDisplay(const char** arr, Entry* e)
+IPTR MUITracksISOBuilder::filesDisplay(const char** arr, Entry* e)
 {
    if (e == 0)
    {
@@ -340,12 +340,12 @@ uint32 MUITracksISOBuilder::filesDisplay(const char** arr, Entry* e)
    {
       if (e->elem->isDirectory())
       {
-         e->s1.FormatStr("\0333%s", ARRAY((int32)e->elem->getNormalName()));
+         e->s1.FormatStr("\0333%s", ARRAY((IPTR)e->elem->getNormalName()));
          e->s2 = "\0333<DIR>";
       }
       else
       {
-         e->s1.FormatStr("%s", ARRAY((int32)e->elem->getNormalName()));
+         e->s1.FormatStr("%s", ARRAY((IPTR)e->elem->getNormalName()));
          e->s2 = Glb.Loc.FormatNumber(e->elem->getISOSize(), 0);
       }
 
@@ -414,7 +414,7 @@ void MUITracksISOBuilder::enableISO()
    muiSetEnabled(ID_BuildImage, true);
 }
    
-uint32 MUITracksISOBuilder::onWBMessage(AppMessage* m, void*)
+IPTR MUITracksISOBuilder::onWBMessage(AppMessage* m, IPTR)
 {
    char *c = new char[1024];
    IEngine *pEng = Glb.CurrentEngine->ObtainRead();
@@ -431,4 +431,3 @@ uint32 MUITracksISOBuilder::onWBMessage(AppMessage* m, void*)
    Glb.CurrentEngine->Release();
    return 0;
 }
-

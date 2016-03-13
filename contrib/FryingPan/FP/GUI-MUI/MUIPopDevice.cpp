@@ -41,7 +41,7 @@ bool MUIPopDevice::onOpen()
    
    for (unsigned int i=0; i<list.GetCount(); i++)
    {
-      addEntry(list.GetNode(i)->ln_Name);
+      addEntry((IPTR)list.GetNode(i)->ln_Name);
    }
 
    return true;

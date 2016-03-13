@@ -38,24 +38,25 @@ using namespace GenNS;
    bool                  AllClear;
    bool                  Clear1, Clear2;
 
-unsigned long DoLibMethodA(unsigned long *parm)
+IPTR DoLibMethodA(IPTR parm)
 {
+    IPTR                *msg = (IPTR *)parm;
    LONG           rc  = 0;
    DriveClient   *drv = 0;
 
    if (!parm) return 0;
-   drv = (DriveClient*)parm[1];
+   drv = (DriveClient*)msg[1];
 
-   switch (*parm) {
-      case DRV_ScanDevice:       return Drive::ScanDevice((char*)parm[1]);
-      case DRV_FreeScanResults:  return Drive::FreeScanResults((ScanData*)parm[1]);
-      case DRV_NewDrive:         return (IPTR)DriveSpool::GetInstance()->NewClient((char*)parm[1], parm[2]);
+   switch (*msg) {
+      case DRV_ScanDevice:       return Drive::ScanDevice((char*)msg[1]);
+      case DRV_FreeScanResults:  return Drive::FreeScanResults((ScanData*)msg[1]);
+      case DRV_NewDrive:         return (IPTR)DriveSpool::GetInstance()->NewClient((char*)msg[1], msg[2]);
       case DRV_CloneDrive:       return (IPTR)DriveSpool::GetInstance()->CloneClient(drv);
       case DRV_EndDrive:         DriveSpool::GetInstance()->DelClient(drv); return 0;
-      case DRV_GetAttr:          return drv->GetDriveAttrs(parm[2]);
-      case DRV_GetAttrs:         return drv->GetDriveAttrs((struct TagItem*)&parm[2]);
-      case DRV_WaitForDisc:      return drv->WaitForDisc(parm[2]);
-      default:                   return drv->Send((ULONG *)parm);
+      case DRV_GetAttr:          return drv->GetDriveAttrs(msg[2]);
+      case DRV_GetAttrs:         return drv->GetDriveAttrs((struct TagItem*)&msg[2]);
+      case DRV_WaitForDisc:      return drv->WaitForDisc(msg[2]);
+      default:                   return drv->Send((ULONG *)msg);
    }
    return rc;
 }
@@ -97,7 +98,7 @@ void showDetails(const IOptItem *di)
             di->getItemNumber()
             ));
 
-   DOS->VPrintf("\tLocation   : %ld - %ld (%ld blocks)\n", ARRAY(di->getStartAddress(), di->getEndAddress(), di->getBlockCount()));
+   DOS->VPrintf("\tLocation   : %ld - %ld (%ld blocks)\n", ARRAY((IPTR)di->getStartAddress(), (IPTR)di->getEndAddress(), (IPTR)di->getBlockCount()));
    DOS->VPrintf("\tType       : %s\n", ARRAY(di->getDataType() == Data_Unknown   ? (IPTR)"Unknown" :
             di->getDataType() == Data_Audio     ? (IPTR)"Audio" :
             di->getDataType() == Data_Mode1     ? (IPTR)"Data, Mode 1" :
@@ -124,40 +125,40 @@ int main()
 { 
    struct args {
       char    *drive;
-      int     *unit;
-      int      show_contents;
-      int      quick_erase;
-      int      complete_erase;
-      int      quick_format;
-      int      complete_format;
-      int      prepare_disc;
-      int      check_writable;
-      int      check_erasable;
-      int      check_formatable;
-      int      start;
-      int      stop;
-      int      load;
-      int      eject;
-      int      idle;
-      int      standby;
-      int      sleep;
-      int      check_overwritable;
-      int      write_image;
-      int     *read_track;
+      IPTR    *unit;
+      IPTR     show_contents;
+      IPTR     quick_erase;
+      IPTR     complete_erase;
+      IPTR     quick_format;
+      IPTR     complete_format;
+      IPTR     prepare_disc;
+      IPTR     check_writable;
+      IPTR     check_erasable;
+      IPTR     check_formatable;
+      IPTR     start;
+      IPTR     stop;
+      IPTR     load;
+      IPTR     eject;
+      IPTR     idle;
+      IPTR     standby;
+      IPTR     sleep;
+      IPTR     check_overwritable;
+      IPTR     write_image;
+      IPTR    *read_track;
       char    *read_to;
-      int      layout_track;
-      int     *writekbps;
-      int     *readkbps;
-      int      testmode;
-      int      closetrack;
-      int      closesession;
-      int      closedisc;
-      int      getwritabletrks;
-      int      writedao;
+      IPTR     layout_track;
+      IPTR    *writekbps;
+      IPTR    *readkbps;
+      IPTR     testmode;
+      IPTR     closetrack;
+      IPTR     closesession;
+      IPTR     closedisc;
+      IPTR     getwritabletrks;
+      IPTR     writedao;
       char    *data;
       char   **audio;
-      int      wait_forever;
-      int      close_tracks;
+      IPTR     wait_forever;
+      IPTR     close_tracks;
 
       const char* GetTemplate(void)
       {
@@ -220,7 +221,7 @@ int main()
    }
 
 
-   rda = DOS->ReadArgs(const_cast<char*>(arg.GetTemplate()), (int32*)&arg, 0);
+   rda = DOS->ReadArgs(const_cast<char*>(arg.GetTemplate()), (IPTR *)&arg, 0);
 
    if (rda != NULL) 
    {
@@ -296,8 +297,8 @@ int main()
    }
    else if (arg.show_contents) 
    {
-      int         num;
-      IOptItem   *di;
+      IPTR        num = NULL;
+      IOptItem   *di = NULL;
 
       DOS->VPrintf("Please insert a disc (unless it is already inserted).\n", 0);
 
@@ -329,31 +330,31 @@ int main()
    }
    else if (arg.check_writable) 
    {
-      int         num;
+      IPTR         num;
       num = DoLibMethodA(ARRAY(DRV_GetAttr, dcl, DRA_Disc_IsWritable));
       DOS->VPrintf("Disc is %swritable.\n", ARRAY(num? (IPTR)"" : (IPTR)"not "));
    }
    else if (arg.check_erasable) 
    {
-      int         num;
+      IPTR         num;
       num = DoLibMethodA(ARRAY(DRV_GetAttr, dcl, DRA_Disc_IsErasable));
       DOS->VPrintf("Disc is %serasable.\n", ARRAY(num? (IPTR)"" : (IPTR)"not "));
    }
    else if (arg.check_formatable) 
    {
-      int         num;
+      IPTR         num;
       num = DoLibMethodA(ARRAY(DRV_GetAttr, dcl, DRA_Disc_IsFormatable));
       DOS->VPrintf("Disc is %sformatable.\n", ARRAY(num? (IPTR)"" : (IPTR)"not "));
    }
    else if (arg.check_overwritable) 
    {
-      int         num;
+      IPTR         num;
       num = DoLibMethodA(ARRAY(DRV_GetAttr, dcl, DRA_Disc_IsOverwritable));
       DOS->VPrintf("Disc is %soverwritable.\n", ARRAY(num? (IPTR)"" : (IPTR)"not "));
    }
    else if ((arg.layout_track) || (arg.write_image))
    {
-      int         num;
+      IPTR         num;
 
       num = DoLibMethodA(ARRAY(DRV_GetAttr, dcl, DRA_Disc_IsWritable));
 
@@ -506,8 +507,8 @@ int main()
    }
    else if (arg.read_track) 
    {
-      int               num;
-      IOptItem         *di;
+      IPTR              num = NULL;
+      IOptItem         *di = NULL;
       const IOptItem   *trak = 0;
 
       if ((arg.read_to) && (*arg.read_track>0)) 
@@ -583,11 +584,11 @@ int main()
          DOS->VPrintf("Track %ld\n", ARRAY(di->getItemNumber()));
          if (di->isIncremental())
          {
-            DOS->VPrintf("\tLocation   : %ld - %ld (%ld blocks total, random writable)\n", ARRAY(di->getStartAddress(), di->getEndAddress(), di->getBlockCount()));
+            DOS->VPrintf("\tLocation   : %ld - %ld (%ld blocks total, random writable)\n", ARRAY((IPTR)di->getStartAddress(), (IPTR)di->getEndAddress(), (IPTR)di->getBlockCount()));
          }
          else
          {
-            DOS->VPrintf("\tLocation   : %ld - %ld (%ld blocks written, %ld blocks total)\n", ARRAY(di->getStartAddress(), di->getEndAddress(), 0, di->getBlockCount()));
+            DOS->VPrintf("\tLocation   : %ld - %ld (%ld blocks written, %ld blocks total)\n", ARRAY((IPTR)di->getStartAddress(), (IPTR)di->getEndAddress(), 0, (IPTR)di->getBlockCount()));
          }
          DOS->VPrintf("\tType       : %s\n", ARRAY(  di->getDataType() == Data_Unknown     ? (IPTR)"Unknown" :
                                                 di->getDataType() == Data_Audio       ? (IPTR)"Audio" :
@@ -626,8 +627,9 @@ int main()
    }
    else if (arg.closetrack) 
    {
+       int cltrack = *((int*)arg.closetrack);
       DOS->VPrintf("Close track... \n", 0);
-      rc = DoLibMethodA(ARRAY(DRV_CloseDisc, dcl, DRT_Close_Track, *((int*)arg.closetrack)));
+      rc = DoLibMethodA(ARRAY(DRV_CloseDisc, dcl, DRT_Close_Track, cltrack));
       DOS->VPrintf("Close track result: %ld\n", ARRAY(rc));
    }
    else if (arg.closesession) 
@@ -648,8 +650,8 @@ int main()
    }
    else if (arg.close_tracks)
    {
-      int         num;
-      IOptItem   *di;
+      IPTR         num = NULL;
+      IOptItem   *di = NULL;
 
       DOS->VPrintf("Please insert a disc (unless it is already inserted).\n", 0);
 

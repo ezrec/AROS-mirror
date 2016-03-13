@@ -34,14 +34,14 @@ Object *GenericMUI::MUI_MakeObjectX(IPTR Name, ...)
    IPTR *params = new IPTR [128];
    IPTR pos = 0;
    va_start(ap, Name);
-      
+
    while ((params[pos++] = va_arg(ap, IPTR)) != 0)
    {
       params[pos++] = va_arg(ap, IPTR);
       ASSERT(pos < 128);
    }
-      
-   pos = (IPTR)MUIMaster->MUI_MakeObjectA(Name, (IPTR *)params);
+
+   pos = (IPTR)MUIMaster->MUI_MakeObjectA(Name, (IPTR)params);
    delete [] params;
    return (Object*)pos;
 }
@@ -52,7 +52,7 @@ Object *GenericMUI::MUI_NewObject(const char* Name, IPTR FirstTag, ...)         
    IPTR *params = new IPTR [128];
    IPTR pos = 0;
    va_start(ap, FirstTag);
-      
+
    params[pos] = FirstTag;
    while (params[pos++] != 0)
    {
@@ -60,7 +60,7 @@ Object *GenericMUI::MUI_NewObject(const char* Name, IPTR FirstTag, ...)         
       params[pos] = va_arg(ap, IPTR);         
       ASSERT(pos < 128);
    }
-      
+
    pos = (IPTR)MUIMaster->MUI_NewObjectA(Name, (struct TagItem*)params);
    delete [] params;
    return (Object*)pos;

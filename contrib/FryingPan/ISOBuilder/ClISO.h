@@ -45,13 +45,13 @@ protected:
    ClRoot                             *pRoot;
    ClDirectory                        *pCurrDir;
    VectorT<const Hook*>                hDataHooks;
-   HookT<ClISO, void*, long>           hDataFetch;
+   HookT<ClISO, IPTR, long>            hDataFetch;
    bool                                bAbortDataFlow;
-   void                               *pMemBlk;
+   IPTR                                pMemBlk;
    unsigned long                       lMemBlkSize;
    unsigned long                       lCurrentPos;
 protected:
-   unsigned long                       fDataPass(void* Data, long lSize);
+   unsigned long                       fDataPass(IPTR Data, long lSize);
 
 public:
                                        ClISO();

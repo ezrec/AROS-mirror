@@ -463,7 +463,7 @@ enum EOpticalError
 };
 
    BEGINDECL(Optical, "Optical")
-      FUNC1(uint32,           OptDoMethodA,  5, uint32*,   parm, a0);
+      FUNC1(IPTR,           OptDoMethodA,  5, IPTR,   parm, a0);
       FUNC0(class IOptItem*,  OptCreateDisc, 6);
    ENDDECL
 

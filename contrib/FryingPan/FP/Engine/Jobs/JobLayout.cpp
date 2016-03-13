@@ -82,7 +82,7 @@ void JobLayout::analyse(EOpticalError ret)
    String layout;
 
    {
-      uint32 size;
+      IPTR size = 0;
       uint32 curr = disc->getEndAddress();
       uint32 fsize=0, fcurr=0;
       uint32 ssize, scurr;
@@ -131,10 +131,10 @@ void JobLayout::analyse(EOpticalError ret)
                   pf,
                   curr,
                   ((fcurr * 100) >> 10) % 100,
-                  (int32)suff.Data(),
+                  (IPTR)suff.Data(),
                   size,
                   ((fsize * 100) >> 10) % 100,
-                  (int32)suff.Data(),
+                  (IPTR)suff.Data(),
                   scurr,
                   ssize,
                   ));

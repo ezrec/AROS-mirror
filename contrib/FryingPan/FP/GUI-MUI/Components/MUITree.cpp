@@ -40,10 +40,10 @@ MUITree::~MUITree()
 {
 }
 
-unsigned long *MUITree::getObject()
+IPTR MUITree::getObject()
 {
    if (0 != listview)
-      return (unsigned long *)listview;
+      return (IPTR)listview;
 
    list = NListtreeObject,
       InputListFrame,
@@ -62,18 +62,18 @@ unsigned long *MUITree::getObject()
          MUIA_NListview_NList,      (IPTR)list,
       End;
    
-      DoMtd(list, ARRAY(MUIM_Notify, MUIA_NListtree_Active, MUIV_EveryTime, (uint32)list, 2, MUIM_CallHook, (uint32)hHkSelect.GetHook()));
+      DoMtd(list, ARRAY(MUIM_Notify, MUIA_NListtree_Active, MUIV_EveryTime, (IPTR)list, 2, MUIM_CallHook, (IPTR)hHkSelect.GetHook()));
    }
    else
    {
       ASSERTS(false, "NListTree could not be found! Memory will leak a little..");
-      return (unsigned long *)TextObject, 
+      return (IPTR)TextObject, 
          MUIA_Text_Contents,     "NListTree could not be found!",
       End;
    }
 
 
-   return (unsigned long *)listview;
+   return (IPTR)listview;
 }
 
 void MUITree::setConstructHook(const Hook* hook)
@@ -98,7 +98,7 @@ void MUITree::setSelectionHook(const Hook* hook)
 
 void MUITree::setWeight(int weight)
 {
-   unsigned long *obj = getObject();
+   Object *obj = (Object *)getObject();
 
    if (0 == obj)
       return;
@@ -110,23 +110,23 @@ void MUITree::setWeight(int weight)
 
 }
 
-unsigned long MUITree::doConstruct(void*, MUIP_NListtree_ConstructMessage* m)
+IPTR MUITree::doConstruct(IPTR, MUIP_NListtree_ConstructMessage* m)
 {
    if (hConstruct.IsValid())
    {
-      return hConstruct.Call(this, m->UserData);
+      return hConstruct.Call((IPTR)this, (IPTR)m->UserData);
    }
    else
    {
-      return (unsigned long)m->UserData;
+      return (IPTR)m->UserData;
    }
 }
 
-unsigned long MUITree::doDestruct(void*, MUIP_NListtree_DestructMessage* m)
+IPTR MUITree::doDestruct(IPTR, MUIP_NListtree_DestructMessage* m)
 {
    if (hDestruct.IsValid())
    {
-      return hDestruct.Call(this, m->UserData);
+      return hDestruct.Call((IPTR)this, (IPTR)m->UserData);
    }
    else
    {
@@ -134,14 +134,14 @@ unsigned long MUITree::doDestruct(void*, MUIP_NListtree_DestructMessage* m)
    }
 }
 
-unsigned long MUITree::doDisplay(void*, MUIP_NListtree_DisplayMessage* m)
+IPTR MUITree::doDisplay(IPTR, MUIP_NListtree_DisplayMessage* m)
 {
    if (hDisplay.IsValid())
    {
       if (m->EntryPos >= 0)
-         return hDisplay.Call(m->Array, m->TreeNode->tn_User);
+         return hDisplay.Call((IPTR)m->Array, (IPTR)m->TreeNode->tn_User);
       else
-         return hDisplay.Call(m->Array, (void*)NULL);
+         return hDisplay.Call((IPTR)m->Array, (IPTR)NULL);
    }
    else
    {
@@ -157,21 +157,21 @@ unsigned long MUITree::doDisplay(void*, MUIP_NListtree_DisplayMessage* m)
    }
 }
 
-unsigned long MUITree::doSelect(void*, void*)
+IPTR MUITree::doSelect(IPTR, IPTR)
 {
-   void* data = 0;
+   IPTR data = 0;
    MUI_NListtree_TreeNode *tn = 0;
    tn = (MUI_NListtree_TreeNode*)DoMtd((Object *)list, ARRAY(MUIM_NListtree_GetEntry, 
-                                                   (uint32)MUIV_NListtree_GetEntry_ListNode_Active,
-                                                   (uint32)MUIV_NListtree_GetEntry_Position_Active,
+                                                   (IPTR)MUIV_NListtree_GetEntry_ListNode_Active,
+                                                   (IPTR)MUIV_NListtree_GetEntry_Position_Active,
                                                    0));
    if (tn != 0)
-      data = tn->tn_User;
+      data = (IPTR)tn->tn_User;
 
    return hSelect.Call(data, data);
 }
 
-unsigned long MUITree::addEntry(unsigned long parent, void* entry, bool opened)
+IPTR MUITree::addEntry(IPTR parent, IPTR entry, bool opened)
 {
    if (0 == list)
       getObject();
@@ -182,7 +182,7 @@ unsigned long MUITree::addEntry(unsigned long parent, void* entry, bool opened)
    if (0 == parent)
       parent = MUIV_NListtree_Insert_ListNode_Root;
 
-   return DoMtd((Object *)list, ARRAY(MUIM_NListtree_Insert, (IPTR)"*", (IPTR)entry, parent, (IPTR)MUIV_NListtree_Insert_PrevNode_Tail, TNF_LIST | (opened ? TNF_OPEN : 0)));
+   return DoMtd((Object *)list, ARRAY(MUIM_NListtree_Insert, (IPTR)"*", (IPTR)entry, parent, (IPTR)MUIV_NListtree_Insert_PrevNode_Tail, (IPTR)TNF_LIST | (opened ? TNF_OPEN : 0)));
 }
 
 void MUITree::clear()
@@ -198,7 +198,7 @@ void MUITree::clear()
    DoMtd((Object *)list, ARRAY(MUIM_NListtree_Clear, 0, 0));  
 }
 
-VectorT<void*> &MUITree::getSelectedObjects()
+VectorT<IPTR> &MUITree::getSelectedObjects()
 {
    MUI_NListtree_TreeNode *sel = (MUI_NListtree_TreeNode*)MUIV_NListtree_NextSelected_Start;
 
@@ -206,29 +206,29 @@ VectorT<void*> &MUITree::getSelectedObjects()
 
    while (true)
    {
-      DoMtd((Object *)list, ARRAY(MUIM_NListtree_NextSelected, (long)&sel));
+      DoMtd((Object *)list, ARRAY(MUIM_NListtree_NextSelected, (IPTR)&sel));
       if (sel == (MUI_NListtree_TreeNode*)MUIV_NListtree_NextSelected_End)
          break;
-      hSelected << sel->tn_User;
+      hSelected << (IPTR)sel->tn_User;
    }
    
    return hSelected;
 }
 
-void MUITree::showObject(void* data, bool expand)
+void MUITree::showObject(IPTR data, bool expand)
 {
    MUI_NListtree_TreeNode *tn;
 
    tn = (MUI_NListtree_TreeNode*)DoMtd((Object *)list, ARRAY(MUIM_NListtree_FindUserData, 
                                                    MUIV_NListtree_FindUserData_ListNode_Root, 
-                                                   (uint32)data, 
+                                                   data, 
                                                    MUIV_NListtree_FindUserData_Flag_Activate));
    (void)tn; // Unused
    if (expand)
    {
       DoMtd((Object *)list, ARRAY(MUIM_NListtree_Open, 
-                        (uint32)MUIV_NListtree_Open_ListNode_Parent, 
-                        (uint32)MUIV_NListtree_Open_TreeNode_Active));
+                        (IPTR)MUIV_NListtree_Open_ListNode_Parent, 
+                        (IPTR)MUIV_NListtree_Open_TreeNode_Active));
    }
 }
 

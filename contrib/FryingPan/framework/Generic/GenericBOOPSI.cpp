@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "GenericOOP.h"
+#include "GenericBOOPSI.h"
 #include "LibrarySpool.h"
 #include <libclass/exec.h>
 #include <libclass/utility.h>
@@ -27,17 +27,17 @@
 
 using namespace GenNS;
 
-IPTR GenericOOP::DoMtd(Object* pObject, IPTR *pMsg)
+IPTR GenericBOOPSI::DoMtd(Object* pObject, IPTR pMsg)
 {
-   return Utility->CallHookPkt((const Hook*)OCLASS(pObject), pObject, pMsg);
+   return Utility->CallHookPkt((const Hook*)OCLASS(pObject), (IPTR)pObject, pMsg);
 }
 
-IPTR GenericOOP::DoSuperMtd(IClass *pClass, Object* pObject, IPTR *pMsg)
+IPTR GenericBOOPSI::DoSuperMtd(IClass *pClass, Object* pObject, IPTR pMsg)
 {
-   return Utility->CallHookPkt((Hook*)pClass->cl_Super, pObject, pMsg);
+   return Utility->CallHookPkt((Hook*)pClass->cl_Super, (IPTR)pObject, pMsg);
 }
 
-IPTR GenericOOP::NewObj(char* Name, IPTR FirstTag, ...)          // me hates mos for that.
+IPTR GenericBOOPSI::NewObj(char* Name, IPTR FirstTag, ...)          // me hates mos for that.
 {
    va_list ap;
    IPTR *params = new IPTR [128];
@@ -57,7 +57,7 @@ IPTR GenericOOP::NewObj(char* Name, IPTR FirstTag, ...)          // me hates mos
    return pos;
 }
 
-IPTR GenericOOP::NewObj(Class* cls, IPTR FirstTag, ...)          // me hates mos for that.
+IPTR GenericBOOPSI::NewObj(Class* cls, IPTR FirstTag, ...)          // me hates mos for that.
 {
    va_list ap;
    IPTR *params = new IPTR [128];
@@ -78,26 +78,26 @@ IPTR GenericOOP::NewObj(Class* cls, IPTR FirstTag, ...)          // me hates mos
    return pos;
 }
 
-void GenericOOP::DisposeObj(IPTR *obj)
+void GenericBOOPSI::DisposeObj(IPTR *obj)
 {
    Intuition->DisposeObject(obj);
 }
 
-void GenericOOP::AddChildObj(Object *parent, IPTR *child)
+void GenericBOOPSI::AddChildObj(Object *parent, IPTR *child)
 {
    DoMtd(parent, ARRAY(OM_ADDMEMBER, (IPTR)child));
 }
 
-void GenericOOP::RemChildObj(Object *parent, IPTR *child)
+void GenericBOOPSI::RemChildObj(Object *parent, IPTR *child)
 {
    DoMtd(parent, ARRAY(OM_REMMEMBER, (IPTR)child));
 }
 
-GenericOOP::~GenericOOP()
+GenericBOOPSI::~GenericBOOPSI()
 {
 }
 
-GenericOOP::GenericOOP()
+GenericBOOPSI::GenericBOOPSI()
 {
    ASSERTS(Utility != 0, "Please create library spool!");
 }

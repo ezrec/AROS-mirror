@@ -90,21 +90,21 @@ protected:
    DiskObject          *appobj;
 
 protected:
-   HookT<GUI, void*, void*>               hShowHide;
-   HookT<GUI, void*, long>                hPager;
-   HookT<GUI, ActionID, void*>            hAction;
+   HookT<GUI, IPTR, IPTR>                 hShowHide;
+   HookT<GUI, IPTR, long>                 hPager;
+   HookT<GUI, ActionID, IPTR>             hAction;
    HookT<GUI, EngineMessage, IEngine*>    hEngineCmd;       // as received from engine
    HookT<GUI, EngineMessage, IEngine*>    hEngineMsg;       // as received via dosync()
    HookT<GUI, IEngine*, IEngine*>         hEngineChanged;
 
    Timer                                 *pTimer;
 protected:
-   uint32                     doShowHide(void*, void*);
-   uint32                     doChangePage(void*, long page);
-   uint32                     doUserAction(ActionID, void*);
-   uint32                     doEngineMessage(EngineMessage, IEngine*);
-   uint32                     doEngineInternalMessage(EngineMessage, IEngine*);
-   uint32                     doEngineChanged(IEngine* old, IEngine* current);
+   IPTR                       doShowHide(IPTR, IPTR);
+   IPTR                       doChangePage(IPTR, long page);
+   IPTR                       doUserAction(ActionID, IPTR);
+   IPTR                       doEngineMessage(EngineMessage, IEngine*);
+   IPTR                       doEngineInternalMessage(EngineMessage, IEngine*);
+   IPTR                       doEngineChanged(IEngine* old, IEngine* current);
 
    void                       setDebug(DbgHandler *h);
    DbgHandler                *getDebug();

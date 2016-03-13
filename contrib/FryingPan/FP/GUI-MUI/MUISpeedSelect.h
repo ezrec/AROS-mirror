@@ -33,15 +33,15 @@ protected:
    Globals                   &Glb;
    VectorT<const char*>       names;
    VectorT<uint16>            speeds;
-   unsigned long             *cycle;
+   IPTR                       cycle;
    MUIWindowMenu             *menu;
-   unsigned long             *pager;
-   unsigned long             *cyclegroup;
-   HookAttrT<uint, uint>      hook;
+   IPTR                       pager;
+   IPTR                       cyclegroup;
+   HookAttrT<IPTR, IPTR>      hook;
    uint32                     id;
 
 protected:
-   HookT<MUISpeedSelect, long, void*>    hHkBtnHook;
+   HookT<MUISpeedSelect, IPTR, IPTR>    hHkBtnHook;
    
 protected:
    enum
@@ -50,7 +50,7 @@ protected:
    };
 
 protected:
-   virtual unsigned long      btnHook(long id, void* data);
+   virtual IPTR               btnHook(IPTR id, IPTR data);
    virtual void               rebuildCycle(struct DiscSpeed *, uint16);
    const char*                dupstr(const char* str);
 
@@ -60,7 +60,7 @@ protected:
 public:
                               MUISpeedSelect(Globals &glb);
    virtual                   ~MUISpeedSelect();
-   virtual unsigned long     *getObject();
+   virtual IPTR               getObject();
    virtual void               setSpeeds(struct DiscSpeed*, uint16);
    virtual bool               start();
    virtual void               stop();

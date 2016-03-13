@@ -70,7 +70,7 @@ MUIPageSelect::~MUIPageSelect()
    delete Config;
 }
 
-unsigned long *MUIPageSelect::getObject()
+IPTR MUIPageSelect::getObject()
 {
    if (0 != all)
       return all;
@@ -138,7 +138,7 @@ unsigned long *MUIPageSelect::getObject()
    ToolBar->addButtons(&buttons[0]);
 
 
-   all = (long unsigned int *)HGroup,
+   all = (IPTR)HGroup,
       Child,            RectangleObject,
          MUIA_Weight,      1,
       End,
@@ -163,7 +163,7 @@ void MUIPageSelect::stop()
    return;
 }
 
-uint MUIPageSelect::pageSel(MUIToolBar*, uint page)
+IPTR MUIPageSelect::pageSel(MUIToolBar*, uint page)
 {
    return callBack(this, page);
 }

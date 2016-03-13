@@ -54,7 +54,7 @@ bool MUIPopAsl::onOpen()
             unsigned long tags[] =
             {
                ASLFR_DrawersOnly,      true,
-               ASLFR_InitialDrawer,    (long)&value,
+               ASLFR_InitialDrawer,    (IPTR)&value,
                ASLFR_DoMultiSelect,    false,
                TAG_DONE,               0
             };
@@ -84,7 +84,7 @@ bool MUIPopAsl::onOpen()
             unsigned long tags[] =
             {
                ASLFR_DrawersOnly,      false,
-               ASLFR_InitialFile,      (long)&value,
+               ASLFR_InitialFile,      (IPTR)&value,
                ASLFR_DoMultiSelect,    false,
                TAG_DONE,               0
             };
@@ -114,7 +114,7 @@ bool MUIPopAsl::onOpen()
 
    if (result != false)
    {
-      setValue(value);
+      setValue((IPTR)value);
    }
  
    update();
@@ -126,27 +126,27 @@ bool MUIPopAsl::onClose()
    return true;
 }
 
-unsigned long *MUIPopAsl::getPopDisplay()
+IPTR MUIPopAsl::getPopDisplay()
 {
    return muiString(value, 0, ID_String); 
 }
 
-unsigned long *MUIPopAsl::getPopButton()
+IPTR MUIPopAsl::getPopButton()
 {
-   return (unsigned long *)PopButton(MUII_PopDrawer);
+   return (IPTR)PopButton(MUII_PopDrawer);
 }
 
-unsigned long *MUIPopAsl::getPopObject()
+IPTR MUIPopAsl::getPopObject()
 {
-   return (unsigned long *)TextObject, End;
+   return (IPTR)TextObject, End;
 }
 
-void MUIPopAsl::setValue(const void* string)
+void MUIPopAsl::setValue(IPTR val)
 {
-   strncpy(value, (const char*)string, sizeof(value)-1);
-   if (string != NULL)
+   strncpy(value, (const char*)val, sizeof(value)-1);
+   if (val != NULL)
    {
-      muiSetText(ID_String, (const char*)string);
+      muiSetText(ID_String, (const char*)val);
    }
    else
    {
@@ -154,12 +154,12 @@ void MUIPopAsl::setValue(const void* string)
    }
 }
 
-const void *MUIPopAsl::getValue()
+IPTR MUIPopAsl::getValue()
 {
-   return value;
+   return (IPTR)value;
 }
 
-unsigned long MUIPopAsl::buttonHandler(int id, void* data)
+IPTR MUIPopAsl::buttonHandler(IPTR id, IPTR data)
 {
    switch (id)
    {

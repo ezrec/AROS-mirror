@@ -40,18 +40,18 @@ protected:
    };
 protected:
    Globals                         &Glb;
-   HookAttrT<void*, void*>          hCallback;
+   HookAttrT<IPTR, IPTR>            hCallback;
 
 protected:
-   HookT<MUIPopAction, int, void*>  hHkBtnHook;
+   HookT<MUIPopAction, IPTR, IPTR>  hHkBtnHook;
 
 protected:
    virtual bool                     onOpen();
    virtual bool                     onClose();
-   virtual unsigned long           *getPopDisplay();
-   virtual unsigned long           *getPopButton();
-   virtual unsigned long           *getPopObject();
-   virtual unsigned long            buttonHandler(int id, void* data);
+   virtual IPTR                     getPopDisplay();
+   virtual IPTR                     getPopButton();
+   virtual IPTR                     getPopObject();
+   virtual IPTR                     buttonHandler(IPTR id, IPTR data);
 
    String                           discType();
    String                           discSize();
@@ -59,8 +59,8 @@ protected:
 public:
                                     MUIPopAction(Globals &glb);
    virtual                         ~MUIPopAction();                                    
-   virtual void                     setValue(const void* string);
-   virtual const void              *getValue();
+   virtual void                     setValue(IPTR val);
+   virtual IPTR                     getValue();
    void                             update();
 };
 

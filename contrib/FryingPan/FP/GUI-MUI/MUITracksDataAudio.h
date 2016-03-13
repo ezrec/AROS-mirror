@@ -46,7 +46,7 @@ protected:
 
 protected:
    Globals                   &Glb;
-   uint32                   *all;
+   IPTR                       all;
 
    MUIList                   *tracks;
    FileReq                   *addReq;
@@ -57,20 +57,20 @@ protected:
    DbgHandler                *getDebug();
 
 protected:
-   HookT<MUITracksDataAudio, BtnID, void*>                  hHkButton;
-   HookT<MUITracksDataAudio, void*, ITrack*>                hConstruct;
-   HookT<MUITracksDataAudio, void*, ITrackEntry*>           hDestruct;
+   HookT<MUITracksDataAudio, BtnID, IPTR>                   hHkButton;
+   HookT<MUITracksDataAudio, IPTR, ITrack*>                 hConstruct;
+   HookT<MUITracksDataAudio, IPTR, ITrackEntry*>            hDestruct;
    HookT<MUITracksDataAudio, const char**, ITrackEntry*>    hDisplay;
-   HookT<MUITracksDataAudio, AppMessage*, void*>            hWBMessage;
-   HookT<MUITracksDataAudio, VectorT<ITrackEntry*>*, void*> hDragSort;
+   HookT<MUITracksDataAudio, AppMessage*, IPTR>             hWBMessage;
+   HookT<MUITracksDataAudio, VectorT<ITrackEntry*>*, IPTR>  hDragSort;
 
 protected:
-   uint32                     onButton(BtnID, void*);
-   uint32                     onConstruct(void*, ITrack*);
-   uint32                     onDestruct(void*, ITrackEntry*);
-   uint32                     onDisplay(const char**, ITrackEntry*);
-   uint32                     onWBMessage(AppMessage* m, void*);
-   uint32                     onDragSort(VectorT<ITrackEntry*>*, void*);
+   IPTR                       onButton(BtnID, IPTR);
+   IPTR                       onConstruct(IPTR, ITrack*);
+   IPTR                       onDestruct(IPTR, ITrackEntry*);
+   IPTR                       onDisplay(const char**, ITrackEntry*);
+   IPTR                       onWBMessage(AppMessage* m, IPTR);
+   IPTR                       onDragSort(VectorT<ITrackEntry*>*, IPTR);
 
 protected:
    void                       addTracks();
@@ -78,7 +78,7 @@ protected:
 public:
                               MUITracksDataAudio(ConfigParser *parent, Globals &glb);
                              ~MUITracksDataAudio();
-   uint32                    *getObject();
+   virtual IPTR               getObject();
    bool                       start();
    void                       stop();
    const char                *getName();

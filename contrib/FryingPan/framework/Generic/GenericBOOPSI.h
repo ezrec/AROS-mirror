@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _GENERIC_OOP_H_
-#define _GENERIC_OOP_H_
+#ifndef _GENERIC_BOOPSI_H_
+#define _GENERIC_BOOPSI_H_
 
 #include "Types.h"
 #include <intuition/classes.h>
@@ -26,13 +26,13 @@
 
 namespace GenNS
 {
-   class GenericOOP 
+   class GenericBOOPSI 
    {
    public:
-                              GenericOOP();
-      virtual                ~GenericOOP();  
-      virtual IPTR          DoMtd(Object* pObject, IPTR *pMsg);
-      virtual IPTR          DoSuperMtd(IClass *pClass, Object* pObject, IPTR *pMsg);
+                              GenericBOOPSI();
+      virtual                ~GenericBOOPSI();  
+      virtual IPTR          DoMtd(Object* pObject, IPTR pMsg);
+      virtual IPTR          DoSuperMtd(IClass *pClass, Object* pObject, IPTR pMsg);
       virtual IPTR         NewObj(char* Name, IPTR FirstTag, ...);
       virtual IPTR         NewObj(Class* cls, IPTR FirstTag, ...);
       virtual void            DisposeObj(IPTR *obj);

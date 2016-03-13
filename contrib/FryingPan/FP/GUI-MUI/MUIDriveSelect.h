@@ -32,15 +32,15 @@ protected:
    Globals                   &Glb;
    const char                *names[5]; 
    ConfigParser              *Config;
-   uint32                    *cycle;
-   uint32                    *string;
+   IPTR                       cycle;
+   IPTR                       string;
    MUIWindowMenu             *menu;
-   uint32                    *pager;
-   uint32                    *cyclegroup;
-   int                        currentdrive;
+   IPTR                       pager;
+   IPTR                       cyclegroup;
+   IPTR                       currentdrive;
 
 protected:
-   HookT<MUIDriveSelect, int32, void*>    hHkBtnHook;
+   HookT<MUIDriveSelect, IPTR, IPTR>    hHkBtnHook;
 
 protected:
    enum
@@ -51,7 +51,7 @@ protected:
    };
 
 protected:
-   virtual uint32             btnHook(int32 id, void* data);
+   virtual IPTR               btnHook(IPTR id, IPTR data);
    virtual void               rebuildCycle();
 
 public:
@@ -59,7 +59,7 @@ public:
    virtual                   ~MUIDriveSelect();
    virtual bool               start();
    virtual void               stop();
-   virtual uint32            *getObject();
+   virtual IPTR               getObject();
    virtual void               update();
 };
 

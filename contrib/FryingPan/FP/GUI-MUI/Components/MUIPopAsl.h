@@ -43,25 +43,25 @@ protected:
 
 protected:
    char                             value[1024];
-   HookAttrT<void*, void*>          hCallback;
+   HookAttrT<IPTR, IPTR>            hCallback;
    PopType                          type;
 
 protected:
-   HookT<MUIPopAsl, int, void*>           hHkBtnHook;
+   HookT<MUIPopAsl, IPTR, IPTR>     hHkBtnHook;
 
 protected:
    virtual bool                     onOpen();
    virtual bool                     onClose();
-   virtual unsigned long           *getPopDisplay();
-   virtual unsigned long           *getPopButton();
-   virtual unsigned long           *getPopObject();
-   virtual unsigned long            buttonHandler(int id, void* data);
+   virtual IPTR                     getPopDisplay();
+   virtual IPTR                     getPopButton();
+   virtual IPTR                     getPopObject();
+   virtual IPTR                     buttonHandler(IPTR id, IPTR data);
 
 public:
                                     MUIPopAsl(const char* name, PopType type = Pop_File);
    virtual                         ~MUIPopAsl();                                    
-   virtual void                     setValue(const void* string);
-   virtual const void              *getValue();
+   virtual void                     setValue(IPTR val);
+   virtual IPTR                     getValue();
 };
 
 #endif

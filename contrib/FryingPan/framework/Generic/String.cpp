@@ -148,11 +148,11 @@ String &String::operator = (const int64 sVal)
 {
    if ((sVal & 0xffffffff) == sVal)
    {
-      FormatStr("%ld", ARRAY(sVal));      // aint hard i guess..
+      FormatStr("%ld", ARRAY((ULONG)sVal));      // aint hard i guess..
    }
    else
    {
-      FormatStr("0x%lx%08lx", ARRAY((sVal >> 32) & 0xffffffff, sVal & 0xffffffff));
+      FormatStr("0x%lx%08lx", ARRAY((ULONG)((sVal >> 32) & 0xffffffff), (ULONG)(sVal & 0xffffffff)));
    }
    return *this;                       // is it..
 }
@@ -177,7 +177,7 @@ int String::operator == (const char* sStr)  const
    return 0 == strncmp(Data(), sStr, Length());          // compare only what we are aware of.
 }
 
-int String::FormatStr(const char *sFmtStr, void*pParams)
+int String::FormatStr(const char *sFmtStr, IPTR pParams)
 {
    char *temp = new char[65535];
    ASSERT(Exec != 0);
@@ -187,7 +187,7 @@ int String::FormatStr(const char *sFmtStr, void*pParams)
    Exec->RawDoFmt(sFmtStr, pParams, 0, temp);
    //VSNPrintf((uint8*)temp, 65535, (uint8*)sFmtStr, pParams);
 #elif !defined(__LINUX__)
-   Exec->RawDoFmt(sFmtStr, pParams, 0, temp);
+   Exec->RawDoFmt(sFmtStr, (void*)pParams, 0, temp);
 #else
    vsprintf(temp, sFmtStr, (va_list)pParams);
 #endif
@@ -564,7 +564,7 @@ void String::StrLCpy(const char* sSrc, int lNum)
 void String::BstrCpy(BSTR src)
 {
 #ifndef __AROS__   
-   StrLCpy(&((char*)((int)src<<2))[1], ((char*)((int)src<<2))[0]);
+   StrLCpy(&((char*)((IPTR)src<<2))[1], ((char*)((IPTR)src<<2))[0]);
 #else
    *this = (char*)src;
 #endif

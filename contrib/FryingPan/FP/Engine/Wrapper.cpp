@@ -206,7 +206,7 @@ const ScanData* scanDevice(const char* device)
 {
    if (NULL == pOptical)
       return 0;
-   return (ScanData*)pOptical->OptDoMethodA(ARRAY(DRV_ScanDevice, (long)device));
+   return (ScanData*)pOptical->OptDoMethodA(ARRAY(DRV_ScanDevice, (IPTR)device));
 }
 
 void freeScanData(const ScanData* data)
@@ -214,7 +214,7 @@ void freeScanData(const ScanData* data)
    if (NULL == pOptical)
       return;
 
-   pOptical->OptDoMethodA(ARRAY(DRV_FreeScanResults, (long)data));
+   pOptical->OptDoMethodA(ARRAY(DRV_FreeScanResults, (IPTR)data));
 }
 
 // vim: ts=3 et

@@ -34,7 +34,7 @@ public:
    }
 
 protected:
-   virtual GenericOOP        *createObject(IClass *cls)
+   virtual GenericBOOPSI        *createObject(IClass *cls)
    {
       return new T(cls);
    }

@@ -45,6 +45,7 @@ typedef unsigned long      uint;    /**< @brief architecture specific unsigned i
 
 /* platform specific includes */
 #if defined(__AROS__)
+#include <exec/types.h>
 #include <stddef.h>
 #elif defined(__mc68000)
 typedef long unsigned int size_t;
@@ -58,8 +59,10 @@ typedef unsigned int size_t;
 #error no size_t defined
 #endif
 
+#if (0)
 typedef uint*              sized_iptr; /**< @brief type returned by #SIZEARRAY to differentiate it from normal pointers */
 typedef uint*              iptr;       /**< @brief type returned by #ARRAY to differentiate it from normal pointers */
+#endif
 
 #define PACKED __attribute__((packed))
 
@@ -79,7 +82,7 @@ enum TriState
 
 //! Use this macro instead of varargs. Maintains compatibility across platforms.
 #define ARRAY(arg...) \
-   ((iptr) \
+   ((IPTR) \
       ({ \
          IPTR __parm[] = {arg}; \
          &__parm; \
@@ -90,7 +93,7 @@ enum TriState
  * \b Size is always stored in \b param[-1].
  */
 #define SIZEARRAY(arg...) \
-   ((sized_iptr) \
+   ((IPTR) \
       ({ \
          IPTR __parm[] = {0, arg}; \
          __parm[0] = sizeof(__parm) / sizeof(__parm[0]) - 1; \
@@ -136,9 +139,9 @@ enum TriState
 #define SWAP_LONG(data) ({ register uint32 t = (((data & 0xffff) << 16) | ((data >> 16) &0xffff)); \
                            t = ((t >> 8) & 0xff00ff) | ((t & 0xff00ff) << 8); t; })
 
-#ifndef __AROS__
-#define ENDIAN BIG   /**< @brief Defines endianess for current architecture. Can be either @b BIG or @b LITTLE */
+#if !defined(__AROS__) || AROS_BIG_ENDIAN
 
+#define ENDIAN BIG   /**< @brief Defines endianess for current architecture. Can be either @b BIG or @b LITTLE */
 
 /** 
  * @brief Way to change any word into BigEndian 
@@ -160,13 +163,16 @@ enum TriState
  * or change andy LittleEndian long to current arch.
  */
 #define L2LE(x) ((((x)>>24)&255) | (((x)>>8)&0xff00) | (((x)<<8)&0xff0000) | (((x)<<24)&0xff000000))
-#else
+
+#else /* defined(__AROS__) && !AROS_BIG_ENDIAN */
+
 #define ENDIAN LITTLE
 #define W2LE(x)   (x)
 #define W2BE(x)   ((((x)>>8)&255) | (((x)&255)<<8))
 #define L2LE(x)   (x)
 #define L2BE(x)   ((((x)>>24)&255) | (((x)>>8)&0xff00) | (((x)<<8)&0xff0000) | (((x)<<24)&0xff000000))
-#endif
+
+#endif /* !defined(__AROS__) || AROS_BIG_ENDIAN */
 
 #endif
 

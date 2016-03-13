@@ -50,32 +50,32 @@ protected:
 
 protected:
    Globals                   &Glb;
-   unsigned long             *all;
+   IPTR                       all;
    MUITree                   *tracks;
    ConfigParser              *Config;
    MUIPopAsl                 *target;
 
 protected:
    HookT<MUITracksSession, const char**, Entry*>     hHkDisplay;
-   HookT<MUITracksSession, void*, const IOptItem*>   hHkConstruct;
-   HookT<MUITracksSession, void*, Entry*>            hHkDestruct;
-   HookT<MUITracksSession, BtnID, void*>             hHkButton;
+   HookT<MUITracksSession, IPTR, const IOptItem*>    hHkConstruct;
+   HookT<MUITracksSession, IPTR, Entry*>             hHkDestruct;
+   HookT<MUITracksSession, BtnID, IPTR>              hHkButton;
 
 protected:
 
    DbgHandler                *getDebug();
 
 protected:
-   virtual uint32             display(const char**, Entry*);
-   virtual uint32             construct(void*, const IOptItem*);
-   virtual uint32             destruct(void*, Entry*);
-   virtual uint32             button(BtnID, void*);
-   virtual void               addRecurse(unsigned long parent, const IOptItem* data);
+   virtual IPTR               display(const char**, Entry*);
+   virtual IPTR               construct(IPTR, const IOptItem*);
+   virtual IPTR               destruct(IPTR, Entry*);
+   virtual IPTR               button(BtnID, IPTR);
+   virtual void               addRecurse(IPTR parent, const IOptItem* data);
 
 public:
                               MUITracksSession(ConfigParser *parent, Globals &glb);
    virtual                   ~MUITracksSession();
-   virtual unsigned long     *getObject();
+   virtual IPTR               getObject();
    virtual bool               start();
    virtual void               stop();
    virtual void               update();

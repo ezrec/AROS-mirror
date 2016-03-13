@@ -22,7 +22,7 @@
 
 extern "C"
 {
-   unsigned long DoLibMethodA(unsigned long*);
+   IPTR DoLibMethodA(IPTR);
    bool          SetUp(void);
    void          CleanUp(void);
 };

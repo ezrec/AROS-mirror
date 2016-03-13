@@ -40,38 +40,38 @@ protected:
    Object                 *list;
    bool                    multiselect;
    String                  format;
-   HookAttrT<void*, void*> hConstruct;
-   HookAttrT<void*, void*> hDestruct;
-   HookAttrT<void*, void*> hDisplay;
-   HookAttrT<void*, void*> hSelect;
-   VectorT<void*>          hSelected;
+   HookAttrT<IPTR, IPTR>   hConstruct;
+   HookAttrT<IPTR, IPTR>   hDestruct;
+   HookAttrT<IPTR, IPTR>   hDisplay;
+   HookAttrT<IPTR, IPTR>   hSelect;
+   VectorT<IPTR>           hSelected;
 
 protected:
-   HookT<MUITree, void*, MUIP_NListtree_ConstructMessage*>     hHkConstruct;
-   HookT<MUITree, void*, MUIP_NListtree_DestructMessage*>      hHkDestruct;
-   HookT<MUITree, void*, MUIP_NListtree_DisplayMessage*>       hHkDisplay;
-   HookT<MUITree, void*, void*>                                hHkSelect;
+   HookT<MUITree, IPTR, MUIP_NListtree_ConstructMessage*>     hHkConstruct;
+   HookT<MUITree, IPTR, MUIP_NListtree_DestructMessage*>      hHkDestruct;
+   HookT<MUITree, IPTR, MUIP_NListtree_DisplayMessage*>       hHkDisplay;
+   HookT<MUITree, IPTR, IPTR>                                 hHkSelect;
 
 protected:
-   virtual unsigned long   doConstruct(void*, MUIP_NListtree_ConstructMessage*);
-   virtual unsigned long   doDestruct(void*, MUIP_NListtree_DestructMessage*);
-   virtual unsigned long   doDisplay(void*, MUIP_NListtree_DisplayMessage*);
-   virtual unsigned long   doSelect(void*, void*);
+   virtual IPTR            doConstruct(IPTR, MUIP_NListtree_ConstructMessage*);
+   virtual IPTR            doDestruct(IPTR, MUIP_NListtree_DestructMessage*);
+   virtual IPTR            doDisplay(IPTR, MUIP_NListtree_DisplayMessage*);
+   virtual IPTR            doSelect(IPTR, IPTR);
 
 public:
                            MUITree(const char *format, bool multiselect=false);
    virtual                ~MUITree(); 
-   virtual unsigned long  *getObject();
+   virtual IPTR            getObject();
    virtual void            setConstructHook(const Hook* hook);       // void*, <source>
    virtual void            setDestructHook(const Hook* hook);        // void*, <element>
    virtual void            setDisplayHook(const Hook* hook);         // const char**, <element>
    virtual void            setSelectionHook(const Hook* hook);       // <element> active, void*
    virtual void            setWeight(int weight);
 
-   virtual unsigned long   addEntry(unsigned long parent, void* data, bool opened=false);
-   virtual void            showObject(void* data, bool expand);
+   virtual IPTR            addEntry(IPTR parent, IPTR data, bool opened=false);
+   virtual void            showObject(IPTR data, bool expand);
    virtual void            clear();
-   virtual VectorT<void*> &getSelectedObjects();
+   virtual VectorT<IPTR>  &getSelectedObjects();
 
    virtual void            setEnabled(bool enabled);
 };

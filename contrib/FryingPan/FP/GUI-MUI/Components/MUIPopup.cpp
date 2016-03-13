@@ -38,10 +38,10 @@ MUIPopup::~MUIPopup()
 
 void MUIPopup::update()
 {
-   hNotify.Call(id, getValue());
+   hNotify.Call(id, (IPTR)getValue());
 }
 
-void MUIPopup::setID(int id)
+void MUIPopup::setID(IPTR id)
 {
    this->id = id;
 }
@@ -51,14 +51,13 @@ void MUIPopup::setCallbackHook(const Hook* hook)
    hNotify = hook;
 }
 
-unsigned long *MUIPopup::getObject()
+IPTR MUIPopup::getObject()
 {
    if (NULL != all)
-      return (unsigned long *)all;
+      return (IPTR)all;
 
-  
    all = HGroup,
-   End;
+    End;
 
    if (name.Length() != 0)
    {
@@ -74,15 +73,15 @@ unsigned long *MUIPopup::getObject()
                MUIA_Popobject_StrObjHook,          hHkOpen.GetHook(),
             End)));
 
-   return (unsigned long *)all;
+   return (IPTR)all;
 }
 
-unsigned long MUIPopup::doOpen(void* a, void* x)
+IPTR MUIPopup::doOpen(IPTR a, IPTR x)
 {
    return onOpen();
 }
 
-unsigned long MUIPopup::doClose(void*, void*)
+IPTR MUIPopup::doClose(IPTR, IPTR)
 {
    bool bResult;
    bResult = onClose();
@@ -99,6 +98,3 @@ void MUIPopup::close()
 {
    DoMtd((Object *)all, ARRAY(MUIM_Popstring_Close, true));
 }
-
-
-

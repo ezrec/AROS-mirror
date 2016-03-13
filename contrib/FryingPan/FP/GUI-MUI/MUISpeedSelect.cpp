@@ -43,13 +43,13 @@ bool MUISpeedSelect::vecDeleteName(const char* const& name)
    return true;
 }
 
-unsigned long MUISpeedSelect::btnHook(long id, void* data)
+IPTR MUISpeedSelect::btnHook(IPTR id, IPTR data)
 {
    switch (id)
    {
       case ID_SwitchSpeed:
          {
-            long which = (long)data;
+            IPTR which = data;
             if (speeds.Count() == 0)
                return 0;
             hook(this->id, speeds[which]);
@@ -102,8 +102,8 @@ void MUISpeedSelect::rebuildCycle(DiscSpeed *speeds, uint16 currspd)
    
    cycle = muiCycle(const_cast<const char**>(names.GetArray()), 0, ID_SwitchSpeed, which);
 
-   Intuition->SetAttrsA(cycle, (TagItem*)ARRAY(
-      MUIA_ContextMenu,    (long)menu->getObject(),
+   Intuition->SetAttrsA((Object *)cycle, (TagItem*)ARRAY(
+      MUIA_ContextMenu,    (IPTR)menu->getObject(),
       TAG_DONE,            0
    ));
 
@@ -127,11 +127,11 @@ void MUISpeedSelect::stop()
 {
 }
 
-unsigned long *MUISpeedSelect::getObject()
+IPTR MUISpeedSelect::getObject()
 {
    cycle = 0;
-   pager = (long unsigned int *)PageGroup,
-      Child,               cyclegroup = (long unsigned int *)VGroup,
+   pager = (IPTR)PageGroup,
+      Child,               cyclegroup = (IPTR)VGroup,
       End,
    End;
 

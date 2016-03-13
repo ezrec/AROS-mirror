@@ -70,7 +70,7 @@ namespace GenNS
       uint16         len;
    public:
 
-      DbgMsg(const DbgHandler *pParent, DbgLevel lvl, char* sFmtStr, sized_iptr vFmtArr, void* pData, int lLen);
+      DbgMsg(const DbgHandler *pParent, DbgLevel lvl, char* sFmtStr, IPTR vFmtArr, void* pData, int lLen);
       virtual       ~DbgMsg(void);
 
       virtual const char  *Text();
@@ -111,8 +111,8 @@ namespace GenNS
       DbgHandler(int, char*);
       ~DbgHandler();
       void           DumpMsg(DbgMsg*) const;
-      void           DoAsync(DbgLevel lvl, char* sFmtString, sized_iptr vFmtArgs, void* bMemBlock, int lMemLen) const;
-      void           DoSync(DbgLevel lvl, char* sFmtString, sized_iptr vFmtArgs, void* bMemBlock, int lMemLen) const;
+      void           DoAsync(DbgLevel lvl, char* sFmtString, IPTR vFmtArgs, void* bMemBlock, int lMemLen) const;
+      void           DoSync(DbgLevel lvl, char* sFmtString, IPTR vFmtArgs, void* bMemBlock, int lMemLen) const;
 
       void           InitH();
       void           ExitH();

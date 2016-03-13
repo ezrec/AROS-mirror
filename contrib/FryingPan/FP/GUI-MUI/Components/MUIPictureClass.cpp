@@ -78,27 +78,27 @@ MUIPictureClass::~MUIPictureClass()
    }
 }
 
-IPTR MUIPictureClass::DoMtd(Object *obj, uint32 *msg)
+IPTR MUIPictureClass::DoMtd(Object *obj, IPTR msg)
 {
    uint16  *minmax;
    IPTR      k;
 
-   switch (msg[0]) 
+   switch (((IPTR *)msg)[0]) 
    {
       case OM_NEW:
          {
             if (!(obj = (Object *)DoSuperMtd(parent, obj, msg))) 
                return 0;
 
-            k = (IPTR)Utility->GetTagData(MUIA_Picture_NormalImage, 0, (TagItem*)msg[1]);
+            k = (IPTR)Utility->GetTagData(MUIA_Picture_NormalImage, 0, (TagItem*)((IPTR *)msg)[1]);
             if (k != 0)
                image1 = (char*)k;
-            k = (IPTR)Utility->GetTagData(MUIA_Picture_SelectedImage, 0, (TagItem*)msg[1]);
+            k = (IPTR)Utility->GetTagData(MUIA_Picture_SelectedImage, 0, (TagItem*)((IPTR *)msg)[1]);
             if (k != 0)
                image2 = (char*)k;
 
-            isDisabled = Utility->GetTagData(MUIA_Disabled, 0, (struct TagItem*)msg[1]) ? true : false;
-            isSelected = Utility->GetTagData(MUIA_Selected, 0, (struct TagItem*)msg[1]) ? true : false;
+            isDisabled = Utility->GetTagData(MUIA_Disabled, 0, (struct TagItem*)((IPTR *)msg)[1]) ? true : false;
+            isSelected = Utility->GetTagData(MUIA_Selected, 0, (struct TagItem*)((IPTR *)msg)[1]) ? true : false;
 
             openImages();
 
@@ -142,7 +142,7 @@ IPTR MUIPictureClass::DoMtd(Object *obj, uint32 *msg)
          {
             DoSuperMtd(parent, obj, msg);
 
-            minmax = (uint16*)msg[1];
+            minmax = (uint16*)&((IPTR*)msg)[1];
             minmax[0] = width;
             minmax[2] = width;
             minmax[4] = width;
@@ -156,16 +156,16 @@ IPTR MUIPictureClass::DoMtd(Object *obj, uint32 *msg)
          {
             bool flg;
             bool refresh = false;
-//            image1 = (char*)GetTagData(MUIA_Picture_NormalImage,   (int32)image1.Data(), (TagItem*)msg[1]);
-//            image2 = (char*)GetTagData(MUIA_Picture_SelectedImage, (int32)image2.Data(), (TagItem*)msg[1]);
-            flg = Utility->GetTagData(MUIA_Disabled, isDisabled, (struct TagItem*)msg[1]) ? true : false;
+//            image1 = (char*)GetTagData(MUIA_Picture_NormalImage,   (int32)image1.Data(), (TagItem*)((IPTR *)msg)[1]);
+//            image2 = (char*)GetTagData(MUIA_Picture_SelectedImage, (int32)image2.Data(), (TagItem*)((IPTR *)msg)[1]);
+            flg = Utility->GetTagData(MUIA_Disabled, isDisabled, (struct TagItem*)((IPTR *)msg)[1]) ? true : false;
             if (flg != isDisabled)
             {
                isDisabled = flg;
                refresh = true;
             }
 
-            flg = Utility->GetTagData(MUIA_Selected, isSelected, (struct TagItem*)msg[1]) ? true : false;
+            flg = Utility->GetTagData(MUIA_Selected, isSelected, (struct TagItem*)((IPTR *)msg)[1]) ? true : false;
             if (isSelected != flg)
             {
                isSelected = flg;
@@ -181,15 +181,15 @@ IPTR MUIPictureClass::DoMtd(Object *obj, uint32 *msg)
       case MUIM_Set:
          {
             bool refresh = false;
-            if (msg[1] == MUIA_Picture_NormalImage)
-               image1 = (char*)msg[2];
+            if (((IPTR *)msg)[1] == MUIA_Picture_NormalImage)
+               image1 = ((char*)msg)[2];
 
-            if (msg[1] == MUIA_Picture_SelectedImage)
-               image2 = (char*)msg[2];
+            if (((IPTR *)msg)[1] == MUIA_Picture_SelectedImage)
+               image2 = ((char*)msg)[2];
 
-            if (msg[1] == MUIA_Disabled)
+            if (((IPTR *)msg)[1] == MUIA_Disabled)
             {
-               bool flg = msg[2] ? true : false;
+               bool flg = ((IPTR *)msg)[2] ? true : false;
                if (flg != isDisabled)
                {
                   isDisabled = flg;
@@ -197,9 +197,9 @@ IPTR MUIPictureClass::DoMtd(Object *obj, uint32 *msg)
                }
             }
 
-            if (msg[1] == MUIA_Selected)
+            if (((IPTR *)msg)[1] == MUIA_Selected)
             {
-               bool flg = msg[2] ? true : false;
+               bool flg = ((IPTR *)msg)[2] ? true : false;
                if (flg != isSelected)
                {
                   refresh = true;
@@ -292,7 +292,7 @@ void MUIPictureClass::openImages()
 
    if (dtimg1 != 0)
    {
-      BitMapHeader *bmhd;
+      BitMapHeader *bmhd = NULL;
 
       dt->GetDTAttrsA(dtimg1, (TagItem*)ARRAY(
          PDTA_BitMapHeader,   (IPTR)&bmhd,
@@ -304,7 +304,7 @@ void MUIPictureClass::openImages()
 
    if (dtimg2 != 0)
    {
-      BitMapHeader *bmhd;
+      BitMapHeader *bmhd = NULL;
 
       dt->GetDTAttrsA(dtimg1, (TagItem*)ARRAY(
          PDTA_BitMapHeader,   (IPTR)&bmhd,

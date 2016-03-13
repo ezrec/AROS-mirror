@@ -71,7 +71,7 @@ struct RastPort;
       PROC0(                  private6,                             13);
 #endif
       FUNC2(uint32,           DoAsyncLayout,                        14, Object*,    obj,        a0, gpLayout*, layout,     a1);
-      FUNC4(uint32,           DoDTMethodA,                          15, Object*,    obj,        a0, Window*,   win,        a1, Requester*, req,       a2, uint32*,      message, a3);
+      FUNC4(IPTR,           DoDTMethodA,                          15, Object*,    obj,        a0, Window*,   win,        a1, Requester*, req,       a2, IPTR,      message, a3);
 #ifdef __AMIGAOS4__
       PROC0(                  private7,                             15);
 #endif

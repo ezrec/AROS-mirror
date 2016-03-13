@@ -133,14 +133,14 @@ void MUIToolBar::addButtons(const MUIToolBar::Button *definition)
    }
 }
 
-unsigned long *MUIToolBar::getObject()
+IPTR MUIToolBar::getObject()
 {
    if (0 != all)
       return all;
    
    buildMenu();
 
-   all = (unsigned long *)HGroup,
+   all = (IPTR)HGroup,
       MUIA_Group_Spacing,        spacing,
    End;
 
@@ -148,11 +148,11 @@ unsigned long *MUIToolBar::getObject()
    return all;
 }
 
-unsigned long *MUIToolBar::createButton(const MUIToolBar::Button *def)
+IPTR MUIToolBar::createButton(const MUIToolBar::Button *def)
 {
-   unsigned long    *btn;
-   unsigned long    *label = 0;
-   unsigned long    *image = 0;
+   IPTR btn;
+   IPTR label = 0;
+   IPTR image = 0;
    String            s;
 
    if ((false == showImages) && (Label_None == labelPosition))
@@ -160,7 +160,7 @@ unsigned long *MUIToolBar::createButton(const MUIToolBar::Button *def)
 
    if (true == showImages)
    {
-      image = (unsigned long *)pPicture->Create(
+      image = (IPTR)pPicture->Create(
          MUIPictureClass::MUIA_Picture_NormalImage,      def->image1RelPath.Data(),
          MUIPictureClass::MUIA_Picture_SelectedImage,    def->image2RelPath.Data(),
          MUIA_ShowSelState,                              true,
@@ -171,7 +171,7 @@ unsigned long *MUIToolBar::createButton(const MUIToolBar::Button *def)
 
    if (Label_None != labelPosition)
    {
-      label = (unsigned long *)TextObject,
+      label = (IPTR)TextObject,
          MUIA_Font,           MUIV_Font_Tiny,
          MUIA_Text_Contents,  def->label.Data(),
          MUIA_Text_PreParse,  "\033c",
@@ -183,7 +183,7 @@ unsigned long *MUIToolBar::createButton(const MUIToolBar::Button *def)
 
    if ((labelPosition == Label_Left) || (labelPosition == Label_Right))
    {
-      btn = (unsigned long *)HGroup,
+      btn = (IPTR)HGroup,
          MUIA_InputMode,      MUIV_InputMode_Immediate,
          //MUIA_InputMode,      MUIV_InputMode_RelVerify,
          MUIA_UserData,       def->id,
@@ -194,7 +194,7 @@ unsigned long *MUIToolBar::createButton(const MUIToolBar::Button *def)
    }
    else
    {
-      btn = (unsigned long *)VGroup,
+      btn = (IPTR)VGroup,
          MUIA_InputMode,      MUIV_InputMode_Immediate,
          //MUIA_InputMode,      MUIV_InputMode_RelVerify,
          MUIA_UserData,       def->id,
@@ -230,9 +230,9 @@ unsigned long *MUIToolBar::createButton(const MUIToolBar::Button *def)
    return btn;
 }
 
-unsigned long *MUIToolBar::createSeparator()
+IPTR MUIToolBar::createSeparator()
 {
-   return (unsigned long *)RectangleObject,
+   return (IPTR)RectangleObject,
       MUIA_FixWidth,    10,
    End;
 }
@@ -300,8 +300,8 @@ void MUIToolBar::rebuildGadgets()
 
    for (int i=0; i<buttons.Count(); i++)
    {
-      unsigned long *elem = buttons[i];
-      DoMtd((Object *)all, ARRAY(OM_REMMEMBER, (IPTR)elem));
+      IPTR elem = buttons[i];
+      DoMtd((Object *)all, ARRAY(OM_REMMEMBER, elem));
    }
 
    buttons.Empty();
@@ -345,10 +345,11 @@ void MUIToolBar::rebuildGadgets()
    setSelected(active);
 }
 
-unsigned long MUIToolBar::reportChange(long, long *id)
+IPTR MUIToolBar::reportChange(IPTR, IPTR id)
 {
-   setSelected(*id);
-   return callBack.Call(this, (void*)*id);
+   IPTR selected = *(IPTR *)id;
+   setSelected(selected);
+   return callBack.Call((IPTR)this, selected);
 }
 
 void MUIToolBar::setHook(const Hook* pHook)
@@ -367,13 +368,11 @@ void MUIToolBar::setSelected(int32 id)
    {
       if (defs[i]->type == Type_Button)
       {
-         Intuition->SetAttrsA(defs[i]->object, (TagItem*)ARRAY(
-            MUIA_Selected,       defs[i]->id == id,
+         Intuition->SetAttrsA((Object *)defs[i]->object, (TagItem*)ARRAY(
+            MUIA_Selected,       defs[i]->id == (IPTR)id,
             TAG_DONE,            0));
       }
    }
    
    active = id;
 }
-
-

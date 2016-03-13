@@ -118,12 +118,12 @@ namespace GenNS
           * \brief Use this method to call hook with adequate parameters.
           * \sa operator ()(T1, T2)
           */
-         uint           Call(T1 object, T2 message)
+         IPTR           Call(T1 object, T2 message)
          {
             ASSERT(Utility != 0);
             if (FHook == 0) 
                return 0;
-            return Utility->CallHookPkt(const_cast<Hook*>(FHook), (void*)(object), (void*)(message));
+            return Utility->CallHookPkt(const_cast<Hook*>(FHook), (IPTR)(object), (IPTR)(message));
          }
 
          /**
@@ -145,24 +145,24 @@ namespace GenNS
           *    // ...
           * \endcode
           */
-         static uint   Call(const Hook* pHook, T1 object, T2 message)
+         static IPTR   Call(const Hook* pHook, T1 object, T2 message)
          {
             ASSERT(Utility != 0);
             if (pHook == 0) 
                return 0;
-            return Utility->CallHookPkt(const_cast<Hook*>(pHook), (void*)(object), (void*)(message));
+            return Utility->CallHookPkt(const_cast<Hook*>(pHook), (IPTR)(object), (IPTR)(message));
          }
 
          /**
           * \brief Use this method to call hook with adequate parameters.
           * \sa Call(T1, T2)
           */
-         uint operator () (T1 object, T2 message)
+         IPTR operator () (T1 object, T2 message)
          {
             ASSERT(Utility != 0);
             if (FHook == 0) 
                return 0;
-            return Utility->CallHookPkt(const_cast<Hook*>(FHook), (void*)(object), (void*)(message));
+            return Utility->CallHookPkt(const_cast<Hook*>(FHook), (IPTR)(object), (IPTR)(message));
          }
       };
 };

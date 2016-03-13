@@ -159,7 +159,7 @@ unsigned long Engine::mainOperations(Thread* thread, void*)
          if (drv != 0)
          {
             pOptical->OptDoMethodA(ARRAY(DRV_GetAttrs, drv, 
-               DRA_Disc_CurrentDiscSeqNum,   (int32)&did,
+               DRA_Disc_CurrentDiscSeqNum,   (IPTR)&did,
                TAG_DONE,                     0));
             if (did != lid)
                do_update();
@@ -511,7 +511,7 @@ void Engine::readContents()
    pCurrentDisc = (const IOptItem*)pOptical->OptDoMethodA(ARRAY(DRV_GetAttr, drv, DRA_Disc_Contents));
 
    {
-      int32 rec, era, fmt, ovw;
+      IPTR rec = 0, era = 0, fmt = 0, ovw = 0;
 
       pOptical->OptDoMethodA(ARRAY(DRV_GetAttrs, drv, 
             DRA_Disc_IsWritable,    (IPTR)&rec, 

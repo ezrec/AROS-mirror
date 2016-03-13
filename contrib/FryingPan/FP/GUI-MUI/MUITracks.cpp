@@ -87,10 +87,10 @@ void MUITracks::stop()
    all = 0;
 }
 
-unsigned long *MUITracks::getObject()
+IPTR MUITracks::getObject()
 {
    if (0 != all)
-      return (unsigned long *)all;
+      return all;
 
    static const char *options[3] =
    {
@@ -106,7 +106,7 @@ unsigned long *MUITracks::getObject()
    titles[0] = ISOBuilder->getName(),
    titles[1] = DataAudio->getName(),
 
-   all = VGroup,
+   all = (IPTR)VGroup,
       Child,                  muiCycle(options, 0, Btn_CompositionType, 0),
       Child,                  page = PageGroup,
          Child,                  RegisterGroup(titles),
@@ -118,7 +118,7 @@ unsigned long *MUITracks::getObject()
       Child,                  infogauge = (Object *)muiGauge("...", Btn_InfoGauge),
    End;
 
-   return (unsigned long *)all;
+   return all;
 }
 
 void MUITracks::update()
@@ -184,17 +184,17 @@ void MUITracks::disableISO()
    ISOBuilder->disableISO();
 }
 
-uint32 MUITracks::onButton(BtnId id, void* option)
+IPTR MUITracks::onButton(BtnId id, IPTR option)
 {
    switch (id)
    {
       case Btn_CompositionType:
          {
-            IPTR sel = (IPTR)option;
+            IPTR sel = option;
             DoMtd((Object *)page, ARRAY(MUIM_Set, MUIA_Group_ActivePage, sel));
-            if ((IPTR)option == 0)
+            if (option == 0)
                Glb.WriteSelection = Globals::Select_Tracks;
-            else if ((IPTR)option == 1)
+            else if (option == 1)
                Glb.WriteSelection = Globals::Select_Session;
          };
          break;

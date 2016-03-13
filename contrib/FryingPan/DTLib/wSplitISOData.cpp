@@ -170,7 +170,7 @@ bool                 wSplitISOData::setUp()
 {
    String s;
    
-   s.FormatStr("%s.sii", ARRAY((int32)name_base.Data()));
+   s.FormatStr("%s.sii", ARRAY((IPTR)name_base.Data()));
    master_file = DOS->Open(s.Data(), MODE_NEWFILE);
    ASSERT(master_file != 0);
    if (master_file == 0)
@@ -245,7 +245,7 @@ void                 wSplitISOData::deleteFiles()
       DOS->DeleteFile(names[i]->Data());
 
    String s;
-   s.FormatStr("%s.sii", ARRAY((int32)name_base.Data()));
+   s.FormatStr("%s.sii", ARRAY((IPTR)name_base.Data()));
    DOS->DeleteFile(s.Data());
 }
 

@@ -85,10 +85,12 @@ bool Lib_SetUp()
 
 void Lib_CleanUp()
 {
+#if (0)
    for (int i=0; i<pReaders->Count(); i++)
       delete (*pReaders)[i];
    for (int i=0; i<pWriters->Count(); i++)
       delete (*pWriters)[i];
+#endif
    delete pReaders;
    delete pWriters;
 

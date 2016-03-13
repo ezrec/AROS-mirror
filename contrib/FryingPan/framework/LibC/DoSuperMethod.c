@@ -21,16 +21,16 @@
 #include <proto/utility.h>
 
 
-sint DoSuperMethodA(Class* cl, Object* obj, iptr message)
+IPTR DoSuperMethodA(Class* cl, Object* obj, IPTR message)
 {
 #ifndef __amigaos4__
    struct Library *UtilityBase = __InternalUtilityBase;
    if ((!obj) || (!cl))
       return 0L;
-   return CallHookPkt((struct Hook*)cl->cl_Super, obj, message);
+   return CallHookPkt((struct Hook*)cl->cl_Super, obj, (APTR)message);
 #else
    if ((!obj) || (!cl))
       return 0L;
-   return __InternalUtilityIFace->CallHookPkt((struct Hook*)cl->cl_Super, obj, message);
+   return __InternalUtilityIFace->CallHookPkt((struct Hook*)cl->cl_Super, obj, (APTR)message);
 #endif
 }

@@ -134,9 +134,9 @@ DbgHandler *MUIContents::getDebug()
    return Glb.dbg;
 }
 
-unsigned long *MUIContents::getObject()
+IPTR MUIContents::getObject()
 {
-   _dx(Lvl_Info, "Retrieving page content (%lx)", (uint)all);
+   _dx(Lvl_Info, "Retrieving page content (%lx)", (IPTR)all);
    if (NULL != all)
       return all;
 
@@ -155,10 +155,10 @@ unsigned long *MUIContents::getObject()
    {
       _dx(Lvl_Info, "Setting up PopASL");
       target = new MUIPopAsl(Glb.Loc[loc_TargetDir], MUIPopAsl::Pop_Dir);
-      target->setValue((char*)Config->getValue(Cfg_TargetDir, ""));
+      target->setValue((IPTR)Config->getValue(Cfg_TargetDir, ""));
    }
 
-   all = (long unsigned int *)VGroup,
+   all = (IPTR)VGroup,
       GroupFrame,
       Child,                     tracks->getObject(),
       Child,                     target->getObject(),
@@ -166,7 +166,7 @@ unsigned long *MUIContents::getObject()
       Child,                     muiButton(Glb.Loc[loc_DownloadTracks], Glb.Loc.Accel(loc_DownloadTracks), ID_DownloadTracks),
    End;
 
-   _dx(Lvl_Info, "Page content created (%08lx)", (uint)all);
+   _dx(Lvl_Info, "Page content created (%08lx)", (IPTR)all);
    return all;
 }
 
@@ -190,27 +190,27 @@ void MUIContents::stop()
    _dx(Lvl_Info, "All done");
 }
 
-unsigned long MUIContents::construct(void*, const IOptItem* item)
+IPTR MUIContents::construct(IPTR, const IOptItem* item)
 {
    Entry *e = new Entry;
-   _dx(Lvl_Info, "Creating new Tree element %08lx (-> %08lx)", (uint)e, (uint)item);
+   _dx(Lvl_Info, "Creating new Tree element %08lx (-> %08lx)", (IPTR)e, (IPTR)item);
    e->item = item;
    _dx(Lvl_Info, "Locking element");
    e->item->claim();
    _dx(Lvl_Info, "Element set up.");
-   return (unsigned long)e;
+   return (IPTR)e;
 }
 
-unsigned long MUIContents::destruct(void*, Entry* e)
+IPTR MUIContents::destruct(IPTR, Entry* e)
 {
-   _dx(Lvl_Info, "Disposing Tree element %08lx (-> %08lx)", (uint)e, (uint)e->item);
+   _dx(Lvl_Info, "Disposing Tree element %08lx (-> %08lx)", (IPTR)e, (IPTR)e->item);
    e->item->dispose();
    delete e;
    _dx(Lvl_Info, "Done.");
    return 0;
 }
 
-unsigned long MUIContents::display(const char** arr, Entry* e)
+IPTR MUIContents::display(const char** arr, Entry* e)
 {
    if (NULL == e)
    {
@@ -226,7 +226,7 @@ unsigned long MUIContents::display(const char** arr, Entry* e)
       unsigned long long   len = 0;
       int                  fraction = 0;
 
-      _dx(Lvl_Info, "Constructing display for Tree element %08lx (-> %08lx)", (uint)e, (uint)e->item);
+      _dx(Lvl_Info, "Constructing display for Tree element %08lx (-> %08lx)", (IPTR)e, (IPTR)e->item);
 
       switch (e->item->getItemType())
       {
@@ -311,14 +311,14 @@ unsigned long MUIContents::display(const char** arr, Entry* e)
       s1 = Glb.Loc.FormatNumber(len, fraction * 100000);
       s2 = Glb.Loc.FormatNumber(e->item->getStartAddress());
       s3 = Glb.Loc.FormatNumber(e->item->getEndAddress());
-      e->info.FormatStr("%s %s  (%s - %s)", ARRAY((uint)s1.Data(), (uint)suffix, (uint)s2.Data(), (uint)s3.Data()));
+      e->info.FormatStr("%s %s  (%s - %s)", ARRAY((IPTR)s1.Data(), (IPTR)suffix, (IPTR)s2.Data(), (IPTR)s3.Data()));
 
       arr[0] = e->number.Data();
       arr[1] = e->name.Data();
       arr[2] = e->info.Data();
    }
    
-   _dx(Lvl_Info, "Displaying information %s | %s | %s", (uint)arr[0], (uint)arr[1], (uint)arr[2]);
+   _dx(Lvl_Info, "Displaying information %s | %s | %s", (IPTR)arr[0], (IPTR)arr[1], (IPTR)arr[2]);
    _dx(Lvl_Info, "Done.");
    return true;
 }
@@ -334,7 +334,7 @@ void MUIContents::update()
       const IOptItem * item = eng->getContents();
       _dx(Lvl_Info, "Clearing old items");
       tracks->clear();
-      _dx(Lvl_Info, "Recursively adding new items (if any). Disc structure at %08lx", (int)item);
+      _dx(Lvl_Info, "Recursively adding new items (if any). Disc structure at %08lx", (IPTR)item);
       addRecurse(0, item);
    }
 
@@ -343,15 +343,15 @@ void MUIContents::update()
    Glb.CurrentEngine->Release();
 }
 
-void MUIContents::addRecurse(unsigned long parent, const IOptItem* data)
+void MUIContents::addRecurse(IPTR parent, const IOptItem* data)
 {
-   uint32 item;
+   IPTR item;
 
    if (data == 0)
       return;
 
-   _dx(Lvl_Info, "Adding item %08lx of type %ld to tree", (int)data, data->getItemType());
-   item = tracks->addEntry(parent, const_cast<IOptItem*>(data), true);
+   _dx(Lvl_Info, "Adding item %08lx of type %ld to tree", (IPTR)data, data->getItemType());
+   item = tracks->addEntry(parent, (IPTR)data, true);
 
    _dx(Lvl_Info, "Item branch: %08lx", item);
    _dx(Lvl_Info, "This item has %ld children, that will be added now.", data->getChildCount());
@@ -364,7 +364,7 @@ void MUIContents::addRecurse(unsigned long parent, const IOptItem* data)
    _dx(Lvl_Info, "All children have been added");
 }
 
-unsigned long MUIContents::button(BtnID id, void*)
+IPTR MUIContents::button(BtnID id, IPTR)
 {
    IEngine *eng = Glb.CurrentEngine->ObtainRead();
 
@@ -388,7 +388,7 @@ unsigned long MUIContents::button(BtnID id, void*)
                request(Glb.Loc[Globals::loc_Req], Glb.Loc[loc_SelectTargetDirFirst], Glb.Loc[Globals::loc_OK], 0);
                break;
             }
-            VectorT<void*> &vec = tracks->getSelectedObjects();
+            VectorT<IPTR> &vec = tracks->getSelectedObjects();
 
             if (vec.Count() == 0)
             {
@@ -398,19 +398,19 @@ unsigned long MUIContents::button(BtnID id, void*)
 
             if (eng->getDataExport() == 0)
             {
-               request(Glb.Loc[Globals::loc_Req], Glb.Loc[loc_SelectItemExportModule], Glb.Loc[Globals::loc_OK], ARRAY((uint)Glb.Loc[loc_DataExport].Data()));
+               request(Glb.Loc[Globals::loc_Req], Glb.Loc[loc_SelectItemExportModule], Glb.Loc[Globals::loc_OK], ARRAY((IPTR)Glb.Loc[loc_DataExport].Data()));
                break;
             }
 
             if (eng->getAudioExport() == 0)
             {
-               request(Glb.Loc[Globals::loc_Req], Glb.Loc[loc_SelectItemExportModule], Glb.Loc[Globals::loc_OK], ARRAY((uint)Glb.Loc[loc_AudioExport].Data()));
+               request(Glb.Loc[Globals::loc_Req], Glb.Loc[loc_SelectItemExportModule], Glb.Loc[Globals::loc_OK], ARRAY((IPTR)Glb.Loc[loc_AudioExport].Data()));
                break;
             }
 
             if (eng->getSessionExport() == 0)
             {
-               request(Glb.Loc[Globals::loc_Req], Glb.Loc[loc_SelectItemExportModule], Glb.Loc[Globals::loc_OK], ARRAY((uint)Glb.Loc[loc_SessionExport].Data()));
+               request(Glb.Loc[Globals::loc_Req], Glb.Loc[loc_SelectItemExportModule], Glb.Loc[Globals::loc_OK], ARRAY((IPTR)Glb.Loc[loc_SessionExport].Data()));
                break;
             }
 
@@ -438,6 +438,3 @@ unsigned long MUIContents::button(BtnID id, void*)
    Glb.CurrentEngine->Release();  
    return 0;
 }
-
-
-

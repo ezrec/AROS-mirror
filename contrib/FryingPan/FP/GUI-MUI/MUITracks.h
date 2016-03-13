@@ -44,7 +44,7 @@ protected:
    };
 
 protected:
-   Object                    *all;
+   IPTR                       all;
    Object                    *page;
    ConfigParser              *Config;
    MUITracksISOBuilder       *ISOBuilder;
@@ -54,10 +54,10 @@ protected:
    Globals                   &Glb;
    
 protected:
-   HookT<MUITracks, BtnId, void*>             hHkButton;
+   HookT<MUITracks, BtnId, IPTR>             hHkButton;
    
 protected:
-   uint32                     onButton(BtnId id, void*);
+   IPTR                       onButton(BtnId id, IPTR);
 
 public:
    /*
@@ -71,7 +71,7 @@ public:
    virtual                   ~MUITracks();
    virtual bool               start();
    virtual void               stop();
-   virtual unsigned long     *getObject();
+   virtual IPTR               getObject();
    virtual void               update();
    virtual void               layoutUpdate();
 

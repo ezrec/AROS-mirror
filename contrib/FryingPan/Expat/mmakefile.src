@@ -22,8 +22,9 @@ CXXFILES := \
 USER_CFLAGS := -isystem $(SRCDIR)/$(CURDIR)/../framework \
  -isystem $(SRCDIR)/$(CURDIR)/..
 
-USER_CXXFLAGS := -isystem $(SRCDIR)/$(CURDIR)/../framework \
+USER_CXXFLAGS := -fno-rtti -fno-exceptions -isystem $(SRCDIR)/$(CURDIR)/../framework \
  -isystem $(SRCDIR)/$(CURDIR)/..
+USER_LDFLAGS := -static-libstdc++
 
 %build_prog mmake=contrib-fryingpan-expat \
  progname="expat2.library" targetdir=$(DESTDIR) files="$(FILES)" \

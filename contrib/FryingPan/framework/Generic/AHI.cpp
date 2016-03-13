@@ -116,13 +116,15 @@ unsigned short AHI::CreateStaticSample(AHISampleType type, int freq, void* buffe
 
 void AHI::FreeSample(unsigned short idx)
 {
-   ahi_FreeSample fre = { idx };
+   short sample = (short)idx;
+   ahi_FreeSample fre = { sample };
    pThread->DoSync(cmd_FreeSample, &fre);
 }
 
 bool AHI::PlaySample(unsigned short idx)
 {
-   ahi_PlaySample fre = { idx };
+   short sample = (short)idx;
+   ahi_PlaySample fre = { sample };
    return pThread->DoSync(cmd_PlaySample, &fre);
 }
 
@@ -261,7 +263,7 @@ bool AHI::do_SetAudio(AudioID* newID)
    pCtl = pAHI->AHI_AllocAudioA((TagItem*)ARRAY(
       AHIA_AudioID,        newID->id,
       AHIA_MixFreq,        44100,
-      AHIA_Channels,       numChannels,
+      AHIA_Channels,       static_cast<IPTR>(numChannels),
       AHIA_Sounds,         256,
       AHIA_SoundFunc,      (IPTR)hHkSound.GetHook(),
       TAG_DONE,            0
@@ -274,7 +276,7 @@ bool AHI::do_SetAudio(AudioID* newID)
       err = pAHI->AHI_ControlAudioA(pCtl, (TagItem*)ARRAY(AHIC_Play, true, 0, 0));
       if (0 != err)
       {
-         request("Error", "Unable to start audio device.\nError code %ld", "Proceed", ARRAY(err));
+         request("Error", "Unable to start audio device.\nError code %ld", "Proceed", ARRAY(static_cast<IPTR>(err)));
       }
       return true;
    }
@@ -507,11 +509,11 @@ bool AHI::do_PlaySample(ahi_PlaySample *dat)
          }
 
          err = pAHI->AHI_PlayA(pCtl, (TagItem*)ARRAY(
-                  AHIP_BeginChannel,   chan,
-                  AHIP_Freq,           smpSample[idx]->freq,
+                  AHIP_BeginChannel,   static_cast<IPTR>(chan),
+                  AHIP_Freq,           static_cast<IPTR>(smpSample[idx]->freq),
                   AHIP_Vol,            0x10000,
                   AHIP_Pan,            0x8000,
-                  AHIP_Sound,          idx,
+                  AHIP_Sound,          static_cast<IPTR>(idx),
                   AHIP_EndChannel,     0,
                   TAG_DONE,            0));
 
@@ -550,7 +552,7 @@ void AHI::do_SoundStop(ahi_SoundInfo* dat)
    { 
       smpChan[chan] = 0;
       pAHI->AHI_PlayA(pCtl, (TagItem*)ARRAY(
-               AHIP_BeginChannel,   chan,
+               AHIP_BeginChannel,   static_cast<IPTR>(chan),
                AHIP_Sound,          AHI_NOSOUND,
                AHIP_Vol,            65536,
                AHIP_Pan,            32768,

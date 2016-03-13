@@ -76,57 +76,57 @@ bool MUIPopString::onOpen()
 bool MUIPopString::onClose()
 {
    value = getSelectedEntry();
-   muiSetText(ID_String, toString(value));
+   muiSetText(ID_String, toString((const void*)value));
    return true;
 }
 
-unsigned long *MUIPopString::getPopDisplay()
+IPTR MUIPopString::getPopDisplay()
 {
    string = (Object *)muiString("", 0, ID_String); 
-   return (unsigned long *)string;
+   return (IPTR)string;
 }
 
-unsigned long *MUIPopString::getPopButton()
+IPTR MUIPopString::getPopButton()
 {
-   return (unsigned long *)PopButton(MUII_PopUp);
+   return (IPTR)PopButton(MUII_PopUp);
 }
 
-unsigned long *MUIPopString::getPopObject()
+IPTR MUIPopString::getPopObject()
 {
    listview = NListviewObject,
       MUIA_NListview_NList,         list = NListObject,
          InputListFrame,
          MUIA_NList_Title,          sColNames.Count() != 0,
-         MUIA_NList_ConstructHook,  (long)hHkConstruct.GetHook(),
-         MUIA_NList_DestructHook,   (long)hHkDestruct.GetHook(),
-         MUIA_NList_DisplayHook,    (long)hHkDisplay.GetHook(),
-         MUIA_NList_Format,         (long)sCols.Data(),
+         MUIA_NList_ConstructHook,  (IPTR)hHkConstruct.GetHook(),
+         MUIA_NList_DestructHook,   (IPTR)hHkDestruct.GetHook(),
+         MUIA_NList_DisplayHook,    (IPTR)hHkDisplay.GetHook(),
+         MUIA_NList_Format,         (IPTR)sCols.Data(),
       End,
    End;
 
-   return (unsigned long *)listview;
+   return (IPTR)listview;
 }
 
-void MUIPopString::setValue(const void* string)
+void MUIPopString::setValue(IPTR val)
 {
-   muiSetText(ID_String, (const char*)string);
+   muiSetText(ID_String, (const char*)val);
 }
 
-const void *MUIPopString::getValue()
+IPTR MUIPopString::getValue()
 {
    return value;
 }
 
-unsigned long MUIPopString::buttonHandler(int id, void* data)
+IPTR MUIPopString::buttonHandler(IPTR id, IPTR data)
 {
    switch (id)
    {
       case ID_String:
          {
-            if (((value != 0) && (strcmp(toString(value), (const char*)data))) ||
+            if (((value != 0) && (strcmp(toString((const void*)value), (const char*)data))) ||
                  (value == 0))
             {
-               value = (const char*)data;
+               value = data;
                update();
             }
          }
@@ -135,17 +135,17 @@ unsigned long MUIPopString::buttonHandler(int id, void* data)
    return 0;
 }
 
-unsigned long MUIPopString::construct(void*, void* arg)
+IPTR MUIPopString::construct(IPTR, IPTR arg)
 {
-   return (unsigned long)arg;
+   return arg;
 }
 
-unsigned long MUIPopString::destruct(void*, void* arg)
+IPTR MUIPopString::destruct(IPTR, IPTR arg)
 {
    return 0;
 }
 
-unsigned long MUIPopString::display(const char** arr, void* arg)
+IPTR MUIPopString::display(const char** arr, IPTR arg)
 {
    if (arg != NULL)
    {
@@ -162,42 +162,42 @@ unsigned long MUIPopString::display(const char** arr, void* arg)
 void MUIPopString::clearList()
 {
    if (all == 0)
-      return; 
+      return;
+
    DoMtd((Object *)list, ARRAY(MUIM_NList_Clear));
 }
 
-void MUIPopString::addEntry(const void* entry)
+void MUIPopString::addEntry(IPTR entry)
 {
    if (all == 0)
       return;
-   DoMtd((Object *)list, ARRAY(MUIM_NList_InsertSingle, (long)entry, (unsigned)MUIV_NList_Insert_Bottom));
+
+   DoMtd((Object *)list, ARRAY(MUIM_NList_InsertSingle, entry, (IPTR)MUIV_NList_Insert_Bottom));
 }
 
-const void *MUIPopString::getSelectedEntry()
+const IPTR MUIPopString::getSelectedEntry()
 {
-   void *item;
+   IPTR item=0;
 
    if (all == 0)
       return 0;
 
-   DoMtd((Object *)list, ARRAY(MUIM_NList_GetEntry, (unsigned)MUIV_NList_GetEntry_Active, (long)&item));
+   DoMtd((Object *)list, ARRAY(MUIM_NList_GetEntry, (IPTR)MUIV_NList_GetEntry_Active, (IPTR)&item));
 
    return item;
 }
 
-unsigned long *MUIPopString::getObject()
+IPTR MUIPopString::getObject()
 {
    MUIPopup::getObject();
-   DoMtd((Object *)list, ARRAY(MUIM_Notify, MUIA_NList_DoubleClick, MUIV_EveryTime, (long)popup, 2, MUIM_Popstring_Close, true));
+   DoMtd((Object *)list, ARRAY(MUIM_Notify, MUIA_NList_DoubleClick, MUIV_EveryTime, (IPTR)popup, 2, MUIM_Popstring_Close, true));
 
 //   if (NULL != string)
 //      DoMtd(string, ARRAY(MUIM_Notify, MUIA_String_Acknowledge, MUIV_EveryTime, (long)popup, 2, MUIM_Popstring_Close, true));
-   return (unsigned long *)all;
+   return (IPTR)all;
 }
 
 const char *MUIPopString::toString(const void* arg)
 {
    return (const char*) arg;
 }
-
-

@@ -32,7 +32,7 @@
 
    /*
     * HOW TO USE IT?
-    * it is best to create the object that derives from the GenericOOP class
+    * it is best to create the object that derives from the GenericBOOPSI class
     * simply replace DoMtd() with your own method to get the desired effect
     */
 
@@ -41,11 +41,11 @@ namespace GenNS
    class MUICustomClass : public GenericMUI
    {
    protected:
-      virtual GenericOOP        *createObject(IClass *cls)    = 0;
+      virtual GenericBOOPSI     *createObject(IClass *cls)    = 0;
 
    private:
       void                      *getDispatcher();
-      virtual unsigned long      dispatch(IClass *cls, Object* obj, unsigned long *msg);
+      virtual IPTR               dispatch(IClass *cls, Object* obj, IPTR msg);
 
    protected:
       MUI_CustomClass           *pMUIClass;
@@ -54,14 +54,14 @@ namespace GenNS
    public:
       MUICustomClass(const char *parent);
       virtual                   ~MUICustomClass();
-      Object                    *Create(unsigned long lTag1, ...);
+      Object                    *Create(IPTR lTag1, ...);
 
    private:
 #if defined (__AROS__)
       AROS_UFP4(static IPTR, FDispatchCaller,
          AROS_UFPA(struct IClass *, pClass, A0),
          AROS_UFPA(Object *, pObject, A2),
-         AROS_UFPA(unsigned long *, pMessage, A1),
+         AROS_UFPA(IPTR, pMessage, A1),
          AROS_UFPA(APTR, data, A6));
 #elif defined (__AMIGAOS4__)
       static unsigned long       FDispatchCaller(IClass *pClass, Object* pObject, unsigned long *pMessage);

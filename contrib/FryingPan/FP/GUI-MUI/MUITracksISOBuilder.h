@@ -62,43 +62,43 @@ protected:
    FileReq                   *buildimg;
    MUIPopISOElement          *popelem;
 
-   uint32                    *all;
+   IPTR                       all;
 
    ConfigParser              *Config;
    HookT<MUITracksISOBuilder, const char**, class ClDirectory*>   hHkTreeDisplayHook;
-   HookT<MUITracksISOBuilder, BtnID, void*>                       hHkButton;
-   HookT<MUITracksISOBuilder, ClDirectory*, void*>                hHkTreeSelect;
-   HookT<MUITracksISOBuilder, Entry*, void*>                      hHkElemSelect;
-   HookT<MUITracksISOBuilder, AppMessage*, void*>                 hHkWBMessage;
+   HookT<MUITracksISOBuilder, BtnID, IPTR>                        hHkButton;
+   HookT<MUITracksISOBuilder, ClDirectory*, IPTR>                 hHkTreeSelect;
+   HookT<MUITracksISOBuilder, Entry*, IPTR>                       hHkElemSelect;
+   HookT<MUITracksISOBuilder, AppMessage*, IPTR>                  hHkWBMessage;
    
-   HookT<MUITracksISOBuilder, void*, class ClElement*>            hHkFilesConstruct;
-   HookT<MUITracksISOBuilder, void*, class Entry*>                hHkFilesDestruct;
+   HookT<MUITracksISOBuilder, IPTR, class ClElement*>             hHkFilesConstruct;
+   HookT<MUITracksISOBuilder, IPTR, class Entry*>                 hHkFilesDestruct;
    HookT<MUITracksISOBuilder, const char**, class Entry*>         hHkFilesDisplay;
 
 protected:
    void                       showTree(class IBrowser*);
    void                       showContents(class IBrowser*);
-   void                       addTreeEntries(uint32 parent, ClDirectory *dir);
+   void                       addTreeEntries(IPTR parent, ClDirectory *dir);
 
    void                       addFiles(IEngine*, IBrowser*);
    void                       removeFiles(IEngine*, IBrowser*);
    void                       buildImage(IEngine*, IBrowser*);
 
 protected:
-   uint32                     treeDisplayHook(const char**, ClDirectory*);
-   uint32                     button(BtnID, void*);
-   uint32                     treeSelect(ClDirectory*, void*);
-   uint32                     elemSelect(Entry*, void*);
-   uint32                     onWBMessage(AppMessage*, void*);
+   IPTR                       treeDisplayHook(const char**, ClDirectory*);
+   IPTR                       button(BtnID, IPTR);
+   IPTR                       treeSelect(ClDirectory*, IPTR);
+   IPTR                       elemSelect(Entry*, IPTR);
+   IPTR                       onWBMessage(AppMessage*, IPTR);
 
-   uint32                     filesConstruct(void*, ClElement*);
-   uint32                     filesDestruct(void*, Entry*);
-   uint32                     filesDisplay(const char**, Entry*);
+   IPTR                       filesConstruct(IPTR, ClElement*);
+   IPTR                       filesDestruct(IPTR, Entry*);
+   IPTR                       filesDisplay(const char**, Entry*);
 
 public:
                               MUITracksISOBuilder(ConfigParser *parent, Globals &glb);
                              ~MUITracksISOBuilder();
-   uint32                    *getObject();
+   virtual IPTR               getObject();
    bool                       start();
    void                       stop();
    const char                *getName();

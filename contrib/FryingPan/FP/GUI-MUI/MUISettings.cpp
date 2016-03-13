@@ -103,7 +103,7 @@ void MUISettings::stop()
    all = 0;
 }
 
-unsigned long *MUISettings::getObject()
+IPTR MUISettings::getObject()
 {
    if (NULL != all)
       return all;
@@ -123,7 +123,7 @@ unsigned long *MUISettings::getObject()
    popSessionExport->setCallbackHook(hkButton.GetHook());
    popDOSDevice->setCallbackHook(hkButton.GetHook());
 
-   all = (long unsigned int *)VGroup,
+   all = (IPTR)VGroup,
       GroupFrame,
       Child,                  muiSpace(),
 
@@ -166,7 +166,7 @@ void MUISettings::update()
 {
    IEngine *eng = Glb.CurrentEngine->ObtainRead();
 
-   popDOSDevice->setValue(eng->getDOSDevice());
+   popDOSDevice->setValue((IPTR)eng->getDOSDevice());
    muiSetSelected(ID_DOSInhibit, eng->getDOSInhibit());
 
    popDataExport->clearList();
@@ -176,50 +176,50 @@ void MUISettings::update()
    for (int i=0; i<eng->getDataExports().Count(); i++)
    {
 //      MessageBox("Info", "Entry: %s", "Ok", ARRAY((int)eng->getDataExports()[i]));
-      popDataExport->addEntry(eng->getDataExports()[i]);
+      popDataExport->addEntry((IPTR)eng->getDataExports()[i]);
    }
 
    for (int i=0; i<eng->getAudioExports().Count(); i++)
    {
-      popAudioExport->addEntry(eng->getAudioExports()[i]);
+      popAudioExport->addEntry((IPTR)eng->getAudioExports()[i]);
    }
 
    for (int i=0; i<eng->getSessionExports().Count(); i++)
    {
-      popSessionExport->addEntry(eng->getSessionExports()[i]);
+      popSessionExport->addEntry((IPTR)eng->getSessionExports()[i]);
    }
 
    if (eng->getDataExport() != NULL)
    {
-      popDataExport->setValue(eng->getDataExport());
+      popDataExport->setValue((IPTR)eng->getDataExport());
    }
    else
    {
-      popDataExport->setValue(Glb.Loc[loc_NotSet].Data());
+      popDataExport->setValue((IPTR)Glb.Loc[loc_NotSet].Data());
    }
 
    if (eng->getAudioExport() != NULL)
    {
-      popAudioExport->setValue(eng->getAudioExport());
+      popAudioExport->setValue((IPTR)eng->getAudioExport());
    }
    else
    {
-      popAudioExport->setValue(Glb.Loc[loc_NotSet].Data());
+      popAudioExport->setValue((IPTR)Glb.Loc[loc_NotSet].Data());
    }
 
    if (eng->getSessionExport() != NULL)
    {
-      popSessionExport->setValue(eng->getSessionExport());
+      popSessionExport->setValue((IPTR)eng->getSessionExport());
    }
    else
    {
-      popSessionExport->setValue(Glb.Loc[loc_NotSet].Data());
+      popSessionExport->setValue((IPTR)Glb.Loc[loc_NotSet].Data());
    }
 
    Glb.CurrentEngine->Release();
 }
 
-unsigned long MUISettings::button(BtnID id, void* data)
+IPTR MUISettings::button(BtnID id, IPTR data)
 {
    IEngine *eng = Glb.CurrentEngine->ObtainRead();
 
@@ -238,7 +238,7 @@ unsigned long MUISettings::button(BtnID id, void* data)
          break;
 
       case ID_FindDOSDevice:
-         popDOSDevice->setValue(eng->findMatchingDOSDevice());
+         popDOSDevice->setValue((IPTR)eng->findMatchingDOSDevice());
          break;
 
       case ID_DOSDevice:

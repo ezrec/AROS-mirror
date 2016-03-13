@@ -33,7 +33,11 @@ uint64 __ashldi3(uint64 a, int32 sh)
 {
    struct quad m;
    uint32 x, y;
-   
+
+#if (1) // just to quieten gcc ...
+   m.data.l[0] = 0;
+   m.data.l[1] = 0;
+#endif
    m.data.q = a;
    x = m.data.l[0];
    y = m.data.l[1];

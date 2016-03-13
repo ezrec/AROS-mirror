@@ -32,10 +32,10 @@ void *MUICustomClass::getDispatcher()
    return (void*)&FDispatchCaller;
 }
 
-uint MUICustomClass::dispatch(IClass *cls, Object* obj, unsigned long *msg)
+uint MUICustomClass::dispatch(IClass *cls, Object* obj, IPTR msg)
 {
-   GenericOOP       *co;
-   GenericOOP      **ptr;
+   GenericBOOPSI       *co;
+   GenericBOOPSI      **ptr;
    unsigned long     ret = 0;
 
    /*
@@ -47,7 +47,7 @@ uint MUICustomClass::dispatch(IClass *cls, Object* obj, unsigned long *msg)
     * you dont wanna dig too deep here...
     */
 
-   switch (*msg)
+   switch (*((IPTR *)msg))
    {
       case OM_NEW:
          co    = createObject(cls);
@@ -60,7 +60,7 @@ uint MUICustomClass::dispatch(IClass *cls, Object* obj, unsigned long *msg)
 
             if (NULL != obj)
             {
-               ptr   = (GenericOOP**)INST_DATA(cls, obj);
+               ptr   = (GenericBOOPSI**)INST_DATA(cls, obj);
                ASSERT(NULL != ptr);
                if (NULL != ptr)
                   *ptr  = co;
@@ -70,7 +70,7 @@ uint MUICustomClass::dispatch(IClass *cls, Object* obj, unsigned long *msg)
          break;
             
       case OM_DISPOSE:
-         ptr   = (GenericOOP**)INST_DATA(cls, obj);
+         ptr   = (GenericBOOPSI**)INST_DATA(cls, obj);
          co    = *ptr;
          if (NULL != co)
          {
@@ -84,7 +84,7 @@ uint MUICustomClass::dispatch(IClass *cls, Object* obj, unsigned long *msg)
          break;
             
       default:
-         ptr   = (GenericOOP**)INST_DATA(cls, obj);
+         ptr   = (GenericBOOPSI**)INST_DATA(cls, obj);
          co    = *ptr;
          if (NULL != co)
          {
@@ -105,7 +105,7 @@ MUICustomClass::MUICustomClass(const char *parent)
    pMUIClass = 0;
    pClass    = 0;
 
-   pMUIClass = MUIMaster->MUI_CreateCustomClass(0, const_cast<char*>(parent), 0, sizeof(GenericOOP*), getDispatcher());
+   pMUIClass = MUIMaster->MUI_CreateCustomClass(0, const_cast<char*>(parent), 0, sizeof(GenericBOOPSI*), getDispatcher());
 
    ASSERTS(pMUIClass != 0, "Unable to create MUI Custom Class");
    if (pMUIClass != NULL)
@@ -151,7 +151,7 @@ Object *MUICustomClass::Create(IPTR lTag1, ...)
 AROS_UFH4(IPTR, GenNS::MUICustomClass::FDispatchCaller,
    AROS_UFHA(struct IClass *, pClass, A0),
    AROS_UFHA(Object *, pObject, A2),
-   AROS_UFHA(unsigned long *, pMessage, A1),
+   AROS_UFHA(IPTR, pMessage, A1),
    AROS_UFHA(APTR, data, A6))
 {
    AROS_USERFUNC_INIT

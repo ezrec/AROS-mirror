@@ -56,7 +56,7 @@ void GenNS::Localization::Add(GenNS::Localization::LocaleSet set[], const char* 
 
    locale_set ls("", grp, 0);
 
-   while (set[i].key != (uint32)GenNS::Localization::LocaleSet::Set_Last)
+   while (set[i].key != (IPTR)GenNS::Localization::LocaleSet::Set_Last)
    {
       ls.id  = set[i].locale_id;
       split(set[i].value, ls.accel[0], ls.str);
@@ -78,13 +78,13 @@ bool GenNS::Localization::ReadCatalog(const char* name, sint version)
 
    if (locale != 0)
    {
-      Catalog *cat = locale->OpenCatalogA(0, name, TAGARRAY(OC_Version, version, TAG_DONE, 0));
+      Catalog *cat = locale->OpenCatalogA(0, name, TAGARRAY(OC_Version, static_cast<IPTR>(version), TAG_DONE, 0));
       if (cat != 0)
       {
          res = true;
          for (int i=0; i<hash.Count(); i++)
          {
-            uint32 k = hash.GetKey(i);
+            IPTR k = hash.GetKey(i);
             const char *t = locale->GetCatalogStr(cat, k, 0);
             if (t == 0)
                continue;
@@ -99,7 +99,7 @@ bool GenNS::Localization::ReadCatalog(const char* name, sint version)
    return res;
 }
       
-const GenNS::String& GenNS::Localization::Str(uint key)
+const GenNS::String& GenNS::Localization::Str(IPTR key)
 {
    return (*this)[key];
 }
@@ -115,12 +115,12 @@ bool GenNS::Localization::ExportCD(const char* filename, sint version)
    if (fh != 0)
    {
       String s;
-      DOS->VFPrintf(fh, ";#version %ld\n", ARRAY(version));
+      DOS->VFPrintf(fh, ";#version %ld\n", (void *)ARRAY(static_cast<IPTR>(version)));
       DOS->VFPrintf(fh, ";#language english\n", 0);
       DOS->VFPrintf(fh, ";\n", 0);
       for (int i=0; i<hash.Count(); i++)
       {
-         uint32 key = hash.GetKey(i);
+         IPTR key = hash.GetKey(i);
          const char* g;
          const locale_set &set = hash.GetVal(key);
          
@@ -130,18 +130,18 @@ bool GenNS::Localization::ExportCD(const char* filename, sint version)
             g = set.group;
 
          if (set.id == 0)
-            s.FormatStr("%s_%ld", ARRAY((uint)g, key));
+            s.FormatStr("%s_%ld", ARRAY((IPTR)g, key));
          else
-            s.FormatStr("%s_%s", ARRAY((uint)g, (uint)set.id));
+            s.FormatStr("%s_%s", ARRAY((IPTR)g, (IPTR)set.id));
 
-         DOS->VFPrintf(fh, "%s (%ld//)\n", ARRAY((uint)s.Data(), key));
+         DOS->VFPrintf(fh, "%s (%ld//)\n", (void *)ARRAY((IPTR)s.Data(), key));
          s = set.str;
          s.Substitute("\n", "\\n");
          s.Substitute("\033", "\\033");
          if (set.accel[0] == 0)
-            DOS->VFPrintf(fh, "%s\n", ARRAY((uint)s.Data()));
+            DOS->VFPrintf(fh, "%s\n", (void *)ARRAY((IPTR)s.Data()));
          else
-            DOS->VFPrintf(fh, "%lc&%s\n", ARRAY((uint)set.accel[0], (uint)s.Data()));
+            DOS->VFPrintf(fh, "%lc&%s\n", (void *)ARRAY((IPTR)set.accel[0], (IPTR)s.Data()));
          DOS->VFPrintf(fh, ";\n", 0);
       }
 
@@ -162,12 +162,12 @@ bool GenNS::Localization::ExportCT(const char* filename, sint version)
    if (fh != 0)
    {
       String s;
-      DOS->VFPrintf(fh, "##version %s %ld.0\n", ARRAY((uint)filename, version));
+      DOS->VFPrintf(fh, "##version %s %ld.0\n", (void *)ARRAY((IPTR)filename, static_cast<IPTR>(version)));
       DOS->VFPrintf(fh, "##language english\n", 0);
       DOS->VFPrintf(fh, ";\n", 0);
       for (int i=0; i<hash.Count(); i++)
       {
-         uint32 key = hash.GetKey(i);
+         IPTR key = hash.GetKey(i);
          const char* g;
          const locale_set &set = hash.GetVal(key);
          
@@ -177,18 +177,18 @@ bool GenNS::Localization::ExportCT(const char* filename, sint version)
             g = set.group;
 
          if (set.id == 0)
-            s.FormatStr("%s_%ld", ARRAY((uint)g, key));
+            s.FormatStr("%s_%ld", ARRAY((IPTR)g, key));
          else
-            s.FormatStr("%s_%s", ARRAY((uint)g, (uint)set.id));
+            s.FormatStr("%s_%s", ARRAY((IPTR)g, (IPTR)set.id));
 
-         DOS->VFPrintf(fh, "%s\n", ARRAY((uint)s.Data()));
+         DOS->VFPrintf(fh, "%s\n", (void *)ARRAY((IPTR)s.Data()));
          s = set.str;
          s.Substitute("\n", "\\n");
          s.Substitute("\033", "\\033");
          if (set.accel[0] == 0)
-            DOS->VFPrintf(fh, "%s\n", ARRAY((uint)s.Data()));
+            DOS->VFPrintf(fh, "%s\n", (void *)ARRAY((IPTR)s.Data()));
          else
-            DOS->VFPrintf(fh, "%lc&%s\n", ARRAY((uint)set.accel[0], (uint)s.Data()));
+            DOS->VFPrintf(fh, "%lc&%s\n", (void *)ARRAY((IPTR)set.accel[0], (IPTR)s.Data()));
          DOS->VFPrintf(fh, ";\n", 0);
       }
 
@@ -212,13 +212,13 @@ void GenNS::Localization::split(GenNS::String s, char &accelerator, GenNS::Strin
    }
 }
 
-const char GenNS::Localization::Accel(uint key)
+const char GenNS::Localization::Accel(IPTR key)
 {
    //request("Info", "accelerator: %s", "Ok", ARRAY((uint)hash.GetVal(key).accel[0]));
    return hash.GetVal(key).accel[0];
 }
 
-const char* GenNS::Localization::Shortcut(uint key)
+const char* GenNS::Localization::Shortcut(IPTR key)
 {
    //request("Info", "shortcut: %s", "Ok", ARRAY((uint)&hash.GetVal(key).accel));
    return (const char*)(&hash.GetVal(key).accel);
@@ -321,4 +321,3 @@ GenNS::String GenNS::Localization::FormatNumber(int32 integer, int32 millionth)
 
    return String(temp);
 }
-

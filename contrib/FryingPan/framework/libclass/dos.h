@@ -227,7 +227,7 @@ struct PathNode;
    FUNC3(Segment*,         FindSegment,    130, const char*,      name,    d1, Segment*,        segment, d2, int32,           sys,     d3);
    FUNC1(int32,            RemSegment,     131, Segment*,         segment, d1);
    FUNC1(int32,            CheckSignal,    132, int32,            mask,    d1);
-   FUNC3(RDArgs*,          ReadArgs,       133, const char*,      tmplate, d1, int32*,          array,   d2, RDArgs*,         args,    d3);
+   FUNC3(RDArgs*,          ReadArgs,       133, const char*,      tmplate, d1, IPTR *,          array,   d2, RDArgs*,         args,    d3);
    FUNC2(int32,            FindArg,        134, const char*,      tmplate, d1, const char*,     keyword, d2);
    FUNC3(int32,            ReadItem,       135, const char*,      name,    d1, int32,           maxchrs, d2, CSource*,        csource, d3);
    FUNC2(int32,            StrToLong,      136, const char*,      string,  d1, int32*,          value,   d2);
@@ -257,7 +257,7 @@ struct PathNode;
    FUNC1(int32,            CliInitRun,     156, DosPacket*,       dp,      d1);
    FUNC2(int32,            WriteChars,     157, const char*,      buffer,  d1, uint32,          buflen,  d2);
    FUNC1(int32,            PutStr,         158, const char*,      buffer,  d1);
-   FUNC2(int32,            VPrintf,        159, const char*,      format,  d1, void*,           argarray,d2);
+   FUNC2(int32,            VPrintf,        159, const char*,      format,  d1, IPTR,           argarray,d2);
 
    PROC0(                  dummy19,          0);      // amigaos4 Printf function
    PROC0(                  dummy20,        160);      // reserved call

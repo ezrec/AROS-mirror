@@ -229,8 +229,8 @@ GUI::~GUI()
 
 bool GUI::start()
 {
-   uint32 signals;
-   
+   IPTR signals = 0;
+
    _dx(Lvl_Info, "Composing program menu");
    {  // Compose menu
       Menu->addMenu(Glb.Loc[loc_File]);
@@ -383,7 +383,7 @@ void GUI::dispose()
    delete this;
 }
 
-uint32 GUI::doShowHide(void*, void*)
+IPTR GUI::doShowHide(IPTR, IPTR)
 {
    _dx(Lvl_Info, "Switching UI");
    _dx(Lvl_Info, "Hiding main window");
@@ -414,7 +414,7 @@ uint32 GUI::doShowHide(void*, void*)
    return 0;
 }
 
-uint32 GUI::doChangePage(void*, long page)
+IPTR GUI::doChangePage(IPTR, long page)
 {
    _dx(Lvl_Info, "Flipping page to %ld", page);
    Intuition->SetAttrsA(pages, (TagItem*)ARRAY(
@@ -425,13 +425,13 @@ uint32 GUI::doChangePage(void*, long page)
    return 0;
 }
 
-uint32 GUI::doEngineMessage(EngineMessage msg, IEngine* src)
+IPTR GUI::doEngineMessage(EngineMessage msg, IEngine* src)
 {
    pMsgPort->DoSync(msg, src);
    return 0;
 }
 
-uint32 GUI::doEngineInternalMessage(EngineMessage msg, IEngine* src)
+IPTR GUI::doEngineInternalMessage(EngineMessage msg, IEngine* src)
 {
    if (0 == pApp)
       return 0;
@@ -526,9 +526,9 @@ void GUI::layoutUpdate()
    Tracks->layoutUpdate();
 }
 
-uint32 GUI::doEngineChanged(IEngine *old, IEngine *current)
+IPTR GUI::doEngineChanged(IEngine *old, IEngine *current)
 {
-   _dx(Lvl_Info, "Switching engine from %08lx to %08lx. Updating", (uint)old, (uint)current);
+   _dx(Lvl_Info, "Switching engine from %08lx to %08lx. Updating", (IPTR)old, (IPTR)current);
    update();
    return 0;
 }
@@ -543,7 +543,7 @@ DbgHandler *GUI::getDebug()
    return Glb.dbg;
 }
 
-uint32 GUI::doUserAction(ActionID act, void*)
+IPTR GUI::doUserAction(ActionID act, IPTR)
 {
    switch (act)
    {
@@ -562,7 +562,7 @@ uint32 GUI::doUserAction(ActionID act, void*)
          break;
 
       case Action_Quit:
-         DoMtd((Object *)pApp, ARRAY(MUIM_Application_ReturnID, (uint)MUIV_Application_ReturnID_Quit));
+         DoMtd((Object *)pApp, ARRAY(MUIM_Application_ReturnID, (IPTR)MUIV_Application_ReturnID_Quit));
          break;
    }
 

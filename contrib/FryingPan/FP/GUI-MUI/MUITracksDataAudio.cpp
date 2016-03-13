@@ -96,7 +96,7 @@ DbgHandler *MUITracksDataAudio::getDebug()
    return Glb.dbg;
 }
 
-uint32 *MUITracksDataAudio::getObject()
+IPTR MUITracksDataAudio::getObject()
 {
    if (NULL != all)
       return all;
@@ -113,7 +113,7 @@ uint32 *MUITracksDataAudio::getObject()
    addReq = new FileReq(Glb.Loc[loc_SelectTracks]);
    addReq->setMultiSelect(true);
 
-   all = (uint32 *)VGroup,
+   all = (IPTR)VGroup,
       Child,                  tracks->getObject(),
 
       Child,                  ColGroup(3),
@@ -163,7 +163,7 @@ void MUITracksDataAudio::update()
    _d(Lvl_Info, "Adding current set of tracks.");
    for (int i=0; i<t.Count(); i++)
    {
-      tracks->addItem(t[i]);
+      tracks->addItem((IPTR)t[i]);
    }
 
    eng->tracks().Release();
@@ -173,22 +173,22 @@ void MUITracksDataAudio::update()
    Glb.CurrentEngine->Release();
 }
 
-uint32 MUITracksDataAudio::onConstruct(void*, ITrack* t)
+IPTR MUITracksDataAudio::onConstruct(IPTR, ITrack* t)
 {
    ITrackEntry *e = new ITrackEntry;
    e->track = t;
    e->information = "";
 
-   return (uint32)e;
+   return (IPTR)e;
 }
 
-uint32 MUITracksDataAudio::onDestruct(void*, ITrackEntry* e)
+IPTR MUITracksDataAudio::onDestruct(IPTR, ITrackEntry* e)
 {
    delete e;
    return 0;
 }
 
-uint32 MUITracksDataAudio::onDisplay(const char** a, ITrackEntry* e)
+IPTR MUITracksDataAudio::onDisplay(const char** a, ITrackEntry* e)
 {
    if (e == NULL)
    {
@@ -232,7 +232,7 @@ uint32 MUITracksDataAudio::onDisplay(const char** a, ITrackEntry* e)
       a[1] = e->track->getModuleName();
       a[2] = e->information.Data();
    }
-   return (uint32)a;
+   return (IPTR)a;
 }
 
 void MUITracksDataAudio::addTracks()
@@ -251,7 +251,7 @@ void MUITracksDataAudio::addTracks()
 
 void MUITracksDataAudio::remTracks()
 {
-   VectorT<void*> &res = tracks->getSelectedItems();
+   VectorT<IPTR> &res = tracks->getSelectedItems();
    IEngine *eng = Glb.CurrentEngine->ObtainRead();
 
    for (int i=0; i<res.Count(); i++)
@@ -264,7 +264,7 @@ void MUITracksDataAudio::remTracks()
    Glb.CurrentEngine->Release();
 }
 
-uint32 MUITracksDataAudio::onButton(BtnID id, void*)
+IPTR MUITracksDataAudio::onButton(BtnID id, IPTR)
 {
    switch (id)
    {
@@ -287,7 +287,7 @@ uint32 MUITracksDataAudio::onButton(BtnID id, void*)
    return 0;
 }
 
-uint32 MUITracksDataAudio::onWBMessage(AppMessage* m, void*)
+IPTR MUITracksDataAudio::onWBMessage(AppMessage* m, IPTR)
 {
    char *c = new char[1024];
    IEngine *pEng = Glb.CurrentEngine->ObtainRead();
@@ -305,9 +305,8 @@ uint32 MUITracksDataAudio::onWBMessage(AppMessage* m, void*)
    return 0;
 }
    
-uint32 MUITracksDataAudio::onDragSort(VectorT<ITrackEntry*>*vec, void*)
+IPTR MUITracksDataAudio::onDragSort(VectorT<ITrackEntry*>*vec, IPTR)
 {
-   request("Info", "Newly sorted vector has %ld items.", "Ok", ARRAY(vec->Count()));
+   request("Info", "Newly sorted vector has %ld items.", "Ok", ARRAY((IPTR)vec->Count()));
    return 0;
 }
-

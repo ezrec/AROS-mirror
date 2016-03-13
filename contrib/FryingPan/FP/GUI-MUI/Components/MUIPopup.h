@@ -37,32 +37,32 @@ protected:
    String                        name;
 
 protected:
-   HookT<MUIPopup, void*, void*> hHkOpen;
-   HookT<MUIPopup, void*, void*> hHkClose;
-   HookAttrT<uint, const void*>  hNotify;
-   int                           id;
+   HookT<MUIPopup, IPTR, IPTR>   hHkOpen;
+   HookT<MUIPopup, IPTR, IPTR>   hHkClose;
+   HookAttrT<IPTR, const IPTR>   hNotify;
+   IPTR                          id;
 
 private:
-   virtual unsigned long         doOpen(void*, void*);
-   virtual unsigned long         doClose(void*, void*);
+   virtual IPTR                  doOpen(IPTR, IPTR);
+   virtual IPTR                  doClose(IPTR, IPTR);
 
 protected:
    virtual bool                  onOpen()                         =  0;
    virtual bool                  onClose()                        =  0;
-   virtual unsigned long        *getPopDisplay()                  =  0;
-   virtual unsigned long        *getPopButton()                   =  0;
-   virtual unsigned long        *getPopObject()                   =  0;
+   virtual IPTR                  getPopDisplay()                  =  0;
+   virtual IPTR                  getPopButton()                   =  0;
+   virtual IPTR                  getPopObject()                   =  0;
 
    virtual void                  update();
 public:
-   virtual void                  setValue(const void* string)     =  0;
-   virtual const void           *getValue()                       =  0;
+   virtual void                  setValue(IPTR val)               =  0;
+   virtual IPTR                  getValue()                       =  0;
 
                                  MUIPopup(const char* name);
    virtual                      ~MUIPopup();
-   virtual void                  setID(int id);
+   virtual void                  setID(IPTR id);
    virtual void                  setCallbackHook(const Hook*);
-   virtual unsigned long        *getObject();
+   virtual IPTR                  getObject();
    virtual void                  open();
    virtual void                  close();
 };

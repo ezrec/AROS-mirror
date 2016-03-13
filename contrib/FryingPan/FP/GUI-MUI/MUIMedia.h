@@ -61,16 +61,16 @@ protected:
 
 protected:
    Globals                   &Glb;
-   uint32                    *all;
+   IPTR                       all;
    ConfigParser              *Config;
 
-   HookT<MUIMedia, BtnID, int32> hBtnHook;
+   HookT<MUIMedia, BtnID, IPTR> hBtnHook;
 
 protected:
    uint16                     preptype;
 
 protected:
-   uint32                     buttonClicked(BtnID id, int32 state);
+   IPTR                       buttonClicked(BtnID id, IPTR state);
    String                     speedsToString(DiscSpeed*);
    String                     profileToString();
    String                     subTypeToString();
@@ -84,7 +84,7 @@ public:
                              ~MUIMedia();
    bool                       start();
    void                       stop();
-   uint32                    *getObject();
+   IPTR                       getObject();
    void                       update();
 };
 

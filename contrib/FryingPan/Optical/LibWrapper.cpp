@@ -26,7 +26,7 @@
 
    LIBRARY("Optical", "$VER: Optical 2.0 (" __DATE__ " " __TIME__ ") Tomasz Wiszkowski", 2);
 
-   GATE1(unsigned long,    DoLibMethodA,                          unsigned long *,  a0);
+   GATE1(IPTR,    DoLibMethodA,                          IPTR,  a0);
    GATE0(class IOptItem*,  OptCreateDisc);
    LIB_FT_Begin
       LIB_FT_Function(DoLibMethodA)

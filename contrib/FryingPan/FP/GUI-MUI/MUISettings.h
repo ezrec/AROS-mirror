@@ -44,7 +44,7 @@ protected:
    };
 
 protected:
-   unsigned long             *all;
+   IPTR                       all;
    ConfigParser              *Config;
    
 
@@ -56,10 +56,10 @@ protected:
    MUIPopDOSDevice           *popDOSDevice;
 
 protected:
-   HookT<MUISettings, BtnID, void*>    hkButton;
+   HookT<MUISettings, BtnID, IPTR>    hkButton;
 
 protected:
-   virtual unsigned long      button(BtnID id, void* data);
+   virtual IPTR               button(BtnID id, IPTR data);
 
 public:
 
@@ -67,7 +67,7 @@ public:
    virtual                   ~MUISettings();
    virtual bool               start();
    virtual void               stop();
-   virtual unsigned long     *getObject();
+   virtual IPTR               getObject();
    virtual void               update();
 };
 

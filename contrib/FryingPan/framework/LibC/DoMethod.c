@@ -21,18 +21,18 @@
 #include <proto/utility.h>
 
 
-sint DoMethodA(Object* obj, iptr message)
+IPTR DoMethodA(Object* obj, IPTR message)
 {
 #ifndef __amigaos4__
    register struct Library *UtilityBase = __InternalUtilityBase;
    if (!obj)
       return 0L;
 
-   return CallHookPkt((struct Hook*) OCLASS(obj), obj, message);
+   return CallHookPkt((struct Hook*) OCLASS(obj), obj, (APTR)message);
 #else
    if (!obj)
       return 0L;
 
-   return __InternalUtilityIFace->CallHookPkt((struct Hook*) OCLASS(obj), obj, message);
+   return __InternalUtilityIFace->CallHookPkt((struct Hook*) OCLASS(obj), obj, (APTR)message);
 #endif
 }

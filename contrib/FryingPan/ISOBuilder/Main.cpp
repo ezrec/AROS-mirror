@@ -84,7 +84,7 @@ int main()
   
    delete pDesc;
 
-   rda = DOS->ReadArgs(Args::Template(), (int32*)&args, 0);
+   rda = DOS->ReadArgs(Args::Template(), (IPTR *)&args, 0);
 
    if (NULL != rda)
    {

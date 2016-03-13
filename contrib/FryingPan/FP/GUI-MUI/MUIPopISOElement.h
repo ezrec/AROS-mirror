@@ -61,35 +61,35 @@ protected:
 
 protected:
    String                           value;
-   unsigned long                   *string;
+   IPTR                             string;
 
-   uint32                          *page;
+   IPTR                             page;
 
    IBrowser                        *browser;
    ClElement                       *elem;
    Globals                         &Glb;
 
-   HookAttrT<void*, void*>          hCallback;
+   HookAttrT<IPTR, IPTR>           hCallback;
 
 protected:
-   HookT<MUIPopISOElement, int, void*>           hHkBtnHook;
+   HookT<MUIPopISOElement, IPTR, IPTR>           hHkBtnHook;
 
 protected:
    virtual bool                     onOpen();
    virtual bool                     onClose();
-   virtual unsigned long           *getPopDisplay();
-   virtual unsigned long           *getPopButton();
-   virtual unsigned long           *getPopObject();
-   virtual unsigned long            buttonHandler(int id, void* data);
+   virtual IPTR                     getPopDisplay();
+   virtual IPTR                     getPopButton();
+   virtual IPTR                     getPopObject();
+   virtual IPTR                     buttonHandler(IPTR id, IPTR data);
 
-   virtual uint32                  *getElemSettings();
-   virtual uint32                  *getISOSettings();
+   virtual IPTR                     getElemSettings();
+   virtual IPTR                     getISOSettings();
 public:
                                     MUIPopISOElement(Globals &glb);
    virtual                         ~MUIPopISOElement();
-   virtual void                     setValue(const void* string);
-   virtual const void              *getValue();
-   virtual unsigned long           *getObject();
+   virtual void                     setValue(IPTR val);
+   virtual IPTR                     getValue();
+   virtual IPTR                     getObject();
 
    virtual void                     setBrowser(IBrowser *pBser);
    virtual void                     setElement(ClElement *pElem);

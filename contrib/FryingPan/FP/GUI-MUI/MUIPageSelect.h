@@ -34,22 +34,22 @@ using namespace GenNS;
 class MUIPageSelect : public MUICommon
 {
 protected:
-   unsigned long                            *all;
+   IPTR                                      all;
    ConfigParser                             *Config;
    MUIToolBar                               *ToolBar;
    Globals                                  &Glb;
-   HookT<MUIPageSelect, MUIToolBar*, uint>   hPageSel;
-   HookAttrT<MUIPageSelect*, uint>           callBack;
+   HookT<MUIPageSelect, MUIToolBar*, IPTR>   hPageSel;
+   HookAttrT<MUIPageSelect*, IPTR>           callBack;
 
 protected:
-   uint                       pageSel(MUIToolBar*, uint page);
+   IPTR                       pageSel(MUIToolBar*, IPTR page);
 public:
 
                               MUIPageSelect(ConfigParser *parent, Globals &glb);
    virtual                   ~MUIPageSelect();
    virtual bool               start();
    virtual void               stop();
-   virtual unsigned long     *getObject();
+   virtual IPTR               getObject();
    virtual void               update();
    virtual void               setHook(const Hook *hook);
 };

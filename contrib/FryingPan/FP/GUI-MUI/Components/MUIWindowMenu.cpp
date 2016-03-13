@@ -33,21 +33,22 @@ MUIWindowMenu::MUIWindowMenu()
    pRadio    = 0;
 }
 
-unsigned long MUIWindowMenu::callBack(long* arg1, long *arg2)
+IPTR MUIWindowMenu::callBack(IPTR arg1, IPTR arg2)
 {
-   return hCallback.Call(arg2[0], this);
+    IPTR tmp = *(IPTR *)arg2;
+   return hCallback.Call(tmp, this);
 }
 
 MUIWindowMenu::~MUIWindowMenu()
 {
 }
 
-Object *MUIWindowMenu::getObject()
+IPTR MUIWindowMenu::getObject()
 {
-   return pMain;
+   return (IPTR)pMain;
 }
 
-void MUIWindowMenu::addItem(const char *tTitle, long lParam, const char* tShort)
+void MUIWindowMenu::addItem(const char *tTitle, IPTR lParam, const char* tShort)
 {
    Object *pObj = MenuObject,
                      MUIA_Menu_Title,    tTitle,
@@ -68,7 +69,7 @@ void MUIWindowMenu::addSeparator()
    DoMtd(pMenu, ARRAY(MUIM_Family_AddTail, (IPTR)pObj)); 
 }
 
-void MUIWindowMenu::addChoice(const char *tTitle, bool bSelected, long lParam, const char* tShort)
+void MUIWindowMenu::addChoice(const char *tTitle, bool bSelected, IPTR lParam, const char* tShort)
 {
    Object *pObj = MenuObject,
                      MUIA_Menu_Title,    tTitle,
@@ -94,7 +95,7 @@ void MUIWindowMenu::addRadio(const char *tTitle)
    pRadio = pObj;
 }
 
-void MUIWindowMenu::addRadioOption(const char *tTitle, bool bSelected, long lParam, const char* tShort)
+void MUIWindowMenu::addRadioOption(const char *tTitle, bool bSelected, IPTR lParam, const char* tShort)
 {
    ASSERT(pRadio != NULL);
    if (pRadio == NULL)

@@ -30,7 +30,7 @@ using namespace GenNS;
    long       DbgMaster::lNumInstances = 0; 
 
   
-DbgMsg::DbgMsg(const DbgHandler *pParent, DbgLevel lvl, char *sFmtStr, sized_iptr vFmtArgs, void *bData, int lLen)
+DbgMsg::DbgMsg(const DbgHandler *pParent, DbgLevel lvl, char *sFmtStr, IPTR vFmtArgs, void *bData, int lLen)
    : DbgCmd(pParent, lvl)
 {
    text     = 0;
@@ -184,11 +184,11 @@ void DbgHandler::PutDate() const
 
    DOS->DateStamp(&CDT.dat_Stamp);
    DOS->DateToStr(&CDT);
-   if (fh2 != 0) DOS->VFPrintf(fh2, "[%s] ", ARRAY((IPTR)&TM));
-   if (fh1 != 0) DOS->VFPrintf(fh1, "[%s] ", ARRAY((IPTR)&TM));
+   if (fh2 != 0) DOS->VFPrintf(fh2, "[%s] ", (void*)ARRAY((IPTR)&TM));
+   if (fh1 != 0) DOS->VFPrintf(fh1, "[%s] ", (void*)ARRAY((IPTR)&TM));
 }
 
-void DbgHandler::DoAsync(DbgLevel l, char* sFmtString, sized_iptr vFmtArgs, void* bMemBlock, int lMemLen) const
+void DbgHandler::DoAsync(DbgLevel l, char* sFmtString, IPTR vFmtArgs, void* bMemBlock, int lMemLen) const
 {
    if (0 == this)
       return;
@@ -197,7 +197,7 @@ void DbgHandler::DoAsync(DbgLevel l, char* sFmtString, sized_iptr vFmtArgs, void
    dest->DoAsync(0, new DbgMsg(this, l, sFmtString, vFmtArgs, bMemBlock, lMemLen));
 }
 
-void DbgHandler::DoSync(DbgLevel l, char* sFmtString, sized_iptr vFmtArgs, void* bMemBlock, int lMemLen) const
+void DbgHandler::DoSync(DbgLevel l, char* sFmtString, IPTR vFmtArgs, void* bMemBlock, int lMemLen) const
 {
    if (0 == this)
       return;
@@ -257,8 +257,8 @@ void DbgHandler::DumpMsg(DbgMsg* m) const
 
          for (i=0; i<lLen; i++)
          {
-            if (fh2 != 0) DOS->VFPrintf(fh2, "%02lx ", ARRAY(bMemBuf[lCurr+i]));
-            if (fh1 != 0) DOS->VFPrintf(fh1, "%02lx ", ARRAY(bMemBuf[lCurr+i]));
+            if (fh2 != 0) DOS->VFPrintf(fh2, "%02lx ", (void*)ARRAY(bMemBuf[lCurr+i]));
+            if (fh1 != 0) DOS->VFPrintf(fh1, "%02lx ", (void*)ARRAY(bMemBuf[lCurr+i]));
          }
 
          for (;i<17; i++)

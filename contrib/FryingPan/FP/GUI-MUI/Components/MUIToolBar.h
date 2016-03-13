@@ -48,8 +48,8 @@ public:
    struct Button
    {
       ButtonType     type;
-      unsigned short id;
-      uint32        *object;
+      IPTR           id;
+      IPTR           object;
       String         label;
       String         image1RelPath;
       String         image2RelPath;
@@ -87,8 +87,8 @@ protected:
    };
 
 protected:
-   unsigned long                *all;
-   VectorT<uint32*>              buttons;
+   IPTR                          all;
+   VectorT<IPTR>                 buttons;
    VectorT<Button*>              defs;
    bool                          showImages;
    bool                          showFrames;
@@ -98,12 +98,12 @@ protected:
    String                        themeName;
    String                        themePath;
    MUIWindowMenu                *menu;
-   HookAttrT<void*, void*>       callBack;
+   HookAttrT<IPTR, IPTR>         callBack;
    int32                         active;
    Localization                 &Loc;
 
    HookT<MUIToolBar, MenuOption, MUIWindowMenu*>   hOptions;
-   HookT<MUIToolBar, long, long*>                  hCallBack;
+   HookT<MUIToolBar, IPTR, IPTR>                   hCallBack;
    
 protected:
    MUICustomClassT<MUIPictureClass>               *pPicture;
@@ -112,17 +112,17 @@ protected:
    static bool                   freeDefs(Button* const& id);
 
 protected:
-   virtual unsigned long        *createButton(const MUIToolBar::Button *definition);
-   virtual unsigned long        *createSeparator();
-   virtual unsigned long         setMenuOption(MenuOption, MUIWindowMenu*);
+   virtual IPTR                  createButton(const MUIToolBar::Button *definition);
+   virtual IPTR                  createSeparator();
+   virtual IPTR                  setMenuOption(MenuOption, MUIWindowMenu*);
    virtual void                  buildMenu();
    virtual void                  rebuildGadgets();
-   virtual unsigned long         reportChange(long, long*);
+   virtual IPTR                  reportChange(IPTR, IPTR);
 public:
                                  MUIToolBar(ConfigParser *parent, Localization &loc);
    virtual                      ~MUIToolBar();
    virtual void                  addButtons(const MUIToolBar::Button *definition);    // title / image array
-   virtual unsigned long        *getObject();
+   virtual IPTR                  getObject();
    virtual void                  setHook(const Hook* pHook);
    virtual void                  setThemePath(const char* theme);
    virtual void                  setSelected(int32 i);

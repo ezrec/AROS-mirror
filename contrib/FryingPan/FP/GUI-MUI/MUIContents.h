@@ -51,32 +51,32 @@ protected:
 
 protected:
    Globals                   &Glb;
-   unsigned long             *all;
+   IPTR                       all;
    MUITree                   *tracks;
    ConfigParser              *Config;
    MUIPopAsl                 *target;
 
 protected:
    HookT<MUIContents, const char**, Entry*>     hHkDisplay;
-   HookT<MUIContents, void*, const IOptItem*>   hHkConstruct;
-   HookT<MUIContents, void*, Entry*>            hHkDestruct;
-   HookT<MUIContents, BtnID, void*>             hHkButton;
+   HookT<MUIContents, IPTR, const IOptItem*>    hHkConstruct;
+   HookT<MUIContents, IPTR, Entry*>             hHkDestruct;
+   HookT<MUIContents, BtnID, IPTR>              hHkButton;
 
 protected:
 
    DbgHandler                *getDebug();
 
 protected:
-   virtual unsigned long      display(const char**, Entry*);
-   virtual unsigned long      construct(void*, const IOptItem*);
-   virtual unsigned long      destruct(void*, Entry*);
-   virtual unsigned long      button(BtnID, void*);
-   virtual void               addRecurse(unsigned long parent, const IOptItem* data);
+   virtual IPTR               display(const char**, Entry*);
+   virtual IPTR               construct(IPTR, const IOptItem*);
+   virtual IPTR               destruct(IPTR, Entry*);
+   virtual IPTR               button(BtnID, IPTR);
+   virtual void               addRecurse(IPTR parent, const IOptItem* data);
 
 public:
                               MUIContents(ConfigParser *parent, Globals &glb);
    virtual                   ~MUIContents();
-   virtual unsigned long     *getObject();
+   virtual IPTR               getObject();
    virtual bool               start();
    virtual void               stop();
    virtual void               update();

@@ -65,7 +65,7 @@ void IHook::Initialize()
    hMOSCall[1]       =  (unsigned long)&subCaller;
    hHook.h_Entry     =  (unsigned long(*)())&hMOSCall;
 #else
-   hHook.h_Entry     =  (APTR(*)())&subCaller;
+   hHook.h_Entry     =  (APTR)&subCaller;
 #endif
    hHook.h_SubEntry  =  0;
 

@@ -20,7 +20,7 @@
 #ifndef _GENERICMUI_H_
 #define _GENERICMUI_H_
 
-#include "GenericOOP.h"
+#include "GenericBOOPSI.h"
 #include "LibrarySpool.h"
 #include <intuition/classes.h>
 #include <libclass/muimaster.h>
@@ -60,7 +60,7 @@ extern MUIMasterIFace *MUIMaster;
 
 namespace GenNS
 {
-   class GenericMUI : public GenericOOP
+   class GenericMUI : public GenericBOOPSI
    {
    protected:
 

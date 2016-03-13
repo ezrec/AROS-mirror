@@ -31,22 +31,22 @@ class MUIWindowMenu : public GenericMUI
    Object*                                pMain;
    Object*                                pMenu;
    Object*                                pRadio;
-   HookAttrT<uint, MUIWindowMenu*>        hCallback;
-   HookT<MUIWindowMenu, long*, long*>     hLocal;
+   HookAttrT<IPTR, MUIWindowMenu*>        hCallback;
+   HookT<MUIWindowMenu, IPTR, IPTR>       hLocal;
 
 protected:
-   virtual unsigned long   callBack(long* arg1, long* arg2);
+   virtual IPTR            callBack(IPTR arg1, IPTR arg2);
 public:
                            MUIWindowMenu();
    virtual                ~MUIWindowMenu();
 
-   virtual Object         *getObject();
+   virtual IPTR            getObject();
    virtual void            addMenu(const char* tTitle);
    virtual void            addSeparator();
-   virtual void            addItem(const char* tTitle, long lParam, const char *tShort = 0);
-   virtual void            addChoice(const char* tTitle, bool bSelected, long lParam, const char *tShort = 0);
+   virtual void            addItem(const char* tTitle, IPTR lParam, const char *tShort = 0);
+   virtual void            addChoice(const char* tTitle, bool bSelected, IPTR lParam, const char *tShort = 0);
    virtual void            addRadio(const char* tTitle);
-   virtual void            addRadioOption(const char* tTitle, bool bSelected, long lParam, const char* tShort = 0);
+   virtual void            addRadioOption(const char* tTitle, bool bSelected, IPTR lParam, const char* tShort = 0);
    virtual void            setHook(const Hook* pNotify);
 };
 

@@ -59,9 +59,9 @@ protected:
    {
       elemType          type;
       int               id;
-      unsigned long    *elem;
+      IPTR              elem;
 
-      elemAssoc(elemType t, int i, unsigned long *e) :
+      elemAssoc(elemType t, int i, IPTR e) :
          type(t),
          id(i),
          elem(e)
@@ -70,8 +70,8 @@ protected:
    };
 
 private:
-   HookT<MUI, iptr, iptr>              gateBtns;
-   HookAttrT<uint, iptr>               cbButtonHook;
+   HookT<MUI, IPTR, IPTR>              gateBtns;
+   HookAttrT<IPTR, IPTR>               cbButtonHook;
    
 protected:
    VectorT<elemAssoc*>                 muiElements;
@@ -79,7 +79,7 @@ protected:
    static bool             freeItem(elemAssoc* const& item);
 
 protected:
-   virtual unsigned long   gateButtons(iptr btn, iptr idptr);
+   virtual IPTR            gateButtons(IPTR btn, IPTR idptr);
 
 protected:
    virtual void            setButtonCallBack(const Hook *hook);
@@ -87,21 +87,21 @@ protected:
 public:
                            MUI();
    virtual                ~MUI();
-   virtual uint32         *muiLabel(const char* contents, char key=0, int id=ID_Default, Alignment align=Align_Center);
-   virtual uint32         *muiButton(const char* contents, char key=0, int id=ID_Default);
-   virtual uint32         *muiCycle(const char** contents, char key=0, int id=ID_Default, int active=0);
-   virtual uint32         *muiCheckBox(const char* name, char key=0, int id=ID_Default, Alignment align=Align_Left, bool checked=false);
-   virtual uint32         *muiBar(const char *name=0, bool vertical=false);        
-   virtual uint32         *muiString(const char* contents, char key=0, int id=ID_Default, Alignment align=Align_Left);
-   virtual uint32         *muiGauge(const char* contents, int id=ID_Default);
-   virtual uint32         *muiSpace(int weight=100);
-   virtual uint32         *muiSlider(int32 min, int32 max, int32 level, char key=0, int id=ID_Default);
+   virtual IPTR            muiLabel(const char* contents, char key=0, int id=ID_Default, Alignment align=Align_Center);
+   virtual IPTR            muiButton(const char* contents, char key=0, int id=ID_Default);
+   virtual IPTR            muiCycle(const char** contents, char key=0, int id=ID_Default, int active=0);
+   virtual IPTR            muiCheckBox(const char* name, char key=0, int id=ID_Default, Alignment align=Align_Left, bool checked=false);
+   virtual IPTR            muiBar(const char *name=0, bool vertical=false);
+   virtual IPTR            muiString(const char* contents, char key=0, int id=ID_Default, Alignment align=Align_Left);
+   virtual IPTR            muiGauge(const char* contents, int id=ID_Default);
+   virtual IPTR            muiSpace(int weight=100);
+   virtual IPTR            muiSlider(int32 min, int32 max, int32 level, char key=0, int id=ID_Default);
 
    virtual void            muiSetEnabled(int id, bool enabled);
    virtual void            muiSetSelected(int id, int selected);
    virtual void            muiSetVisible(int id, bool visible);
    virtual void            muiSetText(int id, const char *text);
-   virtual void            muiSetValue(int id, int value);
+   virtual void            muiSetValue(int id, IPTR value);
 };
 
 #endif

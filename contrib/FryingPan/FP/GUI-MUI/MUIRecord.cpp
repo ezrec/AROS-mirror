@@ -106,7 +106,7 @@ void MUIRecord::stop()
    all = 0;
 }
 
-uint32 *MUIRecord::getObject()
+IPTR MUIRecord::getObject()
 {
    if (NULL != all)
       return all;
@@ -115,7 +115,7 @@ uint32 *MUIRecord::getObject()
    speedselect->setCallbackHook(hBtnHook.GetHook());
    speedselect->setID(ID_SetWriteSpeed);
 
-   all = (uint32 *)VGroup,
+   all = (IPTR)VGroup,
       GroupFrame,
       Child,                  muiSpace(),
 
@@ -156,7 +156,7 @@ uint32 *MUIRecord::getObject()
    return all;
 }
 
-uint32 MUIRecord::btnClicked(BtnID button, int32 state)
+IPTR MUIRecord::btnClicked(BtnID button, IPTR state)
 {
    switch (button)
    {
