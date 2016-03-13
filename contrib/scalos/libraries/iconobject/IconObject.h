@@ -51,14 +51,14 @@ LIBFUNC_P2_PROTO(void, LIBDisposeIconObject,
 	A6, struct IconObjectBase *, IconObjectBase, 6);
 LIBFUNC_P3_PROTO(struct Iconobject *, LIBGetDefIconObject,
 	D0, ULONG, IconType,
-	A0, CONST struct TagItem *, TagList,
+	A0, struct TagItem *, TagList,
 	A6, struct IconObjectBase *, IconObjectBase, 7);
 LIBFUNC_P4_PROTO(LONG, LIBPutIconObject,
 	A0, struct Iconobject *, iconobject,
 	A1, APTR, path,
 	A2, CONST struct TagItem *, TagList,
 	A6, struct IconObjectBase *, IconObjectBase, 8);
-LIBFUNC_P2_PROTO(ULONG, LIBIsIconName,
+LIBFUNC_P2_PROTO(IPTR, LIBIsIconName,
 	A0, const char *, filename,
 	A6, struct IconObjectBase *, IconObjectBase, 9);
 LIBFUNC_P3_PROTO(struct Iconobject *, LIBConvert2IconObjectA,

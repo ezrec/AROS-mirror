@@ -529,9 +529,9 @@ LIBFUNC_P3(struct Iconobject *, LIBNewIconObject,
 			Seek(IconFh, 0, OFFSET_BEGINNING);
 
 			obj = (struct Iconobject *) NewObject(in->in_Class, NULL,
-				DTA_Name, (ULONG) Name,
-				DTA_Handle, (ULONG) IconFh,
-				TAG_MORE, (ULONG) Taglist,
+				DTA_Name, (IPTR) Name,
+				DTA_Handle, (IPTR) IconFh,
+				TAG_MORE, (IPTR) Taglist,
 				TAG_END);
 
 			d1(kprintf("%s/%ld:  datatype=<%s>  obj=%08lx  ln_name=<%s>\n", \
@@ -566,7 +566,7 @@ LIBFUNC_END
 // GetDefIconObject()
 LIBFUNC_P3(struct Iconobject *, LIBGetDefIconObject,
 	D0, ULONG, IconType,
-	A0, CONST struct TagItem *, TagList, 
+	A0, struct TagItem *, TagList, 
 	A6, struct IconObjectBase *, IconObjectBase, 7)
 {
 	struct IconNode *in;
@@ -582,8 +582,8 @@ LIBFUNC_P3(struct Iconobject *, LIBGetDefIconObject,
 		{
 		obj = (struct Iconobject *) NewObject(in->in_Class, NULL,
 			IDTA_DefType, IconType,
-			DTA_Name, (ULONG) GetTagData(DTA_Name, (ULONG) "", TagList),
-			TAG_MORE, (ULONG) TagList,
+			DTA_Name, (IPTR) GetTagData(DTA_Name, (IPTR) "", TagList),
+			TAG_MORE, (IPTR) TagList,
 			TAG_END);
 
 		d1(kprintf("%s/%ld:   obj=%08lx  ln_name=<%s>\n", __FUNC__, __LINE__, obj, in->Node.ln_Name));
@@ -617,7 +617,7 @@ LIBFUNC_END
 // Input: A0 = Filename
 // Output: D0 = address of extension ( or NULL or -1 )
 // IsIconName()
-LIBFUNC_P2(ULONG, LIBIsIconName,
+LIBFUNC_P2(IPTR, LIBIsIconName,
 	A0, const char *, filename, 
 	A6, struct IconObjectBase *, IconObjectBase, 9);
 {
@@ -641,7 +641,7 @@ LIBFUNC_P2(ULONG, LIBIsIconName,
 		if (0 == Stricmp(in->in_Suffix, filename - in->in_SuffixLen))
 			{
 			d1(kprintf("%s/%ld:  Found (2)\n", __FUNC__, __LINE__));
-			return (ULONG) (filename - in->in_SuffixLen);
+			return (IPTR) (filename - in->in_SuffixLen);
 			}
 		}
 
@@ -690,9 +690,9 @@ static struct Iconobject *InternalConvert2IconObjectA(
 		in = (struct IconNode *) in->Node.ln_Succ)
 		{
 		obj = (struct Iconobject *) NewObject(in->in_Class, NULL,
-			AIDTA_Icon, (ULONG) diskobject,
-			DTA_Name, (ULONG) "",
-			TAG_MORE, (ULONG) TagList,
+			AIDTA_Icon, (IPTR) diskobject,
+			DTA_Name, (IPTR) "",
+			TAG_MORE, (IPTR) TagList,
 			TAG_END);
 
 		d1(kprintf("%s/%ld:   obj=%08lx  ln_name=<%s>\n", __FUNC__, __LINE__, obj, in->Node.ln_Name));
