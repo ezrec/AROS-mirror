@@ -1621,7 +1621,7 @@ GBool PDFCore::findU(Unicode *u, int len, GBool caseSensitive,
   TextOutputDev *textOut;
   double xMin, yMin, xMax, yMax;
   PDFCorePage *page;
-  PDFCoreTile *tile;
+  PDFCoreTile *tile __unused;
   int pg;
   GBool startAtTop, startAtLast, stopAtLast;
 

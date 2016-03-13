@@ -560,25 +560,25 @@ Gfx8BitFont::Gfx8BitFont(XRef *xref, char *tagA, Ref idA, GString *nameA,
     if (obj2.isName("MacRomanEncoding")) {
       hasEncoding = gTrue;
       usesMacRomanEnc = gTrue;
-      baseEnc = macRomanEncoding;
+      baseEnc = (char **)macRomanEncoding;
     } else if (obj2.isName("MacExpertEncoding")) {
       hasEncoding = gTrue;
-      baseEnc = macExpertEncoding;
+      baseEnc = (char **)macExpertEncoding;
     } else if (obj2.isName("WinAnsiEncoding")) {
       hasEncoding = gTrue;
-      baseEnc = winAnsiEncoding;
+      baseEnc = (char **)winAnsiEncoding;
     }
     obj2.free();
   } else if (obj1.isName("MacRomanEncoding")) {
     hasEncoding = gTrue;
     usesMacRomanEnc = gTrue;
-    baseEnc = macRomanEncoding;
+    baseEnc = (char **)macRomanEncoding;
   } else if (obj1.isName("MacExpertEncoding")) {
     hasEncoding = gTrue;
-    baseEnc = macExpertEncoding;
+    baseEnc = (char **)macExpertEncoding;
   } else if (obj1.isName("WinAnsiEncoding")) {
     hasEncoding = gTrue;
-    baseEnc = winAnsiEncoding;
+    baseEnc = (char **)winAnsiEncoding;
   }
 
   // check embedded or external font file for base encoding
@@ -636,9 +636,9 @@ Gfx8BitFont::Gfx8BitFont(XRef *xref, char *tagA, Ref idA, GString *nameA,
       baseEnc = builtinFont->defaultBaseEnc;
       hasEncoding = gTrue;
     } else if (type == fontTrueType) {
-      baseEnc = winAnsiEncoding;
+      baseEnc = (char **)winAnsiEncoding;
     } else {
-      baseEnc = standardEncoding;
+      baseEnc = (char **)standardEncoding;
     }
   }
 
@@ -658,7 +658,7 @@ Gfx8BitFont::Gfx8BitFont(XRef *xref, char *tagA, Ref idA, GString *nameA,
       baseEncFromFontFile) {
     for (i = 0; i < 256; ++i) {
       if (!enc[i] && standardEncoding[i]) {
-	enc[i] = standardEncoding[i];
+	enc[i] = (char *)standardEncoding[i];
 	encFree[i] = gFalse;
       }
     }

@@ -101,7 +101,7 @@ struct CustomImageData
   AROSPDFApp * app;
   struct MUI_EventHandlerNode	ehnode;
   struct BitMap * bitmap;
-  LONG width, height;
+  ULONG width, height;
 };
 #define MY_APP  0x8022UL
 #define MY_RP   0x8023UL
@@ -273,14 +273,14 @@ BOOPSI_DISPATCHER(IPTR, MyDispatcher, cl, obj, msg)
 {
   switch (msg->MethodID)
   {
-    case OM_NEW           : return(mNew      (cl,obj,(APTR)msg));
-    case OM_SET           : return(mSet      (cl,obj,(APTR)msg));
-    case OM_GET           : return(mGet      (cl,obj,(APTR)msg));
-    case MUIM_AskMinMax   : return(mAskMinMax(cl,obj,(APTR)msg));
-    case MUIM_Draw        : return(mDraw     (cl,obj,(APTR)msg));
-    case MUIM_Setup       : return(mSetup    (cl,obj,(APTR)msg));
-    case MUIM_Cleanup     : return(mCleanup  (cl,obj,(APTR)msg));
-    case MUIM_HandleEvent : return(mHandleEvent(cl,obj,(struct MUIP_HandleEvent*)msg));
+    case OM_NEW           : return(mNew      (cl,obj,(Msg)msg));
+    case OM_SET           : return(mSet      (cl,obj,(Msg)msg));
+    case OM_GET           : return(mGet      (cl,obj,(Msg)msg));
+    case MUIM_AskMinMax   : return(mAskMinMax(cl,obj,(struct MUIP_AskMinMax *)msg));
+    case MUIM_Draw        : return(mDraw     (cl,obj,(struct MUIP_Draw *)msg));
+    case MUIM_Setup       : return(mSetup    (cl,obj,(Msg)msg));
+    case MUIM_Cleanup     : return(mCleanup  (cl,obj,(Msg)msg));
+    case MUIM_HandleEvent : return(mHandleEvent(cl,obj,(struct MUIP_HandleEvent *)msg));
   }
 
   return DoSuperMethodA(cl,obj,msg);
@@ -330,7 +330,7 @@ void AROSPDFApp::BackFillFullScreen() {
 void AROSPDFApp::ToggleFullscreen() {
   FullScreen=!FullScreen;
   if (FullScreen) {
-    origscreen=XGET(wnd,MUIA_Window_Screen);
+    origscreen=(struct Screen *)XGET(wnd,MUIA_Window_Screen);
     int scx=origscreen->Width;
     int scy=origscreen->Height;
     fsscreen=OpenScreenTags(NULL, SA_Width,scx,
@@ -478,7 +478,7 @@ int AROSPDFApp::run() {
 AROS_UFH3(ULONG, sliderfunction,
 AROS_UFHA(struct Hook *, h, A0),
 AROS_UFHA(Object *, object, A2),
-AROS_UFHA(APTR *, msg, A1)) {
+AROS_UFHA(IPTR *, msg, A1)) {
   AROS_USERFUNC_INIT
 
   AROSPDFApp *me=(AROSPDFApp *)msg[0];
@@ -497,7 +497,7 @@ AROS_UFHA(APTR *, msg, A1)) {
 AROS_UFH3(ULONG, buttonhookfunc,
 AROS_UFHA(struct Hook *, h, A0),
 AROS_UFHA(Object *, object, A2),
-AROS_UFHA(APTR *, msg, A1)) {
+AROS_UFHA(IPTR *, msg, A1)) {
   AROS_USERFUNC_INIT
 
   AROSPDFApp *me=(AROSPDFApp *)msg[0];
@@ -532,7 +532,7 @@ AROS_UFHA(APTR *, msg, A1)) {
 AROS_UFH3(ULONG, menufunction,
 AROS_UFHA(struct Hook *, h, A0),
 AROS_UFHA(Object *, object, A2),
-AROS_UFHA(APTR *, msg, A1)) {
+AROS_UFHA(IPTR *, msg, A1)) {
   AROS_USERFUNC_INIT
 
   AROSPDFApp *me=(AROSPDFApp *)msg[0];
@@ -610,7 +610,7 @@ void AROSPDFApp::RequestOpenFile() {
   static char infile[1024] = "";
   GString *fileName;
   struct Screen * curscreen;
-  curscreen=XGET(wnd,MUIA_Window_Screen);
+  curscreen=(struct Screen *)XGET(wnd,MUIA_Window_Screen);
   if (LoadASL(curscreen,infile,"Open file:","","#?.pdf",FALSE)) {
     fileName=new GString(infile);
     OpenFile(fileName,(GString*)NULL,(GString*)NULL);
@@ -621,13 +621,15 @@ void AROSPDFApp::AboutMenu() {
   MUI_RequestA(muiapp,wnd,0,"About AROSPDF","*OK",about_text,NULL);
 }
 
+typedef void (*sdraw_t)(void *);
+
 int AROSPDFApp::initAROS() {
   SplashColor paperColor;
   FitWidth=FALSE;
   BestFit=FALSE;
   FullScreen=FALSE;
   dobj = GetDiskObject("PROGDIR:AROSPDF");
-  mcc = MUI_CreateCustomClass(NULL,MUIC_Area,NULL,sizeof(struct CustomImageData),MyDispatcher);
+  mcc = MUI_CreateCustomClass(NULL,MUIC_Area,NULL,sizeof(struct CustomImageData),(APTR)MyDispatcher);
   // GUI creation    
   muiapp = ApplicationObject,
     MUIA_Application_Title  , "AROSPDF",
@@ -709,9 +711,9 @@ int AROSPDFApp::initAROS() {
   End;
 
   if (muiapp != NULL) {
-    sliderhook.h_Entry = (HOOKFUNC)sliderfunction;
-    menuhook.h_Entry = (HOOKFUNC)menufunction;
-    buttonhook.h_Entry = (HOOKFUNC)buttonhookfunc;
+    sliderhook.h_Entry = (APTR)sliderfunction;
+    menuhook.h_Entry = (APTR)menufunction;
+    buttonhook.h_Entry = (APTR)buttonhookfunc;
 
     DoMethod(vslider, MUIM_Notify, MUIA_Prop_First, MUIV_EveryTime,
       (IPTR)vslider, 5, MUIM_CallHook, (IPTR)&sliderhook,(AROSPDFApp *)this,1,MUIV_TriggerValue);
@@ -746,8 +748,9 @@ int AROSPDFApp::initAROS() {
     SetAttrs(Bmp, MY_BM,bm,TAG_DONE);
 
     paperColor[0] = paperColor[1] = paperColor[2] = 255;
+    sdraw_t splashredraw = (sdraw_t)&redraw;
     splashOut = new AROSSplashOutputDev(rp, gFalse, paperColor, gFalse,
-      &redraw, (AROSPDFApp *)this);
+      splashredraw, (AROSPDFApp *)this);
   }
   return 0;
 }
@@ -891,19 +894,19 @@ void AROSPDFApp::ResizeBitMap(int width, int height){
     SetAttrs(hslider, MUIA_Prop_Entries, (LONG)(pw/SCROLLSPEED),MUIA_Prop_Visible,(LONG)(width/SCROLLSPEED),TAG_DONE);
   }
   bug("Before redraw\n");
-  redraw((void *)this);
+  redraw((AROSPDFApp*)this);
 }
 
 void AROSPDFApp::setVert(int n) {
   if (docLoaded) {
     posY=n;
-    redraw((void *)this);
+    redraw((AROSPDFApp*)this);
   }
 }
 
 void AROSPDFApp::setHoriz(int n) {
   if (docLoaded) {
     posX=n;
-    redraw((void *)this);
+    redraw((AROSPDFApp*)this);
   }
 }

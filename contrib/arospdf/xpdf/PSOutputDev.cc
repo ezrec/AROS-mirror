@@ -1814,7 +1814,7 @@ void PSOutputDev::setupEmbeddedType1Font(Ref *id, GString *psName) {
   static char hexChar[17] = "0123456789abcdef";
   xObject refObj, strObj, obj1, obj2, obj3;
   Dict *dict;
-  int length1, length2, length3;
+  int length1, length2, length3 __unused;
   int c;
   int start[4];
   GBool binMode;

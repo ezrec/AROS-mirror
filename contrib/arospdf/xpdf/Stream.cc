@@ -2931,7 +2931,7 @@ GBool DCTStream::readHeader() {
 }
 
 GBool DCTStream::readBaselineSOF() {
-  int length;
+  int length __unused;
   int prec;
   int i;
   int c;
@@ -2962,7 +2962,7 @@ GBool DCTStream::readBaselineSOF() {
 }
 
 GBool DCTStream::readProgressiveSOF() {
-  int length;
+  int length __unused;
   int prec;
   int i;
   int c;

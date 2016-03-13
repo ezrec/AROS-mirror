@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
       {
         /* FIXME: all arguments but the first are ignored */
         cd = CurrentDir(startup->sm_ArgList[1].wa_Lock);
-        fileName = new GString(startup->sm_ArgList[1].wa_Name);
+        fileName = new GString((const char*)startup->sm_ArgList[1].wa_Name);
       }
     }
   }

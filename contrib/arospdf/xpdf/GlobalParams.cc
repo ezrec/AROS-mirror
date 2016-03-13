@@ -624,7 +624,7 @@ GlobalParams::GlobalParams(char *cfgFileName) {
   macRomanReverseMap = new NameToCharCode();
   for (i = 255; i >= 0; --i) {
     if (macRomanEncoding[i]) {
-      macRomanReverseMap->add(macRomanEncoding[i], (CharCode)i);
+      macRomanReverseMap->add((char *)macRomanEncoding[i], (CharCode)i);
     }
   }
 
@@ -731,7 +731,7 @@ GlobalParams::GlobalParams(char *cfgFileName) {
 
   // set up the initial nameToUnicode table
   for (i = 0; nameToUnicodeTab[i].name; ++i) {
-    nameToUnicode->add(nameToUnicodeTab[i].name, nameToUnicodeTab[i].u);
+    nameToUnicode->add((char *)nameToUnicodeTab[i].name, nameToUnicodeTab[i].u);
   }
 
   // set up the residentUnicodeMaps table
@@ -1867,7 +1867,7 @@ void GlobalParams::setupBaseFonts(char *dir) {
     fileName = NULL;
     kind = displayFontT1; // make gcc happy
     if (dir) {
-      fileName = appendToPath(new GString(dir), displayFontTab[i].t1FileName);
+      fileName = appendToPath(new GString(dir), (char *)displayFontTab[i].t1FileName);
       kind = displayFontT1;
       if ((f = fopen(fileName->getCString(), "rb"))) {
 	fclose(f);
@@ -1907,7 +1907,7 @@ void GlobalParams::setupBaseFonts(char *dir) {
 #else
     for (j = 0; !fileName && displayFontDirs[j]; ++j) {
       fileName = appendToPath(new GString(displayFontDirs[j]),
-			      displayFontTab[i].t1FileName);
+			      (char *)displayFontTab[i].t1FileName);
       kind = displayFontT1;
  
 

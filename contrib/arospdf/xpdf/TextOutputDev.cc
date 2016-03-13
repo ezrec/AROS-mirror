@@ -3130,7 +3130,7 @@ GString *TextPage::getText(double xMin, double yMin,
 			   double xMax, double yMax) {
   GString *s;
   UnicodeMap *uMap;
-  GBool isUnicode;
+  GBool isUnicode __unused;
   TextBlock *blk;
   TextLine *line;
   TextLineFrag *frags;

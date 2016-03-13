@@ -2551,7 +2551,7 @@ void SplashOutputDev::beginTransparencyGroup(GfxState *state, double *bbox,
 }
 
 void SplashOutputDev::endTransparencyGroup(GfxState *state) {
-  double *ctm;
+  double *ctm __unused;
 
   // restore state
   delete splash;
@@ -2793,7 +2793,7 @@ SplashFont *SplashOutputDev::getFont(GString *name, double *textMatA) {
     dfp = globalParams->getDisplayFont(name);
     if (dfp && dfp->kind == displayFontT1) {
       fontFile = fontEngine->loadType1Font(id, dfp->t1.fileName->getCString(),
-					   gFalse, winAnsiEncoding);
+					   gFalse, (char **)winAnsiEncoding);
     } else if (dfp && dfp->kind == displayFontTT) {
       if (!(ff = FoFiTrueType::load(dfp->tt.fileName->getCString()))) {
 	return NULL;
@@ -2813,7 +2813,7 @@ SplashFont *SplashOutputDev::getFont(GString *name, double *textMatA) {
       for (i = 0; i < 256; ++i) {
 	codeToGID[i] = 0;
 	if (winAnsiEncoding[i] &&
-	    (u = globalParams->mapNameToUnicode(winAnsiEncoding[i]))) {
+	    (u = globalParams->mapNameToUnicode((char *)winAnsiEncoding[i]))) {
 	  codeToGID[i] = ff->mapCodeToGID(cmap, u);
 	}
       }

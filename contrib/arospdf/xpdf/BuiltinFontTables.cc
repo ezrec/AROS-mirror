@@ -4227,20 +4227,20 @@ static BuiltinFontWidth zapfDingbatsWidthsTab[] = {
 };
 
 BuiltinFont builtinFonts[] = {
-  { "Courier",               standardEncoding,            629, -157, { -23, -250,  715,  805}, NULL },
-  { "Courier-Bold",          standardEncoding,            629, -157, {-113, -250,  749,  801}, NULL },
-  { "Courier-BoldOblique",   standardEncoding,            629, -157, { -57, -250,  869,  801}, NULL },
-  { "Courier-Oblique",       standardEncoding,            629, -157, { -27, -250,  849,  805}, NULL },
-  { "Helvetica",             standardEncoding,            718, -207, {-166, -225, 1000,  931}, NULL },
-  { "Helvetica-Bold",        standardEncoding,            718, -207, {-170, -228, 1003,  962}, NULL },
-  { "Helvetica-BoldOblique", standardEncoding,            718, -207, {-174, -228, 1114,  962}, NULL },
-  { "Helvetica-Oblique",     standardEncoding,            718, -207, {-170, -225, 1116,  931}, NULL },
-  { "Symbol",                symbolEncoding,             1010, -293, {-180, -293, 1090, 1010}, NULL },
-  { "Times-Bold",            standardEncoding,            683, -217, {-168, -218, 1000,  935}, NULL },
-  { "Times-BoldItalic",      standardEncoding,            683, -217, {-200, -218,  996,  921}, NULL },
-  { "Times-Italic",          standardEncoding,            683, -217, {-169, -217, 1010,  883}, NULL },
-  { "Times-Roman",           standardEncoding,            683, -217, {-168, -218, 1000,  898}, NULL },
-  { "ZapfDingbats",          zapfDingbatsEncoding,        820, -143, {  -1, -143,  981,  820}, NULL }
+  { "Courier",               (char **)standardEncoding,            629, -157, { -23, -250,  715,  805}, NULL },
+  { "Courier-Bold",          (char **)standardEncoding,            629, -157, {-113, -250,  749,  801}, NULL },
+  { "Courier-BoldOblique",   (char **)standardEncoding,            629, -157, { -57, -250,  869,  801}, NULL },
+  { "Courier-Oblique",       (char **)standardEncoding,            629, -157, { -27, -250,  849,  805}, NULL },
+  { "Helvetica",             (char **)standardEncoding,            718, -207, {-166, -225, 1000,  931}, NULL },
+  { "Helvetica-Bold",        (char **)standardEncoding,            718, -207, {-170, -228, 1003,  962}, NULL },
+  { "Helvetica-BoldOblique", (char **)standardEncoding,            718, -207, {-174, -228, 1114,  962}, NULL },
+  { "Helvetica-Oblique",     (char **)standardEncoding,            718, -207, {-170, -225, 1116,  931}, NULL },
+  { "Symbol",                (char **)symbolEncoding,             1010, -293, {-180, -293, 1090, 1010}, NULL },
+  { "Times-Bold",            (char **)standardEncoding,            683, -217, {-168, -218, 1000,  935}, NULL },
+  { "Times-BoldItalic",      (char **)standardEncoding,            683, -217, {-200, -218,  996,  921}, NULL },
+  { "Times-Italic",          (char **)standardEncoding,            683, -217, {-169, -217, 1010,  883}, NULL },
+  { "Times-Roman",           (char **)standardEncoding,            683, -217, {-168, -218, 1000,  898}, NULL },
+  { "ZapfDingbats",          (char **)zapfDingbatsEncoding,        820, -143, {  -1, -143,  981,  820}, NULL }
 };
 
 BuiltinFont *builtinFontSubst[] = {
