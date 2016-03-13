@@ -1,0 +1,28 @@
+========================
+February 2016 Highlights
+========================
+
+:Author:   Krzysztof Smiechowicz
+:Date:     2016-03-13
+
+Core AROS developments in February focused mostly on bug fixes. Matthias
+Rustler and Neil Cafferkey improved several Shell commands and Michal
+Schulz fixed a bug in TLSF memory manager. We also saw a number of
+fixes for 64-bit support from Nick Andrews and Michal Schulz as well as
+enabling the 64-bit AROS to allocate memory over 4GB barrier.
+
+Lunapaint, a native painting program has been added to AROS
+Contrib repository in February which should make fixing it
+for compatibilities with different platforms easier.
+
+3rd party developers brought a number important updates in February.
+First Yannick Erb updated ZuneView, the image viewing program
+to version 0.22. Pascal Papara release updates to AEROS for Raspberry 
+Pi 1 and 2. AEROS is a distribution of AROS hosted on Linux. Finally,
+a interesting development from Norbert Kett has been made available,
+namely a Google Drive handler. This handler allows, in basic version,
+a read only access to files located on Google Drive accounts. For a
+small fee of 10 Euros, the license can be obtained that enables
+write access as well as guarantees access to future works from
+Norbert, which will include Dropbox and Google Cloud Print.
+
