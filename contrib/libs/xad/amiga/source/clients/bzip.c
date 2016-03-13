@@ -629,10 +629,18 @@ xadERROR bzip_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
   bzip_initBogusModel(bzs);
   bzip_arithCodeStartDecoding(bzs);
   do {
-    if (bzs->err) goto exit_handler; bzip_getAndMoveToFrontDecode(bzs);
-    if (bzs->err) goto exit_handler; bzip_undoReversibleTransformation(bzs);
-    if (bzs->err) goto exit_handler; bzip_spotBlock(bzs);
-    if (bzs->err) goto exit_handler; bzip_unRLEandDump(bzs);
+    if (bzs->err)
+        goto exit_handler;
+    bzip_getAndMoveToFrontDecode(bzs);
+    if (bzs->err)
+        goto exit_handler;
+    bzip_undoReversibleTransformation(bzs);
+    if (bzs->err)
+        goto exit_handler;
+    bzip_spotBlock(bzs);
+    if (bzs->err)
+        goto exit_handler;
+    bzip_unRLEandDump(bzs);
   } while (!bzs->lastblock);
 
   /* write any remaining bytes */
