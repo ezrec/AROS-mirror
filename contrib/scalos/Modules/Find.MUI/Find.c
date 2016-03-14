@@ -328,10 +328,10 @@ static T_TIMEREQUEST *TimerIO;
 static struct MsgPort *TimerPort;
 static T_TIMEVAL LastUpdate;
 
-DISPATCHER_PROTO(myFindResultsNList);
-DISPATCHER_PROTO(myFileTypesNListTree);
-DISPATCHER_PROTO(myPersistentNList);
-DISPATCHER_PROTO(myPopObject);
+DISPATCHERPROTO(myFindResultsNList);
+DISPATCHERPROTO(myFileTypesNListTree);
+DISPATCHERPROTO(myPersistentNList);
+DISPATCHERPROTO(myPopObject);
 
 static struct MUI_CustomClass *myFindResultsNListClass;
 static struct MUI_CustomClass *myFileTypesNListTreeClass;
@@ -511,7 +511,7 @@ int main(int argc, char *argv[])
 							End, //ColGroup
 
 						Child, (IPTR)VGroup,
-							MUIA_FrameTitle, (ULONG) GetLocString(MSGID_GROUP_SOURCES),
+							MUIA_FrameTitle, (IPTR) GetLocString(MSGID_GROUP_SOURCES),
 							GroupFrame,
 							MUIA_Background, MUII_GroupBack,
 
@@ -1256,10 +1256,10 @@ static void TranslateNewMenu(struct NewMenu *nm)
 	while (nm && NM_END != nm->nm_Type)
 		{
 		if (NM_BARLABEL != nm->nm_Label)
-			nm->nm_Label = GetLocString((ULONG) nm->nm_Label);
+			nm->nm_Label = GetLocString((IPTR) nm->nm_Label);
 
 		if (nm->nm_CommKey)
-			nm->nm_CommKey = GetLocString((ULONG) nm->nm_CommKey);
+			nm->nm_CommKey = GetLocString((IPTR) nm->nm_CommKey);
 
 		nm++;
 		}
@@ -2018,7 +2018,7 @@ static SAVEDS(APTR) INTERRUPT ExpandFileTypesHookFunc(struct Hook *hook, Object 
 
 		if (tnChild)
 			{
-			set(ListtreeFileTypes, MUIA_NListtree_Active, (ULONG) tnChild);
+			set(ListtreeFileTypes, MUIA_NListtree_Active, (IPTR) tnChild);
 
 			DoMethod(ListtreeFileTypes,
 				MUIM_NListtree_Open,
@@ -2027,7 +2027,7 @@ static SAVEDS(APTR) INTERRUPT ExpandFileTypesHookFunc(struct Hook *hook, Object 
 				0);
 			}
 
-		set(ListtreeFileTypes, MUIA_NListtree_Active, (ULONG) tn);
+		set(ListtreeFileTypes, MUIA_NListtree_Active, (IPTR) tn);
 		}
 
 	set(ListtreeFileTypes, MUIA_NList_Quiet, MUIV_NList_Quiet_None);
