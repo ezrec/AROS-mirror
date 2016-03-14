@@ -84,7 +84,7 @@ void StripTrailingLF(STRPTR Line)
 
 void StripIconExtension(STRPTR Line)
 {
-	ULONG Pos = IsIconName(Line);
+	IPTR Pos = IsIconName(Line);
 
 	if (Pos && ~0 != Pos)
 		{

@@ -289,7 +289,7 @@ SAVEDS(ULONG) INTERRUPT WblTask(void)
 					NP_Priority, Priority,
 					NP_StackSize, StackSize,
 					NP_Seglist, wbStart->sm_Segment,
-					NP_Name, (ULONG) wbStart->sm_ArgList[0].wa_Name,
+					NP_Name, (IPTR) wbStart->sm_ArgList[0].wa_Name,
 					NP_Path, DupWBPathList(),
 					TAG_END);
 
@@ -351,7 +351,7 @@ SAVEDS(ULONG) INTERRUPT WblTask(void)
 				if (wbStart->sm_NumArgs > 1)
 					{
 					Object *IconObject;
-					ULONG IconType = 0;
+					IPTR IconType = 0;
 					BPTR OldDir = CurrentDir(wbStart->sm_ArgList[1].wa_Lock);
 
 					IconObject = (Object *) NewIconObjectTags((STRPTR) wbStart->sm_ArgList[1].wa_Name,
@@ -527,8 +527,8 @@ static BOOL WBLRequestFile(struct WBArg *arg)
 		// AllocAslRequest()
 		fileReq = AllocAslRequestTags(ASL_FileRequest,
 				ASLFR_PrivateIDCMP, TRUE,
-				ASLFR_Screen, (ULONG) iInfos.xii_iinfos.ii_Screen,
-				ASLFR_TitleText, (ULONG) GetLocString(MSGID_WBLOAD_ASLTITLE),
+				ASLFR_Screen, (IPTR) iInfos.xii_iinfos.ii_Screen,
+				ASLFR_TitleText, (IPTR) GetLocString(MSGID_WBLOAD_ASLTITLE),
 				ASLFR_DoSaveMode, FALSE,
 				ASLFR_RejectIcons, TRUE,
 				TAG_END);
@@ -538,8 +538,8 @@ static BOOL WBLRequestFile(struct WBArg *arg)
 
 		// AslRequest()
 		Success = AslRequestTags(fileReq,
-				ASLFR_InitialFile, (ULONG) FilePart(arg->wa_Name),
-				ASLFR_InitialDrawer, (ULONG) Path,
+				ASLFR_InitialFile, (IPTR) FilePart(arg->wa_Name),
+				ASLFR_InitialDrawer, (IPTR) Path,
 				TAG_END);
 
 		if (Success)

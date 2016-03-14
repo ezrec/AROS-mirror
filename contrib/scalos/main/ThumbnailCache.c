@@ -1306,7 +1306,7 @@ static void ThumbnailCacheGetEndOfLife(T_TIMEVAL *tv, ULONG LifetimeDays)
 	if (LifetimeDays)
 		tv->tv_secs += 24 * 60 * 60 * LifetimeDays;
 	else
-		tv->tv_secs = ULONG_MAX;	// forever
+		tv->tv_secs = INT_MAX;	// forever
 }
 
 //-----------------------------------------------------------------------

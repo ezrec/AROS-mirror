@@ -43,7 +43,7 @@
 
 BOOL StatusBarAdd(struct internalScaWindowTask *iwt)
 {
-	ULONG Height = 0;
+	IPTR Height = 0;
 
 	d1(KPrintF("%s/%s/%ld: iwt=%08lx  <%s>\n", __FILE__, __FUNC__, __LINE__, iwt, iwt->iwt_WinTitle));
 
@@ -56,13 +56,13 @@ BOOL StatusBarAdd(struct internalScaWindowTask *iwt)
 		PalettePrefs.pal_PensList[PENIDX_STATUSBAR_BG]));
 
 	iwt->iwt_StatusBar = (struct Gadget *) SCA_NewScalosObjectTags("GadgetBar.sca",
-		GBDTA_WindowTask, (ULONG) iwt,
+		GBDTA_WindowTask, (IPTR) iwt,
 		GBDTA_Position, GBPOS_Bottom,
 		GA_RelSpecial, TRUE,
 		GA_GadgetHelp, TRUE,
 		GA_ID, GADGETID_STATUSBAR,
 		GBDTA_BGPen, PalettePrefs.pal_PensList[PENIDX_STATUSBAR_BG],
-		GBDTA_BackgroundImageName, (ULONG) "THEME:Window/StatusBar/Background",
+		GBDTA_BackgroundImageName, (IPTR) "THEME:Window/StatusBar/Background",
 		TAG_END);
 
 	if (NULL == iwt->iwt_StatusBar)
@@ -72,9 +72,9 @@ BOOL StatusBarAdd(struct internalScaWindowTask *iwt)
 	d1(KPrintF("%s/%s/%ld: tf_YSize=%ld\n", __FILE__, __FUNC__, __LINE__, iInfos.xii_iinfos.ii_Screen->RastPort.Font->tf_YSize));
 
 	iwt->iwt_StatusBarMembers[STATUSBARGADGET_StatusText] = (struct Gadget *) SCA_NewScalosObjectTags("GadgetBarText.sca",
-		GBTDTA_Text, (ULONG) "Ä???g",
-		GBTDTA_TextFont, (ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
-		GBTDTA_TTFont, (ULONG) &ScreenTTFont,
+		GBTDTA_Text, (IPTR) "Ä???g",
+		GBTDTA_TextFont, (IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
+		GBTDTA_TTFont, (IPTR) &ScreenTTFont,
 		GBTDTA_TextPen, PalettePrefs.pal_PensList[PENIDX_STATUSBAR_TEXT],
 		GBTDTA_Justification, GACT_STRINGCENTER,
 		GA_ID, SBAR_GadgetID_Text,
@@ -91,8 +91,8 @@ BOOL StatusBarAdd(struct internalScaWindowTask *iwt)
 		{
 		d1(KPrintF("%s/%s/%ld: \n", __FILE__, __FUNC__, __LINE__));
 		iwt->iwt_StatusBarMembers[STATUSBARGADGET_ShowAll] = (struct Gadget *) SCA_NewScalosObjectTags("GadgetBarImage.sca",
-			DTA_Name, (ULONG) "THEME:Window/StatusBar/ShowAll",
-			GBIDTA_WindowTask, (ULONG) iwt,
+			DTA_Name, (IPTR) "THEME:Window/StatusBar/ShowAll",
+			GBIDTA_WindowTask, (IPTR) iwt,
 			GA_ID, SBAR_GadgetID_ShowAll,
 			TAG_END);
 

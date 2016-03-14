@@ -60,8 +60,8 @@ struct TextIconHighlightClassInst
 
 // local functions
 
-static SAVEDS(ULONG) INTERRUPT TextIconHighlightClassDispatcher(Class *cl, Object *o, Msg msg);
-static ULONG TIHighlight_New(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) INTERRUPT TextIconHighlightClassDispatcher(Class *cl, Object *o, Msg msg);
+static IPTR TIHighlight_New(Class *cl, Object *o, Msg msg);
 static ULONG TIHighlight_Dispose(Class *cl, Object *o, Msg msg);
 static ULONG TIHighlight_Get(Class *cl, Object *o, Msg msg);
 static ULONG TIHighlight_Set(Class *cl, Object *o, Msg msg);
@@ -96,7 +96,7 @@ Class *initTextIconHighlightClass(void)
 
 //----------------------------------------------------------------------------
 
-static SAVEDS(ULONG) INTERRUPT TextIconHighlightClassDispatcher(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) INTERRUPT TextIconHighlightClassDispatcher(Class *cl, Object *o, Msg msg)
 {
 	ULONG Result;
 
@@ -127,7 +127,7 @@ static SAVEDS(ULONG) INTERRUPT TextIconHighlightClassDispatcher(Class *cl, Objec
 
 //----------------------------------------------------------------------------
 
-static ULONG TIHighlight_New(Class *cl, Object *o, Msg msg)
+static IPTR TIHighlight_New(Class *cl, Object *o, Msg msg)
 {
 	struct opSet *ops = (struct opSet *) msg;
 	struct TextIconHighlightClassInst *inst;
@@ -143,11 +143,11 @@ static ULONG TIHighlight_New(Class *cl, Object *o, Msg msg)
 	memset(inst, 0, sizeof(struct TextIconHighlightClassInst));
 
 	inst->tih_FgPen =  GetTagData(IA_FGPen, PalettePrefs.pal_PensList[PENIDX_FILEBG], ops->ops_AttrList);
-	inst->tih_BaseColor = *(const struct ARGB *) GetTagData(TIHA_BaseColor, (ULONG) &DefaultBaseColor, ops->ops_AttrList);
+	inst->tih_BaseColor = *(const struct ARGB *) GetTagData(TIHA_BaseColor, (IPTR) &DefaultBaseColor, ops->ops_AttrList);
 	inst->tih_Radius = GetTagData(TIHA_Radius, 3, ops->ops_AttrList);
 	inst->tih_Transparency = GetTagData(TIHA_Transparency, 128, ops->ops_AttrList);
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 //----------------------------------------------------------------------------
@@ -202,7 +202,7 @@ static ULONG TIHighlight_Set(Class *cl, Object *o, Msg msg)
 	struct TextIconHighlightClassInst *inst = INST_DATA(cl, o);
 
 	inst->tih_FgPen        =  GetTagData(IA_FGPen, inst->tih_FgPen, ops->ops_AttrList);
-	inst->tih_BaseColor    = *(const struct ARGB *) GetTagData(TIHA_BaseColor, (ULONG) &inst->tih_BaseColor, ops->ops_AttrList);
+	inst->tih_BaseColor    = *(const struct ARGB *) GetTagData(TIHA_BaseColor, (IPTR) &inst->tih_BaseColor, ops->ops_AttrList);
 	inst->tih_Radius       = GetTagData(TIHA_Radius, inst->tih_Radius, ops->ops_AttrList);
 	inst->tih_Transparency = GetTagData(TIHA_Transparency, inst->tih_Transparency, ops->ops_AttrList);
 

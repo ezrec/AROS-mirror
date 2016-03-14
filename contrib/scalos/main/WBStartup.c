@@ -127,7 +127,7 @@ SAVEDS(void) INTERRUPT WBStartup(void)
 
 		for (in=iwt->iwt_WindowTask.wt_IconList; in; in = inNext)
 			{
-			ULONG IconType;
+			IPTR IconType;
 			STRPTR tt;
 			LONG StartPri;
 
@@ -159,7 +159,7 @@ SAVEDS(void) INTERRUPT WBStartup(void)
 			{
 			SplashDisplayProgress(GetLocString(MSGID_PROGRESS_WBSTARTUP_RUNPRG),
 				1,
-				(ULONG) in->in_Name);
+				(IPTR) in->in_Name);
 
 			debugLock_d1(in->in_Lock);
 
@@ -214,7 +214,7 @@ static void StartTool(BPTR DirLock, struct ScaIconNode *in)
 	debugLock_d1(ArgArray.wa_Lock);
 
 	SCA_WBStartTags(&ArgArray, 1,
-		SCA_IconObject, (ULONG) in->in_Icon,
+		SCA_IconObject, (IPTR) in->in_Icon,
 		SCA_Flags, Flags,
 		TAG_END);
 

@@ -118,8 +118,8 @@ struct TextIClassInst
 
 // local functions
 
-static SAVEDS(ULONG) INTERRUPT TextIconClassDispatcher(Class *cl, Object *o, Msg msg);
-static ULONG TextIcon_New(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) INTERRUPT TextIconClassDispatcher(Class *cl, Object *o, Msg msg);
+static IPTR TextIcon_New(Class *cl, Object *o, Msg msg);
 static ULONG TextIcon_Dispose(Class *cl, Object *o, Msg msg);
 static ULONG TextIcon_Set(Class *cl, Object *o, Msg msg);
 static ULONG TextIcon_Get(Class *cl, Object *o, Msg msg);
@@ -164,10 +164,10 @@ Class *initTextIconClass(void)
 }
 
 
-static SAVEDS(ULONG) INTERRUPT TextIconClassDispatcher(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) INTERRUPT TextIconClassDispatcher(Class *cl, Object *o, Msg msg)
 {
 	struct TextIClassInst *inst;
-	ULONG Result;
+	IPTR Result;
 
 	switch (msg->MethodID)
 		{
@@ -214,7 +214,7 @@ static SAVEDS(ULONG) INTERRUPT TextIconClassDispatcher(Class *cl, Object *o, Msg
 }
 
 
-static ULONG TextIcon_New(Class *cl, Object *o, Msg msg)
+static IPTR TextIcon_New(Class *cl, Object *o, Msg msg)
 {
 	struct TextIClassInst *inst;
 	struct opSet *ops = (struct opSet *) msg;
@@ -276,7 +276,7 @@ static ULONG TextIcon_New(Class *cl, Object *o, Msg msg)
 	d1(KPrintF("%s/%s/%ld: name=<%s>  comment=<%s>\n", \
 		__FILE__, __FUNC__, __LINE__, inst->txicl_rild.rild_Name, inst->txicl_rild.rild_Comment));
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 
@@ -343,7 +343,7 @@ static ULONG TextIcon_Get(Class *cl, Object *o, Msg msg)
 	case DTA_Name:
 	case IDTA_Text:
 		d1(KPrintF("%s/%s/%ld: DTA_Name=<%s> %08lx\n", __FILE__, __FUNC__, __LINE__, inst->txicl_rild.rild_Name, inst->txicl_rild.rild_Name));
-		*(opg->opg_Storage) = (ULONG) inst->txicl_rild.rild_Name;
+		*(opg->opg_Storage) = (IPTR) inst->txicl_rild.rild_Name;
 		break;
 
 	case TIDTA_FileType:
@@ -371,71 +371,71 @@ static ULONG TextIcon_Get(Class *cl, Object *o, Msg msg)
 		break;
 
 	case TIDTA_Comment:
-		*(opg->opg_Storage) = (ULONG) inst->txicl_rild.rild_Comment;
+		*(opg->opg_Storage) = (IPTR) inst->txicl_rild.rild_Comment;
 		break;
 
 	case TIDTA_Owner_UID:
-		*(opg->opg_Storage) = (ULONG) inst->txicl_rild.rild_OwnerUID;
+		*(opg->opg_Storage) = (IPTR) inst->txicl_rild.rild_OwnerUID;
 		break;
 
 	case TIDTA_Owner_GID:
-		*(opg->opg_Storage) = (ULONG) inst->txicl_rild.rild_OwnerGID;
+		*(opg->opg_Storage) = (IPTR) inst->txicl_rild.rild_OwnerGID;
 		break;
 
 	case TIDTA_Font:
-		*(opg->opg_Storage) = (ULONG) inst->txicl_Font;
+		*(opg->opg_Storage) = (IPTR) inst->txicl_Font;
 		break;
 
 	case TIDTA_TTFont:
-		*(opg->opg_Storage) = (ULONG) inst->txicl_TTFont;
+		*(opg->opg_Storage) = (IPTR) inst->txicl_TTFont;
 		break;
 
 	case TIDTA_IconObject:
-		*(opg->opg_Storage) = (ULONG) inst->txicl_IconObject;
+		*(opg->opg_Storage) = (IPTR) inst->txicl_IconObject;
 		break;
 
 	case TIDTA_SoloIcon:
-		*(opg->opg_Storage) = (ULONG) inst->txicl_rild.rild_SoloIcon;
+		*(opg->opg_Storage) = (IPTR) inst->txicl_rild.rild_SoloIcon;
 		break;
 
 	case TIDTA_ColumnWidthChangeHook:
-		*(opg->opg_Storage) = (ULONG) inst->ixicl_ColWidthChangeHook;
+		*(opg->opg_Storage) = (IPTR) inst->ixicl_ColWidthChangeHook;
 		break;
 
 	case TIDTA_WidthArray:
-		*(opg->opg_Storage) = (ULONG) inst->txicl_widtharray;
+		*(opg->opg_Storage) = (IPTR) inst->txicl_widtharray;
 		break;
 
 	case TIDTA_SelectNameOnly:
-		*(opg->opg_Storage) = (ULONG) inst->txicl_HitOnNameOnly;
+		*(opg->opg_Storage) = (IPTR) inst->txicl_HitOnNameOnly;
 		break;
 
 	case TIDTA_TextPenFileNormal:
-		*(opg->opg_Storage) = (ULONG) inst->txicl_PenNormal;
+		*(opg->opg_Storage) = (IPTR) inst->txicl_PenNormal;
 		break;
 
 	case TIDTA_TextPenFileSelected:
-		*(opg->opg_Storage) = (ULONG) inst->txicl_PenSelected;
+		*(opg->opg_Storage) = (IPTR) inst->txicl_PenSelected;
 		break;
 
 	case TIDTA_TextPenDrawerNormal:
-		*(opg->opg_Storage) = (ULONG) inst->txicl_PenDrawersNormal;
+		*(opg->opg_Storage) = (IPTR) inst->txicl_PenDrawersNormal;
 		break;
 
 	case TIDTA_TextPenDrawerSelected:
-		*(opg->opg_Storage) = (ULONG) inst->txicl_PenDrawersSelected;
+		*(opg->opg_Storage) = (IPTR) inst->txicl_PenDrawersSelected;
 		break;
 
 	case IDTA_TextPenShadow:
-		*(opg->opg_Storage) = (ULONG) inst->txicl_PenShadow;
+		*(opg->opg_Storage) = (IPTR) inst->txicl_PenShadow;
 		break;
 
 	case IDTA_TextPenOutline:
-		*(opg->opg_Storage) = (ULONG) inst->txicl_PenOutline;
+		*(opg->opg_Storage) = (IPTR) inst->txicl_PenOutline;
 		break;
 
 	case IDTA_TextMode:
-		*(opg->opg_Storage) = (ULONG) inst->txicl_TextMode;
+		*(opg->opg_Storage) = (IPTR) inst->txicl_TextMode;
 		break;
 
 	case IDTA_Type:
@@ -452,13 +452,13 @@ static ULONG TextIcon_Get(Class *cl, Object *o, Msg msg)
 				(STRPTR)inst->txicl_rild.rild_Name, ICONTYPE_NONE);
 			}
 
-		*(opg->opg_Storage) = inst->txicl_TypeNode ? (ULONG) inst->txicl_TypeNode : inst->txicl_rild.rild_IconType;
+		*(opg->opg_Storage) = inst->txicl_TypeNode ? (IPTR) inst->txicl_TypeNode : inst->txicl_rild.rild_IconType;
 		break;
 
 	case IDTA_MaskBM_Selected:
 	case IDTA_MaskBM_Normal:
 	case IDTA_AlphaChannel:
-		*(opg->opg_Storage) = (ULONG) NULL;
+		*(opg->opg_Storage) = (IPTR) NULL;
 		break;
 
 	default:
@@ -881,7 +881,7 @@ static void SetAttributes(struct TextIClassInst *inst, struct opSet *ops)
 
 	PackStructureTags(inst, packTable, ops->ops_AttrList);
 
-	rild = (struct ReadIconListData *) GetTagData(TIDTA_ReadIconListData, (ULONG)NULL, ops->ops_AttrList);
+	rild = (struct ReadIconListData *) GetTagData(TIDTA_ReadIconListData, (IPTR)NULL, ops->ops_AttrList);
 
 	if (rild)
 		{
@@ -949,7 +949,7 @@ static void SetAttributes(struct TextIClassInst *inst, struct opSet *ops)
 				(STRPTR)inst->txicl_rild.rild_Name, ICONTYPE_NONE);
 			}
 
-		switch ((ULONG) inst->txicl_TypeNode)
+		switch ((IPTR) inst->txicl_TypeNode)
 			{
 		case WBDISK:
 			stccpy((char *)inst->txicl_filetype, GetLocString(MSGID_ICONTYPE_WBDISK), sizeof(inst->txicl_filetype));
@@ -987,7 +987,7 @@ static void SetAttributes(struct TextIClassInst *inst, struct opSet *ops)
 			}
 		}
 
-	switch ((ULONG) inst->txicl_TypeNode)
+	switch ((IPTR) inst->txicl_TypeNode)
 		{
 	case WBDISK:
 	case WBPROJECT:
@@ -995,7 +995,7 @@ static void SetAttributes(struct TextIClassInst *inst, struct opSet *ops)
 	case WBDEVICE:
 	case WBKICK:
 	case WBAPPICON:
-		inst->txicl_rild.rild_IconType = (ULONG) inst->txicl_TypeNode;
+		inst->txicl_rild.rild_IconType = (IPTR) inst->txicl_TypeNode;
 		break;
 	case WBDRAWER:
 		inst->txicl_rild.rild_IconType = WB_TEXTICON_DRAWER;      // Dir
@@ -1051,15 +1051,15 @@ static Object *CreateIconObject(struct TextIClassInst *inst, struct TagItem *tag
 		IDTA_InnerRight, CurrentPrefs.pref_ImageBorders.Right,
 		IDTA_InnerTop, CurrentPrefs.pref_ImageBorders.Top,
 		IDTA_InnerLeft, CurrentPrefs.pref_ImageBorders.Left,
-		IDTA_Text, (ULONG) inst->txicl_rild.rild_Name,
+		IDTA_Text, (IPTR) inst->txicl_rild.rild_Name,
 		IDTA_HalfShinePen, PalettePrefs.pal_PensList[PENIDX_HSHINEPEN],
 		IDTA_HalfShadowPen, PalettePrefs.pal_PensList[PENIDX_HSHADOWPEN],
 		IDTA_FrameTypeSel, MF_FRAME_NONE,
 		IDTA_FrameType, MF_FRAME_NONE,
 		IDTA_SupportedIconTypes, CurrentPrefs.pref_SupportedIconTypes,
-		IDTA_SizeConstraints, (ULONG) &inst->txicl_IconRect,
+		IDTA_SizeConstraints, (IPTR) &inst->txicl_IconRect,
 		IDTA_ScalePercentage, 100,
-		TAG_MORE, (ULONG) tagList,
+		TAG_MORE, (IPTR) tagList,
 		TAG_END);
 	d1(KPrintF("%s/%s/%ld: txicl_rild.rild_Name=<%s>  txicl_IconObject=%08lx\n", \
 		__FILE__, __FUNC__, __LINE__, inst->txicl_rild.rild_Name, inst->txicl_IconObject));
@@ -1073,15 +1073,15 @@ static Object *CreateIconObject(struct TextIClassInst *inst, struct TagItem *tag
 				IDTA_InnerRight, CurrentPrefs.pref_ImageBorders.Right,
 				IDTA_InnerTop, CurrentPrefs.pref_ImageBorders.Top,
 				IDTA_InnerLeft, CurrentPrefs.pref_ImageBorders.Left,
-				IDTA_Text, (ULONG) inst->txicl_rild.rild_Name,
+				IDTA_Text, (IPTR) inst->txicl_rild.rild_Name,
 				IDTA_HalfShinePen, PalettePrefs.pal_PensList[PENIDX_HSHINEPEN],
 				IDTA_HalfShadowPen, PalettePrefs.pal_PensList[PENIDX_HSHADOWPEN],
 				IDTA_FrameTypeSel, MF_FRAME_NONE,
 				IDTA_FrameType, MF_FRAME_NONE,
 				IDTA_SupportedIconTypes, CurrentPrefs.pref_SupportedIconTypes,
-				IDTA_SizeConstraints, (ULONG) &inst->txicl_IconRect,
+				IDTA_SizeConstraints, (IPTR) &inst->txicl_IconRect,
 				IDTA_ScalePercentage, 100,
-				TAG_MORE, (ULONG) tagList,
+				TAG_MORE, (IPTR) tagList,
 				TAG_END);
 
 		if (inst->txicl_IconObject)

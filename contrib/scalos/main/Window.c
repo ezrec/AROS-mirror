@@ -59,7 +59,7 @@
 struct AsyncArexxMenuCmdArg
 	{
 	struct internalScaWindowTask *asm_iwt;
-	struct ScalosMenuTree *asm_MenuTree;
+	struct SCALOS_MENUTREE *asm_MenuTree;
 	struct ScaIconNode *asm_IconNode;
 	};
 
@@ -71,16 +71,16 @@ struct AsyncArexxMenuCmdArg
 // local functions
 
 static void RunMenuCmd_Internal(struct internalScaWindowTask *iwt,
-	struct ScalosMenuTree *mtr, struct ScaIconNode *in, ULONG Flags);
+	struct SCALOS_MENUTREE *mtr, struct ScaIconNode *in, ULONG Flags);
 static void RunMenuCmd_WBStart(struct internalScaWindowTask *iwt,
-	struct ScalosMenuTree *mtr, struct ScaIconNode *in);
+	struct SCALOS_MENUTREE *mtr, struct ScaIconNode *in);
 static void RunMenuCmd_CLI(struct internalScaWindowTask *iwt,
-	struct ScalosMenuTree *mtr, struct ScaIconNode *in);
+	struct SCALOS_MENUTREE *mtr, struct ScaIconNode *in);
 static void RunMenuCmd_ARexx(struct internalScaWindowTask *iwt,
-	struct ScalosMenuTree *mtr, struct ScaIconNode *in);
+	struct SCALOS_MENUTREE *mtr, struct ScaIconNode *in);
 static SAVEDS(void) AsyncARexxMenuCmdStart(APTR xarg, struct SM_RunProcess *msg);
 static void RunMenuCmd_Plugin(struct internalScaWindowTask *iwt,
-	struct ScalosMenuTree *mtr, struct ScaIconNode *in);
+	struct SCALOS_MENUTREE *mtr, struct ScaIconNode *in);
 static STRPTR InsertCliArgDeviceName(struct internalScaWindowTask *iwt, STRPTR Buffer,
 	size_t *BuffLen, struct ScaIconNode *in);
 static STRPTR InsertCliArgs(struct internalScaWindowTask *iwt, STRPTR Buffer, 
@@ -375,7 +375,7 @@ BOOL isAlternateLssoQualifier(ULONG Qualifier)
 
 
 void RunMenuCommand(struct internalScaWindowTask *iwt, 
-	struct ScalosMenuTree *mtr, struct ScaIconNode *in, ULONG Flags)
+	struct SCALOS_MENUTREE *mtr, struct ScaIconNode *in, ULONG Flags)
 {
 	d1(KPrintF("%s/%s/%ld: START iwt=%08lx  mtr=%08lx Next=%08lx  in=%08lx  Flags=%08lx\n", \
 		__FILE__, __FUNC__, __LINE__, iwt, mtr, mtr->mtre_Next, in, Flags));
@@ -419,7 +419,7 @@ void RunMenuCommand(struct internalScaWindowTask *iwt,
 					else
 						{
 						SCA_OpenIconWindowTags(SCA_Flags, SCAF_OpenWindow_ScalosPort,
-							SCA_Path, (ULONG) mtr->MenuCombo.MenuCommand.mcom_name,
+							SCA_Path, (IPTR) mtr->MenuCombo.MenuCommand.mcom_name,
 							SCA_CheckOverlappingIcons, CurrentPrefs.pref_CheckOverlappingIcons,
 							TAG_END);
 						}
@@ -443,7 +443,7 @@ void RunMenuCommand(struct internalScaWindowTask *iwt,
 
 
 void RunMenuCommandExt(struct internalScaWindowTask *iwt, struct internalScaWindowTask *iwtDest,
-	struct ScalosMenuTree *mtr, struct ScaIconNode *in, ULONG Flags)
+	struct SCALOS_MENUTREE *mtr, struct ScaIconNode *in, ULONG Flags)
 {
 	d1(KPrintF("%s/%s/%ld: in=%08lx  <%s>\n", __FILE__, __FUNC__, __LINE__, in, in ? GetIconName(in) : (STRPTR) ""));
 
@@ -470,9 +470,9 @@ void RunMenuCommandExt(struct internalScaWindowTask *iwt, struct internalScaWind
 
 
 static void RunMenuCmd_Internal(struct internalScaWindowTask *iwt,
-	struct ScalosMenuTree *mtr, struct ScaIconNode *in, ULONG Flags)
+	struct SCALOS_MENUTREE *mtr, struct ScaIconNode *in, ULONG Flags)
 {
-	ULONG IconType = WBTOOL;
+	IPTR IconType = WBTOOL;
 
 	d1(KPrintF("%s/%s/%ld: in=%08lx  <%s>\n", __FILE__, __FUNC__, __LINE__, in, in ? GetIconName(in) : (STRPTR) ""));
 
@@ -510,7 +510,7 @@ static void RunMenuCmd_Internal(struct internalScaWindowTask *iwt,
 
 
 static void RunMenuCmd_WBStart(struct internalScaWindowTask *iwt,
-	struct ScalosMenuTree *mtr, struct ScaIconNode *in)
+	struct SCALOS_MENUTREE *mtr, struct ScaIconNode *in)
 {
 	struct WBArg *args;
 	ULONG ArgCount = 1;
@@ -586,7 +586,7 @@ static void RunMenuCmd_WBStart(struct internalScaWindowTask *iwt,
 
 
 static void RunMenuCmd_CLI(struct internalScaWindowTask *iwt,
-	struct ScalosMenuTree *mtr, struct ScaIconNode *in)
+	struct SCALOS_MENUTREE *mtr, struct ScaIconNode *in)
 {
 	STRPTR Buffer;
 	BPTR oldDir = NOT_A_LOCK;
@@ -774,7 +774,7 @@ static void RunMenuCmd_CLI(struct internalScaWindowTask *iwt,
 
 
 static void RunMenuCmd_ARexx(struct internalScaWindowTask *iwt,
-	struct ScalosMenuTree *mtr, struct ScaIconNode *in)
+	struct SCALOS_MENUTREE *mtr, struct ScaIconNode *in)
 {
 	struct AsyncArexxMenuCmdArg Args;
 
@@ -931,7 +931,7 @@ static SAVEDS(void) AsyncARexxMenuCmdStart(APTR xarg, struct SM_RunProcess *msg)
 
 
 static void RunMenuCmd_Plugin(struct internalScaWindowTask *iwt,
-	struct ScalosMenuTree *mtr, struct ScaIconNode *in)
+	struct SCALOS_MENUTREE *mtr, struct ScaIconNode *in)
 {
 	struct Library *ScalosMenuPluginBase;
 #ifdef __amigaos4__
@@ -1334,7 +1334,7 @@ Object *LoadIconObject(BPTR DirLock, CONST_STRPTR IconName, struct TagItem *TagL
 	oldDir = CurrentDir(DirLock);
 
 	IconObj = NewIconObjectTags(IconName,
-		TAG_MORE, (ULONG) TagList,
+		TAG_MORE, (IPTR) TagList,
 		TAG_END);
 
 	CurrentDir(oldDir);
@@ -1361,7 +1361,7 @@ LONG SaveIconObject(Object *IconObj, BPTR DirLock,
 	Result = PutIconObjectTags(IconObj, IconName,
 		ICONA_NoNewImage, TRUE,
 		ICONA_NotifyWorkbench, NeedUpdateIcon,
-		TAG_MORE, (ULONG) TagList,
+		TAG_MORE, (IPTR) TagList,
 		TAG_END);
 
 	d1(KPrintF("%s/%s/%ld:  \n", __FILE__, __FUNC__, __LINE__));
@@ -1528,7 +1528,7 @@ CONST_STRPTR GetIconName(const struct ScaIconNode *in)
 
 	if (in)
 		{
-		ULONG IconType;
+		IPTR IconType;
 
 		GetAttr(IDTA_Type, in->in_Icon, &IconType);
 
@@ -1716,7 +1716,7 @@ static void DisposeScalosWindow_IconFound(struct internalScaWindowTask *iwt,
 	SetAttrs(in->in_Icon,
 		IDTA_ViewModes, IconViewMode,
 		IDTA_Flags, ddFlags,
-		IDTA_WindowRect, (ULONG) &ws->ws_Left,
+		IDTA_WindowRect, (IPTR) &ws->ws_Left,
 		IDTA_WinCurrentX, ws->ws_xoffset,
 		IDTA_WinCurrentY, ws->ws_yoffset,
 		TAG_END);
@@ -1811,17 +1811,17 @@ void UnLockWindow(struct internalScaWindowTask *iwt)
 }
 
 
-struct ScalosMenuTree *CloneMenuTree(const struct ScalosMenuTree *mtr)
+struct SCALOS_MENUTREE *CloneMenuTree(const struct SCALOS_MENUTREE *mtr)
 {
-	struct ScalosMenuTree *newNodeList = NULL;
+	struct SCALOS_MENUTREE *newNodeList = NULL;
 
 	while (mtr)
 		{
-		struct ScalosMenuTree *mtrNew;
+		struct SCALOS_MENUTREE *mtrNew;
 
 		d1(KPrintF("%s/%s/%ld:  mtr=%08lx  Next=%08lx\n", __FILE__, __FUNC__, __LINE__, mtr, mtr->mtre_Next));
 
-		mtrNew = ScalosAlloc(sizeof(struct ScalosMenuTree));
+		mtrNew = ScalosAlloc(sizeof(struct SCALOS_MENUTREE));
 		if (NULL == mtrNew)
 			{
 			DisposeMenuTree(newNodeList);
@@ -1850,11 +1850,11 @@ struct ScalosMenuTree *CloneMenuTree(const struct ScalosMenuTree *mtr)
 }
 
 
-void DisposeMenuTree(struct ScalosMenuTree *mtr)
+void DisposeMenuTree(struct SCALOS_MENUTREE *mtr)
 {
 	while (mtr)
 		{
-		struct ScalosMenuTree *mtrNext = mtr->mtre_Next;
+		struct SCALOS_MENUTREE *mtrNext = mtr->mtre_Next;
 
 		DisposeMenuTree(mtr->mtre_tree);
 
@@ -1882,7 +1882,7 @@ void DisposeMenuTree(struct ScalosMenuTree *mtr)
 }
 
 
-void AppendToMenuTree(struct ScalosMenuTree **mtreList, struct ScalosMenuTree *mTree)
+void AppendToMenuTree(struct SCALOS_MENUTREE **mtreList, struct SCALOS_MENUTREE *mTree)
 {
 	while (*mtreList)
 		{
@@ -1901,8 +1901,8 @@ void SetIconWindowReadOnly(struct internalScaWindowTask *iwt, BOOL IsReadOnly)
 		if (NULL == iwt->iwt_PadLockGadget)
 			{
 			iwt->iwt_PadLockGadget = (struct Gadget *) SCA_NewScalosObjectTags("GadgetBarImage.sca",
-				DTA_Name, (ULONG) "THEME:Window/StatusBar/PadLock",
-				GBIDTA_WindowTask,(ULONG)  iwt,
+				DTA_Name, (IPTR) "THEME:Window/StatusBar/PadLock",
+				GBIDTA_WindowTask, (IPTR) iwt,
 				GA_ID, SBAR_GadgetID_PadLock,
 				TAG_END);
 			}
@@ -2053,7 +2053,7 @@ void UpdateIconOverlays(struct internalScaWindowTask *iwt)
 
 void AddIconOverlay(Object *IconObj, ULONG NewOverlay)
 {
-	ULONG IconOverlayType = ICONOVERLAY_None;
+	IPTR IconOverlayType = ICONOVERLAY_None;
 
 	GetAttr(IDTA_OverlayType, IconObj, &IconOverlayType);
 	IconOverlayType |= NewOverlay;
@@ -2065,7 +2065,7 @@ void AddIconOverlay(Object *IconObj, ULONG NewOverlay)
 
 void RemoveIconOverlay(Object *IconObj, ULONG OldOverlay)
 {
-	ULONG IconOverlayType = ICONOVERLAY_None;
+	IPTR IconOverlayType = ICONOVERLAY_None;
 
 	GetAttr(IDTA_OverlayType, IconObj, &IconOverlayType);
 	IconOverlayType &= ~OldOverlay;

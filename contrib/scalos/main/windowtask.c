@@ -209,8 +209,8 @@ SAVEDS(void) INTERRUPT WindowTask(void)
 
 		iwt->iwt_TitleObject = SCA_NewScalosObjectTags("Title.sca",
 				SCCA_Title_Type, SCCV_Title_Type_Window,
-				SCCA_Title_Format, (ULONG) (ws->ws_Title ? ws->ws_Title : (STRPTR) "Scalos"),
-				SCCA_WindowTask, (ULONG) iwt,
+				SCCA_Title_Format, (IPTR) (ws->ws_Title ? ws->ws_Title : (STRPTR) "Scalos"),
+				SCCA_WindowTask, (IPTR) iwt,
 				TAG_END);
 		d1(kprintf("%s/%s/%ld: TitleObject=%08lx\n", __FILE__, __FUNC__, __LINE__, iwt->iwt_TitleObject));
 		if (NULL == iwt->iwt_TitleObject)
@@ -231,14 +231,14 @@ SAVEDS(void) INTERRUPT WindowTask(void)
 			}
 
 		iwt->iwt_WindowTask.mt_WindowObject = SCA_NewScalosObjectTags("Window.sca",
-				SCCA_WindowTask, (ULONG) iwt,
+				SCCA_WindowTask, (IPTR) iwt,
 				TAG_END);
 		d1(kprintf("%s/%s/%ld: WindowObject=%08lx\n", __FILE__, __FUNC__, __LINE__, iwt->iwt_WindowTask.mt_WindowObject));
 		if (NULL == iwt->iwt_WindowTask.mt_WindowObject)
 			break;
 
 		iwt->iwt_WindowTask.mt_MainObject = SCA_NewScalosObjectTags(ws->ms_ClassName,
-				SCCA_WindowTask, (ULONG) iwt,
+				SCCA_WindowTask, (IPTR) iwt,
 				TAG_END);
 		d1(kprintf("%s/%s/%ld: MainObject=%08lx\n", __FILE__, __FUNC__, __LINE__, iwt->iwt_WindowTask.mt_MainObject));
 		if (NULL == iwt->iwt_WindowTask.mt_MainObject)
@@ -395,8 +395,8 @@ SAVEDS(void) INTERRUPT WindowTask(void)
 
 				d1(KPrintF("%s/%s/%ld: \n", __FILE__, __FUNC__, __LINE__));
 
-				if (ScaAttemptSemaphoreList(SCA_SemaphoreExclusive, (ULONG) iwt->iwt_WindowTask.wt_WindowSemaphore,
-						SCA_SemaphoreExclusive, (ULONG) &iwt->iwt_ChildProcessSemaphore,
+				if (ScaAttemptSemaphoreList(SCA_SemaphoreExclusive, (IPTR) iwt->iwt_WindowTask.wt_WindowSemaphore,
+						SCA_SemaphoreExclusive, (IPTR) &iwt->iwt_ChildProcessSemaphore,
 						TAG_END))
 					{
 					WinSemaLocked = TRUE;

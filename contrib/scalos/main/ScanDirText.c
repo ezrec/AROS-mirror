@@ -51,7 +51,7 @@
 // local functions
 
 static BOOL IsBackDropIconTextWindow(struct internalScaWindowTask *iwt, struct BackDropList *bdl,
-	BPTR fLock, CONST_STRPTR FileName, ULONG pos);
+	BPTR fLock, CONST_STRPTR FileName, IPTR pos);
 static enum ScanDirResult TextCheckCleanup(struct ReadIconListControl *rilc);
 static enum ScanDirResult GenerateTextIcons(struct ReadIconListControl *rilc, BOOL Final);
 static struct ScaIconNode *GetTextIcon(struct internalScaWindowTask *iwt,
@@ -86,7 +86,7 @@ struct ScaIconNode *TextWindowReadIcon(struct internalScaWindowTask *iwt,
 
 	do	{
 		BPTR iLock;
-		ULONG pos;
+		IPTR pos;
 		BOOL hasIcon = FALSE;
 		struct ReadIconListData rild;
 
@@ -367,7 +367,7 @@ struct ScaIconNode *TextWindowReadIcon(struct internalScaWindowTask *iwt,
 
 /// IsBackDropIconTextWindow
 static BOOL IsBackDropIconTextWindow(struct internalScaWindowTask *iwt, struct BackDropList *bdl,
-	BPTR fLock, CONST_STRPTR FileName, ULONG pos)
+	BPTR fLock, CONST_STRPTR FileName, IPTR pos)
 {
 	BOOL Result;
 
@@ -765,27 +765,27 @@ static struct ScaIconNode *GetTextIcon(struct internalScaWindowTask *iwt,
 	// for shadowed drawing (ICONOBJ_USERFLAGF_DrawShadowed), IDTV_TextMode_Shadow is used.
 
 	TextIconObj = NewObject(TextIconClass, NULL,
-		TIDTA_ReadIconListData, (ULONG) rild,
-		TIDTA_WidthArray, (ULONG) iwt->iwt_WidthArray,
+		TIDTA_ReadIconListData, (IPTR) rild,
+		TIDTA_WidthArray, (IPTR) iwt->iwt_WidthArray,
 		TIDTA_TextStyle, TextStyle,
-		TIDTA_Font, (ULONG) iwt->iwt_IconFont,
-		TIDTA_TTFont, (ULONG) &iwt->iwt_IconTTFont,
-		TIDTA_IconType, (0 != pos) ? WB_TEXTICON_TOOL : (ULONG) rild->rild_IconType,
-		TIDTA_TypeNode, (ULONG) rild->rild_TypeNode,
-		TIDTA_WindowTask, (ULONG) iwt,
-//		TIDTA_IconObject, (ULONG) (ise ? ise->ise_IconObj : NULL),
+		TIDTA_Font, (IPTR) iwt->iwt_IconFont,
+		TIDTA_TTFont, (IPTR) &iwt->iwt_IconTTFont,
+		TIDTA_IconType, (0 != pos) ? WB_TEXTICON_TOOL : (IPTR) rild->rild_IconType,
+		TIDTA_TypeNode, (IPTR) rild->rild_TypeNode,
+		TIDTA_WindowTask, (IPTR) iwt,
+//		TIDTA_IconObject, (IPTR) (ise ? ise->ise_IconObj : NULL),
 		TIDTA_SoloIcon, rild->rild_SoloIcon,
 		IDTA_InnerBottom, CurrentPrefs.pref_ImageBorders.Bottom,
 		IDTA_InnerRight, CurrentPrefs.pref_ImageBorders.Right,
 		IDTA_InnerTop, CurrentPrefs.pref_ImageBorders.Top,
 		IDTA_InnerLeft, CurrentPrefs.pref_ImageBorders.Left,
-		IDTA_Text, (ULONG) rild->rild_Name,
+		IDTA_Text, (IPTR) rild->rild_Name,
 		IDTA_HalfShinePen, PalettePrefs.pal_PensList[PENIDX_HSHINEPEN],
 		IDTA_HalfShadowPen, PalettePrefs.pal_PensList[PENIDX_HSHADOWPEN],
 		IDTA_FrameTypeSel, CurrentPrefs.pref_FrameTypeSel,
 		IDTA_FrameType, CurrentPrefs.pref_FrameType,
 		IDTA_TextSkip, CurrentPrefs.pref_TextSkip,
-		IDTA_MultiLineText, (ULONG) CurrentPrefs.pref_IconTextMuliLine,
+		IDTA_MultiLineText, (IPTR) CurrentPrefs.pref_IconTextMuliLine,
 		TIDTA_TextPenFileNormal, PalettePrefs.pal_PensList[PENIDX_FILETEXT],
 		TIDTA_TextPenFileSelected, PalettePrefs.pal_PensList[PENIDX_FILETEXTSEL],
 		IDTA_TextPenShadow, PalettePrefs.pal_PensList[PENIDX_ICONTEXTSHADOWPEN],
@@ -796,7 +796,7 @@ static struct ScaIconNode *GetTextIcon(struct internalScaWindowTask *iwt,
 		IDTA_TextDrawMode, FontPrefs.fprf_TextDrawMode,
 		IDTA_TextStyle, isLink ? CurrentPrefs.pref_LinkTextStyle : FS_NORMAL,
 		IDTA_SupportedIconTypes, CurrentPrefs.pref_SupportedIconTypes,
-		TIDTA_ColumnWidthChangeHook, (ULONG) ColumnChangeHook,
+		TIDTA_ColumnWidthChangeHook, (IPTR) ColumnChangeHook,
 		TIDTA_SelectNameOnly, CurrentPrefs.pref_SelectTextIconName,
 		TAG_END);
 
@@ -814,7 +814,7 @@ static struct ScaIconNode *GetTextIcon(struct internalScaWindowTask *iwt,
 			{
 			in->in_Icon = TextIconObj;
 
-			GetAttr(TIDTA_IconType, TextIconObj, (ULONG *) &in->in_FileType);
+			GetAttr(TIDTA_IconType, TextIconObj, (IPTR *) &in->in_FileType);
 
 			SetIconName(TextIconObj, in);
 			d1(kprintf("%s/%s/%ld: in_Name=<%s> %08lx\n", __FILE__, __FUNC__, __LINE__, in->in_Name, in->in_Name));

@@ -217,7 +217,7 @@ BOOL UndoAddEventTagList(struct internalScaWindowTask *iwt, enum ScalosUndoType 
 			struct UndoStep *ustMulti;
 			struct UndoStep *ust;
 
-			ust = ustMulti = (struct UndoStep *) GetTagData(UNDOTAG_UndoMultiStep, (ULONG) NULL, TagList);
+			ust = ustMulti = (struct UndoStep *) GetTagData(UNDOTAG_UndoMultiStep, (IPTR) NULL, TagList);
 			d1(kprintf("%s/%s/%ld: ust=%08lx\n", __FILE__, __FUNC__, __LINE__, ust));
 			if (NULL == ust)
 				{
@@ -234,7 +234,7 @@ BOOL UndoAddEventTagList(struct internalScaWindowTask *iwt, enum ScalosUndoType 
 
 				uev->uev_Type = type;
 
-				uev->uev_CustomAddHook = (struct Hook *) GetTagData(UNDOTAG_CustomAddHook, (ULONG) NULL, TagList);
+				uev->uev_CustomAddHook = (struct Hook *) GetTagData(UNDOTAG_CustomAddHook, (IPTR) NULL, TagList);
 
 				uev->uev_NewPosX = GetTagData(UNDOTAG_IconPosX, NO_ICON_POSITION_SHORT, TagList);
 				uev->uev_NewPosY = GetTagData(UNDOTAG_IconPosY, NO_ICON_POSITION_SHORT, TagList);
@@ -667,7 +667,7 @@ static SAVEDS(ULONG) UndoTask(struct UndoProcArg *upa, struct SM_RunProcess *msg
 	SetProgramName(ProgTaskName);
 
 	upa->upa_UndoStep->ust_FileTransObj = SCA_NewScalosObjectTags((STRPTR) "FileTransfer.sca",
-		SCCA_FileTrans_Screen, (ULONG) iInfos.xii_iinfos.ii_Screen,
+		SCCA_FileTrans_Screen, (IPTR) iInfos.xii_iinfos.ii_Screen,
 		SCCA_FileTrans_ReplaceMode, SCCV_ReplaceMode_Ask,
 		TAG_END);
 
@@ -725,7 +725,7 @@ static SAVEDS(ULONG) RedoTask(struct UndoProcArg *upa, struct SM_RunProcess *msg
 	SetProgramName(ProgTaskName);
 
 	upa->upa_UndoStep->ust_FileTransObj = SCA_NewScalosObjectTags((STRPTR) "FileTransfer.sca",
-		SCCA_FileTrans_Screen, (ULONG) iInfos.xii_iinfos.ii_Screen,
+		SCCA_FileTrans_Screen, (IPTR) iInfos.xii_iinfos.ii_Screen,
 		SCCA_FileTrans_ReplaceMode, SCCV_ReplaceMode_Ask,
 		TAG_END);
 
@@ -814,26 +814,26 @@ static BOOL UndoAddCopyMoveEvent(struct UndoEvent *uev, struct TagItem *TagList)
 			NULL,					// h_Data
 			};
 
-		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (ULONG) &UndoDisposeCopyMoveDataHook, TagList);
+		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (IPTR) &UndoDisposeCopyMoveDataHook, TagList);
 
 		if (UNDO_Copy == uev->uev_Type)
 			{
-			uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (ULONG) &UndoCopyEventHook, TagList);
-			uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (ULONG) &RedoCopyEventHook, TagList);
+			uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (IPTR) &UndoCopyEventHook, TagList);
+			uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (IPTR) &RedoCopyEventHook, TagList);
 			uev->uev_DescrMsgIDSingle = MSGID_UNDO_COPY_SINGLE;
 			uev->uev_DescrMsgIDMultiple = MSGID_UNDO_COPY_MORE;
 			}
 		else if (UNDO_Move == uev->uev_Type)
 			{
-			uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (ULONG) &UndoMoveEventHook, TagList);
-			uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (ULONG) &RedoMoveEventHook, TagList);
+			uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (IPTR) &UndoMoveEventHook, TagList);
+			uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (IPTR) &RedoMoveEventHook, TagList);
 			uev->uev_DescrMsgIDSingle = MSGID_UNDO_MOVE_SINGLE;
 			uev->uev_DescrMsgIDMultiple = MSGID_UNDO_MOVE_MORE;
 			}
 		else if (UNDO_CreateLink == uev->uev_Type)
 			{
-			uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (ULONG) &UndoCopyEventHook, TagList);
-			uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (ULONG) &RedoCreateLinkEventHook, TagList);
+			uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (IPTR) &UndoCopyEventHook, TagList);
+			uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (IPTR) &RedoCreateLinkEventHook, TagList);
 			uev->uev_DescrMsgIDSingle = MSGID_UNDO_CREATELINK_SINGLE;
 			uev->uev_DescrMsgIDMultiple = MSGID_UNDO_CREATELINK_MORE;
 			}
@@ -873,7 +873,7 @@ static BOOL UndoAddCopyMoveEvent(struct UndoEvent *uev, struct TagItem *TagList)
 		if (NULL == ucmed->ucmed_destDirName)
 			break;
 
-		fName = (CONST_STRPTR) GetTagData(UNDOTAG_CopySrcName, (ULONG) NULL, TagList);
+		fName = (CONST_STRPTR) GetTagData(UNDOTAG_CopySrcName, (IPTR) NULL, TagList);
 		if (NULL == fName)
 			break;
 
@@ -887,7 +887,7 @@ static BOOL UndoAddCopyMoveEvent(struct UndoEvent *uev, struct TagItem *TagList)
 		if ((NULL == ucmed->ucmed_srcName) || (0 == strlen(ucmed->ucmed_srcName)))
 			uev->uev_DescrObjName = &ucmed->ucmed_srcDirName;
 
-		fName = (CONST_STRPTR) GetTagData(UNDOTAG_CopyDestName, (ULONG) ucmed->ucmed_srcName, TagList);
+		fName = (CONST_STRPTR) GetTagData(UNDOTAG_CopyDestName, (IPTR) ucmed->ucmed_srcName, TagList);
 		if (NULL == fName)
 			fName = ucmed->ucmed_srcName;
 
@@ -966,9 +966,9 @@ static BOOL AddChangeIconPosEvent(struct UndoEvent *uev, struct TagItem *TagList
 			NULL,					// h_Data
 			};
 
-		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (ULONG) &DisposeIconDataHook, TagList);
-		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (ULONG) &UndoChangeIconPosEventHook, TagList);
-		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (ULONG) &RedoChangeIconPosEventHook, TagList);
+		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (IPTR) &DisposeIconDataHook, TagList);
+		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (IPTR) &UndoChangeIconPosEventHook, TagList);
+		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (IPTR) &RedoChangeIconPosEventHook, TagList);
 
 		uev->uev_DescrMsgIDSingle = MSGID_UNDO_CHANGEICONPOS_SINGLE;
 		uev->uev_DescrMsgIDMultiple = MSGID_UNDO_CHANGEICONPOS_MORE;
@@ -992,7 +992,7 @@ static BOOL AddChangeIconPosEvent(struct UndoEvent *uev, struct TagItem *TagList
 		if (NULL == uev->uev_Data.uev_IconData.uid_DirName)
 			break;
 
-		in  = (struct ScaIconNode *) GetTagData(UNDOTAG_IconNode, (ULONG) NULL, TagList);
+		in  = (struct ScaIconNode *) GetTagData(UNDOTAG_IconNode, (IPTR) NULL, TagList);
 		if (NULL == in)
 			break;
 
@@ -1052,9 +1052,9 @@ static BOOL AddSnapshotEvent(struct UndoEvent *uev, struct TagItem *TagList)
 			NULL,					// h_Data
 			};
 
-		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (ULONG) &DisposeIconDataHook, TagList);
-		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (ULONG) &UndoSnapshotEventHook, TagList);
-		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (ULONG) &RedoSnapshotPosEventHook, TagList);
+		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (IPTR) &DisposeIconDataHook, TagList);
+		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (IPTR) &UndoSnapshotEventHook, TagList);
+		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (IPTR) &RedoSnapshotPosEventHook, TagList);
 
 		uev->uev_DescrMsgIDSingle = MSGID_UNDO_SNAPSHOT_SINGLE;
 		uev->uev_DescrMsgIDMultiple = MSGID_UNDO_SNAPSHOT_MORE;
@@ -1082,7 +1082,7 @@ static BOOL AddSnapshotEvent(struct UndoEvent *uev, struct TagItem *TagList)
 
 		d1(kprintf("%s/%s/%ld: UNDOTAG_SaveIcon=%ld\n", __FILE__, __FUNC__, __LINE__, usid->usid_SaveIcon));
 
-		in  = (struct ScaIconNode *) GetTagData(UNDOTAG_IconNode, (ULONG) NULL, TagList);
+		in  = (struct ScaIconNode *) GetTagData(UNDOTAG_IconNode, (IPTR) NULL, TagList);
 		if (NULL == in)
 			break;
 
@@ -1096,10 +1096,10 @@ static BOOL AddSnapshotEvent(struct UndoEvent *uev, struct TagItem *TagList)
 
 		usid->usid_IconObj = (Object *) NewIconObjectTags(usid->usid_IconName,
 			IDTA_SupportedIconTypes, CurrentPrefs.pref_SupportedIconTypes,
-			IDTA_SizeConstraints, (ULONG) &CurrentPrefs.pref_IconSizeConstraints,
+			IDTA_SizeConstraints, (IPTR) &CurrentPrefs.pref_IconSizeConstraints,
 			IDTA_ScalePercentage, CurrentPrefs.pref_IconScaleFactor,
-			IDTA_Text, (ULONG) usid->usid_IconName,
-			DTA_Name, (ULONG) usid->usid_IconName,
+			IDTA_Text, (IPTR) usid->usid_IconName,
+			DTA_Name, (IPTR) usid->usid_IconName,
 			TAG_END);
 
 		CurrentDir(oldDir);
@@ -1159,9 +1159,9 @@ static BOOL AddCleanupEvent(struct UndoEvent *uev, struct TagItem *TagList)
 			NULL,					// h_Data
 			};
 
-		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (ULONG) &DisposeCleanupDataHook, TagList);
-		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (ULONG) &UndoCleanupEventHook, TagList);
-		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (ULONG) &RedoCleanupEventHook, TagList);
+		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (IPTR) &DisposeCleanupDataHook, TagList);
+		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (IPTR) &UndoCleanupEventHook, TagList);
+		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (IPTR) &RedoCleanupEventHook, TagList);
 
 		uev->uev_DescrMsgIDSingle = MSGID_UNDO_CLEANUP;
 		uev->uev_DescrMsgIDMultiple = MSGID_UNDO_CLEANUP;
@@ -1170,7 +1170,7 @@ static BOOL AddCleanupEvent(struct UndoEvent *uev, struct TagItem *TagList)
 
 		d1(kprintf("%s/%s/%ld: UNDOTAG_CleanupMode=%ld\n", __FILE__, __FUNC__, __LINE__, ucd->ucd_CleanupMode));
 
-		ucd->ucd_WindowTask = (struct ScaWindowTask *) GetTagData(UNDOTAG_WindowTask, (ULONG) NULL, TagList);
+		ucd->ucd_WindowTask = (struct ScaWindowTask *) GetTagData(UNDOTAG_WindowTask, (IPTR) NULL, TagList);
 		if (NULL == ucd->ucd_WindowTask)
 			break;
 
@@ -1183,7 +1183,7 @@ static BOOL AddCleanupEvent(struct UndoEvent *uev, struct TagItem *TagList)
 		d1(kprintf("%s/%s/%ld: UNDOTAG_WindowTask=%08lx\n", __FILE__, __FUNC__, __LINE__, ucd->ucd_WindowTask));
 		d1(kprintf("%s/%s/%ld: ucd_WindowTitle=<%s>\n", __FILE__, __FUNC__, __LINE__, ucd->ucd_WindowTitle));
 
-		IconList = (struct ScaIconNode *) GetTagData(UNDOTAG_IconList, (ULONG) NULL, TagList);
+		IconList = (struct ScaIconNode *) GetTagData(UNDOTAG_IconList, (IPTR) NULL, TagList);
 		if (NULL == IconList)
 			break;
 
@@ -1263,10 +1263,10 @@ static BOOL AddRenameEvent(struct UndoEvent *uev, struct TagItem *TagList)
 			NULL,					// h_Data
 			};
 
-		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (ULONG) &UndoDisposeCopyMoveDataHook, TagList);
+		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (IPTR) &UndoDisposeCopyMoveDataHook, TagList);
 
-		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (ULONG) &UndoRenameHook, TagList);
-		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (ULONG) &RedoRenameHook, TagList);
+		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (IPTR) &UndoRenameHook, TagList);
+		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (IPTR) &RedoRenameHook, TagList);
 
 		uev->uev_DescrMsgIDSingle = MSGID_UNDO_RENAME_SINGLE;
 		uev->uev_DescrMsgIDMultiple = MSGID_UNDO_RENAME_MORE;
@@ -1293,7 +1293,7 @@ static BOOL AddRenameEvent(struct UndoEvent *uev, struct TagItem *TagList)
 		if (NULL == ucmed->ucmed_srcDirName)
 			break;
 
-		fName = (CONST_STRPTR) GetTagData(UNDOTAG_CopySrcName, (ULONG) NULL, TagList);
+		fName = (CONST_STRPTR) GetTagData(UNDOTAG_CopySrcName, (IPTR) NULL, TagList);
 		if (NULL == fName)
 			break;
 
@@ -1303,7 +1303,7 @@ static BOOL AddRenameEvent(struct UndoEvent *uev, struct TagItem *TagList)
 		if (NULL == ucmed->ucmed_srcName)
 			break;
 
-		fName = (CONST_STRPTR) GetTagData(UNDOTAG_CopyDestName, (ULONG) NULL, TagList);
+		fName = (CONST_STRPTR) GetTagData(UNDOTAG_CopyDestName, (IPTR) NULL, TagList);
 		if (NULL == fName)
 			break;
 		d1(kprintf("%s/%s/%ld: UNDOTAG_CopyDestName=<%s>\n", __FILE__, __FUNC__, __LINE__, fName));
@@ -1354,10 +1354,10 @@ static BOOL AddRelabelEvent(struct UndoEvent *uev, struct TagItem *TagList)
 			NULL,					// h_Data
 			};
 
-		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (ULONG) &UndoDisposeCopyMoveDataHook, TagList);
+		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (IPTR) &UndoDisposeCopyMoveDataHook, TagList);
 
-		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (ULONG) &UndoRelabelHook, TagList);
-		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (ULONG) &RedoRelabelHook, TagList);
+		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (IPTR) &UndoRelabelHook, TagList);
+		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (IPTR) &RedoRelabelHook, TagList);
 
 		uev->uev_DescrMsgIDSingle = MSGID_UNDO_RELABEL_SINGLE;
 		uev->uev_DescrMsgIDMultiple = MSGID_UNDO_RELABEL_MORE;
@@ -1374,7 +1374,7 @@ static BOOL AddRelabelEvent(struct UndoEvent *uev, struct TagItem *TagList)
 		if (NULL == ucmed->ucmed_srcDirName)
 			break;
 
-		fName = (CONST_STRPTR) GetTagData(UNDOTAG_CopySrcName, (ULONG) NULL, TagList);
+		fName = (CONST_STRPTR) GetTagData(UNDOTAG_CopySrcName, (IPTR) NULL, TagList);
 		if (NULL == fName)
 			break;
 
@@ -1385,7 +1385,7 @@ static BOOL AddRelabelEvent(struct UndoEvent *uev, struct TagItem *TagList)
 		if (NULL == ucmed->ucmed_srcName)
 			break;
 
-		fName = (CONST_STRPTR) GetTagData(UNDOTAG_CopyDestName, (ULONG) NULL, TagList);
+		fName = (CONST_STRPTR) GetTagData(UNDOTAG_CopyDestName, (IPTR) NULL, TagList);
 		if (NULL == fName)
 			break;
 
@@ -1439,10 +1439,10 @@ static BOOL AddDeleteEvent(struct UndoEvent *uev, struct TagItem *TagList)
 			NULL,					// h_Data
 			};
 
-		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (ULONG) &UndoDisposeCopyMoveDataHook, TagList);
+		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (IPTR) &UndoDisposeCopyMoveDataHook, TagList);
 
-		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (ULONG) &UndoDeleteHook, TagList);
-		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (ULONG) &RedoDeleteHook, TagList);
+		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (IPTR) &UndoDeleteHook, TagList);
+		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (IPTR) &RedoDeleteHook, TagList);
 
 		uev->uev_DescrMsgIDSingle = MSGID_UNDO_DELETE_SINGLE;
 		uev->uev_DescrMsgIDMultiple = MSGID_UNDO_DELETE_MORE;
@@ -1469,7 +1469,7 @@ static BOOL AddDeleteEvent(struct UndoEvent *uev, struct TagItem *TagList)
 		if (NULL == ucmed->ucmed_srcDirName)
 			break;
 
-		fName = (CONST_STRPTR) GetTagData(UNDOTAG_CopySrcName, (ULONG) NULL, TagList);
+		fName = (CONST_STRPTR) GetTagData(UNDOTAG_CopySrcName, (IPTR) NULL, TagList);
 		if (NULL == fName)
 			break;
 
@@ -1479,7 +1479,7 @@ static BOOL AddDeleteEvent(struct UndoEvent *uev, struct TagItem *TagList)
 		if (NULL == ucmed->ucmed_srcName)
 			break;
 
-		fName = (CONST_STRPTR) GetTagData(UNDOTAG_CopyDestName, (ULONG) "SYS:Trashcan", TagList);
+		fName = (CONST_STRPTR) GetTagData(UNDOTAG_CopyDestName, (IPTR) "SYS:Trashcan", TagList);
 		if (NULL == fName)
 			break;
 		d1(kprintf("%s/%s/%ld: UNDOTAG_CopyDestName=<%s>\n", __FILE__, __FUNC__, __LINE__, fName));
@@ -1528,14 +1528,14 @@ static BOOL AddSizeWindowEvent(struct UndoEvent *uev, struct TagItem *TagList)
 			NULL,					// h_Data
 			};
 
-		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (ULONG) &DisposeSizeWindowDataHook, TagList);
-		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (ULONG) &UndoSizeWindowHook, TagList);
-		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (ULONG) &RedoSizeWindowHook, TagList);
+		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (IPTR) &DisposeSizeWindowDataHook, TagList);
+		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (IPTR) &UndoSizeWindowHook, TagList);
+		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (IPTR) &RedoSizeWindowHook, TagList);
 
 		uev->uev_DescrMsgIDSingle = MSGID_UNDO_SIZEWINDOW;
 		uev->uev_DescrMsgIDMultiple = MSGID_UNDO_SIZEWINDOW;
 
-		uswd->uswd_WindowTask = (struct ScaWindowTask *) GetTagData(UNDOTAG_WindowTask, (ULONG) NULL, TagList);
+		uswd->uswd_WindowTask = (struct ScaWindowTask *) GetTagData(UNDOTAG_WindowTask, (IPTR) NULL, TagList);
 		if (NULL == uswd->uswd_WindowTask)
 			break;
 
@@ -1614,10 +1614,10 @@ static BOOL AddNewDrawerEvent(struct UndoEvent *uev, struct TagItem *TagList)
 			NULL,					// h_Data
 			};
 
-		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (ULONG) &UndoDisposeNewDrawerHook, TagList);
+		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (IPTR) &UndoDisposeNewDrawerHook, TagList);
 
-		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (ULONG) &UndoNewDrawerHook, TagList);
-		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (ULONG) &RedoNewDrawerHook, TagList);
+		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (IPTR) &UndoNewDrawerHook, TagList);
+		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (IPTR) &RedoNewDrawerHook, TagList);
 
 		uev->uev_DescrMsgIDSingle = MSGID_UNDO_NEWDRAWER_SINGLE;
 		uev->uev_DescrMsgIDMultiple = MSGID_UNDO_NEWDRAWER_MORE;
@@ -1643,7 +1643,7 @@ static BOOL AddNewDrawerEvent(struct UndoEvent *uev, struct TagItem *TagList)
 		if (NULL == und->und_DirName)
 			break;
 
-		fName = (CONST_STRPTR) GetTagData(UNDOTAG_IconName, (ULONG) NULL, TagList);
+		fName = (CONST_STRPTR) GetTagData(UNDOTAG_IconName, (IPTR) NULL, TagList);
 		if (NULL == fName)
 			break;
 
@@ -1700,19 +1700,19 @@ static BOOL AddLeaveOutPutAwayEvent(struct UndoEvent *uev, struct TagItem *TagLi
 			NULL,					// h_Data
 			};
 
-		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (ULONG) &UndoDisposeLeaveOutPutAwayHook, TagList);
+		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (IPTR) &UndoDisposeLeaveOutPutAwayHook, TagList);
 
 		if (UNDO_PutAway == uev->uev_Type)
 			{
-			uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (ULONG) &RedoLeaveOutHook, TagList);
-			uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (ULONG) &UndoLeaveOutHook, TagList);
+			uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (IPTR) &RedoLeaveOutHook, TagList);
+			uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (IPTR) &UndoLeaveOutHook, TagList);
 			uev->uev_DescrMsgIDSingle = MSGID_UNDO_PUTAWAY_SINGLE;
 			uev->uev_DescrMsgIDMultiple = MSGID_UNDO_PUTAWAY_MORE;
 			}
 		else
 			{
-			uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (ULONG) &UndoLeaveOutHook, TagList);
-			uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (ULONG) &RedoLeaveOutHook, TagList);
+			uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (IPTR) &UndoLeaveOutHook, TagList);
+			uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (IPTR) &RedoLeaveOutHook, TagList);
 			uev->uev_DescrMsgIDSingle = MSGID_UNDO_LEAVEOUT_SINGLE;
 			uev->uev_DescrMsgIDMultiple = MSGID_UNDO_LEAVEOUT_MORE;
 			}
@@ -1739,7 +1739,7 @@ static BOOL AddLeaveOutPutAwayEvent(struct UndoEvent *uev, struct TagItem *TagLi
 		if (NULL == usid->usid_DirName)
 			break;
 
-		IconName = (CONST_STRPTR) GetTagData(UNDOTAG_IconName, (ULONG) NULL, TagList);
+		IconName = (CONST_STRPTR) GetTagData(UNDOTAG_IconName, (IPTR) NULL, TagList);
 		if (NULL == IconName)
 			break;
 
@@ -1792,10 +1792,10 @@ static BOOL AddSetProtectionEvent(struct UndoEvent *uev, struct TagItem *TagList
 			NULL,					// h_Data
 			};
 
-		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (ULONG) &UndoDisposeSetProtectionHook, TagList);
+		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (IPTR) &UndoDisposeSetProtectionHook, TagList);
 
-		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (ULONG) &UndoSetProtectionHook, TagList);
-		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (ULONG) &RedoSetProtectionHook, TagList);
+		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (IPTR) &UndoSetProtectionHook, TagList);
+		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (IPTR) &RedoSetProtectionHook, TagList);
 		uev->uev_DescrMsgIDSingle = MSGID_UNDO_SETPROTECTION_SINGLE;
 		uev->uev_DescrMsgIDMultiple = MSGID_UNDO_SETPROTECTION_MORE;
 
@@ -1821,7 +1821,7 @@ static BOOL AddSetProtectionEvent(struct UndoEvent *uev, struct TagItem *TagList
 		if (NULL == uspd->uspd_DirName)
 			break;
 
-		IconName = (CONST_STRPTR) GetTagData(UNDOTAG_IconName, (ULONG) NULL, TagList);
+		IconName = (CONST_STRPTR) GetTagData(UNDOTAG_IconName, (IPTR) NULL, TagList);
 		if (NULL == IconName)
 			break;
 
@@ -1881,10 +1881,10 @@ static BOOL AddSetCommentEvent(struct UndoEvent *uev, struct TagItem *TagList)
 			NULL,					// h_Data
 			};
 
-		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (ULONG) &UndoDisposeSetCommentHook, TagList);
+		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (IPTR) &UndoDisposeSetCommentHook, TagList);
 
-		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (ULONG) &UndoSetCommentHook, TagList);
-		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (ULONG) &RedoSetCommentHook, TagList);
+		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (IPTR) &UndoSetCommentHook, TagList);
+		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (IPTR) &RedoSetCommentHook, TagList);
 		uev->uev_DescrMsgIDSingle = MSGID_UNDO_SETCOMMENT_SINGLE;
 		uev->uev_DescrMsgIDMultiple = MSGID_UNDO_SETCOMMENT_MORE;
 
@@ -1910,7 +1910,7 @@ static BOOL AddSetCommentEvent(struct UndoEvent *uev, struct TagItem *TagList)
 		if (NULL == uscd->uscd_DirName)
 			break;
 
-		IconName = (CONST_STRPTR) GetTagData(UNDOTAG_IconName, (ULONG) NULL, TagList);
+		IconName = (CONST_STRPTR) GetTagData(UNDOTAG_IconName, (IPTR) NULL, TagList);
 		if (NULL == IconName)
 			break;
 
@@ -1920,7 +1920,7 @@ static BOOL AddSetCommentEvent(struct UndoEvent *uev, struct TagItem *TagList)
 
 		d1(kprintf("%s/%s/%ld: UNDOTAG_IconName=<%s>\n", __FILE__, __FUNC__, __LINE__, uscd->uscd_IconName));
 
-		Comment = (CONST_STRPTR) GetTagData(UNDOTAG_OldComment, (ULONG) NULL, TagList);
+		Comment = (CONST_STRPTR) GetTagData(UNDOTAG_OldComment, (IPTR) NULL, TagList);
 		if (NULL == Comment)
 			break;
 
@@ -1930,7 +1930,7 @@ static BOOL AddSetCommentEvent(struct UndoEvent *uev, struct TagItem *TagList)
 
 		d1(kprintf("%s/%s/%ld: UNDOTAG_OldComment=<%s>\n", __FILE__, __FUNC__, __LINE__, uscd->uscd_OldComment));
 
-		Comment = (CONST_STRPTR) GetTagData(UNDOTAG_NewComment, (ULONG) NULL, TagList);
+		Comment = (CONST_STRPTR) GetTagData(UNDOTAG_NewComment, (IPTR) NULL, TagList);
 		if (NULL == Comment)
 			break;
 
@@ -1984,10 +1984,10 @@ static BOOL AddSetToolTypesEvent(struct UndoEvent *uev, struct TagItem *TagList)
 			NULL,					// h_Data
 			};
 
-		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (ULONG) &UndoDisposeSetToolTypesHook, TagList);
+		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (IPTR) &UndoDisposeSetToolTypesHook, TagList);
 
-		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (ULONG) &UndoSetToolTypesHook, TagList);
-		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (ULONG) &RedoSetToolTypesHook, TagList);
+		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (IPTR) &UndoSetToolTypesHook, TagList);
+		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (IPTR) &RedoSetToolTypesHook, TagList);
 		uev->uev_DescrMsgIDSingle = MSGID_UNDO_SETTOOLTYPES_SINGLE;
 		uev->uev_DescrMsgIDMultiple = MSGID_UNDO_SETTOOLTYPES_MORE;
 
@@ -2013,7 +2013,7 @@ static BOOL AddSetToolTypesEvent(struct UndoEvent *uev, struct TagItem *TagList)
 		if (NULL == ustd->ustd_DirName)
 			break;
 
-		IconName = (CONST_STRPTR) GetTagData(UNDOTAG_IconName, (ULONG) NULL, TagList);
+		IconName = (CONST_STRPTR) GetTagData(UNDOTAG_IconName, (IPTR) NULL, TagList);
 		if (NULL == IconName)
 			break;
 
@@ -2023,7 +2023,7 @@ static BOOL AddSetToolTypesEvent(struct UndoEvent *uev, struct TagItem *TagList)
 
 		d1(kprintf("%s/%s/%ld: UNDOTAG_IconName=<%s>\n", __FILE__, __FUNC__, __LINE__, ustd->ustd_IconName));
 
-		ToolTypes = (CONST_STRPTR *) GetTagData(UNDOTAG_OldToolTypes, (ULONG) NULL, TagList);
+		ToolTypes = (CONST_STRPTR *) GetTagData(UNDOTAG_OldToolTypes, (IPTR) NULL, TagList);
 		if (NULL == ToolTypes)
 			break;
 
@@ -2033,7 +2033,7 @@ static BOOL AddSetToolTypesEvent(struct UndoEvent *uev, struct TagItem *TagList)
 
 		d1(kprintf("%s/%s/%ld: UNDOTAG_OldToolTypes=%08lx\n", __FILE__, __FUNC__, __LINE__, ustd->ustd_OldToolTypes));
 
-		ToolTypes = (CONST_STRPTR *) GetTagData(UNDOTAG_NewToolTypes, (ULONG) NULL, TagList);
+		ToolTypes = (CONST_STRPTR *) GetTagData(UNDOTAG_NewToolTypes, (IPTR) NULL, TagList);
 		if (NULL == ToolTypes)
 			break;
 
@@ -2087,10 +2087,10 @@ static BOOL AddChangeIconObjectEvent(struct UndoEvent *uev, struct TagItem *TagL
 			NULL,					// h_Data
 			};
 
-		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (ULONG) &UndoDisposeChangeIconObjectHook, TagList);
+		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (IPTR) &UndoDisposeChangeIconObjectHook, TagList);
 
-		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (ULONG) &UndoChangeIconObjectHook, TagList);
-		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (ULONG) &RedoChangeIconObjectHook, TagList);
+		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (IPTR) &UndoChangeIconObjectHook, TagList);
+		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (IPTR) &RedoChangeIconObjectHook, TagList);
 		uev->uev_DescrMsgIDSingle = MSGID_UNDO_CHANGEICON_SINGLE;
 		uev->uev_DescrMsgIDMultiple = MSGID_UNDO_CHANGEICON_MORE;
 
@@ -2116,7 +2116,7 @@ static BOOL AddChangeIconObjectEvent(struct UndoEvent *uev, struct TagItem *TagL
 		if (NULL == uciod->uciod_DirName)
 			break;
 
-		IconName = (CONST_STRPTR) GetTagData(UNDOTAG_IconName, (ULONG) NULL, TagList);
+		IconName = (CONST_STRPTR) GetTagData(UNDOTAG_IconName, (IPTR) NULL, TagList);
 		if (NULL == IconName)
 			break;
 
@@ -2126,7 +2126,7 @@ static BOOL AddChangeIconObjectEvent(struct UndoEvent *uev, struct TagItem *TagL
 
 		d1(kprintf("%s/%s/%ld: UNDOTAG_IconName=<%s>\n", __FILE__, __FUNC__, __LINE__, uciod->uciod_IconName));
 
-		IconObj	= (Object *) GetTagData(UNDOTAG_OldIconObject, (ULONG) NULL, TagList);
+		IconObj	= (Object *) GetTagData(UNDOTAG_OldIconObject, (IPTR) NULL, TagList);
 		if (NULL == IconObj)
 			break;
 
@@ -2136,7 +2136,7 @@ static BOOL AddChangeIconObjectEvent(struct UndoEvent *uev, struct TagItem *TagL
 
 		d1(kprintf("%s/%s/%ld: UNDOTAG_OldIconObject=%08lx\n", __FILE__, __FUNC__, __LINE__, uciod->uciod_OldIconObject));
 
-		IconObj	= (Object *) GetTagData(UNDOTAG_NewIconObject, (ULONG) NULL, TagList);
+		IconObj	= (Object *) GetTagData(UNDOTAG_NewIconObject, (IPTR) NULL, TagList);
 		if (NULL == IconObj)
 			break;
 
@@ -2189,10 +2189,10 @@ static BOOL AddCloseWindowEvent(struct UndoEvent *uev, struct TagItem *TagList)
 			NULL,					// h_Data
 			};
 
-		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (ULONG) &UndoDisposeCloseWindowHook, TagList);
+		uev->uev_DisposeHook = (struct Hook *) GetTagData(UNDOTAG_DisposeHook, (IPTR) &UndoDisposeCloseWindowHook, TagList);
 
-		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (ULONG) &UndoCloseWindowHook, TagList);
-		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (ULONG) &RedoCloseWindowHook, TagList);
+		uev->uev_UndoHook = (struct Hook *) GetTagData(UNDOTAG_UndoHook, (IPTR) &UndoCloseWindowHook, TagList);
+		uev->uev_RedoHook = (struct Hook *) GetTagData(UNDOTAG_RedoHook, (IPTR) &RedoCloseWindowHook, TagList);
 
 		uev->uev_DescrMsgIDSingle = MSGID_UNDO_CLOSEWINDOW_SINGLE;
 		uev->uev_DescrMsgIDMultiple = MSGID_UNDO_CLOSEWINDOW_MORE;
@@ -2203,7 +2203,7 @@ static BOOL AddCloseWindowEvent(struct UndoEvent *uev, struct TagItem *TagList)
 
 		d1(kprintf("%s/%s/%ld: name=%08lx\n", __FILE__, __FUNC__, __LINE__, name));
 
-		iwt = (struct internalScaWindowTask *) GetTagData(UNDOTAG_WindowTask, (ULONG) NULL, TagList);
+		iwt = (struct internalScaWindowTask *) GetTagData(UNDOTAG_WindowTask, (IPTR) NULL, TagList);
 		if (BNULL == iwt)
 			break;
 
@@ -3260,9 +3260,9 @@ static SAVEDS(LONG) UndoSnapshotEvent(struct Hook *hook, APTR object, struct Und
 	do	{
 		struct UndoSnaphotIconData *usid = &uev->uev_Data.uev_SnapshotData;
 		const struct IBox *pWinRect;
-		ULONG IconViewMode;
-		ULONG ddFlags;
-		LONG WinCurrentX, WinCurrentY;
+		IPTR IconViewMode;
+		IPTR ddFlags;
+		IPTR WinCurrentX, WinCurrentY;
 
 		if (!UndoFindWindowAndIcon(usid->usid_DirName, usid->usid_IconName, &iwt, &in))
 			break;
@@ -3281,14 +3281,14 @@ static SAVEDS(LONG) UndoSnapshotEvent(struct Hook *hook, APTR object, struct Und
 
 		GetAttr(IDTA_ViewModes, usid->usid_IconObj, &IconViewMode);
 		GetAttr(IDTA_Flags, usid->usid_IconObj, &ddFlags);
-		GetAttr(IDTA_WindowRect, usid->usid_IconObj, (ULONG *) &pWinRect);
-		GetAttr(IDTA_WinCurrentX, usid->usid_IconObj, (ULONG *) &WinCurrentX);
-		GetAttr(IDTA_WinCurrentY, usid->usid_IconObj, (ULONG *) &WinCurrentY);
+		GetAttr(IDTA_WindowRect, usid->usid_IconObj, (IPTR *)&pWinRect);
+		GetAttr(IDTA_WinCurrentX, usid->usid_IconObj, &WinCurrentX);
+		GetAttr(IDTA_WinCurrentY, usid->usid_IconObj, &WinCurrentY);
 
 		SetAttrs(in->in_Icon,
 			IDTA_ViewModes, IconViewMode,
 			IDTA_Flags, ddFlags,
-			pWinRect ? IDTA_WindowRect : TAG_IGNORE, (ULONG) pWinRect,
+			pWinRect ? IDTA_WindowRect : TAG_IGNORE, (IPTR) pWinRect,
 			IDTA_WinCurrentY, WinCurrentY,
 			IDTA_WinCurrentX, WinCurrentX,
 			TAG_END);
@@ -3395,7 +3395,7 @@ static SAVEDS(LONG) RedoSnapshotPosEvent(struct Hook *hook, APTR object, struct 
 static BOOL UndoSnapshotIcon(struct internalScaWindowTask *iwt, struct ScaIconNode *in)
 {
 	BOOL Success = FALSE;
-	ULONG IconType = 0;
+	IPTR IconType = 0;
 
 	d1(KPrintF("%s/%s/%ld:  START iwt=%08lx  in=%08lx <%s>\n", __FILE__, __FUNC__, __LINE__, iwt, in, GetIconName(in)));
 
@@ -3462,7 +3462,7 @@ static BOOL UndoUnsnapshotIcon(struct internalScaWindowTask *iwt,
 	struct ScaIconNode *in, BOOL SaveIcon)
 {
 	BOOL Success = FALSE;
-	ULONG IconType = 0;
+	IPTR IconType = 0;
 
 	d1(KPrintF("%s/%s/%ld:  iwt=%08lx  in=%08lx <%s>\n", __FILE__, __FUNC__, __LINE__, iwt, in, GetIconName(in)));
 
@@ -4219,7 +4219,7 @@ static SAVEDS(LONG) UndoSetToolTypesEvent(struct Hook *hook, APTR object, struct
 		upd.ui_IconType = ICONTYPE_NONE;
 
 		SetAttrs(in->in_Icon,
-			IDTA_ToolTypes, (ULONG) ustd->ustd_OldToolTypes,
+			IDTA_ToolTypes, (IPTR) ustd->ustd_OldToolTypes,
 			TAG_END);
 
 		rc = PutIconObjectTags(in->in_Icon, ustd->ustd_IconName,
@@ -4285,7 +4285,7 @@ static SAVEDS(LONG) RedoSetToolTypesEvent(struct Hook *hook, APTR object, struct
 		upd.ui_IconType = ICONTYPE_NONE;
 
 		SetAttrs(in->in_Icon,
-			IDTA_ToolTypes, (ULONG) ustd->ustd_OldToolTypes,
+			IDTA_ToolTypes, (IPTR) ustd->ustd_OldToolTypes,
 			TAG_END);
 
 		rc = PutIconObjectTags(in->in_Icon, ustd->ustd_IconName,
@@ -4437,8 +4437,8 @@ static SAVEDS(LONG) UndoCloseWindowEvent(struct Hook *hook, APTR object, struct 
 		WindowBox.Height = ucwd->ucwd_Height;
 
 		Success = SCA_OpenIconWindowTags(
-			SCA_Path, (ULONG) ucwd->ucwd_DirName,
-			SCA_WindowRect, (ULONG) &WindowBox,
+			SCA_Path, (IPTR) ucwd->ucwd_DirName,
+			SCA_WindowRect, (IPTR) &WindowBox,
 			SCA_ViewModes, ucwd->ucwd_Viewmodes,
 			SCA_ShowAllMode, ucwd->ucwd_ViewAll,
 			SCA_XOffset, ucwd->ucwd_VirtX,

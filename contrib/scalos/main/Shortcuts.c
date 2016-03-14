@@ -278,10 +278,13 @@ void ShortcutReadPrefs(void)
 
 			if (ssc.ssc_Name && ssc.ssc_Left && ssc.ssc_Top)
 				{
+                                ULONG *posxPtr, *posyPtr;
 				LONG PosX, PosY;
 
-				PosX = (LONG) *((ULONG *) ssc.ssc_Left->spf_Data);
-				PosY = (LONG) *((ULONG *) ssc.ssc_Top->spf_Data);
+                                posxPtr = (ULONG *) ssc.ssc_Left->spf_Data;
+                                posyPtr = (ULONG *) ssc.ssc_Top->spf_Data;
+				PosX = (LONG) *posxPtr;
+				PosY = (LONG) *posyPtr;
 
 				d1(KPrintF("%s/%s/%ld:  Add backdrop: <%s>  PosX=%ld  PosY=%ld\n", __FILE__, __FUNC__, __LINE__, ssc.ssc_Name->spf_Data, PosX, PosY));
 

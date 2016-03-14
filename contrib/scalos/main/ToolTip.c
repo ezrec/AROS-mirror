@@ -111,7 +111,7 @@ struct ToolTipHideFunc
 	CONST_STRPTR tthf_CommandName;		// Name of the command.
 
 	// Pointer to the function which implements this command.
-	ULONG (*tthf_Function)(struct ttDef *, struct ScaToolTipInfoHookData *, CONST_STRPTR);
+	IPTR (*tthf_Function)(struct ttDef *, struct ScaToolTipInfoHookData *, CONST_STRPTR);
 	};
 
 struct ToolTipSignalData
@@ -208,9 +208,9 @@ static STRPTR Tooltip_DiskUsedFree(struct ScaToolTipInfoHookData *ttshd, CONST_S
 static STRPTR Tooltip_RunPlugin(struct ScaToolTipInfoHookData *ttshd, CONST_STRPTR Args);
 static STRPTR Tooltip_LinkTarget(struct ScaToolTipInfoHookData *ttshd, CONST_STRPTR Args);
 
-static ULONG Tooltip_Hide_IsEmpty(struct ttDef *ttd, 
+static IPTR Tooltip_Hide_IsEmpty(struct ttDef *ttd, 
 	struct ScaToolTipInfoHookData *ttshd, CONST_STRPTR Args);
-static ULONG Tooltip_Hide_NoVolumeNode(struct ttDef *ttd, 
+static IPTR Tooltip_Hide_NoVolumeNode(struct ttDef *ttd, 
 	struct ScaToolTipInfoHookData *ttshd, CONST_STRPTR Args);
 
 static struct ttDef *CloneToolTipDef(const struct ttDef *ttdOrig);
@@ -324,7 +324,7 @@ static void DisplayToolTip(struct internalScaWindowTask *iwt, ULONG FirstTag, ..
 	struct ToolTipStart startArg;
 	struct TagItem *TagList;
 	struct TagItem *ti;
-	ULONG IconType;
+	IPTR IconType;
 	struct ttDef *ttd = NULL;
 	WORD MouseX, MouseY;
 	STRPTR tt;
@@ -457,7 +457,7 @@ static void DisplayToolTip(struct internalScaWindowTask *iwt, ULONG FirstTag, ..
 			{
 			ttd = CreateGadgetTooltip(iwt, ti->ti_Data,
 				(struct Hook *) GetTagData(DITT_GadgetTextHook,
-					(ULONG) iInfos.xii_GlobalGadgetUnderPointer.ggd_GadgetTextHook, TagList));
+					(IPTR) iInfos.xii_GlobalGadgetUnderPointer.ggd_GadgetTextHook, TagList));
 			}
 		}
 
@@ -1735,7 +1735,7 @@ static STRPTR Tooltip_FileType(struct ScaToolTipInfoHookData *ttshd, CONST_STRPT
 	d1(KPrintF("%s/%s/%ld: <%s>  in_FileType=%08lx\n", __FILE__, __FUNC__, __LINE__, \
 		GetIconName(ttshd->ttshd_IconNode), ttshd->ttshd_IconNode->in_FileType));
 
-	switch ((ULONG) ttshd->ttshd_IconNode->in_FileType)
+	switch ((IPTR) ttshd->ttshd_IconNode->in_FileType)
 		{
 	case WBAPPICON:
 		{
@@ -1800,7 +1800,7 @@ static STRPTR Tooltip_FileType(struct ScaToolTipInfoHookData *ttshd, CONST_STRPT
 			stccpy(ttshd->ttshd_Buffer, GetLocString(MSGID_TOOLTIP_HARDLINKDIR), ttshd->ttshd_BuffLen);
 			break;
 		case ST_FILE:
-			switch ((ULONG) ttshd->ttshd_IconNode->in_FileType)
+			switch ((IPTR) ttshd->ttshd_IconNode->in_FileType)
 				{
 			case WBDISK:
 				stccpy(ttshd->ttshd_Buffer, GetLocString(MSGID_TOOLTIP_FILETYPE_WBDISK), ttshd->ttshd_BuffLen);
@@ -1868,7 +1868,7 @@ static STRPTR Tooltip_FileSize(struct ScaToolTipInfoHookData *ttshd, CONST_STRPT
 		ScaFormatStringMaxLength(ttshd->ttshd_Buffer,
 			ttshd->ttshd_BuffLen,
 			GetLocString(MSGID_TOOLTIP_FILESIZEFMT),
-			(ULONG) NumBuff);
+			(IPTR) NumBuff);
 		}
 
 	return ttshd->ttshd_Buffer;
@@ -2106,7 +2106,7 @@ static STRPTR Tooltip_DiskUsedCount(struct ScaToolTipInfoHookData *ttshd, CONST_
 
 			ScaFormatStringMaxLength(ttshd->ttshd_Buffer, ttshd->ttshd_BuffLen,
 				GetLocString(MSGID_TOOLTIP_USEDCOUNTFMT),
-				(ULONG) SizePercent, (ULONG) SizeFree, (ULONG) SizeUsed);
+				(IPTR) SizePercent, (IPTR) SizeFree, (IPTR) SizeUsed);
 			}
 		}
 
@@ -2148,7 +2148,7 @@ static STRPTR Tooltip_DiskUsedPercent(struct ScaToolTipInfoHookData *ttshd, CONS
 
 			ScaFormatStringMaxLength(ttshd->ttshd_Buffer, ttshd->ttshd_BuffLen,
 				GetLocString(MSGID_TOOLTIP_USEDCOUNTFMT_FULL),
-								(ULONG) SizePercent);
+								(IPTR) SizePercent);
 			}
 		}
 
@@ -2190,7 +2190,7 @@ static STRPTR Tooltip_DiskUsedInUse(struct ScaToolTipInfoHookData *ttshd, CONST_
 
 			ScaFormatStringMaxLength(ttshd->ttshd_Buffer, ttshd->ttshd_BuffLen,
 				GetLocString(MSGID_TOOLTIP_USEDCOUNTFMT_INUSE),
-								(ULONG) SizeUsed);
+								(IPTR) SizeUsed);
 			}
 		}
 
@@ -2232,7 +2232,7 @@ static STRPTR Tooltip_DiskUsedFree(struct ScaToolTipInfoHookData *ttshd, CONST_S
 
 			ScaFormatStringMaxLength(ttshd->ttshd_Buffer, ttshd->ttshd_BuffLen,
 				GetLocString(MSGID_TOOLTIP_USEDCOUNTFMT_FREE),
-				(ULONG) SizeFree);
+				(IPTR) SizeFree);
 			}
 		}
 
@@ -2355,12 +2355,12 @@ static STRPTR Tooltip_LinkTarget(struct ScaToolTipInfoHookData *ttshd, CONST_STR
 
 //----------------------------------------------------------------------------
 
-static ULONG Tooltip_Hide_IsEmpty(struct ttDef *ttd, 
+static IPTR Tooltip_Hide_IsEmpty(struct ttDef *ttd, 
 	struct ScaToolTipInfoHookData *ttshd, CONST_STRPTR Args)
 {
 	struct Hook testHook;
 	STRPTR TestString;
-	ULONG hidden;
+	IPTR hidden;
 
 	d1(kprintf("%s/%s/%ld: Args=<%s>\n", __FILE__, __FUNC__, __LINE__, Args);)
 
@@ -2379,10 +2379,10 @@ static ULONG Tooltip_Hide_IsEmpty(struct ttDef *ttd,
 }
 
 
-static ULONG Tooltip_Hide_NoVolumeNode(struct ttDef *ttd, 
+static IPTR Tooltip_Hide_NoVolumeNode(struct ttDef *ttd, 
 	struct ScaToolTipInfoHookData *ttshd, CONST_STRPTR Args)
 {
-	ULONG hidden;
+	IPTR hidden;
 	struct DosList *VolumeNode = NULL;
 
 	if (ttshd->ttshd_IconNode && ttshd->ttshd_IconNode->in_DeviceIcon)
@@ -2613,7 +2613,7 @@ static BOOL GetFileTypeFromTypeNode(struct ScaToolTipInfoHookData *ttshd)
 		const struct TypeNode *tn = ttshd->ttshd_IconNode->in_FileType;
 
 		ScaFormatStringMaxLength(ttshd->ttshd_Buffer, ttshd->ttshd_BuffLen,
-			"[%s]", (ULONG) tn->tn_Name);
+			"[%s]", (IPTR) tn->tn_Name);
 
 		tn = tn->tn_Parent;
 		while (tn)

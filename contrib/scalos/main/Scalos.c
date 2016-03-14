@@ -423,7 +423,7 @@ void FreeIconList(struct internalScaWindowTask *iwt, struct ScaIconNode **IconLi
 	while (*IconList)
 		{
 		struct ScaIconNode *in = *IconList;
-		ULONG IconType;
+		IPTR IconType;
 
 		GetAttr(IDTA_Type, in->in_Icon, &IconType);
 

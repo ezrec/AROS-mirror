@@ -106,8 +106,8 @@ BOOL AddThumbnailIcon(struct internalScaWindowTask *iwt, Object *IconObj,
 		ULONG ThumbnailHeight = CurrentPrefs.pref_ThumbNailHeight;
 		struct ThumbnailIcon *tni;
 		struct FileTypeDef *ftd;
-		ULONG IconUserFlags;
-		ULONG IconType;
+		IPTR IconUserFlags;
+		IPTR  IconType;
 
 		debugLock_d1(DirLock);
 
@@ -268,7 +268,7 @@ static SAVEDS(ULONG) GenerateThumbnailProcess(struct SM_StartProg *sMsg, struct 
 	ScalosObtainSemaphoreShared(iwt->iwt_WindowTask.wt_WindowSemaphore);
 
 	ScaFormatStringMaxLength(TaskName, sizeof(TaskName),
-		"Scalos_CreateThumbnails <%s>", (ULONG) iwt->iwt_WindowTask.mt_WindowStruct->ws_Name);
+		"Scalos_CreateThumbnails <%s>", (IPTR) iwt->iwt_WindowTask.mt_WindowStruct->ws_Name);
 
 	myProc->pr_Task.tc_Node.ln_Name = TaskName;
 	SetProgramName(TaskName);
@@ -386,7 +386,7 @@ static BOOL GenerateThumbnail(struct internalScaWindowTask *iwt,
 
 	do	{
 		BOOL DoRemap;
-		ULONG SupportedColors = 256;
+		IPTR SupportedColors = 256;
 		ULONG ThumbnailWidth = CurrentPrefs.pref_ThumbNailWidth;
 		ULONG ThumbnailHeight = CurrentPrefs.pref_ThumbNailHeight;
 		BOOL WasCached = FALSE;
@@ -535,10 +535,10 @@ static BOOL GenerateThumbnail(struct internalScaWindowTask *iwt,
 				tni->tni_IconName,
 				SCALOSPREVIEW_ThumbnailWidth, ThumbnailWidth,
 				SCALOSPREVIEW_ThumbnailHeight, ThumbnailHeight,
-				SCALOSPREVIEW_Screen, (ULONG) iInfos.xii_iinfos.ii_Screen,
+				SCALOSPREVIEW_Screen, (IPTR) iInfos.xii_iinfos.ii_Screen,
 				SCALOSPREVIEW_SupportedColors, SupportedColors,
-				SCALOSPREVIEW_ResultStruct, (ULONG) &PVResult,
-				SCALOSPREVIEW_ImgBitMapHeader, (ULONG) &bmhd,
+				SCALOSPREVIEW_ResultStruct, (IPTR) &PVResult,
+				SCALOSPREVIEW_ImgBitMapHeader, (IPTR) &bmhd,
 				SCALOSPREVIEW_Quality, CurrentPrefs.pref_ThumbnailQuality,
 				SCALOSPREVIEW_ReservedColors, 2,
 				TAG_END);
@@ -654,7 +654,7 @@ static BOOL GenerateThumbnail(struct internalScaWindowTask *iwt,
 			{
 			// Thumbnail creation failed but IconObj is still valid
 			// Restore initial icon settings
-			ULONG IconUserFlags;
+			IPTR IconUserFlags;
 
 			// Reset thumbnail flag
 			GetAttr(IDTA_UserFlags, tni->tni_IconObj, &IconUserFlags);
@@ -837,7 +837,7 @@ static BOOL GenerateThumbnailFromARGB(struct internalScaWindowTask *iwt,
         struct ARGBHeader *argbDest,
 	BPTR fLock, BOOL MayAddToCache)
 {
-	ULONG SupportedColors = 256;
+	IPTR SupportedColors = 256;
 
 	d1(KPrintF("%s/%s/%ld:  START\n", __FILE__, __FUNC__, __LINE__));
 
@@ -1138,8 +1138,8 @@ BOOL SetIconThumbnailARGB(struct internalScaWindowTask *iwt,
 				IDTA_FrameTypeSel, 	CurrentPrefs.pref_ThumbnailFrameTypeSel,
 				IDTA_Borderless,	FALSE,
 				IDTA_CopyARGBImageData, TRUE,
-				IDTA_ARGBImageData, 	(ULONG) &argbh,
-				IDTA_SelARGBImageData, 	(ULONG) NULL,
+				IDTA_ARGBImageData, 	(IPTR) &argbh,
+				IDTA_SelARGBImageData, 	(IPTR) NULL,
 				TAG_END);
 
 			d1(KPrintF("%s/%s/%ld:  \n", __FILE__, __FUNC__, __LINE__));
@@ -1275,8 +1275,8 @@ BOOL SetIconThumbnailRemapped(struct internalScaWindowTask *iwt,
 				IDTA_BackfillSel,       CurrentPrefs.pref_ThumbnailFillBackground
 						? PalettePrefs.pal_PensList[PENIDX_THUMBNAILBACKGROUNDPENSEL] : IDTA_BACKFILL_NONE,
 				IDTA_Borderless,	FALSE,
-				IDTA_ARGBImageData, 	(ULONG) NULL,
-				IDTA_SelARGBImageData, 	(ULONG) NULL,
+				IDTA_ARGBImageData, 	(IPTR) NULL,
+				IDTA_SelARGBImageData, 	(IPTR) NULL,
 				TAG_END);
 
 			d1(KPrintF("%s/%s/%ld:  sac_BitMap=%08lx  sac_TransparentColor=%ld\n", \

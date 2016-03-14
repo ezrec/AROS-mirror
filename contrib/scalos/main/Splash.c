@@ -521,7 +521,7 @@ static void UpdateSplash(struct SplashInstance *inst, CONST_STRPTR text, BOOL Fo
 			GetLocString(MSGID_PROGRESS_SCALOSVERSION), 
 			ScalosBase->scb_LibNode.lib_Version,
 			ScalosBase->scb_LibNode.lib_Revision,
-			(ULONG) ScalosBuildNr);
+			(IPTR) ScalosBuildNr);
 
 		rp = iInfos.xii_iinfos.ii_Screen->RastPort;
 
@@ -912,9 +912,9 @@ static struct Gadget *SplashCreateGadgets(struct SplashInstance *inst, WORD iWid
 			GA_Top, ng.ng_TopEdge,
 			GA_Width, ng.ng_Width,
 			GA_Height, ng.ng_Height,
-			GBTDTA_Text, (ULONG) inst->spli_VersionText,
-			GBTDTA_TextFont, (ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
-			GBTDTA_TTFont, (ULONG) &ScreenTTFont,
+			GBTDTA_Text, (IPTR) inst->spli_VersionText,
+			GBTDTA_TextFont, (IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
+			GBTDTA_TTFont, (IPTR) &ScreenTTFont,
 			GBTDTA_DrawMode, JAM1,
 			GBTDTA_Justification, GACT_STRINGCENTER,
 			GBTDTA_SoftStyle, FSF_BOLD,
@@ -932,10 +932,10 @@ static struct Gadget *SplashCreateGadgets(struct SplashInstance *inst, WORD iWid
 			GA_Top, ng.ng_TopEdge,
 			GA_Width, ng.ng_Width,
 			GA_Height, ng.ng_Height,
-			GA_Previous, (ULONG) gad,
-			GBTDTA_Text, (ULONG) COMPILER_STRING,
-			GBTDTA_TextFont, (ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
-			GBTDTA_TTFont, (ULONG) &ScreenTTFont,
+			GA_Previous, (IPTR) gad,
+			GBTDTA_Text, (IPTR) COMPILER_STRING,
+			GBTDTA_TextFont, (IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
+			GBTDTA_TTFont, (IPTR) &ScreenTTFont,
 			GBTDTA_DrawMode, JAM1,
 			GBTDTA_Justification, GACT_STRINGCENTER,
 			TAG_END);
@@ -950,10 +950,10 @@ static struct Gadget *SplashCreateGadgets(struct SplashInstance *inst, WORD iWid
 			GA_Top, ng.ng_TopEdge,
 			GA_Width, ng.ng_Width,
 			GA_Height, ng.ng_Height,
-			GA_Previous, (ULONG) gad,
-			GBTDTA_Text, (ULONG) "",
-			GBTDTA_TextFont, (ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
-			GBTDTA_TTFont, (ULONG) &ScreenTTFont,
+			GA_Previous, (IPTR) gad,
+			GBTDTA_Text, (IPTR) "",
+			GBTDTA_TextFont, (IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
+			GBTDTA_TTFont, (IPTR) &ScreenTTFont,
 			GBTDTA_DrawMode, JAM1,
 			GBTDTA_Justification, GACT_STRINGCENTER,
 			TAG_END);
@@ -978,7 +978,7 @@ static void SplashUpdateTextGadget(struct Window *win, struct Gadget *gad, CONST
 ///
 	d1(KPrintF("%s/%s/%ld: START\n", __FILE__, __FUNC__, __LINE__));
 	SetGadgetAttrs(gad, win, NULL,
-		GBTDTA_Text, (ULONG) NewText,
+		GBTDTA_Text, (IPTR) NewText,
 		TAG_END);
 	EraseRect(win->RPort,
 		gad->LeftEdge, gad->TopEdge,

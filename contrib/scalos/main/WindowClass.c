@@ -83,7 +83,7 @@ struct WindowClassInstance
 
 // local functions
 
-static SAVEDS(ULONG) WindowClass_Dispatcher(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) WindowClass_Dispatcher(Class *cl, Object *o, Msg msg);
 static ULONG WindowClass_Iconify(Class *cl, Object *o, Msg msg);
 static ULONG WindowClass_UnIconify(Class *cl, Object *o, Msg msg);
 static ULONG WindowClass_RemClipRegion(Class *cl, Object *o, Msg msg);
@@ -133,14 +133,14 @@ struct ScalosClass *initWindowClass(const struct PluginClass *plug)
 }
 
 
-static SAVEDS(ULONG) WindowClass_Dispatcher(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) WindowClass_Dispatcher(Class *cl, Object *o, Msg msg)
 {
-	ULONG Result;
+	IPTR Result;
 
 	switch (msg->MethodID)
 		{
 	case SCCM_Window_Open:
-		Result = (ULONG) WindowClass_Open(cl, o, msg);
+		Result = (IPTR) WindowClass_Open(cl, o, msg);
 		break;
 
 	case SCCM_Window_Close:
@@ -156,7 +156,7 @@ static SAVEDS(ULONG) WindowClass_Dispatcher(Class *cl, Object *o, Msg msg)
 		break;
 
 	case SCCM_Window_InitClipRegion:
-		Result = (ULONG) WindowClass_InitClipRegion(cl, o, msg);
+		Result = (IPTR) WindowClass_InitClipRegion(cl, o, msg);
 		break;
 
 	case SCCM_Window_RemClipRegion:
@@ -247,7 +247,7 @@ static ULONG WindowClass_Iconify(Class *cl, Object *o, Msg msg)
 		AddPart(IconPath, ICONIFIED_ICON_NAME, Max_PathLen - 1);
 
 		iconifiedIconObj = NewIconObjectTags(IconPath,
-			IDTA_SizeConstraints, (ULONG) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
+			IDTA_SizeConstraints, (IPTR) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
 			IDTA_ScalePercentage, iwt->iwt_WindowTask.mt_WindowStruct->ws_IconScaleFactor,
 			TAG_END);
 
@@ -257,14 +257,14 @@ static ULONG WindowClass_Iconify(Class *cl, Object *o, Msg msg)
 			AddPart(IconPath, ICONIFIED_ICON_NAME, Max_PathLen - 1);
 
 			iconifiedIconObj = NewIconObjectTags(IconPath,
-				IDTA_SizeConstraints, (ULONG) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
+				IDTA_SizeConstraints, (IPTR) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
 				IDTA_ScalePercentage, iwt->iwt_WindowTask.mt_WindowStruct->ws_IconScaleFactor,
 				TAG_END);
 			}
 
 		if (NULL == iconifiedIconObj)
 			iconifiedIconObj = GetDefIconObjectTags(WBPROJECT,
-				IDTA_SizeConstraints, (ULONG) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
+				IDTA_SizeConstraints, (IPTR) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
 				IDTA_ScalePercentage, iwt->iwt_WindowTask.mt_WindowStruct->ws_IconScaleFactor,
 				TAG_END);
 
@@ -306,11 +306,11 @@ static ULONG WindowClass_Iconify(Class *cl, Object *o, Msg msg)
 		d1(kprintf("%s/%s/%ld: LeftEdge=%ld  TopEdge=%ld\n", __FILE__, __FUNC__, __LINE__, gg->LeftEdge, gg->TopEdge));
 
 		SetAttrs(iconifiedIconObj, 
-			IDTA_Text, (ULONG) iwt->iwt_WindowTask.mt_WindowStruct->ws_Name,
+			IDTA_Text, (IPTR) iwt->iwt_WindowTask.mt_WindowStruct->ws_Name,
 			TAG_END);
 
 		// SCA_NewAddAppIcon()
-		iwt->iwt_myAppObj = SCA_NewAddAppIconTags(MAKE_ID('I','C','F','Y'), (ULONG) iwt->iwt_WindowTask.mt_WindowStruct,
+		iwt->iwt_myAppObj = SCA_NewAddAppIconTags(MAKE_ID('I','C','F','Y'), (IPTR) iwt->iwt_WindowTask.mt_WindowStruct,
 			iconifiedIconObj, iwt->iwt_WindowTask.wt_IconPort,
 			WBAPPICONA_SupportsOpen, TRUE,
 			WBAPPICONA_SupportsSnapshot, NULL != WindowIconObj,
@@ -955,7 +955,7 @@ static struct Window *ScaOpenWindow(struct internalScaWindowTask *iwt, Class *cl
 				{
 				// First, try to use "sysiclass" gadget
 				iwt->iwt_IconifyImage = (struct Image *) NewObject(NULL, "sysiclass",
-					SYSIA_DrawInfo, (ULONG) iwt->iwt_WinDrawInfo,
+					SYSIA_DrawInfo, (IPTR) iwt->iwt_WinDrawInfo,
 					SYSIA_Which, ICONIFYIMAGE,
 					TAG_END);
 
@@ -963,7 +963,7 @@ static struct Window *ScaOpenWindow(struct internalScaWindowTask *iwt, Class *cl
 				if (NULL == iwt->iwt_IconifyImage)
 					{
 					iwt->iwt_IconifyImage = (struct Image *) NewObject(NULL, "tbiclass",
-						SYSIA_DrawInfo, (ULONG) iwt->iwt_WinDrawInfo,
+						SYSIA_DrawInfo, (IPTR) iwt->iwt_WinDrawInfo,
 						SYSIA_Which, ICONIFYIMAGE,
 						TAG_END);
 					}
@@ -975,7 +975,7 @@ static struct Window *ScaOpenWindow(struct internalScaWindowTask *iwt, Class *cl
 					// if titlebarimageclass" not available, use built-in image class.
 					iwt->iwt_IconifyImage = (struct Image *) NewObject(IconifyImageClass, NULL,
 						IA_Height, LeftMostGadget->Height,
-						SYSIA_DrawInfo, (ULONG) iwt->iwt_WinDrawInfo,
+						SYSIA_DrawInfo, (IPTR) iwt->iwt_WinDrawInfo,
 						SYSIA_Which, ICONIFYIMAGE,
 						TAG_END);
 					}
@@ -1000,7 +1000,7 @@ static struct Window *ScaOpenWindow(struct internalScaWindowTask *iwt, Class *cl
 						GA_GadgetHelp, TRUE,
 						GA_TopBorder, TRUE,
 						GA_ID, MAKE_ID(0,0,'F','Y'),
-						GA_Image, (ULONG) iwt->iwt_IconifyImage,
+						GA_Image, (IPTR) iwt->iwt_IconifyImage,
 						TAG_END);
 					}
 				if (iwt->iwt_IconifyGadget)
@@ -1094,7 +1094,7 @@ static struct Gadget *InitWindowGadgets(struct internalScaWindowTask *iwt)
 			{
 			// Update status bar font
 			SetAttrs(iwt->iwt_StatusBarMembers[STATUSBARGADGET_StatusText],
-				GBTDTA_TextFont, (ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
+				GBTDTA_TextFont, (IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
 				TAG_END);
 			}
 
@@ -1107,7 +1107,7 @@ static struct Gadget *InitWindowGadgets(struct internalScaWindowTask *iwt)
 			GA_RelRight, -w2,
 			GA_RelBottom, -(h - 1),
 			GA_GadgetHelp, TRUE,
-			GA_Image, (ULONG) iwt->iwt_GadImageRightArrow,
+			GA_Image, (IPTR) iwt->iwt_GadImageRightArrow,
 			TAG_END);
 		d1(kprintf("%s/%s/%ld: iwt_GadgetRightArrow=%08lx\n", __FILE__, __FUNC__, __LINE__, iwt->iwt_GadgetRightArrow));
 		if (NULL == iwt->iwt_GadgetRightArrow)
@@ -1124,8 +1124,8 @@ static struct Gadget *InitWindowGadgets(struct internalScaWindowTask *iwt)
 			GA_RelRight, -w2,
 			GA_RelBottom, -(h - 1),
 			GA_GadgetHelp, TRUE,
-			GA_Image, (ULONG) iwt->iwt_GadImageLeftArrow,
-			GA_Next, (ULONG) iwt->iwt_GadgetRightArrow,
+			GA_Image, (IPTR) iwt->iwt_GadImageLeftArrow,
+			GA_Next, (IPTR) iwt->iwt_GadgetRightArrow,
 			TAG_END);
 		d1(kprintf("%s/%s/%ld: iwt_GadgetLeftArrow=%08lx\n", __FILE__, __FUNC__, __LINE__, iwt->iwt_GadgetLeftArrow));
 		if (NULL == iwt->iwt_GadgetLeftArrow)
@@ -1150,7 +1150,7 @@ static struct Gadget *InitWindowGadgets(struct internalScaWindowTask *iwt)
 			GA_BottomBorder, TRUE,
 			GA_RelVerify, TRUE,
 			GA_Immediate, TRUE,
-			GA_Next, (ULONG) iwt->iwt_GadgetLeftArrow,
+			GA_Next, (IPTR) iwt->iwt_GadgetLeftArrow,
 			TAG_END);
 		d1(kprintf("%s/%s/%ld: iwt_PropBottom=%08lx\n", __FILE__, __FUNC__, __LINE__, iwt->iwt_PropBottom));
 		if (NULL == iwt->iwt_PropBottom)
@@ -1167,8 +1167,8 @@ static struct Gadget *InitWindowGadgets(struct internalScaWindowTask *iwt)
 			GA_RelBottom, -h2,
 			GA_RelRight, -(w - 1),
 			GA_GadgetHelp, TRUE,
-			GA_Image, (ULONG) iwt->iwt_GadImageDownArrow,
-			GA_Next, (ULONG) iwt->iwt_PropBottom,
+			GA_Image, (IPTR) iwt->iwt_GadImageDownArrow,
+			GA_Next, (IPTR) iwt->iwt_PropBottom,
 			TAG_END);
 		d1(kprintf("%s/%s/%ld: iwt_GadgetDownArrow=%08lx\n", __FILE__, __FUNC__, __LINE__, iwt->iwt_GadgetDownArrow));
 		if (NULL == iwt->iwt_GadgetDownArrow)
@@ -1188,8 +1188,8 @@ static struct Gadget *InitWindowGadgets(struct internalScaWindowTask *iwt)
 			GA_RelBottom, -h2,
 			GA_RelRight, -w + 1,
 			GA_GadgetHelp, TRUE,
-			GA_Image, (ULONG) iwt->iwt_GadImageUpArrow,
-			GA_Next, (ULONG) iwt->iwt_GadgetDownArrow,
+			GA_Image, (IPTR) iwt->iwt_GadImageUpArrow,
+			GA_Next, (IPTR) iwt->iwt_GadgetDownArrow,
 			TAG_END);
 		d1(kprintf("%s/%s/%ld: iwt_GadgetUpArrow=%08lx\n", __FILE__, __FUNC__, __LINE__, iwt->iwt_GadgetUpArrow));
 		if (NULL == iwt->iwt_GadgetUpArrow)
@@ -1217,7 +1217,7 @@ static struct Gadget *InitWindowGadgets(struct internalScaWindowTask *iwt)
 			GA_RightBorder, TRUE,
 			GA_RelVerify, TRUE,
 			GA_Immediate, TRUE,
-			GA_Next, (ULONG) iwt->iwt_GadgetUpArrow,
+			GA_Next, (IPTR) iwt->iwt_GadgetUpArrow,
 			TAG_END);
 		d1(kprintf("%s/%s/%ld: iwt_PropSide=%08lx\n", __FILE__, __FUNC__, __LINE__, iwt->iwt_PropSide));
 		if (NULL == iwt->iwt_PropSide)
@@ -1267,7 +1267,7 @@ static struct Image *NewArrow(struct internalScaWindowTask *iwt, ULONG ImageType
 {
 	return (struct Image *) NewObject(NULL, SYSICLASS,
 		SYSIA_Which, ImageType,
-		SYSIA_DrawInfo, (ULONG) iwt->iwt_WinDrawInfo,
+		SYSIA_DrawInfo, (IPTR) iwt->iwt_WinDrawInfo,
 		TAG_END);
 }
 

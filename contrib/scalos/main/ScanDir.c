@@ -550,10 +550,10 @@ static enum ScanDirResult BeginScan_ExAll(struct ReadIconListControl *rilc)
 
 	rilc->rilc_pkt->dp_Type = ACTION_EXAMINE_ALL;
 	rilc->rilc_pkt->dp_Arg1 = (SIPTR) rilc->rilc_dirLock;
-	rilc->rilc_pkt->dp_Arg2 = (LONG) rilc->rilc_ExAllBuffer;	// Buffer to store results
+	rilc->rilc_pkt->dp_Arg2 = (IPTR) rilc->rilc_ExAllBuffer;	// Buffer to store results
 	rilc->rilc_pkt->dp_Arg3 = ExAllBuffer_SIZE;			// Length (in bytes) of buffer (ARG2)
 	rilc->rilc_pkt->dp_Arg4 = rilc->rilc_ExAllType;			// Type of request
-	rilc->rilc_pkt->dp_Arg5 = (LONG) rilc->rilc_exallControl;	// Control structure to store state information.
+	rilc->rilc_pkt->dp_Arg5 = (IPTR) rilc->rilc_exallControl;	// Control structure to store state information.
 
 	rilc->rilc_PacketPending = TRUE;
 	SendPkt(rilc->rilc_pkt, rilc->rilc_FileSysPort, rilc->rilc_replyPort);
@@ -944,7 +944,7 @@ static struct ScaIconNode *ScanDirInitIcon(struct ReadIconListControl *rilc, con
 	BPTR currentDirLock;
 	struct ExtGadget *gg = (struct ExtGadget *) IconObj;
 	struct ScaIconNode *in;
-	ULONG IconType;
+	IPTR IconType;
 	STRPTR tt;
 	BOOL FreePosition;
 
@@ -1200,16 +1200,16 @@ static struct ScaIconNode *ScanDirCreateIcon(struct ReadIconListControl *rilc,
 		IDTA_InnerTop, CurrentPrefs.pref_ImageBorders.Top,
 		IDTA_InnerLeft, CurrentPrefs.pref_ImageBorders.Left,
 		IDTA_SupportedIconTypes, CurrentPrefs.pref_SupportedIconTypes,
-		IDTA_SizeConstraints, (ULONG) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
+		IDTA_SizeConstraints, (IPTR) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
 		IDTA_ScalePercentage, iwt->iwt_WindowTask.mt_WindowStruct->ws_IconScaleFactor,
-		IDTA_Text, (ULONG) rild->rild_Name,
-		DTA_Name, (ULONG) rild->rild_Name,
+		IDTA_Text, (IPTR) rild->rild_Name,
+		DTA_Name, (IPTR) rild->rild_Name,
 		IDTA_HalfShinePen, PalettePrefs.pal_PensList[PENIDX_HSHINEPEN],
 		IDTA_HalfShadowPen, PalettePrefs.pal_PensList[PENIDX_HSHADOWPEN],
 		IDTA_FrameTypeSel, CurrentPrefs.pref_FrameTypeSel,
 		IDTA_FrameType, CurrentPrefs.pref_FrameType,
 		IDTA_TextSkip, CurrentPrefs.pref_TextSkip,
-		IDTA_MultiLineText, (ULONG) CurrentPrefs.pref_IconTextMuliLine,
+		IDTA_MultiLineText, (IPTR) CurrentPrefs.pref_IconTextMuliLine,
 		IDTA_TextPen, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPEN],
 		IDTA_TextPenSel, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPENSEL],
 		IDTA_TextPenShadow, PalettePrefs.pal_PensList[PENIDX_ICONTEXTSHADOWPEN],
@@ -1223,9 +1223,9 @@ static struct ScaIconNode *ScanDirCreateIcon(struct ReadIconListControl *rilc,
 		IDTA_TextDrawMode, FontPrefs.fprf_TextDrawMode,
 		IDTA_TextBackPen, FontPrefs.fprf_FontBackPen,
 		IDTA_TextStyle, isLink ? CurrentPrefs.pref_LinkTextStyle : FS_NORMAL,
-		IDTA_Font, (ULONG) iwt->iwt_IconFont,
-		IDTA_Fonthandle, (ULONG) &iwt->iwt_IconTTFont,
-		IDTA_FontHook, (ULONG) (TTEngineBase ? &ScalosFontHook : NULL),
+		IDTA_Font, (IPTR) iwt->iwt_IconFont,
+		IDTA_Fonthandle, (IPTR) &iwt->iwt_IconTTFont,
+		IDTA_FontHook, (IPTR) (TTEngineBase ? &ScalosFontHook : NULL),
 		TAG_END);
 
 	d1(KPrintF("%s/%s/%ld: <%s>  IconObj=%08lx\n", __FILE__, __FUNC__, __LINE__, rild->rild_Name, IconObj));
@@ -1624,7 +1624,7 @@ static SAVEDS(LONG) CompareNameFunc(
 
 	if (IntuitionBase)
 		{
-		ULONG IconType1, IconType2;
+		IPTR IconType1, IconType2;
 
 		GetAttr(IDTA_Type, in1->in_Icon, &IconType1);
 		GetAttr(IDTA_Type, in2->in_Icon, &IconType2);
@@ -1648,7 +1648,7 @@ static SAVEDS(LONG) CompareNameFunc(
 /// SetIconSupportsFlags
 void SetIconSupportsFlags(struct ScaIconNode *in, BOOL isDiskWritable)
 {
-	ULONG IconType;
+	IPTR IconType;
 
 	if (NULL == in || NULL == in->in_Icon)
 		return;
@@ -1691,7 +1691,7 @@ void SetIconSupportsFlags(struct ScaIconNode *in, BOOL isDiskWritable)
 BOOL IsSoftLink(CONST_STRPTR Name)
 {
 	BOOL isLink = FALSE;
-	LONG Success;
+	IPTR Success;
 	char *Buffer = NULL;
 	BPTR fLock = (BPTR)NULL;
 
@@ -2020,13 +2020,13 @@ static struct IconScanEntry *NewIconScanEntry(struct internalScaWindowTask *iwt,
 					IDTA_InnerRight, CurrentPrefs.pref_ImageBorders.Right,
 					IDTA_InnerTop, CurrentPrefs.pref_ImageBorders.Top,
 					IDTA_InnerLeft, CurrentPrefs.pref_ImageBorders.Left,
-					IDTA_Text, (ULONG) rild->rild_Name,
+					IDTA_Text, (IPTR) rild->rild_Name,
 					IDTA_HalfShinePen, PalettePrefs.pal_PensList[PENIDX_HSHINEPEN],
 					IDTA_HalfShadowPen, PalettePrefs.pal_PensList[PENIDX_HSHADOWPEN],
 					IDTA_FrameTypeSel, CurrentPrefs.pref_FrameTypeSel,
 					IDTA_FrameType, CurrentPrefs.pref_FrameType,
 					IDTA_TextSkip, CurrentPrefs.pref_TextSkip,
-					IDTA_MultiLineText, (ULONG) CurrentPrefs.pref_IconTextMuliLine,
+					IDTA_MultiLineText, (IPTR) CurrentPrefs.pref_IconTextMuliLine,
 					IDTA_TextPen, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPEN],
 					IDTA_TextPenSel, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPENSEL],
 					IDTA_TextPenShadow, PalettePrefs.pal_PensList[PENIDX_ICONTEXTSHADOWPEN],
@@ -2041,7 +2041,7 @@ static struct IconScanEntry *NewIconScanEntry(struct internalScaWindowTask *iwt,
 					IDTA_TextBackPen, FontPrefs.fprf_FontBackPen,
 					IDTA_TextStyle, (ise->ise_Flags & ISEFLG_IsLink) ? CurrentPrefs.pref_LinkTextStyle : FS_NORMAL,
 					IDTA_SupportedIconTypes, CurrentPrefs.pref_SupportedIconTypes,
-					IDTA_SizeConstraints, (ULONG) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
+					IDTA_SizeConstraints, (IPTR) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
 					IDTA_ScalePercentage, iwt->iwt_WindowTask.mt_WindowStruct->ws_IconScaleFactor,
 					TAG_END);
 
@@ -2461,7 +2461,7 @@ BOOL IsFileHidden(CONST_STRPTR Filename, ULONG Protection)
 /// AdjustIconType
 static ULONG AdjustIconType(Object *IconObj, LONG DirEntryType, BOOL isLink)
 {
-	ULONG IconType;
+	IPTR IconType;
 	ULONG NewIconType;
 
 	GetAttr(IDTA_Type, IconObj, &IconType);

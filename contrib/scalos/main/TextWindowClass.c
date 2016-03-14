@@ -82,14 +82,14 @@ struct TextWindowSortFunc
 
 // local functions
 
-static SAVEDS(ULONG) TextWindowClass_Dispatcher(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) TextWindowClass_Dispatcher(Class *cl, Object *o, Msg msg);
 static ULONG TextWindowClass_ReadIconList(Class *cl, Object *o, Msg msg);
-static ULONG TextWindowClass_ReadIcon(Class *cl, Object *o, Msg msg);
+static IPTR TextWindowClass_ReadIcon(Class *cl, Object *o, Msg msg);
 static ULONG TextWindowClass_RemIcon(Class *cl, Object *o, Msg msg);
 static ULONG TextWindowClass_DeltaMove(Class *cl, Object *o, Msg msg);
 static ULONG TextWindowClass_SetVirtSize(Class *cl, Object *o, Msg msg);
 static ULONG TextWindowClass_Message(Class *cl, Object *o, Msg msg);
-static ULONG TextWindowClass_New(Class *cl, Object *o, Msg msg);
+static IPTR TextWindowClass_New(Class *cl, Object *o, Msg msg);
 static ULONG TextWindowClass_Dispose(Class *cl, Object *o, Msg msg);
 static ULONG TextWindowClass_ReAdjust(Class *cl, Object *o, Msg msg);
 static ULONG TextWindowClass_Cleanup(Class *cl, Object *o, Msg msg);
@@ -249,9 +249,9 @@ struct ScalosClass *initTextWindowClass(const struct PluginClass *plug)
 
 //----------------------------------------------------------------------------
 
-static SAVEDS(ULONG) TextWindowClass_Dispatcher(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) TextWindowClass_Dispatcher(Class *cl, Object *o, Msg msg)
 {
-	ULONG Result;
+	IPTR Result;
 
 	switch (msg->MethodID)
 		{
@@ -363,19 +363,19 @@ static ULONG TextWindowClass_ReadIconList(Class *cl, Object *o, Msg msg)
 
 //----------------------------------------------------------------------------
 
-static ULONG TextWindowClass_ReadIcon(Class *cl, Object *o, Msg msg)
+static IPTR TextWindowClass_ReadIcon(Class *cl, Object *o, Msg msg)
 {
 	struct internalScaWindowTask *iwt = (struct internalScaWindowTask *) ((struct ScaRootList *) o)->rl_WindowTask;
 	struct msg_ReadIcon *mri = (struct msg_ReadIcon *) msg;
 	HOOKFUNC origColWidthChangeFunc = iwt->iwt_ColumnWidthChangeHook.h_SubEntry;
 	UBYTE holdUpdate = iwt->iwt_HoldUpdate;
-	ULONG Result;
+	IPTR Result;
 
 	d1(KPrintF("%s/%s/%ld: wt_Window=%08lx\n", __FILE__, __FUNC__, __LINE__, iwt->iwt_WindowTask.wt_Window));
 
 	iwt->iwt_ColumnWidthChangeHook.h_SubEntry = (HOOKFUNC) ColWidthChangeFunc;
 
-	Result = (ULONG) TextWindowReadIcon(iwt, mri->mri_Name, mri->mri_ria);
+	Result = (IPTR) TextWindowReadIcon(iwt, mri->mri_Name, mri->mri_ria);
 
 	if (Result && iwt->iwt_HoldUpdate && !holdUpdate)
 		{
@@ -681,7 +681,7 @@ static ULONG TextWindowClass_Message(Class *cl, Object *o, Msg msg)
 
 //----------------------------------------------------------------------------
 
-static ULONG TextWindowClass_New(Class *cl, Object *o, Msg msg)
+static IPTR TextWindowClass_New(Class *cl, Object *o, Msg msg)
 {
 	d1(KPrintF("%s/%s/%ld: cl=%08lx  o=%08lx\n", __FILE__, __FUNC__, __LINE__, cl, o));
 
@@ -732,7 +732,7 @@ static ULONG TextWindowClass_New(Class *cl, Object *o, Msg msg)
 		iwt->iwt_IconTTFont = TextWindowTTFont;
 		}
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 //----------------------------------------------------------------------------
@@ -996,7 +996,7 @@ static ULONG TextWindowClass_DrawIcon(Class *cl, Object *o, Msg msg)
 {
 	struct internalScaWindowTask *iwt = (struct internalScaWindowTask *) ((struct ScaRootList *) o)->rl_WindowTask;
 	struct msg_DrawIcon *mdi = (struct msg_DrawIcon *) msg;
-	ULONG IconUserFlags = 0L;
+	IPTR IconUserFlags = 0L;
 	WORD *WidthArray = NULL;
 
 
@@ -1199,7 +1199,7 @@ static SAVEDS(ULONG) INTERRUPT ColWidthChangeFunc(struct Hook *hook, Object *o, 
 static void UpdateObjectForIcon(struct internalScaWindowTask *iwt, CONST_STRPTR IconName)
 {
 	STRPTR ObjectName = AllocCopyString(IconName);
-	ULONG pos;
+	IPTR pos;
 
 	if (ObjectName)
 		{
@@ -1491,7 +1491,7 @@ static LONG TextIconCompareSizeAscFunc(struct Hook *hook,
 	const struct ScaIconNode *in2, const struct ScaIconNode *in1)
 {
 	LONG Result;
-	ULONG Size1, Size2;
+	IPTR Size1, Size2;
 
 	d1(kprintf("%s/%s/%ld: in1=%08lx  in2=%08lx\n", __FILE__, __FUNC__, __LINE__, in1, in2));
 
@@ -1513,7 +1513,7 @@ static LONG TextIconCompareSizeDescFunc(struct Hook *hook,
 	const struct ScaIconNode *in2, const struct ScaIconNode *in1)
 {
 	LONG Result;
-	ULONG Size1, Size2;
+	IPTR Size1, Size2;
 
 	d1(kprintf("%s/%s/%ld: in1=%08lx  in2=%08lx\n", __FILE__, __FUNC__, __LINE__, in1, in2));
 
@@ -1535,6 +1535,7 @@ static LONG TextIconCompareDateAscFunc(struct Hook *hook,
 	const struct ScaIconNode *in2, const struct ScaIconNode *in1)
 {
 	LONG Result;
+        IPTR vals[6];
 	struct DateStamp ds1, ds2;
 
 	d1(kprintf("%s/%s/%ld: in1=%08lx  in2=%08lx\n", __FILE__, __FUNC__, __LINE__, in1, in2));
@@ -1543,13 +1544,20 @@ static LONG TextIconCompareDateAscFunc(struct Hook *hook,
 	if (0 != Result)
 		return Result;
 
-	GetAttr(TIDTA_Days, in1->in_Icon, (ULONG *) &ds1.ds_Days);
-	GetAttr(TIDTA_Days, in2->in_Icon, (ULONG *) &ds2.ds_Days);
-	GetAttr(TIDTA_Mins, in1->in_Icon, (ULONG *) &ds1.ds_Minute);
-	GetAttr(TIDTA_Mins, in2->in_Icon, (ULONG *) &ds2.ds_Minute);
-	GetAttr(TIDTA_Ticks, in1->in_Icon, (ULONG *) &ds1.ds_Tick);
-	GetAttr(TIDTA_Ticks, in2->in_Icon, (ULONG *) &ds2.ds_Tick);
+	GetAttr(TIDTA_Days, in1->in_Icon, &vals[0]);
+	GetAttr(TIDTA_Days, in2->in_Icon, &vals[1]);
+	GetAttr(TIDTA_Mins, in1->in_Icon, &vals[2]);
+	GetAttr(TIDTA_Mins, in2->in_Icon, &vals[3]);
+	GetAttr(TIDTA_Ticks, in1->in_Icon, &vals[4]);
+	GetAttr(TIDTA_Ticks, in2->in_Icon, &vals[5]);
 
+	ds1.ds_Days = vals[0];
+	ds2.ds_Days = vals[1];
+	ds1.ds_Minute = vals[2];
+	ds2.ds_Minute = vals[3];
+	ds1.ds_Tick = vals[4];
+	ds2.ds_Tick = vals[5];
+        
 	return CompareDates(&ds2, &ds1);
 }
 
@@ -1561,6 +1569,7 @@ static LONG TextIconCompareDateDescFunc(struct Hook *hook,
 	const struct ScaIconNode *in2, const struct ScaIconNode *in1)
 {
 	LONG Result;
+        IPTR vals[6];
 	struct DateStamp ds1, ds2;
 
 	d1(kprintf("%s/%s/%ld: in1=%08lx  in2=%08lx\n", __FILE__, __FUNC__, __LINE__, in1, in2));
@@ -1569,13 +1578,20 @@ static LONG TextIconCompareDateDescFunc(struct Hook *hook,
 	if (0 != Result)
 		return Result;
 
-	GetAttr(TIDTA_Days, in1->in_Icon, (ULONG *) &ds1.ds_Days);
-	GetAttr(TIDTA_Days, in2->in_Icon, (ULONG *) &ds2.ds_Days);
-	GetAttr(TIDTA_Mins, in1->in_Icon, (ULONG *) &ds1.ds_Minute);
-	GetAttr(TIDTA_Mins, in2->in_Icon, (ULONG *) &ds2.ds_Minute);
-	GetAttr(TIDTA_Ticks, in1->in_Icon, (ULONG *) &ds1.ds_Tick);
-	GetAttr(TIDTA_Ticks, in2->in_Icon, (ULONG *) &ds2.ds_Tick);
+	GetAttr(TIDTA_Days, in1->in_Icon, &vals[0]);
+	GetAttr(TIDTA_Days, in2->in_Icon, &vals[1]);
+	GetAttr(TIDTA_Mins, in1->in_Icon, &vals[2]);
+	GetAttr(TIDTA_Mins, in2->in_Icon, &vals[3]);
+	GetAttr(TIDTA_Ticks, in1->in_Icon, &vals[4]);
+	GetAttr(TIDTA_Ticks, in2->in_Icon, &vals[5]);
 
+	ds1.ds_Days = vals[0];
+	ds2.ds_Days = vals[1];
+	ds1.ds_Minute = vals[2];
+	ds2.ds_Minute = vals[3];
+	ds1.ds_Tick = vals[4];
+	ds2.ds_Tick = vals[5];
+        
 	return CompareDates(&ds1, &ds2);
 }
 
@@ -1587,6 +1603,7 @@ static LONG TextIconCompareTimeAscFunc(struct Hook *hook,
 	const struct ScaIconNode *in2, const struct ScaIconNode *in1)
 {
 	LONG Result;
+        IPTR vals[4];
 	struct DateStamp ds1, ds2;
 
 	d1(kprintf("%s/%s/%ld: in1=%08lx  in2=%08lx\n", __FILE__, __FUNC__, __LINE__, in1, in2));
@@ -1596,10 +1613,15 @@ static LONG TextIconCompareTimeAscFunc(struct Hook *hook,
 		return Result;
 
 	ds1.ds_Days = ds2.ds_Days = 0;
-	GetAttr(TIDTA_Mins, in1->in_Icon, (ULONG *) &ds1.ds_Minute);
-	GetAttr(TIDTA_Mins, in2->in_Icon, (ULONG *) &ds2.ds_Minute);
-	GetAttr(TIDTA_Ticks, in1->in_Icon, (ULONG *) &ds1.ds_Tick);
-	GetAttr(TIDTA_Ticks, in2->in_Icon, (ULONG *) &ds2.ds_Tick);
+	GetAttr(TIDTA_Mins, in1->in_Icon, &vals[0]);
+	GetAttr(TIDTA_Mins, in2->in_Icon, &vals[1]);
+	GetAttr(TIDTA_Ticks, in1->in_Icon, &vals[2]);
+	GetAttr(TIDTA_Ticks, in2->in_Icon, &vals[3]);
+
+	ds1.ds_Minute = vals[0];
+	ds2.ds_Minute = vals[1];
+	ds1.ds_Tick = vals[2];
+	ds2.ds_Tick = vals[3];
 
 	return CompareDates(&ds2, &ds1);
 }
@@ -1612,6 +1634,7 @@ static LONG TextIconCompareTimeDescFunc(struct Hook *hook,
 	const struct ScaIconNode *in2, const struct ScaIconNode *in1)
 {
 	LONG Result;
+        IPTR vals[4];
 	struct DateStamp ds1, ds2;
 
 	d1(kprintf("%s/%s/%ld: in1=%08lx  in2=%08lx\n", __FILE__, __FUNC__, __LINE__, in1, in2));
@@ -1621,10 +1644,15 @@ static LONG TextIconCompareTimeDescFunc(struct Hook *hook,
 		return Result;
 
 	ds1.ds_Days = ds2.ds_Days = 0;
-	GetAttr(TIDTA_Mins, in1->in_Icon, (ULONG *) &ds1.ds_Minute);
-	GetAttr(TIDTA_Mins, in2->in_Icon, (ULONG *) &ds2.ds_Minute);
-	GetAttr(TIDTA_Ticks, in1->in_Icon, (ULONG *) &ds1.ds_Tick);
-	GetAttr(TIDTA_Ticks, in2->in_Icon, (ULONG *) &ds2.ds_Tick);
+	GetAttr(TIDTA_Mins, in1->in_Icon, &vals[0]);
+	GetAttr(TIDTA_Mins, in2->in_Icon, &vals[1]);
+	GetAttr(TIDTA_Ticks, in1->in_Icon, &vals[2]);
+	GetAttr(TIDTA_Ticks, in2->in_Icon, &vals[3]);
+
+	ds1.ds_Minute = vals[0];
+	ds2.ds_Minute = vals[1];
+	ds1.ds_Tick = vals[2];
+	ds2.ds_Tick = vals[3];
 
 	return CompareDates(&ds1, &ds2);
 }
@@ -1685,7 +1713,7 @@ static LONG TextIconCompareProtAscFunc(struct Hook *hook,
 	const struct ScaIconNode *in2, const struct ScaIconNode *in1)
 {
 	LONG Result;
-	ULONG Prot1, Prot2;
+	IPTR Prot1, Prot2;
 
 	d1(kprintf("%s/%s/%ld: in1=%08lx  in2=%08lx\n", __FILE__, __FUNC__, __LINE__, in1, in2));
 
@@ -1707,7 +1735,7 @@ static LONG TextIconCompareProtDescFunc(struct Hook *hook,
 	const struct ScaIconNode *in2, const struct ScaIconNode *in1)
 {
 	LONG Result;
-	ULONG Prot1, Prot2;
+	IPTR Prot1, Prot2;
 
 	d1(kprintf("%s/%s/%ld: in1=%08lx  in2=%08lx\n", __FILE__, __FUNC__, __LINE__, in1, in2));
 
@@ -1729,7 +1757,7 @@ static LONG TextIconCompareOwnerAscFunc(struct Hook *hook,
 	const struct ScaIconNode *in2, const struct ScaIconNode *in1)
 {
 	LONG Result;
-	ULONG Owner1, Owner2;
+	IPTR Owner1, Owner2;
 
 	d1(kprintf("%s/%s/%ld: in1=%08lx  in2=%08lx\n", __FILE__, __FUNC__, __LINE__, in1, in2));
 
@@ -1756,7 +1784,7 @@ static LONG TextIconCompareOwnerDescFunc(struct Hook *hook,
 	const struct ScaIconNode *in2, const struct ScaIconNode *in1)
 {
 	LONG Result;
-	ULONG Owner1, Owner2;
+	IPTR Owner1, Owner2;
 
 	d1(kprintf("%s/%s/%ld: in1=%08lx  in2=%08lx\n", __FILE__, __FUNC__, __LINE__, in1, in2));
 
@@ -1783,7 +1811,7 @@ static LONG TextIconCompareGroupAscFunc(struct Hook *hook,
 	const struct ScaIconNode *in2, const struct ScaIconNode *in1)
 {
 	LONG Result;
-	ULONG Group1, Group2;
+	IPTR Group1, Group2;
 
 	d1(kprintf("%s/%s/%ld: in1=%08lx  in2=%08lx\n", __FILE__, __FUNC__, __LINE__, in1, in2));
 
@@ -1810,7 +1838,7 @@ static LONG TextIconCompareGroupDescFunc(struct Hook *hook,
 	const struct ScaIconNode *in2, const struct ScaIconNode *in1)
 {
 	LONG Result;
-	ULONG Group1, Group2;
+	IPTR Group1, Group2;
 
 	d1(kprintf("%s/%s/%ld: in1=%08lx  in2=%08lx\n", __FILE__, __FUNC__, __LINE__, in1, in2));
 

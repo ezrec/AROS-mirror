@@ -60,8 +60,8 @@ struct StringGadgetInstance
 
 // The functions in this module
 
-static SAVEDS(ULONG) INTERRUPT dispatchStringGadgetClass(Class *cl, Object *o, Msg msg);
-static ULONG StringGadgetNew(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) INTERRUPT dispatchStringGadgetClass(Class *cl, Object *o, Msg msg);
+static IPTR StringGadgetNew(Class *cl, Object *o, Msg msg);
 static ULONG StringGadgetDispose(Class *cl, Object *o, Msg msg);
 static ULONG StringGadgetRender(Class *cl, Object *o, Msg msg);
 static ULONG StringGadgetGoActive(Class *cl, Object *o, Msg msg);
@@ -98,9 +98,9 @@ struct ScalosClass *initStringGadgetClass(const struct PluginClass *plug)
 /**************************************************************************/
 /**********	   The StringGadgetCLASS class dispatcher	  *********/
 /**************************************************************************/
-static SAVEDS(ULONG) INTERRUPT dispatchStringGadgetClass(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) INTERRUPT dispatchStringGadgetClass(Class *cl, Object *o, Msg msg)
 {
-	ULONG Result;
+	IPTR Result;
 
 	d1(kprintf("%s/%s/%ld:  Class=%l08x  SuperClass=%08lx  Method=%08lx\n", __FILE__, __FUNC__,__LINE__, cl, cl->cl_Super, msg->MethodID));
 
@@ -149,7 +149,7 @@ static SAVEDS(ULONG) INTERRUPT dispatchStringGadgetClass(Class *cl, Object *o, M
 
 //----------------------------------------------------------------------------
 
-static ULONG StringGadgetNew(Class *cl, Object *o, Msg msg)
+static IPTR StringGadgetNew(Class *cl, Object *o, Msg msg)
 {
 	BOOL Success = FALSE;
 
@@ -188,7 +188,7 @@ static ULONG StringGadgetNew(Class *cl, Object *o, Msg msg)
 		o = NULL;
 		}
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 //----------------------------------------------------------------------------

@@ -117,7 +117,7 @@ LONG SetToolType(Object *iconObj, CONST_STRPTR ToolTypeName, CONST_STRPTR ToolTy
 			d1(kprintf("%s/%s/%ld: new ToolType=<%s>\n", __FILE__, __FUNC__, __LINE__, *ptt));
 
 		SetAttrs(iconObj, 
-			IDTA_ToolTypes, (ULONG) ttClone,
+			IDTA_ToolTypes, (IPTR) ttClone,
 			TAG_END);
 
 		if (SaveIcon)
@@ -187,7 +187,7 @@ LONG RemoveToolType(Object *iconObj, CONST_STRPTR ToolTypeName, BOOL SaveIcon)
 				kprintf("%s/%s/%ld: new ToolType=<%s>\n", __FILE__, __FUNC__, __LINE__, *ptt));
 
 			SetAttrs(iconObj, 
-				IDTA_ToolTypes, (ULONG) ttClone,
+				IDTA_ToolTypes, (IPTR) ttClone,
 				TAG_END);
 
 			if (SaveIcon)

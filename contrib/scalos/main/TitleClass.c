@@ -99,11 +99,11 @@ struct TitleFuncEntry
 
 // local functions
 
-static SAVEDS(ULONG) TitleClass_Dispatcher(Class *cl, Object *o, Msg msg);
-static ULONG TitleClass_New(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) TitleClass_Dispatcher(Class *cl, Object *o, Msg msg);
+static IPTR TitleClass_New(Class *cl, Object *o, Msg msg);
 static ULONG TitleClass_Dispose(Class *cl, Object *o, Msg msg);
 static ULONG TitleClass_Set(Class *cl, Object *o, Msg msg);
-static ULONG TitleClass_Generate(Class *cl, Object *o, Msg msg);
+static IPTR TitleClass_Generate(Class *cl, Object *o, Msg msg);
 static ULONG TitleClass_Translate(Class *cl, Object *o, Msg msg);
 static ULONG TitleClass_QueryTitle(Class *cl, Object *o, Msg msg);
 static ULONG TitleClass_Query(Class *cl, Object *o, Msg msg);
@@ -251,7 +251,7 @@ struct ScalosClass *initTitleClass(const struct PluginClass *plug)
 }
 
 
-static SAVEDS(ULONG) TitleClass_Dispatcher(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) TitleClass_Dispatcher(Class *cl, Object *o, Msg msg)
 {
 	ULONG Result;
 
@@ -298,7 +298,7 @@ static SAVEDS(ULONG) TitleClass_Dispatcher(Class *cl, Object *o, Msg msg)
 }
 
 
-static ULONG TitleClass_New(Class *cl, Object *o, Msg msg)
+static IPTR TitleClass_New(Class *cl, Object *o, Msg msg)
 {
 	o = (Object *) DoSuperMethodA(cl, o, msg);
 
@@ -340,7 +340,7 @@ static ULONG TitleClass_New(Class *cl, Object *o, Msg msg)
 
 		}
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 
@@ -367,7 +367,7 @@ static ULONG TitleClass_Set(Class *cl, Object *o, Msg msg)
 
 	d1(kprintf("%s/%s/%ld: o=%08lx\n", __FILE__, __FUNC__, __LINE__, o));
 
-	inst->tci_TitleFormat = (CONST_STRPTR) GetTagData(SCCA_Title_Format, (ULONG) inst->tci_TitleFormat, ops->ops_AttrList);
+	inst->tci_TitleFormat = (CONST_STRPTR) GetTagData(SCCA_Title_Format, (IPTR) inst->tci_TitleFormat, ops->ops_AttrList);
 
 	d1(kprintf("%s/%s/%ld: tci_TitleFormat=<%s>\n", __FILE__, __FUNC__, __LINE__, inst->tci_TitleFormat));
 
@@ -375,7 +375,7 @@ static ULONG TitleClass_Set(Class *cl, Object *o, Msg msg)
 }
 
 
-static ULONG TitleClass_Generate(Class *cl, Object *o, Msg msg)
+static IPTR TitleClass_Generate(Class *cl, Object *o, Msg msg)
 {
 	struct TitleClassInstance *inst = INST_DATA(cl, o);
 	CONST_STRPTR tlp;
@@ -442,7 +442,7 @@ static ULONG TitleClass_Generate(Class *cl, Object *o, Msg msg)
 
 	d1(kprintf("%s/%s/%ld: Buffer=<%s>\n", __FILE__, __FUNC__, __LINE__, inst->tci_Buffer));
 
-	return (ULONG) inst->tci_Buffer;
+	return (IPTR) inst->tci_Buffer;
 }
 
 

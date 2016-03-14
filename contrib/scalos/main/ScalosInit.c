@@ -140,7 +140,7 @@ static M68KFUNC_P3_PROTO(ULONG, ReadDiskPlugin,
 	A2, Object *, o,
 	A1, Msg, msg);
 static void CleanupScalosClasses(void);
-static void ScalosMain(LONG *ArgArray);
+static void ScalosMain(IPTR *ArgArray);
 
 //----------------------------------------------------------------------------
 
@@ -642,7 +642,7 @@ static M68KFUNC_P3(ULONG, ReadDiskPlugin,
 
 	if (!Success)
 		{
-		cl->cl_UserData = (ULONG)NULL;
+		cl->cl_UserData = (IPTR)NULL;
 		return DoSuperMethodA(cl, o, msg);
 		}
 
@@ -962,9 +962,9 @@ static ULONG InitMainWindow(void)
 			NP_StackSize, CurrentPrefs.pref_DefaultStackSize,
 			NP_Priority, 1,
 			NP_Cli, TRUE,
-			NP_CommandName, (ULONG) "Scalos_Window_Task_Main",
-			NP_Name, (ULONG) "Scalos_Window_Task_Main",
-			NP_Entry, (ULONG) PATCH_NEWFUNC(WindowTask),
+			NP_CommandName, (IPTR) "Scalos_Window_Task_Main",
+			NP_Name, (IPTR) "Scalos_Window_Task_Main",
+			NP_Entry, (IPTR) PATCH_NEWFUNC(WindowTask),
 			NP_CurrentDir, wsMain->ws_Lock,
 			TAG_END);
 
@@ -1061,7 +1061,7 @@ int main(int argc, char **argv)
 	struct RDArgs *argsPtr = NULL;
 	BPTR origCommandName = (BPTR)NULL;
 	BSTR origCommandFile = (BSTR)NULL;
-	LONG argArray[5];
+	IPTR argArray[5];
 	struct Task *MyTask;
 	STRPTR OrigTaskName;
 
@@ -1146,7 +1146,7 @@ int main(int argc, char **argv)
 }
 
 
-static void ScalosMain(LONG *ArgArray)
+static void ScalosMain(IPTR *ArgArray)
 {
 ///
 	BOOL ArgsDisableSplash = FALSE;
@@ -1416,7 +1416,7 @@ static void ScalosMain(LONG *ArgArray)
 			break;
 
 		ScreenTitleObject = SCA_NewScalosObjectTags("Title.sca",
-			SCCA_Title_Format, (ULONG) CurrentPrefs.pref_ScreenTitle,
+			SCCA_Title_Format, (IPTR) CurrentPrefs.pref_ScreenTitle,
 			TAG_END);
 
 		d1(kprintf("%s/%s/%ld: ScreenTitleObject=%08lx\n", __FILE__, __FUNC__, __LINE__, ScreenTitleObject));
@@ -1462,7 +1462,7 @@ static void ScalosMain(LONG *ArgArray)
 			if (IconBase->lib_Version >= 44)
 				{
 				IconControl(NULL,
-					ICONCTRLA_SetGlobalScreen, (ULONG) iInfos.xii_iinfos.ii_Screen,
+					ICONCTRLA_SetGlobalScreen, (IPTR) iInfos.xii_iinfos.ii_Screen,
 					TAG_END);
 				}
 			}
@@ -1470,13 +1470,13 @@ static void ScalosMain(LONG *ArgArray)
 			{
 			iInfos.xii_iinfos.ii_Screen = OpenScreenTags(NULL,
 				CurrentPrefs.pref_FullBenchFlag ? SA_ShowTitle : TAG_IGNORE, FALSE,
-//				  SA_Pens, (ULONG) PalettePrefs.pal_driPens,
+//				  SA_Pens, (IPTR) PalettePrefs.pal_driPens,
 				SA_SharePens, TRUE,
 				SA_LikeWorkbench, TRUE,
 //				  PalettePrefs.pal_ScreenColorList ? SA_Colors32 : TAG_IGNORE, (ULONG) PalettePrefs.pal_ScreenColorList,
-				SA_PubName, (ULONG) "Scalos",
+				SA_PubName, (IPTR) "Scalos",
 				SA_Type, PUBLICSCREEN,
-				SA_Title, (ULONG) "Scalos Screen",
+				SA_Title, (IPTR) "Scalos Screen",
 				TAG_END);
 
 			if (NULL == iInfos.xii_iinfos.ii_Screen)
