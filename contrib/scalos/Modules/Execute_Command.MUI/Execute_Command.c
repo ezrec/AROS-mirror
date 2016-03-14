@@ -658,7 +658,7 @@ static void MakeAPPSleep(BOOL etat)
 static void GetDefStack(void)
 {
 	SCA_ScalosControl(NULL,
-		SCALOSCTRLA_GetDefaultStackSize, (ULONG) &stackNum,
+		SCALOSCTRLA_GetDefaultStackSize, (IPTR) &stackNum,
 		TAG_END);
 }
 
@@ -907,7 +907,7 @@ static void WBLRequestFile(struct WBArg *arg)
 
 		// AllocAslRequest()
 		fileReq = AllocAslRequestTags(ASL_FileRequest,
-				ASLFR_TitleText, (ULONG) GetLocString(MSGID_COMMAND_ASLTITLE),
+				ASLFR_TitleText, (IPTR) GetLocString(MSGID_COMMAND_ASLTITLE),
 				ASLFR_DoSaveMode, FALSE,
 				ASLFR_RejectIcons, FALSE,
 				TAG_END);
@@ -919,8 +919,8 @@ static void WBLRequestFile(struct WBArg *arg)
 
 		// AslRequest()
 		if (AslRequestTags(fileReq,
-				ASLFR_InitialFile, (ULONG) FileName,
-				ASLFR_InitialDrawer, (ULONG) Path,
+				ASLFR_InitialFile, (IPTR) FileName,
+				ASLFR_InitialDrawer, (IPTR) Path,
 				TAG_END))
 			Success = TRUE;
 		else
