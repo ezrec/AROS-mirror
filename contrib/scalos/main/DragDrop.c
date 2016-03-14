@@ -259,7 +259,7 @@ void DragDrop(struct Window *win, LONG MouseX, LONG MouseY, ULONG Qualifier,
 
 		if (NULL == FindIconInDragList(iwt, inDest))
 			{
-			ULONG IconType;
+			IPTR IconType;
 
 			GetAttr(IDTA_Type, inDest->in_Icon, &IconType);
 
@@ -362,7 +362,7 @@ static SAVEDS(void) ASM INTERRUPT DropTask(void)
 		d1(kprintf("%s/%s/%ld: ArgList=%08lx  ArgCount=%ld\n", __FILE__, __FUNC__, __LINE__, ArgList, ArgCount));
 
 		DrInfo.drin_FileTransObj = SCA_NewScalosObjectTags((STRPTR) "FileTransfer.sca",
-			SCCA_FileTrans_Screen, (ULONG) iInfos.xii_iinfos.ii_Screen,
+			SCCA_FileTrans_Screen, (IPTR) iInfos.xii_iinfos.ii_Screen,
 			SCCA_FileTrans_Number, ArgCount,
 			SCCA_FileTrans_ReplaceMode, SCCV_ReplaceMode_Ask,
 			TAG_END);
@@ -479,9 +479,9 @@ static void DragDropFinish(struct internalScaWindowTask *iwt, struct ScaWindowSt
 				proc = CreateNewProcTags(NP_WindowPtr, NULL,
 					NP_StackSize, 8192,
 					NP_Cli, TRUE,
-					NP_CommandName, (ULONG) "Scalos_Drag&Drop",
-					NP_Name, (ULONG) "Scalos_Drag&Drop",
-					NP_Entry, (ULONG) PATCH_NEWFUNC(DropTask),
+					NP_CommandName, (IPTR) "Scalos_Drag&Drop",
+					NP_Name, (IPTR) "Scalos_Drag&Drop",
+					NP_Entry, (IPTR) PATCH_NEWFUNC(DropTask),
 					NP_Path, DupWBPathList(),
 					TAG_END);
 
@@ -644,7 +644,7 @@ static void Icon2IconDrop(struct ScalosArg **ArgList,
 				}
 			else
 				{
-				ULONG IconType;
+				IPTR IconType;
 
 				GetAttr(IDTA_Type, in->in_Icon, &IconType);
 				d1(kprintf("%s/%s/%ld: in=%08lx <%s>  IconType=%ld\n", __FILE__, __FUNC__, __LINE__, in, GetIconName(in), IconType));
@@ -1014,7 +1014,7 @@ static void Icon2DesktopDrop(struct ScalosArg **ArgList,
 		if (in)
 			{
 			// Drop on some icon
-			ULONG IconType;
+			IPTR IconType;
 
 			GetAttr(IDTA_Type, in->in_Icon, &IconType);
 
@@ -1187,7 +1187,7 @@ static void Desktop2DesktopDrop(struct ScalosArg **ArgList, struct ScaWindowStru
 	in = CheckMouseIcon(&iwtDest->iwt_WindowTask.wt_IconList, iwtDest, DrInfo->drin_x, DrInfo->drin_y);
 	if (in)
 		{
-		ULONG IconType;
+		IPTR IconType;
 
 		GetAttr(IDTA_Type, in->in_Icon, &IconType);
 		switch (IconType)
@@ -1303,7 +1303,7 @@ static void Desktop2IconDrop(struct ScalosArg **ArgList,
 		d1(kprintf("%s/%s/%ld: in=%08lx  iwtDest=%08lx\n", __FILE__, __FUNC__, __LINE__, in, iwtDest));
 		if (in)
 			{
-			ULONG IconType;
+			IPTR IconType;
 			BPTR IconLock = (BPTR)NULL;
 
 			GetAttr(IDTA_Type, in->in_Icon, &IconType);
@@ -1602,6 +1602,7 @@ static ULONG DropAddIcon(struct MsgPort *ReplyPort, struct ScaWindowStruct *wsDe
 {
 	struct SM_AddIcon *aMsg;
 	ULONG Result;
+        ULONG *resPtr;
 
 	aMsg = (struct SM_AddIcon *) SCA_AllocMessage(MTYP_AddIcon, 0);
 	d1(kprintf("%s/%s/%ld:  aMsg=%08lx\n", __FILE__, __FUNC__, __LINE__, aMsg));
@@ -1623,7 +1624,8 @@ static ULONG DropAddIcon(struct MsgPort *ReplyPort, struct ScaWindowStruct *wsDe
 	d1(kprintf("%s/%s/%ld:  after WaitPort\n", __FILE__, __FUNC__, __LINE__));
 
 	aMsg = (struct SM_AddIcon *) GetMsg(ReplyPort);
-	Result = *((ULONG *) &(aMsg->smai_x));
+        resPtr = (ULONG *)&aMsg->smai_x;
+	Result = *resPtr ;
 
 	SCA_FreeMessage(&aMsg->ScalosMessage);
 
@@ -1842,7 +1844,7 @@ static void DronOnAppObject(struct internalScaWindowTask *iwt, struct AppObject 
 	for (dn=iwt->iwt_DragNodeList; dn && ArgCount < NumberOfDroppedIcons; dn = (struct DragNode *) dn->drgn_Node.mln_Succ)
 		{
 		struct ScaIconNode *in = dn->drgn_iconnode;
-		ULONG IconType;
+		IPTR IconType;
 		BPTR oldDir;
 		BPTR fLock;
 
@@ -2189,36 +2191,36 @@ static BOOL DropPopupMenu(struct internalScaWindowTask *iwtSrc,
 			ULONG n;
 
 			MenuImages[DROPMENUIMAGE_Abort]	= NewObject(DtImageClass, NULL,
-				DTIMG_ImageName, (ULONG) "THEME:Menu/DropMenu/Abort",
+				DTIMG_ImageName, (IPTR) "THEME:Menu/DropMenu/Abort",
 				TAG_END);
 			d1(KPrintF("%s/%s/%ld: DROPMENUIMAGE_Abort=%08lx\n", __FILE__, __FUNC__, __LINE__, MenuImages[DROPMENUIMAGE_Abort]));
 			MenuImages[DROPMENUIMAGE_Copy] = NewObject(DtImageClass, NULL,
-				DTIMG_ImageName, (ULONG) "THEME:Menu/DropMenu/Copy",
+				DTIMG_ImageName, (IPTR) "THEME:Menu/DropMenu/Copy",
 				TAG_END);
 			d1(KPrintF("%s/%s/%ld: DROPMENUIMAGE_Copy=%08lx\n", __FILE__, __FUNC__, __LINE__, MenuImages[DROPMENUIMAGE_Copy]));
 			MenuImages[DROPMENUIMAGE_Move] = NewObject(DtImageClass, NULL,
-				DTIMG_ImageName, (ULONG) "THEME:Menu/DropMenu/Move",
+				DTIMG_ImageName, (IPTR) "THEME:Menu/DropMenu/Move",
 				TAG_END);
 			d1(KPrintF("%s/%s/%ld: DROPMENUIMAGE_Move=%08lx\n", __FILE__, __FUNC__, __LINE__, MenuImages[DROPMENUIMAGE_Move]));
 			MenuImages[DROPMENUIMAGE_CreateLink] = NewObject(DtImageClass, NULL,
-				DTIMG_ImageName, (ULONG) "THEME:Menu/DropMenu/CreateLink",
+				DTIMG_ImageName, (IPTR) "THEME:Menu/DropMenu/CreateLink",
 				TAG_END);
 			d1(KPrintF("%s/%s/%ld: DROPMENUIMAGE_CreateLink=%08lx\n", __FILE__, __FUNC__, __LINE__, MenuImages[DROPMENUIMAGE_CreateLink]));
 
-			pm = PM_MakeMenu(PM_Item, (ULONG) PM_MakeItem(PM_TitleID, MSGID_DROPMENU_DROPMENUTITLE,
+			pm = PM_MakeMenu(PM_Item, (IPTR) PM_MakeItem(PM_TitleID, MSGID_DROPMENU_DROPMENUTITLE,
 							PM_NoSelect, TRUE,
 							PM_ShinePen, TRUE,
 							PM_Shadowed, TRUE,
 							PM_Center, TRUE,
 							TAG_END),
-					PM_Item, (ULONG) (pmLast = PM_MakeItem(PM_WideTitleBar, TRUE,
+					PM_Item, (IPTR) (pmLast = PM_MakeItem(PM_WideTitleBar, TRUE,
 							TAG_END)),
-					PM_Item, (ULONG) PM_MakeItem(PM_TitleBar, TRUE,
+					PM_Item, (IPTR) PM_MakeItem(PM_TitleBar, TRUE,
 							TAG_END),
-					PM_Item, (ULONG) PM_MakeItem(PM_TitleID, MSGID_DROPMENU_CANCEL,
+					PM_Item, (IPTR) PM_MakeItem(PM_TitleID, MSGID_DROPMENU_CANCEL,
 							PM_UserData, DROPMENURESULT_Cancel,
-							MenuImages[DROPMENUIMAGE_Abort]	? PM_IconUnselected : TAG_IGNORE, (ULONG) MenuImages[DROPMENUIMAGE_Abort],
-							MenuImages[DROPMENUIMAGE_Abort]	? PM_IconSelected   : TAG_IGNORE, (ULONG) MenuImages[DROPMENUIMAGE_Abort],
+							MenuImages[DROPMENUIMAGE_Abort]	? PM_IconUnselected : TAG_IGNORE, (IPTR) MenuImages[DROPMENUIMAGE_Abort],
+							MenuImages[DROPMENUIMAGE_Abort]	? PM_IconSelected   : TAG_IGNORE, (IPTR) MenuImages[DROPMENUIMAGE_Abort],
 							TAG_END),
 					TAG_END);
 
@@ -2236,11 +2238,11 @@ static BOOL DropPopupMenu(struct internalScaWindowTask *iwtSrc,
 					{
 					d1(KPrintF("%s/%s/%ld:\n", __FILE__, __FUNC__, __LINE__));
 					PM_InsertMenuItem(pm,
-						PM_Insert_After, (ULONG) pmLast,
-						PM_Insert_Item, (ULONG) (pmLastNext = PM_MakeItem(PM_TitleID, MSGID_DROPMENU_COPY,
+						PM_Insert_After, (IPTR) pmLast,
+						PM_Insert_Item, (IPTR) (pmLastNext = PM_MakeItem(PM_TitleID, MSGID_DROPMENU_COPY,
 							PM_UserData, DROPMENURESULT_Copy,
-							MenuImages[DROPMENUIMAGE_Copy] ? PM_IconUnselected : TAG_IGNORE, (ULONG) MenuImages[DROPMENUIMAGE_Copy],
-							MenuImages[DROPMENUIMAGE_Copy] ? PM_IconSelected   : TAG_IGNORE, (ULONG) MenuImages[DROPMENUIMAGE_Copy],
+							MenuImages[DROPMENUIMAGE_Copy] ? PM_IconUnselected : TAG_IGNORE, (IPTR) MenuImages[DROPMENUIMAGE_Copy],
+							MenuImages[DROPMENUIMAGE_Copy] ? PM_IconSelected   : TAG_IGNORE, (IPTR) MenuImages[DROPMENUIMAGE_Copy],
 							TAG_END)),
 						TAG_END);
 					pmLast = pmLastNext;
@@ -2250,11 +2252,11 @@ static BOOL DropPopupMenu(struct internalScaWindowTask *iwtSrc,
 					{
 					d1(KPrintF("%s/%s/%ld:\n", __FILE__, __FUNC__, __LINE__));
 					PM_InsertMenuItem(pm,
-						PM_Insert_After, (ULONG) pmLast,
-						PM_Insert_Item, (ULONG) (pmLastNext = PM_MakeItem(PM_TitleID, MSGID_DROPMENU_MOVE,
+						PM_Insert_After, (IPTR) pmLast,
+						PM_Insert_Item, (IPTR) (pmLastNext = PM_MakeItem(PM_TitleID, MSGID_DROPMENU_MOVE,
 							PM_UserData, DROPMENURESULT_Move,
-							MenuImages[DROPMENUIMAGE_Move] ? PM_IconUnselected : TAG_IGNORE, (ULONG) MenuImages[DROPMENUIMAGE_Move],
-							MenuImages[DROPMENUIMAGE_Move] ? PM_IconSelected   : TAG_IGNORE, (ULONG) MenuImages[DROPMENUIMAGE_Move],
+							MenuImages[DROPMENUIMAGE_Move] ? PM_IconUnselected : TAG_IGNORE, (IPTR) MenuImages[DROPMENUIMAGE_Move],
+							MenuImages[DROPMENUIMAGE_Move] ? PM_IconSelected   : TAG_IGNORE, (IPTR) MenuImages[DROPMENUIMAGE_Move],
 							TAG_END)),
 						TAG_END);
 					pmLast = pmLastNext;
@@ -2264,11 +2266,11 @@ static BOOL DropPopupMenu(struct internalScaWindowTask *iwtSrc,
 					{
 					d1(KPrintF("%s/%s/%ld:\n", __FILE__, __FUNC__, __LINE__));
 					PM_InsertMenuItem(pm,
-						PM_Insert_After, (ULONG) pmLast,
-						PM_Insert_Item, (ULONG) (pmLastNext = PM_MakeItem(PM_TitleID, MSGID_DROPMENU_CREATE_LINK,
+						PM_Insert_After, (IPTR) pmLast,
+						PM_Insert_Item, (IPTR) (pmLastNext = PM_MakeItem(PM_TitleID, MSGID_DROPMENU_CREATE_LINK,
 							PM_UserData, DROPMENURESULT_CreateLink,
-							MenuImages[DROPMENUIMAGE_CreateLink] ? PM_IconUnselected : TAG_IGNORE, (ULONG) MenuImages[DROPMENUIMAGE_CreateLink],
-							MenuImages[DROPMENUIMAGE_CreateLink] ? PM_IconSelected   : TAG_IGNORE, (ULONG) MenuImages[DROPMENUIMAGE_CreateLink],
+							MenuImages[DROPMENUIMAGE_CreateLink] ? PM_IconUnselected : TAG_IGNORE, (IPTR) MenuImages[DROPMENUIMAGE_CreateLink],
+							MenuImages[DROPMENUIMAGE_CreateLink] ? PM_IconSelected   : TAG_IGNORE, (IPTR) MenuImages[DROPMENUIMAGE_CreateLink],
 							TAG_END)),
 						TAG_END);
 					//pmLast = pmLastNext;
@@ -2277,8 +2279,8 @@ static BOOL DropPopupMenu(struct internalScaWindowTask *iwtSrc,
 
 				// PM_OpenPopupMenuA()
 				UserData = PM_OpenPopupMenu(iwtSrc->iwt_WindowTask.wt_Window,
-					PM_Menu, (ULONG) pm,
-					PM_LocaleHook, (ULONG) &PMGetStringHook,
+					PM_Menu, (IPTR) pm,
+					PM_LocaleHook, (IPTR) &PMGetStringHook,
 					TAG_END);
 				d1(KPrintF("%s/%s/%ld: UserData=%ld\n", __FILE__, __FUNC__, __LINE__, UserData));
 

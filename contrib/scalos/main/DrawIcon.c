@@ -85,8 +85,8 @@ void EraseIconObject(struct internalScaWindowTask *iwt, Object *IconObj)
 void DrawIconObject(struct internalScaWindowTask *iwt, Object *IconObj, ULONG Flags)
 {
 	struct ExtGadget *gg = (struct ExtGadget *) IconObj;
-	ULONG IconUserFlags = 0L;
-	ULONG IconOverlayType = ICONOVERLAY_None;
+	IPTR IconUserFlags = 0L;
+	IPTR IconOverlayType = ICONOVERLAY_None;
 	LONG BoundsLeft, BoundsRight, BoundsTop, BoundsBottom;
 	ULONG ScreenDepth;
 
@@ -277,7 +277,7 @@ void DrawIconObjectTransparent(struct internalScaWindowTask *iwt, Object *IconOb
 				iwt->iwt_InnerLeft + gg->BoundsLeftEdge - iwt->iwt_WindowTask.wt_XOffset,
 				iwt->iwt_InnerTop + gg->BoundsTopEdge - iwt->iwt_WindowTask.wt_YOffset,
 				gg->BoundsWidth, gg->BoundsHeight,
-				SCALOSGFX_BlitIconAlpha, (ULONG) AlphaChannel,
+				SCALOSGFX_BlitIconAlpha, (IPTR) AlphaChannel,
 				SCALOSGFX_BlitIconTransparency, (transparency * 255) / 100,
 				TAG_END);
 
@@ -469,8 +469,8 @@ void DrawIconObjectK(struct internalScaWindowTask *iwt, Object *IconObj,
 				iwt->iwt_InnerLeft + gg->BoundsLeftEdge - iwt->iwt_WindowTask.wt_XOffset,
 				iwt->iwt_InnerTop + gg->BoundsTopEdge - iwt->iwt_WindowTask.wt_YOffset,
 				gg->BoundsWidth, gg->BoundsHeight,
-				SCALOSGFX_BlitIconAlpha, (ULONG) AlphaChannel,
-				SCALOSGFX_BlitIconHilight, (ULONG) K,
+				SCALOSGFX_BlitIconAlpha, (IPTR) AlphaChannel,
+				SCALOSGFX_BlitIconHilight, (IPTR) K,
 				TAG_END);
 
 		DrawGhosted = FALSE;
@@ -1001,17 +1001,17 @@ static void DrawIconObjectDisabled(struct internalScaWindowTask *iwt, Object *Ic
 // Draw IconOverlay
 static void DrawIconObjectOverlay(struct internalScaWindowTask *iwt, Object *IconObj)
 {
-	ULONG IconOverlayType = ICONOVERLAY_None;
+	IPTR IconOverlayType = ICONOVERLAY_None;
 	struct DatatypesImage *dti;
 	struct ExtGadget *gg = (struct ExtGadget *) IconObj;
-	LONG InnerLeft = 0;
-	LONG InnerBottom = 0;
+	IPTR InnerLeft = 0;
+	IPTR InnerBottom = 0;
 	LONG x, y;
 	ULONG n;
 
 	GetAttr(IDTA_OverlayType, IconObj, &IconOverlayType);
-	GetAttr(IDTA_InnerLeft, IconObj, (ULONG *) &InnerLeft);
-	GetAttr(IDTA_InnerBottom, IconObj, (ULONG *) &InnerBottom);
+	GetAttr(IDTA_InnerLeft, IconObj, &InnerLeft);
+	GetAttr(IDTA_InnerBottom, IconObj, &InnerBottom);
 
 	x = gg->LeftEdge + InnerLeft + iwt->iwt_InnerLeft
 			- iwt->iwt_WindowTask.wt_XOffset;

@@ -201,7 +201,7 @@ LONG InitDefIcons(void);
 void CleanupDefIcons(void);
 void NewDefIconsPrefs(struct internalScaWindowTask *iwt, struct NotifyMessage *msg);
 BOOL ChangedDefIconsPrefs(void);
-struct TypeNode *DefIconsIdentify(BPTR dirLock, CONST_STRPTR Name, ULONG IconType);
+struct TypeNode *DefIconsIdentify(BPTR dirLock, CONST_STRPTR Name, IPTR IconType);
 Object *ReturnDefIconObjTags(BPTR dirLock, CONST_STRPTR Name, ULONG FirstTag, ...);
 Object *ReturnDefIconObj(BPTR dirLock, CONST_STRPTR Name, struct TagItem *TagList);
 ///

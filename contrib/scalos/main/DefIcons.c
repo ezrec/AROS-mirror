@@ -470,7 +470,7 @@ static LONG match(CONST_STRPTR a, CONST_STRPTR b, size_t len)
 it returns NULL for failure
  */
 
-struct TypeNode *DefIconsIdentify(BPTR dirLock, CONST_STRPTR Name, ULONG IconType)
+struct TypeNode *DefIconsIdentify(BPTR dirLock, CONST_STRPTR Name, IPTR IconType)
 {
 	struct TypeNode *type = NULL;
 	T_ExamineData *fib = NULL;
@@ -1022,7 +1022,7 @@ Object *ReturnDefIconObj(BPTR dirLock, CONST_STRPTR Name, struct TagItem *TagLis
 	d1(KPrintF("%s/%s/%ld: tn=%08lx  Name=<%s>\n", __FILE__, __FUNC__, __LINE__, tn, Name));
 	debugLock_d1(dirLock);
 
-	switch ((ULONG) tn)
+	switch ((IPTR) tn)
 		{
 	case WBDISK:
 		IconObj = ReadDefIconObjectForNameFallback(WBDISK,
@@ -1098,8 +1098,8 @@ Object *ReturnDefIconObj(BPTR dirLock, CONST_STRPTR Name, struct TagItem *TagLis
 		if (NULL == IconObj)
 			{
 			IconObj = GetDefIconObjectTags(WBPROJECT,
-				IDTA_Text, (ULONG) Name,
-				TAG_MORE, (ULONG) TagList,
+				IDTA_Text, (IPTR) Name,
+				TAG_MORE, (IPTR) TagList,
 				TAG_END);
 			}
 		break;
@@ -1133,11 +1133,11 @@ static Object *ReadDefIconObjectForName(ULONG IconType, CONST_STRPTR TypeName,
 		d1(KPrintF("%s/%s/%ld: DefIconPath=<%s>\n", __FILE__, __FUNC__, __LINE__, DefIconPath));
 
 		IconObj = (Object *) NewIconObjectTags(DefIconPath,
-			IDTA_IconLocation, (ULONG) &OriginalLocation,
+			IDTA_IconLocation, (IPTR) &OriginalLocation,
 			IDTA_SupportedIconTypes, GetTagData(IDTA_SupportedIconTypes, CurrentPrefs.pref_SupportedIconTypes, TagList),
-			IDTA_SizeConstraints, GetTagData(IDTA_SizeConstraints, (ULONG) &CurrentPrefs.pref_IconSizeConstraints, TagList),
+			IDTA_SizeConstraints, GetTagData(IDTA_SizeConstraints, (IPTR) &CurrentPrefs.pref_IconSizeConstraints, TagList),
 			IDTA_ScalePercentage, GetTagData(IDTA_ScalePercentage, CurrentPrefs.pref_IconScaleFactor, TagList),
-			TagList ? TAG_MORE : TAG_IGNORE, (ULONG) TagList,
+			TagList ? TAG_MORE : TAG_IGNORE, (IPTR) TagList,
 			TAG_END);
 
 		d1(kprintf("%s/%s/%ld: IconObj=%08lx\n", __FILE__, __FUNC__, __LINE__, IconObj));
@@ -1151,11 +1151,11 @@ static Object *ReadDefIconObjectForName(ULONG IconType, CONST_STRPTR TypeName,
 			d1(KPrintF("%s/%s/%ld: DefIconPath=<%s>\n", __FILE__, __FUNC__, __LINE__, DefIconPath));
 
 			IconObj = (Object *) NewIconObjectTags(DefIconPath,
-				IDTA_IconLocation, (ULONG) &OriginalLocation,
+				IDTA_IconLocation, (IPTR) &OriginalLocation,
 				IDTA_SupportedIconTypes, GetTagData(IDTA_SupportedIconTypes, CurrentPrefs.pref_SupportedIconTypes, TagList),
-				IDTA_SizeConstraints, GetTagData(IDTA_SizeConstraints, (ULONG) &CurrentPrefs.pref_IconSizeConstraints, TagList),
+				IDTA_SizeConstraints, GetTagData(IDTA_SizeConstraints, (IPTR) &CurrentPrefs.pref_IconSizeConstraints, TagList),
 				IDTA_ScalePercentage, GetTagData(IDTA_ScalePercentage, CurrentPrefs.pref_IconScaleFactor, TagList),
-				TagList ? TAG_MORE : TAG_IGNORE, (ULONG) TagList,
+				TagList ? TAG_MORE : TAG_IGNORE, (IPTR) TagList,
 				TAG_END);
 
 			d1(kprintf("%s/%s/%ld: IconObj=%08lx\n", __FILE__, __FUNC__, __LINE__, IconObj));
@@ -1211,8 +1211,8 @@ static Object *ReadDefIconObjectForNameFallback(ULONG IconType, CONST_STRPTR Typ
 		else
 			{
 			IconObj = GetDefIconObjectTags(IconType,
-				IDTA_Text, (ULONG) OriginalName,
-				TAG_MORE, (ULONG) TagList,
+				IDTA_Text, (IPTR) OriginalName,
+				TAG_MORE, (IPTR) TagList,
 				TAG_END);
 			}
 		}
@@ -1237,19 +1237,19 @@ static Object *CloneDefIconObject(Object *IconObj, BPTR dirLock,
 	d1(KPrintF("%s/%s/%ld: IconObj=%08lx\n", __FILE__, __FUNC__, __LINE__, IconObj));
 
 	CloneTags[0].ti_Tag = IDTA_IconLocation;
-	CloneTags[0].ti_Data = (ULONG) &OriginalLocation;
+	CloneTags[0].ti_Data = (IPTR) &OriginalLocation;
 
 	CloneTags[1].ti_Tag = IDTA_SupportedIconTypes;
 	CloneTags[1].ti_Data = GetTagData(IDTA_SupportedIconTypes, CurrentPrefs.pref_SupportedIconTypes, TagList);
 
 	CloneTags[2].ti_Tag = IDTA_SizeConstraints;
-	CloneTags[2].ti_Data = GetTagData(IDTA_SizeConstraints, (ULONG) &CurrentPrefs.pref_IconSizeConstraints, TagList);
+	CloneTags[2].ti_Data = GetTagData(IDTA_SizeConstraints, (IPTR) &CurrentPrefs.pref_IconSizeConstraints, TagList);
 
 	CloneTags[3].ti_Tag = IDTA_ScalePercentage;
 	CloneTags[3].ti_Data = GetTagData(IDTA_ScalePercentage, CurrentPrefs.pref_IconScaleFactor, TagList);
 
 	CloneTags[4].ti_Tag = TagList ? TAG_MORE : TAG_IGNORE;
-	CloneTags[4].ti_Data = (ULONG) TagList;
+	CloneTags[4].ti_Data = (IPTR) TagList;
 
 	CloneTags[5].ti_Tag = TAG_END;
 	CloneTags[5].ti_Data = 0;

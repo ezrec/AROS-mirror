@@ -50,9 +50,9 @@ BOOL CLIStart(BPTR dirLock, CONST_STRPTR PrgName, Object *iconObject, ULONG def_
 	BPTR oldCurrentDir;
 	STRPTR defTool;
 	STRPTR cmd;
-	ULONG StackSize = def_StackSize;
+	IPTR StackSize = def_StackSize;
 	size_t CmdLen;
-	ULONG IconType;
+	IPTR IconType;
 	BOOL Success = FALSE;
 	const struct DiskObject *icon = NULL;
 
@@ -70,7 +70,7 @@ BOOL CLIStart(BPTR dirLock, CONST_STRPTR PrgName, Object *iconObject, ULONG def_
 
 	d1(kprintf("%s/%s/%ld: PrgName=<%s>  deftool=<%s>\n", __FILE__, __FUNC__, __LINE__, PrgName, defTool));
 
-	GetAttr(IDTA_Type, iconObject, (ULONG *) &IconType);
+	GetAttr(IDTA_Type, iconObject, &IconType);
 	switch ((ULONG) IconType)
 		{
 	case WBTOOL:
@@ -103,10 +103,10 @@ BOOL CLIStart(BPTR dirLock, CONST_STRPTR PrgName, Object *iconObject, ULONG def_
 			{
 		case WBTOOL:
 		case WB_TEXTICON_TOOL:
-			ScaFormatStringMaxLength(cmd, CmdLen, "\"%s\"", (ULONG) PrgName);
+			ScaFormatStringMaxLength(cmd, CmdLen, "\"%s\"", (IPTR) PrgName);
 			break;
 		case WBPROJECT:
-			ScaFormatStringMaxLength(cmd, CmdLen, "\"%s\" \"%s\"", (ULONG) defTool, (ULONG) PrgName);
+			ScaFormatStringMaxLength(cmd, CmdLen, "\"%s\" \"%s\"", (IPTR) defTool, (IPTR) PrgName);
 			break;
 		default:
 			return FALSE;

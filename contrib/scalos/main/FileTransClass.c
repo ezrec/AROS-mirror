@@ -81,16 +81,16 @@ struct FileTransOp
 
 // local functions
 
-static SAVEDS(ULONG) FileTransClass_Dispatcher(Class *cl, Object *o, Msg msg);
-static ULONG FileTransClass_New(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) FileTransClass_Dispatcher(Class *cl, Object *o, Msg msg);
+static IPTR FileTransClass_New(Class *cl, Object *o, Msg msg);
 static ULONG FileTransClass_Dispose(Class *cl, Object *o, Msg msg);
 static ULONG FileTransClass_Copy(Class *cl, Object *o, Msg msg);
 static ULONG FileTransClass_Move(Class *cl, Object *o, Msg msg);
 static ULONG FileTransClass_CreateLink(Class *cl, Object *o, Msg msg);
 static ULONG FileTransClass_Delete(Class *cl, Object *o, Msg msg);
 static ULONG FileTransClass_CheckAbort(Class *cl, Object *o, Msg msg);
-static ULONG FileTransClass_OpenWindow(Class *cl, Object *o, Msg msg);
-static ULONG FileTransClass_DelayedOpenWindow(Class *cl, Object *o, Msg msg);
+static IPTR FileTransClass_OpenWindow(Class *cl, Object *o, Msg msg);
+static IPTR FileTransClass_DelayedOpenWindow(Class *cl, Object *o, Msg msg);
 static ULONG FileTransClass_UpdateWindow(Class *cl, Object *o, Msg msg);
 
 static void AddFTOp(struct FileTransClassInstance *inst,
@@ -145,7 +145,7 @@ struct ScalosClass *initFileTransClass(const struct PluginClass *plug)
 }
 
 
-static SAVEDS(ULONG) FileTransClass_Dispatcher(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) FileTransClass_Dispatcher(Class *cl, Object *o, Msg msg)
 {
 	ULONG Result;
 
@@ -224,7 +224,7 @@ static SAVEDS(ULONG) FileTransClass_Dispatcher(Class *cl, Object *o, Msg msg)
 }
 
 
-static ULONG FileTransClass_New(Class *cl, Object *o, Msg msg)
+static IPTR FileTransClass_New(Class *cl, Object *o, Msg msg)
 {
 	d1(kprintf("%s/%s/%ld: iwt=%08lx  <%s>\n", __FILE__, __FUNC__, __LINE__, iwt, iwt->iwt_WinTitle));
 
@@ -253,7 +253,7 @@ static ULONG FileTransClass_New(Class *cl, Object *o, Msg msg)
 		ScalosObtainSemaphoreShared(&CopyHookSemaphore);
 
 		inst->ftci_Number = GetTagData(SCCA_FileTrans_Number, 0, ops->ops_AttrList);
-		inst->ftci_Screen = (struct Screen *) GetTagData(SCCA_FileTrans_Screen, (ULONG)NULL, ops->ops_AttrList);
+		inst->ftci_Screen = (struct Screen *) GetTagData(SCCA_FileTrans_Screen, (IPTR)NULL, ops->ops_AttrList);
 		inst->ftci_ReplaceMode = GetTagData(SCCA_FileTrans_ReplaceMode, SCCV_ReplaceMode_Ask, ops->ops_AttrList);
 		inst->ftci_OverwriteMode = GetTagData(SCCA_FileTrans_WriteProtectedMode, SCCV_WriteProtectedMode_Ask, ops->ops_AttrList);
 		inst->ftci_LinksMode = GetTagData(SCCA_FileTrans_LinksNotSupportedMode, SCCV_LinksNotSupportedMode_Ask, ops->ops_AttrList);
@@ -280,7 +280,7 @@ static ULONG FileTransClass_New(Class *cl, Object *o, Msg msg)
 			}
 		}
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 
@@ -532,7 +532,7 @@ static ULONG FileTransClass_Delete(Class *cl, Object *o, Msg msg)
 }
 
 
-static ULONG FileTransClass_OpenWindow(Class *cl, Object *o, Msg msg)
+static IPTR FileTransClass_OpenWindow(Class *cl, Object *o, Msg msg)
 {
 	struct FileTransClassInstance *inst = INST_DATA(cl, o);
 
@@ -597,7 +597,7 @@ static ULONG FileTransClass_OpenWindow(Class *cl, Object *o, Msg msg)
 
 	d1(Delay(5 * 50));
 
-	return (ULONG) inst->ftci_Window;
+	return (IPTR) inst->ftci_Window;
 }
 
 
@@ -849,7 +849,7 @@ static LONG DoFileTransCopy(Class *cl, Object *o, struct FileTransOp *fto)
 		OldIconObj = NewIconObject("disk", NULL);
 		if (OldIconObj)
 			{
-			ULONG IconType;
+			IPTR IconType;
 
 			GetAttr(IDTA_Type, OldIconObj, &IconType);
 
@@ -948,7 +948,7 @@ static LONG DoFileTransCopy(Class *cl, Object *o, struct FileTransOp *fto)
 					//
 					SetAttrs(OldIconObj,
 						DTA_Name, fto->fto_DestName,
-						IDTA_Type, (ULONG) WBDRAWER,
+						IDTA_Type, (IPTR) WBDRAWER,
 						TAG_END);
 
 					IconObj = OldIconObj;
@@ -1360,7 +1360,7 @@ static LONG CountFTOps(Class *cl, Object *o, struct FileTransOp *fto)
 }
 
 
-static ULONG FileTransClass_DelayedOpenWindow(Class *cl, Object *o, Msg msg)
+static IPTR FileTransClass_DelayedOpenWindow(Class *cl, Object *o, Msg msg)
 {
 	struct FileTransClassInstance *inst = INST_DATA(cl, o);
 
@@ -1372,7 +1372,7 @@ static ULONG FileTransClass_DelayedOpenWindow(Class *cl, Object *o, Msg msg)
 			DoMethod(o, SCCM_FileTrans_OpenWindow);
 		}
 
-	return (ULONG) inst->ftci_Window;
+	return (IPTR) inst->ftci_Window;
 }
 
 
@@ -1440,10 +1440,10 @@ static ULONG FileTransClass_UpdateWindow(Class *cl, Object *o, Msg msg)
 			// show <from "fromdir" to "todir"> in lower text gadget
 			ScaFormatStringMaxLength(inst->ftci_Line2Buffer, Max_PathLen,
 				 "%s \"%s\" %s \"%s\"", 
-				(ULONG) GetLocString(MSGID_FROMNAME),
-				(ULONG) muw->muw_SrcName,
-				(ULONG) GetLocString(MSGID_TONAME),
-				(ULONG) DestDirName);
+				(IPTR) GetLocString(MSGID_FROMNAME),
+				(IPTR) muw->muw_SrcName,
+				(IPTR) GetLocString(MSGID_TONAME),
+				(IPTR) DestDirName);
 
 			d1(kprintf("%s/%s/%ld: Line2Buffer=<%s>\n", __FILE__, __FUNC__, __LINE__, inst->ftci_Line2Buffer));
 
@@ -1564,21 +1564,21 @@ static ULONG FileTransClass_UpdateWindow(Class *cl, Object *o, Msg msg)
 
 					ScaFormatStringMaxLength(inst->ftci_Line3Buffer, sizeof(inst->ftci_Line3Buffer),
 						"%s %ld %s %ld %s",
-						(ULONG) GetLocString(MSGID_FILETRANSFER_REMAININGTIME),
+						(IPTR) GetLocString(MSGID_FILETRANSFER_REMAININGTIME),
 						RemainingHours,
-						(ULONG) GetLocString(RemainingHours > 1 ?
+						(IPTR) GetLocString(RemainingHours > 1 ?
 							MSGID_FILETRANSFER_HOURS : MSGID_FILETRANSFER_HOUR),
 						RemainingMinutes,
-						(ULONG) GetLocString(RemainingMinutes > 1 ?
+						(IPTR) GetLocString(RemainingMinutes > 1 ?
 							MSGID_FILETRANSFER_MINUTES : MSGID_FILETRANSFER_MINUTE));
 					}
 				else if (RemainingMinutes > 1)
 					{
 					ScaFormatStringMaxLength(inst->ftci_Line3Buffer, sizeof(inst->ftci_Line3Buffer),
 						"%s %ld %s", 
-						(ULONG) GetLocString(MSGID_FILETRANSFER_REMAININGTIME),
+						(IPTR) GetLocString(MSGID_FILETRANSFER_REMAININGTIME),
 						RemainingMinutes,
-						(ULONG) GetLocString(MSGID_FILETRANSFER_MINUTES));
+						(IPTR) GetLocString(MSGID_FILETRANSFER_MINUTES));
 					}
 				else
 					{
@@ -1586,9 +1586,9 @@ static ULONG FileTransClass_UpdateWindow(Class *cl, Object *o, Msg msg)
 
 					ScaFormatStringMaxLength(inst->ftci_Line3Buffer, sizeof(inst->ftci_Line3Buffer),
 						"%s %ld %s", 
-						(ULONG) GetLocString(MSGID_FILETRANSFER_REMAININGTIME),
+						(IPTR) GetLocString(MSGID_FILETRANSFER_REMAININGTIME),
 						RemainingSeconds,
-						(ULONG) GetLocString(RemainingSeconds > 1 ?
+						(IPTR) GetLocString(RemainingSeconds > 1 ?
 							MSGID_FILETRANSFER_SECONDS : MSGID_FILETRANSFER_SECOND));
 					}
 				}
@@ -1609,8 +1609,8 @@ static ULONG FileTransClass_UpdateWindow(Class *cl, Object *o, Msg msg)
 
 				ScaFormatStringMaxLength(inst->ftci_Line5Buffer, sizeof(inst->ftci_Line5Buffer),
 					GetLocString(MSGID_FILETRANSFER_DETAILS_SIZE),
-					(ULONG) CurrentBytesBuffer,
-					(ULONG) TotalBytesBuffer);
+					(IPTR) CurrentBytesBuffer,
+					(IPTR) TotalBytesBuffer);
 				}
 			else
 				{
@@ -1620,12 +1620,12 @@ static ULONG FileTransClass_UpdateWindow(Class *cl, Object *o, Msg msg)
 
 				ScaFormatStringMaxLength(inst->ftci_Line5Buffer, sizeof(inst->ftci_Line5Buffer),
 					GetLocString(MSGID_FILETRANSFER_DETAILS_SIZE_NOTOTAL),
-					(ULONG) CurrentBytesBuffer);
+					(IPTR) CurrentBytesBuffer);
 				}
 
 			ScaFormatStringMaxLength(inst->ftci_Line6Buffer, sizeof(inst->ftci_Line6Buffer),
 				GetLocString(MSGID_FILETRANSFER_DETAILS_SPEED),
-				(ULONG) SpeedBuffer);
+				(IPTR) SpeedBuffer);
 
 			FileTransClass_UpdateTextGadget(inst->ftci_Window,
 				inst->ftci_TextLineGadgets[2], inst->ftci_Line3Buffer);
@@ -1821,7 +1821,7 @@ static ULONG FileTransClass_InsufficientSpaceRequest(Class *cl, Object *o, Msg m
 static void FileTransClass_UpdateTextGadget(struct Window *win, struct Gadget *gad, CONST_STRPTR NewText)
 {
 	SetGadgetAttrs(gad, win, NULL,
-		GBTDTA_Text, (ULONG) NewText,
+		GBTDTA_Text, (IPTR) NewText,
 		TAG_END);
 	EraseRect(win->RPort,
 		gad->LeftEdge, gad->TopEdge,
@@ -1910,10 +1910,10 @@ static BOOL FileTransClass_CreateGadgets(struct FileTransClassInstance *inst)
 			GA_Top, ng.ng_TopEdge,
 			GA_Width, ng.ng_Width,
 			GA_Height, ng.ng_Height,
-			(gad ? GA_Previous : TAG_IGNORE), (ULONG) gad,
-			GBTDTA_Text, (ULONG) inst->ftci_Line1Buffer,
-			GBTDTA_TextFont, (ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
-			GBTDTA_TTFont, (ULONG) &ScreenTTFont,
+			(gad ? GA_Previous : TAG_IGNORE), (IPTR) gad,
+			GBTDTA_Text, (IPTR) inst->ftci_Line1Buffer,
+			GBTDTA_TextFont, (IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
+			GBTDTA_TTFont, (IPTR) &ScreenTTFont,
 			GBTDTA_DrawMode, JAM1,
 			GBTDTA_Justification, GACT_STRINGCENTER,
 			TAG_END);
@@ -1930,11 +1930,11 @@ static BOOL FileTransClass_CreateGadgets(struct FileTransClassInstance *inst)
 			GA_Top, ng.ng_TopEdge,
 			GA_Width, ng.ng_Width,
 			GA_Height, ng.ng_Height,
-			(gad ? GA_Previous : TAG_IGNORE), (ULONG) gad,
-			GBTDTA_Text, (ULONG) inst->ftci_Line2Buffer,
+			(gad ? GA_Previous : TAG_IGNORE), (IPTR) gad,
+			GBTDTA_Text, (IPTR) inst->ftci_Line2Buffer,
 			GBTDTA_DrawMode, JAM1,
-			GBTDTA_TextFont, (ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
-			GBTDTA_TTFont, (ULONG) &ScreenTTFont,
+			GBTDTA_TextFont, (IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
+			GBTDTA_TTFont, (IPTR) &ScreenTTFont,
 			GBTDTA_Justification, GACT_STRINGLEFT,
 			TAG_END);
 		if (NULL == gad)
@@ -1951,7 +1951,7 @@ static BOOL FileTransClass_CreateGadgets(struct FileTransClassInstance *inst)
 			GA_Top, ng.ng_TopEdge,
 			GA_Width, ng.ng_Width,
 			GA_Height, ng.ng_Height,
-			GA_Previous, (ULONG) gad,
+			GA_Previous, (IPTR) gad,
 			SCAGAUGE_MinValue, 0,
 			SCAGAUGE_MaxValue, 100,
 			SCAGAUGE_Level, 0,
@@ -1970,10 +1970,10 @@ static BOOL FileTransClass_CreateGadgets(struct FileTransClassInstance *inst)
 			GA_Top, ng.ng_TopEdge,
 			GA_Width, ng.ng_Width,
 			GA_Height, ng.ng_Height,
-			GA_Previous, (ULONG) gad,
-			GBTDTA_Text, (ULONG) inst->ftci_Line3Buffer,
-			GBTDTA_TextFont, (ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
-			GBTDTA_TTFont, (ULONG) &ScreenTTFont,
+			GA_Previous, (IPTR) gad,
+			GBTDTA_Text, (IPTR) inst->ftci_Line3Buffer,
+			GBTDTA_TextFont, (IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
+			GBTDTA_TTFont, (IPTR) &ScreenTTFont,
 			GBTDTA_DrawMode, JAM1,
 			GBTDTA_Justification, GACT_STRINGCENTER,
 			TAG_END);
@@ -1988,10 +1988,10 @@ static BOOL FileTransClass_CreateGadgets(struct FileTransClassInstance *inst)
 			GA_Top, ng.ng_TopEdge,
 			GA_Width, ng.ng_Width,
 			GA_Height, ng.ng_Height,
-			GA_Previous, (ULONG) gad,
-			GBTDTA_Text, (ULONG) inst->ftci_Line4Buffer,
-			GBTDTA_TextFont, (ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
-			GBTDTA_TTFont, (ULONG) &ScreenTTFont,
+			GA_Previous, (IPTR) gad,
+			GBTDTA_Text, (IPTR) inst->ftci_Line4Buffer,
+			GBTDTA_TextFont, (IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
+			GBTDTA_TTFont, (IPTR) &ScreenTTFont,
 			GBTDTA_DrawMode, JAM1,
 			GBTDTA_Justification, GACT_STRINGCENTER,
 			TAG_END);
@@ -2006,10 +2006,10 @@ static BOOL FileTransClass_CreateGadgets(struct FileTransClassInstance *inst)
 			GA_Top, ng.ng_TopEdge,
 			GA_Width, ng.ng_Width,
 			GA_Height, ng.ng_Height,
-			GA_Previous, (ULONG) gad,
-			GBTDTA_Text, (ULONG) inst->ftci_Line5Buffer,
-			GBTDTA_TextFont, (ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
-			GBTDTA_TTFont, (ULONG) &ScreenTTFont,
+			GA_Previous, (IPTR) gad,
+			GBTDTA_Text, (IPTR) inst->ftci_Line5Buffer,
+			GBTDTA_TextFont, (IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
+			GBTDTA_TTFont, (IPTR) &ScreenTTFont,
 			GBTDTA_DrawMode, JAM1,
 			GBTDTA_Justification, GACT_STRINGCENTER,
 			TAG_END);
@@ -2024,10 +2024,10 @@ static BOOL FileTransClass_CreateGadgets(struct FileTransClassInstance *inst)
 			GA_Top, ng.ng_TopEdge,
 			GA_Width, ng.ng_Width,
 			GA_Height, ng.ng_Height,
-			GA_Previous, (ULONG) gad,
-			GBTDTA_Text, (ULONG) inst->ftci_Line6Buffer,
-			GBTDTA_TextFont, (ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
-			GBTDTA_TTFont, (ULONG) &ScreenTTFont,
+			GA_Previous, (IPTR) gad,
+			GBTDTA_Text, (IPTR) inst->ftci_Line6Buffer,
+			GBTDTA_TextFont, (IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
+			GBTDTA_TTFont, (IPTR) &ScreenTTFont,
 			GBTDTA_DrawMode, JAM1,
 			GBTDTA_Justification, GACT_STRINGCENTER,
 			TAG_END);
@@ -2050,8 +2050,8 @@ static BOOL FileTransClass_CreateGadgets(struct FileTransClassInstance *inst)
 
 		// imgNormal is always required
 		inst->ftci_CancelButtonImage = NewObject(DtImageClass, NULL,
-			DTIMG_ImageName, (ULONG) ImageNameNrm,
-			DTIMG_SelImageName, (ULONG) ImageNameSel,
+			DTIMG_ImageName, (IPTR) ImageNameNrm,
+			DTIMG_SelImageName, (IPTR) ImageNameSel,
 			TAG_END);
 		d1(KPrintF("%s/%s/%ld: agi_Image=%08lx\n", __FILE__, __FUNC__, __LINE__, agi->agi_Image));
 		if (NULL == inst->ftci_CancelButtonImage)
@@ -2060,7 +2060,7 @@ static BOOL FileTransClass_CreateGadgets(struct FileTransClassInstance *inst)
 			inst->ftci_CancelButtonFrame = NewObject(NULL, FRAMEICLASS,
 				IA_Width, ng.ng_LeftEdge,
 				IA_Height, ng.ng_TopEdge,
-				SYSIA_DrawInfo, (ULONG) iInfos.xii_iinfos.ii_DrawInfo,
+				SYSIA_DrawInfo, (IPTR) iInfos.xii_iinfos.ii_DrawInfo,
 				IA_FrameType, FRAME_BUTTON,
 				TAG_END);
 			d1(KPrintF("%s/%s/%ld: ftci_CancelButtonFrame=%08lx\n", __FILE__, __FUNC__, __LINE__, inst->ftci_CancelButtonFrame));
@@ -2072,18 +2072,18 @@ static BOOL FileTransClass_CreateGadgets(struct FileTransClassInstance *inst)
 				GA_Top, ng.ng_TopEdge,
 				GA_Width, ng.ng_Width,
 				GA_Height, ng.ng_Height,
-				GA_Previous, (ULONG) gad,
+				GA_Previous, (IPTR) gad,
 				GA_ID, GID_CancelButton,
 				GA_RelVerify, TRUE,
 				GA_Underscore, '_',
-				GA_Image, (ULONG) inst->ftci_CancelButtonFrame,
-				GA_Text, (ULONG) ng.ng_GadgetText,
+				GA_Image, (IPTR) inst->ftci_CancelButtonFrame,
+				GA_Text, (IPTR) ng.ng_GadgetText,
 				TAG_END);
 			d1(KPrintF("%s/%s/%ld: agi_Gadget=%08lx\n", __FILE__, __FUNC__, __LINE__, gad));
 			}
 		else
 			{
-			ULONG ImgWidth;
+			IPTR ImgWidth;
 
 			GetAttr(IA_Width, inst->ftci_CancelButtonImage, &ImgWidth);
 			//GetAttr(IA_Height, inst->ftci_CancelButtonImage, &agi->agi_Height);
@@ -2093,8 +2093,8 @@ static BOOL FileTransClass_CreateGadgets(struct FileTransClassInstance *inst)
 				GA_Top, ng.ng_TopEdge,
 				GA_ID, GID_CancelButton,
 				GA_RelVerify, TRUE,
-				GA_Image, (ULONG) inst->ftci_CancelButtonImage,
-				GA_Previous, (ULONG) gad,
+				GA_Image, (IPTR) inst->ftci_CancelButtonImage,
+				GA_Previous, (IPTR) gad,
 				TAG_END);
 			}
 		d1(KPrintF("%s/%s/%ld: gad=%08lx\n", __FILE__, __FUNC__, __LINE__, gad));

@@ -83,7 +83,7 @@ SAVEDS(WORD) Scalos_TextLength(struct RastPort *rp, CONST_STRPTR string, WORD Le
 		// TT_GetAttrsA()
 		STRPTR FontName = NULL;
 
-		TT_GetAttrs(rp, TT_FontName, (ULONG) &FontName,
+		TT_GetAttrs(rp, TT_FontName, (IPTR) &FontName,
 			TAG_END);
 
 		if (FontName)
@@ -122,7 +122,7 @@ SAVEDS(ULONG) Scalos_TextFit(struct RastPort *rp, CONST_STRPTR string, WORD Leng
 		// TT_GetAttrsA()
 		STRPTR FontName = NULL;
 
-		TT_GetAttrs(rp, TT_FontName, (ULONG) &FontName,
+		TT_GetAttrs(rp, TT_FontName, (IPTR) &FontName,
 			TAG_END);
 
 		d1(kprintf("%s/%s/%ld: FontName=%08lx\n", __FILE__, __FUNC__, __LINE__, FontName));
@@ -177,7 +177,7 @@ SAVEDS(void) Scalos_TextExtent(struct RastPort *rp, CONST_STRPTR string, WORD Le
 		// TT_GetAttrsA()
 		STRPTR FontName = NULL;
 
-		TT_GetAttrs(rp, TT_FontName, (ULONG) &FontName,
+		TT_GetAttrs(rp, TT_FontName, (IPTR) &FontName,
 			TAG_END);
 
 		d1(kprintf("%s/%s/%ld: FontName=%08lx\n", __FILE__, __FUNC__, __LINE__, FontName));
@@ -220,7 +220,7 @@ SAVEDS(void) Scalos_Text(struct RastPort *rp, CONST_STRPTR string, WORD Length)
 			// TT_GetAttrsA()
 			STRPTR FontName = NULL;
 
-			TT_GetAttrs(rp, TT_FontName, (ULONG) &FontName,
+			TT_GetAttrs(rp, TT_FontName, (IPTR) &FontName,
 				TAG_END);
 
 			d1(kprintf("%s/%s/%ld: FontName=%08lx\n", __FILE__, __FUNC__, __LINE__, FontName));
@@ -254,7 +254,7 @@ SAVEDS(UWORD) Scalos_GetFontHeight(struct RastPort *rp)
 		STRPTR FontName = NULL;
 
 		// TT_GetAttrsA()
-		TT_GetAttrs(rp, TT_FontName, (ULONG) &FontName,
+		TT_GetAttrs(rp, TT_FontName, (IPTR) &FontName,
 			TAG_END);
 
 		d1(kprintf("%s/%s/%ld: rp=%08lx FontName=%08lx\n", __FILE__, __FUNC__, __LINE__, rp, FontName));
@@ -264,9 +264,9 @@ SAVEDS(UWORD) Scalos_GetFontHeight(struct RastPort *rp)
 			ULONG Height = 0;
 			ULONG asc = 0, desc = 0;
 
-			TT_GetAttrs(rp, TT_FontDesignHeight, (ULONG) &Height,
-				TT_FontRealAscender, (ULONG) &asc,
-				TT_FontRealDescender, (ULONG) &desc,
+			TT_GetAttrs(rp, TT_FontDesignHeight, (IPTR) &Height,
+				TT_FontRealAscender, (IPTR) &asc,
+				TT_FontRealDescender, (IPTR) &desc,
 				TAG_END);
 
 			d1(kprintf("%s/%s/%ld: FontName=<%s>  DesignHeight=%ld\n", __FILE__, __FUNC__, __LINE__, FontName, Height));
@@ -288,7 +288,7 @@ SAVEDS(UWORD) Scalos_GetFontBaseline(struct RastPort *rp)
 		STRPTR FontName = NULL;
 
 		// TT_GetAttrsA()
-		TT_GetAttrs(rp, TT_FontName, (ULONG) &FontName,
+		TT_GetAttrs(rp, TT_FontName, (IPTR) &FontName,
 			TAG_END);
 
 
@@ -298,7 +298,7 @@ SAVEDS(UWORD) Scalos_GetFontBaseline(struct RastPort *rp)
 			{
 			ULONG Baseline = 0;
 
-			TT_GetAttrs(rp, TT_FontAccentedAscender, (ULONG) &Baseline,
+			TT_GetAttrs(rp, TT_FontAccentedAscender, (IPTR) &Baseline,
 				TAG_END);
 
 			return (UWORD) (Baseline - 2);
@@ -318,7 +318,7 @@ SAVEDS(void) Scalos_SetFontTransparency(struct RastPort *rp, ULONG Transparency)
 		STRPTR FontName = NULL;
 
 		// TT_GetAttrsA()
-		TT_GetAttrs(rp, TT_FontName, (ULONG) &FontName,
+		TT_GetAttrs(rp, TT_FontName, (IPTR) &FontName,
 			TAG_END);
 
 		if (FontName)
@@ -348,7 +348,7 @@ SAVEDS(ULONG) Scalos_SetSoftStyle(struct RastPort *rp, ULONG style, ULONG enable
 		STRPTR FontName = NULL;
 
 		// TT_GetAttrsA()
-		TT_GetAttrs(rp, TT_FontName, (ULONG) &FontName,
+		TT_GetAttrs(rp, TT_FontName, (IPTR) &FontName,
 			TAG_END);
 
 		if (FontName)
@@ -395,7 +395,7 @@ SAVEDS(void) Scalos_SetFont(struct RastPort *rp, struct TextFont *tf, struct TTF
 		TT_SetAttrs(rp,
 			TT_Antialias, CurrentPrefs.pref_TTFontAntialias,
 			TT_Gamma, CurrentPrefs.pref_TTFontGamma,
-			TT_ColorMap, (ULONG) iInfos.xii_iinfos.ii_Screen->ViewPort.ColorMap, 
+			TT_ColorMap, (IPTR) iInfos.xii_iinfos.ii_Screen->ViewPort.ColorMap, 
 //			TT_Screen, iInfos.xii_iinfos.ii_Screen,
 			TAG_END);
 #ifdef USE_SEMA
@@ -454,7 +454,7 @@ static void SetFamilyTTFont(struct RastPort *rp, ULONG style, struct TTFontFamil
 		TT_SetAttrs(rp,
 			TT_Antialias, CurrentPrefs.pref_TTFontAntialias,
 			TT_Gamma, CurrentPrefs.pref_TTFontGamma,
-			TT_ColorMap, (ULONG) iInfos.xii_iinfos.ii_Screen->ViewPort.ColorMap,
+			TT_ColorMap, (IPTR) iInfos.xii_iinfos.ii_Screen->ViewPort.ColorMap,
 			TAG_END);
 #ifdef USE_SEMA
 		ScalosReleaseSemaphore(&tteSema);
@@ -485,7 +485,7 @@ APTR Scalos_OpenTTFont(CONST_STRPTR FontDesc, struct TTFontFamily *ttff)
 
 			// TT_OpenFontA()
 			ttff->ttff_Normal = TT_OpenFont(
-				TT_FamilyTable, (ULONG) ttta.ttta_FamilyTable,
+				TT_FamilyTable, (IPTR) ttta.ttta_FamilyTable,
 				TT_FontSize, ttta.ttta_FontSize,
 				TT_FontStyle, ttta.ttta_FontStyle,
 				TT_FontWeight, ttta.ttta_FontWeight,
@@ -493,7 +493,7 @@ APTR Scalos_OpenTTFont(CONST_STRPTR FontDesc, struct TTFontFamily *ttff)
 			d1(kprintf("%s/%s/%ld: Normal font=%08lx\n", __FILE__, __FUNC__, __LINE__, ttff->ttff_Normal));
 
 			ttff->ttff_Bold = TT_OpenFont(
-				TT_FamilyTable, (ULONG) ttta.ttta_FamilyTable,
+				TT_FamilyTable, (IPTR) ttta.ttta_FamilyTable,
 				TT_FontSize, ttta.ttta_FontSize,
 				TT_FontStyle, TT_FontStyle_Regular,
 				TT_FontWeight, TT_FontWeight_Bold,
@@ -501,7 +501,7 @@ APTR Scalos_OpenTTFont(CONST_STRPTR FontDesc, struct TTFontFamily *ttff)
 			d1(kprintf("%s/%s/%ld: Bold font=%08lx\n", __FILE__, __FUNC__, __LINE__, ttff->ttff_Bold));
 
 			ttff->ttff_Italic = TT_OpenFont(
-				TT_FamilyTable, (ULONG) ttta.ttta_FamilyTable,
+				TT_FamilyTable, (IPTR) ttta.ttta_FamilyTable,
 				TT_FontSize, ttta.ttta_FontSize,
 				TT_FontStyle, TT_FontStyle_Italic,
 				TT_FontWeight, TT_FontWeight_Normal,
@@ -509,7 +509,7 @@ APTR Scalos_OpenTTFont(CONST_STRPTR FontDesc, struct TTFontFamily *ttff)
 			d1(kprintf("%s/%s/%ld: Italic font=%08lx\n", __FILE__, __FUNC__, __LINE__, ttff->ttff_Italic));
 
 			ttff->ttff_BoldItalic = TT_OpenFont(
-				TT_FamilyTable, (ULONG) ttta.ttta_FamilyTable,
+				TT_FamilyTable, (IPTR) ttta.ttta_FamilyTable,
 				TT_FontSize, ttta.ttta_FontSize,
 				TT_FontStyle, TT_FontStyle_Italic,
 				TT_FontWeight, TT_FontWeight_Bold,
@@ -567,7 +567,7 @@ SAVEDS(void) Scalos_InitRastPort(struct RastPort *rp)
 		ScalosObtainSemaphore(&tteSema);
 #endif
 		TT_SetAttrs(rp,
-			TT_ColorMap, (ULONG) iInfos.xii_iinfos.ii_Screen->ViewPort.ColorMap, 
+			TT_ColorMap, (IPTR) iInfos.xii_iinfos.ii_Screen->ViewPort.ColorMap, 
 			TAG_END);
 
 #ifdef USE_SEMA

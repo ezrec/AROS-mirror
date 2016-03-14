@@ -171,7 +171,7 @@ BOOL IconDoubleClick(struct internalScaWindowTask *iwt, struct ScaIconNode *in, 
 			}
 		else
 			{
-			ULONG IconType;
+			IPTR IconType;
 
 			d1(kprintf("%s/%s/%ld: ObtainSemaphore iwt=%08lx  <%s>\n", __FILE__, __FUNC__, __LINE__, iwt, iwt->iwt_WinTitle));
 
@@ -429,7 +429,7 @@ static BOOL OpenDefaultIcon(struct internalScaWindowTask *iwt, struct ScaIconNod
 static BOOL IconFound(struct internalScaWindowTask *iwt, struct ScaIconNode *in)
 {
 	struct ScaWindowStruct *ws = iwt->iwt_WindowTask.mt_WindowStruct;
-	ULONG IconType;
+	IPTR IconType;
 	BOOL Success = FALSE;
 	BPTR oldDir;
 
@@ -582,9 +582,9 @@ static struct ScaIconNode *SearchForIcon(ULONG IconType, struct ScaWindowStruct 
 
 				if (gg->Flags & GFLG_SELECTED)
 					{
-					ULONG tstIconType;
+					IPTR tstIconType;
 
-					GetAttr(IDTA_Type, in->in_Icon, (ULONG *) &tstIconType);
+					GetAttr(IDTA_Type, in->in_Icon, &tstIconType);
 					if (tstIconType == IconType)
 						{
 						*wsFound = ws;
@@ -622,11 +622,11 @@ static BOOL TestToolStart(struct internalScaWindowTask *iwt, struct ScaIconNode 
 	if (IconObj)
 		{
 		Object *origIconObj = in->in_Icon;
-		ULONG IconType;
+		IPTR IconType;
 
 		in->in_Icon = IconObj;
 
-		GetAttr(IDTA_Type, in->in_Icon, (ULONG *) &IconType);
+		GetAttr(IDTA_Type, in->in_Icon, &IconType);
 
 		switch ((ULONG) IconType)
 			{
@@ -744,7 +744,7 @@ static BOOL DC_ToolStart(struct ScaIconNode *in)
 
 	// SCA_WBStart()
 	Success = SCA_WBStartTags(args, ArgCount,
-		SCA_IconObject, (ULONG) in->in_Icon,
+		SCA_IconObject, (IPTR) in->in_Icon,
 		TAG_END);
 
 	SCA_FreeWBArgs(&args[1], ArgCount - 1, 
@@ -803,7 +803,7 @@ static BOOL OpenIcon(struct internalScaWindowTask *iwt,
 
 		if (in->in_Flags & INF_TextIcon)
 			{
-			ULONG ShowFlags, ViewBy;
+			IPTR ShowFlags, ViewBy;
 			Object *IconObj = NewIconObject(in->in_Name,
 						TAG_END);
 
@@ -826,9 +826,9 @@ static BOOL OpenIcon(struct internalScaWindowTask *iwt,
 
 			if (OpenNewWindow)
 				{
-				Success = SCA_OpenIconWindowTags(SCA_Path, (ULONG) in->in_Name,
+				Success = SCA_OpenIconWindowTags(SCA_Path, (IPTR) in->in_Name,
 					SCA_Flags, SCAF_OpenWindow_ScalosPort,
-					SCA_MessagePort, (ULONG) ReplyPort,
+					SCA_MessagePort, (IPTR) ReplyPort,
 					SCA_ShowAllMode, ShowFlags & DDFLAGS_SHOWMASK,
 					SCA_ViewModes, ViewBy,
 					SCA_NoActivateWindow, noActivate,
@@ -868,9 +868,9 @@ static BOOL OpenIcon(struct internalScaWindowTask *iwt,
 
 				if (OpenNewWindow)
 					{
-					Success = SCA_OpenIconWindowTags(SCA_IconNode, (ULONG) in,
+					Success = SCA_OpenIconWindowTags(SCA_IconNode, (IPTR) in,
 						SCA_Flags, SCAF_OpenWindow_ScalosPort,
-						SCA_MessagePort, (ULONG) ReplyPort,
+						SCA_MessagePort, (IPTR) ReplyPort,
 						SCA_ShowAllMode, iwt->iwt_OldShowType,
 						SCA_DdPopupWindow, isDdPopup,
 						SCA_NoActivateWindow, noActivate,
@@ -900,11 +900,11 @@ static BOOL OpenIcon(struct internalScaWindowTask *iwt,
 
 				if (OpenNewWindow)
 					{
-					Success = SCA_OpenIconWindowTags(SCA_IconNode, (ULONG) in,
+					Success = SCA_OpenIconWindowTags(SCA_IconNode, (IPTR) in,
 						SCA_Flags, SCAF_OpenWindow_ScalosPort,
 						SCA_DdPopupWindow, isDdPopup,
 						SCA_NoActivateWindow, noActivate,
-						SCA_MessagePort, (ULONG) ReplyPort,
+						SCA_MessagePort, (IPTR) ReplyPort,
 						SCA_CheckOverlappingIcons, CurrentPrefs.pref_CheckOverlappingIcons,
 						SCA_BrowserMode, BrowserMode,
 						TAG_END);

@@ -78,7 +78,7 @@ BOOL RunProcess(struct ScaWindowTask *wt, RUNPROCFUNC Routine, ULONG NumLongs,
 		Success = ChildProcessRun((struct internalScaWindowTask *) wt,
 			&msg->ScalosMessage,
 			NP_Priority, 0,
-			NP_Name, (ULONG) "Scalos_SubProcess_Runner",
+			NP_Name, (IPTR) "Scalos_SubProcess_Runner",
 			TAG_END);
 
 		d1(kprintf("%s/%s/%ld: newProc=%08lx\n", __FILE__, __FUNC__, __LINE__, newProc));
@@ -131,7 +131,7 @@ BOOL ChildProcessRun(struct internalScaWindowTask *iwt, struct ScalosMessage *ms
 		newProc = CreateNewProcTags(NP_WindowPtr, NULL,
 			NP_StackSize, CurrentPrefs.pref_DefaultStackSize,
 			NP_Cli, TRUE,
-			NP_Entry, (ULONG) PATCH_NEWFUNC(ProcRunnerTask),
+			NP_Entry, (IPTR) PATCH_NEWFUNC(ProcRunnerTask),
 			WBPath ? NP_Path : TAG_IGNORE, WBPath,
 			TAG_MORE, TagList,
 			TAG_END);

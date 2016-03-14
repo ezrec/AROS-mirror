@@ -1077,7 +1077,7 @@ struct IconScanEntry
 	Object *ise_IconObj;			// Iconobject generated during scanning
 	ULONG ise_IconType;			// Workbench icon type (e.g. WBDISK)
 	ULONG ise_Flags;
-	ULONG ise_Pos;				// Result from IsIconName()
+	IPTR ise_Pos;				// Result from IsIconName()
 	char ise_PosChar;
 	struct FileInfoBlock ise_Fib;
 	ULONG64 ise_Size64;

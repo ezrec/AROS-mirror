@@ -81,8 +81,8 @@ typedef LONG (*GetPenFunc_t)(struct RastPort *, WORD, WORD );
 
 // local functions
 
-static SAVEDS(ULONG) INTERRUPT FrameImageClassDispatcher(Class *cl, Object *o, Msg msg);
-static ULONG FrameImage_New(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) INTERRUPT FrameImageClassDispatcher(Class *cl, Object *o, Msg msg);
+static IPTR FrameImage_New(Class *cl, Object *o, Msg msg);
 static ULONG FrameImage_Dispose(Class *cl, Object *o, Msg msg);
 static ULONG FrameImage_Set(Class *cl, Object *o, Msg msg);
 static ULONG FrameImage_Draw(Class *cl, Object *o, Msg msg);
@@ -127,7 +127,7 @@ struct ScalosClass *initFrameImageClass(const struct PluginClass *plug)
 
 //----------------------------------------------------------------------------
 
-static SAVEDS(ULONG) INTERRUPT FrameImageClassDispatcher(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) INTERRUPT FrameImageClassDispatcher(Class *cl, Object *o, Msg msg)
 {
 	ULONG Result;
 
@@ -158,7 +158,7 @@ static SAVEDS(ULONG) INTERRUPT FrameImageClassDispatcher(Class *cl, Object *o, M
 
 //----------------------------------------------------------------------------
 
-static ULONG FrameImage_New(Class *cl, Object *o, Msg msg)
+static IPTR FrameImage_New(Class *cl, Object *o, Msg msg)
 {
 	struct opSet *ops = (struct opSet *) msg;
 	struct FrameImageClassInst *inst;
@@ -181,10 +181,10 @@ static ULONG FrameImage_New(Class *cl, Object *o, Msg msg)
 		memset(inst, 0, sizeof(struct FrameImageClassInst));
 
 		inst->bmicl_Recessed = GetTagData(IA_Recessed, FALSE, ops->ops_AttrList);
-		inst->bmicl_OutsideBackfillHook = (struct Hook *) GetTagData(FRAMEIMG_OuterBackfillHook, (ULONG) NULL, ops->ops_AttrList);
-		inst->bmicl_InsideBackfillHook = (struct Hook *) GetTagData(FRAMEIMG_InnerBackfillHook, (ULONG) NULL, ops->ops_AttrList);
+		inst->bmicl_OutsideBackfillHook = (struct Hook *) GetTagData(FRAMEIMG_OuterBackfillHook, (IPTR) NULL, ops->ops_AttrList);
+		inst->bmicl_InsideBackfillHook = (struct Hook *) GetTagData(FRAMEIMG_InnerBackfillHook, (IPTR) NULL, ops->ops_AttrList);
 
-		ImageName = (CONST_STRPTR) GetTagData(FRAMEIMG_ImageName, (ULONG) "", ops->ops_AttrList);
+		ImageName = (CONST_STRPTR) GetTagData(FRAMEIMG_ImageName, (IPTR) "", ops->ops_AttrList);
 		d1(KPrintF("%s/%s/%ld: o=%08lx  ImageName=<%s>\n", __FILE__, __FUNC__, __LINE__, o, ImageName));
 
 		fd = Open(ImageName, MODE_OLDFILE);
@@ -246,7 +246,7 @@ static ULONG FrameImage_New(Class *cl, Object *o, Msg msg)
 		o = NULL;
 		}
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 //----------------------------------------------------------------------------
@@ -282,8 +282,8 @@ static ULONG FrameImage_Set(Class *cl, Object *o, Msg msg)
 	ULONG Result;
 
 	inst->bmicl_Recessed = GetTagData(IA_Recessed, inst->bmicl_Recessed, ops->ops_AttrList);
-	inst->bmicl_OutsideBackfillHook = (struct Hook *) GetTagData(FRAMEIMG_OuterBackfillHook, (ULONG) inst->bmicl_OutsideBackfillHook, ops->ops_AttrList);
-	inst->bmicl_InsideBackfillHook = (struct Hook *) GetTagData(FRAMEIMG_InnerBackfillHook, (ULONG) inst->bmicl_InsideBackfillHook, ops->ops_AttrList);
+	inst->bmicl_OutsideBackfillHook = (struct Hook *) GetTagData(FRAMEIMG_OuterBackfillHook, (IPTR) inst->bmicl_OutsideBackfillHook, ops->ops_AttrList);
+	inst->bmicl_InsideBackfillHook = (struct Hook *) GetTagData(FRAMEIMG_InnerBackfillHook, (IPTR) inst->bmicl_InsideBackfillHook, ops->ops_AttrList);
 
 	d1(KPrintF("%s/%s/%ld:  o=%08lx  bmicl_OutsideBackfillHook=%08lx  h_Entry=%08lx  h_SubEntry=%08lx\n", \
 		__FILE__, __FUNC__, __LINE__, o, inst->bmicl_OutsideBackfillHook, \

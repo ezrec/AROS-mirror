@@ -2702,7 +2702,7 @@ static BOOL AddSpecialIcon(struct internalScaWindowTask *iwt, struct RastPort *r
 		return FALSE;
 
 	in->in_Icon = NewIconObjectTags((STRPTR) IconFileName,
-				IDTA_Text, (ULONG) "",
+				IDTA_Text, (IPTR) "",
 				TAG_END);
 
 	d1(kprintf("%s/%s/%ld: in=%08lx  IconObj=%08lx  <%s>\n", __FILE__, __FUNC__, __LINE__, in, in->in_Icon, IconFileName));
@@ -2923,7 +2923,7 @@ static BOOL AddInfoTextBob(struct internalScaWindowTask *iwt)
 				ScaFormatStringMaxLength(TextBuffer[0], Max_PathLen,
 					GetLocString(MSGID_MULTIDRAG), 
 					iwt->iwt_myDragHandle->drgh_FileCount,
-					(ULONG) GetLocString(1 == iwt->iwt_myDragHandle->drgh_FileCount ? MSGID_MULTIDRAG_FILE_1 : MSGID_MULTIDRAG_FILE_2)
+					(IPTR) GetLocString(1 == iwt->iwt_myDragHandle->drgh_FileCount ? MSGID_MULTIDRAG_FILE_1 : MSGID_MULTIDRAG_FILE_2)
 					);
 				}
 			if (iwt->iwt_myDragHandle->drgh_DrawerCount > 0)
@@ -2931,7 +2931,7 @@ static BOOL AddInfoTextBob(struct internalScaWindowTask *iwt)
 				ScaFormatStringMaxLength(TextBuffer[1], Max_PathLen,
 					GetLocString(MSGID_MULTIDRAG), 
 					iwt->iwt_myDragHandle->drgh_DrawerCount,
-					(ULONG) GetLocString(1 == iwt->iwt_myDragHandle->drgh_DrawerCount ? MSGID_MULTIDRAG_DRAWER_1 : MSGID_MULTIDRAG_DRAWER_2)
+					(IPTR) GetLocString(1 == iwt->iwt_myDragHandle->drgh_DrawerCount ? MSGID_MULTIDRAG_DRAWER_1 : MSGID_MULTIDRAG_DRAWER_2)
 					);
 				}
 			if (iwt->iwt_myDragHandle->drgh_DeviceCount > 0)
@@ -2939,7 +2939,7 @@ static BOOL AddInfoTextBob(struct internalScaWindowTask *iwt)
 				ScaFormatStringMaxLength(TextBuffer[2], Max_PathLen,
 					GetLocString(MSGID_MULTIDRAG), 
 					iwt->iwt_myDragHandle->drgh_DeviceCount,
-					(ULONG) GetLocString(1 == iwt->iwt_myDragHandle->drgh_DeviceCount ? MSGID_MULTIDRAG_DEVICE_1 : MSGID_MULTIDRAG_DEVICE_2)
+					(IPTR) GetLocString(1 == iwt->iwt_myDragHandle->drgh_DeviceCount ? MSGID_MULTIDRAG_DEVICE_1 : MSGID_MULTIDRAG_DEVICE_2)
 					);
 				}
 			}

@@ -62,14 +62,14 @@ struct DeviceWindowClassInstance
 
 // local functions
 
-static SAVEDS(ULONG) INTERRUPT DeviceWindowClass_Dispatcher(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) INTERRUPT DeviceWindowClass_Dispatcher(Class *cl, Object *o, Msg msg);
 static ULONG DeviceWindowClass_ReadIconList(Class *cl, Object *o, Msg msg);
 static ULONG DeviceWindowClass_ReadIcon(Class *cl, Object *o, Msg msg);
 static ULONG DeviceWindowClass_RemIcon(Class *cl, Object *o, Msg msg);
 static ULONG DeviceWindowClass_RemIcon2(Class *cl, Object *o, Msg msg);
 static ULONG DeviceWindowClass_Ping(Class *cl, Object *o, Msg msg);
 static ULONG DeviceWindowClass_Message(Class *cl, Object *o, Msg msg);
-static ULONG DeviceWindowClass_New(Class *cl, Object *o, Msg msg);
+static IPTR DeviceWindowClass_New(Class *cl, Object *o, Msg msg);
 static ULONG DeviceWindowClass_Dispose(Class *cl, Object *o, Msg msg);
 static ULONG DeviceWindowClass_CheckUpdate(Class *cl, Object *o, Msg msg);
 static ULONG DeviceWindowClass_Update(Class *cl, Object *o, Msg msg);
@@ -120,9 +120,9 @@ struct ScalosClass *initDeviceWindowClass(const struct PluginClass *plug)
 }
 
 
-static SAVEDS(ULONG) INTERRUPT DeviceWindowClass_Dispatcher(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) INTERRUPT DeviceWindowClass_Dispatcher(Class *cl, Object *o, Msg msg)
 {
-	ULONG Result;
+	IPTR Result;
 
 	switch (msg->MethodID)
 		{
@@ -390,7 +390,7 @@ static ULONG DeviceWindowClass_Message(Class *cl, Object *o, Msg msg)
 }
 
 
-static ULONG DeviceWindowClass_New(Class *cl, Object *o, Msg msg)
+static IPTR DeviceWindowClass_New(Class *cl, Object *o, Msg msg)
 {
 	d1(kprintf("%s/%s/%ld:  START  o=%08lx\n", __FILE__, __FUNC__, __LINE__, o));
 
@@ -442,7 +442,7 @@ static ULONG DeviceWindowClass_New(Class *cl, Object *o, Msg msg)
 
 	d1(kprintf("%s/%s/%ld:  END o=%08lx\n", __FILE__, __FUNC__, __LINE__, o));
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 
@@ -474,7 +474,7 @@ static ULONG DeviceWindowClass_Update(Class *cl, Object *o, Msg msg)
 	struct internalScaWindowTask *iwt = (struct internalScaWindowTask *) ((struct ScaRootList *) o)->rl_WindowTask;
 	ULONG Result, ReadResult;
 	struct ScaIconNode *in, *inNext;
-	ULONG IconType;
+	IPTR IconType;
 
 	d1(KPrintF("%s/%s/%ld: START iwt=%08lx  <%s>\n", __FILE__, __FUNC__, __LINE__, iwt, iwt->iwt_WinTitle));
 
@@ -599,7 +599,7 @@ static struct ScaIconNode *ReadDevIcon_Device(struct internalScaWindowTask *iwt,
 				IDTA_FrameTypeSel, CurrentPrefs.pref_FrameTypeSel,
 				IDTA_FrameType, CurrentPrefs.pref_FrameType,
 				IDTA_TextSkip, CurrentPrefs.pref_TextSkip,
-				IDTA_MultiLineText, (ULONG) CurrentPrefs.pref_IconTextMuliLine,
+				IDTA_MultiLineText, (IPTR) CurrentPrefs.pref_IconTextMuliLine,
 				IDTA_TextPen, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPEN],
 				IDTA_TextPenSel, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPENSEL],
 				IDTA_TextPenShadow, PalettePrefs.pal_PensList[PENIDX_ICONTEXTSHADOWPEN],
@@ -612,12 +612,12 @@ static struct ScaIconNode *ReadDevIcon_Device(struct internalScaWindowTask *iwt,
 				IDTA_TextMode, CurrentPrefs.pref_TextMode,
 				IDTA_TextDrawMode, FontPrefs.fprf_TextDrawMode,
 				IDTA_TextBackPen, FontPrefs.fprf_FontBackPen,
-				DTA_Name, (ULONG) di->di_Device,
-				IDTA_Text, (ULONG) DevName,
-				IDTA_Font, (ULONG) iwt->iwt_IconFont,
-				IDTA_Fonthandle, (ULONG) &iwt->iwt_IconTTFont,
-				IDTA_FontHook, (ULONG) (TTEngineBase ? &ScalosFontHook : NULL),
-				IDTA_SizeConstraints, (ULONG) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
+				DTA_Name, (IPTR) di->di_Device,
+				IDTA_Text, (IPTR) DevName,
+				IDTA_Font, (IPTR) iwt->iwt_IconFont,
+				IDTA_Fonthandle, (IPTR) &iwt->iwt_IconTTFont,
+				IDTA_FontHook, (IPTR) (TTEngineBase ? &ScalosFontHook : NULL),
+				IDTA_SizeConstraints, (IPTR) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
 				IDTA_ScalePercentage, iwt->iwt_WindowTask.mt_WindowStruct->ws_IconScaleFactor,
 				TAG_END);
 		if (NULL == iconObj)
@@ -700,7 +700,7 @@ static struct ScaIconNode *ReadDevIcon_Volume(struct internalScaWindowTask *iwt,
 				IDTA_FrameTypeSel, CurrentPrefs.pref_FrameTypeSel,
 				IDTA_FrameType, CurrentPrefs.pref_FrameType,
 				IDTA_TextSkip, CurrentPrefs.pref_TextSkip,
-				IDTA_MultiLineText, (ULONG) CurrentPrefs.pref_IconTextMuliLine,
+				IDTA_MultiLineText, (IPTR) CurrentPrefs.pref_IconTextMuliLine,
 				IDTA_TextPen, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPEN],
 				IDTA_TextPenSel, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPENSEL],
 				IDTA_TextPenShadow, PalettePrefs.pal_PensList[PENIDX_ICONTEXTSHADOWPEN],
@@ -713,12 +713,12 @@ static struct ScaIconNode *ReadDevIcon_Volume(struct internalScaWindowTask *iwt,
 				IDTA_TextMode, CurrentPrefs.pref_TextMode,
 				IDTA_TextDrawMode, FontPrefs.fprf_TextDrawMode,
 				IDTA_TextBackPen, FontPrefs.fprf_FontBackPen,
-				DTA_Name, (ULONG) di->di_Device,
-				IDTA_Text, (ULONG) DevName,
-				IDTA_Font, (ULONG) iwt->iwt_IconFont,
-				IDTA_Fonthandle, (ULONG) &iwt->iwt_IconTTFont,
-				IDTA_FontHook, (ULONG) (TTEngineBase ? &ScalosFontHook : NULL),
-				IDTA_SizeConstraints, (ULONG) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
+				DTA_Name, (IPTR) di->di_Device,
+				IDTA_Text, (IPTR) DevName,
+				IDTA_Font, (IPTR) iwt->iwt_IconFont,
+				IDTA_Fonthandle, (IPTR) &iwt->iwt_IconTTFont,
+				IDTA_FontHook, (IPTR) (TTEngineBase ? &ScalosFontHook : NULL),
+				IDTA_SizeConstraints, (IPTR) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
 				IDTA_ScalePercentage, iwt->iwt_WindowTask.mt_WindowStruct->ws_IconScaleFactor,
 				TAG_END);
 			}
@@ -841,7 +841,7 @@ static Object *ReadDiskIcon(struct internalScaWindowTask *iwt, struct ScaDeviceI
 			IDTA_FrameTypeSel, CurrentPrefs.pref_FrameTypeSel,
 			IDTA_FrameType, CurrentPrefs.pref_FrameType,
 			IDTA_TextSkip, CurrentPrefs.pref_TextSkip,
-			IDTA_MultiLineText, (ULONG) CurrentPrefs.pref_IconTextMuliLine,
+			IDTA_MultiLineText, (IPTR) CurrentPrefs.pref_IconTextMuliLine,
 			IDTA_TextPen, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPEN],
 			IDTA_TextPenSel, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPENSEL],
 			IDTA_TextPenShadow, PalettePrefs.pal_PensList[PENIDX_ICONTEXTSHADOWPEN],
@@ -854,11 +854,11 @@ static Object *ReadDiskIcon(struct internalScaWindowTask *iwt, struct ScaDeviceI
 			IDTA_TextMode, CurrentPrefs.pref_TextMode,
 			IDTA_TextDrawMode, FontPrefs.fprf_TextDrawMode,
 			IDTA_TextBackPen, FontPrefs.fprf_FontBackPen,
-			IDTA_Font, (ULONG) iwt->iwt_IconFont,
-			IDTA_Fonthandle, (ULONG) &iwt->iwt_IconTTFont,
-			IDTA_FontHook, (ULONG) (TTEngineBase ? &ScalosFontHook : NULL),
+			IDTA_Font, (IPTR) iwt->iwt_IconFont,
+			IDTA_Fonthandle, (IPTR) &iwt->iwt_IconTTFont,
+			IDTA_FontHook, (IPTR) (TTEngineBase ? &ScalosFontHook : NULL),
 			IDTA_SupportedIconTypes, CurrentPrefs.pref_SupportedIconTypes,
-			IDTA_SizeConstraints, (ULONG) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
+			IDTA_SizeConstraints, (IPTR) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
 			IDTA_ScalePercentage, iwt->iwt_WindowTask.mt_WindowStruct->ws_IconScaleFactor,
 			TAG_END);
 
@@ -866,7 +866,7 @@ static Object *ReadDiskIcon(struct internalScaWindowTask *iwt, struct ScaDeviceI
 
 	if (iconObj)
 		{
-		ULONG IconType;
+		IPTR IconType;
 
 		GetAttr(IDTA_Type, iconObj, &IconType);
 
@@ -875,7 +875,7 @@ static Object *ReadDiskIcon(struct internalScaWindowTask *iwt, struct ScaDeviceI
 		if (WBDISK == IconType)
 			{
 			SetAttrs(iconObj, 
-				IDTA_Text, (ULONG) DevName,
+				IDTA_Text, (IPTR) DevName,
 				TAG_END);
 			}
 		else
@@ -918,7 +918,7 @@ static Object *ReadDefaultIcon(struct internalScaWindowTask *iwt, struct ScaDevi
 			IDTA_FrameTypeSel, CurrentPrefs.pref_FrameTypeSel,
 			IDTA_FrameType, CurrentPrefs.pref_FrameType,
 			IDTA_TextSkip, CurrentPrefs.pref_TextSkip,
-			IDTA_MultiLineText, (ULONG) CurrentPrefs.pref_IconTextMuliLine,
+			IDTA_MultiLineText, (IPTR) CurrentPrefs.pref_IconTextMuliLine,
 			IDTA_TextPen, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPEN],
 			IDTA_TextPenSel, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPENSEL],
 			IDTA_TextPenShadow, PalettePrefs.pal_PensList[PENIDX_ICONTEXTSHADOWPEN],
@@ -931,11 +931,11 @@ static Object *ReadDefaultIcon(struct internalScaWindowTask *iwt, struct ScaDevi
 			IDTA_TextMode, CurrentPrefs.pref_TextMode,
 			IDTA_TextDrawMode, FontPrefs.fprf_TextDrawMode,
 			IDTA_TextBackPen, FontPrefs.fprf_FontBackPen,
-			DTA_Name, (ULONG) di->di_Device,
-			IDTA_Text, (ULONG) DevName,
-			IDTA_Font, (ULONG) iwt->iwt_IconFont,
-			IDTA_Fonthandle, (ULONG) &iwt->iwt_IconTTFont,
-			IDTA_FontHook, (ULONG) (TTEngineBase ? &ScalosFontHook : NULL),
+			DTA_Name, (IPTR) di->di_Device,
+			IDTA_Text, (IPTR) DevName,
+			IDTA_Font, (IPTR) iwt->iwt_IconFont,
+			IDTA_Fonthandle, (IPTR) &iwt->iwt_IconTTFont,
+			IDTA_FontHook, (IPTR) (TTEngineBase ? &ScalosFontHook : NULL),
 			TAG_END);
 
 	if (iconObj)
@@ -955,7 +955,7 @@ static struct ScaIconNode *DevIconOk2(struct internalScaWindowTask *iwt, struct 
 {
 	struct ScaIconNode *in;
 	STRPTR tt;
-	ULONG IconType;
+	IPTR IconType;
 	struct ExtGadget *gg = (struct ExtGadget *) iconObj;
 
 	d1(kprintf("%s/%s/%ld: iwt=%08lx  di=%08lx iconObj=%08lx\n", __FILE__, __FUNC__, __LINE__, iwt, di, iconObj));
@@ -1135,7 +1135,7 @@ static struct ScaIconNode *CreateBackdropIcon(struct internalScaWindowTask *iwt,
 	char ch;
 	STRPTR lp;
 	STRPTR tt;
-	ULONG IconType;
+	IPTR IconType;
 	Object *iconObj = NULL;
 	struct ScaIconNode *in = NULL;
 	struct ExtGadget *gg;
@@ -1209,7 +1209,7 @@ static struct ScaIconNode *CreateBackdropIcon(struct internalScaWindowTask *iwt,
 			}
 
 		iconObj = NewIconObjectTags(lp,
-			IDTA_Text, (ULONG) lp,
+			IDTA_Text, (IPTR) lp,
 			IDTA_InnerBottom, CurrentPrefs.pref_ImageBorders.Bottom,
 			IDTA_InnerRight, CurrentPrefs.pref_ImageBorders.Right,
 			IDTA_InnerTop, CurrentPrefs.pref_ImageBorders.Top,
@@ -1219,7 +1219,7 @@ static struct ScaIconNode *CreateBackdropIcon(struct internalScaWindowTask *iwt,
 			IDTA_FrameTypeSel, CurrentPrefs.pref_FrameTypeSel,
 			IDTA_FrameType, CurrentPrefs.pref_FrameType,
 			IDTA_TextSkip, CurrentPrefs.pref_TextSkip,
-			IDTA_MultiLineText, (ULONG) CurrentPrefs.pref_IconTextMuliLine,
+			IDTA_MultiLineText, (IPTR) CurrentPrefs.pref_IconTextMuliLine,
 			IDTA_TextPen, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPEN],
 			IDTA_TextPenSel, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPENSEL],
 			IDTA_TextPenShadow, PalettePrefs.pal_PensList[PENIDX_ICONTEXTSHADOWPEN],
@@ -1232,11 +1232,11 @@ static struct ScaIconNode *CreateBackdropIcon(struct internalScaWindowTask *iwt,
 			IDTA_TextMode, CurrentPrefs.pref_TextMode,
 			IDTA_TextDrawMode, FontPrefs.fprf_TextDrawMode,
 			IDTA_TextBackPen, FontPrefs.fprf_FontBackPen,
-			IDTA_Font, (ULONG) iwt->iwt_IconFont,
-			IDTA_Fonthandle, (ULONG) &iwt->iwt_IconTTFont,
-			IDTA_FontHook, (ULONG) (TTEngineBase ? &ScalosFontHook : NULL),
+			IDTA_Font, (IPTR) iwt->iwt_IconFont,
+			IDTA_Fonthandle, (IPTR) &iwt->iwt_IconTTFont,
+			IDTA_FontHook, (IPTR) (TTEngineBase ? &ScalosFontHook : NULL),
 			IDTA_SupportedIconTypes, CurrentPrefs.pref_SupportedIconTypes,
-			IDTA_SizeConstraints, (ULONG) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
+			IDTA_SizeConstraints, (IPTR) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
 			IDTA_ScalePercentage, iwt->iwt_WindowTask.mt_WindowStruct->ws_IconScaleFactor,
 			IDTA_OverlayType, ICONOVERLAYF_LeftOut,
 			TAG_END);
@@ -1464,7 +1464,7 @@ static BOOL CreateSbi(struct ScaIconNode *DevIn, struct ScaIconNode *in)
 		bdi->sbi_NotifyReq->nr_Name = bdi->sbi_DrawerName;
 		bdi->sbi_NotifyReq->nr_stuff.nr_Msg.nr_Port = iwtMain->iwt_WindowTask.wt_IconPort;
 		bdi->sbi_NotifyReq->nr_Flags = NRF_SEND_MESSAGE;
-		bdi->sbi_NotifyReq->nr_UserData = (ULONG)NULL;
+		bdi->sbi_NotifyReq->nr_UserData = (IPTR)NULL;
 
 		d1(kprintf("%s/%s/%ld: starting notification on <%s>\n", \
 			__FILE__, __FUNC__, __LINE__, bdi->sbi_NotifyReq->nr_Name));
@@ -1667,7 +1667,7 @@ static Object *ReadDefaultIconByName(struct internalScaWindowTask *iwt, CONST_ST
 		IDTA_FrameTypeSel, CurrentPrefs.pref_FrameTypeSel,
 		IDTA_FrameType, CurrentPrefs.pref_FrameType,
 		IDTA_TextSkip, CurrentPrefs.pref_TextSkip,
-		IDTA_MultiLineText, (ULONG) CurrentPrefs.pref_IconTextMuliLine,
+		IDTA_MultiLineText, (IPTR) CurrentPrefs.pref_IconTextMuliLine,
 		IDTA_TextPen, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPEN],
 		IDTA_TextPenSel, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPENSEL],
 		IDTA_TextPenShadow, PalettePrefs.pal_PensList[PENIDX_ICONTEXTSHADOWPEN],
@@ -1680,17 +1680,17 @@ static Object *ReadDefaultIconByName(struct internalScaWindowTask *iwt, CONST_ST
 		IDTA_TextMode, CurrentPrefs.pref_TextMode,
 		IDTA_TextDrawMode, FontPrefs.fprf_TextDrawMode,
 		IDTA_TextBackPen, FontPrefs.fprf_FontBackPen,
-		IDTA_Font, (ULONG) iwt->iwt_IconFont,
-		IDTA_Fonthandle, (ULONG) &iwt->iwt_IconTTFont,
-		IDTA_FontHook, (ULONG) (TTEngineBase ? &ScalosFontHook : NULL),
+		IDTA_Font, (IPTR) iwt->iwt_IconFont,
+		IDTA_Fonthandle, (IPTR) &iwt->iwt_IconTTFont,
+		IDTA_FontHook, (IPTR) (TTEngineBase ? &ScalosFontHook : NULL),
 		IDTA_SupportedIconTypes, CurrentPrefs.pref_SupportedIconTypes,
-		IDTA_SizeConstraints, (ULONG) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
+		IDTA_SizeConstraints, (IPTR) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
 		IDTA_ScalePercentage, iwt->iwt_WindowTask.mt_WindowStruct->ws_IconScaleFactor,
 		TAG_END);
 
 	if (iconObj)
 		{
-		ULONG IconType;
+		IPTR IconType;
 
 		GetAttr(IDTA_Type, iconObj, &IconType);
 
@@ -1698,7 +1698,7 @@ static Object *ReadDefaultIconByName(struct internalScaWindowTask *iwt, CONST_ST
 
 		SetAttrs(iconObj, 
 			IDTA_Type, WBDISK,
-			IDTA_Text, (ULONG) DevName,
+			IDTA_Text, (IPTR) DevName,
 			TAG_END);
 		}
 

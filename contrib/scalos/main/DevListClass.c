@@ -77,8 +77,8 @@ struct DevListEntry
 
 // local functions
 
-static SAVEDS(ULONG) DevListClass_Dispatcher(Class *cl, Object *o, Msg msg);
-static ULONG DevListClass_New(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) DevListClass_Dispatcher(Class *cl, Object *o, Msg msg);
+static IPTR DevListClass_New(Class *cl, Object *o, Msg msg);
 static ULONG DevListClass_Dispose(Class *cl, Object *o, Msg msg);
 static ULONG DevListClass_Generate(Class *cl, Object *o, Msg msg);
 static ULONG DevListClass_FreeDevNode(Class *cl, Object *o, Msg msg);
@@ -122,9 +122,9 @@ struct ScalosClass *initDevListClass(const struct PluginClass *plug)
 }
 
 
-static SAVEDS(ULONG) DevListClass_Dispatcher(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) DevListClass_Dispatcher(Class *cl, Object *o, Msg msg)
 {
-	ULONG Result;
+	IPTR Result;
 
 	switch (msg->MethodID)
 		{
@@ -157,7 +157,7 @@ static SAVEDS(ULONG) DevListClass_Dispatcher(Class *cl, Object *o, Msg msg)
 }
 
 
-static ULONG DevListClass_New(Class *cl, Object *o, Msg msg)
+static IPTR DevListClass_New(Class *cl, Object *o, Msg msg)
 {
 	d1(KPrintF("%s/%s/%ld: \n", __FILE__, __FUNC__, __LINE__));
 
@@ -180,7 +180,7 @@ static ULONG DevListClass_New(Class *cl, Object *o, Msg msg)
 			}
 		}
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 

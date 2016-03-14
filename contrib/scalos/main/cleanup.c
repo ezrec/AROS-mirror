@@ -192,7 +192,7 @@ void IconWindow_Cleanup(struct internalScaWindowTask *iwt)
 		for (in = LateIconList; in; in = inNext)
 			{
 			enum IconLayoutMode LayoutMode;
-			ULONG IconType;
+			IPTR IconType;
 
 			inNext = (struct ScaIconNode *) in->in_Node.mln_Succ;
 

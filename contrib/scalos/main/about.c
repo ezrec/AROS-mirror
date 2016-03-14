@@ -155,8 +155,8 @@ static LONG RunAbout(struct internalScaWindowTask *iwt, LONG lOkenabled, struct 
 		ChildProcessRun(iwt,
 			&smrp_Message->ScalosMessage,
 			NP_Priority, -5,
-			NP_CommandName, (ULONG) bAboutname,
-			NP_Name, (ULONG) bAboutname,
+			NP_CommandName, (IPTR) bAboutname,
+			NP_Name, (IPTR) bAboutname,
 			TAG_DONE);
 
 		d1(kprintf("%s/%s/%ld: \n", __FILE__, __FUNC__, __LINE__));
@@ -290,8 +290,8 @@ static ULONG NewAbout(APTR dummy, struct SM_RunProcess *msg)
 
 		/* Try to open about window */
 		abi->abi_Window = LockedOpenWindowTags(NULL,
-				WA_Title, (ULONG) GetLocString(MSGID_ABOUTNAME),
-				WA_CustomScreen, (ULONG) iInfos.xii_iinfos.ii_Screen,
+				WA_Title, (IPTR) GetLocString(MSGID_ABOUTNAME),
+				WA_CustomScreen, (IPTR) iInfos.xii_iinfos.ii_Screen,
 				WA_IDCMP, IDCMPFlags,
 				WA_Activate, TRUE,
 				WA_RMBTrap, TRUE,
@@ -829,9 +829,9 @@ static struct AboutGadgetInfo *AboutCreateButton(const struct AboutGadgetDef *ag
 
 		// imgNormal is always required
 		agi->agi_Image = NewObject(DtImageClass, NULL,
-			DTIMG_ImageName, (ULONG) ImageNameNrm,
-			DTIMG_SelImageName, (ULONG) ImageNameSel,
-			DTIMG_DisabledImageName, (ULONG) ImageNameDisabled,
+			DTIMG_ImageName, (IPTR) ImageNameNrm,
+			DTIMG_SelImageName, (IPTR) ImageNameSel,
+			DTIMG_DisabledImageName, (IPTR) ImageNameDisabled,
 			TAG_END);
 		d1(KPrintF("%s/%s/%ld: agi_Image=%08lx\n", __FILE__, __FUNC__, __LINE__, agi->agi_Image));
 		if (NULL == agi->agi_Image)
@@ -863,7 +863,7 @@ static struct AboutGadgetInfo *AboutCreateButton(const struct AboutGadgetDef *ag
 			agi->agi_Image = NewObject(NULL, FRAMEICLASS,
 					IA_Width, agi->agi_Width,
 					IA_Height, agi->agi_Height,
-					SYSIA_DrawInfo, (ULONG) iInfos.xii_iinfos.ii_DrawInfo,
+					SYSIA_DrawInfo, (IPTR) iInfos.xii_iinfos.ii_DrawInfo,
 					IA_FrameType, FRAME_BUTTON,
 					TAG_END);
 			d1(KPrintF("%s/%s/%ld: agi_Image=%08lx\n", __FILE__, __FUNC__, __LINE__, agi->agi_Image));
@@ -877,8 +877,8 @@ static struct AboutGadgetInfo *AboutCreateButton(const struct AboutGadgetDef *ag
 				GA_Text, GadgetText,
 				GA_RelVerify, TRUE,
 				GA_GadgetHelp, TRUE,
-				GA_Image, (ULONG) agi->agi_Image,
-				PrevGadget ? GA_Previous : TAG_IGNORE, (ULONG) PrevGadget,
+				GA_Image, (IPTR) agi->agi_Image,
+				PrevGadget ? GA_Previous : TAG_IGNORE, (IPTR) PrevGadget,
 #if defined(GA_LabelPlace)
 				GA_LabelPlace, GV_LabelPlace_In,
 #endif //defined(GA_LabelPlace)
@@ -887,17 +887,18 @@ static struct AboutGadgetInfo *AboutCreateButton(const struct AboutGadgetDef *ag
 			}
 		else
 			{
+			IPTR val;
 			agi->agi_Themed = FALSE;
 
-			GetAttr(IA_Width, agi->agi_Image, &agi->agi_Width);
-			GetAttr(IA_Height, agi->agi_Image, &agi->agi_Height);
+			GetAttr(IA_Width, agi->agi_Image, &val); agi->agi_Width = val;
+			GetAttr(IA_Height, agi->agi_Image, &val); agi->agi_Height = val;
 
 			agi->agi_Gadget = (struct Gadget *) SCA_NewScalosObjectTags("ButtonGadget.sca",
 				GA_ID, agd->agd_GadgetID,
 				GA_RelVerify, TRUE,
 				GA_GadgetHelp, TRUE,
-				GA_Image, (ULONG) agi->agi_Image,
-				PrevGadget ? GA_Previous : TAG_IGNORE, (ULONG) PrevGadget,
+				GA_Image, (IPTR) agi->agi_Image,
+				PrevGadget ? GA_Previous : TAG_IGNORE, (IPTR) PrevGadget,
 				TAG_END);
 			}
 		d1(KPrintF("%s/%s/%ld: agi_Gadget=%08lx\n", __FILE__, __FUNC__, __LINE__, agi->agi_Gadget));
@@ -1217,10 +1218,10 @@ static struct ttDef *CreateDiskPluginList(struct AboutInfo *abi)
 				{
 				ScalosTagListNewEntry(&stl, 
 					TT_Item,
-					(ULONG) TT_CreateItem(TT_Title, FilePart(plug->plug_filename),
+					(IPTR) TT_CreateItem(TT_Title, FilePart(plug->plug_filename),
 							TT_HAlign, GTJ_LEFT,
 							TT_TextPen, iInfos.xii_iinfos.ii_DrawInfo->dri_Pens[TEXTPEN],
-							TT_Font, (ULONG) iInfos.xii_iinfos.ii_Screen->Font,
+							TT_Font, (IPTR) iInfos.xii_iinfos.ii_Screen->Font,
 							TT_TTFont, abi->abi_ttDesc,
 							TT_SpaceLeft, 5,
 							End
@@ -1260,10 +1261,10 @@ static struct ttDef *CreateDiskPluginList(struct AboutInfo *abi)
 					{
 					ScalosTagListNewEntry(&stl,
 						TT_Item,
-						(ULONG) TT_CreateItem(TT_Title, ci->ci_name,
+						(IPTR) TT_CreateItem(TT_Title, ci->ci_name,
 								TT_HAlign, GTJ_LEFT,
 								TT_TextPen, iInfos.xii_iinfos.ii_DrawInfo->dri_Pens[TEXTPEN],
-								TT_Font, (ULONG) iInfos.xii_iinfos.ii_Screen->Font,
+								TT_Font, (IPTR) iInfos.xii_iinfos.ii_Screen->Font,
 								TT_TTFont, abi->abi_ttDesc,
 								End
 						);
@@ -1314,10 +1315,10 @@ static struct ttDef *CreateDiskPluginList(struct AboutInfo *abi)
 
 					ScalosTagListNewEntry(&stl,
 						TT_Item,
-						(ULONG) TT_CreateItem(TT_Title, text,
+						(IPTR) TT_CreateItem(TT_Title, text,
 							TT_HAlign, GTJ_LEFT,
 							TT_SpaceRight, 5,
-							TT_Font, (ULONG) iInfos.xii_iinfos.ii_Screen->Font,
+							TT_Font, (IPTR) iInfos.xii_iinfos.ii_Screen->Font,
 							TT_TTFont, abi->abi_ttDesc,
 							TT_TextPen, iInfos.xii_iinfos.ii_DrawInfo->dri_Pens[TEXTPEN],
 							End
@@ -1454,12 +1455,12 @@ static struct ttDef *CreateAboutText(struct AboutInfo *abi, ULONG MsgId)
 				switch (lp[1])
 					{
 				case 'p':	// Plugin List
-					ScalosTagListNewEntry(&stl, TT_Item, (ULONG) CreateDiskPluginList(abi));
+					ScalosTagListNewEntry(&stl, TT_Item, (IPTR) CreateDiskPluginList(abi));
 					break;
 				case 'l':	// Scalos Logo
 					ScalosTagListNewEntry(&stl, 
 						TT_Item, 
-						(ULONG) TT_CreateItem(TT_Image, abi->abi_Logo,
+						(IPTR) TT_CreateItem(TT_Image, abi->abi_Logo,
 								TT_HAlign, Justification,
 								TAG_END)
 						);
@@ -1494,13 +1495,13 @@ static struct ttDef *CreateAboutText(struct AboutInfo *abi, ULONG MsgId)
 
 				ScalosTagListNewEntry(&stl, 
 					TT_Item,
-					(ULONG) TT_CreateItem(TT_LayoutMode, TTL_Horizontal,
+					(IPTR) TT_CreateItem(TT_LayoutMode, TTL_Horizontal,
 					TT_Members, TT_CreateItem(TT_Title, lp3Start,
 							TT_HAlign, Justification,
 							TT_TextStyle, textStyle,
-							TT_Font, (ULONG) iInfos.xii_iinfos.ii_Screen->Font,
+							TT_Font, (IPTR) iInfos.xii_iinfos.ii_Screen->Font,
 							TT_TTFont, abi->abi_ttDesc,
-							TT_TextPen, (ULONG) iInfos.xii_iinfos.ii_DrawInfo->dri_Pens[bPennum],
+							TT_TextPen, (IPTR) iInfos.xii_iinfos.ii_DrawInfo->dri_Pens[bPennum],
 							TAG_END),
 					TAG_END)
 					);
@@ -1514,7 +1515,7 @@ static struct ttDef *CreateAboutText(struct AboutInfo *abi, ULONG MsgId)
 
 				ScalosTagListNewEntry(&stl, 
 					TT_Item,
-					(ULONG) TT_CreateItem(TT_Space, lSkipline,
+					(IPTR) TT_CreateItem(TT_Space, lSkipline,
 						TAG_END)
 					);
 				}
@@ -1704,7 +1705,7 @@ static void AboutBackfill(struct AboutInfo *abi)
 			abi->abi_wInnerleft + abi->abi_wInnerwidth - 1,
 			abi->abi_wInnertop + abi->abi_wInnerheight - 1,
 			IA_APatSize, 1,
-			IA_APattern, (ULONG) wAboutpattern,
+			IA_APattern, (IPTR) wAboutpattern,
 			IA_FGPen, iInfos.xii_iinfos.ii_DrawInfo->dri_Pens[SHINEPEN],
 			TAG_END);
 		}

@@ -340,7 +340,7 @@ static struct DatatypesImage *NewDatatypesImage(CONST_STRPTR ImageName, ULONG Fl
 				DTA_GroupID, GID_PICTURE,
 				PDTA_DestMode, PMODE_V43,
 				PDTA_Remap, DoRemap,
-				DoRemap ? PDTA_Screen : TAG_IGNORE, (ULONG) iInfos.xii_iinfos.ii_Screen,
+				DoRemap ? PDTA_Screen : TAG_IGNORE, (IPTR) iInfos.xii_iinfos.ii_Screen,
 				PDTA_UseFriendBitMap, UseFriendBM,
 				TAG_END);
 		d1(KPrintF("%s/%s/%ld: dti_ImageObj=%08lx\n", __FILE__, __FUNC__, __LINE__, dti->dti_ImageObj));
@@ -358,8 +358,8 @@ static struct DatatypesImage *NewDatatypesImage(CONST_STRPTR ImageName, ULONG Fl
 			}
 
 		Result = GetDTAttrs(dti->dti_ImageObj,
-			PDTA_DestBitMap, (ULONG) &dti->dti_BitMap,
-			PDTA_BitMapHeader, (ULONG) &dti->dti_BitMapHeader,
+			PDTA_DestBitMap, (IPTR) &dti->dti_BitMap,
+			PDTA_BitMapHeader, (IPTR) &dti->dti_BitMapHeader,
 			TAG_END);
 
 		d1(KPrintF("%s/%s/%ld: Result=%ld  dti_BitMap=%08lx  dti_BitMapHeader=%08lx\n", \
@@ -384,7 +384,7 @@ static struct DatatypesImage *NewDatatypesImage(CONST_STRPTR ImageName, ULONG Fl
 		case mskHasMask:
 		case mskHasTransparentColor:
 			GetDTAttrs(dti->dti_ImageObj,
-				PDTA_MaskPlane, (ULONG) &dti->dti_MaskPlane,
+				PDTA_MaskPlane, (IPTR) &dti->dti_MaskPlane,
 				TAG_END);
 			break;
 		default:
@@ -578,7 +578,7 @@ static void DtImageNotify(struct internalScaWindowTask *iwt, struct NotifyMessag
 				DTA_GroupID, GID_PICTURE,
 				PDTA_DestMode, PMODE_V43,
 				PDTA_Remap, TRUE,
-				PDTA_Screen, (ULONG) iInfos.xii_iinfos.ii_Screen,
+				PDTA_Screen, (IPTR) iInfos.xii_iinfos.ii_Screen,
 				PDTA_UseFriendBitMap, (GetBitMapAttr(iInfos.xii_iinfos.ii_Screen->RastPort.BitMap, BMA_DEPTH) <= 8 ? FALSE : TRUE ),	 /* +dm+ Do not use a friend bitmap for 8bit or less screens */
 				TAG_END);
 		d1(KPrintF("%s/%s/%ld: dti_ImageObj=%08lx\n", __FILE__, __FUNC__, __LINE__, dtiNew->dti_ImageObj));
@@ -604,8 +604,8 @@ static void DtImageNotify(struct internalScaWindowTask *iwt, struct NotifyMessag
 			break;
 
 		Result = GetDTAttrs(dti->dti_ImageObj,
-			PDTA_DestBitMap, (ULONG) &dti->dti_BitMap,
-			PDTA_BitMapHeader, (ULONG) &dti->dti_BitMapHeader,
+			PDTA_DestBitMap, (IPTR) &dti->dti_BitMap,
+			PDTA_BitMapHeader, (IPTR) &dti->dti_BitMapHeader,
 			TAG_END);
 
 		if (Result < 2)
@@ -620,7 +620,7 @@ static void DtImageNotify(struct internalScaWindowTask *iwt, struct NotifyMessag
 		case mskHasAlpha:
 		case mskHasTransparentColor:
 			GetDTAttrs(dti->dti_ImageObj,
-				PDTA_MaskPlane, (ULONG) &dti->dti_MaskPlane,
+				PDTA_MaskPlane, (IPTR) &dti->dti_MaskPlane,
 				TAG_END);
 			break;
 		default:

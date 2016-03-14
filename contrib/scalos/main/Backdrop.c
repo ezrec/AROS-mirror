@@ -261,7 +261,7 @@ static LONG BackdropWriteList(struct BackDropList *bdl)
 		{
 		d1(kprintf("%s/%s/%ld: Line=<%s>\n", __FILE__, __FUNC__, __LINE__, cnl->cnl_Line));
 
-		if (-1 == FPrintf(fh, "%s\n", (ULONG) cnl->cnl_Line))
+		if (-1 == FPrintf(fh, "%s\n", (IPTR) cnl->cnl_Line))
 			Result = IoErr();
 		}
 

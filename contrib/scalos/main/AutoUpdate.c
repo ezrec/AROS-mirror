@@ -115,9 +115,9 @@ ULONG DeviceWindowCheckUpdate(struct internalScaWindowTask *iwt)
 			break;
 			}
 
-		if (!ScaAttemptSemaphoreList(SCA_SemaphoreExclusiveNoNest, (ULONG) &iwt->iwt_UpdateSemaphore,
-			SCA_SemaphoreExclusive, (ULONG) iwt->iwt_WindowTask.wt_IconSemaphore,
-			SCA_SemaphoreShared, (ULONG) iwt->iwt_WindowTask.wt_WindowSemaphore,
+		if (!ScaAttemptSemaphoreList(SCA_SemaphoreExclusiveNoNest, (IPTR) &iwt->iwt_UpdateSemaphore,
+			SCA_SemaphoreExclusive, (IPTR) iwt->iwt_WindowTask.wt_IconSemaphore,
+			SCA_SemaphoreShared, (IPTR) iwt->iwt_WindowTask.wt_WindowSemaphore,
 			TAG_END))
 			{
 			d1(KPrintF("%s/%s/%ld: AttemptSemaphoreNoNest(&iwt->iwt_UpdateSemaphore) failed.\n", __FILE__, __FUNC__, __LINE__));
@@ -177,7 +177,7 @@ ULONG DeviceWindowCheckUpdate(struct internalScaWindowTask *iwt)
 
 				if (DiskInfoObj)
 					{
-					ULONG IconType;
+					IPTR IconType;
 
 					GetAttr(IDTA_Type, DiskInfoObj, &IconType);
 					if (WBDISK == IconType)
@@ -213,7 +213,7 @@ ULONG DeviceWindowCheckUpdate(struct internalScaWindowTask *iwt)
 
 			if (cud->cud_IconNode)
 				{
-				ULONG IconType;
+				IPTR IconType;
 
 				GetAttr(IDTA_Type, cud->cud_IconNode->in_Icon, &IconType);
 
@@ -359,10 +359,10 @@ ULONG IconWindowCheckUpdate(struct internalScaWindowTask *iwt)
 			break;
 			}
 
-		if (!ScaAttemptSemaphoreList(SCA_SemaphoreExclusiveNoNest, (ULONG) &iwt->iwt_UpdateSemaphore,
-			SCA_SemaphoreExclusive, (ULONG) iwt->iwt_WindowTask.wt_IconSemaphore,
-			SCA_SemaphoreExclusive, (ULONG) iInfos.xii_iinfos.ii_MainWindowStruct->ws_WindowTask->wt_IconSemaphore,
-			SCA_SemaphoreShared, (ULONG) iwt->iwt_WindowTask.wt_WindowSemaphore,
+		if (!ScaAttemptSemaphoreList(SCA_SemaphoreExclusiveNoNest, (IPTR) &iwt->iwt_UpdateSemaphore,
+			SCA_SemaphoreExclusive, (IPTR) iwt->iwt_WindowTask.wt_IconSemaphore,
+			SCA_SemaphoreExclusive, (IPTR) iInfos.xii_iinfos.ii_MainWindowStruct->ws_WindowTask->wt_IconSemaphore,
+			SCA_SemaphoreShared, (IPTR) iwt->iwt_WindowTask.wt_WindowSemaphore,
 			TAG_END))
 			{
 			d1(KPrintF("%s/%s/%ld: ScaAttemptSemaphoreList(&iwt->iwt_UpdateSemaphore) failed.\n", __FILE__, __FUNC__, __LINE__));
@@ -702,10 +702,10 @@ ULONG TextWindowCheckUpdate(struct internalScaWindowTask *iwt)
 
 		d1(KPrintF("%s/%s/%ld: \n", __FILE__, __FUNC__, __LINE__));
 
-		if (!ScaAttemptSemaphoreList(SCA_SemaphoreExclusiveNoNest, (ULONG) &iwt->iwt_UpdateSemaphore,
-			SCA_SemaphoreExclusive, (ULONG) iwt->iwt_WindowTask.wt_IconSemaphore,
-			SCA_SemaphoreExclusive, (ULONG) iInfos.xii_iinfos.ii_MainWindowStruct->ws_WindowTask->wt_IconSemaphore,
-			SCA_SemaphoreShared, (ULONG) iwt->iwt_WindowTask.wt_WindowSemaphore,
+		if (!ScaAttemptSemaphoreList(SCA_SemaphoreExclusiveNoNest, (IPTR) &iwt->iwt_UpdateSemaphore,
+			SCA_SemaphoreExclusive, (IPTR) iwt->iwt_WindowTask.wt_IconSemaphore,
+			SCA_SemaphoreExclusive, (IPTR) iInfos.xii_iinfos.ii_MainWindowStruct->ws_WindowTask->wt_IconSemaphore,
+			SCA_SemaphoreShared, (IPTR) iwt->iwt_WindowTask.wt_WindowSemaphore,
 			TAG_END))
 			{
 			d1(KPrintF("%s/%s/%ld: AttemptSemaphoreNoNest(&iwt->iwt_UpdateSemaphore) failed.\n", __FILE__, __FUNC__, __LINE__));
@@ -933,18 +933,18 @@ ULONG TextWindowCheckUpdate(struct internalScaWindowTask *iwt)
 				// Both File and Icon found
 				const struct DateStamp *fDate = NULL;
 				CONST_STRPTR Comment = (CONST_STRPTR) "";
-				ULONG Protection;				// +jmc+ 30.01.2005
+				IPTR Protection, val;				// +jmc+ 30.01.2005
 				ULONG fProt = 0;
 				struct DateStamp iseIconDate;
 
 				d1(KPrintF("%s/%s/%ld: (update) cud=%08lx  <%s>\n", __FILE__, __FUNC__, __LINE__, cud, cud->cud_FileName));
 
 				GetAttr(TIDTA_Comment, cud->cud_IconNode->in_Icon, (APTR) &Comment);
-				GetAttr(TIDTA_Protection, cud->cud_IconNode->in_Icon, (ULONG *) &Protection); 	// +jmc+ 30.01.2005
+				GetAttr(TIDTA_Protection, cud->cud_IconNode->in_Icon, (IPTR *) &Protection); 	// +jmc+ 30.01.2005
 
-				GetAttr(TIDTA_Days, cud->cud_IconNode->in_Icon, (ULONG *) &iseIconDate.ds_Days);
-				GetAttr(TIDTA_Mins, cud->cud_IconNode->in_Icon, (ULONG *) &iseIconDate.ds_Minute);
-				GetAttr(TIDTA_Ticks, cud->cud_IconNode->in_Icon, (ULONG *) &iseIconDate.ds_Tick);
+				GetAttr(TIDTA_Days, cud->cud_IconNode->in_Icon, &val); iseIconDate.ds_Days = val;
+				GetAttr(TIDTA_Mins, cud->cud_IconNode->in_Icon, &val); iseIconDate.ds_Minute = val;
+				GetAttr(TIDTA_Ticks, cud->cud_IconNode->in_Icon, &val); iseIconDate.ds_Tick = val;
 
 	 			if (cud->cud_iseIcon && cud->cud_iseObject)
 					{
@@ -1463,7 +1463,7 @@ static BOOL IsThumbnailIcon(struct ScaIconNode *in)
 
 	if (in && in->in_Icon)
 		{
-		ULONG IconUserFlags;
+		IPTR IconUserFlags;
 
 		GetAttr(IDTA_UserFlags, in->in_Icon, &IconUserFlags);
 		if (IconUserFlags & ICONOBJ_USERFLAGF_Thumbnail)
@@ -1782,7 +1782,7 @@ static struct CheckUpdateData *CreateCheckUpdateData(struct internalScaWindowTas
 
 	if (cud)
 		{
-		ULONG SoloIcon = FALSE;
+		IPTR SoloIcon = FALSE;
 
 		cud->cud_iwt = iwt;
 		cud->cud_iseIcon = NULL;

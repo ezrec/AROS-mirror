@@ -65,8 +65,8 @@ struct DtImageClassInst
 
 // local functions
 
-static SAVEDS(ULONG) INTERRUPT DtImageClassDispatcher(Class *cl, Object *o, Msg msg);
-static ULONG DtImage_New(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) INTERRUPT DtImageClassDispatcher(Class *cl, Object *o, Msg msg);
+static IPTR DtImage_New(Class *cl, Object *o, Msg msg);
 static ULONG DtImage_Dispose(Class *cl, Object *o, Msg msg);
 static ULONG DtImage_Draw(Class *cl, Object *o, Msg msg);
 static ULONG DtImage_Get(Class *cl, Object *o, Msg msg);
@@ -98,7 +98,7 @@ Class *initDtImageClass(void)
 
 //----------------------------------------------------------------------------
 
-static SAVEDS(ULONG) INTERRUPT DtImageClassDispatcher(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) INTERRUPT DtImageClassDispatcher(Class *cl, Object *o, Msg msg)
 {
 	ULONG Result;
 
@@ -126,7 +126,7 @@ static SAVEDS(ULONG) INTERRUPT DtImageClassDispatcher(Class *cl, Object *o, Msg 
 
 //----------------------------------------------------------------------------
 
-static ULONG DtImage_New(Class *cl, Object *o, Msg msg)
+static IPTR DtImage_New(Class *cl, Object *o, Msg msg)
 {
 	struct opSet *ops = (struct opSet *) msg;
 	struct DtImageClassInst *inst;
@@ -142,7 +142,7 @@ static ULONG DtImage_New(Class *cl, Object *o, Msg msg)
 
 	memset(inst, 0, sizeof(struct DtImageClassInst));
 
-	ImageName = (CONST_STRPTR) GetTagData(DTIMG_ImageName, (ULONG) "", ops->ops_AttrList);
+	ImageName = (CONST_STRPTR) GetTagData(DTIMG_ImageName, (IPTR) "", ops->ops_AttrList);
 	d1(KPrintF("%s/%s/%ld: o=%08lx  ImageName=<%s>\n", __FILE__, __FUNC__, __LINE__, o, ImageName));
 
 	inst->bmicl_DtImage = CreateDatatypesImage(ImageName, 0);
@@ -154,7 +154,7 @@ static ULONG DtImage_New(Class *cl, Object *o, Msg msg)
 		}
 
 	// Selected image is optional
-	ImageName = (CONST_STRPTR) GetTagData(DTIMG_SelImageName, (ULONG) "", ops->ops_AttrList);
+	ImageName = (CONST_STRPTR) GetTagData(DTIMG_SelImageName, (IPTR) "", ops->ops_AttrList);
 	d1(KPrintF("%s/%s/%ld: o=%08lx  SelImageName=<%s>\n", __FILE__, __FUNC__, __LINE__, o, ImageName));
 
 	if (ImageName && strlen(ImageName) > 0)
@@ -162,7 +162,7 @@ static ULONG DtImage_New(Class *cl, Object *o, Msg msg)
 	d1(KPrintF("%s/%s/%ld: bmicl_SelDtImage=%08lx\n", __FILE__, __FUNC__, __LINE__, inst->bmicl_SelDtImage));
 
 	// Disabled image is optional
-	ImageName = (CONST_STRPTR) GetTagData(DTIMG_DisabledImageName, (ULONG) "", ops->ops_AttrList);
+	ImageName = (CONST_STRPTR) GetTagData(DTIMG_DisabledImageName, (IPTR) "", ops->ops_AttrList);
 	d1(KPrintF("%s/%s/%ld: o=%08lx  DisabledImageName=<%s>\n", __FILE__, __FUNC__, __LINE__, o, ImageName));
 
 	if (ImageName && strlen(ImageName) > 0)
@@ -189,7 +189,7 @@ static ULONG DtImage_New(Class *cl, Object *o, Msg msg)
 		IA_Height, Height,
 		TAG_END);
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 //----------------------------------------------------------------------------

@@ -130,8 +130,8 @@ struct CycleGadgetInstance
 
 // The functions in this module
 
-static SAVEDS(ULONG) INTERRUPT dispatchCycleGadgetClass(Class *cl, Object *o, Msg msg);
-static ULONG CycleGadgetNew(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) INTERRUPT dispatchCycleGadgetClass(Class *cl, Object *o, Msg msg);
+static IPTR CycleGadgetNew(Class *cl, Object *o, Msg msg);
 static ULONG CycleGadgetDispose(Class *cl, Object *o, Msg msg);
 static ULONG CycleGadgetSet(Class *cl, Object *o, Msg msg);
 static ULONG CycleGadgetGet(Class *cl, Object *o, Msg msg);
@@ -188,9 +188,9 @@ struct ScalosClass *initCycleGadgetClass(const struct PluginClass *plug)
 /**************************************************************************/
 /**********	   The CycleGadgetCLASS class dispatcher         *********/
 /**************************************************************************/
-static SAVEDS(ULONG) INTERRUPT dispatchCycleGadgetClass(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) INTERRUPT dispatchCycleGadgetClass(Class *cl, Object *o, Msg msg)
 {
-	ULONG Result;
+	IPTR Result;
 
 	d1(kprintf("%s/%s/%ld:  Class=%08lx  SuperClass=%08lx  Method=%08lx\n", __FILE__, __FUNC__, __LINE__, cl, cl->cl_Super, msg->MethodID));
 
@@ -245,7 +245,7 @@ static SAVEDS(ULONG) INTERRUPT dispatchCycleGadgetClass(Class *cl, Object *o, Ms
 
 //----------------------------------------------------------------------------
 
-static ULONG CycleGadgetNew(Class *cl, Object *o, Msg msg)
+static IPTR CycleGadgetNew(Class *cl, Object *o, Msg msg)
 {
 	BOOL Success = FALSE;
 
@@ -263,7 +263,7 @@ static ULONG CycleGadgetNew(Class *cl, Object *o, Msg msg)
 		memset(inst, 0, sizeof(struct CycleGadgetInstance));
 
 		inst->cgi_Active = GetTagData(SCACYCLE_Active, 0, ops->ops_AttrList);
-		inst->cgi_Labels = (CONST_STRPTR *) GetTagData(SCACYCLE_Labels, (ULONG) NULL, ops->ops_AttrList);
+		inst->cgi_Labels = (CONST_STRPTR *) GetTagData(SCACYCLE_Labels, (IPTR) NULL, ops->ops_AttrList);
 		inst->cgi_Hidden = GetTagData(GBDTA_Hidden, FALSE, ops->ops_AttrList);
 
 		CycleGadgetCountLabels(inst);
@@ -280,7 +280,7 @@ static ULONG CycleGadgetNew(Class *cl, Object *o, Msg msg)
 		if (NULL == inst->cgi_CreatedFrame)
 			break;
 
-		inst->cgi_ButtonFrame = (Object *) GetTagData(SCACYCLE_FrameImage, (ULONG) inst->cgi_CreatedFrame, ops->ops_AttrList);
+		inst->cgi_ButtonFrame = (Object *) GetTagData(SCACYCLE_FrameImage, (IPTR) inst->cgi_CreatedFrame, ops->ops_AttrList);
 		d1(KPrintF("%s/%s/%ld:  o=%08lx  cgi_ButtonFrame=%08lx\n", __FILE__, __FUNC__, __LINE__, o, inst->cgi_ButtonFrame));
 
 		inst->cgi_CheckImage = NewObject(NULL, SYSICLASS,
@@ -293,8 +293,8 @@ static ULONG CycleGadgetNew(Class *cl, Object *o, Msg msg)
 
 		// cgi_CycleImage is optional
 		inst->cgi_CycleImage = NewObject(DtImageClass, NULL,
-			DTIMG_ImageName, (ULONG) "THEME:Window/ControlBar/CycleNormal",
-			DTIMG_SelImageName, (ULONG) "THEME:Window/ControlBar/CycleSelected",
+			DTIMG_ImageName, (IPTR) "THEME:Window/ControlBar/CycleNormal",
+			DTIMG_SelImageName, (IPTR) "THEME:Window/ControlBar/CycleSelected",
 			TAG_END);
 		d1(KPrintF("%s/%s/%ld:  o=%08lx  cgi_CycleImage=%08lx\n", __FILE__, __FUNC__, __LINE__, o, inst->cgi_CycleImage));
 
@@ -317,11 +317,11 @@ static ULONG CycleGadgetNew(Class *cl, Object *o, Msg msg)
 		inst->cgi_InsideBackFillHook.h_Data = inst;
 
 		inst->cgi_GadgetFont = (struct TextFont *) GetTagData(SCACYCLE_TextFont,
-			(ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font, ops->ops_AttrList);
+			(IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font, ops->ops_AttrList);
 		inst->cgi_PopupFont = (struct TextFont *) GetTagData(SCACYCLE_PopupTextFont,
-			(ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font, ops->ops_AttrList);
+			(IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font, ops->ops_AttrList);
 		inst->cgi_PopupTTFont = (struct TTFontFamily *) GetTagData(SCACYCLE_PopupTTFont,
-			CurrentPrefs.pref_UseScreenTTFont ? (ULONG) &ScreenTTFont : 0, ops->ops_AttrList);
+			CurrentPrefs.pref_UseScreenTTFont ? (IPTR) &ScreenTTFont : 0, ops->ops_AttrList);
 
 		Success = TRUE;
 		} while (0);
@@ -332,7 +332,7 @@ static ULONG CycleGadgetNew(Class *cl, Object *o, Msg msg)
 		o = NULL;
 		}
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 //----------------------------------------------------------------------------
@@ -464,34 +464,34 @@ static ULONG CycleGadgetGet(Class *cl, Object *o, Msg msg)
 	switch (opg->opg_AttrID)
 		{
 	case GA_Left:	// required since gadgetclass attribute is [IS] - no support for [G]
-		*(opg->opg_Storage) = (ULONG) gg->LeftEdge;
+		*(opg->opg_Storage) = (IPTR) gg->LeftEdge;
 		break;
 	case GA_Top:	// required since gadgetclass attribute is [IS] - no support for [G]
-		*(opg->opg_Storage) = (ULONG) gg->TopEdge;
+		*(opg->opg_Storage) = (IPTR) gg->TopEdge;
 		break;
 	case GA_Width:	// required since gadgetclass attribute is [IS] - no support for [G]
-		*(opg->opg_Storage) = (ULONG) gg->Width;
+		*(opg->opg_Storage) = (IPTR) gg->Width;
 		break;
 	case GA_Height:	// required since gadgetclass attribute is [IS] - no support for [G]
-		*(opg->opg_Storage) = (ULONG) gg->Height;
+		*(opg->opg_Storage) = (IPTR) gg->Height;
 		break;
 	case SCACYCLE_Active:
 		*(opg->opg_Storage) = inst->cgi_Active;
 		break;
 	case SCACYCLE_Labels:
-		*(opg->opg_Storage) = (ULONG) inst->cgi_Labels;
+		*(opg->opg_Storage) = (IPTR) inst->cgi_Labels;
 		break;
 	case SCACYCLE_TextFont:
-		*(opg->opg_Storage) = (ULONG) inst->cgi_GadgetFont;
+		*(opg->opg_Storage) = (IPTR) inst->cgi_GadgetFont;
 		break;
 	case SCACYCLE_PopupTextFont:
-		*(opg->opg_Storage) = (ULONG) inst->cgi_PopupFont;
+		*(opg->opg_Storage) = (IPTR) inst->cgi_PopupFont;
 		break;
 	case SCACYCLE_PopupTTFont:
-		*(opg->opg_Storage) = (ULONG) inst->cgi_PopupTTFont;
+		*(opg->opg_Storage) = (IPTR) inst->cgi_PopupTTFont;
 		break;
 	case GBDTA_Hidden:
-		*(opg->opg_Storage) = (ULONG) inst->cgi_Hidden;
+		*(opg->opg_Storage) = (IPTR) inst->cgi_Hidden;
 		break;
 	default:
 		Result = DoSuperMethodA(cl, o, msg);
@@ -537,7 +537,7 @@ static ULONG CycleGadgetLayout(Class *cl, Object *o, Msg msg)
 	struct ExtGadget *gg = (struct ExtGadget *) o;
 	struct RastPort rp;
 	ULONG cycleWidth = 0, cycleHeight = 0;
-	ULONG checkWidth = 0, checkHeight = 0;
+	IPTR checkWidth = 0, checkHeight = 0;
 	ULONG Width, Height;
 	ULONG n;
 	struct IBox FrameBox = { 0, 0, 20, 15 };
@@ -556,7 +556,7 @@ static ULONG CycleGadgetLayout(Class *cl, Object *o, Msg msg)
 	// get dimensions of Cycle image(s)
 	if (inst->cgi_CycleImage)
 		{
-		ULONG Width = 0, Height = 0;
+		IPTR Width = 0, Height = 0;
 
 		GetAttr(IA_Width, inst->cgi_CycleImage, &Width);
 		GetAttr(IA_Height, inst->cgi_CycleImage, &Height);
@@ -703,7 +703,7 @@ static ULONG CycleGadgetRender(Class *cl, Object *o, Msg msg)
 	struct RastPort rp;
 	struct TextExtent textExt;
 	size_t LabelLength;
-	ULONG CycleImageHeight;
+	IPTR CycleImageHeight;
 	ULONG SeparatorYOffset;
 	WORD x, y, y2;
 
@@ -861,7 +861,7 @@ static ULONG CycleGadgetHelpTest(Class *cl, Object *o, Msg msg)
 // x, y are already relative to the Gadget position (0,0) is top left corner!
 static BOOL CycleGadgetPointInGadget(Object *o, WORD x, WORD y)
 {
-	ULONG Width, Height;
+	IPTR Width, Height;
 
 	GetAttr(GA_Width, o, &Width);
 	GetAttr(GA_Height, o, &Height);
@@ -1290,8 +1290,8 @@ static void CycleGadgetOpenPopupWindow(struct ScaWindowTask *wt, APTR arg)
 	struct GadgetInfo *GInfo = &cpm->cpm_GInfo;
 	struct CycleGadgetInstance *inst = INST_DATA(cl, o);
 	ULONG Left, Top;
-	ULONG Width, Height;
-	ULONG GadgetLeft, GadgetTop, GadgetHeight;
+	IPTR Width, Height;
+	IPTR GadgetLeft, GadgetTop, GadgetHeight;
 	struct IBox FrameBox = { 0, 0, 20, 15 };
 	struct IBox ContentsBox = { 3, 3, 20 - 2 * 3, 15 - 2 * 3 };
 
@@ -1445,7 +1445,7 @@ static void CycleGadgetPopupDrawWindowLine(struct ScaWindowTask *wt, APTR arg)
 	size_t LabelLength;
 	LONG x, y;
 	struct Rectangle LineRect;
-	ULONG checkWidth;
+	IPTR checkWidth;
 	ULONG Width;
 
 	GetAttr(IA_Width, inst->cgi_CheckImage, &checkWidth);
@@ -1505,7 +1505,7 @@ static void CycleGadgetPopupDrawWindowLine(struct ScaWindowTask *wt, APTR arg)
 	if (LineNo == inst->cgi_Active)
 		{
 		// for currently active line, draw checkmark
-		ULONG checkHeight;
+		IPTR checkHeight;
 
 		GetAttr(IA_Height, inst->cgi_CheckImage, &checkHeight);
 

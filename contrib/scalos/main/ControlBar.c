@@ -99,7 +99,7 @@ static void ControlBarAddGadgets(struct internalScaWindowTask *iwt, const struct
 
 BOOL ControlBarAdd(struct internalScaWindowTask *iwt)
 {
-	ULONG Height = 0;
+	IPTR Height = 0;
 	BOOL Success = FALSE;
 
 	d1(KPrintF("%s/%s/%ld: START iwt=%08lx  <%s>\n", __FILE__, __FUNC__, __LINE__, iwt, iwt->iwt_WinTitle));
@@ -133,13 +133,13 @@ BOOL ControlBarAdd(struct internalScaWindowTask *iwt)
 			PalettePrefs.pal_PensList[PENIDX_STATUSBAR_BG]));
 
 		iwt->iwt_ControlBar = (struct Gadget *) SCA_NewScalosObjectTags("GadgetBar.sca",
-			GBDTA_WindowTask, (ULONG) iwt,
+			GBDTA_WindowTask, (IPTR) iwt,
 			GBDTA_Position, GBPOS_Top,
 			GA_RelSpecial, TRUE,
 			GA_GadgetHelp, TRUE,
 			GA_ID, GADGETID_CONTROLBAR,
 			GBDTA_BGPen, PalettePrefs.pal_PensList[PENIDX_STATUSBAR_BG],
-			GBDTA_BackgroundImageName, (ULONG) "THEME:Window/ControlBar/Background",
+			GBDTA_BackgroundImageName, (IPTR) "THEME:Window/ControlBar/Background",
 			GA_RelVerify, TRUE,
 			GA_GadgetHelp, TRUE,
 			TAG_END);
@@ -254,7 +254,7 @@ void ControlBarRebuild(struct internalScaWindowTask *iwt)
 			{
 			// control bar is already present - apply modifications
 			struct ControlBarMember *Member;
-			ULONG OldHeight = 0, NewHeight = 0;
+			IPTR OldHeight = 0, NewHeight = 0;
 			ULONG OldHeightTop = iwt->iwt_GadgetBarHeightTop;
 			ULONG OldInnerTop = iwt->iwt_InnerTop;
 
@@ -451,7 +451,7 @@ void ControlBarUpdateHistory(struct internalScaWindowTask *iwt)
 			{
 			SetGadgetAttrs((struct Gadget *) Member->cbm_Gadget,
 				iwt->iwt_WindowTask.wt_Window, NULL,
-				SCAHISTORY_Active, (ULONG) iwt->iwt_CurrentHistoryEntry,
+				SCAHISTORY_Active, (IPTR) iwt->iwt_CurrentHistoryEntry,
 				TAG_END);
 			}
 		}
@@ -497,17 +497,17 @@ static struct ControlBarMember *ControlBarCreateViewByCycle(struct internalScaWi
 
 		// Frame image is optional
 		Member->cbm_FrameImage = SCA_NewScalosObjectTags("FrameImage.sca",
-			FRAMEIMG_ImageName, (ULONG) "THEME:Window/ControlBar/ViewByCycleFrame",
+			FRAMEIMG_ImageName, (IPTR) "THEME:Window/ControlBar/ViewByCycleFrame",
 			TAG_END);
 		d1(KPrintF("%s/%s/%ld: FrameImage=%08lx\n", __FILE__, __FUNC__, __LINE__, Frame));
 
 		Member->cbm_Gadget = SCA_NewScalosObjectTags("CycleGadget.sca",
-			SCACYCLE_Labels, (ULONG) CycleLabels,
+			SCACYCLE_Labels, (IPTR) CycleLabels,
 			SCACYCLE_Active, ControlbarCodeFromViewMode(iwt->iwt_WindowTask.mt_WindowStruct->ws_Viewmodes),
-			SCACYCLE_TextFont, (ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
-			SCACYCLE_PopupTextFont, (ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
-			SCACYCLE_PopupTTFont, CurrentPrefs.pref_UseScreenTTFont ? (ULONG) &ScreenTTFont : 0,
-			Member->cbm_FrameImage ? SCACYCLE_FrameImage : TAG_IGNORE, (ULONG) Member->cbm_FrameImage,
+			SCACYCLE_TextFont, (IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
+			SCACYCLE_PopupTextFont, (IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
+			SCACYCLE_PopupTTFont, CurrentPrefs.pref_UseScreenTTFont ? (IPTR) &ScreenTTFont : 0,
+			Member->cbm_FrameImage ? SCACYCLE_FrameImage : TAG_IGNORE, (IPTR) Member->cbm_FrameImage,
 			GA_ID, GadgetID,
 			GA_RelVerify, TRUE,
 			GA_GadgetHelp, TRUE,
@@ -562,17 +562,17 @@ static struct ControlBarMember *ControlBarCreateShowModeCycle(struct internalSca
 
 		// Frame image is optional
 		Member->cbm_FrameImage = SCA_NewScalosObjectTags("FrameImage.sca",
-			FRAMEIMG_ImageName, (ULONG) "THEME:Window/ControlBar/ShowModeCycleFrame",
+			FRAMEIMG_ImageName, (IPTR) "THEME:Window/ControlBar/ShowModeCycleFrame",
 			TAG_END);
 		d1(KPrintF("%s/%s/%ld: FrameImage=%08lx\n", __FILE__, __FUNC__, __LINE__, Frame));
 
 		Member->cbm_Gadget = SCA_NewScalosObjectTags("CycleGadget.sca",
-			SCACYCLE_Labels, (ULONG) ShowModeLabels,
+			SCACYCLE_Labels, (IPTR) ShowModeLabels,
 			SCACYCLE_Active, IsShowAll(iwt->iwt_WindowTask.mt_WindowStruct) ? 1 : 0,
-			SCACYCLE_TextFont, (ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
-			SCACYCLE_PopupTextFont, (ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
-			SCACYCLE_PopupTTFont, CurrentPrefs.pref_UseScreenTTFont ? (ULONG) &ScreenTTFont : 0,
-			Member->cbm_FrameImage ? SCACYCLE_FrameImage : TAG_IGNORE, (ULONG) Member->cbm_FrameImage,
+			SCACYCLE_TextFont, (IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
+			SCACYCLE_PopupTextFont, (IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font,
+			SCACYCLE_PopupTTFont, CurrentPrefs.pref_UseScreenTTFont ? (IPTR) &ScreenTTFont : 0,
+			Member->cbm_FrameImage ? SCACYCLE_FrameImage : TAG_IGNORE, (IPTR) Member->cbm_FrameImage,
 			GA_ID, GadgetID,
 			GA_RelVerify, TRUE,
 			GA_GadgetHelp, TRUE,
@@ -670,9 +670,9 @@ static struct ControlBarMember *ControlBarCreateActionButton(const struct Contro
 
 		// imgNormal is always required
 		Member->cbm_NormalImage	= NewObject(DtImageClass, NULL,
-			DTIMG_ImageName, (ULONG) cgy->cgy_NormalImage,
-			DTIMG_SelImageName, (ULONG) cgy->cgy_SelectedImage,
-			DTIMG_DisabledImageName, (ULONG) cgy->cgy_DisabledImage,
+			DTIMG_ImageName, (IPTR) cgy->cgy_NormalImage,
+			DTIMG_SelImageName, (IPTR) cgy->cgy_SelectedImage,
+			DTIMG_DisabledImageName, (IPTR) cgy->cgy_DisabledImage,
 			TAG_END);
 		d1(KPrintF("%s/%s/%ld: cbm_NormalImage=%08lx\n", __FILE__, __FUNC__, __LINE__, Member->cbm_NormalImage));
 		if (NULL == Member->cbm_NormalImage)
@@ -684,7 +684,7 @@ static struct ControlBarMember *ControlBarCreateActionButton(const struct Contro
 			GA_ID, GadgetID,
 			GA_RelVerify, TRUE,
 			GA_GadgetHelp, TRUE,
-			GA_Image, (ULONG) Member->cbm_NormalImage,
+			GA_Image, (IPTR) Member->cbm_NormalImage,
 			TAG_END);
 		d1(KPrintF("%s/%s/%ld: cbm_Gadget=%08lx\n", __FILE__, __FUNC__, __LINE__, Member->cbm_Gadget));
 		if (NULL == Member->cbm_Gadget)
@@ -784,9 +784,9 @@ static struct ControlBarMember *ControlBarCreateButton(CONST_STRPTR NormalImgNam
 
 		// imgNormal is always required
 		Member->cbm_NormalImage	= NewObject(DtImageClass, NULL,
-			DTIMG_ImageName, (ULONG) ImageNameNrm,
-			DTIMG_SelImageName, (ULONG) ImageNameSel,
-			DTIMG_DisabledImageName, (ULONG) ImageNameDisabled,
+			DTIMG_ImageName, (IPTR) ImageNameNrm,
+			DTIMG_SelImageName, (IPTR) ImageNameSel,
+			DTIMG_DisabledImageName, (IPTR) ImageNameDisabled,
 			TAG_END);
 		d1(KPrintF("%s/%s/%ld: cbm_NormalImage=%08lx\n", __FILE__, __FUNC__, __LINE__, Member->cbm_NormalImage));
 		if (NULL == Member->cbm_NormalImage)
@@ -794,7 +794,7 @@ static struct ControlBarMember *ControlBarCreateButton(CONST_STRPTR NormalImgNam
 			// no Theme image could be found - fall back to sys image
 			Member->cbm_NormalImage	= NewObject(NULL, SYSICLASS,
 					SYSIA_Which, FallbackSysImg,
-					SYSIA_DrawInfo, (ULONG) iInfos.xii_iinfos.ii_DrawInfo,
+					SYSIA_DrawInfo, (IPTR) iInfos.xii_iinfos.ii_DrawInfo,
 					TAG_END);
 			}
 		d1(KPrintF("%s/%s/%ld: cbm_NormalImage=%08lx\n", __FILE__, __FUNC__, __LINE__, Member->cbm_NormalImage));
@@ -807,7 +807,7 @@ static struct ControlBarMember *ControlBarCreateButton(CONST_STRPTR NormalImgNam
 			GA_ID, GadgetID,
 			GA_RelVerify, TRUE,
 			GA_GadgetHelp, TRUE,
-			GA_Image, (ULONG) Member->cbm_NormalImage,
+			GA_Image, (IPTR) Member->cbm_NormalImage,
 			TAG_END);
 		d1(KPrintF("%s/%s/%ld: cbm_Gadget=%08lx\n", __FILE__, __FUNC__, __LINE__, Member->cbm_Gadget));
 		if (NULL == Member->cbm_Gadget)
@@ -850,16 +850,16 @@ static struct ControlBarMember *ControlBarCreateHistoryGadget(struct internalSca
 
 		// imgNormal is always required
 		Member->cbm_NormalImage	= NewObject(DtImageClass, NULL,
-			DTIMG_ImageName, (ULONG) "THEME:Window/ControlBar/HistoryNormal" ,
-			DTIMG_SelImageName, (ULONG) "THEME:Window/ControlBar/HistorySelected" ,
-			DTIMG_DisabledImageName, (ULONG) "THEME:Window/ControlBar/HistoryDisabled" ,
+			DTIMG_ImageName, (IPTR) "THEME:Window/ControlBar/HistoryNormal" ,
+			DTIMG_SelImageName, (IPTR) "THEME:Window/ControlBar/HistorySelected" ,
+			DTIMG_DisabledImageName, (IPTR) "THEME:Window/ControlBar/HistoryDisabled" ,
 			TAG_END);
 		if (NULL == Member->cbm_NormalImage)
 			{
 			// no Theme image could be found - fall back to sys image
 			Member->cbm_NormalImage	= NewObject(NULL, SYSICLASS,
 					SYSIA_Which, MXIMAGE,
-					SYSIA_DrawInfo, (ULONG) iInfos.xii_iinfos.ii_DrawInfo,
+					SYSIA_DrawInfo, (IPTR) iInfos.xii_iinfos.ii_DrawInfo,
 					TAG_END);
 			}
 		if (NULL == Member->cbm_NormalImage)
@@ -873,9 +873,9 @@ static struct ControlBarMember *ControlBarCreateHistoryGadget(struct internalSca
 			GA_ID, GadgetID,
 			GA_RelVerify, TRUE,
 			GA_GadgetHelp, TRUE,
-			GA_Image, (ULONG) Member->cbm_NormalImage,
-			SCAHISTORY_Labels, (ULONG) &iwt->iwt_HistoryList,
-			SCAHISTORY_Active, (ULONG) iwt->iwt_CurrentHistoryEntry,
+			GA_Image, (IPTR) Member->cbm_NormalImage,
+			SCAHISTORY_Labels, (IPTR) &iwt->iwt_HistoryList,
+			SCAHISTORY_Active, (IPTR) iwt->iwt_CurrentHistoryEntry,
 			TAG_END);
 		if (NULL == Member->cbm_Gadget)
 			break;
@@ -919,7 +919,7 @@ struct ControlBarGadgetEntry *ControlBarFindGadgetByID(struct internalScaWindowT
 
 static UWORD ControlBarQueryGadgetID(struct ExtGadget *gg)
 {
-	ULONG Code = 0;
+	IPTR Code = 0;
 
 	GetAttr(GBDTA_LastActive, (Object *) gg, &Code);
 	d1(KPrintF("%s/%s/%ld: Code=%04lx\n", __FILE__, __FUNC__, __LINE__, Code));

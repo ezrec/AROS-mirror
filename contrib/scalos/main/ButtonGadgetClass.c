@@ -58,8 +58,8 @@ struct ButtonGadgetInstance
 
 // The functions in this module
 
-static SAVEDS(ULONG) INTERRUPT dispatchButtonGadgetClass(Class *cl, Object *o, Msg msg);
-static ULONG ButtonGadgetNew(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) INTERRUPT dispatchButtonGadgetClass(Class *cl, Object *o, Msg msg);
+static IPTR ButtonGadgetNew(Class *cl, Object *o, Msg msg);
 static ULONG ButtonGadget_Set(Class *cl, Object *o, Msg msg);
 static ULONG ButtonGadget_Get(Class *cl, Object *o, Msg msg);
 static ULONG ButtonGadget_Render(Class *cl, Object *o, Msg msg);
@@ -94,9 +94,9 @@ struct ScalosClass *initButtonGadgetClass(const struct PluginClass *plug)
 /**************************************************************************/
 /**********	   The ButtonGadgetCLASS class dispatcher	  *********/
 /**************************************************************************/
-static SAVEDS(ULONG) INTERRUPT dispatchButtonGadgetClass(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) INTERRUPT dispatchButtonGadgetClass(Class *cl, Object *o, Msg msg)
 {
-	ULONG Result;
+	IPTR Result;
 
 	d1(KPrintF("%s/%s/%ld  Class=%l08x  SuperClass=%08lx  Method=%08lx\n", __FILE__, __FUNC__, __LINE__, cl, cl->cl_Super, msg->MethodID));
 
@@ -124,7 +124,7 @@ static SAVEDS(ULONG) INTERRUPT dispatchButtonGadgetClass(Class *cl, Object *o, M
 
 //----------------------------------------------------------------------------
 
-static ULONG ButtonGadgetNew(Class *cl, Object *o, Msg msg)
+static IPTR ButtonGadgetNew(Class *cl, Object *o, Msg msg)
 {
 	BOOL Success = FALSE;
 
@@ -152,7 +152,7 @@ static ULONG ButtonGadgetNew(Class *cl, Object *o, Msg msg)
 		o = NULL;
 		}
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 //----------------------------------------------------------------------------
@@ -172,19 +172,19 @@ static ULONG ButtonGadget_Get(Class *cl, Object *o, Msg msg)
 	switch (opg->opg_AttrID)
 		{
 	case GA_Left:	// required since gadgetclass attribute is [IS] - no support for [G]
-		*(opg->opg_Storage) = (ULONG) gg->LeftEdge;
+		*(opg->opg_Storage) = (IPTR) gg->LeftEdge;
 		break;
 	case GA_Top:	// required since gadgetclass attribute is [IS] - no support for [G]
-		*(opg->opg_Storage) = (ULONG) gg->TopEdge;
+		*(opg->opg_Storage) = (IPTR) gg->TopEdge;
 		break;
 	case GA_Width:	// required since gadgetclass attribute is [IS] - no support for [G]
-		*(opg->opg_Storage) = (ULONG) gg->Width;
+		*(opg->opg_Storage) = (IPTR) gg->Width;
 		break;
 	case GA_Height:	// required since gadgetclass attribute is [IS] - no support for [G]
-		*(opg->opg_Storage) = (ULONG) gg->Height;
+		*(opg->opg_Storage) = (IPTR) gg->Height;
 		break;
 	case GBDTA_Hidden:
-		*(opg->opg_Storage) = (ULONG) inst->bgi_Hidden;
+		*(opg->opg_Storage) = (IPTR) inst->bgi_Hidden;
 		break;
 	default:
 		Success = DoSuperMethodA(cl, o, msg);
@@ -271,7 +271,7 @@ static ULONG ButtonGadget_Render(Class *cl, Object *o, Msg msg)
 
 		if (Image)
 			{
-			ULONG SupportsDisable = FALSE;
+			IPTR SupportsDisable = FALSE;
 
 			Result = 0;
 

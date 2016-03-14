@@ -116,20 +116,20 @@ LIBFUNC_P2(BOOL, sca_OpenIconWindow,
 		BOOL Found;
 		size_t length;
 
-		ReturnWs = (struct ScaWindowStruct **) GetTagData(SCA_WindowStruct, (ULONG)NULL, TagList);
+		ReturnWs = (struct ScaWindowStruct **) GetTagData(SCA_WindowStruct, (IPTR)NULL, TagList);
 		d1(KPrintF("%s/%s/%ld: ReturnWs=%08lx\n", __FILE__, __FUNC__, __LINE__, ReturnWs));
 
-		in = (struct ScaIconNode *) GetTagData(SCA_IconNode, (ULONG)NULL, TagList);
+		in = (struct ScaIconNode *) GetTagData(SCA_IconNode, (IPTR)NULL, TagList);
 		if (in)
 			IconObj = in->in_Icon;
 
-		IconObj = (Object *) GetTagData(SCA_IconObject, (ULONG) IconObj, TagList);
+		IconObj = (Object *) GetTagData(SCA_IconObject, (IPTR) IconObj, TagList);
 
 		d1(KPrintF("%s/%s/%ld: in=%08lx  IconObj=%08lx\n", __FILE__, __FUNC__, __LINE__, in, IconObj));
 
 		WindowFlags = GetTagData(SCA_Flags, 0, TagList);
 
-		ReplyPort = (struct MsgPort *) GetTagData(SCA_MessagePort, (ULONG)NULL, TagList);
+		ReplyPort = (struct MsgPort *) GetTagData(SCA_MessagePort, (IPTR)NULL, TagList);
 		d1(KPrintF("%s/%s/%ld: ReplyPort=%08lx\n", __FILE__, __FUNC__, __LINE__, ReplyPort));
 		if (NULL == ReplyPort)
 			ReplyPort = allocMsgPort = CreateMsgPort();
@@ -151,7 +151,7 @@ LIBFUNC_P2(BOOL, sca_OpenIconWindow,
 		wsNew->ws_IconSizeConstraints = CurrentPrefs.pref_IconSizeConstraints;
 		wsNew->ws_IconScaleFactor = CurrentPrefs.pref_IconScaleFactor;
 
-		Path = (STRPTR) GetTagData(SCA_Path, (ULONG)NULL, TagList);
+		Path = (STRPTR) GetTagData(SCA_Path, (IPTR)NULL, TagList);
 		d1(KPrintF("%s/%s/%ld: Path=%08lx  <%s>\n", __FILE__, __FUNC__, __LINE__, Path, Path ? Path : (STRPTR) ""));
 		if (Path)
 			{
@@ -183,7 +183,7 @@ LIBFUNC_P2(BOOL, sca_OpenIconWindow,
 
 		d1(KPrintF("%s/%s/%ld: IconObj=%08lx  ws_Name=%08lx\n", __FILE__, __FUNC__, __LINE__, IconObj, wsNew->ws_Name));
 
-		WindowRect = (struct IBox *) GetTagData(SCA_WindowRect, (ULONG)NULL, TagList);
+		WindowRect = (struct IBox *) GetTagData(SCA_WindowRect, (IPTR)NULL, TagList);
 		d1(KPrintF("%s/%s/%ld: WindowRect=%08lx\n", __FILE__, __FUNC__, __LINE__, WindowRect));
 		if (NULL == WindowRect)
 			GetAttr(IDTA_WindowRect, IconObj, (APTR) &WindowRect);
@@ -292,9 +292,9 @@ LIBFUNC_P2(BOOL, sca_OpenIconWindow,
 		else
 			wsNew->ms_ClassName = (STRPTR) "TextWindow.sca";
 
-		wsNew->ms_ClassName = (STRPTR) GetTagData(SCA_ClassName, (ULONG) wsNew->ms_ClassName, TagList);
+		wsNew->ms_ClassName = (STRPTR) GetTagData(SCA_ClassName, (IPTR) wsNew->ms_ClassName, TagList);
 
-		wsNew->ms_Class = (Class *) GetTagData(SCA_Class, (ULONG)NULL, TagList);
+		wsNew->ms_Class = (Class *) GetTagData(SCA_Class, (IPTR)NULL, TagList);
 		if (wsNew->ms_Class)
 			wsNew->ms_ClassName = NULL;
 
@@ -369,7 +369,7 @@ LIBFUNC_P2(BOOL, sca_OpenIconWindow,
 				{
 				// .noiconnode:
 				STRPTR iconName = NULL;
-				ULONG IconType;
+				IPTR IconType;
 
 				d1(kprintf("%s/%s/%ld: IconObj=%08lx\n", __FILE__, __FUNC__, __LINE__, IconObj));
 
@@ -436,7 +436,7 @@ LIBFUNC_P2(BOOL, sca_OpenIconWindow,
 		else
 			clp = CurrentPrefs.pref_StandardWindowTitle;
 
-		wsNew->ws_Title = AllocCopyString((STRPTR) GetTagData(SCA_WindowTitle, (ULONG) clp, TagList));
+		wsNew->ws_Title = AllocCopyString((STRPTR) GetTagData(SCA_WindowTitle, (IPTR) clp, TagList));
 		if (NULL == wsNew->ws_Title)
 			break;
 
@@ -501,7 +501,7 @@ LIBFUNC_P2(BOOL, sca_OpenIconWindow,
 			TaskName = wsNew->ws_WindowTaskName;
 
 			ScaFormatStringMaxLength(TaskName, length,
-				"Scalos_Window_Task <%s>", (ULONG) wsNew->ws_Name);
+				"Scalos_Window_Task <%s>", (IPTR) wsNew->ws_Name);
 			}
 		else
 			{
@@ -515,9 +515,9 @@ LIBFUNC_P2(BOOL, sca_OpenIconWindow,
 				NP_StackSize, CurrentPrefs.pref_DefaultStackSize,
 				NP_Priority, 1,
 				NP_Cli, TRUE,
-				NP_CommandName, (ULONG) TaskName,
-				NP_Name, (ULONG) TaskName,
-				NP_Entry, (ULONG) PATCH_NEWFUNC(WindowTask),
+				NP_CommandName, (IPTR) TaskName,
+				NP_Name, (IPTR) TaskName,
+				NP_Entry, (IPTR) PATCH_NEWFUNC(WindowTask),
 				NP_CurrentDir, wsNew->ws_Lock,
 				NP_Path, DupWBPathList(),
 				TAG_END);
@@ -639,7 +639,7 @@ static Object *ReadDeviceIconObject(CONST_STRPTR Path)
 			d1(kprintf("%s/%s/%ld: internalName=<%s>\n", __FILE__, __FUNC__, __LINE__, internalName));
 
 			IconObj = NewIconObjectTags(internalName,
-				IDTA_SizeConstraints, (ULONG) &CurrentPrefs.pref_IconSizeConstraints,
+				IDTA_SizeConstraints, (IPTR) &CurrentPrefs.pref_IconSizeConstraints,
 				IDTA_ScalePercentage, CurrentPrefs.pref_IconScaleFactor,
 				TAG_END);
 			d1(kprintf("%s/%s/%ld:  IconObj=%08lx  internalName=<%s>\n", __FILE__, __FUNC__, __LINE__, IconObj, internalName));
@@ -654,7 +654,7 @@ static Object *ReadDeviceIconObject(CONST_STRPTR Path)
 				case DLT_LATE:
 				case DLT_NONBINDING:
 					IconObj = NewIconObjectTags(Path,
-						IDTA_SizeConstraints, (ULONG) &CurrentPrefs.pref_IconSizeConstraints,
+						IDTA_SizeConstraints, (IPTR) &CurrentPrefs.pref_IconSizeConstraints,
 						IDTA_ScalePercentage, CurrentPrefs.pref_IconScaleFactor,
 						TAG_END);
 					break;
@@ -694,7 +694,7 @@ static Object *ReadDeviceIconObject(CONST_STRPTR Path)
 					d1(kprintf("%s/%s/%ld: DeviceName=<%s>\n", __FILE__, __FUNC__, __LINE__, internalName));
 
 					IconObj = NewIconObjectTags(internalName,
-						IDTA_SizeConstraints, (ULONG) &CurrentPrefs.pref_IconSizeConstraints,
+						IDTA_SizeConstraints, (IPTR) &CurrentPrefs.pref_IconSizeConstraints,
 						IDTA_ScalePercentage, CurrentPrefs.pref_IconScaleFactor,
 						TAG_END);
 					}
@@ -936,7 +936,7 @@ Object *FunctionsFindIconObjectForPath(CONST_STRPTR Path, BOOL *WindowListLocked
 				CurrentDir(parentLock);
 
 				IconObj = *allocIconObj = NewIconObjectTags(FullPath,
-					IDTA_SizeConstraints, (ULONG) &CurrentPrefs.pref_IconSizeConstraints,
+					IDTA_SizeConstraints, (IPTR) &CurrentPrefs.pref_IconSizeConstraints,
 					IDTA_ScalePercentage, CurrentPrefs.pref_IconScaleFactor,
 					TAG_END);
 
@@ -987,9 +987,9 @@ Object *FunctionsFindIconObjectForPath(CONST_STRPTR Path, BOOL *WindowListLocked
 
 void FunctionsGetSettingsFromIconObject(struct IconWindowProperties *iwp, Object *IconObj)
 {
-	ULONG ddFlags;
-	ULONG ViewBy;
-	ULONG lDummy;
+	IPTR ddFlags;
+	IPTR ViewBy;
+	IPTR lDummy;
 	STRPTR tt;
 
 	GetAttr(IDTA_ViewModes, IconObj, &ViewBy);
@@ -1030,7 +1030,7 @@ void FunctionsGetSettingsFromIconObject(struct IconWindowProperties *iwp, Object
 	tt = NULL;
 	if (DoMethod(IconObj, IDTM_FindToolType, "SCALOS_PATTERNNO", &tt))
 		{
-		DoMethod(IconObj, IDTM_GetToolTypeValue, tt, (ULONG *) &lDummy);
+		DoMethod(IconObj, IDTM_GetToolTypeValue, tt, &lDummy);
 		iwp->iwp_PatternNumber = (UWORD) lDummy;
 		d1(KPrintF("%s/%s/%ld: iwp->iwp_PatternNumber=%lu\n", __FILE__, __FUNC__, __LINE__, iwp->iwp_PatternNumber));
 		}
@@ -1047,7 +1047,7 @@ void FunctionsGetSettingsFromIconObject(struct IconWindowProperties *iwp, Object
 	tt = NULL;
 	if (DoMethod(IconObj, IDTM_FindToolType, "SCALOS_CHECKOVERLAP", &tt))
 		{
-		DoMethod(IconObj, IDTM_GetToolTypeValue, tt, (ULONG *) &lDummy);
+		DoMethod(IconObj, IDTM_GetToolTypeValue, tt, &lDummy);
 		iwp->iwp_CheckOverlap = lDummy;
 		d1(KPrintF("%s/%s/%ld: iwp_CheckOverlap=%ld\n", __FILE__, __FUNC__, __LINE__, iwp->iwp_CheckOverlap));
 		}
@@ -1075,7 +1075,7 @@ void FunctionsGetSettingsFromIconObject(struct IconWindowProperties *iwp, Object
 	tt = NULL;
 	if (DoMethod(IconObj, IDTM_FindToolType, "SCALOS_THUMBNAIL_LIFETIME", &tt))
 		{
-		DoMethod(IconObj, IDTM_GetToolTypeValue, tt, (ULONG *) &lDummy);
+		DoMethod(IconObj, IDTM_GetToolTypeValue, tt, &lDummy);
 		iwp->iwp_ThumbnailsLifetimeDays = lDummy;
 		}
 
@@ -1100,10 +1100,10 @@ void FunctionsGetSettingsFromIconObject(struct IconWindowProperties *iwp, Object
 		iwp->iwp_BrowserMode = TRUE;
 		}
 
-	GetAttr(IDTA_WinCurrentX, IconObj, (ULONG *) &lDummy);
+	GetAttr(IDTA_WinCurrentX, IconObj, &lDummy);
 	iwp->iwp_XOffset = (WORD) lDummy;
 
-	GetAttr(IDTA_WinCurrentY, IconObj, (ULONG *) &lDummy);
+	GetAttr(IDTA_WinCurrentY, IconObj, &lDummy);
 	iwp->iwp_YOffset = (WORD) lDummy;
 
 	tt = NULL;

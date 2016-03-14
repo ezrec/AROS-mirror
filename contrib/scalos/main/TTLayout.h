@@ -130,14 +130,14 @@ struct ttDef
 
 #define	TT_CreateTooltip	TT_CreateItem
 
-#define TTSpace(s)	TT_Item, (ULONG) TT_CreateItem(TT_Space, (s))
-#define TTItem(t)	TT_Item, (ULONG) TT_CreateItem(TT_Title, (t)
-#define TTTitleHook(t)	TT_Item, (ULONG) TT_CreateItem(TT_TitleHook, (t)
-#define TTItemID(t)	TT_Item, (ULONG) TT_CreateItem(TT_TitleID, (t)
-#define TTHoriz		TT_Item, (ULONG) TT_CreateItem(TT_LayoutMode, TTL_Horizontal
-#define TTVert		TT_Item, (ULONG) TT_CreateItem(TT_LayoutMode, TTL_Vertical
-#define TTMembers	TT_Members, (ULONG) TT_CreateItem(TT_Dummy, 0
-#define TTobjName(t)	TT_Item, (ULONG) TT_CreateItem(TT_Title, (t), \
+#define TTSpace(s)	TT_Item, (IPTR) TT_CreateItem(TT_Space, (s))
+#define TTItem(t)	TT_Item, (IPTR) TT_CreateItem(TT_Title, (t)
+#define TTTitleHook(t)	TT_Item, (IPTR) TT_CreateItem(TT_TitleHook, (t)
+#define TTItemID(t)	TT_Item, (IPTR) TT_CreateItem(TT_TitleID, (t)
+#define TTHoriz		TT_Item, (IPTR) TT_CreateItem(TT_LayoutMode, TTL_Horizontal
+#define TTVert		TT_Item, (IPTR) TT_CreateItem(TT_LayoutMode, TTL_Vertical
+#define TTMembers	TT_Members, (IPTR) TT_CreateItem(TT_Dummy, 0
+#define TTobjName(t)	TT_Item, (IPTR) TT_CreateItem(TT_Title, (t), \
 				TT_TextStyle, FSF_BOLD, TT_HAlign, GTJ_CENTER
 
 #ifndef End

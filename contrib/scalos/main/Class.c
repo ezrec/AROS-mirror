@@ -100,7 +100,7 @@ ULONG ClassDragQuery(struct DragEnter *drge, struct internalScaWindowTask *iwt)
 	// Check for source icons which may not be dropped on any other icon
 	for (dn = iwtSrc->iwt_DragNodeList; dn; dn = (struct DragNode *) dn->drgn_Node.mln_Succ)
 		{
-		ULONG SrcIconType;
+		IPTR SrcIconType;
 		STRPTR tt;
 
 		GetAttr(IDTA_Type, dn->drgn_icon, &SrcIconType);
@@ -181,7 +181,7 @@ ULONG ClassDragQuery(struct DragEnter *drge, struct internalScaWindowTask *iwt)
 		if (drge->drage_Icon->in_Icon)
 			{
 			// query icon if we may drop here
-			ULONG DestIconType;
+			IPTR DestIconType;
 
 			GetAttr(IDTA_Type, drge->drage_Icon->in_Icon, &DestIconType);
 
@@ -334,7 +334,7 @@ ULONG ClassDragEnter(struct DragEnter *drge, struct internalScaWindowTask *iwtDe
 
 		if (iwtSrc->iwt_DragMayDrop)
 			{
-			ULONG IconType;
+			IPTR IconType;
 
 			d1(kprintf("%s/%s/%ld: icon=%08lx <%s>  Type=%ld\n", __FILE__, __FUNC__, __LINE__, drge->drage_Icon, drge->drage_Icon->in_Name));
 
@@ -1041,7 +1041,7 @@ ULONG ClassCountSelectedIcons(struct internalScaWindowTask *iwt)
 static void NotifyAppIconSelected(struct ScaWindowStruct *ws, Object *IconObj, BOOL Selected)
 {
 	struct internalScaWindowTask *iwt = (struct internalScaWindowTask *) ws->ws_WindowTask;
-	ULONG IconType;
+	IPTR IconType;
 	struct AppObject *appo;
 
 	if (ws != iInfos.xii_iinfos.ii_MainWindowStruct)
@@ -1109,7 +1109,7 @@ void ClassDragBegin_IconWin(struct ScalosArg **ArgList, struct DragNode **dnList
 
 		if (scarg)
 			{
-			ULONG IconType = 0;
+			IPTR IconType = 0;
 
 			scarg->scarg_xpos = dn->drgn_x;
 			scarg->scarg_ypos = dn->drgn_y;
@@ -1252,7 +1252,7 @@ void ClassDragBegin_IconWin(struct ScalosArg **ArgList, struct DragNode **dnList
 
 void ClassSetDefaultIconFlags(struct ScaIconNode *in, BOOL IsDefIcon)
 {
-	ULONG UserFlags;
+	IPTR UserFlags;
 
 	GetAttr(IDTA_UserFlags, in->in_Icon, &UserFlags);
 

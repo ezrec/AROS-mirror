@@ -112,40 +112,40 @@ struct CmdFunc
 	enum FileTypeDefSections cf_validForSection;
 
 	// Pointer to the function which implements this command.
-	LONG (*cf_Function)(struct FileTypeDef *, LONG *);
+	IPTR (*cf_Function)(struct FileTypeDef *, IPTR *);
 	};
 
 //----------------------------------------------------------------------------
 
 // local functions
 
-static LONG FtBeginToolTip(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG FtEndToolTip(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG FtHBar(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG FtBeginGroup(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG FtEndGroup(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG FtBeginMember(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG FtEndMember(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG FtString(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG FtSpace(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG FtImage(struct FileTypeDef *ftd, LONG *ArgArray);
+static IPTR FtBeginToolTip(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR FtEndToolTip(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR FtHBar(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR FtBeginGroup(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR FtEndGroup(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR FtBeginMember(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR FtEndMember(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR FtString(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR FtSpace(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR FtImage(struct FileTypeDef *ftd, IPTR *ArgArray);
 
-static LONG FtBeginPopupMenu(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG FtEndPopupMenu(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG FtIncludeFile(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG GetFtDescription(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG GetFtPvPlugin(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG AddFtMenuSeparator(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG NewFtMenuEntry(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG EndFtMenuEntry(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG AddSubMenuEntry(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG EndSubMenuEntry(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG FtInternalCmd(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG FtWbCmd(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG FtARexxCmd(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG FtCliCmd(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG FtPluginCmd(struct FileTypeDef *ftd, LONG *ArgArray);
-static LONG FtIconWindowCmd(struct FileTypeDef *ftd, LONG *ArgArray);
+static IPTR FtBeginPopupMenu(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR FtEndPopupMenu(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR FtIncludeFile(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR GetFtDescription(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR GetFtPvPlugin(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR AddFtMenuSeparator(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR NewFtMenuEntry(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR EndFtMenuEntry(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR AddSubMenuEntry(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR EndSubMenuEntry(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR FtInternalCmd(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR FtWbCmd(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR FtARexxCmd(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR FtCliCmd(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR FtPluginCmd(struct FileTypeDef *ftd, IPTR *ArgArray);
+static IPTR FtIconWindowCmd(struct FileTypeDef *ftd, IPTR *ArgArray);
 static const struct CmdFunc *ParseFileTypeLine(CONST_STRPTR *Line);
 static struct ttDef *ReadFileTypeGlobals(struct FileTypeDef *ftd, CONST_STRPTR fileTypeName);
 static struct ttDef *ReadFileTypeToolTipDef(struct FileTypeDef *ftd, CONST_STRPTR fileTypeName);
@@ -331,7 +331,7 @@ void FileTypeFlush(BOOL Final)
 
 //----------------------------------------------------------------------------
 
-static LONG FtBeginToolTip(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtBeginToolTip(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	(void) ArgArray;
 
@@ -352,7 +352,7 @@ static LONG FtBeginToolTip(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG FtEndToolTip(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtEndToolTip(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	(void) ArgArray;
 
@@ -391,7 +391,7 @@ static LONG FtEndToolTip(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG FtHBar(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtHBar(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct ttDef *barTTd;
 
@@ -421,7 +421,7 @@ static LONG FtHBar(struct FileTypeDef *ftd, LONG *ArgArray)
 		return RETURN_ERROR;
 
 	if (RETURN_OK != ScalosTagListNewEntry(&ftd->ftd_CurrentTTItem->ftti_TagList, 
-			TT_Item, (ULONG) barTTd))
+			TT_Item, (IPTR) barTTd))
 		{
 		TTDisposeItem(barTTd);
 		return RETURN_ERROR;
@@ -431,7 +431,7 @@ static LONG FtHBar(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG FtBeginGroup(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtBeginGroup(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct FileTypeTTItem *groupTTi;
 	enum TTLayoutMode orientation = TTL_Vertical;
@@ -469,7 +469,7 @@ static LONG FtBeginGroup(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG FtEndGroup(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtEndGroup(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct FileTypeTTItem *groupTTi;
 	struct ttDef *groupTTd;
@@ -510,7 +510,7 @@ static LONG FtEndGroup(struct FileTypeDef *ftd, LONG *ArgArray)
 	if (NULL == groupTTd)
 		return RETURN_ERROR;
 
-	if (RETURN_OK != ScalosTagListNewEntry(&ftd->ftd_CurrentTTItem->ftti_TagList, TT_Members, (ULONG) groupTTd))
+	if (RETURN_OK != ScalosTagListNewEntry(&ftd->ftd_CurrentTTItem->ftti_TagList, TT_Members, (IPTR) groupTTd))
 		{
 		TTDisposeItem(groupTTd);
 		return RETURN_ERROR;
@@ -526,7 +526,7 @@ static LONG FtEndGroup(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG FtBeginMember(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtBeginMember(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct FileTypeTTItem *memberTTi;
 	STRPTR hideString = (STRPTR) ArgArray[0];
@@ -574,7 +574,7 @@ static LONG FtBeginMember(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG FtEndMember(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtEndMember(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct FileTypeTTItem *memberTTi;
 	struct ttDef *memberTTd;
@@ -616,7 +616,7 @@ static LONG FtEndMember(struct FileTypeDef *ftd, LONG *ArgArray)
 	if (NULL == memberTTd)
 		return RETURN_ERROR;
 
-	if (RETURN_OK != ScalosTagListNewEntry(&ftd->ftd_CurrentTTItem->ftti_TagList, TT_Item, (ULONG) memberTTd))
+	if (RETURN_OK != ScalosTagListNewEntry(&ftd->ftd_CurrentTTItem->ftti_TagList, TT_Item, (IPTR) memberTTd))
 		{
 		TTDisposeItem(memberTTd);
 		return RETURN_ERROR;
@@ -626,7 +626,7 @@ static LONG FtEndMember(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG FtString(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtString(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct ttDef *stringTTd;
 	STRPTR idString = (STRPTR) ArgArray[0];
@@ -805,12 +805,12 @@ static LONG FtString(struct FileTypeDef *ftd, LONG *ArgArray)
 	else if (textString && strlen(textString) > 0)
 		{
 		TitleTag = TT_Title;
-		TitleData = (ULONG) textString;
+		TitleData = (IPTR) textString;
 		}
 	else if (srcString && strlen(srcString) > 0)
 		{
 		TitleTag = TT_TitleHook;
-		TitleData = (ULONG) srcString;
+		TitleData = (IPTR) srcString;
 		}
 	else
 		return RETURN_ERROR;
@@ -822,7 +822,7 @@ static LONG FtString(struct FileTypeDef *ftd, LONG *ArgArray)
 				TT_TextPen, TextPen,
 				ftTextAttr.ta_Name ? TT_Font : TAG_IGNORE, &ftTextAttr,
 				TTFontDescriptor ? TT_TTFont : TAG_IGNORE, TTFontDescriptor,
-				ftd->ftd_CurrentTTItem->ftti_HideHookString ? TT_HiddenHook : TAG_IGNORE, (ULONG) ftd->ftd_CurrentTTItem->ftti_HideHookString,
+				ftd->ftd_CurrentTTItem->ftti_HideHookString ? TT_HiddenHook : TAG_IGNORE, (IPTR) ftd->ftd_CurrentTTItem->ftti_HideHookString,
 				TAG_END);
 
 	d1(kprintf("%s/%s/%ld: stringTTd=%08lx\n", __FILE__, __FUNC__, __LINE__, stringTTd));
@@ -833,7 +833,7 @@ static LONG FtString(struct FileTypeDef *ftd, LONG *ArgArray)
 	if (NULL == stringTTd)
 		return RETURN_ERROR;
 
-	if (RETURN_OK != ScalosTagListNewEntry(&ftd->ftd_CurrentTTItem->ftti_TagList, TT_Item, (ULONG) stringTTd))
+	if (RETURN_OK != ScalosTagListNewEntry(&ftd->ftd_CurrentTTItem->ftti_TagList, TT_Item, (IPTR) stringTTd))
 		{
 		TTDisposeItem(stringTTd);
 		return RETURN_ERROR;
@@ -843,7 +843,7 @@ static LONG FtString(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG FtSpace(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtSpace(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	ULONG *Size = (ULONG *) ArgArray[0];
 	struct ttDef *spaceTTd;
@@ -874,7 +874,7 @@ static LONG FtSpace(struct FileTypeDef *ftd, LONG *ArgArray)
 		return RETURN_ERROR;
 
 	if (RETURN_OK != ScalosTagListNewEntry(&ftd->ftd_CurrentTTItem->ftti_TagList, 
-			TT_Item, (ULONG) spaceTTd))
+			TT_Item, (IPTR) spaceTTd))
 		{
 		TTDisposeItem(spaceTTd);
 		return RETURN_ERROR;
@@ -884,7 +884,7 @@ static LONG FtSpace(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG FtImage(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtImage(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	STRPTR fileName = (STRPTR) ArgArray[0];
 	struct ttDef *imageTTd;
@@ -915,7 +915,7 @@ static LONG FtImage(struct FileTypeDef *ftd, LONG *ArgArray)
 		return RETURN_ERROR;
 
 	if (RETURN_OK != ScalosTagListNewEntry(&ftd->ftd_CurrentTTItem->ftti_TagList, 
-			TT_Item, (ULONG) imageTTd))
+			TT_Item, (IPTR) imageTTd))
 		{
 		TTDisposeItem(imageTTd);
 		return RETURN_ERROR;
@@ -926,7 +926,7 @@ static LONG FtImage(struct FileTypeDef *ftd, LONG *ArgArray)
 
 //----------------------------------------------------------------------------
 
-static LONG FtBeginPopupMenu(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtBeginPopupMenu(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct FileTypeMenuItem *ftmi;
 
@@ -948,8 +948,8 @@ static LONG FtBeginPopupMenu(struct FileTypeDef *ftd, LONG *ArgArray)
 		if (PopupMenuBase)
 			{
 			if (RETURN_OK != ScalosTagListNewEntry(&ftd->ftd_TagList, PM_Item,
-					(ULONG) PM_MakeItem(PM_ID, PM_TITLE_ID,
-						PM_Title, (ULONG) ftd->ftd_Description,
+					(IPTR) PM_MakeItem(PM_ID, PM_TITLE_ID,
+						PM_Title, (IPTR) ftd->ftd_Description,
 						PM_NoSelect, TRUE,
 						PM_ShinePen, TRUE,
 						PM_Shadowed, FALSE,
@@ -958,7 +958,7 @@ static LONG FtBeginPopupMenu(struct FileTypeDef *ftd, LONG *ArgArray)
 				return RETURN_ERROR;
 
 			if (RETURN_OK != ScalosTagListNewEntry(&ftd->ftd_TagList, 
-						PM_Item, (ULONG) PM_MakeItem(PM_WideTitleBar, TRUE,
+						PM_Item, (IPTR) PM_MakeItem(PM_WideTitleBar, TRUE,
 						TAG_END)))
 				return RETURN_ERROR;
 			}
@@ -968,7 +968,7 @@ static LONG FtBeginPopupMenu(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG FtEndPopupMenu(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtEndPopupMenu(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	d1(kprintf("%s/%s/%ld: \n", __FILE__, __FUNC__, __LINE__));
 
@@ -981,7 +981,7 @@ static LONG FtEndPopupMenu(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG FtIncludeFile(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtIncludeFile(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	STRPTR fileName = (STRPTR) ArgArray[0];
 
@@ -996,7 +996,7 @@ static LONG FtIncludeFile(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG GetFtDescription(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR GetFtDescription(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	STRPTR descName = (STRPTR) ArgArray[0];
 
@@ -1013,7 +1013,7 @@ static LONG GetFtDescription(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG GetFtPvPlugin(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR GetFtPvPlugin(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	STRPTR pluginName = (STRPTR) ArgArray[0];
 
@@ -1030,7 +1030,7 @@ static LONG GetFtPvPlugin(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG AddFtMenuSeparator(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR AddFtMenuSeparator(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	d1(kprintf("%s/%s/%ld:\n", __FILE__, __FUNC__, __LINE__));
 
@@ -1040,7 +1040,7 @@ static LONG AddFtMenuSeparator(struct FileTypeDef *ftd, LONG *ArgArray)
 	if (PopupMenuBase)
 		{
 		if (RETURN_OK != ScalosTagListNewEntry(ftd->ftd_CurrentTagList, PM_Item,
-				(ULONG) PM_MakeItem(PM_UserData, NULL,
+				(IPTR) PM_MakeItem(PM_UserData, NULL,
 					PM_TitleBar, TRUE,
 					TAG_END)))
 			return RETURN_ERROR;
@@ -1050,7 +1050,7 @@ static LONG AddFtMenuSeparator(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG NewFtMenuEntry(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR NewFtMenuEntry(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct FileTypeMenuItem *ftmi;
 	STRPTR itemName = (STRPTR) ArgArray[0];
@@ -1099,33 +1099,33 @@ static LONG NewFtMenuEntry(struct FileTypeDef *ftd, LONG *ArgArray)
 	if (SelectedIconName)
 		{
 		ftmi->ftmi_MenuIconSelected = NewObject(DtImageClass, NULL,
-			DTIMG_ImageName, (ULONG) SelectedIconName,
+			DTIMG_ImageName, (IPTR) SelectedIconName,
 			TAG_END);
 		}
 	if (UnselectedIconName)
 		{
 		ftmi->ftmi_MenuIconUnselected = NewObject(DtImageClass, NULL,
-			DTIMG_ImageName, (ULONG) UnselectedIconName,
+			DTIMG_ImageName, (IPTR) UnselectedIconName,
 			TAG_END);
 		}
 	if (PopupMenuBase)
 		{
-		if (RETURN_OK != ScalosTagListNewEntry(&ftmi->ftmi_TagList, PM_Title, (ULONG) ftmi->ftmi_MenuName))
+		if (RETURN_OK != ScalosTagListNewEntry(&ftmi->ftmi_TagList, PM_Title, (IPTR) ftmi->ftmi_MenuName))
 			return RETURN_ERROR;
 
 		d1(kprintf("%s/%s/%ld:\n", __FILE__, __FUNC__, __LINE__));
 
-		if (RETURN_OK != ScalosTagListNewEntry(&ftmi->ftmi_TagList, PM_CommKey, (ULONG) ftmi->ftmi_MenuCommKey))
+		if (RETURN_OK != ScalosTagListNewEntry(&ftmi->ftmi_TagList, PM_CommKey, (IPTR) ftmi->ftmi_MenuCommKey))
 			return RETURN_ERROR;
 
 		d1(kprintf("%s/%s/%ld:\n", __FILE__, __FUNC__, __LINE__));
 
-		if (RETURN_OK != ScalosTagListNewEntry(&ftmi->ftmi_TagList, PM_Bold, (ULONG) defaultAction))
+		if (RETURN_OK != ScalosTagListNewEntry(&ftmi->ftmi_TagList, PM_Bold, (IPTR) defaultAction))
 			return RETURN_ERROR;
 
-		if (ftmi->ftmi_MenuIconSelected && RETURN_OK != ScalosTagListNewEntry(&ftmi->ftmi_TagList, PM_IconSelected, (ULONG) ftmi->ftmi_MenuIconSelected))
+		if (ftmi->ftmi_MenuIconSelected && RETURN_OK != ScalosTagListNewEntry(&ftmi->ftmi_TagList, PM_IconSelected, (IPTR) ftmi->ftmi_MenuIconSelected))
 			return RETURN_ERROR;
-		if (ftmi->ftmi_MenuIconUnselected && RETURN_OK != ScalosTagListNewEntry(&ftmi->ftmi_TagList, PM_IconUnselected, (ULONG) ftmi->ftmi_MenuIconUnselected))
+		if (ftmi->ftmi_MenuIconUnselected && RETURN_OK != ScalosTagListNewEntry(&ftmi->ftmi_TagList, PM_IconUnselected, (IPTR) ftmi->ftmi_MenuIconUnselected))
 			return RETURN_ERROR;
 		}
 	d1(kprintf("%s/%s/%ld:\n", __FILE__, __FUNC__, __LINE__));
@@ -1134,7 +1134,7 @@ static LONG NewFtMenuEntry(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG EndFtMenuEntry(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR EndFtMenuEntry(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct FileTypeMenuItem *ftmi = ftd->ftd_CurrentMenuItem;
 
@@ -1148,7 +1148,7 @@ static LONG EndFtMenuEntry(struct FileTypeDef *ftd, LONG *ArgArray)
 
 	if (PopupMenuBase)
 		{
-		if (RETURN_OK != ScalosTagListNewEntry(&ftmi->ftmi_TagList, PM_UserData, (ULONG) ftmi->ftmi_MenuTree))
+		if (RETURN_OK != ScalosTagListNewEntry(&ftmi->ftmi_TagList, PM_UserData, (IPTR) ftmi->ftmi_MenuTree))
 			return RETURN_ERROR;
 		}
 
@@ -1161,7 +1161,7 @@ static LONG EndFtMenuEntry(struct FileTypeDef *ftd, LONG *ArgArray)
 	if (PopupMenuBase)
 		{
 		if (RETURN_OK != ScalosTagListNewEntry(ftd->ftd_CurrentTagList, 
-				PM_Item, (ULONG) PM_MakeItemA(ftmi->ftmi_TagList.stl_TagList)))
+				PM_Item, (IPTR) PM_MakeItemA(ftmi->ftmi_TagList.stl_TagList)))
 			return RETURN_ERROR;
 		}
 
@@ -1171,7 +1171,7 @@ static LONG EndFtMenuEntry(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG AddSubMenuEntry(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR AddSubMenuEntry(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct FileTypeMenuItem *ftmi;
 	STRPTR itemName = (STRPTR) ArgArray[0];
@@ -1202,24 +1202,24 @@ static LONG AddSubMenuEntry(struct FileTypeDef *ftd, LONG *ArgArray)
 	if (SelectedIconName)
 		{
 		ftmi->ftmi_MenuIconSelected = NewObject(DtImageClass, NULL,
-			DTIMG_ImageName, (ULONG) SelectedIconName,
+			DTIMG_ImageName, (IPTR) SelectedIconName,
 			TAG_END);
 		}
 	if (UnselectedIconName)
 		{
 		ftmi->ftmi_MenuIconUnselected = NewObject(DtImageClass, NULL,
-			DTIMG_ImageName, (ULONG) UnselectedIconName,
+			DTIMG_ImageName, (IPTR) UnselectedIconName,
 			TAG_END);
 		}
 
 	if (PopupMenuBase)
 		{
-		if (RETURN_OK != ScalosTagListNewEntry(&ftmi->ftmi_TagList, PM_Title, (ULONG) ftmi->ftmi_MenuName))
+		if (RETURN_OK != ScalosTagListNewEntry(&ftmi->ftmi_TagList, PM_Title, (IPTR) ftmi->ftmi_MenuName))
 			return RETURN_ERROR;
 
-		if (ftmi->ftmi_MenuIconSelected && RETURN_OK != ScalosTagListNewEntry(&ftmi->ftmi_TagList, PM_IconSelected, (ULONG) ftmi->ftmi_MenuIconSelected))
+		if (ftmi->ftmi_MenuIconSelected && RETURN_OK != ScalosTagListNewEntry(&ftmi->ftmi_TagList, PM_IconSelected, (IPTR) ftmi->ftmi_MenuIconSelected))
 			return RETURN_ERROR;
-		if (ftmi->ftmi_MenuIconUnselected && RETURN_OK != ScalosTagListNewEntry(&ftmi->ftmi_TagList, PM_IconUnselected, (ULONG) ftmi->ftmi_MenuIconUnselected))
+		if (ftmi->ftmi_MenuIconUnselected && RETURN_OK != ScalosTagListNewEntry(&ftmi->ftmi_TagList, PM_IconUnselected, (IPTR) ftmi->ftmi_MenuIconUnselected))
 			return RETURN_ERROR;
 		}
 
@@ -1230,7 +1230,7 @@ static LONG AddSubMenuEntry(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG EndSubMenuEntry(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR EndSubMenuEntry(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct FileTypeMenuItem *ftmi = ftd->ftd_ParentMenuItem;
 
@@ -1260,10 +1260,10 @@ static LONG EndSubMenuEntry(struct FileTypeDef *ftd, LONG *ArgArray)
 	if (PopupMenuBase)
 		{
 		if (RETURN_OK != ScalosTagListNewEntry(ftd->ftd_CurrentTagList, 
-				PM_Item, (ULONG) PM_MakeItem(PM_Sub, (ULONG) PM_MakeMenuA(ftmi->ftmi_TagList.stl_TagList),
-						PM_Title, (ULONG) ftmi->ftmi_MenuName,
-						ftmi->ftmi_MenuIconSelected   ? PM_IconSelected   : TAG_IGNORE, (ULONG) ftmi->ftmi_MenuIconSelected,
-						ftmi->ftmi_MenuIconUnselected ? PM_IconUnselected : TAG_IGNORE, (ULONG) ftmi->ftmi_MenuIconUnselected,
+				PM_Item, (IPTR) PM_MakeItem(PM_Sub, (IPTR) PM_MakeMenuA(ftmi->ftmi_TagList.stl_TagList),
+						PM_Title, (IPTR) ftmi->ftmi_MenuName,
+						ftmi->ftmi_MenuIconSelected   ? PM_IconSelected   : TAG_IGNORE, (IPTR) ftmi->ftmi_MenuIconSelected,
+						ftmi->ftmi_MenuIconUnselected ? PM_IconUnselected : TAG_IGNORE, (IPTR) ftmi->ftmi_MenuIconUnselected,
 						TAG_END)))
 			return RETURN_ERROR;
 		}
@@ -1272,7 +1272,7 @@ static LONG EndSubMenuEntry(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG FtInternalCmd(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtInternalCmd(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct FileTypeMenuItem *ftmi = ftd->ftd_CurrentMenuItem;
 	CONST_STRPTR cmdName = (CONST_STRPTR) ArgArray[0];
@@ -1308,7 +1308,7 @@ static LONG FtInternalCmd(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG FtWbCmd(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtWbCmd(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct FileTypeMenuItem *ftmi = ftd->ftd_CurrentMenuItem;
 	CONST_STRPTR cmdName = (CONST_STRPTR) ArgArray[0];
@@ -1353,7 +1353,7 @@ static LONG FtWbCmd(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG FtARexxCmd(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtARexxCmd(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct FileTypeMenuItem *ftmi = ftd->ftd_CurrentMenuItem;
 	CONST_STRPTR cmdName = (CONST_STRPTR) ArgArray[0];
@@ -1398,7 +1398,7 @@ static LONG FtARexxCmd(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG FtCliCmd(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtCliCmd(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct FileTypeMenuItem *ftmi = ftd->ftd_CurrentMenuItem;
 	CONST_STRPTR cmdName = (CONST_STRPTR) ArgArray[0];
@@ -1443,7 +1443,7 @@ static LONG FtCliCmd(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG FtPluginCmd(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtPluginCmd(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct FileTypeMenuItem *ftmi = ftd->ftd_CurrentMenuItem;
 	CONST_STRPTR cmdName = (CONST_STRPTR) ArgArray[0];
@@ -1476,7 +1476,7 @@ static LONG FtPluginCmd(struct FileTypeDef *ftd, LONG *ArgArray)
 }
 
 
-static LONG FtIconWindowCmd(struct FileTypeDef *ftd, LONG *ArgArray)
+static IPTR FtIconWindowCmd(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct FileTypeMenuItem *ftmi = ftd->ftd_CurrentMenuItem;
 	CONST_STRPTR cmdName = (CONST_STRPTR) ArgArray[0];
@@ -1589,7 +1589,7 @@ struct FileTypeDef *FindFileTypeForTypeNode(struct internalScaWindowTask *iwt, c
 	do	{
 		d1(kprintf("%s/%s/%ld: iwt=%08lx  tNode=%08lx\n", __FILE__, __FUNC__, __LINE__, iwt, tNode));
 
-		switch ((ULONG) tNode)
+		switch ((IPTR) tNode)
 			{
 		case WBDISK:
 			d1(kprintf("%s/%s/%ld: WBDISK start  iwt=%08lx\n", __FILE__, __FUNC__, __LINE__, iwt));
@@ -1752,7 +1752,7 @@ static LONG ReadFileTypeDef(struct FileTypeDef *ftd, CONST_STRPTR fileName)
 					if (InputRdArgs)
 						{
 						struct RDArgs *rdArg;
-						LONG ArgArray[10];
+						IPTR ArgArray[10];
 
 						d1(KPrintF("%s/%s/%ld: Template = <%s>\n", __FILE__, __FUNC__, __LINE__, cmdTableEntry->cf_Template));
 
