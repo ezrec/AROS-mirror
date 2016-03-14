@@ -1034,8 +1034,9 @@ LIBFUNC_P4(BOOL, sca_WBStart,
 					DisplayScreenTitleError(NULL, MSGID_ERROR_NO_DEFAULTTOOL);
 					break;
 					}
-
-				GetAttr(IDTA_Stacksize, IconObject, &wblArg->wbl_IO.wbl_Input.wbli_StackSize);
+                                IPTR stackSize = 0;
+				GetAttr(IDTA_Stacksize, IconObject, &stackSize);
+                                wblArg->wbl_IO.wbl_Input.wbli_StackSize = stackSize;
 				}
 			}
 
