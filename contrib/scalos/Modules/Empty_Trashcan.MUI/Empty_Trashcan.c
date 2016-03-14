@@ -599,7 +599,7 @@ static BOOL ReadInDir( struct DirList *list, APTR dirPool )
 					ExAllEnd( list->lock, ead, 1024, ED_PROTECTION, eac );
 					free(ead);
 
-					if ( !IsListEmpty((struct List*)&fileList))
+					if ( !IsListEmpty(&fileList))
 					{
 						struct FileNode *node;
 						struct DirNode *dnode;
