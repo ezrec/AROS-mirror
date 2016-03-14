@@ -13,7 +13,9 @@ include $(TOP)/config/make.cfg
 #MM     contrib-scalos-libraries-preferences-includes \
 #MM     contrib-scalos-libraries-scalosgfx-includes \
 #MM     contrib-scalos-plugin-includes \
-#MM     contrib-scalos-prefsplugin-includes
+#MM     contrib-scalos-prefsplugin-includes \
+#MM     contrib-zune-classes-popph \
+#MM     contrib-zune-classes-urltext
 
 FILES := \
     Hooks \
