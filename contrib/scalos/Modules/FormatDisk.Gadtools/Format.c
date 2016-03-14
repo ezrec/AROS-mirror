@@ -1040,7 +1040,7 @@ BOOL updateStatWindow(char *string,UWORD percent)
 
 	strcpy(msg,string);
 	tags[0].ti_Tag=GTTX_Text;
-	tags[0].ti_Data=(ULONG)msg;
+	tags[0].ti_Data=(IPTR)msg;
 
 	tags[1].ti_Tag=TAG_DONE;
 	tags[1].ti_Data=0UL;
