@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
 			}
 		}
 
-	if (SCA_ScalosControl(NULL, SCALOSCTRLA_GetSemaphoreList, (ULONG) &sspl, TAG_END) > 0)
+	if (SCA_ScalosControl(NULL, SCALOSCTRLA_GetSemaphoreList, (IPTR) &sspl, TAG_END) > 0)
 		{
 		BOOL Dummy = TRUE;
 

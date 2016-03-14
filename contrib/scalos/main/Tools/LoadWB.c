@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
 		// --- Shows Debugging Information
 		if(result[OPT_DEBUG])
 			{
-			Printf((STRPTR) "%s\n", (ULONG) VERString);
+			Printf((STRPTR) "%s\n", (IPTR) VERString);
 			}
 
 
@@ -197,7 +197,7 @@ int main(int argc, char *argv[])
 		// --- Start Scalos From Its Home Directory
 		// SystemTagList()
 		if (RETURN_OK == SystemTags(scalospath, 
-			NP_CommandName, (ULONG) "Scalos",
+			NP_CommandName, (IPTR) "Scalos",
 			SYS_Asynch, TRUE,
 			SYS_Output, NULL,
 			SYS_Input, Open("CON:////Scalos/AUTO/CLOSE/WAIT", MODE_OLDFILE),

@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
 			PrintFault(IoErr(), "Error setting default stack size");
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetDefaultStackSize, (ULONG) &defStack,
+			SCALOSCTRLA_GetDefaultStackSize, (IPTR) &defStack,
 			TAG_END);
 
 		if (Result < 1)
@@ -143,7 +143,7 @@ int main(int argc, char *argv[])
 			PrintFault(IoErr(), "Error disabling CloseWorkbench()");
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetCloseWBDisabled, (ULONG) &Enabled,
+			SCALOSCTRLA_GetCloseWBDisabled, (IPTR) &Enabled,
 			TAG_END);
 
 		if (Result < 1)
@@ -165,7 +165,7 @@ int main(int argc, char *argv[])
 			PrintFault(IoErr(), "Error enabling splash window");
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetSplashEnable, (ULONG) &Enabled,
+			SCALOSCTRLA_GetSplashEnable, (IPTR) &Enabled,
 			TAG_END);
 
 		if (Result < 1)
@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
 			PrintFault(IoErr(), "Error enabling tooltips");
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetToolTipEnable, (ULONG) &Enabled,
+			SCALOSCTRLA_GetToolTipEnable, (IPTR) &Enabled,
 			TAG_END);
 
 		if (Result < 1)
@@ -209,7 +209,7 @@ int main(int argc, char *argv[])
 			PrintFault(IoErr(), "Error setting ToolTip Delay");
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetToolTipDelay, (ULONG) &ttDelay,
+			SCALOSCTRLA_GetToolTipDelay, (IPTR) &ttDelay,
 			TAG_END);
 
 		if (Result < 1)
@@ -231,7 +231,7 @@ int main(int argc, char *argv[])
 			PrintFault(IoErr(), "Error setting Icon Dragging Mode");
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetOldDragIconMode, (ULONG) &Enabled,
+			SCALOSCTRLA_GetOldDragIconMode, (IPTR) &Enabled,
 			TAG_END);
 
 		if (Result < 1)
@@ -252,7 +252,7 @@ int main(int argc, char *argv[])
 			PrintFault(IoErr(), "Error enabling Status Bar");
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetStatusBarEnable, (ULONG) &Enabled,
+			SCALOSCTRLA_GetStatusBarEnable, (IPTR) &Enabled,
 			TAG_END);
 
 		if (Result < 1)
@@ -273,7 +273,7 @@ int main(int argc, char *argv[])
 			PrintFault(IoErr(), "Error enabling Striped Text Windows");
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetStripedTextWindows, (ULONG) &Enabled,
+			SCALOSCTRLA_GetStripedTextWindows, (IPTR) &Enabled,
 			TAG_END);
 
 		if (Result < 1)
@@ -294,7 +294,7 @@ int main(int argc, char *argv[])
 			PrintFault(IoErr(), "Error enabling DragDrop Object count display");
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetDisplayDragCount, (ULONG) &Enabled,
+			SCALOSCTRLA_GetDisplayDragCount, (IPTR) &Enabled,
 			TAG_END);
 
 		if (Result < 1)
@@ -315,7 +315,7 @@ int main(int argc, char *argv[])
 			PrintFault(IoErr(), "Error setting window drop mark mode");
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetWindowDropMarkMode, (ULONG) &Enabled,
+			SCALOSCTRLA_GetWindowDropMarkMode, (IPTR) &Enabled,
 			TAG_END);
 
 		if (Result < 1)
@@ -336,7 +336,7 @@ int main(int argc, char *argv[])
 			PrintFault(IoErr(), "Error setting copy buffer size");
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetCopyBuffSize, (ULONG) &BuffSize,
+			SCALOSCTRLA_GetCopyBuffSize, (IPTR) &BuffSize,
 			TAG_END);
 
 		if (Result < 1)
@@ -351,67 +351,67 @@ int main(int argc, char *argv[])
 		ULONG Enabled;
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetCopyBuffSize, (ULONG) &Enabled,
+			SCALOSCTRLA_GetCopyBuffSize, (IPTR) &Enabled,
 			TAG_END);
 		if (Result >= 1)
 			printf("Copy Buffer size      : %lu bytes\n", (unsigned long) Enabled);
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetDefaultStackSize, (ULONG) &Enabled,
+			SCALOSCTRLA_GetDefaultStackSize, (IPTR) &Enabled,
 			TAG_END);
 		if (Result >= 1)
 			printf("Default stack size    : %lu bytes\n", (unsigned long) Enabled);
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetCloseWBDisabled, (ULONG) &Enabled,
+			SCALOSCTRLA_GetCloseWBDisabled, (IPTR) &Enabled,
 			TAG_END);
 		if (Result >= 1)
 			printf("CloseWorkbench()      : %s\n", Enabled ? "LOCKED" : "UNLOCKED");
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetSplashEnable, (ULONG) &Enabled,
+			SCALOSCTRLA_GetSplashEnable, (IPTR) &Enabled,
 			TAG_END);
 		if (Result >= 1)
 			printf("Splash Window         : %s\n", Enabled ? "ENABLED" : "DISABLED");
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetToolTipEnable, (ULONG) &Enabled,
+			SCALOSCTRLA_GetToolTipEnable, (IPTR) &Enabled,
 			TAG_END);
 		if (Result >= 1)
 			printf("ToolTips              : %s\n", Enabled ? "ENABLED" : "DISABLED");
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetToolTipDelay, (ULONG) &Enabled,
+			SCALOSCTRLA_GetToolTipDelay, (IPTR) &Enabled,
 			TAG_END);
 		if (Result >= 1)
 			printf("ToolTip delay         : %lu s\n", (unsigned long) Enabled);
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetOldDragIconMode, (ULONG) &Enabled,
+			SCALOSCTRLA_GetOldDragIconMode, (IPTR) &Enabled,
 			TAG_END);
 		if (Result >= 1)
 			printf("Icon Dragging mode    : %s\n", Enabled ? "OLD" : "NEW");
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetStatusBarEnable, (ULONG) &Enabled,
+			SCALOSCTRLA_GetStatusBarEnable, (IPTR) &Enabled,
 			TAG_END);
 		if (Result >= 1)
 			printf("StatusBar             : %s\n", Enabled ? "ENABLED" : "DISABLED");
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetStripedTextWindows, (ULONG) &Enabled,
+			SCALOSCTRLA_GetStripedTextWindows, (IPTR) &Enabled,
 			TAG_END);
 		if (Result >= 1)
 			printf("Striped Text Windows  : %s\n", Enabled ? "ENABLED" : "DISABLED");
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetDisplayDragCount, (ULONG) &Enabled,
+			SCALOSCTRLA_GetDisplayDragCount, (IPTR) &Enabled,
 			TAG_END);
 		if (Result >= 1)
 			printf("Display Drag Count    : %s\n", Enabled ? "ENABLED" : "DISABLED");
 
 		Result = SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetWindowDropMarkMode, (ULONG) &Enabled,
+			SCALOSCTRLA_GetWindowDropMarkMode, (IPTR) &Enabled,
 			TAG_END);
 		if (Result >= 1)
 			printf("Window drop mark mode : %s\n", WdmNames[Enabled & 0x03]);
