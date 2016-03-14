@@ -63,7 +63,7 @@
 
 struct ScalosMenuTreeX
 	{
-	struct	ScalosMenuTree *mtrx_Next;
+	struct	SCALOS_MENUTREE *mtrx_Next;
 	APTR	mtrx_tree;
 	UBYTE	mtrx_TreeType;
 	UBYTE	mtrx_TreeFlags;
@@ -205,11 +205,11 @@ static void SetIconMenuOnOff(struct internalScaWindowTask *iwt);
 static void SetWindowMenuOnOff(struct internalScaWindowTask *iwt);
 static void internalSetMenuOnOff(struct internalScaWindowTask *iwt,
 	struct MenuInfo *mInfo, struct IconMenuSupports *MenuTable, ULONG MenuFlags);
-static void GenerateMainMenu(struct ScalosMenuTree *mTree, struct NewMenu **nm, LONG Level);
-static struct PopupMenu *GeneratePopupMenu(struct ScalosMenuChunk *MenuChunk, LONG Level);
-static struct PopupMenu *BuildPopupMenu(struct ScalosMenuTree *mTree, LONG Level);
-static struct PopupMenu *MakePopupMenuItem(struct ScalosMenuTree *mTree);
-static void AddAddresses(struct ScalosMenuTree *MenuTree, const UBYTE *BaseAddr);
+static void GenerateMainMenu(struct SCALOS_MENUTREE *mTree, struct NewMenu **nm, LONG Level);
+static struct PopupMenu *GeneratePopupMenu(struct ScalosMenuChunk *MenuChunk, struct SCALOS_MENUTREE *AdjustedMenu, LONG Level);
+static struct PopupMenu *BuildPopupMenu(struct SCALOS_MENUTREE *mTree, LONG Level);
+static struct PopupMenu *MakePopupMenuItem(struct SCALOS_MENUTREE *mTree);
+static void AddAddresses(struct ScalosMenuTree *srcTree, struct SCALOS_MENUTREE *MenuTree, const UBYTE *BaseAddr);
 static void ParseMenuItem(struct MenuItem *theItem, ULONG *MenuNumber, ULONG MenuNumIncrement);
 static void MenuFunc_ViewByIcon(struct internalScaWindowTask *iwt, struct MenuInfo *mInfo);
 static void MenuFunc_ViewByText(struct internalScaWindowTask *iwt, struct MenuInfo *mInfo);
@@ -443,11 +443,11 @@ static void internalSetMenuOnOff(struct internalScaWindowTask *iwt,
 		{
 		if (ScalosAttemptSemaphoreShared(&MenuSema))
 			{
-			struct ScalosMenuTree *mTree;
+			struct SCALOS_MENUTREE *mTree;
 
 			d1(kprintf("%s/%s/%ld: mItem=%08lx  minf_type=%08lx\n", __FILE__, __FUNC__, __LINE__, mInfo->minf_item, mInfo->minf_type));
 
-			mTree = (struct ScalosMenuTree *) GTMENUITEM_USERDATA(mInfo->minf_item);
+			mTree = (struct SCALOS_MENUTREE *) GTMENUITEM_USERDATA(mInfo->minf_item);
 
 			d1(kprintf("%s/%s/%ld: mTree=%08lx\n", __FILE__, __FUNC__, __LINE__, mTree));
 
@@ -534,6 +534,9 @@ ULONG ReadMenuPrefs(void)
 	ULONG Error;
 	BOOL iffOpened = FALSE;
 	struct ScalosMenuChunk *MenuChunk = NULL;
+#if defined(__AROS__) && __WORDSIZE==64
+        struct SCALOS_MENUTREE *AdjustedMenu = NULL;
+#endif
 
 	d1(KPrintF("\n" "%s/%s/%ld: Start\n", __FILE__, __FUNC__, __LINE__));
 
@@ -589,7 +592,8 @@ ULONG ReadMenuPrefs(void)
 			if (MAKE_ID('M','E','N','U') != cn->cn_ID)
 				continue;
 
-			MenuChunk = ScalosAlloc(cn->cn_Size);
+                        MenuChunk = ScalosAlloc(cn->cn_Size);
+
 			if (NULL == MenuChunk)
 				{
 				Error = ERROR_NO_FREE_STORE;
@@ -605,7 +609,19 @@ ULONG ReadMenuPrefs(void)
 			MenuChunk->smch_MenuID = SCA_BE2WORD(MenuChunk->smch_MenuID);
 			MenuChunk->smch_Entries = SCA_BE2WORD(MenuChunk->smch_Entries);
 
-			AddAddresses(MenuChunk->smch_Menu, (UBYTE *) MenuChunk);
+#if defined(__AROS__) && __WORDSIZE==64
+                        AdjustedMenu = ScalosAlloc((cn->cn_Size << 1));
+                        if (NULL == AdjustedMenu)
+                        {
+				ScalosFree(MenuChunk);
+				MenuChunk = NULL;
+				Error = ERROR_NO_FREE_STORE;
+				break;
+                        }
+#else
+#define                 AdjustedMenu = MenuChunk->smch_Menu;
+#endif
+			AddAddresses(MenuChunk->smch_Menu, AdjustedMenu, (UBYTE *) MenuChunk);
 
 			switch (MenuChunk->smch_MenuID)
 				{
@@ -633,7 +649,7 @@ ULONG ReadMenuPrefs(void)
 					break;
 					}
 				memset(MainNewMenu, 0, length);
-				GenerateMainMenu(MenuChunk->smch_Menu, &nm, 1);
+				GenerateMainMenu(AdjustedMenu, &nm, 1);
 
 				if (GenerateList_ViewByIcon.smmx_NewMenu)
 					{
@@ -722,7 +738,7 @@ ULONG ReadMenuPrefs(void)
 			case SCMID_Popup_Desktop:
 				d1(KPrintF("%s/%s/%ld: smch_MenuID=%lu\n", __FILE__, __FUNC__, __LINE__, MenuChunk->smch_MenuID));
 				PopupMenuBuffer[MenuChunk->smch_MenuID] = MenuChunk;
-				PopupMenus[MenuChunk->smch_MenuID - 1] = GeneratePopupMenu(MenuChunk, MenuChunk->smch_MenuID - 1);
+				PopupMenus[MenuChunk->smch_MenuID - 1] = GeneratePopupMenu(MenuChunk, AdjustedMenu, MenuChunk->smch_MenuID - 1);
 				MenuChunk = NULL;
 				break;
 				}
@@ -730,6 +746,13 @@ ULONG ReadMenuPrefs(void)
 			if (RETURN_OK != Error)
 				break;
 
+#if defined(__AROS__) && __WORDSIZE==64
+                        if (AdjustedMenu)
+                                {
+				ScalosFree(AdjustedMenu);
+				AdjustedMenu = NULL;
+                                }
+#endif
 			if (MenuChunk)
 				{
 				ScalosFree(MenuChunk);
@@ -739,6 +762,10 @@ ULONG ReadMenuPrefs(void)
 		
 		} while (0);
 
+#if defined(__AROS__) && __WORDSIZE==64
+        if (AdjustedMenu)
+                ScalosFree(AdjustedMenu);
+#endif
 	if (MenuChunk)
 		ScalosFree(MenuChunk);
 	if (iffHandle)
@@ -797,7 +824,7 @@ void FreeMenuPrefs(void)
 }
 
 
-static void GenerateMainMenu(struct ScalosMenuTree *mTree, struct NewMenu **nm, LONG Level)
+static void GenerateMainMenu(struct SCALOS_MENUTREE *mTree, struct NewMenu **nm, LONG Level)
 {
 	ULONG Mask = 1;
 
@@ -808,7 +835,7 @@ static void GenerateMainMenu(struct ScalosMenuTree *mTree, struct NewMenu **nm, 
 		{
 		ULONG Flags;
 		ULONG MutualExclude;
-		struct ScalosMenuTree *mTreeChild;
+		struct SCALOS_MENUTREE *mTreeChild;
 
 		d1(kprintf("%s/%s/%ld: mTree=%08lx  Type=%ld\n", __FILE__, __FUNC__, __LINE__, mTree, mTree->mtre_type));
 
@@ -976,7 +1003,7 @@ static void GenerateMainMenu(struct ScalosMenuTree *mTree, struct NewMenu **nm, 
 }
 
 
-static struct PopupMenu *GeneratePopupMenu(struct ScalosMenuChunk *MenuChunk, LONG Level)
+static struct PopupMenu *GeneratePopupMenu(struct ScalosMenuChunk *MenuChunk, struct SCALOS_MENUTREE *AdjustedMenu, LONG Level)
 {
 	d1(KPrintF("%s/%s/%ld: MenuChunk=%08lx  Level=%ld\n", __FILE__, __FUNC__, __LINE__, MenuChunk, Level));
 
@@ -989,11 +1016,11 @@ static struct PopupMenu *GeneratePopupMenu(struct ScalosMenuChunk *MenuChunk, LO
 
 	PopupMenuFlag = TRUE;
 
-	return BuildPopupMenu(MenuChunk->smch_Menu, Level);
+	return BuildPopupMenu(AdjustedMenu, Level);
 }
 
 
-static struct PopupMenu *BuildPopupMenu(struct ScalosMenuTree *mTree, LONG Level)
+static struct PopupMenu *BuildPopupMenu(struct SCALOS_MENUTREE *mTree, LONG Level)
 {
 	struct TagItem *TagBuffer, *tbAlloc;
 	struct PopupMenu *pm = NULL;
@@ -1011,8 +1038,8 @@ static struct PopupMenu *BuildPopupMenu(struct ScalosMenuTree *mTree, LONG Level
 			d1(KPrintF("%s/%s/%ld: Level >= 0\n", __FILE__, __FUNC__, __LINE__));
 
 			TagBuffer->ti_Tag = PM_Item;
-			TagBuffer->ti_Data = (ULONG) PM_MakeItem(PM_ID, PM_TITLE_ID,
-				PM_Title, (ULONG) GetLocString(MSGID_PMTITLE1NAME + Level),
+			TagBuffer->ti_Data = (IPTR) PM_MakeItem(PM_ID, PM_TITLE_ID,
+				PM_Title, (IPTR) GetLocString(MSGID_PMTITLE1NAME + Level),
 				PM_NoSelect, TRUE,
 				PM_ShinePen, TRUE,
 				PM_Shadowed, FALSE,
@@ -1025,7 +1052,7 @@ static struct PopupMenu *BuildPopupMenu(struct ScalosMenuTree *mTree, LONG Level
 			MaxTagItem--;
 
 			TagBuffer->ti_Tag = PM_Item;
-			TagBuffer->ti_Data = (ULONG) PM_MakeItem(PM_WideTitleBar, TRUE,
+			TagBuffer->ti_Data = (IPTR) PM_MakeItem(PM_WideTitleBar, TRUE,
 				TAG_END);
 
 			TagBuffer++;
@@ -1037,7 +1064,7 @@ static struct PopupMenu *BuildPopupMenu(struct ScalosMenuTree *mTree, LONG Level
 		while (mTree && MaxTagItem > 1)
 			{
 			TagBuffer->ti_Tag = PM_Item;
-			TagBuffer->ti_Data = (ULONG) MakePopupMenuItem(mTree);
+			TagBuffer->ti_Data = (IPTR) MakePopupMenuItem(mTree);
 
 			d1(KPrintF("%s/%s/%ld:  mTree=%08lx  Next=%08lx\n", __FILE__, __FUNC__, __LINE__, mTree, mTree->mtre_Next));
 
@@ -1059,7 +1086,7 @@ static struct PopupMenu *BuildPopupMenu(struct ScalosMenuTree *mTree, LONG Level
 }
 
 
-static struct PopupMenu *MakePopupMenuItem(struct ScalosMenuTree *mTree)
+static struct PopupMenu *MakePopupMenuItem(struct SCALOS_MENUTREE *mTree)
 {
 	struct PopupMenu *pm;
 
@@ -1083,7 +1110,7 @@ static struct PopupMenu *MakePopupMenuItem(struct ScalosMenuTree *mTree)
 		if (UnselectedIconName && strlen(UnselectedIconName) >= 1)
 			{
 			UnselectedImage	= NewObject(DtImageClass, NULL,
-				DTIMG_ImageName, (ULONG) UnselectedIconName,
+				DTIMG_ImageName, (IPTR) UnselectedIconName,
 				TAG_END);
 			if (UnselectedImage)
 				AddMenuImage(UnselectedImage);
@@ -1091,7 +1118,7 @@ static struct PopupMenu *MakePopupMenuItem(struct ScalosMenuTree *mTree)
 		if (SelectedIconName && strlen(SelectedIconName) >= 1)
 			{
 			SelectedImage = NewObject(DtImageClass, NULL,
-				DTIMG_ImageName, (ULONG) SelectedIconName,
+				DTIMG_ImageName, (IPTR) SelectedIconName,
 				TAG_END);
 			if (SelectedImage)
 				AddMenuImage(SelectedImage);
@@ -1102,11 +1129,11 @@ static struct PopupMenu *MakePopupMenuItem(struct ScalosMenuTree *mTree)
 		if (mTree->mtre_tree && SCAMENUTYPE_Menu == mTree->mtre_type)
 			{
 			// Build Submenu
-			pm = PM_MakeItem(PM_Sub, (ULONG) BuildPopupMenu(mTree->mtre_tree, -1),
+			pm = PM_MakeItem(PM_Sub, (IPTR) BuildPopupMenu(mTree->mtre_tree, -1),
 				PM_UserData, NULL,
-				PM_Title, (ULONG) mTree->MenuCombo.MenuTree.mtre_name,
-				UnselectedImage ? PM_IconUnselected : TAG_IGNORE, (ULONG) UnselectedImage,
-				SelectedImage   ? PM_IconSelected   : TAG_IGNORE, (ULONG) SelectedImage,
+				PM_Title, (IPTR) mTree->MenuCombo.MenuTree.mtre_name,
+				UnselectedImage ? PM_IconUnselected : TAG_IGNORE, (IPTR) UnselectedImage,
+				SelectedImage   ? PM_IconSelected   : TAG_IGNORE, (IPTR) SelectedImage,
 				TAG_END);
 			}
 		else
@@ -1116,7 +1143,7 @@ static struct PopupMenu *MakePopupMenuItem(struct ScalosMenuTree *mTree)
 
 			if (mTree->mtre_tree && SCAMENUTYPE_Command == mTree->mtre_tree->mtre_type)
 				{
-				struct ScalosMenuTree *subTree;
+				struct SCALOS_MENUTREE *subTree;
 
 				UserData = mTree->mtre_tree;
 				d1(KPrintF("%s/%s/%ld: mtre_tree=%08lx  Next=%08lx\n", __FILE__, __FUNC__, __LINE__, mTree->mtre_tree, mTree->mtre_tree->mtre_Next));
@@ -1135,10 +1162,10 @@ static struct PopupMenu *MakePopupMenuItem(struct ScalosMenuTree *mTree)
 				}
 
 			d1(KPrintF("%s/%s/%ld: UserData=%08lx\n", __FILE__, __FUNC__, __LINE__, UserData));
-			pm = PM_MakeItem(PM_UserData, (ULONG) UserData,
-				PM_Title, (ULONG) mTree->MenuCombo.MenuTree.mtre_name,
-				UnselectedImage ? PM_IconUnselected : TAG_IGNORE, (ULONG) UnselectedImage,
-				SelectedImage   ? PM_IconSelected   : TAG_IGNORE, (ULONG) SelectedImage,
+			pm = PM_MakeItem(PM_UserData, (IPTR) UserData,
+				PM_Title, (IPTR) mTree->MenuCombo.MenuTree.mtre_name,
+				UnselectedImage ? PM_IconUnselected : TAG_IGNORE, (IPTR) UnselectedImage,
+				SelectedImage   ? PM_IconSelected   : TAG_IGNORE, (IPTR) SelectedImage,
 				PM_Bold, isDefaultCommand,
 				TAG_END);
 			}
@@ -1155,30 +1182,29 @@ static struct PopupMenu *MakePopupMenuItem(struct ScalosMenuTree *mTree)
 	return pm;
 }
 
-
-static void AddAddresses(struct ScalosMenuTree *MenuTree, const UBYTE *BaseAddr)
+static void AddAddresses(struct ScalosMenuTree *srcTree, struct SCALOS_MENUTREE *MenuTree, const UBYTE *BaseAddr)
 {
 	while (MenuTree)
 		{
 		if (SCAMENUTYPE_Command == MenuTree->mtre_type)
 			{
-			MenuTree->MenuCombo.MenuCommand.mcom_name = (APTR) SCA_BE2LONG(MenuTree->MenuCombo.MenuCommand.mcom_name);
+			MenuTree->MenuCombo.MenuCommand.mcom_name = (APTR)0 + SCA_BE2LONG(srcTree->MenuCombo.MenuCommand.mcom_name);
 			if (MenuTree->MenuCombo.MenuCommand.mcom_name)
-				MenuTree->MenuCombo.MenuCommand.mcom_name += (ULONG) BaseAddr;
-			MenuTree->MenuCombo.MenuCommand.mcom_stack = SCA_BE2LONG(MenuTree->MenuCombo.MenuCommand.mcom_stack);
+				MenuTree->MenuCombo.MenuCommand.mcom_name += (IPTR) BaseAddr;
+			MenuTree->MenuCombo.MenuCommand.mcom_stack = SCA_BE2LONG(srcTree->MenuCombo.MenuCommand.mcom_stack);
 			}
 		else
 			{
-			MenuTree->MenuCombo.MenuTree.mtre_name = (APTR) SCA_BE2LONG(MenuTree->MenuCombo.MenuTree.mtre_name);
+			MenuTree->MenuCombo.MenuTree.mtre_name = (APTR)0 + SCA_BE2LONG(srcTree->MenuCombo.MenuTree.mtre_name);
 			if (MenuTree->MenuCombo.MenuTree.mtre_name)
-				MenuTree->MenuCombo.MenuTree.mtre_name += (ULONG) BaseAddr;
+				MenuTree->MenuCombo.MenuTree.mtre_name += (IPTR) BaseAddr;
 
 			if (MenuTree->mtre_flags & MTREFLGF_IconNames)
 				{
-				MenuTree->MenuCombo.MenuTree.mtre_iconnames = (APTR) SCA_BE2LONG(MenuTree->MenuCombo.MenuTree.mtre_iconnames);
+				MenuTree->MenuCombo.MenuTree.mtre_iconnames = (APTR)0 + SCA_BE2LONG(srcTree->MenuCombo.MenuTree.mtre_iconnames);
 				if (MenuTree->MenuCombo.MenuTree.mtre_iconnames)
 					{
-					MenuTree->MenuCombo.MenuTree.mtre_iconnames += (ULONG) BaseAddr;
+					MenuTree->MenuCombo.MenuTree.mtre_iconnames += (IPTR) BaseAddr;
 					}
 					else
 					{
@@ -1190,16 +1216,16 @@ static void AddAddresses(struct ScalosMenuTree *MenuTree, const UBYTE *BaseAddr)
 				MenuTree->MenuCombo.MenuTree.mtre_iconnames = NULL;
 				}
 			}
-		MenuTree->mtre_tree = (APTR) SCA_BE2LONG(MenuTree->mtre_tree);
+		MenuTree->mtre_tree = (APTR)0 + SCA_BE2LONG(srcTree->mtre_tree);
 		if (MenuTree->mtre_tree)
 			{
-			MenuTree->mtre_tree = (struct ScalosMenuTree *) (((UBYTE *) MenuTree->mtre_tree) + (ULONG) BaseAddr);
-			AddAddresses(MenuTree->mtre_tree, BaseAddr);
+			MenuTree->mtre_tree = (struct SCALOS_MENUTREE *) (((UBYTE *) MenuTree->mtre_tree) + (IPTR) BaseAddr);
+			AddAddresses(srcTree, MenuTree->mtre_tree, BaseAddr);
 			}
-		MenuTree->mtre_Next = (APTR) SCA_BE2LONG(MenuTree->mtre_Next);
+		MenuTree->mtre_Next = (APTR)0 + SCA_BE2LONG(srcTree->mtre_Next);
 		if (MenuTree->mtre_Next)
 			{
-			MenuTree->mtre_Next = (struct ScalosMenuTree *) (((UBYTE *) MenuTree->mtre_Next) + (ULONG) BaseAddr);
+			MenuTree->mtre_Next = (struct SCALOS_MENUTREE *) (((UBYTE *) MenuTree->mtre_Next) + (IPTR) BaseAddr);
 			}
 		MenuTree = MenuTree->mtre_Next;
 		}
@@ -1278,7 +1304,7 @@ static void ParseMenuItem(struct MenuItem *theItem, ULONG *MenuNumber, ULONG Men
 {
 	while (theItem)
 		{
-		struct ScalosMenuTree *mtre = GTMENUITEM_USERDATA(theItem);
+		struct SCALOS_MENUTREE *mtre = GTMENUITEM_USERDATA(theItem);
 
 		d1(kprintf("%s/%s/%ld: theItem=%08lx\n", __FILE__, __FUNC__, __LINE__, theItem));
 

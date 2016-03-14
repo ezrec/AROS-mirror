@@ -580,7 +580,7 @@ struct NotifyNode *AddToMainNotifyList(struct NotifyTab *nft, ULONG Flags)
 		if (NULL == non)
 			break;
 
-		non->non_NotifyRequest.nr_UserData = (ULONG) nft;
+		non->non_NotifyRequest.nr_UserData = (IPTR) nft;
 		non->non_NotifyRequest.nr_Name = (STRPTR) nft->nft_FileName;
 		non->non_NotifyRequest.nr_stuff.nr_Msg.nr_Port = iInfos.xii_iinfos.ii_MainMsgPort;
 		non->non_NotifyRequest.nr_Flags = NRF_SEND_MESSAGE | Flags;

@@ -55,8 +55,8 @@ struct IconifyClassInst
 
 // local functions
 
-static SAVEDS(ULONG) INTERRUPT IconifyClassDispatcher(Class *cl, Object *o, Msg msg);
-static ULONG Iconify_New(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) INTERRUPT IconifyClassDispatcher(Class *cl, Object *o, Msg msg);
+static IPTR Iconify_New(Class *cl, Object *o, Msg msg);
 static ULONG Iconify_Draw(Class *cl, Object *o, Msg msg);
 
 static LONG RenderYPos(const struct Image *img, LONG MinY, LONG y);
@@ -88,9 +88,9 @@ Class * initIconifyClass(void)
 }
 
 
-static SAVEDS(ULONG) INTERRUPT IconifyClassDispatcher(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) INTERRUPT IconifyClassDispatcher(Class *cl, Object *o, Msg msg)
 {
-	ULONG Result;
+	IPTR Result;
 
 	switch (msg->MethodID)
 		{
@@ -111,7 +111,7 @@ static SAVEDS(ULONG) INTERRUPT IconifyClassDispatcher(Class *cl, Object *o, Msg 
 }
 
 
-static ULONG Iconify_New(Class *cl, Object *o, Msg msg)
+static IPTR Iconify_New(Class *cl, Object *o, Msg msg)
 {
 	o = (Object *) DoSuperMethodA(cl, o, msg);
 
@@ -123,7 +123,7 @@ static ULONG Iconify_New(Class *cl, Object *o, Msg msg)
 		img->Width = 25;
 		}
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 

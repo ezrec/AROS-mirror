@@ -77,8 +77,8 @@ struct GadgetBarTextClassInst
 
 // local functions
 
-static SAVEDS(ULONG) INTERRUPT GadgetBarTextClassDispatcher(Class *cl, Object *o, Msg msg);
-static ULONG GadgetBarText_New(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) INTERRUPT GadgetBarTextClassDispatcher(Class *cl, Object *o, Msg msg);
+static IPTR GadgetBarText_New(Class *cl, Object *o, Msg msg);
 static ULONG GadgetBarText_Dispose(Class *cl, Object *o, Msg msg);
 static ULONG GadgetBarText_Set(Class *cl, Object *o, Msg msg);
 static ULONG GadgetBarText_Get(Class *cl, Object *o, Msg msg);
@@ -113,9 +113,9 @@ struct ScalosClass *initGadgetBarTextClass(const struct PluginClass *plug)
 
 //----------------------------------------------------------------------------
 
-static SAVEDS(ULONG) INTERRUPT GadgetBarTextClassDispatcher(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) INTERRUPT GadgetBarTextClassDispatcher(Class *cl, Object *o, Msg msg)
 {
-	ULONG Result;
+	IPTR Result;
 
 	switch (msg->MethodID)
 		{
@@ -154,7 +154,7 @@ static SAVEDS(ULONG) INTERRUPT GadgetBarTextClassDispatcher(Class *cl, Object *o
 
 //----------------------------------------------------------------------------
 
-static ULONG GadgetBarText_New(Class *cl, Object *o, Msg msg)
+static IPTR GadgetBarText_New(Class *cl, Object *o, Msg msg)
 {
 	struct opSet *ops = (struct opSet *) msg;
 	struct GadgetBarTextClassInst *inst;
@@ -177,9 +177,9 @@ static ULONG GadgetBarText_New(Class *cl, Object *o, Msg msg)
 
 	inst->gbtcl_NeedLayout = TRUE;
 
-	inst->gbtcl_Text = (STRPTR) GetTagData(GBTDTA_Text, (ULONG) "", ops->ops_AttrList);
-	inst->gbtcl_Font = (struct TextFont *) GetTagData(GBTDTA_TextFont, (ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font, ops->ops_AttrList);
-	inst->gbtcl_TTFont = (struct TTFontFamily *) GetTagData(GBTDTA_TTFont, (ULONG) &ScreenTTFont, ops->ops_AttrList);
+	inst->gbtcl_Text = (STRPTR) GetTagData(GBTDTA_Text, (IPTR) "", ops->ops_AttrList);
+	inst->gbtcl_Font = (struct TextFont *) GetTagData(GBTDTA_TextFont, (IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font, ops->ops_AttrList);
+	inst->gbtcl_TTFont = (struct TTFontFamily *) GetTagData(GBTDTA_TTFont, (IPTR) &ScreenTTFont, ops->ops_AttrList);
 	inst->gbtcl_TextPen = GetTagData(GBTDTA_TextPen, PalettePrefs.pal_driPens[TEXTPEN], ops->ops_AttrList);
 	inst->gbtcl_BGPen = GetTagData(GBTDTA_BgPen, PalettePrefs.pal_driPens[BACKGROUNDPEN], ops->ops_AttrList);
 	inst->gbtcl_DrawMode = GetTagData(GBTDTA_DrawMode, JAM1, ops->ops_AttrList);
@@ -212,7 +212,7 @@ static ULONG GadgetBarText_New(Class *cl, Object *o, Msg msg)
 
 		d1(kprintf("%s/%s/%ld: gg=%08lx  Width=%ld  Height=%ld\n", __FILE__, __FUNC__, __LINE__, gg, gg->Width, gg->Height));
 		}
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 //----------------------------------------------------------------------------
@@ -241,22 +241,22 @@ static ULONG GadgetBarText_Get(Class *cl, Object *o, Msg msg)
 	switch (opg->opg_AttrID)
 		{
 	case GA_Left:	// required since gadgetclass attribute is [IS] - no support for [G]
-		*(opg->opg_Storage) = (ULONG) gg->LeftEdge;
+		*(opg->opg_Storage) = (IPTR) gg->LeftEdge;
 		break;
 	case GA_Top:	// required since gadgetclass attribute is [IS] - no support for [G]
-		*(opg->opg_Storage) = (ULONG) gg->TopEdge;
+		*(opg->opg_Storage) = (IPTR) gg->TopEdge;
 		break;
 	case GA_Width:	// required since gadgetclass attribute is [IS] - no support for [G]
-		*(opg->opg_Storage) = (ULONG) gg->Width;
+		*(opg->opg_Storage) = (IPTR) gg->Width;
 		break;
 	case GA_Height:	// required since gadgetclass attribute is [IS] - no support for [G]
-		*(opg->opg_Storage) = (ULONG) gg->Height;
+		*(opg->opg_Storage) = (IPTR) gg->Height;
 		break;
 	case GBTDTA_Text:
-		*(opg->opg_Storage) = (ULONG) inst->gbtcl_Text;
+		*(opg->opg_Storage) = (IPTR) inst->gbtcl_Text;
 		break;
 	case GBTDTA_TextFont:
-		*(opg->opg_Storage) = (ULONG) inst->gbtcl_Font;
+		*(opg->opg_Storage) = (IPTR) inst->gbtcl_Font;
 		break;
 	case GBTDTA_TextPen:
 		*(opg->opg_Storage) = inst->gbtcl_TextPen;
@@ -291,7 +291,7 @@ static ULONG GadgetBarText_Set(Class *cl, Object *o, Msg msg)
 
 	if (FindTagItem(GBTDTA_Text, ops->ops_AttrList))
 		{
-		STRPTR NewText = (STRPTR) GetTagData(GBTDTA_Text, (ULONG) inst->gbtcl_Text, ops->ops_AttrList);
+		STRPTR NewText = (STRPTR) GetTagData(GBTDTA_Text, (IPTR) inst->gbtcl_Text, ops->ops_AttrList);
 
 		if (inst->gbtcl_Text)
 			FreeCopyString(inst->gbtcl_Text);
@@ -300,8 +300,8 @@ static ULONG GadgetBarText_Set(Class *cl, Object *o, Msg msg)
 		inst->gbtcl_NeedLayout = TRUE;
 		}
 
-	inst->gbtcl_Font = (struct TextFont *) GetTagData(GBTDTA_TextFont, (ULONG) inst->gbtcl_Font, ops->ops_AttrList);
-	inst->gbtcl_TTFont = (struct TTFontFamily *) GetTagData(GBTDTA_TTFont, (ULONG) inst->gbtcl_TTFont, ops->ops_AttrList);
+	inst->gbtcl_Font = (struct TextFont *) GetTagData(GBTDTA_TextFont, (IPTR) inst->gbtcl_Font, ops->ops_AttrList);
+	inst->gbtcl_TTFont = (struct TTFontFamily *) GetTagData(GBTDTA_TTFont, (IPTR) inst->gbtcl_TTFont, ops->ops_AttrList);
 	inst->gbtcl_TextPen = GetTagData(GBTDTA_TextPen, inst->gbtcl_TextPen, ops->ops_AttrList);
 	inst->gbtcl_BGPen = GetTagData(GBTDTA_BgPen, inst->gbtcl_BGPen, ops->ops_AttrList);
 	inst->gbtcl_DrawMode = GetTagData(GBTDTA_DrawMode, inst->gbtcl_DrawMode, ops->ops_AttrList);
@@ -415,7 +415,7 @@ static ULONG GadgetBarText_Render(Class *cl, Object *o, Msg msg)
 	if (inst->gbtcl_NeedLayout)
 		{
 		DoMethod(o, GM_LAYOUT,
-			(ULONG) gpr->gpr_GInfo,
+			(IPTR) gpr->gpr_GInfo,
 			TRUE);
 		}
 

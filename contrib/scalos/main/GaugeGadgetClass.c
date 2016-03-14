@@ -88,7 +88,7 @@ struct GaugeINST
 
 // local functions
 
-static SAVEDS(ULONG) INTERRUPT GaugeGadgetClassDispatcher(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) INTERRUPT GaugeGadgetClassDispatcher(Class *cl, Object *o, Msg msg);
 static ULONG  RenderGauge(Class *, struct Gadget *, struct gpRender *);
 static ULONG INTERRUPT UpdateGauge(Class *cl, struct Gadget *g, struct opSet *msg);
 static short GetGaugeWidth(struct GaugeINST *inst, struct Gadget *g);
@@ -124,7 +124,7 @@ struct ScalosClass *initGaugeGadgetClass(const struct PluginClass *plug)
 /***********************************************************/
 /**********	   The Gauge class dispatcher	  *********/
 /***********************************************************/
-static SAVEDS(ULONG) INTERRUPT GaugeGadgetClassDispatcher(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) INTERRUPT GaugeGadgetClassDispatcher(Class *cl, Object *o, Msg msg)
 {
 	struct GaugeINST *inst;
 	ULONG retval = FALSE;
@@ -154,10 +154,10 @@ static SAVEDS(ULONG) INTERRUPT GaugeGadgetClassDispatcher(Class *cl, Object *o, 
 			inst->BarPen    = GetTagData(SCAGAUGE_BarPen, FILLPEN, ops->ops_AttrList);
 			inst->TextPen   = GetTagData(SCAGAUGE_TextPen, TEXTPEN, ops->ops_AttrList);
 
-			PBTextAttr      = (struct TextAttr *) GetTagData(SCAGAUGE_TextFont, (ULONG) NULL, ops->ops_AttrList);
-			PBTTTextDesc	= (CONST_STRPTR) GetTagData(SCAGAUGE_TTFont, (ULONG) NULL, ops->ops_AttrList);
+			PBTextAttr      = (struct TextAttr *) GetTagData(SCAGAUGE_TextFont, (IPTR) NULL, ops->ops_AttrList);
+			PBTTTextDesc	= (CONST_STRPTR) GetTagData(SCAGAUGE_TTFont, (IPTR) NULL, ops->ops_AttrList);
 
-			stccpy(inst->NumFormat, (char *) GetTagData(SCAGAUGE_NumFormat, (ULONG) "%3d%%", ops->ops_AttrList),
+			stccpy(inst->NumFormat, (char *) GetTagData(SCAGAUGE_NumFormat, (IPTR) "%3d%%", ops->ops_AttrList),
 					sizeof(inst->NumText));
 
 			if (PBTTTextDesc)
@@ -167,7 +167,7 @@ static SAVEDS(ULONG) INTERRUPT GaugeGadgetClassDispatcher(Class *cl, Object *o, 
 
 			ScaleValue(inst);
 
-			retval = (ULONG)object;
+			retval = (IPTR)object;
 			}
 		break;
 
@@ -253,7 +253,7 @@ static ULONG INTERRUPT RenderGauge(Class *cl, struct Gadget *g, struct gpRender 
 		DrawBevelBox(msg->gpr_RPort, g->LeftEdge, g->TopEdge, g->Width, g->Height,
 			GTBB_FrameType, BBFT_BUTTON,
 			GTBB_Recessed, TRUE,
-			GT_VisualInfo, (ULONG) inst->vi,
+			GT_VisualInfo, (IPTR) inst->vi,
 			TAG_END );
 		}
 

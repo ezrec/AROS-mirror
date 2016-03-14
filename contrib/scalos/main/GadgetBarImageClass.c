@@ -70,8 +70,8 @@ struct GadgetBarImageClassInst
 
 // local functions
 
-static SAVEDS(ULONG) INTERRUPT GadgetBarImageClassDispatcher(Class *cl, Object *o, Msg msg);
-static ULONG GadgetBarImage_New(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) INTERRUPT GadgetBarImageClassDispatcher(Class *cl, Object *o, Msg msg);
+static IPTR GadgetBarImage_New(Class *cl, Object *o, Msg msg);
 static ULONG GadgetBarImage_Dispose(Class *cl, Object *o, Msg msg);
 static ULONG GadgetBarImage_Set(Class *cl, Object *o, Msg msg);
 static ULONG GadgetBarImage_Get(Class *cl, Object *o, Msg msg);
@@ -108,9 +108,9 @@ struct ScalosClass *initGadgetBarImageClass(const struct PluginClass *plug)
 
 //----------------------------------------------------------------------------
 
-static SAVEDS(ULONG) INTERRUPT GadgetBarImageClassDispatcher(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) INTERRUPT GadgetBarImageClassDispatcher(Class *cl, Object *o, Msg msg)
 {
-	ULONG Result;
+	IPTR Result;
 
 	d1(kprintf("%s/%s/%ld: MethodID=%08lx\n", __FILE__, __FUNC__, __LINE__, msg->MethodID));
 
@@ -157,7 +157,7 @@ static SAVEDS(ULONG) INTERRUPT GadgetBarImageClassDispatcher(Class *cl, Object *
 
 //----------------------------------------------------------------------------
 
-static ULONG GadgetBarImage_New(Class *cl, Object *o, Msg msg)
+static IPTR GadgetBarImage_New(Class *cl, Object *o, Msg msg)
 {
 	struct opSet *ops = (struct opSet *) msg;
 	struct GadgetBarImageClassInst *inst;
@@ -173,9 +173,9 @@ static ULONG GadgetBarImage_New(Class *cl, Object *o, Msg msg)
 
 	inst->gbicl_LayoutOk = FALSE;
 
-	inst->gbicl_iwt = (struct internalScaWindowTask *) GetTagData(GBIDTA_WindowTask, (ULONG)NULL, ops->ops_AttrList);
+	inst->gbicl_iwt = (struct internalScaWindowTask *) GetTagData(GBIDTA_WindowTask, (IPTR)NULL, ops->ops_AttrList);
 
-	inst->gbicl_DtImage = CreateDatatypesImage((STRPTR) GetTagData(DTA_Name, (ULONG)NULL, ops->ops_AttrList), 0);
+	inst->gbicl_DtImage = CreateDatatypesImage((STRPTR) GetTagData(DTA_Name, (IPTR)NULL, ops->ops_AttrList), 0);
 
 	d1(KPrintF("%s/%s/%ld: gbicl_DtImage=%08lx\n", __FILE__, __FUNC__, __LINE__, inst->gbicl_DtImage));
 
@@ -214,13 +214,13 @@ static ULONG GadgetBarImage_New(Class *cl, Object *o, Msg msg)
 		}
 	if (inst->gbicl_AnimDTObject)
 		{
-		ULONG Width = 0, Height = 0;
+		IPTR Width = 0, Height = 0;
 
 		DoDTMethod(inst->gbicl_AnimDTObject, NULL, NULL, DTM_PROCLAYOUT, NULL, TRUE);
 
 		GetDTAttrs(inst->gbicl_AnimDTObject, 
-			ADTA_Width, (ULONG) &Width,
-			ADTA_Height, (ULONG) &Height,
+			ADTA_Width, (IPTR) &Width,
+			ADTA_Height, (IPTR) &Height,
 			TAG_END);
 
 		gg->Width = gg->BoundsWidth = Width;
@@ -229,7 +229,7 @@ static ULONG GadgetBarImage_New(Class *cl, Object *o, Msg msg)
 
 	d1(kprintf("%s/%s/%ld: Width=%ld  Height=%ld\n", __FILE__, __FUNC__, __LINE__, gg->Width, gg->Height));
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 //----------------------------------------------------------------------------
@@ -385,7 +385,7 @@ static ULONG GadgetBarImage_Render(Class *cl, Object *o, Msg msg)
 			{
 			DoDTMethod(inst->gbicl_AnimDTObject, gpr->gpr_GInfo->gi_Window, NULL, 
 				GM_LAYOUT,
-				(ULONG) gpr->gpr_GInfo,
+				(IPTR) gpr->gpr_GInfo,
 				FALSE);
 			inst->gbicl_LayoutOk = TRUE;
 			}
@@ -453,7 +453,7 @@ static ULONG GadgetBarImage_HelpTest(Class *cl, Object *o, Msg msg)
 
 static BOOL GadgetBarImage_PointInGadget(Object *o, WORD x, WORD y)
 {
-	ULONG Width, Height;
+	IPTR Width, Height;
 
 	GetAttr(GA_Width, o, &Width);
 	GetAttr(GA_Height, o, &Height);

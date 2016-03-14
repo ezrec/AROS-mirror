@@ -99,7 +99,7 @@ struct FileTypeMenuItem
 
 	struct ScalosTagList ftmi_TagList;
 
-	struct ScalosMenuTree *ftmi_MenuTree;
+	struct SCALOS_MENUTREE *ftmi_MenuTree;
 
 	BOOL ftmi_DefaultAction;
 	};
@@ -158,7 +158,7 @@ static struct FileTypeMenuItem *NewFileTypeMenuItem(void);
 static void DisposeFileTypeMenuItem(const struct FileTypeDef *ParentFtd, struct FileTypeMenuItem *ftmi);
 static struct FileTypeTTItem *NewFileTypeTTItem(enum TTItemTypes type);
 static void DisposeFileTypeTTItem(struct FileTypeTTItem *ftti);
-static void FreeMenuTree(const struct FileTypeDef *ParentFtd, struct ScalosMenuTree *mTree);
+static void FreeMenuTree(const struct FileTypeDef *ParentFtd, struct SCALOS_MENUTREE *mTree);
 static struct FileTypeDef *GetFileTypeDefForName(CONST_STRPTR Name);
 static void AddFileTypeDef(struct FileTypeDef *ftd, CONST_STRPTR Name);
 static void FileTypeFlushObsolete(void);
@@ -1276,14 +1276,14 @@ static IPTR FtInternalCmd(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct FileTypeMenuItem *ftmi = ftd->ftd_CurrentMenuItem;
 	CONST_STRPTR cmdName = (CONST_STRPTR) ArgArray[0];
-	struct ScalosMenuTree *mTree;
+	struct SCALOS_MENUTREE *mTree;
 
 	d1(KPrintF("%s/%s/%ld: cmdName=<%s>\n", __FILE__, __FUNC__, __LINE__, cmdName));
 
 	if (NULL == ftmi)
 		return RETURN_ERROR;
 
-	mTree = ScalosAlloc(sizeof(struct ScalosMenuTree));
+	mTree = ScalosAlloc(sizeof(struct SCALOS_MENUTREE));
 	if (mTree)
 		{
 		d1(KPrintF("%s/%s/%ld: ftmi_MenuTree=%08lx\n", __FILE__, __FUNC__, __LINE__, ftmi->ftmi_MenuTree));
@@ -1315,14 +1315,14 @@ static IPTR FtWbCmd(struct FileTypeDef *ftd, IPTR *ArgArray)
 	ULONG *StackSize = (ULONG *) ArgArray[1];
 	ULONG wbArgs = ArgArray[2];
 	ULONG *Priority = (ULONG *) ArgArray[3];
-	struct ScalosMenuTree *mTree;
+	struct SCALOS_MENUTREE *mTree;
 
 	d1(kprintf("%s/%s/%ld: cmdName=<%s>  StackSize=%08lx  wbArgs=%ld\n", __FILE__, __FUNC__, __LINE__, cmdName, StackSize, wbArgs));
 
 	if (NULL == ftmi)
 		return RETURN_ERROR;
 
-	mTree = ScalosAlloc(sizeof(struct ScalosMenuTree));
+	mTree = ScalosAlloc(sizeof(struct SCALOS_MENUTREE));
 	if (mTree)
 		{
 		AppendToMenuTree(&ftmi->ftmi_MenuTree, mTree);
@@ -1360,14 +1360,14 @@ static IPTR FtARexxCmd(struct FileTypeDef *ftd, IPTR *ArgArray)
 	ULONG *StackSize = (ULONG *) ArgArray[1];
 	ULONG wbArgs = ArgArray[2];
 	ULONG *Priority = (ULONG *) ArgArray[3];
-	struct ScalosMenuTree *mTree;
+	struct SCALOS_MENUTREE *mTree;
 
 	d1(kprintf("%s/%s/%ld: cmdName=<%s>  StackSize=%08lx  wbArgs=%ld\n", __FILE__, __FUNC__, __LINE__, cmdName, StackSize, wbArgs));
 
 	if (NULL == ftmi)
 		return RETURN_ERROR;
 
-	mTree = ScalosAlloc(sizeof(struct ScalosMenuTree));
+	mTree = ScalosAlloc(sizeof(struct SCALOS_MENUTREE));
 	if (mTree)
 		{
 		AppendToMenuTree(&ftmi->ftmi_MenuTree, mTree);
@@ -1405,14 +1405,14 @@ static IPTR FtCliCmd(struct FileTypeDef *ftd, IPTR *ArgArray)
 	ULONG *StackSize = (ULONG *) ArgArray[1];
 	ULONG wbArgs = ArgArray[2];
 	ULONG *Priority = (ULONG *) ArgArray[3];
-	struct ScalosMenuTree *mTree;
+	struct SCALOS_MENUTREE *mTree;
 
 	d1(kprintf("%s/%s/%ld: cmdName=<%s>  StackSize=%08lx\n", __FILE__, __FUNC__, __LINE__, cmdName, StackSize));
 
 	if (NULL == ftmi)
 		return RETURN_ERROR;
 
-	mTree = ScalosAlloc(sizeof(struct ScalosMenuTree));
+	mTree = ScalosAlloc(sizeof(struct SCALOS_MENUTREE));
 	if (mTree)
 		{
 		AppendToMenuTree(&ftmi->ftmi_MenuTree, mTree);
@@ -1447,14 +1447,14 @@ static IPTR FtPluginCmd(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct FileTypeMenuItem *ftmi = ftd->ftd_CurrentMenuItem;
 	CONST_STRPTR cmdName = (CONST_STRPTR) ArgArray[0];
-	struct ScalosMenuTree *mTree;
+	struct SCALOS_MENUTREE *mTree;
 
 	d1(kprintf("%s/%s/%ld: cmdName=<%s>\n", __FILE__, __FUNC__, __LINE__, cmdName));
 
 	if (NULL == ftmi)
 		return RETURN_ERROR;
 
-	mTree = ScalosAlloc(sizeof(struct ScalosMenuTree));
+	mTree = ScalosAlloc(sizeof(struct SCALOS_MENUTREE));
 	if (mTree)
 		{
 		AppendToMenuTree(&ftmi->ftmi_MenuTree, mTree);
@@ -1480,14 +1480,14 @@ static IPTR FtIconWindowCmd(struct FileTypeDef *ftd, IPTR *ArgArray)
 {
 	struct FileTypeMenuItem *ftmi = ftd->ftd_CurrentMenuItem;
 	CONST_STRPTR cmdName = (CONST_STRPTR) ArgArray[0];
-	struct ScalosMenuTree *mTree;
+	struct SCALOS_MENUTREE *mTree;
 
 	d1(kprintf("%s/%s/%ld: cmdName=<%s>\n", __FILE__, __FUNC__, __LINE__, cmdName));
 
 	if (NULL == ftmi)
 		return RETURN_ERROR;
 
-	mTree = ScalosAlloc(sizeof(struct ScalosMenuTree));
+	mTree = ScalosAlloc(sizeof(struct SCALOS_MENUTREE));
 	if (mTree)
 		{
 		AppendToMenuTree(&ftmi->ftmi_MenuTree, mTree);
@@ -2251,13 +2251,13 @@ LONG ConvertPenNameToPen(CONST_STRPTR PenName)
 }
 
 
-static void FreeMenuTree(const struct FileTypeDef *ParentFtd, struct ScalosMenuTree *mTree)
+static void FreeMenuTree(const struct FileTypeDef *ParentFtd, struct SCALOS_MENUTREE *mTree)
 {
 	d1(kprintf("%s/%s/%ld: ParentFtd=%08lx, mTree=%08lx\n", __FILE__, __FUNC__, __LINE__, ParentFtd, mTree));
 
 	while (mTree)
 		{
-		struct ScalosMenuTree *mTreeNext = mTree->mtre_Next;
+		struct SCALOS_MENUTREE *mTreeNext = mTree->mtre_Next;
 
 		// Do NOT free parent's ftd_DefaultAction here!
 		if (NULL == ParentFtd || mTree != ParentFtd->ftd_DefaultAction)

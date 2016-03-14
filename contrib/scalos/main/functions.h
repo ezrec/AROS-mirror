@@ -10,7 +10,6 @@
 #include <dos/datetime.h>
 #include <intuition/intuition.h>
 #include <datatypes/iconobject.h>
-#include <scalos/menu.h>
 #include <scalos/scalos.h>
 
 #include "defs.h"
@@ -1025,9 +1024,9 @@ BOOL isMakeLinkQualifier(ULONG Qualifier);
 BOOL isMoveQualifier(ULONG Qualifier);
 BOOL isAlternateLssoQualifier(ULONG Qualifier);
 void RunMenuCommand(struct internalScaWindowTask *iwt, 
-	struct ScalosMenuTree *mtr, struct ScaIconNode *in, ULONG Flags);
+	struct SCALOS_MENUTREE *mtr, struct ScaIconNode *in, ULONG Flags);
 void RunMenuCommandExt(struct internalScaWindowTask *iwt, struct internalScaWindowTask *iwtDest,
-	struct ScalosMenuTree *mtr, struct ScaIconNode *in, ULONG Flags);
+	struct SCALOS_MENUTREE *mtr, struct ScaIconNode *in, ULONG Flags);
 LONG ScalosPutIcon(struct ScaIconNode *in, BPTR destDirLock, BOOL NeedUpdateIcon);
 Object *LoadIconObject(BPTR DirLock, CONST_STRPTR IconName, struct TagItem *TagList);
 LONG SaveIconObject(Object *IconObj, BPTR DirLock,
@@ -1045,9 +1044,9 @@ ULONG DisposeScalosWindow(struct internalScaWindowTask *iwt, struct ScaWindowStr
 void AdjustRenamedWindowName(BPTR objLock);
 void LockWindow(struct internalScaWindowTask *iwt);
 void UnLockWindow(struct internalScaWindowTask *iwt);
-struct ScalosMenuTree *CloneMenuTree(const struct ScalosMenuTree *mtr);
-void DisposeMenuTree(struct ScalosMenuTree *mtr);
-void AppendToMenuTree(struct ScalosMenuTree **mtreList, struct ScalosMenuTree *mTree);
+struct SCALOS_MENUTREE *CloneMenuTree(const struct SCALOS_MENUTREE *mtr);
+void DisposeMenuTree(struct SCALOS_MENUTREE *mtr);
+void AppendToMenuTree(struct SCALOS_MENUTREE **mtreList, struct SCALOS_MENUTREE *mTree);
 void SetIconWindowReadOnly(struct internalScaWindowTask *iwt, BOOL IsReadOnly);
 void RedrawResizedWindow(struct internalScaWindowTask *iwt,
 	WORD OldInnerWidth, WORD OldInnerHeight);

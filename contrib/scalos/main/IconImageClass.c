@@ -59,7 +59,7 @@ struct IconImageINST
 //----------------------------------------------------------------------------
 
 // The functions in this module
-static SAVEDS(ULONG) INTERRUPT dispatchIconImageClass(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) INTERRUPT dispatchIconImageClass(Class *cl, Object *o, Msg msg);
 static BOOL InitIconImage(struct IconImageINST *inst, const struct opSet *ops, const struct Image *NewImage);
 static void DisposeIconImage(struct IconImageINST *inst);
 static void DrawIconImage(struct IconImageINST *inst, struct impDraw *Msg, struct Image *myImage);
@@ -111,10 +111,10 @@ BOOL freeIconImageClass( Class *cl )
 /**************************************************************************/
 /**********	   The IconImageCLASS class dispatcher	  *********/
 /**************************************************************************/
-static SAVEDS(ULONG) INTERRUPT dispatchIconImageClass(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) INTERRUPT dispatchIconImageClass(Class *cl, Object *o, Msg msg)
 {
 	struct IconImageINST *inst;
-	ULONG retval = 0l;
+	IPTR retval = 0l;
 	Object *object;
 
 	d1(kprintf("%s/%s/%ld:  Class=%l08x  SuperClass=%08lx  Method=%08lx\n", __FILE__, __FUNC__, __LINE__, cl, cl->cl_Super, msg->MethodID));
@@ -138,7 +138,7 @@ static SAVEDS(ULONG) INTERRUPT dispatchIconImageClass(Class *cl, Object *o, Msg 
 				object = NULL;
 				}
 
-			retval = (ULONG) object;
+			retval = (IPTR) object;
 			d1(kprintf("OM_NEW: object=%08lx  inst=%08lx\n", object, inst));
 			}
 		break;
@@ -177,9 +177,9 @@ static SAVEDS(ULONG) INTERRUPT dispatchIconImageClass(Class *cl, Object *o, Msg 
 
 static BOOL InitIconImage(struct IconImageINST *inst, const struct opSet *ops, const struct Image *NewImage)
 {
-	memset(inst, 0, sizeof(inst));
+	memset(inst, 0, sizeof(struct IconImageINST));
 
-	inst->sii_IconObject = (APTR) GetTagData(ICI_IconObj, (ULONG) NULL, ops->ops_AttrList);
+	inst->sii_IconObject = (APTR) GetTagData(ICI_IconObj, (IPTR) NULL, ops->ops_AttrList);
 	if (NULL == inst->sii_IconObject)
 		return FALSE;
 

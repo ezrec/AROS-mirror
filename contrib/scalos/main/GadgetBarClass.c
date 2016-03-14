@@ -104,8 +104,8 @@ struct GadgetBarClassInst
 
 // local functions
 
-static SAVEDS(ULONG) INTERRUPT GadgetBarClassDispatcher(Class *cl, Object *o, Msg msg);
-static ULONG GadgetBar_New(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) INTERRUPT GadgetBarClassDispatcher(Class *cl, Object *o, Msg msg);
+static IPTR GadgetBar_New(Class *cl, Object *o, Msg msg);
 static ULONG GadgetBar_Dispose(Class *cl, Object *o, Msg msg);
 static ULONG GadgetBar_Set(Class *cl, Object *o, Msg msg);
 static ULONG GadgetBar_Get(Class *cl, Object *o, Msg msg);
@@ -153,11 +153,11 @@ struct ScalosClass *initGadgetBarClass(const struct PluginClass *plug)
 
 //----------------------------------------------------------------------------
 
-static SAVEDS(ULONG) INTERRUPT GadgetBarClassDispatcher(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) INTERRUPT GadgetBarClassDispatcher(Class *cl, Object *o, Msg msg)
 {
 	struct GadgetBarMember *Member;
 	struct GadgetBarClassInst *inst;
-	ULONG Result;
+	IPTR Result;
 
 	d1(KPrintF("%s/%s/%ld: o=%08lx  MethodID=%08lx\n", __FILE__, __FUNC__, __LINE__, o, msg->MethodID));
 
@@ -232,7 +232,7 @@ static SAVEDS(ULONG) INTERRUPT GadgetBarClassDispatcher(Class *cl, Object *o, Ms
 
 //----------------------------------------------------------------------------
 
-static ULONG GadgetBar_New(Class *cl, Object *o, Msg msg)
+static IPTR GadgetBar_New(Class *cl, Object *o, Msg msg)
 {
 	struct opSet *ops = (struct opSet *) msg;
 	struct GadgetBarClassInst *inst;
@@ -248,7 +248,7 @@ static ULONG GadgetBar_New(Class *cl, Object *o, Msg msg)
 
 	NewList(&inst->gbcl_MemberList);
 
-	inst->gbcl_WindowTask = (struct internalScaWindowTask *) GetTagData(GBDTA_WindowTask, (ULONG)NULL, ops->ops_AttrList);
+	inst->gbcl_WindowTask = (struct internalScaWindowTask *) GetTagData(GBDTA_WindowTask, (IPTR)NULL, ops->ops_AttrList);
 
 	if (NULL == inst->gbcl_WindowTask)
 		{
@@ -266,7 +266,7 @@ static ULONG GadgetBar_New(Class *cl, Object *o, Msg msg)
 	inst->gbcl_LeftSpace = GetTagData(GBDTA_LeftSpace, 2, ops->ops_AttrList);
 	inst->gbcl_BetweenSpace = GetTagData(GBDTA_BetweenSpace, 5, ops->ops_AttrList);
 
-	inst->gbcl_Background = CreateDatatypesImage((CONST_STRPTR) GetTagData(GBDTA_BackgroundImageName, (ULONG) "", ops->ops_AttrList), 0);
+	inst->gbcl_Background = CreateDatatypesImage((CONST_STRPTR) GetTagData(GBDTA_BackgroundImageName, (IPTR) "", ops->ops_AttrList), 0);
 
 	gg->Height = gg->BoundsHeight = 0;
 	inst->gbcl_WindowLeftBorder = 0;
@@ -277,7 +277,7 @@ static ULONG GadgetBar_New(Class *cl, Object *o, Msg msg)
 	SETHOOKFUNC(inst->gbcl_BackFillHook, GadgetBar_BackFillFunc);
 	inst->gbcl_BackFillHook.h_Data = inst;
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 //----------------------------------------------------------------------------
@@ -319,8 +319,10 @@ static ULONG GadgetBar_Set(Class *cl, Object *o, Msg msg)
 {
 	struct GadgetBarClassInst *inst = INST_DATA(cl, o);
 	struct opSet *ops = (struct opSet *) msg;
-	static const ULONG packTable[] =
+    
+	static ULONG packTable[] =
 		{
+#if !defined(__AROS__) || __WORDSIZE != 64
 		PACK_STARTTABLE(DTA_Dummy),
 		PACK_ENTRY(DTA_Dummy, GBDTA_BGPen, 	  GadgetBarClassInst, gbcl_BGPen, PKCTRL_UWORD | PKCTRL_PACKUNPACK),
 		PACK_ENTRY(DTA_Dummy, GBDTA_TopSpace, 	  GadgetBarClassInst, gbcl_TopSpace, PKCTRL_WORD | PKCTRL_PACKUNPACK),
@@ -329,6 +331,9 @@ static ULONG GadgetBar_Set(Class *cl, Object *o, Msg msg)
 		PACK_ENTRY(DTA_Dummy, GBDTA_LeftSpace, 	  GadgetBarClassInst, gbcl_LeftSpace, PKCTRL_WORD | PKCTRL_PACKUNPACK),
 		PACK_ENTRY(DTA_Dummy, GBDTA_BetweenSpace, GadgetBarClassInst, gbcl_BetweenSpace, PKCTRL_WORD | PKCTRL_PACKUNPACK),
 		PACK_ENDTABLE
+#else
+                // FIXME!!
+#endif
 		};
 
 	DoSuperMethodA(cl, o, msg);
@@ -345,7 +350,7 @@ static ULONG GadgetBar_Set(Class *cl, Object *o, Msg msg)
 	if (FindTagItem(GBDTA_BackgroundImageName, ops->ops_AttrList))
 		{
 		DisposeDatatypesImage(&inst->gbcl_Background);
-		inst->gbcl_Background = CreateDatatypesImage((CONST_STRPTR) GetTagData(GBDTA_BackgroundImageName, (ULONG) "", ops->ops_AttrList), 0);
+		inst->gbcl_Background = CreateDatatypesImage((CONST_STRPTR) GetTagData(GBDTA_BackgroundImageName, (IPTR) "", ops->ops_AttrList), 0);
 		}
 
 	return 0;
@@ -472,7 +477,7 @@ static ULONG GadgetBar_Layout(Class *cl, Object *o, Msg msg)
 		Member != (struct GadgetBarMember *) &inst->gbcl_MemberList.lh_Tail; 
 		Member = (struct GadgetBarMember *) Member->gbm_Node.ln_Succ)
 		{
-		ULONG MemberHeight = 0;
+		IPTR MemberHeight = 0;
 		ULONG TotalHeight;
 
 		Member->gbm_Flags &= ~GBMFLAGF_Skipped;
@@ -522,7 +527,7 @@ static ULONG GadgetBar_Layout(Class *cl, Object *o, Msg msg)
 		Member != (struct GadgetBarMember *) &inst->gbcl_MemberList.lh_Tail; 
 		Member = (struct GadgetBarMember *) Member->gbm_Node.ln_Succ)
 		{
-		ULONG imgWidth = 0;
+		IPTR imgWidth = 0;
 
 		GetAttr(GA_Width, Member->gbm_Object, &imgWidth);
 
@@ -546,7 +551,7 @@ static ULONG GadgetBar_Layout(Class *cl, Object *o, Msg msg)
 			{
 			if (GB_FIXED_WIDTH == Member->gbm_Weight)
 				{
-				ULONG imgWidth = 0;
+				IPTR imgWidth = 0;
 
 				GetAttr(GA_Width, Member->gbm_Object, &imgWidth);
 
@@ -592,8 +597,8 @@ static ULONG GadgetBar_Layout(Class *cl, Object *o, Msg msg)
 		{
 		if (!(Member->gbm_Flags & GBMFLAGF_Skipped))
 			{
-			ULONG imgWidth = 0;
-			ULONG imgHeight = 0;
+			IPTR imgWidth = 0;
+			IPTR imgHeight = 0;
 
 			GetAttr(GA_Height, Member->gbm_Object, &imgHeight);
 			GetAttr(GA_Width, Member->gbm_Object, &imgWidth);
@@ -674,7 +679,7 @@ static ULONG GadgetBar_Layout(Class *cl, Object *o, Msg msg)
 		{
 		if (!(Member->gbm_Flags & GBMFLAGF_Skipped))
 			{
-			ULONG imgWidth = 0, imgHeight = 0;
+			IPTR imgWidth = 0, imgHeight = 0;
 
 			GetAttr(GA_Height, Member->gbm_Object, &imgHeight);
 			GetAttr(GA_Width, Member->gbm_Object, &imgWidth);
@@ -1152,7 +1157,7 @@ static ULONG GadgetBar_HandleMouseWheel(Class *cl, Object *o, Msg msg)
 
 static BOOL GadgetBar_PointInGadget(struct ExtGadget *Parent, struct ExtGadget *gg, WORD x, WORD y)
 {
-	ULONG Left, Top, Width, Height;
+	IPTR Left, Top, Width, Height;
 
 	GetAttr(GA_Left, (Object *) Parent, &Left);
 	GetAttr(GA_Top, (Object *) Parent, &Top);

@@ -65,8 +65,8 @@ struct EventListener
 
 // local functions
 
-static ULONG RootClass_Dispatcher(Class *cl, Object *o, Msg msg);
-static ULONG RootClass_New(Class *cl, Object *o, Msg msg);
+static IPTR RootClass_Dispatcher(Class *cl, Object *o, Msg msg);
+static IPTR RootClass_New(Class *cl, Object *o, Msg msg);
 static ULONG Root_HandleMessages(Class *cl, Object *o, Msg msg);
 static ULONG Root_CheckForMessages(Class *cl, Object *o, Msg msg);
 static ULONG RootClass_Message(Class *cl, Object *o, Msg msg);
@@ -74,7 +74,7 @@ static int IDCMPFuncTableComp(const void *keyval, const void *datum);
 static ULONG RootClass_RunProcess(Class *cl, Object *o, Msg msg);
 static ULONG RootClass_AddToClipboard(Class *cl, Object *o, Msg msg);
 static ULONG RootClass_ClearClipboard(Class *cl, Object *o, Msg msg);
-static ULONG RootClass_GetLocalizedString(Class *cl, Object *o, Msg msg);
+static IPTR RootClass_GetLocalizedString(Class *cl, Object *o, Msg msg);
 static struct EventListener *RootClass_AddListener(Class *cl, Object *o, Msg msg);
 static ULONG RootClass_RemListener(Class *cl, Object *o, Msg msg);
 static ULONG RootMessageUnIconify(struct internalScaWindowTask *iwt, struct AppMessage *appMsg);
@@ -142,44 +142,44 @@ Class * initRootClass(void)
 }
 
 
-static ULONG RootClass_Dispatcher(Class *cl, Object *o, Msg msg)
+static IPTR RootClass_Dispatcher(Class *cl, Object *o, Msg msg)
 {
-	ULONG Result;
+	IPTR Result;
 
 	GenerateEvents(cl, o, msg);
 
 	switch (msg->MethodID)
 		{
 	case OM_NEW:
-		Result = (ULONG) RootClass_New(cl, o, msg);
+		Result = (IPTR) RootClass_New(cl, o, msg);
 		break;
 
 	case SCCM_HandleMessages:
-		Result = (ULONG) Root_HandleMessages(cl, o, msg);
+		Result = (IPTR) Root_HandleMessages(cl, o, msg);
 		break;
 
 	case SCCM_CheckForMessages:
-		Result = (ULONG) Root_CheckForMessages(cl, o, msg);
+		Result = (IPTR) Root_CheckForMessages(cl, o, msg);
 		break;
 
 	case SCCM_Message:
-		Result = (ULONG) RootClass_Message(cl, o, msg);
+		Result = (IPTR) RootClass_Message(cl, o, msg);
 		break;
 
 	case SCCM_RunProcess:
-		Result = (ULONG) RootClass_RunProcess(cl, o, msg);
+		Result = (IPTR) RootClass_RunProcess(cl, o, msg);
 		break;
 
 	case SCCM_AddToClipboard:
-		Result = (ULONG) RootClass_AddToClipboard(cl, o, msg);
+		Result = (IPTR) RootClass_AddToClipboard(cl, o, msg);
 		break;
 
 	case SCCM_ClearClipboard:
-		Result = (ULONG) RootClass_ClearClipboard(cl, o, msg);
+		Result = (IPTR) RootClass_ClearClipboard(cl, o, msg);
 		break;
 
 	case SCCM_GetLocalizedString:
-		Result = (ULONG) RootClass_GetLocalizedString(cl, o, msg);
+		Result = (IPTR) RootClass_GetLocalizedString(cl, o, msg);
 		break;
 
 	case SCCM_WindowStartComplete:
@@ -188,7 +188,7 @@ static ULONG RootClass_Dispatcher(Class *cl, Object *o, Msg msg)
 		break;
 
 	case SCCM_AddListener:
-		Result = (ULONG) RootClass_AddListener(cl, o, msg);
+		Result = (IPTR) RootClass_AddListener(cl, o, msg);
 		break;
 
 	case SCCM_RemListener:
@@ -204,7 +204,7 @@ static ULONG RootClass_Dispatcher(Class *cl, Object *o, Msg msg)
 }
 
 
-static ULONG RootClass_New(Class *cl, Object *o, Msg msg)
+static IPTR RootClass_New(Class *cl, Object *o, Msg msg)
 {
 	o = (Object *) DoSuperMethodA(cl, o, msg);
 	if (o)	
@@ -212,11 +212,11 @@ static ULONG RootClass_New(Class *cl, Object *o, Msg msg)
 		struct RootClassInstance *inst = INST_DATA(cl, o);
 		struct opSet *ops = (struct opSet *) msg;
 
-		inst->rci_RootList.rl_WindowTask = (struct ScaWindowTask *) GetTagData(SCCA_WindowTask, (ULONG)NULL, ops->ops_AttrList);
+		inst->rci_RootList.rl_WindowTask = (struct ScaWindowTask *) GetTagData(SCCA_WindowTask, (IPTR)NULL, ops->ops_AttrList);
 		inst->rci_RootList.rl_internInfos = &iInfos.xii_iinfos;
 		}
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 
@@ -380,7 +380,7 @@ static ULONG RootClass_RunProcess(Class *cl, Object *o, Msg msg)
 
 	d1(kprintf("%s/%s/%ld: iwt=%08lx  <%s>\n", __FILE__, __FUNC__, __LINE__, iwt, iwt->iwt_WinTitle, mrp->mrp_ReplyPort));
 
-	if (SCCV_RunProcess_WaitReply == (ULONG) mrp->mrp_ReplyPort)
+	if (SCCV_RunProcess_WaitReply == (IPTR) mrp->mrp_ReplyPort)
 		{
 		if (ScalosAttemptSemaphoreShared(&iwt->iwt_ChildProcessSemaphore))
 			{
@@ -389,7 +389,7 @@ static ULONG RootClass_RunProcess(Class *cl, Object *o, Msg msg)
 			d1(kprintf("%s/%s/%ld: wt_IconPort=%08lx\n", __FILE__, __FUNC__, __LINE__, iwt->iwt_WindowTask.wt_IconPort));
 
 			Result = RunProcess(&iwt->iwt_WindowTask, mrp->mrp_EntryPoint,
-				(mrp->mrp_ArgSize + 3) / sizeof(LONG),
+				(mrp->mrp_ArgSize + 3) / sizeof(IPTR),
 				(struct WBArg *) mrp->mrp_Args, iwt->iwt_WindowTask.wt_IconPort);
 
 			if (Result)
@@ -417,7 +417,7 @@ static ULONG RootClass_AddToClipboard(Class *cl, Object *o, Msg msg)
 	struct msg_AddToClipboard *acp = (struct msg_AddToClipboard *) msg;
 	BPTR destDirLock;
 	BPTR newLock = (BPTR)NULL;
-	ULONG IconType = 0;
+	IPTR IconType = 0;
 	struct FileTransArg *fta;
 
 	d1(kprintf("%s/%s/%ld: in=%08lx  <%s>  Opcode=%ld  Clipboard=%08lx\n", \
@@ -506,11 +506,11 @@ static ULONG RootClass_ClearClipboard(Class *cl, Object *o, Msg msg)
 }
 
 
-static ULONG RootClass_GetLocalizedString(Class *cl, Object *o, Msg msg)
+static IPTR RootClass_GetLocalizedString(Class *cl, Object *o, Msg msg)
 {
 	struct msg_GetLocString *mgl = (struct msg_GetLocString *) msg;
 
-	return (ULONG) GetLocString(mgl->mgl_StringID);
+	return (IPTR) GetLocString(mgl->mgl_StringID);
 }
 
 
@@ -700,7 +700,7 @@ static void UnShadowIcon(struct internalScaWindowTask *iwt, struct ScaIconNode *
 					// we found the icon
 					struct ScaIconNode inCopy;
 					struct ScaIconNode *IconList = &inCopy;
-					ULONG UserFlags = 0L;
+					IPTR UserFlags = 0L;
 
 					GetAttr(IDTA_UserFlags, in2->in_Icon, &UserFlags);
 					UserFlags &= ~ICONOBJ_USERFLAGF_DrawShadowed;

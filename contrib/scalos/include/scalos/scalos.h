@@ -73,6 +73,10 @@
 #include <scalos/scalosgfx.h>
 #endif
 
+#ifndef PREFS_SCA_MENU_H
+#include <scalos/menu.h>
+#endif
+
 #ifndef SCALOS_UNDO_H
 #include <scalos/undo.h>
 #endif
@@ -606,7 +610,7 @@ struct SM_MenuCmd
 struct SM_RunMenuCmd
 	{
 	struct ScalosMessage    ScalosMessage;
-	struct ScalosMenuTree	*smrm_MenuItem;
+	struct SCALOS_MENUTREE	*smrm_MenuItem;
 	struct ScaIconNode	*smrm_IconNode;
 	ULONG			smrm_Flags;
 	};

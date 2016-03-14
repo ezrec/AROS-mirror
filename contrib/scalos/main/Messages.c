@@ -511,6 +511,7 @@ static ULONG UpdateIconMsg(struct internalScaWindowTask *iwt, struct Message *ms
 static ULONG AddIconMsg(struct internalScaWindowTask *iwt, struct Message *msg, APTR p)
 {
 	struct SM_AddIcon *smai = (struct SM_AddIcon *) msg;
+        ULONG *x_ptr;
 	ULONG Result;
 
 	Result = DoMethod(iwt->iwt_WindowTask.mt_MainObject,
@@ -518,7 +519,8 @@ static ULONG AddIconMsg(struct internalScaWindowTask *iwt, struct Message *msg, 
 		SCCM_ADDICON_MAKEXY(smai->smai_x, smai->smai_y),
 		smai->smai_DirLock, smai->smai_IconName);
 
-	*((ULONG *) &(smai->smai_x)) = Result;
+        x_ptr = (ULONG *) &smai->smai_x;
+	*x_ptr = Result;
 
 	return 0;
 }
@@ -697,7 +699,7 @@ static ULONG RedrawIconObjectMsg(struct internalScaWindowTask *iwt, struct Messa
 				{
 				if (smrio->smrio_Flags & SMRIOFLAGF_HightlightOn)
 					{
-					ULONG IconUserFlags;
+					IPTR IconUserFlags;
 
 					d1(KPrintF("%s/%s/%ld: SMRIOFLAGF_HightlightOn\n", __FILE__, __FUNC__, __LINE__));
 
@@ -712,7 +714,7 @@ static ULONG RedrawIconObjectMsg(struct internalScaWindowTask *iwt, struct Messa
 					}
 				else if (smrio->smrio_Flags & SMRIOFLAGF_HightlightOff)
 					{
-					ULONG IconUserFlags;
+					IPTR IconUserFlags;
 
 					d1(KPrintF("%s/%s/%ld: SMRIOFLAGF_HightlightOff\n", __FILE__, __FUNC__, __LINE__));
 

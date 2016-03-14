@@ -60,9 +60,9 @@ struct ScaWindowStruct *OpenDrawerByName(CONST_STRPTR Path, struct TagItem *TagL
 			{
 			d1(KPrintF("%s/%s/%ld: open device window Path=<%s>\n", __FILE__, __FUNC__, __LINE__, Path));
 			SCA_OpenIconWindowTags(
-				SCA_Path, (ULONG) Path,
+				SCA_Path, (IPTR) Path,
 				SCA_CheckOverlappingIcons, CurrentPrefs.pref_CheckOverlappingIcons,
-				TAG_MORE, (ULONG) TagList,
+				TAG_MORE, (IPTR) TagList,
 				TAG_END
 				);
 			}
@@ -93,9 +93,9 @@ struct ScaWindowStruct *OpenDrawerByName(CONST_STRPTR Path, struct TagItem *TagL
 
 			SCA_OpenIconWindowTags(
 				SCA_CheckOverlappingIcons, CurrentPrefs.pref_CheckOverlappingIcons,
-				SCA_IconObject, (ULONG) iconObj,
-				SCA_WindowStruct, (ULONG) &Result,
-				TAG_MORE, (ULONG) TagList,
+				SCA_IconObject, (IPTR) iconObj,
+				SCA_WindowStruct, (IPTR) &Result,
+				TAG_MORE, (IPTR) TagList,
 				TAG_END
 				);
 			}
@@ -180,8 +180,8 @@ static Object *ReadIconObject_NoFail(CONST_STRPTR Path)
 			d1(kprintf("%s/%s/%ld  wa_Lock=%08lx  wa_Name=<%s>\n", __FILE__, __FUNC__, __LINE__, OriginalLocation.wa_Lock, OriginalLocation.wa_Name));
 
 			iconObj = GetDefIconObjectTags(WBDRAWER, 
-				IDTA_IconLocation, (ULONG) &OriginalLocation,
-				DTA_Name, (ULONG) Path,
+				IDTA_IconLocation, (IPTR) &OriginalLocation,
+				DTA_Name, (IPTR) Path,
 				TAG_END);
 
 			d1(kprintf("%s/%s/%ld  iconObj=%08lx\n", __FILE__, __FUNC__, __LINE__, iconObj));

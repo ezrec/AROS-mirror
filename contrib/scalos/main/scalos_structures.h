@@ -16,6 +16,7 @@
 #include <libraries/gadtools.h>
 #include "Semaphores.h"
 #include <scalos/scalos.h>
+#include <scalos/menu.h>
 #include <scalos/pattern.h>
 #include <scalos/scalosprefs.h>
 #include <scalos/scalosgfx.h>
@@ -1284,7 +1285,7 @@ struct FileTypeDef
 
 	STRPTR ftd_Description;				// textual description of file type
 
-	struct ScalosMenuTree *ftd_DefaultAction;	// default action on double click
+	struct SCALOS_MENUTREE *ftd_DefaultAction;	// default action on double click
 
 	BPTR ftd_FileTypesDirLock;			// Lock on filetype descriptions' directory
 

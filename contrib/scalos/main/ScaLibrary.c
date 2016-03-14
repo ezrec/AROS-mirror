@@ -160,7 +160,7 @@ LIBFUNC_P6(struct AppObject *, sca_NewAddAppIcon,
 		appo->appo_object.appoo_IconObject = iconObj;
 		appo->appo_TagList = CloneTagItems(TagList);
 
-		renderHook = (struct Hook *) GetTagData(WBAPPICONA_RenderHook, (ULONG)NULL, TagList);
+		renderHook = (struct Hook *) GetTagData(WBAPPICONA_RenderHook, (IPTR)NULL, TagList);
 
 		SetAttrs(iconObj,
 			IDTA_Type, WBAPPICON,
@@ -186,11 +186,11 @@ LIBFUNC_P6(struct AppObject *, sca_NewAddAppIcon,
 			IDTA_TextMode, CurrentPrefs.pref_TextMode,
 			IDTA_TextDrawMode, FontPrefs.fprf_TextDrawMode,
 			IDTA_TextBackPen, FontPrefs.fprf_FontBackPen,
-			IDTA_Font, (ULONG) iwt->iwt_IconFont,
-			IDTA_Fonthandle, (ULONG) &iwt->iwt_IconTTFont,
-			IDTA_FontHook, (ULONG) (TTEngineBase ? &ScalosFontHook : NULL),
-			IDTA_RenderHook, (ULONG) renderHook,
-			IDTA_SizeConstraints, (ULONG) &iInfos.xii_iinfos.ii_AppWindowStruct->ws_IconSizeConstraints,
+			IDTA_Font, (IPTR) iwt->iwt_IconFont,
+			IDTA_Fonthandle, (IPTR) &iwt->iwt_IconTTFont,
+			IDTA_FontHook, (IPTR) (TTEngineBase ? &ScalosFontHook : NULL),
+			IDTA_RenderHook, (IPTR) renderHook,
+			IDTA_SizeConstraints, (IPTR) &iInfos.xii_iinfos.ii_AppWindowStruct->ws_IconSizeConstraints,
 			IDTA_ScalePercentage, iInfos.xii_iinfos.ii_AppWindowStruct->ws_IconScaleFactor,
 			TAG_END);
 
@@ -781,10 +781,10 @@ LIBFUNC_P6(struct AppObject *, sca_NewAddAppMenuItem,
 		if (NULL == appo)
 			break;
 
-		CmdString = (STRPTR) GetTagData(WBAPPMENUA_CommandKeyString, (ULONG) "", TagList);
+		CmdString = (STRPTR) GetTagData(WBAPPMENUA_CommandKeyString, (IPTR) "", TagList);
 
-		SubKey = (struct AppMenuInfo **) GetTagData(WBAPPMENUA_GetKey, (ULONG)NULL, TagList);
-		TitleKey = (struct AppMenuInfo **) GetTagData(WBAPPMENUA_GetTitleKey, (ULONG)NULL, TagList);
+		SubKey = (struct AppMenuInfo **) GetTagData(WBAPPMENUA_GetKey, (IPTR)NULL, TagList);
+		TitleKey = (struct AppMenuInfo **) GetTagData(WBAPPMENUA_GetTitleKey, (IPTR)NULL, TagList);
 
 		appo->appo_Kennung = ID_SC;
 		appo->appo_type = APPTYPE_AppMenuItem;
@@ -826,7 +826,7 @@ LIBFUNC_P6(struct AppObject *, sca_NewAddAppMenuItem,
 			*SubKey = appo->appo_object.appoo_MenuInfo;
 			}
 
-		appo->appo_object.appoo_MenuInfo->ami_Parent = (struct AppMenuInfo *) GetTagData(WBAPPMENUA_UseKey, (ULONG)NULL, TagList);
+		appo->appo_object.appoo_MenuInfo->ami_Parent = (struct AppMenuInfo *) GetTagData(WBAPPMENUA_UseKey, (IPTR)NULL, TagList);
 
 		if (appo->appo_object.appoo_MenuInfo->ami_Parent)
 			{
@@ -997,7 +997,7 @@ LIBFUNC_P4(BOOL, sca_WBStart,
 
 		if (!(wblArg->wbl_IO.wbl_Input.wbli_Flags & SCAF_WBStart_NoIcon))
 			{
-			IconObject = (Object *) GetTagData(SCA_IconObject, (ULONG)NULL, TagList);
+			IconObject = (Object *) GetTagData(SCA_IconObject, (IPTR)NULL, TagList);
 
 			d1(KPrintF("%s/%s/%ld: IconObject=%08lx\n", __FILE__, __FUNC__, __LINE__, IconObject));
 
@@ -1010,7 +1010,9 @@ LIBFUNC_P4(BOOL, sca_WBStart,
 
 				if (IconObject)
 					{
-					GetAttr(IDTA_Stacksize, IconObject, &wblArg->wbl_IO.wbl_Input.wbli_StackSize);
+                                        IPTR stackSize = 0;
+					GetAttr(IDTA_Stacksize, IconObject, &stackSize);
+                                        wblArg->wbl_IO.wbl_Input.wbli_StackSize = stackSize;
 
 					if (!CheckProject(IconObject, &wblArg->wbl_IO.wbl_Input, &cliStart, &RexxStart, &Arg0Locked))
 						{
@@ -1068,8 +1070,8 @@ LIBFUNC_P4(BOOL, sca_WBStart,
 			newProc = CreateNewProcTags(NP_CurrentDir, NULL,
 				NP_WindowPtr, NULL,
 				NP_Priority, wblArg->wbl_IO.wbl_Input.wbli_Priority,
-				NP_Name, (ULONG) "WBL",
-				NP_Entry, (ULONG) PATCH_NEWFUNC(WblTask),
+				NP_Name, (IPTR) "WBL",
+				NP_Entry, (IPTR) PATCH_NEWFUNC(WblTask),
 				TAG_END);
 			if (NULL == newProc)
 				break;
@@ -1258,7 +1260,7 @@ static BOOL CheckProject(Object *IconObject, struct WblInput *wbli, BOOL *cliSta
 {
 	Object *DefaultIconObject = NULL;
 	STRPTR Path = NULL;
-	ULONG IconType;
+	IPTR IconType;
 	ULONG ul;
 	STRPTR tt;
 
@@ -1442,7 +1444,7 @@ LIBFUNC_P5(struct ScalosClass *, sca_MakeScalosClass,
 
 		d1(kprintf("%s/%s/%ld: NewScalosClass=%08lx\n", __FILE__, __FUNC__, __LINE__, NewScalosClass));
 
-		NewClass->cl_UserData = (ULONG) NewScalosClass;
+		NewClass->cl_UserData = (IPTR) NewScalosClass;
 		NewScalosClass->sccl_class = NewClass;
 		NewScalosClass->sccl_name = (STRPTR) ClassName;
 
@@ -2831,8 +2833,8 @@ static STRPTR ChkPrjRequestFile(struct WBArg *arg)
 		// AllocAslRequest()
 		fileReq = AllocAslRequestTags(ASL_FileRequest,
 				ASLFR_PrivateIDCMP, TRUE,
-				ASLFR_Screen, (ULONG) iInfos.xii_iinfos.ii_Screen,
-				ASLFR_TitleText, (ULONG) GetLocString(MSGID_REQ_SELECTDEFTOOL),
+				ASLFR_Screen, (IPTR) iInfos.xii_iinfos.ii_Screen,
+				ASLFR_TitleText, (IPTR) GetLocString(MSGID_REQ_SELECTDEFTOOL),
 				ASLFR_DoSaveMode, FALSE,
 				ASLFR_RejectIcons, TRUE,
 				TAG_END);
@@ -2842,8 +2844,8 @@ static STRPTR ChkPrjRequestFile(struct WBArg *arg)
 
 		// AslRequest()
 		Success = AslRequestTags(fileReq,
-				ASLFR_InitialFile, (ULONG) arg->wa_Name,
-				ASLFR_InitialDrawer, (ULONG) Path,
+				ASLFR_InitialFile, (IPTR) arg->wa_Name,
+				ASLFR_InitialDrawer, (IPTR) Path,
 				TAG_END);
 
 		if (Success)

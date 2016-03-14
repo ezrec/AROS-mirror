@@ -113,8 +113,8 @@ void UseAsyncRequestArgs(struct internalScaWindowTask *iwt,
 		msg->smrq_ez.es_GadgetFormat = (STRPTR) GetLocString(GadgetTextNum);
 
 		RequestProc = CreateNewProcTags(NP_WindowPtr, NULL,
-			NP_Name, (ULONG) "Scalos_Request",
-			NP_Entry, (ULONG) PATCH_NEWFUNC(RequestTask),
+			NP_Name, (IPTR) "Scalos_Request",
+			NP_Entry, (IPTR) PATCH_NEWFUNC(RequestTask),
 			TAG_END);
 
 		if (RequestProc)

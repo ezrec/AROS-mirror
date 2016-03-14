@@ -116,10 +116,11 @@ FILES :=	about                   	\
 		Patches-aros			\
 		ScaLibrary-aros
 
+NOWARN_FLAGS := -Wno-discarded-qualifiers
 USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include -idirafter $(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../common/McpGfx \
     -I$(SRCDIR)/$(CURDIR)/../common/Fs -I$(SRCDIR)/$(CURDIR)/../common/Int64 -I$(SRCDIR)/$(CURDIR)
 SCALOS_LOCALE := Scalos_Locale.h
-USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -D__REXXSYSLIB_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ \
+USER_CFLAGS := $(NOWARN_FLAGS) -D__UTILITY_STDLIBBASE__ -D__REXXSYSLIB_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ \
     -D__CONSOLE_STDLIBBASE__ -DSCALOSLOCALE=$(SCALOS_LOCALE)
 TARGETDIR := $(AROS_CONTRIB)/Scalos
 

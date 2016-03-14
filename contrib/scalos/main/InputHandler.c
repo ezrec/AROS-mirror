@@ -226,7 +226,7 @@ static BOOL PretestPopupMenu(const struct InputEvent *ie)
 		if (inUnderPointer)
 			{
 			// Pointer is over icon
-			ULONG IconType;
+			IPTR IconType;
 
 			GetAttr(IDTA_Type, inUnderPointer->in_Icon, &IconType);
 

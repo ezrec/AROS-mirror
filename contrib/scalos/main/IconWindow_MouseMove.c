@@ -351,7 +351,7 @@ void IDCMPDragMouseMove(struct internalScaWindowTask *iwt, struct IntuiMessage *
 			case OUM_Icon:
 				if (iwt->iwt_DragMayDrop && iwt->iwt_IconUnderPtr)
 					{
-					ULONG IconType;
+					IPTR IconType;
 
 					GetAttr(IDTA_Type, iwt->iwt_IconUnderPtr->in_Icon, &IconType);
 
@@ -483,7 +483,7 @@ static LONG GetSourceDestScaSameLock(struct internalScaWindowTask *iwt)
 
 		if (iwt->iwt_IconUnderPtr)
 			{
-			ULONG IconType;
+			IPTR IconType;
 
 			GetAttr(IDTA_Type, iwt->iwt_IconUnderPtr->in_Icon, &IconType);
 
@@ -523,7 +523,7 @@ static LONG GetSourceDestScaSameLock(struct internalScaWindowTask *iwt)
 static BPTR GetIconLock(struct internalScaWindowTask *iwt, struct ScaIconNode *in)
 {
 	BPTR iLock;
-	ULONG IconType;
+	IPTR IconType;
 
 	GetAttr(IDTA_Type, in->in_Icon, &IconType);
 
@@ -587,7 +587,7 @@ static ULONG DragMayCopy(struct internalScaWindowTask *iwt, ULONG Qualifier)
 {
 	struct DragNode *dn;
 	ULONG DrawDragFlags = 0l;
-	ULONG IconType;
+	IPTR IconType;
 	BOOL isBackDropIcon = FALSE;
 
 	DrawDragFlags &= ~(SCAF_Drag_IndicateCopy | SCAF_Drag_IndicateMakeLink | SCAF_Drag_ForceMove);

@@ -628,7 +628,7 @@ void ReadFontPrefs(void)
 
 		InitIFFasDOS(iff);
 
-		iff->iff_Stream = (ULONG) Open("ENV:sys/font.prefs", MODE_OLDFILE);
+		iff->iff_Stream = (IPTR) Open("ENV:sys/font.prefs", MODE_OLDFILE);
 
 		d1(KPrintF("%s/%s/%ld: iff_Stream=%08lx\n", __FILE__, __FUNC__, __LINE__, iff->iff_Stream));
 		if (0 == iff->iff_Stream)
@@ -1221,7 +1221,7 @@ BOOL ReadScalosPrefs(void)
 		NewPrefs->pref_ScreenTitle = GetPrefsConfigString(NewPrefs->pref_Handle, SCP_ScreenTitle, DefaultScreenTitle);
 
 		SetAttrs(ScreenTitleObject,
-			SCCA_Title_Format, (ULONG) NewPrefs->pref_ScreenTitle,
+			SCCA_Title_Format, (IPTR) NewPrefs->pref_ScreenTitle,
 			TAG_END);
 
 		NewPrefs->pref_MainWindowTitle = GetPrefsConfigString(NewPrefs->pref_Handle, SCP_RootWinTitle, DefaultMainWindowTitle);
@@ -1449,7 +1449,7 @@ BOOL ReadScalosPrefs(void)
 			}
 
 		SetAttrs(ScreenTitleObject,
-			SCCA_Title_Format, (ULONG) NewPrefs->pref_ScreenTitle,
+			SCCA_Title_Format, (IPTR) NewPrefs->pref_ScreenTitle,
 			TAG_END);
 
 		ps = FindPreferences(NewPrefs->pref_Handle, ID_MAIN, SCP_TextMode_ListColumns);

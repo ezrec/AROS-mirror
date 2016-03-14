@@ -521,12 +521,12 @@ static ULONG IDCMPMenuPick(struct internalScaWindowTask *iwt, struct IntuiMessag
 	while ((WORD) MENUNULL != code)
 		{
 		struct MenuItem *mItem = ItemAddress(MainMenu, code);
-		struct ScalosMenuTree *mTree;
+		struct SCALOS_MENUTREE *mTree;
 
 		if (NULL == mItem)
 			break;
 
-		mTree = (struct ScalosMenuTree *) GTMENUITEM_USERDATA(mItem);
+		mTree = (struct SCALOS_MENUTREE *) GTMENUITEM_USERDATA(mItem);
 		if (mTree)
 			{
 			struct AppObject *appo = (struct AppObject *) mTree;
@@ -1294,7 +1294,7 @@ static void ArrowUp(struct internalScaWindowTask *iwt, struct IntuiMessage *iMsg
 
 static void SetPropBottom(struct internalScaWindowTask *iwt)
 {
-	ULONG Top;
+	IPTR Top;
 
 	GetAttr(PGA_Top, (Object *) iwt->iwt_PropBottom, &Top);
 
@@ -1329,7 +1329,7 @@ static void SetPropBottom(struct internalScaWindowTask *iwt)
 
 static void SetPropSide(struct internalScaWindowTask *iwt)
 {
-	ULONG Top;
+	IPTR Top;
 
 	GetAttr(PGA_Top, (Object *) iwt->iwt_PropSide, &Top);
 

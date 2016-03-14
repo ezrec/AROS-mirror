@@ -65,7 +65,7 @@ LIBFUNC_P3_PROTO(struct Window *, sca_OpenWindowTagList,
 
 LIBFUNC_P1_PROTO(LONG, sca_CloseWorkBench,
 	A6, struct IntuitionBase *, iBase, 0);
-LIBFUNC_P1_PROTO(LONG, sca_OpenWorkBench,
+LIBFUNC_P1_PROTO(IPTR, sca_OpenWorkBench,
 	A6, struct IntuitionBase *, iBase, 0);
 LIBFUNC_P8_PROTO(struct AppIcon *, sca_AddAppIconA,
 	D0, ULONG, Id,

@@ -83,7 +83,7 @@ struct IconListNode
 
 static SAVEDS(ULONG) IconWindowClass_Dispatcher(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_ReadIconList(Class *cl, Object *o, Msg msg);
-static ULONG IconWindowClass_ReadIcon(Class *cl, Object *o, Msg msg);
+static IPTR IconWindowClass_ReadIcon(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_Message(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_ScheduleUpdate(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_ShowIconToolTip(Class *cl, Object *o, Msg msg);
@@ -95,12 +95,12 @@ static ULONG IconWindowClass_DragLeave(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_DragDrop(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_Set(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_Get(Class *cl, Object *o, Msg msg);
-static ULONG IconWindowClass_New(Class *cl, Object *o, Msg msg);
+static IPTR IconWindowClass_New(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_Dispose(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_Open(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_UpdateIcon(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_UpdateIconTags(Class *cl, Object *o, Msg msg);
-static ULONG IconWindowClass_AddIcon(Class *cl, Object *o, Msg msg);
+static IPTR IconWindowClass_AddIcon(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_RemIcon(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_MakeWbArg(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_CountWbArg(Class *cl, Object *o, Msg msg);
@@ -112,9 +112,9 @@ static ULONG IconWindowClass_DrawIcon(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_LayoutIcon(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_Ping(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_RawKey(Class *cl, Object *o, Msg msg);
-static ULONG IconWindowClass_GetDefIcon(Class *cl, Object *o, Msg msg);
+static IPTR IconWindowClass_GetDefIcon(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_MenuCommand(Class *cl, Object *o, Msg msg);
-static ULONG IconWindowClass_NewViewMode(Class *cl, Object *o, Msg msg);
+static IPTR IconWindowClass_NewViewMode(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_DeltaMove(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_UnCleanup(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_UnCleanupRegion(Class *cl, Object *o, Msg msg);
@@ -152,7 +152,7 @@ static ULONG IconWindowClass_Browse(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_StartPopOpenTimer(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_StopPopOpenTimer(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_AddUndoEvent(Class *cl, Object *o, Msg msg);
-static ULONG IconWindowClass_BeginUndoStep(Class *cl, Object *o, Msg msg);
+static IPTR IconWindowClass_BeginUndoStep(Class *cl, Object *o, Msg msg);
 static ULONG IconWindowClass_EndUndoStep(Class *cl, Object *o, Msg msg);
 
 static SAVEDS(ULONG) IconWinBrowseProc(APTR aptr, struct SM_RunProcess *msg);
@@ -554,14 +554,14 @@ static ULONG IconWindowClass_ReadIconList(Class *cl, Object *o, Msg msg)
 }
 
 
-static ULONG IconWindowClass_ReadIcon(Class *cl, Object *o, Msg msg)
+static IPTR IconWindowClass_ReadIcon(Class *cl, Object *o, Msg msg)
 {
 	struct internalScaWindowTask *iwt = (struct internalScaWindowTask *) ((struct ScaRootList *) o)->rl_WindowTask;
 	struct msg_ReadIcon *mri = (struct msg_ReadIcon *) msg;
 
 	d1(kprintf("%s/%s/%ld: wt_Window=%08lx\n", __FILE__, __FUNC__, __LINE__, iwt->iwt_WindowTask.wt_Window));
 
-	return (ULONG) IconWindowReadIcon(iwt, mri->mri_Name, mri->mri_ria);
+	return (IPTR) IconWindowReadIcon(iwt, mri->mri_Name, mri->mri_ria);
 }
 
 
@@ -848,7 +848,7 @@ static ULONG IconWindowClass_RawKey(Class *cl, Object *o, Msg msg)
 
 		if (Actual > 0)
 			{
-			ULONG fTyping = FALSE;
+			IPTR fTyping = FALSE;
 
 			KeyBuffer[Actual] = '\0';
 
@@ -1012,8 +1012,8 @@ static ULONG IconWindowClass_Set(Class *cl, Object *o, Msg msg)
 						if (NULL == iwt->iwt_StatusBarMembers[STATUSBARGADGET_Reading])
 							{
 							iwt->iwt_StatusBarMembers[STATUSBARGADGET_Reading] = (struct Gadget *) SCA_NewScalosObjectTags("GadgetBarImage.sca",
-								DTA_Name, (ULONG) "THEME:Window/StatusBar/Reading",
-								GBIDTA_WindowTask, (ULONG) iwt,
+								DTA_Name, (IPTR) "THEME:Window/StatusBar/Reading",
+								GBIDTA_WindowTask, (IPTR) iwt,
 								GA_ID, SBAR_GadgetID_Reading,
 								TAG_END);
 
@@ -1050,8 +1050,8 @@ static ULONG IconWindowClass_Set(Class *cl, Object *o, Msg msg)
 						if (NULL == iwt->iwt_StatusBarMembers[STATUSBARGADGET_Typing])
 							{
 							iwt->iwt_StatusBarMembers[STATUSBARGADGET_Typing] = (struct Gadget *) SCA_NewScalosObjectTags("GadgetBarImage.sca",
-								DTA_Name, (ULONG) "THEME:Window/StatusBar/Typing",
-								GBIDTA_WindowTask, (ULONG) iwt,
+								DTA_Name, (IPTR) "THEME:Window/StatusBar/Typing",
+								GBIDTA_WindowTask, (IPTR) iwt,
 								GA_ID, SBAR_GadgetID_Typing,
 								TAG_END);
 
@@ -1145,7 +1145,7 @@ static ULONG IconWindowClass_Get(Class *cl, Object *o, Msg msg)
 	switch (opg->opg_AttrID)
 		{
 	case SCCA_IconWin_IconSizeConstraints:
-		*opg->opg_Storage = (ULONG) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints;
+		*opg->opg_Storage = (IPTR) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints;
 		break;
 
 	case SCCA_IconWin_IconScaleFactor:
@@ -1197,23 +1197,23 @@ static ULONG IconWindowClass_Get(Class *cl, Object *o, Msg msg)
 		break;
 
 	case SCCA_IconWin_IconFont:
-		*opg->opg_Storage = (ULONG) iwt->iwt_IconFont;
+		*opg->opg_Storage = (IPTR) iwt->iwt_IconFont;
 		break;
 	
 	case SCCA_IconWin_LayersLocked:
-		*opg->opg_Storage = (ULONG) iwt->iwt_LockFlag;
+		*opg->opg_Storage = (IPTR) iwt->iwt_LockFlag;
 		break;
 
 	case SCCA_IconWin_ThumbnailView:
-		*opg->opg_Storage = (ULONG) iwt->iwt_ThumbnailMode;
+		*opg->opg_Storage = (IPTR) iwt->iwt_ThumbnailMode;
 		break;
 
 	case SCCA_IconWin_ThumbnailsGenerating:
-		*opg->opg_Storage = (ULONG) iwt->iwt_ThumbnailGenerationPending;
+		*opg->opg_Storage = (IPTR) iwt->iwt_ThumbnailGenerationPending;
 		break;
 
 	case SCCA_IconWin_ControlBar:
-		*opg->opg_Storage = (ULONG) !(iwt->iwt_WindowTask.mt_WindowStruct->ws_MoreFlags & WSV_MoreFlagF_NoControlBar);
+		*opg->opg_Storage = (IPTR) !(iwt->iwt_WindowTask.mt_WindowStruct->ws_MoreFlags & WSV_MoreFlagF_NoControlBar);
 		break;
 
 	default:
@@ -1226,7 +1226,7 @@ static ULONG IconWindowClass_Get(Class *cl, Object *o, Msg msg)
 
 //----------------------------------------------------------------------------
 
-static ULONG IconWindowClass_New(Class *cl, Object *o, Msg msg)
+static IPTR IconWindowClass_New(Class *cl, Object *o, Msg msg)
 {
 	struct internalScaWindowTask *iwt;
 
@@ -1262,7 +1262,7 @@ static ULONG IconWindowClass_New(Class *cl, Object *o, Msg msg)
 		DoMethod(o, SCCM_IconWin_StartNotify);
 		}
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 //----------------------------------------------------------------------------
@@ -1375,7 +1375,7 @@ static ULONG IconWindowClass_UpdateIconTags(Class *cl, Object *o, Msg msg)
 
 //----------------------------------------------------------------------------
 
-static ULONG IconWindowClass_AddIcon(Class *cl, Object *o, Msg msg)
+static IPTR IconWindowClass_AddIcon(Class *cl, Object *o, Msg msg)
 {
 	//struct internalScaWindowTask *iwt = (struct internalScaWindowTask *) ((struct ScaRootList *) o)->rl_WindowTask;
 	struct msg_AddIcon *mai = (struct msg_AddIcon *) msg;
@@ -1404,7 +1404,7 @@ static ULONG IconWindowClass_AddIcon(Class *cl, Object *o, Msg msg)
 
 	CurrentDir(oldDir);
 
-	return (ULONG) in;
+	return (IPTR) in;
 }
 
 //----------------------------------------------------------------------------
@@ -1499,7 +1499,7 @@ static ULONG IconWindowClass_MakeWbArg(Class *cl, Object *o, Msg msg)
 
 	if (mwa->mwa_Icon)
 		{
-		ULONG IconType;
+		IPTR IconType;
 
 		GetAttr(IDTA_Type, mwa->mwa_Icon->in_Icon, &IconType);
 
@@ -1616,7 +1616,7 @@ static ULONG IconWindowClass_CountWbArg(Class *cl, Object *o, Msg msg)
 
 	if (mca->mca_Icon)
 		{
-		ULONG IconType;
+		IPTR IconType;
 
 		GetAttr(IDTA_Type, mca->mca_Icon->in_Icon, &IconType);
 
@@ -1956,7 +1956,7 @@ static ULONG IconWindowClass_Ping(Class *cl, Object *o, Msg msg)
 
 //----------------------------------------------------------------------------
 
-static ULONG IconWindowClass_GetDefIcon(Class *cl, Object *o, Msg msg)
+static IPTR IconWindowClass_GetDefIcon(Class *cl, Object *o, Msg msg)
 {
 	struct internalScaWindowTask *iwt = (struct internalScaWindowTask *) ((struct ScaRootList *) o)->rl_WindowTask;
 	struct msg_GetDefIcon *mgd = (struct msg_GetDefIcon *) msg;
@@ -1970,15 +1970,15 @@ static ULONG IconWindowClass_GetDefIcon(Class *cl, Object *o, Msg msg)
 
 	IconObj = SCA_GetDefIconObjectTags(iwt->iwt_WindowTask.mt_WindowStruct->ws_Lock,
 			mgd->mgd_Name,
-			IDTA_Text, (ULONG) mgd->mgd_Name,
-//			  DTA_Name, (ULONG) mgd->mgd_Name,
+			IDTA_Text, (IPTR) mgd->mgd_Name,
+//			  DTA_Name, (IPTR) mgd->mgd_Name,
 			IDTA_Type, mgd->mgd_IconType,
 			IDTA_HalfShinePen, PalettePrefs.pal_PensList[PENIDX_HSHINEPEN],
 			IDTA_HalfShadowPen, PalettePrefs.pal_PensList[PENIDX_HSHADOWPEN],
 			IDTA_FrameTypeSel, CurrentPrefs.pref_FrameTypeSel,
 			IDTA_FrameType, CurrentPrefs.pref_FrameType,
 			IDTA_TextSkip, CurrentPrefs.pref_TextSkip,
-			IDTA_MultiLineText, (ULONG) CurrentPrefs.pref_IconTextMuliLine,
+			IDTA_MultiLineText, (IPTR) CurrentPrefs.pref_IconTextMuliLine,
 			IDTA_TextPen, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPEN],
 			IDTA_TextPenSel, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPENSEL],
 			IDTA_TextPenShadow, PalettePrefs.pal_PensList[PENIDX_ICONTEXTSHADOWPEN],
@@ -1992,10 +1992,10 @@ static ULONG IconWindowClass_GetDefIcon(Class *cl, Object *o, Msg msg)
 			IDTA_TextDrawMode, FontPrefs.fprf_TextDrawMode,
 			IDTA_TextBackPen, FontPrefs.fprf_FontBackPen,
 			IDTA_TextStyle, FS_NORMAL,
-			IDTA_Font, (ULONG) iwt->iwt_IconFont,
-			IDTA_Fonthandle, (ULONG) &iwt->iwt_IconTTFont,
-			IDTA_FontHook, (ULONG) (TTEngineBase ? &ScalosFontHook : NULL),
-			IDTA_SizeConstraints, (ULONG) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
+			IDTA_Font, (IPTR) iwt->iwt_IconFont,
+			IDTA_Fonthandle, (IPTR) &iwt->iwt_IconTTFont,
+			IDTA_FontHook, (IPTR) (TTEngineBase ? &ScalosFontHook : NULL),
+			IDTA_SizeConstraints, (IPTR) &iwt->iwt_WindowTask.mt_WindowStruct->ws_IconSizeConstraints,
 			IDTA_ScalePercentage, iwt->iwt_WindowTask.mt_WindowStruct->ws_IconScaleFactor,
 			TAG_END);
 
@@ -2010,13 +2010,13 @@ static ULONG IconWindowClass_GetDefIcon(Class *cl, Object *o, Msg msg)
 		// otherwise the taglist contains DTA_Name twice, first with deficon name,
 		// and second with mgd->mgd_Name !
 		SetAttrs(IconObj,
-			DTA_Name, (ULONG) mgd->mgd_Name,
+			DTA_Name, (IPTR) mgd->mgd_Name,
 			TAG_END);
 
 		gg->LeftEdge = gg->TopEdge = NO_ICON_POSITION_SHORT;
 		}
 
-	return (ULONG) IconObj;
+	return (IPTR) IconObj;
 }
 
 //----------------------------------------------------------------------------
@@ -2092,12 +2092,12 @@ static ULONG IconWindowClass_MenuCommand(Class *cl, Object *o, Msg msg)
 
 //----------------------------------------------------------------------------
 
-static ULONG IconWindowClass_NewViewMode(Class *cl, Object *o, Msg msg)
+static IPTR IconWindowClass_NewViewMode(Class *cl, Object *o, Msg msg)
 {
 	struct internalScaWindowTask *iwt = (struct internalScaWindowTask *) ((struct ScaRootList *) o)->rl_WindowTask;
 	struct msg_NewViewMode *mnv = (struct msg_NewViewMode *) msg;
 	struct ScaWindowStruct *ws = iwt->iwt_WindowTask.mt_WindowStruct;
-	ULONG Result = 0;
+	IPTR Result = 0;
 
 	d1(KPrintF("%s/%s/%ld: iwt=%08lx  <%s>\n", __FILE__, __FUNC__, __LINE__, iwt, iwt->iwt_WinTitle));
 
@@ -2115,8 +2115,8 @@ static ULONG IconWindowClass_NewViewMode(Class *cl, Object *o, Msg msg)
 			else
 				ws->ms_ClassName = (STRPTR) "TextWindow.sca";
 
-			Result = (ULONG) SCA_NewScalosObjectTags(ws->ms_ClassName,
-					SCCA_WindowTask, (ULONG) iwt,
+			Result = (IPTR) SCA_NewScalosObjectTags(ws->ms_ClassName,
+					SCCA_WindowTask, (IPTR) iwt,
 					TAG_END);
 
 			ScalosReleaseSemaphore(&iwt->iwt_UpdateSemaphore);
@@ -2475,8 +2475,8 @@ static ULONG IconWindowClass_AddToStatusBar(Class *cl, Object *o, Msg msg)
 		DoGadgetMethod(iwt->iwt_StatusBar, iwt->iwt_WindowTask.wt_Window, NULL,
 			OM_ADDMEMBER,
 			NULL,
-			(ULONG) mab->mab_NewMember,
-			(ULONG) mab->mab_TagList);
+			(IPTR) mab->mab_NewMember,
+			(IPTR) mab->mab_TagList);
 
 		if (iwt->iwt_WindowTask.wt_Window)
 			RefreshGList(iwt->iwt_StatusBar, iwt->iwt_WindowTask.wt_Window, NULL, 1);
@@ -2499,7 +2499,7 @@ static ULONG IconWindowClass_RemFromStatusBar(Class *cl, Object *o, Msg msg)
 		DoGadgetMethod(iwt->iwt_StatusBar, iwt->iwt_WindowTask.wt_Window, NULL,
 			OM_REMMEMBER,
 			NULL,
-			(ULONG) mrb->mrb_OldMember);
+			(IPTR) mrb->mrb_OldMember);
 
 		if (iwt->iwt_WindowTask.wt_Window)
 			RefreshGList(iwt->iwt_StatusBar, iwt->iwt_WindowTask.wt_Window, NULL, 1);
@@ -2526,7 +2526,7 @@ static ULONG IconWindowClass_UpdateStatusBar(Class *cl, Object *o, Msg msg)
 			iwt->iwt_WindowTask.wt_Window, NULL,
 			GBCL_UPDATEMEMBER,
 			NULL,			// GadgetInfo gets filled in here by DoGadgetMethod()
-			(ULONG) mub->mub_Member,
+			(IPTR) mub->mub_Member,
 			NULL);
 		}
 
@@ -2547,8 +2547,8 @@ static ULONG IconWindowClass_AddToControlBar(Class *cl, Object *o, Msg msg)
 		DoGadgetMethod(iwt->iwt_ControlBar, iwt->iwt_WindowTask.wt_Window, NULL,
 			OM_ADDMEMBER,
 			NULL,
-			(ULONG) mab->mab_NewMember,
-			(ULONG) mab->mab_TagList);
+			(IPTR) mab->mab_NewMember,
+			(IPTR) mab->mab_TagList);
 
 		if (iwt->iwt_WindowTask.wt_Window)
 			RefreshGList(iwt->iwt_ControlBar, iwt->iwt_WindowTask.wt_Window, NULL, 1);
@@ -2571,7 +2571,7 @@ static ULONG IconWindowClass_RemFromControlBar(Class *cl, Object *o, Msg msg)
 		DoGadgetMethod(iwt->iwt_ControlBar, iwt->iwt_WindowTask.wt_Window, NULL,
 			OM_REMMEMBER,
 			NULL,
-			(ULONG) mrb->mrb_OldMember);
+			(IPTR) mrb->mrb_OldMember);
 
 		if (iwt->iwt_WindowTask.wt_Window)
 			RefreshGList(iwt->iwt_ControlBar, iwt->iwt_WindowTask.wt_Window, NULL, 1);
@@ -2598,7 +2598,7 @@ static ULONG IconWindowClass_UpdateControlBar(Class *cl, Object *o, Msg msg)
 			iwt->iwt_WindowTask.wt_Window, NULL,
 			GBCL_UPDATEMEMBER,
 			NULL,			// GadgetInfo gets filled in here by DoGadgetMethod()
-			(ULONG) mub->mub_Member,
+			(IPTR) mub->mub_Member,
 			NULL);
 		}
 
@@ -2784,10 +2784,10 @@ static ULONG IconWindowClass_GetIconFileType(Class *cl, Object *o, Msg msg)
 
 		if (!IS_TYPENODE(mft->mft_IconNode->in_FileType))
 			{
-			if (mft->mft_IconNode->in_Flags & INF_TextIcon)
-				GetAttr(TIDTA_TypeNode, mft->mft_IconNode->in_Icon, (ULONG *) &mft->mft_IconNode->in_FileType);
-			else
-				GetAttr(IDTA_Type, mft->mft_IconNode->in_Icon, (ULONG *) &mft->mft_IconNode->in_FileType);
+                                if (mft->mft_IconNode->in_Flags & INF_TextIcon)
+                                        GetAttr(TIDTA_TypeNode, mft->mft_IconNode->in_Icon, (IPTR *)&mft->mft_IconNode->in_FileType);
+                                else
+                                        GetAttr(IDTA_Type, mft->mft_IconNode->in_Icon, (IPTR *)&mft->mft_IconNode->in_FileType);
 			}
 
 		d1(KPrintF("%s/%s/%ld: in_FileType=%08lx  in_Lock=%08lx\n", __FILE__, __FUNC__, __LINE__, mft->mft_IconNode->in_FileType, mft->mft_IconNode->in_Lock));
@@ -2818,7 +2818,7 @@ static ULONG IconWindowClass_GetIconFileType(Class *cl, Object *o, Msg msg)
 
 		d1(KPrintF("%s/%s/%ld: in_FileType=%08lx\n", __FILE__, __FUNC__, __LINE__, mft->mft_IconNode->in_FileType));
 
-		switch ((ULONG) mft->mft_IconNode->in_FileType)
+		switch ((IPTR)mft->mft_IconNode->in_FileType)
 			{
 		case WBDRAWER:
 		case WB_TEXTICON_DRAWER:
@@ -2883,9 +2883,9 @@ static ULONG IconWindowClass_ClearIconFileTypes(Class *cl, Object *o, Msg msg)
 
 	for (in = iwt->iwt_WindowTask.wt_IconList; in; in = (struct ScaIconNode *) in->in_Node.mln_Succ)
 		{
-		ULONG IconType;
+		IPTR IconType;
 
-		switch ((ULONG) in->in_FileType)
+		switch ((IPTR) in->in_FileType)
 			{
 		case WBTOOL:
 		case WBPROJECT:
@@ -2901,9 +2901,9 @@ static ULONG IconWindowClass_ClearIconFileTypes(Class *cl, Object *o, Msg msg)
 		}
 	for (in = iwt->iwt_WindowTask.wt_LateIconList; in; in = (struct ScaIconNode *) in->in_Node.mln_Succ)
 		{
-		ULONG IconType;
+		IPTR IconType;
 
-		switch ((ULONG) in->in_FileType)
+		switch ((IPTR) in->in_FileType)
 			{
 		case WBTOOL:
 		case WBPROJECT:
@@ -3213,7 +3213,7 @@ static ULONG IconWindowClass_NewPath(Class *cl, Object *o, Msg msg)
 		d1(KPrintF("%s/%s/%ld: isRootWindow=%ld  ws_Flags=%08lx\n", __FILE__, __FUNC__, __LINE__, isRootWindow, ws->ws_Flags));
 
 		SetAttrs(iwt->iwt_TitleObject,
-				SCCA_Title_Format, (ULONG) (ws->ws_Title ? ws->ws_Title : (STRPTR) "Scalos"),
+				SCCA_Title_Format, (IPTR) (ws->ws_Title ? ws->ws_Title : (STRPTR) "Scalos"),
 				TAG_END);
 		iwt->iwt_WinTitle = (STRPTR) DoMethod(iwt->iwt_TitleObject, SCCM_Title_Generate);
 		DoMethod(iwt->iwt_WindowTask.mt_WindowObject, SCCM_Window_SetTitle, iwt->iwt_WinTitle);
@@ -3224,7 +3224,7 @@ static ULONG IconWindowClass_NewPath(Class *cl, Object *o, Msg msg)
 		iwpNew.iwp_ShowAll = GetTagData(SCA_ShowAllMode, iwpNew.iwp_ShowAll, (struct TagItem *) npa->npa_TagList);
 		iwpNew.iwp_OpacityActive = GetTagData(SCA_TransparencyActive, iwpNew.iwp_OpacityActive, (struct TagItem *) npa->npa_TagList);
 		iwpNew.iwp_OpacityInactive = GetTagData(SCA_TransparencyInactive, iwpNew.iwp_OpacityInactive, (struct TagItem *) npa->npa_TagList);
-		newIconList = (struct ScaIconNode *) GetTagData(SCA_IconList, (ULONG) newIconList, (struct TagItem *) npa->npa_TagList);
+		newIconList = (struct ScaIconNode *) GetTagData(SCA_IconList, (IPTR) newIconList, (struct TagItem *) npa->npa_TagList);
 
 		d1(KPrintF("%s/%s/%ld: newIconList=%08lx\n", __FILE__, __FUNC__, __LINE__, newIconList));
 
@@ -3473,7 +3473,7 @@ static ULONG IconWindowClass_StartNotify(Class *cl, Object *o, Msg msg)
 
 			inst->ici_NotifyReq->nr_stuff.nr_Msg.nr_Port = iwt->iwt_WindowTask.wt_IconPort;
 			inst->ici_NotifyReq->nr_Flags = NRF_SEND_MESSAGE;
-			inst->ici_NotifyReq->nr_UserData = (ULONG)NULL;
+			inst->ici_NotifyReq->nr_UserData = (IPTR)NULL;
 
 			if (!StartNotify(inst->ici_NotifyReq))
 				break;
@@ -3566,9 +3566,9 @@ static ULONG IconWindowClass_AddUndoEvent(Class *cl, Object *o, Msg msg)
 
 //----------------------------------------------------------------------------
 
-static ULONG IconWindowClass_BeginUndoStep(Class *cl, Object *o, Msg msg)
+static IPTR IconWindowClass_BeginUndoStep(Class *cl, Object *o, Msg msg)
 {
-	return (ULONG) UndoBeginStep();
+	return (IPTR) UndoBeginStep();
 }
 
 //----------------------------------------------------------------------------
@@ -3886,11 +3886,11 @@ static void ReLayoutIcons(struct internalScaWindowTask *iwt, struct ScaIconNode 
 			IDTA_TextMode, CurrentPrefs.pref_TextMode,
 			IDTA_TextDrawMode, FontPrefs.fprf_TextDrawMode,
 			IDTA_TextBackPen, FontPrefs.fprf_FontBackPen,
-			IDTA_Font, (ULONG) iwt->iwt_IconFont,
-			IDTA_Fonthandle, (ULONG) &iwt->iwt_IconTTFont,
-			IDTA_FontHook, (ULONG) (TTEngineBase ? &ScalosFontHook : NULL),
-			TIDTA_Font, (ULONG) iwt->iwt_IconFont,
-			TIDTA_TTFont, (ULONG) &iwt->iwt_IconTTFont,
+			IDTA_Font, (IPTR) iwt->iwt_IconFont,
+			IDTA_Fonthandle, (IPTR) &iwt->iwt_IconTTFont,
+			IDTA_FontHook, (IPTR) (TTEngineBase ? &ScalosFontHook : NULL),
+			TIDTA_Font, (IPTR) iwt->iwt_IconFont,
+			TIDTA_TTFont, (IPTR) &iwt->iwt_IconTTFont,
 			TAG_END);
 
 		DoMethod(in->in_Icon, IDTM_Layout,
@@ -4400,8 +4400,8 @@ static void SetShowType(struct internalScaWindowTask *iwt, ULONG newShowType)
 			if (NULL == iwt->iwt_StatusBarMembers[STATUSBARGADGET_ShowAll])
 				{
 				iwt->iwt_StatusBarMembers[STATUSBARGADGET_ShowAll] = (struct Gadget *) SCA_NewScalosObjectTags("GadgetBarImage.sca",
-					DTA_Name, (ULONG) "THEME:Window/StatusBar/ShowAll",
-					GBIDTA_WindowTask, (ULONG) iwt,
+					DTA_Name, (IPTR) "THEME:Window/StatusBar/ShowAll",
+					GBIDTA_WindowTask, (IPTR) iwt,
 					GA_ID, SBAR_GadgetID_ShowAll,
 					TAG_END);
 
@@ -4482,7 +4482,7 @@ static void SetShowType(struct internalScaWindowTask *iwt, ULONG newShowType)
 		// but keep all thumbnail icons
 		for (in=iwt->iwt_WindowTask.wt_IconList; in; in=inNext)
 			{
-			ULONG IconUserFlags;
+			IPTR IconUserFlags;
 
 			inNext = (struct ScaIconNode *) in->in_Node.mln_Succ;
 
@@ -4669,7 +4669,7 @@ static SAVEDS(LONG) IconSortBySizeFunc(struct Hook *hook, struct ScaIconNode *in
 
 static SAVEDS(LONG) IconSortByTypeFunc(struct Hook *hook, struct ScaIconNode *in2, struct ScaIconNode *in1)
 {
-	ULONG Type1, Type2;
+	IPTR Type1, Type2;
 
 	d1(kprintf("%s/%s/%ld: in1=%08lx  in2=%08lx\n", __FILE__, __FUNC__, __LINE__, in1, in2));
 
@@ -4750,8 +4750,8 @@ static void SetThumbnailView(struct internalScaWindowTask *iwt, ULONG NewThumbna
 			if (GadgetName)
 				{
 				iwt->iwt_StatusBarMembers[STATUSBARGADGET_Thumbnails] = (struct Gadget *) SCA_NewScalosObjectTags("GadgetBarImage.sca",
-					DTA_Name, (ULONG) GadgetName,
-					GBIDTA_WindowTask, (ULONG) iwt,
+					DTA_Name, (IPTR) GadgetName,
+					GBIDTA_WindowTask, (IPTR) iwt,
 					GA_ID, GadgetID,
 					TAG_END);
 
@@ -4779,8 +4779,8 @@ static void SetThumbnailsGenerating(struct internalScaWindowTask *iwt, BOOL Thum
 				if (NULL == iwt->iwt_StatusBarMembers[STATUSBARGADGET_ThumbnailsGenerate])
 					{
 					iwt->iwt_StatusBarMembers[STATUSBARGADGET_ThumbnailsGenerate] = (struct Gadget *) SCA_NewScalosObjectTags("GadgetBarImage.sca",
-						DTA_Name, (ULONG) "THEME:Window/StatusBar/ThumbnailsGenerate",
-						GBIDTA_WindowTask, (ULONG) iwt,
+						DTA_Name, (IPTR) "THEME:Window/StatusBar/ThumbnailsGenerate",
+						GBIDTA_WindowTask, (IPTR) iwt,
 						GA_ID, SBAR_GadgetID_ThumbnailsGenerate,
 						TAG_END);
 
@@ -4816,7 +4816,7 @@ static void GetIconsTotalBoundingBox(struct internalScaWindowTask *iwt)
 
 	ScalosLockIconListShared(iwt);
 
-	iwt->iwt_IconBBox.MinX = iwt->iwt_IconBBox.MinY = LONG_MAX;
+	iwt->iwt_IconBBox.MinX = iwt->iwt_IconBBox.MinY = INT_MAX;
 	iwt->iwt_IconBBox.MaxX = iwt->iwt_IconBBox.MaxY = 0;
 
 	for (in = iwt->iwt_WindowTask.wt_IconList; in; in = (const struct ScaIconNode *) in->in_Node.mln_Succ)

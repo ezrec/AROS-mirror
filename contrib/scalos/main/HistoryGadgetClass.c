@@ -115,8 +115,8 @@ struct HistoryGadgetInstance
 
 // The functions in this module
 
-static SAVEDS(ULONG) INTERRUPT dispatchHistoryGadgetClass(Class *cl, Object *o, Msg msg);
-static ULONG HistoryGadgetNew(Class *cl, Object *o, Msg msg);
+static SAVEDS(IPTR) INTERRUPT dispatchHistoryGadgetClass(Class *cl, Object *o, Msg msg);
+static IPTR HistoryGadgetNew(Class *cl, Object *o, Msg msg);
 static ULONG HistoryGadgetDispose(Class *cl, Object *o, Msg msg);
 static ULONG HistoryGadgetSet(Class *cl, Object *o, Msg msg);
 static ULONG HistoryGadgetGet(Class *cl, Object *o, Msg msg);
@@ -170,9 +170,9 @@ struct ScalosClass *initHistoryGadgetClass(const struct PluginClass *plug)
 /**************************************************************************/
 /**********	   The HistoryGadgetCLASS class dispatcher         *********/
 /**************************************************************************/
-static SAVEDS(ULONG) INTERRUPT dispatchHistoryGadgetClass(Class *cl, Object *o, Msg msg)
+static SAVEDS(IPTR) INTERRUPT dispatchHistoryGadgetClass(Class *cl, Object *o, Msg msg)
 {
-	ULONG Result;
+	IPTR Result;
 
 	d1(kprintf("%s/%s/%ld:  Class=%08lx  SuperClass=%08lx  Method=%08lx\n", __FILE__, __FUNC__, __LINE__, cl, cl->cl_Super, msg->MethodID));
 
@@ -224,7 +224,7 @@ static SAVEDS(ULONG) INTERRUPT dispatchHistoryGadgetClass(Class *cl, Object *o, 
 
 //----------------------------------------------------------------------------
 
-static ULONG HistoryGadgetNew(Class *cl, Object *o, Msg msg)
+static IPTR HistoryGadgetNew(Class *cl, Object *o, Msg msg)
 {
 	BOOL Success = FALSE;
 
@@ -241,8 +241,8 @@ static ULONG HistoryGadgetNew(Class *cl, Object *o, Msg msg)
 		inst = INST_DATA(cl, o);
 		memset(inst, 0, sizeof(struct HistoryGadgetInstance));
 
-		inst->hgi_Active = (struct Node *) GetTagData(SCAHISTORY_Active, (ULONG) ACTIVE_NONE, ops->ops_AttrList);
-		inst->hgi_Entries = (struct List *) GetTagData(SCAHISTORY_Labels, (ULONG) NULL, ops->ops_AttrList);
+		inst->hgi_Active = (struct Node *) GetTagData(SCAHISTORY_Active, (IPTR) ACTIVE_NONE, ops->ops_AttrList);
+		inst->hgi_Entries = (struct List *) GetTagData(SCAHISTORY_Labels, (IPTR) NULL, ops->ops_AttrList);
 		inst->hgi_Hidden = GetTagData(GBDTA_Hidden, FALSE, ops->ops_AttrList);
 
 		HistoryGadgetCountEntries(inst);
@@ -266,8 +266,8 @@ static ULONG HistoryGadgetNew(Class *cl, Object *o, Msg msg)
 
 		// hgi_HistoryImage is optional
 		inst->hgi_HistoryImage = NewObject(DtImageClass, NULL,
-			DTIMG_ImageName, (ULONG) "THEME:Window/ControlBar/HistoryNormal",
-			DTIMG_SelImageName, (ULONG) "THEME:Window/ControlBar/HistorySelected",
+			DTIMG_ImageName, (IPTR) "THEME:Window/ControlBar/HistoryNormal",
+			DTIMG_SelImageName, (IPTR) "THEME:Window/ControlBar/HistorySelected",
 			TAG_END);
 		d1(KPrintF("%s/%s/%ld:  o=%08lx  hgi_HistoryImage=%08lx\n", __FILE__, __FUNC__, __LINE__, o, inst->hgi_HistoryImage));
 
@@ -283,9 +283,9 @@ static ULONG HistoryGadgetNew(Class *cl, Object *o, Msg msg)
 		d1(KPrintF("%s/%s/%ld:  gg->Width=%ld  gg->Height=%ld\n", __FILE__, __FUNC__, __LINE__, ((struct Gadget *) o)->Width, ((struct Gadget *) o)->Height));
 
 		inst->hgi_PopupFont = (struct TextFont *) GetTagData(GBTDTA_TextFont,
-			(ULONG) iInfos.xii_iinfos.ii_Screen->RastPort.Font, ops->ops_AttrList);
+			(IPTR) iInfos.xii_iinfos.ii_Screen->RastPort.Font, ops->ops_AttrList);
 		inst->hgi_PopupTTFont = (struct TTFontFamily *) GetTagData(GBTDTA_TTFont,
-			CurrentPrefs.pref_UseScreenTTFont ? (ULONG) &ScreenTTFont : 0, ops->ops_AttrList);
+			CurrentPrefs.pref_UseScreenTTFont ? (IPTR) &ScreenTTFont : 0, ops->ops_AttrList);
 
 		Success = TRUE;
 		} while (0);
@@ -296,7 +296,7 @@ static ULONG HistoryGadgetNew(Class *cl, Object *o, Msg msg)
 		o = NULL;
 		}
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 //----------------------------------------------------------------------------
@@ -403,25 +403,25 @@ static ULONG HistoryGadgetGet(Class *cl, Object *o, Msg msg)
 	switch (opg->opg_AttrID)
 		{
 	case GA_Left:	// required since gadgetclass attribute is [IS] - no support for [G]
-		*(opg->opg_Storage) = (ULONG) gg->LeftEdge;
+		*(opg->opg_Storage) = (IPTR) gg->LeftEdge;
 		break;
 	case GA_Top:	// required since gadgetclass attribute is [IS] - no support for [G]
-		*(opg->opg_Storage) = (ULONG) gg->TopEdge;
+		*(opg->opg_Storage) = (IPTR) gg->TopEdge;
 		break;
 	case GA_Width:	// required since gadgetclass attribute is [IS] - no support for [G]
-		*(opg->opg_Storage) = (ULONG) gg->Width;
+		*(opg->opg_Storage) = (IPTR) gg->Width;
 		break;
 	case GA_Height:	// required since gadgetclass attribute is [IS] - no support for [G]
-		*(opg->opg_Storage) = (ULONG) gg->Height;
+		*(opg->opg_Storage) = (IPTR) gg->Height;
 		break;
 	case SCAHISTORY_Active:
-		*(opg->opg_Storage) = (ULONG) inst->hgi_Active;
+		*(opg->opg_Storage) = (IPTR) inst->hgi_Active;
 		break;
 	case SCAHISTORY_Labels:
-		*(opg->opg_Storage) = (ULONG) inst->hgi_Entries;
+		*(opg->opg_Storage) = (IPTR) inst->hgi_Entries;
 		break;
 	case GBDTA_Hidden:
-		*(opg->opg_Storage) = (ULONG) inst->hgi_Hidden;
+		*(opg->opg_Storage) = (IPTR) inst->hgi_Hidden;
 		break;
 	default:
 		Result = DoSuperMethodA(cl, o, msg);
@@ -480,7 +480,7 @@ static ULONG HistoryGadgetLayout(Class *cl, Object *o, Msg msg)
 	// get dimensions of History popup image(s)
 	if (inst->hgi_HistoryImage)
 		{
-		ULONG Width = 0, Height = 0;
+		IPTR Width = 0, Height = 0;
 
 		GetAttr(IA_Width, inst->hgi_HistoryImage, &Width);
 		GetAttr(IA_Height, inst->hgi_HistoryImage, &Height);
@@ -622,7 +622,7 @@ static ULONG HistoryGadgetHelpTest(Class *cl, Object *o, Msg msg)
 // x, y are already relative to the Gadget position (0,0) is top left corner!
 static BOOL HistoryGadgetPointInGadget(Object *o, WORD x, WORD y)
 {
-	ULONG Width, Height;
+	IPTR Width, Height;
 
 	GetAttr(GA_Width, o, &Width);
 	GetAttr(GA_Height, o, &Height);
@@ -726,7 +726,7 @@ static ULONG HistoryGadgetHandleInput(Class *cl, Object *o, Msg msg)
 
 				d1(KPrintF("%s/%s/%ld:  hgi_Active=%ld\n", __FILE__, __FUNC__, __LINE__, inst->hgi_Active));
 
-				*gpi->gpi_Termination = (ULONG) inst->hgi_Active;
+				*gpi->gpi_Termination = (IPTR) inst->hgi_Active;
 				Result = GMR_NOREUSE | GMR_VERIFY;
 				}
 		        else
@@ -978,8 +978,8 @@ static void HistoryGadgetOpenPopupWindow(struct ScaWindowTask *wt, APTR arg)
 	struct HistoryGadgetInstance *inst = INST_DATA(cl, o);
 	ULONG Left, Top;
 	ULONG Width, Height;
-	ULONG GadgetLeft, GadgetTop, GadgetHeight;
-	ULONG checkWidth = 0, checkHeight = 0;
+	IPTR GadgetLeft, GadgetTop, GadgetHeight;
+	IPTR checkWidth = 0, checkHeight = 0;
 	struct Node *ln;
 	struct RastPort rp;
 
@@ -1181,7 +1181,7 @@ static void HistoryGadgetPopupDrawWindowLine(struct ScaWindowTask *wt, APTR arg)
 	size_t EntryLength;
 	LONG x, y;
 	struct Rectangle LineRect;
-	ULONG checkWidth;
+	IPTR checkWidth;
 	ULONG Width;
 
 	GetAttr(IA_Width, inst->hgi_CheckImage, &checkWidth);
@@ -1247,7 +1247,7 @@ static void HistoryGadgetPopupDrawWindowLine(struct ScaWindowTask *wt, APTR arg)
 	if (ln == inst->hgi_Active)
 		{
 		// for currently active line, draw checkmark
-		ULONG checkHeight;
+		IPTR checkHeight;
 
 		GetAttr(IA_Height, inst->hgi_CheckImage, &checkHeight);
 

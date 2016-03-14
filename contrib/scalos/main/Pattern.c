@@ -487,8 +487,8 @@ static BOOL SetBackFill_AsyncRead(struct internalScaWindowTask *iwt,
 
 			if (!ChildProcessRun(iwt,
 				&msg->ScalosMessage,
-				NP_CommandName, (ULONG) "Scalos_Async_Backfill",
-				NP_Name, (ULONG) "Scalos_Async_Backfill",
+				NP_CommandName, (IPTR) "Scalos_Async_Backfill",
+				NP_Name, (IPTR) "Scalos_Async_Backfill",
 				TAG_END))
 				{
 				iwt->iwt_AsyncLayoutPending = FALSE;
@@ -596,7 +596,7 @@ static BOOL ReadBackFill_NoGuiGfx(struct internalScaWindowTask *iwt, struct Patt
 {
 	struct BitMap *destBitMap = NULL;
 	struct BitMapHeader *bmhd = NULL;
-	ULONG ReallyUseFriendBitMap;
+	IPTR ReallyUseFriendBitMap;
 	BOOL Success = FALSE;
 
 	d1(KPrintF("%s/%s/%ld: START ptn=%08lx  ptn_flags=%04lx  ptinf=%08lx  scr=%08lx\n", \
@@ -613,7 +613,7 @@ static BOOL ReadBackFill_NoGuiGfx(struct internalScaWindowTask *iwt, struct Patt
 			DTA_SourceType, DTST_FILE,
 			DTA_GroupID, GID_PICTURE,
 			PDTA_Remap, !(ptNode->ptn_flags & PTNF_NoRemap),
-			PDTA_Screen, (ULONG) scr,
+			PDTA_Screen, (IPTR) scr,
 			PDTA_FreeSourceBitMap, TRUE,
 			OBP_Precision, ptNode->ptn_prec,
 			TAG_END);
@@ -627,8 +627,8 @@ static BOOL ReadBackFill_NoGuiGfx(struct internalScaWindowTask *iwt, struct Patt
 		DoMethod(ptNode->ptn_object, DTM_PROCLAYOUT, NULL, TRUE);
 
 		GetDTAttrs(ptNode->ptn_object, 
-			PDTA_DestBitMap, (ULONG) &destBitMap,
-			PDTA_BitMapHeader, (ULONG) &bmhd,
+			PDTA_DestBitMap, (IPTR) &destBitMap,
+			PDTA_BitMapHeader, (IPTR) &bmhd,
 			TAG_END);
 		d1(KPrintF("%s/%s/%ld: destBitMap=%08lx bmhd=%08lx\n", __FILE__, __FUNC__, __LINE__, destBitMap, bmhd));
 		if (NULL == destBitMap || NULL == bmhd)
@@ -804,8 +804,8 @@ static BOOL ReadBackFill_Enhanced(struct internalScaWindowTask *iwt, struct Patt
 			break;
 
 		if (2 != GetPictureAttrs(ptNode->ptn_picture,
-			PICATTR_Width, (ULONG) &picWidth,
-			PICATTR_Height, (ULONG) &picHeight,
+			PICATTR_Width, (IPTR) &picWidth,
+			PICATTR_Height, (IPTR) &picHeight,
 			TAG_END))
 			break;
 
@@ -1233,13 +1233,13 @@ static BOOL PatternCreateScaledBitMapNoGuiGFX(struct internalScaWindowTask *iwt,
 	do	{
 		struct ScaleBitMapArg sbma;
 		struct BitMap *ScaledBitMap;
-		ULONG NumColors;
+		IPTR NumColors;
 		ULONG *ColorTable;
 		struct RastPort rp;
 
 		if (2 != GetDTAttrs(ptNode->ptn_object,
-			PDTA_NumColors, (ULONG) &NumColors,
-			PDTA_CRegs, (ULONG) &ColorTable,
+			PDTA_NumColors, (IPTR) &NumColors,
+			PDTA_CRegs, (IPTR) &ColorTable,
 			TAG_END))
 			break;
 

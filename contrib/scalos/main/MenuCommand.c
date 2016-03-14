@@ -506,7 +506,7 @@ static void DoForAllIconsExclusive(struct internalScaWindowTask *iwt,
 
 void WBInfoStart(struct internalScaWindowTask *iwt, struct ScaIconNode *in, APTR undoStep)
 {
-	ULONG IconType;
+	IPTR IconType;
 
 	d1(KPrintF("%s/%s/%ld: iwt=%08lx  in=%08lx  <%s>\n", __FILE__, __FUNC__, __LINE__, iwt, in, GetIconName(in)));
 
@@ -1149,7 +1149,7 @@ void AsyncDeleteProg(struct internalScaWindowTask *iwt, const struct MenuCmdArg 
 
 static void LeaveOutIcon(struct internalScaWindowTask *iwt, struct ScaIconNode *in, APTR undoStep)
 {
-	ULONG IconType = 0;
+	IPTR IconType = 0;
 
 	d1(KPrintF("%s/%s/%ld: START iwt=%08lx  <%s>\n", __FILE__, __FUNC__, __LINE__, iwt, iwt->iwt_WinTitle));
 	d1(KPrintF("%s/%s/%ld: Icon=<%s>  Lock=%08lx\n", __FILE__, __FUNC__, __LINE__, IconName, in->in_Lock));
@@ -1193,7 +1193,7 @@ static void LeaveOutIcon(struct internalScaWindowTask *iwt, struct ScaIconNode *
 
 static void PutAwayIconNode(struct internalScaWindowTask *iwt, struct ScaIconNode *in, APTR undoStep)
 {
-	ULONG IconType = 0;
+	IPTR IconType = 0;
 
 	d1(KPrintF("%s/%s/%ld: START iwt=%08lx  <%s>\n", __FILE__, __FUNC__, __LINE__, iwt, iwt->iwt_WinTitle));
 	d1(KPrintF("%s/%s/%ld: Icon=<%s>  Lock=%08lx\n", __FILE__, __FUNC__, __LINE__, GetIconName(in), in->in_Lock));
@@ -1337,7 +1337,7 @@ static void SnapshotWindow(struct internalScaWindowTask *iwt)
 		SetAttrs(IconObj,
 			IDTA_ViewModes, IconViewMode,
 			IDTA_Flags, ddFlags,
-			IDTA_WindowRect, (ULONG) &WinRect,
+			IDTA_WindowRect, (IPTR) &WinRect,
 			IDTA_WinCurrentY, ws->ws_yoffset,
 			IDTA_WinCurrentX, ws->ws_xoffset,
 			TAG_END);
@@ -1743,7 +1743,7 @@ static void CloneProg(struct internalScaWindowTask *iwt, const struct MenuCmdArg
 
 		if (mcArg->mca_IconNode)
 			{
-			ULONG IconType;
+			IPTR IconType;
 
 			GetAttr(IDTA_Type, mcArg->mca_IconNode->in_Icon, &IconType);
 
@@ -1828,7 +1828,7 @@ static void CloneInfoStart(struct internalScaWindowTask *iwt,
 
 		if (gg->Flags & GFLG_SELECTED)
 			{
-			ULONG IconType;
+			IPTR IconType;
 
 			GetAttr(IDTA_Type, in->in_Icon, &IconType);
 
@@ -1910,7 +1910,7 @@ static SAVEDS(ULONG) CloneFilesStart(APTR aptr, struct SM_RunProcess *msg)
 			break;
 
 		fileTransObj = SCA_NewScalosObjectTags((STRPTR) "FileTransfer.sca", 
-			SCCA_FileTrans_Screen, (ULONG) iInfos.xii_iinfos.ii_Screen,
+			SCCA_FileTrans_Screen, (IPTR) iInfos.xii_iinfos.ii_Screen,
 			SCCA_FileTrans_Number, arg->cla_NumArgs,
 			SCCA_FileTrans_ReplaceMode, SCCV_ReplaceMode_Ask,
 			TAG_END);
@@ -2339,7 +2339,7 @@ static SAVEDS(LONG) IconCompareFunc(struct Hook *hook, struct ScaIconNode *in2, 
 
 static void MenuOpenProg(struct internalScaWindowTask *iwt, const struct MenuCmdArg *mcArg)
 {
-	ULONG IconType = 0;
+	IPTR IconType = 0;
 
 	if (mcArg->mca_IconNode)
 		GetAttr(IDTA_Type, mcArg->mca_IconNode->in_Icon, &IconType);
@@ -2418,7 +2418,7 @@ static void OpenParentProg(struct internalScaWindowTask *iwt, const struct MenuC
 		else
 			{
 			SCA_OpenIconWindowTags(SCA_Flags, SCAF_OpenWindow_ScalosPort,
-				SCA_Path, (ULONG) ParentName,
+				SCA_Path, (IPTR) ParentName,
 				SCA_CheckOverlappingIcons, CurrentPrefs.pref_CheckOverlappingIcons,
 				TAG_END);
 			}
@@ -2678,7 +2678,7 @@ static void MenuRedoProg(struct internalScaWindowTask *iwt, const struct MenuCmd
 
 static void SnapshotIcon(struct internalScaWindowTask *iwt, struct ScaIconNode *in, APTR undoStep)
 {
-	ULONG IconType = 0;
+	IPTR IconType = 0;
 
 	d1(KPrintF("%s/%s/%ld:  START iwt=%08lx  in=%08lx <%s>\n", __FILE__, __FUNC__, __LINE__, iwt, in, GetIconName(in)));
 
@@ -2752,7 +2752,7 @@ static void UnsnapshotIconAndSave(struct internalScaWindowTask *iwt, struct ScaI
 static void UnsnapshotIcon(struct internalScaWindowTask *iwt,
 	struct ScaIconNode *in, BOOL SaveIcon, APTR undoStep)
 {
-	ULONG IconType = 0;
+	IPTR IconType = 0;
 
 	d1(KPrintF("%s/%s/%ld:  iwt=%08lx  in=%08lx <%s>\n", __FILE__, __FUNC__, __LINE__, iwt, in, GetIconName(in)));
 
@@ -2874,7 +2874,7 @@ void SetIconWindowRect(struct ScaIconNode *in)
 		}
 	else
 		{
-		ULONG IconType = 0;
+		IPTR IconType = 0;
 
 		GetAttr(IDTA_Type, in->in_Icon, &IconType);
 
@@ -2937,7 +2937,7 @@ static void SetRect2(struct ScaIconNode *in, BPTR iconLock)
 				SetAttrs(in->in_Icon,
 					IDTA_ViewModes, IconViewMode,
 					IDTA_Flags, ddFlags,
-					IDTA_WindowRect, (ULONG) &WinRect,
+					IDTA_WindowRect, (IPTR) &WinRect,
 					IDTA_WinCurrentY, ws->ws_yoffset,
 					IDTA_WinCurrentX, ws->ws_xoffset,
 					TAG_END);
@@ -3048,7 +3048,7 @@ static void EmptyTrashProg(struct internalScaWindowTask *iwt, const struct MenuC
 			{
 			if (mcArg->mca_IconNode)
 				{
-				ULONG IconType;
+				IPTR IconType;
 
 				GetAttr(IDTA_Type, mcArg->mca_IconNode->in_Icon, &IconType);
 
@@ -3080,7 +3080,7 @@ static void EmptyTrashProg(struct internalScaWindowTask *iwt, const struct MenuC
 
 						if (gg->Flags & GFLG_SELECTED)
 							{
-							ULONG IconType;
+							IPTR IconType;
 
 							GetAttr(IDTA_Type, in->in_Icon, &IconType);
 
@@ -3160,7 +3160,7 @@ static void CloseWindowProg(struct internalScaWindowTask *iwt, const struct Menu
 static ULONG FindIconType(struct WBArg *Arg)
 {
 	struct ScaWindowStruct *ws;
-	ULONG IconType = 0;
+	IPTR IconType = 0;
 	BOOL Found = FALSE;
 
 	SCA_LockWindowList(SCA_LockWindowList_Shared);
@@ -3435,7 +3435,7 @@ static void AsyncPasteProg(struct internalScaWindowTask *iwt, const struct MenuC
 		{
 		BPTR parentDirLock;
 		BPTR newLock = (BPTR)NULL;
-		ULONG IconType = 0;
+		IPTR IconType = 0;
 
 		d1(kprintf("%s/%s/%ld: mca_IconNode=%08lx <%s>\n", __FILE__, __FUNC__, __LINE__, mcArg->mca_IconNode, GetIconName(mcArg->mca_IconNode)));
 
@@ -3484,7 +3484,7 @@ static void AsyncPasteProg(struct internalScaWindowTask *iwt, const struct MenuC
 	debugLock_d1(DestLock);
 
 	fileTransObj = SCA_NewScalosObjectTags((STRPTR) "FileTransfer.sca", 
-		SCCA_FileTrans_Screen, (ULONG) iInfos.xii_iinfos.ii_Screen,
+		SCCA_FileTrans_Screen, (IPTR) iInfos.xii_iinfos.ii_Screen,
 //		SCCA_FileTrans_Number, ArgCount,
 		SCCA_FileTrans_ReplaceMode, SCCV_ReplaceMode_Ask,
 		TAG_END);
@@ -3620,7 +3620,7 @@ static void RememberFilesToCut(struct internalScaWindowTask *iwt, struct ScaIcon
 {
 	struct ScaIconNode inCopy;
 	struct ScaIconNode *IconList = &inCopy;
-	ULONG UserFlags = 0L;
+	IPTR UserFlags = 0;
 
 	(void) undoStep;
 
@@ -4083,7 +4083,7 @@ static void CopyToCloneInfoStart(struct internalScaWindowTask *iwt,
 
 			if (gg->Flags & GFLG_SELECTED)
 				{
-				ULONG IconType;
+				IPTR IconType;
 
 				GetAttr(IDTA_Type, in->in_Icon, &IconType);
 
@@ -4194,7 +4194,7 @@ static void CopyToProg(struct internalScaWindowTask *iwt, const struct MenuCmdAr
 
 		if (mcArg->mca_IconNode)
 			{
-			ULONG IconType;
+			IPTR IconType;
 
 			GetAttr(IDTA_Type, mcArg->mca_IconNode->in_Icon, &IconType);
 
@@ -4263,8 +4263,8 @@ static SAVEDS(ULONG) CopyToStart(APTR aptr, struct SM_RunProcess *msg)
 		// AllocAslRequest()
 		dirReq = AllocAslRequestTags(ASL_FileRequest,
 				ASLFR_PrivateIDCMP, TRUE,
-				ASLFR_Screen, (ULONG) iInfos.xii_iinfos.ii_Screen,
-				ASLFR_TitleText, (ULONG) GetLocString(MSGID_COPYTO_ASLTITLE),
+				ASLFR_Screen, (IPTR) iInfos.xii_iinfos.ii_Screen,
+				ASLFR_TitleText, (IPTR) GetLocString(MSGID_COPYTO_ASLTITLE),
 				ASLFR_DoSaveMode, TRUE,
 				ASLFR_DrawersOnly, TRUE,
 				TAG_END);
@@ -4274,7 +4274,7 @@ static SAVEDS(ULONG) CopyToStart(APTR aptr, struct SM_RunProcess *msg)
 
 		// AslRequest()
 		Success = AslRequestTags(dirReq,
-				ASLFR_InitialDrawer, (ULONG) Path,
+				ASLFR_InitialDrawer, (IPTR) Path,
 				TAG_END);
 
 		if (Success)
@@ -4296,7 +4296,7 @@ static SAVEDS(ULONG) CopyToStart(APTR aptr, struct SM_RunProcess *msg)
 			stccpy(LockdirName, dirReq->fr_Drawer, sizeof(LockdirName));
 
 			fileTransObj = SCA_NewScalosObjectTags((STRPTR) "FileTransfer.sca", 
-				SCCA_FileTrans_Screen, (ULONG) iInfos.xii_iinfos.ii_Screen,
+				SCCA_FileTrans_Screen, (IPTR) iInfos.xii_iinfos.ii_Screen,
 				SCCA_FileTrans_Number, arg->cla_NumArgs,
 				SCCA_FileTrans_ReplaceMode, SCCV_ReplaceMode_Ask,
 				TAG_END);
@@ -4436,7 +4436,7 @@ static void MoveToCloneInfoStart(struct internalScaWindowTask *iwt,
 
 			if (gg->Flags & GFLG_SELECTED)
 				{
-				ULONG IconType;
+				IPTR IconType;
 
 				GetAttr(IDTA_Type, in->in_Icon, &IconType);
 
@@ -4499,7 +4499,7 @@ static void MoveToProg(struct internalScaWindowTask *iwt, const struct MenuCmdAr
 
 		if (mcArg->mca_IconNode)
 			{
-			ULONG IconType;
+			IPTR IconType;
 
 			GetAttr(IDTA_Type, mcArg->mca_IconNode->in_Icon, &IconType);
 
@@ -4567,8 +4567,8 @@ static SAVEDS(ULONG) MoveToStart(APTR aptr, struct SM_RunProcess *msg)
 		// AllocAslRequest()
 		dirReq = AllocAslRequestTags(ASL_FileRequest,
 				ASLFR_PrivateIDCMP, TRUE,
-				ASLFR_Screen, (ULONG) iInfos.xii_iinfos.ii_Screen,
-				ASLFR_TitleText, (ULONG) GetLocString(MSGID_MOVETO_ASLTITLE),
+				ASLFR_Screen, (IPTR) iInfos.xii_iinfos.ii_Screen,
+				ASLFR_TitleText, (IPTR) GetLocString(MSGID_MOVETO_ASLTITLE),
 				ASLFR_DoSaveMode, TRUE,
 				ASLFR_DrawersOnly, TRUE,
 				TAG_END);
@@ -4602,7 +4602,7 @@ static SAVEDS(ULONG) MoveToStart(APTR aptr, struct SM_RunProcess *msg)
 
 		// AslRequest()
 		Success = AslRequestTags(dirReq,
-				ASLFR_InitialDrawer, (ULONG) Path,
+				ASLFR_InitialDrawer, (IPTR) Path,
 				TAG_END);
 
 		if (Success)
@@ -4624,7 +4624,7 @@ static SAVEDS(ULONG) MoveToStart(APTR aptr, struct SM_RunProcess *msg)
 			stccpy(LockdirName, dirReq->fr_Drawer, sizeof(LockdirName));
 
 			fileTransObj = SCA_NewScalosObjectTags((STRPTR) "FileTransfer.sca", 
-				SCCA_FileTrans_Screen, (ULONG) iInfos.xii_iinfos.ii_Screen,
+				SCCA_FileTrans_Screen, (IPTR) iInfos.xii_iinfos.ii_Screen,
 				SCCA_FileTrans_Number, arg->cla_NumArgs,
 				SCCA_FileTrans_ReplaceMode, SCCV_ReplaceMode_Ask,
 				TAG_END);
@@ -4812,7 +4812,7 @@ static void DoForAppIcons(ULONG AppMsgClass)
 
 				if (gg->Flags & GFLG_SELECTED)
 					{
-					ULONG IconType;
+					IPTR IconType;
 
 					GetAttr(IDTA_Type, in->in_Icon, &IconType);
 

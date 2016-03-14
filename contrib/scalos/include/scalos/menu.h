@@ -28,12 +28,40 @@
 #pragma pack(2)
 #endif /* __GNUC__ */
 
-// This is the exact structure that stores menu information in menu preferences files
+// This is the disk structure that stores menu information in menu preferences files
+// Do not use pointers since the values _must_ remain 32bit even on 64bit platforms.
 // !!! BE VERY CAREFUL TO KEEP PREFS COMPATIBLE IF YOU EVER CHANGE THIS STRUCTURE !!!
 struct ScalosMenuTree
 	{
-	struct	ScalosMenuTree *mtre_Next;
-	struct	ScalosMenuTree *mtre_tree;
+	ULONG	mtre_Next;
+	ULONG	mtre_tree;
+	UBYTE	mtre_type;
+	UBYTE	mtre_flags;
+	union	{
+		struct	{
+			char	mtre_hotkey[2];
+			ULONG	mtre_name;
+			ULONG	mtre_iconnames;	// only valid if MTREFLGF_IconNames
+						// points to 2 strings with menu icon path names
+						// for empty path names, it points to two '\0'
+			} MenuTree;
+		struct	{
+			UBYTE	mcom_flags;
+			UBYTE	mcom_type;	// enum ScalosMenuCommandType
+			ULONG	mcom_stack;
+			ULONG	mcom_name;
+			BYTE	mcom_pri;	// priority for command process
+						// only valid if MCOMFLGF_Priority set
+			} MenuCommand;
+		} MenuCombo;
+	} __attribute__((packed)) ;
+
+// SCALOS_MENUTREE represents the memory structure that stores menu information
+#if defined(__AROS__) && __WORDSIZE==64
+struct ScalosMenuTreeFull
+	{
+	struct	ScalosMenuTreeFull *mtre_Next;
+	struct	ScalosMenuTreeFull *mtre_tree;
 	UBYTE	mtre_type;
 	UBYTE	mtre_flags;
 	union	{
@@ -54,6 +82,10 @@ struct ScalosMenuTree
 			} MenuCommand;
 		} MenuCombo;
 	};
+#define SCALOS_MENUTREE ScalosMenuTreeFull
+#else
+#define SCALOS_MENUTREE ScalosMenuTree    
+#endif
 
 enum ScalosMenuType
 	{

@@ -336,7 +336,7 @@ LIBFUNC_END
 
 
 // OpenWorkBench() replacement
-LIBFUNC_P1(LONG, sca_OpenWorkBench,
+LIBFUNC_P1(IPTR, sca_OpenWorkBench,
 	A6, struct IntuitionBase *, iBase, 0)
 {
 	LONG Success;
@@ -364,7 +364,7 @@ LIBFUNC_P1(LONG, sca_OpenWorkBench,
 
 	// OpenWorkBench() is supposed to return WBScreeen !!!
 
-	return Success ? (LONG) iInfos.xii_iinfos.ii_Screen : 0L;
+	return Success ? (IPTR) iInfos.xii_iinfos.ii_Screen : 0L;
 }
 LIBFUNC_END
 
@@ -396,7 +396,7 @@ static LONG ReOpenScalos(void)
 			{
 			// IconControlA()
 			IconControl(NULL, 
-				ICONCTRLA_SetGlobalScreen, (ULONG) iInfos.xii_iinfos.ii_Screen,
+				ICONCTRLA_SetGlobalScreen, (IPTR) iInfos.xii_iinfos.ii_Screen,
 				TAG_END);
 			}
 
@@ -581,7 +581,7 @@ LIBFUNC_P8(struct AppIcon *, sca_AddAppIconA,
 			break;
 
 		SetAttrs(IconObj,
-			IDTA_Text, (ULONG) IconText,
+			IDTA_Text, (IPTR) IconText,
 			TAG_END);
 
 		OpenLibrary("scalos.library", 0);
@@ -846,7 +846,7 @@ static SAVEDS(ULONG) AppChangeFunc(struct WBArg *ArgArray, struct SM_RunProcess 
 		d1(kprintf("%s/%s/%ld: Path=<%s>\n", __FILE__, __FUNC__, __LINE__, Path));
 
 		IconObj = NewIconObjectTags(Path,
-			IDTA_SizeConstraints, (ULONG) &ws->ws_IconSizeConstraints,
+			IDTA_SizeConstraints, (IPTR) &ws->ws_IconSizeConstraints,
 			IDTA_ScalePercentage, ws->ws_IconScaleFactor,
 			TAG_END);
 		d1(kprintf("%s/%s/%ld: IconObj=%08lx\n", __FILE__, __FUNC__, __LINE__, IconObj));
@@ -860,7 +860,7 @@ static SAVEDS(ULONG) AppChangeFunc(struct WBArg *ArgArray, struct SM_RunProcess 
 		d1(kprintf("%s/%s/%ld: Path=<%s>\n", __FILE__, __FUNC__, __LINE__, Path));
 
 		IconObj = NewIconObjectTags(Path,
-			IDTA_SizeConstraints, (ULONG) &ws->ws_IconSizeConstraints,
+			IDTA_SizeConstraints, (IPTR) &ws->ws_IconSizeConstraints,
 			IDTA_ScalePercentage, ws->ws_IconScaleFactor,
 			TAG_END);
 		} while (0);
@@ -1354,7 +1354,7 @@ LIBFUNC_P3(struct Screen *, sca_OpenScreenTagList,
 
 	d1(KPrintF("%s/%s/%ld: NewScreen=%08lx\n", __FILE__, __FUNC__, __LINE__, newScr));
 
-	PubScreenName = (CONST_STRPTR) GetTagData(SA_PubName, (ULONG)NULL, (struct TagItem *) TagList);
+	PubScreenName = (CONST_STRPTR) GetTagData(SA_PubName, (IPTR)NULL, (struct TagItem *) TagList);
 
 	if (PubScreenName && 0 == strcmp("Workbench", PubScreenName))
 		{
@@ -1390,7 +1390,7 @@ LIBFUNC_P3(struct Screen *, sca_OpenScreenTagList,
 			if (-1 != PalettePrefs.pal_driPens[0])
 				{
 				ti[nTag].ti_Tag = SA_Pens;
-				ti[nTag++].ti_Data = (ULONG) PalettePrefs.pal_driPens;
+				ti[nTag++].ti_Data = (IPTR) PalettePrefs.pal_driPens;
 
 				d1(KPrintF("%s/%s/%ld: driPens[0]=%ld  driPens[1]=%ld\n", __FILE__, __FUNC__, __LINE__, PalettePrefs.pal_driPens[0], PalettePrefs.pal_driPens[1]));
 
@@ -1405,7 +1405,7 @@ LIBFUNC_P3(struct Screen *, sca_OpenScreenTagList,
 			if (PalettePrefs.pal_ScreenColorList)
 				{
 				ti[nTag].ti_Tag = SA_Colors32;
-				ti[nTag++].ti_Data = (ULONG) PalettePrefs.pal_ScreenColorList;
+				ti[nTag++].ti_Data = (IPTR) PalettePrefs.pal_ScreenColorList;
 
 #if 0
 				{
@@ -1426,7 +1426,7 @@ LIBFUNC_P3(struct Screen *, sca_OpenScreenTagList,
 				ti[nTag++].ti_Data = FALSE;
 				}
 			ti[nTag].ti_Tag = TAG_MORE;
-			ti[nTag++].ti_Data = (ULONG) AllocatedTagList;
+			ti[nTag++].ti_Data = (IPTR) AllocatedTagList;
 
 			ti[nTag].ti_Tag = TAG_END;
 
