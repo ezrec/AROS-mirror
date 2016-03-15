@@ -256,39 +256,39 @@ int main(int argc, char *argv[])
 	SubWindowTagList = CreatePluginSubWindowArray();
 
 	APP_Main = ApplicationObject,
-		MUIA_Application_Title,		GetLocString(MSGID_TITLENAME),
-		MUIA_Application_Version,	"$VER: Scalos FileTypes Prefs V40.24 (" __DATE__ ")" COMPILER_STRING,
-		MUIA_Application_Copyright,	"The Scalos Team, 2000" CURRENTYEAR,
-		MUIA_Application_Author,	"The Scalos Team",
-		MUIA_Application_Description,	"Scalos FileTypes preferences editor",
-		MUIA_Application_Base,		"SCALOS_FILETYPES",
-		FileTypesDiskObject ? MUIA_Application_DiskObject : TAG_IGNORE,	FileTypesDiskObject,
+		MUIA_Application_Title,		(IPTR)GetLocString(MSGID_TITLENAME),
+		MUIA_Application_Version,	(IPTR)"$VER: Scalos FileTypes Prefs V40.24 (" __DATE__ ")" COMPILER_STRING,
+		MUIA_Application_Copyright,	(IPTR)"The Scalos Team, 2000" CURRENTYEAR,
+		MUIA_Application_Author,	(IPTR)"The Scalos Team",
+		MUIA_Application_Description,	(IPTR)"Scalos FileTypes preferences editor",
+		MUIA_Application_Base,		(IPTR)"SCALOS_FILETYPES",
+		FileTypesDiskObject ? MUIA_Application_DiskObject : TAG_IGNORE,	(IPTR)FileTypesDiskObject,
 #if defined(MUIA_Application_UsedClasses)
 		MUIA_Application_UsedClasses,	UsedClasses,
 #endif /* MUIA_Application_UsedClasses */
 
-		SubWindow, WIN_Main = WindowObject,
-			MUIA_Window_Title, GetLocString(MSGID_TITLENAME),
+		SubWindow, (IPTR)(WIN_Main = WindowObject,
+			MUIA_Window_Title, (IPTR)GetLocString(MSGID_TITLENAME),
 			MUIA_Window_ID,	MAKE_ID('M','A','I','N'),
 			MUIA_Window_AppWindow, TRUE,
-			WindowContents, VGroup,
-				Child, Group_Plugin,
+			WindowContents, (IPTR)(VGroup,
+				Child, (IPTR)Group_Plugin,
 
-				Child, Group_Buttons2 = HGroup,
+				Child, (IPTR)(Group_Buttons2 = HGroup,
 					MUIA_Group_SameWidth, TRUE,
-					Child, SaveButton = KeyButtonHelp(GetLocString(MSGID_SAVENAME), 
-								's', GetLocString(MSGID_SHORTHELP_SAVEBUTTON)),
-					Child, UseButton = KeyButtonHelp(GetLocString(MSGID_USENAME), 
-								'u', GetLocString(MSGID_SHORTHELP_USEBUTTON)),
-					Child, CancelButton = KeyButtonHelp(GetLocString(MSGID_CANCELNAME), 
-								'c', GetLocString(MSGID_SHORTHELP_CANCELBUTTON)),
-					End, //HGroup
-				End, //VGroup
-			End, //WindowObject
+					Child, (IPTR)(SaveButton = KeyButtonHelp(GetLocString(MSGID_SAVENAME), 
+								's', GetLocString(MSGID_SHORTHELP_SAVEBUTTON))),
+					Child, (IPTR)(UseButton = KeyButtonHelp(GetLocString(MSGID_USENAME), 
+								'u', GetLocString(MSGID_SHORTHELP_USEBUTTON))),
+					Child, (IPTR)(CancelButton = KeyButtonHelp(GetLocString(MSGID_CANCELNAME), 
+								'c', GetLocString(MSGID_SHORTHELP_CANCELBUTTON))),
+                                End), //HGroup
+                        End), //VGroup
+                End), //WindowObject
 
 // -----------------------------------------------------------------------------------------------
 
-		SubWindow, WIN_Splash = WindowObject,
+		SubWindow, (IPTR)(WIN_Splash = WindowObject,
 			MUIA_Window_AppWindow,	FALSE,
 			MUIA_Window_CloseGadget, FALSE,
 			MUIA_Window_DepthGadget, FALSE,
@@ -297,70 +297,70 @@ int main(int argc, char *argv[])
 			MUIA_Window_LeftEdge,	MUIV_Window_LeftEdge_Centered,
 			MUIA_Window_TopEdge,	MUIV_Window_TopEdge_Centered,
 
-			WindowContents, VGroup,
-				Child, TEXT_Splash = TextObject,
+			WindowContents, (IPTR)(VGroup,
+				Child, (IPTR)(TEXT_Splash = TextObject,
 					MUIA_Weight, 0,
 					MUIA_Text_Contents, (IPTR) GetLocString(MSGID_SPLASHWINDOW_LOADING_FILETYPES_PREFS),
-				End, //TextObject
-			End, //VGroup
+				End), //TextObject
+			End), //VGroup
 
-		End, //SubWindow
+		End), //SubWindow
 
 // -----------------------------------------------------------------------------------------------
 
-		MUIA_Application_Menustrip, MenustripObject,
-			Child, MenuObjectT(GetLocString(MSGID_MENU_PROJECT)),
-				Child, MenuOpen = MenuitemObject,
-					MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_OPEN),
-					MUIA_Menuitem_Shortcut, GetLocString(MSGID_MENU_PROJECT_OPEN_SHORT),
-				End,
-				Child, MenuSaveAs = MenuitemObject,
-					MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_SAVEAS),
-					MUIA_Menuitem_Shortcut, GetLocString(MSGID_MENU_PROJECT_SAVEAS_SHORT),
-				End,
-				Child, MenuitemObject,
+		MUIA_Application_Menustrip, (IPTR)(MenustripObject,
+			Child, (IPTR)(MenuObjectT(GetLocString(MSGID_MENU_PROJECT)),
+				Child, (IPTR)(MenuOpen = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_OPEN),
+					MUIA_Menuitem_Shortcut, (IPTR)GetLocString(MSGID_MENU_PROJECT_OPEN_SHORT),
+				End),
+				Child, (IPTR)(MenuSaveAs = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_SAVEAS),
+					MUIA_Menuitem_Shortcut, (IPTR)GetLocString(MSGID_MENU_PROJECT_SAVEAS_SHORT),
+				End),
+				Child, (IPTR)(MenuitemObject,
 					MUIA_Menuitem_Title, -1,
-				End,
-				Child, MenuAbout = MenuitemObject,
-					MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_ABOUT),
-				End,
-				Child, MenuAboutMUI = MenuitemObject,
-					MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_ABOUTMUI),
-				End,
-				Child, MenuitemObject,
+				End),
+				Child, (IPTR)(MenuAbout = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_ABOUT),
+				End),
+				Child, (IPTR)(MenuAboutMUI = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_ABOUTMUI),
+				End),
+				Child, (IPTR)(MenuitemObject,
 					MUIA_Menuitem_Title, -1,
-				End,
-				Child, MenuQuit = MenuitemObject,
-					MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_QUIT),
-					MUIA_Menuitem_Shortcut, GetLocString(MSGID_MENU_PROJECT_QUIT_SHORT),
-				End,
+				End),
+				Child, (IPTR)(MenuQuit = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_QUIT),
+					MUIA_Menuitem_Shortcut, (IPTR)GetLocString(MSGID_MENU_PROJECT_QUIT_SHORT),
+				End),
 					
-			End, //MenuObjectT
-			Child, MenuObjectT(GetLocString(MSGID_MENU_EDIT)),
-				Child, MenuResetToDefaults = MenuitemObject,
-					MUIA_Menuitem_Title, GetLocString(MSGID_MENU_EDIT_RESETTODEFAULTS),
-					MUIA_Menuitem_Shortcut, GetLocString(MSGID_MENU_EDIT_RESETTODEFAULTS_SHORT),
-				End,
-				Child, MenuLastSaved = MenuitemObject,
-					MUIA_Menuitem_Title, GetLocString(MSGID_MENU_EDIT_LASTSAVED),
-					MUIA_Menuitem_Shortcut, GetLocString(MSGID_MENU_EDIT_LASTSAVED_SHORT),
-				End,
-				Child, MenuRestore = MenuitemObject,
-					MUIA_Menuitem_Title, GetLocString(MSGID_MENU_EDIT_RESTORE),
-					MUIA_Menuitem_Shortcut, GetLocString(MSGID_MENU_EDIT_RESTORE_SHORT),
-				End,
-			End, //MenuObjectT
-			Child, MenuObjectT(GetLocString(MSGID_MENU_SETTINGS)),
-				Child, MenuCreateIcons = MenuitemObject,
-					MUIA_Menuitem_Title, GetLocString(MSGID_MENU_SETTINGS_CREATEICONS),
-					MUIA_Menuitem_Shortcut, GetLocString(MSGID_MENU_SETTINGS_CREATEICONS_SHORT),
+			End), //MenuObjectT
+			Child, (IPTR)(MenuObjectT(GetLocString(MSGID_MENU_EDIT)),
+				Child, (IPTR)(MenuResetToDefaults = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_EDIT_RESETTODEFAULTS),
+					MUIA_Menuitem_Shortcut, (IPTR)GetLocString(MSGID_MENU_EDIT_RESETTODEFAULTS_SHORT),
+				End),
+				Child, (IPTR)(MenuLastSaved = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_EDIT_LASTSAVED),
+					MUIA_Menuitem_Shortcut, (IPTR)GetLocString(MSGID_MENU_EDIT_LASTSAVED_SHORT),
+				End),
+				Child, (IPTR)(MenuRestore = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_EDIT_RESTORE),
+					MUIA_Menuitem_Shortcut, (IPTR)GetLocString(MSGID_MENU_EDIT_RESTORE_SHORT),
+				End),
+			End), //MenuObjectT
+			Child, (IPTR)(MenuObjectT(GetLocString(MSGID_MENU_SETTINGS)),
+				Child, (IPTR)(MenuCreateIcons = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_SETTINGS_CREATEICONS),
+					MUIA_Menuitem_Shortcut, (IPTR)GetLocString(MSGID_MENU_SETTINGS_CREATEICONS_SHORT),
 					MUIA_Menuitem_Checkit, TRUE,
 					MUIA_Menuitem_Checked, fCreateIcons,
-				End,
-			End, //MenuObjectT
-		End, //MenuStripObject
+				End),
+			End), //MenuObjectT
+		End), //MenuStripObject
 
-		SubWindowTagList ? TAG_MORE : TAG_IGNORE, SubWindowTagList,
+		SubWindowTagList ? TAG_MORE : TAG_IGNORE, (IPTR)SubWindowTagList,
 	End; //ApplicationObject
 
 	if (NULL == APP_Main)
@@ -661,7 +661,7 @@ static void TranslateStringArray(STRPTR *stringArray)
 {
 	while (*stringArray)
 		{
-		*stringArray = GetLocString((ULONG) *stringArray);
+		*stringArray = GetLocString((IPTR) *stringArray);
 		stringArray++;
 		}
 }
@@ -735,7 +735,7 @@ static struct TagItem *CreatePluginSubWindowArray(void)
 	for (n=0; PluginSubWindows && PluginSubWindows[n]; n++)
 		{
 		ti->ti_Tag = MUIA_Application_Window;
-		ti->ti_Data = (ULONG) PluginSubWindows[n];
+		ti->ti_Data = (IPTR) PluginSubWindows[n];
 		ti++;
 		}
 
@@ -852,7 +852,7 @@ static BOOL CheckMCCVersion(CONST_STRPTR name, ULONG minver, ULONG minrev)
 				{
 				if (MUI_Request(NULL, NULL, 0L, GetLocString(MSGID_STARTUP_FAILURE),
 					GetLocString(MSGID_STARTUP_RETRY_QUIT_GAD), GetLocString(MSGID_STARTUP_MCC_IN_USE),
-					(ULONG) name, minver, minrev, ver, rev))
+					(IPTR) name, minver, minrev, ver, rev))
 					{
 					flush = TRUE;
 					}
@@ -881,7 +881,7 @@ static BOOL CheckMCCVersion(CONST_STRPTR name, ULONG minver, ULONG minrev)
 				// and still haven't got the version we want
 				if (MUI_Request(NULL, NULL, 0L, GetLocString(MSGID_STARTUP_FAILURE),
 					GetLocString(MSGID_STARTUP_RETRY_QUIT_GAD), GetLocString(MSGID_STARTUP_OLD_MCC),
-					(ULONG) name, minver, minrev, ver, rev))
+					(IPTR) name, minver, minrev, ver, rev))
 					{
 					flush = TRUE;
 					}
@@ -895,7 +895,7 @@ static BOOL CheckMCCVersion(CONST_STRPTR name, ULONG minver, ULONG minrev)
 			flush = FALSE;
 			if (!MUI_Request(NULL, NULL, 0L, GetLocString(MSGID_STARTUP_FAILURE),
 				GetLocString(MSGID_STARTUP_RETRY_QUIT_GAD), GetLocString(MSGID_STARTUP_MCC_NOT_FOUND),
-				(ULONG) name, minver, minrev))
+				(IPTR) name, minver, minrev))
 				{
 				break;
 				}

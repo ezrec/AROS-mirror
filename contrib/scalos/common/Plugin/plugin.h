@@ -72,7 +72,7 @@ LIBFUNC_P5_PROTO(LONG, LIBSCAPreviewGenerate,
 #endif // PLUGIN_TYPE == PREVIEW
 
 #if PLUGIN_TYPE == PREFS
-LIBFUNC_P2_PROTO(ULONG, LIBSCAGetPrefsInfo,
+LIBFUNC_P2_PROTO(IPTR, LIBSCAGetPrefsInfo,
 	D0, ULONG, which,
 	A6, struct PluginBase *, PluginBase, 5);
 #endif // PLUGIN_TYPE == PREFS
