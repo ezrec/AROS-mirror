@@ -58,7 +58,7 @@ struct DtMCCInstance
 
 /* ------------------------------------------------------------------------- */
 
-static ULONG mNew(struct IClass *cl,Object *obj,Msg msg);
+static IPTR mNew(struct IClass *cl,Object *obj,Msg msg);
 static ULONG mDispose(struct IClass *cl,Object *obj,Msg msg);
 static BOOL CreateDto(struct DtMCCInstance *inst);
 static VOID freedto(struct DtMCCInstance *inst);
@@ -68,13 +68,13 @@ static ULONG mSetup(struct IClass *cl,Object *obj,Msg msg);
 static ULONG mCleanup(struct IClass *cl,Object *obj,Msg msg);
 static ULONG mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg);
 static ULONG mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg);
-DISPATCHER_PROTO(MUI_DataTypesMCC);
+DISPATCHERPROTO(MUI_DataTypesMCC);
 static void ClearInstanceData(struct DtMCCInstance *inst);
 static void ForceRelayout(struct IClass *cl, Object *obj);
 
 /* ------------------------------------------------------------------------- */
 
-static ULONG mNew(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mNew(struct IClass *cl,Object *obj,Msg msg)
 {
 	struct DtMCCInstance *inst;
 	struct opSet *ops;
@@ -105,7 +105,7 @@ static ULONG mNew(struct IClass *cl,Object *obj,Msg msg)
 		inst->FailIfUnavailable = GetTagData(MUIA_ScaDtpic_FailIfUnavailable, FALSE, ops->ops_AttrList);
 		inst->Tiled = GetTagData(MUIA_ScaDtpic_Tiled, FALSE, ops->ops_AttrList);
 
-		FileName = (CONST_STRPTR) GetTagData(MUIA_ScaDtpic_Name, (ULONG) NULL, ops->ops_AttrList);
+		FileName = (CONST_STRPTR) GetTagData(MUIA_ScaDtpic_Name, (IPTR) NULL, ops->ops_AttrList);
 		if (NULL == FileName)
 			break;
 
@@ -138,7 +138,7 @@ static ULONG mNew(struct IClass *cl,Object *obj,Msg msg)
 			}
 		}
 
-	return((ULONG)obj);
+	return((IPTR)obj);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -233,7 +233,7 @@ static BOOL SetupDto(Class *cl, Object *obj)
 		d1(KPrintF("%s/%ld: win=%08lx\n", __FUNC__, __LINE__, _win(obj)));
 
 		SetAttrs(inst->dto,
-			PDTA_Screen, (ULONG) _screen(obj),
+			PDTA_Screen, (IPTR) _screen(obj),
 			TAG_END);
 
 		DoMethod(inst->dto,
@@ -251,17 +251,17 @@ static BOOL SetupDto(Class *cl, Object *obj)
 		if (NULL == inst->bmhd)
 			break;
 
-		GetDTAttrs(inst->dto, PDTA_DestBitMap, (ULONG) &inst->bitmap, TAG_DONE);
+		GetDTAttrs(inst->dto, PDTA_DestBitMap, (IPTR) &inst->bitmap, TAG_DONE);
 		d1(KPrintF("%s/%ld: bitmap=%08lx\n", __FUNC__, __LINE__, inst->bitmap));
 		d1(KPrintF("%s/%ld: bmh_Masking=%ld\n", __FUNC__, __LINE__, inst->bmhd->bmh_Masking));
 
 		GetDTAttrs(inst->dto,
-			PDTA_MaskPlane, (ULONG) &inst->MaskPlane,
+			PDTA_MaskPlane, (IPTR) &inst->MaskPlane,
 			TAG_END);
 		d1(KPrintF("%s/%ld: MaskPlane=%08lx\n", __FUNC__, __LINE__, inst->MaskPlane));
 
 		if (NULL == inst->bitmap)
-			GetDTAttrs(inst->dto, PDTA_BitMap, (ULONG) &inst->bitmap, TAG_DONE);
+			GetDTAttrs(inst->dto, PDTA_BitMap, (IPTR) &inst->bitmap, TAG_DONE);
 
 		if (NULL == inst->bitmap)
 			break;
@@ -307,7 +307,7 @@ static ULONG mSet(struct IClass *cl, Object *obj, Msg msg)
 	struct TagItem *ti;
 
 	inst->FailIfUnavailable = GetTagData(MUIA_ScaDtpic_FailIfUnavailable, inst->FailIfUnavailable, ops->ops_AttrList);
-	FileName = (CONST_STRPTR) GetTagData(MUIA_ScaDtpic_Name, (ULONG) inst->name, ops->ops_AttrList);
+	FileName = (CONST_STRPTR) GetTagData(MUIA_ScaDtpic_Name, (IPTR) inst->name, ops->ops_AttrList);
 
 	if (FileName)
 		NewFileName = strdup(FileName);
@@ -545,7 +545,7 @@ static ULONG mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 		if (inst->dto)
 			{
 			SetAttrs(inst->dto,
-				PDTA_Screen, (ULONG) _screen(obj),
+				PDTA_Screen, (IPTR) _screen(obj),
 				TAG_END);
 			DoDTMethod(inst->dto,
 				_window(obj), NULL,

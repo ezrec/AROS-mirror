@@ -54,12 +54,12 @@ extern struct Library *TTEngineBase;
 
 /* ------------------------------------------------------------------------- */
 
-static ULONG mNew(struct IClass *cl,Object *obj,Msg msg);
+static IPTR mNew(struct IClass *cl,Object *obj,Msg msg);
 static ULONG mDispose(struct IClass *cl, Object *obj, Msg msg);
 static ULONG mAskMinMax(struct IClass *cl, Object *obj, struct MUIP_AskMinMax *msg);
 static ULONG mDraw(struct IClass *cl, Object *obj, struct MUIP_Draw *msg);
 static ULONG mSet(struct IClass *cl, Object *obj, struct opSet *ops);
-DISPATCHER_PROTO(FontSampleMCC);
+DISPATCHERPROTO(FontSampleMCC);
 static void ClearInstanceData(struct FsMCCInstance *inst);
 static BOOL SetInstanceData(struct FsMCCInstance *inst, struct TagItem *TagList);
 static APTR OpenTTFontFromDesc(CONST_STRPTR FontDesc);
@@ -71,7 +71,7 @@ static size_t stccpy(char *dest, const char *src, size_t MaxLen);
 
 /* ------------------------------------------------------------------------- */
 
-static ULONG mNew(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mNew(struct IClass *cl,Object *obj,Msg msg)
 {
 	d1(KPrintF("%s/%ld: START  obj=%08lx\n", __FUNC__, __LINE__, obj));
 
@@ -102,7 +102,7 @@ static ULONG mNew(struct IClass *cl,Object *obj,Msg msg)
 
 	d1(KPrintF("%s/%ld: END  obj=%08lx\n", __FUNC__, __LINE__, obj));
 
-	return((ULONG)obj);
+	return((IPTR)obj);
 }
 
 
@@ -217,7 +217,7 @@ static ULONG mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 			TT_SetFont(_rp(obj), inst->fsm_TTFontHandle);
 
 			TT_SetAttrs(_rp(obj), 
-				TT_Window, (ULONG) _window(obj),
+				TT_Window, (IPTR) _window(obj),
 				TT_Antialias, inst->fsm_AntiAlias,
 				TT_Gamma, inst->fsm_Gamma,
 				TAG_END);
@@ -326,10 +326,10 @@ static BOOL SetInstanceData(struct FsMCCInstance *inst, struct TagItem *TagList)
 	BYTE OldAntiAlias = inst->fsm_AntiAlias;
 	WORD OldGamma = inst->fsm_Gamma;
 
-	inst->fsm_AntiAlias = (BYTE) GetTagData(MUIA_FontSample_Antialias, (ULONG) inst->fsm_AntiAlias, TagList);
-	inst->fsm_Gamma = (WORD) GetTagData(MUIA_FontSample_Gamma, (ULONG) inst->fsm_Gamma, TagList);
-	inst->fsm_HAlign = (WORD) GetTagData(MUIA_FontSample_HAlign, (ULONG) inst->fsm_HAlign, TagList);
-	inst->fsm_VAlign = (WORD) GetTagData(MUIA_FontSample_VAlign, (ULONG) inst->fsm_VAlign, TagList);
+	inst->fsm_AntiAlias = (BYTE) GetTagData(MUIA_FontSample_Antialias, (IPTR) inst->fsm_AntiAlias, TagList);
+	inst->fsm_Gamma = (WORD) GetTagData(MUIA_FontSample_Gamma, (IPTR) inst->fsm_Gamma, TagList);
+	inst->fsm_HAlign = (WORD) GetTagData(MUIA_FontSample_HAlign, (IPTR) inst->fsm_HAlign, TagList);
+	inst->fsm_VAlign = (WORD) GetTagData(MUIA_FontSample_VAlign, (IPTR) inst->fsm_VAlign, TagList);
 
 	tag = FindTagItem(MUIA_FontSample_DemoString, TagList);
 	if (tag)
@@ -381,7 +381,7 @@ static BOOL SetInstanceData(struct FsMCCInstance *inst, struct TagItem *TagList)
 
 			TT_SetFont(&rp, inst->fsm_TTFontHandle);
 
-			TT_GetAttrs(&rp, TT_FontAccentedAscender, (ULONG) &inst->fsm_FontBaseLine,
+			TT_GetAttrs(&rp, TT_FontAccentedAscender, (IPTR) &inst->fsm_FontBaseLine,
 				TAG_END);
 
 			TT_TextExtent(&rp, (STRPTR) inst->fsm_String, strlen(inst->fsm_String), &inst->fsm_TextExtent);
@@ -478,7 +478,7 @@ static APTR OpenTTFontFromDesc(CONST_STRPTR FontDesc)
 	FamilyTable[1] = NULL;
 
 	//TT_OpenFontA()
-	TTFont = TT_OpenFont(TT_FamilyTable, (ULONG) FamilyTable,
+	TTFont = TT_OpenFont(TT_FamilyTable, (IPTR) FamilyTable,
 		TT_FontSize, FontSize,
 		TT_FontStyle, FontStyle,
 		TT_FontWeight, FontWeight,

@@ -61,41 +61,41 @@ struct CmdFunc
 	enum FileTypeDefSections cf_validForSection;
 
 	// Pointer to the function which implements this command.
-	LONG (*cf_Function)(struct FileTypesPrefsInst *, struct MUI_NListtree_TreeNode *, LONG *);
+	IPTR (*cf_Function)(struct FileTypesPrefsInst *, struct MUI_NListtree_TreeNode *, IPTR *);
 	};
 
 //----------------------------------------------------------------------------
 
 static void ReadFileTypeDef(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn);
-static LONG ReadFileTypeDefFile(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, CONST_STRPTR fileName);
+static IPTR ReadFileTypeDefFile(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, CONST_STRPTR fileName);
 static const struct CmdFunc *ParseFileTypeLine(CONST_STRPTR *Line);
 
-static LONG FtBeginToolTip(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG FtEndToolTip(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG FtHBar(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG FtBeginGroup(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG FtEndGroup(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG FtBeginMember(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG FtEndMember(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG FtString(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG FtSpace(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG FtImage(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG FtBeginPopupMenu(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG FtEndPopupMenu(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG FtIncludeFile(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG GetFtDescription(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG GetFtPvPlugin(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG AddFtMenuSeparator(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG NewFtMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG EndFtMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG AddSubMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG EndSubMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG FtInternalCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG FtWbCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG FtARexxCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG FtCliCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG FtPluginCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
-static LONG FtIconWindowCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtBeginToolTip(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtEndToolTip(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtHBar(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtBeginGroup(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtEndGroup(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtBeginMember(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtEndMember(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtString(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtSpace(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtImage(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtBeginPopupMenu(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtEndPopupMenu(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtIncludeFile(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR GetFtDescription(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR GetFtPvPlugin(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR AddFtMenuSeparator(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR NewFtMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR EndFtMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR AddSubMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR EndSubMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtInternalCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtWbCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtARexxCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtCliCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtPluginCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
+static IPTR FtIconWindowCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray);
 
 #if !defined(__SASC) && !defined(__MORPHOS__) && !defined(__AROS__)
 static char *stpblk(const char *q);
@@ -282,7 +282,7 @@ static void ReadFileTypeDef(struct FileTypesPrefsInst *inst, struct MUI_NListtre
 
 //----------------------------------------------------------------------------
 
-static LONG ReadFileTypeDefFile(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, CONST_STRPTR fileName)
+static IPTR ReadFileTypeDefFile(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, CONST_STRPTR fileName)
 {
 	struct FileTypesListEntry *fte = (struct FileTypesListEntry *) tn->tn_User;
 	LONG Result = RETURN_OK;
@@ -424,7 +424,7 @@ static const struct CmdFunc *ParseFileTypeLine(CONST_STRPTR *Line)
 
 //----------------------------------------------------------------------------
 
-static LONG FtBeginToolTip(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtBeginToolTip(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct FileTypesListEntry *fte;
 
@@ -454,7 +454,7 @@ static LONG FtBeginToolTip(struct FileTypesPrefsInst *inst, struct MUI_NListtree
 }
 
 
-static LONG FtEndToolTip(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtEndToolTip(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct FileTypesListEntry *fte;
 
@@ -483,7 +483,7 @@ static LONG FtEndToolTip(struct FileTypesPrefsInst *inst, struct MUI_NListtree_T
 }
 
 
-static LONG FtHBar(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtHBar(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct FileTypesListEntry *fte;
 	struct MUI_NListtree_TreeNode *barTTd;
@@ -520,7 +520,7 @@ static LONG FtHBar(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNod
 }
 
 
-static LONG FtBeginGroup(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtBeginGroup(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct FileTypesListEntry *fte;
 	struct MUI_NListtree_TreeNode *groupTTi;
@@ -566,7 +566,7 @@ static LONG FtBeginGroup(struct FileTypesPrefsInst *inst, struct MUI_NListtree_T
 }
 
 
-static LONG FtEndGroup(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtEndGroup(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct FileTypesListEntry *fte;
 
@@ -595,7 +595,7 @@ static LONG FtEndGroup(struct FileTypesPrefsInst *inst, struct MUI_NListtree_Tre
 }
 
 
-static LONG FtBeginMember(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtBeginMember(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct MUI_NListtree_TreeNode *memberTTi;
 	struct FileTypesListEntry *fte;
@@ -638,7 +638,7 @@ static LONG FtBeginMember(struct FileTypesPrefsInst *inst, struct MUI_NListtree_
 }
 
 
-static LONG FtEndMember(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtEndMember(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct FileTypesListEntry *fte;
 
@@ -665,7 +665,7 @@ static LONG FtEndMember(struct FileTypesPrefsInst *inst, struct MUI_NListtree_Tr
 }
 
 
-static LONG FtString(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtString(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct FileTypesListEntry *fte;
 	struct MUI_NListtree_TreeNode *stringTTd;
@@ -744,7 +744,7 @@ static LONG FtString(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeN
 }
 
 
-static LONG FtSpace(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtSpace(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	ULONG *Size = (ULONG *) ArgArray[0];
 	struct MUI_NListtree_TreeNode *spaceTTd;
@@ -786,7 +786,7 @@ static LONG FtSpace(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNo
 }
 
 
-static LONG FtImage(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtImage(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	STRPTR fileName = (STRPTR) ArgArray[0];
 	struct MUI_NListtree_TreeNode *imageTTd;
@@ -828,7 +828,7 @@ static LONG FtImage(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNo
 
 //----------------------------------------------------------------------------
 
-static LONG FtBeginPopupMenu(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtBeginPopupMenu(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct FileTypesListEntry *fte;
 
@@ -848,7 +848,7 @@ static LONG FtBeginPopupMenu(struct FileTypesPrefsInst *inst, struct MUI_NListtr
 }
 
 
-static LONG FtEndPopupMenu(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtEndPopupMenu(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	d1(kprintf(__FILE__ "/%s/%ld: \n", __FUNC__, __LINE__));
 
@@ -858,7 +858,7 @@ static LONG FtEndPopupMenu(struct FileTypesPrefsInst *inst, struct MUI_NListtree
 }
 
 
-static LONG FtIncludeFile(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtIncludeFile(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	STRPTR fileName = (STRPTR) ArgArray[0];
 
@@ -873,7 +873,7 @@ static LONG FtIncludeFile(struct FileTypesPrefsInst *inst, struct MUI_NListtree_
 }
 
 
-static LONG GetFtDescription(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR GetFtDescription(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct FileTypesListEntry *fte = (struct FileTypesListEntry *) tn->tn_User;
 	STRPTR descName = (STRPTR) ArgArray[0];
@@ -886,7 +886,7 @@ static LONG GetFtDescription(struct FileTypesPrefsInst *inst, struct MUI_NListtr
 }
 
 
-static LONG GetFtPvPlugin(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR GetFtPvPlugin(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct FileTypesListEntry *fte = (struct FileTypesListEntry *) tn->tn_User;
 	STRPTR pluginName = (STRPTR) ArgArray[0];
@@ -899,7 +899,7 @@ static LONG GetFtPvPlugin(struct FileTypesPrefsInst *inst, struct MUI_NListtree_
 }
 
 
-static LONG AddFtMenuSeparator(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR AddFtMenuSeparator(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct MUI_NListtree_TreeNode *ftmi;
 	struct FileTypesListEntry *fte;
@@ -926,7 +926,7 @@ static LONG AddFtMenuSeparator(struct FileTypesPrefsInst *inst, struct MUI_NList
 }
 
 
-static LONG NewFtMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR NewFtMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct MUI_NListtree_TreeNode *ftmi;
 	struct FileTypesListEntry *fte;
@@ -1005,7 +1005,7 @@ static LONG NewFtMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtree
 }
 
 
-static LONG EndFtMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR EndFtMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct MUI_NListtree_TreeNode *ftmi = inst->fpb_CurrentMenuItem;
 
@@ -1020,7 +1020,7 @@ static LONG EndFtMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtree
 }
 
 
-static LONG AddSubMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR AddSubMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct MUI_NListtree_TreeNode *ftmi;
 	struct FileTypesListEntry *fte;
@@ -1068,7 +1068,7 @@ static LONG AddSubMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtre
 }
 
 
-static LONG EndSubMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR EndSubMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct MUI_NListtree_TreeNode *ftmi = inst->fpb_ParentMenuItem;
 
@@ -1091,7 +1091,7 @@ static LONG EndSubMenuEntry(struct FileTypesPrefsInst *inst, struct MUI_NListtre
 }
 
 
-static LONG FtInternalCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtInternalCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct MUI_NListtree_TreeNode *ftmi = inst->fpb_CurrentMenuItem;
 	struct FileTypesListEntry *fte;
@@ -1123,7 +1123,7 @@ static LONG FtInternalCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_
 }
 
 
-static LONG FtWbCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtWbCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct MUI_NListtree_TreeNode *ftmi = inst->fpb_CurrentMenuItem;
 	struct FileTypesListEntry *fte;
@@ -1163,7 +1163,7 @@ static LONG FtWbCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNo
 }
 
 
-static LONG FtARexxCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtARexxCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct MUI_NListtree_TreeNode *ftmi = inst->fpb_CurrentMenuItem;
 	struct FileTypesListEntry *fte;
@@ -1203,7 +1203,7 @@ static LONG FtARexxCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_Tre
 }
 
 
-static LONG FtCliCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtCliCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct MUI_NListtree_TreeNode *ftmi = inst->fpb_CurrentMenuItem;
 	struct FileTypesListEntry *fte;
@@ -1243,7 +1243,7 @@ static LONG FtCliCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeN
 }
 
 
-static LONG FtPluginCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtPluginCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct MUI_NListtree_TreeNode *ftmi = inst->fpb_CurrentMenuItem;
 	struct FileTypesListEntry *fte;
@@ -1275,7 +1275,7 @@ static LONG FtPluginCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_Tr
 }
 
 
-static LONG FtIconWindowCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
+static IPTR FtIconWindowCmd(struct FileTypesPrefsInst *inst, struct MUI_NListtree_TreeNode *tn, IPTR *ArgArray)
 {
 	struct MUI_NListtree_TreeNode *ftmi = inst->fpb_CurrentMenuItem;
 	struct FileTypesListEntry *fte;
