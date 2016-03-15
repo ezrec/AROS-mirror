@@ -81,14 +81,14 @@ extern T_UTILITYBASE __UtilityBase;
 static BOOL fInit;
 
 
-M68KFUNC_P3(ULONG, myHookFunc,
+M68KFUNC_P3(IPTR, myHookFunc,
 	A0, Class *, cl,
 	A2, Object *, obj,
 	A1, Msg, msg)
 {
 	struct ScaRootList *rootList = (struct ScaRootList *) obj;
 	struct ScaWindowStruct *sWin = NULL;
-	ULONG Result;
+	IPTR Result;
 	BOOL Scalos4014;
 
 	d(kprintf(__FUNC__ "/%ld: MethodID=%08lx\n", __LINE__, msg->MethodID));
@@ -106,7 +106,7 @@ M68KFUNC_P3(ULONG, myHookFunc,
 
 			inst->vgi_VolumeGaugeObject = NULL;
 
-			Result = (ULONG) obj;
+			Result = (IPTR) obj;
 			}
 		else
 			Result = 0;
@@ -123,7 +123,7 @@ M68KFUNC_P3(ULONG, myHookFunc,
 			struct VGinst *inst = INST_DATA(cl, obj);
 
 			inst->vgi_VolumeGaugeObject = NewObject(VOLUMEGAUGE_GetClass(), NULL, 
-				GA_DrawInfo, (ULONG) rootList->rl_internInfos->ii_DrawInfo,
+				GA_DrawInfo, (IPTR) rootList->rl_internInfos->ii_DrawInfo,
 				GA_LeftBorder, TRUE,
 				GA_RelSpecial, TRUE,
 				VOLUMEGAUGE_Ticks, 5,
@@ -171,7 +171,7 @@ M68KFUNC_P3(ULONG, myHookFunc,
 					GA_Left, 4,
 					GA_Width, win->BorderLeft - 4 - 4,
 					GA_RelHeight, - (win->BorderTop + 2) - win->BorderBottom,
-					GA_DrawInfo, (ULONG) rootList->rl_internInfos->ii_DrawInfo,
+					GA_DrawInfo, (IPTR) rootList->rl_internInfos->ii_DrawInfo,
 					GA_LeftBorder, TRUE,
 					GA_RelSpecial, TRUE,
 					VOLUMEGAUGE_Ticks, 5,

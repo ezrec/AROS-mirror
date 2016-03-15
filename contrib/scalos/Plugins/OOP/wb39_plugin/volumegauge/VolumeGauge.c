@@ -52,7 +52,7 @@ static struct RastPort *NewObtainGIRPort(struct GadgetInfo *gInfo);
 /***********************************************************/
 
 // The functions in this module
-static ULONG INTERRUPT InitVolumeGauge(Class *cl, struct Gadget *g, struct opSet *ops);
+static IPTR INTERRUPT InitVolumeGauge(Class *cl, struct Gadget *g, struct opSet *ops);
 static ULONG LayoutVolumeGauge(Class *cl, struct Gadget *g, struct gpLayout *gpr);
 static ULONG RenderVolumeGauge(Class *, struct Gadget *, struct gpRender *);
 static ULONG UpdateVolumeGauge(Class *cl, struct Gadget *g, struct opSet *msg);
@@ -160,7 +160,7 @@ static SAVEDS(ULONG) INTERRUPT dispatchVolumeGaugeGad(Class *cl, Object *o, Msg 
 /*************************************************************************************************/
 /*******************************   Initialize the gadget.   **************************************/
 /*************************************************************************************************/
-static ULONG INTERRUPT InitVolumeGauge(Class *cl, struct Gadget *g, struct opSet *ops)
+static IPTR INTERRUPT InitVolumeGauge(Class *cl, struct Gadget *g, struct opSet *ops)
 {
 	struct VolumeGaugeInst *inst = INST_DATA(cl, (Object *)g);
 
@@ -178,7 +178,7 @@ static ULONG INTERRUPT InitVolumeGauge(Class *cl, struct Gadget *g, struct opSet
 
 	ScaleValue(inst);
 
-	return (ULONG) g;
+	return (IPTR) g;
 }
 
 
@@ -195,7 +195,7 @@ static ULONG LayoutVolumeGauge(Class *cl, struct Gadget *g, struct gpLayout *gpl
 	if (gpl->gpl_GInfo && gpl->gpl_GInfo->gi_Window)
 		{
 		Object *CloseImage;
-		ULONG GWidth = 14;
+		IPTR GWidth = 14;
 
 		d1(kprintf("%s/%s/%ld:  Window=%08lx\n", __FILE__, __FUNC__, __LINE__, gpl->gpl_GInfo->gi_Window));
 		d1(kprintf("%s/%s/%ld:  BorderLeft=%ld  BorderRight=%ld\n", __FILE__, __FUNC__, __LINE__, gpl->gpl_GInfo->gi_Window->BorderLeft, gpl->gpl_GInfo->gi_Window->BorderRight));

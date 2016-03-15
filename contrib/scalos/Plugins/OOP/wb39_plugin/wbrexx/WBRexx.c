@@ -649,7 +649,7 @@ LONG ReturnRexxMsg(struct RexxMsg * Message,CONST_STRPTR Result)
 			 * result field.
 			 */
 
-			Message->rm_Result2 = (LONG)ResultString;
+			Message->rm_Result2 = (IPTR)ResultString;
 			}
 		else
 			{
@@ -999,7 +999,7 @@ LONG DoRexxCommand(CONST_STRPTR Command)
 		/* The command goes into the first
 		 * message argument.
 		 */
-		RexxMsg->rm_Args[0] = CreateArgstring((STRPTR) Command,strlen(Command));
+		RexxMsg->rm_Args[0] = (IPTR)CreateArgstring((STRPTR) Command,strlen(Command));
 		if (0 == RexxMsg->rm_Args[0])
 			{
 			Error = ERROR_NO_FREE_STORE;
@@ -1231,7 +1231,7 @@ BOOL StartWBRexxProcess(void)
 	if (ScalosBase->scb_LibNode.lib_Version >= 40)
 		{
 		SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetEmulationMode, (ULONG) &EmulationMode,
+			SCALOSCTRLA_GetEmulationMode, (IPTR) &EmulationMode,
 			TAG_END);
 		}
 
@@ -1248,9 +1248,9 @@ BOOL StartWBRexxProcess(void)
 			return FALSE;
 			}
 
-		WBRexxProc = CreateNewProcTags(NP_Name, (ULONG) "WB39 Rexx Handler",
+		WBRexxProc = CreateNewProcTags(NP_Name, (IPTR) "WB39 Rexx Handler",
 				NP_Priority, 0,
-				NP_Entry, (ULONG) PATCH_NEWFUNC(WBRexxProcess),
+				NP_Entry, (IPTR) PATCH_NEWFUNC(WBRexxProcess),
 				NP_StackSize, 16384,
 				TAG_END);
 		if (WBRexxProc == NULL)
@@ -1684,9 +1684,9 @@ ULONG AddMenuItem(CONST_STRPTR Name, CONST_STRPTR Title, CONST_STRPTR Cmd, CONST
 
 		if (tmi->tmi_MenuTitle && NULL == tmi->tmi_wbTitleKey)
 			{
-			tmi->tmi_MenuAppObject = SCA_NewAddAppMenuItemTags(0, (ULONG) tmi,
+			tmi->tmi_MenuAppObject = SCA_NewAddAppMenuItemTags(0, (IPTR) tmi,
 				tmi->tmi_MenuTitle, ToolMenuMsgPort,
-				WBAPPMENUA_GetTitleKey, (ULONG) &tmi->tmi_wbTitleKey,
+				WBAPPMENUA_GetTitleKey, (IPTR) &tmi->tmi_wbTitleKey,
 				TAG_END);
 
 			if (NULL == tmi->tmi_MenuAppObject)
@@ -1701,11 +1701,11 @@ ULONG AddMenuItem(CONST_STRPTR Name, CONST_STRPTR Title, CONST_STRPTR Cmd, CONST
 
 		if (NULL == tmi->tmi_SubItem || NULL == tmi->tmi_wbKey)
 			{
-			tmi->tmi_ItemAppObject = SCA_NewAddAppMenuItemTags(0, (ULONG) tmi,
+			tmi->tmi_ItemAppObject = SCA_NewAddAppMenuItemTags(0, (IPTR) tmi,
 				tmi->tmi_Title, ToolMenuMsgPort,
-				tmi->tmi_SubItem ? TAG_IGNORE : WBAPPMENUA_CommandKeyString, (ULONG) Shortcut,
-				WBAPPMENUA_UseKey, (ULONG) tmi->tmi_wbTitleKey,
-				tmi->tmi_SubItem ? WBAPPMENUA_GetKey : TAG_IGNORE, (ULONG) &tmi->tmi_wbKey,
+				tmi->tmi_SubItem ? TAG_IGNORE : WBAPPMENUA_CommandKeyString, (IPTR) Shortcut,
+				WBAPPMENUA_UseKey, (IPTR) tmi->tmi_wbTitleKey,
+				tmi->tmi_SubItem ? WBAPPMENUA_GetKey : TAG_IGNORE, (IPTR) &tmi->tmi_wbKey,
 				TAG_END);
 
 			if (NULL == tmi->tmi_ItemAppObject)
@@ -1720,10 +1720,10 @@ ULONG AddMenuItem(CONST_STRPTR Name, CONST_STRPTR Title, CONST_STRPTR Cmd, CONST
 
 		if (tmi->tmi_SubItem)
 			{
-			tmi->tmi_SubAppObject = SCA_NewAddAppMenuItemTags(0, (ULONG) tmi,
+			tmi->tmi_SubAppObject = SCA_NewAddAppMenuItemTags(0, (IPTR) tmi,
 					tmi->tmi_SubItem, ToolMenuMsgPort,
-					WBAPPMENUA_CommandKeyString, (ULONG) Shortcut,
-					WBAPPMENUA_UseKey, (ULONG) tmi->tmi_wbKey,
+					WBAPPMENUA_CommandKeyString, (IPTR) Shortcut,
+					WBAPPMENUA_UseKey, (IPTR) tmi->tmi_wbKey,
 					TAG_END);
 
 			if (NULL == tmi->tmi_SubAppObject)

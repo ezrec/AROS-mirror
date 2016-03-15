@@ -161,7 +161,7 @@ BOOL closePlugin(struct PluginBase *base)
 	SEE ALSO
 		scalos/scalos.h
 */
-M68KFUNC_P3(ULONG, EnvVar,
+M68KFUNC_P3(IPTR, EnvVar,
 	A0, Class *, cls,
 	A2, Object *, object,
 	A1, Msg, message)
@@ -180,7 +180,7 @@ M68KFUNC_P3(ULONG, EnvVar,
 			CONST_STRPTR FmtPtr;
 			STRPTR DestPtr;
 			size_t Len;
-			ULONG Success = FALSE;
+			IPTR Success = FALSE;
 
 			for (FmtPtr = msg->mxl_TitleFormat, DestPtr = VarName, Len = sizeof(VarName);
 				*FmtPtr && '?' != *FmtPtr && Len > 1;
@@ -223,7 +223,7 @@ M68KFUNC_P3(ULONG, EnvVar,
 
 	/* Call superclass method if we have failed to do something (this method does not get processed by
 	** this function, the parse characters were not what we were looking for, etc) */
-	return (ULONG) DoSuperMethodA(keepclass, object, (Msg)msg);
+	return (IPTR) DoSuperMethodA(keepclass, object, (Msg)msg);
 }
 M68KFUNC_END
 

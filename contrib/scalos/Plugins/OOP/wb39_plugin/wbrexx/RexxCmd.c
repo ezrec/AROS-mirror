@@ -1681,7 +1681,7 @@ LONG Cmd_Rx(APTR UserData,struct RexxMsg *Message,STRPTR *Args)
 		Printf(" ASYNC");
 
 	if(Args[ARG_COMMAND] != NULL)
-		Printf(" COMMAND=\"%s\"", (ULONG) Args[ARG_COMMAND]);
+		Printf(" COMMAND=\"%s\"", (IPTR) Args[ARG_COMMAND]);
 
 	Printf("\n");
 
@@ -1739,9 +1739,9 @@ LONG Cmd_Rx(APTR UserData,struct RexxMsg *Message,STRPTR *Args)
 					NP_Input,	Stream,
 					NP_CloseInput,	FALSE,
 					NP_Output,	NULL,
-					NP_ConsoleTask,	(ULONG) Handle->fh_Type,
+					NP_ConsoleTask,	(IPTR) Handle->fh_Type,
 					NP_WindowPtr,	-1,
-					NP_Entry,	(ULONG) PATCH_NEWFUNC(RxEntry),
+					NP_Entry,	(IPTR) PATCH_NEWFUNC(RxEntry),
 				TAG_DONE);
 
 				if(Child != NULL)
@@ -2634,9 +2634,9 @@ static LONG OpenWBHelpFile(void)
 	struct Process *WBHelpProc;
 	STATIC_PATCHFUNC(WBHelpProcess);
 
-	WBHelpProc = CreateNewProcTags(NP_Name, (ULONG) "WB39 WBHelp Handler",
+	WBHelpProc = CreateNewProcTags(NP_Name, (IPTR) "WB39 WBHelp Handler",
 			NP_Priority, 0,
-			NP_Entry, (ULONG) PATCH_NEWFUNC(WBHelpProcess),
+			NP_Entry, (IPTR) PATCH_NEWFUNC(WBHelpProcess),
 			NP_StackSize, 16384,
 			TAG_END);
 	if (WBHelpProc == NULL)

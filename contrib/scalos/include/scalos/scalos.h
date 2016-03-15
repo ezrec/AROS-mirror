@@ -1987,10 +1987,10 @@ struct ScaAppObjNode
 	WORD			an_Kennug;	/* for want of a better name, holds "SC" as identifier */
 	WORD			an_type;
 	LONG			an_id;
-	LONG			an_userdata;
-	struct MsgPort	*an_msgport;
-	LONG			an_object;
-	LONG			an_userdata2;
+	IPTR			an_userdata;
+	struct MsgPort	        *an_msgport;
+	IPTR			an_object;
+	IPTR			an_userdata2;
 };
 
 

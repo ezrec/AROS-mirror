@@ -258,14 +258,14 @@ struct List HiddenDeviceList;   		// +dm+ 20010518 for storing names of hidden d
 struct SignalSemaphore HiddenDevListSema;	// +jl+ 20010523 Semaphore to protect HiddenDeviceList
 
 
-M68KFUNC_P3(ULONG, myHookFunc,
+M68KFUNC_P3(IPTR, myHookFunc,
 	A0, Class *, cl,
 	A2, Object *, obj,
 	A1, Msg, msg)
 {
 	struct ScaRootList *rootList;
 	struct ScaWindowStruct *sWin = NULL;
-	ULONG Result;
+	IPTR Result;
 	BOOL Scalos4014;
 
 	rList = rootList = (struct ScaRootList *) obj;
@@ -287,7 +287,7 @@ M68KFUNC_P3(ULONG, myHookFunc,
 
 			inst->wb39i_VolumeGaugeObject = NULL;
 
-			Result = (ULONG) obj;
+			Result = (IPTR) obj;
 			}
 		else
 			Result = 0;
@@ -307,7 +307,7 @@ M68KFUNC_P3(ULONG, myHookFunc,
 				struct WB39inst *inst = INST_DATA(cl, obj);
 
 				inst->wb39i_VolumeGaugeObject = NewObject(VOLUMEGAUGE_GetClass(), NULL, 
-					GA_DrawInfo, (ULONG) rootList->rl_internInfos->ii_DrawInfo,
+					GA_DrawInfo, (IPTR) rootList->rl_internInfos->ii_DrawInfo,
 					GA_LeftBorder, TRUE,
 					GA_RelSpecial, TRUE,
 					VOLUMEGAUGE_Ticks, 5,
@@ -356,7 +356,7 @@ M68KFUNC_P3(ULONG, myHookFunc,
 					GA_Left, 4,
 					GA_Width, win->BorderLeft - 4 - 4,
 					GA_RelHeight, - (win->BorderTop + 2) - win->BorderBottom,
-					GA_DrawInfo, (ULONG) rootList->rl_internInfos->ii_DrawInfo,
+					GA_DrawInfo, (IPTR) rootList->rl_internInfos->ii_DrawInfo,
 					GA_LeftBorder, TRUE,
 					GA_RelSpecial, TRUE,
 					VOLUMEGAUGE_Ticks, 5,
@@ -456,7 +456,7 @@ static BOOL LateInit(void)
 		if (ScalosBase->scb_LibNode.lib_Version >= 40)
 			{
 			SCA_ScalosControl(NULL,
-				SCALOSCTRLA_GetEmulationMode, (ULONG) &EmulationMode,
+				SCALOSCTRLA_GetEmulationMode, (IPTR) &EmulationMode,
 				TAG_END);
 			}
 
@@ -1217,7 +1217,7 @@ static LIBFUNC_P3(BOOL, myOpenWorkbenchObjectA,
 		ArgList[0].wa_Name = name;
 
 		TagList[0].ti_Tag = SCA_IconObject;
-		TagList[0].ti_Data = (ULONG) IconObj;
+		TagList[0].ti_Data = (IPTR) IconObj;
 		TagList[1].ti_Tag = SCA_Stacksize;
 		TagList[1].ti_Data = DefaultStackSize;
 		TagList[2].ti_Tag = SCA_Flags;
@@ -1561,14 +1561,14 @@ static LIBFUNC_P4(BOOL, myChangeWorkbenchSelectionA,
 			{
 			struct ExtGadget *gg = (struct ExtGadget *) icon->in_Icon;
 			struct IconSelectMsg ism;
-			ULONG IconType;
+			IPTR IconType;
 			WORD iconLeft, iconTop;
 			struct ScaWindowStruct *swiDrawer = GetIconNodeOpenWindow(swi->ws_Lock, icon);
 
 			ism.ism_Name = NULL;
 
-			GetAttr(IDTA_Text, icon->in_Icon, (ULONG *) &ism.ism_Name);
-			GetAttr(IDTA_Type, icon->in_Icon, (ULONG *) &IconType);
+			GetAttr(IDTA_Text, icon->in_Icon, (IPTR *)&ism.ism_Name);
+			GetAttr(IDTA_Type, icon->in_Icon, &IconType);
 
 			d1(kprintf("%s/%s/%ld: icon=%08lx <%s>  IconType=%ld  swiDrawer=%08lx\n", \
 				__LINE__, icon, ism.ism_Name, IconType, swiDrawer));

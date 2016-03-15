@@ -190,7 +190,7 @@ ULONG MenuSetViewModeByDate(struct ScaWindowStruct *swi)
 
 ULONG MenuShowAllFiles(struct ScaWindowStruct *swi)
 {
-	ULONG showAllFiles = FALSE;
+	IPTR showAllFiles = FALSE;
 
 	GetAttr(SCCA_IconWin_ShowType, swi->ws_WindowTask->mt_MainObject, &showAllFiles);
 	if (showAllFiles)
@@ -237,7 +237,7 @@ static void HandleWBHD(char *Data, size_t Length)
 	if(Data && Length)
 	{
 		WorkbenchControl(NULL, 
-			WBCTRLA_AddHiddenDeviceName, (ULONG) Data, 
+			WBCTRLA_AddHiddenDeviceName, (IPTR) Data, 
 			TAG_DONE);
 	}
 }
@@ -256,7 +256,7 @@ BOOL ParseWBPrefs(CONST_STRPTR filename)
 
 	if( iff = AllocIFF() )
 		{
-		if( iff->iff_Stream = (ULONG) Open((STRPTR) filename, MODE_OLDFILE ) )
+		if( iff->iff_Stream = (IPTR) Open((STRPTR) filename, MODE_OLDFILE ) )
 			{
 			InitIFFasDOS( iff );
 
@@ -373,7 +373,7 @@ BOOL ReadScalosPrefs(void)
 	if (ScalosBase->scb_LibNode.lib_Version >= 39 && ScalosBase->scb_LibNode.lib_Revision >= 234)
 		{
 		SCA_ScalosControl(NULL,
-			SCALOSCTRLA_GetDefaultStackSize, (ULONG) &DefaultStackSize,
+			SCALOSCTRLA_GetDefaultStackSize, (IPTR) &DefaultStackSize,
 			TAG_END);
 		}
 
@@ -506,7 +506,7 @@ void MakeIconVisible(struct ScaWindowStruct *swi, struct ScaIconNode *sIcon)
 {
 	struct ExtGadget *gg = (struct ExtGadget *) sIcon->in_Icon;
 	LONG deltaX = 0, deltaY = 0;
-	LONG winRight, winBottom;
+	IPTR winRight, winBottom;
 	WORD iconLeft, iconTop, iconRight, iconBottom;
 	WORD winLeft, winTop;
 
@@ -518,8 +518,8 @@ void MakeIconVisible(struct ScaWindowStruct *swi, struct ScaIconNode *sIcon)
 	winLeft = 0;
 	winTop = 0;
 
-	GetAttr(SCCA_IconWin_InnerWidth, swi->ws_WindowTask->mt_MainObject, (ULONG *) &winRight);
-	GetAttr(SCCA_IconWin_InnerHeight, swi->ws_WindowTask->mt_MainObject, (ULONG *) &winBottom);
+	GetAttr(SCCA_IconWin_InnerWidth, swi->ws_WindowTask->mt_MainObject, &winRight);
+	GetAttr(SCCA_IconWin_InnerHeight, swi->ws_WindowTask->mt_MainObject, &winBottom);
 
 	d1(kprintf(__FUNC__ "/%ld: iconLeft=%ld  iconRight=%ld  iconTop=%ld  iconBottom=%ld\n", \
 		__LINE__, iconLeft, iconRight, iconTop, iconBottom);)
@@ -1021,7 +1021,7 @@ CONST_STRPTR GetIconName(struct ScaIconNode *in)
 
 	if (in)
 		{
-		ULONG IconType;
+		IPTR IconType;
 
 		GetAttr(IDTA_Type, in->in_Icon, &IconType);
 
@@ -1057,7 +1057,7 @@ struct ScaWindowStruct *WaitOpen(struct ScaWindowStruct *ws)
 	d1(kprintf(__FUNC__ "/%ld: ws=%08lx\n", __LINE__, ws));
 	if (ws)
 		{
-		ULONG Reading = FALSE;
+		IPTR Reading = FALSE;
 
 		// if ws is non-NULL, wait until icon reading is finished
 		do	{

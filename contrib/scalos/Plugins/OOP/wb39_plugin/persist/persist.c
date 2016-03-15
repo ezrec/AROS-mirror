@@ -307,7 +307,7 @@ BOOL closePlugin(struct PluginBase *pluginbase)
 
 //----------------------------------------------------------------------------
 
-M68KFUNC_P3(ULONG, persistHookFunc,
+M68KFUNC_P3(IPTR, persistHookFunc,
 	A0, Class *, cl,
 	A2, Object *, obj,
 	A1, Msg, msg)
@@ -778,9 +778,9 @@ static void RewriteNodeListFile(void)
 							}
 						}
 					rc = FPrintf(fh, "%s%sP=%s\n",
-						(ULONG) (OldNode->on_Iconified ? "I " : ""), 
-						(ULONG) (OldNode->on_BrowserMode ? "B " : ""),
-						(ULONG) OldNode->on_Path);
+						(IPTR) (OldNode->on_Iconified ? "I " : ""), 
+						(IPTR) (OldNode->on_BrowserMode ? "B " : ""),
+						(IPTR) OldNode->on_Path);
 					if (rc < 0)
 						{
 						Success = FALSE;
@@ -828,9 +828,9 @@ static BOOL StartReOpenProcess(void)
 	struct Process *myProc;
 
 	// CreateNewProc()
-	myProc = CreateNewProcTags(NP_Name, (ULONG) "ReOpenScaloswindows",
+	myProc = CreateNewProcTags(NP_Name, (IPTR) "ReOpenScaloswindows",
 			NP_Priority, 0,
-			NP_Entry, (ULONG) PATCH_NEWFUNC(ReOpenProcess),
+			NP_Entry, (IPTR) PATCH_NEWFUNC(ReOpenProcess),
 			NP_StackSize, 32768,
 			TAG_END);
 	if (myProc == NULL)
@@ -1126,7 +1126,7 @@ static BOOL OpenNodes(void)
 				SCA_NoActivateWindow, TRUE,
 				SCA_BrowserMode, OldNode->on_BrowserMode,
 				((0 != WindowRect.Width) && (0 != WindowRect.Height))
-					? SCA_WindowRect : TAG_IGNORE, (ULONG) &WindowRect,
+					? SCA_WindowRect : TAG_IGNORE, (IPTR) &WindowRect,
 				TAG_END);
 			}
 
@@ -1398,9 +1398,9 @@ static BOOL StartUpdaterProcess(void)
 	STATIC_PATCHFUNC(UpdaterProcess)
 
 	// CreateNewProc()
-	UpdaterProc = CreateNewProcTags(NP_Name, (ULONG) "Scalos_PersistentWindowsUpdater",
+	UpdaterProc = CreateNewProcTags(NP_Name, (IPTR) "Scalos_PersistentWindowsUpdater",
 			NP_Priority, 0,
-			NP_Entry, (ULONG) PATCH_NEWFUNC(UpdaterProcess),
+			NP_Entry, (IPTR) PATCH_NEWFUNC(UpdaterProcess),
 			NP_StackSize, 32768,
 			TAG_END);
 	if (UpdaterProc == NULL)

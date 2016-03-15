@@ -163,7 +163,7 @@ LIBFUNC_P3(BOOL, myWorkbenchControlA,
 				if (ScalosBase->scb_LibNode.lib_Version >= 40)
 					{
 					SCA_ScalosControl(NULL,
-						SCALOSCTRLA_GetDefaultStackSize, (ULONG) &DefaultStackSize,
+						SCALOSCTRLA_GetDefaultStackSize, (IPTR) &DefaultStackSize,
 						TAG_END);
 					}
 				*((ULONG *) ti->ti_Data) = DefaultStackSize;
@@ -327,7 +327,7 @@ LIBFUNC_P3(BOOL, myWorkbenchControlA,
 				if (ScalosBase->scb_LibNode.lib_Version >= 40)
 					{
 					SCA_ScalosControl(NULL,
-						SCALOSCTRLA_GetTypeRestartTime, (ULONG) &TypeRestartTime,
+						SCALOSCTRLA_GetTypeRestartTime, (IPTR) &TypeRestartTime,
 						TAG_END);
 					}
 
@@ -375,7 +375,7 @@ LIBFUNC_P3(BOOL, myWorkbenchControlA,
 				struct Screen *wbScreen = LockPubScreen("Workbench");
 
 				IconControl(NULL, 
-					ICONCTRLA_SetGlobalScreen, (ULONG) wbScreen,
+					ICONCTRLA_SetGlobalScreen, (IPTR) wbScreen,
 					TAG_END);
 
 				UnlockPubScreen(NULL, wbScreen);

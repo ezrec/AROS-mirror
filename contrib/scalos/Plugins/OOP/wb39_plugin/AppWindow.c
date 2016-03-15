@@ -125,7 +125,7 @@ LIBFUNC_P5(struct myAppWindowDropZone *, myAddAppWindowDropZoneA,
 	dz->awz_AppWindow = maw;
 	dz->awz_ID = id;
 	dz->awz_UserData = userdata;
-	dz->awz_Hook = (struct Hook *) GetTagData(WBDZA_Hook, (ULONG)NULL, tags);
+	dz->awz_Hook = (struct Hook *) GetTagData(WBDZA_Hook, (IPTR)NULL, tags);
 
 	if (ti = FindTagItem(WBDZA_Box, tags))
 		{
@@ -321,7 +321,7 @@ LIBFUNC_P6(struct myAppWindow *, myAddAppWindowA,
 #ifdef __AROS__
 	aw = (struct ScaAppObjNode *)AROS_CALL5(struct AppWindow *, origAddAppWindowA,
 			AROS_LDA(ULONG, id, D0),
-			AROS_LDA(ULONG, (ULONG)maw, D1),
+			AROS_LDA(IPTR, (IPTR)maw, D1),
 			AROS_LDA(struct Window *, window, A0),
 			AROS_LDA(struct MsgPort *, msgport, A1),
 			AROS_LDA(struct TagItem *, taglist, A2),
@@ -370,7 +370,7 @@ LIBFUNC_P2(BOOL, myRemoveAppWindow,
 		{
 #ifdef __AROS__
 		return AROS_CALL1(BOOL, origRemoveAppWindow,
-				AROS_LDA(struct AppWindow *, maw, A0),
+				AROS_LDA(struct AppWindow *, (struct AppWindow *)maw, A0),
 				struct Library *, WorkbenchBase);
 #else
 		return CALLLIBFUNC_P2(origRemoveAppWindow,
@@ -389,7 +389,7 @@ LIBFUNC_P2(BOOL, myRemoveAppWindow,
 
 #ifdef __AROS__
 	Result = AROS_CALL1(BOOL, origRemoveAppWindow,
-		AROS_LDA(struct AppWindow *, maw->maw_AppWindow, A0),
+		AROS_LDA(struct AppWindow *, (struct AppWindow *)maw->maw_AppWindow, A0),
 		struct Library *, WorkbenchBase);
 #else
 	Result = CALLLIBFUNC_P2(origRemoveAppWindow,
@@ -650,9 +650,9 @@ BOOL DetachMyProcess(void)
 		return FALSE;
 		}
 
-	myProc = CreateNewProcTags(NP_Name, (ULONG) "wb39_plugin",
+	myProc = CreateNewProcTags(NP_Name, (IPTR) "wb39_plugin",
 			NP_Priority, 0,
-			NP_Entry, (ULONG) PATCH_NEWFUNC(myProcess),
+			NP_Entry, (IPTR) PATCH_NEWFUNC(myProcess),
 			NP_StackSize, 16384,
 			TAG_END);
 	if (myProc == NULL)
@@ -837,7 +837,11 @@ static void ServiceMyPort(void)
 					*myMsg = *Msg;
 					myMsg->am_Message.mn_ReplyPort = myPort;
 					myMsg->am_UserData = maw->maw_origUserData;
-					myMsg->am_Reserved[7] = (ULONG) Msg;	// Remember original Msg for Replying
+#if !defined(__AROS__) || __WORDSIZE !=64
+					myMsg->am_Reserved[7] = (IPTR) Msg;	// Remember original Msg for Replying
+#else
+                                        // FIXME!!
+#endif
 
 					if (maw->maw_ActiveDropZone)
 						{
@@ -871,7 +875,11 @@ static void ServiceMyPort(void)
 			if (MAKE_ID('A','P','P','M') == Msg->am_Reserved[0] && Msg->am_Reserved[7])
 				{
 				// Reply original Msg
+#if !defined(__AROS__) || __WORDSIZE !=64
 				ReplyMsg((struct Message *) Msg->am_Reserved[7]);
+#else
+                                // FIXME!!
+#endif
 				}
 			free(Msg);
 			break;

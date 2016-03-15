@@ -285,12 +285,12 @@ static void CloseLibraries(void)
  * to deal with whatever the messages are (if you intend to respond to multiple
  * messages), but in this case, I'll just stick everything in the dispatcher.
  */
-M68KFUNC_P3(ULONG, Dispatcher,
+M68KFUNC_P3(IPTR, Dispatcher,
 	A0, Class *, cl,
 	A2, Object *, obj,
 	A1, Msg, msg)
 {
-	ULONG Result = 0;
+	IPTR Result = 0;
 
 	if (msg)
 		{

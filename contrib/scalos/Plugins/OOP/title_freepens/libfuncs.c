@@ -153,7 +153,7 @@ BOOL closePlugin(struct PluginBase *base)
 	SEE ALSO
 		scalos/scalos.h
 */
-M68KFUNC_P3(ULONG, FreePens,
+M68KFUNC_P3(IPTR, FreePens,
 	A0, Class *, cls,
 	A2, Object *, obj,
 	A1, Msg, message)
@@ -201,7 +201,7 @@ M68KFUNC_P3(ULONG, FreePens,
 
 	/* Call superclass method if we have failed to do something (this method does not get processed by
 	** this function, the parse characters were not what we were looking for, etc) */
-	return (ULONG) DoSuperMethodA(keepclass, (Object *)object, (Msg) msg);
+	return (IPTR) DoSuperMethodA(keepclass, (Object *)object, (Msg) msg);
 }
 M68KFUNC_END
 

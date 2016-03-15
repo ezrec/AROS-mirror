@@ -108,12 +108,12 @@ WORD ScalosPrefs_IconOffsets[4] = { 1, 1, 1, 1 };
 struct ScaRootList *rList = NULL;
 
 
-M68KFUNC_P3(ULONG, myHookFunc,
+M68KFUNC_P3(IPTR, myHookFunc,
 	A0, Class *, cl,
 	A2, Object *, obj,
 	A1, Msg, msg)
 {
-	ULONG Result;
+	IPTR Result;
 
 	d1(kprintf(__FUNC__ "/%ld: MethodID=%08lx\n", __LINE__, msg->MethodID));
 

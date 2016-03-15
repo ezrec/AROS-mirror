@@ -43,7 +43,7 @@ BOOL closePlugin(struct PluginBase *pluginbase);
 #if PLUGIN_TYPE == OOP
 #include <intuition/classes.h>
 
-M68KFUNC_P3_PROTO(ULONG, CI_HOOKFUNC,
+M68KFUNC_P3_PROTO(IPTR, CI_HOOKFUNC,
 	A0, Class *, cl,
 	A2, Object *, obj,
 	A1, Msg, msg);

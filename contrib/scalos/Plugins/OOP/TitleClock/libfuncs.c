@@ -122,7 +122,7 @@ M68KFUNC_END
 	SEE ALSO
 		scalos/scalos.h
 */
-M68KFUNC_P3(ULONG, TimeDate,
+M68KFUNC_P3(IPTR, TimeDate,
 	A0, Class *, cls,
 	A2, Object *, object,
 	A1, Msg, message)
@@ -130,7 +130,7 @@ M68KFUNC_P3(ULONG, TimeDate,
 	Class                   *keepclass = cls;   	/* a copy of the class just in case: register A0 is a scratch register remember */
 	struct msg_Translate	*msg = (struct msg_Translate *)message;     	/* a copy of the message just in case: register A1 is a scratch register remember */
 	struct Locale           *loc = NULL;        	/* So we can get the correct date/time format for the display */
-	ULONG                   retval = 0;
+	IPTR                   retval = 0;
 	BOOL dosup = TRUE;
 
 	if (globalLibBase->lb_NotifyPort)

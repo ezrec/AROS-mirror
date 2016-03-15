@@ -31,7 +31,7 @@
 #include "plugin-common.c"
 #endif
 
-DISPATCHER_PROTO(FreeMsgInter);
+DISPATCHERPROTO(FreeMsgInter);
 
 
 extern struct ExecBase	*SysBase;
@@ -218,13 +218,13 @@ BOOL closePlugin(struct PluginBase *base)
 //  Main entry point
 //----------------------------------------------------------------------------·
 
-M68KFUNC_P3(ULONG, Dispatcher,
+M68KFUNC_P3(IPTR, Dispatcher,
 	A0, Class *, cl,
 	A2, Object *, obj,
 	A1, Msg, msg)
 {
 ///
-	ULONG Result;
+	IPTR Result;
 	struct XTWindowsInstanceData *inst;
 
 	switch (msg->MethodID)
@@ -236,7 +236,7 @@ M68KFUNC_P3(ULONG, Dispatcher,
 			inst = INST_DATA(cl,obj);
 			inst->windowTask = ((struct ScaRootList *)obj)->rl_WindowTask;
 			}
-		Result = (ULONG) obj;
+		Result = (IPTR) obj;
 		break;
 
 	case SCCM_Message:
