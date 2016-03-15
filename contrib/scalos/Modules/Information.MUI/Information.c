@@ -100,19 +100,19 @@
 
 #define Label1S(name) \
 	VGroup, \
-		Child, VSpace(0), \
-		Child, HGroup, \
-			Child, HSpace(0), \
-			Child, Label1(name), \
-		End,  \
-		Child, VSpace(0), \
+		Child, (IPTR)VSpace(0), \
+		Child, (IPTR)(HGroup, \
+			Child, (IPTR)HSpace(0), \
+			Child, (IPTR)Label1(name), \
+		End),  \
+		Child, (IPTR)VSpace(0), \
 	End //VGroup
 
 #define ConstantText(contents) \
 	TextObject, \
 		TextFrame, \
 		MUIA_Background, MUII_TextBack, \
-		MUIA_Text_Contents, (contents), \
+		MUIA_Text_Contents, (IPTR)(contents), \
 	End //Textobject
 
 #define ConstantFloatText(contents) \
@@ -120,15 +120,15 @@
 		TextFrame, \
 		MUIA_Weight, 0, \
 		MUIA_Background, MUII_TextBack, \
-		MUIA_Floattext_Text, (contents), \
+		MUIA_Floattext_Text, (IPTR)(contents), \
 	End //Textobject
 
 #define KeyButtonHelp(name,key,HelpText)\
 	TextObject,\
 		ButtonFrame,\
 		MUIA_Font, MUIV_Font_Button,\
-		MUIA_Text_Contents, name,\
-		MUIA_Text_PreParse, "\33c",\
+		MUIA_Text_Contents, (IPTR)name,\
+		MUIA_Text_PreParse, (IPTR)"\33c",\
 		MUIA_Text_HiChar  , key,\
 		MUIA_ControlChar  , key,\
 		MUIA_InputMode    , MUIV_InputMode_RelVerify,\
@@ -141,8 +141,8 @@
 	TextObject,\
 		ButtonFrame,\
 		MUIA_Font, MUIV_Font_Button,\
-		MUIA_Text_Contents, name,\
-		MUIA_Text_PreParse, "\33c",\
+		MUIA_Text_Contents, (IPTR)name,\
+		MUIA_Text_PreParse, (IPTR)"\33c",\
 		MUIA_InputMode    , InputMode,\
 		MUIA_Background   , MUII_ButtonBack,\
 		MUIA_ShortHelp    , HelpText,\
@@ -155,11 +155,11 @@
 		MUIA_InputMode        , MUIV_InputMode_Toggle,\
 		MUIA_Image_Spec       , MUII_CheckMark,\
 		MUIA_Image_FreeVert   , TRUE,\
-		MUIA_Selected         , selected,\
+		MUIA_Selected         , (IPTR)selected,\
 		MUIA_Background       , MUII_ButtonBack,\
 		MUIA_ShowSelState     , FALSE,\
 		MUIA_CycleChain       , TRUE,\
-		MUIA_ShortHelp	      , GetLocString(HelpTextID), \
+		MUIA_ShortHelp	      , (IPTR)GetLocString(HelpTextID), \
 		End
 
 #define UpArrowObject \
@@ -701,7 +701,7 @@ int main(int argc, char *argv[])
 		{
 		const struct ExtGadget *gg = (const struct ExtGadget *) iconObjFromDisk;
 		STRPTR *ToolTypesArray = NULL;
-		ULONG IconType;
+		IPTR IconType;
 		enum StartFromType StartFrom = STARTFROM_Workbench;
 		BOOL PromptForInput = FALSE;
 		BOOL WaitUntilFinished = TRUE;
@@ -770,15 +770,15 @@ int main(int argc, char *argv[])
 		d1(KPrintF(__FILE__ "/%s/%ld: \n", __FUNC__, __LINE__));
 
 		APP_Main = ApplicationObject,
-			MUIA_Application_Title,		GetLocString(MSGID_TITLENAME),
-			MUIA_Application_Version,	versTag + 1,
-			MUIA_Application_Copyright,	"© The Scalos Team, 2004" CURRENTYEAR,
-			MUIA_Application_Author,	"The Scalos Team",
-			MUIA_Application_Description,	"Scalos Information module",
-			MUIA_Application_Base,		"SCALOS_INFORMATION",
+			MUIA_Application_Title,		(IPTR)GetLocString(MSGID_TITLENAME),
+			MUIA_Application_Version,	(IPTR)versTag + 1,
+			MUIA_Application_Copyright,	(IPTR)"© The Scalos Team, 2004" CURRENTYEAR,
+			MUIA_Application_Author,	(IPTR)"The Scalos Team",
+			MUIA_Application_Description,	(IPTR)"Scalos Information module",
+			MUIA_Application_Base,		(IPTR)"SCALOS_INFORMATION",
 
-			SubWindow, WIN_Main = WindowObject,
-				MUIA_Window_Title, GetLocString(MSGID_TITLENAME),
+			SubWindow, (IPTR)(WIN_Main = WindowObject,
+				MUIA_Window_Title, (IPTR)GetLocString(MSGID_TITLENAME),
 //				MUIA_Window_ID,	MAKE_ID('M','A','I','N'),
 				MUIA_Window_AppWindow, FALSE,
 
@@ -788,737 +788,731 @@ int main(int argc, char *argv[])
 				MUIA_Window_Width, MUIV_Window_Width_MinMax(0),
 				MUIA_Window_Height, MUIV_Window_Height_MinMax(0),
 
-				WindowContents, VGroup,
+				WindowContents, (IPTR)(VGroup,
 
-					Child, HGroup,
-						Child, StringName = StringObject,
-							MUIA_Text_PreParse, MUIX_C MUIX_B,
-							MUIA_String_Contents, IconName,
+					Child, (IPTR)(HGroup,
+						Child, (IPTR)(StringName = StringObject,
+							MUIA_Text_PreParse, (IPTR)MUIX_C MUIX_B,
+							MUIA_String_Contents, (IPTR)IconName,
 							MUIA_String_MaxLen, 108,
 							StringFrame,
 							StringBack,
 							MUIA_String_Format, MUIV_String_Format_Center,
 							MUIA_Weight, 100,
 							MUIA_CycleChain, TRUE,
-						End, //StringObject
-						Child, TextOnDev = TextObject,
+						End), //StringObject
+						Child, (IPTR)(TextOnDev = TextObject,
 							MUIA_ShowMe, strlen(TextDeviceOnDev) > 0,
-							MUIA_Text_Contents, TextDeviceOnDev,
+							MUIA_Text_Contents, (IPTR)TextDeviceOnDev,
 							MUIA_Weight, 0,
-						End, //TextObject
-						Child, TextTypeName = TextObject,
-							MUIA_Text_Contents, GetIconTypeName(iconObjFromDisk),
+						End), //TextObject
+						Child, (IPTR)(TextTypeName = TextObject,
+							MUIA_Text_Contents, (IPTR)GetIconTypeName(iconObjFromDisk),
 							MUIA_Weight, 0,
-						End, //TextObject
-					End, //HGroup
+						End), //TextObject
+					End), //HGroup
 
 //---- +jmc+ -----------------------------------------------------------------------------------------------------------------------------------
 
-					Child, Group_Virtual = ScrollgroupObject,
+					Child, (IPTR)(Group_Virtual = ScrollgroupObject,
 						MUIA_ShowMe, strlen(PathName) > 0 ? ShowIconPath : FALSE,
 						MUIA_CycleChain, TRUE,
 						MUIA_Scrollgroup_FreeHoriz, TRUE,
 						MUIA_Scrollgroup_FreeVert, FALSE,
-						MUIA_Scrollgroup_Contents,
-						VirtgroupObject,
-							Child, Path = TextObject, TextFrame,
+						MUIA_Scrollgroup_Contents, (IPTR)(VirtgroupObject,
+							Child, (IPTR)(Path = TextObject, TextFrame,
 								MUIA_Background, MUII_TextBack,
-								MUIA_Text_PreParse, MUIX_C,
-								MUIA_Text_Contents, PathName,
-								MUIA_ShortHelp, GetLocString(MSGID_TEXT_ICONPATH_SHORTHELP),
-							End, //TextObject
-						End, //VirtgroupObject
-					End, //ScrollgroupObject
+								MUIA_Text_PreParse, (IPTR)MUIX_C,
+								MUIA_Text_Contents, (IPTR)PathName,
+								MUIA_ShortHelp, (IPTR)GetLocString(MSGID_TEXT_ICONPATH_SHORTHELP),
+							End), //TextObject
+						End), //VirtgroupObject
+					End), //ScrollgroupObject
 
 //----------------------------------------------------------------------------------------------------------------------------------------------
-					Child, HGroup,
-						Child, GroupMccIconObj = VGroup,
-							Child, VSpace(0),
+					Child, (IPTR)(HGroup,
+						Child, (IPTR)(GroupMccIconObj = VGroup,
+							Child, (IPTR)VSpace(0),
 
-							Child, TextObject,
-								MUIA_Text_PreParse, MUIX_C,
-								MUIA_Text_Contents, TextFileTypeName,
-							End, //TextObject
+							Child, (IPTR)(TextObject,
+								MUIA_Text_PreParse, (IPTR)MUIX_C,
+								MUIA_Text_Contents, (IPTR)TextFileTypeName,
+							End), //TextObject
 
-							Child, VSpace(1),
+							Child, (IPTR)VSpace(1),
 
-							Child, MccIconObj = IconobjectMCCObject,
-								MUIA_Iconobj_Object, iconObjFromScalos ? iconObjFromScalos : iconObjFromDisk,
+							Child, (IPTR)(MccIconObj = IconobjectMCCObject,
+								MUIA_Iconobj_Object, iconObjFromScalos ? (IPTR)iconObjFromScalos : (IPTR)iconObjFromDisk,
 								MUIA_InputMode, MUIV_InputMode_Toggle,
 								MUIA_ShowSelState, FALSE,
 								MUIA_Dropable, TRUE,
-							End, //IconobjectMCCObject
+							End), //IconobjectMCCObject
 
-							Child, VSpace(1),
+							Child, (IPTR)VSpace(1),
 
-							Child, ColGroup(4),
-								Child, HSpace(0),
+							Child, (IPTR)(ColGroup(4),
+								Child, (IPTR)HSpace(0),
 
-								Child, TextObject,
-									MUIA_Text_Contents, GetLocString(MSGID_ICONPOS_X),
-								End, //TextObject
-								Child, TextPosX = TextObject,
-									MUIA_Text_PreParse, MUIX_R,
-									MUIA_Text_Contents, TextPosXString,
-								End, //TextObject
+								Child, (IPTR)(TextObject,
+									MUIA_Text_Contents, (IPTR)GetLocString(MSGID_ICONPOS_X),
+								End), //TextObject
+								Child, (IPTR)(TextPosX = TextObject,
+									MUIA_Text_PreParse, (IPTR)MUIX_R,
+									MUIA_Text_Contents, (IPTR)TextPosXString,
+								End), //TextObject
 
-								Child, HSpace(0),
-								Child, HSpace(0),
+								Child, (IPTR)HSpace(0),
+								Child, (IPTR)HSpace(0),
 
-								Child, TextObject,
-									MUIA_Text_Contents, GetLocString(MSGID_ICONPOS_Y),
-								End, //TextObject
-								Child, TextPosY = TextObject,
-									MUIA_Text_PreParse, MUIX_R,
-									MUIA_Text_Contents, TextPosYString,
-								End, //TextObject
+								Child, (IPTR)(TextObject,
+									MUIA_Text_Contents, (IPTR)GetLocString(MSGID_ICONPOS_Y),
+								End), //TextObject
+								Child, (IPTR)(TextPosY = TextObject,
+									MUIA_Text_PreParse, (IPTR)MUIX_R,
+									MUIA_Text_Contents, (IPTR)TextPosYString,
+								End), //TextObject
 
-								Child, HSpace(0),
-							End, //ColGroup(2)
+								Child, (IPTR)HSpace(0),
+							End), //ColGroup(4)
 
-							Child, VSpace(0),
-						End, //VGroup
+							Child, (IPTR)VSpace(0),
+						End), //VGroup
 
-						Child, VGroup,
+						Child, (IPTR)(VGroup,
 							MUIA_Background, MUII_GroupBack,
 
-							Child, GroupDisk = RegisterObject,
-								MUIA_Register_Titles, DeviceRegisterTitleStrings,
+							Child, (IPTR)(GroupDisk = RegisterObject,
+								MUIA_Register_Titles, (IPTR)DeviceRegisterTitleStrings,
 								MUIA_CycleChain, TRUE,
 								MUIA_ShowMe, (WBDISK == IconType),
 
-								Child,	VGroup,
+								Child, (IPTR)(VGroup,
 									GroupFrame,
-									Child, ColGroup(2),
-										strlen(TextDeviceName) > 0 ? Child : TAG_IGNORE, Label1(GetLocString(MSGID_DEVICE_DEVICE)),
-										strlen(TextDeviceName) > 0 ? Child : TAG_IGNORE, ConstantText(TextDeviceName),
+									Child, (IPTR)(ColGroup(2),
+										strlen(TextDeviceName) > 0 ? Child : TAG_IGNORE, (IPTR)Label1(GetLocString(MSGID_DEVICE_DEVICE)),
+										strlen(TextDeviceName) > 0 ? Child : TAG_IGNORE, (IPTR)ConstantText(TextDeviceName),
 
 										// strlen(TextDeviceHandler) > 0 ? Child : TAG_IGNORE, Label1(GetLocString(MSGID_DEVICE_HANDLER)),
-										FoundDeviceHandler ? Child : TAG_IGNORE, Label1(GetLocString(MSGID_DEVICE_HANDLER)),
-										(!FoundDeviceHandler && FoundDeviceDosType) ? Child : TAG_IGNORE, Label1(GetLocString(MSGID_DEVICE_DOSTYPE)),
+										FoundDeviceHandler ? Child : TAG_IGNORE, (IPTR)Label1(GetLocString(MSGID_DEVICE_HANDLER)),
+										(!FoundDeviceHandler && FoundDeviceDosType) ? Child : TAG_IGNORE, (IPTR)Label1(GetLocString(MSGID_DEVICE_DOSTYPE)),
 
-										strlen(TextDeviceHandler) > 0 ? Child : TAG_IGNORE, ConstantFloatText(TextDeviceHandler),
+										strlen(TextDeviceHandler) > 0 ? Child : TAG_IGNORE, (IPTR)ConstantFloatText(TextDeviceHandler),
 
-										Child, Label1(GetLocString(MSGID_DEVICE_CREATED_ON)),
-										Child, ConstantText(TextDeviceCreateDate),
+										Child, (IPTR)Label1(GetLocString(MSGID_DEVICE_CREATED_ON)),
+										Child, (IPTR)ConstantText(TextDeviceCreateDate),
 
-										Child, Label1(GetLocString(MSGID_DEVICE_SPACE_USED)),
-										Child, ButtonDiskSize = ButtonHelp(TextDeviceUsed, GetLocString(MSGID_DRAWER_SIZE_SHORTHELP), MUIV_InputMode_Toggle),
+										Child, (IPTR)Label1(GetLocString(MSGID_DEVICE_SPACE_USED)),
+										Child, (IPTR)(ButtonDiskSize = ButtonHelp(TextDeviceUsed, (IPTR)GetLocString(MSGID_DRAWER_SIZE_SHORTHELP), MUIV_InputMode_Toggle)),
 
-										Child, Label1(GetLocString(MSGID_DEVICE_SPACE_FREE)),
-										Child, ConstantText(TextDeviceFree),
+										Child, (IPTR)Label1(GetLocString(MSGID_DEVICE_SPACE_FREE)),
+										Child, (IPTR)ConstantText(TextDeviceFree),
 
-										Child, Label1(GetLocString(MSGID_DEVICE_SIZE)),
-										Child, ConstantText(TextDeviceSize),
+										Child, (IPTR)Label1(GetLocString(MSGID_DEVICE_SIZE)),
+										Child, (IPTR)ConstantText(TextDeviceSize),
 
-										Child, Label1(GetLocString(MSGID_DEVICE_BLOCK_SIZE)),
-										Child, ConstantText(DeviceBlockSize),
+										Child, (IPTR)Label1(GetLocString(MSGID_DEVICE_BLOCK_SIZE)),
+										Child, (IPTR)ConstantText(DeviceBlockSize),
 
-										Child, Label1(GetLocString(MSGID_DEVICE_STATE)),
-										Child, ConstantText(DeviceState),
+										Child, (IPTR)Label1(GetLocString(MSGID_DEVICE_STATE)),
+										Child, (IPTR)ConstantText(DeviceState),
 
-										Child, Label1S(GetLocString(MSGID_COMMENT)),
-										Child, StringCommentDevice = StringObject,
+										Child, (IPTR)Label1S((IPTR)GetLocString(MSGID_COMMENT)),
+										Child, (IPTR)(StringCommentDevice = StringObject,
 											StringFrame,
 											StringBack,
-											MUIA_String_Contents, (ULONG) Comment,
+											MUIA_String_Contents, (IPTR) Comment,
 											MUIA_CycleChain, TRUE,
 											MUIA_Dropable, TRUE,
-										End, //StringObject
-									End, //ColGroup
-								End, //VGroup
+										End), //StringObject
+									End), //ColGroup
+								End), //VGroup
 
-								Child,	VGroup,
+								Child, (IPTR)(VGroup,
 									GroupFrame,
 
-									Child, ColGroup(2),
-										Child, VGroup,
-											Child, VSpace(0),
-											Child, Label1(GetLocString(MSGID_TOOLTYPES)),
-											Child, VSpace(0),
-										End, //VGroup
-										Child, HGroup,
-											Child, TextEditorToolTypesDevice = TextEditorObject,
+									Child, (IPTR)(ColGroup(2),
+										Child, (IPTR)(VGroup,
+											Child, (IPTR)VSpace(0),
+											Child, (IPTR)Label1(GetLocString(MSGID_TOOLTYPES)),
+											Child, (IPTR)VSpace(0),
+										End), //VGroup
+										Child, (IPTR)(HGroup,
+											Child, (IPTR)(TextEditorToolTypesDevice = TextEditorObject,
 												TextFrame,
 												MUIA_Background, MUII_TextBack,
 												MUIA_CycleChain, TRUE,
 												//MUIA_Textinput_Multiline, TRUE,
 												MUIA_Dropable, TRUE,
-											End, //TextEditorObject
-											Child, ScrollBarToolTypesDevice = ScrollbarObject,
+											End), //TextEditorObject
+											Child, (IPTR)(ScrollBarToolTypesDevice = ScrollbarObject,
 												MUIA_Background, MUII_PropBack,
 												SliderFrame,
-											End, //ScrollbarObject
-										End, //HGroup
-									End, //ColGroup
-								End, //VGroup
-							End, //RegisterObject
+											End), //ScrollbarObject
+										End), //HGroup
+									End), //ColGroup
+								End), //VGroup
+							End), //RegisterObject
 
-							Child,	GroupDrawer = RegisterObject,
-								MUIA_Register_Titles, DrawerRegisterTitleStrings,
+							Child, (IPTR)(GroupDrawer = RegisterObject,
+								MUIA_Register_Titles, (IPTR)DrawerRegisterTitleStrings,
 								MUIA_CycleChain, TRUE,
 								MUIA_ShowMe, (WBDRAWER == IconType) || (WBGARBAGE == IconType),
 
-								Child,	VGroup,
+								Child, (IPTR)(VGroup,
 									GroupFrame,
-									Child, ColGroup(2),
-										Child, Label1S(GetLocString(MSGID_LASTCHANGE)),
-										Child, ConstantText(GetChangeDate(FibValid, ScalosExamineGetDate(fib))),
-										Child, Label1S(GetLocString(MSGID_SIZE)),
-										Child, ButtonDrawerSize = ButtonHelp(GetLocString(MSGID_INITIAL_DRAWER_SIZE), GetLocString(MSGID_DRAWER_SIZE_SHORTHELP), MUIV_InputMode_Toggle),
-										Child, Label1S(GetLocString(MSGID_PROTECTION)),
-										Child, VGroup,
-											Child, VSpace(0),
-											Child, HGroup,
+									Child, (IPTR)(ColGroup(2),
+										Child, (IPTR)Label1S((IPTR)GetLocString(MSGID_LASTCHANGE)),
+										Child, (IPTR)ConstantText(GetChangeDate(FibValid, ScalosExamineGetDate(fib))),
+										Child, (IPTR)Label1S((IPTR)GetLocString(MSGID_SIZE)),
+										Child, (IPTR)(ButtonDrawerSize = ButtonHelp(GetLocString(MSGID_INITIAL_DRAWER_SIZE), (IPTR)GetLocString(MSGID_DRAWER_SIZE_SHORTHELP), MUIV_InputMode_Toggle)),
+										Child, (IPTR)Label1S((IPTR)GetLocString(MSGID_PROTECTION)),
+										Child, (IPTR)(VGroup,
+											Child, (IPTR)VSpace(0),
+											Child, (IPTR)(HGroup,
 												GroupFrame,
-												Child, HSpace(0),
-												Child, ColGroup(2 * 3),
+												Child, (IPTR)HSpace(0),
+												Child, (IPTR)(ColGroup(2 * 3),
 													MUIA_Disabled, !FibValid || !IsWriteable,
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_READ)),
-													Child, CheckMarkProtectionReadDrawer =  CheckMarkHelp(!(Protection & FIBF_READ), MSGID_PROTECTION_READ_SHORTHELP),
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_READ)),
+													Child, (IPTR)(CheckMarkProtectionReadDrawer =  CheckMarkHelp(!(Protection & FIBF_READ), MSGID_PROTECTION_READ_SHORTHELP)),
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_WRITE)),
-													Child, CheckMarkProtectionWriteDrawer = CheckMarkHelp(!(Protection & FIBF_WRITE), MSGID_PROTECTION_WRITE_SHORTHELP),
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_WRITE)),
+													Child, (IPTR)(CheckMarkProtectionWriteDrawer = CheckMarkHelp(!(Protection & FIBF_WRITE), MSGID_PROTECTION_WRITE_SHORTHELP)),
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_ARCHIVE)),
-													Child, CheckMarkProtectionArchiveDrawer = CheckMarkHelp(Protection & FIBF_ARCHIVE, MSGID_PROTECTION_ARCHIVE_SHORTHELP),
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_ARCHIVE)),
+													Child, (IPTR)(CheckMarkProtectionArchiveDrawer = CheckMarkHelp(Protection & FIBF_ARCHIVE, MSGID_PROTECTION_ARCHIVE_SHORTHELP)),
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_DELETE)),
-													Child, CheckMarkProtectionDeleteDrawer = CheckMarkHelp(!(Protection & FIBF_DELETE), MSGID_PROTECTION_DELETE_SHORTHELP),
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_DELETE)),
+													Child, (IPTR)(CheckMarkProtectionDeleteDrawer = CheckMarkHelp(!(Protection & FIBF_DELETE), MSGID_PROTECTION_DELETE_SHORTHELP)),
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_EXECUTE)),
-													Child, CheckMarkProtectionExecuteDrawer = CheckMarkHelp(!(Protection & FIBF_EXECUTE), MSGID_PROTECTION_EXECUTE_SHORTHELP),
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_EXECUTE)),
+													Child, (IPTR)(CheckMarkProtectionExecuteDrawer = CheckMarkHelp(!(Protection & FIBF_EXECUTE), MSGID_PROTECTION_EXECUTE_SHORTHELP)),
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_SCRIPT)),
-													Child, CheckMarkProtectionScriptDrawer = CheckMarkHelp(Protection & FIBF_SCRIPT, MSGID_PROTECTION_SCRIPT_SHORTHELP),
-												End, //ColGroup
-												Child, HSpace(0),
-											End, //HGroup
-											Child, VSpace(0),
-										End, //VGroup
-										Child, Label1S(GetLocString(MSGID_COMMENT)),
-										Child, StringCommentDrawer = StringObject,
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_SCRIPT)),
+													Child, (IPTR)(CheckMarkProtectionScriptDrawer = CheckMarkHelp(Protection & FIBF_SCRIPT, MSGID_PROTECTION_SCRIPT_SHORTHELP)),
+												End), //ColGroup
+												Child, (IPTR)HSpace(0),
+											End), //HGroup
+											Child, (IPTR)VSpace(0),
+										End), //VGroup
+										Child, (IPTR)Label1S((IPTR)GetLocString(MSGID_COMMENT)),
+										Child, (IPTR)(StringCommentDrawer = StringObject,
 											StringFrame,
 											StringBack,
-											MUIA_String_Contents, Comment,
+											MUIA_String_Contents, (IPTR)Comment,
 											MUIA_CycleChain, TRUE,
 											MUIA_Dropable, TRUE,
-										End, //StringObject
-									End, //ColGroup
-								End, //VGroup
+										End), //StringObject
+									End), //ColGroup
+								End), //VGroup
 
-								Child,	VGroup,
+								Child, (IPTR)(VGroup,
 									GroupFrame,
 
-									Child, ColGroup(2),
-										Child, VGroup,
-											Child, VSpace(0),
-											Child, Label1(GetLocString(MSGID_TOOLTYPES)),
-											Child, VSpace(0),
-										End, //VGroup
-										Child, HGroup,
-											Child, TextEditorToolTypesDrawer = TextEditorObject,
+									Child, (IPTR)(ColGroup(2),
+										Child, (IPTR)(VGroup,
+											Child, (IPTR)VSpace(0),
+											Child, (IPTR)Label1(GetLocString(MSGID_TOOLTYPES)),
+											Child, (IPTR)VSpace(0),
+										End), //VGroup
+										Child, (IPTR)(HGroup,
+											Child, (IPTR)(TextEditorToolTypesDrawer = TextEditorObject,
 												TextFrame,
 												MUIA_Background, MUII_TextBack,
 												MUIA_CycleChain, TRUE,
 												//MUIA_Textinput_Multiline, TRUE,
 												MUIA_Dropable, TRUE,
-											End, //TextEditorObject
-											Child, ScrollBarToolTypesDrawer = ScrollbarObject,
+											End), //TextEditorObject
+											Child, (IPTR)(ScrollBarToolTypesDrawer = ScrollbarObject,
 												MUIA_Background, MUII_PropBack,
 												SliderFrame,
-											End, //ScrollbarObject
-										End, //HGroup
-									End, //ColGroup
-								End, //VGroup
+											End), //ScrollbarObject
+										End), //HGroup
+									End), //ColGroup
+								End), //VGroup
 
-							End, //RegisterObject
+							End), //RegisterObject
 
-							Child,	GroupProject = RegisterObject,
-								MUIA_Register_Titles, ProjectRegisterTitleStrings,
+							Child, (IPTR)(GroupProject = RegisterObject,
+								MUIA_Register_Titles, (IPTR)ProjectRegisterTitleStrings,
 								MUIA_CycleChain, TRUE,
 								MUIA_ShowMe, WBPROJECT == IconType,
 
-								Child,	VGroup,
+								Child, (IPTR)(VGroup,
 									GroupFrame,
-									Child, ColGroup(2),
-										Child, Label1S(GetLocString(MSGID_VERSION)),
-										Child, ConstantFloatText(GetVersionString(IconName)),
+									Child, (IPTR)(ColGroup(2),
+										Child, (IPTR)Label1S((IPTR)GetLocString(MSGID_VERSION)),
+										Child, (IPTR)ConstantFloatText(GetVersionString(IconName)),
 
-										Child, Label1S(GetLocString(MSGID_LASTCHANGE)),
-										Child, ConstantText(GetChangeDate(FibValid, ScalosExamineGetDate(fib))),
+										Child, (IPTR)Label1S((IPTR)GetLocString(MSGID_LASTCHANGE)),
+										Child, (IPTR)ConstantText(GetChangeDate(FibValid, ScalosExamineGetDate(fib))),
 
-										Child, Label1S(GetLocString(MSGID_SIZE)),
-										Child, ConstantText(GetSizeString()),
+										Child, (IPTR)Label1S((IPTR)GetLocString(MSGID_SIZE)),
+										Child, (IPTR)ConstantText(GetSizeString()),
 
-										Child, Label1S(GetLocString(MSGID_PROTECTION)),
-										Child, VGroup,
-											Child, VSpace(0),
-											Child, HGroup,
+										Child, (IPTR)Label1S((IPTR)GetLocString(MSGID_PROTECTION)),
+										Child, (IPTR)(VGroup,
+											Child, (IPTR)VSpace(0),
+											Child, (IPTR)(HGroup,
 												GroupFrame,
-												Child, HSpace(0),
+												Child, (IPTR)HSpace(0),
 
-												Child, ColGroup(2 * 4),
+												Child, (IPTR)(ColGroup(2 * 4),
 													MUIA_Disabled, !FibValid || !IsWriteable,
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_HIDDEN)),
-													Child, CheckMarkProtectionHideProject = CheckMarkHelp((Protection & FIBF_HIDDEN), MSGID_PROTECTION_HIDDEN_SHORTHELP),
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_HIDDEN)),
+													Child, (IPTR)(CheckMarkProtectionHideProject = CheckMarkHelp((Protection & FIBF_HIDDEN), MSGID_PROTECTION_HIDDEN_SHORTHELP)),
 
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_READ)),
-													Child, CheckMarkProtectionReadProject = CheckMarkHelp(!(Protection & FIBF_READ), MSGID_PROTECTION_READ_SHORTHELP),
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_READ)),
+													Child, (IPTR)(CheckMarkProtectionReadProject = CheckMarkHelp(!(Protection & FIBF_READ), MSGID_PROTECTION_READ_SHORTHELP)),
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_WRITE)),
-													Child, CheckMarkProtectionWriteProject = CheckMarkHelp(!(Protection & FIBF_WRITE), MSGID_PROTECTION_WRITE_SHORTHELP),
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_WRITE)),
+													Child, (IPTR)(CheckMarkProtectionWriteProject = CheckMarkHelp(!(Protection & FIBF_WRITE), MSGID_PROTECTION_WRITE_SHORTHELP)),
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_ARCHIVE)),
-													Child, CheckMarkProtectionArchiveProject = CheckMarkHelp(Protection & FIBF_ARCHIVE, MSGID_PROTECTION_ARCHIVE_SHORTHELP),
-
-
-													Child, Label1(GetLocString(MSGID_PROTECTION_DELETE)),
-													Child, CheckMarkProtectionDeleteProject = CheckMarkHelp(!(Protection & FIBF_DELETE), MSGID_PROTECTION_DELETE_SHORTHELP),
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_ARCHIVE)),
+													Child, (IPTR)(CheckMarkProtectionArchiveProject = CheckMarkHelp(Protection & FIBF_ARCHIVE, MSGID_PROTECTION_ARCHIVE_SHORTHELP)),
 
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_PURE)),
-													Child, CheckMarkProtectionPureProject = CheckMarkHelp((Protection & FIBF_PURE), MSGID_PROTECTION_PURE_SHORTHELP),
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_DELETE)),
+													Child, (IPTR)(CheckMarkProtectionDeleteProject = CheckMarkHelp(!(Protection & FIBF_DELETE), MSGID_PROTECTION_DELETE_SHORTHELP)),
 
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_EXECUTE)),
-													Child, CheckMarkProtectionExecuteProject = CheckMarkHelp(!(Protection & FIBF_EXECUTE), MSGID_PROTECTION_EXECUTE_SHORTHELP),
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_PURE)),
+													Child, (IPTR)(CheckMarkProtectionPureProject = CheckMarkHelp((Protection & FIBF_PURE), MSGID_PROTECTION_PURE_SHORTHELP)),
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_SCRIPT)),
-													Child, CheckMarkProtectionScriptProject = CheckMarkHelp(Protection & FIBF_SCRIPT, MSGID_PROTECTION_SCRIPT_SHORTHELP),
-												End, //ColGroup
 
-												Child, HSpace(0),
-											End, //HGroup
-											Child, VSpace(0),
-										End, //VGroup
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_EXECUTE)),
+													Child, (IPTR)(CheckMarkProtectionExecuteProject = CheckMarkHelp(!(Protection & FIBF_EXECUTE), MSGID_PROTECTION_EXECUTE_SHORTHELP)),
 
-										Child, Label1S(GetLocString(MSGID_COMMENT)),
-										Child, StringCommentProject = StringObject,
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_SCRIPT)),
+													Child, (IPTR)(CheckMarkProtectionScriptProject = CheckMarkHelp(Protection & FIBF_SCRIPT, MSGID_PROTECTION_SCRIPT_SHORTHELP)),
+												End), //ColGroup
+
+												Child, (IPTR)HSpace(0),
+											End), //HGroup
+											Child, (IPTR)VSpace(0),
+										End), //VGroup
+
+										Child, (IPTR)Label1S((IPTR)GetLocString(MSGID_COMMENT)),
+										Child, (IPTR)(StringCommentProject = StringObject,
 											StringFrame,
 											StringBack,
-											MUIA_String_Contents, (ULONG) Comment,
+											MUIA_String_Contents, (IPTR) Comment,
 											MUIA_CycleChain, TRUE,
 											MUIA_Dropable, TRUE,
-										End, //TextObject
-									End, //ColGroup
-								End, //VGroup
+										End), //TextObject
+									End), //ColGroup
+								End), //VGroup
 
-								Child,	VGroup,
+								Child, (IPTR)(VGroup,
 									GroupFrame,
 
-									Child, GroupIconProject = ColGroup(2),
-										Child, Label1(GetLocString(MSGID_DEFAULTTOOL)),
-										Child, PopAslDefaultTool = PopaslObject,
-											MUIA_Popstring_Button, PopButton(MUII_PopDrawer),
+									Child, (IPTR)(GroupIconProject = ColGroup(2),
+										Child, (IPTR)Label1(GetLocString(MSGID_DEFAULTTOOL)),
+										Child, (IPTR)(PopAslDefaultTool = PopaslObject,
+											MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopDrawer),
 											MUIA_Dropable, TRUE,
-											MUIA_Popstring_String, StringObject,
+											MUIA_Popstring_String, (IPTR)(StringObject,
 												StringFrame,
 												StringBack,
-												MUIA_String_Contents, GetDefaultTool(iconObjFromDisk),
+												MUIA_String_Contents, (IPTR)GetDefaultTool(iconObjFromDisk),
 												MUIA_CycleChain, TRUE,
-											End, //StringObject
-//											  ASLFR_TitleText, (ULONG) GetLocString(MSGID_PATHSPAGE_SCALOS_HOME_ASLTITLE),
-//											  MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PATHSPAGE_SCALOS_HOME_SHORTHELP),
-										End, //PopaslObject
+											End), //StringObject
+//											  ASLFR_TitleText, (IPTR) GetLocString(MSGID_PATHSPAGE_SCALOS_HOME_ASLTITLE),
+//											  MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PATHSPAGE_SCALOS_HOME_SHORTHELP),
+										End), //PopaslObject
 
 
-										Child, Label1(GetLocString(MSGID_STACKSIZE)),
-										Child, HGroup,
-											Child, HGroup,
+										Child, (IPTR)Label1(GetLocString(MSGID_STACKSIZE)),
+										Child, (IPTR)(HGroup,
+											Child, (IPTR)(HGroup,
 												MUIA_Group_HorizSpacing, 0,
-												Child, StringStackSizeProject = StringObject,
+												Child, (IPTR)(StringStackSizeProject = StringObject,
 													StringFrame,
 													StringBack,
 													MUIA_String_Integer, GetStackSize(iconObjFromDisk),
-													MUIA_String_Accept, "0123456789",
+													MUIA_String_Accept, (IPTR)"0123456789",
 													MUIA_CycleChain, TRUE,
-												End, //StringObject
-												Child, VGroup,
+												End), //StringObject
+												Child, (IPTR)(VGroup,
 													MUIA_Group_VertSpacing, 0,
-													Child, UpArrowStackSizeProject = UpArrowObject,
-													Child, DownArrowStackSizeProject = DownArrowObject,
-													End, //VGroup
-												End, //HGroup
+													Child, (IPTR)(UpArrowStackSizeProject = UpArrowObject),
+													Child, (IPTR)(DownArrowStackSizeProject = DownArrowObject),
+                                                                                                End), //VGroup
+                                                                                        End), //HGroup
 
-											Child, Label1(GetLocString(MSGID_TOOL_PRIORITY)),
-											Child, SliderToolPriProject = SliderObject,
+											Child, (IPTR)Label1(GetLocString(MSGID_TOOL_PRIORITY)),
+											Child, (IPTR)(SliderToolPriProject = SliderObject,
 												MUIA_CycleChain, TRUE,
 												MUIA_Slider_Horiz, TRUE,
 												MUIA_Numeric_Min, -128,
 												MUIA_Numeric_Max, 127,
 												MUIA_Numeric_Value, ToolPri,
-											End, //SliderObject
-										End, //HGroup
+											End), //SliderObject
+										End), //HGroup
 
-										Child, Label1(GetLocString(MSGID_START_FROM)),
-										Child, HGroup,
-											Child, CycleStartFromProject = CycleObject,
+										Child, (IPTR)Label1(GetLocString(MSGID_START_FROM)),
+										Child, (IPTR)(HGroup,
+											Child, (IPTR)(CycleStartFromProject = CycleObject,
 												MUIA_CycleChain, TRUE,
-												MUIA_Cycle_Entries, StartFromCycleChoices,
+												MUIA_Cycle_Entries, (IPTR)StartFromCycleChoices,
 												MUIA_Cycle_Active, StartFrom,
-											End, //CycleObject
+											End), //CycleObject
 
-											Child, Label1(GetLocString(MSGID_PROMPT_FOR_INPUT)),
-											Child, ButtonPromptForInputProject = ImageObject,
+											Child, (IPTR)Label1(GetLocString(MSGID_PROMPT_FOR_INPUT)),
+											Child, (IPTR)(ButtonPromptForInputProject = ImageObject,
 												ButtonFrame,
 												MUIA_InputMode, MUIV_InputMode_Toggle,
 												MUIA_Image_Spec, MUII_CheckMark,
-												MUIA_Selected, PromptForInput,
+												MUIA_Selected, (IPTR)PromptForInput,
 												MUIA_Background, MUII_ButtonBack,
 												MUIA_ShowSelState, FALSE,
-											End, //Image
-										End, //HGroup
+											End), //Image
+										End), //HGroup
 
-										Child, VGroup,
-											Child, VSpace(0),
-											Child, Label1(GetLocString(MSGID_TOOLTYPES)),
-											Child, VSpace(0),
-										End, //VGroup
+										Child, (IPTR)(VGroup,
+											Child, (IPTR)VSpace(0),
+											Child, (IPTR)Label1(GetLocString(MSGID_TOOLTYPES)),
+											Child, (IPTR)VSpace(0),
+										End), //VGroup
 
-										Child, HGroup,
-											Child, TextEditorToolTypesProject = TextEditorObject,
+										Child, (IPTR)(HGroup,
+											Child, (IPTR)(TextEditorToolTypesProject = TextEditorObject,
 												TextFrame,
 												MUIA_Background, MUII_TextBack,
 												MUIA_CycleChain, TRUE,
 												//MUIA_Textinput_Multiline, TRUE,
 												MUIA_Dropable, TRUE,
-											End, //TextEditorObject
-											Child, ScrollBarToolTypesProject = ScrollbarObject,
+											End), //TextEditorObject
+											Child, (IPTR)(ScrollBarToolTypesProject = ScrollbarObject,
 												MUIA_Background, MUII_PropBack,
 												SliderFrame,
-											End, //ScrollbarObject
-										End, //HGroup
+											End), //ScrollbarObject
+										End), //HGroup
 
 //************************************************************* WBStartup members ****************************************************************
 
 										// the following members are only used for icons located in WBStartup
 										// for all other directories, those members will be removed later
-										Child, LabelStartPriTool2 = Label1S(GetLocString(MSGID_STARTPRI)),
-										Child, SliderStartPriTool2 = SliderObject,
+										Child, (IPTR)(LabelStartPriTool2 = Label1S((IPTR)GetLocString(MSGID_STARTPRI))),
+										Child, (IPTR)(SliderStartPriTool2 = SliderObject,
 											MUIA_CycleChain, TRUE,
 											MUIA_Slider_Horiz, TRUE,
 											MUIA_Numeric_Min, -128,
 											MUIA_Numeric_Max, 127,
 											MUIA_Numeric_Value, StartPri,
-										End, //SliderObject
+										End), //SliderObject
 
-										Child, LabelWaitUntilFinishedTool2 = Label1S(GetLocString(MSGID_WAITUNTILFINISHED)),
-										Child, GroupWaitUntilFinished2 = HGroup,
-											Child, CheckMarkWaitUntilFinishedTool2 = CheckMarkHelp(WaitUntilFinished, MSGID_WAITUNTILFINISHED_SHORTHELP),
+										Child, (IPTR)(LabelWaitUntilFinishedTool2 = Label1S((IPTR)GetLocString(MSGID_WAITUNTILFINISHED))),
+										Child, (IPTR)(GroupWaitUntilFinished2 = HGroup,
+											Child, (IPTR)(CheckMarkWaitUntilFinishedTool2 = CheckMarkHelp(WaitUntilFinished, MSGID_WAITUNTILFINISHED_SHORTHELP)),
 
-											Child, GroupWaitTimeTool2 = HGroup,
+											Child, (IPTR)(GroupWaitTimeTool2 = HGroup,
 												MUIA_Group_HorizSpacing, 0,
 												MUIA_Disabled, !WaitUntilFinished,
 
-												Child, StringWaitTimeTool2 = StringObject,
+												Child, (IPTR)(StringWaitTimeTool2 = StringObject,
 													StringFrame,
 													StringBack,
 													MUIA_String_Integer, WaitTime,
-													MUIA_String_Accept, "0123456789",
+													MUIA_String_Accept, (IPTR)"0123456789",
 													MUIA_CycleChain, TRUE,
-												End, //StringObject
-												Child, VGroup,
+												End), //StringObject
+												Child, (IPTR)(VGroup,
 													MUIA_Group_VertSpacing, 0,
-													Child, UpArrowWaitTimeTool2 = UpArrowObject,
-													Child, DownArrowWaitTimeTool2 = DownArrowObject,
-												End, //VGroup
-											End, //HGroup
+													Child, (IPTR)(UpArrowWaitTimeTool2 = UpArrowObject),
+													Child, (IPTR)(DownArrowWaitTimeTool2 = DownArrowObject),
+												End), //VGroup
+											End), //HGroup
 
-											Child, Label1(GetLocString(MSGID_TOOL_SECONDS)),
-										End, //HGroup
+											Child, (IPTR)Label1(GetLocString(MSGID_TOOL_SECONDS)),
+										End), //HGroup
 
 //*************************************************************************************************************************************************
 
-									End, //ColGroup
-								End, //VGroup
+									End), //ColGroup
+								End), //VGroup
+							End), //RegisterObject
 
-							End, //RegisterObject
-
-							Child,	GroupTool = RegisterObject,
-								MUIA_Register_Titles, ToolRegisterTitleStrings,
+							Child, (IPTR)(GroupTool = RegisterObject,
+								MUIA_Register_Titles, (IPTR)ToolRegisterTitleStrings,
 								MUIA_CycleChain, TRUE,
 								MUIA_ShowMe, WBTOOL == IconType,
 
-								Child,	VGroup,
+								Child, (IPTR)(VGroup,
 									GroupFrame,
-									Child, ColGroup(2),
-										Child, Label1S(GetLocString(MSGID_VERSION)),
-										Child, ConstantFloatText(GetVersionString(IconName)),
+									Child, (IPTR)(ColGroup(2),
+										Child, (IPTR)Label1S((IPTR)GetLocString(MSGID_VERSION)),
+										Child, (IPTR)ConstantFloatText(GetVersionString(IconName)),
 
-										Child, Label1S(GetLocString(MSGID_LASTCHANGE)),
-										Child, ConstantText(GetChangeDate(FibValid, ScalosExamineGetDate(fib))),
+										Child, (IPTR)Label1S((IPTR)GetLocString(MSGID_LASTCHANGE)),
+										Child, (IPTR)ConstantText(GetChangeDate(FibValid, ScalosExamineGetDate(fib))),
 
-										Child, Label1S(GetLocString(MSGID_SIZE)),
-										Child, ConstantText(GetSizeString()),
+										Child, (IPTR)Label1S((IPTR)GetLocString(MSGID_SIZE)),
+										Child, (IPTR)ConstantText(GetSizeString()),
 
-										Child, Label1S(GetLocString(MSGID_PROTECTION)),
-										Child, VGroup,
-											Child, VSpace(0),
-											Child, HGroup,
+										Child,(IPTR) Label1S((IPTR)GetLocString(MSGID_PROTECTION)),
+										Child, (IPTR)(VGroup,
+											Child, (IPTR)VSpace(0),
+											Child, (IPTR)(HGroup,
 												GroupFrame,
-												Child, HSpace(0),
+												Child, (IPTR)HSpace(0),
 
-												Child, ColGroup(2 * 4),
+												Child, (IPTR)(ColGroup(2 * 4),
 													MUIA_Disabled, !FibValid || !IsWriteable,
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_HIDDEN)),
-													Child, CheckMarkProtectionHideTool = CheckMarkHelp((Protection & FIBF_HIDDEN), MSGID_PROTECTION_HIDDEN_SHORTHELP),
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_HIDDEN)),
+													Child, (IPTR)(CheckMarkProtectionHideTool = CheckMarkHelp((Protection & FIBF_HIDDEN), MSGID_PROTECTION_HIDDEN_SHORTHELP)),
 
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_READ)),
+													Child, (IPTR)(CheckMarkProtectionReadTool = CheckMarkHelp(!(Protection & FIBF_READ), MSGID_PROTECTION_READ_SHORTHELP)),
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_READ)),
-													Child, CheckMarkProtectionReadTool = CheckMarkHelp(!(Protection & FIBF_READ), MSGID_PROTECTION_READ_SHORTHELP),
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_WRITE)),
+													Child, (IPTR)(CheckMarkProtectionWriteTool = CheckMarkHelp(!(Protection & FIBF_WRITE), MSGID_PROTECTION_WRITE_SHORTHELP)),
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_WRITE)),
-													Child, CheckMarkProtectionWriteTool = CheckMarkHelp(!(Protection & FIBF_WRITE), MSGID_PROTECTION_WRITE_SHORTHELP),
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_ARCHIVE)),
+													Child, (IPTR)(CheckMarkProtectionArchiveTool = CheckMarkHelp(Protection & FIBF_ARCHIVE, MSGID_PROTECTION_ARCHIVE_SHORTHELP)),
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_ARCHIVE)),
-													Child, CheckMarkProtectionArchiveTool = CheckMarkHelp(Protection & FIBF_ARCHIVE, MSGID_PROTECTION_ARCHIVE_SHORTHELP),
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_DELETE)),
+													Child, (IPTR)(CheckMarkProtectionDeleteTool = CheckMarkHelp(!(Protection & FIBF_DELETE), MSGID_PROTECTION_DELETE_SHORTHELP)),
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_DELETE)),
-													Child, CheckMarkProtectionDeleteTool = CheckMarkHelp(!(Protection & FIBF_DELETE), MSGID_PROTECTION_DELETE_SHORTHELP),
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_PURE)),
+													Child, (IPTR)(CheckMarkProtectionPureTool = CheckMarkHelp((Protection & FIBF_PURE), MSGID_PROTECTION_PURE_SHORTHELP)),
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_PURE)),
-													Child, CheckMarkProtectionPureTool = CheckMarkHelp((Protection & FIBF_PURE), MSGID_PROTECTION_PURE_SHORTHELP),
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_EXECUTE)),
+													Child, (IPTR)(CheckMarkProtectionExecuteTool = CheckMarkHelp(!(Protection & FIBF_EXECUTE), MSGID_PROTECTION_EXECUTE_SHORTHELP)),
 
+													Child, (IPTR)Label1(GetLocString(MSGID_PROTECTION_SCRIPT)),
+													Child, (IPTR)(CheckMarkProtectionScriptTool = CheckMarkHelp(Protection & FIBF_SCRIPT, MSGID_PROTECTION_SCRIPT_SHORTHELP)),
+												End), //ColGroup
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_EXECUTE)),
-													Child, CheckMarkProtectionExecuteTool = CheckMarkHelp(!(Protection & FIBF_EXECUTE), MSGID_PROTECTION_EXECUTE_SHORTHELP),
+												Child, (IPTR)HSpace(0),
+											End), //HGroup
+											Child, (IPTR)VSpace(0),
+										End), //VGroup
 
-													Child, Label1(GetLocString(MSGID_PROTECTION_SCRIPT)),
-													Child, CheckMarkProtectionScriptTool = CheckMarkHelp(Protection & FIBF_SCRIPT, MSGID_PROTECTION_SCRIPT_SHORTHELP),
-												End, //ColGroup
-
-												Child, HSpace(0),
-											End, //HGroup
-											Child, VSpace(0),
-										End, //VGroup
-
-										Child, Label1S(GetLocString(MSGID_COMMENT)),
-										Child, StringCommentTool = StringObject,
+										Child, (IPTR)Label1S((IPTR)GetLocString(MSGID_COMMENT)),
+										Child, (IPTR)(StringCommentTool = StringObject,
 											StringFrame,
 											StringBack,
-											MUIA_String_Contents, (ULONG) Comment,
+											MUIA_String_Contents, (IPTR) Comment,
 											MUIA_CycleChain, TRUE,
 											MUIA_Dropable, TRUE,
-										End, //TextObject
-									End, //ColGroup
-								End, //VGroup
+										End), //TextObject
+									End), //ColGroup
+								End), //VGroup
 
-								Child,	VGroup,
+								Child, (IPTR)(VGroup,
 									GroupFrame,
 
-									Child, GroupIconTool = ColGroup(2),
-
-
-									Child, Label1S(GetLocString(MSGID_STACKSIZE)),
-										Child, HGroup,
-											Child, HGroup,
+									Child, (IPTR)(GroupIconTool = ColGroup(2),
+                                                                                Child, (IPTR)Label1S((IPTR)GetLocString(MSGID_STACKSIZE)),
+										Child, (IPTR)(HGroup,
+											Child, (IPTR)(HGroup,
 												MUIA_Group_HorizSpacing, 0,
-												Child, StringStackSizeTool = StringObject,
+												Child, (IPTR)(StringStackSizeTool = StringObject,
 													StringFrame,
 													StringBack,
 													MUIA_String_Integer, GetStackSize(iconObjFromDisk),
-													MUIA_String_Accept, "0123456789",
+													MUIA_String_Accept, (IPTR)"0123456789",
 													MUIA_CycleChain, TRUE,
-												End, //StringObject
-												Child, VGroup,
+												End), //StringObject
+												Child, (IPTR)(VGroup,
 													MUIA_Group_VertSpacing, 0,
-													Child, UpArrowStackSizeTool = UpArrowObject,
-													Child, DownArrowStackSizeTool = DownArrowObject,
-													End, //VGroup
-												End, //HGroup
+													Child, (IPTR)(UpArrowStackSizeTool = UpArrowObject),
+													Child, (IPTR)(DownArrowStackSizeTool = DownArrowObject),
+                                                                                                End), //VGroup
+                                                                                        End), //HGroup
 
-											Child, Label1(GetLocString(MSGID_TOOL_PRIORITY)),
-											Child, SliderToolPriTool = SliderObject,
+											Child, (IPTR)Label1(GetLocString(MSGID_TOOL_PRIORITY)),
+											Child, (IPTR)(SliderToolPriTool = SliderObject,
 												MUIA_CycleChain, TRUE,
 												MUIA_Slider_Horiz, TRUE,
 												MUIA_Numeric_Min, -128,
 												MUIA_Numeric_Max, 127,
 												MUIA_Numeric_Value, ToolPri,
-											End, //SliderObject
-										End, //HGroup
+											End), //SliderObject
+										End), //HGroup
 
-										Child, Label1S(GetLocString(MSGID_START_FROM)),
-										Child, HGroup,
-											Child, CycleStartFromTool = CycleObject,
-												MUIA_Cycle_Entries, StartFromCycleChoices,
+										Child, (IPTR)Label1S((IPTR)GetLocString(MSGID_START_FROM)),
+										Child, (IPTR)(HGroup,
+											Child, (IPTR)(CycleStartFromTool = CycleObject,
+												MUIA_Cycle_Entries, (IPTR)StartFromCycleChoices,
 												MUIA_Cycle_Active, StartFrom,
 												MUIA_CycleChain, TRUE,
-											End, //CycleObject
+											End), //CycleObject
 
-											Child, Label1(GetLocString(MSGID_PROMPT_FOR_INPUT)),
-											Child, ButtonPromptForInputTool = ImageObject,
+											Child, (IPTR)Label1(GetLocString(MSGID_PROMPT_FOR_INPUT)),
+											Child, (IPTR)(ButtonPromptForInputTool = ImageObject,
 												ButtonFrame,
 												MUIA_InputMode, MUIV_InputMode_Toggle,
 												MUIA_Image_Spec, MUII_CheckMark,
-												MUIA_Selected, PromptForInput,
+												MUIA_Selected, (IPTR)PromptForInput,
 												MUIA_Background, MUII_ButtonBack,
 												MUIA_ShowSelState, FALSE,
-											End, //Image
-										End, //HGroup
+											End), //Image
+										End), //HGroup
 
-										Child, VGroup,
-											Child, VSpace(0),
-											Child, Label1(GetLocString(MSGID_TOOLTYPES)),
-											Child, VSpace(0),
-										End, //VGroup
+										Child, (IPTR)(VGroup,
+											Child, (IPTR)VSpace(0),
+											Child, (IPTR)Label1(GetLocString(MSGID_TOOLTYPES)),
+											Child, (IPTR)VSpace(0),
+										End), //VGroup
 
-										Child, HGroup,
-											Child, TextEditorToolTypesTool = TextEditorObject,
+										Child, (IPTR)(HGroup,
+											Child, (IPTR)(TextEditorToolTypesTool = TextEditorObject,
 												TextFrame,
 												MUIA_Background, MUII_TextBack,
 												MUIA_CycleChain, TRUE,
 												//MUIA_Textinput_Multiline, TRUE,
 												MUIA_Dropable, TRUE,
-											End, //TextEditorObject
-											Child, ScrollBarToolTypesTool = ScrollbarObject,
+											End), //TextEditorObject
+											Child, (IPTR)(ScrollBarToolTypesTool = ScrollbarObject,
 												MUIA_Background, MUII_PropBack,
 												SliderFrame,
-											End, //ScrollbarObject
-										End, //HGroup
+											End), //ScrollbarObject
+										End), //HGroup
 
 										// the following members are only used for icons located in WBStartup
 										// for all other directories, those members will be removed later
-										Child, LabelStartPriTool = Label1S(GetLocString(MSGID_STARTPRI)),
-										Child, SliderStartPriTool = SliderObject,
+										Child, (IPTR)(LabelStartPriTool = Label1S((IPTR)GetLocString(MSGID_STARTPRI))),
+										Child, (IPTR)(SliderStartPriTool = SliderObject,
 											MUIA_CycleChain, TRUE,
 											MUIA_Slider_Horiz, TRUE,
 											MUIA_Numeric_Min, -128,
 											MUIA_Numeric_Max, 127,
 											MUIA_Numeric_Value, StartPri,
-											End, //SliderObject
+                                                                                End), //SliderObject
 
-										Child, LabelWaitUntilFinishedTool = Label1S(GetLocString(MSGID_WAITUNTILFINISHED)),
-										Child, GroupWaitUntilFinished = HGroup,
-											Child, CheckMarkWaitUntilFinishedTool = CheckMarkHelp(WaitUntilFinished, MSGID_WAITUNTILFINISHED_SHORTHELP),
+										Child, (IPTR)(LabelWaitUntilFinishedTool = Label1S((IPTR)GetLocString(MSGID_WAITUNTILFINISHED))),
+										Child, (IPTR)(GroupWaitUntilFinished = HGroup,
+											Child, (IPTR)(CheckMarkWaitUntilFinishedTool = CheckMarkHelp(WaitUntilFinished, MSGID_WAITUNTILFINISHED_SHORTHELP)),
 
-											Child, GroupWaitTimeTool = HGroup,
+											Child, (IPTR)(GroupWaitTimeTool = HGroup,
 												MUIA_Group_HorizSpacing, 0,
 												MUIA_Disabled, !WaitUntilFinished,
 
-												Child, StringWaitTimeTool = StringObject,
+												Child, (IPTR)(StringWaitTimeTool = StringObject,
 													StringFrame,
 													StringBack,
 													MUIA_String_Integer, WaitTime,
-													MUIA_String_Accept, "0123456789",
+													MUIA_String_Accept, (IPTR)"0123456789",
 													MUIA_CycleChain, TRUE,
-												End, //StringObject
-												Child, VGroup,
+												End), //StringObject
+												Child, (IPTR)(VGroup,
 													MUIA_Group_VertSpacing, 0,
-													Child, UpArrowWaitTimeTool = UpArrowObject,
-													Child, DownArrowWaitTimeTool = DownArrowObject,
-													End, //VGroup
-												End, //HGroup
+													Child, (IPTR)(UpArrowWaitTimeTool = UpArrowObject),
+													Child, (IPTR)(DownArrowWaitTimeTool = DownArrowObject),
+                                                                                                End), //VGroup
+                                                                                        End), //HGroup
 
-											Child, Label1(GetLocString(MSGID_TOOL_SECONDS)),
-										End, //HGroup
-									End, //ColGroup
-								End, //VGroup
+											Child, (IPTR)Label1(GetLocString(MSGID_TOOL_SECONDS)),
+										End), //HGroup
+									End), //ColGroup
+								End), //VGroup
 
-							End, //RegisterObject
-						End, //VGroup
-					End, //HGroup
+							End), //RegisterObject
+						End), //VGroup
+					End), //HGroup
 
 //
-					Child, VSpace(0),
+					Child, (IPTR)VSpace(0),
 
-					Child, Group_Buttons2 = HGroup,
+					Child, (IPTR)(Group_Buttons2 = HGroup,
 						MUIA_Group_SameWidth, TRUE,
-						Child, OkButton = KeyButtonHelp(GetLocString(MSGID_OKBUTTON), 
-									'o', GetLocString(MSGID_SHORTHELP_OKBUTTON)),
-						Child, CancelButton = KeyButtonHelp(GetLocString(MSGID_CANCELBUTTON), 
-									'c', GetLocString(MSGID_SHORTHELP_CANCELBUTTON)),
-						End, //HGroup
-					End, //VGroup
-				End, //WindowObject
+						Child, (IPTR)(OkButton = KeyButtonHelp(GetLocString(MSGID_OKBUTTON), 
+									'o', (IPTR)GetLocString(MSGID_SHORTHELP_OKBUTTON))),
+						Child, (IPTR)(CancelButton = KeyButtonHelp(GetLocString(MSGID_CANCELBUTTON), 
+									'c', (IPTR)GetLocString(MSGID_SHORTHELP_CANCELBUTTON))),
+                                        End), //HGroup
+                                End), //VGroup
+                        End), //WindowObject
 
-			MUIA_Application_Menustrip, MenustripObject,
-				Child, MenuObjectT(GetLocString(MSGID_MENU_PROJECT)),
+			MUIA_Application_Menustrip, (IPTR)(MenustripObject,
+				Child, (IPTR)(MenuObjectT((IPTR)GetLocString(MSGID_MENU_PROJECT)),
 
-					Child, MenuAbout = MenuitemObject,
-						MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_ABOUT),
-					End,
-					Child, MenuAboutMUI = MenuitemObject,
-						MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_ABOUTMUI),
-					End,
-					Child, MenuitemObject,
+					Child, (IPTR)(MenuAbout = MenuitemObject,
+						MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_ABOUT),
+					End),
+					Child, (IPTR)(MenuAboutMUI = MenuitemObject,
+						MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_ABOUTMUI),
+					End),
+					Child, (IPTR)(MenuitemObject,
 						MUIA_Menuitem_Title, -1,
-					End,
-					Child, MenuQuit = MenuitemObject,
-						MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_QUIT),
-						MUIA_Menuitem_Shortcut, GetLocString(MSGID_MENU_PROJECT_QUIT_SHORT),
-					End,
+					End),
+					Child, (IPTR)(MenuQuit = MenuitemObject,
+						MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_QUIT),
+						MUIA_Menuitem_Shortcut, (IPTR)GetLocString(MSGID_MENU_PROJECT_QUIT_SHORT),
+					End),
 						
-				End, //MenuObjectT
+				End), //MenuObjectT
 
-				Child, MenuObjectT(GetLocString(MSGID_MENU_TYPE)),
+				Child, (IPTR)(MenuObjectT((IPTR)GetLocString(MSGID_MENU_TYPE)),
 
-					Child, MenuTypeDisk = MenuitemObject,
-						MUIA_Menuitem_Title, GetLocString(MSGID_MENU_TYPE_DISK),
-						MUIA_Menuitem_Shortcut, "1",
+					Child, (IPTR)(MenuTypeDisk = MenuitemObject,
+						MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_TYPE_DISK),
+						MUIA_Menuitem_Shortcut, (IPTR)"1",
 						MUIA_Menuitem_Checkit, TRUE,
 						MUIA_Menuitem_Exclude, 0x1e,
-					End,
-					Child, MenuTypeDrawer = MenuitemObject,
-						MUIA_Menuitem_Title, GetLocString(MSGID_MENU_TYPE_DRAWER),
-						MUIA_Menuitem_Shortcut, "2",
+					End),
+					Child, (IPTR)(MenuTypeDrawer = MenuitemObject,
+						MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_TYPE_DRAWER),
+						MUIA_Menuitem_Shortcut, (IPTR)"2",
 						MUIA_Menuitem_Checkit, TRUE,
 						MUIA_Menuitem_Exclude, 0x1d,
-					End,
-					Child, MenuTypeProject = MenuitemObject,
-						MUIA_Menuitem_Title, GetLocString(MSGID_MENU_TYPE_PROJECT),
-						MUIA_Menuitem_Shortcut, "3",
+					End),
+					Child, (IPTR)(MenuTypeProject = MenuitemObject,
+						MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_TYPE_PROJECT),
+						MUIA_Menuitem_Shortcut, (IPTR)"3",
 						MUIA_Menuitem_Checkit, TRUE,
 						MUIA_Menuitem_Exclude, 0x1b,
-					End,
-					Child, MenuTypeTool = MenuitemObject,
-						MUIA_Menuitem_Title, GetLocString(MSGID_MENU_TYPE_TOOL),
-						MUIA_Menuitem_Shortcut, "4",
+					End),
+					Child, (IPTR)(MenuTypeTool = MenuitemObject,
+						MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_TYPE_TOOL),
+						MUIA_Menuitem_Shortcut, (IPTR)"4",
 						MUIA_Menuitem_Checkit, TRUE,
 						MUIA_Menuitem_Exclude, 0x17,
-					End,
-					Child, MenuTypeTrashcan = MenuitemObject,
-						MUIA_Menuitem_Title, GetLocString(MSGID_MENU_TYPE_TRASHCAN),
-						MUIA_Menuitem_Shortcut, "5",
+					End),
+					Child, (IPTR)(MenuTypeTrashcan = MenuitemObject,
+						MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_TYPE_TRASHCAN),
+						MUIA_Menuitem_Shortcut, (IPTR)"5",
 						MUIA_Menuitem_Checkit, TRUE,
 						MUIA_Menuitem_Exclude, 0x0f,
-					End,
-				End, //MenuObjectT
+					End),
+				End), //MenuObjectT
 
-				Child, MenuObjectT(GetLocString(MSGID_MENU_IMAGE)),
+				Child, (IPTR)(MenuObjectT((IPTR)GetLocString(MSGID_MENU_IMAGE)),
 
-					Child, MenuImageDefault = MenuitemObject,
-						MUIA_Menuitem_Title, GetLocString(MSGID_MENU_IMAGE_DEFAULT),
-						MUIA_Menuitem_Shortcut, GetLocString(MSGID_MENU_IMAGE_DEFAULT_SHORT),
-					End,
-				End, //MenuObjectT
+					Child, (IPTR)(MenuImageDefault = MenuitemObject,
+						MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_IMAGE_DEFAULT),
+						MUIA_Menuitem_Shortcut, (IPTR)GetLocString(MSGID_MENU_IMAGE_DEFAULT_SHORT),
+					End),
+				End), //MenuObjectT
 
 //--- +jmc+ --------------------------------------------------------------------------------------------------------------
 
-				Child, MenuObjectT(GetLocString(MSGID_MENU_OPTIONS)),
-					Child, MenuIconPath = MenuitemObject,
-						MUIA_Menuitem_Title, GetLocString(MSGID_MENU_ALWAYS_ICONPATH),
-						MUIA_Menuitem_Shortcut, GetLocString(MSGID_MENU_ALWAYS_ICONPATH_SHORT),
+				Child, (IPTR)(MenuObjectT((IPTR)GetLocString(MSGID_MENU_OPTIONS)),
+					Child, (IPTR)(MenuIconPath = MenuitemObject,
+						MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_ALWAYS_ICONPATH),
+						MUIA_Menuitem_Shortcut, (IPTR)GetLocString(MSGID_MENU_ALWAYS_ICONPATH_SHORT),
 						MUIA_Menuitem_Checkit, TRUE,
 						MUIA_Menuitem_Toggle, TRUE,
 						// MUIA_Menuitem_Enabled, (WBDISK != IconType),
-					End,
-					Child, MenuGetSize = MenuitemObject,
-						MUIA_Menuitem_Title, GetLocString(MSGID_MENU_ALWAYS_GETSIZE),
-						MUIA_Menuitem_Shortcut, GetLocString(MSGID_MENU_ALWAYS_GETSIZE_SHORT),
+					End),
+					Child, (IPTR)(MenuGetSize = MenuitemObject,
+						MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_ALWAYS_GETSIZE),
+						MUIA_Menuitem_Shortcut, (IPTR)GetLocString(MSGID_MENU_ALWAYS_GETSIZE_SHORT),
 						MUIA_Menuitem_Checkit, TRUE,
 						MUIA_Menuitem_Toggle, TRUE,
 						MUIA_Menuitem_Enabled, (WBDRAWER == IconType) || (WBGARBAGE == IconType),
-					End,
-				End, //MenuObjectT
+					End),
+				End), //MenuObjectT
 
 //------------------------------------------------------------------------------------------------------------------------
 
-			End, //MenuStripObject
+			End), //MenuStripObject
 
 		End; //ApplicationObject
 
@@ -1827,7 +1821,7 @@ int main(int argc, char *argv[])
 				case MUIV_Application_ReturnID_Quit:
 					//---- Show icon path gadget --------------------------------------------------------------------------------------
 					get(MenuIconPath, MUIA_Menuitem_Checked, &ShowIconPath);
-					sprintf(VarBuffer, "%ld", (long) ShowIconPath);
+					sprintf(VarBuffer, "%ld", (IPTR) ShowIconPath);
 					SetVar(INFO_ICONPATH_ENV, VarBuffer, -1, GVF_GLOBAL_ONLY);
 					SetVar(INFO_ICONPATH_ENVARC, VarBuffer, -1, GVF_GLOBAL_ONLY);
 
@@ -1837,7 +1831,7 @@ int main(int argc, char *argv[])
 					//---- Auto GetSize calculation at startup -------------------------------------------------------------------------
 
 					get(MenuGetSize, MUIA_Menuitem_Checked, &AutoGetSize);
-					sprintf(VarBuffer, "%ld", (long) AutoGetSize);
+					sprintf(VarBuffer, "%ld", (IPTR) AutoGetSize);
 					SetVar(INFO_AUTOGETSIZE_ENV, VarBuffer, -1, GVF_GLOBAL_ONLY);
 					SetVar(INFO_AUTOGETSIZE_ENVARC, VarBuffer, -1, GVF_GLOBAL_ONLY);
 
@@ -2288,7 +2282,7 @@ static void TranslateStringArray(STRPTR *stringArray)
 {
 	while (*stringArray)
 		{
-		*stringArray = (STRPTR)GetLocString((ULONG) *stringArray);
+		*stringArray = (STRPTR)GetLocString((IPTR) *stringArray);
 		stringArray++;
 		}
 }
@@ -2366,7 +2360,7 @@ static SAVEDS(void) INTERRUPT DrawerSizeHookFunc(struct Hook *hook, Object *o, M
 
 	if (RESULT_HALT == Result) // +jmc+
 		{
-		set(ButtonSize, MUIA_Text_Contents, (ULONG) InitButtonSize); // +jmc+
+		set(ButtonSize, MUIA_Text_Contents, (IPTR) InitButtonSize); // +jmc+
 		}
 	else
 		{
@@ -2569,9 +2563,9 @@ static SAVEDS(void) INTERRUPT IconifyHookFunc(struct Hook *hook, Object *o, Msg 
 				if (mad->mad_Flags & MADF_OBJECTVISIBLE)
 					{
 					dz->dz_DropZone = AddAppWindowDropZone(myAppWindow, 0,
-						(ULONG) dz,
-						WBDZA_Hook, (ULONG) &AppWindowDropZoneHook,
-						WBDZA_Box, (ULONG) &dz->dz_Box,
+						(IPTR) dz,
+						WBDZA_Hook, (IPTR) &AppWindowDropZoneHook,
+						WBDZA_Box, (IPTR) &dz->dz_Box,
 						TAG_END);
 					}
 				}
@@ -2826,7 +2820,7 @@ static void SaveSettings(Object *IconObj, Object *originalIconObj, CONST_STRPTR 
 		CONST_STRPTR NewName = ScalosExamineGetName(fib);
 		char GetName[128];
 		char VolumeName[128];
-		ULONG Pos2;
+		IPTR Pos2;
 		BPTR dirLock = CurrentDir((BPTR) NULL);
 
 		CurrentDir(dirLock);
@@ -2951,7 +2945,7 @@ static void SaveSettings(Object *IconObj, Object *originalIconObj, CONST_STRPTR 
 				GetAttr(MUIA_String_Integer, StringWaitTimeTool, &WaitTime);
 				if (0 != WaitTime)
 					{
-					sprintf(ToolPriString, "%ld", (long) WaitTime);
+					sprintf(ToolPriString, "%ld", (IPTR) WaitTime);
 					SetToolType(IconObj, "WAIT", ToolPriString);
 					}
 				else
@@ -2984,7 +2978,7 @@ static void SaveSettings(Object *IconObj, Object *originalIconObj, CONST_STRPTR 
 			GetAttr(MUIA_Numeric_Value, SliderToolPriTool, &ToolPri);
 			if (ToolPri)
 				{
-				sprintf(ToolPriString, "%ld", (long) ToolPri);
+				sprintf(ToolPriString, "%ld", (IPTR) ToolPri);
 				SetToolType(IconObj, "TOOLPRI", ToolPriString);
 				}
 			else
@@ -3072,7 +3066,7 @@ static void SaveSettings(Object *IconObj, Object *originalIconObj, CONST_STRPTR 
 				GetAttr(MUIA_String_Integer, StringWaitTimeTool2, &WaitTime);
 				if (0 != WaitTime)
 					{
-					sprintf(ToolPriString, "%ld", (long) WaitTime);
+					sprintf(ToolPriString, "%ld", (IPTR) WaitTime);
 					SetToolType(IconObj, "WAIT", ToolPriString);
 					}
 				else
@@ -3106,7 +3100,7 @@ static void SaveSettings(Object *IconObj, Object *originalIconObj, CONST_STRPTR 
 			GetAttr(MUIA_Numeric_Value, SliderToolPriProject, (IPTR *) &ToolPri);
 			if (ToolPri)
 				{
-				sprintf(ToolPriString, "%ld", (long) ToolPri);
+				sprintf(ToolPriString, "%ld", (IPTR) ToolPri);
 				SetToolType(IconObj, "TOOLPRI", ToolPriString);
 				}
 			else
@@ -3175,9 +3169,9 @@ static void SaveSettings(Object *IconObj, Object *originalIconObj, CONST_STRPTR 
 				UNDO_ChangeIconObject,
 				UNDOTAG_UndoMultiStep, UndoStep,
 				UNDOTAG_IconDirLock, dirLock,
-				UNDOTAG_IconName, (ULONG) ScalosExamineGetName(fib),
-				UNDOTAG_OldIconObject, (ULONG) originalIconObj,
-				UNDOTAG_NewIconObject, (ULONG) IconObj,
+				UNDOTAG_IconName, (IPTR) ScalosExamineGetName(fib),
+				UNDOTAG_OldIconObject, (IPTR) originalIconObj,
+				UNDOTAG_NewIconObject, (IPTR) IconObj,
 				TAG_END
 				);
 			}
@@ -3201,7 +3195,7 @@ static void SaveSettings(Object *IconObj, Object *originalIconObj, CONST_STRPTR 
 						UNDO_SetProtection,
 						UNDOTAG_UndoMultiStep, UndoStep,
 						UNDOTAG_IconDirLock, dirLock,
-						UNDOTAG_IconName, (ULONG) ScalosExamineGetName(fib),
+						UNDOTAG_IconName, (IPTR) ScalosExamineGetName(fib),
 						UNDOTAG_OldProtection, ScalosExamineGetProtection(fib),
 						UNDOTAG_NewProtection, Protection,
 						TAG_END
@@ -3224,7 +3218,7 @@ static void SaveSettings(Object *IconObj, Object *originalIconObj, CONST_STRPTR 
 						UNDO_Relabel,
 						UNDOTAG_UndoMultiStep, UndoStep,
 						UNDOTAG_CopySrcDirLock, dirLock,
-						UNDOTAG_CopySrcName, (ULONG) ScalosExamineGetName(fib),
+						UNDOTAG_CopySrcName, (IPTR) ScalosExamineGetName(fib),
 						UNDOTAG_CopyDestName, NewName,
 						TAG_END
 						);
@@ -3240,8 +3234,8 @@ static void SaveSettings(Object *IconObj, Object *originalIconObj, CONST_STRPTR 
 						UNDO_Rename,
 						UNDOTAG_UndoMultiStep, UndoStep,
 						UNDOTAG_CopySrcDirLock, dirLock,
-						UNDOTAG_CopySrcName, (ULONG) ScalosExamineGetName(fib),
-						UNDOTAG_CopyDestName, (ULONG) NewName,
+						UNDOTAG_CopySrcName, (IPTR) ScalosExamineGetName(fib),
+						UNDOTAG_CopyDestName, (IPTR) NewName,
 						TAG_END
 						);
 					}
@@ -3268,9 +3262,9 @@ static void SaveSettings(Object *IconObj, Object *originalIconObj, CONST_STRPTR 
 					UNDO_SetComment,
 					UNDOTAG_UndoMultiStep, UndoStep,
 					UNDOTAG_IconDirLock, dirLock,
-					UNDOTAG_IconName, (ULONG) ScalosExamineGetName(fib),
-					UNDOTAG_OldComment, (ULONG) ScalosExamineGetComment(fib),
-					UNDOTAG_NewComment, (ULONG) Comment,
+					UNDOTAG_IconName, (IPTR) ScalosExamineGetName(fib),
+					UNDOTAG_OldComment, (IPTR) ScalosExamineGetComment(fib),
+					UNDOTAG_NewComment, (IPTR) Comment,
 					TAG_END
 					);
 				}
@@ -3789,7 +3783,7 @@ static void GetDeviceName(BPTR dLock, CONST_STRPTR VolumeName, STRPTR DeviceName
 
 						d1(KPrintF(__FILE__ "/%s/%ld: env=%08lx\n", __FUNC__, __LINE__, env));
 
-						if ( 0 == (((ULONG) fsm->fssm_Environ) & 0xc0000000)
+						if ( 0 == (((IPTR) fsm->fssm_Environ) & 0xc0000000)
 							&& env
 							&& 0 != TypeOfMem((APTR) env)
 							&& env->de_TableSize >= DE_DOSTYPE)
@@ -3915,7 +3909,7 @@ static STRPTR ScaFormatString(CONST_STRPTR formatString, STRPTR Buffer, size_t M
 		{
 		ULONG *ArgArray;
 
-		ArgArray = malloc(sizeof(ULONG) * NumArgs);
+		ArgArray = malloc(sizeof(IPTR) * NumArgs);
 		if (ArgArray)
 			{
 			struct FormatDateHookData fd;
@@ -4032,7 +4026,7 @@ static void BtoCstring(BSTR bstr, STRPTR Buffer, size_t BuffLen)
 
 	*Buffer = '\0';
 
-	if ( 0 == (((ULONG) bstr) & 0xc0000000) && bString && 0 != TypeOfMem((APTR) bString) )
+	if ( 0 == (((IPTR) bstr) & 0xc0000000) && bString && 0 != TypeOfMem((APTR) bString) )
 		{
 		size_t Len = *bString;
 
@@ -4846,7 +4840,7 @@ static BOOL ToolTypeNameCmp(CONST_STRPTR ToolTypeName, CONST_STRPTR ToolTypeCont
 static void GetIconObjectFromWBArg(struct DefIconInfo *dii, struct WBArg *arg,
 	STRPTR FileTypeName, size_t FileTypeNameSize)
 {
-	ULONG Pos;
+	IPTR Pos;
 	STRPTR NewIconName;
 
 	d1(KPrintF(__FILE__ "/%s/%ld: wa_Lock=%08lx  wa_Name=<%s>\n", __FUNC__, __LINE__, arg->wa_Lock, arg->wa_Name));
@@ -4987,9 +4981,9 @@ static void AddDropZoneForObject(Object *o, DropZoneHandler Handler)
 			{
 			// AddAppWindowDropZoneA()
 			dz->dz_DropZone = AddAppWindowDropZone(myAppWindow, 0,
-				(ULONG) dz,
-				WBDZA_Hook, (ULONG) &AppWindowDropZoneHook,
-				WBDZA_Box, (ULONG) &dz->dz_Box,
+				(IPTR) dz,
+				WBDZA_Hook, (IPTR) &AppWindowDropZoneHook,
+				WBDZA_Box, (IPTR) &dz->dz_Box,
 				TAG_END);
 
 			d1(KPrintF("%s/%ld: dz_DropZone=%08lx\n", __FUNC__, __LINE__, dz->dz_DropZone));
@@ -5039,9 +5033,9 @@ static void AdjustDropZones(void)
 				if (mad->mad_Flags & MADF_OBJECTVISIBLE)
 					{
 					dz->dz_DropZone = AddAppWindowDropZone(myAppWindow, 0,
-						(ULONG) dz,
-						WBDZA_Hook, (ULONG) &AppWindowDropZoneHook,
-						WBDZA_Box, (ULONG) &dz->dz_Box,
+						(IPTR) dz,
+						WBDZA_Hook, (IPTR) &AppWindowDropZoneHook,
+						WBDZA_Box, (IPTR) &dz->dz_Box,
 						TAG_END);
 					}
 				else
@@ -5439,7 +5433,7 @@ static void GetIconFileType(struct ScaWindowTask *wt, struct ScaIconNode *in,
 
 	d1(KPrintF(__FILE__ "/%s/%ld: in=%08lx  <%s>  in_FileType=%08lx\n", __FUNC__, __LINE__, in, in->in_Name, in->in_FileType));
 
-	switch ((ULONG) in->in_FileType)
+	switch ((IPTR) in->in_FileType)
 		{
 	case WBDRAWER:
 	case WB_TEXTICON_DRAWER:
