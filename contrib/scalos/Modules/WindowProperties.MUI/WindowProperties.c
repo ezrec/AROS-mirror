@@ -138,31 +138,31 @@ struct PatternListEntry
 #define KeyButtonHelp(name,key,HelpText)\
 	TextObject,\
 		ButtonFrame,\
-		MUIA_Font, MUIV_Font_Button,\
-		MUIA_Text_Contents, name,\
-		MUIA_Text_PreParse, "\33c",\
-		MUIA_Text_HiChar  , key,\
-		MUIA_ControlChar  , key,\
-		MUIA_InputMode    , MUIV_InputMode_RelVerify,\
-		MUIA_Background   , MUII_ButtonBack,\
-		MUIA_ShortHelp, HelpText,\
-		MUIA_CycleChain, TRUE, \
+		MUIA_Font,              MUIV_Font_Button,\
+		MUIA_Text_Contents,     (IPTR)name,\
+		MUIA_Text_PreParse,     (IPTR)"\33c",\
+		MUIA_Text_HiChar,       (IPTR)key,\
+		MUIA_ControlChar,       (IPTR)key,\
+		MUIA_InputMode,         MUIV_InputMode_RelVerify,\
+		MUIA_Background,        MUII_ButtonBack,\
+		MUIA_ShortHelp,         (IPTR)HelpText,\
+		MUIA_CycleChain,        TRUE, \
 		End
 
 #define CheckMarkHelp(selected, HelpTextID)\
 	ImageObject,\
 		ImageButtonFrame,\
-		MUIA_InputMode        , MUIV_InputMode_Toggle,\
-		MUIA_Image_Spec       , MUII_CheckMark,\
-		MUIA_Image_FreeVert   , TRUE,\
-		MUIA_Selected         , selected,\
-		MUIA_Background       , MUII_ButtonBack,\
-		MUIA_ShowSelState     , FALSE,\
-		MUIA_CycleChain       , TRUE,\
-		MUIA_ShortHelp	      , GetLocString(HelpTextID), \
+		MUIA_InputMode,         MUIV_InputMode_Toggle,\
+		MUIA_Image_Spec,        MUII_CheckMark,\
+		MUIA_Image_FreeVert,    TRUE,\
+		MUIA_Selected,          selected,\
+		MUIA_Background,        MUII_ButtonBack,\
+		MUIA_ShowSelState,      FALSE,\
+		MUIA_CycleChain,        TRUE,\
+		MUIA_ShortHelp,         (IPTR)GetLocString(HelpTextID), \
 		End
 
-#define	Application_Return_Ok	1001
+#define	Application_Return_Ok	        1001
 
 #define THUMBNAIL_LIFETIME_NOTSET	366
 #define	CHECKOVERLAP_NOTSET		2
@@ -203,7 +203,7 @@ static LONG ReadPatternPrefsFile(CONST_STRPTR Filename, BOOL Quiet);
 static LONG ReadPrefsBitMap(struct IFFHandle *iff, struct PatternEntryDef *ped, struct TempRastPort *trp);
 static void CreateThumbnailImages(void);
 static void CreateThumbnailImage(struct PatternEntryDef *ped);
-DISPATCHER_PROTO(ThumbnailLifetimeSlider);
+DISPATCHERPROTO(ThumbnailLifetimeSlider);
 static void SelectPattern(ULONG PatternNumber);
 static void AddDefaultPatternEntry(void);
 static struct PatternEntryDef *CreatePatternEntryDef(void);
@@ -650,17 +650,17 @@ int main(int argc, char *argv[])
 		TranslateStringArray(cRegisterTitleStrings);
 
 		APP_Main = ApplicationObject,
-			MUIA_Application_Title,		GetLocString(MSGID_TITLENAME),
-			MUIA_Application_Version,	"$VER: Scalos WindowProperties.module V"
+			MUIA_Application_Title,		(IPTR)GetLocString(MSGID_TITLENAME),
+			MUIA_Application_Version,	(IPTR)"$VER: Scalos WindowProperties.module V"
 							STR(VERSION_MAJOR) "." STR(VERSION_MINOR)
 							" (" __DATE__ ") " COMPILER_STRING,
-			MUIA_Application_Copyright,	"The Scalos Team, 2004" CURRENTYEAR,
-			MUIA_Application_Author,	"The Scalos Team",
-			MUIA_Application_Description,	"Scalos Window Properties module",
-			MUIA_Application_Base,		"SCALOS_WINDOW_PROP",
+			MUIA_Application_Copyright,	(IPTR)"The Scalos Team, 2004" CURRENTYEAR,
+			MUIA_Application_Author,	(IPTR)"The Scalos Team",
+			MUIA_Application_Description,	(IPTR)"Scalos Window Properties module",
+			MUIA_Application_Base,		(IPTR)"SCALOS_WINDOW_PROP",
 
-			SubWindow, WIN_Main = WindowObject,
-				MUIA_Window_Title, GetLocString(MSGID_TITLENAME),
+			SubWindow, (IPTR)(WIN_Main = WindowObject,
+				MUIA_Window_Title, (IPTR)GetLocString(MSGID_TITLENAME),
 //				MUIA_Window_ID,	MAKE_ID('M','A','I','N'),
 				MUIA_Window_AppWindow, TRUE,
 
@@ -670,79 +670,78 @@ int main(int argc, char *argv[])
 				MUIA_Window_Width, MUIV_Window_Width_MinMax(0),
 				MUIA_Window_Height, MUIV_Window_Height_MinMax(0),
 
-				WindowContents, VGroup,
-					Child, VGroup,
+				WindowContents, (IPTR)(VGroup,
+					Child, (IPTR)(VGroup,
 						GroupFrame,
 						MUIA_Background, MUII_GroupBack,
 
-						Child, TextObject,
-							MUIA_Text_PreParse, MUIX_C MUIX_B,
-							MUIA_Text_Contents, IconName,
+						Child, (IPTR)(TextObject,
+							MUIA_Text_PreParse, (IPTR)MUIX_C MUIX_B,
+							MUIA_Text_Contents, (IPTR)IconName,
 							TextFrame,
-							MUIA_Background, MUII_TextBack,
-							MUIA_ShortHelp, GetLocString(MSGID_TEXT_WINDOWNAME_SHORTHELP),
-						End, //TextObject
+							MUIA_Background, (IPTR)MUII_TextBack,
+							MUIA_ShortHelp, (IPTR)GetLocString(MSGID_TEXT_WINDOWNAME_SHORTHELP),
+						End), //TextObject
 
-						Child, TextObject,
+						Child, (IPTR)(TextObject,
 							MUIA_ShowMe, !IsWriteable,
-							MUIA_Text_PreParse, MUIX_C,
-							MUIA_Text_Contents, GetLocString(MSGID_READ_ONLY),
-						End, //TextObject
+							MUIA_Text_PreParse, (IPTR)MUIX_C,
+							MUIA_Text_Contents, (IPTR)GetLocString(MSGID_READ_ONLY),
+						End), //TextObject
 
 
-						Child, HGroup,
+						Child, (IPTR)(HGroup,
 
-							Child, RectangleObject, End, //--- Instead: Child, VSpace(0)
+							Child, (IPTR)(RectangleObject, End), //--- Instead: Child, VSpace(0)
 
-							Child, IconImage = IconobjectMCCObject,
-								MUIA_Iconobj_Object, iconObj,
+							Child, (IPTR)(IconImage = IconobjectMCCObject,
+								MUIA_Iconobj_Object, (IPTR)iconObj,
 								MUIA_InputMode, MUIV_InputMode_Toggle, //MUIV_InputMode_RelVerify,
 								MUIA_ShowSelState, FALSE,
 								MUIA_CycleChain, TRUE,
-							End, //IconobjectMCCObject
+							End), //IconobjectMCCObject
 
-							Child,	RegisterObject,
-								MUIA_Register_Titles, cRegisterTitleStrings,
+							Child,	(IPTR)(RegisterObject,
+								MUIA_Register_Titles, (IPTR)cRegisterTitleStrings,
 								MUIA_CycleChain, TRUE,
 
-								Child,	VGroup,
-									Child, HGroup,
-										Child, Label1(GetLocString(MSGID_POPUP_PATTERNNUMBER)),
-										Child, HGroup,
+								Child,	(IPTR)(VGroup,
+									Child, (IPTR)(HGroup,
+										Child, (IPTR)Label1(GetLocString(MSGID_POPUP_PATTERNNUMBER)),
+										Child, (IPTR)(HGroup,
 											MUIA_Disabled, !IsWriteable,
 
-											Child, TextPatternNumber = TextObject,
-												MUIA_Text_PreParse, MUIX_C,
-												MUIA_Text_Contents, GetLocString(MSGID_PATTERNR_DEFAULT),
-												End, //TextObject
+											Child, (IPTR)(TextPatternNumber = TextObject,
+												MUIA_Text_PreParse, (IPTR)MUIX_C,
+												MUIA_Text_Contents, (IPTR)GetLocString(MSGID_PATTERNR_DEFAULT),
+                                                                                        End), //TextObject
 
-											Child, BackfillPatternPreview = BackfillObject,
+											Child, (IPTR)(BackfillPatternPreview = BackfillObject,
 												ImageButtonFrame,
 												MUIA_Background, MUII_ButtonBack,
-												ImageButtonFrame,
 												MUIA_InputMode, MUIV_InputMode_RelVerify,
 												MUIA_CycleChain, TRUE,
-												BFA_BitmapObject, EmptyThumbnailBitmap,
-												End, //BackfillClass
+												BFA_BitmapObject, (IPTR)EmptyThumbnailBitmap,
+                                                                                        End), //BackfillClass
 
-											Child, PopObjectPatternNumber = PopobjectObject,
+											Child, (IPTR)(PopObjectPatternNumber = PopobjectObject,
 												MUIA_CycleChain, TRUE,
-												MUIA_Popobject_WindowHook, &PatternPopupWindowHook,
-												MUIA_Popstring_Button, PopButton(MUII_PopUp),
-												MUIA_Popobject_Object, NListviewPatterns = NListviewObject,
+												MUIA_Popobject_WindowHook, (IPTR)&PatternPopupWindowHook,
+												MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopUp),
+												MUIA_Popobject_Object, (IPTR)(NListviewPatterns = NListviewObject,
 													MUIA_Listview_DragType, MUIV_Listview_DragType_None,
 													MUIA_Listview_Input, TRUE,
 													MUIA_CycleChain, TRUE,
-													MUIA_Listview_List, NListPatterns = NListObject,
+													MUIA_Listview_List, (IPTR)(NListPatterns = NListObject,
 														InputListFrame,
 														MUIA_Background, MUII_ListBack,
-														MUIA_NList_Format, "P=\33r BAR, BAR",
+														MUIA_NList_Format, (IPTR)"P=\33r BAR, BAR",
 														MUIA_NList_TitleSeparator, FALSE,
 														MUIA_NList_Title, FALSE,
-														MUIA_NList_DisplayHook2, &PatternListDisplayHook,
-														MUIA_NList_ConstructHook2, &PatternListConstructHook,
-														MUIA_NList_DestructHook2, &PatternListDestructHook,
-														MUIA_NList_CompareHook2, &PatternListCompareHook,
+														MUIA_NList_DisplayHook2, (IPTR)&PatternListDisplayHook,
+														MUIA_NList_ConstructHook2, (IPTR)&PatternListConstructHook,
+														MUIA_NList_DestructHook2, (IPTR)&PatternListDestructHook,
+														MUIA_NList_CompareHook2, (IPTR)&PatternListCompareHook,
 														MUIA_NList_PoolPuddleSize, sizeof(struct PatternListEntry) * 64,
 														MUIA_NList_PoolThreshSize, sizeof(struct PatternListEntry),
 														MUIA_NList_AutoVisible, TRUE,
@@ -750,283 +749,282 @@ int main(int argc, char *argv[])
 														MUIA_NList_TitleMark, MUIV_NList_TitleMark_Down | 0,
 														MUIA_NList_EntryValueDependent, TRUE,
 														MUIA_NList_MultiSelect, MUIV_NList_MultiSelect_None,
-														End, //NListObject
+                                                                                                        End), //NListObject
 													MUIA_NListview_Horiz_ScrollBar, MUIV_NListview_HSB_FullAuto,
-													End, //NListviewObject
-												End, //PopobjectObject
-											End, //HGroup
-										End, //HGroup
+                                                                                                End), //NListviewObject
+                                                                                        End), //PopobjectObject
+                                                                                End), //HGroup
+                                                                        End), //HGroup
 
-									Child, HVSpace,
+									Child, (IPTR)HVSpace,
 
-									Child, ColGroup(2),
-										Child, Label1(GetLocString(MSGID_CYCLE_NOSTATUSBAR)),
-										Child, CycleMarkNoStatusBar = CycleObject,
+									Child, (IPTR)(ColGroup(2),
+										Child, (IPTR)Label1(GetLocString(MSGID_CYCLE_NOSTATUSBAR)),
+										Child, (IPTR)(CycleMarkNoStatusBar = CycleObject,
 											MUIA_CycleChain, TRUE,
 											MUIA_Cycle_Active, NoStatusBar,
-											MUIA_Cycle_Entries, cHideStatusBar,
+											MUIA_Cycle_Entries, (IPTR)cHideStatusBar,
 											MUIA_Disabled, !IsWriteable,
-											MUIA_ShortHelp, (ULONG) GetLocString(MSGID_CYCLE_NOSTATUSBAR_SHORTHELP),
-											End, //CycleObject
+											MUIA_ShortHelp, (IPTR) GetLocString(MSGID_CYCLE_NOSTATUSBAR_SHORTHELP),
+                                                                                End), //CycleObject
 
-										Child, Label1(GetLocString(MSGID_CYCLE_NOCONTROLBAR)),
-										Child, CycleMarkNoControlBar = CycleObject,
+										Child, (IPTR)Label1(GetLocString(MSGID_CYCLE_NOCONTROLBAR)),
+										Child, (IPTR)(CycleMarkNoControlBar = CycleObject,
 											MUIA_CycleChain, TRUE,
 											MUIA_Cycle_Active, NoControlBar,
-											MUIA_Cycle_Entries, cHideControlBar,
+											MUIA_Cycle_Entries, (IPTR)cHideControlBar,
 											MUIA_Disabled, !IsWriteable,
-											MUIA_ShortHelp, (ULONG) GetLocString(MSGID_CYCLE_NOCONTROLBAR_SHORTHELP),
-											End, //CycleObject
+											MUIA_ShortHelp, (IPTR) GetLocString(MSGID_CYCLE_NOCONTROLBAR_SHORTHELP),
+                                                                                End), //CycleObject
 
-										End, //ColGroup
+                                                                        End), //ColGroup
 
-									Child, HVSpace,
+									Child, (IPTR)HVSpace,
 
-									Child, VGroup,
+									Child, (IPTR)(VGroup,
 #if defined(__MORPHOS__)
 										MUIA_ShowMe, IntuitionBase->LibNode.lib_Version >= 51,
 #elif !defined(__amigaos4__)
 										MUIA_ShowMe, FALSE,
 #endif //!defined(__MORPHOS__) && !defined(__amigaos4__)
-										Child, VGroup,
-											MUIA_FrameTitle, (ULONG) GetLocString(MSGID_TRANSPARENCY_ACTIVEWINDOW),
+										Child, (IPTR)(VGroup,
+											MUIA_FrameTitle, (IPTR) GetLocString(MSGID_TRANSPARENCY_ACTIVEWINDOW),
 											GroupFrame,
 											MUIA_Background, MUII_GroupBack,
 
-											MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TRANSPARENCY_ACTIVEWINDOW_SHORTHELP),
+											MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TRANSPARENCY_ACTIVEWINDOW_SHORTHELP),
 
-											Child, HGroup,
-												Child, Label1((ULONG) GetLocString(MSGID_CHECKBOX_TRANSPARENCY_USEDEFAULT)),
-												Child, CheckboxTransparencyActiveWindow = CheckMarkHelp(ActiveWindowTransparencyDefault, MSGID_CHECKBOX_TRANSPARENCY_USEDEFAULT_SHORTHELP),
-												Child, HVSpace,
-												End, //HGroup
+											Child, (IPTR)(HGroup,
+												Child, (IPTR)Label1(GetLocString(MSGID_CHECKBOX_TRANSPARENCY_USEDEFAULT)),
+												Child, (IPTR)(CheckboxTransparencyActiveWindow = CheckMarkHelp(ActiveWindowTransparencyDefault, MSGID_CHECKBOX_TRANSPARENCY_USEDEFAULT_SHORTHELP)),
+												Child, (IPTR)HVSpace,
+                                                                                        End), //HGroup
 
-											Child, GroupTransparencyActiveWindow = ColGroup(3),
+											Child, (IPTR)(GroupTransparencyActiveWindow = ColGroup(3),
 												MUIA_Disabled, ActiveWindowTransparencyDefault,
-												Child, Label1((ULONG) GetLocString(MSGID_TRANSPARENCY_TRANSPARENT)),
+												Child, (IPTR)Label1(GetLocString(MSGID_TRANSPARENCY_TRANSPARENT)),
 
-												Child, SliderTransparencyActiveWindow = SliderObject,
+												Child, (IPTR)(SliderTransparencyActiveWindow = SliderObject,
 													MUIA_CycleChain, TRUE,
 													MUIA_Numeric_Min, 0,
 													MUIA_Numeric_Max, 100,
 													MUIA_Slider_Horiz, TRUE,
 													MUIA_Numeric_Value, ActiveWindowTransparency,
-													End, //Slider
+                                                                                                End), //Slider
 
-												Child, Label1((ULONG) GetLocString(MSGID_TRANSPARENCY_OPAQUE)),
+												Child, (IPTR)Label1(GetLocString(MSGID_TRANSPARENCY_OPAQUE)),
 
-												End, //ColGroup
+                                                                                        End), //ColGroup
 
-											End, //VGroup
+                                                                                End), //VGroup
 
-										Child, VGroup,
-											MUIA_FrameTitle, (ULONG) GetLocString(MSGID_TRANSPARENCY_INACTIVEWINDOW),
+										Child, (IPTR)(VGroup,
+											MUIA_FrameTitle, (IPTR) GetLocString(MSGID_TRANSPARENCY_INACTIVEWINDOW),
 											GroupFrame,
 											MUIA_Background, MUII_GroupBack,
 
-											MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TRANSPARENCY_INACTIVEWINDOW_SHORTHELP),
+											MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TRANSPARENCY_INACTIVEWINDOW_SHORTHELP),
 
-											Child, HGroup,
-												Child, Label1((ULONG) GetLocString(MSGID_CHECKBOX_TRANSPARENCY_USEDEFAULT)),
-												Child, CheckboxTransparencyInactiveWindow = CheckMarkHelp(InactiveWindowTransparencyDefault, MSGID_CHECKBOX_TRANSPARENCY_USEDEFAULT_SHORTHELP),
-												Child, HVSpace,
-												End, //HGroup
+											Child, (IPTR)(HGroup,
+												Child, (IPTR)Label1(GetLocString(MSGID_CHECKBOX_TRANSPARENCY_USEDEFAULT)),
+												Child, (IPTR)(CheckboxTransparencyInactiveWindow = CheckMarkHelp(InactiveWindowTransparencyDefault, MSGID_CHECKBOX_TRANSPARENCY_USEDEFAULT_SHORTHELP)),
+												Child, (IPTR)HVSpace,
+                                                                                        End), //HGroup
 
-											Child, GroupTransparencyInactiveWindow = ColGroup(3),
+											Child, (IPTR)(GroupTransparencyInactiveWindow = ColGroup(3),
 												MUIA_Disabled, InactiveWindowTransparencyDefault,
-												Child, Label1((ULONG) GetLocString(MSGID_TRANSPARENCY_TRANSPARENT)),
+												Child, (IPTR)Label1(GetLocString(MSGID_TRANSPARENCY_TRANSPARENT)),
 
-												Child, SliderTransparencyInactiveWindow = SliderObject,
+												Child, (IPTR)(SliderTransparencyInactiveWindow = SliderObject,
 													MUIA_CycleChain, TRUE,
 													MUIA_Numeric_Min, 0,
 													MUIA_Numeric_Max, 100,
 													MUIA_Slider_Horiz, TRUE,
 													MUIA_Numeric_Value, InactiveWindowTransparency,
-												End, //Slider
+												End), //Slider
 
-												Child, Label1((ULONG) GetLocString(MSGID_TRANSPARENCY_OPAQUE)),
+												Child, (IPTR)Label1(GetLocString(MSGID_TRANSPARENCY_OPAQUE)),
 
-												End, //ColGroup
+                                                                                        End), //ColGroup
 
-											End, //VGroup
+                                                                                End), //VGroup
 
-										End, //VGroup
+                                                                        End), //VGroup
 
-									Child, HVSpace,
-									End, //VGroup
+									Child, (IPTR)HVSpace,
+                                                                End), //VGroup
 
-								Child,	VGroup,
-									Child, ColGroup(2),
-										Child, Label1(GetLocString(MSGID_CYCLE_CHECKOVERLAP)),
-										Child, CycleCheckOverlap = CycleObject,
+								Child,	(IPTR)(VGroup,
+									Child, (IPTR)(ColGroup(2),
+										Child, (IPTR)Label1(GetLocString(MSGID_CYCLE_CHECKOVERLAP)),
+										Child, (IPTR)(CycleCheckOverlap = CycleObject,
 											MUIA_CycleChain, TRUE,
 											MUIA_Disabled, !IsWriteable,
-											MUIA_Cycle_Entries, cCheckOverlap,
+											MUIA_Cycle_Entries, (IPTR)cCheckOverlap,
 											MUIA_Cycle_Active, CheckOverlap,
-											MUIA_ShortHelp, (ULONG) GetLocString(MSGID_CYCLE_CHECKOVERLAP_SHORTHELP),
-											End, //CycleObject
+											MUIA_ShortHelp, (IPTR) GetLocString(MSGID_CYCLE_CHECKOVERLAP_SHORTHELP),
+                                                                                End), //CycleObject
 
-										Child, Label1(GetLocString(MSGID_CYCLE_THUMBNAILS)),
-										Child, CycleThumbnails = CycleObject,
+										Child, (IPTR)Label1(GetLocString(MSGID_CYCLE_THUMBNAILS)),
+										Child, (IPTR)(CycleThumbnails = CycleObject,
 											MUIA_CycleChain, TRUE,
 											MUIA_Disabled, !IsWriteable,
-											MUIA_Cycle_Entries, cShowThumbnails,
+											MUIA_Cycle_Entries, (IPTR)cShowThumbnails,
 											MUIA_Cycle_Active, ThumbnailMode,
-											MUIA_ShortHelp, (ULONG) GetLocString(MSGID_CYCLE_THUMBNAILS_SHORTHELP),
-											End, //CycleObject
+											MUIA_ShortHelp, (IPTR) GetLocString(MSGID_CYCLE_THUMBNAILS_SHORTHELP),
+                                                                                End), //CycleObject
 
-										Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_MAXAGE)),
-										Child, NumericButtonThumbnailsLifetime = ThumbnailLifetimeSliderObject,
+										Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_THUMBNAILS_MAXAGE)),
+										Child, (IPTR)(NumericButtonThumbnailsLifetime = ThumbnailLifetimeSliderObject,
 											MUIA_CycleChain, TRUE,
 											MUIA_Numeric_Min, 0,
 											MUIA_Numeric_Max, 366,
 											MUIA_Slider_Horiz, TRUE,
 											MUIA_Numeric_Value, ThumbnailLifetime,
-											MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_MAXAGE_SHORTHELP),
-											End, //ThumbnailLifetimeSliderClass
-										End, //ColGroup
+											MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_MAXAGE_SHORTHELP),
+                                                                                End), //ThumbnailLifetimeSliderClass
+                                                                        End), //ColGroup
 
-									Child, HVSpace,
+									Child, (IPTR)HVSpace,
 
-									Child, VGroup,
-										MUIA_FrameTitle, (ULONG) GetLocString(MSGID_GROUP_ICONSCALING),
+									Child, (IPTR)(VGroup,
+										MUIA_FrameTitle, (IPTR) GetLocString(MSGID_GROUP_ICONSCALING),
 										GroupFrame,
 										MUIA_Background, MUII_GroupBack,
 
-										Child, HGroup,
-											Child, Label1((ULONG) GetLocString(MSGID_CHECKBOX_ICONSCALING_NOMINALSIZE)),
-											Child, CheckboxNominalIconSize  = CheckMarkHelp(IconScaleFactorDefault, MSGID_CHECKBOX_ICONSCALING_NOMINALSIZE_SHORTHELP),
-											Child, HVSpace,
-											End, //HGroup
+										Child, (IPTR)(HGroup,
+											Child, (IPTR)Label1(GetLocString(MSGID_CHECKBOX_ICONSCALING_NOMINALSIZE)),
+											Child, (IPTR)(CheckboxNominalIconSize  = CheckMarkHelp(IconScaleFactorDefault, MSGID_CHECKBOX_ICONSCALING_NOMINALSIZE_SHORTHELP)),
+											Child, (IPTR)HVSpace,
+                                                                                End), //HGroup
 
-										Child, GroupNominalIconSize = HGroup,
+										Child, (IPTR)(GroupNominalIconSize = HGroup,
 											MUIA_Disabled, IconScaleFactorDefault,
-											MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSCALING_NOMINALSIZE_SHORTHELP),
+											MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSCALING_NOMINALSIZE_SHORTHELP),
 
-											Child, Label1((ULONG) GetLocString(MSGID_ICONSCALING_NOMINALSIZE)),
+											Child, (IPTR)Label1(GetLocString(MSGID_ICONSCALING_NOMINALSIZE)),
 
-											Child, SliderNominalIconSize = SliderObject,
+											Child, (IPTR)(SliderNominalIconSize = SliderObject,
 												MUIA_CycleChain, TRUE,
 												MUIA_Numeric_Min, IDTA_ScalePercentage_MIN,
 												MUIA_Numeric_Max, IDTA_ScalePercentage_MAX,
 												MUIA_Slider_Horiz, TRUE,
 												MUIA_Numeric_Value, IconScaleFactor,
-												End, //Slider
+                                                                                        End), //Slider
 
-											Child, Label1((ULONG) GetLocString(MSGID_ICONSCALING_PERCENT)),
-											End, //HGroup
+											Child, (IPTR)Label1(GetLocString(MSGID_ICONSCALING_PERCENT)),
+                                                                                End), //HGroup
 
-										Child, HVSpace,
+										Child, (IPTR)HVSpace,
 
-										Child, HGroup,
-											Child, Label1((ULONG) GetLocString(MSGID_CHECKBOX_ICONSIZECONSTRAINTS_USEDEFAULT)),
-											Child, CheckboxIconSizeConstraints  = CheckMarkHelp(IconSizeConstraintsDefault, MSGID_CHECKBOX_ICONSIZECONSTRAINTS_USEDEFAULT_SHORTHELP),
-											Child, HVSpace,
-											End, //HGroup
+										Child, (IPTR)(HGroup,
+											Child, (IPTR)Label1(GetLocString(MSGID_CHECKBOX_ICONSIZECONSTRAINTS_USEDEFAULT)),
+											Child, (IPTR)(CheckboxIconSizeConstraints  = CheckMarkHelp(IconSizeConstraintsDefault, MSGID_CHECKBOX_ICONSIZECONSTRAINTS_USEDEFAULT_SHORTHELP)),
+											Child, (IPTR)HVSpace,
+                                                                                End), //HGroup
 
-										Child, GroupIconSizeConstraints = HGroup,
+										Child, (IPTR)(GroupIconSizeConstraints = HGroup,
 											MUIA_Disabled, IconSizeConstraintsDefault,
 
-											Child, HVSpace,
+											Child, (IPTR)HVSpace,
 
-											Child, Label1((ULONG) GetLocString(MSGID_ICONSCALING_MINSIZE)),
-											Child, CycleIconMinSize = CycleObject,
+											Child, (IPTR)Label1(GetLocString(MSGID_ICONSCALING_MINSIZE)),
+											Child, (IPTR)(CycleIconMinSize = CycleObject,
 												MUIA_CycleChain, TRUE,
-												MUIA_Cycle_Entries, cIconSizesMin,
-												MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSCALING_MINSIZE_SHORTHELP),
-												End, //Cycle
+												MUIA_Cycle_Entries, (IPTR)cIconSizesMin,
+												MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSCALING_MINSIZE_SHORTHELP),
+                                                                                        End), //Cycle
 
-											Child, HVSpace,
+											Child, (IPTR)HVSpace,
 
-											Child, Label1((ULONG) GetLocString(MSGID_ICONSCALING_MAXSIZE)),
-											Child, CycleIconMaxSize = CycleObject,
+											Child, (IPTR)Label1(GetLocString(MSGID_ICONSCALING_MAXSIZE)),
+											Child, (IPTR)(CycleIconMaxSize = CycleObject,
 												MUIA_CycleChain, TRUE,
-												MUIA_Cycle_Entries, cIconSizesMax,
-												MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSCALING_MAXSIZE_SHORTHELP),
-												End, //Cycle
+												MUIA_Cycle_Entries, (IPTR)cIconSizesMax,
+												MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSCALING_MAXSIZE_SHORTHELP),
+                                                                                        End), //Cycle
 
-											Child, HVSpace,
-											End, //HGroup
+                                                                                        Child, (IPTR)HVSpace,
+                                                                                End), //HGroup
 
-										End, //VGroup
-									End, //VGroup
+                                                                        End), //VGroup
+                                                                End), //VGroup
 
-									Child, HVSpace,
-								End, //VGroup
+                                                                Child, (IPTR)HVSpace,
+                                                        End), //RegisterObject
 
-							End, //RegisterObject
+                                                End), //HGroup
 
-						Child, Group_Virtual = ScrollgroupObject, // +jmc+
-							MUIA_Scrollgroup_VertBar, NULL,
-							MUIA_Scrollgroup_HorizBar, NULL,
+						Child, (IPTR)(Group_Virtual = ScrollgroupObject, // +jmc+
+							MUIA_Scrollgroup_VertBar, (IPTR)NULL,
+							MUIA_Scrollgroup_HorizBar, (IPTR)NULL,
 							MUIA_Scrollgroup_FreeHoriz, TRUE,
 							MUIA_Scrollgroup_FreeVert, FALSE,
-							MUIA_Scrollgroup_Contents,
-							VirtgroupObject,
-								Child, Path = TextObject, TextFrame,
+							MUIA_Scrollgroup_Contents,(IPTR)(VirtgroupObject,
+								Child, (IPTR)(Path = TextObject, TextFrame,
 									MUIA_Background, MUII_TextBack,
-									MUIA_Text_PreParse, MUIX_C,
-									MUIA_Text_Contents, PathName,
-									MUIA_ShortHelp, GetLocString(MSGID_TEXT_PARENTDIR_SHORTHELP),
-									End, //TextObject
-								End, //VirtgroupObject
-							End, //ScrollgroupObject
+									MUIA_Text_PreParse, (IPTR)MUIX_C,
+									MUIA_Text_Contents, (IPTR)PathName,
+									MUIA_ShortHelp, (IPTR)GetLocString(MSGID_TEXT_PARENTDIR_SHORTHELP),
+                                                                End), //TextObject
+                                                        End), //VirtgroupObject
+                                                End), //ScrollgroupObject
 
-						Child, HVSpace,
+                                                Child, (IPTR)HVSpace,
 
-						End, //VGroup,
+                                        End), //VGroup,
 
-					Child, Group_Buttons2 = HGroup,
+					Child, (IPTR)(Group_Buttons2 = HGroup,
 						MUIA_Group_SameWidth, TRUE,
-						Child, OkButton = KeyButtonHelp(GetLocString(MSGID_OKBUTTON), 
-									'o', GetLocString(MSGID_SHORTHELP_OKBUTTON)),
-						Child, CancelButton = KeyButtonHelp(GetLocString(MSGID_CANCELBUTTON), 
-									'c', GetLocString(MSGID_SHORTHELP_CANCELBUTTON)),
-						End, //HGroup
-					End, //VGroup
-				End, //WindowObject
+						Child, (IPTR)(OkButton = KeyButtonHelp(GetLocString(MSGID_OKBUTTON), 
+									'o', GetLocString(MSGID_SHORTHELP_OKBUTTON))),
+						Child, (IPTR)(CancelButton = KeyButtonHelp(GetLocString(MSGID_CANCELBUTTON), 
+									'c', GetLocString(MSGID_SHORTHELP_CANCELBUTTON))),
+                                        End), //HGroup
+                                End), //VGroup
+                        End), //WindowObject
 
-			SubWindow, WIN_Progress = WindowObject,
+			SubWindow, (IPTR)(WIN_Progress = WindowObject,
 			//		MUIA_Window_Borderless, TRUE,
 					MUIA_Window_Activate, FALSE,
 					MUIA_Window_NoMenus, TRUE,
-					MUIA_Window_Title, GetLocString(MSGID_WINDOW_STARTUP),
-					WindowContents, VGroup,
-						Child, GaugeProgress = GaugeObject,
+					MUIA_Window_Title, (IPTR)GetLocString(MSGID_WINDOW_STARTUP),
+					WindowContents, (IPTR)(VGroup,
+						Child, (IPTR)(GaugeProgress = GaugeObject,
 							MUIA_Gauge_Horiz, TRUE,
 							GaugeFrame,
-							MUIA_Gauge_InfoText, " ",
-							End, //GaugeObject
-						Child, TextMsgProgress1 = TextObject,
-							MUIA_Text_PreParse, MUIX_C,
-							MUIA_Text_Contents, "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-							End, //TextObject
-						Child, TextMsgProgress2 = TextObject,
-							MUIA_Text_PreParse, MUIX_C,
-							MUIA_Text_Contents, "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-							End, //TextObject
-						End, //VGroup
-				End, //WindowObject
+							MUIA_Gauge_InfoText, (IPTR)" ",
+                                                End), //GaugeObject
+						Child, (IPTR)(TextMsgProgress1 = TextObject,
+							MUIA_Text_PreParse, (IPTR)MUIX_C,
+							MUIA_Text_Contents, (IPTR)"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                                                End), //TextObject
+						Child, (IPTR)(TextMsgProgress2 = TextObject,
+							MUIA_Text_PreParse, (IPTR)MUIX_C,
+							MUIA_Text_Contents, (IPTR)"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                                                End), //TextObject
+                                        End), //VGroup
+                        End), //WindowObject
 
-			MUIA_Application_Menustrip, MenustripObject,
-				Child, MenuObjectT(GetLocString(MSGID_MENU_PROJECT)),
+			MUIA_Application_Menustrip, (IPTR)(MenustripObject,
+				Child, (IPTR)(MenuObjectT((IPTR)GetLocString(MSGID_MENU_PROJECT)),
 
-					Child, MenuAbout = MenuitemObject,
-						MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_ABOUT),
-					End,
-					Child, MenuAboutMUI = MenuitemObject,
-						MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_ABOUTMUI),
-					End,
-					Child, MenuitemObject,
+					Child, (IPTR)(MenuAbout = MenuitemObject,
+						MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_ABOUT),
+					End),
+					Child, (IPTR)(MenuAboutMUI = MenuitemObject,
+						MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_ABOUTMUI),
+					End),
+					Child, (IPTR)(MenuitemObject,
 						MUIA_Menuitem_Title, -1,
-					End,
-					Child, MenuQuit = MenuitemObject,
-						MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_QUIT),
-						MUIA_Menuitem_Shortcut, GetLocString(MSGID_MENU_PROJECT_QUIT_SHORT),
-					End,
+					End),
+					Child, (IPTR)(MenuQuit = MenuitemObject,
+						MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_QUIT),
+						MUIA_Menuitem_Shortcut, (IPTR)GetLocString(MSGID_MENU_PROJECT_QUIT_SHORT),
+					End),
 						
-				End, //MenuObjectT
-			End, //MenuStripObject
+				End), //MenuObjectT
+			End), //MenuStripObject
 		End; //ApplicationObject
 
 		if (NULL == APP_Main)
@@ -1173,7 +1171,7 @@ int main(int argc, char *argv[])
 
 DISPATCHER(ThumbnailLifetimeSlider)
 {
-	ULONG Result;
+	IPTR Result;
 
 	switch (msg->MethodID)
 		{
@@ -1193,7 +1191,7 @@ DISPATCHER(ThumbnailLifetimeSlider)
 				GetLocString(MSGID_ICONSPAGE_THUMBNAILS_MAXAGE_DAYS));
 			}
 		d1(KPrintF("%s/%s/%ld: inst=%08lx  buf=%08lx  <%s>\n", __FILE__, __FUNC__, __LINE__, inst, inst->buf, inst->buf));
-		Result = (ULONG) inst->buf;
+		Result = (IPTR) inst->buf;
 		}
 		break;
 
@@ -1619,7 +1617,7 @@ static void TranslateStringArray(STRPTR *stringArray)
 {
 	while (*stringArray)
 		{
-		*stringArray = GetLocString((ULONG) *stringArray);
+		*stringArray = GetLocString((IPTR) *stringArray);
 		stringArray++;
 		}
 }
@@ -1874,7 +1872,7 @@ static void SaveSettings(Object *IconObj, struct ScaWindowStruct *ws)
 			RemoveToolType(IconObj, "SCALOS_ICONSIZECONSTRAINTS");
 
 			SetAttrs(ws->ws_WindowTask->mt_MainObject,
-				SCCA_IconWin_IconSizeConstraints, (ULONG) &prefIconSizeConstraints,
+				SCCA_IconWin_IconSizeConstraints, (IPTR) &prefIconSizeConstraints,
 				TAG_END);
 			}
 		else
@@ -1888,7 +1886,7 @@ static void SaveSettings(Object *IconObj, struct ScaWindowStruct *ws)
 			SetToolType(IconObj, "SCALOS_ICONSIZECONSTRAINTS", IconSizeConstraintsString);
 
 			SetAttrs(ws->ws_WindowTask->mt_MainObject,
-				SCCA_IconWin_IconSizeConstraints, (ULONG) &IconSizeConstraints,
+				SCCA_IconWin_IconSizeConstraints, (IPTR) &IconSizeConstraints,
 				TAG_END);
 			}
 
@@ -1907,9 +1905,9 @@ static void SaveSettings(Object *IconObj, struct ScaWindowStruct *ws)
 				SCCM_IconWin_AddUndoEvent,
 				UNDO_SetToolTypes,
 				UNDOTAG_IconDirLock, dirLock,
-				UNDOTAG_IconName, (ULONG) iconName,
-				UNDOTAG_OldToolTypes, (ULONG) OldToolTypesArray,
-				UNDOTAG_NewToolTypes, (ULONG) NewToolTypeArray,
+				UNDOTAG_IconName, (IPTR) iconName,
+				UNDOTAG_OldToolTypes, (IPTR) OldToolTypesArray,
+				UNDOTAG_NewToolTypes, (IPTR) NewToolTypeArray,
 				TAG_END
 				);
 
@@ -2924,7 +2922,7 @@ static void CreateThumbnailImages(void)
 
 	set(WIN_Main, MUIA_Window_Sleep, TRUE);
 
-	set(TextMsgProgress1, MUIA_Text_Contents, (ULONG) GetLocString(MSGID_LOADING_THUMBNAILS));
+	set(TextMsgProgress1, MUIA_Text_Contents, (IPTR) GetLocString(MSGID_LOADING_THUMBNAILS));
 
 	get(NListPatterns, MUIA_NList_Entries, &nEntries);
 
@@ -2997,8 +2995,8 @@ static void CreateThumbnailImages(void)
 					tvNow.tv_micro = 100000;
 					AddTime(&tvStart, &tvNow);	// +100ms
 
-					set(TextMsgProgress1, MUIA_Text_Contents, (ULONG) GetLocString(MSGID_LOADING_THUMBNAIL));
-					set(TextMsgProgress2, MUIA_Text_Contents, (ULONG) ped->ped_PatternPrefs.scxp_Name);
+					set(TextMsgProgress1, MUIA_Text_Contents, (IPTR) GetLocString(MSGID_LOADING_THUMBNAIL));
+					set(TextMsgProgress2, MUIA_Text_Contents, (IPTR) ped->ped_PatternPrefs.scxp_Name);
 
 					// make sure the progress display window is open
 					get(WIN_Progress, MUIA_Window_Open, &WindowIsOpen);
@@ -3008,7 +3006,7 @@ static void CreateThumbnailImages(void)
 						}
 
 					snprintf(TextLine, sizeof(TextLine), GetLocString(MSGID_PROGRESS_THUMBNAILS), n, nEntries);
-					set(GaugeProgress, MUIA_Gauge_InfoText, (ULONG) TextLine);
+					set(GaugeProgress, MUIA_Gauge_InfoText, (IPTR) TextLine);
 
 					set(GaugeProgress, MUIA_Gauge_Current, n);
 					}
