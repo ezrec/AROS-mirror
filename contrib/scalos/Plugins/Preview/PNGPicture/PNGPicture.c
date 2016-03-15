@@ -324,7 +324,7 @@ LIBFUNC_P5(LONG, LIBSCAPreviewGenerate,
 		int bit_depth, color_type, interlace_type;
 		ULONG y;
 
-		PVResult = (struct ScalosPreviewResult *) GetTagData(SCALOSPREVIEW_ResultStruct, (ULONG)NULL, tagList);
+		PVResult = (struct ScalosPreviewResult *) GetTagData(SCALOSPREVIEW_ResultStruct, (IPTR)NULL, tagList);
 		if (NULL == PVResult)
 			break;
 
@@ -346,10 +346,10 @@ LIBFUNC_P5(LONG, LIBSCAPreviewGenerate,
 		if (SupportedColors < ReservedColors + 16)
 			break;
 
-		bmhdExternal = (struct BitMapHeader *) GetTagData(SCALOSPREVIEW_ImgBitMapHeader, (ULONG)NULL, tagList);
+		bmhdExternal = (struct BitMapHeader *) GetTagData(SCALOSPREVIEW_ImgBitMapHeader, (IPTR)NULL, tagList);
 		quality = GetTagData(SCALOSPREVIEW_Quality, SCALOSPREVIEWA_Quality_Max, tagList);
 
-		WBScreen = (struct Screen *) GetTagData(SCALOSPREVIEW_Screen, (ULONG)NULL, tagList);
+		WBScreen = (struct Screen *) GetTagData(SCALOSPREVIEW_Screen, (IPTR)NULL, tagList);
 		if (NULL == WBScreen)
 			break;
 
