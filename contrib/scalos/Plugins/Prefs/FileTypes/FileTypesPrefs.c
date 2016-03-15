@@ -102,10 +102,10 @@
     MUIA_Bitmap_Width         , PREFIX2##_WIDTH ,\
     MUIA_Bitmap_Height        , PREFIX2##_HEIGHT,\
     MUIA_Bodychunk_Depth      , PREFIX2##_DEPTH ,\
-    MUIA_Bodychunk_Body       , (UBYTE *) prefix1##_body,\
+    MUIA_Bodychunk_Body       , (IPTR) prefix1##_body,\
     MUIA_Bodychunk_Compression, PREFIX2##_COMPRESSION,\
     MUIA_Bodychunk_Masking    , PREFIX2##_MASKING,\
-    MUIA_Bitmap_SourceColors  , (ULONG *) prefix1##_colors,\
+    MUIA_Bitmap_SourceColors  , (IPTR) prefix1##_colors,\
     MUIA_Bitmap_Transparent   , 0,\
   End
 
@@ -118,13 +118,13 @@
 		ButtonFrame,\
 		MUIA_CycleChain, TRUE, \
 		MUIA_Font, MUIV_Font_Button,\
-		MUIA_Text_Contents, (ULONG) GetLocString(name),\
-		MUIA_Text_PreParse, "\33c",\
-		MUIA_Text_HiChar  , key,\
-		MUIA_ControlChar  , key,\
+		MUIA_Text_Contents, (IPTR) GetLocString(name),\
+		MUIA_Text_PreParse, (IPTR)"\33c",\
+		MUIA_Text_HiChar  , (IPTR)key,\
+		MUIA_ControlChar  , (IPTR)key,\
 		MUIA_InputMode    , MUIV_InputMode_RelVerify,\
 		MUIA_Background   , MUII_ButtonBack,\
-		MUIA_ShortHelp	  , (ULONG) GetLocString(HelpText),\
+		MUIA_ShortHelp	  , (IPTR) GetLocString(HelpText),\
 		End
 
 #define KeyButtonHelp2(name,key,HelpText,Weight)\
@@ -132,13 +132,13 @@
 		ButtonFrame,\
 		MUIA_CycleChain, TRUE, \
 		MUIA_Font, MUIV_Font_Button,\
-		MUIA_Text_Contents, (ULONG) GetLocString(name),\
-		MUIA_Text_PreParse, "\33c",\
-		MUIA_Text_HiChar  , (ULONG) *GetLocString(key),\
-		MUIA_ControlChar  , (ULONG) *GetLocString(key),\
+		MUIA_Text_Contents, (IPTR) GetLocString(name),\
+		MUIA_Text_PreParse, (IPTR)"\33c",\
+		MUIA_Text_HiChar  , (IPTR) *GetLocString(key),\
+		MUIA_ControlChar  , (IPTR) *GetLocString(key),\
 		MUIA_InputMode    , MUIV_InputMode_RelVerify,\
 		MUIA_Background   , MUII_ButtonBack,\
-		MUIA_ShortHelp	  , (ULONG) GetLocString(HelpText),\
+		MUIA_ShortHelp	  , (IPTR) GetLocString(HelpText),\
 		MUIA_Weight	  , (Weight), \
 		End
 
@@ -152,7 +152,7 @@
 		MUIA_Selected         , selected,\
 		MUIA_Background       , MUII_ButtonBack,\
 		MUIA_ShowSelState     , FALSE,\
-		MUIA_ShortHelp	      , GetLocString(HelpTextID),\
+		MUIA_ShortHelp	      , (IPTR)GetLocString(HelpTextID),\
 		End
 
 struct AddEntryListEntry
@@ -246,7 +246,7 @@ extern void _STD_240_TerminateMemFunctions(void);
 
 // local functions
 
-DISPATCHER_PROTO(FileTypesPrefs);
+DISPATCHERPROTO(FileTypesPrefs);
 static Object *CreatePrefsGroup(struct FileTypesPrefsInst *inst);
 static Object **CreateSubWindows(Class *cl, Object *o);
 static Object *CreatePrefsImage(void);
@@ -331,10 +331,10 @@ static LONG ReadPrefs(struct FileTypesPrefsInst *inst,
 static LONG WritePrefs(struct FileTypesPrefsInst *inst,
 	CONST_STRPTR SaveName, CONST_STRPTR DefIconPrefsName, ULONG Flags);
 
-DISPATCHER_PROTO(myNListTree);
-DISPATCHER_PROTO(myFileTypesNListTree);
-DISPATCHER_PROTO(myNList);
-DISPATCHER_PROTO(myFileTypesActionsNList);
+DISPATCHERPROTO(myNListTree);
+DISPATCHERPROTO(myFileTypesNListTree);
+DISPATCHERPROTO(myNList);
+DISPATCHERPROTO(myFileTypesActionsNList);
 
 
 static void DisposeAttribute(struct FtAttribute *fta);
@@ -371,7 +371,7 @@ static void EntryHasChanged(struct FileTypesPrefsInst *inst, struct MUI_NListtre
 static void SetChangedFlag(struct FileTypesPrefsInst *inst, BOOL changed);
 static void BuildTTDescFromAttrList(char *buffer, size_t length, struct TagItem *AttrList);
 static BOOL ParseTTFontFromDesc(CONST_STRPTR FontDesc, 
-	ULONG *FontStyle, ULONG *FontWeight, ULONG *FontSize,
+	IPTR *FontStyle, IPTR *FontWeight, IPTR *FontSize,
 	STRPTR FontName, size_t FontNameSize);
 static void ShowHiddenNodes(struct FileTypesPrefsInst *inst);
 static void ParseToolTypes(struct FileTypesPrefsInst *inst, struct MUIP_ScalosPrefs_ParseToolTypes *ptt);
@@ -1664,19 +1664,19 @@ LIBFUNC_P2(ULONG, LIBSCAGetPrefsInfo,
 	switch(which)
 		{
 	case SCAPREFSINFO_GetClass:
-		result = (ULONG) FileTypesPrefsClass;
+		result = (IPTR) FileTypesPrefsClass;
 		break;
 
 	case SCAPREFSINFO_GetTitle:
-		result = (ULONG) GetLocString(MSGID_PLUGIN_LIST_TITLE);
+		result = (IPTR) GetLocString(MSGID_PLUGIN_LIST_TITLE);
 		break;
 
 	case SCAPREFSINFO_GetTitleImage:
-		result = (ULONG) CreatePrefsImage();
+		result = (IPTR) CreatePrefsImage();
 		break;
 
 	default:
-		result = (ULONG) NULL;
+		result = (IPTR) NULL;
 		break;
 		}
 
@@ -1729,9 +1729,9 @@ DISPATCHER(FileTypesPrefs)
 			ReadScalosPrefs(inst, "ENV:scalos/scalos.prefs");
 
 			inst->fpb_fCreateIcons = GetTagData(MUIA_ScalosPrefs_CreateIcons, TRUE, ops->ops_AttrList);
-			inst->fpb_ProgramName = (CONST_STRPTR) GetTagData(MUIA_ScalosPrefs_ProgramName, (ULONG) "", ops->ops_AttrList);
-			inst->fpb_Objects[OBJNDX_WIN_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_MainWindow, (ULONG) NULL, ops->ops_AttrList);
-			inst->fpb_Objects[OBJNDX_APP_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_Application, (ULONG) NULL, ops->ops_AttrList);
+			inst->fpb_ProgramName = (CONST_STRPTR) GetTagData(MUIA_ScalosPrefs_ProgramName, (IPTR) "", ops->ops_AttrList);
+			inst->fpb_Objects[OBJNDX_WIN_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_MainWindow, (IPTR) NULL, ops->ops_AttrList);
+			inst->fpb_Objects[OBJNDX_APP_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_Application, (IPTR) NULL, ops->ops_AttrList);
 
 			prefsobject = CreatePrefsGroup(inst);
 			d1(kprintf(__FILE__ "/%s/%ld: prefsobject=%08lx\n", __FUNC__, __LINE__, prefsobject));
@@ -1739,7 +1739,7 @@ DISPATCHER(FileTypesPrefs)
 				{
 				DoMethod(obj, OM_ADDMEMBER, prefsobject);
 
-				result = (ULONG) obj;
+				result = (IPTR) obj;
 				}
 			else
 				{
@@ -1827,11 +1827,11 @@ DISPATCHER(FileTypesPrefs)
 		d1(kprintf("%s/%ld:   OM_SET  createIcons=%ld\n", __FUNC__, __LINE__, inst->fpb_fCreateIcons));
 
 		inst->fpb_fCreateIcons = GetTagData(MUIA_ScalosPrefs_CreateIcons, inst->fpb_fCreateIcons, ops->ops_AttrList);
-		inst->fpb_ProgramName = (CONST_STRPTR) GetTagData(MUIA_ScalosPrefs_ProgramName, (ULONG) inst->fpb_ProgramName, ops->ops_AttrList);
+		inst->fpb_ProgramName = (CONST_STRPTR) GetTagData(MUIA_ScalosPrefs_ProgramName, (IPTR) inst->fpb_ProgramName, ops->ops_AttrList);
 		inst->fpb_Objects[OBJNDX_WIN_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_MainWindow, 
-			(ULONG) inst->fpb_Objects[OBJNDX_WIN_Main], ops->ops_AttrList);
+			(IPTR) inst->fpb_Objects[OBJNDX_WIN_Main], ops->ops_AttrList);
 		inst->fpb_Objects[OBJNDX_APP_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_Application, 
-			(ULONG) inst->fpb_Objects[OBJNDX_APP_Main], ops->ops_AttrList);
+			(IPTR) inst->fpb_Objects[OBJNDX_APP_Main], ops->ops_AttrList);
 
 		d1(kprintf("%s/%ld:   OM_SET  createIcons=%ld\n", __FUNC__, __LINE__, inst->fpb_fCreateIcons));
 
@@ -1913,37 +1913,37 @@ DISPATCHER(FileTypesPrefs)
 	case MUIM_ScalosPrefs_RestoreConfig:
 		inst = (struct FileTypesPrefsInst *) INST_DATA(cl, obj);
 		d1(KPrintF(__FILE__ "/%s/%ld: MUIM_ScalosPrefs_RestoreConfig\n", __FUNC__, __LINE__));
-		DoMethod(obj, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_Restore], 0);
+		DoMethod(obj, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_Restore], 0);
 		break;
 
 	case MUIM_ScalosPrefs_ResetToDefaults:
 		inst = (struct FileTypesPrefsInst *) INST_DATA(cl, obj);
 		d1(KPrintF(__FILE__ "/%s/%ld: MUIM_ScalosPrefs_ResetToDefaults", __FUNC__, __LINE__));
-		DoMethod(obj, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ResetToDefaults], 0);
+		DoMethod(obj, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ResetToDefaults], 0);
 		break;
 
 	case MUIM_ScalosPrefs_LastSavedConfig:
 		inst = (struct FileTypesPrefsInst *) INST_DATA(cl, obj);
 		d1(KPrintF(__FILE__ "/%s/%ld: MUIM_ScalosPrefs_LastSavedConfig", __FUNC__, __LINE__));
-		DoMethod(obj, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_LastSaved], 0);
+		DoMethod(obj, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_LastSaved], 0);
 		break;
 
 	case MUIM_ScalosPrefs_OpenConfig:
 		d1(kprintf(__FILE__ "/%s/%ld: MUIM_ScalosPrefs_OpenConfig obj=%08lx\n", __FUNC__, __LINE__, obj));
 		inst = (struct FileTypesPrefsInst *) INST_DATA(cl, obj);
-		DoMethod(obj, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_Open], 0);
+		DoMethod(obj, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_Open], 0);
 		break;
 
 	case MUIM_ScalosPrefs_SaveConfigAs:
 		d1(kprintf(__FILE__ "/%s/%ld: MUIM_ScalosPrefs_SaveConfigAs obj=%08lx\n", __FUNC__, __LINE__, obj));
 		inst = (struct FileTypesPrefsInst *) INST_DATA(cl, obj);
-		DoMethod(obj, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_SaveAs], 0);
+		DoMethod(obj, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_SaveAs], 0);
 		break;
 
 	case MUIM_ScalosPrefs_About:
 		d1(kprintf(__FILE__ "/%s/%ld: MUIM_ScalosPrefs_About obj=%08lx\n", __FUNC__, __LINE__, obj));
 		inst = (struct FileTypesPrefsInst *) INST_DATA(cl, obj);
-		DoMethod(obj, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_About], 0);
+		DoMethod(obj, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_About], 0);
 		break;
 
 	case MUIM_ScalosPrefs_LoadNamedConfig:
@@ -1960,7 +1960,7 @@ DISPATCHER(FileTypesPrefs)
 
 	case MUIM_ScalosPrefs_CreateSubWindows:
 		d1(kprintf(__FILE__ "/%s/%ld: MUIM_ScalosPrefs_CreateSubWindows obj=%08lx\n", __FUNC__, __LINE__, obj));
-		result = (ULONG) CreateSubWindows(cl, obj);
+		result = (IPTR) CreateSubWindows(cl, obj);
 		break;
 
 	case MUIM_ScalosPrefs_PageActive:
@@ -1974,7 +1974,7 @@ DISPATCHER(FileTypesPrefs)
 		break;
 
 	case MUIM_ScalosPrefs_GetListOfMCCs:
-		result = (ULONG) RequiredMccList;
+		result = (IPTR) RequiredMccList;
 		break;
 
 	default:
@@ -2049,632 +2049,632 @@ static Object *CreatePrefsGroup(struct FileTypesPrefsInst *inst)
 
 		// OBJNDX_ShadowListView is used as invisible storage
 		// for copy and paste operations
-		Child, inst->fpb_Objects[OBJNDX_ShadowListView] = NListviewObject,
+		Child, (IPTR)(inst->fpb_Objects[OBJNDX_ShadowListView] = NListviewObject,
 			MUIA_ShowMe, FALSE,
 			MUIA_CycleChain, TRUE,
-			MUIA_NListview_NList, inst->fpb_Objects[OBJNDX_ShadowListTree] = myNListTreeObject,
-				MUIA_NList_PrivateData, inst,
-				MUIA_NList_Format, "",
-				MUIA_NListtree_DisplayHook, &inst->fpb_Hooks[HOOKNDX_TreeDisplay],
-				MUIA_NListtree_ConstructHook, &inst->fpb_Hooks[HOOKNDX_TreeConstruct],
-				MUIA_NListtree_DestructHook, &inst->fpb_Hooks[HOOKNDX_TreeDestruct],
-				End, // myNListTreeClass
-			End, // NListviewObject
+			MUIA_NListview_NList, (IPTR)(inst->fpb_Objects[OBJNDX_ShadowListTree] = myNListTreeObject,
+				MUIA_NList_PrivateData, (IPTR)inst,
+				MUIA_NList_Format, (IPTR)"",
+				MUIA_NListtree_DisplayHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_TreeDisplay],
+				MUIA_NListtree_ConstructHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_TreeConstruct],
+				MUIA_NListtree_DestructHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_TreeDestruct],
+                        End), // myNListTreeClass
+                End), // NListviewObject
 
-		Child, inst->fpb_Objects[OBJNDX_ShadowAttrListView] = NListviewObject,
+		Child, (IPTR)(inst->fpb_Objects[OBJNDX_ShadowAttrListView] = NListviewObject,
 			MUIA_ShowMe, FALSE,
 			MUIA_CycleChain, TRUE,
-			MUIA_NListview_NList, inst->fpb_Objects[OBJNDX_ShadowAttrList] = myNListObject,
-				MUIA_NList_PrivateData, inst,
-				MUIA_NList_Format, ",",
+			MUIA_NListview_NList, (IPTR)(inst->fpb_Objects[OBJNDX_ShadowAttrList] = myNListObject,
+				MUIA_NList_PrivateData, (IPTR)inst,
+				MUIA_NList_Format, (IPTR)",",
 				InputListFrame,
 				MUIA_Background, MUII_ListBack,
-				MUIA_NList_DisplayHook2, &inst->fpb_Hooks[HOOKNDX_AttrDisplay],
-				MUIA_NList_ConstructHook2, &inst->fpb_Hooks[HOOKNDX_AttrConstruct],
-				MUIA_NList_DestructHook2, &inst->fpb_Hooks[HOOKNDX_AttrDestruct],
+				MUIA_NList_DisplayHook2, (IPTR)&inst->fpb_Hooks[HOOKNDX_AttrDisplay],
+				MUIA_NList_ConstructHook2, (IPTR)&inst->fpb_Hooks[HOOKNDX_AttrConstruct],
+				MUIA_NList_DestructHook2, (IPTR)&inst->fpb_Hooks[HOOKNDX_AttrDestruct],
 				MUIA_NList_DragSortable, FALSE,
 				MUIA_NList_ShowDropMarks, FALSE,
 				MUIA_NList_Title, TRUE,
 				MUIA_NList_TitleSeparator, TRUE,
-				End, // myNListTreeClass
+                        End), // myNListTreeClass
 
 			MUIA_Listview_DragType, MUIV_Listview_DragType_None,
 			MUIA_Weight, 50,
-			End, // NListviewObject
+                End), // NListviewObject
 
-		Child, RegisterObject,
-			MUIA_Register_Titles, RegisterTitles,
+		Child, (IPTR)(RegisterObject,
+			MUIA_Register_Titles, (IPTR)RegisterTitles,
 			MUIA_CycleChain, TRUE,
 
 			// --- filetypes
-			Child, VGroup,
-				Child, HGroup,
+			Child, (IPTR)(VGroup,
+				Child, (IPTR)(HGroup,
 					MUIA_Weight, 200,
-					Child, VGroup,
-						Child, VGroup,
-							MUIA_FrameTitle, (ULONG) GetLocString(MSGID_GROUP_FILETYPES_FILETYPES),
+					Child, (IPTR)(VGroup,
+						Child, (IPTR)(VGroup,
+							MUIA_FrameTitle, (IPTR) GetLocString(MSGID_GROUP_FILETYPES_FILETYPES),
 							GroupFrame,
 
-							Child, inst->fpb_Objects[OBJNDX_Group_FindFiletype] = HGroup,
+							Child, (IPTR)(inst->fpb_Objects[OBJNDX_Group_FindFiletype] = HGroup,
 								GroupFrame,
-								Child, inst->fpb_Objects[OBJNDX_Button_HideFind] = TextObject,
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_Button_HideFind] = TextObject,
 									MUIA_Weight, 10,
 									ButtonFrame,
 									MUIA_CycleChain, TRUE,
 #if defined(MUII_Close)
-									MUIA_Text_Contents, MUIX_C "\33I[6:" STR(MUII_Close) "]",
+									MUIA_Text_Contents, (IPTR)MUIX_C "\33I[6:" STR(MUII_Close) "]",
 #else
-									MUIA_Text_Contents, MUIX_C "\33I[6:" STR(MUII_TapeStop) "]",
+									MUIA_Text_Contents, (IPTR)MUIX_C "\33I[6:" STR(MUII_TapeStop) "]",
 #endif
 									MUIA_InputMode, MUIV_InputMode_RelVerify,
 									MUIA_Background, MUII_ButtonBack,
-									MUIA_ShortHelp, GetLocString(MSGID_BUTTON_FIND_HIDE_SHORTHELP),
-									End,
+									MUIA_ShortHelp, (IPTR)GetLocString(MSGID_BUTTON_FIND_HIDE_SHORTHELP),
+                                                                End),
 
-								Child, inst->fpb_Objects[OBJNDX_String_FindFileType] = StringObject,
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_String_FindFileType] = StringObject,
 									MUIA_CycleChain, TRUE,
 									StringFrame,
-									MUIA_ShortHelp, GetLocString(MSGID_STRING_FIND_SHORTHELP),
-									End, //StringObject
-								Child, inst->fpb_Objects[OBJNDX_Button_FindPrevFileType] = TextObject,
+									MUIA_ShortHelp, (IPTR)GetLocString(MSGID_STRING_FIND_SHORTHELP),
+                                                                End), //StringObject
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_Button_FindPrevFileType] = TextObject,
 									MUIA_Weight, 10,
 									ButtonFrame,
 									MUIA_CycleChain, TRUE,
-									MUIA_Text_Contents, MUIX_C "\33I[6:" STR(MUII_TapePlayBack) "]",
+									MUIA_Text_Contents, (IPTR)MUIX_C "\33I[6:" STR(MUII_TapePlayBack) "]",
 									MUIA_InputMode, MUIV_InputMode_RelVerify,
 									MUIA_Background, MUII_ButtonBack,
-									MUIA_ShortHelp, GetLocString(MSGID_BUTTON_FIND_PREV_SHORTHELP),
-									End,
-								Child, inst->fpb_Objects[OBJNDX_Button_FindNextFileType] = TextObject,
+									MUIA_ShortHelp, (IPTR)GetLocString(MSGID_BUTTON_FIND_PREV_SHORTHELP),
+                                                                End),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_Button_FindNextFileType] = TextObject,
 									MUIA_Weight, 10,
 									ButtonFrame,
 									MUIA_CycleChain, TRUE,
-									MUIA_Text_Contents, MUIX_C "\33I[6:" STR(MUII_TapePlay) "]",
+									MUIA_Text_Contents, (IPTR)MUIX_C "\33I[6:" STR(MUII_TapePlay) "]",
 									MUIA_InputMode, MUIV_InputMode_RelVerify,
 									MUIA_Background, MUII_ButtonBack,
-									MUIA_ShortHelp, GetLocString(MSGID_BUTTON_FIND_NEXT_SHORTHELP),
-									End,
-								Child, inst->fpb_Objects[OBJNDX_Button_FindHitCount] = TextObject,
+									MUIA_ShortHelp, (IPTR)GetLocString(MSGID_BUTTON_FIND_NEXT_SHORTHELP),
+                                                                End),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_Button_FindHitCount] = TextObject,
 									MUIA_Weight, 10,
-									MUIA_Text_Contents, "",
-									End, //TextObject
+									MUIA_Text_Contents, (IPTR)"",
+                                                                End), //TextObject
 
-								End, //HGroup
+                                                        End), //HGroup
 
-							Child, inst->fpb_Objects[OBJNDX_NListview_FileTypes] = NListviewObject,
+							Child, (IPTR)(inst->fpb_Objects[OBJNDX_NListview_FileTypes] = NListviewObject,
 								MUIA_CycleChain, TRUE,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_LISTVIEW_FILETYPES),
-								MUIA_NListview_NList, inst->fpb_Objects[OBJNDX_NListtree_FileTypes] = myFileTypesNListTreeObject,
+								MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_LISTVIEW_FILETYPES),
+								MUIA_NListview_NList, (IPTR)(inst->fpb_Objects[OBJNDX_NListtree_FileTypes] = myFileTypesNListTreeObject,
 									MUIA_Background, MUII_ListBack,
-									MUIA_NList_PrivateData, inst,
-									MUIA_ContextMenu, inst->fpb_Objects[OBJNDX_ContextMenuFileTypes],
-									MUIA_NListtree_DisplayHook, &inst->fpb_Hooks[HOOKNDX_FileTypesDisplay],
-									MUIA_NListtree_ConstructHook, &inst->fpb_Hooks[HOOKNDX_FileTypesConstruct],
-									MUIA_NListtree_DestructHook, &inst->fpb_Hooks[HOOKNDX_FileTypesDestruct],
+									MUIA_NList_PrivateData, (IPTR)inst,
+									MUIA_ContextMenu, (IPTR)inst->fpb_Objects[OBJNDX_ContextMenuFileTypes],
+									MUIA_NListtree_DisplayHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_FileTypesDisplay],
+									MUIA_NListtree_ConstructHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_FileTypesConstruct],
+									MUIA_NListtree_DestructHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_FileTypesDestruct],
 									MUIA_NListtree_DragDropSort, TRUE,
 									MUIA_NList_ShowDropMarks, TRUE,
 									MUIA_NListtree_EmptyNodes, TRUE,
 									MUIA_NListtree_AutoVisible, MUIV_NListtree_AutoVisible_Expand,
-								End, //myFileTypesNListTreeClass
-							End, //NListtreeObject
+								End), //myFileTypesNListTreeClass
+							End), //NListtreeObject
 
-							Child, inst->fpb_Objects[OBJNDX_String_FileTypes_Name] = StringObject,
+							Child, (IPTR)(inst->fpb_Objects[OBJNDX_String_FileTypes_Name] = StringObject,
 								MUIA_CycleChain, TRUE,
 								MUIA_Disabled, TRUE,
 								MUIA_String_AdvanceOnCR, TRUE,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPES),
+								MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPES),
 								StringFrame,
-								End, //StringObject
+                                                        End), //StringObject
 
-							Child, ColGroup(2),
-								Child, inst->fpb_Objects[OBJNDX_Button_FileTypes_Add] = KeyButtonHelp(MSGID_BUTTON_ADD_FILETYPE,
+							Child, (IPTR)(ColGroup(2),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_Button_FileTypes_Add] = KeyButtonHelp(MSGID_BUTTON_ADD_FILETYPE,
 									'a',
-									MSGID_SHORTHELP_BUTTON_ADD_FILETYPE),
-								Child, inst->fpb_Objects[OBJNDX_Button_FileTypes_Remove] = KeyButtonHelp(MSGID_BUTTON_DELETE_FILETYPE,
+									MSGID_SHORTHELP_BUTTON_ADD_FILETYPE)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_Button_FileTypes_Remove] = KeyButtonHelp(MSGID_BUTTON_DELETE_FILETYPE,
 									'r',
-									MSGID_SHORTHELP_BUTTON_DELETE_FILETYPE),
-								End, //ColGroup
-							End, //VGroup
-						End, //VGroup
+									MSGID_SHORTHELP_BUTTON_DELETE_FILETYPE)),
+                                                        End), //ColGroup
+                                                End), //VGroup
+                                        End), //VGroup
 
-					Child, VGroup,
-						Child, HVSpace,
+					Child, (IPTR)(VGroup,
+						Child, (IPTR)HVSpace,
 						MUIA_Weight, 10,
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_DEFAULTICON),
+						MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_DEFAULTICON),
 
-						Child, inst->fpb_Objects[OBJNDX_Text_FileTypes_FileTypesName] = TextObject,
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_Text_FileTypes_FileTypesName] = TextObject,
 							MUIA_ShowMe, FALSE,
-							MUIA_Text_Contents, "",
-							MUIA_Text_PreParse, MUIX_B "\33c",
-							End, //TextObject
+							MUIA_Text_Contents, (IPTR)"",
+							MUIA_Text_PreParse, (IPTR)MUIX_B "\33c",
+                                                End), //TextObject
 
-						Child, HVSpace,
+						Child, (IPTR)HVSpace,
 
-						Child, inst->fpb_Objects[OBJNDX_Text_FileTypes_DefIconName] = TextObject,
-							MUIA_Text_Contents, "",
-							MUIA_Text_PreParse, "\33c",
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_Text_FileTypes_DefIconName] = TextObject,
+							MUIA_Text_Contents, (IPTR)"",
+							MUIA_Text_PreParse, (IPTR)"\33c",
 							MUIA_Text_SetMin, TRUE,
-							End, //TextObject
-						Child, inst->fpb_Objects[OBJNDX_IconObjectMCC_FileTypes_Icon] = IconobjectMCCObject,
+                                                End), //TextObject
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_IconObjectMCC_FileTypes_Icon] = IconobjectMCCObject,
 							MUIA_InputMode, MUIV_InputMode_RelVerify,
 							NoFrame,
 							MUIA_ShowSelState, FALSE,
-							End, //IconobjectMCCObject
+                                                End), //IconobjectMCCObject
 
-						Child, HVSpace,
+						Child, (IPTR)HVSpace,
 
-						Child, inst->fpb_Objects[OBJNDX_Button_FileTypes_CreateIcon] = KeyButtonHelp(MSGID_BUTTON_CREATE_ICON,
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_Button_FileTypes_CreateIcon] = KeyButtonHelp(MSGID_BUTTON_CREATE_ICON,
 							'i',
-							MSGID_SHORTHELP_BUTTON_CREATE_ICON),
+							MSGID_SHORTHELP_BUTTON_CREATE_ICON)),
 						
-                                                Child, HVSpace,
-						End, //VGroup
-					End, //HGroup
+                                                Child, (IPTR)HVSpace,
+                                        End), //VGroup
+                                End), //HGroup
 
-				Child, BalanceObject,
-					End, // BalanceObject
+				Child, (IPTR)(BalanceObject,
+					End), // BalanceObject
 
-				Child, VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_GROUP_FILETYPES_METHODS),
+				Child, (IPTR)(VGroup,
+					MUIA_FrameTitle, (IPTR) GetLocString(MSGID_GROUP_FILETYPES_METHODS),
 					GroupFrame,
 					MUIA_Weight, 50,
 
-					Child, inst->fpb_Objects[OBJNDX_NListview_FileTypes_Methods] = NListviewObject,
+					Child, (IPTR)(inst->fpb_Objects[OBJNDX_NListview_FileTypes_Methods] = NListviewObject,
 						MUIA_CycleChain, TRUE,
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_LISTVIEW_FILETYPE_ACTION),
-						MUIA_NListview_NList, inst->fpb_Objects[OBJNDX_NList_FileTypes_Actions] = myFileTypesActionsNListObject,
-							MUIA_NList_PrivateData, inst,
-							MUIA_NList_Format, "BAR,",
+						MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_LISTVIEW_FILETYPE_ACTION),
+						MUIA_NListview_NList, (IPTR)(inst->fpb_Objects[OBJNDX_NList_FileTypes_Actions] = myFileTypesActionsNListObject,
+							MUIA_NList_PrivateData, (IPTR)inst,
+							MUIA_NList_Format, (IPTR)"BAR,",
 							InputListFrame,
 							MUIA_Background, MUII_ListBack,
-							MUIA_ContextMenu, inst->fpb_Objects[OBJNDX_ContextMenuFileTypesActions],
+							MUIA_ContextMenu, (IPTR)inst->fpb_Objects[OBJNDX_ContextMenuFileTypesActions],
 							MUIA_NList_DragSortable, TRUE,
-							MUIA_NList_DisplayHook2, &inst->fpb_Hooks[HOOKNDX_FileTypesActionDisplay],
-							MUIA_NList_ConstructHook2, &inst->fpb_Hooks[HOOKNDX_FileTypesActionConstruct],
-							MUIA_NList_DestructHook2, &inst->fpb_Hooks[HOOKNDX_FileTypesActionDestruct],
-						End, //myFileTypesActionsNListClass
-					End, //NListviewObject
+							MUIA_NList_DisplayHook2, (IPTR)&inst->fpb_Hooks[HOOKNDX_FileTypesActionDisplay],
+							MUIA_NList_ConstructHook2, (IPTR)&inst->fpb_Hooks[HOOKNDX_FileTypesActionConstruct],
+							MUIA_NList_DestructHook2, (IPTR)&inst->fpb_Hooks[HOOKNDX_FileTypesActionDestruct],
+						End), //myFileTypesActionsNListClass
+					End), //NListviewObject
 
-					Child, ColGroup(3),
-						Child, inst->fpb_Objects[OBJNDX_Popobject_FileTypes_Methods_Add] = PopobjectObject,
+					Child, (IPTR)(ColGroup(3),
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_Popobject_FileTypes_Methods_Add] = PopobjectObject,
 							MUIA_Disabled, TRUE,
-							MUIA_UserData, inst,
+							MUIA_UserData, (IPTR)inst,
 							MUIA_CycleChain, TRUE,
-							MUIA_Popstring_Button, KeyButtonHelp(MSGID_BUTTON_ADD_FILETYPEACTION,
+							MUIA_Popstring_Button, (IPTR)(KeyButtonHelp(MSGID_BUTTON_ADD_FILETYPEACTION,
 								'a',
-								MSGID_SHORTHELP_BUTTON_ADD_FILETYPEACTION),
-							MUIA_Popobject_Object, inst->fpb_Objects[OBJNDX_NListview_FileTypes_Methods_Add] = NListviewObject,
-								MUIA_NListview_NList, inst->fpb_Objects[OBJNDX_Nlist_FileTypes_Methods_Add] = NListObject,
+								MSGID_SHORTHELP_BUTTON_ADD_FILETYPEACTION)),
+							MUIA_Popobject_Object, (IPTR)(inst->fpb_Objects[OBJNDX_NListview_FileTypes_Methods_Add] = NListviewObject,
+								MUIA_NListview_NList, (IPTR)(inst->fpb_Objects[OBJNDX_Nlist_FileTypes_Methods_Add] = NListObject,
 									InputListFrame,
 									MUIA_Background, MUII_ListBack,
 									MUIA_NList_AdjustWidth, TRUE,
-									End, //NListObject
-								End, //NListviewObject
-							MUIA_Popstring_CloseHook, &inst->fpb_Hooks[HOOKNDX_AddFileTypesMethod],
-							End, //PopobjectObject
-						Child, inst->fpb_Objects[OBJNDX_Button_FileTypes_Actions_Remove] = KeyButtonHelp(MSGID_BUTTON_REMOVE_FILETYPEACTION,
+                                                                End), //NListObject
+                                                        End), //NListviewObject
+							MUIA_Popstring_CloseHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_AddFileTypesMethod],
+                                                End), //PopobjectObject
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_Button_FileTypes_Actions_Remove] = KeyButtonHelp(MSGID_BUTTON_REMOVE_FILETYPEACTION,
 							'r',
-							MSGID_SHORTHELP_BUTTON_REMOVE_FILETYPEACTION),
-						Child, inst->fpb_Objects[OBJNDX_Button_FileTypes_Actions_Learn] = KeyButtonHelp(MSGID_BUTTON_LEARN_FILETYPEACTION,
+							MSGID_SHORTHELP_BUTTON_REMOVE_FILETYPEACTION)),
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_Button_FileTypes_Actions_Learn] = KeyButtonHelp(MSGID_BUTTON_LEARN_FILETYPEACTION,
 							'l',
-							MSGID_SHORTHELP_BUTTON_LEARN_FILETYPEACTION),
-						End, //ColGroup
-					End, //VGroup
+							MSGID_SHORTHELP_BUTTON_LEARN_FILETYPEACTION)),
+                                        End), //ColGroup
+                                End), //VGroup
 
-				Child, BalanceObject,
-					End, // BalanceObject
+				Child, (IPTR)(BalanceObject,
+                                End), // BalanceObject
 
-				Child, ScrollgroupObject,
+				Child, (IPTR)(ScrollgroupObject,
 					MUIA_Weight, 25,
-					MUIA_Scrollgroup_Contents, VirtgroupObject,
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_VIRTGROUP_FILETYPE_ACTION_ATTRIBUTES),
+					MUIA_Scrollgroup_Contents, (IPTR)(VirtgroupObject,
+						MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_VIRTGROUP_FILETYPE_ACTION_ATTRIBUTES),
 
 						// empty placeholder
-						Child, inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_Empty] = VGroup,
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_Empty] = VGroup,
 							MUIA_ShowMe, TRUE,
-							Child, HVSpace,
-							End, //VGroup
+							Child, (IPTR)HVSpace,
+                                                End), //VGroup
 
 						// for MATCH
-						Child, inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_Match] = VGroup,
-							MUIA_FrameTitle, (ULONG) GetLocString(MSGID_GROUP_FILETYPESACTION_MATCH),
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_Match] = VGroup,
+							MUIA_FrameTitle, (IPTR) GetLocString(MSGID_GROUP_FILETYPESACTION_MATCH),
 							GroupFrame,
 							MUIA_ShowMe, FALSE,
 
-							Child, HGroup,
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_MATCH_OFFSET)),
-								Child, inst->fpb_Objects[OBJNDX_String_Filetypes_Actions_Match_Offset] = StringObject,
+							Child, (IPTR)(HGroup,
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_MATCH_OFFSET)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_String_Filetypes_Actions_Match_Offset] = StringObject,
 									MUIA_CycleChain, TRUE,
 									StringFrame,
 									MUIA_String_Integer, 0,
 									MUIA_String_AdvanceOnCR, TRUE,
-									MUIA_String_Accept , "0123456879",
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_MATCH_OFFSET),
-									End, //StringObject
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_MATCH_CASE_SENSITIVE)),
-								Child, inst->fpb_Objects[OBJNDX_Checkmark_FileTypes_Action_Match_Case] = KeyCheckMark(FALSE, "v"),
-								End, //HGroup
+									MUIA_String_Accept , (IPTR)"0123456879",
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_MATCH_OFFSET),
+                                                                End), //StringObject
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_MATCH_CASE_SENSITIVE)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_Checkmark_FileTypes_Action_Match_Case] = KeyCheckMark(FALSE, (IPTR)"v")),
+                                                        End), //HGroup
 
-							Child, HGroup,
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_MATCH_MATCH)),
-								Child, inst->fpb_Objects[OBJNDX_String_Filetypes_Actions_Match_Match] = StringObject,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_MATCH),
+							Child, (IPTR)(HGroup,
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_MATCH_MATCH)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_String_Filetypes_Actions_Match_Match] = StringObject,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_MATCH),
 									MUIA_CycleChain, TRUE,
 									MUIA_String_AdvanceOnCR, TRUE,
 									StringFrame,
-									End, //StringObject
-								End, //HGroup
-							Child, HVSpace,
-							End, //VGroup
+                                                                End), //StringObject
+                                                        End), //HGroup
+							Child, (IPTR)HVSpace,
+                                                End), //VGroup
 
 						// for SEARCH
-						Child, inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_Search] = VGroup,
-							MUIA_FrameTitle, (ULONG) GetLocString(MSGID_GROUP_FILETYPESACTION_SEARCH),
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_Search] = VGroup,
+							MUIA_FrameTitle, (IPTR) GetLocString(MSGID_GROUP_FILETYPESACTION_SEARCH),
 							GroupFrame,
 							MUIA_ShowMe, FALSE,
 
-							Child, HGroup,
-								Child, HVSpace,
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_SEARCH_SKIP_SPACES)),
-								Child, inst->fpb_Objects[OBJNDX_Checkmark_FileTypes_Action_Search_SkipSpaces] = KeyCheckMark(FALSE, "v"),
-								Child, HVSpace,
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_SEARCH_CASE_SENSITIVE)),
-								Child, inst->fpb_Objects[OBJNDX_Checkmark_FileTypes_Action_Search_Case] = KeyCheckMark(FALSE, "v"),
-								Child, HVSpace,
-								End, //HGroup
+							Child, (IPTR)(HGroup,
+								Child, (IPTR)HVSpace,
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_SEARCH_SKIP_SPACES)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_Checkmark_FileTypes_Action_Search_SkipSpaces] = KeyCheckMark(FALSE, (IPTR)"v")),
+								Child, (IPTR)HVSpace,
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_SEARCH_CASE_SENSITIVE)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_Checkmark_FileTypes_Action_Search_Case] = KeyCheckMark(FALSE, (IPTR)"v")),
+								Child, (IPTR)HVSpace,
+                                                        End), //HGroup
 
-							Child, HGroup,
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_SEARCH_SEARCH)),
-								Child, inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Search_Search] = StringObject,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_SEARCH),
+							Child, (IPTR)(HGroup,
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_SEARCH_SEARCH)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Search_Search] = StringObject,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_SEARCH),
 									MUIA_CycleChain, TRUE,
 									MUIA_String_AdvanceOnCR, TRUE,
 									StringFrame,
-									End, //StringObject
-								End, //HGroup
-							Child, HVSpace,
-							End, //VGroup
+                                                                End), //StringObject
+                                                        End), //HGroup
+							Child, (IPTR)HVSpace,
+                                                End), //VGroup
 
 						// for FILESIZE
-						Child, inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_Filesize] = VGroup,
-							MUIA_FrameTitle, (ULONG) GetLocString(MSGID_GROUP_FILETYPESACTION_FILESIZE),
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_Filesize] = VGroup,
+							MUIA_FrameTitle, (IPTR) GetLocString(MSGID_GROUP_FILETYPESACTION_FILESIZE),
 							GroupFrame,
 							MUIA_ShowMe, FALSE,
 
-							Child, HGroup,
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_FILESIZE_FILESIZE)),
-								Child, inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Filesize_Filesize] = StringObject,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_FILESIZE),
+							Child, (IPTR)(HGroup,
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_FILESIZE_FILESIZE)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Filesize_Filesize] = StringObject,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_FILESIZE),
 									MUIA_CycleChain, TRUE,
 									StringFrame,
 									MUIA_String_Integer, 0,
-									MUIA_String_Accept , "0123456879",
+									MUIA_String_Accept , (IPTR)"0123456879",
 									MUIA_String_AdvanceOnCR, TRUE,
-									End, //StringObject
-								End, //HGroup
-							Child, HVSpace,
-							End, //VGroup
+                                                                End), //StringObject
+                                                        End), //HGroup
+							Child, (IPTR)HVSpace,
+                                                End), //VGroup
 
 						// for MINSIZEMB
-						Child, inst->fpb_Objects[OBJNDX_Group_FileTypes_Action_MinSizeMB] = VGroup,
-							MUIA_FrameTitle, (ULONG) GetLocString(MSGID_GROUP_FILETYPESACTION_MINSIZEMB),
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_Group_FileTypes_Action_MinSizeMB] = VGroup,
+							MUIA_FrameTitle, (IPTR) GetLocString(MSGID_GROUP_FILETYPESACTION_MINSIZEMB),
 							GroupFrame,
 							MUIA_ShowMe, FALSE,
 
-							Child, HGroup,
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_MINSIZEMB_SIZE)),
-								Child, inst->fpb_Objects[OBJNDX_String_FileTypes_Action_MinSizeMB_MinSize] = StringObject,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_MINSIZEMB),
+							Child, (IPTR)(HGroup,
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_MINSIZEMB_SIZE)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_String_FileTypes_Action_MinSizeMB_MinSize] = StringObject,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_MINSIZEMB),
 									MUIA_CycleChain, TRUE,
 									StringFrame,
 									MUIA_String_Integer, 0,
-									MUIA_String_Accept , "0123456879",
+									MUIA_String_Accept , (IPTR)"0123456879",
 									MUIA_String_AdvanceOnCR, TRUE,
-									End, //StringObject
-								End, //HGroup
-							Child, HVSpace,
-							End, //VGroup
+                                                                End), //StringObject
+                                                        End), //HGroup
+							Child, (IPTR)HVSpace,
+                                                End), //VGroup
 						// for PATTERN
-						Child, inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_Pattern] = VGroup,
-							MUIA_FrameTitle, (ULONG) GetLocString(MSGID_GROUP_FILETYPESACTION_PATTERN),
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_Pattern] = VGroup,
+							MUIA_FrameTitle, (IPTR) GetLocString(MSGID_GROUP_FILETYPESACTION_PATTERN),
 							GroupFrame,
 							MUIA_ShowMe, FALSE,
 
-							Child, HGroup,
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_PATTERN_PATTERN)),
-								Child, inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Pattern_Pattern] = StringObject,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_PATTERN),
+							Child, (IPTR)(HGroup,
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_PATTERN_PATTERN)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Pattern_Pattern] = StringObject,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_PATTERN),
 									MUIA_CycleChain, TRUE,
 									StringFrame,
 									MUIA_String_AdvanceOnCR, TRUE,
-									End, //StringObject
-								End, //HGroup
-							Child, HVSpace,
-							End, //VGroup
+                                                                End), //StringObject
+                                                        End), //HGroup
+							Child, (IPTR)HVSpace,
+                                                End), //VGroup
 
 						// for DOSDEVICE
-						Child, inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_DosDevice] = VGroup,
-							MUIA_FrameTitle, (ULONG) GetLocString(MSGID_GROUP_FILETYPESACTION_DOSDEVICE),
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_DosDevice] = VGroup,
+							MUIA_FrameTitle, (IPTR) GetLocString(MSGID_GROUP_FILETYPESACTION_DOSDEVICE),
 							GroupFrame,
 							MUIA_ShowMe, FALSE,
 
-							Child, HGroup,
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_DOSDEVICE_PATTERN)),
-								Child, inst->fpb_Objects[OBJNDX_String_FileTypes_Action_DosDevice_Pattern] = StringObject,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_DOSDEVICE),
+							Child, (IPTR)(HGroup,
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_DOSDEVICE_PATTERN)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_String_FileTypes_Action_DosDevice_Pattern] = StringObject,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_DOSDEVICE),
 									MUIA_CycleChain, TRUE,
 									StringFrame,
 									MUIA_String_AdvanceOnCR, TRUE,
-									End, //StringObject
-								End, //HGroup
-							Child, HVSpace,
-							End, //VGroup
+                                                                End), //StringObject
+                                                        End), //HGroup
+							Child, (IPTR)HVSpace,
+                                                End), //VGroup
 
 						// for DEVICENAME
-						Child, inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_DeviceName] = VGroup,
-							MUIA_FrameTitle, (ULONG) GetLocString(MSGID_GROUP_FILETYPESACTION_DEVICENAME),
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_DeviceName] = VGroup,
+							MUIA_FrameTitle, (IPTR) GetLocString(MSGID_GROUP_FILETYPESACTION_DEVICENAME),
 							GroupFrame,
 							MUIA_ShowMe, FALSE,
 
-							Child, HGroup,
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_DEVICENAME_PATTERN)),
-								Child, inst->fpb_Objects[OBJNDX_String_FileTypes_Action_DeviceName_Pattern] = StringObject,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_DEVICENAME),
+							Child, (IPTR)(HGroup,
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_DEVICENAME_PATTERN)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_String_FileTypes_Action_DeviceName_Pattern] = StringObject,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_DEVICENAME),
 									MUIA_CycleChain, TRUE,
 									StringFrame,
 									MUIA_String_AdvanceOnCR, TRUE,
-									End, //StringObject
-								End, //HGroup
-							Child, HVSpace,
-							End, //VGroup
+                                                                End), //StringObject
+                                                        End), //HGroup
+							Child, (IPTR)HVSpace,
+                                                End), //VGroup
 
 						// for CONTENTS
-						Child, inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_Contents] = VGroup,
-							MUIA_FrameTitle, (ULONG) GetLocString(MSGID_GROUP_FILETYPESACTION_CONTENTS),
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_Contents] = VGroup,
+							MUIA_FrameTitle, (IPTR) GetLocString(MSGID_GROUP_FILETYPESACTION_CONTENTS),
 							GroupFrame,
 							MUIA_ShowMe, FALSE,
 
-							Child, HGroup,
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_CONTENTS_PATTERN)),
-								Child, inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Contents_Pattern] = StringObject,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_CONTENTS),
+							Child, (IPTR)(HGroup,
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_CONTENTS_PATTERN)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Contents_Pattern] = StringObject,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_CONTENTS),
 									MUIA_CycleChain, TRUE,
 									StringFrame,
 									MUIA_String_AdvanceOnCR, TRUE,
-									End, //StringObject
-								End, //HGroup
-							Child, HVSpace,
-							End, //VGroup
+                                                                End), //StringObject
+                                                        End), //HGroup
+							Child, (IPTR)HVSpace,
+                                                End), //VGroup
 
 						// for DOSTYPE
-						Child, inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_DosType] = VGroup,
-							MUIA_FrameTitle, (ULONG) GetLocString(MSGID_GROUP_FILETYPESACTION_DOSTYPE),
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_DosType] = VGroup,
+							MUIA_FrameTitle, (IPTR) GetLocString(MSGID_GROUP_FILETYPESACTION_DOSTYPE),
 							GroupFrame,
 							MUIA_ShowMe, FALSE,
 
-							Child, HGroup,
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_DOSTYPE_PATTERN)),
-								Child, inst->fpb_Objects[OBJNDX_String_FileTypes_Action_DosType_Pattern] = StringObject,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_DOSTYPE),
+							Child, (IPTR)(HGroup,
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_DOSTYPE_PATTERN)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_String_FileTypes_Action_DosType_Pattern] = StringObject,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_DOSTYPE),
 									MUIA_CycleChain, TRUE,
 									StringFrame,
 									MUIA_String_AdvanceOnCR, TRUE,
-									End, //StringObject
-								End, //HGroup
-							Child, HVSpace,
-							End, //VGroup
+                                                                End), //StringObject
+                                                        End), //HGroup
+							Child, (IPTR)HVSpace,
+                                                End), //VGroup
 
 						// for PROTECTION
-						Child, inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_Protection] = VGroup,
-							MUIA_FrameTitle, (ULONG) GetLocString(MSGID_GROUP_FILETYPESACTION_PROTECTION),
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_Group_Filetypes_Actions_Protection] = VGroup,
+							MUIA_FrameTitle, (IPTR) GetLocString(MSGID_GROUP_FILETYPESACTION_PROTECTION),
 							GroupFrame,
 							MUIA_ShowMe, FALSE,
 
-							Child, ColGroup(4),
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_PROTECTION_R)),
-								Child, inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_R] = CycleObject,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_R),
+							Child, (IPTR)(ColGroup(4),
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_PROTECTION_R)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_R] = CycleObject,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_R),
 									MUIA_CycleChain, TRUE,
 		                                                        MUIA_Font, MUIV_Font_Button,
-									MUIA_Cycle_Entries, FileTypeActionProtectionStrings,
-									End, //CycleObject
+									MUIA_Cycle_Entries, (IPTR)FileTypeActionProtectionStrings,
+                                                                End), //CycleObject
 
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_PROTECTION_W)),
-								Child, inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_W] = CycleObject,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_W),
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_PROTECTION_W)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_W] = CycleObject,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_W),
 									MUIA_CycleChain, TRUE,
 		                                                        MUIA_Font, MUIV_Font_Button,
-									MUIA_Cycle_Entries, FileTypeActionProtectionStrings,
-									End, //CycleObject
+									MUIA_Cycle_Entries, (IPTR)FileTypeActionProtectionStrings,
+                                                                End), //CycleObject
 
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_PROTECTION_E)),
-								Child, inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_E] = CycleObject,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_E),
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_PROTECTION_E)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_E] = CycleObject,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_E),
 									MUIA_CycleChain, TRUE,
 		                                                        MUIA_Font, MUIV_Font_Button,
-									MUIA_Cycle_Entries, FileTypeActionProtectionStrings,
-									End, //CycleObject
+									MUIA_Cycle_Entries, (IPTR)FileTypeActionProtectionStrings,
+                                                                End), //CycleObject
 
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_PROTECTION_D)),
-								Child, inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_D] = CycleObject,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_D),
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_PROTECTION_D)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_D] = CycleObject,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_D),
 									MUIA_CycleChain, TRUE,
 		                                                        MUIA_Font, MUIV_Font_Button,
-									MUIA_Cycle_Entries, FileTypeActionProtectionStrings,
-									End, //CycleObject
+									MUIA_Cycle_Entries, (IPTR)FileTypeActionProtectionStrings,
+                                                                End), //CycleObject
 
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_PROTECTION_S)),
-								Child, inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_S] = CycleObject,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_S),
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_PROTECTION_S)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_S] = CycleObject,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_S),
 									MUIA_CycleChain, TRUE,
 		                                                        MUIA_Font, MUIV_Font_Button,
-									MUIA_Cycle_Entries, FileTypeActionProtectionStrings,
-									End, //CycleObject
+									MUIA_Cycle_Entries, (IPTR)FileTypeActionProtectionStrings,
+                                                                End), //CycleObject
 
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_PROTECTION_P)),
-								Child, inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_P] = CycleObject,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_P),
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_PROTECTION_P)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_P] = CycleObject,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_P),
 									MUIA_CycleChain, TRUE,
 		                                                        MUIA_Font, MUIV_Font_Button,
-									MUIA_Cycle_Entries, FileTypeActionProtectionStrings,
-									End, //CycleObject
+									MUIA_Cycle_Entries, (IPTR)FileTypeActionProtectionStrings,
+                                                                End), //CycleObject
 
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_PROTECTION_A)),
-								Child, inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_A] = CycleObject,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_A),
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_PROTECTION_A)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_A] = CycleObject,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_A),
 									MUIA_CycleChain, TRUE,
 		                                                        MUIA_Font, MUIV_Font_Button,
-									MUIA_Cycle_Entries, FileTypeActionProtectionStrings,
-									End, //CycleObject
+									MUIA_Cycle_Entries, (IPTR)FileTypeActionProtectionStrings,
+                                                                End), //CycleObject
 
-								Child, Label2((ULONG) GetLocString(MSGID_FILETYPEACTION_PROTECTION_H)),
-								Child, inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_H] = CycleObject,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_H),
+								Child, (IPTR)Label2(GetLocString(MSGID_FILETYPEACTION_PROTECTION_H)),
+								Child, (IPTR)(inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_H] = CycleObject,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SHORTHELP_STRING_FILETYPEACTION_PROTECTION_H),
 									MUIA_CycleChain, TRUE,
 		                                                        MUIA_Font, MUIV_Font_Button,
-									MUIA_Cycle_Entries, FileTypeActionProtectionStrings,
-									End, //CycleObject
+									MUIA_Cycle_Entries, (IPTR)FileTypeActionProtectionStrings,
+                                                                End), //CycleObject
 
-								End, //ColGroup
-							Child, HVSpace,
-							End, //VGroup
-						End, //VirtualGroup
-					End, //Scrollgroup
+                                                        End), //ColGroup
+                                                        Child, (IPTR)HVSpace,
+                                                End), //VGroup
+                                        End), //VirtualGroup
+                                End), //Scrollgroup
 
-				End, //VGroup
+                        End), //VGroup
 
 			// --- filetype actions
-			Child, VGroup,
-				Child, inst->fpb_Objects[OBJNDX_MainListView] = NListviewObject,
+			Child, (IPTR)(VGroup,
+				Child, (IPTR)(inst->fpb_Objects[OBJNDX_MainListView] = NListviewObject,
 					MUIA_CycleChain, TRUE,
-					MUIA_NListview_NList, inst->fpb_Objects[OBJNDX_MainListTree] = myNListTreeObject,
-						MUIA_ContextMenu, inst->fpb_Objects[OBJNDX_ContextMenu],
-						MUIA_NList_PrivateData, inst,
-						MUIA_NList_Format, "",
+					MUIA_NListview_NList, (IPTR)(inst->fpb_Objects[OBJNDX_MainListTree] = myNListTreeObject,
+						MUIA_ContextMenu, (IPTR)inst->fpb_Objects[OBJNDX_ContextMenu],
+						MUIA_NList_PrivateData, (IPTR)inst,
+						MUIA_NList_Format, (IPTR)"",
 						InputListFrame,
 						MUIA_Background, MUII_ListBack,
-						MUIA_NListtree_DisplayHook, &inst->fpb_Hooks[HOOKNDX_TreeDisplay],
-						MUIA_NListtree_ConstructHook, &inst->fpb_Hooks[HOOKNDX_TreeConstruct],
-						MUIA_NListtree_DestructHook, &inst->fpb_Hooks[HOOKNDX_TreeDestruct],
+						MUIA_NListtree_DisplayHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_TreeDisplay],
+						MUIA_NListtree_ConstructHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_TreeConstruct],
+						MUIA_NListtree_DestructHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_TreeDestruct],
 						MUIA_NListtree_DragDropSort, TRUE,
 						MUIA_NList_ShowDropMarks, TRUE,
 						MUIA_NListtree_EmptyNodes, TRUE,
 						MUIA_NListtree_AutoVisible, MUIV_NListtree_AutoVisible_Expand,
-						End, // myNListTreeClass
+                                        End), // myNListTreeClass
 
 					MUIA_Listview_DragType, MUIV_Listview_DragType_None,
-					End, // NListviewObject
+                                End), // NListviewObject
 
-				Child, inst->fpb_Objects[OBJNDX_HiddenListView] = NListviewObject,
+				Child, (IPTR)(inst->fpb_Objects[OBJNDX_HiddenListView] = NListviewObject,
 					MUIA_ShowMe, FALSE,
 					MUIA_CycleChain, TRUE,
-					MUIA_NListview_NList, inst->fpb_Objects[OBJNDX_HiddenListTree] = myNListTreeObject,
-						MUIA_ContextMenu, inst->fpb_Objects[OBJNDX_ContextMenu],
-						MUIA_NList_PrivateData, inst,
-						MUIA_NList_Format, "",
+					MUIA_NListview_NList, (IPTR)(inst->fpb_Objects[OBJNDX_HiddenListTree] = myNListTreeObject,
+						MUIA_ContextMenu, (IPTR)inst->fpb_Objects[OBJNDX_ContextMenu],
+						MUIA_NList_PrivateData, (IPTR)inst,
+						MUIA_NList_Format, (IPTR)"",
 						InputListFrame,
 						MUIA_Background, MUII_ListBack,
-						MUIA_NListtree_DisplayHook, &inst->fpb_Hooks[HOOKNDX_TreeDisplay],
-						MUIA_NListtree_ConstructHook, &inst->fpb_Hooks[HOOKNDX_TreeConstruct],
-						MUIA_NListtree_DestructHook, &inst->fpb_Hooks[HOOKNDX_TreeDestruct],
+						MUIA_NListtree_DisplayHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_TreeDisplay],
+						MUIA_NListtree_ConstructHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_TreeConstruct],
+						MUIA_NListtree_DestructHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_TreeDestruct],
 						MUIA_NListtree_DragDropSort, TRUE,
 						MUIA_NList_ShowDropMarks, TRUE,
 						MUIA_NListtree_EmptyNodes, TRUE,
 						MUIA_NListtree_AutoVisible, MUIV_NListtree_AutoVisible_Expand,
-						End, // myNListTreeClass
+                                        End), // myNListTreeClass
 
 					MUIA_Listview_DragType, MUIV_Listview_DragType_None,
-					End, // NListviewObject
+                                End), // NListviewObject
 
-				Child, HGroup,
-					Child, inst->fpb_Objects[OBJNDX_Lamp_Changed] = LampObject,
+				Child, (IPTR)(HGroup,
+					Child, (IPTR)(inst->fpb_Objects[OBJNDX_Lamp_Changed] = LampObject,
 						MUIA_Lamp_Type, MUIV_Lamp_Type_Huge, 
 						MUIA_Lamp_Color, MUIV_Lamp_Color_Off,
-						MUIA_ShortHelp, GetLocString(MSGID_SHORTHELP_LAMP_CHANGED),
-						End, //LampObject
+						MUIA_ShortHelp, (IPTR)GetLocString(MSGID_SHORTHELP_LAMP_CHANGED),
+                                        End), //LampObject
 
-					Child, ColGroup(2),
-						Child, inst->fpb_Objects[OBJNDX_AddEntryPopObject] = PopobjectObject,
+					Child, (IPTR)(ColGroup(2),
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_AddEntryPopObject] = PopobjectObject,
 							MUIA_Disabled, TRUE,
 							MUIA_CycleChain, TRUE,
-							MUIA_Popstring_Button, inst->fpb_Objects[OBJNDX_ButtonAddEntry] = KeyButtonHelp(MSGID_BUTTON_ADD_ENTRY,
+							MUIA_Popstring_Button, (IPTR)(inst->fpb_Objects[OBJNDX_ButtonAddEntry] = KeyButtonHelp(MSGID_BUTTON_ADD_ENTRY,
 								'a',
-								MSGID_SHORTHELP_BUTTON_ADD_ENTRY),
-							MUIA_Popobject_Object, inst->fpb_Objects[OBJNDX_AddEntryListView] = NListviewObject,
-								MUIA_NListview_NList, inst->fpb_Objects[OBJNDX_AddEntryList] = NListObject,
+								MSGID_SHORTHELP_BUTTON_ADD_ENTRY)),
+							MUIA_Popobject_Object, (IPTR)(inst->fpb_Objects[OBJNDX_AddEntryListView] = NListviewObject,
+								MUIA_NListview_NList, (IPTR)(inst->fpb_Objects[OBJNDX_AddEntryList] = NListObject,
 									InputListFrame,
 									MUIA_Background, MUII_ListBack,
-									MUIA_NList_ConstructHook2, &inst->fpb_Hooks[HOOKNDX_AddEntryListConstruct],
-									MUIA_NList_DestructHook2, &inst->fpb_Hooks[HOOKNDX_AddEntryListDestruct],
-									MUIA_NList_DisplayHook2, &inst->fpb_Hooks[HOOKNDX_AddEntryListDisplay],
+									MUIA_NList_ConstructHook2, (IPTR)&inst->fpb_Hooks[HOOKNDX_AddEntryListConstruct],
+									MUIA_NList_DestructHook2, (IPTR)&inst->fpb_Hooks[HOOKNDX_AddEntryListDestruct],
+									MUIA_NList_DisplayHook2, (IPTR)&inst->fpb_Hooks[HOOKNDX_AddEntryListDisplay],
 									MUIA_NList_AdjustWidth, TRUE,
-									End, //NListObject
-								End, //NListviewObject
-							End, //PopobjectObject
+                                                                End), //NListObject
+                                                        End), //NListviewObject
+                                                End), //PopobjectObject
 
-						Child, inst->fpb_Objects[OBJNDX_ButtonRemoveEntry] = KeyButtonHelp(MSGID_BUTTON_DELETE_ENTRY,
+						Child, (IPTR)(inst->fpb_Objects[OBJNDX_ButtonRemoveEntry] = KeyButtonHelp(MSGID_BUTTON_DELETE_ENTRY,
 								'd',
-								MSGID_SHORTHELP_BUTTON_DELETE_ENTRY),
-					End, //ColGroup
-				End, //HGroup
+								MSGID_SHORTHELP_BUTTON_DELETE_ENTRY)),
+					End), //ColGroup
+				End), //HGroup
 
-				Child, BalanceObject,
-					End, // BalanceObject
+				Child, (IPTR)(BalanceObject,
+                                End), // BalanceObject
 
-				Child, inst->fpb_Objects[OBJNDX_AttrListView] = NListviewObject,
+				Child, (IPTR)(inst->fpb_Objects[OBJNDX_AttrListView] = NListviewObject,
 					MUIA_CycleChain, TRUE,
-					MUIA_NListview_NList, inst->fpb_Objects[OBJNDX_AttrList] = myNListObject,
-						MUIA_ContextMenu, inst->fpb_Objects[OBJNDX_ContextMenuAttrList],
-						MUIA_NList_PrivateData, inst,
-						MUIA_NList_Format, ",",
+					MUIA_NListview_NList, (IPTR)(inst->fpb_Objects[OBJNDX_AttrList] = myNListObject,
+						MUIA_ContextMenu, (IPTR)inst->fpb_Objects[OBJNDX_ContextMenuAttrList],
+						MUIA_NList_PrivateData, (IPTR)inst,
+						MUIA_NList_Format, (IPTR)",",
 						InputListFrame,
 						MUIA_Background, MUII_ListBack,
-						MUIA_NList_DisplayHook2, &inst->fpb_Hooks[HOOKNDX_AttrDisplay],
-						MUIA_NList_ConstructHook2, &inst->fpb_Hooks[HOOKNDX_AttrConstruct],
-						MUIA_NList_DestructHook2, &inst->fpb_Hooks[HOOKNDX_AttrDestruct],
+						MUIA_NList_DisplayHook2, (IPTR)&inst->fpb_Hooks[HOOKNDX_AttrDisplay],
+						MUIA_NList_ConstructHook2, (IPTR)&inst->fpb_Hooks[HOOKNDX_AttrConstruct],
+						MUIA_NList_DestructHook2, (IPTR)&inst->fpb_Hooks[HOOKNDX_AttrDestruct],
 						MUIA_NList_DragSortable, FALSE,
 						MUIA_NList_ShowDropMarks, FALSE,
 						MUIA_NList_Title, TRUE,
 						MUIA_NList_TitleSeparator, TRUE,
-						End, // myNListTreeClass
+                                        End), // myNListTreeClass
 
 					MUIA_Listview_DragType, MUIV_Listview_DragType_None,
 					MUIA_Weight, 50,
-					End, // NListviewObject
+                                End), // NListviewObject
 
-				Child, ColGroup(3),
-					Child, inst->fpb_Objects[OBJNDX_AddAttrPopObject] = PopobjectObject,
+				Child, (IPTR)(ColGroup(3),
+					Child, (IPTR)(inst->fpb_Objects[OBJNDX_AddAttrPopObject] = PopobjectObject,
 						MUIA_Disabled, TRUE,
 						MUIA_CycleChain, TRUE,
-						MUIA_Popstring_Button, inst->fpb_Objects[OBJNDX_ButtonAddAttribute] = KeyButtonHelp(MSGID_BUTTON_ADD_ATTRIBUTE,
+						MUIA_Popstring_Button, (IPTR)(inst->fpb_Objects[OBJNDX_ButtonAddAttribute] = KeyButtonHelp(MSGID_BUTTON_ADD_ATTRIBUTE,
 							' ',
-							MSGID_SHORTHELP_BUTTON_ADD_ATTRIBUTE),
-						MUIA_Popobject_Object, inst->fpb_Objects[OBJNDX_AddAttrListView] = NListviewObject,
-							MUIA_NListview_NList, inst->fpb_Objects[OBJNDX_AddAttrList] = NListObject,
+							MSGID_SHORTHELP_BUTTON_ADD_ATTRIBUTE)),
+						MUIA_Popobject_Object, (IPTR)(inst->fpb_Objects[OBJNDX_AddAttrListView] = NListviewObject,
+							MUIA_NListview_NList, (IPTR)(inst->fpb_Objects[OBJNDX_AddAttrList] = NListObject,
 								InputListFrame,
 								MUIA_Background, MUII_ListBack,
-								MUIA_NList_ConstructHook2, &inst->fpb_Hooks[HOOKNDX_AddAttrListConstruct],
-								MUIA_NList_DestructHook2, &inst->fpb_Hooks[HOOKNDX_AddAttrListDestruct],
-								MUIA_NList_DisplayHook2, &inst->fpb_Hooks[HOOKNDX_AddAttrListDisplay],
+								MUIA_NList_ConstructHook2, (IPTR)&inst->fpb_Hooks[HOOKNDX_AddAttrListConstruct],
+								MUIA_NList_DestructHook2, (IPTR)&inst->fpb_Hooks[HOOKNDX_AddAttrListDestruct],
+								MUIA_NList_DisplayHook2, (IPTR)&inst->fpb_Hooks[HOOKNDX_AddAttrListDisplay],
 								MUIA_NList_AdjustWidth, TRUE,
-								End, //NListObject
-							End, //NListviewObject
-						End, //PopobjectObject
-					Child, inst->fpb_Objects[OBJNDX_ButtonEditAttribute] = KeyButtonHelp(MSGID_BUTTON_EDIT_ATTRIBUTE,
+                                                        End), //NListObject
+                                                End), //NListviewObject
+                                        End), //PopobjectObject
+					Child, (IPTR)(inst->fpb_Objects[OBJNDX_ButtonEditAttribute] = KeyButtonHelp(MSGID_BUTTON_EDIT_ATTRIBUTE,
 							'e',
-							MSGID_SHORTHELP_BUTTON_EDIT_ATTRIBUTE),
-					Child, inst->fpb_Objects[OBJNDX_ButtonRemoveAttribute] = KeyButtonHelp(MSGID_BUTTON_DELETE_ATTRIBUTE,
+							MSGID_SHORTHELP_BUTTON_EDIT_ATTRIBUTE)),
+					Child, (IPTR)(inst->fpb_Objects[OBJNDX_ButtonRemoveAttribute] = KeyButtonHelp(MSGID_BUTTON_DELETE_ATTRIBUTE,
 							'r',
-							MSGID_SHORTHELP_BUTTON_DELETE_ATTRIBUTE),
-					End, //HGroup
+							MSGID_SHORTHELP_BUTTON_DELETE_ATTRIBUTE)),
+                                End), //ColGroup
 
-				MUIA_ContextMenu, inst->fpb_Objects[OBJNDX_ContextMenu],
+				MUIA_ContextMenu, (IPTR)inst->fpb_Objects[OBJNDX_ContextMenu],
 
-				End,	//VGroup
+                        End),	//VGroup
 
-			End, //RegisterObject
+                End), //RegisterObject
 
-		End; //VGroup
+        End; //VGroup
 
 	if (NULL == inst->fpb_Objects[OBJNDX_Group_Main])
 		return NULL;
@@ -2698,154 +2698,154 @@ static Object *CreatePrefsGroup(struct FileTypesPrefsInst *inst)
 	set(inst->fpb_Objects[OBJNDX_Popobject_FileTypes_Methods_Add], MUIA_Disabled, TRUE);
 
 	DoMethod(inst->fpb_Objects[OBJNDX_Group_Main], MUIM_Notify, MUIA_ContextMenuTrigger, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_Group_Main], 3, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ContextMenuTrigger], MUIV_TriggerValue );
+		inst->fpb_Objects[OBJNDX_Group_Main], 3, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ContextMenuTrigger], MUIV_TriggerValue );
 
 	DoMethod(inst->fpb_Objects[OBJNDX_AddEntryListView], MUIM_Notify, MUIA_Listview_DoubleClick, TRUE,
-		inst->fpb_Objects[OBJNDX_AddEntryPopObject], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_AddEntry]);
+		inst->fpb_Objects[OBJNDX_AddEntryPopObject], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_AddEntry]);
 	DoMethod(inst->fpb_Objects[OBJNDX_AddAttrListView], MUIM_Notify, MUIA_Listview_DoubleClick, TRUE,
-		inst->fpb_Objects[OBJNDX_AddAttrPopObject], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_AddAttribute]);
+		inst->fpb_Objects[OBJNDX_AddAttrPopObject], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_AddAttribute]);
 
 	// Call hook when Find Filetype Hide button is clicked
 	DoMethod(inst->fpb_Objects[OBJNDX_Button_HideFind], MUIM_Notify, MUIA_Pressed, FALSE,
-		inst->fpb_Objects[OBJNDX_Button_HideFind], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_HideFindGroup]);
+		inst->fpb_Objects[OBJNDX_Button_HideFind], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_HideFindGroup]);
 
 	// Call hook everytime the contents of StringFindFileType changes
 	DoMethod(inst->fpb_Objects[OBJNDX_String_FindFileType], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_String_FindFileType], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_IncrementalFindFileType]);
+		inst->fpb_Objects[OBJNDX_String_FindFileType], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_IncrementalFindFileType]);
 
 	// Call FindNextFileTypeHook when "Next" button is clicked
 	DoMethod(inst->fpb_Objects[OBJNDX_Button_FindNextFileType], MUIM_Notify, MUIA_Pressed, FALSE,
-		inst->fpb_Objects[OBJNDX_Button_FindNextFileType], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_IncrementalFindNextFileType]);
+		inst->fpb_Objects[OBJNDX_Button_FindNextFileType], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_IncrementalFindNextFileType]);
 
 	// Call FindPrevFileTypeHook when "Prev" button is clicked
 	DoMethod(inst->fpb_Objects[OBJNDX_Button_FindPrevFileType], MUIM_Notify, MUIA_Pressed, FALSE,
-		inst->fpb_Objects[OBJNDX_Button_FindPrevFileType], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_IncrementalFindPrevFileType]);
+		inst->fpb_Objects[OBJNDX_Button_FindPrevFileType], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_IncrementalFindPrevFileType]);
 
 	// call hook on double click into "Add Method" popup listview
 	DoMethod(inst->fpb_Objects[OBJNDX_NListview_FileTypes_Methods_Add], MUIM_Notify, MUIA_Listview_DoubleClick, TRUE,
-		inst->fpb_Objects[OBJNDX_Popobject_FileTypes_Methods_Add], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_AddFileTypesMethod]);
+		inst->fpb_Objects[OBJNDX_Popobject_FileTypes_Methods_Add], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_AddFileTypesMethod]);
 
 	// call hook when the "Learn" button is pressed
 	DoMethod(inst->fpb_Objects[OBJNDX_Button_FileTypes_Actions_Learn], MUIM_Notify, MUIA_Pressed, FALSE,
-		inst->fpb_Objects[OBJNDX_Button_FileTypes_Actions_Learn], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_Learn_FileType] );
+		inst->fpb_Objects[OBJNDX_Button_FileTypes_Actions_Learn], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_Learn_FileType] );
 
 	// call hook everytime the filetype actions list is drag-drop sorted
 	DoMethod(inst->fpb_Objects[OBJNDX_NList_FileTypes_Actions], MUIM_Notify, MUIA_NList_DragSortInsert, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_NList_FileTypes_Actions], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_DragDropSort_FileTypesAction] );
+		inst->fpb_Objects[OBJNDX_NList_FileTypes_Actions], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_DragDropSort_FileTypesAction] );
 
 	// call hook everytime a new filetype is added
 	DoMethod(inst->fpb_Objects[OBJNDX_Button_FileTypes_Add], MUIM_Notify, MUIA_Pressed, FALSE,
-		inst->fpb_Objects[OBJNDX_Button_FileTypes_Add], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_AddFileType] );
+		inst->fpb_Objects[OBJNDX_Button_FileTypes_Add], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_AddFileType] );
 
 	// call hook everytime a new filetype is removed
 	DoMethod(inst->fpb_Objects[OBJNDX_Button_FileTypes_Remove], MUIM_Notify, MUIA_Pressed, FALSE,
-		inst->fpb_Objects[OBJNDX_Button_FileTypes_Remove], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_RemoveFileType] );
+		inst->fpb_Objects[OBJNDX_Button_FileTypes_Remove], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_RemoveFileType] );
 
 	// call hook everytime a new filetype is selected
 	DoMethod(inst->fpb_Objects[OBJNDX_NListtree_FileTypes], MUIM_Notify, MUIA_NListtree_Active, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_NListtree_FileTypes], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_SelectFileTypesEntry] );
+		inst->fpb_Objects[OBJNDX_NListtree_FileTypes], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_SelectFileTypesEntry] );
 
 	// call hook everytime a new filetype is renamed
 	DoMethod(inst->fpb_Objects[OBJNDX_String_FileTypes_Name], MUIM_Notify, MUIA_String_Acknowledge, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_String_FileTypes_Name], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_RenameFileType] );
+		inst->fpb_Objects[OBJNDX_String_FileTypes_Name], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_RenameFileType] );
 
 	// call hook everytime a new filetypes action is removed
 	DoMethod(inst->fpb_Objects[OBJNDX_Button_FileTypes_Actions_Remove], MUIM_Notify, MUIA_Pressed, FALSE,
-		inst->fpb_Objects[OBJNDX_Button_FileTypes_Actions_Remove], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_RemoveFileTypeAction] );
+		inst->fpb_Objects[OBJNDX_Button_FileTypes_Actions_Remove], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_RemoveFileTypeAction] );
 
 	// setup hook if "create new" button is presseed for filetypes icon
 	DoMethod(inst->fpb_Objects[OBJNDX_Button_FileTypes_CreateIcon], MUIM_Notify, MUIA_Pressed, FALSE,
-		inst->fpb_Objects[OBJNDX_Button_FileTypes_CreateIcon], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_CreateNewFileTypesIcon] );
+		inst->fpb_Objects[OBJNDX_Button_FileTypes_CreateIcon], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_CreateNewFileTypesIcon] );
 
 	// setup hook if filetypes icon is clicked
 	DoMethod(inst->fpb_Objects[OBJNDX_IconObjectMCC_FileTypes_Icon], MUIM_Notify, MUIA_Pressed, FALSE,
-		inst->fpb_Objects[OBJNDX_IconObjectMCC_FileTypes_Icon], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_EditFileTypesIcon] );
+		inst->fpb_Objects[OBJNDX_IconObjectMCC_FileTypes_Icon], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_EditFileTypesIcon] );
 
 	// call hook if filetypes action MATCH attributes are changed
 	DoMethod(inst->fpb_Objects[OBJNDX_String_Filetypes_Actions_Match_Offset], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_String_Filetypes_Actions_Match_Match], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionMatchOffset] );
+		inst->fpb_Objects[OBJNDX_String_Filetypes_Actions_Match_Match], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionMatchOffset] );
 	DoMethod(inst->fpb_Objects[OBJNDX_Checkmark_FileTypes_Action_Match_Case], MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_Checkmark_FileTypes_Action_Match_Case], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionMatchCase] );
+		inst->fpb_Objects[OBJNDX_Checkmark_FileTypes_Action_Match_Case], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionMatchCase] );
 	DoMethod(inst->fpb_Objects[OBJNDX_String_Filetypes_Actions_Match_Match], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_String_Filetypes_Actions_Match_Match], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionMatchMatch] );
+		inst->fpb_Objects[OBJNDX_String_Filetypes_Actions_Match_Match], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionMatchMatch] );
 
 	// call hook if filetypes action SEARCH attributes are changed
 	DoMethod(inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Search_Search], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Search_Search], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionSearchSearch] );
+		inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Search_Search], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionSearchSearch] );
 	DoMethod(inst->fpb_Objects[OBJNDX_Checkmark_FileTypes_Action_Search_Case], MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_Checkmark_FileTypes_Action_Search_Case], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionSearchCase] );
+		inst->fpb_Objects[OBJNDX_Checkmark_FileTypes_Action_Search_Case], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionSearchCase] );
 	DoMethod(inst->fpb_Objects[OBJNDX_Checkmark_FileTypes_Action_Search_SkipSpaces], MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_Checkmark_FileTypes_Action_Search_SkipSpaces], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionSearchSkipSpaces] );
+		inst->fpb_Objects[OBJNDX_Checkmark_FileTypes_Action_Search_SkipSpaces], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionSearchSkipSpaces] );
 
 	// call hook if filetypes action FILESIZE attributes are changed
 	DoMethod(inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Filesize_Filesize], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Filesize_Filesize], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionFilesize] );
+		inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Filesize_Filesize], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionFilesize] );
 
 	// call hook if filetypes action PATTERN attributes are changed
 	DoMethod(inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Pattern_Pattern], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Pattern_Pattern], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionPattern] );
+		inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Pattern_Pattern], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionPattern] );
 
 	// call hook if filetypes action DOSDEVICE attributes are changed
 	DoMethod(inst->fpb_Objects[OBJNDX_String_FileTypes_Action_DosDevice_Pattern], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_String_FileTypes_Action_DosDevice_Pattern], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionDosDevice] );
+		inst->fpb_Objects[OBJNDX_String_FileTypes_Action_DosDevice_Pattern], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionDosDevice] );
 
 	// call hook if filetypes action DEVICENAME attributes are changed
 	DoMethod(inst->fpb_Objects[OBJNDX_String_FileTypes_Action_DeviceName_Pattern], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_String_FileTypes_Action_DeviceName_Pattern], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionDeviceName] );
+		inst->fpb_Objects[OBJNDX_String_FileTypes_Action_DeviceName_Pattern], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionDeviceName] );
 
 	// call hook if filetypes action CONTENTS attributes are changed
 	DoMethod(inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Contents_Pattern], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Contents_Pattern], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionContents] );
+		inst->fpb_Objects[OBJNDX_String_FileTypes_Action_Contents_Pattern], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionContents] );
 
 	// call hook if filetypes action DOSTYPE attributes are changed
 	DoMethod(inst->fpb_Objects[OBJNDX_String_FileTypes_Action_DosType_Pattern], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_String_FileTypes_Action_DosType_Pattern], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionDosType] );
+		inst->fpb_Objects[OBJNDX_String_FileTypes_Action_DosType_Pattern], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionDosType] );
 
 	// call hook if filetypes action MINSIZEMB attributes are changed
 	DoMethod(inst->fpb_Objects[OBJNDX_String_FileTypes_Action_MinSizeMB_MinSize], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_String_FileTypes_Action_MinSizeMB_MinSize], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionMinSize] );
+		inst->fpb_Objects[OBJNDX_String_FileTypes_Action_MinSizeMB_MinSize], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionMinSize] );
 
 	// call hook if filetypes action PROTECTION attributes are changed
 	DoMethod(inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_R], MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_R], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionProtection] );
+		inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_R], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionProtection] );
 	DoMethod(inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_W], MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_W], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionProtection] );
+		inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_W], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionProtection] );
 	DoMethod(inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_E], MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_E], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionProtection] );
+		inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_E], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionProtection] );
 	DoMethod(inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_D], MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_D], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionProtection] );
+		inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_D], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionProtection] );
 	DoMethod(inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_S], MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_S], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionProtection] );
+		inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_S], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionProtection] );
 	DoMethod(inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_P], MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_P], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionProtection] );
+		inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_P], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionProtection] );
 	DoMethod(inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_A], MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_A], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionProtection] );
+		inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_A], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionProtection] );
 	DoMethod(inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_H], MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_H], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionProtection] );
+		inst->fpb_Objects[OBJNDX_Cycle_Filetypes_Protection_H], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangedFileTypesActionProtection] );
 
 	// call hook everytime a filetypes action entry is selected
 	DoMethod(inst->fpb_Objects[OBJNDX_NListview_FileTypes_Methods], MUIM_Notify, MUIA_NList_Active, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_Group_Main], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_SelectFileTypesActionEntry] );
+		inst->fpb_Objects[OBJNDX_Group_Main], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_SelectFileTypesActionEntry] );
 
 	DoMethod(inst->fpb_Objects[OBJNDX_MainListTree], MUIM_Notify, MUIA_NListtree_Active, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_Group_Main], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_SelectEntry] );
+		inst->fpb_Objects[OBJNDX_Group_Main], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_SelectEntry] );
 
 	DoMethod(inst->fpb_Objects[OBJNDX_AttrList], MUIM_Notify, MUIA_NList_Active, MUIV_EveryTime,
-		inst->fpb_Objects[OBJNDX_Group_Main], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_SelectAttribute] );
+		inst->fpb_Objects[OBJNDX_Group_Main], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_SelectAttribute] );
 
 	DoMethod(inst->fpb_Objects[OBJNDX_ButtonRemoveEntry], MUIM_Notify, MUIA_Pressed, FALSE, 
-		inst->fpb_Objects[OBJNDX_Group_Main], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_RemoveEntry]);
+		inst->fpb_Objects[OBJNDX_Group_Main], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_RemoveEntry]);
 
 	DoMethod(inst->fpb_Objects[OBJNDX_ButtonRemoveAttribute], MUIM_Notify, MUIA_Pressed, FALSE, 
-		inst->fpb_Objects[OBJNDX_Group_Main], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_RemoveAttribute]);
+		inst->fpb_Objects[OBJNDX_Group_Main], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_RemoveAttribute]);
 
 	// Edit Attribute by pressing "Edit" button of double-clicking attribute in list
 
 	DoMethod(inst->fpb_Objects[OBJNDX_AttrList], MUIM_Notify, MUIA_Listview_DoubleClick, TRUE,
-		inst->fpb_Objects[OBJNDX_Group_Main], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_EditAttribute] );
+		inst->fpb_Objects[OBJNDX_Group_Main], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_EditAttribute] );
 
 	DoMethod(inst->fpb_Objects[OBJNDX_ButtonEditAttribute], MUIM_Notify, MUIA_Pressed, FALSE, 
-		inst->fpb_Objects[OBJNDX_Group_Main], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_EditAttribute]);
+		inst->fpb_Objects[OBJNDX_Group_Main], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_EditAttribute]);
 
 	// initially display icon for "project" filetype
 	// "Create new" icon is disabled if "def_project" icon is present
@@ -2863,143 +2863,143 @@ static Object **CreateSubWindows(Class *cl, Object *o)
 	d1(KPrintF(__FILE__ "/%s/%ld: START\n", __FUNC__, __LINE__));
 
 	inst->fpb_SubWindows[0] = inst->fpb_Objects[OBJNDX_WIN_EditAttribute] = WindowObject,
-		MUIA_Window_Title, GetLocString(MSGID_EDITATTRIBUTE_WINDOWTITLE),
+		MUIA_Window_Title, (IPTR)GetLocString(MSGID_EDITATTRIBUTE_WINDOWTITLE),
 		MUIA_Window_ID,	MAKE_ID('F','T','P','R'),
-		WindowContents, VGroup,
+		WindowContents, (IPTR)(VGroup,
 
-			Child, TextObject,
-				MUIA_Text_PreParse, MUIX_C,
-				MUIA_Text_Contents, GetLocString(MSGID_EDITATTRIBUTE_TITLE),
-				End, // TextObject
+			Child, (IPTR)(TextObject,
+				MUIA_Text_PreParse, (IPTR)MUIX_C,
+				MUIA_Text_Contents, (IPTR)GetLocString(MSGID_EDITATTRIBUTE_TITLE),
+                        End), // TextObject
 
-			Child, HGroup,
+			Child, (IPTR)(HGroup,
 				TextFrame,
-				Child, HVSpace,
-				Child, inst->fpb_Objects[OBJNDX_Text_AttributeName] = TextObject,
+				Child, (IPTR)HVSpace,
+				Child, (IPTR)(inst->fpb_Objects[OBJNDX_Text_AttributeName] = TextObject,
 					MUIA_HorizWeight, 200,
-					MUIA_Text_PreParse, MUIX_C,
-					MUIA_Text_Contents, "xxxxxxxxxxxxxxxxxxxxxxxxxxx",
+					MUIA_Text_PreParse, (IPTR)MUIX_C,
+					MUIA_Text_Contents, (IPTR)"xxxxxxxxxxxxxxxxxxxxxxxxxxx",
 					MUIA_Text_SetMin, TRUE,
-					End, // TextObject
-				Child, HVSpace,
-			End, //HGroup
+                                End), // TextObject
+				Child, (IPTR)HVSpace,
+			End), //HGroup
 
-			Child, inst->fpb_Objects[OBJNDX_Group_AttributeValue] = VGroup,
+			Child, (IPTR)(inst->fpb_Objects[OBJNDX_Group_AttributeValue] = VGroup,
 				MUIA_ShowMe, FALSE,
 
-				Child, inst->fpb_Objects[OBJNDX_String_AttributeValue] = StringObject,
+				Child, (IPTR)(inst->fpb_Objects[OBJNDX_String_AttributeValue] = StringObject,
 					MUIA_CycleChain, TRUE,
 					StringFrame,
-					MUIA_String_Contents, "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+					MUIA_String_Contents, (IPTR)"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 					MUIA_String_AdvanceOnCR, TRUE,
 					MUIA_Text_SetMin, TRUE,
-					End, // StringObject
-			End, //VGroup
+                                End), // StringObject
+			End), //VGroup
 
-			Child, inst->fpb_Objects[OBJNDX_Group_AttributeAslPath] = VGroup,
+			Child, (IPTR)(inst->fpb_Objects[OBJNDX_Group_AttributeAslPath] = VGroup,
 				MUIA_ShowMe, FALSE,
 
-				Child, inst->fpb_Objects[OBJNDX_Pop_AttributeSelectAslPath] = PopaslObject,
+				Child, (IPTR)(inst->fpb_Objects[OBJNDX_Pop_AttributeSelectAslPath] = PopaslObject,
 					MUIA_CycleChain, TRUE,
-					MUIA_Popasl_StartHook, &inst->fpb_Hooks[HOOKNDX_EditAttributePopAslPathStartHook],
+					MUIA_Popasl_StartHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_EditAttributePopAslPathStartHook],
 					MUIA_Popasl_Type, ASL_FileRequest,
 					MUIA_String_AdvanceOnCR, TRUE,
-					MUIA_Popstring_String, KeyString("", MAX_ATTRVALUE, '\0'),
-					MUIA_Popstring_Button, PopButton(MUII_PopDrawer),
-				End, //PopaslObject
-			End, //VGroup
+					MUIA_Popstring_String, (IPTR)KeyString((IPTR)"", MAX_ATTRVALUE, '\0'),
+					MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopDrawer),
+				End), //PopaslObject
+			End), //VGroup
 
-			Child, inst->fpb_Objects[OBJNDX_Group_AttributeAslFile] = HGroup,
+			Child, (IPTR)(inst->fpb_Objects[OBJNDX_Group_AttributeAslFile] = HGroup,
 				MUIA_ShowMe, FALSE,
 
-				Child, inst->fpb_Objects[OBJNDX_DtPic_AttributeSelectAslFile] = DataTypesImageObject,
-					MUIA_ScaDtpic_Name, (ULONG) "",
+				Child, (IPTR)(inst->fpb_Objects[OBJNDX_DtPic_AttributeSelectAslFile] = DataTypesImageObject,
+					MUIA_ScaDtpic_Name, (IPTR) "",
 					MUIA_ScaDtpic_FailIfUnavailable, FALSE,
-					End, //DataTypesMCCObject
+                                End), //DataTypesMCCObject
 
-				Child, inst->fpb_Objects[OBJNDX_Pop_AttributeSelectAslFile] = PopaslObject,
+				Child, (IPTR)(inst->fpb_Objects[OBJNDX_Pop_AttributeSelectAslFile] = PopaslObject,
 					MUIA_CycleChain, TRUE,
-					MUIA_Popasl_StartHook, &inst->fpb_Hooks[HOOKNDX_EditAttributePopAslFileStartHook],
+					MUIA_Popasl_StartHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_EditAttributePopAslFileStartHook],
 					MUIA_Popasl_Type, ASL_FileRequest,
-					MUIA_Popstring_String, KeyString("", MAX_ATTRVALUE, '\0'),
-					MUIA_Popstring_Button, PopButton(MUII_PopFile),
-				End, //PopaslObject
-			End, //VGroup
+					MUIA_Popstring_String, (IPTR)KeyString((IPTR)"", MAX_ATTRVALUE, '\0'),
+					MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopFile),
+				End), //PopaslObject
+			End), //VGroup
 
-			Child, inst->fpb_Objects[OBJNDX_Group_AttributeAslFont] = VGroup,
+			Child, (IPTR)(inst->fpb_Objects[OBJNDX_Group_AttributeAslFont] = VGroup,
 				MUIA_ShowMe, FALSE,
 
-				Child, inst->fpb_Objects[OBJNDX_Pop_AttributeSelectAslFont] = PopaslObject,
+				Child, (IPTR)(inst->fpb_Objects[OBJNDX_Pop_AttributeSelectAslFont] = PopaslObject,
 					MUIA_CycleChain, TRUE,
 					TAG_IGNORE, 993,
 					MUIA_Popasl_Type, ASL_FontRequest,
-					MUIA_Popstring_String, KeyString("", MAX_ATTRVALUE, '\0'),
-					MUIA_Popstring_Button, PopButton(MUII_PopUp),
-				End, //PopaslObject
+					MUIA_Popstring_String, (IPTR)KeyString((IPTR)"", MAX_ATTRVALUE, '\0'),
+					MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopUp),
+				End), //PopaslObject
 
-				Child, inst->fpb_Objects[OBJNDX_AslFont_Sample] = FontSampleObject,
+				Child, (IPTR)(inst->fpb_Objects[OBJNDX_AslFont_Sample] = FontSampleObject,
 					TextFrame,
 					MUIA_Background, MUII_TextBack,
-					MUIA_FontSample_DemoString, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
+					MUIA_FontSample_DemoString, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
 					MUIA_FontSample_Antialias, inst->fpb_TTfAntialias,
 					MUIA_FontSample_Gamma, inst->fpb_TTfGamma,
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SCREENFONT_SAMPLETEXT_SHORTHELP),
-				End, //FontSampleMCCObject
-			End, //VGroup
+					MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SCREENFONT_SAMPLETEXT_SHORTHELP),
+				End), //FontSampleMCCObject
+			End), //VGroup
 
-			Child, inst->fpb_Objects[OBJNDX_Group_AttributeTTFont] = VGroup,
+			Child, (IPTR)(inst->fpb_Objects[OBJNDX_Group_AttributeTTFont] = VGroup,
 				MUIA_ShowMe, FALSE,
 
-				Child, inst->fpb_Objects[OBJNDX_Pop_AttributeSelectTTFont] = PopstringObject,
+				Child, (IPTR)(inst->fpb_Objects[OBJNDX_Pop_AttributeSelectTTFont] = PopstringObject,
 					MUIA_CycleChain, TRUE,
 					TAG_IGNORE, 994,
-					MUIA_Popstring_String, KeyString("", MAX_ATTRVALUE, '\0'),
+					MUIA_Popstring_String, (IPTR)KeyString((IPTR)"", MAX_ATTRVALUE, '\0'),
 					MUIA_String_AdvanceOnCR, TRUE,
-					MUIA_Popstring_Button, PopButton(MUII_PopUp),
-					MUIA_Popstring_OpenHook, &inst->fpb_Hooks[HOOKNDX_EditAttributeTTFontOpen],
-					MUIA_Popstring_CloseHook, &inst->fpb_Hooks[HOOKNDX_EditAttributeTTFontClose],
-				End, //PopstringObject
+					MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopUp),
+					MUIA_Popstring_OpenHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_EditAttributeTTFontOpen],
+					MUIA_Popstring_CloseHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_EditAttributeTTFontClose],
+				End), //PopstringObject
 
-				Child, inst->fpb_Objects[OBJNDX_TTFont_Sample] = FontSampleObject,
+				Child, (IPTR)(inst->fpb_Objects[OBJNDX_TTFont_Sample] = FontSampleObject,
 					TextFrame,
 					MUIA_Background, MUII_TextBack,
 					MUIA_FontSample_Antialias, inst->fpb_TTfAntialias,
 					MUIA_FontSample_Gamma, inst->fpb_TTfGamma,
-					MUIA_FontSample_DemoString, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SCREENFONT_SAMPLETEXT_SHORTHELP),
-				End, //FontSampleMCCObject
-			End, //VGroup
+					MUIA_FontSample_DemoString, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
+					MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SCREENFONT_SAMPLETEXT_SHORTHELP),
+				End), //FontSampleMCCObject
+			End), //VGroup
 
-			Child, inst->fpb_Objects[OBJNDX_Group_AttributeSelectValue] = VGroup,
+			Child, (IPTR)(inst->fpb_Objects[OBJNDX_Group_AttributeSelectValue] = VGroup,
 				MUIA_ShowMe, FALSE,
 
-				Child, inst->fpb_Objects[OBJNDX_Pop_AttributeSelectValue] = PopobjectObject,
+				Child, (IPTR)(inst->fpb_Objects[OBJNDX_Pop_AttributeSelectValue] = PopobjectObject,
 					MUIA_CycleChain, TRUE,
-					MUIA_Popstring_Button, PopButton(MUII_PopUp),
-					MUIA_Popstring_String, KeyString("", MAX_ATTRVALUE, '\0'),
-					MUIA_Popobject_Object, inst->fpb_Objects[OBJNDX_Listview_AttributeSelectValue] = NListviewObject,
-						MUIA_NListview_NList, inst->fpb_Objects[OBJNDX_List_AttributeSelectValue] = NListObject,
+					MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopUp),
+					MUIA_Popstring_String, (IPTR)KeyString((IPTR)"", MAX_ATTRVALUE, '\0'),
+					MUIA_Popobject_Object, (IPTR)(inst->fpb_Objects[OBJNDX_Listview_AttributeSelectValue] = NListviewObject,
+						MUIA_NListview_NList, (IPTR)(inst->fpb_Objects[OBJNDX_List_AttributeSelectValue] = NListObject,
 							InputListFrame,
 							MUIA_Background, MUII_ListBack,
-							MUIA_NList_ConstructHook2, &inst->fpb_Hooks[HOOKNDX_EditAttributeListConstruct],
-							MUIA_NList_DestructHook2, &inst->fpb_Hooks[HOOKNDX_EditAttributeListDestruct],
-							MUIA_NList_DisplayHook2, &inst->fpb_Hooks[HOOKNDX_EditAttributeListDisplay],
+							MUIA_NList_ConstructHook2, (IPTR)&inst->fpb_Hooks[HOOKNDX_EditAttributeListConstruct],
+							MUIA_NList_DestructHook2, (IPTR)&inst->fpb_Hooks[HOOKNDX_EditAttributeListDestruct],
+							MUIA_NList_DisplayHook2, (IPTR)&inst->fpb_Hooks[HOOKNDX_EditAttributeListDisplay],
 							MUIA_NList_AdjustWidth, TRUE,
-						End, //NListObject
-					End, //NListviewObject
-				End, //PopobjectObject
-			End, //VGroup
+						End), //NListObject
+					End), //NListviewObject
+				End), //PopobjectObject
+			End), //VGroup
 
-		Child, ColGroup(2),
-				Child, inst->fpb_Objects[OBJNDX_ButtonChangeAttribute] = KeyButtonHelp(MSGID_BUTTON_CHANGE_ATTRIBUTE,
+                        Child, (IPTR)(ColGroup(2),
+				Child, (IPTR)(inst->fpb_Objects[OBJNDX_ButtonChangeAttribute] = KeyButtonHelp(MSGID_BUTTON_CHANGE_ATTRIBUTE,
 					' ',
-					MSGID_SHORTHELP_BUTTON_CHANGE_ATTRIBUTE),
-				Child, inst->fpb_Objects[OBJNDX_ButtonKeepAttribute] = KeyButtonHelp(MSGID_BUTTON_KEEP_ATTRIBUTE,
+					MSGID_SHORTHELP_BUTTON_CHANGE_ATTRIBUTE)),
+				Child, (IPTR)(inst->fpb_Objects[OBJNDX_ButtonKeepAttribute] = KeyButtonHelp(MSGID_BUTTON_KEEP_ATTRIBUTE,
 					' ',
-					MSGID_SHORTHELP_BUTTON_KEEP_ATTRIBUTE),
-				End, //ColGroup
-			End, //VGroup
-		End;
+					MSGID_SHORTHELP_BUTTON_KEEP_ATTRIBUTE)),
+                        End), //ColGroup
+                End), //VGroup
+        End;
 
 	d1(KPrintF(__FILE__ "/%s/%ld: fpb_SubWindows[0]=%08lx\n", __FUNC__, __LINE__, inst->fpb_SubWindows[0]));
 
@@ -3013,7 +3013,7 @@ static Object **CreateSubWindows(Class *cl, Object *o)
 
 	// Pressing "change" button in "edit attribute" window calls hook
 	DoMethod(inst->fpb_Objects[OBJNDX_ButtonChangeAttribute], MUIM_Notify, MUIA_Pressed, FALSE, 
-		inst->fpb_Objects[OBJNDX_Group_Main], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_ChangeAttribute]);
+		inst->fpb_Objects[OBJNDX_Group_Main], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_ChangeAttribute]);
 
 	// Pressing "cancel" button in "edit attribute" window closes window
 	DoMethod(inst->fpb_Objects[OBJNDX_ButtonKeepAttribute], MUIM_Notify, MUIA_Pressed, FALSE, 
@@ -3021,7 +3021,7 @@ static Object **CreateSubWindows(Class *cl, Object *o)
 
 	// Doubleclick in "edit attribute" selection listview calls hook
 	DoMethod(inst->fpb_Objects[OBJNDX_Listview_AttributeSelectValue], MUIM_Notify, MUIA_Listview_DoubleClick, TRUE,
-		inst->fpb_Objects[OBJNDX_Pop_AttributeSelectValue], 2, MUIM_CallHook, &inst->fpb_Hooks[HOOKNDX_SelectAttributeValue]);
+		inst->fpb_Objects[OBJNDX_Pop_AttributeSelectValue], 2, MUIM_CallHook, (IPTR)&inst->fpb_Hooks[HOOKNDX_SelectAttributeValue]);
 
 	// Update sample image everytime the image file string changes
 	DoMethod(inst->fpb_Objects[OBJNDX_Pop_AttributeSelectAslFile], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
@@ -3038,7 +3038,7 @@ static Object *CreatePrefsImage(void)
 
 	// First try to load datatypes image from THEME: tree
 	img = DataTypesImageObject,
-		MUIA_ScaDtpic_Name, (ULONG) "THEME:prefs/plugins/filetypes",
+		MUIA_ScaDtpic_Name, (IPTR) "THEME:prefs/plugins/filetypes",
 		MUIA_ScaDtpic_FailIfUnavailable, TRUE,
 		End; //DataTypesMCCObject
 
@@ -3404,7 +3404,7 @@ static SAVEDS(APTR) INTERRUPT TreeConstructFunc(struct Hook *hook, APTR obj, str
 		if (strlen(UnSelIconName) > 0)
 			{
 			fte->fte_ImageObject = DataTypesImageObject, 0,
-				MUIA_ScaDtpic_Name, (ULONG) UnSelIconName,
+				MUIA_ScaDtpic_Name, (IPTR) UnSelIconName,
 				MUIA_ScaDtpic_FailIfUnavailable, TRUE,
 				End; //DataTypesMCCObject
 
@@ -3552,7 +3552,7 @@ static SAVEDS(ULONG) INTERRUPT TreeDisplayFunc(struct Hook *hook, APTR obj, stru
 					{
 					snprintf(fte->ftle_NameBuffer, sizeof(fte->ftle_NameBuffer),
 						"\33o[%ld]" MUIX_B "%s" MUIX_I " NAME %.*s" MUIX_N,
-						fte->fte_ImageIndex, ltdm->TreeNode->tn_Name, MAX_FTE_NAME, Line);
+						(IPTR)fte->fte_ImageIndex, ltdm->TreeNode->tn_Name, MAX_FTE_NAME, Line);
 					}
 				else
 					{
@@ -3567,7 +3567,7 @@ static SAVEDS(ULONG) INTERRUPT TreeDisplayFunc(struct Hook *hook, APTR obj, stru
 					{
 					snprintf(fte->ftle_NameBuffer, sizeof(fte->ftle_NameBuffer),
 						"\33o[%ld]%s" MUIX_I " NAME %.*s" MUIX_N,
-						fte->fte_ImageIndex, ltdm->TreeNode->tn_Name, MAX_FTE_NAME, Line);
+						(IPTR)fte->fte_ImageIndex, ltdm->TreeNode->tn_Name, MAX_FTE_NAME, Line);
 					}
 				else
 					{
@@ -3860,10 +3860,10 @@ static void TranslateNewMenu(struct NewMenu *nm)
 	while (nm && NM_END != nm->nm_Type)
 		{
 		if (NM_BARLABEL != nm->nm_Label)
-			nm->nm_Label = GetLocString((ULONG) nm->nm_Label);
+			nm->nm_Label = GetLocString((IPTR) nm->nm_Label);
 
 		if (nm->nm_CommKey)
-			nm->nm_CommKey = GetLocString((ULONG) nm->nm_CommKey);
+			nm->nm_CommKey = GetLocString((IPTR) nm->nm_CommKey);
 
 		nm++;
 		}
@@ -3873,7 +3873,7 @@ static void TranslateStringArray(STRPTR *stringArray)
 {
 	while (*stringArray)
 		{
-		*stringArray = GetLocString((ULONG) *stringArray);
+		*stringArray = GetLocString((IPTR) *stringArray);
 		stringArray++;
 		}
 }
@@ -4003,7 +4003,7 @@ static SAVEDS(APTR) INTERRUPT CollapseHookFunc(struct Hook *hook, Object *o, Msg
 
 		if (tnChild)
 			{
-			set(inst->fpb_Objects[OBJNDX_MainListTree], MUIA_NListtree_Active, (ULONG) tnChild);
+			set(inst->fpb_Objects[OBJNDX_MainListTree], MUIA_NListtree_Active, (IPTR) tnChild);
 
 			DoMethod(inst->fpb_Objects[OBJNDX_MainListTree],
 				MUIM_NListtree_Close,
@@ -4012,7 +4012,7 @@ static SAVEDS(APTR) INTERRUPT CollapseHookFunc(struct Hook *hook, Object *o, Msg
 				0);
 			}
 
-		set(inst->fpb_Objects[OBJNDX_MainListTree], MUIA_NListtree_Active, (ULONG) tn);
+		set(inst->fpb_Objects[OBJNDX_MainListTree], MUIA_NListtree_Active, (IPTR) tn);
 		}
 
 	DoMethod(inst->fpb_Objects[OBJNDX_MainListTree],
@@ -4059,7 +4059,7 @@ static SAVEDS(APTR) INTERRUPT ExpandHookFunc(struct Hook *hook, Object *o, Msg m
 
 		if (tnChild)
 			{
-			set(inst->fpb_Objects[OBJNDX_MainListTree], MUIA_NListtree_Active, (ULONG) tnChild);
+			set(inst->fpb_Objects[OBJNDX_MainListTree], MUIA_NListtree_Active, (IPTR) tnChild);
 
 			DoMethod(inst->fpb_Objects[OBJNDX_MainListTree], 
 				MUIM_NListtree_Open, 
@@ -4068,7 +4068,7 @@ static SAVEDS(APTR) INTERRUPT ExpandHookFunc(struct Hook *hook, Object *o, Msg m
 				0);
 			}
 
-		set(inst->fpb_Objects[OBJNDX_MainListTree], MUIA_NListtree_Active, (ULONG) tn);
+		set(inst->fpb_Objects[OBJNDX_MainListTree], MUIA_NListtree_Active, (IPTR) tn);
 		}
 
 	set(inst->fpb_Objects[OBJNDX_MainListTree], MUIA_NList_Quiet, MUIV_NList_Quiet_None);
@@ -4148,7 +4148,7 @@ static SAVEDS(APTR) INTERRUPT ExpandFileTypesHookFunc(struct Hook *hook, Object 
 
 		if (tnChild)
 			{
-			set(inst->fpb_Objects[OBJNDX_NListtree_FileTypes], MUIA_NListtree_Active, (ULONG) tnChild);
+			set(inst->fpb_Objects[OBJNDX_NListtree_FileTypes], MUIA_NListtree_Active, (IPTR) tnChild);
 
 			DoMethod(inst->fpb_Objects[OBJNDX_NListtree_FileTypes],
 				MUIM_NListtree_Open,
@@ -4157,7 +4157,7 @@ static SAVEDS(APTR) INTERRUPT ExpandFileTypesHookFunc(struct Hook *hook, Object 
 				0);
 			}
 
-		set(inst->fpb_Objects[OBJNDX_NListtree_FileTypes], MUIA_NListtree_Active, (ULONG) tn);
+		set(inst->fpb_Objects[OBJNDX_NListtree_FileTypes], MUIA_NListtree_Active, (IPTR) tn);
 		}
 
 	set(inst->fpb_Objects[OBJNDX_NListtree_FileTypes], MUIA_NList_Quiet, MUIV_NList_Quiet_None);
@@ -4515,7 +4515,7 @@ static SAVEDS(APTR) INTERRUPT AddEntryHookFunc(struct Hook *hook, Object *o, Msg
 			UpdateAttributes(inst, (struct FileTypesListEntry *) tn->tn_User);
 
 			// Make sure the new entry is the active one
-			set(inst->fpb_Objects[OBJNDX_MainListTree], MUIA_NListtree_Active, (ULONG) tnNew);
+			set(inst->fpb_Objects[OBJNDX_MainListTree], MUIA_NListtree_Active, (IPTR) tnNew);
 
 			EntryHasChanged(inst, tnNew);
 			}
@@ -4857,7 +4857,7 @@ static SAVEDS(APTR) INTERRUPT SelectAttributeValueHookFunc(struct Hook *hook, Ob
 	if (eal)
 		{
 		set(inst->fpb_Objects[OBJNDX_Pop_AttributeSelectValue],
-			MUIA_String_Contents, (ULONG) eal->eal_ValueString);
+			MUIA_String_Contents, (IPTR) eal->eal_ValueString);
 		}
 
 	d1(kprintf("%s/%ld: eal=%08lx\n", __FUNC__, __LINE__, eal));
@@ -4873,7 +4873,7 @@ static SAVEDS(ULONG) INTERRUPT EditAttributePopAslFileStartHookFunc(struct Hook 
 {
 	struct TagItem *TagList = (struct TagItem *) msg;
 	struct FileTypesPrefsInst *inst = (struct FileTypesPrefsInst *) hook->h_Data;
-	CONST_STRPTR ValueString;
+	CONST_STRPTR ValueString = NULL;
 	STRPTR lp;
 
 	d1(KPrintF("%s/%ld: inst=%08lx\n", __FUNC__, __LINE__, inst));
@@ -4896,11 +4896,11 @@ static SAVEDS(ULONG) INTERRUPT EditAttributePopAslFileStartHookFunc(struct Hook 
 	TagList++;
 
 	TagList->ti_Tag = ASLFR_InitialFile;
-	TagList->ti_Data = (ULONG) inst->fpb_FileName;
+	TagList->ti_Data = (IPTR) inst->fpb_FileName;
 	TagList++;
 
 	TagList->ti_Tag = ASLFR_InitialDrawer;
-	TagList->ti_Data = (ULONG) inst->fpb_Path;
+	TagList->ti_Data = (IPTR) inst->fpb_Path;
 	TagList++;
 
 	TagList->ti_Tag = TAG_END;
@@ -4916,7 +4916,7 @@ static SAVEDS(ULONG) INTERRUPT EditAttributePopAslPathStartHookFunc(struct Hook 
 {
 	struct TagItem *TagList = (struct TagItem *) msg;
 	struct FileTypesPrefsInst *inst = (struct FileTypesPrefsInst *) hook->h_Data;
-	CONST_STRPTR ValueString;
+	CONST_STRPTR ValueString = NULL;
 	STRPTR lp;
 
 	d1(kprintf("%s/%ld: inst=%08lx\n", __FUNC__, __LINE__, inst));
@@ -4937,11 +4937,11 @@ static SAVEDS(ULONG) INTERRUPT EditAttributePopAslPathStartHookFunc(struct Hook 
 	TagList++;
 
 	TagList->ti_Tag = ASLFR_InitialFile;
-	TagList->ti_Data = (ULONG) inst->fpb_FileName;
+	TagList->ti_Data = (IPTR) inst->fpb_FileName;
 	TagList++;
 
 	TagList->ti_Tag = ASLFR_InitialDrawer;
-	TagList->ti_Data = (ULONG) inst->fpb_Path;
+	TagList->ti_Data = (IPTR) inst->fpb_Path;
 	TagList++;
 
 	TagList->ti_Tag = TAG_END;
@@ -4964,8 +4964,8 @@ static SAVEDS(ULONG) INTERRUPT EditAttrTTFontOpenHookFunc(struct Hook *hook, Obj
 		struct Window *PrefsWindow;
 		struct TagItem *AttrList;
 		char FontName[MAX_ATTRVALUE];
-		ULONG FontStyle, FontWeight, FontSize;
-		STRPTR FontDesc;
+		IPTR FontStyle, FontWeight, FontSize;
+		STRPTR FontDesc = NULL;
 
 		get(o, MUIA_String_Contents, &FontDesc);
 
@@ -4977,16 +4977,16 @@ static SAVEDS(ULONG) INTERRUPT EditAttrTTFontOpenHookFunc(struct Hook *hook, Obj
 
 		//TT_RequestA()
 		AttrList = TT_Request(ttRequest,
-			TTRQ_Window, (ULONG) PrefsWindow,
-			TTRQ_TitleText, (ULONG) GetLocString(MSGID_EDITATTRIBUTE_TTFONT_ASLTITLE),
-			TTRQ_PositiveText, (ULONG) GetLocString(MSGID_EDITATTRIBUTE_TTFONT_ASL_OKBUTTON),
-			TTRQ_NegativeText, (ULONG) GetLocString(MSGID_EDITATTRIBUTE_TTFONT_ASL_CANCELBUTTON),
+			TTRQ_Window, (IPTR) PrefsWindow,
+			TTRQ_TitleText, (IPTR) GetLocString(MSGID_EDITATTRIBUTE_TTFONT_ASLTITLE),
+			TTRQ_PositiveText, (IPTR) GetLocString(MSGID_EDITATTRIBUTE_TTFONT_ASL_OKBUTTON),
+			TTRQ_NegativeText, (IPTR) GetLocString(MSGID_EDITATTRIBUTE_TTFONT_ASL_CANCELBUTTON),
 			TTRQ_DoSizes, TRUE,
 			TTRQ_DoStyle, TRUE,
 			TTRQ_DoWeight, TRUE,
 			TTRQ_Activate, TRUE,
 			TTRQ_DoPreview, TRUE,
-			TTRQ_InitialName, (ULONG) FontName,
+			TTRQ_InitialName, (IPTR) FontName,
 			TTRQ_InitialSize, FontSize,
 			TTRQ_InitialStyle, FontStyle,
 			TAG_END);
@@ -5001,8 +5001,8 @@ static SAVEDS(ULONG) INTERRUPT EditAttrTTFontOpenHookFunc(struct Hook *hook, Obj
 
 			d1(kprintf("%s/%ld: FontDesc=<%s>\n", __FUNC__, __LINE__, buffer));
 
-			set(o, MUIA_String_Contents, (ULONG) buffer);
-			set(inst->fpb_Objects[OBJNDX_TTFont_Sample], MUIA_FontSample_TTFontDesc, (ULONG) buffer);
+			set(o, MUIA_String_Contents, (IPTR) buffer);
+			set(inst->fpb_Objects[OBJNDX_TTFont_Sample], MUIA_FontSample_TTFontDesc, (IPTR) buffer);
 
 			Success = 1;
 			}
@@ -5208,7 +5208,7 @@ static SAVEDS(APTR) INTERRUPT EditAttributeHookFunc(struct Hook *hook, Object *o
 			char ValueString[MAX_ATTRVALUE];
 
 			set(inst->fpb_Objects[OBJNDX_Text_AttributeName],
-				MUIA_Text_Contents, (ULONG) GetAttributeName(atd->atd_Type));
+				MUIA_Text_Contents, (IPTR) GetAttributeName(atd->atd_Type));
 
 			GetAttributeValueString(&Attr->ale_Attribute, ValueString, sizeof(ValueString));
 
@@ -5230,7 +5230,7 @@ static SAVEDS(APTR) INTERRUPT EditAttributeHookFunc(struct Hook *hook, Object *o
 				set(inst->fpb_Objects[OBJNDX_Group_AttributeTTFont],  		MUIA_ShowMe, FALSE);
 
 				set(inst->fpb_Objects[OBJNDX_Pop_AttributeSelectAslPath],
-					MUIA_String_Contents, (ULONG) ValueString);
+					MUIA_String_Contents, (IPTR) ValueString);
 
 				set(inst->fpb_Objects[OBJNDX_WIN_EditAttribute],
 					MUIA_Window_ActiveObject,
@@ -5260,7 +5260,7 @@ static SAVEDS(APTR) INTERRUPT EditAttributeHookFunc(struct Hook *hook, Object *o
 					}
 
 				set(inst->fpb_Objects[OBJNDX_Pop_AttributeSelectAslFile],
-					MUIA_String_Contents, (ULONG) ValueString);
+					MUIA_String_Contents, (IPTR) ValueString);
 
 				set(inst->fpb_Objects[OBJNDX_WIN_EditAttribute],
 					MUIA_Window_ActiveObject,
@@ -5276,9 +5276,9 @@ static SAVEDS(APTR) INTERRUPT EditAttributeHookFunc(struct Hook *hook, Object *o
 				set(inst->fpb_Objects[OBJNDX_Group_AttributeTTFont],		MUIA_ShowMe, FALSE);
 
 				set(inst->fpb_Objects[OBJNDX_Pop_AttributeSelectAslFont],
-					MUIA_String_Contents, (ULONG) ValueString);
+					MUIA_String_Contents, (IPTR) ValueString);
 				set(inst->fpb_Objects[OBJNDX_AslFont_Sample], 
-					MUIA_FontSample_StdFontDesc, (ULONG) ValueString);
+					MUIA_FontSample_StdFontDesc, (IPTR) ValueString);
 
 				set(inst->fpb_Objects[OBJNDX_WIN_EditAttribute],
 					MUIA_Window_ActiveObject,
@@ -5294,9 +5294,9 @@ static SAVEDS(APTR) INTERRUPT EditAttributeHookFunc(struct Hook *hook, Object *o
 				set(inst->fpb_Objects[OBJNDX_Group_AttributeTTFont],		MUIA_ShowMe, TRUE);
 
 				set(inst->fpb_Objects[OBJNDX_Pop_AttributeSelectTTFont],
-					MUIA_String_Contents, (ULONG) ValueString);
+					MUIA_String_Contents, (IPTR) ValueString);
 				set(inst->fpb_Objects[OBJNDX_TTFont_Sample],
-					MUIA_FontSample_TTFontDesc, (ULONG) ValueString);
+					MUIA_FontSample_TTFontDesc, (IPTR) ValueString);
 
 				set(inst->fpb_Objects[OBJNDX_WIN_EditAttribute],
 					MUIA_Window_ActiveObject,
@@ -5322,7 +5322,7 @@ static SAVEDS(APTR) INTERRUPT EditAttributeHookFunc(struct Hook *hook, Object *o
 					FillListOfAttributeValues(inst, fte, atd, Attr);
 
 					set(inst->fpb_Objects[OBJNDX_Pop_AttributeSelectValue],
-						MUIA_String_Contents, (ULONG) ValueString);
+						MUIA_String_Contents, (IPTR) ValueString);
 
 					set(inst->fpb_Objects[OBJNDX_WIN_EditAttribute],
 						MUIA_Window_ActiveObject,
@@ -5334,7 +5334,7 @@ static SAVEDS(APTR) INTERRUPT EditAttributeHookFunc(struct Hook *hook, Object *o
 					set(inst->fpb_Objects[OBJNDX_Group_AttributeValue],		MUIA_ShowMe, TRUE);
 
 					set(inst->fpb_Objects[OBJNDX_String_AttributeValue],
-						MUIA_String_Contents, (ULONG) ValueString);
+						MUIA_String_Contents, (IPTR) ValueString);
 
 					set(inst->fpb_Objects[OBJNDX_WIN_EditAttribute],
 						MUIA_Window_ActiveObject,
@@ -5371,7 +5371,7 @@ static SAVEDS(APTR) INTERRUPT ContextMenuTriggerHookFunc(struct Hook *hook, Obje
 	struct Hook *MenuHook = NULL;
 
 	d1(KPrintF("%s/%ld: MenuObj=%08lx\n", __FUNC__, __LINE__, MenuObj));
-	d1(KPrintF("%s/%ld: msg=%08lx *msg=%08lx\n", __FUNC__, __LINE__, msg, *((ULONG *) msg)));
+	d1(KPrintF("%s/%ld: msg=%08lx *msg=%08lx\n", __FUNC__, __LINE__, msg, *((IPTR *) msg)));
 
 	get(MenuObj, MUIA_UserData, &MenuHookIndex);
 
@@ -5440,8 +5440,8 @@ static LONG WritePrefs(struct FileTypesPrefsInst *inst,
 
 DISPATCHER(myNListTree)
 {
-	struct FileTypesPrefsInst *inst;
-	ULONG Result;
+	struct FileTypesPrefsInst *inst = NULL;
+	IPTR Result;
 
 	d1(kprintf(__FILE__ "/%s/%ld: MethodID=%08lx\n", __FUNC__, __LINE__, msg->MethodID));
 
@@ -5454,14 +5454,14 @@ DISPATCHER(myNListTree)
 		ULONG MenuHookIndex = 0;
 		struct Hook *MenuHook = NULL;
 
-		get(obj, MUIA_NList_PrivateData, &inst);
+		get(obj, MUIA_NList_PrivateData, (IPTR *)&inst);
 
 		d1(kprintf("%s/%ld:  MUIM_ContextMenuChoice  item=%08lx\n", __FUNC__, __LINE__, cmc->item));
 
 		MenuObj = cmc->item;
 
 		d1(kprintf("%s/%ld: MenuObj=%08lx\n", __FUNC__, __LINE__, MenuObj));
-		d1(kprintf("%s/%ld: msg=%08lx *msg=%08lx\n", __FUNC__, __LINE__, msg, *((ULONG *) msg)));
+		d1(kprintf("%s/%ld: msg=%08lx *msg=%08lx\n", __FUNC__, __LINE__, msg, *((IPTR *) msg)));
 
 		get(MenuObj, MUIA_UserData, &MenuHookIndex);
 
@@ -5486,7 +5486,7 @@ DISPATCHER(myNListTree)
 			};
 		struct TestPosArg *tpa = (struct TestPosArg *) msg;
 
-		get(obj, MUIA_NList_PrivateData, &inst);
+		get(obj, MUIA_NList_PrivateData, (IPTR *)&inst);
 
 		if (inst->fpb_PageIsActive)
 			Result = DoSuperMethodA(cl, obj, msg);
@@ -5505,7 +5505,7 @@ DISPATCHER(myNListTree)
 		{
 		struct MUIP_DragQuery *dq = (struct MUIP_DragQuery *) msg;
 
-		get(obj, MUIA_NList_PrivateData, &inst);
+		get(obj, MUIA_NList_PrivateData, (IPTR *)&inst);
 
 		d1(kprintf("%s/%ld: MUIM_DragQuery obj=%08lx\n", __FUNC__, __LINE__, dq->obj));
 
@@ -5526,7 +5526,7 @@ DISPATCHER(myNListTree)
 		struct MUI_NListtree_TreeNode *tnTo, *tnFrom;
 		struct MUI_NListtree_TestPos_Result res;
 
-		get(obj, MUIA_NList_PrivateData, &inst);
+		get(obj, MUIA_NList_PrivateData, (IPTR *)&inst);
 
 		inst->fpb_MenuTreeMayDrop = FALSE;
 
@@ -5568,7 +5568,7 @@ DISPATCHER(myNListTree)
 	// we catch MUIM_DragReport because we want to restrict some dragging for some special objects
 	case MUIM_DragReport:
 		{
-		get(obj, MUIA_NList_PrivateData, &inst);
+		get(obj, MUIA_NList_PrivateData, (IPTR *)&inst);
 
 		d1(KPrintF("%s/%ld: MUIM_DragReport\n", __FUNC__, __LINE__));
 
@@ -5592,8 +5592,8 @@ DISPATCHER_END
 
 DISPATCHER(myFileTypesNListTree)
 {
-	struct FileTypesPrefsInst *inst;
-	ULONG Result;
+	struct FileTypesPrefsInst *inst = NULL;
+	IPTR Result;
 
 	d1(kprintf(__FILE__ "/%s/%ld: MethodID=%08lx\n", __FUNC__, __LINE__, msg->MethodID));
 
@@ -5606,14 +5606,14 @@ DISPATCHER(myFileTypesNListTree)
 		ULONG MenuHookIndex = 0;
 		struct Hook *MenuHook = NULL;
 
-		get(obj, MUIA_NList_PrivateData, &inst);
+		get(obj, MUIA_NList_PrivateData, (IPTR *)&inst);
 
 		d1(kprintf("%s/%ld:  MUIM_ContextMenuChoice  item=%08lx\n", __FUNC__, __LINE__, cmc->item));
 
 		MenuObj = cmc->item;
 
 		d1(kprintf("%s/%ld: MenuObj=%08lx\n", __FUNC__, __LINE__, MenuObj));
-		d1(kprintf("%s/%ld: msg=%08lx *msg=%08lx\n", __FUNC__, __LINE__, msg, *((ULONG *) msg)));
+		d1(kprintf("%s/%ld: msg=%08lx *msg=%08lx\n", __FUNC__, __LINE__, msg, *((IPTR *) msg)));
 
 		get(MenuObj, MUIA_UserData, &MenuHookIndex);
 
@@ -5647,7 +5647,7 @@ DISPATCHER(myFileTypesNListTree)
 		//struct MUIP_DragDrop *dq = (struct MUIP_DragDrop *) msg;
 		struct MUI_NListtree_TreeNode *ln;
 
-		get(obj, MUIA_NList_PrivateData, &inst);
+		get(obj, MUIA_NList_PrivateData, (IPTR *)&inst);
 		d1(kprintf("%s/%ld: MUIP_DragDrop obj=%08lx\n", __FUNC__, __LINE__, obj));
 
 		Result = DoSuperMethodA(cl, obj, msg);
@@ -5679,8 +5679,8 @@ DISPATCHER_END
 
 DISPATCHER(myNList)
 {
-	struct FileTypesPrefsInst *inst;
-	ULONG Result;
+	struct FileTypesPrefsInst *inst = NULL;
+	IPTR Result;
 
 	d1(kprintf(__FILE__ "/%s/%ld: MethodID=%08lx\n", __FUNC__, __LINE__, msg->MethodID));
 
@@ -5693,14 +5693,14 @@ DISPATCHER(myNList)
 		ULONG MenuHookIndex = 0;
 		struct Hook *MenuHook = NULL;
 
-		get(obj, MUIA_NList_PrivateData, &inst);
+		get(obj, MUIA_NList_PrivateData, (IPTR *)&inst);
 
 		d1(kprintf("%s/%ld:  MUIM_ContextMenuChoice  item=%08lx\n", __FUNC__, __LINE__, cmc->item));
 
 		MenuObj = cmc->item;
 
 		d1(kprintf("%s/%ld: MenuObj=%08lx\n", __FUNC__, __LINE__, MenuObj));
-		d1(kprintf("%s/%ld: msg=%08lx *msg=%08lx\n", __FUNC__, __LINE__, msg, *((ULONG *) msg)));
+		d1(kprintf("%s/%ld: msg=%08lx *msg=%08lx\n", __FUNC__, __LINE__, msg, *((IPTR *) msg)));
 
 		get(MenuObj, MUIA_UserData, &MenuHookIndex);
 
@@ -5727,8 +5727,8 @@ DISPATCHER_END
 
 DISPATCHER(myFileTypesActionsNList)
 {
-	struct FileTypesPrefsInst *inst;
-	ULONG Result;
+	struct FileTypesPrefsInst *inst = NULL;
+	IPTR Result;
 
 	d1(kprintf(__FILE__ "/%s/%ld: MethodID=%08lx\n", __FUNC__, __LINE__, msg->MethodID));
 
@@ -5736,7 +5736,7 @@ DISPATCHER(myFileTypesActionsNList)
 		{
 	case MUIM_DragDrop:
 		Result = DoSuperMethodA(cl, obj, msg);
-		get(obj, MUIA_NList_PrivateData, &inst);
+		get(obj, MUIA_NList_PrivateData, (IPTR *)&inst);
 		CallHookPkt(&inst->fpb_Hooks[HOOKNDX_DragDropSort_FileTypesAction], obj, msg);
 		break;
 
@@ -5747,14 +5747,14 @@ DISPATCHER(myFileTypesActionsNList)
 		ULONG MenuHookIndex = 0;
 		struct Hook *MenuHook = NULL;
 
-		get(obj, MUIA_NList_PrivateData, &inst);
+		get(obj, MUIA_NList_PrivateData, (IPTR *)&inst);
 
 		d1(kprintf("%s/%ld:  MUIM_ContextMenuChoice  item=%08lx\n", __FUNC__, __LINE__, cmc->item));
 
 		MenuObj = cmc->item;
 
 		d1(kprintf("%s/%ld: MenuObj=%08lx\n", __FUNC__, __LINE__, MenuObj));
-		d1(kprintf("%s/%ld: msg=%08lx *msg=%08lx\n", __FUNC__, __LINE__, msg, *((ULONG *) msg)));
+		d1(kprintf("%s/%ld: msg=%08lx *msg=%08lx\n", __FUNC__, __LINE__, msg, *((IPTR *) msg)));
 
 		get(MenuObj, MUIA_UserData, &MenuHookIndex);
 
@@ -5957,24 +5957,30 @@ STRPTR GetAttributeValueString(const struct FtAttribute *fta, char *Buffer, size
 			break;
 
 		case ATTRTYPE_GroupOrientation:
-			switch (*((enum TTLayoutMode *) fta->fta_Data))
-				{
-			case TTL_Horizontal:
-				stccpy(Buffer, "horizontal", BuffLen);
-				break;
-			case TTL_Vertical:
-				stccpy(Buffer, "vertical", BuffLen);
-				break;
-			default:
-				sprintf(Buffer, "??unknown_Orientation??:%d", *((enum TTLayoutMode *) fta->fta_Data));
-				break;
-				}
+                        {
+                            enum TTLayoutMode *goEnum = (enum TTLayoutMode *)fta->fta_Data;
+                            switch (*goEnum)
+                                    {
+                            case TTL_Horizontal:
+                                    stccpy(Buffer, "horizontal", BuffLen);
+                                    break;
+                            case TTL_Vertical:
+                                    stccpy(Buffer, "vertical", BuffLen);
+                                    break;
+                            default:
+                                    sprintf(Buffer, "??unknown_Orientation??:%d", *goEnum);
+                                    break;
+                                    }
+                        }
 			break;
 
 		case ATTRTYPE_CommandStacksize:
 		case ATTRTYPE_CommandPriority:
 		case ATTRTYPE_SpaceSize:
-			sprintf(Buffer, "%ld", *((ULONG *) fta->fta_Data));
+                        {
+                            IPTR *sizePtr = (IPTR *)fta->fta_Data;
+                            sprintf(Buffer, "%ld", *sizePtr);
+                        }
 			break;
 
 		case ATTRTYPE_CommandWbArgs:
@@ -6000,7 +6006,7 @@ static const struct FtAttribute *FindAttribute(const struct FileTypesListEntry *
 		fta != (struct FtAttribute *) &fte->ftle_AttributesList.lh_Tail;
 		fta = (struct FtAttribute *) fta->fta_Node.ln_Succ)
 		{
-		if (AttrType == fta->fta_Type)
+		if (AttrType == (enum FtEntryType)fta->fta_Type)
 			return fta;
 		}
 
@@ -6917,15 +6923,15 @@ static void SetChangedFlag(struct FileTypesPrefsInst *inst, BOOL changed)
 
 static void BuildTTDescFromAttrList(char *buffer, size_t length, struct TagItem *AttrList)
 {
-	ULONG FontStyle;
-	ULONG FontWeight;
-	ULONG FontSize;
+	IPTR FontStyle;
+	IPTR FontWeight;
+	IPTR FontSize;
 	const STRPTR *FontFamilyTable;
 
 	FontStyle = GetTagData(TT_FontStyle, TT_FontStyle_Regular, AttrList);
 	FontWeight = GetTagData(TT_FontWeight, TT_FontWeight_Normal, AttrList);
 	FontSize = GetTagData(TT_FontSize, 12, AttrList);
-	FontFamilyTable = (const STRPTR *) GetTagData(TT_FamilyTable, (ULONG) NULL, AttrList);
+	FontFamilyTable = (const STRPTR *) GetTagData(TT_FamilyTable, (IPTR) NULL, AttrList);
 
 	sprintf(buffer, "%ld/%ld/%ld/%s", FontStyle, FontWeight, FontSize, FontFamilyTable[0]);
 }
@@ -6933,7 +6939,7 @@ static void BuildTTDescFromAttrList(char *buffer, size_t length, struct TagItem 
 //-----------------------------------------------------------------
 
 static BOOL ParseTTFontFromDesc(CONST_STRPTR FontDesc, 
-	ULONG *FontStyle, ULONG *FontWeight, ULONG *FontSize,
+	IPTR *FontStyle, IPTR *FontWeight, IPTR *FontSize,
 	STRPTR FontName, size_t FontNameSize)
 {
 	CONST_STRPTR lp;
@@ -7120,10 +7126,10 @@ static LONG ReadScalosPrefs(struct FileTypesPrefsInst *inst, CONST_STRPTR PrefsF
 
 		ReadPrefsHandle(p_MyPrefsHandle, PrefsFileName);
 
-		GetPreferences(p_MyPrefsHandle, lID, SCP_TTfAntialiasing, &inst->fpb_TTfAntialias, sizeof(inst->fpb_TTfAntialias) );
+		GetPreferences(p_MyPrefsHandle, lID, SCP_TTfAntialiasing, (APTR)&inst->fpb_TTfAntialias, sizeof(inst->fpb_TTfAntialias) );
 		// BYTE
 
-		GetPreferences(p_MyPrefsHandle, lID, SCP_TTfGamma, &inst->fpb_TTfGamma, sizeof(inst->fpb_TTfGamma) );
+		GetPreferences(p_MyPrefsHandle, lID, SCP_TTfGamma, (APTR)&inst->fpb_TTfGamma, sizeof(inst->fpb_TTfGamma) );
 		inst->fpb_TTfGamma = SCA_BE2WORD(inst->fpb_TTfGamma);
 
 		prefDefIconPath = GetPrefsConfigString(p_MyPrefsHandle, SCP_PathsDefIcons, "ENV:sys");
@@ -7277,10 +7283,10 @@ BOOL initPlugin(struct PluginBase *PluginBase)
 
 static ULONG DoDragDrop(Class *cl, Object *obj, Msg msg)
 {
-	struct FileTypesPrefsInst *inst;
-	struct MUI_NListtree_TreeNode *tnTo, *tnFrom;
+	struct FileTypesPrefsInst *inst = NULL;
+	struct MUI_NListtree_TreeNode *tnTo = NULL, *tnFrom;
 
-	get(obj, MUIA_NList_PrivateData, &inst);
+	get(obj, MUIA_NList_PrivateData, (IPTR *)&inst);
 
 	get(obj, MUIA_NListtree_DropTarget, &tnTo);
 
@@ -7352,7 +7358,7 @@ static SAVEDS(APTR) INTERRUPT OpenHookFunc(struct Hook *hook, Object *o, Msg msg
 			ASLFR_InitialDrawer, "SYS:Prefs/presets",
 			ASLFR_InitialPattern, "#?.(pre|prefs)",
 			ASLFR_UserData, inst,
-			ASLFR_IntuiMsgFunc, &inst->fpb_Hooks[HOOKNDX_AslIntuiMsg],
+			ASLFR_IntuiMsgFunc, (IPTR)&inst->fpb_Hooks[HOOKNDX_AslIntuiMsg],
 			TAG_END);
 		}
 
@@ -7398,11 +7404,11 @@ static SAVEDS(APTR) INTERRUPT SaveAsHookFunc(struct Hook *hook, Object *o, Msg m
 	if (NULL == inst->fpb_SaveReq)
 		{
 		inst->fpb_SaveReq = MUI_AllocAslRequestTags(ASL_FileRequest,
-			ASLFR_InitialFile, "deficons.prefs",
+			ASLFR_InitialFile, (IPTR)"deficons.prefs",
 			ASLFR_DoSaveMode, TRUE,
-			ASLFR_InitialDrawer, "SYS:Prefs/presets",
-			ASLFR_UserData, inst,
-			ASLFR_IntuiMsgFunc, &inst->fpb_Hooks[HOOKNDX_AslIntuiMsg],
+			ASLFR_InitialDrawer, (IPTR)"SYS:Prefs/presets",
+			ASLFR_UserData, (IPTR)inst,
+			ASLFR_IntuiMsgFunc, (IPTR)&inst->fpb_Hooks[HOOKNDX_AslIntuiMsg],
 			TAG_END);
 		}
 
@@ -7415,8 +7421,8 @@ static SAVEDS(APTR) INTERRUPT SaveAsHookFunc(struct Hook *hook, Object *o, Msg m
 
 		//AslRequest(
 		Result = MUI_AslRequestTags(inst->fpb_SaveReq,
-			ASLFR_TitleText, GetLocString(MSGID_MENU_PROJECT_SAVEAS),
-			ASLFR_Window, win,
+			ASLFR_TitleText, (IPTR)GetLocString(MSGID_MENU_PROJECT_SAVEAS),
+			ASLFR_Window, (IPTR)win,
 			ASLFR_SleepWindow, TRUE,
 			TAG_END);
 
@@ -7839,7 +7845,7 @@ void UpdateMenuImage(struct FileTypesPrefsInst *inst, ULONG ListTree, struct Fil
 	if (strlen(UnSelIconName) > 0)
 		{
 		fte->fte_ImageObject = DataTypesImageObject,
-			MUIA_ScaDtpic_Name, (ULONG) UnSelIconName,
+			MUIA_ScaDtpic_Name, (IPTR) UnSelIconName,
 			MUIA_ScaDtpic_FailIfUnavailable, TRUE,
 			End; //DataTypesMCCObject
 

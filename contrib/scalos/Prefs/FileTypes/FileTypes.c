@@ -243,7 +243,7 @@ int main(int argc, char *argv[])
 
 	Group_Plugin = NewObject(FileTypesPluginClass->mcc_Class, 0,
 		MUIA_ScalosPrefs_CreateIcons, fCreateIcons,
-		MUIA_ScalosPrefs_ProgramName, (ULONG) ProgramName,
+		MUIA_ScalosPrefs_ProgramName, (IPTR) ProgramName,
 		TAG_END);
 	if (NULL == Group_Plugin)
 		fail(APP_Main, "Failed to create Group_Plugin.");
@@ -300,7 +300,7 @@ int main(int argc, char *argv[])
 			WindowContents, VGroup,
 				Child, TEXT_Splash = TextObject,
 					MUIA_Weight, 0,
-					MUIA_Text_Contents, (ULONG) GetLocString(MSGID_SPLASHWINDOW_LOADING_FILETYPES_PREFS),
+					MUIA_Text_Contents, (IPTR) GetLocString(MSGID_SPLASHWINDOW_LOADING_FILETYPES_PREFS),
 				End, //TextObject
 			End, //VGroup
 
@@ -373,8 +373,8 @@ int main(int argc, char *argv[])
 	// +jmc+ open Splash window
 	set(WIN_Splash, MUIA_Window_Open, TRUE);
 
-	set(Group_Plugin, MUIA_ScalosPrefs_MainWindow, (ULONG) WIN_Main);
-	set(Group_Plugin, MUIA_ScalosPrefs_Application, (ULONG) APP_Main);
+	set(Group_Plugin, MUIA_ScalosPrefs_MainWindow, (IPTR) WIN_Main);
+	set(Group_Plugin, MUIA_ScalosPrefs_Application, (IPTR) APP_Main);
 
 	DoMethod(Group_Plugin, MUIM_ScalosPrefs_PageActive, TRUE);
 
@@ -482,12 +482,12 @@ int main(int argc, char *argv[])
 	switch (Action)
 		{
 	case Application_Return_SAVE:
-		set(TEXT_Splash, MUIA_Text_Contents, (ULONG) GetLocString(MSGID_SPLASHWINDOW_SAVING_FILETYPES_PREFS));		// +jmc+
+		set(TEXT_Splash, MUIA_Text_Contents, (IPTR) GetLocString(MSGID_SPLASHWINDOW_SAVING_FILETYPES_PREFS));		// +jmc+
 		set(WIN_Splash, MUIA_Window_Open, TRUE);									// +jmc+
 		DoMethod(Group_Plugin, MUIM_ScalosPrefs_SaveConfig);
 		break;
 	case Application_Return_USE:
-		set(TEXT_Splash, MUIA_Text_Contents, (ULONG) GetLocString(MSGID_SPLASHWINDOW_APPLYING_FILETYPES_PREFS));	// +jmc+
+		set(TEXT_Splash, MUIA_Text_Contents, (IPTR) GetLocString(MSGID_SPLASHWINDOW_APPLYING_FILETYPES_PREFS));	// +jmc+
 		set(WIN_Splash, MUIA_Window_Open, TRUE);									// +jmc+
 		DoMethod(Group_Plugin, MUIM_ScalosPrefs_UseConfig);
 		break;
