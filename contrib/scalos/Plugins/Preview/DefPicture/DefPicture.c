@@ -318,7 +318,7 @@ LIBFUNC_P5(LONG, LIBSCAPreviewGenerate,
 		memset(&BitMapCopy, 0, sizeof(BitMapCopy));
 #endif /* __MORPHOS__ */
 
-		PVResult = (struct ScalosPreviewResult *) GetTagData(SCALOSPREVIEW_ResultStruct, (ULONG)NULL, tagList);
+		PVResult = (struct ScalosPreviewResult *) GetTagData(SCALOSPREVIEW_ResultStruct, (IPTR)NULL, tagList);
 		d1(KPrintF(__FILE__ "/%s/%ld: PVResult=%08lx\n", __FUNC__, __LINE__, PVResult));
 		if (NULL == PVResult)
 			break;
@@ -341,10 +341,10 @@ LIBFUNC_P5(LONG, LIBSCAPreviewGenerate,
 		if (SupportedColors < ReservedColors + 16)
 			break;
 
-		bmhdExternal = (struct BitMapHeader *) GetTagData(SCALOSPREVIEW_ImgBitMapHeader, (ULONG)NULL, tagList);
+		bmhdExternal = (struct BitMapHeader *) GetTagData(SCALOSPREVIEW_ImgBitMapHeader, (IPTR)NULL, tagList);
 		quality = GetTagData(SCALOSPREVIEW_Quality, SCALOSPREVIEWA_Quality_Max, tagList);
 
-		WBScreen = (struct Screen *) GetTagData(SCALOSPREVIEW_Screen, (ULONG)NULL, tagList);
+		WBScreen = (struct Screen *) GetTagData(SCALOSPREVIEW_Screen, (IPTR)NULL, tagList);
 		if (NULL == WBScreen)
 			break;
 
@@ -365,7 +365,7 @@ LIBFUNC_P5(LONG, LIBSCAPreviewGenerate,
 			{
 			d1(KPrintF(__FILE__ "/%s/%ld:  IsPictureDT43\n", __FUNC__, __LINE__));
 			SetDTAttrs(ImageObj, NULL, NULL,
-				PDTA_Screen, (ULONG) WBScreen,
+				PDTA_Screen, (IPTR) WBScreen,
 				PDTA_UseFriendBitMap, ScreenDepth <= 8,	       /* +dm+ Do not use a friend bitmap for 8bit or less screens */
 				TAG_END);
 			}
@@ -377,7 +377,7 @@ LIBFUNC_P5(LONG, LIBSCAPreviewGenerate,
 			}
 
 		if (GetDTAttrs(ImageObj,
-			PDTA_BitMapHeader, (ULONG) &bmhd,
+			PDTA_BitMapHeader, (IPTR) &bmhd,
 			TAG_END) < 1)
 			break;
 
@@ -501,10 +501,10 @@ static BOOL GenerateRemappedThumbnail(struct ScaWindowTask *wt,
 			TAG_END);
 
 		if (GetDTAttrs(ImageObj,
-			PDTA_DestBitMap, (ULONG) &bm,
-			PDTA_BitMapHeader, (ULONG) &bmhd,
-			PDTA_NumColors, (ULONG) &sac->sac_NumColors,
-			PDTA_CRegs, (ULONG) &ColorTable,
+			PDTA_DestBitMap, (IPTR) &bm,
+			PDTA_BitMapHeader, (IPTR) &bmhd,
+			PDTA_NumColors, (IPTR) &sac->sac_NumColors,
+			PDTA_CRegs, (IPTR) &ColorTable,
 			TAG_END) < 4)
 			break;
 
@@ -632,8 +632,8 @@ static BOOL GenerateARGBThumbnail(struct ScaWindowTask *wt,
 			break;;
 
 		if (GetDTAttrs(ImageObj,
-			PDTA_DestBitMap, (ULONG) &bm,
-			PDTA_BitMapHeader, (ULONG) &bmhd,
+			PDTA_DestBitMap, (IPTR) &bm,
+			PDTA_BitMapHeader, (IPTR) &bmhd,
 			TAG_END) < 2)
 			break;
 
@@ -647,14 +647,14 @@ static BOOL GenerateARGBThumbnail(struct ScaWindowTask *wt,
 		argbSrc.argb_Height = bmhd->bmh_Height;
 
 		(void) GetDTAttrs(ImageObj,
-			PDTA_MaskPlane, (ULONG) &MaskPlane,
+			PDTA_MaskPlane, (IPTR) &MaskPlane,
 			TAG_END);
 
 		d1(KPrintF(__FILE__ "/%s/%ld:  MaskPlane=%08lx\n", __FUNC__, __LINE__, MaskPlane));
 
 		if (GetDTAttrs(ImageObj,
-			PDTA_NumColors, (ULONG) &NumberOfColors,
-			PDTA_CRegs, (ULONG) &CRegs,
+			PDTA_NumColors, (IPTR) &NumberOfColors,
+			PDTA_CRegs, (IPTR) &CRegs,
 			TAG_END) < 2)
 			break;
 
@@ -832,7 +832,7 @@ static BOOL IsPictureDT43(Object *o)
 	BOOL IsV43 = FALSE;
 
 	GetDTAttrs(o,
-		DTA_Methods, (ULONG) &MethodArray,
+		DTA_Methods, (IPTR) &MethodArray,
 		TAG_END);
 
 	while (MethodArray && ~0 != *MethodArray)
@@ -860,7 +860,7 @@ static void ByteDump(const unsigned char *Data, size_t Length)
 	for (count=0; count<Length; count++)
 		{
 		*lp++ = isprint(*Data) ? *Data : '.';
-		KPrintF("%02lx ", (ULONG) *Data++);
+		KPrintF("%02lx ", (IPTR) *Data++);
 		if ((count+1) % 16 == 0)
 			{
 			*lp = '\0';
