@@ -43,7 +43,7 @@ struct FrameButtonMCCInstance
 
 /* ------------------------------------------------------------------------- */
 
-static ULONG mNew(struct IClass *cl,Object *obj,Msg msg);
+static IPTR mNew(struct IClass *cl,Object *obj,Msg msg);
 static ULONG mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg);
 static void DrawBoxMM2(struct RastPort *rp, int x1, int y1, int x2, int y2,
 	UBYTE shine, UBYTE shadow, UBYTE halfshine);
@@ -55,13 +55,13 @@ static void DrawXENBox(struct RastPort *rp, int x1, int y1, int x2, int y2,
 	UBYTE shine, UBYTE shadow, UBYTE bgplus, UBYTE bgminus);
 static void DrawDBLBox(struct RastPort *rp, int x1, int y1, int x2, int y2, UBYTE shine, UBYTE shadow);
 static void DrawDropBox(struct RastPort *rp, int x1, int y1, int x2, int y2, UBYTE shine, UBYTE shadow);
-DISPATCHER_PROTO(FrameButtonClass);
+DISPATCHERPROTO(FrameButtonClass);
 static ULONG mGet(Class *cl, Object *o, struct opGet *opg);
 static void ClearInstanceData(struct FrameButtonMCCInstance *inst);
 
 /* ------------------------------------------------------------------------- */
 
-static ULONG mNew(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mNew(struct IClass *cl,Object *obj,Msg msg)
 {
 	struct FrameButtonMCCInstance *inst;
 	struct opSet *ops;
@@ -96,7 +96,7 @@ static ULONG mNew(struct IClass *cl,Object *obj,Msg msg)
 			}
 		}
 
-	return((ULONG)obj);
+	return((IPTR)obj);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -340,7 +340,7 @@ static ULONG mGet(Class *cl, Object *o, struct opGet *opg)
 
 DISPATCHER(FrameButtonClass)
 {
-	ULONG Result;
+	IPTR Result;
 
 	switch (msg->MethodID)
 		{

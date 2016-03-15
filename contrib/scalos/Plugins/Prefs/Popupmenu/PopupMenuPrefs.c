@@ -90,7 +90,7 @@
 		MUIA_Background       , MUII_ButtonBack,\
 		MUIA_ShowSelState     , FALSE,\
 		MUIA_CycleChain       , TRUE,\
-		MUIA_ShortHelp	      , GetLocString(HelpTextID), \
+		MUIA_ShortHelp	      , (IPTR)GetLocString(HelpTextID), \
 		End
 
 #define IMG(prefix1,PREFIX2) \
@@ -100,10 +100,10 @@
     MUIA_Bitmap_Width         , PREFIX2##_WIDTH ,\
     MUIA_Bitmap_Height        , PREFIX2##_HEIGHT,\
     MUIA_Bodychunk_Depth      , PREFIX2##_DEPTH ,\
-    MUIA_Bodychunk_Body       , (UBYTE *) prefix1##_body,\
+    MUIA_Bodychunk_Body       , (IPTR)  prefix1##_body,\
     MUIA_Bodychunk_Compression, PREFIX2##_COMPRESSION,\
     MUIA_Bodychunk_Masking    , PREFIX2##_MASKING,\
-    MUIA_Bitmap_SourceColors  , (ULONG *) prefix1##_colors,\
+    MUIA_Bitmap_SourceColors  , (IPTR) prefix1##_colors,\
     MUIA_Bitmap_Transparent   , 0,\
   End
 
@@ -112,32 +112,32 @@
 		ButtonFrame,\
 		MUIA_CycleChain, TRUE, \
 		MUIA_Font, MUIV_Font_Button,\
-		MUIA_Text_Contents, (name),\
-		MUIA_Text_PreParse, "\33c",\
-		MUIA_Text_HiChar  , (key),\
-		MUIA_ControlChar  , (key),\
+		MUIA_Text_Contents, (IPTR)(name),\
+		MUIA_Text_PreParse, (IPTR)"\33c",\
+		MUIA_Text_HiChar  , (IPTR)(key),\
+		MUIA_ControlChar  , (IPTR)(key),\
 		MUIA_InputMode    , MUIV_InputMode_RelVerify,\
 		MUIA_Background   , MUII_ButtonBack,\
-		MUIA_ShortHelp, HelpText,\
+		MUIA_ShortHelp, (IPTR)HelpText,\
 		End
 
 #define FrameButton(objindex, frame, text, selected, raised)\
 	VGroup, \
 		MUIA_ShowSelState, FALSE, \
-		Child, FrameButtonObject, \
+		Child, (IPTR)(FrameButtonObject, \
 			MUIA_Frame, MUIV_Frame_None, \
-			MUIA_Text_Contents, (text),\
-			MUIA_Text_PreParse, "\33c", \
+			MUIA_Text_Contents, (IPTR)(text),\
+			MUIA_Text_PreParse, (IPTR)"\33c", \
 			MUIA_Font, MUIV_Font_Button,\
 			MUIA_InputMode, MUIV_InputMode_None,\
 			MUIA_Background, MUII_ButtonBack,\
 			MUIA_ScaFrameButton_FrameType, (frame),\
 			MUIA_ScaFrameButton_Selected, (selected), \
 			MUIA_ScaFrameButton_Raised, (raised), \
-			End, \
-		Child, HGroup, \
-			Child, HVSpace, \
-			Child, inst->mpb_Objects[objindex] = ImageObject,\
+                End), \
+		Child, (IPTR)(HGroup, \
+			Child, (IPTR)HVSpace, \
+			Child, (IPTR)(inst->mpb_Objects[objindex] = ImageObject,\
 				ImageButtonFrame,\
 				MUIA_InputMode        , MUIV_InputMode_Immediate,\
 				MUIA_Image_Spec       , MUII_CheckMark,\
@@ -146,10 +146,10 @@
 				MUIA_Background       , MUII_ButtonBack,\
 				MUIA_ShowSelState     , FALSE,\
 				MUIA_CycleChain       , TRUE,\
-				End, /* ImageObject */ \
-			Child, HVSpace, \
-			End, /* HGroup */ \
-		End /* VGroup */
+                        End), /* ImageObject */ \
+                        Child, (IPTR)HVSpace, \
+                End), /* HGroup */ \
+        End /* VGroup */
 
 #define	Application_Return_EDIT	0
 #define	Application_Return_USE	1001
@@ -169,7 +169,7 @@ extern void _STD_240_TerminateMemFunctions(void);
 static BOOL OpenLibraries(void);
 static void CloseLibraries(void);
 
-DISPATCHER_PROTO(PopupMenuPrefs);
+DISPATCHERPROTO(PopupMenuPrefs);
 static Object *CreatePrefsGroup(struct PopupMenuPrefsInst *inst);
 
 static SAVEDS(ULONG) INTERRUPT ImagePopAslFileStartHookFunc(struct Hook *hook, Object *o, Msg msg);
@@ -376,7 +376,7 @@ BOOL closePlugin(struct PluginBase *PluginBase)
 }
 
 
-LIBFUNC_P2(ULONG, LIBSCAGetPrefsInfo,
+LIBFUNC_P2(IPTR, LIBSCAGetPrefsInfo,
 	D0, ULONG, which,
 	A6, struct PluginBase *, PluginBase, 5);
 {
@@ -389,19 +389,19 @@ LIBFUNC_P2(ULONG, LIBSCAGetPrefsInfo,
 	switch(which)
 		{
 	case SCAPREFSINFO_GetClass:
-		result = (ULONG) PopupMenuPrefsClass;
+		result = (IPTR) PopupMenuPrefsClass;
 		break;
 
 	case SCAPREFSINFO_GetTitle:
-		result = (ULONG) GetLocString(MSGID_PLUGIN_LIST_TITLE);
+		result = (IPTR) GetLocString(MSGID_PLUGIN_LIST_TITLE);
 		break;
 
 	case SCAPREFSINFO_GetTitleImage:
-		result = (ULONG) CreatePrefsImage();
+		result = (IPTR) CreatePrefsImage();
 		break;
 
 	default:
-		result = (ULONG) NULL;
+		result = (IPTR) NULL;
 		break;
 		}
 
@@ -416,7 +416,7 @@ LIBFUNC_END
 DISPATCHER(PopupMenuPrefs)
 {
 	struct PopupMenuPrefsInst *inst;
-	ULONG result = 0;
+	IPTR result = 0;
 
 	switch(msg->MethodID)
 		{
@@ -439,9 +439,9 @@ DISPATCHER(PopupMenuPrefs)
 			InitHooks(inst);
 
 			inst->mpb_fCreateIcons = GetTagData(MUIA_ScalosPrefs_CreateIcons, TRUE, ops->ops_AttrList);
-			inst->mpb_ProgramName = (CONST_STRPTR) GetTagData(MUIA_ScalosPrefs_ProgramName, (ULONG) "", ops->ops_AttrList);
-			inst->mpb_Objects[OBJNDX_WIN_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_MainWindow, (ULONG) NULL, ops->ops_AttrList);
-			inst->mpb_Objects[OBJNDX_APP_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_Application, (ULONG) NULL, ops->ops_AttrList);
+			inst->mpb_ProgramName = (CONST_STRPTR) GetTagData(MUIA_ScalosPrefs_ProgramName, (IPTR) "", ops->ops_AttrList);
+			inst->mpb_Objects[OBJNDX_WIN_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_MainWindow, (IPTR) NULL, ops->ops_AttrList);
+			inst->mpb_Objects[OBJNDX_APP_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_Application, (IPTR) NULL, ops->ops_AttrList);
 
 			prefsobject = CreatePrefsGroup(inst);
 			d1(kprintf("%s/%s/%ld: prefsobject=%08lx\n", __FILE__, __FUNC__, __LINE__, prefsobject));
@@ -449,7 +449,7 @@ DISPATCHER(PopupMenuPrefs)
 				{
 				DoMethod(obj, OM_ADDMEMBER, prefsobject);
 
-				result = (ULONG) obj;
+				result = (IPTR) obj;
 				}
 			else
 				{
@@ -486,11 +486,11 @@ DISPATCHER(PopupMenuPrefs)
 		inst = (struct PopupMenuPrefsInst *) INST_DATA(cl, obj);
 
 		inst->mpb_fCreateIcons = GetTagData(MUIA_ScalosPrefs_CreateIcons, inst->mpb_fCreateIcons, ops->ops_AttrList);
-		inst->mpb_ProgramName = (CONST_STRPTR) GetTagData(MUIA_ScalosPrefs_ProgramName, (ULONG) inst->mpb_ProgramName, ops->ops_AttrList);
+		inst->mpb_ProgramName = (CONST_STRPTR) GetTagData(MUIA_ScalosPrefs_ProgramName, (IPTR) inst->mpb_ProgramName, ops->ops_AttrList);
 		inst->mpb_Objects[OBJNDX_WIN_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_MainWindow, 
-			(ULONG) inst->mpb_Objects[OBJNDX_WIN_Main], ops->ops_AttrList);
+			(IPTR) inst->mpb_Objects[OBJNDX_WIN_Main], ops->ops_AttrList);
 		inst->mpb_Objects[OBJNDX_APP_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_Application, 
-			(ULONG) inst->mpb_Objects[OBJNDX_APP_Main], ops->ops_AttrList);
+			(IPTR) inst->mpb_Objects[OBJNDX_APP_Main], ops->ops_AttrList);
 
 		return DoSuperMethodA(cl, obj, msg);
 		}
@@ -614,11 +614,11 @@ DISPATCHER(PopupMenuPrefs)
 		break;
 
 	case MUIM_ScalosPrefs_CreateSubWindows:
-		result = (ULONG) NULL;
+		result = (IPTR) NULL;
 		break;
 
 	case MUIM_ScalosPrefs_GetListOfMCCs:
-		result = (ULONG) RequiredMccList;
+		result = (IPTR) RequiredMccList;
 		break;
 
 	default:
@@ -640,126 +640,126 @@ static Object *CreatePrefsGroup(struct PopupMenuPrefsInst *inst)
 	inst->mpb_Objects[OBJNDX_Group_Main] = VGroup,
 		MUIA_Background, MUII_PageBack,
 
-		Child, RegisterObject,
-			MUIA_Register_Titles, PrefsPageNames,
+		Child, (IPTR)(RegisterObject,
+			MUIA_Register_Titles, (IPTR)PrefsPageNames,
 			MUIA_CycleChain, TRUE,
 
 			//------ Misc. ----------------------
-			Child, VGroup,
+			Child, (IPTR)(VGroup,
 				MUIA_Background, MUII_RegisterBack,
-				MUIA_FrameTitle, (ULONG) GetLocString(MSGID_MISCPAGE_TITLE),
+				MUIA_FrameTitle, (IPTR) GetLocString(MSGID_MISCPAGE_TITLE),
 
-				Child, HVSpace,
+				Child, (IPTR)HVSpace,
 
-				Child, HGroup,
-					Child, Label1((ULONG) GetLocString(MSGID_MISCPAGE_DELAY_SUBMENUS)),
-					Child, inst->mpb_Objects[OBJNDX_Slider_DelaySubMenus] = SliderObject,
+				Child, (IPTR)(HGroup,
+					Child, (IPTR)Label1(GetLocString(MSGID_MISCPAGE_DELAY_SUBMENUS)),
+					Child, (IPTR)(inst->mpb_Objects[OBJNDX_Slider_DelaySubMenus] = SliderObject,
 						MUIA_CycleChain, TRUE,
 						MUIA_Slider_Min, 0,
 						MUIA_Slider_Max, 10,
 						MUIA_Slider_Horiz, TRUE,
 						MUIA_Numeric_Value, 0,
-						End, //SliderObject
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_MISCPAGE_DELAY_SUBMENUS_SHORTHELP),
-					End, //HGroup
+                                        End), //SliderObject
+					MUIA_ShortHelp, (IPTR) GetLocString(MSGID_MISCPAGE_DELAY_SUBMENUS_SHORTHELP),
+                                End), //HGroup
 
-				Child, HVSpace,
+				Child, (IPTR)HVSpace,
 
-				Child, VGroup,
+				Child, (IPTR)(VGroup,
 					GroupFrame,
 					MUIA_Background, MUII_GroupBack,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_MISCPAGE_ANIMATION),
+					MUIA_FrameTitle, (IPTR) GetLocString(MSGID_MISCPAGE_ANIMATION),
 
-					Child, ColGroup(2),
-						Child, Label1((ULONG) GetLocString(MSGID_MISCPAGE_ANIMATION_TYPE)),
-						Child, inst->mpb_Objects[OBJNDX_Cycle_AnimationType] = CycleObject,
+					Child, (IPTR)(ColGroup(2),
+						Child, (IPTR)Label1(GetLocString(MSGID_MISCPAGE_ANIMATION_TYPE)),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_Cycle_AnimationType] = CycleObject,
 							MUIA_CycleChain, TRUE,
-							MUIA_Cycle_Entries, AnimationNames,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_MISCPAGE_ANIMATION_TYPE_SHORTHELP),
-							End, //Cycle
-						End, //ColGroup
-					End, //VGroup
+							MUIA_Cycle_Entries, (IPTR)AnimationNames,
+							MUIA_ShortHelp, (IPTR) GetLocString(MSGID_MISCPAGE_ANIMATION_TYPE_SHORTHELP),
+                                                End), //Cycle
+                                        End), //ColGroup
+                                End), //VGroup
 
-				Child, HVSpace,
+				Child, (IPTR)HVSpace,
 
 
-				Child, HVSpace,
+				Child, (IPTR)HVSpace,
 
-				Child, ColGroup(4),
+				Child, (IPTR)(ColGroup(4),
 					GroupFrame,
 					MUIA_Background, MUII_GroupBack,
 
-					Child, HVSpace,
+					Child, (IPTR)HVSpace,
 
-					Child, inst->mpb_Objects[OBJNDX_CheckMark_MenuShadows] = CheckMarkHelp(TRUE, MSGID_MISCPAGE_MENUSHADOWS_SHORTHELP),
-					Child, LLabel1((ULONG) GetLocString(MSGID_MISCPAGE_MENUSHADOWS)),
+					Child, (IPTR)(inst->mpb_Objects[OBJNDX_CheckMark_MenuShadows] = CheckMarkHelp(TRUE, MSGID_MISCPAGE_MENUSHADOWS_SHORTHELP)),
+					Child, (IPTR)LLabel1(GetLocString(MSGID_MISCPAGE_MENUSHADOWS)),
 
-					Child, HVSpace,
-					Child, HVSpace,
+					Child, (IPTR)HVSpace,
+					Child, (IPTR)HVSpace,
 
-					Child, inst->mpb_Objects[OBJNDX_CheckMark_RealShadows] = CheckMarkHelp(TRUE, MSGID_MISCPAGE_REALSHADOWS_SHORTHELP),
-					Child, LLabel1((ULONG) GetLocString(MSGID_MISCPAGE_REALSHADOWS)),
+					Child, (IPTR)(inst->mpb_Objects[OBJNDX_CheckMark_RealShadows] = CheckMarkHelp(TRUE, MSGID_MISCPAGE_REALSHADOWS_SHORTHELP)),
+					Child, (IPTR)LLabel1(GetLocString(MSGID_MISCPAGE_REALSHADOWS)),
 
-					Child, HVSpace,
-					Child, HVSpace,
+					Child, (IPTR)HVSpace,
+					Child, (IPTR)HVSpace,
 
-					Child, inst->mpb_Objects[OBJNDX_CheckMark_Sticky] = CheckMarkHelp(TRUE, MSGID_MISCPAGE_STICKY_SHORTHELP),
-					Child, LLabel1((ULONG) GetLocString(MSGID_MISCPAGE_STICKY)),
+					Child, (IPTR)(inst->mpb_Objects[OBJNDX_CheckMark_Sticky] = CheckMarkHelp(TRUE, MSGID_MISCPAGE_STICKY_SHORTHELP)),
+					Child, (IPTR)LLabel1(GetLocString(MSGID_MISCPAGE_STICKY)),
 
-					Child, HVSpace,
-					End, //ColGroup
+					Child, (IPTR)HVSpace,
+                                End), //ColGroup
 
-				Child, HVSpace,
-				End, //VGroup
+				Child, (IPTR)HVSpace,
+                        End), //VGroup
 
 			//------ Borders ----------------------
-			Child, VGroup,
+			Child, (IPTR)(VGroup,
 				MUIA_Background, MUII_RegisterBack,
-				MUIA_FrameTitle, (ULONG) GetLocString(MSGID_BORDERSPAGE_TITLE),
+				MUIA_FrameTitle, (IPTR) GetLocString(MSGID_BORDERSPAGE_TITLE),
 
-				Child, HVSpace,
+				Child, (IPTR)HVSpace,
 
-				Child, HGroup,
+				Child, (IPTR)(HGroup,
 					GroupFrame,
 					MUIA_Background, MUII_GroupBack,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_BORDERSPAGE_MENUBORDER),
+					MUIA_FrameTitle, (IPTR) GetLocString(MSGID_BORDERSPAGE_MENUBORDER),
 
-					Child, FrameButton(OBJNDX_Button_FrameThin, PMP_MENUBORDER_THIN, "", FALSE, FALSE),
-					Child, FrameButton(OBJNDX_Button_FrameMM, PMP_MENUBORDER_MM, "", FALSE, FALSE),
-					Child, FrameButton(OBJNDX_Button_FrameThick, PMP_MENUBORDER_THICK, "", FALSE, FALSE),
-					Child, FrameButton(OBJNDX_Button_FrameRidge, PMP_MENUBORDER_RIDGE, "", FALSE, FALSE),
-					Child, FrameButton(OBJNDX_Button_FrameDropBox, PMP_MENUBORDER_DROPBOX, "", FALSE, FALSE),
-					Child, FrameButton(OBJNDX_Button_FrameOldStyle, PMP_MENUBORDER_OLDSTYLE, "", FALSE, FALSE),
-					End, //HGroup
+					Child, (IPTR)FrameButton(OBJNDX_Button_FrameThin, PMP_MENUBORDER_THIN, "", FALSE, FALSE),
+					Child, (IPTR)FrameButton(OBJNDX_Button_FrameMM, PMP_MENUBORDER_MM, "", FALSE, FALSE),
+					Child, (IPTR)FrameButton(OBJNDX_Button_FrameThick, PMP_MENUBORDER_THICK, "", FALSE, FALSE),
+					Child, (IPTR)FrameButton(OBJNDX_Button_FrameRidge, PMP_MENUBORDER_RIDGE, "", FALSE, FALSE),
+					Child, (IPTR)FrameButton(OBJNDX_Button_FrameDropBox, PMP_MENUBORDER_DROPBOX, "", FALSE, FALSE),
+					Child, (IPTR)FrameButton(OBJNDX_Button_FrameOldStyle, PMP_MENUBORDER_OLDSTYLE, "", FALSE, FALSE),
+                                End), //HGroup
 
-				Child, HVSpace,
+				Child, (IPTR)HVSpace,
 
-				Child, HGroup,
+				Child, (IPTR)(HGroup,
 					GroupFrame,
 					MUIA_Background, MUII_GroupBack,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_BORDERSPAGE_SELECTEDITEM),
+					MUIA_FrameTitle, (IPTR) GetLocString(MSGID_BORDERSPAGE_SELECTEDITEM),
 
-					Child, FrameButton(OBJNDX_Button_Normal, PMP_MENUBORDER_NONE, GetLocString(MSGID_BORDERSPAGE_NORMAL), TRUE, FALSE),
-					Child, FrameButton(OBJNDX_Button_Raised, PMP_MENUBORDER_THIN, GetLocString(MSGID_BORDERSPAGE_RAISED), TRUE, TRUE),
-					Child, FrameButton(OBJNDX_Button_Recessed, PMP_MENUBORDER_THIN, GetLocString(MSGID_BORDERSPAGE_RECESSED), TRUE, FALSE),
-					End, //HGroup
+					Child, (IPTR)FrameButton(OBJNDX_Button_Normal, PMP_MENUBORDER_NONE, GetLocString(MSGID_BORDERSPAGE_NORMAL), TRUE, FALSE),
+					Child, (IPTR)FrameButton(OBJNDX_Button_Raised, PMP_MENUBORDER_THIN, GetLocString(MSGID_BORDERSPAGE_RAISED), TRUE, TRUE),
+					Child, (IPTR)FrameButton(OBJNDX_Button_Recessed, PMP_MENUBORDER_THIN, GetLocString(MSGID_BORDERSPAGE_RECESSED), TRUE, FALSE),
+                                End), //HGroup
 
-				Child, HVSpace,
+				Child, (IPTR)HVSpace,
 
-				Child, HGroup,
+				Child, (IPTR)(HGroup,
 					GroupFrame,
 					MUIA_Background, MUII_GroupBack,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_BORDERSPAGE_SEPARATORS),
+					MUIA_FrameTitle, (IPTR) GetLocString(MSGID_BORDERSPAGE_SEPARATORS),
 
-					Child, HVSpace,
+					Child, (IPTR)HVSpace,
 
-					Child, ColGroup(4),
-						Child, HGroup,
-							Child, HVSpace,
-							Child, IMG(NewStyle, NEWSTYLE),
-							Child, HVSpace,
-							End, //HGroup
-						Child, inst->mpb_Objects[OBJNDX_CheckMark_NewLook] = ImageObject,
+					Child, (IPTR)(ColGroup(4),
+						Child, (IPTR)(HGroup,
+							Child, (IPTR)HVSpace,
+							Child, (IPTR)(IMG(NewStyle, NEWSTYLE)),
+							Child, (IPTR)HVSpace,
+                                                End), //HGroup
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_CheckMark_NewLook] = ImageObject,
 							ImageButtonFrame,
 							MUIA_InputMode, MUIV_InputMode_Toggle,
 							MUIA_Image_Spec, MUII_CheckMark,
@@ -767,16 +767,16 @@ static Object *CreatePrefsGroup(struct PopupMenuPrefsInst *inst)
 							MUIA_Background, MUII_ButtonBack,
 							MUIA_ShowSelState, FALSE,
 							MUIA_CycleChain, TRUE,
-							End, //ImageObject
-						Child, CLabel((ULONG) GetLocString(MSGID_BORDERSPAGE_NEW_LOOK)),
-						Child, HVSpace,
+                                                End), //ImageObject
+						Child, (IPTR)CLabel(GetLocString(MSGID_BORDERSPAGE_NEW_LOOK)),
+						Child, (IPTR)HVSpace,
 
-						Child, HGroup,
-							Child, HVSpace,
-							Child, IMG(OldStyle, OLDSTYLE),
-							Child, HVSpace,
-							End, //HGroup
-						Child, inst->mpb_Objects[OBJNDX_CheckMark_OldLook] = ImageObject,
+						Child, (IPTR)(HGroup,
+							Child, (IPTR)HVSpace,
+							Child, (IPTR)(IMG(OldStyle, OLDSTYLE)),
+							Child, (IPTR)HVSpace,
+                                                End), //HGroup
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_CheckMark_OldLook] = ImageObject,
 							ImageButtonFrame,
 							MUIA_InputMode, MUIV_InputMode_Toggle,
 							MUIA_Image_Spec, MUII_CheckMark,
@@ -784,263 +784,263 @@ static Object *CreatePrefsGroup(struct PopupMenuPrefsInst *inst)
 							MUIA_Background, MUII_ButtonBack,
 							MUIA_ShowSelState, FALSE,
 							MUIA_CycleChain, TRUE,
-							End, //ImageObject
-						Child, CLabel((ULONG) GetLocString(MSGID_BORDERSPAGE_OLD_LOOK)),
-						Child, HVSpace,
-						End, //ColGroup
+                                                End), //ImageObject
+						Child, (IPTR)CLabel(GetLocString(MSGID_BORDERSPAGE_OLD_LOOK)),
+						Child, (IPTR)HVSpace,
+                                        End), //ColGroup
 
-					Child, HVSpace,
-					End, //HGroup
+					Child, (IPTR)HVSpace,
+                                End), //HGroup
 
-				Child, HVSpace,
-				End, //VGroup
+				Child, (IPTR)HVSpace,
+                        End), //VGroup
 
 			//------ Spacing ----------------------
-			Child, VGroup,
+			Child, (IPTR)(VGroup,
 				MUIA_Background, MUII_RegisterBack,
-				MUIA_FrameTitle, (ULONG) GetLocString(MSGID_SPACINGPAGE_TITLE),
+				MUIA_FrameTitle, (IPTR) GetLocString(MSGID_SPACINGPAGE_TITLE),
 
-				Child, HVSpace,
+				Child, (IPTR)HVSpace,
 				
-				Child, ColGroup(5),
-					Child, HVSpace,
+				Child, (IPTR)(ColGroup(5),
+					Child, (IPTR)HVSpace,
 
-					Child, VGroup,
+					Child, (IPTR)(VGroup,
 						GroupFrame,
 						MUIA_Background, MUII_GroupBack,
-						Child, HVSpace,
-						Child, CLabel((ULONG) GetLocString(MSGID_SPACINGPAGE_HORIZONTAL_SPACE)),
-						Child, IMG(Horizontal_Space, HORIZONTAL_SPACE),
-						Child, inst->mpb_Objects[OBJNDX_Slider_HorizontalSpacing] = SliderObject,
+						Child, (IPTR)HVSpace,
+						Child, (IPTR)CLabel(GetLocString(MSGID_SPACINGPAGE_HORIZONTAL_SPACE)),
+						Child, (IPTR)(IMG(Horizontal_Space, HORIZONTAL_SPACE)),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_Slider_HorizontalSpacing] = SliderObject,
 							MUIA_CycleChain, TRUE,
 							MUIA_Numeric_Min, 0,
 							MUIA_Numeric_Max, 10,
 							MUIA_Slider_Horiz, TRUE,
 							MUIA_Numeric_Value, 2,
-							End, //SliderObject
-						Child, HVSpace,
-						End, //VGroup
+                                                End), //SliderObject
+						Child, (IPTR)HVSpace,
+                                        End), //VGroup
 
-					Child, HVSpace,
+					Child, (IPTR)HVSpace,
 
-					Child, VGroup,
+					Child, (IPTR)(VGroup,
 						GroupFrame,
 						MUIA_Background, MUII_GroupBack,
-						Child, HVSpace,
-						Child, CLabel((ULONG) GetLocString(MSGID_SPACINGPAGE_VERTICAL_SPACE)),
-						Child, IMG(Vertical_Space, VERTICAL_SPACE),
-						Child, inst->mpb_Objects[OBJNDX_Slider_VerticalSpacing] = SliderObject,
+						Child, (IPTR)HVSpace,
+						Child, (IPTR)CLabel(GetLocString(MSGID_SPACINGPAGE_VERTICAL_SPACE)),
+						Child, (IPTR)(IMG(Vertical_Space, VERTICAL_SPACE)),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_Slider_VerticalSpacing] = SliderObject,
 							MUIA_CycleChain, TRUE,
 							MUIA_Numeric_Min, 0,
 							MUIA_Numeric_Max, 10,
 							MUIA_Slider_Horiz, TRUE,
 							MUIA_Numeric_Value, 1,
-							End, //SliderObject
-						Child, HVSpace,
-						End, //VGroup
+                                                End), //SliderObject
+						Child, (IPTR)HVSpace,
+                                        End), //VGroup
 
-					Child, HVSpace,
-					Child, HVSpace,
+					Child, (IPTR)HVSpace,
+					Child, (IPTR)HVSpace,
 
-					Child, VGroup,
+					Child, (IPTR)(VGroup,
 						GroupFrame,
 						MUIA_Background, MUII_GroupBack,
-						Child, HVSpace,
-						Child, CLabel((ULONG) GetLocString(MSGID_SPACINGPAGE_HORIZONTAL)),
-						Child, IMG(Horizontal, HORIZONTAL),
-						Child, inst->mpb_Objects[OBJNDX_Slider_Horizontal] = SliderObject,
+						Child, (IPTR)HVSpace,
+						Child, (IPTR)CLabel(GetLocString(MSGID_SPACINGPAGE_HORIZONTAL)),
+						Child, (IPTR)(IMG(Horizontal, HORIZONTAL)),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_Slider_Horizontal] = SliderObject,
 							MUIA_CycleChain, TRUE,
 							MUIA_Numeric_Min, 0,
 							MUIA_Numeric_Max, 10,
 							MUIA_Slider_Horiz, TRUE,
 							MUIA_Numeric_Value, 0,
-							End, //SliderObject
-						Child, HVSpace,
-						End, //VGroup
+                                                End), //SliderObject
+						Child, (IPTR)HVSpace,
+                                        End), //VGroup
 
-					Child, HVSpace,
+					Child, (IPTR)HVSpace,
 
-					Child, VGroup,
+					Child, (IPTR)(VGroup,
 						GroupFrame,
 						MUIA_Background, MUII_GroupBack,
-						Child, HVSpace,
-						Child, CLabel((ULONG) GetLocString(MSGID_SPACINGPAGE_VERTICAL_OFFSET)),
-						Child, IMG(Vertical_Offset, VERTICAL_OFFSET),
-						Child, inst->mpb_Objects[OBJNDX_Slider_VerticalOffset] = SliderObject,
+						Child, (IPTR)HVSpace,
+						Child, (IPTR)CLabel(GetLocString(MSGID_SPACINGPAGE_VERTICAL_OFFSET)),
+						Child, (IPTR)(IMG(Vertical_Offset, VERTICAL_OFFSET)),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_Slider_VerticalOffset] = SliderObject,
 							MUIA_CycleChain, TRUE,
 							MUIA_Numeric_Min, 0,
 							MUIA_Numeric_Max, 10,
 							MUIA_Slider_Horiz, TRUE,
 							MUIA_Numeric_Value, 0,
-							End, //SliderObject
-						Child, HVSpace,
-						End, //VGroup
+                                                End), //SliderObject
+						Child, (IPTR)HVSpace,
+                                        End), //VGroup
 
-					Child, HVSpace,
-					Child, HVSpace,
+					Child, (IPTR)HVSpace,
+					Child, (IPTR)HVSpace,
 
-					Child, VGroup,
+					Child, (IPTR)(VGroup,
 						GroupFrame,
 						MUIA_Background, MUII_GroupBack,
-						Child, HVSpace,
-						Child, CLabel((ULONG) GetLocString(MSGID_SPACINGPAGE_INTERMEDIATE_SPACING)),
-						Child, IMG(Intermediate_Spacing, INTERMEDIATE_SPACING),
-						Child, inst->mpb_Objects[OBJNDX_Slider_IntermediateSpacing] = SliderObject,
+						Child, (IPTR)HVSpace,
+						Child, (IPTR)CLabel(GetLocString(MSGID_SPACINGPAGE_INTERMEDIATE_SPACING)),
+						Child, (IPTR)(IMG(Intermediate_Spacing, INTERMEDIATE_SPACING)),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_Slider_IntermediateSpacing] = SliderObject,
 							MUIA_CycleChain, TRUE,
 							MUIA_Numeric_Min, 0,
 							MUIA_Numeric_Max, 10,
 							MUIA_Slider_Horiz, TRUE,
 							MUIA_Numeric_Value, 0,
-							End, //SliderObject
-						Child, HVSpace,
-						End, //VGroup
+                                                End), //SliderObject
+						Child, (IPTR)HVSpace,
+                                        End), //VGroup
 
-					Child, HVSpace,
+					Child, (IPTR)HVSpace,
 
-					Child, VGroup,
+					Child, (IPTR)(VGroup,
 						GroupFrame,
 						MUIA_Background, MUII_GroupBack,
-						Child, HVSpace,
-						Child, CLabel((ULONG) GetLocString(MSGID_SPACINGPAGE_TEXT_DISPLACEMENT)),
-						Child, IMG(Text_Displacement, TEXT_DISPLACEMENT),
-						Child, inst->mpb_Objects[OBJNDX_Slider_TextDisplacement] = SliderObject,
+						Child, (IPTR)HVSpace,
+						Child, (IPTR)CLabel(GetLocString(MSGID_SPACINGPAGE_TEXT_DISPLACEMENT)),
+						Child, (IPTR)(IMG(Text_Displacement, TEXT_DISPLACEMENT)),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_Slider_TextDisplacement] = SliderObject,
 							MUIA_CycleChain, TRUE,
 							MUIA_Numeric_Min, -5,
 							MUIA_Numeric_Max, 5,
 							MUIA_Slider_Horiz, TRUE,
 							MUIA_Numeric_Value, 0,
-							End, //SliderObject
-						Child, HVSpace,
-						End, //VGroup
+                                                End), //SliderObject
+						Child, (IPTR)HVSpace,
+                                        End), //VGroup
 
-					Child, HVSpace,
-					End, //ColGroup
+					Child, (IPTR)HVSpace,
+                                End), //ColGroup
 
-				Child, HVSpace,
-                                End, //VGroup
+				Child, (IPTR)HVSpace,
+                        End), //VGroup
 
 			//------ Text ----------------------
-			Child, VGroup,
+			Child, (IPTR)(VGroup,
 				MUIA_Background, MUII_RegisterBack,
-				MUIA_FrameTitle, (ULONG) GetLocString(MSGID_TEXTPAGE_TITLE),
+				MUIA_FrameTitle, (IPTR) GetLocString(MSGID_TEXTPAGE_TITLE),
 
-				Child, HVSpace,
+				Child, (IPTR)HVSpace,
 
-				Child, ColGroup(4),
+				Child, (IPTR)(ColGroup(4),
 					GroupFrame,
 					MUIA_Background, MUII_GroupBack,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_TEXTPAGE_MENU_TITLES),
+					MUIA_FrameTitle, (IPTR) GetLocString(MSGID_TEXTPAGE_MENU_TITLES),
 
-					Child, ColGroup(2),
-						Child, inst->mpb_Objects[OBJNDX_CheckMark_MenuTitles_Italic] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUTITLES_ITALIC_SHORTHELP),
-						Child, LLabel1((ULONG) GetLocString(MSGID_TEXTPAGE_MENUTITLES_ITALIC)),
+					Child, (IPTR)(ColGroup(2),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_CheckMark_MenuTitles_Italic] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUTITLES_ITALIC_SHORTHELP)),
+						Child, (IPTR)LLabel1(GetLocString(MSGID_TEXTPAGE_MENUTITLES_ITALIC)),
 
-						Child, inst->mpb_Objects[OBJNDX_CheckMark_MenuTitles_Underlined] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUTITLES_UNDERLINED_SHORTHELP),
-						Child, LLabel1((ULONG) GetLocString(MSGID_TEXTPAGE_MENUTITLES_UNDERLINED)),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_CheckMark_MenuTitles_Underlined] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUTITLES_UNDERLINED_SHORTHELP)),
+						Child, (IPTR)LLabel1(GetLocString(MSGID_TEXTPAGE_MENUTITLES_UNDERLINED)),
 
-						Child, inst->mpb_Objects[OBJNDX_CheckMark_MenuTitles_Bold] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUTITLES_BOLD_SHORTHELP),
-						Child, LLabel1((ULONG) GetLocString(MSGID_TEXTPAGE_MENUTITLES_BOLD)),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_CheckMark_MenuTitles_Bold] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUTITLES_BOLD_SHORTHELP)),
+						Child, (IPTR)LLabel1(GetLocString(MSGID_TEXTPAGE_MENUTITLES_BOLD)),
 
-						End, //ColGroup
+                                        End), //ColGroup
 
-					Child, HVSpace,
+					Child, (IPTR)HVSpace,
 
-					Child, ColGroup(2),
-						Child, inst->mpb_Objects[OBJNDX_CheckMark_MenuTitles_Shadowed] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUTITLES_SHADOWED_SHORTHELP),
-						Child, LLabel1((ULONG) GetLocString(MSGID_TEXTPAGE_MENUTITLES_SHADOWED)),
+					Child, (IPTR)(ColGroup(2),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_CheckMark_MenuTitles_Shadowed] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUTITLES_SHADOWED_SHORTHELP)),
+						Child, (IPTR)LLabel1(GetLocString(MSGID_TEXTPAGE_MENUTITLES_SHADOWED)),
 
-						Child, inst->mpb_Objects[OBJNDX_CheckMark_MenuTitles_Outlined] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUTITLES_OUTLINED_SHORTHELP),
-						Child, LLabel1((ULONG) GetLocString(MSGID_TEXTPAGE_MENUTITLES_OUTLINED)),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_CheckMark_MenuTitles_Outlined] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUTITLES_OUTLINED_SHORTHELP)),
+						Child, (IPTR)LLabel1(GetLocString(MSGID_TEXTPAGE_MENUTITLES_OUTLINED)),
 
-						Child, inst->mpb_Objects[OBJNDX_CheckMark_MenuTitles_Embossed] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUTITLES_EMBOSSED_SHORTHELP),
-						Child, LLabel1((ULONG) GetLocString(MSGID_TEXTPAGE_MENUTITLES_EMBOSSED)),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_CheckMark_MenuTitles_Embossed] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUTITLES_EMBOSSED_SHORTHELP)),
+						Child, (IPTR)LLabel1(GetLocString(MSGID_TEXTPAGE_MENUTITLES_EMBOSSED)),
 
-						End, //ColGroup
+                                        End), //ColGroup
 
-					Child, HVSpace,
+					Child, (IPTR)HVSpace,
 
-					End, //ColGroup
+                                End), //ColGroup
 
-				Child, ColGroup(4),
+				Child, (IPTR)(ColGroup(4),
 					GroupFrame,
 					MUIA_Background, MUII_GroupBack,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_TEXTPAGE_MENU_ITEMS),
+					MUIA_FrameTitle, (IPTR) GetLocString(MSGID_TEXTPAGE_MENU_ITEMS),
 
-					Child, ColGroup(2),
-						Child, inst->mpb_Objects[OBJNDX_CheckMark_MenuItems_Italic] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUITEMS_ITALIC_SHORTHELP),
-						Child, LLabel1((ULONG) GetLocString(MSGID_TEXTPAGE_MENUITEMS_ITALIC)),
+					Child, (IPTR)(ColGroup(2),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_CheckMark_MenuItems_Italic] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUITEMS_ITALIC_SHORTHELP)),
+						Child, (IPTR)LLabel1(GetLocString(MSGID_TEXTPAGE_MENUITEMS_ITALIC)),
 
-						Child, inst->mpb_Objects[OBJNDX_CheckMark_MenuItems_Underlined] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUITEMS_UNDERLINED_SHORTHELP),
-						Child, LLabel1((ULONG) GetLocString(MSGID_TEXTPAGE_MENUITEMS_UNDERLINED)),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_CheckMark_MenuItems_Underlined] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUITEMS_UNDERLINED_SHORTHELP)),
+						Child, (IPTR)LLabel1(GetLocString(MSGID_TEXTPAGE_MENUITEMS_UNDERLINED)),
 
-						Child, inst->mpb_Objects[OBJNDX_CheckMark_MenuItems_Bold] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUITEMS_BOLD_SHORTHELP),
-						Child, LLabel1((ULONG) GetLocString(MSGID_TEXTPAGE_MENUITEMS_BOLD)),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_CheckMark_MenuItems_Bold] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUITEMS_BOLD_SHORTHELP)),
+						Child, (IPTR)LLabel1(GetLocString(MSGID_TEXTPAGE_MENUITEMS_BOLD)),
 
-						End, //ColGroup
+                                        End), //ColGroup
 
-					Child, HVSpace,
+					Child, (IPTR)HVSpace,
 
-					Child, ColGroup(2),
-						Child, inst->mpb_Objects[OBJNDX_CheckMark_MenuItems_Shadowed] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUITEMS_SHADOWED_SHORTHELP),
-						Child, LLabel1((ULONG) GetLocString(MSGID_TEXTPAGE_MENUITEMS_SHADOWED)),
+					Child, (IPTR)(ColGroup(2),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_CheckMark_MenuItems_Shadowed] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUITEMS_SHADOWED_SHORTHELP)),
+						Child, (IPTR)LLabel1(GetLocString(MSGID_TEXTPAGE_MENUITEMS_SHADOWED)),
 
-						Child, inst->mpb_Objects[OBJNDX_CheckMark_MenuItems_Outlined] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUITEMS_OUTLINED_SHORTHELP),
-						Child, LLabel1((ULONG) GetLocString(MSGID_TEXTPAGE_MENUITEMS_OUTLINED)),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_CheckMark_MenuItems_Outlined] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUITEMS_OUTLINED_SHORTHELP)),
+						Child, (IPTR)LLabel1(GetLocString(MSGID_TEXTPAGE_MENUITEMS_OUTLINED)),
 
-						Child, inst->mpb_Objects[OBJNDX_CheckMark_MenuItems_Embossed] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUITEMS_EMBOSSED_SHORTHELP),
-						Child, LLabel1((ULONG) GetLocString(MSGID_TEXTPAGE_MENUITEMS_EMBOSSED)),
+						Child, (IPTR)(inst->mpb_Objects[OBJNDX_CheckMark_MenuItems_Embossed] = CheckMarkHelp(TRUE, MSGID_TEXTPAGE_MENUITEMS_EMBOSSED_SHORTHELP)),
+						Child, (IPTR)LLabel1(GetLocString(MSGID_TEXTPAGE_MENUITEMS_EMBOSSED)),
 
-						End, //ColGroup
+                                        End), //ColGroup
 
-					Child, HVSpace,
+					Child, (IPTR)HVSpace,
 
-					End, //ColGroup
+                                End), //ColGroup
 
-				Child, HVSpace,
+				Child, (IPTR)HVSpace,
 
-				End, //VGroup
+                        End), //VGroup
 
 			//------ Transparency ----------------------
-			Child, VGroup,
+			Child, (IPTR)(VGroup,
 				MUIA_Background, MUII_RegisterBack,
-				MUIA_FrameTitle, (ULONG) GetLocString(MSGID_TRANSPARENCYPAGE_TITLE),
+				MUIA_FrameTitle, (IPTR) GetLocString(MSGID_TRANSPARENCYPAGE_TITLE),
 
-				Child, HVSpace,
+				Child, (IPTR)HVSpace,
 
-				Child, ColGroup(4),
+				Child, (IPTR)(ColGroup(4),
 					GroupFrame,
 					MUIA_Background, MUII_GroupBack,
 
-					Child, HVSpace,
+					Child, (IPTR)HVSpace,
 
-					Child, inst->mpb_Objects[OBJNDX_CheckMark_Transparency_Enable] = CheckMarkHelp(TRUE, MSGID_TRANSPARENCYPAGE_ENABLE_SHORTHELP),
-					Child, LLabel1((ULONG) GetLocString(MSGID_TRANSPARENCYPAGE_ENABLE)),
+					Child, (IPTR)(inst->mpb_Objects[OBJNDX_CheckMark_Transparency_Enable] = CheckMarkHelp(TRUE, MSGID_TRANSPARENCYPAGE_ENABLE_SHORTHELP)),
+					Child, (IPTR)LLabel1(GetLocString(MSGID_TRANSPARENCYPAGE_ENABLE)),
 
-					Child, HVSpace,
-					End, //ColGroup
+					Child, (IPTR)HVSpace,
+                                End), //ColGroup
 
-				Child, HVSpace,
+				Child, (IPTR)HVSpace,
 
-				Child, inst->mpb_Objects[OBJNDX_Group_Transp_Blur] = ColGroup(2),
-					Child, Label1((ULONG) GetLocString(MSGID_TRANSPARENCYPAGE_BLUR)),
-					Child, inst->mpb_Objects[OBJNDX_Slider_Transp_Blur] = SliderObject,
+				Child, (IPTR)(inst->mpb_Objects[OBJNDX_Group_Transp_Blur] = ColGroup(2),
+					Child, (IPTR)Label1(GetLocString(MSGID_TRANSPARENCYPAGE_BLUR)),
+					Child, (IPTR)(inst->mpb_Objects[OBJNDX_Slider_Transp_Blur] = SliderObject,
 						MUIA_CycleChain, TRUE,
 						MUIA_Numeric_Min, 0,
 						MUIA_Numeric_Max, 100,
 						MUIA_Slider_Horiz, TRUE,
 						MUIA_Numeric_Value, -16,
-						MUIA_Numeric_Format, (ULONG) GetLocString(MSGID_TRANSPARENCYPAGE_BLUR_NUMERIC_FORMAT),
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TRANSPARENCYPAGE_BLUR_SHORTHELP),
-						End, //SliderObject
-					End, //ColGroup
+						MUIA_Numeric_Format, (IPTR) GetLocString(MSGID_TRANSPARENCYPAGE_BLUR_NUMERIC_FORMAT),
+						MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TRANSPARENCYPAGE_BLUR_SHORTHELP),
+                                        End), //SliderObject
+                                End), //ColGroup
 
-				Child, HVSpace,
+				Child, (IPTR)HVSpace,
 
-				End, //VGroup
+                        End), //VGroup
 
-                        End, //RegisterObject
+                End), //RegisterObject
 
-		End; //VGroup
+        End; //VGroup
 
 	if (NULL == inst->mpb_Objects[OBJNDX_Group_Main])
 		return NULL;
@@ -1373,11 +1373,11 @@ static SAVEDS(ULONG) INTERRUPT ImagePopAslFileStartHookFunc(struct Hook *hook, O
 	TagList++;
 
 //	  TagList->ti_Tag = ASLFR_InitialFile;
-//	  TagList->ti_Data = (ULONG) inst->fpb_FileName;
+//	  TagList->ti_Data = (IPTR) inst->fpb_FileName;
 //	  TagList++;
 
 	TagList->ti_Tag = ASLFR_InitialDrawer;
-	TagList->ti_Data = (ULONG) "THEME:FileTypes/";
+	TagList->ti_Data = (IPTR) "THEME:FileTypes/";
 	TagList++;
 
 	TagList->ti_Tag = TAG_END;
@@ -1405,7 +1405,7 @@ static void TranslateStringArray(STRPTR *stringArray)
 {
 	while (*stringArray)
 		{
-		*stringArray = GetLocString((ULONG) *stringArray);
+		*stringArray = GetLocString((IPTR) *stringArray);
 		stringArray++;
 		}
 }
@@ -2127,7 +2127,7 @@ static Object *CreatePrefsImage(void)
 
 	// First try to load datatypes image from THEME: tree
 	img = DataTypesImageObject,
-		MUIA_ScaDtpic_Name, (ULONG) "THEME:prefs/plugins/popupmenu",
+		MUIA_ScaDtpic_Name, (IPTR) "THEME:prefs/plugins/popupmenu",
 		MUIA_ScaDtpic_FailIfUnavailable, TRUE,
 		End; //DataTypesMCCObject
 
@@ -2288,8 +2288,8 @@ static LONG ReadOldPrefsFile(CONST_STRPTR Filename, struct oldPopupMenuPrefs *pr
 
 		InitIFFasDOS(iff);
 
-		iff->iff_Stream = Open(Filename, MODE_OLDFILE);
-		if ((BPTR)NULL == iff->iff_Stream)
+		iff->iff_Stream = (IPTR)Open(Filename, MODE_OLDFILE);
+		if (BNULL == (BPTR)iff->iff_Stream)
 			{
 			Result = IoErr();
 			break;
