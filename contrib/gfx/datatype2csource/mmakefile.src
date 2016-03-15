@@ -11,7 +11,7 @@ EXEDIR  := $(AROS_CONTRIB)/MultiMedia/Gfx/DatatypeToCSource
 
 %build_prog mmake=contrib-gfx-datatype2csource \
     progname=DatatypeToCSource targetdir=$(EXEDIR) \
-    files=$(FILES)
+    files=$(FILES) uselibs=bz2
 
 %common
 

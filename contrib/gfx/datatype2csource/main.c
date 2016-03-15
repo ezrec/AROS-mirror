@@ -8,10 +8,12 @@
 #include <proto/exec.h>
 #include <proto/datatypes.h>
 #include <proto/alib.h>
+#include <proto/bz2.h>
 
 #include <datatypes/pictureclass.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 
 static const char version[] __attribute__((used)) = "$VER: DatatypeToCSource 1.0 (14.3.2016)\n";
 
@@ -26,6 +28,7 @@ enum
     ARG_COUNT
 };
 
+BOOL compressed = TRUE;
 
 int main(int argc, char **argv)
 {
@@ -65,7 +68,7 @@ int main(int argc, char **argv)
 
                 printf("result PDTM_READPIXELARRAY %lu\n", DoMethodA(obj, (Msg)&bpa_msg));
 
-                write_source(mem, width, height, FALSE);
+                write_source(mem, width, height, compressed);
 
                 FreeVec(mem);
             }
@@ -84,18 +87,54 @@ int main(int argc, char **argv)
     return 0;
 }
 
-static void write_source(UBYTE *mem, ULONG width, ULONG height, BOOL pack)
+static void write_source(UBYTE *mem, ULONG width, ULONG height, BOOL compress)
 {
-    ULONG size;
+    ULONG srclen = width * height * 4;;
     ULONG i;
 
-    if (pack)
+    if (compress)
     {
-        puts("packed write not implemented");
+        unsigned int destlen = srclen * 1.1 + 600;
+        unsigned char *dest = malloc(destlen);
+        if (dest)
+        {
+            int compressresult = BZ2_bzBuffToBuffCompress(dest, &destlen,
+                mem, srclen,
+                9,  // 1 to 9
+                4,  // 0 to 4
+                30);
+            printf("BZ2_bzBuffToBuffCompress result %d\n", compressresult);
+            if (compressresult == BZ_OK)
+            {
+                puts("UBYTE img[] = {");
+
+                printf("    0x%02x, 0x%02x, 0x%02x, 0x%02x,  // width\n",
+                    (width & 0xff000000) >> 24, (width & 0xff0000) >> 16, (width & 0xff00) >> 8, (width & 0xff));
+                printf("    0x%02x, 0x%02x, 0x%02x, 0x%02x,  // height\n",
+                    (height & 0xff000000) >> 24, (height & 0xff0000) >> 16, (height & 0xff00) >> 8, (height & 0xff));
+                puts("    'B', 'Z', '2', '\\0',");
+                printf("    0x%02x, 0x%02x, 0x%02x, 0x%02x,  // // number of bytes\n",
+                    (destlen & 0xff000000) >> 24, (destlen & 0xff0000) >> 16, (destlen & 0xff00) >> 8, (destlen & 0xff));
+
+                for (i = 0; i < destlen; i++)
+                {
+                    if ((i % 12) == 0)
+                    {
+                        printf("\n    ");
+                    }
+                    printf("0x%02x, ", dest[i]);
+                }
+                puts("\n};");
+            }
+            free(dest);
+        }
+        else
+        {
+            puts("Can't allocate memory for compressing");
+        }
     }
     else
     {
-        size = width * height * 4;
         puts("UBYTE img[] = {");
 
         printf("    0x%02x, 0x%02x, 0x%02x, 0x%02x,  // width\n",
@@ -105,7 +144,7 @@ static void write_source(UBYTE *mem, ULONG width, ULONG height, BOOL pack)
         puts("    0x00, 0x00, 0x00, 0x00,");
         puts("    0x00, 0x00, 0x00, 0x00,  // number of bytes");
 
-        for (i = 0; i < size; i++)
+        for (i = 0; i < srclen; i++)
         {
             if ((i % 12) == 0)
             {
