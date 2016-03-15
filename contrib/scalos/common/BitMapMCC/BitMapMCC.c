@@ -49,13 +49,13 @@ struct BitMapMCCInstance
 
 /* ------------------------------------------------------------------------- */
 
-static ULONG mNew(struct IClass *cl,Object *obj,Msg msg);
+static IPTR mNew(struct IClass *cl,Object *obj,Msg msg);
 static ULONG mDispose(struct IClass *cl,Object *obj,Msg msg);
 static ULONG mSetup(struct IClass *cl,Object *obj,Msg msg);
 static ULONG mCleanup(struct IClass *cl,Object *obj,Msg msg);
 static ULONG mAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg);
 static ULONG mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg);
-DISPATCHER_PROTO(BitMapMCC);
+DISPATCHERPROTO(BitMapMCC);
 static ULONG mGet(Class *cl, Object *o, struct opGet *opg);
 static void ClearInstanceData(struct BitMapMCCInstance *inst);
 
@@ -65,7 +65,7 @@ extern struct Library *CyberGfxBase;
 
 /* ------------------------------------------------------------------------- */
 
-static ULONG mNew(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mNew(struct IClass *cl,Object *obj,Msg msg)
 {
 	struct BitMapMCCInstance *inst;
 	struct opSet *ops;
@@ -89,16 +89,16 @@ static ULONG mNew(struct IClass *cl,Object *obj,Msg msg)
 
 		inst->NumColors = 256;
 
-		inst->ColorTable = (ULONG *) GetTagData(MUIA_ScaBitMappic_ColorTable, (ULONG) NULL, ops->ops_AttrList);
-		inst->Screen = (struct Screen *) GetTagData(MUIA_ScaBitMappic_Screen, (ULONG) NULL, ops->ops_AttrList);
+		inst->ColorTable = (ULONG *) GetTagData(MUIA_ScaBitMappic_ColorTable, (IPTR) NULL, ops->ops_AttrList);
+		inst->Screen = (struct Screen *) GetTagData(MUIA_ScaBitMappic_Screen, (IPTR) NULL, ops->ops_AttrList);
 
 		inst->Width  = (ULONG) GetTagData(MUIA_ScaBitMappic_Width, 0, ops->ops_AttrList);
 		inst->Height = (ULONG) GetTagData(MUIA_ScaBitMappic_Height, 0, ops->ops_AttrList);
 
-		inst->BitMapArray = (UBYTE *) GetTagData(MUIA_ScaBitmappic_BitMapArray, (ULONG) NULL, ops->ops_AttrList);
+		inst->BitMapArray = (UBYTE *) GetTagData(MUIA_ScaBitmappic_BitMapArray, (IPTR) NULL, ops->ops_AttrList);
 		d1(KPrintF(__FUNC__ "/%ld:  inst->BitMapArray=%08lx\n", __LINE__, inst->BitMapArray));
 
-		inst->BitMap = (struct BitMap *) GetTagData(MUIA_ScaBitMappic_BitMap, (ULONG) NULL, ops->ops_AttrList);
+		inst->BitMap = (struct BitMap *) GetTagData(MUIA_ScaBitMappic_BitMap, (IPTR) NULL, ops->ops_AttrList);
 		if (NULL == inst->BitMap)
 			break;
 
@@ -218,7 +218,7 @@ static ULONG mNew(struct IClass *cl,Object *obj,Msg msg)
 			}
 		}
 
-	return((ULONG)obj);
+	return((IPTR)obj);
 }
 
 
@@ -354,11 +354,11 @@ static ULONG mGet(Class *cl, Object *o, struct opGet *opg)
 	switch (opg->opg_AttrID)
 		{
 	case MUIA_ScaBitMappic_ColorTable:
-		*(opg->opg_Storage) = (ULONG) inst->ColorTable;
+		*(opg->opg_Storage) = (IPTR) inst->ColorTable;
 		Result++;
 		break;
 	case MUIA_ScaBitMappic_Screen:
-		*(opg->opg_Storage) = (ULONG) inst->Screen;
+		*(opg->opg_Storage) = (IPTR) inst->Screen;
 		Result++;
 		break;
 	case MUIA_ScaBitMappic_Width:
@@ -370,11 +370,11 @@ static ULONG mGet(Class *cl, Object *o, struct opGet *opg)
 		Result++;
 		break;
 	case MUIA_ScaBitmappic_BitMapArray:
-		*(opg->opg_Storage) = (ULONG) inst->BitMapArray;
+		*(opg->opg_Storage) = (IPTR) inst->BitMapArray;
 		Result++;
 		break;
 	case MUIA_ScaBitMappic_BitMap:
-		*(opg->opg_Storage) = (ULONG) inst->BitMap;
+		*(opg->opg_Storage) = (IPTR) inst->BitMap;
 		Result++;
 		break;
 	default:
@@ -387,7 +387,7 @@ static ULONG mGet(Class *cl, Object *o, struct opGet *opg)
 
 DISPATCHER(BitMapMCC)
 {
-	ULONG Result;
+	IPTR Result;
 
 	switch (msg->MethodID)
 		{
