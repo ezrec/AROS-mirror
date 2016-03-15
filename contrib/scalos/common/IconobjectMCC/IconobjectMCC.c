@@ -40,7 +40,7 @@ struct DtMCCInstance
 
 /* ------------------------------------------------------------------------- */
 
-static ULONG mNew(struct IClass *cl,Object *obj,Msg msg);
+static IPTR mNew(struct IClass *cl,Object *obj,Msg msg);
 static ULONG mDispose(struct IClass *cl,Object *obj,Msg msg);
 static ULONG mSetup(struct IClass *cl,Object *obj,Msg msg);
 static ULONG mCleanup(struct IClass *cl,Object *obj,Msg msg);
@@ -49,13 +49,13 @@ static ULONG mDraw(struct IClass *cl,Object *obj, struct MUIP_Draw *msg);
 static ULONG mSet(struct IClass *cl, Object *obj, Msg msg);
 static ULONG mGet(struct IClass *cl, Object *obj, Msg msg);
 
-DISPATCHER_PROTO(MUI);
+DISPATCHERPROTO(MUI);
 static void ClearInstanceData(struct DtMCCInstance *inst);
 static void ForceRelayout(struct IClass *cl, Object *obj);
 
 /* ------------------------------------------------------------------------- */
 
-static ULONG mNew(struct IClass *cl,Object *obj,Msg msg)
+static IPTR mNew(struct IClass *cl,Object *obj,Msg msg)
 {
 	struct DtMCCInstance *inst;
 	struct opSet *ops;
@@ -70,10 +70,10 @@ static ULONG mNew(struct IClass *cl,Object *obj,Msg msg)
 
 	ops = (struct opSet *) msg;
 
-	inst->Iconobj = (Object *) GetTagData(MUIA_Iconobj_Object, (ULONG)NULL, ops->ops_AttrList);
+	inst->Iconobj = (Object *) GetTagData(MUIA_Iconobj_Object, (IPTR)NULL, ops->ops_AttrList);
 	inst->Selected = GetTagData(MUIA_Selected, FALSE, ops->ops_AttrList);
 
-	return (ULONG) obj;
+	return (IPTR) obj;
 }
 
 
@@ -188,7 +188,7 @@ static ULONG mSet(struct IClass *cl, Object *obj, Msg msg)
 	struct DtMCCInstance *inst = INST_DATA(cl,obj);
 	struct opSet *ops = (struct opSet *) msg;
 
-	inst->Iconobj = (Object *) GetTagData(MUIA_Iconobj_Object, (ULONG) inst->Iconobj, ops->ops_AttrList);
+	inst->Iconobj = (Object *) GetTagData(MUIA_Iconobj_Object, (IPTR) inst->Iconobj, ops->ops_AttrList);
 	inst->Selected = GetTagData(MUIA_Selected, inst->Selected, ops->ops_AttrList);
 
 	// Setting a different IconObj requires relayout
@@ -207,7 +207,7 @@ static ULONG mGet(struct IClass *cl, Object *obj, Msg msg)
 	switch (opg->opg_AttrID)
 		{
 	case MUIA_Selected:
-		*(opg->opg_Storage) = inst->Selected;
+		*(opg->opg_Storage) = (IPTR)inst->Selected;
 		break;
 		}
 
@@ -217,7 +217,7 @@ static ULONG mGet(struct IClass *cl, Object *obj, Msg msg)
 
 DISPATCHER(MUI)
 {
-	ULONG Result;
+	IPTR Result;
 
 	switch (msg->MethodID)
 		{

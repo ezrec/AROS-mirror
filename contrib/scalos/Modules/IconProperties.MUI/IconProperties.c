@@ -91,8 +91,8 @@ long _stack = 16384;		// minimum stack size, used by SAS/C startup code
 	TextObject,\
 		ButtonFrame,\
 		MUIA_Font, MUIV_Font_Button,\
-		MUIA_Text_Contents, name,\
-		MUIA_Text_PreParse, "\33c",\
+		MUIA_Text_Contents, (IPTR)name,\
+		MUIA_Text_PreParse, (IPTR)"\33c",\
 		MUIA_Text_HiChar  , key,\
 		MUIA_ControlChar  , key,\
 		MUIA_InputMode    , MUIV_InputMode_RelVerify,\
@@ -196,7 +196,7 @@ static struct MUI_CustomClass *IconobjectClass;
 
 int main(int argc, char *argv[])
 {
-	LONG win_opened;
+	IPTR win_opened = 0;
 	BPTR oldDir = (BPTR)NULL;
 	CONST_STRPTR IconName = "";
 	Object *iconObj = NULL;
@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
 				}
 			else
 				{
-				ULONG Pos;
+				IPTR Pos;
 				char xName[256];
 
 				stccpy(xName, arg->wa_Name, sizeof(xName));
@@ -272,7 +272,7 @@ int main(int argc, char *argv[])
 		ULONG NoToolTip = FALSE;
 		ULONG BrowserMode = FALSE;
 		BOOL BrowserSupported = FALSE;
-		ULONG IconType;
+		IPTR IconType;
 		STRPTR tt;
 
 		GetAttr(IDTA_Type, iconObj, (IPTR *)&IconType);
@@ -302,15 +302,15 @@ int main(int argc, char *argv[])
 		
 
 		APP_Main = ApplicationObject,
-			MUIA_Application_Title,		GetLocString(MSGID_TITLENAME),
-			MUIA_Application_Version,	"$VER: Scalos IconProperties.module V" VERS_MAJOR "." VERS_MINOR " (" __DATE__ ") " COMPILER_STRING,
-			MUIA_Application_Copyright,	"© The Scalos Team, 2004" CURRENTYEAR,
-			MUIA_Application_Author,	"The Scalos Team",
-			MUIA_Application_Description,	"Scalos Icon Properties module",
-			MUIA_Application_Base,		"SCALOS_ICON_PROPERTIES",
+			MUIA_Application_Title,		(IPTR)GetLocString(MSGID_TITLENAME),
+			MUIA_Application_Version,	(IPTR)"$VER: Scalos IconProperties.module V" VERS_MAJOR "." VERS_MINOR " (" __DATE__ ") " COMPILER_STRING,
+			MUIA_Application_Copyright,	(IPTR)"© The Scalos Team, 2004" CURRENTYEAR,
+			MUIA_Application_Author,	(IPTR)"The Scalos Team",
+			MUIA_Application_Description,	(IPTR)"Scalos Icon Properties module",
+			MUIA_Application_Base,		(IPTR)"SCALOS_ICON_PROPERTIES",
 
-			SubWindow, WIN_Main = WindowObject,
-				MUIA_Window_Title, GetLocString(MSGID_TITLENAME),
+			SubWindow, (IPTR)(WIN_Main = WindowObject,
+				MUIA_Window_Title, (IPTR)GetLocString(MSGID_TITLENAME),
 //				MUIA_Window_ID,	MAKE_ID('M','A','I','N'),
 				MUIA_Window_AppWindow, TRUE,
 
@@ -320,43 +320,43 @@ int main(int argc, char *argv[])
 				MUIA_Window_Width, MUIV_Window_Width_MinMax(0),
 				MUIA_Window_Height, MUIV_Window_Height_MinMax(0),
 
-				WindowContents, VGroup,
-					Child, VGroup,
+				WindowContents, (IPTR)(VGroup,
+					Child, (IPTR)(VGroup,
 						GroupFrame,
 						MUIA_Background, MUII_GroupBack,
 
-						Child, TextObject,
-							MUIA_Text_PreParse, MUIX_C MUIX_B,
-							MUIA_Text_Contents, IconName,
+						Child, (IPTR)(TextObject,
+							MUIA_Text_PreParse, (IPTR)MUIX_C MUIX_B,
+							MUIA_Text_Contents, (IPTR)IconName,
 							TextFrame,
 							MUIA_Background, MUII_TextBack,
-							MUIA_ShortHelp, GetLocString(MSGID_TEXT_ICONNAME_SHORTHELP),
-						End, //TextObject
+							MUIA_ShortHelp, (IPTR)GetLocString(MSGID_TEXT_ICONNAME_SHORTHELP),
+						End), //TextObject
 
-						Child, TextObject,
+						Child, (IPTR)(TextObject,
 							MUIA_ShowMe, !IsWriteable,
-							MUIA_Text_PreParse, MUIX_C,
-							MUIA_Text_Contents, GetLocString(MSGID_READ_ONLY),
-						End, //TextObject
+							MUIA_Text_PreParse,(IPTR) MUIX_C,
+							MUIA_Text_Contents, (IPTR)GetLocString(MSGID_READ_ONLY),
+						End), //TextObject
 
 						// Child, VSpace(0),
 
-						Child, HGroup,
-							Child, GroupMccIconObj = HGroup,
-								Child, RectangleObject, End, //--- Instead: Child, VSpace(0)
+						Child, (IPTR)(HGroup,
+							Child, (IPTR)(GroupMccIconObj = HGroup,
+								Child, (IPTR)(RectangleObject, End), //--- Instead: Child, VSpace(0)
 
-								Child, IconImage = IconobjectMCCObject,
-									MUIA_Iconobj_Object, iconObj,
+								Child, (IPTR)(IconImage = IconobjectMCCObject,
+									MUIA_Iconobj_Object, (IPTR)iconObj,
 									MUIA_InputMode, MUIV_InputMode_Toggle,
 									MUIA_ShowSelState, FALSE,
-								End, //IconobjectMCCObject
-							End, //VGroup
+								End), //IconobjectMCCObject
+							End), //HGroup
 
-							Child, VSpace(0),
+							Child, (IPTR)VSpace(0),
 
-							Child, ColGroup(2),
-								Child, Label1(GetLocString(MSGID_CHECKMARK_NOTEXT)),
-								Child, CheckMarkNoText = ImageObject,
+							Child, (IPTR)(ColGroup(2),
+								Child, (IPTR) Label1(GetLocString(MSGID_CHECKMARK_NOTEXT)),
+								Child, (IPTR)(CheckMarkNoText = ImageObject,
 									ImageButtonFrame,
 									MUIA_CycleChain, TRUE,
 									MUIA_InputMode, MUIV_InputMode_Toggle,
@@ -366,11 +366,11 @@ int main(int argc, char *argv[])
 									MUIA_Disabled, !IsWriteable,
 									MUIA_Background, MUII_ButtonBack,
 									MUIA_ShowSelState, FALSE,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_CHECKMARK_NOTEXT_SHORTHELP),
-								End, //Image
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_CHECKMARK_NOTEXT_SHORTHELP),
+								End), //Image
 
-								Child, Label1(GetLocString(MSGID_CHECKMARK_NODRAG)),
-								Child, CheckMarkNoDrag = ImageObject,
+								Child, (IPTR)Label1(GetLocString(MSGID_CHECKMARK_NODRAG)),
+								Child, (IPTR)(CheckMarkNoDrag = ImageObject,
 									ImageButtonFrame,
 									MUIA_CycleChain, TRUE,
 									MUIA_InputMode, MUIV_InputMode_Toggle,
@@ -380,11 +380,11 @@ int main(int argc, char *argv[])
 									MUIA_Disabled, !IsWriteable,
 									MUIA_Background, MUII_ButtonBack,
 									MUIA_ShowSelState, FALSE,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_CHECKMARK_NODRAG_SHORTHELP),
-								End, //Image
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_CHECKMARK_NODRAG_SHORTHELP),
+								End), //Image
 
-								Child, Label1(GetLocString(MSGID_CHECKMARK_NOTOOLTIPS)),
-								Child, CheckMarkNoToolTips = ImageObject,
+								Child, (IPTR)Label1(GetLocString(MSGID_CHECKMARK_NOTOOLTIPS)),
+								Child, (IPTR)(CheckMarkNoToolTips = ImageObject,
 									ImageButtonFrame,
 									MUIA_CycleChain, TRUE,
 									MUIA_InputMode, MUIV_InputMode_Toggle,
@@ -394,11 +394,11 @@ int main(int argc, char *argv[])
 									MUIA_Disabled, !IsWriteable,
 									MUIA_Background, MUII_ButtonBack,
 									MUIA_ShowSelState, FALSE,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_CHECKMARK_NOTOOLTIPS_SHORTHELP),
-								End, //Image
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_CHECKMARK_NOTOOLTIPS_SHORTHELP),
+								End), //Image
 
-								Child, Label1(GetLocString(MSGID_CHECKMARK_BROWSERMODE)),
-								Child, CheckMarkBrowserMode = ImageObject,
+								Child, (IPTR)Label1(GetLocString(MSGID_CHECKMARK_BROWSERMODE)),
+								Child, (IPTR)(CheckMarkBrowserMode = ImageObject,
 									ImageButtonFrame,
 									MUIA_CycleChain, TRUE,
 									MUIA_InputMode, MUIV_InputMode_Toggle,
@@ -408,73 +408,72 @@ int main(int argc, char *argv[])
 									MUIA_Disabled, (!IsWriteable || !BrowserSupported),
 									MUIA_Background, MUII_ButtonBack,
 									MUIA_ShowSelState, FALSE,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_CHECKMARK_BROWSERMODE_SHORTHELP),
-								End, //Image
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_CHECKMARK_BROWSERMODE_SHORTHELP),
+								End), //Image
 
-							End, //ColGroup
+							End), //ColGroup
 
-							Child, RectangleObject, End, //--- Instead: Child, VSpace(0)
+							Child, (IPTR)(RectangleObject, End), //--- Instead: Child, VSpace(0)
 
-						End, //HGroup
+						End), //HGroup
 
-						Child, Group_Virtual = ScrollgroupObject, // +jmc+
+						Child, (IPTR)(Group_Virtual = ScrollgroupObject, // +jmc+
 							MUIA_CycleChain, TRUE,
-							MUIA_Scrollgroup_VertBar, NULL,
-							MUIA_Scrollgroup_HorizBar, NULL,
+							MUIA_Scrollgroup_VertBar, (IPTR)NULL,
+							MUIA_Scrollgroup_HorizBar, (IPTR)NULL,
 							MUIA_Scrollgroup_FreeHoriz, TRUE,
 							MUIA_Scrollgroup_FreeVert, FALSE,
-							MUIA_Scrollgroup_Contents,
-							VirtgroupObject,
-								Child, Path = TextObject, TextFrame,
+							MUIA_Scrollgroup_Contents, (IPTR)(VirtgroupObject,
+								Child, (IPTR)(Path = TextObject, TextFrame,
 									MUIA_Background, MUII_TextBack,
-									MUIA_Text_PreParse, MUIX_C,
-									MUIA_Text_Contents, PathName,
-									MUIA_ShortHelp, GetLocString(MSGID_TEXT_ICONPATH_SHORTHELP),
-								End, //TextObject
-							End, //VirtgroupObject
-						End, //ScrollgroupObject
+									MUIA_Text_PreParse, (IPTR)MUIX_C,
+									MUIA_Text_Contents, (IPTR)PathName,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TEXT_ICONPATH_SHORTHELP),
+								End), //TextObject
+							End), //VirtgroupObject
+						End), //ScrollgroupObject
 
-					End, //VGroup,
+					End), //VGroup,
 
 					// Child, VSpace(0), //--- Removed 
 
-					Child, Group_Buttons2 = HGroup,
+					Child, (IPTR)(Group_Buttons2 = HGroup,
 						MUIA_Group_SameWidth, TRUE,
-						Child, OkButton = KeyButtonHelp(GetLocString(MSGID_OKBUTTON), 
-									'o', GetLocString(MSGID_SHORTHELP_OKBUTTON)),
-						Child, CancelButton = KeyButtonHelp(GetLocString(MSGID_CANCELBUTTON), 
-									'c', GetLocString(MSGID_SHORTHELP_CANCELBUTTON)),
-						End, //HGroup
-					End, //VGroup
-				End, //WindowObject
+						Child, (IPTR)(OkButton = KeyButtonHelp((IPTR)GetLocString(MSGID_OKBUTTON), 
+									'o', (IPTR)GetLocString(MSGID_SHORTHELP_OKBUTTON))),
+						Child, (IPTR)(CancelButton = KeyButtonHelp((IPTR)GetLocString(MSGID_CANCELBUTTON), 
+									'c', (IPTR)GetLocString(MSGID_SHORTHELP_CANCELBUTTON))),
+                                        End), //HGroup
+                                End), //VGroup
+                        End), //WindowObject
 
-			MUIA_Application_Menustrip, MenustripObject,
-				Child, MenuObjectT(GetLocString(MSGID_MENU_PROJECT)),
+			MUIA_Application_Menustrip, (IPTR)(MenustripObject,
+				Child, (IPTR)(MenuObjectT((IPTR)GetLocString(MSGID_MENU_PROJECT)),
 
-					Child, MenuAbout = MenuitemObject,
-						MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_ABOUT),
-					End,
-					Child, MenuAboutMUI = MenuitemObject,
-						MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_ABOUTMUI),
-					End,
-					Child, MenuitemObject,
+					Child, (IPTR)(MenuAbout = MenuitemObject,
+						MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_ABOUT),
+					End),
+					Child, (IPTR)(MenuAboutMUI = MenuitemObject,
+						MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_ABOUTMUI),
+					End),
+					Child, (IPTR)(MenuitemObject,
 						MUIA_Menuitem_Title, -1,
-					End,
-					Child, MenuQuit = MenuitemObject,
-						MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_QUIT),
-						MUIA_Menuitem_Shortcut, GetLocString(MSGID_MENU_PROJECT_QUIT_SHORT),
-					End,
+					End),
+					Child, (IPTR)(MenuQuit = MenuitemObject,
+						MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_QUIT),
+						MUIA_Menuitem_Shortcut, (IPTR)GetLocString(MSGID_MENU_PROJECT_QUIT_SHORT),
+					End),
 						
-				End, //MenuObjectT
+				End), //MenuObjectT
 
-				Child, MenuObjectT(GetLocString(MSGID_MENU_IMAGE)),
-					Child, MenuImageDefault = MenuitemObject,
-						MUIA_Menuitem_Title, GetLocString(MSGID_MENU_IMAGE_DEFAULT),
-						MUIA_Menuitem_Shortcut, GetLocString(MSGID_MENU_IMAGE_DEFAULT_SHORT),
-					End,
-				End, //MenuObjectT
+				Child, (IPTR)(MenuObjectT((IPTR)GetLocString(MSGID_MENU_IMAGE)),
+					Child, (IPTR)(MenuImageDefault = MenuitemObject,
+						MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_IMAGE_DEFAULT),
+						MUIA_Menuitem_Shortcut, (IPTR)GetLocString(MSGID_MENU_IMAGE_DEFAULT_SHORT),
+					End),
+				End), //MenuObjectT
 
-			End, //MenuStripObject
+			End), //MenuStripObject
 
 		End; //ApplicationObject
 
@@ -886,7 +885,7 @@ static SAVEDS(void) INTERRUPT AppMessageHookFunc(struct Hook *hook, Object *o, M
 		struct WBArg *arg = &AppMsg->am_ArgList[0];
 		BPTR OldDir;
 		Object *NewIconObj;
-		ULONG Pos;
+		IPTR Pos;
 		char xName[256];
 		STRPTR NewIconName;
 
@@ -970,13 +969,13 @@ static void ReplaceIcon(Object *NewIconObj, Object **OldIconObj)
 
 
 	GetAttr(IDTA_ToolTypes, *OldIconObj, (APTR) &ToolTypesArray);
-	set(NewIconObj, IDTA_ToolTypes, (ULONG) ToolTypesArray);
+	set(NewIconObj, IDTA_ToolTypes, (IPTR) ToolTypesArray);
 
 	GetAttr(IDTA_DefaultTool, *OldIconObj, (APTR) &str);
-	set(NewIconObj, IDTA_DefaultTool, (ULONG) str);
+	set(NewIconObj, IDTA_DefaultTool, (IPTR) str);
 
 	GetAttr(IDTA_WindowRect, *OldIconObj, (APTR) &WinRect);
-	set(NewIconObj, IDTA_WindowRect, (ULONG) WinRect);
+	set(NewIconObj, IDTA_WindowRect, (IPTR) WinRect);
 
 	GetAttr(IDTA_WinCurrentX, *OldIconObj, &ul);
 	set(NewIconObj, IDTA_WinCurrentX, ul);
@@ -1003,7 +1002,7 @@ static void SaveSettings(Object *IconObj, CONST_STRPTR IconName)
 		IPTR  IconType;
 		ULONG Checked = 0;
 		char CheckName[256];
-		ULONG Pos;
+		IPTR Pos;
 		APTR UndoStep = NULL;
 		struct ScaWindowStruct *ws;
 		CONST_STRPTR *ToolTypesArray;
@@ -1076,9 +1075,9 @@ static void SaveSettings(Object *IconObj, CONST_STRPTR IconName)
 				SCCM_IconWin_AddUndoEvent,
 				UNDO_SetToolTypes,
 				UNDOTAG_IconDirLock, dirLock,
-				UNDOTAG_IconName, (ULONG) IconName,
-				UNDOTAG_OldToolTypes, (ULONG) OldToolTypesArray,
-				UNDOTAG_NewToolTypes, (ULONG) NewToolTypeArray,
+				UNDOTAG_IconName, (IPTR) IconName,
+				UNDOTAG_OldToolTypes, (IPTR) OldToolTypesArray,
+				UNDOTAG_NewToolTypes, (IPTR) NewToolTypeArray,
 				TAG_END
 				);
 			}
