@@ -80,7 +80,7 @@ struct ScalosBitMapAndColor *DoLoadDT(STRPTR source, struct RastPort *rast,
 			{
 			d1(KPrintF(__FILE__ "/%s/%ld:  IsPictureDT43\n", __FUNC__, __LINE__));
 			SetDTAttrs(obj, NULL, NULL,
-				PDTA_Screen, (ULONG) screen,
+				PDTA_Screen, (IPTR) screen,
 				PDTA_UseFriendBitMap, ScreenDepth <= 8,
 				TAG_END);
 			}
@@ -114,10 +114,10 @@ struct ScalosBitMapAndColor *DoLoadDT(STRPTR source, struct RastPort *rast,
 		sac->sac_Flags |= SACFLAGF_NO_FREE_COLORTABLE;
 
 		Result = GetDTAttrs(obj,
-			PDTA_NumColors, (ULONG) &sac->sac_NumColors,
-			PDTA_CRegs, (ULONG) &sac->sac_ColorTable,
-			PDTA_BitMapHeader, (ULONG) &bmhd,
-			PDTA_DestBitMap, (ULONG) &bm,
+			PDTA_NumColors, (IPTR) &sac->sac_NumColors,
+			PDTA_CRegs, (IPTR) &sac->sac_ColorTable,
+			PDTA_BitMapHeader, (IPTR) &bmhd,
+			PDTA_DestBitMap, (IPTR) &bm,
 			TAG_END);
 		d1(KPrintF(__FILE__ "/" __FUNC__ "/%ld: Result=%08lx\n", __LINE__, Result));
 		if (Result < 4)
@@ -140,7 +140,7 @@ struct ScalosBitMapAndColor *DoLoadDT(STRPTR source, struct RastPort *rast,
 		d1(KPrintF(__FILE__ "/" __FUNC__ "/%ld: bmh_Depth=%lu\n", __LINE__, bmhd->bmh_Depth));
 
 		(void) GetDTAttrs(obj,
-			PDTA_MaskPlane, (ULONG) &MaskPlane,
+			PDTA_MaskPlane, (IPTR) &MaskPlane,
 			TAG_END);
 
 		argbSrc.argb_Width = bmhd->bmh_Width;
@@ -209,11 +209,11 @@ struct ScalosBitMapAndColor *DoLoadDT(STRPTR source, struct RastPort *rast,
 
 static BOOL IsPictureDT43(Object *o)
 {
-	const ULONG *MethodArray = NULL;
+	const IPTR *MethodArray = NULL;
 	BOOL IsV43 = FALSE;
 
 	GetDTAttrs(o,
-		DTA_Methods, (ULONG) &MethodArray,
+		DTA_Methods, (IPTR) &MethodArray,
 		TAG_END);
 
 	while (MethodArray && ~0 != *MethodArray)

@@ -110,10 +110,10 @@
     MUIA_Bitmap_Width         , PREFIX2##_WIDTH ,\
     MUIA_Bitmap_Height        , PREFIX2##_HEIGHT,\
     MUIA_Bodychunk_Depth      , PREFIX2##_DEPTH ,\
-    MUIA_Bodychunk_Body       , (UBYTE *) prefix1##_body,\
+    MUIA_Bodychunk_Body       , (IPTR) prefix1##_body,\
     MUIA_Bodychunk_Compression, PREFIX2##_COMPRESSION,\
     MUIA_Bodychunk_Masking    , PREFIX2##_MASKING,\
-    MUIA_Bitmap_SourceColors  , (ULONG *) prefix1##_colors,\
+    MUIA_Bitmap_SourceColors  , (IPTR) prefix1##_colors,\
     MUIA_Bitmap_Transparent   , 0,\
   End
 
@@ -130,36 +130,36 @@ extern int KPrintF(const char *fmt, ...);
 #define KeyButtonHelp(name,key,HelpText)\
 	TextObject,\
 		ButtonFrame,\
-		MUIA_CycleChain, TRUE, \
-		MUIA_Font, MUIV_Font_Button,\
-		MUIA_Text_Contents, name,\
-		MUIA_Text_PreParse, "\33c",\
-		MUIA_Text_HiChar  , key,\
-		MUIA_ControlChar  , key,\
-		MUIA_InputMode    , MUIV_InputMode_RelVerify,\
-		MUIA_Background   , MUII_ButtonBack,\
-		MUIA_ShortHelp, HelpText,\
+		MUIA_CycleChain,        TRUE, \
+		MUIA_Font,              MUIV_Font_Button,\
+		MUIA_Text_Contents,     (IPTR)name,\
+		MUIA_Text_PreParse,     (IPTR)"\33c",\
+		MUIA_Text_HiChar,       (IPTR)key,\
+		MUIA_ControlChar,       (IPTR)key,\
+		MUIA_InputMode,         MUIV_InputMode_RelVerify,\
+		MUIA_Background,        MUII_ButtonBack,\
+		MUIA_ShortHelp,         (IPTR)HelpText,\
 		End
 
 #define CheckMarkHelp(selected, HelpTextID)\
 	ImageObject,\
 		ImageButtonFrame,\
-		MUIA_CycleChain       , TRUE, \
-		MUIA_InputMode        , MUIV_InputMode_Toggle,\
-		MUIA_Image_Spec       , MUII_CheckMark,\
-		MUIA_Image_FreeVert   , TRUE,\
-		MUIA_Selected         , selected,\
-		MUIA_Background       , MUII_ButtonBack,\
-		MUIA_ShowSelState     , FALSE,\
-		MUIA_ShortHelp	      , GetLocString(HelpTextID),\
+		MUIA_CycleChain,        TRUE, \
+		MUIA_InputMode,         MUIV_InputMode_Toggle,\
+		MUIA_Image_Spec,        MUII_CheckMark,\
+		MUIA_Image_FreeVert,    TRUE,\
+		MUIA_Selected,          selected,\
+		MUIA_Background,        MUII_ButtonBack,\
+		MUIA_ShowSelState,      FALSE,\
+		MUIA_ShortHelp,         (IPTR)GetLocString(HelpTextID),\
 		End
 
 
-#define	Application_Return_EDIT	0
-#define	Application_Return_USE	1001
-#define	Application_Return_SAVE	1002
+#define	Application_Return_EDIT         0
+#define	Application_Return_USE          1001
+#define	Application_Return_SAVE         1002
 
-#define	MAX_FILENAME	512
+#define	MAX_FILENAME                    512
 
 
 struct RGBlong
@@ -195,7 +195,7 @@ extern void _STD_240_TerminateMemFunctions(void);
 
 // local functions
 
-DISPATCHER_PROTO(PatternPrefs);
+DISPATCHERPROTO(PatternPrefs);
 static Object *CreatePrefsGroup(struct PatternPrefsInst *inst);
 static void CreateSubWindows(struct PatternPrefsInst *inst);
 static ULONG DoOmSet(Class *cl, Object *o, struct opSet *ops);
@@ -212,8 +212,8 @@ static SAVEDS(void) INTERRUPT ListDestructHookFunc(struct Hook *hook, Object *ob
 static SAVEDS(ULONG) INTERRUPT ListDisplayHookFunc(struct Hook *hook, Object *obj, struct NList_DisplayMessage *ndm);
 static SAVEDS(LONG) INTERRUPT ListCompareHookFunc(struct Hook *hook, Object *obj, struct NList_CompareMessage *msg);
 static SAVEDS(APTR) INTERRUPT SettingsChangedHookFunc(struct Hook *hook, Object *o, Msg msg);
-DISPATCHER_PROTO(PatternSlider);
-DISPATCHER_PROTO(PrecSlider);
+DISPATCHERPROTO(PatternSlider);
+DISPATCHERPROTO(PrecSlider);
 static LONG ReadPrefsFile(struct PatternPrefsInst *inst, CONST_STRPTR Filename, BOOL Quiet);
 static LONG ReadPrefsBitMap(struct PatternPrefsInst *inst, struct IFFHandle *iff,
 	struct PatternListEntry *scp, struct TempRastPort *trp);
@@ -259,7 +259,7 @@ static void CreateThumbnailImage(struct PatternPrefsInst *inst, struct PatternLi
 static void UpdateUseThumbnails(struct PatternPrefsInst *inst);
 static void DisableBackgroundColorGadgets(struct PatternPrefsInst *inst, UWORD RenderType, UWORD BgType);
 
-DISPATCHER_PROTO(myNList);
+DISPATCHERPROTO(myNList);
 
 #if !defined(__SASC) && !defined(__MORPHOS__) && !defined(__amigaos4__) && !defined(__AROS__)
 static size_t stccpy(char *dest, const char *src, size_t MaxLen);
@@ -481,11 +481,11 @@ BOOL closePlugin(struct PluginBase *PluginBase)
 }
 
 
-LIBFUNC_P2(ULONG, LIBSCAGetPrefsInfo,
+LIBFUNC_P2(IPTR, LIBSCAGetPrefsInfo,
 	D0, ULONG, which,
 	A6, struct PluginBase *, PluginBase, 5)
 {
-	ULONG result;
+	IPTR result;
 
 	(void) PluginBase;
 
@@ -494,15 +494,15 @@ LIBFUNC_P2(ULONG, LIBSCAGetPrefsInfo,
 	switch(which)
 		{
 	case SCAPREFSINFO_GetClass:
-		result = (ULONG) PatternPrefsClass;
+		result = (IPTR) PatternPrefsClass;
 		break;
 
 	case SCAPREFSINFO_GetTitle:
-		result = (ULONG) GetLocString(MSGID_PLUGIN_LIST_TITLE);
+		result = (IPTR) GetLocString(MSGID_PLUGIN_LIST_TITLE);
 		break;
 
 	case SCAPREFSINFO_GetTitleImage:
-		result = (ULONG) CreatePrefsImage();
+		result = (IPTR) CreatePrefsImage();
 		break;
 
 	default:
@@ -521,7 +521,7 @@ LIBFUNC_END
 DISPATCHER(PatternPrefs)
 {
 	struct PatternPrefsInst *inst;
-	ULONG result = 0;
+	IPTR result = 0;
 
 	switch(msg->MethodID)
 		{
@@ -558,9 +558,9 @@ DISPATCHER(PatternPrefs)
 			InitHooks(inst);
 
 			inst->ppb_fCreateIcons = GetTagData(MUIA_ScalosPrefs_CreateIcons, TRUE, ops->ops_AttrList);
-			inst->ppb_ProgramName = (CONST_STRPTR) GetTagData(MUIA_ScalosPrefs_ProgramName, (ULONG) "", ops->ops_AttrList);
-			inst->ppb_Objects[OBJNDX_WIN_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_MainWindow, (ULONG) NULL, ops->ops_AttrList);
-			inst->ppb_Objects[OBJNDX_APP_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_Application, (ULONG) NULL, ops->ops_AttrList);
+			inst->ppb_ProgramName = (CONST_STRPTR) GetTagData(MUIA_ScalosPrefs_ProgramName, (IPTR) "", ops->ops_AttrList);
+			inst->ppb_Objects[OBJNDX_WIN_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_MainWindow, (IPTR) NULL, ops->ops_AttrList);
+			inst->ppb_Objects[OBJNDX_APP_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_Application, (IPTR) NULL, ops->ops_AttrList);
 			inst->ppb_fPreview = GetTagData(MUIA_ScalosPrefs_PatternPrefs_Preview, TRUE, ops->ops_AttrList);
 			inst->ppb_fAutoPreview = GetTagData(MUIA_ScalosPrefs_PatternPrefs_AutoPreview, FALSE, ops->ops_AttrList);
 			inst->ppb_PreviewWeight = GetTagData(MUIA_ScalosPrefs_PatternPrefs_PreviewWeight, 20, ops->ops_AttrList);
@@ -572,7 +572,7 @@ DISPATCHER(PatternPrefs)
 				{
 				DoMethod(obj, OM_ADDMEMBER, prefsobject);
 
-				result = (ULONG) obj;
+				result = (IPTR) obj;
 				}
 			else
 				{
@@ -745,12 +745,12 @@ DISPATCHER(PatternPrefs)
 		d1(KPrintF("%s/%s/%ld: MUIM_ScalosPrefs_CreateSubWindows obj=%08lx\n", __FILE__, __FUNC__, __LINE__, obj));
 		inst = (struct PatternPrefsInst *) INST_DATA(cl, obj);
 		CreateSubWindows(inst);
-		result = (ULONG) inst->ppb_SubWindows;
+		result = (IPTR) inst->ppb_SubWindows;
 		break;
 
 	case MUIM_ScalosPrefs_GetListOfMCCs:
 		d1(KPrintF("%s/%s/%ld: MUIM_ScalosPrefs_GetListOfMCCs obj=%08lx\n", __FILE__, __FUNC__, __LINE__, obj));
-		result = (ULONG) RequiredMccList;
+		result = (IPTR) RequiredMccList;
 		break;
 
 	default:
@@ -795,28 +795,28 @@ static Object *CreatePrefsGroup(struct PatternPrefsInst *inst)
 	inst->ppb_Objects[OBJNDX_Group_Main] = VGroup,
 		MUIA_Background, MUII_PageBack,
 
-		Child,	RegisterObject,
-			MUIA_Register_Titles, RegisterTitleStrings,
+		Child, (IPTR)(RegisterObject,
+			MUIA_Register_Titles, (IPTR)RegisterTitleStrings,
 
 // Register page "Pattern List"
-			Child,	VGroup,
+			Child, (IPTR)(VGroup,
 				GroupFrame,
-				Child,	inst->ppb_Objects[OBJNDX_Group_MainList] = HGroup,
-					Child,	inst->ppb_Objects[OBJNDX_MainListView] = NListviewObject,
+				Child,	(IPTR)(inst->ppb_Objects[OBJNDX_Group_MainList] = HGroup,
+					Child, (IPTR)(inst->ppb_Objects[OBJNDX_MainListView] = NListviewObject,
 						MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
 						MUIA_Listview_Input, TRUE,
 						MUIA_CycleChain, TRUE,
-						MUIA_Listview_List, inst->ppb_Objects[OBJNDX_MainList] = myNListObject,
+						MUIA_Listview_List, (IPTR)(inst->ppb_Objects[OBJNDX_MainList] = myNListObject,
 							InputListFrame,
 							MUIA_Background, MUII_ListBack,
-							MUIA_NList_Format, MainListFormat,
-							MUIA_NList_PrivateData, inst,
+							MUIA_NList_Format, (IPTR)MainListFormat,
+							MUIA_NList_PrivateData, (IPTR)inst,
 							MUIA_NList_TitleSeparator, TRUE,
 							MUIA_NList_Title, TRUE,
-							MUIA_NList_DisplayHook2, &inst->ppb_Hooks[HOOKNDX_ListDisplay],
-							MUIA_NList_ConstructHook2, &inst->ppb_Hooks[HOOKNDX_ListConstruct],
-							MUIA_NList_DestructHook2, &inst->ppb_Hooks[HOOKNDX_ListDestruct],
-							MUIA_NList_CompareHook2, &inst->ppb_Hooks[HOOKNDX_ListCompare],
+							MUIA_NList_DisplayHook2, (IPTR)&inst->ppb_Hooks[HOOKNDX_ListDisplay],
+							MUIA_NList_ConstructHook2, (IPTR)&inst->ppb_Hooks[HOOKNDX_ListConstruct],
+							MUIA_NList_DestructHook2, (IPTR)&inst->ppb_Hooks[HOOKNDX_ListDestruct],
+							MUIA_NList_CompareHook2, (IPTR)&inst->ppb_Hooks[HOOKNDX_ListCompare],
 							MUIA_NList_PoolPuddleSize, sizeof(struct PatternListEntry) * 128,
 							MUIA_NList_PoolThreshSize, sizeof(struct PatternListEntry),
 							MUIA_NList_DragSortable, TRUE,
@@ -826,322 +826,322 @@ static Object *CreatePrefsGroup(struct PatternPrefsInst *inst)
 							MUIA_NList_TitleMark, MUIV_NList_TitleMark_Down | 0,
 							MUIA_NList_EntryValueDependent, TRUE,
 							MUIA_NList_DefaultObjectOnClick, TRUE,
-							MUIA_ContextMenu, inst->ppb_Objects[OBJNDX_ContextMenu],
-							End, //NListObject
+							MUIA_ContextMenu, (IPTR)inst->ppb_Objects[OBJNDX_ContextMenu],
+                                                End), //NListObject
 						MUIA_NListview_Horiz_ScrollBar, MUIV_NListview_HSB_FullAuto,
-						End, //NListviewObject
+                                        End), //NListviewObject
 
-					Child, inst->ppb_Objects[OBJNDX_Balance] = BalanceObject,
+					Child, (IPTR)(inst->ppb_Objects[OBJNDX_Balance] = BalanceObject,
 						MUIA_ShowMe, inst->ppb_fPreview && !inst->ppb_UseThumbNails,
-						End, //BalanceObject
+                                        End), //BalanceObject
 
-					Child, inst->ppb_Objects[OBJNDX_Group_Preview] = VGroupV,
-						Child, HVSpace,
-						Child, inst->ppb_Objects[OBJNDX_PreviewImage] = DataTypesImageObject,
-							MUIA_ScaDtpic_Name, (ULONG) "",
+					Child, (IPTR)(inst->ppb_Objects[OBJNDX_Group_Preview] = VGroupV,
+						Child, (IPTR)HVSpace,
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_PreviewImage] = DataTypesImageObject,
+							MUIA_ScaDtpic_Name, (IPTR) "",
 							MUIA_ScaDtpic_Tiled, FALSE,
-							MUIA_UserData, inst,
+							MUIA_UserData, (IPTR)inst,
 							ButtonFrame,
 							MUIA_Background, MUII_ButtonBack,
 							MUIA_InputMode, MUIV_InputMode_RelVerify,
-							End, //DataTypesMCC
-						Child, HVSpace,
+                                                End), //DataTypesMCC
+						Child, (IPTR)HVSpace,
 						MUIA_ShowMe, inst->ppb_fPreview && !inst->ppb_UseThumbNails,
 						MUIA_Disabled, TRUE,
-						MUIA_ShortHelp, GetLocString(MSGID_PREVIEWIMAGEBUBBLE),
+						MUIA_ShortHelp, (IPTR)GetLocString(MSGID_PREVIEWIMAGEBUBBLE),
 						MUIA_Weight, inst->ppb_PreviewWeight,
-						End, //VGroupV
-					End, // HGroup
+                                        End), //VGroupV
+                                End), // HGroup
 
-				Child, HGroup,
-					Child, inst->ppb_Objects[OBJNDX_Lamp_Changed] = LampObject,
+				Child, (IPTR)(HGroup,
+					Child, (IPTR)(inst->ppb_Objects[OBJNDX_Lamp_Changed] = LampObject,
 						MUIA_Lamp_Type, MUIV_Lamp_Type_Huge, 
 						MUIA_Lamp_Color, MUIV_Lamp_Color_Off,
-						MUIA_ShortHelp, GetLocString(MSGID_SHORTHELP_LAMP_CHANGED),
-						End, //LampObject
+						MUIA_ShortHelp, (IPTR)GetLocString(MSGID_SHORTHELP_LAMP_CHANGED),
+                                        End), //LampObject
 
-					Child,	ColGroup(2),
-						Child, inst->ppb_Objects[OBJNDX_NewButton] = KeyButtonHelp(GetLocString(MSGID_NEWNAME), 'w', GetLocString(MSGID_SHORTHELP_NEWBUTTON)),
-						Child, inst->ppb_Objects[OBJNDX_DelButton] = KeyButtonHelp(GetLocString(MSGID_DELNAME), 'd', GetLocString(MSGID_SHORTHELP_DELBUTTON)),
-						End, //ColGroup
-					End, //HGroup
+					Child, (IPTR)(ColGroup(2),
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_NewButton] = KeyButtonHelp(GetLocString(MSGID_NEWNAME), 'w', GetLocString(MSGID_SHORTHELP_NEWBUTTON))),
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_DelButton] = KeyButtonHelp(GetLocString(MSGID_DELNAME), 'd', GetLocString(MSGID_SHORTHELP_DELBUTTON))),
+                                        End), //ColGroup
+                                End), //HGroup
 
-				Child, VGroup,
+				Child, (IPTR)(VGroup,
 					MUIA_Background, MUII_GroupBack,
 					GroupFrame,
 
-					Child,	inst->ppb_Objects[OBJNDX_Group_String] = ColGroup(5),
+					Child, (IPTR)(inst->ppb_Objects[OBJNDX_Group_String] = ColGroup(5),
 						MUIA_Disabled, TRUE,
-						Child,	inst->ppb_Objects[OBJNDX_NumButton] = NumericbuttonObject,
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_NumButton] = NumericbuttonObject,
 							MUIA_CycleChain, TRUE,
 							MUIA_Numeric_Min, 1,
 							MUIA_Numeric_Max, 300,
-							MUIA_ShortHelp, GetLocString(MSGID_NUMBUTTONBUBBLE),
-							End,
-						Child, inst->ppb_Objects[OBJNDX_Popasl] = PopaslObject,
+							MUIA_ShortHelp, (IPTR)GetLocString(MSGID_NUMBUTTONBUBBLE),
+                                                End),
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_Popasl] = PopaslObject,
 							MUIA_CycleChain, TRUE,
 							MUIA_Popasl_Type, ASL_FileRequest,
-							MUIA_Popstring_String, inst->ppb_Objects[OBJNDX_STR_PopAsl] = MUI_MakeObject(MUIO_String, NULL, MAX_FILENAME),
-							MUIA_Popstring_Button, PopButton(MUII_PopFile),
-							End,
-						Child, inst->ppb_Objects[OBJNDX_CyclePatternType] = CycleObject,
+							MUIA_Popstring_String, (IPTR)(inst->ppb_Objects[OBJNDX_STR_PopAsl] = MUI_MakeObject(MUIO_String, NULL, MAX_FILENAME)),
+							MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopFile),
+                                                End),
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_CyclePatternType] = CycleObject,
 							MUIA_CycleChain, TRUE,
-							MUIA_Cycle_Entries, patternmode,
+							MUIA_Cycle_Entries, (IPTR)patternmode,
 							MUIA_Weight, 5,
-							MUIA_ShortHelp, GetLocString(MSGID_CYCLEGADBUBBLE),
-							End,
-						Child, Label(GetLocString(MSGID_REMAPNAME)),
-						Child, inst->ppb_Objects[OBJNDX_CheckmarkGad] = CheckMarkHelp(FALSE, MSGID_CHECKMARKGADBUBBLE),
-						End,
-					Child,	inst->ppb_Objects[OBJNDX_Group_Slider] = HGroup,
+							MUIA_ShortHelp, (IPTR)GetLocString(MSGID_CYCLEGADBUBBLE),
+                                                End),
+						Child, (IPTR)Label(GetLocString(MSGID_REMAPNAME)),
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_CheckmarkGad] = CheckMarkHelp(FALSE, MSGID_CHECKMARKGADBUBBLE)),
+                                        End),
+					Child, (IPTR)(inst->ppb_Objects[OBJNDX_Group_Slider] = HGroup,
 						MUIA_Disabled, TRUE,
 						MUIA_CycleChain, TRUE,
 
-						Child, HGroup,
+						Child, (IPTR)(HGroup,
 							MUIA_ShowMe, (NULL != GuiGFXBase),
-							Child, Label(GetLocString(MSGID_ENHANCNAME)),
-							Child, inst->ppb_Objects[OBJNDX_CheckmarkEnh] = CheckMarkHelp(FALSE, MSGID_CHECKMARKENHBUBBLE),
-						End, //HGroup
+							Child, (IPTR)Label(GetLocString(MSGID_ENHANCNAME)),
+							Child, (IPTR)(inst->ppb_Objects[OBJNDX_CheckmarkEnh] = CheckMarkHelp(FALSE, MSGID_CHECKMARKENHBUBBLE)),
+						End), //HGroup
 
-						Child, Label(GetLocString(MSGID_PRECNAME)),
-						Child, inst->ppb_Objects[OBJNDX_PrecSlider] = PrecSliderObject,
+						Child, (IPTR)Label(GetLocString(MSGID_PRECNAME)),
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_PrecSlider] = PrecSliderObject,
 							MUIA_CycleChain, TRUE,
 							MUIA_Numeric_Min, 0,
 							MUIA_Numeric_Max, 3,
 							MUIA_Numeric_Value, 1,
-							MUIA_ShortHelp, GetLocString(MSGID_PRECSLIDERBUBBLE),
-							End,
-						End,
+							MUIA_ShortHelp, (IPTR)GetLocString(MSGID_PRECSLIDERBUBBLE),
+                                                End),
+                                        End),
 
-					End, //VGroup
+                                End), //VGroup
 
-				Child,	inst->ppb_Objects[OBJNDX_Group_Enhanced] = VGroup,
+				Child, (IPTR)(inst->ppb_Objects[OBJNDX_Group_Enhanced] = VGroup,
 					MUIA_Background, MUII_GroupBack,
 					GroupFrame,
-					MUIA_FrameTitle, GetLocString(MSGID_ENHANCOPTSNAME),
+					MUIA_FrameTitle, (IPTR)GetLocString(MSGID_ENHANCOPTSNAME),
 					MUIA_ShowMe, (NULL != GuiGFXBase),
 					MUIA_Disabled, TRUE,
 
-					Child,	ColGroup(4),
-						Child, Label(GetLocString(MSGID_AUTODITHERNAME)),
-						Child, inst->ppb_Objects[OBJNDX_CheckmarkAutoDither] = CheckMarkHelp(FALSE, MSGID_CHECKMARKAUTODITHERBUBBLE),
-						Child, Label(GetLocString(MSGID_NUMCOLSNAME)),
-						Child, inst->ppb_Objects[OBJNDX_SliderColours] = SliderObject,
+					Child, (IPTR)(ColGroup(4),
+						Child, (IPTR)Label(GetLocString(MSGID_AUTODITHERNAME)),
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_CheckmarkAutoDither] = CheckMarkHelp(FALSE, MSGID_CHECKMARKAUTODITHERBUBBLE)),
+						Child, (IPTR)Label(GetLocString(MSGID_NUMCOLSNAME)),
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_SliderColours] = SliderObject,
 							MUIA_CycleChain, TRUE,
 							MUIA_Numeric_Min, 1,
 							MUIA_Numeric_Max, 100,
-							MUIA_Numeric_Format, "%ld %%",
+							MUIA_Numeric_Format, (IPTR)"%ld %%",
 							MUIA_Numeric_Value, 10,
-							MUIA_ShortHelp, GetLocString(MSGID_COLORSSLIDERBUBBLE),
-							End,
-						End, //ColGroup
-					Child,	HGroup,
-						Child, Label(GetLocString(MSGID_DITHERMODENAME)),
-						Child, inst->ppb_Objects[OBJNDX_CycleDitherMode] = CycleObject,
+							MUIA_ShortHelp, (IPTR)GetLocString(MSGID_COLORSSLIDERBUBBLE),
+                                                End),
+                                        End), //ColGroup
+					Child, (IPTR)(HGroup,
+						Child, (IPTR)Label(GetLocString(MSGID_DITHERMODENAME)),
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_CycleDitherMode] = CycleObject,
 							MUIA_CycleChain, TRUE,
-							MUIA_Cycle_Entries, dithermodecont,
-							MUIA_ShortHelp, GetLocString(MSGID_CYCLEDITHERMODEBUBBLE),
-							End,
-						Child, Label(GetLocString(MSGID_DITHERAMOUNTNAME)),
-						Child, inst->ppb_Objects[OBJNDX_SliderDitherAmount] = SliderObject,
+							MUIA_Cycle_Entries, (IPTR)dithermodecont,
+							MUIA_ShortHelp, (IPTR)GetLocString(MSGID_CYCLEDITHERMODEBUBBLE),
+                                                End),
+						Child, (IPTR)Label(GetLocString(MSGID_DITHERAMOUNTNAME)),
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_SliderDitherAmount] = SliderObject,
 							MUIA_CycleChain, TRUE,
 							MUIA_Slider_Min, 1,
 							MUIA_Slider_Max, 20,
-							MUIA_ShortHelp, GetLocString(MSGID_SLIDERDITHERAMOUNTBUBBLE),
-							End,
-						End, //HGroup
+							MUIA_ShortHelp, (IPTR)GetLocString(MSGID_SLIDERDITHERAMOUNTBUBBLE),
+                                                End),
+                                        End), //HGroup
 
-					End, //VGroup
-				End, //VGroup
+                                End), //VGroup
+                        End), //VGroup
 
 // Register page "Background Colours"
-			Child,	VGroup,
-				Child, VGroup,
-					Child, HGroup,
-						Child, Label(GetLocString(MSGID_LABEL_CYCLEBACKGROUND)),
-						Child, inst->ppb_Objects[OBJNDX_CycleBackgroundType] = CycleObject,
-							MUIA_Cycle_Entries, CycleBackgroundModeStrings,
+			Child,	(IPTR)(VGroup,
+				Child, (IPTR)(VGroup,
+					Child, (IPTR)(HGroup,
+						Child, (IPTR)Label(GetLocString(MSGID_LABEL_CYCLEBACKGROUND)),
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_CycleBackgroundType] = CycleObject,
+							MUIA_Cycle_Entries, (IPTR)CycleBackgroundModeStrings,
 							MUIA_CycleChain, TRUE,
 							MUIA_Disabled, TRUE,
-							End, //CycleObject
-						MUIA_ShortHelp, GetLocString(MSGID_SHORTHELP_CYCLEBACKGROUND),
-						End, //HGroup
+                                                End), //CycleObject
+						MUIA_ShortHelp, (IPTR)GetLocString(MSGID_SHORTHELP_CYCLEBACKGROUND),
+                                        End), //HGroup
 
-					Child, inst->ppb_Objects[OBJNDX_ColorAdjustBgColor1] = ColoradjustObject,
+					Child, (IPTR)(inst->ppb_Objects[OBJNDX_ColorAdjustBgColor1] = ColoradjustObject,
 						MUIA_CycleChain, TRUE,
 						MUIA_Disabled, TRUE,
-						MUIA_ShortHelp, GetLocString(MSGID_SHORTHELP_BACKGROUNDCOLOR1),
-						End, //ColoradjustObject
+						MUIA_ShortHelp, (IPTR)GetLocString(MSGID_SHORTHELP_BACKGROUNDCOLOR1),
+                                        End), //ColoradjustObject
 
-					Child, BalanceObject,
-						End, //BalanceObject
+					Child, (IPTR)(BalanceObject,
+                                        End), //BalanceObject
 
-					Child, inst->ppb_Objects[OBJNDX_ColorAdjustBgColor2] = ColoradjustObject,
+					Child, (IPTR)(inst->ppb_Objects[OBJNDX_ColorAdjustBgColor2] = ColoradjustObject,
 						MUIA_CycleChain, TRUE,
 						MUIA_Disabled, TRUE,
-						MUIA_ShortHelp, GetLocString(MSGID_SHORTHELP_BACKGROUNDCOLOR2),
-						End, //ColoradjustObject
+						MUIA_ShortHelp, (IPTR)GetLocString(MSGID_SHORTHELP_BACKGROUNDCOLOR2),
+                                        End), //ColoradjustObject
 
-					End, //VGroup
-				End, //VGroup
+                                End), //VGroup
+                        End), //VGroup
 
 
 // Register page "Defaults"
-			Child,	VGroup,
-				Child, HVSpace,
+			Child,	(IPTR)(VGroup,
+				Child, (IPTR)HVSpace,
 
-				Child, VGroup,
+				Child, (IPTR)(VGroup,
 					MUIA_Background, MUII_GroupBack,
 					GroupFrame,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_GROUP_MISCELLANEOUS),
+					MUIA_FrameTitle, (IPTR) GetLocString(MSGID_GROUP_MISCELLANEOUS),
 
-					Child, HVSpace,
+					Child, (IPTR)HVSpace,
 
-					Child,	ColGroup(7),
-						Child, HVSpace,
-						Child, Label(GetLocString(MSGID_ASYNCNAME)),
-						Child, inst->ppb_Objects[OBJNDX_CheckmarkAsync] = CheckMarkHelp(FALSE, MSGID_CHECKMARKASYNCBUBBLE),
-						Child, HVSpace,
-						Child, Label(GetLocString(MSGID_FRIENDNAME)),
-						Child, inst->ppb_Objects[OBJNDX_CheckmarkFriend] = CheckMarkHelp(FALSE, MSGID_CHECKMARKFRIENDBUBBLE),
-						Child, HVSpace,
-						Child, HVSpace,
-						Child, Label(GetLocString(MSGID_RELAYOUTNAME)),
-						Child, inst->ppb_Objects[OBJNDX_CheckmarkRelayout] = CheckMarkHelp(FALSE, MSGID_CHECKMARKRELAYOUTBUBBLE),
-						Child, HVSpace,
-						Child, Label(GetLocString(MSGID_RANDOMNAME)),
-						Child, inst->ppb_Objects[OBJNDX_CheckmarkRandom] = CheckMarkHelp(FALSE, MSGID_CHECKMARKRANDOMBUBBLE),
-						Child, HVSpace,
-					End,
+					Child, (IPTR)(ColGroup(7),
+						Child, (IPTR)HVSpace,
+						Child, (IPTR)Label(GetLocString(MSGID_ASYNCNAME)),
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_CheckmarkAsync] = CheckMarkHelp(FALSE, MSGID_CHECKMARKASYNCBUBBLE)),
+						Child, (IPTR)HVSpace,
+						Child, (IPTR)Label(GetLocString(MSGID_FRIENDNAME)),
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_CheckmarkFriend] = CheckMarkHelp(FALSE, MSGID_CHECKMARKFRIENDBUBBLE)),
+						Child, (IPTR)HVSpace,
+						Child, (IPTR)HVSpace,
+						Child, (IPTR)Label(GetLocString(MSGID_RELAYOUTNAME)),
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_CheckmarkRelayout] = CheckMarkHelp(FALSE, MSGID_CHECKMARKRELAYOUTBUBBLE)),
+						Child, (IPTR)HVSpace,
+						Child, (IPTR)Label(GetLocString(MSGID_RANDOMNAME)),
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_CheckmarkRandom] = CheckMarkHelp(FALSE, MSGID_CHECKMARKRANDOMBUBBLE)),
+						Child, (IPTR)HVSpace,
+					End),
 
-					Child,	ColGroup(2),
-						Child, Label(GetLocString(MSGID_TASKPRINAME)),
-						Child, inst->ppb_Objects[OBJNDX_SliderTaskPri] = PatternSliderObject,
+					Child, (IPTR)(ColGroup(2),
+						Child, (IPTR)Label(GetLocString(MSGID_TASKPRINAME)),
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_SliderTaskPri] = PatternSliderObject,
 							MUIA_CycleChain, TRUE,
 							MUIA_Numeric_Min, -128,
 							MUIA_Numeric_Max, 127,
 							MUIA_Numeric_Value, -3,
 							MUIA_Disabled, TRUE,
-							MUIA_ShortHelp, GetLocString(MSGID_SLIDERTASKPRIBUBBLE),
-							End,
-					End, //ColGroup
+							MUIA_ShortHelp, (IPTR)GetLocString(MSGID_SLIDERTASKPRIBUBBLE),
+                                                End),
+                                        End), //ColGroup
 
-					Child, HVSpace,
+					Child, (IPTR)HVSpace,
 
-					End, //VGroup
+                                End), //VGroup
 
-				Child, VGroup,
+				Child, (IPTR)(VGroup,
 					MUIA_Background, MUII_GroupBack,
 					GroupFrame,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_GROUP_PATTERNNUMBERS),
+					MUIA_FrameTitle, (IPTR) GetLocString(MSGID_GROUP_PATTERNNUMBERS),
 
-					Child, HVSpace,
+					Child, (IPTR)HVSpace,
 
-					Child, HGroup,
-						Child,	inst->ppb_Objects[OBJNDX_Group_PatternSliders] = ColGroup(2),
-							Child, VSpace(0),
-							Child, VSpace(0),
+					Child, (IPTR)(HGroup,
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_Group_PatternSliders] = ColGroup(2),
+							Child, (IPTR)VSpace(0),
+							Child, (IPTR)VSpace(0),
 
-							Child, Label(GetLocString(MSGID_DEFWBNAME)),
-							Child, inst->ppb_Objects[OBJNDX_SliderWB] = PatternSliderObject,
+							Child, (IPTR)Label(GetLocString(MSGID_DEFWBNAME)),
+							Child, (IPTR)(inst->ppb_Objects[OBJNDX_SliderWB] = PatternSliderObject,
 								MUIA_CycleChain, TRUE,
 								MUIA_Numeric_Min, 0,
 								MUIA_Numeric_Max, 300,
 								MUIA_Numeric_Value, 0,
-								MUIA_ShortHelp, GetLocString(MSGID_SLIDERWBBUBBLE),
-								End,
+								MUIA_ShortHelp, (IPTR)GetLocString(MSGID_SLIDERWBBUBBLE),
+                                                        End),
 
-							Child, VSpace(0),
-							Child, VSpace(0),
+							Child, (IPTR)VSpace(0),
+							Child, (IPTR)VSpace(0),
 
-							Child, Label(GetLocString(MSGID_DEFSCREENNAME)),
-							Child, inst->ppb_Objects[OBJNDX_SliderScreen] = PatternSliderObject,
+							Child, (IPTR)Label(GetLocString(MSGID_DEFSCREENNAME)),
+							Child, (IPTR)(inst->ppb_Objects[OBJNDX_SliderScreen] = PatternSliderObject,
 								MUIA_CycleChain, TRUE,
 								MUIA_Numeric_Min, 0,
 								MUIA_Numeric_Max, 300,
 								MUIA_Numeric_Value, 0,
-								MUIA_ShortHelp, GetLocString(MSGID_SLIDERSCREENBUBBLE),
-								End,
+								MUIA_ShortHelp, (IPTR)GetLocString(MSGID_SLIDERSCREENBUBBLE),
+                                                        End),
 
-							Child, VSpace(0),
-							Child, VSpace(0),
+							Child, (IPTR)VSpace(0),
+							Child, (IPTR)VSpace(0),
 
-							Child, Label(GetLocString(MSGID_DEFWINNAME)),
-							Child, inst->ppb_Objects[OBJNDX_SliderWin] = PatternSliderObject,
+							Child, (IPTR)Label(GetLocString(MSGID_DEFWINNAME)),
+							Child, (IPTR)(inst->ppb_Objects[OBJNDX_SliderWin] = PatternSliderObject,
 								MUIA_CycleChain, TRUE,
 								MUIA_Numeric_Min, 0,
 								MUIA_Numeric_Max, 300,
 								MUIA_Numeric_Value, 0,
-								MUIA_ShortHelp, GetLocString(MSGID_SLIDERWINBUBBLE),
-								End,
+								MUIA_ShortHelp, (IPTR)GetLocString(MSGID_SLIDERWINBUBBLE),
+                                                        End),
 
-							Child, VSpace(0),
-							Child, VSpace(0),
+							Child, (IPTR)VSpace(0),
+							Child, (IPTR)VSpace(0),
 
-							Child, Label(GetLocString(MSGID_TEXTNAME)),
-							Child,	inst->ppb_Objects[OBJNDX_SliderText] = PatternSliderObject,
+							Child, (IPTR)Label(GetLocString(MSGID_TEXTNAME)),
+							Child, (IPTR)(inst->ppb_Objects[OBJNDX_SliderText] = PatternSliderObject,
 								MUIA_CycleChain, TRUE,
 								MUIA_Numeric_Min, 0,
 								MUIA_Numeric_Max, 300,
 								MUIA_Numeric_Value, 0,
-								MUIA_ShortHelp, GetLocString(MSGID_SLIDERTEXTBUBBLE),
-								End,
+								MUIA_ShortHelp, (IPTR)GetLocString(MSGID_SLIDERTEXTBUBBLE),
+                                                        End),
 
-							Child, VSpace(0),
-							Child, VSpace(0),
+							Child, (IPTR)VSpace(0),
+							Child, (IPTR)VSpace(0),
 
-							End, //ColGroup
+                                                End), //ColGroup
 
-						Child, inst->ppb_Objects[OBJNDX_Group_PatternPreviews] = VGroup,
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_Group_PatternPreviews] = VGroup,
 							MUIA_ShowMe, inst->ppb_UseThumbNails,
 
-							Child,  inst->ppb_Objects[OBJNDX_Image_DesktopPattern] = BackfillObject,
-								MUIA_UserData, inst,
+							Child, (IPTR)(inst->ppb_Objects[OBJNDX_Image_DesktopPattern] = BackfillObject,
+								MUIA_UserData, (IPTR)inst,
 								ImageButtonFrame,
 								MUIA_Background, MUII_ButtonBack,
 								ImageButtonFrame,
 								MUIA_InputMode, MUIV_InputMode_None,
-								BFA_BitmapObject, inst->ppb_Objects[OBJNDX_EmptyThumbnailBitmap],
-								End, //BackfillClass
-							Child,  inst->ppb_Objects[OBJNDX_Image_ScreenPattern] = BackfillObject,
-								MUIA_UserData, inst,
+								BFA_BitmapObject, (IPTR)inst->ppb_Objects[OBJNDX_EmptyThumbnailBitmap],
+                                                        End), //BackfillClass
+							Child, (IPTR)(inst->ppb_Objects[OBJNDX_Image_ScreenPattern] = BackfillObject,
+								MUIA_UserData, (IPTR)inst,
 								ImageButtonFrame,
 								MUIA_Background, MUII_ButtonBack,
 								ImageButtonFrame,
 								MUIA_InputMode, MUIV_InputMode_None,
-								BFA_BitmapObject, inst->ppb_Objects[OBJNDX_EmptyThumbnailBitmap],
-								End, //BackfillClass
-							Child,  inst->ppb_Objects[OBJNDX_Image_IconWindowPattern] = BackfillObject,
-								MUIA_UserData, inst,
+								BFA_BitmapObject, (IPTR)inst->ppb_Objects[OBJNDX_EmptyThumbnailBitmap],
+                                                        End), //BackfillClass
+							Child, (IPTR)(inst->ppb_Objects[OBJNDX_Image_IconWindowPattern] = BackfillObject,
+								MUIA_UserData, (IPTR)inst,
 								ImageButtonFrame,
 								MUIA_Background, MUII_ButtonBack,
 								ImageButtonFrame,
 								MUIA_InputMode, MUIV_InputMode_None,
-								BFA_BitmapObject, inst->ppb_Objects[OBJNDX_EmptyThumbnailBitmap],
-								End, //BackfillClass
-							Child,  inst->ppb_Objects[OBJNDX_Image_TextWindowPattern] = BackfillObject,
-								MUIA_UserData, inst,
+								BFA_BitmapObject, (IPTR)inst->ppb_Objects[OBJNDX_EmptyThumbnailBitmap],
+                                                        End), //BackfillClass
+							Child, (IPTR)(inst->ppb_Objects[OBJNDX_Image_TextWindowPattern] = BackfillObject,
+								MUIA_UserData, (IPTR)inst,
 								ImageButtonFrame,
 								MUIA_Background, MUII_ButtonBack,
 								ImageButtonFrame,
 								MUIA_InputMode, MUIV_InputMode_None,
-								BFA_BitmapObject, inst->ppb_Objects[OBJNDX_EmptyThumbnailBitmap],
-								End, //BackfillClass
+								BFA_BitmapObject, (IPTR)inst->ppb_Objects[OBJNDX_EmptyThumbnailBitmap],
+                                                        End), //BackfillClass
 
-							End, //VGroup
-						End, //HGroup
+                                                End), //VGroup
+                                        End), //HGroup
 
-					Child, HVSpace,
+					Child, (IPTR)HVSpace,
 
-					End, //VGroup
+                                End), //VGroup
 
-				Child, HVSpace,
+				Child, (IPTR)HVSpace,
 
-				End,
-			End,
+                        End),
+                End),
 
-			MUIA_ContextMenu, inst->ppb_Objects[OBJNDX_ContextMenu],
-		End;
+                MUIA_ContextMenu, (IPTR)inst->ppb_Objects[OBJNDX_ContextMenu],
+        End;
 
 	if (NULL == inst->ppb_Objects[OBJNDX_Group_Main])
 		return NULL;
@@ -1302,23 +1302,23 @@ static void CreateSubWindows(struct PatternPrefsInst *inst)
 //		MUIA_Window_Borderless, TRUE,
 		MUIA_Window_Activate, FALSE,
 		MUIA_Window_NoMenus, TRUE,
-		MUIA_Window_Title, GetLocString(MSGID_WINDOW_STARTUP),
-		WindowContents, VGroup,
-			Child, inst->ppb_Objects[OBJNDX_MsgGauge] = GaugeObject,
+		MUIA_Window_Title, (IPTR)GetLocString(MSGID_WINDOW_STARTUP),
+		WindowContents, (IPTR)(VGroup,
+			Child, (IPTR)(inst->ppb_Objects[OBJNDX_MsgGauge] = GaugeObject,
 				MUIA_Gauge_Horiz, TRUE,
 				GaugeFrame,
-				MUIA_Gauge_InfoText, " ",
-				End,
-			Child, inst->ppb_Objects[OBJNDX_MsgText1] = TextObject,
-				MUIA_Text_PreParse, MUIX_C,
-				MUIA_Text_Contents, "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-				End,
-			Child, inst->ppb_Objects[OBJNDX_MsgText2] = TextObject,
-				MUIA_Text_PreParse, MUIX_C,
-				MUIA_Text_Contents, "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-				End,
-			End,
-		End;
+				MUIA_Gauge_InfoText, (IPTR)" ",
+                        End),
+			Child, (IPTR)(inst->ppb_Objects[OBJNDX_MsgText1] = TextObject,
+				MUIA_Text_PreParse, (IPTR)MUIX_C,
+				MUIA_Text_Contents, (IPTR)"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                        End),
+			Child, (IPTR)(inst->ppb_Objects[OBJNDX_MsgText2] = TextObject,
+				MUIA_Text_PreParse, (IPTR)MUIX_C,
+				MUIA_Text_Contents, (IPTR)"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                        End),
+                End),
+        End;
 
 	inst->ppb_SubWindows[1] = NULL;
 }
@@ -1369,7 +1369,7 @@ static ULONG DoOmSet(Class *cl, Object *o, struct opSet *ops)
 			d1(KPrintF("%s/%s/%ld: MUIA_ScalosPrefs_PatternPrefs_Thumbnails obj=%08lx\n", __FILE__, __FUNC__, __LINE__, o));
 			inst->ppb_UseThumbNails = ti->ti_Data;
 			set(inst->ppb_Objects[OBJNDX_MainList], MUIA_NList_Format,
-				(ULONG) (inst->ppb_UseThumbNails ? LISTFORMAT_THUMBNAILS : LISTFORMAT_STANDARD));
+				(IPTR) (inst->ppb_UseThumbNails ? LISTFORMAT_THUMBNAILS : LISTFORMAT_STANDARD));
 			break;
 		default:
 			d1(KPrintF(__FILE__ "/%s/%ld: unknown tag o=%08lx  Tag=%08lx\n", __FUNC__, __FILE__, __FUNC__, __LINE__, o, ti->ti_Tag));
@@ -1389,7 +1389,7 @@ static Object *CreatePrefsImage(void)
 
 	// First try to load datatypes image from THEME: tree
 	img = DataTypesImageObject,
-		MUIA_ScaDtpic_Name, (ULONG) "THEME:prefs/plugins/pattern",
+		MUIA_ScaDtpic_Name, (IPTR) "THEME:prefs/plugins/pattern",
 		MUIA_ScaDtpic_FailIfUnavailable, TRUE,
 		End; //DataTypesMCCObject
 
@@ -1741,7 +1741,7 @@ static void TranslateStringArray(STRPTR *stringArray)
 {
 	while (*stringArray)
 		{
-		*stringArray = GetLocString((ULONG) *stringArray);
+		*stringArray = GetLocString((IPTR) *stringArray);
 		stringArray++;
 		}
 }
@@ -1751,10 +1751,10 @@ static void TranslateNewMenu(struct NewMenu *nm)
 	while (nm && NM_END != nm->nm_Type)
 		{
 		if (NM_BARLABEL != nm->nm_Label)
-			nm->nm_Label = GetLocString((ULONG) nm->nm_Label);
+			nm->nm_Label = GetLocString((IPTR) nm->nm_Label);
 
 		if (nm->nm_CommKey)
-			nm->nm_CommKey = GetLocString((ULONG) nm->nm_CommKey);
+			nm->nm_CommKey = GetLocString((IPTR) nm->nm_CommKey);
 
 		nm++;
 		}
@@ -2016,13 +2016,13 @@ static SAVEDS(LONG) INTERRUPT ListCompareHookFunc(struct Hook *hook, Object *obj
 DISPATCHER(PatternSlider)
 {
 	struct MUIP_Numeric_Stringify *mstr = (struct MUIP_Numeric_Stringify *) msg;
-	ULONG Result;
+	IPTR Result;
 
 	switch (msg->MethodID)
 		{
 	case MUIM_Numeric_Stringify:
 		if (0 == mstr->value)
-			Result = (ULONG) GetLocString(MSGID_NONE_PRIORITY);
+			Result = (IPTR) GetLocString(MSGID_NONE_PRIORITY);
 		else
 			Result = DoSuperMethodA(cl, obj, msg);
 		break;
@@ -2048,12 +2048,12 @@ DISPATCHER(PrecSlider)
 		MSGID_PRECGUINAME
 		};
 	struct MUIP_Numeric_Stringify *mstr = (struct MUIP_Numeric_Stringify *) msg;
-	ULONG Result;
+	IPTR Result;
 
 	switch (msg->MethodID)
 		{
 	case MUIM_Numeric_Stringify:
-		Result = (ULONG) GetLocString(PrecisionStrings[mstr->value]);
+		Result = (IPTR) GetLocString(PrecisionStrings[mstr->value]);
 		break;
 
 	default:
@@ -2184,14 +2184,14 @@ static LONG ReadPrefsFile(struct PatternPrefsInst *inst, CONST_STRPTR Filename, 
 				pDefs.scd_WindowPattern = SCA_BE2WORD(pDefs.scd_WindowPattern);
 				pDefs.scd_TextModePattern = SCA_BE2WORD(pDefs.scd_TextModePattern);
 
-				set(inst->ppb_Objects[OBJNDX_SliderWB], MUIA_Numeric_Value, (ULONG) pDefs.scd_WorkbenchPattern);
-				set(inst->ppb_Objects[OBJNDX_SliderScreen], MUIA_Numeric_Value, (ULONG) pDefs.scd_ScreenPattern);
-				set(inst->ppb_Objects[OBJNDX_SliderWin], MUIA_Numeric_Value, (ULONG) pDefs.scd_WindowPattern);
+				set(inst->ppb_Objects[OBJNDX_SliderWB], MUIA_Numeric_Value, (IPTR) pDefs.scd_WorkbenchPattern);
+				set(inst->ppb_Objects[OBJNDX_SliderScreen], MUIA_Numeric_Value, (IPTR) pDefs.scd_ScreenPattern);
+				set(inst->ppb_Objects[OBJNDX_SliderWin], MUIA_Numeric_Value, (IPTR) pDefs.scd_WindowPattern);
 
 				if (Actual >= offsetof(struct ScaPatternDefs, scd_TextModePattern))
 					{
-					set(inst->ppb_Objects[OBJNDX_SliderText], MUIA_Numeric_Value, (ULONG) pDefs.scd_TextModePattern);
-					set(inst->ppb_Objects[OBJNDX_SliderTaskPri], MUIA_Numeric_Value, (ULONG) pDefs.scd_TaskPriority);
+					set(inst->ppb_Objects[OBJNDX_SliderText], MUIA_Numeric_Value, (IPTR) pDefs.scd_TextModePattern);
+					set(inst->ppb_Objects[OBJNDX_SliderTaskPri], MUIA_Numeric_Value, (IPTR) pDefs.scd_TaskPriority);
 					}
 
 				set(inst->ppb_Objects[OBJNDX_CheckmarkAsync], MUIA_Selected, (pDefs.scd_Flags & SCDF_ASYNCLAYOUT) ? TRUE : FALSE);
@@ -2924,7 +2924,7 @@ static SAVEDS(void) INTERRUPT ListSelectEntryHookFunc(struct Hook *hook, Object 
 		set(inst->ppb_Objects[OBJNDX_Group_Enhanced], MUIA_Disabled, !(scp->ple_PatternPrefs.scxp_PatternPrefs.scp_Flags & SCPF_ENHANCED));
 		set(inst->ppb_Objects[OBJNDX_Group_Preview], MUIA_Disabled, FALSE);
 
-		set(inst->ppb_Objects[OBJNDX_STR_PopAsl], MUIA_String_Contents, (ULONG) scp->ple_PatternPrefs.scxp_Name);
+		set(inst->ppb_Objects[OBJNDX_STR_PopAsl], MUIA_String_Contents, (IPTR) scp->ple_PatternPrefs.scxp_Name);
 
 		set(inst->ppb_Objects[OBJNDX_ColorAdjustBgColor1], MUIA_Coloradjust_Red,   RGB_8_TO_32(scp->ple_PatternPrefs.scxp_PatternPrefs.scp_color1[0]));
 		set(inst->ppb_Objects[OBJNDX_ColorAdjustBgColor1], MUIA_Coloradjust_Green, RGB_8_TO_32(scp->ple_PatternPrefs.scxp_PatternPrefs.scp_color1[1]));
@@ -3960,12 +3960,12 @@ static void CreateThumbnailImages(struct PatternPrefsInst *inst)
 						}
 
 					set(inst->ppb_Objects[OBJNDX_MsgText1], MUIA_Text_Contents,
-						(ULONG) GetLocString(scp->ple_SAC ? MSGID_LOADING_THUMBNAIL : MSGID_CREATING_THUMBNAIL));
-					set(inst->ppb_Objects[OBJNDX_MsgText2], MUIA_Text_Contents, (ULONG) scp->ple_PatternPrefs.scxp_Name);
+						(IPTR) GetLocString(scp->ple_SAC ? MSGID_LOADING_THUMBNAIL : MSGID_CREATING_THUMBNAIL));
+					set(inst->ppb_Objects[OBJNDX_MsgText2], MUIA_Text_Contents, (IPTR) scp->ple_PatternPrefs.scxp_Name);
 
 					sprintf(TextLine, GetLocString(MSGID_PROGRESS_THUMBNAILS), n, nEntries);
 					set(inst->ppb_Objects[OBJNDX_MsgGauge], MUIA_Gauge_Current, n);
-					set(inst->ppb_Objects[OBJNDX_MsgGauge], MUIA_Gauge_InfoText, (ULONG) TextLine);
+					set(inst->ppb_Objects[OBJNDX_MsgGauge], MUIA_Gauge_InfoText, (IPTR) TextLine);
 					}
 				}
 
@@ -4134,7 +4134,7 @@ void _XCEXIT(long x)
 DISPATCHER(myNList)
 {
 	struct PatternPrefsInst *inst = NULL;
-	ULONG result;
+	IPTR result;
 
 	d1(kprintf("%s/%s/%ld: MethodID=%08lx\n", __FILE__, __FUNC__, __LINE__, msg->MethodID));
 
@@ -4330,7 +4330,7 @@ static void UpdateUseThumbnails(struct PatternPrefsInst *inst)
 	set(inst->ppb_Objects[OBJNDX_Menu_ReloadThumbnails], MUIA_Menuitem_Enabled, inst->ppb_UseThumbNails);
 
 	set(inst->ppb_Objects[OBJNDX_MainList], MUIA_NList_Format,
-		(ULONG) (inst->ppb_UseThumbNails ? LISTFORMAT_THUMBNAILS : LISTFORMAT_STANDARD));
+		(IPTR) (inst->ppb_UseThumbNails ? LISTFORMAT_THUMBNAILS : LISTFORMAT_STANDARD));
 
 	// pattern previews are only enabled if thumbnails are enabled
 	set(inst->ppb_Objects[OBJNDX_Group_PatternPreviews], MUIA_ShowMe, inst->ppb_UseThumbNails);
