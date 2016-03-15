@@ -91,15 +91,15 @@ long _stack = 16384;		// minimum stack size, used by SAS/C startup code
 #define KeyButtonHelp(name,key,HelpText)\
 	TextObject,\
 		ButtonFrame,\
-		MUIA_CycleChain, TRUE, \
-		MUIA_Font, MUIV_Font_Button,\
-		MUIA_Text_Contents, name,\
-		MUIA_Text_PreParse, "\33c",\
-		MUIA_Text_HiChar  , key,\
-		MUIA_ControlChar  , key,\
-		MUIA_InputMode    , MUIV_InputMode_RelVerify,\
-		MUIA_Background   , MUII_ButtonBack,\
-		MUIA_ShortHelp, HelpText,\
+		MUIA_CycleChain,        TRUE, \
+		MUIA_Font,              MUIV_Font_Button,\
+		MUIA_Text_Contents,     (IPTR)name,\
+		MUIA_Text_PreParse,     (IPTR)"\33c",\
+		MUIA_Text_HiChar,       (IPTR)key,\
+		MUIA_ControlChar,       (IPTR)key,\
+		MUIA_InputMode,         MUIV_InputMode_RelVerify,\
+		MUIA_Background,        MUII_ButtonBack,\
+		MUIA_ShortHelp,         (IPTR)HelpText,\
 		End
 
 struct VersionFileHandle
@@ -325,7 +325,7 @@ static CONST_STRPTR ProxyPasswd = "password";
 
 static CONST_STRPTR VersTag = "\0$VER: Scalos Updater.module V" VERS_MAJOR "." VERS_MINOR " (" __DATE__ ") " COMPILER_STRING;
 
-DISPATCHER_PROTO(myComponentsNList);
+DISPATCHERPROTO(myComponentsNList);
 
 static struct MUI_CustomClass *myComponentsNListClass;
 
@@ -392,7 +392,7 @@ int main(int argc, char *argv[])
 
 	TranslateStringArray(RegisterTitles);
 
-	ContextMenuComponents = MUI_MakeObject(MUIO_MenustripNM, (ULONG) NewContextMenuComponents, 0);
+	ContextMenuComponents = MUI_MakeObject(MUIO_MenustripNM, (IPTR) NewContextMenuComponents, 0);
 	if (NULL == ContextMenuComponents)
 		{
 		fail(APP_Main, "Failed to create Collections Context Menu.", 20);
@@ -401,174 +401,173 @@ int main(int argc, char *argv[])
 #undef NewObject
 #endif //defined(M68K) && defined(__GNUC__)
 	APP_Main = ApplicationObject,
-		MUIA_Application_Title,		GetLocString(MSGID_TITLENAME),
-		MUIA_Application_Version,	1 + VersTag,
-		MUIA_Application_Copyright,	"© The Scalos Team, 2009" CURRENTYEAR,
-		MUIA_Application_Author,	"The Scalos Team",
-		MUIA_Application_Description,	"Scalos Updater module",
-		MUIA_Application_Base,		"SCALOS_UPDATER_MODULE",
+		MUIA_Application_Title,		(IPTR)GetLocString(MSGID_TITLENAME),
+		MUIA_Application_Version,	(IPTR)VersTag + 1,
+		MUIA_Application_Copyright,	(IPTR)"© The Scalos Team, 2009" CURRENTYEAR,
+		MUIA_Application_Author,	(IPTR)"The Scalos Team",
+		MUIA_Application_Description,	(IPTR)"Scalos Updater module",
+		MUIA_Application_Base,		(IPTR)"SCALOS_UPDATER_MODULE",
 
-		SubWindow, WIN_Main = WindowObject,
-			MUIA_Window_Title, GetLocString(MSGID_TITLENAME),
+		SubWindow, (IPTR)(WIN_Main = WindowObject,
+			MUIA_Window_Title, (IPTR)GetLocString(MSGID_TITLENAME),
 			MUIA_Window_ID,	MAKE_ID('M','A','I','N'),
 			MUIA_Window_AppWindow, TRUE,
 
-			WindowContents, VGroup,
+			WindowContents, (IPTR)(VGroup,
 
-				Child, RegisterGroup(RegisterTitles),
+				Child, (IPTR)(RegisterGroup(RegisterTitles),
 
 	//------- Main page ----------------
-					Child, VGroup,
+					Child, (IPTR)(VGroup,
 						MUIA_Background, MUII_RegisterBack,
 
-						Child, NListviewObject,
-							MUIA_NListview_NList, NListComponents = myComponentsNListObject,
-								MUIA_NList_Format, ",BAR,BAR,BAR,BAR,BAR",
+						Child, (IPTR)(NListviewObject,
+							MUIA_NListview_NList, (IPTR)(NListComponents = myComponentsNListObject,
+								MUIA_NList_Format, (IPTR)",BAR,BAR,BAR,BAR,BAR",
 								MUIA_Background, MUII_ListBack,
-								MUIA_NList_ConstructHook2, &ComponentsConstructHook,
-								MUIA_NList_DestructHook2, &ComponentsDestructHook,
-								MUIA_NList_DisplayHook2, &ComponentsDisplayHook,
-								MUIA_NList_CompareHook2, &ComponentsCompareHook,
+								MUIA_NList_ConstructHook2, (IPTR)&ComponentsConstructHook,
+								MUIA_NList_DestructHook2, (IPTR)&ComponentsDestructHook,
+								MUIA_NList_DisplayHook2, (IPTR)&ComponentsDisplayHook,
+								MUIA_NList_CompareHook2, (IPTR)&ComponentsCompareHook,
 								MUIA_NList_AdjustWidth, TRUE,
 								MUIA_NList_Title, TRUE,
 								MUIA_NList_TitleSeparator, TRUE,
 								MUIA_NList_SortType, 1,
 								MUIA_NList_TitleMark, MUIV_NList_TitleMark_Down | 3,
-								MUIA_ContextMenu, ContextMenuComponents,
-								End, //NListObject
-							End, //NListviewObject
+								MUIA_ContextMenu, (IPTR)ContextMenuComponents,
+                                                        End), //NListObject
+                                                End), //NListviewObject
 
-						Child, NListviewObject,
+						Child, (IPTR)(NListviewObject,
 							MUIA_ShowMe, FALSE,
-							MUIA_NListview_NList, NListHiddenComponents = myComponentsNListObject,
-								MUIA_NList_Format, ",BAR,BAR,BAR,BAR,BAR",
+							MUIA_NListview_NList, (IPTR)(NListHiddenComponents = myComponentsNListObject,
+								MUIA_NList_Format, (IPTR)",BAR,BAR,BAR,BAR,BAR",
 								MUIA_Background, MUII_ListBack,
-								MUIA_NList_ConstructHook2, &ComponentsConstructHook,
-								MUIA_NList_DestructHook2, &ComponentsDestructHook,
-								MUIA_NList_DisplayHook2, &ComponentsDisplayHook,
-								MUIA_NList_CompareHook2, &ComponentsCompareHook,
+								MUIA_NList_ConstructHook2, (IPTR)&ComponentsConstructHook,
+								MUIA_NList_DestructHook2, (IPTR)&ComponentsDestructHook,
+								MUIA_NList_DisplayHook2, (IPTR)&ComponentsDisplayHook,
+								MUIA_NList_CompareHook2, (IPTR)&ComponentsCompareHook,
 								MUIA_NList_AdjustWidth, TRUE,
 								MUIA_NList_Title, TRUE,
 								MUIA_NList_TitleSeparator, TRUE,
 								MUIA_NList_SortType, 1,
 								MUIA_NList_TitleMark, MUIV_NList_TitleMark_Down | 3,
-								MUIA_ContextMenu, ContextMenuComponents,
-								End, //NListObject
-							End, //NListviewObject
+								MUIA_ContextMenu, (IPTR)ContextMenuComponents,
+                                                        End), //NListObject
+                                                End), //NListviewObject
 
-						Child, GroupSelection = HGroup,
-							Child, ColGroup(2),
-								Child, ButtonSelectAll = KeyButtonHelp(GetLocString(MSGID_BUTTON_SELECT_ALL),
+						Child, (IPTR)(GroupSelection = HGroup,
+							Child, (IPTR)(ColGroup(2),
+								Child, (IPTR)(ButtonSelectAll = KeyButtonHelp(GetLocString(MSGID_BUTTON_SELECT_ALL),
 									GetLocString(MSGID_BUTTON_SELECT_ALL_SHORT),
-									GetLocString(MSGID_BUTTON_SELECT_ALL_HELP)),
-								Child, ButtonDeselectAll = KeyButtonHelp(GetLocString(MSGID_BUTTON_DESELECT_ALL),
+									GetLocString(MSGID_BUTTON_SELECT_ALL_HELP))),
+								Child, (IPTR)(ButtonDeselectAll = KeyButtonHelp(GetLocString(MSGID_BUTTON_DESELECT_ALL),
 									GetLocString(MSGID_BUTTON_DESELECT_ALL_SHORT),
-									GetLocString(MSGID_BUTTON_DESELECT_ALL_HELP)),
-								End, //ColGroup
+									GetLocString(MSGID_BUTTON_DESELECT_ALL_HELP))),
+                                                        End), //ColGroup
 
-							Child, SelectedCountMsg = TextObject,
-								MUIA_Text_Contents, "",
-								MUIA_Text_PreParse, MUIX_C,
-								End, //TextObject
-							End, //HGroup
+							Child, (IPTR)(SelectedCountMsg = TextObject,
+								MUIA_Text_Contents, (IPTR)"",
+								MUIA_Text_PreParse, (IPTR)MUIX_C,
+                                                        End), //TextObject
+                                                End), //HGroup
 
-						Child, HGroup,
+						Child, (IPTR)(HGroup,
 							GroupFrame,
 							MUIA_Background, MUII_GroupBack,
 
-							Child, GaugeProgress = GaugeObject,
+							Child, (IPTR)(GaugeProgress = GaugeObject,
 								GaugeFrame,
 								MUIA_InputMode, MUIV_InputMode_None,
 								MUIA_ShowSelState, FALSE,
-								MUIA_Gauge_InfoText, "",
+								MUIA_Gauge_InfoText, (IPTR)"",
 								MUIA_Gauge_Horiz, TRUE,
 								MUIA_Gauge_Max, 100,
-								End, //GaugeObject
-							End, //HGroup
+                                                        End), //GaugeObject
+                                                End), //HGroup
 						
 
-						Child, GroupActionButtons = ColGroup(2),
-							Child, ButtonCheckForUpdates = KeyButtonHelp(GetLocString(MSGID_BUTTON_CHECKFORUPDATES),
+						Child, (IPTR)(GroupActionButtons = ColGroup(2),
+							Child, (IPTR)(ButtonCheckForUpdates = KeyButtonHelp(GetLocString(MSGID_BUTTON_CHECKFORUPDATES),
 								GetLocString(MSGID_BUTTON_CHECKFORUPDATES_SHORT),
-								GetLocString(MSGID_BUTTON_CHECKFORUPDATES_HELP)),
-							Child, ButtonStartUpdate = KeyButtonHelp(GetLocString(MSGID_BUTTON_STARTUPDATE),
+								GetLocString(MSGID_BUTTON_CHECKFORUPDATES_HELP))),
+							Child, (IPTR)(ButtonStartUpdate = KeyButtonHelp(GetLocString(MSGID_BUTTON_STARTUPDATE),
 								GetLocString(MSGID_BUTTON_STARTUPDATE_SHORT),
-								GetLocString(MSGID_BUTTON_STARTUPDATE_HELP)),
-							End, //HGroup
+								GetLocString(MSGID_BUTTON_STARTUPDATE_HELP))),
+                                                End), //ColGroup
 
-						End, //VGroup
+                                        End), //VGroup
 
 	//------- Log page ----------------
-					Child, VGroup,
+					Child, (IPTR)(VGroup,
 						MUIA_Background, MUII_RegisterBack,
 
-						Child, HGroup,
+						Child, (IPTR)(HGroup,
 							GroupFrame,
 							MUIA_Background, MUII_GroupBack,
-							MUIA_FrameTitle, GetLocString(MSGID_GROUP_LOG),
-								Child, TextEditorLog = TextEditorObject,
-									TextFrame,
-									MUIA_Background, MUII_TextBack,
-									MUIA_TextEditor_ReadOnly, TRUE,
-								End, //TextEditorObject
-								Child, ScrollBarLog = ScrollbarObject,
-									MUIA_Background, MUII_PropBack,
-									SliderFrame,
-								End, //ScrollbarObject
-							End, //HGroup
+							MUIA_FrameTitle, (IPTR)GetLocString(MSGID_GROUP_LOG),
+                                                        Child, (IPTR)(TextEditorLog = TextEditorObject,
+                                                                TextFrame,
+                                                                MUIA_Background, MUII_TextBack,
+                                                                MUIA_TextEditor_ReadOnly, TRUE,
+                                                        End), //TextEditorObject
+                                                        Child, (IPTR)(ScrollBarLog = ScrollbarObject,
+                                                                MUIA_Background, MUII_PropBack,
+                                                                SliderFrame,
+                                                        End), //ScrollbarObject
+                                                End), //HGroup
 
-						Child, ColGroup(2),
-							Child, ButtonClearLog = KeyButtonHelp(GetLocString(MSGID_BUTTON_CLEAR_LOG),
+						Child, (IPTR)(ColGroup(2),
+							Child, (IPTR)(ButtonClearLog = KeyButtonHelp(GetLocString(MSGID_BUTTON_CLEAR_LOG),
 								GetLocString(MSGID_BUTTON_CLEAR_LOG_SHORT),
-								GetLocString(MSGID_BUTTON_CLEAR_LOG_SHORTHELP)),
-							Child, ButtonSaveLog = KeyButtonHelp(GetLocString(MSGID_BUTTON_SAVE_LOG),
+								GetLocString(MSGID_BUTTON_CLEAR_LOG_SHORTHELP))),
+							Child, (IPTR)(ButtonSaveLog = KeyButtonHelp(GetLocString(MSGID_BUTTON_SAVE_LOG),
 								GetLocString(MSGID_BUTTON_SAVE_LOG_SHORT),
-								GetLocString(MSGID_BUTTON_SAVE_LOG_SHORTHELP)),
-							End, //HGroup
-
+								GetLocString(MSGID_BUTTON_SAVE_LOG_SHORTHELP))),
+                                                End), //ColGroup
 						
-						End, //VGroup
+                                        End), //VGroup
 
 	//------- Configuration page ----------------
-					Child, VGroup,
+					Child, (IPTR)(VGroup,
 						MUIA_Background, MUII_RegisterBack,
 
-						Child, VGroup,
+						Child, (IPTR)(VGroup,
 							GroupFrame,
 							MUIA_Background, MUII_GroupBack,
-							MUIA_FrameTitle, GetLocString(MSGID_GROUP_PROXY),
-							Child, HGroup,
-								Child, Label1((ULONG) GetLocString(MSGID_CHECK_USE_PROXY)),
-								Child, HGroup,
-									Child, CheckUseProxy = CheckMark(fUseProxy),
-									Child, HVSpace,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_CHECK_USE_PROXY_SHORTHELP),
-									End, //HGroup
-								End, //HGroup,
-							Child, HGroup,
-								Child, Label2((ULONG) GetLocString(MSGID_STRING_PROXY_ADDR)),
-								Child, StringProxyAddr = StringObject,
+							MUIA_FrameTitle, (IPTR)GetLocString(MSGID_GROUP_PROXY),
+							Child, (IPTR)(HGroup,
+								Child, (IPTR)Label1(GetLocString(MSGID_CHECK_USE_PROXY)),
+								Child, (IPTR)(HGroup,
+									Child, (IPTR)(CheckUseProxy = CheckMark(fUseProxy)),
+									Child, (IPTR)HVSpace,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_CHECK_USE_PROXY_SHORTHELP),
+                                                                End), //HGroup
+                                                        End), //HGroup,
+							Child, (IPTR)(HGroup,
+								Child, (IPTR)Label2( GetLocString(MSGID_STRING_PROXY_ADDR)),
+								Child, (IPTR)(StringProxyAddr = StringObject,
 									StringFrame,
 									MUIA_Disabled, !fUseProxy,
 									MUIA_CycleChain, TRUE,
-									MUIA_String_Contents, ProxyAddr,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_STRING_PROXY_ADDR_SHORTHELP),
-									End, //StringObject
-								Child, Label2((ULONG) GetLocString(MSGID_STRING_PROXY_PORT)),
-								Child, StringProxyPort = StringObject,
+									MUIA_String_Contents, (IPTR)ProxyAddr,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_STRING_PROXY_ADDR_SHORTHELP),
+                                                                End), //StringObject
+								Child, (IPTR)Label2(GetLocString(MSGID_STRING_PROXY_PORT)),
+								Child, (IPTR)(StringProxyPort = StringObject,
 									MUIA_Weight, 25,
 									StringFrame,
 									MUIA_Disabled, !fUseProxy,
 									MUIA_CycleChain, TRUE,
 									MUIA_String_Integer, ProxyPort,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_STRING_PROXY_PORT_SHORTHELP),
-									End, //StringObject
-								End, //HGroup
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_STRING_PROXY_PORT_SHORTHELP),
+                                                                End), //StringObject
+                                                        End), //HGroup
 
-							Child, HGroup,
-								Child, Label1((ULONG) GetLocString(MSGID_CHECK_USE_PROXYAUTH)),
-								Child, HGroup,
-									Child, CheckUseProxyAuth = ImageObject,
+							Child, (IPTR)(HGroup,
+								Child, (IPTR)Label1(GetLocString(MSGID_CHECK_USE_PROXYAUTH)),
+								Child, (IPTR)(HGroup,
+									Child, (IPTR)(CheckUseProxyAuth = ImageObject,
 										ImageButtonFrame,
 										MUIA_InputMode, MUIV_InputMode_Toggle,
 										MUIA_Image_Spec, MUII_CheckMark,
@@ -577,114 +576,114 @@ int main(int argc, char *argv[])
 										MUIA_Background, MUII_ButtonBack,
 										MUIA_ShowSelState, FALSE,
 										MUIA_Disabled, !fUseProxy,
-										MUIA_ShortHelp, (ULONG) GetLocString(MSGID_CHECK_USE_PROXYAUTH_SHORTHELP),
-										End, //Checkmark()
+										MUIA_ShortHelp, (IPTR) GetLocString(MSGID_CHECK_USE_PROXYAUTH_SHORTHELP),
+                                                                        End), //Checkmark()
 
-									Child, HVSpace,
-									End, //HGroup
-								End, //HGroup,
-							Child, HGroup,
-								Child, Label2((ULONG) GetLocString(MSGID_STRING_PROXY_USERNAME)),
-								Child, StringProxyUser = StringObject,
+									Child, (IPTR)HVSpace,
+                                                                End), //HGroup
+                                                        End), //HGroup,
+							Child, (IPTR)(HGroup,
+								Child, (IPTR)Label2(GetLocString(MSGID_STRING_PROXY_USERNAME)),
+								Child, (IPTR)(StringProxyUser = StringObject,
 									StringFrame,
 									MUIA_Disabled, !(fUseProxy && fUseProxyAuth),
 									MUIA_CycleChain, TRUE,
-									MUIA_String_Contents, ProxyUser,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_STRING_PROXY_USERNAME_SHORTHELP),
-									End, //StringObject
-								Child, Label2((ULONG) GetLocString(MSGID_STRING_PROXY_PASSWD)),
-								Child, StringProxyPwd = StringObject,
+									MUIA_String_Contents, (IPTR)ProxyUser,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_STRING_PROXY_USERNAME_SHORTHELP),
+                                                                End), //StringObject
+								Child, (IPTR)Label2(GetLocString(MSGID_STRING_PROXY_PASSWD)),
+								Child, (IPTR)(StringProxyPwd = StringObject,
 									StringFrame,
 									MUIA_Disabled, !(fUseProxy && fUseProxyAuth),
 									MUIA_CycleChain, TRUE,
-									MUIA_String_Contents, ProxyPasswd,
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_STRING_PROXY_PASSWD_SHORTHELP),
-									End, //StringObject
-								End, //HGroup
+									MUIA_String_Contents, (IPTR)ProxyPasswd,
+									MUIA_ShortHelp, (IPTR) GetLocString(MSGID_STRING_PROXY_PASSWD_SHORTHELP),
+                                                                End), //StringObject
+                                                        End), //HGroup
 
-							End, //VGroup
+                                                End), //VGroup
 
-						Child, HGroup,
+						Child, (IPTR)(HGroup,
 							GroupFrame,
 							MUIA_Background, MUII_GroupBack,
-							MUIA_FrameTitle, GetLocString(MSGID_STRING_SCALOS_SERVER),
+							MUIA_FrameTitle, (IPTR)GetLocString(MSGID_STRING_SCALOS_SERVER),
 
-							Child, StringScalosWebSite = StringObject,
+							Child, (IPTR)(StringScalosWebSite = StringObject,
 								StringFrame,
 								MUIA_CycleChain, TRUE,
-								MUIA_String_Contents, ScalosHttpAddr,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_STRING_SCALOS_SERVER_SHORTHELP),
-								End, //StringObject
-							End, //HGroup
+								MUIA_String_Contents, (IPTR)ScalosHttpAddr,
+								MUIA_ShortHelp, (IPTR) GetLocString(MSGID_STRING_SCALOS_SERVER_SHORTHELP),
+                                                        End), //StringObject
+                                                End), //HGroup
 
-						Child, HGroup,
+						Child, (IPTR)(HGroup,
 							GroupFrame,
 							MUIA_Background, MUII_GroupBack,
-							MUIA_FrameTitle, GetLocString(MSGID_POPASL_TEMPPATH),
+							MUIA_FrameTitle, (IPTR)GetLocString(MSGID_POPASL_TEMPPATH),
 
-							Child, PopAslTempPath = PopaslObject,
-								MUIA_Popstring_Button, PopButton(MUII_PopDrawer),
+							Child, (IPTR)(PopAslTempPath = PopaslObject,
+								MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopDrawer),
 								MUIA_Dropable, TRUE,
-								MUIA_Popstring_String, StringObject,
+								MUIA_Popstring_String, (IPTR)(StringObject,
 									StringFrame,
 									MUIA_Background, MUII_TextBack,
-									MUIA_String_Contents, TempFilePath,
+									MUIA_String_Contents, (IPTR)TempFilePath,
 									MUIA_CycleChain, TRUE,
-								End, //StringObject
-//								ASLFR_TitleText, (ULONG) GetLocString(MSGID_PATHSPAGE_SCALOS_HOME_ASLTITLE),
-//								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PATHSPAGE_SCALOS_HOME_SHORTHELP),
-								End, //PopaslObject
-							End, //HGroup
+								End), //StringObject
+//								ASLFR_TitleText, (IPTR) GetLocString(MSGID_PATHSPAGE_SCALOS_HOME_ASLTITLE),
+//								MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PATHSPAGE_SCALOS_HOME_SHORTHELP),
+                                                        End), //PopaslObject
+                                                End), //HGroup
 
-						Child, ColGroup(2),
+						Child, (IPTR)(ColGroup(2),
 							GroupFrame,
 							MUIA_Background, MUII_GroupBack,
-							MUIA_FrameTitle, GetLocString(MSGID_GROUP_MISCELLANEOUS),
+							MUIA_FrameTitle, (IPTR)GetLocString(MSGID_GROUP_MISCELLANEOUS),
 
-							Child, Label1((ULONG) GetLocString(MSGID_CHECK_SHOW_ALL_COMPONENTS)),
-							Child, HGroup,
-								Child, CheckShowAllComponents  = CheckMark(fShowAllComponents),
-								Child, HVSpace,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_CHECK_SHOW_ALL_COMPONENTS_SHORTHELP),
-								End, //HGroup
+							Child, (IPTR)Label1(GetLocString(MSGID_CHECK_SHOW_ALL_COMPONENTS)),
+							Child, (IPTR)(HGroup,
+								Child, (IPTR)(CheckShowAllComponents  = CheckMark(fShowAllComponents)),
+								Child, (IPTR)HVSpace,
+								MUIA_ShortHelp, (IPTR) GetLocString(MSGID_CHECK_SHOW_ALL_COMPONENTS_SHORTHELP),
+                                                        End), //HGroup
 
-							Child, Label1((ULONG) GetLocString(MSGID_CHECK_ASK_EVERY_UPDATE)),
-							Child, HGroup,
-								Child, CheckAskEveryUpdate = CheckMark(fAskEveryUpdate),
-								Child, HVSpace,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_CHECK_ASK_EVERY_UPDATE_SHORTHELP),
-								End, //HGroup
-							End, //ColGroup,
+							Child, (IPTR)Label1(GetLocString(MSGID_CHECK_ASK_EVERY_UPDATE)),
+							Child, (IPTR)(HGroup,
+								Child, (IPTR)(CheckAskEveryUpdate = CheckMark(fAskEveryUpdate)),
+								Child, (IPTR)HVSpace,
+								MUIA_ShortHelp, (IPTR) GetLocString(MSGID_CHECK_ASK_EVERY_UPDATE_SHORTHELP),
+                                                        End), //HGroup
+                                                End), //ColGroup,
 
-						End, //VGroup
-	//-------------------------------------------
+                                        End), //VGroup
+//-------------------------------------------
 
-					End, //RegisterGroup
+                                End), //RegisterGroup
 
-				End, //VGroup
+                        End), //VGroup
 
-			End, //WindowObject
+                End), //WindowObject
 
-		MUIA_Application_Menustrip, MenustripObject,
-			Child, MenuObjectT(GetLocString(MSGID_MENU_PROJECT)),
+		MUIA_Application_Menustrip, (IPTR)(MenustripObject,
+			Child, (IPTR)(MenuObjectT((IPTR)GetLocString(MSGID_MENU_PROJECT)),
 
-				Child, MenuAbout = MenuitemObject,
-					MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_ABOUT),
-				End,
-				Child, MenuAboutMUI = MenuitemObject,
-					MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_ABOUTMUI),
-				End,
-				Child, MenuitemObject,
+				Child, (IPTR)(MenuAbout = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_ABOUT),
+				End),
+				Child, (IPTR)(MenuAboutMUI = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_ABOUTMUI),
+				End),
+				Child, (IPTR)(MenuitemObject,
 					MUIA_Menuitem_Title, -1,
-				End,
-				Child, MenuQuit = MenuitemObject,
-					MUIA_Menuitem_Title, GetLocString(MSGID_MENU_PROJECT_QUIT),
-					MUIA_Menuitem_Shortcut, GetLocString(MSGID_MENU_PROJECT_QUIT_SHORT),
-				End,
+				End),
+				Child, (IPTR)(MenuQuit = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR)GetLocString(MSGID_MENU_PROJECT_QUIT),
+					MUIA_Menuitem_Shortcut, (IPTR)GetLocString(MSGID_MENU_PROJECT_QUIT_SHORT),
+				End),
 					
-			End, //MenuObjectT
+			End), //MenuObjectT
 
-		End, //MenuStripObject
+		End), //MenuStripObject
 
 	End; //ApplicationObject
 
@@ -753,7 +752,7 @@ int main(int argc, char *argv[])
 		ButtonCheckForUpdates, 2, MUIM_CallHook, &CheckForUpdatesHook);
 
 	// Connect TextEditor object with its scrollbar
-	set(TextEditorLog,  MUIA_TextEditor_Slider, (ULONG) ScrollBarLog);
+	set(TextEditorLog,  MUIA_TextEditor_Slider, (IPTR) ScrollBarLog);
 
 	// Setup callback hooks for "Select All" and "Deselect All" buttons
 	DoMethod(ButtonSelectAll, MUIM_Notify, MUIA_Pressed, FALSE,
@@ -1021,7 +1020,7 @@ static BOOL MyInitAmiSSL(void)
 #endif //__amigaos4__
 
 #ifndef STATIC_SSL
-		if (0 != InitAmiSSL(AmiSSL_ErrNoPtr, (ULONG) &errno,
+		if (0 != InitAmiSSL(AmiSSL_ErrNoPtr, (IPTR) &errno,
 				    TAG_END))
 			{
 			ErrMsgID = MSGID_AMISSL_FAIL_INITAMISSL;
@@ -1037,7 +1036,7 @@ static BOOL MyInitAmiSSL(void)
 		MUI_Request(APP_Main, WIN_Main, 0, NULL,
 			GetLocString(MSGID_ABOUTREQOK),
 			GetLocString(MSGID_AMISSL_FAIL_REQ_FORMAT),
-			(ULONG) GetLocString(ErrMsgID));
+			(IPTR) GetLocString(ErrMsgID));
 		}
 
 	return Success;
@@ -1335,7 +1334,7 @@ static void TranslateStringArray(CONST_STRPTR *stringArray)
 {
 	while (*stringArray)
 		{
-		*stringArray = GetLocString((ULONG) *stringArray);
+		*stringArray = GetLocString((IPTR) *stringArray);
 		stringArray++;
 		}
 }
@@ -1347,10 +1346,10 @@ static void TranslateNewMenu(struct NewMenu *nm)
 	while (nm && NM_END != nm->nm_Type)
 		{
 		if (NM_BARLABEL != nm->nm_Label)
-			nm->nm_Label = GetLocString((ULONG) nm->nm_Label);
+			nm->nm_Label = GetLocString((IPTR) nm->nm_Label);
 
 		if (nm->nm_CommKey)
-			nm->nm_CommKey = GetLocString((ULONG) nm->nm_CommKey);
+			nm->nm_CommKey = GetLocString((IPTR) nm->nm_CommKey);
 
 		nm++;
 		}
@@ -1381,7 +1380,7 @@ static SAVEDS(void) INTERRUPT OpenAboutFunc(struct Hook *hook, Object *o, Msg ms
 	MUI_Request(APP_Main, WIN_Main, 0, NULL, 
 		GetLocString(MSGID_ABOUTREQOK), 
 		GetLocString(MSGID_ABOUTREQFORMAT), 
-		VERSION_MAJOR, VERSION_MINOR, (ULONG) COMPILER_STRING, (ULONG) CURRENTYEAR);
+		VERSION_MAJOR, VERSION_MINOR, (IPTR) COMPILER_STRING, (IPTR) CURRENTYEAR);
 }
 
 //----------------------------------------------------------------------------
@@ -1444,7 +1443,7 @@ BOOL CheckMCCVersion(CONST_STRPTR name, ULONG minver, ULONG minrev)
 					(STRPTR) GetLocString(MSGID_STARTUP_FAILURE),
 					(STRPTR) GetLocString(MSGID_STARTUP_RETRY_QUIT_GAD),
                                         (STRPTR) GetLocString(MSGID_STARTUP_MCC_IN_USE),
-					(ULONG) name, minver, minrev, ver, rev))
+					(IPTR) name, minver, minrev, ver, rev))
 					{
 					flush = TRUE;
 					}
@@ -1476,7 +1475,7 @@ BOOL CheckMCCVersion(CONST_STRPTR name, ULONG minver, ULONG minrev)
 					(STRPTR) GetLocString(MSGID_STARTUP_FAILURE),
 					(STRPTR) GetLocString(MSGID_STARTUP_RETRY_QUIT_GAD),
                                         (STRPTR) GetLocString(MSGID_STARTUP_OLD_MCC),
-					(ULONG) name, minver, minrev, ver, rev))
+					(IPTR) name, minver, minrev, ver, rev))
 					{
 					flush = TRUE;
 					}
@@ -1492,7 +1491,7 @@ BOOL CheckMCCVersion(CONST_STRPTR name, ULONG minver, ULONG minrev)
 				(STRPTR) GetLocString(MSGID_STARTUP_FAILURE),
 				(STRPTR) GetLocString(MSGID_STARTUP_RETRY_QUIT_GAD),
                                 (STRPTR) GetLocString(MSGID_STARTUP_MCC_NOT_FOUND),
-				(ULONG) name, minver, minrev))
+				(IPTR) name, minver, minrev))
 				{
 				break;
 				}
@@ -2230,7 +2229,7 @@ static void CheckForUpdatesHookFunc(struct Hook *hook, Object *obj, Msg *msg)
 
 		AddLogMsg(MSGID_LOG_CHECKING_VERSIONS);
 
-		set(GaugeProgress, MUIA_Gauge_InfoText, (ULONG) GetLocString(MSG_PROGRESS_PROCESS_HTTP_RESPONSE));
+		set(GaugeProgress, MUIA_Gauge_InfoText, (IPTR) GetLocString(MSG_PROGRESS_PROCESS_HTTP_RESPONSE));
 		Success = ProcessVersionFile(vfhVersions.vfh_AllocatedBuffer, vfhVersions.vfh_TotalLength);
 
 		AddLogMsg(MSGID_LOG_UPDATES_FOUND, SelectedCount);
@@ -2240,7 +2239,7 @@ static void CheckForUpdatesHookFunc(struct Hook *hook, Object *obj, Msg *msg)
 			MUI_Request(APP_Main, WIN_Main, 0, NULL,
 				GetLocString(MSGID_ABOUTREQOK),
 				GetLocString(MSGID_REQFORMAT_NO_UPDATES_FOUND),
-				(ULONG) OsName);
+				(IPTR) OsName);
 			}
 
 		} while (0);
@@ -2249,7 +2248,7 @@ static void CheckForUpdatesHookFunc(struct Hook *hook, Object *obj, Msg *msg)
 	free(vfhSig.vfh_AllocatedBuffer);
 
 	set(GaugeProgress, MUIA_Gauge_Current, 100);
-	set(GaugeProgress, MUIA_Gauge_InfoText, (ULONG) GetLocString(Success ? MSG_PROGRESS_DONE : MSG_PROGRESS_FAILED));
+	set(GaugeProgress, MUIA_Gauge_InfoText, (IPTR) GetLocString(Success ? MSG_PROGRESS_DONE : MSG_PROGRESS_FAILED));
 
 	UpdateSelectedCount();
 }
@@ -2262,7 +2261,7 @@ static void StartUpdateUpdateHookFunc(struct Hook *hook, Object *obj, Msg *msg)
 	STRPTR ScalosWebSite = "";
 	CURL *curl;
 
-	set(GaugeProgress, MUIA_Gauge_InfoText, (ULONG) GetLocString(MSG_PROGRESS_START_UPDATE));
+	set(GaugeProgress, MUIA_Gauge_InfoText, (IPTR) GetLocString(MSG_PROGRESS_START_UPDATE));
 	set(GaugeProgress, MUIA_Gauge_Current, 0);
 	d1(KPrintF("%s/%s/%ld: MUIA_Gauge_Current=%ld\n", __FILE__, __FUNC__, __LINE__, 0));
 
@@ -2330,7 +2329,7 @@ static void StartUpdateUpdateHookFunc(struct Hook *hook, Object *obj, Msg *msg)
 
 				snprintf(TextProgressBuffer, sizeof(TextProgressBuffer),
 					GetLocString(MSG_PROGRESS_DOWNLOAD_UPDATE), cle->cle_Package);
-				set(GaugeProgress, MUIA_Gauge_InfoText, (ULONG) TextProgressBuffer);
+				set(GaugeProgress, MUIA_Gauge_InfoText, (IPTR) TextProgressBuffer);
 
 				EscapedPackageName = EscapeHttpName(cle->cle_Package);
 				d1(KPrintF("%s/%s/%ld: EscapedPackageName=%08lx\n", __FILE__, __FUNC__, __LINE__, EscapedPackageName));
@@ -2371,7 +2370,7 @@ static void StartUpdateUpdateHookFunc(struct Hook *hook, Object *obj, Msg *msg)
 				res = curl_easy_perform(curl);
 				if (0 != res)
 					{
-					CONST_STRPTR ErrorBuffer;
+					CONST_STRPTR ErrorBuffer __unused;
 
 					ErrorBuffer = curl_easy_strerror(res);
 
@@ -2385,7 +2384,7 @@ static void StartUpdateUpdateHookFunc(struct Hook *hook, Object *obj, Msg *msg)
 				fclose(fh);
 				fh = NULL;
 
-				set(GaugeProgress, MUIA_Gauge_InfoText, (ULONG) GetLocString(MSG_PROGRESS_VERIFY_SIGNATURE));
+				set(GaugeProgress, MUIA_Gauge_InfoText, (IPTR) GetLocString(MSG_PROGRESS_VERIFY_SIGNATURE));
 
 				AddLogMsg(MSGID_LOG_VERIFY_SIGNATURE, cle->cle_Package);
 
@@ -2403,7 +2402,7 @@ static void StartUpdateUpdateHookFunc(struct Hook *hook, Object *obj, Msg *msg)
 					ReqRes = MUI_Request(APP_Main, WIN_Main, 0, NULL,
 						GetLocString(MSGID_ABOUTREQ_YES_NO_ABORT),
 						GetLocString(MSGID_REQFORMAT_ASK_UPDATE),
-						(ULONG) cle->cle_File,
+						(IPTR) cle->cle_File,
 						cle->cle_RemoteVersion,
 						cle->cle_RemoteRevision,
 						cle->cle_LocalVersion,
@@ -2545,7 +2544,7 @@ static void StartUpdateUpdateHookFunc(struct Hook *hook, Object *obj, Msg *msg)
 		}
 
 	set(GaugeProgress, MUIA_Gauge_Current, 100);
-	set(GaugeProgress, MUIA_Gauge_InfoText, (ULONG) GetLocString(MSG_PROGRESS_DONE));
+	set(GaugeProgress, MUIA_Gauge_InfoText, (IPTR) GetLocString(MSG_PROGRESS_DONE));
 	d1(KPrintF("%s/%s/%ld: MUIA_Gauge_Current=%ld\n", __FILE__, __FUNC__, __LINE__, 100));
 }
 
@@ -2629,10 +2628,10 @@ static void SaveLogHookFunc(struct Hook *hook, Object *obj, Msg *msg)
 		{
 		//MUI_AllocAslRequest
 		SaveLogAslRequest = MUI_AllocAslRequestTags(ASL_FileRequest,
-			ASLFR_InitialFile, (ULONG) "UpdateLog.txt",
+			ASLFR_InitialFile, (IPTR) "UpdateLog.txt",
 			ASLFR_DoSaveMode, TRUE,
-			ASLFR_InitialDrawer, (ULONG) "SYS:",
-			ASLFR_IntuiMsgFunc, (ULONG) &AslIntuiMsgHook,
+			ASLFR_InitialDrawer, (IPTR) "SYS:",
+			ASLFR_IntuiMsgFunc, (IPTR) &AslIntuiMsgHook,
 			TAG_END);
 		}
 	if (SaveLogAslRequest)
@@ -2644,8 +2643,8 @@ static void SaveLogHookFunc(struct Hook *hook, Object *obj, Msg *msg)
 
 		//MUI_AslRequest(
 		Result = MUI_AslRequestTags(SaveLogAslRequest,
-			ASLFR_TitleText, (ULONG) GetLocString(MSGID_SAVE_LOG_ASLTITLE),
-			ASLFR_Window, (ULONG) win,
+			ASLFR_TitleText, (IPTR) GetLocString(MSGID_SAVE_LOG_ASLTITLE),
+			ASLFR_Window, (IPTR) win,
 			ASLFR_SleepWindow, TRUE,
 			TAG_END);
 
@@ -2705,7 +2704,7 @@ static void UpdateSelectedCount(void)
 
 	snprintf(SelectedCountBuffer, sizeof(SelectedCountBuffer),
 		GetLocString(MSGID_TEXT_SELECTED_COUNT), SelectedCount);
-	set(SelectedCountMsg, MUIA_Text_Contents, (ULONG) SelectedCountBuffer);
+	set(SelectedCountMsg, MUIA_Text_Contents, (IPTR) SelectedCountBuffer);
 
 	set(ButtonStartUpdate, MUIA_Disabled, 0 == SelectedCount);
 	set(ButtonDeselectAll, MUIA_Disabled, 0 == SelectedCount);
@@ -3219,7 +3218,7 @@ static void OpenSSLError(CONST_STRPTR Function, CONST_STRPTR Operation)
 	MUI_Request(APP_Main, WIN_Main, 0, NULL,
 		GetLocString(MSGID_ABOUTREQOK),
 		GetLocString(MSGID_REQFORMAT_OPENSSL_ERROR),
-		(ULONG) Function, (ULONG) Operation, (ULONG) ErrorBuffer);
+		(IPTR) Function, (IPTR) Operation, (IPTR) ErrorBuffer);
 
 	AddLogMsg(MSGID_REQFORMAT_OPENSSL_ERROR, Function, Operation, ErrorBuffer);
 
@@ -3304,23 +3303,23 @@ static void ParseArguments(void)
 
 			tt = FindToolType(icon->do_ToolTypes, "PROXYUSER");
 			if (tt)
-				setstring(StringProxyUser, (ULONG) tt);
+				setstring(StringProxyUser, (IPTR) tt);
 
 			tt = FindToolType(icon->do_ToolTypes, "PROXY");
 			if (tt)
-				setstring(StringProxyAddr, (ULONG) tt);
+				setstring(StringProxyAddr, (IPTR) tt);
 
 			tt = FindToolType(icon->do_ToolTypes, "PROXYPASSWORD");
 			if (tt)
-				setstring(StringProxyPwd, (ULONG) tt);
+				setstring(StringProxyPwd, (IPTR) tt);
 
 			tt = FindToolType(icon->do_ToolTypes, "SCALOSHTTP");
 			if (tt)
-				setstring(StringScalosWebSite, (ULONG) tt);
+				setstring(StringScalosWebSite, (IPTR) tt);
 
 			tt = FindToolType(icon->do_ToolTypes, "TEMPFILEPATH");
 			if (tt)
-				setstring(PopAslTempPath, (ULONG) tt);
+				setstring(PopAslTempPath, (IPTR) tt);
 
 			//TODO:PROXYPORT
 
@@ -3397,7 +3396,7 @@ static CURLcode DownloadFile(struct VersionFileHandle *vfh, CONST_STRPTR Filenam
 
 		snprintf(TextProgressBuffer, sizeof(TextProgressBuffer),
 			GetLocString(MSG_PROGRESS_CONNECTING), ScalosWebSite);
-		set(GaugeProgress, MUIA_Gauge_InfoText, (ULONG) TextProgressBuffer);
+		set(GaugeProgress, MUIA_Gauge_InfoText, (IPTR) TextProgressBuffer);
 
 		if (SetProxyOptions(curl))
 			{
@@ -3423,7 +3422,7 @@ static CURLcode DownloadFile(struct VersionFileHandle *vfh, CONST_STRPTR Filenam
 				snprintf(TextProgressBuffer, sizeof(TextProgressBuffer),
 					GetLocString(MSG_PROGRESS_FAILURE), ScalosWebSite, curl_easy_strerror(res));
 
-				set(GaugeProgress, MUIA_Gauge_InfoText, (ULONG) TextProgressBuffer);
+				set(GaugeProgress, MUIA_Gauge_InfoText, (IPTR) TextProgressBuffer);
 
 				ErrorMsg(MSG_PROGRESS_FAILURE, ScalosWebSite, curl_easy_strerror(res));
 				AddLogMsg(MSGID_LOG_ERROR_READ_VERSIONINFO, ScalosWebSite, curl_easy_strerror(res));
