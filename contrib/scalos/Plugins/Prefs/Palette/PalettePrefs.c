@@ -97,10 +97,10 @@
     MUIA_Bitmap_Width         , PREFIX2##_WIDTH ,\
     MUIA_Bitmap_Height        , PREFIX2##_HEIGHT,\
     MUIA_Bodychunk_Depth      , PREFIX2##_DEPTH ,\
-    MUIA_Bodychunk_Body       , (UBYTE *) prefix1##_body,\
+    MUIA_Bodychunk_Body       , (IPTR) prefix1##_body,\
     MUIA_Bodychunk_Compression, PREFIX2##_COMPRESSION,\
     MUIA_Bodychunk_Masking    , PREFIX2##_MASKING,\
-    MUIA_Bitmap_SourceColors  , (ULONG *) prefix1##_colors,\
+    MUIA_Bitmap_SourceColors  , (IPTR) prefix1##_colors,\
     MUIA_Bitmap_Transparent   , 0,\
   End
 
@@ -119,40 +119,38 @@ extern Object *DoLoadDT(STRPTR source, struct RastPort *rast,
 #define KeyButtonHelp(name,key,HelpText)\
 	TextObject,\
 		ButtonFrame,\
-		MUIA_CycleChain, TRUE, \
-		MUIA_Font, MUIV_Font_Button,\
-		MUIA_Text_Contents, name,\
-		MUIA_Text_PreParse, "\33c",\
-		MUIA_Text_HiChar  , key,\
-		MUIA_ControlChar  , key,\
-		MUIA_InputMode    , MUIV_InputMode_RelVerify,\
-		MUIA_Background   , MUII_ButtonBack,\
-		MUIA_ShortHelp, HelpText,\
+		MUIA_CycleChain,        TRUE, \
+		MUIA_Font,              MUIV_Font_Button,\
+		MUIA_Text_Contents,     (IPTR)name,\
+		MUIA_Text_PreParse,     (IPTR)"\33c",\
+		MUIA_Text_HiChar,       (IPTR)key,\
+		MUIA_ControlChar,       (IPTR)key,\
+		MUIA_InputMode,         MUIV_InputMode_RelVerify,\
+		MUIA_Background,        MUII_ButtonBack,\
+		MUIA_ShortHelp,         (IPTR)HelpText,\
 		End
 
 #define CheckMarkHelp(selected, HelpTextID)\
 	ImageObject,\
 		ImageButtonFrame,\
-		MUIA_CycleChain       , TRUE, \
-		MUIA_InputMode        , MUIV_InputMode_Toggle,\
-		MUIA_Image_Spec       , MUII_CheckMark,\
-		MUIA_Image_FreeVert   , TRUE,\
-		MUIA_Selected         , selected,\
-		MUIA_Background       , MUII_ButtonBack,\
-		MUIA_ShowSelState     , FALSE,\
-		MUIA_ShortHelp	      , GetLocString(HelpTextID),\
+		MUIA_CycleChain,        TRUE, \
+		MUIA_InputMode,         MUIV_InputMode_Toggle,\
+		MUIA_Image_Spec,        MUII_CheckMark,\
+		MUIA_Image_FreeVert,    TRUE,\
+		MUIA_Selected,          selected,\
+		MUIA_Background,        MUII_ButtonBack,\
+		MUIA_ShowSelState,      FALSE,\
+		MUIA_ShortHelp,         (IPTR)GetLocString(HelpTextID),\
 		End
 
-#define	Application_Return_EDIT	0
-#define	Application_Return_USE	1001
-#define	Application_Return_SAVE	1002
+#define	Application_Return_EDIT         0
+#define	Application_Return_USE          1001
+#define	Application_Return_SAVE         1002
 
-#define	ID_SPAL	MAKE_ID('S','P','A','L')
-#define	ID_PENS	MAKE_ID('P','E','N','S')
+#define	ID_SPAL                         MAKE_ID('S','P','A','L')
+#define	ID_PENS                         MAKE_ID('P','E','N','S')
 
-
-#define	PEN_UNDEFINED	(-1)
-
+#define	PEN_UNDEFINED	                (-1)
 
 struct NewScalosPenListInst
 	{
@@ -216,7 +214,7 @@ extern void _STD_240_TerminateMemFunctions(void);
 
 // local functions
 
-DISPATCHER_PROTO(PalettePrefs);
+DISPATCHERPROTO(PalettePrefs);
 static BOOL CreatePalettePrefsObject(struct PalettePrefsInst *inst, struct opSet *ops);
 static void DisposePalettePrefsObject(struct PalettePrefsInst *inst);
 static Object *CreatePrefsGroup(struct PalettePrefsInst *inst);
@@ -228,9 +226,9 @@ static void CloseLibraries(void);
 static STRPTR GetLocString(ULONG MsgId);
 static void TranslateNewMenu(struct NewMenu *nm);
 //static void TranslateStringArray(STRPTR *stringArray);
-DISPATCHER_PROTO(NewColorAdjust);
-DISPATCHER_PROTO(NewPalettePenList);
-DISPATCHER_PROTO(NewScalosPenList);
+DISPATCHERPROTO(NewColorAdjust);
+DISPATCHERPROTO(NewPalettePenList);
+DISPATCHERPROTO(NewScalosPenList);
 static APTR AllocatedPensListConstructFunc(struct Hook *hook, APTR memPool, struct PensListEntry *spleNew);
 static void AllocatedPensListDestructFunc(struct Hook *hook, APTR memPool, APTR Entry);
 static ULONG AllocatedPensListDisplayFunc(struct Hook *hook, Object *obj, struct NList_DisplayMessage *ndm);
@@ -266,7 +264,7 @@ static LONG SaveIcon(struct PalettePrefsInst *inst, CONST_STRPTR IconName);
 static void UpdatePalettePenCount(struct PalettePrefsInst *inst);
 static ULONG GetPenReferenceCount(struct PalettePrefsInst *inst, ULONG PenNr);
 static void SetChangedFlag(struct PalettePrefsInst *inst, BOOL changed);
-DISPATCHER_PROTO(myNList);
+DISPATCHERPROTO(myNList);
 static LONG ColorComp(ULONG Color1, ULONG Color2);
 static LONG RGBComp(const struct PensListEntry *sple1, const struct PensListEntry *sple2);
 
@@ -487,7 +485,7 @@ BOOL closePlugin(struct PluginBase *PluginBase)
 }
 
 
-LIBFUNC_P2(ULONG, LIBSCAGetPrefsInfo,
+LIBFUNC_P2(IPTR, LIBSCAGetPrefsInfo,
 	D0, ULONG, which,
 	A6, struct PluginBase *, PluginBase, 5);
 {
@@ -500,15 +498,15 @@ LIBFUNC_P2(ULONG, LIBSCAGetPrefsInfo,
 	switch(which)
 		{
 	case SCAPREFSINFO_GetClass:
-		result = (ULONG) PalettePrefsClass;
+		result = (IPTR) PalettePrefsClass;
 		break;
 
 	case SCAPREFSINFO_GetTitle:
-		result = (ULONG) GetLocString(MSGID_PLUGIN_LIST_TITLE);
+		result = (IPTR) GetLocString(MSGID_PLUGIN_LIST_TITLE);
 		break;
 
 	case SCAPREFSINFO_GetTitleImage:
-		result = (ULONG) CreatePrefsImage();
+		result = (IPTR) CreatePrefsImage();
 		break;
 
 	default:
@@ -527,7 +525,7 @@ LIBFUNC_END
 DISPATCHER(PalettePrefs)
 {
 	struct PalettePrefsInst *inst;
-	ULONG result = 0;
+	IPTR result = 0;
 
 	d1(kprintf("%s/%s/%ld: START\n", __FILE__, __FUNC__, __LINE__));
 
@@ -553,7 +551,7 @@ DISPATCHER(PalettePrefs)
 				{
 				DoMethod(obj, OM_ADDMEMBER, prefsobject);
 
-				result = (ULONG) obj;
+				result = (IPTR) obj;
 				}
 			else
 				{
@@ -574,11 +572,11 @@ DISPATCHER(PalettePrefs)
 
 		inst = (struct PalettePrefsInst *) INST_DATA(cl, obj);
 		inst->ppb_fCreateIcons = GetTagData(MUIA_ScalosPrefs_CreateIcons, inst->ppb_fCreateIcons, ops->ops_AttrList);
-		inst->ppb_ProgramName = (CONST_STRPTR) GetTagData(MUIA_ScalosPrefs_ProgramName, (ULONG) inst->ppb_ProgramName, ops->ops_AttrList);
+		inst->ppb_ProgramName = (CONST_STRPTR) GetTagData(MUIA_ScalosPrefs_ProgramName, (IPTR) inst->ppb_ProgramName, ops->ops_AttrList);
 		inst->ppb_Objects[OBJNDX_WIN_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_MainWindow, 
-			(ULONG) inst->ppb_Objects[OBJNDX_WIN_Main], ops->ops_AttrList);
+			(IPTR) inst->ppb_Objects[OBJNDX_WIN_Main], ops->ops_AttrList);
 		inst->ppb_Objects[OBJNDX_APP_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_Application, 
-			(ULONG) inst->ppb_Objects[OBJNDX_APP_Main], ops->ops_AttrList);
+			(IPTR) inst->ppb_Objects[OBJNDX_APP_Main], ops->ops_AttrList);
 
 		return DoSuperMethodA(cl, obj, msg);
 		}
@@ -687,7 +685,7 @@ DISPATCHER(PalettePrefs)
 		break;
 
 	case MUIM_ScalosPrefs_GetListOfMCCs:
-		result = (ULONG) RequiredMccList;
+		result = (IPTR) RequiredMccList;
 		break;
 
 	default:
@@ -722,9 +720,9 @@ static BOOL CreatePalettePrefsObject(struct PalettePrefsInst *inst, struct opSet
 		InitHooks(inst);
 
 		inst->ppb_fCreateIcons = GetTagData(MUIA_ScalosPrefs_CreateIcons, TRUE, ops->ops_AttrList);
-		inst->ppb_ProgramName = (CONST_STRPTR) GetTagData(MUIA_ScalosPrefs_ProgramName, (ULONG) "", ops->ops_AttrList);
-		inst->ppb_Objects[OBJNDX_WIN_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_MainWindow, (ULONG) NULL, ops->ops_AttrList);
-		inst->ppb_Objects[OBJNDX_APP_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_Application, (ULONG) NULL, ops->ops_AttrList);
+		inst->ppb_ProgramName = (CONST_STRPTR) GetTagData(MUIA_ScalosPrefs_ProgramName, (IPTR) "", ops->ops_AttrList);
+		inst->ppb_Objects[OBJNDX_WIN_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_MainWindow, (IPTR) NULL, ops->ops_AttrList);
+		inst->ppb_Objects[OBJNDX_APP_Main] = (APTR) GetTagData(MUIA_ScalosPrefs_Application, (IPTR) NULL, ops->ops_AttrList);
 
 		inst->ppb_WBScreen = LockPubScreen("Workbench");
 		if (NULL == inst->ppb_WBScreen)
@@ -774,29 +772,29 @@ static Object *CreatePrefsGroup(struct PalettePrefsInst *inst)
 	inst->ppb_Objects[OBJNDX_Group_Main] = VGroup,
 		MUIA_Background, MUII_PageBack,
 
-		Child, HGroup,
-			Child, VGroup,
-				Child, TextObject,
+		Child, (IPTR)(HGroup,
+			Child, (IPTR)(VGroup,
+				Child, (IPTR)(TextObject,
 					MUIA_Font, MUIV_Font_Title,
 					TextFrame,
 					MUIA_Background, MUII_GroupBack,
-					MUIA_Text_PreParse, "\33c",
-					MUIA_Text_Contents, GetLocString(MSGID_TITLE_SCALOSPENLIST),
-				End, //NListviewObject
+					MUIA_Text_PreParse, (IPTR)"\33c",
+					MUIA_Text_Contents, (IPTR)GetLocString(MSGID_TITLE_SCALOSPENLIST),
+				End), //NListviewObject
 
-				Child, NListviewObject,
+				Child, (IPTR)(NListviewObject,
 					MUIA_CycleChain, TRUE,
 					MUIA_Listview_Input, TRUE,
 					MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
-					MUIA_NListview_NList, inst->ppb_Objects[OBJNDX_ScalosPenList] = NewScalosPenListObject,
-						MUIA_NList_PrivateData, inst,
+					MUIA_NListview_NList, (IPTR)(inst->ppb_Objects[OBJNDX_ScalosPenList] = NewScalosPenListObject,
+						MUIA_NList_PrivateData, (IPTR)inst,
 						InputListFrame,
 						MUIA_Background, MUII_ListBack,
-						MUIA_NList_Format, "BAR D=8 P=\x1br,BAR D=8 P=\x1br,,",
-						MUIA_NList_DisplayHook2, &inst->ppb_Hooks[HOOKNDX_ScalosPenListDisplay],
-						MUIA_NList_ConstructHook, &inst->ppb_Hooks[HOOKNDX_ScalosPenListConstruct],
-						MUIA_NList_DestructHook, &inst->ppb_Hooks[HOOKNDX_ScalosPenListDestruct],
-						MUIA_NList_CompareHook2, &inst->ppb_Hooks[HOOKNDX_ScalosPenListCompare],
+						MUIA_NList_Format, (IPTR)"BAR D=8 P=\x1br,BAR D=8 P=\x1br,,",
+						MUIA_NList_DisplayHook2, (IPTR)&inst->ppb_Hooks[HOOKNDX_ScalosPenListDisplay],
+						MUIA_NList_ConstructHook, (IPTR)&inst->ppb_Hooks[HOOKNDX_ScalosPenListConstruct],
+						MUIA_NList_DestructHook, (IPTR)&inst->ppb_Hooks[HOOKNDX_ScalosPenListDestruct],
+						MUIA_NList_CompareHook2, (IPTR)&inst->ppb_Hooks[HOOKNDX_ScalosPenListCompare],
 						MUIA_NList_DragSortable, TRUE,
 						MUIA_NList_ShowDropMarks, TRUE,
 						MUIA_NList_AutoVisible, TRUE,
@@ -805,38 +803,38 @@ static Object *CreatePrefsGroup(struct PalettePrefsInst *inst)
 						MUIA_NList_TitleSeparator, TRUE,
 						MUIA_NList_SortType, 2,
 						MUIA_NList_TitleMark, MUIV_NList_TitleMark_Down | 2,
-						MUIA_ContextMenu, inst->ppb_Objects[OBJNDX_ContextMenu],
-					End,
-					MUIA_ShortHelp, GetLocString(MSGID_SHORTHELP_SCALOSPENLIST),
-				End, //NListviewObject
-			End, //VGroup
+						MUIA_ContextMenu, (IPTR)inst->ppb_Objects[OBJNDX_ContextMenu],
+					End),
+					MUIA_ShortHelp, (IPTR)GetLocString(MSGID_SHORTHELP_SCALOSPENLIST),
+				End), //NListviewObject
+			End), //VGroup
 
-			Child, BalanceObject, 
-			End, //BalanceObject
+			Child, (IPTR)(BalanceObject, 
+			End), //BalanceObject
 
-			Child, VGroup,
-				Child, inst->ppb_Objects[OBJNDX_AllocatedPensListTitleObj] = TextObject,
+			Child, (IPTR)(VGroup,
+				Child, (IPTR)(inst->ppb_Objects[OBJNDX_AllocatedPensListTitleObj] = TextObject,
 					MUIA_Font, MUIV_Font_Title,
 					TextFrame,
 					MUIA_Background, MUII_GroupBack,
-					MUIA_Text_PreParse, "\33c",
-					MUIA_Text_Contents, inst->ppb_PalettePenListTitle,
-				End, //TextObject
+					MUIA_Text_PreParse, (IPTR)"\33c",
+					MUIA_Text_Contents, (IPTR)inst->ppb_PalettePenListTitle,
+				End), //TextObject
 
-				Child, NListviewObject,
+				Child, (IPTR)(NListviewObject,
 					MUIA_Listview_Input, TRUE,
 					MUIA_CycleChain, TRUE,
 					MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
-					MUIA_NListview_NList, inst->ppb_Objects[OBJNDX_AllocatedPensList] = NewPalettePenListObject,
-						MUIA_NList_PrivateData, inst,
-						MUIA_UserData, inst,
+					MUIA_NListview_NList, (IPTR)(inst->ppb_Objects[OBJNDX_AllocatedPensList] = NewPalettePenListObject,
+						MUIA_NList_PrivateData, (IPTR)inst,
+						MUIA_UserData, (IPTR)inst,
 						InputListFrame,
 						MUIA_Background, MUII_ListBack,
-						MUIA_NList_Format, "BAR D=8 P=\x1br,BAR D=8 P=\x1br,BAR P=\x1br,NOBAR D=8 P=\x1br,NOBAR D=8 P=\x1br,NOBAR D=8 P=\x1br",
-						MUIA_NList_DisplayHook2, &inst->ppb_Hooks[HOOKNDX_AllocatedPensListDisplay],
-						MUIA_NList_ConstructHook, &inst->ppb_Hooks[HOOKNDX_AllocatedPensListConstruct],
-						MUIA_NList_DestructHook, &inst->ppb_Hooks[HOOKNDX_AllocatedPensListDestruct],
-						MUIA_NList_CompareHook2, &inst->ppb_Hooks[HOOKNDX_AllocatedPensListCompare],
+						MUIA_NList_Format, (IPTR)"BAR D=8 P=\x1br,BAR D=8 P=\x1br,BAR P=\x1br,NOBAR D=8 P=\x1br,NOBAR D=8 P=\x1br,NOBAR D=8 P=\x1br",
+						MUIA_NList_DisplayHook2, (IPTR)&inst->ppb_Hooks[HOOKNDX_AllocatedPensListDisplay],
+						MUIA_NList_ConstructHook, (IPTR)&inst->ppb_Hooks[HOOKNDX_AllocatedPensListConstruct],
+						MUIA_NList_DestructHook, (IPTR)&inst->ppb_Hooks[HOOKNDX_AllocatedPensListDestruct],
+						MUIA_NList_CompareHook2, (IPTR)&inst->ppb_Hooks[HOOKNDX_AllocatedPensListCompare],
 						MUIA_NList_DragSortable, TRUE,
 						MUIA_NList_ShowDropMarks, TRUE,
 						MUIA_NList_AutoVisible, TRUE,
@@ -845,58 +843,58 @@ static Object *CreatePrefsGroup(struct PalettePrefsInst *inst)
 						MUIA_NList_TitleSeparator, TRUE,
 						MUIA_NList_SortType, 0,
 						MUIA_NList_TitleMark, MUIV_NList_TitleMark_Down | 0,
-						MUIA_ContextMenu, inst->ppb_Objects[OBJNDX_ContextMenu],
-					End, //NewPalettePenListClass
-					MUIA_ShortHelp, GetLocString(MSGID_SHORTHELP_PALETTEPENLIST),
-				End, //NListviewObject
+						MUIA_ContextMenu, (IPTR)inst->ppb_Objects[OBJNDX_ContextMenu],
+					End), //NewPalettePenListClass
+					MUIA_ShortHelp, (IPTR)GetLocString(MSGID_SHORTHELP_PALETTEPENLIST),
+				End), //NListviewObject
 
-				Child, HGroup,
-					Child, inst->ppb_Objects[OBJNDX_Lamp_Changed] = LampObject,
+				Child, (IPTR)(HGroup,
+					Child, (IPTR)(inst->ppb_Objects[OBJNDX_Lamp_Changed] = LampObject,
 						MUIA_Lamp_Type, MUIV_Lamp_Type_Huge, 
 						MUIA_Lamp_Color, MUIV_Lamp_Color_Off,
-						MUIA_ShortHelp, GetLocString(MSGID_SHORTHELP_LAMP_CHANGED),
-						End, //LampObject
+						MUIA_ShortHelp, (IPTR)GetLocString(MSGID_SHORTHELP_LAMP_CHANGED),
+                                        End), //LampObject
 
-					Child, HGroup,
+					Child, (IPTR)(HGroup,
 						MUIA_Group_SameSize, TRUE,
-						Child, inst->ppb_Objects[OBJNDX_NewButton] = KeyButtonHelp(GetLocString(MSGID_NEW), 'n', GetLocString(MSGID_SHORTHELP_NEWBUTTON)),
-						Child, inst->ppb_Objects[OBJNDX_DeleteButton] = KeyButtonHelp(GetLocString(MSGID_DELETE), 'd', GetLocString(MSGID_SHORTHELP_DELETEBUTTON)),
-					End, //HGroup
-				End, //HGroup
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_NewButton] = KeyButtonHelp(GetLocString(MSGID_NEW), 'n', GetLocString(MSGID_SHORTHELP_NEWBUTTON))),
+						Child, (IPTR)(inst->ppb_Objects[OBJNDX_DeleteButton] = KeyButtonHelp(GetLocString(MSGID_DELETE), 'd', GetLocString(MSGID_SHORTHELP_DELETEBUTTON))),
+					End), //HGroup
+				End), //HGroup
 
-				Child, BalanceObject,
-				End, //BalanceObject
+				Child, (IPTR)(BalanceObject,
+				End), //BalanceObject
 
-				Child, inst->ppb_Objects[OBJNDX_ColorAdjust] = NewColorAdjustObject,
-					MUIA_UserData, inst,
-				End, //NewColorAdjustClass
+				Child, (IPTR)(inst->ppb_Objects[OBJNDX_ColorAdjust] = NewColorAdjustObject,
+					MUIA_UserData, (IPTR)inst,
+				End), //NewColorAdjustClass
 
-				Child, PopobjectObject,
-					MUIA_Popstring_String, TextObject,
+				Child, (IPTR)(PopobjectObject,
+					MUIA_Popstring_String, (IPTR)(TextObject,
 						MUIA_CycleChain, TRUE,
 						MUIA_Background, MUII_GroupBack,
 						TextFrame,
-						MUIA_Text_Contents, GetLocString(MSGID_IMPORTNAME),
-						MUIA_Text_PreParse, "\33c",
-						End,
-					MUIA_Popstring_Button, PopButton(MUII_PopUp),
-					MUIA_ShortHelp, GetLocString(MSGID_SHORTHELP_WBPENSBUTTON),
-					MUIA_Popobject_WindowHook, &inst->ppb_Hooks[HOOKNDX_GetWBColors],
-					MUIA_Popobject_Object, NListviewObject,
+						MUIA_Text_Contents, (IPTR)GetLocString(MSGID_IMPORTNAME),
+						MUIA_Text_PreParse, (IPTR)"\33c",
+                                        End),
+					MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopUp),
+					MUIA_ShortHelp, (IPTR)GetLocString(MSGID_SHORTHELP_WBPENSBUTTON),
+					MUIA_Popobject_WindowHook, (IPTR)&inst->ppb_Hooks[HOOKNDX_GetWBColors],
+					MUIA_Popobject_Object, (IPTR)(NListviewObject,
 						MUIA_Listview_Input, TRUE,
 						MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
 						MUIA_Listview_MultiSelect, TRUE,
 						MUIA_CycleChain, TRUE,
-						MUIA_ShortHelp, GetLocString(MSGID_SHORTHELP_WBPENLIST),
-						MUIA_NListview_NList, inst->ppb_Objects[OBJNDX_WBColorsList] = myNListObject,
-							MUIA_NList_PrivateData, inst,
+						MUIA_ShortHelp, (IPTR)GetLocString(MSGID_SHORTHELP_WBPENLIST),
+						MUIA_NListview_NList, (IPTR)(inst->ppb_Objects[OBJNDX_WBColorsList] = myNListObject,
+							MUIA_NList_PrivateData, (IPTR)inst,
 							InputListFrame,
 							MUIA_Background, MUII_ListBack,
-							MUIA_NList_Format, "BAR D=8 P=\x1br,BAR D=8 P=\x1br,NOBAR D=8 P=\x1br,NOBAR D=8 P=\x1br,NOBAR D=8 P=\x1br",
-							MUIA_NList_DisplayHook2, &inst->ppb_Hooks[HOOKNDX_WBPensListDisplay],
-							MUIA_NList_ConstructHook, &inst->ppb_Hooks[HOOKNDX_WBPensListConstruct],
-							MUIA_NList_DestructHook, &inst->ppb_Hooks[HOOKNDX_WBPensListDestruct],
-							MUIA_NList_CompareHook2, &inst->ppb_Hooks[HOOKNDX_WBPensListCompare],
+							MUIA_NList_Format, (IPTR)"BAR D=8 P=\x1br,BAR D=8 P=\x1br,NOBAR D=8 P=\x1br,NOBAR D=8 P=\x1br,NOBAR D=8 P=\x1br",
+							MUIA_NList_DisplayHook2, (IPTR)&inst->ppb_Hooks[HOOKNDX_WBPensListDisplay],
+							MUIA_NList_ConstructHook, (IPTR)&inst->ppb_Hooks[HOOKNDX_WBPensListConstruct],
+							MUIA_NList_DestructHook, (IPTR)&inst->ppb_Hooks[HOOKNDX_WBPensListDestruct],
+							MUIA_NList_CompareHook2, (IPTR)&inst->ppb_Hooks[HOOKNDX_WBPensListCompare],
 							MUIA_NList_ShowDropMarks, TRUE,
 							MUIA_NList_AutoVisible, TRUE,
 							MUIA_NList_Title, TRUE,
@@ -904,14 +902,14 @@ static Object *CreatePrefsGroup(struct PalettePrefsInst *inst)
 							MUIA_NList_SortType, 0,
 							MUIA_NList_TitleMark, MUIV_NList_TitleMark_Down | 0,
 							MUIA_NList_EntryValueDependent, TRUE,
-							MUIA_ContextMenu, inst->ppb_Objects[OBJNDX_ContextMenu],
-						End, //inst->ppb_myNListClass
-					End, //NListviewObject
-				End, //PopobjectObject
-			End,
-		End, //HGroup
+							MUIA_ContextMenu, (IPTR)inst->ppb_Objects[OBJNDX_ContextMenu],
+						End), //inst->ppb_myNListClass
+					End), //NListviewObject
+				End), //PopobjectObject
+			End),
+		End), //HGroup
 
-		MUIA_ContextMenu, inst->ppb_Objects[OBJNDX_ContextMenu],
+		MUIA_ContextMenu, (IPTR)inst->ppb_Objects[OBJNDX_ContextMenu],
 	End; //VGroup
 
 	if (NULL == inst->ppb_Objects[OBJNDX_Group_Main])
@@ -985,7 +983,7 @@ static Object *CreatePrefsImage(void)
 
 	// First try to load datatypes image from THEME: tree
 	img = DataTypesImageObject,
-		MUIA_ScaDtpic_Name, (ULONG) "THEME:prefs/plugins/palette",
+		MUIA_ScaDtpic_Name, (IPTR) "THEME:prefs/plugins/palette",
 		MUIA_ScaDtpic_FailIfUnavailable, TRUE,
 		End; //DataTypesMCCObject
 
@@ -1254,10 +1252,10 @@ static void TranslateNewMenu(struct NewMenu *nm)
 	while (nm && NM_END != nm->nm_Type)
 		{
 		if (NM_BARLABEL != nm->nm_Label)
-			nm->nm_Label = GetLocString((ULONG) nm->nm_Label);
+			nm->nm_Label = GetLocString((IPTR) nm->nm_Label);
 
 		if (nm->nm_CommKey)
-			nm->nm_CommKey = GetLocString((ULONG) nm->nm_CommKey);
+			nm->nm_CommKey = GetLocString((IPTR) nm->nm_CommKey);
 
 		nm++;
 		}
@@ -1268,7 +1266,7 @@ static void TranslateStringArray(STRPTR *stringArray)
 {
 	while (*stringArray)
 		{
-		*stringArray = GetLocString((ULONG) *stringArray);
+		*stringArray = GetLocString((IPTR) *stringArray);
 		stringArray++;
 		}
 }
@@ -1285,7 +1283,7 @@ void _XCEXIT(long x)
 DISPATCHER(myNList)
 {
 	struct PalettePrefsInst *inst = NULL;
-	ULONG result;
+	IPTR result;
 
 	d1(kprintf(__FILE__ "/" __FUNC__ "/%ld: MethodID=%08lx\n", __LINE__, msg->MethodID));
 
@@ -1333,7 +1331,7 @@ DISPATCHER_END
 DISPATCHER(NewColorAdjust)
 {
 	struct PalettePrefsInst *inst = NULL;
-	ULONG Result;
+	IPTR Result;
 
 	d1(kprintf( "%s/%s/%ld: START MethodID=%08lx\n", __FILE__, __FUNC__, __LINE__, msg->MethodID));
 
@@ -1362,7 +1360,7 @@ DISPATCHER(NewColorAdjust)
 		DoMethod(dd->obj, MUIM_NList_GetEntry, MUIV_NList_GetEntry_Active, &activeEntry);
 
 		if (activeEntry)
-			set(inst->ppb_Objects[OBJNDX_ColorAdjust], MUIA_Coloradjust_RGB, (ULONG) activeEntry);
+			set(inst->ppb_Objects[OBJNDX_ColorAdjust], MUIA_Coloradjust_RGB, (IPTR) activeEntry);
 
 		Result = 0;
 		}
@@ -1383,7 +1381,7 @@ DISPATCHER_END
 DISPATCHER(NewPalettePenList)
 {
 	struct PalettePrefsInst *inst = NULL;
-	ULONG Result;
+	IPTR Result;
 
 	switch (msg->MethodID)
 		{
@@ -1497,7 +1495,7 @@ DISPATCHER_END
 DISPATCHER(NewScalosPenList)
 {
 	struct PalettePrefsInst *inst = NULL;
-	ULONG Result;
+	IPTR Result;
 
 	switch (msg->MethodID)
 		{
@@ -2196,7 +2194,7 @@ static APTR SelectPalettePenFunc(struct Hook *hook, Object *o, Msg msg)
 	DoMethod(inst->ppb_Objects[OBJNDX_AllocatedPensList], MUIM_NList_GetEntry, MUIV_NList_GetEntry_Active, &sple);
 
 	if (sple)
-		set(inst->ppb_Objects[OBJNDX_ColorAdjust], MUIA_Coloradjust_RGB, (ULONG) sple);
+		set(inst->ppb_Objects[OBJNDX_ColorAdjust], MUIA_Coloradjust_RGB, (IPTR) sple);
 
 	set(inst->ppb_Objects[OBJNDX_DeleteButton], MUIA_Disabled, NULL == sple);
 	set(inst->ppb_Objects[OBJNDX_ScalosPenList], MUIA_NList_Active, MUIV_NList_Active_Off);
@@ -3038,7 +3036,7 @@ static void UpdatePalettePenCount(struct PalettePrefsInst *inst)
 		allocatedPens, availablePens);
 
 	if (inst->ppb_Objects[OBJNDX_AllocatedPensListTitleObj])
-		set(inst->ppb_Objects[OBJNDX_AllocatedPensListTitleObj], MUIA_Text_Contents, (ULONG) inst->ppb_PalettePenListTitle);
+		set(inst->ppb_Objects[OBJNDX_AllocatedPensListTitleObj], MUIA_Text_Contents, (IPTR) inst->ppb_PalettePenListTitle);
 
 	set(inst->ppb_Objects[OBJNDX_NewButton], MUIA_Disabled, allocatedPens >= availablePens);
 }
