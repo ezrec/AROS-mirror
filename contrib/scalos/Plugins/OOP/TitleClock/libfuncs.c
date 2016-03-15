@@ -278,7 +278,7 @@ BOOL initPlugin(struct PluginBase *pluginBase)
 			break;
 
 		myLibBase->lb_NotifyRequest.nr_Name = NULL;
-		myLibBase->lb_NotifyRequest.nr_UserData = (ULONG)NULL;
+		myLibBase->lb_NotifyRequest.nr_UserData = (IPTR)NULL;
 		myLibBase->lb_NotifyRequest.nr_Flags = NRF_SEND_MESSAGE;
 		myLibBase->lb_NotifyRequest.nr_stuff.nr_Msg.nr_Port = myLibBase->lb_NotifyPort;
 
