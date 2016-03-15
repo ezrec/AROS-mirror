@@ -1693,8 +1693,8 @@ static void ProcessExifDir(unsigned char * DirStart, unsigned char * OffsetBase,
 		case TAG_SHUTTERSPEED:
 			// More complicated way of expressing exposure time, so only use
 			// this value if we don't already have it from somewhere else.
-		if (ImageInfo.ExposureTime == 0)
-			ImageInfo.ExposureTime = (float)(1/exp(ConvertAnyFormat(ValuePtr, Format)*log(2.0)));
+                        if (ImageInfo.ExposureTime == 0)
+                                ImageInfo.ExposureTime = (float)(1/exp(ConvertAnyFormat(ValuePtr, Format)*log(2.0)));
 			break;
 
 		case TAG_FLASH:
@@ -2360,7 +2360,7 @@ static void process_COM(const uchar * Data, int length)
 //--------------------------------------------------------------------------
 static void process_SOFn(const uchar * Data, int marker)
 {
-	int data_precision, num_components;
+	int data_precision __unused, num_components;
 
 	data_precision = Data[2];
 	ImageInfo.Height = Get16m(Data+3);
