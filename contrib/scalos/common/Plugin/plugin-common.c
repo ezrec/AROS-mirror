@@ -62,10 +62,10 @@
 //----------------------------------------------------------------------------
 // Code common to plugin-aos4.c and plugin-classic.c
 
-static char ALIGNED libName[] = LIB_NAME;
-static char ALIGNED libVerString[] = LIB_VERSTRING;
+static char ALIGNED libName[] __attribute__((used)) = LIB_NAME;
+static char ALIGNED libVerString[] __attribute__((used)) = LIB_VERSTRING;
 #ifdef LIB_IDSTRING
-static char ALIGNED libIdString[] = LIB_IDSTRING;
+static char ALIGNED libIdString[] __attribute__((used)) = LIB_IDSTRING;
 #endif
 
 #if PLUGIN_TYPE == OOP
