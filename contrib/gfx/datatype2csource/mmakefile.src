@@ -6,7 +6,7 @@ include $(TOP)/config/make.cfg
 FILES   := main
 EXEDIR  := $(AROS_CONTRIB)/MultiMedia/Gfx/DatatypeToCSource
 
-#DISABLED MM- contrib-gfx : contrib-gfx-datatype2csource
+#MM- contrib-gfx : contrib-gfx-datatype2csource
 #MM  contrib-gfx-datatype2csource : includes linklibs
 
 %build_prog mmake=contrib-gfx-datatype2csource \
