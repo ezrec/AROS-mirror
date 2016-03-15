@@ -46,32 +46,32 @@
 
 struct MUIP_ScalosPrefs_PageActive
 	{
-	ULONG MethodID;
-	ULONG isActive;
+	STACKED ULONG MethodID;
+	STACKED ULONG isActive;
 	};
 
 struct MUIP_ScalosPrefs_LoadNamedConfig
 	{
-	ULONG MethodID;
-	STRPTR ConfigFileName;
+	STACKED ULONG MethodID;
+	STACKED STRPTR ConfigFileName;
 	};
 
 struct MUIP_ScalosPrefs_ParseToolTypes
 	{
-	ULONG MethodID;
-	STRPTR *ToolTypes;
+	STACKED ULONG MethodID;
+	STACKED STRPTR *ToolTypes;
 	};
 
 struct MUIP_ScalosPrefs_MCCList
 	{
-	CONST_STRPTR MccName;
-	ULONG MccMinVersion;
-	ULONG MccMinRevision;
+	STACKED CONST_STRPTR MccName;
+	STACKED ULONG MccMinVersion;
+	STACKED ULONG MccMinRevision;
 	};
 
 struct MUIP_ScalosPrefs_GetListOfMCCs
 	{
-	ULONG MethodID;
+	STACKED ULONG MethodID;
 	};
 
 /*** Special method values ***/

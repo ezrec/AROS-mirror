@@ -25,7 +25,7 @@ struct ScalosPrefsPluginIFace
 	uint32 APICALL (*Release)(struct ScalosPrefsPluginIFace *Self);
 	void APICALL (*Expunge)(struct ScalosPrefsPluginIFace *Self);
 	struct Interface * APICALL (*Clone)(struct ScalosPrefsPluginIFace *Self);
-	ULONG APICALL (*SCAGetPrefsInfo)(struct ScalosPrefsPluginIFace *Self, LONG which);
+	IPTR APICALL (*SCAGetPrefsInfo)(struct ScalosPrefsPluginIFace *Self, LONG which);
 };
 
 #endif /* SCALOSPREFSPLUGIN_INTERFACE_DEF_H */

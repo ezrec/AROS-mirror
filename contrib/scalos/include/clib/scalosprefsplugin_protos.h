@@ -14,7 +14,7 @@
 extern "C" {
 #endif /* __cplusplus */
 
-ULONG SCAGetPrefsInfo( LONG which );
+IPTR SCAGetPrefsInfo( LONG which );
 
 #ifdef __cplusplus
 }

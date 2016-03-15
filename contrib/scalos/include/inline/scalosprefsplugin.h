@@ -16,7 +16,7 @@
 #endif
 
 #define SCAGetPrefsInfo(which) \
-	LP1(0x1e, ULONG, SCAGetPrefsInfo, LONG, which, d0, \
+	LP1(0x1e, IPTR, SCAGetPrefsInfo, LONG, which, d0, \
 	, SCALOSPREFSPLUGIN_BASE_NAME)
 
 #endif /*  _INLINE_SCALOSPREFSPLUGIN_H  */

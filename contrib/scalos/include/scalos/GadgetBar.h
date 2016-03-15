@@ -69,27 +69,27 @@ enum GBposition
 // struct for OM_ADDMEMBER
 struct opGBAddMember
 	{
-	ULONG MethodID;
-	struct GadgetInfo *opam_GInfo;
-	Object *opam_Object;
-	struct TagItem *opam_AttrList;
+	STACKED ULONG MethodID;
+	STACKED struct GadgetInfo *opam_GInfo;
+	STACKED Object *opam_Object;
+	STACKED struct TagItem *opam_AttrList;
 	};
 
 // struct for OM_REMMEMBER
 struct opGBRemMember
 	{
-	ULONG MethodID;
-	struct GadgetInfo *oprm_GInfo;
-	Object *oprm_Object;
+	STACKED ULONG MethodID;
+	STACKED struct GadgetInfo *oprm_GInfo;
+	STACKED Object *oprm_Object;
 	};
 
 // struct for GBCL_UPDATEMEMBER
 struct opGBUpdateMember
 	{
-	ULONG MethodID;
-	struct GadgetInfo *opum_GInfo;
-	Object *opum_Object;		// Member object to update
-	struct TagItem *opum_AttrList;	// currently unused
+	STACKED ULONG MethodID;
+	STACKED struct GadgetInfo *opum_GInfo;
+	STACKED Object *opum_Object;		// Member object to update
+	STACKED struct TagItem *opum_AttrList;	// currently unused
 	};
 
 /****************************************************************************/

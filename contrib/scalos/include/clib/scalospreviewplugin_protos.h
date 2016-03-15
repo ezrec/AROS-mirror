@@ -21,7 +21,7 @@ extern "C" {
 #include <utility/tagitem.h>
 #endif
 LONG SCAPreviewGenerate( struct ScaWindowTask *wt, BPTR dirLock, CONST_STRPTR iconName, struct TagItem *tagList );
-LONG SCAPreviewGenerateTags( struct ScaWindowTask *wt, BPTR dirLock, CONST_STRPTR iconName, ULONG firstTag, ... );
+LONG SCAPreviewGenerateTags( struct ScaWindowTask *wt, BPTR dirLock, CONST_STRPTR iconName, Tag firstTag, ... );
 
 #ifdef __cplusplus
 }
