@@ -144,7 +144,7 @@ struct DefaultMenuEntry
 	{
 	enum ScalosMenuType dme_EntryType;
 	ULONG dme_Level;
-	ULONG dme_NameId;
+	IPTR dme_NameId;
 	ULONG dme_MenuShortId;
 	enum DefaultMenuParentNode dme_ParentNode;
 	enum ScalosMenuCommandType dme_CmdType;
