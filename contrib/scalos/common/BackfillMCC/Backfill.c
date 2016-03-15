@@ -64,8 +64,8 @@ static ULONG Signature = 0x4711;
 
 //----------------------------------------------------------------------------
 
-DISPATCHER_PROTO(Backfill);
-static ULONG BackFillNew(Class *cl, Object *o, Msg msg);
+DISPATCHERPROTO(Backfill);
+static IPTR BackFillNew(Class *cl, Object *o, Msg msg);
 static ULONG BackFillDispose(Class *cl, Object *o, Msg msg);
 static ULONG BackFillClassAskMinMax(Class *cl, Object *o, Msg msg);
 static ULONG BackFillSet(Class *cl, Object *o, Msg msg);
@@ -77,7 +77,7 @@ static void ForceRelayout(struct IClass *cl, Object *obj);
 
 DISPATCHER(Backfill)
 {
-	ULONG Result;
+	IPTR Result;
 
 	switch (msg->MethodID)
 		{
@@ -112,7 +112,7 @@ DISPATCHER_END
 
 //----------------------------------------------------------------------------
 
-static ULONG BackFillNew(Class *cl, Object *o, Msg msg)
+static IPTR BackFillNew(Class *cl, Object *o, Msg msg)
 {
 	o = (Object *) DoSuperMethodA(cl, o, msg);
 	if (o)
@@ -123,11 +123,11 @@ static ULONG BackFillNew(Class *cl, Object *o, Msg msg)
 
 		set(o, MUIA_FillArea, TRUE);
 
-		NewBitMapObj = (Object *) GetTagData(BFA_BitmapObject, (ULONG) NULL, ops->ops_AttrList);
+		NewBitMapObj = (Object *) GetTagData(BFA_BitmapObject, (IPTR) NULL, ops->ops_AttrList);
 		CloneBitMapObject(cl, o, NewBitMapObj);
 		}
 
-	return (ULONG) o;
+	return (IPTR) o;
 }
 
 //----------------------------------------------------------------------------
@@ -185,7 +185,7 @@ static ULONG BackFillSet(Class *cl, Object *o, Msg msg)
 		{
 		Object *NewBitMapObj;
 
-		NewBitMapObj = (Object *) GetTagData(BFA_BitmapObject, (ULONG) inst->bfi_BitMapObject, ops->ops_AttrList);
+		NewBitMapObj = (Object *) GetTagData(BFA_BitmapObject, (IPTR) inst->bfi_BitMapObject, ops->ops_AttrList);
 
 		CloneBitMapObject(cl, o, NewBitMapObj);
 		DoRedraw = TRUE;
