@@ -17,7 +17,8 @@ REPOSITORIES := http://mathomatic.orgserve.de
 ARCHBASE     := mathomatic-16.0.5
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Scientific/Mathomatic
 
-USER_CFLAGS  := -DVERSION=\"16.0.5\"
+NOWARN_FLAGS := -Wno-cpp
+USER_CFLAGS  := $(NOWARN_FLAGS) -DVERSION=\"16.0.5\"
 
 FILES := \
     $(PORTSDIR)/mathomatic/$(ARCHBASE)/main \
