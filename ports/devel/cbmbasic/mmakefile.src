@@ -21,6 +21,11 @@ FILES := \
     $(PORTSDIR)/cbmbasic/$(ARCHBASE)/plugin \
     $(PORTSDIR)/cbmbasic/$(ARCHBASE)/runtime
 
+NOWARN_FLAGS := -Wno-unused-but-set-variable -Wno-strict-aliasing \
+	-Wno-cpp -Wno-unused-variable
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+
 %build_prog mmake=ports-devel-cbmbasic progname=CBMBasic \
     files=$(FILES) targetdir=$(TARGETDIR)
 
