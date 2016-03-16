@@ -17,7 +17,8 @@ REPOSITORIES := ftp://ftp.tuxpaint.org/unix/x/vectoroids/src
 ARCHBASE     := vectoroids-1.1.0
 TARGETDIR    := $(AROS_CONTRIB)/Games/Vectoroids
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
-USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
+NOWARN_FLAGS := -Wno-unused-variable
+USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
                 -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES -DNOSOUND
 
 # sound disabled because it crashes
