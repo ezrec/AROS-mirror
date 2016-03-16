@@ -19,7 +19,8 @@ REPOSITORIES := http://pulkomandy.tk/projects/GrafX2/downloads
 ARCHBASE     := grafx2-2.4.2035-src
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/GrafX2
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
-USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
+NOWARN_FLAGS := -Wno-misleading-indentation -Wno-cpp
+USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
     -I$(AROS_DEVELOPMENT)/include/lua \
     -D__ENABLE_LUA__ -Wno-unused-but-set-variable \
     
