@@ -659,25 +659,25 @@ void UpdateGuiFromPrefs(struct SCAModule *app)
 
 	// --- Paths Page
 
-	setstring(app->Obj[STRING_DISKCOPY], (ULONG) currentPrefs.Paths.pg_pDiskCopy);
-	setstring(app->Obj[STRING_SCALOSHOME], (ULONG) currentPrefs.Paths.pg_pHome);
-	setstring(app->Obj[STRING_THEMES], (ULONG) currentPrefs.Paths.pg_pThemes);
-	setstring(app->Obj[STRING_IMAGECACHE], (ULONG) currentPrefs.Paths.pg_pImageCache);
-	setstring(app->Obj[STRING_THUMBNAILDB], (ULONG) currentPrefs.Paths.pg_pThumbnailDb);
-	setstring(app->Obj[STRING_FORMAT], (ULONG) currentPrefs.Paths.pg_pFormat);
-	setstring(app->Obj[STRING_SQLITE3TEMPPATH], (ULONG) currentPrefs.Paths.pg_SQLiteTempDir);
+	setstring(app->Obj[STRING_DISKCOPY], (IPTR) currentPrefs.Paths.pg_pDiskCopy);
+	setstring(app->Obj[STRING_SCALOSHOME], (IPTR) currentPrefs.Paths.pg_pHome);
+	setstring(app->Obj[STRING_THEMES], (IPTR) currentPrefs.Paths.pg_pThemes);
+	setstring(app->Obj[STRING_IMAGECACHE], (IPTR) currentPrefs.Paths.pg_pImageCache);
+	setstring(app->Obj[STRING_THUMBNAILDB], (IPTR) currentPrefs.Paths.pg_pThumbnailDb);
+	setstring(app->Obj[STRING_FORMAT], (IPTR) currentPrefs.Paths.pg_pFormat);
+	setstring(app->Obj[STRING_SQLITE3TEMPPATH], (IPTR) currentPrefs.Paths.pg_SQLiteTempDir);
 
 	// --- Startup Page
 
 	setcheckmark(app->Obj[CHECK_SHOWSPLASH], currentPrefs.Startup.sg_bShowSplash);
 	setslider(app->Obj[SLIDER_SPLASHCLOSE], currentPrefs.Startup.sg_bSplashCloseDelay);
 	setslider(app->Obj[SLIDER_WBSDELAY], currentPrefs.Startup.sg_bWBStartupDelay);
-	setstring(app->Obj[STRING_WBSTARTPATH], (ULONG) currentPrefs.Startup.sg_pWBStartup);
+	setstring(app->Obj[STRING_WBSTARTPATH], (IPTR) currentPrefs.Startup.sg_pWBStartup);
 
 	// --- Desktop Page
 
-	setstring(app->Obj[STRING_CONSOLENAME], (ULONG) currentPrefs.Desktop.dg_ConsoleName);
-	set(app->Obj[POPPH_SCREENTITLE], MUIA_Popph_Contents, (ULONG) currentPrefs.Desktop.dg_pScreen);
+	setstring(app->Obj[STRING_CONSOLENAME], (IPTR) currentPrefs.Desktop.dg_ConsoleName);
+	set(app->Obj[POPPH_SCREENTITLE], MUIA_Popph_Contents, (IPTR) currentPrefs.Desktop.dg_pScreen);
 
 	setslider(app->Obj[SLIDER_TITLEREFRESH], currentPrefs.Desktop.dg_bTitleRefresh);
 	setcheckmark(app->Obj[CHECK_TITLEMEM], currentPrefs.Desktop.dg_bMemoryRefresh);
@@ -738,15 +738,15 @@ void UpdateGuiFromPrefs(struct SCAModule *app)
 	setcheckmark(app->Obj[CHECK_ICONMASK], currentPrefs.Icons.ig_bClickAreaMask);
 	setslider(app->Obj[SLIDER_ICONRMAP_PRECISION], currentPrefs.Icons.ig_bNewIconPrecision);
 	setcheckmark(app->Obj[CHECK_NIMASK], currentPrefs.Icons.ig_bNewIconTransparent);
-	setstring(app->Obj[STRING_DEFICONPATH], (ULONG) currentPrefs.Paths.pg_pDefaultIcons);
+	setstring(app->Obj[STRING_DEFICONPATH], (IPTR) currentPrefs.Paths.pg_pDefaultIcons);
 	setcheckmark(app->Obj[CHECK_DEFFIRST], currentPrefs.Icons.ig_bLoadDefIconsFirst);
 	setcheckmark(app->Obj[CHECK_ICONSSAVE], currentPrefs.Icons.ig_bIconsSaveable);
 	setcheckmark(app->Obj[CHECK_TOOLTIPS], currentPrefs.Icons.ig_bShowTooltips);
 	setslider(app->Obj[SLIDER_TIPDELAY], currentPrefs.Icons.ig_bTooltipDelay);
-	setstring(app->Obj[STRING_TOOLTIPFONT], (ULONG) currentPrefs.Icons.ig_ToolTipFont);
+	setstring(app->Obj[STRING_TOOLTIPFONT], (IPTR) currentPrefs.Icons.ig_ToolTipFont);
 	setcheckmark(app->Obj[CHECK_MULTILINES], currentPrefs.Icons.ig_wMultipleLines);
 	setcheckmark(app->Obj[CHECK_HILITEUNDERMOUSE], currentPrefs.Icons.ig_HighlightUnderMouse);
-	setstring(app->Obj[POP_ICONFONT], (ULONG) currentPrefs.Icons.ig_IconFontDesc);
+	setstring(app->Obj[POP_ICONFONT], (IPTR) currentPrefs.Icons.ig_IconFontDesc);
 	setslider(app->Obj[SLIDER_ICONTOOLTIPS_TRANSPARENCY], currentPrefs.Icons.ig_TransparencyTooltips);
 
 	setcycle(app->Obj[CYCLE_SHOWTHUMBNAILS], currentPrefs.Icons.ig_ShowThumbnails);
@@ -807,23 +807,23 @@ void UpdateGuiFromPrefs(struct SCAModule *app)
 	TranslateQualifierToString(currentPrefs.DragNDrop.ddg_pCopyQualifier, 
 		currentPrefs.DragNDrop.ddg_CopyQualifierString, 
 		sizeof(currentPrefs.DragNDrop.ddg_CopyQualifierString));
-	setstring(app->Obj[COPY_HOTKEY], (ULONG) currentPrefs.DragNDrop.ddg_CopyQualifierString);
+	setstring(app->Obj[COPY_HOTKEY], (IPTR) currentPrefs.DragNDrop.ddg_CopyQualifierString);
 	//MakeLink qualifier
 	TranslateQualifierToString(currentPrefs.DragNDrop.ddg_pMakeLinkQualifier, 
 		currentPrefs.DragNDrop.ddg_MakeLinkQualifierString, 
 		sizeof(currentPrefs.DragNDrop.ddg_MakeLinkQualifierString));
-	setstring(app->Obj[MAKELINK_HOTKEY], (ULONG) currentPrefs.DragNDrop.ddg_MakeLinkQualifierString);
+	setstring(app->Obj[MAKELINK_HOTKEY], (IPTR) currentPrefs.DragNDrop.ddg_MakeLinkQualifierString);
 	//Move qualifier
 	TranslateQualifierToString(currentPrefs.DragNDrop.ddg_pMoveQualifier, 
 		currentPrefs.DragNDrop.ddg_MoveQualifierString, 
 		sizeof(currentPrefs.DragNDrop.ddg_MoveQualifierString));
-	setstring(app->Obj[MOVE_HOTKEY], (ULONG) currentPrefs.DragNDrop.ddg_MoveQualifierString);
+	setstring(app->Obj[MOVE_HOTKEY], (IPTR) currentPrefs.DragNDrop.ddg_MoveQualifierString);
 
 	// Single-Window Lasso qualifier
 	TranslateQualifierToString(currentPrefs.Desktop.dg_SingleWindowLassoQualifier,
 		currentPrefs.Desktop.dg_SingleWindowLassoQualifierString,
 		sizeof(currentPrefs.Desktop.dg_SingleWindowLassoQualifierString));
-	setstring(app->Obj[SINGLE_WINDOW_LASSO_HOTKEY], (ULONG) currentPrefs.Desktop.dg_SingleWindowLassoQualifierString);
+	setstring(app->Obj[SINGLE_WINDOW_LASSO_HOTKEY], (IPTR) currentPrefs.Desktop.dg_SingleWindowLassoQualifierString);
 
 	//triggers
 	setcheckmark(app->Obj[CHECK_TRIG_DISK], currentPrefs.DragNDrop.ddg_lTriggers & DRAGTRANSPF_DiskIcons);
@@ -839,8 +839,8 @@ void UpdateGuiFromPrefs(struct SCAModule *app)
 
 	// --- Windows Page
 
-	set(app->Obj[POPPH_ROOTWINDOWTITLE], MUIA_Popph_Contents, (ULONG) currentPrefs.Windows.wg_pRootWin);
-	set(app->Obj[POPPH_DIRWINDOWTITLE], MUIA_Popph_Contents, (ULONG) currentPrefs.Windows.wg_pWindow);
+	set(app->Obj[POPPH_ROOTWINDOWTITLE], MUIA_Popph_Contents, (IPTR) currentPrefs.Windows.wg_pRootWin);
+	set(app->Obj[POPPH_DIRWINDOWTITLE], MUIA_Popph_Contents, (IPTR) currentPrefs.Windows.wg_pWindow);
 	setcycle(app->Obj[CYCLE_WINDOWTYPE], currentPrefs.Windows.wg_bType);
 	set(app->Obj[CHECK_POPTITLEONLY], MUIA_Selected, currentPrefs.Windows.wg_bPopTitleOnly);
 	set(app->Obj[CHECK_MMBMOVE], MUIA_Selected, currentPrefs.Windows.wg_bMMBMove);
@@ -864,8 +864,8 @@ void UpdateGuiFromPrefs(struct SCAModule *app)
 	setslider(app->Obj[SLIDER_LABELSPACE], currentPrefs.TextWindows.fd_wTextSkip);
 	setcheckmark(app->Obj[SOFTICONSLINK], currentPrefs.TextWindows.fd_bShowSoftLinks);
 	setcheckmark(app->Obj[SOFTTEXTSLINK], currentPrefs.TextWindows.fd_bShowSoftLinks);
-	setstring(app->Obj[POP_TEXTMODEFONT], (ULONG) currentPrefs.TextWindows.fd_TextWindowFontDescr);
-	set(app->Obj[STRING_TEXTMODEFONT_SAMPLE], MUIA_FontSample_StdFontDesc, (ULONG) currentPrefs.TextWindows.fd_TextWindowFontDescr);
+	setstring(app->Obj[POP_TEXTMODEFONT], (IPTR) currentPrefs.TextWindows.fd_TextWindowFontDescr);
+	set(app->Obj[STRING_TEXTMODEFONT_SAMPLE], MUIA_FontSample_StdFontDesc, (IPTR) currentPrefs.TextWindows.fd_TextWindowFontDescr);
 
 	// first, put all entries into NLIST_STORAGE_FILEDISPLAY
 	DoMethod(app->Obj[NLIST_STORAGE_FILEDISPLAY], MUIM_NList_Clear);
@@ -907,7 +907,7 @@ void UpdateGuiFromPrefs(struct SCAModule *app)
 	setslider(app->Obj[SLIDER_TEXTWINDOWS_SELECTFILLTRANSPARENCY], currentPrefs.TextWindows.fd_SelectMarkerTransparency);
 	setslider(app->Obj[SLIDER_TEXTWINDOWS_SELECTBORDERTRANSPARENCY], currentPrefs.TextWindows.fd_SelectMarkerBaseColor.Alpha);
 
-	set(app->Obj[MCC_TEXTWINDOWS_SELECTMARKER_SAMPLE], TIHA_BaseColor, (ULONG) &currentPrefs.TextWindows.fd_SelectMarkerBaseColor);
+	set(app->Obj[MCC_TEXTWINDOWS_SELECTMARKER_SAMPLE], TIHA_BaseColor, (IPTR) &currentPrefs.TextWindows.fd_SelectMarkerBaseColor);
 	set(app->Obj[MCC_TEXTWINDOWS_SELECTMARKER_SAMPLE], TIHA_Transparency, currentPrefs.TextWindows.fd_SelectMarkerTransparency);
 
 	SetAttrs(app->Obj[COLORADJUST_TEXTWINDOWS_SELECTIONMARK],
@@ -928,36 +928,36 @@ void UpdateGuiFromPrefs(struct SCAModule *app)
 	setcheckmark(app->Obj[CHECK_TTTEXTWINDOWFONT_ENABLE], currentPrefs.TrueTypeFonts.ttg_UseTextWindowTTFont);
 	setcheckmark(app->Obj[CHECK_TEXTWINDOW_TTTEXTWINDOWFONT_ENABLE], currentPrefs.TrueTypeFonts.ttg_UseTextWindowTTFont);
 	set(app->Obj[GROUP_TEXTWINDOW_FONT_SELECT], MUIA_Disabled, currentPrefs.TrueTypeFonts.ttg_UseTextWindowTTFont);
-	setstring(app->Obj[POPSTRING_TTSCREENFONT], (ULONG) currentPrefs.TrueTypeFonts.ttg_ScreenTTFontDesc);
-	setstring(app->Obj[POPSTRING_TTICONFONT], (ULONG) currentPrefs.TrueTypeFonts.ttg_IconTTFontDesc);
-	setstring(app->Obj[POPSTRING_ICONSPAGE_TTICONFONT], (ULONG) currentPrefs.TrueTypeFonts.ttg_IconTTFontDesc);
-	setstring(app->Obj[POPSTRING_TTTEXTWINDOWFONT], (ULONG) currentPrefs.TrueTypeFonts.ttg_TextWindowTTFontDesc);
-	setstring(app->Obj[POPSTRING_TEXTWINDOW_TTTEXTWINDOWFONT], (ULONG) currentPrefs.TrueTypeFonts.ttg_TextWindowTTFontDesc);
+	setstring(app->Obj[POPSTRING_TTSCREENFONT], (IPTR) currentPrefs.TrueTypeFonts.ttg_ScreenTTFontDesc);
+	setstring(app->Obj[POPSTRING_TTICONFONT], (IPTR) currentPrefs.TrueTypeFonts.ttg_IconTTFontDesc);
+	setstring(app->Obj[POPSTRING_ICONSPAGE_TTICONFONT], (IPTR) currentPrefs.TrueTypeFonts.ttg_IconTTFontDesc);
+	setstring(app->Obj[POPSTRING_TTTEXTWINDOWFONT], (IPTR) currentPrefs.TrueTypeFonts.ttg_TextWindowTTFontDesc);
+	setstring(app->Obj[POPSTRING_TEXTWINDOW_TTTEXTWINDOWFONT], (IPTR) currentPrefs.TrueTypeFonts.ttg_TextWindowTTFontDesc);
 
 	SetAttrs(app->Obj[MCC_TTSCREENFONT_SAMPLE], 
 		MUIA_FontSample_Antialias, currentPrefs.TrueTypeFonts.ttg_Antialias,
 		MUIA_FontSample_Gamma, currentPrefs.TrueTypeFonts.ttg_Gamma,
-		MUIA_FontSample_TTFontDesc, (ULONG) currentPrefs.TrueTypeFonts.ttg_ScreenTTFontDesc,
+		MUIA_FontSample_TTFontDesc, (IPTR) currentPrefs.TrueTypeFonts.ttg_ScreenTTFontDesc,
 		TAG_END);
 	SetAttrs(app->Obj[MCC_TTICONFONT_SAMPLE], 
 		MUIA_FontSample_Antialias, currentPrefs.TrueTypeFonts.ttg_Antialias,
 		MUIA_FontSample_Gamma, currentPrefs.TrueTypeFonts.ttg_Gamma,
-		MUIA_FontSample_TTFontDesc, (ULONG) currentPrefs.TrueTypeFonts.ttg_IconTTFontDesc,
+		MUIA_FontSample_TTFontDesc, (IPTR) currentPrefs.TrueTypeFonts.ttg_IconTTFontDesc,
 		TAG_END);
 	SetAttrs(app->Obj[MCC_ICONSPAGE_TTICONFONT_SAMPLE],
 		MUIA_FontSample_Antialias, currentPrefs.TrueTypeFonts.ttg_Antialias,
 		MUIA_FontSample_Gamma, currentPrefs.TrueTypeFonts.ttg_Gamma,
-		MUIA_FontSample_TTFontDesc, (ULONG) currentPrefs.TrueTypeFonts.ttg_IconTTFontDesc,
+		MUIA_FontSample_TTFontDesc, (IPTR) currentPrefs.TrueTypeFonts.ttg_IconTTFontDesc,
 		TAG_END);
 	SetAttrs(app->Obj[MCC_TTTEXTWINDOWFONT_SAMPLE], 
 		MUIA_FontSample_Antialias, currentPrefs.TrueTypeFonts.ttg_Antialias,
 		MUIA_FontSample_Gamma, currentPrefs.TrueTypeFonts.ttg_Gamma,
-		MUIA_FontSample_TTFontDesc, (ULONG) currentPrefs.TrueTypeFonts.ttg_TextWindowTTFontDesc,
+		MUIA_FontSample_TTFontDesc, (IPTR) currentPrefs.TrueTypeFonts.ttg_TextWindowTTFontDesc,
 		TAG_END);
 	SetAttrs(app->Obj[MCC_TEXTWINDOW_TTTEXTWINDOWFONT_SAMPLE],
 		MUIA_FontSample_Antialias, currentPrefs.TrueTypeFonts.ttg_Antialias,
 		MUIA_FontSample_Gamma, currentPrefs.TrueTypeFonts.ttg_Gamma,
-		MUIA_FontSample_TTFontDesc, (ULONG) currentPrefs.TrueTypeFonts.ttg_TextWindowTTFontDesc,
+		MUIA_FontSample_TTFontDesc, (IPTR) currentPrefs.TrueTypeFonts.ttg_TextWindowTTFontDesc,
 		TAG_END);
 
 	// --- Misc Page
@@ -974,9 +974,9 @@ void UpdateGuiFromPrefs(struct SCAModule *app)
 	TranslateQualifierToString(currentPrefs.Miscellaneous.mg_PopupApplySelectedQualifier, 
 		currentPrefs.Miscellaneous.mg_PopupApplySelectedQualifierString, 
 		sizeof(currentPrefs.Miscellaneous.mg_PopupApplySelectedQualifierString));
-	setstring(app->Obj[POPUP_SELECTED_HOTKEY], (ULONG) currentPrefs.Miscellaneous.mg_PopupApplySelectedQualifierString);
+	setstring(app->Obj[POPUP_SELECTED_HOTKEY], (IPTR) currentPrefs.Miscellaneous.mg_PopupApplySelectedQualifierString);
 
-	setcheckmark(app->Obj[CHECK_MISCPAGE_POPUP_SELECTED_ALWAYS], (ULONG) currentPrefs.Miscellaneous.mp_PopupApplySelectedAlways);
+	setcheckmark(app->Obj[CHECK_MISCPAGE_POPUP_SELECTED_ALWAYS], (IPTR) currentPrefs.Miscellaneous.mp_PopupApplySelectedAlways);
 	set(app->Obj[POPUP_SELECTED_HOTKEY], MUIA_Disabled, currentPrefs.Miscellaneous.mp_PopupApplySelectedAlways);
 
 	// --- Plugins Page
@@ -1918,7 +1918,7 @@ LONG ReadScalosPrefs(CONST_STRPTR PrefsFileName)
 			// starting with WB 45, stack size is changed via "Workbench" prefs.
 			//WorkbenchControlA()
 			WorkbenchControl(NULL,
-				WBCTRLA_GetDefaultStackSize, (ULONG) &currentPrefs.Miscellaneous.mg_DefaultStackSize,
+				WBCTRLA_GetDefaultStackSize, (IPTR) &currentPrefs.Miscellaneous.mg_DefaultStackSize,
 				TAG_END);
 			}
 		GetPreferences(p_MyPrefsHandle, lID, SCP_MiscWindowType, &currentPrefs.Windows.wg_bType, sizeof(currentPrefs.Windows.wg_bType) );
@@ -2704,7 +2704,7 @@ void ReadIconFontPrefs(struct SCAModule *app)
 
 		InitIFFasDOS(iff);
 
-		iff->iff_Stream = (ULONG) Open("ENV:sys/font.prefs", MODE_OLDFILE);
+		iff->iff_Stream = (IPTR) Open("ENV:sys/font.prefs", MODE_OLDFILE);
 
 		d1(kprintf(__FILE__ "/%s/%ld: iff_Stream=%08lx\n", __FUNC__, __LINE__, iff->iff_Stream));
 		if (0 == iff->iff_Stream)
@@ -2757,9 +2757,9 @@ void ReadIconFontPrefs(struct SCAModule *app)
 				sprintf(currentPrefs.Icons.ig_IconFontDesc, "%s/%d",
 					FontChunk->fp_Name, FontChunk->fp_TextAttr.ta_YSize);
 				set(app->Obj[MCC_ICONFONT_SAMPLE],
-					MUIA_FontSample_StdFontDesc, (ULONG) currentPrefs.Icons.ig_IconFontDesc);
+					MUIA_FontSample_StdFontDesc, (IPTR) currentPrefs.Icons.ig_IconFontDesc);
 				set(app->Obj[POP_ICONFONT],
-					MUIA_String_Contents, (ULONG) currentPrefs.Icons.ig_IconFontDesc);
+					MUIA_String_Contents, (IPTR) currentPrefs.Icons.ig_IconFontDesc);
 				memset(&IconFontPrefs, 0, sizeof(IconFontPrefs));
 				IconFontPrefs = *FontChunk;
 				break;

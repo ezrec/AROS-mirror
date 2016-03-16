@@ -50,17 +50,17 @@ struct SelectMarkSampleInstance
 
 // -------------------------------------------------------------------------
 
-static ULONG mNew(Class *cl, Object *o, struct opSet *ops);
+static IPTR mNew(Class *cl, Object *o, struct opSet *ops);
 static ULONG mDispose(Class *cl, Object *o,Msg msg);
 static ULONG mSet(Class *cl, Object *o, struct opSet *ops);
 static ULONG mGet(Class *cl, Object *o, struct opGet *opg);
 static ULONG mAskMinMax(Class *cl, Object *o,struct MUIP_AskMinMax *msg);
 static ULONG mDraw(Class *cl, Object *o,struct MUIP_Draw *msg);
-DISPATCHER_PROTO(SelectMarkSampleClass);
+DISPATCHERPROTO(SelectMarkSampleClass);
 
 // -------------------------------------------------------------------------
 
-static ULONG mNew(Class *cl, Object *o, struct opSet *ops)
+static IPTR mNew(Class *cl, Object *o, struct opSet *ops)
 {
 	struct SelectMarkSampleInstance *inst = NULL;
 	BOOL Success = FALSE;
@@ -77,10 +77,10 @@ static ULONG mNew(Class *cl, Object *o, struct opSet *ops)
 		memset(inst, 0, sizeof(struct SelectMarkSampleInstance));
 
 		inst->smsi_FgPen =  GetTagData(IA_FGPen, 1, ops->ops_AttrList);
-		inst->smsi_BaseColor = *(const struct ARGB *) GetTagData(TIHA_BaseColor, (ULONG) &DefaultBaseColor, ops->ops_AttrList);
+		inst->smsi_BaseColor = *(const struct ARGB *) GetTagData(TIHA_BaseColor, (IPTR) &DefaultBaseColor, ops->ops_AttrList);
 		inst->smsi_Radius = GetTagData(TIHA_Radius, 3, ops->ops_AttrList);
 		inst->smsi_Transparency = GetTagData(TIHA_Transparency, 128, ops->ops_AttrList);
-		inst->smsi_SampleText = (CONST_STRPTR) GetTagData(TIHA_DemoString, (ULONG) "", ops->ops_AttrList);
+		inst->smsi_SampleText = (CONST_STRPTR) GetTagData(TIHA_DemoString, (IPTR) "", ops->ops_AttrList);
 
 		Success = TRUE;
 		} while (0);
@@ -91,7 +91,7 @@ static ULONG mNew(Class *cl, Object *o, struct opSet *ops)
 		o = NULL;
 		}
 
-	return((ULONG)o);
+	return((IPTR)o);
 }
 
 // -------------------------------------------------------------------------
@@ -116,10 +116,10 @@ static ULONG mSet(Class *cl, Object *o, struct opSet *ops)
 	UBYTE oldTransparency = inst->smsi_Transparency;
 
 	inst->smsi_FgPen        = GetTagData(IA_FGPen, inst->smsi_FgPen, ops->ops_AttrList);
-	inst->smsi_BaseColor    = *(const struct ARGB *) GetTagData(TIHA_BaseColor, (ULONG) &inst->smsi_BaseColor, ops->ops_AttrList);
+	inst->smsi_BaseColor    = *(const struct ARGB *) GetTagData(TIHA_BaseColor, (IPTR) &inst->smsi_BaseColor, ops->ops_AttrList);
 	inst->smsi_Radius       = GetTagData(TIHA_Radius, inst->smsi_Radius, ops->ops_AttrList);
 	inst->smsi_Transparency = GetTagData(TIHA_Transparency, inst->smsi_Transparency, ops->ops_AttrList);
-	inst->smsi_SampleText   = (CONST_STRPTR) GetTagData(TIHA_DemoString, (ULONG) inst->smsi_SampleText, ops->ops_AttrList);
+	inst->smsi_SampleText   = (CONST_STRPTR) GetTagData(TIHA_DemoString, (IPTR) inst->smsi_SampleText, ops->ops_AttrList);
 
 	if (inst->smsi_Radius != oldRadius || inst->smsi_Transparency != oldTransparency
 		|| 0 != memcmp(&oldBaseColor, &inst->smsi_BaseColor, sizeof(struct ARGB)) )
@@ -152,7 +152,7 @@ static ULONG mGet(Class *cl, Object *o, struct opGet *opg)
 		*(opg->opg_Storage) = inst->smsi_Transparency;
 		break;
 	case TIHA_DemoString:
-		*(opg->opg_Storage) = (ULONG) inst->smsi_SampleText;
+		*(opg->opg_Storage) = (IPTR) inst->smsi_SampleText;
 		break;
 	default:
 		Result = DoSuperMethodA(cl, o, (Msg) opg);
@@ -386,7 +386,7 @@ static ULONG mDraw(Class *cl, Object *o,struct MUIP_Draw *msg)
 
 DISPATCHER(SelectMarkSampleClass)
 {
-	ULONG Result;
+	IPTR Result;
 
 	switch (msg->MethodID)
 		{

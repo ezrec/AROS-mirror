@@ -118,7 +118,7 @@ BOOL ReadWorkbenchPrefs(CONST_STRPTR filename)
 		if (NULL == iff)
 			break;
 
-		iff->iff_Stream = (ULONG) Open((STRPTR) filename, MODE_OLDFILE);
+		iff->iff_Stream = (IPTR) Open((STRPTR) filename, MODE_OLDFILE);
 		d1(KPrintF(__FILE__ "/%s/%ld: iff_Stream=%08lx\n", __FUNC__, __LINE__, iff->iff_Stream));
 		if (0 == iff->iff_Stream)
 			break;

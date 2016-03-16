@@ -72,7 +72,7 @@ static const ULONG icon128_colors[96] =
 #define ICON128_COMPRESSION   1
 #define ICON128_MASKING       0
 
-static const struct BitMapHeader icon128_header =
+static const struct BitMapHeader icon128_header __unused =
 { 128,128,0,0,5,0,1,0,0,1,1,128,128 };
 
 static const UBYTE icon128_body[6544] = {
@@ -558,7 +558,7 @@ static const ULONG icon96_colors[96] =
 #define ICON96_COMPRESSION   1
 #define ICON96_MASKING       0
 
-static const struct BitMapHeader icon96_header =
+static const struct BitMapHeader icon96_header __unused =
 { 96,96,0,0,5,0,1,0,0,1,1,96,96 };
 
 static const UBYTE icon96_body[4226] = {
@@ -889,7 +889,7 @@ static const ULONG icon64_colors[96] =
 #define ICON64_COMPRESSION   1
 #define ICON64_MASKING       0
 
-static const struct BitMapHeader icon64_header =
+static const struct BitMapHeader icon64_header __unused =
 { 64,64,0,0,5,0,1,0,0,1,1,64,64 };
 
 static const UBYTE icon64_body[2096] = {
@@ -1078,7 +1078,7 @@ static const ULONG icon48_colors[96] =
 #define ICON48_COMPRESSION   1
 #define ICON48_MASKING       0
 
-static const struct BitMapHeader icon48_header =
+static const struct BitMapHeader icon48_header __unused =
 { 48,48,0,0,5,0,1,0,0,1,1,48,48 };
 
 static const UBYTE icon48_body[1333] = {
@@ -1216,7 +1216,7 @@ static const ULONG icon32_colors[96] =
 #define ICON32_COMPRESSION   1
 #define ICON32_MASKING       0
 
-static const struct BitMapHeader icon32_header =
+static const struct BitMapHeader icon32_header __unused =
 { 32,32,0,0,5,0,1,0,0,1,1,32,32 };
 
 static const UBYTE icon32_body[674] = {
@@ -1310,7 +1310,7 @@ static const ULONG icon24_colors[96] =
 #define ICON24_COMPRESSION   1
 #define ICON24_MASKING       0
 
-static const struct BitMapHeader icon24_header =
+static const struct BitMapHeader icon24_header __unused =
 { 24,24,0,0,5,0,1,0,0,1,1,24,24 };
 
 static const UBYTE icon24_body[516] = {
@@ -1394,7 +1394,7 @@ static const ULONG icon16_colors[96] =
 #define ICON16_COMPRESSION   1
 #define ICON16_MASKING       0
 
-static const struct BitMapHeader icon16_header =
+static const struct BitMapHeader icon16_header __unused =
 { 16,16,0,0,5,0,1,0,0,1,1,16,16 };
 
 static const UBYTE icon16_body[223] = {
@@ -1442,7 +1442,7 @@ static const ULONG about_colors[48] =
 #define ABOUT_COMPRESSION   0
 #define ABOUT_MASKING       2
 
-static const struct BitMapHeader about_header =
+static const struct BitMapHeader about_header __unused =
 { 12,16,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE about_body[128] = {
@@ -1484,7 +1484,7 @@ static const ULONG desktop_colors[48] =
 #define DESKTOP_COMPRESSION   0
 #define DESKTOP_MASKING       2
 
-static const struct BitMapHeader desktop_header =
+static const struct BitMapHeader desktop_header __unused =
 { 24,16,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE desktop_body[256] = {
@@ -1535,7 +1535,7 @@ static const ULONG filedisplay_colors[48] =
 #define FILEDISPLAY_COMPRESSION   0
 #define FILEDISPLAY_MASKING       2
 
-static const struct BitMapHeader filedisplay_header =
+static const struct BitMapHeader filedisplay_header __unused =
 { 24,16,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE filedisplay_body[256] = {
@@ -1586,7 +1586,7 @@ static const ULONG icons_colors[48] =
 #define ICONS_COMPRESSION   0
 #define ICONS_MASKING       2
 
-static const struct BitMapHeader icons_header =
+static const struct BitMapHeader icons_header __unused =
 { 23,16,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE icons_body[256] = {
@@ -1637,7 +1637,7 @@ static const ULONG misc_colors[48] =
 #define MISC_COMPRESSION   0
 #define MISC_MASKING       2
 
-static const struct BitMapHeader misc_header =
+static const struct BitMapHeader misc_header __unused =
 { 23,9,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE misc_body[144] = {
@@ -1680,7 +1680,7 @@ static const ULONG modules_colors[48] =
 #define MODULES_COMPRESSION   0
 #define MODULES_MASKING       2
 
-static const struct BitMapHeader modules_header =
+static const struct BitMapHeader modules_header __unused =
 { 24,15,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE modules_body[240] = {
@@ -1730,7 +1730,7 @@ static const ULONG paths_colors[48] =
 #define PATHS_COMPRESSION   0
 #define PATHS_MASKING       2
 
-static const struct BitMapHeader paths_header =
+static const struct BitMapHeader paths_header __unused =
 { 23,16,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE paths_body[256] = {
@@ -1781,7 +1781,7 @@ static const ULONG plugins_colors[48] =
 #define PLUGINS_COMPRESSION   0
 #define PLUGINS_MASKING       2
 
-static const struct BitMapHeader plugins_header =
+static const struct BitMapHeader plugins_header __unused =
 { 23,16,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE plugins_body[256] = {
@@ -1832,7 +1832,7 @@ static const ULONG startup_colors[48] =
 #define STARTUP_COMPRESSION   0
 #define STARTUP_MASKING       2
 
-static const struct BitMapHeader startup_header =
+static const struct BitMapHeader startup_header __unused =
 { 23,16,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE startup_body[256] = {
@@ -1883,7 +1883,7 @@ static const ULONG windows_colors[48] =
 #define WINDOWS_COMPRESSION   0
 #define WINDOWS_MASKING       2
 
-static const struct BitMapHeader windows_header =
+static const struct BitMapHeader windows_header __unused =
 { 23,16,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE windows_body[256] = {
@@ -1934,7 +1934,7 @@ static const ULONG textwindows_colors[] =
 #define TEXTWINDOWS_COMPRESSION   0
 #define TEXTWINDOWS_MASKING       2
 
-static const struct BitMapHeader textwindows_header =
+static const struct BitMapHeader textwindows_header __unused =
 { 23,14,0,0,4,2,0,0,8,22,22,640,512 };
 
 static const UBYTE textwindows_body[] = {
@@ -1981,7 +1981,7 @@ static const ULONG delete_colors[48] =
 #define DELETE_COMPRESSION   0
 #define DELETE_MASKING       2
 
-static const struct BitMapHeader delete_header =
+static const struct BitMapHeader delete_header __unused =
 { 26,27,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE delete_body[432] = {
@@ -2043,7 +2043,7 @@ static const ULONG empty_trashcan_colors[48] =
 #define EMPTY_TRASHCAN_COMPRESSION   0
 #define EMPTY_TRASHCAN_MASKING       2
 
-static const struct BitMapHeader empty_trashcan_header =
+static const struct BitMapHeader empty_trashcan_header __unused =
 { 26,29,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE empty_trashcan_body[464] = {
@@ -2107,7 +2107,7 @@ static const ULONG execute_command_colors[48] =
 #define EXECUTE_COMMAND_COMPRESSION   0
 #define EXECUTE_COMMAND_MASKING       2
 
-static const struct BitMapHeader execute_command_header =
+static const struct BitMapHeader execute_command_header __unused =
 { 42,37,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE execute_command_body[888] = {
@@ -2216,7 +2216,7 @@ static const ULONG format_disk_colors[96] =
 #define FORMAT_DISK_COMPRESSION   0
 #define FORMAT_DISK_MASKING       2
 
-static const struct BitMapHeader format_disk_header =
+static const struct BitMapHeader format_disk_header __unused =
 { 21,21,0,0,5,2,0,0,0,44,44,320,256 };
 
 static const UBYTE format_disk_body[420] = {
@@ -2278,7 +2278,7 @@ static const ULONG Information_colors[48] =
 #define INFORMATION_COMPRESSION   0
 #define INFORMATION_MASKING       2
 
-static const struct BitMapHeader Information_header =
+static const struct BitMapHeader Information_header __unused =
 { 25,25,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE Information_body[400] = {
@@ -2338,7 +2338,7 @@ static const ULONG IconProperties_colors[48] =
 #define ICONPROPERTIES_COMPRESSION   0
 #define ICONPROPERTIES_MASKING       2
 
-static const struct BitMapHeader IconProperties_header =
+static const struct BitMapHeader IconProperties_header __unused =
 { 18,22,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE IconProperties_body[352] = {
@@ -2395,7 +2395,7 @@ static const ULONG NewDrawer_colors[48] =
 #define NEWDRAWER_COMPRESSION   0
 #define NEWDRAWER_MASKING       2
 
-static const struct BitMapHeader NewDrawer_header =
+static const struct BitMapHeader NewDrawer_header __unused =
 { 33,29,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE NewDrawer_body[696] = {
@@ -2475,7 +2475,7 @@ static const ULONG Reboot_colors[48] =
 #define REBOOT_COMPRESSION   0
 #define REBOOT_MASKING       2
 
-static const struct BitMapHeader Reboot_header =
+static const struct BitMapHeader Reboot_header __unused =
 { 42,33,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE Reboot_body[792] = {
@@ -2561,7 +2561,7 @@ static const ULONG rename_colors[48] =
 #define RENAME_COMPRESSION   0
 #define RENAME_MASKING       2
 
-static const struct BitMapHeader rename_header =
+static const struct BitMapHeader rename_header __unused =
 { 26,30,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE rename_body[480] = {
@@ -2627,7 +2627,7 @@ static const ULONG systeminfo_colors[48] =
 #define SYSTEMINFO_COMPRESSION   0
 #define SYSTEMINFO_MASKING       2
 
-static const struct BitMapHeader systeminfo_header =
+static const struct BitMapHeader systeminfo_header __unused =
 { 37,30,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE systeminfo_body[720] = {
@@ -2709,7 +2709,7 @@ static const ULONG WindowProperties_colors[48] =
 #define WINDOWPROPERTIES_COMPRESSION   0
 #define WINDOWPROPERTIES_MASKING       2
 
-static const struct BitMapHeader WindowProperties_header =
+static const struct BitMapHeader WindowProperties_header __unused=
 { 34,34,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE WindowProperties_body[816] = {
@@ -2797,7 +2797,7 @@ static const ULONG dragndrop_colors[48] =
 #define DRAGNDROP_COMPRESSION   0
 #define DRAGNDROP_MASKING       2
 
-static const struct BitMapHeader dragndrop_header =
+static const struct BitMapHeader dragndrop_header __unused =
 { 25,13,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE dragndrop_body[208] = {
@@ -2844,7 +2844,7 @@ static const ULONG TrueTypeFonts_colors[48] =
 #define TRUETYPEFONTS_COMPRESSION   0
 #define TRUETYPEFONTS_MASKING       2
 
-static const struct BitMapHeader TrueTypeFonts_header =
+static const struct BitMapHeader TrueTypeFonts_header __unused =
 { 28,17,0,0,4,2,0,0,0,44,44,320,256 };
 
 static const UBYTE TrueTypeFonts_body[272] = {
@@ -2940,7 +2940,7 @@ Object *CreatePrefsImage(void *UserData)
 		};
 	const struct ImageDef *id;
 	Object *ImgObj = NULL;
-	ULONG Index = (ULONG) UserData;
+	IPTR Index = (IPTR) UserData;
 
 	d1(KPrintF("%s/%s/%ld: START  Index=%lu\n", __FILE__, __FUNC__, __LINE__, Index));
 
@@ -2950,7 +2950,7 @@ Object *CreatePrefsImage(void *UserData)
 			{
 			// First try to load datatypes image from THEME: tree
 			ImgObj = NewObject(DataTypesImageClass->mcc_Class, 0,
-				MUIA_ScaDtpic_Name, (ULONG) id->id_ImgFileName,
+				MUIA_ScaDtpic_Name, (IPTR) id->id_ImgFileName,
 				MUIA_ScaDtpic_FailIfUnavailable, TRUE,
 				End; //DataTypesMCCObject
 

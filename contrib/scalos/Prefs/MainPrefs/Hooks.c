@@ -241,9 +241,9 @@ SAVEDS(void) INTERRUPT AddPlugin_Func(struct Hook *hook, Object *pPluginList, Ms
 	Req = MUI_AllocAslRequestTags(ASL_FileRequest,
 		ASLFR_SleepWindow, TRUE,
 		ASLFR_Flags1, FRF_DOPATTERNS,
-		ASLFR_InitialFile, (ULONG) "",
-		ASLFR_InitialDrawer, (ULONG) "Scalos:Plugins/OOP",
-		ASLFR_InitialPattern, (ULONG) "#?.plugin",
+		ASLFR_InitialFile, (IPTR) "",
+		ASLFR_InitialDrawer, (IPTR) "Scalos:Plugins/OOP",
+		ASLFR_InitialPattern, (IPTR) "#?.plugin",
 		ASLFR_UserData, app,
 		ASLFR_IntuiMsgFunc, &AslIntuiMsgHook,
 		ASLFR_FilterFunc, &AddPluginAslFilterHook,
@@ -258,8 +258,8 @@ SAVEDS(void) INTERRUPT AddPlugin_Func(struct Hook *hook, Object *pPluginList, Ms
 
 		//AslRequest(
 		Result = MUI_AslRequestTags(Req,
-			ASLFR_Window, (ULONG) win,
-			ASLFR_TitleText, (ULONG) GetLocString(MSGID_ADD_PLUGIN_ASLTITLE),
+			ASLFR_Window, (IPTR) win,
+			ASLFR_TitleText, (IPTR) GetLocString(MSGID_ADD_PLUGIN_ASLTITLE),
 			ASLFR_DoMultiSelect, TRUE,
 			TAG_END);
 
@@ -358,9 +358,9 @@ SAVEDS(void) INTERRUPT OpenHookFunc(struct Hook *hook, Object *o, Msg msg)
 	Req = MUI_AllocAslRequestTags(ASL_FileRequest,
 		ASLFR_SleepWindow, TRUE,
 		ASLFR_Flags1, FRF_DOPATTERNS,
-		ASLFR_InitialDrawer, (ULONG) "SYS:Prefs/presets",
-		ASLFR_InitialPattern, (ULONG) "#?.(pre|prefs)",
-		ASLFR_InitialFile, (ULONG) "Scalos.pre",
+		ASLFR_InitialDrawer, (IPTR) "SYS:Prefs/presets",
+		ASLFR_InitialPattern, (IPTR) "#?.(pre|prefs)",
+		ASLFR_InitialFile, (IPTR) "Scalos.pre",
 		ASLFR_UserData, app,
 		ASLFR_IntuiMsgFunc, &AslIntuiMsgHook,
 		TAG_END);
@@ -374,8 +374,8 @@ SAVEDS(void) INTERRUPT OpenHookFunc(struct Hook *hook, Object *o, Msg msg)
 
 		//AslRequest(
 		Result = MUI_AslRequestTags(Req,
-			ASLFR_Window, (ULONG) win,
-			ASLFR_TitleText, (ULONG) GetLocString(MSGID_MENU_PROJECT_OPEN_ASLTITLE),
+			ASLFR_Window, (IPTR) win,
+			ASLFR_TitleText, (IPTR) GetLocString(MSGID_MENU_PROJECT_OPEN_ASLTITLE),
 			TAG_END);
 
 		if (Result)
@@ -415,10 +415,10 @@ SAVEDS(void) INTERRUPT SaveAsFunc(struct Hook *hook, Object *o, Msg msg)
 	struct FileRequester *Req;
 	
 	Req = MUI_AllocAslRequestTags(ASL_FileRequest,
-		ASLFR_InitialFile, (ULONG) "Scalos.pre",
+		ASLFR_InitialFile, (IPTR) "Scalos.pre",
 		ASLFR_SleepWindow, TRUE,
 		ASLFR_DoSaveMode, TRUE,
-		ASLFR_InitialDrawer, (ULONG) "SYS:Prefs/presets",
+		ASLFR_InitialDrawer, (IPTR) "SYS:Prefs/presets",
 		ASLFR_UserData, app,
 		ASLFR_IntuiMsgFunc, &AslIntuiMsgHook,
 		TAG_END);
@@ -432,8 +432,8 @@ SAVEDS(void) INTERRUPT SaveAsFunc(struct Hook *hook, Object *o, Msg msg)
 
 		//AslRequest(
 		Result = MUI_AslRequestTags(Req,
-			ASLFR_TitleText, (ULONG) GetLocString(MSGID_MENU_PROJECT_SAVEAS_ASLTITLE),
-			ASLFR_Window, (ULONG) win,
+			ASLFR_TitleText, (IPTR) GetLocString(MSGID_MENU_PROJECT_SAVEAS_ASLTITLE),
+			ASLFR_Window, (IPTR) win,
 			TAG_END);
 
 		if (Result)
@@ -529,7 +529,7 @@ SAVEDS(void) INTERRUPT DesktopHiddenDevicesHookFunc(struct Hook *hook, Object *o
 {
 	struct SCAModule *app = (struct SCAModule *) hook->h_Data;
 	struct HiddenDeviceListEntry *hde = NULL;
-	ULONG ButtonClicked, EntryClicked;
+	ULONG ButtonClicked __unused, EntryClicked;
 
 	ButtonClicked = getv(app->Obj[NLIST_HIDDENDEVICES], MUIA_NList_ButtonClick);
 	EntryClicked = getv(app->Obj[NLIST_HIDDENDEVICES], MUIA_NList_EntryClick);
@@ -641,16 +641,16 @@ SAVEDS(void) INTERRUPT ScreenTtfPopOpenHookFunc(struct Hook *hook, Object *o, Ms
 
 		//TT_RequestA()
 		AttrList = TT_Request(ttRequest,
-			TTRQ_Window, (ULONG) PrefsWindow,
-			TTRQ_TitleText, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SELECTSCREENFONT_ASLTITLE),
-			TTRQ_PositiveText, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SELECTFONT_ASL_OKBUTTON),
-			TTRQ_NegativeText, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SELECTFONT_ASL_CANCELBUTTON),
+			TTRQ_Window, (IPTR) PrefsWindow,
+			TTRQ_TitleText, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SELECTSCREENFONT_ASLTITLE),
+			TTRQ_PositiveText, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SELECTFONT_ASL_OKBUTTON),
+			TTRQ_NegativeText, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SELECTFONT_ASL_CANCELBUTTON),
 			TTRQ_DoSizes, TRUE,
 			TTRQ_DoStyle, TRUE,
 			TTRQ_DoWeight, TRUE,
 			TTRQ_Activate, TRUE,
 			TTRQ_DoPreview, TRUE,
-			TTRQ_InitialName, (ULONG) FontName,
+			TTRQ_InitialName, (IPTR) FontName,
 			TTRQ_InitialSize, FontSize,
 			TTRQ_InitialStyle, FontStyle,
 			TAG_END);
@@ -712,16 +712,16 @@ SAVEDS(void) INTERRUPT IconTtfPopOpenHookFunc(struct Hook *hook, Object *o, Msg 
 
 		//TT_RequestA()
 		AttrList = TT_Request(ttRequest,
-			TTRQ_Window, (ULONG) PrefsWindow,
-			TTRQ_TitleText, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SELECTICONFONT_ASLTITLE),
-			TTRQ_PositiveText, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SELECTFONT_ASL_OKBUTTON),
-			TTRQ_NegativeText, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SELECTFONT_ASL_CANCELBUTTON),
+			TTRQ_Window, (IPTR) PrefsWindow,
+			TTRQ_TitleText, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SELECTICONFONT_ASLTITLE),
+			TTRQ_PositiveText, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SELECTFONT_ASL_OKBUTTON),
+			TTRQ_NegativeText, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SELECTFONT_ASL_CANCELBUTTON),
 			TTRQ_DoSizes, TRUE,
 			TTRQ_DoStyle, TRUE,
 			TTRQ_DoWeight, TRUE,
 			TTRQ_Activate, TRUE,
 			TTRQ_DoPreview, TRUE,
-			TTRQ_InitialName, (ULONG) FontName,
+			TTRQ_InitialName, (IPTR) FontName,
 			TTRQ_InitialSize, FontSize,
 			TTRQ_InitialStyle, FontStyle,
 			TAG_END);
@@ -786,16 +786,16 @@ SAVEDS(void) INTERRUPT TextWindowTtfPopOpenHookFunc(struct Hook *hook, Object *o
 
 		//TT_RequestA()
 		AttrList = TT_Request(ttRequest,
-			TTRQ_Window, (ULONG) PrefsWindow,
-			TTRQ_TitleText, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SELECTTEXTWINDOWFONT_ASLTITLE),
-			TTRQ_PositiveText, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SELECTFONT_ASL_OKBUTTON),
-			TTRQ_NegativeText, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SELECTFONT_ASL_CANCELBUTTON),
+			TTRQ_Window, (IPTR) PrefsWindow,
+			TTRQ_TitleText, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SELECTTEXTWINDOWFONT_ASLTITLE),
+			TTRQ_PositiveText, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SELECTFONT_ASL_OKBUTTON),
+			TTRQ_NegativeText, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SELECTFONT_ASL_CANCELBUTTON),
 			TTRQ_DoSizes, TRUE,
 			TTRQ_DoStyle, TRUE,
 			TTRQ_DoWeight, TRUE,
 			TTRQ_Activate, TRUE,
 			TTRQ_DoPreview, TRUE,
-			TTRQ_InitialName, (ULONG) FontName,
+			TTRQ_InitialName, (IPTR) FontName,
 			TTRQ_InitialSize, FontSize,
 			TTRQ_InitialStyle, FontStyle,
 			TAG_END);
@@ -857,7 +857,7 @@ static void BuildTTDescFromAttrList(char *buffer, size_t length, struct TagItem 
 	FontStyle = GetTagData(TT_FontStyle, TT_FontStyle_Regular, AttrList);
 	FontWeight = GetTagData(TT_FontWeight, TT_FontWeight_Normal, AttrList);
 	FontSize = GetTagData(TT_FontSize, 12, AttrList);
-	FontFamilyTable = (const STRPTR *) GetTagData(TT_FamilyTable, (ULONG) NULL, AttrList);
+	FontFamilyTable = (const STRPTR *) GetTagData(TT_FamilyTable, (IPTR) NULL, AttrList);
 
 	sprintf(buffer, "%ld/%ld/%ld/%s", (long)FontStyle, (long)FontWeight, (long)FontSize, FontFamilyTable[0]);
 }
@@ -1148,7 +1148,7 @@ SAVEDS(APTR) INTERRUPT BrowserCmdSelectedHookFunc(struct Hook *hook, Object *o, 
 	DoMethod(o, MUIM_List_GetEntry, MUIV_List_GetEntry_Active, &cte);
 	if (cte)
 		{
-		setstring(app->Obj[STRING_CONTROLBARGADGETS_BROWSER_ACTION], (ULONG) cte->cte_Command);
+		setstring(app->Obj[STRING_CONTROLBARGADGETS_BROWSER_ACTION], (IPTR) cte->cte_Command);
 
 		DoMethod(app->Obj[POP_CONTROLBARGADGETS_BROWSER_ACTION], MUIM_Popstring_Close, 0);
 
@@ -1168,7 +1168,7 @@ SAVEDS(APTR) INTERRUPT NormalCmdSelectedHookFunc(struct Hook *hook, Object *o, M
 	DoMethod(o, MUIM_List_GetEntry, MUIV_List_GetEntry_Active, &cte);
 	if (cte)
 		{
-		setstring(app->Obj[STRING_CONTROLBARGADGETS_NORMAL_ACTION], (ULONG) cte->cte_Command);
+		setstring(app->Obj[STRING_CONTROLBARGADGETS_NORMAL_ACTION], (IPTR) cte->cte_Command);
 
 		DoMethod(app->Obj[POP_CONTROLBARGADGETS_NORMAL_ACTION], MUIM_Popstring_Close, 0);
 
@@ -1211,7 +1211,7 @@ SAVEDS(APTR) INTERRUPT ControlBarGadgetBrowserChangedHookFunc(struct Hook *hook,
 			if (ExistsObject(cgy->cgy_NormalImage))
 				{
 				cgy->cgy_Image = NewObject(DataTypesImageClass->mcc_Class, 0,
-					MUIA_ScaDtpic_Name, (ULONG) cgy->cgy_NormalImage,
+					MUIA_ScaDtpic_Name, (IPTR) cgy->cgy_NormalImage,
 					TAG_END); //DataTypesMCC
 
 				set(app->Obj[DTIMG_CONTROLBARGADGETS_BROWSER_NORMALIMAGE], MUIA_ScaDtpic_Name,
@@ -1322,7 +1322,7 @@ SAVEDS(APTR) INTERRUPT ControlBarGadgetNormalChangedHookFunc(struct Hook *hook, 
 			if (ExistsObject(cgy->cgy_NormalImage))
 				{
 				cgy->cgy_Image = NewObject(DataTypesImageClass->mcc_Class, 0,
-					MUIA_ScaDtpic_Name, (ULONG) cgy->cgy_NormalImage,
+					MUIA_ScaDtpic_Name, (IPTR) cgy->cgy_NormalImage,
 					TAG_END); //DataTypesMCC
 
 				set(app->Obj[DTIMG_CONTROLBARGADGETS_NORMAL_NORMALIMAGE], MUIA_ScaDtpic_Name,
@@ -1509,7 +1509,7 @@ SAVEDS(void) INTERRUPT UpdateSelectMarkerSampleHookFunc(struct Hook *hook, Objec
 	argb.Green = getv(app->Obj[COLORADJUST_TEXTWINDOWS_SELECTIONMARK], MUIA_Coloradjust_Green) >> 24;
 	argb.Blue  = getv(app->Obj[COLORADJUST_TEXTWINDOWS_SELECTIONMARK], MUIA_Coloradjust_Blue) >> 24;
 
-	set(app->Obj[MCC_TEXTWINDOWS_SELECTMARKER_SAMPLE], TIHA_BaseColor, (ULONG) &argb);
+	set(app->Obj[MCC_TEXTWINDOWS_SELECTMARKER_SAMPLE], TIHA_BaseColor, (IPTR) &argb);
 }
 
 //-----------------------------------------------------------------

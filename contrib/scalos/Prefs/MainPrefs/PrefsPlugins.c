@@ -112,7 +112,7 @@ ULONG DoMethodForAllPrefsPlugins(ULONG ArgsCount, ULONG MethodID, ...)
 	ULONG result = 0;
 	ULONG *ArgArray;
 
-	ArgArray = calloc(sizeof(ULONG), ArgsCount);
+	ArgArray = calloc(sizeof(IPTR), ArgsCount);
 	if (ArgArray)
 		{
 		struct PrefsPlugin *ppl;
@@ -123,7 +123,7 @@ ULONG DoMethodForAllPrefsPlugins(ULONG ArgsCount, ULONG MethodID, ...)
 		ArgArray[0] = MethodID;
 		for (n = 1; n < ArgsCount; n++)
 			{
-			ArgArray[n] = va_arg(ap, ULONG);
+			ArgArray[n] = va_arg(ap, IPTR);
 			}
 
 		for (ppl = (struct PrefsPlugin *) PrefsPluginList.lh_Head;
@@ -295,10 +295,10 @@ void InsertPrefsPlugins(struct SCAModule *app, Object *pageGroup, Object *pageLi
 				struct NewPageListEntry nple;
 				Object *NewPage;
 
-				set(ppl->ppl_GroupObject, MUIA_ScalosPrefs_MainWindow, (ULONG) app->Obj[WINDOW_MAIN]);
-				set(ppl->ppl_GroupObject, MUIA_ScalosPrefs_Application, (ULONG) app->Obj[APPLICATION]);
+				set(ppl->ppl_GroupObject, MUIA_ScalosPrefs_MainWindow, (IPTR) app->Obj[WINDOW_MAIN]);
+				set(ppl->ppl_GroupObject, MUIA_ScalosPrefs_Application, (IPTR) app->Obj[APPLICATION]);
 				set(ppl->ppl_GroupObject, MUIA_ScalosPrefs_CreateIcons, fCreateIcons);
-				set(ppl->ppl_GroupObject, MUIA_ScalosPrefs_ProgramName, (ULONG) ProgramName);
+				set(ppl->ppl_GroupObject, MUIA_ScalosPrefs_ProgramName, (IPTR) ProgramName);
 //				set(ppl->ppl_GroupObject, MUIA_Background, MUII_PageBack);
 
 				get(pageList, MUIA_NList_Entries, &ppl->ppl_PageNumber);
@@ -357,7 +357,7 @@ struct TagItem *GetPrefsPluginSubWindows(struct SCAModule *app)
 		for (n=0; ppl->ppl_SubWindows && ppl->ppl_SubWindows[n]; n++)
 			{
 			ti->ti_Tag = MUIA_Application_Window;
-			ti->ti_Data = (ULONG) ppl->ppl_SubWindows[n];
+			ti->ti_Data = (IPTR) ppl->ppl_SubWindows[n];
 			ti++;
 			}
 		}

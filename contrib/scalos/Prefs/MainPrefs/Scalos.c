@@ -97,7 +97,7 @@
 		MUIA_Background       , MUII_ButtonBack,\
 		MUIA_ShowSelState     , FALSE,\
 		MUIA_CycleChain       , TRUE,\
-		MUIA_ShortHelp	      , GetLocString(HelpTextID), \
+		MUIA_ShortHelp	      , (IPTR)GetLocString(HelpTextID), \
 		End
 
 #define	THEME_CONTROLBAR	"THEME:Window/ControlBar/"
@@ -106,9 +106,9 @@
 	MUI_NewObject(MUIC_Text,\
 		ButtonFrame,\
 		MUIA_Font,           MUIV_Font_Button,\
-		MUIA_Text_HiCharIdx, '_',\
-		MUIA_Text_Contents,  "Scan",\
-		MUIA_Text_PreParse,  "\33c",\
+		MUIA_Text_HiCharIdx, (IPTR)'_',\
+		MUIA_Text_Contents,  (IPTR)"Scan",\
+		MUIA_Text_PreParse,  (IPTR)"\33c",\
 		MUIA_InputMode,      MUIV_InputMode_Toggle,\
 		MUIA_Background,     MUII_ButtonBack,\
 		MUIA_CycleChain,     1,\
@@ -173,14 +173,14 @@ long _stack = 16384;		// minimum stack size, used by SAS/C startup code
 
 static ULONG TextWindowColumnsListDragQuery(Class *cl, Object *obj, struct MUIP_DragQuery *msg);
 static ULONG TextWindowColumnsListDragDrop(Class *cl,Object *obj,struct MUIP_DragDrop *msg);
-DISPATCHER_PROTO(TextWindowColumnsList);
+DISPATCHERPROTO(TextWindowColumnsList);
 static ULONG ControlBarGadgetsListDragQuery(Class *cl, Object *obj, struct MUIP_DragQuery *msg);
 static ULONG ControlBarGadgetsListDragDrop(Class *cl,Object *obj,struct MUIP_DragDrop *msg);
-DISPATCHER_PROTO(ControlBarGadgetsList);
-DISPATCHER_PROTO(PrecisionSlider);
-DISPATCHER_PROTO(BufferSizeSlider);
-DISPATCHER_PROTO(TTGammaSlider);
-DISPATCHER_PROTO(ThumbnailLifetimeSlider);
+DISPATCHERPROTO(ControlBarGadgetsList);
+DISPATCHERPROTO(PrecisionSlider);
+DISPATCHERPROTO(BufferSizeSlider);
+DISPATCHERPROTO(TTGammaSlider);
+DISPATCHERPROTO(ThumbnailLifetimeSlider);
 static VOID Cleanup(struct SCAModule *app);
 static BOOL Init(struct SCAModule *app);
 static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon);
@@ -1089,114 +1089,114 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 
 	app->Obj[APPLICATION] = ApplicationObject,
 
-		MUIA_Application_Author,	AUTHOR,
-		MUIA_Application_Base,		PROGRAM,
-		MUIA_Application_Copyright,	(ULONG) copyRightVersion,
-		MUIA_Application_Description,	PROGRAM,
-		MUIA_Application_Title,		PROGRAM,
-		MUIA_Application_Version,	"$VER: " PROGRAM " V" VERSION " (" __DATE__ ")" COMPILER_STRING,
+		MUIA_Application_Author,	(IPTR)AUTHOR,
+		MUIA_Application_Base,		(IPTR)PROGRAM,
+		MUIA_Application_Copyright,	(IPTR) copyRightVersion,
+		MUIA_Application_Description,	(IPTR)PROGRAM,
+		MUIA_Application_Title,		(IPTR)PROGRAM,
+		MUIA_Application_Version,	(IPTR)"$VER: " PROGRAM " V" VERSION " (" __DATE__ ")" COMPILER_STRING,
 #if defined(MUIA_Application_UsedClasses)
-		MUIA_Application_UsedClasses,	UsedClasses,
+		MUIA_Application_UsedClasses,	(IPTR)UsedClasses,
 #endif /* MUIA_Application_UsedClasses */
-		PrefsDiskObject ? MUIA_Application_DiskObject : TAG_IGNORE,	PrefsDiskObject,
+		PrefsDiskObject ? MUIA_Application_DiskObject : TAG_IGNORE,	(IPTR)PrefsDiskObject,
 		MUIA_Application_SingleTask,	TRUE,
 
 // -----------------------------------------------------------------------------------------------
 
-		SubWindow, app->Obj[WINDOW_MAIN] = WindowObject,
+		SubWindow, (IPTR)(app->Obj[WINDOW_MAIN] = WindowObject,
 			MUIA_Window_ID,		MAKE_ID('S', 'C', 'S', 'P'),
-			MUIA_Window_Title,	PROGRAM,
+			MUIA_Window_Title,	(IPTR)PROGRAM,
 			MUIA_Window_AppWindow,	TRUE,
 
-			WindowContents, app->Obj[GROUP_MAIN] = VGroup,
+			WindowContents, (IPTR)(app->Obj[GROUP_MAIN] = VGroup,
 
-				Child, HGroup,
-					Child, app->Obj[LISTVIEW] = NListviewObject,
-						MUIA_NListview_NList, app->Obj[LIST] = NListObject,
+				Child, (IPTR)(HGroup,
+					Child, (IPTR)(app->Obj[LISTVIEW] = NListviewObject,
+						MUIA_NListview_NList, (IPTR)(app->Obj[LIST] = NListObject,
 								InputListFrame,
 								MUIA_Background, MUII_ListBack,
 								MUIA_NList_DefaultObjectOnClick, TRUE,
 								MUIA_NList_MultiSelect, MUIV_NList_MultiSelect_None,
-								MUIA_NList_DisplayHook2, (ULONG) &PageListDisplayHook,
-								MUIA_NList_ConstructHook2, (ULONG) &PageListConstructHook,
-								MUIA_NList_DestructHook2, (ULONG) &PageListDestructHook,
-								MUIA_NList_Format, (ULONG) ",",
+								MUIA_NList_DisplayHook2, (IPTR) &PageListDisplayHook,
+								MUIA_NList_ConstructHook2, (IPTR) &PageListConstructHook,
+								MUIA_NList_DestructHook2, (IPTR) &PageListDestructHook,
+								MUIA_NList_Format, (IPTR) (IPTR)",",
 								MUIA_NList_ShowDropMarks, FALSE,
 								MUIA_NList_AdjustWidth, TRUE,
 								MUIA_NList_AutoVisible, TRUE,
-							End,
+							End),
 						MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_None,
 						MUIA_Listview_DragType, MUIV_Listview_DragType_None,
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PREFGROUPS_SHORTHELP),
-					End, //NListview
+						MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PREFGROUPS_SHORTHELP),
+					End), //NListview
 
-					Child, BalanceObject, 
-					End, //BalanceObject
+					Child, (IPTR)(BalanceObject, 
+					End), //BalanceObject
 
-					Child, app->Obj[GROUP] = PageGroup,
+					Child, (IPTR)(app->Obj[GROUP] = PageGroup,
 						VirtualFrame,
 						MUIA_InnerBottom, 0,
 						MUIA_InnerLeft, 0,
 						MUIA_InnerRight, 0,
 						MUIA_InnerTop, 0,
 
-						Child, GenerateAboutPage(app, cVersion, urlSubject),
-						Child, GeneratePathsPage(app),
-						Child, GenerateStartupPage(app),
-						Child, GenerateDesktopPage(app),
-						Child, GenerateIconsPage(app),
-						Child, GenerateDragNDropPage(app),
-						Child, GenerateWindowPage(app),
-						Child, GenerateTextWindowPage(app),
-						Child, GenerateTrueTypeFontsPage(app),
-						Child, GenerateMiscPage(app),
-						Child, GeneratePluginsPage(app),
-						Child, GenerateModulesPage(app),
+						Child, (IPTR)GenerateAboutPage(app, cVersion, urlSubject),
+						Child, (IPTR)GeneratePathsPage(app),
+						Child, (IPTR)GenerateStartupPage(app),
+						Child, (IPTR)GenerateDesktopPage(app),
+						Child, (IPTR)GenerateIconsPage(app),
+						Child, (IPTR)GenerateDragNDropPage(app),
+						Child, (IPTR)GenerateWindowPage(app),
+						Child, (IPTR)GenerateTextWindowPage(app),
+						Child, (IPTR)GenerateTrueTypeFontsPage(app),
+						Child, (IPTR)GenerateMiscPage(app),
+						Child, (IPTR)GeneratePluginsPage(app),
+						Child, (IPTR)GenerateModulesPage(app),
 
-						End, //PageGroup
-					End, //HGroup
+                                        End), //PageGroup
+                                End), //HGroup
 
 // -----------------------------------------------------------------------------------------------
 
-				Child, HGroup,
-					Child, app->Obj[SAVE] = TextObject,
+				Child, (IPTR)(HGroup,
+					Child, (IPTR)(app->Obj[SAVE] = TextObject,
 								ButtonFrame,
 								MUIA_Background, MUII_ButtonBack,
 								MUIA_Font, MUIV_Font_Button,
 								MUIA_InputMode, MUIV_InputMode_RelVerify,
-								MUIA_Text_HiChar, 's',
-								MUIA_ControlChar, 's',
-								MUIA_Text_Contents, (ULONG) GetLocString(MSGID_SAVEBUTTON),
+								MUIA_Text_HiChar, (IPTR)'s',
+								MUIA_ControlChar, (IPTR)'s',
+								MUIA_Text_Contents, (IPTR) GetLocString(MSGID_SAVEBUTTON),
 								MUIA_CycleChain, 1,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_SAVEBUTTON_SHORTHELP),
-					End, //TextObject
-					Child, app->Obj[USE] = TextObject,
+								MUIA_ShortHelp, (IPTR) GetLocString(MSGID_SAVEBUTTON_SHORTHELP),
+					End), //TextObject
+					Child, (IPTR)(app->Obj[USE] = TextObject,
 								ButtonFrame,
 								MUIA_Background, MUII_ButtonBack,
 								MUIA_Font, MUIV_Font_Button,
 								MUIA_InputMode, MUIV_InputMode_RelVerify,
-								MUIA_Text_HiChar, 'u',
-								MUIA_ControlChar, 'u',
-								MUIA_Text_Contents, (ULONG) GetLocString(MSGID_USEBUTTON),
+								MUIA_Text_HiChar, (IPTR)'u',
+								MUIA_ControlChar, (IPTR)'u',
+								MUIA_Text_Contents, (IPTR) GetLocString(MSGID_USEBUTTON),
 								MUIA_CycleChain, 1,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_USEBUTTON_SHORTHELP),
-					End, //TextObject
-					Child, app->Obj[CANCEL] = TextObject,
+								MUIA_ShortHelp, (IPTR) GetLocString(MSGID_USEBUTTON_SHORTHELP),
+					End), //TextObject
+					Child, (IPTR)(app->Obj[CANCEL] = TextObject,
 								ButtonFrame,
 								MUIA_Background, MUII_ButtonBack,
 								MUIA_Font, MUIV_Font_Button,
 								MUIA_InputMode, MUIV_InputMode_RelVerify,
-								MUIA_Text_HiChar, 'c',
-								MUIA_ControlChar, 'c',
-								MUIA_Text_Contents, (ULONG) GetLocString(MSGID_CANCELBUTTON),
+								MUIA_Text_HiChar, (IPTR)'c',
+								MUIA_ControlChar, (IPTR)'c',
+								MUIA_Text_Contents, (IPTR) GetLocString(MSGID_CANCELBUTTON),
 								MUIA_CycleChain, 1,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_CANCELBUTTON_SHORTHELP),
-					End, //TextObject
-				End, //HGroup
+								MUIA_ShortHelp, (IPTR) GetLocString(MSGID_CANCELBUTTON_SHORTHELP),
+					End), //TextObject
+				End), //HGroup
 
-			End, //VGroup
+			End), //VGroup
 
-		End, //Window
+		End), //Window
 
 #if defined(__MORPHOS__)
 		(app->Obj[WIN_ABOUT_MORPHOS]) ? SubWindow : TAG_IGNORE, app->Obj[WIN_ABOUT_MORPHOS],
@@ -1205,14 +1205,14 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 // -----------------------------------------------------------------------------------------------
 ///
 		// Icon frame selection window
-		SubWindow, app->Obj[WINDOW_ICONFRAMES] = WindowObject,
+		SubWindow, (IPTR)(app->Obj[WINDOW_ICONFRAMES] = WindowObject,
 			MUIA_Window_ID,		MAKE_ID('F', 'R', 'A', 'M'),
-			MUIA_Window_Title,	(ULONG) GetLocString(MSGID_FRAMEWINDOW_TITLE),
+			MUIA_Window_Title,	(IPTR) GetLocString(MSGID_FRAMEWINDOW_TITLE),
 			MUIA_Window_NoMenus, 	TRUE,
 
-			WindowContents, RowGroup(2),
+			WindowContents, (IPTR)(RowGroup(2),
 
-				Child, McpFrameObject,
+				Child, (IPTR)(McpFrameObject,
 					ButtonFrame,
 					MUIA_InputMode, MUIV_InputMode_None,
 					MUIA_FixWidth, 12,
@@ -1225,9 +1225,9 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 					MUIA_MCPFrame_FrameType, MCP_FRAME_NONE,
 					MUIA_Draggable, TRUE,
 					MUIA_Dropable, FALSE,
-				End,
+				End),
 
-				Child, McpFrameObject,
+				Child, (IPTR)(McpFrameObject,
 					ButtonFrame,
 					MUIA_InputMode, MUIV_InputMode_None,
 					MUIA_FixWidth, 12,
@@ -1240,8 +1240,8 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 					MUIA_MCPFrame_FrameType, MCP_FRAME_BUTTON,
 					MUIA_Draggable, TRUE,
 					MUIA_Dropable, FALSE,
-				End,
-				Child, McpFrameObject,
+				End),
+				Child, (IPTR)(McpFrameObject,
 					ButtonFrame,
 					MUIA_InputMode, MUIV_InputMode_None,
 					MUIA_FixWidth, 12,
@@ -1254,8 +1254,8 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 					MUIA_MCPFrame_FrameType, MCP_FRAME_BORDER,
 					MUIA_Draggable, TRUE,
 					MUIA_Dropable, FALSE,
-				End,
-				Child, McpFrameObject,
+				End),
+				Child, (IPTR)(McpFrameObject,
 					ButtonFrame,
 					MUIA_InputMode, MUIV_InputMode_None,
 					MUIA_FixWidth, 12,
@@ -1268,8 +1268,8 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 					MUIA_MCPFrame_FrameType, MCP_FRAME_STRING,
 					MUIA_Draggable, TRUE,
 					MUIA_Dropable, FALSE,
-				End,
-				Child, McpFrameObject,
+				End),
+				Child, (IPTR)(McpFrameObject,
 					ButtonFrame,
 					MUIA_InputMode, MUIV_InputMode_None,
 					MUIA_FixWidth, 12,
@@ -1282,8 +1282,8 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 					MUIA_MCPFrame_FrameType, MCP_FRAME_DROPBOX,
 					MUIA_Draggable, TRUE,
 					MUIA_Dropable, FALSE,
-				End,
-				Child, McpFrameObject,
+				End),
+				Child, (IPTR)(McpFrameObject,
 					ButtonFrame,
 					MUIA_InputMode, MUIV_InputMode_None,
 					MUIA_FixWidth, 12,
@@ -1296,8 +1296,8 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 					MUIA_MCPFrame_FrameType, MCP_FRAME_XEN,
 					MUIA_Draggable, TRUE,
 					MUIA_Dropable, FALSE,
-				End,
-				Child, McpFrameObject,
+				End),
+				Child, (IPTR)(McpFrameObject,
 					ButtonFrame,
 					MUIA_InputMode, MUIV_InputMode_None,
 					MUIA_FixWidth, 12,
@@ -1310,8 +1310,8 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 					MUIA_MCPFrame_FrameType, MCP_FRAME_MWB,
 					MUIA_Draggable, TRUE,
 					MUIA_Dropable, FALSE,
-				End,
-				Child, McpFrameObject,
+				End),
+				Child, (IPTR)(McpFrameObject,
 					ButtonFrame,
 					MUIA_InputMode, MUIV_InputMode_None,
 					MUIA_FixWidth, 12,
@@ -1324,8 +1324,8 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 					MUIA_MCPFrame_FrameType, MCP_FRAME_THICK,
 					MUIA_Draggable, TRUE,
 					MUIA_Dropable, FALSE,
-				End,
-				Child, McpFrameObject,
+				End),
+				Child, (IPTR)(McpFrameObject,
 					ButtonFrame,
 					MUIA_InputMode, MUIV_InputMode_None,
 					MUIA_FixWidth, 12,
@@ -1338,11 +1338,11 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 					MUIA_MCPFrame_FrameType, MCP_FRAME_XWIN,
 					MUIA_Draggable, TRUE,
 					MUIA_Dropable, FALSE,
-				End,
-				Child, RectangleObject,
-				End,
+				End),
+				Child, (IPTR)(RectangleObject,
+				End),
 
-				Child, McpFrameObject,
+				Child, (IPTR)(McpFrameObject,
 					ButtonFrame,
 					MUIA_InputMode, MUIV_InputMode_None,
 					MUIA_FixWidth, 12,
@@ -1355,8 +1355,8 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 					MUIA_MCPFrame_FrameType, MCP_FRAME_BUTTON | MCP_FRAME_RECESSED,
 					MUIA_Draggable, TRUE,
 					MUIA_Dropable, FALSE,
-				End,
-				Child, McpFrameObject,
+				End),
+				Child, (IPTR)(McpFrameObject,
 					ButtonFrame,
 					MUIA_InputMode, MUIV_InputMode_None,
 					MUIA_FixWidth, 12,
@@ -1369,8 +1369,8 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 					MUIA_MCPFrame_FrameType, MCP_FRAME_BORDER | MCP_FRAME_RECESSED,
 					MUIA_Draggable, TRUE,
 					MUIA_Dropable, FALSE,
-				End,
-				Child, McpFrameObject,
+				End),
+				Child, (IPTR)(McpFrameObject,
 					ButtonFrame,
 					MUIA_InputMode, MUIV_InputMode_None,
 					MUIA_FixWidth, 12,
@@ -1383,8 +1383,8 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 					MUIA_MCPFrame_FrameType, MCP_FRAME_STRING | MCP_FRAME_RECESSED,
 					MUIA_Draggable, TRUE,
 					MUIA_Dropable, FALSE,
-				End,
-				Child, McpFrameObject,
+				End),
+				Child, (IPTR)(McpFrameObject,
 					ButtonFrame,
 					MUIA_InputMode, MUIV_InputMode_None,
 					MUIA_FixWidth, 12,
@@ -1397,8 +1397,8 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 					MUIA_MCPFrame_FrameType, MCP_FRAME_DROPBOX | MCP_FRAME_RECESSED,
 					MUIA_Draggable, TRUE,
 					MUIA_Dropable, FALSE,
-				End,
-				Child, McpFrameObject,
+				End),
+				Child, (IPTR)(McpFrameObject,
 					ButtonFrame,
 					MUIA_InputMode, MUIV_InputMode_None,
 					MUIA_FixWidth, 12,
@@ -1411,8 +1411,8 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 					MUIA_MCPFrame_FrameType, MCP_FRAME_XEN | MCP_FRAME_RECESSED,
 					MUIA_Draggable, TRUE,
 					MUIA_Dropable, FALSE,
-				End,
-				Child, McpFrameObject,
+				End),
+				Child, (IPTR)(McpFrameObject,
 					ButtonFrame,
 					MUIA_InputMode, MUIV_InputMode_None,
 					MUIA_FixWidth, 12,
@@ -1425,8 +1425,8 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 					MUIA_MCPFrame_FrameType, MCP_FRAME_MWB | MCP_FRAME_RECESSED,
 					MUIA_Draggable, TRUE,
 					MUIA_Dropable, FALSE,
-				End,
-				Child, McpFrameObject,
+				End),
+				Child, (IPTR)(McpFrameObject,
 					ButtonFrame,
 					MUIA_InputMode, MUIV_InputMode_None,
 					MUIA_FixWidth, 12,
@@ -1439,8 +1439,8 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 					MUIA_MCPFrame_FrameType, MCP_FRAME_THICK | MCP_FRAME_RECESSED,
 					MUIA_Draggable, TRUE,
 					MUIA_Dropable, FALSE,
-				End,
-				Child, McpFrameObject,
+				End),
+				Child, (IPTR)(McpFrameObject,
 					ButtonFrame,
 					MUIA_InputMode, MUIV_InputMode_None,
 					MUIA_FixWidth, 12,
@@ -1453,14 +1453,14 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 					MUIA_MCPFrame_FrameType, MCP_FRAME_XWIN | MCP_FRAME_RECESSED,
 					MUIA_Draggable, TRUE,
 					MUIA_Dropable, FALSE,
-				End,
+				End),
 
-			End, //RowGroup
-		End, //Window
+			End), //RowGroup
+		End), //Window
 
 // -----------------------------------------------------------------------------------------------
 
-		SubWindow, app->Obj[WINDOW_SPLASH] = WindowObject,
+		SubWindow, (IPTR)(app->Obj[WINDOW_SPLASH] = WindowObject,
 			MUIA_Window_AppWindow,	FALSE,
 			MUIA_Window_CloseGadget, FALSE,
 			MUIA_Window_DepthGadget, FALSE,
@@ -1469,79 +1469,79 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 			MUIA_Window_LeftEdge,	MUIV_Window_LeftEdge_Centered,
 			MUIA_Window_TopEdge,	MUIV_Window_TopEdge_Centered,
 
-			WindowContents, VGroup,
-				Child, app->Obj[TEXT_SPLASHWINDOW] = TextObject,
+			WindowContents, (IPTR)(VGroup,
+				Child, (IPTR)(app->Obj[TEXT_SPLASHWINDOW] = TextObject,
 					MUIA_Weight, 0,
-					MUIA_Text_Contents, (ULONG) GetLocString(MSGID_SPLASHWINDOW_LOADINGPREFS),
-				End, //TextObject
-			End, //VGroup
+					MUIA_Text_Contents, (IPTR) GetLocString(MSGID_SPLASHWINDOW_LOADINGPREFS),
+				End), //TextObject
+			End), //VGroup
 
-		End, //SubWindow
+		End), //SubWindow
 ///
 // -----------------------------------------------------------------------------------------------
 
-		MUIA_Application_Menustrip, MenustripObject,
-			Child, MenuObjectT(GetLocString(MSGID_MENU_PROJECT)),
-				Child, app->Obj[MENU_OPEN] = MenuitemObject,
-					MUIA_Menuitem_Title, (ULONG) GetLocString(MSGID_MENU_PROJECT_OPEN),
-					MUIA_Menuitem_Shortcut, (ULONG) GetLocString(MSGID_MENU_PROJECT_OPEN_SHORT),
-				End,
-				Child, app->Obj[MENU_SAVE_AS] = MenuitemObject,
-					MUIA_Menuitem_Title, (ULONG) GetLocString(MSGID_MENU_PROJECT_SAVEAS),
-					MUIA_Menuitem_Shortcut, (ULONG) GetLocString(MSGID_MENU_PROJECT_SAVEAS_SHORT),
-				End,
-				Child, MenuitemObject,
+		MUIA_Application_Menustrip, (IPTR)(MenustripObject,
+			Child, (IPTR)(MenuObjectT((IPTR)GetLocString(MSGID_MENU_PROJECT)),
+				Child, (IPTR)(app->Obj[MENU_OPEN] = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR) GetLocString(MSGID_MENU_PROJECT_OPEN),
+					MUIA_Menuitem_Shortcut, (IPTR) GetLocString(MSGID_MENU_PROJECT_OPEN_SHORT),
+				End),
+				Child, (IPTR)(app->Obj[MENU_SAVE_AS] = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR) GetLocString(MSGID_MENU_PROJECT_SAVEAS),
+					MUIA_Menuitem_Shortcut, (IPTR) GetLocString(MSGID_MENU_PROJECT_SAVEAS_SHORT),
+				End),
+				Child, (IPTR)(MenuitemObject,
 					MUIA_Menuitem_Title, -1,
-				End,
-				Child, app->Obj[MENU_ABOUT] = MenuitemObject,
-					MUIA_Menuitem_Title, (ULONG) GetLocString(MSGID_MENU_PROJECT_ABOUT),
-				End,
+				End),
+				Child, (IPTR)(app->Obj[MENU_ABOUT] = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR) GetLocString(MSGID_MENU_PROJECT_ABOUT),
+				End),
 #if defined(__MORPHOS__)
-				Child, app->Obj[MENU_ABOUT_MORPHOS] = MenuitemObject,
-					MUIA_Menuitem_Title, (ULONG) GetLocString(MSGID_MENU_PROJECT_ABOUTMORPHOS),
+				Child, (IPTR)(app->Obj[MENU_ABOUT_MORPHOS] = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR) GetLocString(MSGID_MENU_PROJECT_ABOUTMORPHOS),
 					MUIA_Menuitem_Enabled, (NULL != app->Obj[WIN_ABOUT_MORPHOS]),
-				End,
+				End),
 #endif //defined(__MORPHOS__)
-				Child, app->Obj[MENU_ABOUT_MUI] = MenuitemObject,
-					MUIA_Menuitem_Title, (ULONG) GetLocString(MSGID_MENU_PROJECT_ABOUTMUI),
-				End,
-				Child, MenuitemObject,
+				Child, (IPTR)(app->Obj[MENU_ABOUT_MUI] = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR) GetLocString(MSGID_MENU_PROJECT_ABOUTMUI),
+				End),
+				Child, (IPTR)(MenuitemObject,
 					MUIA_Menuitem_Title, -1,
-				End,
-				Child, app->Obj[MENU_QUIT] = MenuitemObject,
-					MUIA_Menuitem_Title, (ULONG) GetLocString(MSGID_MENU_PROJECT_QUIT),
-					MUIA_Menuitem_Shortcut, (ULONG) GetLocString(MSGID_MENU_PROJECT_QUIT_SHORT),
-				End,
+				End),
+				Child, (IPTR)(app->Obj[MENU_QUIT] = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR) GetLocString(MSGID_MENU_PROJECT_QUIT),
+					MUIA_Menuitem_Shortcut, (IPTR) GetLocString(MSGID_MENU_PROJECT_QUIT_SHORT),
+				End),
 					
-			End,//MenuObjectT
-			Child, MenuObjectT(GetLocString(MSGID_MENU_EDIT)),
-				Child, app->Obj[MENU_RESET_TO_DEFAULTS] = MenuitemObject,
-					MUIA_Menuitem_Title, (ULONG) GetLocString(MSGID_MENU_EDIT_RESETTODEFAULTS),
-					MUIA_Menuitem_Shortcut, (ULONG) GetLocString(MSGID_MENU_EDIT_RESETTODEFAULTS_SHORT),
-				End,
-				Child, app->Obj[MENU_LAST_SAVED] = MenuitemObject,
-					MUIA_Menuitem_Title, (ULONG) GetLocString(MSGID_MENU_EDIT_LASTSAVED),
-					MUIA_Menuitem_Shortcut, (ULONG) GetLocString(MSGID_MENU_EDIT_LASTSAVED_SHORT),
-				End,
-				Child, app->Obj[MENU_RESTORE] = MenuitemObject,
-					MUIA_Menuitem_Title, (ULONG) GetLocString(MSGID_MENU_EDIT_RESTORE),
-					MUIA_Menuitem_Shortcut, (ULONG) GetLocString(MSGID_MENU_EDIT_RESTORE_SHORT),
-				End,
-			End,//MenuObjectT
-			Child, MenuObjectT(GetLocString(MSGID_MENU_SETTINGS)),
-				Child, app->Obj[MENU_CREATE_ICONS] = MenuitemObject,
-					MUIA_Menuitem_Title, (ULONG) GetLocString(MSGID_MENU_SETTINGS_CREATEICONS),
-					MUIA_Menuitem_Shortcut, (ULONG) GetLocString(MSGID_MENU_SETTINGS_CREATEICONS_SHORT),
+			End),//MenuObjectT
+			Child, (IPTR)(MenuObjectT((IPTR)GetLocString(MSGID_MENU_EDIT)),
+				Child, (IPTR)(app->Obj[MENU_RESET_TO_DEFAULTS] = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR) GetLocString(MSGID_MENU_EDIT_RESETTODEFAULTS),
+					MUIA_Menuitem_Shortcut, (IPTR) GetLocString(MSGID_MENU_EDIT_RESETTODEFAULTS_SHORT),
+				End),
+				Child, (IPTR)(app->Obj[MENU_LAST_SAVED] = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR) GetLocString(MSGID_MENU_EDIT_LASTSAVED),
+					MUIA_Menuitem_Shortcut, (IPTR) GetLocString(MSGID_MENU_EDIT_LASTSAVED_SHORT),
+				End),
+				Child, (IPTR)(app->Obj[MENU_RESTORE] = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR) GetLocString(MSGID_MENU_EDIT_RESTORE),
+					MUIA_Menuitem_Shortcut, (IPTR) GetLocString(MSGID_MENU_EDIT_RESTORE_SHORT),
+				End),
+			End),//MenuObjectT
+			Child, (IPTR)(MenuObjectT((IPTR)GetLocString(MSGID_MENU_SETTINGS)),
+				Child, (IPTR)(app->Obj[MENU_CREATE_ICONS] = MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR) GetLocString(MSGID_MENU_SETTINGS_CREATEICONS),
+					MUIA_Menuitem_Shortcut, (IPTR) GetLocString(MSGID_MENU_SETTINGS_CREATEICONS_SHORT),
 					MUIA_Menuitem_Checkit, TRUE,
 					MUIA_Menuitem_Checked, fCreateIcons,
-				End,
-			End,//MenuObjectT
-		End,//MenuStrip
+				End),
+			End),//MenuObjectT
+		End),//MenuStrip
 
 // -----------------------------------------------------------------------------------------------
 
 		// additional taglist to add plugin subwindows
-		PluginTagList ? TAG_MORE : TAG_IGNORE, PluginTagList,
+		PluginTagList ? TAG_MORE : TAG_IGNORE, (IPTR)PluginTagList,
 
 // -----------------------------------------------------------------------------------------------
 
@@ -1602,7 +1602,7 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 	{ STRPTR xxx = strdup("TestTestTest"); if (xxx) free(xxx); }
 
 	DoMethod(app->Obj[GROUP], MUIM_Notify, MUIA_Group_ActivePage, MUIV_EveryTime,
-		app->Obj[GROUP], 2, MUIM_CallHook, &PageChangeHook);
+		app->Obj[GROUP], 2, MUIM_CallHook, (IPTR)&PageChangeHook);
 
 	d1(KPrintF(__FILE__ "/%s/%ld: \n", __FUNC__, __LINE__));
 	{ STRPTR xxx = strdup("TestTestTest"); if (xxx) free(xxx); }
@@ -1620,7 +1620,7 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 	DoMethod(app->Obj[CHECK_WINTITLEMEM], MUIM_Notify, MUIA_Selected, MUIV_EveryTime, 
 		app->Obj[SLIDER_WINTITLEREFRESH], 3, MUIM_Set, MUIA_Disabled, MUIV_TriggerValue);
 	DoMethod(app->Obj[NLIST_HIDDENDEVICES], MUIM_Notify, MUIA_NList_ButtonClick, MUIV_EveryTime,
-		app->Obj[WINDOW_MAIN], 2, MUIM_CallHook, &DesktopHiddenDevicesHook);
+		app->Obj[WINDOW_MAIN], 2, MUIM_CallHook, (IPTR)&DesktopHiddenDevicesHook);
 
 	d1(KPrintF(__FILE__ "/%s/%ld: \n", __FUNC__, __LINE__));
 	{ STRPTR xxx = strdup("TestTestTest"); if (xxx) free(xxx); }
@@ -1660,15 +1660,15 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 
 	// dropping a new icon frame updates icon borders top/left/right/bottom
 	DoMethod(app->Obj[FRAME_ICONNORMAL], MUIM_Notify, MUIA_MCPFrame_FrameType, MUIV_EveryTime,
-		app->Obj[WINDOW_ICONFRAMES], 2, MUIM_CallHook, &IconFrame_NewBorder_Hook);
+		app->Obj[WINDOW_ICONFRAMES], 2, MUIM_CallHook, (IPTR)&IconFrame_NewBorder_Hook);
 	DoMethod(app->Obj[FRAME_ICONSELECTED], MUIM_Notify, MUIA_MCPFrame_FrameType, MUIV_EveryTime,
-		app->Obj[WINDOW_ICONFRAMES], 2, MUIM_CallHook, &IconFrame_NewBorder_Hook);
+		app->Obj[WINDOW_ICONFRAMES], 2, MUIM_CallHook, (IPTR)&IconFrame_NewBorder_Hook);
 
 	// dropping a new thumbnail frame updates thumbnail borders top/left/right/bottom
 	DoMethod(app->Obj[FRAME_ICON_THUMBNAIL_NORMAL], MUIM_Notify, MUIA_MCPFrame_FrameType, MUIV_EveryTime,
-		app->Obj[WINDOW_ICONFRAMES], 2, MUIM_CallHook, &ThumbnailFrame_NewBorder_Hook);
+		app->Obj[WINDOW_ICONFRAMES], 2, MUIM_CallHook, (IPTR)&ThumbnailFrame_NewBorder_Hook);
 	DoMethod(app->Obj[FRAME_ICON_THUMBNAIL_SELECTED], MUIM_Notify, MUIA_MCPFrame_FrameType, MUIV_EveryTime,
-		app->Obj[WINDOW_ICONFRAMES], 2, MUIM_CallHook, &ThumbnailFrame_NewBorder_Hook);
+		app->Obj[WINDOW_ICONFRAMES], 2, MUIM_CallHook, (IPTR)&ThumbnailFrame_NewBorder_Hook);
 
 	DoMethod(app->Obj[SOFTICONSLINK], MUIM_Notify, MUIA_Selected, MUIV_EveryTime, 
 		app->Obj[SOFTTEXTSLINK], 3, MUIM_Set, MUIA_Selected, MUIV_TriggerValue);
@@ -1678,15 +1678,15 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 	DoMethod(app->Obj[CHECK_TOOLTIPS], MUIM_Notify, MUIA_Selected, MUIV_EveryTime, 
 		app->Obj[TOOLTIP_SETTINGSGROUP], 3, MUIM_Set, MUIA_Disabled, MUIV_NotTriggerValue);
 	DoMethod(app->Obj[POP_FONTPREFS], MUIM_Notify, MUIA_Selected, FALSE, 
-		app->Obj[WINDOW_MAIN], 2, MUIM_CallHook, &Pop_FontPrefs_Hook);
+		app->Obj[WINDOW_MAIN], 2, MUIM_CallHook, (IPTR)&Pop_FontPrefs_Hook);
 
 	DoMethod(app->Obj[CYCLE_ROUTINE], MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime, 
-		app->Obj[WINDOW_MAIN], 2, MUIM_CallHook, &IconsSelectBobRoutineHook);
+		app->Obj[WINDOW_MAIN], 2, MUIM_CallHook, (IPTR)&IconsSelectBobRoutineHook);
 
 	DoMethod(app->Obj[CYCLE_ICONMINSIZE], MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
-		app->Obj[WINDOW_MAIN], 2, MUIM_CallHook, &IconsMinSizeHook);
+		app->Obj[WINDOW_MAIN], 2, MUIM_CallHook, (IPTR)&IconsMinSizeHook);
 	DoMethod(app->Obj[CYCLE_ICONMAXSIZE], MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
-		app->Obj[WINDOW_MAIN], 2, MUIM_CallHook, &IconsMaxSizeHook);
+		app->Obj[WINDOW_MAIN], 2, MUIM_CallHook, (IPTR)&IconsMaxSizeHook);
 
 	d1(KPrintF(__FILE__ "/%s/%ld: \n", __FUNC__, __LINE__));
 	{ STRPTR xxx = strdup("TestTestTest"); if (xxx) free(xxx); }
@@ -1720,7 +1720,7 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 
 	// --- DragnDrop Page
 	DoMethod(app->Obj[CYCLE_TRANSPMODE], MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime, 
-		app->Obj[WINDOW_MAIN], 2, MUIM_CallHook, &IconDragTransparencyHook);
+		app->Obj[WINDOW_MAIN], 2, MUIM_CallHook, (IPTR)&IconDragTransparencyHook);
 
 	d1(KPrintF(__FILE__ "/%s/%ld: \n", __FUNC__, __LINE__));
 	{ STRPTR xxx = strdup("TestTestTest"); if (xxx) free(xxx); }
@@ -1735,14 +1735,14 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 
 	// --- Miscellaneous page
 	DoMethod(app->Obj[POP_WORKBENCHPREFS], MUIM_Notify, MUIA_Selected, FALSE, 
-		app->Obj[WINDOW_MAIN], 2, MUIM_CallHook, &Pop_WorkbenchPrefs_Hook);
+		app->Obj[WINDOW_MAIN], 2, MUIM_CallHook, (IPTR)&Pop_WorkbenchPrefs_Hook);
 
 	d1(KPrintF(__FILE__ "/%s/%ld: \n", __FUNC__, __LINE__));
 	{ STRPTR xxx = strdup("TestTestTest"); if (xxx) free(xxx); }
 
 	// --- Modules Page
 	DoMethod(app->Obj[NLIST_MODULES], MUIM_Notify, MUIA_NList_ButtonClick, MUIV_EveryTime,
-		app->Obj[WINDOW_MAIN], 2, MUIM_CallHook, &ModulesPrefsPopupHook);
+		app->Obj[WINDOW_MAIN], 2, MUIM_CallHook, (IPTR)&ModulesPrefsPopupHook);
 	DoMethod(app->Obj[NLIST_MODULES], MUIM_NList_Insert, cModulePrefs, -1, MUIV_NList_Insert_Bottom);
 
 	d1(KPrintF(__FILE__ "/%s/%ld: \n", __FUNC__, __LINE__));
@@ -1750,16 +1750,16 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 
 	// --- Plugins Page
 	DoMethod(app->Obj[PLUGIN_LIST], MUIM_Notify, MUIA_NList_Active, MUIV_EveryTime,
-		MUIV_Notify_Window, 2, MUIM_CallHook, &PluginListActiveHook);
+		MUIV_Notify_Window, 2, MUIM_CallHook, (IPTR)&PluginListActiveHook);
 	// call hook if "add plugin" button is clicked
 	DoMethod(app->Obj[ADD_PLUGIN], MUIM_Notify, MUIA_Selected, FALSE, 
-		app->Obj[PLUGIN_LIST], 2, MUIM_CallHook, &Add_Plugin_Hook);
+		app->Obj[PLUGIN_LIST], 2, MUIM_CallHook, (IPTR)&Add_Plugin_Hook);
 	// call hook if "remove plugin" button is clicked
 	DoMethod(app->Obj[REMOVE_PLUGIN], MUIM_Notify, MUIA_Pressed, FALSE, 
-		app->Obj[PLUGIN_LIST], 2, MUIM_CallHook, &RemovePluginHook);
+		app->Obj[PLUGIN_LIST], 2, MUIM_CallHook, (IPTR)&RemovePluginHook);
         /* Call the AppMsgHook when an icon is dropped on plugin listview */
         DoMethod(app->Obj[PLUGIN_LISTVIEW], MUIM_Notify, MUIA_AppMessage, MUIV_EveryTime,
-                 app->Obj[PLUGIN_LISTVIEW], 3, MUIM_CallHook, &PluginListAppMsgHook, MUIV_TriggerValue);
+                 app->Obj[PLUGIN_LISTVIEW], 3, MUIM_CallHook, (IPTR)&PluginListAppMsgHook, MUIV_TriggerValue);
 	// setup sorting hooks for plugin list
 	DoMethod(app->Obj[PLUGIN_LIST], MUIM_Notify, MUIA_NList_TitleClick, MUIV_EveryTime,
 		app->Obj[PLUGIN_LIST], 4, MUIM_NList_Sort3, MUIV_TriggerValue, MUIV_NList_SortTypeAdd_2Values, MUIV_NList_Sort3_SortType_Both);
@@ -1792,26 +1792,26 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 	SetAttrs(app->Obj[LIST], MUIA_NList_Active, MUIV_NList_Active_Top, TAG_DONE);
 
 	// set allowed drag/drop partners for text window columns
-	SetAttrs(app->Obj[NLIST_STORAGE_FILEDISPLAY], MUIA_UserData, (ULONG) app->Obj[NLIST_USE_FILEDISPLAY], TAG_DONE);
-	SetAttrs(app->Obj[NLIST_USE_FILEDISPLAY], MUIA_UserData, (ULONG) app->Obj[NLIST_STORAGE_FILEDISPLAY], TAG_DONE);
+	SetAttrs(app->Obj[NLIST_STORAGE_FILEDISPLAY], MUIA_UserData, (IPTR) app->Obj[NLIST_USE_FILEDISPLAY], TAG_DONE);
+	SetAttrs(app->Obj[NLIST_USE_FILEDISPLAY], MUIA_UserData, (IPTR) app->Obj[NLIST_STORAGE_FILEDISPLAY], TAG_DONE);
 
 	// set allowed drag/drop partners for control bar gadgets
-	SetAttrs(app->Obj[NLIST_CONTROLBARGADGETS_BROWSER_AVAILABLE], MUIA_UserData, (ULONG) app->Obj[NLIST_CONTROLBARGADGETS_BROWSER_ACTIVE], TAG_DONE);
-	SetAttrs(app->Obj[NLIST_CONTROLBARGADGETS_BROWSER_ACTIVE], MUIA_UserData, (ULONG) app->Obj[NLIST_CONTROLBARGADGETS_BROWSER_AVAILABLE], TAG_DONE);
+	SetAttrs(app->Obj[NLIST_CONTROLBARGADGETS_BROWSER_AVAILABLE], MUIA_UserData, (IPTR) app->Obj[NLIST_CONTROLBARGADGETS_BROWSER_ACTIVE], TAG_DONE);
+	SetAttrs(app->Obj[NLIST_CONTROLBARGADGETS_BROWSER_ACTIVE], MUIA_UserData, (IPTR) app->Obj[NLIST_CONTROLBARGADGETS_BROWSER_AVAILABLE], TAG_DONE);
 
 	// set allowed drag/drop partners for control bar gadgets
-	SetAttrs(app->Obj[NLIST_CONTROLBARGADGETS_NORMAL_AVAILABLE], MUIA_UserData, (ULONG) app->Obj[NLIST_CONTROLBARGADGETS_NORMAL_ACTIVE], TAG_DONE);
-	SetAttrs(app->Obj[NLIST_CONTROLBARGADGETS_NORMAL_ACTIVE], MUIA_UserData, (ULONG) app->Obj[NLIST_CONTROLBARGADGETS_NORMAL_AVAILABLE], TAG_DONE);
+	SetAttrs(app->Obj[NLIST_CONTROLBARGADGETS_NORMAL_AVAILABLE], MUIA_UserData, (IPTR) app->Obj[NLIST_CONTROLBARGADGETS_NORMAL_ACTIVE], TAG_DONE);
+	SetAttrs(app->Obj[NLIST_CONTROLBARGADGETS_NORMAL_ACTIVE], MUIA_UserData, (IPTR) app->Obj[NLIST_CONTROLBARGADGETS_NORMAL_AVAILABLE], TAG_DONE);
 
 	d1(KPrintF(__FILE__ "/%s/%ld: \n", __FUNC__, __LINE__));
 
 	// call hook if an active Control bar gadget is selected
 	DoMethod(app->Obj[NLIST_CONTROLBARGADGETS_BROWSER_ACTIVE], MUIM_Notify, MUIA_NList_Active, MUIV_EveryTime,
-		app->Obj[NLIST_CONTROLBARGADGETS_BROWSER_ACTIVE], 2, MUIM_CallHook, &ControlBarGadgetListBrowserActiveHook);
+		app->Obj[NLIST_CONTROLBARGADGETS_BROWSER_ACTIVE], 2, MUIM_CallHook, (IPTR)&ControlBarGadgetListBrowserActiveHook);
 
 	// call hook if an active Control bar gadget is selected
 	DoMethod(app->Obj[NLIST_CONTROLBARGADGETS_NORMAL_ACTIVE], MUIM_Notify, MUIA_NList_Active, MUIV_EveryTime,
-		app->Obj[NLIST_CONTROLBARGADGETS_NORMAL_ACTIVE], 2, MUIM_CallHook, &ControlBarGadgetListNormalActiveHook);
+		app->Obj[NLIST_CONTROLBARGADGETS_NORMAL_ACTIVE], 2, MUIM_CallHook, (IPTR)&ControlBarGadgetListNormalActiveHook);
 
 	d1(KPrintF(__FILE__ "/%s/%ld: \n", __FUNC__, __LINE__));
 
@@ -1880,17 +1880,17 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 
 	// After icon font change, recalculate maximum radius for selected icon text rectangle
 	DoMethod(app->Obj[SLIDER_SEL_ICONTEXT_RECT_BORDERY], MUIM_Notify, MUIA_Numeric_Value, MUIV_EveryTime,
-		app->Obj[GROUP], 2, MUIM_CallHook, &CalculateMaxRadiusHook);
+		app->Obj[GROUP], 2, MUIM_CallHook, (IPTR)&CalculateMaxRadiusHook);
 	DoMethod(app->Obj[CHECK_ICONSPAGE_TTICONFONT_ENABLE], MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
-		app->Obj[GROUP], 2, MUIM_CallHook, &CalculateMaxRadiusHook);
+		app->Obj[GROUP], 2, MUIM_CallHook, (IPTR)&CalculateMaxRadiusHook);
 	DoMethod(app->Obj[CHECK_TTICONFONT_ENABLE], MUIM_Notify, MUIA_Selected, MUIV_EveryTime,
-		app->Obj[GROUP], 2, MUIM_CallHook, &CalculateMaxRadiusHook);
+		app->Obj[GROUP], 2, MUIM_CallHook, (IPTR)&CalculateMaxRadiusHook);
 	DoMethod(app->Obj[POP_ICONFONT], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		app->Obj[GROUP], 2, MUIM_CallHook, &CalculateMaxRadiusHook);
+		app->Obj[GROUP], 2, MUIM_CallHook, (IPTR)&CalculateMaxRadiusHook);
 	DoMethod(app->Obj[POPSTRING_TTICONFONT], MUIM_Notify, MUIA_String_Acknowledge, MUIV_EveryTime,
-		app->Obj[GROUP], 2, MUIM_CallHook, &CalculateMaxRadiusHook);
+		app->Obj[GROUP], 2, MUIM_CallHook, (IPTR)&CalculateMaxRadiusHook);
 	DoMethod(app->Obj[POPSTRING_ICONSPAGE_TTICONFONT], MUIM_Notify, MUIA_String_Acknowledge, MUIV_EveryTime,
-		app->Obj[GROUP], 2, MUIM_CallHook, &CalculateMaxRadiusHook);
+		app->Obj[GROUP], 2, MUIM_CallHook, (IPTR)&CalculateMaxRadiusHook);
 
 	DoMethod(app->Obj[POPSTRING_TTSCREENFONT], MUIM_Notify, MUIA_String_Acknowledge, MUIV_EveryTime, 
 		app->Obj[MCC_TTSCREENFONT_SAMPLE], 3, MUIM_Set, MUIA_FontSample_TTFontDesc, MUIV_TriggerValue);
@@ -1966,41 +1966,41 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 
 	// use selected action command on double click into listview
 	DoMethod(app->Obj[NLISTVIEW_CONTROLBARGADGETS_BROWSER_ACTION], MUIM_Notify, MUIA_Listview_DoubleClick, TRUE,
-		app->Obj[NLISTVIEW_CONTROLBARGADGETS_BROWSER_ACTION], 2, MUIM_CallHook, &BrowserCmdSelectedHook);
+		app->Obj[NLISTVIEW_CONTROLBARGADGETS_BROWSER_ACTION], 2, MUIM_CallHook, (IPTR)&BrowserCmdSelectedHook);
 
 	// use selected action command on double click into listview
 	DoMethod(app->Obj[NLISTVIEW_CONTROLBARGADGETS_NORMAL_ACTION], MUIM_Notify, MUIA_Listview_DoubleClick, TRUE,
-		app->Obj[NLISTVIEW_CONTROLBARGADGETS_NORMAL_ACTION], 2, MUIM_CallHook, &NormalCmdSelectedHook);
+		app->Obj[NLISTVIEW_CONTROLBARGADGETS_NORMAL_ACTION], 2, MUIM_CallHook, (IPTR)&NormalCmdSelectedHook);
 
 	// call ControlBarGadgetBrowserChangedHook to update the attributes of the selected control bar Gadget
 	//  everytime any of the strings below is modified
 	DoMethod(app->Obj[STRING_CONTROLBARGADGETS_BROWSER_NORMALIMAGE], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		app->Obj[STRING_CONTROLBARGADGETS_BROWSER_NORMALIMAGE], 2, MUIM_CallHook, &ControlBarGadgetBrowserChangedHook);
+		app->Obj[STRING_CONTROLBARGADGETS_BROWSER_NORMALIMAGE], 2, MUIM_CallHook, (IPTR)&ControlBarGadgetBrowserChangedHook);
 	DoMethod(app->Obj[STRING_CONTROLBARGADGETS_BROWSER_SELECTEDIMAGE], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		app->Obj[STRING_CONTROLBARGADGETS_BROWSER_SELECTEDIMAGE], 2, MUIM_CallHook, &ControlBarGadgetBrowserChangedHook);
+		app->Obj[STRING_CONTROLBARGADGETS_BROWSER_SELECTEDIMAGE], 2, MUIM_CallHook, (IPTR)&ControlBarGadgetBrowserChangedHook);
 	DoMethod(app->Obj[STRING_CONTROLBARGADGETS_BROWSER_DISABLEDIMAGE], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		app->Obj[STRING_CONTROLBARGADGETS_BROWSER_DISABLEDIMAGE], 2, MUIM_CallHook, &ControlBarGadgetBrowserChangedHook);
+		app->Obj[STRING_CONTROLBARGADGETS_BROWSER_DISABLEDIMAGE], 2, MUIM_CallHook, (IPTR)&ControlBarGadgetBrowserChangedHook);
 	DoMethod(app->Obj[STRING_CONTROLBARGADGETS_BROWSER_ACTION], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		app->Obj[STRING_CONTROLBARGADGETS_BROWSER_ACTION], 2, MUIM_CallHook, &ControlBarGadgetBrowserChangedHook);
+		app->Obj[STRING_CONTROLBARGADGETS_BROWSER_ACTION], 2, MUIM_CallHook, (IPTR)&ControlBarGadgetBrowserChangedHook);
 	DoMethod(app->Obj[TEXTEDITOR_CONTROLBARGADGETS_BROWSER_HELPTEXT], MUIM_Notify, MUIA_TextEditor_HasChanged, TRUE,
-		app->Obj[TEXTEDITOR_CONTROLBARGADGETS_BROWSER_HELPTEXT], 2, MUIM_CallHook, &ControlBarGadgetBrowserChangedHook);
+		app->Obj[TEXTEDITOR_CONTROLBARGADGETS_BROWSER_HELPTEXT], 2, MUIM_CallHook, (IPTR)&ControlBarGadgetBrowserChangedHook);
 
 	// call ControlBarGadgetNormalChangedHook to update the attributes of the selected control bar Gadget
 	//  everytime any of the strings below is modified
 	DoMethod(app->Obj[STRING_CONTROLBARGADGETS_NORMAL_NORMALIMAGE], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		app->Obj[STRING_CONTROLBARGADGETS_NORMAL_NORMALIMAGE], 2, MUIM_CallHook, &ControlBarGadgetNormalChangedHook);
+		app->Obj[STRING_CONTROLBARGADGETS_NORMAL_NORMALIMAGE], 2, MUIM_CallHook, (IPTR)&ControlBarGadgetNormalChangedHook);
 	DoMethod(app->Obj[STRING_CONTROLBARGADGETS_NORMAL_SELECTEDIMAGE], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		app->Obj[STRING_CONTROLBARGADGETS_NORMAL_SELECTEDIMAGE], 2, MUIM_CallHook, &ControlBarGadgetNormalChangedHook);
+		app->Obj[STRING_CONTROLBARGADGETS_NORMAL_SELECTEDIMAGE], 2, MUIM_CallHook, (IPTR)&ControlBarGadgetNormalChangedHook);
 	DoMethod(app->Obj[STRING_CONTROLBARGADGETS_NORMAL_DISABLEDIMAGE], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		app->Obj[STRING_CONTROLBARGADGETS_NORMAL_DISABLEDIMAGE], 2, MUIM_CallHook, &ControlBarGadgetNormalChangedHook);
+		app->Obj[STRING_CONTROLBARGADGETS_NORMAL_DISABLEDIMAGE], 2, MUIM_CallHook, (IPTR)&ControlBarGadgetNormalChangedHook);
 	DoMethod(app->Obj[STRING_CONTROLBARGADGETS_NORMAL_ACTION], MUIM_Notify, MUIA_String_Contents, MUIV_EveryTime,
-		app->Obj[STRING_CONTROLBARGADGETS_NORMAL_ACTION], 2, MUIM_CallHook, &ControlBarGadgetNormalChangedHook);
+		app->Obj[STRING_CONTROLBARGADGETS_NORMAL_ACTION], 2, MUIM_CallHook, (IPTR)&ControlBarGadgetNormalChangedHook);
 	DoMethod(app->Obj[TEXTEDITOR_CONTROLBARGADGETS_NORMAL_HELPTEXT], MUIM_Notify, MUIA_TextEditor_HasChanged, TRUE,
-		app->Obj[TEXTEDITOR_CONTROLBARGADGETS_NORMAL_HELPTEXT], 2, MUIM_CallHook, &ControlBarGadgetNormalChangedHook);
+		app->Obj[TEXTEDITOR_CONTROLBARGADGETS_NORMAL_HELPTEXT], 2, MUIM_CallHook, (IPTR)&ControlBarGadgetNormalChangedHook);
 
 	// Update sample icon whenever thumbnail size is changed
 	DoMethod(app->Obj[CYCLE_THUMBNAILSIZE], MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,
-		app->Obj[CYCLE_THUMBNAILSIZE], 2, MUIM_CallHook, &ChangeThumbnailSizeHook);
+		app->Obj[CYCLE_THUMBNAILSIZE], 2, MUIM_CallHook, (IPTR)&ChangeThumbnailSizeHook);
 
 	d1(KPrintF(__FILE__ "/%s/%ld: \n", __FUNC__, __LINE__));
 
@@ -2009,28 +2009,28 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 		MUIV_Notify_Application, 2, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
 
 	DoMethod(app->Obj[MENU_OPEN], MUIM_Notify,MUIA_Menuitem_Trigger,MUIV_EveryTime,
-		MUIV_Notify_Application, 2, MUIM_CallHook, &OpenHook);
+		MUIV_Notify_Application, 2, MUIM_CallHook, (IPTR)&OpenHook);
 
 	DoMethod(app->Obj[MENU_SAVE_AS], MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
-		MUIV_Notify_Application, 2, MUIM_CallHook, &SaveAsHook);
+		MUIV_Notify_Application, 2, MUIM_CallHook, (IPTR)&SaveAsHook);
 
 	DoMethod(app->Obj[MENU_LAST_SAVED], MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
-		MUIV_Notify_Application, 2, MUIM_CallHook, &LastSavedHook);
+		MUIV_Notify_Application, 2, MUIM_CallHook, (IPTR)&LastSavedHook);
 
 	DoMethod(app->Obj[MENU_RESET_TO_DEFAULTS], MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
-		MUIV_Notify_Application, 2, MUIM_CallHook, &ResetToDefaultsHook);
+		MUIV_Notify_Application, 2, MUIM_CallHook, (IPTR)&ResetToDefaultsHook);
 
 	DoMethod(app->Obj[MENU_RESTORE], MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
-		MUIV_Notify_Application, 2, MUIM_CallHook, &RestoreHook);
+		MUIV_Notify_Application, 2, MUIM_CallHook, (IPTR)&RestoreHook);
 
 	DoMethod(app->Obj[MENU_ABOUT], MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
-		MUIV_Notify_Application, 2, MUIM_CallHook, &AboutHook);
+		MUIV_Notify_Application, 2, MUIM_CallHook, (IPTR)&AboutHook);
 
 #if defined(__MORPHOS__)
 	if (app->Obj[WIN_ABOUT_MORPHOS])
 		{
 		DoMethod(app->Obj[MENU_ABOUT_MORPHOS], MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
-			MUIV_Notify_Application, 2, MUIM_CallHook, &AboutMorphosHook);
+			MUIV_Notify_Application, 2, MUIM_CallHook, (IPTR)&AboutMorphosHook);
 
 		DoMethod(app->Obj[WIN_ABOUT_MORPHOS], MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
 			app->Obj[WIN_ABOUT_MORPHOS], 2, MUIA_Window_Open, FALSE);
@@ -2038,10 +2038,10 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 #endif //defined(__MORPHOS__)
 
 	DoMethod(app->Obj[MENU_ABOUT_MUI], MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
-		MUIV_Notify_Application, 2, MUIM_CallHook, &AboutMUIHook);
+		MUIV_Notify_Application, 2, MUIM_CallHook, (IPTR)&AboutMUIHook);
 
 	DoMethod(app->Obj[MENU_CREATE_ICONS], MUIM_Notify, MUIA_Menuitem_Checked, MUIV_EveryTime,
-		MUIV_Notify_Application, 2, MUIM_CallHook, &CreateIconsHook);
+		MUIV_Notify_Application, 2, MUIM_CallHook, (IPTR)&CreateIconsHook);
 
 	//Icon border selection window
 	DoMethod(app->Obj[WINDOW_ICONFRAMES], MUIM_Notify, MUIA_Window_CloseRequest, TRUE, 
@@ -2051,9 +2051,9 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 	DoMethod(app->Obj[SLIDER_TEXTWINDOWS_SELECTFILLTRANSPARENCY], MUIM_Notify, MUIA_Numeric_Value, MUIV_EveryTime,
 		app->Obj[MCC_TEXTWINDOWS_SELECTMARKER_SAMPLE], 3, MUIM_Set, TIHA_Transparency, MUIV_TriggerValue);
 	DoMethod(app->Obj[SLIDER_TEXTWINDOWS_SELECTBORDERTRANSPARENCY], MUIM_Notify, MUIA_Numeric_Value, MUIV_EveryTime,
-		MUIV_Notify_Application, 2, MUIM_CallHook, &UpdateSelectMarkerSampleHook);
+		MUIV_Notify_Application, 2, MUIM_CallHook, (IPTR)&UpdateSelectMarkerSampleHook);
 	DoMethod(app->Obj[COLORADJUST_TEXTWINDOWS_SELECTIONMARK], MUIM_Notify, MUIA_Coloradjust_RGB, MUIV_EveryTime,
-		MUIV_Notify_Application, 2, MUIM_CallHook, &UpdateSelectMarkerSampleHook);
+		MUIV_Notify_Application, 2, MUIM_CallHook, (IPTR)&UpdateSelectMarkerSampleHook);
 
 	// Set notifications for HotkeyStrings
 	SetHotkeyNotifications(app->Obj[SINGLE_WINDOW_LASSO_HOTKEY], app->Obj[SINGLE_WINDOW_LASSO_HOTKEY_SCAN]);
@@ -2068,7 +2068,7 @@ static BOOL BuildApp(LONG Action, struct SCAModule *app, struct DiskObject *icon
 		{
 		// open main window
 		SetAttrs(app->Obj[WINDOW_MAIN],
-			MUIA_Window_DefaultObject, (ULONG) app->Obj[LISTVIEW],
+			MUIA_Window_DefaultObject, (IPTR) app->Obj[LISTVIEW],
 			MUIA_Window_Open, TRUE,
 			TAG_DONE);
 
@@ -2269,7 +2269,7 @@ int main(int argc, char *argv[])
 			switch (Action)
 				{
 			case MUIV_Application_ReturnID_SAVE:
-				set(app.Obj[TEXT_SPLASHWINDOW], MUIA_Text_Contents, (ULONG) GetLocString(MSGID_SPLASHWINDOW_SAVINGPREFS));
+				set(app.Obj[TEXT_SPLASHWINDOW], MUIA_Text_Contents, (IPTR) GetLocString(MSGID_SPLASHWINDOW_SAVINGPREFS));
 				if (ShowSplashWindow)
 					set(app.Obj[WINDOW_SPLASH], MUIA_Window_Open, TRUE);
 
@@ -2282,7 +2282,7 @@ int main(int argc, char *argv[])
 				WriteWorkbenchPrefs("ENV:sys/workbench.prefs");
 				break;
 			case MUIV_Application_ReturnID_USE:
-				set(app.Obj[TEXT_SPLASHWINDOW], MUIA_Text_Contents, (ULONG) GetLocString(MSGID_SPLASHWINDOW_APPLYINGPREFS));
+				set(app.Obj[TEXT_SPLASHWINDOW], MUIA_Text_Contents, (IPTR) GetLocString(MSGID_SPLASHWINDOW_APPLYINGPREFS));
 				if (ShowSplashWindow)
 					set(app.Obj[WINDOW_SPLASH], MUIA_Window_Open, TRUE);
 
@@ -2586,7 +2586,7 @@ static SAVEDS(APTR) INTERRUPT ControlBarGadgetListConstructHookFunc(struct Hook 
 			d1(KPrintF("%s/%s/%ld:  cgy_NormalImage=<%s>\n", __FILE__, __FUNC__, __LINE__, cgy->cgy_NormalImage));
 
 			cgy->cgy_Image = DataTypesImageObject,
-				MUIA_ScaDtpic_Name, (ULONG) cgy->cgy_NormalImage,
+				MUIA_ScaDtpic_Name, (IPTR) cgy->cgy_NormalImage,
 				End; //DataTypesMCC
 
 			d1(KPrintF("%s/%s/%ld:  <%s>  cgy_Image=%08lx\n", __FILE__, __FUNC__, __LINE__, cgy->cgy_NormalImage, cgy->cgy_Image));
@@ -2795,7 +2795,7 @@ static void TranslateStringArray(CONST_STRPTR *stringArray)
 {
 	while (*stringArray)
 		{
-		*stringArray = GetLocString((ULONG) *stringArray);
+		*stringArray = GetLocString((IPTR) *stringArray);
 		stringArray++;
 		}
 }
@@ -2931,7 +2931,7 @@ DISPATCHER(PrecisionSlider)
 			break;
 			}
 
-		return (ULONG) data->buf;
+		return (IPTR) data->buf;
 	}
 	return(DoSuperMethodA(cl,obj,msg));
 }
@@ -2958,7 +2958,7 @@ DISPATCHER(BufferSizeSlider)
                         snprintf(data->buf, sizeof(data->buf), "%ldM", (long) size);
 			}
 
-		return (ULONG) data->buf;
+		return (IPTR) data->buf;
 		}
 
 	return DoSuperMethodA(cl, obj, msg);
@@ -2983,7 +2983,7 @@ DISPATCHER(TTGammaSlider)
 
 		snprintf(data->buf, sizeof(data->buf), "%ld.%03ld", (long) (m->value / 1000), (long) (m->value % 1000));
 
-		return (ULONG) data->buf;
+		return (IPTR) data->buf;
 	}
 	return(DoSuperMethodA(cl,obj,msg));
 }
@@ -3003,13 +3003,13 @@ DISPATCHER(ThumbnailLifetimeSlider)
 		struct MUIP_Numeric_Stringify *mstr = (struct MUIP_Numeric_Stringify *) msg;
 
 		if (0 == mstr->value)
-			Result = (ULONG) GetLocString(MSGID_THUMBNAILS_LIFETIME_FOREVER);
+			Result = (IPTR) GetLocString(MSGID_THUMBNAILS_LIFETIME_FOREVER);
 		else
 			{
 			snprintf(data->buf, sizeof(data->buf), MUIX_C "%lu %s",
 				(unsigned long) mstr->value,
 				GetLocString(MSGID_ICONSPAGE_THUMBNAILS_MAXAGE_DAYS));
-			Result = (ULONG) data->buf;
+			Result = (IPTR) data->buf;
 			}
 		}
 		break;
@@ -3948,7 +3948,7 @@ static SAVEDS(APTR) INTERRUPT ModulesListConstructHookFunc(struct Hook *hook, Ob
 				d1(KPrintF("%s/%s/%ld:  tempLine=<%s>\n", __FILE__, __FUNC__, __LINE__, tempLine));
 
 				mdle->mdle_Image = DataTypesImageObject,
-					MUIA_ScaDtpic_Name, (ULONG) tempLine,
+					MUIA_ScaDtpic_Name, (IPTR) tempLine,
 					End; //DataTypesMCC
 
 				d1(kprintf(__FUNC__ "/%ld:  <%s>  mdle_Image=%08lx\n", __LINE__, tempLine, mdle->mdle_Image));
@@ -3983,7 +3983,7 @@ static SAVEDS(APTR) INTERRUPT ModulesListConstructHookFunc(struct Hook *hook, Ob
 
 			mdle->mdle_Popup = ImageObject,
 				MUIA_InputMode, MUIV_InputMode_RelVerify,
-				MUIA_Image_Spec, "6:18", //MUII_PopUp,
+				MUIA_Image_Spec, (IPTR)"6:18", //MUII_PopUp,
 				End; //Image
 
 			DoMethod(o, MUIM_NList_UseImage,
@@ -4658,7 +4658,7 @@ static void InitControlBarGadgets(struct SCAModule *app)
 static void SetupNewPrefsPages(struct SCAModule *app)
 {
 	struct NewPageListEntry *nple = NewPrefsPages;
-	ULONG n;
+	IPTR n;
 
 	d1(KPrintF(__FILE__ "/%s/%ld: START\n", __FUNC__, __LINE__));
 
@@ -4698,34 +4698,34 @@ Object *CreatePrefsPage(struct SCAModule *app, Object *Page, struct NewPageListE
 		result = VGroupV,
 #endif //MUIA_Scrollgroup_AutoBars
 				MUIA_Group_VertSpacing, 0,
-				Child, nlistview = NListviewObject,
+				Child, (IPTR)(nlistview = NListviewObject,
 						MUIA_VertWeight, 0,
 						MUIA_InputMode, MUIV_InputMode_None,
 						MUIA_NListview_Horiz_ScrollBar, MUIV_NListview_HSB_None,
 						MUIA_NListview_Vert_ScrollBar, MUIV_NListview_VSB_None,
-						MUIA_NListview_NList, NListObject,
+						MUIA_NListview_NList, (IPTR)(NListObject,
 								ReadListFrame,
 								MUIA_VertWeight, 0,
 								MUIA_Font, MUIV_Font_Big,
 								MUIA_Background, MUII_ListBack,
 								MUIA_NList_DefaultObjectOnClick, FALSE,
-								MUIA_NList_DisplayHook2, (ULONG) &PageListDisplayHook,
-								MUIA_NList_ConstructHook2, (ULONG) &PageListConstructHook,
-								MUIA_NList_DestructHook2, (ULONG) &PageListDestructHook,
-								MUIA_NList_Format, (ULONG) ",",
+								MUIA_NList_DisplayHook2, (IPTR) &PageListDisplayHook,
+								MUIA_NList_ConstructHook2, (IPTR) &PageListConstructHook,
+								MUIA_NList_DestructHook2, (IPTR) &PageListDestructHook,
+								MUIA_NList_Format, (IPTR) ",",
 								MUIA_NList_ShowDropMarks, FALSE,
 								MUIA_NList_Input, FALSE,
 								MUIA_NList_AdjustHeight, TRUE,
 								MUIA_NList_MultiSelect, MUIV_NList_MultiSelect_None,
-							End, //NListObject
+							End), //NListObject
 						MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_None,
 						MUIA_Listview_DragType, MUIV_Listview_DragType_None,
-//						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PREFGROUPS_SHORTHELP),
-					End, //NListviewObject
-				Child, Page,
+//						MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PREFGROUPS_SHORTHELP),
+					End), //NListviewObject
+				Child, (IPTR)Page,
 #if defined(MUIA_Scrollgroup_AutoBars)
-				End, //VGroupV
-			End; //ScrollgroupObject
+                        End, //VGroupV
+                End; //ScrollgroupObject
 #else //defined(MUIA_Scrollgroup_AutoBars)
 			End; //VGroupV
 #endif //defined(MUIA_Scrollgroup_AutoBars)
@@ -4790,98 +4790,98 @@ static Object *GenerateAboutPage(struct SCAModule *app, CONST_STRPTR cVersion, C
 	snprintf(aboutPageCopyRight, sizeof(aboutPageCopyRight), GetLocString(MSGID_ABOUTPAGE_COPYRIGHT), CURRENTYEAR);
 
 	return CreatePrefsPage(app,
-		VGroup,
-//		MUIA_Background, MUII_PageBack,
-		MUIA_Background, "5:THEME:SplashBackground",
+		(APTR)(VGroup,
+//                        MUIA_Background, MUII_PageBack,
+                        MUIA_Background, (IPTR)"5:THEME:SplashBackground",
 
-		Child, HVSpace,
+                        Child, (IPTR)HVSpace,
 
-		Child, HGroup,
-			Child, HVSpace,
+                        Child, (IPTR)(HGroup,
+                                Child, (IPTR)HVSpace,
 
-			Child, VGroup,
-				Child, DataTypesImageObject,
-					MUIA_ScaDtpic_Name,  (ULONG) "THEME:ScalosSplashLogo",
-					End, //DataTypesMCCObject
+                                Child, (IPTR)(VGroup,
+                                        Child, (IPTR)(DataTypesImageObject,
+                                                MUIA_ScaDtpic_Name,  (IPTR) "THEME:ScalosSplashLogo",
+                                        End), //DataTypesMCCObject
 
-				Child, TextObject,
-					MUIA_Font, MUIV_Font_Big,
-					MUIA_Text_PreParse, MUIX_C,
-					MUIA_Text_Contents, (ULONG) cVersion,
-				End, //Text
+                                        Child, (IPTR)(TextObject,
+                                                MUIA_Font, MUIV_Font_Big,
+                                                MUIA_Text_PreParse, (IPTR)MUIX_C,
+                                                MUIA_Text_Contents, (IPTR) cVersion,
+                                        End), //Text
 
-				Child, HVSpace,
+                                        Child, (IPTR)HVSpace,
 
-				Child, TextObject,
-					MUIA_Font, MUIV_Font_Title,
-					MUIA_Text_PreParse, MUIX_C,
-					MUIA_Text_Contents, (ULONG) prefsVersion,
-				End, //Text
+                                        Child, (IPTR)(TextObject,
+                                                MUIA_Font, MUIV_Font_Title,
+                                                MUIA_Text_PreParse, (IPTR)MUIX_C,
+                                                MUIA_Text_Contents, (IPTR) prefsVersion,
+                                        End), //Text
 
-				Child, TextObject,
-					MUIA_Font, MUIV_Font_Title,
-					MUIA_Text_PreParse, MUIX_C,
-					MUIA_Text_Contents, COMPILER_STRING,
-				End, //Text
+                                        Child, (IPTR)(TextObject,
+                                                MUIA_Font, MUIV_Font_Title,
+                                                MUIA_Text_PreParse, (IPTR)MUIX_C,
+                                                MUIA_Text_Contents, (IPTR)COMPILER_STRING,
+                                        End), //Text
 
-			End, //VGroup
+                                End), //VGroup
 
-			Child, HVSpace,
-		End, //HGroup
+                                Child, (IPTR)HVSpace,
+                        End), //HGroup
 
 
-		Child, HVSpace,
+                        Child, (IPTR)HVSpace,
 
-		Child, VGroup,
-			TextFrame,
-			MUIA_InputMode, MUIV_InputMode_None,
-			MUIA_Background, MUII_TextBack,
+                        Child, (IPTR)(VGroup,
+                                TextFrame,
+                                MUIA_InputMode, MUIV_InputMode_None,
+                                MUIA_Background, MUII_TextBack,
 
-			Child, TextObject,
-				MUIA_Text_SetMax, FALSE,
-				MUIA_Text_Contents, (ULONG) aboutPageCopyRight,
-			End, //Text
+                                Child, (IPTR)(TextObject,
+                                        MUIA_Text_SetMax, FALSE,
+                                        MUIA_Text_Contents, (IPTR) aboutPageCopyRight,
+                                End), //Text
 
-			Child, HGroup,
-				MUIA_Group_HorizSpacing, 0,
+                                Child, (IPTR)(HGroup,
+                                        MUIA_Group_HorizSpacing, 0,
 
-				Child, HVSpace,
+                                        Child, (IPTR)HVSpace,
 
-				Child, HGroup,
-					MUIA_Group_HorizSpacing, 0,
+                                        Child, (IPTR)(HGroup,
+                                                MUIA_Group_HorizSpacing, 0,
 
-					Child, TextObject,
-						MUIA_Text_Contents, (ULONG) GetLocString(MSGID_ABOUTPAGE_CONTACT1),
-					End, //Text
+                                                Child, (IPTR)(TextObject,
+                                                        MUIA_Text_Contents, (IPTR) GetLocString(MSGID_ABOUTPAGE_CONTACT1),
+                                                End), //Text
 
-					Child, UrltextObject,
-						MUIA_Urltext_Text, "Scalos@VFEmail.net",
-						MUIA_Urltext_Url,  (ULONG) urlSubject,	// +jmc+
-						MUIA_Urltext_SetMax, FALSE,
-					End, //URLText
+                                                Child, (IPTR)(UrltextObject,
+                                                        MUIA_Urltext_Text, (IPTR)"Scalos@VFEmail.net",
+                                                        MUIA_Urltext_Url,  (IPTR) urlSubject,	// +jmc+
+                                                        MUIA_Urltext_SetMax, FALSE,
+                                                End), //URLText
 
-					Child, TextObject,
-						MUIA_Text_Contents, (ULONG) GetLocString(MSGID_ABOUTPAGE_CONTACT2),
-					End, //Text
+                                                Child, (IPTR)(TextObject,
+                                                        MUIA_Text_Contents, (IPTR) GetLocString(MSGID_ABOUTPAGE_CONTACT2),
+                                                End), //Text
 
-					Child, UrltextObject,
-						MUIA_Urltext_Text, "scalos.noname.fr",
-						MUIA_Urltext_Url, "http://scalos.noname.fr",
-						MUIA_Urltext_SetMax, FALSE,
-					End, //URLText
+                                                Child, (IPTR)(UrltextObject,
+                                                        MUIA_Urltext_Text, (IPTR)"scalos.noname.fr",
+                                                        MUIA_Urltext_Url, (IPTR)"http://scalos.noname.fr",
+                                                        MUIA_Urltext_SetMax, FALSE,
+                                                End), //URLText
 
-					Child, TextObject,
-						MUIA_Text_Contents, (ULONG) GetLocString(MSGID_ABOUTPAGE_CONTACT3),
-					End, //Text
-				End, //HGroup
+                                                Child, (IPTR)(TextObject,
+                                                        MUIA_Text_Contents, (IPTR) GetLocString(MSGID_ABOUTPAGE_CONTACT3),
+                                                End), //Text
+                                        End), //HGroup
 
-				Child, HVSpace,
-			End, //HGroup
+                                        Child, (IPTR)HVSpace,
+                                End), //HGroup
 
-		End, //VGroup
+                        End), //VGroup
 
-	End, //VGroup
-	&NewPrefsPages[0]);
+                End), //VGroup
+                &NewPrefsPages[0]);
 ///
 }
 
@@ -4891,142 +4891,142 @@ static Object *GeneratePathsPage(struct SCAModule *app)
 {
 ///
 	return CreatePrefsPage(app,
-		VGroup,
-			MUIA_Background, MUII_PageBack,
+		(APTR)(VGroup,
+                        MUIA_Background, MUII_PageBack,
 
-			Child, HVSpace,
+                        Child, (IPTR)HVSpace,
 
-			Child, VGroup,
-			MUIA_Background, MUII_GroupBack,
-			GroupFrame,
-			MUIA_FrameTitle, (ULONG) GetLocString(MSGID_PATHSPAGE_DEFAULTPATHS),
+                        Child, (IPTR)(VGroup,
+                                MUIA_Background, MUII_GroupBack,
+                                GroupFrame,
+                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_PATHSPAGE_DEFAULTPATHS),
 
-			Child, HVSpace,
+                                Child, (IPTR)HVSpace,
 
-			Child, ColGroup(2),
-				Child, Label2((ULONG) GetLocString(MSGID_PATHSPAGE_SCALOS_HOME)),
-				Child, app->Obj[STRING_SCALOSHOME] = PopaslObject,
-					MUIA_CycleChain, TRUE,
-					MUIA_Popstring_Button, PopButton(MUII_PopDrawer),
-					MUIA_Popstring_String, BetterStringObject,
-						StringFrame,
-						MUIA_String_Contents, "SYS:",
-					End, //BetterString
-					ASLFR_TitleText, (ULONG) GetLocString(MSGID_PATHSPAGE_SCALOS_HOME_ASLTITLE),
-					ASLFR_DrawersOnly, TRUE,
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PATHSPAGE_SCALOS_HOME_SHORTHELP),
-				End, //Pop
+                                Child, (IPTR)(ColGroup(2),
+                                        Child, (IPTR)Label2(GetLocString(MSGID_PATHSPAGE_SCALOS_HOME)),
+                                        Child, (IPTR)(app->Obj[STRING_SCALOSHOME] = PopaslObject,
+                                                MUIA_CycleChain, TRUE,
+                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopDrawer),
+                                                MUIA_Popstring_String, (IPTR)(BetterStringObject,
+                                                        StringFrame,
+                                                        MUIA_String_Contents, (IPTR)"SYS:",
+                                                End), //BetterString
+                                                ASLFR_TitleText, (IPTR) GetLocString(MSGID_PATHSPAGE_SCALOS_HOME_ASLTITLE),
+                                                ASLFR_DrawersOnly, TRUE,
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PATHSPAGE_SCALOS_HOME_SHORTHELP),
+                                        End), //Pop
 
-				Child, Label2((ULONG) GetLocString(MSGID_PATHSPAGE_THEMES)),
-				Child, app->Obj[STRING_THEMES] = PopaslObject,
-					MUIA_CycleChain, TRUE,
-					MUIA_Popstring_Button, PopButton(MUII_PopDrawer),
-					MUIA_Popstring_String, BetterStringObject,
-						StringFrame,
-						MUIA_String_Contents, "SCALOS:Themes/",
-					End, //BetterString
-					ASLFR_TitleText, (ULONG) GetLocString(MSGID_PATHSPAGE_THEMES_ASLTITLE),
-					ASLFR_DrawersOnly, TRUE,
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PATHSPAGE_THEMES_SHORTHELP),
-				End, //Pop
+                                        Child, (IPTR)Label2(GetLocString(MSGID_PATHSPAGE_THEMES)),
+                                        Child, (IPTR)(app->Obj[STRING_THEMES] = PopaslObject,
+                                                MUIA_CycleChain, TRUE,
+                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopDrawer),
+                                                MUIA_Popstring_String, (IPTR)(BetterStringObject,
+                                                        StringFrame,
+                                                        MUIA_String_Contents, (IPTR)"SCALOS:Themes/",
+                                                End), //BetterString
+                                                ASLFR_TitleText, (IPTR) GetLocString(MSGID_PATHSPAGE_THEMES_ASLTITLE),
+                                                ASLFR_DrawersOnly, TRUE,
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PATHSPAGE_THEMES_SHORTHELP),
+                                        End), //Pop
 
-				Child, Label2((ULONG) GetLocString(MSGID_PATHSPAGE_DEFAULTICONS)),
-				Child, app->Obj[STRING_DEFICONPATH] = PopaslObject,
-					MUIA_CycleChain, TRUE,
-					MUIA_Popstring_Button, PopButton(MUII_PopDrawer),
-					MUIA_Popstring_String, BetterStringObject,
-						StringFrame,
-						MUIA_String_Contents, "ENV:Sys/",
-					End, //BetterString
-					ASLFR_TitleText, (ULONG) GetLocString(MSGID_PATHSPAGE_DEFAULTICONS_ASLTITLE),
-					ASLFR_DrawersOnly, TRUE,
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PATHSPAGE_DEFAULTICONS_SHORTHELP),
-				End, //Pop
+                                        Child, (IPTR)Label2(GetLocString(MSGID_PATHSPAGE_DEFAULTICONS)),
+                                        Child, (IPTR)(app->Obj[STRING_DEFICONPATH] = PopaslObject,
+                                                MUIA_CycleChain, TRUE,
+                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopDrawer),
+                                                MUIA_Popstring_String, (IPTR)(BetterStringObject,
+                                                        StringFrame,
+                                                        MUIA_String_Contents, (IPTR)"ENV:Sys/",
+                                                End), //BetterString
+                                                ASLFR_TitleText, (IPTR) GetLocString(MSGID_PATHSPAGE_DEFAULTICONS_ASLTITLE),
+                                                ASLFR_DrawersOnly, TRUE,
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PATHSPAGE_DEFAULTICONS_SHORTHELP),
+                                        End), //Pop
 
-				Child, Label2((ULONG) GetLocString(MSGID_PATHSPAGE_WBSTARTUP)),
-				Child, app->Obj[STRING_WBSTARTPATH] = PopaslObject,
-					MUIA_CycleChain, TRUE,
-					MUIA_Popstring_Button, PopButton(MUII_PopDrawer),
-					MUIA_Popstring_String, BetterStringObject,
-						StringFrame,
-						MUIA_String_Contents, "SYS:WBStartup/",
-					End, //BetterString
-					ASLFR_TitleText, (ULONG) GetLocString(MSGID_PATHSPAGE_WBSTARTUP_ASLTITLE),
-					ASLFR_DrawersOnly, TRUE,
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PATHSPAGE_WBSTARTUP_SHORTHELP),
-				End, //Pop
+                                        Child, (IPTR)Label2(GetLocString(MSGID_PATHSPAGE_WBSTARTUP)),
+                                        Child, (IPTR)(app->Obj[STRING_WBSTARTPATH] = PopaslObject,
+                                                MUIA_CycleChain, TRUE,
+                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopDrawer),
+                                                MUIA_Popstring_String, (IPTR)(BetterStringObject,
+                                                        StringFrame,
+                                                        MUIA_String_Contents, (IPTR)"SYS:WBStartup/",
+                                                End), //BetterString
+                                                ASLFR_TitleText, (IPTR) GetLocString(MSGID_PATHSPAGE_WBSTARTUP_ASLTITLE),
+                                                ASLFR_DrawersOnly, TRUE,
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PATHSPAGE_WBSTARTUP_SHORTHELP),
+                                        End), //Pop
 
-				Child, Label2((ULONG) GetLocString(MSGID_PATHSPAGE_IMAGECACHE)),
-				Child, app->Obj[STRING_IMAGECACHE] = PopaslObject,
-					MUIA_CycleChain, TRUE,
-					MUIA_Popstring_Button, PopButton(MUII_PopDrawer),
-					MUIA_Popstring_String, BetterStringObject,
-						StringFrame,
-						MUIA_String_Contents, "t:",
-					End, //BetterString
-					ASLFR_TitleText, (ULONG) GetLocString(MSGID_PATHSPAGE_IMAGECACHE_ASLTITLE),
-					ASLFR_DrawersOnly, TRUE,
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PATHSPAGE_IMAGECACHE_SHORTHELP),
-				End, //Pop
+                                        Child, (IPTR)Label2(GetLocString(MSGID_PATHSPAGE_IMAGECACHE)),
+                                        Child, (IPTR)(app->Obj[STRING_IMAGECACHE] = PopaslObject,
+                                                MUIA_CycleChain, TRUE,
+                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopDrawer),
+                                                MUIA_Popstring_String, (IPTR)(BetterStringObject,
+                                                        StringFrame,
+                                                        MUIA_String_Contents, (IPTR)"t:",
+                                                End), //BetterString
+                                                ASLFR_TitleText, (IPTR) GetLocString(MSGID_PATHSPAGE_IMAGECACHE_ASLTITLE),
+                                                ASLFR_DrawersOnly, TRUE,
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PATHSPAGE_IMAGECACHE_SHORTHELP),
+                                        End), //Pop
 
-				Child, Label2((ULONG) GetLocString(MSGID_PATHSPAGE_SQLITE3TEMPPATH)),
-				Child, app->Obj[STRING_SQLITE3TEMPPATH] = PopaslObject,
-					MUIA_CycleChain, TRUE,
-					MUIA_Popstring_Button, PopButton(MUII_PopDrawer),
-					MUIA_Popstring_String, BetterStringObject,
-						StringFrame,
-						MUIA_String_Contents, "t:",
-					End, //BetterString
-					ASLFR_TitleText, (ULONG) GetLocString(MSGID_PATHSPAGE_SQLITE3TEMPPATH_ASLTITLE),
-					ASLFR_DrawersOnly, TRUE,
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PATHSPAGE_SQLITE3TEMPPATH_SHORTHELP),
-				End, //Pop
+                                        Child, (IPTR)Label2(GetLocString(MSGID_PATHSPAGE_SQLITE3TEMPPATH)),
+                                        Child, (IPTR)(app->Obj[STRING_SQLITE3TEMPPATH] = PopaslObject,
+                                                MUIA_CycleChain, TRUE,
+                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopDrawer),
+                                                MUIA_Popstring_String, (IPTR)(BetterStringObject,
+                                                        StringFrame,
+                                                        MUIA_String_Contents, (IPTR)"t:",
+                                                End), //BetterString
+                                                ASLFR_TitleText, (IPTR) GetLocString(MSGID_PATHSPAGE_SQLITE3TEMPPATH_ASLTITLE),
+                                                ASLFR_DrawersOnly, TRUE,
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PATHSPAGE_SQLITE3TEMPPATH_SHORTHELP),
+                                        End), //Pop
 
-				Child, HVSpace,
-				Child, HVSpace,
+                                        Child, (IPTR)HVSpace,
+                                        Child, (IPTR)HVSpace,
 
-				Child, Label2((ULONG) GetLocString(MSGID_PATHSPAGE_THUMBNAILDB)),
-				Child, app->Obj[STRING_THUMBNAILDB] = PopaslObject,
-					MUIA_CycleChain, TRUE,
-					MUIA_Popstring_Button, PopButton(MUII_PopFile),
-					MUIA_Popstring_String, BetterStringObject,
-						StringFrame,
-						MUIA_String_Contents, "Scalos:Thumbnails.db",
-					End, //BetterString
-					ASLFR_TitleText, (ULONG) GetLocString(MSGID_PATHSPAGE_THUMBNAILDB_ASLTITLE),
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PATHSPAGE_THUMBNAILDB_SHORTHELP),
-				End, //Pop
+                                        Child, (IPTR)Label2(GetLocString(MSGID_PATHSPAGE_THUMBNAILDB)),
+                                        Child, (IPTR)(app->Obj[STRING_THUMBNAILDB] = PopaslObject,
+                                                MUIA_CycleChain, TRUE,
+                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopFile),
+                                                MUIA_Popstring_String, (IPTR)(BetterStringObject,
+                                                        StringFrame,
+                                                        MUIA_String_Contents, (IPTR)"Scalos:Thumbnails.db",
+                                                End), //BetterString
+                                                ASLFR_TitleText, (IPTR) GetLocString(MSGID_PATHSPAGE_THUMBNAILDB_ASLTITLE),
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PATHSPAGE_THUMBNAILDB_SHORTHELP),
+                                        End), //Pop
 
-				Child, Label2((ULONG) GetLocString(MSGID_PATHSPAGE_DISKCOPY)),
-				Child, app->Obj[STRING_DISKCOPY] = PopaslObject,
-					MUIA_CycleChain, TRUE,
-					MUIA_Popstring_Button, PopButton(MUII_PopFile),
-					MUIA_Popstring_String, BetterStringObject,
-						StringFrame,
-						MUIA_String_Contents, "SYS:System/DiskCopy",
-					End, //BetterString
-					ASLFR_TitleText, (ULONG) GetLocString(MSGID_PATHSPAGE_DISKCOPY_ASLTITLE),
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PATHSPAGE_DISKCOPY_SHORTHELP),
-				End, //Pop
+                                        Child, (IPTR)Label2(GetLocString(MSGID_PATHSPAGE_DISKCOPY)),
+                                        Child, (IPTR)(app->Obj[STRING_DISKCOPY] = PopaslObject,
+                                                MUIA_CycleChain, TRUE,
+                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopFile),
+                                                MUIA_Popstring_String, (IPTR)(BetterStringObject,
+                                                        StringFrame,
+                                                        MUIA_String_Contents, (IPTR)"SYS:System/DiskCopy",
+                                                End), //BetterString
+                                                ASLFR_TitleText, (IPTR) GetLocString(MSGID_PATHSPAGE_DISKCOPY_ASLTITLE),
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PATHSPAGE_DISKCOPY_SHORTHELP),
+                                        End), //Pop
 
-				Child, Label2((ULONG) GetLocString(MSGID_PATHSPAGE_FORMAT)),
-				Child, app->Obj[STRING_FORMAT] = PopaslObject,
-					MUIA_CycleChain, TRUE,
-					MUIA_Popstring_Button, PopButton(MUII_PopFile),
-					MUIA_Popstring_String, BetterStringObject,
-						StringFrame,
-						MUIA_String_Contents, "SYS:System/Format",
-					End, //BetterString
-					ASLFR_TitleText, (ULONG) GetLocString(MSGID_PATHSPAGE_FORMAT_ASLTITLE),
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PATHSPAGE_FORMAT_SHORTHELP),
-				End, //Pop
-			End, //ColumnGroup
+                                        Child, (IPTR)Label2(GetLocString(MSGID_PATHSPAGE_FORMAT)),
+                                        Child, (IPTR)(app->Obj[STRING_FORMAT] = PopaslObject,
+                                                MUIA_CycleChain, TRUE,
+                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopFile),
+                                                MUIA_Popstring_String, (IPTR)(BetterStringObject,
+                                                        StringFrame,
+                                                        MUIA_String_Contents, (IPTR)"SYS:System/Format",
+                                                End), //BetterString
+                                                ASLFR_TitleText, (IPTR) GetLocString(MSGID_PATHSPAGE_FORMAT_ASLTITLE),
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PATHSPAGE_FORMAT_SHORTHELP),
+                                        End), //Pop
+                                End), //ColumnGroup
 
-			Child, HVSpace,
-		End, //VGroup
-		Child, HVSpace,
-	End, //VGroup
-	&NewPrefsPages[1]);
+                                Child, (IPTR)HVSpace,
+                        End), //VGroup
+                        Child, (IPTR)HVSpace,
+                End), //VGroup
+                &NewPrefsPages[1]);
 ///
 }
 
@@ -5036,68 +5036,68 @@ static Object *GenerateStartupPage(struct SCAModule *app)
 {
 ///
 	return CreatePrefsPage(app,
-		VGroup,
-		MUIA_Background, MUII_PageBack,
-		Child, HVSpace,
+		(APTR)(VGroup,
+                        MUIA_Background, MUII_PageBack,
+                        Child, (IPTR)HVSpace,
 
-		Child, VGroup,
-			GroupFrame,
-			MUIA_FrameTitle, (ULONG) GetLocString(MSGID_STARTUPPAGE_SPLASHWINDOW),
-			MUIA_Background, MUII_GroupBack,
+                        Child, (IPTR)(VGroup,
+                                GroupFrame,
+                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_STARTUPPAGE_SPLASHWINDOW),
+                                MUIA_Background, MUII_GroupBack,
 
-			Child, HVSpace,
+                                Child, (IPTR)HVSpace,
 
-			Child, HGroup,
-				Child, Label((ULONG) GetLocString(MSGID_STARTUPPAGE_SHOWSPLASHWINDOW)),
-				Child, app->Obj[CHECK_SHOWSPLASH] = CheckMarkHelp(TRUE, MSGID_STARTUPPAGE_SHOWSPLASHWINDOW_SHORTHELP),
-				Child, HVSpace,
-			End, //HGroup
+                                Child, (IPTR)(HGroup,
+                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_STARTUPPAGE_SHOWSPLASHWINDOW)),
+                                        Child, (IPTR)(app->Obj[CHECK_SHOWSPLASH] = CheckMarkHelp(TRUE, MSGID_STARTUPPAGE_SHOWSPLASHWINDOW_SHORTHELP)),
+                                        Child, (IPTR)HVSpace,
+                                End), //HGroup
 
-			Child, HGroup,
-				Child, Label((ULONG) GetLocString(MSGID_STARTUPPAGE_SPLASHCLOSEDELAY)),
-				Child, app->Obj[SLIDER_SPLASHCLOSE] = SliderObject,
-					MUIA_CycleChain, 1,
-					MUIA_Numeric_Min, 1,
-					MUIA_Numeric_Max, 10,
-					MUIA_Slider_Horiz, TRUE,
-					MUIA_Numeric_Value, 5,
-				End, //Slider
-				MUIA_ShortHelp, (ULONG) GetLocString(MSGID_STARTUPPAGE_SPLASHCLOSEDELAY_SHORTHELP),
-				Child, Label((ULONG) GetLocString(MSGID_STARTUPPAGE_DOWAITDELAY_SECONDS)),
-			End, //HGroup
+                                Child, (IPTR)(HGroup,
+                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_STARTUPPAGE_SPLASHCLOSEDELAY)),
+                                        Child, (IPTR)(app->Obj[SLIDER_SPLASHCLOSE] = SliderObject,
+                                                MUIA_CycleChain, 1,
+                                                MUIA_Numeric_Min, 1,
+                                                MUIA_Numeric_Max, 10,
+                                                MUIA_Slider_Horiz, TRUE,
+                                                MUIA_Numeric_Value, 5,
+                                        End), //Slider
+                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_STARTUPPAGE_SPLASHCLOSEDELAY_SHORTHELP),
+                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_STARTUPPAGE_DOWAITDELAY_SECONDS)),
+                                End), //HGroup
 
-			Child, HVSpace,
+                                Child, (IPTR)HVSpace,
 
-		End, //VGroup
+                        End), //VGroup
 
-		Child, VGroup,
-			GroupFrame,
-			MUIA_FrameTitle, (ULONG) GetLocString(MSGID_STARTUPPAGE_WBSTARTUP),
-			MUIA_Background, MUII_GroupBack,
+                        Child, (IPTR)(VGroup,
+                                GroupFrame,
+                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_STARTUPPAGE_WBSTARTUP),
+                                MUIA_Background, MUII_GroupBack,
 
-			Child, HVSpace,
+                                Child, (IPTR)HVSpace,
 
-			Child, HGroup,
-				Child, Label((ULONG) GetLocString(MSGID_STARTUPPAGE_DOWAITDELAY)),
-				Child, app->Obj[SLIDER_WBSDELAY] = SliderObject,
-					MUIA_CycleChain, 1,
-					MUIA_Weight, 500,
-					MUIA_Numeric_Min, 1,
-					MUIA_Numeric_Max, 10,
-					MUIA_Slider_Horiz, TRUE,
-					MUIA_Numeric_Value, 2,
-				End, //Slider
-				Child, Label((ULONG) GetLocString(MSGID_STARTUPPAGE_DOWAITDELAY_SECONDS)),
-				MUIA_ShortHelp, (ULONG) GetLocString(MSGID_STARTUPPAGE_DOWAITDELAY_SHORTHELP),
-			End, //HGroup
+                                Child, (IPTR)(HGroup,
+                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_STARTUPPAGE_DOWAITDELAY)),
+                                        Child, (IPTR)(app->Obj[SLIDER_WBSDELAY] = SliderObject,
+                                                MUIA_CycleChain, 1,
+                                                MUIA_Weight, 500,
+                                                MUIA_Numeric_Min, 1,
+                                                MUIA_Numeric_Max, 10,
+                                                MUIA_Slider_Horiz, TRUE,
+                                                MUIA_Numeric_Value, 2,
+                                        End), //Slider
+                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_STARTUPPAGE_DOWAITDELAY_SECONDS)),
+                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_STARTUPPAGE_DOWAITDELAY_SHORTHELP),
+                                End), //HGroup
 
-			Child, HVSpace,
-		End, //VGroup
+                                Child, (IPTR)HVSpace,
+                        End), //VGroup
 
-		Child, HVSpace,
+                        Child, (IPTR)HVSpace,
 
-	End, //VGroup
-	&NewPrefsPages[2]);
+                End), //VGroup
+                &NewPrefsPages[2]);
 ///
 }
 
@@ -5107,276 +5107,276 @@ static Object *GenerateDesktopPage(struct SCAModule *app)
 {
 ///
 	return CreatePrefsPage(app,
-		VGroup,
-		MUIA_Background, MUII_PageBack,
+		(APTR)(VGroup,
+                        MUIA_Background, MUII_PageBack,
 
-		Child, RegisterObject,
-			MUIA_Register_Titles, cDesktopPages,
-			MUIA_CycleChain, TRUE,
+                        Child, (IPTR)(RegisterObject,
+                                MUIA_Register_Titles, (IPTR)cDesktopPages,
+                                MUIA_CycleChain, TRUE,
 
-			// --- Desktop-Screen
-			Child, app->Obj[GROUP_SCRTITLE] = VGroup,
-				Child, HVSpace,
+                                // --- Desktop-Screen
+                                Child, (IPTR)(app->Obj[GROUP_SCRTITLE] = VGroup,
+                                        Child, (IPTR)HVSpace,
 
-				Child, VGroup,
-					GroupFrame,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_DESKTOPPAGE_SCREENTITLEBAR),
-					MUIA_Background, MUII_GroupBack,
+                                        Child, (IPTR)(VGroup,
+                                                GroupFrame,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_DESKTOPPAGE_SCREENTITLEBAR),
+                                                MUIA_Background, MUII_GroupBack,
 
-					Child, HGroup,
-						Child, Label2((ULONG) GetLocString(MSGID_DESKTOPPAGE_SCREEN)),
-						Child, app->Obj[POPPH_SCREENTITLE] = PopplaceholderObject,
-							MUIA_Popph_Title, (ULONG) GetLocString(MSGID_DESKTOPPAGE_SCREEN_DESCRIPTION),
-							MUIA_Popph_Array, cTitleph,
-							MUIA_Popph_Avoid, MUIV_Popph_Avoid_Textinput,
-							MUIA_Popph_ReplaceMode, FALSE,
-							MUIA_Popph_Contents, "",
-							MUIA_Popph_StringMaxLen, 1000,
-						End, //Popplaceholder
-					End, //HGroup
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)Label2(GetLocString(MSGID_DESKTOPPAGE_SCREEN)),
+                                                        Child, (IPTR)(app->Obj[POPPH_SCREENTITLE] = PopplaceholderObject,
+                                                                MUIA_Popph_Title, (IPTR) GetLocString(MSGID_DESKTOPPAGE_SCREEN_DESCRIPTION),
+                                                                MUIA_Popph_Array, (IPTR)cTitleph,
+                                                                MUIA_Popph_Avoid, MUIV_Popph_Avoid_Textinput,
+                                                                MUIA_Popph_ReplaceMode, FALSE,
+                                                                MUIA_Popph_Contents, (IPTR)"",
+                                                                MUIA_Popph_StringMaxLen, 1000,
+                                                        End), //Popplaceholder
+                                                End), //HGroup
 
 
-					Child, HGroup,
-						Child, Label2((ULONG) GetLocString(MSGID_DESKTOPPAGE_TITLEBAR_REFRESH)),
-						Child, app->Obj[SLIDER_TITLEREFRESH] = SliderObject,
-							MUIA_CycleChain, 1,
-							MUIA_Numeric_Min, 1,
-							MUIA_Numeric_Max, 10,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 5,
-						End, //Slider
-						Child, Label((ULONG) GetLocString(MSGID_DESKTOPPAGE_TITLEBAR_REFRESH_SECONDS)),
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DESKTOPPAGE_TITLEBAR_REFRESH_SHORTHELP),
-					End, //HGroup
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)Label2(GetLocString(MSGID_DESKTOPPAGE_TITLEBAR_REFRESH)),
+                                                        Child, (IPTR)(app->Obj[SLIDER_TITLEREFRESH] = SliderObject,
+                                                                MUIA_CycleChain, 1,
+                                                                MUIA_Numeric_Min, 1,
+                                                                MUIA_Numeric_Max, 10,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 5,
+                                                        End), //Slider
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_DESKTOPPAGE_TITLEBAR_REFRESH_SECONDS)),
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DESKTOPPAGE_TITLEBAR_REFRESH_SHORTHELP),
+                                                End), //HGroup
 
-					Child, HGroup,
-						Child, HVSpace,
-						Child, Label1((ULONG) GetLocString(MSGID_DESKTOPPAGE_TITLEBAR_REFRESH_MEMCHANGE)),
-						Child, app->Obj[CHECK_TITLEMEM] = CheckMarkHelp(FALSE, MSGID_DESKTOPPAGE_TITLEBAR_REFRESH_MEMCHANGE_SHORTHELP),
-						Child, HVSpace,
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DESKTOPPAGE_TITLEBAR_REFRESH_MEMCHANGE_SHORTHELP),
-					End, //HGroup
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)HVSpace,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DESKTOPPAGE_TITLEBAR_REFRESH_MEMCHANGE)),
+                                                        Child, (IPTR)(app->Obj[CHECK_TITLEMEM] = CheckMarkHelp(FALSE, MSGID_DESKTOPPAGE_TITLEBAR_REFRESH_MEMCHANGE_SHORTHELP)),
+                                                        Child, (IPTR)HVSpace,
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DESKTOPPAGE_TITLEBAR_REFRESH_MEMCHANGE_SHORTHELP),
+                                                End), //HGroup
 
-					Child, HVSpace,
+                                                Child, (IPTR)HVSpace,
 
-					Child, HGroup,
-						Child, Label1((ULONG) GetLocString(MSGID_DESKTOPPAGE_SCREENTITLE_MODE)),
-						Child, app->Obj[CYCLE_SCREENTITLEMODE] = CycleObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Cycle_Entries, cScreenTitleModes,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DESKTOPPAGE_SCREENTITLE_MODE_SHORTHELP),
-						End, //Cycle
-					End, //HGroup
-				End, //VGroup
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DESKTOPPAGE_SCREENTITLE_MODE)),
+                                                        Child, (IPTR)(app->Obj[CYCLE_SCREENTITLEMODE] = CycleObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Cycle_Entries, (IPTR)cScreenTitleModes,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DESKTOPPAGE_SCREENTITLE_MODE_SHORTHELP),
+                                                        End), //Cycle
+                                                End), //HGroup
+                                        End), //VGroup
 
-				Child, HVSpace,
-			End, //VGroup
+                                        Child, (IPTR)HVSpace,
+                                End), //VGroup
 
-			// Desktop -- Icons
-			Child, VGroup,
-				Child, HVSpace,
+                                // Desktop -- Icons
+                                Child, (IPTR)(VGroup,
+                                        Child, (IPTR)HVSpace,
 
-				Child, VGroup,
-					GroupFrame,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_DESKTOPPAGE_DESKTOP_REFRESH),
-					MUIA_Background, MUII_GroupBack,
+                                        Child, (IPTR)(VGroup,
+                                                GroupFrame,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_DESKTOPPAGE_DESKTOP_REFRESH),
+                                                MUIA_Background, MUII_GroupBack,
 
-					Child, HVSpace,
+                                                Child, (IPTR)HVSpace,
 
-					Child, HGroup,
-						Child, Label2((ULONG) GetLocString(MSGID_DESKTOPPAGE_DISK_ICON_RATE)),
-						Child, app->Obj[SLIDER_DISKREFRESH] = SliderObject,
-							MUIA_CycleChain, 1,
-							MUIA_Weight, 500,
-							MUIA_Numeric_Min, 1,
-							MUIA_Numeric_Max, 10,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 2,
-						End, //Slider
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DESKTOPPAGE_DISK_ICON_RATE_SHORTHELP),
-						Child, Label((ULONG) GetLocString(MSGID_DESKTOPPAGE_DISK_ICON_RATE_SECONDS)),
-					End, //HGroup
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)Label2(GetLocString(MSGID_DESKTOPPAGE_DISK_ICON_RATE)),
+                                                        Child, (IPTR)(app->Obj[SLIDER_DISKREFRESH] = SliderObject,
+                                                                MUIA_CycleChain, 1,
+                                                                MUIA_Weight, 500,
+                                                                MUIA_Numeric_Min, 1,
+                                                                MUIA_Numeric_Max, 10,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 2,
+                                                        End), //Slider
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DESKTOPPAGE_DISK_ICON_RATE_SHORTHELP),
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_DESKTOPPAGE_DISK_ICON_RATE_SECONDS)),
+                                                End), //HGroup
 
-					Child, HVSpace,
+                                                Child, (IPTR)HVSpace,
 
-				End, //VGroup
+                                        End), //VGroup
 
-				Child, HVSpace,
+                                        Child, (IPTR)HVSpace,
 
-				Child, VGroup,
-					GroupFrame,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_DESKTOPPAGE_ICONS_HIDDENDEVICES),
-					MUIA_Background, MUII_GroupBack,
+                                        Child, (IPTR)(VGroup,
+                                                GroupFrame,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_DESKTOPPAGE_ICONS_HIDDENDEVICES),
+                                                MUIA_Background, MUII_GroupBack,
 
-					// Child, HVSpace,
+                                                // Child, (IPTR)HVSpace,
 
-					Child, app->Obj[NLISTVIEW_HIDDENDEVICES] = NListviewObject,
-						MUIA_CycleChain, TRUE,
-	//										  MUIA_Listview_Input, TRUE,
-						MUIA_Listview_DragType, MUIV_Listview_DragType_None,
-						MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_None,
-						MUIA_NListview_Vert_ScrollBar, MUIV_NListview_VSB_FullAuto,
-						MUIA_NListview_NList, app->Obj[NLIST_HIDDENDEVICES] = NListObject,
-							MUIA_NList_DefaultObjectOnClick, TRUE,
-							MUIA_NList_DragSortable, FALSE,
-							MUIA_Background, MUII_ListBack,
-							InputListFrame,
-							MUIA_NList_DisplayHook2, (ULONG) &HiddenDevicesDisplayHook,
-							MUIA_NList_ConstructHook2, (ULONG) &HiddenDevicesConstructHook,
-							MUIA_NList_DestructHook2, (ULONG) &HiddenDevicesDestructHook,
-							MUIA_NList_CompareHook2, &HiddenDevicesCompareHook,
-							MUIA_NList_SortType, 0,
-							MUIA_NList_TitleMark, MUIV_NList_TitleMark_Down | 0,
-							MUIA_NList_Format, (ULONG) ",",
-							MUIA_NList_ShowDropMarks, FALSE,
-							MUIA_NList_AdjustHeight, TRUE,
-							End, //NListObject
-						End, //NListviewObject
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DESKTOPPAGE_HIDDENDEVICES_SHORTHELP),
-					End, //HGroup
+                                                Child, (IPTR)(app->Obj[NLISTVIEW_HIDDENDEVICES] = NListviewObject,
+                                                        MUIA_CycleChain, TRUE,
+                //										  MUIA_Listview_Input, TRUE,
+                                                        MUIA_Listview_DragType, MUIV_Listview_DragType_None,
+                                                        MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_None,
+                                                        MUIA_NListview_Vert_ScrollBar, MUIV_NListview_VSB_FullAuto,
+                                                        MUIA_NListview_NList, (IPTR)(app->Obj[NLIST_HIDDENDEVICES] = NListObject,
+                                                                MUIA_NList_DefaultObjectOnClick, TRUE,
+                                                                MUIA_NList_DragSortable, FALSE,
+                                                                MUIA_Background, MUII_ListBack,
+                                                                InputListFrame,
+                                                                MUIA_NList_DisplayHook2, (IPTR) &HiddenDevicesDisplayHook,
+                                                                MUIA_NList_ConstructHook2, (IPTR) &HiddenDevicesConstructHook,
+                                                                MUIA_NList_DestructHook2, (IPTR) &HiddenDevicesDestructHook,
+                                                                MUIA_NList_CompareHook2, (IPTR)&HiddenDevicesCompareHook,
+                                                                MUIA_NList_SortType, 0,
+                                                                MUIA_NList_TitleMark, MUIV_NList_TitleMark_Down | 0,
+                                                                MUIA_NList_Format, (IPTR) ",",
+                                                                MUIA_NList_ShowDropMarks, FALSE,
+                                                                MUIA_NList_AdjustHeight, TRUE,
+                                                        End), //NListObject
+                                                End), //NListviewObject
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DESKTOPPAGE_HIDDENDEVICES_SHORTHELP),
+                                        End), //VGroup
 
-					Child, HVSpace,
+                                        Child, (IPTR)HVSpace,
 
-				End, //VGroup
+                                End), //VGroup
 
-			// Desktop -- Layout
-			Child, VGroup,
-				Child, HVSpace,
+                                // Desktop -- Layout
+                                Child, (IPTR)(VGroup,
+                                        Child, (IPTR)HVSpace,
 
-				Child, VGroup,
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_DESKTOPPAGE_LAYOUTPREFERENCES),
+                                        Child, (IPTR)(VGroup,
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_DESKTOPPAGE_LAYOUTPREFERENCES),
 
-					Child, ColGroup(2),
-						Child, Label1((ULONG) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBDISK)),
-						Child, app->Obj[CYCLE_DESKTOP_LAYOUT_WBDISK] = CycleObject,
-							MUIA_Cycle_Entries, cIconLayoutModes,
-							MUIA_CycleChain, TRUE,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBDISK_SHORTHELP),
-						End, //Cycle
-						Child, Label1((ULONG) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBDRAWER)),
-						Child, app->Obj[CYCLE_DESKTOP_LAYOUT_WBDRAWER] = CycleObject,
-							MUIA_Cycle_Entries, cIconLayoutModes,
-							MUIA_CycleChain, TRUE,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBDRAWER_SHORTHELP),
-						End, //Cycle
-						Child, Label1((ULONG) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBTOOL)),
-						Child, app->Obj[CYCLE_DESKTOP_LAYOUT_WBTOOL] = CycleObject,
-							MUIA_Cycle_Entries, cIconLayoutModes,
-							MUIA_CycleChain, TRUE,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBTOOL_SHORTHELP),
-						End, //Cycle
-						Child, Label1((ULONG) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBPROJECT)),
-						Child, app->Obj[CYCLE_DESKTOP_LAYOUT_WBPROJECT] = CycleObject,
-							MUIA_Cycle_Entries, cIconLayoutModes,
-							MUIA_CycleChain, TRUE,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBPROJECT_SHORTHELP),
-						End, //Cycle
-						Child, Label1((ULONG) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBGARBAGE)),
-						Child, app->Obj[CYCLE_DESKTOP_LAYOUT_WBGARBAGE] = CycleObject,
-							MUIA_Cycle_Entries, cIconLayoutModes,
-							MUIA_CycleChain, TRUE,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBGARBAGE_SHORTHELP),
-						End, //Cycle
-						Child, Label1((ULONG) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBDEVICE)),
-						Child, app->Obj[CYCLE_DESKTOP_LAYOUT_WBDEVICE] = CycleObject,
-							MUIA_Cycle_Entries, cIconLayoutModes,
-							MUIA_CycleChain, TRUE,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBDEVICE_SHORTHELP),
-						End, //Cycle
-						Child, Label1((ULONG) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBKICK)),
-						Child, app->Obj[CYCLE_DESKTOP_LAYOUT_WBKICK] = CycleObject,
-							MUIA_Cycle_Entries, cIconLayoutModes,
-							MUIA_CycleChain, TRUE,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBKICK_SHORTHELP),
-						End, //Cycle
-						Child, Label1((ULONG) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBAPPICON)),
-						Child, app->Obj[CYCLE_DESKTOP_LAYOUT_WBAPPICON] = CycleObject,
-							MUIA_Cycle_Entries, cIconLayoutModes,
-							MUIA_CycleChain, TRUE,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBAPPICON_SHORTHELP),
-						End, //Cycle
-					End, //ColGroup
+                                                Child, (IPTR)(ColGroup(2),
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBDISK)),
+                                                        Child, (IPTR)(app->Obj[CYCLE_DESKTOP_LAYOUT_WBDISK] = CycleObject,
+                                                                MUIA_Cycle_Entries, (IPTR)cIconLayoutModes,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBDISK_SHORTHELP),
+                                                        End), //Cycle
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBDRAWER)),
+                                                        Child, (IPTR)(app->Obj[CYCLE_DESKTOP_LAYOUT_WBDRAWER] = CycleObject,
+                                                                MUIA_Cycle_Entries, (IPTR)cIconLayoutModes,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBDRAWER_SHORTHELP),
+                                                        End), //Cycle
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBTOOL)),
+                                                        Child, (IPTR)(app->Obj[CYCLE_DESKTOP_LAYOUT_WBTOOL] = CycleObject,
+                                                                MUIA_Cycle_Entries, (IPTR)cIconLayoutModes,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBTOOL_SHORTHELP),
+                                                        End), //Cycle
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBPROJECT)),
+                                                        Child, (IPTR)(app->Obj[CYCLE_DESKTOP_LAYOUT_WBPROJECT] = CycleObject,
+                                                                MUIA_Cycle_Entries, (IPTR)cIconLayoutModes,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBPROJECT_SHORTHELP),
+                                                        End), //Cycle
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBGARBAGE)),
+                                                        Child, (IPTR)(app->Obj[CYCLE_DESKTOP_LAYOUT_WBGARBAGE] = CycleObject,
+                                                                MUIA_Cycle_Entries, (IPTR)cIconLayoutModes,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBGARBAGE_SHORTHELP),
+                                                        End), //Cycle
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBDEVICE)),
+                                                        Child, (IPTR)(app->Obj[CYCLE_DESKTOP_LAYOUT_WBDEVICE] = CycleObject,
+                                                                MUIA_Cycle_Entries, (IPTR)cIconLayoutModes,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBDEVICE_SHORTHELP),
+                                                        End), //Cycle
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBKICK)),
+                                                        Child, (IPTR)(app->Obj[CYCLE_DESKTOP_LAYOUT_WBKICK] = CycleObject,
+                                                                MUIA_Cycle_Entries, (IPTR)cIconLayoutModes,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBKICK_SHORTHELP),
+                                                        End), //Cycle
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBAPPICON)),
+                                                        Child, (IPTR)(app->Obj[CYCLE_DESKTOP_LAYOUT_WBAPPICON] = CycleObject,
+                                                                MUIA_Cycle_Entries, (IPTR)cIconLayoutModes,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DESKTOPPAGE_LAYOUT_WBAPPICON_SHORTHELP),
+                                                        End), //Cycle
+                                                End), //ColGroup
 
-					Child, HVSpace,
+                                                Child, (IPTR)HVSpace,
 
-				End, //VGroup
-				Child, HVSpace,
-			End, //VGroup
+                                        End), //VGroup
+                                        Child, (IPTR)HVSpace,
+                                End), //VGroup
 
-			// Desktop -- misc
-			Child, VGroup,
-				Child, HVSpace,
+                                // Desktop -- misc
+                                Child, (IPTR)(VGroup,
+                                        Child, (IPTR)HVSpace,
 
-				Child, VGroup,
-					GroupFrame,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_DESKTOPPAGE_CONSOLENAME),
-					MUIA_Background, MUII_GroupBack,
+                                        Child, (IPTR)(VGroup,
+                                                GroupFrame,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_DESKTOPPAGE_CONSOLENAME),
+                                                MUIA_Background, MUII_GroupBack,
 
-					Child, HVSpace,
+                                                Child, (IPTR)HVSpace,
 
-					Child, app->Obj[STRING_CONSOLENAME] = BetterStringObject,
-						MUIA_CycleChain, TRUE,
-						StringFrame,
-						MUIA_String_Contents, "",
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DESKTOPPAGE_CONSOLENAME_SHORTHELP),
-					End, //BetterString
+                                                Child, (IPTR)(app->Obj[STRING_CONSOLENAME] = BetterStringObject,
+                                                        MUIA_CycleChain, TRUE,
+                                                        StringFrame,
+                                                        MUIA_String_Contents, (IPTR)"",
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DESKTOPPAGE_CONSOLENAME_SHORTHELP),
+                                                End), //BetterString
 
-					Child, HVSpace,
-				End, //VGroup
+                                                Child, (IPTR)HVSpace,
+                                        End), //VGroup
 
-				Child, VGroup,
-					GroupFrame,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_DESKTOPPAGE_MISCELLANEOUS),
-					MUIA_Background, MUII_GroupBack,
+                                        Child, (IPTR)(VGroup,
+                                                GroupFrame,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_DESKTOPPAGE_MISCELLANEOUS),
+                                                MUIA_Background, MUII_GroupBack,
 
-					Child, HVSpace,
+                                                Child, (IPTR)HVSpace,
 
-					Child, HGroup,
-						Child, HVSpace,
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)HVSpace,
 
-						Child, ColGroup(2),
-							Child, Label1((ULONG) GetLocString(MSGID_DESKTOPPAGE_ALLOW_CLOSEWB)),
-							Child, app->Obj[CLOSEWB] = CheckMarkHelp(TRUE, MSGID_DESKTOPPAGE_ALLOW_CLOSEWB_SHORTHELP),
+                                                        Child, (IPTR)(ColGroup(2),
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DESKTOPPAGE_ALLOW_CLOSEWB)),
+                                                                Child, (IPTR)(app->Obj[CLOSEWB] = CheckMarkHelp(TRUE, MSGID_DESKTOPPAGE_ALLOW_CLOSEWB_SHORTHELP)),
 
-							Child, Label1((ULONG) GetLocString(MSGID_DESKTOPPAGE_DROPSTART)),
-							Child, app->Obj[DROPSTART] = CheckMarkHelp(TRUE, MSGID_DESKTOPPAGE_DROPSTART_SHORTHELP),
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DESKTOPPAGE_DROPSTART)),
+                                                                Child, (IPTR)(app->Obj[DROPSTART] = CheckMarkHelp(TRUE, MSGID_DESKTOPPAGE_DROPSTART_SHORTHELP)),
 
-							Child, Label1((ULONG) GetLocString(MSGID_DESKTOPPAGE_AUTOLEAVEOUT)),
-							Child, app->Obj[CHECK_AUTOLEAVEOUT] = CheckMarkHelp(TRUE, MSGID_DESKTOPPAGE_AUTOLEAVEOUT_SHORTHELP),
-							End, //ColGroup
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DESKTOPPAGE_AUTOLEAVEOUT)),
+                                                                Child, (IPTR)(app->Obj[CHECK_AUTOLEAVEOUT] = CheckMarkHelp(TRUE, MSGID_DESKTOPPAGE_AUTOLEAVEOUT_SHORTHELP)),
+                                                        End), //ColGroup
 
-						Child, HVSpace,
-						End, //HGroup
+                                                        Child, (IPTR)HVSpace,
+                                                End), //HGroup
 
-					Child, HVSpace,
-					End, //VGroup
+                                                Child, (IPTR)HVSpace,
+                                        End), //VGroup
 
-				Child, VGroup,
-					GroupFrame,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_DESKTOPPAGE_LASSO),
-					MUIA_Background, MUII_GroupBack,
+                                        Child, (IPTR)(VGroup,
+                                                GroupFrame,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_DESKTOPPAGE_LASSO),
+                                                MUIA_Background, MUII_GroupBack,
 
-					Child, ColGroup(2),
-						Child, Label1((ULONG) GetLocString(MSGID_DESKTOPPAGE_SINGLEWINDOW_LASSO)),
-						Child, HGroup,
-							Child, app->Obj[SINGLE_WINDOW_LASSO_HOTKEY] = HotkeyStringObject,
-								StringFrame,
-								MUIA_String_Contents, "",
-								MUIA_HotkeyString_Snoop, FALSE,
-							End, //HotkeyString
-							Child, app->Obj[SINGLE_WINDOW_LASSO_HOTKEY_SCAN] = ScanButton,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DESKTOPPAGE_SINGLEWINDOW_LASSO_SHORTHELP),
-							End, //HGroup
-						End, //ColGroup
-					End, //VGroup
+                                                Child, (IPTR)(ColGroup(2),
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DESKTOPPAGE_SINGLEWINDOW_LASSO)),
+                                                        Child, (IPTR)(HGroup,
+                                                                Child, (IPTR)(app->Obj[SINGLE_WINDOW_LASSO_HOTKEY] = HotkeyStringObject,
+                                                                        StringFrame,
+                                                                        MUIA_String_Contents, (IPTR)"",
+                                                                        MUIA_HotkeyString_Snoop, FALSE,
+                                                                End), //HotkeyString
+                                                                Child, (IPTR)(app->Obj[SINGLE_WINDOW_LASSO_HOTKEY_SCAN] = ScanButton),
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DESKTOPPAGE_SINGLEWINDOW_LASSO_SHORTHELP),
+                                                        End), //HGroup
+                                                End), //ColGroup
+                                        End), //VGroup
 
-			Child, HVSpace,
-			End, //VGroup
-		End, //RegisterObject
-	End, //VGroup
-	&NewPrefsPages[3]);
+                                        Child, (IPTR)HVSpace,
+                                End), //VGroup
+                        End), //RegisterObject
+                End), //VGroup
+                &NewPrefsPages[3]);
 ///
 }
 
@@ -5386,869 +5386,866 @@ static Object *GenerateIconsPage(struct SCAModule *app)
 {
 ///
 	return CreatePrefsPage(app,
-		VGroup,
-		MUIA_Background, MUII_PageBack,
-
-		Child, RegisterObject,
-			MUIA_Register_Titles, cIconPages,
-			MUIA_CycleChain, TRUE,
-
-			// --- Icons-Attributes
-			Child, VGroup,
-
-				Child, HVSpace,
-
-				Child, VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_GENERAL),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
+		(APTR)(VGroup,
+                        MUIA_Background, MUII_PageBack,
+
+                        Child, (IPTR)(RegisterObject,
+                                MUIA_Register_Titles, (IPTR)cIconPages,
+                                MUIA_CycleChain, TRUE,
+
+                                // --- Icons-Attributes
+                                Child, (IPTR)(VGroup,
+
+                                        Child, (IPTR)HVSpace,
+
+                                        Child, (IPTR)(VGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_GENERAL),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
 
-					Child, HVSpace,
-
-					Child, HGroup,
-						Child, HVSpace,
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)HVSpace,
 
-						Child, ColGroup(2),
-							Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_MASKED_CLICKAREA)),
-							Child, app->Obj[CHECK_ICONMASK] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_MASKED_CLICKAREA_SHORTHELP),
-
-							Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_HILITE_UNDER_MOUSE)),
-							Child, app->Obj[CHECK_HILITEUNDERMOUSE] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_HILITE_UNDER_MOUSE_SHORTHELP),
-#if 0
-							Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_MULTISELECTION)),
-								Child, app->Obj[CHECK_MULTISELECT] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_MULTISELECTION_SHORTHELP),
-#endif
-						End, //ColGroup
-						Child, HVSpace,
-					End, //HGroup
-					Child, HVSpace,
-				End, //VGroup
+                                                        Child, (IPTR)(ColGroup(2),
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_MASKED_CLICKAREA)),
+                                                                Child, (IPTR)(app->Obj[CHECK_ICONMASK] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_MASKED_CLICKAREA_SHORTHELP)),
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_HILITE_UNDER_MOUSE)),
+                                                                Child, (IPTR)(app->Obj[CHECK_HILITEUNDERMOUSE] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_HILITE_UNDER_MOUSE_SHORTHELP)),
+        #if 0
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_MULTISELECTION)),
+                                                                        Child, (IPTR)(app->Obj[CHECK_MULTISELECT] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_MULTISELECTION_SHORTHELP)),
+        #endif
+                                                        End), //ColGroup
+                                                        Child, (IPTR)HVSpace,
+                                                End), //HGroup
+                                                Child, (IPTR)HVSpace,
+                                        End), //VGroup
 
-				Child, VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_NEWICONS),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
+                                        Child, (IPTR)(VGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_NEWICONS),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
 
-					Child, HVSpace,
+                                                Child, (IPTR)HVSpace,
 
-					Child, HGroup,
+                                                Child, (IPTR)(HGroup,
 
-					Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_NEWICONS_REMAP_PRECISION)),
-						Child, app->Obj[SLIDER_ICONRMAP_PRECISION] = PrecisionSliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 1,
-							MUIA_Numeric_Max, 4,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 1,
-							End, //Slider
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_NEWICONS_REMAP_PRECISION_SHORTHELP),
-					End, //HGroup
-
-					Child, HGroup,
-						Child, HVSpace,
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_NEWICONS_TRANSPARENTBG)),
-						Child, app->Obj[CHECK_NIMASK] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_NEWICONS_TRANSPARENTBG_SHORTHELP),
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_NEWICONS_TRANSPARENTBG_SHORTHELP),
-						Child, HVSpace,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_NEWICONS_REMAP_PRECISION)),
+                                                        Child, (IPTR)(app->Obj[SLIDER_ICONRMAP_PRECISION] = PrecisionSliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 1,
+                                                                MUIA_Numeric_Max, 4,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 1,
+                                                        End), //Slider
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_NEWICONS_REMAP_PRECISION_SHORTHELP),
+                                                End), //HGroup
+
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)HVSpace,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_NEWICONS_TRANSPARENTBG)),
+                                                        Child, (IPTR)(app->Obj[CHECK_NIMASK] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_NEWICONS_TRANSPARENTBG_SHORTHELP)),
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_NEWICONS_TRANSPARENTBG_SHORTHELP),
+                                                        Child, (IPTR)HVSpace,
 
-					End, //HGroup
-
-					Child, HVSpace,
-
-				End, //VGroup
-
-				Child, VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_DEFICONS),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
+                                                End), //HGroup
+
+                                                Child, (IPTR)HVSpace,
+
+                                        End), //VGroup
+
+                                        Child, (IPTR)(VGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_DEFICONS),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
 
-					Child, HVSpace,
-
-					Child, HGroup,
-						Child, HVSpace,
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_DEFICONS_LOADFIRST)),
-						Child, app->Obj[CHECK_DEFFIRST] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_DEFICONS_LOADFIRST_SHORTHELP),
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_DEFICONS_SAVEABLE)),
-						Child, app->Obj[CHECK_ICONSSAVE] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_DEFICONS_SAVEABLE_SHORTHELP),
-						Child, HVSpace,
-					End, //HGroup
-
-					Child, HVSpace,
-
-					Child, HGroup,
-						MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_ATTRIBUTES_TRANSPARENCY_DEFICONS),
-						GroupFrame,
-						MUIA_Background, MUII_GroupBack,
-
-						Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT)),
-
-						Child, app->Obj[SLIDER_ICONTRANSPARENCY_DEFICONS] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 100,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 50,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_ATTRIBUTES_TRANSPARENCY_DEFICONS_SHORTHELP),
-						End, //Slider
-
-						Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE)),
-					End, //HGroup
-
-					Child, HVSpace,
-
-				End, //VGroup
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)HVSpace,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_DEFICONS_LOADFIRST)),
+                                                        Child, (IPTR)(app->Obj[CHECK_DEFFIRST] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_DEFICONS_LOADFIRST_SHORTHELP)),
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_DEFICONS_SAVEABLE)),
+                                                        Child, (IPTR)(app->Obj[CHECK_ICONSSAVE] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_DEFICONS_SAVEABLE_SHORTHELP)),
+                                                        Child, (IPTR)HVSpace,
+                                                End), //HGroup
+
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(HGroup,
+                                                        MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_ATTRIBUTES_TRANSPARENCY_DEFICONS),
+                                                        GroupFrame,
+                                                        MUIA_Background, MUII_GroupBack,
+
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT)),
+
+                                                        Child, (IPTR)(app->Obj[SLIDER_ICONTRANSPARENCY_DEFICONS] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 100,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 50,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_ATTRIBUTES_TRANSPARENCY_DEFICONS_SHORTHELP),
+                                                        End), //Slider
+
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE)),
+                                                End), //HGroup
+
+                                                Child, (IPTR)HVSpace,
+
+                                        End), //VGroup
 
-				Child, HVSpace,
+                                        Child, (IPTR)HVSpace,
 
-			End, //VGroup
+                                End), //VGroup
 
-			// --- Icons-Sizes
-			Child, VGroup,
+                                // --- Icons-Sizes
+                                Child, (IPTR)(VGroup,
 
-				Child, HVSpace,
+                                        Child, (IPTR)HVSpace,
 
-				Child, VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_ICONSCALING),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, HVSpace,
-
-					Child, HGroup,
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_SCALING_NOMINALSIZE_SHORTHELP),
-
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_SCALING_NOMINALSIZE)),
-
-						Child, app->Obj[SLIDER_ICONSPAGE_NOMINALSIZE] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, IDTA_ScalePercentage_MIN,
-							MUIA_Numeric_Max, IDTA_ScalePercentage_MAX,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 100,
-						End, //Slider
-
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_SCALING_PERCENT)),
-					End, //HGroup
-
-					Child, HVSpace,
-
-					Child, ColGroup(5),
-						Child, HVSpace,
-
-						Child, HGroup,
-							Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_SCALING_MINSIZE)),
-							Child, app->Obj[CYCLE_ICONMINSIZE] = CycleObject,
-								MUIA_CycleChain, TRUE,
-								MUIA_Cycle_Entries, cIconSizesMin,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_SCALING_MINSIZE_SHORTHELP),
-								End, //Cycle
-							End, //HGroup
-
-						Child, HVSpace,
-
-						Child, HGroup,
-							Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_SCALING_MAXSIZE)),
-							Child, app->Obj[CYCLE_ICONMAXSIZE] = CycleObject,
-								MUIA_CycleChain, TRUE,
-								MUIA_Cycle_Entries, cIconSizesMax,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_SCALING_MAXSIZE_SHORTHELP),
-								End, //Cycle
-							End, //HGroup
-
-						Child, HVSpace,
-
-						Child, HVSpace,
-
-						Child, app->Obj[GOUP_ICONSIZE_MIN_SAMPLE] = PageGroup,
-							MUIA_Frame, MUIV_Frame_Gauge,
-							Child, HVSpace, // empty
-							Child,  app->Obj[IMAGE_ICON_SAMPLE_16] = CreatePrefsImage((void *) IMAGE_ICON16),
-							Child,  app->Obj[IMAGE_ICON_SAMPLE_24] = CreatePrefsImage((void *) IMAGE_ICON24),
-							Child,  app->Obj[IMAGE_ICON_SAMPLE_32] = CreatePrefsImage((void *) IMAGE_ICON32),
-							Child,  app->Obj[IMAGE_ICON_SAMPLE_48] = CreatePrefsImage((void *) IMAGE_ICON48),
-							Child,  app->Obj[IMAGE_ICON_SAMPLE_64] = CreatePrefsImage((void *) IMAGE_ICON64),
-							Child,  app->Obj[IMAGE_ICON_SAMPLE_96] = CreatePrefsImage((void *) IMAGE_ICON96),
-							Child,  app->Obj[IMAGE_ICON_SAMPLE_128] = CreatePrefsImage((void *) IMAGE_ICON128),
-							End, //PageGroup
-
-						Child, HVSpace,
-
-						Child, app->Obj[GOUP_ICONSIZE_MAX_SAMPLE] = PageGroup,
-							MUIA_Frame, MUIV_Frame_Gauge,
-							Child, HVSpace, // empty
-							Child,  app->Obj[IMAGE_ICON_SAMPLE_16] = CreatePrefsImage((void *) IMAGE_ICON16),
-							Child,  app->Obj[IMAGE_ICON_SAMPLE_24] = CreatePrefsImage((void *) IMAGE_ICON24),
-							Child,  app->Obj[IMAGE_ICON_SAMPLE_32] = CreatePrefsImage((void *) IMAGE_ICON32),
-							Child,  app->Obj[IMAGE_ICON_SAMPLE_48] = CreatePrefsImage((void *) IMAGE_ICON48),
-							Child,  app->Obj[IMAGE_ICON_SAMPLE_64] = CreatePrefsImage((void *) IMAGE_ICON64),
-							Child,  app->Obj[IMAGE_ICON_SAMPLE_96] = CreatePrefsImage((void *) IMAGE_ICON96),
-							Child,  app->Obj[IMAGE_ICON_SAMPLE_128] = CreatePrefsImage((void *) IMAGE_ICON128),
-							End, //PageGroup
-
-						Child, HVSpace,
-					End, //ColGroup
-
-					Child, HVSpace,
-				End, //VGroup
-				Child, HVSpace,
-
-			End, //VGroup
-
-			// --- Icons-Labels
-			Child, VGroup,
-
-				Child, HVSpace,
-
-				Child, VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_LABELS),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, HVSpace,
-
-					Child, HGroup,
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_LABELS_TEXT)),
-						Child, app->Obj[CYCLE_LABELSTYLE] = CycleObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Cycle_Entries, cIconLabelStyles,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_LABELS_TEXT_SHORTHELP),
-						End, //Cycle
-					End, //HGroup
-
-					Child, HGroup,
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_LABELS_TEXTSPACE)),
-						Child, app->Obj[SLIDER_LABELSPACE] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 10,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 0,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_LABELS_TEXTSPACE_SHORTHELP),
-						End, //Slider
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_LABELS_TEXTSPACE_PIXELS)),
-					End, //HGroup
-
-					Child, HGroup,
-						Child, HVSpace,
-						Child, ColGroup(2),
-							Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_LABELS_SPLIT)),
-							Child, app->Obj[CHECK_MULTILINES] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_LABELS_SPLIT_SHORTHELP),
-
-							Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_LABELS_UNDERLINE_LINKS)),
-							Child, app->Obj[SOFTICONSLINK] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_LABELS_UNDERLINE_LINKS_SHORTHELP),
-
-						End, //ColGroup
-						Child, HVSpace,
-					End, //HGroup
-
-					Child, HVSpace,
-				End, //VGroup
-
-			Child, HVSpace,
-
-			Child, VGroup,
-				Child, HVSpace,
-
-				Child, VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_SEL_ICONTEXT_RECT_GROUP),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, HVSpace,
-
-					Child, HGroup,
-						Child, HVSpace,
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_SEL_ICONTEXT_RECT)),
-						Child, app->Obj[CHECK_SEL_ICONTEXT_RECTANGLE] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_SEL_ICONTEXT_RECT_SHORTHELP),
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_SEL_ICONTEXT_RECT_SHORTHELP),
-						Child, HVSpace,
-
-					End, //HGroup
-
-					Child, HVSpace,
-
-					Child, ColGroup(2),
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_SEL_ICONTEXT_XBORDER)),
-						Child, app->Obj[SLIDER_SEL_ICONTEXT_RECT_BORDERX] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 20,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 4,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_SEL_ICONTEXT_XBORDER_SHORTHELP),
-						End, //Cycle
-
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_SEL_ICONTEXT_YBORDER)),
-						Child, app->Obj[SLIDER_SEL_ICONTEXT_RECT_BORDERY] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 20,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 2,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_SEL_ICONTEXT_YBORDER_SHORTHELP),
-						End, //Cycle
-
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_SEL_ICONTEXT_RADIUS)),
-						Child, app->Obj[SLIDER_SEL_ICONTEXT_RECT_RADIUS] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 1,
-							MUIA_Numeric_Max, 20,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 5,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_SEL_ICONTEXT_RADIUS_SHORTHELP),
-						End, //Cycle
-					End, //ColGroup
-
-				Child, HVSpace,
-				End, //VGroup
-
-			End, //VGroup
-
-			Child, HVSpace,
-
-			Child, VGroup,
-				MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_LABELS_FONT),
-				GroupFrame,
-				MUIA_Background, MUII_GroupBack,
-
-				Child, HVSpace,
-
-				Child, HGroup,
-					Child, HVSpace,
-					Child, Label1((ULONG) GetLocString(MSGID_TTFONTSPAGE_ICONFONT_ENABLE)),
-					Child, app->Obj[CHECK_ICONSPAGE_TTICONFONT_ENABLE] = CheckMarkHelp(FALSE, MSGID_FONTSPAGE_TTFICONFONT_ENABLE_SHORTHELP),
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_FONTSPAGE_TTFICONFONT_ENABLE_SHORTHELP),
-					End, //HGroup
-
-				Child, HVSpace,
-
-				Child, app->Obj[GROUP_ICONSPAGE_ICONFONT] = VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_GROUP_ICONFONT),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-					Child, app->Obj[GROUP_ICONFONT_NOTICE] = HGroup,
-						Child, FloattextObject,
-							TextFrame,
-							MUIA_Floattext_Justify, FALSE,
-							MUIA_Floattext_Text, (ULONG) GetLocString(MSGID_ICONSPAGE_LABELS_FONT_NOTICE),
-							End, //Floattext
-						Child, app->Obj[POP_FONTPREFS] = ImageObject,
-							MUIA_InputMode, MUIV_InputMode_RelVerify,
-							MUIA_Image_Spec, "6:18", //MUII_PopUp,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_LABELS_FONT_SHORTHELP),
-							End, //Image
-						End, //HGroup
-
-					Child, app->Obj[GROUP_ICONFONT_SELECT] = HGroup,
-						Child, app->Obj[POP_ICONFONT] = PopaslObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Popstring_Button, PopButton(MUII_PopUp),
-							MUIA_Popstring_String, BetterStringObject,
-								StringFrame,
-								MUIA_String_Contents, "Xen/8",
-								End, //BetterString
-							ASLFR_TitleText, (ULONG) GetLocString(MSGID_ICONSPAGE_ICONFONT_ASLTITLE),
-							MUIA_Popasl_Type , ASL_FontRequest,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_LABELS_ICONFONT_SHORTHELP),
-							End, //Pop
-						End, //HGroup
-
-					Child, app->Obj[MCC_ICONFONT_SAMPLE] = FontSampleObject,
-						TextFrame,
-						MUIA_Background, MUII_TextBack,
-						MUIA_FontSample_DemoString, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_LABELS_FONT_SAMPLETEXT_SHORTHELP),
-						End, //FontSampleMCCObject
-					End, //VGroup
-
-				Child, app->Obj[GROUP_ICONSPAGE_TTICONFONT] = HGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_TTFONTSPAGE_ICONFONT),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-					MUIA_Disabled, TRUE,
-
-					Child, VGroup,
-						Child, app->Obj[POPSTRING_ICONSPAGE_TTICONFONT] = PopstringObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Popstring_Button, PopButton(MUII_PopUp),
-							MUIA_Popstring_String, BetterStringObject,
-								StringFrame,
-								MUIA_String_Contents, " ",
-								End, //BetterString
-							MUIA_Popstring_OpenHook, &IconTtfPopOpenHook,
-							MUIA_Popstring_CloseHook, &IconTtfPopCloseHook,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TTFONTSPAGE_ICONFONT_SHORTHELP),
-							End, //PopstringObject
-
-						Child, app->Obj[MCC_ICONSPAGE_TTICONFONT_SAMPLE] = FontSampleObject,
-							TextFrame,
-							MUIA_Background, MUII_TextBack,
-							MUIA_FontSample_DemoString, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TTFONTSPAGE_ICONFONT_SAMPLETEXT_SHORTHELP),
-							End, //FontSampleMCCObject
-						End, //VGroup
-					End, //HGroup
-				End, //VGroup
-
-
-			Child, HVSpace,
-
-			End, //VGroup
-
-			// --- Icons-Borders
-			Child, VGroup,
-				Child, VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_ICONFRAME),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, ColGroup(2),
-						Child, app->Obj[FRAME_ICONNORMAL] = McpFrameObject,
-							MUIA_InputMode, MUIV_InputMode_RelVerify,
-							ButtonFrame,
-							MUIA_InnerBottom, 4,
-							MUIA_InnerLeft, 4,
-							MUIA_InnerRight, 4,
-							MUIA_InnerTop, 4,
-							MUIA_CycleChain, 1,
-							MUIA_Background, MUII_ButtonBack,
-							MUIA_CycleChain, 1,
-							MUIA_MCPFrame_FrameType, MCP_FRAME_BUTTON,
-							MUIA_Draggable, FALSE,
-							MUIA_Dropable, TRUE,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_ICONFRAME_NORMAL_SHORTHELP),
-						End,
-						Child, app->Obj[FRAME_ICONSELECTED] = McpFrameObject,
-							MUIA_InputMode, MUIV_InputMode_RelVerify,
-							ButtonFrame,
-							MUIA_InnerBottom, 4,
-							MUIA_InnerLeft, 4,
-							MUIA_InnerRight, 4,
-							MUIA_InnerTop, 4,
-							MUIA_CycleChain, 1,
-							MUIA_Background, MUII_ButtonBack,
-							MUIA_MCPFrame_FrameType, MCP_FRAME_BUTTON | MCP_FRAME_RECESSED,
-							MUIA_Draggable, FALSE,
-							MUIA_Dropable, TRUE,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_ICONFRAME_SELECTED_SHORTHELP),
-						End,
-
-						Child, CLabel((ULONG) GetLocString(MSGID_ICONSPAGE_ICONFRAME_NORMAL)),
-						Child, CLabel((ULONG) GetLocString(MSGID_ICONSPAGE_ICONFRAME_SELECTED)),
-					End, //ColGroup
-					Child, ColGroup(4),
-						Child, Label((ULONG) GetLocString(MSGID_ICONSPAGE_ICONBORDER_LEFT)),
-						Child, app->Obj[ICONLEFT] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 10,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 4,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_ICONBORDER_LEFT_SHORTHELP),
-							End, // Slider
-						Child, Label((ULONG) GetLocString(MSGID_ICONSPAGE_ICONBORDER_TOP)),
-						Child, app->Obj[ICONTOP] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 10,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 3,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_ICONBORDER_TOP_SHORTHELP),
-							End, //Slider
-						Child, Label((ULONG) GetLocString(MSGID_ICONSPAGE_ICONBORDER_RIGHT)),
-						Child, app->Obj[ICONRIGHT] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 10,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 4,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_ICONBORDER_RIGHT_SHORTHELP),
-							End, //Slider
-						Child, Label((ULONG) GetLocString(MSGID_ICONSPAGE_ICONBORDER_BOTTOM)),
-						Child, app->Obj[ICONBOTTOM] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 10,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 3,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_ICONBORDER_BOTTOM_SHORTHELP),
-							End, //Slider
-						End, //ColGroup
-					End, //VGroup
-
-				Child, VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_ICONFRAME),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, ColGroup(2),
-						Child, app->Obj[FRAME_ICON_THUMBNAIL_NORMAL] = McpFrameObject,
-							MUIA_InputMode, MUIV_InputMode_RelVerify,
-							ButtonFrame,
-							MUIA_InnerBottom, 4,
-							MUIA_InnerLeft, 4,
-							MUIA_InnerRight, 4,
-							MUIA_InnerTop, 4,
-							MUIA_CycleChain, 1,
-							MUIA_Background, MUII_ButtonBack,
-							MUIA_CycleChain, 1,
-							MUIA_MCPFrame_FrameType, MCP_FRAME_BUTTON,
-							MUIA_Draggable, FALSE,
-							MUIA_Dropable, TRUE,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_ICONFRAME_NORMAL_SHORTHELP),
-							End, //McpFrameClass
-
-						Child, app->Obj[FRAME_ICON_THUMBNAIL_SELECTED] = McpFrameObject,
-							MUIA_InputMode, MUIV_InputMode_RelVerify,
-							ButtonFrame,
-							MUIA_InnerBottom, 4,
-							MUIA_InnerLeft, 4,
-							MUIA_InnerRight, 4,
-							MUIA_InnerTop, 4,
-							MUIA_CycleChain, 1,
-							MUIA_Background, MUII_ButtonBack,
-							MUIA_CycleChain, 1,
-							MUIA_MCPFrame_FrameType, MCP_FRAME_BUTTON | MCP_FRAME_RECESSED,
-							MUIA_Draggable, FALSE,
-							MUIA_Dropable, TRUE,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_ICONFRAME_SELECTED_SHORTHELP),
-							End, //McpFrameClass
-
-						Child, CLabel((ULONG) GetLocString(MSGID_ICONSPAGE_ICONFRAME_NORMAL)),
-						Child, CLabel((ULONG) GetLocString(MSGID_ICONSPAGE_ICONFRAME_SELECTED)),
-
-						End, //ColGroup
-					Child, ColGroup(4),
-						Child, Label((ULONG) GetLocString(MSGID_ICONSPAGE_ICONBORDER_LEFT)),
-						Child, app->Obj[THUMBNAILS_LEFTBORDER] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 10,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 4,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_ICONBORDER_LEFT_SHORTHELP),
-							End, // Slider
-						Child, Label((ULONG) GetLocString(MSGID_ICONSPAGE_ICONBORDER_TOP)),
-						Child, app->Obj[THUMBNAILS_TOPBORDER] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 10,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 3,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_ICONBORDER_TOP_SHORTHELP),
-							End, //Slider
-						Child, Label((ULONG) GetLocString(MSGID_ICONSPAGE_ICONBORDER_RIGHT)),
-						Child, app->Obj[THUMBNAILS_RIGHTBORDER] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 10,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 4,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_ICONBORDER_RIGHT_SHORTHELP),
-							End, //Slider
-						Child, Label((ULONG) GetLocString(MSGID_ICONSPAGE_ICONBORDER_BOTTOM)),
-						Child, app->Obj[THUMBNAILS_BOTTOMBORDER] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 10,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 3,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_ICONBORDER_BOTTOM_SHORTHELP),
-							End, //Slider
-						End, //ColGroup
-					End, //VGroup
-
-			End, //VGroup
-
-
-			// --- Icons--Tooltips
-			Child, VGroup,
-
-				Child, HVSpace,
-
-				Child, VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_GENERAL),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, HVSpace,
-
-					Child, HGroup,
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_SHOW)),
-						Child, app->Obj[CHECK_TOOLTIPS] = CheckMarkHelp(TRUE, MSGID_ICONSPAGE_TOOLTIPS_SHOW_SHORTHELP),
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_SHOW_SHORTHELP),
-						Child, HVSpace,
-					End, //HGroup
-
-					Child, HVSpace,
-
-				End, //VGroup
-
-				Child, app->Obj[TOOLTIP_SETTINGSGROUP] = VGroup,
-
-					Child, VGroup,
-						MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_SETTINGS),
-						GroupFrame,
-						MUIA_Background, MUII_GroupBack,
-
-						Child, HVSpace,
-
-						Child, HGroup,
-							Child, Label2((ULONG) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_DELAY)),
-							Child, app->Obj[SLIDER_TIPDELAY] = SliderObject,
-									MUIA_CycleChain, TRUE,
-									MUIA_Numeric_Min, 1,
-									MUIA_Numeric_Max, 10,
-									MUIA_Slider_Horiz, TRUE,
-									MUIA_Numeric_Value, 5,
-							End, //Slider
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_DELAY_SHORTHELP),
-							Child, Label((ULONG) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_DELAY_SECONDS)),
-						End, //HGroup
-
-						Child, HGroup,
-/* currently unused */					MUIA_ShowMe, FALSE,
-							Child, Label2((ULONG) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_FONT)),
-							Child, app->Obj[STRING_TOOLTIPFONT] = PopaslObject,
-								MUIA_CycleChain, TRUE,
-								MUIA_Popasl_Type, ASL_FontRequest,
-								MUIA_Popstring_Button, PopButton(MUII_PopUp),
-								MUIA_Popstring_String, BetterStringObject,
-									StringFrame,
-									MUIA_String_Contents, "Xen/8",
-								End, //BetterString
-
-								ASLFO_TitleText, (ULONG) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_FONT_ASLTITLE),
-								ASLFO_FixedWidthOnly, FALSE,
-							End, //Pop
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_FONT_SHORTHELP),
-						End, //HGroup
-
-						Child, HVSpace,
-
-						Child, HGroup,
-							MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_TRANSPARENCY),
-							GroupFrame,
-							MUIA_Background, MUII_GroupBack,
-
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT)),
-
-							Child, app->Obj[SLIDER_ICONTOOLTIPS_TRANSPARENCY] = SliderObject,
-								MUIA_CycleChain, TRUE,
-								MUIA_Numeric_Min, 0,
-								MUIA_Numeric_Max, 100,
-								MUIA_Slider_Horiz, TRUE,
-								MUIA_Numeric_Value, 50,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_TRANSPARENCY_SHORTHELP),
-							End, //Slider
-
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE)),
-						End, //HGroup
-						Child, HVSpace,
-
-					End, //VGroup
-
-					Child, HGroup,
-/* currently unused */				MUIA_ShowMe, FALSE,
-						MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_DISPLAYFIELDS),
-						GroupFrame,
-						MUIA_Background, MUII_GroupBack,
-
-						Child, VGroup,
-							Child, CLabel2((ULONG) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_AVAILABLEFIELDS)),
-							Child, NListviewObject,
-/* currently unused */						MUIA_Disabled, TRUE,
-								MUIA_NListview_NList, app->Obj[STORAGE_TIPS] = NListObject,
-									InputListFrame,
-									MUIA_Background, MUII_ListBack,
-									//MUIA_List_Format, "",
-									MUIA_NList_ShowDropMarks, TRUE,
-									MUIA_NList_AdjustWidth, FALSE,
-									MUIA_NList_AutoVisible, TRUE,
-									MUIA_NList_DragSortable, FALSE,
-								End, //List
-								MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_Shifted,
-								MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_AVAILABLEFIELDS_SHORTHELP),
-							End, //Listview
-						End, //VGroup
-
-						Child, VGroup,
-							Child, CLabel2((ULONG) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_FIELDSINUSE)),
-							Child, NListviewObject,
-/* currently unused */						MUIA_Disabled, TRUE,
-								MUIA_NListview_NList, app->Obj[USED_TIPS] = NListObject,
-									InputListFrame,
-									MUIA_Background, MUII_ListBack,
-									//MUIA_List_Format, "",
-									MUIA_NList_ShowDropMarks, TRUE,
-									MUIA_NList_AdjustWidth, FALSE,
-									MUIA_NList_AutoVisible, TRUE,
-									MUIA_NList_DragSortable, TRUE,
-								End, //List
-								MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_Shifted,
-								MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_FIELDSINUSE_SHORTHELP),
-							End, //Listview
-						End, //VGroup
-					End, //HGroup
-
-				End, //VGroup
-
-				Child, HVSpace,
-
-				End, //VGroup
-
-			// --- Icons-Thumbnails
-			Child, VGroup,
-
-				Child, HVSpace,
-
-				Child, VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_SETTINGS),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, HGroup,
-						Child, HVSpace,
-
-						Child, ColGroup(2),
-							Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_SHOWTHUMBNAILS)),
-							Child, app->Obj[CYCLE_SHOWTHUMBNAILS] = CycleObject,
-								MUIA_CycleChain, TRUE,
-								MUIA_Cycle_Entries, cShowThumbnails,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_SHOWTHUMBNAILS_SHORTHELP),
-							End, //Cycle
-
-							Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_SIZE)),
-							Child, app->Obj[CYCLE_THUMBNAILSIZE] = CycleObject,
-								MUIA_CycleChain, TRUE,
-								MUIA_Cycle_Entries, cThumbnailSizes,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_SIZE_SHORTHELP),
-							End, //Cycle
-
-							Child, HVSpace,	// always 2 HVSpace due to ColGroup(2)
-							Child, HVSpace,
-
-							Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_SHOWTHUMBNAILS_AS_DEFAULT)),
-							Child, app->Obj[CHECK_SHOWTHUMBNAILS_AS_DEFAULT] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_SHOWTHUMBNAILS_AS_DEFAULT_SHORTHELP),
-
-							Child, HVSpace,	// always 2 HVSpace due to ColGroup(2)
-							Child, HVSpace,
-
-							Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_SQUARE)),
-							Child, app->Obj[CHECK_THUMBNAILS_SQUARE] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_THUMBNAILS_SQUARE_SHORTHELP),
-
-							Child, HVSpace,	// always 2 HVSpace due to ColGroup(2)
-							Child, HVSpace,
-
-							Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_BACKFILL)),
-							Child, app->Obj[CHECK_THUMBNAILS_BACKFILL] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_THUMBNAILS_BACKFILL_SHORTHELP),
-
-							End, // ColGroup
-
-						Child, HVSpace,
-
-						Child, VGroup,
-							Child, app->Obj[GROUP_THUMBNAILS_ICON_SAMPLE] = PageGroup,
-								MUIA_Frame, MUIV_Frame_Gauge,
-								Child,  app->Obj[IMAGE_ICON_SAMPLE_16] = CreatePrefsImage((void *) IMAGE_ICON16),
-								Child,  app->Obj[IMAGE_ICON_SAMPLE_24] = CreatePrefsImage((void *) IMAGE_ICON24),
-								Child,  app->Obj[IMAGE_ICON_SAMPLE_32] = CreatePrefsImage((void *) IMAGE_ICON32),
-								Child,  app->Obj[IMAGE_ICON_SAMPLE_48] = CreatePrefsImage((void *) IMAGE_ICON48),
-								Child,  app->Obj[IMAGE_ICON_SAMPLE_64] = CreatePrefsImage((void *) IMAGE_ICON64),
-								Child,  app->Obj[IMAGE_ICON_SAMPLE_96] = CreatePrefsImage((void *) IMAGE_ICON96),
-								Child,  app->Obj[IMAGE_ICON_SAMPLE_128] = CreatePrefsImage((void *) IMAGE_ICON128),
-								End, //PageGroup
-							End, //VGroup
-
-						Child, HVSpace,
-
-						End, //HGroup
-
-					Child, HGroup,
-						MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_QUALITY),
-						GroupFrame,
-						MUIA_Background, MUII_GroupBack,
-
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_QUALITY_WORST)),
-
-						Child, app->Obj[SLIDER_THUMBNAILS_QUALITY] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, SCALOSPREVIEWA_Quality_Min,
-							MUIA_Numeric_Max, SCALOSPREVIEWA_Quality_Max,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, SCALOSPREVIEWA_Quality_Max,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_QUALITY_SHORTHELP),
-						End, //Slider
-
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_QUALITY_BEST)),
-					End, //HGroup
-
-					Child, HVSpace,
-					End, //HGroup
-
-				Child, app->Obj[GROUP_THUMBNAIL_BACKFILL_TRANSPARENCY] = HGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAIL_BACKFILL_TRANSPARENCY),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT)),
-
-					Child, app->Obj[SLIDER_ICONTRANSPARENCY_THUMBNAILBACK] = SliderObject,
-						MUIA_CycleChain, TRUE,
-						MUIA_Numeric_Min, 0,
-						MUIA_Numeric_Max, 100,
-						MUIA_Slider_Horiz, TRUE,
-						MUIA_Numeric_Value, 50,
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAIL_BACKFILL_TRANSPARENCY_SHORTHELP),
-						End, //Slider
-
-					Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE)),
-					End, //HGroup
-
-				Child, HGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_CACHE),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, HVSpace,
-
-					Child, ColGroup(2),
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_MAXAGE)),
-						Child, app->Obj[SLIDER_THUMBNAILS_MAXAGE] = ThumbnailLifetimeSliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 365,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 14,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_MAXAGE_SHORTHELP),
-						End, //ThumbnailLifetimeSliderClass
-
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_MINSIZE_LIMIT)),
-						Child, app->Obj[SLIDER_THUMBNAILS_MINSIZE_LIMIT] = NumericbuttonObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 8,
-							MUIA_Numeric_Max, 256,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 128,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_MINSIZE_LIMIT_SHORTHELP),
-						End, //Slider
-
-						End, //ColGroup
-
-					Child, HVSpace,
-					End, // HGroup
-
-				Child, HVSpace,
-
-				End, //VGroup
-
-
-		End, //Register
-
-	End, //VGroup
-	&NewPrefsPages[4]);
+                                        Child, (IPTR)(VGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_ICONSCALING),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(HGroup,
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_SCALING_NOMINALSIZE_SHORTHELP),
+
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_SCALING_NOMINALSIZE)),
+
+                                                        Child, (IPTR)(app->Obj[SLIDER_ICONSPAGE_NOMINALSIZE] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, IDTA_ScalePercentage_MIN,
+                                                                MUIA_Numeric_Max, IDTA_ScalePercentage_MAX,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 100,
+                                                        End), //Slider
+
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_SCALING_PERCENT)),
+                                                End), //HGroup
+
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(ColGroup(5),
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)(HGroup,
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_SCALING_MINSIZE)),
+                                                                Child, (IPTR)(app->Obj[CYCLE_ICONMINSIZE] = CycleObject,
+                                                                        MUIA_CycleChain, TRUE,
+                                                                        MUIA_Cycle_Entries, (IPTR)cIconSizesMin,
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_SCALING_MINSIZE_SHORTHELP),
+                                                                End), //Cycle
+                                                        End), //HGroup
+
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)(HGroup,
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_SCALING_MAXSIZE)),
+                                                                Child, (IPTR)(app->Obj[CYCLE_ICONMAXSIZE] = CycleObject,
+                                                                        MUIA_CycleChain, TRUE,
+                                                                        MUIA_Cycle_Entries, (IPTR)cIconSizesMax,
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_SCALING_MAXSIZE_SHORTHELP),
+                                                                End), //Cycle
+                                                        End), //HGroup
+
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)(app->Obj[GOUP_ICONSIZE_MIN_SAMPLE] = PageGroup,
+                                                                MUIA_Frame, MUIV_Frame_Gauge,
+                                                                Child, (IPTR)HVSpace, // empty
+                                                                Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_16] = CreatePrefsImage((void *) IMAGE_ICON16)),
+                                                                Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_24] = CreatePrefsImage((void *) IMAGE_ICON24)),
+                                                                Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_32] = CreatePrefsImage((void *) IMAGE_ICON32)),
+                                                                Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_48] = CreatePrefsImage((void *) IMAGE_ICON48)),
+                                                                Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_64] = CreatePrefsImage((void *) IMAGE_ICON64)),
+                                                                Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_96] = CreatePrefsImage((void *) IMAGE_ICON96)),
+                                                                Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_128] = CreatePrefsImage((void *) IMAGE_ICON128)),
+                                                        End), //PageGroup
+
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)(app->Obj[GOUP_ICONSIZE_MAX_SAMPLE] = PageGroup,
+                                                                MUIA_Frame, MUIV_Frame_Gauge,
+                                                                Child, (IPTR)HVSpace, // empty
+                                                                Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_16] = CreatePrefsImage((void *) IMAGE_ICON16)),
+                                                                Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_24] = CreatePrefsImage((void *) IMAGE_ICON24)),
+                                                                Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_32] = CreatePrefsImage((void *) IMAGE_ICON32)),
+                                                                Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_48] = CreatePrefsImage((void *) IMAGE_ICON48)),
+                                                                Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_64] = CreatePrefsImage((void *) IMAGE_ICON64)),
+                                                                Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_96] = CreatePrefsImage((void *) IMAGE_ICON96)),
+                                                                Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_128] = CreatePrefsImage((void *) IMAGE_ICON128)),
+                                                        End), //PageGroup
+
+                                                        Child, (IPTR)HVSpace,
+                                                End), //ColGroup
+
+                                                Child, (IPTR)HVSpace,
+                                        End), //VGroup
+                                        Child, (IPTR)HVSpace,
+
+                                End), //VGroup
+
+                                // --- Icons-Labels
+                                Child, (IPTR)(VGroup,
+
+                                        Child, (IPTR)HVSpace,
+
+                                        Child, (IPTR)(VGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_LABELS),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_LABELS_TEXT)),
+                                                        Child, (IPTR)(app->Obj[CYCLE_LABELSTYLE] = CycleObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Cycle_Entries, (IPTR)cIconLabelStyles,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_LABELS_TEXT_SHORTHELP),
+                                                        End), //Cycle
+                                                End), //HGroup
+
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_LABELS_TEXTSPACE)),
+                                                        Child, (IPTR)(app->Obj[SLIDER_LABELSPACE] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 10,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 0,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_LABELS_TEXTSPACE_SHORTHELP),
+                                                        End), //Slider
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_LABELS_TEXTSPACE_PIXELS)),
+                                                End), //HGroup
+
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)HVSpace,
+                                                        Child, (IPTR)(ColGroup(2),
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_LABELS_SPLIT)),
+                                                                Child, (IPTR)(app->Obj[CHECK_MULTILINES] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_LABELS_SPLIT_SHORTHELP)),
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_LABELS_UNDERLINE_LINKS)),
+                                                                Child, (IPTR)(app->Obj[SOFTICONSLINK] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_LABELS_UNDERLINE_LINKS_SHORTHELP)),
+
+                                                        End), //ColGroup
+                                                        Child, (IPTR)HVSpace,
+                                                End), //HGroup
+
+                                                Child, (IPTR)HVSpace,
+                                        End), //VGroup
+                                End), //VGroup
+
+                                Child, (IPTR)HVSpace,
+
+                                Child, (IPTR)(VGroup,
+                                        Child, (IPTR)HVSpace,
+
+                                        Child, (IPTR)(VGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_SEL_ICONTEXT_RECT_GROUP),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)HVSpace,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_SEL_ICONTEXT_RECT)),
+                                                        Child, (IPTR)(app->Obj[CHECK_SEL_ICONTEXT_RECTANGLE] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_SEL_ICONTEXT_RECT_SHORTHELP)),
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_SEL_ICONTEXT_RECT_SHORTHELP),
+                                                        Child, (IPTR)HVSpace,
+
+                                                End), //HGroup
+
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(ColGroup(2),
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_SEL_ICONTEXT_XBORDER)),
+                                                        Child, (IPTR)(app->Obj[SLIDER_SEL_ICONTEXT_RECT_BORDERX] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 20,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 4,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_SEL_ICONTEXT_XBORDER_SHORTHELP),
+                                                        End), //Cycle
+
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_SEL_ICONTEXT_YBORDER)),
+                                                        Child, (IPTR)(app->Obj[SLIDER_SEL_ICONTEXT_RECT_BORDERY] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 20,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 2,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_SEL_ICONTEXT_YBORDER_SHORTHELP),
+                                                        End), //Cycle
+
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_SEL_ICONTEXT_RADIUS)),
+                                                        Child, (IPTR)(app->Obj[SLIDER_SEL_ICONTEXT_RECT_RADIUS] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 1,
+                                                                MUIA_Numeric_Max, 20,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 5,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_SEL_ICONTEXT_RADIUS_SHORTHELP),
+                                                        End), //Cycle
+                                                End), //ColGroup
+
+                                                Child, (IPTR)HVSpace,
+                                        End), //VGroup
+
+                                End), //VGroup
+
+                                Child, (IPTR)HVSpace,
+
+                                Child, (IPTR)(VGroup,
+                                        MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_LABELS_FONT),
+                                        GroupFrame,
+                                        MUIA_Background, MUII_GroupBack,
+
+                                        Child, (IPTR)HVSpace,
+
+                                        Child, (IPTR)(HGroup,
+                                                Child, (IPTR)HVSpace,
+                                                Child, (IPTR)Label1(GetLocString(MSGID_TTFONTSPAGE_ICONFONT_ENABLE)),
+                                                Child, (IPTR)(app->Obj[CHECK_ICONSPAGE_TTICONFONT_ENABLE] = CheckMarkHelp(FALSE, MSGID_FONTSPAGE_TTFICONFONT_ENABLE_SHORTHELP)),
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_FONTSPAGE_TTFICONFONT_ENABLE_SHORTHELP),
+                                        End), //HGroup
+
+                                        Child, (IPTR)HVSpace,
+
+                                        Child, (IPTR)(app->Obj[GROUP_ICONSPAGE_ICONFONT] = VGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_GROUP_ICONFONT),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+                                                Child, (IPTR)(app->Obj[GROUP_ICONFONT_NOTICE] = HGroup,
+                                                        Child, (IPTR)(FloattextObject,
+                                                                TextFrame,
+                                                                MUIA_Floattext_Justify, FALSE,
+                                                                MUIA_Floattext_Text, (IPTR) GetLocString(MSGID_ICONSPAGE_LABELS_FONT_NOTICE),
+                                                        End), //Floattext
+                                                        Child, (IPTR)(app->Obj[POP_FONTPREFS] = ImageObject,
+                                                                MUIA_InputMode, MUIV_InputMode_RelVerify,
+                                                                MUIA_Image_Spec, (IPTR)"6:18", //MUII_PopUp,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_LABELS_FONT_SHORTHELP),
+                                                        End), //Image
+                                                End), //HGroup
+
+                                                Child, (IPTR)(app->Obj[GROUP_ICONFONT_SELECT] = HGroup,
+                                                        Child, (IPTR)(app->Obj[POP_ICONFONT] = PopaslObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopUp),
+                                                                MUIA_Popstring_String, (IPTR)(BetterStringObject,
+                                                                        StringFrame,
+                                                                        MUIA_String_Contents, (IPTR)"Xen/8",
+                                                                End), //BetterString
+                                                                ASLFR_TitleText, (IPTR) GetLocString(MSGID_ICONSPAGE_ICONFONT_ASLTITLE),
+                                                                MUIA_Popasl_Type , ASL_FontRequest,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_LABELS_ICONFONT_SHORTHELP),
+                                                        End), //Pop
+                                                End), //HGroup
+
+                                                Child, (IPTR)(app->Obj[MCC_ICONFONT_SAMPLE] = FontSampleObject,
+                                                        TextFrame,
+                                                        MUIA_Background, MUII_TextBack,
+                                                        MUIA_FontSample_DemoString, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_LABELS_FONT_SAMPLETEXT_SHORTHELP),
+                                                End), //FontSampleMCCObject
+                                        End), //VGroup
+
+                                        Child, (IPTR)(app->Obj[GROUP_ICONSPAGE_TTICONFONT] = HGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_TTFONTSPAGE_ICONFONT),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+                                                MUIA_Disabled, TRUE,
+
+                                                Child, (IPTR)(VGroup,
+                                                        Child, (IPTR)(app->Obj[POPSTRING_ICONSPAGE_TTICONFONT] = PopstringObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopUp),
+                                                                MUIA_Popstring_String, (IPTR)(BetterStringObject,
+                                                                        StringFrame,
+                                                                        MUIA_String_Contents, (IPTR)" ",
+                                                                End), //BetterString
+                                                                MUIA_Popstring_OpenHook, (IPTR)&IconTtfPopOpenHook,
+                                                                MUIA_Popstring_CloseHook, (IPTR)&IconTtfPopCloseHook,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TTFONTSPAGE_ICONFONT_SHORTHELP),
+                                                        End), //PopstringObject
+
+                                                        Child, (IPTR)(app->Obj[MCC_ICONSPAGE_TTICONFONT_SAMPLE] = FontSampleObject,
+                                                                TextFrame,
+                                                                MUIA_Background, MUII_TextBack,
+                                                                MUIA_FontSample_DemoString, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TTFONTSPAGE_ICONFONT_SAMPLETEXT_SHORTHELP),
+                                                        End), //FontSampleMCCObject
+                                                End), //VGroup
+                                        End), //HGroup
+                                        Child, (IPTR)HVSpace,
+                                End), //VGroup
+ 
+                                // --- Icons-Borders
+                                Child, (IPTR)(VGroup,
+                                        Child, (IPTR)(VGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_ICONFRAME),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)(ColGroup(2),
+                                                        Child, (IPTR)(app->Obj[FRAME_ICONNORMAL] = McpFrameObject,
+                                                                MUIA_InputMode, MUIV_InputMode_RelVerify,
+                                                                ButtonFrame,
+                                                                MUIA_InnerBottom, 4,
+                                                                MUIA_InnerLeft, 4,
+                                                                MUIA_InnerRight, 4,
+                                                                MUIA_InnerTop, 4,
+                                                                MUIA_CycleChain, 1,
+                                                                MUIA_Background, MUII_ButtonBack,
+                                                                MUIA_CycleChain, 1,
+                                                                MUIA_MCPFrame_FrameType, MCP_FRAME_BUTTON,
+                                                                MUIA_Draggable, FALSE,
+                                                                MUIA_Dropable, TRUE,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_ICONFRAME_NORMAL_SHORTHELP),
+                                                        End),
+                                                        Child, (IPTR)(app->Obj[FRAME_ICONSELECTED] = McpFrameObject,
+                                                                MUIA_InputMode, MUIV_InputMode_RelVerify,
+                                                                ButtonFrame,
+                                                                MUIA_InnerBottom, 4,
+                                                                MUIA_InnerLeft, 4,
+                                                                MUIA_InnerRight, 4,
+                                                                MUIA_InnerTop, 4,
+                                                                MUIA_CycleChain, 1,
+                                                                MUIA_Background, MUII_ButtonBack,
+                                                                MUIA_MCPFrame_FrameType, MCP_FRAME_BUTTON | MCP_FRAME_RECESSED,
+                                                                MUIA_Draggable, FALSE,
+                                                                MUIA_Dropable, TRUE,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_ICONFRAME_SELECTED_SHORTHELP),
+                                                        End),
+
+                                                        Child, (IPTR)CLabel((IPTR) GetLocString(MSGID_ICONSPAGE_ICONFRAME_NORMAL)),
+                                                        Child, (IPTR)CLabel((IPTR) GetLocString(MSGID_ICONSPAGE_ICONFRAME_SELECTED)),
+                                                End), //ColGroup
+                                                Child, (IPTR)(ColGroup(4),
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_ICONSPAGE_ICONBORDER_LEFT)),
+                                                        Child, (IPTR)(app->Obj[ICONLEFT] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 10,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 4,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_ICONBORDER_LEFT_SHORTHELP),
+                                                        End), // Slider
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_ICONSPAGE_ICONBORDER_TOP)),
+                                                        Child, (IPTR)(app->Obj[ICONTOP] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 10,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 3,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_ICONBORDER_TOP_SHORTHELP),
+                                                        End), //Slider
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_ICONSPAGE_ICONBORDER_RIGHT)),
+                                                        Child, (IPTR)(app->Obj[ICONRIGHT] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 10,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 4,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_ICONBORDER_RIGHT_SHORTHELP),
+                                                        End), //Slider
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_ICONSPAGE_ICONBORDER_BOTTOM)),
+                                                        Child, (IPTR)(app->Obj[ICONBOTTOM] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 10,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 3,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_ICONBORDER_BOTTOM_SHORTHELP),
+                                                        End), //Slider
+                                                End), //ColGroup
+                                        End), //VGroup
+
+                                        Child, (IPTR)(VGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_ICONFRAME),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)(ColGroup(2),
+                                                        Child, (IPTR)(app->Obj[FRAME_ICON_THUMBNAIL_NORMAL] = McpFrameObject,
+                                                                MUIA_InputMode, MUIV_InputMode_RelVerify,
+                                                                ButtonFrame,
+                                                                MUIA_InnerBottom, 4,
+                                                                MUIA_InnerLeft, 4,
+                                                                MUIA_InnerRight, 4,
+                                                                MUIA_InnerTop, 4,
+                                                                MUIA_CycleChain, 1,
+                                                                MUIA_Background, MUII_ButtonBack,
+                                                                MUIA_CycleChain, 1,
+                                                                MUIA_MCPFrame_FrameType, MCP_FRAME_BUTTON,
+                                                                MUIA_Draggable, FALSE,
+                                                                MUIA_Dropable, TRUE,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_ICONFRAME_NORMAL_SHORTHELP),
+                                                        End), //McpFrameClass
+
+                                                        Child, (IPTR)(app->Obj[FRAME_ICON_THUMBNAIL_SELECTED] = McpFrameObject,
+                                                                MUIA_InputMode, MUIV_InputMode_RelVerify,
+                                                                ButtonFrame,
+                                                                MUIA_InnerBottom, 4,
+                                                                MUIA_InnerLeft, 4,
+                                                                MUIA_InnerRight, 4,
+                                                                MUIA_InnerTop, 4,
+                                                                MUIA_CycleChain, 1,
+                                                                MUIA_Background, MUII_ButtonBack,
+                                                                MUIA_CycleChain, 1,
+                                                                MUIA_MCPFrame_FrameType, MCP_FRAME_BUTTON | MCP_FRAME_RECESSED,
+                                                                MUIA_Draggable, FALSE,
+                                                                MUIA_Dropable, TRUE,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_ICONFRAME_SELECTED_SHORTHELP),
+                                                        End), //McpFrameClass
+
+                                                        Child, (IPTR)CLabel((IPTR) GetLocString(MSGID_ICONSPAGE_ICONFRAME_NORMAL)),
+                                                        Child, (IPTR)CLabel((IPTR) GetLocString(MSGID_ICONSPAGE_ICONFRAME_SELECTED)),
+
+                                                End), //ColGroup
+                                                Child, (IPTR)(ColGroup(4),
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_ICONSPAGE_ICONBORDER_LEFT)),
+                                                        Child, (IPTR)(app->Obj[THUMBNAILS_LEFTBORDER] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 10,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 4,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_ICONBORDER_LEFT_SHORTHELP),
+                                                        End), // Slider
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_ICONSPAGE_ICONBORDER_TOP)),
+                                                        Child, (IPTR)(app->Obj[THUMBNAILS_TOPBORDER] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 10,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 3,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_ICONBORDER_TOP_SHORTHELP),
+                                                        End), //Slider
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_ICONSPAGE_ICONBORDER_RIGHT)),
+                                                        Child, (IPTR)(app->Obj[THUMBNAILS_RIGHTBORDER] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 10,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 4,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_ICONBORDER_RIGHT_SHORTHELP),
+                                                        End), //Slider
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_ICONSPAGE_ICONBORDER_BOTTOM)),
+                                                        Child, (IPTR)(app->Obj[THUMBNAILS_BOTTOMBORDER] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 10,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 3,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_ICONBORDER_BOTTOM_SHORTHELP),
+                                                        End), //Slider
+                                                End), //ColGroup
+                                        End), //VGroup
+
+                                End), //VGroup
+
+
+                                // --- Icons--Tooltips
+                                Child, (IPTR)(VGroup,
+
+                                        Child, (IPTR)HVSpace,
+
+                                        Child, (IPTR)(VGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_GENERAL),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_TOOLTIPS_SHOW)),
+                                                        Child, (IPTR)(app->Obj[CHECK_TOOLTIPS] = CheckMarkHelp(TRUE, MSGID_ICONSPAGE_TOOLTIPS_SHOW_SHORTHELP)),
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_SHOW_SHORTHELP),
+                                                        Child, (IPTR)HVSpace,
+                                                End), //HGroup
+
+                                                Child, (IPTR)HVSpace,
+
+                                        End), //VGroup
+
+                                        Child, (IPTR)(app->Obj[TOOLTIP_SETTINGSGROUP] = VGroup,
+
+                                                Child, (IPTR)(VGroup,
+                                                        MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_SETTINGS),
+                                                        GroupFrame,
+                                                        MUIA_Background, MUII_GroupBack,
+
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)(HGroup,
+                                                                Child, (IPTR)Label2(GetLocString(MSGID_ICONSPAGE_TOOLTIPS_DELAY)),
+                                                                Child, (IPTR)(app->Obj[SLIDER_TIPDELAY] = SliderObject,
+                                                                                MUIA_CycleChain, TRUE,
+                                                                                MUIA_Numeric_Min, 1,
+                                                                                MUIA_Numeric_Max, 10,
+                                                                                MUIA_Slider_Horiz, TRUE,
+                                                                                MUIA_Numeric_Value, 5,
+                                                                End), //Slider
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_DELAY_SHORTHELP),
+                                                                Child, (IPTR)Label((IPTR) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_DELAY_SECONDS)),
+                                                        End), //HGroup
+
+                                                        Child, (IPTR)(HGroup,
+        /* currently unused */					MUIA_ShowMe, FALSE,
+                                                                Child, (IPTR)Label2(GetLocString(MSGID_ICONSPAGE_TOOLTIPS_FONT)),
+                                                                Child, (IPTR)(app->Obj[STRING_TOOLTIPFONT] = PopaslObject,
+                                                                        MUIA_CycleChain, TRUE,
+                                                                        MUIA_Popasl_Type, ASL_FontRequest,
+                                                                        MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopUp),
+                                                                        MUIA_Popstring_String, (IPTR)(BetterStringObject,
+                                                                                StringFrame,
+                                                                                MUIA_String_Contents, (IPTR)"Xen/8",
+                                                                        End), //BetterString
+
+                                                                        ASLFO_TitleText, (IPTR) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_FONT_ASLTITLE),
+                                                                        ASLFO_FixedWidthOnly, FALSE,
+                                                                End), //Pop
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_FONT_SHORTHELP),
+                                                        End), //HGroup
+
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)(HGroup,
+                                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_TRANSPARENCY),
+                                                                GroupFrame,
+                                                                MUIA_Background, MUII_GroupBack,
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT)),
+
+                                                                Child, (IPTR)(app->Obj[SLIDER_ICONTOOLTIPS_TRANSPARENCY] = SliderObject,
+                                                                        MUIA_CycleChain, TRUE,
+                                                                        MUIA_Numeric_Min, 0,
+                                                                        MUIA_Numeric_Max, 100,
+                                                                        MUIA_Slider_Horiz, TRUE,
+                                                                        MUIA_Numeric_Value, 50,
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_TRANSPARENCY_SHORTHELP),
+                                                                End), //Slider
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE)),
+                                                        End), //HGroup
+                                                        Child, (IPTR)HVSpace,
+
+                                                End), //VGroup
+
+                                                Child, (IPTR)(HGroup,
+        /* currently unused */				MUIA_ShowMe, FALSE,
+                                                        MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_DISPLAYFIELDS),
+                                                        GroupFrame,
+                                                        MUIA_Background, MUII_GroupBack,
+
+                                                        Child, (IPTR)(VGroup,
+                                                                Child, (IPTR)CLabel2(GetLocString(MSGID_ICONSPAGE_TOOLTIPS_AVAILABLEFIELDS)),
+                                                                Child, (IPTR)(NListviewObject,
+        /* currently unused */						MUIA_Disabled, TRUE,
+                                                                        MUIA_NListview_NList, (IPTR)(app->Obj[STORAGE_TIPS] = NListObject,
+                                                                                InputListFrame,
+                                                                                MUIA_Background, MUII_ListBack,
+                                                                                //MUIA_List_Format, "",
+                                                                                MUIA_NList_ShowDropMarks, TRUE,
+                                                                                MUIA_NList_AdjustWidth, FALSE,
+                                                                                MUIA_NList_AutoVisible, TRUE,
+                                                                                MUIA_NList_DragSortable, FALSE,
+                                                                        End), //List
+                                                                        MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_Shifted,
+                                                                        MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_AVAILABLEFIELDS_SHORTHELP),
+                                                                End), //Listview
+                                                        End), //VGroup
+
+                                                        Child, (IPTR)(VGroup,
+                                                                Child, (IPTR)CLabel2(GetLocString(MSGID_ICONSPAGE_TOOLTIPS_FIELDSINUSE)),
+                                                                Child, (IPTR)(NListviewObject,
+        /* currently unused */						MUIA_Disabled, TRUE,
+                                                                        MUIA_NListview_NList, (IPTR)(app->Obj[USED_TIPS] = NListObject,
+                                                                                InputListFrame,
+                                                                                MUIA_Background, MUII_ListBack,
+                                                                                //MUIA_List_Format, "",
+                                                                                MUIA_NList_ShowDropMarks, TRUE,
+                                                                                MUIA_NList_AdjustWidth, FALSE,
+                                                                                MUIA_NList_AutoVisible, TRUE,
+                                                                                MUIA_NList_DragSortable, TRUE,
+                                                                        End), //List
+                                                                        MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_Shifted,
+                                                                        MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_TOOLTIPS_FIELDSINUSE_SHORTHELP),
+                                                                End), //Listview
+                                                        End), //VGroup
+                                                End), //HGroup
+
+                                        End), //VGroup
+
+                                        Child, (IPTR)HVSpace,
+
+                                End), //VGroup
+
+                                // --- Icons-Thumbnails
+                                Child, (IPTR)(VGroup,
+
+                                        Child, (IPTR)HVSpace,
+
+                                        Child, (IPTR)(VGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_SETTINGS),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)(ColGroup(2),
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_SHOWTHUMBNAILS)),
+                                                                Child, (IPTR)(app->Obj[CYCLE_SHOWTHUMBNAILS] = CycleObject,
+                                                                        MUIA_CycleChain, TRUE,
+                                                                        MUIA_Cycle_Entries, (IPTR)cShowThumbnails,
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_SHOWTHUMBNAILS_SHORTHELP),
+                                                                End), //Cycle
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_THUMBNAILS_SIZE)),
+                                                                Child, (IPTR)(app->Obj[CYCLE_THUMBNAILSIZE] = CycleObject,
+                                                                        MUIA_CycleChain, TRUE,
+                                                                        MUIA_Cycle_Entries, (IPTR)cThumbnailSizes,
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_SIZE_SHORTHELP),
+                                                                End), //Cycle
+
+                                                                Child, (IPTR)HVSpace,	// always 2 HVSpace due to ColGroup(2)
+                                                                Child, (IPTR)HVSpace,
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_SHOWTHUMBNAILS_AS_DEFAULT)),
+                                                                Child, (IPTR)(app->Obj[CHECK_SHOWTHUMBNAILS_AS_DEFAULT] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_SHOWTHUMBNAILS_AS_DEFAULT_SHORTHELP)),
+
+                                                                Child, (IPTR)HVSpace,	// always 2 HVSpace due to ColGroup(2)
+                                                                Child, (IPTR)HVSpace,
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_THUMBNAILS_SQUARE)),
+                                                                Child, (IPTR)(app->Obj[CHECK_THUMBNAILS_SQUARE] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_THUMBNAILS_SQUARE_SHORTHELP)),
+
+                                                                Child, (IPTR)HVSpace,	// always 2 HVSpace due to ColGroup(2)
+                                                                Child, (IPTR)HVSpace,
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_THUMBNAILS_BACKFILL)),
+                                                                Child, (IPTR)(app->Obj[CHECK_THUMBNAILS_BACKFILL] = CheckMarkHelp(FALSE, MSGID_ICONSPAGE_THUMBNAILS_BACKFILL_SHORTHELP)),
+
+                                                        End), // ColGroup
+
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)(VGroup,
+                                                                Child, (IPTR)(app->Obj[GROUP_THUMBNAILS_ICON_SAMPLE] = PageGroup,
+                                                                        MUIA_Frame, MUIV_Frame_Gauge,
+                                                                        Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_16] = CreatePrefsImage((void *) IMAGE_ICON16)),
+                                                                        Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_24] = CreatePrefsImage((void *) IMAGE_ICON24)),
+                                                                        Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_32] = CreatePrefsImage((void *) IMAGE_ICON32)),
+                                                                        Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_48] = CreatePrefsImage((void *) IMAGE_ICON48)),
+                                                                        Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_64] = CreatePrefsImage((void *) IMAGE_ICON64)),
+                                                                        Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_96] = CreatePrefsImage((void *) IMAGE_ICON96)),
+                                                                        Child, (IPTR) (app->Obj[IMAGE_ICON_SAMPLE_128] = CreatePrefsImage((void *) IMAGE_ICON128)),
+                                                                End), //PageGroup
+                                                        End), //VGroup
+
+                                                        Child, (IPTR)HVSpace,
+
+                                                End), //HGroup
+
+                                                Child, (IPTR)(HGroup,
+                                                        MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_QUALITY),
+                                                        GroupFrame,
+                                                        MUIA_Background, MUII_GroupBack,
+
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_THUMBNAILS_QUALITY_WORST)),
+
+                                                        Child, (IPTR)(app->Obj[SLIDER_THUMBNAILS_QUALITY] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, SCALOSPREVIEWA_Quality_Min,
+                                                                MUIA_Numeric_Max, SCALOSPREVIEWA_Quality_Max,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, SCALOSPREVIEWA_Quality_Max,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_QUALITY_SHORTHELP),
+                                                        End), //Slider
+
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_THUMBNAILS_QUALITY_BEST)),
+                                                End), //HGroup
+
+                                                Child, (IPTR)HVSpace,
+                                        End), //VGroup
+
+                                        Child, (IPTR)(app->Obj[GROUP_THUMBNAIL_BACKFILL_TRANSPARENCY] = HGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_THUMBNAIL_BACKFILL_TRANSPARENCY),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT)),
+
+                                                Child, (IPTR)(app->Obj[SLIDER_ICONTRANSPARENCY_THUMBNAILBACK] = SliderObject,
+                                                        MUIA_CycleChain, TRUE,
+                                                        MUIA_Numeric_Min, 0,
+                                                        MUIA_Numeric_Max, 100,
+                                                        MUIA_Slider_Horiz, TRUE,
+                                                        MUIA_Numeric_Value, 50,
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_THUMBNAIL_BACKFILL_TRANSPARENCY_SHORTHELP),
+                                                End), //Slider
+
+                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE)),
+                                        End), //HGroup
+
+                                        Child, (IPTR)(HGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_CACHE),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(ColGroup(2),
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_THUMBNAILS_MAXAGE)),
+                                                        Child, (IPTR)(app->Obj[SLIDER_THUMBNAILS_MAXAGE] = ThumbnailLifetimeSliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 365,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 14,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_MAXAGE_SHORTHELP),
+                                                        End), //ThumbnailLifetimeSliderClass
+
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_THUMBNAILS_MINSIZE_LIMIT)),
+                                                        Child, (IPTR)(app->Obj[SLIDER_THUMBNAILS_MINSIZE_LIMIT] = NumericbuttonObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 8,
+                                                                MUIA_Numeric_Max, 256,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 128,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_THUMBNAILS_MINSIZE_LIMIT_SHORTHELP),
+                                                        End), //Slider
+
+                                                End), //ColGroup
+
+                                                Child, (IPTR)HVSpace,
+                                        End), // HGroup
+
+                                        Child, (IPTR)HVSpace,
+
+                                End), //VGroup
+
+
+                        End), //Register
+
+                End), //VGroup
+                &NewPrefsPages[4]);
 ///
 }
 
@@ -6258,321 +6255,321 @@ static Object *GenerateDragNDropPage(struct SCAModule *app)
 {
 ///
 	return CreatePrefsPage(app,
-		VGroup,
-		MUIA_Background, MUII_PageBack,
+		(APTR)(VGroup,
+                        MUIA_Background, MUII_PageBack,
 
-		Child, RegisterObject,
-			MUIA_Register_Titles, cIconDragDropPages,
-			MUIA_CycleChain, TRUE,
+                        Child, (IPTR)(RegisterObject,
+                                MUIA_Register_Titles, (IPTR)cIconDragDropPages,
+                                MUIA_CycleChain, TRUE,
 
-			// Drag and drop
-			Child, VGroup,
-				Child, HVSpace,
+                                // Drag and drop
+                                Child, (IPTR)(VGroup,
+                                        Child, (IPTR)HVSpace,
 
-				Child, VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_DRAGNDROPPAGE_BOBS),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
+                                        Child, (IPTR)(VGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_DRAGNDROPPAGE_BOBS),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
 
-					Child, HVSpace,
+                                                Child, (IPTR)HVSpace,
 
-					Child, HGroup,
-						Child, HVSpace,
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)HVSpace,
 
-						Child, ColGroup(2),
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_ROUTINES)),
-							Child, app->Obj[CYCLE_ROUTINE] = CycleObject,
-								MUIA_CycleChain, TRUE,
-								MUIA_Cycle_Entries, cIconDragRoutines,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DRAGNDROPPAGE_ROUTINES_SHORTHELP),
-							End, //Cycle
+                                                        Child, (IPTR)(ColGroup(2),
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_ROUTINES)),
+                                                                Child, (IPTR)(app->Obj[CYCLE_ROUTINE] = CycleObject,
+                                                                        MUIA_CycleChain, TRUE,
+                                                                        MUIA_Cycle_Entries, (IPTR)cIconDragRoutines,
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DRAGNDROPPAGE_ROUTINES_SHORTHELP),
+                                                                End), //Cycle
 
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY)),
-							Child, app->Obj[CYCLE_TRANSPMODE] = CycleObject,
-								MUIA_CycleChain, TRUE,
-								MUIA_Cycle_Entries, cIconDragTransparents,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_SHORTHELP),
-							End, //Cycle
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY)),
+                                                                Child, (IPTR)(app->Obj[CYCLE_TRANSPMODE] = CycleObject,
+                                                                        MUIA_CycleChain, TRUE,
+                                                                        MUIA_Cycle_Entries, (IPTR)cIconDragTransparents,
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_SHORTHELP),
+                                                                End), //Cycle
 
-						End, //ColGroup
+                                                        End), //ColGroup
 
-						Child, HVSpace,
-					End, //HGroup
+                                                        Child, (IPTR)HVSpace,
+                                                End), //HGroup
 
-					Child, HVSpace,
-				End, //VGroup
+                                                Child, (IPTR)HVSpace,
+                                        End), //VGroup
 
-				Child, HVSpace,
+                                        Child, (IPTR)HVSpace,
 
-				Child, VGroup,
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
+                                        Child, (IPTR)(VGroup,
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
 
-					Child, HVSpace,
+                                                Child, (IPTR)HVSpace,
 
-					Child, HGroup,
-						Child, HVSpace,
-
-						Child, ColGroup(2),
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_STYLE)),
-							Child, app->Obj[CYCLE_STYLE] = CycleObject,
-								MUIA_CycleChain, TRUE,
-								MUIA_Cycle_Entries, cIconDragStyle,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DRAGNDROPPAGE_STYLE_SHORTHELP),
-							End, //Cycle
-
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_DROPMARKMODE)),
-							Child, app->Obj[CYCLE_DROPMARK] = CycleObject,
-								MUIA_CycleChain, TRUE,
-								MUIA_Cycle_Entries, cIconDropMark,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DRAGNDROPPAGE_DROPMARKMODE_SHORTHELP),
-							End, //Cycle
-
-						End, //ColGroup
-
-						Child, HVSpace,
-					End, //HGroup
-
-					Child, HVSpace,
-				End, //VGroup
-
-				Child, HVSpace,
-
-				Child, VGroup,
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, HVSpace,
-
-					Child, HGroup,
-						Child, HVSpace,
-
-						Child, ColGroup(4),
-						Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_AUTOREMOVE)),
-						Child, app->Obj[CHECK_AUTOREMOVE] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_AUTOREMOVE_SHORTHELP),
-
-						Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_EASY_MULTISELECT)),
-						Child, app->Obj[CHECK_EASY_MULTISELECT] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_EASY_MULTISELECT_SHORTHELP),
-
-						Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_GROUP_MULTIPLE)),
-						Child, app->Obj[CHECK_GROUPDRAG] = CheckMarkHelp(FALSE,MSGID_DRAGNDROPPAGE_GROUP_MULTIPLE_SHORTHELP),
-
-						Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_EASY_MULTIDRAG)),
-						Child, app->Obj[CHECK_EASY_MULTIDRAG] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_EASY_MULTIDRAG_SHORTHELP),
-
-						Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_DRAGGINGLABEL)),
-						Child, app->Obj[CHECK_SHOWDRAG] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_DRAGGINGLABEL_SHORTHELP),
-
-						Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_DROPMENU)),
-						Child, app->Obj[CHECK_ENABLE_DROPMENU] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_DROPMENU_SHORTHELP),
-
-						End, //ColGroup
-
-						Child, HVSpace,
-					End, //HGroup
-
-					Child, HVSpace,
-				End, //VGroup
-
-				Child, HVSpace,
-
-				Child, VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_DRAGNDROPPAGE_QUALIFIERS),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, HVSpace,
-
-					Child, ColGroup(2),
-						Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_FORCECOPY)),
-						Child, HGroup,
-							Child, app->Obj[COPY_HOTKEY] = HotkeyStringObject,
-								StringFrame,
-								MUIA_String_Contents, "",
-								MUIA_HotkeyString_Snoop, FALSE,
-							End, //HotkeyString
-							Child, app->Obj[COPY_HOTKEY_SCAN] = ScanButton,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DRAGNDROPPAGE_FORCECOPY_SHORTHELP),
-						End, //HGroup
-
-						Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_FORCEMAKELINK)),
-						Child, HGroup,
-							Child, app->Obj[MAKELINK_HOTKEY] = HotkeyStringObject,
-								StringFrame,
-								MUIA_String_Contents, "",
-								MUIA_HotkeyString_Snoop, FALSE,
-							End, //HotkeyString
-							Child, app->Obj[MAKELINK_HOTKEY_SCAN] = ScanButton,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DRAGNDROPPAGE_FORCEMAKELINK_SHORTHELP),
-						End, //HGroup
-
-						Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_FORCEMOVE)),
-						Child, HGroup,
-							Child, app->Obj[MOVE_HOTKEY] = HotkeyStringObject,
-								StringFrame,
-								MUIA_String_Contents, "",
-								MUIA_HotkeyString_Snoop, FALSE,
-							End, //HotkeyString
-							Child, app->Obj[MOVE_HOTKEY_SCAN] = ScanButton,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DRAGNDROPPAGE_FORCEMOVE_SHORTHELP),
-						End, //HGroup
-					End, //ColGroup
-
-					Child, HVSpace,
-				End, //VGroup
-
-				Child, HVSpace,
-			End, //VGroup
-
-			// Transparency
-			Child, VGroup,
-				Child, HVSpace,
-
-				Child, HGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_ICONDRAG),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT)),
-
-					Child, app->Obj[SLIDER_ICONTRANSPARENCY_DRAG] = SliderObject,
-						MUIA_CycleChain, TRUE,
-						MUIA_Numeric_Min, 0,
-						MUIA_Numeric_Max, 100,
-						MUIA_Slider_Horiz, TRUE,
-						MUIA_Numeric_Value, 50,
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_ICONDRAG_SHORTHELP),
-					End, //Slider
-
-					Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE)),
-				End, //HGroup
-
-				Child, HGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_ICONSHADOW),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT)),
-
-					Child, app->Obj[SLIDER_ICONTRANSPARENCY_SHADOW] = SliderObject,
-						MUIA_CycleChain, TRUE,
-						MUIA_Numeric_Min, 0,
-						MUIA_Numeric_Max, 100,
-						MUIA_Slider_Horiz, TRUE,
-						MUIA_Numeric_Value, 50,
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_ICONSHADOW_SHORTHELP),
-					End, //Slider
-
-					Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE)),
-				End, //HGroup
-
-				Child, HVSpace,
-			End, //VGroup
-
-			// Triggers
-			Child, VGroup,
-				Child, HVSpace,
-
-				Child, VGroup,
-					//MUIA_FrameTitle, "",
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, HVSpace,
-
-					Child, HGroup,
-						Child, HVSpace,
-
-						Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_LOOK)),
-						Child, app->Obj[RADIO_BOBLOOK] = RadioObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Radio_Entries, cIconDragLook,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DRAGNDROPPAGE_LOOK_SHORTHELP),
-						End, //Radio
-
-						Child, HVSpace,
-					End, //HGroup
-
-					Child, HVSpace,
-				End, //VGroup
-
-				Child, VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, HVSpace,
-
-					Child, HGroup,
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP),
-
-						Child, HVSpace,
-
-						Child, ColGroup(4),
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_DISKICONS)),
-							Child, app->Obj[CHECK_TRIG_DISK] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP),
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_DRAWERICONS)),
-							Child, app->Obj[CHECK_TRIG_DRAWER] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP),
-
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_TOOLICONS)),
-							Child, app->Obj[CHECK_TRIG_TOOL] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP),
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_PROJECTICONS)),
-							Child, app->Obj[CHECK_TRIG_PROJECT] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP),
-
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_TRASHCANICONS)),
-							Child, app->Obj[CHECK_TRIG_TRASHCAN] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP),
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_KICKICONS)),
-							Child, app->Obj[CHECK_TRIG_KICK] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP),
-
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_APPICONS)),
-							Child, app->Obj[CHECK_TRIG_APPICON] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP),
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_APPWINDOWS)),
-							Child, app->Obj[CHECK_TRIG_APPWIN] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP),
-
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_ICONIFIED_WINDOWS)),
-							Child, app->Obj[CHECK_TRIG_ICONIFIEDWIN] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP),
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_SCALOS_WINDOWS)),
-							Child, app->Obj[CHECK_TRIG_SCALOSWIN] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP),
-						End, //ColGroup
-
-						Child, HVSpace,
-					End, //VGroup
-
-				Child, HVSpace,
-
-				End, //VGroup
-
-				Child, VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_DRAGNDROPPAGE_POPOPENWINDOWS),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, HVSpace,
-
-					Child, HGroup,
-						Child, Label((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_SLIDER_POPOPWINDOW_DELAY)),
-						Child, app->Obj[SLIDER_POPOPENWINDOW_DELAY] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 1,
-							MUIA_Numeric_Max, 20,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 3,
-						End, //Slider
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DRAGNDROPPAGE_SLIDER_POPOPWINDOW_DELAY_SHORTHELP),
-						Child, Label((ULONG) GetLocString(MSGID_STARTUPPAGE_DOWAITDELAY_SECONDS)),
-					End, //HGroup
-
-					Child, HVSpace,
-
-					End, //VGroup
-
-				Child, HVSpace,
-
-			End, //VGroup,
-		End, //Register
-
-	End, //VGroup
-	&NewPrefsPages[5]);
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)(ColGroup(2),
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_STYLE)),
+                                                                Child, (IPTR)(app->Obj[CYCLE_STYLE] = CycleObject,
+                                                                        MUIA_CycleChain, TRUE,
+                                                                        MUIA_Cycle_Entries, (IPTR)cIconDragStyle,
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DRAGNDROPPAGE_STYLE_SHORTHELP),
+                                                                End), //Cycle
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_DROPMARKMODE)),
+                                                                Child, (IPTR)(app->Obj[CYCLE_DROPMARK] = CycleObject,
+                                                                        MUIA_CycleChain, TRUE,
+                                                                        MUIA_Cycle_Entries, (IPTR)cIconDropMark,
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DRAGNDROPPAGE_DROPMARKMODE_SHORTHELP),
+                                                                End), //Cycle
+
+                                                        End), //ColGroup
+
+                                                        Child, (IPTR)HVSpace,
+                                                End), //HGroup
+
+                                                Child, (IPTR)HVSpace,
+                                        End), //VGroup
+
+                                        Child, (IPTR)HVSpace,
+
+                                        Child, (IPTR)(VGroup,
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)(ColGroup(4),
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_AUTOREMOVE)),
+                                                                Child, (IPTR)(app->Obj[CHECK_AUTOREMOVE] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_AUTOREMOVE_SHORTHELP)),
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_EASY_MULTISELECT)),
+                                                                Child, (IPTR)(app->Obj[CHECK_EASY_MULTISELECT] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_EASY_MULTISELECT_SHORTHELP)),
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_GROUP_MULTIPLE)),
+                                                                Child, (IPTR)(app->Obj[CHECK_GROUPDRAG] = CheckMarkHelp(FALSE,MSGID_DRAGNDROPPAGE_GROUP_MULTIPLE_SHORTHELP)),
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_EASY_MULTIDRAG)),
+                                                                Child, (IPTR)(app->Obj[CHECK_EASY_MULTIDRAG] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_EASY_MULTIDRAG_SHORTHELP)),
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_DRAGGINGLABEL)),
+                                                                Child, (IPTR)(app->Obj[CHECK_SHOWDRAG] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_DRAGGINGLABEL_SHORTHELP)),
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_DROPMENU)),
+                                                                Child, (IPTR)(app->Obj[CHECK_ENABLE_DROPMENU] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_DROPMENU_SHORTHELP)),
+
+                                                        End), //ColGroup
+
+                                                        Child, (IPTR)HVSpace,
+                                                End), //HGroup
+
+                                                Child, (IPTR)HVSpace,
+                                        End), //VGroup
+
+                                        Child, (IPTR)HVSpace,
+
+                                        Child, (IPTR)(VGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_DRAGNDROPPAGE_QUALIFIERS),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(ColGroup(2),
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_FORCECOPY)),
+                                                        Child, (IPTR)(HGroup,
+                                                                Child, (IPTR)(app->Obj[COPY_HOTKEY] = HotkeyStringObject,
+                                                                        StringFrame,
+                                                                        MUIA_String_Contents, (IPTR)"",
+                                                                        MUIA_HotkeyString_Snoop, FALSE,
+                                                                End), //HotkeyString
+                                                                Child, (IPTR)(app->Obj[COPY_HOTKEY_SCAN] = ScanButton),
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DRAGNDROPPAGE_FORCECOPY_SHORTHELP),
+                                                        End), //HGroup
+
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_FORCEMAKELINK)),
+                                                        Child, (IPTR)(HGroup,
+                                                                Child, (IPTR)(app->Obj[MAKELINK_HOTKEY] = HotkeyStringObject,
+                                                                        StringFrame,
+                                                                        MUIA_String_Contents, (IPTR)"",
+                                                                        MUIA_HotkeyString_Snoop, FALSE,
+                                                                End), //HotkeyString
+                                                                Child, (IPTR)(app->Obj[MAKELINK_HOTKEY_SCAN] = ScanButton),
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DRAGNDROPPAGE_FORCEMAKELINK_SHORTHELP),
+                                                        End), //HGroup
+
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_FORCEMOVE)),
+                                                        Child, (IPTR)(HGroup,
+                                                                Child, (IPTR)(app->Obj[MOVE_HOTKEY] = HotkeyStringObject,
+                                                                        StringFrame,
+                                                                        MUIA_String_Contents, (IPTR)"",
+                                                                        MUIA_HotkeyString_Snoop, FALSE,
+                                                                End), //HotkeyString
+                                                                Child, (IPTR)(app->Obj[MOVE_HOTKEY_SCAN] = ScanButton),
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DRAGNDROPPAGE_FORCEMOVE_SHORTHELP),
+                                                        End), //HGroup
+                                                End), //ColGroup
+
+                                                Child, (IPTR)HVSpace,
+                                        End), //VGroup
+
+                                        Child, (IPTR)HVSpace,
+                                End), //VGroup
+
+                                // Transparency
+                                Child, (IPTR)(VGroup,
+                                        Child, (IPTR)HVSpace,
+
+                                        Child, (IPTR)(HGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_ICONDRAG),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT)),
+
+                                                Child, (IPTR)(app->Obj[SLIDER_ICONTRANSPARENCY_DRAG] = SliderObject,
+                                                        MUIA_CycleChain, TRUE,
+                                                        MUIA_Numeric_Min, 0,
+                                                        MUIA_Numeric_Max, 100,
+                                                        MUIA_Slider_Horiz, TRUE,
+                                                        MUIA_Numeric_Value, 50,
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_ICONDRAG_SHORTHELP),
+                                                End), //Slider
+
+                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE)),
+                                        End), //HGroup
+
+                                        Child, (IPTR)(HGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_ICONSHADOW),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT)),
+
+                                                Child, (IPTR)(app->Obj[SLIDER_ICONTRANSPARENCY_SHADOW] = SliderObject,
+                                                        MUIA_CycleChain, TRUE,
+                                                        MUIA_Numeric_Min, 0,
+                                                        MUIA_Numeric_Max, 100,
+                                                        MUIA_Slider_Horiz, TRUE,
+                                                        MUIA_Numeric_Value, 50,
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_ICONSHADOW_SHORTHELP),
+                                                End), //Slider
+
+                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE)),
+                                        End), //HGroup
+
+                                        Child, (IPTR)HVSpace,
+                                End), //VGroup
+
+                                // Triggers
+                                Child, (IPTR)(VGroup,
+                                        Child, (IPTR)HVSpace,
+
+                                        Child, (IPTR)(VGroup,
+                                                //MUIA_FrameTitle, "",
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_LOOK)),
+                                                        Child, (IPTR)(app->Obj[RADIO_BOBLOOK] = RadioObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Radio_Entries, (IPTR)cIconDragLook,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DRAGNDROPPAGE_LOOK_SHORTHELP),
+                                                        End), //Radio
+
+                                                        Child, (IPTR)HVSpace,
+                                                End), //HGroup
+
+                                                Child, (IPTR)HVSpace,
+                                        End), //VGroup
+
+                                        Child, (IPTR)(VGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(HGroup,
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP),
+
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)(ColGroup(4),
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_DISKICONS)),
+                                                                Child, (IPTR)(app->Obj[CHECK_TRIG_DISK] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP)),
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_DRAWERICONS)),
+                                                                Child, (IPTR)(app->Obj[CHECK_TRIG_DRAWER] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP)),
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_TOOLICONS)),
+                                                                Child, (IPTR)(app->Obj[CHECK_TRIG_TOOL] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP)),
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_PROJECTICONS)),
+                                                                Child, (IPTR)(app->Obj[CHECK_TRIG_PROJECT] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP)),
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_TRASHCANICONS)),
+                                                                Child, (IPTR)(app->Obj[CHECK_TRIG_TRASHCAN] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP)),
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_KICKICONS)),
+                                                                Child, (IPTR)(app->Obj[CHECK_TRIG_KICK] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP)),
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_APPICONS)),
+                                                                Child, (IPTR)(app->Obj[CHECK_TRIG_APPICON] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP)),
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_APPWINDOWS)),
+                                                                Child, (IPTR)(app->Obj[CHECK_TRIG_APPWIN] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP)),
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_ICONIFIED_WINDOWS)),
+                                                                Child, (IPTR)(app->Obj[CHECK_TRIG_ICONIFIEDWIN] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP)),
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRIGGERS_SCALOS_WINDOWS)),
+                                                                Child, (IPTR)(app->Obj[CHECK_TRIG_SCALOSWIN] = CheckMarkHelp(FALSE, MSGID_DRAGNDROPPAGE_TRIGGERS_SHORTHELP)),
+                                                        End), //ColGroup
+
+                                                        Child, (IPTR)HVSpace,
+                                                End), //HGroup
+
+                                                Child, (IPTR)HVSpace,
+
+                                        End), //VGroup
+
+                                        Child, (IPTR)(VGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_DRAGNDROPPAGE_POPOPENWINDOWS),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_DRAGNDROPPAGE_SLIDER_POPOPWINDOW_DELAY)),
+                                                        Child, (IPTR)(app->Obj[SLIDER_POPOPENWINDOW_DELAY] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 1,
+                                                                MUIA_Numeric_Max, 20,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 3,
+                                                        End), //Slider
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DRAGNDROPPAGE_SLIDER_POPOPWINDOW_DELAY_SHORTHELP),
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_STARTUPPAGE_DOWAITDELAY_SECONDS)),
+                                                End), //HGroup
+
+                                                Child, (IPTR)HVSpace,
+
+                                        End), //VGroup
+
+                                        Child, (IPTR)HVSpace,
+
+                                End), //VGroup,
+                        End), //Register
+
+                End), //VGroup
+                &NewPrefsPages[5]);
 ///
 }
 
@@ -6582,708 +6579,708 @@ static Object *GenerateWindowPage(struct SCAModule *app)
 {
 ///
 	return CreatePrefsPage(app,
-		VGroup,
-		MUIA_Background, MUII_PageBack,
-
-		Child, RegisterObject,
-			MUIA_Register_Titles, cWindowPages,
-			MUIA_CycleChain, TRUE,
-
-			// --- Windows-General
-			Child, VGroup,
-
-				Child, HVSpace,
-
-				Child, VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_WINDOWPAGE_WINDOWTITLES),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, HVSpace,
-
-					Child, ColGroup(2),
-						Child, Label2((ULONG) GetLocString(MSGID_WINDOWPAGE_WINDOWTITLES_ROOTWINDOW)),
-						Child, app->Obj[POPPH_ROOTWINDOWTITLE] = PopplaceholderObject,
-							MUIA_Popph_Title, (ULONG) GetLocString(MSGID_WINDOWPAGE_WINDOWTITLES_ROOTWINDOW_DESCRIPTION),
-							MUIA_Popph_Array, cTitleph,
-							MUIA_Popph_Avoid, MUIV_Popph_Avoid_Textinput,
-							MUIA_Popph_ReplaceMode, FALSE,
-							MUIA_Popph_Contents, "",
-							MUIA_Popph_StringMaxLen, 600,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_WINDOWTITLES_ROOTWINDOW_SHORTHELP),
-						End, //Popplaceholder
-
-						Child, Label2((ULONG) GetLocString(MSGID_WINDOWPAGE_WINDOWTITLES_DIRECTORYWINDOW)),
-						Child, app->Obj[POPPH_DIRWINDOWTITLE] = PopplaceholderObject,
-							MUIA_Popph_Title, (ULONG) GetLocString(MSGID_WINDOWPAGE_WINDOWTITLES_DIRECTORYWINDOW_DESCRIPTION),
-							MUIA_Popph_Array, cTitleph,
-							MUIA_Popph_Avoid, MUIV_Popph_Avoid_Textinput,
-							MUIA_Popph_ReplaceMode, FALSE,
-							MUIA_Popph_Contents, "",
-							MUIA_Popph_StringMaxLen, 600,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_WINDOWTITLES_DIRECTORYWINDOW_SHORTHELP),
-						End, //Popplaceholder
-
-						Child, Label2((ULONG) GetLocString(MSGID_DESKTOPPAGE_WINTITLEBAR_REFRESH)),
-						Child, HGroup,
-							Child, app->Obj[SLIDER_WINTITLEREFRESH] = SliderObject,
-								MUIA_CycleChain, TRUE,
-								MUIA_Numeric_Min, 1,
-								MUIA_Numeric_Max, 10,
-								MUIA_Slider_Horiz, TRUE,
-								MUIA_Numeric_Value, 5,
-							End, //Slider
-							Child, Label((ULONG) GetLocString(MSGID_DESKTOPPAGE_WINTITLEBAR_REFRESH_SECONDS)),
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DESKTOPPAGE_WINTITLEBAR_REFRESH_SHORTHELP),
-						End, //HGroup
-					End, //ColGroup
-
-					Child, HGroup,
-						Child, HVSpace,
-						Child, Label1((ULONG) GetLocString(MSGID_DESKTOPPAGE_WINTITLEBAR_REFRESH_MEMCHANGE)),
-						Child, app->Obj[CHECK_WINTITLEMEM] = CheckMarkHelp(FALSE, MSGID_DESKTOPPAGE_WINTITLEBAR_REFRESH_MEMCHANGE_SHORTHELP),
-						Child, HVSpace,
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_DESKTOPPAGE_WINTITLEBAR_REFRESH_MEMCHANGE_SHORTHELP),
-					End, //HGroup
-
-					Child, HVSpace,
-
-				End, //VGroup
-
-				Child, VGroup,
-					//MUIA_FrameTitle, "",
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, HVSpace,
-
-					Child, ColGroup(4),
-						Child, HVSpace,
-						Child, Label1((ULONG) GetLocString(MSGID_WINDOWPAGE_WINDOWTYPE)),
-						Child, app->Obj[CYCLE_WINDOWTYPE] = CycleObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Cycle_Entries, cWindowRefresh,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_WINDOWTYPE_SHORTHELP),
-						End, //Cycle
-						Child, HVSpace,
-
-						Child, HVSpace,
-						Child, Label1((ULONG) GetLocString(MSGID_WINDOWPAGE_SHOWALL_DEFAULT)),
-						Child, app->Obj[CYCLE_SHOWALLDEFAULT] = CycleObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Cycle_Entries, cShowAllDefault,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_SHOWALL_DEFAULT_SHORTHELP),
-						End, //Cycle
-						Child, HVSpace,
-
-						Child, HVSpace,
-						Child, Label1((ULONG) GetLocString(MSGID_WINDOWPAGE_VIEWBY_DEFAULT)),
-						Child, app->Obj[CYCLE_VIEWBYICONSDEFAULT] = CycleObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Cycle_Entries, cViewByDefault,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_WINDOWTYPE_VIEWBY_DEFAULT_SHORTHELP),
-						End, //Cycle
-						Child, HVSpace,
-					End, //ColGroup
-
-					Child, HVSpace,
-
-				End, //VGroup
-
-				Child, VGroup,
-					//MUIA_FrameTitle, "",
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, HVSpace,
-
-					Child, ColGroup(4),
-						Child, HVSpace,
-						Child, Label1((ULONG) GetLocString(MSGID_WINDOWPAGE_CONTEXTMENU_DRAGBAR)),
-						Child, app->Obj[CHECK_POPTITLEONLY] = CheckMarkHelp(FALSE, MSGID_WINDOWPAGE_CONTEXTMENU_DRAGBAR_SHORTHELP),
-						Child, HVSpace,
-
-						Child, HVSpace,
-						Child, Label1((ULONG) GetLocString(MSGID_WINDOWPAGE_MMB_MOVE)),
-						Child, app->Obj[CHECK_MMBMOVE] = CheckMarkHelp(FALSE, MSGID_WINDOWPAGE_MMB_MOVE_SHORTHELP),
-						Child, HVSpace,
-
-						Child, HVSpace,
-						Child, Label1((ULONG) GetLocString(MSGID_WINDOWPAGE_SHOW_STATUSBAR)),
-						Child, app->Obj[CHECK_STATUSBAR] = CheckMarkHelp(FALSE, MSGID_WINDOWPAGE_SHOW_STATUSBAR_SHORTHELP),
-						Child, HVSpace,
-
-						Child, HVSpace,
-						Child, Label1((ULONG) GetLocString(MSGID_WINDOWPAGE_CHECK_OVERLAP)),
-						Child, app->Obj[CHECK_CHECKOVERLAP] = CheckMarkHelp(FALSE, MSGID_WINDOWPAGE_CHECK_OVERLAP_SHORTHELP),
-						Child, HVSpace,
-
-						Child, HVSpace,
-						Child, Label1((ULONG) GetLocString(MSGID_WINDOWPAGE_CLEANUP_ONRESIZE)),
-						Child, app->Obj[CHECK_CLEANUP_ONRESIZE] = CheckMarkHelp(FALSE, MSGID_WINDOWPAGE_CLEANUP_ONRESIZE_SHORTHELP),
-						Child, HVSpace,
-
-						Child, HVSpace,
-						Child, Label1((ULONG) GetLocString(MSGID_FILEDISPLAYPAGE_HIDE_HIDDENFILES)),
-						Child, app->Obj[HIDEHIDDENFILES] = CheckMarkHelp(FALSE, MSGID_FILEDISPLAYPAGE_HIDE_HIDDENFILES_SHORTHELP),
-						Child, HVSpace,
-
-						Child, HVSpace,
-						Child, Label1((ULONG) GetLocString(MSGID_FILEDISPLAYPAGE_HIDE_PROTECTHIDDENFILES)),
-						Child, app->Obj[HIDEPROTECTHIDDENFILES] = CheckMarkHelp(FALSE, MSGID_FILEDISPLAYPAGE_HIDE_PROTECTHIDDENFILES_SHORTHELP),
-						Child, HVSpace,
-
-					End, //ColGroup
-
-					Child, HVSpace,
-
-				End, //VGroup
-
-				Child, HVSpace,
-
-			End, //VGroup
-
-			// --- Window-Sizes
-			Child, VGroup,
-
-				Child, HVSpace,
-
-				Child, VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_WINDOWPAGE_DEFAULT_WINDOWSIZE),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, HVSpace,
-
-					Child, ColGroup(4),
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_DEFAULT_WINDOWSIZE_SHORTHELP),
-
-						Child, Label((ULONG) GetLocString(MSGID_WINDOWPAGE_DEFAULT_WINDOWSIZE_LEFT)),
-						Child, app->Obj[WINLEFT] = BetterStringObject,
-							StringFrame,
-							MUIA_CycleChain, TRUE,
-							MUIA_String_Integer, 220,
-							MUIA_String_Accept, "0123456789",
-							MUIA_String_AdvanceOnCR, TRUE,
-							End, //BetterString
-
-						Child, Label((ULONG) GetLocString(MSGID_WINDOWPAGE_DEFAULT_WINDOWSIZE_TOP)),
-						Child, app->Obj[WINTOP] = BetterStringObject,
-							StringFrame,
-							MUIA_CycleChain, TRUE,
-							MUIA_String_Integer, 100,
-							MUIA_String_Accept, "0123456789",
-							MUIA_String_AdvanceOnCR, TRUE,
-							End, //BetterString
-
-						Child, Label((ULONG) GetLocString(MSGID_WINDOWPAGE_DEFAULT_WINDOWSIZE_WIDTH)),
-						Child, app->Obj[WINWIDTH] = BetterStringObject,
-							StringFrame,
-							MUIA_CycleChain, TRUE,
-							MUIA_String_Integer, 200,
-							MUIA_String_Accept, "0123456789",
-							MUIA_String_AdvanceOnCR, TRUE,
-							End, //BetterString
-
-						Child, Label((ULONG) GetLocString(MSGID_WINDOWPAGE_DEFAULT_WINDOWSIZE_HEIGHT)),
-						Child, app->Obj[WINHEIGHT] = BetterStringObject,
-							StringFrame,
-							MUIA_CycleChain, TRUE,
-							MUIA_String_Integer, 300,
-							MUIA_String_Accept, "0123456789",
-							MUIA_String_AdvanceOnCR, TRUE,
-							End, //BetterString
-					End, //ColGroup
-
-					Child, HVSpace,
-				End, //VGroup
-
-				Child, VGroup,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_WINDOWPAGE_CLEANUPSPACE),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, HVSpace,
-
-					Child, ColGroup(2),
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_CLEANUPSPACE_SHORTHELP),
-
-						Child, Label((ULONG) GetLocString(MSGID_WINDOWPAGE_CLEANUPSPACE_LEFT)),
-						Child, app->Obj[SLIDER_CLEANLEFT] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 20,
-							MUIA_Numeric_Value, 5,
-							MUIA_Slider_Horiz, TRUE,
-							End, //SliderObject
-
-						Child, Label((ULONG) GetLocString(MSGID_WINDOWPAGE_CLEANUPSPACE_TOP)),
-						Child, app->Obj[SLIDER_CLEANTOP] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 20,
-							MUIA_Numeric_Value, 5,
-							MUIA_Slider_Horiz, TRUE,
-							End, //SliderObject
-
-						Child, Label((ULONG) GetLocString(MSGID_WINDOWPAGE_CLEANUPSPACE_XSKIP)),
-						Child, app->Obj[SLIDER_CLEANXSKIP] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 20,
-							MUIA_Numeric_Value, 5,
-							MUIA_Slider_Horiz, TRUE,
-							End, //SliderObject
-
-						Child, Label((ULONG) GetLocString(MSGID_WINDOWPAGE_CLEANUPSPACE_YSKIP)),
-						Child, app->Obj[SLIDER_CLEANYSKIP] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 20,
-							MUIA_Numeric_Value, 5,
-							MUIA_Slider_Horiz, TRUE,
-							End, //SliderObject
-					End, //ColGroup
-
-					Child, HVSpace,
-
-				End, //VGroup
-
-				Child, HVSpace,
-
-			End, //VGroup
-
-			// --- Window-Control Bar Browser
-			Child, RegisterObject,
-				MUIA_Register_Titles, cWindowControlBar,
-				MUIA_CycleChain, TRUE,
-
-				// --- Browser Window Control Bar
-				Child, VGroup,
-
-					Child, VSpace(1),
-
-					Child, VGroup,
-						MUIA_FrameTitle, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_BROWSER_GADGETS),
-						GroupFrame,
-						MUIA_Background, MUII_GroupBack,
-						MUIA_Weight, 500,
-
-						Child, HGroup,
-							Child, VGroup,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_AVAILABLE_GADGETS_SHORTHELP),
-								Child, CLabel2((ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_AVAILABLE_GADGETS)),
-								Child, app->Obj[NLISTVIEW_CONTROLBARGADGETS_BROWSER_AVAILABLE] = NListviewObject,
-									MUIA_Weight, 500,
-									MUIA_Listview_Input, TRUE,
-									MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_Shifted,
-									MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
-									MUIA_NListview_NList, app->Obj[NLIST_CONTROLBARGADGETS_BROWSER_AVAILABLE] = ControlBarGadgetsListObject,
-										InputListFrame,
-										MUIA_Background, MUII_ListBack,
-										MUIA_NList_Format, "W=-1, W=-1 MICW=3, W=-1",
-										MUIA_NList_ShowDropMarks, FALSE,
-										MUIA_NList_AutoVisible, TRUE,
-										MUIA_NList_DisplayHook2, &ControlBarGadgetListDisplayHook,
-										MUIA_NList_ConstructHook2, &ControlBarGadgetListConstructHook,
-										MUIA_NList_DestructHook2, &ControlBarGadgetListDestructHook,
-									End,
-								End, //Listview
-							End, //VGroup
-
-							Child, VGroup,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_ACTIVE_GADGETS_SHORTHELP),
-								Child, CLabel2((ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_ACTIVE_GADGETS)),
-								Child, app->Obj[NLISTVIEW_CONTROLBARGADGETS_BROWSER_ACTIVE] = NListviewObject,
-									MUIA_Weight, 500,
-									MUIA_Listview_Input, TRUE,
-									MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_Shifted,
-									MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
-									MUIA_NListview_NList, app->Obj[NLIST_CONTROLBARGADGETS_BROWSER_ACTIVE] = ControlBarGadgetsListObject,
-										InputListFrame,
-										MUIA_Background, MUII_ListBack,
-										MUIA_NList_Format, "W=-1, W=25 MICW=3, W=-1",
-										MUIA_NList_DragSortable, TRUE,
-										MUIA_NList_ShowDropMarks, TRUE,
-										MUIA_NList_AutoVisible, TRUE,
-										MUIA_NList_DisplayHook2, &ControlBarGadgetListDisplayHook,
-										MUIA_NList_ConstructHook2, &ControlBarGadgetListConstructHook,
-										MUIA_NList_DestructHook2, &ControlBarGadgetListDestructHook,
-									End,
-								End, //Listview
-							End, //VGroup
-						End, //HGroup
-
-						Child, VSpace(1),
-
-						Child, ColGroup(2),
-
-							Child, Label2((ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_NORMALIMAGE)),
-							Child, HGroup,
-								Child, app->Obj[STRING_CONTROLBARGADGETS_BROWSER_NORMALIMAGE] = PopaslObject,
-									MUIA_CycleChain, TRUE,
-									MUIA_Disabled, TRUE,
-									MUIA_Popstring_Button, PopButton(MUII_PopFile),
-									MUIA_Popstring_String, StringObject,
-										StringFrame,
-									End, //String
-									ASLFR_TitleText, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_NORMALIMAGE_ASLTITLE),
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_NORMALIMAGE_SHORTHELP),
-								End, //PopAsl
-								Child, app->Obj[DTIMG_CONTROLBARGADGETS_BROWSER_NORMALIMAGE] = DataTypesImageObject,
-									MUIA_ScaDtpic_Name, (ULONG) "",
-									MUIA_ScaDtpic_FailIfUnavailable, FALSE,
-								End, //DataTypesMCC
-							End, //HGroup
-
-							Child, Label2((ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_SELECTEDIMAGE)),
-							Child, HGroup,
-								Child, app->Obj[STRING_CONTROLBARGADGETS_BROWSER_SELECTEDIMAGE] = PopaslObject,
-									MUIA_CycleChain, TRUE,
-									MUIA_Disabled, TRUE,
-									MUIA_Popstring_Button, PopButton(MUII_PopFile),
-									MUIA_Popstring_String, StringObject,
-										StringFrame,
-									End, //String
-									ASLFR_TitleText, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_SELECTEDIMAGE_ASLTITLE),
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_SELECTEDIMAGE_SHORTHELP),
-								End, //PopAsl
-								Child, app->Obj[DTIMG_CONTROLBARGADGETS_BROWSER_SELECTEDIMAGE] = DataTypesImageObject,
-									MUIA_ScaDtpic_Name, (ULONG) "",
-									MUIA_ScaDtpic_FailIfUnavailable, FALSE,
-								End, //DataTypesMCC
-							End, //HGroup
-
-							Child, Label2((ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_DISABLEDIMAGE)),
-							Child, HGroup,
-								Child, app->Obj[STRING_CONTROLBARGADGETS_BROWSER_DISABLEDIMAGE] = PopaslObject,
-									MUIA_CycleChain, TRUE,
-									MUIA_Disabled, TRUE,
-									MUIA_Popstring_Button, PopButton(MUII_PopFile),
-									MUIA_Popstring_String, StringObject,
-										StringFrame,
-									End, //String
-									ASLFR_TitleText, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_DISABLEDIMAGE_ASLTITLE),
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_DISABLEDIMAGE_SHORTHELP),
-								End, //PopAsl
-								Child, app->Obj[DTIMG_CONTROLBARGADGETS_BROWSER_DISABLEDIMAGE] = DataTypesImageObject,
-									MUIA_ScaDtpic_Name, (ULONG) "",
-									MUIA_ScaDtpic_FailIfUnavailable, FALSE,
-								End, //DataTypesMCC
-							End, //HGroup
-
-							Child, VGroup,
-								Child, Label1((ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_GADGETHELPTEXT)),
-								Child, HVSpace,
-								End, //VGroup
-							Child, app->Obj[TEXTEDITOR_CONTROLBARGADGETS_BROWSER_HELPTEXT] = TextEditorObject,
-								TextFrame,
-								MUIA_Background, MUII_TextBack,
-								MUIA_CycleChain, TRUE,
-								MUIA_Disabled, TRUE,
-								MUIA_TextEditor_Contents, "",
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_GADGETHELPTEXT_SHORTHELP),
-								End, //TextEditor
-
-							Child, Label2((ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_ACTION)),
-							Child, HGroup,
-								Child, app->Obj[STRING_CONTROLBARGADGETS_BROWSER_ACTION] = StringObject,
-									MUIA_Disabled, TRUE,
-									StringFrame,
-									MUIA_String_Contents, "",
-								End, //String
-								Child, app->Obj[POP_CONTROLBARGADGETS_BROWSER_ACTION] = PopobjectObject,
-									MUIA_CycleChain, TRUE,
-									MUIA_Disabled, TRUE,
-									MUIA_Popstring_Button, PopButton(MUII_PopUp),
-									MUIA_Popobject_Object, app->Obj[NLISTVIEW_CONTROLBARGADGETS_BROWSER_ACTION] = NListviewObject,
-										MUIA_NListview_NList, NListObject,
-											InputListFrame,
-											MUIA_Background, MUII_ListBack,
-											MUIA_NList_Format, ",",
-											MUIA_NList_ConstructHook2, &CmdListConstructHook,
-											MUIA_NList_DestructHook2, &CmdListDestructHook,
-											MUIA_NList_DisplayHook2, &CmdListDisplayHook,
-											MUIA_NList_CompareHook2, &CmdListCompareHook,
-											MUIA_NList_AdjustWidth, TRUE,
-											MUIA_NList_SortType, 1,
-											MUIA_NList_TitleMark, MUIV_NList_TitleMark_Down | 1,
-											MUIA_NList_SourceArray, CommandsArray,
-										End, //NListObject
-									End, //NListviewObject
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_ACTION_SHORTHELP),
-								End, //PopobjectObject
-								Child, HVSpace,
-							End, //HGroup
-						End, //ColGroup
-					End, //VGroup
-
-					Child, VSpace(1),
-
-				End, //VGroup
-
-				// --- Standard Window Control Bar
-				Child, VGroup,
-
-					Child, VSpace(1),
-
-					Child, VGroup,
-						MUIA_FrameTitle, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_NORMAL_GADGETS),
-						GroupFrame,
-						MUIA_Background, MUII_GroupBack,
-						MUIA_Weight, 500,
-
-						Child, HGroup,
-							Child, VGroup,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_AVAILABLE_GADGETS_SHORTHELP),
-								Child, CLabel2((ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_AVAILABLE_GADGETS)),
-								Child, app->Obj[NLISTVIEW_CONTROLBARGADGETS_NORMAL_AVAILABLE] = NListviewObject,
-									MUIA_Weight, 500,
-									MUIA_Listview_Input, TRUE,
-									MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_Shifted,
-									MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
-									MUIA_NListview_NList, app->Obj[NLIST_CONTROLBARGADGETS_NORMAL_AVAILABLE] = ControlBarGadgetsListObject,
-										InputListFrame,
-										MUIA_Background, MUII_ListBack,
-										MUIA_NList_Format, "W=-1, W=-1 MICW=3, W=-1",
-										MUIA_NList_ShowDropMarks, FALSE,
-										MUIA_NList_AutoVisible, TRUE,
-										MUIA_NList_DisplayHook2, &ControlBarGadgetListDisplayHook,
-										MUIA_NList_ConstructHook2, &ControlBarGadgetListConstructHook,
-										MUIA_NList_DestructHook2, &ControlBarGadgetListDestructHook,
-									End,
-								End, //Listview
-							End, //VGroup
-
-							Child, VGroup,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_ACTIVE_GADGETS_SHORTHELP),
-								Child, CLabel2((ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_ACTIVE_GADGETS)),
-								Child, app->Obj[NLISTVIEW_CONTROLBARGADGETS_NORMAL_ACTIVE] = NListviewObject,
-									MUIA_Weight, 500,
-									MUIA_Listview_Input, TRUE,
-									MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_Shifted,
-									MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
-									MUIA_NListview_NList, app->Obj[NLIST_CONTROLBARGADGETS_NORMAL_ACTIVE] = ControlBarGadgetsListObject,
-										InputListFrame,
-										MUIA_Background, MUII_ListBack,
-										MUIA_NList_Format, "W=-1, W=25 MICW=3, W=-1",
-										MUIA_NList_DragSortable, TRUE,
-										MUIA_NList_ShowDropMarks, TRUE,
-										MUIA_NList_AutoVisible, TRUE,
-										MUIA_NList_DisplayHook2, &ControlBarGadgetListDisplayHook,
-										MUIA_NList_ConstructHook2, &ControlBarGadgetListConstructHook,
-										MUIA_NList_DestructHook2, &ControlBarGadgetListDestructHook,
-									End,
-								End, //Listview
-							End, //VGroup
-						End, //HGroup
-
-						Child, VSpace(1),
-
-						Child, ColGroup(2),
-
-							Child, Label2((ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_NORMALIMAGE)),
-							Child, HGroup,
-								Child, app->Obj[STRING_CONTROLBARGADGETS_NORMAL_NORMALIMAGE] = PopaslObject,
-									MUIA_CycleChain, TRUE,
-									MUIA_Disabled, TRUE,
-									MUIA_Popstring_Button, PopButton(MUII_PopFile),
-									MUIA_Popstring_String, StringObject,
-										StringFrame,
-									End, //String
-									ASLFR_TitleText, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_NORMALIMAGE_ASLTITLE),
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_NORMALIMAGE_SHORTHELP),
-								End, //PopAsl
-								Child, app->Obj[DTIMG_CONTROLBARGADGETS_NORMAL_NORMALIMAGE] = DataTypesImageObject,
-									MUIA_ScaDtpic_Name, (ULONG) "",
-									MUIA_ScaDtpic_FailIfUnavailable, FALSE,
-								End, //DataTypesMCC
-							End, //HGroup
-
-							Child, Label2((ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_SELECTEDIMAGE)),
-							Child, HGroup,
-								Child, app->Obj[STRING_CONTROLBARGADGETS_NORMAL_SELECTEDIMAGE] = PopaslObject,
-									MUIA_CycleChain, TRUE,
-									MUIA_Disabled, TRUE,
-									MUIA_Popstring_Button, PopButton(MUII_PopFile),
-									MUIA_Popstring_String, StringObject,
-										StringFrame,
-									End, //String
-									ASLFR_TitleText, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_SELECTEDIMAGE_ASLTITLE),
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_SELECTEDIMAGE_SHORTHELP),
-								End, //PopAsl
-								Child, app->Obj[DTIMG_CONTROLBARGADGETS_NORMAL_SELECTEDIMAGE] = DataTypesImageObject,
-									MUIA_ScaDtpic_Name, (ULONG) "",
-									MUIA_ScaDtpic_FailIfUnavailable, FALSE,
-								End, //DataTypesMCC
-							End, //HGroup
-
-							Child, Label2((ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_DISABLEDIMAGE)),
-							Child, HGroup,
-								Child, app->Obj[STRING_CONTROLBARGADGETS_NORMAL_DISABLEDIMAGE] = PopaslObject,
-									MUIA_CycleChain, TRUE,
-									MUIA_Disabled, TRUE,
-									MUIA_Popstring_Button, PopButton(MUII_PopFile),
-									MUIA_Popstring_String, StringObject,
-										StringFrame,
-									End, //String
-									ASLFR_TitleText, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_DISABLEDIMAGE_ASLTITLE),
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_DISABLEDIMAGE_SHORTHELP),
-								End, //PopAsl
-								Child, app->Obj[DTIMG_CONTROLBARGADGETS_NORMAL_DISABLEDIMAGE] = DataTypesImageObject,
-									MUIA_ScaDtpic_Name, (ULONG) "",
-									MUIA_ScaDtpic_FailIfUnavailable, FALSE,
-								End, //DataTypesMCC
-							End, //HGroup
-
-							Child, VGroup,
-								Child, Label1((ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_GADGETHELPTEXT)),
-								Child, HVSpace,
-								End, //VGroup
-							Child, app->Obj[TEXTEDITOR_CONTROLBARGADGETS_NORMAL_HELPTEXT] = TextEditorObject,
-								TextFrame,
-								MUIA_Background, MUII_TextBack,
-								MUIA_CycleChain, TRUE,
-								MUIA_Disabled, TRUE,
-								MUIA_TextEditor_Contents, "",
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_GADGETHELPTEXT_SHORTHELP),
-								End, //TextEditor
-
-							Child, Label2((ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_ACTION)),
-							Child, HGroup,
-								Child, app->Obj[STRING_CONTROLBARGADGETS_NORMAL_ACTION] = StringObject,
-									MUIA_Disabled, TRUE,
-									StringFrame,
-									MUIA_String_Contents, "",
-								End, //String
-								Child, app->Obj[POP_CONTROLBARGADGETS_NORMAL_ACTION] = PopobjectObject,
-									MUIA_CycleChain, TRUE,
-									MUIA_Disabled, TRUE,
-									MUIA_Popstring_Button, PopButton(MUII_PopUp),
-									MUIA_Popobject_Object, app->Obj[NLISTVIEW_CONTROLBARGADGETS_NORMAL_ACTION] = NListviewObject,
-										MUIA_NListview_NList, NListObject,
-											InputListFrame,
-											MUIA_Background, MUII_ListBack,
-											MUIA_NList_Format, ",",
-											MUIA_NList_ConstructHook2, &CmdListConstructHook,
-											MUIA_NList_DestructHook2, &CmdListDestructHook,
-											MUIA_NList_DisplayHook2, &CmdListDisplayHook,
-											MUIA_NList_CompareHook2, &CmdListCompareHook,
-											MUIA_NList_AdjustWidth, TRUE,
-											MUIA_NList_SortType, 1,
-											MUIA_NList_TitleMark, MUIV_NList_TitleMark_Down | 1,
-											MUIA_NList_SourceArray, CommandsArray,
-										End, //NListObject
-									End, //NListviewObject
-									MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_ACTION_SHORTHELP),
-								End, //PopobjectObject
-								Child, HVSpace,
-							End, //HGroup
-						End, //ColGroup
-					End, //VGroup
-
-					Child, VSpace(1),
-
-				End, //VGroup
-
-			End, //Register
-
-			// Windows -- Layout
-			Child, VGroup,
-				Child, HVSpace,
-
-				Child, VGroup,
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_LAYOUTPREFERENCES),
-
-					Child, ColGroup(2),
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_LAYOUT_WBDRAWER)),
-						Child, app->Obj[CYCLE_ICONS_LAYOUT_WBDRAWER] = CycleObject,
-							MUIA_Cycle_Entries, cIconLayoutModes,
-							MUIA_CycleChain, TRUE,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_LAYOUT_WBDRAWER_SHORTHELP),
-						End, //Cycle
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_LAYOUT_WBTOOL)),
-						Child, app->Obj[CYCLE_ICONS_LAYOUT_WBTOOL] = CycleObject,
-							MUIA_Cycle_Entries, cIconLayoutModes,
-							MUIA_CycleChain, TRUE,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_LAYOUT_WBTOOL_SHORTHELP),
-						End, //Cycle
-						Child, Label1((ULONG) GetLocString(MSGID_ICONSPAGE_LAYOUT_WBPROJECT)),
-						Child, app->Obj[CYCLE_ICONS_LAYOUT_WBPROJECT] = CycleObject,
-							MUIA_Cycle_Entries, cIconLayoutModes,
-							MUIA_CycleChain, TRUE,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_ICONSPAGE_LAYOUT_WBPROJECT_SHORTHELP),
-						End, //Cycle
-					End, //ColGroup
-
-				End, //VGroup
-
-				Child, HVSpace,
-
-				Child, VGroup,
-					MUIA_ShowMe, ((struct Library *) DOSBase)->lib_Version >= 51,
-					MUIA_FrameTitle, (ULONG) GetLocString(MSGID_WINDOWPAGE_TRANSPARENCY_WINDOW),
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
-
-					Child, VGroup,
-						MUIA_FrameTitle, (ULONG) GetLocString(MSGID_WINDOWPAGE_TRANSPARENCY_ACTIVEWINDOW),
-						GroupFrame,
-						MUIA_Background, MUII_GroupBack,
-
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_TRANSPARENCY_ACTIVEWINDOW_SHORTHELP),
-
-						Child, ColGroup(3),
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT)),
-
-							Child, app->Obj[SLIDER_TRANSPARENCY_ACTIVEWINDOW] = SliderObject,
-								MUIA_CycleChain, TRUE,
-								MUIA_Numeric_Min, 0,
-								MUIA_Numeric_Max, 100,
-								MUIA_Slider_Horiz, TRUE,
-								MUIA_Numeric_Value, 50,
-							End, //Slider
-
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE)),
-
-							End, //ColGroup
-
-						End, //VGroup
-
-					Child, VGroup,
-						MUIA_FrameTitle, (ULONG) GetLocString(MSGID_WINDOWPAGE_TRANSPARENCY_INACTIVEWINDOW),
-						GroupFrame,
-						MUIA_Background, MUII_GroupBack,
-
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_WINDOWPAGE_TRANSPARENCY_INACTIVEWINDOW_SHORTHELP),
-
-						Child, ColGroup(3),
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT)),
-
-							Child, app->Obj[SLIDER_TRANSPARENCY_INACTIVEWINDOW] = SliderObject,
-								MUIA_CycleChain, TRUE,
-								MUIA_Numeric_Min, 0,
-								MUIA_Numeric_Max, 100,
-								MUIA_Slider_Horiz, TRUE,
-								MUIA_Numeric_Value, 50,
-							End, //Slider
-
-							Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE)),
-
-							End, //ColGroup
-
-						End, //VGroup
-
-					End, //VGroup
-
-				Child, HVSpace,
-			End, //VGroup
-
-		End, //Register
-	End, //VGroup
-	&NewPrefsPages[6]);
+		(APTR)(VGroup,
+                        MUIA_Background, MUII_PageBack,
+
+                        Child, (IPTR)(RegisterObject,
+                                MUIA_Register_Titles, (IPTR)cWindowPages,
+                                MUIA_CycleChain, TRUE,
+
+                                // --- Windows-General
+                                Child, (IPTR)(VGroup,
+
+                                        Child, (IPTR)HVSpace,
+
+                                        Child, (IPTR)(VGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_WINDOWPAGE_WINDOWTITLES),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(ColGroup(2),
+                                                        Child, (IPTR)Label2(GetLocString(MSGID_WINDOWPAGE_WINDOWTITLES_ROOTWINDOW)),
+                                                        Child, (IPTR)(app->Obj[POPPH_ROOTWINDOWTITLE] = PopplaceholderObject,
+                                                                MUIA_Popph_Title, (IPTR) GetLocString(MSGID_WINDOWPAGE_WINDOWTITLES_ROOTWINDOW_DESCRIPTION),
+                                                                MUIA_Popph_Array, (IPTR)cTitleph,
+                                                                MUIA_Popph_Avoid, MUIV_Popph_Avoid_Textinput,
+                                                                MUIA_Popph_ReplaceMode, FALSE,
+                                                                MUIA_Popph_Contents, (IPTR)"",
+                                                                MUIA_Popph_StringMaxLen, 600,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_WINDOWTITLES_ROOTWINDOW_SHORTHELP),
+                                                        End), //Popplaceholder
+
+                                                        Child, (IPTR)Label2(GetLocString(MSGID_WINDOWPAGE_WINDOWTITLES_DIRECTORYWINDOW)),
+                                                        Child, (IPTR)(app->Obj[POPPH_DIRWINDOWTITLE] = PopplaceholderObject,
+                                                                MUIA_Popph_Title, (IPTR) GetLocString(MSGID_WINDOWPAGE_WINDOWTITLES_DIRECTORYWINDOW_DESCRIPTION),
+                                                                MUIA_Popph_Array, (IPTR)cTitleph,
+                                                                MUIA_Popph_Avoid, MUIV_Popph_Avoid_Textinput,
+                                                                MUIA_Popph_ReplaceMode, FALSE,
+                                                                MUIA_Popph_Contents, (IPTR)"",
+                                                                MUIA_Popph_StringMaxLen, 600,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_WINDOWTITLES_DIRECTORYWINDOW_SHORTHELP),
+                                                        End), //Popplaceholder
+
+                                                        Child, (IPTR)Label2(GetLocString(MSGID_DESKTOPPAGE_WINTITLEBAR_REFRESH)),
+                                                        Child, (IPTR)(HGroup,
+                                                                Child, (IPTR)(app->Obj[SLIDER_WINTITLEREFRESH] = SliderObject,
+                                                                        MUIA_CycleChain, TRUE,
+                                                                        MUIA_Numeric_Min, 1,
+                                                                        MUIA_Numeric_Max, 10,
+                                                                        MUIA_Slider_Horiz, TRUE,
+                                                                        MUIA_Numeric_Value, 5,
+                                                                End), //Slider
+                                                                Child, (IPTR)Label((IPTR) GetLocString(MSGID_DESKTOPPAGE_WINTITLEBAR_REFRESH_SECONDS)),
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DESKTOPPAGE_WINTITLEBAR_REFRESH_SHORTHELP),
+                                                        End), //HGroup
+                                                End), //ColGroup
+
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)HVSpace,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DESKTOPPAGE_WINTITLEBAR_REFRESH_MEMCHANGE)),
+                                                        Child, (IPTR)(app->Obj[CHECK_WINTITLEMEM] = CheckMarkHelp(FALSE, MSGID_DESKTOPPAGE_WINTITLEBAR_REFRESH_MEMCHANGE_SHORTHELP)),
+                                                        Child, (IPTR)HVSpace,
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_DESKTOPPAGE_WINTITLEBAR_REFRESH_MEMCHANGE_SHORTHELP),
+                                                End), //HGroup
+
+                                                Child, (IPTR)HVSpace,
+
+                                        End), //VGroup
+
+                                        Child, (IPTR)(VGroup,
+                                                //MUIA_FrameTitle, "",
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(ColGroup(4),
+                                                        Child, (IPTR)HVSpace,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_WINDOWPAGE_WINDOWTYPE)),
+                                                        Child, (IPTR)(app->Obj[CYCLE_WINDOWTYPE] = CycleObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Cycle_Entries, (IPTR)cWindowRefresh,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_WINDOWTYPE_SHORTHELP),
+                                                        End), //Cycle
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)HVSpace,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_WINDOWPAGE_SHOWALL_DEFAULT)),
+                                                        Child, (IPTR)(app->Obj[CYCLE_SHOWALLDEFAULT] = CycleObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Cycle_Entries, (IPTR)cShowAllDefault,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_SHOWALL_DEFAULT_SHORTHELP),
+                                                        End), //Cycle
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)HVSpace,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_WINDOWPAGE_VIEWBY_DEFAULT)),
+                                                        Child, (IPTR)(app->Obj[CYCLE_VIEWBYICONSDEFAULT] = CycleObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Cycle_Entries, (IPTR)cViewByDefault,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_WINDOWTYPE_VIEWBY_DEFAULT_SHORTHELP),
+                                                        End), //Cycle
+                                                        Child, (IPTR)HVSpace,
+                                                End), //ColGroup
+
+                                                Child, (IPTR)HVSpace,
+
+                                        End), //VGroup
+
+                                        Child, (IPTR)(VGroup,
+                                                //MUIA_FrameTitle, "",
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(ColGroup(4),
+                                                        Child, (IPTR)HVSpace,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_WINDOWPAGE_CONTEXTMENU_DRAGBAR)),
+                                                        Child, (IPTR)(app->Obj[CHECK_POPTITLEONLY] = CheckMarkHelp(FALSE, MSGID_WINDOWPAGE_CONTEXTMENU_DRAGBAR_SHORTHELP)),
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)HVSpace,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_WINDOWPAGE_MMB_MOVE)),
+                                                        Child, (IPTR)(app->Obj[CHECK_MMBMOVE] = CheckMarkHelp(FALSE, MSGID_WINDOWPAGE_MMB_MOVE_SHORTHELP)),
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)HVSpace,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_WINDOWPAGE_SHOW_STATUSBAR)),
+                                                        Child, (IPTR)(app->Obj[CHECK_STATUSBAR] = CheckMarkHelp(FALSE, MSGID_WINDOWPAGE_SHOW_STATUSBAR_SHORTHELP)),
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)HVSpace,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_WINDOWPAGE_CHECK_OVERLAP)),
+                                                        Child, (IPTR)(app->Obj[CHECK_CHECKOVERLAP] = CheckMarkHelp(FALSE, MSGID_WINDOWPAGE_CHECK_OVERLAP_SHORTHELP)),
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)HVSpace,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_WINDOWPAGE_CLEANUP_ONRESIZE)),
+                                                        Child, (IPTR)(app->Obj[CHECK_CLEANUP_ONRESIZE] = CheckMarkHelp(FALSE, MSGID_WINDOWPAGE_CLEANUP_ONRESIZE_SHORTHELP)),
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)HVSpace,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_FILEDISPLAYPAGE_HIDE_HIDDENFILES)),
+                                                        Child, (IPTR)(app->Obj[HIDEHIDDENFILES] = CheckMarkHelp(FALSE, MSGID_FILEDISPLAYPAGE_HIDE_HIDDENFILES_SHORTHELP)),
+                                                        Child, (IPTR)HVSpace,
+
+                                                        Child, (IPTR)HVSpace,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_FILEDISPLAYPAGE_HIDE_PROTECTHIDDENFILES)),
+                                                        Child, (IPTR)(app->Obj[HIDEPROTECTHIDDENFILES] = CheckMarkHelp(FALSE, MSGID_FILEDISPLAYPAGE_HIDE_PROTECTHIDDENFILES_SHORTHELP)),
+                                                        Child, (IPTR)HVSpace,
+
+                                                End), //ColGroup
+
+                                                Child, (IPTR)HVSpace,
+
+                                        End), //VGroup
+
+                                        Child, (IPTR)HVSpace,
+
+                                End), //VGroup
+
+                                // --- Window-Sizes
+                                Child, (IPTR)(VGroup,
+
+                                        Child, (IPTR)HVSpace,
+
+                                        Child, (IPTR)(VGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_WINDOWPAGE_DEFAULT_WINDOWSIZE),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(ColGroup(4),
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_DEFAULT_WINDOWSIZE_SHORTHELP),
+
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_WINDOWPAGE_DEFAULT_WINDOWSIZE_LEFT)),
+                                                        Child, (IPTR)(app->Obj[WINLEFT] = BetterStringObject,
+                                                                StringFrame,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_String_Integer, 220,
+                                                                MUIA_String_Accept, (IPTR)"0123456789",
+                                                                MUIA_String_AdvanceOnCR, TRUE,
+                                                        End), //BetterString
+
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_WINDOWPAGE_DEFAULT_WINDOWSIZE_TOP)),
+                                                        Child, (IPTR)(app->Obj[WINTOP] = BetterStringObject,
+                                                                StringFrame,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_String_Integer, 100,
+                                                                MUIA_String_Accept,(IPTR) "0123456789",
+                                                                MUIA_String_AdvanceOnCR, TRUE,
+                                                        End), //BetterString
+
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_WINDOWPAGE_DEFAULT_WINDOWSIZE_WIDTH)),
+                                                        Child, (IPTR)(app->Obj[WINWIDTH] = BetterStringObject,
+                                                                StringFrame,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_String_Integer, 200,
+                                                                MUIA_String_Accept, (IPTR)"0123456789",
+                                                                MUIA_String_AdvanceOnCR, TRUE,
+                                                        End), //BetterString
+
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_WINDOWPAGE_DEFAULT_WINDOWSIZE_HEIGHT)),
+                                                        Child, (IPTR)(app->Obj[WINHEIGHT] = BetterStringObject,
+                                                                StringFrame,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_String_Integer, 300,
+                                                                MUIA_String_Accept, (IPTR)"0123456789",
+                                                                MUIA_String_AdvanceOnCR, TRUE,
+                                                        End), //BetterString
+                                                End), //ColGroup
+
+                                                Child, (IPTR)HVSpace,
+                                        End), //VGroup
+
+                                        Child, (IPTR)(VGroup,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_WINDOWPAGE_CLEANUPSPACE),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)HVSpace,
+
+                                                Child, (IPTR)(ColGroup(2),
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_CLEANUPSPACE_SHORTHELP),
+
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_WINDOWPAGE_CLEANUPSPACE_LEFT)),
+                                                        Child, (IPTR)(app->Obj[SLIDER_CLEANLEFT] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 20,
+                                                                MUIA_Numeric_Value, 5,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                        End), //SliderObject
+
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_WINDOWPAGE_CLEANUPSPACE_TOP)),
+                                                        Child, (IPTR)(app->Obj[SLIDER_CLEANTOP] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 20,
+                                                                MUIA_Numeric_Value, 5,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                        End), //SliderObject
+
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_WINDOWPAGE_CLEANUPSPACE_XSKIP)),
+                                                        Child, (IPTR)(app->Obj[SLIDER_CLEANXSKIP] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 20,
+                                                                MUIA_Numeric_Value, 5,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                        End), //SliderObject
+
+                                                        Child, (IPTR)Label((IPTR) GetLocString(MSGID_WINDOWPAGE_CLEANUPSPACE_YSKIP)),
+                                                        Child, (IPTR)(app->Obj[SLIDER_CLEANYSKIP] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 20,
+                                                                MUIA_Numeric_Value, 5,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                        End), //SliderObject
+                                                End), //ColGroup
+
+                                                Child, (IPTR)HVSpace,
+
+                                        End), //VGroup
+
+                                        Child, (IPTR)HVSpace,
+
+                                End), //VGroup
+
+                                // --- Window-Control Bar Browser
+                                Child, (IPTR)(RegisterObject,
+                                        MUIA_Register_Titles, (IPTR)cWindowControlBar,
+                                        MUIA_CycleChain, TRUE,
+
+                                        // --- Browser Window Control Bar
+                                        Child, (IPTR)(VGroup,
+
+                                                Child, (IPTR)VSpace(1),
+
+                                                Child, (IPTR)(VGroup,
+                                                        MUIA_FrameTitle, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_BROWSER_GADGETS),
+                                                        GroupFrame,
+                                                        MUIA_Background, MUII_GroupBack,
+                                                        MUIA_Weight, 500,
+
+                                                        Child, (IPTR)(HGroup,
+                                                                Child, (IPTR)(VGroup,
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_AVAILABLE_GADGETS_SHORTHELP),
+                                                                        Child, (IPTR)CLabel2(GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_AVAILABLE_GADGETS)),
+                                                                        Child, (IPTR)(app->Obj[NLISTVIEW_CONTROLBARGADGETS_BROWSER_AVAILABLE] = NListviewObject,
+                                                                                MUIA_Weight, 500,
+                                                                                MUIA_Listview_Input, TRUE,
+                                                                                MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_Shifted,
+                                                                                MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
+                                                                                MUIA_NListview_NList, (IPTR)(app->Obj[NLIST_CONTROLBARGADGETS_BROWSER_AVAILABLE] = ControlBarGadgetsListObject,
+                                                                                        InputListFrame,
+                                                                                        MUIA_Background, MUII_ListBack,
+                                                                                        MUIA_NList_Format, (IPTR)"W=-1, W=-1 MICW=3, W=-1",
+                                                                                        MUIA_NList_ShowDropMarks, FALSE,
+                                                                                        MUIA_NList_AutoVisible, TRUE,
+                                                                                        MUIA_NList_DisplayHook2, (IPTR)&ControlBarGadgetListDisplayHook,
+                                                                                        MUIA_NList_ConstructHook2, (IPTR)&ControlBarGadgetListConstructHook,
+                                                                                        MUIA_NList_DestructHook2, (IPTR)&ControlBarGadgetListDestructHook,
+                                                                                End),
+                                                                        End), //Listview
+                                                                End), //VGroup
+
+                                                                Child, (IPTR)(VGroup,
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_ACTIVE_GADGETS_SHORTHELP),
+                                                                        Child, (IPTR)CLabel2(GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_ACTIVE_GADGETS)),
+                                                                        Child, (IPTR)(app->Obj[NLISTVIEW_CONTROLBARGADGETS_BROWSER_ACTIVE] = NListviewObject,
+                                                                                MUIA_Weight, 500,
+                                                                                MUIA_Listview_Input, TRUE,
+                                                                                MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_Shifted,
+                                                                                MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
+                                                                                MUIA_NListview_NList, (IPTR)(app->Obj[NLIST_CONTROLBARGADGETS_BROWSER_ACTIVE] = ControlBarGadgetsListObject,
+                                                                                        InputListFrame,
+                                                                                        MUIA_Background, MUII_ListBack,
+                                                                                        MUIA_NList_Format, (IPTR)"W=-1, W=25 MICW=3, W=-1",
+                                                                                        MUIA_NList_DragSortable, TRUE,
+                                                                                        MUIA_NList_ShowDropMarks, TRUE,
+                                                                                        MUIA_NList_AutoVisible, TRUE,
+                                                                                        MUIA_NList_DisplayHook2, (IPTR)&ControlBarGadgetListDisplayHook,
+                                                                                        MUIA_NList_ConstructHook2, (IPTR)&ControlBarGadgetListConstructHook,
+                                                                                        MUIA_NList_DestructHook2, (IPTR)&ControlBarGadgetListDestructHook,
+                                                                                End),
+                                                                        End), //Listview
+                                                                End), //VGroup
+                                                        End), //HGroup
+
+                                                        Child, (IPTR)VSpace(1),
+
+                                                        Child, (IPTR)(ColGroup(2),
+
+                                                                Child, (IPTR)Label2(GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_NORMALIMAGE)),
+                                                                Child, (IPTR)(HGroup,
+                                                                        Child, (IPTR)(app->Obj[STRING_CONTROLBARGADGETS_BROWSER_NORMALIMAGE] = PopaslObject,
+                                                                                MUIA_CycleChain, TRUE,
+                                                                                MUIA_Disabled, TRUE,
+                                                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopFile),
+                                                                                MUIA_Popstring_String, (IPTR)(StringObject,
+                                                                                        StringFrame,
+                                                                                End), //String
+                                                                                ASLFR_TitleText, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_NORMALIMAGE_ASLTITLE),
+                                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_NORMALIMAGE_SHORTHELP),
+                                                                        End), //PopAsl
+                                                                        Child, (IPTR)(app->Obj[DTIMG_CONTROLBARGADGETS_BROWSER_NORMALIMAGE] = DataTypesImageObject,
+                                                                                MUIA_ScaDtpic_Name, (IPTR) "",
+                                                                                MUIA_ScaDtpic_FailIfUnavailable, FALSE,
+                                                                        End), //DataTypesMCC
+                                                                End), //HGroup
+
+                                                                Child, (IPTR)Label2(GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_SELECTEDIMAGE)),
+                                                                Child, (IPTR)(HGroup,
+                                                                        Child, (IPTR)(app->Obj[STRING_CONTROLBARGADGETS_BROWSER_SELECTEDIMAGE] = PopaslObject,
+                                                                                MUIA_CycleChain, TRUE,
+                                                                                MUIA_Disabled, TRUE,
+                                                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopFile),
+                                                                                MUIA_Popstring_String, (IPTR)(StringObject,
+                                                                                        StringFrame,
+                                                                                End), //String
+                                                                                ASLFR_TitleText, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_SELECTEDIMAGE_ASLTITLE),
+                                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_SELECTEDIMAGE_SHORTHELP),
+                                                                        End), //PopAsl
+                                                                        Child, (IPTR)(app->Obj[DTIMG_CONTROLBARGADGETS_BROWSER_SELECTEDIMAGE] = DataTypesImageObject,
+                                                                                MUIA_ScaDtpic_Name, (IPTR) "",
+                                                                                MUIA_ScaDtpic_FailIfUnavailable, FALSE,
+                                                                        End), //DataTypesMCC
+                                                                End), //HGroup
+
+                                                                Child, (IPTR)Label2(GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_DISABLEDIMAGE)),
+                                                                Child, (IPTR)(HGroup,
+                                                                        Child, (IPTR)(app->Obj[STRING_CONTROLBARGADGETS_BROWSER_DISABLEDIMAGE] = PopaslObject,
+                                                                                MUIA_CycleChain, TRUE,
+                                                                                MUIA_Disabled, TRUE,
+                                                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopFile),
+                                                                                MUIA_Popstring_String, (IPTR)(StringObject,
+                                                                                        StringFrame,
+                                                                                End), //String
+                                                                                ASLFR_TitleText, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_DISABLEDIMAGE_ASLTITLE),
+                                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_DISABLEDIMAGE_SHORTHELP),
+                                                                        End), //PopAsl
+                                                                        Child, (IPTR)(app->Obj[DTIMG_CONTROLBARGADGETS_BROWSER_DISABLEDIMAGE] = DataTypesImageObject,
+                                                                                MUIA_ScaDtpic_Name, (IPTR) "",
+                                                                                MUIA_ScaDtpic_FailIfUnavailable, FALSE,
+                                                                        End), //DataTypesMCC
+                                                                End), //HGroup
+
+                                                                Child, (IPTR)(VGroup,
+                                                                        Child, (IPTR)Label1(GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_GADGETHELPTEXT)),
+                                                                        Child, (IPTR)HVSpace,
+                                                                End), //VGroup
+                                                                Child, (IPTR)(app->Obj[TEXTEDITOR_CONTROLBARGADGETS_BROWSER_HELPTEXT] = TextEditorObject,
+                                                                        TextFrame,
+                                                                        MUIA_Background, MUII_TextBack,
+                                                                        MUIA_CycleChain, TRUE,
+                                                                        MUIA_Disabled, TRUE,
+                                                                        MUIA_TextEditor_Contents, (IPTR)"",
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_GADGETHELPTEXT_SHORTHELP),
+                                                                End), //TextEditor
+
+                                                                Child, (IPTR)Label2(GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_ACTION)),
+                                                                Child, (IPTR)(HGroup,
+                                                                        Child, (IPTR)(app->Obj[STRING_CONTROLBARGADGETS_BROWSER_ACTION] = StringObject,
+                                                                                MUIA_Disabled, TRUE,
+                                                                                StringFrame,
+                                                                                MUIA_String_Contents, (IPTR)"",
+                                                                        End), //String
+                                                                        Child, (IPTR)(app->Obj[POP_CONTROLBARGADGETS_BROWSER_ACTION] = PopobjectObject,
+                                                                                MUIA_CycleChain, TRUE,
+                                                                                MUIA_Disabled, TRUE,
+                                                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopUp),
+                                                                                MUIA_Popobject_Object, (IPTR)(app->Obj[NLISTVIEW_CONTROLBARGADGETS_BROWSER_ACTION] = NListviewObject,
+                                                                                        MUIA_NListview_NList, (IPTR)(NListObject,
+                                                                                                InputListFrame,
+                                                                                                MUIA_Background, MUII_ListBack,
+                                                                                                MUIA_NList_Format, (IPTR)",",
+                                                                                                MUIA_NList_ConstructHook2, (IPTR)&CmdListConstructHook,
+                                                                                                MUIA_NList_DestructHook2, (IPTR)&CmdListDestructHook,
+                                                                                                MUIA_NList_DisplayHook2, (IPTR)&CmdListDisplayHook,
+                                                                                                MUIA_NList_CompareHook2, (IPTR)&CmdListCompareHook,
+                                                                                                MUIA_NList_AdjustWidth, TRUE,
+                                                                                                MUIA_NList_SortType, 1,
+                                                                                                MUIA_NList_TitleMark, MUIV_NList_TitleMark_Down | 1,
+                                                                                                MUIA_NList_SourceArray, (IPTR)CommandsArray,
+                                                                                        End), //NListObject
+                                                                                End), //NListviewObject
+                                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_ACTION_SHORTHELP),
+                                                                        End), //PopobjectObject
+                                                                        Child, (IPTR)HVSpace,
+                                                                End), //HGroup
+                                                        End), //ColGroup
+                                                End), //VGroup
+
+                                                Child, (IPTR)VSpace(1),
+
+                                        End), //VGroup
+
+                                        // --- Standard Window Control Bar
+                                        Child, (IPTR)(VGroup,
+
+                                                Child, (IPTR)VSpace(1),
+
+                                                Child, (IPTR)(VGroup,
+                                                        MUIA_FrameTitle, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_NORMAL_GADGETS),
+                                                        GroupFrame,
+                                                        MUIA_Background, MUII_GroupBack,
+                                                        MUIA_Weight, 500,
+
+                                                        Child, (IPTR)(HGroup,
+                                                                Child, (IPTR)(VGroup,
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_AVAILABLE_GADGETS_SHORTHELP),
+                                                                        Child, (IPTR)CLabel2(GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_AVAILABLE_GADGETS)),
+                                                                        Child, (IPTR)(app->Obj[NLISTVIEW_CONTROLBARGADGETS_NORMAL_AVAILABLE] = NListviewObject,
+                                                                                MUIA_Weight, 500,
+                                                                                MUIA_Listview_Input, TRUE,
+                                                                                MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_Shifted,
+                                                                                MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
+                                                                                MUIA_NListview_NList, (IPTR)(app->Obj[NLIST_CONTROLBARGADGETS_NORMAL_AVAILABLE] = ControlBarGadgetsListObject,
+                                                                                        InputListFrame,
+                                                                                        MUIA_Background, MUII_ListBack,
+                                                                                        MUIA_NList_Format, (IPTR)"W=-1, W=-1 MICW=3, W=-1",
+                                                                                        MUIA_NList_ShowDropMarks, FALSE,
+                                                                                        MUIA_NList_AutoVisible, TRUE,
+                                                                                        MUIA_NList_DisplayHook2, (IPTR)&ControlBarGadgetListDisplayHook,
+                                                                                        MUIA_NList_ConstructHook2, (IPTR)&ControlBarGadgetListConstructHook,
+                                                                                        MUIA_NList_DestructHook2, (IPTR)&ControlBarGadgetListDestructHook,
+                                                                                End),
+                                                                        End), //Listview
+                                                                End), //VGroup
+
+                                                                Child, (IPTR)(VGroup,
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_ACTIVE_GADGETS_SHORTHELP),
+                                                                        Child, (IPTR)CLabel2(GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_ACTIVE_GADGETS)),
+                                                                        Child, (IPTR)(app->Obj[NLISTVIEW_CONTROLBARGADGETS_NORMAL_ACTIVE] = NListviewObject,
+                                                                                MUIA_Weight, 500,
+                                                                                MUIA_Listview_Input, TRUE,
+                                                                                MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_Shifted,
+                                                                                MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
+                                                                                MUIA_NListview_NList, (IPTR)(app->Obj[NLIST_CONTROLBARGADGETS_NORMAL_ACTIVE] = ControlBarGadgetsListObject,
+                                                                                        InputListFrame,
+                                                                                        MUIA_Background, MUII_ListBack,
+                                                                                        MUIA_NList_Format, (IPTR)"W=-1, W=25 MICW=3, W=-1",
+                                                                                        MUIA_NList_DragSortable, TRUE,
+                                                                                        MUIA_NList_ShowDropMarks, TRUE,
+                                                                                        MUIA_NList_AutoVisible, TRUE,
+                                                                                        MUIA_NList_DisplayHook2, (IPTR)&ControlBarGadgetListDisplayHook,
+                                                                                        MUIA_NList_ConstructHook2, (IPTR)&ControlBarGadgetListConstructHook,
+                                                                                        MUIA_NList_DestructHook2, (IPTR)&ControlBarGadgetListDestructHook,
+                                                                                End),
+                                                                        End), //Listview
+                                                                End), //VGroup
+                                                        End), //HGroup
+
+                                                        Child, (IPTR)VSpace(1),
+
+                                                        Child, (IPTR)(ColGroup(2),
+
+                                                                Child, (IPTR)Label2(GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_NORMALIMAGE)),
+                                                                Child, (IPTR)(HGroup,
+                                                                        Child, (IPTR)(app->Obj[STRING_CONTROLBARGADGETS_NORMAL_NORMALIMAGE] = PopaslObject,
+                                                                                MUIA_CycleChain, TRUE,
+                                                                                MUIA_Disabled, TRUE,
+                                                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopFile),
+                                                                                MUIA_Popstring_String, (IPTR)(StringObject,
+                                                                                        StringFrame,
+                                                                                End), //String
+                                                                                ASLFR_TitleText, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_NORMALIMAGE_ASLTITLE),
+                                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_NORMALIMAGE_SHORTHELP),
+                                                                        End), //PopAsl
+                                                                        Child, (IPTR)(app->Obj[DTIMG_CONTROLBARGADGETS_NORMAL_NORMALIMAGE] = DataTypesImageObject,
+                                                                                MUIA_ScaDtpic_Name, (IPTR) "",
+                                                                                MUIA_ScaDtpic_FailIfUnavailable, FALSE,
+                                                                        End), //DataTypesMCC
+                                                                End), //HGroup
+
+                                                                Child, (IPTR)Label2(GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_SELECTEDIMAGE)),
+                                                                Child, (IPTR)(HGroup,
+                                                                        Child, (IPTR)(app->Obj[STRING_CONTROLBARGADGETS_NORMAL_SELECTEDIMAGE] = PopaslObject,
+                                                                                MUIA_CycleChain, TRUE,
+                                                                                MUIA_Disabled, TRUE,
+                                                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopFile),
+                                                                                MUIA_Popstring_String, (IPTR)(StringObject,
+                                                                                        StringFrame,
+                                                                                End), //String
+                                                                                ASLFR_TitleText, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_SELECTEDIMAGE_ASLTITLE),
+                                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_SELECTEDIMAGE_SHORTHELP),
+                                                                        End), //PopAsl
+                                                                        Child, (IPTR)(app->Obj[DTIMG_CONTROLBARGADGETS_NORMAL_SELECTEDIMAGE] = DataTypesImageObject,
+                                                                                MUIA_ScaDtpic_Name, (IPTR) "",
+                                                                                MUIA_ScaDtpic_FailIfUnavailable, FALSE,
+                                                                        End), //DataTypesMCC
+                                                                End), //HGroup
+
+                                                                Child, (IPTR)Label2(GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_DISABLEDIMAGE)),
+                                                                Child, (IPTR)(HGroup,
+                                                                        Child, (IPTR)(app->Obj[STRING_CONTROLBARGADGETS_NORMAL_DISABLEDIMAGE] = PopaslObject,
+                                                                                MUIA_CycleChain, TRUE,
+                                                                                MUIA_Disabled, TRUE,
+                                                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopFile),
+                                                                                MUIA_Popstring_String, (IPTR)(StringObject,
+                                                                                        StringFrame,
+                                                                                End), //String
+                                                                                ASLFR_TitleText, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_DISABLEDIMAGE_ASLTITLE),
+                                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_DISABLEDIMAGE_SHORTHELP),
+                                                                        End), //PopAsl
+                                                                        Child, (IPTR)(app->Obj[DTIMG_CONTROLBARGADGETS_NORMAL_DISABLEDIMAGE] = DataTypesImageObject,
+                                                                                MUIA_ScaDtpic_Name, (IPTR) "",
+                                                                                MUIA_ScaDtpic_FailIfUnavailable, FALSE,
+                                                                        End), //DataTypesMCC
+                                                                End), //HGroup
+
+                                                                Child, (IPTR)(VGroup,
+                                                                        Child, (IPTR)Label1(GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_GADGETHELPTEXT)),
+                                                                        Child, (IPTR)HVSpace,
+                                                                End), //VGroup
+                                                                Child, (IPTR)(app->Obj[TEXTEDITOR_CONTROLBARGADGETS_NORMAL_HELPTEXT] = TextEditorObject,
+                                                                        TextFrame,
+                                                                        MUIA_Background, MUII_TextBack,
+                                                                        MUIA_CycleChain, TRUE,
+                                                                        MUIA_Disabled, TRUE,
+                                                                        MUIA_TextEditor_Contents, (IPTR)"",
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_GADGETHELPTEXT_SHORTHELP),
+                                                                End), //TextEditor
+
+                                                                Child, (IPTR)Label2(GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_ACTION)),
+                                                                Child, (IPTR)(HGroup,
+                                                                        Child, (IPTR)(app->Obj[STRING_CONTROLBARGADGETS_NORMAL_ACTION] = StringObject,
+                                                                                MUIA_Disabled, TRUE,
+                                                                                StringFrame,
+                                                                                MUIA_String_Contents, (IPTR)"",
+                                                                        End), //String
+                                                                        Child, (IPTR)(app->Obj[POP_CONTROLBARGADGETS_NORMAL_ACTION] = PopobjectObject,
+                                                                                MUIA_CycleChain, TRUE,
+                                                                                MUIA_Disabled, TRUE,
+                                                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopUp),
+                                                                                MUIA_Popobject_Object, (IPTR)(app->Obj[NLISTVIEW_CONTROLBARGADGETS_NORMAL_ACTION] = NListviewObject,
+                                                                                        MUIA_NListview_NList, (IPTR)(NListObject,
+                                                                                                InputListFrame,
+                                                                                                MUIA_Background, MUII_ListBack,
+                                                                                                MUIA_NList_Format, (IPTR)",",
+                                                                                                MUIA_NList_ConstructHook2, (IPTR)&CmdListConstructHook,
+                                                                                                MUIA_NList_DestructHook2, (IPTR)&CmdListDestructHook,
+                                                                                                MUIA_NList_DisplayHook2, (IPTR)&CmdListDisplayHook,
+                                                                                                MUIA_NList_CompareHook2, (IPTR)&CmdListCompareHook,
+                                                                                                MUIA_NList_AdjustWidth, TRUE,
+                                                                                                MUIA_NList_SortType, 1,
+                                                                                                MUIA_NList_TitleMark, MUIV_NList_TitleMark_Down | 1,
+                                                                                                MUIA_NList_SourceArray, (IPTR)CommandsArray,
+                                                                                        End), //NListObject
+                                                                                End), //NListviewObject
+                                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_CONTROLBAR_ACTION_SHORTHELP),
+                                                                        End), //PopobjectObject
+                                                                        Child, (IPTR)HVSpace,
+                                                                End), //HGroup
+                                                        End), //ColGroup
+                                                End), //VGroup
+
+                                                Child, (IPTR)VSpace(1),
+
+                                        End), //VGroup
+
+                                End), //Register
+
+                                // Windows -- Layout
+                                Child, (IPTR)(VGroup,
+                                        Child, (IPTR)HVSpace,
+
+                                        Child, (IPTR)(VGroup,
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_LAYOUTPREFERENCES),
+
+                                                Child, (IPTR)(ColGroup(2),
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_LAYOUT_WBDRAWER)),
+                                                        Child, (IPTR)(app->Obj[CYCLE_ICONS_LAYOUT_WBDRAWER] = CycleObject,
+                                                                MUIA_Cycle_Entries, (IPTR)cIconLayoutModes,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_LAYOUT_WBDRAWER_SHORTHELP),
+                                                        End), //Cycle
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_LAYOUT_WBTOOL)),
+                                                        Child, (IPTR)(app->Obj[CYCLE_ICONS_LAYOUT_WBTOOL] = CycleObject,
+                                                                MUIA_Cycle_Entries, (IPTR)cIconLayoutModes,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_LAYOUT_WBTOOL_SHORTHELP),
+                                                        End), //Cycle
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_ICONSPAGE_LAYOUT_WBPROJECT)),
+                                                        Child, (IPTR)(app->Obj[CYCLE_ICONS_LAYOUT_WBPROJECT] = CycleObject,
+                                                                MUIA_Cycle_Entries, (IPTR)cIconLayoutModes,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_ICONSPAGE_LAYOUT_WBPROJECT_SHORTHELP),
+                                                        End), //Cycle
+                                                End), //ColGroup
+
+                                        End), //VGroup
+
+                                        Child, (IPTR)HVSpace,
+
+                                        Child, (IPTR)(VGroup,
+                                                MUIA_ShowMe, ((struct Library *) DOSBase)->lib_Version >= 51,
+                                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_WINDOWPAGE_TRANSPARENCY_WINDOW),
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
+
+                                                Child, (IPTR)(VGroup,
+                                                        MUIA_FrameTitle, (IPTR) GetLocString(MSGID_WINDOWPAGE_TRANSPARENCY_ACTIVEWINDOW),
+                                                        GroupFrame,
+                                                        MUIA_Background, MUII_GroupBack,
+
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_TRANSPARENCY_ACTIVEWINDOW_SHORTHELP),
+
+                                                        Child, (IPTR)(ColGroup(3),
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT)),
+
+                                                                Child, (IPTR)(app->Obj[SLIDER_TRANSPARENCY_ACTIVEWINDOW] = SliderObject,
+                                                                        MUIA_CycleChain, TRUE,
+                                                                        MUIA_Numeric_Min, 0,
+                                                                        MUIA_Numeric_Max, 100,
+                                                                        MUIA_Slider_Horiz, TRUE,
+                                                                        MUIA_Numeric_Value, 50,
+                                                                End), //Slider
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE)),
+
+                                                        End), //ColGroup
+
+                                                End), //VGroup
+
+                                                Child, (IPTR)(VGroup,
+                                                        MUIA_FrameTitle, (IPTR) GetLocString(MSGID_WINDOWPAGE_TRANSPARENCY_INACTIVEWINDOW),
+                                                        GroupFrame,
+                                                        MUIA_Background, MUII_GroupBack,
+
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_WINDOWPAGE_TRANSPARENCY_INACTIVEWINDOW_SHORTHELP),
+
+                                                        Child, (IPTR)(ColGroup(3),
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT)),
+
+                                                                Child, (IPTR)(app->Obj[SLIDER_TRANSPARENCY_INACTIVEWINDOW] = SliderObject,
+                                                                        MUIA_CycleChain, TRUE,
+                                                                        MUIA_Numeric_Min, 0,
+                                                                        MUIA_Numeric_Max, 100,
+                                                                        MUIA_Slider_Horiz, TRUE,
+                                                                        MUIA_Numeric_Value, 50,
+                                                                End), //Slider
+
+                                                                Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE)),
+
+                                                        End), //ColGroup
+
+                                                End), //VGroup
+
+                                        End), //VGroup
+
+                                        Child, (IPTR)HVSpace,
+                                End), //VGroup
+
+                        End), //Register
+                End), //VGroup
+                &NewPrefsPages[6]);
 ///
 }
 
@@ -7293,270 +7290,270 @@ static Object *GenerateTextWindowPage(struct SCAModule *app)
 {
 ///
 	return CreatePrefsPage(app,
-		VGroup,
-		MUIA_Background, MUII_PageBack,
+		(APTR)(VGroup,
+                        MUIA_Background, MUII_PageBack,
 
-		Child, RegisterObject,
-			MUIA_Register_Titles, cTextWindowPages,
-			MUIA_CycleChain, TRUE,
+                        Child, (IPTR)(RegisterObject,
+                                MUIA_Register_Titles, (IPTR)cTextWindowPages,
+                                MUIA_CycleChain, TRUE,
 
-			// Fonts
-			Child, VGroup,
-				MUIA_Background, MUII_RegisterBack,
+                                // Fonts
+                                Child, (IPTR)(VGroup,
+                                        MUIA_Background, MUII_RegisterBack,
 
-				Child, HVSpace,
+                                        Child, (IPTR)HVSpace,
 
-				Child, VGroup,
+                                        Child, (IPTR)(VGroup,
 
-					Child, HVSpace,
+                                                Child, (IPTR)HVSpace,
 
-					Child, HGroup,
-						Child, HVSpace,
-						Child, Label1((ULONG) GetLocString(MSGID_TTFONTSPAGE_TTFTEXTWINDOWFONT_ENABLE)),
-						Child, app->Obj[CHECK_TEXTWINDOW_TTTEXTWINDOWFONT_ENABLE] = CheckMarkHelp(FALSE, MSGID_TTFONTSPAGE_TTFTEXTWINDOWFONT_ENABLE_SHORTHELP),
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TTFONTSPAGE_TTFTEXTWINDOWFONT_ENABLE_SHORTHELP),
-					End, //HGroup
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)HVSpace,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_TTFONTSPAGE_TTFTEXTWINDOWFONT_ENABLE)),
+                                                        Child, (IPTR)(app->Obj[CHECK_TEXTWINDOW_TTTEXTWINDOWFONT_ENABLE] = CheckMarkHelp(FALSE, MSGID_TTFONTSPAGE_TTFTEXTWINDOWFONT_ENABLE_SHORTHELP)),
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TTFONTSPAGE_TTFTEXTWINDOWFONT_ENABLE_SHORTHELP),
+                                                End), //HGroup
 
-					Child, app->Obj[GROUP_TEXTWINDOW_FONT_SELECT] = VGroup,
-						MUIA_FrameTitle, (ULONG) GetLocString(MSGID_ICONSPAGE_GROUP_ICONFONT),
-						GroupFrame,
-						MUIA_Background, MUII_GroupBack,
-						Child, HGroup,
-//							  Child, Label2((ULONG) GetLocString(MSGID_FILEDISPLAYPAGE_FONT)),
-							Child, app->Obj[POP_TEXTMODEFONT] = PopaslObject,
-								MUIA_CycleChain, TRUE,
-								MUIA_Popstring_Button, PopButton(MUII_PopUp),
-								MUIA_Popstring_String, BetterStringObject,
-									StringFrame,
-									MUIA_String_Contents, "Xen/8",
-								End, //BetterString
-								ASLFR_TitleText, (ULONG) GetLocString(MSGID_FILEDISPLAYPAGE_FONT_ASLTITLE),
-								MUIA_Popasl_Type , ASL_FontRequest,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_FILEDISPLAYPAGE_FONT_SHORTHELP),
-							End, //Pop
-						End, //HGroup
+                                                Child, (IPTR)(app->Obj[GROUP_TEXTWINDOW_FONT_SELECT] = VGroup,
+                                                        MUIA_FrameTitle, (IPTR) GetLocString(MSGID_ICONSPAGE_GROUP_ICONFONT),
+                                                        GroupFrame,
+                                                        MUIA_Background, MUII_GroupBack,
+                                                        Child, (IPTR)(HGroup,
+        //							  Child, (IPTR)Label2(GetLocString(MSGID_FILEDISPLAYPAGE_FONT)),
+                                                                Child, (IPTR)(app->Obj[POP_TEXTMODEFONT] = PopaslObject,
+                                                                        MUIA_CycleChain, TRUE,
+                                                                        MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopUp),
+                                                                        MUIA_Popstring_String, (IPTR)(BetterStringObject,
+                                                                                StringFrame,
+                                                                                MUIA_String_Contents, (IPTR)"Xen/8",
+                                                                        End), //BetterString
+                                                                        ASLFR_TitleText, (IPTR) GetLocString(MSGID_FILEDISPLAYPAGE_FONT_ASLTITLE),
+                                                                        MUIA_Popasl_Type , ASL_FontRequest,
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_FILEDISPLAYPAGE_FONT_SHORTHELP),
+                                                                End), //Pop
+                                                        End), //HGroup
 
-						Child, app->Obj[STRING_TEXTMODEFONT_SAMPLE] = FontSampleObject,
-							TextFrame,
-							MUIA_Background, MUII_TextBack,
-							MUIA_FontSample_DemoString, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_FILEDISPLAYPAGE_FONT_SAMPLETEXT),
-							End, //FontSampleMCCObject
-					End, //VGroup
+                                                        Child, (IPTR)(app->Obj[STRING_TEXTMODEFONT_SAMPLE] = FontSampleObject,
+                                                                TextFrame,
+                                                                MUIA_Background, MUII_TextBack,
+                                                                MUIA_FontSample_DemoString, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_FILEDISPLAYPAGE_FONT_SAMPLETEXT),
+                                                        End), //FontSampleMCCObject
+                                                End), //VGroup
 
-					Child, app->Obj[GROUP_TEXTWINDOW_TTTEXTWINDOWFONT] = HGroup,
-						MUIA_FrameTitle, (ULONG) GetLocString(MSGID_TTFONTSPAGE_TEXTWINDOWFONT),
-						GroupFrame,
-						MUIA_Background, MUII_GroupBack,
-						MUIA_Disabled, TRUE,
+                                                Child, (IPTR)(app->Obj[GROUP_TEXTWINDOW_TTTEXTWINDOWFONT] = HGroup,
+                                                        MUIA_FrameTitle, (IPTR) GetLocString(MSGID_TTFONTSPAGE_TEXTWINDOWFONT),
+                                                        GroupFrame,
+                                                        MUIA_Background, MUII_GroupBack,
+                                                        MUIA_Disabled, TRUE,
 
-						Child, VGroup,
-							Child, app->Obj[POPSTRING_TEXTWINDOW_TTTEXTWINDOWFONT] = PopstringObject,
-								MUIA_CycleChain, TRUE,
-								MUIA_Popstring_Button, PopButton(MUII_PopUp),
-								MUIA_Popstring_String, BetterStringObject,
-									StringFrame,
-									MUIA_String_Contents, " ",
-									End, //BetterString
-								MUIA_Popstring_OpenHook, &TextWindowTtfPopOpenHook,
-								MUIA_Popstring_CloseHook, &TextWindowTtfPopCloseHook,
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TTFONTSPAGE_TEXTWINDOWFONT_SHORTHELP),
-							End, //PopstringObject
+                                                        Child, (IPTR)(VGroup,
+                                                                Child, (IPTR)(app->Obj[POPSTRING_TEXTWINDOW_TTTEXTWINDOWFONT] = PopstringObject,
+                                                                        MUIA_CycleChain, TRUE,
+                                                                        MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopUp),
+                                                                        MUIA_Popstring_String, (IPTR)(BetterStringObject,
+                                                                                StringFrame,
+                                                                                MUIA_String_Contents, (IPTR)" ",
+                                                                        End), //BetterString
+                                                                        MUIA_Popstring_OpenHook, (IPTR)&TextWindowTtfPopOpenHook,
+                                                                        MUIA_Popstring_CloseHook, (IPTR)&TextWindowTtfPopCloseHook,
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TTFONTSPAGE_TEXTWINDOWFONT_SHORTHELP),
+                                                                End), //PopstringObject
 
-							Child, app->Obj[MCC_TEXTWINDOW_TTTEXTWINDOWFONT_SAMPLE] = FontSampleObject,
-								TextFrame,
-								MUIA_Background, MUII_TextBack,
-								MUIA_FontSample_DemoString, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
-								MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TTFONTSPAGE_TEXTWINDOWFONT_SAMPLETEXT_SHORTHELP),
-								End, //FontSampleMCCObject
-						End, //VGroup
-					End, //HGroup
-				End, //VGroup
+                                                                Child, (IPTR)(app->Obj[MCC_TEXTWINDOW_TTTEXTWINDOWFONT_SAMPLE] = FontSampleObject,
+                                                                        TextFrame,
+                                                                        MUIA_Background, MUII_TextBack,
+                                                                        MUIA_FontSample_DemoString, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
+                                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TTFONTSPAGE_TEXTWINDOWFONT_SAMPLETEXT_SHORTHELP),
+                                                                End), //FontSampleMCCObject
+                                                        End), //VGroup
+                                                End), //HGroup
+                                        End), //VGroup
 
-				Child, HVSpace,
+                                        Child, (IPTR)HVSpace,
 
-			End, //VGroup
+                                End), //VGroup
 
-			// Columns
-			Child, VGroup,
-				MUIA_Background, MUII_RegisterBack,
+                                // Columns
+                                Child, (IPTR)(VGroup,
+                                        MUIA_Background, MUII_RegisterBack,
 
-				Child, HVSpace,
+                                        Child, (IPTR)HVSpace,
 
-				Child, HGroup,
-					MUIA_Weight, 500,
+                                        Child, (IPTR)(HGroup,
+                                                MUIA_Weight, 500,
 
-					Child, VGroup,
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_FILEDISPLAYPAGE_AVAILABLE_COLUMNS_SHORTHELP),
-						Child, CLabel2((ULONG) GetLocString(MSGID_FILEDISPLAYPAGE_AVAILABLE_COLUMNS)),
-						Child, app->Obj[NLISTVIEW_STORAGE_FILEDISPLAY] = NListviewObject,
-							MUIA_Listview_Input, TRUE,
-							MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_Shifted,
-							MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
-							MUIA_NListview_NList, app->Obj[NLIST_STORAGE_FILEDISPLAY] = TextWindowColumnsListObject,
-								InputListFrame,
-								MUIA_Background, MUII_ListBack,
-								//MUIA_NList_Format, "",
-								MUIA_NList_DragSortable, FALSE,
-								MUIA_NList_ShowDropMarks, FALSE,
-								MUIA_NList_AutoVisible, TRUE,
-								MUIA_NList_DisplayHook2, &FileDisplayDisplayHook,
-								MUIA_NList_ConstructHook2, &FileDisplayConstructHook,
-								MUIA_NList_DestructHook2, &FileDisplayDestructHook,
-							End,
-						End, //Listview
-					End, //VGroup
+                                                Child, (IPTR)(VGroup,
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_FILEDISPLAYPAGE_AVAILABLE_COLUMNS_SHORTHELP),
+                                                        Child, (IPTR)CLabel2(GetLocString(MSGID_FILEDISPLAYPAGE_AVAILABLE_COLUMNS)),
+                                                        Child, (IPTR)(app->Obj[NLISTVIEW_STORAGE_FILEDISPLAY] = NListviewObject,
+                                                                MUIA_Listview_Input, TRUE,
+                                                                MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_Shifted,
+                                                                MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
+                                                                MUIA_NListview_NList, (IPTR)(app->Obj[NLIST_STORAGE_FILEDISPLAY] = TextWindowColumnsListObject,
+                                                                        InputListFrame,
+                                                                        MUIA_Background, MUII_ListBack,
+                                                                        //MUIA_NList_Format, (IPTR)"",
+                                                                        MUIA_NList_DragSortable, FALSE,
+                                                                        MUIA_NList_ShowDropMarks, FALSE,
+                                                                        MUIA_NList_AutoVisible, TRUE,
+                                                                        MUIA_NList_DisplayHook2, (IPTR)&FileDisplayDisplayHook,
+                                                                        MUIA_NList_ConstructHook2, (IPTR)&FileDisplayConstructHook,
+                                                                        MUIA_NList_DestructHook2, (IPTR)&FileDisplayDestructHook,
+                                                                End),
+                                                        End), //Listview
+                                                End), //VGroup
 
-					Child, VGroup,
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_FILEDISPLAYPAGE_COLUMNS_INUSE_SHORTHELP),
-						Child, CLabel2((ULONG) GetLocString(MSGID_FILEDISPLAYPAGE_COLUMNS_INUSE)),
-						Child, app->Obj[NLISTVIEW_USE_FILEDISPLAY] = NListviewObject,
-							MUIA_Listview_Input, TRUE,
-							MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_Shifted,
-							MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
-							MUIA_NListview_NList, app->Obj[NLIST_USE_FILEDISPLAY] = TextWindowColumnsListObject,
-								InputListFrame,
-								MUIA_Background, MUII_ListBack,
-								//MUIA_NList_Format, "",
-								MUIA_NList_DragSortable, TRUE,
-								MUIA_NList_ShowDropMarks, TRUE,
-								MUIA_NList_AutoVisible, TRUE,
-								MUIA_NList_DisplayHook2, &FileDisplayDisplayHook,
-								MUIA_NList_ConstructHook2, &FileDisplayConstructHook,
-								MUIA_NList_DestructHook2, &FileDisplayDestructHook,
-							End,
-						End, //Listview
-					End, //VGroup
-				End, //HGroup
+                                                Child, (IPTR)(VGroup,
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_FILEDISPLAYPAGE_COLUMNS_INUSE_SHORTHELP),
+                                                        Child, (IPTR)CLabel2(GetLocString(MSGID_FILEDISPLAYPAGE_COLUMNS_INUSE)),
+                                                        Child, (IPTR)(app->Obj[NLISTVIEW_USE_FILEDISPLAY] = NListviewObject,
+                                                                MUIA_Listview_Input, TRUE,
+                                                                MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_Shifted,
+                                                                MUIA_Listview_DragType, MUIV_Listview_DragType_Immediate,
+                                                                MUIA_NListview_NList, (IPTR)(app->Obj[NLIST_USE_FILEDISPLAY] = TextWindowColumnsListObject,
+                                                                        InputListFrame,
+                                                                        MUIA_Background, MUII_ListBack,
+                                                                        //MUIA_NList_Format, (IPTR)"",
+                                                                        MUIA_NList_DragSortable, TRUE,
+                                                                        MUIA_NList_ShowDropMarks, TRUE,
+                                                                        MUIA_NList_AutoVisible, TRUE,
+                                                                        MUIA_NList_DisplayHook2, (IPTR)&FileDisplayDisplayHook,
+                                                                        MUIA_NList_ConstructHook2, (IPTR)&FileDisplayConstructHook,
+                                                                        MUIA_NList_DestructHook2, (IPTR)&FileDisplayDestructHook,
+                                                                End),
+                                                        End), //Listview
+                                                End), //VGroup
+                                        End), //HGroup
 
-				Child, HVSpace,
-			End, //VGroup
+                                        Child, (IPTR)HVSpace,
+                                End), //VGroup
 
-			// Selection marks
-			Child, VGroup,
-				MUIA_Background, MUII_RegisterBack,
+                                // Selection marks
+                                Child, (IPTR)(VGroup,
+                                        MUIA_Background, MUII_RegisterBack,
 
-				Child, app->Obj[GROUP_TEXTWINDOWS_SELECTIONMARK] = VGroup,
+                                        Child, (IPTR)(app->Obj[GROUP_TEXTWINDOWS_SELECTIONMARK] = VGroup,
 
-//				  	Child, HVSpace,
+        //				  	Child, (IPTR)HVSpace,
 
-					Child, HGroup,
-						MUIA_FrameTitle, (ULONG) GetLocString(MSGID_TEXTWINDOWSPAGE_GROUP_BASECOLOR),
-						GroupFrame,
-						MUIA_Background, MUII_GroupBack,
+                                                Child, (IPTR)(HGroup,
+                                                        MUIA_FrameTitle, (IPTR) GetLocString(MSGID_TEXTWINDOWSPAGE_GROUP_BASECOLOR),
+                                                        GroupFrame,
+                                                        MUIA_Background, MUII_GroupBack,
 
-						Child, app->Obj[COLORADJUST_TEXTWINDOWS_SELECTIONMARK] = ColoradjustObject,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TEXTWINDOWSPAGE_SELECTIONMARK_BASECOLOR_SHORTHELP),
-							End, //ColoradjustObject
-					End, //HGroup
+                                                        Child, (IPTR)(app->Obj[COLORADJUST_TEXTWINDOWS_SELECTIONMARK] = ColoradjustObject,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TEXTWINDOWSPAGE_SELECTIONMARK_BASECOLOR_SHORTHELP),
+                                                        End), //ColoradjustObject
+                                                End), //HGroup
 
-//				  	Child, HVSpace,
+        //				  	Child, (IPTR)HVSpace,
 
-					Child, HGroup,
-						MUIA_FrameTitle, (ULONG) GetLocString(MSGID_TEXTWINDOWSPAGE_SELECTION_BORDER_TRANSPARENCY),
-						GroupFrame,
-						MUIA_Background, MUII_GroupBack,
+                                                Child, (IPTR)(HGroup,
+                                                        MUIA_FrameTitle, (IPTR) GetLocString(MSGID_TEXTWINDOWSPAGE_SELECTION_BORDER_TRANSPARENCY),
+                                                        GroupFrame,
+                                                        MUIA_Background, MUII_GroupBack,
 
-						Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT)),
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT)),
 
-						Child, app->Obj[SLIDER_TEXTWINDOWS_SELECTBORDERTRANSPARENCY] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 255,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 255,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TEXTWINDOWSPAGE_SELECTIONMARK_BORDER_TRANSPARENCY_SHORTHELP),
-						End, //Slider
+                                                        Child, (IPTR)(app->Obj[SLIDER_TEXTWINDOWS_SELECTBORDERTRANSPARENCY] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 255,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 255,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TEXTWINDOWSPAGE_SELECTIONMARK_BORDER_TRANSPARENCY_SHORTHELP),
+                                                        End), //Slider
 
-						Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE)),
-					End, //HGroup
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE)),
+                                                End), //HGroup
 
-					Child, HGroup,
-						MUIA_FrameTitle, (ULONG) GetLocString(MSGID_TEXTWINDOWSPAGE_SELECTION_FILL_TRANSPARENCY),
-						GroupFrame,
-						MUIA_Background, MUII_GroupBack,
+                                                Child, (IPTR)(HGroup,
+                                                        MUIA_FrameTitle, (IPTR) GetLocString(MSGID_TEXTWINDOWSPAGE_SELECTION_FILL_TRANSPARENCY),
+                                                        GroupFrame,
+                                                        MUIA_Background, MUII_GroupBack,
 
-						Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT)),
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_TRANSPARENT)),
 
-						Child, app->Obj[SLIDER_TEXTWINDOWS_SELECTFILLTRANSPARENCY] = SliderObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Numeric_Min, 0,
-							MUIA_Numeric_Max, 255,
-							MUIA_Slider_Horiz, TRUE,
-							MUIA_Numeric_Value, 128,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TEXTWINDOWSPAGE_SELECTIONMARK_FILL_TRANSPARENCY_SHORTHELP),
-						End, //Slider
+                                                        Child, (IPTR)(app->Obj[SLIDER_TEXTWINDOWS_SELECTFILLTRANSPARENCY] = SliderObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Numeric_Min, 0,
+                                                                MUIA_Numeric_Max, 255,
+                                                                MUIA_Slider_Horiz, TRUE,
+                                                                MUIA_Numeric_Value, 128,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TEXTWINDOWSPAGE_SELECTIONMARK_FILL_TRANSPARENCY_SHORTHELP),
+                                                        End), //Slider
 
-						Child, Label1((ULONG) GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE)),
-					End, //HGroup
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_DRAGNDROPPAGE_TRANSPARENCY_OPAQUE)),
+                                                End), //HGroup
 
-					Child, HVSpace,
+                                                Child, (IPTR)HVSpace,
 
-				End, //VGroup
+                                        End), //VGroup
 
-				Child, HGroup,
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
+                                        Child, (IPTR)(HGroup,
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
 
-					Child, app->Obj[MCC_TEXTWINDOWS_SELECTMARKER_SAMPLE] = SelectMarkSampleObject,
-						TextFrame,
-						MUIA_Background, MUII_TextBack,
-						TIHA_DemoString, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
-					End, //
-				End, //HGroup
+                                                Child, (IPTR)(app->Obj[MCC_TEXTWINDOWS_SELECTMARKER_SAMPLE] = SelectMarkSampleObject,
+                                                        TextFrame,
+                                                        MUIA_Background, MUII_TextBack,
+                                                        TIHA_DemoString, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
+                                                End), //
+                                        End), //HGroup
 
-			End, //VGroup
+                                End), //VGroup
 
-			// Miscellaneous
-			Child, VGroup,
-				MUIA_Background, MUII_RegisterBack,
+                                // Miscellaneous
+                                Child, (IPTR)(VGroup,
+                                        MUIA_Background, MUII_RegisterBack,
 
-				Child, HVSpace,
+                                        Child, (IPTR)HVSpace,
 
-				Child, HGroup,
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
+                                        Child, (IPTR)(HGroup,
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
 
-					Child, HVSpace,
+                                                Child, (IPTR)HVSpace,
 
-					Child, ColGroup(2),
-						Child, Label1((ULONG) GetLocString(MSGID_TEXTWINDOWSPAGE_DRAWERSORT)),
-						Child, app->Obj[CYCLE_DRAWERSORTMODE] = CycleObject,
-							MUIA_CycleChain, TRUE,
-							MUIA_Cycle_Entries, cDrawerSortMode,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TEXTWINDOWSPAGE_DRAWERSORT_SHORTHELP),
-							End, //CycleObject
-					End, //ColGroup
-					Child, HVSpace,
+                                                Child, (IPTR)(ColGroup(2),
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_TEXTWINDOWSPAGE_DRAWERSORT)),
+                                                        Child, (IPTR)(app->Obj[CYCLE_DRAWERSORTMODE] = CycleObject,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Cycle_Entries, (IPTR)cDrawerSortMode,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TEXTWINDOWSPAGE_DRAWERSORT_SHORTHELP),
+                                                        End), //CycleObject
+                                                End), //ColGroup
+                                                Child, (IPTR)HVSpace,
 
-				End, //HGroup
+                                        End), //HGroup
 
-				Child, HGroup,
-					GroupFrame,
-					MUIA_Background, MUII_GroupBack,
+                                        Child, (IPTR)(HGroup,
+                                                GroupFrame,
+                                                MUIA_Background, MUII_GroupBack,
 
-					Child, HVSpace,
+                                                Child, (IPTR)HVSpace,
 
-					Child, ColGroup(2),
+                                                Child, (IPTR)(ColGroup(2),
 
-						Child, Label1((ULONG) GetLocString(MSGID_FILEDISPLAYPAGE_SOFTLINKS_UNDERLINED)),
-						Child, app->Obj[SOFTTEXTSLINK] = CheckMarkHelp(FALSE, MSGID_FILEDISPLAYPAGE_SOFTLINKS_UNDERLINED_SHORTHELP),
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_FILEDISPLAYPAGE_SOFTLINKS_UNDERLINED)),
+                                                        Child, (IPTR)(app->Obj[SOFTTEXTSLINK] = CheckMarkHelp(FALSE, MSGID_FILEDISPLAYPAGE_SOFTLINKS_UNDERLINED_SHORTHELP)),
 
-						Child, Label1((ULONG) GetLocString(MSGID_FILEDISPLAYPAGE_STRIPED)),
-						Child, app->Obj[CHECK_STRIPED_WINDOW] = CheckMarkHelp(FALSE, MSGID_FILEDISPLAYPAGE_STRIPED_SHORTHELP),
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_FILEDISPLAYPAGE_STRIPED)),
+                                                        Child, (IPTR)(app->Obj[CHECK_STRIPED_WINDOW] = CheckMarkHelp(FALSE, MSGID_FILEDISPLAYPAGE_STRIPED_SHORTHELP)),
 
-						Child, Label1((ULONG) GetLocString(MSGID_FILEDISPLAYPAGE_SELECTTEXTICONNAME)),
-						Child, app->Obj[CHECK_SELECTTEXTICONNAME] = CheckMarkHelp(FALSE, MSGID_FILEDISPLAYPAGE_SELECTTEXTICONNAME_SHORTHELP),
-					End, //ColGroup
-					Child, HVSpace,
+                                                        Child, (IPTR)Label1(GetLocString(MSGID_FILEDISPLAYPAGE_SELECTTEXTICONNAME)),
+                                                        Child, (IPTR)(app->Obj[CHECK_SELECTTEXTICONNAME] = CheckMarkHelp(FALSE, MSGID_FILEDISPLAYPAGE_SELECTTEXTICONNAME_SHORTHELP)),
+                                                End), //ColGroup
+                                                Child, (IPTR)HVSpace,
 
-				End, //HGroup
-				Child, HVSpace,
+                                        End), //HGroup
+                                        Child, (IPTR)HVSpace,
 
-			End, //VGroup
-		End, //Register
-	End, //VGroup
-	&NewPrefsPages[7]);
+                                End), //VGroup
+                        End), //Register
+                End), //VGroup
+                &NewPrefsPages[7]);
 ///
 }
 
@@ -7566,164 +7563,164 @@ static Object *GenerateTrueTypeFontsPage(struct SCAModule *app)
 {
 ///
 	return CreatePrefsPage(app,
-		VGroup,
-		MUIA_Background, MUII_PageBack,
+		(APTR)(VGroup,
+                        MUIA_Background, MUII_PageBack,
 
-		Child, HVSpace,
+                        Child, (IPTR)HVSpace,
 
-		Child, app->Obj[GROUP_TTGLOBALS] = HGroup,
-			MUIA_FrameTitle, (ULONG) GetLocString(MSGID_TTFONTSPAGE_GLOBALS),
-			GroupFrame,
-			MUIA_Background, MUII_GroupBack,
-			MUIA_Disabled, TRUE,
+                        Child, (IPTR)(app->Obj[GROUP_TTGLOBALS] = HGroup,
+                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_TTFONTSPAGE_GLOBALS),
+                                GroupFrame,
+                                MUIA_Background, MUII_GroupBack,
+                                MUIA_Disabled, TRUE,
 
-			Child, VGroup,
-				Child, HVSpace,
+                                Child, (IPTR)(VGroup,
+                                        Child, (IPTR)HVSpace,
 
-				Child,	ColGroup(2),
-					Child, Label1((ULONG) GetLocString(MSGID_TTFONTSPAGE_ANTIALIASING)),
-					Child, app->Obj[CYCLE_TTANTIALIAS] = CycleObject,
-						MUIA_CycleChain, TRUE,
-						MUIA_Cycle_Entries, cTTFontsAntiAliasing,
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TTFONTSPAGE_ANTIALIASING_SHORTHELP),
-					End, //Radio
-				End, //ColGroup
+                                        Child, (IPTR)(ColGroup(2),
+                                                Child, (IPTR)Label1(GetLocString(MSGID_TTFONTSPAGE_ANTIALIASING)),
+                                                Child, (IPTR)(app->Obj[CYCLE_TTANTIALIAS] = CycleObject,
+                                                        MUIA_CycleChain, TRUE,
+                                                        MUIA_Cycle_Entries, (IPTR)cTTFontsAntiAliasing,
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TTFONTSPAGE_ANTIALIASING_SHORTHELP),
+                                                End), //Radio
+                                        End), //ColGroup
 
-				Child, HVSpace,
+                                        Child, (IPTR)HVSpace,
 
-				Child,	ColGroup(2),
-					Child, Label(GetLocString(MSGID_TTFONTSPAGE_GAMMA)),
-					Child, app->Obj[SLIDER_TTGAMMA] = TTGammaSliderObject,
-						MUIA_CycleChain, TRUE,
-						MUIA_Numeric_Min, 100,
-						MUIA_Numeric_Max, 5000,
-						MUIA_Numeric_Value, 2500,
-						MUIA_ShortHelp, GetLocString(MSGID_TTFONTSPAGE_GAMMA_SHORTHELP),
-						End,
-				End, //ColGroup
+                                        Child, (IPTR)(ColGroup(2),
+                                                Child, (IPTR)Label(GetLocString(MSGID_TTFONTSPAGE_GAMMA)),
+                                                Child, (IPTR)(app->Obj[SLIDER_TTGAMMA] = TTGammaSliderObject,
+                                                        MUIA_CycleChain, TRUE,
+                                                        MUIA_Numeric_Min, 100,
+                                                        MUIA_Numeric_Max, 5000,
+                                                        MUIA_Numeric_Value, 2500,
+                                                        MUIA_ShortHelp, (IPTR)GetLocString(MSGID_TTFONTSPAGE_GAMMA_SHORTHELP),
+                                                End),
+                                        End), //ColGroup
 
-				Child, HVSpace,
-			End, //HGroup
-		End, //HGroup
+                                        Child, (IPTR)HVSpace,
+                                End), //VGroup
+                        End), //HGroup
 
-		Child, app->Obj[GROUP_TTSCREENFONT] = HGroup,
-			MUIA_FrameTitle, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SCREENFONT),
-			GroupFrame,
-			MUIA_Background, MUII_GroupBack,
-			MUIA_Disabled, TRUE,
+                        Child, (IPTR)(app->Obj[GROUP_TTSCREENFONT] = HGroup,
+                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SCREENFONT),
+                                GroupFrame,
+                                MUIA_Background, MUII_GroupBack,
+                                MUIA_Disabled, TRUE,
 
-			Child, VGroup,
-				Child, HGroup,
-					Child, HVSpace,
-					Child, Label1((ULONG) GetLocString(MSGID_TTFONTSPAGE_SCREENFONT_ENABLE)),
-					Child, app->Obj[CHECK_TTSCREENFONT_ENABLE] = CheckMarkHelp(FALSE, MSGID_TTFONTSPAGE_SCREENFONT_ENABLE_SHORTHELP),
+                                Child, (IPTR)(VGroup,
+                                        Child, (IPTR)(HGroup,
+                                                Child, (IPTR)HVSpace,
+                                                Child, (IPTR)Label1(GetLocString(MSGID_TTFONTSPAGE_SCREENFONT_ENABLE)),
+                                                Child, (IPTR)(app->Obj[CHECK_TTSCREENFONT_ENABLE] = CheckMarkHelp(FALSE, MSGID_TTFONTSPAGE_SCREENFONT_ENABLE_SHORTHELP)),
 
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SCREENFONT_ENABLE_SHORTHELP),
-				End, //HGroup
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SCREENFONT_ENABLE_SHORTHELP),
+                                        End), //HGroup
 
-				Child, app->Obj[POPSTRING_TTSCREENFONT] = PopstringObject,
-					MUIA_CycleChain, TRUE,
-					MUIA_Popstring_Button, PopButton(MUII_PopUp),
-					MUIA_Popstring_String, BetterStringObject,
-						StringFrame,
-						MUIA_String_Contents, " ",
-					End, //BetterString
-					MUIA_Popstring_OpenHook, &ScreenTtfPopOpenHook,
-					MUIA_Popstring_CloseHook, &ScreenTtfPopCloseHook,
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SCREENFONT_SHORTHELP),
-				End, //PopstringObject
+                                        Child, (IPTR)(app->Obj[POPSTRING_TTSCREENFONT] = PopstringObject,
+                                                MUIA_CycleChain, TRUE,
+                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopUp),
+                                                MUIA_Popstring_String, (IPTR)(BetterStringObject,
+                                                        StringFrame,
+                                                        MUIA_String_Contents, (IPTR)" ",
+                                                End), //BetterString
+                                                MUIA_Popstring_OpenHook, (IPTR)&ScreenTtfPopOpenHook,
+                                                MUIA_Popstring_CloseHook, (IPTR)&ScreenTtfPopCloseHook,
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SCREENFONT_SHORTHELP),
+                                        End), //PopstringObject
 
-				Child, app->Obj[MCC_TTSCREENFONT_SAMPLE] = FontSampleObject,
-					TextFrame,
-					MUIA_Background, MUII_TextBack,
-					MUIA_FontSample_DemoString, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SCREENFONT_SAMPLETEXT_SHORTHELP),
-					End, //FontSampleMCCObject
+                                        Child, (IPTR)(app->Obj[MCC_TTSCREENFONT_SAMPLE] = FontSampleObject,
+                                                TextFrame,
+                                                MUIA_Background, MUII_TextBack,
+                                                MUIA_FontSample_DemoString, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SCREENFONT_SAMPLETEXT_SHORTHELP),
+                                        End), //FontSampleMCCObject
 
-			End, //VGroup
+                                End), //VGroup
 
-		End, //HGroup
+                        End), //HGroup
 
-		Child, HVSpace,
+                        Child, (IPTR)HVSpace,
 
-		Child, app->Obj[GROUP_TTICONFONT] = HGroup,
-			MUIA_FrameTitle, (ULONG) GetLocString(MSGID_TTFONTSPAGE_ICONFONT),
-			GroupFrame,
-			MUIA_Background, MUII_GroupBack,
-			MUIA_Disabled, TRUE,
+                        Child, (IPTR)(app->Obj[GROUP_TTICONFONT] = HGroup,
+                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_TTFONTSPAGE_ICONFONT),
+                                GroupFrame,
+                                MUIA_Background, MUII_GroupBack,
+                                MUIA_Disabled, TRUE,
 
-			Child, VGroup,
-				Child, HGroup,
-					Child, HVSpace,
-					Child, Label1((ULONG) GetLocString(MSGID_TTFONTSPAGE_ICONFONT_ENABLE)),
-					Child, app->Obj[CHECK_TTICONFONT_ENABLE] = CheckMarkHelp(FALSE, MSGID_FONTSPAGE_TTFICONFONT_ENABLE_SHORTHELP),
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_FONTSPAGE_TTFICONFONT_ENABLE_SHORTHELP),
-				End, //HGroup
+                                Child, (IPTR)(VGroup,
+                                        Child, (IPTR)(HGroup,
+                                                Child, (IPTR)HVSpace,
+                                                Child, (IPTR)Label1(GetLocString(MSGID_TTFONTSPAGE_ICONFONT_ENABLE)),
+                                                Child, (IPTR)(app->Obj[CHECK_TTICONFONT_ENABLE] = CheckMarkHelp(FALSE, MSGID_FONTSPAGE_TTFICONFONT_ENABLE_SHORTHELP)),
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_FONTSPAGE_TTFICONFONT_ENABLE_SHORTHELP),
+                                        End), //HGroup
 
-				Child, app->Obj[POPSTRING_TTICONFONT] = PopstringObject,
-					MUIA_CycleChain, TRUE,
-					MUIA_Popstring_Button, PopButton(MUII_PopUp),
-					MUIA_Popstring_String, BetterStringObject,
-						StringFrame,
-						MUIA_String_Contents, " ",
-						End, //BetterString
-					MUIA_Popstring_OpenHook, &IconTtfPopOpenHook,
-					MUIA_Popstring_CloseHook, &IconTtfPopCloseHook,
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TTFONTSPAGE_ICONFONT_SHORTHELP),
-				End, //PopstringObject
+                                        Child, (IPTR)(app->Obj[POPSTRING_TTICONFONT] = PopstringObject,
+                                                MUIA_CycleChain, TRUE,
+                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopUp),
+                                                MUIA_Popstring_String, (IPTR)(BetterStringObject,
+                                                        StringFrame,
+                                                        MUIA_String_Contents, (IPTR)" ",
+                                                End), //BetterString
+                                                MUIA_Popstring_OpenHook, (IPTR)&IconTtfPopOpenHook,
+                                                MUIA_Popstring_CloseHook, (IPTR)&IconTtfPopCloseHook,
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TTFONTSPAGE_ICONFONT_SHORTHELP),
+                                        End), //PopstringObject
 
-				Child, app->Obj[MCC_TTICONFONT_SAMPLE] = FontSampleObject,
-					TextFrame,
-					MUIA_Background, MUII_TextBack,
-					MUIA_FontSample_DemoString, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TTFONTSPAGE_ICONFONT_SAMPLETEXT_SHORTHELP),
-					End, //FontSampleMCCObject
-			End, //VGroup
+                                        Child, (IPTR)(app->Obj[MCC_TTICONFONT_SAMPLE] = FontSampleObject,
+                                                TextFrame,
+                                                MUIA_Background, MUII_TextBack,
+                                                MUIA_FontSample_DemoString, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TTFONTSPAGE_ICONFONT_SAMPLETEXT_SHORTHELP),
+                                        End), //FontSampleMCCObject
+                                End), //VGroup
 
-		End, //HGroup
+                        End), //HGroup
 
-		Child, HVSpace,
+                        Child, (IPTR)HVSpace,
 
-		Child, app->Obj[GROUP_TTTEXTWINDOWFONT] = HGroup,
-			MUIA_FrameTitle, (ULONG) GetLocString(MSGID_TTFONTSPAGE_TEXTWINDOWFONT),
-			GroupFrame,
-			MUIA_Background, MUII_GroupBack,
-			MUIA_Disabled, TRUE,
+                        Child, (IPTR)(app->Obj[GROUP_TTTEXTWINDOWFONT] = HGroup,
+                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_TTFONTSPAGE_TEXTWINDOWFONT),
+                                GroupFrame,
+                                MUIA_Background, MUII_GroupBack,
+                                MUIA_Disabled, TRUE,
 
-			Child, VGroup,
-				Child, HGroup,
-					Child, HVSpace,
-					Child, Label1((ULONG) GetLocString(MSGID_TTFONTSPAGE_TTFTEXTWINDOWFONT_ENABLE)),
-					Child, app->Obj[CHECK_TTTEXTWINDOWFONT_ENABLE] = CheckMarkHelp(FALSE, MSGID_TTFONTSPAGE_TTFTEXTWINDOWFONT_ENABLE_SHORTHELP),
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TTFONTSPAGE_TTFTEXTWINDOWFONT_ENABLE_SHORTHELP),
-				End, //HGroup
+                                Child, (IPTR)(VGroup,
+                                        Child, (IPTR)(HGroup,
+                                                Child, (IPTR)HVSpace,
+                                                Child, (IPTR)Label1(GetLocString(MSGID_TTFONTSPAGE_TTFTEXTWINDOWFONT_ENABLE)),
+                                                Child, (IPTR)(app->Obj[CHECK_TTTEXTWINDOWFONT_ENABLE] = CheckMarkHelp(FALSE, MSGID_TTFONTSPAGE_TTFTEXTWINDOWFONT_ENABLE_SHORTHELP)),
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TTFONTSPAGE_TTFTEXTWINDOWFONT_ENABLE_SHORTHELP),
+                                        End), //HGroup
 
-				Child, app->Obj[POPSTRING_TTTEXTWINDOWFONT] = PopstringObject,
-					MUIA_CycleChain, TRUE,
-					MUIA_Popstring_Button, PopButton(MUII_PopUp),
-					MUIA_Popstring_String, BetterStringObject,
-						StringFrame,
-						MUIA_String_Contents, " ",
-						End, //BetterString
-					MUIA_Popstring_OpenHook, &TextWindowTtfPopOpenHook,
-					MUIA_Popstring_CloseHook, &TextWindowTtfPopCloseHook,
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TTFONTSPAGE_TEXTWINDOWFONT_SHORTHELP),
-				End, //PopstringObject
+                                        Child, (IPTR)(app->Obj[POPSTRING_TTTEXTWINDOWFONT] = PopstringObject,
+                                                MUIA_CycleChain, TRUE,
+                                                MUIA_Popstring_Button, (IPTR)PopButton(MUII_PopUp),
+                                                MUIA_Popstring_String, (IPTR)(BetterStringObject,
+                                                        StringFrame,
+                                                        MUIA_String_Contents, (IPTR)" ",
+                                                End), //BetterString
+                                                MUIA_Popstring_OpenHook, (IPTR)&TextWindowTtfPopOpenHook,
+                                                MUIA_Popstring_CloseHook, (IPTR)&TextWindowTtfPopCloseHook,
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TTFONTSPAGE_TEXTWINDOWFONT_SHORTHELP),
+                                        End), //PopstringObject
 
-				Child, app->Obj[MCC_TTTEXTWINDOWFONT_SAMPLE] = FontSampleObject,
-					TextFrame,
-					MUIA_Background, MUII_TextBack,
-					MUIA_FontSample_DemoString, (ULONG) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_TTFONTSPAGE_TEXTWINDOWFONT_SAMPLETEXT_SHORTHELP),
-					End, //FontSampleMCCObject
-			End, //VGroup
+                                        Child, (IPTR)(app->Obj[MCC_TTTEXTWINDOWFONT_SAMPLE] = FontSampleObject,
+                                                TextFrame,
+                                                MUIA_Background, MUII_TextBack,
+                                                MUIA_FontSample_DemoString, (IPTR) GetLocString(MSGID_TTFONTSPAGE_SAMPLETEXT),
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_TTFONTSPAGE_TEXTWINDOWFONT_SAMPLETEXT_SHORTHELP),
+                                        End), //FontSampleMCCObject
+                                End), //VGroup
 
-		End, //HGroup
+                        End), //HGroup
 
-		Child, HVSpace,
+                        Child, (IPTR)HVSpace,
 
-	End, //VGroup
-	&NewPrefsPages[8]);
+                End), //VGroup
+                &NewPrefsPages[8]);
 ///
 }
 
@@ -7733,165 +7730,165 @@ static Object *GenerateMiscPage(struct SCAModule *app)
 {
 ///
 	return CreatePrefsPage(app,
-		VGroup,
-		MUIA_Background, MUII_PageBack,
+		(APTR)(VGroup,
+                        MUIA_Background, MUII_PageBack,
 
-		Child, HVSpace,
+                        Child, (IPTR)HVSpace,
 
-		Child, VGroup,
-			MUIA_FrameTitle, GetLocString(MSGID_MISCPAGE_POPUPMENUS),
-			GroupFrame,
-			MUIA_Background, MUII_GroupBack,
+                        Child, (IPTR)(VGroup,
+                                MUIA_FrameTitle, (IPTR)GetLocString(MSGID_MISCPAGE_POPUPMENUS),
+                                GroupFrame,
+                                MUIA_Background, MUII_GroupBack,
 
-			Child, HVSpace,
+                                Child, (IPTR)HVSpace,
 
-			Child, ColGroup(2),
-				Child, Label1((ULONG) GetLocString(MSGID_MISCPAGE_POPUP_SELECTED_ALWAYS)),
-				Child, HGroup,
-					Child, app->Obj[CHECK_MISCPAGE_POPUP_SELECTED_ALWAYS] = CheckMarkHelp(FALSE, MSGID_TTFONTSPAGE_TTFTEXTWINDOWFONT_ENABLE_SHORTHELP),
-					Child, HVSpace,
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_MISCPAGE_POPUP_SELECTED_ALWAYS_SHORTHELP),
-					End, //HGroup
+                                Child, (IPTR)(ColGroup(2),
+                                        Child, (IPTR)Label1(GetLocString(MSGID_MISCPAGE_POPUP_SELECTED_ALWAYS)),
+                                        Child, (IPTR)(HGroup,
+                                                Child, (IPTR)(app->Obj[CHECK_MISCPAGE_POPUP_SELECTED_ALWAYS] = CheckMarkHelp(FALSE, MSGID_TTFONTSPAGE_TTFTEXTWINDOWFONT_ENABLE_SHORTHELP)),
+                                                Child, (IPTR)HVSpace,
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_MISCPAGE_POPUP_SELECTED_ALWAYS_SHORTHELP),
+                                        End), //HGroup
 
-				Child, Label1((ULONG) GetLocString(MSGID_MISCPAGE_POPUP_SELECTED_HOTKEY)),
-				Child, HGroup,
-					Child, app->Obj[POPUP_SELECTED_HOTKEY] = HotkeyStringObject,
-						StringFrame,
-						MUIA_String_Contents, "",
-						MUIA_HotkeyString_Snoop, FALSE,
-					End, //HotkeyString
-					Child, app->Obj[POPUP_SELECTED_HOTKEY_SCAN] = ScanButton,
-				End, //HGroup
-				MUIA_ShortHelp, (ULONG) GetLocString(MSGID_MISCPAGE_POPUP_SELECTED_HOTKEY_SHORTHELP),
-			End, //ColGroup
+                                        Child, (IPTR)Label1(GetLocString(MSGID_MISCPAGE_POPUP_SELECTED_HOTKEY)),
+                                        Child, (IPTR)(HGroup,
+                                                Child, (IPTR)(app->Obj[POPUP_SELECTED_HOTKEY] = HotkeyStringObject,
+                                                        StringFrame,
+                                                        MUIA_String_Contents, (IPTR)"",
+                                                        MUIA_HotkeyString_Snoop, FALSE,
+                                                End), //HotkeyString
+                                                Child, (IPTR)(app->Obj[POPUP_SELECTED_HOTKEY_SCAN] = ScanButton),
+                                        End), //HGroup
+                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_MISCPAGE_POPUP_SELECTED_HOTKEY_SHORTHELP),
+                                End), //ColGroup
 
-			Child, HVSpace,
-		End, //VGroup
+                                Child, (IPTR)HVSpace,
+                        End), //VGroup
 
-		Child, VGroup,
-			MUIA_FrameTitle, (ULONG) GetLocString(MSGID_MISCPAGE_LABELS_STACK),
-			GroupFrame,
-			MUIA_Background, MUII_GroupBack,
+                        Child, (IPTR)(VGroup,
+                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_MISCPAGE_LABELS_STACK),
+                                GroupFrame,
+                                MUIA_Background, MUII_GroupBack,
 
-			Child, HVSpace,
+                                Child, (IPTR)HVSpace,
 
-			Child, app->Obj[GROUP2_DEFAULTSTACKSIZE] = HGroup,
-				MUIA_Background, MUII_GroupBack,
+                                Child, (IPTR)(app->Obj[GROUP2_DEFAULTSTACKSIZE] = HGroup,
+                                        MUIA_Background, MUII_GroupBack,
 
-				Child, FloattextObject,
-					TextFrame,
-					MUIA_Floattext_Justify, FALSE,
-					MUIA_Floattext_Text, (ULONG) GetLocString(MSGID_MISCPAGE_DEFAULTSTACKSIZE_OS35),
-				End, //Floattext
-				Child, app->Obj[POP_WORKBENCHPREFS] = ImageObject,
-					MUIA_InputMode, MUIV_InputMode_RelVerify,
-					MUIA_Image_Spec, "6:18", //MUII_PopUp,
-					MUIA_ShortHelp, (ULONG) GetLocString(MSGID_MISCPAGE_POP_WORKBENCHPREFS_SHORTHELP),
-				End, //Image
-			End, //HGroup
+                                        Child, (IPTR)(FloattextObject,
+                                                TextFrame,
+                                                MUIA_Floattext_Justify, FALSE,
+                                                MUIA_Floattext_Text, (IPTR) GetLocString(MSGID_MISCPAGE_DEFAULTSTACKSIZE_OS35),
+                                        End), //Floattext
+                                        Child, (IPTR)(app->Obj[POP_WORKBENCHPREFS] = ImageObject,
+                                                MUIA_InputMode, MUIV_InputMode_RelVerify,
+                                                MUIA_Image_Spec, (IPTR)"6:18", //MUII_PopUp,
+                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_MISCPAGE_POP_WORKBENCHPREFS_SHORTHELP),
+                                        End), //Image
+                                End), //HGroup
 
-			Child, app->Obj[GROUP_DEFAULTSTACKSIZE] = ColGroup(2),
-				Child, Label1((ULONG) GetLocString(MSGID_MISCPAGE_DEFAULTSTACKSIZE)),
-				Child, app->Obj[SLIDER_DEFAULTSTACKSIZE] = SliderObject,
-					MUIA_CycleChain, TRUE,
-					MUIA_Numeric_Format, "%luK",
-					MUIA_Slider_Horiz, TRUE,
-					MUIA_Slider_Level, 16,
-					MUIA_Slider_Min, 8,
-					MUIA_Slider_Max, 2048,
-				End, //Slider
-				MUIA_ShortHelp, (ULONG) GetLocString(MSGID_MISCPAGE_DEFAULTSTACKSIZE_SHORTHELP),
-			End, //ColGroup
+                                Child, (IPTR)(app->Obj[GROUP_DEFAULTSTACKSIZE] = ColGroup(2),
+                                        Child, (IPTR)Label1(GetLocString(MSGID_MISCPAGE_DEFAULTSTACKSIZE)),
+                                        Child, (IPTR)(app->Obj[SLIDER_DEFAULTSTACKSIZE] = SliderObject,
+                                                MUIA_CycleChain, TRUE,
+                                                MUIA_Numeric_Format, (IPTR)"%luK",
+                                                MUIA_Slider_Horiz, TRUE,
+                                                MUIA_Slider_Level, 16,
+                                                MUIA_Slider_Min, 8,
+                                                MUIA_Slider_Max, 2048,
+                                        End), //Slider
+                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_MISCPAGE_DEFAULTSTACKSIZE_SHORTHELP),
+                                End), //ColGroup
 
-			Child, HVSpace,
-		End, //VGroup
+                                Child, (IPTR)HVSpace,
+                        End), //VGroup
 
-		Child, VGroup,
-			MUIA_FrameTitle, (ULONG) GetLocString(MSGID_MISCPAGE_LABELS_UNDOSTEPS),
-			GroupFrame,
-			MUIA_Background, MUII_GroupBack,
+                        Child, (IPTR)(VGroup,
+                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_MISCPAGE_LABELS_UNDOSTEPS),
+                                GroupFrame,
+                                MUIA_Background, MUII_GroupBack,
 
-			Child, HVSpace,
+                                Child, (IPTR)HVSpace,
 
-			Child, ColGroup(2),
-				Child, Label1((ULONG) GetLocString(MSGID_MISCPAGE_UNDOSTEPS)),
-				Child, app->Obj[SLIDER_UNDOSTEPS] = SliderObject,
-					MUIA_CycleChain, TRUE,
-					MUIA_Slider_Horiz, TRUE,
-					MUIA_Slider_Level, 10,
-					MUIA_Slider_Min, 1,
-					MUIA_Slider_Max, 100,
-				End, //Slider
-				MUIA_ShortHelp, (ULONG) GetLocString(MSGID_MISCPAGE_UNDOSTEPS_SHORTHELP),
-			End, //ColGroup
+                                Child, (IPTR)(ColGroup(2),
+                                        Child, (IPTR)Label1(GetLocString(MSGID_MISCPAGE_UNDOSTEPS)),
+                                        Child, (IPTR)(app->Obj[SLIDER_UNDOSTEPS] = SliderObject,
+                                                MUIA_CycleChain, TRUE,
+                                                MUIA_Slider_Horiz, TRUE,
+                                                MUIA_Slider_Level, 10,
+                                                MUIA_Slider_Min, 1,
+                                                MUIA_Slider_Max, 100,
+                                        End), //Slider
+                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_MISCPAGE_UNDOSTEPS_SHORTHELP),
+                                End), //ColGroup
 
-			Child, HVSpace,
-		End, //VGroup
+                                Child, (IPTR)HVSpace,
+                        End), //VGroup
 
-		Child, VGroup,
-			MUIA_FrameTitle, (ULONG) GetLocString(MSGID_MISCPAGE_LABELS_FILEOPERATIONS),
-			GroupFrame,
-			MUIA_Background, MUII_GroupBack,
+                        Child, (IPTR)(VGroup,
+                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_MISCPAGE_LABELS_FILEOPERATIONS),
+                                GroupFrame,
+                                MUIA_Background, MUII_GroupBack,
 
-			Child, HVSpace,
+                                Child, (IPTR)HVSpace,
 
-			Child, app->Obj[GROUP_COPYBUFFERSIZE] = ColGroup(2),
-				Child, Label1((ULONG) GetLocString(MSGID_MISCPAGE_COPYBUFFERSIZE)),
-				Child, app->Obj[SLIDER_COPYBUFFERSIZE] = BufferSizeSliderObject,
-					MUIA_CycleChain, TRUE,
-					MUIA_Slider_Horiz, TRUE,
-					MUIA_Slider_Level, 28 - 15,
-					MUIA_Slider_Min, 15,
-					MUIA_Slider_Max, 28,
-				End, //Slider
-				MUIA_ShortHelp, (ULONG) GetLocString(MSGID_MISCPAGE_COPYBUFFERSIZE_SHORTHELP),
-			End, //ColGroup
+                                Child, (IPTR)(app->Obj[GROUP_COPYBUFFERSIZE] = ColGroup(2),
+                                        Child, (IPTR)Label1(GetLocString(MSGID_MISCPAGE_COPYBUFFERSIZE)),
+                                        Child, (IPTR)(app->Obj[SLIDER_COPYBUFFERSIZE] = BufferSizeSliderObject,
+                                                MUIA_CycleChain, TRUE,
+                                                MUIA_Slider_Horiz, TRUE,
+                                                MUIA_Slider_Level, 28 - 15,
+                                                MUIA_Slider_Min, 15,
+                                                MUIA_Slider_Max, 28,
+                                        End), //Slider
+                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_MISCPAGE_COPYBUFFERSIZE_SHORTHELP),
+                                End), //ColGroup
 
-			Child, HVSpace,
-		End, //VGroup
-
-
-		Child, VGroup,
-			//MUIA_FrameTitle, "",
-			GroupFrame,
-			MUIA_Background, MUII_GroupBack,
-
-			Child, HVSpace,
-
-			Child, HGroup,
-				Child, HVSpace,
-
-				Child, ColGroup(2),
-					Child, Label1((ULONG) GetLocString(MSGID_MISCPAGE_MENU_CURRENTDIR)),
-					Child, app->Obj[CHECK_MENUCURRENTDIR] = CheckMarkHelp(FALSE, MSGID_MISCPAGE_MENU_CURRENTDIR_SHORTHELP),
-
-					Child, Label1((ULONG) GetLocString(MSGID_MISCPAGE_HARD_EMULATION)),
-					Child, app->Obj[CHECK_HARDEMULATION] = CheckMarkHelp(FALSE, MSGID_MISCPAGE_HARD_EMULATION_SHORTHELP),
-
-					Child, Label1((ULONG) GetLocString(MSGID_MISCPAGE_USE_EXALL)),
-					Child, app->Obj[CHECK_USEEXALL] = CheckMarkHelp(FALSE, MSGID_MISCPAGE_USE_EXALL_SHORTHELP),
-
-					Child, Label1((ULONG) GetLocString(MSGID_MISCPAGE_CREATE_LINKS)),
-					Child, app->Obj[CYCLE_CREATELINKS] = CycleObject,
-						MUIA_CycleChain, TRUE,
-						MUIA_Cycle_Entries, cCreateLinkTypes,
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_MISCPAGE_CREATE_LINKS_SHORTHELP),
-					End, //Image
+                                Child, (IPTR)HVSpace,
+                        End), //VGroup
 
 
-				End, //ColGroup
+                        Child, (IPTR)(VGroup,
+                                //MUIA_FrameTitle, "",
+                                GroupFrame,
+                                MUIA_Background, MUII_GroupBack,
 
-				Child, HVSpace,
-			End, //HGroup
+                                Child, (IPTR)HVSpace,
 
-			Child, HVSpace,
+                                Child, (IPTR)(HGroup,
+                                        Child, (IPTR)HVSpace,
 
-		End, //VGroup
+                                        Child, (IPTR)(ColGroup(2),
+                                                Child, (IPTR)Label1(GetLocString(MSGID_MISCPAGE_MENU_CURRENTDIR)),
+                                                Child, (IPTR)(app->Obj[CHECK_MENUCURRENTDIR] = CheckMarkHelp(FALSE, MSGID_MISCPAGE_MENU_CURRENTDIR_SHORTHELP)),
 
-		Child, HVSpace,
+                                                Child, (IPTR)Label1(GetLocString(MSGID_MISCPAGE_HARD_EMULATION)),
+                                                Child, (IPTR)(app->Obj[CHECK_HARDEMULATION] = CheckMarkHelp(FALSE, MSGID_MISCPAGE_HARD_EMULATION_SHORTHELP)),
 
-	End, //VGroup
-	&NewPrefsPages[9]);
+                                                Child, (IPTR)Label1(GetLocString(MSGID_MISCPAGE_USE_EXALL)),
+                                                Child, (IPTR)(app->Obj[CHECK_USEEXALL] = CheckMarkHelp(FALSE, MSGID_MISCPAGE_USE_EXALL_SHORTHELP)),
+
+                                                Child, (IPTR)Label1(GetLocString(MSGID_MISCPAGE_CREATE_LINKS)),
+                                                Child, (IPTR)(app->Obj[CYCLE_CREATELINKS] = CycleObject,
+                                                        MUIA_CycleChain, TRUE,
+                                                        MUIA_Cycle_Entries, (IPTR)cCreateLinkTypes,
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_MISCPAGE_CREATE_LINKS_SHORTHELP),
+                                                End), //Image
+
+
+                                        End), //ColGroup
+
+                                        Child, (IPTR)HVSpace,
+                                End), //HGroup
+
+                                Child, (IPTR)HVSpace,
+
+                        End), //VGroup
+
+                        Child, (IPTR)HVSpace,
+
+                End), //VGroup
+                &NewPrefsPages[9]);
 ///
 }
 
@@ -7901,146 +7898,146 @@ static Object *GeneratePluginsPage(struct SCAModule *app)
 {
 ///
 	return CreatePrefsPage(app,
-		VGroup,
-		MUIA_Background, MUII_PageBack,
+		(APTR)(VGroup,
+                        MUIA_Background, MUII_PageBack,
 
-		Child, VSpace(2),
+                        Child, (IPTR)VSpace(2),
 
-		Child, VGroup,
-			Child, HGroup,
-				//Child, HVSpace,
-				Child, VGroup,
-					Child, Label((ULONG) GetLocString(MSGID_PLUGINSPAGE_INSTALLEDPLUGINS)),
-					Child, app->Obj[PLUGIN_LISTVIEW] = NListviewObject,
-						MUIA_NListview_NList, app->Obj[PLUGIN_LIST] = NListObject,
-							InputListFrame,
-							MUIA_CycleChain, TRUE,
-							MUIA_Background, MUII_ListBack,
-							MUIA_NList_Format, "W=-1, W=-1",
-							MUIA_NList_DefaultObjectOnClick, TRUE,
-							MUIA_NList_ShowDropMarks, FALSE,
-							//MUIA_NList_AdjustWidth, TRUE,
-							MUIA_NList_AutoVisible, TRUE,
-							MUIA_NList_Title, TRUE,
-							MUIA_NList_TitleSeparator, TRUE,
-							MUIA_NList_SortType, 0,
-							MUIA_NList_TitleMark, MUIV_NList_TitleMark_Down | 0,
-							MUIA_NList_MinColSortable, 0,
-							MUIA_NList_DisplayHook2, &PluginListDisplayHook,
-							MUIA_NList_ConstructHook2, &PluginListConstructHook,
-							MUIA_NList_DestructHook2, &PluginListDestructHook,
-							MUIA_NList_CompareHook2, &PluginListCompareHook,
-							End, //NList
-						MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_None,
-						MUIA_Listview_DragType, MUIV_Listview_DragType_None,
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PLUGINSPAGE_INSTALLEDPLUGINS_SHORTHELP),
-						End, //Listview
+                        Child, (IPTR)(VGroup,
+                                Child, (IPTR)(HGroup,
+                                        //Child, (IPTR)HVSpace,
+                                        Child, (IPTR)(VGroup,
+                                                Child, (IPTR)Label((IPTR) GetLocString(MSGID_PLUGINSPAGE_INSTALLEDPLUGINS)),
+                                                Child, (IPTR)(app->Obj[PLUGIN_LISTVIEW] = NListviewObject,
+                                                        MUIA_NListview_NList, (IPTR)(app->Obj[PLUGIN_LIST] = NListObject,
+                                                                InputListFrame,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Background, MUII_ListBack,
+                                                                MUIA_NList_Format, (IPTR)"W=-1, W=-1",
+                                                                MUIA_NList_DefaultObjectOnClick, TRUE,
+                                                                MUIA_NList_ShowDropMarks, FALSE,
+                                                                //MUIA_NList_AdjustWidth, TRUE,
+                                                                MUIA_NList_AutoVisible, TRUE,
+                                                                MUIA_NList_Title, TRUE,
+                                                                MUIA_NList_TitleSeparator, TRUE,
+                                                                MUIA_NList_SortType, 0,
+                                                                MUIA_NList_TitleMark, MUIV_NList_TitleMark_Down | 0,
+                                                                MUIA_NList_MinColSortable, 0,
+                                                                MUIA_NList_DisplayHook2, (IPTR)&PluginListDisplayHook,
+                                                                MUIA_NList_ConstructHook2, (IPTR)&PluginListConstructHook,
+                                                                MUIA_NList_DestructHook2, (IPTR)&PluginListDestructHook,
+                                                                MUIA_NList_CompareHook2, (IPTR)&PluginListCompareHook,
+                                                        End), //NList
+                                                        MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_None,
+                                                        MUIA_Listview_DragType, MUIV_Listview_DragType_None,
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PLUGINSPAGE_INSTALLEDPLUGINS_SHORTHELP),
+                                                End), //Listview
 
-					Child, BalanceObject,
-						End, //Balance
+                                                Child, (IPTR)(BalanceObject,
+                                                End), //Balance
 
-					Child, HGroup,
-						Child, HVSpace,
-						Child, app->Obj[ADD_PLUGIN] = TextObject,
-							MUIA_InputMode, MUIV_InputMode_RelVerify,
-							ButtonFrame,
-							MUIA_CycleChain, TRUE,
-							MUIA_Background, MUII_ButtonBack,
-							MUIA_Text_Contents, (ULONG) GetLocString(MSGID_PLUGINSPAGE_ADD_NEW),
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PLUGINSPAGE_ADD_NEW_SHORTHELP),
-							End, //TextObject
+                                                Child, (IPTR)(HGroup,
+                                                        Child, (IPTR)HVSpace,
+                                                        Child, (IPTR)(app->Obj[ADD_PLUGIN] = TextObject,
+                                                                MUIA_InputMode, MUIV_InputMode_RelVerify,
+                                                                ButtonFrame,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Background, MUII_ButtonBack,
+                                                                MUIA_Text_Contents, (IPTR) GetLocString(MSGID_PLUGINSPAGE_ADD_NEW),
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PLUGINSPAGE_ADD_NEW_SHORTHELP),
+                                                        End), //TextObject
 
-						Child, HVSpace,
+                                                        Child, (IPTR)HVSpace,
 
-						Child, app->Obj[REMOVE_PLUGIN] = TextObject,
-							MUIA_InputMode, MUIV_InputMode_RelVerify,
-							ButtonFrame,
-							MUIA_CycleChain, TRUE,
-							MUIA_Background, MUII_ButtonBack,
-							MUIA_Text_Contents, (ULONG) GetLocString(MSGID_PLUGINSPAGE_REMOVE_SELECTED),
-							MUIA_Disabled, TRUE,
-							MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PLUGINSPAGE_REMOVE_SELECTED_SHORTHELP),
-							End, //TextObject
+                                                        Child, (IPTR)(app->Obj[REMOVE_PLUGIN] = TextObject,
+                                                                MUIA_InputMode, MUIV_InputMode_RelVerify,
+                                                                ButtonFrame,
+                                                                MUIA_CycleChain, TRUE,
+                                                                MUIA_Background, MUII_ButtonBack,
+                                                                MUIA_Text_Contents, (IPTR) GetLocString(MSGID_PLUGINSPAGE_REMOVE_SELECTED),
+                                                                MUIA_Disabled, TRUE,
+                                                                MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PLUGINSPAGE_REMOVE_SELECTED_SHORTHELP),
+                                                        End), //TextObject
 
-						Child, HVSpace,
+                                                        Child, (IPTR)HVSpace,
 
-						End, //HGroup
+                                                End), //HGroup
 
-					End, //VGroup
+                                        End), //VGroup
 
-				//Child, HVSpace,
-				End, //HGroup
+                                //Child, (IPTR)HVSpace,
+                                End), //HGroup
 
-			Child, ColGroup(2),
-				Child, VGroup,
-					Child, Label((ULONG) GetLocString(MSGID_PLUGINSPAGE_NAME)),
-					Child, app->Obj[PLUGIN_NAME] = TextObject,
-						TextFrame,
-						MUIA_Background, MUII_ReadListBack,
-						MUIA_Text_Contents,"",
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PLUGINSPAGE_NAME_SHORTHELP),
-					End,
+                                Child, (IPTR)(ColGroup(2),
+                                        Child, (IPTR)(VGroup,
+                                                Child, (IPTR)Label((IPTR) GetLocString(MSGID_PLUGINSPAGE_NAME)),
+                                                Child, (IPTR)(app->Obj[PLUGIN_NAME] = TextObject,
+                                                        TextFrame,
+                                                        MUIA_Background, MUII_ReadListBack,
+                                                        MUIA_Text_Contents, (IPTR)"",
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PLUGINSPAGE_NAME_SHORTHELP),
+                                                End),
 
-					Child, Label1((ULONG) GetLocString(MSGID_PLUGINSPAGE_FILENAME)),
-					Child, app->Obj[PLUGIN_FILENAME] = TextObject,
-						TextFrame,
-						MUIA_Background, MUII_ReadListBack,
-						MUIA_Text_Contents, "",
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PLUGINSPAGE_FILENAME_SHORTHELP),
-					End,
+                                                Child, (IPTR)Label1(GetLocString(MSGID_PLUGINSPAGE_FILENAME)),
+                                                Child, (IPTR)(app->Obj[PLUGIN_FILENAME] = TextObject,
+                                                        TextFrame,
+                                                        MUIA_Background, MUII_ReadListBack,
+                                                        MUIA_Text_Contents, (IPTR)"",
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PLUGINSPAGE_FILENAME_SHORTHELP),
+                                                End),
 
-					Child, Label1((ULONG) GetLocString(MSGID_PLUGINSPAGE_VERSION)),
-					Child, app->Obj[PLUGIN_VERSION] = TextObject,
-						TextFrame,
-						MUIA_Background, MUII_ReadListBack,
-						MUIA_Text_Contents, "",
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PLUGINSPAGE_VERSION_SHORTHELP),
-					End,
+                                                Child, (IPTR)Label1(GetLocString(MSGID_PLUGINSPAGE_VERSION)),
+                                                Child, (IPTR)(app->Obj[PLUGIN_VERSION] = TextObject,
+                                                        TextFrame,
+                                                        MUIA_Background, MUII_ReadListBack,
+                                                        MUIA_Text_Contents, (IPTR)"",
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PLUGINSPAGE_VERSION_SHORTHELP),
+                                                End),
 
-					Child, HGroup,
-						MUIA_InputMode, MUIV_InputMode_RelVerify,
-						ButtonFrame,
-						MUIA_Background, MUII_ButtonBack,
+                                                Child, (IPTR)(HGroup,
+                                                        MUIA_InputMode, MUIV_InputMode_RelVerify,
+                                                        ButtonFrame,
+                                                        MUIA_Background, MUII_ButtonBack,
 /* currently unused */				MUIA_Disabled, TRUE,
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PLUGINSPAGE_EDIT_PREFERENCES_SHORTHELP),
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PLUGINSPAGE_EDIT_PREFERENCES_SHORTHELP),
 
-						Child, TextObject,
-							MUIA_Text_Contents, (ULONG) GetLocString(MSGID_PLUGINSPAGE_EDIT_PREFERENCES),
-						End,
+                                                        Child, (IPTR)(TextObject,
+                                                                MUIA_Text_Contents, (IPTR) GetLocString(MSGID_PLUGINSPAGE_EDIT_PREFERENCES),
+                                                        End),
 
-						Child, ImageObject,
-							MUIA_Image_Spec, "6:18", //MUII_PopUp,
-						End, //Image
-					End, //HGroup
-				End, //VGroup
+                                                        Child, (IPTR)(ImageObject,
+                                                                MUIA_Image_Spec, (IPTR)"6:18", //MUII_PopUp,
+                                                        End), //Image
+                                                End), //HGroup
+                                        End), //VGroup
 
-				Child, VGroup,
-					Child, Label1((ULONG) GetLocString(MSGID_PLUGINSPAGE_DESCRIPTION)),
-					Child, app->Obj[PLUGIN_DESCRIPTION] = FloattextObject,
-						TextFrame,
-						MUIA_Background, MUII_ReadListBack,
-						MUIA_Floattext_Justify, FALSE,
-						MUIA_Floattext_Text, "",
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PLUGINSPAGE_DESCRIPTION_SHORTHELP),
-					End, //FloattextObject
+                                        Child, (IPTR)(VGroup,
+                                                Child, (IPTR)Label1(GetLocString(MSGID_PLUGINSPAGE_DESCRIPTION)),
+                                                Child, (IPTR)(app->Obj[PLUGIN_DESCRIPTION] = FloattextObject,
+                                                        TextFrame,
+                                                        MUIA_Background, MUII_ReadListBack,
+                                                        MUIA_Floattext_Justify, FALSE,
+                                                        MUIA_Floattext_Text, (IPTR)"",
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PLUGINSPAGE_DESCRIPTION_SHORTHELP),
+                                                End), //FloattextObject
 
-					Child, Label1((ULONG) GetLocString(MSGID_PLUGINSPAGE_CREATOR)),
-					Child, app->Obj[PLUGIN_CREATOR] = FloattextObject,
-						TextFrame,
-						MUIA_Background, MUII_ReadListBack,
-						MUIA_Floattext_Justify, FALSE,
-						MUIA_Floattext_Text, "",
-						MUIA_VertWeight, 20,
-						MUIA_ShortHelp, (ULONG) GetLocString(MSGID_PLUGINSPAGE_CREATOR_SHORTHELP),
-						End, //FloattextObject
+                                                Child, (IPTR)Label1(GetLocString(MSGID_PLUGINSPAGE_CREATOR)),
+                                                Child, (IPTR)(app->Obj[PLUGIN_CREATOR] = FloattextObject,
+                                                        TextFrame,
+                                                        MUIA_Background, MUII_ReadListBack,
+                                                        MUIA_Floattext_Justify, FALSE,
+                                                        MUIA_Floattext_Text, (IPTR)"",
+                                                        MUIA_VertWeight, 20,
+                                                        MUIA_ShortHelp, (IPTR) GetLocString(MSGID_PLUGINSPAGE_CREATOR_SHORTHELP),
+                                                End), //FloattextObject
 
-					End, //VGroup
-				End, //ColGroup
-			End, //VGroup
-		Child, VSpace(2),
+                                        End), //VGroup
+                                End), //ColGroup
+                        End), //VGroup
+                        Child, (IPTR)VSpace(2),
 
-	End, //VGroup
-	&NewPrefsPages[10]);
+                End), //VGroup
+                &NewPrefsPages[10]);
 ///
 }
 
@@ -8050,44 +8047,41 @@ static Object *GenerateModulesPage(struct SCAModule *app)
 {
 ///
 	return CreatePrefsPage(app,
-		VGroup,
-		MUIA_Background, MUII_PageBack,
+                (APTR)(VGroup,
+                        MUIA_Background, MUII_PageBack,
 
-		Child, HVSpace,
+                        Child, (IPTR)HVSpace,
 
-		Child, VGroup,
-			MUIA_FrameTitle, (ULONG) GetLocString(MSGID_MODULESPAGE_MODULE_PREFERENCES),
-			GroupFrame,
-			MUIA_Background, MUII_GroupBack,
-			MUIA_Weight, 500,
+                        Child, (IPTR)(VGroup,
+                                MUIA_FrameTitle, (IPTR) GetLocString(MSGID_MODULESPAGE_MODULE_PREFERENCES),
+                                GroupFrame,
+                                MUIA_Background, MUII_GroupBack,
+                                MUIA_Weight, 500,
 
-			Child, HGroup,
+                                Child, (IPTR)(HGroup,
+                                        Child, (IPTR)(app->Obj[NLISTVIEW_MODULES] = NListviewObject,
+                                                MUIA_Listview_Input, FALSE,
+                                                MUIA_CycleChain, 1,
+                                                MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_None,
+                                                MUIA_Listview_DragType, MUIV_Listview_DragType_None,
+                                                MUIA_NListview_NList, (IPTR)(app->Obj[NLIST_MODULES] = NListObject,
+                                                        MUIA_NList_DefaultObjectOnClick, TRUE,
+                                                        MUIA_Background, MUII_ListBack,
+                                                        InputListFrame,
+                                                        MUIA_NList_Format, (IPTR)",,",
+                                                        MUIA_NList_DragSortable, FALSE,
+                                                        MUIA_NList_ShowDropMarks, FALSE,
+                                                        MUIA_NList_AutoVisible, TRUE,
+                                                        MUIA_NList_DisplayHook2, (IPTR)&ModulesListDisplayHook,
+                                                        MUIA_NList_ConstructHook2, (IPTR)&ModulesListConstructHook,
+                                                        MUIA_NList_DestructHook2, (IPTR)&ModulesListDestructHook,
+                                                End),
+                                        End), //Listview
+                                End), //HGroup
+                        End), //VGroup
 
-			Child, app->Obj[NLISTVIEW_MODULES] = NListviewObject,
-				MUIA_Listview_Input, FALSE,
-				MUIA_CycleChain, 1,
-				MUIA_Listview_MultiSelect, MUIV_Listview_MultiSelect_None,
-				MUIA_Listview_DragType, MUIV_Listview_DragType_None,
-				MUIA_NListview_NList, app->Obj[NLIST_MODULES] = NListObject,
-					MUIA_NList_DefaultObjectOnClick, TRUE,
-					MUIA_Background, MUII_ListBack,
-					InputListFrame,
-					MUIA_NList_Format, ",,",
-					MUIA_NList_DragSortable, FALSE,
-					MUIA_NList_ShowDropMarks, FALSE,
-					MUIA_NList_AutoVisible, TRUE,
-					MUIA_NList_DisplayHook2, &ModulesListDisplayHook,
-					MUIA_NList_ConstructHook2, &ModulesListConstructHook,
-					MUIA_NList_DestructHook2, &ModulesListDestructHook,
-				End,
-			End, //Listview
-
-			End, //HGroup
-		End, //VGroup
-
-		Child, HVSpace,
-
-		End, //VGroup
+                        Child, (IPTR)HVSpace,
+		End), //VGroup
 		&NewPrefsPages[11]);
 ///
 }

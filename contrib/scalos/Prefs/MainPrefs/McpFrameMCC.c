@@ -48,7 +48,7 @@ struct McpFrameMCCInstance
 
 // -------------------------------------------------------------------------
 
-static ULONG mNew(Class *cl, Object *o, struct opSet *ops);
+static IPTR mNew(Class *cl, Object *o, struct opSet *ops);
 static ULONG mDispose(Class *cl, Object *o,Msg msg);
 static ULONG mSet(Class *cl, Object *o, struct opSet *ops);
 static ULONG mGet(Class *cl, Object *o, struct opGet *opg);
@@ -56,11 +56,11 @@ static ULONG mAskMinMax(Class *cl, Object *o,struct MUIP_AskMinMax *msg);
 static ULONG mDraw(Class *cl, Object *o,struct MUIP_Draw *msg);
 static ULONG mDragQuery(Class *cl, Object *o, struct MUIP_DragQuery *msg);
 static ULONG mDragDrop(Class *cl, Object *o, struct MUIP_DragDrop *msg);
-DISPATCHER_PROTO(McpFrameMCC);
+DISPATCHERPROTO(McpFrameMCC);
 
 // -------------------------------------------------------------------------
 
-static ULONG mNew(Class *cl, Object *o, struct opSet *ops)
+static IPTR mNew(Class *cl, Object *o, struct opSet *ops)
 {
 	struct McpFrameMCCInstance *inst = NULL;
 	BOOL Success = FALSE;
@@ -90,7 +90,7 @@ static ULONG mNew(Class *cl, Object *o, struct opSet *ops)
 		o = NULL;
 		}
 
-	return((ULONG)o);
+	return((IPTR)o);
 }
 
 // -------------------------------------------------------------------------
