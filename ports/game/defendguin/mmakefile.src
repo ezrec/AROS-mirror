@@ -20,7 +20,8 @@ REPOSITORIES := ftp://ftp.tuxpaint.org/unix/x/defendguin/src
 ARCHBASE     := defendguin-0.0.12
 TARGETDIR    := $(AROS_CONTRIB)/Games/Defendguin
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
-USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
+NOWARN_FLAGS := -Wno-maybe-uninitialized
+USER_CFLAGS  := $(NOWARN_FLAGS)  $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
                 -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES -D__SOUND
 
 FILES := $(PORTSDIR)/defendguin/$(ARCHBASE)/src/defendguin
