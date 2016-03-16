@@ -1,6 +1,6 @@
-diff -Naur gnurobbo-0.66-orig/board.c gnurobbo-0.66/board.c
---- gnurobbo-0.66-orig/board.c	2012-07-28 10:43:41.592439980 +0200
-+++ gnurobbo-0.66/board.c	2012-07-28 09:38:56.082489510 +0200
+diff -ruN gnurobbo-0.66/board.c gnurobbo-0.66.aros/board.c
+--- gnurobbo-0.66/board.c	2010-08-31 15:17:53.000000000 +0100
++++ gnurobbo-0.66.aros/board.c	2016-03-16 04:17:31.044982001 +0000
 @@ -1837,7 +1837,7 @@
  		     */
  		    if (rcfile.save_frequency == RCFILE_SAVE_ON_CHANGE) {
@@ -10,9 +10,9 @@ diff -Naur gnurobbo-0.66-orig/board.c gnurobbo-0.66/board.c
  #elif defined(PLATFORM_GP2X)
  			system("sync");
  #elif defined(PLATFORM_ZAURUS)
-diff -Naur gnurobbo-0.66-orig/controls.c gnurobbo-0.66/controls.c
---- gnurobbo-0.66-orig/controls.c	2012-07-28 10:43:41.612440199 +0200
-+++ gnurobbo-0.66/controls.c	2012-07-28 09:38:56.082489510 +0200
+diff -ruN gnurobbo-0.66/controls.c gnurobbo-0.66.aros/controls.c
+--- gnurobbo-0.66/controls.c	2010-10-27 13:43:45.000000000 +0100
++++ gnurobbo-0.66.aros/controls.c	2016-03-16 04:17:31.045982012 +0000
 @@ -563,7 +563,7 @@
  	/* Set some defaults */
  	for (count = 0; count < USER_CONTROLS; count++)
@@ -40,9 +40,9 @@ diff -Naur gnurobbo-0.66-orig/controls.c gnurobbo-0.66/controls.c
  			if (joystick)
  			{
  		#elif defined(PLATFORM_GP2X)
-diff -Naur gnurobbo-0.66-orig/game.c gnurobbo-0.66/game.c
---- gnurobbo-0.66-orig/game.c	2012-07-28 10:43:41.592439980 +0200
-+++ gnurobbo-0.66/game.c	2012-07-28 09:38:56.082489510 +0200
+diff -ruN gnurobbo-0.66/game.c gnurobbo-0.66.aros/game.c
+--- gnurobbo-0.66/game.c	2010-09-03 17:06:05.000000000 +0100
++++ gnurobbo-0.66.aros/game.c	2016-03-16 04:17:31.045982012 +0000
 @@ -180,7 +180,7 @@
    pointer_controls.state = POINTER_CONTROLS_MODE_OFF;
    pointer_controls.shoot_state = POINTER_CONTROLS_SHOOT_OFF;
@@ -88,9 +88,25 @@ diff -Naur gnurobbo-0.66-orig/game.c gnurobbo-0.66/game.c
  #elif defined(PLATFORM_GP2X)
  	      system ("sync");
  #elif defined(PLATFORM_ZAURUS)
-diff -Naur gnurobbo-0.66-orig/levels.c gnurobbo-0.66/levels.c
---- gnurobbo-0.66-orig/levels.c	2012-07-28 10:43:41.592439980 +0200
-+++ gnurobbo-0.66/levels.c	2012-07-28 10:29:14.813563973 +0200
+diff -ruN gnurobbo-0.66/game.h gnurobbo-0.66.aros/game.h
+--- gnurobbo-0.66/game.h	2010-08-31 15:17:53.000000000 +0100
++++ gnurobbo-0.66.aros/game.h	2016-03-16 04:22:20.697097558 +0000
+@@ -77,8 +77,12 @@
+ */
+ 
+ 
++#ifndef TRUE
+ #define TRUE 1
++#endif
++#ifndef FALSE
+ #define FALSE 0
++#endif
+ 
+ #define UNDEFINED -1
+ 
+diff -ruN gnurobbo-0.66/levels.c gnurobbo-0.66.aros/levels.c
+--- gnurobbo-0.66/levels.c	2010-08-30 17:43:47.000000000 +0100
++++ gnurobbo-0.66.aros/levels.c	2016-03-16 04:17:31.046982023 +0000
 @@ -182,7 +182,7 @@
  	FILE *fp;
  	char fullpath[256];
@@ -140,9 +156,9 @@ diff -Naur gnurobbo-0.66-orig/levels.c gnurobbo-0.66/levels.c
  			#elif defined(PLATFORM_PC) || defined(PLATFORM_ZAURUS) || defined(PLATFORM_FREMANTLE)
  				strcpy (foldername, getenv ("HOME"));
  				strcat (foldername, "/" LOCAL_DATA_DIR "/" LEVELS_DIR);
-diff -Naur gnurobbo-0.66-orig/locales.c gnurobbo-0.66/locales.c
---- gnurobbo-0.66-orig/locales.c	2012-07-28 10:43:41.592439980 +0200
-+++ gnurobbo-0.66/locales.c	2012-07-28 09:38:56.082489510 +0200
+diff -ruN gnurobbo-0.66/locales.c gnurobbo-0.66.aros/locales.c
+--- gnurobbo-0.66/locales.c	2010-11-12 00:04:56.000000000 +0000
++++ gnurobbo-0.66.aros/locales.c	2016-03-16 04:17:31.046982023 +0000
 @@ -326,6 +326,10 @@
  		strcpy (config_items[++row].name, "[txt_intro_keys_PLATFORM_PC]");
  		config_items[row].destination = txt_intro_keys;
@@ -154,9 +170,9 @@ diff -Naur gnurobbo-0.66-orig/locales.c gnurobbo-0.66/locales.c
  	#elif defined(PLATFORM_GP2X)
  		strcpy (config_items[++row].name, "[txt_intro_keys_PLATFORM_GP2X]");
  		config_items[row].destination = txt_intro_keys;
-diff -Naur gnurobbo-0.66-orig/rcfile.h gnurobbo-0.66/rcfile.h
---- gnurobbo-0.66-orig/rcfile.h	2012-07-28 10:43:41.592439980 +0200
-+++ gnurobbo-0.66/rcfile.h	2012-07-28 09:38:56.082489510 +0200
+diff -ruN gnurobbo-0.66/rcfile.h gnurobbo-0.66.aros/rcfile.h
+--- gnurobbo-0.66/rcfile.h	2010-08-24 22:57:10.000000000 +0100
++++ gnurobbo-0.66.aros/rcfile.h	2016-03-16 04:17:31.046982023 +0000
 @@ -23,6 +23,8 @@
  	#define RESOURCE_FILE "gnurobborc"
  #elif defined(PLATFORM_PC)
@@ -166,9 +182,9 @@ diff -Naur gnurobbo-0.66-orig/rcfile.h gnurobbo-0.66/rcfile.h
  #elif defined(PLATFORM_GP2X)
  	#define RESOURCE_FILE "gnurobborc"
  #elif defined(PLATFORM_ZAURUS)
-diff -Naur gnurobbo-0.66-orig/screen.c gnurobbo-0.66/screen.c
---- gnurobbo-0.66-orig/screen.c	2012-07-28 10:43:41.642442364 +0200
-+++ gnurobbo-0.66/screen.c	2012-07-28 09:38:56.094991961 +0200
+diff -ruN gnurobbo-0.66/screen.c gnurobbo-0.66.aros/screen.c
+--- gnurobbo-0.66/screen.c	2010-09-01 13:33:27.000000000 +0100
++++ gnurobbo-0.66.aros/screen.c	2016-03-16 04:17:31.048982045 +0000
 @@ -1237,7 +1237,7 @@
  	video.field_size = 16;
      }
