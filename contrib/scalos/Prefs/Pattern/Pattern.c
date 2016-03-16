@@ -263,7 +263,7 @@ int main(int argc, char *argv[])
 
 	Group_Plugin = NewObject(PatternPluginClass->mcc_Class, 0,
 		MUIA_ScalosPrefs_CreateIcons, fCreateIcons,
-		MUIA_ScalosPrefs_ProgramName, (ULONG) ProgramName,
+		MUIA_ScalosPrefs_ProgramName, (IPTR) ProgramName,
 		MUIA_ScalosPrefs_PatternPrefs_Preview, fPreview,
 		MUIA_ScalosPrefs_PatternPrefs_AutoPreview, fAutoPreview,
 		MUIA_ScalosPrefs_PatternPrefs_PreviewWeight, PreviewWeight,
@@ -369,8 +369,8 @@ int main(int argc, char *argv[])
 		fail(APP_Main, "Failed to create Application.");
 		}
 
-	set(Group_Plugin, MUIA_ScalosPrefs_MainWindow, (ULONG) WIN_Main);
-	set(Group_Plugin, MUIA_ScalosPrefs_Application, (ULONG) APP_Main);
+	set(Group_Plugin, MUIA_ScalosPrefs_MainWindow, (IPTR) WIN_Main);
+	set(Group_Plugin, MUIA_ScalosPrefs_Application, (IPTR) APP_Main);
 
 	DoMethod(WIN_Main, MUIM_Notify, MUIA_Window_CloseRequest, TRUE, 
 		WIN_Main, 3, MUIM_Set, MUIA_Window_Open, FALSE);
@@ -647,7 +647,7 @@ static void TranslateStringArray(STRPTR *stringArray)
 {
 	while (*stringArray)
 		{
-		*stringArray = GetLocString((ULONG) *stringArray);
+		*stringArray = GetLocString((IPTR) *stringArray);
 		stringArray++;
 		}
 }
@@ -721,7 +721,7 @@ static struct TagItem *CreatePluginSubWindowArray(void)
 	for (n=0; PluginSubWindows && PluginSubWindows[n]; n++)
 		{
 		ti->ti_Tag = MUIA_Application_Window;
-		ti->ti_Data = (ULONG) PluginSubWindows[n];
+		ti->ti_Data = (IPTR) PluginSubWindows[n];
 		ti++;
 		}
 
@@ -841,7 +841,7 @@ static BOOL CheckMCCVersion(CONST_STRPTR name, ULONG minver, ULONG minrev)
 				{
 				if (MUI_Request(NULL, NULL, 0L, GetLocString(MSGID_STARTUP_FAILURE),
 					GetLocString(MSGID_STARTUP_RETRY_QUIT_GAD), GetLocString(MSGID_STARTUP_MCC_IN_USE),
-					(ULONG) name, minver, minrev, ver, rev))
+					(IPTR) name, minver, minrev, ver, rev))
 					{
 					flush = TRUE;
 					}
@@ -870,7 +870,7 @@ static BOOL CheckMCCVersion(CONST_STRPTR name, ULONG minver, ULONG minrev)
 				// and still haven't got the version we want
 				if (MUI_Request(NULL, NULL, 0L, GetLocString(MSGID_STARTUP_FAILURE),
 					GetLocString(MSGID_STARTUP_RETRY_QUIT_GAD), GetLocString(MSGID_STARTUP_OLD_MCC),
-					(ULONG) name, minver, minrev, ver, rev))
+					(IPTR) name, minver, minrev, ver, rev))
 					{
 					flush = TRUE;
 					}
@@ -884,7 +884,7 @@ static BOOL CheckMCCVersion(CONST_STRPTR name, ULONG minver, ULONG minrev)
 			flush = FALSE;
 			if (!MUI_Request(NULL, NULL, 0L, GetLocString(MSGID_STARTUP_FAILURE),
 				GetLocString(MSGID_STARTUP_RETRY_QUIT_GAD), GetLocString(MSGID_STARTUP_MCC_NOT_FOUND),
-				(ULONG) name, minver, minrev))
+				(IPTR) name, minver, minrev))
 				{
 				break;
 				}
