@@ -13,8 +13,8 @@ include $(TOP)/config/make.cfg
 REPOSITORIES := sf://zunetools
 ARCHBASE     := ZuneView_v0.18
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/ZuneView
-
-USER_CFLAGS  := -Wno-parentheses -Wno-unused-but-set-variable
+NOWARN_FLAGS := -Wno-int-to-pointer-cast -Wno-pointer-to-int-cast -Wno-parentheses -Wno-unused-but-set-variable -Wno-unused-const-variable
+USER_CFLAGS  := $(NOWARN_FLAGS)
 USER_INCLUDES:= -I$(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView/src
 
 FILES := \
