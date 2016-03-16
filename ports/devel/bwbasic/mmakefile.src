@@ -39,15 +39,18 @@ FILES := \
 
 FILES := $(addprefix $(PORTSDIR)/bwbasic/$(ARCHBASE)/,$(FILES))
 
+NOWARN_FLAGS := -Wno-format-contains-nul -Wno-maybe-uninitialized \
+	-Wno-unused-but-set-variable -Wno-implicit-int \
+        -Wno-unused-variable -Wno-aggressive-loop-optimizations
+
+USER_CFLAGS := $(NOWARN_FLAGS)
 
 %build_prog mmake=ports-devel-bwbasic progname=BWBasic \
     files=$(FILES) targetdir=$(TARGETDIR)
 
-
 %fetch mmake=ports-devel-bwbasic-fetch archive=$(ARCHBASE) \
     destination=$(PORTSDIR)/bwbasic/$(ARCHBASE) \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip"
-
 
 %copy_dir_recursive mmake=ports-devel-bwbasic-examples \
     src=$(PORTSDIR)/bwbasic/$(ARCHBASE)/bwbtest dst=$(TARGETDIR)/bwbtest
