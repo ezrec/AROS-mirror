@@ -35,9 +35,11 @@ MANTITLEPRINTF := '%s(%s) manual page'
 
 # relative link to pregenerated file in same directory
 MANREFPRINTF := '%s.%s'
-
-USER_CFLAGS  := -DVOLLIST=\"$(VOLLIST)\" -DMANTITLEPRINTF=\"$(MANTITLEPRINTF)\" -DMANREFPRINTF=\"$(MANREFPRINTF)\" -DPOLYGLOTMANVERSION=\"3.2\" \
-    -Wno-comment -Wno-unused-variable -Wno-unused-but-set-variable
+NOWARN_FLAGS := -Wno-comment -Wno-unused-variable \
+    -Wno-unused-but-set-variable -Wno-nonnull-compare \
+    -Wno-incompatible-pointer-types -Wno-discarded-qualifiers -Wno-misleading-indentation
+USER_CFLAGS  := $(NOWARN_FLAGS) -DVOLLIST=\"$(VOLLIST)\" -DMANTITLEPRINTF=\"$(MANTITLEPRINTF)\" -DMANREFPRINTF=\"$(MANREFPRINTF)\" -DPOLYGLOTMANVERSION=\"3.2\"
+    
 
 FILES := $(PORTSDIR)/polyglotman/$(ARCHBASE)/rman
 
