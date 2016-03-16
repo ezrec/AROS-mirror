@@ -17,7 +17,8 @@ REPOSITORIES := ftp://ftp.tuxpaint.org/unix/x/circus-linux/src
 ARCHBASE     := circuslinux-1.0.3
 TARGETDIR    := $(AROS_CONTRIB)/Games/CircusLinux
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
-USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
+NOWARN_FLAGS := -Wno-unused-variable
+USER_CFLAGS  := $(NOWARN_FLAGS)  $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
                 -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES -DNOSOUND -DVERSION=\"1.0.3\"
 
 # sound disabled because it crashes
