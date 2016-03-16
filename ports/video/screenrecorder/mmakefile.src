@@ -15,7 +15,8 @@ include $(TOP)/config/make.cfg
 REPOSITORIES := http://archives.aros-exec.org/share/video/record/
 ARCHBASE     := screenrecorder-src-svn17
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Video/ScreenRecorder
-USER_CFLAGS  := -D__LOCALE_STDLIBBASE__ -Wno-unused-but-set-variable
+NOWARN_FLAGS := -Wno-discarded-array-qualifiers -Wno-unused-but-set-variable
+USER_CFLAGS  := $(NOWARN_FLAGS) -D__LOCALE_STDLIBBASE__
 USER_INCLUDES:= -I$(PORTSDIR)/screenrecorder/$(ARCHBASE)/include
 
 FILES := \
