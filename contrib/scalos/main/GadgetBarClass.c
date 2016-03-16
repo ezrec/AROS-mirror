@@ -314,40 +314,45 @@ static ULONG GadgetBar_Dispose(Class *cl, Object *o, Msg msg)
 }
 
 //----------------------------------------------------------------------------
-
 static ULONG GadgetBar_Set(Class *cl, Object *o, Msg msg)
 {
 	struct GadgetBarClassInst *inst = INST_DATA(cl, o);
 	struct opSet *ops = (struct opSet *) msg;
-    
-	static ULONG packTable[] =
-		{
-#if !defined(__AROS__) || __WORDSIZE != 64
-		PACK_STARTTABLE(DTA_Dummy),
-		PACK_ENTRY(DTA_Dummy, GBDTA_BGPen, 	  GadgetBarClassInst, gbcl_BGPen, PKCTRL_UWORD | PKCTRL_PACKUNPACK),
-		PACK_ENTRY(DTA_Dummy, GBDTA_TopSpace, 	  GadgetBarClassInst, gbcl_TopSpace, PKCTRL_WORD | PKCTRL_PACKUNPACK),
-		PACK_ENTRY(DTA_Dummy, GBDTA_BottomSpace,  GadgetBarClassInst, gbcl_BottomSpace, PKCTRL_WORD | PKCTRL_PACKUNPACK),
-		PACK_ENTRY(DTA_Dummy, GBDTA_RightSpace,   GadgetBarClassInst, gbcl_RightSpace, PKCTRL_WORD | PKCTRL_PACKUNPACK),
-		PACK_ENTRY(DTA_Dummy, GBDTA_LeftSpace, 	  GadgetBarClassInst, gbcl_LeftSpace, PKCTRL_WORD | PKCTRL_PACKUNPACK),
-		PACK_ENTRY(DTA_Dummy, GBDTA_BetweenSpace, GadgetBarClassInst, gbcl_BetweenSpace, PKCTRL_WORD | PKCTRL_PACKUNPACK),
-		PACK_ENDTABLE
-#else
-                // FIXME!!
-#endif
-		};
+        struct TagItem *tag;
+        struct TagItem *tstate;
+        BOOL changed = FALSE;
 
 	DoSuperMethodA(cl, o, msg);
 
-	PackStructureTags(inst, packTable, ops->ops_AttrList);
-/*
-	inst->gbcl_BGPen = GetTagData(GBDTA_BGPen, inst->gbcl_BGPen, ops->ops_AttrList);
-	inst->gbcl_TopSpace = GetTagData(GBDTA_TopSpace, inst->gbcl_TopSpace, ops->ops_AttrList);
-	inst->gbcl_BottomSpace = GetTagData(GBDTA_BottomSpace, inst->gbcl_BottomSpace, ops->ops_AttrList);
-	inst->gbcl_RightSpace = GetTagData(GBDTA_RightSpace, inst->gbcl_RightSpace, ops->ops_AttrList);
-	inst->gbcl_LeftSpace = GetTagData(GBDTA_LeftSpace, inst->gbcl_LeftSpace, ops->ops_AttrList);
-	inst->gbcl_BetweenSpace = GetTagData(GBDTA_BetweenSpace, inst->gbcl_BetweenSpace, ops->ops_AttrList);
-*/
-	if (FindTagItem(GBDTA_BackgroundImageName, ops->ops_AttrList))
+        for(tstate = ops->ops_AttrList; (tag = NextTagItem((APTR)&tstate)); )
+        {
+                switch (tag->ti_Tag)
+                {
+                    case GBDTA_BGPen:
+                        inst->gbcl_BGPen = (UWORD)tag->ti_Data;
+                        break;
+                    case GBDTA_TopSpace:
+                        inst->gbcl_TopSpace = (WORD)tag->ti_Data;
+                        break;
+                  case GBDTA_BottomSpace:
+                        inst->gbcl_BottomSpace = (WORD)tag->ti_Data;
+                        break;
+                   case GBDTA_RightSpace:
+                        inst->gbcl_RightSpace = (WORD)tag->ti_Data;
+                        break;
+                    case GBDTA_LeftSpace:
+                        inst->gbcl_LeftSpace = (WORD)tag->ti_Data;
+                        break;
+                   case GBDTA_BetweenSpace:
+                        inst->gbcl_BetweenSpace = (WORD)tag->ti_Data;
+                        break;
+                   case GBDTA_BackgroundImageName:
+                       changed = TRUE;
+                       break;
+                }
+        }
+
+	if (changed)
 		{
 		DisposeDatatypesImage(&inst->gbcl_Background);
 		inst->gbcl_Background = CreateDatatypesImage((CONST_STRPTR) GetTagData(GBDTA_BackgroundImageName, (IPTR) "", ops->ops_AttrList), 0);
@@ -373,16 +378,16 @@ static ULONG GadgetBar_Get(Class *cl, Object *o, Msg msg)
 	switch (opg->opg_AttrID)
 		{
 	case GA_Left:	// required since gadgetclass attribute is [IS]
-		*(opg->opg_Storage) = (ULONG) gg->LeftEdge;
+		*(opg->opg_Storage) = (IPTR) gg->LeftEdge;
 		break;
 	case GA_Top:	// required since gadgetclass attribute is [IS]
-		*(opg->opg_Storage) = (ULONG) gg->TopEdge;
+		*(opg->opg_Storage) = (IPTR) gg->TopEdge;
 		break;
 	case GA_Width:	// required since gadgetclass attribute is [IS]
-		*(opg->opg_Storage) = (ULONG) gg->Width;
+		*(opg->opg_Storage) = (IPTR) gg->Width;
 		break;
 	case GA_Height:	// required since gadgetclass attribute is [IS]
-		*(opg->opg_Storage) = (ULONG) gg->Height;
+		*(opg->opg_Storage) = (IPTR) gg->Height;
 		break;
 	case GBDTA_BGPen:
 		*(opg->opg_Storage) = inst->gbcl_BGPen;
