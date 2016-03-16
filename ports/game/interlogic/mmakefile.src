@@ -14,7 +14,8 @@ REPOSITORIES := sf://interlogic
 ARCHBASE     := interLOGIC-src-0.30
 TARGETDIR    := $(AROS_CONTRIB)/Games/InterLogic
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
-USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags)
+NOWARN_FLAGS := -Wno-misleading-indentation -Wno-discarded-qualifiers
+USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags)
 
 FILES := \
     $(PORTSDIR)/interlogic/interlogic/src/password \
