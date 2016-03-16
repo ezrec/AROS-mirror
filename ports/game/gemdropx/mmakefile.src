@@ -16,7 +16,8 @@ REPOSITORIES := ftp://ftp.tuxpaint.org/unix/x/gemdropx/src
 ARCHBASE     := gemdropx-0.9
 TARGETDIR    := $(AROS_CONTRIB)/Games/GemDropX
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
-USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
+NOWARN_FLAGS := -Wno-maybe-uninitialized -Wno-unused-but-set-variable
+USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
                 -DDATA_PREFIX=\"PROGDIR:data\" -DJOYSTICK -DNOSOUND -DNOT_EMBEDDED
 
 FILES := $(PORTSDIR)/gemdropx/$(ARCHBASE)/gemdropx
