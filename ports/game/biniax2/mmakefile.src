@@ -23,7 +23,9 @@ REPOSITORIES := http://mordred.dir.bg/biniax
 ARCHBASE     := biniax2-1.30-fullsrc
 TARGETDIR    := $(AROS_CONTRIB)/Games/Biniax2
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
-USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags)
+
+NOWARN_FLAGS := -Wno-unused-variable -Wno-char-subscripts -Wno-unused-value -Wno-switch
+USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags)
 USER_INCLUDES:= -I$(PORTSDIR)/biniax2/biniax2-1.30 -I$(PORTSDIR)/biniax2/biniax2-1.30/desktop
 
 FILES := \
