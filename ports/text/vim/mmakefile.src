@@ -18,7 +18,11 @@ include $(TOP)/config/make.cfg
 REPOSITORIES := ftp://ftp.vim.org/pub/vim/unix
 ARCHBASE     := vim-7.2
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Text/Vim
-USER_CFLAGS  := --no-strict-aliasing -I$(PORTSDIR)/vim/vim72/src/proto \
+NOWARN_FLAGS := -Wno-strict-overflow -Wno-strict-aliasing \
+    -Wno-misleading-indentation -Wno-int-conversion \
+    -Wno-bool-compare -Wno-logical-not-parentheses \
+    -Wno-pointer-to-int-cast
+USER_CFLAGS  := $(NOWARN_FLAGS) -I$(PORTSDIR)/vim/vim72/src/proto \
              -DUSE_TMPNAM -DFEAT_MBYTE -DFEAT_GUI -DFEAT_ASL -DFEAT_BROWSE \
              -DFEAT_MOUSE -DHAVE_STDARG_H -DFEAT_HUGE \
 	     -DDFLT_RUNTIMEPATH=\"PROGDIR:runtime\" \
