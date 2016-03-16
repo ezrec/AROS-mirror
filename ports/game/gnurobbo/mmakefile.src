@@ -17,7 +17,8 @@ REPOSITORIES := sf://gnurobbo
 ARCHBASE     := gnurobbo-0.66
 TARGETDIR    := $(AROS_CONTRIB)/Games/GnuRobbo
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
-USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
+NOWARN_FLAGS := -Wno-misleading-indentation -Wno-unused-but-set-variable
+USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
                 -DPLATFORM_AROS -DVERSION=\"0.66\" -DPACKAGE_DATA_DIR=\"PROGDIR:data\" -DHAVE_DESIGNER 
 
 FILES := \
@@ -42,6 +43,13 @@ FILES := \
 %fetch mmake=ports-game-gnurobbo-fetch archive=$(ARCHBASE)-source destination=$(PORTSDIR)/gnurobbo \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
     patches_specs=gnurobbo-0.66-aros.diff:$(ARCHBASE):-p1
+
+%create_patch mmake=ports-game-gnurobbo-create-patch \
+    archive=$(ARCHBASE)-source \
+    srcdir=$(ARCHBASE) \
+    suffixes="tar.gz" \
+    destination=$(PORTSDIR)/gnurobbo
+
 
 %copy_dir_recursive mmake=ports-game-gnurobbo-data src=$(PORTSDIR)/gnurobbo/$(ARCHBASE)/data \
     dst=$(TARGETDIR)/data
