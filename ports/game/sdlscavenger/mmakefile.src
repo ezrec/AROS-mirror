@@ -15,7 +15,8 @@ REPOSITORIES := sf://sdlscavenger
 ARCHBASE     := sdlscav-145
 TARGETDIR    := $(AROS_CONTRIB)/Games/SdlScavenger
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
-USER_CFLAGS  := $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
+NOWARN_FLAGS := -Wno-unused-but-set-variable -Wno-sequence-point
+USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
                 -DLIBPATH=\"/PROGDIR/data\"
 
 FILES := \
