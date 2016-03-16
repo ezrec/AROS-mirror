@@ -28,20 +28,26 @@
 #pragma pack(2)
 #endif /* __GNUC__ */
 
+#if defined(__AROS__) && __WORDSIZE==64
+#define PTR32   ULONG    
+#else
+#define PTR32   APTR
+#endif
+
 // This is the disk structure that stores menu information in menu preferences files
 // Do not use pointers since the values _must_ remain 32bit even on 64bit platforms.
 // !!! BE VERY CAREFUL TO KEEP PREFS COMPATIBLE IF YOU EVER CHANGE THIS STRUCTURE !!!
 struct ScalosMenuTree
 	{
-	ULONG	mtre_Next;
-	ULONG	mtre_tree;
+	PTR32	mtre_Next;
+	PTR32	mtre_tree;
 	UBYTE	mtre_type;
 	UBYTE	mtre_flags;
 	union	{
 		struct	{
 			char	mtre_hotkey[2];
-			ULONG	mtre_name;
-			ULONG	mtre_iconnames;	// only valid if MTREFLGF_IconNames
+			PTR32	mtre_name;
+			PTR32	mtre_iconnames;	// only valid if MTREFLGF_IconNames
 						// points to 2 strings with menu icon path names
 						// for empty path names, it points to two '\0'
 			} MenuTree;
@@ -49,7 +55,7 @@ struct ScalosMenuTree
 			UBYTE	mcom_flags;
 			UBYTE	mcom_type;	// enum ScalosMenuCommandType
 			ULONG	mcom_stack;
-			ULONG	mcom_name;
+			PTR32	mcom_name;
 			BYTE	mcom_pri;	// priority for command process
 						// only valid if MCOMFLGF_Priority set
 			} MenuCommand;
