@@ -2839,7 +2839,7 @@ static LONG ReadPrefsFile(struct MenuPrefsInst *inst, CONST_STRPTR Filename, BOO
                                         break;
                                 }
 #else
-#define                         adjustedMenu = menuChunk->smch_Menu;
+#define                     adjustedMenu  (menuChunk->smch_Menu)
 #endif
 				d1(kprintf("%s/%s//%ld:  menuChunk=%08lx\n", __FILE__, __FUNC__, __LINE__, menuChunk));
 				if (NULL == menuChunk)
