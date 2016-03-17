@@ -49,7 +49,7 @@ void free(void* pMem)
          if ((pMem1[-i] != 0xC0DEDBAD) ||
              (pMem2[-i] != 0xC0DEDBAD))
          {
-            _error("Freeing corrupted memory block!\nSize: %ld bytes\nMEMORY WILL NOT BE FREED!\nPLEASE REPORT!", ARRAY(lSize-128-8));
+            _error("Freeing corrupted memory block!\nSize: %ld bytes\nMEMORY WILL NOT BE FREED!\nPLEASE REPORT!", lSize-128-8);
             return;
          }
       }

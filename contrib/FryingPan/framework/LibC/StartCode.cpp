@@ -200,7 +200,8 @@ void __main()
 {
 }
 
-void _error(const char* text, IPTR args)
+extern "C" {
+void _error(const char* text, ...)
 {
 #ifndef __AMIGAOS4__
    struct Library* DOSBase       = __InternalDOSBase;
@@ -219,9 +220,12 @@ void _error(const char* text, IPTR args)
       (IPTR)"OK"              // gadgets
    };
 
+   AROS_SLOWSTACKFORMAT_PRE(text);
    if (0 != __InternalIntuitionBase)
-      EasyRequestArgs(0, (struct EasyStruct*)&es, 0, (void*)args);
+      EasyRequestArgs(0, (struct EasyStruct*)&es, 0, AROS_SLOWSTACKFORMAT_ARG(text));
    else if (0 != __InternalDOSBase)
-      VFPrintf(stdout, (char*)text, (const IPTR*)args);
+      VFPrintf(stdout, (char*)text, AROS_SLOWSTACKFORMAT_ARG(text));
+   AROS_SLOWSTACKFORMAT_POST(text);
 }
+};
 

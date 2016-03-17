@@ -84,7 +84,7 @@ extern "C"
    extern void    __cleanup();                     // cleanup proc, call it from your lib expunge. REQUIRES VALID EXECBASE
    extern int     main();
 
-   extern void    _error(const char*, IPTR);
+   extern void    _error(const char*, ...);
 
    /* regular c code */
    extern void*   malloc(size_t size);

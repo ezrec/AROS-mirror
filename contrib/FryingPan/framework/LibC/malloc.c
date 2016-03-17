@@ -89,7 +89,7 @@ void* malloc(size_t lSize)
 
    if (pMem == 0)
    {
-      _error("Unable to allocate %ld bytes of memory!!!\nClick 'OK' to retry", ARRAY(lSize));
+      _error("Unable to allocate %ld bytes of memory!!!\nClick 'OK' to retry", lSize);
       return malloc(lSize-8);
    }
    return pMem;                                                // return mem :)
