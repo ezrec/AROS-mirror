@@ -3907,7 +3907,7 @@ static STRPTR ScaFormatString(CONST_STRPTR formatString, STRPTR Buffer, size_t M
 
 	if (InformationLocale)
 		{
-		ULONG *ArgArray;
+		IPTR *ArgArray;
 
 		ArgArray = malloc(sizeof(IPTR) * NumArgs);
 		if (ArgArray)
@@ -3918,7 +3918,7 @@ static STRPTR ScaFormatString(CONST_STRPTR formatString, STRPTR Buffer, size_t M
 			STATIC_PATCHFUNC(FormatDateHookFunc)
 
 			for (n = 0; n < NumArgs; n++)
-				ArgArray[n] = va_arg(args, LONG);
+				ArgArray[n] = va_arg(args, IPTR);
 
 			fmtHook.h_Entry = (HOOKFUNC) PATCH_NEWFUNC(FormatDateHookFunc);
 			fmtHook.h_Data = &fd;
