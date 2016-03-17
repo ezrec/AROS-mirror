@@ -1110,20 +1110,17 @@ void OpenLogfile( struct ClassBase *cb, struct GIFAnimInstData *gaid )
     }
 }
 
-#if !defined(__AROS__)
 void error_printf( struct ClassBase *cb, struct GIFAnimInstData *gaid, STRPTR format, ... )
 {
-    va_list args;
-
     if( (gaid -> gaid_VerboseOutput) != (BPTR)-1L )
     {
         OpenLogfile( cb, gaid );
 
         if( gaid -> gaid_VerboseOutput )
         {
-            va_start (args, format);
-            VFPrintf( (gaid -> gaid_VerboseOutput), format, (const IPTR *)args);
-            va_end (args);
+            AROS_SLOWSTACKFORMAT_PRE(format);
+            VFPrintf( (gaid -> gaid_VerboseOutput), format, AROS_SLOWSTACKFORMAT_ARG(format));
+            AROS_SLOWSTACKFORMAT_POST(format);
         }
     }
 }
@@ -1131,16 +1128,13 @@ void error_printf( struct ClassBase *cb, struct GIFAnimInstData *gaid, STRPTR fo
 
 void verbose_printf( struct ClassBase *cb, struct GIFAnimInstData *gaid, STRPTR format, ... )
 {
-    va_list args;
-
     if( (gaid -> gaid_VerboseOutput) && ((gaid -> gaid_VerboseOutput) != (BPTR)-1L) )
     {
-        va_start (args, format);
-        VFPrintf( (gaid -> gaid_VerboseOutput), format, (const IPTR *)args);
-        va_end (args);
+        AROS_SLOWSTACKFORMAT_PRE(format);
+        VFPrintf( (gaid -> gaid_VerboseOutput), format, AROS_SLOWSTACKFORMAT_ARG(format));
+        AROS_SLOWSTACKFORMAT_POST(format);
     }
 }
-#endif
 
 static
 void AttachSample( struct ClassBase *cb, struct GIFAnimInstData *gaid )

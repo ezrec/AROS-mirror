@@ -2442,41 +2442,30 @@ void mysprintf( struct ClassBase *cb, STRPTR buffer, STRPTR fmt, ... )
 
     RawDoFmt( fmt, args, (void (*))"\x16\xc0\x4e\x75", buffer );
 }
-
+#endif
 
 void error_printf( struct ClassBase *cb, struct AnimInstData *aid, STRPTR format, ... )
 {
-    va_list args;
-
     OpenLogfile( cb, aid );
 
     if (aid -> aid_VerboseOutput)
     {
-        va_start (args, format);
-        VFPrintf( (aid -> aid_VerboseOutput), format, (const IPTR *)args);
-        va_end (args);
+        AROS_SLOWSTACKFORMAT_PRE(format);
+        VFPrintf( (aid -> aid_VerboseOutput), format, AROS_SLOWSTACKFORMAT_ARG(format));
+        AROS_SLOWSTACKFORMAT_POST(format);
     }
 }
 
 
 void verbose_printf( struct ClassBase *cb, struct AnimInstData *aid, STRPTR format, ... )
 {
-    va_list args;
-
     if (aid -> aid_VerboseOutput)
     {
-        va_start (args, format);
-        VFPrintf( (aid -> aid_VerboseOutput), format, (const IPTR *)args);
-        va_end (args);
+        AROS_SLOWSTACKFORMAT_PRE(format);
+        VFPrintf( (aid -> aid_VerboseOutput), format, AROS_SLOWSTACKFORMAT_ARG(format));
+        AROS_SLOWSTACKFORMAT_POST(format);
     }
-    D(
-        else
-        {
-            vkprintf(format, args);
-        }
-    )
 }
-#endif
 
 static
 void AttachSample( struct ClassBase *cb, struct AnimInstData *aid )

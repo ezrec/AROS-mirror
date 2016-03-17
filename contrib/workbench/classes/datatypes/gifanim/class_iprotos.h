@@ -40,23 +40,6 @@ APTR AllocPooledVec ( struct ClassBase *cb , APTR pool , ULONG memsize );
 void FreePooledVec ( struct ClassBase *cb , APTR pool , APTR mem );
 #else
 #define mysprintf(cb, buffer, fmt, ...) sprintf(buffer, fmt, __VA_ARGS__)
-#define error_printf(cb, gaid, fmt, ...) \
-{ \
-    IPTR errargs[] = { AROS_PP_VARIADIC_CAST2IPTR(__VA_ARGS__) }; \
-    OpenLogfile( (cb), (gaid) ); \
-    if ((gaid) -> gaid_VerboseOutput) \
-    { \
-        VFPrintf( ((gaid) -> gaid_VerboseOutput), (fmt), errargs); \
-    } \
-}
-#define verbose_printf(cb, gaid, fmt, ... ) \
-{ \
-    IPTR pargs[] = { AROS_PP_VARIADIC_CAST2IPTR(__VA_ARGS__) }; \
-    if( ((gaid) -> gaid_VerboseOutput) && (((gaid) -> gaid_VerboseOutput) != (BPTR)-1L) ) \
-    { \
-        VFPrintf( ((gaid) -> gaid_VerboseOutput), (fmt), pargs); \
-    } \
-}
 #define AllocPooledVec(cb, pool, size) AllocVecPooled(pool, size)
 #define FreePooledVec(cb, pool, mem) FreeVecPooled(pool, mem)
 #endif

@@ -622,43 +622,37 @@ void mysprintf( struct ClassBase *classbase, STRPTR buffer, STRPTR fmt, ... )
 
     RawDoFmt( fmt, args, (void (*))"\x16\xc0\x4e\x75", buffer );
 }
-
+#endif
 
 void verbose_printf( struct MPEGVideoInstData *mvid, STRPTR format, ... )
 {
-    va_list args;
-
     if( mvid -> mvid_VerboseOutput )
     {
-        va_start (args, format);
-        VFPrintf( (mvid -> mvid_VerboseOutput), format, (const IPTR *)args);
-        va_end (args);
+        AROS_SLOWSTACKFORMAT_PRE(format);
+        VFPrintf( (mvid -> mvid_VerboseOutput), format, AROS_SLOWSTACKFORMAT_ARG(format));
+        AROS_SLOWSTACKFORMAT_POST(format);
     }
 }
 
 
 void debug_printf( struct MPEGVideoInstData *mvid, STRPTR format, ... )
 {
-    va_list args;
-
     if( (mvid -> mvid_VerboseOutput) && (mvid -> mvid_DoDebug) )
     {
-        va_start (args, format);
-        VFPrintf( (mvid -> mvid_VerboseOutput), format, (const IPTR *)args);
-        va_end (args);
+        AROS_SLOWSTACKFORMAT_PRE(format);
+        VFPrintf( (mvid -> mvid_VerboseOutput), format, AROS_SLOWSTACKFORMAT_ARG(format));
+        AROS_SLOWSTACKFORMAT_POST(format);
     }
 }
 
 
 void syntax_printf( struct MPEGVideoInstData *mvid, STRPTR format, ... )
 {
-    va_list args;
-
     if( (mvid -> mvid_VerboseOutput) && (mvid -> mvid_DoSyntax) )
     {
-        va_start (args, format);
-        VFPrintf( (mvid -> mvid_VerboseOutput), format, (const IPTR *)args);
-        va_end (args);
+        AROS_SLOWSTACKFORMAT_PRE(format);
+        VFPrintf( (mvid -> mvid_VerboseOutput), format, AROS_SLOWSTACKFORMAT_ARG(format));
+        AROS_SLOWSTACKFORMAT_POST(format);
     }
 }
 
@@ -666,18 +660,16 @@ void syntax_printf( struct MPEGVideoInstData *mvid, STRPTR format, ... )
 void error_printf( struct MPEGVideoInstData *mvid, STRPTR format, ... )
 {
     struct ClassBase *classbase = mvid -> mvid_ClassBase;
-    va_list args;
 
     OpenLogfile( classbase, mvid );
 
     if( mvid -> mvid_VerboseOutput )
     {
-        va_start (args, format);
-        VFPrintf( (mvid -> mvid_VerboseOutput), format, (const IPTR *)args);
-        va_end (args);
+        AROS_SLOWSTACKFORMAT_PRE(format);
+        VFPrintf( (mvid -> mvid_VerboseOutput), format, AROS_SLOWSTACKFORMAT_ARG(format));
+        AROS_SLOWSTACKFORMAT_POST(format);
     }
 }
-#endif
 
 static
 void CopyBitMap( struct ClassBase *classbase, struct BitMap *dest, struct BitMap *src, ULONG width, ULONG height )
