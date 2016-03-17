@@ -182,7 +182,7 @@ struct FormatDateHookData
 	size_t fdhd_Length;		// length of buffer
 	};
 
-static STRPTR ScaFormatString(CONST_STRPTR FormatString, STRPTR Buffer, size_t MaxLen, LONG NumArgs, ...);
+static STRPTR ScaFormatString(CONST_STRPTR FormatString, STRPTR Buffer, size_t MaxLen, ...);
 
 static M68KFUNC_P3_PROTO(void, FormatDateHookFunc,
 	A0, struct Hook *, theHook,
@@ -781,7 +781,7 @@ CONST_STRPTR GetLocString(ULONG MsgId)
 BOOL askAreYouSure(char *volumeName,BOOL truncColon, char *DeviceSize)
 {
 	char name[36];
-	APTR args[3];
+	CONST_STRPTR args[2];
 	UBYTE result;
 	struct EasyStruct ez;
 
@@ -795,7 +795,6 @@ BOOL askAreYouSure(char *volumeName,BOOL truncColon, char *DeviceSize)
 	// Setup the device name as the argument to the requestor
 	args[0]=name;
 	args[1]=DeviceSize;
-	args[2]=NULL;
 
 
 	ez.es_StructSize = sizeof(ez);
@@ -820,8 +819,8 @@ void printError(CONST_STRPTR first, CONST_STRPTR second, CONST_STRPTR third)
 	static const char *twoLine="%s\n%s";
 	static const char *threeLine="%s\n%s\n%s";
 	struct EasyStruct errorReq;
-	APTR args[4];
-	args[0] = args[3] = NULL;
+	CONST_STRPTR args[3];
+	args[0] = NULL;
 
 	errorReq.es_StructSize = sizeof(errorReq);
 	errorReq.es_Flags = 0;
@@ -867,20 +866,20 @@ void printError(CONST_STRPTR first, CONST_STRPTR second, CONST_STRPTR third)
 		// Three lines
 		if (third != NULL)
 			{
-			args[2] = (APTR) third;
-			args[1] = (APTR) second;
-			args[0] = (APTR) first;
+			args[2] = third;
+			args[1] = second;
+			args[0] = first;
 			errorReq.es_TextFormat = (STRPTR) threeLine;
 			}
 		else if (second != NULL)   // Two lines
 			{
-			args[1] = (APTR) second;
-			args[0] = (APTR) first;
+			args[1] = second;
+			args[0] = first;
 			errorReq.es_TextFormat = (STRPTR) twoLine;
 			}
 		else if (first != NULL)    // One line
 			{
-			args[0] = (APTR) first;
+			args[0] = first;
 			errorReq.es_TextFormat = (STRPTR) oneLine;
 			}
 		// Put up the requestor
@@ -906,12 +905,7 @@ void getVolumeName(char *name,struct WBArg *argList,UWORD disk)
 BOOL alertIsWriteProtected(CONST_STRPTR devName)
 {
 	struct EasyStruct writeProtected;
-	APTR args[2];
 	BYTE result;
-
-	// Setup the device name as the argument to the requestor
-	args[0] = (APTR) devName;
-	args[1] = NULL;
 
 	writeProtected.es_StructSize = sizeof(writeProtected);
 	writeProtected.es_Flags = 0;
@@ -920,7 +914,7 @@ BOOL alertIsWriteProtected(CONST_STRPTR devName)
 	writeProtected.es_GadgetFormat = (STRPTR) GetLocString(MSGID_REQ_RETRY_CANCEL);
 
 	// (+jmc+) Open the request
-	result=EasyRequestArgs(NULL, &writeProtected, NULL, (RAWARG)args);
+	result=EasyRequestArgs(NULL, &writeProtected, NULL, (RAWARG)&devName);
 
 	// return(result==1);	// 
 	return(result);		// +jmc+
@@ -1151,11 +1145,11 @@ static void ByteCount(STRPTR Buffer, size_t BuffLen, LONG NumBlocks, LONG BytesP
 		d1(KPrintF(__FILE__ "/%s/%ld: GBytes=%lu  MBytes=%lu\n", __FUNC__, __FILE__, __FUNC__, __LINE__, GBytes, MBytes));
 
 		if (GBytes > 200)
-			ScaFormatString("%lDG", Buffer, BuffLen, 1, GBytes);
+			ScaFormatString("%lDG", Buffer, BuffLen, GBytes);
 		else if (GBytes > 20)
-			ScaFormatString("%lD%s%1ldG", Buffer, BuffLen, 3, GBytes, Decimal, MBytes / 100);
+			ScaFormatString("%lD%s%1ldG", Buffer, BuffLen, GBytes, Decimal, MBytes / 100);
 		else
-			ScaFormatString("%lD%s%-02ldG", Buffer, BuffLen, 3, GBytes, Decimal, MBytes / 10);
+			ScaFormatString("%lD%s%-02ldG", Buffer, BuffLen, GBytes, Decimal, MBytes / 10);
 		}
 	else if (NumBlocks > 2 * 1024)
 		{
@@ -1164,60 +1158,51 @@ static void ByteCount(STRPTR Buffer, size_t BuffLen, LONG NumBlocks, LONG BytesP
 		ULONG KBytes = NumBlocks % 1024;
 
 		if (MBytes > 200)
-			ScaFormatString("%lDM", Buffer, BuffLen, 1, MBytes);
+			ScaFormatString("%lDM", Buffer, BuffLen, MBytes);
 		else if (MBytes > 20)
-			ScaFormatString("%lD%s%1ldM", Buffer, BuffLen, 3, MBytes, Decimal, KBytes / 100);
+			ScaFormatString("%lD%s%1ldM", Buffer, BuffLen, MBytes, Decimal, KBytes / 100);
 		else
-			ScaFormatString("%lD%s%-02ldK", Buffer, BuffLen, 3, MBytes, Decimal, KBytes / 10);
+			ScaFormatString("%lD%s%-02ldK", Buffer, BuffLen, MBytes, Decimal, KBytes / 10);
 		}
 	else
 		{
-		ScaFormatString("%lDK", Buffer, BuffLen, 1, NumBlocks);
+		ScaFormatString("%lDK", Buffer, BuffLen, NumBlocks);
 		}
 
 }
 
 //-----------------------------------------------------------------------------
 
-static STRPTR ScaFormatString(CONST_STRPTR formatString, STRPTR Buffer, size_t MaxLen, LONG NumArgs, ...)
+static STRPTR ScaFormatString(CONST_STRPTR formatString, STRPTR Buffer, size_t MaxLen, ...)
 {
-	va_list args;
-
-	va_start(args, NumArgs);
 
 	if (FormatDiskLocale)
 		{
-		IPTR *ArgArray;
+		struct FormatDateHookData fd;
+		struct Hook fmtHook;
+		STATIC_PATCHFUNC(FormatDateHookFunc)
 
-		ArgArray = malloc(sizeof(IPTR) * NumArgs);
-		if (ArgArray)
-			{
-			struct FormatDateHookData fd;
-			struct Hook fmtHook;
-			ULONG n;
-			STATIC_PATCHFUNC(FormatDateHookFunc)
+		fmtHook.h_Entry = (HOOKFUNC) PATCH_NEWFUNC(FormatDateHookFunc);
+		fmtHook.h_Data = &fd;
 
-			for (n = 0; n < NumArgs; n++)
-				ArgArray[n] = va_arg(args, IPTR);
+		fd.fdhd_Buffer = Buffer;
+		fd.fdhd_Length = MaxLen;
 
-			fmtHook.h_Entry = (HOOKFUNC) PATCH_NEWFUNC(FormatDateHookFunc);
-			fmtHook.h_Data = &fd;
-
-			fd.fdhd_Buffer = Buffer;
-			fd.fdhd_Length = MaxLen;
-
-			FormatString(FormatDiskLocale, (STRPTR) formatString, (RAWARG)ArgArray, &fmtHook);
-
-			free(ArgArray);
-			}
+		AROS_SLOWSTACKFORMAT_PRE_USING(MaxLen, formatString);
+		FormatString(FormatDiskLocale, (STRPTR) formatString, AROS_SLOWSTACKFORMAT_ARG(MaxLen), &fmtHook);
+		AROS_SLOWSTACKFORMAT_POST(MaxLen);
 		}
 	else
 		{
+		va_list args;
+
+		va_start(args, MaxLen);
 		vsprintf(Buffer, formatString, args);
+		va_end(args);
 		}
 
-	va_end(args);
 
+	Buffer[MaxLen-1] = 0;
 	return Buffer;
 }
 

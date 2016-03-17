@@ -290,7 +290,7 @@ static BOOL ReadScalosPrefs(void);
 static CONST_STRPTR GetPrefsConfigString(APTR prefsHandle, ULONG Id, CONST_STRPTR DefaultString);
 static void StripTrailingChar(STRPTR String, char CharToRemove);
 static void BuildDefVolumeNameNoSpace(STRPTR Buffer, CONST_STRPTR VolumeName, size_t MaxLength);
-static STRPTR ScaFormatString(CONST_STRPTR FormatString, STRPTR Buffer, size_t MaxLen, LONG NumArgs, ...);
+static STRPTR ScaFormatString(CONST_STRPTR FormatString, STRPTR Buffer, size_t MaxLen, ...);
 static void ScaFormatDate(struct DateTime *dt, ULONG DayMaxLen, ULONG DateMaxLen, ULONG TimeMaxLen);
 static M68KFUNC_P3_PROTO(void, FormatDateHookFunc,
 	A0, struct Hook *, theHook,
@@ -524,7 +524,7 @@ static char PathName[512];
 //----------------------------------------------------------------------------
 
 static void ScaFormatStringMaxLength(char *Buffer, size_t BuffLen, const char *Format, ...);
-static void ScaFormatStringArgs(char *Buffer, size_t BuffLength, const char *Format, APTR Args);
+static void ScaFormatStringArgs(char *Buffer, size_t BuffLength, const char *Format, va_list Args);
 static STRPTR AllocCopyString(CONST_STRPTR clp);
 static void FreeCopyString(STRPTR lp);
 
@@ -2382,7 +2382,7 @@ static void UpdateDrawerSize(Object *ButtonSize, ULONG *FileCount,
 	Convert64(InformationLocale, *ByteCount, ByteCountText, sizeof(ByteCountText));
 
 	ScaFormatString(GetLocString(MSGID_DRAWER_SIZE),
-		SizeText, sizeof(SizeText), 4,
+		SizeText, sizeof(SizeText),
 		ByteCountText, *FileCount, *DrawersCount, *BlocksCount);
 	set(ButtonSize, MUIA_Text_Contents, SizeText);
 }
@@ -3498,20 +3498,20 @@ static ULONG CheckInfoData(const struct InfoData *info)
 	ByteCount(ByteCountText, sizeof(ByteCountText), info->id_NumBlocksUsed, info->id_BytesPerBlock);
 	ScaFormatString(GetLocString(MSGID_DEVICE_BLOCKS_PERCENT),
 		TextDeviceUsed, sizeof(TextDeviceUsed),
-		 3, ByteCountText, info->id_NumBlocksUsed, UsedPercent);
+		 ByteCountText, info->id_NumBlocksUsed, UsedPercent);
 
 	ByteCount(ByteCountText, sizeof(ByteCountText),
 		info->id_NumBlocks - info->id_NumBlocksUsed, info->id_BytesPerBlock);
 	ScaFormatString(GetLocString(MSGID_DEVICE_BLOCKS_PERCENT),
 		TextDeviceFree, sizeof(TextDeviceFree),
-		 3, ByteCountText,
+		ByteCountText,
 		info->id_NumBlocks - info->id_NumBlocksUsed,
 		100 - UsedPercent);
 
 	ByteCount(ByteCountText, sizeof(ByteCountText), info->id_NumBlocks, info->id_BytesPerBlock);
 	ScaFormatString(GetLocString(MSGID_DEVICE_BLOCKS),
 		TextDeviceSize, sizeof(TextDeviceSize),
-		2, ByteCountText, info->id_NumBlocks);
+		ByteCountText, info->id_NumBlocks);
 
 
 	switch (info->id_DiskState)
@@ -3532,7 +3532,7 @@ static ULONG CheckInfoData(const struct InfoData *info)
 
 	ScaFormatString(GetLocString(MSGID_DEVICE_BLOCKSIZE_BYTES),
 		DeviceBlockSize, sizeof(DeviceBlockSize),
-		1, info->id_BytesPerBlock);
+		info->id_BytesPerBlock);
 
 	switch (info->id_DiskType)
 		{
@@ -3899,45 +3899,33 @@ static void BuildDefVolumeNameNoSpace(STRPTR Buffer, CONST_STRPTR VolumeName, si
 
 //----------------------------------------------------------------------------
 
-static STRPTR ScaFormatString(CONST_STRPTR formatString, STRPTR Buffer, size_t MaxLen, LONG NumArgs, ...)
+static STRPTR ScaFormatString(CONST_STRPTR formatString, STRPTR Buffer, size_t MaxLen, ...)
 {
-	va_list args;
-
-	va_start(args, NumArgs);
-
 	if (InformationLocale)
 		{
-		IPTR *ArgArray;
+		struct FormatDateHookData fd;
+		struct Hook fmtHook;
+		STATIC_PATCHFUNC(FormatDateHookFunc)
 
-		ArgArray = malloc(sizeof(IPTR) * NumArgs);
-		if (ArgArray)
-			{
-			struct FormatDateHookData fd;
-			struct Hook fmtHook;
-			ULONG n;
-			STATIC_PATCHFUNC(FormatDateHookFunc)
+		fmtHook.h_Entry = (HOOKFUNC) PATCH_NEWFUNC(FormatDateHookFunc);
+		fmtHook.h_Data = &fd;
 
-			for (n = 0; n < NumArgs; n++)
-				ArgArray[n] = va_arg(args, IPTR);
+		fd.fdhd_Buffer = Buffer;
+		fd.fdhd_Length = MaxLen;
 
-			fmtHook.h_Entry = (HOOKFUNC) PATCH_NEWFUNC(FormatDateHookFunc);
-			fmtHook.h_Data = &fd;
-
-			fd.fdhd_Buffer = Buffer;
-			fd.fdhd_Length = MaxLen;
-
-			FormatString(InformationLocale, (STRPTR) formatString, (RAWARG)ArgArray, &fmtHook);
-
-			free(ArgArray);
-			}
+		AROS_SLOWSTACKFORMAT_PRE_USING(MaxLen, formatString);
+		FormatString(InformationLocale, (STRPTR) formatString, AROS_SLOWSTACKFORMAT_ARG(MaxLen), &fmtHook);
+		AROS_SLOWSTACKFORMAT_POST(MaxLen);
 		}
 	else
 		{
-		vsprintf(Buffer, formatString, args);
+		va_list args;
+		va_start(args, MaxLen);
+		vsnprintf(Buffer, MaxLen, formatString, args);
+		va_end(args);
 		}
 
-	va_end(args);
-
+	Buffer[MaxLen-1] = 0;
 	return Buffer;
 }
 
@@ -4073,11 +4061,11 @@ static void ByteCount(STRPTR Buffer, size_t BuffLen, LONG NumBlocks, LONG BytesP
 		d1(KPrintF(__FILE__ "/%s/%ld: GBytes=%lu  MBytes=%lu\n", __FUNC__, __LINE__, GBytes, MBytes));
 
 		if (GBytes > 200)
-			ScaFormatString(GetLocString(MSGID_BYTES_GB), Buffer, BuffLen, 1, GBytes);
+			ScaFormatString(GetLocString(MSGID_BYTES_GB), Buffer, BuffLen, GBytes);
 		else if (GBytes > 20)
-			ScaFormatString(GetLocString(MSGID_BYTES_GB_1), Buffer, BuffLen, 3, GBytes, Decimal, MBytes / 100);
+			ScaFormatString(GetLocString(MSGID_BYTES_GB_1), Buffer, BuffLen, GBytes, Decimal, MBytes / 100);
 		else
-			ScaFormatString(GetLocString(MSGID_BYTES_GB_2), Buffer, BuffLen, 3, GBytes, Decimal, MBytes / 10);
+			ScaFormatString(GetLocString(MSGID_BYTES_GB_2), Buffer, BuffLen, GBytes, Decimal, MBytes / 10);
 		}
 	else if (NumBlocks > 2 * 1024)
 		{
@@ -4086,15 +4074,15 @@ static void ByteCount(STRPTR Buffer, size_t BuffLen, LONG NumBlocks, LONG BytesP
 		ULONG KBytes = NumBlocks % 1024;
 
 		if (MBytes > 200)
-			ScaFormatString(GetLocString(MSGID_BYTES_MB), Buffer, BuffLen, 1, MBytes);
+			ScaFormatString(GetLocString(MSGID_BYTES_MB), Buffer, BuffLen, MBytes);
 		else if (MBytes > 20)
-			ScaFormatString(GetLocString(MSGID_BYTES_MB_1), Buffer, BuffLen, 3, MBytes, Decimal, KBytes / 100);
+			ScaFormatString(GetLocString(MSGID_BYTES_MB_1), Buffer, BuffLen, MBytes, Decimal, KBytes / 100);
 		else
-			ScaFormatString(GetLocString(MSGID_BYTES_MB_2), Buffer, BuffLen, 3, MBytes, Decimal, KBytes / 10);
+			ScaFormatString(GetLocString(MSGID_BYTES_MB_2), Buffer, BuffLen, MBytes, Decimal, KBytes / 10);
 		}
 	else
 		{
-		ScaFormatString(GetLocString(MSGID_BYTES_KB), Buffer, BuffLen, 1, NumBlocks);
+		ScaFormatString(GetLocString(MSGID_BYTES_KB), Buffer, BuffLen, NumBlocks);
 		}
 
 }
@@ -4693,7 +4681,7 @@ static STRPTR GetSizeString(void)
 		Convert64(InformationLocale, ScalosExamineGetSize(fib), ByteCountText, sizeof(ByteCountText));
 
 		SizeString = ScaFormatString(GetLocString(MSGID_SIZE_FORMAT), TextSize, sizeof(TextSize),
-			1, ByteCountText);
+			ByteCountText);
 		}
 	else
 		SizeString = (STRPTR)GetLocString(MSGID_VERSION_NOT_AVAILABLE);
@@ -5212,7 +5200,7 @@ static void ScaFormatStringMaxLength(char *Buffer, size_t BuffLen, const char *F
 
 //-----------------------------------------------------------------------------------
 
-static void ScaFormatStringArgs(char *Buffer, size_t BuffLength, const char *Format, APTR Args)
+static void ScaFormatStringArgs(char *Buffer, size_t BuffLength, const char *Format, va_list Args)
 {
 	// here converting %lU und %lD format strings to lower case
 	// because sprintf doesn't recognize them

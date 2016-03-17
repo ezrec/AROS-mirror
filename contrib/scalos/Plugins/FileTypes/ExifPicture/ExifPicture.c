@@ -426,7 +426,7 @@ void MyFreeVecPooled(APTR mem);
 
 static struct Locale *ExifPictureLocale;
 
-static STRPTR ScaFormatString(CONST_STRPTR FormatString, STRPTR Buffer, size_t MaxLen, LONG NumArgs, ...);
+static STRPTR ScaFormatString(CONST_STRPTR FormatString, STRPTR Buffer, size_t MaxLen, ...);
 static void ScaFormatDate(struct DateTime *dt, ULONG DayMaxLen, ULONG DateMaxLen, ULONG TimeMaxLen);
 
 static M68KFUNC_P3_PROTO(void, FormatDateHookFunc,
@@ -865,45 +865,35 @@ LIBFUNC_P3(STRPTR, LIBToolTipInfoString,
 }
 LIBFUNC_END
 
-static STRPTR ScaFormatString(CONST_STRPTR formatString, STRPTR Buffer, size_t MaxLen, LONG NumArgs, ...)
+static STRPTR ScaFormatString(CONST_STRPTR formatString, STRPTR Buffer, size_t MaxLen, ...)
 {
-	va_list args;
-
-	va_start(args, NumArgs);
-
 	if (ExifPictureLocale)
 		{
-		ULONG *ArgArray;
+		struct FormatDateHookData fd;
+		struct Hook fmtHook;
+		STATIC_PATCHFUNC(FormatDateHookFunc)
 
-		ArgArray = MyAllocVecPooled(sizeof(ULONG) * NumArgs);
-		if (ArgArray)
-			{
-			struct FormatDateHookData fd;
-			struct Hook fmtHook;
-			ULONG n;
-			STATIC_PATCHFUNC(FormatDateHookFunc)
+		fmtHook.h_Entry = (HOOKFUNC) PATCH_NEWFUNC(FormatDateHookFunc);
+		fmtHook.h_Data = &fd;
 
-			for (n = 0; n < NumArgs; n++)
-				ArgArray[n] = va_arg(args, LONG);
+		fd.fdhd_Buffer = Buffer;
+		fd.fdhd_Length = MaxLen;
 
-			fmtHook.h_Entry = (HOOKFUNC) PATCH_NEWFUNC(FormatDateHookFunc);
-			fmtHook.h_Data = &fd;
-
-			fd.fdhd_Buffer = Buffer;
-			fd.fdhd_Length = MaxLen;
-
-			FormatString(ExifPictureLocale, (STRPTR) formatString, (RAWARG)ArgArray, &fmtHook);
-
-			MyFreeVecPooled(ArgArray);
-			}
+		AROS_SLOWSTACKFORMAT_PRE_USING(MaxLen, formatString);
+		FormatString(ExifPictureLocale, (STRPTR) formatString, AROS_SLOWSTACKFORMAT_ARG(MaxLen), &fmtHook);
+		AROS_SLOWSTACKFORMAT_POST(MaxLen);
 		}
 	else
 		{
-		vsprintf(Buffer, formatString, args);
+		va_list args;
+
+		va_start(args, MaxLen);
+		vsnprintf(Buffer, MaxLen, formatString, args);
+		va_end(args);
 		}
 
-	va_end(args);
 
+	Buffer[MaxLen-1] = 0;
 	return Buffer;
 }
 //----------------------------------------------------------------------------
@@ -1003,7 +993,7 @@ static STRPTR GetSizeString(void)
 	STRPTR SizeString;
 
 	if (FibValid)
-		SizeString = ScaFormatString(GetLocString(MSGID_SIZE_FORMAT), TextSize, sizeof(TextSize), 1, fib.fib_Size);
+		SizeString = ScaFormatString(GetLocString(MSGID_SIZE_FORMAT), TextSize, sizeof(TextSize), fib.fib_Size);
 	else
 		SizeString = GetLocString(MSGID_VERSION_NOT_AVAILABLE);
 
@@ -2034,7 +2024,7 @@ static char *ShowImageInfo(struct ExifPictureBase *ExifPictureBase)
 		{
 		if (FibValid)
 			{
-			SizeString = ScaFormatString(GetLocString(MSGID_PICTURE_FILESIZE, ExifPictureBase), BufFileSize, sizeof(BufFileSize), 1, fib.fib_Size);
+			SizeString = ScaFormatString(GetLocString(MSGID_PICTURE_FILESIZE, ExifPictureBase), BufFileSize, sizeof(BufFileSize), fib.fib_Size);
 			strcat(BufType.Buffer, SizeString);
 			}
 		else
