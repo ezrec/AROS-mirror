@@ -1125,14 +1125,7 @@ LONG GetBaudRate(STRPTR Buffer);
 LONG GetFileSize(CONST_STRPTR Name);
 VOID PutDimensionTags(struct Window *Reference, LONG Left, LONG Top, LONG Width, LONG Height);
 struct TagItem *GetDimensionTags(struct Window *Reference, struct TagItem *Tags);
-#ifdef __AROS__
-#define ShowRequest(w,t,g,...) ({ \
-	IPTR args[] = { AROS_PP_VARIADIC_CAST2IPTR(__VA_ARGS__) }; \
-	_ShowRequest(w,t,g,args); })
-LONG _ShowRequest(struct Window *Window, CONST_STRPTR Text, CONST_STRPTR Gadgets, IPTR *Args);
-#else
 LONG ShowRequest(struct Window *Window, CONST_STRPTR Text, CONST_STRPTR Gadgets, ...);
-#endif
 VOID CloseWindowSafely(struct Window *Window);
 VOID DelayTime(LONG Secs, LONG Micros);
 VOID WaitTime(VOID);

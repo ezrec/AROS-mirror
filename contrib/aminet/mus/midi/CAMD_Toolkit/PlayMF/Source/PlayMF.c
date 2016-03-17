@@ -1830,7 +1830,7 @@ LONG __stdargs Message(UBYTE *Msg,UBYTE *Options,...)
 	LONG retval = 0;
 	
 	BOOL req = FALSE;
-	IPTR *Arg = ((IPTR *)&Options)+1;
+	AROS_SLOWSTACKFORMAT_PRE_USING(Options, Msg);
 	
 	// if (Options) if (strchr(Options,'|')) req = TRUE;
 	if (Options) req = TRUE;
@@ -1844,18 +1844,19 @@ LONG __stdargs Message(UBYTE *Msg,UBYTE *Options,...)
 		Req.es_TextFormat=Msg;
 		Req.es_GadgetFormat=Options;
 		
-		retval=EasyRequestArgs(NULL,&Req,0,Arg);
+		retval=EasyRequestArgs(NULL,&Req,0,AROS_SLOWSTACKFORMAT_ARG(Options));
 	}
 	else
 	{
 		if (DOSBase)
 		{
-			VPrintf(Msg,Arg);
+			VPrintf(Msg,AROS_SLOWSTACKFORMAT_ARG(Options));
 			Printf("\n");
 			
 			retval=0;
 		}
 	}
+	AROS_SLOWSTACKFORMAT_POST(Options);
 	
 	return(retval);
 }
@@ -1875,8 +1876,6 @@ LONG __stdargs PrintDOSFault(LONG code, STRPTR header, UBYTE *Options)
 	if (IntuitionBase && (WBMode || req))
 	{
 		struct EasyStruct Req={sizeof(struct EasyStruct),0,"Piano Meter",0, NULL};
-		struct TagItem emptytags[1] = {{TAG_DONE}};
-		
 		UBYTE buffer[128];
 		Fault(code, header, buffer, sizeof(buffer));
 		
@@ -1885,7 +1884,7 @@ LONG __stdargs PrintDOSFault(LONG code, STRPTR header, UBYTE *Options)
 		Req.es_TextFormat=buffer;
 		Req.es_GadgetFormat=Options;
 		
-		retval=EasyRequestArgs(NULL,&Req,0,emptytags);
+		retval=EasyRequestArgs(NULL,&Req,0,NULL);
 	}
 	else
 	{

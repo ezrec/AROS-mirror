@@ -530,7 +530,7 @@ long action,                   /* packet type (desired action)              */
      nargs;                    /* number of arguments in list               */
 {
 
-    struct MsgPort *replyport, *CreatePort(UBYTE *, long);
+    struct MsgPort *replyport;
     void DeletePort(struct MsgPort *);
     struct StandardPacket *packet;
     LONG count;

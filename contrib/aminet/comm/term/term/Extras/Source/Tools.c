@@ -1922,18 +1922,10 @@ GetDimensionTags(struct Window *Reference,struct TagItem *Tags)
 	 *	EasyRequest requester.
 	 */
 
-#ifdef __AROS__
-LONG
-_ShowRequest(struct Window *Window,CONST_STRPTR Text,CONST_STRPTR Gadgets,IPTR *Args)
-#else
 LONG
 ShowRequest(struct Window *Window,CONST_STRPTR Text,CONST_STRPTR Gadgets,...)
-#endif
 {
 	struct EasyStruct Easy;
-#ifndef __AROS__
-	va_list VarArgs;
-#endif
 	LONG i,GadgetCount;
 
 	for(i = GadgetCount = 0 ; i < strlen(Gadgets) ; i++)
@@ -1950,6 +1942,7 @@ ShowRequest(struct Window *Window,CONST_STRPTR Text,CONST_STRPTR Gadgets,...)
 	Easy.es_TextFormat		= Text;
 	Easy.es_GadgetFormat	= Gadgets;
 
+	AROS_SLOWSTACKFORMAT_PRE_USING(Gadgets, Text);
 	if(GadgetCount)
 	{
 		LONG Result;
@@ -1960,13 +1953,8 @@ ShowRequest(struct Window *Window,CONST_STRPTR Text,CONST_STRPTR Gadgets,...)
 			/* Use the argument array to build the
 			 * requester and display it.
 			 */
-#ifdef __AROS__
-		Result = EasyRequestArgs(Window,&Easy,NULL,Args);
-#else
-		va_start(VarArgs,Gadgets);
-		Result = EasyRequestArgs(Window,&Easy,NULL,(APTR)VarArgs);
-		va_end(VarArgs);
-#endif
+		Result = EasyRequestArgs(Window,&Easy,NULL,AROS_SLOWSTACKFORMAT_ARG(Gadgets));
+
 
 		if(GTLayoutBase)
 			LT_UnlockWindow(Window);
@@ -1980,13 +1968,7 @@ ShowRequest(struct Window *Window,CONST_STRPTR Text,CONST_STRPTR Gadgets,...)
 		if(GTLayoutBase)
 			LT_LockWindow(Window);
 
-#ifdef __AROS__
-		if(ReqWindow = BuildEasyRequestArgs(Window,&Easy,IDCMP_RAWKEY,(APTR)Args))
-#else
-		va_start(VarArgs,Gadgets);
-
-		if(ReqWindow = BuildEasyRequestArgs(Window,&Easy,IDCMP_RAWKEY,(APTR)VarArgs))
-#endif
+		if(ReqWindow = BuildEasyRequestArgs(Window,&Easy,IDCMP_RAWKEY,AROS_SLOWSTACKFORMAT_ARG(Gadgets)))
 		{
 			ULONG	IDCMP;
 			LONG	Result;
@@ -2006,15 +1988,13 @@ ShowRequest(struct Window *Window,CONST_STRPTR Text,CONST_STRPTR Gadgets,...)
 			FreeSysRequest(ReqWindow);
 		}
 
-#ifndef __AROS__
-		va_end(VarArgs);
-#endif
-
 		if(GTLayoutBase)
 			LT_UnlockWindow(Window);
 
-		return(0);
 	}
+	AROS_SLOWSTACKFORMAT_POST(Gadgets);
+
+	return(0);
 }
 
 	/* CloseWindowSafely(struct Window *Window):
