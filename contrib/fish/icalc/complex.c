@@ -5,7 +5,7 @@
 
 # define	NUMBER	257
 # define	VAR	258
-# define	CONST	259
+# define	_CONST	259
 # define	C_BLTIN	260
 # define	R_BLTIN	261
 # define	FUNCDEF	262
@@ -1041,7 +1041,7 @@ case 19:
     break;}
 case 20:
 #line 141 "complex.y"
-{ yyval.node = n_symbol(CONST, yyvsp[0].sym); ;
+{ yyval.node = n_symbol(_CONST, yyvsp[0].sym); ;
     break;}
 case 21:
 #line 142 "complex.y"

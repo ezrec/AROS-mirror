@@ -23,12 +23,16 @@
  * Prototypes from amiga.lib (with stack parameters)
  * Declare before #including <exec.h>.
  */
+#ifdef __AROS__
+#include <proto/alib.h>
+#else
 extern ULONG RangeSeed;	/* from amiga.lib */
 extern /*__stdargs*/ UWORD RangeRand(LONG);
 extern /*__stdargs*/ void ArgArrayDone( void );
 extern /*__stdargs*/ UBYTE **ArgArrayInit( long argc, UBYTE **argv );
 extern /*__stdargs*/ LONG ArgInt( UBYTE **tt, STRPTR entry, long defaultval );
 extern /*__stdargs*/ STRPTR ArgString( UBYTE **tt, STRPTR entry, STRPTR defaulstring );
+#endif
 
 #include <proto/dos.h>			/* -> will be autoopened */
 #include <proto/exec.h>			/* #includes <clib/alib_protos> ! */

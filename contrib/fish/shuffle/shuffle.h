@@ -187,8 +187,12 @@ extern int OpenProject0Window( void );
 extern void CloseProject0Window( void );
 extern int Project0VanillaKey( void );
 
+#ifdef __AROS__
+#include <proto/alib.h>
+#else
 ULONG __stdargs FastRand( unsigned long seed );
 UWORD __stdargs RangeRand( unsigned long maxValue );      
+#endif
 int main(int argc, char **argv);
 extern int  MakeScWd(void);
 extern void  FreeScWd(void);
