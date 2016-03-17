@@ -1223,7 +1223,7 @@ static void AddAddresses(struct ScalosMenuTree *srcTree, struct SCALOS_MENUTREE 
 		if (MenuTree->mtre_tree)
 			{
 			MenuTree->mtre_tree = (struct SCALOS_MENUTREE *) (((UBYTE *) MenuTree->mtre_tree) + (IPTR) BaseAddr);
-			AddAddresses((struct ScalosMenuTree *)((IPTR)BaseAddr + (IPTR)srcTree->mtre_tree), MenuTree->mtre_tree, BaseAddr);
+			AddAddresses((struct ScalosMenuTree *)((IPTR)0 + (IPTR)srcTree->mtre_tree), MenuTree->mtre_tree, BaseAddr);
 			}
 		MenuTree->mtre_Next = SCA_BE_ADDR(srcTree->mtre_Next);
 		if (MenuTree->mtre_Next)
