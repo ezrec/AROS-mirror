@@ -974,7 +974,7 @@ static BOOL init(void)
 static BOOL MyInitAmiSSL(void)
 {
 	BOOL Success = FALSE;
-	ULONG ErrMsgID;
+	ULONG ErrMsgID = 0;
 
 	do	{
 #ifndef STATIC_SSL
