@@ -12,4 +12,8 @@ EXEDIR	:= $(AROS_CONTRIB)/Games/LazyMines
     progname=LazyMines targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="chunkyiclass"
 
+
+FILES := lazymines.guide lazymines.guide.info
+%copy_files_q mmake=aminet-games-think-lazymines dst=$(EXEDIR)
+
 %common
