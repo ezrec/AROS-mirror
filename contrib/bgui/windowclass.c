@@ -2598,7 +2598,6 @@ STATIC ASM REGFUNC3(IPTR, ToolTip_func,
    struct IBox        ibx;
    UWORD              x, y, ww, wh;
    UBYTE             *tip, *tc;
-   IPTR               args[2];
    struct BaseInfo   *bi;
 
    switch (ttc->ttc_Command)
@@ -2618,9 +2617,11 @@ STATIC ASM REGFUNC3(IPTR, ToolTip_func,
 	  */
 	 if ((tip = (UBYTE *)BGUI_AllocPoolMem(strlen(tc) + 10)))
 	 {
-	    args[0] = (IPTR)BARDETAILPEN;
-	    args[1] = (IPTR)tc;
-	    DoSPrintF(tip, "\033d%ld%s", args);
+	    struct {
+	    	    ULONG a;
+	    	    CONST_STRPTR b;
+	    } __packed args = { BARDETAILPEN, tc };
+	    DoSPrintF(tip, "\033d%ld%s", (RAWARG)&args);
 	 }
 	 else
 	 {

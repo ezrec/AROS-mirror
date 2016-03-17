@@ -231,7 +231,6 @@ METHOD(ProgressClassRender, struct bmRender *, bmr)
    LONG               done, min, max;
    LONG               filled, space;
    UBYTE             *str;
-   IPTR               tmp;
 
    /*
     * Render the baseclass.
@@ -307,8 +306,7 @@ METHOD(ProgressClassRender, struct bmRender *, bmr)
       /*
        * Do we have a text?
        */
-      tmp = pd->pd_Done;
-      if ((str = DoBuffer(pd->pd_Text, &pd->pd_Buffer, &pd->pd_BufSize, &tmp)) && strlen(str))
+      if ((str = DoBuffer(pd->pd_Text, &pd->pd_Buffer, &pd->pd_BufSize, (RAWARG)&pd->pd_Done)) && strlen(str))
       {
          ULONG apen;
          STRPTR formatted=NULL;
@@ -394,7 +392,7 @@ METHOD(ProgressClassDimensions, struct bmDimensions *, bmd)
       /*
        * Obtain string.
        */
-      if ((str = DoBuffer(pd->pd_Text, &pd->pd_Buffer, &pd->pd_BufSize, (IPTR *)&pd->pd_Min)))
+      if ((str = DoBuffer(pd->pd_Text, &pd->pd_Buffer, &pd->pd_BufSize, (RAWARG)&pd->pd_Min)))
       {
          /*
           * Compute size of minimum level.
@@ -404,7 +402,7 @@ METHOD(ProgressClassDimensions, struct bmDimensions *, bmd)
          /*
           * Obtain string.
           */
-         if ((str = DoBuffer(pd->pd_Text, &pd->pd_Buffer, &pd->pd_BufSize, (IPTR *)&pd->pd_Max)))
+         if ((str = DoBuffer(pd->pd_Text, &pd->pd_Buffer, &pd->pd_BufSize, (RAWARG)&pd->pd_Max)))
          {
             /*
              * Compute size of maximum level.

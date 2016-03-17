@@ -199,7 +199,7 @@ makeproto ASM VOID ShowHelpReq( REG(a0) struct Window *win, REG(a1) UBYTE *text 
 /*
  * Re-allocate and format a buffer.
  */
-makeproto ASM UBYTE *DoBuffer(REG(a0) UBYTE *text, REG(a1) UBYTE **buf_ptr, REG(a2) ULONG *buf_len, REG(a3) IPTR *args)
+makeproto ASM UBYTE *DoBuffer(REG(a0) UBYTE *text, REG(a1) UBYTE **buf_ptr, REG(a2) ULONG *buf_len, REG(a3) RAWARG args)
 {
    ULONG       len;
 

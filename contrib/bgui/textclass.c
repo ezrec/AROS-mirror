@@ -89,7 +89,7 @@ typedef struct td_ {
    ULONG            td_Flags;              /* Flags.                           */
    UBYTE           *td_Text;               /* The text itself.                 */
    ULONG            td_TextID;             /* Text ID.                         */
-   IPTR            *td_Args;               /* Arguments for format string.     */
+   RAWARG           td_Args;               /* Arguments for format string.     */
 }  TD;
 
 #define TEXTF_COPY         (1<<0)          /* Copy text.                       */

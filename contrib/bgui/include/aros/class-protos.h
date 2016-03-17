@@ -25,9 +25,9 @@ extern Class *InitAslReqClass(void);
 
 /* strformat.c                                */
 
-extern ASM ULONG CompStrlenF(REG(a0) UBYTE *, REG(a1) IPTR *args);
+extern ASM ULONG CompStrlenF(REG(a0) UBYTE *, REG(a1) RAWARG args);
 
-extern ASM VOID DoSPrintF(REG(a0) UBYTE *, REG(a1) UBYTE *, REG(a2) IPTR *);
+extern ASM VOID DoSPrintF(REG(a0) UBYTE *, REG(a1) UBYTE *, REG(a2) RAWARG args);
 #ifdef __AROS__
 #else
 extern void sprintf(char *, char *, ...);
@@ -55,7 +55,7 @@ extern WORD MapKey(UWORD, UWORD, APTR *);
 
 extern ASM VOID ShowHelpReq( REG(a0) struct Window *, REG(a1) UBYTE *);
 
-extern ASM UBYTE *DoBuffer(REG(a0) UBYTE *, REG(a1) UBYTE **, REG(a2) ULONG *, REG(a3) IPTR *args);
+extern ASM UBYTE *DoBuffer(REG(a0) UBYTE *, REG(a1) UBYTE **, REG(a2) ULONG *, REG(a3) RAWARG args);
 
 extern VOID DoMultiSet(Tag, IPTR, ULONG, Object *, ...);
 
@@ -494,9 +494,9 @@ extern BOOL DisplayAGuideInfo(struct NewAmigaGuide *, Tag, ...);
 
 extern ASM ULONG ScaleWeight(REG(d2) ULONG e, REG(d3) ULONG f, REG(d4) ULONG a);
 
-extern /*__stdargs*/ ASM ULONG StrLenfA(REG(a0) UBYTE *, REG(a1) IPTR *args);
+extern /*__stdargs*/ ASM ULONG StrLenfA(REG(a0) UBYTE *, REG(a1) RAWARG args);
 
-extern /*__stdargs*/ ASM VOID SPrintfA(REG(a3) UBYTE *, REG(a0) UBYTE *, REG(a1) IPTR *args);
+extern /*__stdargs*/ ASM VOID SPrintfA(REG(a3) UBYTE *, REG(a0) UBYTE *, REG(a1) RAWARG args);
 
 //extern ASM VOID LHook_Count(REG(a0) struct Hook *hook, REG(a1) ULONG chr, REG(a2) struct Locale *loc);
 extern REGFUNCPROTO3(VOID, LHook_Count,

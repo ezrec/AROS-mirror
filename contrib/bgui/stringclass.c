@@ -814,12 +814,12 @@ METHOD(StringClassFString, struct smFormatString *, smfs)
       /*
        * Allocate string buffer.
        */
-      if ((sb = (UBYTE *)BGUI_AllocPoolMem(CompStrlenF(smfs->smfs_FStr, &smfs->smfs_Arg1))))
+      if ((sb = (UBYTE *)BGUI_AllocPoolMem(CompStrlenF(smfs->smfs_FStr, (RAWARG)&smfs->smfs_Arg1))))
       {
          /*
           * Format and set it.
           */
-         DoSPrintF(sb, smfs->smfs_FStr, &smfs->smfs_Arg1);
+         DoSPrintF(sb, smfs->smfs_FStr, (RAWARG)&smfs->smfs_Arg1);
          DoSetMethod(sd->sd_StrGad, smfs->smfs_GInfo, STRINGA_TextVal, sb, TAG_END);
          /*
           * Free the string.

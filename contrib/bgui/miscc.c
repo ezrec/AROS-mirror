@@ -48,7 +48,7 @@ REGFUNC2(void, MyPutChProc_StrLenfA,
 }
 REGFUNC_END
 
-ASM ULONG StrLenfA(REG(a0) UBYTE * FormatString, REG(a1) IPTR * DataStream)
+ASM ULONG StrLenfA(REG(a0) UBYTE * FormatString, REG(a1) RAWARG DataStream)
 {
   ULONG c = 0;
   RawDoFmt(FormatString, DataStream, ((APTR)MyPutChProc_StrLenfA), &c);
@@ -65,7 +65,7 @@ REGFUNC2(void, MyPutChProc_SPrintfA,
 }
 REGFUNC_END
 
-ASM VOID SPrintfA(REG(a3) UBYTE * buffer, REG(a0) UBYTE * format, REG(a1) IPTR * args)
+ASM VOID SPrintfA(REG(a3) UBYTE * buffer, REG(a0) UBYTE * format, REG(a1) RAWARG args)
 {
   RawDoFmt(format, args, ((APTR)MyPutChProc_SPrintfA), &buffer);
 }
