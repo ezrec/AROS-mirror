@@ -892,7 +892,7 @@ static STRPTR ScaFormatString(CONST_STRPTR formatString, STRPTR Buffer, size_t M
 			fd.fdhd_Buffer = Buffer;
 			fd.fdhd_Length = MaxLen;
 
-			FormatString(ExifPictureLocale, (STRPTR) formatString, ArgArray, &fmtHook);
+			FormatString(ExifPictureLocale, (STRPTR) formatString, (RAWARG)ArgArray, &fmtHook);
 
 			MyFreeVecPooled(ArgArray);
 			}

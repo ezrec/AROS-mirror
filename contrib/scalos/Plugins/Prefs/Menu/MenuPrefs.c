@@ -1647,10 +1647,10 @@ static SAVEDS(APTR) INTERRUPT TreeConstructFunc(struct Hook *hook, APTR obj, str
 		if ((mie->mie_TreeEntry->mtre_flags & MTREFLGF_IconNames) &&
 			mie->mie_TreeEntry->MenuCombo.MenuTree.mtre_iconnames)
 			{
-			stccpy(mle->llist_UnselectedIconName, mie->mie_TreeEntry->MenuCombo.MenuTree.mtre_iconnames,
+			stccpy(mle->llist_UnselectedIconName, (const char *)mie->mie_TreeEntry->MenuCombo.MenuTree.mtre_iconnames,
 				sizeof(mle->llist_UnselectedIconName));
 			stccpy(mle->llist_SelectedIconName,
-				mie->mie_TreeEntry->MenuCombo.MenuTree.mtre_iconnames + 1 + strlen(mie->mie_TreeEntry->MenuCombo.MenuTree.mtre_iconnames),
+				(const char *)mie->mie_TreeEntry->MenuCombo.MenuTree.mtre_iconnames + 1 + strlen((const char*)mie->mie_TreeEntry->MenuCombo.MenuTree.mtre_iconnames),
 				sizeof(mle->llist_SelectedIconName));
 
 			d1(KPrintF("%s/%s/%ld: llist_UnselectedIconName=<%s>  llist_SelectedIconName=<%s>\n", __FILE__, __FUNC__, __LINE__, mle->llist_UnselectedIconName, mle->llist_SelectedIconName));
@@ -2784,7 +2784,9 @@ static LONG ReadPrefsFile(struct MenuPrefsInst *inst, CONST_STRPTR Filename, BOO
 
 	do	{
                 menuChunk = NULL;
+#if defined(__AROS__) && __WORDSIZE==64
                 adjustedMenu = NULL;
+#endif
 		iff = AllocIFF();
 		if (NULL == iff)
 			{
@@ -3344,7 +3346,7 @@ static LONG BuildMenuTree(struct MenuPrefsInst *inst, Object *ListTree,
 
 #if !defined(__AROS__) || __WORDSIZE != 64
 		if (TreeNode)
-			Parent = &mTree->mtre_Next;
+			Parent = (struct ScalosMenuTree **)&mTree->mtre_Next;
 #else
                 //FIXME!!
 #endif
@@ -3369,13 +3371,13 @@ static void RemoveAddresses(struct ScalosMenuTree *MenuTree, const UBYTE *BaseAd
 {
 	while (MenuTree)
 		{
-		struct ScalosMenuTree *MenuTreeNext = (APTR)BaseAddr + MenuTree->mtre_Next;
+		struct ScalosMenuTree *MenuTreeNext = (APTR)((IPTR)BaseAddr + (IPTR)MenuTree->mtre_Next);
 
 		if (SCAMENUTYPE_Command == MenuTree->mtre_type)
 			{
 			if (MenuTree->MenuCombo.MenuCommand.mcom_name)
 				{
-				MenuTree->MenuCombo.MenuCommand.mcom_name = SCA_LONG2BE(MenuTree->MenuCombo.MenuCommand.mcom_name - (IPTR)BaseAddr);
+				MenuTree->MenuCombo.MenuCommand.mcom_name = (PTR32)SCA_LONG2BE((IPTR)MenuTree->MenuCombo.MenuCommand.mcom_name - (IPTR)BaseAddr);
 				}
 			MenuTree->MenuCombo.MenuCommand.mcom_stack = SCA_LONG2BE(MenuTree->MenuCombo.MenuCommand.mcom_stack);
 			}
@@ -3383,12 +3385,12 @@ static void RemoveAddresses(struct ScalosMenuTree *MenuTree, const UBYTE *BaseAd
 			{
 			if (MenuTree->MenuCombo.MenuTree.mtre_name)
 				{
-				MenuTree->MenuCombo.MenuTree.mtre_name = SCA_LONG2BE(MenuTree->MenuCombo.MenuTree.mtre_name - (IPTR)BaseAddr);
+				MenuTree->MenuCombo.MenuTree.mtre_name = (PTR32)SCA_LONG2BE((IPTR)MenuTree->MenuCombo.MenuTree.mtre_name - (IPTR)BaseAddr);
 				}
 
 			if ((MenuTree->mtre_flags & MTREFLGF_IconNames) && MenuTree->MenuCombo.MenuTree.mtre_iconnames)
 				{
-				MenuTree->MenuCombo.MenuTree.mtre_iconnames = SCA_LONG2BE(MenuTree->MenuCombo.MenuTree.mtre_iconnames - (IPTR)BaseAddr);
+				MenuTree->MenuCombo.MenuTree.mtre_iconnames = (PTR32)SCA_LONG2BE((IPTR)MenuTree->MenuCombo.MenuTree.mtre_iconnames - (IPTR)BaseAddr);
 				}
 
 			d1(KPrintF("%s/%s/%ld: mtre_name=<%s>  mtre_flags=%02lx  mtre_iconnames=%08lx\n", \
@@ -3397,14 +3399,14 @@ static void RemoveAddresses(struct ScalosMenuTree *MenuTree, const UBYTE *BaseAd
 			}
 		if (MenuTree->mtre_tree)
 			{
-			RemoveAddresses((struct ScalosMenuTree *)(BaseAddr + MenuTree->mtre_tree), BaseAddr);
-			MenuTree->mtre_tree = (ULONG) (((IPTR) MenuTree->mtre_tree) - (IPTR) BaseAddr);
-			MenuTree->mtre_tree = SCA_LONG2BE(MenuTree->mtre_tree);
+			RemoveAddresses((struct ScalosMenuTree *)((IPTR)BaseAddr + (IPTR)MenuTree->mtre_tree), BaseAddr);
+			MenuTree->mtre_tree = (SMTPTR32) (((IPTR) MenuTree->mtre_tree) - (IPTR) BaseAddr);
+			MenuTree->mtre_tree = (SMTPTR32) SCA_LONG2BE((IPTR)MenuTree->mtre_tree);
 			}
 		if (MenuTree->mtre_Next)
 			{
-			MenuTree->mtre_Next = (ULONG) (((IPTR) MenuTree->mtre_Next) - (IPTR) BaseAddr);
-			MenuTree->mtre_Next = SCA_LONG2BE(MenuTree->mtre_Next);
+			MenuTree->mtre_Next = (SMTPTR32) (((IPTR) MenuTree->mtre_Next) - (IPTR) BaseAddr);
+			MenuTree->mtre_Next = (SMTPTR32) SCA_LONG2BE((IPTR)MenuTree->mtre_Next);
 			}
 
 		MenuTree = MenuTreeNext;
@@ -3535,20 +3537,20 @@ static void AddAddresses(struct ScalosMenuTree *srcTree, struct SCALOS_MENUTREE 
 		{
 		if (SCAMENUTYPE_Command == MenuTree->mtre_type)
 			{
-			MenuTree->MenuCombo.MenuCommand.mcom_name = (APTR)0 + SCA_BE2LONG(srcTree->MenuCombo.MenuCommand.mcom_name);
+			MenuTree->MenuCombo.MenuCommand.mcom_name = SCA_BE_ADDR(srcTree->MenuCombo.MenuCommand.mcom_name);
 			if (MenuTree->MenuCombo.MenuCommand.mcom_name)
 				MenuTree->MenuCombo.MenuCommand.mcom_name += (IPTR) BaseAddr;
 			MenuTree->MenuCombo.MenuCommand.mcom_stack = SCA_BE2LONG(srcTree->MenuCombo.MenuCommand.mcom_stack);
 			}
 		else
 			{
-			MenuTree->MenuCombo.MenuTree.mtre_name = (APTR)0 + SCA_BE2LONG(srcTree->MenuCombo.MenuTree.mtre_name);
+			MenuTree->MenuCombo.MenuTree.mtre_name = SCA_BE_ADDR(srcTree->MenuCombo.MenuTree.mtre_name);
 			if (MenuTree->MenuCombo.MenuTree.mtre_name)
 				MenuTree->MenuCombo.MenuTree.mtre_name += (IPTR) BaseAddr;
 
 			if (MenuTree->mtre_flags & MTREFLGF_IconNames)
 				{
-				MenuTree->MenuCombo.MenuTree.mtre_iconnames = (APTR)0 + SCA_BE2LONG(srcTree->MenuCombo.MenuTree.mtre_iconnames);
+				MenuTree->MenuCombo.MenuTree.mtre_iconnames = SCA_BE_ADDR(srcTree->MenuCombo.MenuTree.mtre_iconnames);
 				if (MenuTree->MenuCombo.MenuTree.mtre_iconnames)
 					{
 					MenuTree->MenuCombo.MenuTree.mtre_iconnames += (IPTR) BaseAddr;
@@ -3570,13 +3572,13 @@ static void AddAddresses(struct ScalosMenuTree *srcTree, struct SCALOS_MENUTREE 
 				__FILE__, __FUNC__, __LINE__, MenuTree->MenuCombo.MenuTree.mtre_iconnames \
 				? MenuTree->MenuCombo.MenuTree.mtre_iconnames : (STRPTR) ""));
 			}
-		MenuTree->mtre_tree = (APTR)0 + SCA_BE2LONG(srcTree->mtre_tree);
+		MenuTree->mtre_tree = SCA_BE_ADDR(srcTree->mtre_tree);
 		if (MenuTree->mtre_tree)
 			{
 			MenuTree->mtre_tree = (struct SCALOS_MENUTREE *) (((UBYTE *) MenuTree->mtre_tree) + (IPTR) BaseAddr);
-			AddAddresses((struct ScalosMenuTree *)(BaseAddr + srcTree->mtre_tree), MenuTree->mtre_tree, BaseAddr);
+			AddAddresses((struct ScalosMenuTree *)((IPTR)BaseAddr + (IPTR)srcTree->mtre_tree), MenuTree->mtre_tree, BaseAddr);
 			}
-		MenuTree->mtre_Next = (APTR)0 + SCA_BE2LONG(srcTree->mtre_Next);
+		MenuTree->mtre_Next = SCA_BE_ADDR(srcTree->mtre_Next);
 		if (MenuTree->mtre_Next)
 			{
 			MenuTree->mtre_Next = (struct SCALOS_MENUTREE *) (((UBYTE *) MenuTree->mtre_Next) + (IPTR) BaseAddr);

@@ -3926,7 +3926,7 @@ static STRPTR ScaFormatString(CONST_STRPTR formatString, STRPTR Buffer, size_t M
 			fd.fdhd_Buffer = Buffer;
 			fd.fdhd_Length = MaxLen;
 
-			FormatString(InformationLocale, (STRPTR) formatString, ArgArray, &fmtHook);
+			FormatString(InformationLocale, (STRPTR) formatString, (RAWARG)ArgArray, &fmtHook);
 
 			free(ArgArray);
 			}

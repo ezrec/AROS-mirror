@@ -805,7 +805,7 @@ BOOL askAreYouSure(char *volumeName,BOOL truncColon, char *DeviceSize)
 	ez.es_GadgetFormat = (STRPTR) GetLocString(MSGID_REQ_SURE_GADGETS);
 
 	// (+jmc+) Open the request
-	result=EasyRequestArgs(NULL, &ez, NULL, args);
+	result=EasyRequestArgs(NULL, &ez, NULL, (RAWARG)args);
 
 	// return(result==1);	// 
 	return(result);		// +jmc+
@@ -884,7 +884,7 @@ void printError(CONST_STRPTR first, CONST_STRPTR second, CONST_STRPTR third)
 			errorReq.es_TextFormat = (STRPTR) oneLine;
 			}
 		// Put up the requestor
-		EasyRequestArgs(NULL,&errorReq,NULL,args);
+		EasyRequestArgs(NULL,&errorReq,NULL,(RAWARG)args);
 		}
 	return;
 }
@@ -920,7 +920,7 @@ BOOL alertIsWriteProtected(CONST_STRPTR devName)
 	writeProtected.es_GadgetFormat = (STRPTR) GetLocString(MSGID_REQ_RETRY_CANCEL);
 
 	// (+jmc+) Open the request
-	result=EasyRequestArgs(NULL, &writeProtected, NULL, args);
+	result=EasyRequestArgs(NULL, &writeProtected, NULL, (RAWARG)args);
 
 	// return(result==1);	// 
 	return(result);		// +jmc+
@@ -1187,9 +1187,9 @@ static STRPTR ScaFormatString(CONST_STRPTR formatString, STRPTR Buffer, size_t M
 
 	if (FormatDiskLocale)
 		{
-		ULONG *ArgArray;
+		IPTR *ArgArray;
 
-		ArgArray = malloc(sizeof(ULONG) * NumArgs);
+		ArgArray = malloc(sizeof(IPTR) * NumArgs);
 		if (ArgArray)
 			{
 			struct FormatDateHookData fd;
@@ -1198,7 +1198,7 @@ static STRPTR ScaFormatString(CONST_STRPTR formatString, STRPTR Buffer, size_t M
 			STATIC_PATCHFUNC(FormatDateHookFunc)
 
 			for (n = 0; n < NumArgs; n++)
-				ArgArray[n] = va_arg(args, LONG);
+				ArgArray[n] = va_arg(args, IPTR);
 
 			fmtHook.h_Entry = (HOOKFUNC) PATCH_NEWFUNC(FormatDateHookFunc);
 			fmtHook.h_Data = &fd;
@@ -1206,7 +1206,7 @@ static STRPTR ScaFormatString(CONST_STRPTR formatString, STRPTR Buffer, size_t M
 			fd.fdhd_Buffer = Buffer;
 			fd.fdhd_Length = MaxLen;
 
-			FormatString(FormatDiskLocale, (STRPTR) formatString, ArgArray, &fmtHook);
+			FormatString(FormatDiskLocale, (STRPTR) formatString, (RAWARG)ArgArray, &fmtHook);
 
 			free(ArgArray);
 			}
