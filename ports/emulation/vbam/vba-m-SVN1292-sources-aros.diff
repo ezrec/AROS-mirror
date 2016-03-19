@@ -1,6 +1,6 @@
-diff -Naur vba-m-SVN1292-sources-orig/sources/CMakeLists.txt vba-m-SVN1292-sources/sources/CMakeLists.txt
---- vba-m-SVN1292-sources-orig/sources/CMakeLists.txt	2015-04-13 19:54:10.320159059 +0200
-+++ vba-m-SVN1292-sources/sources/CMakeLists.txt	2015-04-13 21:34:30.921228163 +0200
+diff -ruN sources/CMakeLists.txt sources.aros/CMakeLists.txt
+--- sources/CMakeLists.txt	2015-04-04 17:31:34.000000000 +0100
++++ sources.aros/CMakeLists.txt	2016-03-19 03:12:16.008140755 +0000
 @@ -342,6 +342,8 @@
      )
  	IF( WIN32 )
@@ -19,9 +19,9 @@ diff -Naur vba-m-SVN1292-sources-orig/sources/CMakeLists.txt vba-m-SVN1292-sourc
      INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/gtk/icons/ DESTINATION share/icons/hicolor PATTERN ".svn" EXCLUDE)
  ENDIF(NOT APPLE)
  SET(CPACK_GENERATOR "ZIP")
-diff -Naur vba-m-SVN1292-sources-orig/sources/fex/fex/Data_Reader.cpp vba-m-SVN1292-sources/sources/fex/fex/Data_Reader.cpp
---- vba-m-SVN1292-sources-orig/sources/fex/fex/Data_Reader.cpp	2015-04-13 19:54:10.143161913 +0200
-+++ vba-m-SVN1292-sources/sources/fex/fex/Data_Reader.cpp	2015-04-13 19:56:17.122767809 +0200
+diff -ruN sources/fex/fex/Data_Reader.cpp sources.aros/fex/fex/Data_Reader.cpp
+--- sources/fex/fex/Data_Reader.cpp	2015-04-04 01:05:16.000000000 +0100
++++ sources.aros/fex/fex/Data_Reader.cpp	2016-03-19 03:12:16.008140755 +0000
 @@ -411,7 +411,11 @@
  		return NULL;
  	
@@ -34,24 +34,23 @@ diff -Naur vba-m-SVN1292-sources-orig/sources/fex/fex/Data_Reader.cpp vba-m-SVN1
  	if ( mmax <= 0 )
  		return NULL;
  
-diff -Naur vba-m-SVN1292-sources-orig/sources/src/common/Patch.cpp vba-m-SVN1292-sources/sources/src/common/Patch.cpp
---- vba-m-SVN1292-sources-orig/sources/src/common/Patch.cpp	2015-04-13 19:54:10.208161209 +0200
-+++ vba-m-SVN1292-sources/sources/src/common/Patch.cpp	2015-04-13 20:13:47.834060148 +0200
-@@ -11,6 +11,11 @@
+diff -ruN sources/src/common/Patch.cpp sources.aros/src/common/Patch.cpp
+--- sources/src/common/Patch.cpp	2015-04-04 01:05:20.000000000 +0100
++++ sources.aros/src/common/Patch.cpp	2016-03-19 03:17:08.344268106 +0000
+@@ -11,6 +11,10 @@
  typedef off_t __off64_t; /* off_t is 64 bits on BSD. */
  #define	fseeko64 fseeko
  #define	ftello64 ftello
 +#elif defined(__AROS__)
 +#include <exec/types.h>
-+typedef QUAD __off64_t;
 +#define	fseeko64 fseeko
 +#define	ftello64 ftello
  #else
  typedef off64_t __off64_t;
  #endif /* __APPLE__ || BSD */
-diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/debugger-expr-yacc.cpp vba-m-SVN1292-sources/sources/src/gba/debugger-expr-yacc.cpp
---- vba-m-SVN1292-sources-orig/sources/src/gba/debugger-expr-yacc.cpp	2015-04-13 19:54:10.278159865 +0200
-+++ vba-m-SVN1292-sources/sources/src/gba/debugger-expr-yacc.cpp	2015-04-13 20:22:27.423265146 +0200
+diff -ruN sources/src/gba/debugger-expr-yacc.cpp sources.aros/src/gba/debugger-expr-yacc.cpp
+--- sources/src/gba/debugger-expr-yacc.cpp	2015-04-04 01:05:20.000000000 +0100
++++ sources.aros/src/gba/debugger-expr-yacc.cpp	2016-03-19 03:12:16.008140755 +0000
 @@ -126,7 +126,7 @@
    
  #include "../System.h"
@@ -61,9 +60,9 @@ diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/debugger-expr-yacc.cpp vba
  
  #include <string>
  #include <map>
-diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/ereader.cpp vba-m-SVN1292-sources/sources/src/gba/ereader.cpp
---- vba-m-SVN1292-sources-orig/sources/src/gba/ereader.cpp	2015-04-13 19:54:10.278159865 +0200
-+++ vba-m-SVN1292-sources/sources/src/gba/ereader.cpp	2015-04-13 20:24:23.593696330 +0200
+diff -ruN sources/src/gba/ereader.cpp sources.aros/src/gba/ereader.cpp
+--- sources/src/gba/ereader.cpp	2015-04-04 01:05:20.000000000 +0100
++++ sources.aros/src/gba/ereader.cpp	2016-03-19 03:12:16.008140755 +0000
 @@ -1,6 +1,6 @@
  #include <stdio.h>
  #include <locale>
@@ -72,9 +71,9 @@ diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/ereader.cpp vba-m-SVN1292-
  #include <string.h>
  
  #include "GBA.h"
-diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/GBALink.cpp vba-m-SVN1292-sources/sources/src/gba/GBALink.cpp
---- vba-m-SVN1292-sources-orig/sources/src/gba/GBALink.cpp	2015-04-13 19:54:10.278159865 +0200
-+++ vba-m-SVN1292-sources/sources/src/gba/GBALink.cpp	2015-04-13 20:25:48.394550998 +0200
+diff -ruN sources/src/gba/GBALink.cpp sources.aros/src/gba/GBALink.cpp
+--- sources/src/gba/GBALink.cpp	2015-04-04 01:27:54.000000000 +0100
++++ sources.aros/src/gba/GBALink.cpp	2016-03-19 03:12:16.008140755 +0000
 @@ -3,12 +3,7 @@
  #include <string.h>
  #include <stdio.h>
@@ -88,9 +87,9 @@ diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/GBALink.cpp vba-m-SVN1292-
  
  #ifdef _MSC_VER
  #define snprintf _snprintf
-diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/remote.cpp vba-m-SVN1292-sources/sources/src/gba/remote.cpp
---- vba-m-SVN1292-sources-orig/sources/src/gba/remote.cpp	2015-04-13 19:54:10.279159846 +0200
-+++ vba-m-SVN1292-sources/sources/src/gba/remote.cpp	2015-04-13 20:29:12.934788397 +0200
+diff -ruN sources/src/gba/remote.cpp sources.aros/src/gba/remote.cpp
+--- sources/src/gba/remote.cpp	2015-04-04 01:05:20.000000000 +0100
++++ sources.aros/src/gba/remote.cpp	2016-03-19 03:12:16.008140755 +0000
 @@ -29,6 +29,10 @@
  # define write _write
  #endif // _WIN32
@@ -102,9 +101,28 @@ diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/remote.cpp vba-m-SVN1292-s
  #include "remote.h"
  #include "BreakpointStructures.h"
  #include "GBA.h"
-diff -Naur vba-m-SVN1292-sources-orig/sources/src/sdl/SDL.cpp vba-m-SVN1292-sources/sources/src/sdl/SDL.cpp
---- vba-m-SVN1292-sources-orig/sources/src/sdl/SDL.cpp	2015-04-13 19:54:10.266160095 +0200
-+++ vba-m-SVN1292-sources/sources/src/sdl/SDL.cpp	2015-04-13 20:52:58.200948827 +0200
+diff -ruN sources/src/sdl/expr.cpp sources.aros/src/sdl/expr.cpp
+--- sources/src/sdl/expr.cpp	2015-04-04 01:05:18.000000000 +0100
++++ sources.aros/src/sdl/expr.cpp	2016-03-19 03:46:29.205130946 +0000
+@@ -90,12 +90,9 @@
+ /* Copy the first part of user declarations.  */
+ #line 1 "expr.ypp"
+ 
+-namespace std {  
+-#include <stdio.h>
+-#include <memory.h>
+-#include <stdlib.h>
+-#include <string.h>
+-}
++#include <cstdio>
++#include <cstdlib>
++#include <cstring>
+ 
+ using namespace std;
+  
+diff -ruN sources/src/sdl/SDL.cpp sources.aros/src/sdl/SDL.cpp
+--- sources/src/sdl/SDL.cpp	2015-04-04 01:05:18.000000000 +0100
++++ sources.aros/src/sdl/SDL.cpp	2016-03-19 03:12:16.008140755 +0000
 @@ -507,6 +507,12 @@
          return f;
      }
