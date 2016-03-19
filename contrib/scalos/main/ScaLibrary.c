@@ -112,7 +112,7 @@ static ULONG CountWindowWBArgs(struct ScaWindowStruct *ws,
 
 LIBFUNC_P6(struct AppObject *, sca_NewAddAppIcon,
 	D0, ULONG, ID, 
-	D1, ULONG, UserData, 
+	D1, IPTR, UserData, 
 	A0, Object *, iconObj, 
 	A1, struct MsgPort *, msgPort, 
 	A2, struct TagItem *, TagList,
@@ -173,7 +173,7 @@ LIBFUNC_P6(struct AppObject *, sca_NewAddAppIcon,
 			IDTA_FrameType, CurrentPrefs.pref_FrameType,
 			IDTA_FrameTypeSel, CurrentPrefs.pref_FrameTypeSel,
 			IDTA_TextSkip, CurrentPrefs.pref_TextSkip,
-			IDTA_MultiLineText, (ULONG) CurrentPrefs.pref_IconTextMuliLine,
+			IDTA_MultiLineText, (IPTR) CurrentPrefs.pref_IconTextMuliLine,
 			IDTA_TextPen, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPEN],
 			IDTA_TextPenSel, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPENSEL],
 			IDTA_TextPenShadow, PalettePrefs.pal_PensList[PENIDX_ICONTEXTSHADOWPEN],
@@ -266,7 +266,7 @@ LIBFUNC_P3(ULONG, sca_ScalosControl,
 			d1(kprintf("%s/%s/%ld: SCALOSCTRLA_GetDefaultStackSize ti_Data=%08lx\n", __FILE__, __FUNC__, __LINE__, Tag->ti_Data));
 			if (Tag->ti_Data)
 				{
-				*((ULONG *) Tag->ti_Data) = CurrentPrefs.pref_DefaultStackSize;
+				*((IPTR *) Tag->ti_Data) = CurrentPrefs.pref_DefaultStackSize;
 				}
 			else
 				ErrorCode = ERROR_REQUIRED_ARG_MISSING;
@@ -321,7 +321,7 @@ LIBFUNC_P3(ULONG, sca_ScalosControl,
 		case SCALOSCTRLA_GetCloseWBDisabled:
 			d1(kprintf("%s/%s/%ld: SCALOSCTRLA_GetCloseWBDisabled ti_Data=%08lx\n", __FILE__, __FUNC__, __LINE__, Tag->ti_Data));
 			if (Tag->ti_Data)
-				*((ULONG *) Tag->ti_Data) = (CurrentPrefs.pref_DisableCloseWorkbench != 0);
+				*((IPTR *) Tag->ti_Data) = (CurrentPrefs.pref_DisableCloseWorkbench != 0);
 			else
 				ErrorCode = ERROR_REQUIRED_ARG_MISSING;
 			break;
@@ -334,7 +334,7 @@ LIBFUNC_P3(ULONG, sca_ScalosControl,
 		case SCALOSCTRLA_GetSplashEnable:
 			d1(kprintf("%s/%s/%ld: SCALOSCTRLA_GetSplashEnable ti_Data=%08lx\n", __FILE__, __FUNC__, __LINE__, Tag->ti_Data));
 			if (Tag->ti_Data)
-				*((ULONG *) Tag->ti_Data) = (CurrentPrefs.pref_EnableSplash != 0);
+				*((IPTR *) Tag->ti_Data) = (CurrentPrefs.pref_EnableSplash != 0);
 			else
 				ErrorCode = ERROR_REQUIRED_ARG_MISSING;
 			break;
@@ -347,7 +347,7 @@ LIBFUNC_P3(ULONG, sca_ScalosControl,
 		case SCALOSCTRLA_GetToolTipEnable:
 			d1(kprintf("%s/%s/%ld: SCALOSCTRLA_GetToolTipEnable ti_Data=%08lx\n", __FILE__, __FUNC__, __LINE__, Tag->ti_Data));
 			if (Tag->ti_Data)
-				*((ULONG *) Tag->ti_Data) = (CurrentPrefs.pref_EnableTooltips != 0);
+				*((IPTR *) Tag->ti_Data) = (CurrentPrefs.pref_EnableTooltips != 0);
 			else
 				ErrorCode = ERROR_REQUIRED_ARG_MISSING;
 			break;
@@ -360,7 +360,7 @@ LIBFUNC_P3(ULONG, sca_ScalosControl,
 		case SCALOSCTRLA_GetToolTipDelay:
 			d1(kprintf("%s/%s/%ld: SCALOSCTRLA_GetToolTipDelay ti_Data=%08lx\n", __FILE__, __FUNC__, __LINE__, Tag->ti_Data));
 			if (Tag->ti_Data)
-				*((ULONG *) Tag->ti_Data) = CurrentPrefs.pref_ToolTipDelaySeconds;
+				*((IPTR *) Tag->ti_Data) = CurrentPrefs.pref_ToolTipDelaySeconds;
 			else
 				ErrorCode = ERROR_REQUIRED_ARG_MISSING;
 			break;
@@ -376,7 +376,7 @@ LIBFUNC_P3(ULONG, sca_ScalosControl,
 		case SCALOSCTRLA_GetOldDragIconMode:
 			d1(kprintf("%s/%s/%ld: SCALOSCTRLA_GetOldDragIconMode ti_Data=%08lx\n", __FILE__, __FUNC__, __LINE__, Tag->ti_Data));
 			if (Tag->ti_Data)
-				*((ULONG *) Tag->ti_Data) = (CurrentPrefs.pref_UseOldDragIcons != 0);
+				*((IPTR *) Tag->ti_Data) = (CurrentPrefs.pref_UseOldDragIcons != 0);
 			else
 				ErrorCode = ERROR_REQUIRED_ARG_MISSING;
 			break;
@@ -389,7 +389,7 @@ LIBFUNC_P3(ULONG, sca_ScalosControl,
 		case SCALOSCTRLA_GetTypeRestartTime:
 			d1(kprintf("%s/%s/%ld: SCALOSCTRLA_GetTypeRestartTime ti_Data=%08lx\n", __FILE__, __FUNC__, __LINE__, Tag->ti_Data));
 			if (Tag->ti_Data)
-				*((ULONG *) Tag->ti_Data) = CurrentPrefs.pref_TypeRestartTime;
+				*((IPTR *) Tag->ti_Data) = CurrentPrefs.pref_TypeRestartTime;
 			else
 				ErrorCode = ERROR_REQUIRED_ARG_MISSING;
 			break;
@@ -405,7 +405,7 @@ LIBFUNC_P3(ULONG, sca_ScalosControl,
 		case SCALOSCTRLA_GetEmulationMode:
 			d1(kprintf("%s/%s/%ld: SCALOSCTRLA_GetEmulationMode ti_Data=%08lx\n", __FILE__, __FUNC__, __LINE__, Tag->ti_Data));
 			if (Tag->ti_Data)
-				*((ULONG *) Tag->ti_Data) = MainWindowTask->emulation != 0;
+				*((IPTR *) Tag->ti_Data) = MainWindowTask->emulation != 0;
 			else
 				ErrorCode = ERROR_REQUIRED_ARG_MISSING;
 			break;
@@ -413,7 +413,7 @@ LIBFUNC_P3(ULONG, sca_ScalosControl,
 		case SCALOSCTRLA_GetStatusBarEnable:
 			d1(kprintf("%s/%s/%ld: SCALOSCTRLA_GetStatusBarEnable ti_Data=%08lx\n", __FILE__, __FUNC__, __LINE__, Tag->ti_Data));
 			if (Tag->ti_Data)
-				*((ULONG *) Tag->ti_Data) = (CurrentPrefs.pref_DisplayStatusBar != 0);
+				*((IPTR *) Tag->ti_Data) = (CurrentPrefs.pref_DisplayStatusBar != 0);
 			else
 				ErrorCode = ERROR_REQUIRED_ARG_MISSING;
 			break;
@@ -426,7 +426,7 @@ LIBFUNC_P3(ULONG, sca_ScalosControl,
 		case SCALOSCTRLA_GetStripedTextWindows:
 			d1(kprintf("%s/%s/%ld: SCALOSCTRLA_GetStripedTextWindows ti_Data=%08lx\n", __FILE__, __FUNC__, __LINE__, Tag->ti_Data));
 			if (Tag->ti_Data)
-				*((ULONG *) Tag->ti_Data) = (CurrentPrefs.pref_TextWindowStriped != 0);
+				*((IPTR *) Tag->ti_Data) = (CurrentPrefs.pref_TextWindowStriped != 0);
 			else
 				ErrorCode = ERROR_REQUIRED_ARG_MISSING;
 			break;
@@ -439,7 +439,7 @@ LIBFUNC_P3(ULONG, sca_ScalosControl,
 		case SCALOSCTRLA_GetWindowDropMarkMode:
 			d1(kprintf("%s/%s/%ld: SCALOSCTRLA_GetWindowDropMarkMode ti_Data=%08lx\n", __FILE__, __FUNC__, __LINE__, Tag->ti_Data));
 			if (Tag->ti_Data)
-				*((ULONG *) Tag->ti_Data) = CurrentPrefs.pref_WindowDropMarkMode;
+				*((IPTR *) Tag->ti_Data) = CurrentPrefs.pref_WindowDropMarkMode;
 			else
 				ErrorCode = ERROR_REQUIRED_ARG_MISSING;
 			break;
@@ -455,7 +455,7 @@ LIBFUNC_P3(ULONG, sca_ScalosControl,
 		case SCALOSCTRLA_GetDisplayDragCount:
 			d1(kprintf("%s/%s/%ld: SCALOSCTRLA_GetDisplayDragCount ti_Data=%08lx\n", __FILE__, __FUNC__, __LINE__, Tag->ti_Data));
 			if (Tag->ti_Data)
-				*((ULONG *) Tag->ti_Data) = (CurrentPrefs.pref_ShowDDCountText != 0);
+				*((IPTR *) Tag->ti_Data) = (CurrentPrefs.pref_ShowDDCountText != 0);
 			else
 				ErrorCode = ERROR_REQUIRED_ARG_MISSING;
 			break;
@@ -468,7 +468,7 @@ LIBFUNC_P3(ULONG, sca_ScalosControl,
 		case SCALOSCTRLA_GetSupportedIconTypes:
 			d1(kprintf("%s/%s/%ld: SCALOSCTRLA_GetSupportedIconTypes ti_Data=%08lx\n", __FILE__, __FUNC__, __LINE__, Tag->ti_Data));
 			if (Tag->ti_Data)
-				*((ULONG *) Tag->ti_Data) = CurrentPrefs.pref_SupportedIconTypes;
+				*((IPTR *) Tag->ti_Data) = CurrentPrefs.pref_SupportedIconTypes;
 			else
 				ErrorCode = ERROR_REQUIRED_ARG_MISSING;
 			break;
@@ -500,7 +500,7 @@ LIBFUNC_P3(ULONG, sca_ScalosControl,
 		case SCALOSCTRLA_GetCopyBuffSize:
 			d1(kprintf("%s/%s/%ld: SCALOSCTRLA_GetCopyBuffSize ti_Data=%08lx\n", __FILE__, __FUNC__, __LINE__, Tag->ti_Data));
 			if (Tag->ti_Data)
-				*((ULONG *) Tag->ti_Data) = CurrentPrefs.pref_CopyBuffLen;
+				*((IPTR *) Tag->ti_Data) = CurrentPrefs.pref_CopyBuffLen;
 			else
 				ErrorCode = ERROR_REQUIRED_ARG_MISSING;
 			break;
@@ -752,7 +752,7 @@ static struct List *GetMenuCommandList(void)
 // AddAppMenuItemA()
 LIBFUNC_P6(struct AppObject *, sca_NewAddAppMenuItem,
 	D0, ULONG, ID, 
-	D1, ULONG, UserData, 
+	D1, IPTR, UserData, 
 	A0, CONST_STRPTR, MenuText, 
 	A1, struct MsgPort *, msgPort, 
 	A2, struct TagItem *, TagList,
@@ -1802,12 +1802,12 @@ static void NewScreenTitle(CONST_STRPTR NewTitle)
 //	AppObject = SCA_NewAddAppWindow (ID, UserData, Window, MessagePort, Taglist)
 //	   D0                            D0     D1       A0        A1         A2
 //
-//	struct AppObject *SCA_NewAddAppWindow( ULONG ID, ULONG UserData, 
+//	struct AppObject *SCA_NewAddAppWindow( ULONG ID, IPTR UserData, 
 //		struct Window *, struct MsgPort *, 
 //		struct TagItem *Taglist);
 LIBFUNC_P6(struct AppObject *, sca_NewAddAppWindow,
 	D0, ULONG, ID,
-	D1, ULONG, UserData, 
+	D1, IPTR, UserData, 
 	A0, struct Window *, win,
 	A1, struct MsgPort *, msgPort, 
 	A2, struct TagItem *, TagList,
