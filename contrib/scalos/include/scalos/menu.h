@@ -35,7 +35,7 @@
 #define PTR32           APTR
 #define SMTPTR32        struct ScalosMenuTree *
 #endif
-#define SCA_BE_ADDR(addr) ((APTR)0 + SCA_BE2LONG((IPTR)addr))
+#define SCA_BE_ADDR(addr) ((APTR)((IPTR)0 + SCA_BE2LONG((IPTR)addr)))
 
 // This is the disk structure that stores menu information in menu preferences files
 // Do not use pointers since the values _must_ remain 32bit even on 64bit platforms.
