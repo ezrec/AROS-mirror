@@ -18,7 +18,7 @@ struct TagItem *GetPrefsPluginSubWindows(struct SCAModule *app);
 void CreatePrefsPlugins(struct SCAModule *app);
 void InsertPrefsPlugins(struct SCAModule *app, Object *pageGroup, Object *pageList);
 ULONG DoMethodForAllPrefsPlugins(ULONG ArgCount, ULONG MethodID, ...);
-void SetAttributeForAllPrefsPlugins(ULONG Attribute, ULONG Value);
+void SetAttributeForAllPrefsPlugins(ULONG Attribute, IPTR Value);
 void NotifyPrefsPluginsPageChange(ULONG ActivePage);
 BOOL CheckMCCsForAllPrefsPlugins(void);
 

@@ -141,7 +141,7 @@ ULONG DoMethodForAllPrefsPlugins(ULONG ArgsCount, ULONG MethodID, ...)
 	return result;
 }
 
-void SetAttributeForAllPrefsPlugins(ULONG Attribute, ULONG Value)
+void SetAttributeForAllPrefsPlugins(ULONG Attribute, IPTR Value)
 {
 	struct PrefsPlugin *ppl;
 
