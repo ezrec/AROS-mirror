@@ -26,7 +26,7 @@
 #ifndef NO_INLINE_VARARGS
 #define SCA_WBStartTags(___argArray, ___numArgs, ___firstTag, ...) __SCA_WBStartTags_WB(SCALOS_LIB_SFD_BASE_NAME, ___argArray, ___numArgs, ___firstTag, ## __VA_ARGS__)
 #define __SCA_WBStartTags_WB(___base, ___argArray, ___numArgs, ___firstTag, ...) \
-	({IPTR _message[] = { (IPTR) ___firstTag, ## __VA_ARGS__ }; __SCA_WBStart_WB((___base), (___argArray), (ULONG) _message, (___numArgs)); })
+	({IPTR _message[] = { (IPTR) ___firstTag, ## __VA_ARGS__ }; __SCA_WBStart_WB((___base), (___argArray), (IPTR) _message, (___numArgs)); })
 #endif /* !NO_INLINE_VARARGS */
 
 #define SCA_SortNodes(___nodelist, ___sortHook, ___sortType) __SCA_SortNodes_WB(SCALOS_LIB_SFD_BASE_NAME, ___nodelist, ___sortHook, ___sortType)
@@ -41,7 +41,7 @@
 #define __SCA_NewAddAppIcon_WB(___base, ___iD, ___userData, ___iconObj, ___msgPort, ___tagList) \
 	AROS_LC5(struct AppObject *, SCA_NewAddAppIcon, \
 	AROS_LCA(ULONG, (___iD), D0), \
-	AROS_LCA(ULONG, (___userData), D1), \
+	AROS_LCA(IPTR, (___userData), D1), \
 	AROS_LCA(Object *, (___iconObj), A0), \
 	AROS_LCA(struct MsgPort *, (___msgPort), A1), \
 	AROS_LCA(CONST struct TagItem *, (___tagList), A2), \
@@ -63,7 +63,7 @@
 #define __SCA_NewAddAppWindow_WB(___base, ___iD, ___userData, ___win, ___msgPort, ___tagList) \
 	AROS_LC5(struct AppObject *, SCA_NewAddAppWindow, \
 	AROS_LCA(ULONG, (___iD), D0), \
-	AROS_LCA(ULONG, (___userData), D1), \
+	AROS_LCA(IPTR, (___userData), D1), \
 	AROS_LCA(struct Window *, (___win), A0), \
 	AROS_LCA(struct MsgPort *, (___msgPort), A1), \
 	AROS_LCA(CONST struct TagItem *, (___tagList), A2), \
@@ -79,7 +79,7 @@
 #define __SCA_NewAddAppMenuItem_WB(___base, ___iD, ___userData, ___text, ___msgPort, ___tagList) \
 	AROS_LC5(struct AppObject *, SCA_NewAddAppMenuItem, \
 	AROS_LCA(ULONG, (___iD), D0), \
-	AROS_LCA(ULONG, (___userData), D1), \
+	AROS_LCA(IPTR, (___userData), D1), \
 	AROS_LCA(CONST_STRPTR, (___text), A0), \
 	AROS_LCA(struct MsgPort *, (___msgPort), A1), \
 	AROS_LCA(CONST struct TagItem *, (___tagList), A2), \

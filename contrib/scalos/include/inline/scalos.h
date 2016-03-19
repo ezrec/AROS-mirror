@@ -29,7 +29,7 @@
 
 #ifndef NO_INLINE_STDARG
 #define SCA_WBStartTags(argArray, numArgs, tags...) \
-       ({ULONG _tags[] = {tags}; SCA_WBStart((argArray), (struct TagItem *) _tags, (numArgs));})
+       ({IPTR _tags[] = {tags}; SCA_WBStart((argArray), (struct TagItem *) _tags, (numArgs));})
 #endif
 
 #define SCA_SortNodes(nodelist, sortHook, sortType) \
@@ -37,12 +37,12 @@
 	, SCALOS_BASE_NAME)
 
 #define SCA_NewAddAppIcon(iD, userData, iconObj, msgPort, tagList) \
-	LP5(0x2a, struct AppObject *, SCA_NewAddAppIcon, ULONG, iD, d0, ULONG, userData, d1, Object *, iconObj, a0, struct MsgPort *, msgPort, a1, CONST struct TagItem *, tagList, a2, \
+	LP5(0x2a, struct AppObject *, SCA_NewAddAppIcon, ULONG, iD, d0, IPTR, userData, d1, Object *, iconObj, a0, struct MsgPort *, msgPort, a1, CONST struct TagItem *, tagList, a2, \
 	, SCALOS_BASE_NAME)
 
 #ifndef NO_INLINE_STDARG
 #define SCA_NewAddAppIconTags(iD, userData, iconObj, msgPort, tags...) \
-	({ULONG _tags[] = {tags}; SCA_NewAddAppIcon((iD), (userData), (iconObj), (msgPort), (CONST struct TagItem *) _tags);})
+	({IPTR _tags[] = {tags}; SCA_NewAddAppIcon((iD), (userData), (iconObj), (msgPort), (CONST struct TagItem *) _tags);})
 #endif
 
 #define SCA_RemoveAppObject(appObj) \
@@ -50,21 +50,21 @@
 	, SCALOS_BASE_NAME)
 
 #define SCA_NewAddAppWindow(iD, userData, win, msgPort, tagList) \
-	LP5(0x36, struct AppObject *, SCA_NewAddAppWindow, ULONG, iD, d0, ULONG, userData, d1, struct Window *, win, a0, struct MsgPort *, msgPort, a1, CONST struct TagItem *, tagList, a2, \
+	LP5(0x36, struct AppObject *, SCA_NewAddAppWindow, ULONG, iD, d0, IPTR, userData, d1, struct Window *, win, a0, struct MsgPort *, msgPort, a1, CONST struct TagItem *, tagList, a2, \
 	, SCALOS_BASE_NAME)
 
 #ifndef NO_INLINE_STDARG
 #define SCA_NewAddAppWindowTags(iD, userData, win, msgPort, tags...) \
-	({ULONG _tags[] = {tags}; SCA_NewAddAppWindow((iD), (userData), (win), (msgPort), (CONST struct TagItem *) _tags);})
+	({IPTR _tags[] = {tags}; SCA_NewAddAppWindow((iD), (userData), (win), (msgPort), (CONST struct TagItem *) _tags);})
 #endif
 
 #define SCA_NewAddAppMenuItem(iD, userData, text, msgPort, tagList) \
-	LP5(0x3c, struct AppObject *, SCA_NewAddAppMenuItem, ULONG, iD, d0, ULONG, userData, d1, CONST_STRPTR, text, a0, struct MsgPort *, msgPort, a1, CONST struct TagItem *, tagList, a2, \
+	LP5(0x3c, struct AppObject *, SCA_NewAddAppMenuItem, ULONG, iD, d0, IPTR, userData, d1, CONST_STRPTR, text, a0, struct MsgPort *, msgPort, a1, CONST struct TagItem *, tagList, a2, \
 	, SCALOS_BASE_NAME)
 
 #ifndef NO_INLINE_STDARG
 #define SCA_NewAddAppMenuItemTags(iD, userData, text, msgPort, tags...) \
-	({ULONG _tags[] = {tags}; SCA_NewAddAppMenuItem((iD), (userData), (text), (msgPort), (CONST struct TagItem *) _tags);})
+	({IPTR _tags[] = {tags}; SCA_NewAddAppMenuItem((iD), (userData), (text), (msgPort), (CONST struct TagItem *) _tags);})
 #endif
 
 #define SCA_AllocStdNode(nodeList, nodeType) \
@@ -97,7 +97,7 @@
 
 #ifndef NO_INLINE_STDARG
 #define SCA_OpenIconWindowTags(tags...) \
-	({ULONG _tags[] = {tags}; SCA_OpenIconWindow((CONST struct TagItem *) _tags);})
+	({IPTR _tags[] = {tags}; SCA_OpenIconWindow((CONST struct TagItem *) _tags);})
 #endif
 
 #define SCA_LockWindowList(accessmode) \
@@ -150,7 +150,7 @@
 
 #ifndef NO_INLINE_STDARG
 #define SCA_ScreenTitleMsgArgs(format, tags...) \
-	({ULONG _tags[] = {tags}; SCA_ScreenTitleMsg((format), (APTR) _tags);})
+	({IPTR _tags[] = {tags}; SCA_ScreenTitleMsg((format), (APTR) _tags);})
 #endif
 
 #define SCA_MakeScalosClass(className, superClassName, instSize, dispFunc) \
@@ -167,7 +167,7 @@
 
 #ifndef NO_INLINE_STDARG
 #define SCA_NewScalosObjectTags(className, tags...) \
-	({ULONG _tags[] = {tags}; SCA_NewScalosObject((className), (CONST struct TagItem *) _tags);})
+	({IPTR _tags[] = {tags}; SCA_NewScalosObject((className), (CONST struct TagItem *) _tags);})
 #endif
 
 #define SCA_DisposeScalosObject(obj) \
@@ -180,7 +180,7 @@
 
 #ifndef NO_INLINE_STDARG
 #define SCA_ScalosControl(name, tags...) \
-	({ULONG _tags[] = {tags}; SCA_ScalosControlA((name), (CONST struct TagItem *) _tags);})
+	({IPTR _tags[] = {tags}; SCA_ScalosControlA((name), (CONST struct TagItem *) _tags);})
 #endif
 
 #ifndef NO_INLINE_STDARG
@@ -197,7 +197,7 @@
 
 #ifndef NO_INLINE_STDARG
 #define SCA_OpenDrawerByNameTags(path, tags...) \
-	({ULONG _tags[] = {tags}; SCA_OpenDrawerByName((path), (struct TagItem *) _tags);})
+	({IPTR _tags[] = {tags}; SCA_OpenDrawerByName((path), (struct TagItem *) _tags);})
 #endif
 
 #define SCA_CountWBArgs(in) \
@@ -210,7 +210,7 @@
 
 #ifndef NO_INLINE_STDARG
 #define SCA_GetDefIconObjectTags(dirLock, name, tags...) \
-	({ULONG _tags[] = {tags}; SCA_GetDefIconObjectA((dirLock), (name), (struct TagItem *) _tags);})
+	({IPTR _tags[] = {tags}; SCA_GetDefIconObjectA((dirLock), (name), (struct TagItem *) _tags);})
 #endif
 
 #define SCA_LockDrag(dragHandle) \
