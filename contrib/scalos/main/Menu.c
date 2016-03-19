@@ -1762,7 +1762,9 @@ BOOL ChangedMenuPrefs(struct MainTask *mt)
 void CreateScalosMenu(void)
 {
 	d1(kprintf("%s/%s/%ld: MainMenu=%08lx\n", __FILE__, __FUNC__, __LINE__, MainMenu));
+#if !defined(__AROS__) || __WORDSIZE != 64
 	AppMenu_CreateMenu();
+#endif
 }
 
 
