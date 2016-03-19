@@ -3,8 +3,11 @@
 
 -include $(TOP)/config/make.cfg
 
+FINDUTILS_VERSION = 4.2.31
+##4.4.2
+
 #MM- contrib-gnu : contrib-gnu-findutils
 #MM- contrib-gnu-findutils : development-findutils
 
-%fetch_and_build_gnu_development package=findutils version=4.2.31 patch=yes \
+%fetch_and_build_gnu_development package=findutils version=$(FINDUTILS_VERSION) patch=yes \
     suffixes="tar.gz"
