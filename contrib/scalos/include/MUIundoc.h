@@ -135,8 +135,8 @@ extern char MUIC_Crawling[];
 #define MUIM_Window_Cleanup       0x8042ab26 /* Custom Class */ /* V18 */
 #define MUIM_Window_Setup         0x8042c34c /* Custom Class */ /* V18 */
 
-struct  MUIP_Window_Cleanup       { ULONG MethodID; }; /* Custom Class */
-struct  MUIP_Window_Setup         { ULONG MethodID; }; /* Custom Class */
+struct  MUIP_Window_Cleanup       { STACKED ULONG MethodID; }; /* Custom Class */
+struct  MUIP_Window_Setup         { STACKED ULONG MethodID; }; /* Custom Class */
 
 /* Attributes */
 
@@ -156,10 +156,10 @@ struct  MUIP_Window_Setup         { ULONG MethodID; }; /* Custom Class */
 #define MUIM_GoInactive 	 0x80422c0c
 #define MUIM_CustomBackfill  0x80428d73
 
-struct  MUIP_CustomBackfill  { ULONG MethodID; LONG left; LONG top; LONG right; LONG bottom; LONG xoffset; LONG yoffset; };
-struct  MUIP_DeleteDragImage { ULONG MethodID; struct MUI_DragImage *di; };              /* Custom Class */
-struct  MUIP_CreateDragImage { ULONG MethodID; LONG touchx; LONG touchy; ULONG flags; }; /* Custom Class */
-struct  MUIP_DoDrag          { ULONG MethodID; LONG touchx; LONG touchy; ULONG flags; }; /* Custom Class */
+struct  MUIP_CustomBackfill  { STACKED ULONG MethodID; STACKED LONG left; STACKED LONG top; STACKED LONG right; STACKED LONG bottom; STACKED LONG xoffset; STACKED LONG yoffset; };
+struct  MUIP_DeleteDragImage { STACKED ULONG MethodID; STACKED struct MUI_DragImage *di; };              /* Custom Class */
+struct  MUIP_CreateDragImage { STACKED ULONG MethodID; STACKED LONG touchx; STACKED LONG touchy; STACKED ULONG flags; }; /* Custom Class */
+struct  MUIP_DoDrag          { STACKED ULONG MethodID; STACKED LONG touchx; STACKED LONG touchy; STACKED ULONG flags; }; /* Custom Class */
 
 /* Attributes */
 

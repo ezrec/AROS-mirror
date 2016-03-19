@@ -17,10 +17,10 @@
 
 struct SetBackFillMsg
 	{
-	ULONG sbf_MethodID;
-	CONST_STRPTR sbf_FileName;
-	ULONG sbf_PattFlags;
-	ULONG sbf_DefsFlags;
+	STACKED ULONG sbf_MethodID;
+	STACKED CONST_STRPTR sbf_FileName;
+	STACKED ULONG sbf_PattFlags;
+	STACKED ULONG sbf_DefsFlags;
 	};
 
 //----------------------------------------------------------------------------

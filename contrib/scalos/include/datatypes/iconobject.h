@@ -299,12 +299,12 @@ struct ioFontMsg_SetTransparency
 
 struct iopLayout
 {
-    ULONG	MethodID;
-    struct	Screen *iopl_Screen;
-    struct	Window *iopl_Window;
-    struct	RastPort *iopl_RastPort;
-    struct	DrawInfo *iopl_DrawInfo;
-    ULONG	iopl_Flags;
+    STACKED ULONG	MethodID;
+    STACKED struct	Screen *iopl_Screen;
+    STACKED struct	Window *iopl_Window;
+    STACKED struct	RastPort *iopl_RastPort;
+    STACKED struct	DrawInfo *iopl_DrawInfo;
+    STACKED ULONG	iopl_Flags;
 };
 
 /* Flags */
@@ -322,14 +322,14 @@ struct iopLayout
 
 struct iopDraw
 {
-    ULONG	MethodID;
-    struct	Screen *iopd_Screen;
-    struct	Window *iopd_Window;
-    struct	RastPort *iopd_RastPort;
-    struct	DrawInfo *iopd_DrawInfo;
-    ULONG	iopd_XOffset;
-    ULONG	iopd_YOffset;
-    ULONG	iopd_DrawFlags;
+    STACKED ULONG	MethodID;
+    STACKED struct	Screen *iopd_Screen;
+    STACKED struct	Window *iopd_Window;
+    STACKED struct	RastPort *iopd_RastPort;
+    STACKED struct	DrawInfo *iopd_DrawInfo;
+    STACKED ULONG	iopd_XOffset;
+    STACKED ULONG	iopd_YOffset;
+    STACKED ULONG	iopd_DrawFlags;
 };
 
 /* DrawFlags */
@@ -355,13 +355,13 @@ struct iopDraw
 
 struct iopErase
 {
-    ULONG	MethodID;
-    struct	Screen *iope_Screen;
-    struct	Window *iope_Window;
-    struct	RastPort *iope_RastPort;
-    ULONG	iope_XOffset;
-    ULONG	iope_YOffset;
-    ULONG	iope_EraseFlags;
+    STACKED ULONG	MethodID;
+    STACKED struct	Screen *iope_Screen;
+    STACKED struct	Window *iope_Window;
+    STACKED struct	RastPort *iope_RastPort;
+    STACKED ULONG	iope_XOffset;
+    STACKED ULONG	iope_YOffset;
+    STACKED ULONG	iope_EraseFlags;
 };
 
 /*----------------------------------------------------------------------------------*/
@@ -372,9 +372,9 @@ struct iopErase
 
 struct iopFindToolType
 {
-    ULONG		MethodID;
-    CONST_STRPTR	ioftt_ToolTypeName;	// Name of tooltype to search
-    STRPTR		*ioftt_ToolTypeValue;   // on Call: point to NULL to search from first tooltype,
+    STACKED ULONG		MethodID;
+    STACKED CONST_STRPTR	ioftt_ToolTypeName;	// Name of tooltype to search
+    STACKED STRPTR		*ioftt_ToolTypeValue;   // on Call: point to NULL to search from first tooltype,
 						// or result of last IDTM_FindToolType.
 };
 
@@ -386,9 +386,9 @@ struct iopFindToolType
 
 struct iopGetToolTypeValue
 {
-    ULONG		MethodID;
-    STRPTR		iotv_ToolTypeValue;    // result from IDTM_FindToolType
-    LONG		*iotv_Value;		// Pointer to LONG for storing the result
+    STACKED ULONG		MethodID;
+    STACKED STRPTR		iotv_ToolTypeValue;    // result from IDTM_FindToolType
+    STACKED LONG		*iotv_Value;		// Pointer to LONG for storing the result
 };
 
 /*----------------------------------------------------------------------------------*/
@@ -399,10 +399,10 @@ struct iopGetToolTypeValue
 
 struct iopWrite
 {
-    ULONG		MethodID;
-    STRPTR		iopw_Path;
-    APTR		iopw_SourceObject;	/* Object to get attrs from */
-    struct TagItem 	*iopw_Tags;		/* Additional Tags */
+    STACKED ULONG		MethodID;
+    STACKED STRPTR		iopw_Path;
+    STACKED APTR		iopw_SourceObject;	/* Object to get attrs from */
+    STACKED struct TagItem 	*iopw_Tags;		/* Additional Tags */
 };
 
 /* Tags for IDTM_Write */
@@ -419,8 +419,8 @@ struct iopWrite
 
 struct iopFreeLayout
 {
-    ULONG	MethodID;		/* IDTM_FreeLayout */
-    ULONG	iopf_Flags;		/* Additional flags */
+    STACKED ULONG	MethodID;		/* IDTM_FreeLayout */
+    STACKED ULONG	iopf_Flags;		/* Additional flags */
 };
 
 /* Flags */
@@ -435,10 +435,10 @@ struct iopFreeLayout
 
 struct iopScaleIcon
 {
-	ULONG	    MethodID;		/* ITDM_ScaleIcon */
-	ULONG	    iops_NewWidth;	// Scaled icon width (Gadget->Width, BoundsWidth will be adjusted accordingly)
-	ULONG	    iops_NewHeight;	// Scaled icon height (Gadget->Height, BoundsHeight will be adjusted accordingly)
-	ULONG	    iops_Flags;		/* flags */
+	STACKED ULONG	    MethodID;		/* ITDM_ScaleIcon */
+	STACKED ULONG	    iops_NewWidth;	// Scaled icon width (Gadget->Width, BoundsWidth will be adjusted accordingly)
+	STACKED ULONG	    iops_NewHeight;	// Scaled icon height (Gadget->Height, BoundsHeight will be adjusted accordingly)
+	STACKED ULONG	    iops_Flags;		/* flags */
 };
 
 /* Flags */
@@ -454,9 +454,9 @@ struct iopScaleIcon
 
 struct iopNewImage
 {
-	ULONG	    MethodID;			/* IDTM_NewImage */
-	struct ScalosBitMapAndColor *ioni_NormalImage;
-	struct ScalosBitMapAndColor *ioni_SelectedImage;	/* may be NULL for IDTM_NewSelectedImage */
+	STACKED ULONG	    MethodID;			/* IDTM_NewImage */
+	STACKED struct ScalosBitMapAndColor *ioni_NormalImage;
+	STACKED struct ScalosBitMapAndColor *ioni_SelectedImage;	/* may be NULL for IDTM_NewSelectedImage */
 };
 
 /*----------------------------------------------------------------------------------*/
@@ -467,8 +467,8 @@ struct iopNewImage
 
 struct iopCloneIconObject
 {
-    ULONG		MethodID;
-    struct TagItem 	*iocio_TagList;
+    STACKED ULONG		MethodID;
+    STACKED struct TagItem 	*iocio_TagList;
 };
 
 /*----------------------------------------------------------------------------------*/

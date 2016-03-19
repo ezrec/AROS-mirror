@@ -437,9 +437,9 @@ typedef ULONG (*RUNPROCFUNC)(APTR, struct SM_RunProcess *);
 
 struct ScalosMessage
 	{
-	struct Message		sm_Message;
-	ULONG			sm_Signature;		// ID_IMSG
-	ULONG			sm_MessageType;		// SCA_AllocMessage() type
+	STACKED struct Message		sm_Message;
+	STACKED ULONG			sm_Signature;		// ID_IMSG
+	STACKED ULONG			sm_MessageType;		// SCA_AllocMessage() type
 	};
 
 struct UpdateIconData
@@ -748,11 +748,11 @@ struct SM_StartChildProcess
 struct SM_RootEvent
 	{
 	struct ScalosMessage    ScalosMessage;
-	ULONG 			smre_MethodID;		// the MethodID of the event
-	APTR 			smre_EventHandle;	// the handle that had been returned by SCCM_AddListener
-	Class 			*smre_Class;		// Class variable of the method call
-	Object 			*smre_Object;		// Object variable of the method call
-	Msg 			smre_Message;		// msg variable of the method call - might no longer be valid when event is received!
+	STACKED ULONG 		smre_MethodID;		// the MethodID of the event
+	STACKED APTR 		smre_EventHandle;	// the handle that had been returned by SCCM_AddListener
+	STACKED Class 		*smre_Class;		// Class variable of the method call
+	STACKED Object 		*smre_Object;		// Object variable of the method call
+	STACKED Msg 		smre_Message;		// msg variable of the method call - might no longer be valid when event is received!
 	};
 
 // ------------------------------------------------------------------
@@ -2238,50 +2238,50 @@ struct DragEnter
 // SCCM_RunProcess
 struct msg_RunProcess
 	{
-	ULONG mrp_MethodID;
-	RUNPROCFUNC mrp_EntryPoint;
-	APTR mrp_Args;
-	ULONG mrp_ArgSize;
-	struct MsgPort *mrp_ReplyPort;
+	STACKED ULONG mrp_MethodID;
+	STACKED RUNPROCFUNC mrp_EntryPoint;
+	STACKED APTR mrp_Args;
+	STACKED ULONG mrp_ArgSize;
+	STACKED struct MsgPort *mrp_ReplyPort;
 	};
 
 // SCCM_Message
 struct msg_Message
 	{
-	ULONG msm_MethodID;
-	struct IntuiMessage *msm_iMsg;
+	STACKED ULONG msm_MethodID;
+	STACKED struct IntuiMessage *msm_iMsg;
 	};
 
 // SCCM_AddToClipboard
 struct msg_AddToClipboard
 	{
-	ULONG acb_MethodID;
-	struct internalScaWindowTask *acb_iwt;
-	struct ScaIconNode *acb_in;
-	enum ftOpCodes acb_Opcode;
+	STACKED ULONG acb_MethodID;
+	STACKED struct internalScaWindowTask *acb_iwt;
+	STACKED struct ScaIconNode *acb_in;
+	STACKED enum ftOpCodes acb_Opcode;
 	};
 
 // SCCM_GetLocalizedString
 struct msg_GetLocString
 	{
-	ULONG mgl_MethodID;
-	ULONG mgl_StringID;
+	STACKED ULONG mgl_MethodID;
+	STACKED ULONG mgl_StringID;
 	};
 
 // SCCM_AddListener
 struct msg_AddListener
 	{
-	ULONG mal_MethodID;
-	ULONG mal_Method;		// the method we want to be informed about
-	struct MsgPort *mal_Port;	// Message port to forward the events to
-	ULONG mal_Count;		// number of times we want to receive messages
+	STACKED ULONG mal_MethodID;
+	STACKED ULONG mal_Method;		// the method we want to be informed about
+	STACKED struct MsgPort *mal_Port;	// Message port to forward the events to
+	STACKED ULONG mal_Count;		// number of times we want to receive messages
 	};
 
 // SCCM_RemoveListener
 struct msg_RemoveListener
 	{
-	ULONG mrl_MethodID;
-	APTR mrl_EventHandle;		// The handle returned by SCCM_AddListener
+	STACKED ULONG mrl_MethodID;
+	STACKED APTR mrl_EventHandle;		// The handle returned by SCCM_AddListener
 	};
 
 // --- DeviceWindowClass methods ----------------------------------------
@@ -2289,15 +2289,15 @@ struct msg_RemoveListener
 // SCCM_DeviceWin_ReadIcon
 struct msg_DevWinReadIcon
 	{
-	ULONG dri_MethodID;
-	struct ScaDeviceIcon *dri_DeviceNode;
+	STACKED ULONG dri_MethodID;
+	STACKED struct ScaDeviceIcon *dri_DeviceNode;
 	};
 
 // SCCM_DeviceWin_RemIcon
 struct msg_DevWinRemIcon
 	{
-	ULONG dri_MethodID;
-	struct ScaIconNode *dri_IconNode;
+	STACKED ULONG dri_MethodID;
+	STACKED struct ScaIconNode *dri_IconNode;
 	};
 
 // --- DevListClass methods ------------------------------------------
@@ -2305,22 +2305,22 @@ struct msg_DevWinRemIcon
 // SCCM_DeviceList_Generate
 struct msg_Generate
 	{
-	ULONG mge_MethodID;
-	struct ScaDeviceIcon **mge_DevIconList;
+	STACKED ULONG mge_MethodID;
+	STACKED struct ScaDeviceIcon **mge_DevIconList;
 	};
 
 // SCCM_DeviceList_FreeDevNode
 struct msg_FreeDevNode
 	{
-	ULONG mfd_MethodID;
-	struct ScaDeviceIcon *mfd_DevIcon;
+	STACKED ULONG mfd_MethodID;
+	STACKED struct ScaDeviceIcon *mfd_DevIcon;
 	};
 
 // SCCM_DeviceList_Filter
 struct msg_Filter
 	{
-	ULONG mfi_MethodID;
-	struct ScaDeviceIcon **mfi_DevIconList;
+	STACKED ULONG mfi_MethodID;
+	STACKED struct ScaDeviceIcon **mfi_DevIconList;
 	};
 
 // --- IconWindowClass methods ------------------------------------------
@@ -2328,271 +2328,271 @@ struct msg_Filter
 // SCCM_IconWin_ReadIconList
 struct msg_ReadIconList
 	{
-	ULONG mrl_MethodID;
-	ULONG mrl_Flags;
+	STACKED ULONG mrl_MethodID;
+	STACKED ULONG mrl_Flags;
 	};
 
 // SCCM_IconWin_ShowIconToolTip
 struct msg_ShowIconToolTip
 	{
-	ULONG mtt_MethodID;
-	struct ScaIconNode *mtt_IconNode;
+	STACKED ULONG mtt_MethodID;
+	STACKED struct ScaIconNode *mtt_IconNode;
 	};
 
 // SCCM_IconWin_ShowGadgetToolTip
 struct msg_ShowGadgetToolTip
 	{
-	ULONG sgtt_MethodID;
-	ULONG sgtt_GadgetID;
+	STACKED ULONG sgtt_MethodID;
+	STACKED ULONG sgtt_GadgetID;
 	};
 
 // SCCM_IconWin_RawKey
 struct msg_RawKey
 	{
-	ULONG mrk_MethodID;
-	struct IntuiMessage *mrk_iMsg;
+	STACKED ULONG mrk_MethodID;
+	STACKED struct IntuiMessage *mrk_iMsg;
 	};
 
 // SCCM_IconWin_DragBegin
 struct msg_DragBegin
 	{
-	ULONG mdb_MethodID;
-	struct DragEnter mdb_DragEnter;
+	STACKED ULONG mdb_MethodID;
+	STACKED struct DragEnter mdb_DragEnter;
 	};
 
 // SCCM_IconWin_DragDrop
 struct msg_DragDrop
 	{
-	ULONG mdd_MethodID;
-	struct Window *mdd_DropWindow;
-	ULONG mdd_MouseX;
-	ULONG mdd_MouseY;
-	ULONG mdd_Qualifier;
+	STACKED ULONG mdd_MethodID;
+	STACKED struct Window *mdd_DropWindow;
+	STACKED ULONG mdd_MouseX;
+	STACKED ULONG mdd_MouseY;
+	STACKED ULONG mdd_Qualifier;
 	};
 
 // SCCM_IconWin_Open
 struct msg_Open
 	{
-	ULONG mop_MethodID;
-	struct ScaIconNode *mop_IconNode;
-	ULONG mop_Flags;
+	STACKED ULONG mop_MethodID;
+	STACKED struct ScaIconNode *mop_IconNode;
+	STACKED ULONG mop_Flags;
 	};
 
 // SCCM_IconWin_AddIcon
 struct msg_AddIcon
 	{
-	ULONG mai_MethodID;
-	WORD mai_x;
-	WORD mai_y;
-	BPTR mai_Lock;
-	CONST_STRPTR mai_Name;
+	STACKED ULONG mai_MethodID;
+	STACKED WORD mai_x;
+	STACKED WORD mai_y;
+	STACKED BPTR mai_Lock;
+	STACKED CONST_STRPTR mai_Name;
 	};
 
 // SCCM_IconWin_RemIcon
 struct msg_RemIcon
 	{
-	ULONG mri_MethodID;
-	BPTR mri_Lock;
-	CONST_STRPTR mri_Name;
+	STACKED ULONG mri_MethodID;
+	STACKED BPTR mri_Lock;
+	STACKED CONST_STRPTR mri_Name;
 	};
 
 // SCCM_IconWin_UpdateIconTags
 struct msg_UpdateIconTags
 	{
-	ULONG muit_MethodID;
-	BPTR muit_Lock;
-	CONST_STRPTR muit_Name;
-	ULONG muit_TagList[0];
+	STACKED ULONG muit_MethodID;
+	STACKED BPTR muit_Lock;
+	STACKED CONST_STRPTR muit_Name;
+	STACKED ULONG muit_TagList[0];
 	};
 
 // SCCM_IconWin_MakeWBArg
 struct msg_MakeWbArg
 	{
-	ULONG mwa_MethodID;
-	struct ScaIconNode *mwa_Icon;
-	struct WBArg *mwa_Buffer;
+	STACKED ULONG mwa_MethodID;
+	STACKED struct ScaIconNode *mwa_Icon;
+	STACKED struct WBArg *mwa_Buffer;
 	};
 
 // SCCM_IconWin_CountWBArg
 struct msg_CountWbArg
 	{
-	ULONG mca_MethodID;
-	struct ScaIconNode *mca_Icon;
+	STACKED ULONG mca_MethodID;
+	STACKED struct ScaIconNode *mca_Icon;
 	};
 
 // SCCM_IconWin_SetVirtSize
 struct msg_SetVirtSize
 	{
-	ULONG msv_MethodID;
-	ULONG msv_Flags;
+	STACKED ULONG msv_MethodID;
+	STACKED ULONG msv_Flags;
 	};
 
 // SCCM_IconWin_Redraw
 struct msg_Redraw
 	{
-	ULONG mrd_MethodID;
-	ULONG mrd_Flags;
+	STACKED ULONG mrd_MethodID;
+	STACKED ULONG mrd_Flags;
 	};
 
 // SCCM_IconWin_WakeUp
 struct msg_Wakeup
 	{
-	ULONG mwu_MethodID;
-	ULONG mwu_ReLayout;
+	STACKED ULONG mwu_MethodID;
+	STACKED ULONG mwu_ReLayout;
 	};
 
 // SCCM_IconWin_DrawIcon
 struct msg_DrawIcon
 	{
-	ULONG mdi_MethodID;
-	Object *mdi_IconObject;
+	STACKED ULONG mdi_MethodID;
+	STACKED Object *mdi_IconObject;
 	};
 
 // SCCM_IconWin_LayoutIcon
 struct msg_LayoutIcon
 	{
-	ULONG mli_MethodID;
-	Object *mli_IconObject;
-	ULONG mli_LayoutFlags;
+	STACKED ULONG mli_MethodID;
+	STACKED Object *mli_IconObject;
+	STACKED ULONG mli_LayoutFlags;
 	};
 
 // SCCM_IconWin_GetDefIcon
 struct msg_GetDefIcon
 	{
-	ULONG mgd_MethodID;
-	CONST_STRPTR mgd_Name;
-	LONG mgd_Type;		// fib_DirEntryType from FileInfoBlock
-	ULONG mgd_Protection;	// fib_Protection from FileInfoBlock
-	ULONG mgd_IconType;	// WB icon type as fallback if object cannot be locked
+	STACKED ULONG mgd_MethodID;
+	STACKED CONST_STRPTR mgd_Name;
+	STACKED LONG mgd_Type;		// fib_DirEntryType from FileInfoBlock
+	STACKED ULONG mgd_Protection;	// fib_Protection from FileInfoBlock
+	STACKED ULONG mgd_IconType;	// WB icon type as fallback if object cannot be locked
 	};
 
 // SCCM_IconWin_MenuCommand
 struct msg_MenuCommand
 	{
-	ULONG mcm_MethodID;
-	CONST_STRPTR mcm_CmdName;
-	struct ScaIconNode *mcm_IconNode;
-	ULONG mcm_State;
+	STACKED ULONG mcm_MethodID;
+	STACKED CONST_STRPTR mcm_CmdName;
+	STACKED struct ScaIconNode *mcm_IconNode;
+	STACKED ULONG mcm_State;
 	};
 
 // SCCM_IconWin_NewViewMode
 struct msg_NewViewMode
 	{
-	ULONG mnv_MethodID;
-	ULONG mnv_NewMode;
+	STACKED ULONG mnv_MethodID;
+	STACKED ULONG mnv_NewMode;
 	};
 
 // SCCM_IconWin_DeltaMove
 struct msg_DeltaMove
 	{
-	ULONG mdm_MethodID;
-	LONG mdm_DeltaX;
-	LONG mdm_DeltaY;
+	STACKED ULONG mdm_MethodID;
+	STACKED LONG mdm_DeltaX;
+	STACKED LONG mdm_DeltaY;
 	};
 
 // SCCM_IconWin_AddToStatusBar
 // SCCM_IconWin_AddToControlBar
 struct msg_AddToStatusBar
 	{
-	ULONG mab_MethodID;
-	struct Gadget *mab_NewMember;
-	ULONG mab_TagList[0];
+	STACKED ULONG mab_MethodID;
+	STACKED struct Gadget *mab_NewMember;
+	STACKED ULONG mab_TagList[0];
 	};
 
 // SCCM_IconWin_RemFromStatusBar
 // SCCM_IconWin_RemFromControlBar
 struct msg_RemFromStatusBar
 	{
-	ULONG mrb_MethodID;
-	struct Gadget *mrb_OldMember;
+	STACKED ULONG mrb_MethodID;
+	STACKED struct Gadget *mrb_OldMember;
 	};
 
 // SCCM_IconWin_UpdateStatusBar
 // SCCM_IconWin_UpdateControlBarBar
 struct msg_UpdateStatusBar
 	{
-	ULONG mub_MethodID;
-	struct Gadget *mub_Member;
-	ULONG mub_TagList[0];
+	STACKED ULONG mub_MethodID;
+	STACKED struct Gadget *mub_Member;
+	STACKED ULONG mub_TagList[0];
 	};
 
 // SCCM_IconWin_AddGadget
 struct msg_AddGadget
 	{
-	ULONG mag_MethodID;
-	struct Gadget *mag_NewGadget;
+	STACKED ULONG mag_MethodID;
+	STACKED struct Gadget *mag_NewGadget;
 	};
 
 // SCCM_IconWin_ReadIcon
 struct msg_ReadIcon
 	{
-	ULONG mri_MethodID;
-	CONST_STRPTR mri_Name;		// icon name
-	struct ScaReadIconArg *mri_ria;
+	STACKED ULONG mri_MethodID;
+	STACKED CONST_STRPTR mri_Name;		// icon name
+	STACKED struct ScaReadIconArg *mri_ria;
 	};
 
 // SCCM_IconWin_ShowPopupMenu
 struct msg_ShowPopupMenu
 	{
-	ULONG mpm_MethodID;
-	struct PopupMenu *mpm_PopupMenu;
-	struct ScaIconNode *mpm_IconNode;
-	ULONG mpm_Flags;
-	ULONG mpm_Qualifier;
-	struct FileTypeDef *mpm_FileType;
+	STACKED ULONG mpm_MethodID;
+	STACKED struct PopupMenu *mpm_PopupMenu;
+	STACKED struct ScaIconNode *mpm_IconNode;
+	STACKED ULONG mpm_Flags;
+	STACKED ULONG mpm_Qualifier;
+	STACKED struct FileTypeDef *mpm_FileType;
 	};
 
 // SCCM_IconWin_NewPatternNumber
 struct msg_NewPatternNumber
 	{
-	ULONG npn_MethodID;
-	ULONG npn_PatternNumber;
+	STACKED ULONG npn_MethodID;
+	STACKED ULONG npn_PatternNumber;
 	};
 
 // SCCM_IconWin_NewPath
 struct msg_NewPath
 	{
-	ULONG npa_MethodID;
-	CONST_STRPTR npa_Path;
-	ULONG npa_TagList[0];
+	STACKED ULONG npa_MethodID;
+	STACKED CONST_STRPTR npa_Path;
+	STACKED ULONG npa_TagList[0];
 	};
 
 // SCCM_IconWin_StartPopOpenTimer
 struct msg_StartPopOpenTimer
 	{
-	ULONG spot_MethodID;
-	struct ScaWindowTask *spot_DestWindow;
-	struct DragHandle *spot_DragHandle;
-	struct ScaIconNode *spot_IconNode;
+	STACKED ULONG spot_MethodID;
+	STACKED struct ScaWindowTask *spot_DestWindow;
+	STACKED struct DragHandle *spot_DragHandle;
+	STACKED struct ScaIconNode *spot_IconNode;
 	};
 
 // SCCM_IconWin_StopPopOpenTimer
 struct msg_StopPopOpenTimer
 	{
-	ULONG stop_MethodID;
-	struct DragHandle *stop_DragHandle;
+	STACKED ULONG stop_MethodID;
+	STACKED struct DragHandle *stop_DragHandle;
 	};
 
 // SCCM_IconWin_AddUndoEvent
 struct msg_AddUndoEvent
 	{
-	ULONG aue_MethodID;
-	enum ScalosUndoType aue_Type;
-	ULONG aue_TagList[0];
+	STACKED ULONG aue_MethodID;
+	STACKED enum ScalosUndoType aue_Type;
+	STACKED ULONG aue_TagList[0];
 	};
 
 // SCCM_IconWin_EndUndoStep
 struct msg_EndUndoStep
 	{
-	ULONG eus_MethodID;
-	APTR eus_UndoStep;      // Result from SCCM_IconWin_BeginUndoStep
+	STACKED ULONG eus_MethodID;
+	STACKED APTR eus_UndoStep;      // Result from SCCM_IconWin_BeginUndoStep
 	};
 
 // SCCM_IconWin_UnCleanUpRegion
 struct msg_UnCleanUpRegion
 	{
-	ULONG ucr_MethodID;
-	struct Region *ucr_UnCleanUpRegion;
+	STACKED ULONG ucr_MethodID;
+	STACKED struct Region *ucr_UnCleanUpRegion;
 	};
 
 // --- TextWindowClass methods ------------------------------------------
@@ -2600,170 +2600,170 @@ struct msg_UnCleanUpRegion
 // SCCM_TextWin_EndUpdate
 struct msg_EndUpdate
 	{
-	ULONG meu_MethodID;
-	ULONG meu_RefreshFlag;
+	STACKED ULONG meu_MethodID;
+	STACKED ULONG meu_RefreshFlag;
 	};
 
 // SCCM_TextWin_InsertIcon
 struct msg_InsertIcon
 	{
-	ULONG iic_MethodID;
-	struct ScaIconNode *iic_IconNode;
+	STACKED ULONG iic_MethodID;
+	STACKED struct ScaIconNode *iic_IconNode;
 	};
 
 // --- TitleClass methods ------------------------------------------
 
 struct msg_Translate
 	{
-	ULONG mxl_MethodID;
-	STRPTR mxl_Buffer;		// Buffer being written to, gets updated after call
-	CONST_STRPTR mxl_TitleFormat;	// current title format pointer, gets updated after call
-	UWORD mxl_ParseID;		// ID containing the two-character variable name, e.g. "os"
-	UWORD mxl_BuffLen;		// Length of mxl_Buffer
+	STACKED ULONG mxl_MethodID;
+	STACKED STRPTR mxl_Buffer;		// Buffer being written to, gets updated after call
+	STACKED CONST_STRPTR mxl_TitleFormat;	// current title format pointer, gets updated after call
+	STACKED UWORD mxl_ParseID;		// ID containing the two-character variable name, e.g. "os"
+	STACKED UWORD mxl_BuffLen;		// Length of mxl_Buffer
 	};
 
 struct msg_Query
 	{
-	ULONG mqy_MethodID;
-	UWORD mqy_ParseID;		// ID containing the two-character variable name, e.g. "os"
+	STACKED ULONG mqy_MethodID;
+	STACKED UWORD mqy_ParseID;		// ID containing the two-character variable name, e.g. "os"
 	};
 
 // --- WindowClass methods ------------------------------------------
 
 struct msg_RemClipRegion
 	{
-	ULONG mrc_MethodID;
-	struct Region *mrc_oldClipRegion;
+	STACKED ULONG mrc_MethodID;
+	STACKED struct Region *mrc_oldClipRegion;
 	};
 
 struct msg_SetTitle
 	{
-	ULONG mst_MethodID;
-	CONST_STRPTR mst_Title;
+	STACKED ULONG mst_MethodID;
+	STACKED CONST_STRPTR mst_Title;
 	};
 
 struct msg_GetIconFileType
 	{
-	ULONG mft_MethodID;
-	struct ScaIconNode *mft_IconNode;
+	STACKED ULONG mft_MethodID;
+	STACKED struct ScaIconNode *mft_IconNode;
 	};
 
 // --- FileTransClass methods ------------------------------------------
 
 struct msg_Move
 	{
-	ULONG mmv_MethodID;
-	BPTR mmv_SrcDirLock;
-	BPTR mmv_DestDirLock;
-	CONST_STRPTR mmv_Name;
-	LONG mmv_MouseX;
-	LONG mmv_MouseY;
+	STACKED ULONG mmv_MethodID;
+	STACKED BPTR mmv_SrcDirLock;
+	STACKED BPTR mmv_DestDirLock;
+	STACKED CONST_STRPTR mmv_Name;
+	STACKED LONG mmv_MouseX;
+	STACKED LONG mmv_MouseY;
 	};
 
 struct msg_Copy
 	{
-	ULONG mcp_MethodID;
-	BPTR mcp_SrcDirLock;
-	BPTR mcp_DestDirLock;
-	CONST_STRPTR mcp_SrcName;
-	CONST_STRPTR mcp_DestName;
-	LONG mcp_MouseX;
-	LONG mcp_MouseY;
+	STACKED ULONG mcp_MethodID;
+	STACKED BPTR mcp_SrcDirLock;
+	STACKED BPTR mcp_DestDirLock;
+	STACKED CONST_STRPTR mcp_SrcName;
+	STACKED CONST_STRPTR mcp_DestName;
+	STACKED LONG mcp_MouseX;
+	STACKED LONG mcp_MouseY;
 	};
 
 struct msg_CreateLink
 	{
-	ULONG mcl_MethodID;
-	BPTR mcl_SrcDirLock;
-	BPTR mcl_DestDirLock;
-	CONST_STRPTR mcl_SrcName;
-	CONST_STRPTR mcl_DestName;
-	LONG mcl_MouseX;
-	LONG mcl_MouseY;
+	STACKED ULONG mcl_MethodID;
+	STACKED BPTR mcl_SrcDirLock;
+	STACKED BPTR mcl_DestDirLock;
+	STACKED CONST_STRPTR mcl_SrcName;
+	STACKED CONST_STRPTR mcl_DestName;
+	STACKED LONG mcl_MouseX;
+	STACKED LONG mcl_MouseY;
 	};
 
 struct msg_UpdateWindow
 	{
-	ULONG muw_MethodID;
-	ULONG muw_UpdateMode;
-	BPTR muw_SrcDirLock;
-	BPTR muw_DestDirLock;
-	CONST_STRPTR muw_SrcName;
+	STACKED ULONG muw_MethodID;
+	STACKED ULONG muw_UpdateMode;
+	STACKED BPTR muw_SrcDirLock;
+	STACKED BPTR muw_DestDirLock;
+	STACKED CONST_STRPTR muw_SrcName;
 	};
 
 struct msg_OverwriteRequest
 	{
-	ULONG mov_MethodID;
-	enum OverWriteReqType mov_RequestType;
-	BPTR mov_SrcLock;
-	CONST_STRPTR mov_SrcName;
-	BPTR mov_DestLock;
-	CONST_STRPTR mov_DestName;
-	struct Window *mov_ParentWindow;
-	ULONG mov_SuggestedBodyTextId;
-	ULONG mov_SuggestedGadgetTextId;
+	STACKED ULONG mov_MethodID;
+	STACKED enum OverWriteReqType mov_RequestType;
+	STACKED BPTR mov_SrcLock;
+	STACKED CONST_STRPTR mov_SrcName;
+	STACKED BPTR mov_DestLock;
+	STACKED CONST_STRPTR mov_DestName;
+	STACKED struct Window *mov_ParentWindow;
+	STACKED ULONG mov_SuggestedBodyTextId;
+	STACKED ULONG mov_SuggestedGadgetTextId;
 	};
 
 // SCCM_FileTrans_WriteProtectedRequest
 struct msg_WriteProtectedRequest
 	{
-	ULONG mwp_MethodID;
-	enum WriteProtectedReqType mwp_RequestType;
-	BPTR mwp_DestLock;
-	CONST_STRPTR mwp_DestName;
-	struct Window *mwp_ParentWindow;
-	LONG mwp_ErrorCode;
-	ULONG mwp_SuggestedBodyTextId;
-	ULONG mwp_SuggestedGadgetTextId;
+	STACKED ULONG mwp_MethodID;
+	STACKED enum WriteProtectedReqType mwp_RequestType;
+	STACKED BPTR mwp_DestLock;
+	STACKED CONST_STRPTR mwp_DestName;
+	STACKED struct Window *mwp_ParentWindow;
+	STACKED LONG mwp_ErrorCode;
+	STACKED ULONG mwp_SuggestedBodyTextId;
+	STACKED ULONG mwp_SuggestedGadgetTextId;
 	};
 
 // SCCM_FileTrans_ErrorRequest
 struct msg_ErrorRequest
 	{
-	ULONG mer_MethodID;
-	struct Window *mer_ParentWindow;
-	enum FileTransTypeAction mer_Action;	// Action performed when the error occurred
-	enum FileTransOperation mer_Op;		// Operation performed (Lock, Examine etc.) when error occurred
-	LONG	mer_ErrorCode;			// code of error
-	STRPTR	mer_ErrorFileName;		// name of object on which error occured
-	ULONG mer_SuggestedBodyTextId;
-	ULONG mer_SuggestedGadgetTextId;
+	STACKED ULONG mer_MethodID;
+	STACKED struct Window *mer_ParentWindow;
+	STACKED enum FileTransTypeAction mer_Action;	// Action performed when the error occurred
+	STACKED enum FileTransOperation mer_Op;		// Operation performed (Lock, Examine etc.) when error occurred
+	STACKED LONG	mer_ErrorCode;			// code of error
+	STACKED STRPTR	mer_ErrorFileName;		// name of object on which error occured
+	STACKED ULONG mer_SuggestedBodyTextId;
+	STACKED ULONG mer_SuggestedGadgetTextId;
 	};
 
 // SCCM_FileTrans_LinksNotSupportedRequest
 struct msg_LinksNotSupportedRequest
 	{
-	ULONG mlns_MethodID;
-	struct Window *mlns_ParentWindow;
-	BPTR  mlns_SrcDirLock;
-	CONST_STRPTR mlns_SrcName;
-	BPTR  mlns_DestDirLock;
-	CONST_STRPTR mlns_DestName;
-	ULONG mlns_SuggestedBodyTextId;
-	ULONG mlns_SuggestedGadgetTextId;
+	STACKED ULONG mlns_MethodID;
+	STACKED struct Window *mlns_ParentWindow;
+	STACKED BPTR  mlns_SrcDirLock;
+	STACKED CONST_STRPTR mlns_SrcName;
+	STACKED BPTR  mlns_DestDirLock;
+	STACKED CONST_STRPTR mlns_DestName;
+	STACKED ULONG mlns_SuggestedBodyTextId;
+	STACKED ULONG mlns_SuggestedGadgetTextId;
 	};
 
 // SCCM_FileTrans_InsufficientSpaceRequest
 struct msg_InsufficientSpaceRequest
 	{
-	ULONG miss_MethodID;
-	struct Window *mlns_ParentWindow;
-	BPTR  miss_SrcDirLock;
-	CONST_STRPTR miss_SrcName;
-	BPTR  miss_DestDirLock;
-	CONST_STRPTR miss_DestName;
-	const ULONG64 *miss_RequiredSpace;
-	const ULONG64 *miss_AvailableSpace;
-	ULONG miss_SuggestedBodyTextId;
-	ULONG miss_SuggestedGadgetTextId;
+	STACKED ULONG miss_MethodID;
+	STACKED struct Window *mlns_ParentWindow;
+	STACKED BPTR  miss_SrcDirLock;
+	STACKED CONST_STRPTR miss_SrcName;
+	STACKED BPTR  miss_DestDirLock;
+	STACKED CONST_STRPTR miss_DestName;
+	STACKED const ULONG64 *miss_RequiredSpace;
+	STACKED const ULONG64 *miss_AvailableSpace;
+	STACKED ULONG miss_SuggestedBodyTextId;
+	STACKED ULONG miss_SuggestedGadgetTextId;
 	};
 
 // SCCM_FileTrans_Delete
 struct msg_Delete
 	{
-	ULONG mmd_MethodID;
-	BPTR mmd_DirLock;
-	CONST_STRPTR mmd_Name;
+	STACKED ULONG mmd_MethodID;
+	STACKED BPTR mmd_DirLock;
+	STACKED CONST_STRPTR mmd_Name;
 	};
 
 /****************************************************************************/
