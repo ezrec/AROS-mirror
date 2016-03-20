@@ -164,7 +164,7 @@ struct MUIP_Textinput_DoIncrementDec { STACKED ULONG MethodID; };
 struct MUIP_Textinput_DoDecrementDec { STACKED ULONG MethodID; };
 struct MUIP_Textinputmcp_DefaultKeys { STACKED ULONG MethodID; };
 struct MUIP_Textinput_DoUndo { STACKED ULONG MethodID; };
-struct MUIP_Textinput_DoRedo { vULONG MethodID; };
+struct MUIP_Textinput_DoRedo { STACKED ULONG MethodID; };
 struct MUIP_Textinput_DoTab { STACKED ULONG MethodID; };
 struct MUIP_Textinput_DoNextGadget { STACKED ULONG MethodID; };
 struct MUIP_Textinput_DoSetBookmark1 { STACKED ULONG MethodID; };
