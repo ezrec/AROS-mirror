@@ -1,9 +1,10 @@
 # $Id$
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 EXEDIR := $(AROS_CONTRIB)/Games/Doom
 
-NOWARN_FLAGS := -Wno-strict-aliasing -Wno-uninitialized
+NOWARN_FLAGS := $(NOWARN_STRICT_ALIASING) $(NOWARN_UNINITIALIZED)
 USER_CFLAGS = $(NOWARN_FLAGS) -DAROS -DNORMALUNIX -DUNROLL \
               -O3 -ffast-math -funroll-loops -fomit-frame-pointer -fexpensive-optimizations
 USER_CFLAGS +=  $(UNUSED_BUT_SET_VARIABLE_CFLAGS)

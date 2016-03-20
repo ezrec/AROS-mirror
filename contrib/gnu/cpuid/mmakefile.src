@@ -1,9 +1,11 @@
 include $(SRCDIR)/$(CURDIR)/../make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 EXEDIR := $(GNUDIR)/cpuid/bin
 FILES  := cpuid
 
-USER_CFLAGS += $(UNUSED_BUT_SET_VARIABLE_CFLAGS)
+NOWARN_FLAGS := $(NOWARN_UNUSED_BUT_SET_VARIABLE)
+USER_CFLAGS += $(NOWARN_FLAGS)
 
 #MM- contrib-gnu-cpuid : cpuid-$(AROS_TARGET_CPU)
 #MM- contrib-gnu      : cpuid-$(AROS_TARGET_CPU)

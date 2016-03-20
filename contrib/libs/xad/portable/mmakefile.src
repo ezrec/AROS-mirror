@@ -2,6 +2,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 HFILES   = \
     include/ConvertE
@@ -37,9 +38,9 @@ FILES = \
     $(HFILES) \
     $(CHARSET)
 
-USER_CFLAGS := -DHAVE_STDINT_H
-USER_CFLAGS += -D__DOS_NOLIBBASE__ -D__UTILITY_NOLIBBASE__ -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/ -I$(SRCDIR)/$(CURDIR)/amiga
-USER_CFLAGS += -Wno-uninitialized -Wno-parentheses $(ARRAY_BOUNDS_CFLAGS)
+NOWARN_FLAGS := $(NOWARN_UNINITIALIZED) $(NOWARN_PARENTHESES) $(ARRAY_BOUNDS_CFLAGS)
+USER_CFLAGS := $(NOWARN_FLAGS) -DHAVE_STDINT_H -D__DOS_NOLIBBASE__ -D__UTILITY_NOLIBBASE__
+USER_CFLAGS += -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/ -I$(SRCDIR)/$(CURDIR)/amiga
 USER_LDFLAGS := -static
 
 #MM- contrib-pack-xadmaster : xadmaster-library
