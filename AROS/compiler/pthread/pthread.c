@@ -93,6 +93,7 @@ typedef struct
     int cancelstate;
     int canceltype;
     int canceled;
+    int detached;
 } ThreadInfo;
 
 static ThreadInfo threads[PTHREAD_THREADS_MAX];
@@ -1382,10 +1383,20 @@ static void StarterFunc(void)
     }
     ReleaseSemaphore(&tls_sem);
 
-    // tell the parent thread that we are done
-    Forbid();
-    inf->finished = TRUE;
-    Signal(inf->parent, SIGF_PARENT);
+    if (!inf->detached)
+    {
+        // tell the parent thread that we are done
+        Forbid();
+        inf->finished = TRUE;
+        Signal(inf->parent, SIGF_PARENT);
+    }
+    else
+    {
+        // no one is waiting for us, do the clean up
+        ObtainSemaphore(&thread_sem);
+        memset(inf, 0, sizeof(ThreadInfo));
+        ReleaseSemaphore(&thread_sem);
+    }
 }
 
 int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start)(void *), void *arg)
@@ -1458,9 +1469,18 @@ int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start)
 
 int pthread_detach(pthread_t thread)
 {
-    D(bug("%s(%u) not implemented\n", __FUNCTION__, thread));
+    ThreadInfo *inf;
 
-    return ESRCH;
+    D(bug("%s(%u, %p)\n", __FUNCTION__, thread, value_ptr));
+
+    inf = GetThreadInfo(thread);
+
+    if (inf == NULL)
+        return ESRCH;
+
+    inf->detached = TRUE;
+
+    return 0;
 }
 
 int pthread_join(pthread_t thread, void **value_ptr)
@@ -1690,6 +1710,26 @@ int pthread_setschedparam(pthread_t thread, int policy, const struct sched_param
         return ESRCH;
 
     SetTaskPri(inf->task, param->sched_priority);
+
+    return 0;
+}
+
+int pthread_getschedparam(pthread_t thread, int *policy, struct sched_param *param)
+{
+    ThreadInfo *inf;
+
+    D(bug("%s(%u, %d, %p)\n", __FUNCTION__, thread, policy, param));
+
+    if ((param == NULL) || (policy == NULL))
+        return EINVAL;
+
+    inf = GetThreadInfo(thread);
+
+    if (inf == NULL)
+        return ESRCH;
+
+    param->sched_priority = inf->task->tc_Node.ln_Pri;
+    *policy = 1;
 
     return 0;
 }
