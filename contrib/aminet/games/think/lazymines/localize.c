@@ -16,12 +16,18 @@
 #include <proto/locale.h>
 #include <proto/alib.h>
 
+#define CATCOMP_BLOCK
+#define CATCOMP_CODE
 #include "localize.h"
 
-char * GetString(struct LocaleInfo * li,
+STRPTR GetString(struct LocaleInfo * li,
                  LONG stringNum);
-		 
+
+#ifdef __MORPHOS__
+struct Library *LocaleBase = NULL;
+#else
 struct LocaleBase *LocaleBase = NULL;
+#endif
 
 static struct LocaleInfo   li;
 
