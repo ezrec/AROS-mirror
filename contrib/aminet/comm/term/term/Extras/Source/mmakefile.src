@@ -132,7 +132,9 @@ FILES := \
 	StackCall \
 	VersionTag
 
-USER_CFLAGS = -DINCLUDEALL -DCPU_ANY -Wno-parentheses
+USER_CFLAGS := -DINCLUDEALL -DCPU_ANY -Wno-parentheses
+# Hack for gcc 6 for m68k - prevents register spill
+USER_CFLAGS += -O1
 
 %build_prog mmake=aminet-comm-term-term \
     progname=Term targetdir=$(AROS_CONTRIB)/Misc/aminet \
