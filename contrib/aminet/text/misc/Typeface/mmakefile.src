@@ -3,14 +3,15 @@
 # Makefile to make Typeface.
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 FILES  := char checkbox error node locale \
           gadget text fontio typeface
 
 EXEDIR := $(AROS_CONTRIB)/Misc/aminet/Typeface
 
-USER_CFLAGS := -DINTUITION_NO_INLINE_STDARG \
-	       -Wno-unused-function $(FORMAT_SECURITY_CFLAGS)
+NOWARN_FLAGS := $(NOWARN_UNUSED_FUNCTION) $(NOWARN_FORMAT_SECURITY)
+USER_CFLAGS := $(NOWARN_FLAGS) -DINTUITION_NO_INLINE_STDARG
 
 #MM aminet-text-misc-typeface : setup-typeface-catalogs contrib-bgui
 

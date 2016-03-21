@@ -3,6 +3,7 @@
 #   Makefile to make FileMaster.
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 FILES := decode environ unarj
 
@@ -10,7 +11,8 @@ EXEDIR := $(AROS_CONTRIB)/Misc/aminet/C
 
 #MM aminet-util-arc-unarj : includes linklibs
 
-USER_CFLAGS := $(FORMAT_SECURITY_CFLAGS)
+NOWARN_FLAGS := $(NOWARN_FORMAT_SECURITY)
+USER_CFLAGS := $(NOWARN_FLAGS)
 
 %build_prog mmake=aminet-util-arc-unarj \
     progname=unarj targetdir=$(EXEDIR) \

@@ -3,6 +3,7 @@
 #   Makefile to make MUIBuilder
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 FILES := \
     argnotify \
@@ -55,10 +56,8 @@ FILES := \
 
 EXEDIR := $(AROSDIR)/Extras/Development/MUIBuilder
 
-USER_CFLAGS += -I$(AROS_INCLUDES)/SDI -DMUI_OBSOLETE
-USER_CFLAGS += -Wno-parentheses \
-	       -Wno-uninitialized \
-	       $(FORMAT_SECURITY_CFLAGS)
+NOWARN_FLAGS := $(NOWARN_FORMAT_SECURITY) $(NOWARN_PARENTHESES) $(NOWARN_UNINITIALIZED)
+USER_CFLAGS := $(NOWARN_FLAGS) -I$(AROS_INCLUDES)/SDI -DMUI_OBSOLETE
 
 %build_prog mmake=contrib-development-gui-muibuilder-src \
     progname=MUIBuilder targetdir=$(EXEDIR) \

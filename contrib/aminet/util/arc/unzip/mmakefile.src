@@ -3,6 +3,7 @@
 #   Makefile to make UnZip.
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 OS=$(shell uname)
 
@@ -26,21 +27,20 @@ EXEDIR := $(AROS_C)
 
 #MM- aminet-util-arc-unzip: includes linklibs unzip-unzip unzip-unzipsfx unzip-funzip
 
-USER_WARNINGS := $(STRICT_OVERFLOW_CFLAGS) $(FORMAT_SECURITY_CFLAGS)
-
-USER_CFLAGS := -DUNDER='"$(OS)"' $(USER_WARNINGS)
+NOWARN_FLAGS := $(NOWARN_STRICT_OVERFLOW) $(NOWARN_FORMAT_SECURITY)
+USER_CFLAGS := $(NOWARN_FLAGS) -DUNDER='"$(OS)"'
 
 %build_prog mmake=unzip-unzip \
     progname=UnZip objdir=$(GENDIR)/$(CURDIR)/UnZip targetdir=$(EXEDIR) \
     files=$(FILES)
 
-USER_CFLAGS := -DSFX -DUNDER='"$(OS)"' $(USER_WARNINGS)
+USER_CFLAGS := $(NOWARN_FLAGS) -DSFX -DUNDER='"$(OS)"'
 
 %build_prog mmake=unzip-unzipsfx \
     progname=UnZipSfx objdir=$(GENDIR)/$(CURDIR)/UnZipSfx targetdir=$(EXEDIR) \
     files=$(FILESX)
 
-USER_CFLAGS := -DFUNZIP -DUNDER='"$(OS)"' $(USER_WARNINGS)
+USER_CFLAGS := $(NOWARN_FLAGS) -DFUNZIP -DUNDER='"$(OS)"'
 
 %build_prog mmake=unzip-funzip \
     progname=fUnZip objdir=$(GENDIR)/$(CURDIR)/fUnZip targetdir=$(EXEDIR) \

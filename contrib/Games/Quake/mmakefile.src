@@ -1,5 +1,6 @@
 # $Id$
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 INSTDIR  := $(AROS_CONTRIB)/Games/Quake
 BUILDDIR := $(GENDIR)/$(CURDIR)
@@ -47,7 +48,8 @@ BUILD_RELEASE_DIR=release$(ARCH)$(GLIBC)
 
 CC=$(AROS_CC)
 
-CFLAGS += $(FORMAT_SECURITY_CFLAGS) -nix
+NOWARN_FLAGS := $(NOWARN_FORMAT_SECURITY)
+CFLAGS += $(NOWARN_FLAGS) -nix
 BASE_CFLAGS=-Dstricmp=strcasecmp
 
 DEBUG_CFLAGS=$(CFLAGS) $(BASE_CFLAGS) -g

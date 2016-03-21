@@ -10,7 +10,7 @@ ARCHBASE := openssl-1.0.1g
 OPENSSL_SOURCE := $(PORTSDIR)/openssl/$(ARCHBASE)
 OPENSSL_BUILD_DIR := $(GENDIR)/$(CURDIR)
 
-NOWARN_FLAGS :=  $(NOWARN_UNUSED_BUT_SET_VARIABLE) $(NOWARN_UNUSED_VALUE) $(NOWARN_UNUSED_VARIABLE) $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_MAYBE_UNINITIALIZED)
+NOWARN_FLAGS :=   $(NOWARN_FORMAT_SECURITY) $(NOWARN_UNUSED_BUT_SET_VARIABLE) $(NOWARN_UNUSED_VALUE) $(NOWARN_UNUSED_VARIABLE) $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_MAYBE_UNINITIALIZED)
 
 #MM- contrib-openssl : contrib-openssl-fetch contrib-openssl-setup contrib-openssl-configure contrib-openssl-build contrib-openssl-install
 
@@ -40,7 +40,7 @@ contrib-openssl-setup : $(OPENSSL_BUILD_DIR)/.links-created
 $(OPENSSL_BUILD_DIR)/.build-configured : $(OPENSSL_BUILD_DIR)/.links-created
 	$(RM) $@
 	cd $(OPENSSL_BUILD_DIR); \
-	env -i PATH=$(PATH) AROS_CC="$(TARGET_CC)" AROS_CFLAGS="$(CONFIG_CFLAGS) $(NOWARN_FLAGS) $(FORMAT_SECURITY_CFLAGS)" AROS_RANLIB="$(RANLIB)" AR="$(AR_PLAIN)" ./Configure "aros-$(AROS_TARGET_CPU)-cross" no-threads no-sse2 --prefix=/Development --openssldir=/Development/etc/ssl
+	env -i PATH=$(PATH) AROS_CC="$(TARGET_CC)" AROS_CFLAGS="$(CONFIG_CFLAGS) $(NOWARN_FLAGS)" AROS_RANLIB="$(RANLIB)" AR="$(AR_PLAIN)" ./Configure "aros-$(AROS_TARGET_CPU)-cross" no-threads no-sse2 --prefix=/Development --openssldir=/Development/etc/ssl
 	$(TOUCH) $@;
 
 #MM

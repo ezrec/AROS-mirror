@@ -3,6 +3,7 @@
 #   Makefile to make UnZip.
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 OS=$(shell uname)
 
@@ -35,15 +36,14 @@ EXEDIR := $(AROS_C)
 
 #MM- aminet-util-arc-zip: includes linklibs zip-zip zip-zipnote zip-zipcloak zip-zipsplit
 
-USER_WARNINGS := $(STRICT_OVERFLOW_CFLAGS) $(FORMAT_SECURITY_CFLAGS)
-
-USER_CFLAGS := $(CUSEMEM) -DUNDER='"$(OS)"' $(USER_WARNINGS)
+NOWARN_FLAGS := $(NOWARN_STRICT_OVERFLOW) $(NOWARN_FORMAT_SECURITY)
+USER_CFLAGS := $(NOWARN_FLAGS) $(CUSEMEM) -DUNDER='"$(OS)"'
 
 %build_prog mmake=zip-zip \
     progname=Zip objdir=$(GENDIR)/$(CURDIR)/Zip targetdir=$(EXEDIR) \
     files=$(FILESZ)
 
-USER_CFLAGS := $(CUSEMEM) -DUTIL -DUNDER='"$(OS)"' $(USER_WARNINGS)
+USER_CFLAGS := $(NOWARN_FLAGS) $(CUSEMEM) -DUTIL -DUNDER='"$(OS)"'
 
 %build_prog mmake=zip-zipnote \
     progname=ZipNote objdir=$(GENDIR)/$(CURDIR)/ZipNote targetdir=$(EXEDIR) \
@@ -59,7 +59,7 @@ USER_CFLAGS := $(CUSEMEM) -DUTIL -DUNDER='"$(OS)"' $(USER_WARNINGS)
 
 # Low-memory version. By default we don't build it.
 
-USER_CFLAGS := $(CLOWMEM) -DUNDER='"$(OS)"' $(USER_WARNINGS)
+USER_CFLAGS := $(NOWARN_FLAGS) $(CLOWMEM) -DUNDER='"$(OS)"'
 
 %build_prog mmake=zip-ziplm \
     progname=ZipLM objdir=$(GENDIR)/$(CURDIR)/ZipLM targetdir=$(EXEDIR) \
