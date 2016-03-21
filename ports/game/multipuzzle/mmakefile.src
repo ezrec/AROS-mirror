@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-game: ports-game-$(AROS_TARGET_CPU)
 
@@ -22,7 +23,8 @@ TARGETDIR    := $(AROS_CONTRIB)/Games/MultiPuzzle
 
 FILES := displayinit localize multipuzzle puzzle requesters multipuzzle_strings
 FILES := $(addprefix $(PORTSDIR)/multipuzzle/$(ARCHBASE)/,$(FILES))
-USER_CFLAGS := -Wno-implicit-function-declaration -Wno-parentheses
+NOWARN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECL) $(NOWARN_PARENTHESES)
+USER_CFLAGS := $(NOWARN_FLAGS)
 USER_INCLUDES := -I.
 
 %build_prog mmake=ports-game-multipuzzle progname=MultiPuzzle \

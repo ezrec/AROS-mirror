@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-game : ports-game-defendguin
 
@@ -20,7 +21,7 @@ REPOSITORIES := ftp://ftp.tuxpaint.org/unix/x/defendguin/src
 ARCHBASE     := defendguin-0.0.12
 TARGETDIR    := $(AROS_CONTRIB)/Games/Defendguin
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
-NOWARN_FLAGS := -Wno-maybe-uninitialized
+NOWARN_FLAGS := $(NOWARN_MAYBE_UNINITIALIZED)
 USER_CFLAGS  := $(NOWARN_FLAGS)  $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
                 -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES -D__SOUND
 

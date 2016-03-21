@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-scientific : ports-scientific-mathomatic
 
@@ -17,7 +18,7 @@ REPOSITORIES := http://mathomatic.orgserve.de
 ARCHBASE     := mathomatic-16.0.5
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Scientific/Mathomatic
 
-NOWARN_FLAGS := -Wno-cpp
+NOWARN_FLAGS := $(NOWARN_CPP)
 USER_CFLAGS  := $(NOWARN_FLAGS) -DVERSION=\"16.0.5\"
 
 FILES := \

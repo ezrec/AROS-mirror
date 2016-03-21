@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-game : ports-game-biniax2
 
@@ -24,7 +25,7 @@ ARCHBASE     := biniax2-1.30-fullsrc
 TARGETDIR    := $(AROS_CONTRIB)/Games/Biniax2
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
 
-NOWARN_FLAGS := -Wno-unused-variable -Wno-char-subscripts -Wno-unused-value -Wno-switch
+NOWARN_FLAGS := $(NOWARN_UNUSED_VARIABLE) $(NOWARN_CHAR_SUBSCRIPTS) $(NOWARN_UNUSED_VALUE) $(NOWARN_SWITCH)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags)
 USER_INCLUDES:= -I$(PORTSDIR)/biniax2/biniax2-1.30 -I$(PORTSDIR)/biniax2/biniax2-1.30/desktop
 

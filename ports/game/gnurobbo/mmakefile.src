@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-game : ports-game-gnurobbo
 
@@ -17,7 +18,7 @@ REPOSITORIES := sf://gnurobbo
 ARCHBASE     := gnurobbo-0.66
 TARGETDIR    := $(AROS_CONTRIB)/Games/GnuRobbo
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
-NOWARN_FLAGS := -Wno-misleading-indentation -Wno-unused-but-set-variable
+NOWARN_FLAGS := $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_UNUSED_BUT_SET_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
                 -DPLATFORM_AROS -DVERSION=\"0.66\" -DPACKAGE_DATA_DIR=\"PROGDIR:data\" -DHAVE_DESIGNER 
 

@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-devel : ports-devel-cbmbasic
 
@@ -21,8 +22,8 @@ FILES := \
     $(PORTSDIR)/cbmbasic/$(ARCHBASE)/plugin \
     $(PORTSDIR)/cbmbasic/$(ARCHBASE)/runtime
 
-NOWARN_FLAGS := -Wno-unused-but-set-variable -Wno-strict-aliasing \
-	-Wno-cpp -Wno-unused-variable
+NOWARN_FLAGS := $(NOWARN_UNUSED_BUT_SET_VARIABLE) $(NOWARN_STRICT_ALIASING) \
+	$(NOWARN_CPP) $(NOWARN_UNUSED_VARIABLE)
 
 USER_CFLAGS := $(NOWARN_FLAGS)
 

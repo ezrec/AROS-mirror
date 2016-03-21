@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-devel : ports-devel-bwbasic
 
@@ -39,9 +40,9 @@ FILES := \
 
 FILES := $(addprefix $(PORTSDIR)/bwbasic/$(ARCHBASE)/,$(FILES))
 
-NOWARN_FLAGS := -Wno-format-contains-nul -Wno-maybe-uninitialized \
-	-Wno-unused-but-set-variable -Wno-implicit-int \
-        -Wno-unused-variable -Wno-aggressive-loop-optimizations
+NOWARN_FLAGS := $(NOWARN_FORMAT_CONTAINS_NUL) $(NOWARN_MAYBE_UNINITIALIZED) \
+	$(NOWARN_UNUSED_BUT_SET_VARIABLE) $(NOWARN_IMPLICIT_INT) \
+        $(NOWARN_UNUSED_VARIABLE) $(NOWARN_AGGRESSIVE_LOOP_OPT)
 
 USER_CFLAGS := $(NOWARN_FLAGS)
 

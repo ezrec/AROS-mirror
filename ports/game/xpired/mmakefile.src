@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-game : ports-game-xpired
 
@@ -26,7 +27,7 @@ REPOSITORIES := sf://xpired
 ARCHBASE     := xpired-1.22
 TARGETDIR    := $(AROS_CONTRIB)/Games/Xpired
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
-NOWARN_FLAGS := -Wno-char-subscripts -Wno-unused-variable -Wno-misleading-indentation -Wno-endif-labels
+NOWARN_FLAGS := $(NOWARN_CHAR_SUBSCRIPTS) $(NOWARN_UNUSED_VARIABLE) $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_ENDIF_LABELS)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) -DUNIX -DSHARE_PREFIX=\"PROGDIR:data\"
 
 %build_prog mmake=ports-game-xpiredbin progname=Xpired \

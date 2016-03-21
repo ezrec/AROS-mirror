@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-game : ports-game-bugsquish
 
@@ -17,7 +18,7 @@ REPOSITORIES := ftp://ftp.tuxpaint.org/unix/x/bugsquish/src
 ARCHBASE     := bugsquish-0.0.6
 TARGETDIR    := $(AROS_CONTRIB)/Games/Bugsquish
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
-NOWARN_FLAGS := -Wno-unused-variable -Wno-unused-but-set-variable
+NOWARN_FLAGS := $(NOWARN_UNUSED_VARIABLE) $(NOWARN_UNUSED_BUT_SET_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
                 -DDATA_PREFIX=\"PROGDIR:data/\" -DNOSOUND
 

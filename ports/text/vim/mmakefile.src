@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-text : ports-text-vim
 
@@ -18,10 +19,10 @@ include $(TOP)/config/make.cfg
 REPOSITORIES := ftp://ftp.vim.org/pub/vim/unix
 ARCHBASE     := vim-7.2
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Text/Vim
-NOWARN_FLAGS := -Wno-strict-overflow -Wno-strict-aliasing \
-    -Wno-misleading-indentation -Wno-int-conversion \
-    -Wno-bool-compare -Wno-logical-not-parentheses \
-    -Wno-pointer-to-int-cast
+NOWARN_FLAGS := $(NOWARN_STRICT_OVERFLOW) $(NOWARN_STRICT_ALIASING) \
+    $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_INT_CONVERSION) \
+    $(NOWARN_BOOL_COMPARE) $(NOWARN_LOGICAL_NOT_PARENTHESES) \
+    $(NOWARN_POINTER_TO_INT_CAST)
 USER_CFLAGS  := $(NOWARN_FLAGS) -I$(PORTSDIR)/vim/vim72/src/proto \
              -DUSE_TMPNAM -DFEAT_MBYTE -DFEAT_GUI -DFEAT_ASL -DFEAT_BROWSE \
              -DFEAT_MOUSE -DHAVE_STDARG_H -DFEAT_HUGE \

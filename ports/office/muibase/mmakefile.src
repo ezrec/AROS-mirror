@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #DISABLED #MM- ports-office : ports-office-$(AROS_TARGET_CPU)
 
@@ -31,10 +32,10 @@ FROMAM       := $(PORTSDIR)/muibase/$(ARCHBASE)/install/amiga
 FROMSH       := $(PORTSDIR)/muibase/$(ARCHBASE)/install/share
 FROMDOC      := $(PORTSDIR)/muibase/$(ARCHBASE)/doc/text
 
+NOWARN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECL)
 USER_INCLUDES:= -I$(PORTSDIR)/muibase/$(ARCHBASE)/src -I$(PORTSDIR)/muibase/$(ARCHBASE)/$(BASE_SRCD) \
                 -I$(PORTSDIR)/muibase/$(ARCHBASE)/$(AMIGA_SRCD) -I$(PORTSDIR)/muibase/$(ARCHBASE)/$(LANG_SRCD)
-USER_CFLAGS  := -fno-strict-aliasing -Wno-implicit-function-declaration \
-                -DAMIGA -DMUI -DMBASE -DUSE_HOOKENTRY -DNO_INLINE_STDARG
+USER_CFLAGS  := $(NOWARN_FLAGS) -fno-strict-aliasing -DAMIGA -DMUI -DMBASE -DUSE_HOOKENTRY -DNO_INLINE_STDARG
 MB_VERSION   := 3
 MB_REVISION  := 0
 MB_VERSTR    := 3.0

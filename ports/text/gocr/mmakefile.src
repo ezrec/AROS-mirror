@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-text : ports-text-gocr
 
@@ -16,7 +17,8 @@ include $(TOP)/config/make.cfg
 REPOSITORIES := http://www-e.uni-magdeburg.de/jschulen/ocr/
 ARCHBASE     := gocr-0.49
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Text/Gocr
-USER_CFLAGS  := -Wno-unused-but-set-variable
+NOWARN_FLAGS := $(NOWARN_UNUSED_BUT_SET_VARIABLE)
+USER_CFLAGS  := $(NOWARN_FLAGS)
 USER_INCLUDES:= -I $(PORTSDIR)/gocr/$(ARCHBASE)/include
 
 FILES := \

@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-game : ports-game-$(AROS_TARGET_CPU)
 
@@ -17,7 +18,8 @@ include $(TOP)/config/make.cfg
 REPOSITORIES := http://archives.aros-exec.org/share/game/adventure/
 ARCHBASE     := magnetic-src-2.3.1
 TARGETDIR    := $(AROS_CONTRIB)/Games/Magnetic
-USER_CFLAGS  := -Wno-parentheses -DNO_ANIMATION
+NOWARN_FLAGS := $(NOWARN_PARENTHESES)
+USER_CFLAGS  := $(NOWARN_FLAGS) -DNO_ANIMATION
 USER_INCLUDES:= -I $(PORTSDIR)/magnetic/$(ARCHBASE)/Generic
 
 FILES := Amiga/amiga Generic/emu

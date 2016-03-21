@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-game : ports-game-sdlscavenger
 
@@ -15,7 +16,7 @@ REPOSITORIES := sf://sdlscavenger
 ARCHBASE     := sdlscav-145
 TARGETDIR    := $(AROS_CONTRIB)/Games/SdlScavenger
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
-NOWARN_FLAGS := -Wno-unused-but-set-variable -Wno-sequence-point
+NOWARN_FLAGS := $(NOWARN_UNUSED_BUT_SET_VARIABLE) $(NOWARN_SEQUENCE_POINT)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
                 -DLIBPATH=\"/PROGDIR/data\"
 

@@ -1,7 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
-
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-game : ports-game-$(AROS_TARGET_CPU)
 
@@ -27,8 +27,8 @@ include $(TOP)/config/make.cfg
 REPOSITORIES := http://archives.aros-exec.org/share/game/misc/
 ARCHBASE     := wormwars-src-8.86
 TARGETDIR    := $(AROS_CONTRIB)/Games/WormWars
-USER_CFLAGS  := -DNO_PRAGMAS -D__STORM__ -D__chip= -DAMIGA \
-                -Wno-implicit-function-declaration -Wno-unknown-pragmas -Wno-parentheses
+NOWARN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECL) $(NOWARN_UNKNOWN_PRAGMAS) $(NOWARN_PARENTHESES)
+USER_CFLAGS  := $(NOWARN_FLAGS) -DNO_PRAGMAS -D__STORM__ -D__chip= -DAMIGA
 
 FILES := source/amiga source/engine1 source/engine2 source/extras \
          source/gfx source/heads source/le source/squares source/tails

@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-archive : ports-archive-zunearc
 
@@ -15,7 +16,8 @@ REPOSITORIES := sf://zunetools
 ARCHBASE     := ZuneARC_v1.4
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Archive/ZuneARC
 
-USER_CFLAGS  := -Wno-parentheses -Wno-unused-but-set-variable -Wno-unused-variable
+NOWARN_FLAGS := $(NOWARN_PARENTHESES) $(NOWARN_UNUSED_BUT_SET_VARIABLE) $(NOWARN_UNUSED_VARIABLE)
+USER_CFLAGS  := $(NOWARN_FLAGS)
 
 FILES := $(PORTSDIR)/zunearc/$(ARCHBASE)/ZuneARC/source/ZuneARC
 

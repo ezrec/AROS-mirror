@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-game : ports-game-madbomber
 
@@ -17,7 +18,7 @@ REPOSITORIES := ftp://ftp.tuxpaint.org/unix/x/madbomber/src
 ARCHBASE     := madbomber-0.2.5
 TARGETDIR    := $(AROS_CONTRIB)/Games/MadBomber
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
-NOWARN_FLAGS := -Wno-sequence-point -Wno-unused-variable
+NOWARN_FLAGS := $(NOWARN_SEQUENCE_POINT) $(NOWARN_UNUSED_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
                 -DDATA_PREFIX=\"PROGDIR:data/\" -D__SOUND
 

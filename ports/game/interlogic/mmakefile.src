@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-game : ports-game-interlogic
 
@@ -14,7 +15,7 @@ REPOSITORIES := sf://interlogic
 ARCHBASE     := interLOGIC-src-0.30
 TARGETDIR    := $(AROS_CONTRIB)/Games/InterLogic
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
-NOWARN_FLAGS := -Wno-misleading-indentation -Wno-discarded-qualifiers
+NOWARN_FLAGS := $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_DISCARDED_QUALIFIERS)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags)
 
 FILES := \

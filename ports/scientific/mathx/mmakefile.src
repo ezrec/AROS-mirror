@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-scientific : ports-scientific-$(AROS_TARGET_CPU)
 
@@ -35,13 +36,14 @@ include $(TOP)/config/make.cfg
 REPOSITORIES := http://archives.aros-exec.org/share/utility/scientific
 ARCHBASE     := muimathx-src-svn46
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Scientific/MathX
-USER_CFLAGS  := -D__MATHX_VERDATE=\"`date +%d.%m.%Y`\" \
+NOWARN_FLAGS := $(NOWARN_WRITE_STRINGS)
+USER_CXXFLAGS  := $(NOWARN_FLAGS) -funroll-loops -fno-strict-aliasing -fpermissive \
+                -D__MATHX_VERDATE=\"`date +%d.%m.%Y`\" \
                 -D__MATHX_VERDAYS="`expr \`date +%s\` / 86400 - 2922`" \
                 -D__MATHX_BUILDID=\"$(BUILDID)\" \
                 -D__GRAPHICS_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ \
                 -D__REXXSYSLIB_STDLIBBASE__ -D__UTILITY_STDLIBBASE__ \
-                -DMUI_OBSOLETE \
-                -Wno-write-strings -funroll-loops -fno-strict-aliasing -fpermissive -DDEBUG
+                -DMUI_OBSOLETE -DDEBUG
 USER_INCLUDES:= -I$(PORTSDIR)/mathx/$(ARCHBASE) -I$(PORTSDIR)/mathx/$(ARCHBASE)/extrasrc
 
 CXX_FILES := \
