@@ -507,8 +507,8 @@ Function
 ~~~~~~~~
 ::
 
-     Prints a hexdump of the data beginning at data. The format
-     is liks this:
+     Prints a hexdump of the data beginning at 'data'. The format
+     is like this:
 
      xxxxxxxx: dddddddd dddddddd dddddddd dddddddd aaaaaaaaaaaaaaaa
 

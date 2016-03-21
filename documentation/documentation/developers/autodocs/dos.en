@@ -1834,7 +1834,7 @@ Synopsis
 ::
 
  BOOL ExamineFH(
-          BPTR lock,
+          BPTR fh,
           struct FileInfoBlock * fib );
 
 
@@ -6935,7 +6935,7 @@ Synopsis
 
  LONG VPrintf(
           CONST_STRPTR format,
-          IPTR * argarray );
+          RAWARG argarray );
 
 Function
 ~~~~~~~~

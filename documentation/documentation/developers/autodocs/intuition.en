@@ -568,7 +568,7 @@ Synopsis
           struct Window     * RefWindow,
           struct EasyStruct * easyStruct,
           ULONG IDCMP,
-          APTR Args );
+          RAWARG Args );
  
  struct Window * BuildEasyRequest(
           struct Window     * RefWindow,
@@ -1563,7 +1563,7 @@ Synopsis
           struct Window     * window,
           struct EasyStruct * easyStruct,
           ULONG             * IDCMP_ptr,
-          APTR argList );
+          RAWARG argList );
  
  LONG EasyRequest(
           struct Window     * window,

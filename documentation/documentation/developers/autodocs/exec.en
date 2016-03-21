@@ -5232,9 +5232,9 @@ Synopsis
 ~~~~~~~~
 ::
 
- APTR RawDoFmt(
+ RAWARG RawDoFmt(
           CONST_STRPTR FormatString,
-          APTR DataStream,
+          RAWARG DataStream,
           VOID_FUNC PutChProc,
           APTR PutChData );
 
@@ -5315,7 +5315,7 @@ Example
 
      Build a sprintf style function:
 
-         __stackparm void my_sprintf(UBYTE *buffer, UBYTE *format, ...);
+         void my_sprintf(UBYTE *buffer, UBYTE *format, ...);
 
          static void callback(UBYTE chr __reg(d0), UBYTE **data __reg(a3))
          {
@@ -5324,11 +5324,13 @@ Example
 
          void my_sprintf(UBYTE *buffer, UBYTE *format, ...)
          {
-             RawDoFmt(format, &format+1, &callback, &buffer);
+             AROS_SLOWSTACKFORMAT_PRE(format)
+             RawDoFmt(format, AROS_SLOWSTACKFORMAT_ARG(format), &callback, &buffer);
+             AROS_SLOWSTACKFORMAT_POST(format)
          }
 
-     The above example uses __stackparm attribute in the function
-     prototype in order to make sure that arguments are all passed on
+     The above example uses AROS_SLOWSTACKFORMAT_* macros in the function
+     in order to make sure that arguments are all passed on
      the stack on all architectures. The alternative is to use
      VNewRawDoFmt() function which takes va_list instead of array
      DataStream.

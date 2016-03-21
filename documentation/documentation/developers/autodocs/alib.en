@@ -23,23 +23,23 @@ alib
 `DoGadgetMethod()`_                     `DoMethodA()`_                          `DoSuperMethodA()`_                     `DoSuperNewTagList()`_                  
 `DrawBevelBox()`_                       `EasyRequest()`_                        `ErrorOutput()`_                        `ExtendFontTags()`_                     
 `FastRand()`_                           `FreeIEvents()`_                        `FreeMsgFromStack()`_                   `FreeParamsFromStack()`_                
-`FreeTagsFromStack()`_                  `GetDTAttrs()`_                         `GetExtSprite()`_                       `GetMsgFromStack()`_                    
-`GetParamsFromStack()`_                 `GetRexxVar()`_                         `GetRPAttrs()`_                         `GetTagsFromStack()`_                   
-`GetVisualInfo()`_                      `GT_GetGadgetAttrs()`_                  `GT_SetGadgetAttrs()`_                  `HookEntry()`_                          
-`HotKey()`_                             `InvertString()`_                       `InvertStringForwd()`_                  `LayoutMenuItems()`_                    
-`LayoutMenus()`_                        `LibAllocAligned()`_                    `LibAllocPooled()`_                     `LibCreatePool()`_                      
-`LibDeletePool()`_                      `LibFreePooled()`_                      `LockBitMapTags()`_                     `MakeWorkbenchObjectVisible()`_         
-`Merge()`_                              `MergeSortList()`_                      `NewDTObject()`_                        `NewList()`_                            
-`NewLoadSegTags()`_                     `NewObject()`_                          `NewRawDoFmt()`_                        `NewRectRegion()`_                      
-`ObtainBestPen()`_                      `ObtainInfo()`_                         `OpenAmigaGuide()`_                     `OpenAmigaGuideAsync()`_                
-`OpenCatalog()`_                        `OpenScreenTags()`_                     `OpenWindowTags()`_                     `OpenWorkbenchObject()`_                
-`RangeRand()`_                          `RefreshDTObject()`_                    `RefreshDTObjects()`_                   `ReleaseInfo()`_                        
-`RemoveAmigaGuideHost()`_               `SelectErrorOutput()`_                  `SendAmigaGuideCmd()`_                  `SendAmigaGuideContext()`_              
-`SetAmigaGuideAttrs()`_                 `SetAmigaGuideContext()`_               `SetAttrs()`_                           `SetDTAttrs()`_                         
-`SetGadgetAttrs()`_                     `SetInfo()`_                            `SetRexxVar()`_                         `SetRPAttrs()`_                         
-`SetSuperAttrs()`_                      `SetWindowPointer()`_                   `StrDup()`_                             `SystemTags()`_                         
-`TimeDelay()`_                          `UnLockBitMapTags()`_                   `VideoControlTags()`_                   `WorkbenchControl()`_                   
-
+`FreeTagsFromStack()`_                  `GetDataStreamFromFormat()`_            `GetDTAttrs()`_                         `GetExtSprite()`_                       
+`GetMsgFromStack()`_                    `GetParamsFromStack()`_                 `GetRexxVar()`_                         `GetRPAttrs()`_                         
+`GetTagsFromStack()`_                   `GetVisualInfo()`_                      `GT_GetGadgetAttrs()`_                  `GT_SetGadgetAttrs()`_                  
+`HookEntry()`_                          `HotKey()`_                             `InvertString()`_                       `InvertStringForwd()`_                  
+`LayoutMenuItems()`_                    `LayoutMenus()`_                        `LibAllocAligned()`_                    `LibAllocPooled()`_                     
+`LibCreatePool()`_                      `LibDeletePool()`_                      `LibFreePooled()`_                      `LockBitMapTags()`_                     
+`MakeWorkbenchObjectVisible()`_         `Merge()`_                              `MergeSortList()`_                      `NewDTObject()`_                        
+`NewList()`_                            `NewLoadSegTags()`_                     `NewObject()`_                          `NewRawDoFmt()`_                        
+`NewRectRegion()`_                      `ObtainBestPen()`_                      `ObtainInfo()`_                         `OpenAmigaGuide()`_                     
+`OpenAmigaGuideAsync()`_                `OpenCatalog()`_                        `OpenScreenTags()`_                     `OpenWindowTags()`_                     
+`OpenWorkbenchObject()`_                `RangeRand()`_                          `RefreshDTObject()`_                    `RefreshDTObjects()`_                   
+`ReleaseInfo()`_                        `RemoveAmigaGuideHost()`_               `SelectErrorOutput()`_                  `SendAmigaGuideCmd()`_                  
+`SendAmigaGuideContext()`_              `SetAmigaGuideAttrs()`_                 `SetAmigaGuideContext()`_               `SetAttrs()`_                           
+`SetDTAttrs()`_                         `SetGadgetAttrs()`_                     `SetInfo()`_                            `SetRexxVar()`_                         
+`SetRPAttrs()`_                         `SetSuperAttrs()`_                      `SetWindowPointer()`_                   `StrDup()`_                             
+`SystemTags()`_                         `TimeDelay()`_                          `UnLockBitMapTags()`_                   `VideoControlTags()`_                   
+`WorkbenchControl()`_                   
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -2059,6 +2059,91 @@ See also
 
 ----------
 
+GetDataStreamFromFormat()
+=========================
+
+Synopsis
+~~~~~~~~
+::
+
+  VOID GetDataStreamFromFormat(
+     CONST_STRPTR format,
+     va_list args,
+     RAWARG dataStream, ULONG *dataSize,
+     ULONG *indexStream, ULONG *indexSize)
+
+
+Function
+~~~~~~~~
+::
+
+     Builds an array of parameters which are passed on the stack.
+     This function is used on machines which have compilers which
+     don't pass the arguments to a varargs function unlike the
+     Amiga ones.
+
+
+Inputs
+~~~~~~
+::
+
+     format - Exec/RawDoFmt or Locale/FormatString format string
+     args   - This has to be initialized by va_start()
+              (not used if dataStream is NULL)
+     dataStream - data buffer to write to
+                  (can be NULL for sizing)
+     dataSize  - size of the buffer
+                  (can be NULL, or pointer to 0 for sizing)
+                  updated to the actual size required at exit.
+     indexStream- array of offsets to the Nth element in the dataStream
+                  (can be NULL for sizing)
+     indexSize  - size of the index, in bytes
+                  (can be NULL, or pointer to 0 for sizing)
+                  updated to the actual size required at exit.
+
+
+Result
+~~~~~~
+::
+
+     An array which can be passed to any function which expects the
+     structure or NULL if something failed. This call may fail for
+     different reasons on different systems. On some systems, NULL
+     indicates that there was not enough memory.
+
+
+Notes
+~~~~~
+::
+
+     This structure converts from format types to the following
+     dataStream values in the returned structure. The dataStream
+     is suitable for use by Exec/RawDoFmt or Locale/FormatString,
+     and is packed on WORD alignment. The indexStream is used
+     internally by Locale/FormatString for format repositioning.
+
+     Format code     GET_ARG() type           Datastream type
+     -----------     -------------           ---------------
+     %c              char (really int)       WORD
+     %d/%D           int                     WORD
+     %u/%U           unsigned int            UWORD
+     %x/%X           unsigned int            UWORD
+     %b              BPTR                    IPTR
+     %s              const char *            IPTR
+     %p/%P           void *                  IPTR
+     %l<cdDuUxX>     LONG                    LONG
+     %ll<cdDuUxX>    QUAD                    QUAD
+     %i<cdDuUxX>     IPTR                    IPTR
+
+
+
+See also
+~~~~~~~~
+
+`exec.library/RawDoFmt() <./exec#rawdofmt>`_ `locale.library/FormatString() <./locale#formatstring>`_ 
+
+----------
+
 GetDTAttrs()
 ============
 
@@ -3270,7 +3355,7 @@ Synopsis
      ULONG G,
      ULONG B,
      Tag tag1,
-     ... )
+     ... ) __stackparm
 
 
 Function
