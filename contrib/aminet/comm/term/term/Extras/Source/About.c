@@ -669,7 +669,7 @@ ShowAbout(LONG Ticks)
 			struct Gadget		*MsgGadget;
 			ULONG				 Signals;
 			LONG				 TickCount = 0;
-			LONG				 Top = 0,Total,LastLine,IntroTicks = 15;
+			LONG				 Top = 0,Total,LastLine = 0,IntroTicks = 15;
 			struct RastPort		*RPort = PanelWindow->RPort;
 
 			if(ImageBitMap)

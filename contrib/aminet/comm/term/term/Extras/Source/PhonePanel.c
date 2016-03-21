@@ -729,9 +729,14 @@ ChangeActiveEntry(PhoneListContext *Context,LONG How)
 
 				Work = ToggleDialEntry;
 				break;
+
+			default:
+				Work = NULL;
+				break;
 		}
 
-		(*Work)(Context->PhoneHandle,Context->SelectedNode->Entry);
+		if (Work)
+			(*Work)(Context->PhoneHandle,Context->SelectedNode->Entry);
 
 		UpdateWindowTitle(Context);
 
