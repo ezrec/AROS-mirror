@@ -2,11 +2,13 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 FILES   := SmartTrash
 EXEDIR  := $(AROSDIR)/WBStartup
 
-USER_CFLAGS := -Wno-parentheses
+NOWARN_FLAGS := $(NOWARN_PARENTHESES)
+USER_CFLAGS := $(NOWARN_FLAGS)
 
 #MM  aminet-util-app-smarttrash : aminet-util-app-smarttrash-icon includes linklibs \
 #MM  aminet-util-app-smarttrash-catalogs

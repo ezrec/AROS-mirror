@@ -1,5 +1,5 @@
 include $(TOP)/config/make.cfg
-include $(GENDIR)/config/compiler.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 API_SOURCE = \
 	LT_Activate \
@@ -109,7 +109,7 @@ OTHERS := gtlayout_data
 LINKLIB_FILES = \
 	varargfuncs
 
-USER_CFLAGS := -Wno-parentheses $(NOWARN_FRAME_ADDRESS)
+USER_CFLAGS := $(NOWARN_PARENTHESES) $(NOWARN_FRAME_ADDRESS)
 USER_LDFLAGS := -static
 
 #MM- aminet-dev-gui-gtlayout : aminet-dev-gui-gtlayout-test

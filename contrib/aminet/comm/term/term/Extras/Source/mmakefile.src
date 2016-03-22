@@ -1,4 +1,5 @@
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 FILES := \
 	About \
@@ -132,7 +133,8 @@ FILES := \
 	StackCall \
 	VersionTag
 
-USER_CFLAGS := -DINCLUDEALL -DCPU_ANY -Wno-parentheses
+NOWARN_FLAGS := $(NOWARN_PARENTHESES)
+USER_CFLAGS := $(NOWARN_FLAGS) -DINCLUDEALL -DCPU_ANY
 # Hack for gcc 6 for m68k - prevents register spill
 USER_CFLAGS += -O1
 
