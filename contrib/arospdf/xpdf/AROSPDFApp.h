@@ -9,6 +9,8 @@
 #ifndef AROSPDFAPP_H
 #define AROSPDFAPP_H
 
+#define NO_INLINE_STDARG
+
 #define BITMAPX 600
 #define BITMAPY 400
 #define SCROLLSPEED 20
