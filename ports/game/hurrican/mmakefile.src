@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- ports-game : ports-game-hurrican
 
@@ -43,9 +44,10 @@ ARCHBASE     := hurrican-src-svn85
 ####################################################################################################
 # build program
 
-HURRICAN_COMMONFLAGS := -DPLATFORM_SDL -DENABLE_CONSOLE_COMMANDS -DUSE_MODPLUG -DDEBUG -DUSE_GL1 -fexceptions -fpermissive
-USER_CFLAGS  := $(HURRICAN_COMMONFLAGS)
-USER_CXXFLAGS := $(HURRICAN_COMMONFLAGS)
+NOWARN_FLAGS := $(NOWARN_DISCARDED_QUALIFIERS)
+HURRICAN_COMMONFLAGS := -DPLATFORM_SDL -DENABLE_CONSOLE_COMMANDS -DUSE_MODPLUG -DDEBUG -DUSE_GL1 -fexceptions
+USER_CFLAGS  := $(NOWARN_FLAGS) $(HURRICAN_COMMONFLAGS)
+USER_CXXFLAGS := -fpermissive $(HURRICAN_COMMONFLAGS)
 
 USER_INCLUDES:= -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/SDLPort -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/cml \
     -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src -I$(AROS_INCLUDES)/SDL -I$(AROS_INCLUDES)/libmodplug \
