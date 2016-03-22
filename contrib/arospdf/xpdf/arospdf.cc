@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
   GString *fileName;
   GString *ownerPW, *userPW;
   GBool ok;
-  BPTR cd=NULL;
+  BPTR cd=BNULL;
   int exitCode;
 
   exitCode = 99;
@@ -151,7 +151,7 @@ err0:
   // check for memory leaks
   xObject::memCheck(stderr);
   gMemReport(stderr);
-  if (cd != NULL)
+  if (cd != BNULL)
     CurrentDir(cd);
   return exitCode;
 }
