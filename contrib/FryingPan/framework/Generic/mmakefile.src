@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- contrib-fryingpan-framework-generic : AHI $(CROSSTOOLS_TARGET)
 
@@ -35,8 +36,8 @@ FILES := \
  SumCRC \
  Locale
 
-NOWARN_FLAGS := -Wno-nonnull-compare
-USER_CXXFLAGS := $(NOWARN_FLAGS) -fno-rtti -fno-exceptions -fpermissive -isystem $(SRCDIR)/$(CURDIR)/..
+NOWARN_FLAGS := $(NOWARN_NONNULL_COMPARE)
+USER_CXXFLAGS := -fno-rtti -fno-exceptions -fpermissive $(NOWARN_FLAGS) -isystem $(SRCDIR)/$(CURDIR)/..
 
 %build_linklib mmake=contrib-fryingpan-framework-generic \
  libname="Generic" files= cxxfiles="$(FILES)"

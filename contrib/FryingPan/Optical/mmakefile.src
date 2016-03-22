@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- contrib-fryingpan-optical: $(CROSSTOOLS_TARGET)
 
@@ -44,7 +45,8 @@ CXXFILES := \
  OptIndex \
  CDText
 
-USER_CXXFLAGS := -fno-rtti -fno-exceptions -Wno-attributes -isystem $(SRCDIR)/$(CURDIR)/../framework
+NOWARN_FLAGS := $(NOWARN_ATTRIBUTES)
+USER_CXXFLAGS := -fno-rtti -fno-exceptions $(NOWARN_FLAGS) -isystem $(SRCDIR)/$(CURDIR)/../framework
 USER_LDFLAGS := -static-libstdc++
 
 %build_prog mmake=contrib-fryingpan-optical progname="Optical" \

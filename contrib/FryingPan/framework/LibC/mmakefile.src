@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 FILES := \
  initmem \
@@ -43,7 +44,7 @@ CXXFILES := \
  new \
  StartCode
 
-NOWARN_FLAGS := -Wno-nonnull-compare
+NOWARN_FLAGS := $(NOWARN_NONNULL_COMPARE)
 USER_CFLAGS := $(NOWARN_FLAGS) -isystem $(SRCDIR)/$(CURDIR)/..
 USER_CXXFLAGS := -fno-rtti -fno-exceptions -isystem $(SRCDIR)/$(CURDIR)/..
 USER_LDFLAGS := -static-libstdc++
