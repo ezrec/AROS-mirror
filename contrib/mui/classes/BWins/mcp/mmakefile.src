@@ -1,6 +1,7 @@
 #   $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM contrib-zune-classes-bwin-mcp : includes linklibs
 
@@ -10,8 +11,8 @@ FILES := libinit_aros \
 	 shape \
 	 class
 
+NOWARN_FLAGS := -$(NOWARN_DISCARDED_QUALIFIERS)
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../include
-NOWARN_FLAGS := -Wno-discarded-qualifiers
 # USER_CFLAGS := -DNO_INLINE_STDARG -DAROS_ABI_V1
 USER_CFLAGS += $(PARANOIA_CFLAGS) $(NOWARN_FLAGS)
 USER_LDFLAGS := -static
