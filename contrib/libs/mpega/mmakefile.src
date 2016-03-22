@@ -1,11 +1,13 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 FILES := library wrap_mpega support filter resample tag crc fixed bit \
  timer stream frame synth layer12 layer3 huffman
 
-USER_CFLAGS := -DFPM_INTEL -DOPT_ACCURACY -DBUILD_AROS -DNDEBUG -Wno-parentheses
+NOWARN_FLAGS :=  $(NOWARN_PARENTHESES)
+USER_CFLAGS := $(NOWARN_FLAGS) -DFPM_INTEL -DOPT_ACCURACY -DBUILD_AROS -DNDEBUG
 
 %build_module mmake=contrib-libs-mpega \
  modname="mpega" modtype=library files="$(FILES)"
