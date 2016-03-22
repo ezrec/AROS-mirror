@@ -3,6 +3,7 @@
 #   Makefile to make AMosaic.
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 FILES := globals \
 	Boingtransfer \
@@ -40,9 +41,9 @@ FILES := globals \
 
 EXEDIR := $(AROS_CONTRIB)/Networking/Apps/AMosaic
 
+NOWARN_FLAGS := $(NOWARN_PARENTHESES) $(NOWARN_FORMAT_CONTAINS_NUL)
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../libwww2
-
-USER_CFLAGS  += -Wno-parentheses -Wno-format-contains-nul
+USER_CFLAGS  += $(NOWARN_FLAGS)
 
 #MM mui-amosaic : includes linklibs linklibs-www2
 

@@ -1,13 +1,14 @@
 # Metamake file for wget (AROS)
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM aros-tcpip-apps-wget-bin : includes linklibs contrib-networking-stacks-arostcp
 
 EXE := wget
 TARGETDIR := $(AROS_CONTRIB)/Networking/Apps/WGet
 
-NOWARN_FLAGS := -Wno-strict-aliasing
+NOWARN_FLAGS := $(NOWARN_STRICT_ALIASING)
 USER_CFLAGS := $(NOWARN_FLAGS) -DHAVE_CONFIG_H -DAMIGA -D__amigaos__ -D__BUILDER="\"AROS Dev Team\"" \
         -D__BSD_VISIBLE=1 -DVERSION="\"1.10.2.aros\""
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/../aros

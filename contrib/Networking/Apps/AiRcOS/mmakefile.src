@@ -3,12 +3,14 @@
 # Makefile for AiRcOS Internet Relay Chat
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 FILES  := locale aircos_main aircos_gui aircos_server_gui aircos_funcs_irc aircos_prefs aircos_funcs_dcc
 
 EXEDIR := $(AROS_CONTRIB)/Networking/Apps/AiRcOS
 
-USER_CFLAGS := -Wno-uninitialized -Wno-parentheses -D__BSD_VISIBLE=1
+NOWARN_FLAGS := $(NOWARN_UNINITIALIZED) $(NOWARN_PARENTHESES)
+USER_CFLAGS := $(NOWARN_FLAGS) -D__BSD_VISIBLE=1
 
 #MM aros-tcpip-apps-aircos : \
 #MM aros-tcpip-apps-aircos-catalogs \

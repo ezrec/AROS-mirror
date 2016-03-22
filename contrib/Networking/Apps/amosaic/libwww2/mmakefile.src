@@ -1,6 +1,7 @@
 # $Id$
 #
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 ##MM- linklibs : linklibs-www2
 #MM linklibs-www2 : includes
@@ -48,8 +49,8 @@ FILES := \
 # Don't use these:
 #	HTFTP \
 
-USER_CFLAGS += -DUSE_DIRENT -D__BSD_VISIBLE=1
-USER_CFLAGS += -Wno-format-contains-nul
+NOWARN_FLAGS := $(NOWARN_FORMAT_CONTAINS_NUL)
+USER_CFLAGS += $(NOWARN_FLAGS) -DUSE_DIRENT -D__BSD_VISIBLE=1
 
 %build_linklib mmake=linklibs-www2 libname=www2 files=$(FILES)
 

@@ -1,11 +1,11 @@
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 ##MM- aros-tcpip-apps : aros-tcpip-apps-ttel
 #MM aros-tcpip-apps-ttel : includes linklibs contrib-gnu-termcap
 
-USER_CFLAGS := \
-        -Wno-uninitialized -Wno-parentheses \
-        -DAMITCP \
+NOWARN_FLAGS := $(NOWARN_UNINITIALIZED) $(NOWARN_PARENTHESES)
+USER_CFLAGS := $(NOWARN_FLAGS) -DAMITCP \
         -DDIRECTED_BROADCAST \
         -D__BSD_VISIBLE=1
 
