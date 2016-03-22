@@ -1,6 +1,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM contrib-arospdf-fofi : includes
 
@@ -13,7 +14,7 @@ FILES := \
 
 TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/AROSPDF/libs
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../goo
-NOWARN_FLAGS := -Wno-write-strings
+NOWARN_FLAGS := $(NOWARN_WRITE_STRINGS)
 USER_CFLAGS := $(NOWARN_FLAGS) -DHAVE_CONFIG_H
 USER_CXXFLAGS := $(NOWARN_FLAGS)  -DHAVE_CONFIG_H
 
