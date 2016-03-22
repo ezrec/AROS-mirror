@@ -1,6 +1,7 @@
 # Metamakefile for AROS build-system
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- contrib-scalos-libraries-sqlite3 : \
 #MM     linklibs \
@@ -86,7 +87,8 @@ USER_INCLUDES := -I$(TARGETDIR)/Development/include \
     -I$(SRCDIR)/$(CURDIR)/src \
     -idirafter $(SRCDIR)/$(CURDIR)/../../include
 
-USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -Wno-implicit-function-declaration \
+NOWARN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECL)
+USER_CFLAGS := $(NOWARN_FLAGS) -D__UTILITY_STDLIBBASE__ \
     -DNO_TCL=1 \
     -DHAVE_USLEEP=0 \
     -DSQLITE_THREADSAFE=1 \

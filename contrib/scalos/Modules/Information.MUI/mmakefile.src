@@ -1,6 +1,7 @@
 # Metamakefile for AROS build-system
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- contrib-scalos : contrib-scalos-modules-information
 
@@ -20,7 +21,7 @@ FILES := \
     $(SRCDIR)/$(CURDIR)/../../common/Int64/int64 \
     $(SRCDIR)/$(CURDIR)/../../common/Fs/FsAbstraction
 
-NOWARN_FLAGS := -Wno-parentheses -Wno-discarded-qualifiers -Wno-format
+NOWARN_FLAGS := $(NOWARN_PARENTHESES) $(NOWARN_DISCARDED_QUALIFIERS) $(NOWARN_FORMAT)
 USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include \
     -I$(SRCDIR)/$(CURDIR)/../IconProperties.MUI \
     -I$(SRCDIR)/$(CURDIR)/../../common/Int64 \
@@ -29,7 +30,8 @@ USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include \
     -idirafter $(SRCDIR)/$(CURDIR)/../../include
 SCALOS_LOCALE := Information_Locale.h
 USER_CFLAGS := $(NOWARN_FLAGS) -DMUI_OBSOLETE  \
-    -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__ -DSCALOSLOCALE=$(SCALOS_LOCALE)
+    -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__ \
+    -DSCALOSLOCALE=$(SCALOS_LOCALE)
 
 TARGETDIR := $(AROS_CONTRIB)/Scalos/Modules
 

@@ -1,6 +1,7 @@
 # Metamakefile for AROS build-system
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- contrib-scalos : contrib-scalos-datatypes-amigaiconobject
 
@@ -14,7 +15,8 @@ TARGETDIR := $(AROS_CONTRIB)/Scalos/IconDatatypes
 USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include \
     -idirafter $(SRCDIR)/$(CURDIR)/../../include
 
-USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -Wno-implicit-function-declaration
+NOWARN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECL)
+USER_CFLAGS := $(NOWARN_FLAGS) -D__UTILITY_STDLIBBASE__
 USER_LDFLAGS := -static
 
 %build_module mmake=contrib-scalos-datatypes-amigaiconobject \

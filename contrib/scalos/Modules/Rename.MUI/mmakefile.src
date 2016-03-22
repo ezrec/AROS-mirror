@@ -1,6 +1,7 @@
 # Metamakefile for AROS build-system
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- contrib-scalos : contrib-scalos-modules-rename
 
@@ -13,10 +14,11 @@ include $(TOP)/config/make.cfg
 
 FILES := Rename
 
+NOWARN_FLAGS := $(NOWARN_PARENTHESES)
 USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include -idirafter $(SRCDIR)/$(CURDIR)/../../include
 SCALOS_LOCALE := Rename_Locale.h
-USER_CFLAGS := -DMUI_OBSOLETE -Wno-parentheses \
-    -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -DSCALOSLOCALE=$(SCALOS_LOCALE)
+USER_CFLAGS := $(NOWARN_FLAGS) -DMUI_OBSOLETE -D__UTILITY_STDLIBBASE__ \
+    -D__LOCALE_STDLIBBASE__ -DSCALOSLOCALE=$(SCALOS_LOCALE)
 
 TARGETDIR := $(AROS_CONTRIB)/Scalos/Modules
 

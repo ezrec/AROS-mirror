@@ -1,6 +1,7 @@
 # Metamakefile for AROS build-system
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- contrib-scalos : contrib-scalos-modules-windowproperties
 
@@ -21,6 +22,7 @@ FILES := \
     $(SRCDIR)/$(CURDIR)/../../common/BitMapMCC/BitMapMCC \
     $(SRCDIR)/$(CURDIR)/../../common/IconobjectMCC/IconobjectMCC \
 
+NOWARN_FLAGS := $(NOWARN_PARENTHESES)
 USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include \
     -I $(SRCDIR)/$(CURDIR)/../IconProperties.MUI \
     -I $(SRCDIR)/$(CURDIR)/../../common/BackfillMCC \
@@ -28,8 +30,8 @@ USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include \
     -I $(SRCDIR)/$(CURDIR)/../../common/IconobjectMCC \
     -idirafter $(SRCDIR)/$(CURDIR)/../../include
 SCALOS_LOCALE := WindowProperties_Locale.h
-USER_CFLAGS := -DMUI_OBSOLETE -Wno-parentheses \
-    -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__ -DSCALOSLOCALE=$(SCALOS_LOCALE)
+USER_CFLAGS := $(NOWARN_FLAGS) -DMUI_OBSOLETE -D__UTILITY_STDLIBBASE__ \
+    -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__ -DSCALOSLOCALE=$(SCALOS_LOCALE)
 
 TARGETDIR := $(AROS_CONTRIB)/Scalos/Modules
 
