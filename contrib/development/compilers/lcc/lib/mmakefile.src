@@ -1,8 +1,9 @@
 #
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
-USER_CFLAGS	:= -Iinclude
-USER_CFLAGS     += -Wno-parentheses -Wno-unused-variable
+NOWARN_FLAGS := $(NOWARN_PARENTHESES) $(NOWARN_UNUSED_VARIABLE)
+USER_CFLAGS	:= $(NOWARN_FLAGS) -Iinclude
 
 CFLAGS := $(subst -O2,,$(CFLAGS))
 

@@ -1,6 +1,7 @@
 #   $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 COREFILES :=	lapi lcode lctype ldebug ldo ldump lfunc lgc llex \
 		lmem lobject lopcodes lparser lstate lstring ltable \
@@ -31,7 +32,8 @@ EXEDIR :=	$(AROS_CONTRIB)/Development/Lua
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../luafilesystem/src -I$(SRCDIR)/$(CURDIR)/../lua-xmlreader-0.1
 
-USER_CFLAGS   += -Wno-uninitialized -DLUA_COMPAT_ALL
+NOWARN_FLAGS := $(NOWARN_UNINITIALIZED)
+USER_CFLAGS	:= $(NOWARN_FLAGS) -DLUA_COMPAT_ALL
 
 #MM- contrib-development-lua : contrib-development-lua-lua \
 #MM  contrib-development-lua-amilua \
