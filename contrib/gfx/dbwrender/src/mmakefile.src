@@ -4,6 +4,7 @@
 # Makefile to make DBWRender.
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- contrib-gfx-dbwrender : \
 #MM    contrib-gfx-dbwrender-render contrib-gfx-dbwrender-display
@@ -14,7 +15,9 @@ include $(TOP)/config/make.cfg
 EXEDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/DBWRender
 
 FILES := cal ext fil hit int mth ray rnd tex val
-USER_CFLAGS := -Wno-unused-variable -Wno-implicit-function-declaration
+
+NOWARN_FLAGS := $(NOWARN_UNUSED_VARIABLE) $(NOWARN_IMPLICIT_FUNCTION_DECL)
+USER_CFLAGS := $(NOWARN_FLAGS)
 
 %build_prog mmake=contrib-gfx-dbwrender-render \
     progname=dbwrender targetdir=$(EXEDIR) files=$(FILES)

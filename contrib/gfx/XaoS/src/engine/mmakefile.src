@@ -3,15 +3,16 @@
 #
 #
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM linklibs-xaosengine : includes setup-gfx-xaos
 
-USER_CFLAGS := -DAROS -I$(SRCDIR)/$(CURDIR)/../include -I../include
+NOWARN_FLAGS := $(NOWARN_STRICT_ALIASING)
+USER_CFLAGS := $(NOWARN_FLAGS) -DAROS -I$(SRCDIR)/$(CURDIR)/../include -I../include
 
 ifeq ($(AROS_TARGET_CPU), i386)
-USER_CFLAGS := -DAROS -I$(SRCDIR)/$(CURDIR)/../include -I../include -O2 -fstrength-reduce -ffast-math -fomit-frame-pointer -funroll-loops
+USER_CFLAGS += -O2 -fstrength-reduce -ffast-math -fomit-frame-pointer -funroll-loops
 endif
-USER_CFLAGS += -Wno-strict-aliasing
 
 FILES := \
 	formulas \

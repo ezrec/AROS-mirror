@@ -1,6 +1,7 @@
 #   $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- contrib-gfx-libs : contrib-gfx-libs-pixman contrib-gfx-libs-pixman-includes
 
@@ -31,7 +32,7 @@ FILES :=			\
 	pixman-general		\
 	pixman-noop
 
-NOWARN_FLAGS := -Wno-unused-local-typedefs -Wno-format -Wno-uninitialized -Wno-unused-function
+NOWARN_FLAGS := $(NOWARN_UNUSED_LOCAL_TYPEDEFS) $(NOWARN_FORMAT) $(NOWARN_UNINITIALIZED) $(NOWARN_UNUSED_FUNCTION)
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/../aros
 USER_CFLAGS := $(NOWARN_FLAGS) -DHAVE_CONFIG_H -DPIXMAN_NO_TLS
 	       
