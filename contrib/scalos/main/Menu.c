@@ -1252,10 +1252,14 @@ static void AddAddresses(struct ScalosMenuTree *srcTree, struct SCALOS_MENUTREE 
 		if (srcTree->mtre_tree)
 			{
 #if defined(__AROS__) && __WORDSIZE == 64
+#define                 AdjustedMenu (MenuTree->mtre_tree)
                         MenuTree->mtre_tree = (struct SCALOS_MENUTREE *) (*end);
+#else
+#define                 AdjustedMenu (struct ScalosMenuTree *)((IPTR)srcBase + (IPTR)srcTree->mtre_tree)
 #endif
-                        AddAddresses((struct ScalosMenuTree *)((IPTR)srcBase + (IPTR)srcTree->mtre_tree), MenuTree->mtre_tree, srcBase, treeBase
+                        AddAddresses((struct ScalosMenuTree *)((IPTR)srcBase + (IPTR)srcTree->mtre_tree), AdjustedMenu, srcBase, treeBase
 #if defined(__AROS__) && __WORDSIZE == 64
+#undef AdjustedMenu
                             , end
 #endif
                             );
