@@ -3,6 +3,7 @@
 #   Makefile to make ChocolateCastle
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 FILES := \
     main generator castleapp support muigenerator methodlist \
@@ -16,7 +17,8 @@ FILES := \
 
 EXEDIR := $(AROS_CONTRIB)/Development/ChocolateCastle
 
-USER_CFLAGS := -D__NOLIBBASE__ -DUSE_INLINE_STDARG -Wno-parentheses
+NOWARN_FLAGS := $(NOWARN_PARENTHESES)
+USER_CFLAGS	:= $(NOWARN_FLAGS) -D__NOLIBBASE__ -DUSE_INLINE_STDARG
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/libvstring
 
 %build_prog mmake=contrib-development-gui-chocolatecastle-source \
