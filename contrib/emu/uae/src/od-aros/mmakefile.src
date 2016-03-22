@@ -2,6 +2,8 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
+
 UAESRCDIR := $(SRCDIR)/$(CURDIR)
 EXEDIR := $(GENDIR)/$(CURDIR)/..
 FILES  := \
@@ -10,13 +12,14 @@ FILES  := \
 #MM uae-od-aros : uae-gui
 #MM- uae-od-aros-quick : uae-gui-quick
 
-USER_CFLAGS := -O2  -Wall -Wno-unused\
-               -Wno-format -W -Wmissing-prototypes\
-               -Wstrict-prototypes   -DGCCCONSTFUNC='__attribute__((const))'\
+NOWARN_FLAGS := $(NOWARN_UNUSED)  $(NOWARN_FORMAT) 
+USER_CFLAGS := -O2 -fno-exceptions -fno-strength-reduce \
+               -Wall -W -Wmissing-prototypes -Wstrict-prototypes $(NOWARN_FLAGS) \
+               -DGCCCONSTFUNC='__attribute__((const))' \
                -D_REENTRANT \
-               -fno-exceptions -DUNALIGNED_PROFITABLE\
-               -fno-strength-reduce -DREGPARAM='__attribute__((regparm(3)))'\
-               -DX86_ASSEMBLY -DOPTIMIZED_FLAGS -D__inline__=inline\
+               -DUNALIGNED_PROFITABLE \
+               -DREGPARAM='__attribute__((regparm(3)))' \
+               -DX86_ASSEMBLY -DOPTIMIZED_FLAGS -D__inline__=inline \
                -I$(UAESRCDIR)/.. -I$(UAESRCDIR)/../include \
                -I$(TOP)/$(CURDIR)/.. -I$(TOP)/$(CURDIR)/../include
 

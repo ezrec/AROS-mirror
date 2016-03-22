@@ -3,7 +3,7 @@
 #   Makefile to make uae.
 
 include $(TOP)/config/make.cfg
-
+-include $(GENDIR)/config/compiler.cfg
 
 UAESRCDIR := $(SRCDIR)/$(CURDIR)
 
@@ -57,12 +57,13 @@ FILES := \
 
 EXEDIR := $(AROS_CONTRIB)/Emu/UAE
 
-USER_CFLAGS := -O2 -fomit-frame-pointer -Wall -Wno-unused\
-               -Wno-format -W -Wmissing-prototypes -Wno-sign-compare \
-               -Wstrict-prototypes   -DGCCCONSTFUNC='__attribute__((const))'\
+NOWARN_FLAGS := $(NOWARN_UNUSED)  $(NOWARN_FORMAT) $(NOWARN_SIGN_COMPARE)
+USER_CFLAGS := -O2 -fomit-frame-pointer -fno-exceptions -fno-strength-reduce \
+	       -Wall -W -Wmissing-prototypes  -Wstrict-prototypes $(NOWARN_FLAGS) \
+               -DGCCCONSTFUNC='__attribute__((const))'\
                -D_REENTRANT \
-	       -fno-exceptions -DUNALIGNED_PROFITABLE\
-	       -fno-strength-reduce -DREGPARAM='__attribute__((regparm(3)))'\
+               -DUNALIGNED_PROFITABLE\
+               -DREGPARAM='__attribute__((regparm(3)))'\
 	       -DX86_ASSEMBLY -DOPTIMIZED_FLAGS -D__inline__=inline\
 	       -I$(UAESRCDIR) -I$(UAESRCDIR)/include \
 	       -I$(TOP)/$(CURDIR) -I$(TOP)/$(CURDIR)/include \

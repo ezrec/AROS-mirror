@@ -1,5 +1,6 @@
 # $Id$
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 AROSMAME_USEZLIB			:= "yes"
 
@@ -806,18 +807,18 @@ CDEFS = $(DEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS) $(DEBUGDEF)
 
 ifdef SYMBOLS
 # Sorry for the -Wno-unused, but I was tired ;)
+NOWARN_FLAGS := $(NOWARN_UNUSED)
 USER_CFLAGS = $(CDEFS) $(TINYFLAGS) -Isrc -Isrc/aros -I$(OBJDIR)/cpu/m68000 -Isrc/cpu/m68000 \
-	-O3 -Wall -Werror -Wno-unused -g
+	-O3 -Wall -Werror $(NOWARN_FLAGS) -g
 else
 USER_CFLAGS = $(CDEFS) $(TINYFLAGS) -Isrc -Isrc/aros -I$(OBJDIR)/cpu/m68000 -Isrc/cpu/m68000 \
 	-O3 -fomit-frame-pointer -ffast-math -funroll-loops \
 	-fexpensive-optimizations \
 	-Wall -Wunused \
 	-Wpointer-arith -Wbad-function-cast -Wcast-align -Waggregate-return \
-	\
-	#-Wshadow \
 	-Wstrict-prototypes
 #   -W had to remove because of the "missing initializer" warning
+#      -Wshadow \
 #	-Wredundant-decls \
 #	-Wlarger-than-27648 \
 #	-Wcast-qual \
