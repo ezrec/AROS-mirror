@@ -245,7 +245,7 @@ CommonStartReceive(LONG Type,STRPTR Name,BOOL WaitForIt)
 STATIC BOOL
 CommonStartSend(LONG Type,STRPTR TheFile,struct FileTransferInfo **TransferInfoPtr,BOOL WaitForIt)
 {
-	STRPTR From,To,Name;
+	STRPTR From = NULL,To = NULL,Name = NULL;
 	BOOL IsBinary;
 	LONG Mode = 0;
 
