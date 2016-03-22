@@ -2,6 +2,7 @@
 # $Id$
 
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- contrib-sdl-sdl-ttf : development-SDL_ttf-test
 
@@ -17,7 +18,7 @@ USER_INCLUDES:=-I$(AROS_INCLUDES)/SDL
     targetdir=$(AROS_TESTS) uselibs="SDL GL iconv SDL_ttf freetype2"
     
 LIBFILES:=SDL_ttf
-NOWARN_FLAGS := -Wno-overflow -Wno-unused-variable
+NOWARN_FLAGS := $(NOWARN_OVERFLOW) $(NOWARN_UNUSED_VARIABLE)
 USER_CFLAGS := $(NOWARN_FLAGS)
 
 %build_linklib mmake=development-SDL_ttf libname=SDL_ttf files=$(LIBFILES)
