@@ -1,19 +1,18 @@
 #   $Id$
 include $(TOP)/config/make.cfg
-
-USER_CFLAGS := -Wno-uninitialized -Wno-parentheses
+-include $(GENDIR)/config/compiler.cfg
 
 #MM contrib-networking-utils-sanautil : contrib-networking-utils-sanautil-cpy
 
+NOWARN_FLAGS := $(NOWARN_UNINITIALIZED) $(NOWARN_PARENTHESES)
+USER_CFLAGS := $(NOWARN_FLAGS)
 
 %build_prog mmake=contrib-networking-utils-sanautil \
     progname="SANAUtil" \
     files="SANAUtil" \
     targetdir="$(AROS_CONTRIB)/Networking/Utils/SANAUtil"
 
-
 %copy_files_q mmake=contrib-networking-utils-sanautil-cpy files="SANAUtil.doc" \
     dst="$(AROS_CONTRIB)/Networking/Utils/SANAUtil"
-
 
 %common
