@@ -1,4 +1,5 @@
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- contrib : contrib-ptplay-lib
 
@@ -6,7 +7,8 @@ include $(TOP)/config/make.cfg
 
 FILES := ptinit ptplay ptplaytest
 
-USER_CFLAGS := -DAMIGA -Wno-parentheses -Wno-missing-braces
+NOWARN_FLAGS := $(NOWARN_PARENTHESES) $(NOWARN_MISSING_BRACES)
+USER_CFLAGS := $(NOWARN_FLAGS) -DAMIGA
 
 %build_module mmake=contrib-ptplay-lib modname=ptplay modtype=library \
   files=$(FILES) uselibs="stdc"

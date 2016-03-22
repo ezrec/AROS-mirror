@@ -3,6 +3,7 @@
 #   Generate libopenal.a
 #
 include $(TOP)/config/make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- contrib-multimedia : contrib-openal
 
@@ -16,7 +17,7 @@ USER_INCLUDES := \
         -I$(SRCDIR)/$(CURDIR)/OpenAL32/Include \
         -I$(SRCDIR)/$(CURDIR)/Alc
 
-NOWARN_FLAGS := -Wno-array-bounds
+NOWARN_FLAGS := $(NOWARN_ARRAY_BOUNDS)
 USER_CFLAGS := -std=gnu99 -O3 -ffast-math -Wall $(NOWARN_FLAGS) -DAL_ALEXT_PROTOTYPES 
 
 OPENAL32_FILES = \
