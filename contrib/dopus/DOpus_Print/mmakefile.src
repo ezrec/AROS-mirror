@@ -1,5 +1,6 @@
 # $Id$
 include $(SRCDIR)/$(CURDIR)/../make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- DOpus_Print : dopus-library
 
@@ -10,7 +11,8 @@ USER_CFLAGS := -I$(DOPUSDIR)/Development/include \
     -D__LOCALE_STDLIBBASE__
 
 # TODO: Remove and clean the compiler warnings!
-USER_CFLAGS += -Wno-error -Wno-implicit-function-declaration -Wno-parentheses
+NOWARN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECL) $(NOWARN_PARENTHESES)
+USER_CFLAGS += -Wno-error $(NOWARN_FLAGS)
 
 %build_prog mmake=DOpus_Print \
     progname=DOpus_Print targetdir=$(DOPUSDIR)/Modules \

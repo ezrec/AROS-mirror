@@ -1,5 +1,6 @@
 # $Id$
 include $(SRCDIR)/$(CURDIR)/../make.cfg
+-include $(GENDIR)/config/compiler.cfg
 
 #MM- DOpus_Disk : dopus-library
 
