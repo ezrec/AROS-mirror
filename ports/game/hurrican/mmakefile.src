@@ -44,7 +44,7 @@ ARCHBASE     := hurrican-src-svn85
 ####################################################################################################
 # build program
 
-NOWARN_FLAGS := $(NOWARN_DISCARDED_QUALIFIERS)
+NOWARN_FLAGS := $(NOWARN_DISCARDED_QUALIFIERS) $(NOWARN_UNUSED_LOCAL_TYPEDEFS)
 HURRICAN_COMMONFLAGS := -DPLATFORM_SDL -DENABLE_CONSOLE_COMMANDS -DUSE_MODPLUG -DDEBUG -DUSE_GL1 -fexceptions
 USER_CFLAGS  := $(NOWARN_FLAGS) $(HURRICAN_COMMONFLAGS)
 USER_CXXFLAGS := -fpermissive $(HURRICAN_COMMONFLAGS)
