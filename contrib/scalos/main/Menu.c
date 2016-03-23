@@ -1206,10 +1206,8 @@ static void AddAddresses(struct ScalosMenuTree *srcTree __alias, struct SCALOS_M
 #endif
 )
 {
-        kprintf("%s()\n", __func__);
 	while (MenuTree)
 		{
-                kprintf("%s: 0x%p, 0x%p)\n", __func__, srcTree, MenuTree);
 #if defined(__AROS__) && __WORDSIZE == 64
                 *end = (IPTR)*end + sizeof(struct SCALOS_MENUTREE);
                 MenuTree->mtre_type = srcTree->mtre_type;
