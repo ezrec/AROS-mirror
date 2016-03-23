@@ -203,8 +203,8 @@ void ControlBarRemove(struct internalScaWindowTask *iwt)
 		if (iwt->iwt_WindowTask.wt_Window)
 			RemoveGList(iwt->iwt_WindowTask.wt_Window, iwt->iwt_ControlBar, 1);
 
-		d1(kprintf("%s/%s/%ld: iwt_InnerBottom=%ld  iwt_SkipBottom=%ld\n", \
-			__FILE__, __FUNC__, __LINE__, iwt->iwt_InnerBottom, iwt->iwt_SkipBottom));
+		d1(kprintf("%s/%s/%ld: iwt_InnerBottom=%ld  iwt_PropBottom=%ld\n", \
+			__FILE__, __FUNC__, __LINE__, iwt->iwt_InnerBottom, iwt->iwt_PropBottom));
 
 		d1(KPrintF("%s/%s/%ld: iwt_GadgetBarHeightTop=%ld\n", __FILE__, __FUNC__, __LINE__, iwt->iwt_GadgetBarHeightTop));
 		d1(KPrintF("%s/%s/%ld: iwt_ExtraHeight=%ld\n", __FILE__, __FUNC__, __LINE__, iwt->iwt_ExtraHeight));
@@ -220,8 +220,8 @@ void ControlBarRemove(struct internalScaWindowTask *iwt)
 		DisposeObject((Object *) iwt->iwt_ControlBar);
 		iwt->iwt_ControlBar = NULL;
 
-		d1(kprintf("%s/%s/%ld: iwt_InnerBottom=%ld  iwt_SkipBottom=%ld\n", \
-			__FILE__, __FUNC__, __LINE__, iwt->iwt_InnerBottom, iwt->iwt_SkipBottom));
+		d1(kprintf("%s/%s/%ld: iwt_InnerBottom=%ld  iwt_PropBottom=%ld\n", \
+			__FILE__, __FUNC__, __LINE__, iwt->iwt_InnerBottom, iwt->iwt_PropBottom));
 		}
 
 	while ((Member = (struct ControlBarMember *) RemHead(&iwt->iwt_ControlBarMemberList)))
