@@ -19,7 +19,7 @@ DEFICON      := def_Lunapaint
 
 # Next version of Lunapaint shouldn't need -fgnu89-inline anymore
 USER_CFLAGS  := -fgnu89-inline -fno-strict-aliasing
-USER_INCLUDES:= -I$(SRCDIR)/$(CURDIR)/src
+USER_INCLUDES:= -I$(SRCDIR)/$(CURDIR)/src -I$(AROS_INCLUDES)/SDI
 
 FILES := \
 	src/main \
