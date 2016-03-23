@@ -814,7 +814,7 @@ static struct AboutGadgetInfo *AboutCreateButton(const struct AboutGadgetDef *ag
 		if (NULL == agi)
 			break;
 
-		d1(KPrintF("%s/%s/%ld: NormalImgName=<%s>\n", __FILE__, __FUNC__, __LINE__, NormalImgName));
+		d1(KPrintF("%s/%s/%ld: ImageNameNrm=<%s>\n", __FILE__, __FUNC__, __LINE__, ImageNameNrm));
 
 		memset(agi, 0, sizeof(struct AboutGadgetInfo));
 
