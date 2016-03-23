@@ -66,12 +66,13 @@ ULONG   img_palette[] = {
 };
 
 
-void
+int
 main (void)
 {
    if (initialize ())
       event_loop ();
    finalize ();
+   return 0;
 }
 
 void

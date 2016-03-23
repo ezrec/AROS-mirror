@@ -3,3 +3,6 @@ include $(TOP)/config/make.cfg
 
 %build_linklib mmake=aminet-dev-src-chunkyiclass \
     libname=chunkyiclass files=chunkyiclass
+
+%build_prog mmake=aminet-dev-src-chunkyiclass-test progname=test files=test \
+    targetdir=$(AROS_TESTS)/chunkyiclass uselibs=chunkyiclass
