@@ -73,15 +73,13 @@ BOOL RunProcess(struct ScaWindowTask *wt, RUNPROCFUNC Routine, ULONG NumLongs,
 		if (NumBytes > 0)
 			CopyMem(ArgArray, &msg->Flags, NumBytes);
 
-		d1(KPrintF("%s/%s/%ld: msg=%08lx  iwt=%08lx  Routine=%08lx\n", __FILE__, __FUNC__, __LINE__, msg, iwt, Routine));
+		d1(KPrintF("%s/%s/%ld: msg=%08lx  iwt=%08lx  Routine=%08lx\n", __FILE__, __FUNC__, __LINE__, msg, wt, Routine));
 
 		Success = ChildProcessRun((struct internalScaWindowTask *) wt,
 			&msg->ScalosMessage,
 			NP_Priority, 0,
 			NP_Name, (IPTR) "Scalos_SubProcess_Runner",
 			TAG_END);
-
-		d1(kprintf("%s/%s/%ld: newProc=%08lx\n", __FILE__, __FUNC__, __LINE__, newProc));
 		}
 
 	d1(kprintf("%s/%s/%ld: Success=%ld\n", __FILE__, __FUNC__, __LINE__, Success));
@@ -91,7 +89,7 @@ BOOL RunProcess(struct ScaWindowTask *wt, RUNPROCFUNC Routine, ULONG NumLongs,
 
 //----------------------------------------------------------------------------
 
-BOOL ChildProcessRun(struct internalScaWindowTask *iwt, struct ScalosMessage *msg, ULONG FirstTag, ...)
+BOOL ChildProcessRun(struct internalScaWindowTask *iwt, struct ScalosMessage *msg, Tag FirstTag, ...)
 {
 	va_list args;
 	struct TagItem *TagList = NULL;
