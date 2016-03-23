@@ -6,21 +6,27 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
+//#define DEBUG_SCALOS
+
 // Debugging Macros
 
 #include <exec/semaphores.h>
 #include <dos/dosextens.h>
 
-/* ------------------------------------------------- */
-#define       DEBUG_SEMAPHORES
-//#define       DEBUG_LOCKS
-//#define       DEBUG_MEMORY
-/* ------------------------------------------------- */
-
 #include "Semaphores.h"
 
-#define	d1(x)	;
-#define	d2(x)	{ Forbid(); x; Permit(); }
+#ifdef DEBUG_SCALOS
+/* ------------------------------------------------- */
+# define       DEBUG_SEMAPHORES
+//# define       DEBUG_LOCKS
+//# define       DEBUG_MEMORY
+/* ------------------------------------------------- */
+# define	d1(x)	x;
+# define	d2(x)	{ Forbid(); x; Permit(); }
+#else
+# define	d1(x)	;
+# define	d2(x)	;
+#endif
 
 #define	debugLock_d1(LockName) ;
 #define	debugLock_d2(LockName) \
