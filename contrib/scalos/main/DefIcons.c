@@ -1233,7 +1233,7 @@ static Object *CloneDefIconObject(Object *IconObj, BPTR dirLock,
 	OriginalLocation.wa_Lock = dirLock;
 	OriginalLocation.wa_Name = (STRPTR) OriginalName;
 
-	d1(KPrintF("%s/%s/%ld: DefIconPath=<%s>\n", __FILE__, __FUNC__, __LINE__, DefIconPath));
+	d1(KPrintF("%s/%s/%ld: DefIconPath=<%s>\n", __FILE__, __FUNC__, __LINE__, OriginalName));
 	d1(KPrintF("%s/%s/%ld: IconObj=%08lx\n", __FILE__, __FUNC__, __LINE__, IconObj));
 
 	CloneTags[0].ti_Tag = IDTA_IconLocation;
