@@ -268,7 +268,7 @@ chunkyim_new (
    struct chunkyidata  *data = INST_DATA (cl, obj);
    UBYTE               *normal_data = NULL;
    struct DrawInfo     *dri = NULL;
-   ULONG                bgpen;
+   IPTR                 bgpen;
    
 // NOTE: Had to add the following line.
 data->normal_rpi.rp = NULL;
@@ -310,7 +310,7 @@ data->normal_rpi.rp = NULL;
    /* Create images in their own rastports. */
    data->selected_data = (UBYTE *)GetTagData (CHUNKYIA_SelectedData, (IPTR)NULL,
                                               msg->ops_AttrList);
-   GetAttr (IA_BGPen, obj, (IPTR *)&bgpen);
+   GetAttr (IA_BGPen, obj, &bgpen);
    data->def_pens = (UWORD *)GetTagData (IA_Pens, (IPTR)NULL, msg->ops_AttrList);
    
    if (data->screen)
