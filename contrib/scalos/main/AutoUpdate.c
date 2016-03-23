@@ -131,7 +131,7 @@ ULONG DeviceWindowCheckUpdate(struct internalScaWindowTask *iwt)
 			break;
 
 		d1(kprintf("%s/%s/%ld: UpdateSemaphore=%08lx  NestCount=%ld\n", \
-			__FILE__, __FUNC__, __LINE__, &iwt->iwt_UpdateSemaphore, iwt->iwt_UpdateSemaphore.ss_NestCount));
+			__FILE__, __FUNC__, __LINE__, &iwt->iwt_UpdateSemaphore, iwt->iwt_UpdateSemaphore.Sema.ss_NestCount));
 
 		if (!InitCudFilesList(&cfl))
 			break;
@@ -717,7 +717,7 @@ ULONG TextWindowCheckUpdate(struct internalScaWindowTask *iwt)
 		SemaphoresLocked = TRUE;
 
 		d1(KPrintF("%s/%s/%ld: UpdateSemaphore=%08lx  NestCount=%ld\n", \
-			__FILE__, __FUNC__, __LINE__, &iwt->iwt_UpdateSemaphore, iwt->iwt_UpdateSemaphore.ss_NestCount));
+			__FILE__, __FUNC__, __LINE__, &iwt->iwt_UpdateSemaphore, iwt->iwt_UpdateSemaphore.Sema.ss_NestCount));
 
 		if (NULL == iwt->iwt_WindowTask.wt_Window)
 			break;
@@ -861,7 +861,7 @@ ULONG TextWindowCheckUpdate(struct internalScaWindowTask *iwt)
 				if ((IconLock = Lock(fileName, SHARED_LOCK)))	// +jmc+
 					{
 					UnLock(IconLock);				// +jmc+
-					d1(kprintf("%s/%s/%ld: Test icon=<%s>\n", __FILE__, __FUNC__, __LINE__, TestIcon));
+					d1(kprintf("%s/%s/%ld: Test icon=<%s>\n", __FILE__, __FUNC__, __LINE__, fileName));
 					ClassSetDefaultIconFlags(cud->cud_IconNode, NULL == cud->cud_iseIcon);	// +jmc+
 					}
 
