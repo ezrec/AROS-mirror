@@ -499,7 +499,7 @@ static struct ControlBarMember *ControlBarCreateViewByCycle(struct internalScaWi
 		Member->cbm_FrameImage = SCA_NewScalosObjectTags("FrameImage.sca",
 			FRAMEIMG_ImageName, (IPTR) "THEME:Window/ControlBar/ViewByCycleFrame",
 			TAG_END);
-		d1(KPrintF("%s/%s/%ld: FrameImage=%08lx\n", __FILE__, __FUNC__, __LINE__, Frame));
+		d1(KPrintF("%s/%s/%ld: FrameImage=%08lx\n", __FILE__, __FUNC__, __LINE__, Member->cbm_FrameImage));
 
 		Member->cbm_Gadget = SCA_NewScalosObjectTags("CycleGadget.sca",
 			SCACYCLE_Labels, (IPTR) CycleLabels,
@@ -564,7 +564,7 @@ static struct ControlBarMember *ControlBarCreateShowModeCycle(struct internalSca
 		Member->cbm_FrameImage = SCA_NewScalosObjectTags("FrameImage.sca",
 			FRAMEIMG_ImageName, (IPTR) "THEME:Window/ControlBar/ShowModeCycleFrame",
 			TAG_END);
-		d1(KPrintF("%s/%s/%ld: FrameImage=%08lx\n", __FILE__, __FUNC__, __LINE__, Frame));
+		d1(KPrintF("%s/%s/%ld: FrameImage=%08lx\n", __FILE__, __FUNC__, __LINE__, Member->cbm_FrameImage));
 
 		Member->cbm_Gadget = SCA_NewScalosObjectTags("CycleGadget.sca",
 			SCACYCLE_Labels, (IPTR) ShowModeLabels,
