@@ -890,7 +890,7 @@ static void BackdropRemoveDuplicateEntriesFromBackdropFile(struct BackDropList *
 			if ((cnl2 != cnl) && (0 == Stricmp(cnl2->cnl_Line, cnl->cnl_Line)) )
 				{
 				// Remove Duplicate line
-				d1(kprintf("%s/%s/%ld: LockResult=%ld - GO Remove <%s> \n", __FILE__, __FUNC__, __LINE__, LockResult, cnl->cnl_Line));
+				d1(kprintf("%s/%s/%ld: GO Remove <%s> \n", __FILE__, __FUNC__, __LINE__, cnl->cnl_Line));
 				Remove(&cnl2->cnl_Node);
 				BackdropFreeChainedLine(cnl2);
 				bdl->bdl_Changed = TRUE;
