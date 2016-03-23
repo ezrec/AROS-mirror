@@ -1258,13 +1258,17 @@ static void AddAddresses(struct ScalosMenuTree *srcTree __alias, struct SCALOS_M
 		srcTree->mtre_tree = SCA_BE2LONG((IPTR)srcTree->mtre_tree);
 		if (srcTree->mtre_tree)
 			{
+                            struct ScalosMenuTree *src;
 #if defined(__AROS__) && __WORDSIZE == 64
 #define                 AdjustedMenu (MenuTree->mtre_tree)
-                        MenuTree->mtre_tree = (struct SCALOS_MENUTREE *) (*end);
+                            MenuTree->mtre_tree = (struct SCALOS_MENUTREE *) (*end);
+                            src = (struct ScalosMenuTree *)((IPTR)srcBase + (IPTR)srcTree->mtre_tree
 #else
-#define                 AdjustedMenu ((struct SCALOS_MENUTREE *)((IPTR)srcBase + (IPTR)srcTree->mtre_tree))
+                            srcTree->mtre_tree = (struct ScalosMenuTree *)((IPTR)srcBase + (IPTR)srcTree->mtre_tree);
+                            src = srcTree->mtre_tree;
+#define                 AdjustedMenu    src
 #endif
-                        AddAddresses((struct ScalosMenuTree *)((IPTR)srcBase + (IPTR)srcTree->mtre_tree), AdjustedMenu, srcBase, treeBase
+                        AddAddresses(src, AdjustedMenu, srcBase, treeBase
 #if defined(__AROS__) && __WORDSIZE == 64
 #undef AdjustedMenu
                             , end
