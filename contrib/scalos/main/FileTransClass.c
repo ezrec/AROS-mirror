@@ -1313,8 +1313,11 @@ static void FreeFTO(struct FileTransOp *fto)
 // Count number of bytes and items to process
 static LONG CountFTOps(Class *cl, Object *o, struct FileTransOp *fto)
 {
-//	struct FileTransClassInstance *inst = INST_DATA(cl, o);
+	d1(struct FileTransClassInstance *inst = INST_DATA(cl, o));
 	LONG Result = RETURN_OK;
+
+	d1(KPrintF("%s/%s/%ld: START  TotalBytes=%lu  TotalItems=%ld\n", \
+ 	        __LINE__, ULONG64_LOW(inst->ftci_TotalBytes), inst->ftci_TotalItems));
 
 	switch (fto->fto_OpCode)
 		{
@@ -2048,7 +2051,7 @@ static BOOL FileTransClass_CreateGadgets(struct FileTransClassInstance *inst)
 			DTIMG_ImageName, (IPTR) ImageNameNrm,
 			DTIMG_SelImageName, (IPTR) ImageNameSel,
 			TAG_END);
-		d1(KPrintF("%s/%s/%ld: agi_Image=%08lx\n", __FILE__, __FUNC__, __LINE__, agi->agi_Image));
+		d1(KPrintF("%s/%s/%ld: ftci_CancelButtonImage=%08lx\n", __FILE__, __FUNC__, __LINE__, inst->ftci_CancelButtonImage));
 		if (NULL == inst->ftci_CancelButtonImage)
 			{
 			// no Theme image could be found - fall back to sys image
@@ -2074,7 +2077,7 @@ static BOOL FileTransClass_CreateGadgets(struct FileTransClassInstance *inst)
 				GA_Image, (IPTR) inst->ftci_CancelButtonFrame,
 				GA_Text, (IPTR) ng.ng_GadgetText,
 				TAG_END);
-			d1(KPrintF("%s/%s/%ld: agi_Gadget=%08lx\n", __FILE__, __FUNC__, __LINE__, gad));
+			d1(KPrintF("%s/%s/%ld: gad=%08lx\n", __FILE__, __FUNC__, __LINE__, gad));
 			}
 		else
 			{
