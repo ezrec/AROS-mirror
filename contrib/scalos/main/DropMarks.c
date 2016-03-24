@@ -120,7 +120,7 @@ void EraseWindowDropMark(struct internalScaWindowTask *iwt)
 {
 	if (iwt->iwt_DragFlags & DRAGFLAGF_WindowMarked)
 		{
-		d1(KPrintF("%s/%s/%ld: in=%08lx  <%s>\n", __FILE__, __FUNC__, __LINE__, in, GetIconName(in)));
+		d1(KPrintF("%s/%s/%ld\n", __FILE__, __FUNC__, __LINE__));
 
 		RestoreFromDropMarkInfo(&iwt->iwt_WindowDropMarkInfo,
 			iwt->iwt_WindowTask.wt_Window->RPort);
@@ -242,7 +242,7 @@ void RedrawWindowDropMark(struct internalScaWindowTask *iwt, struct Region *clip
 static void DrawWindowDropMark(struct internalScaWindowTask *iwt, struct Region *clipRegion)
 {
 	d1(kprintf("%s/%s/%ld: Started: iwt=%08lx  title=<%s>\n", __FILE__, __FUNC__, __LINE__, iwt, iwt->iwt_WinTitle));
-	d1(kprintf("%s/%s/%ld: iwt=%08lx  ClipRegion=%08lx\n", __FILE__, __FUNC__, __LINE__, iwt, iwt->iwt_WindowTask.wt_Window->WLayer->ClipRegion));
+	d1(kprintf("%s/%s/%ld: iwt=%08lx  WLayer->ClipRegion=%08lx\n", __FILE__, __FUNC__, __LINE__, iwt, iwt->iwt_WindowTask.wt_Window->WLayer->ClipRegion));
 
 	iwt->iwt_WindowDropMarkInfo.dmi_Rectangle.MaxX = iwt->iwt_WindowDropMarkInfo.dmi_Rectangle.MinX = iwt->iwt_InnerLeft + 2;
 	iwt->iwt_WindowDropMarkInfo.dmi_Rectangle.MaxX += iwt->iwt_InnerWidth - 4 - 1;
@@ -255,7 +255,7 @@ static void DrawWindowDropMark(struct internalScaWindowTask *iwt, struct Region 
 
 	RedrawWindowDropMark(iwt, clipRegion);
 
-	d1(kprintf("%s/%s/%ld: Finished: oldClipRegion=%08lx\n", __FILE__, __FUNC__, __LINE__, oldClipRegion));
+	d1(kprintf("%s/%s/%ld: Finished: clipRegion=%08lx\n", __FILE__, __FUNC__, __LINE__, clipRegion));
 }
 
 
