@@ -466,6 +466,7 @@ static ULONG HistoryGadgetLayout(Class *cl, Object *o, Msg msg)
 {
 	struct HistoryGadgetInstance *inst = INST_DATA(cl, o);
 	struct gpLayout *gpl = (struct gpLayout *) msg;
+    	d1(struct Gadget *gg = (struct Gadget *) o);
 	ULONG HistoryWidth = 0, HistoryHeight = 0;
 	ULONG Width, Height;
 	struct IBox FrameBox = { 0, 0, 20, 15 };
