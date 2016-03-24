@@ -562,7 +562,7 @@ static void FindFrameBorders(struct FrameImageClassInst *inst)
 
 	BgPen = *inst->bmicl_argbh.argb_ImageData;
 
-	d1(KPrintF("%s/%s/%ld: BgPen=%08lx  Color(0,1)=%08lx\n", __FILE__, __FUNC__, __LINE__, BgPen, GetPenFunc(&rp, 0, 1)));
+	d1(KPrintF("%s/%s/%ld: BgPen=%08lx\n", __FILE__, __FUNC__, __LINE__, BgPen));
 
 	for (y = 0; y < wh && 0 == inst->bmicl_TopOffset; y++)
 		{
@@ -616,7 +616,7 @@ static void GenerateMask(Class *cl, Object *o)
 	struct Image *img = (struct Image *) o;
 	struct RastPort rpMask;
 
-	d1(KPrintF("%s/%s/%ld: dti_BitMap=%08lx\n", __FILE__, __FUNC__, __LINE__, inst->bmicl_FrameImage->dti_BitMap));
+	d1(KPrintF("%s/%s/%ld\n", __FILE__, __FUNC__, __LINE__));
 
 	InitRastPort(&rpMask);
 	rpMask.BitMap =	inst->bmicl_MaskBitMap = AllocBitMap(img->Width, img->Height, 1, BMF_CLEAR, NULL);
@@ -733,7 +733,7 @@ static void GenerateMaskTile(const struct ARGBHeader *Src, struct RastPort *rpMa
 
 	d1(KPrintF("%s/%s/%ld: START MaskX=%ld  MaskY=%ld\n",  __FILE__, __FUNC__, __LINE__, MaskX, MaskY));
 	d1(KPrintF("%s/%s/%ld: SrcX=%ld  SrcY=%ld\n",  __FILE__, __FUNC__, __LINE__, SrcX, SrcY));
-	d1(KPrintF("%s/%s/%ld: Width=%ld  Height=%ld  Depth=%ld\n",  __FILE__, __FUNC__, __LINE__, Width, Height, GetBitMapAttr(rpSrc->BitMap, BMA_DEPTH)));
+	d1(KPrintF("%s/%s/%ld: Width=%ld  Height=%ld  Depth=%ld\n",  __FILE__, __FUNC__, __LINE__, Width, Height, GetBitMapAttr(rpMask->BitMap, BMA_DEPTH)));
 
 	for (y = 0; y < Height; y++)
 		{
@@ -747,7 +747,7 @@ static void GenerateMaskTile(const struct ARGBHeader *Src, struct RastPort *rpMa
 				+ (x + SrcX);
 
 			Pen = *((ULONG *) pSrc) & 0x00f0f0f0;
-			d1(KPrintF("%s/%s/%ld: x=%ld  y=%ld  Pen=%08lx\n",  __FILE__, __FUNC__, __LINE__, SrcX + x, SrcY + y, GetPenFunc(rpSrc, x + SrcX, y + SrcY)));
+			d1(KPrintF("%s/%s/%ld: x=%ld  y=%ld\n",  __FILE__, __FUNC__, __LINE__, SrcX + x, SrcY + y));
 			if (0x00f0f0f0 != Pen)
 				{
 				d1(KPrintF("%s/%s/%ld: x=%ld  y=%ld  Pen=%08lx\n",  __FILE__, __FUNC__, __LINE__, MaskX + x, MaskY + y, Pen));
