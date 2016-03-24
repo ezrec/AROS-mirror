@@ -326,7 +326,7 @@ static ULONG IDCMPMouseMove(struct internalScaWindowTask *iwt, struct IntuiMessa
 static ULONG IDCMPGadgetDown(struct internalScaWindowTask *iwt, struct IntuiMessage *iMsg)
 {
 	struct ExtGadget *gad;
-//	UWORD Code;
+	d1(UWORD Code);
 
 	ResetToolTips(iwt);
 
@@ -367,12 +367,12 @@ static ULONG IDCMPGadgetDown(struct internalScaWindowTask *iwt, struct IntuiMess
 		break;
 
 	case GADGETID_CONTROLBAR:
-		//Code = StatusBarQueryGadgetID(iwt, gad, iMsg->MouseX, iMsg->MouseY);
+		d1(Code = StatusBarQueryGadgetID(iwt, gad, iMsg->MouseX, iMsg->MouseY));
 		d1(KPrintF("%s/%s/%ld: GADGETID_CONTROLBAR  Code=%ld\n", __FILE__, __FUNC__, __LINE__, Code));
 		break;
 
 	case GADGETID_STATUSBAR:
-		//Code = StatusBarQueryGadgetID(iwt, gad, iMsg->MouseX, iMsg->MouseY);
+		d1(Code = StatusBarQueryGadgetID(iwt, gad, iMsg->MouseX, iMsg->MouseY));
 		d1(KPrintF("%s/%s/%ld: GADGETID_STATUSBAR  Code=%ld\n", __FILE__, __FUNC__, __LINE__, Code));
 		break;
 
@@ -423,7 +423,7 @@ static ULONG IDCMPGadgetUp(struct internalScaWindowTask *iwt, struct IntuiMessag
 	case GADGETID_CONTROLBAR:
 		d1(KPrintF("%s/%s/%ld: GADGETID_CONTROLBAR\n", __FILE__, __FUNC__, __LINE__));
 		Code = ControlBarQueryGadgetType(iwt, gad);
-		d1(KPrintF("%s/%s/%ld: code=%ld\n", __FILE__, __FUNC__, __LINE__, code));
+		d1(KPrintF("%s/%s/%ld: code=%ld\n", __FILE__, __FUNC__, __LINE__, Code));
 		switch (Code)
 			{
 		case SCPGadgetType_BrowseButton:
@@ -1159,7 +1159,7 @@ static ULONG IDCMPGadgetHelp(struct internalScaWindowTask *iwt, struct IntuiMess
 	else
 		{
 		d1(KPrintF("%s/%s/%ld: Reading=%08lx Typing=%08lx Text=%08lx ReadAll=%08lx\n", \
-			__FILE__, __FUNC__, __LINE__, iwt_StatusBarMembers[STATUSBARGADGET_Reading], \
+			__FILE__, __FUNC__, __LINE__, iwt->iwt_StatusBarMembers[STATUSBARGADGET_Reading], \
 			iwt->iwt_StatusBarMembers[STATUSBARGADGET_Typing],\
 			iwt->iwt_StatusBarMembers[STATUSBARGADGET_StatusText], \
 			iwt->iwt_StatusBarMembers[STATUSBARGADGET_ShowAll]));
