@@ -144,7 +144,9 @@ static void BlitARGBMaskAlpha(ULONG SrcWidth, ULONG SrcHeight,
 		ULONG DestWidth, struct ARGB *Dest, LONG DestLeft, LONG DestTop,
 		const struct BitMap *MaskBM, ULONG Trans,
 		const UBYTE *Alpha, LONG AlphaLeft, ULONG AlphaWidth);
-//static void DumpBitMap(struct BitMap *bm);
+#ifdef DEBUG_SCALOS
+static void DumpBitMap(struct BitMap *bm);
+#endif
 
 //----------------------------------------------------------------------------
 
@@ -3097,8 +3099,6 @@ void BlitARGB(ULONG SrcWidth, ULONG SrcHeight,
 
 		Src += SrcWidth;
 		Dest += DestWidth;
-
-		d1(KPrintF("%s/%s/%ld: ny=%ld\n", __FILE__, __FUNC__, __LINE__, ny));
 		}
 }
 
@@ -3179,8 +3179,6 @@ void BlitARGBMask(ULONG SrcWidth, ULONG SrcHeight,
 			Mask += MaskBytesPerRow;
 			Src += SrcWidth;
 			Dest += DestWidth;
-
-			d1(kprintf("%s/%s/%ld: ny=%ld  Mask=%08lx\n", __FILE__, __FUNC__, __LINE__, ny, mask));
 			}
 		}
 }
@@ -3204,7 +3202,7 @@ static void BlitARGBMaskAlpha(ULONG SrcWidth, ULONG SrcHeight,
 		Mask[8], Mask[9], Mask[10], Mask[11], \
 		Mask[12], Mask[13], Mask[14], Mask[15]));
 
-	d1(kprintf("%s/%s/%ld: SrcWidth=%ld  BoundsWidth=%ld  Left=%ld\n", __FILE__, __FUNC__, __LINE__, SrcWidth, BoundsWidth, Left));
+	d1(kprintf("%s/%s/%ld: SrcWidth=%ld\n", __FILE__, __FUNC__, __LINE__, SrcWidth));
 
 	Src += SrcTop * SrcWidth;
 	Dest += DestTop * DestWidth;
@@ -3270,13 +3268,11 @@ static void BlitARGBMaskAlpha(ULONG SrcWidth, ULONG SrcHeight,
 		Mask += MaskBytesPerRow;
 		Src += SrcWidth;
 		Dest += DestWidth;
-
-		d1(kprintf("%s/%s/%ld: ny=%ld  Mask=%08lx\n", __FILE__, __FUNC__, __LINE__, ny, mask));
 		}
 }
 
 //----------------------------------------------------------------------------
-#if 0
+#ifdef DEBUG_SCALOS
 static void DumpBitMap(struct BitMap *bm)
 {
 	struct RastPort rp;
