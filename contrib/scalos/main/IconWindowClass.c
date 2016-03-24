@@ -1593,7 +1593,7 @@ static ULONG IconWindowClass_MakeWbArg(Class *cl, Object *o, Msg msg)
 
 		if (Count)
 			{
-			d1(kprintf("%s/%s/%ld: Name=<%s>\n", __FILE__, __FUNC__, __LINE__, mwa->mwa_Buffer->wa_Name ? mwa->mwa_Buffer->wa_Name : ""));
+			d1(kprintf("%s/%s/%ld: Name=<%s>\n", __FILE__, __FUNC__, __LINE__, mwa->mwa_Buffer->wa_Name ? (char *)mwa->mwa_Buffer->wa_Name : (char *)""));
 			debugLock_d1(mwa->mwa_Buffer->wa_Lock);
 			mwa->mwa_Buffer++;
 			}
@@ -2953,7 +2953,7 @@ static ULONG IconWindowClass_RandomizePatternNumber(Class *cl, Object *o, Msg ms
 	struct ScaWindowStruct *ws = iwt->iwt_WindowTask.mt_WindowStruct;
 	struct PatternNode *NewPatternNode;
 
-	d1(kprintf("%s/%s/%ld: iwt=%08lx  <%s>  NewPatternNr=%lu\n", __FILE__, __FUNC__, __LINE__, iwt, iwt->iwt_WinTitle, npn->npn_PatternNumber));
+	d1(kprintf("%s/%s/%ld: iwt=%08lx  <%s>  PatternNr=%lu\n", __FILE__, __FUNC__, __LINE__, iwt, iwt->iwt_WinTitle, ws->ws_PatternNumber));
 
 	NewPatternNode = GetPatternNode(ws->ws_PatternNumber, (struct PatternNode *) ws->ws_PatternNode);
 	if (NewPatternNode != (struct PatternNode *) ws->ws_PatternNode)
@@ -3518,7 +3518,7 @@ static ULONG IconWindowClass_Browse(Class *cl, Object *o, Msg msg)
 
 static ULONG IconWindowClass_StartPopOpenTimer(Class *cl, Object *o, Msg msg)
 {
-	//struct internalScaWindowTask *iwt = (struct internalScaWindowTask *) ((struct ScaRootList *) o)->rl_WindowTask;
+	d1(struct internalScaWindowTask *iwt = (struct internalScaWindowTask *) ((struct ScaRootList *) o)->rl_WindowTask);
 	struct msg_StartPopOpenTimer *spot = (struct msg_StartPopOpenTimer *) msg;
 
 	d1(kprintf("%s/%s/%ld: iwt=%08lx  <%s>  dh=%08lx  spot_IconNode=%08lx <%s>\n", __FILE__, __FUNC__, __LINE__, \
@@ -3538,7 +3538,7 @@ static ULONG IconWindowClass_StartPopOpenTimer(Class *cl, Object *o, Msg msg)
 
 static ULONG IconWindowClass_StopPopOpenTimer(Class *cl, Object *o, Msg msg)
 {
-	//struct internalScaWindowTask *iwt = (struct internalScaWindowTask *) ((struct ScaRootList *) o)->rl_WindowTask;
+	d1(struct internalScaWindowTask *iwt = (struct internalScaWindowTask *) ((struct ScaRootList *) o)->rl_WindowTask);
 	struct msg_StopPopOpenTimer *stop = (struct msg_StopPopOpenTimer *) msg;
 
 	d1(kprintf("%s/%s/%ld: iwt=%08lx  <%s>  dh=%08lx\n", __FILE__, __FUNC__, __LINE__, iwt, \
@@ -3869,7 +3869,7 @@ static void ReLayoutIcons(struct internalScaWindowTask *iwt, struct ScaIconNode 
 			IDTA_FrameTypeSel, CurrentPrefs.pref_FrameTypeSel,
 			IDTA_FrameType, CurrentPrefs.pref_FrameType,
 			IDTA_TextSkip, CurrentPrefs.pref_TextSkip,
-			IDTA_MultiLineText, (ULONG) CurrentPrefs.pref_IconTextMuliLine,
+			IDTA_MultiLineText, (IPTR) CurrentPrefs.pref_IconTextMuliLine,
 			IDTA_HalfShinePen, PalettePrefs.pal_PensList[PENIDX_HSHINEPEN],
 			IDTA_HalfShadowPen, PalettePrefs.pal_PensList[PENIDX_HSHADOWPEN],
 			IDTA_TextPen, PalettePrefs.pal_PensList[PENIDX_ICONTEXTPEN],
@@ -4275,7 +4275,7 @@ static SAVEDS(LONG) IconCompareYFunc(struct Hook *hook, struct IconListNode *iln
 
 static SAVEDS(LONG) IconCompareNameFunc(struct Hook *hook, struct IconListNode *iln2, struct IconListNode *iln1)
 {
-	d1(kprintf("%s/%s/%ld: in1=%08lx  in2=%08lx\n", __FILE__, __FUNC__, __LINE__, gg1, gg2));
+	d1(kprintf("%s/%s/%ld: in1=%08lx  in2=%08lx\n", __FILE__, __FUNC__, __LINE__, iln1, iln2));
 
 	return Stricmp((STRPTR) GetIconName(iln2->iln_IconNode), (STRPTR) GetIconName(iln1->iln_IconNode));
 }
