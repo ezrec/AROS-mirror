@@ -226,8 +226,6 @@ static SAVEDS(IPTR) FileTransClass_Dispatcher(Class *cl, Object *o, Msg msg)
 
 static IPTR FileTransClass_New(Class *cl, Object *o, Msg msg)
 {
-	d1(kprintf("%s/%s/%ld: iwt=%08lx  <%s>\n", __FILE__, __FUNC__, __LINE__, iwt, iwt->iwt_WinTitle));
-
 	o = (Object *) DoSuperMethodA(cl, o, msg);
 	if (o)	
 		{
@@ -1317,9 +1315,6 @@ static LONG CountFTOps(Class *cl, Object *o, struct FileTransOp *fto)
 {
 //	struct FileTransClassInstance *inst = INST_DATA(cl, o);
 	LONG Result = RETURN_OK;
-
-	d1(KPrintF("%s/%s/%ld: START  TotalBytes=%lu  TotalItems=%ld\n", \
-		__LINE__, ULONG64_LOW(inst->ftci_TotalBytes), inst->ftci_TotalItems));
 
 	switch (fto->fto_OpCode)
 		{
