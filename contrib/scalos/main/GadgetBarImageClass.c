@@ -343,7 +343,7 @@ static ULONG GadgetBarImage_Get(Class *cl, Object *o, Msg msg)
 static ULONG GadgetBarImage_Layout(Class *cl, Object *o, Msg msg)
 {
 	struct GadgetBarImageClassInst *inst = INST_DATA(cl, o);
-//	struct Gadget *gg = (struct Gadget *) o;
+	d1(struct Gadget *gg = (struct Gadget *) o);
 	struct gpLayout *gpl = (struct gpLayout *) msg;
 
 	inst->gbicl_Window = gpl->gpl_GInfo->gi_Window;
