@@ -12,6 +12,8 @@ ICU_PKGVERSION := $(subst .,_,$(ICU_VERSION))
 ICU_REPOSITORY := http://download.icu-project.org/files/$(ICU_PKGNAME)/$(ICU_VERSION)
 ARCHBASE := $(ICU_PKGNAME)-$(ICU_VERSION)-src
 
+USER_LDFLAGS := -static-libstdc++
+
 ICU_EXTRA_OPTS := \
         --disable-dyload \
         --enable-static \
@@ -24,9 +26,7 @@ ICU_EXTRA_OPTS := \
         --host=$(AROS_TARGET_CPU)-aros \
         --with-cross-build=$(CROSSTOOLSDIR)/tools/crosstools/$(ICU_PKGNAME)
 
-TARGET_CXXFLAGS := $(subst -Wno-pointer-sign,, $(subst -Werror-implicit-function-declaration,, $(TARGET_CXXFLAGS)))
-
 %fetch_and_build mmake=contrib-icu4c-complete package=$(ICU_PKGNAME) version=$(ICU_PKGVERSION)-src \
 	package_repo="$(ICU_REPOSITORY)" suffixes="tgz" \
 	patch=yes srcdir=icu builddir=source prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development nix=yes \
-	extracflags="-static-libstdc++" extraoptions="$(ICU_EXTRA_OPTS)"
+	extraoptions="$(ICU_EXTRA_OPTS)"
