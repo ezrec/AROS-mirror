@@ -2469,9 +2469,12 @@ void StopGameRunning(Object * obj, struct MineFieldData * data)
 {
     struct Window * win = _window(obj);
 
-    Forbid();
-    win->Flags &= ~WFLG_RMBTRAP;
-    Permit();
+    if (win)
+    {
+        Forbid();
+        win->Flags &= ~WFLG_RMBTRAP;
+        Permit();
+    }
     DoMethod(_app(obj), MUIM_Application_RemInputHandler,
                         &data->ihn);
     SetAttrs(obj, MUIA_MineField_GameRunning, FALSE, TAG_DONE);
