@@ -737,7 +737,7 @@ FindLibDev(struct Window *Parent,STRPTR File,LONG Type,LONG *Error)
 {
 	UBYTE LocalBuffer[MAX_FILENAME_LENGTH];
 	BOOL Result,Replaced;
-	STRPTR OriginalFile;
+	STRPTR OriginalFile = NULL;
 	struct Node	*Node;
 	LONG LocalError;
 	BPTR FileLock;
