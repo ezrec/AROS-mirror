@@ -15,7 +15,7 @@ Z\0Zur¸ck
 ; Z\0Undo
 ;
 MSG_GAME_HIGHSCORE
- \0High Scores...
+ \0Bestenliste...
 ;  \0High Scores...
 ;
 MSG_GAME_ABOUT
@@ -75,7 +75,7 @@ MSG_SETTINGS_SAVE
 ;  \0Save Settings
 ;
 MSG_HIGHSCORE_REQTITLE
-High Scores
+Bestenliste
 ; High Scores
 ;
 MSG_ABOUT_REQTITLE
@@ -155,11 +155,11 @@ Kleine Straﬂe
 ; Small Straight
 ;
 MSG_LGSTRAIGHT_LABEL
-Grosse Straﬂe
+Groﬂe Straﬂe
 ; Large Straight
 ;
 MSG_FULLHOUSE_LABEL
-Full House
+Full-House
 ; Full House
 ;
 MSG_CHANCE_LABEL
@@ -167,7 +167,7 @@ Chance
 ; Chance
 ;
 MSG_YAHZEE_LABEL
-YAHZEE
+KNIFFEL
 ; YAHZEE
 ;
 MSG_TOTAL_LABEL

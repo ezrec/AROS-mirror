@@ -1,0 +1,163 @@
+## version $VER: yahzee.catalog 2.4 (11.8.98)
+## language norsk
+## codeset 0
+;
+MSG_GAME_MENU
+ \0Spill
+;
+MSG_GAME_NEW
+N\0Ny
+;
+MSG_GAME_UNDO
+Z\0Omgjør
+;
+MSG_GAME_HIGHSCORE
+ \0Rekorder...
+;
+MSG_GAME_ABOUT
+?\0Om...
+;
+MSG_GAME_QUIT
+Q\0Avslutt Yahzee
+;
+MSG_SETTINGS_MENU
+ \0Innstillinger
+;
+MSG_SETTINGS_NUMPLAYERS
+ \0Antall Spillere
+;
+MSG_SETTINGS_NUMPLAYERS_1
+1\0001 Spiller
+;
+MSG_SETTINGS_NUMPLAYERS_2
+2\0002 Spillere
+;
+MSG_SETTINGS_NUMPLAYERS_3
+3\0003 Spillere
+;
+MSG_SETTINGS_NUMPLAYERS_4
+4\0004 Spillere
+;
+MSG_SETTINGS_NUMPLAYERS_5
+5\0005 Spillere
+;
+MSG_SETTINGS_NUMPLAYERS_6
+6\0006 Spillere
+;
+MSG_SETTINGS_SCORING
+ \0Poeng Metode
+;
+MSG_SETTINGS_SCORING_DEFAULT
+ \0Tradisjonell
+;
+MSG_SETTINGS_SCORING_AMERICAN
+ \0Amerikansk
+;
+MSG_SETTINGS_SAVE
+ \0Lagre Innstillninger
+;
+MSG_HIGHSCORE_REQTITLE
+Rekorder
+;
+MSG_ABOUT_REQTITLE
+Om %s
+;
+MSG_ABOUT_REQMSG
+%s v%s\nAv %s %s\nKopibeskyttet ® %s %s\nOversatt til Norsk av Kimme Utsi
+;
+MSG_NAME_REQTITLE
+Meget høy poengsum spiller %d!!!
+;
+MSG_CONTINUE_GAD
+Fortsett
+;
+MSG_NAME_GAD
+Navn:
+;
+MSG_ROLL_GAD
+Kast
+;
+MSG_ACES_LABEL
+Enere
+;
+MSG_TWOS_LABEL
+Toere
+;
+MSG_THREES_LABEL
+Treere
+;
+MSG_FOURS_LABEL
+Firere
+;
+MSG_FIVES_LABEL
+Femmere
+;
+MSG_SIXES_LABEL
+Seksere
+;
+MSG_UPPERTOTAL_LABEL
+Total
+;
+MSG_BONUS_LABEL
+Bonus
+;
+MSG_ONEPAIR_LABEL
+Ett Par
+;
+MSG_TWOPAIRS_LABEL
+To Par
+;
+MSG_THREEKIND_LABEL
+Tre Like
+;
+MSG_FOURKIND_LABEL
+Fire Like
+;
+MSG_SMSTRAIGHT_LABEL
+Liten Straight
+;
+MSG_LGSTRAIGHT_LABEL
+Stor Straight
+;
+MSG_FULLHOUSE_LABEL
+Hytte
+;
+MSG_CHANCE_LABEL
+Sjanse
+;
+MSG_YAHZEE_LABEL
+YAHZEE
+;
+MSG_TOTAL_LABEL
+Total
+;
+MSG_SETTINGS_GAMETYPE
+ \0Type av Spill
+;
+MSG_SETTINGS_GAMETYPE_ORIGINAL
+ \0Original
+;
+MSG_SETTINGS_GAMETYPE_MAXI
+ \0Maxi
+;
+MSG_THREEPAIRS_LABEL
+Tre Par
+;
+MSG_FIVEKIND_LABEL
+Fem Like
+;
+MSG_FULLSTRAIGHT_LABEL
+Full Straight
+;
+MSG_HOUSE_LABEL
+Hus
+;
+MSG_TOWER_LABEL
+Tårn
+;
+MSG_MAXIYAHZEE_LABEL
+MAXI-YAHZEE
+;
+MSG_SAVEDROLLS_LABEL
+Ekstra Kast
+;
