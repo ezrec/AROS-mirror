@@ -152,7 +152,7 @@ AROS_UFH3S(LONG, list_display_func,
     if (li)
     {
         static TEXT protbuf[8], sizebuf[20], crsizebuf[20], percentbuf[8];
-        static TEXT datebuf[10], timebuf[10];
+        static TEXT datebuf[20], timebuf[20];
         struct DateTime dt;
 
         // Protection bits
