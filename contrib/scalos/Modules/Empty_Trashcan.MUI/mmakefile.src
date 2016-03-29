@@ -1,7 +1,6 @@
 # Metamakefile for AROS build-system
 
-include $(TOP)/config/make.cfg
--include $(GENDIR)/config/compiler.cfg
+include $(SRCDIR)/config/aros.cfg
 
 #MM- contrib-scalos : contrib-scalos-modules-emptytrashcan
 
