@@ -2,8 +2,8 @@
 #
 #   Generate libopenal.a
 #
-include $(TOP)/config/make.cfg
--include $(GENDIR)/config/compiler.cfg
+
+include $(SRCDIR)/config/aros.cfg
 
 #MM- contrib-multimedia : contrib-openal
 

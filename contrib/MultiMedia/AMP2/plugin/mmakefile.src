@@ -1,5 +1,4 @@
 #   $Id$
-include $(TOP)/config/make.cfg
 
 #MM- 		contrib-mmedia-amp2-plugins : \
 #MM			contrib-mmedia-amp2-plug-MPEGVX \
