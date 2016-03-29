@@ -3,7 +3,6 @@
 #   Makefile to make lha.
 
 include $(SRCDIR)/config/aros.cfg
-TOP)/config/make.cfg
 
 FILES := append extract larc lhext maketree slide crcio header lhadd\
 lhlist patmatch dhuf huf lharc maketbl shuf util
