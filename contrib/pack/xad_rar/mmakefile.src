@@ -1,7 +1,7 @@
 # Copyright © 2013, The AROS Development Team. All rights reserved.
 # $Id$
 
-include $(TOP)/config/make.cfg
+include $(SRCDIR)/config/aros.cfg
 
 USER_CFLAGS     := -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/Rar_Extractor-0.2.1/unrarlib/unrarlib
 LDFLAGS += -nostartfiles
