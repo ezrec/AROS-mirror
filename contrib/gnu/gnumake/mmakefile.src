@@ -1,7 +1,7 @@
 # Copyright © 2008, The AROS Development Team. All rights reserved.
 # $Id$
 
--include $(TOP)/config/make.cfg
+include $(SRCDIR)/config/aros.cfg
 
 #MM- contrib-gnu : contrib-gnu-gnumake
 #MM- contrib-gnu-gnumake : development-make
