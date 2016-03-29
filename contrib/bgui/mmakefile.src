@@ -1,5 +1,5 @@
-include $(TOP)/config/make.cfg
-include $(SRCDIR)/$(CURDIR)/make.cfg
+
+include $(SRCDIR)/config/aros.cfg
 
 USER_CFLAGS := -DENHANCED $(PARANOIA_CFLAGS)
 USER_LDFLAGS := -static
