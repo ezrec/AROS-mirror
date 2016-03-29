@@ -1,6 +1,6 @@
 # $Id$
 
-include $(TOP)/config/make.cfg
+include $(SRCDIR)/config/aros.cfg
 
 TARGETDIR    := $(AROS_CONTRIB)/Games/MultiPuzzle/Catalogs
 ARCHBASE     := multipuzzle-src-1.3.2
