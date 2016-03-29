@@ -1,5 +1,5 @@
-include $(TOP)/config/make.cfg
--include $(GENDIR)/config/compiler.cfg
+
+include $(SRCDIR)/config/aros.cfg
 
 ##MM- aros-tcpip-apps : aros-tcpip-apps-tinyirc
 #MM aros-tcpip-apps-tinyirc : includes linklibs
