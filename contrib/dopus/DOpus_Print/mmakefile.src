@@ -1,6 +1,6 @@
 # $Id$
-include $(SRCDIR)/$(CURDIR)/../make.cfg
--include $(GENDIR)/config/compiler.cfg
+
+include $(SRCDIR)/config/aros.cfg
 
 #MM- DOpus_Print : dopus-library
 

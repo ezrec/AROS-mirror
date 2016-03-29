@@ -1,7 +1,7 @@
 # Copyright © 2004-2010, The AROS Development Team. All rights reserved.
 # $Id$
 
-include $(SRCDIR)/$(CURDIR)/make.cfg
+include $(SRCDIR)/config/aros.cfg
 
 SFILES := Package-Startup ConfigOpus.HLP DirectoryOpus.HLP DirectoryOpus.CFG DirectoryOpus.CLA
 

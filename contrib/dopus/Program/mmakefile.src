@@ -1,6 +1,6 @@
 # $Id$
-include $(SRCDIR)/$(CURDIR)/../make.cfg
--include $(GENDIR)/config/compiler.cfg
+
+include $(SRCDIR)/config/aros.cfg
 
 FILES := about arbiter main main1 main2 main3 main4 main5 main6 main7\
          main8 main9 main10 main11 main12 main13 main14 main15 main16\
