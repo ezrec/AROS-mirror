@@ -1,6 +1,6 @@
 # $Id$
 
-include $(TOP)/config/make.cfg
+include $(SRCDIR)/config/aros.cfg
 
 FILES         := popph popphs popph_misc popph_clipboard
 INCLUDE_FILES := Popplaceholder_mcc.h
