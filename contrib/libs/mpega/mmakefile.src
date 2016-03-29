@@ -1,7 +1,6 @@
 # $Id$
 
-include $(TOP)/config/make.cfg
--include $(GENDIR)/config/compiler.cfg
+include $(SRCDIR)/config/aros.cfg
 
 FILES := library wrap_mpega support filter resample tag crc fixed bit \
  timer stream frame synth layer12 layer3 huffman
