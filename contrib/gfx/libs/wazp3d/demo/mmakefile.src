@@ -1,6 +1,6 @@
 # $Id$
 
-include $(TOP)/config/make.cfg
+include $(SRCDIR)/config/aros.cfg
 
 #MM contrib-wazp3d-test : includes linklibs contrib-wazp3d-lib contrib-wazp3d-test-cpy
 

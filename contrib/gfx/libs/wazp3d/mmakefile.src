@@ -1,7 +1,5 @@
 # $Id$
 
-include $(TOP)/config/make.cfg
-
 #MM- contrib : contrib-wazp3d
 
 #MM- contrib-wazp3d : contrib-wazp3d-prefs contrib-wazp3d-cow3d \

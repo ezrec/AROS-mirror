@@ -1,7 +1,7 @@
 # Copyright © 2016, The AROS Development Team. All rights reserved.
 # $Id$
 
-include $(TOP)/config/make.cfg
+include $(SRCDIR)/config/aros.cfg
 
 TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/Lunapaint/Catalogs
 
