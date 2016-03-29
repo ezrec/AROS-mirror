@@ -2,7 +2,7 @@
 #
 # Makefile to contributed development tools.
 
-include $(TOP)/config/make.cfg
+include $(SRCDIR)/config/aros.cfg
 
 #MM contrib-development : contrib-development-setup
 

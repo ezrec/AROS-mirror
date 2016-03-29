@@ -2,7 +2,7 @@
 #
 #   Makefile to make cpp.
 
-include $(TOP)/config/make.cfg
+include $(SRCDIR)/config/aros.cfg
 
 FILES := cpp getopt include macro tokens eval hideset lex nlist unix
 

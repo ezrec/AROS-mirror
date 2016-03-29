@@ -1,7 +1,6 @@
 #   $Id$
 
-include $(TOP)/config/make.cfg
--include $(GENDIR)/config/compiler.cfg
+include $(SRCDIR)/config/aros.cfg
 
 COREFILES :=	lapi lcode lctype ldebug ldo ldump lfunc lgc llex \
 		lmem lobject lopcodes lparser lstate lstring ltable \

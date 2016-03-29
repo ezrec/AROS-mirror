@@ -1,7 +1,7 @@
 # Copyright © 2009, The AROS Development Team. All rights reserved.
 # $Id$
 
--include $(TOP)/config/make.cfg
+include $(SRCDIR)/config/aros.cfg
 
 %fetch_and_build_gnu_development package=ode version=0.11.1 patch=no \
      package_repo="sf://opende/ODE/0.11.1" \

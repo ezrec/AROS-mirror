@@ -1,7 +1,7 @@
 # Copyright © 2009, The AROS Development Team. All rights reserved.
 # $Id$
 
--include $(TOP)/config/make.cfg
+include $(SRCDIR)/config/aros.cfg
 
 #MM- contrib-icu4c : contrib-icu4c-complete
 #MM- contrib-icu4c-complete : tools-crosstools-icu
