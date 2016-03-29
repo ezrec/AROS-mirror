@@ -3,7 +3,6 @@
 #   Makefile to make nbench bytemark 2.1
 
 include $(SRCDIR)/config/aros.cfg
-TOP)/config/make.cfg
 
 FILES :=emfloat misc nbench0 nbench1 sysspec
 
