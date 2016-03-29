@@ -2,7 +2,7 @@
 #
 #   Makefile to make FileMaster.
 
-include $(TOP)/config/make.cfg
+include $(SRCDIR)/config/aros.cfg
 
 FILES := addbfcrc addfname basename comment crcdefs getfile lzc lzd machine\
 makelist misc misc2 nextfile needed options parse portable prterror version\

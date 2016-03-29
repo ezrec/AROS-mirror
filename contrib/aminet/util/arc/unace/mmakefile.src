@@ -1,5 +1,5 @@
-include $(TOP)/config/make.cfg
--include $(GENDIR)/config/compiler.cfg
+
+include $(SRCDIR)/config/aros.cfg
 
 FILES := uac_crc globals uac_crt unace uac_sys uac_dcpr uac_comm
 

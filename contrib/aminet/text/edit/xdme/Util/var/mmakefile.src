@@ -2,9 +2,9 @@
 #
 #   Makefile to make XDME
 
-USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)
+include $(SRCDIR)/config/aros.cfg
 
-include $(TOP)/config/make.cfg
+USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)
 
 EXEDIR := $(OBJDIR)
 EXE := $(EXEDIR)/Parser

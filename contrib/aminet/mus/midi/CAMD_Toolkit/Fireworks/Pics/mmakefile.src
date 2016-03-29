@@ -1,7 +1,7 @@
 #   $Id: mmakefile.src 48342 2013-10-28 07:59:49Z mazze $
 #
 
-include $(TOP)/config/make.cfg
+include $(SRCDIR)/config/aros.cfg
 
 EXEDIR := $(AROS_CONTRIB)/Misc/aminet/CAMD
 

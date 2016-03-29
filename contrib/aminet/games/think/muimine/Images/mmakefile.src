@@ -2,7 +2,7 @@
 #
 #   Makefile to make MUIMine/Images.
 
-include $(TOP)/config/make.cfg
+include $(SRCDIR)/config/aros.cfg
 
 IMAGES =                        \
 	DigitsImage.7seg.BW     \
