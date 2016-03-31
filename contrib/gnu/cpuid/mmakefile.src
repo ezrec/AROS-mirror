@@ -1,7 +1,7 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-EXEDIR := $(GNUDIR)/cpuid/bin
+EXEDIR := $(AROS_CONTRIB)/GNU/cpuid/bin
 FILES  := cpuid
 
 NOWARN_FLAGS := $(NOWARN_UNUSED_BUT_SET_VARIABLE)
