@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2001, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2016, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc:
@@ -30,9 +30,7 @@
 #include <exec/execbase.h>
 #include <exec/memory.h>
 #include <hardware/intbits.h>
-#include <asm/segments.h>
-#include <asm/linkage.h>
-#include <asm/ptrace.h>
+#include <asm/io.h>
 #include <dos/dosextens.h>
 
 #include <aros/arossupportbase.h>
@@ -45,6 +43,6 @@
 #include <libraries/security.h>
 
 #include LC_LIBDEFS_FILE
-#define  DEBUG_NAME_STR                     "[" NAME_STRING "]"
+#define  DEBUG_NAME_STR                     "[security.library]"
 
 #endif /* _SECURITY_INTERN_H */
