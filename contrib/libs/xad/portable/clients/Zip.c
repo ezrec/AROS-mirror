@@ -390,8 +390,8 @@ XADGETINFO(Zip)
             {
               for(o = 0; o < i; ++o)
               {
-                if((xadUINT8)fi2->xfi_FileName[o] >= 0x80 && (xadUINT8)fi2->xfi_FileName[o] < 0x9B)
-                  fi2->xfi_FileName[o] = remapPC8[fi2->xfi_FileName[o]-0x80];
+                if((xadUINT8)fi2->xfi_FileName[o] >= 0x80 && (xadUINT8)fi2->xfi_FileName[o] < 0x9A)
+                  fi2->xfi_FileName[o] = remapPC8[((xadUINT8)fi2->xfi_FileName[o])-0x80];
                 if((fi2->xfi_FileName[o]&0x7F) < 0x20)
                 {
                   fi2->xfi_FileName[o] = 0;

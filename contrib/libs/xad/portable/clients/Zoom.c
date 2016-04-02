@@ -168,38 +168,41 @@ static void Update(struct LhData *dat, xadINT16 pos)
   xadINT16 i, j, k, l;
   xadUINT16 *freq;
 
-  i = dat->parent[pos];
-
-  do
+  if ((xadUINT16)pos < SizeTable)
   {
-    freq = &dat->freq[i];       /* Mutterknotenhäufigkeit */
-    j = *freq;
-    *(freq++) = ++j;            /* Mutterknotenhäfigkeit erhöhen */
-    if(*(freq++) < j)           /* hat der Eintrag die Continuität beeinträchtigt ? */
+    i = dat->parent[(xadUINT16)pos];
+
+    do
     {
-      /* dann müssen Knoten vertauscht werden, d.h. die Knoten werden umgehängt */
-      /* i == Swap Knoten 1 */
+      freq = &dat->freq[i];       /* Mutterknotenhäufigkeit */
+      j = *freq;
+      *(freq++) = ++j;            /* Mutterknotenhäfigkeit erhöhen */
+      if(*(freq++) < j)           /* hat der Eintrag die Continuität beeinträchtigt ? */
+      {
+        /* dann müssen Knoten vertauscht werden, d.h. die Knoten werden umgehängt */
+        /* i == Swap Knoten 1 */
 
-      while(*freq < j)
-        ++freq;                         /* swap Knoten 2 suchen */
+        while(*freq < j)
+          ++freq;                         /* swap Knoten 2 suchen */
 
-      --freq;                           /* freq == Swapknoten 2 */
-      k = freq - dat->freq;             /* k == (offset zum Swap 2) */
-      dat->freq[i] = *freq;             /* freq(knot1)=freq(knot2) */
-      *freq = j;                        /* freq(knot2)=freq(knot1) */
-      if((j = dat->son[i]) >= 0)        /* wenn der l-sohn vom old knot ein code ist */
-        dat->parent[j+1] = k;           /* dann neuer r-Vater=new knot */
-      dat->parent[j] = k;               /* jf. neuer l-vater=new knot */
-      if((l = dat->son[k]) >= 0)        /* wenn der l-sohn vom new knot ein code ist */
-        dat->parent[l+1] = i;           /* dann neuer r-Vater=old knot */
-      dat->son[k] = j;                  /* l-sohn(new knot)=l-sohn(old k) */
-      dat->parent[l] = i;               /* l-vater von sohn vom new knot = old knot */
-      dat->son[i] = l;                  /* l-sohn vom old knot= l-sohn vom new knot */
-      i = dat->parent[k];               /* vater holen */
-    }
-    else
-      i = dat->parent[i];               /* vater holen */
-  } while(i);                           /* bis Root erreicht ist. */
+        --freq;                           /* freq == Swapknoten 2 */
+        k = freq - dat->freq;             /* k == (offset zum Swap 2) */
+        dat->freq[i] = *freq;             /* freq(knot1)=freq(knot2) */
+        *freq = j;                        /* freq(knot2)=freq(knot1) */
+        if((j = dat->son[i]) >= 0)        /* wenn der l-sohn vom old knot ein code ist */
+          dat->parent[j+1] = k;           /* dann neuer r-Vater=new knot */
+        dat->parent[j] = k;               /* jf. neuer l-vater=new knot */
+        if((l = dat->son[k]) >= 0)        /* wenn der l-sohn vom new knot ein code ist */
+          dat->parent[l+1] = i;           /* dann neuer r-Vater=old knot */
+        dat->son[k] = j;                  /* l-sohn(new knot)=l-sohn(old k) */
+        dat->parent[l] = i;               /* l-vater von sohn vom new knot = old knot */
+        dat->son[i] = l;                  /* l-sohn vom old knot= l-sohn vom new knot */
+        i = dat->parent[k];               /* vater holen */
+      }
+      else
+        i = dat->parent[i];               /* vater holen */
+    } while(i);                           /* bis Root erreicht ist. */
+  }
 }
 
 static void InitFreqTree(struct LhData *dat)
