@@ -221,7 +221,7 @@ IPTR mDraw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg) {
 }
 
 IPTR mSetup(struct IClass *cl,Object *obj,Msg msg) {
-  struct CustomImageData *data = INST_DATA(cl,obj);
+  struct CustomImageData *data = (struct CustomImageData *)INST_DATA(cl,obj);
 
   if (!DoSuperMethodA(cl,obj,msg))
     return(FALSE);
@@ -235,7 +235,7 @@ IPTR mSetup(struct IClass *cl,Object *obj,Msg msg) {
 }
 
 IPTR mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg) {
-  struct CustomImageData *data = INST_DATA(cl,obj);
+  struct CustomImageData *data = (struct CustomImageData *)INST_DATA(cl,obj);
 
   if (msg->imsg) {
     switch (msg->imsg->Class) {
@@ -263,7 +263,7 @@ IPTR mHandleEvent(struct IClass *cl, Object *obj, struct MUIP_HandleEvent *msg) 
 }
 
 IPTR mCleanup(struct IClass *cl,Object *obj,Msg msg) {
-  struct CustomImageData *data = INST_DATA(cl,obj);
+  struct CustomImageData *data = (struct CustomImageData *)INST_DATA(cl,obj);
 
   DoMethod(_win(obj),MUIM_Window_RemEventHandler,&data->ehnode);
   return DoSuperMethodA(cl,obj,msg);
@@ -693,8 +693,8 @@ int AROSPDFApp::initAROS() {
           Child, RectangleObject,End,
         End,//HGroup
         Child, HGroup,
-          Child, Bmp = NewObject(mcc->mcc_Class,NULL,
-            TextFrame,MY_APP,(void *)this, MY_BMWIDTH, BITMAPX, MY_BMHEIGHT, BITMAPY,
+          Child, Bmp = (Object *)NewObject(mcc->mcc_Class, NULL,
+            TextFrame, MY_APP, (IPTR)this, MY_BMWIDTH, BITMAPX, MY_BMHEIGHT, BITMAPY,
             MUIA_Background, MUII_BACKGROUND,
           TAG_DONE),
           //End, //Bmp
@@ -732,7 +732,7 @@ int AROSPDFApp::initAROS() {
     DoMethod(wnd, MUIM_Notify, MUIA_Window_CloseRequest, TRUE,
       (IPTR)muiapp, 2,
       MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);     
-    DoMethod((APTR)DoMethod(menustrip,MUIM_FindUData,MEN_QUIT), MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
+    DoMethod((Object *)DoMethod(menustrip,MUIM_FindUData,MEN_QUIT), MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime,
       (IPTR) muiapp, 2, MUIM_Application_ReturnID,
       MUIV_Application_ReturnID_Quit);
 
