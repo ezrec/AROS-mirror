@@ -1262,7 +1262,7 @@ static BOOL CheckProject(Object *IconObject, struct WblInput *wbli, BOOL *cliSta
 	Object *DefaultIconObject = NULL;
 	STRPTR Path = NULL;
 	IPTR IconType;
-	ULONG ul;
+	IPTR ul;
 	STRPTR tt;
 
 	tt = NULL;
@@ -2517,7 +2517,7 @@ static void NodeBubbleSort(struct ScalosNodeList *nodeList,
 
 		while (node->mln_Succ)
 			{
-			if ((LONG) CallHookPkt(compareHook, node, node->mln_Succ) > 0)
+			if ((IPTR) CallHookPkt(compareHook, node, node->mln_Succ) > 0)
 				{
 				d1(kprintf("%s/%s/%ld: SWAP leftNode=%08lx  rightNode=%08lx\n", __FILE__, __FUNC__, __LINE__, node, node->mln_Succ));
 				SCA_SwapNodes(node, node->mln_Succ, nodeList);
@@ -2550,7 +2550,7 @@ static void NodeSelectionSort(struct ScalosNodeList *nodeList,
 
 		while (1)
 			{
-			if ((LONG) CallHookPkt(compareHook, rightNode, leftNode) < 0)
+			if ((IPTR) CallHookPkt(compareHook, rightNode, leftNode) < 0)
 				{
 				struct MinNode *tempNode = leftNode;
 
@@ -2597,7 +2597,7 @@ static void NodeInsertionSort(struct ScalosNodeList *nodeList,
 			if (NULL == leftNode->mln_Pred)
 				break;
 
-			if ((LONG) CallHookPkt(compareHook, leftNode, leftNode->mln_Pred) < 0)
+			if ((IPTR) CallHookPkt(compareHook, leftNode, leftNode->mln_Pred) < 0)
 				{
 				d1(kprintf("%s/%s/%ld: SWAP node1=%08lx  node2=%08lx\n", __FILE__, __FUNC__, __LINE__, leftNode->mln_Pred, leftNode));
 				SCA_SwapNodes(leftNode->mln_Pred, leftNode, nodeList);
@@ -2698,7 +2698,7 @@ static struct MinNode *PartitionNodeList(struct ScalosNodeList *nodeList, struct
 				node = node->mln_Succ;\
 				}\
 		});
-		while ((LONG) CallHookPkt(compareHook, jNode, pivotNode) > 0)
+		while ((IPTR) CallHookPkt(compareHook, jNode, pivotNode) > 0)
 			{
 			if (iNode == jNode)
 				Done = TRUE;
@@ -2706,7 +2706,7 @@ static struct MinNode *PartitionNodeList(struct ScalosNodeList *nodeList, struct
 			}
 		if (Done)
 			return jNode;
-		while ((LONG) CallHookPkt(compareHook, iNode, pivotNode) < 0)
+		while ((IPTR) CallHookPkt(compareHook, iNode, pivotNode) < 0)
 			{
 			if (iNode == jNode)
 				Done = TRUE;

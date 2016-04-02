@@ -879,7 +879,7 @@ static void SetAttributes(struct TextIClassInst *inst, struct opSet *ops)
 		PACK_ENDTABLE
 		};
 
-	PackStructureTags(inst, packTable, ops->ops_AttrList);
+	PackStructureTags(inst, (ULONG *)packTable, ops->ops_AttrList);
 
 	rild = (struct ReadIconListData *) GetTagData(TIDTA_ReadIconListData, (IPTR)NULL, ops->ops_AttrList);
 

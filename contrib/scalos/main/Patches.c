@@ -732,7 +732,7 @@ static struct DiskObject *CloneDiskObject(const struct DiskObject *origDiskObj)
 		d1(kprintf("%s/%s/%ld: \n", __FILE__, __FUNC__, __LINE__));
 
 		// DupDiskObjectA(
-		NewDiskObj = DupDiskObject(origDiskObj,
+		NewDiskObj = DupDiskObject((struct DiskObject *)origDiskObj,
 			ICONDUPA_DuplicateImages, TRUE,
 			ICONDUPA_DuplicateImageData, TRUE,
 			ICONDUPA_DuplicateToolTypes, TRUE,
@@ -1364,7 +1364,7 @@ LIBFUNC_P3(struct Screen *, sca_OpenScreenTagList,
 		d1(KPrintF("%s/%s/%ld: driPens=%08lx  ScreenColorList=%08lx\n", \
 			__FILE__, __FUNC__, __LINE__, driPens, ScreenColorList));
 
-		AllocatedTagList = CloneTagItems(TagList);
+		AllocatedTagList = CloneTagItems((struct TagItem *)TagList);
 		d1(KPrintF("%s/%s/%ld: AllocatedTagList=%08lx\n", __FILE__, __FUNC__, __LINE__, AllocatedTagList));
 
 		if (AllocatedTagList)
@@ -1465,7 +1465,7 @@ LIBFUNC_P3(struct Screen *, sca_OpenScreenTagList,
 #ifdef __AROS__
 		Scr = AROS_CALL2(struct Screen *, (*OldOpenScreenTagList),
 				 AROS_LDA(struct NewScreen *, newScr, A0),
-				 AROS_LDA(struct TagItem   *, TagList, A1),
+				 AROS_LDA(const struct TagItem   *, TagList, A1),
 				 struct IntuitionBase *, iBase);
 #else
 		Scr = (struct Screen *) CALLLIBFUNC_P3((*OldOpenScreenTagList),
@@ -1589,7 +1589,7 @@ LIBFUNC_P3(BOOL, sca_PutDiskObject,
 #ifdef __AROS__
 	BOOL Success = AROS_CALL2(BOOL, (*OldPutDiskObject),
 				  AROS_LDA(CONST_STRPTR,        Name, A0),
-				  AROS_LDA(struct DiskObject *, diskObj, A1),
+				  AROS_LDA(const struct DiskObject *, diskObj, A1),
 				  struct Library *, IconBase);
 #else
 	BOOL Success = CALLLIBFUNC_P3((*OldPutDiskObject),
@@ -1616,7 +1616,7 @@ LIBFUNC_P2(BOOL, sca_DeleteDiskObject,
 {
 #ifdef __AROS__
 	BOOL Success = AROS_CALL1(BOOL, (*OldDeleteDiskObject),
-				  AROS_LDA(UBYTE *, Name, A0),
+				  AROS_LDA(CONST_STRPTR, Name, A0),
 				  struct Library *, IconBase);
 #else
 	BOOL Success = CALLLIBFUNC_P2((*OldDeleteDiskObject),
@@ -1648,7 +1648,7 @@ LIBFUNC_P4(BOOL, sca_PutIconTagList,
 #ifdef __AROS__
 	BOOL Success = AROS_CALL3(BOOL, (*OldPutIconTagList),
 				  AROS_LDA(CONST_STRPTR,        Name, A0),
-				  AROS_LDA(struct DiskObject *, diskObj, A1),
+				  AROS_LDA(const struct DiskObject *, diskObj, A1),
 				  AROS_LDA(struct TagItem *,    tags, A2),
 				  struct Library *, IconBase);
 #else

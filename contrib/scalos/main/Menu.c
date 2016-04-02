@@ -1253,7 +1253,7 @@ static void AddAddresses(struct ScalosMenuTree *srcTree __alias, struct SCALOS_M
 				MenuTree->MenuCombo.MenuTree.mtre_iconnames = NULL;
 				}
 			}
-		srcTree->mtre_tree = SCA_BE2LONG((IPTR)srcTree->mtre_tree);
+		srcTree->mtre_tree = (SMTPTR32)SCA_BE2LONG((IPTR)srcTree->mtre_tree);
 		if (srcTree->mtre_tree)
 			{
                             struct ScalosMenuTree *src;
@@ -1273,7 +1273,7 @@ static void AddAddresses(struct ScalosMenuTree *srcTree __alias, struct SCALOS_M
 #endif
                             );
 			}
-		srcTree->mtre_Next = SCA_BE2LONG((IPTR)srcTree->mtre_Next);
+		srcTree->mtre_Next = (SMTPTR32)SCA_BE2LONG((IPTR)srcTree->mtre_Next);
 		if (srcTree->mtre_Next)
 			{
 #if defined(__AROS__) && __WORDSIZE == 64

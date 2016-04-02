@@ -492,6 +492,7 @@ static ULONG DeviceWindowClass_Update(Class *cl, Object *o, Msg msg)
 	for (in=iwt->iwt_WindowTask.wt_IconList; in; in = inNext)
 		{
 		inNext = (struct ScaIconNode *) in->in_Node.mln_Succ;
+		IconType = 0;
 
 		GetAttr(IDTA_Type, in->in_Icon, &IconType);
 
@@ -506,6 +507,7 @@ static ULONG DeviceWindowClass_Update(Class *cl, Object *o, Msg msg)
 	for (in=iwt->iwt_WindowTask.wt_LateIconList; in; in = inNext)
 		{
 		inNext = (struct ScaIconNode *) in->in_Node.mln_Succ;
+		IconType = 0;
 
 		GetAttr(IDTA_Type, in->in_Icon, &IconType);
 
@@ -537,7 +539,7 @@ static ULONG DeviceWindowClass_Update(Class *cl, Object *o, Msg msg)
 
 	RefreshIcons(iwt, NULL);
 
-	ReadResult = DoMethod(iwt->iwt_WindowTask.mt_MainObject, SCCM_IconWin_ReadIconList, 0L);
+	ReadResult = DoMethod(iwt->iwt_WindowTask.mt_MainObject, SCCM_IconWin_ReadIconList, 0);
 
 	SetAttrs(iwt->iwt_WindowTask.mt_MainObject, 
 		SCCA_IconWin_Reading, FALSE,
