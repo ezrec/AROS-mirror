@@ -286,7 +286,7 @@ xadERROR DImp_UnArchive(struct xadArchiveInfo *ai, XADBASE) {
   UBYTE *buf = NULL, *info = (UBYTE *) ai->xai_PrivateClient, *p;
   struct xadDiskInfo *di = ai->xai_CurDisk;
   ULONG cyl, x;
-  LONG err;
+  LONG err = 0;
 
   ALLOC(UBYTE *, buf, DIMP_CYLSIZE);
   for (cyl = di->xdi_LowCyl; cyl <= ai->xai_HighCyl; cyl++) {
