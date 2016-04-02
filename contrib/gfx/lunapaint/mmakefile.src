@@ -18,7 +18,8 @@ TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/Lunapaint
 DEFICON      := def_Lunapaint
 
 # Next version of Lunapaint shouldn't need -fgnu89-inline anymore
-USER_CFLAGS  := -fgnu89-inline -fno-strict-aliasing
+NOWARN_FLAGS := $(NOWARN_UNUSED_BUT_SET_VARIABLE)
+USER_CFLAGS  := -fgnu89-inline -fno-strict-aliasing $(NOWARN_FLAGS)
 USER_INCLUDES:= -I$(SRCDIR)/$(CURDIR)/src -I$(AROS_INCLUDES)/SDI
 
 FILES := \
