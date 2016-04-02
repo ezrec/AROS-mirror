@@ -1,6 +1,6 @@
-diff -Naur vba-m-SVN1292-sources-orig/sources/CMakeLists.txt sources.aros/CMakeLists.txt
+diff -Naur vba-m-SVN1292-sources-orig/sources/CMakeLists.txt vba-m-SVN1292-sources/sources/CMakeLists.txt
 --- vba-m-SVN1292-sources-orig/sources/CMakeLists.txt	2015-04-04 17:31:34.000000000 +0100
-+++ vba-m-SVN1292-sources/sources/CMakeLists.txt	2016-03-19 03:12:16.008140755 +0000
++++ vba-m-SVN1292-sources/sources/CMakeLists.txt	2016-04-02 04:13:36.053664364 +0100
 @@ -342,6 +342,8 @@
      )
  	IF( WIN32 )
@@ -10,18 +10,21 @@ diff -Naur vba-m-SVN1292-sources-orig/sources/CMakeLists.txt sources.aros/CMakeL
  	ELSE( WIN32 )
  		INSTALL(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/vbam DESTINATION bin)
  	ENDIF( WIN32 )
-@@ -365,7 +367,7 @@
+@@ -365,9 +367,9 @@
      endif( ENABLE_NLS )
  endif( ENABLE_GTK OR ENABLE_WX )
  INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/vba-over.ini DESTINATION ${DATA_INSTALL_DIR})
 -IF(NOT APPLE)
 +IF(NOT APPLE AND NOT AROS)
      INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/gtk/icons/ DESTINATION share/icons/hicolor PATTERN ".svn" EXCLUDE)
- ENDIF(NOT APPLE)
+-ENDIF(NOT APPLE)
++ENDIF(NOT APPLE AND NOT AROS)
  SET(CPACK_GENERATOR "ZIP")
-diff -Naur vba-m-SVN1292-sources-orig/sources/fex/fex/Data_Reader.cpp sources.aros/fex/fex/Data_Reader.cpp
+ SET(CPACK_PACKAGE_VERSION_MAJOR "1")
+ SET(CPACK_PACKAGE_VERSION_MINOR "8")
+diff -Naur vba-m-SVN1292-sources-orig/sources/fex/fex/Data_Reader.cpp vba-m-SVN1292-sources/sources/fex/fex/Data_Reader.cpp
 --- vba-m-SVN1292-sources-orig/sources/fex/fex/Data_Reader.cpp	2015-04-04 01:05:16.000000000 +0100
-+++ vba-m-SVN1292-sources/sources/fex/fex/Data_Reader.cpp	2016-03-19 03:12:16.008140755 +0000
++++ vba-m-SVN1292-sources/sources/fex/fex/Data_Reader.cpp	2016-04-02 03:59:08.183102191 +0100
 @@ -411,7 +411,11 @@
  		return NULL;
  	
@@ -34,9 +37,9 @@ diff -Naur vba-m-SVN1292-sources-orig/sources/fex/fex/Data_Reader.cpp sources.ar
  	if ( mmax <= 0 )
  		return NULL;
  
-diff -Naur vba-m-SVN1292-sources-orig/sources/src/common/Patch.cpp sources.aros/src/common/Patch.cpp
+diff -Naur vba-m-SVN1292-sources-orig/sources/src/common/Patch.cpp vba-m-SVN1292-sources/sources/src/common/Patch.cpp
 --- vba-m-SVN1292-sources-orig/sources/src/common/Patch.cpp	2015-04-04 01:05:20.000000000 +0100
-+++ vba-m-SVN1292-sources/sources/src/common/Patch.cpp	2016-03-19 03:17:08.344268106 +0000
++++ vba-m-SVN1292-sources/sources/src/common/Patch.cpp	2016-04-02 03:59:08.183102191 +0100
 @@ -11,6 +11,13 @@
  typedef off_t __off64_t; /* off_t is 64 bits on BSD. */
  #define	fseeko64 fseeko
@@ -51,9 +54,9 @@ diff -Naur vba-m-SVN1292-sources-orig/sources/src/common/Patch.cpp sources.aros/
  #else
  typedef off64_t __off64_t;
  #endif /* __APPLE__ || BSD */
-diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/debugger-expr-yacc.cpp sources.aros/src/gba/debugger-expr-yacc.cpp
+diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/debugger-expr-yacc.cpp vba-m-SVN1292-sources/sources/src/gba/debugger-expr-yacc.cpp
 --- vba-m-SVN1292-sources-orig/sources/src/gba/debugger-expr-yacc.cpp	2015-04-04 01:05:20.000000000 +0100
-+++ vba-m-SVN1292-sources/sources/src/gba/debugger-expr-yacc.cpp	2016-03-19 03:12:16.008140755 +0000
++++ vba-m-SVN1292-sources/sources/src/gba/debugger-expr-yacc.cpp	2016-04-02 03:59:08.183102191 +0100
 @@ -126,7 +126,7 @@
    
  #include "../System.h"
@@ -63,9 +66,9 @@ diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/debugger-expr-yacc.cpp sou
  
  #include <string>
  #include <map>
-diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/ereader.cpp sources.aros/src/gba/ereader.cpp
+diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/ereader.cpp vba-m-SVN1292-sources/sources/src/gba/ereader.cpp
 --- vba-m-SVN1292-sources-orig/sources/src/gba/ereader.cpp	2015-04-04 01:05:20.000000000 +0100
-+++ vba-m-SVN1292-sources/sources/src/gba/ereader.cpp	2016-03-19 03:12:16.008140755 +0000
++++ vba-m-SVN1292-sources/sources/src/gba/ereader.cpp	2016-04-02 03:59:08.183102191 +0100
 @@ -1,6 +1,6 @@
  #include <stdio.h>
  #include <locale>
@@ -74,9 +77,9 @@ diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/ereader.cpp sources.aros/s
  #include <string.h>
  
  #include "GBA.h"
-diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/GBALink.cpp sources.aros/src/gba/GBALink.cpp
+diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/GBALink.cpp vba-m-SVN1292-sources/sources/src/gba/GBALink.cpp
 --- vba-m-SVN1292-sources-orig/sources/src/gba/GBALink.cpp	2015-04-04 01:27:54.000000000 +0100
-+++ vba-m-SVN1292-sources/sources/src/gba/GBALink.cpp	2016-03-19 03:12:16.008140755 +0000
++++ vba-m-SVN1292-sources/sources/src/gba/GBALink.cpp	2016-04-02 03:59:08.183102191 +0100
 @@ -3,12 +3,7 @@
  #include <string.h>
  #include <stdio.h>
@@ -90,9 +93,9 @@ diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/GBALink.cpp sources.aros/s
  
  #ifdef _MSC_VER
  #define snprintf _snprintf
-diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/remote.cpp sources.aros/src/gba/remote.cpp
+diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/remote.cpp vba-m-SVN1292-sources/sources/src/gba/remote.cpp
 --- vba-m-SVN1292-sources-orig/sources/src/gba/remote.cpp	2015-04-04 01:05:20.000000000 +0100
-+++ vba-m-SVN1292-sources/sources/src/gba/remote.cpp	2016-03-19 03:12:16.008140755 +0000
++++ vba-m-SVN1292-sources/sources/src/gba/remote.cpp	2016-04-02 03:59:08.183102191 +0100
 @@ -29,6 +29,10 @@
  # define write _write
  #endif // _WIN32
@@ -104,9 +107,9 @@ diff -Naur vba-m-SVN1292-sources-orig/sources/src/gba/remote.cpp sources.aros/sr
  #include "remote.h"
  #include "BreakpointStructures.h"
  #include "GBA.h"
-diff -Naur vba-m-SVN1292-sources-orig/sources/src/sdl/expr.cpp sources.aros/src/sdl/expr.cpp
+diff -Naur vba-m-SVN1292-sources-orig/sources/src/sdl/expr.cpp vba-m-SVN1292-sources/sources/src/sdl/expr.cpp
 --- vba-m-SVN1292-sources-orig/sources/src/sdl/expr.cpp	2015-04-04 01:05:18.000000000 +0100
-+++ vba-m-SVN1292-sources/sources/src/sdl/expr.cpp	2016-03-19 03:46:29.205130946 +0000
++++ vba-m-SVN1292-sources/sources/src/sdl/expr.cpp	2016-04-02 03:59:08.183102191 +0100
 @@ -90,12 +90,9 @@
  /* Copy the first part of user declarations.  */
  #line 1 "expr.ypp"
@@ -123,9 +126,9 @@ diff -Naur vba-m-SVN1292-sources-orig/sources/src/sdl/expr.cpp sources.aros/src/
  
  using namespace std;
   
-diff -Naur vba-m-SVN1292-sources-orig/sources/src/sdl/SDL.cpp sources.aros/src/sdl/SDL.cpp
+diff -Naur vba-m-SVN1292-sources-orig/sources/src/sdl/SDL.cpp vba-m-SVN1292-sources/sources/src/sdl/SDL.cpp
 --- vba-m-SVN1292-sources-orig/sources/src/sdl/SDL.cpp	2015-04-04 01:05:18.000000000 +0100
-+++ vba-m-SVN1292-sources/sources/src/sdl/SDL.cpp	2016-03-19 03:12:16.008140755 +0000
++++ vba-m-SVN1292-sources/sources/src/sdl/SDL.cpp	2016-04-02 03:59:08.183102191 +0100
 @@ -507,6 +507,12 @@
          return f;
      }
