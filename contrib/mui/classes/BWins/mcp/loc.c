@@ -28,12 +28,12 @@ initStrings(void)
         {
             STRPTR s;
 
-            if (s = GetCatalogStr(cat,cca->cca_ID,cca->cca_Str)) cca->cca_Str = s;
+            if (s = (STRPTR)GetCatalogStr(cat,cca->cca_ID,cca->cca_Str)) cca->cca_Str = s;
         }
     }
 
     for (ids = shapeIds, f = shapeStrings; *ids; ids++, f++)
-        *f = getString(*ids);
+        *f = (STRPTR)getString(*ids);
 }
 
 /****************************************************************************/

@@ -103,7 +103,7 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
 
         snprintf(buf,sizeof(buf),getString(MCPMSG_Info_First),"\33bBWin " VRSTRING "\33n (" DATE ")\33n");
 
-        if ((t = getString(MCPMSG_Info_Translator)) && *t)
+        if ((t = (char *)getString(MCPMSG_Info_Translator)) && *t)
             trans = VGroup,
                 MUIA_InnerLeft,0,
                 MUIA_InnerBottom,0,
@@ -119,9 +119,9 @@ mNew(REG(a0) struct IClass *cl,REG(a2) Object *obj,REG(a1) struct opSet *msg)
             End;
         else trans = NULL;
 
-        dragstr = getString(MCPMSG_DragBarType);
-        sizestr = getString(MCPMSG_SizeType);
-        closestr = getString(MCPMSG_CloseType);
+        dragstr = (char *)getString(MCPMSG_DragBarType);
+        sizestr = (char *)getString(MCPMSG_SizeType);
+        closestr = (char *)getString(MCPMSG_CloseType);
 
         if (prefs = VGroup,
 
