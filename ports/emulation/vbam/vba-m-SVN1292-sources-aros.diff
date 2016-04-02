@@ -37,12 +37,15 @@ diff -Naur vba-m-SVN1292-sources-orig/sources/fex/fex/Data_Reader.cpp sources.ar
 diff -Naur vba-m-SVN1292-sources-orig/sources/src/common/Patch.cpp sources.aros/src/common/Patch.cpp
 --- vba-m-SVN1292-sources-orig/sources/src/common/Patch.cpp	2015-04-04 01:05:20.000000000 +0100
 +++ vba-m-SVN1292-sources/sources/src/common/Patch.cpp	2016-03-19 03:17:08.344268106 +0000
-@@ -11,6 +11,10 @@
+@@ -11,6 +11,13 @@
  typedef off_t __off64_t; /* off_t is 64 bits on BSD. */
  #define	fseeko64 fseeko
  #define	ftello64 ftello
 +#elif defined(__AROS__)
 +#include <exec/types.h>
++#ifndef __off64_t
++typedef QUAD __off64_t;
++#endif
 +#define	fseeko64 fseeko
 +#define	ftello64 ftello
  #else
