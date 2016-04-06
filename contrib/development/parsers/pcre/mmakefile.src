@@ -8,4 +8,4 @@ include $(SRCDIR)/config/aros.cfg
 #MM contrib-development-parsers-pcre : linklibs-startup linklibs-amiga linklibs-arossupport linklibs-clib
 
 %build_with_configure mmake=contrib-development-parsers-pcre prefix=$(AROS_DEVELOPMENT) nix=yes \
-    extraoptions="--disable-stack-for-recursion --without-pic --disable-shared"
+    extraoptions="--disable-stack-for-recursion --without-pic --disable-shared --libdir=$(AROS_LIB)"

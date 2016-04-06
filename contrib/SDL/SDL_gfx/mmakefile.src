@@ -22,4 +22,4 @@ REPOSITORIES := http://www.ferzkopp.net/Software/SDL_gfx-2.0 \
 
 %fetch_and_build_gnu_development package=SDL_gfx version=2.0.22 patch=no \
      package_repo=$(REPOSITORIES) \
-     suffixes="tar.gz" extraoptions="$(DISABLE_MMX)"
+     suffixes="tar.gz" extraoptions="$(DISABLE_MMX) libdir=$(AROS_LIB)"

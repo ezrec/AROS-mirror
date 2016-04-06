@@ -12,4 +12,4 @@ REPOSITORIES := http://icculus.org/SDL_sound/downloads/ \
 
 %fetch_and_build_gnu_development package=SDL_sound version=1.0.3 patch=no \
     suffixes="tar.gz" package_repo="$(REPOSITORIES)" \
-    extraoptions="--disable-midi"
+    extraoptions="--disable-midi libdir=$(AROS_LIB)"

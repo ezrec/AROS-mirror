@@ -16,6 +16,6 @@ MODPLUG_ENVFLAGS := ac_cv_c_bigendian=$(BIGENDIAN)
 
 %fetch_and_build_gnu_development package=libmodplug version=0.8.8.5 patch=no \
     package_repo=sf://modplug-xmms \
-    suffixes="tar.gz" extraoptions="" \
+    suffixes="tar.gz" extraoptions="--libdir=$(AROS_LIB)" \
     config_env_extra="$(MODPLUG_ENVFLAGS)"
 

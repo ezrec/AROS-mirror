@@ -13,4 +13,5 @@ T1_ENVFLAGS := T1_AA_TYPE16="-DT1_AA_TYPE16=short" T1_AA_TYPE32="-DT1_AA_TYPE32=
 
 %fetch_and_build_gnu_development package=t1lib version=5.1.2 \
     patch=yes package_repo="$(REPOSITORIES)" \
-    config_env_extra="$(T1_ENVFLAGS)"
+    config_env_extra="$(T1_ENVFLAGS)" \
+    extraoptions="--libdir=$(AROS_LIB)"

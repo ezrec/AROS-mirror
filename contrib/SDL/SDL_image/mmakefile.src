@@ -13,5 +13,5 @@ include $(SRCDIR)/config/aros.cfg
 
 %fetch_and_build_gnu_development package=SDL_image version=1.2.3 patch=yes \
     package_repo=http://www.libsdl.org/projects/SDL_image/release/ \
-    suffixes="tar.gz"
+    suffixes="tar.gz" extraoptions="libdir=$(AROS_LIB)"
 
