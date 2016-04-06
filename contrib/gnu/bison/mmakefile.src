@@ -6,4 +6,5 @@ include $(SRCDIR)/config/aros.cfg
 #MM- contrib-gnu : contrib-gnu-bison
 #MM- contrib-gnu-bison : development-bison
 
-%fetch_and_build_gnu_development package=bison version=1.875 patch=yes
+%fetch_and_build_gnu_development package=bison version=1.875 patch=yes \
+    extraoptions="--libdir=$(AROS_LIB)"

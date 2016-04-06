@@ -10,7 +10,7 @@ REPOSITORIES := http://curl.haxx.se/download \
 
 %fetch_and_build_gnu_development package=curl version=7.37.1 \
     patch=yes package_repo="$(REPOSITORIES)" \
-    extraoptions="--without-random --disable-ntlm-wb CPPFLAGS='-D__BSD_VISIBLE=1'" \
+    extraoptions="--without-random --disable-ntlm-wb CPPFLAGS='-D__BSD_VISIBLE=1' --libdir=$(AROS_LIB)" \
     postconfigure="development-curl-fixconfig"
 
 #MM

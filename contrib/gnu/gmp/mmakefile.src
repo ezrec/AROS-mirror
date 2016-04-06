@@ -5,6 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 
 #MM- contrib-gnu-gmp : development-gmp
 
-%fetch_and_build_gnu_development package=gmp version=5.1.2 patch=yes
+%fetch_and_build_gnu_development package=gmp version=5.1.2 patch=yes \
+    extraoptions="--libdir=$(AROS_LIB)"
 
 %common

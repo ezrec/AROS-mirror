@@ -24,7 +24,8 @@ ICU_EXTRA_OPTS := \
         --enable-threads=no \
         --with-data-packaging=static \
         --host=$(AROS_TARGET_CPU)-aros \
-        --with-cross-build=$(CROSSTOOLSDIR)/tools/crosstools/$(ICU_PKGNAME)
+        --with-cross-build=$(CROSSTOOLSDIR)/tools/crosstools/$(ICU_PKGNAME) \
+        --libdir=$(AROS_LIB)
 
 %fetch_and_build mmake=contrib-icu4c-complete package=$(ICU_PKGNAME) version=$(ICU_PKGVERSION)-src \
 	package_repo="$(ICU_REPOSITORY)" suffixes="tgz" \

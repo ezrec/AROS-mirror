@@ -9,4 +9,5 @@ include $(SRCDIR)/config/aros.cfg
 REPOSITORIES := http://www.oberhumer.com/opensource/lzo/download
 
 %fetch_and_build_gnu_development package=lzo version=2.09 patch=no \
-    package_repo=$(REPOSITORIES) suffixes="tar.gz"
+    package_repo=$(REPOSITORIES) suffixes="tar.gz" \
+    extraoptions="--libdir=$(AROS_LIB)"
