@@ -72,10 +72,10 @@ void closemuimaster(void)
 
 int Ouvrir_Libs(void )
 {
-  if ( !(IntuitionBase=(struct IntuitionBase *) OpenLibrary((UBYTE *)"intuition.library",39)) )
+  if ( !(IntuitionBase=(struct IntuitionBase *) OpenLibrary("intuition.library",39)) )
     return(0);
 
-  if ( !(GfxBase=(struct GfxBase *) OpenLibrary((UBYTE *)"graphics.library",0)) )
+  if ( !(GfxBase=(struct GfxBase *) OpenLibrary("graphics.library",0)) )
   {
     Fermer_Libs();
     return(0);

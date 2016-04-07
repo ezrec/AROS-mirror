@@ -28,7 +28,7 @@ extern struct Library *MUIMasterBase;
 
 int main(int argc, char **argv)
 {
-  ULONG ok;
+  IPTR ok;
   Object *app,*win_main, *madmatrix, *restart, *shake, *taille, *groupe;
 #ifdef SOLVE
   Object *resoud
@@ -140,7 +140,7 @@ int main(int argc, char **argv)
 
     LONG sigs=0;
 
-    while(DoMethod(app,MUIM_Application_NewInput,&sigs)!= (unsigned int)MUIV_Application_ReturnID_Quit)
+    while(DoMethod(app,MUIM_Application_NewInput,&sigs)!= MUIV_Application_ReturnID_Quit)
     {
       if(sigs) sigs = Wait(sigs);
     }

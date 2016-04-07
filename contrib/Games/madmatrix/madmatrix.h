@@ -1,3 +1,6 @@
+#ifndef MADMATRIX_H
+#define MADMATRIX_H
+
 #include <proto/intuition.h>
 #include <proto/graphics.h>
 #include <proto/exec.h>
@@ -43,4 +46,6 @@ struct Madmatrix_Data
 __asm ULONG Madmatrix_Dispatcher(register __a0 struct IClass *cl, register __a2 Object *obj, register __a1 Msg msg);
 #else
 BOOPSI_DISPATCHER_PROTO(IPTR, Madmatrix_Dispatcher, cl, obj, msg);
+#endif
+
 #endif

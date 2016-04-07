@@ -93,26 +93,7 @@ IPTR Madmatrix_New(struct IClass *cl,Object *obj,Msg msg)
   if ( data->matrice == NULL )
     return(FALSE);
 
-
-
-
-  /* parse initial taglist */
-  /*
-  for (tags=((struct opSet *)msg)->ops_AttrList;tag=NextTagItem(&tags);)
-  {
-          switch (tag->ti_Tag)
-          {
-                  case MYATTR_PEN:
-                          if (tag->ti_Data)
-                                  data->penspec = *((struct MUI_PenSpec *)tag->ti_Data);
-                          break;
-          }
-  }
-  */
-
   return((IPTR)obj);
-
-
 }
 ///
 
@@ -130,9 +111,8 @@ IPTR Madmatrix_Dispose(struct IClass *cl,Object *obj,Msg msg)
 /// ULONG Madmatrix_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 IPTR Madmatrix_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
-  struct Madmatrix_Data *data = (struct Madmatrix_Data *)INST_DATA(cl,obj);
+  struct Madmatrix_Data *data = INST_DATA(cl,obj);
   int largeur;
-
 
   data->font_sx = _font(obj)->tf_XSize;
   data->font_sy = _font(obj)->tf_YSize;
@@ -165,15 +145,13 @@ IPTR Madmatrix_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *ms
 
 
   return(0);
-
-
 }
 ///
 
 /// ULONG Madmatrix_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 IPTR Madmatrix_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
-  struct Madmatrix_Data *data = (struct Madmatrix_Data *)INST_DATA(cl,obj);
+  struct Madmatrix_Data *data = INST_DATA(cl,obj);
   int ligne,colonne;
   char temp[1000];
   int tf_x=_rp(obj)->Font->tf_XSize;
@@ -351,12 +329,12 @@ IPTR Madmatrix_Setup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 
 
 /// ULONG Madmatrix_Set(struct IClass *cl,Object *obj,Msg msg)
-IPTR Madmatrix_Set(struct IClass *cl,Object *obj,Msg msg)
+IPTR Madmatrix_Set(struct IClass *cl,Object *obj,struct opSet *msg)
 {
   struct Madmatrix_Data *data = INST_DATA(cl,obj);
   struct TagItem *tags,*tag;
 
-  for (tags=((struct opSet *)msg)->ops_AttrList;(tag=NextTagItem(&tags));)
+  for (tags=msg->ops_AttrList;(tag=NextTagItem(&tags));)
   {
 
     switch (tag->ti_Tag)
@@ -375,15 +353,15 @@ IPTR Madmatrix_Set(struct IClass *cl,Object *obj,Msg msg)
 ///
 
 /// ULONG Madmatrix_Get(struct IClass *cl,Object *obj,Msg msg)
-IPTR Madmatrix_Get(struct IClass *cl,Object *obj,Msg msg)
+IPTR Madmatrix_Get(struct IClass *cl,Object *obj,struct opGet *msg)
 {
   struct Madmatrix_Data *data = INST_DATA(cl,obj);
-  IPTR *store = ((struct opGet *)msg)->opg_Storage;
+  IPTR *store = msg->opg_Storage;
 
-  switch (((struct opGet *)msg)->opg_AttrID)
+  switch (msg->opg_AttrID)
   {
     case MADMATRIX_TAILLE:
-      *store = (ULONG)(data->taille);
+      *store = data->taille;
       return(TRUE);
   }
 
@@ -394,7 +372,7 @@ IPTR Madmatrix_Get(struct IClass *cl,Object *obj,Msg msg)
 /// ULONG Madmatrix_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 IPTR Madmatrix_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
-  struct Madmatrix_Data *data = (struct Madmatrix_Data *)INST_DATA(cl,obj);
+  struct Madmatrix_Data *data = INST_DATA(cl,obj);
 
   if (msg->muikey!=MUIKEY_NONE)
   {
@@ -476,13 +454,11 @@ __asm ULONG Madmatrix_Dispatcher(register __a0 struct IClass *cl, register __a2 
 BOOPSI_DISPATCHER(IPTR, Madmatrix_Dispatcher, cl, obj, msg)
 #endif
 {
-  Msg msg2;
   struct Madmatrix_Data *data;
 
-  data = (struct Madmatrix_Data *)INST_DATA(cl,obj);
-  msg2= (Msg) msg;
+  data = INST_DATA(cl,obj);
 
-  switch (msg2->MethodID)
+  switch (msg->MethodID)
   {
     case OM_NEW           : return(Madmatrix_New(cl,obj,(APTR)msg));
     case OM_DISPOSE       : return(Madmatrix_Dispose(cl,obj,(APTR)msg));
@@ -514,7 +490,7 @@ BOOPSI_DISPATCHER_END
 /* init data & allocate pens */
 void Madmatrix_Rotate(struct IClass *cl,Object *obj, int sens, double pas)
 {
-  struct Madmatrix_Data *data = (struct Madmatrix_Data *)INST_DATA(cl,obj);
+  struct Madmatrix_Data *data = INST_DATA(cl,obj);
 
   data->mouvement=sens;
   for ( data->pas=0; data->pas <= 1; data->pas+=pas )
@@ -540,7 +516,7 @@ void Madmatrix_Rotate(struct IClass *cl,Object *obj, int sens, double pas)
 /// void Madmatrix_Shake(struct IClass *cl,Object *obj, int nb)
 void Madmatrix_Shake(struct IClass *cl,Object *obj, int nb)
 {
-  struct Madmatrix_Data *data = (struct Madmatrix_Data *)INST_DATA(cl,obj);
+  struct Madmatrix_Data *data = INST_DATA(cl,obj);
   int cpt, sens=-1;
 
   data->box = -1;
@@ -590,7 +566,7 @@ void Madmatrix_Init(struct Madmatrix_Data *data)
 /// void Madmatrix_Restart(struct IClass *cl,Object *obj)
 void Madmatrix_Restart(struct IClass *cl,Object *obj)
 {
-  struct Madmatrix_Data *data = (struct Madmatrix_Data *)INST_DATA(cl,obj);
+  struct Madmatrix_Data *data = INST_DATA(cl,obj);
 
 
   if ( data->ntaille > MADMATRIX_TAILLE_MAX )
