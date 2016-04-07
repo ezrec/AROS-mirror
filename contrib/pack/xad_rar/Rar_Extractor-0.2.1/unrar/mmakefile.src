@@ -3,6 +3,9 @@
 
 include $(SRCDIR)/config/aros.cfg
 
+NOWARN_FLAGS := $(NOWARN_ATTRIBUTES) $(NOWARN_UNKNOWN_PRAGMAS)
+USER_CXXFLAGS := $(NOWARN_FLAGS)
+
 CPPSRCS := \
 	abstract_file \
 	archive \
