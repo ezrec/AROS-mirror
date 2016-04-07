@@ -42,9 +42,5 @@ struct Madmatrix_Data
 #ifndef __AROS__
 __asm ULONG Madmatrix_Dispatcher(register __a0 struct IClass *cl, register __a2 Object *obj, register __a1 Msg msg);
 #else
-AROS_UFH3(IPTR, Madmatrix_Dispatcher,
-	AROS_UFHA(Class  *, cl,  A0),
-	AROS_UFHA(Object *, obj, A2),
-	AROS_UFHA(Msg     , msg, A1));
+BOOPSI_DISPATCHER_PROTO(IPTR, Madmatrix_Dispatcher, cl, obj, msg);
 #endif
-

@@ -12,7 +12,7 @@ extern struct Library *MUIMasterBase;
 #endif
 
 
-#include <mui.h>
+#include <libraries/mui.h>
 #undef SysBase /* the definition should be not done in mui.h */
 #undef IntuitionBase /* the definition should be not done in mui.h */
 #undef DOSBase /* the definition should be not done in mui.h */
@@ -22,7 +22,9 @@ extern struct Library *MUIMasterBase;
 
 /*#define SOLVE*/
 
+#ifndef MAKE_ID
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
+#endif
 
 int main(int argc, char **argv)
 {
@@ -116,12 +118,12 @@ int main(int argc, char **argv)
 
   DoMethod(taille,MUIM_Notify,MUIA_Numeric_Value,MUIV_EveryTime,madmatrix,3,MUIM_Set,MADMATRIX_TAILLE,MUIV_TriggerValue);
 
-  set(win_main,MUIA_Window_DefaultObject, (LONG)madmatrix);
+  set(win_main,MUIA_Window_DefaultObject, madmatrix);
   set(win_main,MUIA_Window_Open,TRUE);
 
   get(win_main,MUIA_Window_Open,&ok);
 
-  set(madmatrix,MADMATRIX_GROUPE,(ULONG)groupe);
+  set(madmatrix,MADMATRIX_GROUPE,groupe);
 
   if ( argc > 1 )
   {

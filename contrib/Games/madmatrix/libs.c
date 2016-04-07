@@ -5,7 +5,7 @@
 #include <proto/graphics.h>
 #include <proto/exec.h>
 
-#include <mui.h> /* Should be libraries/mui.h when MUI is ready */
+#include <libraries/mui.h>
 #undef SysBase
 #undef GfxBase
 #undef UtilityBase

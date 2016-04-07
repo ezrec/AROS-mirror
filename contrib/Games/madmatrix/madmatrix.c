@@ -14,7 +14,7 @@
 
 #include <proto/utility.h>
 
-#include <mui.h>
+#include <libraries/mui.h>
 #undef SysBase
 #undef GfxBase
 #undef UtilityBase
@@ -26,7 +26,9 @@
 
 // Custom class MUI
 
+#ifndef MAKE_ID
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
+#endif
 
 #define PAS 0.12
 #define MADMATRIX_ABS(x) ((x)>0?(x):-(x))
@@ -49,13 +51,13 @@ void Madmatrix_Tourne(int **tableau,int ligne, int colonne, int sens );
 int Madmatrix_Calcul(int **tableau, int taille);
 
 
-ULONG Madmatrix_Dispose(struct IClass *cl,Object *obj,Msg msg);
-ULONG Madmatrix_New(struct IClass *cl,Object *obj,Msg msg);
-ULONG Madmatrix_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg);
-ULONG Madmatrix_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg);
-ULONG Madmatrix_Setup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg);
-ULONG Madmatrix_Cleanup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg);
-ULONG Madmatrix_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg);
+IPTR Madmatrix_Dispose(struct IClass *cl,Object *obj,Msg msg);
+IPTR Madmatrix_New(struct IClass *cl,Object *obj,Msg msg);
+IPTR Madmatrix_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg);
+IPTR Madmatrix_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg);
+IPTR Madmatrix_Setup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg);
+IPTR Madmatrix_Cleanup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg);
+IPTR Madmatrix_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg);
 
 
 extern struct GfxBase *GfxBase;
@@ -70,7 +72,7 @@ extern struct Library  *MUIMasterBase;
 #define MADMATRIX_MAX(a,b) ((a)<(b)?(b):(a))
 
 /// ULONG Madmatrix_New(struct IClass *cl,Object *obj,Msg msg)
-ULONG Madmatrix_New(struct IClass *cl,Object *obj,Msg msg)
+IPTR Madmatrix_New(struct IClass *cl,Object *obj,Msg msg)
 {
   struct Madmatrix_Data *data;
 /*  struct TagItem *tags,*tag;*/
@@ -108,14 +110,14 @@ ULONG Madmatrix_New(struct IClass *cl,Object *obj,Msg msg)
   }
   */
 
-  return((ULONG)obj);
+  return((IPTR)obj);
 
 
 }
 ///
 
 /// ULONG Madmatrix_Dispose(struct IClass *cl,Object *obj,Msg msg)
-ULONG Madmatrix_Dispose(struct IClass *cl,Object *obj,Msg msg)
+IPTR Madmatrix_Dispose(struct IClass *cl,Object *obj,Msg msg)
 {
   struct Madmatrix_Data *data = (struct Madmatrix_Data *)INST_DATA(cl,obj);
 
@@ -126,7 +128,7 @@ ULONG Madmatrix_Dispose(struct IClass *cl,Object *obj,Msg msg)
 ///
 
 /// ULONG Madmatrix_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
-ULONG Madmatrix_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
+IPTR Madmatrix_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 {
   struct Madmatrix_Data *data = (struct Madmatrix_Data *)INST_DATA(cl,obj);
   int largeur;
@@ -169,7 +171,7 @@ ULONG Madmatrix_AskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *m
 ///
 
 /// ULONG Madmatrix_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
-ULONG Madmatrix_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
+IPTR Madmatrix_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 {
   struct Madmatrix_Data *data = (struct Madmatrix_Data *)INST_DATA(cl,obj);
   int ligne,colonne;
@@ -334,7 +336,7 @@ ULONG Madmatrix_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
 /// ULONG Madmatrix_Setup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 /* init data & allocate pens */
-ULONG Madmatrix_Setup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+IPTR Madmatrix_Setup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
   if (!(DoSuperMethodA(cl,obj,(Msg)msg)))
     return(FALSE);
@@ -349,7 +351,7 @@ ULONG Madmatrix_Setup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg
 
 
 /// ULONG Madmatrix_Set(struct IClass *cl,Object *obj,Msg msg)
-ULONG Madmatrix_Set(struct IClass *cl,Object *obj,Msg msg)
+IPTR Madmatrix_Set(struct IClass *cl,Object *obj,Msg msg)
 {
   struct Madmatrix_Data *data = INST_DATA(cl,obj);
   struct TagItem *tags,*tag;
@@ -373,10 +375,10 @@ ULONG Madmatrix_Set(struct IClass *cl,Object *obj,Msg msg)
 ///
 
 /// ULONG Madmatrix_Get(struct IClass *cl,Object *obj,Msg msg)
-ULONG Madmatrix_Get(struct IClass *cl,Object *obj,Msg msg)
+IPTR Madmatrix_Get(struct IClass *cl,Object *obj,Msg msg)
 {
   struct Madmatrix_Data *data = INST_DATA(cl,obj);
-  ULONG *store = ((struct opGet *)msg)->opg_Storage;
+  IPTR *store = ((struct opGet *)msg)->opg_Storage;
 
   switch (((struct opGet *)msg)->opg_AttrID)
   {
@@ -390,7 +392,7 @@ ULONG Madmatrix_Get(struct IClass *cl,Object *obj,Msg msg)
 ///
 
 /// ULONG Madmatrix_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
-ULONG Madmatrix_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+IPTR Madmatrix_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
   struct Madmatrix_Data *data = (struct Madmatrix_Data *)INST_DATA(cl,obj);
 
@@ -458,7 +460,7 @@ ULONG Madmatrix_HandleInput(struct IClass *cl,Object *obj,struct MUIP_HandleInpu
 ///
 
 /// ULONG Madmatrix_Cleanup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
-ULONG Madmatrix_Cleanup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
+IPTR Madmatrix_Cleanup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *msg)
 {
   MUI_RejectIDCMP(obj,IDCMP_RAWKEY);
 
@@ -471,10 +473,7 @@ ULONG Madmatrix_Cleanup(struct IClass *cl,Object *obj,struct MUIP_HandleInput *m
 #ifndef __AROS__
 __asm ULONG Madmatrix_Dispatcher(register __a0 struct IClass *cl, register __a2 Object *obj, register __a1 Msg msg)
 #else
-AROS_UFH3(IPTR, Madmatrix_Dispatcher,
-	AROS_UFHA(Class  *, cl,  A0),
-	AROS_UFHA(Object *, obj, A2),
-	AROS_UFHA(Msg     , msg, A1))
+BOOPSI_DISPATCHER(IPTR, Madmatrix_Dispatcher, cl, obj, msg)
 #endif
 {
   Msg msg2;
@@ -502,6 +501,9 @@ AROS_UFH3(IPTR, Madmatrix_Dispatcher,
 
   return(DoSuperMethodA(cl,obj,(Msg)msg));
 }
+#ifdef __AROS__
+BOOPSI_DISPATCHER_END
+#endif
 ///
 
 
