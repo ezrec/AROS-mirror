@@ -16,4 +16,7 @@ USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../libs/muimaster
     progname=MadMatrix targetdir=$(EXEDIR) \
     files=$(FILES)
 
+FILES := MadMatrix.guide MadMatrix_fr.guide
+%copy_files_q mmake=contrib-aminet-games-think-madmatrix dst=$(EXEDIR)
+
 %common

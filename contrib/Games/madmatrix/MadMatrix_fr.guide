@@ -1,0 +1,136 @@
+@database "MadMatrix.guide"
+@author "Olivier Croquette"
+@remark "$VER: MadMatrix Guide 1.2 (18 Mars 2000)"
+@index INDEX
+
+@node MAIN "MadMatrix"
+
+                          Guide MadMatrix v1.2
+                          ====================
+                             18 Mars 2000
+
+
+
+                     * Si vous trouvez une solution *
+                     *    tenez-moi au courant !!!  *
+                     *   ( je vous paie un pot      *
+                     *   sous réserve de proximité  *
+                     *       géographique )         *
+
+
+
+    @{" Qu'est-ce ?          " Link "WHAT"   }             But du jeu et utilisation
+    @{" Besoins              " Link "REQUI"  }
+    @{" Auteur & statut      " Link "AUTHOR" }             Freeware
+    @{" Historique           " Link "HISTORY" }
+
+@endnode
+
+@node WHAT "Explications"
+
+Explications
+============
+
+
+MadMatrix est un jeu très simple. Il démarre avec une matrice NxN remplie
+avec les nombres de 1 à N*N. Les nombres sont triés de manière naturelle.
+Un clic sur 'Shake' se chargera de mettre un peu de désordre là-dedans :).
+Le but est maintenant de remettre les nombres commes ils étaient avant.
+Pour cela, il est possible de faire tourner des blocs 2x2 de nombres sur
+eux-mêmes. Par exemple :
+1 2 3
+4 5 6
+7 8 9
+
+peut donner :
+
+4 1 3
+5 2 6
+7 8 9
+
+Le carré en haut à gauche a été tourné dans le sens des aiguilles d'une
+montre.
+
+C'est tout, bonne change !
+
+  Touches
+  -------
+
+  Déplacement :     Touches de direction
+  Rotation    :     Espace ou 'o' ( sens horaire )
+                    Entrée ou 'p' ( sens trigo )
+
+
+*Nouveau* : Il est possible de spécifier la taille que la matrice aura
+            au démarrage. Par exemple:
+            MadMatrix 3
+            commencera avec une matrice 3x3.
+
+
+@endnode
+
+
+@node REQUI "Besoin"
+
+Besoins
+=======
+
+
+Sous Windows :
+  - Windows 2000 1.25412 beta
+  - min. Pentium 2 @ 266Mhz, Pentium 3 @ 550Mhz recommandé
+  - min. 32Mo RAM, 128Mo recommandé
+
+
+Sous AmigaOS :
+  - AmigaOS v3.0
+  - MUI v3
+  - 30ko de disque :)
+
+
+Je sais que ce genre d'application ne devrait pas nécessiter MUI, mais étant
+donné que je travaille en ce moment sur un projet MUI beaucoup plus gros, je
+me fais la main sur des petits programmes comme MadMatrix.
+
+@endnode
+
+@node AUTHOR "Auteur"
+
+Auteur
+======
+
+MadMatrix a été écrit par Olivier Croquette ( France ).
+Contact : ocroquette@nordnet.fr
+
+Mon site personnel est visible à l'adresse suivante :
+http://home.nordnet.fr/~vcroquette
+
+
+MadMatrix est :
+- Freeware pour la version AmigaOS,
+- Shareware ( 100 US$ ) pour la version Windows.
+
+
+Compilé avec gcc 2.7.2.1
+
+@endnode
+
+
+@node HISTORY "Historique"
+
+Historique
+==========
+
+
+18 Mars 2000    v1.2 :  Correction de petits bugs.
+                        Permet de spécifier la taille au démarrage.
+                        Messages d'encouragement. :)
+
+13 Mars 2000    v1.1 :  Plus de hits au démarrage
+                        Permet des matrices 6x6.
+
+15 Février 2000 v1.0 :  Première version sur Aminet
+
+
+
+@endnode

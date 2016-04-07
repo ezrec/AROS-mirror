@@ -1,0 +1,135 @@
+@database "MadMatrix.guide"
+@author "Olivier Croquette"
+@remark "$VER: MadMatrix Guide 1.2 (18/03/2000)"
+@index INDEX
+
+@node MAIN "Welcome"
+
+                          MadMatrix v1.2 Guide
+                          ==================
+                             18 March 2000
+
+
+
+                    * If you find any solution *
+                    *       Let me know !!     *
+
+
+
+
+
+
+    @{" What is it ?         " Link "WHAT"   }
+    @{" Requirements         " Link "REQUI"  }
+    @{" Author & legal stuff " Link "AUTHOR" }
+    @{" History              " Link "HISTORY" }
+
+@endnode
+
+@node WHAT "What is it ?"
+
+What is it ?
+============
+
+
+
+MadMatrix is a very simple game. It starts with a matrix NxN filled with
+numbers from 1 to N*N. Numbers are sorted in their natural order.
+Now click on 'Shake'. They are no more sorted :).
+The aim is to resort those numbers as they were before. To do that,
+you can only make 2x2 little squares of numbers rotate on themselves.
+For example :
+1 2 3
+4 5 6
+7 8 9
+
+could become :
+
+4 1 3
+5 2 6
+7 8 9
+
+The 2x2 top left square has been turned clockwise here.
+
+That's all, good luck !
+
+
+  Keys
+  ----
+
+  Move      :     Cursor keys
+  Rotate    :     Space or 'o' ( clockwise )
+                  Enter or 'p' ( anticlockwise )
+
+
+*New*   It is now possible so specify the starting size on the
+        command line, like :
+        MadMatrix 3
+        to start with a 3x3 matrix.
+
+
+
+@endnode
+
+
+@node REQUI "Requirements"
+
+Requirements
+============
+
+
+Under Windows :
+  - Windows 2000 1.25412 beta
+  - min. Pentium 2 @ 266Mhz, but Pentium 3 @ 550Mhz recommended
+  - min. 32Mo RAM, 128Mo recommended
+
+
+Under AmigaOS :
+  - AmigaOS v3.0
+  - MUI v3
+  - 30ko of free disk :)
+
+
+I know this kind of application doesn't really need MUI, but since I'm writing
+a quite big project using MUI for the first time, I try to train on little
+one like MadMatrix.
+
+@endnode
+
+@node AUTHOR "Author"
+
+Author
+======
+
+MadMatrix was written by Olivier Croquette ( France ). You can contact me at :
+ocroquette@nordnet.fr
+
+or you can come and visit my homepage :
+http://home.nordnet.fr/~vcroquette ( French Version only ).
+
+
+MadMatrix is :
+- Freeware for AmigaOS version
+- Shareware ( 100 US$ ) for Windows version.
+
+
+Compiled with gcc 2.7.2.1
+
+@endnode
+
+@node HISTORY "History"
+
+History
+=======
+
+18 Mar. 2000 v1.2 :   Little bugs corrected.
+                      Starting size specification on command line.
+                      Messages.
+
+13 Mar. 2000 v1.1 :   Hits on setup are now fixed.
+                      Up to 6x6 matrix.
+15 Feb. 2000 v1.0 :   First Aminet release
+
+
+@endnode
+
