@@ -28,7 +28,7 @@ extern struct Library *MUIMasterBase;
 
 int main(int argc, char **argv)
 {
-  IPTR ok;
+  IPTR ok = 0;
   Object *app,*win_main, *madmatrix, *restart, *shake, *taille, *groupe;
 #ifdef SOLVE
   Object *resoud
