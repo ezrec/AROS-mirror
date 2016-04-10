@@ -102,10 +102,12 @@ const char* Archive::ReadHeader()
 					{
 						hd->SubData.Alloc(DataSize);
 						Raw.Get(&hd->SubData[0],DataSize);
+#if !defined(__AROS__)
 						if (hd->CmpName(SUBHEAD_TYPE_RR))
 						{
 							byte *D=&hd->SubData[8];
 						}
+#endif
 					}
 				}
 				else
