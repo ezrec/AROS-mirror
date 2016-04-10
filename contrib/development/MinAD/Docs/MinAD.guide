@@ -1,0 +1,109 @@
+@database "MinAD.guide"
+@author "Rupert Hausberger"
+
+@node MAIN "MinAD · Welcome"
+                           @{b}- MinAD -@{ub}
+                     @{b}Min@{ub}imalistic @{b}A@{ub}uto@{b}D@{ub}oc
+
+                  ©2005-2012 Rupert Hausberger
+                            @{i}- GPL -@{ui}
+
+  @{" Description  " link DESCRIPTION} What is it?
+  @{" Features     " link FEATURES} What can it?
+
+  @{" Requirements " link REQUIREMENTS} What does it need?
+  @{" Installation " link INSTALL} How to install it?
+  @{" Usage        " link USAGE} How do i use it?
+
+  @{" Author       " link AUTHOR} Who made it?
+  @{" Copyrights   " link COPYRIGHTS} Copyrights?
+
+  @{" License      " link LICENSE} License?
+  @{" History      " link HISTORY} History?
+
+  @{" Thanks       " link THANKS} Who help?
+@endnode
+
+@node DESCRIPTION "MinAD · Description"
+Description
+===========
+  'MinAD' is a tool to view autodoc-files.
+@endnode
+
+@node FEATURES "MinAD · Features"
+Features
+========
+  - Auto-grouping of most common AutoDocs
+  - Search function
+  - Filter function
+  - Directory ride
+  - Fast
+@endnode
+
+@node REQUIREMENTS "MinAD · Requirements"
+Requirements
+============
+  - AmigaOS 3.x / MorphOS 1.x
+  - NList classes
+@endnode
+
+@node INSTALL "MinAD · Installation"
+Installation
+============
+  Just drag the MinAD-drawer where you like. 'MinAD' doesn't need any assigns.
+@endnode
+
+@node USAGE "MinAD · Usage"
+Usage
+=====
+  Just select you AutoDocs-path and things get running.
+
+  Use the 'Mode' cycle in the 'Main' window to switch between the 'Autogroup'
+  and the 'Normal' view mode.
+
+  Use the filter string to only show files and functions selected with the
+  filter. The filter works like *filterstring*.
+
+  Use the menuitem 'Tools/Search Function' to find files and functions.
+  Here it's also *patternstring*.
+
+  Thats all..
+@endnode
+
+@node AUTHOR "MinAD · Author"
+Author
+======
+  ©2005-2012 Rupert Hausberger <naTmeg@gmx.net>
+  http://natmeg.mooo.com/
+@endnode
+
+@node COPYRIGHTS "MinAD · Copyrights"
+Copyrights
+==========
+NList : ©2001-2012 NList Open Source Team
+        http://www.sourceforge.net/projects/nlist-classes/
+@endnode
+
+@node LICENSE "MinAD · License"
+License
+=======
+  GPL. Please refer to the file COPYING for details.
+@endnode
+
+@node HISTORY "MinAD · History"
+History
+=======
+  Please refer to the file ChangeLog for details.
+@endnode
+
+@node THANKS "MinAD · Thanks"
+Thanks
+======
+  - Christian Rosentreter (Tokai)
+    For pulling my arm if the MUI-GUI don't follow the standard.
+    And for giving usefull tips.
+
+  - People on #morphos
+    For betatesting this tool.
+@endnode
+

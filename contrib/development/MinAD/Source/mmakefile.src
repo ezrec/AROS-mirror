@@ -1,0 +1,30 @@
+# $Id$
+# Makefile to make MinAD.
+
+include $(SRCDIR)/config/aros.cfg
+
+USER_CFLAGS := \
+    -D__AMIGADATE__=\"$(shell date "+%d.%m.%Y")\" \
+    -D__YEAR__=\"$(shell date "+%Y")\" \
+    -DMUI_OBSOLETE
+
+FILES := \
+    startup \
+    app \
+    misc \
+    main \
+    listtree \
+    string
+
+EXEDIR := $(AROS_CONTRIB)/Development/MinAD
+
+#MM- contrib-development : contrib-development-minad
+
+#MM contrib-development-minad : \
+#MM    includes linklibs
+
+%build_prog mmake=contrib-development-minad \
+    progname=MinAD targetdir=$(EXEDIR) \
+    files=$(FILES)
+
+%common

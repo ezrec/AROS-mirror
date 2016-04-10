@@ -1,0 +1,37 @@
+CC = gcc
+STRIP = strip
+CHMOD = chmod
+CP = cp
+RM = rm
+
+CFLAGS = -O2 -Wall -noixemul
+LFLAGS = -lm -lmuimaster -noixemul
+CDEFS = \
+	-D__AMIGADATE__=\"$(shell date "+%d.%m.%Y")\" \
+	-D__YEAR__=\"$(shell date "+%Y")\" \
+	-DNO_INLINE_STDARG
+
+EXE = MinAD
+
+OBJ = \
+	startup.o \
+	app.o \
+	misc.o \
+	main.o \
+	listtree.o \
+	string.o \
+	os3.o
+
+all: $(EXE)
+
+$(EXE): $(OBJ)
+	$(CC) $(OBJ) -o $@.debug $(LFLAGS)
+	$(STRIP) --strip-all --strip-unneeded --remove-section .comment $@.debug -o $@
+	$(CHMOD) +x $(EXE)
+
+.c.o:
+	$(CC) $(CDEFS) $(CFLAGS) -c $< -o $@
+
+clean:
+	$(RM) -f $(OBJ) $(EXE) $(EXE).debug
+

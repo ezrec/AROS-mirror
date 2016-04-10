@@ -1,0 +1,61 @@
+Short:        MinAD - Minimalistic Autodoc Viewer
+Author:       Rupert Hausberger <natmeg@gmx.net>
+Uploader:     Rupert Hausberger <natmeg@gmx.net>
+Type:         text/show
+Version:      1.7
+Architecture: ppc-morphos
+
+Description
+===========
+  'MinAD' is a tool to view autodoc-files.
+
+Features
+========
+  - Auto-grouping of most common AutoDocs
+  - Search function
+  - Filter function
+  - Directory ride
+  - Fast
+
+Requirements
+============
+  - MorphOS 1.x
+  - NList classes
+
+Installation
+============
+  Just drag the MinAD-drawer where you like. 'MinAD' doesn't need any assigns.
+
+Usage
+=====
+  Just select you AutoDocs-path and things get running.
+
+  Use the 'Mode' cycle in the 'Main' window to switch between the 'Autogroup'
+  and the 'Normal' view mode.
+
+  Use the filter string to only show files and functions selected with the
+  filter. The filter works like *filterstring*.
+
+  Use the menuitem 'Tools/Search Function' to find files and functions.
+  Here it's also *patternstring*.
+
+  Thats all..
+
+Author
+======
+  ©2005-2012 Rupert Hausberger <natmeg@gmx.net>
+  http://natmeg.mooo.com/
+
+Copyrights
+==========
+NList : ©2001-2012 NList Open Source Team
+        http://www.sourceforge.net/projects/nlist-classes/
+
+License
+=======
+  GPL. Please refer to the file COPYING for details.
+
+History
+=======
+  Please refer to the file ChangeLog for details.
+
