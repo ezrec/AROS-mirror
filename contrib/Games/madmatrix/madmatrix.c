@@ -203,6 +203,11 @@ IPTR Madmatrix_Draw(struct IClass *cl,Object *obj,struct MUIP_Draw *msg)
 
   DoSuperMethodA(cl,obj,(Msg)msg);
 
+  if (data->matrice == NULL)
+  {
+    return FALSE;
+  }
+
   SetAPen(_rp(obj),0);
   if ( data->mouvement == 0 )
     RectFill(_rp(obj),_mleft(obj),_mtop(obj),_mright(obj),_mbottom(obj));
@@ -582,6 +587,7 @@ void Madmatrix_Restart(struct IClass *cl,Object *obj)
       if (DoMethod(data->groupe,MUIM_Group_InitChange))
       {
         FreeTab((void **)data->matrice,data->taille);
+        data->matrice = NULL;
 
         DoMethod(data->groupe,OM_REMMEMBER,obj);
         data->taille=data->ntaille;
@@ -593,6 +599,7 @@ void Madmatrix_Restart(struct IClass *cl,Object *obj)
     else
     {
       FreeTab((void **)data->matrice,data->taille);
+      data->matrice = NULL;
       data->taille=data->ntaille;
     }
 
