@@ -702,9 +702,8 @@ static LONG Highlight(UBYTE *data, LONG size, UBYTE *high)
 
 void DirRide(void)
 {
-	struct MUI_NListtree_TreeNode *node = NULL;
-
-	DoMethod(MUI_Obj[MAIN][M_Files], MUIM_NListtree_GetEntry, node, MUIV_NListtree_GetEntry_ListNode_Active, 0);
+	struct MUI_NListtree_TreeNode *node = (struct MUI_NListtree_TreeNode *)
+	DoMethod(MUI_Obj[MAIN][M_Files], MUIM_NListtree_GetEntry, MUIV_NListtree_Exchange_ListNode1_Root, MUIV_NListtree_GetEntry_ListNode_Active, 0);
 
 	if (node)
 	{
@@ -761,9 +760,8 @@ void DirRide(void)
 
 void ShowFunc(void)
 {
-	struct MUI_NListtree_TreeNode *node = NULL;
-
-	DoMethod(MUI_Obj[MAIN][M_Docs], MUIM_NListtree_GetEntry, node, MUIV_NListtree_GetEntry_ListNode_Active, 0);
+	struct MUI_NListtree_TreeNode *node = (struct MUI_NListtree_TreeNode *)
+	DoMethod(MUI_Obj[MAIN][M_Docs], MUIM_NListtree_GetEntry, MUIV_NListtree_Exchange_ListNode1_Root, MUIV_NListtree_GetEntry_ListNode_Active, 0);
 
 	if (node)
 	{
@@ -1035,9 +1033,8 @@ void OpenCloseAll(BOOL mode)
 
 void mTools_MakeGuide(void)
 {
-	struct MUI_NListtree_TreeNode *node = NULL;
-
-	DoMethod(MUI_Obj[MAIN][M_Docs], MUIM_NListtree_GetEntry, node, MUIV_NListtree_GetEntry_ListNode_Active, 0);
+	struct MUI_NListtree_TreeNode *node = (struct MUI_NListtree_TreeNode *)
+	DoMethod(MUI_Obj[MAIN][M_Docs], MUIM_NListtree_GetEntry, MUIV_NListtree_Exchange_ListNode1_Root, MUIV_NListtree_GetEntry_ListNode_Active, 0);
 
 	if (node)
 	{
