@@ -1164,7 +1164,7 @@ static void drop_crop( tsd_t *TSD, environment *env, streng **string,
    streng *s ;
    char *ptr ;
    void *fptr = NULL ;
-   int max, found, termlen, isStream ;
+   int max, found, termlen = 0, isStream ;
 
 
    s = *string;
