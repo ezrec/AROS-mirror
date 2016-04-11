@@ -28,6 +28,8 @@ USER_CFLAGS  := $(NOWARN_FLAGS) -I$(PORTSDIR)/vim/vim72/src/proto \
 	     -DDFLT_RUNTIMEPATH=\"PROGDIR:runtime\" \
 	     -UAMIGA -U_AMIGA -DAROS
 
+CONFIG_CFLAGS := $(subst -Werror ,,$(CONFIG_CFLAGS))
+
 FILES := \
     buffer charset diff digraph edit eval ex_cmds ex_cmds2 \
     ex_docmd ex_eval ex_getln fileio fold getchar hardcopy \
