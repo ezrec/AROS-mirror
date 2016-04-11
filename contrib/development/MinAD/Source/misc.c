@@ -71,8 +71,13 @@ struct Node *GetNode(struct List *list, LONG num)
 
 static void bcplcpy(UBYTE *out, BSTR in)
 {
+#if defined(__AROS__)
+	UBYTE *ptr = AROS_BSTR_ADDR(in);
+	ULONG len = AROS_BSTR_strlen(in);
+#else
 	UBYTE *ptr = (UBYTE *)BADDR(in);
 	ULONG len = (ULONG)*ptr++;
+#endif
 
 	if (len) {
 		_strncpy(out, ptr, len); out[len] = ':'; out[len+1] = '\0';
