@@ -12,7 +12,7 @@ ICONS := AmiChess \
          Inv \
          Kiel \
          LazyMines LBreakout2 \
-         Moria3D MUIMine \
+         MadMatrix Moria3D MUIMine \
          NewMasterMind \
          Quake \
          Soliton Spout \
