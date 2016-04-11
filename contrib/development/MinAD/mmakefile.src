@@ -1,0 +1,18 @@
+# $Id$
+# Makefile to make MinAD.
+
+include $(SRCDIR)/config/aros.cfg
+
+EXEDIR := $(AROS_CONTRIB)/Development/MinAD
+
+#MM- contrib-development-minad : \
+#MM    contrib-development-minad-files \
+#MM    contrib-development-minad-docs
+
+%copy_dir_recursive mmake=contrib-development-minad-docs \
+    src=Docs dst=$(EXEDIR)/Docs
+
+FILES := Docs.info MinAD.info
+%copy_files_q mmake=contrib-development-minad-files dst=$(EXEDIR)
+
+%common
