@@ -26,6 +26,8 @@ NOWARN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECL) $(NOWARN_PARENTHESES)
 USER_CFLAGS := $(NOWARN_FLAGS)
 USER_INCLUDES := -I.
 
+CONFIG_CFLAGS := $(subst -Werror ,,$(CONFIG_CFLAGS))
+
 %build_prog mmake=ports-game-multipuzzle progname=MultiPuzzle \
     files=$(FILES) targetdir=$(TARGETDIR)
 
