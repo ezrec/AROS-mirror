@@ -58,7 +58,7 @@
 #define APP_DISKOBJECT	"PROGDIR:"APP_PROGNAME
 #define APP_HELPFILE		"PROGDIR:Docs/"APP_PROGNAME".guide"
 
-#ifdef __MORPHOS__
+#if defined(__MORPHOS__) || defined(__AROS__)
 #define APP_LOGOFILE		"PROGDIR:"APP_PROGNAME".info"
 #else
 #define APP_LOGOFILE		"PROGDIR:"APP_PROGNAME".logo"
