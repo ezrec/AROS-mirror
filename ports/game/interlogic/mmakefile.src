@@ -17,6 +17,8 @@ SDL_PREFIX   := $(AROS_DEVELOPMENT)
 NOWARN_FLAGS := $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_DISCARDED_QUALIFIERS)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags)
 
+CONFIG_CFLAGS := $(subst -Werror ,,$(CONFIG_CFLAGS))
+
 FILES := \
     $(PORTSDIR)/interlogic/interlogic/src/password \
     $(PORTSDIR)/interlogic/interlogic/src/credits \
