@@ -3,7 +3,8 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-USER_CFLAGS := \
+NOWARN_FLAGS := $(NOWARN_UNINITIALIZED)
+USER_CFLAGS := $(NOWARN_FLAGS) \
     -D__AMIGADATE__=\"$(shell date "+%d.%m.%Y")\" \
     -D__YEAR__=\"$(shell date "+%Y")\" \
     -DMUI_OBSOLETE
