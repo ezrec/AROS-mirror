@@ -21,6 +21,8 @@ NOWARN_FLAGS := $(NOWARN_PARENTHESES)
 USER_CFLAGS  := $(NOWARN_FLAGS) -DNO_ANIMATION
 USER_INCLUDES:= -I $(PORTSDIR)/magnetic/$(ARCHBASE)/Generic
 
+CONFIG_CFLAGS := $(subst -Werror ,,$(CONFIG_CFLAGS))
+
 FILES := Amiga/amiga Generic/emu
 FILES := $(addprefix $(PORTSDIR)/magnetic/$(ARCHBASE)/,$(FILES))
 
