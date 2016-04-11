@@ -1,4 +1,5 @@
 # $Id$
 
 #MM- ports : ports-game
+#MM- ports-game : ports-game-$(AROS_TARGET_CPU)
 
