@@ -26,6 +26,8 @@ TARGETDIR    := $(AROS_CONTRIB)/Utilities/Filetool/Zaphod
 USER_CFLAGS  := -D__LOCALE_STDLIBBASE__ -D__GRAPHICS_STDLIBBASE__ -D__INTUITION_STDLIBBASE__
 USER_INCLUDES:= -I$(PORTSDIR)/zaphod/$(ARCHBASE)/src
 
+CONFIG_CFLAGS := $(subst -Werror ,,$(CONFIG_CFLAGS))
+
 FILES := \
 	src/locale \
 	src/events \
