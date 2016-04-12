@@ -9,6 +9,9 @@ EXEDIR  := $(AROS_CONTRIB)/MultiMedia/Gfx/DatatypeToCSource
 #MM- contrib-gfx : contrib-gfx-datatype2csource
 #MM  contrib-gfx-datatype2csource : includes linklibs
 
+NOWARN_FLAGS := $(NOWARN_FORMAT)
+USER_CFLAGS := $(NOWARN_FLAGS)
+
 %build_prog mmake=contrib-gfx-datatype2csource \
     progname=DatatypeToCSource targetdir=$(EXEDIR) \
     files=$(FILES) uselibs=bz2
