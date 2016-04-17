@@ -23,7 +23,8 @@ FFMPEG_OPTIONS := \
         --target-os=aros \
         --cc=$(FFMPEG_CC) \
         --extra-cflags=$(FFMPEG_CFLAGS) \
-        --disable-yasm
+        --disable-yasm \
+        --disable-programs --disable-doc
 
 NOWARN_FLAGS := $(NOWARN_DEPRECATED_DECLARATIONS) $(NOWARN_UNUSED_RESULT)
 USER_CFLAGS := $(NOWARN_FLAGS)
