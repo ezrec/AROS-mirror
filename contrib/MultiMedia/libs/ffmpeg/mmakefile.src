@@ -1,0 +1,34 @@
+# Copyright © 2016, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(SRCDIR)/config/aros.cfg
+
+#MM contrib-ffmpeg : linklibs-startup linklibs-amiga linklibs-arossupport linklibs-clib
+
+FFMPEG_CC="$(TARGET_CC)"
+FFMPEG_CFLAGS="$(TARGET_CFLAGS)"
+
+VERSION      := 3.0.1
+REPOSITORIES := http://ffmpeg.org/releases
+
+ifneq ($(AROS_TARGET_CPU),i386)
+FFMPEG_ARCH := $(AROS_TARGET_CPU)
+else
+FFMPEG_ARCH := x86 --cpu=$(AROS_TARGET_CPU)
+endif
+
+FFMPEG_OPTIONS := \
+        --enable-cross-compile \
+        --arch=$(FFMPEG_ARCH) \
+        --target-os=aros \
+        --cc=$(FFMPEG_CC) \
+        --extra-cflags=$(FFMPEG_CFLAGS) \
+        --disable-yasm
+
+NOWARN_FLAGS := $(NOWARN_DEPRECATED_DECLARATIONS) $(NOWARN_UNUSED_RESULT)
+USER_CFLAGS := $(NOWARN_FLAGS)
+
+%fetch_and_build mmake=contrib-ffmpeg prefix=$(AROS_DEVELOPMENT) \
+	package=ffmpeg version=$(VERSION) suffixes="tar.bz2" \
+	patch=yes nix=yes package_repo=$(REPOSITORIES) \
+	extraoptions="$(FFMPEG_OPTIONS)" gnuflags=no

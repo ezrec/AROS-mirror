@@ -1,0 +1,12 @@
+diff -ruN ffmpeg-3.0.1/configure ffmpeg-3.0.1.aros/configure
+--- ffmpeg-3.0.1/configure	2016-03-29 03:27:11.000000000 +0100
++++ ffmpeg-3.0.1.aros/configure	2016-04-17 10:34:50.325159324 +0100
+@@ -4467,6 +4467,8 @@
+         SLIB_INSTALL_LINKS=
+         SHFLAGS='-shared -Wl,-soname,$(SLIBNAME)'
+         ;;
++    aros)
++        ;;
+     haiku)
+         prefix_default="/boot/common"
+         network_extralibs="-lnetwork"
