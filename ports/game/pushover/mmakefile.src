@@ -7,6 +7,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-pushover : \
 #MM     contrib-sdl \
 #MM     contrib-sdl-sdl-mixer \
+#MM     contrib-sdl-sdl-ttf \
 #MM     contrib-development-libs-libintl \
 #MM     contrib-development-lua
 
