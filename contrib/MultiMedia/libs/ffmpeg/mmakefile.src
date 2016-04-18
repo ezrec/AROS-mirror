@@ -3,7 +3,7 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-#MM contrib-ffmpeg : linklibs-startup linklibs-amiga linklibs-arossupport linklibs-clib
+#MM- contrib-ffmpeg : linklibs-startup linklibs-amiga linklibs-arossupport linklibs-clib
 
 FFMPEG_CC="$(TARGET_CC)"
 FFMPEG_CFLAGS="$(TARGET_CFLAGS)"
