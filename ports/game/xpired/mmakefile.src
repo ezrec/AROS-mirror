@@ -9,7 +9,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM  ports-game-xpired-img ports-game-xpired-snd ports-game-xpired-fetch
 
 #MM  ports-game-xpiredbin : includes linklibs contrib-sdl \
-#MM    contrib-sdl-sdl-image contrib-sdl-sdl-gfx ports-game-xpired-fetch
+#MM    contrib-sdl-sdl-image contrib-sdl-sdl-gfx contrib-sdl-sdl-mixer ports-game-xpired-fetch
 
 #MM  ports-game-xpiredit : includes linklibs contrib-sdl \
 #MM    contrib-sdl-sdl-image contrib-sdl-sdl-gfx ports-game-xpired-fetch
