@@ -1,6 +1,6 @@
 diff -ruN ffmpeg-3.0.1/configure ffmpeg-3.0.1.aros/configure
 --- ffmpeg-3.0.1/configure	2016-03-29 03:27:11.000000000 +0100
-+++ ffmpeg-3.0.1.aros/configure	2016-04-17 10:34:50.325159324 +0100
++++ ffmpeg-3.0.1.aros/configure	2016-04-17 10:40:16.268649237 +0100
 @@ -4467,6 +4467,8 @@
          SLIB_INSTALL_LINKS=
          SHFLAGS='-shared -Wl,-soname,$(SLIBNAME)'
@@ -10,3 +10,14 @@ diff -ruN ffmpeg-3.0.1/configure ffmpeg-3.0.1.aros/configure
      haiku)
          prefix_default="/boot/common"
          network_extralibs="-lnetwork"
+diff -ruN ffmpeg-3.0.1/libavformat/Makefile ffmpeg-3.0.1.aros/libavformat/Makefile
+--- ffmpeg-3.0.1/libavformat/Makefile	2016-03-29 03:25:27.000000000 +0100
++++ ffmpeg-3.0.1.aros/libavformat/Makefile	2016-04-18 15:08:52.012360343 +0100
+@@ -5,6 +5,7 @@
+ HEADERS = avformat.h                                                    \
+           avio.h                                                        \
+           version.h                                                     \
++          url.h
+ 
+ OBJS = allformats.o         \
+        avio.o               \
