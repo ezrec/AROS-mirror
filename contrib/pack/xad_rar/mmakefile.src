@@ -1,9 +1,10 @@
-# Copyright © 2013, The AROS Development Team. All rights reserved.
+# Copyright © 2013-2016, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros.cfg
 
-NOWARN_FLAGS := $(NOWARN_ATTRIBUTES) $(NOWARN_UNKNOWN_PRAGMAS)
+NOWARN_FLAGS := $(NOWARN_ATTRIBUTES) $(NOWARN_UNKNOWN_PRAGMAS)\
+ $(NOWARN_MAYBE_UNINITIALIZED)
 USER_CFLAGS     := -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/Rar_Extractor-0.2.1/unrarlib/unrarlib
 USER_CXXFLAGS := $(NOWARN_FLAGS)
 LDFLAGS += -nostartfiles

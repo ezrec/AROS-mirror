@@ -1,4 +1,4 @@
-# Copyright © 2013, The AROS Development Team. All rights reserved.
+# Copyright © 2013-2016, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros.cfg
@@ -6,7 +6,7 @@ include $(SRCDIR)/config/aros.cfg
 NOWARN_FLAGS := $(NOWARN_SIGN_COMPARE) $(NOWARN_PARENTHESES) \
         $(NOWARN_ATTRIBUTES) $(NOWARN_UNKNOWN_PRAGMAS) \
         $(NOWARN_SWITCH) $(NOWARN_MISSING_BRACES) \
-        $(NOWARN_VOLATILE_REGISTER_VAR)
+        $(NOWARN_VOLATILE_REGISTER_VAR) $(NOWARN_MAYBE_UNINITIALIZED)
 USER_CXXFLAGS := $(NOWARN_FLAGS)
 
 CPPSRCS := \
