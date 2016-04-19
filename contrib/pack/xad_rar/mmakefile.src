@@ -10,6 +10,8 @@ USER_CFLAGS := -I$(AROS_INCLUDES)/SDI\
 USER_CXXFLAGS := $(NOWARN_FLAGS)
 LDFLAGS += -nostartfiles
 
+CONFIG_CXXFLAGS := $(subst -Werror ,,$(CONFIG_CXXFLAGS))
+
 #MM- xadmaster-clients : \
 #MM xadmaster-client-rar
 
