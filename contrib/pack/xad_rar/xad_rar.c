@@ -109,7 +109,7 @@ xadERROR rar_GetInfo(struct xadArchiveInfo *ai, struct xadMasterBase *xadMasterB
         #endif
 #else
         if (!set_call_funcs(SETNAME(INIT), 1, 1))
-            return NULL;
+            return (xadERROR)NULL;
 #endif
 
         ai->xai_PrivateClient = xadAllocVec(sizeof(struct xadrarprivate),MEMF_PRIVATE | MEMF_CLEAR);
@@ -176,7 +176,7 @@ xadERROR rar_UnArchive(struct xadArchiveInfo *ai, struct xadMasterBase *xadMaste
 #endif
         struct xadFileInfo *fi = ai->xai_CurFile;
         long err=XADERR_OK;
-        ULONG data_size = 0;
+        unsigned long data_size = 0;
         ArchiveList_struct *templist = (ArchiveList_struct *)fi->xfi_PrivateInfo;
 
 #if !defined(__AROS__)
@@ -193,7 +193,7 @@ xadERROR rar_UnArchive(struct xadArchiveInfo *ai, struct xadMasterBase *xadMaste
         #endif
 #else
         if (!set_call_funcs(SETNAME(INIT), 1, 1))
-            return NULL;
+            return (xadERROR)NULL;
 #endif
         
 #ifdef __amigaos4__
