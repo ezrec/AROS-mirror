@@ -7,6 +7,7 @@
  * under the same terms as AROS itself.
  */
 
+#define ADEBUG 1
 #include "thread_intern.h"
 
 #include <exec/libraries.h>
@@ -18,9 +19,6 @@
 #include <proto/exec.h>
 #include <proto/dos.h>
 #include <proto/thread.h>
-
-#define ADEBUG 1
-#include <aros/debug.h>
 
 struct trampoline_data {
     struct ThreadBase   *ThreadBase;

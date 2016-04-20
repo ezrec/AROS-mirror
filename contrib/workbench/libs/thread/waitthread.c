@@ -7,15 +7,13 @@
  * under the same terms as AROS itself.
  */
 
+#define ADEBUG 1
 #include "thread_intern.h"
 
 #include <exec/types.h>
 #include <exec/tasks.h>
 #include <proto/exec.h>
 #include <proto/thread.h>
-
-#define ADEBUG 1
-#include <aros/debug.h>
 
 /*****************************************************************************
 
