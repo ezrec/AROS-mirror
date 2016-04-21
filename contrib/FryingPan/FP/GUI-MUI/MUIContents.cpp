@@ -137,7 +137,7 @@ DbgHandler *MUIContents::getDebug()
 IPTR MUIContents::getObject()
 {
    _dx(Lvl_Info, "Retrieving page content (%lx)", (IPTR)all);
-   if (NULL != all)
+   if (0 != all)
       return all;
 
    _dx(Lvl_Info, "Page not created yet - building");
