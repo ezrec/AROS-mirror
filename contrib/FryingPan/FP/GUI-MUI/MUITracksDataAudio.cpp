@@ -98,7 +98,7 @@ DbgHandler *MUITracksDataAudio::getDebug()
 
 IPTR MUITracksDataAudio::getObject()
 {
-   if (NULL != all)
+   if (0 != all)
       return all;
 
    tracks = new MUIList("BAR,BAR,", true);
