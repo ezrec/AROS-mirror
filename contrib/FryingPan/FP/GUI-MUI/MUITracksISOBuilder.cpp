@@ -108,7 +108,7 @@ MUITracksISOBuilder::~MUITracksISOBuilder()
 
 IPTR MUITracksISOBuilder::getObject()
 {
-   if (NULL != all)
+   if (0 != all)
       return all;
 
    files  = new MUIList("BAR,BAR", true); 
