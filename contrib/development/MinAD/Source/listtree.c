@@ -502,7 +502,7 @@ void ShowListtree(void)
 	DoMethod(MUI_Obj[MAIN][M_Docs], MUIM_NListtree_Clear);
 
 	/* Add Roots (Drawer Index & AutoDocs Index) */
-	file = (struct AutoDocFile *)((struct List *)(&autodocs.ad_Files))->lh_Head;
+	file = (struct AutoDocFile *)GetHead(&autodocs.ad_Files);
 	file->adf_ListMsg.adm_Type = TYP_ROOT;
 	froot = (struct MUI_NListtree_TreeNode *)DoMethod(MUI_Obj[MAIN][M_Files], MUIM_NListtree_Insert, "\033bDrawer Index", &file->adf_ListMsg, MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, file->adf_ListFlags);
 	root = (struct MUI_NListtree_TreeNode *)DoMethod(MUI_Obj[MAIN][M_Docs], MUIM_NListtree_Insert, "\033bAutoDoc Index", &file->adf_ListMsg, MUIV_NListtree_Insert_ListNode_Root, MUIV_NListtree_Insert_PrevNode_Tail, file->adf_ListFlags);
