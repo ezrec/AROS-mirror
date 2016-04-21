@@ -177,10 +177,10 @@ STATIC void IterateList( void (* callback)( struct ExpansionEntry *ee, void *use
                     stccpy(ee->ee_HardwareType, "ZORRO", sizeof(ee->ee_HardwareType));
 
                     if (IdentifyBase) {
-                        IdExpansionTags(IDTAG_ConfigDev, cd,
-                                        IDTAG_ManufStr, ee->ee_ManufName,
-                                        IDTAG_ProdStr, ee->ee_ProdName,
-                                        IDTAG_ClassStr, ee->ee_ProdClass,
+                        IdExpansionTags(IDTAG_ConfigDev, (IPTR)cd,
+                                        IDTAG_ManufStr, (IPTR)ee->ee_ManufName,
+                                        IDTAG_ProdStr, (IPTR)ee->ee_ProdName,
+                                        IDTAG_ClassStr, (IPTR)ee->ee_ProdClass,
                                         IDTAG_Localize, FALSE,
                                         TAG_DONE);
                     } else {
