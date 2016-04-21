@@ -83,8 +83,8 @@ void MUIPopUnit::setDevice(const char *device)
 
 IPTR MUIPopUnit::construct(IPTR, IPTR arg)
 {
-   ASSERT(arg != NULL);
-   if (NULL == arg)
+   ASSERT(arg != (IPTR)NULL);
+   if ((IPTR)NULL == arg)
       return 0;
 
    ScanData   *d = (ScanData*)arg;
@@ -108,7 +108,7 @@ IPTR MUIPopUnit::destruct(IPTR, IPTR arg)
 
 IPTR MUIPopUnit::display(const char** arr, IPTR arg)
 {
-   if (NULL == arg)
+   if ((IPTR)NULL == arg)
    {
       return MUIPopText::display(arr, arg);
    }

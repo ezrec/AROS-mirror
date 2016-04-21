@@ -147,7 +147,7 @@ IPTR MUIPopString::destruct(IPTR, IPTR arg)
 
 IPTR MUIPopString::display(const char** arr, IPTR arg)
 {
-   if (arg != NULL)
+   if (arg != (IPTR)NULL)
    {
       arr[0] = (const char*)arg;
    }

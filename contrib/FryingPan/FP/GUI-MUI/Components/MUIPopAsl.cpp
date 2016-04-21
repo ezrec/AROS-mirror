@@ -144,7 +144,7 @@ IPTR MUIPopAsl::getPopObject()
 void MUIPopAsl::setValue(IPTR val)
 {
    strncpy(value, (const char*)val, sizeof(value)-1);
-   if (val != NULL)
+   if (val != (IPTR)NULL)
    {
       muiSetText(ID_String, (const char*)val);
    }

@@ -152,7 +152,7 @@ MUIDrive::~MUIDrive()
 IPTR MUIDrive::getObject()
 {
    _dx(Lvl_Info, "Retrieving page content (%08lx)", (IPTR)all);
-   if (NULL != all)
+   if (0 != all)
       return all;
 
    _dx(Lvl_Info, "Page not created - building");

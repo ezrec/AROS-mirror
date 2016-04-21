@@ -108,7 +108,7 @@ void MUIRecord::stop()
 
 IPTR MUIRecord::getObject()
 {
-   if (NULL != all)
+   if (0 != all)
       return all;
 
    speedselect = new MUISpeedSelect(Glb);

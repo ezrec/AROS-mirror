@@ -105,7 +105,7 @@ void MUISettings::stop()
 
 IPTR MUISettings::getObject()
 {
-   if (NULL != all)
+   if (0 != all)
       return all;
 
    popDataExport     = new MUIPopText(0);
