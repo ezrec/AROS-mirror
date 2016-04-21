@@ -52,4 +52,4 @@ USER_LDFLAGS := -static-libstdc++
 
 %build_prog mmake=contrib-fryingpan-fp-guimui \
  progname="mui.interface" targetdir=$(DESTDIR) files= cxxfiles="$(CXXFILES)" \
- uselibs="Generic C Library" usestartup=no
+ uselibs="Generic C Library" usestartup=no lto=no
