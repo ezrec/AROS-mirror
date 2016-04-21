@@ -161,7 +161,7 @@ void MUIMedia::stop()
 
 IPTR MUIMedia::getObject()
 {
-   if (NULL != all)
+   if (0 != all)
       return all;
 
    static const char* preptypes[3];
