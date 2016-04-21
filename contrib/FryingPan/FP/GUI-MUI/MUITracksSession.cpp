@@ -94,7 +94,7 @@ DbgHandler *MUITracksSession::getDebug()
 
 IPTR MUITracksSession::getObject()
 {
-   if (NULL != all)
+   if (0 != all)
       return all;
 
    tracks = new MUITree("BAR,BAR,", true);
