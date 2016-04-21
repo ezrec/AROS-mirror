@@ -297,7 +297,7 @@ int main()
    }
    else if (arg.show_contents) 
    {
-      IPTR        num = NULL;
+      IPTR        num = (IPTR)NULL;
       IOptItem   *di = NULL;
 
       DOS->VPrintf("Please insert a disc (unless it is already inserted).\n", 0);
@@ -507,7 +507,7 @@ int main()
    }
    else if (arg.read_track) 
    {
-      IPTR              num = NULL;
+      IPTR              num = (IPTR)NULL;
       IOptItem         *di = NULL;
       const IOptItem   *trak = 0;
 
@@ -650,7 +650,7 @@ int main()
    }
    else if (arg.close_tracks)
    {
-      IPTR         num = NULL;
+      IPTR         num = (IPTR)NULL;
       IOptItem   *di = NULL;
 
       DOS->VPrintf("Please insert a disc (unless it is already inserted).\n", 0);
