@@ -1,0 +1,32 @@
+# $Id$
+
+include $(SRCDIR)/config/aros.cfg
+
+#MM- ports-audio : ports-audio-milkytracker
+
+#MM- ports-audio-milkytracker : contrib-sdl
+
+PACKAGE      := milkytracker
+VERSION      := 0.90.86
+TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Audio/MilkyTracker
+REPOSITORIES := http://milkytracker.org/files
+USER_CXXFLAGS:= -fpermissive
+
+%fetch_and_build mmake=ports-audio-milkytracker prefix=$(TARGETDIR) \
+	package=$(PACKAGE) version=$(VERSION) suffixes="tar.bz2" \
+	patch=no package_repo=$(REPOSITORIES) nix=no nix_dir_layout=no \
+	extracxxflags="$(USER_CXXFLAGS)" extraoptions="" \
+        postinstall=ports-audio-milkytracker-songs
+
+
+%copy_dir_recursive mmake=ports-audio-milkytracker-songs \
+        src=$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/resources/music \
+        dst=$(TARGETDIR)/music
+
+
+#MM
+ports-audio-milkytracker-clean :
+	$(RM) $(TARGETDIR)
+	$(RM) $(GENDIR)/$(CURDIR)
+
+%common
