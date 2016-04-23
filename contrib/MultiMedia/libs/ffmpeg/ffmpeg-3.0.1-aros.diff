@@ -12,7 +12,7 @@ diff -ruN ffmpeg-3.0.1/configure ffmpeg-3.0.1.aros/configure
          network_extralibs="-lnetwork"
 diff -ruN ffmpeg-3.0.1/libavformat/Makefile ffmpeg-3.0.1.aros/libavformat/Makefile
 --- ffmpeg-3.0.1/libavformat/Makefile	2016-03-29 03:25:27.000000000 +0100
-+++ ffmpeg-3.0.1.aros/libavformat/Makefile	2016-04-18 15:08:52.012360343 +0100
++++ ffmpeg-3.0.1.aros/libavformat/Makefile	2016-04-17 10:40:16.268649237 +0100
 @@ -5,6 +5,7 @@
  HEADERS = avformat.h                                                    \
            avio.h                                                        \
@@ -21,3 +21,19 @@ diff -ruN ffmpeg-3.0.1/libavformat/Makefile ffmpeg-3.0.1.aros/libavformat/Makefi
  
  OBJS = allformats.o         \
         avio.o               \
+diff -ruN ffmpeg-3.0.1/libavformat/os_support.h ffmpeg-3.0.1.aros/libavformat/os_support.h
+--- ffmpeg-3.0.1/libavformat/os_support.h	2016-03-29 03:25:29.000000000 +0100
++++ ffmpeg-3.0.1.aros/libavformat/os_support.h	2016-04-23 14:50:59.696886816 +0100
+@@ -105,6 +105,12 @@
+ #define closesocket close
+ #endif
+ 
++#if defined(__AROS__)
++#undef closesocket
++#define closesocket CloseSocket
++#include <proto/socket.h>
++#endif
++
+ #if !HAVE_POLL_H
+ typedef unsigned long nfds_t;
+ 
