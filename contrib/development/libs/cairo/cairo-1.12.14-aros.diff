@@ -1,18 +1,100 @@
-diff -ruN cairo-1.12.14/configure cairo-1.12.14-aros/configure
---- cairo-1.12.14/configure	2013-02-10 14:39:19.000000000 +0100
-+++ cairo-1.12.14-aros/configure	2014-08-08 19:23:11.065996836 +0200
-@@ -26342,7 +26342,7 @@
+diff -ruN cairo-1.12.14/build/configure.ac.warnings cairo-1.12.14.aros/build/configure.ac.warnings
+--- cairo-1.12.14/build/configure.ac.warnings	2012-10-21 17:30:52.000000000 +0100
++++ cairo-1.12.14.aros/build/configure.ac.warnings	2016-04-23 05:28:13.963987312 +0100
+@@ -37,13 +37,18 @@
+ dnl options.  Namely, the following:
+ 
+ dnl -flto working really needs a test link, not just a compile
+-
+-safe_MAYBE_WARN="$MAYBE_WARN"
+-MAYBE_WARN="$MAYBE_WARN -flto"
+-AC_TRY_LINK([],[
+-	int main(int argc, char **argv) { return 0; }
+-],[],[
+-	MAYBE_WARN="$safe_MAYBE_WARN"
++AC_ARG_ENABLE(lto,
++	      [AS_HELP_STRING([--disable-lto],
++			      [disable use of lto])],
++	      [use_lto=$enableval], [use_lto=yes])
++AS_IF([test "x$use_lto" = "xyes"], [
++  safe_MAYBE_WARN="$MAYBE_WARN"
++  MAYBE_WARN="$MAYBE_WARN -flto"
++  AC_TRY_LINK([],[
++  	int main(int argc, char **argv) { return 0; }
++  ],[],[
++  	MAYBE_WARN="$safe_MAYBE_WARN"
++  ])
+ ])
+ 
+ MAYBE_WARN="$MAYBE_WARN -fno-strict-aliasing -fno-common"
+diff -ruN cairo-1.12.14/configure cairo-1.12.14.aros/configure
+--- cairo-1.12.14/configure	2013-02-10 13:39:19.000000000 +0000
++++ cairo-1.12.14.aros/configure	2016-04-23 06:07:15.788416832 +0100
+@@ -995,6 +995,7 @@
+ enable_gtk_doc_html
+ enable_gtk_doc_pdf
+ enable_largefile
++enable_lto
+ enable_atomic
+ enable_gcov
+ enable_valgrind
+@@ -1743,6 +1744,7 @@
+   --enable-gtk-doc-html   build documentation in html format [[default=yes]]
+   --enable-gtk-doc-pdf    build documentation in pdf format [[default=no]]
+   --disable-largefile     omit support for large files
++  --disable-lto           disable use of lto
+   --disable-atomic        disable use of native atomic operations
+   --enable-gcov           Enable gcov
+   --disable-valgrind      Disable valgrind support
+@@ -18160,17 +18162,25 @@
+ 			-erroff=E_ENUM_TYPE_MISMATCH_OP"
  
  
++# Check whether --enable-lto was given.
++if test "${enable_lto+set}" = set; then :
++  enableval=$enable_lto; use_lto=$enableval
++else
++  use_lto=yes
++fi
  
--  use_png=no
-+  use_png=yes
+-safe_MAYBE_WARN="$MAYBE_WARN"
+-MAYBE_WARN="$MAYBE_WARN -flto"
+-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
++if test "x$use_lto" = "xyes"; then :
++
++  safe_MAYBE_WARN="$MAYBE_WARN"
++  MAYBE_WARN="$MAYBE_WARN -flto"
++  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
  
-   if test "x$png_REQUIRES" = x; then
-     # libpng13 is GnuWin32's libpng-1.2.8 :-(
-diff -ruN cairo-1.12.14/Makefile.am cairo-1.12.14-aros/Makefile.am
---- cairo-1.12.14/Makefile.am	2012-04-19 14:17:34.000000000 +0200
-+++ cairo-1.12.14-aros/Makefile.am	2014-08-08 19:23:11.065996836 +0200
+ int
+ main ()
+ {
+ 
+-	int main(int argc, char **argv) { return 0; }
++  	int main(int argc, char **argv) { return 0; }
+ 
+   ;
+   return 0;
+@@ -18180,12 +18190,14 @@
+ 
+ else
+ 
+-	MAYBE_WARN="$safe_MAYBE_WARN"
++  	MAYBE_WARN="$safe_MAYBE_WARN"
+ 
+ fi
+ rm -f core conftest.err conftest.$ac_objext \
+     conftest$ac_exeext conftest.$ac_ext
+ 
++fi
++
+ MAYBE_WARN="$MAYBE_WARN -fno-strict-aliasing -fno-common"
+ 
+ MAYBE_WARN="$MAYBE_WARN -Wp,-D_FORTIFY_SOURCE=2"
+diff -ruN cairo-1.12.14/Makefile.am cairo-1.12.14.aros/Makefile.am
+--- cairo-1.12.14/Makefile.am	2012-04-19 13:17:34.000000000 +0100
++++ cairo-1.12.14.aros/Makefile.am	2016-04-05 23:44:19.447970276 +0100
 @@ -20,7 +20,7 @@
  SUBDIRS = src doc util
  # libpng is required for our test programs
@@ -22,9 +104,9 @@ diff -ruN cairo-1.12.14/Makefile.am cairo-1.12.14-aros/Makefile.am
  endif
  
  configure: cairo-version.h
-diff -ruN cairo-1.12.14/Makefile.in cairo-1.12.14-aros/Makefile.in
---- cairo-1.12.14/Makefile.in	2013-02-10 14:39:17.000000000 +0100
-+++ cairo-1.12.14-aros/Makefile.in	2014-08-08 19:23:11.065996836 +0200
+diff -ruN cairo-1.12.14/Makefile.in cairo-1.12.14.aros/Makefile.in
+--- cairo-1.12.14/Makefile.in	2013-02-10 13:39:17.000000000 +0000
++++ cairo-1.12.14.aros/Makefile.in	2016-04-23 06:07:13.784397273 +0100
 @@ -80,7 +80,7 @@
  TESTS =
  check_PROGRAMS =
@@ -34,9 +116,9 @@ diff -ruN cairo-1.12.14/Makefile.in cairo-1.12.14-aros/Makefile.in
  subdir = .
  ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
  am__aclocal_m4_deps = $(top_srcdir)/build/aclocal.cairo.m4 \
-diff -ruN cairo-1.12.14/src/cairo-mutex-impl-private.h cairo-1.12.14-aros/src/cairo-mutex-impl-private.h
---- cairo-1.12.14/src/cairo-mutex-impl-private.h	2010-06-13 21:58:21.000000000 +0200
-+++ cairo-1.12.14-aros/src/cairo-mutex-impl-private.h	2014-08-08 19:23:11.065996836 +0200
+diff -ruN cairo-1.12.14/src/cairo-mutex-impl-private.h cairo-1.12.14.aros/src/cairo-mutex-impl-private.h
+--- cairo-1.12.14/src/cairo-mutex-impl-private.h	2010-06-13 20:58:21.000000000 +0100
++++ cairo-1.12.14.aros/src/cairo-mutex-impl-private.h	2016-04-05 23:44:19.447970276 +0100
 @@ -156,6 +156,10 @@
   *   poke around cairo-mutex-private.h for possible solutions.
   */
