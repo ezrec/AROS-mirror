@@ -272,17 +272,20 @@ STATIC IPTR mShowFunctions( struct IClass *cl,
                         id_offset = offset;
 #endif
                         if (stricmp(sfm->name, CIAANAME) == 0 || stricmp(sfm->name, CIABNAME) == 0) {
-                            error = IdFunctionTags((STRPTR)"cia.resource", id_offset, IDTAG_FuncNameStr, fe->fe_FuncName,
+                            error = IdFunctionTags((STRPTR)"cia.resource", id_offset,
+                                                                                      IDTAG_FuncNameStr, (IPTR)fe->fe_FuncName,
                                                                                       IDTAG_StrLength, sizeof(fe->fe_FuncName),
                                                                                       TAG_DONE);
                         } else if (stricmp(sfm->name, CARDRESNAME) == 0) {
-                            error = IdFunctionTags((STRPTR)"cardres.resource", id_offset, IDTAG_FuncNameStr, fe->fe_FuncName,
-                                                                                          IDTAG_StrLength, sizeof(fe->fe_FuncName),
-                                                                                          TAG_DONE);
+                            error = IdFunctionTags((STRPTR)"cardres.resource", id_offset,
+                                                                                      IDTAG_FuncNameStr, (IPTR)fe->fe_FuncName,
+                                                                                      IDTAG_StrLength, sizeof(fe->fe_FuncName),
+                                                                                      TAG_DONE);
                         } else {
-                            error = IdFunctionTags(sfm->name, id_offset, IDTAG_FuncNameStr, fe->fe_FuncName,
-                                                                         IDTAG_StrLength, sizeof(fe->fe_FuncName),
-                                                                         TAG_DONE);
+                            error = IdFunctionTags(sfm->name, id_offset,
+                                                                                      IDTAG_FuncNameStr, (IPTR)fe->fe_FuncName,
+                                                                                      IDTAG_StrLength, sizeof(fe->fe_FuncName),
+                                                                                      TAG_DONE);
                         }
                         switch (error) {
                             case IDERR_NOFD:
