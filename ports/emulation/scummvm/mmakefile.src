@@ -2,21 +2,22 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-#DISABLED #MM- ports-game : ports-emulation-scummvm
+#DISABLED #MM- ports-emulation : ports-emulation-scummvm
 
 #MM- ports-emulation-scummvm : \
 #MM     contrib-sdl
 
 PACKAGE      := scummvm
-VERSION      := 1.6.0
+VERSION      := 1.8.0
 TARGETDIR    := $(AROS_CONTRIB)/Emu/Scummvm
-REPOSITORIES := sf://scummvm
+REPOSITORIES := https://www.scummvm.org/frs/scummvm/1.8.0
+
 
 %fetch_and_build mmake=ports-emulation-scummvm prefix=$(TARGETDIR) \
     package=$(PACKAGE) version=$(VERSION) suffixes="tar.bz2" \
-    patch=yes package_repo=$(REPOSITORIES) nix=no nix_dir_layout=no \
+    patch=no package_repo=$(REPOSITORIES) nix=no nix_dir_layout=no gnuflags=no \
     extracflags="" \
-    extraoptions="--enable-verbose-build --disable-all-engines"
+    extraoptions="--host=i386-aros --enable-verbose-build"
 
 
 #MM

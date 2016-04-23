@@ -1,0 +1,28 @@
+diff -Naur scummvm-1.8.0-orig/backends/graphics/opengl/opengl-sys.h scummvm-1.8.0/backends/graphics/opengl/opengl-sys.h
+--- scummvm-1.8.0-orig/backends/graphics/opengl/opengl-sys.h	2016-04-23 11:20:27.022727688 +0200
++++ scummvm-1.8.0/backends/graphics/opengl/opengl-sys.h	2016-02-26 23:20:21.000000000 +0100
+@@ -49,7 +49,7 @@
+ #elif defined(USE_GLES)
+ #include <GLES/gl.h>
+ #elif defined(SDL_BACKEND)
+-#include <SDL_opengl.h>
++#include <SDL/SDL_opengl.h>
+ #else
+ #include <GL/gl.h>
+ #endif
+diff -Naur scummvm-1.8.0-orig/backends/platform/sdl/sdl-sys.h scummvm-1.8.0/backends/platform/sdl/sdl-sys.h
+--- scummvm-1.8.0-orig/backends/platform/sdl/sdl-sys.h	2016-04-23 11:20:27.011727698 +0200
++++ scummvm-1.8.0/backends/platform/sdl/sdl-sys.h	2016-02-26 23:20:21.000000000 +0100
+@@ -82,10 +82,10 @@
+ #if defined(__SYMBIAN32__)
+ #include <esdl\SDL.h>
+ #else
+-#include <SDL.h>
++#include <SDL/SDL.h>
+ #endif
+ 
+-#include <SDL_syswm.h>
++#include <SDL/SDL_syswm.h>
+ 
+ // Restore the forbidden exceptions from the hack above
+ #if !defined(FORBIDDEN_SYMBOL_ALLOW_ALL) && defined(_MSC_VER)
