@@ -1,0 +1,13 @@
+# $Id$
+
+include $(SRCDIR)/config/aros.cfg
+
+#MM- ports-graphics-lodepaint : ports-graphics-lodepaint-icons
+
+TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Gfx
+ICONS     := Lodepaint
+
+%build_icons mmake=ports-graphics-lodepaint-icons \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+%common

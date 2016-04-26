@@ -1,0 +1,202 @@
+diff -Naur lodepaint_src_svn146-orig/main_program/src/imfmt/rgbe.cpp lodepaint_src_svn146/main_program/src/imfmt/rgbe.cpp
+--- lodepaint_src_svn146-orig/main_program/src/imfmt/rgbe.cpp	2016-04-24 12:55:49.171153032 +0200
++++ lodepaint_src_svn146/main_program/src/imfmt/rgbe.cpp	2016-04-24 13:07:49.717977747 +0200
+@@ -12,6 +12,7 @@
+ #include <ctype.h>
+ #include <cstdio>
+ #include <iostream>
++#include <cstdlib>
+ 
+ /* This file contains code to read and write four byte rgbe file format
+  developed by Greg Ward.  It handles the conversions between rgbe and
+diff -Naur lodepaint_src_svn146-orig/main_program/src/lpi/gui/lpi_gui_file.cpp lodepaint_src_svn146/main_program/src/lpi/gui/lpi_gui_file.cpp
+--- lodepaint_src_svn146-orig/main_program/src/lpi/gui/lpi_gui_file.cpp	2016-04-24 12:55:49.168153031 +0200
++++ lodepaint_src_svn146/main_program/src/lpi/gui/lpi_gui_file.cpp	2016-04-24 15:04:48.290215878 +0200
+@@ -212,6 +212,8 @@
+       if(!home.empty()) persist->add(home);
+ #ifdef LPI_OS_WINDOWS
+       persist->add("C:\\");
++#elif defined(LPI_OS_AROS)
++      persist->add("SYS:");
+ #else
+       persist->add("/");
+       persist->add("/mnt/");
+@@ -229,6 +231,8 @@
+     if(!home.empty()) suggestedFolders.addItem(home);
+ #ifdef LPI_WIN32
+     suggestedFolders.addItem("C:\\");
++#elif defined(LPI_OS_AROS)
++    suggestedFolders.addItem("SYS:");
+ #else
+     suggestedFolders.addItem("/");
+     suggestedFolders.addItem("/mnt/");
+@@ -239,6 +243,8 @@
+   {
+ #ifdef LPI_OS_WINDOWS
+     setPath("C:\\");
++#elif defined(LPI_OS_AROS)
++    setPath("SYS:");
+ #else
+     setPath("/");
+ #endif
+diff -Naur lodepaint_src_svn146-orig/main_program/src/lpi/os/lpi_clipboard.cpp lodepaint_src_svn146/main_program/src/lpi/os/lpi_clipboard.cpp
+--- lodepaint_src_svn146-orig/main_program/src/lpi/os/lpi_clipboard.cpp	2016-04-24 12:55:49.168153031 +0200
++++ lodepaint_src_svn146/main_program/src/lpi/os/lpi_clipboard.cpp	2016-04-24 13:03:39.682125246 +0200
+@@ -803,8 +803,11 @@
+     for(size_t i = 0; i < text.size(); i++) cbtext[i] = text[i];
+     cbtext[text.size()] = 0;
+     
++#ifndef __AROS__
++//FIXME: why doesn't this work on AROS?
+     std::cout << text;
+-    
++#endif
++
+     if ((ior=CBOpen(0L))!=NULL)
+     {
+       CBWriteFTXT(ior,(char *)cbtext);
+diff -Naur lodepaint_src_svn146-orig/main_program/src/lpi/os/lpi_filebrowse.cpp lodepaint_src_svn146/main_program/src/lpi/os/lpi_filebrowse.cpp
+--- lodepaint_src_svn146-orig/main_program/src/lpi/os/lpi_filebrowse.cpp	2016-04-24 12:55:49.167153026 +0200
++++ lodepaint_src_svn146/main_program/src/lpi/os/lpi_filebrowse.cpp	2016-04-24 21:17:30.574412757 +0200
+@@ -20,6 +20,13 @@
+ 
+ #include "lpi_filebrowse.h"
+ 
++#ifdef LPI_OS_AROS
++#include <aros/debug.h>
++#else
++#define bug() ()
++#endif
++
++
+ namespace lpi
+ {
+ 
+@@ -31,7 +38,11 @@
+   
+   for(int i = 0; i < ((int)path.size()) - 1; i++)
+   {
++#if defined(LPI_OS_AROS)
++    if(path[i] == '/' || path[i] == '\\' || path[i] == ':') lastslash = i;
++#else
+     if(path[i] == '/' || path[i] == '\\') lastslash = i;
++#endif
+   }
+   
+   return path.substr(0, lastslash + 1);
+@@ -42,6 +53,7 @@
+   std::string result = path;
+   ensureDirectoryEndSlash(result);
+   result += child;
++  bug("IFileBrowse::getChild path %s child %s result %s\n", path.c_str(), child.c_str(), result.c_str());
+   return result;
+ }
+ 
+@@ -412,26 +424,31 @@
+ 
+ bool FileBrowseAmiga::isDirectory(const std::string& filename) const
+ {
++  bool result = false;
+   struct stat _stat;
+   if(lstat(filename.c_str(), &_stat) == 0 )
+   {
+-    return S_ISDIR(_stat.st_mode);
++    result = S_ISDIR(_stat.st_mode);
+   }
+-  return false;
++  bug("isDirectory %s result %d\n", filename.c_str(), result);
++  return result;
+ }
+ 
+ static bool isRegularFile(const std::string& filename)
+ {
++  bool result = false;
+   struct stat _stat;
+   if(lstat(filename.c_str(), &_stat) == 0 )
+   {
+-    return S_ISREG(_stat.st_mode);
++    result = S_ISREG(_stat.st_mode);
+   }
+-  return false;
++  bug("isRegularFile %s result %d\n", filename.c_str(), result);
++  return result;
+ }
+ 
+ void FileBrowseAmiga::getFiles(std::vector<std::string>& files, const std::string& directory) const
+ {
++  bug("FileBrowseAmiga::getFiles directory %s\n", directory.c_str());
+   DIR* d = opendir( directory.c_str() );
+   static struct dirent* dirp;
+   if (!d)
+@@ -452,11 +469,12 @@
+ 
+ void FileBrowseAmiga::getDirectories(std::vector<std::string>& dirs, const std::string& directory) const
+ {
++  bug("FileBrowseAmiga::getDirectories directory %s\n", directory.c_str());
+   DIR* d = opendir( directory.c_str() );
+   static struct dirent* dirp;
+   if (!d)
+   {
+-    dirs.push_back("/");
++    dirs.push_back("SYS:");
+     return;
+   }
+   
+@@ -478,6 +496,8 @@
+ 
+ std::string FileBrowseAmiga::getParent(const std::string& path) const
+ {
++  std::string result = IFileBrowse::getParent(path);
++  bug("FileBrowseAmiga::getParent path %s result %s\n", path.c_str(), result.c_str());
+   return IFileBrowse::getParent(path);
+ }
+ 
+@@ -506,11 +526,13 @@
+ void FileBrowseAmiga::fixSlashes(std::string& path) const
+ {
+   giveFilenameSlashes(path);
++  bug("FileBrowseAmiga::fixSlashes %s\n", path.c_str());
+ }
+ 
+ void FileBrowseAmiga::ensureDirectoryEndSlash(std::string& path) const
+ {
+   lpi::ensureDirectoryEndSlash(path);
++  bug("FileBrowseAmiga::ensureDirectoryEndSlash %s\n", path.c_str());
+ }
+ 
+ std::string FileBrowseAmiga::getDefaultDir(DefaultDir dd) const
+diff -Naur lodepaint_src_svn146-orig/main_program/src/main.cpp lodepaint_src_svn146/main_program/src/main.cpp
+--- lodepaint_src_svn146-orig/main_program/src/main.cpp	2016-04-24 12:55:49.170153028 +0200
++++ lodepaint_src_svn146/main_program/src/main.cpp	2016-04-24 15:39:13.358678461 +0200
+@@ -1713,6 +1713,8 @@
+ 
+ #if defined(LPI_OS_WINDOWS)
+     OS = "MS Windows";
++#elif defined(LPI_OS_AROS)
++    OS = "AROS";
+ #elif defined(LPI_OS_LINUX)
+     OS = "Linux";
+ #endif
+diff -Naur lodepaint_src_svn146-orig/main_program/src/paint_clipboard.cpp lodepaint_src_svn146/main_program/src/paint_clipboard.cpp
+--- lodepaint_src_svn146-orig/main_program/src/paint_clipboard.cpp	2016-04-24 12:55:49.167153026 +0200
++++ lodepaint_src_svn146/main_program/src/paint_clipboard.cpp	2016-04-24 12:56:55.634268157 +0200
+@@ -608,7 +608,7 @@
+ 
+ bool getClipboardImageRGBA8(std::vector<unsigned char>& image, int& w, int& h)
+ {
+-  if(REMEMBER_IMAGE.size() == (size_t)(REMEMBER_W * REMEMBER_H * 4) && !REMEMBER_IMAGE.empty())
++  if(REMEMBER_IMAGE.size() == (std::size_t)(REMEMBER_W * REMEMBER_H * 4) && !REMEMBER_IMAGE.empty())
+   {
+     image = REMEMBER_IMAGE;
+     w = REMEMBER_W;
+@@ -628,8 +628,8 @@
+   for(int x = 0; x < w; x++)
+   for(int c = 0; c < 4; c++)
+   {
+-    size_t index = y * 4 * w + x * 4 + c;
+-    size_t index2 = y * 4 * w2 + x * 4 + c;
++    std::size_t index = y * 4 * w + x * 4 + c;
++    std::size_t index2 = y * 4 * w2 + x * 4 + c;
+     REMEMBER_IMAGE[index] = image[index2];
+   }
+ 

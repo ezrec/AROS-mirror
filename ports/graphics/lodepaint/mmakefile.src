@@ -1,0 +1,148 @@
+# $Id$
+
+include $(SRCDIR)/config/aros.cfg
+
+#DISABLED #MM- ports-graphics : ports-graphics-lodepaint
+
+#MM  ports-graphics-lodepaint : \
+#MM    includes linklibs ports-graphics-lodepaint-fetch \
+#MM    ports-graphics-lodepaint-skins
+
+REPOSITORIES := http://archives.aros-exec.org/share/graphics/edit
+ARCHBASE     := lodepaint_src_svn146
+TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/Lodepaint
+NOWARN_FLAGS := $(NOWARN_WRITE_STRINGS)
+USER_CXXFLAGS:= $(NOWARN_FLAGS) -DDATAROOTDIR="\"PROGDIR:\""
+
+CXXFILES := \
+    main_program/src/imalg/alpha \
+    main_program/src/imalg/bits \
+    main_program/src/imalg/blend \
+    main_program/src/imalg/blur \
+    main_program/src/imalg/brush \
+    main_program/src/imalg/colorop \
+    main_program/src/imalg/contour \
+    main_program/src/imalg/dsp \
+    main_program/src/imalg/edges \
+    main_program/src/imalg/floodfill \
+    main_program/src/imalg/generate \
+    main_program/src/imalg/hqnx \
+    main_program/src/imalg/morphology \
+    main_program/src/imalg/other \
+    main_program/src/imalg/primitives \
+    main_program/src/imalg/progress \
+    main_program/src/imalg/reduction \
+    main_program/src/imalg/sing \
+    main_program/src/imalg/tolerance \
+    main_program/src/imalg/transform \
+    main_program/src/imalg/util \
+    main_program/src/imfmt/imageformats \
+    main_program/src/imfmt/jpgd \
+    main_program/src/imfmt/rgbe \
+    main_program/src/imfmt/stb_image \
+    main_program/src/imfmt/winimage \
+    main_program/src/lpi/gio/lpi_draw2d \
+    main_program/src/lpi/gio/lpi_draw2d_buffer \
+    main_program/src/lpi/gio/lpi_input \
+    main_program/src/lpi/gio/lpi_text_drawer \
+    main_program/src/lpi/gio/lpi_text_drawer_int \
+    main_program/src/lpi/gl/lpi_draw2dgl \
+    main_program/src/lpi/gl/lpi_draw3dgl \
+    main_program/src/lpi/gl/lpi_gl_context \
+    main_program/src/lpi/gl/lpi_screen_gl \
+    main_program/src/lpi/gl/lpi_text_drawer_gl \
+    main_program/src/lpi/gl/lpi_texture_gl \
+    main_program/src/lpi/gui/lpi_gui \
+    main_program/src/lpi/gui/lpi_gui_base \
+    main_program/src/lpi/gui/lpi_gui_color \
+    main_program/src/lpi/gui/lpi_gui_drawer \
+    main_program/src/lpi/gui/lpi_gui_drawer_buffer \
+    main_program/src/lpi/gui/lpi_gui_drawer_gl \
+    main_program/src/lpi/gui/lpi_gui_dynamic \
+    main_program/src/lpi/gui/lpi_gui_ex \
+    main_program/src/lpi/gui/lpi_gui_file \
+    main_program/src/lpi/gui/lpi_guipartdraw_int \
+    main_program/src/lpi/gui/lpi_gui_text \
+    main_program/src/lpi/gui/lpi_gui_unittest \
+    main_program/src/lpi/lodepng \
+    main_program/src/lpi/lodewav \
+    main_program/src/lpi/lpi_base64 \
+    main_program/src/lpi/lpi_bignums \
+    main_program/src/lpi/lpi_color \
+    main_program/src/lpi/lpi_crypto \
+    main_program/src/lpi/lpi_file \
+    main_program/src/lpi/lpi_font \
+    main_program/src/lpi/lpi_math \
+    main_program/src/lpi/lpi_math2d \
+    main_program/src/lpi/lpi_math3d \
+    main_program/src/lpi/lpi_math4d \
+    main_program/src/lpi/lpi_os \
+    main_program/src/lpi/lpi_parse \
+    main_program/src/lpi/lpi_pathfind \
+    main_program/src/lpi/lpi_texture \
+    main_program/src/lpi/lpi_tools \
+    main_program/src/lpi/lpi_translate \
+    main_program/src/lpi/lpi_unicode \
+    main_program/src/lpi/lpi_unicode_data \
+    main_program/src/lpi/lpi_xml \
+    main_program/src/lpi/os/lpi_clipboard \
+    main_program/src/lpi/os/lpi_filebrowse \
+    main_program/src/lpi/os/lpi_persist \
+    main_program/src/lpi/sdl/lpi_audio \
+    main_program/src/lpi/sdl/lpi_event \
+    main_program/src/lpi/sdl/lpi_input_sdl \
+    main_program/src/lpi/sdl/lpi_time \
+    main_program/src/main \
+    main_program/src/paint_algos \
+    main_program/src/paint_algos_brush_color \
+    main_program/src/paint_algos_brush_pixelop \
+    main_program/src/paint_algos_dsp \
+    main_program/src/paint_algos_geom \
+    main_program/src/paint_clipboard \
+    main_program/src/paint_cmd \
+    main_program/src/paint_file \
+    main_program/src/paint_filter \
+    main_program/src/paint_filter_alpha \
+    main_program/src/paint_filter_dsp \
+    main_program/src/paint_filter_image \
+    main_program/src/paint_filter_mask \
+    main_program/src/paint_filter_other \
+    main_program/src/paint_filter_plugin \
+    main_program/src/paint_gui \
+    main_program/src/paint_gui_items \
+    main_program/src/paint_gui_main \
+    main_program/src/paint_gui_operation \
+    main_program/src/paint_imageformat_native \
+    main_program/src/paint_imageformat_plugin \
+    main_program/src/paint_imageformats \
+    main_program/src/paint_operation \
+    main_program/src/paint_palette \
+    main_program/src/paint_param \
+    main_program/src/paint_settings \
+    main_program/src/paint_skin \
+    main_program/src/paint_texture \
+    main_program/src/paint_tool \
+    main_program/src/paint_tool_brushes \
+    main_program/src/paint_tool_geom \
+    main_program/src/paint_tool_other \
+    main_program/src/paint_undo \
+    main_program/src/paint_window
+
+CXXFILES := $(addprefix $(PORTSDIR)/lodepaint/$(ARCHBASE)/,$(CXXFILES))
+
+
+%build_prog mmake=ports-graphics-lodepaint progname=Lodepaint \
+    files= cxxfiles=$(CXXFILES) targetdir=$(TARGETDIR) \
+    uselibs="SDL GL"
+
+
+%fetch mmake=ports-graphics-lodepaint-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/lodepaint \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2" \
+    patches_specs=lodepaint_src_svn146.diff:$(ARCHBASE):-p1
+
+
+%copy_dir_recursive mmake=ports-graphics-lodepaint-skins \
+    src=$(PORTSDIR)/lodepaint/$(ARCHBASE)/main_program/Skins dst=$(TARGETDIR)/Skins excludefiles=
+
+
+%common
