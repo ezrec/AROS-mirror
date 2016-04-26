@@ -2,8 +2,9 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-#MM contrib-scout-bin : includes linklibs contrib-zune-classes-nlist contrib-scout-tblib \
-#MM contrib-scout-catalogs contrib-scout-bin contrib-scout-icon workbench-libs-identify-linklib
+#MM contrib-scout-bin : includes linklibs contrib-zune-classes-nlist \
+#MM contrib-scout-tblib contrib-scout-catalogs contrib-scout-bin \
+#MM contrib-scout-icon workbench-libs-identify-lib-linklib
 
 EXE := Scout
 
