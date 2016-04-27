@@ -550,10 +550,10 @@ STATIC void IterateList( void (* callback)( struct SystemEntry *se, void *userDa
             }
 
             if (IdentifyBase) {
-                IdAlertTags(lastalert, IDTAG_DeadStr, se->se_AlertDeadend, IDTAG_StrLength, sizeof(se->se_AlertDeadend), TAG_DONE);
-                IdAlertTags(lastalert, IDTAG_SubsysStr, se->se_AlertSubsystem, IDTAG_StrLength, sizeof(se->se_AlertSubsystem), TAG_DONE);
-                IdAlertTags(lastalert, IDTAG_GeneralStr, se->se_AlertGeneral, IDTAG_StrLength, sizeof(se->se_AlertGeneral), TAG_DONE);
-                IdAlertTags(lastalert, IDTAG_SpecStr, se->se_AlertSpecific, IDTAG_StrLength, sizeof(se->se_AlertSpecific), TAG_DONE);
+                IdAlertTags(lastalert, IDTAG_DeadStr, (IPTR)se->se_AlertDeadend, IDTAG_StrLength, sizeof(se->se_AlertDeadend), TAG_DONE);
+                IdAlertTags(lastalert, IDTAG_SubsysStr, (IPTR)se->se_AlertSubsystem, IDTAG_StrLength, sizeof(se->se_AlertSubsystem), TAG_DONE);
+                IdAlertTags(lastalert, IDTAG_GeneralStr, (IPTR)se->se_AlertGeneral, IDTAG_StrLength, sizeof(se->se_AlertGeneral), TAG_DONE);
+                IdAlertTags(lastalert, IDTAG_SpecStr, (IPTR)se->se_AlertSpecific, IDTAG_StrLength, sizeof(se->se_AlertSpecific), TAG_DONE);
             }
         }
 
