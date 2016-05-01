@@ -13,29 +13,29 @@ include $(SRCDIR)/config/aros.cfg
 #MM  ports-devel-bwbasic-examples : ports-devel-bwbasic-fetch
 #MM  ports-devel-bwbasic-files : ports-devel-bwbasic-fetch
 
-ARCHBASE     := bwbasic-2.61
+ARCHBASE     := bwbasic-3.00
 TARGETDIR    := $(AROS_CONTRIB)/Development/BWBasic
 REPOSITORIES := sf://bwbasic
 
 FILES := \
-	bwbasic \
-	bwb_int \
-	bwb_tbl \
-	bwb_cmd \
-	bwb_prn \
-	bwb_exp \
-	bwb_var \
-	bwb_inp \
-	bwb_fnc \
-	bwb_cnd \
-	bwb_ops \
-	bwb_dio \
-	bwb_str \
-	bwb_elx \
-	bwb_mth \
-	bwb_stc \
-	bwb_par \
-	bwx_tty
+    bwbasic \
+    bwb_cmd \
+    bwb_cnd \
+    bwb_dio \
+    bwb_elx \
+    bwb_exp \
+    bwb_fnc \
+    bwb_inp \
+    bwb_int \
+    bwb_ops \
+    bwb_prn \
+    bwb_stc \
+    bwb_str \
+    bwb_tbl \
+    bwb_var \
+    bwd_cmd \
+    bwd_fun \
+    bwx_tty
 
 FILES := $(addprefix $(PORTSDIR)/bwbasic/$(ARCHBASE)/,$(FILES))
 
@@ -43,17 +43,30 @@ NOWARN_FLAGS := $(NOWARN_FORMAT_CONTAINS_NUL) $(NOWARN_MAYBE_UNINITIALIZED) \
 	$(NOWARN_UNINITIALIZED) $(NOWARN_UNUSED_BUT_SET_VARIABLE) $(NOWARN_IMPLICIT_INT) \
         $(NOWARN_UNUSED_VARIABLE) $(NOWARN_AGGRESSIVE_LOOP_OPT)
 
-USER_CFLAGS := $(NOWARN_FLAGS)
+USER_CFLAGS := $(NOWARN_FLAGS) -ansi -DHAVE_ISNAN
 
 %build_prog mmake=ports-devel-bwbasic progname=BWBasic \
     files=$(FILES) targetdir=$(TARGETDIR)
+
 
 %fetch mmake=ports-devel-bwbasic-fetch archive=$(ARCHBASE) \
     destination=$(PORTSDIR)/bwbasic/$(ARCHBASE) \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip"
 
-%copy_dir_recursive mmake=ports-devel-bwbasic-examples \
+
+TESTFILES := \
+    abs.bas	      assign.bas    callfunc.bas  callsub.bas	chain1.bas\
+    chain2.bas    dataread.bas  deffn.bas	  dim.bas	doloop.bas\
+    dowhile.bas   elseif.bas    end.bas	  err.bas	fncallfn.bas\
+    fornext.bas   function.bas  gosub.bas	  gotolabl.bas	ifline.bas\
+    index.txt     input.bas	    lof.bas	  loopuntl.bas	main.bas\
+    mlifthen.bas  on.bas	    onerr.bas	  onerrlbl.bas	ongosub.bas\
+    opentest.bas  option.bas    putget.bas	  random.bas	selcase.bas\
+    snglfunc.bas  stop.bas	    term.bas	  whilwend.bas	width.bas\
+    writeinp.bas  pascaltr.bas
+%copy_files_q mmake=ports-devel-bwbasic-examples files=$(TESTFILES) \
     src=$(PORTSDIR)/bwbasic/$(ARCHBASE)/bwbtest dst=$(TARGETDIR)/bwbtest
+
 
 CPFILES := bwbasic.doc COPYING example.bas README
 %copy_files_q mmake=ports-devel-bwbasic-files files=$(CPFILES) \
