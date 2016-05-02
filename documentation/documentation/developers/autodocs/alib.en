@@ -2134,6 +2134,7 @@ Notes
      %l<cdDuUxX>     LONG                    LONG
      %ll<cdDuUxX>    QUAD                    QUAD
      %i<cdDuUxX>     IPTR                    IPTR
+     %%              -                       -
 
 
 
