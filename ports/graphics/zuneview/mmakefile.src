@@ -11,16 +11,20 @@ include $(SRCDIR)/config/aros.cfg
 #MM  ports-graphics-zuneview-quick : ports-graphics-zuneview-fetch
 
 REPOSITORIES := sf://zunetools
-ARCHBASE     := ZuneView_v0.18
+ARCHBASE     := ZuneView_v0.22
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/ZuneView
 NOWARN_FLAGS := $(NOWARN_INT_TO_POINTER_CAST) $(NOWARN_POINTER_TO_INT_CAST) $(NOWARN_PARENTHESES) $(NOWARN_UNUSED_BUT_SET_VARIABLE) $(NOWARN_UNUSED_CONST_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS)
 USER_INCLUDES:= -I$(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView/src
 
 FILES := \
-ZuneView \
+    SupportFunctions \
     ListTreeHooks \
-    PictureFunctions \
+    Picture_Filter \
+    Picture_Artistic \
+    Picture_Geometry \
+    Picture_IO \
+    Picture_Color \
     FilterFunctions \
     mcc_Pictdisp \
     mcc_Thumbdisp \
@@ -29,7 +33,8 @@ ZuneView \
     mcc_ScrollerPict \
     mcc_Matrix \
     mcc_Histdisp \
-    exif
+    exif \
+    ZuneView 
 FILES := $(addprefix $(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView/src/,$(FILES))
 
 %build_prog mmake=ports-graphics-zuneview progname=ZuneView \
@@ -38,8 +43,8 @@ FILES := $(addprefix $(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView/src/,$(FILES))
 
 
 %fetch mmake=ports-graphics-zuneview-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/zuneview/$(ARCHBASE) \
-    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip"
-
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip" \
+    patches_specs=ZuneView_v0.22-aros.diff::-p1
 
 CPFILES := ZuneView.info
 
