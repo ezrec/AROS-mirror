@@ -1,0 +1,30 @@
+=====================
+April 2016 Highlights
+=====================
+
+:Author:   Krzysztof Smiechowicz
+:Date:     2016-05-03
+
+This biggest news of April was the release of long awaited, new version
+of Odyssey Web Browser by Krzysztof Smiechowicz. Odyssey 1.25 released
+after one and half years of development brings updated WebKit engine,
+many stability and bug fixes and finally the capability to play HTML5
+videos to AROS. While Odyssey is a cross-AmigaNG browser, AROS currently
+has the most advanced version.
+
+Nick Andrews continued his work started in March and added more patches
+to support AROS being compiled with GCC 6.1.0 as well as Clang/LLVM.
+In April Nick also initiated the work on supporting 64-bit version of
+ARM platform. We do not yet have a working build, but first important
+steps are taken. Finally Nick ported ffmpeg library in version 3.0.1
+to AROS and updated the source codes of SMB file system. The later
+allows compatibility with Windows 7 created shares.
+
+Icaros 2.1 AROS distribution, released in March, received a small
+update in April, bringing component fixes and new version of Odyssey
+Web Browser thus increasing the version of Icaros to 2.1.1.
+Olaf Schoenweiss released an updated version of his Aros Vision
+distribution for AROS 68k. From version 3.1 AROS Vision adds "RTG" suffix,
+because in April Olaf also released a new experimental distribution
+called Aros Vision PAL which is aimed at lower spec machines.
+
