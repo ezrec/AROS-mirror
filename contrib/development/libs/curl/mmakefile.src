@@ -1,4 +1,4 @@
-# Copyright © 2009-2013, The AROS Development Team. All rights reserved.
+# Copyright © 2009-2016, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros.cfg
@@ -6,7 +6,8 @@ include $(SRCDIR)/config/aros.cfg
 #MM- contrib-curl : contrib-openssl development-curl
 
 REPOSITORIES := http://curl.haxx.se/download \
- http://ftp.sunet.se/pub/www/utilities/curl
+ http://www.execve.net/curl/ \
+ http://ftp.sunet.se/mirror/archive/ftp.sunet.se/pub/www/utilities/curl
 
 %fetch_and_build_gnu_development package=curl version=7.37.1 \
     patch=yes package_repo="$(REPOSITORIES)" \
