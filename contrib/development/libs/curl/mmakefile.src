@@ -6,7 +6,6 @@ include $(SRCDIR)/config/aros.cfg
 #MM- contrib-curl : contrib-openssl development-curl
 
 REPOSITORIES := http://curl.haxx.se/download \
- http://www.execve.net/curl/ \
  http://ftp.sunet.se/mirror/archive/ftp.sunet.se/pub/www/utilities/curl
 
 %fetch_and_build_gnu_development package=curl version=7.37.1 \
