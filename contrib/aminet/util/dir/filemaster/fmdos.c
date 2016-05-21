@@ -120,7 +120,7 @@ return(Read(h->handle,buffer,size));
 
 LONG seek(struct FMHandle *h,LONG p,LONG mode)
 {
-LONG ret,ret2;
+LONG ret,ret2=0;
 
 if (h->flags&OFDECRUNCH) {
 	ret=h->position;

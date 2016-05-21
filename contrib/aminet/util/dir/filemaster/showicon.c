@@ -98,6 +98,7 @@ struct FontContentsHeader *fch=0;
 UWORD *cfptr;
 WORD depthset=0;
 
+txtcolor=1;
 list=h->owner;
 penlist[0]=-1;penlist[1]=-1;
 ret=0;
@@ -122,7 +123,6 @@ if(type) {
 }
 
 
-txtcolor=1;
 if((scr=LockPubScreen(workbench))) {
 	di=GetScreenDrawInfo(scr);
 	if(di) {

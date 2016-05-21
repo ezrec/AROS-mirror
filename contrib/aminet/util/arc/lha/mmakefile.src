@@ -9,7 +9,8 @@ lhlist patmatch dhuf huf lharc maketbl shuf util
 
 EXEDIR := $(AROS_CONTRIB)/Misc/aminet/C
 
-USER_CFLAGS := -DAROS
+NOWARN_FLAGS := $(NOWARN_UNINITIALIZED)
+USER_CFLAGS := $(NOWARN_FLAGS) -DAROS
 
 %build_prog mmake=aminet-util-arc-lha \
     progname=lha targetdir=$(EXEDIR) \
