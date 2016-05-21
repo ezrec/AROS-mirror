@@ -3663,7 +3663,7 @@ static void GetDeviceName(BPTR dLock, CONST_STRPTR VolumeName, STRPTR DeviceName
 			fse = FindFileSysResEntry(VolumeNode->dol_misc.dol_volume.dol_DiskType);
 			if (fse)
 				{
-				LONG *seg;
+				SIPTR *seg;
 
 				d1(KPrintF(__FILE__ "/%s/%ld: fse=%08lx  ln_Name=%08lx\n", __FUNC__, __LINE__, fse, fse->fse_Node.ln_Name));
 
@@ -3678,7 +3678,7 @@ static void GetDeviceName(BPTR dLock, CONST_STRPTR VolumeName, STRPTR DeviceName
 					FseVersion, FseRevision);
 
 
-				seg = (LONG *) BADDR(fse->fse_SegList);
+				seg = (SIPTR *) BADDR(fse->fse_SegList);
 				d1(KPrintF(__FILE__ "/%s/%ld: seg=%08lx\n", __FUNC__, __LINE__, seg));
 				while (seg)
 					{
@@ -3705,7 +3705,7 @@ static void GetDeviceName(BPTR dLock, CONST_STRPTR VolumeName, STRPTR DeviceName
 						break;
 						}
 
-					seg = (LONG *) BADDR(*seg);
+					seg = (SIPTR *) BADDR(*seg);
 					}
 				}
 
