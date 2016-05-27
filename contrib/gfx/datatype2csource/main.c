@@ -47,12 +47,12 @@
 #include <proto/dos.h>
 #include <proto/datatypes.h>
 #include <proto/alib.h>
-#include <proto/bz2.h>
 
 #include <datatypes/pictureclass.h>
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <bzlib.h>
 
 //#define DEBUG 1
 #include <aros/debug.h>
