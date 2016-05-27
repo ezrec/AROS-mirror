@@ -9810,7 +9810,7 @@ diff -Naur SDL-1.2.15-orig/src/thread/aros/SDL_thread.c SDL-1.2.15/src/thread/ar
 +int thread_lock_created = 0;
 +/* The default (non-thread-safe) global error variable */
 +static SDL_error SDL_global_error;
-+#define threadlock_ptr &thread_lock
++static struct SignalSemaphore *threadlock_ptr = &thread_lock;
 +#else
 +#include "SDL_intern.h"
 +#define SDL_maxthreads SDLBase->SDL_maxthreads
