@@ -2,8 +2,8 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-#MM- ports-scientific-i386 : ports-scientific-mathx
-#MM- ports-scientific-arm : ports-scientific-mathx
+##MM- ports-scientific-i386 : ports-scientific-mathx
+##MM- ports-scientific-arm : ports-scientific-mathx
 
 #MM  ports-scientific-mathx : includes linklibs ports-scientific-mathx-catalogs \
 #MM  ports-scientific-mathx-drawericon \

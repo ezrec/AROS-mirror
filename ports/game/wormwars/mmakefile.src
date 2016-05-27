@@ -2,8 +2,8 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-#MM- ports-game-i386 : ports-game-wormwars
-#MM- ports-game-arm : ports-game-wormwars
+##MM- ports-game-i386 : ports-game-wormwars
+##MM- ports-game-arm : ports-game-wormwars
 
 #MM  ports-game-wormwars : includes linklibs \
 #MM     ports-game-wormwars-cpy \

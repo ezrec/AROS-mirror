@@ -2,7 +2,7 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-#MM- ports-scientific : ports-scientific-mathomatic
+##MM- ports-scientific : ports-scientific-mathomatic
 
 #MM  ports-scientific-mathomatic : includes linklibs \
 #MM     ports-scientific-mathomatic-fetch \

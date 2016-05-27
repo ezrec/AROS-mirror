@@ -69,7 +69,7 @@ FILES := $(addprefix $(PORTSDIR)/rocksndiamonds/$(ARCHBASE)/src/,$(FILES))
 
 %build_prog mmake=ports-game-rocksndiamonds progname=Rocksndiamonds \
     files=$(FILES) targetdir=$(TARGETDIR) nix=yes \
-    uselibs="game game_sp game_em SDL SDL_mixer vorbisfile vorbis ogg SDL_net SDL_image png jpeg"
+    uselibs="game game_sp game_em SDL_mixer SDL vorbisfile vorbis ogg SDL_net SDL_image png jpeg"
 
 ###################################################################################################
 
