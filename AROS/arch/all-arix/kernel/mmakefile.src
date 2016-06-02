@@ -1,0 +1,8 @@
+# $Id$
+include $(SRCDIR)/config/aros.cfg
+
+#MM- kernel-kernel-arix-i386 : kernel-kernel-linux-i386
+
+%common
+
+
