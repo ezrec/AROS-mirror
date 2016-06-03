@@ -5,7 +5,6 @@
 
 #include <aros/libcall.h>
 #include <aros/asmcall.h>
-
 #include <exec/execbase.h>
 #include <exec/types.h>
 #include <exec/resident.h>
@@ -33,6 +32,8 @@
 #include "pci.h"
 #include "syscall.h"
 
+#undef strncmp // remove conflict of a Linux header
+
 #define __NR_iopl   (110)
 #define __NR_open   (5)
 #define __NR_close  (6)
@@ -58,25 +59,35 @@ static int PCILx_Init(LIBBASETYPEPTR LIBBASE)
     	return FALSE;
     }
 
-#if defined(__i386__) || defined(__x86_64__)
+    LIBBASE->psd.hiddUnixIOAttrBase = OOP_ObtainAttrBase(IID_Hidd_UnixIO);
+    if (!LIBBASE->psd.hiddUnixIOAttrBase)
+        return FALSE;
+
+    LIBBASE->psd.hiddUnixIO = OOP_NewObjectTags(NULL, CLID_Hidd_UnixIO,
+                                            aHidd_UnixIO_Opener, MOD_NAME_STRING,
+                                            aHidd_UnixIO_Architecture, AROS_ARCHITECTURE,
+                                            TAG_DONE);
+    if (!LIBBASE->psd.hiddUnixIO)
+        return FALSE;
+
+#ifdef PCI_CONFIG_IO
     ret = syscall1(__NR_iopl, 3);
 
     D(bug("LinuxPCI: iopl(3)=%d\n", ret));
-
-    LIBBASE->psd.fd = syscall2(__NR_open, (IPTR)"/dev/mem", 2);
-#else
-    ret = -1;
-    LIBBASE->psd.fd = -1;
+    if (ret < 0)
+        return FALSE;
 #endif
 
-    D(bug("LinuxPCI: /dev/mem fd=%d\n", LIBBASE->psd.fd));
+    LIBBASE->psd.fd = Hidd_UnixIO_OpenFile(LIBBASE->psd.hiddUnixIO,
+                                           "/dev/mem", 2, 0, &ret);
+    D(bug("LinuxPCI: /dev/mem fd=%d (err=%d)\n", LIBBASE->psd.fd, ret));
 
-    if (ret==0)
-	return TRUE;
+    if (LIBBASE->psd.fd < 0) {
+        D(bug("LinuxPCI: has to be root in order to use this hidd\n"));
+        return FALSE;
+    }
 
-    D(bug("LinuxPCI: has to be root in order to use this hidd\n"));
-
-    return FALSE;
+    return TRUE;
 }
 
 static int PCILx_Expunge(LIBBASETYPEPTR LIBBASE)
@@ -103,6 +114,12 @@ static int PCILx_Expunge(LIBBASETYPEPTR LIBBASE)
 	}
 	OOP_DisposeObject(pci);
     }
+
+    Hidd_UnixIO_CloseFile(LIBBASE->psd.hiddUnixIO, LIBBASE->psd.fd, NULL);
+
+    OOP_DisposeObject(LIBBASE->psd.hiddUnixIO);
+
+    OOP_ReleaseAttrBase(IID_Hidd_UnixIO);
 
     return ret;
 }

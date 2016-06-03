@@ -2,6 +2,9 @@
 
 include $(SRCDIR)/config/aros.cfg
 
+USER_CFLAGS := -DHOST_OS_$(ARCH) \
+               -DAROS_ARCHITECTURE="\"$(AROS_TARGET_PLATFORM)\""
+USER_INCLUDES := -isystem $(GENINCDIR) $(KERNEL_INCLUDES)
 USER_LDFLAGS		= -static
 
 FILES	:= pcilinux_init driverclass

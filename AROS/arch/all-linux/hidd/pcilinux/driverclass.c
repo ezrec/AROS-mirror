@@ -6,7 +6,10 @@
     Lang: English
 */
 
+#include <fcntl.h>      // O_RDWR
+
 #include <exec/interrupts.h>
+#include <exec/rawfmt.h>
 #include <hidd/hidd.h>
 #include <hidd/pci.h>
 #include <oop/oop.h>
@@ -77,7 +80,7 @@ OOP_Object *PCILx__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_New *msg
     return o;
 }
 
-#if defined(__i386__) || defined(__x86_64__)
+#ifdef PCI_CONFIG_IO
 /*
     Some in/out magic to access PCI bus on PCs
 */
@@ -94,27 +97,80 @@ static inline void outl(ULONG val, UWORD port)
 {
     asm volatile ("outl %0,%w1"::"a"(val),"Nd"(port));
 }
-#else
-static inline ULONG inl(UWORD port)
+#endif
+
+#ifdef PCI_CONFIG_SYS
+static inline int pci_config_sys_open(OOP_Class *cl, int domain,
+                                      int bus, int dev, int sub)
 {
-    return 0;
+    char path[64];
+
+    NewRawDoFmt("/sys/bus/pci/devices/%04X:%02X:%02X.%d/config",
+                RAWFMTFUNC_STRING, path, 
+                domain, bus, dev, sub);
+    return Hidd_UnixIO_OpenFile(PSD(cl)->hiddUnixIO, path, O_RDWR, 0, NULL);
 }
 
-static inline void outl(ULONG val, UWORD port)
+static inline int pci_config_sys_close(OOP_Class *cl, int fd)
 {
+    return Hidd_UnixIO_CloseFile(PSD(cl)->hiddUnixIO, fd, NULL);
 }
 #endif
 
+IPTR PCILx__Hidd_PCIDriver__HasExtendedConfig(OOP_Class *cl, OOP_Object *o,
+                                              struct pHidd_PCIDriver_HasExtendedConfig *msg)
+{
+    IPTR mmio = 0;
+
+    return mmio;
+}
+
+#ifdef PCI_CONFIG_IO
 ULONG PCILx__Hidd_PCIDriver__ReadConfigLong(OOP_Class *cl, OOP_Object *o, 
     struct pHidd_PCIDriver_ReadConfigLong *msg)
 {
-    ULONG orig,temp;
-
+    ULONG orig, temp;
     Disable();    
     orig=inl(PCI_AddressPort);
     outl(CFGADD(msg->bus, msg->dev, msg->sub, msg->reg),PCI_AddressPort);
     temp=inl(PCI_DataPort);
     outl(orig, PCI_AddressPort);
+    Enable();
+    return temp;
+}
+
+void PCILx__Hidd_PCIDriver__WriteConfigLong(OOP_Class *cl, OOP_Object *o,
+    struct pHidd_PCIDriver_WriteConfigLong *msg)
+{
+    ULONG orig;
+   
+    Disable();
+    orig=inl(PCI_AddressPort);
+    outl(CFGADD(msg->bus, msg->dev, msg->sub, msg->reg),PCI_AddressPort);
+    outl(msg->val,PCI_DataPort);
+    outl(orig, PCI_AddressPort);
+    Enable();
+}
+#endif /* PCI_CONFIG_IO */
+
+#ifdef PCI_CONFIG_SYS
+ULONG PCILx__Hidd_PCIDriver__ReadConfigLong(OOP_Class *cl, OOP_Object *o, 
+    struct pHidd_PCIDriver_ReadConfigLong *msg)
+{
+    ULONG orig, temp;
+    int fd;
+
+    Disable();
+    orig = temp = 0;
+    fd = pci_config_sys_open(cl, 0, msg->bus, msg->dev, msg->sub);
+    if (fd >= 0) {
+        Hidd_UnixIO_SeekFile(PSD(cl)->hiddUnixIO, fd,
+                             msg->reg, SEEK_SET, NULL);
+        Hidd_UnixIO_ReadFile(PSD(cl)->hiddUnixIO, fd,
+                              &orig, sizeof(orig), NULL);
+        temp = AROS_LE2LONG(orig);
+        pci_config_sys_close(cl, fd);
+    }
     Enable();
 
     return temp;
@@ -123,55 +179,45 @@ ULONG PCILx__Hidd_PCIDriver__ReadConfigLong(OOP_Class *cl, OOP_Object *o,
 void PCILx__Hidd_PCIDriver__WriteConfigLong(OOP_Class *cl, OOP_Object *o,
     struct pHidd_PCIDriver_WriteConfigLong *msg)
 {
-    ULONG orig;
-    
+    int fd;
+
     Disable();
-    orig=inl(PCI_AddressPort);
-    outl(CFGADD(msg->bus, msg->dev, msg->sub, msg->reg),PCI_AddressPort);
-    outl(msg->val,PCI_DataPort);
-    outl(orig, PCI_AddressPort);
+    fd = pci_config_sys_open(cl, 0, msg->bus, msg->dev, msg->sub);
+    if (fd >= 0) {
+        ULONG val = AROS_LONG2LE(msg->val);
+        Hidd_UnixIO_SeekFile(PSD(cl)->hiddUnixIO, fd,
+                             msg->reg, SEEK_SET, NULL);
+        Hidd_UnixIO_WriteFile(PSD(cl)->hiddUnixIO, fd,
+                              &val, sizeof(val), NULL);
+        pci_config_sys_close(cl, fd);
+    }
     Enable();
 }
+#endif /* PCI_CONFIG_SYS */
 
 IPTR PCILx__Hidd_PCIDriver__MapPCI(OOP_Class *cl, OOP_Object *o,
     struct pHidd_PCIDriver_MapPCI *msg)
 {
-    ULONG offs = (IPTR)msg->PCIAddress >> 12;
-    ULONG size = msg->Length;
-    IPTR ret;
+    void *addr;
 
-    D(bug("[PCILinux] PCIDriver::MapPCI(%x, %x)\n", offs, size));
+    D(bug("[PCILinux] PCIDriver::MapPCI(%p, %x)\n",
+                (void *)msg->PCIAddress, (unsigned)msg->Length));
 
-#ifdef __x86_64__
-    asm volatile(
-       "push %%rbp; mov %%rax,%%rbp; mov %1,%%rax; int $0x80; pop %%rbp"
-        :"=a"(ret)
-        :"i"(192), "b"(0), "c"(size), "d"(0x03), "S"(0x01), "D"(PSD(cl)->fd), "0"(offs)
-    );
-#elif defined(__i386__)
-    asm volatile(
-        "push %%ebp; movl %%eax,%%ebp; movl %1,%%eax; int $0x80; pop %%ebp"
-        :"=a"(ret)
-        :"i"(192), "b"(0), "c"(size), "d"(0x03), "S"(0x01), "D"(PSD(cl)->fd), "0"(offs)
-    );
-#else
-    ret = (IPTR)-1;
-#endif
+    addr = Hidd_UnixIO_MemoryMap(PSD(cl)->hiddUnixIO, NULL,
+                                 msg->Length, PROT_READ | PROT_WRITE,
+                                 MAP_SHARED, PSD(cl)->fd,
+                                 (IPTR)msg->PCIAddress, NULL);
 
-    D(bug("[PCILinux] mmap syscall returned %x\n", ret));
+    D(bug("[PCILinux] mmap syscall returned %p\n", addr));
 
-    return ret;
+    return (IPTR)addr;
 }
 
 VOID PCILx__Hidd_PCIDriver__UnmapPCI(OOP_Class *cl, OOP_Object *o,
     struct pHidd_PCIDriver_UnmapPCI *msg)
 {
-#if defined(__x86_64__) || defined(__i386__)
-    IPTR offs = (IPTR)msg->CPUAddress;
-    ULONG size = msg->Length;
-    syscall2(91, offs, size);
-#else
-#endif
+    Hidd_UnixIO_MemoryUnMap(PSD(cl)->hiddUnixIO, msg->CPUAddress, 
+                            msg->Length, NULL);
 }
 
 BOOL PCILx__Hidd_PCIDriver__AddInterrupt(OOP_Class *cl, OOP_Object *o,
