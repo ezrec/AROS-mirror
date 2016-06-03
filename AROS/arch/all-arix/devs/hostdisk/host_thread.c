@@ -13,11 +13,7 @@
 #include <sys/syscall.h>
 
 /* Required to build with proper syscal numbers! Why!?? */
-#if defined __i386__
-#include <i386-linux-gnu/asm/unistd.h>
-#elif defined __arm__
-#include <arm-linux-gnueabihf/asm/unistd.h>
-#endif
+#include <asm/unistd.h>
 
 /* Empty signal handler which does pretty nothing */
 #ifdef SA_SIGINFO

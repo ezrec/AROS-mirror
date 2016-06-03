@@ -51,11 +51,7 @@
 #include <linux/sched.h>
 
 /* Required to build with proper syscal numbers! Why!?? */
-#if defined __i386__
-#include <i386-linux-gnu/asm/unistd.h>
-#elif defined __arm__
-#include <arm-linux-gnueabihf/asm/unistd.h>
-#endif
+#include <asm/unistd.h>
 
 static ULONG error(int unixerr)
 {
