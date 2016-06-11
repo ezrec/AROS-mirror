@@ -794,7 +794,7 @@ IPTR Install__MUIM_IC_NextStep(Class * CLASS, Object * self, Msg message)
                     tmp_grub = AllocVec(100, MEMF_CLEAR | MEMF_PUBLIC);
 
                     GET(dest_volume, MUIA_String_Contents, &option);
-                    sprintf(tmp_grub, "%s:Arch/pc/grub",
+                    sprintf(tmp_grub, "%s:"ARCH_PATH"/"GRUB_PATH,
                         (CONST_STRPTR) option);
 
                     /* Guess the best disk to install GRUB's bootblock to */
@@ -3334,7 +3334,7 @@ int main(int argc, char *argv[])
 
     /* Let GRUB text/graphics choice default to same as on boot media */
     source_path[pathend] = '\0';
-    AddPart(source_path, "Arch/pc/grub/unicode.pf2", 256);
+    AddPart(source_path, ARCH_PATH"/"GRUB_PATH"/unicode.pf2", 256);
     if ((lock = Lock(source_path, SHARED_LOCK)) != BNULL)
     {
         gfx_font_exists = TRUE;
