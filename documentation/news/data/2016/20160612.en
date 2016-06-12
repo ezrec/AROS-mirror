@@ -1,0 +1,27 @@
+===================
+May 2016 Highlights
+===================
+
+:Author:   Krzysztof Smiechowicz
+:Date:     2016-06-12
+
+As the days finally got warmer on northern hemisphere, the activity of
+both users and developers of AROS reached quite low levels in May.
+
+Krzysztof Smiechowicz made the necessary fixes to the source code
+and enabled again the x86_64 build of AROS, which was not available for
+over three months. Right now nightly build targets for all supported
+architectures are available.
+
+In May first version of a new, interesting application has been made
+available by Marcus Sacrow. Mapparium is an OpenStreetMap client
+working under AROS and MorphOS. Current functionality allows for
+example browsing the map and searching for location.
+
+Closing, a new survey has been launched in order to understand how
+AROS is used by people and how it can become even more useful. If
+you have not done so, please answer the survey questions in `this
+thread`__
+
+__ http://aros-exec.org/modules/newbb/viewtopic.php?start=0&topic_id=9754&viewmode=flat&order=ASC&type=&mode=0
+
