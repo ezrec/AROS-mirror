@@ -203,8 +203,8 @@ Result
 ~~~~~~
 ::
 
-     Zero if interrupt was succesfully installed and UNIX errno value if there was en error
-     during setting up the filedescriptor.
+     Zero if interrupt was successfully installed and UNIX errno value if
+     there was an error during setting up the filedescriptor.
 
 
 

@@ -127,7 +127,7 @@ Result
 ::
 
 
-     A valid GL context or NULL of creation was not succesfull.
+     A valid GL context or NULL of creation was not successful.
 
 
 

@@ -246,7 +246,7 @@ Result
 ~~~~~~
 ::
 
-     error - 0 if successfulle. IFFERR_#? elsewise.
+     error - 0 if successful. IFFERR_#? otherwise.
 
 
 
@@ -290,7 +290,7 @@ Result
 ~~~~~~
 ::
 
-     error      - 0 if successfull, IFFERR_#? otherwise.
+     error      - 0 if successful, IFFERR_#? otherwise.
 
 
 
@@ -385,7 +385,7 @@ Result
 ~~~~~~
 ::
 
-     error - 0 If successfull, IFFERR_#? elsewise.
+     error - 0 If successful, IFFERR_#? otherwise.
 
 
 
@@ -439,7 +439,7 @@ Result
 ~~~~~~
 ::
 
-     error - 0 If successfull, IFFERR_#? elsewise.
+     error - 0 If successful, IFFERR_#? otherwise.
 
 
 
@@ -1024,14 +1024,14 @@ Inputs
 ~~~~~~
 ::
 
-     unitNumber  - a clipboard device unit number (usually PRIMARY_CLIP).
+     unitNumber - a clipboard device unit number (usually PRIMARY_CLIP).
 
 
 Result
 ~~~~~~
 ::
 
-     ch          -  pointer to ClipboarHandle struct or NULL if unsuccessfull.
+     ch -  pointer to ClipboardHandle struct or NULL if unsuccessful.
 
 
 
@@ -1075,7 +1075,7 @@ Result
 ~~~~~~
 ::
 
-     error -  0 if successfull, IFFERR_#? elsewise.
+     error -  0 if successful, IFFERR_#? elsewise.
 
 
 Notes
@@ -1187,7 +1187,7 @@ Result
 ~~~~~~
 ::
 
-     0 if successfull or IFFERR_#?
+     0 if successful or IFFERR_#?
 
 
 
@@ -1228,7 +1228,7 @@ Result
 ~~~~~~
 ::
 
-     error  -  0 if successfull, IFFERR_#? otherwise.
+     error  -  0 if successful, IFFERR_#? otherwise.
 
 
 
@@ -1275,7 +1275,7 @@ Result
 ~~~~~~
 ::
 
-     error  - 0 if successfull, IFFERR_#? otherwise.
+     error  - 0 if successful, IFFERR_#? otherwise.
 
 
 
@@ -1321,7 +1321,7 @@ Result
 ~~~~~~
 ::
 
-     error      - 0 if successfull, IFFERR_#? otherwise.
+     error      - 0 if successful, IFFERR_#? otherwise.
 
 
 
@@ -1368,7 +1368,7 @@ Result
 ~~~~~~
 ::
 
-     error  -  0 if successfull, IFFERR_#? otherwize.
+     error  -  0 if successful, IFFERR_#? otherwise.
 
 
 
@@ -1413,7 +1413,7 @@ Result
 ::
 
      actual -   (positive) the actual number of bytes read.
-               (negative) IFFERR_#? error code if not succesfull.
+               (negative) IFFERR_#? error code if not successful.
 
 
 
@@ -1460,8 +1460,7 @@ Result
 ::
 
      actual -   (positive) the actual number of whole records read.
-               (negative) IFFERR_#? error code if not succesfull.
-
+               (negative) IFFERR_#? error code if not successful.
 
 
 
@@ -1550,7 +1549,7 @@ Result
 ~~~~~~
 ::
 
-     error  -  0 if successfull, IFFERR_#? otherwise.
+     error  -  0 if successful, IFFERR_#? otherwise.
 
 
 
@@ -1593,7 +1592,7 @@ Result
 ~~~~~~
 ::
 
-     error      - 0 if successfull, IFFERR_#? otherwise.
+     error      - 0 if successful, IFFERR_#? otherwise.
 
 
 
@@ -1637,7 +1636,7 @@ Result
 ~~~~~~
 ::
 
-     error  -  0 if successfull, IFFERR_#? otherwise.
+     error  -  0 if successful, IFFERR_#? otherwise.
 
 
 
@@ -1725,7 +1724,7 @@ Result
 ~~~~~~
 ::
 
-     error     -  0 if succesfull, IFFERR_#? otherwise.
+     error     -  0 if successful, IFFERR_#? otherwise.
 
 
 
@@ -1771,7 +1770,7 @@ Result
 ::
 
      actual    -  (positive) number of bytes actually written.
-                 (negative) IFFERR_#? indicating unsuccesfull write.
+                 (negative) IFFERR_#? indicating unsuccessful write.
 
 
 See also
@@ -1817,7 +1816,7 @@ Result
 ::
 
      actual -   (positive) the actual number of whole records written.
-               (negative) IFFERR_#? error code if not succesfull.
+               (negative) IFFERR_#? error code if not successful.
 
 
 

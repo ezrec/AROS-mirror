@@ -2754,7 +2754,7 @@ Result
 ~~~~~~
 ::
 
-     buffer when succesfull. NULL in case of an error or when EOF without any
+     buffer when successful. NULL in case of an error or when EOF without any
      characters read. In the latter case buffer array is unchanged.
 
 

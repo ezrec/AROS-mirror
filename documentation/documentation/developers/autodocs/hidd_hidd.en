@@ -305,7 +305,7 @@ Result
 ~~~~~~
 ::
 
-     TRUE if removal succesful or FALSE upon failure.
+     TRUE if removal successful or FALSE upon failure.
 
 
 Notes
@@ -358,7 +358,7 @@ Result
 ~~~~~~
 ::
 
-     TRUE if setup completed succesfully and FALSE in case of error.
+     TRUE if setup completed successfully and FALSE in case of error.
      If this method returns error, the driver object will be disposed
      and moHW_AddDriver method will fail.
 

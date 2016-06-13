@@ -5747,7 +5747,7 @@ Function
 ~~~~~~~~
 ::
 
-     Sets the global (default) string editing hook of intuition
+     Sets the global (default) string editing hook of Intuition
      string gadgets.
 
 
@@ -5755,7 +5755,7 @@ Inputs
 ~~~~~~
 ::
 
-     The stringgagdget editing hook to replace the old one.
+     The string gadget editing hook to replace the old one.
 
 
 Result
