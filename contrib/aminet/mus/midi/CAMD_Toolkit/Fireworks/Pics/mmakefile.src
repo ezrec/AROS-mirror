@@ -1,4 +1,4 @@
-#   $Id: mmakefile.src 48342 2013-10-28 07:59:49Z mazze $
+#   $Id$
 #
 
 include $(SRCDIR)/config/aros.cfg
