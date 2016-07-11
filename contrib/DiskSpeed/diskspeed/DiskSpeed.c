@@ -1,5 +1,5 @@
 /*
-   Copyright © 1995-2006, The AROS Development Team. All rights reserved.
+   Copyright © 1995-2016, The AROS Development Team. All rights reserved.
    $Id$
 
    Desc: Disk subsystem Benchmarking Utility..
@@ -170,7 +170,7 @@ enum
 #define CXVERSION            VERS " (" DATE ")" 
 #define STR_SEPERATOR         "------------------------------------------------------------------"
 
-const char COPYRIGHT[] =      "Aros " VERS " Copyright © 2004-2006 The AROS Development Team" VERSTAG;
+const char COPYRIGHT[] =      "Aros " VERS " Copyright © 2004-2016 The AROS Development Team" VERSTAG;
 
 #ifdef SCSI_SPEED
 #   define MSG_BYTES_READ      MSG_BYTES_READ_S
@@ -343,9 +343,9 @@ static char *GetString(LONG num)
 }
 #endif
 
-static ULONG getv(APTR obj, ULONG tag)
+static IPTR getv(APTR obj, ULONG tag)
 {
-   ULONG x;
+   IPTR x;
    GetAttr(tag, obj, &x);
    return x;
 }
@@ -466,7 +466,7 @@ static struct SpeedTimer *Init_Timer(void)
 		spt->Open = FALSE;
 		if ((spt->tmPort = CreateMsgPort()))
 		{
-			if ((spt->tmReq = (struct timerrequest *)CreateIORequest(spt->tmPort,sizeof(struct timerequest))))
+			if ((spt->tmReq = (struct timerequest *)CreateIORequest(spt->tmPort,sizeof(struct timerequest))))
 			{
 				if (!OpenDevice(TIMERNAME,UNIT_MICROHZ,(struct IORequest *)(spt->tmReq),0L)) spt->Open = TRUE;
 			}
@@ -485,7 +485,7 @@ static struct SpeedTimer *Init_Timer(void)
             needed in the display...
 */
 
-static void AddDisplayLine(struct DiskSpeed *global,char *line)
+static void AddDisplayLine(struct DiskSpeed *global,const char *line)
 {
 	ULONG		         size = strlen(line);
 
@@ -550,7 +550,7 @@ static ULONG MaxDivide(ULONG x,ULONG y,ULONG digits)
             and the given unit of measure.
 */
 
-static VOID Display_Result(struct DiskSpeed *global,char *Header,ULONG number,char *Units, struct CPU_AVAIL *CPU_AVAIL_struct)
+static VOID Display_Result(struct DiskSpeed *global,const char *Header,ULONG number,const char *Units, struct CPU_AVAIL *CPU_AVAIL_struct)
 {
    char	         *st_string = global->tmp1;
    char	         format[48];
@@ -601,7 +601,7 @@ static VOID Display_Result(struct DiskSpeed *global,char *Header,ULONG number,ch
 	AddDisplayLine(global,st_string);
 }
 
-static VOID Display_Error(struct DiskSpeed *global,char *test)
+static VOID Display_Error(struct DiskSpeed *global,const char *test)
 {
 	sprintf(global->tmp1,GetString(MSG_ERR_FAIL),test);
 	AddDisplayLine(global,global->tmp1);
@@ -645,7 +645,7 @@ static BOOL SpeedTest(struct DiskSpeed *global,ULONG size,ULONG offset,ULONG mem
 		while ((worked &= Check_Quit(global)) && (Read_Timer(global->timer) < global->Min_Time))
 		{
 			global->DiskIO.iotd_Req.io_Command = CMD_READ;
-			global->DiskIO.iotd_Req.io_Flags = NULL;
+			global->DiskIO.iotd_Req.io_Flags = 0;
 			global->DiskIO.iotd_Req.io_Length = size;
 			global->DiskIO.iotd_Req.io_Data = buffer;
 			global->DiskIO.iotd_Req.io_Offset = count;
@@ -695,7 +695,7 @@ static LONG CreateFileTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL
 
 	for (count=0;(count<NUM_FILES) && (worked &= Check_Quit(global));count++)
 	{
-		sprintf(st_string,FILE_STRING,count);
+		sprintf(st_string,FILE_STRING,(unsigned long)count);
 		if (file = Open(st_string,MODE_NEWFILE)) Close(file);
 		else
 		{
@@ -724,7 +724,7 @@ static LONG OpenFileTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_s
 	Init_CPU_Available(CPU_AVAIL_struct);		/* Start counting free CPU cycles... */
 	while ((worked &= Check_Quit(global)) && (Read_Timer(global->timer) < global->Min_Time))
 	{
-		sprintf(st_string,FILE_STRING,(ULONG)(count % NUM_FILES));
+		sprintf(st_string,FILE_STRING,(unsigned long)(count % NUM_FILES));
 		count++;
 		if (file=Open(st_string,MODE_OLDFILE)) Close(file);
 		else
@@ -792,7 +792,7 @@ static LONG DeleteFileTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL
 
 	for (count = 0;(count<NUM_FILES) && (worked &= Check_Quit(global));count++)
 	{
-		sprintf(st_string,FILE_STRING,count);
+		sprintf(st_string,FILE_STRING,(unsigned long)count);
 		if (!DeleteFile(st_string))
 		{
 			Display_Error(global,GetString(MSG_ERR_DFILE));
@@ -1067,7 +1067,7 @@ static void DoTests(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct
 
 #ifndef	SCSI_SPEED
    char            *fstring;
-   LONG            buffers;
+   LONG            buffers = 0;
 #endif	/* !SCSI_SPEED */
 
 	/*
@@ -1278,7 +1278,7 @@ static void StartTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_stru
 		memset(&(global->DiskIO),0,sizeof(struct IOExtTD));
 		if ((global->DiskIO.iotd_Req.io_Message.mn_ReplyPort = CreateMsgPort()))
 		{
-			if (!OpenDevice(global->Device,scsi_unit, (struct IORequest *)&global->DiskIO, NULL))
+			if (!OpenDevice(global->Device,scsi_unit, (struct IORequest *)&global->DiskIO, 0))
 			{
 				unit = NULL;
 				*st_string = ':';
@@ -1348,16 +1348,16 @@ static VOID SetVersionStrings(struct DiskSpeed *global)
 //  UWORD	         flags = ((struct ExecBase *)(SysBase))->AttnFlags;
    ULONG	         sysVer = ((struct ExecBase *)(SysBase))->LibNode.lib_Version;
    ULONG	         sofVer = ((struct ExecBase *)(SysBase))->SoftVer;
-   char	         *st_string;
+//   char	         *st_string;
 
 #if defined(__PPC__)
 	strcpy( global->CPU_Type,"PPC" );
 #else
 	strcpy( global->CPU_Type,"i386" );
 #endif
-	st_string = &( global->CPU_Type[1] );
+//	st_string = &( global->CPU_Type[1] );
 
-	sprintf(global->Exec_Ver,"%ld.%ld",(ULONG) sysVer,(ULONG) sofVer);
+	sprintf(global->Exec_Ver,"%ld.%ld",(long) sysVer,(long) sofVer);
 }
 
 /*
@@ -1419,7 +1419,7 @@ static Object *MakeCheck (CONST_STRPTR label, ULONG id, ULONG checked)
    return obj;
 }
 
-static APTR MakeButton(char *string)
+static APTR MakeButton(const char *string)
 {
    APTR obj;
    if (obj = MUI_MakeObject(MUIO_Button, (IPTR)string))
@@ -1453,7 +1453,7 @@ D(bug("Open_GUI()\n"));
          MUIA_Application_DiskObject, (IPTR)dobj,
          MUIA_Application_Title, (IPTR)APPNAME,
          MUIA_Application_Version, (IPTR)CXVERSION,
-         MUIA_Application_Copyright, (IPTR)"Copyright © 1995-2006, The AROS Development Team",
+         MUIA_Application_Copyright, (IPTR)"Copyright © 1995-2016, The AROS Development Team",
          MUIA_Application_Author, (IPTR)"The AROS Development Team",
          MUIA_Application_Description, (IPTR)GetString(MSG_DESCRIPTION),
          MUIA_Application_Base, (IPTR)APPNAME,
@@ -1940,7 +1940,7 @@ static LONG ParseArg(struct DiskSpeed *global,int argc,char *argv[],int start,st
 				loop++;
 				if (loop<argc) next = argv[loop];
 			}
-			if (*next) stcd_l(next,&(global->Test_Size[0]));
+			if (*next) stcd_l(next,(long *)&(global->Test_Size[0]));
 			else working=FALSE;
 		}
 		else if ((next = Check_String(arg,"BUF2")))
@@ -1951,7 +1951,7 @@ static LONG ParseArg(struct DiskSpeed *global,int argc,char *argv[],int start,st
 				loop++;
 				if (loop<argc) next = argv[loop];
 			}
-			if (*next) stcd_l(next,&(global->Test_Size[1]));
+			if (*next) stcd_l(next,(long *)&(global->Test_Size[1]));
 			else working = FALSE;
 		}
 		else if ((next = Check_String(arg,"BUF3")))
@@ -1962,7 +1962,7 @@ static LONG ParseArg(struct DiskSpeed *global,int argc,char *argv[],int start,st
 				loop++;
 				if (loop<argc) next = argv[loop];
 			}
-			if (*next) stcd_l(next,&(global->Test_Size[2]));
+			if (*next) stcd_l(next,(long *)&(global->Test_Size[2]));
 			else working = FALSE;
 		}
 		else if ((next = Check_String(arg,"BUF4")))
@@ -1973,7 +1973,7 @@ static LONG ParseArg(struct DiskSpeed *global,int argc,char *argv[],int start,st
 				loop++;
 				if (loop<argc) next=argv[loop];
 			}
-			if (*next) stcd_l(next,&(global->Test_Size[3]));
+			if (*next) stcd_l(next,(long *)&(global->Test_Size[3]));
 			else working = FALSE;
 		}
 		else if ((next = Check_String(arg,"MINTIME")))
@@ -1984,7 +1984,7 @@ static LONG ParseArg(struct DiskSpeed *global,int argc,char *argv[],int start,st
 				loop++;
 				if (loop<argc) next = argv[loop];
 			}
-			if (*next) stcd_l(next,&(global->Min_Time));
+			if (*next) stcd_l(next,(long *)&(global->Min_Time));
 			else working = FALSE;
 		}
 #ifndef	SCSI_SPEED
@@ -2015,7 +2015,7 @@ static LONG ParseArg(struct DiskSpeed *global,int argc,char *argv[],int start,st
 
    D(bug("ParseArg() - preparing to open MUI window\n"));
 
-	if (working && window) working = Open_GUI(global,CPU_AVAIL_struct, NULL, 0);
+	if (working && window) working = Open_GUI(global,CPU_AVAIL_struct, NULL, 0) != NULL;
 
 	return(working);
 }
@@ -2061,7 +2061,7 @@ static void HandleAll (struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_str
    {
       case RETURNID_BEGIN:
       {
-         ULONG str1, str2;
+         IPTR str1, str2;
          
          GET_Config(global, CPU_AVAIL_struct);
 

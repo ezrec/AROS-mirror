@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2003, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2016, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: CPU Load Monitoring code.
@@ -43,7 +43,7 @@ struct CPU_AVAIL
     ULONG   _CPU_State_Flag;            /* Used to control this routine...      */
     ULONG   _CPU_Count_Low;             /* The low-order word for CPU count     */
     ULONG   _CPU_Count_High;            /* The high-order word for CPU count    */
-    ULONG   CPU_Task;                   /* The task pointer...                  */
+    struct Task *CPU_Task;              /* The task pointer...                  */
 };
 
 static const char Task_Name[] = "DiskSpeed CPU Load Monitor";
@@ -81,7 +81,7 @@ struct Task *Init_CPU_Available(struct CPU_AVAIL *CPU_AVAIL_struct)
 	{
         NewList(&SPEED_Task->tc_MemEntry);
 		SPEED_Task->tc_Node.ln_Type = NT_TASK;
-		SPEED_Task->tc_Node.ln_Name = Task_Name;
+		SPEED_Task->tc_Node.ln_Name = (STRPTR)Task_Name;
 		SPEED_Task->tc_Node.ln_Pri = -127;
 
 		stack = AllocMem(AROS_STACKSIZE, MEMF_PUBLIC);
