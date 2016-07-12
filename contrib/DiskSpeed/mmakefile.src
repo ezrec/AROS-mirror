@@ -4,7 +4,8 @@ include $(SRCDIR)/config/aros.cfg
 DESTDIR	:= $(AROS_CONTRIB)/DiskSpeed
 
 NOWARN_FLAGS := $(NOWARN_UNINITIALIZED)
-USER_CFLAGS := $(NOWARN_FLAGS) -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/diskspeed -I$(SRCDIR)/$(CURDIR)/scsispeed
+USER_CFLAGS := $(NOWARN_FLAGS) -I$(SRCDIR)/$(CURDIR)\
+ -I$(SRCDIR)/$(CURDIR)/diskspeed -I$(SRCDIR)/$(CURDIR)/scsispeed -O0
 
 DISKSHARED := locale diskspeed/DiskSpeedCPU
 
