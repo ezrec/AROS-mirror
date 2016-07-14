@@ -1,0 +1,217 @@
+## version $VER: diskspeed.catalog 1.0 (14.07.2016)
+## codeset 0
+## language deutsch
+;
+MSG_CANT_OPEN_LIB
+Kann %s V%ld nicht öffnen!\n
+;
+MSG_CANT_CREATE_APP
+Anwendungsobjekt kann nicht erstellen werden!
+;
+MSG_MAIN_WINTITLE 
+%s 4.10 Benchmark-Fenster
+;
+MSG_ABOUT_WINTITLE
+Über AROS DiskSpeed ..
+;
+MSG_DESCRIPTION
+Testen der Datenträgerleistung
+;
+MSG_CONFIG_WINTITLE
+Benchmark-Konfiguration ..
+;
+MSG_Welcome
+Willkommen beim AROS %s Benchmarking-Werkzeug.
+;
+MSG_W_DEVICE
+Gerät
+;
+MSG_W_FILESYS
+Dateisystem
+;
+WORD_MENU_Project
+Projekt
+;
+WORD_MENU_About
+Über
+;
+WORD_MENU_Quit
+Beenden
+;
+MSG_OK 
+Ok
+;
+MSG_GAD_SAVE 
+Speichern
+;
+MSG_GAD_USE
+Benutzen
+;
+MSG_GAD_CANCEL
+Abbrechen
+;
+MSG_FILE_CREATE
+Datei zu erstellen:
+;
+MSG_FILE_OPEN
+Datei öffnen:
+;
+MSG_FILE_SCAN
+Verzeichnis-Scan:
+;
+MSG_FILE_DELETE
+Datei löschen:
+;
+MSG_SEEK_READ
+Seek/Read:
+;
+MSG_BYTES_CREATE 
+Datei erstellen:
+;
+MSG_BYTES_WRITE
+Datei schreiben:
+;
+MSG_BYTES_READ_N
+Lesen aus der Datei:
+;
+MSG_BYTES_READ_S
+Lesen über SCSI:
+;
+MSG_SEEK_UNITS
+Seeks/s
+;
+MSG_FILE_UNITS
+Dateien/s
+;
+MSG_BYTE_UNITS
+Bytes/s
+;
+MSG_START_TEST
+Test beginnen
+;
+MSG_SAVE_RESULTS
+Ergebnisse speichern
+;
+MSG_STOP_TEST
+Test beenden
+;
+MSG_BUF1TXT 
+Testpuffer 1
+;
+MSG_BUF2TXT
+Testpuffer 2
+;
+MSG_BUF3TXT
+Testpuffer 3
+;
+MSG_BUF4TXT
+Testpuffer 4
+;
+MSG_RWBUFT 
+Lese/Schreib Puffertypen
+;
+MSG_RWBUFS 
+Lese/ Schreib Puffergrößen
+;
+MSG_CMMNTS 
+Bemerkungen:
+;
+MSG_DEVICE 
+Gerät:
+;
+MSG_BLDAMOS 
+  AmigaOS Version: 
+;
+MSG_BLDAROS 
+  AROS Version: 
+;
+MSG_PROCESSOR 
+Prozessor:
+;
+MSG_DMAHIGH 
+  Hoch
+;
+MSG_DMANORM
+  Normal
+;
+MSG_VIDDMA
+ Video-DMA
+;
+MSG_TSTMANP 
+Teste Verzeichnis Manipulationsgeschwindigkeit.
+;
+MSG_TSTBUFF 
+Testen mit einem %ld Byte, MEMF_%s, %s-ausgerichteten Puffer.
+;
+MSG_CPUSPD
+CPU-Geschwindigkeitsmessung: %ld
+;
+MSG_AVGCPU
+CPU durchschnittlich verfügbar: %ld%% | CPU-Verfügbarkeitsindex: %ld
+;
+MSG_NOCPU
+Keine CPU-Geschwindigkeitsmessung -- CPU % steht nicht zur Verfügung.
+;
+MSG_CPUAVAIL
+  |  CPU verfügbar: %ld%%
+;
+MSG_SKIPMEM
+Skipping %ld Byte MEMF_%s-Test wegen Speichermangel.
+;
+MSG_ERR_CALIB1 
+CPU-Kalibrierung zeigt, dass CPU-Verfügbarkeitstests
+;
+MSG_ERR_CALIB2
+in dem aktuellen Systemzustand ungenau sein würden.
+;
+MSG_ERR_FAIL
+Fehler:   %s-Test nicht bestanden.
+;
+MSG_ERR_NOLOCK
+Fehler:   Es konnte keine Sperre auf Testgerät erhalten.
+;
+MSG_ERR_NODIR
+Fehler:   Konnte kein Testverzeichnis erstellen.
+;
+MSG_ERR_BADDIR 
+Fehler:   Konnte auf Testverzeichnis nicht zugreifen.
+;
+MSG_ERR_NOCONF
+Fehler:   Konnte Konfigurationsrequester nicht öffnen.
+;
+MSG_ERR_BADSPEC
+Fehler:   Schlechte Gerätespezifikation.
+;
+MSG_ERR_NODEV 
+Fehler:   Angegebenes Gerät konnte nicht geöffnet werden
+;
+MSG_ERR_OFILE
+Datei öffnen
+;
+MSG_ERR_RFILE
+Datei lesen
+;
+MSG_ERR_WFILE
+Datei schreiben
+;
+MSG_ERR_CFILE
+Datei erstellen
+;
+MSG_ERR_DFILE
+Datei löschen
+;
+MSG_ERR_SEEK
+Seek/Read
+;
+MSG_ERR_DIRSCAN
+Verzeichnis-Scan
+;
+MSG_ERR_RDEV
+Gerät meldet Fehler beim Lesen
+;
+MSG_ERR_DATA
+*** Datenfehler ***  Puffer nicht richtig gelesen.
+;
+MSG_USERINT
+*** Unterbrochen durch Benutzer ***
+;

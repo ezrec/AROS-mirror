@@ -174,13 +174,13 @@ MSG_ERR_BADDIR (//)
 Error:  Could not access test directory.
 ;
 MSG_ERR_NOCONF (//)
-Could not open configuration requester.
+Error:  Could not open configuration requester.
 ;
 MSG_ERR_BADSPEC (//)
 Error:  Bad device specification.
 ;
 MSG_ERR_NODEV (//)
-Error:  Could not open device specified
+Error:  Could not open device specified.
 ;
 MSG_ERR_OFILE (//)
 File Open

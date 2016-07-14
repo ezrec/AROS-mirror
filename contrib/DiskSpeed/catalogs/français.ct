@@ -1,4 +1,4 @@
-## version $VER: diskspeed.catalog 1.0 (30.01.2004)
+## version $VER: diskspeed.catalog 1.0 (14.07.2016)
 ## codeset 0
 ## language français
 ;
@@ -9,7 +9,7 @@ MSG_CANT_CREATE_APP
 Impossible de créer l'application
 ;
 MSG_MAIN_WINTITLE 
-%s 4.9 Mesures de performances des disques
+%s 4.10 Mesures de performances des disques
 ;
 MSG_ABOUT_WINTITLE
 À propos de DiskSpeed..
@@ -57,7 +57,7 @@ MSG_FILE_OPEN
 Ouvrir un fichier  
 ;
 MSG_FILE_SCAN
-Parcourir un répertoire:
+Parcourir un répertoire :
 ;
 MSG_FILE_DELETE
 Effacer un fichier :   
@@ -183,7 +183,7 @@ MSG_ERR_BADSPEC
 Erreur :  Mauvais périphérique spécifié.
 ;
 MSG_ERR_NODEV 
-Error:    Pas de périphérique
+Erreur :  Pas de périphérique.
 ;
 MSG_ERR_OFILE
 Ouverture de fichier
