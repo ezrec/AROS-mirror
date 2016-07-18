@@ -5,22 +5,22 @@ June 2016 Highlights
 :Author:   Krzysztof Smiechowicz
 :Date:     2016-07-17
 
-This months highlights start with results of AROS 2016 usage survey.
-The survey was aimed at understanding ways how AROS is used and what is
-needed to make it more useful. In total 50 people took part and you can
-read the results of the survey in `this thread`__ . Thank you to all
+This month's highlights start with the results of the AROS 2016 usage 
+survey. The survey was aimed at understanding the ways in which AROS is used 
+and what is needed to make it more useful. In total 50 people took part and 
+you can read the results of the survey in `this thread`__ . Thank you to all 
 who participated!
 
-June also saw a release of an update to Icaros Desktop, the leading x86
-distribution by Paolo Besser. The update, presented as version 2.1.2, brings
-refreshed 68K environment, new cloud service drivers and a few updated
+June also saw the release of an update to Icaros Desktop, the leading x86 
+distribution by Paolo Besser. The update, presented as version 2.1.2, brings 
+a refreshed 68K environment, new cloud service drivers and a few updated 
 applications. Visit `www.icarosdesktop.org/`__ to download the update.
 
-As a final highlight, Krzysztof Smiechowicz began work to refresh
-the ABI_V0 compatible system files with latest developments from AROS trunk.
-The last refresh was done end of 2014, so it is good time to bring the new
-functionalities to AROS community. The refreshes version is expected to be
-available in fall 2016.
+As a final highlight, Krzysztof Smiechowicz began work to refresh the 
+ABI_V0-compatible system files with the latest developments from the AROS 
+trunk. The last refresh was done at the end of 2014, so it is a good time to 
+bring the new functionalities to the AROS community. The refreshed version 
+is expected to be available in Fall 2016.
 
 __ http://aros-exec.org/modules/newbb/viewtopic.php?post_id=99750#forumpost99750
 __ http://www.icarosdesktop.org/
