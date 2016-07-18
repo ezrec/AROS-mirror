@@ -41,7 +41,6 @@ GCC_EXTRA_OPTS += --with-dwarf2
 GCC_EXTRA_OPTS += --enable-frame-pointer
 GCC_EXTRA_OPTS += --disable-libssp
 GCC_EXTRA_OPTS += --disable-libstdcxx-pch
-GCC_EXTRA_OPTS += --libdir=$(AROS_LIB)
 
 %fetch_and_build_gnu_development package=gcc version=$(GCC_VERSION) patch=yes \
     package_repo="$(GNU_REPOSITORY)/gcc/gcc-$(GCC_VERSION)" \
