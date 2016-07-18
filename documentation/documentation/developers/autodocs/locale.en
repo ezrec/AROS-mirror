@@ -293,7 +293,7 @@ Synopsis
  APTR FormatString(
           const struct Locale * locale,
           CONST_STRPTR fmtTemplate,
-          CONST_APTR dataStream,
+          RAWARG dataStream,
           const struct Hook * putCharFunc );
 
 
