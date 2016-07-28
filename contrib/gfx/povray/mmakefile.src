@@ -75,7 +75,7 @@ FILES = aros     \
 
 #MM povray : includes linklibs linklibs-png
 
-NOWARN_FLAGS := $(NOWARN_ARRAY_BOUNDS)
+NOWARN_FLAGS := $(NOWARN_ARRAY_BOUNDS) $(NOWARN_MAYBE_UNINITIALIZED)
 USER_CFLAGS := $(NOWARN_FLAGS)
 
 %build_prog mmake=povray \
