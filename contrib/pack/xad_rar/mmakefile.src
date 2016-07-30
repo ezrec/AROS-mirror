@@ -22,4 +22,4 @@ CONFIG_CXXFLAGS := $(subst -Werror ,,$(CONFIG_CXXFLAGS))
 
 %build_prog mmake=xadmaster-client-rar \
     files="extheader xad_rar" cxxfiles="Rar_Extractor-0.2.1/unrarlib/unrarlib" progname=RAR targetdir=$(AROS_LIBRARIES)/XAD \
-    uselibs="rarextract debug stdc++ posixc stdcio stdc"
+    uselibs="rarextract debug stdc++ stdcio stdc pthread posixc"
