@@ -18,6 +18,9 @@ EXEDIR := $(AROS_CONTRIB)/Development/False
 
 #MM contrib-development-false: setup-contrib-development-false 
 
+NOWARN_FLAGS := $(NOWARN_MISLEADING_INDENTATION)
+USER_CFLAGS := $(NOWARN_FLAGS)
+
 %build_prog mmake=contrib-development-false \
     progname=False targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="z"
