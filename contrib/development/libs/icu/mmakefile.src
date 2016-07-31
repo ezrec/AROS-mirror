@@ -3,7 +3,12 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-#MM- contrib-icu4c : contrib-icu4c-complete
+#MM- contrib-development : contrib-icu4c
+
+#MM- contrib-icu4c : contrib-icu4c-$(AROS_TARGET_CPU)
+#MM- contrib-icu4c-i386 : contrib-icu4c-complete
+#MM- contrib-icu4c-x86_64 : contrib-icu4c-complete
+
 #MM- contrib-icu4c-complete : tools-crosstools-icu
 
 ICU_VERSION := 4.2.1
