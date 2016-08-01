@@ -1,9 +1,9 @@
-# Copyright © 2008-2010, The AROS Development Team. All rights reserved.
+# Copyright © 2008-2016, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros.cfg
 
-#MM- contrib-gnu : contrib-libiconv
+#MM- contrib-development : contrib-libiconv
 #MM- contrib-libiconv : development-libiconv
 
 #MM- libiconv-includes : contrib-libiconv
