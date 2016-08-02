@@ -3,7 +3,7 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-##MM- contrib-gnu : contrib-gnu-automake
+#MM- contrib-gnu : contrib-gnu-automake
 #MM- contrib-gnu-automake : development-automake
 
 %fetch_and_build_gnu_development package=automake version=1.9.6
