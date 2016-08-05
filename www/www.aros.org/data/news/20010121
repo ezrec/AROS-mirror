@@ -1,7 +1,0 @@
-Kjetil Svalastog Matheussen fixed a couple of bugs in the
-new camd.library and wrote an example MIDI driver for it.
-Johan Alfredsson began work on the last datatypes.library function
-(LaunchToolA()).
-
-Georg Steger fixed a really very old bug in the task switching
-core of AROS (FPU context wasn't correctly saved).

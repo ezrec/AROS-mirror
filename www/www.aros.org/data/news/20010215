@@ -1,9 +1,0 @@
-Georg Steger wrote the locale sensitve StrToDate replacement and
-made IPrefs install them. The workbench screen title is now 
-"Workbench Screen" as it should be. Also some bugs which the
-test code showed in the date<->string conversion where
-squished by him. Lastly, he added some scripts to start Doom
-with a certain amount of players using his netlocal routines.
-Makes a nice running demo for AROS :-)
-
-Johan Alfredsson completed notifications support.

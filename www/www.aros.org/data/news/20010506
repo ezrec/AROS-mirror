@@ -1,6 +1,0 @@
-Georg Steger disabled some more debug output, optimized drawing of
-a resizes console window, added support for the WAIT argument in the
-console filename, fixed a typo in stdio.h and fopen(). And he
-implemented more CSI sequences and fixed some existing ones. RAW
-mode is mostly implemented (WaitForChar() doesn't work, yet).
-MicroEmacs from the Fish disks works now.

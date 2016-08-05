@@ -1,6 +1,0 @@
-Adam Chodorowski fixed more copyright notices and moved some tests
-to where they belong.
-
-Joerg Dietrich continued to work on the picture.datatype and fixed
-a minor glitch in MultiView (didn't take a 2-pixel border around
-pictures into account).

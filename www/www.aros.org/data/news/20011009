@@ -1,6 +1,0 @@
-Kjetil Svalastog Matheussen added a startup script which starts Radium
-and removed a debug line which caused Radium to crash. He also
-committed a patch for realtime.library hunting for a bug which caused
-Radium to break. And he fixed a bug in the sliderclass in
-gadtools.library (would return the smallest value when at the
-top).

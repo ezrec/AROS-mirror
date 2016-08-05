@@ -1,6 +1,0 @@
-Iain Templeton fixed init() functions of the libraries to use proper
-macros for arguments.
-
-Stefan Berger implemented Clib's sig#?set() functions.
-
-Adam Chodorowski merged in the latest Python 2.2 sources.

@@ -1,9 +1,0 @@
-Johan Alfredsson fixed the emulation of ACTION_ADD_NOTIFY, ACTION_REMOVE_NOTIFY
-and ACTION_MAKE_LINK.
-
-Stefan Berger continued to improve archtool and comitted the sources
-for shutdown.library from Aminet.
-
-AROS now boots into the shell instead of waiting in SAD for the user
-to start it. With the floppy code, you can now boot AROS from a floppy
-disk and actually do something useful with it :-) Horay !

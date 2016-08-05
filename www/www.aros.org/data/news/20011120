@@ -1,8 +1,0 @@
-Adam Chodorowski continued to work on Python and fixed a bug in utime()
-and fdopen().  The amiga module is now finished. Current status
-of the port: 84 tests OK, 43 tests skipped and 12 tests failed
-(skipped means that they use things which make no sense on AROS).
-
-Aaron "Optimizer" Digulla changed the nightly build to generate the
-extra disk images. The images will be generated when the bugs in the
-nightly build are fixed.

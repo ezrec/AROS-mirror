@@ -1,7 +1,0 @@
-Henning Kiel added Freetype, rexx and some gfx utils to the standard
-build. He also fixed a lot of warnings in windowtool from FishDisks.
-
-Georg Steger fixed a bug in fdsk.device and he added a ramdisk.device
-(RAD:) based on fdsk.device. He also added proper deadkey handling in
-MapRawKey() and fixed a linker problem in windowtool. windowtool
-works now.

@@ -1,3 +1,0 @@
-Georg Steger improved interrupt handling in the serial driver and the
-VGA text mode driver and the task switching core. He also fixed
-some bugs in the handling of ThisTask with <code>Reschedule()</code>.

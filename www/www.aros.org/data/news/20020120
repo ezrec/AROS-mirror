@@ -1,6 +1,0 @@
-Georg Steger fixed the IDCMP_RAWKEY IntuiMessages which
-were completely wrong (the field IAddress must contain
-a pointer to the prevCodeQuals).
-
-Paul Huxham committed Zune 1.0 which is a free replacement
-for MUI and began porting it.

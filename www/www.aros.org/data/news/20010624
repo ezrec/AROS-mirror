@@ -1,6 +1,0 @@
-Sebastian Heutling began to write HDToolBox. Only PC-Partition tables are
-supported - be careful, use it only with harddisks which doesn't contain
-important information.
-
-Fabio Alemagna implemented more functions for c.lib (fstat(), isatty())
-and fixed a few bugs. He also began porting gzip.

@@ -1,6 +1,0 @@
-Michael Schulz has left the project because of increasing workload. The AROS
-team wishes him good luck :-) As one of his last actions, he has committed
-his latest work, the unfinished new core for AROS Native/i386.
-
-Georg Steger removed an illegal character in a warning statement which
-broke the nightly builds.

@@ -1,2 +1,0 @@
-Georg Steger made duplicate font entries (for fonts which are in RAM and
-on disk) disappear in the ASL font requester.

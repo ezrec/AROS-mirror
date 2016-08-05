@@ -1,6 +1,0 @@
-Henning Kiel has changed the build system so that you can have multiple
-targets in one tree.  Also different host configurations in one tree are
-now supported.
-
-Sebastian Heutling has committed his new partition.library and a new
-HDToolBox which uses the library to access/modify the partition table.

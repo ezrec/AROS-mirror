@@ -1,7 +1,0 @@
-Georg Steger added escaping of # with "'" in DOS pattern matching. He also
-fixed a memory trash in Reqtools.
-
-Henning Kiel fixed all missing newlines.
-
-Sebastian Heutling committed a missing file for the new x86 kernel. Workbench
-and contrib are now compiled as well for AROS Native/x86.

@@ -1,4 +1,0 @@
-Stefan Berger fixed a problem with compiling RawDoFmt() for m68k using
-a cross compiler.
-
-Tobias Seiler added a small test program for GTLayout.
