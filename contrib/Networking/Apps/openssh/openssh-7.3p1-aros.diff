@@ -1,0 +1,975 @@
+diff -ruN openssh-7.3p1/auth2-pubkey.c openssh-7.3p1.aros/auth2-pubkey.c
+--- openssh-7.3p1/auth2-pubkey.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/auth2-pubkey.c	2016-08-01 04:01:55.000000000 +0200
+@@ -460,8 +460,9 @@
+ 		if ((cp = getenv("LANG")) != NULL)
+ 			child_set_env(&child_env, &envsize, "LANG", cp);
+ 
+-		for (i = 0; i < NSIG; i++)
+-			signal(i, SIG_DFL);
++//		for (i = 0; i < NSIG; i++)
++//			signal(i, SIG_DFL);
++		asm("int3");
+ 
+ 		if ((devnull = open(_PATH_DEVNULL, O_RDWR)) == -1) {
+ 			error("%s: open %s: %s", tag, _PATH_DEVNULL,
+diff -ruN openssh-7.3p1/clientloop.c openssh-7.3p1.aros/clientloop.c
+--- openssh-7.3p1/clientloop.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/clientloop.c	2016-08-01 04:01:55.000000000 +0200
+@@ -225,8 +225,9 @@
+ static void
+ window_change_handler(int sig)
+ {
+-	received_window_change_signal = 1;
+-	signal(SIGWINCH, window_change_handler);
++//	received_window_change_signal = 1;
++//	signal(SIGWINCH, window_change_handler);
++    asm("int3");
+ }
+ 
+ /*
+@@ -1589,7 +1590,8 @@
+ 		signal(SIGQUIT, signal_handler);
+ 	if (signal(SIGTERM, SIG_IGN) != SIG_IGN)
+ 		signal(SIGTERM, signal_handler);
+-	signal(SIGWINCH, window_change_handler);
++//	signal(SIGWINCH, window_change_handler);
++	asm("int3");
+ 
+ 	if (have_pty)
+ 		enter_raw_mode(options.request_tty == REQUEST_TTY_FORCE);
+@@ -1710,7 +1712,8 @@
+ 	/* Terminate the session. */
+ 
+ 	/* Stop watching for window change. */
+-	signal(SIGWINCH, SIG_DFL);
++//	signal(SIGWINCH, SIG_DFL);
++	asm("int3");
+ 
+ 	if (compat20) {
+ 		packet_start(SSH2_MSG_DISCONNECT);
+diff -ruN openssh-7.3p1/defines.h openssh-7.3p1.aros/defines.h
+--- openssh-7.3p1/defines.h	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/defines.h	2016-08-01 04:01:55.000000000 +0200
+@@ -342,7 +342,7 @@
+ #endif /* HAVE_CLOCK_T */
+ 
+ #ifndef HAVE_SA_FAMILY_T
+-typedef int sa_family_t;
++typedef unsigned char sa_family_t;
+ # define HAVE_SA_FAMILY_T
+ #endif /* HAVE_SA_FAMILY_T */
+ 
+diff -ruN openssh-7.3p1/hostfile.c openssh-7.3p1.aros/hostfile.c
+--- openssh-7.3p1/hostfile.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/hostfile.c	2016-08-01 04:01:55.000000000 +0200
+@@ -44,7 +44,6 @@
+ #include <netinet/in.h>
+ 
+ #include <errno.h>
+-#include <resolv.h>
+ #include <stdarg.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+diff -ruN openssh-7.3p1/includes.h openssh-7.3p1.aros/includes.h
+--- openssh-7.3p1/includes.h	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/includes.h	2016-08-01 04:01:55.000000000 +0200
+@@ -16,6 +16,8 @@
+ #ifndef INCLUDES_H
+ #define INCLUDES_H
+ 
++#define _STDC_NOINLINE_MBTOWC
++
+ #include "config.h"
+ 
+ #ifndef _GNU_SOURCE
+@@ -170,6 +172,7 @@
+ #include "platform.h"
+ #include "openbsd-compat/openbsd-compat.h"
+ #include "openbsd-compat/bsd-nextstep.h"
++#include "openbsd-compat/port-aros.h"
+ 
+ #include "entropy.h"
+ 
+diff -ruN openssh-7.3p1/loginrec.c openssh-7.3p1.aros/loginrec.c
+--- openssh-7.3p1/loginrec.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/loginrec.c	2016-08-01 04:01:55.000000000 +0200
+@@ -1032,7 +1032,7 @@
+ 		return (0);
+ 	}
+ # else
+-	if (!utmpx_write_direct(li, &ut)) {
++	if (!utmpx_write_direct(li, &utx)) {
+ 		logit("%s: utmp_write_direct() failed", __func__);
+ 		return (0);
+ 	}
+diff -ruN openssh-7.3p1/Makefile.in openssh-7.3p1.aros/Makefile.in
+--- openssh-7.3p1/Makefile.in	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/Makefile.in	2016-08-06 21:30:19.184386564 +0200
+@@ -161,37 +161,37 @@
+ 	$(RANLIB) $@
+ 
+ ssh$(EXEEXT): $(LIBCOMPAT) libssh.a $(SSHOBJS)
+-	$(LD) -o $@ $(SSHOBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(SSHLIBS) $(LIBS) $(GSSLIBS)
++	$(LD) -o $@ $(SSHOBJS) $(LDFLAGS) -lssh -lopenbsd-compat -lnet $(SSHLIBS) $(LIBS) $(GSSLIBS)
+ 
+ sshd$(EXEEXT): libssh.a	$(LIBCOMPAT) $(SSHDOBJS)
+-	$(LD) -o $@ $(SSHDOBJS) $(LDFLAGS) -lssh -lopenbsd-compat $(SSHDLIBS) $(LIBS) $(GSSLIBS) $(K5LIBS)
++	$(LD) -o $@ $(SSHDOBJS) $(LDFLAGS) -lssh -lopenbsd-compat -lnet $(SSHDLIBS) $(LIBS) $(GSSLIBS) $(K5LIBS)
+ 
+ scp$(EXEEXT): $(LIBCOMPAT) libssh.a scp.o progressmeter.o
+-	$(LD) -o $@ scp.o progressmeter.o bufaux.o $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS)
++	$(LD) -o $@ scp.o progressmeter.o bufaux.o $(LDFLAGS) -lssh -lopenbsd-compat -lnet $(LIBS)
+ 
+ ssh-add$(EXEEXT): $(LIBCOMPAT) libssh.a ssh-add.o
+-	$(LD) -o $@ ssh-add.o $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS)
++	$(LD) -o $@ ssh-add.o $(LDFLAGS) -lssh -lopenbsd-compat -lnet $(LIBS)
+ 
+ ssh-agent$(EXEEXT): $(LIBCOMPAT) libssh.a ssh-agent.o ssh-pkcs11-client.o
+-	$(LD) -o $@ ssh-agent.o ssh-pkcs11-client.o $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS)
++	$(LD) -o $@ ssh-agent.o ssh-pkcs11-client.o $(LDFLAGS) -lssh -lopenbsd-compat -lnet $(LIBS)
+ 
+ ssh-keygen$(EXEEXT): $(LIBCOMPAT) libssh.a ssh-keygen.o
+-	$(LD) -o $@ ssh-keygen.o $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS)
++	$(LD) -o $@ ssh-keygen.o $(LDFLAGS) -lssh -lopenbsd-compat -lnet $(LIBS)
+ 
+ ssh-keysign$(EXEEXT): $(LIBCOMPAT) libssh.a ssh-keysign.o readconf.o
+-	$(LD) -o $@ ssh-keysign.o readconf.o $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS)
++	$(LD) -o $@ ssh-keysign.o readconf.o $(LDFLAGS) -lssh -lopenbsd-compat -lnet $(LIBS)
+ 
+ ssh-pkcs11-helper$(EXEEXT): $(LIBCOMPAT) libssh.a ssh-pkcs11-helper.o ssh-pkcs11.o
+-	$(LD) -o $@ ssh-pkcs11-helper.o ssh-pkcs11.o $(LDFLAGS) -lssh -lopenbsd-compat -lssh -lopenbsd-compat $(LIBS)
++	$(LD) -o $@ ssh-pkcs11-helper.o ssh-pkcs11.o $(LDFLAGS) -lssh -lopenbsd-compat -lssh -lopenbsd-compat -lnet $(LIBS)
+ 
+ ssh-keyscan$(EXEEXT): $(LIBCOMPAT) libssh.a ssh-keyscan.o
+-	$(LD) -o $@ ssh-keyscan.o $(LDFLAGS) -lssh -lopenbsd-compat -lssh $(LIBS)
++	$(LD) -o $@ ssh-keyscan.o $(LDFLAGS) -lssh -lopenbsd-compat -lssh -lnet $(LIBS)
+ 
+ sftp-server$(EXEEXT): $(LIBCOMPAT) libssh.a sftp.o sftp-common.o sftp-server.o sftp-server-main.o
+-	$(LD) -o $@ sftp-server.o sftp-common.o sftp-server-main.o $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS)
++	$(LD) -o $@ sftp-server.o sftp-common.o sftp-server-main.o $(LDFLAGS) -lssh -lopenbsd-compat -lnet $(LIBS)
+ 
+ sftp$(EXEEXT): $(LIBCOMPAT) libssh.a sftp.o sftp-client.o sftp-common.o sftp-glob.o progressmeter.o
+-	$(LD) -o $@ progressmeter.o sftp.o sftp-client.o sftp-common.o sftp-glob.o $(LDFLAGS) -lssh -lopenbsd-compat $(LIBS) $(LIBEDIT)
++	$(LD) -o $@ progressmeter.o sftp.o sftp-client.o sftp-common.o sftp-glob.o $(LDFLAGS) -lssh -lopenbsd-compat -lnet $(LIBS) $(LIBEDIT)
+ 
+ # test driver for the loginrec code - not built by default
+ logintest: logintest.o $(LIBCOMPAT) libssh.a loginrec.o
+@@ -289,7 +289,7 @@
+ 	$(AUTORECONF)
+ 	-rm -rf autom4te.cache
+ 
+-install: $(CONFIGFILES) $(MANPAGES) $(TARGETS) install-files install-sysconf host-key check-config
++install: $(CONFIGFILES) $(MANPAGES) $(TARGETS) install-files install-sysconf
+ install-nokeys: $(CONFIGFILES) $(MANPAGES) $(TARGETS) install-files install-sysconf
+ install-nosysconf: $(CONFIGFILES) $(MANPAGES) $(TARGETS) install-files
+ 
+@@ -304,7 +304,6 @@
+ 	$(srcdir)/mkinstalldirs $(DESTDIR)$(mandir)/$(mansubdir)5
+ 	$(srcdir)/mkinstalldirs $(DESTDIR)$(mandir)/$(mansubdir)8
+ 	$(srcdir)/mkinstalldirs $(DESTDIR)$(libexecdir)
+-	(umask 022 ; $(srcdir)/mkinstalldirs $(DESTDIR)$(PRIVSEP_PATH))
+ 	$(INSTALL) -m 0755 $(STRIP_OPT) ssh$(EXEEXT) $(DESTDIR)$(bindir)/ssh$(EXEEXT)
+ 	$(INSTALL) -m 0755 $(STRIP_OPT) scp$(EXEEXT) $(DESTDIR)$(bindir)/scp$(EXEEXT)
+ 	$(INSTALL) -m 0755 $(STRIP_OPT) ssh-add$(EXEEXT) $(DESTDIR)$(bindir)/ssh-add$(EXEEXT)
+diff -ruN openssh-7.3p1/mux.c openssh-7.3p1.aros/mux.c
+--- openssh-7.3p1/mux.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/mux.c	2016-08-01 04:01:55.000000000 +0200
+@@ -1896,7 +1896,8 @@
+ 	signal(SIGHUP, control_client_sighandler);
+ 	signal(SIGINT, control_client_sighandler);
+ 	signal(SIGTERM, control_client_sighandler);
+-	signal(SIGWINCH, control_client_sigrelay);
++//	signal(SIGWINCH, control_client_sigrelay);
++	asm("int3");
+ 
+ 	rawmode = tty_flag;
+ 	if (tty_flag)
+@@ -2044,7 +2045,8 @@
+ 	signal(SIGHUP, control_client_sighandler);
+ 	signal(SIGINT, control_client_sighandler);
+ 	signal(SIGTERM, control_client_sighandler);
+-	signal(SIGWINCH, control_client_sigrelay);
++//	signal(SIGWINCH, control_client_sigrelay);
++	asm("int3");
+ 
+ 	/*
+ 	 * Stick around until the controlee closes the client_fd.
+diff -ruN openssh-7.3p1/openbsd-compat/bsd-err.c openssh-7.3p1.aros/openbsd-compat/bsd-err.c
+--- openssh-7.3p1/openbsd-compat/bsd-err.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/openbsd-compat/bsd-err.c	2016-08-01 04:01:55.000000000 +0200
+@@ -26,6 +26,7 @@
+  */
+ 
+ #include "includes.h"
++#include <string.h>
+ 
+ #ifndef HAVE_ERR
+ void
+diff -ruN openssh-7.3p1/openbsd-compat/bsd-misc.c openssh-7.3p1.aros/openbsd-compat/bsd-misc.c
+--- openssh-7.3p1/openbsd-compat/bsd-misc.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/openbsd-compat/bsd-misc.c	2016-08-01 04:01:55.000000000 +0200
+@@ -183,10 +183,11 @@
+ {
+ 	int ctty_pgrp;
+ 
+-	if (ioctl(fd, TIOCGPGRP, &ctty_pgrp) == -1)
+-		return(-1);
+-	else
+-		return(ctty_pgrp);
++//	if (ioctl(fd, TIOCGPGRP, &ctty_pgrp) == -1)
++//		return(-1);
++//	else
++//		return(ctty_pgrp);
++	asm("int3");
+ }
+ #endif /* HAVE_TCGETPGRP */
+ 
+diff -ruN openssh-7.3p1/openbsd-compat/getrrsetbyname.c openssh-7.3p1.aros/openbsd-compat/getrrsetbyname.c
+--- openssh-7.3p1/openbsd-compat/getrrsetbyname.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/openbsd-compat/getrrsetbyname.c	2016-08-01 04:01:55.000000000 +0200
+@@ -45,7 +45,7 @@
+ 
+ /* OPENBSD ORIGINAL: lib/libc/net/getrrsetbyname.c */
+ 
+-#include "includes.h"
++//#include "includes.h"
+ 
+ #if !defined (HAVE_GETRRSETBYNAME) && !defined (HAVE_LDNS)
+ 
+@@ -68,7 +68,7 @@
+ #define _THREAD_PRIVATE(a,b,c) (c)
+ 
+ #ifndef HAVE__RES_EXTERN
+-struct __res_state _res;
++//struct __res_state _res;
+ #endif
+ 
+ /* Necessary functions and macros */
+@@ -114,7 +114,7 @@
+  */
+ 
+ #ifndef HAVE__GETSHORT
+-static u_int16_t
++u_short
+ _getshort(msgp)
+ 	register const u_char *msgp;
+ {
+@@ -128,7 +128,7 @@
+ #endif
+ 
+ #ifndef HAVE__GETLONG
+-static u_int32_t
++u_long
+ _getlong(msgp)
+ 	register const u_char *msgp;
+ {
+@@ -187,162 +187,164 @@
+     unsigned int rdtype, unsigned int flags,
+     struct rrsetinfo **res)
+ {
+-	struct __res_state *_resp = _THREAD_PRIVATE(_res, _res, &_res);
+-	int result;
+-	struct rrsetinfo *rrset = NULL;
+-	struct dns_response *response = NULL;
+-	struct dns_rr *rr;
+-	struct rdatainfo *rdata;
+-	int length;
+-	unsigned int index_ans, index_sig;
+-	u_char answer[ANSWER_BUFFER_SIZE];
+-
+-	/* check for invalid class and type */
+-	if (rdclass > 0xffff || rdtype > 0xffff) {
+-		result = ERRSET_INVAL;
+-		goto fail;
+-	}
+-
+-	/* don't allow queries of class or type ANY */
+-	if (rdclass == 0xff || rdtype == 0xff) {
+-		result = ERRSET_INVAL;
+-		goto fail;
+-	}
+-
+-	/* don't allow flags yet, unimplemented */
+-	if (flags) {
+-		result = ERRSET_INVAL;
+-		goto fail;
+-	}
+-
+-	/* initialize resolver */
+-	if ((_resp->options & RES_INIT) == 0 && res_init() == -1) {
+-		result = ERRSET_FAIL;
+-		goto fail;
+-	}
+-
+-#ifdef DEBUG
+-	_resp->options |= RES_DEBUG;
+-#endif /* DEBUG */
+-
+-#ifdef RES_USE_DNSSEC
+-	/* turn on DNSSEC if EDNS0 is configured */
+-	if (_resp->options & RES_USE_EDNS0)
+-		_resp->options |= RES_USE_DNSSEC;
+-#endif /* RES_USE_DNSEC */
+-
+-	/* make query */
+-	length = res_query(hostname, (signed int) rdclass, (signed int) rdtype,
+-	    answer, sizeof(answer));
+-	if (length < 0) {
+-		switch(h_errno) {
+-		case HOST_NOT_FOUND:
+-			result = ERRSET_NONAME;
+-			goto fail;
+-		case NO_DATA:
+-			result = ERRSET_NODATA;
+-			goto fail;
+-		default:
+-			result = ERRSET_FAIL;
+-			goto fail;
+-		}
+-	}
+-
+-	/* parse result */
+-	response = parse_dns_response(answer, length);
+-	if (response == NULL) {
+-		result = ERRSET_FAIL;
+-		goto fail;
+-	}
+-
+-	if (response->header.qdcount != 1) {
+-		result = ERRSET_FAIL;
+-		goto fail;
+-	}
+-
+-	/* initialize rrset */
+-	rrset = calloc(1, sizeof(struct rrsetinfo));
+-	if (rrset == NULL) {
+-		result = ERRSET_NOMEMORY;
+-		goto fail;
+-	}
+-	rrset->rri_rdclass = response->query->class;
+-	rrset->rri_rdtype = response->query->type;
+-	rrset->rri_ttl = response->answer->ttl;
+-	rrset->rri_nrdatas = response->header.ancount;
+-
+-#ifdef HAVE_HEADER_AD
+-	/* check for authenticated data */
+-	if (response->header.ad == 1)
+-		rrset->rri_flags |= RRSET_VALIDATED;
+-#endif
+-
+-	/* copy name from answer section */
+-	rrset->rri_name = strdup(response->answer->name);
+-	if (rrset->rri_name == NULL) {
+-		result = ERRSET_NOMEMORY;
+-		goto fail;
+-	}
+-
+-	/* count answers */
+-	rrset->rri_nrdatas = count_dns_rr(response->answer, rrset->rri_rdclass,
+-	    rrset->rri_rdtype);
+-	rrset->rri_nsigs = count_dns_rr(response->answer, rrset->rri_rdclass,
+-	    T_RRSIG);
+-
+-	/* allocate memory for answers */
+-	rrset->rri_rdatas = calloc(rrset->rri_nrdatas,
+-	    sizeof(struct rdatainfo));
+-	if (rrset->rri_rdatas == NULL) {
+-		result = ERRSET_NOMEMORY;
+-		goto fail;
+-	}
+-
+-	/* allocate memory for signatures */
+-	if (rrset->rri_nsigs > 0) {
+-		rrset->rri_sigs = calloc(rrset->rri_nsigs, sizeof(struct rdatainfo));
+-		if (rrset->rri_sigs == NULL) {
+-			result = ERRSET_NOMEMORY;
+-			goto fail;
+-		}
+-	}
+-
+-	/* copy answers & signatures */
+-	for (rr = response->answer, index_ans = 0, index_sig = 0;
+-	    rr; rr = rr->next) {
+-
+-		rdata = NULL;
+-
+-		if (rr->class == rrset->rri_rdclass &&
+-		    rr->type  == rrset->rri_rdtype)
+-			rdata = &rrset->rri_rdatas[index_ans++];
+-
+-		if (rr->class == rrset->rri_rdclass &&
+-		    rr->type  == T_RRSIG)
+-			rdata = &rrset->rri_sigs[index_sig++];
+-
+-		if (rdata) {
+-			rdata->rdi_length = rr->size;
+-			rdata->rdi_data   = malloc(rr->size);
+-
+-			if (rdata->rdi_data == NULL) {
+-				result = ERRSET_NOMEMORY;
+-				goto fail;
+-			}
+-			memcpy(rdata->rdi_data, rr->rdata, rr->size);
+-		}
+-	}
+-	free_dns_response(response);
+-
+-	*res = rrset;
+-	return (ERRSET_SUCCESS);
+-
+-fail:
+-	if (rrset != NULL)
+-		freerrset(rrset);
+-	if (response != NULL)
+-		free_dns_response(response);
+-	return (result);
++//	struct __res_state *_resp = _THREAD_PRIVATE(_res, _res, &_res);
++//	int result;
++//	struct rrsetinfo *rrset = NULL;
++//	struct dns_response *response = NULL;
++//	struct dns_rr *rr;
++//	struct rdatainfo *rdata;
++//	int length;
++//	unsigned int index_ans, index_sig;
++//	u_char answer[ANSWER_BUFFER_SIZE];
++//
++//	/* check for invalid class and type */
++//	if (rdclass > 0xffff || rdtype > 0xffff) {
++//		result = ERRSET_INVAL;
++//		goto fail;
++//	}
++//
++//	/* don't allow queries of class or type ANY */
++//	if (rdclass == 0xff || rdtype == 0xff) {
++//		result = ERRSET_INVAL;
++//		goto fail;
++//	}
++//
++//	/* don't allow flags yet, unimplemented */
++//	if (flags) {
++//		result = ERRSET_INVAL;
++//		goto fail;
++//	}
++//
++//	/* initialize resolver */
++//	if ((_resp->options & RES_INIT) == 0 && res_init() == -1) {
++//		result = ERRSET_FAIL;
++//		goto fail;
++//	}
++//
++//#ifdef DEBUG
++//	_resp->options |= RES_DEBUG;
++//#endif /* DEBUG */
++//
++//#ifdef RES_USE_DNSSEC
++//	/* turn on DNSSEC if EDNS0 is configured */
++//	if (_resp->options & RES_USE_EDNS0)
++//		_resp->options |= RES_USE_DNSSEC;
++//#endif /* RES_USE_DNSEC */
++//
++//	/* make query */
++//	length = res_query(hostname, (signed int) rdclass, (signed int) rdtype,
++//	    answer, sizeof(answer));
++//	if (length < 0) {
++//		switch(h_errno) {
++//		case HOST_NOT_FOUND:
++//			result = ERRSET_NONAME;
++//			goto fail;
++//		case NO_DATA:
++//			result = ERRSET_NODATA;
++//			goto fail;
++//		default:
++//			result = ERRSET_FAIL;
++//			goto fail;
++//		}
++//	}
++//
++//	/* parse result */
++//	response = parse_dns_response(answer, length);
++//	if (response == NULL) {
++//		result = ERRSET_FAIL;
++//		goto fail;
++//	}
++//
++//	if (response->header.qdcount != 1) {
++//		result = ERRSET_FAIL;
++//		goto fail;
++//	}
++//
++//	/* initialize rrset */
++//	rrset = calloc(1, sizeof(struct rrsetinfo));
++//	if (rrset == NULL) {
++//		result = ERRSET_NOMEMORY;
++//		goto fail;
++//	}
++//	rrset->rri_rdclass = response->query->class;
++//	rrset->rri_rdtype = response->query->type;
++//	rrset->rri_ttl = response->answer->ttl;
++//	rrset->rri_nrdatas = response->header.ancount;
++//
++//#ifdef HAVE_HEADER_AD
++//	/* check for authenticated data */
++//	if (response->header.ad == 1)
++//		rrset->rri_flags |= RRSET_VALIDATED;
++//#endif
++//
++//	/* copy name from answer section */
++//	rrset->rri_name = strdup(response->answer->name);
++//	if (rrset->rri_name == NULL) {
++//		result = ERRSET_NOMEMORY;
++//		goto fail;
++//	}
++//
++//	/* count answers */
++//	rrset->rri_nrdatas = count_dns_rr(response->answer, rrset->rri_rdclass,
++//	    rrset->rri_rdtype);
++//	rrset->rri_nsigs = count_dns_rr(response->answer, rrset->rri_rdclass,
++//	    T_RRSIG);
++//
++//	/* allocate memory for answers */
++//	rrset->rri_rdatas = calloc(rrset->rri_nrdatas,
++//	    sizeof(struct rdatainfo));
++//	if (rrset->rri_rdatas == NULL) {
++//		result = ERRSET_NOMEMORY;
++//		goto fail;
++//	}
++//
++//	/* allocate memory for signatures */
++//	if (rrset->rri_nsigs > 0) {
++//		rrset->rri_sigs = calloc(rrset->rri_nsigs, sizeof(struct rdatainfo));
++//		if (rrset->rri_sigs == NULL) {
++//			result = ERRSET_NOMEMORY;
++//			goto fail;
++//		}
++//	}
++//
++//	/* copy answers & signatures */
++//	for (rr = response->answer, index_ans = 0, index_sig = 0;
++//	    rr; rr = rr->next) {
++//
++//		rdata = NULL;
++//
++//		if (rr->class == rrset->rri_rdclass &&
++//		    rr->type  == rrset->rri_rdtype)
++//			rdata = &rrset->rri_rdatas[index_ans++];
++//
++//		if (rr->class == rrset->rri_rdclass &&
++//		    rr->type  == T_RRSIG)
++//			rdata = &rrset->rri_sigs[index_sig++];
++//
++//		if (rdata) {
++//			rdata->rdi_length = rr->size;
++//			rdata->rdi_data   = malloc(rr->size);
++//
++//			if (rdata->rdi_data == NULL) {
++//				result = ERRSET_NOMEMORY;
++//				goto fail;
++//			}
++//			memcpy(rdata->rdi_data, rr->rdata, rr->size);
++//		}
++//	}
++//	free_dns_response(response);
++//
++//	*res = rrset;
++//	return (ERRSET_SUCCESS);
++//
++//fail:
++//	if (rrset != NULL)
++//		freerrset(rrset);
++//	if (response != NULL)
++//		free_dns_response(response);
++//	return (result);
++    asm("int3");
++    return -1;
+ }
+ 
+ void
+diff -ruN openssh-7.3p1/openbsd-compat/getrrsetbyname.h openssh-7.3p1.aros/openbsd-compat/getrrsetbyname.h
+--- openssh-7.3p1/openbsd-compat/getrrsetbyname.h	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/openbsd-compat/getrrsetbyname.h	2016-08-01 04:01:55.000000000 +0200
+@@ -56,7 +56,6 @@
+ #include <netinet/in.h>
+ #include <arpa/nameser.h>
+ #include <netdb.h>
+-#include <resolv.h>
+ 
+ #ifndef HFIXEDSZ
+ #define HFIXEDSZ 12
+diff -ruN openssh-7.3p1/openbsd-compat/inet_ntoa.c openssh-7.3p1.aros/openbsd-compat/inet_ntoa.c
+--- openssh-7.3p1/openbsd-compat/inet_ntoa.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/openbsd-compat/inet_ntoa.c	2016-08-01 04:01:55.000000000 +0200
+@@ -34,26 +34,26 @@
+ 
+ #if defined(BROKEN_INET_NTOA) || !defined(HAVE_INET_NTOA)
+ 
+-/*
+- * Convert network-format internet address
+- * to base 256 d.d.d.d representation.
+- */
+-#include <sys/types.h>
+-#include <netinet/in.h>
+-#include <arpa/inet.h>
+-#include <stdio.h>
+-
+-char *
+-inet_ntoa(struct in_addr in)
+-{
+-	static char b[18];
+-	char *p;
+-
+-	p = (char *)&in;
+-#define	UC(b)	(((int)b)&0xff)
+-	(void)snprintf(b, sizeof(b),
+-	    "%u.%u.%u.%u", UC(p[0]), UC(p[1]), UC(p[2]), UC(p[3]));
+-	return (b);
+-}
++///*
++// * Convert network-format internet address
++// * to base 256 d.d.d.d representation.
++// */
++//#include <sys/types.h>
++//#include <netinet/in.h>
++//#include <arpa/inet.h>
++//#include <stdio.h>
++//
++//char *
++//inet_ntoa(struct in_addr in)
++//{
++//	static char b[18];
++//	char *p;
++//
++//	p = (char *)&in;
++//#define	UC(b)	(((int)b)&0xff)
++//	(void)snprintf(b, sizeof(b),
++//	    "%u.%u.%u.%u", UC(p[0]), UC(p[1]), UC(p[2]), UC(p[3]));
++//	return (b);
++//}
+ 
+ #endif /* defined(BROKEN_INET_NTOA) || !defined(HAVE_INET_NTOA) */
+diff -ruN openssh-7.3p1/openbsd-compat/Makefile.in openssh-7.3p1.aros/openbsd-compat/Makefile.in
+--- openssh-7.3p1/openbsd-compat/Makefile.in	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/openbsd-compat/Makefile.in	2016-08-01 04:01:55.000000000 +0200
+@@ -20,7 +20,7 @@
+ 
+ COMPAT=arc4random.o bsd-asprintf.o bsd-closefrom.o bsd-cray.o bsd-cygwin_util.o bsd-getpeereid.o getrrsetbyname-ldns.o bsd-err.o bsd-misc.o bsd-nextstep.o bsd-openpty.o bsd-poll.o bsd-setres_id.o bsd-snprintf.o bsd-statvfs.o bsd-waitpid.o fake-rfc2553.o openssl-compat.o xmmap.o xcrypt.o kludge-fd_set.o
+ 
+-PORTS=port-aix.o port-irix.o port-linux.o port-solaris.o port-tun.o port-uw.o
++PORTS=port-aix.o port-irix.o port-linux.o port-solaris.o port-tun.o port-uw.o port-aros.o
+ 
+ .c.o:
+ 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $<
+diff -ruN openssh-7.3p1/openbsd-compat/openbsd-compat.h openssh-7.3p1.aros/openbsd-compat/openbsd-compat.h
+--- openssh-7.3p1/openbsd-compat/openbsd-compat.h	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/openbsd-compat/openbsd-compat.h	2016-08-01 04:01:55.000000000 +0200
+@@ -133,7 +133,7 @@
+ #endif
+ 
+ #if defined(BROKEN_INET_NTOA) || !defined(HAVE_INET_NTOA)
+-char *inet_ntoa(struct in_addr in);
++//char *inet_ntoa(struct in_addr in);
+ #endif
+ 
+ #ifndef HAVE_INET_NTOP
+diff -ruN openssh-7.3p1/openbsd-compat/port-aros.c openssh-7.3p1.aros/openbsd-compat/port-aros.c
+--- openssh-7.3p1/openbsd-compat/port-aros.c	1970-01-01 01:00:00.000000000 +0100
++++ openssh-7.3p1.aros/openbsd-compat/port-aros.c	2016-08-01 04:01:55.000000000 +0200
+@@ -0,0 +1,113 @@
++/*
++ * Copyright (c) 2000 Denis Parker.  All rights reserved.
++ * Copyright (c) 2000 Michael Stone.  All rights reserved.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
++ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
++ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
++ * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
++ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
++ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
++ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++#include "includes.h"
++
++#if defined(__AROS__)
++
++/* No-op */
++int setegid(gid_t gid)
++{
++    asm("int3");
++    return 0;
++}
++
++/* No-op */
++int seteuid(uid_t uid)
++{
++    asm("int3");
++    return 0;
++}
++
++/* No-op */
++int setgroups(size_t size, const gid_t *groups)
++{
++    asm("int3");
++    return 0;
++}
++
++/* No-op */
++int setpgrp(pid_t pid, pid_t pgid)
++{
++    asm("int3");
++    return 1;
++}
++
++/* No-op */
++int initgroups(const char *user, gid_t group)
++{
++    asm("int3");
++    return 0;
++}
++
++/* Not implemented */
++int socketpair(int domain, int type, int protocol,
++       int socket_vector[2])
++{
++    asm("int3");
++    /* TODO: set errno */
++    return -1;
++}
++
++/* Not implemented */
++int dn_expand(unsigned char *msg, unsigned char *eomorig,unsigned char
++*comp_dn, char *exp_dn,int length)
++{
++    asm("int3");
++    return -1;
++}
++
++/* Not implemented */
++ssize_t readv(int fildes, const struct iovec *iov, int iovcnt)
++{
++    asm("int3");
++    /* TODO: set errno */
++    return -1;
++}
++
++/* Not implemented */
++pid_t fork(void)
++{
++    asm("int3");
++    /* TODO: set errno */
++    return -1;
++}
++
++/* Not implemented */
++int chroot(const char *path)
++{
++    asm("int3");
++    /* TODO: set errno */
++    return -1;
++}
++
++/* No-op */
++unsigned alarm(unsigned seconds)
++{
++    asm("int3");
++    return 0;
++}
++
++#endif /* defined(__AROS__) */
+diff -ruN openssh-7.3p1/openbsd-compat/port-aros.h openssh-7.3p1.aros/openbsd-compat/port-aros.h
+--- openssh-7.3p1/openbsd-compat/port-aros.h	1970-01-01 01:00:00.000000000 +0100
++++ openssh-7.3p1.aros/openbsd-compat/port-aros.h	2016-08-01 04:01:55.000000000 +0200
+@@ -0,0 +1,26 @@
++#ifndef _PORT_AROS_H
++#define _PORT_AROS_H
++
++#ifdef __AROS__
++
++#define USER_PROCESS    (1)
++#define DEAD_PROCESS    (2)
++
++struct utmpx
++{
++    char    ut_user[32];
++    char    ut_line[64];
++    short   ut_type;
++    pid_t   ut_pid;
++};
++
++pid_t fork(void);
++int initgroups(const char *user, gid_t group);
++int setpgrp(pid_t pid, pid_t pgid);
++int chroot(const char *path);
++unsigned alarm(unsigned seconds);
++
++
++#endif
++
++#endif /* ! _PORT_AROS_H */
+diff -ruN openssh-7.3p1/progressmeter.c openssh-7.3p1.aros/progressmeter.c
+--- openssh-7.3p1/progressmeter.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/progressmeter.c	2016-08-01 04:01:55.000000000 +0200
+@@ -263,7 +263,8 @@
+ 		refresh_progress_meter();
+ 
+ 	signal(SIGALRM, update_progress_meter);
+-	signal(SIGWINCH, sig_winch);
++//	signal(SIGWINCH, sig_winch);
++	asm("int3");
+ 	alarm(UPDATE_INTERVAL);
+ }
+ 
+diff -ruN openssh-7.3p1/session.c openssh-7.3p1.aros/session.c
+--- openssh-7.3p1/session.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/session.c	2016-08-01 04:01:55.000000000 +0200
+@@ -1236,8 +1236,9 @@
+ # endif /* HAVE_CYGWIN */
+ #endif /* HAVE_LOGIN_CAP */
+ 
+-		snprintf(buf, sizeof buf, "%.200s/%.50s",
+-			 _PATH_MAILDIR, pw->pw_name);
++//		snprintf(buf, sizeof buf, "%.200s/%.50s",
++//			 _PATH_MAILDIR, pw->pw_name);
++		asm("int3");
+ 		child_set_env(&env, &envsize, "MAIL", buf);
+ 
+ 		/* Normal systems set SHELL by default. */
+diff -ruN openssh-7.3p1/sshbuf-misc.c openssh-7.3p1.aros/sshbuf-misc.c
+--- openssh-7.3p1/sshbuf-misc.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/sshbuf-misc.c	2016-08-01 04:01:55.000000000 +0200
+@@ -28,7 +28,6 @@
+ #include <stdio.h>
+ #include <limits.h>
+ #include <string.h>
+-#include <resolv.h>
+ #include <ctype.h>
+ 
+ #include "ssherr.h"
+diff -ruN openssh-7.3p1/sshkey.c openssh-7.3p1.aros/sshkey.c
+--- openssh-7.3p1/sshkey.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/sshkey.c	2016-08-01 04:01:55.000000000 +0200
+@@ -43,7 +43,6 @@
+ #include <limits.h>
+ #include <stdio.h>
+ #include <string.h>
+-#include <resolv.h>
+ #ifdef HAVE_UTIL_H
+ #include <util.h>
+ #endif /* HAVE_UTIL_H */
+diff -ruN openssh-7.3p1/umac.c openssh-7.3p1.aros/umac.c
+--- openssh-7.3p1/umac.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/umac.c	2016-08-01 04:01:55.000000000 +0200
+@@ -91,7 +91,7 @@
+ typedef u_int16_t	UINT16; /* 2 byte   */
+ typedef u_int32_t	UINT32; /* 4 byte   */
+ typedef u_int64_t	UINT64; /* 8 bytes  */
+-typedef unsigned int	UWORD;  /* Register */
++typedef unsigned int	UWORDSSH;  /* Register */
+ 
+ /* ---------------------------------------------------------------------- */
+ /* --- Constants -------------------------------------------------------- */
+@@ -332,7 +332,7 @@
+ */
+ {
+     UINT64 h;
+-    UWORD c = dlen / 32;
++    UWORDSSH c = dlen / 32;
+     UINT32 *k = (UINT32 *)kp;
+     const UINT32 *d = (const UINT32 *)dp;
+     UINT32 d0,d1,d2,d3,d4,d5,d6,d7;
+@@ -365,7 +365,7 @@
+  */
+ {
+   UINT64 h1,h2;
+-  UWORD c = dlen / 32;
++  UWORDSSH c = dlen / 32;
+   UINT32 *k = (UINT32 *)kp;
+   const UINT32 *d = (const UINT32 *)dp;
+   UINT32 d0,d1,d2,d3,d4,d5,d6,d7;
+@@ -412,7 +412,7 @@
+ */
+ {
+     UINT64 h1,h2,h3;
+-    UWORD c = dlen / 32;
++    UWORDSSH c = dlen / 32;
+     UINT32 *k = (UINT32 *)kp;
+     const UINT32 *d = (const UINT32 *)dp;
+     UINT32 d0,d1,d2,d3,d4,d5,d6,d7;
+@@ -467,7 +467,7 @@
+ */
+ {
+     UINT64 h1,h2,h3,h4;
+-    UWORD c = dlen / 32;
++    UWORDSSH c = dlen / 32;
+     UINT32 *k = (UINT32 *)kp;
+     const UINT32 *d = (const UINT32 *)dp;
+     UINT32 d0,d1,d2,d3,d4,d5,d6,d7;
+@@ -546,11 +546,11 @@
+ /* ---------------------------------------------------------------------- */
+ 
+ #if (__LITTLE_ENDIAN__)
+-static void endian_convert(void *buf, UWORD bpw, UINT32 num_bytes)
++static void endian_convert(void *buf, UWORDSSH bpw, UINT32 num_bytes)
+ /* We endian convert the keys on little-endian computers to               */
+ /* compensate for the lack of big-endian memory reads during hashing.     */
+ {
+-    UWORD iters = num_bytes / bpw;
++    UWORDSSH iters = num_bytes / bpw;
+     if (bpw == 4) {
+         UINT32 *p = (UINT32 *)buf;
+         do {
+@@ -639,16 +639,16 @@
+ static void zero_pad(UINT8 *p, int nbytes)
+ {
+ /* Write "nbytes" of zeroes, beginning at "p" */
+-    if (nbytes >= (int)sizeof(UWORD)) {
+-        while ((ptrdiff_t)p % sizeof(UWORD)) {
++    if (nbytes >= (int)sizeof(UWORDSSH)) {
++        while ((ptrdiff_t)p % sizeof(UWORDSSH)) {
+             *p = 0;
+             nbytes--;
+             p++;
+         }
+-        while (nbytes >= (int)sizeof(UWORD)) {
+-            *(UWORD *)p = 0;
+-            nbytes -= sizeof(UWORD);
+-            p += sizeof(UWORD);
++        while (nbytes >= (int)sizeof(UWORDSSH)) {
++            *(UWORDSSH *)p = 0;
++            nbytes -= sizeof(UWORDSSH);
++            p += sizeof(UWORDSSH);
+         }
+     }
+     while (nbytes) {
+@@ -1043,7 +1043,7 @@
+  * hash each one with NH, calling the polyhash on each NH output.
+  */
+ {
+-    UWORD bytes_hashed, bytes_remaining;
++    UWORDSSH bytes_hashed, bytes_remaining;
+     UINT64 result_buf[STREAMS];
+     UINT8 *nh_result = (UINT8 *)&result_buf;
+     
+diff -ruN openssh-7.3p1/uuencode.c openssh-7.3p1.aros/uuencode.c
+--- openssh-7.3p1/uuencode.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/uuencode.c	2016-08-01 04:01:55.000000000 +0200
+@@ -27,7 +27,6 @@
+ 
+ #include <sys/types.h>
+ #include <netinet/in.h>
+-#include <resolv.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ 
