@@ -105,7 +105,16 @@ diff -ruN openssh-7.3p1/loginrec.c openssh-7.3p1.aros/loginrec.c
  	}
 diff -ruN openssh-7.3p1/Makefile.in openssh-7.3p1.aros/Makefile.in
 --- openssh-7.3p1/Makefile.in	2016-07-28 00:54:27.000000000 +0200
-+++ openssh-7.3p1.aros/Makefile.in	2016-08-06 21:30:19.184386564 +0200
++++ openssh-7.3p1.aros/Makefile.in	2016-08-01 04:01:55.000000000 +0200
+@@ -28,7 +28,7 @@
+ SSH_PKCS11_HELPER=$(libexecdir)/ssh-pkcs11-helper
+ PRIVSEP_PATH=@PRIVSEP_PATH@
+ SSH_PRIVSEP_USER=@SSH_PRIVSEP_USER@
+-STRIP_OPT=@STRIP_OPT@
++STRIP_OPT=
+ TEST_SHELL=@TEST_SHELL@
+ 
+ PATHS= -DSSHDIR=\"$(sysconfdir)\" \
 @@ -161,37 +161,37 @@
  	$(RANLIB) $@
  
@@ -195,6 +204,18 @@ diff -ruN openssh-7.3p1/mux.c openssh-7.3p1.aros/mux.c
  
  	/*
  	 * Stick around until the controlee closes the client_fd.
+diff -ruN openssh-7.3p1/openbsd-compat/bsd-closefrom.c openssh-7.3p1.aros/openbsd-compat/bsd-closefrom.c
+--- openssh-7.3p1/openbsd-compat/bsd-closefrom.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/openbsd-compat/bsd-closefrom.c	2016-08-07 11:31:29.877589276 +0200
+@@ -69,7 +69,7 @@
+ closefrom(int lowfd)
+ {
+     long fd, maxfd;
+-#if defined(HAVE_DIRFD) && defined(HAVE_PROC_PID)
++#if 0 /* defined(HAVE_DIRFD) && defined(HAVE_PROC_PID) */
+     char fdpath[PATH_MAX], *endp;
+     struct dirent *dent;
+     DIR *dirp;
 diff -ruN openssh-7.3p1/openbsd-compat/bsd-err.c openssh-7.3p1.aros/openbsd-compat/bsd-err.c
 --- openssh-7.3p1/openbsd-compat/bsd-err.c	2016-07-28 00:54:27.000000000 +0200
 +++ openssh-7.3p1.aros/openbsd-compat/bsd-err.c	2016-08-01 04:01:55.000000000 +0200
@@ -673,8 +694,8 @@ diff -ruN openssh-7.3p1/openbsd-compat/openbsd-compat.h openssh-7.3p1.aros/openb
  #ifndef HAVE_INET_NTOP
 diff -ruN openssh-7.3p1/openbsd-compat/port-aros.c openssh-7.3p1.aros/openbsd-compat/port-aros.c
 --- openssh-7.3p1/openbsd-compat/port-aros.c	1970-01-01 01:00:00.000000000 +0100
-+++ openssh-7.3p1.aros/openbsd-compat/port-aros.c	2016-08-01 04:01:55.000000000 +0200
-@@ -0,0 +1,113 @@
++++ openssh-7.3p1.aros/openbsd-compat/port-aros.c	2016-08-07 11:34:17.089854681 +0200
+@@ -0,0 +1,112 @@
 +/*
 + * Copyright (c) 2000 Denis Parker.  All rights reserved.
 + * Copyright (c) 2000 Michael Stone.  All rights reserved.
@@ -714,7 +735,6 @@ diff -ruN openssh-7.3p1/openbsd-compat/port-aros.c openssh-7.3p1.aros/openbsd-co
 +/* No-op */
 +int seteuid(uid_t uid)
 +{
-+    asm("int3");
 +    return 0;
 +}
 +
@@ -791,7 +811,7 @@ diff -ruN openssh-7.3p1/openbsd-compat/port-aros.c openssh-7.3p1.aros/openbsd-co
 diff -ruN openssh-7.3p1/openbsd-compat/port-aros.h openssh-7.3p1.aros/openbsd-compat/port-aros.h
 --- openssh-7.3p1/openbsd-compat/port-aros.h	1970-01-01 01:00:00.000000000 +0100
 +++ openssh-7.3p1.aros/openbsd-compat/port-aros.h	2016-08-01 04:01:55.000000000 +0200
-@@ -0,0 +1,26 @@
+@@ -0,0 +1,27 @@
 +#ifndef _PORT_AROS_H
 +#define _PORT_AROS_H
 +
@@ -813,6 +833,7 @@ diff -ruN openssh-7.3p1/openbsd-compat/port-aros.h openssh-7.3p1.aros/openbsd-co
 +int setpgrp(pid_t pid, pid_t pgid);
 +int chroot(const char *path);
 +unsigned alarm(unsigned seconds);
++int seteuid(uid_t uid);
 +
 +
 +#endif
