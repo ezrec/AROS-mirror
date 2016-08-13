@@ -1118,7 +1118,7 @@ Inputs
 ~~~~~~
 ::
 
-     sigSem - Pointer so semaphore structure.
+     sigSem - Pointer to semaphore structure.
 
 
 Result

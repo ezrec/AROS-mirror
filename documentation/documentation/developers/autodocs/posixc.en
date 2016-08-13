@@ -41,19 +41,19 @@ posixc
 `read()`_                               `readdir()`_                            `remove()`_                             `rename()`_                             
 `rewind()`_                             `rewinddir()`_                          `rmdir()`_                              `scanf()`_                              
 `seed48()`_                             `seekdir()`_                            `setbuf()`_                             `setenv()`_                             
-`setgid()`_                             `setgrent()`_                           `setlinebuf()`_                         `setpwent()`_                           
-`setrlimit()`_                          `setuid()`_                             `setvbuf()`_                            `sigaction()`_                          
-`sigaddset()`_                          `sigdelset()`_                          `sigemptyset()`_                        `sigfillset()`_                         
-`sigismember()`_                        `siglongjmp()`_                         `sigpending()`_                         `sigprocmask()`_                        
-`sigsuspend()`_                         `sleep()`_                              `srand48()`_                            `stat()`_                               
-`statfs()`_                             `swab()`_                               `symlink()`_                            `sysconf()`_                            
-`system()`_                             `tcsetattr()`_                          `telldir()`_                            `tempnam()`_                            
-`times()`_                              `tmpfile()`_                            `tmpnam()`_                             `truncate()`_                           
-`ttyname()`_                            `umask()`_                              `uname()`_                              `ungetc()`_                             
-`unlink()`_                             `unsetenv()`_                           `updatestdio()`_                        `usleep()`_                             
-`utime()`_                              `utimes()`_                             `vfork()`_                              `vfprintf()`_                           
-`vfscanf()`_                            `vprintf()`_                            `vscanf()`_                             `wait()`_                               
-`waitpid()`_                            `write()`_                              
+`seteuid()`_                            `setgid()`_                             `setgrent()`_                           `setlinebuf()`_                         
+`setpwent()`_                           `setrlimit()`_                          `setuid()`_                             `setvbuf()`_                            
+`sigaction()`_                          `sigaddset()`_                          `sigdelset()`_                          `sigemptyset()`_                        
+`sigfillset()`_                         `sigismember()`_                        `siglongjmp()`_                         `sigpending()`_                         
+`sigprocmask()`_                        `sigsuspend()`_                         `sleep()`_                              `srand48()`_                            
+`stat()`_                               `statfs()`_                             `swab()`_                               `symlink()`_                            
+`sysconf()`_                            `system()`_                             `tcsetattr()`_                          `telldir()`_                            
+`tempnam()`_                            `times()`_                              `tmpfile()`_                            `tmpnam()`_                             
+`truncate()`_                           `ttyname()`_                            `umask()`_                              `uname()`_                              
+`ungetc()`_                             `unlink()`_                             `unsetenv()`_                           `updatestdio()`_                        
+`usleep()`_                             `utime()`_                              `utimes()`_                             `vfork()`_                              
+`vfprintf()`_                           `vfscanf()`_                            `vprintf()`_                            `vscanf()`_                             
+`wait()`_                               `waitpid()`_                            `write()`_                              
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -3122,13 +3122,6 @@ Synopsis
      void)
 
 
-Notes
-~~~~~
-::
-
-     Always returns 0 for the moment.
-
-
 
 See also
 ~~~~~~~~
@@ -3636,7 +3629,8 @@ Notes
 ~~~~~
 ::
 
-     Not implemented.
+     Function is not re-entrant. Results will be overwritten by
+     subsequent calls.
 
 
 
@@ -3845,13 +3839,6 @@ Synopsis
 
   uid_t getuid(
      void)
-
-
-Notes
-~~~~~
-::
-
-     Always 0 is returned for the moment.
 
 
 
@@ -5580,6 +5567,27 @@ Notes
 
 ----------
 
+seteuid()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  int seteuid(
+     uid_t uid)
+
+
+Notes
+~~~~~
+::
+
+     Does not check permissions.
+
+
+
+----------
+
 setgid()
 ========
 
@@ -5736,7 +5744,7 @@ Notes
 ~~~~~
 ::
 
-     Not implemented.
+     Does not check permissions.
 
 
 
