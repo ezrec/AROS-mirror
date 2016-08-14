@@ -1,3 +1,42 @@
+diff -ruN openssh-7.3p1/atomicio.c openssh-7.3p1.aros/atomicio.c
+--- openssh-7.3p1/atomicio.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/atomicio.c	2016-08-10 20:05:26.451012370 +0200
+@@ -45,6 +45,15 @@
+ 
+ #include "atomicio.h"
+ 
++#ifdef __AROS__
++#undef  BROKEN_READ_COMPARISON
++#define  BROKEN_READ_COMPARISON 1
++#undef  BROKEN_READV_COMPARISON
++#define  BROKEN_READV_COMPARISON 1
++#include <proto/bsdsocket.h>
++#include <aros/debug.h>
++#endif
++
+ /*
+  * ensure all of data on socket comes through. f==read || f==vwrite
+  */
+@@ -62,7 +71,19 @@
+ 	pfd.events = f == read ? POLLIN : POLLOUT;
+ #endif
+ 	while (n > pos) {
++#ifdef __AROS__
++		if (f == read)
++			res = recv (fd, s + pos, n - pos, 0);
++		else if (f == vwrite)
++			res = send (fd, s + pos, n - pos, 0);
++		else
++		{
++			bug("SSH:atomicio6:unhandled function!\n");
++			return 0;
++		}
++#else
+ 		res = (f) (fd, s + pos, n - pos);
++#endif
+ 		switch (res) {
+ 		case -1:
+ 			if (errno == EINTR)
 diff -ruN openssh-7.3p1/auth2-pubkey.c openssh-7.3p1.aros/auth2-pubkey.c
 --- openssh-7.3p1/auth2-pubkey.c	2016-07-28 00:54:27.000000000 +0200
 +++ openssh-7.3p1.aros/auth2-pubkey.c	2016-08-01 04:01:55.000000000 +0200
@@ -694,8 +733,8 @@ diff -ruN openssh-7.3p1/openbsd-compat/openbsd-compat.h openssh-7.3p1.aros/openb
  #ifndef HAVE_INET_NTOP
 diff -ruN openssh-7.3p1/openbsd-compat/port-aros.c openssh-7.3p1.aros/openbsd-compat/port-aros.c
 --- openssh-7.3p1/openbsd-compat/port-aros.c	1970-01-01 01:00:00.000000000 +0100
-+++ openssh-7.3p1.aros/openbsd-compat/port-aros.c	2016-08-07 15:10:27.865340092 +0200
-@@ -0,0 +1,106 @@
++++ openssh-7.3p1.aros/openbsd-compat/port-aros.c	2016-08-10 19:44:39.919459483 +0200
+@@ -0,0 +1,98 @@
 +/*
 + * Copyright (c) 2000 Denis Parker.  All rights reserved.
 + * Copyright (c) 2000 Michael Stone.  All rights reserved.
@@ -771,14 +810,6 @@ diff -ruN openssh-7.3p1/openbsd-compat/port-aros.c openssh-7.3p1.aros/openbsd-co
 +}
 +
 +/* Not implemented */
-+ssize_t readv(int fildes, const struct iovec *iov, int iovcnt)
-+{
-+    asm("int3");
-+    /* TODO: set errno */
-+    return -1;
-+}
-+
-+/* Not implemented */
 +pid_t fork(void)
 +{
 +    asm("int3");
@@ -831,6 +862,66 @@ diff -ruN openssh-7.3p1/openbsd-compat/port-aros.h openssh-7.3p1.aros/openbsd-co
 +#endif
 +
 +#endif /* ! _PORT_AROS_H */
+diff -ruN openssh-7.3p1/openbsd-compat/readpassphrase.c openssh-7.3p1.aros/openbsd-compat/readpassphrase.c
+--- openssh-7.3p1/openbsd-compat/readpassphrase.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/openbsd-compat/readpassphrase.c	2016-08-10 21:14:16.692038000 +0200
+@@ -84,12 +84,16 @@
+ 	 * Read and write to /dev/tty if available.  If not, read from
+ 	 * stdin and write to stderr unless a tty is required.
+ 	 */
++#ifndef __AROS__
+ 	if ((flags & RPP_STDIN) ||
+ 	    (input = output = open(_PATH_TTY, O_RDWR)) == -1) {
+ 		if (flags & RPP_REQUIRE_TTY) {
+ 			errno = ENOTTY;
+ 			return(NULL);
+ 		}
++#else
++	{
++#endif
+ 		input = STDIN_FILENO;
+ 		output = STDERR_FILENO;
+ 	}
+diff -ruN openssh-7.3p1/packet.c openssh-7.3p1.aros/packet.c
+--- openssh-7.3p1/packet.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/packet.c	2016-08-10 20:24:39.509998893 +0200
+@@ -87,6 +87,10 @@
+ #include "ssherr.h"
+ #include "sshbuf.h"
+ 
++#ifdef __AROS__
++#include <proto/bsdsocket.h>
++#endif
++
+ #ifdef PACKET_DEBUG
+ #define DBG(x) x
+ #else
+@@ -1503,7 +1507,11 @@
+ 		if (r == 0)
+ 			return SSH_ERR_CONN_TIMEOUT;
+ 		/* Read data from the socket. */
++#ifdef __AROS__
++		len = recv(state->connection_in, buf, sizeof(buf), 0);
++#else
+ 		len = read(state->connection_in, buf, sizeof(buf));
++#endif
+ 		if (len == 0) {
+ 			r = SSH_ERR_CONN_CLOSED;
+ 			goto out;
+@@ -2182,8 +2190,13 @@
+ 	int r;
+ 
+ 	if (len > 0) {
++#ifdef __AROS__
++		len = send(state->connection_out,
++			sshbuf_ptr(state->output), len, 0);
++#else
+ 		len = write(state->connection_out,
+ 		    sshbuf_ptr(state->output), len);
++#endif
+ 		if (len == -1) {
+ 			if (errno == EINTR || errno == EAGAIN ||
+ 			    errno == EWOULDBLOCK)
 diff -ruN openssh-7.3p1/progressmeter.c openssh-7.3p1.aros/progressmeter.c
 --- openssh-7.3p1/progressmeter.c	2016-07-28 00:54:27.000000000 +0200
 +++ openssh-7.3p1.aros/progressmeter.c	2016-08-01 04:01:55.000000000 +0200
@@ -844,6 +935,25 @@ diff -ruN openssh-7.3p1/progressmeter.c openssh-7.3p1.aros/progressmeter.c
  	alarm(UPDATE_INTERVAL);
  }
  
+diff -ruN openssh-7.3p1/readpass.c openssh-7.3p1.aros/readpass.c
+--- openssh-7.3p1/readpass.c	2016-07-28 00:54:27.000000000 +0200
++++ openssh-7.3p1.aros/readpass.c	2016-08-10 21:15:00.060300775 +0200
+@@ -129,6 +129,7 @@
+ 			debug("read_passphrase: stdin is not a tty");
+ 			use_askpass = 1;
+ 		}
++#ifndef __AROS__
+ 	} else {
+ 		rppflags |= RPP_REQUIRE_TTY;
+ 		ttyfd = open(_PATH_TTY, O_RDWR);
+@@ -139,6 +140,7 @@
+ 			    strerror(errno));
+ 			use_askpass = 1;
+ 		}
++#endif
+ 	}
+ 
+ 	if ((flags & RP_USE_ASKPASS) && getenv("DISPLAY") == NULL)
 diff -ruN openssh-7.3p1/session.c openssh-7.3p1.aros/session.c
 --- openssh-7.3p1/session.c	2016-07-28 00:54:27.000000000 +0200
 +++ openssh-7.3p1.aros/session.c	2016-08-01 04:01:55.000000000 +0200
