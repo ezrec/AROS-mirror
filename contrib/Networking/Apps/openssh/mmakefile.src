@@ -3,6 +3,11 @@
 
 include $(SRCDIR)/config/aros.cfg
 
+#MM- aros-tcpip-apps-openssh : development-openssh
+#MM- development-openssh : contrib-openssl
+
 %fetch_and_build_gnu_development package=openssh version=7.3p1 suffixes="tar.gz" \
     package_repo="http://mirrors.evowise.com/pub/OpenBSD/OpenSSH/portable/" \
     patch=yes
+
+%common
