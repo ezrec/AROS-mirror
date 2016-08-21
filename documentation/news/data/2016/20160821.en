@@ -1,0 +1,33 @@
+====================
+July 2016 Highlights
+====================
+
+:Author:   Krzysztof Smiechowicz
+:Date:     2016-08-21
+
+In July AROS core received a number of small fixes and updates from
+varius contributors, including Neil Cafferkey, Krzysztof Smiechowicz,
+Matthias Rustler and Stefan Haubenthal. Notably, this work included fixing
+the native GCC to correctly search for SDK paths.
+
+Outside of core AROS developments, an interesting offer has been made by
+the `Apollo Team`__ . They offered free Vampire accelerator cards to
+developers interested in improving AROS 68k. More information can be found
+in `this thread`__ .
+
+We've also seen a good portion of new applications being released for
+AROS. A number of games have been ported and are now available for
+download from the `Archives`__ . Next, SimpleMail mail client, has been
+updated to version 0.41. Finally, a retro gaming center program called
+EMULA has been made public by its author, Fabio Falcucci. EMULA is free to
+use and includes additional features based on subscription model.
+
+Closing July's highlights, Pascal Papara released a new preview build of
+his AROS x86 distribution called AROS Broadway. More information can be
+found `here`__ .
+
+__ http://www.apollo-core.com/
+__ http://aros-exec.org/modules/newbb/viewtopic.php?topic_id=9827&forum=4
+__ http://archives.aros-exec.org/
+__ http://www.aros-broadway.de/index.html
+
