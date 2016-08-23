@@ -47,13 +47,14 @@ posixc
 `sigfillset()`_                         `sigismember()`_                        `siglongjmp()`_                         `sigpending()`_                         
 `sigprocmask()`_                        `sigsuspend()`_                         `sleep()`_                              `srand48()`_                            
 `stat()`_                               `statfs()`_                             `swab()`_                               `symlink()`_                            
-`sysconf()`_                            `system()`_                             `tcsetattr()`_                          `telldir()`_                            
-`tempnam()`_                            `times()`_                              `tmpfile()`_                            `tmpnam()`_                             
-`truncate()`_                           `ttyname()`_                            `umask()`_                              `uname()`_                              
-`ungetc()`_                             `unlink()`_                             `unsetenv()`_                           `updatestdio()`_                        
-`usleep()`_                             `utime()`_                              `utimes()`_                             `vfork()`_                              
-`vfprintf()`_                           `vfscanf()`_                            `vprintf()`_                            `vscanf()`_                             
-`wait()`_                               `waitpid()`_                            `write()`_                              
+`sysconf()`_                            `system()`_                             `tcgetattr()`_                          `tcsetattr()`_                          
+`telldir()`_                            `tempnam()`_                            `times()`_                              `tmpfile()`_                            
+`tmpnam()`_                             `truncate()`_                           `ttyname()`_                            `umask()`_                              
+`uname()`_                              `ungetc()`_                             `unlink()`_                             `unsetenv()`_                           
+`updatestdio()`_                        `usleep()`_                             `utime()`_                              `utimes()`_                             
+`vfork()`_                              `vfprintf()`_                           `vfscanf()`_                            `vprintf()`_                            
+`vscanf()`_                             `wait()`_                               `waitpid()`_                            `write()`_                              
+
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -1560,7 +1561,7 @@ Function
      Perform operation specified in cmd on the file descriptor fd.
      Some operations require additional arguments, in this case they
      follow the cmd argument. The following operations are available:
-     
+
      F_DUPFD (int)  - Duplicate file descriptor fd as the lowest numbered
                       file descriptor greater or equal to the operation
                       argument.
@@ -1572,21 +1573,21 @@ Function
 
      F_GETFL (void) - Read the file status flags
 
-     F_SETFL (int)  - Set the file status flags to value given in the 
+     F_SETFL (int)  - Set the file status flags to value given in the
                       operation argument.
 
      File descriptor flags are zero or more ORed constants:
-     
+
      FD_CLOEXEC - File descriptor will be closed during execve()
-     
+
      File descriptor flags are not copied during duplication of file
      descriptors.
-     
+
      File status flags are the flags given as mode parameter to open()
      function call. You can change only a few file status flags in opened
      file descriptor: O_NONBLOCK, O_APPEND and O_ASYNC. Any other file
      status flags passed in F_SETFL argument will be ignored.
-     
+
      All duplicated file descriptors share the same set of file status
      flags.
 
@@ -1609,13 +1610,13 @@ Result
      F_DUPFD  - New duplicated file descriptor
 
      F_GETFD  - File descriptor flags
-     
+
      F_SETFD  - 0
 
      F_GETFL  - File status flags
 
      F_SETFL  - 0 on success, -1 on error. In case of error a global errno
-                variable is set.
+            variable is set.
 
 
 
@@ -6291,6 +6292,56 @@ Notes
 
 ----------
 
+tcgetattr()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  int tcgetattr(
+     int fd,
+     struct termios *t)
+
+
+Function
+~~~~~~~~
+::
+
+     Get terminal attributes.
+
+
+Inputs
+~~~~~~
+::
+
+     fd      - file descriptor
+     t       - struct termios where attributes are put
+
+
+Result
+~~~~~~
+::
+
+      0      - success
+     -1      - error
+
+
+Notes
+~~~~~
+::
+
+     Currently supports only ICANON flag
+
+
+
+See also
+~~~~~~~~
+
+`ioctl()`_ 
+
+----------
+
 tcsetattr()
 ===========
 
@@ -6324,8 +6375,8 @@ Result
 ~~~~~~
 ::
 
-     0       - success
-     1       - error 
+      0      - success
+     -1      - error
 
 
 Notes
@@ -6333,13 +6384,7 @@ Notes
 ::
 
      Will return success, if *any* of the changes were successful.
-
-
-Bugs
-~~~~
-::
-
-     Not implemented.
+     Currently supports only ICANON flag
 
 
 
