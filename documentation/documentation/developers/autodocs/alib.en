@@ -15,31 +15,31 @@ alib
 `ArgArrayInit()`_                       `ArgInt()`_                             `ArgString()`_                          `ArosInquire()`_                        
 `AslRequestTags()`_                     `AsmAllocPooled()`_                     `AsmCreatePool()`_                      `AsmDeletePool()`_                      
 `AsmFreePooled()`_                      `BeginIO()`_                            `BestCModeIDTags()`_                    `BestModeID()`_                         
-`BuildEasyRequest()`_                   `BuildEasyRequest()`_                   `CallHook()`_                           `CallHookA()`_                          
-`ChangeExtSprite()`_                    `CheckRexxMsg()`_                       `CloseWorkbenchObject()`_               `CoerceMethodA()`_                      
-`CopyRegion()`_                         `CreateExtIO()`_                        `CreateGadget()`_                       `CreateMenus()`_                        
-`CreateNewProcTags()`_                  `CreatePort()`_                         `CreateStdIO()`_                        `CreateTask()`_                         
-`DeleteExtIO()`_                        `DeletePort()`_                         `DeleteStdIO()`_                        `DeleteTask()`_                         
-`DoDTMethod()`_                         `DoGadgetMethod()`_                     `DoMethodA()`_                          `DoSuperMethodA()`_                     
-`DoSuperNewTagList()`_                  `DrawBevelBox()`_                       `EasyRequest()`_                        `ErrorOutput()`_                        
-`ExtendFontTags()`_                     `FastRand()`_                           `FreeIEvents()`_                        `FreeMsgFromStack()`_                   
-`FreeParamsFromStack()`_                `FreeTagsFromStack()`_                  `GetDataStreamFromFormat()`_            `GetDTAttrs()`_                         
-`GetExtSprite()`_                       `GetMsgFromStack()`_                    `GetParamsFromStack()`_                 `GetRexxVar()`_                         
-`GetRPAttrs()`_                         `GetTagsFromStack()`_                   `GetVisualInfo()`_                      `GT_GetGadgetAttrs()`_                  
-`GT_SetGadgetAttrs()`_                  `HookEntry()`_                          `HotKey()`_                             `InvertString()`_                       
-`InvertStringForwd()`_                  `LayoutMenuItems()`_                    `LayoutMenus()`_                        `LibAllocAligned()`_                    
-`LibAllocPooled()`_                     `LibCreatePool()`_                      `LibDeletePool()`_                      `LibFreePooled()`_                      
-`LockBitMapTags()`_                     `MakeWorkbenchObjectVisible()`_         `Merge()`_                              `MergeSortList()`_                      
-`NewDTObject()`_                        `NewList()`_                            `NewLoadSegTags()`_                     `NewObject()`_                          
-`NewRawDoFmt()`_                        `NewRectRegion()`_                      `ObtainBestPen()`_                      `ObtainInfo()`_                         
-`OpenAmigaGuide()`_                     `OpenAmigaGuideAsync()`_                `OpenCatalog()`_                        `OpenScreenTags()`_                     
-`OpenWindowTags()`_                     `OpenWorkbenchObject()`_                `RangeRand()`_                          `RefreshDTObject()`_                    
-`RefreshDTObjects()`_                   `ReleaseInfo()`_                        `RemoveAmigaGuideHost()`_               `SelectErrorOutput()`_                  
-`SendAmigaGuideCmd()`_                  `SendAmigaGuideContext()`_              `SetAmigaGuideAttrs()`_                 `SetAmigaGuideContext()`_               
-`SetAttrs()`_                           `SetDTAttrs()`_                         `SetGadgetAttrs()`_                     `SetInfo()`_                            
-`SetRexxVar()`_                         `SetRPAttrs()`_                         `SetSuperAttrs()`_                      `SetWindowPointer()`_                   
-`StrDup()`_                             `SystemTags()`_                         `TimeDelay()`_                          `UnLockBitMapTags()`_                   
-`VideoControlTags()`_                   `WorkbenchControl()`_                   
+`BuildEasyRequest()`_                   `CallHook()`_                           `CallHookA()`_                          `ChangeExtSprite()`_                    
+`CheckRexxMsg()`_                       `CloseWorkbenchObject()`_               `CoerceMethodA()`_                      `CopyRegion()`_                         
+`CreateExtIO()`_                        `CreateGadget()`_                       `CreateMenus()`_                        `CreateNewProcTags()`_                  
+`CreatePort()`_                         `CreateStdIO()`_                        `CreateTask()`_                         `DeleteExtIO()`_                        
+`DeletePort()`_                         `DeleteStdIO()`_                        `DeleteTask()`_                         `DoDTMethod()`_                         
+`DoGadgetMethod()`_                     `DoMethodA()`_                          `DoSuperMethodA()`_                     `DoSuperNewTagList()`_                  
+`DrawBevelBox()`_                       `EasyRequest()`_                        `ErrorOutput()`_                        `ExtendFontTags()`_                     
+`FastRand()`_                           `FreeIEvents()`_                        `FreeMsgFromStack()`_                   `FreeParamsFromStack()`_                
+`FreeTagsFromStack()`_                  `GetDataStreamFromFormat()`_            `GetDTAttrs()`_                         `GetExtSprite()`_                       
+`GetMsgFromStack()`_                    `GetParamsFromStack()`_                 `GetRexxVar()`_                         `GetRPAttrs()`_                         
+`GetTagsFromStack()`_                   `GetVisualInfo()`_                      `GT_GetGadgetAttrs()`_                  `GT_SetGadgetAttrs()`_                  
+`HookEntry()`_                          `HotKey()`_                             `InvertString()`_                       `InvertStringForwd()`_                  
+`LayoutMenuItems()`_                    `LayoutMenus()`_                        `LibAllocAligned()`_                    `LibAllocPooled()`_                     
+`LibCreatePool()`_                      `LibDeletePool()`_                      `LibFreePooled()`_                      `LockBitMapTags()`_                     
+`MakeWorkbenchObjectVisible()`_         `Merge()`_                              `MergeSortList()`_                      `NewDTObject()`_                        
+`NewList()`_                            `NewLoadSegTags()`_                     `NewObject()`_                          `NewRawDoFmt()`_                        
+`NewRectRegion()`_                      `ObtainBestPen()`_                      `ObtainInfo()`_                         `OpenAmigaGuide()`_                     
+`OpenAmigaGuideAsync()`_                `OpenCatalog()`_                        `OpenScreenTags()`_                     `OpenWindowTags()`_                     
+`OpenWorkbenchObject()`_                `RangeRand()`_                          `RefreshDTObject()`_                    `RefreshDTObjects()`_                   
+`ReleaseInfo()`_                        `RemoveAmigaGuideHost()`_               `SelectErrorOutput()`_                  `SendAmigaGuideCmd()`_                  
+`SendAmigaGuideContext()`_              `SetAmigaGuideAttrs()`_                 `SetAmigaGuideContext()`_               `SetAttrs()`_                           
+`SetDTAttrs()`_                         `SetGadgetAttrs()`_                     `SetInfo()`_                            `SetRexxVar()`_                         
+`SetRPAttrs()`_                         `SetSuperAttrs()`_                      `SetWindowPointer()`_                   `StrDup()`_                             
+`SystemTags()`_                         `TimeDelay()`_                          `UnLockBitMapTags()`_                   `VideoControlTags()`_                   
+`WorkbenchControl()`_                   
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -868,23 +868,6 @@ See also
 ~~~~~~~~
 
 `intuition.library/BuildEasyRequestArgs() <./intuition#buildeasyrequestargs>`_ 
-
-----------
-
-BuildEasyRequest()
-==================
-
-Synopsis
-~~~~~~~~
-::
-
-  struct Window * BuildEasyRequest(
- struct Window       *RefWindow,
- struct EasyStruct   *easyStruct,
- ULONG               IDCMP,
- ...)
-
-
 
 ----------
 
