@@ -77,9 +77,9 @@ unsigned int getFilesize ( char *filename )
 
     if ( filename != NULL )
     {
-        FILE *fp = NULL;
+        BPTR fp = BNULL;
 
-        if ( ( fp = Open ( filename, MODE_OLDFILE ) ) != NULL )
+        if ( ( fp = Open ( filename, MODE_OLDFILE ) ) != BNULL )
         {
             unsigned int size = 0;
             Seek ( fp, 0, OFFSET_END );
