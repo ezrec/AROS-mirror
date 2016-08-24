@@ -701,7 +701,7 @@ void exportPNG ( int w, int h, unsigned int *buffer, unsigned char *filename )
         return;
 
     // Register the write function.
-    png_set_write_fn ( png_ptr, file, png_user_write, png_user_flush );
+    png_set_write_fn ( png_ptr, (APTR) file, png_user_write, png_user_flush );
 
     // Create the info header.
     png_set_IHDR (
