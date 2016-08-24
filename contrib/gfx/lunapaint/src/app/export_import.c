@@ -112,7 +112,7 @@ HOOKPROTONHNO(export_func, void, int *param)
     else if ( datatype == 3 )
     {
         BPTR myfile;
-        if ( ( myfile = Open ( filename, MODE_NEWFILE ) ) != NULL )
+        if ( ( myfile = Open ( filename, MODE_NEWFILE ) ) != BNULL )
         {
             Write ( myfile, buffer, sizeof ( unsigned int ) * ( globalActiveCanvas->width * globalActiveCanvas->height ) );
             Close ( myfile );
@@ -138,7 +138,7 @@ HOOKPROTONHNO(import_func, void, int *param)
             if ( filename != NULL )
             {
                 BPTR myfile;
-                if ( ( myfile = Open ( filename, MODE_OLDFILE ) ) != NULL )
+                if ( ( myfile = Open ( filename, MODE_OLDFILE ) ) != BNULL )
                 {
                     Read (
                         myfile, globalActiveCanvas->activebuffer,
@@ -533,7 +533,7 @@ void createImageFromAnimation ( struct oCanvas *canv, int datatype, char *filena
         else if ( datatype == 3 )
         {
             BPTR myfile;
-            if ( ( myfile = Open ( filename, MODE_NEWFILE ) ) != NULL )
+            if ( ( myfile = Open ( filename, MODE_NEWFILE ) ) != BNULL )
             {
                 Write ( myfile, animBuf, bufsize );
                 Close ( myfile );
@@ -588,7 +588,7 @@ void createImageFromAnimation ( struct oCanvas *canv, int datatype, char *filena
             else if ( datatype == 3 )
             {
                 BPTR myfile;
-                if ( ( myfile = Open ( tmpFilename, MODE_NEWFILE ) ) != NULL )
+                if ( ( myfile = Open ( tmpFilename, MODE_NEWFILE ) ) != BNULL )
                 {
                     Write ( myfile, buf, framesize );
                     Close ( myfile );
@@ -697,7 +697,7 @@ void exportPNG ( int w, int h, unsigned int *buffer, unsigned char *filename )
     }
 
     // Open file for writing
-    if ( ( file = Open ( filename, MODE_NEWFILE ) ) == NULL )
+    if ( ( file = Open ( filename, MODE_NEWFILE ) ) == BNULL )
         return;
 
     // Register the write function.

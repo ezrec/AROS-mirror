@@ -541,7 +541,7 @@ void initPalette ( )
 void loadDefaultPalette ( )
 {
     BPTR myfile;
-    if ( ( myfile = Open ( "PROGDIR:default.palette", MODE_OLDFILE ) ) != NULL )
+    if ( ( myfile = Open ( "PROGDIR:default.palette", MODE_OLDFILE ) ) != BNULL )
     {
         Read ( myfile, globalPalette, 1024 );
         Close ( myfile );

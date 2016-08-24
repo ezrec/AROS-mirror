@@ -692,7 +692,7 @@ ULONG savePalette ( )
     {
         // The aros way!
         BPTR myfile;
-        if ( ( myfile = Open ( filename, MODE_NEWFILE ) ) != NULL )
+        if ( ( myfile = Open ( filename, MODE_NEWFILE ) ) != BNULL )
         {
             Write ( myfile, globalPalette, 4 * 256 );
             Close ( myfile );
@@ -711,7 +711,7 @@ ULONG loadPalette ( )
     {
         // The aros way!
         BPTR myfile;
-        if ( ( myfile = Open ( filename, MODE_OLDFILE ) ) != NULL )
+        if ( ( myfile = Open ( filename, MODE_OLDFILE ) ) != BNULL )
         {
             Read ( myfile, globalPalette, 4 * 256 );
             Close ( myfile );

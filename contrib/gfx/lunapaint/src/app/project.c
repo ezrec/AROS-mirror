@@ -105,7 +105,7 @@ void SaveProject ( struct WindowList *lst )
     header.objectCount = 3 * lst->canvas->totalLayers;
 
     BPTR outFile;
-    if ( ( outFile = Open ( lst->filename, MODE_NEWFILE ) ) == NULL )
+    if ( ( outFile = Open ( lst->filename, MODE_NEWFILE ) ) == BNULL )
         return;
 
     // Write the header
@@ -172,7 +172,7 @@ void LoadProject ( unsigned char *filename, BOOL useCurrentCanvas )
     strcpy ( tmpFilename, filename );
 
     BPTR inputFile;
-    if ( ( inputFile = Open ( tmpFilename, MODE_OLDFILE ) ) != NULL )
+    if ( ( inputFile = Open ( tmpFilename, MODE_OLDFILE ) ) != BNULL )
     {
         // Get the lunapaint header
         struct LunapaintHeader *header = AllocVec ( sizeof ( struct LunapaintHeader ), MEMF_CLEAR );

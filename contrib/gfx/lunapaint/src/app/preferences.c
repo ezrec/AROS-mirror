@@ -151,9 +151,9 @@ BOOL savePreferences ( )
     struct PrefHeader head = { 0 };
     struct IFFHandle *handle;
     BOOL result = FALSE;
-    BPTR filehandle = NULL;
+    BPTR filehandle = BNULL;
 
-    if ( ( filehandle = Open ( "PROGDIR:lunapaint.prefs", MODE_NEWFILE ) ) == NULL )
+    if ( ( filehandle = Open ( "PROGDIR:lunapaint.prefs", MODE_NEWFILE ) ) == BNULL )
         return FALSE;
 
     if ( !( handle = AllocIFF() ) )
@@ -219,7 +219,7 @@ BOOL savePreferences ( )
     prefs_save_ending:
 
     if ( handle != NULL ) CloseIFF( handle );
-    if ( filehandle != NULL ) Close ( filehandle );
+    if ( filehandle != BNULL ) Close ( filehandle );
     if ( handle != NULL ) FreeIFF( handle );
 
     return result;
@@ -230,13 +230,13 @@ BOOL loadPreferences ( )
     struct ContextNode *context;
     struct IFFHandle *handle;
     BOOL result = FALSE;
-    BPTR filehandle = NULL;
+    BPTR filehandle = BNULL;
 
 
     if ( !( handle = AllocIFF( ) ) )
         return FALSE;
 
-    if ( ( filehandle = Open ( "PROGDIR:lunapaint.prefs", MODE_OLDFILE ) ) == NULL )
+    if ( ( filehandle = Open ( "PROGDIR:lunapaint.prefs", MODE_OLDFILE ) ) == BNULL )
         goto prefs_load_ending;
 
     handle->iff_Stream = ( IPTR )filehandle;
@@ -261,7 +261,7 @@ BOOL loadPreferences ( )
     prefs_load_ending:
 
     if ( handle != NULL ) CloseIFF(handle);
-    if ( filehandle != NULL ) Close (filehandle);
+    if ( filehandle != BNULL ) Close (filehandle);
     if ( handle != NULL ) FreeIFF(handle);
 
     return result;

@@ -1408,7 +1408,7 @@ void importImageRAW ( unsigned int w, unsigned int h, unsigned long long int *bu
         {
             // The aros way!
             BPTR myfile;
-            if ( ( myfile = Open ( filename, MODE_OLDFILE ) ) != NULL )
+            if ( ( myfile = Open ( filename, MODE_OLDFILE ) ) != BNULL )
             {
                 Read ( myfile, buffer, 8 * w * h );
                 Close ( myfile );
