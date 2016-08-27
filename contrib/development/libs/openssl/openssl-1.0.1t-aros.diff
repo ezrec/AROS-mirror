@@ -1,0 +1,682 @@
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/apps/apps.c openssl-1.0.1t.aros/apps/apps.c
+--- openssl-1.0.1t/apps/apps.c	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/apps/apps.c	2016-08-27 13:55:11.450224866 +0200
+@@ -2841,6 +2841,23 @@
+ 
+     return (ret);
+ }
++#elif defined(OPENSSL_SYS_AROS)
++#include <sys/time.h>
++
++double app_tminterval(int stop,int usertime)
++{
++    double ret = 0;
++    struct timeval  now;
++    static struct timeval tmstart;
++
++    gettimeofday(&now,NULL);
++
++    if (stop==TM_START) tmstart = now;
++    else ret = ( (now.tv_sec+now.tv_usec*1e-6)
++         - (tmstart.tv_sec+tmstart.tv_usec*1e-6) );
++
++    return ret;
++}
+ 
+ #elif defined(_SC_CLK_TCK)      /* by means of unistd.h */
+ # include <sys/times.h>
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/apps/apps.h openssl-1.0.1t.aros/apps/apps.h
+--- openssl-1.0.1t/apps/apps.h	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/apps/apps.h	2016-08-27 13:55:11.450224866 +0200
+@@ -159,7 +159,7 @@
+ 
+ # endif
+ 
+-# ifndef OPENSSL_SYS_NETWARE
++# if !defined(OPENSSL_SYS_NETWARE) && !defined(OPENSSL_SYS_AROS)
+ #  include <signal.h>
+ # endif
+ 
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/apps/ca.c openssl-1.0.1t.aros/apps/ca.c
+--- openssl-1.0.1t/apps/ca.c	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/apps/ca.c	2016-08-27 13:55:11.450224866 +0200
+@@ -82,7 +82,7 @@
+ #  else
+ #   include <unixlib.h>
+ #  endif
+-# elif !defined(OPENSSL_SYS_VXWORKS) && !defined(OPENSSL_SYS_WINDOWS) && !defined(OPENSSL_SYS_NETWARE)
++# elif !defined(OPENSSL_SYS_VXWORKS) && !defined(OPENSSL_SYS_WINDOWS) && !defined(OPENSSL_SYS_NETWARE) && !defined(OPENSSL_SYS_AROS)
+ #  include <sys/file.h>
+ # endif
+ #endif
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/apps/ocsp.c openssl-1.0.1t.aros/apps/ocsp.c
+--- openssl-1.0.1t/apps/ocsp.c	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/apps/ocsp.c	2016-08-27 13:55:11.450224866 +0200
+@@ -94,6 +94,10 @@
+ #  endif
+ # endif
+ 
++#if defined(OPENSSL_SYS_AROS)
++#include <proto/bsdsocket.h>
++#endif
++
+ /* Maximum leeway in validity period: default 5 minutes */
+ # define MAX_VALIDITY_PERIOD     (5 * 60)
+ 
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/apps/openssl.c openssl-1.0.1t.aros/apps/openssl.c
+--- openssl-1.0.1t/apps/openssl.c	2016-05-03 15:44:42.000000000 +0200
++++ openssl-1.0.1t.aros/apps/openssl.c	2016-08-27 13:55:11.450224866 +0200
+@@ -135,6 +135,16 @@
+ # include <openssl/fips.h>
+ #endif
+ 
++#if defined(OPENSSL_SYS_AROS)
++#include <exec/types.h>
++#include <exec/libraries.h>
++#include <bsdsocket/socketbasetags.h>
++#include <proto/exec.h>
++#include <proto/bsdsocket.h>
++
++struct Library *SocketBase = NULL;
++#endif
++
+ /*
+  * The LHASH callbacks ("hash" & "cmp") have been replaced by functions with
+  * the base prototypes (we cast each variable inside the function to the
+@@ -155,6 +165,13 @@
+ BIO *bio_err = NULL;
+ #endif
+ 
++#if defined(OPENSSL_SYS_AROS)
++static void aros_bsdsocket_close(void) {
++    CloseLibrary(SocketBase);
++    SocketBase = NULL;
++}
++#endif
++
+ static void lock_dbg_cb(int mode, int type, const char *file, int line)
+ {
+     static int modes[CRYPTO_NUM_LOCKS]; /* = {0, 0, ... } */
+@@ -281,6 +298,22 @@
+ #endif                          /* defined( OPENSSL_SYS_VMS) &&
+                                  * (__INITIAL_POINTER_SIZE == 64) */
+ 
++#if defined(OPENSSL_SYS_AROS)
++        if ((SocketBase = OpenLibrary("bsdsocket.library", 0)) == NULL) {
++            fprintf(stderr, "Couldn't open bsdsocket.library. Is a TCP/IP stack running?\n");
++            OPENSSL_EXIT(10);
++        }
++
++        atexit(aros_bsdsocket_close);
++
++        if(SocketBaseTags(SBTM_SETVAL(SBTC_ERRNOPTR(sizeof(errno))), (IPTR) &errno,
++                          SBTM_SETVAL(SBTC_LOGTAGPTR),               (IPTR) "openssl",
++                          TAG_DONE)) {
++            fprintf(stderr, "Error initialising bsdsocket.library\n");
++            OPENSSL_EXIT(10);
++        }
++#endif
++
+     arg.data = NULL;
+     arg.count = 0;
+ 
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/apps/s_client.c openssl-1.0.1t.aros/apps/s_client.c
+--- openssl-1.0.1t/apps/s_client.c	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/apps/s_client.c	2016-08-27 13:55:11.450224866 +0200
+@@ -156,6 +156,10 @@
+ typedef unsigned int u_int;
+ #endif
+ 
++#if defined(OPENSSL_SYS_AROS)
++#include <proto/bsdsocket.h>
++#endif
++
+ #define USE_SOCKETS
+ #include "apps.h"
+ #include <openssl/x509.h>
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/apps/speed.c openssl-1.0.1t.aros/apps/speed.c
+--- openssl-1.0.1t/apps/speed.c	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/apps/speed.c	2016-08-27 13:55:11.450224866 +0200
+@@ -104,7 +104,7 @@
+ #  include OPENSSL_UNISTD
+ # endif
+ 
+-# ifndef OPENSSL_SYS_NETWARE
++# if !defined(OPENSSL_SYS_NETWARE) && !defined(OPENSSL_SYS_AROS)
+ #  include <signal.h>
+ # endif
+ 
+@@ -212,7 +212,7 @@
+ # endif
+ 
+ # ifndef HAVE_FORK
+-#  if defined(OPENSSL_SYS_VMS) || defined(OPENSSL_SYS_WINDOWS) || defined(OPENSSL_SYS_MACINTOSH_CLASSIC) || defined(OPENSSL_SYS_OS2) || defined(OPENSSL_SYS_NETWARE)
++#  if defined(OPENSSL_SYS_VMS) || defined(OPENSSL_SYS_WINDOWS) || defined(OPENSSL_SYS_MACINTOSH_CLASSIC) || defined(OPENSSL_SYS_OS2) || defined(OPENSSL_SYS_NETWARE) || defined(OPENSSL_SYS_AROS)
+ #   define HAVE_FORK 0
+ #  else
+ #   define HAVE_FORK 1
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/apps/s_server.c openssl-1.0.1t.aros/apps/s_server.c
+--- openssl-1.0.1t/apps/s_server.c	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/apps/s_server.c	2016-08-27 13:55:11.450224866 +0200
+@@ -175,6 +175,10 @@
+ typedef unsigned int u_int;
+ #endif
+ 
++#if defined(OPENSSL_SYS_AROS)
++#include <proto/bsdsocket.h>
++#endif
++
+ #include <openssl/lhash.h>
+ #include <openssl/bn.h>
+ #define USE_SOCKETS
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/apps/s_socket.c openssl-1.0.1t.aros/apps/s_socket.c
+--- openssl-1.0.1t/apps/s_socket.c	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/apps/s_socket.c	2016-08-27 13:55:11.454224892 +0200
+@@ -101,6 +101,10 @@
+ #  include "netdb.h"
+ # endif
+ 
++#if defined(OPENSSL_SYS_AROS)
++#include <proto/bsdsocket.h>
++#endif
++
+ static struct hostent *GetHostByName(char *name);
+ # if defined(OPENSSL_SYS_WINDOWS) || (defined(OPENSSL_SYS_NETWARE) && !defined(NETWARE_BSDSOCK))
+ static void ssl_sock_cleanup(void);
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/apps/s_time.c openssl-1.0.1t.aros/apps/s_time.c
+--- openssl-1.0.1t/apps/s_time.c	2016-05-03 15:44:42.000000000 +0200
++++ openssl-1.0.1t.aros/apps/s_time.c	2016-08-27 13:55:11.454224892 +0200
+@@ -85,6 +85,10 @@
+ # include OPENSSL_UNISTD
+ #endif
+ 
++#if defined(OPENSSL_SYS_AROS)
++#include <proto/bsdsocket.h>
++#endif
++
+ #undef PROG
+ #define PROG s_time_main
+ 
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/Configure openssl-1.0.1t.aros/Configure
+--- openssl-1.0.1t/Configure	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/Configure	2016-08-27 13:55:11.454224892 +0200
+@@ -626,6 +626,13 @@
+ "uClinux-dist","$ENV{'CC'}:\$(CFLAGS)::-D_REENTRANT::\$(LDFLAGS) \$(LDLIBS):BN_LLONG:${no_asm}:$ENV{'LIBSSL_dlfcn'}:linux-shared:-fPIC:-shared:.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR):$ENV{'RANLIB'}::",
+ "uClinux-dist64","$ENV{'CC'}:\$(CFLAGS)::-D_REENTRANT::\$(LDFLAGS) \$(LDLIBS):SIXTY_FOUR_BIT_LONG:${no_asm}:$ENV{'LIBSSL_dlfcn'}:linux-shared:-fPIC:-shared:.so.\$(SHLIB_MAJOR).\$(SHLIB_MINOR):$ENV{'RANLIB'}::",
+ 
++##### AROS
++"aros-i386-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -Wall $ENV{'AROS_CFLAGS'}:::AROS::BN_LLONG ${x86_gcc_des} ${x86_gcc_opts}:${x86_elf_asm}::::::$ENV{'AROS_RANLIB'}",
++"aros-x86_64-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -DMD32_REG_T=int -Wall $ENV{'AROS_CFLAGS'}:::AROS::SIXTY_FOUR_BIT_LONG RC4_CHAR RC4_CHUNK DES_INT DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
++"aros-ppc-cross","$ENV{'AROS_CC'}:-DB_ENDIAN -Wall $ENV{'AROS_CFLAGS'}:::AROS::BN_LLONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
++"aros-arm-cross","$ENV{'AROS_CC'}:-DL_ENDIAN -Wall $ENV{'AROS_CFLAGS'}:::AROS::BN_LLONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
++"aros-m68k-cross","$ENV{'AROS_CC'}:-DB_ENDIAN -Wall $ENV{'AROS_CFLAGS'} -Wno-unused-but-set-variable -Wno-unused-variable -Wno-format:::AROS::BN_LLONG RC4_CHAR RC4_CHUNK DES_UNROLL BF_PTR:${no_asm}::::::$ENV{'AROS_RANLIB'}",
++
+ );
+ 
+ my @MK1MF_Builds=qw(VC-WIN64I VC-WIN64A
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/bf/bf_opts.c openssl-1.0.1t.aros/crypto/bf/bf_opts.c
+--- openssl-1.0.1t/crypto/bf/bf_opts.c	2016-05-03 15:44:42.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/bf/bf_opts.c	2016-08-27 13:55:11.454224892 +0200
+@@ -70,7 +70,7 @@
+ #include <openssl/e_os2.h>
+ #include OPENSSL_UNISTD_IO
+ OPENSSL_DECLARE_EXIT
+-#ifndef OPENSSL_SYS_NETWARE
++#if !defined(OPENSSL_SYS_NETWARE) && !defined(OPENSSL_SYS_AROS)
+ # include <signal.h>
+ #endif
+ #ifndef _IRIX
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/bf/bfspeed.c openssl-1.0.1t.aros/crypto/bf/bfspeed.c
+--- openssl-1.0.1t/crypto/bf/bfspeed.c	2016-05-03 15:44:42.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/bf/bfspeed.c	2016-08-27 13:55:11.454224892 +0200
+@@ -68,7 +68,7 @@
+ #include <openssl/e_os2.h>
+ #include OPENSSL_UNISTD_IO
+ OPENSSL_DECLARE_EXIT
+-#ifndef OPENSSL_SYS_NETWARE
++#if !defined(OPENSSL_SYS_NETWARE) && !defined(OPENSSL_SYS_AROS)
+ # include <signal.h>
+ #endif
+ #ifndef _IRIX
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/bio/b_sock.c openssl-1.0.1t.aros/crypto/bio/b_sock.c
+--- openssl-1.0.1t/crypto/bio/b_sock.c	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/bio/b_sock.c	2016-08-27 13:55:11.454224892 +0200
+@@ -94,6 +94,10 @@
+ #  define WSAAPI
+ # endif
+ 
++#if defined(OPENSSL_SYS_AROS)
++#include <proto/bsdsocket.h>
++#endif
++
+ # if 0
+ static unsigned long BIO_ghbn_hits = 0L;
+ static unsigned long BIO_ghbn_miss = 0L;
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/bio/bss_acpt.c openssl-1.0.1t.aros/crypto/bio/bss_acpt.c
+--- openssl-1.0.1t/crypto/bio/bss_acpt.c	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/bio/bss_acpt.c	2016-08-27 13:55:11.454224892 +0200
+@@ -75,6 +75,10 @@
+ #  undef FIONBIO
+ # endif
+ 
++#if defined(OPENSSL_SYS_AROS)
++#include <proto/bsdsocket.h>
++#endif
++
+ typedef struct bio_accept_st {
+     int state;
+     char *param_addr;
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/bio/bss_conn.c openssl-1.0.1t.aros/crypto/bio/bss_conn.c
+--- openssl-1.0.1t/crypto/bio/bss_conn.c	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/bio/bss_conn.c	2016-08-27 13:55:11.454224892 +0200
+@@ -75,6 +75,10 @@
+ #  undef FIONBIO
+ # endif
+ 
++#if defined(OPENSSL_SYS_AROS)
++#include <proto/bsdsocket.h>
++#endif
++
+ typedef struct bio_connect_st {
+     int state;
+     char *param_hostname;
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/bio/bss_dgram.c openssl-1.0.1t.aros/crypto/bio/bss_dgram.c
+--- openssl-1.0.1t/crypto/bio/bss_dgram.c	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/bio/bss_dgram.c	2016-08-27 13:55:11.454224892 +0200
+@@ -96,6 +96,10 @@
+ #  define sock_puts  SockPuts
+ # endif
+ 
++#if defined(OPENSSL_SYS_AROS)
++#include <proto/bsdsocket.h>
++#endif
++
+ static int dgram_write(BIO *h, const char *buf, int num);
+ static int dgram_read(BIO *h, char *buf, int size);
+ static int dgram_puts(BIO *h, const char *str);
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/bio/bss_log.c openssl-1.0.1t.aros/crypto/bio/bss_log.c
+--- openssl-1.0.1t/crypto/bio/bss_log.c	2016-05-03 15:44:42.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/bio/bss_log.c	2016-08-27 13:55:11.454224892 +0200
+@@ -92,6 +92,10 @@
+ # include <syslog.h>
+ #endif
+ 
++#if defined(OPENSSL_SYS_AROS)
++#include <proto/bsdsocket.h>
++#endif
++
+ #include <openssl/buffer.h>
+ #include <openssl/err.h>
+ 
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/bio/bss_sock.c openssl-1.0.1t.aros/crypto/bio/bss_sock.c
+--- openssl-1.0.1t/crypto/bio/bss_sock.c	2016-05-03 15:44:42.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/bio/bss_sock.c	2016-08-27 13:55:11.454224892 +0200
+@@ -65,6 +65,10 @@
+ 
+ # include <openssl/bio.h>
+ 
++#if defined(OPENSSL_SYS_AROS)
++#include <proto/bsdsocket.h>
++#endif
++
+ # ifdef WATT32
+ #  define sock_write SockWrite  /* Watt-32 uses same names */
+ #  define sock_read  SockRead
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/cast/castopts.c openssl-1.0.1t.aros/crypto/cast/castopts.c
+--- openssl-1.0.1t/crypto/cast/castopts.c	2016-05-03 15:44:42.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/cast/castopts.c	2016-08-27 13:55:11.454224892 +0200
+@@ -70,7 +70,7 @@
+ #include <openssl/e_os2.h>
+ #include OPENSSL_UNISTD_IO
+ OPENSSL_DECLARE_EXIT
+-#ifndef OPENSSL_SYS_NETWARE
++#if !defined(OPENSSL_SYS_NETWARE) && !defined(OPENSSL_SYS_AROS)
+ # include <signal.h>
+ #endif
+ #ifndef _IRIX
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/cast/cast_spd.c openssl-1.0.1t.aros/crypto/cast/cast_spd.c
+--- openssl-1.0.1t/crypto/cast/cast_spd.c	2016-05-03 15:44:42.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/cast/cast_spd.c	2016-08-27 13:55:11.454224892 +0200
+@@ -68,7 +68,7 @@
+ #include <openssl/e_os2.h>
+ #include OPENSSL_UNISTD_IO
+ OPENSSL_DECLARE_EXIT
+-#ifndef OPENSSL_SYS_NETWARE
++#if !defined(OPENSSL_SYS_NETWARE) && !defined(OPENSSL_SYS_AROS)
+ # include <signal.h>
+ #endif
+ #ifndef _IRIX
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/des/des_opts.c openssl-1.0.1t.aros/crypto/des/des_opts.c
+--- openssl-1.0.1t/crypto/des/des_opts.c	2016-05-03 15:44:42.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/des/des_opts.c	2016-08-27 13:55:11.454224892 +0200
+@@ -74,7 +74,7 @@
+ extern void exit();
+ #endif
+ 
+-#ifndef OPENSSL_SYS_NETWARE
++#if !defined(OPENSSL_SYS_NETWARE) && !defined(OPENSSL_SYS_AROS)
+ # include <signal.h>
+ #endif
+ 
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/des/speed.c openssl-1.0.1t.aros/crypto/des/speed.c
+--- openssl-1.0.1t/crypto/des/speed.c	2016-05-03 15:44:42.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/des/speed.c	2016-08-27 13:55:11.454224892 +0200
+@@ -68,7 +68,7 @@
+ #include <openssl/e_os2.h>
+ #include OPENSSL_UNISTD_IO
+ OPENSSL_DECLARE_EXIT
+-#ifndef OPENSSL_SYS_NETWARE
++#if !defined(OPENSSL_SYS_NETWARE) && !defined(OPENSSL_SYS_AROS)
+ # include <signal.h>
+ # define crypt(c,s) (des_crypt((c),(s)))
+ #endif
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/engine/eng_rsax.c openssl-1.0.1t.aros/crypto/engine/eng_rsax.c
+--- openssl-1.0.1t/crypto/engine/eng_rsax.c	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/engine/eng_rsax.c	2016-08-27 13:55:11.458224918 +0200
+@@ -79,7 +79,7 @@
+ #undef COMPILE_RSAX
+ 
+ #if (defined(__x86_64) || defined(__x86_64__) || \
+-     defined(_M_AMD64) || defined (_M_X64)) && !defined(OPENSSL_NO_ASM)
++     defined(_M_AMD64) || defined (_M_X64)) && !defined(OPENSSL_NO_ASM) && !defined(__AROS__)
+ # define COMPILE_RSAX
+ static ENGINE *ENGINE_rsax(void);
+ #endif
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/evp/e_rc4_hmac_md5.c openssl-1.0.1t.aros/crypto/evp/e_rc4_hmac_md5.c
+--- openssl-1.0.1t/crypto/evp/e_rc4_hmac_md5.c	2016-05-03 15:44:42.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/evp/e_rc4_hmac_md5.c	2016-08-27 13:55:11.458224918 +0200
+@@ -99,7 +99,7 @@
+     return 1;
+ }
+ 
+-# if     !defined(OPENSSL_NO_ASM) &&     ( \
++# if     !defined(OPENSSL_NO_ASM) && !defined(__AROS__) &&     ( \
+         defined(__x86_64)       || defined(__x86_64__)  || \
+         defined(_M_AMD64)       || defined(_M_X64)      || \
+         defined(__INTEL__)              ) && \
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/idea/idea_spd.c openssl-1.0.1t.aros/crypto/idea/idea_spd.c
+--- openssl-1.0.1t/crypto/idea/idea_spd.c	2016-05-03 15:44:42.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/idea/idea_spd.c	2016-08-27 13:55:11.458224918 +0200
+@@ -68,7 +68,7 @@
+ #include <openssl/e_os2.h>
+ #include OPENSSL_UNISTD_IO
+ OPENSSL_DECLARE_EXIT
+-#ifndef OPENSSL_SYS_NETWARE
++#if !defined(OPENSSL_SYS_NETWARE) && !defined(OPENSSL_SYS_AROS)
+ # include <signal.h>
+ #endif
+ #ifndef _IRIX
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/rand/rand_egd.c openssl-1.0.1t.aros/crypto/rand/rand_egd.c
+--- openssl-1.0.1t/crypto/rand/rand_egd.c	2016-05-03 15:44:42.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/rand/rand_egd.c	2016-08-27 13:55:11.458224918 +0200
+@@ -95,7 +95,7 @@
+  *   RAND_egd() is a wrapper for RAND_egd_bytes() with numbytes=255.
+  */
+ 
+-#if defined(OPENSSL_SYS_WIN32) || defined(OPENSSL_SYS_VMS) || defined(OPENSSL_SYS_MSDOS) || defined(OPENSSL_SYS_VXWORKS) || defined(OPENSSL_SYS_NETWARE) || defined(OPENSSL_SYS_VOS) || defined(OPENSSL_SYS_BEOS)
++#if defined(OPENSSL_SYS_WIN32) || defined(OPENSSL_SYS_VMS) || defined(OPENSSL_SYS_MSDOS) || defined(OPENSSL_SYS_VXWORKS) || defined(OPENSSL_SYS_NETWARE) || defined(OPENSSL_SYS_VOS) || defined(OPENSSL_SYS_BEOS) || defined(OPENSSL_SYS_AROS)
+ int RAND_query_egd_bytes(const char *path, unsigned char *buf, int bytes)
+ {
+     return (-1);
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/rand/rand_unix.c openssl-1.0.1t.aros/crypto/rand/rand_unix.c
+--- openssl-1.0.1t/crypto/rand/rand_unix.c	2016-05-03 15:44:42.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/rand/rand_unix.c	2016-08-27 13:55:11.458224918 +0200
+@@ -222,6 +222,23 @@
+     }
+     return 1;
+ }
++#elif defined __AROS__
++int RAND_poll(void)
++{
++	u_int32_t rnd = 0, i;
++	unsigned char buf[ENTROPY_NEEDED];
++
++	for (i = 0; i < sizeof(buf); i++) {
++		if (i % 4 == 0)
++			rnd = rand();
++		buf[i] = rnd;
++		rnd >>= 8;
++	}
++	RAND_add(buf, sizeof(buf), ENTROPY_NEEDED);
++	memset(buf, 0, sizeof(buf));
++
++	return 1;
++}
+ # elif defined __OpenBSD__
+ int RAND_poll(void)
+ {
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/rc2/rc2speed.c openssl-1.0.1t.aros/crypto/rc2/rc2speed.c
+--- openssl-1.0.1t/crypto/rc2/rc2speed.c	2016-05-03 15:44:42.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/rc2/rc2speed.c	2016-08-27 13:55:11.458224918 +0200
+@@ -68,7 +68,7 @@
+ #include <openssl/e_os2.h>
+ #include OPENSSL_UNISTD_IO
+ OPENSSL_DECLARE_EXIT
+-#ifndef OPENSSL_SYS_NETWARE
++#if !defined(OPENSSL_SYS_NETWARE) && !defined(OPENSSL_SYS_AROS)
+ # include <signal.h>
+ #endif
+ #ifndef _IRIX
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/rc4/rc4speed.c openssl-1.0.1t.aros/crypto/rc4/rc4speed.c
+--- openssl-1.0.1t/crypto/rc4/rc4speed.c	2016-05-03 15:44:42.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/rc4/rc4speed.c	2016-08-27 13:55:11.458224918 +0200
+@@ -68,7 +68,7 @@
+ #include <openssl/e_os2.h>
+ #include OPENSSL_UNISTD_IO
+ OPENSSL_DECLARE_EXIT
+-#ifndef OPENSSL_SYS_NETWARE
++#if !defined(OPENSSL_SYS_NETWARE) && !defined(OPENSSL_SYS_AROS)
+ # include <signal.h>
+ #endif
+ #ifndef _IRIX
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/rc5/rc5speed.c openssl-1.0.1t.aros/crypto/rc5/rc5speed.c
+--- openssl-1.0.1t/crypto/rc5/rc5speed.c	2016-05-03 15:44:42.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/rc5/rc5speed.c	2016-08-27 13:55:11.458224918 +0200
+@@ -68,7 +68,7 @@
+ #include <openssl/e_os2.h>
+ #include OPENSSL_UNISTD_IO
+ OPENSSL_DECLARE_EXIT
+-#ifndef OPENSSL_SYS_NETWARE
++#if !defined(OPENSSL_SYS_NETWARE) && !defined(OPENSSL_SYS_AROS)
+ # include <signal.h>
+ #endif
+ #ifndef _IRIX
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/crypto/ui/ui_openssl.c openssl-1.0.1t.aros/crypto/ui/ui_openssl.c
+--- openssl-1.0.1t/crypto/ui/ui_openssl.c	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/crypto/ui/ui_openssl.c	2016-08-27 13:55:11.458224918 +0200
+@@ -218,6 +218,12 @@
+ 
+ #endif
+ 
++#if defined(OPENSSL_SYS_AROS)
++#undef TERMIOS
++#undef TERMIO
++#undef SGTTY
++#endif
++
+ #ifdef TERMIOS
+ # include <termios.h>
+ # define TTY_STRUCT             struct termios
+@@ -266,7 +272,7 @@
+ typedef int sig_atomic_t;
+ #endif
+ 
+-#if defined(OPENSSL_SYS_MACINTOSH_CLASSIC) || defined(MAC_OS_GUSI_SOURCE) || defined(OPENSSL_SYS_NETWARE)
++#if defined(OPENSSL_SYS_MACINTOSH_CLASSIC) || defined(MAC_OS_GUSI_SOURCE) || defined(OPENSSL_SYS_NETWARE) || defined(OPENSSL_SYS_AROS)
+ /*
+  * This one needs work. As a matter of fact the code is unoperational
+  * and this is only a trick to get it compiled.
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/e_os2.h openssl-1.0.1t.aros/e_os2.h
+--- openssl-1.0.1t/e_os2.h	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/e_os2.h	2016-08-27 13:55:11.458224918 +0200
+@@ -231,6 +231,12 @@
+ #  endif
+ # endif
+ 
++/* ------------------------------- AROS ------------------------------------ */
++#ifdef __AROS__
++# undef OPENSSL_SYS_UNIX
++# define OPENSSL_SYS_AROS
++#endif
++
+ /**
+  * That's it for OS-specific stuff
+  *****************************************************************************/
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/e_os.h openssl-1.0.1t.aros/e_os.h
+--- openssl-1.0.1t/e_os.h	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/e_os.h	2016-08-27 13:55:11.458224918 +0200
+@@ -113,6 +113,12 @@
+ #  endif
+ # endif
+ 
++#if defined(OPENSSL_SYS_AROS)
++#  define NO_CHMOD
++#  undef  DEVRANDOM
++#  define GETPID_IS_MEANINGLESS
++#endif
++
+ /********************************************************************
+  The Microsoft section
+  ********************************************************************/
+@@ -209,6 +215,14 @@
+ #   define readsocket(s,b,n)               recv((s),(b),(n),0)
+ #   define writesocket(s,b,n)              send((s),(b),(n),0)
+ #  endif
++# elif defined(__AROS__)
++#  define __BSD_VISIBLE 1
++#  define get_last_socket_error()	Errno()
++#  define clear_socket_error()	
++#  define ioctlsocket(a,b,c)	IoctlSocket(a,b,c)
++#  define closesocket(s)		CloseSocket(s)
++#  define readsocket(s,b,n)	recv((s),(b),(n),0)
++#  define writesocket(s,b,n)	send((s),(b),(n),0)
+ # else
+ #  define get_last_socket_error() errno
+ #  define clear_socket_error()    errno=0
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/Makefile.org openssl-1.0.1t.aros/Makefile.org
+--- openssl-1.0.1t/Makefile.org	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/Makefile.org	2016-08-27 13:55:11.458224918 +0200
+@@ -528,7 +528,7 @@
+ 	@$(MAKE) SDIRS='$(SDIRS)' clean
+ 	@$(MAKE) TAR='$(TAR)' TARFLAGS='$(TARFLAGS)' $(DISTTARVARS) tar
+ 
+-install: all install_docs install_sw
++install: all install_sw
+ 
+ install_sw:
+ 	@$(PERL) $(TOP)/util/mkdir-p.pl $(INSTALL_PREFIX)$(INSTALLTOP)/bin \
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/ssl/ssltest.c openssl-1.0.1t.aros/ssl/ssltest.c
+--- openssl-1.0.1t/ssl/ssltest.c	2016-05-03 15:49:00.000000000 +0200
++++ openssl-1.0.1t.aros/ssl/ssltest.c	2016-08-27 13:55:11.458224918 +0200
+@@ -203,6 +203,16 @@
+ # include OPENSSL_UNISTD
+ #endif
+ 
++#if defined(OPENSSL_SYS_AROS)
++#include <exec/types.h>
++#include <exec/libraries.h>
++#include <bsdsocket/socketbasetags.h>
++#include <proto/exec.h>
++#include <proto/bsdsocket.h>
++
++struct Library *SocketBase = NULL;
++#endif
++
+ #ifdef OPENSSL_SYS_VMS
+ # define TEST_SERVER_CERT "SYS$DISK:[-.APPS]SERVER.PEM"
+ # define TEST_CLIENT_CERT "SYS$DISK:[-.APPS]CLIENT.PEM"
+@@ -212,6 +222,9 @@
+ #elif defined(OPENSSL_SYS_NETWARE)
+ # define TEST_SERVER_CERT "\\openssl\\apps\\server.pem"
+ # define TEST_CLIENT_CERT "\\openssl\\apps\\client.pem"
++#elif defined(OPENSSL_SYS_AROS)
++# define TEST_SERVER_CERT "OPENSSL:server.pem"
++# define TEST_CLIENT_CERT "OPENSSL:client.pem"
+ #else
+ # define TEST_SERVER_CERT "../apps/server.pem"
+ # define TEST_CLIENT_CERT "../apps/client.pem"
+@@ -245,6 +258,13 @@
+ static DH *get_dh1024dsa(void);
+ #endif
+ 
++#if defined(OPENSSL_SYS_AROS)
++static void aros_bsdsocket_close(void) {
++    CloseLibrary(SocketBase);
++    SocketBase = NULL;
++}
++#endif
++
+ static char *psk_key = NULL;    /* by default PSK is not used */
+ #ifndef OPENSSL_NO_PSK
+ static unsigned int psk_client_callback(SSL *ssl, const char *hint,
+@@ -561,6 +581,22 @@
+ #endif
+     int no_protocol = 0;
+ 
++#if defined(OPENSSL_SYS_AROS)
++        if ((SocketBase = OpenLibrary("bsdsocket.library", 0)) == NULL) {
++            fprintf(stderr, "Couldn't open bsdsocket.library. Is a TCP/IP stack running?\n");
++	    EXIT(10);
++        }
++
++        atexit(aros_bsdsocket_close);
++
++        if(SocketBaseTags(SBTM_SETVAL(SBTC_ERRNOPTR(sizeof(errno))), (IPTR) &errno,
++                          SBTM_SETVAL(SBTC_LOGTAGPTR),               (IPTR) "openssl",
++                          TAG_DONE)) {
++            fprintf(stderr, "Error initialising bsdsocket.library\n");
++            EXIT(10);
++        }
++#endif
++
+     verbose = 0;
+     debug = 0;
+     cipher = 0;
+diff -ruN -X ./exclude.patterns openssl-1.0.1t/test/Makefile openssl-1.0.1t.aros/test/Makefile
+--- openssl-1.0.1t/test/Makefile	2016-05-03 15:49:51.000000000 +0200
++++ openssl-1.0.1t.aros/test/Makefile	2016-08-27 14:01:49.004806248 +0200
+@@ -67,7 +67,6 @@
+ HEARTBEATTEST=  heartbeat_test
+ CONSTTIMETEST=  constant_time_test
+ VERIFYEXTRATEST=	verify_extra_test
+-CLIENTHELLOTEST=	clienthellotest
+ 
+ TESTS=		alltests
+ 
+@@ -80,7 +79,6 @@
+ 	$(BFTEST)$(EXE_EXT) $(CASTTEST)$(EXE_EXT) $(SSLTEST)$(EXE_EXT) $(EXPTEST)$(EXE_EXT) $(DSATEST)$(EXE_EXT) $(RSATEST)$(EXE_EXT) \
+ 	$(EVPTEST)$(EXE_EXT) $(EVPEXTRATEST)$(EXE_EXT) $(IGETEST)$(EXE_EXT) $(JPAKETEST)$(EXE_EXT) $(SRPTEST)$(EXE_EXT) \
+ 	$(ASN1TEST)$(EXE_EXT) $(HEARTBEATTEST)$(EXE_EXT) $(CONSTTIMETEST)$(EXE_EXT) $(VERIFYEXTRATEST)$(EXE_EXT) \
+-	$(CLIENTHELLOTEST)$(EXE_EXT)
+ 
+ # $(METHTEST)$(EXE_EXT)
+ 
+@@ -149,7 +147,6 @@
+ 	test_gen test_req test_pkcs7 test_verify test_dh test_dsa \
+ 	test_ss test_ca test_engine test_evp test_evp_extra test_ssl test_tsa test_ige \
+ 	test_jpake test_srp test_cms test_heartbeat test_constant_time test_verify_extra \
+-	test_clienthello
+ 
+ test_evp:
+ 	../util/shlib_wrap.sh ./$(EVPTEST) evptests.txt
+@@ -344,10 +341,6 @@
+ 	@echo $(START) $@
+ 	../util/shlib_wrap.sh ./$(VERIFYEXTRATEST)
+ 
+-test_clienthello: $(CLIENTHELLOTEST)$(EXE_EXT)
+-	@echo $(START) $@
+-	../util/shlib_wrap.sh ./$(CLIENTHELLOTEST)
+-
+ lint:
+ 	lint -DLINT $(INCLUDES) $(SRC)>fluff
+ 
+@@ -519,9 +512,6 @@
+ $(VERIFYEXTRATEST)$(EXE_EXT): $(VERIFYEXTRATEST).o
+ 	@target=$(VERIFYEXTRATEST) $(BUILD_CMD)
+ 
+-$(CLIENTHELLOTEST)$(EXE_EXT): $(CLIENTHELLOTEST).o
+-	@target=$(CLIENTHELLOTEST) $(BUILD_CMD)
+-
+ #$(AESTEST).o: $(AESTEST).c
+ #	$(CC) -c $(CFLAGS) -DINTERMEDIATE_VALUE_KAT -DTRACE_KAT_MCT $(AESTEST).c
+ 
