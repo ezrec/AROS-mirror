@@ -13939,7 +13939,7 @@ diff -Naur SDL-1.2.15-orig/src/video/cgx/SDL_cgxmouse_c.h SDL-1.2.15/src/video/c
 diff -Naur SDL-1.2.15-orig/src/video/cgx/SDL_cgxvideo.c SDL-1.2.15/src/video/cgx/SDL_cgxvideo.c
 --- SDL-1.2.15-orig/src/video/cgx/SDL_cgxvideo.c	1970-01-01 01:00:00.000000000 +0100
 +++ SDL-1.2.15/src/video/cgx/SDL_cgxvideo.c	2015-05-09 15:09:59.769739506 +0200
-@@ -0,0 +1,1520 @@
+@@ -0,0 +1,1518 @@
 +/*
 +    SDL - Simple DirectMedia Layer
 +    Copyright (C) 1997-2006 Sam Lantinga
@@ -14197,8 +14197,6 @@ diff -Naur SDL-1.2.15-orig/src/video/cgx/SDL_cgxvideo.c SDL-1.2.15/src/video/cgx
 +#endif
 +#define CGX_DeleteDevice CGX_DeleteDeviceI
 +#endif
-+
-+	device->name			= cgxVidName;
 +
 +	/* Set the function pointers */
 +	/* SDL_cgxvideo.c */
