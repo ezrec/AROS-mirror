@@ -857,17 +857,12 @@ Synopsis
 ::
 
   struct Window * BuildEasyRequest(
-     struct Window     * RefWindow,
-     struct EasyStruct * easyStruct,
-     ULONG               IDCMP,
-     ...)
+ struct Window       *RefWindow,
+ struct EasyStruct   *easyStruct,
+ ULONG               IDCMP,
+ ...)
 
 
-
-See also
-~~~~~~~~
-
-`intuition.library/BuildEasyRequestArgs() <./intuition#buildeasyrequestargs>`_ 
 
 ----------
 
