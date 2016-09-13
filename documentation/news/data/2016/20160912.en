@@ -21,7 +21,8 @@ Krzysztof Smiechowicz updated OpenSSL library to version 1.0.1t and
 started porting OpenSSH 7.3 package, releasing the first, alpha version. The
 work on the ssh client was triggered by results of June's survey. Neil
 Cafferkey continued making fixes and extensions to MUI List class and
-finally a number of programs received new or updated Czech localization.
+finally a number of programs received new or updated Czech localization thanks
+to Miloslav Martinka.
 
 Outside of core team Pascal Papara continued releasing updated to his
 AROS distributions. In August AEROS 4.0.1 has been release with support for
