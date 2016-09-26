@@ -101,7 +101,7 @@ zune;prop;Prop.mui;2012-07-10
 zune;gauge;Gauge.mui;2012-07-10
 zune;scale;Scale.mui;2012-07-10
 zune;colorfield;Colorfield.mui;2012-07-10
-zune;list;List.mui;2013-07-09
+zune;list;List.mui;2016-09-26
 zune;floattext;Floattext.mui;2012-07-10
 zune;volumelist;Volumelist.mui;2012-07-10
 zune;dirlist;Dirlist.mui;2012-07-10
@@ -2817,7 +2817,7 @@ list;MUIA_List_ConstructHook;1;1;2
 list;MUIA_List_DestructHook;1;1;2
 list;MUIA_List_DisplayHook;1;1;2
 list;MUIA_List_DragSortable;1;1;2
-list;MUIA_List_DropMark;1;1;0
+list;MUIA_List_DropMark;1;1;2
 list;MUIA_List_Entries;1;1;2
 list;MUIA_List_First;1;1;2
 list;MUIA_List_Format;1;1;2
