@@ -19,9 +19,9 @@ arossupport
 `RT_FreeResource()`_                    `RT_IntAdd()`_                          `RT_IntCheck()`_                        `RT_IntEnter()`_                        
 `RT_IntExitB()`_                        `RT_IntExitE()`_                        `RT_IntFree()`_                         `RT_IntInitB()`_                        
 `RT_IntInitE()`_                        `RT_IntLeave()`_                        `RT_IntTrack()`_                        `RT_ShowRTStack()`_                     
-`RT_ShowStack()`_                       `strrncasecmp()`_                       `WriteByte()`_                          `WriteDouble()`_                        
-`WriteFloat()`_                         `WriteLong()`_                          `WriteString()`_                        `WriteStruct()`_                        
-`WriteWord()`_                          
+`RT_ShowStack()`_                       `WriteByte()`_                          `WriteDouble()`_                        `WriteFloat()`_                         
+`WriteLong()`_                          `WriteString()`_                        `WriteStruct()`_                        `WriteWord()`_                          
+
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -1972,68 +1972,6 @@ Result
      none
 
 
-
-----------
-
-strrncasecmp()
-==============
-
-Synopsis
-~~~~~~~~
-::
-
-  int strrncasecmp(
-     const char * str1,
-     const char * str2,
-     int          cnt)
-
-
-Function
-~~~~~~~~
-::
-
-     Compare the end parts of two strings. Case is ignored.
-
-
-Inputs
-~~~~~~
-::
-
-     str1, str2 - Strings to compare
-     cnt - Compare that many characters
-
-
-Result
-~~~~~~
-::
-
-     Returns 0 if the strings are equal and != 0 otherwise.
-
-
-Example
-~~~~~~~
-::
-
-     // rc = 0
-     rc = strrncasecmp ("disk.info", ".INFO", 5);
-
-     // rc <> 0
-     rc = strrncasecmp ("disk.info", ".c", 2);
-
-
-Notes
-~~~~~
-::
-
-     This function is not part of a library and may thus be called
-     any time.
-
-
-
-See also
-~~~~~~~~
-
-clib/strcmp() clib/strcasecmp() clib/strncasecmp() clib/strrchr() 
 
 ----------
 

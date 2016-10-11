@@ -89,8 +89,7 @@ Result
 ~~~~~~
 ::
 
-     Will return a pointer the string part of the allocated RexxArg
-     structure.
+     A pointer to the string part of the allocated RexxArg structure.
 
 
 Notes
