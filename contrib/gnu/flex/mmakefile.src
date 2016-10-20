@@ -1,4 +1,4 @@
-# Copyright © 2004-2008, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2016, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros.cfg
@@ -7,4 +7,4 @@ include $(SRCDIR)/config/aros.cfg
 #MM- contrib-gnu-flex : development-flex
 
 %fetch_and_build_gnu_development package=flex version=2.5.4a srcdir=flex-2.5.4 patch=yes \
-    package_repo=sf://flex
+    package_repo="http://www.theflatnet.de/pub/linux/system" suffixes="tar.gz"
