@@ -909,6 +909,7 @@ def create_apps_docs():
     """
     
     srcdirs = ( os.path.join(topdir, "workbench", "tools", "commodities"),
+                os.path.join(topdir, "workbench", "tools", "WiMP"),
                 os.path.join(topdir, "workbench", "tools") )
                 
     targetdir = os.path.join("documentation", "users", "applications") # relative to main build script
