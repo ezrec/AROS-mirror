@@ -200,7 +200,7 @@ void SplashDisplayProgress(const char *fmt, ULONG NumArgs, ...)
 			*pArg++ = va_arg(args, ULONG);
 
 		if (strlen(fmt) > 0)
-			ScaFormatStringArgs(text, sizeof(text), fmt, ArgList);
+			ScaFormatStringArgs(text, sizeof(text), fmt, (RAWARG)ArgList);
 		else
 			strcpy(text, "");
 

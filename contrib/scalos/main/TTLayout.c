@@ -1060,6 +1060,11 @@ static SAVEDS(ULONG) TTStringFormatHookFunc(
 #if !defined(ScaFormatString)
 void ScaFormatString(char *Buffer, const char *Format, ...)
 {
+#if defined(__AROS__)
+    AROS_SLOWSTACKFORMAT_PRE(Format);
+    ScaFormatStringArgs(Buffer, INT_MAX, Format, AROS_SLOWSTACKFORMAT_ARG(Format));
+    AROS_SLOWSTACKFORMAT_POST(Format);
+#else
 	va_list Args;
 
 	va_start(Args, Format);
@@ -1067,6 +1072,7 @@ void ScaFormatString(char *Buffer, const char *Format, ...)
 	ScaFormatStringArgs(Buffer, INT_MAX, Format, Args);
 
 	va_end(Args);
+#endif
 }
 #endif /* ScaFormatString */
 
@@ -1074,6 +1080,11 @@ void ScaFormatString(char *Buffer, const char *Format, ...)
 #if !defined(ScaFormatStringMaxLength)
 void ScaFormatStringMaxLength(char *Buffer, size_t BuffLen, const char *Format, ...)
 {
+#if defined(__AROS__)
+    AROS_SLOWSTACKFORMAT_PRE(Format);
+    ScaFormatStringArgs(Buffer, BuffLen, Format, AROS_SLOWSTACKFORMAT_ARG(Format));
+    AROS_SLOWSTACKFORMAT_POST(Format);
+#else
 	va_list Args;
 
 	va_start(Args, Format);
@@ -1081,11 +1092,12 @@ void ScaFormatStringMaxLength(char *Buffer, size_t BuffLen, const char *Format, 
 	ScaFormatStringArgs(Buffer, BuffLen, Format, Args);
 
 	va_end(Args);
+#endif
 }
 #endif /* ScaFormatStringMaxLength */
 
 
-void ScaFormatStringArgs(char *Buffer, size_t BuffLength, const char *Format, APTR Args)
+void ScaFormatStringArgs(char *Buffer, size_t BuffLength, const char *Format, RAWARG Args)
 {
 	if (LocaleBase && ((struct Library *) LocaleBase)->lib_Version >= 38 && ScalosLocale)
 		{
@@ -1100,6 +1112,8 @@ void ScaFormatStringArgs(char *Buffer, size_t BuffLength, const char *Format, AP
 
 		FormatString(ScalosLocale, (STRPTR) Format, Args, &myHook);
 		}
+#if !defined(__AROS__)
+	// No universal conversion from RAWARG to va_list
 	else
 		{
 		// here converting %lU und %lD format strings to lower case
@@ -1125,6 +1139,7 @@ void ScaFormatStringArgs(char *Buffer, size_t BuffLength, const char *Format, AP
 			FreeCopyString(FormatCopy);
 			}
 		}
+#endif
 }
 
 

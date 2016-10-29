@@ -978,7 +978,7 @@ STRPTR *CloneToolTypeArray(CONST_STRPTR *ToolTypeArray, ULONG AdditionalEntries)
 ///
 void ScaFormatString(char *Buffer, const char *Format, ...);
 void ScaFormatStringMaxLength(char *Buffer, size_t BuffLen, const char *Format, ...);
-void ScaFormatStringArgs(char *Buffer, size_t BuffLength, const char *Format, APTR Args);
+void ScaFormatStringArgs(char *Buffer, size_t BuffLength, const char *Format, RAWARG Args);
 ///
 /* ------------------------------------------------- */
 
