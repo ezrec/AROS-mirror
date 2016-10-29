@@ -40,7 +40,7 @@ ULONG VARARGS68K STDARGS MyRequest( STRPTR gadgets,
 
     VA_START(args, fmt);
 #if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
-    if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
+    if ((buf = VASPrintf(fmt, args)) != NULL) {
 #else
     if ((buf = AllocVec(TMP_STRING_LENGTH, MEMF_ANY)) != NULL) {
         _vsnprintf(buf, TMP_STRING_LENGTH, fmt, VA_ARG(args, APTR));

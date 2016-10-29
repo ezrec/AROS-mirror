@@ -309,7 +309,7 @@ int VARARGS68K STDARGS SendDaemon( CONST_STRPTR fmt, ... )
     VA_START(args, fmt);
 
 #if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
-    if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
+    if ((buf = VASPrintf(fmt, args)) != NULL) {
 #else
     if ((buf = AllocVec(TMP_STRING_LENGTH, MEMF_ANY)) != NULL) {
         _vsnprintf(buf, TMP_STRING_LENGTH, fmt, VA_ARG(args, APTR));
@@ -500,7 +500,7 @@ int VARARGS68K STDARGS SendClient( CONST_STRPTR fmt, ... )
     VA_START(args,fmt);
 
 #if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
-    if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
+    if ((buf = VASPrintf(fmt, args)) != NULL) {
 #else
     if ((buf = AllocVec(TMP_STRING_LENGTH, MEMF_ANY)) != NULL) {
         _vsnprintf(buf, TMP_STRING_LENGTH, fmt, VA_ARG(args, APTR));
@@ -538,7 +538,7 @@ long VARARGS68K STDARGS SendResultString( CONST_STRPTR fmt, ... )
     VA_START(args, fmt);
 
 #if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
-    if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
+    if ((buf = VASPrintf(fmt, args)) != NULL) {
 #else
     if ((buf = AllocVec(TMP_STRING_LENGTH, MEMF_ANY)) != NULL) {
         _vsnprintf(buf, TMP_STRING_LENGTH, fmt, VA_ARG(args, APTR));
@@ -570,7 +570,7 @@ void VARARGS68K STDARGS PrintFOneLine( BPTR hd,
     VA_START(args, fmt);
 
 #if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
-    if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
+    if ((buf = VASPrintf(fmt, args)) != NULL) {
 #else
     if ((buf = AllocVec(TMP_STRING_LENGTH, MEMF_ANY)) != NULL) {
         _vsnprintf(buf, TMP_STRING_LENGTH, fmt, VA_ARG(args, APTR));
@@ -729,7 +729,7 @@ ULONG VARARGS68K STDARGS MyDoCommand( CONST_STRPTR fmt, ... )
     VA_START(args, fmt);
 
 #if defined(__amigaos4__) || defined(__MORPHOS__) || defined(__AROS__)
-    if ((buf = VASPrintf(fmt, VA_ARG(args, APTR))) != NULL) {
+    if ((buf = VASPrintf(fmt, args)) != NULL) {
 #else
     if ((buf = AllocVec(TMP_STRING_LENGTH, MEMF_ANY)) != NULL) {
         _vsnprintf(buf, TMP_STRING_LENGTH, fmt, VA_ARG(args, APTR));
