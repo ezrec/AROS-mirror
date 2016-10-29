@@ -1779,7 +1779,14 @@ LIBFUNC_P3(LONG, LIBSQLite3ConfigV,
 
 	(void) SQLite3Base;
 	d1(KPrintF("%s/%ld:   START\n", __FUNC__, __LINE__));
+#ifdef __ARM_ARCH__
+	(void)op;(void)ap;
+	Result = 0;
+	// FIXME: I don't know if there is a way to translate a number of memory
+	// locations start at APR ap into va_list for ARM
+#else
 	Result = sqlite3_configv(op, ap);
+#endif
 	d1(KPrintF("%s/%ld:   END  Result=%ld\n", __FUNC__, __LINE__, Result));
 	return Result;
 }
@@ -1797,7 +1804,14 @@ LIBFUNC_P4(LONG, LIBSQLlite3DbConfigV,
 
 	(void) SQLite3Base;
 	d1(KPrintF("%s/%ld:   START\n", __FUNC__, __LINE__));
+#ifdef __ARM_ARCH__
+	(void)db;(void)op;(void)ap;
+	Result = 0;
+	// FIXME: I don't know if there is a way to translate a number of memory
+	// locations start at APR ap into va_list for ARM
+#else
 	Result = sqlite3_db_configv(db, op, ap);
+#endif
 	d1(KPrintF("%s/%ld:   END  Result=%ld\n", __FUNC__, __LINE__, Result));
 	return Result;
 }
