@@ -7,11 +7,38 @@
 #include "tblib.h"
 #include <SDI/SDI_compiler.h>
 
+#define STRLEN(s) \
+({ \
+    CONST_STRPTR _s = s; \
+    while (*_s++ != '\0'); \
+    _s - s - 1; \
+})
+
+static inline STRPTR CreateFormatStringFromEasyStruct(struct EasyStruct *easyStruct)
+{
+    STRPTR format = NULL;
+    LONG lentext = 0, lengadget = 0;
+
+    if (easyStruct->es_TextFormat) lentext = STRLEN(easyStruct->es_TextFormat);
+    if (easyStruct->es_GadgetFormat) lengadget = STRLEN(easyStruct->es_GadgetFormat);
+
+    format = AllocVec(lentext + lengadget + 1, MEMF_PUBLIC);
+    CopyMem(easyStruct->es_TextFormat, format, lentext);
+    CopyMem(easyStruct->es_GadgetFormat, format + lentext, lengadget);
+    format[lentext + lengadget] = '\0';
+
+    return format;
+}
+
+static inline void FreeFormatString(STRPTR format)
+{
+    FreeVec(format);
+}
+
 /* /// "ErrorMsg()" */
 void VARARGS68K STDARGS ErrorMsg( CONST_STRPTR title,
                                   CONST_STRPTR msg, ... )
 {
-    VA_LIST args;
     struct EasyStruct es;
 
     es.es_StructSize = sizeof(struct EasyStruct);
@@ -20,13 +47,13 @@ void VARARGS68K STDARGS ErrorMsg( CONST_STRPTR title,
     es.es_TextFormat = msg;
     es.es_GadgetFormat = (STRPTR)"Ok";
 
-    VA_START(args, msg);
-#if defined(__AROS__) && defined(__ARM_ARCH__)
-    #warning "TODO: fix va_arg usage for ARM"
-#else
-    EasyRequestArgs(NULL, &es, NULL, VA_ARG(args, APTR));
-#endif
-    VA_END(args);
+    STRPTR format = CreateFormatStringFromEasyStruct(&es);
+
+    AROS_SLOWSTACKFORMAT_PRE_USING(msg, format);
+    EasyRequestArgs(NULL, &es, NULL, AROS_SLOWSTACKFORMAT_ARG(format));
+    AROS_SLOWSTACKFORMAT_POST(format);
+
+    FreeFormatString(format);
 }
 /* \\\ */
 
