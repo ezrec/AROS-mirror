@@ -368,29 +368,35 @@ sformatti(ptr,form,args);
 va_end(args);
 }
 
+#include <aros/posixc/alloca.h>
+
 void sformatti(UBYTE *ptr,UBYTE *form,va_list args)
 {
 extern struct Locale *locale;
 D(bug("nodes.c 385 sformatti...........\n")); 
 ObtainSemaphore(&fmmain.msgsema);
+
+RAWARG  _data;
+ULONG  _datasize = 0;
+ULONG * _index;
+ULONG  _indexsize = 0;
+GetDataStreamFromFormat (form, args, NULL, NULL, NULL, &_indexsize);
+_index = (ULONG *)alloca(_indexsize);
+GetDataStreamFromFormat (form, args, NULL, &_datasize, _index, &_indexsize);
+_data = (RAWARG)alloca(_datasize);
+GetDataStreamFromFormat (form, args, _data, &_datasize, _index, &_indexsize);
+
 if(locale&&!(fmconfig->flags&MLOCALE)) {
-#ifdef __AROS__
-	VNewRawDoFmt(form, (VOID_FUNC)formathook, ptr, args);
-#else
-        struct Hook hook;
+struct Hook hook;
 	hook.h_Data=ptr;
 	hook.h_Entry=(HOOKFUNC)formathook;
 D(bug("FormatString nodes.c 388...........\n"));  
-	FormatString(locale,form,args, &hook);
+	FormatString(locale,form,_data, &hook);
 D(bug("FormatString nodes.c 391...........\n"));
-#endif
   } else {
-#if defined(__AROS__) && defined(__ARM_ARCH__)
-        #warning "TODO: fix va_arg usage for ARM"
-#else
- 	rawdo(form,(void *)&args,ptr);
-#endif
+ 	rawdo(form,_data,ptr);
  }
+
 D(bug("FormatString nodes.c 398...........\n"));
 ReleaseSemaphore(&fmmain.msgsema);
 D(bug("FormatString nodes.c 400...........\n"));
