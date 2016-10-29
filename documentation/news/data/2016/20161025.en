@@ -12,8 +12,8 @@ changes include integration of EmuLa, installation of Chrome browser
 supporting Flash, SDL2 libraries and ScummVM 1.8 and Amiga Racer game.
 
 Staying on ARM platform, September also saw first release of AROS
-distribution targetted at Orange Pi platform. The distribution uses
-hosted version of AROS, similar to AEROS.
+distribution targetted at Orange Pi platform. The distribution, called
+PiAROS, uses hosted version of AROS, similar to AEROS.
 
 Lastly, Icaros Desktop, x86 distribution by Paolo Besser received
 an update and is now available in version 2.1.3. The new version brings
