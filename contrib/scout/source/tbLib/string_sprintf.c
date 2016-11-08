@@ -28,7 +28,7 @@ void VARARGS68K STDARGS _sprintf( STRPTR buffer,
 #ifdef NO_LINEAR_VARARGS
     VNewRawDoFmt(fmt, (VOID (*)())NULL, (APTR)buffer, args);
 #else
-    RawDoFmt(fmt, VA_ARG(args, APTR), (VOID (*)())NULL, (APTR)buffer);
+    RawDoFmt(fmt, (APTR)args, (VOID (*)())NULL, (APTR)buffer);
 #endif
     VA_END(args);
 }
