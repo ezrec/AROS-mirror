@@ -1,0 +1,133 @@
+## version $VER: unarc.catalog 1.0 (25.11.2016)
+## language czech
+## codeset 5
+;
+MSG_AppDescription
+UnArchiv
+; Unarchiver
+;
+MSG_AppCopyright
+; Copyright © 2012 The AROS Development Team
+; Copyright © 2012 The AROS Development Team
+;
+MSG_WI_TITLE
+UnArchiv
+; Unarc
+;
+MSG_LA_ARCHIVE
+Archiv
+; Archive
+;
+MSG_LA_DESTINATION
+Cílová slo¾ka
+; Destination
+;
+MSG_BT_ALL
+_V¹e
+; _All
+;
+MSG_BT_NONE
+®á_dný
+; _None
+;
+MSG_BT_INVERT
+_Inverznì
+; _Invert
+;
+MSG_BT_START
+_Start
+; _Start
+;
+MSG_BT_CANCEL
+_Ukonèit
+; _Cancel
+;
+MSG_TXT_STATUS_ALL
+%u bytù v %u souborech
+; %u bytes in %u files
+;
+MSG_TXT_STATUS_SEL
+%u bytù v %u vybraných souborech
+; %u bytes in %u selected files
+;
+MSG_FREQ_ARCHIVE_TITLE
+Výbìr archivu
+; Select Archive
+;
+MSG_FREQ_DESTINATION_TITLE
+Cílová slo¾ka
+; Select Destination
+;
+MSG_OK
+_OK
+; _OK
+;
+MSG_SKIP_CANCEL
+_Pøeskoèit|_Ukonèit
+; _Skip|_Cancel
+;
+;
+; List labels
+MSG_LBL_NAME
+Jméno
+; Name
+;
+MSG_LBL_PROTECTION
+Atributy
+; Protection
+;
+MSG_LBL_SIZE
+Rozbaleno
+; Size
+;
+MSG_LBL_PACKSIZE
+Zabaleno
+; Packsize
+;
+MSG_LBL_RATE
+Komprese
+; Rate
+;
+MSG_LBL_DATE
+Datum
+; Date
+;
+MSG_LBL_TIME
+Èas
+; Time
+;
+;
+; Error messages
+;
+MSG_ERR
+Chyba
+; Error
+;
+MSG_ERR_NO_APPLICATION
+Nelze vytvoøit aplikace
+; Can't create application
+;
+MSG_ERR_READARGS
+Nelze pøeèíst øádkový argument
+; Can't read commandline arguments
+;
+MSG_ERR_NO_MEM
+Nedostatek pamìti
+; Out of memory
+;
+MSG_ERR_NO_ARC
+Nelze pøeèíst archiv
+; Can't read archive
+;
+MSG_ERR_CANT_UNPACK
+Rozbaleno z\n%s\nohlá¹ena chyba:\n%s
+; Unpacking of\n%s\nreturned error:\n%s
+;
+MSG_ERR_ADDPART
+Nelze vytvoøit cílový soubor
+; Can't create target file name
+;
+MSG_ERR_NODEST
+Prosím vyberte cílovou slo¾ku
+; Please, select a destination
+;
