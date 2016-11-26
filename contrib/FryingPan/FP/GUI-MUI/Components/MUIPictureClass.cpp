@@ -142,7 +142,7 @@ IPTR MUIPictureClass::DoMtd(Object *obj, IPTR msg)
          {
             DoSuperMtd(parent, obj, msg);
 
-            minmax = (uint16*)&((IPTR*)msg)[1];
+            minmax = (uint16*)(((IPTR *)msg)[1]);
             minmax[0] = width;
             minmax[2] = width;
             minmax[4] = width;
