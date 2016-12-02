@@ -2568,10 +2568,10 @@ application;MUIM_SetUData;1;1;2
 application;MUIM_SetUDataOnce;1;1;2
 window;MUIA_Window_Active;1;1;2
 window;MUIA_Window_ActiveObject;1;1;1
-window;MUIA_Window_AltHeight;1;1;1
-window;MUIA_Window_AltLeftEdge;1;1;1
-window;MUIA_Window_AltTopEdge;1;1;1
-window;MUIA_Window_AltWidth;1;1;1
+window;MUIA_Window_AltHeight;1;1;2
+window;MUIA_Window_AltLeftEdge;1;1;2
+window;MUIA_Window_AltTopEdge;1;1;2
+window;MUIA_Window_AltWidth;1;1;2
 window;MUIA_Window_AppWindow;1;1;0
 window;MUIA_Window_Backdrop;1;1;2
 window;MUIA_Window_Borderless;1;1;2
@@ -3024,7 +3024,6 @@ menuitem;MUIA_Menuitem_Title - bugreport 1985757
 menuitem;MUIM_Import/MUIM_Export - MUIA_Menuitem_Checked needs to be exportable/importable
 application;MUIM_Application_KillPushMethod is a private method with signature 0x80429954
 window;MUIA_Window_ActiveObject - bugreport #2807849
-window;MUIA_Window_AltWidth, MUIA_Window_AltTopEdge, MUIA_Window_AltLeftEdge and MUIA_Window_AltHeight are missing getters
 window;MUIA_Window_AppWindow - flag set but no real implementation
 window;MUIA_Window_IsSubWindow - flag set but no real implementation
 window;MUIA_Window_UseBottomBorderScroller and MUIA_Window_UseRightBorderScroller are missing getters
