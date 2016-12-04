@@ -1,0 +1,23 @@
+=======================
+October 2016 Highlights
+=======================
+
+:Author:   Krzysztof Smiechowicz
+:Date:     2016-12-04
+
+In October the AROS repository breached 53000 commits mark thank
+to contributions from multiple developers. Neil Cafferkey continued
+his work on improving MUI as well as fixed the IntelGMA video driver.
+Miloslav Martinka contributed further Czech localization as well as
+localized WiMP tool. Yannick Erb and Marcus Sackrow contributed fixes
+to AROS programs and we saw introduction of new AROS GUI theme. Lastly
+ARM Linux hosted version of AROS has been fixed to compile again as
+part of ABIv0 refresh by Krzysztof Smiechowicz.
+
+After September's explosion of distributions, October was quiet on
+that front. 3rd party developers however continued their work.
+Yannick Erb released updated version of ZuneView tool and Joerg Renkert
+released new version of his ModExplorer application for playing online
+and offline music modules. AROS archives also saw upload of two interesting
+Zelda-type games, Time to Triumph and Navi's Quest.
+
