@@ -5,8 +5,8 @@ July 2016 Highlights
 :Author:   Krzysztof Smiechowicz
 :Date:     2016-08-21
 
-In July AROS core received a number of small fixes and updates from
-varius contributors, including Neil Cafferkey, Krzysztof Smiechowicz,
+In July the AROS core received a number of small fixes and updates from
+various contributors, including Neil Cafferkey, Krzysztof Smiechowicz,
 Matthias Rustler and Stefan Haubenthal. Notably, this work included fixing
 the native GCC to correctly search for SDK paths.
 
@@ -17,10 +17,10 @@ in `this thread`__ .
 
 We've also seen a good portion of new applications being released for
 AROS. A number of games have been ported and are now available for
-download from the `Archives`__ . Next, SimpleMail mail client, has been
+download from the `Archives`__ . Next, the SimpleMail mail client, has been
 updated to version 0.41. Finally, a retro gaming center program called
 EMULA has been made public by its author, Fabio Falcucci. EMULA is free to
-use and includes additional features based on subscription model.
+use and includes additional features based on a subscription model.
 
 Closing July's highlights, Pascal Papara released a new preview build of
 his AROS x86 distribution called AROS Broadway. More information can be

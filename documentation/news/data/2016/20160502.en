@@ -8,36 +8,37 @@ March 2016 Highlights
 March saw tons of activity from all aspects of AROS. First and foremost
 Nick Andrews has been working on enabling compilation of AROS with
 GCC 6.0. This not only included the porting of the compiler itself, but
-also adjusting the source code to the new compiler and fixing warnings
-and bugs. While at it, Nick also worked on our build system making it
-more flexible and capable of integrating a second compiler - LLVM/Clang.
-While AROS cannot yet be compiled with the new compiler, the usage is
+also adjusting the source code to suit the new compiler and fixing warnings
+and bugs. While at it, Nick also worked on our build system, making it
+more flexible and capable of integrating a second compiler -- LLVM/Clang.
+While AROS cannot yet be compiled with the new compiler, its usage is
 already possible.
 
-Continuing work of Nick, he applied many fixes to x86_64 version of
-AROS. The fixes were mainly the result of problems detected by new
+Continuing with the work of Nick, he applied many fixes to x86_64 version of
+AROS. The fixes were mainly the result of problems detected with the new
 version of GCC.
 
-Third area that received improvements was the 68k support in AROS. Georg
-Steger updated the AROS RGT driver, giving it more performance, stability
+The third area that received improvements was 68k support in AROS. Georg
+Steger updated the AROS RTG driver, giving it better performance, stability
 and functionality. Toni Willen implemented faster hunk executable
-loading, solving the long standing difference between hunk and elf.
-Jason McMullan improved the stability of Amiga ATA driver under low
-memory conditions. All these improvements contribute to better AROS 68k
-which is important in the light of coming Vampire V2 accelerator card.
+loading, solving a long-standing difference between hunk and ELF formats.
+Additionally, Jason McMullan improved the stability of the Amiga ATA driver
+under low memory conditions. All these improvements contribute to better
+AROS 68k, which is important in the light of the coming Vampire V2
+accelerator card.
 
-Wanderer, the AROS Workbench replacement, received also a new file
+Wanderer, the AROS Workbench replacement, also received a new file
 search capability thanks to Matthias Rustler. This development is
 going to be really appreciated by Wanderer users.
 
-A lot also happened in AROS distributions. Pascal Papara released new
+A lot also happened in AROS distributions. Pascal Papara released a new
 versions of AEROS Premium for Odroid XU3 and XU4 as well as AEROS
-for RaspberryPi 3. Icaros Desktop, leading distribution for x86 PC
-computers was updated by Paolo Besser to version 2.1 bringing updates
-to software released in last year.
+for RaspberryPi 3. Icaros Desktop, the leading distribution for x86 PC
+computers, was updated by Paolo Besser to version 2.1, bringing updates
+to software released in the last year.
 
-Closing this update, in 3rd party development, Marcus Sackrow released
-version 0.54 of his text editor EdiSyn. EdiSyn among standard editor
-features supports also syntax highlighting which is important to
+Closing this update, looking to third party development, Marcus Sackrow
+released version 0.54 of his text editor EdiSyn. As well as standard editor
+features, EdiSyn supports syntax highlighting, which is important to
 developers working directly under AROS.
 

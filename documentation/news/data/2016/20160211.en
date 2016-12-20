@@ -10,32 +10,32 @@ was working on animation.datatype and specialized animation
 classes. These components were missing for a long time in AROS
 and we are happy to see Nick take up this work. The work is
 additionally financed by a bounty hosted by Power2People.org. Nick
-already deliver the gif and mpeg classes as well as made substantial
+already delivered the gif and mpeg classes as well as making substantial
 improvements to the anim class. MultiView was also extended along
 the way.
 
-Following on topic of bounties, two new bounties were opened. First
-targets a new port of Python programming language. The complete
-work in split into 5 stages and for now the first stage bounty is
-defined which aims at porting the core of Python 2.7. The second new
-bounty will deliver the overscan support to AROS 68k Amiga chipset
-video drivers. More details can be found on `Power2People`__
+Following on the topic of bounties, two new bounties were opened. The first
+targets a new port of the Python programming language. The complete
+work is split into five stages: for now the first stage bounty is
+defined, which aims at porting the core of Python 2.7. The second new
+bounty will deliver overscan support to AROS 68k Amiga chipset
+video drivers. More details can be found on `Power2People`__.
 
 __ http://power2people.org/projects/
 
-Further progress has been made on supporting 68k platform, with
-Scalos, a Workbench replacements, now functioning correctly
+Further progress has been made on supporting the 68k platform, with
+Scalos, a Workbench replacement, now functioning correctly
 under AROS 68k. In more 68k news, Olaf Schoenweiss released a
 new milestone build of his AROS 68k distribution called
 "AROS Vision". The version is now 3.0 and brings a lot of important
 improvements.
 
-Following up on 3rd party developments, Frederik Wikstrom, who
+Following up on third party developments, Frederik Wikstrom, who
 in November completed the FUSE bounty, delivered an updated
 version of the filesysbox.library and NTFS and exFAT drivers.
 
 Closing the January highlights, AROS made it to AmigaFuture,
 the printed Amiga magazine. The January/February issue
-contains interview with Krzysztof Smiechowicz, one of core
+contains an interview with Krzysztof Smiechowicz, one of the core
 AROS developers.
 

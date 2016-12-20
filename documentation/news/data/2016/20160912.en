@@ -5,31 +5,32 @@ August 2016 Highlights
 :Author:   Krzysztof Smiechowicz
 :Date:     2016-09-12
 
-Opening this news summary is a public, read-only access for AROS
-repository. So far such access was only provided via the AROS
+Opening this news summary is the announcement of a public, read-only access 
+for AROS repository. So far such access was only provided via the AROS 
 GIT-mirror but now it is also available on the main repository.
 
-Also last month a first, full developer pack for AROS 68k has been
-released by Krzysztof Smiechowicz in cooperation with Apollo/Vampire
-team. The dev-pack contains ready to use native development environment
+Also last month, a first full developer pack for AROS 68k has been
+released by Krzysztof Smiechowicz in cooperation with the Apollo/Vampire
+team. The dev-pack contains a ready-to-use native development environment
 for 68k as well as scripts that will download and build AROS 68k on a
-Linux host delivering system and cross compiler.
+Linux host, delivering system and cross compiler.
 
 In the AROS core there have been a few notable developments. Nick Andrews
 continued making fixes to AROS to allow compilation under GCC 6.1.
-Krzysztof Smiechowicz updated OpenSSL library to version 1.0.1t and
-started porting OpenSSH 7.3 package, releasing the first, alpha version. The
-work on the ssh client was triggered by results of June's survey. Neil
-Cafferkey continued making fixes and extensions to MUI List class and
-finally a number of programs received new or updated Czech localization thanks
-to Miloslav Martinka.
+Krzysztof Smiechowicz updated the OpenSSL library to version 1.0.1t and
+started porting the OpenSSH 7.3 package, releasing the first, alpha version.
+The work on the ssh client was triggered by the results of June's usage
+survey. Neil Cafferkey continued making fixes and extensions to MUI's List
+class and finally a number of programs received new or updated Czech
+localization thanks to Miloslav Martinka.
 
-Outside of core team Pascal Papara continued releasing updated to his
-AROS distributions. In August AEROS 4.0.1 has been release with support for
-Raspberry Pi 1,2 and 3 containing updated kernels and update for UAE4ARM emulator.
+Outside of the core team, Pascal Papara continued releasing updates to his
+AROS distributions. In August AEROS 4.0.1 has been released with support for
+Raspberry Pi 1, 2 and 3, containing updated kernels and an update for the
+UAE4ARM emulator.
 
-Closing this update, there have been two interesting 3rd party developments
+Closing this update, there have been two interesting third party developments
 in August. SimpleMail 0.42 with SSL support has been released and a new
-,OpenGL enabled port of a classic Elite 2 Frontier has been made available
+OpenGL-enabled port of the classic 'Elite 2: Frontier' has been made available
 by David Douglas.
 
