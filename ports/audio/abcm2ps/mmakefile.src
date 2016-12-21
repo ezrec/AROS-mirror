@@ -15,14 +15,14 @@ include $(SRCDIR)/config/aros.cfg
 
 
 REPOSITORIES := http://moinejf.free.fr
-ARCHBASE     := abcm2ps-8.12.4
+ARCHBASE     := abcm2ps-8.13.1
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Audio/Abcm2ps
 NOWARN_FLAGS := $(NOWARN_UNINITIALIZED)
 USER_CFLAGS  := $(NOWARN_FLAGS) \
     -DA4_FORMAT=1 \
     -DDEFAULT_FDIR="\"PROGDIR:Formats\"" \
-    -DVERSION="\"8.12.4\"" \
-    -DVDATE="\"September 25, 2016\""
+    -DVERSION="\"8.13.1\"" \
+    -DVDATE="\"December 10, 2016\""
 
 FILES := \
     abcm2ps \
