@@ -1,0 +1,13 @@
+# Copyright © 2016, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(TOP)/config/make.cfg
+
+#MM- iconset-Gorilla-contrib-icons-extras-games : iconset-Gorilla-contrib-icons-extras-games-fps
+
+ICONS := Doom \
+         Moria3D \
+         Quake
+
+#MM- iconset-Gorilla-contrib-icons-extras-games-clean : iconset-Gorilla-contrib-icons-extras-games-fps-clean
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games-fps icons=$(ICONS) dir=$(AROS_CONTRIB)/Games/Fps

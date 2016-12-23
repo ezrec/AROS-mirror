@@ -61,6 +61,21 @@ contrib-setup-dirs :
 	%mkdirs_q $(AROS_CONTRIB)/Development
 	%mkdirs_q $(AROS_CONTRIB)/Emu
 	%mkdirs_q $(AROS_CONTRIB)/Games
+	%mkdirs_q $(AROS_CONTRIB)/Games/Action
+	%mkdirs_q $(AROS_CONTRIB)/Games/Adventure
+	%mkdirs_q $(AROS_CONTRIB)/Games/Board
+	%mkdirs_q $(AROS_CONTRIB)/Games/Card
+	%mkdirs_q $(AROS_CONTRIB)/Games/Children
+	%mkdirs_q $(AROS_CONTRIB)/Games/Driving
+	%mkdirs_q $(AROS_CONTRIB)/Games/Fps
+	%mkdirs_q $(AROS_CONTRIB)/Games/Misc
+	%mkdirs_q $(AROS_CONTRIB)/Games/Platform
+	%mkdirs_q $(AROS_CONTRIB)/Games/Puzzle
+	%mkdirs_q $(AROS_CONTRIB)/Games/Roleplaying
+	%mkdirs_q $(AROS_CONTRIB)/Games/Server
+	%mkdirs_q $(AROS_CONTRIB)/Games/Sport
+	%mkdirs_q $(AROS_CONTRIB)/Games/Strategy
+	%mkdirs_q $(AROS_CONTRIB)/Games/Utility
 	%mkdirs_q $(AROS_CONTRIB)/MultiMedia
 	%mkdirs_q $(AROS_CONTRIB)/MultiMedia/Audio
 	%mkdirs_q $(AROS_CONTRIB)/MultiMedia/Gfx

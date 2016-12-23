@@ -1,23 +1,25 @@
-# Copyright © 2004, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2016, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(TOP)/config/make.cfg
 
 #MM- iconset-Gorilla-contrib-icons-extras : iconset-Gorilla-contrib-icons-extras-games
 
-ICONS := AmiChess \
-         Backgammon Bomber \
-         CXHextris \
-         Doom \
-         Inv \
-         Kiel \
-         LazyMines LBreakout2 \
-         MadMatrix Moria3D MUIMine \
-         NewMasterMind \
-         Quake \
-         Soliton Spout \
-         XInvaders3D \
-         Yahzee
+ICONS := Action \
+         Adventure \
+         Board \
+         Card \
+         Children \
+         Driving \
+         Fps \
+         Misc \
+         Platform \
+         Puzzle \
+         Roleplaying \
+         Server \
+         Sport \
+         Strategy \
+         Utility
 
 #MM- iconset-Gorilla-contrib-icons-extras-clean : iconset-Gorilla-contrib-icons-extras-games-clean
 %build_icons mmake=iconset-Gorilla-contrib-icons-extras-games icons=$(ICONS) dir=$(AROS_CONTRIB)/Games
