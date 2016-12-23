@@ -1,7 +1,7 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-EXEDIR := $(AROS_CONTRIB)/Games/Inv
+EXEDIR := $(AROS_CONTRIB)/Games/Misc/Inv
 
 %build_prog mmake=aminet-games-shoot-inv \
     progname=Inv targetdir=$(EXEDIR) \

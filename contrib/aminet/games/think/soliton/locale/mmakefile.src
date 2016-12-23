@@ -5,4 +5,4 @@ include $(SRCDIR)/config/aros.cfg
 
 %build_catalogs mmake=setup-soliton-catalogs \
                 name=Soliton subdir=  source=../common/Catalog.h \
-                dir=$(AROS_CONTRIB)/Games/Soliton/Catalogs
+                dir=$(AROS_CONTRIB)/Games/Card/Soliton/Catalogs

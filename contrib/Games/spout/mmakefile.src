@@ -10,5 +10,5 @@ include $(SRCDIR)/config/aros.cfg
 
 %build_with_configure mmake=contrib-games-spout nix=yes \
 	extraoptions="--disable-sdl-test" \
-	prefix=$(AROS_CONTRIB)/Games/Spout nix_dir_layout=no
+	prefix=$(AROS_CONTRIB)/Games/Action/Spout nix_dir_layout=no
 

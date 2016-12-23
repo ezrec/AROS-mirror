@@ -1,7 +1,7 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-EXEDIR := $(AROS_CONTRIB)/Games/Backgammon
+EXEDIR := $(AROS_CONTRIB)/Games/Board/Backgammon
 
 %build_prog mmake=aminet-games-board-backgammon \
     progname=Backgammon targetdir=$(EXEDIR) \

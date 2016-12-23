@@ -2,7 +2,7 @@
 include $(SRCDIR)/config/aros.cfg
 
 FILES := Rotate
-DESTDIR := $(AROS_CONTRIB)/Games/Kiel
+DESTDIR := $(AROS_CONTRIB)/Games/Misc/Kiel
 
 #MM- contrib-games : games-kiel-rotate
 

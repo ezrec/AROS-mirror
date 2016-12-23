@@ -1,7 +1,7 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-EXEDIR := $(AROS_CONTRIB)/Games/NewMasterMind
+EXEDIR := $(AROS_CONTRIB)/Games/Board/NewMasterMind
 
 %build_prog mmake=aminet-games-think-newmastermind \
     progname=NewMasterMind targetdir=$(EXEDIR) \

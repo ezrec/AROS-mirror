@@ -1,7 +1,7 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-DESTDIR := $(AROS_CONTRIB)/Games/LazyMines/Catalogs
+DESTDIR := $(AROS_CONTRIB)/Games/Board/LazyMines/Catalogs
 
 CATALOGS    := danish german italian norwegian polish swedish
 CATDESC     := lazymines

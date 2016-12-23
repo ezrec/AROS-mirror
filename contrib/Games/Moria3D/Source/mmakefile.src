@@ -15,5 +15,5 @@ MORIA_FILES := Moveing \
 	Timer
 
 %build_prog mmake=contrib-games-moria3d \
-    progname=Moria3D targetdir=$(AROS_CONTRIB)/Games/Moria3D \
+    progname=Moria3D targetdir=$(AROS_CONTRIB)/Games/Fps/Moria3D \
     files="$(MORIA_FILES)"

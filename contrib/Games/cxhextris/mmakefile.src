@@ -4,7 +4,7 @@ include $(SRCDIR)/config/aros.cfg
 
 FILES := hextris stdsys arosio shape
 
-EXEDIR := $(AROS_CONTRIB)/Games/CXHextris
+EXEDIR := $(AROS_CONTRIB)/Games/Puzzle/CXHextris
 
 USER_CFLAGS = -DHIGHSCOREFILE=\""S:chextris-scores"\"
 

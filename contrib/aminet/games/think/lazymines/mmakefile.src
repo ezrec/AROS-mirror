@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 FILES	:= lazymines button counter field highscores images layout \
 	    localize requesters timer tooltypes lazymines_strings
 
-EXEDIR	:= $(AROS_CONTRIB)/Games/LazyMines
+EXEDIR	:= $(AROS_CONTRIB)/Games/Board/LazyMines
 
 #MM aminet-games-think-lazymines : aminet-dev-src-chunkyiclass setup-aminet-lazymines-catalogs
 

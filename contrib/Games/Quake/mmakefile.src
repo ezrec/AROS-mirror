@@ -2,7 +2,7 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-INSTDIR  := $(AROS_CONTRIB)/Games/Quake
+INSTDIR  := $(AROS_CONTRIB)/Games/Fps/Quake
 
 #MM- contrib-games : Quake-$(AROS_TARGET_CPU)
 #MM- Quake-i386 : Quake

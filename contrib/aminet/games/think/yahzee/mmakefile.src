@@ -1,7 +1,7 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-EXEDIR := $(AROS_CONTRIB)/Games/Yahzee
+EXEDIR := $(AROS_CONTRIB)/Games/Board/Yahzee
 
 FILES := dice draw game highscores layout localize requesters rules tooltypes \
 	yahzee yahzee_strings

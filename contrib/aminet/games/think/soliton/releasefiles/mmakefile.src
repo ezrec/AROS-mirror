@@ -1,7 +1,7 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-SOLITONDIR := $(AROS_CONTRIB)/Games/Soliton
+SOLITONDIR := $(AROS_CONTRIB)/Games/Card/Soliton
 
 CARDS 		:= Cards_Standard_Medium
 CARDDIR 	:= $(SOLITONDIR)/Graphics

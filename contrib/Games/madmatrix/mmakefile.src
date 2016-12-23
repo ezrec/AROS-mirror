@@ -6,7 +6,7 @@ include $(SRCDIR)/config/aros.cfg
 
 FILES := main alloctab libs madmatrix
 
-EXEDIR := $(AROS_CONTRIB)/Games/MadMatrix
+EXEDIR := $(AROS_CONTRIB)/Games/Puzzle/MadMatrix
 
 #MM- aminet-games : contrib-aminet-games-think-madmatrix
 #MM contrib-aminet-games-think-madmatrix : includes linklibs

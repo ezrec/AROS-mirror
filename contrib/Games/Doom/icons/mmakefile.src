@@ -4,7 +4,7 @@ include $(SRCDIR)/config/aros.cfg
 
 #MM- Doom-extra : Doom-extra-icons
 
-EXEDIR := $(AROS_CONTRIB)/Games/Doom
+EXEDIR := $(AROS_CONTRIB)/Games/Fps/Doom
 
 %build_icons mmake=Doom-extra-icons icons=Doom dir=$(EXEDIR)
 

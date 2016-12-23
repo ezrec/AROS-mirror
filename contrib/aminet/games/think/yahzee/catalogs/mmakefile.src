@@ -1,7 +1,7 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-DESTDIR := $(AROS_CONTRIB)/Games/Yahzee/Catalogs
+DESTDIR := $(AROS_CONTRIB)/Games/Board/Yahzee/Catalogs
 
 CATALOGS := dansk deutsch nederlands suomi svenska
 CATDESC  := yahzee

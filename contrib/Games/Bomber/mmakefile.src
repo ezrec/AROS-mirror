@@ -4,7 +4,7 @@ include $(SRCDIR)/config/aros.cfg
 
 FILES := Main
 
-EXEDIR := $(AROS_CONTRIB)/Games/Bomber
+EXEDIR := $(AROS_CONTRIB)/Games/Action/Bomber
 
 #MM- contrib-games : Bomber
 #MM Bomber : Bomber-datafiles

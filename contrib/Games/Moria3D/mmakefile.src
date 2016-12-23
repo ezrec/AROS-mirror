@@ -7,7 +7,7 @@ include $(SRCDIR)/config/aros.cfg
 FILES := $(call WILDCARD, Levels/Level* Levels/Mission* Levels/Story*) \
 	 $(call WILDCARD, Textures/*.256) \
 	 Missions
-INSTDIR := $(AROS_CONTRIB)/Games/Moria3D
+INSTDIR := $(AROS_CONTRIB)/Games/Fps/Moria3D
 
 DEST := $(foreach f,$(FILES),$(INSTDIR)/$(f))
 
