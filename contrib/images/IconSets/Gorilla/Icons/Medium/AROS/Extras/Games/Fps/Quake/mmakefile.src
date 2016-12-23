@@ -3,10 +3,10 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- iconset-Gorilla-contrib-icons-extras-games : iconset-Gorilla-contrib-icons-extras-games-quake
+#MM- iconset-Gorilla-contrib-icons-extras-games-fps : iconset-Gorilla-contrib-icons-extras-games-fps-quake
 
 ICONS := Quake
 
-#MM- iconset-Gorilla-contrib-icons-extras-games-clean : iconset-Gorilla-contrib-icons-extras-games-quake-clean
+#MM- iconset-Gorilla-contrib-icons-extras-games-fps-clean : iconset-Gorilla-contrib-icons-extras-games-fps-quake-clean
 
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games-quake icons=$(ICONS) dir=$(AROS_CONTRIB)/Games/Quake
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games-fps-quake icons=$(ICONS) dir=$(AROS_CONTRIB)/Games/Fps/Quake

@@ -3,10 +3,10 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- iconset-Gorilla-contrib-icons-extras-games : iconset-Gorilla-contrib-icons-extras-games-spout
+#MM- iconset-Gorilla-contrib-icons-extras-games-action : iconset-Gorilla-contrib-icons-extras-games-action-spout
 
 ICONS := Spout
 
-#MM- iconset-Gorilla-contrib-icons-extras-games-clean : iconset-Gorilla-contrib-icons-extras-games-spout-clean
+#MM- iconset-Gorilla-contrib-icons-extras-games-action-clean : iconset-Gorilla-contrib-icons-extras-games-action-spout-clean
 
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games-spout icons=$(ICONS) dir=$(AROS_CONTRIB)/Games/Spout
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games-action-spout icons=$(ICONS) dir=$(AROS_CONTRIB)/Games/Action/Spout

@@ -3,10 +3,10 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- iconset-Gorilla-contrib-icons-extras-games : iconset-Gorilla-contrib-icons-extras-games-soliton
+#MM- iconset-Gorilla-contrib-icons-extras-games-card : iconset-Gorilla-contrib-icons-extras-games-card-soliton
 
 ICONS := Soliton
 
-#MM- iconset-Gorilla-contrib-icons-extras-games-clean : iconset-Gorilla-contrib-icons-extras-games-soliton-clean
+#MM- iconset-Gorilla-contrib-icons-extras-games-card-clean : iconset-Gorilla-contrib-icons-extras-games-card-soliton-clean
 
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games-soliton icons=$(ICONS) dir=$(AROS_CONTRIB)/Games/Soliton
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games-card-soliton icons=$(ICONS) dir=$(AROS_CONTRIB)/Games/Card/Soliton

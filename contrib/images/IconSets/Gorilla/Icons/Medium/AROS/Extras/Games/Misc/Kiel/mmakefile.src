@@ -3,10 +3,10 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- iconset-Gorilla-contrib-icons-extras-games : iconset-Gorilla-contrib-icons-extras-games-wumpus
+#MM- iconset-Gorilla-contrib-icons-extras-games-misc : iconset-Gorilla-contrib-icons-extras-games-misc-wumpus
 
 ICONS := Wumpus
 
-#MM- iconset-Gorilla-contrib-icons-extras-games-clean : iconset-Gorilla-contrib-icons-extras-games-wumpus-clean
+#MM- iconset-Gorilla-contrib-icons-extras-games-misc-clean : iconset-Gorilla-contrib-icons-extras-games-misc-wumpus-clean
 
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games-wumpus icons=$(ICONS) dir=$(AROS_CONTRIB)/Games/Kiel
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games-misc-wumpus icons=$(ICONS) dir=$(AROS_CONTRIB)/Games/Misc/Kiel

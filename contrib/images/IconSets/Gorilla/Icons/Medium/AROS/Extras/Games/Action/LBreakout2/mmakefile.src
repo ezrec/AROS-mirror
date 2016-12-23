@@ -3,10 +3,10 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- iconset-Gorilla-contrib-icons-extras-games : iconset-Gorilla-contrib-icons-extras-games-lbreakout2
+#MM- iconset-Gorilla-contrib-icons-extras-games-action : iconset-Gorilla-contrib-icons-extras-games-action-lbreakout2
 
 ICONS := LBreakout2
 
-#MM- iconset-Gorilla-contrib-icons-extras-games-clean : iconset-Gorilla-contrib-icons-extras-games-lbreakout2-clean
+#MM- iconset-Gorilla-contrib-icons-extras-games-action-clean : iconset-Gorilla-contrib-icons-extras-games-action-lbreakout2-clean
 
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games-lbreakout2 icons=$(ICONS) dir=$(AROS_CONTRIB)/Games/LBreakout2
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games-action-lbreakout2 icons=$(ICONS) dir=$(AROS_CONTRIB)/Games/Action/LBreakout2

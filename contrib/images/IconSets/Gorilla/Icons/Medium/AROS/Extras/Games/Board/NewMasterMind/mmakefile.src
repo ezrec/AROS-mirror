@@ -3,10 +3,10 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- iconset-Gorilla-contrib-icons-extras-games : iconset-Gorilla-contrib-icons-extras-games-newmastermind
+#MM- iconset-Gorilla-contrib-icons-extras-games-board : iconset-Gorilla-contrib-icons-extras-games-board-newmastermind
 
 ICONS := NewMasterMind
 
-#MM- iconset-Gorilla-contrib-icons-extras-games-clean : iconset-Gorilla-contrib-icons-extras-games-newmastermind-clean
+#MM- iconset-Gorilla-contrib-icons-extras-games-board-clean : iconset-Gorilla-contrib-icons-extras-games-board-newmastermind-clean
 
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games-newmastermind icons=$(ICONS) dir=$(AROS_CONTRIB)/Games/NewMasterMind
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games-board-newmastermind icons=$(ICONS) dir=$(AROS_CONTRIB)/Games/Board/NewMasterMind

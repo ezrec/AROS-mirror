@@ -3,10 +3,10 @@
 
 include $(TOP)/config/make.cfg
 
-#MM- iconset-Gorilla-contrib-icons-extras-games : iconset-Gorilla-contrib-icons-extras-games-lazymines
+#MM- iconset-Gorilla-contrib-icons-extras-games-board : iconset-Gorilla-contrib-icons-extras-games-board-lazymines
 
 ICONS := LazyMines
 
-#MM- iconset-Gorilla-contrib-icons-extras-games-clean : iconset-Gorilla-contrib-icons-extras-games-lazymines-clean
+#MM- iconset-Gorilla-contrib-icons-extras-games-board-clean : iconset-Gorilla-contrib-icons-extras-games-board-lazymines-clean
 
-%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games-lazymines icons=$(ICONS) dir=$(AROS_CONTRIB)/Games/LazyMines
+%build_icons mmake=iconset-Gorilla-contrib-icons-extras-games-board-lazymines icons=$(ICONS) dir=$(AROS_CONTRIB)/Games/Board/LazyMines
