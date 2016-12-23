@@ -2,7 +2,7 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-##MM- ports-scientific : ports-scientific-mathomatic
+#MM- ports-scientific : ports-scientific-mathomatic
 
 #MM  ports-scientific-mathomatic : includes linklibs \
 #MM     ports-scientific-mathomatic-fetch \
@@ -13,7 +13,7 @@ include $(SRCDIR)/config/aros.cfg
 
 #MM  ports-scientific-mathomatic-quick : ports-scientific-mathomatic-fetch
 
-REPOSITORIES := http://mathomatic.orgserve.de
+REPOSITORIES := https://github.com/mfillpot/mathomatic/archive
 ARCHBASE     := mathomatic-16.0.5
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Scientific/Mathomatic
 
@@ -21,41 +21,41 @@ NOWARN_FLAGS := $(NOWARN_CPP)
 USER_CFLAGS  := $(NOWARN_FLAGS) -DVERSION=\"16.0.5\"
 
 FILES := \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/main \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/globals \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/am \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/solve \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/help \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/parse \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/cmds \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/simplify \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/factor \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/super \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/unfactor \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/poly \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/diff \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/integrate \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/complex \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/complex_lib \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/list \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/gcd \
-    $(PORTSDIR)/mathomatic/$(ARCHBASE)/factor_int
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/main \
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/globals \
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/am \
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/solve \
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/help \
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/parse \
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/cmds \
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/simplify \
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/factor \
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/super \
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/unfactor \
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/poly \
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/diff \
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/integrate \
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/complex \
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/complex_lib \
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/list \
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/gcd \
+    $(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/factor_int
 
 %build_prog mmake=ports-scientific-mathomatic progname=Mathomatic \
     files=$(FILES) targetdir=$(TARGETDIR)
 
 %fetch mmake=ports-scientific-mathomatic-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/mathomatic \
-    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2" \
-    patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+    patches_specs=$(ARCHBASE)-aros.diff:mathomatic-$(ARCHBASE):-p1
 
 
 %copy_dir_recursive mmake=ports-scientific-mathomatic-docs \
-src=$(PORTSDIR)/mathomatic/$(ARCHBASE)/doc dst=$(TARGETDIR)/Docs
+src=$(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE)/doc dst=$(TARGETDIR)/Docs
 
 
 CPYFILES := changes.txt COPYING mathomatic.1 README.txt
 
-%copy_files_q mmake=ports-scientific-mathomatic-cpy files=$(CPYFILES) src=$(PORTSDIR)/mathomatic/$(ARCHBASE) \
+%copy_files_q mmake=ports-scientific-mathomatic-cpy files=$(CPYFILES) src=$(PORTSDIR)/mathomatic/mathomatic-$(ARCHBASE) \
     dst=$(TARGETDIR)
 
 %common
