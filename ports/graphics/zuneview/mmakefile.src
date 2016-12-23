@@ -40,7 +40,7 @@ FILES := $(addprefix $(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView/src/,$(FILES))
 
 %build_prog mmake=ports-graphics-zuneview progname=ZuneView \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="mui png z freetype2"
+    uselibs="mui"
 
 
 %fetch mmake=ports-graphics-zuneview-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/zuneview/$(ARCHBASE) \
