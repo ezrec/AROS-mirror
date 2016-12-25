@@ -8,7 +8,9 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-office-arm : ports-office-muibase
 
 #MM  ports-office-muibase : includes linklibs contrib-zune-classes-nlist ports-office-muibase-fetch \
-#MM  ports-office-muibase-create ports-office-muibase-install ports-office-muibase-catalogs
+#MM  ports-office-muibase-create ports-office-muibase-install
+
+########### ports-office-muibase-catalogs
 
 #MM- ports-office-muibase-install : ports-office-muibase-fetch \
 #MM  ports-office-muibase-demos ports-office-muibase-images \
@@ -19,25 +21,28 @@ include $(SRCDIR)/config/aros.cfg
 #MM  ports-office-muibase-quick : ports-office-muibase-fetch
 
 REPOSITORIES := sf://muibase
-ARCHBASE     := MUIbase-3.0
+ARCHBASE     := MUIbase-3.3
 TARGETDIR    := $(AROS_CONTRIB)/Office/MUIbase
 BASE_SRCD    := src/base
 LANG_SRCD    := src/lang
 AMIGA_SRCD   := src/amiga
 MUI_SRCD     := src/amiga/mui
 MUIEXT_SRCD  := src/amiga/mui/extclasses
+POD          := src/po
 
 FROMAM       := $(PORTSDIR)/muibase/$(ARCHBASE)/install/amiga
 FROMSH       := $(PORTSDIR)/muibase/$(ARCHBASE)/install/share
 FROMDOC      := $(PORTSDIR)/muibase/$(ARCHBASE)/doc/text
 
-NOWARN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECL)
+NOWARN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECL) $(NOWARN_UNUSED_BUT_SET_VARIABLE)
 USER_INCLUDES:= -I$(PORTSDIR)/muibase/$(ARCHBASE)/src -I$(PORTSDIR)/muibase/$(ARCHBASE)/$(BASE_SRCD) \
                 -I$(PORTSDIR)/muibase/$(ARCHBASE)/$(AMIGA_SRCD) -I$(PORTSDIR)/muibase/$(ARCHBASE)/$(LANG_SRCD)
 USER_CFLAGS  := $(NOWARN_FLAGS) -fno-strict-aliasing -DAMIGA -DMUI -DMBASE -DUSE_HOOKENTRY -DNO_INLINE_STDARG
+CONFIG_CFLAGS:= $(subst -Werror ,,$(CONFIG_CFLAGS))
+
 MB_VERSION   := 3
-MB_REVISION  := 0
-MB_VERSTR    := 3.0
+MB_REVISION  := 3
+MB_VERSTR    := 3.3
 DATE         := date
 
 
@@ -80,6 +85,7 @@ BASE_SRCS := \
 	$(BASE_SRCD)/fileinfo \
 	$(BASE_SRCD)/textfile \
 	$(BASE_SRCD)/guidosutil \
+	$(BASE_SRCD)/filelock \
 	$(BASE_SRCD)/dosutil
 
 LANG_SRCS := \
@@ -153,6 +159,8 @@ MUIEXT_SRCS := \
 	$(MUIEXT_SRCD)/WindowButton_mcc \
 
 
+POT_SRC = $(POD)/MUIbase.pot
+
 AUTO_SRCS := y.tab appstrings_cat
 
 FILES := \
@@ -169,7 +177,7 @@ FILES := $(addprefix $(PORTSDIR)/muibase/$(ARCHBASE)/,$(FILES))
     files=$(FILES) targetdir=$(TARGETDIR)
 
 
-%fetch mmake=ports-office-muibase-fetch archive=MUIbaseSource-3.0 destination=$(PORTSDIR)/muibase \
+%fetch mmake=ports-office-muibase-fetch archive=MUIbaseSource-3.3 destination=$(PORTSDIR)/muibase \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz"
 
 
@@ -179,9 +187,9 @@ FILES := $(addprefix $(PORTSDIR)/muibase/$(ARCHBASE)/,$(FILES))
 ports-office-muibase-create : appstrings_cat.h builddate.h version.h $(PORTSDIR)/muibase/$(ARCHBASE)/y.tab.c $(PORTSDIR)/muibase/$(ARCHBASE)/appstrings_cat.c
 	$(NOP)
 
-appstrings_cat.h : $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/MUIbase.cd
+appstrings_cat.h : $(PORTSDIR)/muibase/$(ARCHBASE)/$(POT_SRC)
 	@$(ECHO) "Creating MUIbase catalog include file $@"
-	@$(FLEXCAT) $< $@=$(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/lib/AutoC_h.sd
+	@$(FLEXCAT) QUIET $(PORTSDIR)/muibase/$(ARCHBASE)/$(POT_SRC) appstrings_cat.h=$(PORTSDIR)/muibase/$(ARCHBASE)/$(AMIGA_SRCD)/Catalogs/AutoC_h.sd
 
 builddate.h:
 	$(DATE) "+#define BUILD_YEAR \"%Y\"" > $@
@@ -198,10 +206,9 @@ $(PORTSDIR)/muibase/$(ARCHBASE)/y.tab.c: $(PORTSDIR)/muibase/$(ARCHBASE)/$(LANG_
 $(PORTSDIR)/muibase/$(ARCHBASE)/lex.yy.c: $(PORTSDIR)/muibase/$(ARCHBASE)/$(LANG_SRCD)/scanner.l
 	flex -8 -o$@ $<
 
-$(PORTSDIR)/muibase/$(ARCHBASE)/appstrings_cat.c : $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/MUIbase.cd
+$(PORTSDIR)/muibase/$(ARCHBASE)/appstrings_cat.c : $(PORTSDIR)/muibase/$(ARCHBASE)/$(POT_SRC)
 	@$(ECHO) "Creating MUIbase catalog code file $@"
-	@$(FLEXCAT) $< $@=$(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/lib/AutoC_c.sd
-
+	@$(FLEXCAT) QUIET $(PORTSDIR)/muibase/$(ARCHBASE)/$(POT_SRC) $(PORTSDIR)/muibase/$(ARCHBASE)/appstrings_cat.c=$(PORTSDIR)/muibase/$(ARCHBASE)/$(AMIGA_SRCD)/Catalogs/AutoC_c.sd
 
 
 ##### Copy files and directories #####
