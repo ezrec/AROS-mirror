@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-circuslinux : ports-game-circuslinux-icons
 
 ICONS     := CircusLinux
-TARGETDIR := $(AROS_CONTRIB)/Games
+TARGETDIR := $(AROS_CONTRIB)/Games/Action
 
 %build_icons mmake=ports-game-circuslinux-icons \
 icons=$(ICONS) dir=$(TARGETDIR)

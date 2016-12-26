@@ -4,7 +4,7 @@ include $(SRCDIR)/config/aros.cfg
 
 #MM- ports-game-wormwars : ports-game-wormwars-icons
 
-TARGETDIR := $(AROS_CONTRIB)/Games
+TARGETDIR := $(AROS_CONTRIB)/Games/Action
 ICONS     := WormWars
 
 %build_icons mmake=ports-game-wormwars-icons \

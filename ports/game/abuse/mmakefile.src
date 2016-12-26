@@ -10,8 +10,9 @@ include $(SRCDIR)/config/aros.cfg
 
 PACKAGE      := abuse
 VERSION      := 0.8
-TARGETDIR    := $(AROS_CONTRIB)/Games/Abuse
+TARGETDIR    := $(AROS_CONTRIB)/Games/Platform/Abuse
 REPOSITORIES := http://abuse.zoy.org/raw-attachment/wiki/download
+USER_CXXFLAGS:= -static-libstdc++ -fpermissive
 
 %fetch_and_build mmake=ports-game-abuse prefix=$(TARGETDIR) \
 	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \

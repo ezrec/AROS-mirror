@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-gnurobbo : ports-game-gnurobbo-icons
 
 ICONS     := GnuRobbo
-TARGETDIR := $(AROS_CONTRIB)/Games
+TARGETDIR := $(AROS_CONTRIB)/Games/Action
 
 %build_icons mmake=ports-game-gnurobbo-icons \
 icons=$(ICONS) dir=$(TARGETDIR)

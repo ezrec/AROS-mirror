@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-vectoroids-icons : ports-game-vectoroids-icons-vectoroids
 
 ICONS     := Vectoroids
-TARGETDIR := $(AROS_CONTRIB)/Games/Vectoroids
+TARGETDIR := $(AROS_CONTRIB)/Games/Action/Vectoroids
 
 %build_icons mmake=ports-game-vectoroids-icons \
     icons=$(ICONS) dir=$(TARGETDIR)

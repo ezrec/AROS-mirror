@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-penguincommand-icons : ports-game-penguincommand-icons-penguincommand
 
 ICONS     := PenguinCommand
-TARGETDIR := $(AROS_CONTRIB)/Games/PenguinCommand
+TARGETDIR := $(AROS_CONTRIB)/Games/Action/PenguinCommand
 
 %build_icons mmake=ports-game-penguincommand-icons \
     icons=$(ICONS) dir=$(TARGETDIR)

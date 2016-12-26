@@ -8,7 +8,7 @@ include $(SRCDIR)/config/aros.cfg
 
 PACKAGE      := KoboDeluxe
 VERSION      := 0.5.1
-TARGETDIR    := $(AROS_CONTRIB)/Games/KoboDeluxe
+TARGETDIR    := $(AROS_CONTRIB)/Games/Action/KoboDeluxe
 REPOSITORIES := http://www.olofson.net/kobodl/download
 
 KOBDL_COMMONFLAGS := -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION) -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/graphics -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/eel -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/data/sfx -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/sound

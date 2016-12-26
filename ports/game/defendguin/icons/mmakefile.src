@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-defendguin : ports-game-defendguin-icons
 
 ICONS     := Defendguin
-TARGETDIR := $(AROS_CONTRIB)/Games
+TARGETDIR := $(AROS_CONTRIB)/Games/Action
 
 %build_icons mmake=ports-game-defendguin-icons \
     icons=$(ICONS) dir=$(TARGETDIR)

@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-blobwars-icons : ports-game-blobwars-icons-blobwars
 
 ICONS     := Blobwars
-TARGETDIR := $(AROS_CONTRIB)/Games/Blobwars
+TARGETDIR := $(AROS_CONTRIB)/Games/Platform/Blobwars
 
 %build_icons mmake=ports-game-blobwars-icons-blobwars \
     icons=$(ICONS) dir=$(TARGETDIR)

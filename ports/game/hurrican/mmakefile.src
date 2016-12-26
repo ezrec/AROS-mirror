@@ -19,7 +19,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM  ports-game-hurrican-lang : ports-game-hurrican-fetch
 
 
-TARGETDIR    := $(AROS_CONTRIB)/Games/Hurrican
+TARGETDIR    := $(AROS_CONTRIB)/Games/Platform/Hurrican
 
 
 ####################################################################################################

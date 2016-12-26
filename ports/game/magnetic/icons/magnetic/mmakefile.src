@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-magnetic-icons : ports-game-magnetic-icons-magnetic
 
 ICONS     := Magnetic README.txt
-TARGETDIR := $(AROS_CONTRIB)/Games/Magnetic
+TARGETDIR := $(AROS_CONTRIB)/Games/Adventure/Magnetic
 
 %build_icons mmake=ports-game-magnetic-icons-magnetic \
     icons=$(ICONS) dir=$(TARGETDIR)

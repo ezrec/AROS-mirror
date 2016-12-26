@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-madbomber : ports-game-madbomber-icons
 
 ICONS     := MadBomber
-TARGETDIR := $(AROS_CONTRIB)/Games
+TARGETDIR := $(AROS_CONTRIB)/Games/Action
 
 %build_icons mmake=ports-game-madbomber-icons \
     icons=$(ICONS) dir=$(TARGETDIR)

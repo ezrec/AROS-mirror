@@ -15,7 +15,7 @@ include $(SRCDIR)/config/aros.cfg
 
 REPOSITORIES := sf://gnurobbo
 ARCHBASE     := gnurobbo-0.66
-TARGETDIR    := $(AROS_CONTRIB)/Games/GnuRobbo
+TARGETDIR    := $(AROS_CONTRIB)/Games/Action/GnuRobbo
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
 NOWARN_FLAGS := $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_UNUSED_BUT_SET_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
@@ -38,7 +38,7 @@ FILES := \
 
 %build_prog mmake=ports-game-gnurobbo progname=GnuRobbo \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="SDL_image png jpeg SDL_ttf freetype2 SDL_mixer vorbisfile vorbis ogg SDL GL z"
+    uselibs="SDL_image png jpeg SDL_ttf freetype2 SDL_mixer vorbisfile vorbis ogg SDL z"
 
 %fetch mmake=ports-game-gnurobbo-fetch archive=$(ARCHBASE)-source destination=$(PORTSDIR)/gnurobbo \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \

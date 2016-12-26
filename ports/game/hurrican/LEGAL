@@ -1,5 +1,5 @@
-+ Extras/Games/Hurrican [ports/game/hurrican]
-+ Extras/Games/Hurrican/Hurrican.info [ports/game/hurrican]
++ Extras/Games/Platform/Hurrican [ports/game/hurrican]
++ Extras/Games/Platform/Hurrican/Hurrican.info [ports/game/hurrican]
 
 I decided to release the sourcecode for Hurrican and its level editor to the public today,
 along with all the assets that the game contains.
@@ -31,6 +31,6 @@ Origin: http://sourceforge.net/projects/hurrican/
 
 ----------------------------------------------------------------------------------------------------
 
-+ Extras/Games/Hurrican.info [ports/game/hurrican/Hurrican.png]
++ Extras/Games/Platform/Hurrican.info [ports/game/hurrican/Hurrican.png]
 
 GNU Public License because it's based on the Gorilla icon set.

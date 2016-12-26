@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-hurrican : ports-game-hurrican-icons
 
 ICONS     := Hurrican
-TARGETDIR := $(AROS_CONTRIB)/Games
+TARGETDIR := $(AROS_CONTRIB)/Games/Platform
 
 %build_icons mmake=ports-game-hurrican-icons \
 icons=$(ICONS) dir=$(TARGETDIR)

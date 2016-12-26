@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-ltris-icons : ports-game-ltris-icons-ltris
 
 ICONS     := LTris
-TARGETDIR := $(AROS_CONTRIB)/Games/LTris
+TARGETDIR := $(AROS_CONTRIB)/Games/Puzzle/LTris
 
 %build_icons mmake=ports-game-ltris-icons-ltris \
     icons=$(ICONS) dir=$(TARGETDIR)

@@ -15,7 +15,7 @@ include $(SRCDIR)/config/aros.cfg
 
 REPOSITORIES := ftp://ftp.tuxpaint.org/unix/x/vectoroids/src
 ARCHBASE     := vectoroids-1.1.0
-TARGETDIR    := $(AROS_CONTRIB)/Games/Vectoroids
+TARGETDIR    := $(AROS_CONTRIB)/Games/Action/Vectoroids
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
 NOWARN_FLAGS := $(NOWARN_UNUSED_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \

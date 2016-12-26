@@ -13,7 +13,7 @@ include $(SRCDIR)/config/aros.cfg
 
 PACKAGE      := pushover
 VERSION      := 0.0.5
-TARGETDIR    := $(AROS_CONTRIB)/Games/Pushover
+TARGETDIR    := $(AROS_CONTRIB)/Games/Puzzle/Pushover
 REPOSITORIES := sf://pushover
 
 %fetch_and_build mmake=ports-game-pushover prefix=$(TARGETDIR) \

@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-gemdropx : ports-game-gemdropx-icons
 
 ICONS     := GemDropX
-TARGETDIR := $(AROS_CONTRIB)/Games
+TARGETDIR := $(AROS_CONTRIB)/Games/Puzzle
 
 %build_icons mmake=ports-game-gemdropx-icons \
 icons=$(ICONS) dir=$(TARGETDIR)

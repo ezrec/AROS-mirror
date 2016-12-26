@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-abuse : ports-game-abuse-icons
 
 ICONS     := Abuse
-TARGETDIR := $(AROS_CONTRIB)/Games
+TARGETDIR := $(AROS_CONTRIB)/Games/Platform
 
 %build_icons mmake=ports-game-abuse-icons \
 icons=$(ICONS) dir=$(TARGETDIR)

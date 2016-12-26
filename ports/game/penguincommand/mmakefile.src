@@ -8,7 +8,7 @@ include $(SRCDIR)/config/aros.cfg
 
 PACKAGE      := penguin-command
 VERSION      := 1.6.11
-TARGETDIR    := $(AROS_CONTRIB)/Games/PenguinCommand
+TARGETDIR    := $(AROS_CONTRIB)/Games/Action/PenguinCommand
 REPOSITORIES := sf://penguin-command
 
 %fetch_and_build mmake=ports-game-penguincommand prefix=$(TARGETDIR) \

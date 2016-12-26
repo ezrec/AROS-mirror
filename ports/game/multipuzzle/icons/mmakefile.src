@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-multipuzzle : ports-game-multipuzzle-icons
 
 ICONS     := MultiPuzzle
-TARGETDIR := $(AROS_CONTRIB)/Games
+TARGETDIR := $(AROS_CONTRIB)/Games/Puzzle
 
 %build_icons mmake=ports-game-multipuzzle-icons \
     icons=$(ICONS) dir=$(TARGETDIR)

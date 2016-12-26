@@ -5,6 +5,6 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-xpired : ports-game-xpired-icons
 
 ICONS     := Xpired XpirEdit
-TARGETDIR := $(AROS_CONTRIB)/Games/Xpired
+TARGETDIR := $(AROS_CONTRIB)/Games/Action/Xpired
 
 %build_icons mmake=ports-game-xpired-icons icons=$(ICONS) dir=$(TARGETDIR)

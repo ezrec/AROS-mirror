@@ -4,7 +4,7 @@ include $(SRCDIR)/config/aros.cfg
 
 #MM- ports-game-adv770 : ports-game-adv770-icons
 
-TARGETDIR := $(AROS_CONTRIB)/Games
+TARGETDIR := $(AROS_CONTRIB)/Games/Adventure
 ICONS     := Adv770
 
 %build_icons mmake=ports-game-adv770-icons \

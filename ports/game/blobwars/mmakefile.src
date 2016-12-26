@@ -49,7 +49,7 @@ include $(SRCDIR)/config/aros.cfg
 
 ARCHBASE := blobwars
 REPOSITORIES := sf://blobwars
-TARGETDIR := $(AROS_CONTRIB)/Games/Blobwars
+TARGETDIR := $(AROS_CONTRIB)/Games/Platform/Blobwars
 
 # PROG := blobwars
 PAKNAME := blobwars.pak

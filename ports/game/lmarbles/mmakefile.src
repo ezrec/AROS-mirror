@@ -8,7 +8,7 @@ include $(SRCDIR)/config/aros.cfg
 
 PACKAGE      := lmarbles
 VERSION      := 1.0.8
-TARGETDIR    := $(AROS_CONTRIB)/Games/LMarbles
+TARGETDIR    := $(AROS_CONTRIB)/Games/Puzzle/LMarbles
 REPOSITORIES := sf://lgames
 
 %fetch_and_build mmake=ports-game-lmarbles prefix=$(TARGETDIR) \

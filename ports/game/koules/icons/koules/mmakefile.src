@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-koules-icons : ports-game-koules-iconse-koules
 
 ICONS     := Koules
-TARGETDIR := $(AROS_CONTRIB)/Games/Koules
+TARGETDIR := $(AROS_CONTRIB)/Games/Action/Koules
 
 %build_icons mmake=ports-game-koules-iconse-koules \
     icons=$(ICONS) dir=$(TARGETDIR)

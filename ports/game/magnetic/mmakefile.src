@@ -16,7 +16,7 @@ include $(SRCDIR)/config/aros.cfg
 
 REPOSITORIES := http://archives.aros-exec.org/share/game/adventure/
 ARCHBASE     := magnetic-src-2.3.1
-TARGETDIR    := $(AROS_CONTRIB)/Games/Magnetic
+TARGETDIR    := $(AROS_CONTRIB)/Games/Adventure/Magnetic
 NOWARN_FLAGS := $(NOWARN_PARENTHESES)
 USER_CFLAGS  := $(NOWARN_FLAGS) -DNO_ANIMATION
 USER_INCLUDES:= -I $(PORTSDIR)/magnetic/$(ARCHBASE)/Generic

@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-kobodl-icons : ports-game-kobodl-icons-kobodl
 
 ICONS     := KoboDL
-TARGETDIR := $(AROS_CONTRIB)/Games/KoboDeluxe
+TARGETDIR := $(AROS_CONTRIB)/Games/Action/KoboDeluxe
 
 %build_icons mmake=ports-game-kobodl-icons-kobodl \
     icons=$(ICONS) dir=$(TARGETDIR)

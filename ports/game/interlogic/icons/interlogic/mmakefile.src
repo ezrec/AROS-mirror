@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-interlogic-icons : ports-game-interlogic-icons-interlogic
 
 ICONS     := InterLogic README
-TARGETDIR := $(AROS_CONTRIB)/Games/InterLogic
+TARGETDIR := $(AROS_CONTRIB)/Games/Puzzle/InterLogic
 
 %build_icons mmake=ports-game-interlogic-icons-interlogic \
 icons=$(ICONS) dir=$(TARGETDIR)

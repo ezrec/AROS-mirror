@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-rocksndiamonds : ports-game-rocksndiamonds-icons
 
 ICONS     := Rocksndiamonds
-TARGETDIR := $(AROS_CONTRIB)/Games
+TARGETDIR := $(AROS_CONTRIB)/Games/Action
 
 %build_icons mmake=ports-game-rocksndiamonds-icons \
 icons=$(ICONS) dir=$(TARGETDIR)

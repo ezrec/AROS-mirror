@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-lmarbles-icons : ports-game-lmarbles-icons-lmarbles
 
 ICONS     := LMarbles
-TARGETDIR := $(AROS_CONTRIB)/Games/LMarbles
+TARGETDIR := $(AROS_CONTRIB)/Games/Puzzle/LMarbles
 
 %build_icons mmake=ports-game-lmarbles-icons-lmarbles \
     icons=$(ICONS) dir=$(TARGETDIR)
