@@ -8,9 +8,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-office-arm : ports-office-muibase
 
 #MM  ports-office-muibase : includes linklibs contrib-zune-classes-nlist ports-office-muibase-fetch \
-#MM  ports-office-muibase-create ports-office-muibase-install
-
-########### ports-office-muibase-catalogs
+#MM  ports-office-muibase-create ports-office-muibase-install ports-office-muibase-catalogs
 
 #MM- ports-office-muibase-install : ports-office-muibase-fetch \
 #MM  ports-office-muibase-demos ports-office-muibase-images \
@@ -258,18 +256,18 @@ ports-office-muibase-projects :
 ##### Create catalogs #####
 
 #MM
-ports-office-muibase-catalogs : $(TARGETDIR)/Catalogs/deutsch/MUIbase.catalog $(TARGETDIR)/Catalogs/français/MUIbase.catalog
+ports-office-muibase-catalogs : $(TARGETDIR)/Catalogs/deutsch/MUIbase.catalog $(TARGETDIR)/Catalogs/french/MUIbase.catalog
 	$(NOP)
 
-$(TARGETDIR)/Catalogs/deutsch/MUIbase.catalog : $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/Deutsch/MUIbase.ct $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/MUIbase.cd
+$(TARGETDIR)/Catalogs/deutsch/MUIbase.catalog : $(PORTSDIR)/muibase/$(ARCHBASE)/src/po/de.po $(PORTSDIR)/muibase/$(ARCHBASE)/src/po/MUIbase.pot
 	@$(ECHO) "Creating $(CATNAME) catalog for language 'deutsch'."
 	@$(MKDIR) $(TARGETDIR)/Catalogs/deutsch
-	@$(FLEXCAT) $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/MUIbase.cd $< CATALOG=$@
+	$(FLEXCAT) POFILE $< CATALOG $@
 
-$(TARGETDIR)/Catalogs/français/MUIbase.catalog : $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/Francais/MUIbase.ct $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/MUIbase.cd
+$(TARGETDIR)/Catalogs/french/MUIbase.catalog : $(PORTSDIR)/muibase/$(ARCHBASE)/src/po/fr.po $(PORTSDIR)/muibase/$(ARCHBASE)/src/po/MUIbase.pot
 	@$(ECHO) "Creating $(CATNAME) catalog for language 'français'."
-	@$(MKDIR) $(TARGETDIR)/Catalogs/français
-	@$(FLEXCAT) $(PORTSDIR)/muibase/$(ARCHBASE)/src/Catalogs/MUIbase.cd $< CATALOG=$@
+	@$(MKDIR) $(TARGETDIR)/Catalogs/french
+	$(FLEXCAT) POFILE $< CATALOG $@
 
 
 %common
