@@ -39,7 +39,7 @@ include $(SRCDIR)/config/aros.cfg
 
 
 REPOSITORIES := http://www.artsoft.org/RELEASES/unix/rocksndiamonds
-ARCHBASE     := rocksndiamonds-3.3.1.2
+ARCHBASE     := rocksndiamonds-4.0.0.0
 TARGETDIR    := $(AROS_CONTRIB)/Games/Action/Rocksndiamonds
 USER_CFLAGS  := -DTARGET_SDL -DRO_GAME_DIR=\"/PROGDIR/Data_RO\" -DRW_GAME_DIR=\"/PROGDIR/Data_RW\"
 USER_INCLUDES:= -I$(AROS_INCLUDES)/SDL
@@ -62,7 +62,7 @@ FILES := 		\
 	editor		\
 	files		\
 	tape		\
-	cartoons	\
+	anim		\
 	network		\
 	netserv
 FILES := $(addprefix $(PORTSDIR)/rocksndiamonds/$(ARCHBASE)/src/,$(FILES))
@@ -80,15 +80,11 @@ FILES := 		\
 	sound		\
 	joystick	\
 	snapshot	\
-	toons		\
-	pcx		\
 	image		\
 	random		\
 	hash		\
 	setup		\
 	misc		\
-	msdos		\
-	x11		\
 	sdl
 FILES := $(addprefix $(PORTSDIR)/rocksndiamonds/$(ARCHBASE)/src/libgame/,$(FILES))
 
@@ -149,8 +145,9 @@ FILES := $(addprefix $(PORTSDIR)/rocksndiamonds/$(ARCHBASE)/src/game_sp/,$(FILES
 ###################################################################################################
 
 %fetch mmake=ports-game-rocksndiamonds-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/rocksndiamonds \
-    archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
-    patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
+    archive_origins=$(REPOSITORIES) suffixes="tar.gz"
+
+#    patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
 
 %create_patch mmake=ports-game-rocksndiamonds-create-patch \
     archive="$(ARCHBASE)" \
@@ -176,7 +173,7 @@ FILES := $(addprefix $(PORTSDIR)/rocksndiamonds/$(ARCHBASE)/src/game_sp/,$(FILES
 
 ###################################################################################################
 
-CPYFILES := ChangeLog COPYING CREDITS README rocksndiamonds.1
+CPYFILES := ChangeLog COPYING CREDITS
 
 %copy_files_q mmake=ports-game-rocksndiamonds-cpy files=$(CPYFILES) src=$(PORTSDIR)/rocksndiamonds/$(ARCHBASE) \
     dst=$(TARGETDIR)
