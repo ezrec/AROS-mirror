@@ -19,9 +19,7 @@ TARGETDIR    := $(AROS_CONTRIB)/Games/Action/Bugsquish
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
 NOWARN_FLAGS := $(NOWARN_UNUSED_VARIABLE) $(NOWARN_UNUSED_BUT_SET_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
-                -DDATA_PREFIX=\"PROGDIR:data/\" -DNOSOUND
-
-# sound disabled because it crashes
+                -DDATA_PREFIX=\"PROGDIR:data/\"
 
 FILES := $(PORTSDIR)/bugsquish/$(ARCHBASE)/bugsquish
 

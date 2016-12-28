@@ -21,8 +21,6 @@ NOWARN_FLAGS := $(NOWARN_UNUSED_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS)  $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
                 -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES -DVERSION=\"1.0.3\"
 
-# sound disabled because it crashes
-
 FILES := $(PORTSDIR)/circuslinux/$(ARCHBASE)/circuslinux
 
 %build_prog mmake=ports-game-circuslinux progname=CircusLinux \
