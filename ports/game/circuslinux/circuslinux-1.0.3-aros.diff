@@ -1,7 +1,60 @@
 diff -Naur circuslinux-1.0.3-orig/circuslinux.c circuslinux-1.0.3/circuslinux.c
---- circuslinux-1.0.3-orig/circuslinux.c	2001-04-29 08:38:01.000000000 +0200
-+++ circuslinux-1.0.3/circuslinux.c	2010-07-11 10:27:52.599260558 +0200
-@@ -3434,8 +3434,9 @@
+--- circuslinux-1.0.3-orig/circuslinux.c	2016-12-28 12:18:23.112292544 +0100
++++ circuslinux-1.0.3/circuslinux.c	2016-12-28 12:15:31.770446133 +0100
+@@ -2727,6 +2727,7 @@
+       exit(1);
+     }
+ 
++  atexit(SDL_Quit);
+ 
+   /* Init Joystick: */
+   
+@@ -2958,7 +2959,7 @@
+ 		  "%s\n"
+ 		  "The Simple DirectMedia error that occured was:\n"
+ 		  "%s\n\n", MUS_TITLE, SDL_GetError());
+-	  exit(1);
++	  //exit(1);
+ 	}
+ 
+       /* (game) */
+@@ -2971,7 +2972,7 @@
+ 		  "%s\n"
+ 		  "The Simple DirectMedia error that occured was:\n"
+ 		  "%s\n\n", MUS_GAME, SDL_GetError());
+-	  exit(1);
++	  //exit(1);
+ 	}
+ 
+       /* (gameover) */
+@@ -2984,7 +2985,7 @@
+ 		  "%s\n"
+ 		  "The Simple DirectMedia error that occured was:\n"
+ 		  "%s\n\n", MUS_GAMEOVER, SDL_GetError());
+-	  exit(1);
++	  //exit(1);
+ 	}
+ 
+       /* (hiscore) */
+@@ -2997,7 +2998,7 @@
+ 		  "%s\n"
+ 		  "The Simple DirectMedia error that occured was:\n"
+ 		  "%s\n\n", MUS_HISCORE, SDL_GetError());
+-	  exit(1);
++	  //exit(1);
+ 	}
+ 
+       /* (hiscore screen) */
+@@ -3010,7 +3011,7 @@
+ 		  "%s\n"
+ 		  "The Simple DirectMedia error that occured was:\n"
+ 		  "%s\n\n", MUS_HISCORESCREEN, SDL_GetError());
+-	  exit(1);
++	  //exit(1);
+ 	}
+     }
+ #endif
+@@ -3434,8 +3435,9 @@
    char * home;
  #endif
    

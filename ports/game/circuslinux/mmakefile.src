@@ -19,7 +19,7 @@ TARGETDIR    := $(AROS_CONTRIB)/Games/Action/CircusLinux
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
 NOWARN_FLAGS := $(NOWARN_UNUSED_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS)  $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
-                -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES -DNOSOUND -DVERSION=\"1.0.3\"
+                -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES -DVERSION=\"1.0.3\"
 
 # sound disabled because it crashes
 
@@ -27,7 +27,7 @@ FILES := $(PORTSDIR)/circuslinux/$(ARCHBASE)/circuslinux
 
 %build_prog mmake=ports-game-circuslinux progname=CircusLinux \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="SDL_image png jpeg SDL GL z"
+    uselibs="SDL_mixer vorbisfile vorbis ogg SDL_image png jpeg SDL z"
 
 %fetch mmake=ports-game-circuslinux-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/circuslinux \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
