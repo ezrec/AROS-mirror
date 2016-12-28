@@ -2,10 +2,10 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-#MM- ports-game : ports-game-gnurobbo
+#DISABLED #MM- ports-game : ports-game-gnurobbo
 
 #MM  ports-game-gnurobbo : includes linklibs contrib-sdl \
-#MM    contrib-sdl-sdl-image contrib-sdl-sdl-ttf \
+#MM    contrib-sdl-sdl-image contrib-sdl-sdl-ttf contrib-sdl-sdl-mixer \
 #MM    ports-game-gnurobbo-data ports-game-gnurobbo-cpy \
 #MM    ports-game-gnurobbo-fetch
 
@@ -19,7 +19,7 @@ TARGETDIR    := $(AROS_CONTRIB)/Games/Action/GnuRobbo
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
 NOWARN_FLAGS := $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_UNUSED_BUT_SET_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
-                -DPLATFORM_AROS -DVERSION=\"0.66\" -DPACKAGE_DATA_DIR=\"PROGDIR:data\" -DHAVE_DESIGNER 
+                -DPLATFORM_AROS -DVERSION=\"0.66\" -DPACKAGE_DATA_DIR=\"PROGDIR:data\" -DHAVE_DESIGNER -DHAVE_MUSIC
 
 FILES := \
 	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/board \
