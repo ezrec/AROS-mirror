@@ -68,12 +68,11 @@ Firstly, these software packages must be installed:
 
 + XCode
 + MacPorts
-+ objconv (not needed for hosted AROS)
++ XQuartz (not needed for native AROS)
 
 The following MacPort packages then need to be installed to complete the
 set of required software listed earlier:
 
-+ i386-elf-gcc
 + netpbm
 + cdrtools (not needed for hosted AROS)
 + gawk
@@ -81,39 +80,12 @@ set of required software listed earlier:
 + wget
 + gsed
 + cmake
-+ autoconf (if using XCode 2.4 or earlier)
++ autoconf (may not be needed with some versions of XCode)
++ automake
 
 These can be installed with, for example::
 
-    > sudo port install i386-elf-gcc
-
-You also need to create a dummy crt0.o file that the configure scripts can
-use. Create the following file in a text editor and save it as crt0.c::
-
-    int _start()
-    {
-    }
-
-Then compile and install it with::
-
-    > i386-elf-gcc -c crt0.c
-    > sudo cp crt0.o /opt/local/i386-elf/lib/
-
-If building native AROS, objconv must be manually downloaded, compiled and
-installed::
-
-    > mkdir objconv
-    > cd objconv
-    > wget http://www.agner.org/optimize/objconv.zip
-    > unzip objconv.zip
-    > unzip source.zip
-    > g++ -o objconv -O2 *.cpp
-    > sudo cp objconv /usr/local/bin
-
-Finally, there is a missing symbolic link that needs to be created::
-
-    > cd /opt/local/bin
-    > sudo ln -s i386-elf-gcc-4.3.2 i386-elf-gcc
+    > sudo port install netpbm
 
 
 
@@ -435,7 +407,7 @@ Because the Live CD misses needed packages we have to get them from the
 Internet::
 
     > sudo apt-get install subversion g++ libpng12-dev libx11-dev
-    libgl1-mesa-dev gawk bison flex netpbm automake cmake gperf
+    libxcursor-dev libgl1-mesa-dev gawk bison flex netpbm automake cmake gperf
     libswitch-perl libasound2-dev
 
 If you are using the 64-bit version of Ubuntu, you will need some 
