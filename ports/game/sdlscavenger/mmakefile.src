@@ -28,11 +28,11 @@ FILES := \
 
 %build_prog mmake=ports-game-sdlscavenger progname=SdlScavenger \
     files=$(FILES) targetdir=$(TARGETDIR) nix=yes \
-    uselibs="SDL GL"
+    uselibs="SDL"
 
-%fetch mmake=ports-game-sdlscavenger-fetch archive=$(ARCHBASE).1_2010_11_5 destination=$(PORTSDIR)/sdlscavenger \
+%fetch mmake=ports-game-sdlscavenger-fetch archive=$(ARCHBASE).4_2015_01_05 destination=$(PORTSDIR)/sdlscavenger \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz" \
-    patches_specs=sdlscavenger-145-aros.diff:$(ARCHBASE):-p1
+    patches_specs=sdlscav-145.4-aros.diff:$(ARCHBASE):-p1
 
 CPYFILES := DOC STRATEGY COPYING README
 
