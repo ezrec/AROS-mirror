@@ -18,13 +18,13 @@ TARGETDIR    := $(AROS_CONTRIB)/Games/Puzzle/GemDropX
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
 NOWARN_FLAGS := $(NOWARN_MAYBE_UNINITIALIZED) $(NOWARN_UNUSED_BUT_SET_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
-                -DDATA_PREFIX=\"PROGDIR:data\" -DJOYSTICK -DNOSOUND -DNOT_EMBEDDED
+                -DDATA_PREFIX=\"PROGDIR:data\" -DJOYSTICK -DNOT_EMBEDDED
 
 FILES := $(PORTSDIR)/gemdropx/$(ARCHBASE)/gemdropx
 
 %build_prog mmake=ports-game-gemdropx progname=GemDropX \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="SDL GL"
+    uselibs="SDL_mixer vorbisfile vorbis ogg SDL"
 
 %fetch mmake=ports-game-gemdropx-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/gemdropx \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \

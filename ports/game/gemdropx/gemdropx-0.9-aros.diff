@@ -1,6 +1,17 @@
 diff -Naur gemdropx-0.9-orig/gemdropx.c gemdropx-0.9/gemdropx.c
---- gemdropx-0.9-orig/gemdropx.c	2010-06-26 17:04:27.142239400 +0200
-+++ gemdropx-0.9/gemdropx.c	2010-06-26 17:05:52.914960447 +0200
+--- gemdropx-0.9-orig/gemdropx.c	2016-12-28 10:44:28.773502652 +0100
++++ gemdropx-0.9/gemdropx.c	2016-12-28 10:24:37.539645758 +0100
+@@ -773,8 +773,8 @@
+ 	    if (songs[i] == NULL)
+ 	      {
+ 	        fprintf(stderr, "Couldn't load %s: %s\n", file, SDL_GetError());
+-	        SDL_Quit();
+-	        exit(1);
++	        //SDL_Quit();
++	        //exit(1);
+ 	      }
+ 	  }
+       }
 @@ -2655,8 +2655,12 @@
    
    /* Get max level: */
