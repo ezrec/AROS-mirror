@@ -1,7 +1,53 @@
 diff -Naur defendguin-0.0.12-orig/src/defendguin.c defendguin-0.0.12/src/defendguin.c
---- defendguin-0.0.12-orig/src/defendguin.c	2010-06-25 15:31:32.732265468 +0200
-+++ defendguin-0.0.12/src/defendguin.c	2010-06-25 15:36:15.942476447 +0200
-@@ -5882,9 +5882,15 @@
+--- defendguin-0.0.12-orig/src/defendguin.c	2016-12-28 11:41:02.595018858 +0100
++++ defendguin-0.0.12/src/defendguin.c	2016-12-28 11:14:49.056855970 +0100
+@@ -4323,7 +4323,8 @@
+       exit(1);
+     }
+   
+-  
++  atexit(SDL_Quit);
++
+   /* Open display: */
+   
+   if (use_fullscreen == 1)
+@@ -4593,7 +4594,7 @@
+                   "%s\n"
+                   "The Simple DirectMedia error that occured was:\n"
+                   "%s\n\n", MUS_TITLE, SDL_GetError());
+-          exit(1);
++          //exit(1);
+         }
+       Mix_PlayMusic(title_music, 0);
+       Mix_VolumeMusic(vol_music * (MIX_MAX_VOLUME / 5));
+@@ -4607,7 +4608,7 @@
+                   "%s\n"
+                   "The Simple DirectMedia error that occured was:\n"
+                   "%s\n\n", MUS_LAST, SDL_GetError());
+-          exit(1);
++          //exit(1);
+         }
+ 
+ 
+@@ -4619,7 +4620,7 @@
+                   "%s\n"
+                   "The Simple DirectMedia error that occured was:\n"
+                   "%s\n\n", MUS_WIN, SDL_GetError());
+-          exit(1);
++          //exit(1);
+         }
+       
+       
+@@ -4633,7 +4634,7 @@
+                       "%s\n"
+                       "The Simple DirectMedia error that occured was:\n"
+                       "%s\n\n", game_music_names[i], SDL_GetError());
+-              exit(1);
++              //exit(1);
+             }
+         }
+     }
+@@ -5882,9 +5883,15 @@
    vol_effects = 5;
    vol_music = 5;
  
@@ -17,7 +63,7 @@ diff -Naur defendguin-0.0.12-orig/src/defendguin.c defendguin-0.0.12/src/defendg
  
        fi = fopen(fname, "r");
  
-@@ -5945,10 +5951,16 @@
+@@ -5945,10 +5952,16 @@
  {
    FILE * fi;
    char fname[512];

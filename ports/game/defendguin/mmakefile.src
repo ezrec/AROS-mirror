@@ -22,13 +22,13 @@ TARGETDIR    := $(AROS_CONTRIB)/Games/Action/Defendguin
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
 NOWARN_FLAGS := $(NOWARN_MAYBE_UNINITIALIZED) $(NOWARN_UNINITIALIZED)
 USER_CFLAGS  := $(NOWARN_FLAGS)  $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
-                -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES -D__SOUND
+                -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES
 
 FILES := $(PORTSDIR)/defendguin/$(ARCHBASE)/src/defendguin
 
 %build_prog mmake=ports-game-defendguin progname=Defendguin \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="SDL_mixer vorbisfile vorbis ogg SDL GL"
+    uselibs="SDL_mixer vorbisfile vorbis ogg SDL"
 
 %fetch mmake=ports-game-defendguin-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/defendguin \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
