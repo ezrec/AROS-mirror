@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game : ports-game-vectoroids
 
 #MM  ports-game-vectoroids : includes linklibs contrib-sdl \
-#MM    contrib-sdl-sdl-image \
+#MM    contrib-sdl-sdl-image contrib-sdl-sdl-mixer \
 #MM    ports-game-vectoroids-data ports-game-vectoroids-cpy \
 #MM    ports-game-vectoroids-fetch
 
@@ -19,15 +19,13 @@ TARGETDIR    := $(AROS_CONTRIB)/Games/Action/Vectoroids
 SDL_PREFIX   := $(AROS_DEVELOPMENT)
 NOWARN_FLAGS := $(NOWARN_UNUSED_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
-                -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES -DNOSOUND
-
-# sound disabled because it crashes
+                -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES
 
 FILES := $(PORTSDIR)/vectoroids/$(ARCHBASE)/vectoroids
 
 %build_prog mmake=ports-game-vectoroids progname=Vectoroids \
     files=$(FILES) targetdir=$(TARGETDIR) \
-    uselibs="SDL_image png jpeg SDL GL z"
+    uselibs="SDL_mixer vorbisfile vorbis ogg SDL_image png jpeg SDL z"
 
 %fetch mmake=ports-game-vectoroids-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/vectoroids \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \

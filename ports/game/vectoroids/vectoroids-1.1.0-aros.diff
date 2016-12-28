@@ -1,16 +1,17 @@
 diff -Naur vectoroids-1.1.0-orig/vectoroids.c vectoroids-1.1.0/vectoroids.c
---- vectoroids-1.1.0-orig/vectoroids.c	2010-06-25 17:55:25.172477152 +0200
-+++ vectoroids-1.1.0/vectoroids.c	2010-06-25 17:57:53.393897223 +0200
-@@ -76,5 +76,7 @@
+--- vectoroids-1.1.0-orig/vectoroids.c	2016-12-28 09:14:41.266746328 +0100
++++ vectoroids-1.1.0/vectoroids.c	2016-12-28 09:09:10.194916878 +0100
+@@ -75,7 +75,9 @@
  
  
--enum { FALSE, TRUE };
+ 
 +#ifndef TRUE
-+enum { FALSE, TRUE };
+ enum { FALSE, TRUE };
 +#endif
  
  #define LEFT_EDGE   0x0001
-@@ -593,7 +593,9 @@
+ #define RIGHT_EDGE  0x0002
+@@ -593,7 +595,9 @@
  
    /* Load state from disk: */
  
@@ -21,3 +22,29 @@ diff -Naur vectoroids-1.1.0-orig/vectoroids.c vectoroids-1.1.0/vectoroids.c
    /* snprintf(statefile, sizeof(statefile), "%s/.vectoroids-state",
  	   getenv("HOME")); */
    sprintf(statefile, "%s/.vectoroids-state",
+@@ -1946,7 +1950,7 @@
+   
+   /* Init SDL video: */
+   
+-  if (SDL_Init(SDL_INIT_VIDEO) < 0)
++  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
+     {
+       fprintf(stderr,
+               "\nError: I could not initialize video!\n"
+@@ -1955,6 +1959,7 @@
+       exit(1);
+     }
+   
++  atexit(SDL_Quit);
+   
+   /* Init joysticks: */
+ 
+@@ -2159,7 +2164,7 @@
+ 		  "%s\n"
+ 		  "The Simple DirectMedia error that occured was:\n"
+ 		  "%s\n\n", mus_game_name, SDL_GetError());
+-	  exit(1);
++	  // exit(1);
+ 	}
+     }
+ #endif
