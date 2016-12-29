@@ -2,7 +2,8 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-#MM- ports-game : ports-game-pushover
+#DISABLED #MM- ports-game : ports-game-pushover
+# Crashes when loading OGG files
 
 #MM- ports-game-pushover : \
 #MM     contrib-sdl \

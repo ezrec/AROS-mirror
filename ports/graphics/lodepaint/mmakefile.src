@@ -2,7 +2,7 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-#DISABLED #MM- ports-graphics : ports-graphics-lodepaint
+#MM- ports-graphics : ports-graphics-lodepaint
 
 #MM  ports-graphics-lodepaint : \
 #MM    includes linklibs ports-graphics-lodepaint-fetch \
