@@ -1,0 +1,34 @@
+========================
+November 2016 Highlights
+========================
+
+:Author:   Krzysztof Smiechowicz
+:Date:     2016-12-29
+
+November saw a fair amount of changes in AROS system. Neil Cafferkey
+provided further improvements to MUI and made 3D acceleration on
+the IntelGMA video driver work again. Krzysztof Smiechowicz fixed
+Windows-hosted AROS port, enabling Windows users to enjoy AROS again,
+and was making final changes to ABIv0 refresh. Miloslav Martinka made
+a small but usefull improvement to Wanderer's Info tool, which from now
+on shows the path at which the icon is located and allows opening that
+path in separate Wanderer window.
+
+Paolo Besser, who is working on next version of Icaros, `announced`__ that
+it will support also hosted flavors of AROS which is a welcomed
+development by AROS community. It means Linux and Windows users will be
+able to enjoy Icaros without a need to install virtual machine.
+
+Third party development also provided new, interesting software. Marcus
+Sacrow prepared versions of his EdiSyn and Maporium applications for AROS
+ARM platform, which is a very welcomed development. Yannick Erb provided a new
+version of MAME (Multiple Arcade Machines Emulator). Olivier Brunner, author
+of Janus-UAE, `released`__ first version of Janus-UAE 2. This new application is
+based on latest WinUAE source codes, while the initial Janus-UAE used several
+years old UAE engine. The Janus-UAE 2 will be available for 32bit/64bit
+AROS trunk system (not ABIv0 compatible). While working on his new application,
+Olivier also fixed a memory trashing problem in AROS MUI List class.
+
+__ http://vmwaros.blogspot.it/2016/11/native-or-hosted-on-linux-both.html
+__ http://aros-exec.org/modules/newbb/viewtopic.php?post_id=101930#forumpost101930
+
