@@ -1348,6 +1348,7 @@ Inputs
 
              GVF_LOCAL_ONLY  - delete a local variable.
              GVF_GLOBAL_ONLY - delete a global environment variable.
+             GVF_SAVE_VAR    - delete a global variable permanently.
 
 
 Result
