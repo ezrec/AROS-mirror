@@ -6,7 +6,6 @@ import os, sys
 
 from build.utility import *
 
-import db.mirrors.parse
 import db.mirrors.format.html
 
 from page import makePage
@@ -16,14 +15,8 @@ def makeTemplates():
     # Deduce important paths
     HERE_DIR   = os.path.split( __file__ )[0]
     LANG_DIR   = 'targets/www/template/languages'
-    MIRRORS_DB = 'db/mirrors'
     DST_DIR    = 'targets/www'
     
-    MIRRORS_DATA = db.mirrors.format.html.format \
-    ( 
-        db.mirrors.parse.parse( file( MIRRORS_DB, 'r' ) )
-    )
-     
     def makeTemplate( language, dst ):
         # Setup translation dictionaries
         config = ConfigParser()
@@ -43,7 +36,7 @@ def makeTemplates():
         for option in config.options( 'misc' ):
             _M[option] = config.get( 'misc', option )
         
-        file( dst, 'w' ).write( makePage( _T, _N, _M, MIRRORS_DATA, language, charset ) )
+        file( dst, 'w' ).write( makePage( _T, _N, _M, '', language, charset ) )
 
     for language in os.listdir( LANG_DIR ):
         if ignore( language ): continue 

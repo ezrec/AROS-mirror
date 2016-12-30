@@ -575,7 +575,6 @@ def buildWWW():
 
     dbpath = os.path.join( TRGROOT, 'db' )
     makedir( dbpath )
-    copy( 'db/quotes', dbpath )
 
     makedir( os.path.join( dbpath, 'download-descriptions' ) )
     for lang in languages:
