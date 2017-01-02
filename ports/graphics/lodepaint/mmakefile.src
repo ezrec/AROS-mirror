@@ -5,8 +5,12 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-graphics : ports-graphics-lodepaint
 
 #MM  ports-graphics-lodepaint : \
-#MM    includes linklibs ports-graphics-lodepaint-fetch \
+#MM    includes linklibs contrib-sdl \
+#MM    ports-graphics-lodepaint-fetch \
 #MM    ports-graphics-lodepaint-skins
+
+#MM  ports-graphics-lodepaint-skins : ports-graphics-lodepaint-fetch
+
 
 REPOSITORIES := http://archives.aros-exec.org/share/graphics/edit
 ARCHBASE     := lodepaint_src_svn146

@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game : ports-game-circuslinux
 
 #MM  ports-game-circuslinux : includes linklibs contrib-sdl \
-#MM    contrib-sdl-sdl-image \
+#MM    contrib-sdl-sdl-image contrib-sdl-sdl-mixer \
 #MM    ports-game-circuslinux-data ports-game-circuslinux-cpy \
 #MM    ports-game-circuslinux-fetch
 
