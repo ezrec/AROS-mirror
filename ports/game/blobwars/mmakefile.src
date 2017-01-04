@@ -2,8 +2,7 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-#DISABLED #MM- ports-game : ports-game-blobwars
-#Crash when loading OGG files
+#MM- ports-game : ports-game-blobwars
 
 #MM- ports-game-blobwars : \
 #MM     ports-game-blobwars-bin \
