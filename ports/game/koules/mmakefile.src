@@ -18,7 +18,7 @@ include $(SRCDIR)/config/aros.cfg
 
 
 REPOSITORIES := http://archives.aros-exec.org/share/game/action/
-ARCHBASE     := koules-src-1.17
+ARCHBASE     := koules-src-1.19
 TARGETDIR    := $(AROS_CONTRIB)/Games/Action/Koules
 
 FILES := source/framebuffer source/koules source/menu source/amiga source/gameplan
