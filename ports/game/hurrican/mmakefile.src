@@ -15,40 +15,32 @@ include $(SRCDIR)/config/aros.cfg
 #MM  ports-game-hurrican-lang \
 #MM  ports-game-hurrican-fetch
 
-#MM  ports-game-hurrican-data : ports-game-hurrican-data-fetch
 #MM  ports-game-hurrican-lang : ports-game-hurrican-fetch
+#MM  ports-game-hurrican-data : ports-game-hurrican-fetch
 
 
 TARGETDIR    := $(AROS_CONTRIB)/Games/Platform/Hurrican
-
 
 ####################################################################################################
 # fetch source
 
 REPOSITORIES := http://archives.aros-exec.org/share/game/action
-ARCHBASE     := hurrican-src-svn85
+ARCHBASE     := hurrican-src-svn281
 
 %fetch mmake=ports-game-hurrican-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/hurrican \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2" \
     patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
 
-
-####################################################################################################
-# fetch data
-
-%fetch mmake=ports-game-hurrican-data-fetch archive=hurrican-data destination=$(PORTSDIR)/hurrican \
-    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip"
-
-
 ####################################################################################################
 # build program
 
 NOWARN_FLAGS := $(NOWARN_DISCARDED_QUALIFIERS) $(NOWARN_UNUSED_LOCAL_TYPEDEFS)
-HURRICAN_COMMONFLAGS := -DPLATFORM_SDL -DENABLE_CONSOLE_COMMANDS -DUSE_MODPLUG -DDEBUG -DUSE_GL1 -fexceptions
-USER_CFLAGS  := $(NOWARN_FLAGS) $(HURRICAN_COMMONFLAGS)
+HURRICAN_COMMONFLAGS := -DPLATFORM_SDL -DENABLE_CONSOLE_COMMANDS -DUSE_MODPLUG -DUSE_INDEXED_BATCH \
+                        -DDEBUG -DUSE_GL1 -fexceptions \
+                        -DUSE_STORAGE_PATH="\"/PROGDIR\"" -DUSE_HOME_DIR
+
 USER_CXXFLAGS := -fpermissive $(HURRICAN_COMMONFLAGS)
 
-CONFIG_CFLAGS := $(subst -Werror ,,$(CONFIG_CFLAGS))
 CONFIG_CXXFLAGS := $(subst -Werror ,,$(CONFIG_CXXFLAGS))
 
 USER_INCLUDES:= -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/SDLPort -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/cml \
@@ -56,14 +48,13 @@ USER_INCLUDES:= -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/SDLPort -I$(PORTSDIR)/hur
     -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/unrarlib040/unrarlib
 USER_LDFLAGS := -static-libstdc++
 
-SDL_CFILES := SDLPort/SDL_fmod
 
-SDL_CXXFILES := SDLPort/SDL_port SDLPort/texture
+SDL_CXXFILES := SDLPort/SDL_fmod SDLPort/SDL_port SDLPort/texture
 
 # EGL_FILES := SDLPort/eglport
 # GL2_FILES := SDLPort/cshader
 
-UNRAR_CFILES := unrarlib040/unrarlib/unrarlib
+UNRAR_CXXFILES := unrarlib040/unrarlib/unrarlib
 
 CXXFILES := \
         Boss_BigFish \
@@ -92,7 +83,6 @@ CXXFILES := \
         Boss_Ufo \
         Boss_WuxeSpinnen \
         CCracktro \
-        CCutScene \
         CDragonHack \
         Console \
         DX8Enum \
@@ -102,6 +92,7 @@ CXXFILES := \
         DX8Joystick \
         DX8Sound \
         DX8Sprite \
+        DX8Texture \
         GUISystem \
         Gameplay \
         GegnerClass \
@@ -197,6 +188,7 @@ CXXFILES := \
         Intro \
         Logdatei \
         Main \
+        Mathematics \
         Menu \
         Outtro \
         Partikelsystem \
@@ -243,24 +235,21 @@ CXXFILES := \
         Trigger_Tube \
         Trigger_TutorialText \
         Trigger_Warning \
-        lightmap \
         stdafx \
         tracealloc
 
-CXXFILES := $(addprefix $(PORTSDIR)/hurrican/$(ARCHBASE)/src/,$(CXXFILES) $(SDL_CXXFILES))
-
-CFILES := $(addprefix $(PORTSDIR)/hurrican/$(ARCHBASE)/src/,$(UNRAR_CFILES) $(SDL_CFILES))
+CXXFILES := $(addprefix $(PORTSDIR)/hurrican/$(ARCHBASE)/src/,$(CXXFILES) $(SDL_CXXFILES) $(UNRAR_CFILES))
 
 %build_prog mmake=ports-game-hurrican progname=Hurrican \
-    files=$(CFILES) cxxfiles=$(CXXFILES) targetdir=$(TARGETDIR) \
+    files= cxxfiles=$(CXXFILES) targetdir=$(TARGETDIR) nix=yes \
     uselibs="stdc++ SDL_mixer modplug vorbisfile vorbis ogg SDL_image png z jpeg SDL GL"
 
 
 ####################################################################################################
 # copy directories
 
-%copy_dir_recursive mmake=ports-game-hurrican-data src=$(PORTSDIR)/hurrican/Hurrican \
-    dst=$(TARGETDIR)
+%copy_dir_recursive mmake=ports-game-hurrican-data src=$(PORTSDIR)/hurrican/$(ARCHBASE)/data \
+    dst=$(TARGETDIR)/data
 
 %copy_dir_recursive mmake=ports-game-hurrican-lang src=$(PORTSDIR)/hurrican/$(ARCHBASE)/lang \
     dst=$(TARGETDIR)/lang
