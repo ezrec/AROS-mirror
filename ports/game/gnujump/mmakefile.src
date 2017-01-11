@@ -1,0 +1,40 @@
+# $Id: mmakefile.src 53106 2016-12-26 15:46:50Z mazze $
+
+include $(SRCDIR)/config/aros.cfg
+
+#MM- ports-game : ports-game-gnujump
+
+#MM- ports-game-gnujump : \
+#MM  contrib-sdl \
+#MM  contrib-sdl-sdl-image \
+#MM  contrib-sdl-sdl-mixer
+
+PACKAGE      := gnujump
+VERSION      := 1.0.5
+TARGETDIR    := $(AROS_CONTRIB)/Games/Platform/Gnujump
+REPOSITORIES := http://download.savannah.gnu.org/releases/gnujump
+
+%fetch_and_build mmake=ports-game-gnujump prefix=$(TARGETDIR) \
+	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
+	patch=yes package_repo=$(REPOSITORIES) nix=yes nix_dir_layout=no \
+	extraoptions="--program-transform-name='s/.*/Gnujump/' --datadir='$$(PROGDIR)data' --mandir='$$(PROGDIR)man'" \
+        postinstall=ports-game-gnujump-files
+
+
+#MM- ports-game-gnujump-files : ports-game-gnujump-files-skins ports-game-gnujump-files-sound
+
+%copy_dir_recursive mmake=ports-game-gnujump-files-skins \
+    src=$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/skins dst=$(TARGETDIR)/data/gnujump/skins \
+    excludefiles="Makefile.am Makefile.in"
+
+%copy_dir_recursive mmake=ports-game-gnujump-files-sound \
+    src=$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/sound dst=$(TARGETDIR)/data/gnujump/sound \
+    excludefiles="Makefile.am Makefile.in"
+
+
+#MM
+ports-game-gnujump-clean :
+	$(RM) $(TARGETDIR)
+	$(RM) $(GENDIR)/$(CURDIR)
+
+%common

@@ -1,0 +1,11 @@
+# $Id: mmakefile.src 53106 2016-12-26 15:46:50Z mazze $
+
+include $(SRCDIR)/config/aros.cfg
+
+#MM- ports-game-gnujump : ports-game-gnujump-icons
+
+ICONS     := Gnujump
+TARGETDIR := $(AROS_CONTRIB)/Games/Platform
+
+%build_icons mmake=ports-game-gnujump-icons \
+    icons=$(ICONS) dir=$(TARGETDIR)
