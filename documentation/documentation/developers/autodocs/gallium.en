@@ -9,7 +9,7 @@ gallium
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`BltPipeResourceRastPort()`_            `BltPipeSurfaceRastPort()`_             `CreatePipeScreen()`_                   `DestroyPipeScreen()`_                  
+`BltPipeResourceRastPort()`_            `CreatePipe()`_                         `CreatePipeScreen()`_                   `DestroyPipeScreen()`_                  
 
 ======================================= ======================================= ======================================= ======================================= 
 
@@ -23,6 +23,7 @@ Synopsis
 ::
 
  void BltPipeResourceRastPort(
+          PipeHandle_t pipe,
           struct pipe_resource * srcPipeResource,
           LONG xSrc,
           LONG ySrc,
@@ -54,63 +55,24 @@ Inputs
 
 ----------
 
-BltPipeSurfaceRastPort()
-========================
+CreatePipe()
+============
 
 Synopsis
 ~~~~~~~~
 ::
 
- void BltPipeSurfaceRastPort(
-          struct pipe_surface * srcPipeSurface,
-          LONG xSrc,
-          LONG ySrc,
-          struct RastPort * destRP,
-          LONG xDest,
-          LONG yDest,
-          LONG xSize,
-          LONG ySize );
-
-Function
-~~~~~~~~
-::
-
-     Copies part of pipe surface onto rast port. Clips output by using layers of
-     rastport.
-
-
-Inputs
-~~~~~~
-::
-
-     srcPipeSurface - Copy from this pipe surface.
-     xSrc, ySrc - This is the upper left corner of the area to copy.
-     destRP - Destination RastPort.
-     xDest, yDest - Upper left corner where to place the copy
-     xSize, ySize - The size of the area to copy
-
-
-
-----------
-
-CreatePipeScreen()
-==================
-
-Synopsis
-~~~~~~~~
-::
-
- struct pipe_screen * CreatePipeScreen(
+ PipeHandle_t CreatePipe(
           struct TagItem * tags );
  
- struct pipe_screen * CreatePipeScreenTags(
+ PipeHandle_t CreatePipeTags(
           TAG tag, ... );
 
 Function
 ~~~~~~~~
 ::
 
-     Creates a gallium pipe screen.
+     Instantiates a gallium pipe.
 
 
 Inputs
@@ -124,13 +86,49 @@ Tags
 ~~~~
 ::
 
+     CPS_PipeFriendBitmap - a bitmap our pipe screen will target.
+     CPS_PipeScreenDriver * - where to store the driver.
      CPS_GalliumInterfaceVersion - Indicates a version of gallium interface
          that a client is expected to receive. The client expected version
          must ideally match with the version that the driver provides,
          because gallium interface is not backwards compatible. This tag is
          required. Unless otherwise needed, the value
          GALLIUM_INTERFACE_VERSION should be passed.
-         See also CreatePipeScreenV.
+         See also CreatePipeV.
+
+
+Result
+~~~~~~
+::
+
+     A valid pipe instance or NULL if creation was not successful.
+
+
+
+----------
+
+CreatePipeScreen()
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ struct pipe_screen * CreatePipeScreen(
+          PipeHandle_t pipe );
+
+Function
+~~~~~~~~
+::
+
+     Creates a gallium pipe screen.
+
+
+Inputs
+~~~~~~
+::
+
+     pipe - a pipe handle created using CreatePipe().
 
 
 Result
@@ -151,7 +149,8 @@ Synopsis
 ::
 
  void DestroyPipeScreen(
-          struct pipe_screen * screen );
+          PipeHandle_t pipe,
+          struct pipe_screen * pscreen );
 
 Function
 ~~~~~~~~

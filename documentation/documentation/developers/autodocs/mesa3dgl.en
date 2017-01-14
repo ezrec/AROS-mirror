@@ -54,7 +54,7 @@ Function
 ::
 
 
-     Crates a GL rendering context that can be later used in subsequent
+     Creates a GL rendering context that can be later used in subsequent
      calls.
 
 
@@ -127,7 +127,7 @@ Result
 ::
 
 
-     A valid GL context or NULL of creation was not successful.
+     A valid GL context or NULL of creation was not succesfull.
 
 
 

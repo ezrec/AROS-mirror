@@ -2409,8 +2409,8 @@ Function
 ~~~~~~~~
 ::
 
-     ChildOrphan() will detach the specified task from the its parent
-     task child task tree. This is useful if the parent task will be
+     ChildOrphan() will detach the specified task from its parent
+     task's child task tree. This is useful if the parent task will be
      exiting, and no longer needs to be told about child task events.
 
      Note that the default Task finaliser will orphan any remaining
