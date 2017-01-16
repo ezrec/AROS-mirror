@@ -7,7 +7,8 @@ include $(SRCDIR)/config/aros.cfg
 #MM- ports-game-gnujump : \
 #MM  contrib-sdl \
 #MM  contrib-sdl-sdl-image \
-#MM  contrib-sdl-sdl-mixer
+#MM  contrib-sdl-sdl-mixer \
+#MM  ports-audio-freepats
 
 PACKAGE      := gnujump
 VERSION      := 1.0.5
