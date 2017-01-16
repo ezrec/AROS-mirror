@@ -1,0 +1,17 @@
+#   $Id: mmakefile.src 52341 2016-03-29 03:46:55Z NicJA $
+
+include $(SRCDIR)/config/aros.cfg
+
+#MM- ports-audio-freepats : ports-audio-freepats-startup
+
+#MM- ports-audio-freepats-startup : workbench-prefs-envarc \
+#MM      ports-audio-freepats-startupfiles \
+#MM      ports-audio-freepats-envpackage
+
+#MM
+ports-audio-freepats-envpackage :
+	$(ECHO) "Extras:MultiMedia/Audio/Timidity/Freepats" >$(AROS_PACKAGES)/Freepats
+
+FILES := Package-Startup
+%copy_files_q mmake=ports-audio-freepats-startupfiles \
+    dst=$(AROS_CONTRIB)/MultiMedia/Audio/Timidity/Freepats/S

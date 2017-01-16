@@ -1,0 +1,22 @@
+# $Id: mmakefile.src 53124 2016-12-28 18:29:18Z mazze $
+
+include $(SRCDIR)/config/aros.cfg
+
+#MM ports-audio-freepats : \
+#MM    ports-audio-freepats-cfg \
+#MM    ports-audio-freepats-fetch
+
+REPOSITORIES := http://freepats.zenvoid.org
+ARCHBASE     := freepats-20060219
+TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Audio/Timidity
+
+%fetch mmake=ports-audio-freepats-fetch archive=$(ARCHBASE) \
+    destination=$(PORTSDIR)/freepats/$(ARCHBASE) \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.xz"
+
+%copy_dir_recursive mmake=ports-audio-freepats \
+    src=$(PORTSDIR)/freepats/$(ARCHBASE)/freepats \
+    dst=$(TARGETDIR)/Freepats
+
+%copy_files_q mmake=ports-audio-freepats-cfg files=timidity.cfg \
+    src=. dst=$(TARGETDIR)
