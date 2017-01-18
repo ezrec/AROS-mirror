@@ -4,7 +4,7 @@ include $(SRCDIR)/config/aros.cfg
 
 #MM- contrib-games : contrib-games-lbreakout2
 #MM- lbreakout2 : contrib-games-lbreakout2
-#MM contrib-games-lbreakout2 : contrib-sdl contrib-sdl-sdl-net development-libvorbis workbench-libs-z workbench-libs-png-linklib
+#MM contrib-games-lbreakout2 : contrib-sdl contrib-sdl-sdl-mixer contrib-sdl-sdl-net development-libvorbis workbench-libs-z workbench-libs-png-linklib
 
 #MM- contrib-games-quick : contrib-games-lbreakout2-quick
 #MM- lbreakout2-quick : contrib-games-lbreakout2-quick
@@ -13,5 +13,5 @@ include $(SRCDIR)/config/aros.cfg
     extraoptions="--bindir='$$(PROGDIR)' --datarootdir='$$(PROGDIR)data' \
     --localstatedir='$$(PROGDIR)var' --docdir='$$(PROGDIR)docs' \
     --disable-sdltest --with-docdir='$$(PROGDIR)docs' --program-prefix='' \
-    CFLAGS='-DSDL_NET_ENABLED' LIBS='-lvorbisfile -lvorbis -logg -lSDL_net'" \
+    CFLAGS='-DSDL_NET_ENABLED' LIBS='-lmikmod -lvorbisfile -lvorbis -logg -lSDL_net'" \
     prefix=$(AROS_CONTRIB)/Games/Action/LBreakout2 nix_dir_layout=no
