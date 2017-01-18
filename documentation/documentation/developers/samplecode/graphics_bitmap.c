@@ -89,7 +89,6 @@ static void draw_bitmap(void)
     struct RastPort rp; // Create rastport for our bitmap
     InitRastPort(&rp);
     bm_rp = &rp;
-    if (!bm_rp) clean_exit("Can't allocate rastport!\n");
     bm_rp->BitMap = bm;            // Link bitmap to rastport
 
     /*
