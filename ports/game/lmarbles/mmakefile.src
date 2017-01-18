@@ -15,7 +15,7 @@ REPOSITORIES := sf://lgames
     package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
     patch=yes package_repo=$(REPOSITORIES) nix=yes nix_dir_layout=no \
     extracflags="" install_target= postinstall=ports-game-lmarbles-install \
-    extraoptions="-datarootdir='$$(PROGDIR)share' LIBS='-lvorbisfile -lvorbis -logg'" 
+    extraoptions="-datarootdir='$$(PROGDIR)share' LIBS='-lmikmod -lvorbisfile -lvorbis -logg'" 
 
 
 #MM- ports-game-lmarbles-install : \
