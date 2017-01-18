@@ -55,13 +55,13 @@ int main(void)
     if (! window) clean_exit("Can't open window\n");
     
     rp = window->RPort;
-    cm = window->WScreen->ViewPort.ColorMap;
+    cm = ViewPortAddress(window)->ColorMap;
 
     // Let's obtain two pens
     pen1 = ObtainBestPen(cm, 0xFFFF0000 , 0 , 0 , TAG_END);
     pen2 = ObtainBestPen(cm, 0 , 0 , 0xFFFF0000 , TAG_END);
 
-    if ( !pen1 || !pen2) clean_exit("Can't allocate pen\n");
+    if ( (pen1 == -1) || (pen2 == -1) ) clean_exit("Can't allocate pen\n");
     
     draw_area();
     handle_events();

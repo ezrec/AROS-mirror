@@ -93,7 +93,7 @@ int main(void)
     // Let's obtain two pens
     pen1 = ObtainBestPen(cm, 0xFFFF0000 , 0 , 0 , TAG_END);
     pen2 = ObtainBestPen(cm, 0 , 0 , 0xFFFF0000 , TAG_END);
-    if ( !pen1 || !pen2) clean_exit("Can't allocate pen\n");
+    if ( (pen1 == -1) || (pen2 == -1) ) clean_exit("Can't allocate pen\n");
     
     draw_stuff(window1);
     draw_stuff(window2);

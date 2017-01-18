@@ -53,24 +53,22 @@ static void handle_events(void)
     struct IntuiMessage *imsg;
     struct MsgPort *port = window->UserPort;
 
-    ULONG signals;
-    
     ULONG iclass;
     UWORD code;
-    UWORD qualifier;
+    // UWORD qualifier;
     WORD mousex, mousey;
     
     BOOL terminated = FALSE;
     
     while (! terminated)
     {
-        signals = Wait(1L << port->mp_SigBit);
+        Wait(1L << port->mp_SigBit);
 
         while ((imsg = (struct IntuiMessage *)GetMsg(port)) != NULL)
         {
             iclass = imsg->Class;
             code = imsg->Code;
-            qualifier = imsg->Qualifier;
+            // qualifier = imsg->Qualifier;
             mousex = imsg->MouseX;
             mousey = imsg->MouseY;
             

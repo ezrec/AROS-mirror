@@ -55,12 +55,12 @@ int main(void)
     if (! window) clean_exit("Can't open window\n");
     
     win_rp = window->RPort;
-    cm = window->WScreen->ViewPort.ColorMap;
+    cm = ViewPortAddress(window)->ColorMap;
 
     // Let's obtain two pens
     pen1 = ObtainBestPen(cm, 0xFFFF0000 , 0 , 0 , TAG_END);
     pen2 = ObtainBestPen(cm, 0 , 0 , 0xFFFF0000 , TAG_END);
-    if ( !pen1 || !pen2) clean_exit("Can't allocate pen\n");
+    if ( (pen1 == -1) || (pen2 == -1) ) clean_exit("Can't allocate pen\n");
     
     draw_bitmap();
     handle_events();
@@ -86,7 +86,9 @@ static void draw_bitmap(void)
     bm = AllocBitMap(BMWIDTH , BMHEIGHT, depth, BMF_MINPLANES, win_rp->BitMap);
     if (!bm) clean_exit("Can't allocate bitmap\n");
     
-    bm_rp = CreateRastPort();      // Create rastport for our bitmap
+    struct RastPort rp; // Create rastport for our bitmap
+    InitRastPort(&rp);
+    bm_rp = &rp;
     if (!bm_rp) clean_exit("Can't allocate rastport!\n");
     bm_rp->BitMap = bm;            // Link bitmap to rastport
 
@@ -149,7 +151,6 @@ static void clean_exit(CONST_STRPTR s)
 
     // Give back allocated resourses
     if (bm) FreeBitMap(bm);
-    if (bm_rp) FreeRastPort(bm_rp);
     if (pen1 != -1) ReleasePen(cm, pen1);
     if (pen2 != -1) ReleasePen(cm, pen2);
     if (window) CloseWindow(window);
