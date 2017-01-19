@@ -1,6 +1,6 @@
 diff -Naur gnujump-1.0.5-orig/config.h.in gnujump-1.0.5/config.h.in
 --- gnujump-1.0.5-orig/config.h.in	2008-08-11 15:07:45.000000000 +0200
-+++ gnujump-1.0.5/config.h.in	2017-01-14 15:05:57.263049060 +0100
++++ gnujump-1.0.5/config.h.in	2017-01-19 23:16:27.267162981 +0100
 @@ -76,6 +76,9 @@
  /* Define to the one symbol short name of this package. */
  #undef PACKAGE_TARNAME
@@ -13,7 +13,7 @@ diff -Naur gnujump-1.0.5-orig/config.h.in gnujump-1.0.5/config.h.in
  
 diff -Naur gnujump-1.0.5-orig/config.h.in~ gnujump-1.0.5/config.h.in~
 --- gnujump-1.0.5-orig/config.h.in~	1970-01-01 01:00:00.000000000 +0100
-+++ gnujump-1.0.5/config.h.in~	2017-01-14 15:05:57.263049060 +0100
++++ gnujump-1.0.5/config.h.in~	2017-01-19 23:16:27.267162981 +0100
 @@ -0,0 +1,90 @@
 +/* config.h.in.  Generated from configure.in by autoheader.  */
 +
@@ -107,7 +107,7 @@ diff -Naur gnujump-1.0.5-orig/config.h.in~ gnujump-1.0.5/config.h.in~
 +#undef VERSION
 diff -Naur gnujump-1.0.5-orig/configure gnujump-1.0.5/configure
 --- gnujump-1.0.5-orig/configure	2008-08-11 15:07:45.000000000 +0200
-+++ gnujump-1.0.5/configure	2017-01-14 15:05:57.263049060 +0100
++++ gnujump-1.0.5/configure	2017-01-19 23:16:27.267162981 +0100
 @@ -1,60 +1,81 @@
  #! /bin/sh
  # Guess values for system-dependent variables and create Makefiles.
@@ -7323,7 +7323,7 @@ diff -Naur gnujump-1.0.5-orig/configure gnujump-1.0.5/configure
  
  
 -LIBS="$LIBS -lSDL_mixer"
-+LIBS="-lSDL_mixer -lvorbisfile -lvorbis -logg $LIBS"
++LIBS="-lSDL_mixer -lmikmod -lvorbisfile -lvorbis -logg $LIBS"
  
  # Set PACKAGE PREFIX
  
@@ -14865,7 +14865,7 @@ diff -Naur gnujump-1.0.5-orig/configure gnujump-1.0.5/configure
  
 diff -Naur gnujump-1.0.5-orig/configure.in gnujump-1.0.5/configure.in
 --- gnujump-1.0.5-orig/configure.in	2008-08-11 15:04:47.000000000 +0200
-+++ gnujump-1.0.5/configure.in	2017-01-14 15:05:57.263049060 +0100
++++ gnujump-1.0.5/configure.in	2017-01-19 23:16:27.267162981 +0100
 @@ -39,7 +39,7 @@
  AX_CHECK_GL
  AX_CHECK_GLU
@@ -14887,13 +14887,13 @@ diff -Naur gnujump-1.0.5-orig/configure.in gnujump-1.0.5/configure.in
  		[ AC_MSG_ERROR([*** Could not find SDL/SDL_mixer.h ! Install the SDL_mixer devel package.]) ]
  )
 -LIBS="$LIBS -lSDL_mixer"
-+LIBS="-lSDL_mixer -lvorbisfile -lvorbis -logg $LIBS"
++LIBS="-lSDL_mixer -lmikmod -lvorbisfile -lvorbis -logg $LIBS"
  
  # Set PACKAGE PREFIX
  
 diff -Naur gnujump-1.0.5-orig/skins/default/cursor/Makefile.am gnujump-1.0.5/skins/default/cursor/Makefile.am
 --- gnujump-1.0.5-orig/skins/default/cursor/Makefile.am	2008-08-11 15:04:48.000000000 +0200
-+++ gnujump-1.0.5/skins/default/cursor/Makefile.am	2017-01-14 15:05:57.263049060 +0100
++++ gnujump-1.0.5/skins/default/cursor/Makefile.am	2017-01-19 23:16:27.267162981 +0100
 @@ -1,6 +1,6 @@
  
  pkgdatadir = $(datadir)/@PACKAGE@/skins/default/cursor
@@ -14904,7 +14904,7 @@ diff -Naur gnujump-1.0.5-orig/skins/default/cursor/Makefile.am gnujump-1.0.5/ski
  
 diff -Naur gnujump-1.0.5-orig/skins/default/Makefile.am gnujump-1.0.5/skins/default/Makefile.am
 --- gnujump-1.0.5-orig/skins/default/Makefile.am	2008-08-11 15:04:47.000000000 +0200
-+++ gnujump-1.0.5/skins/default/Makefile.am	2017-01-14 15:05:57.263049060 +0100
++++ gnujump-1.0.5/skins/default/Makefile.am	2017-01-19 23:16:27.267162981 +0100
 @@ -2,7 +2,7 @@
  SUBDIRS = cursor
  
@@ -14916,7 +14916,7 @@ diff -Naur gnujump-1.0.5-orig/skins/default/Makefile.am gnujump-1.0.5/skins/defa
  
 diff -Naur gnujump-1.0.5-orig/sound/Makefile.am gnujump-1.0.5/sound/Makefile.am
 --- gnujump-1.0.5-orig/sound/Makefile.am	2008-08-11 15:04:48.000000000 +0200
-+++ gnujump-1.0.5/sound/Makefile.am	2017-01-14 15:05:57.263049060 +0100
++++ gnujump-1.0.5/sound/Makefile.am	2017-01-19 23:16:27.267162981 +0100
 @@ -1,5 +1,6 @@
  pkgdatadir = $(datadir)/@PACKAGE@/sound
 -pkgdata_DATA = $(wildcard *.sounds *.ogg *.mid)
@@ -14927,7 +14927,7 @@ diff -Naur gnujump-1.0.5-orig/sound/Makefile.am gnujump-1.0.5/sound/Makefile.am
  
 diff -Naur gnujump-1.0.5-orig/src/gnujump.h gnujump-1.0.5/src/gnujump.h
 --- gnujump-1.0.5-orig/src/gnujump.h	2008-08-11 15:04:48.000000000 +0200
-+++ gnujump-1.0.5/src/gnujump.h	2017-01-14 15:05:57.263049060 +0100
++++ gnujump-1.0.5/src/gnujump.h	2017-01-19 23:16:27.267162981 +0100
 @@ -32,7 +32,9 @@
  #include <math.h>
  #include <stdio.h>
@@ -14951,7 +14951,7 @@ diff -Naur gnujump-1.0.5-orig/src/gnujump.h gnujump-1.0.5/src/gnujump.h
  
 diff -Naur gnujump-1.0.5-orig/src/main.c gnujump-1.0.5/src/main.c
 --- gnujump-1.0.5-orig/src/main.c	2008-08-11 15:04:48.000000000 +0200
-+++ gnujump-1.0.5/src/main.c	2017-01-14 15:05:57.263049060 +0100
++++ gnujump-1.0.5/src/main.c	2017-01-19 23:16:27.267162981 +0100
 @@ -45,13 +45,19 @@
    char *replay = NULL;
  
@@ -14974,8 +14974,20 @@ diff -Naur gnujump-1.0.5-orig/src/main.c gnujump-1.0.5/src/main.c
  	    (strlen (homeDir) + strlen (CONFDIR) + strlen (CFGFILE) + 3));
 diff -Naur gnujump-1.0.5-orig/src/setup.c gnujump-1.0.5/src/setup.c
 --- gnujump-1.0.5-orig/src/setup.c	2008-08-11 15:04:48.000000000 +0200
-+++ gnujump-1.0.5/src/setup.c	2017-01-14 15:05:57.263049060 +0100
-@@ -54,7 +54,11 @@
++++ gnujump-1.0.5/src/setup.c	2017-01-19 23:16:27.267162981 +0100
+@@ -35,7 +35,11 @@
+   char *cfgDir;
+ 
+   gblOps.aa = 0;
++#ifdef __AROS__
++  gblOps.useGL = FALSE;
++#else
+   gblOps.useGL = TRUE;
++#endif
+   gblOps.w = 0;
+   gblOps.h = 0;
+   gblOps.bpp = BPPAUTO;
+@@ -54,7 +58,11 @@
    gblOps.musvolume = 6;
  
  #ifndef WIN32
@@ -14989,7 +15001,7 @@ diff -Naur gnujump-1.0.5-orig/src/setup.c gnujump-1.0.5/src/setup.c
    if (access (cfgDir, F_OK) < 0)
 diff -Naur gnujump-1.0.5-orig/src/surface.h gnujump-1.0.5/src/surface.h
 --- gnujump-1.0.5-orig/src/surface.h	2008-08-11 15:04:48.000000000 +0200
-+++ gnujump-1.0.5/src/surface.h	2017-01-14 15:05:57.263049060 +0100
++++ gnujump-1.0.5/src/surface.h	2017-01-19 23:16:27.267162981 +0100
 @@ -24,8 +24,11 @@
  #include "SDL_2dgl.h"
  
@@ -15004,7 +15016,7 @@ diff -Naur gnujump-1.0.5-orig/src/surface.h gnujump-1.0.5/src/surface.h
  typedef struct surface
 diff -Naur gnujump-1.0.5-orig/src/tools.c gnujump-1.0.5/src/tools.c
 --- gnujump-1.0.5-orig/src/tools.c	2008-08-11 15:04:48.000000000 +0200
-+++ gnujump-1.0.5/src/tools.c	2017-01-14 15:30:36.766060923 +0100
++++ gnujump-1.0.5/src/tools.c	2017-01-19 23:16:27.267162981 +0100
 @@ -141,7 +141,6 @@
    int n;
    int r = 0;

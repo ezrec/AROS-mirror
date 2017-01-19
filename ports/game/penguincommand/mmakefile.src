@@ -2,10 +2,9 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-#DISABLED #MM- ports-game : ports-game-penguincommand
-#requires libmikmod
+#MM- ports-game : ports-game-penguincommand
 
-#MM- ports-game-penguincommand : contrib-sdl
+#MM- ports-game-penguincommand : contrib-sdl contrib-sdl-sdl-image
 
 PACKAGE      := penguin-command
 VERSION      := 1.6.11

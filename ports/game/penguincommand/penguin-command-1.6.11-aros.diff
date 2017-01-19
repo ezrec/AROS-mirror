@@ -1,5 +1,5 @@
 diff -Naur penguin-command-1.6.11-orig/config.sub penguin-command-1.6.11/config.sub
---- penguin-command-1.6.11-orig/config.sub	2013-10-15 20:52:23.785475456 +0200
+--- penguin-command-1.6.11-orig/config.sub	2007-03-18 16:21:10.000000000 +0100
 +++ penguin-command-1.6.11/config.sub	2007-03-18 16:44:44.000000000 +0100
 @@ -1,9 +1,10 @@
  #! /bin/sh
@@ -827,8 +827,8 @@ diff -Naur penguin-command-1.6.11-orig/config.sub penguin-command-1.6.11/config.
  # Local variables:
  # eval: (add-hook 'write-file-hooks 'time-stamp)
 diff -Naur penguin-command-1.6.11-orig/src/main.c penguin-command-1.6.11/src/main.c
---- penguin-command-1.6.11-orig/src/main.c	2013-10-15 20:52:23.773475479 +0200
-+++ penguin-command-1.6.11/src/main.c	2013-10-15 20:46:25.961458187 +0200
+--- penguin-command-1.6.11-orig/src/main.c	2007-03-18 16:21:13.000000000 +0100
++++ penguin-command-1.6.11/src/main.c	2007-03-18 16:44:44.000000000 +0100
 @@ -32,8 +32,16 @@
  #endif
  
@@ -858,19 +858,19 @@ diff -Naur penguin-command-1.6.11-orig/src/main.c penguin-command-1.6.11/src/mai
      init_SDL();
      SDL_EventState(SDL_ACTIVEEVENT, SDL_IGNORE);
 diff -Naur penguin-command-1.6.11-orig/src/Makefile.in penguin-command-1.6.11/src/Makefile.in
---- penguin-command-1.6.11-orig/src/Makefile.in	2013-10-15 20:52:23.773475479 +0200
-+++ penguin-command-1.6.11/src/Makefile.in	2007-03-18 16:44:44.000000000 +0100
+--- penguin-command-1.6.11-orig/src/Makefile.in	2007-03-18 16:44:43.000000000 +0100
++++ penguin-command-1.6.11/src/Makefile.in	2017-01-19 22:55:10.485421916 +0100
 @@ -238,7 +238,7 @@
  	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
  penguin-command$(EXEEXT): $(penguin_command_OBJECTS) $(penguin_command_DEPENDENCIES) 
  	@rm -f penguin-command$(EXEEXT)
 -	$(LINK) $(penguin_command_LDFLAGS) $(penguin_command_OBJECTS) $(penguin_command_LDADD) $(LIBS)
-+	$(LINK) $(penguin_command_LDFLAGS) $(penguin_command_OBJECTS) $(penguin_command_LDADD) -lSDL_image -lpng -ljpeg -lz -lSDL_mixer -lvorbisfile -lvorbis -logg -lSDL -lGL
++	$(LINK) $(penguin_command_LDFLAGS) $(penguin_command_OBJECTS) $(penguin_command_LDADD) -lSDL_image -lpng -ljpeg -lz -lSDL_mixer -lmikmod -lvorbisfile -lvorbis -logg -lSDL -lGL
  
  mostlyclean-compile:
  	-rm -f *.$(OBJEXT)
 diff -Naur penguin-command-1.6.11-orig/src/options.c penguin-command-1.6.11/src/options.c
---- penguin-command-1.6.11-orig/src/options.c	2013-10-15 20:52:23.773475479 +0200
+--- penguin-command-1.6.11-orig/src/options.c	2007-03-18 16:21:13.000000000 +0100
 +++ penguin-command-1.6.11/src/options.c	2007-03-18 16:44:44.000000000 +0100
 @@ -10,10 +10,14 @@
      char filename[200];
