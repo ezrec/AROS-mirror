@@ -73,7 +73,7 @@ Synopsis
 
  struct PartitionHandle * AddPartition(
           struct PartitionHandle * root,
-          struct TagItem * taglist );
+          const struct TagItem * taglist );
  
  struct PartitionHandle * AddPartitionTags(
           struct PartitionHandle * root,
@@ -292,7 +292,7 @@ Synopsis
 
  struct Node * FindFileSystemA(
           struct PartitionHandle * table,
-          struct TagItem * taglist );
+          const struct TagItem * taglist );
  
  struct Node * FindFileSystem(
           struct PartitionHandle * table,
@@ -340,7 +340,7 @@ Synopsis
 
  void GetFileSystemAttrsA(
           struct Node * handle,
-          struct TagItem * taglist );
+          const struct TagItem * taglist );
  
  void GetFileSystemAttrs(
           struct Node * handle,
@@ -404,7 +404,7 @@ Synopsis
 
  LONG GetPartitionAttrs(
           struct PartitionHandle * ph,
-          struct TagItem * taglist );
+          const struct TagItem * taglist );
  
  LONG GetPartitionAttrsTags(
           struct PartitionHandle * ph,
@@ -480,7 +480,7 @@ Synopsis
 
  LONG GetPartitionTableAttrs(
           struct PartitionHandle * root,
-          struct TagItem * taglist );
+          const struct TagItem * taglist );
  
  LONG GetPartitionTableAttrsTags(
           struct PartitionHandle * root,
@@ -774,7 +774,7 @@ Synopsis
 
  LONG SetPartitionAttrs(
           struct PartitionHandle * ph,
-          struct TagItem * taglist );
+          const struct TagItem * taglist );
  
  LONG SetPartitionAttrsTags(
           struct PartitionHandle * ph,
@@ -812,7 +812,7 @@ Synopsis
 
  LONG SetPartitionTableAttrs(
           struct PartitionHandle * root,
-          struct TagItem * taglist );
+          const struct TagItem * taglist );
  
  LONG SetPartitionTableAttrsTags(
           struct PartitionHandle * root,

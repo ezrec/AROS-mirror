@@ -973,7 +973,7 @@ Synopsis
 ::
 
  struct Process * CreateNewProc(
-          struct TagItem * tags );
+          const struct TagItem * tags );
  
  struct Process * CreateNewProcTags(
           TAG tag, ... );
@@ -4323,7 +4323,7 @@ Synopsis
 
  BPTR NewLoadSeg(
           CONST_STRPTR file,
-          struct TagItem * tags );
+          const struct TagItem * tags );
  
  BPTR NewLoadSegTags(
           CONST_STRPTR file,
@@ -6519,7 +6519,7 @@ Synopsis
 
  LONG SystemTagList(
           CONST_STRPTR command,
-          struct TagItem * tags );
+          const struct TagItem * tags );
  
  LONG SystemTags(
           CONST_STRPTR command,

@@ -464,7 +464,7 @@ Synopsis
  struct Catalog * OpenCatalogA(
           const struct Locale  * locale,
           CONST_STRPTR name,
-          struct TagItem * tags );
+          const struct TagItem * tags );
  
  struct Catalog * OpenCatalog(
           const struct Locale  * locale,
