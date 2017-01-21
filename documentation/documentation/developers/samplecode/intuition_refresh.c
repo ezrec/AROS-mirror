@@ -88,7 +88,7 @@ int main(void)
 
     if (! window2) clean_exit("Can't open window 2\n");
     
-    cm = window1->WScreen->ViewPort.ColorMap;
+    cm = ViewPortAddress(window1)->ColorMap;
 
     // Let's obtain two pens
     pen1 = ObtainBestPen(cm, 0xFFFF0000 , 0 , 0 , TAG_END);
