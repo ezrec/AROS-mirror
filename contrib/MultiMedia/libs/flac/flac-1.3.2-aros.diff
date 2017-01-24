@@ -1,0 +1,21 @@
+diff -Naur flac-1.3.2-orig/src/flac/utils.c flac-1.3.2/src/flac/utils.c
+--- flac-1.3.2-orig/src/flac/utils.c	2016-12-11 10:04:19.000000000 +0100
++++ flac-1.3.2/src/flac/utils.c	2017-01-24 19:27:40.682540994 +0100
+@@ -40,6 +40,17 @@
+ #endif
+ #endif
+ 
++#ifdef __AROS__
++
++// FIXME: maybe we need function from codesets.library
++
++int wcswidth(const wchar_t *s, size_t n)
++{
++    size_t l = strlen(s);
++    return l > n ? n : l; 
++}
++#endif
++
+ const char *CHANNEL_MASK_TAG = "WAVEFORMATEXTENSIBLE_CHANNEL_MASK";
+ 
+ int flac__utils_verbosity_ = 2;
