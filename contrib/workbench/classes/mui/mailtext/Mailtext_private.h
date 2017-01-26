@@ -206,6 +206,10 @@
     #ifdef __amigaos4__
         #define BUG DebugPrintF
     #else
+        #ifdef __AROS__
+            #define DEBUG 1
+            #include <aros/debug.h>
+        #endif
         #define BUG kprintf
     #endif
 #else
