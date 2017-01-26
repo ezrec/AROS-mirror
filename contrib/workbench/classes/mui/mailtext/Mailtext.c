@@ -118,10 +118,10 @@ struct Data
 
 #ifndef __AROS__
 #include <mui/mccbase.c>
-#endif
 
 struct Library *LocaleBase;
 struct Library *DiskfontBase;
+#endif
 
 #if defined(__amigaos4__)
 struct LocaleIFace   * ILocale   = NULL;
