@@ -1,0 +1,10 @@
+This ugly, sparsely-commented program is the source for text2pdf version
+1.1.  It should be ANSI-conforming and compile on most platforms.  You'll
+need to change LF_EXTRA to 1 for machines which write 2 characters for \n.
+These include PCs, of course.
+
+You may distribute the source or compiled versions free of charge.  You may
+not alter the source in any way other than those mentioned above without
+the permission of the author, Phil Smith <phil@bagobytes.co.uk>.
+
+Origin: http://www.eprg.org/pdfcorner/text2pdf/

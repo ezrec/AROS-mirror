@@ -1,0 +1,25 @@
+# Copyright © 2017 The AROS Development Team. All rights reserved.
+# $Id$
+
+# Makefile to make Text2PDF.
+
+include $(SRCDIR)/config/aros.cfg
+
+EXEDIR := $(AROS_CONTRIB)/Utilities/Text/Text2PDF
+
+FILES := \
+    text2pdf 
+
+NOWARN_FLAGS  :=
+USER_CFLAGS   := $(NOWARN_FLAGS)
+USER_INCLUDES :=
+USER_LDFLAGS  := 
+
+#MM- contrib : contrib-multimedia-text2pdf
+#MM  contrib-multimedia-text2pdf : includes linklibs
+
+%build_prog mmake=contrib-multimedia-text2pdf \
+    progname=Text2PDF targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs=""
+
+%common
