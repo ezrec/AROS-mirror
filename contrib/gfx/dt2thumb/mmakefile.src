@@ -1,0 +1,28 @@
+# Copyright © 2017 The AROS Development Team. All rights reserved.
+# $Id$
+
+# Makefile to make dt2thumb.
+
+include $(SRCDIR)/config/aros.cfg
+
+EXEDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/Dt2Thumb
+
+FILES := \
+    Datatype2Thumb 
+
+NOWARN_FLAGS  :=
+USER_CFLAGS   := $(NOWARN_FLAGS)
+USER_INCLUDES :=
+USER_LDFLAGS  := 
+
+#MM- contrib-gfx : contrib-gfx-dt2thumb
+#MM  contrib-gfx-dt2thumb : includes linklibs contrib-gfx-dt2thumb-files
+
+%build_prog mmake=contrib-gfx-dt2thumb \
+    progname=dt2thumb targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs=""
+
+%copy_files_q mmake=contrib-gfx-dt2thumb-files \
+files=readme.txt src=. dst=$(EXEDIR)
+
+%common
