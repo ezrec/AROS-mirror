@@ -224,7 +224,7 @@ BOOL CreateThumb(STRPTR infile, ULONG destwidth, ULONG destheight, BOOL keepaspe
 
 	sprintf(outfile,"%s.info",infile);
 
-	if (in_pic = (RGBImage *)AllocVec(sizeof(RGBImage),MEMF_ANY))
+	if ((in_pic = (RGBImage *)AllocVec(sizeof(RGBImage),MEMF_ANY)))
 	{
 		in_pic->Data = NULL;
 		if (readpic_by_datatype(in_pic, infile))
@@ -322,7 +322,7 @@ BOOL readpic_by_datatype(RGBImage *pic, char *file_name)
 	{
 
 		if (GetDTAttrs( DTImage,
-					PDTA_BitMapHeader, (ULONG)&bmh,
+					PDTA_BitMapHeader, &bmh,
 					TAG_END ) == 1)
 
 		{
@@ -370,10 +370,10 @@ RGBImage *resizeNearest(RGBImage *pic, ULONG w2, ULONG h2)
     ULONG y_ratio = (ULONG)((pic->Height<<16)/h2) +1;
     ULONG x2,y2,i,j;
 	
-	if (outpic = (RGBImage *)AllocVec(sizeof(RGBImage),MEMF_ANY))
+	if ((outpic = (RGBImage *)AllocVec(sizeof(RGBImage),MEMF_ANY)))
 	{
 		outpic->Data = NULL;
-		if (outpic->Data = (UBYTE *)AllocVec(w2*h2*4, MEMF_ANY))
+		if ((outpic->Data = (UBYTE *)AllocVec(w2*h2*4, MEMF_ANY)))
 		{
 			outpic->Width = w2;
 			outpic->Height = h2;
@@ -413,10 +413,10 @@ RGBImage *resizeAverage(RGBImage *pic, ULONG w2, ULONG h2)
 	ULONG r,g,b,a,index;
     ULONG x2,y2,i,j,x,y;
 	
-	if (outpic = (RGBImage *)AllocVec(sizeof(RGBImage),MEMF_ANY))
+	if ((outpic = (RGBImage *)AllocVec(sizeof(RGBImage),MEMF_ANY)))
 	{
 		outpic->Data = NULL;
-		if (outpic->Data = (UBYTE *)AllocVec(w2*h2*4, MEMF_ANY))
+		if ((outpic->Data = (UBYTE *)AllocVec(w2*h2*4, MEMF_ANY)))
 		{
 			outpic->Width = w2;
 			outpic->Height = h2;
@@ -478,9 +478,9 @@ RGBImage *resizeBilinear(RGBImage *pic, ULONG w2, ULONG h2)
 	ULONG offset = 0 ;
 	int i,j;
 	
-	if (outpic = (RGBImage *)AllocVec(sizeof(RGBImage),MEMF_ANY))
+	if ((outpic = (RGBImage *)AllocVec(sizeof(RGBImage),MEMF_ANY)))
 	{
-		if (outpic->Data = (UBYTE *)AllocVec(w2*h2*4, MEMF_ANY))
+		if ((outpic->Data = (UBYTE *)AllocVec(w2*h2*4, MEMF_ANY)))
 		{
 			outpic->Width = w2;
 			outpic->Height = h2;
@@ -544,7 +544,7 @@ BOOL savepic_by_datatype(RGBImage *pic, char *file_name)
 	struct BitMapHeader *bmhd;
 	struct dtWrite dtw;
 	struct pdtBlitPixelArray dtb;
-	FILE *file = NULL;
+	BPTR *file = NULL;
 	BOOL retval = FALSE;
 	
 	DTImage = NewDTObject(	(APTR)NULL,
@@ -575,7 +575,7 @@ BOOL savepic_by_datatype(RGBImage *pic, char *file_name)
 		DoMethodA(DTImage, (Msg) &dtb);
 
 		//write datatype object to file
-		if (file = Open (file_name,MODE_NEWFILE))
+		if ((file = Open (file_name,MODE_NEWFILE)))
 		{
 			dtw.MethodID = DTM_WRITE;
 			dtw.dtw_GInfo = NULL;
