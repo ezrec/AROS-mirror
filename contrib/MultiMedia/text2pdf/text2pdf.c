@@ -220,7 +220,7 @@ void WritePages(){
   int atBOP;
   long beginstream;
   int lineNo, charNo;
-  int ch, column;
+  int ch = EOF, column;
   int padding, i;
 
   while (!atEOF) {
