@@ -15,10 +15,10 @@ USER_CFLAGS   := $(NOWARN_FLAGS)
 USER_INCLUDES :=
 USER_LDFLAGS  := 
 
-#MM- contrib : contrib-multimedia-text2pdf
-#MM  contrib-multimedia-text2pdf : includes linklibs
+#MM- contrib : contrib-misc-text2pdf
+#MM  contrib-misc-text2pdf : includes linklibs
 
-%build_prog mmake=contrib-multimedia-text2pdf \
+%build_prog mmake=contrib-misc-text2pdf \
     progname=Text2PDF targetdir=$(EXEDIR) \
     files=$(FILES) uselibs=""
 
