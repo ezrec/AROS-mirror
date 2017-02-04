@@ -6,7 +6,9 @@ include $(SRCDIR)/config/aros.cfg
 #MM- contrib-ffmpeg : linklibs-startup linklibs-amiga linklibs-arossupport linklibs-clib
 
 FFMPEG_CC="$(TARGET_CC)"
-FFMPEG_CFLAGS="$(TARGET_CFLAGS)"
+FFMPEG_LD="$(TARGET_LD)"
+FFMPEG_CFLAGS=$(TARGET_CFLAGS) $(DEBUG_CFLAGS) $(OPTIMIZATION_CFLAGS) $(ISA_FLAGS)
+FFMPEG_LIBS=-lnet
 
 VERSION      := 3.0.1
 REPOSITORIES := http://ffmpeg.org/releases
@@ -22,12 +24,13 @@ FFMPEG_OPTIONS := \
         --arch=$(FFMPEG_ARCH) \
         --target-os=aros \
         --cc=$(FFMPEG_CC) \
-        --extra-cflags=$(FFMPEG_CFLAGS) \
+        --extra-cflags="$(FFMPEG_CFLAGS)" \
+        --extra-libs="$(FFMPEG_LIBS)" \
+        --enable-static \
+        --disable-pic \
+        --disable-shared \
         --disable-yasm \
-        --disable-programs --disable-doc
-
-NOWARN_FLAGS := $(NOWARN_DEPRECATED_DECLARATIONS) $(NOWARN_UNUSED_RESULT)
-USER_CFLAGS := $(NOWARN_FLAGS)
+        --disable-doc
 
 %fetch_and_build mmake=contrib-ffmpeg prefix=$(AROS_DEVELOPMENT) \
 	package=ffmpeg version=$(VERSION) suffixes="tar.bz2" \
