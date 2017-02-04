@@ -5,6 +5,9 @@ include $(SRCDIR)/config/aros.cfg
 
 #MM- contrib-ffmpeg : linklibs-startup linklibs-amiga linklibs-arossupport linklibs-clib
 
+NOWARN_FLAGS := $(NOWARN_DEPRECATED_DECLARATIONS) $(NOWARN_UNUSED_RESULT)
+USER_CFLAGS := $(NOWARN_FLAGS)
+
 FFMPEG_CC="$(TARGET_CC)"
 FFMPEG_LD="$(TARGET_LD)"
 FFMPEG_CFLAGS=$(TARGET_CFLAGS) $(DEBUG_CFLAGS) $(OPTIMIZATION_CFLAGS) $(ISA_FLAGS)
