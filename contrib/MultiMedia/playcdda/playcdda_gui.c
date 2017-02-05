@@ -135,6 +135,7 @@ int main (void) {
 		!(cdda_buf = AllocVec(CDDA_BUFFER_SIZE, MEMF_ANY)) ||
 		!(cdda_buf2 = AllocVec(CDDA_BUFFER_SIZE, MEMF_ANY)))
 	{
+		MUI_Request(app, NULL, 0, "PlayCDDA error", "OK", "Can't allocate memory");
 		goto error;
 	}
 
@@ -142,21 +143,25 @@ int main (void) {
 	if (!(ahi_io = CreateIORequest(ahi_mp, sizeof(*ahi_io))) ||
 		!(ahi_io2 = CreateIORequest(ahi_mp, sizeof(*ahi_io))))
 	{
+		MUI_Request(app, NULL, 0, "PlayCDDA error", "OK", "CreateIORequest() failed");
 		goto error;
 	}
 	if (OpenDevice(AHINAME, AHI_DEFAULT_UNIT, (struct IORequest *)ahi_io, 0) != IOERR_SUCCESS) {
 		ahi_io->ahir_Std.io_Device = NULL;
+		MUI_Request(app, NULL, 0, "PlayCDDA error", "OK", "OpenDevice() failed");
 		goto error;
 	}
 	CopyMem(ahi_io, ahi_io2, sizeof(*ahi_io));
 
 	icon = GetDiskObjectNew("PROGDIR:"PROGNAME);
 	if (!icon) {
+		MUI_Request(app, NULL, 0, "PlayCDDA error", "OK", "GetDiskObjectNew() failed");
 		goto error;
 	}
 	
 	SeekBarClass = SeekBar_CreateClass();
 	if (!SeekBarClass) {
+		MUI_Request(app, NULL, 0, "PlayCDDA error", "OK", "SeekBar_CreateClass()");
 		goto error;
 	}
 	
@@ -236,6 +241,7 @@ int main (void) {
 		End,
 	End;
 	if (!app) {
+		MUI_Request(app, NULL, 0, "PlayCDDA error", "OK", "Can't create application object");
 		goto error;
 	}
 	
@@ -267,6 +273,7 @@ int main (void) {
 	
 	set(wnd, MUIA_Window_Open, TRUE);
 	if (!XGET(wnd, MUIA_Window_Open)) {
+		MUI_Request(app, NULL, 0, "PlayCDDA error", "OK", "Can't open window");
 		goto error;
 	}
 	
@@ -276,11 +283,13 @@ int main (void) {
 	}
 	cd_io = GetCDDevice(dosdev);
 	if (!cd_io) {
+		MUI_Request(app, NULL, 0, "PlayCDDA error", "OK", "GetCDDevice() failed");
 		goto error;
 	}
 	
 	cdda_io = CreateIORequest(cd_io->io_Message.mn_ReplyPort, sizeof(struct IOStdReq));
 	if (!cdda_io) {
+		MUI_Request(app, NULL, 0, "PlayCDDA error", "OK", "CreateIORequest() failed");
 		goto error;
 	}
 	CopyMem(cd_io, cdda_io, sizeof(struct IOStdReq));
@@ -298,6 +307,7 @@ int main (void) {
 	cd_sig = 1UL << cd_signal;
 	cd_change = AddDiskChangeHandler(cd_io, cd_sig);
 	if (!cd_change) {
+		MUI_Request(app, NULL, 0, "PlayCDDA error", "OK", "AddDiskChangeHandler() failed");
 		goto error;
 	}
 	
