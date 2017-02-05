@@ -1,0 +1,6 @@
+# DataType file for a RIFF-WAVE Sound
+FileName=RAM:ICO
+DTName=Windows ICO,ico
+ID=pict,ico
+Recog=#?.ico,\$00\$00\$01\$00
+Flags=binary,y,0

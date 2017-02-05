@@ -1,0 +1,6 @@
+# DataType file for a RIFF-WAVE Sound
+FileName=RAM:J2K
+DTName=J2K,jpeg2000
+ID=pict,j2k
+Recog=#?.j2k,
+Flags=binary,y,0

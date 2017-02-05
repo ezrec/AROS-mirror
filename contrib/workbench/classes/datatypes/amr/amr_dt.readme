@@ -1,0 +1,21 @@
+Short:        3GPP AMR datatype
+Author:       Fredrik Wikstrom
+Uploader:     Fredrik Wikstrom <fredrik@a500.org>
+Type:         util/dtype
+Version:      0.1
+Architecture: ppc-amigaos
+
+Installation:
+
+Copy amr.datatype to SYS:Classes/DataTypes/
+Copy AMR(|.info) to DEVS:DataTypes/
+
+Info:
+
+Based on the 7.0.0 3GPP reference implementation:
+http://www.3gpp.org/ftp/Specs/html-info/26104.htm
+
+Changes:
+
+0.1 (5-Nov-2008)
+ - First released version

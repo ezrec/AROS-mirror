@@ -1,0 +1,6 @@
+FileName=RAM:Bonk
+DTName=Bonk,bonk
+ID=soun,bonk
+Recog=#?,\$00BONK\$00
+Flags=binary,y,0
+Version=0.1

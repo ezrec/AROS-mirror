@@ -1,0 +1,26 @@
+Short:        Windows Icon (.ico) datatype
+Author:       Fredrik Wikstrom
+Uploader:     Fredrik Wikstrom <fredrik@a500.org>
+Type:         util/dtype
+Version:      52.1
+Architecture: ppc-amigaos
+Replaces:     util/dtype/ico_dt_os4.lha
+
+Installation:
+
+1. copy ico.datatype to SYS:Classes/DataTypes/
+2. copy ICO(|.info) to DEVS:DataTypes/
+
+Changes:
+
+52.1 (29-Jul-2008)
+ - Fixed a bug in the truecolour code ("Loading..." in MultiView's titlebar
+   and no image would be displayed)
+
+0.2 (7-Dec-2006)
+ - enabled compiler optimisations
+ - now always lets superclass deal with DTM_WRITE so that save in multiview now
+   works
+
+0.1 (13-Sep-2006)
+ - first released version

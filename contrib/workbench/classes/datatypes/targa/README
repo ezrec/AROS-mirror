@@ -1,0 +1,27 @@
+Targa (.tga) picture datatype
+
+Author: Fredrik Wikstrom
+Website: http://a500.org
+E-mail: fredrik at a500 dot org
+
+Installation:
+
+1. copy Targa to DEVS:DataTypes/
+2. copy targa.datatype to SYS:Classes/DataTypes/
+
+"make install" can also be used if the OS4 SDK is installed.
+
+Bugs:
+
+None known.
+
+Compiling:
+
+"make".
+
+Changes:
+
+0.2 (28-Nov-2006)
+ - correctly skips id field after header now if idsize > 0
+0.1 (20-Nov-2006)
+ - first released version

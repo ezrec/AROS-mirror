@@ -1,0 +1,43 @@
+Short:        Direct Draw Surface (DDS) DataType
+Author:       Fredrik Wikstrom
+Uploader:     Fredrik Wikstrom <fredrik@a500.org>
+Type:         util/dtype
+Version:      52.2
+Architecture: ppc-amigaos
+
+Installation:
+
+1. Copy dds.datatype to SYS:Classes/DataTypes/
+2. Copy DDS(|.info) to DEVS:DataTypes/
+
+Supports:
+
+ - Uncompressed truecolor
+ - DXT1 compression
+ - DXT2/3 compression
+ - DXT4/5 compression
+ - RXGB (Doom 3)
+
+Indexed texture files are not supported (due to lack of test files).
+
+Source code is included.
+
+Changes:
+
+52.2 (19-Jun-2008)
+ - Added support for RXGB format used for Doom 3 height maps (same as DXT5 but
+   with red colour data stored in the alpha channel part, and no alpha channel)
+
+52.1 (15-Jun-2008)
+ - Implemented DXT2-5 compression support
+ - Fixed a bug in the uncompressed alpha channel support
+
+0.3 (12-Jun-2008)
+ - Improved DXT1 support (fixes weird colored pixels with some files)
+
+0.2 (11-Jun-2008)
+ - Fixed bug in 32-bit truecolor support
+ - Implemented DXT1 compression support
+
+0.1 (10-Jun-2008)
+ - First released version

@@ -1,0 +1,37 @@
+Short:        MacOS Icon (.icns) datatype
+Author:       Fredrik Wikstrom
+Uploader:     Fredrik Wikstrom <fredrik@a500.org>
+Type:         util/dtype
+Version:      52.3
+Architecture: ppc-amigaos
+
+Installation:
+
+1. Copy ICNS(|.info) to DEVS:DataTypes/
+2. Copy icns.datatype to SYS:Classes/DataTypes/
+
+Supported Formats:
+
+ - 16-colour
+ - 256-colour
+ - Truecolour (all sizes up to and including 512x512)
+
+Use '<' and '>' on your keyboard to view all images in a file in MultiView
+(same as with the ico.datatype).
+
+256x256 and larger icons require openjpeg.library to be installed to work.
+
+Changes:
+
+52.3 (26-Jul-2008)
+ - Modified to use openjpeg.library
+
+52.2 (20-Jul-2008)
+ - Added JP2 compression support using libopenjpeg
+
+52.1 (20-Jul-2008)
+ - Added support for B&W images
+ - Added support for 16- & 256-colour images
+
+0.1 (19-Jul-2008)
+ - First released version

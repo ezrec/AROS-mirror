@@ -1,0 +1,28 @@
+Short:        AmigaOS Icon (.info) datatype
+Author:       Fredrik Wikstrom
+Uploader:     Fredrik Wikstrom <fredrik@a500.org>
+Type:         util/dtype
+Version:      52.2
+Architecture: ppc-amigaos
+
+Installation:
+
+Copy info.datatype to SYS:Classes/DataTypes/
+Copy INFO(|.info) to DEVS:DataTypes/
+
+Info:
+
+Should support all icon file formats handled by icon.library.
+
+Changes:
+
+52.2 (26-Aug-2008)
+ - Fixed truecolor icons being reported as having an alternate image even when
+   they don't
+
+52.1 (4-Aug-2008)
+ - Added truecolour icon support (thanks to Chris Young)
+ - Added support for selected image
+
+0.1 (31-Jul-2008)
+ - First released version

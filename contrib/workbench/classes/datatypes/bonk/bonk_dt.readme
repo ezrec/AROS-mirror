@@ -1,0 +1,25 @@
+Short:        Bonk sound datatype
+Author:       Fredrik Wikstrom
+Uploader:     Fredrik Wikstrom <fredrik@a500.org>
+Type:         util/dtype
+Version:      0.2
+Architecture: ppc-amigaos
+
+Bonk - lossy/lossless audio compressor
+
+Based on 0.6 Bonk code from:
+http://logarithmic.net/pfh/bonk
+
+Installation:
+
+1. Copy bonk.datatype to SYS:Classes/DataTypes/
+2. Copy Bonk to DEVS:DataTypes/
+
+Changes:
+
+0.2 (18-Dec-2008)
+ - Fixed handling of stereo files (bonk's length_remaining counts samples, not
+   frames)
+
+0.1 (18-Dec-2008)
+ - First released version

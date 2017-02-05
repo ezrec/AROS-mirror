@@ -1,0 +1,18 @@
+Short:        WavPack (.wv) datatype
+Author:       Fredrik Wikstrom
+Uploader:     Fredrik Wikstrom <fredrik@a500.org>
+Type:         util/dtype
+Version:      0.1
+Architecture: ppc-amigaos
+
+Hybrid Lossless Wavefile Compressor
+
+Installation:
+
+1. Copy wavpack.datatype to SYS:Classes/DataTypes/
+2. Copy WavPack to DEVS:DataTypes/
+
+Changes:
+
+0.1 (18-Dec-2008)
+ - First released version

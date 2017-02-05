@@ -1,0 +1,6 @@
+# DataType file for a RIFF-WAVE Sound
+FileName=RAM:ICNS
+DTName=MacOS ICNS,icns
+ID=pict,icns
+Recog=#?,icns
+Flags=binary,y,0

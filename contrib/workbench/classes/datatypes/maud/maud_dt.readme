@@ -1,0 +1,21 @@
+Short:        IFF-MAUD (.maud) sound datatype
+Author:       Fredrik Wikstrom
+Uploader:     Fredrik Wikstrom <fredrik@a500.org>
+Type:         util/dtype
+Version:      52.1
+Architecture: ppc-amigaos
+
+Supported compressions:
+
+ - PCM (1-bit and upwards)
+ - A-Law/u-Law (16->8)
+
+Installation:
+
+Copy maud.datatype SYS:Classes/DataTypes/
+Copy MAUD(|.info) DEVS:DataTypes/
+
+Changes:
+
+52.1 (2-May-2009)
+ - First released version

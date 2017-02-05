@@ -1,0 +1,6 @@
+# DataType file for a RIFF-WAVE Sound
+FileName=RAM:PCX
+DTName=PCX,pcx
+ID=pict,pcx
+Recog=#?,\$0A\?\$01
+Flags=binary,y,0

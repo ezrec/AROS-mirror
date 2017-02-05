@@ -1,0 +1,6 @@
+# DataType file for a Sun .au Sound
+FileName=RAM:Sun .au
+DTName=Sun .au/NeXT .snd,au
+ID=soun,au
+Recog=#?,.snd
+Flags=binary,y,0

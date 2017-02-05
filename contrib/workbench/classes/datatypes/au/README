@@ -1,0 +1,44 @@
+Datatype for Sun .au/NeXT .snd sound files
+
+Author: Fredrik Wikstrom
+Website: http://a500.org
+E-mail: fredrik at a500 dot org
+
+SUPPORTED ENCODINGS/FORMATS:
+
+ - 8-bit u-law/A-law
+ - 8, 16, 24 & 32-bit linear (PCM)
+ - IEEE Float (32 & 64-bit)
+ - G.721 (4-bit, untested)
+ - G.723 (3 & 5-bit, untested)
+
+Fragmented files are not supported at the moment.
+
+INSTALLATION:
+
+1. copy the file SUN_AU to DEVS:DataTypes/.
+2. copy sun_au.datatype to SYS:Classes/DataTypes/.
+
+Alternatively, if you have the OS4 SDK installed, you can just type "make install" and both files will be installed to their correct places.
+
+BUGS:
+
+None known. If you find any, contact me by e-mail (fredrik at a500 dot org).
+The same goes for (if you have any) .au/.snd encodings/formats that are not yet supported in this datatype.
+
+COMPILING:
+
+To compile just type "make". To compile without G.72X support use "make G72X=0".
+
+In order to be able to recreate the descriptor (from AU.dt) file you will need to have the MakeDT.rexx arexx script installed in REXX: (can be downloaded from http://aminet.net). The rest will be handled by the Makefile.
+
+CHANGES:
+
+50.1
+ - enabled G.72X support (untested)
+
+0.2 (5-May-2005)
+ - fixed memory trashing in wave_class.c (was the cause of some instability)
+
+0.1 (26-Apr-2005)
+ - first released version of the datatype

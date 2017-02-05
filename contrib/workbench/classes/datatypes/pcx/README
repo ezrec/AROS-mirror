@@ -1,0 +1,29 @@
+PCX picture datatype
+
+Author: Fredrik Wikstrom
+Website: http://a500.org
+E-mail: fredrik at a500 dot org
+
+Installation:
+
+1. copy PCX to DEVS:DataTypes/
+2. copy pcx.datatype to SYS:Classes/DataTypes/
+
+"make install" can also be used if the OS4 SDK is installed.
+
+Bugs:
+
+None known.
+
+Compiling:
+
+"make".
+
+Changes:
+
+0.3 (28-Nov-2006)
+ - now forces 2-color image palette to black & white (seems like this is the proper thing to do)
+0.2 (17-Nov-2006)
+ - removed a useless check that stopped datatype from loading anything with depth > 8 (no idea how this got left in...)
+0.1 (5-Sep-2006)
+ - first released version

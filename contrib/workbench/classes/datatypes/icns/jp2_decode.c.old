@@ -1,0 +1,177 @@
+#include "icns_class.h"
+#include <string.h>
+
+struct JP2Box {
+	uint32 BoxSize;
+	uint32 BoxType;
+};
+
+#define JP2BT_jP	MAKE_ID('j','P',' ',' ')
+#define JP2BT_prfl	MAKE_ID('p','r','f','l')
+#define JP2BT_jp2h	MAKE_ID('j','p','2','h')
+#define JP2BT_ihdr	MAKE_ID('i','h','d','r')
+#define JP2BT_bpcc	MAKE_ID('b','p','c','c')
+#define JP2BT_colr	MAKE_ID('c','o','l','r')
+#define JP2BT_pclr	MAKE_ID('p','c','l','r')
+#define JP2BT_cdef	MAKE_ID('c','d','e','f')
+#define JP2BT_res	MAKE_ID('r','e','s',' ')
+#define JP2BT_jp2c	MAKE_ID('j','p','2','c')
+
+struct JP2_ihdr {
+	uint8 Version[2];
+	uint16 NC;
+	uint32 Height, Width;
+	uint8 BPC, C;
+	uint8 UnkC, IPR;
+};
+
+struct JP2Info {
+	struct IconInfo *IconInfo;
+	void *jP;
+	void *jp2h;
+	void *jp2c;
+	struct {
+		uint8 depth;
+	} component[4];
+	BOOL done;
+};
+
+static int32 jp2_box_parser (uint8 *in, int32 in_size, struct JP2Info *jp2i,
+	int32 (*callback)(struct JP2Box *box, struct JP2Info *jp2i));
+
+static int32 jp2_root_callback (struct JP2Box *box, struct JP2Info *jp2i);
+static int32 jp2_jp2h_callback (struct JP2Box *box, struct JP2Info *jp2i);
+static int32 jp2_jp2c_callback (struct JP2Box *box, struct JP2Info *jp2i);
+
+int32 jp2_decode (uint8 *out, int32 out_size, struct IconInfo *info) {
+	struct JP2Info jp2i = {0};
+	int32 error;
+
+	jp2i.IconInfo = info;
+	error = jp2_box_parser(info->Data, info->DataSize, &jp2i, jp2_root_callback);
+
+	if (!error && !jp2i.done) error = DTERROR_NOT_ENOUGH_DATA;
+
+	return error;
+}
+
+static int32 jp2_box_parser (uint8 *in, int32 in_size, struct JP2Info *jp2i,
+	int32 (*callback)(struct JP2Box *box, struct JP2Info *jp2i))
+{
+	struct JP2Box *box;
+	int32 data_size;
+	int32 error = OK;
+
+	while (!error && in_size > 0) {
+		box = (struct JP2Box *)in;
+		in += sizeof(*box);
+
+		in_size -= sizeof(*box);
+		if (in_size < 0) {
+			error = DTERROR_INVALID_DATA;
+			break;
+		}
+
+		if (box->BoxSize == 0) box->BoxSize = in_size;
+		data_size = box->BoxSize - sizeof(*box);
+		in_size -= data_size;
+		if (data_size < 0 || in_size < 0) {
+			error = DTERROR_INVALID_DATA;
+			break;
+		}
+
+		error = callback(box, jp2i);
+	}
+
+	return error;
+}
+
+static int32 jp2_root_callback (struct JP2Box *box, struct JP2Info *jp2i) {
+	uint8 *in = (uint8 *)(box + 1);
+	int32 error = OK;
+	int32 data_size = box->BoxSize - sizeof(*box);
+	switch (box->BoxType) {
+
+		case JP2BT_jP:
+			if (data_size != 4 || *(uint32 *)in != 0x0D0A870A) {
+				error = DTERROR_INVALID_DATA;
+				break;
+			}
+			jp2i->jP = in;
+			break;
+
+		case JP2BT_jp2h:
+			if (!jp2i->jP) {
+				error = DTERROR_INVALID_DATA;
+				break;
+			}
+			jp2i->jp2h = in;
+			error = jp2_box_parser(in, box->BoxSize, jp2i, jp2_jp2h_callback);
+			break;
+
+		case JP2BT_jp2c:
+			if (!jp2i->jp2h) {
+				error = DTERROR_INVALID_DATA;
+				break;
+			}
+			jp2i->jp2c = in;
+			error = jp2_box_parser(in, box->BoxSize, jp2i, jp2_jp2c_callback);
+			break;
+
+	}
+	return error;
+}
+
+static int32 jp2_jp2h_callback (struct JP2Box *box, struct JP2Info *jp2i) {
+	uint8 *in = (uint8 *)(box + 1);
+	int32 error = OK;
+	int32 data_size = box->BoxSize - sizeof(*box);
+	switch (box->BoxType) {
+
+		case JP2BT_ihdr:
+			if (data_size == sizeof(struct JP2_ihdr)) {
+				struct IconInfo *info = jp2i->IconInfo;
+				struct JP2_ihdr *ihdr = (struct JP2_ihdr *)in;
+				int i;
+
+				if (ihdr->Version[1] != 1 || ihdr->C != 7) {
+					error = DTERROR_UNKNOWN_COMPRESSION;
+					break;
+				}
+
+				if (ihdr->NC != 4 || ihdr->Width != info->Width || ihdr->Height != info->Height) {
+					error = DTERROR_INVALID_DATA;
+					break;
+				}
+
+				for (i = 0; i < 4; i++) {
+					jp2i->component[i].depth = ihdr->BPC;
+				}
+			} else {
+				error = DTERROR_INVALID_DATA;
+			}
+			break;
+
+		case JP2BT_bpcc:
+			if (data_size != 4 || jp2i->component[0].depth != 0) {
+				error = DTERROR_INVALID_DATA;
+			} else {
+				int i;
+				for (i = 0; i < 4; i++) {
+					jp2i->component[i].depth = *in++;
+				}
+			}
+			break;
+
+	}
+	return error;
+}
+
+static int32 jp2_jp2c_callback (struct JP2Box *box, struct JP2Info *jp2i) {
+	uint8 *in = (uint8 *)(box + 1);
+	int32 error = OK;
+	int32 data_size = box->BoxSize - sizeof(*box);
+	switch (box->BoxType) {
+	}
+	return error;
+}

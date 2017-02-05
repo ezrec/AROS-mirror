@@ -1,0 +1,30 @@
+Short:        JPEG 2000 (.j2k, .jp2) datatype
+Author:       Fredrik Wikstrom
+Uploader:     Fredrik Wikstrom <fredrik@a500.org>
+Type:         util/dtype
+Version:      0.2
+Architecture: ppc-amigaos
+Requires:     util/libs/openjpeglibrary
+
+Installation:
+
+1. Copy jpeg2000.datatype to SYS:Classes/DataTypes/
+2. Copy JP2(|.info) to DEVS:DataTypes/
+
+Requirements:
+
+openjpeg.library
+
+Info:
+
+Datatype for JPEG 2000 (.j2k, .jp2) picture files.
+
+Currently only 3-component (RGB) images are supported.
+
+Changes:
+
+0.2 (29-Jul-2008)
+ - Added .j2k support
+
+0.1 (28-Jul-2008)
+ - First released version

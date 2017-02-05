@@ -1,0 +1,6 @@
+FileName=RAM:Icon
+DTName=AmigaOS Icon,info
+ID=pict,info
+Recog=#?.info,
+Flags=binary,y,0
+Version=52.2

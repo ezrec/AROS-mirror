@@ -1,0 +1,6 @@
+FileName=RAM:WavPack
+DTName=WavPack,wavpack
+ID=soun,wvpk
+Recog=#?,wvpk
+Flags=binary,y,0
+Version=0.1

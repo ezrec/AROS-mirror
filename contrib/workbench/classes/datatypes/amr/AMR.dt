@@ -1,0 +1,5 @@
+FileName=RAM:AMR
+DTName=3GPP AMR,amr
+ID=soun,amr
+Recog=#?,#!AMR\$0A
+Flags=binary,y,0

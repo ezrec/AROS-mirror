@@ -1,0 +1,5 @@
+FileName=RAM:IFF-MAUD
+DTName=IFF-MAUD,maud
+ID=soun,maud
+Recog=#?,FORM\?\?\?\?MAUD
+Flags=iff,y,0
