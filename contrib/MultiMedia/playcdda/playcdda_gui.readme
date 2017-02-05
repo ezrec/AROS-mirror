@@ -1,0 +1,37 @@
+Short:        Play CD audio tracks using AHI
+Author:       Fredrik Wikstrom
+Uploader:     Fredrik Wikstrom <fredrik@a500.org>
+Type:         mus/play
+Version:      1.6
+Architecture: i386-aros
+
+Installation:
+
+Copy the PlayCDDA executable anywhere on your harddrive and set the DOSDEV
+tooltype to the device name of your CD/DVD drive.
+
+Changes:
+
+1.6 (1-Dec-2011)
+ - Added CDDA buffering code from AmigaOS4.x version
+ - Added some icons to the release archive including one for the PlayCDDA exe
+ - Added a status display above the seeking gadget
+
+1.5 (13-Aug-2010)
+ - Added a Zune interface for AROS
+
+1.4 (27-Oct-2009)
+ - Removed the io_Unit check from DoSCSICmd because some device drivers set
+   this field to NULL even they open successfully
+
+1.3 (27-Oct-2009)
+ - Fixed playback of the first track on an Audio CD
+ - Tracks are now numbered starting with track #1 instead of #0
+ 
+1.2 (19-Oct-2009)
+ - PlayCDDA now obtains the device/unit information using dos.library
+ - If no track number is specified PlayCDDA will list all data/audio tracks on
+   the CD in question
+
+1.1 (4-Aug-2009)
+ - First released version
