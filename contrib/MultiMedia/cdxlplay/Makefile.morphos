@@ -1,0 +1,22 @@
+CC = ppc-morphos-gcc
+AS = ppc-morphos-as
+RM = rm
+
+CFLAGS = -O3 -Wall -Iinclude
+ASFLAGS = -mregnames -Ippc
+LINK = 
+LIBS = -lSDL -lGL
+
+TARGET = ../aros/CDXLPlay
+OBJS = main.o options_amiga.o cdxlplay.o ppc/p2c.o opengl.o
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(LINK) -o $@ $^ $(LIBS)
+
+main.o options_amiga.o: include/cdxlplay.h
+ppc/p2c.o: ppc/p2c/*.s
+
+clean:
+	$(RM) *.o ppc/*.o

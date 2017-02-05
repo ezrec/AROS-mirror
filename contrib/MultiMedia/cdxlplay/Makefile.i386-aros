@@ -1,0 +1,20 @@
+CC = i686-aros-gcc
+RM = rm
+
+CFLAGS = -O3 -Wall -Iinclude
+LINK = 
+LIBS = -lSDLGL -lGL
+
+TARGET = ../i386-aros/CDXLPlay
+OBJS = main.o options_amiga.o cdxlplay.o p2c.o usleep_aros.o SDL_cond_aros.o opengl.o
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(LINK) -o $@ $^ $(LIBS)
+
+main.o options_amiga.o: include/cdxlplay.h
+p2c.o: p2c/*.c
+
+clean:
+	$(RM) *.o

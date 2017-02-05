@@ -1,0 +1,22 @@
+CC = powerpc-aros-gcc
+AS = powerpc-aros-as
+RM = rm
+
+CFLAGS = -O3 -Wall -Iinclude
+ASFLAGS = -mregnames -Ippc
+LINK = 
+LIBS = -lSDLGL -lGL
+
+TARGET = ../ppc-aros/CDXLPlay
+OBJS = main.o options_amiga.o cdxlplay.o ppc/p2c.o usleep_aros.o SDL_cond_aros.o opengl.o
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(LINK) -o $@ $^ $(LIBS)
+
+main.o options_amiga.o: include/cdxlplay.h
+ppc/p2c.o: ppc/p2c/*.s
+
+clean:
+	$(RM) *.o ppc/*.o

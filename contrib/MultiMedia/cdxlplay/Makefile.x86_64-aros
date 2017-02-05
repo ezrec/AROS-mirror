@@ -1,0 +1,20 @@
+CC = x86_64-aros-gcc
+RM = rm
+
+CFLAGS = -O3 -Wall -Iinclude
+LINK = 
+LIBS = -lSDLGL -lGL
+
+TARGET = ../x86_64-aros/CDXLPlay
+OBJS = main.o options_amiga.o cdxlplay.o p2c.o usleep_aros.o SDL_cond_aros.o opengl.o
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(LINK) -o $@ $^ $(LIBS)
+
+main.o options_amiga.o: include/cdxlplay.h
+p2c.o: p2c/*.c
+
+clean:
+	$(RM) *.o

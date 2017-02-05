@@ -1,0 +1,49 @@
+Short:        CDXL player (src)
+Author:       Fredrik Wikstrom
+Uploader:     Fredrik Wikstrom <fredrik@a500.org>
+Type:         gfx/show
+Version:      1.4
+Architecture: generic
+
+This a portable, SDL-based commandline program for playing Amiga CDXL files on
+today's computers. If you don't know what the CDXL file format is then you can
+read this page:
+http://en.wikipedia.org/wiki/CDXL
+
+Compiling:
+
+cd source
+make -f Makefile.<platform>
+
+Usage:
+
+Type "CDXLPlay --help" or "CDXLPlay ?" depending on which OS you are using to
+obtain a list of the commandline parameters.
+
+The "normal" audio frequency for CDXL files seems to be 11025 Hz (this is the
+default sample rate setting) but some files need other settings in order to
+play correctly (the Genetic Species intro needs 22050 Hz f.e.).
+
+Changes:
+
+1.4 (16-Dec-2009)
+ - Fixed default display dimensions when using a pixel aspect ratio other than
+   the default (1:1)
+
+1.3 (27-Nov-2009)
+ - Disabled pointer in fullscreen mode
+ - Added nonsquare pixel support (required for some CDXL files that use highres
+   or interlaced modes)
+
+1.2 (27-Nov-2009)
+ - Implemented scaling with OpenGL
+ - Added fullscreen mode
+ - Pressing "escape" now quits CDXLPlay
+
+1.1 (23-Nov-2009)
+ - First release with audio support
+ - Added commandline arguments support for samplerate, fps, looping, etc.
+ - Pressing the "space" key now pauses/unpauses playback
+
+1.0 (19-Nov-2009)
+ - First released version

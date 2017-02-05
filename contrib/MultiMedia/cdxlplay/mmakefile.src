@@ -1,0 +1,30 @@
+# Copyright © 2017 The AROS Development Team. All rights reserved.
+# $Id$
+
+# Makefile to make cdxlplay.
+
+include $(SRCDIR)/config/aros.cfg
+
+EXEDIR := $(AROS_CONTRIB)/MultiMedia/CDXLPlay
+
+FILES := \
+    main \
+    options_amiga \
+    cdxlplay \
+    p2c \
+    usleep_aros \
+    opengl
+
+NOWARN_FLAGS  :=
+USER_CFLAGS   := $(NOWARN_FLAGS)
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/include
+USER_LDFLAGS  := 
+
+#MM- contrib : contrib-multimedia-cdxlplay
+#MM  contrib-multimedia-cdxlplay : includes linklibs development-sdl
+
+%build_prog mmake=contrib-multimedia-cdxlplay \
+    progname=CDXLPlay targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="SDL GL"
+
+%common

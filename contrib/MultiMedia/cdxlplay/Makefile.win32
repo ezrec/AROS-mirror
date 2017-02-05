@@ -1,0 +1,20 @@
+CC = gcc -mno-cygwin
+RM = rm
+
+CFLAGS = -pg -O3 -Wall -Iinclude -I/usr/local/include
+LINK = -pg
+LIBS = -lmingw32 -L/usr/local/lib -lSDLmain -lSDL -lopengl32
+
+TARGET = ../win32/CDXLPlay.exe
+OBJS = main.o options_unix.o cdxlplay.o p2c.o opengl.o
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(LINK) -o $@ $^ $(LIBS)
+
+main.o options_unix.o: include/cdxlplay.h
+p2c.o: p2c/*.c
+
+clean:
+	$(RM) *.o
