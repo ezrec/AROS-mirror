@@ -33,32 +33,32 @@ Function
 ~~~~~~~~
 ::
 
- Adds the specified filesystem to the system list of bootable filesystems
- (actually FileSystem.resource).
+     Adds the specified filesystem to the system list of bootable
+     filesystems (actually FileSystem.resource).
 
 
 Inputs
 ~~~~~~
 ::
 
- handle - Filesystem handle obtained by FindFileSystemA()
+     handle - Filesystem handle obtained by FindFileSystemA()
 
 
 Result
 ~~~~~~
 ::
 
- Zero if everything went okay or common dos.library-compliant error code.
+     Zero if everything went okay or common dos.library-compliant error code.
 
 
 Notes
 ~~~~~
 ::
 
- This function can be called during system startup before dos.library is
- available. In this case filesystem loading will be delayed until dos.library
- started up. Delayed loading will be handled automatically without any caller's
- intervention.
+     This function can be called during system startup before dos.library
+     is available. In this case filesystem loading will be delayed until
+     dos.library started up. Delayed loading will be handled automatically
+     without any caller's intervention.
 
 
 
@@ -83,32 +83,31 @@ Function
 ~~~~~~~~
 ::
 
- Add a new partition.
+     Add a new partition.
 
 
 Inputs
 ~~~~~~
 ::
 
- root - PartitionHandle, where to add the new partition
- taglist - tags that specify more information about the partition
-           unknown tags are ignored
-     PT_DOSENVEC - ptr to a DosEnvec
-         de_LowCyl and de_HighCyl specify start and end of cylinder
-         de_Reserved, de_Bootblocks, ...
-         de_Surfaces, de_BlocksPerTrack, ... are inherited from "root"
-     PT_TYPE     - partition type (depends on PartitionTable type)
-     PT_POSITION - position number within the partition table (MBR->PC)
-     PT_ACTIVE   - set this partition active (MBR->PC)
-     PT_NAME     - set partition name (HD0, HD1, ...)
-     
+     root - PartitionHandle, where to add the new partition
+     taglist - tags that specify more information about the partition
+               unknown tags are ignored
+         PT_DOSENVEC - ptr to a DosEnvec
+             de_LowCyl and de_HighCyl specify start and end of cylinder
+             de_Reserved, de_Bootblocks, ...
+             de_Surfaces, de_BlocksPerTrack, ... are inherited from "root"
+         PT_TYPE     - partition type (depends on PartitionTable type)
+         PT_POSITION - position number within the partition table (MBR->PC)
+         PT_ACTIVE   - set this partition active (MBR->PC)
+         PT_NAME     - set partition name (HD0, HD1, ...)
 
 
 Result
 ~~~~~~
 ::
 
- PartitionHandle of the new partition; 0 for an error
+     PartitionHandle of the new partition; 0 for an error
 
 
 
@@ -128,15 +127,15 @@ Function
 ~~~~~~~~
 ::
 
- close a partition table (and discard all changes)
- all partitions and subpartitions in root->list will be removed recursivly
+     Close a partition table (and discard all changes). All partitions
+     and subpartitions in root->list will be removed recursively.
 
 
 Inputs
 ~~~~~~
 ::
 
- root - partition table to close
+     root - partition table to close
 
 
 
@@ -156,14 +155,14 @@ Function
 ~~~~~~~~
 ::
 
- close root handle allocated by OpenRootPartition()
+     Close a root handle allocated by OpenRootPartition().
 
 
 Inputs
 ~~~~~~
 ::
 
- ph - root handle created by OpenRootPartition()
+     ph - root handle created by OpenRootPartition()
 
 
 
@@ -184,31 +183,32 @@ Function
 ~~~~~~~~
 ::
 
- Create a new partition table. 
+     Create a new partition table. 
 
 
 Inputs
 ~~~~~~
 ::
 
- root - partition to create table in
- type - the type of the partition table to create
+     root - partition to create table in
+     type - the type of the partition table to create
 
 
 Result
 ~~~~~~
 ::
 
- 0 on success; an error code otherwise
+     0 on success; an error code otherwise
 
 
 Notes
 ~~~~~
 ::
 
- After calling this function the state of the PartitionHandle will be the
- same as when calling OpenPartitionTable(). Therefore before closing the
- PartitionHandle you should call ClosePartitionTable().
+     After calling this function the state of the PartitionHandle will be
+     the same as when calling OpenPartitionTable(). Therefore before
+     closing the PartitionHandle you should call ClosePartitionTable().
+
 
 
 ----------
@@ -227,14 +227,14 @@ Function
 ~~~~~~~~
 ::
 
- Delete a partition with its subpartitions
+     Delete a partition along with its subpartitions.
 
 
 Inputs
 ~~~~~~
 ::
 
- ph - PartitionHandle to delete
+     ph - PartitionHandle to delete
 
 
 
@@ -254,30 +254,31 @@ Function
 ~~~~~~~~
 ::
 
- Destroy a partition table by immediately overwriting table data on disk.
+     Destroy a partition table by immediately overwriting table data on
+     disk.
 
 
 Inputs
 ~~~~~~
 ::
 
- root - partition table to destroy
+     root - partition table to destroy
 
 
 Result
 ~~~~~~
 ::
 
- 0 on success; an error code otherwise
+     0 on success; an error code otherwise
 
 
 Notes
 ~~~~~
 ::
 
- After calling this function the state of the PartitionHandle will be the
- same as before calling OpenPartitionTable(). Therefore do not reference
- any child PartitionHandles any more.
+     After calling this function the state of the PartitionHandle will be
+     the same as before calling OpenPartitionTable(). Therefore do not
+     reference any child PartitionHandles any more.
 
 
 
@@ -302,30 +303,30 @@ Function
 ~~~~~~~~
 ::
 
- Locate a filesystem handler in the partition
+     Locate a filesystem handler in the partition.
 
 
 Inputs
 ~~~~~~
 ::
 
- ph      - PartitionHandle to the table
- taglist - Taglist specifying arguments. Possible tags are:
+     ph      - PartitionHandle to the table
+     taglist - Taglist specifying arguments. Possible tags are:
 
            FST_ID   - specify ID of the filesystem.
            FST_NAME - specify name of the filesystem.
 
            If more than one condition is specified for the search, logical
-           AND will be applied to them. Empty taglist will give you the first
-           filesystem in the list.
+           AND will be applied to them. Empty taglist will give you the
+           first filesystem in the list.
 
 
 Result
 ~~~~~~
 ::
 
- Abstract handle of a filesystem or NULL if the filesystem with the given
- parameters was not located in the partition.
+     Abstract handle of a filesystem or NULL if the filesystem with the
+     given parameters was not located in the partition.
 
 
 
@@ -350,18 +351,24 @@ Function
 ~~~~~~~~
 ::
 
- get attributes of a partition table
+     get attributes of a partition table
 
 
 Inputs
 ~~~~~~
 ::
 
- handle      - Filesystem handle
- taglist - list of attributes; unknown tags are ignored
-     FST_ID      (ULONG *)               - Get 4-characters filesystem ID
-     FST_NAME    (STRPTR *)              - Get a pointer to filesystem name
-     FST_FSENTRY (struct FileSysEntry *) - Fill in the given struct FileSysEntry.
+     handle      - Filesystem handle
+     taglist - list of attributes; unknown tags are ignored
+
+
+Tags
+~~~~
+::
+
+     FST_ID      (ULONG *)           - Get 4-character FS ID
+     FST_NAME    (STRPTR *)          - Get a pointer to FS name
+     FST_FSENTRY (struct FileSysEntry *) - Fill in given FileSysEntry.
 
 
 Result
@@ -375,16 +382,17 @@ Notes
 ~~~~~
 ::
 
-     Name is returned as a pointer to internally allocated string. You should copy
-     it if you want to keep it after filesystem's partition table had been closed.
+     Name is returned as a pointer to an internally allocated string. You
+     should copy it if you want to keep it after the filesystem's
+     partition table handle has been closed.
 
      The following fields in struct FileSysEntry will not be filled in:
        - Node name
        - fse_Handler
        - fse_SegList
-     You need to query for filesystem's name separately and copy it into BSTR
-     yourself, if you need to. Loading the handler is done by LoadFileSystem()
-     function.
+     You need to query for the filesystem's name separately and copy it
+     into a BSTR yourself, if you need to. Loading the handler is done by
+     the LoadFileSystem() function.
 
 
 
@@ -414,27 +422,42 @@ Function
 ~~~~~~~~
 ::
 
- get attributes of a partition
+     Get attributes of a partition.
 
 
 Inputs
 ~~~~~~
 ::
 
- ph      - PartitionHandle
- taglist - list of attributes, unknown tags are ignored:
+     ph      - PartitionHandle
+     taglist - list of attributes, unknown tags are ignored
 
-     PT_GEOMETRY   - struct DriveGeometry *  ; Fill in DriveGeometry structure
-     PT_DOSENVEC   - struct DosEnvec *       ; Fill in DosEnvec structure
-     PT_TYPE       - struct PartitionType *  ; Get partition type
-     PT_POSITION   - ULONG *                 ; Get position (entry number) of partition within its table.
-                                             ; Returns -1 is there's no table (e. g. if used on disk root)
-     PT_ACTIVE     - LONG *                  ; Get value of "active" flag (PC-MBR specific)
-     PT_BOOTABLE   - LONG *                  ; Get value of "bootable" flag
-     PT_AUTOMOUNT  - LONG *                  ; Get value of "automount" flag
-     PT_NAME       - STRPTR                  ; Get name of partition (max 31 Bytes + NULL-byte)
-     PT_STARTBLOCK - UQUAD *                 ; Get number of starting block for the partition (V2)
-     PT_ENDBLOCK   - UQUAD *                 ; Get number of ending block for the partition (V2)
+
+Tags
+~~~~
+::
+
+     PT_GEOMETRY (struct DriveGeometry *)
+         Fill in DriveGeometry structure
+     PT_DOSENVEC (struct DosEnvec *)
+         Fill in DosEnvec structure
+     PT_TYPE (struct PartitionType *)
+         Get partition type
+     PT_POSITION (ULONG *)
+         Get position (entry number) of partition within its table.
+         Returns -1 if there's no table (e.g. if used on disk root)
+     PT_ACTIVE (LONG *)
+         Get value of "active" flag (PC-MBR specific)
+     PT_BOOTABLE (LONG *)
+         Get value of "bootable" flag
+     PT_AUTOMOUNT (LONG *)
+         Get value of "automount" flag
+     PT_NAME (STRPTR)
+         Get name of partition (max 31 Bytes + NUL-byte)
+     PT_STARTBLOCK (UQUAD *)
+         Get number of starting block for the partition (V2)
+     PT_ENDBLOCK (UQUAD *)
+         Get number of ending block for the partition (V2)
 
 
 Result
@@ -448,19 +471,23 @@ Notes
 ~~~~~
 ::
 
-     Nested partition tables (e. g. RDB subpartitions on PC MBR drive) are treated as virtual disks.
-     In this case start and end block numbers are relative to the beginning of the virtual disk
-     (which is represented by parent partition containing the RDB itself), not absolute numbers.
-     The same applies to DriveGeomerty and geometry-related fields in DosEnvec structure.
+     Nested partition tables (e.g. RDB subpartitions on PC MBR drive) are 
+     treated as virtual disks. In this case start and end block numbers are
+     relative to the beginning of the virtual disk (which is represented by
+     a parent partition containing the RDB itself), not absolute numbers.
+     The same applies to DriveGeomerty and geometry-related fields in the
+     DosEnvec structure.
 
-     Note that geometry data can be stored on disk in the partition table ifself (RDB for example), and
-     this way it can not match physical device's geometry (for example, if the disk was partitioned on
-     another operating system which used virtual geometry). In this case you might need to adjust these
-     data in order to mount the file system correctly (if absolute start/end blocks are not
-     cylinder-aligned).
+     Note that geometry data can be stored on disk in the partition table
+     ifself (RDB for example), and this way it may not match the physical
+     device's geometry (for example, if the disk was partitioned on
+     another operating system which used virtual geometry). In this case
+     you might need to adjust these data in order to mount the file system
+     correctly (if absolute start/end blocks are not cylinder-aligned).
 
-     Starting from V2, partition.library always provides default values for all attributes, even for those
-     not listed as readable in QueryPartitionAttrs() results.
+     Starting from V2, partition.library always provides default values 
+     for all attributes, even for those not listed as readable in 
+     QueryPartitionAttrs() results.
 
 
 
@@ -490,18 +517,26 @@ Function
 ~~~~~~~~
 ::
 
- get attributes of a partition table
+     Get attributes of a partition table.
 
 
 Inputs
 ~~~~~~
 ::
 
- ph      - PartitionHandle of the partition table
- taglist - list of attributes; unknown tags are ignored
-     PTT_TYPE     - ULONG *           ; get partition table type
-     PTT_MAXLEADIN     - LONG *
-     PTT_RESERVED - ULONG *           ; get number of reserved blocks
+     ph      - PartitionHandle of the partition table
+     taglist - list of attributes; unknown tags are ignored
+
+
+Tags
+~~~~
+::
+
+     PTT_TYPE (ULONG *)
+         Get partition table type
+     PTT_MAXLEADIN (LONG *)
+     PTT_RESERVED (ULONG *)
+         Get number of reserved blocks
 
 
 
@@ -541,9 +576,9 @@ Notes
 ~~~~~
 ::
 
-     This function is actually private, it's called by dos.library during
-     initialization process. There's no sense to call it from within user
-     software.
+     This function is actually private; it's called by dos.library during
+     the initialization process. There's no sense to call it from within
+     user software.
 
 
 
@@ -563,21 +598,21 @@ Function
 ~~~~~~~~
 ::
 
- Load the specified filesystem as DOS segment list.
+     Load the specified filesystem as a DOS segment list.
 
 
 Inputs
 ~~~~~~
 ::
 
- handle - Filesystem handle obtained by FindFileSystemA()
+     handle - Filesystem handle obtained by FindFileSystemA()
 
 
 Result
 ~~~~~~
 ::
 
- DOS seglist or NULL in case of failure.
+     DOS seglist or NULL in case of failure.
 
 
 
@@ -635,22 +670,22 @@ Function
 ~~~~~~~~
 ::
 
- Create a root handle by opening a trackdisk-compatible device.
+     Create a root handle by opening a trackdisk-compatible device.
 
 
 Inputs
 ~~~~~~
 ::
 
- Device - name of the block device
- Unit - unit of the block device
+     Device - name of the block device
+     Unit - unit of the block device
 
 
 Result
 ~~~~~~
 ::
 
- handle to the device
+     Handle to the device
 
 
 
@@ -670,21 +705,21 @@ Function
 ~~~~~~~~
 ::
 
- query partition attributes
+     Query partition attributes.
 
 
 Inputs
 ~~~~~~
 ::
 
- ph      - PartitionHandle to the table
+     ph      - PartitionHandle to the table
 
 
 Result
 ~~~~~~
 ::
 
- list of NULL-terminated ULONGs with attributes
+     List of NULL-terminated ULONGs with attributes.
 
 
 
@@ -704,21 +739,21 @@ Function
 ~~~~~~~~
 ::
 
- query partition table attributes
+     Query partition table attributes.
 
 
 Inputs
 ~~~~~~
 ::
 
- ph      - PartitionHandle of a partition table
+     ph - PartitionHandle of a partition table
 
 
 Result
 ~~~~~~
 ::
 
- list of NULL-terminated ULONGs with attributes
+     List of NULL-terminated ULONGs with attributes.
 
 
 
@@ -750,16 +785,17 @@ Inputs
 
      Partition  - a handle to a partition to read from
      Buffer     - a pointer to a data buffer
-     DataSize   - Size of data to read in bytes. This size must be a multiple of block size,
-                  in order to ensure correct operation
-     StartBlock - Number of the first block to start reading from.
+     DataSize   - Size of data to read in bytes. This size must be a
+                  multiple of block size in order to ensure correct
+                  operation
+     StartBlock - Number of the first block to start reading from
 
 
 Result
 ~~~~~~
 ::
 
-     A return code of DoIO() function which was used to read the data
+     Return code of DoIO() function which was used to read the data.
 
 
 
@@ -784,15 +820,21 @@ Function
 ~~~~~~~~
 ::
 
- set attributes of a partition
+     Set attributes of a partition
 
 
 Inputs
 ~~~~~~
 ::
 
- ph      - PartitionHandle
- taglist - list of attributes; unknown tags are ignored
+     ph      - PartitionHandle
+     taglist - list of attributes; unknown tags are ignored
+
+
+Tags
+~~~~
+::
+
      PT_DOSENVEC - set new DosEnvec values
      PT_TYPE     - change partition type (MBR-PC)
      PT_POSITION - move partition to another position (MBR-PC)
@@ -822,15 +864,15 @@ Function
 ~~~~~~~~
 ::
 
- set attributes of a partition table
+     Set attributes of a partition table.
 
 
 Inputs
 ~~~~~~
 ::
 
- ph      - PartitionHandle of the partition table
- taglist - list of attributes; unknown tags are ignored
+     ph      - PartitionHandle of the partition table
+     taglist - list of attributes; unknown tags are ignored
 
 
 
@@ -862,8 +904,9 @@ Inputs
 
      Partition  - a handle to a partition to read from
      Buffer     - a pointer to a data buffer
-     DataSize   - Size of data to read in bytes. This size must be a multiple of block size,
-                  in order to ensure correct operation.
+     DataSize   - Size of data to read in bytes. This size must be a
+                  multiple of block size in order to ensure correct
+                  operation.
      StartBlock - Number of the first block to start writing from.
 
 
@@ -871,7 +914,7 @@ Result
 ~~~~~~
 ::
 
-     A return code of DoIO() function which was used to write the data
+     Return code of DoIO() function which was used to write the data.
 
 
 
@@ -891,22 +934,22 @@ Function
 ~~~~~~~~
 ::
 
- Write a partition table; writing this partition table doesn't affect
- subpartition tables
+     Write a partition table; writing this partition table doesn't affect
+     subpartition tables.
 
 
 Inputs
 ~~~~~~
 ::
 
- root - partition table to write
+     root - partition table to write
 
 
 Result
 ~~~~~~
 ::
 
- 0 for success; an error code otherwise
+     0 for success; an error code otherwise
 
 
 

@@ -6066,6 +6066,14 @@ Synopsis
      sigset_t *oldset)
 
 
+Function
+~~~~~~~~
+::
+
+     Allow the caller to examine or change (or both) the 
+     signal mask of the calling thread. 
+
+
 Notes
 ~~~~~
 ::
@@ -6087,13 +6095,50 @@ Synopsis
      const sigset_t *mask)
 
 
+Function
+~~~~~~~~
+::
+
+     replace the callers signal mask, and suspend it
+     until it signaled to terminate, or to invoke a
+     signal handler.
+
+     If the signal terminates the process, sigsuspend()
+     doesn't return.
+
+     If the signal is caught, sigsuspend() returns following the
+     signal handler, and the signal mask is restored to
+     the state prior to calling sigsuspend(). 
+
+     SIGKILL or SIGSTOP cannot be blocked; specifying
+     them in the mask has no effect on the process's signal mask. 
+
+
+Result
+~~~~~~
+::
+
+     always returns -1, normally with the error EINTR.
+
+
 Notes
 ~~~~~
 ::
 
      Not implemented.
 
+     Normally used in conjunction with sigprocmask(), to prevent
+     signal delivery during critical code sections. Callers must 
+     block the signals with sigprocmask(). On completion, the caller
+     waits for signals by calling sigsuspend() with the return value
+     of sigprocmask()
 
+
+
+See also
+~~~~~~~~
+
+`kill`_ `pause`_ `sigaction`_ `signal`_ `sigprocmask`_ `sigwaitinfo`_ `sigsetops`_ `sigwait`_ `signal`_ 
 
 ----------
 

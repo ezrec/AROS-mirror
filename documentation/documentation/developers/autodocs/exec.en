@@ -25,29 +25,29 @@ exec
 `CopyMemQuick()`_                       `CreateIORequest()`_                    `CreateMsgPort()`_                      `CreatePool()`_                         
 `Deallocate()`_                         `Debug()`_                              `DeleteIORequest()`_                    `DeleteMsgPort()`_                      
 `DeletePool()`_                         `Disable()`_                            `Dispatch()`_                           `DoIO()`_                               
-`Enable()`_                             `Enqueue()`_                            `ExitIntr()`_                           `FindName()`_                           
-`FindPort()`_                           `FindResident()`_                       `FindSemaphore()`_                      `FindTask()`_                           
-`FindTaskByPID()`_                      `Forbid()`_                             `FreeEntry()`_                          `FreeMem()`_                            
-`FreePooled()`_                         `FreeSignal()`_                         `FreeTaskStorageSlot()`_                `FreeTrap()`_                           
-`FreeVec()`_                            `FreeVecPooled()`_                      `GetCC()`_                              `GetMsg()`_                             
-`GetParentTaskStorageSlot()`_           `GetTaskStorageSlot()`_                 `InitCode()`_                           `InitResident()`_                       
-`InitSemaphore()`_                      `InitStruct()`_                         `Insert()`_                             `MakeFunctions()`_                      
-`MakeLibrary()`_                        `NewAddTask()`_                         `NewAllocEntry()`_                      `NewCreateTaskA()`_                     
-`NewMinList()`_                         `NewStackSwap()`_                       `ObtainQuickVector()`_                  `ObtainSemaphoreList()`_                
-`ObtainSemaphoreShared()`_              `OldOpenLibrary()`_                     `OpenDevice()`_                         `OpenLibrary()`_                        
-`OpenResource()`_                       `Permit()`_                             `Procure()`_                            `PutMsg()`_                             
-`RawDoFmt()`_                           `ReadGayle()`_                          `ReleaseSemaphore()`_                   `ReleaseSemaphoreList()`_               
-`RemDevice()`_                          `RemHead()`_                            `RemIntServer()`_                       `RemLibrary()`_                         
-`RemMemHandler()`_                      `Remove()`_                             `RemPort()`_                            `RemResetCallback()`_                   
-`RemResource()`_                        `RemSemaphore()`_                       `RemTail()`_                            `RemTask()`_                            
-`ReplyMsg()`_                           `Reschedule()`_                         `RestoreTaskStorage()`_                 `SaveTaskStorage()`_                    
-`Schedule()`_                           `SendIO()`_                             `SetExcept()`_                          `SetFunction()`_                        
-`SetIntVector()`_                       `SetSignal()`_                          `SetSR()`_                              `SetTaskPri()`_                         
-`SetTaskStorageSlot()`_                 `ShutdownA()`_                          `Signal()`_                             `StackSwap()`_                          
-`SumKickData()`_                        `SumLibrary()`_                         `SuperState()`_                         `Supervisor()`_                         
-`Switch()`_                             `TypeOfMem()`_                          `UserState()`_                          `Vacate()`_                             
-`VNewRawDoFmt()`_                       `Wait()`_                               `WaitIO()`_                             `WaitPort()`_                           
-
+`Enable()`_                             `Enqueue()`_                            `Exec_FindChild()`_                     `ExitIntr()`_                           
+`FindName()`_                           `FindPort()`_                           `FindResident()`_                       `FindSemaphore()`_                      
+`FindTask()`_                           `FindTaskByPID()`_                      `Forbid()`_                             `FreeEntry()`_                          
+`FreeMem()`_                            `FreePooled()`_                         `FreeSignal()`_                         `FreeTaskStorageSlot()`_                
+`FreeTrap()`_                           `FreeVec()`_                            `FreeVecPooled()`_                      `GetCC()`_                              
+`GetMsg()`_                             `GetParentTaskStorageSlot()`_           `GetTaskStorageSlot()`_                 `InitCode()`_                           
+`InitResident()`_                       `InitSemaphore()`_                      `InitStruct()`_                         `Insert()`_                             
+`MakeFunctions()`_                      `MakeLibrary()`_                        `NewAddTask()`_                         `NewAllocEntry()`_                      
+`NewCreateTaskA()`_                     `NewMinList()`_                         `NewStackSwap()`_                       `ObtainQuickVector()`_                  
+`ObtainSemaphoreList()`_                `ObtainSemaphoreShared()`_              `OldOpenLibrary()`_                     `OpenDevice()`_                         
+`OpenLibrary()`_                        `OpenResource()`_                       `Permit()`_                             `Procure()`_                            
+`PutMsg()`_                             `RawDoFmt()`_                           `ReadGayle()`_                          `ReleaseSemaphore()`_                   
+`ReleaseSemaphoreList()`_               `RemDevice()`_                          `RemHead()`_                            `RemIntServer()`_                       
+`RemLibrary()`_                         `RemMemHandler()`_                      `Remove()`_                             `RemPort()`_                            
+`RemResetCallback()`_                   `RemResource()`_                        `RemSemaphore()`_                       `RemTail()`_                            
+`RemTask()`_                            `ReplyMsg()`_                           `Reschedule()`_                         `RestoreTaskStorage()`_                 
+`SaveTaskStorage()`_                    `Schedule()`_                           `SendIO()`_                             `SetExcept()`_                          
+`SetFunction()`_                        `SetIntVector()`_                       `SetSignal()`_                          `SetSR()`_                              
+`SetTaskPri()`_                         `SetTaskStorageSlot()`_                 `ShutdownA()`_                          `Signal()`_                             
+`StackSwap()`_                          `SumKickData()`_                        `SumLibrary()`_                         `SuperState()`_                         
+`Supervisor()`_                         `Switch()`_                             `TypeOfMem()`_                          `UserState()`_                          
+`Vacate()`_                             `VNewRawDoFmt()`_                       `Wait()`_                               `WaitIO()`_                             
+`WaitPort()`_                           
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -3348,6 +3348,52 @@ Notes
 
      The list has to be in descending order in respect to the field
      ln_Pri of all nodes.
+
+
+
+----------
+
+Exec_FindChild()
+================
+
+Synopsis
+~~~~~~~~
+::
+
+  struct ETask * Exec_FindChild(
+     ULONG       id,
+     struct ExecBase *SysBase)
+
+
+Function
+~~~~~~~~
+::
+
+     Scan through the current tasks children list searching for the task
+     whose et_UniqueID field matches.
+
+
+Inputs
+~~~~~~
+::
+
+     id      -   The task ID to match.
+
+
+Result
+~~~~~~
+::
+
+     Address of the ETask structure that matches, or
+     NULL otherwise.
+
+
+Notes
+~~~~~
+::
+
+     This is an internal exec.library function not exported from the
+     library.
 
 
 
