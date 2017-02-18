@@ -31,7 +31,7 @@ IPTR PCX__DTM_WRITE(Class *cl, Object *o, struct dtWrite *msg)
 {
 	IPTR ret;
 	/* check if dt's native format should be used */
-	if (((struct dtWrite *)msg)->dtw_Mode == DTWM_RAW) {
+	if (msg->dtw_Mode == DTWM_RAW) {
 		LONG error;
 		error = WritePCX(cl, o, msg);
 		if (error == OK) {
@@ -40,6 +40,8 @@ IPTR PCX__DTM_WRITE(Class *cl, Object *o, struct dtWrite *msg)
 			SetIoErr(error);
 			ret = FALSE;
 		}
+	} else {
+		ret = DoSuperMethodA(cl, o, msg);
 	}
 	return ret;
 }
