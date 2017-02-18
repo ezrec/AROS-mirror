@@ -1,6 +1,0 @@
-# DataType file for a RIFF-WAVE Sound
-FileName=RAM:Targa
-DTName=Targa,targa
-ID=pict,tga
-Recog=#?.tga,
-Flags=binary,y,0

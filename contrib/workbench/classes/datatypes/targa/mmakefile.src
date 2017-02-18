@@ -1,0 +1,19 @@
+#   $Id$
+
+include $(SRCDIR)/config/aros.cfg
+
+FILES := targa_class
+
+#MM- workbench-datatypes-picture : workbench-datatype-targa
+#MM workbench-datatype-targa : includes linklibs
+
+NOWARN_FLAGS  := $(NOWARN_STRICT_ALIASING)
+USER_CFLAGS   := $(NOWARN_FLAGS)
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)
+USER_LDFLAGS  := -static
+
+%build_module mmake=workbench-datatype-targa \
+    modname=targa modtype=datatype \
+    files="$(FILES)" uselibs=""
+
+%common

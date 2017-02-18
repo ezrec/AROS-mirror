@@ -4,112 +4,88 @@
  */
 
 #include "targa_class.h"
-#include "endian.h"
 
-#define RGB8to32(RGB) (((uint32)(RGB) << 24)|((uint32)(RGB) << 16)|((uint32)(RGB) << 8)|((uint32)(RGB)))
+#define RGB8to32(RGB) (((ULONG)(RGB) << 24)|((ULONG)(RGB) << 16)|((ULONG)(RGB) << 8)|((ULONG)(RGB)))
 
-uint32 ClassDispatch (Class *cl, Object *o, Msg msg);
+static LONG WriteTarga (Class *cl, Object *o, struct dtWrite *msg);
+static LONG ConvertTarga (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh);
+static LONG GetTarga (Class *cl, Object *o, struct TagItem *tags);
 
-Class *initDTClass (struct ClassBase *libBase) {
-	Class *cl;
-	SuperClassLib = IExec->OpenLibrary("datatypes/picture.datatype", 51);
-	if (SuperClassLib) {
-		cl = IIntuition->MakeClass(libBase->libNode.lib_Node.ln_Name, PICTUREDTCLASS, NULL, 0, 0);
-		if (cl) {
-			cl->cl_Dispatcher.h_Entry = (HOOKFUNC)ClassDispatch;
-			cl->cl_UserData = (uint32)libBase;
-			IIntuition->AddClass(cl);
-		} else {
-			IExec->CloseLibrary(SuperClassLib);
+IPTR TARGA__OM_NEW(Class *cl, Object *o, struct opSet *msg)
+{
+	IPTR ret;
+	ret = DoSuperMethodA(cl, o, msg);
+	if (ret) {
+		LONG error;
+		error = GetTarga(cl, (Object *)ret, msg->ops_AttrList);
+		if (error != OK) {
+			CoerceMethod(cl, (Object *)ret, OM_DISPOSE);
+			ret = 0;
+			SetIoErr(error);
 		}
 	}
-	return cl;
-}
-
-BOOL freeDTClass (struct ClassBase *libBase, Class *cl) {
-	BOOL res = TRUE;
-	if (cl) {
-		res = IIntuition->FreeClass(cl);
-		if (res) {
-			IExec->CloseLibrary(SuperClassLib);
-		}
-	}
-	return res;
-}
-
-static int32 WriteTarga (Class *cl, Object *o, struct dtWrite *msg);
-static int32 ConvertTarga (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh);
-static int32 GetTarga (Class *cl, Object *o, struct TagItem *tags);
-
-uint32 ClassDispatch (Class *cl, Object *o, Msg msg) {
-	struct ClassBase *libBase = (struct ClassBase *)cl->cl_UserData;
-	uint32 ret;
-
-	switch (msg->MethodID) {
-
-		case OM_NEW:
-			ret = IIntuition->IDoSuperMethodA(cl, o, msg);
-			if (ret) {
-				int32 error;
-				error = GetTarga(cl, (Object *)ret, ((struct opSet *)msg)->ops_AttrList);
-				if (error != OK) {
-					IIntuition->ICoerceMethod(cl, (Object *)ret, OM_DISPOSE);
-					ret = (uint32)NULL;
-					IDOS->SetIoErr(error);
-				}
-			}
-			break;
-
-		case DTM_WRITE:
-			/* check if dt's native format should be used */
-			if (((struct dtWrite *)msg)->dtw_Mode == DTWM_RAW) {
-				int32 error;
-				error = WriteTarga(cl, o, (struct dtWrite *)msg);
-				if (error == OK) {
-					ret = TRUE;
-				} else {
-					IDOS->SetIoErr(error);
-					ret = FALSE;
-				}
-				break;
-			}
-			/* fall through and let superclass deal with it */
-
-		default:
-			ret = IIntuition->IDoSuperMethodA(cl, o, msg);
-			break;
-
-	}
-
 	return ret;
 }
 
-static int32 WriteTarga (Class *cl, Object *o, struct dtWrite *msg) {
+IPTR TARGA__DTM_WRITE(Class *cl, Object *o, struct dtWrite *msg)
+{
+	IPTR ret;
+	/* check if dt's native format should be used */
+	if (msg->dtw_Mode == DTWM_RAW) {
+		LONG error;
+		error = WriteTarga(cl, o, msg);
+		if (error == OK) {
+			ret = TRUE;
+		} else {
+			SetIoErr(error);
+			ret = FALSE;
+		}
+	} else {
+		ret = DoSuperMethodA(cl, o, msg);
+	}
+	return ret;
+}
+
+static LONG WriteTarga (Class *cl, Object *o, struct dtWrite *msg) {
 	return ERROR_NOT_IMPLEMENTED;
 }
 
-int32 ReadLUT8 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct TargaHeader *tga);
-int32 ReadRGB15 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct TargaHeader *tga);
-int32 ReadRGBA16 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct TargaHeader *tga);
-int32 ReadTruecolor (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct TargaHeader *tga);
-int32 ReadPixels (struct ClassBase *libBase, struct TargaHeader *tga, BPTR file, uint8 *buf, int32 width, int32 bpp);
+static LONG ReadLUT8 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct TargaHeader *tga);
+static LONG ReadRGB15 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct TargaHeader *tga);
+static LONG ReadRGBA16 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct TargaHeader *tga);
+static LONG ReadTruecolor (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct TargaHeader *tga);
+static LONG ReadPixels (struct Library *libBase, struct TargaHeader *tga, BPTR file, UBYTE *buf, LONG width, LONG bpp);
 
-int32 GetCMAP24 (struct ClassBase *libBase, BPTR file, struct ColorRegister *cmap, int32 len);
+static LONG GetCMAP24 (struct Library *libBase, BPTR file, struct ColorRegister *cmap, LONG len);
 
-static int32 ConvertTarga (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh) {
-	struct ClassBase *libBase = (struct ClassBase *)cl->cl_UserData;
-	int32 status, error = OK;
+static LONG ConvertTarga (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh) {
+	struct Library *libBase = (struct Library *)cl->cl_UserData;
+	LONG status, error = OK;
 	struct TargaHeader tga;
-	int32 (*ReadFunc) (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct TargaHeader *tga);
+	struct TargaHeaderFile tgafile;
+	LONG (*ReadFunc) (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct TargaHeader *tga);
 	int needs_palette;
 
-	status = IDOS->Read(file, &tga, sizeof(struct TargaHeader));
-	if (status != sizeof(struct TargaHeader)) {
+	status = Read(file, &tgafile, sizeof(struct TargaHeaderFile));
+	if (status != sizeof(struct TargaHeaderFile)) {
 		return ReadError(status);
 	}
 
-	bmh->bmh_Width = read_le16(&tga.width);
-	bmh->bmh_Height = read_le16(&tga.height);
+	tga.idsize = tgafile.idsize;
+	tga.cmaptype = tgafile.cmaptype;
+	tga.imagetype = tgafile.imagetype;
+	tga.cmapstart = AROS_LE2WORD(*(WORD *)tgafile.cmapstart);
+	tga.cmaplength = AROS_LE2WORD(*(WORD *)tgafile.cmaplength);
+	tga.cmapdepth = tgafile.cmapdepth;
+	tga.xstart = AROS_LE2WORD(tgafile.xstart);
+	tga.ystart = AROS_LE2WORD(tgafile.ystart);
+	tga.width = AROS_LE2WORD(tgafile.width);
+	tga.height = AROS_LE2WORD(tgafile.height);
+	tga.depth = tgafile.depth;
+	tga.descriptor = tgafile.descriptor;
+
+	bmh->bmh_Width = tga.width;
+	bmh->bmh_Height = tga.height;
 	bmh->bmh_Depth = tga.depth;
 
 	if (tga.cmaptype > 1) {
@@ -160,7 +136,7 @@ static int32 ConvertTarga (Class *cl, Object *o, BPTR file, struct BitMapHeader 
 	}
 
 	if (tga.idsize) {
-		if (IDOS->Seek(file, tga.idsize, OFFSET_CURRENT) == -1 && (error = IDOS->IoErr())) {
+		if (Seek(file, tga.idsize, OFFSET_CURRENT) == -1 && (error = IoErr())) {
 			goto out;
 		}
 	}
@@ -171,9 +147,9 @@ static int32 ConvertTarga (Class *cl, Object *o, BPTR file, struct BitMapHeader 
 	}
 	if (needs_palette) {
 		struct ColorRegister *cmap = NULL;
-		uint32 *cregs = NULL;
-		int32 (*CMAPFunc) (struct ClassBase *libBase, BPTR file, struct ColorRegister *cmap,
-			int32 len);
+		ULONG *cregs = NULL;
+		LONG (*CMAPFunc) (struct Library *libBase, BPTR file, struct ColorRegister *cmap,
+			LONG len);
 
 		if (tga.cmaptype == TGA_CMAP_NONE) {
 			error = NOTOK;
@@ -191,16 +167,16 @@ static int32 ConvertTarga (Class *cl, Object *o, BPTR file, struct BitMapHeader 
 			goto out;
 		}
 
-		IDataTypes->SetDTAttrs(o, NULL, NULL,
+		SetDTAttrs(o, NULL, NULL,
 			PDTA_NumColors, 256,
 			TAG_END);
 
-		if (IDataTypes->GetDTAttrs(o, PDTA_ColorRegisters, &cmap, PDTA_CRegs, &cregs, TAG_END) == 2)
+		if (GetDTAttrs(o, PDTA_ColorRegisters, &cmap, PDTA_CRegs, &cregs, TAG_END) == 2)
 		{
 			int start, len, i;
 
-			start = read_le16(tga.cmapstart);
-			len = read_le16(tga.cmaplength);
+			start = tga.cmapstart;
+			len = tga.cmaplength;
 
 			error = CMAPFunc(libBase, file, cmap+=start, len);
 			if (error) goto out;
@@ -214,9 +190,9 @@ static int32 ConvertTarga (Class *cl, Object *o, BPTR file, struct BitMapHeader 
 			}
 		}
 	} else {
-		uint32 len;
-		len = read_le16(tga.cmaplength) * ((tga.cmapdepth+7)>>3);
-		if (IDOS->Seek(file, len, OFFSET_CURRENT) == -1 && (error = IDOS->IoErr())) {
+		ULONG len;
+		len = tga.cmaplength * ((tga.cmapdepth+7)>>3);
+		if (Seek(file, len, OFFSET_CURRENT) == -1 && (error = IoErr())) {
 			goto out;
 		}
 	}
@@ -227,22 +203,22 @@ out:
 	return error;
 }
 
-int32 ReadLUT8 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct TargaHeader *tga) {
-	struct ClassBase *libBase = (struct ClassBase *)cl->cl_UserData;
-	uint32 bpr, fmt;
-	uint8 *buf;
-	int32 status, level = 0, error = OK;
+LONG ReadLUT8 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct TargaHeader *tga) {
+	struct Library *libBase = (struct Library *)cl->cl_UserData;
+	ULONG bpr, fmt;
+	UBYTE *buf;
+	LONG status, level = 0, error = OK;
 	int y;
 	
 	bpr = bmh->bmh_Width;
 	fmt = ((tga->imagetype & ~TGA_IMAGE_RLE) == TGA_IMAGE_GREY) ? PBPAFMT_GREY8 : PBPAFMT_LUT8;
 	
-	buf = IExec->AllocMem(bpr, MEMF_SHARED);
+	buf = AllocMem(bpr, /* MEMF_SHARED */ MEMF_ANY);
 	if (!buf) {
 		return ERROR_NO_FREE_STORE;
 	}
 	
-	IDataTypes->SetDTAttrs(o, NULL, NULL,
+	SetDTAttrs(o, NULL, NULL,
 		DTA_NominalHoriz,	bmh->bmh_Width,
 		DTA_NominalVert,	bmh->bmh_Height,
 		PDTA_SourceMode,	PMODE_V43,
@@ -257,33 +233,34 @@ int32 ReadLUT8 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struc
 	for (y = bmh->bmh_Height-1; y >= 0; y--) {
 		status = ReadPixels(libBase, tga, file, buf, bpr, 1);
 		if (status != bmh->bmh_Width) {
-			error = IDOS->IoErr();
+			error = IoErr();
 			goto out;
 		}
 		
-		IIntuition->IDoSuperMethod(cl, o,
+		DoSuperMethod(cl, o,
 			PDTM_WRITEPIXELARRAY, buf, fmt,
 			bpr, 0, y, bpr, 1);
 	}
 
 out:
-	IExec->FreeMem(buf, bpr);
+	FreeMem(buf, bpr);
 	return error;
 }
 
-int32 ReadRGB15 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct TargaHeader *tga) {
+LONG ReadRGB15 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct TargaHeader *tga) {
 	return ERROR_NOT_IMPLEMENTED;
 }
 
-int32 ReadRGBA16 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct TargaHeader *tga) {
+LONG ReadRGBA16 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct TargaHeader *tga) {
 	return ERROR_NOT_IMPLEMENTED;
 }
 
-int32 ReadTruecolor (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct TargaHeader *tga) {
-	struct ClassBase *libBase = (struct ClassBase *)cl->cl_UserData;
-	uint32 bpp, bpr, fmt;
-	uint8 *buf1, *buf2, *src, *dst;
-	int32 status, level = 0, error = OK;
+LONG ReadTruecolor (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct TargaHeader *tga) {
+	struct Library *libBase = (struct Library *)cl->cl_UserData;
+	ULONG bpp, bpr, fmt;
+	UBYTE *buf1, *buf2, *src, *dst;
+	LONG status;
+	IPTR level = 0, error = OK;
 	int y, x;
 	
 	switch (tga->depth) {
@@ -301,14 +278,14 @@ int32 ReadTruecolor (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, 
 	}
 	bpr = bmh->bmh_Width * bpp;
 		
-	buf1 = IExec->AllocMem(bpr, MEMF_SHARED);
-	buf2 = IExec->AllocMem(bpr, MEMF_SHARED);
+	buf1 = AllocMem(bpr, /* MEMF_SHARED */ MEMF_ANY);
+	buf2 = AllocMem(bpr, /* MEMF_SHARED */ MEMF_ANY);
 	if (!buf1 || !buf2) {
 		error = ERROR_NO_FREE_STORE;
 		goto out;
 	}
 	
-	IDataTypes->SetDTAttrs(o, NULL, NULL,
+	SetDTAttrs(o, NULL, NULL,
 		DTA_NominalHoriz,	bmh->bmh_Width,
 		DTA_NominalVert,	bmh->bmh_Height,
 		PDTA_SourceMode,	PMODE_V43,
@@ -323,7 +300,7 @@ int32 ReadTruecolor (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, 
 	for (y = bmh->bmh_Height-1; y >= 0; y--) {
 		status = ReadPixels(libBase, tga, file, buf1, bmh->bmh_Width, bpp);
 		if (status != bmh->bmh_Width) {
-			error = IDOS->IoErr();
+			error = IoErr();
 			goto out;
 		}
 
@@ -338,36 +315,41 @@ int32 ReadTruecolor (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, 
 			}
 		} else {
 			for (x = 0; x < bmh->bmh_Width; x++) {
-				write_le32(dst, *(uint32 *)src);
-				src += 4; dst += 4;
+				//write_le32(dst, *(ULONG *)src);
+				// FIXME: do we need endiannes conversion
+				*dst++ = src[3];
+				*dst++ = src[2];
+				*dst++ = src[1];
+				*dst++ = src[0];
+				src += 4;
 			}
 		}
 
-		IIntuition->IDoSuperMethod(cl, o,
+		DoSuperMethod(cl, o,
 			PDTM_WRITEPIXELARRAY, buf2, fmt,
 			bpr, 0, y, bmh->bmh_Width, 1);
 	}
 	
 out:
-	if (buf1) IExec->FreeMem(buf1, bpr);
-	if (buf2) IExec->FreeMem(buf2, bpr);
+	if (buf1) FreeMem(buf1, bpr);
+	if (buf2) FreeMem(buf2, bpr);
 	return error;
 }
 
-int32 ReadPixels (struct ClassBase *libBase, struct TargaHeader *tga, BPTR file, uint8 *buf, int32 width, int32 bpp) {
+LONG ReadPixels (struct Library *libBase, struct TargaHeader *tga, BPTR file, UBYTE *buf, LONG width, LONG bpp) {
 	if (tga->imagetype & TGA_IMAGE_RLE) {
-		uint8 *ptr = buf;
-		int32 x = 0;
-		int32 st, cnt, rem;
-		uint8 pix[4];
+		//UBYTE *ptr = buf;
+		LONG x = 0;
+		LONG st, cnt, rem;
+		UBYTE pix[4];
 		while (x < width) {
-			cnt = IDOS->FGetC(file);
+			cnt = FGetC(file);
 			if (cnt == -1) break;
 			rem = width-x;
 			if (cnt & 0x80) {
 				cnt -= 0x80;
 				if (++cnt > rem) cnt = rem;
-				st = IDOS->FRead(file, pix, bpp, 1);
+				st = FRead(file, pix, bpp, 1);
 				if (st != 1) break;
 				x += cnt;
 				switch (bpp) {
@@ -378,7 +360,7 @@ int32 ReadPixels (struct ClassBase *libBase, struct TargaHeader *tga, BPTR file,
 						break;
 					case 2:
 						while (cnt--) {
-							*(uint16 *)buf = *(uint16 *)pix;
+							*(UWORD *)buf = *(UWORD *)pix;
 							buf += 2;
 						}
 						break;
@@ -391,35 +373,35 @@ int32 ReadPixels (struct ClassBase *libBase, struct TargaHeader *tga, BPTR file,
 						break;
 					case 4:
 						while (cnt--) {
-							*(uint32 *)buf = *(uint32 *)pix;
+							*(ULONG *)buf = *(ULONG *)pix;
 							buf += 4;
 						}
 						break;
 				}
 			} else {
 				if (++cnt > rem) cnt = rem;
-				x += st = IDOS->FRead(file, buf, bpp, cnt);
+				x += st = FRead(file, buf, bpp, cnt);
 				if (st != cnt) break;
 				buf += (cnt*bpp);
 			}
 		}
 		return x;
 	} else {
-		return IDOS->FRead(file, buf, bpp, width);
+		return FRead(file, buf, bpp, width);
 	}
 }
 
-int32 GetCMAP24 (struct ClassBase *libBase, BPTR file, struct ColorRegister *cmap, int32 len) {
-	uint8 *buf, *ptr;
-	int32 status, error = OK, size = len * 3;
-	int32 i;
+LONG GetCMAP24 (struct Library *libBase, BPTR file, struct ColorRegister *cmap, LONG len) {
+	UBYTE *buf, *ptr;
+	LONG status, error = OK, size = len * 3;
+	LONG i;
 
-	buf = IExec->AllocMem(size, MEMF_SHARED);
+	buf = AllocMem(size, /* MEMF_SHARED */ MEMF_ANY);
 	if (!buf) {
 		return ERROR_NO_FREE_STORE;
 	}
 
-	status = IDOS->Read(file, buf, size);
+	status = Read(file, buf, size);
 	if (status != size) {
 		error = ReadError(status);
 		goto out;
@@ -434,21 +416,21 @@ int32 GetCMAP24 (struct ClassBase *libBase, BPTR file, struct ColorRegister *cma
 	}
 
 out:
-	IExec->FreeMem(buf, size);
+	FreeMem(buf, size);
 	return error;
 }
 
-static int32 GetTarga (Class *cl, Object *o, struct TagItem *tags) {
-	struct ClassBase *libBase = (struct ClassBase *)cl->cl_UserData;
+static LONG GetTarga (Class *cl, Object *o, struct TagItem *tags) {
+	//struct Library *libBase = (struct Library *)cl->cl_UserData;
 	struct BitMapHeader *bmh = NULL;
 	char *filename;
-	int32 srctype;
-	int32 error = ERROR_OBJECT_NOT_FOUND;
-	BPTR file = (BPTR)NULL;
+	IPTR srctype;
+	LONG error = ERROR_OBJECT_NOT_FOUND;
+	BPTR file = BNULL;
 
-	filename = (char *)IUtility->GetTagData(DTA_Name, (uint32)"Untitled", tags);
+	filename = (char *)GetTagData(DTA_Name, (IPTR)"Untitled", tags);
 
-	IDataTypes->GetDTAttrs(o,
+	GetDTAttrs(o,
 		PDTA_BitMapHeader,	&bmh,
 		DTA_Handle,			&file,
 		DTA_SourceType,		&srctype,
@@ -458,8 +440,8 @@ static int32 GetTarga (Class *cl, Object *o, struct TagItem *tags) {
 	if (bmh && file && srctype == DTST_FILE) {
 		error = ConvertTarga(cl, o, file, bmh);
 		if (error == OK) {
-			IDataTypes->SetDTAttrs(o, NULL, NULL,
-				DTA_ObjName,	IDOS->FilePart(filename),
+			SetDTAttrs(o, NULL, NULL,
+				DTA_ObjName,	FilePart(filename),
 				TAG_END);
 		}
 	}
