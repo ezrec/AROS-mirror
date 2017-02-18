@@ -1,0 +1,19 @@
+#   $Id$
+
+include $(SRCDIR)/config/aros.cfg
+
+FILES := pcx_class
+
+#MM- workbench-datatypes-picture : workbench-datatype-pcx
+#MM workbench-datatype-pcx : includes linklibs
+
+NOWARN_FLAGS  :=
+USER_CFLAGS   := $(NOWARN_FLAGS)
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)
+USER_LDFLAGS  := -static
+
+%build_module mmake=workbench-datatype-pcx \
+    modname=pcx modtype=datatype \
+    files="$(FILES)" uselibs=""
+
+%common
