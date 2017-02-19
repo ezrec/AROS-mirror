@@ -56,8 +56,8 @@ static LONG ReadLUT8 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh,
 static LONG ReadRGB24 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct PCXHeader *pcx);
 static LONG ReadRLE (struct Library *libBase, BPTR file, UBYTE *buf, LONG len);
 
-LONG GetCMAP16 (struct Library *libBase, BPTR file, struct PCXHeader *pcx, struct ColorRegister *cmap, LONG numcolors);
-LONG GetCMAP256 (struct Library *libBase, BPTR file, struct PCXHeader *pcx, struct ColorRegister *cmap, LONG numcolors);
+static LONG GetCMAP16 (struct Library *libBase, BPTR file, struct PCXHeader *pcx, struct ColorRegister *cmap, LONG numcolors);
+static LONG GetCMAP256 (struct Library *libBase, BPTR file, struct PCXHeader *pcx, struct ColorRegister *cmap, LONG numcolors);
 
 static LONG ConvertPCX (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh) {
 	struct Library *libBase = (struct Library *)cl->cl_UserData;
@@ -216,7 +216,7 @@ static LONG GetPCX (Class *cl, Object *o, struct TagItem *tags) {
 	return error;
 }
 
-LONG ReadPlanar (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct PCXHeader *pcx) {
+static LONG ReadPlanar (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct PCXHeader *pcx) {
 	struct Library *libBase = (struct Library *)cl->cl_UserData;
 	UBYTE *buf, *src;
 	struct BitMap *bm;
@@ -293,7 +293,7 @@ out:
 	return error;
 }
 
-LONG ReadLUT8 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct PCXHeader *pcx) {
+static LONG ReadLUT8 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct PCXHeader *pcx) {
 	struct Library *libBase = (struct Library *)cl->cl_UserData;
 	ULONG bpr;
 	UBYTE *buf;
@@ -333,12 +333,12 @@ out:
 	return error;
 }
 
-LONG ReadRGB24 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct PCXHeader *pcx) {
+static LONG ReadRGB24 (Class *cl, Object *o, BPTR file, struct BitMapHeader *bmh, struct PCXHeader *pcx) {
 	struct Library *libBase = (struct Library *)cl->cl_UserData;
 	ULONG bpr;
 	UBYTE *buf1, *buf2, *src[3], *dst;
 	LONG buf_size;
-	LONG level = 0, error = OK;
+	IPTR level = 0, error = OK;
 	int y, x;
 
 	bpr = pcx->BytesPerRow;
@@ -408,7 +408,7 @@ static LONG ReadRLE (struct Library *libBase, BPTR file, UBYTE *buf, LONG len) {
 	return dec;
 }
 
-LONG GetCMAP16 (struct Library *libBase, BPTR file, struct PCXHeader *pcx, struct ColorRegister *cmap, LONG numcolors) {
+static LONG GetCMAP16 (struct Library *libBase, BPTR file, struct PCXHeader *pcx, struct ColorRegister *cmap, LONG numcolors) {
 	if (numcolors == 2) {
 		cmap[0].red = cmap[0].green = cmap[0].blue = 0;
 		cmap[1].red = cmap[1].green = cmap[1].blue = 255;
@@ -422,7 +422,7 @@ LONG GetCMAP16 (struct Library *libBase, BPTR file, struct PCXHeader *pcx, struc
 	return OK;
 }
 
-LONG GetCMAP256 (struct Library *libBase, BPTR file, struct PCXHeader *pcx, struct ColorRegister *cmap, LONG numcolors) {
+static LONG GetCMAP256 (struct Library *libBase, BPTR file, struct PCXHeader *pcx, struct ColorRegister *cmap, LONG numcolors) {
 	LONG status, error = OK;
 	//int i;
 
