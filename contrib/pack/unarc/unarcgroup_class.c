@@ -1,5 +1,5 @@
 /*
-    Copyright © 2012, The AROS Development Team. All rights reserved.
+    Copyright © 2012-2017, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -376,6 +376,12 @@ AROS_UFH3S(void, start_func,
                 return;
             }
             D(bug("[start_func] filename %s\n", data->targetpathname));
+            if (entry->fi->xfi_Flags & XADFIF_DIRECTORY)
+            {
+                // FIXME: create directory (needed if empty)
+            }
+            else
+            {
             result = xadFileUnArc
             (
                 data->ai,
@@ -399,6 +405,7 @@ AROS_UFH3S(void, start_func,
                 {
                     return;
                 }
+            }
             }
         }
         SET(data->ga_progress, MUIA_Gauge_Current, i);
