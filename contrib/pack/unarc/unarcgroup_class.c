@@ -382,30 +382,31 @@ AROS_UFH3S(void, start_func,
             }
             else
             {
-            result = xadFileUnArc
-            (
-                data->ai,
-                XAD_ENTRYNUMBER, i + 1,
-                XAD_OUTFILENAME, data->targetpathname,
-                XAD_MAKEDIRECTORY, TRUE,
-                XAD_OVERWRITE, TRUE,
-                TAG_DONE
-            );
-            D(bug("[start_func] xadFileUnArc result %d\n", result));
-            if (result !=0 && result != XADERR_BADPARAMS) // FIXME: why do I have to catch that error?
-            {
-                if
+                result = xadFileUnArc
                 (
-                    MUI_Request
-                    (
-                        _app(obj), _win(obj), 0, _(MSG_ERR),
-                        _(MSG_SKIP_CANCEL), _(MSG_ERR_CANT_UNPACK), data->targetpathname, xadGetErrorText(result)
-                    ) == 0
-                )
+                    data->ai,
+                    XAD_ENTRYNUMBER, i + 1,
+                    XAD_OUTFILENAME, data->targetpathname,
+                    XAD_MAKEDIRECTORY, TRUE,
+                    XAD_OVERWRITE, TRUE,
+                    TAG_DONE
+                );
+                D(bug("[start_func] xadFileUnArc result %d\n", result));
+                if (result !=0 && result != XADERR_BADPARAMS) // FIXME: why do I have to catch that error?
                 {
-                    return;
+                    if
+                    (
+                        MUI_Request
+                        (
+                            _app(obj), _win(obj), 0, _(MSG_ERR),
+                            _(MSG_SKIP_CANCEL), _(MSG_ERR_CANT_UNPACK),
+                            data->targetpathname, xadGetErrorText(result)
+                        ) == 0
+                    )
+                    {
+                        return;
+                    }
                 }
-            }
             }
         }
         SET(data->ga_progress, MUIA_Gauge_Current, i);
