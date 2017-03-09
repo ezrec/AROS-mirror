@@ -9,10 +9,67 @@ kernel
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`KrnGetSystemAttr()`_                   `KrnScheduleCPU()`_                     
+`KrnAddIRQHandler()`_                   `KrnGetSystemAttr()`_                   `KrnScheduleCPU()`_                     
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
+
+KrnAddIRQHandler()
+==================
+
+Synopsis
+~~~~~~~~
+::
+
+ void * KrnAddIRQHandler(
+          uint32_t irq,
+          irqhandler_t * handler,
+          void * handlerData,
+          void * handlerData2 );
+
+Function
+~~~~~~~~
+::
+
+     Add a raw hardware IRQ handler to the chain of handlers.
+
+
+Inputs
+~~~~~~
+::
+
+     num          - hardware-specific IRQ number
+     handler      - Pointer to a handler function
+     handlerData,
+     handlerData2 - User-defined data which is passed to the
+                    handler.
+     
+       Handler function uses a C calling convention and must be
+       declared as follows:
+
+       void IRQHandler(void *handlerData, void *handlerData2)
+
+       handlerData and handlerData2 will be values passed to the
+       KrnAddExceptionHandler() function.
+
+       There is no return code for the IRQ handler.
+
+
+Result
+~~~~~~
+::
+
+     An opaque handle that can be used for handler removal or NULL in case
+     of failure (like unsupported exception number).
+
+
+
+See also
+~~~~~~~~
+
+`KrnRemIRQHandler()`_ 
+
+----------
 
 KrnGetSystemAttr()
 ==================
@@ -61,7 +118,7 @@ Synopsis
 ::
 
  void KrnScheduleCPU(
-          uint32_t cpu_mask );
+          void * cpu_mask );
 
 Function
 ~~~~~~~~
