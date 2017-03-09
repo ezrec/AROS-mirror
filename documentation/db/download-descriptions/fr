@@ -73,6 +73,9 @@ pc-x86_64-boot-iso:
     La version native pour PC avec processeur x86_64.
     Cette archive contient l'image du CDROM bootable,
     ainsi que tous les programmes de contribution.
+pc-x86_64-smp-boot-iso:
+    This is a highly experimental SMP build for pc-x86_64.
+    Only recommended for Developers. This is a bootable CD-ROM ISO image.
 pc-i386-contrib:
     Cette archive contient tous les programmes de contribution
     compilés pour l'architecture i386. Ils fonctionneront à la fois

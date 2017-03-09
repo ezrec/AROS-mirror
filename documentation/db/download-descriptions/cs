@@ -72,6 +72,9 @@ pc-x86_64-boot-iso:
     Nativní verze pro 64 bitové poèítaèe (x86_64, amd64).
     Jedná se o ISO obraz bootovacího CD, které
     obsahuje celý systém AROS a programy pøispìvovatelù.
+pc-x86_64-smp-boot-iso:
+    This is a highly experimental SMP build for pc-x86_64.
+    Only recommended for Developers. This is a bootable CD-ROM ISO image.
 pc-i386-contrib:
     Tento archív obsahuje v¹echny programy pøispìvovatelù
     kompilované pro architekturu i386. Budou pracovat v

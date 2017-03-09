@@ -77,6 +77,9 @@ pc-x86_64-boot-iso:
     Η native έκδοση για 64-bit (x86_64, amd64) υπολογιστές.
     Αυτή είναι μια ISO εικόνα ενός CDROM εκκίνησης, το οποίο περιέχει
     όλα τα προγράμματα που τρίτοι έχουν συνεισφέρει και το σύστημα AROS.
+pc-x86_64-smp-boot-iso:
+    This is a highly experimental SMP build for pc-x86_64.
+    Only recommended for Developers. This is a bootable CD-ROM ISO image.
 pc-i386-contrib:
     Αυτό το πακέτο περιέχει όλα τα προγράμματα που τρίτοι έχουν
 	συνεισφέρει και έγιναν compiled για i386 αρχιτεκτονική. Θα 
