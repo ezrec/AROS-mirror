@@ -544,7 +544,7 @@ BOOL savepic_by_datatype(RGBImage *pic, char *file_name)
 	struct BitMapHeader *bmhd;
 	struct dtWrite dtw;
 	struct pdtBlitPixelArray dtb;
-	BPTR file = NULL;
+	BPTR file = BNULL;
 	BOOL retval = FALSE;
 	
 	DTImage = NewDTObject(	(APTR)NULL,
@@ -575,7 +575,7 @@ BOOL savepic_by_datatype(RGBImage *pic, char *file_name)
 		DoMethodA(DTImage, (Msg) &dtb);
 
 		//write datatype object to file
-		if ((file = Open (file_name,MODE_NEWFILE)))
+		if ((file = Open (file_name,MODE_NEWFILE)) != BNULL)
 		{
 			dtw.MethodID = DTM_WRITE;
 			dtw.dtw_GInfo = NULL;
