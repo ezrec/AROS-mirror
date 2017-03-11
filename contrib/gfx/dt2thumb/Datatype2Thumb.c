@@ -544,7 +544,7 @@ BOOL savepic_by_datatype(RGBImage *pic, char *file_name)
 	struct BitMapHeader *bmhd;
 	struct dtWrite dtw;
 	struct pdtBlitPixelArray dtb;
-	BPTR *file = NULL;
+	BPTR file = NULL;
 	BOOL retval = FALSE;
 	
 	DTImage = NewDTObject(	(APTR)NULL,
