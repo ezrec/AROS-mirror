@@ -78,7 +78,7 @@ pc-x86_64-boot-iso:
     De native versie voor 64-bit (x86_64, amd64) PC computers. Dit omvat een
     opstartbare CD-ROM ISO image, welke alle AROS systeem en contributie
     programmatuur bevat.
-pc-x86_64-smp-boot-iso:
+smp-pc-x86_64-boot-iso:
     This is a highly experimental SMP build for pc-x86_64.
     Only recommended for Developers. This is a bootable CD-ROM ISO image.
 pc-x86_64-contrib:

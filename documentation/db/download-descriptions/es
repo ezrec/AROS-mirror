@@ -76,7 +76,7 @@ pc-x86_64-boot-iso:
     La versión nativa para las computadoras PC de 64-bit (amd64, x86_64).
     Ésta es la imagen ISO de CDROM de arranque, que 
     contiene todo el sistema AROS más los programas contribuídos.
-pc-x86_64-smp-boot-iso:
+smp-pc-x86_64-boot-iso:
     This is a highly experimental SMP build for pc-x86_64.
     Only recommended for Developers. This is a bootable CD-ROM ISO image.
 pc-i386-contrib:
