@@ -3,7 +3,7 @@
 
 # Have a look at doc/PATENTS
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 EXEDIR := $(AROS_CONTRIB)/MultiMedia/Audio/MadAHI
 

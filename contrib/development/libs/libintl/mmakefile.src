@@ -3,7 +3,7 @@
 #   Generate libintl.a
 #
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-development : contrib-development-libs-libintl
 

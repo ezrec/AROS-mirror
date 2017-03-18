@@ -2,7 +2,7 @@
 #
 #   Makefile to make XDME
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 USER_CFLAGS := -I$(SRCDIR)/$(CURDIR)
 

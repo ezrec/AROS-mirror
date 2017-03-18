@@ -3,7 +3,7 @@
 
 # Makefile to make dt2thumb.
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 EXEDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/Dt2Thumb
 

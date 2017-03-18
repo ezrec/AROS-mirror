@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM demo-firework : demo-firework-icons
 

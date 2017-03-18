@@ -6,7 +6,7 @@
 #  Licensed under the AROS PUBLIC LICENSE (APL) Version 1.1
 # 
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 %copy_includes includes=svgtiny.h
 

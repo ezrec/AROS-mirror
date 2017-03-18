@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 %build_prog mmake=contrib-linie12 \
     progname=Linie12 targetdir=$(AROS_CONTRIB)/Misc \

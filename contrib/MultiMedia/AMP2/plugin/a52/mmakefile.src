@@ -1,6 +1,6 @@
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #
 # Makefile for AMP2 A52 Plugin (020111)

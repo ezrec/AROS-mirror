@@ -20,7 +20,7 @@
 #	Makefile for GNU Make
 #
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 ##MM- contrib-gnu : contrib-gnu-make
 #MM contrib-gnu-make : includes linklibs kernel-aros-linklib

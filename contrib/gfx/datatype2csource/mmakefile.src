@@ -1,7 +1,7 @@
 # Copyright © 2016 The AROS Development Team. All rights reserved.
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES   := main
 EXEDIR  := $(AROS_CONTRIB)/MultiMedia/Gfx/DatatypeToCSource

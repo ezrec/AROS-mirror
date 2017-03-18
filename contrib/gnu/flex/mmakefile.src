@@ -1,7 +1,7 @@
 # Copyright © 2004-2016, The AROS Development Team. All rights reserved.
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-gnu : contrib-gnu-flex
 #MM- contrib-gnu-flex : development-flex

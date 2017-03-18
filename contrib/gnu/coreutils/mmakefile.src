@@ -1,7 +1,7 @@
 # Copyright © 2008, 2011, The AROS Development Team. All rights reserved.
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 COREUTILS_VERSION = 6.9
 ##8.24

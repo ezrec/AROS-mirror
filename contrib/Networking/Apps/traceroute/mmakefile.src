@@ -2,7 +2,7 @@
 #
 # Makefile for traceroute
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES  := socket_autoinit traceroute
 DOCFILES := traceroute.guide traceroute.guide.info

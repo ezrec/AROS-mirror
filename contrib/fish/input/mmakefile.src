@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 %build_prog mmake=fish-input \
     progname=input_test targetdir=$(AROS_CONTRIB)/Misc/fish \

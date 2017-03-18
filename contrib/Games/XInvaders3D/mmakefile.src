@@ -1,6 +1,6 @@
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES := game aliens player effects object camera vec4x1 mat4x4 main-aros
 

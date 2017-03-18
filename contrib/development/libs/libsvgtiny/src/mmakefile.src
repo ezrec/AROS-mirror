@@ -6,7 +6,7 @@
 #  Licensed under the AROS PUBLIC LICENSE (APL) Version 1.1
 # 
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES=svgtiny svgtiny_list svgtiny_gradient src_colors
 

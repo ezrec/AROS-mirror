@@ -2,7 +2,7 @@
 #
 # Makefile to make Typeface.
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES  := char checkbox error node locale \
           gadget text fontio typeface

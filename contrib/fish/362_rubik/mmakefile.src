@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES := rubik getwindow makecube rotate trig gadgets draw extras solve \
 	blurb

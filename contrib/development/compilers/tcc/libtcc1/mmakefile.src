@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 %build_linklib mmake=linklibs-tcc1 libname=tcc1 files=libtcc1
 

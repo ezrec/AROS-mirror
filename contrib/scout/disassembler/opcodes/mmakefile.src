@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-scout-disassembler-opcodes: contrib-scout-disassembler-opcodes-setup
 #MM- contrib-scout-disassembler-opcodes-quick: contrib-scout-disassembler-opcodes-setup

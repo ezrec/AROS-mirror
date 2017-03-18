@@ -1,7 +1,7 @@
 # $Id$
 # Makefile to make MinAD.
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 NOWARN_FLAGS := $(NOWARN_UNINITIALIZED)
 USER_CFLAGS := $(NOWARN_FLAGS) \

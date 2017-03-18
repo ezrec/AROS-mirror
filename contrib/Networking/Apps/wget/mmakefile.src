@@ -1,6 +1,6 @@
 # Metamake file for wget (AROS)
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- aros-tcpip-apps : aros-tcpip-apps-wget
 

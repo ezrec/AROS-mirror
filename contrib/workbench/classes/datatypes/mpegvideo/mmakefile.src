@@ -1,6 +1,6 @@
 #   $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES := classbase dispatch methods mpeg16bit mpegamiga mpegdecoders mpeggdith mpeggray mpegjrevdct mpegfloatdct mpegmain mpegmotionvector mpegordered mpegparseblock mpegutil mpegvideo
 DTDIR 		:= $(AROS_DEVS)/DataTypes

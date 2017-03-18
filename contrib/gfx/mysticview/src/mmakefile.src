@@ -3,7 +3,7 @@
 #
 # Makefile to make MysticView.
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 USER_CFLAGS := -DNDEBUG -DREGISTERED -DNO_NEWICONS -DNO_SCREENNOTIFY \
 	       -DNO_POPUPMENU -DNO_NEURALNET

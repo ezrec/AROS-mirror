@@ -1,7 +1,7 @@
 # Copyright © 2011, The AROS Development Team. All rights reserved.
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 USER_CFLAGS     := -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/../../../portable/include
 USER_LDFLAGS += -nostartfiles -static

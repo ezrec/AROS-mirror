@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES := font_back font_bold font_color font_def font_ital font_large font_small font_under pop_pic pop_smiley pop_url img_speek
 

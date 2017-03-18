@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #.c.o:
 #	SC $(CFLAGS) $(GST) $(OPTIMIZE) $*.c

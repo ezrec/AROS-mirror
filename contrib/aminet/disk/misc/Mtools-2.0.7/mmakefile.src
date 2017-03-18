@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 DESTDIR	:= $(AROS_CONTRIB)/Misc/aminet/disk/misc/Mtools-2.0.7
 

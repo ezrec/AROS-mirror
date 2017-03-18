@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- demo-galaxy : demo-galaxy-$(AROS_TARGET_CPU)
 #MM demo-galaxy-i386 : demo-galaxy-common

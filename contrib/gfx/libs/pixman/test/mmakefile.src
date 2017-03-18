@@ -1,6 +1,6 @@
 #   $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-gfx-libs-pixman-test : \
 #MM  contrib-gfx-libs-pixman-test-a1-trap \

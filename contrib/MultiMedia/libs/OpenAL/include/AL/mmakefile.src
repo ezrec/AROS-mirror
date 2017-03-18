@@ -1,6 +1,6 @@
 #   $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 INCLUDE_FILES := alc.h alext.h al.h efx.h efx-creative.h efx-presets.h
 

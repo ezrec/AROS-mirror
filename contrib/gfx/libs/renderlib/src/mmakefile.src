@@ -1,6 +1,6 @@
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-gfx-libs : contrib-gfx-libs-render
 #MM- contrib-gfx-libs-render : linklibs

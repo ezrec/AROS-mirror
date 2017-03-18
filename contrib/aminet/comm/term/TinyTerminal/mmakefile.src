@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 %build_prog mmake=aminet-comm-term-tinyterminal \
     progname=TinyTerminal targetdir=$(AROS_CONTRIB)/Misc/aminet \

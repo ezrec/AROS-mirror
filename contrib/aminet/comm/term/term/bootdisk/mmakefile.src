@@ -1,6 +1,6 @@
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 -include $(OSGENDIR)/boot/mf.inc
 

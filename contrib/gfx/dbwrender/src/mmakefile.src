@@ -3,7 +3,7 @@
 #
 # Makefile to make DBWRender.
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-gfx-dbwrender : \
 #MM    contrib-gfx-dbwrender-render contrib-gfx-dbwrender-display

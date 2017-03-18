@@ -1,7 +1,7 @@
 # Copyright © 2008-2010, The AROS Development Team. All rights reserved.
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-sdl-sdl-net : development-SDL_net
 

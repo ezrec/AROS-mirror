@@ -1,7 +1,7 @@
 #   $Id$
 #
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 INCLUDE_FILES := caf/caf_debugging.h caf/caf_types.h caf/networking_helpers.h caf/thread_helpers.h caf/errors.h
 

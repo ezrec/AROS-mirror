@@ -1,6 +1,6 @@
 #   $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 # files to build the linker lib 'lualfs'
 LFSLIBFILES := lfs

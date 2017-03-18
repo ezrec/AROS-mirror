@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES := buffer language subwin mainwin system hotkey \
 	settings miscwin patches snoopdos 

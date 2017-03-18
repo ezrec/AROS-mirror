@@ -1,6 +1,6 @@
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 %build_linklib mmake=aminet-dev-src-chunkyiclass \
     libname=chunkyiclass files=chunkyiclass

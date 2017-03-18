@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES  := getbuff getopt join repair split sploiner usage
 EXEDIR := $(AROS_CONTRIB)/Misc/aminet

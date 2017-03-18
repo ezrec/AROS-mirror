@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 %build_prog mmake=aminet-comm-term-termlite \
     progname=termLite targetdir=$(AROS_CONTRIB)/Misc/aminet \

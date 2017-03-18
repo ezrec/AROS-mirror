@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 %build_prog mmake=fish-371_fractal \
     progname=371_fractal targetdir=$(AROS_CONTRIB)/Misc/fish \

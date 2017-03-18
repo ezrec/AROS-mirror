@@ -1,6 +1,6 @@
 #   $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM contrib-zune-classes-thebar-demos : includes linklibs \
 #MM contrib-zune-classes-thebar-mcc contrib-zune-classes-thebar-mccv \

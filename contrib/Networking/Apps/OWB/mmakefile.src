@@ -1,7 +1,7 @@
 # Copyright © 2009-2013, The AROS Development Team. All rights reserved.
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 EXEDIR := $(AROS_CONTRIB)/Networking/Apps/OWB
     

@@ -1,7 +1,7 @@
 # Copyright © 2008, 2013, The AROS Development Team. All rights reserved.
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-gfx : contrib-gfx-netpbm
 #MM- contrib-gfx-netpbm : contrib-gfx-netpbm-pngtopnm contrib-gfx-netpbm-ppmtoilbm

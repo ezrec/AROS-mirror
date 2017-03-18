@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 %build_prog mmake=contrib-misc-m68kemul \
     progname=m68kemul targetdir=$(AROS_CONTRIB)/Misc/Berger \

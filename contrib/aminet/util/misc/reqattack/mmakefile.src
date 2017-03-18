@@ -3,7 +3,7 @@
 #
 # Makefile to make ReqAttack.
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES := addicon    	\
     	 anim 	    	\

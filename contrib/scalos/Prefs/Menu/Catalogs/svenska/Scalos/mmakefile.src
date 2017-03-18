@@ -1,6 +1,6 @@
 # Metamakefile for AROS build-system
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 LANGUAGE  := swedish
 CATNAME   := ScalosMenu

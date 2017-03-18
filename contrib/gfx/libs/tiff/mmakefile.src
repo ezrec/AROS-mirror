@@ -1,7 +1,7 @@
 # Copyright © 2008, The AROS Development Team. All rights reserved.
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 ##MM- contrib-gfx-libs : contrib-gfx-libs-tiff
 #MM- contrib-gfx-libs-tiff : development-tiff

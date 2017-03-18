@@ -1,7 +1,7 @@
 # $Id$
 #
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 ##MM- linklibs : linklibs-www2
 #MM linklibs-www2 : includes

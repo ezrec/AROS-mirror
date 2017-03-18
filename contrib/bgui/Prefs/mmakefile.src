@@ -2,7 +2,7 @@
 #
 # Makefile to make BGUI Prefs program.
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 include $(SRCDIR)/$(CURDIR)/../make.cfg
 
 FILES := BGUIPrefs

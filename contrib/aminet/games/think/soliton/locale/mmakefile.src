@@ -1,7 +1,7 @@
 # Copyright © 2003, The AROS Development Team. All rights reserved.
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 %build_catalogs mmake=setup-soliton-catalogs \
                 name=Soliton subdir=  source=../common/Catalog.h \

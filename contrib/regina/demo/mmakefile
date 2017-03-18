@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 TARGETDIR := $(AROS_CONTRIB)/Regina/demo
 

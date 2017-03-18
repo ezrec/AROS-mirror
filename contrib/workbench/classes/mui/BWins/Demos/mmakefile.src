@@ -1,6 +1,6 @@
 #   $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM contrib-zune-classes-bwin-demos : includes linklibs \
 #MM contrib-zune-classes-bwin-mcc

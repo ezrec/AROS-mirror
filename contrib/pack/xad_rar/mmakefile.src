@@ -1,7 +1,7 @@
 # Copyright © 2013-2016, The AROS Development Team. All rights reserved.
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 NOWARN_FLAGS := $(NOWARN_ATTRIBUTES) $(NOWARN_UNKNOWN_PRAGMAS)\
  $(NOWARN_MAYBE_UNINITIALIZED) $(NOWARN_VOLATILE_REGISTER_VAR)

@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES = Send Receive Utils xprgetsystime xprtimeout xprzmodem_locale Zm xprsprintf xprz_init aros/string
 

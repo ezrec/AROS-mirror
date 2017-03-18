@@ -3,7 +3,7 @@
 #   Generate libopenal.a
 #
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-multimedia : contrib-openal
 

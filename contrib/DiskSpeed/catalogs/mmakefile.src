@@ -1,7 +1,7 @@
 # Copyright © 2003, The AROS Development Team. All rights reserved.
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 %build_catalogs mmake=contrib-diskspeed-catalogs name=DiskSpeed subdir=$(DESTDIR)\
                  source=../locale.c sourcedescription=$(TOOLDIR)/gcccatcomp

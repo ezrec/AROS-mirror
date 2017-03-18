@@ -1,7 +1,7 @@
 # Copyright © 2016, The AROS Development Team. All rights reserved.
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-ffmpeg : linklibs-startup linklibs-amiga linklibs-arossupport linklibs-clib
 

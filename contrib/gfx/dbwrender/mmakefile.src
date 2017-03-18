@@ -3,7 +3,7 @@
 #
 # Makefile to make DBWRender.
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES := brick.dat COPYING glass1.dat glass2.dat glass.dat \
 glassorig.dat island.dat moonover.dat ray.txt README.txt README.AROS

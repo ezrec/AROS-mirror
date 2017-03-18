@@ -1,5 +1,5 @@
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES := $(AROS_INCLUDES)/proto/disassembler.h \
 	 $(AROS_INCLUDES)/defines/disassembler.h \

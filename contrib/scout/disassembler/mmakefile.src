@@ -2,7 +2,7 @@
 
 #   AROS metamakefile for codesetslib
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES := library disassemble findstartposition libbfd libc object support
 

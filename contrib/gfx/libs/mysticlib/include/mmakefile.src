@@ -1,6 +1,6 @@
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 INCLUDE_FILES 	 := mysticview.h
 INCLUDE_SRC_DIR  := libraries
