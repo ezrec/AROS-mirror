@@ -34,8 +34,11 @@ REPOSITORIES := http://archives.aros-exec.org/share/utility/scientific
 ARCHBASE     := muimathx-src-svn46
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Scientific/MathX
 NOWARN_FLAGS := $(NOWARN_WRITE_STRINGS) $(NOWARN_UNINITIALIZED)
-USER_CXXFLAGS  := $(NOWARN_FLAGS) -funroll-loops -fno-strict-aliasing -fpermissive \
-                -D__MATHX_VERDATE=\"`date +%d.%m.%Y`\" \
+USER_CXXFLAGS  := $(NOWARN_FLAGS) \
+                $(CFLAGS_UNROLL_LOOPS) \
+                $(CFLAGS_NO_STRICT_ALIASING) \
+                $(CFLAGS_PERMISSIVE)
+USER_CXXFLAGS  += -D__MATHX_VERDATE=\"`date +%d.%m.%Y`\" \
                 -D__MATHX_VERDAYS="`expr \`date +%s\` / 86400 - 2922`" \
                 -D__MATHX_BUILDID=\"$(BUILDID)\" \
                 -D__GRAPHICS_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ \
