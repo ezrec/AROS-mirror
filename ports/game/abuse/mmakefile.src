@@ -1,6 +1,6 @@
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #DISABLED #MM- ports-game : ports-game-abuse
 # Collision check isn't working. i.e. hero falls through floor.

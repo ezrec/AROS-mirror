@@ -1,7 +1,7 @@
 # Copyright © 2003, The AROS Development Team. All rights reserved.
 # $Id: mmakefile.src
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 ARCHBASE     := screenrecorder-src-svn17
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Video/ScreenRecorder

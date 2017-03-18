@@ -1,6 +1,6 @@
 # $Id$
 
-include $(SRCDIR)/config/aros.cfg
+include $(SRCDIR)/config/aros-contrib.cfg
 
 #DISABLED #MM- ports-emulation-vbam-icons : ports-emulation-vbam-vbam-icons
 
