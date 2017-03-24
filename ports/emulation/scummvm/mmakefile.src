@@ -15,8 +15,7 @@ REPOSITORIES := https://www.scummvm.org/frs/scummvm/1.8.0
 
 %fetch_and_build mmake=ports-emulation-scummvm prefix=$(TARGETDIR) \
     package=$(PACKAGE) version=$(VERSION) suffixes="tar.bz2" \
-    patch=yes package_repo=$(REPOSITORIES) nix=no nix_dir_layout=no gnuflags=no \
-    extracflags="" \
+    patch=yes package_repo=$(REPOSITORIES) nix=no nix_dir_layout=no gnuflags=no\
     extraoptions="--host=i386-aros --enable-verbose-build"
 
 
