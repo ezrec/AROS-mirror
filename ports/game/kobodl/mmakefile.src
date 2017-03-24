@@ -18,7 +18,6 @@ USER_CXXFLAGS := -static-libstdc++ $(KOBDL_COMMONFLAGS)
 %fetch_and_build mmake=ports-game-kobodl prefix=$(TARGETDIR) \
     package=$(PACKAGE) version=$(VERSION) suffixes="tar.bz2" \
     patch=yes package_repo=$(REPOSITORIES) nix=yes nix_dir_layout=no \
-    extracflags="$(USER_CFLAGS)" extracxxflags="$(USER_CXXFLAGS)" \
     extraoptions="--datarootdir='$$(PROGDIR)share' --sharedstatedir='$$(PROGDIR)com' --localstatedir='$$(PROGDIR)var' --program-transform-name='s/.*/KoboDL/'" 
 
 #MM
