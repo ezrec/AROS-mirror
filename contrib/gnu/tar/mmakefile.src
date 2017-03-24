@@ -6,5 +6,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- contrib-gnu : contrib-gnu-tar
 #MM- contrib-gnu-tar : development-tar
 
+TARCFLAGS := $(OPTIMIZATION_CFLAGS) -D__BSD_VISIBLE=1
+
 %fetch_and_build_gnu_development package=tar version=1.26 patch=yes \
-    extracflags="-D__BSD_VISIBLE=1"
+    extracflags="$(TARCFLAGS)"
