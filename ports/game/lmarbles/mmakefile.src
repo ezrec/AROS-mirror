@@ -14,7 +14,7 @@ REPOSITORIES := sf://lgames
 %fetch_and_build mmake=ports-game-lmarbles prefix=$(TARGETDIR) \
     package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
     patch=yes package_repo=$(REPOSITORIES) nix=yes nix_dir_layout=no \
-    extracflags="" install_target= postinstall=ports-game-lmarbles-install \
+    install_target= postinstall=ports-game-lmarbles-install \
     extraoptions="-datarootdir='$$(PROGDIR)share' LIBS='-lmikmod -lvorbisfile -lvorbis -logg'" 
 
 
