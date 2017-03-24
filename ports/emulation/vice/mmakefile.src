@@ -9,11 +9,13 @@ VERSION      := 2.4
 TARGETDIR    := $(AROS_CONTRIB)/Emu/Vice
 REPOSITORIES := sf://vice-emu/releases
 
+VICECFLAGS := $(OPTIMIZATION_CFLAGS) -I$(GENDIR)/$(CURDIR)/vice/src/arch/amigaos
+
 %fetch_and_build mmake=ports-emulation-vice prefix=$(TARGETDIR) \
 	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
 	patch=yes nix=no nix_dir_layout=no package_repo=$(REPOSITORIES) \
 	install_target= postinstall=ports-emulation-vice-install \
-	extracflags="-I$(GENDIR)/$(CURDIR)/vice/src/arch/amigaos"
+	extracflags="$(VICECFLAGS)"
 
 
 #MM
