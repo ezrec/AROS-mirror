@@ -7,7 +7,9 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- development-SDL_net : SDL-aros-lib
 
+SDLNETCFLAGS := $(OPTIMIZATION_CFLAGS) -D__BSD_VISIBLE=1
+
 %fetch_and_build_gnu_development package=SDL_net version=1.2.7 patch=yes \
     package_repo=http://www.libsdl.org/projects/SDL_net/release/ \
-    suffixes="tar.gz" extracflags="-D__BSD_VISIBLE=1" extraoptions="libdir=$(AROS_LIB)"
+    suffixes="tar.gz" extracflags="$(SDLNETCFLAGS)" extraoptions="libdir=$(AROS_LIB)"
 
