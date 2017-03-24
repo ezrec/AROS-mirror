@@ -11,10 +11,12 @@ VERSION      := 1.0.19
 TARGETDIR    := $(AROS_CONTRIB)/Games/Puzzle/LTris
 REPOSITORIES := sf://lgames
 
+LTRISCFLAGS := -std=gnu89 $(OPTIMIZATION_CFLAGS)
+
 %fetch_and_build mmake=ports-game-ltris prefix=$(TARGETDIR) \
     package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
     patch=yes package_repo=$(REPOSITORIES) nix=yes nix_dir_layout=no \
-    extracflags="-std=gnu89" install_target= postinstall=ports-game-ltris-install \
+    extracflags="$(LTRISCFLAGS)" install_target= postinstall=ports-game-ltris-install \
     extraoptions="--datarootdir='$$(PROGDIR)share' LIBS='-lmikmod -lvorbisfile -lvorbis -logg'" 
 
 
