@@ -27,6 +27,6 @@ endif
     archive=$(ARCHBASE) srcdir=bdwgc-$(ARCHBASE) destination=$(PORTSDIR)/gc
 
 %build_with_cmake mmake=contrib-development-libs-gc		\
-	srcdir=$(GC_SOURCE) prefix="$(AROS_DEVELOPMENT)"
+	srcdir=$(GC_SOURCE) prefix="$(AROS_DEVELOPER)"
 
 %common

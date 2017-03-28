@@ -71,7 +71,7 @@ ICONS := back.png close.png download.png find.png forward.png go.png home.png pr
 %copy_files_q mmake=aros-tcpip-apps-owb-readme files="README" dst="$(EXEDIR)/"
 
 %copy_dir_recursive src="fonts" dst="$(EXEDIR)/fonts" mmake=aros-tcpip-apps-owb-fonts
-%copy_dir_recursive src="$(AROS_DEVELOPMENT)/share/webkit-owb/resources" dst="$(EXEDIR)/resources" mmake=aros-tcpip-apps-owb-resources
+%copy_dir_recursive src="$(AROS_DEVELOPER)/share/webkit-owb/resources" dst="$(EXEDIR)/resources" mmake=aros-tcpip-apps-owb-resources
 %copy_dir_recursive src="licenses" dst="$(EXEDIR)/licenses" mmake=aros-tcpip-apps-owb-licenses
 
 %common

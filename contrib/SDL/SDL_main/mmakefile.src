@@ -105,7 +105,7 @@ FILES := \
     $(ARCHSRCDIR)/src/video/cgx/SDL_cgxvideo \
     $(ARCHSRCDIR)/src/video/cgx/SDL_cgxwm
 
-SDLINCDIR := $(AROS_DEVELOPMENT)/include/SDL
+SDLINCDIR := $(AROS_DEVELOPER)/include/SDL
 
 USER_INCLUDES := -I$(SDLINCDIR) -I$(ARCHSRCDIR) -I$(ARCHSRCDIR)/src -DSDL_AROS_SHARED
 
@@ -223,15 +223,15 @@ SDL_main-aros-includes : setup-gendir $(STAMPFILE)
 #MM
 SDL-aros-config : \
     $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros-sdl-config \
-    $(AROS_DEVELOPMENT)/bin/sdl-config
+    $(AROS_DEVELOPER)/bin/sdl-config
 
 $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)-aros-sdl-config: $(ARCHSRCDIR)/aros/sdl-config
-	@$(SED) 's,prefix=/Development,prefix=$(AROS_DEVELOPMENT),g' $< > $@
+	@$(SED) 's,prefix=/Development,prefix=$(AROS_DEVELOPER),g' $< > $@
 	@$(CHMOD) a+x $@
 	ln -sf $@ $(TOOLDIR)/$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)$(AROS_TARGET_SUFFIX)/sdl-config
 
-$(AROS_DEVELOPMENT)/bin/sdl-config: $(ARCHSRCDIR)/aros/sdl-config
-	%mkdir_q dir=$(AROS_DEVELOPMENT)/bin
+$(AROS_DEVELOPER)/bin/sdl-config: $(ARCHSRCDIR)/aros/sdl-config
+	%mkdir_q dir=$(AROS_DEVELOPER)/bin
 	@$(CP) $< $@
 	@$(CHMOD) a+x $@
 

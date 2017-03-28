@@ -13,5 +13,5 @@ ISL_EXTRA_OPTS := \
 
 %fetch_and_build mmake=contrib-gnu-isl package=$(ISL_PKGNAME) version=$(ISL_VERSION) \
 	package_repo="$(ISL_REPOSITORY)" \
-	patch=no  prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development nix=yes \
+	patch=no  prefix=$(AROS_DEVELOPER) aros_prefix=/Development nix=yes \
 	extraoptions="$(ISL_EXTRA_OPTS)"

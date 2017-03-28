@@ -40,7 +40,7 @@ FFMPEG_OPTIONS := \
         --disable-doc \
         $(FFMPEG_PROGS)
 
-%fetch_and_build mmake=contrib-ffmpeg prefix=$(AROS_DEVELOPMENT) \
+%fetch_and_build mmake=contrib-ffmpeg prefix=$(AROS_DEVELOPER) \
 	package=ffmpeg version=$(VERSION) suffixes="tar.bz2" \
 	patch=yes nix=yes package_repo=$(REPOSITORIES) \
 	extraoptions="$(FFMPEG_OPTIONS)" gnuflags=no

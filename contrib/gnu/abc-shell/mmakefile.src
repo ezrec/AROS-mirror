@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES   := amigaos alloc c_ksh c_sh c_test environ eval exec expr history io jobs\
            lex main misc missing path shf sigact syn table trap tree tty var version
-DESTDIR := $(AROS_DEVELOPMENT)/bin
+DESTDIR := $(AROS_DEVELOPER)/bin
 
 NOWARN_FLAGS := $(NOWARN_FORMAT_SECURITY)
 USER_CFLAGS  := $(NOWARN_FLAGS) -DAMIGA -DPOSIXLY_CORRECT -DHISTORY -DAUTOINIT -D__USE_RUNCOMMAND__ -DUSE_TEMPFILES

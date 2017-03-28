@@ -12,7 +12,7 @@ PKG_VER := $(PACKAGE)-$(VERSION)
 	prefix=$(PROGDIR) \
 	package=$(PACKAGE) version=$(VERSION) patch=yes \
 	package_repo=http://www.rcdrummond.net/uae/$(PKG_VER) \
-	extraoptions="--includedir=$(AROS_INCLUDES) --with-zlib=$(AROS_DEVELOPMENT)" \
+	extraoptions="--includedir=$(AROS_INCLUDES) --with-zlib=$(AROS_DEVELOPER)" \
 	postinstall=euae-copy-files
 
 CP_SRC := $(PORTSDIR)/$(PACKAGE)/$(PKG_VER)

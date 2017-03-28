@@ -36,7 +36,7 @@ USER_LDFLAGS := -static
 #MM
 contrib-zune-classes-popph-clean :
 	$(RM) $(AROS_CONTRIB)/Zune/MCC_Popph
-	$(RM) $(AROS_DEVELOPMENT)/$(INCLUDE_FILES)
+	$(RM) $(AROS_DEVELOPER)/$(INCLUDE_FILES)
 	$(RM) $(AROS_PACKAGES)/MCC_Popph
 
 %common

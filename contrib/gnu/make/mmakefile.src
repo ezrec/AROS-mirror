@@ -25,7 +25,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 ##MM- contrib-gnu : contrib-gnu-make
 #MM contrib-gnu-make : includes linklibs kernel-aros-linklib
 
-TARGETDIR := $(AROS_DEVELOPMENT)/bin
+TARGETDIR := $(AROS_DEVELOPER)/bin
 
 USER_CFLAGS := -DHAVE_CONFIG_H -D__AROS__ -D_AMIGA \
     -DFILE_TIMESTAMP_HI_RES=0 -DINCLUDEDIR="\".\"" -DLIBDIR="\".\"" -DNO_ARCHIVES -I$(SRCDIR)/$(CURDIR) -I$(SRCDIR)/$(CURDIR)/glob

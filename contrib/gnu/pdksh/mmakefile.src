@@ -19,6 +19,6 @@ ARCHBASE := pdksh-5.2.14
 
 
 %build_with_configure mmake=development-pdksh srcdir=$(PORTSDIR)/pdksh/$(ARCHBASE) \
-     nix=yes prefix=$(AROS_DEVELOPMENT) aros_prefix=/Development
+     nix=yes prefix=$(AROS_DEVELOPER) aros_prefix=/Development
 
 

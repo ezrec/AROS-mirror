@@ -57,7 +57,7 @@ contrib-openssl-build : $(OPENSSL_BUILD_DIR)/.build-flag
 $(OPENSSL_BUILD_DIR)/.install-flag : $(OPENSSL_BUILD_DIR)/.build-flag
 	$(RM) $@
 	cd $(OPENSSL_BUILD_DIR); \
-	env -i PATH=$(PATH) make install INSTALL_PREFIX=$(AROS_DEVELOPMENT)/../
+	env -i PATH=$(PATH) make install INSTALL_PREFIX=$(AROS_DEVELOPER)/../
 	$(TOUCH) $@
 
 #MM

@@ -9,7 +9,7 @@ HEADERS := error.h
 
 NOWARN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECL)
 USER_CFLAGS	:= $(NOWARN_FLAGS)
-USER_INCLUDES := -I$(AROS_DEVELOPMENT)/include/lua -I$(AROS_DEVELOPMENT)/include/libxml2
+USER_INCLUDES := -I$(AROS_DEVELOPER)/include/lua -I$(AROS_DEVELOPER)/include/libxml2
 
 #MM- contrib-development-luaxmlreader-lib : development-libxml2
 

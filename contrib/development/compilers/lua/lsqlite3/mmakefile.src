@@ -18,7 +18,7 @@ EXEDIR := $(AROS_CONTRIB)/Development/Lua
     src=examples dst=$(EXEDIR)/lsqlite3/examples
 
 USER_CFLAGS := -DLUA_COMPAT_ALL
-USER_INCLUDES := -I$(AROS_DEVELOPMENT)/include/lua
+USER_INCLUDES := -I$(AROS_DEVELOPER)/include/lua
 
 #MM contrib-development-lsqlite3-lib : contrib-sqlite
 %build_linklib mmake=contrib-development-lsqlite3-lib libname=lsqlite3 files=$(LSQLITE3LIBFILES)
