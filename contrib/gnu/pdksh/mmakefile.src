@@ -1,5 +1,5 @@
 
-# Copyright © 2004, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2017, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -19,6 +19,6 @@ ARCHBASE := pdksh-5.2.14
 
 
 %build_with_configure mmake=development-pdksh srcdir=$(PORTSDIR)/pdksh/$(ARCHBASE) \
-     nix=yes prefix=$(AROS_DEVELOPER) aros_prefix=/Development
+     nix=yes prefix=$(AROS_DEVELOPER) aros_prefix=/$(AROS_DIR_DEVELOPER)
 
 

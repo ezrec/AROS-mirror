@@ -3,7 +3,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES  := tcc
 
-EXEDIR := $(AROS_CONTRIB)/Development/TCC
+EXEDIR := $(AROS_CONTRIB)/$(AROS_DIR_DEVELOPER)/TCC
 
 USER_CFLAGS  := -O2 -g -Wall -DCONFIG_TCC_STATIC -DAROSC
 USER_LDFLAGS := -ltcc1

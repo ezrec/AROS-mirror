@@ -1,4 +1,4 @@
-# Copyright © 2004-2015 The AROS Development Team. All rights reserved.
+# Copyright © 2004-2017, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -27,7 +27,7 @@ GCC_EXTRA_OPTS += --with-fpu=$(GCC_DEFAULT_FPU)
 GCC_EXTRA_OPTS += --with-mode=arm
 endif
 
-GCC_EXTRA_OPTS += --with-sysroot=/Development
+GCC_EXTRA_OPTS += --with-sysroot=/$(AROS_DIR_DEVELOPER)
 GCC_EXTRA_OPTS += --with-build-sysroot=$(AROS_DEVELOPER)
 GCC_EXTRA_OPTS += --with-native-system-header-dir=/include
 GCC_EXTRA_OPTS += --enable-languages=$(strip $(GCC_LANGUAGES))

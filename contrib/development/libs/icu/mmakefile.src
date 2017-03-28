@@ -1,4 +1,4 @@
-# Copyright Â© 2009, The AROS Development Team. All rights reserved.
+# Copyright © 2009-2017, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -34,5 +34,5 @@ ICU_EXTRA_OPTS := \
 
 %fetch_and_build mmake=contrib-icu4c-complete package=$(ICU_PKGNAME) version=$(ICU_PKGVERSION)-src \
 	package_repo="$(ICU_REPOSITORY)" suffixes="tgz" \
-	patch=yes srcdir=icu builddir=source prefix=$(AROS_DEVELOPER) aros_prefix=/Development nix=yes \
+	patch=yes srcdir=icu builddir=source prefix=$(AROS_DEVELOPER) aros_prefix=/$(AROS_DIR_DEVELOPER) nix=yes \
 	extraoptions="$(ICU_EXTRA_OPTS)"

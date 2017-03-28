@@ -21,7 +21,7 @@ FILES := \
     $(SRCDIR)/$(CURDIR)/../../common/Fs/FsAbstraction
 
 NOWARN_FLAGS := $(NOWARN_PARENTHESES) $(NOWARN_DISCARDED_QUALIFIERS) $(NOWARN_FORMAT)
-USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include \
+USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/$(AROS_DIR_DEVELOPER)/include \
     -I$(SRCDIR)/$(CURDIR)/../IconProperties.MUI \
     -I$(SRCDIR)/$(CURDIR)/../../common/Int64 \
     -I$(SRCDIR)/$(CURDIR)/../../common/IconobjectMCC \

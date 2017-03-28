@@ -12,7 +12,7 @@ FILES := vg_plugin VolumeGauge
 TARGETDIR := $(AROS_CONTRIB)/Scalos
 
 USER_INCLUDES := \
-    -I$(TARGETDIR)/Development/include \
+    -I$(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include \
     -I$(SRCDIR)/$(CURDIR)/../../../../common/Plugin \
     -idirafter $(SRCDIR)/$(CURDIR)/../../../../include
 

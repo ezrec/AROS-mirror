@@ -14,7 +14,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 FILES := Rename
 
 NOWARN_FLAGS := $(NOWARN_PARENTHESES)
-USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include -idirafter $(SRCDIR)/$(CURDIR)/../../include
+USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/$(AROS_DIR_DEVELOPER)/include -idirafter $(SRCDIR)/$(CURDIR)/../../include
 SCALOS_LOCALE := Rename_Locale.h
 USER_CFLAGS := $(NOWARN_FLAGS) -DMUI_OBSOLETE -D__UTILITY_STDLIBBASE__ \
     -D__LOCALE_STDLIBBASE__ -DSCALOSLOCALE=$(SCALOS_LOCALE)

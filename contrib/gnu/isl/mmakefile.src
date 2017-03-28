@@ -1,4 +1,4 @@
-# Copyright © 2015 The AROS Development Team. All rights reserved.
+# Copyright © 2015-2017, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -13,5 +13,5 @@ ISL_EXTRA_OPTS := \
 
 %fetch_and_build mmake=contrib-gnu-isl package=$(ISL_PKGNAME) version=$(ISL_VERSION) \
 	package_repo="$(ISL_REPOSITORY)" \
-	patch=no  prefix=$(AROS_DEVELOPER) aros_prefix=/Development nix=yes \
+	patch=no  prefix=$(AROS_DEVELOPER) aros_prefix=/$(AROS_DIR_DEVELOPER) nix=yes \
 	extraoptions="$(ISL_EXTRA_OPTS)"

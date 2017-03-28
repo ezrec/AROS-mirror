@@ -2,7 +2,7 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-EXEDIR := $(AROS_CONTRIB)/Development/Lua
+EXEDIR := $(AROS_CONTRIB)/$(AROS_DIR_DEVELOPER)/Lua
 
 #MM- contrib-development : \
 #MM  contrib-development-lua-lfs-doc \

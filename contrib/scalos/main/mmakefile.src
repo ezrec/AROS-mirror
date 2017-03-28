@@ -117,7 +117,7 @@ FILES :=	about                   	\
 		ScaLibrary-aros
 
 NOWARN_FLAGS := $(NOWARN_DISCARDED_QUALIFIERS)
-USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include -idirafter $(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../common/McpGfx \
+USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/$(AROS_DIR_DEVELOPER)/include -idirafter $(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../common/McpGfx \
     -I$(SRCDIR)/$(CURDIR)/../common/Fs -I$(SRCDIR)/$(CURDIR)/../common/Int64 -I$(SRCDIR)/$(CURDIR)
 SCALOS_LOCALE := Scalos_Locale.h
 USER_CFLAGS := $(NOWARN_FLAGS) -D__UTILITY_STDLIBBASE__ -D__REXXSYSLIB_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ \
@@ -145,16 +145,16 @@ MsgIdNames.h : $(SRCDIR)/$(CURDIR)/Scalos.cd $(SRCDIR)/$(CURDIR)/../msgidnames.s
 	@$(FLEXCAT) $< $@=$(SRCDIR)/$(CURDIR)/../msgidnames.sd
 
 
-INCLUDES := $(TARGETDIR)/Development/include/clib/scalos_protos.h $(TARGETDIR)/Development/include/defines/scalos.h \
-    $(TARGETDIR)/Development/include/inline/scalos.h $(TARGETDIR)/Development/include/proto/scalos.h 
+INCLUDES := $(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include/clib/scalos_protos.h $(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include/defines/scalos.h \
+    $(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include/inline/scalos.h $(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include/proto/scalos.h 
 
 #MM
 contrib-scalos-library-includes : $(INCLUDES)
 
 $(INCLUDES) : $(SRCDIR)/$(CURDIR)/scalos-aros.conf
-	%mkdirs_q $(TARGETDIR)/Development/include/clib $(TARGETDIR)/Development/include/defines/ \
-		$(TARGETDIR)/Development/include/inline $(TARGETDIR)/Development/include/proto
-	$(GENMODULE) -c $^ -d $(TARGETDIR)/Development/include writeincludes scalos library
+	%mkdirs_q $(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include/clib $(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include/defines/ \
+		$(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include/inline $(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include/proto
+	$(GENMODULE) -c $^ -d $(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include writeincludes scalos library
 
 
 ICON := $(TARGETDIR)/Scalos.info

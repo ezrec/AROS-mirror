@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- iconset-Gorilla-contrib-icons : iconset-Gorilla-contrib-icons-extras
 
-ICONS := MultiMedia DOpus Demos Development Emu Games Networking Office \
+ICONS := MultiMedia DOpus Demos Developer Emu Games Networking Office \
  Utilities System FryingPan Scalos
 
 #MM- iconset-Gorilla-contrib-icons-clean : iconset-Gorilla-contrib-icons-extras-clean

@@ -11,7 +11,7 @@ FILES := \
 
 #MM contrib-development-gui-muibuilder-libs : includes linklib
 
-EXEDIR := $(AROSDIR)/Extras/Development/MUIBuilder/Libs
+EXEDIR := $(AROSDIR)/Extras/$(AROS_DIR_DEVELOPER)/MUIBuilder/Libs
 
 USER_CFLAGS += -I$(AROS_INCLUDES)/SDI -DAROS_ABI_V1
 USER_LDFLAGS := -static

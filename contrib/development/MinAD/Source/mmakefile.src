@@ -17,7 +17,7 @@ FILES := \
     listtree \
     string
 
-EXEDIR := $(AROS_CONTRIB)/Development/MinAD
+EXEDIR := $(AROS_CONTRIB)/$(AROS_DIR_DEVELOPER)/MinAD
 
 #MM- contrib-development : contrib-development-minad
 

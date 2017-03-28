@@ -13,7 +13,7 @@ FILES := \
     GetPNGPicture LoadPngIcon PNGIconDt SavePngIcon
 
 TARGETDIR := $(AROS_CONTRIB)/Scalos/IconDatatypes
-USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include \
+USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/$(AROS_DIR_DEVELOPER)/include \
     -idirafter $(SRCDIR)/$(CURDIR)/../../include
 
 NOWARN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECL)

@@ -58,7 +58,7 @@ contrib-setup :
 #MM
 contrib-setup-dirs :
 	%mkdirs_q $(AROS_CONTRIB)/Demos
-	%mkdirs_q $(AROS_CONTRIB)/Development
+	%mkdirs_q $(AROS_CONTRIB)/$(AROS_DIR_DEVELOPER)
 	%mkdirs_q $(AROS_CONTRIB)/Emu
 	%mkdirs_q $(AROS_CONTRIB)/Games
 	%mkdirs_q $(AROS_CONTRIB)/Games/Action

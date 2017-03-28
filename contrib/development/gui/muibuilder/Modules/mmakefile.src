@@ -8,7 +8,7 @@ FILES := \
     C-Header \
     H-Header
 
-EXEDIR := $(AROSDIR)/Extras/Development/MUIBuilder/Modules
+EXEDIR := $(AROSDIR)/Extras/$(AROS_DIR_DEVELOPER)/MUIBuilder/Modules
 
 %copy_files_q mmake=contrib-development-gui-muibuilder-modules \
     files=$(FILES) dst=$(EXEDIR)

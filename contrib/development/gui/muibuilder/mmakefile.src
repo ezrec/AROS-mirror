@@ -14,7 +14,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM		contrib-development-gui-muibuilder-demos \
 #MM		contrib-development-gui-muibuilder-src
 
-TARGETDIR := $(AROSDIR)/Extras/Development/MUIBuilder
+TARGETDIR := $(AROSDIR)/Extras/$(AROS_DIR_DEVELOPER)/MUIBuilder
 
 %copy_dir_recursive mmake=contrib-development-gui-muibuilder-images \
         src=Images dst=$(TARGETDIR)/Images

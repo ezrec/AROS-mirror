@@ -14,7 +14,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES := Menu
 
-USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include -idirafter $(SRCDIR)/$(CURDIR)/../../include
+USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/$(AROS_DIR_DEVELOPER)/include -idirafter $(SRCDIR)/$(CURDIR)/../../include
 SCALOS_LOCALE := ScalosMenu_locale.h
 USER_CFLAGS := -D__LOCALE_STDLIBBASE__ -DSCALOSLOCALE=$(SCALOS_LOCALE)
 

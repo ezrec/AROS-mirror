@@ -4,7 +4,7 @@ diff -Naur SDL-1.2.15-orig/aros/sdl-config SDL-1.2.15/aros/sdl-config
 @@ -0,0 +1,58 @@
 +#!/bin/sh
 +
-+prefix=/Development
++prefix=/Developer
 +exec_prefix=${prefix}
 +exec_prefix_set=no
 +libdir=${exec_prefix}/lib

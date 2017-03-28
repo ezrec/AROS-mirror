@@ -53,7 +53,7 @@ FILES := \
 
 #MM contrib-development-gui-muibuilder-src : includes linklib contrib-development-gui-muibuilder-locale
 
-EXEDIR := $(AROSDIR)/Extras/Development/MUIBuilder
+EXEDIR := $(AROSDIR)/Extras/$(AROS_DIR_DEVELOPER)/MUIBuilder
 
 NOWARN_FLAGS := $(NOWARN_FORMAT_SECURITY) $(NOWARN_PARENTHESES) $(NOWARN_UNINITIALIZED)
 USER_CFLAGS := $(NOWARN_FLAGS) -I$(AROS_INCLUDES)/SDI -DMUI_OBSOLETE

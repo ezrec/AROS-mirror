@@ -6,7 +6,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES  := false_int 
 
-EXEDIR := $(AROS_CONTRIB)/Development/False
+EXEDIR := $(AROS_CONTRIB)/$(AROS_DIR_DEVELOPER)/False
 
 #MM- contrib-development : contrib-development-false-$(CPU)
 

@@ -19,7 +19,7 @@ FILES := \
     ToolTypes
 
 NOWARN_FLAGS := $(NOWARN_PARENTHESES)
-USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include \
+USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/$(AROS_DIR_DEVELOPER)/include \
     -I$(SRCDIR)/$(CURDIR)/../../common/IconobjectMCC \
     -idirafter $(SRCDIR)/$(CURDIR)/../../include
 SCALOS_LOCALE := IconProperties_Locale.h

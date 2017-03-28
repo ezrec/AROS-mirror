@@ -1,7 +1,7 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-EXEDIR := $(AROS_CONTRIB)/Development/Lua
+EXEDIR := $(AROS_CONTRIB)/$(AROS_DIR_DEVELOPER)/Lua
 
 # files to build the linker lib 'luaxmlreader'
 XMLLIBFILES := error xmlreader

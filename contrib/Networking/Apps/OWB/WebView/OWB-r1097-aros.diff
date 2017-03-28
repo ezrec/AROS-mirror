@@ -14476,7 +14476,7 @@ diff -ruN OWB-r1097/WebKit/OrigynWebBrowser/webkit-owb.pc OWB-r1097.aros/WebKit/
 --- OWB-r1097/WebKit/OrigynWebBrowser/webkit-owb.pc	1970-01-01 01:00:00.000000000 +0100
 +++ OWB-r1097.aros/WebKit/OrigynWebBrowser/webkit-owb.pc	2015-02-23 04:42:16.000130905 +0000
 @@ -0,0 +1,11 @@
-+prefix=/home/Nick/Developer/AROS/wip_builds/trunk/raspi-armhf/bin/raspi-arm/AROS/Development
++prefix=/Developer
 +exec_prefix=${prefix}
 +libdir=${prefix}/lib
 +includedir=${prefix}/include

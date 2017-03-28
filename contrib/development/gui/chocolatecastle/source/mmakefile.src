@@ -14,7 +14,7 @@ FILES := \
  
 #MM contrib-development-gui-chocolatecastle-source : includes linklib
 
-EXEDIR := $(AROS_CONTRIB)/Development/ChocolateCastle
+EXEDIR := $(AROS_CONTRIB)/$(AROS_DIR_DEVELOPER)/ChocolateCastle
 
 NOWARN_FLAGS := $(NOWARN_PARENTHESES)
 USER_CFLAGS	:= $(NOWARN_FLAGS) -D__NOLIBBASE__ -DUSE_INLINE_STDARG

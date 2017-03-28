@@ -11,7 +11,7 @@ FILES := \
 #MM- contrib-development-gui-muibuilder-modules: contrib-development-gui-muibuilder-modules-c
 #MM contrib-development-gui-muibuilder-modules-c: includes linklib
 
-EXEDIR := $(AROSDIR)/Extras/Development/MUIBuilder/Modules
+EXEDIR := $(AROSDIR)/Extras/$(AROS_DIR_DEVELOPER)/MUIBuilder/Modules
 
 USER_CFLAGS += -I$(SRCDIR)/contrib/development/gui/muibuilder/include
 

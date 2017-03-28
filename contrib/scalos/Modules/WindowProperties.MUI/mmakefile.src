@@ -22,7 +22,7 @@ FILES := \
     $(SRCDIR)/$(CURDIR)/../../common/IconobjectMCC/IconobjectMCC \
 
 NOWARN_FLAGS := $(NOWARN_PARENTHESES)
-USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/Development/include \
+USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/$(AROS_DIR_DEVELOPER)/include \
     -I $(SRCDIR)/$(CURDIR)/../IconProperties.MUI \
     -I $(SRCDIR)/$(CURDIR)/../../common/BackfillMCC \
     -I $(SRCDIR)/$(CURDIR)/../../common/BitMapMCC \

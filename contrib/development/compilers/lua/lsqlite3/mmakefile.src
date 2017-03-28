@@ -5,7 +5,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 # files to build the linker lib 'lsqlite3'
 LSQLITE3LIBFILES := lsqlite3
 
-EXEDIR := $(AROS_CONTRIB)/Development/Lua
+EXEDIR := $(AROS_CONTRIB)/$(AROS_DIR_DEVELOPER)/Lua
 
 #MM- contrib-development : \
 #MM  contrib-development-lua-lsqlite3-doc \
