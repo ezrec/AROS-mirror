@@ -18,10 +18,10 @@ include $(SRCDIR)/config/aros-contrib.cfg
 REPOSITORIES := http://pulkomandy.tk/projects/GrafX2/downloads
 ARCHBASE     := grafx2-2.4.2035-src
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/GrafX2
-SDL_PREFIX   := $(AROS_DEVELOPMENT)
+SDL_PREFIX   := $(AROS_DEVELOPER)
 NOWARN_FLAGS := $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_CPP)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
-    -I$(AROS_DEVELOPMENT)/include/lua \
+    -I$(AROS_DEVELOPER)/include/lua \
     -D__ENABLE_LUA__ -Wno-unused-but-set-variable \
     
 

@@ -15,7 +15,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 REPOSITORIES := ftp://ftp.tuxpaint.org/unix/x/gemdropx/src
 ARCHBASE     := gemdropx-0.9
 TARGETDIR    := $(AROS_CONTRIB)/Games/Puzzle/GemDropX
-SDL_PREFIX   := $(AROS_DEVELOPMENT)
+SDL_PREFIX   := $(AROS_DEVELOPER)
 NOWARN_FLAGS := $(NOWARN_MAYBE_UNINITIALIZED) $(NOWARN_UNUSED_BUT_SET_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
                 -DDATA_PREFIX=\"PROGDIR:data\" -DJOYSTICK -DNOT_EMBEDDED

@@ -13,7 +13,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 REPOSITORIES := sf://interlogic
 ARCHBASE     := interLOGIC-src-0.30
 TARGETDIR    := $(AROS_CONTRIB)/Games/Puzzle/InterLogic
-SDL_PREFIX   := $(AROS_DEVELOPMENT)
+SDL_PREFIX   := $(AROS_DEVELOPER)
 NOWARN_FLAGS := $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_DISCARDED_QUALIFIERS)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags)
 

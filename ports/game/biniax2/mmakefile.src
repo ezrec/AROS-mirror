@@ -22,7 +22,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 REPOSITORIES := http://mordred.dir.bg/biniax
 ARCHBASE     := biniax2-1.30-fullsrc
 TARGETDIR    := $(AROS_CONTRIB)/Games/Action/Biniax2
-SDL_PREFIX   := $(AROS_DEVELOPMENT)
+SDL_PREFIX   := $(AROS_DEVELOPER)
 
 NOWARN_FLAGS := $(NOWARN_UNUSED_VARIABLE) $(NOWARN_CHAR_SUBSCRIPTS) $(NOWARN_UNUSED_VALUE) $(NOWARN_SWITCH)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags)

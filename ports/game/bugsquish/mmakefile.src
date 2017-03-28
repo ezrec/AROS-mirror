@@ -16,7 +16,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 REPOSITORIES := ftp://ftp.tuxpaint.org/unix/x/bugsquish/src
 ARCHBASE     := bugsquish-0.0.6
 TARGETDIR    := $(AROS_CONTRIB)/Games/Action/Bugsquish
-SDL_PREFIX   := $(AROS_DEVELOPMENT)
+SDL_PREFIX   := $(AROS_DEVELOPER)
 NOWARN_FLAGS := $(NOWARN_UNUSED_VARIABLE) $(NOWARN_UNUSED_BUT_SET_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
                 -DDATA_PREFIX=\"PROGDIR:data/\"
