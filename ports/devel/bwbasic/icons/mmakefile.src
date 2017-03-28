@@ -4,7 +4,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- ports-devel-bwbasic : ports-devel-bwbasic-icons
 
-TARGETDIR := $(AROS_CONTRIB)/Development
+TARGETDIR := $(AROS_CONTRIB)/$(AROS_DIR_DEVELOPER)
 ICONS     := BWBasic
 
 %build_icons mmake=ports-devel-bwbasic-icons \

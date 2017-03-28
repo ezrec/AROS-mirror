@@ -4,7 +4,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- ports-devel-cflow : ports-devel-cflow-icons
 
-TARGETDIR := $(AROS_CONTRIB)/Development
+TARGETDIR := $(AROS_CONTRIB)/$(AROS_DIR_DEVELOPER)
 ICONS     := CFlow
 
 %build_icons mmake=ports-devel-cflow-icons \

@@ -14,7 +14,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 REPOSITORIES := sf://cbmbasic
 ARCHBASE     := cbmbasic-1.0
-TARGETDIR    := $(AROS_CONTRIB)/Development/CBMBasic
+TARGETDIR    := $(AROS_CONTRIB)/$(AROS_DIR_DEVELOPER)/CBMBasic
 
 FILES := \
     $(PORTSDIR)/cbmbasic/$(ARCHBASE)/cbmbasic \

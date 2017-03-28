@@ -6,7 +6,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 PACKAGE      := ctags
 VERSION      := 5.8
-TARGETDIR    := $(AROS_CONTRIB)/Development/Ctags
+TARGETDIR    := $(AROS_CONTRIB)/$(AROS_DIR_DEVELOPER)/Ctags
 REPOSITORIES := sf://ctags
 
 

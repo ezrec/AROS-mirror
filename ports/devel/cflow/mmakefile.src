@@ -6,7 +6,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 PACKAGE      := cflow
 VERSION      := 1.4
-TARGETDIR    := $(AROS_CONTRIB)/Development/CFlow
+TARGETDIR    := $(AROS_CONTRIB)/$(AROS_DIR_DEVELOPER)/CFlow
 REPOSITORIES := gnu://cflow
 
 %fetch_and_build mmake=ports-devel-cflow prefix=$(TARGETDIR) \
