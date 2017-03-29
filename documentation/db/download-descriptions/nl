@@ -4,7 +4,7 @@ package: Pakket
 documentation: Documentation
 sources: Broncode
 binaries: Binaries
-development-tools: Development Tools
+developer-tools: Development Tools
 date: Datum
 
 [links]

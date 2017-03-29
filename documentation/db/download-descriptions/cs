@@ -4,7 +4,7 @@ package: Balíèek
 documentation: Dokumentace
 sources: Zdroje
 binaries: Binárky
-development-tools: Vývojové nástroje
+developer-tools: Vývojové nástroje
 date: Datum
 
 [links]

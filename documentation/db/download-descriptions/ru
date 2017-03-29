@@ -4,7 +4,7 @@ package: Пакет
 documentation: Документация
 sources: Исходники
 binaries: Исполняемые файлы
-development-tools: Средства разработки
+developer-tools: Средства разработки
 date: Дата
 
 [links]

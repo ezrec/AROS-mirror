@@ -4,7 +4,7 @@ package: Paket
 documentation: Dokumentation
 sources: Quellcodes
 binaries: Binärdateien
-development-tools: Entwicklungswerkzeuge
+developer-tools: Entwicklungswerkzeuge
 date: Datum
 
 [links]

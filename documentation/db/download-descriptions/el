@@ -4,7 +4,7 @@ package: Πακέτα
 documentation: Τεκμηρίωση
 sources: Πηγαίος Κώδικας
 binaries: Εκτελέσιμα
-development-tools: Εργαλεία Ανάπτυξης
+developer-tools: Εργαλεία Ανάπτυξης
 date: Ημερομηνία
 
 [links]
