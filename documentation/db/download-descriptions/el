@@ -4,7 +4,8 @@ package: Πακέτα
 documentation: Τεκμηρίωση
 sources: Πηγαίος Κώδικας
 binaries: Εκτελέσιμα
-developer-tools: Εργαλεία Ανάπτυξης
+developer-tools: ABI-v1 Εργαλεία Ανάπτυξης
+development-tools: ABI-v0 Εργαλεία Ανάπτυξης
 date: Ημερομηνία
 
 [links]

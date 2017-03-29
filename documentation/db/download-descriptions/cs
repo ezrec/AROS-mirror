@@ -4,7 +4,8 @@ package: Balíèek
 documentation: Dokumentace
 sources: Zdroje
 binaries: Binárky
-developer-tools: Vývojové nástroje
+developer-tools: ABI-v1 Vývojové nástroje
+development-tools: ABI-v0 Vývojové nástroje
 date: Datum
 
 [links]

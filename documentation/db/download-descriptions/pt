@@ -4,7 +4,8 @@ package: Pacote
 documentation: Documentação
 sources: Fontes
 binaries: Binários
-developer-tools: Ferramentas de Desenvolvimento
+developer-tools: ABI-v1 Ferramentas de Desenvolvimento
+development-tools: ABI-v0 Ferramentas de Desenvolvimento
 date: Data
 
 [links]

@@ -4,7 +4,8 @@ package: Paket
 documentation: Dokumentation
 sources: Quellcodes
 binaries: Binärdateien
-developer-tools: Entwicklungswerkzeuge
+developer-tools: ABI-v1 Entwicklungswerkzeuge
+development-tools: ABI-v0 Entwicklungswerkzeuge
 date: Datum
 
 [links]
