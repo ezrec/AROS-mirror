@@ -17,7 +17,7 @@ ifneq (no-java,$(JAVA_TARGET))
 GCC_LANGUAGES:=$(GCC_LANGUAGES),java
 endif
 
-GCC_EXTRAOPTS := CFLAGS=-I$(AROS_DEVELOPER)/include
+GCC_EXTRA_OPTS := CFLAGS=-I$(AROS_DEVELOPER)/include
 
 # ARM requires additional flags to determine CPU type and FP model
 ifneq (,$(findstring $(AROS_TARGET_CPU),arm))
