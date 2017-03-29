@@ -14,7 +14,10 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM  ports-audio-abcm2ps-docs : ports-audio-abcm2ps-fetch
 
 
-REPOSITORIES := http://moinejf.free.fr
+REPOSITORIES := \
+    http://moinejf.free.fr \
+    http://ftp.dei.uc.pt/pub/linux/gentoo/distfiles/
+
 ARCHBASE     := abcm2ps-8.13.3
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Audio/Abcm2ps
 NOWARN_FLAGS := $(NOWARN_UNINITIALIZED)
