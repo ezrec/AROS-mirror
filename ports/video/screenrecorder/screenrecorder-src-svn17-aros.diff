@@ -1,6 +1,6 @@
 diff -ruN screenrecorder-src-svn17/include/macros/vapor.h screenrecorder-src-svn17.aros/include/macros/vapor.h
---- screenrecorder-src-svn17/include/macros/vapor.h	2010-05-19 09:15:12.000000000 +0200
-+++ screenrecorder-src-svn17.aros/include/macros/vapor.h	2011-03-17 14:45:47.000000000 +0100
+--- screenrecorder-src-svn17/include/macros/vapor.h	2010-05-19 08:15:12.000000000 +0100
++++ screenrecorder-src-svn17.aros/include/macros/vapor.h	2017-03-29 02:43:11.848785745 +0100
 @@ -38,7 +38,11 @@
  
  #if defined(__AROS__)
@@ -14,3 +14,27 @@ diff -ruN screenrecorder-src-svn17/include/macros/vapor.h screenrecorder-src-svn
  #  else
  #    define BE_SWAPLONG_C(x) (x)
  #    define BE_SWAPWORD_C(x) (x)
+diff -ruN screenrecorder-src-svn17/main.c screenrecorder-src-svn17.aros/main.c
+--- screenrecorder-src-svn17/main.c	2010-05-17 20:47:25.000000000 +0100
++++ screenrecorder-src-svn17.aros/main.c	2017-03-29 02:44:22.536527457 +0100
+@@ -43,7 +43,7 @@
+ 		wbmsg = (struct WBStartup *)GetMsg(&GUIThread->pr_MsgPort);
+ 	}
+ 	#else
+-	GUIThread = (struct Process *)SysBase->ThisTask;
++	GUIThread = (struct Process *)FindTask(NULL);
+ 	wbmsg = WBenchMsg;
+ 	IS_MORPHOS = FindResident("MorphOS") ? TRUE : FALSE;
+ 	#endif
+diff -ruN screenrecorder-src-svn17/recorder.c screenrecorder-src-svn17.aros/recorder.c
+--- screenrecorder-src-svn17/recorder.c	2010-05-17 20:47:25.000000000 +0100
++++ screenrecorder-src-svn17.aros/recorder.c	2017-03-29 02:46:22.301781431 +0100
+@@ -417,7 +417,7 @@
+ 	struct Process *proc;
+ 	struct StartupMsg *msg;
+ 
+-	proc = (struct Process *)SysBase->ThisTask;
++	proc = (struct Process *)FindTask(NULL);
+ 
+ 	WaitPort(&proc->pr_MsgPort);
+ 
