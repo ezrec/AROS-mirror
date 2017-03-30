@@ -80,9 +80,25 @@ table.layout {
   margin-top:    0 ;
   margin-bottom: 0 }
 
+table.layout.nightly {
+  border-collapse: collapse;
+  margin-top:    0 ;
+  margin-bottom: 0 }
+
 td.layout, th.layout {
   padding-left:  0 ;
   padding-right: 0 }
 
+td.layout.nightly, th.layout.nightly {
+  border: 1px solid #000000;
+  padding-left:  0 ;
+  padding-right: 0 }
+
 td.layout.padded {
+  border: 1px solid #000000;
+  padding: 8 }
+
+td.layout.invis {
+  background-color: #ffffff;
+  border: 0;
   padding: 8 }

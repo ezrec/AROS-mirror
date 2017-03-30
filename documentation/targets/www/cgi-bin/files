@@ -127,9 +127,9 @@ downloadLabel = descriptions.get( 'links', 'download', '' )
 md5Label = descriptions.get( 'links', 'md5', '' )
 
 print '''
-    <table class="layout" border="0" cellpadding="2" cellspacing="1" bgcolor="%(colorFrame)s">
-        <tr class="layout" bgcolor="%(colorTH)s">
-            <td class="layout padded" width="35%%" rowspan="2"><b>%(packageHeading)s</b></td>
+    <table class="layout nightly" border="0" cellpadding="2" cellspacing="1" bgcolor="%(colorFrame)s">
+        <tr class="layout nightly" bgcolor="%(colorTH)s">
+            <td class="layout invis" width="35%%" rowspan="2"></td>
             <td class="layout padded" align="center" colspan="%(span)d"><b>%(dateHeading)s</b></td>
         </tr>
         <tr class="layout" bgcolor="%(colorTH)s">
@@ -144,21 +144,21 @@ for date in dates:
 
     if dltype == "nightly":
         print '''
-                    <td class="layout" align="center" bgcolor="%(color)s">
+                    <td class="layout nightly" align="center" bgcolor="%(color)s">
                         <b>%(year)s-%(month)s-%(day)s</b><br>
                         [<a href="http://aros.sourceforge.net/downloads/nightly/%(date)s/logs/">%(logsLabel)s</a>]
                     </td>
         ''' % vars()
     if dltype == "nightly2":
         print '''
-                    <td class="layout" align="center" bgcolor="%(color)s">
+                    <td class="layout nightly" align="center" bgcolor="%(color)s">
                         <b>%(year)s-%(month)s-%(day)s</b><br>
                         [<a href="http://aros.sourceforge.net/downloads/nightly2/%(date)s/logs/">%(logsLabel)s</a>]
                     </td>
         ''' % vars()
     elif dltype == "snapshots" or dltype == "snapshots2":
         print '''
-                    <td class="layout" align="center" bgcolor="%(color)s">
+                    <td class="layout nightly" align="center" bgcolor="%(color)s">
                         <b>%(year)s-%(month)s-%(day)s</b>
                     </td>
         ''' % vars()
@@ -175,7 +175,7 @@ for group in groups.keys():
         groupHeading = descriptions.get( 'headings', groupKey, '' )
 
         print '''
-                <tr class="layout" bgcolor="%(colorTH)s">
+                <tr class="layout nightly" bgcolor="%(colorTH)s">
                     <td class="layout padded" align="left" colspan="%(groupSpan)s"><b>%(groupHeading)s</b></td>
                 </tr>    ''' % vars()
 
@@ -183,7 +183,7 @@ for group in groups.keys():
             description = descriptions.get( 'descriptions', package, '' )
 
             print '''
-                    <tr class="layout" valign="middle" bgcolor="%(colorTD)s">
+                    <tr class="layout nightly" valign="middle" bgcolor="%(colorTD)s">
                         <td class="layout padded" valign="top">
                             <p><i>%(package)s</i></p>
                             <p><font size="-1">%(description)s</font></p>
@@ -199,7 +199,7 @@ for group in groups.keys():
                     colorBlended = Color.blend( colorFileNA, colorBG, span, column )
 
                 print '''
-                            <td class="layout" align="center" bgcolor="%(colorBlended)s">
+                            <td class="layout nightly" align="center" bgcolor="%(colorBlended)s">
                 ''' % vars()
 
                 if date in groups[group][package]:
