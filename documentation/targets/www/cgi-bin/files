@@ -29,7 +29,7 @@ else:
 if dltype == "nightly":
     colorTH      = Color( 0xFF, 0xE0, 0xA0 )  # Table headers
 elif dltype == "nightly2":
-    colorTH      = Color( 0xA0, 0x00, 0xFF )  # Table headers
+    colorTH      = Color( 0x91, 0xAB, 0xC6 )  # Table headers
 elif dltype == "snapshots":
     colorTH      = Color( 0xA0, 0xE0, 0xFF )  # Table headers
 elif dltype == "snapshots2":
