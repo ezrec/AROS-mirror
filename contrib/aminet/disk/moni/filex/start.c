@@ -71,7 +71,7 @@ LONG __saveds Start(void)
 		return(start());
 	else
 	{
-		register struct Process *ThisProcess = (struct Process *)SysBase -> ThisTask;
+		register struct Process *ThisProcess = (struct Process *)FindTask(NULL);
 
 			/* Is a Shell window available? */
 
