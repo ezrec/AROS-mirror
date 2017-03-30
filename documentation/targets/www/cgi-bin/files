@@ -169,6 +169,10 @@ print '''         </tr>'''
 
 for group in groups.keys():
     groupSpan    = span + 1
+
+    print '''
+            <!-- %(group) -->    ''' % vars()
+
     groupKey = string.replace(group, '_', '-').lower()
     groupHeading = descriptions.get( 'headings', groupKey, '' )
 
