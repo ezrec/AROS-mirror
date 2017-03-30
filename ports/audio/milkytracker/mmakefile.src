@@ -2,7 +2,8 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- ports-audio : ports-audio-milkytracker
+#MM- ports-audio : ports-audio-milkytracker-$(AROS_TARGET_CPU)
+#MM- ports-audio-milkytracker-i386 : ports-audio-milkytracker
 
 #MM- ports-audio-milkytracker : contrib-sdl
 
@@ -10,7 +11,7 @@ PACKAGE      := milkytracker
 VERSION      := 0.90.86
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Audio/MilkyTracker
 REPOSITORIES := http://milkytracker.org/files
-USER_CXXFLAGS:= -fpermissive
+USER_CXXFLAGS:= -std=c++03 -fpermissive
 
 %fetch_and_build mmake=ports-audio-milkytracker prefix=$(TARGETDIR) \
 	package=$(PACKAGE) version=$(VERSION) suffixes="tar.bz2" \
