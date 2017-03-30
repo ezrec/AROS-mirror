@@ -25,7 +25,6 @@ body {
 div.document {
     padding: 0px 10px 0px 10px }
 
-
 div.gallerygroup {
 	clear: left;
 }
@@ -84,3 +83,6 @@ table.layout {
 td.layout, th.layout {
   padding-left:  0 ;
   padding-right: 0 }
+
+td.layout.padded {
+  padding: 8 }

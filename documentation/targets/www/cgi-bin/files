@@ -129,8 +129,8 @@ md5Label = descriptions.get( 'links', 'md5', '' )
 print '''
     <table class="layout" border="0" cellpadding="2" cellspacing="1" bgcolor="%(colorFrame)s">
         <tr class="layout" bgcolor="%(colorTH)s">
-            <td class="layout" width="35%%" rowspan="2"><b>%(packageHeading)s</b></td>
-            <td class="layout" align="center" colspan="%(span)d"><b>%(dateHeading)s</b></td>
+            <td class="layout padded" width="35%%" rowspan="2"><b>%(packageHeading)s</b></td>
+            <td class="layout padded" align="center" colspan="%(span)d"><b>%(dateHeading)s</b></td>
         </tr>
         <tr class="layout" bgcolor="%(colorTH)s">
 ''' % vars()
@@ -176,7 +176,7 @@ for group in groups.keys():
 
         print '''
                 <tr class="layout" bgcolor="%(colorTH)s">
-                    <td class="layout" align="left" colspan="%(groupSpan)s"><b>%(groupHeading)s</b></td>
+                    <td class="layout padded" align="left" colspan="%(groupSpan)s"><b>%(groupHeading)s</b></td>
                 </tr>    ''' % vars()
 
         for package in sorted(groups[group].keys()):
@@ -184,7 +184,7 @@ for group in groups.keys():
 
             print '''
                     <tr class="layout" valign="middle" bgcolor="%(colorTD)s">
-                        <td class="layout" valign="top">
+                        <td class="layout padded" valign="top">
                             <p><i>%(package)s</i></p>
                             <p><font size="-1">%(description)s</font></p>
                         </td>
