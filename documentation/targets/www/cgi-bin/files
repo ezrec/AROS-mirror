@@ -171,9 +171,6 @@ for group in groups.keys():
     groupSpan    = span + 1
 
     try:
-        print '''
-                <!-- {} -->    ''' .format(group)
-
         groupKey = string.replace(group, '_', '-').lower()
         groupHeading = descriptions.get( 'headings', groupKey, '' )
 
