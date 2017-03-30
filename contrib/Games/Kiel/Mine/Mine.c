@@ -203,7 +203,7 @@ BYTE i;
   }
   open_hsfile();
   killme = FALSE;
-  parent=SysBase->ThisTask;
+  parent=FindTask(NULL);
   sigbit1=AllocSignal(-1);
   if(sigbit1!=0)
   {
