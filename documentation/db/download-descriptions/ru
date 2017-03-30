@@ -5,7 +5,7 @@ documentation: Документация
 sources: Исходники
 binaries: Исполняемые файлы
 developer-tools: ABI-v1 Средства разработки
-developerment-tools: ABI-v0 Средства разработки
+development-tools: ABI-v0 Средства разработки
 date: Дата
 
 [links]
