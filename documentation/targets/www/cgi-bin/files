@@ -167,7 +167,7 @@ for date in dates:
 
 print '''         </tr>'''
 
-for group in groups.keys():
+for group in sorted(groups.keys()):
     groupSpan    = span + 1
 
     try:
