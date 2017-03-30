@@ -9,7 +9,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- contrib-icu4c-i386 : contrib-icu4c-complete
 #MM- contrib-icu4c-x86_64 : contrib-icu4c-complete
 
-#MM- contrib-icu4c-complete : tools-crosstools-icu
+#MM- contrib-icu4c-complete : crosstools-icu
 
 ICU_VERSION := 4.2.1
 ICU_PKGNAME := icu4c
@@ -34,7 +34,7 @@ ICU_EXTRA_OPTS := \
         --enable-threads=no \
         --with-data-packaging=static \
         --host=$(AROS_TARGET_CPU)-aros \
-        --with-cross-build=$(CROSSTOOLSDIR)/$(ICU_PKGNAME) \
+        --with-cross-build=$(CROSSTOOLSDIR)/tools/crosstools/$(ICU_PKGNAME) \
         --libdir=$(AROS_LIB)
 
 %fetch_and_build mmake=contrib-icu4c-complete package=$(ICU_PKGNAME) version=$(ICU_PKGVERSION)-src \
