@@ -8,7 +8,12 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 REPOSITORIES := ftp://xmlsoft.org/libxml2/ ftp://gd.tuwien.ac.at/pub/libxml/
 
+XML2_CFLAGS=
+ifneq (x86_64,$(AROS_TARGET_CPU))
+XML2_CFLAGS+=$(OPTIMIZATION_CFLAGS)
+endif
+
 %fetch_and_build_gnu_development package=libxml2 version=2.7.8 patch=yes \
     package_repo=$(REPOSITORIES) suffixes="tar.gz"\
-    extraoptions="--disable-shared --with-http=no --with-ftp=no --with-modules=no --with-mem-debug=no \
+    extracflags="$(XML2_CFLAGS)" extraoptions="--disable-shared --with-http=no --with-ftp=no --with-modules=no --with-mem-debug=no \
         --with-iconv=no --with-debug=no --with-run-debug=no --enable-shared=no --with-threads=no --with-python=no --libdir=$(AROS_LIB)"
