@@ -25,15 +25,14 @@ USER_CXXFLAGS := $(NOWARN_FLAGS)
 USER_LDFLAGS := -static-libstdc++
 
 ICU_EXTRA_OPTS := \
-        --disable-dyload \
         --enable-static \
-        --enable-shared=no \
-        --enable-tests=no \
-        --enable-samples=no \
-        --enable-extras=no \
-        --enable-threads=no \
+        --disable-strict \
+        --disable-dyload \
+        --disable-shared \
+        --disable-tests \
+        --disable-samples \
+        --disable-extras \
         --with-data-packaging=static \
-        --host=$(AROS_TARGET_CPU)-aros \
         --with-cross-build=$(CROSSTOOLSDIR)/$(ICU_PKGNAME) \
         --libdir=$(AROS_LIB)
 
