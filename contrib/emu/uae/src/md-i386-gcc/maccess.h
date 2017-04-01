@@ -164,5 +164,6 @@ typedef struct {
 
 static __inline__ uae_u24 uae24_convert (uae_u32 v)
 {
-    return *(uae_u24 *)&v;
+    uae_u24 *_ptr = (uae_u24 *)&v;
+    return *_ptr;
 }
