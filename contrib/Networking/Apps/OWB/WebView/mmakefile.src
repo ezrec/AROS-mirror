@@ -34,7 +34,7 @@ endif
 %create_patch mmake=aros-tcpip-apps-owb-webview-create-patch \
     archive=$(ARCHBASE) destination=$(PORTSDIR)/OWB
 
-NOWARN_FLAGS := $(NOWARN_UNUSED_VARIABLE)
+NOWARN_FLAGS := $(NOWARN_ERROR) $(NOWARN_UNUSED_VARIABLE)
 USER_CXXFLAGS := -std=gnu++98 $(NOWARN_FLAGS)
 
 OWB_OPTIONS := \
