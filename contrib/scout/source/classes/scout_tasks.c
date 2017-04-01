@@ -615,7 +615,7 @@ STATIC void IterateList( void (* callback)( struct TaskEntry *te, void *userData
     }
 
     if ((te = AllocVec(sizeof(struct TaskEntry), MEMF_CLEAR)) != NULL) {
-        GetTaskEntry(SysBase->ThisTask, te, FALSE);
+        GetTaskEntry(FindTask(NULL), te, FALSE);
         AddTail((struct List *)&tmplist, (struct Node *)te);
     }
 
