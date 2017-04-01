@@ -4,10 +4,10 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 INSTDIR  := $(AROS_CONTRIB)/Games/Fps/Quake
 
-#MM- contrib-games : Quake-$(AROS_TARGET_CPU)
-#MM- Quake-i386 : Quake
+#MM- contrib-games : contrib-games-quake-$(AROS_TARGET_CPU)
+#MM- contrib-games-quake-i386 : contrib-games-quake
 
-#MM Quake : linklibs includes
+#MM contrib-games-quake : linklibs includes
 
 VERSION=1.09
 
@@ -136,6 +136,6 @@ DISABLE_MAINASMSOURCES =: \
 QUAKE_SOURCES := $(QUAKE_MAINSOURCES) $(QUAKE_AROSSOURCES)
 QUAKE_ASMSOURCES := $(QUAKE_MAINASMSOURCES)
 
-%build_prog mmake=Quake \
+%build_prog mmake=contrib-games-quake \
     progname=quake targetdir="$(INSTDIR)" \
     files="$(QUAKE_SOURCES)" asmfiles="$(QUAKE_ASMSOURCES)"
