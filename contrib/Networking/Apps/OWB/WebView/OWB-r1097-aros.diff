@@ -9012,16 +9012,25 @@ diff -ruN OWB-r1097/Base/BALBase.h.in OWB-r1097.aros/Base/BALBase.h.in
  #endif
 diff -ruN OWB-r1097/Base/NotImplemented.h OWB-r1097.aros/Base/NotImplemented.h
 --- OWB-r1097/Base/NotImplemented.h	2009-01-16 14:33:31.000000000 +0000
-+++ OWB-r1097.aros/Base/NotImplemented.h	2017-04-01 14:57:02.745938516 +0100
-@@ -29,7 +29,7 @@
++++ OWB-r1097.aros/Base/NotImplemented.h	2017-04-01 16:16:39.834701669 +0100
+@@ -29,7 +29,8 @@
  #include "Logging.h"
  #include <Assertions.h>
  
 -#if PLATFORM(GTK)
++#if !defined(supressNotImplementedWarning)
 +#if PLATFORM(GTK) || PLATFORM(AROS)
      #define supressNotImplementedWarning() getenv("DISABLE_NI_WARNING")
  #elif PLATFORM(QT)
      #include <QByteArray>
+@@ -37,6 +38,7 @@
+ #else
+     #define supressNotImplementedWarning() false
+ #endif
++#endif
+ 
+ #if defined(NDEBUG)
+     #define notImplemented() ((void)0)
 diff -ruN OWB-r1097/Base/owb-config.h OWB-r1097.aros/Base/owb-config.h
 --- OWB-r1097/Base/owb-config.h	1970-01-01 01:00:00.000000000 +0100
 +++ OWB-r1097.aros/Base/owb-config.h	2017-04-01 14:57:02.745938516 +0100
@@ -9361,7 +9370,7 @@ diff -ruN OWB-r1097/Base/wtf/Platform.h OWB-r1097.aros/Base/wtf/Platform.h
  #define WTF_USE_JSVALUE32 1
 diff -ruN OWB-r1097/cmake/AddGlobalCompilerFlags.cmake OWB-r1097.aros/cmake/AddGlobalCompilerFlags.cmake
 --- OWB-r1097/cmake/AddGlobalCompilerFlags.cmake	2009-10-14 14:25:22.000000000 +0100
-+++ OWB-r1097.aros/cmake/AddGlobalCompilerFlags.cmake	2017-04-01 15:33:39.177193357 +0100
++++ OWB-r1097.aros/cmake/AddGlobalCompilerFlags.cmake	2017-04-01 14:57:02.745938516 +0100
 @@ -1,13 +1,15 @@
  if(CMAKE_COMPILER_IS_GNUCXX)
 -    set(CMAKE_C_FLAGS "-Wall -W -Wcast-align -Wchar-subscripts -Wreturn-type -Wformat -Wformat-security -Wno-format-y2k -Wundef -Wmissing-format-attribute -Wpointer-arith -Wwrite-strings -Wno-unused-parameter -Wno-parentheses -fPIC")
