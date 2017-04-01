@@ -14,7 +14,7 @@ static BOOL IsValidTask( struct Task *task )
 
     Forbid();
 
-    if (SysBase->ThisTask == task) {
+    if (FindTask(NULL) == task) {
         Permit();
         return TRUE;
     }
