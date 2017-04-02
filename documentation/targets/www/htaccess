@@ -1,3 +1,14 @@
-Options +Includes
-XBitHack on
+Options +Includes Indexes
+XBitHack on 
 
+# 20121206 Trying to improve a bit ... -- Jman
+Header unset Pragma
+FileETag None
+Header unset ETag
+ 
+<IfModule mod_expires.c>
+ ExpiresActive on
+ ExpiresByType image/png "access plus 1 month"
+ ExpiresByType image/gif "access plus 1 month"
+ ExpiresByType text/css "access plus 1 month"
+</IfModule>

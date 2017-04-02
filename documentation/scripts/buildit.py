@@ -573,6 +573,8 @@ def buildWWW():
         TRGROOT
     )
 
+    copy( os.path.join( 'targets/www', 'htaccess'), os.path.join( TRGROOT, '.htaccess' ) )
+
     dbpath = os.path.join( TRGROOT, 'db' )
     makedir( dbpath )
 
