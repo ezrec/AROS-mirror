@@ -1,0 +1,17 @@
+=============================
+Download ABIv0 Nightly Builds
+=============================
+
+.. Note::
+
+   Diese Builds werden nur für Entwickler und Tester sowie für
+   Anwender von Architekturen, für die keine Distributionen erstellt
+   wurden, zur Verfügung gestellt.
+
+
+Nightly Builds (ABIv0)
+======================
+
+.. raw:: html
+
+   <?php virtual( "/cgi-bin/files?type=nightly&lang=de" ); ?>

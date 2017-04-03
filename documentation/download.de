@@ -1,6 +1,7 @@
 ========
 Download
 ========
+
 .. Note::
 
    Falls Du ein **Anwender** bist, der AROS ausprobieren will, verwende
@@ -33,59 +34,85 @@ __ http://live.icarosdesktop.org/
 __ https://www.virtualbox.org/
 
 
-Snapshots
-=========
+AspireOS
+--------
 
-'Snapshots' sind in unregelmäßigen Abständen manuell gebaute Versionen
-von AROS. Sie werden von Entwicklern erzeugt, die aus technischen oder
-politischen Gründen keine 'Nightly Builds' erstellen können.
+.. image:: /images/aspireos_logo.png
+   :align: left
 
-Verwende bitte den `Bug Tracker`__ um Fehler zu melden.
+`AspireOS`__ ist eine leichtgewichtige Distribution, welche ursprünglich für
+Netbooks wie den Acer Aspire One entwickelt wurde. Sie versucht, die Dinge
+so einfach wie möglich zu halten. Die enthaltenen Programme wurden gut
+getestet.
 
-.. raw:: html
+__ https://sites.google.com/site/arosaspireone/
 
-   <?php virtual( "/cgi-bin/files?type=snapshots&lang=de" ); ?>
 
+AROS Broadway
+-------------
+
+`AROS Broadway`__ ist die Distribution für ARES-Computer. Sie funktioniert
+aber auch mit jedem AROS-kompatiblen PC.
+
+__ http://www.aros-broadway.de/index.html
+
+
+AROS Vision
+-----------
+
+`AROS Vision`__ ist eine Distribution für M68k-Amigas. Um gut zu laufen braucht
+sie einen leistungsfähigen Amiga oder einen Emulator wie WinUAE.
+
+__ http://www.natami-news.de/html/distribution_download.html
+
+
+
+Nightly Builds (ABIv1)
+======================
+
+`Nightly builds`__ werden, wie der Name sagt, jede Nacht aus dem aktuellen
+Sourcecode vom Subversionbaum erstellt. Sie wurden jedoch nicht getestet
+und können Fehler enthalten. Meistens funktionieren sie aber ganz gut.
+
+Diese Builds sind auf Quellen der neuen `ABI`__ aufgebaut. **Sie sind
+nicht kompatibel mit bestehenden AROS-Distributionen oder mit AROS-Software
+von den AROS-Archiven oder vom Aminet.**
+
+Berichte bitte Fehler, die dir beim Testen auffallen, an den `Bug Tracker`__.
+Verwende bitte für Diskussionen das `AROS-Exec`__ Forum.
+
+__ nightly1
+__ https://de.wikipedia.org/wiki/Bin%C3%A4rschnittstelle
 __ http://sourceforge.net/p/aros/bugs/
-
-Nightly builds
-==============
-
-'Nightly Builds' werden, wie der Name schon sagt, automatische jede Nacht
-aus dem Subversion-Baum erstellt. Sie enthalten den neusten Kode. Jedoch
-wurden sie nicht getestet und können fehlerhaft sein. Aber meistens
-funktionieren sie ganz gut.
-
-Melde bitte Fehler, die Du beim Benutzen der 'Nightly Builds' entdeckst, an
-den `bug tracker`__. Für andere Anforderungen bitte die Foren von
-`AROS-Exec`__ verwenden.
-
-.. Note::
-
-   Zum Herunterladen von 'Nightly Builds' oder 'Snapshots' brauchst Du einen
-   Downloadmanager, der einen unterbrochenen Download fortsetzen kann, oder
-   ein Shellprogramm wie wget (Du kannst mit "wget -c" den Rest einer von
-   einem anderen Programm nur teilweise heruntergeladen Datei anfordern)
-
-.. raw:: html
-
-   <?php virtual( "/cgi-bin/files?type=nightly&lang=de" ); ?>
-
-__ http://sourceforge.net/tracker/?atid=439463&group_id=43586&func=browse
 __ http://aros-exec.org/
 
 
-Nightly builds (ABIv1)
+Nightly Builds (ABIv0)
 ======================
 
-AROS befindet sich zur Zeit im Übergang zu einer neuen `ABI`__. Ein
-zusätzlicher Satz Nightly Builds wird auf Basis dieses experimentellen
-Source-Baumes erstellt, aber `diese Builds`__ sind nur für Entwickler
-interessant, die den Fortschritt mitverfolgen wollen. **Sie sind nicht
-kompatibel zu bestehenden AROS-Distributionen oder mit AROS-Software aus
-dem AROS-Archive und dem Aminet**. Anwender, die neue Funktionen und
-Fehlerbereinigungen ausprobieren wollen sollten nur die normalen
-Nightly Builds verwenden.
+Weil fast alle verfügbare AROS-Software und Distributionen für die
+alte ABIv0 ABI vorhanden ist, stellen wir `diese Builds`__ für die
+i386-Plattform weiter zur Verfügung.
 
-__ http://en.wikipedia.org/wiki/Application_binary_interface
-__ download2
+__ nightly
+
+
+
+Snapshots (ABIv1)
+=================
+
+`Snapshots`__ sind unregelmäßige, nicht automatisierte Builds von AROS. Sie wurden
+von Entwicklern erzeugt, die aus irgend einem Grund keine Nightly Builds erstellen
+können. Sie sind nicht ungewartet, deshalb berichte bitte Fehler an den `Bug Tracker`__.
+
+__ snapshots1
+__ http://sourceforge.net/p/aros/bugs/
+
+
+Snapshots (ABIv0)
+=================
+
+Wie bei den Nightly Builds stellen wir einen Satz `Snapshots`__, welche
+auf Quellen des ABIv0-Zweiges aufgebaut ist, zur Verfügung.
+
+__ snapshots

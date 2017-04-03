@@ -74,7 +74,7 @@ from the Subversion tree, and they contain the latest code. However,
 they have not been tested in any way and may contain bugs. Most of the
 time, though, they work just fine.
 
-These builds are based ond sources of the new `ABI`__. **They are not 
+These builds are based on sources of the new `ABI`__. **They are not 
 compatible with existing AROS distributions or with the AROS software
 available from The AROS Archives or Aminet.**
 
@@ -115,6 +115,6 @@ Snapshots (ABIv0)
 =================
 
 As with the nightly builds we keep a set of `snapshots`__ which are based
-on sources of the ABIv0 branch on a seprate download page.
+on sources of the ABIv0 branch on a separate download page.
 
 __ snapshots
