@@ -216,7 +216,7 @@ degli eventi chiamato nel vostro loop principale::
 Hello world
 -----------
 
-.. Figure:: zune/images/hello.png
+.. Figure:: /documentation/developers/zune-dev/images/hello.png
 
     Le prime cose per prime! Sapevo che sareste stati entusiasti!
 

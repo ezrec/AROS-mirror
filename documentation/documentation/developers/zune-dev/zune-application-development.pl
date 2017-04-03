@@ -207,7 +207,7 @@ wywo³ywan± w Twojej pêtli g³ównej::
 Witaj ¦wiecie
 -------------
 
-.. Figure:: zune/images/hello.png
+.. Figure:: /documentation/developers/zune-dev/images/hello.png
 
     Proste rzeczy najpierw! Wiem, ¿e to siê Wam spodoba.
 

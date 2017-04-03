@@ -238,7 +238,7 @@ __ http://main.aminet.net/dev/mui/mui38dev.lha
 Hello world
 -----------
 
-.. Figure:: zune/images/hello.png
+.. Figure:: /documentation/developers/zune-dev/images/hello.png
 
 
 С начала, так с начала. Эта программа не разочарует новичка.

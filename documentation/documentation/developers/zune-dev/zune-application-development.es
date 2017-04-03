@@ -228,7 +228,7 @@ procesamiento de eventos invocado en el bucle principal::
 Hola, mundo
 -----------
 
-.. Figure:: zune/images/hello.png
+.. Figure:: /documentation/developers/zune-dev/images/hello.png
 
     First things first! I knew you would be all excited.
     ¡Primero lo primero! Sé que estarás exitado.
