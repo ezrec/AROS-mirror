@@ -28,7 +28,7 @@ Las ventanas de preferencias son similares en apariencia a la ventanas
 de diálogo, en que tienen una fila de botones a lo ancho del fondo y 
 ningún gadget de cierre en la barra de título.
 
-.. Figure:: ui/images/windows-prefs-titlebar.png
+.. Figure:: /documentation/developers/ui/images/windows-prefs-titlebar.png
 
    Ejemplo de la barra de título de una ventana de preferencias. Note la
    ausencia del gadget de cierre.
@@ -77,7 +77,7 @@ horizontal en la ventana abajo (en este orden, de izquierda a derecha):
    ser tan pequeño como sea posible (cuando la ventana se agrande, solamente
    debería ensancharse el espacio entre los dos grupos y no los botones).
         
-.. Figure:: ui/images/windows-prefs-buttons.png
+.. Figure:: /documentation/developers/ui/images/windows-prefs-buttons.png
 
    Ejemplo de la fila de botones en una ventana de preferencias.
 

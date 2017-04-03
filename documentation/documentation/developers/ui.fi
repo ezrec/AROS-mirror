@@ -27,7 +27,7 @@ Preferences ikkunat ovat ulkonäöltään samankaltaisia dialogi-ikkunoiden kanssa
 siinä mielessä että alareunassa on rivi nappeja eikä otsikkopalkissa ole
 sulkunappia.
 
-.. Figure:: ui/images/windows-prefs-titlebar.png
+.. Figure:: /documentation/developers/ui/images/windows-prefs-titlebar.png
 
    Esimerkki preferences ikkunan otsikkopalkista. Huomaa sulkunapin puute.
 
@@ -70,7 +70,7 @@ Seuraava nappisetti on aina paikalla, asemoitu vaakatasoon ikkunan alareunalla
    pienin mahdollinen (kun ikkunan kokoa muutetaan, ainoastaan ryhmien välillä
    olevaa tyhjää tilaa kasvatetaan eikä nappien kokoon puututa).
 
-.. Figure:: ui/images/windows-prefs-buttons.png
+.. Figure:: /documentation/developers/ui/images/windows-prefs-buttons.png
 
    Esimerkki preferences ikkunan nappirivistöstä.
 
