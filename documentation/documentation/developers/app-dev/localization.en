@@ -348,7 +348,7 @@ additional catalog translations as described above. A Windows port of the tool
 *FlexCat* is available at http://archives.aros-exec.org.
 
 Some applications and Zune classes are maintained outside of AROS
-(e.g. MUIbase, toolbar.mcc are available at http://sourceforge.net).
+(e.g. MUIbase, toolbar.mcc are available at https://sourceforge.net).
 You can indirectly support localized AROS versions if you do the
 translation in those repositories.
 

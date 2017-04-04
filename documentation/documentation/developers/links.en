@@ -41,16 +41,7 @@ Executable file formats
   specifications common to all platforms where the ELF standard is adopted,
   it also contains parts specific to the Intel architecture.
 
-+ `Amiga Portable Binaries`__
-
-  A research project about creating a system for portable binaries for the
-  Amiga, allowing one to use a single executable binary for a multitude of
-  CPU architectures. Unfortunately, the page hasn't been updated for a long
-  time; but it *does* contain some interesting ideas. Definitely something
-  we would like to see in AROS.
-
 __ https://refspecs.linuxbase.org/elf/elf.pdf
-__ http://greywire.8m.com/greywire/amigasde.htm
 
 
 Miscellaneous operating system resources

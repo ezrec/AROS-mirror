@@ -26,7 +26,7 @@ resources:
 
   .. RAW:: html
 
-     <a href="http://www.genesi-tech.com/"><img border="0" src="/images/genesi.gif"></a>
+     <a href="https://genesi.company/"><img border="0" src="/images/genesi.gif"></a>
 
   Genesi have generously donated a Pegasos motherboard, in an effort to bring
   AROS to that hardware platform. Thanks!
@@ -35,7 +35,7 @@ resources:
 
   .. RAW:: html
 
-     <a href="http://sourceforge.net/"><img border="0" src="/images/sourceforge.png"></a>
+     <a href="https://sourceforge.net/"><img border="0" src="/images/sourceforge.png"></a>
 
   SourceForge provides us with several services, like a web server with
   scripting extensions and a SQL database, mailing lists, a bug database and
@@ -50,7 +50,7 @@ The following organizations and individuals have sponsored development work:
 
 + Team AROS
 + `Power2People`__
-+ `Norsk Amigaforening`__
++ Norsk Amigaforening
 + Timothy Rue
 + Jakob Eriksson
 + Serge Guillaume
@@ -68,8 +68,7 @@ The following organizations and individuals have sponsored development work:
 + `ACube Systems Slr`__
 
 __ http://www.trustsec.de/
-__ http://www.genesi-tech.com/
-__ http://sourceforge.net/
-__ http://www.power2people.org/
-__ http://amiga.zone/index.php?side=hovedsiden
+__ https://genesi.company/
+__ https://sourceforge.net/
+__ https://power2people.org/
 __ http://acube-systems.biz/

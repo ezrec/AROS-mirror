@@ -378,7 +378,7 @@ you will need:
 
 + The `MacPorts Python Imaging Library`__ 1.1.3
 
-__ http://www.python.org/
+__ https://www.python.org/
 __ http://www.pythonware.com/products/pil/
 __ https://www.macports.org/
 __ https://trac.macports.org/browser/trunk/dports/python/py-pil/

@@ -720,7 +720,7 @@ you've already installed the bootloader in previous steps, nothing should be
 missing.
 
 Well, if you used a fresh nightly build then
-`GRUB <http://en.wikipedia.org/wiki/GRUB>`__ should already be installed and
+`GRUB <https://en.wikipedia.org/wiki/GRUB>`__ should already be installed and
 working, and you can skip the step in the next paragraphs. If not, please
 read on.
 

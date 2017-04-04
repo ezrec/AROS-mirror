@@ -325,7 +325,7 @@ Hollywood_ and False_:
 + False can be classified as an exotic language, so it will most likely not
   be used for serious development, although it can be lots of fun. :-)
 
-.. _Python: http://www.python.org/
+.. _Python: https://www.python.org/
 .. _Regina: http://regina-rexx.sourceforge.net/
 .. _Lua: http://www.lua.org/
 .. _Hollywood: http://www.airsoftsoftwair.com/
@@ -484,7 +484,7 @@ Where can I find an AROS Hardware Compatibility List?
 -----------------------------------------------------
 
 You can find one on the
-`AROS Wiki <http://en.wikibooks.org/wiki/Aros/Platforms/x86_support>`__
+`AROS Wiki <https://en.wikibooks.org/wiki/Aros/Platforms/x86_support>`__
 page. There can be another lists made by the AROS users.
 
 
