@@ -33,8 +33,8 @@ div.gallery {
 	margin: 4px;
 	padding: 2px;
 	border: 1px solid #000000;
-	height: 400;
-	width: 320;
+	height: 400px;
+	width: 320px;
 	float: left;
 	text-align: center;
 }
@@ -96,9 +96,9 @@ td.layout.nightly, th.layout.nightly {
 
 td.layout.padded {
   border: 1px solid #000000;
-  padding: 8 }
+  padding: 8px }
 
 td.layout.invis {
   background-color: #ffffff;
   border: 0;
-  padding: 8 }
+  padding: 8px }
