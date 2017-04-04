@@ -100,7 +100,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                 A( _N['applications'], href=makeURL( 'documentation/users/applications/index', lang ) ),
                 A( _N['faq'], href=makeURL( 'documentation/users/faq', lang ) ),
                 A( _N['howto'], href=makeURL( 'documentation/users/howto', lang ) ),
-                A( _N['hwcompat'], href='http://en.wikibooks.org/wiki/Aros/Platforms/x86_support'),
+                A( _N['hwcompat'], href='https://en.wikibooks.org/wiki/Aros/Platforms/x86_support'),
             ] ),
             A( _N['developers'], href=makeURL( 'documentation/developers/index', lang ) ),
             Tree \
@@ -178,7 +178,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                     A
                     ( 
                         Img( src = '%(ROOT)simages/genesi-small.gif', border = 0, alt = 'Genesi USA' ), 
-                        href = 'http://www.genesi-tech.com/' 
+                        href = 'https://genesi.company/' 
                     )
                 )
             ),
@@ -190,11 +190,11 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                     (
                         Img \
                         (
-                            src = 'http://sflogo.sourceforge.net/sflogo.php?group_id=43586&amp;type=10', 
+                            src = 'https://sourceforge.net/sflogo.php?group_id=43586&type=10', 
                             width = 88, height = 16, border = 0, alt = 'Get AROS Research Operating System at SourceForge.net. '
                                 'Fast, secure and Free Open Source software downloads'
                         ),
-                        href = 'http://sourceforge.net/projects/aros/'
+                        href = 'https://sourceforge.net/projects/aros/'
                     )
                 )
             )
@@ -250,7 +250,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
               echo "<area shape=\\"rect\\" coords=\\"25,78,85,95\\" alt=\\"http://www.aros.org\\" href=\\"http://aros.sourceforge.net/\\">";
               echo "<area shape=\\"rect\\" coords=\\"100,78,168,95\\" alt=\\"AROS-Exec\\" href=\\"http://aros-exec.org\\">";
               echo "<area shape=\\"rect\\" coords=\\"180,78,240,95\\" alt=\\"AROS-Exec Archives\\" href=\\"http://archives.aros-exec.org\\">";
-              echo "<area shape=\\"rect\\" coords=\\"260,78,350,95\\" alt=\\"Power2People\\" href=\\"http://www.power2people.org\\">";
+              echo "<area shape=\\"rect\\" coords=\\"260,78,350,95\\" alt=\\"Power2People\\" href=\\"https://power2people.org/\\">";
               echo "</map>"; 
     ?>
     '''
