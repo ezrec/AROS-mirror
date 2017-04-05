@@ -1370,11 +1370,11 @@ mathieeedoubbas;IEEEDPAbs;1;1;2
 mathieeedoubbas;IEEEDPAdd;1;1;2
 mathieeedoubbas;IEEEDPCeil;1;1;2
 mathieeedoubbas;IEEEDPCmp;1;1;2
-mathieeedoubbas;IEEEDPDiv;2;1;2
+mathieeedoubbas;IEEEDPDiv;1;1;2
 mathieeedoubbas;IEEEDPFix;1;1;2
 mathieeedoubbas;IEEEDPFloor;1;1;2
 mathieeedoubbas;IEEEDPFlt;1;1;2
-mathieeedoubbas;IEEEDPMul;2;1;2
+mathieeedoubbas;IEEEDPMul;1;1;2
 mathieeedoubbas;IEEEDPNeg;1;1;2
 mathieeedoubbas;IEEEDPSub;1;1;2
 mathieeedoubbas;IEEEDPTst;1;1;2
