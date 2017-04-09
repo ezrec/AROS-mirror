@@ -43,9 +43,14 @@ GCC_EXTRA_OPTS += --disable-libstdcxx-pch
 GCC_EXTRA_OPTS += --disable-build-with-cxx
 GCC_EXTRA_OPTS += --disable-build-poststage1-with-cxx
 
+GCC_HOST_VARS += \
+	am_cv_lib_iconv=no \
+	am_cv_func_iconv=no \
+	ac_cv_header_iconv_h=no \
+
 %fetch_and_build_gnu_development package=gcc version=$(GCC_VERSION)  crossbuild=yes patch=yes \
     package_repo="$(GNU_REPOSITORY)/gcc/gcc-$(GCC_VERSION)" \
-    extraoptions=$(GCC_EXTRA_OPTS) \
+    config_env_extra=$(GCC_HOST_VARS) extraoptions=$(GCC_EXTRA_OPTS) \
     postinstall=contrib-gnu-gcc-deletefixed
 
 #MM
