@@ -1,0 +1,32 @@
+# Copyright © 2016-2017, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(SRCDIR)/config/aros.cfg
+
+#MM contrib-development-git : contrib-development-git-setup
+#MM contrib-development-git-setup : contrib-development-git-fetch
+
+DESTDIR     :=	$(AROS_DEVELOPER)
+GIT_CONFIG_ENV := \
+            ac_cv_fread_reads_directories="no" \
+            ac_cv_snprintf_returns_bogus="no"
+
+GIT_VERSION := 2.12.2
+GIT_PORTDIR := $(PORTSDIR)/git
+
+#MM
+contrib-development-git-setup :
+	@$(IF) $(TEST) -d $(GIT_PORTDIR)/git-$(GIT_VERSION) \
+	    && ! $(TEST) -f $(GIT_PORTDIR)/git-$(GIT_VERSION)/configure ; then \
+	       cd $(GIT_PORTDIR)/git-$(GIT_VERSION) && $(MAKE) configure ; \
+	fi
+
+%fetch mmake=contrib-development-git-fetch archive=v$(GIT_VERSION) suffixes="tar.gz" \
+    location=$(PORTSSOURCEDIR) destination=$(GIT_PORTDIR) \
+    archive_origins=". https://github.com/git/git/archive" \
+    patches_specs="::" patches_origins=
+
+%build_with_configure mmake=contrib-development-git compiler=target		\
+    	srcdir=$(GIT_PORTDIR)/git-$(GIT_VERSION) prefix="$(DESTDIR)" nix=yes		\
+	config_env_extra="$(GIT_CONFIG_ENV)"
+
