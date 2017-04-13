@@ -39,7 +39,7 @@ GIT_PATCHIGNORE := autom4te.cache configure GIT-VERSION-FILE
     srcdir=$(GIT_ARCHDIR) suffixes="tar.gz" destination=$(GIT_PORTDIR) excludes="$(GIT_PATCHIGNORE)"
 
 NOAWRN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECLARATION)
-USER_CFLAGS := $(NOAWRN_FLAGS)
+USER_CFLAGS := $(NOAWRN_FLAGS) -DBSDSOCKET_NOLIBDEFINES
 
 %build_with_configure mmake=contrib-development-git compiler=target		\
     	srcdir=$(GIT_PORTDIR)/$(GIT_ARCHDIR) prefix="$(DESTDIR)" nix=yes		\
