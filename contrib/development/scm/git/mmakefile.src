@@ -18,6 +18,9 @@ GIT_PORTDIR := $(PORTSDIR)/git
 GIT_ARCHBASE := v$(GIT_VERSION)
 GIT_ARCHDIR := git-$(GIT_VERSION)
 
+# uncomment to get verbose build output..
+# BUILD_ENV := V=1
+
 #MM
 contrib-development-git-setup :
 	@$(IF) $(TEST) -d $(GIT_PORTDIR)/$(GIT_ARCHDIR) \
