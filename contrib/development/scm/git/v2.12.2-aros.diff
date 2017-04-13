@@ -1,0 +1,42 @@
+diff -ruN -X ./exclude.patterns git-2.12.2/config.mak.uname git-2.12.2.aros/config.mak.uname
+--- git-2.12.2/config.mak.uname	2017-03-24 19:59:15.000000000 +0000
++++ git-2.12.2.aros/config.mak.uname	2017-04-13 01:28:37.611201471 +0100
+@@ -17,6 +17,21 @@
+ # because maintaining the nesting to match is a pain.  If
+ # we had "elif" things would have been much nicer...
+ 
++ifeq ($(uname_S),AROS)
++	BASIC_CFLAGS += -D__BSD_VISIBLE 
++	NO_CURL = YesPlease 
++	BLK_SHA1 = YesPlease 
++	NO_LIBGEN_H = YesPlease
++	# Copied from Windows
++	NO_REGEX = YesPlease
++	NO_GETTEXT = YesPlease
++	NO_PYTHON = YesPlease
++	# Copied from NONSTOP_KERNEL
++	NO_NSEC = YesPlease
++	NO_PREAD = YesPlease
++	NO_MMAP = YesPlease
++	NO_POLL = YesPlease
++endif
+ ifeq ($(uname_S),OSF1)
+ 	# Need this for u_short definitions et al
+ 	BASIC_CFLAGS += -D_OSF_SOURCE
+diff -ruN -X ./exclude.patterns git-2.12.2/git-compat-util.h git-2.12.2.aros/git-compat-util.h
+--- git-2.12.2/git-compat-util.h	2017-03-24 19:59:15.000000000 +0000
++++ git-2.12.2.aros/git-compat-util.h	2017-04-13 01:19:35.059416877 +0100
+@@ -180,11 +180,13 @@
+ #include <regex.h>
+ #include <utime.h>
+ #include <syslog.h>
++#ifndef __AROS__
+ #ifndef NO_SYS_POLL_H
+ #include <sys/poll.h>
+ #else
+ #include <poll.h>
+ #endif
++#endif /* !__AROS__ */
+ #ifdef HAVE_BSD_SYSCTL
+ #include <sys/sysctl.h>
+ #endif

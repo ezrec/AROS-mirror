@@ -14,19 +14,30 @@ GIT_CONFIG_ENV := \
 GIT_VERSION := 2.12.2
 GIT_PORTDIR := $(PORTSDIR)/git
 
+GIT_ARCHBASE := v$(GIT_VERSION)
+GIT_ARCHDIR := git-$(GIT_VERSION)
+
 #MM
 contrib-development-git-setup :
-	@$(IF) $(TEST) -d $(GIT_PORTDIR)/git-$(GIT_VERSION) \
-	    && ! $(TEST) -f $(GIT_PORTDIR)/git-$(GIT_VERSION)/configure ; then \
-	       cd $(GIT_PORTDIR)/git-$(GIT_VERSION) && $(MAKE) configure ; \
+	@$(IF) $(TEST) -d $(GIT_PORTDIR)/$(GIT_ARCHDIR) \
+	    && ! $(TEST) -f $(GIT_PORTDIR)/$(GIT_ARCHDIR)/configure ; then \
+	       cd $(GIT_PORTDIR)/$(GIT_ARCHDIR) && $(MAKE) configure ; \
 	fi
 
-%fetch mmake=contrib-development-git-fetch archive=v$(GIT_VERSION) suffixes="tar.gz" \
+%fetch mmake=contrib-development-git-fetch archive=$(GIT_ARCHBASE) suffixes="tar.gz" \
     location=$(PORTSSOURCEDIR) destination=$(GIT_PORTDIR) \
     archive_origins=". https://github.com/git/git/archive" \
-    patches_specs="::" patches_origins=
+    patches_specs="$(GIT_ARCHBASE)-aros.diff:$(GIT_ARCHDIR):-f,-p1" patches_origins="$(SRCDIR)/$(CURDIR)"
+
+GIT_PATCHIGNORE := autom4te.cache configure GIT-VERSION-FILE
+
+%create_patch mmake=contrib-development-git-create-patch archive=$(GIT_ARCHBASE) \
+    srcdir=$(GIT_ARCHDIR) suffixes="tar.gz" destination=$(GIT_PORTDIR) excludes="$(GIT_PATCHIGNORE)"
+
+NOAWRN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECLARATION)
+USER_CFLAGS := $(NOAWRN_FLAGS)
 
 %build_with_configure mmake=contrib-development-git compiler=target		\
-    	srcdir=$(GIT_PORTDIR)/git-$(GIT_VERSION) prefix="$(DESTDIR)" nix=yes		\
+    	srcdir=$(GIT_PORTDIR)/$(GIT_ARCHDIR) prefix="$(DESTDIR)" nix=yes		\
 	config_env_extra="$(GIT_CONFIG_ENV)"
 
