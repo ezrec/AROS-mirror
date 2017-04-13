@@ -1,7 +1,27 @@
 diff -ruN -X ./exclude.patterns git-2.12.2/config.mak.uname git-2.12.2.aros/config.mak.uname
 --- git-2.12.2/config.mak.uname	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/config.mak.uname	2017-04-13 01:28:37.611201471 +0100
-@@ -17,6 +17,21 @@
++++ git-2.12.2.aros/config.mak.uname	2017-04-13 01:40:23.755052276 +0100
+@@ -1,11 +1,13 @@
+ # Platform specific Makefile tweaks based on uname detection
+ 
+-uname_S := $(shell sh -c 'uname -s 2>/dev/null || echo not')
+-uname_M := $(shell sh -c 'uname -m 2>/dev/null || echo not')
+-uname_O := $(shell sh -c 'uname -o 2>/dev/null || echo not')
+-uname_R := $(shell sh -c 'uname -r 2>/dev/null || echo not')
+-uname_P := $(shell sh -c 'uname -p 2>/dev/null || echo not')
+-uname_V := $(shell sh -c 'uname -v 2>/dev/null || echo not')
++UNAME ?= uname
++
++uname_S := $(shell sh -c '$(UNAME) -s 2>/dev/null || echo not')
++uname_M := $(shell sh -c '$(UNAME) -m 2>/dev/null || echo not')
++uname_O := $(shell sh -c '$(UNAME) -o 2>/dev/null || echo not')
++uname_R := $(shell sh -c '$(UNAME) -r 2>/dev/null || echo not')
++uname_P := $(shell sh -c '$(UNAME) -p 2>/dev/null || echo not')
++uname_V := $(shell sh -c '$(UNAME) -v 2>/dev/null || echo not')
+ 
+ ifdef MSVC
+ 	# avoid the MingW and Cygwin configuration sections
+@@ -17,6 +19,21 @@
  # because maintaining the nesting to match is a pain.  If
  # we had "elif" things would have been much nicer...
  
@@ -25,7 +45,7 @@ diff -ruN -X ./exclude.patterns git-2.12.2/config.mak.uname git-2.12.2.aros/conf
  	BASIC_CFLAGS += -D_OSF_SOURCE
 diff -ruN -X ./exclude.patterns git-2.12.2/git-compat-util.h git-2.12.2.aros/git-compat-util.h
 --- git-2.12.2/git-compat-util.h	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/git-compat-util.h	2017-04-13 01:19:35.059416877 +0100
++++ git-2.12.2.aros/git-compat-util.h	2017-04-13 01:34:22.280516400 +0100
 @@ -180,11 +180,13 @@
  #include <regex.h>
  #include <utime.h>
