@@ -1,6 +1,6 @@
 diff -ruN -X ./exclude.patterns git-2.12.2/config.mak.uname git-2.12.2.aros/config.mak.uname
 --- git-2.12.2/config.mak.uname	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/config.mak.uname	2017-04-13 01:40:23.755052276 +0100
++++ git-2.12.2.aros/config.mak.uname	2017-04-13 02:58:27.593818480 +0100
 @@ -1,11 +1,13 @@
  # Platform specific Makefile tweaks based on uname detection
  
@@ -43,9 +43,36 @@ diff -ruN -X ./exclude.patterns git-2.12.2/config.mak.uname git-2.12.2.aros/conf
  ifeq ($(uname_S),OSF1)
  	# Need this for u_short definitions et al
  	BASIC_CFLAGS += -D_OSF_SOURCE
+diff -ruN -X ./exclude.patterns git-2.12.2/configure.ac git-2.12.2.aros/configure.ac
+--- git-2.12.2/configure.ac	2017-03-24 19:59:15.000000000 +0000
++++ git-2.12.2.aros/configure.ac	2017-04-13 03:04:33.307405790 +0100
+@@ -707,17 +707,17 @@
+ test -n "$NEEDS_LIBGEN" && LIBS="$LIBS -lgen"
+ 
+ AC_CHECK_LIB([c], [gettext],
+-[LIBC_CONTAINS_LIBINTL=YesPlease],
+-[LIBC_CONTAINS_LIBINTL=])
+-GIT_CONF_SUBST([LIBC_CONTAINS_LIBINTL])
++[NO_GETTEXT=],
++[NO_GETTEXT=YesPlease])
++GIT_CONF_SUBST([NO_GETTEXT])
+ 
+ #
+ # Define NO_GETTEXT if you don't want Git output to be translated.
+ # A translated Git requires GNU libintl or another gettext implementation
+ AC_CHECK_HEADER([libintl.h],
+-[NO_GETTEXT=],
+-[NO_GETTEXT=YesPlease])
+-GIT_CONF_SUBST([NO_GETTEXT])
++[LIBC_CONTAINS_LIBINTL=YesPlease],
++[LIBC_CONTAINS_LIBINTL=])
++GIT_CONF_SUBST([LIBC_CONTAINS_LIBINTL])
+ 
+ if test -z "$NO_GETTEXT"; then
+     test -n "$LIBC_CONTAINS_LIBINTL" || LIBS="$LIBS -lintl"
 diff -ruN -X ./exclude.patterns git-2.12.2/git-compat-util.h git-2.12.2.aros/git-compat-util.h
 --- git-2.12.2/git-compat-util.h	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/git-compat-util.h	2017-04-13 01:34:22.280516400 +0100
++++ git-2.12.2.aros/git-compat-util.h	2017-04-13 02:58:27.593818480 +0100
 @@ -180,11 +180,13 @@
  #include <regex.h>
  #include <utime.h>
