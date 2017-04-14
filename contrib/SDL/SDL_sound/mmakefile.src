@@ -9,6 +9,9 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 REPOSITORIES := http://icculus.org/SDL_sound/downloads/ \
  http://downloads.openwrt.org/sources/
+ 
+USER_INCLUDES := -I$(AROS_CONTRIB_INCLUDES)
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
 %fetch_and_build_gnu_development package=SDL_sound version=1.0.3 patch=no \
     suffixes="tar.gz" package_repo="$(REPOSITORIES)" \
