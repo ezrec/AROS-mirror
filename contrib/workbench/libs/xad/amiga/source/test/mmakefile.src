@@ -16,7 +16,7 @@ EXEDIR := $(AROS_TESTS)/xad
 
 USER_CFLAGS     := -I$(AROS_INCLUDES)/SDI -I$(SRCDIR)/$(CURDIR)/../../../portable/include
 
-#MM- test : test-xad
+#MM- contrib-test : test-xad
 
 #MM  test-xad : includes linklibs xadmaster-includes
 
