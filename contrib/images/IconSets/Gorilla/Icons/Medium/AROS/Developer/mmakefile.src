@@ -1,0 +1,11 @@
+# Copyright © 2017, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(SRCDIR)/config/aros-contrib.cfg
+
+#MM- iconset-Gorilla-contrib-icons : iconset-Gorilla-contrib-icons-developer
+#MM- iconset-Gorilla-contrib-icons-clean : iconset-Gorilla-contrib-icons-developer-clean
+
+DEVENVICONS := DevEnv
+
+%build_icons mmake=iconset-Gorilla-contrib-icons-developer icons=$(DEVENVICONS) dir=$(AROS_DEVELOPER)
