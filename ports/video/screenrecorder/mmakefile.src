@@ -15,6 +15,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 REPOSITORIES := http://archives.aros-exec.org/share/video/record/
 ARCHBASE     := screenrecorder-src-svn17
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Video/ScreenRecorder
+
 NOWARN_FLAGS := $(NOWARN_DISCARDED_ARRAY_QUAL) $(NOWARN_UNUSED_BUT_SET_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS) -D__LOCALE_STDLIBBASE__
 USER_INCLUDES:= -I$(PORTSDIR)/screenrecorder/$(ARCHBASE)/include

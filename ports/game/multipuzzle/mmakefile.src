@@ -14,27 +14,26 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM  ports-game-multipuzzle-quick : ports-game-multipuzzle-fetch
 
-
 REPOSITORIES := http://archives.aros-exec.org/share/game/puzzle/
 ARCHBASE     := multipuzzle-src-1.3.2
 TARGETDIR    := $(AROS_CONTRIB)/Games/Puzzle/MultiPuzzle
 
-
 FILES := displayinit localize multipuzzle puzzle requesters multipuzzle_strings
 FILES := $(addprefix $(PORTSDIR)/multipuzzle/$(ARCHBASE)/,$(FILES))
+
 NOWARN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECL) $(NOWARN_PARENTHESES)
 USER_CFLAGS := $(NOWARN_FLAGS)
 USER_INCLUDES := -I.
 
-CONFIG_CFLAGS := $(subst -Werror ,,$(CONFIG_CFLAGS))
+ifneq ("","$(strip $(WARN_ERROR))")
+CONFIG_CFLAGS := $(subst $(WARN_ERROR),,$(CONFIG_CFLAGS))
+endif
 
 %build_prog mmake=ports-game-multipuzzle progname=MultiPuzzle \
     files=$(FILES) targetdir=$(TARGETDIR)
 
-
 %fetch mmake=ports-game-multipuzzle-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/multipuzzle \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
-
 
 CPYFILES := beach.ilbm multipuzzle.guide multipuzzle.info
 

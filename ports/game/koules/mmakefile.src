@@ -24,7 +24,9 @@ TARGETDIR    := $(AROS_CONTRIB)/Games/Action/Koules
 FILES := source/framebuffer source/koules source/menu source/amiga source/gameplan
 FILES := $(addprefix $(PORTSDIR)/koules/$(ARCHBASE)/,$(FILES))
 
-CONFIG_CFLAGS := $(subst -Werror ,,$(CONFIG_CFLAGS))
+ifneq ("","$(strip $(WARN_ERROR))")
+CONFIG_CFLAGS := $(subst $(WARN_ERROR),,$(CONFIG_CFLAGS))
+endif
 
 %build_prog mmake=ports-game-koules progname=Koules \
     files=$(FILES) targetdir=$(TARGETDIR) \

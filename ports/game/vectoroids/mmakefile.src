@@ -17,9 +17,12 @@ REPOSITORIES := ftp://ftp.tuxpaint.org/unix/x/vectoroids/src
 ARCHBASE     := vectoroids-1.1.0
 TARGETDIR    := $(AROS_CONTRIB)/Games/Action/Vectoroids
 SDL_PREFIX   := $(AROS_DEVELOPER)
+
 NOWARN_FLAGS := $(NOWARN_UNUSED_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
                 -DDATA_PREFIX=\"PROGDIR:data/\" -DJOY_YES
+USER_INCLUDES:= -I$(AROS_CONTRIB_INCLUDES)
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
 FILES := $(PORTSDIR)/vectoroids/$(ARCHBASE)/vectoroids
 

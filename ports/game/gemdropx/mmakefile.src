@@ -16,9 +16,12 @@ REPOSITORIES := ftp://ftp.tuxpaint.org/unix/x/gemdropx/src
 ARCHBASE     := gemdropx-0.9
 TARGETDIR    := $(AROS_CONTRIB)/Games/Puzzle/GemDropX
 SDL_PREFIX   := $(AROS_DEVELOPER)
+
 NOWARN_FLAGS := $(NOWARN_MAYBE_UNINITIALIZED) $(NOWARN_UNUSED_BUT_SET_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
                 -DDATA_PREFIX=\"PROGDIR:data\" -DJOYSTICK -DNOT_EMBEDDED
+USER_INCLUDES:= -I$(AROS_CONTRIB_INCLUDES)
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
 FILES := $(PORTSDIR)/gemdropx/$(ARCHBASE)/gemdropx
 

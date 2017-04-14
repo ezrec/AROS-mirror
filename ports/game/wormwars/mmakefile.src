@@ -26,9 +26,13 @@ include $(SRCDIR)/config/aros-contrib.cfg
 REPOSITORIES := http://archives.aros-exec.org/share/game/misc/
 ARCHBASE     := wormwars-src-8.86
 TARGETDIR    := $(AROS_CONTRIB)/Games/Action/WormWars
+
 NOWARN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECL) $(NOWARN_UNKNOWN_PRAGMAS) $(NOWARN_PARENTHESES) $(NOWARN_UNUSED_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS) -DNO_PRAGMAS -D__STORM__ -D__chip= -DAMIGA
-CONFIG_CFLAGS:= $(subst -Werror ,,$(CONFIG_CFLAGS))
+
+ifneq ("","$(strip $(WARN_ERROR))")
+CONFIG_CFLAGS := $(subst $(WARN_ERROR),,$(CONFIG_CFLAGS))
+endif
 
 FILES := source/amiga source/engine1 source/engine2 source/extras \
          source/gfx source/heads source/le source/squares source/tails

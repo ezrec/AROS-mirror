@@ -16,6 +16,9 @@ VERSION      := 0.0.5
 TARGETDIR    := $(AROS_CONTRIB)/Games/Puzzle/Pushover
 REPOSITORIES := sf://pushover
 
+USER_INCLUDES:= -I$(AROS_CONTRIB_INCLUDES)
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
+
 %fetch_and_build mmake=ports-game-pushover prefix=$(TARGETDIR) \
     package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
     patch=yes package_repo=$(REPOSITORIES) nix=yes nix_dir_layout=no \

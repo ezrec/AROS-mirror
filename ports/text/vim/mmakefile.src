@@ -18,6 +18,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 REPOSITORIES := ftp://ftp.vim.org/pub/vim/unix
 ARCHBASE     := vim-7.2
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Text/Vim
+
 NOWARN_FLAGS := $(NOWARN_STRICT_OVERFLOW) $(NOWARN_STRICT_ALIASING) \
     $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_INT_CONVERSION) \
     $(NOWARN_BOOL_COMPARE) $(NOWARN_LOGICAL_NOT_PARENTHESES) \
@@ -28,7 +29,9 @@ USER_CFLAGS  := $(NOWARN_FLAGS) -I$(PORTSDIR)/vim/vim72/src/proto \
 	     -DDFLT_RUNTIMEPATH=\"PROGDIR:runtime\" \
 	     -UAMIGA -U_AMIGA -DAROS
 
-CONFIG_CFLAGS := $(subst -Werror ,,$(CONFIG_CFLAGS))
+ifneq ("","$(strip $(WARN_ERROR))")
+CONFIG_CFLAGS := $(subst $(WARN_ERROR),,$(CONFIG_CFLAGS))
+endif
 
 FILES := \
     buffer charset diff digraph edit eval ex_cmds ex_cmds2 \

@@ -17,11 +17,14 @@ include $(SRCDIR)/config/aros-contrib.cfg
 REPOSITORIES := http://archives.aros-exec.org/share/game/adventure/
 ARCHBASE     := magnetic-src-2.3.1
 TARGETDIR    := $(AROS_CONTRIB)/Games/Adventure/Magnetic
+
 NOWARN_FLAGS := $(NOWARN_PARENTHESES)
 USER_CFLAGS  := $(NOWARN_FLAGS) -DNO_ANIMATION
 USER_INCLUDES:= -I $(PORTSDIR)/magnetic/$(ARCHBASE)/Generic
 
-CONFIG_CFLAGS := $(subst -Werror ,,$(CONFIG_CFLAGS))
+ifneq ("","$(strip $(WARN_ERROR))")
+CONFIG_CFLAGS := $(subst $(WARN_ERROR),,$(CONFIG_CFLAGS))
+endif
 
 FILES := Amiga/amiga Generic/emu
 FILES := $(addprefix $(PORTSDIR)/magnetic/$(ARCHBASE)/,$(FILES))

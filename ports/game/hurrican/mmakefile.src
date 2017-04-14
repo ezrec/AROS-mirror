@@ -18,7 +18,6 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM  ports-game-hurrican-lang : ports-game-hurrican-fetch
 #MM  ports-game-hurrican-data : ports-game-hurrican-fetch
 
-
 TARGETDIR    := $(AROS_CONTRIB)/Games/Platform/Hurrican
 
 ####################################################################################################
@@ -31,23 +30,24 @@ ARCHBASE     := hurrican-src-svn281
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2" \
     patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
 
+%create_patch mmake=ports-game-hurrican-create-patch archive=$(ARCHBASE) \
+    suffixes="tar.bz2" destination=$(PORTSDIR)/hurrican
+
 ####################################################################################################
 # build program
 
-NOWARN_FLAGS := $(NOWARN_DISCARDED_QUALIFIERS) $(NOWARN_UNUSED_LOCAL_TYPEDEFS)
-HURRICAN_COMMONFLAGS := -DPLATFORM_SDL -DENABLE_CONSOLE_COMMANDS -DUSE_MODPLUG -DUSE_INDEXED_BATCH \
-                        -DDEBUG -DUSE_GL1 -fexceptions \
-                        -DUSE_STORAGE_PATH="\"/PROGDIR\"" -DUSE_HOME_DIR
+NOWARN_CXXFLAGS := $(NOWARN_UNUSED_LOCAL_TYPEDEFS) $(NOWARN_WRITE_STRINGS)
+NOWARN_CFLAGS := $(NOWARN_DISCARDED_QUALIFIERS) $(NOWARN_UNUSED_LOCAL_TYPEDEFS)
+HURRICAN_FLAGS := $(CFLAGS_EXCEPTIONS) -DPLATFORM_SDL \
+                        -DENABLE_CONSOLE_COMMANDS -DUSE_MODPLUG -DUSE_INDEXED_BATCH \
+                        -DDEBUG -DUSE_GL1 -DUSE_STORAGE_PATH="\"/PROGDIR\"" -DUSE_HOME_DIR
 
-USER_CXXFLAGS := -fpermissive $(HURRICAN_COMMONFLAGS)
-
-CONFIG_CXXFLAGS := $(subst -Werror ,,$(CONFIG_CXXFLAGS))
-
+USER_CFLAGS := $(HURRICAN_FLAGS)
+USER_CXXFLAGS := $(CFLAGS_PERMISSIVE) $(NOWARN_CXXFLAGS) $(HURRICAN_FLAGS)
 USER_INCLUDES:= -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/SDLPort -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/cml \
-    -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src -I$(AROS_INCLUDES)/SDL -I$(AROS_INCLUDES)/libmodplug \
+    -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src -I$(AROS_INCLUDES)/SDL -I$(AROS_INCLUDES)/libmodplug -I$(AROS_CONTRIB_INCLUDES) \
     -I$(PORTSDIR)/hurrican/$(ARCHBASE)/src/unrarlib040/unrarlib
-USER_LDFLAGS := -static-libstdc++
-
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB) -static-libstdc++
 
 SDL_CXXFILES := SDLPort/SDL_fmod SDLPort/SDL_port SDLPort/texture
 

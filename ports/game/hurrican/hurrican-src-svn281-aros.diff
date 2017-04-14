@@ -1,6 +1,6 @@
-diff -Naur hurrican-src-svn281-orig/src/Main.cpp hurrican-src-svn281/src/Main.cpp
---- hurrican-src-svn281-orig/src/Main.cpp	2017-01-05 01:18:14.093422469 +0100
-+++ hurrican-src-svn281/src/Main.cpp	2017-01-05 02:33:03.301738013 +0100
+diff -ruN hurrican-src-svn281/src/Main.cpp hurrican-src-svn281.aros/src/Main.cpp
+--- hurrican-src-svn281/src/Main.cpp	2016-04-01 20:15:33.596920000 +0100
++++ hurrican-src-svn281.aros/src/Main.cpp	2017-04-14 18:48:24.622908718 +0100
 @@ -657,7 +657,11 @@
  #else // NON-ANDROID:
  #ifdef USE_HOME_DIR
@@ -13,15 +13,15 @@ diff -Naur hurrican-src-svn281-orig/src/Main.cpp hurrican-src-svn281/src/Main.cp
          bool success = false;
          if (homedir) {
              const char *subdir = "/.hurrican";
-diff -Naur hurrican-src-svn281-orig/src/SDLPort/SDL_fmod.cpp hurrican-src-svn281/src/SDLPort/SDL_fmod.cpp
---- hurrican-src-svn281-orig/src/SDLPort/SDL_fmod.cpp	2017-01-05 01:18:14.097422438 +0100
-+++ hurrican-src-svn281/src/SDLPort/SDL_fmod.cpp	2017-01-05 01:48:53.798837505 +0100
+diff -ruN hurrican-src-svn281/src/SDLPort/SDL_fmod.cpp hurrican-src-svn281.aros/src/SDLPort/SDL_fmod.cpp
+--- hurrican-src-svn281/src/SDLPort/SDL_fmod.cpp	2015-11-03 12:00:19.242492000 +0000
++++ hurrican-src-svn281.aros/src/SDLPort/SDL_fmod.cpp	2017-04-14 19:14:46.184108518 +0100
 @@ -353,8 +353,13 @@
      if ((inputmode & FSOUND_LOADMEMORY) == FSOUND_LOADMEMORY)
      {
  #if 1
 +#ifdef __AROS__
-+        SDL_RWops* sdl_rw = SDL_RWFromMem( (const void*)filename, length );
++        SDL_RWops* sdl_rw = SDL_RWFromMem( (void*)filename, length );
 +		chunk = Mix_LoadWAV_RW(sdl_rw, 1);
 +#else
          SDL_RWops* sdl_rw = SDL_RWFromConstMem( (const void*)filename, length );
@@ -30,9 +30,9 @@ diff -Naur hurrican-src-svn281-orig/src/SDLPort/SDL_fmod.cpp hurrican-src-svn281
  #else
          chunk = Mix_QuickLoad_WAV( (Uint8*)filename );
  #endif
-diff -Naur hurrican-src-svn281-orig/src/SDLPort/SDL_port.h hurrican-src-svn281/src/SDLPort/SDL_port.h
---- hurrican-src-svn281-orig/src/SDLPort/SDL_port.h	2017-01-05 01:18:14.097422438 +0100
-+++ hurrican-src-svn281/src/SDLPort/SDL_port.h	2017-01-05 01:45:38.660384539 +0100
+diff -ruN hurrican-src-svn281/src/SDLPort/SDL_port.h hurrican-src-svn281.aros/src/SDLPort/SDL_port.h
+--- hurrican-src-svn281/src/SDLPort/SDL_port.h	2015-10-12 23:20:09.353457000 +0100
++++ hurrican-src-svn281.aros/src/SDLPort/SDL_port.h	2017-04-14 18:48:24.623908728 +0100
 @@ -42,11 +42,13 @@
  
  #define CONST       const
@@ -47,15 +47,15 @@ diff -Naur hurrican-src-svn281-orig/src/SDLPort/SDL_port.h hurrican-src-svn281/s
  typedef uint32_t    DWORD, UINT;
  typedef char*       LPSTR;
  typedef const char* LPCTSTR;
-diff -Naur hurrican-src-svn281-orig/src/SDLPort/texture.cpp hurrican-src-svn281/src/SDLPort/texture.cpp
---- hurrican-src-svn281-orig/src/SDLPort/texture.cpp	2017-01-05 01:18:14.097422438 +0100
-+++ hurrican-src-svn281/src/SDLPort/texture.cpp	2017-01-05 01:49:31.478538785 +0100
+diff -ruN hurrican-src-svn281/src/SDLPort/texture.cpp hurrican-src-svn281.aros/src/SDLPort/texture.cpp
+--- hurrican-src-svn281/src/SDLPort/texture.cpp	2015-11-08 23:44:22.180351000 +0000
++++ hurrican-src-svn281.aros/src/SDLPort/texture.cpp	2017-04-14 19:16:25.869105053 +0100
 @@ -364,8 +364,11 @@
          rawSurf = IMG_Load(fullpath.c_str());
      } else              // Load from memory
      {
 +#ifdef __AROS__
-+        SDL_RWops* sdl_rw = SDL_RWFromMem( (const void*)buf, buf_size );
++        SDL_RWops* sdl_rw = SDL_RWFromMem( (void*)buf, buf_size );
 +#else
          SDL_RWops* sdl_rw = SDL_RWFromConstMem( (const void*)buf, buf_size );
 -

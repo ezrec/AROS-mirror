@@ -16,12 +16,14 @@ include $(SRCDIR)/config/aros-contrib.cfg
 REPOSITORIES := http://www-e.uni-magdeburg.de/jschulen/ocr/
 ARCHBASE     := gocr-0.49
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Text/Gocr
+
 NOWARN_FLAGS := $(NOWARN_UNUSED_BUT_SET_VARIABLE) $(NOWARN_OVERFLOW) $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_STRICT_OVERFLOW)
 USER_CFLAGS  := $(NOWARN_FLAGS)
-
-CONFIG_CFLAGS := $(subst -Werror ,,$(CONFIG_CFLAGS))
-
 USER_INCLUDES:= -I $(PORTSDIR)/gocr/$(ARCHBASE)/include
+
+ifneq ("","$(strip $(WARN_ERROR))")
+CONFIG_CFLAGS := $(subst $(WARN_ERROR),,$(CONFIG_CFLAGS))
+endif
 
 FILES := \
     $(PORTSDIR)/gocr/$(ARCHBASE)/src/pgm2asc \

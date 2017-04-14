@@ -14,10 +14,15 @@ REPOSITORIES := sf://interlogic
 ARCHBASE     := interLOGIC-src-0.30
 TARGETDIR    := $(AROS_CONTRIB)/Games/Puzzle/InterLogic
 SDL_PREFIX   := $(AROS_DEVELOPER)
+
 NOWARN_FLAGS := $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_DISCARDED_QUALIFIERS)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags)
+USER_INCLUDES:= -I$(AROS_CONTRIB_INCLUDES)
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
-CONFIG_CFLAGS := $(subst -Werror ,,$(CONFIG_CFLAGS))
+ifneq ("","$(strip $(WARN_ERROR))")
+CONFIG_CFLAGS := $(subst $(WARN_ERROR),,$(CONFIG_CFLAGS))
+endif
 
 FILES := \
     $(PORTSDIR)/interlogic/interlogic/src/password \

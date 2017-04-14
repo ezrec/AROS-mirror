@@ -11,12 +11,14 @@ VERSION      := 1.0.8
 TARGETDIR    := $(AROS_CONTRIB)/Games/Puzzle/LMarbles
 REPOSITORIES := sf://lgames
 
+USER_INCLUDES:= -I$(AROS_CONTRIB_INCLUDES)
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
+
 %fetch_and_build mmake=ports-game-lmarbles prefix=$(TARGETDIR) \
     package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
     patch=yes package_repo=$(REPOSITORIES) nix=yes nix_dir_layout=no \
     install_target= postinstall=ports-game-lmarbles-install \
     extraoptions="-datarootdir='$$(PROGDIR)share' LIBS='-lmikmod -lvorbisfile -lvorbis -logg'" 
-
 
 #MM- ports-game-lmarbles-install : \
 #MM     ports-game-lmarbles-install-bin \

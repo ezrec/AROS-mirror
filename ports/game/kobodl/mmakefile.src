@@ -11,9 +11,8 @@ VERSION      := 0.5.1
 TARGETDIR    := $(AROS_CONTRIB)/Games/Action/KoboDeluxe
 REPOSITORIES := http://www.olofson.net/kobodl/download
 
-KOBDL_COMMONFLAGS := -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION) -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/graphics -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/eel -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/data/sfx -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/sound
-USER_CFLAGS := $(KOBDL_COMMONFLAGS)
-USER_CXXFLAGS := -static-libstdc++ $(KOBDL_COMMONFLAGS)
+USER_INCLUDES:= -I$(AROS_CONTRIB_INCLUDES) -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION) -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/graphics -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/eel -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/data/sfx -I$(PORTSDIR)/$(PACKAGE)/$(PACKAGE)-$(VERSION)/sound
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB) -static-libstdc++
 
 %fetch_and_build mmake=ports-game-kobodl prefix=$(TARGETDIR) \
     package=$(PACKAGE) version=$(VERSION) suffixes="tar.bz2" \

@@ -26,8 +26,11 @@ REPOSITORIES := sf://xpired
 ARCHBASE     := xpired-1.22
 TARGETDIR    := $(AROS_CONTRIB)/Games/Action/Xpired
 SDL_PREFIX   := $(AROS_DEVELOPER)
+
 NOWARN_FLAGS := $(NOWARN_CHAR_SUBSCRIPTS) $(NOWARN_UNUSED_VARIABLE) $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_ENDIF_LABELS)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) -DUNIX -DSHARE_PREFIX=\"PROGDIR:data\"
+USER_INCLUDES:= -I$(AROS_CONTRIB_INCLUDES)
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
 %build_prog mmake=ports-game-xpiredbin progname=Xpired \
     files="$(PORTSDIR)/xpired/$(ARCHBASE)/src/xpired" targetdir=$(TARGETDIR) nix=yes \

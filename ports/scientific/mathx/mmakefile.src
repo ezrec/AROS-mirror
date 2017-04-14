@@ -33,6 +33,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 REPOSITORIES := http://archives.aros-exec.org/share/utility/scientific
 ARCHBASE     := muimathx-src-svn46
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Scientific/MathX
+
 NOWARN_FLAGS := $(NOWARN_WRITE_STRINGS) $(NOWARN_UNINITIALIZED)
 USER_CXXFLAGS  := $(NOWARN_FLAGS) \
                 $(CFLAGS_UNROLL_LOOPS) \

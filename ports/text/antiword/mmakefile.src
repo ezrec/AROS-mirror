@@ -18,6 +18,7 @@ REPOSITORIES := http://www.winfield.demon.nl/linux
 ARCHBASE     := antiword-0.37
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Text/Antiword
 DB           := NDEBUG
+
 NOWARN_FLAGS := $(NOWARN_UNUSED_BUT_SET_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS) -Wall -pedantic -D$(DB)
 

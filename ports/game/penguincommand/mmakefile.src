@@ -11,11 +11,13 @@ VERSION      := 1.6.11
 TARGETDIR    := $(AROS_CONTRIB)/Games/Action/PenguinCommand
 REPOSITORIES := sf://penguin-command
 
+USER_INCLUDES:= -I$(AROS_CONTRIB_INCLUDES)
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
+
 %fetch_and_build mmake=ports-game-penguincommand prefix=$(TARGETDIR) \
 	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
 	patch=yes package_repo=$(REPOSITORIES) nix=no nix_dir_layout=no \
 	extraoptions="--program-transform-name='s/penguin-command/PenguinCommand/' --datadir='$$(PROGDIR)data' --mandir='$$(PROGDIR)man'"
-
 
 #MM
 ports-game-penguincommand-clean :
