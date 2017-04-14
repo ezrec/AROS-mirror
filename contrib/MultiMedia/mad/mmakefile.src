@@ -20,7 +20,13 @@ FILES  := madoss \
 	  timer \
 	  version
 
-CFLAGS += -DHAVE_CONFIG_H -O2 -DFPM_INTEL
+CFLAGS += -DHAVE_CONFIG_H -O2 $(NOWARN_CPP)
+
+ifeq ($(AROS_TARGET_CPU),i386)
+CFLAGS += -DFPM_INTEL
+else
+CFLAGS += -DFPM_DEFAULT
+endif
 
 #MM sound-madoss : workbench-libs-oss-unix
 

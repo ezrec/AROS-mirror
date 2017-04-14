@@ -72,14 +72,14 @@ int main (int argc, char *argv[])
     struct buffer buffer;
     struct mad_decoder decoder;
 
-    buffer.infh = NULL;
+    buffer.infh = BNULL;
     buffer.srcbuffer = NULL;
     buffer.destbuffer1 = NULL;
     buffer.destbuffer2 = NULL;
     buffer.framecount = 0;
     if (argc != 2)
     {
-	printf ("Usage: madoss <filename>\n");
+	printf ("Usage: madahi <filename>\n");
 	return -1;
     }
 
@@ -316,13 +316,12 @@ static enum mad_flow output(void *data, struct mad_header const *header, struct 
     DateStamp(&date);
     
     {
-    	ULONG sec;
 	static ULONG totbytes;
 	
 	totbytes += length;
 	
-	sec = (date.ds_Minute * 60 + date.ds_Tick / 50) -
-	      (startdate.ds_Minute * 60 + startdate.ds_Tick / 50);
+	//ULONG sec = (date.ds_Minute * 60 + date.ds_Tick / 50) -
+	//   (startdate.ds_Minute * 60 + startdate.ds_Tick / 50);
 	
     	//kprintf("\nmadahi: writing %d bytes. time %d.%02d  sec %d  b/sec %d\n",
     	//length, date.ds_Tick / 50, date.ds_Tick % 50,
@@ -382,7 +381,7 @@ static enum mad_flow error(void *data, struct mad_stream *stream, struct mad_fra
 {
     //struct buffer *buffer = data;
 
-    printf("%srecoverable decoding error 0x%04x at byte 0x%08x (%s)\n", MAD_RECOVERABLE(stream->error) ? "" : "un",
+    printf("%srecoverable decoding error 0x%04x at byte 0x%08ld (%s)\n", MAD_RECOVERABLE(stream->error) ? "" : "un",
 	   stream->error, stream->this_frame - stream->buffer, MadErrorString(stream));
 
     if( MAD_RECOVERABLE(stream->error) )
