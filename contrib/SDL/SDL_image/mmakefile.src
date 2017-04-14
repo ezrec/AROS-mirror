@@ -1,4 +1,4 @@
-# Copyright © 2004-2010, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2017, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -10,6 +10,9 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM    workbench-libs-z \
 #MM    workbench-libs-png-linklib \
 #MM    workbench-libs-jpeg-linklib
+
+USER_INCLUDES := -I$(AROS_CONTRIB_INCLUDES)
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
 %fetch_and_build_gnu_development package=SDL_image version=1.2.3 patch=yes \
     package_repo=http://www.libsdl.org/projects/SDL_image/release/ \
