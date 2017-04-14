@@ -1,4 +1,4 @@
-# Copyright 2004-2009, The AROS Development Team. All rights reserved.
+# Copyright 2004-2017, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -11,7 +11,8 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES:=showfont
 
-USER_INCLUDES:=-I$(AROS_INCLUDES)/SDL
+USER_INCLUDES := -I$(AROS_CONTRIB_INCLUDES) -I$(AROS_INCLUDES)/SDL
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
 %build_prog mmake=development-SDL_ttf-test progname=sdl_ttf_showfont files=$(FILES) \
     targetdir=$(AROS_TESTS) uselibs="SDL GL iconv SDL_ttf freetype2"
