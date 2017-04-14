@@ -1,4 +1,4 @@
-# Copyright Â© 2009-2013, The AROS Development Team. All rights reserved.
+# Copyright © 2009-2017, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -105,9 +105,11 @@ FILES := \
     $(ARCHSRCDIR)/src/video/cgx/SDL_cgxvideo \
     $(ARCHSRCDIR)/src/video/cgx/SDL_cgxwm
 
-SDLINCDIR := $(AROS_DEVELOPER)/include/SDL
+SDLINCDIR := $(AROS_INCLUDES)/SDL
 
-USER_INCLUDES := -I$(SDLINCDIR) -I$(ARCHSRCDIR) -I$(ARCHSRCDIR)/src -DSDL_AROS_SHARED
+USER_INCLUDES := -I$(SDLINCDIR) -I$(ARCHSRCDIR) -I$(ARCHSRCDIR)/src -I$(AROS_CONTRIB_INCLUDES)
+USER_CFLAGS := -DSDL_AROS_SHARED
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
 %build_module mmake=SDL-aros-sharedlib \
     modname=SDL modtype=library \
@@ -116,7 +118,7 @@ USER_INCLUDES := -I$(SDLINCDIR) -I$(ARCHSRCDIR) -I$(ARCHSRCDIR)/src -DSDL_AROS_S
 
 #MM SDL-aros-staticlib : SDL-aros-includes
 
-USER_INCLUDES := -I$(SDLINCDIR) -I$(ARCHSRCDIR) -I$(ARCHSRCDIR)/src
+USER_CFLAGS :=
 
 %build_linklib mmake=SDL-aros-staticlib libname=SDL_static \
     files="$(FILES)"

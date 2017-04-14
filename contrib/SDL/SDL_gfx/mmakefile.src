@@ -1,4 +1,4 @@
-# Copyright © 2004-2014, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2017, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -16,6 +16,9 @@ DISABLE_MMX := "--disable-mmx"
 else
 DISABLE_MMX :=
 endif
+
+USER_INCLUDES := -I$(AROS_CONTRIB_INCLUDES)
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
 REPOSITORIES := http://www.ferzkopp.net/Software/SDL_gfx-2.0 \
  ftp://ftp.netbsd.org/pub/pkgsrc/distfiles

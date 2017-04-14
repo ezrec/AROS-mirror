@@ -1,4 +1,4 @@
-# Copyright © 2004-2011, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2017, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -6,6 +6,9 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- contrib-sdl-sdl-mixer : development-SDL_mixer
 
 #MM- development-SDL_mixer : SDL-aros-lib development-libvorbis development-libmikmod
+
+USER_INCLUDES := -I$(AROS_CONTRIB_INCLUDES)
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
 %fetch_and_build_gnu_development package=SDL_mixer version=1.2.11 patch=yes \
     package_repo=http://www.libsdl.org/projects/SDL_mixer/release/ \

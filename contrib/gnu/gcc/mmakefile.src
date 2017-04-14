@@ -17,7 +17,9 @@ ifneq (no-java,$(JAVA_TARGET))
 GCC_LANGUAGES:=$(GCC_LANGUAGES),java
 endif
 
+#
 # ARM requires additional flags to determine CPU type and FP model
+#
 ifneq (,$(findstring $(AROS_TARGET_CPU),arm))
 GCC_EXTRA_OPTS += --with-arch=$(GCC_DEFAULT_CPU)
 GCC_EXTRA_OPTS += --with-float=$(GCC_DEFAULT_FLOAT_ABI)
@@ -48,6 +50,27 @@ GCC_HOST_VARS += \
 	am_cv_func_iconv=no \
 	ac_cv_header_iconv_h=no \
 
+#
+# GCC will fail to build if iconv is found, so check and generate an error if it
+# is present.
+#
+INVALID_ICONV=false
+# Check if iconv is incorrectly installed in the Dev env..
+if [ -a $(AROS_INCLUDE)/iconv.h ] ; \
+then \
+     INVALID_ICONV=true ; \
+fi;
+if [ -a $(AROS_LIB)/libiconv.a ] ; \
+then \
+     INVALID_ICONV=true ; \
+fi;
+ifneq (false,$(INVALID_ICONV))
+$(error  iconv incorrect installed - please remove it from the developer environement)
+endif
+
+#
+# Rules to build the native GCC compiler.
+#
 %fetch_and_build_gnu_development package=gcc version=$(GCC_VERSION)  crossbuild=yes patch=yes \
     package_repo="$(GNU_REPOSITORY)/gcc/gcc-$(GCC_VERSION)" \
     config_env_extra=$(GCC_HOST_VARS) extraoptions=$(GCC_EXTRA_OPTS) \

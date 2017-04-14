@@ -17,8 +17,8 @@ FILES := \
 
 NOWARN_FLAGS  :=
 USER_CFLAGS   := $(NOWARN_FLAGS)
-USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/include
-USER_LDFLAGS  := 
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/include -I$(AROS_CONTRIB_INCLUDES)
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
 #MM- contrib : contrib-multimedia-cdxlplay
 #MM  contrib-multimedia-cdxlplay : includes linklibs development-sdl
