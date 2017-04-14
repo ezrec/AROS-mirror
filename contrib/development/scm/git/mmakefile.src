@@ -10,7 +10,7 @@ DESTDIR     :=	$(AROS_DEVELOPER)
 GIT_CONFIG_ENV := \
             ac_cv_fread_reads_directories="no" \
             ac_cv_snprintf_returns_bogus="no" \
-            UNAME="$(TOOLDIR)/uname"
+            UNAME="$(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-uname"
 
 GIT_VERSION := 2.12.2
 GIT_PORTDIR := $(PORTSDIR)/git
