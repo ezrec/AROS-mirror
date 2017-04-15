@@ -1,4 +1,4 @@
-# Copyright © 2008, The AROS Development Team. All rights reserved.
+# Copyright © 2008-2017, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -11,8 +11,8 @@ NOWARN_FLAGS := $(NOWARN_FORMAT_SECURITY)
 USER_CFLAGS  := $(NOWARN_FLAGS) -DAMIGA -DPOSIXLY_CORRECT -DHISTORY -DAUTOINIT -D__USE_RUNCOMMAND__ -DUSE_TEMPFILES
 USER_LDFLAGS := -nix
 
-#MM- contrib-gnu    : contrib-gnu-sh
-#MM- contrib-gnu-sh : sh
+#MM- contrib-gnu    : contrib-gnu-abcshell
+#MM- contrib-gnu-abcshell : contrib-gnu-sh
 
 %build_prog mmake=contrib-gnu-sh progname=sh files=$(FILES) targetdir=$(DESTDIR)
 

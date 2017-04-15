@@ -1,0 +1,14 @@
+# Copyright © 2008-2017, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(SRCDIR)/config/aros-contrib.cfg
+
+#MM- contrib-gnu-abcshell : contrib-developer-shell
+
+$(AROS_S)/DevShell-Startup : DevShell-Startup
+	@$(CP) $^ $@
+
+#MM
+contrib-developer-shell : $(AROS_S)/DevShell-Startup
+
+%common
