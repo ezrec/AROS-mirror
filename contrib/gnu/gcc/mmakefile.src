@@ -58,14 +58,14 @@ INVALID_ICONV=false
 # Check if iconv is incorrectly installed in the Dev env..
 if [ -a $(AROS_INCLUDE)/iconv.h ] ; \
 then \
-     INVALID_ICONV=true ; \
+    INVALID_ICONV=true ; \
 fi;
 if [ -a $(AROS_LIB)/libiconv.a ] ; \
 then \
-     INVALID_ICONV=true ; \
+    INVALID_ICONV=true ; \
 fi;
 ifneq (false,$(INVALID_ICONV))
-$(error  iconv incorrect installed - please remove it from the developer environement)
+$(error iconv incorrect installed - please remove it from the developer environement)
 endif
 
 #
