@@ -404,7 +404,7 @@ int main (void) {
 				ULONG frames = MIN(AHI_FRAMES, endaddr - addr);
 				ULONG bytes = frames * FRAME_SIZE;
 #if WORDS_BIGENDIAN
-				swab2((UBYTE *)cdda_buf + (cdda_pos * FRAME_SIZE), ahi_buf, bytes);
+				swab((UBYTE *)cdda_buf + (cdda_pos * FRAME_SIZE), ahi_buf, bytes);
 #else
 				CopyMem((UBYTE *)cdda_buf + (cdda_pos * FRAME_SIZE), ahi_buf, bytes);
 #endif
