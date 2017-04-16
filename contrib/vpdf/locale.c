@@ -38,7 +38,7 @@ void locale_cleanup(void)
 }
 
 
-STRPTR locale_getstr(ULONG array_id)
+CONST_STRPTR locale_getstr(ULONG array_id)
 {
 	const struct CatCompArrayType *t = CatCompArray+array_id;
 

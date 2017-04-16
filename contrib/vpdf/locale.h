@@ -16,7 +16,7 @@
 
 void   locale_init(void);
 void   locale_cleanup(void);
-STRPTR locale_getstr(ULONG);
+CONST_STRPTR locale_getstr(ULONG);
 
 #define LOCSTR(x) locale_getstr(x##_ID)
 
