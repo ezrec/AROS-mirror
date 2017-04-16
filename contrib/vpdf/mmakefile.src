@@ -40,11 +40,12 @@ CPPFILES := \
 TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/VPDF
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/poppler/poppler -I$(SRCDIR)/$(CURDIR)/poppler -I$(SRCDIR)/$(CURDIR)/system \
     -I$(SRCDIR)/$(CURDIR)/aros/include -I$(AROS_INCLUDES)/cairo -idirafter $(SRCDIR)/$(CURDIR)/include
-USER_CFLAGS := -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__ -DMUI_OBSOLETE -frtti -fpermissive -fexceptions -fcheck-new
+USER_CFLAGS := -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__ -DMUI_OBSOLETE -Wno-error
+USER_CXXFLAGS := -frtti -fpermissive -fexceptions -fcheck-new
 USER_LDFLAGS := -L$(TARGETDIR)/libs
 
 %build_prog mmake=contrib-vpdf progname=VPDF files=$(CFILES) cxxfiles=$(CPPFILES) \
-    targetdir=$(TARGETDIR) uselibs="rexxsyslib muiclasses poppler fofi goo poppler-splash cairo pixman fontconfig freetype2 iconv xml2 jpeg z stdc++"
+    targetdir=$(TARGETDIR) uselibs="rexxsyslib muiclasses poppler fofi goo poppler-splash cairo pixman fontconfig freetype2 iconv xml2 jpeg z stdc++ pthread"
 
 
 %copy_dir_recursive mmake=contrib-vpdf-test src=test dst=$(TARGETDIR)/test
