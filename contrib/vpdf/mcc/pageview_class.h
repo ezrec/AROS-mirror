@@ -22,7 +22,7 @@
 #define	MUIA_PageView_MediaWidth       (MUIA_PageView_TagBase +19)
 #define	MUIA_PageView_MediaHeight      (MUIA_PageView_TagBase +20)
 #define	MUIA_PageView_Information      (MUIA_PageView_TagBase +21)
-#define	MUIA_PageView_RenderWidth	   (MUIA_PageView_TagBase +22)	/* dimmensions of area page image can be placed into */
+#define	MUIA_PageView_RenderWidth	   (MUIA_PageView_TagBase +22)	/* dimensions of area page image can be placed into */
 #define	MUIA_PageView_RenderHeight	   (MUIA_PageView_TagBase +23)
 #define	MUIA_PageView_IsPreview   	   (MUIA_PageView_TagBase +24)
 #define	MUIA_PageView_Rotation   	   (MUIA_PageView_TagBase +25)

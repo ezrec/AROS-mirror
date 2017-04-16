@@ -22,7 +22,7 @@ FILES := \
 
 TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/VPDF/libs
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../aros/include -I$(SRCDIR)/$(CURDIR)/.. -idirafter $(SRCDIR)/$(CURDIR)/../include
-USER_CFLAGS := -DMUI_OBSOLETE
+USER_CFLAGS := -DMUI_OBSOLETE $(NOWARN_UNUSED_VARIABLE) -Wno-error
 
 %build_linklib mmake=contrib-vpdf-mcc libname=muiclasses \
   files=$(FILES) libdir=$(TARGETDIR)

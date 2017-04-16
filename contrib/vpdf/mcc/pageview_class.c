@@ -199,7 +199,7 @@ METHOD ThbAskMinMax(struct IClass *cl,Object *obj,struct MUIP_AskMinMax *msg)
 
 DEFNEW
 {
-	obj = DoSuperNew(cl, obj, MUIA_FillArea, FALSE,
+	obj = (Object *)DoSuperNew(cl, obj, MUIA_FillArea, FALSE,
 							//	  MUIA_CustomBackfill, TRUE,
 							//	MUIA_Background, MUII_SHADOW,
 								TAG_MORE, INITTAGS);
@@ -721,7 +721,7 @@ DEFSET
 
 			ObtainSemaphore(&data->sema);
 
-			if (tag->ti_Data == NULL)
+			if ((struct pdfBitmap*) tag->ti_Data == NULL)
 			{
 				if (data->image != NULL)
 				{
