@@ -1,4 +1,4 @@
-# Copyright © 2003, The AROS Development Team. All rights reserved.
+# Copyright © 2003-2017, The AROS Development Team. All rights reserved.
 # $Id$
 
 # Have a look at doc/PATENTS
@@ -20,13 +20,23 @@ FILES  := madoss \
 	  timer \
 	  version
 
-CFLAGS += -DHAVE_CONFIG_H -O2 $(NOWARN_CPP)
+NOWARN_FLAGS := $(NOWARN_CPP)
 
-ifeq ($(AROS_TARGET_CPU),i386)
-CFLAGS += -DFPM_INTEL
+ifeq (i386,$(AROS_TARGET_CPU))
+MADOSS_CPUFLAGS := -DFPM_INTEL
 else
-CFLAGS += -DFPM_DEFAULT
+ifeq (x86_64,$(AROS_TARGET_CPU))
+MADOSS_CPUFLAGS := -DFPM_INTEL -DFPM_64BIT
+else
+ifneq (,$(findstring $(AROS_TARGET_CPU),arm))
+MADOSS_CPUFLAGS := -DFPM_ARM
+else
+MADOSS_CPUFLAGS := -DFPM_DEFAULT
 endif
+endif
+endif
+
+USER_CFLAGS := -DHAVE_CONFIG_H $(MADOSS_CPUFLAGS) $(NOWARN_FLAGS)
 
 #MM sound-madoss : workbench-libs-oss-unix
 
