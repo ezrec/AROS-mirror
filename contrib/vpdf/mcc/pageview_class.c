@@ -721,7 +721,7 @@ DEFSET
 
 			ObtainSemaphore(&data->sema);
 
-			if ((struct pdfBitmap*) tag->ti_Data == NULL)
+			if (tag->ti_Data == 0)
 			{
 				if (data->image != NULL)
 				{
