@@ -56,14 +56,12 @@ GCC_HOST_VARS += \
 #
 INVALID_ICONV=false
 # Check if iconv is incorrectly installed in the Dev env..
-if [ -a $(AROS_INCLUDE)/iconv.h ] ; \
-then \
-    INVALID_ICONV=true ; \
-fi;
-if [ -a $(AROS_LIB)/libiconv.a ] ; \
-then \
-    INVALID_ICONV=true ; \
-fi;
+ifneq ($(wildcard $(AROS_INCLUDE)/iconv.h),)
+    INVALID_ICONV=true
+endif
+ifneq ($(wildcard $(AROS_LIB)/libiconv.a),)
+    INVALID_ICONV=true
+endif
 ifneq (false,$(INVALID_ICONV))
 $(error iconv incorrect installed - please remove it from the developer environement)
 endif
