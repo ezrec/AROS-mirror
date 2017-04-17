@@ -41,7 +41,7 @@ TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/VPDF
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/poppler/poppler -I$(SRCDIR)/$(CURDIR)/poppler -I$(SRCDIR)/$(CURDIR)/system \
     -I$(SRCDIR)/$(CURDIR)/aros/include -I$(AROS_INCLUDES)/cairo -idirafter $(SRCDIR)/$(CURDIR)/include
 USER_CFLAGS := -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__ -DMUI_OBSOLETE -Wno-error
-USER_CXXFLAGS := -frtti -fpermissive -fexceptions -fcheck-new
+USER_CXXFLAGS := -frtti $(CFLAGS_PERMISSIVE) $(CFLAGS_EXCEPTIONS) -fcheck-new
 USER_LDFLAGS := -L$(TARGETDIR)/libs
 
 %build_prog mmake=contrib-vpdf progname=VPDF files=$(CFILES) cxxfiles=$(CPPFILES) \
