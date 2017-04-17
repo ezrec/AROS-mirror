@@ -35,7 +35,7 @@
 #endif
 
 #include "goo/gtypes.h"
-#include <cairo/cairo-ft.h>
+#include <cairo-ft.h>
 #include "OutputDev.h"
 #include "TextOutputDev.h"
 #include "GfxState.h"
