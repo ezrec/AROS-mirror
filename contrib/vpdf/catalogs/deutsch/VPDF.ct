@@ -1,235 +1,268 @@
-## version $VER: VPDF.catalog 1.0 (24.02.2012)
+## version $VER: VPDF.catalog 1.0 (16.08.2016)
 ## codeset 0
-## language polski
-## chunk AUTH Michal Zukowski
+## language deutsch
+;## chunk AUTH Translated by Stefan Haubenthal
+;
+; VPDF locales
 ;
 MSG_APPLICATION_DESCRIPTION
-Przegl±darka dokumentów PDF
+PDF-Betrachter mit Poppler-Engine.
 ;
 MSG_PRINTER_RANGE
-Zakres
-;Print Range
+Druckbereich
 ;
 MSG_PRINTER_PAGES
-Strony:
-;Pages:
+Seiten:
 ;
 MSG_PRINTER_FIRSTPAGE
-Od:
-;First Page:
+Erste Seite:
 ;
 MSG_PRINTER_LASTPAGE
-Do:
-;Last Page:
+Letzte Seite:
 ;
 MSG_PRINTER_MANUAL
-Wybór rêczny:
-;Manual Selection
+Manuelle Auswahl
 ;
 MSG_PRINTER_RESET
-Ustawienia domy¶lne
-;Reset
+zurücksetzen
 ;
 MSG_PRINTER_REVERSE
-Odwróæ kolejno¶æ
-;Reverse Pages
+Seitenreihenfolge umkehren
 ;
 MSG_PRINTER_ORIENTATION
-U³o¿enie strony
-;Page Orientation
+Seitenausrichtung
 ;
 MSG_PRINTER_COPIES
-Kopie:
-;Copies:
+Kopien:
 ;
 MSG_PRINTER_COLLATE
-Sortuj
-;Collate
+vergleichen
 ;
 MSG_PRINTER_SCALING
-Skalowanie:
-;Page Scaling:
+Seitenanpassung:
 ;
 MSG_PRINTER_PAGESPERSHEET
-Stron na arkusz:
-;Pages per Sheet:
+Seiten pro Blatt:
 ;
 MSG_PRINTER_ORDER
-Kolejno¶æ stron:
-;Pages Order:
+Seitenreihenfolge:
 ;
 MSG_PRINTER_AUTOROTATE
-Wycentruj i obróæ automatycznie
-;Auto Rotate and Center
+Selbstdrehen und -zentrieren
 ;
 MSG_PRINTER_DRIVER
-Sterownik
-;Driver
+Treiber
 ;
 MSG_PRINTER_PREFERENCES
-Preferencje druku
-;Printer
+Druckereinstellungen
 ;
 MSG_PRINTER_WINTITLE
-VPDF · Drukowanie dokumentu
-;VPDF · Print Document
+VPDF · Dokument drucken
 ;
 MSG_PRINTER_PRINT
-Drukuj
-;Print
+Drucken
 ;
 MSG_PRINTER_CANCEL
-Poniechaj
-;Cancel
+Abbrechen
+;
 MSG_PRINTER_OUTPUT
-Wyj¶cie:
-;Output:
+Ausgabe:
+;
 MSG_PRINTER_ODD
-Nieparzyste
-;Odd
+ungerade
 ;
 MSG_PRINTER_EVEN
-Parzyste
-;Even
+gerade
 ;
 MSG_PRINTER_ODDEVEN
-Parzyste i nieparzyste
-;Odd and Even
+ungerade und gerade
 ;
 MSG_PRINTER_NONE
-Brak
-;None
+keine
 ;
 MSG_PRINTER_BEST
-Najlepsze
-;Best
+beste
 ;
 MSG_PRINTER_MULTIPLE
-Wiele stron na kartce
-;Multiple pages per sheet
+mehrere Seiten pro Blatt
 ;
 MSG_PRINTER_CUSTOM
-U¿ytkownika
-;Custom
+benutzerdefiniert
 ;
 MSG_PRINTER_HORIZONTAL_VERTICAL
-Poziomo-Pionowo
+horizontal - vertikal
+;
 MSG_PRINTER_HORIZONTAL_VERTICALREVERSED
-Poziomo-Pionowo,odwrotnie
+horizontal - umgekehrt vertikal
+;
 MSG_PRINTER_HORIZONTALREVERSED_VERTICAL
-Poziomo,odwrotnie-Pionowo
+horizontal umgekehrt - vertikal
+;
 MSG_PRINTER_HORIZONTALREVERSED_VERTICAL_REVERSED
-Poziomo,odwrotnie-Pionowo ,odwrotnie
+horizontal umgekehrt - vertikal umgekehrt
+;
 MSG_PRINTER_VERTICAL_HORIZONTAL
-Pionowo-Poziomo
+vertikal - horizontal
+;
 MSG_PRINTER_VERTICALREVERSED_HORIZONTAL
-Pionowo,odwrotnie-Poziomo
+vertikal umgekehrt - horizontal
+;
 MSG_PRINTER_VERTICAL_HORIZONTALREVERSED
-Pionowo-Poziomo,odwrotnie
+vertikal - horizontal umgekehrt
+;
 MSG_PRINTER_VERTICAL_REVERSED_HORIZONTALREVERSED
-Pionowo,odwrotnie-Poziomo,odwrotnie
+vertikal umgekehrt - vertikal umgekehrt
+;
 MSG_PRINTER_ABORT
-Przerwij
-;Abort
+Abbruch
 ;
 MSG_MENU_PROJECT
 Projekt
 ;
 MSG_MENU_NEWWIN
-Nowe okno...
+Neues Fenster ...
+;
 MSG_MENU_NEWTAB
-Nowa zak³adka
+Neuer Tab
+;
 MSG_MENU_FILE
-Otwórz plik...
+Öffnen ...
+;
 MSG_MENU_RECENT
-Otwórz ostatnie...
+Zuletzt geöffnet
+;
 MSG_MENU_PRINT
-Drukuj...
+Drucken ...
+;
 MSG_MENU_ABOUT
-O programie...
+Über ...
+;
 MSG_MENU_QUIT
-Skoñcz
+Beenden
+;
 MSG_MENU_EDIT
-Edycja
+Bearbeiten
+;
 MSG_MENU_COPY
-Kopiuj
+Kopieren
+;
 MSG_MENU_LOG
-Logi...
+Protokoll ...
+;
 MSG_MENU_SETTINGS
-Ustawienia
+Einstellungen
+;
 MSG_MENU_SETTINGS_SETTINGS
-Preferencje...
+VPDF ...
+;
 MSG_MENU_SETTINGS_SAVE
-Zapisz jako domy¶lne
+Speichern als Vorgabe
+;
 MSG_MENU_SETTINGS_MUI
-MUI...
+MUI ...
+;
 MSG_MENU_WINDOWS
-Okna
+Fenster
+;
 MSG_NOFILE
-Brak pliku
+Kein Dokument geladen.
+;
 MSG_SAVE
-Zapi_sz
+_Speichern
+;
 MSG_CANCEL
-Ponie_chaj
+Abbre_chen
+;
 MSG_USE
-_U¿yj
+Ben_utzen
+;
 MSG_WINDOWS
-Okna
+Fenster
+;
 MSG_SETTINGS_LAYOUT
-Uk³ad:
+Layout:
+;
 MSG_SETTINGS_SCALING
-Skalowanie:
+Skalierung:
+;
 MSG_SETTINGS_OUTLINE
-Pokazuj podgl±d zawarto¶ci
+Dokumentumriss zeigen
+;
 MSG_SETTINGS_DOCUMENT
 Dokument
+;
 MSG_SETTINGS_LOGWINDOW
-Pokazuj okno logów przy starcie
+Öffne Protokollfenster automatisch
+;
 MSG_REQ_OPEN
-Wybierz plik...
+Die zu öffnende Datei wählen
+;
 MSG_REQ_SAVE
-Wybierz plik do zapisu...
+Die zu speichernde Datei wählen
+;
 MSG_REQ_DRAWER
-Wybierz katalog...
+Verzeichnis wählen
+;
 MSG_TOOLBAR_ZOOMIN
-Przybli¿
+hineinzoomen
+;
 MSG_TOOLBAR_ZOOMOUT
-Oddal
+herauszoomen
+;
 MSG_TOOLBAR_COUNTERCLOCKWISE
-Obrót w lewo
+Gegen den Uhrzeigersinn drehen
+;
 MSG_TOOLBAR_CLOCKWISE
-Obrót w prawo
+Im Uhrzeigersinn drehen
+;
 MSG_TOOLBAR_MARK
-Zaznaczanie
+Markieren
+;
 MSG_TOOLBAR_SCROLL
-Skrolowanie
+Rollen
+;
 MSG_TOOLBAR_OUTLINE
-Spis tre¶ci
+Umriss
+;
 MSG_TOOLBAR_FITPAGE
-Do strony
+Seite anpassen
+;
 MSG_TOOLBAR_FITWIDTH
-Do szeroko¶ci
+Breite anpassen
+;
 MSG_TOOLBAR_SINGLE
-Pojedyncze
+einzeln
+;
 MSG_TOOLBAR_CONTINUOUS
-Ci±g³e
+fortlaufend
+;
 MSG_TOOLBAR_FACING
-Przystaj±ce
+doppelseitig
+;
 MSG_TOOLBAR_CONT_FACING
-Ci±g³e przystaj±ce
+fortlaufend doppelseitig
+;
 MSG_SEARCH_NEXT
-_Nastêpny
+_nächste
+;
 MSG_SEARCH_PREV
-_Poprzedni
+_vorhergehende
+;
 MSG_SEARCH_END
-Koniec dokumentu
+Ende des Dokuments
+;
 MSG_SEARCH_LABEL
-Szukaj:
+Suche nach:
+;
 MSG_SLIDER_PAGE
-Strona %ld
+Seite %ld
+;
 MSG_MENU_SAVE
-Zapisz plik...
+Speichern ...
+;
 MSG_MENU_EXPORT
-Zapisz jako bitmapy...
+Exportieren als Bitmap ...
+;
 MSG_EXPORT_WINTITLE
-Zapisywanie dokumentu do bitmap
+Exportiere Dokument als Bitmap
+;
