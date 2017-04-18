@@ -52,7 +52,7 @@ DEFNEW
 {
 	Object *list;
 
-	obj = DoSuperNew(cl, obj,
+	obj = (Object *) DoSuperNew(cl, obj,
 						Child, list = ListObject,
 							MUIA_Frame, MUIV_Frame_ReadList,
 							MUIA_List_ConstructHook, MUIV_List_ConstructHook_String,
