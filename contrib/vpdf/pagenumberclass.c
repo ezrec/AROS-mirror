@@ -58,7 +58,7 @@ DEFNEW
 	Object *str_pages;
 	char initial_range[128];
 
-	if ((obj = DoSuperNew(cl, obj,
+	if ((obj = (Object *) DoSuperNew(cl, obj,
 		
 		Child, str_pages = StringObject, 
 			 MUIA_String_Accept, "0123456789-, ",
