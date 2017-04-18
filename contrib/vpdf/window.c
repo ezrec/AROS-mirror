@@ -75,7 +75,7 @@ DEFNEW
 {
     Object *grpRoot, *grpTitles;
 
-    obj = DoSuperNew(cl, obj,
+    obj = (Object *) DoSuperNew(cl, obj,
     MUIA_Window_Title,"VPDF",
     MUIA_Window_Width, MUIV_Window_Width_Screen(50),
     MUIA_Window_Height, MUIV_Window_Height_Screen(50),
@@ -85,13 +85,13 @@ DEFNEW
     MUIA_Background, MUII_RegisterBack,
     MUIA_Frame, MUIV_Frame_Register,
     MUIA_Group_PageMode, TRUE,
-    Child, grpTitles = NewObject(getTitleClass(), NULL,
+    Child, (IPTR) (grpTitles = NewObject(getTitleClass(), NULL,
 #if !defined(__AROS__)
 // FIXME: AROS
     MUIA_Title_Closable, TRUE,
     MUIA_Title_Sortable, TRUE,
 #endif
-    TAG_DONE),
+    TAG_DONE)),
     End,
     TAG_MORE, INITTAGS);
 
@@ -123,15 +123,15 @@ DEFMMETHOD(VPDFWindow_CreateTab)
     DoMethod(data->grpRoot, MUIM_Group_InitChange);
     DoMethod(data->grpTitles, MUIM_Group_InitChange);
     DoMethod(data->grpTitles, MUIM_Family_AddTail, VPDFTitleButtonObject,
-             Child, TextObject,
-             MUIA_Text_Contents, LOCSTR( MSG_NOFILE ) ,
+             Child, (IPTR) TextObject,
+             MUIA_Text_Contents, (IPTR) LOCSTR( MSG_NOFILE ) ,
 			 // MUIA_Text_Copy, TRUE, // acc. to MUI4 autodocs that's already the default
              End,
     End);
 
     DoMethod(data->grpRoot, MUIM_Family_AddTail, VGroup,
              MUIA_UserData, TRUE,		// move it to subclass
-             Child, RectangleObject,
+             Child, (IPTR) RectangleObject,
              End,
     End);
 
@@ -194,13 +194,13 @@ DEFMMETHOD(VPDFWindow_OpenFile)
         MUI_DisposeObject(tcontents);
 
         tcontents = VGroup,
-        Child, document = DocumentViewObject,
+        Child, (IPTR) (document = DocumentViewObject,
                MUIA_DocumentView_Renderer, xget(_app(obj), MUIA_VPDF_Renderer),
-               MUIA_DocumentView_FileName, filename,
+               MUIA_DocumentView_FileName, (IPTR) filename,
                MUIA_DocumentView_Layout, xget(_app(obj), MUIA_VPDFSettings_Layout),
                MUIA_DocumentView_Outline, xget(_app(obj), MUIA_VPDFSettings_Outline),
                MUIA_DocumentLayout_Scaling, xget(_app(obj), MUIA_VPDFSettings_Scaling),
-               End,
+               End),
                End;
 
         if (tcontents != NULL)
@@ -222,7 +222,7 @@ DEFMMETHOD(VPDFWindow_UpdateActive)
 
     if (group != NULL)
     {
-        void *doc = xget(group, MUIA_DocumentView_PDFDocument);
+        void *doc = (APTR) xget(group, MUIA_DocumentView_PDFDocument);
         struct pdfAttribute *attr = NULL;
 
         if (doc != NULL)
@@ -344,7 +344,7 @@ DEFGET
         group = (Object*)DoMethod(group, MUIM_Family_GetChild, 0);
 
         if (group != NULL)
-            doc = xget(group, MUIA_DocumentView_PDFDocument);
+            doc = (APTR) xget(group, MUIA_DocumentView_PDFDocument);
 
         *(ULONG*)msg->opg_Storage = (ULONG)doc;
         return TRUE;
