@@ -37,14 +37,14 @@ ULONG ArrowString_New(struct IClass *cl, Object *obj,  struct opSet *msg)
 
 	memset(&tmp, sizeof(tmp), 0);
 
-	obj = DoSuperNew(cl, obj, MUIA_Group_Horiz, TRUE, MUIA_Group_HorizSpacing, 0,
+	obj = (Object *) DoSuperNew(cl, obj, MUIA_Group_Horiz, TRUE, MUIA_Group_HorizSpacing, 0,
 		Child, tmp.ST_Number = StringObject, StringFrame,
 			MUIA_CycleChain, TRUE,
 			MUIA_String_Accept, "0123456789",
 			MUIA_String_MaxLen, 5,
 			MUIA_FixWidthTxt, "123456",
 			MUIA_String_Format, MUIV_String_Format_Right,
-			MUIA_String_Contents, "1",
+			MUIA_String_Contents, (IPTR) "1",
 		End,
 		Child, tmp.BT_Increase = ImageObject, ImageButtonFrame,
 			MUIA_InputMode, MUIV_InputMode_RelVerify,
