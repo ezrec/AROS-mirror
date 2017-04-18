@@ -39,13 +39,14 @@ CPPFILES := \
 
 TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/VPDF
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/poppler/poppler -I$(SRCDIR)/$(CURDIR)/poppler -I$(SRCDIR)/$(CURDIR)/system \
-    -I$(SRCDIR)/$(CURDIR)/aros/include -I$(AROS_INCLUDES)/cairo -idirafter $(SRCDIR)/$(CURDIR)/include
-USER_CFLAGS := -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__ -DMUI_OBSOLETE -Wno-error
+    -I$(SRCDIR)/$(CURDIR)/aros/include -I$(AROS_INCLUDES)/cairo -idirafter $(SRCDIR)/$(CURDIR)/include 
+NOWARN_FLAGS := $(NOWARN_UNUSED_VARIABLE) $(NOWARN_CPP) $(NOWARN_UNUSED_FUNCTION) $(NOWARN_MISSING_BRACES) $(NOWARN_UNINITIALIZED)
+USER_CFLAGS := $(NOWARN_FLAGS) -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__ -DMUI_OBSOLETE
 USER_CXXFLAGS := -frtti $(CFLAGS_PERMISSIVE) $(CFLAGS_EXCEPTIONS) -fcheck-new
-USER_LDFLAGS := -L$(TARGETDIR)/libs
+USER_LDFLAGS := -L$(TARGETDIR)/libs -static-libstdc++
 
 %build_prog mmake=contrib-vpdf progname=VPDF files=$(CFILES) cxxfiles=$(CPPFILES) \
-    targetdir=$(TARGETDIR) uselibs="rexxsyslib muiclasses poppler fofi goo poppler-splash cairo pixman fontconfig freetype2 iconv xml2 jpeg z stdc++ pthread"
+    targetdir=$(TARGETDIR) uselibs="rexxsyslib muiclasses poppler fofi goo poppler-splash cairo pixman fontconfig freetype2 iconv xml2 jpeg z pthread"
 
 
 %copy_dir_recursive mmake=contrib-vpdf-test src=test dst=$(TARGETDIR)/test
