@@ -21,6 +21,9 @@ GIT_ARCHDIR := git-$(GIT_VERSION)
 # uncomment to get verbose build output..
 # BUILD_ENV := V=1
 
+USER_INCLUDES := -I$(AROS_CONTRIB_INCLUDES)
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
+
 #MM
 contrib-development-git-setup :
 	@$(IF) $(TEST) -d $(GIT_PORTDIR)/$(GIT_ARCHDIR) \
@@ -43,5 +46,5 @@ USER_CFLAGS := $(NOAWRN_FLAGS) -DBSDSOCKET_NOLIBDEFINES
 
 %build_with_configure mmake=contrib-development-git compiler=target		\
     	srcdir=$(GIT_PORTDIR)/$(GIT_ARCHDIR) prefix="$(DESTDIR)" nix=yes		\
-	config_env_extra="$(GIT_CONFIG_ENV)"
+	config_env_extra="$(GIT_CONFIG_ENV)" use_build_env=yes
 
