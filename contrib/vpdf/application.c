@@ -683,7 +683,7 @@ DEFMMETHOD(Import)
 		char *recent = (char*)DoMethod(msg->dataspace, MUIM_Dataspace_Find, ID_VPDF_RECENT0 + i);
 		if (recent != NULL)
 		{
-			BPTR *lock;
+			BPTR lock;
 			struct Process *theProc = (struct Process *)FindTask(NULL);
 			struct Window *oldWindowPtr = theProc->pr_WindowPtr;
 			theProc->pr_WindowPtr = (APTR)(-1L);
