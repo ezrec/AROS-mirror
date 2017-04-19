@@ -126,7 +126,7 @@ static void MessageAddFile(struct MsgPort *port, struct MsgPort *replyport, stru
 
 	strcpy(arexxstr, "OPEN FILE=");
 
-	if(lock == 0)
+	if(lock == BNULL)
 	{
 		lock = Lock("", ACCESS_READ);
 		NameFromLock(lock, filepath, sizeof(filepath));
@@ -135,7 +135,7 @@ static void MessageAddFile(struct MsgPort *port, struct MsgPort *replyport, stru
 	else
 		NameFromLock(lock, filepath, sizeof(filepath));
 
-	if(lock != 0)
+	if(lock != BNULL)
 	{
 		char *ftemp = filepath;
 
