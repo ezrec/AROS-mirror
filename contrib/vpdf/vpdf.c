@@ -126,7 +126,7 @@ static void MessageAddFile(struct MsgPort *port, struct MsgPort *replyport, stru
 
 	strcpy(arexxstr, "OPEN FILE=");
 
-	if(lock == NULL)
+	if(lock == 0)
 	{
 		lock = Lock("", ACCESS_READ);
 		NameFromLock(lock, filepath, sizeof(filepath));
@@ -135,7 +135,7 @@ static void MessageAddFile(struct MsgPort *port, struct MsgPort *replyport, stru
 	else
 		NameFromLock(lock, filepath, sizeof(filepath));
 
-	if(lock != NULL)
+	if(lock != 0)
 	{
 		char *ftemp = filepath;
 
@@ -200,7 +200,8 @@ int main(int argc, char *argv[])
 	{
 		struct RDArgs *myargs = NULL;
 		LONG args[ARG_NUMARGS] = {0};
-		Object *app, *window;
+		Object *app;
+		__unused Object *window;
 		ULONG sigs = 0;
 		char buf[80];
 		struct MsgPort *port = NULL;
