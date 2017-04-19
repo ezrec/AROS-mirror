@@ -4,6 +4,7 @@
 include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-gnu-abcshell : contrib-developer-shell
+#MM contrib-developer-shell : workbench-s-setup
 
 $(AROS_S)/DevShell-Startup : DevShell-Startup
 	@$(CP) $^ $@
