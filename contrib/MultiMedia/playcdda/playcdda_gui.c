@@ -36,8 +36,11 @@
 #include <proto/icon.h>
 #include <clib/alib_protos.h>
 #include <SDI_hook.h>
+
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
+
 #include "scsicmd.h"
 #include "diskchange.h"
 #include "seekbar.h"
