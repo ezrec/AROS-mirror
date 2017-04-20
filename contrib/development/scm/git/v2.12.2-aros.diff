@@ -1,6 +1,6 @@
 diff -ruN -X ./exclude.patterns git-2.12.2/config.mak.uname git-2.12.2.aros/config.mak.uname
 --- git-2.12.2/config.mak.uname	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/config.mak.uname	2017-04-13 02:58:27.593818480 +0100
++++ git-2.12.2.aros/config.mak.uname	2017-04-19 21:28:22.429203045 +0100
 @@ -1,11 +1,13 @@
  # Platform specific Makefile tweaks based on uname detection
  
@@ -45,7 +45,7 @@ diff -ruN -X ./exclude.patterns git-2.12.2/config.mak.uname git-2.12.2.aros/conf
  	BASIC_CFLAGS += -D_OSF_SOURCE
 diff -ruN -X ./exclude.patterns git-2.12.2/configure.ac git-2.12.2.aros/configure.ac
 --- git-2.12.2/configure.ac	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/configure.ac	2017-04-13 03:04:33.307405790 +0100
++++ git-2.12.2.aros/configure.ac	2017-04-19 21:28:22.429203045 +0100
 @@ -707,17 +707,17 @@
  test -n "$NEEDS_LIBGEN" && LIBS="$LIBS -lgen"
  
@@ -72,7 +72,7 @@ diff -ruN -X ./exclude.patterns git-2.12.2/configure.ac git-2.12.2.aros/configur
      test -n "$LIBC_CONTAINS_LIBINTL" || LIBS="$LIBS -lintl"
 diff -ruN -X ./exclude.patterns git-2.12.2/git-compat-util.h git-2.12.2.aros/git-compat-util.h
 --- git-2.12.2/git-compat-util.h	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/git-compat-util.h	2017-04-13 02:58:27.593818480 +0100
++++ git-2.12.2.aros/git-compat-util.h	2017-04-19 21:28:22.429203045 +0100
 @@ -180,11 +180,13 @@
  #include <regex.h>
  #include <utime.h>
@@ -87,3 +87,44 @@ diff -ruN -X ./exclude.patterns git-2.12.2/git-compat-util.h git-2.12.2.aros/git
  #ifdef HAVE_BSD_SYSCTL
  #include <sys/sysctl.h>
  #endif
+@@ -231,6 +233,12 @@
+ #define _ALL_SOURCE 1
+ #endif
+ 
++#ifdef __AROS__
++#ifdef select
++#undef select
++#endif
++#endif
++
+ /* used on Mac OS X */
+ #ifdef PRECOMPOSE_UNICODE
+ #include "compat/precompose_utf8.h"
+diff -ruN -X ./exclude.patterns git-2.12.2/run-command.c git-2.12.2.aros/run-command.c
+--- git-2.12.2/run-command.c	2017-03-24 19:59:15.000000000 +0000
++++ git-2.12.2.aros/run-command.c	2017-04-19 21:28:22.429203045 +0100
+@@ -375,7 +375,11 @@
+ 	if (pipe(notify_pipe))
+ 		notify_pipe[0] = notify_pipe[1] = -1;
+ 
++#ifndef __AROS__
+ 	cmd->pid = fork();
++#else
++	cmd->pid = vfork();
++#endif
+ 	failed_errno = errno;
+ 	if (!cmd->pid) {
+ 		/*
+@@ -913,6 +917,7 @@
+ 	return ret;
+ }
+ 
++#ifndef __AROS__
+ struct io_pump {
+ 	/* initialized by caller */
+ 	int fd;
+@@ -1385,3 +1390,4 @@
+ 	pp_cleanup(&pp);
+ 	return 0;
+ }
++#endif

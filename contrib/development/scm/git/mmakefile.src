@@ -7,10 +7,17 @@ include $(SRCDIR)/config/aros.cfg
 #MM contrib-development-git-setup : contrib-development-git-fetch
 
 DESTDIR     :=	$(AROS_DEVELOPER)
+
+GIT_ENV := \
+           UNAME="$(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-uname"
 GIT_CONFIG_ENV := \
             ac_cv_fread_reads_directories="no" \
             ac_cv_snprintf_returns_bogus="no" \
-            UNAME="$(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-uname"
+            $(GIT_ENV)
+
+GIT_OPTIONS := \
+            --without-tcltk \
+            --with-lib='$(AROS_LIB)'
 
 GIT_VERSION := 2.12.2
 GIT_PORTDIR := $(PORTSDIR)/git
@@ -18,8 +25,10 @@ GIT_PORTDIR := $(PORTSDIR)/git
 GIT_ARCHBASE := v$(GIT_VERSION)
 GIT_ARCHDIR := git-$(GIT_VERSION)
 
+BUILD_ENV := $(GIT_ENV)
+
 # uncomment to get verbose build output..
-# BUILD_ENV := V=1
+# BUILD_ENV := V=1 $(BUILD_ENV)
 
 USER_INCLUDES := -I$(AROS_CONTRIB_INCLUDES)
 USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
@@ -44,7 +53,6 @@ GIT_PATCHIGNORE := autom4te.cache configure GIT-VERSION-FILE
 NOAWRN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECLARATION)
 USER_CFLAGS := $(NOAWRN_FLAGS) -DBSDSOCKET_NOLIBDEFINES
 
-%build_with_configure mmake=contrib-development-git compiler=target		\
-    	srcdir=$(GIT_PORTDIR)/$(GIT_ARCHDIR) prefix="$(DESTDIR)" nix=yes		\
-	config_env_extra="$(GIT_CONFIG_ENV)" use_build_env=yes
-
+%build_with_configure mmake=contrib-development-git compiler=target \
+    srcdir=$(GIT_PORTDIR)/$(GIT_ARCHDIR) prefix="$(DESTDIR)"  gnuflags=no nix=yes \
+    config_env_extra="$(GIT_CONFIG_ENV)" extraoptions="$(GIT_OPTIONS)"
