@@ -6,10 +6,10 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- contrib-gnu-abcshell : contrib-developer-shell
 #MM contrib-developer-shell : workbench-s-setup
 
-$(AROS_S)/DevShell-Startup : DevShell-Startup
+$(AROS_S)/DeveloperShell-Startup : DeveloperShell-Startup
 	@$(CP) $^ $@
 
 #MM
-contrib-developer-shell : $(AROS_S)/DevShell-Startup
+contrib-developer-shell : $(AROS_S)/DeveloperShell-Startup
 
 %common
