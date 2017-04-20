@@ -161,7 +161,7 @@ struct directory *directoryScan(const char *path, int flags)
 	struct FileInfoBlock fib;
 	struct directory *directory = malloc(sizeof(struct directory) + strlen(path) + 1);
 
-	if (dirLock == NULL || directory == NULL)
+	if (dirLock == BNULL || directory == NULL)
 	{
 		free(directory);
 
@@ -288,7 +288,7 @@ DirectoryTraverseResult	directoryTraverse(const char *path, int flags, Directory
 		char *fullpath = malloc(bufflen);
 		int rc = DIRECTORY_TRAVERSE_CONTINUE;
 
-		if (dirLock == NULL || fullpath == NULL)
+		if (dirLock == BNULL || fullpath == NULL)
 		{
 			free(fullpath);
 			return DIRECTORY_TRAVERSE_ERROR;
