@@ -1,4 +1,4 @@
 TYPE = PROJECT
 DEFAULTTOOL = "SYS:System/CLI"
 TOOLTYPE = "WINDOW=CON:0/50//130/Developer Shell/CLOSE"
-TOOLTYPE = "FROM=S:DevShell-Startup"
+TOOLTYPE = "FROM=S:DeveloperShell-Startup"
