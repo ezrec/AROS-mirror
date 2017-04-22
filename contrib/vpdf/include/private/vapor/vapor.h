@@ -106,8 +106,6 @@
 #elif __AROS__
 #define BEGINMTABLE static BOOPSI_DISPATCHER(IPTR, dispatch, cl, obj, msg){switch(msg->MethodID){
 #define BEGINMTABLE2(name) static BOOPSI_DISPATCHER(IPTR, name##_dispatch, cl, obj, msg){switch(msg->MethodID){
-//#define BEGINMTABLE static ULONG dispatch( struct IClass *cl, Object *obj, Msg msg){switch(msg->MethodID){
-//#define BEGINMTABLE2(name) static ULONG name##_dispatch( struct IClass *cl, Object *obj, Msg msg){switch(msg->MethodID){
 #else
 #define BEGINMTABLE static ULONG dispatch( __reg(a0, struct IClass *cl), __reg(a2, Object *obj), __reg(a1, Msg msg)){switch(msg->MethodID){
 #define BEGINMTABLE2(name) static ULONG name##_dispatch( __reg(a0, struct IClass *cl), __reg(a2, Object *obj), __reg(a1, Msg msg)){switch(msg->MethodID){
@@ -124,8 +122,8 @@
 #define DECCONST DECNEW // obsolete
 #define DECDISPOSE case OM_DISPOSE:return(handleOM_DISPOSE(cl, obj, (struct opSet *)msg));
 #define DECDISP DECDISPOSE // obsolete
-#define DECSET case OM_SET:return(handleOM_SET(cl, obj, (APTR)msg));
-#define DECGET case OM_GET:return(handleOM_GET(cl, obj, (APTR)msg));
+#define DECSET case OM_SET:return(handleOM_SET(cl, obj, (struct opSet *)msg));
+#define DECGET case OM_GET:return(handleOM_GET(cl, obj, (struct opGet *)msg));
 #define DECADDMEMBER case OM_ADDMEMBER:return(handleOM_ADDMEMBER(cl, obj, (APTR)msg));
 #define DECREMMEMBER case OM_REMMEMBER:return(handleOM_REMMEMBER(cl, obj, (APTR)msg));
 #define DECMMETHOD(methodid) case MUIM_##methodid:return(handleMUIM_##methodid(cl,obj,(struct MUIP_##methodid *)msg));
@@ -144,7 +142,7 @@
 
 /* Methods */
 
-#ifdef __INLINED_METHODS
+#ifdef __INLINED_METHODS //#if defined(MUIMASTER_YES_INLINE_STDARG)
 #define METHOD_INLINE inline
 #else
 #define METHOD_INLINE
