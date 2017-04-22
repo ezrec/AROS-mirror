@@ -3966,10 +3966,10 @@ LocalCreateTask(STRPTR Name,LONG Priority,TASKENTRY Entry,ULONG StackSize,LONG N
 			Task = AddTask(Task,(APTR)Entry,NULL);
 #else
 			if (0 == NumArgs) {
-				kprintf("AROS-term: Launched task with name '%s'!\n",Name);
+				Printf("AROS-term: Launched task with name '%s'!\n",Name);
 				Task = AddTask(Task,(APTR)Entry,NULL);
 			} else {
-				kprintf("AROS-term: Supposed to launch task with name '%s', but cannot do it!\n",Name);
+				Printf("AROS-term: Supposed to launch task with name '%s', but cannot do it!\n",Name);
 				Task = NULL;
 			}
 #endif
