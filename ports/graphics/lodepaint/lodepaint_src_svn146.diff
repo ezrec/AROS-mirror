@@ -1,6 +1,6 @@
-diff -Naur lodepaint_src_svn146-orig/main_program/src/imfmt/rgbe.cpp lodepaint_src_svn146/main_program/src/imfmt/rgbe.cpp
---- lodepaint_src_svn146-orig/main_program/src/imfmt/rgbe.cpp	2016-04-24 12:55:49.171153032 +0200
-+++ lodepaint_src_svn146/main_program/src/imfmt/rgbe.cpp	2016-04-24 13:07:49.717977747 +0200
+diff -ruN lodepaint_src_svn146/main_program/src/imfmt/rgbe.cpp lodepaint_src_svn146.aros/main_program/src/imfmt/rgbe.cpp
+--- lodepaint_src_svn146/main_program/src/imfmt/rgbe.cpp	2012-04-01 00:07:07.489950000 +0100
++++ lodepaint_src_svn146.aros/main_program/src/imfmt/rgbe.cpp	2017-04-22 23:15:24.387089421 +0100
 @@ -12,6 +12,7 @@
  #include <ctype.h>
  #include <cstdio>
@@ -9,9 +9,9 @@ diff -Naur lodepaint_src_svn146-orig/main_program/src/imfmt/rgbe.cpp lodepaint_s
  
  /* This file contains code to read and write four byte rgbe file format
   developed by Greg Ward.  It handles the conversions between rgbe and
-diff -Naur lodepaint_src_svn146-orig/main_program/src/lpi/gui/lpi_gui_file.cpp lodepaint_src_svn146/main_program/src/lpi/gui/lpi_gui_file.cpp
---- lodepaint_src_svn146-orig/main_program/src/lpi/gui/lpi_gui_file.cpp	2016-04-24 12:55:49.168153031 +0200
-+++ lodepaint_src_svn146/main_program/src/lpi/gui/lpi_gui_file.cpp	2016-04-24 15:04:48.290215878 +0200
+diff -ruN lodepaint_src_svn146/main_program/src/lpi/gui/lpi_gui_file.cpp lodepaint_src_svn146.aros/main_program/src/lpi/gui/lpi_gui_file.cpp
+--- lodepaint_src_svn146/main_program/src/lpi/gui/lpi_gui_file.cpp	2012-04-01 00:07:07.489950000 +0100
++++ lodepaint_src_svn146.aros/main_program/src/lpi/gui/lpi_gui_file.cpp	2017-04-22 23:15:24.387089421 +0100
 @@ -212,6 +212,8 @@
        if(!home.empty()) persist->add(home);
  #ifdef LPI_OS_WINDOWS
@@ -39,9 +39,33 @@ diff -Naur lodepaint_src_svn146-orig/main_program/src/lpi/gui/lpi_gui_file.cpp l
  #else
      setPath("/");
  #endif
-diff -Naur lodepaint_src_svn146-orig/main_program/src/lpi/os/lpi_clipboard.cpp lodepaint_src_svn146/main_program/src/lpi/os/lpi_clipboard.cpp
---- lodepaint_src_svn146-orig/main_program/src/lpi/os/lpi_clipboard.cpp	2016-04-24 12:55:49.168153031 +0200
-+++ lodepaint_src_svn146/main_program/src/lpi/os/lpi_clipboard.cpp	2016-04-24 13:03:39.682125246 +0200
+diff -ruN lodepaint_src_svn146/main_program/src/lpi/lpi_pathfind.cpp lodepaint_src_svn146.aros/main_program/src/lpi/lpi_pathfind.cpp
+--- lodepaint_src_svn146/main_program/src/lpi/lpi_pathfind.cpp	2010-02-10 20:27:33.186031000 +0000
++++ lodepaint_src_svn146.aros/main_program/src/lpi/lpi_pathfind.cpp	2017-04-22 23:28:47.469108501 +0100
+@@ -23,7 +23,7 @@
+ #include <list>
+ #include <iostream>
+ 
+-namespace
++namespace lpi
+ {
+   struct Node
+   {
+@@ -58,11 +58,6 @@
+   {
+     return a.x == b.x && a.y == b.y; //we only compare the coordinates, not the cost
+   }
+-}
+-
+-namespace lpi
+-{
+-
+ 
+ //world is a 2D tilemap, with rectangular tiles that are either filled or empty, supporting positive and negative coordinates of tiles. x0y0x1y1 are the borders inside the world in which to work.
+ bool World_AStar::findPath(std::vector<PathFindPos>& o_path, const PathFindPos& start, const PathFindPos& end, const PathFindPos& corner0, const PathFindPos& corner1)
+diff -ruN lodepaint_src_svn146/main_program/src/lpi/os/lpi_clipboard.cpp lodepaint_src_svn146.aros/main_program/src/lpi/os/lpi_clipboard.cpp
+--- lodepaint_src_svn146/main_program/src/lpi/os/lpi_clipboard.cpp	2011-04-30 19:57:31.526219000 +0100
++++ lodepaint_src_svn146.aros/main_program/src/lpi/os/lpi_clipboard.cpp	2017-04-22 23:15:24.388089421 +0100
 @@ -803,8 +803,11 @@
      for(size_t i = 0; i < text.size(); i++) cbtext[i] = text[i];
      cbtext[text.size()] = 0;
@@ -55,9 +79,9 @@ diff -Naur lodepaint_src_svn146-orig/main_program/src/lpi/os/lpi_clipboard.cpp l
      if ((ior=CBOpen(0L))!=NULL)
      {
        CBWriteFTXT(ior,(char *)cbtext);
-diff -Naur lodepaint_src_svn146-orig/main_program/src/lpi/os/lpi_filebrowse.cpp lodepaint_src_svn146/main_program/src/lpi/os/lpi_filebrowse.cpp
---- lodepaint_src_svn146-orig/main_program/src/lpi/os/lpi_filebrowse.cpp	2016-04-24 12:55:49.167153026 +0200
-+++ lodepaint_src_svn146/main_program/src/lpi/os/lpi_filebrowse.cpp	2016-04-24 21:17:30.574412757 +0200
+diff -ruN lodepaint_src_svn146/main_program/src/lpi/os/lpi_filebrowse.cpp lodepaint_src_svn146.aros/main_program/src/lpi/os/lpi_filebrowse.cpp
+--- lodepaint_src_svn146/main_program/src/lpi/os/lpi_filebrowse.cpp	2011-04-30 19:57:31.526219000 +0100
++++ lodepaint_src_svn146.aros/main_program/src/lpi/os/lpi_filebrowse.cpp	2017-04-22 23:15:24.388089421 +0100
 @@ -20,6 +20,13 @@
  
  #include "lpi_filebrowse.h"
@@ -165,9 +189,9 @@ diff -Naur lodepaint_src_svn146-orig/main_program/src/lpi/os/lpi_filebrowse.cpp 
  }
  
  std::string FileBrowseAmiga::getDefaultDir(DefaultDir dd) const
-diff -Naur lodepaint_src_svn146-orig/main_program/src/main.cpp lodepaint_src_svn146/main_program/src/main.cpp
---- lodepaint_src_svn146-orig/main_program/src/main.cpp	2016-04-24 12:55:49.170153028 +0200
-+++ lodepaint_src_svn146/main_program/src/main.cpp	2016-04-24 15:39:13.358678461 +0200
+diff -ruN lodepaint_src_svn146/main_program/src/main.cpp lodepaint_src_svn146.aros/main_program/src/main.cpp
+--- lodepaint_src_svn146/main_program/src/main.cpp	2012-11-03 20:20:36.221775000 +0000
++++ lodepaint_src_svn146.aros/main_program/src/main.cpp	2017-04-22 23:15:24.389089421 +0100
 @@ -1713,6 +1713,8 @@
  
  #if defined(LPI_OS_WINDOWS)
@@ -177,9 +201,9 @@ diff -Naur lodepaint_src_svn146-orig/main_program/src/main.cpp lodepaint_src_svn
  #elif defined(LPI_OS_LINUX)
      OS = "Linux";
  #endif
-diff -Naur lodepaint_src_svn146-orig/main_program/src/paint_clipboard.cpp lodepaint_src_svn146/main_program/src/paint_clipboard.cpp
---- lodepaint_src_svn146-orig/main_program/src/paint_clipboard.cpp	2016-04-24 12:55:49.167153026 +0200
-+++ lodepaint_src_svn146/main_program/src/paint_clipboard.cpp	2016-04-24 12:56:55.634268157 +0200
+diff -ruN lodepaint_src_svn146/main_program/src/paint_clipboard.cpp lodepaint_src_svn146.aros/main_program/src/paint_clipboard.cpp
+--- lodepaint_src_svn146/main_program/src/paint_clipboard.cpp	2011-04-30 19:57:31.526219000 +0100
++++ lodepaint_src_svn146.aros/main_program/src/paint_clipboard.cpp	2017-04-22 23:15:24.390089421 +0100
 @@ -608,7 +608,7 @@
  
  bool getClipboardImageRGBA8(std::vector<unsigned char>& image, int& w, int& h)
