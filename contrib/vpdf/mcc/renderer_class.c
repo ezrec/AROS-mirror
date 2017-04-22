@@ -84,7 +84,7 @@ struct Data
 DEFNEW
 {
 
-	obj = DoSuperNew(cl, obj,
+	obj = (Object *) DoSuperNew(cl, obj,
 				TAG_MORE, INITTAGS);
 
 	if (obj != NULL)
@@ -105,7 +105,7 @@ DEFNEW
 		DoMethod(data->proc, MUIM_Process_Launch);
 	}
 
-	return (ULONG)obj;
+	return (IPTR)obj;
 }
 
 DEFDISP
@@ -121,7 +121,7 @@ DEFDISP
 
 	while(!ISLISTEMPTY(&data->renderingqueue))
 	{
-		struct RenderingQueueNode *rqn = GetHead(&data->renderingqueue);
+		struct RenderingQueueNode *rqn = (struct RenderingQueueNode *)GetHead(&data->renderingqueue);
 		REMOVE(rqn);
 		free(rqn);
 	}
@@ -184,7 +184,7 @@ DEFMMETHOD(Process_Process)
 
 		if (!ISLISTEMPTY(&data->renderingqueue))
 		{
-			struct RenderingQueueNode *rqnn = GetHead(&data->renderingqueue);
+			struct RenderingQueueNode *rqnn = (struct RenderingQueueNode *)GetHead(&data->renderingqueue);
 			page = rqnn->page;
 			data->pendingpage = 0;
 			data->aborted = FALSE;
@@ -289,7 +289,7 @@ DEFMMETHOD(Process_Process)
 				{
 					/* rerender state causes page to be pushed back to the end of the line */
 					rqn->rerender = FALSE;
-					Enqueue(&data->renderingqueue, rqn);
+					Enqueue(&data->renderingqueue, (struct Node *)rqn);
 				}
 				else
 				{
@@ -355,7 +355,7 @@ DEFMMETHOD(Renderer_Enqueue)
 		rqn->grpLayout = msg->grpLayout;
 		rqn->userdata = NULL;
 		rqn->n.ln_Pri = 32 + msg->priority;  // keep it like this. MUIV_ values might be negative
-		Enqueue(&data->renderingqueue, rqn);
+		Enqueue(&data->renderingqueue, (struct Node *)rqn);
 	}
 
 	DoMethod(data->proc, MUIM_Process_Signal, SIGBREAKF_CTRL_D);
