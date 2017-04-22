@@ -242,7 +242,7 @@ CXXFILES := $(addprefix $(PORTSDIR)/hurrican/$(ARCHBASE)/src/,$(CXXFILES) $(SDL_
 
 %build_prog mmake=ports-game-hurrican progname=Hurrican \
     files= cxxfiles=$(CXXFILES) targetdir=$(TARGETDIR) nix=yes \
-    uselibs="stdc++ SDL_mixer mikmod modplug vorbisfile vorbis ogg SDL_image png z jpeg SDL GL"
+    uselibs="SDL_mixer mikmod modplug vorbisfile vorbis ogg SDL_image png z jpeg SDL GL"
 
 
 ####################################################################################################
