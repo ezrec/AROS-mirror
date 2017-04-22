@@ -67,7 +67,7 @@ DEFNEW
 		data->list = list;
 	}
 
-	return (ULONG)obj;
+	return (IPTR)obj;
 }
 
 DEFMMETHOD(Logger_LogMessage)

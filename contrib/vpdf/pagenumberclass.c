@@ -81,7 +81,7 @@ DEFNEW
 		data->sub_pos = -1;  // position within range
 	}
 	
-	return (ULONG)obj;
+	return (IPTR)obj;
 }
 
 

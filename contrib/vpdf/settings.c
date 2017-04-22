@@ -308,7 +308,7 @@ DEFNEW
 		setWrite("ENVARC:VPDF.config");
 	}
 
-	return (ULONG)obj;
+	return (IPTR)obj;
 }
 
 DEFGET

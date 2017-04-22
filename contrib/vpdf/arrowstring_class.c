@@ -93,7 +93,7 @@ ULONG ArrowString_New(struct IClass *cl, Object *obj,  struct opSet *msg)
 		DoMethod(data->ST_Number, MUIM_Notify, MUIA_String_Acknowledge, MUIV_EveryTime,
 			obj, 3, MUIM_Set, MA_ArrowString_Changed, TRUE);
 
-		return (ULONG)obj;
+		return (IPTR)obj;
 	}
 
 	return (0);

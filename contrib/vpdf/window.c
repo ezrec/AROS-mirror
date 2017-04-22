@@ -111,7 +111,7 @@ DEFNEW
         DoMethod(obj, MUIM_VPDFWindow_CreateTab);
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 DEFMMETHOD(VPDFWindow_CreateTab)
