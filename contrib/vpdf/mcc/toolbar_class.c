@@ -122,7 +122,7 @@ DEFNEW
 	strncpy(layoutmodes[2].name,  LOCSTR( MSG_TOOLBAR_FACING  ),128);
 	strncpy(layoutmodes[3].name,  LOCSTR( MSG_TOOLBAR_CONT_FACING  ),128);
 	
-	obj = DoSuperNew(cl, obj,
+	obj = (Object *) DoSuperNew(cl, obj,
 			MUIA_Group_Horiz, TRUE,
 			Child, strZoom = TextObject,
 				MUIA_Text_PreParse, "\033c",
@@ -250,7 +250,7 @@ DEFNEW
 
 	}
 
-	return (ULONG)obj;
+	return (IPTR)obj;
 
 }
 
@@ -486,7 +486,7 @@ DEFMMETHOD(Toolbar_ZoomPopup)
     // FIXME: AROS doesn't have MUIM_Menustrip_Popup
 #else
 	id = DoMethod(menZoom, MUIM_Menustrip_Popup, data->btnZoomPopup, 0 , _left(data->btnZoomPopup),_bottom(data->btnZoomPopup)+1);
-#endif
+
 
 	if (id != 0)
 	{
@@ -512,7 +512,7 @@ DEFMMETHOD(Toolbar_ZoomPopup)
 
 
 	}
-
+#endif
 	MUI_DisposeObject(menZoom);
 
 	return 0;
