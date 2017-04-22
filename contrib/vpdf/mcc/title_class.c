@@ -14,7 +14,7 @@ struct Data
 {
 	struct MUI_EventHandlerNode ehnode;
 };
-
+#if !defined(__AROS__) // FIXME: AROS
 DEFMMETHOD(Title_Close)
 {
 	DOSUPER;
@@ -24,7 +24,7 @@ DEFMMETHOD(Title_Close)
 
 	return 0;
 }
-
+#endif
 
 DEFMMETHOD(Hide)
 {
