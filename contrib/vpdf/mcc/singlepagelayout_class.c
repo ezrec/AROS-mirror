@@ -75,7 +75,7 @@ struct Data
 
 DEFNEW
 {
-	obj = DoSuperNew(cl, obj,
+	obj = (Object *) DoSuperNew(cl, obj,
 				MUIA_Group_Horiz, FALSE,
 				MUIA_Group_Columns, GetTagData(MUIA_DocumentLayout_Columns, 2, INITTAGS),
 				TAG_MORE, INITTAGS);
@@ -84,7 +84,7 @@ DEFNEW
 	{
 		GETDATA;
 		
-		data->doc = (void*)GetTagData(MUIA_DocumentLayout_PDFDocument, NULL, INITTAGS);
+		data->doc = (void*)GetTagData(MUIA_DocumentLayout_PDFDocument, (IPTR)NULL, INITTAGS);
 		data->scaling = MUIV_DocumentLayout_Scaling_FitPage;
 		data->page = (int)GetTagData(MUIA_DocumentLayout_Page, 1, INITTAGS);
 		data->zoom = 1.0f;
@@ -111,7 +111,7 @@ DEFNEW
 
 				
 				APTR pageview = PageViewObject,
-								MUIA_PageView_PDFDocument, data->doc,
+								MUIA_PageView_PDFDocument, (IPTR) data->doc,
 								MUIA_PageView_Page, i + 1,
 								MUIA_PageView_MediaWidth, (int)mediawidth,
 								MUIA_PageView_MediaHeight, (int)mediaheight,
@@ -139,7 +139,7 @@ DEFNEW
 		}
 	}
 
-	return (ULONG)obj;
+	return (IPTR)obj;
 }
 
 DEFDISP
@@ -177,19 +177,19 @@ DEFGET
 	switch (msg->opg_AttrID)
 	{
 		case MUIA_DocumentLayout_Zoom:
-			*(ULONG*)msg->opg_Storage = (int)(data->zoom * 65536.0f);
+			*(ULONG*)msg->opg_Storage = (ULONG)(data->zoom * 65536.0f);
 			return TRUE;
 			
 		case MUIA_DocumentLayout_Scaling:
-			*(ULONG*)msg->opg_Storage = data->scaling;
+			*(ULONG*)msg->opg_Storage = (ULONG)data->scaling;
 			return TRUE;
 
 		case MUIA_DocumentLayout_PDFDocument:
-			*(ULONG*)msg->opg_Storage = data->doc;
+			*(ULONG*)msg->opg_Storage = (ULONG)data->doc;
 			return TRUE;
 
 		case MUIA_DocumentLayout_Page:
-			*(ULONG*)msg->opg_Storage = (int)(data->page);
+			*(ULONG*)msg->opg_Storage = (ULONG)data->page;
 			return TRUE;
 
 		case MUIA_PageView_NeedRefresh:

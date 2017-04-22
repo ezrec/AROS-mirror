@@ -104,28 +104,28 @@ static Object *buildlayoutobject(int layoutmode, struct Data *data)
 	{
 		case MUIV_DocumentView_Layout_Single:
 			return SinglePageLayoutObject,
-							MUIA_DocumentLayout_PDFDocument, data->doc,
+							MUIA_DocumentLayout_PDFDocument, (IPTR) data->doc,
 							MUIA_DocumentLayout_Columns, 1,
 							MUIA_DocumentLayout_Rotation, data->rotation,
 							End;
 
 		case MUIV_DocumentView_Layout_ContinuousSingle:
 			return ContinuousLayoutObject,
-							MUIA_DocumentLayout_PDFDocument, data->doc,
+							MUIA_DocumentLayout_PDFDocument, (IPTR) data->doc,
 							MUIA_DocumentLayout_Columns, 1,
 							MUIA_DocumentLayout_Rotation, data->rotation,
 							End;
 
 		case MUIV_DocumentView_Layout_Facing:
 			return SinglePageLayoutObject,
-							MUIA_DocumentLayout_PDFDocument, data->doc,
+							MUIA_DocumentLayout_PDFDocument,(IPTR) data->doc,
 							MUIA_DocumentLayout_Columns, 2,
 							MUIA_DocumentLayout_Rotation, data->rotation,
 							End;
 
 		case MUIV_DocumentView_Layout_ContinuousFacing:
 			return ContinuousLayoutObject,
-							MUIA_DocumentLayout_PDFDocument, data->doc,
+							MUIA_DocumentLayout_PDFDocument, (IPTR) data->doc,
 							MUIA_DocumentLayout_Columns, 2,
 							MUIA_DocumentLayout_Rotation, data->rotation,
 							End;
@@ -140,39 +140,39 @@ DEFNEW
 	Object *sldPage, *grpOutlines, *grpOutlinesTitles, *grpToolbar;
 	Object *grpDisplay, *grpOutlineTree, *grpNavigation, *balBalance, *grpSearch, *grpOutlineThumbs;
 
-	obj = DoSuperNew(cl, obj,
+	obj = (Object *) DoSuperNew(cl, obj,
 				MUIA_Group_Horiz, FALSE,
-				Child, HGroup,
-					Child, grpDisplay = VGroup, End,
-					Child, balBalance = BalanceObject, End,
-					Child, grpOutlines = VGroup,
+				Child, (IPTR) HGroup,
+					Child, (IPTR) (grpDisplay = VGroup, End),
+					Child, (IPTR) (balBalance = BalanceObject, End),
+					Child, (IPTR) (grpOutlines = VGroup,
 						MUIA_ShowMe, GetTagData(MUIA_DocumentView_Outline, TRUE, INITTAGS),
 						MUIA_Group_PageMode, TRUE,
 						MUIA_Frame, MUIV_Frame_Group,
 						MUIA_Weight, 30,
-						Child, grpOutlinesTitles = MUI_NewObject(MUIC_Title,
-							TAG_DONE),
-						End,
+						Child, (IPTR) (grpOutlinesTitles = MUI_NewObject(MUIC_Title,
+							TAG_DONE)),
+						End),
 					End,
-				Child, HGroup,
-					Child, grpNavigation = HGroup,
-						Child, sldPage = SliderObject,
+				Child, (IPTR) HGroup,
+					Child, (IPTR) (grpNavigation = HGroup,
+						Child, (IPTR) (sldPage = SliderObject,
 							MUIA_Slider_Level, 1,
 							MUIA_Numeric_Default, 1,
 							MUIA_Slider_Min,1,
 							MUIA_Slider_Max,100,
 							MUIA_Weight,200,
-							MUIA_Numeric_Format,  LOCSTR( MSG_SLIDER_PAGE  ),
+							MUIA_Numeric_Format, (IPTR) LOCSTR(MSG_SLIDER_PAGE),
 							MUIA_CycleChain, TRUE,
-							End,
-						Child, HSpace(5),
-						Child, grpSearch = SearchObject,
-							End,
-						End,
+							End),
+						Child, (IPTR) HSpace(5),
+						Child, (IPTR) (grpSearch = SearchObject,
+							End),
+						End),
 					End,
-				Child, grpToolbar = ToolbarObject,
+				Child, (IPTR) (grpToolbar = ToolbarObject,
 					MUIA_DocumentView_Outline, GetTagData(MUIA_DocumentView_Outline, TRUE, INITTAGS),
-					End,
+					End),
 
 				TAG_MORE, INITTAGS);
 
@@ -184,8 +184,8 @@ DEFNEW
 		
 		data->dragaction = MUIV_DocumentView_DragAction_Scroll;
 		data->rotation = MUIV_DocumentLayout_Rotation_None;
-		data->filename = strdup((char*)GetTagData(MUIA_DocumentView_FileName, NULL, INITTAGS));
-		data->renderer = (Object*)GetTagData(MUIA_DocumentView_Renderer, NULL, INITTAGS);
+		data->filename = strdup((char*)GetTagData(MUIA_DocumentView_FileName, (IPTR)NULL, INITTAGS));
+		data->renderer = (Object*)GetTagData(MUIA_DocumentView_Renderer, (IPTR)NULL, INITTAGS);
 		data->doc = pdfNew(data->filename);
 		data->layoutmode = GetTagData(MUIA_DocumentView_Layout, MUIV_DocumentView_Layout_Single, INITTAGS);
 		data->renderpriority = GetTagData(MUIA_DocumentView_RenderPriority, MUIV_Renderer_Enqueue_Priority_Normal, INITTAGS);
@@ -222,17 +222,17 @@ DEFNEW
 			set(data->layoutgroup, MUIA_DocumentLayout_Scaling, scaling);
 		}
 
-		DoMethod(grpDisplay, OM_ADDMEMBER, ScrollgroupObject, MUIA_Scrollgroup_Contents, data->layoutgroup, End);
+		DoMethod(grpDisplay, OM_ADDMEMBER, ScrollgroupObject, MUIA_Scrollgroup_Contents, (IPTR) data->layoutgroup, End);
 
 		{
 			Object *outline = OutlineViewObject,
-								MUIA_OutlineView_Document, data->doc,
+								MUIA_OutlineView_Document, (IPTR) data->doc,
 								End;
 
 			if (xget(outline, MUIA_OutlineView_IsEmpty) == FALSE)
 			{
 				DoMethod(grpOutlines, OM_ADDMEMBER, outline);
-				DoMethod(grpOutlinesTitles, OM_ADDMEMBER, TextObject, MUIA_Text_Contents, "Tree", End);
+				DoMethod(grpOutlinesTitles, OM_ADDMEMBER, TextObject, MUIA_Text_Contents, (IPTR) "Tree", End);
 				outlinenum++;
 			}
 			else
@@ -246,13 +246,13 @@ DEFNEW
 
 		{
 			Object *thumbnails = ThumbnailListObject,
-								MUIA_ThumbnailList_PDFDocument, data->doc,
-								MUIA_ThumbnailList_Renderer, data->renderer,
+								MUIA_ThumbnailList_PDFDocument, (IPTR) data->doc,
+								MUIA_ThumbnailList_Renderer, (IPTR) data->renderer,
 								End;
 
 			DoMethod(grpOutlines, OM_ADDMEMBER, thumbnails);
 			if (outlinenum > 0)
-				DoMethod(grpOutlinesTitles, OM_ADDMEMBER, TextObject, MUIA_Text_Contents, "Thumbnails", End);
+				DoMethod(grpOutlinesTitles, OM_ADDMEMBER, TextObject, MUIA_Text_Contents, (IPTR) "Thumbnails", End);
 				
 			outlinenum++;
 		}
@@ -282,7 +282,7 @@ DEFNEW
 
 	}
 
-	return (ULONG)obj;
+	return (IPTR)obj;
 }
 
 DEFDISP
@@ -449,7 +449,7 @@ DEFMMETHOD(DocumentView_Layout)
 	data->layoutgroup = buildlayoutobject(msg->layout, data);
 	SetAttrs(data->layoutgroup, MUIA_DocumentLayout_Zoom, zoom, MUIA_DocumentLayout_Scaling, scaling, TAG_DONE);
 
-	DoMethod(data->grpDisplay, OM_ADDMEMBER, ScrollgroupObject, MUIA_Scrollgroup_Contents, data->layoutgroup, End);
+	DoMethod(data->grpDisplay, OM_ADDMEMBER, ScrollgroupObject, MUIA_Scrollgroup_Contents, (IPTR) data->layoutgroup, End);
 	DoMethod(data->grpDisplay, MUIM_Group_ExitChange);
 
 	/* NOTE: using pushmethod ensures that object will be properly layed out and focusing on page will work properly. investigate in mui! */
@@ -590,8 +590,8 @@ DEFMMETHOD(DocumentView_UpdateAnnotations)
 						modified = TRUE;
 							
 						an->obj = AnnotationObject,
-							MUIA_Annotation_Contents, an->contents,
-							MUIA_Annotation_RefObject, pageview,
+							MUIA_Annotation_Contents, (IPTR) an->contents,
+							MUIA_Annotation_RefObject, (IPTR) pageview,
 							End;
 						DoMethod(data->layoutgroup, MUIM_Family_AddTail, an->obj);
 						coords[0] = an->x1;
