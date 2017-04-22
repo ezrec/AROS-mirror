@@ -92,7 +92,7 @@ MUI_HOOK(outline_displayfunc, STRPTR *array, struct MUIS_Listtree_TreeNode *tn)
 
 DEFNEW
 {
-	obj = DoSuperNew(cl, obj,
+	obj = (Object *) DoSuperNew(cl, obj,
 			MUIA_Listtree_DisplayHook, &outline_displayfunc_hook,
 			MUIA_Frame, MUIV_Frame_InputList,
 			TAG_MORE, INITTAGS);
@@ -102,7 +102,7 @@ DEFNEW
 		GETDATA;
 		
 		memset(data, 0, sizeof(struct Data));
-		data->doc = (void*)GetTagData(MUIA_OutlineView_Document, NULL, INITTAGS);
+		data->doc = (void*)GetTagData(MUIA_OutlineView_Document, (IPTR)NULL, INITTAGS);
 
 		if (data->doc != NULL)
 		{
@@ -119,7 +119,7 @@ DEFNEW
 
 	}
 
-	return (ULONG)obj;
+	return (IPTR)obj;
 }
 
 DEFDISP

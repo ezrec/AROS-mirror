@@ -72,11 +72,11 @@ DEFNEW
 {
 	Object *grpDisplay;
 
-	obj = DoSuperNew(cl, obj,
+	obj = (Object *)DoSuperNew(cl, obj,
 				MUIA_Group_Horiz, FALSE,
 				MUIA_Frame, MUIV_Frame_InputList,   // to make it consistent with tree view
 				Child, HGroup,
-					Child, grpDisplay = VGroup, End,
+					Child, (IPTR) (grpDisplay = VGroup, End),
 					End,
 				TAG_MORE, INITTAGS);
 
@@ -84,8 +84,8 @@ DEFNEW
 	{
 		GETDATA;
 
-		data->renderer = (Object*)GetTagData(MUIA_ThumbnailList_Renderer, NULL, INITTAGS);
-		data->doc = GetTagData(MUIA_ThumbnailList_PDFDocument, NULL, INITTAGS);
+		data->renderer = (Object*)GetTagData(MUIA_ThumbnailList_Renderer, (IPTR)NULL, INITTAGS);
+		data->doc = (Object*)GetTagData(MUIA_ThumbnailList_PDFDocument, (IPTR)NULL, INITTAGS);
 
 		data->grpDisplay = grpDisplay;
 
@@ -96,20 +96,20 @@ DEFNEW
 		}
 
 		data->layoutgroup = ContinuousDynamicLayoutObject,
-							MUIA_DocumentLayout_PDFDocument, data->doc,
+							MUIA_DocumentLayout_PDFDocument, (IPTR) data->doc,
 							MUIA_PageView_Information, MUIV_PageView_Information_Number,
 							MUIA_PageView_IsPreview, TRUE,
 							MUIA_DocumentLayout_Scaling, MUIV_DocumentLayout_Scaling_FixWidth(96),
 							End;
 
-		DoMethod(grpDisplay, OM_ADDMEMBER, ScrollgroupObject, MUIA_Scrollgroup_Contents, data->layoutgroup, End);
+		DoMethod(grpDisplay, OM_ADDMEMBER, ScrollgroupObject, MUIA_Scrollgroup_Contents, (IPTR)data->layoutgroup, End);
 
 		DoMethod(data->layoutgroup, MUIM_Notify, MUIA_PageView_NeedRefresh, MUIV_EveryTime, obj, 2, MUIM_DocumentView_EnqueueRender, MUIV_TriggerValue);
 		DoMethod(data->layoutgroup, MUIM_Notify, MUIA_PageView_RedirectPage, MUIV_EveryTime, obj, 3, MUIM_Set, MUIA_DocumentView_Page, MUIV_TriggerValue);
 
 	}
 
-	return (ULONG)obj;
+	return (IPTR)obj;
 }
 
 DEFDISP

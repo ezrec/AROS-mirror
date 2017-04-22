@@ -50,7 +50,7 @@ MUI_HOOK(layoutfunc, APTR grp, struct MUI_LayoutMsg *lm)
 
 			for (n = 0, cstate = (Object *)lm->lm_Children->mlh_Head; (child = NextObject(&cstate)); n++)
             {
-                ULONG sm;
+                ULONG sm = 0;
 
                 get(child,MUIA_ShowMe,&sm);
                 if (!sm) continue;
@@ -183,7 +183,7 @@ MUI_HOOK(layoutfunc, APTR grp, struct MUI_LayoutMsg *lm)
 
 DEFNEW
 {
-	obj = DoSuperNew(cl,obj,
+	obj = (Object *)DoSuperNew(cl,obj,
 			MUIA_Group_LayoutHook, (ULONG)&layoutfunc_hook,
 			MUIA_CustomBackfill, TRUE,
 			MUIA_Group_SameSize, TRUE,
@@ -202,7 +202,7 @@ DEFNEW
 
     }
 
-    return (ULONG)obj;
+    return (IPTR)obj;
 }
 
 void kprintf(char *fmt, ...);

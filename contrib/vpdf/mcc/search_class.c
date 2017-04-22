@@ -68,7 +68,7 @@ DEFNEW
 {
 	Object *strPhrase, *btnNext, *btnPrev, *txtInfo;
 
-	obj = DoSuperNew(cl, obj,
+	obj = (Object *) DoSuperNew(cl, obj,
 						MUIA_Group_Horiz, TRUE,
 						Child, LLabel1( LOCSTR( MSG_SEARCH_LABEL  )),
 						Child, strPhrase = StringObject,
@@ -103,7 +103,7 @@ DEFNEW
 		DoMethod(btnPrev, MUIM_Notify, MUIA_Selected, FALSE, obj, 3, MUIM_Search_Search, NULL, -1);
 	}
 
-	return (ULONG)obj;
+	return (IPTR)obj;
 
 }
 
@@ -197,7 +197,7 @@ DEFMMETHOD(Search_Search)
 		}
 		else if (result == PDFSEARCH_FOUND)
 		{
-			Object *pageview = DoMethod(data->objDocumentView, MUIM_DocumentView_FindViewForPage, page);
+			Object *pageview = (Object *)DoMethod(data->objDocumentView, MUIM_DocumentView_FindViewForPage, page);
 
 			v[0] = x1;
 			v[1] = y1;
@@ -206,7 +206,7 @@ DEFMMETHOD(Search_Search)
 
 			if (data->prevpage != page && data->prevpage != 0)
 			{
-				Object *pageview = DoMethod(data->objDocumentView, MUIM_DocumentView_FindViewForPage, data->prevpage);
+				Object *pageview = (Object *)DoMethod(data->objDocumentView, MUIM_DocumentView_FindViewForPage, data->prevpage);
 				DoMethod(pageview, MUIM_PageView_RemoveMarker, MUIV_PageView_RemoveMarker_All);
 			}
 			else
