@@ -35,7 +35,10 @@ STRPTR MyToolTypes[NUM_TOOLTYPES] =
 
 struct Library *MUIMasterBase = NULL;
 struct Library *DataTypesBase = NULL;
-
+#if defined(__AROS__)
+struct IORequest timereq;
+struct Device *TimerBase = NULL;
+#endif
 struct DiskObject * dobj = NULL;
 char dobjname[256];
 
@@ -111,6 +114,9 @@ static void fail(APTR app, char *str)
         CloseLibrary(DataTypesBase);
     }
 
+#if defined(__AROS__)
+    if (TimerBase) CloseDevice(&timereq);
+#endif
 #endif
 
     CloseStrings();
@@ -175,6 +181,10 @@ static VOID init(VOID)
         fail(NULL, "Failed to open datatypes.library.");
     }
 
+#if defined(__AROS__)
+    OpenDevice("timer.device", 0, &timereq, 0);
+    TimerBase = timereq.io_Device;
+#endif
 #endif
 
     OpenStrings();
