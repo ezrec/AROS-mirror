@@ -458,7 +458,7 @@ DEFNEW
 		DoMethod(data->cycPSVersion, MUIM_Notify, MUIA_Cycle_Active, MUIV_EveryTime,  obj, 3,  MUIM_Set,  MUIA_VPDFPrinter_PSMode, MUIV_TriggerValue);
 	}       
 
-	return (ULONG)obj;
+	return (IPTR)obj;
 }
 
 
@@ -695,7 +695,7 @@ DEFMMETHOD(VPDFPrinter_StatusUpdate)
 {
 	GETDATA;
 	
-	snprintf(data->status, sizeof(data->status), "Printing page %ld...", msg->page_number);
+	snprintf(data->status, sizeof(data->status), "Printing page %ld...", (unsigned long)msg->page_number);
 	D(kprintf("%s\n", data->status));
 	set(data->gauge, MUIA_Gauge_Current, msg->actual_page);
 	set(data->gauge, MUIA_Gauge_InfoText, data->status);
