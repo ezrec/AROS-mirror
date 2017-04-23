@@ -23,6 +23,7 @@
 #include <dos/dos.h>
 #include <proto/exec.h>
 #include <errno.h>
+#include <time.h>
 struct Library *SocketBase;
 #endif
 #include <stdio.h>
