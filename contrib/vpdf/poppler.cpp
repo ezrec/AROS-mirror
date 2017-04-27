@@ -73,7 +73,7 @@ struct SignalSemaphore semaphore;
 extern struct Library *CairoBase;
 #endif
 
-/* all of this is just to not having to expose GBool in ppoppler.h... */
+/* all of this is just to not having to expose GBool in poppler.h... */
 
 struct abortcallbackcontext
 {
