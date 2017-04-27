@@ -7,13 +7,16 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 NOWARN_FLAGS := $(NOWARN_DEPRECATED_DECLARATIONS) $(NOWARN_MISLEADING_INDENTATION) \
         $(NOWARN_INCOMPAT_POINTER_TYPES) $(NOWARN_ARRAY_BOUNDS) $(NOWARN_DISCARDED_QUALIFIERS) \
-        $(NOWARN_STRICT_OVERFLOW) $(NOWARN_UNUSED_BUT_SET_VARIABLE) $(NOWARN_UNUSED_RESULT)
-
+        $(NOWARN_STRICT_OVERFLOW) $(NOWARN_UNUSED_BUT_SET_VARIABLE) $(NOWARN_UNUSED_VARIABLE) \
+        $(NOWARN_UNUSED_RESULT) $(NOWARN_POINTER_TO_INT_CAST) $(NOWARN_UNINITIALIZED) $(NOWARN_STRICT_OVERFLOW)
 USER_CFLAGS := $(NOWARN_FLAGS)
+USER_INCLUDES := -I$(AROS_CONTRIB_INCLUDES)
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
-FFMPEG_CC="$(TARGET_CC)"
-FFMPEG_LD="$(TARGET_LD)"
-FFMPEG_CFLAGS=$(TARGET_CFLAGS) $(DEBUG_CFLAGS) $(OPTIMIZATION_CFLAGS) $(USER_CFLAGS) $(ISA_FLAGS)
+ifneq ("","$(strip $(WARN_ERROR))")
+CONFIG_CFLAGS := $(subst $(WARN_ERROR),,$(CONFIG_CFLAGS))
+endif
+
 FFMPEG_LIBS=-lnet
 FFMPEG_PROGS=--disable-programs
 
@@ -30,8 +33,8 @@ FFMPEG_OPTIONS := \
         --enable-cross-compile \
         --arch=$(FFMPEG_ARCH) \
         --target-os=aros \
-        --cc=$(FFMPEG_CC) \
-        --extra-cflags="$(FFMPEG_CFLAGS)" \
+        --cc="$(CC)" \
+        --extra-cflags="$(CFLAGS)" \
         --extra-libs="$(FFMPEG_LIBS)" \
         --enable-static \
         --disable-pic \
@@ -43,4 +46,4 @@ FFMPEG_OPTIONS := \
 %fetch_and_build mmake=contrib-ffmpeg prefix=$(AROS_DEVELOPER) \
 	package=ffmpeg version=$(VERSION) suffixes="tar.bz2" \
 	patch=yes nix=yes package_repo=$(REPOSITORIES) \
-	extraoptions="$(FFMPEG_OPTIONS)" gnuflags=no
+	extraoptions="$(FFMPEG_OPTIONS)" buildflags=no gnuflags=no
