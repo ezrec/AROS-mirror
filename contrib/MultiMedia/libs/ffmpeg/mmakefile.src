@@ -9,13 +9,17 @@ NOWARN_FLAGS := $(NOWARN_DEPRECATED_DECLARATIONS) $(NOWARN_MISLEADING_INDENTATIO
         $(NOWARN_INCOMPAT_POINTER_TYPES) $(NOWARN_ARRAY_BOUNDS) $(NOWARN_DISCARDED_QUALIFIERS) \
         $(NOWARN_STRICT_OVERFLOW) $(NOWARN_UNUSED_BUT_SET_VARIABLE) $(NOWARN_UNUSED_VARIABLE) \
         $(NOWARN_UNUSED_RESULT) $(NOWARN_POINTER_TO_INT_CAST) $(NOWARN_UNINITIALIZED) $(NOWARN_STRICT_OVERFLOW)
-USER_CFLAGS := $(NOWARN_FLAGS)
+USER_CFLAGS := $(NOWARN_FLAGS) \
+        -D__BSD_VISIBLE=1
 USER_INCLUDES := -I$(AROS_CONTRIB_INCLUDES)
 USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
 ifneq ("","$(strip $(WARN_ERROR))")
 CONFIG_CFLAGS := $(subst $(WARN_ERROR),,$(CONFIG_CFLAGS))
 endif
+
+# uncomment to get verbose build output..
+# BUILD_ENV := V=1
 
 FFMPEG_LIBS=-lnet
 FFMPEG_PROGS=--disable-programs
@@ -34,16 +38,16 @@ FFMPEG_OPTIONS := \
         --arch=$(FFMPEG_ARCH) \
         --target-os=aros \
         --cc="$(CC)" \
-        --extra-cflags="$(CFLAGS)" \
         --extra-libs="$(FFMPEG_LIBS)" \
         --enable-static \
         --disable-pic \
         --disable-shared \
+        --disable-rpath \
         --disable-yasm \
         --disable-doc \
         $(FFMPEG_PROGS)
 
 %fetch_and_build mmake=contrib-ffmpeg prefix=$(AROS_DEVELOPER) \
 	package=ffmpeg version=$(VERSION) suffixes="tar.bz2" \
-	patch=yes nix=yes package_repo=$(REPOSITORIES) \
+	patch=yes nix=no package_repo=$(REPOSITORIES) \
 	extraoptions="$(FFMPEG_OPTIONS)" buildflags=no gnuflags=no
