@@ -4,7 +4,7 @@
 include $(SRCDIR)/config/aros.cfg
 
 #MM contrib-development-git : contrib-development-git-setup
-#MM contrib-development-git-setup : contrib-development-git-fetch
+#MM contrib-development-git-setup : contrib-development-git-fetch contrib-development-git-gendirs
 
 DESTDIR     :=	$(AROS_DEVELOPER)
 
@@ -25,6 +25,8 @@ GIT_PORTDIR := $(PORTSDIR)/git
 GIT_ARCHBASE := v$(GIT_VERSION)
 GIT_ARCHDIR := git-$(GIT_VERSION)
 
+GIT_OVERRIDES := "NEEDS_LIBGEN=\\nNEEDS_SOCKET=\\n"
+
 BUILD_ENV := $(GIT_ENV)
 
 # uncomment to get verbose build output..
@@ -37,7 +39,7 @@ USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 contrib-development-git-setup :
 	@$(IF) $(TEST) -d $(GIT_PORTDIR)/$(GIT_ARCHDIR) \
 	    && ! $(TEST) -f $(GIT_PORTDIR)/$(GIT_ARCHDIR)/configure ; then \
-	       cd $(GIT_PORTDIR)/$(GIT_ARCHDIR) && $(MAKE) configure ; \
+	       cd $(GIT_PORTDIR)/$(GIT_ARCHDIR) && $(MAKE) configure && $(ECHO) -e "$(GIT_OVERRIDES)" > $(GENDIR)/$(CURDIR)/config.mak; \
 	fi
 
 %fetch mmake=contrib-development-git-fetch archive=$(GIT_ARCHBASE) suffixes="tar.gz" \
@@ -56,3 +58,9 @@ USER_CFLAGS := $(NOAWRN_FLAGS) -DBSDSOCKET_NOLIBDEFINES
 %build_with_configure mmake=contrib-development-git compiler=target \
     srcdir=$(GIT_PORTDIR)/$(GIT_ARCHDIR) prefix="$(DESTDIR)"  gnuflags=no nix=yes \
     config_env_extra="$(GIT_CONFIG_ENV)" extraoptions="$(GIT_OPTIONS)"
+
+#MM
+contrib-development-git-gendirs:
+	$(MKDIR) $(GENDIR)/$(CURDIR)
+
+%common
