@@ -1,6 +1,47 @@
+diff -ruN -X ./exclude.patterns git-2.12.2/common-main.c git-2.12.2.aros/common-main.c
+--- git-2.12.2/common-main.c	2017-03-24 19:59:15.000000000 +0000
++++ git-2.12.2.aros/common-main.c	2017-04-30 03:28:17.578869471 +0100
+@@ -12,6 +12,12 @@
+  * Restore the way SIGPIPE is handled to default, which is what we
+  * expect.
+  */
++
++#ifdef __AROS__
++#include <proto/exec.h>
++struct Library *SocketBase = NULL;
++#endif
++
+ static void restore_sigpipe_to_default(void)
+ {
+ 	sigset_t unblock;
+@@ -24,6 +30,8 @@
+ 
+ int main(int argc, const char **argv)
+ {
++	int retval = 1;
++
+ 	/*
+ 	 * Always open file descriptors 0/1/2 to avoid clobbering files
+ 	 * in die().  It also avoids messing up when the pipes are dup'ed
+@@ -37,5 +45,14 @@
+ 
+ 	restore_sigpipe_to_default();
+ 
+-	return cmd_main(argc, argv);
++#ifdef __AROS__
++	if ((SocketBase = OpenLibrary("bsdsocket.library", 4)) != NULL)
++	{
++#endif
++	retval = cmd_main(argc, argv);
++#ifdef __AROS__
++	}
++#endif
++	return retval;
+ }
++
 diff -ruN -X ./exclude.patterns git-2.12.2/compat/poll/poll.c git-2.12.2.aros/compat/poll/poll.c
 --- git-2.12.2/compat/poll/poll.c	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/compat/poll/poll.c	2017-04-30 01:16:52.401864090 +0100
++++ git-2.12.2.aros/compat/poll/poll.c	2017-04-30 03:28:17.578869471 +0100
 @@ -48,6 +48,9 @@
  # include <stdio.h>
  # include <conio.h>
@@ -13,7 +54,7 @@ diff -ruN -X ./exclude.patterns git-2.12.2/compat/poll/poll.c git-2.12.2.aros/co
  # ifndef NO_SYS_SELECT_H
 diff -ruN -X ./exclude.patterns git-2.12.2/config.mak.uname git-2.12.2.aros/config.mak.uname
 --- git-2.12.2/config.mak.uname	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/config.mak.uname	2017-04-30 01:05:47.127436790 +0100
++++ git-2.12.2.aros/config.mak.uname	2017-04-30 03:28:17.578869471 +0100
 @@ -1,11 +1,13 @@
  # Platform specific Makefile tweaks based on uname detection
  
@@ -58,8 +99,49 @@ diff -ruN -X ./exclude.patterns git-2.12.2/config.mak.uname git-2.12.2.aros/conf
  	BASIC_CFLAGS += -D_OSF_SOURCE
 diff -ruN -X ./exclude.patterns git-2.12.2/configure.ac git-2.12.2.aros/configure.ac
 --- git-2.12.2/configure.ac	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/configure.ac	2017-04-30 01:05:47.127436790 +0100
-@@ -707,17 +707,17 @@
++++ git-2.12.2.aros/configure.ac	2017-04-30 03:28:17.578869471 +0100
+@@ -644,12 +644,20 @@
+ 
+ GIT_CONF_SUBST([NO_DEFLATE_BOUND])
+ 
++
+ #
+ # Define NEEDS_SOCKET if linking with libc is not enough (SunOS,
+ # Patrick Mauritz).
+-AC_CHECK_LIB([c], [socket],
+-[NEEDS_SOCKET=],
+-[NEEDS_SOCKET=YesPlease])
++case "$target" in
++  *aros)
++    NEEDS_SOCKET=
++  ;;
++  *)
++    AC_CHECK_LIB([c], [socket],
++    [NEEDS_SOCKET=],
++    [NEEDS_SOCKET=YesPlease])
++  ;;
++esac
+ GIT_CONF_SUBST([NEEDS_SOCKET])
+ test -n "$NEEDS_SOCKET" && LIBS="$LIBS -lsocket"
+ 
+@@ -700,24 +708,31 @@
+ # build-time, also set it here for remaining configure-time checks.
+ test -n "$NEEDS_RESOLV" && LIBS="$LIBS -lresolv"
+ 
+-AC_CHECK_LIB([c], [basename],
+-[NEEDS_LIBGEN=],
+-[NEEDS_LIBGEN=YesPlease])
++case "$target" in
++  *aros)
++    NEEDS_SOCKET=
++  ;;
++  *)
++    AC_CHECK_LIB([c], [basename],
++    [NEEDS_LIBGEN=],
++    [NEEDS_LIBGEN=YesPlease])
++  ;;
++esac
+ GIT_CONF_SUBST([NEEDS_LIBGEN])
  test -n "$NEEDS_LIBGEN" && LIBS="$LIBS -lgen"
  
  AC_CHECK_LIB([c], [gettext],
@@ -85,10 +167,14 @@ diff -ruN -X ./exclude.patterns git-2.12.2/configure.ac git-2.12.2.aros/configur
      test -n "$LIBC_CONTAINS_LIBINTL" || LIBS="$LIBS -lintl"
 diff -ruN -X ./exclude.patterns git-2.12.2/git-compat-util.h git-2.12.2.aros/git-compat-util.h
 --- git-2.12.2/git-compat-util.h	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/git-compat-util.h	2017-04-30 01:23:31.348318769 +0100
-@@ -180,11 +180,13 @@
++++ git-2.12.2.aros/git-compat-util.h	2017-04-30 03:37:49.508242118 +0100
+@@ -179,12 +179,19 @@
+ #include <assert.h>
  #include <regex.h>
  #include <utime.h>
++#ifdef __AROS__
++#define KERNEL
++#endif
  #include <syslog.h>
 +#ifndef __AROS__
  #ifndef NO_SYS_POLL_H
@@ -96,27 +182,61 @@ diff -ruN -X ./exclude.patterns git-2.12.2/git-compat-util.h git-2.12.2.aros/git
  #else
  #include <poll.h>
  #endif
-+#endif /* !__AROS__ */
++#else
++#undef KERNEL
++#endif /* __AROS__ */
  #ifdef HAVE_BSD_SYSCTL
  #include <sys/sysctl.h>
  #endif
-@@ -231,6 +233,21 @@
+@@ -231,6 +238,53 @@
  #define _ALL_SOURCE 1
  #endif
  
 +#ifdef __AROS__
 +#include <proto/socket.h>
 +
-+#define fork vfork
++#define fork          vfork
 +#define getpagesize() PAGE_SIZE
 +
-+#define POLLIN 0x1
-+#define POLLOUT 0x4
++typedef unsigned int  nfds_t;
++
++#define POLLIN        0x1
++#define POLLOUT       0x4
++#define POLLERR       0x8
++#define POLLHUP       0x10
++#define POLLNVAL      0x20
++
 +struct pollfd {
-+ int fd;
-+ int events;
++    int               fd;
++    short             events;
++    short             revents;
 +};
-+#define poll(pfd, a, b)
++
++static inline int poll(struct pollfd pfd[], nfds_t nfds, int timeout)
++{
++    return (int)nfds;
++}
++
++static inline unsigned int alarm(unsigned int secs)
++{
++    return 0;
++}
++
++static inline void openlog(const char *ident, int option, int facility)
++{
++    return;
++}
++
++static inline void closelog(void)
++{
++    return;
++}
++
++static inline int pthread_sigmask(int how, const sigset_t *set, sigset_t *oldset) 
++{
++    return 0;
++}
++
 +#endif
 +
  /* used on Mac OS X */
@@ -124,7 +244,7 @@ diff -ruN -X ./exclude.patterns git-2.12.2/git-compat-util.h git-2.12.2.aros/git
  #include "compat/precompose_utf8.h"
 diff -ruN -X ./exclude.patterns git-2.12.2/refs/iterator.c git-2.12.2.aros/refs/iterator.c
 --- git-2.12.2/refs/iterator.c	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/refs/iterator.c	2017-04-30 01:24:21.413877812 +0100
++++ git-2.12.2.aros/refs/iterator.c	2017-04-30 03:28:17.578869471 +0100
 @@ -8,6 +8,12 @@
  #include "refs/refs-internal.h"
  #include "iterator.h"
@@ -138,25 +258,9 @@ diff -ruN -X ./exclude.patterns git-2.12.2/refs/iterator.c git-2.12.2.aros/refs/
  int ref_iterator_advance(struct ref_iterator *ref_iterator)
  {
  	return ref_iterator->vtable->advance(ref_iterator);
-diff -ruN -X ./exclude.patterns git-2.12.2/run-command.c git-2.12.2.aros/run-command.c
---- git-2.12.2/run-command.c	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/run-command.c	2017-04-30 01:05:47.127436790 +0100
-@@ -913,6 +913,7 @@
- 	return ret;
- }
- 
-+#ifndef __AROS__
- struct io_pump {
- 	/* initialized by caller */
- 	int fd;
-@@ -1385,3 +1386,4 @@
- 	pp_cleanup(&pp);
- 	return 0;
- }
-+#endif
 diff -ruN -X ./exclude.patterns git-2.12.2/transport.c git-2.12.2.aros/transport.c
 --- git-2.12.2/transport.c	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/transport.c	2017-04-30 01:23:53.252563356 +0100
++++ git-2.12.2.aros/transport.c	2017-04-30 03:28:17.578869471 +0100
 @@ -17,6 +17,12 @@
  #include "sha1-array.h"
  #include "sigchain.h"

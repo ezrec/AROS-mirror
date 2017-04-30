@@ -25,8 +25,6 @@ GIT_PORTDIR := $(PORTSDIR)/git
 GIT_ARCHBASE := v$(GIT_VERSION)
 GIT_ARCHDIR := git-$(GIT_VERSION)
 
-GIT_OVERRIDES := "NEEDS_LIBGEN=\\nNEEDS_SOCKET=\\n"
-
 BUILD_ENV := $(GIT_ENV)
 
 # uncomment to get verbose build output..
@@ -39,7 +37,7 @@ USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 contrib-development-git-setup :
 	@$(IF) $(TEST) -d $(GIT_PORTDIR)/$(GIT_ARCHDIR) \
 	    && ! $(TEST) -f $(GIT_PORTDIR)/$(GIT_ARCHDIR)/configure ; then \
-	       cd $(GIT_PORTDIR)/$(GIT_ARCHDIR) && $(MAKE) configure && $(ECHO) -e "$(GIT_OVERRIDES)" > $(GENDIR)/$(CURDIR)/config.mak; \
+	       cd $(GIT_PORTDIR)/$(GIT_ARCHDIR) && $(MAKE) configure; \
 	fi
 
 %fetch mmake=contrib-development-git-fetch archive=$(GIT_ARCHBASE) suffixes="tar.gz" \
