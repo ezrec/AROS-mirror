@@ -1,6 +1,19 @@
+diff -ruN -X ./exclude.patterns git-2.12.2/compat/poll/poll.c git-2.12.2.aros/compat/poll/poll.c
+--- git-2.12.2/compat/poll/poll.c	2017-03-24 19:59:15.000000000 +0000
++++ git-2.12.2.aros/compat/poll/poll.c	2017-04-30 01:16:52.401864090 +0100
+@@ -48,6 +48,9 @@
+ # include <stdio.h>
+ # include <conio.h>
+ #else
++# if defined(__AROS__)
++#  include <proto/socket.h>
++# endif
+ # include <sys/time.h>
+ # include <sys/socket.h>
+ # ifndef NO_SYS_SELECT_H
 diff -ruN -X ./exclude.patterns git-2.12.2/config.mak.uname git-2.12.2.aros/config.mak.uname
 --- git-2.12.2/config.mak.uname	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/config.mak.uname	2017-04-29 01:07:42.342560424 +0100
++++ git-2.12.2.aros/config.mak.uname	2017-04-30 01:05:47.127436790 +0100
 @@ -1,11 +1,13 @@
  # Platform specific Makefile tweaks based on uname detection
  
@@ -45,7 +58,7 @@ diff -ruN -X ./exclude.patterns git-2.12.2/config.mak.uname git-2.12.2.aros/conf
  	BASIC_CFLAGS += -D_OSF_SOURCE
 diff -ruN -X ./exclude.patterns git-2.12.2/configure.ac git-2.12.2.aros/configure.ac
 --- git-2.12.2/configure.ac	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/configure.ac	2017-04-29 00:52:09.836368719 +0100
++++ git-2.12.2.aros/configure.ac	2017-04-30 01:05:47.127436790 +0100
 @@ -707,17 +707,17 @@
  test -n "$NEEDS_LIBGEN" && LIBS="$LIBS -lgen"
  
@@ -72,7 +85,7 @@ diff -ruN -X ./exclude.patterns git-2.12.2/configure.ac git-2.12.2.aros/configur
      test -n "$LIBC_CONTAINS_LIBINTL" || LIBS="$LIBS -lintl"
 diff -ruN -X ./exclude.patterns git-2.12.2/git-compat-util.h git-2.12.2.aros/git-compat-util.h
 --- git-2.12.2/git-compat-util.h	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/git-compat-util.h	2017-04-29 00:52:09.836368719 +0100
++++ git-2.12.2.aros/git-compat-util.h	2017-04-30 01:23:31.348318769 +0100
 @@ -180,11 +180,13 @@
  #include <regex.h>
  #include <utime.h>
@@ -87,14 +100,13 @@ diff -ruN -X ./exclude.patterns git-2.12.2/git-compat-util.h git-2.12.2.aros/git
  #ifdef HAVE_BSD_SYSCTL
  #include <sys/sysctl.h>
  #endif
-@@ -231,6 +233,22 @@
+@@ -231,6 +233,21 @@
  #define _ALL_SOURCE 1
  #endif
  
 +#ifdef __AROS__
-+#ifdef select
-+#undef select
-+#endif
++#include <proto/socket.h>
++
 +#define fork vfork
 +#define getpagesize() PAGE_SIZE
 +
@@ -110,9 +122,25 @@ diff -ruN -X ./exclude.patterns git-2.12.2/git-compat-util.h git-2.12.2.aros/git
  /* used on Mac OS X */
  #ifdef PRECOMPOSE_UNICODE
  #include "compat/precompose_utf8.h"
+diff -ruN -X ./exclude.patterns git-2.12.2/refs/iterator.c git-2.12.2.aros/refs/iterator.c
+--- git-2.12.2/refs/iterator.c	2017-03-24 19:59:15.000000000 +0000
++++ git-2.12.2.aros/refs/iterator.c	2017-04-30 01:24:21.413877812 +0100
+@@ -8,6 +8,12 @@
+ #include "refs/refs-internal.h"
+ #include "iterator.h"
+ 
++#ifdef __AROS__
++#ifdef select
++#undef select
++#endif
++#endif
++
+ int ref_iterator_advance(struct ref_iterator *ref_iterator)
+ {
+ 	return ref_iterator->vtable->advance(ref_iterator);
 diff -ruN -X ./exclude.patterns git-2.12.2/run-command.c git-2.12.2.aros/run-command.c
 --- git-2.12.2/run-command.c	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/run-command.c	2017-04-29 00:52:09.836368719 +0100
++++ git-2.12.2.aros/run-command.c	2017-04-30 01:05:47.127436790 +0100
 @@ -913,6 +913,7 @@
  	return ret;
  }
@@ -126,3 +154,19 @@ diff -ruN -X ./exclude.patterns git-2.12.2/run-command.c git-2.12.2.aros/run-com
  	return 0;
  }
 +#endif
+diff -ruN -X ./exclude.patterns git-2.12.2/transport.c git-2.12.2.aros/transport.c
+--- git-2.12.2/transport.c	2017-03-24 19:59:15.000000000 +0000
++++ git-2.12.2.aros/transport.c	2017-04-30 01:23:53.252563356 +0100
+@@ -17,6 +17,12 @@
+ #include "sha1-array.h"
+ #include "sigchain.h"
+ 
++#ifdef __AROS__
++#ifdef connect
++#undef connect
++#endif
++#endif
++
+ static void set_upstreams(struct transport *transport, struct ref *refs,
+ 	int pretend)
+ {
