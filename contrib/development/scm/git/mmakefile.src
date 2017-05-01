@@ -3,10 +3,12 @@
 
 include $(SRCDIR)/config/aros.cfg
 
+#MM- contrib-development : contrib-development-git
 #MM contrib-development-git : contrib-development-git-setup
 #MM contrib-development-git-setup : contrib-development-git-fetch contrib-development-git-gendirs
 
-DESTDIR     :=	$(AROS_DEVELOPER)
+GIT_DESTDIR     :=	$(AROS_DEVELOPER)
+GIT_NATIVEDIR  :=	/$(AROS_DIR_DEVELOPER)
 
 GIT_ENV := \
            UNAME="$(CROSSTOOLSDIR)/$(AROS_TARGET_CPU)-aros-uname"
@@ -54,7 +56,7 @@ NOAWRN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECLARATION)
 USER_CFLAGS := $(NOAWRN_FLAGS)
 
 %build_with_configure mmake=contrib-development-git compiler=target \
-    srcdir=$(GIT_PORTDIR)/$(GIT_ARCHDIR) prefix="$(DESTDIR)"  gnuflags=no nix=yes \
+    srcdir=$(GIT_PORTDIR)/$(GIT_ARCHDIR) prefix="$(DESTDIR)" aros_prefix=$(GIT_NATIVEDIR) gnuflags=no nix=yes \
     config_env_extra="$(GIT_CONFIG_ENV)" install_env="$(GIT_ENV)" extraoptions="$(GIT_OPTIONS)"
 
 #MM
