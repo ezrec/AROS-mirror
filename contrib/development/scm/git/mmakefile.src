@@ -56,7 +56,7 @@ NOAWRN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECLARATION)
 USER_CFLAGS := $(NOAWRN_FLAGS)
 
 %build_with_configure mmake=contrib-development-git compiler=target \
-    srcdir=$(GIT_PORTDIR)/$(GIT_ARCHDIR) prefix="$(DESTDIR)" aros_prefix=$(GIT_NATIVEDIR) gnuflags=no nix=yes \
+    srcdir=$(GIT_PORTDIR)/$(GIT_ARCHDIR) prefix="$(GIT_DESTDIR)" aros_prefix=$(GIT_NATIVEDIR) gnuflags=no nix=yes \
     config_env_extra="$(GIT_CONFIG_ENV)" install_env="$(GIT_ENV)" extraoptions="$(GIT_OPTIONS)"
 
 #MM
