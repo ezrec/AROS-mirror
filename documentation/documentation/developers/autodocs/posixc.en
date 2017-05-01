@@ -19,42 +19,44 @@ posixc
 `execvp()`_                             `fchdir()`_                             `fchmod()`_                             `fchown()`_                             
 `fclose()`_                             `fcntl()`_                              `fdopen()`_                             `feof()`_                               
 `ferror()`_                             `fflush()`_                             `fgetc()`_                              `fgetpos()`_                            
-`fgets()`_                              `fileno()`_                             `flock()`_                              `fopen()`_                              
-`fprintf()`_                            `fputc()`_                              `fputs()`_                              `fread()`_                              
-`freopen()`_                            `fscanf()`_                             `fseek()`_                              `fseeko()`_                             
-`fsetpos()`_                            `fstat()`_                              `fsync()`_                              `ftell()`_                              
-`ftime()`_                              `ftruncate()`_                          `fwrite()`_                             `gcvt()`_                               
-`getc()`_                               `getchar()`_                            `getcwd()`_                             `getegid()`_                            
-`getenv()`_                             `geteuid()`_                            `getfsstat()`_                          `getgid()`_                             
-`getgrent()`_                           `getgrgid()`_                           `getgrnam()`_                           `getgroups()`_                          
-`getloadavg()`_                         `getlogin()`_                           `getopt()`_                             `getopt_long()`_                        
-`getopt_long_only()`_                   `getpgrp()`_                            `getpid()`_                             `getppid()`_                            
-`getpwent()`_                           `getpwnam()`_                           `getpwuid()`_                           `getrlimit()`_                          
-`gets()`_                               `gettimeofday()`_                       `getuid()`_                             `getw()`_                               
-`ioctl()`_                              `isatty()`_                             `jrand48()`_                            `kill()`_                               
-`lcong48()`_                            `link()`_                               `lrand48()`_                            `lseek()`_                              
-`lstat()`_                              `mkdir()`_                              `mknod()`_                              `mkstemp()`_                            
-`mktemp()`_                             `mrand48()`_                            `nanosleep()`_                          `nrand48()`_                            
-`open()`_                               `opendir()`_                            `pclose()`_                             `perror()`_                             
-`pipe()`_                               `popen()`_                              `posix_memalign()`_                     `printf()`_                             
-`putc()`_                               `putchar()`_                            `putenv()`_                             `puts()`_                               
-`putw()`_                               `read()`_                               `readdir()`_                            `remove()`_                             
-`rename()`_                             `rewind()`_                             `rewinddir()`_                          `rmdir()`_                              
-`scandir()`_                            `scanf()`_                              `seed48()`_                             `seekdir()`_                            
-`setbuf()`_                             `setenv()`_                             `seteuid()`_                            `setgid()`_                             
-`setgrent()`_                           `setlinebuf()`_                         `setpwent()`_                           `setrlimit()`_                          
-`setuid()`_                             `setvbuf()`_                            `sigaction()`_                          `sigaddset()`_                          
-`sigdelset()`_                          `sigemptyset()`_                        `sigfillset()`_                         `sigismember()`_                        
-`siglongjmp()`_                         `sigpending()`_                         `sigprocmask()`_                        `sigsuspend()`_                         
-`sleep()`_                              `srand48()`_                            `stat()`_                               `statfs()`_                             
-`swab()`_                               `symlink()`_                            `sysconf()`_                            `system()`_                             
-`tcgetattr()`_                          `tcsetattr()`_                          `telldir()`_                            `tempnam()`_                            
-`times()`_                              `tmpfile()`_                            `tmpnam()`_                             `truncate()`_                           
-`ttyname()`_                            `umask()`_                              `uname()`_                              `ungetc()`_                             
-`unlink()`_                             `unsetenv()`_                           `updatestdio()`_                        `usleep()`_                             
-`utime()`_                              `utimes()`_                             `vfork()`_                              `vfprintf()`_                           
-`vfscanf()`_                            `vprintf()`_                            `vscanf()`_                             `wait()`_                               
-`waitpid()`_                            `write()`_                              
+`fgets()`_                              `fileno()`_                             `flock()`_                              `flockfile()`_                          
+`fopen()`_                              `fprintf()`_                            `fputc()`_                              `fputs()`_                              
+`fread()`_                              `freopen()`_                            `fscanf()`_                             `fseek()`_                              
+`fseeko()`_                             `fsetpos()`_                            `fstat()`_                              `fsync()`_                              
+`ftell()`_                              `ftime()`_                              `ftruncate()`_                          `funlockfile()`_                        
+`fwrite()`_                             `gcvt()`_                               `getc()`_                               `getc_unlocked()`_                      
+`getchar()`_                            `getcwd()`_                             `getegid()`_                            `getenv()`_                             
+`geteuid()`_                            `getfsstat()`_                          `getgid()`_                             `getgrent()`_                           
+`getgrgid()`_                           `getgrnam()`_                           `getgroups()`_                          `getloadavg()`_                         
+`getlogin()`_                           `getopt()`_                             `getopt_long()`_                        `getopt_long_only()`_                   
+`getpass()`_                            `getpgid()`_                            `getpgrp()`_                            `getpid()`_                             
+`getppid()`_                            `getpwent()`_                           `getpwnam()`_                           `getpwuid()`_                           
+`getrlimit()`_                          `gets()`_                               `gettimeofday()`_                       `getuid()`_                             
+`getw()`_                               `ioctl()`_                              `isatty()`_                             `jrand48()`_                            
+`kill()`_                               `lcong48()`_                            `link()`_                               `lrand48()`_                            
+`lseek()`_                              `lstat()`_                              `mkdir()`_                              `mknod()`_                              
+`mkstemp()`_                            `mktemp()`_                             `mrand48()`_                            `nanosleep()`_                          
+`nrand48()`_                            `open()`_                               `opendir()`_                            `pclose()`_                             
+`perror()`_                             `pipe()`_                               `popen()`_                              `posix_memalign()`_                     
+`printf()`_                             `putc()`_                               `putchar()`_                            `putenv()`_                             
+`puts()`_                               `putw()`_                               `read()`_                               `readdir()`_                            
+`remove()`_                             `rename()`_                             `rewind()`_                             `rewinddir()`_                          
+`rmdir()`_                              `scandir()`_                            `scanf()`_                              `seed48()`_                             
+`seekdir()`_                            `setbuf()`_                             `setenv()`_                             `seteuid()`_                            
+`setgid()`_                             `setgrent()`_                           `setlinebuf()`_                         `setpwent()`_                           
+`setrlimit()`_                          `setsid()`_                             `setuid()`_                             `setvbuf()`_                            
+`sigaction()`_                          `sigaddset()`_                          `sigdelset()`_                          `sigemptyset()`_                        
+`sigfillset()`_                         `sigismember()`_                        `siglongjmp()`_                         `sigpending()`_                         
+`sigprocmask()`_                        `sigsuspend()`_                         `sleep()`_                              `srand48()`_                            
+`stat()`_                               `statfs()`_                             `swab()`_                               `symlink()`_                            
+`sysconf()`_                            `system()`_                             `tcgetattr()`_                          `tcgetpgrp()`_                          
+`tcsetattr()`_                          `telldir()`_                            `tempnam()`_                            `times()`_                              
+`tmpfile()`_                            `tmpnam()`_                             `truncate()`_                           `ttyname()`_                            
+`umask()`_                              `uname()`_                              `ungetc()`_                             `unlink()`_                             
+`unsetenv()`_                           `updatestdio()`_                        `usleep()`_                             `utime()`_                              
+`utimes()`_                             `vfork()`_                              `vfprintf()`_                           `vfscanf()`_                            
+`vprintf()`_                            `vscanf()`_                             `wait()`_                               `waitpid()`_                            
+`write()`_                              
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -2098,6 +2100,27 @@ Bugs
 
 ----------
 
+flockfile()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  void flockfile(
+     FILE *file)
+
+
+Function
+~~~~~~~~
+::
+
+     Obtain exclusive access to the file.
+
+
+
+----------
+
 fopen()
 =======
 
@@ -2834,6 +2857,27 @@ See also
 
 ----------
 
+funlockfile()
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+  void funlockfile(
+     FILE *file)
+
+
+Function
+~~~~~~~~
+::
+
+     Relinquish exclusive access to the file.
+
+
+
+----------
+
 fwrite()
 ========
 
@@ -2976,6 +3020,39 @@ See also
 ~~~~~~~~
 
 `fgetc()`_ `fputc()`_ `putc()`_ 
+
+----------
+
+getc_unlocked()
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+  int getc_unlocked(
+     FILE * stream)
+
+
+Inputs
+~~~~~~
+::
+
+     stream - Read from this stream
+
+
+Result
+~~~~~~
+::
+
+     The character read or EOF on end of file or error.
+
+
+
+See also
+~~~~~~~~
+
+`getc()`_ `fputc()`_ `putc()`_ 
 
 ----------
 
@@ -3218,6 +3295,13 @@ Synopsis
 
   gid_t getgid(
      void)
+
+
+Function
+~~~~~~~~
+::
+
+     Returns the group ID of the calling process
 
 
 Notes
@@ -3538,6 +3622,59 @@ See also
 
 ----------
 
+getpass()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  char * getpass(
+     const char *prompt)
+
+
+Function
+~~~~~~~~
+::
+
+     (obsolete) prompt for a password.
+
+
+Notes
+~~~~~
+::
+
+     This function returns a pointer to a static buffer
+     containing (the first PASS_MAX bytes of) the password without the
+     trailing newline, terminated by a null byte ('\0').
+
+     The buffer may be overwritten by a subsequent call
+
+
+
+----------
+
+getpgid()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  pid_t getpgid(
+     pid_t pid)
+
+
+Function
+~~~~~~~~
+::
+
+     Returns the process group ID for the specified process with ID 'pid'.
+
+
+
+----------
+
 getpgrp()
 =========
 
@@ -3596,6 +3733,13 @@ Synopsis
 
   pid_t getppid(
      void)
+
+
+Function
+~~~~~~~~
+::
+
+     Returns the Parent process ID of the calling processes.
 
 
 
@@ -5808,6 +5952,27 @@ See also
 
 ----------
 
+setsid()
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  pid_t setsid(
+     void)
+
+
+Function
+~~~~~~~~
+::
+
+     Returns the process group ID for the new session.
+
+
+
+----------
+
 setuid()
 ========
 
@@ -6462,6 +6627,27 @@ See also
 ~~~~~~~~
 
 `ioctl()`_ 
+
+----------
+
+tcgetpgrp()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+  pid_t tcgetpgrp(
+     int fd)
+
+
+Function
+~~~~~~~~
+::
+
+     Returns the process group ID for the specified file descriptor.
+
+
 
 ----------
 
