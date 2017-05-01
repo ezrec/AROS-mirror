@@ -16,6 +16,9 @@ GIT_CONFIG_ENV := \
             ac_cv_fread_reads_directories="no" \
             ac_cv_snprintf_returns_bogus="no" \
             $(GIT_ENV)
+GIT_INSTALL_ENV := \
+            DESTDIR_SQ="$(AROSDIR)" \
+            $(GIT_ENV)
 
 GIT_OPTIONS := \
             --without-tcltk \
@@ -56,8 +59,8 @@ NOAWRN_FLAGS := $(NOWARN_IMPLICIT_FUNCTION_DECLARATION)
 USER_CFLAGS := $(NOAWRN_FLAGS)
 
 %build_with_configure mmake=contrib-development-git compiler=target \
-    srcdir=$(GIT_PORTDIR)/$(GIT_ARCHDIR) prefix="$(GIT_DESTDIR)" aros_prefix=$(GIT_NATIVEDIR) gnuflags=no nix=yes \
-    config_env_extra="$(GIT_CONFIG_ENV)" install_env="$(GIT_ENV)" extraoptions="$(GIT_OPTIONS)"
+    srcdir=$(GIT_PORTDIR)/$(GIT_ARCHDIR) prefix="$(GIT_NATIVEDIR)" gnuflags=no nix=yes \
+    config_env_extra="$(GIT_CONFIG_ENV)" install_env="$(GIT_INSTALL_ENV)" extraoptions="$(GIT_OPTIONS)"
 
 #MM
 contrib-development-git-gendirs:
