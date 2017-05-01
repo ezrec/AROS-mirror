@@ -30,7 +30,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
             A( 'English', href='%(BASE)s.' )]),
         P ( contents = [
             Img( src = '%(ROOT)simages/spanishlogo.png', width = 16, height = 10, alt = 'spanish logo'),
-            A( 'Espa&#241ol', href='%(BASE)ses/' )]),
+            A( 'Espa&#241;ol', href='%(BASE)ses/' )]),
             P ( contents = [
             Img( src = '%(ROOT)simages/francelogo.png', width = 16, height = 10, alt = 'france logo'),
             A( 'Fran&#231;ais', href='%(BASE)sfr/' )]),
@@ -190,7 +190,7 @@ def makePage( _T, _N, _M, MIRRORS_DATA, lang, charset ):
                     (
                         Img \
                         (
-                            src = 'https://sourceforge.net/sflogo.php?group_id=43586&type=10', 
+                            src = 'https://sourceforge.net/sflogo.php?group_id=43586&amp;type=10', 
                             width = 88, height = 16, border = 0, alt = 'Get AROS Research Operating System at SourceForge.net. '
                                 'Fast, secure and Free Open Source software downloads'
                         ),
