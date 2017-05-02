@@ -1,6 +1,6 @@
 diff -ruN -X ./exclude.patterns git-2.12.2/common-main.c git-2.12.2.aros/common-main.c
 --- git-2.12.2/common-main.c	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/common-main.c	2017-04-30 03:28:17.578869471 +0100
++++ git-2.12.2.aros/common-main.c	2017-05-02 02:51:01.793415935 +0100
 @@ -12,6 +12,12 @@
   * Restore the way SIGPIPE is handled to default, which is what we
   * expect.
@@ -41,7 +41,7 @@ diff -ruN -X ./exclude.patterns git-2.12.2/common-main.c git-2.12.2.aros/common-
 +
 diff -ruN -X ./exclude.patterns git-2.12.2/compat/poll/poll.c git-2.12.2.aros/compat/poll/poll.c
 --- git-2.12.2/compat/poll/poll.c	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/compat/poll/poll.c	2017-04-30 03:28:17.578869471 +0100
++++ git-2.12.2.aros/compat/poll/poll.c	2017-05-02 02:51:01.793415935 +0100
 @@ -48,6 +48,9 @@
  # include <stdio.h>
  # include <conio.h>
@@ -54,7 +54,7 @@ diff -ruN -X ./exclude.patterns git-2.12.2/compat/poll/poll.c git-2.12.2.aros/co
  # ifndef NO_SYS_SELECT_H
 diff -ruN -X ./exclude.patterns git-2.12.2/config.mak.uname git-2.12.2.aros/config.mak.uname
 --- git-2.12.2/config.mak.uname	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/config.mak.uname	2017-04-30 03:28:17.578869471 +0100
++++ git-2.12.2.aros/config.mak.uname	2017-05-02 02:51:01.793415935 +0100
 @@ -1,11 +1,13 @@
  # Platform specific Makefile tweaks based on uname detection
  
@@ -75,15 +75,16 @@ diff -ruN -X ./exclude.patterns git-2.12.2/config.mak.uname git-2.12.2.aros/conf
  
  ifdef MSVC
  	# avoid the MingW and Cygwin configuration sections
-@@ -17,6 +19,21 @@
+@@ -17,6 +19,22 @@
  # because maintaining the nesting to match is a pain.  If
  # we had "elif" things would have been much nicer...
  
 +ifeq ($(uname_S),AROS)
 +	BASIC_CFLAGS += -D__BSD_VISIBLE
-+	NO_CURL = YesPlease 
 +	BLK_SHA1 = YesPlease 
 +	NO_LIBGEN_H = YesPlease
++	NEEDS_CRYPTO_WITH_SSL = YesPlease
++	NEEDS_Z_WITH_SSL = YesPlease
 +	# Copied from Windows
 +	NO_REGEX = YesPlease
 +	NO_GETTEXT = YesPlease
@@ -99,8 +100,27 @@ diff -ruN -X ./exclude.patterns git-2.12.2/config.mak.uname git-2.12.2.aros/conf
  	BASIC_CFLAGS += -D_OSF_SOURCE
 diff -ruN -X ./exclude.patterns git-2.12.2/configure.ac git-2.12.2.aros/configure.ac
 --- git-2.12.2/configure.ac	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/configure.ac	2017-04-30 03:28:17.578869471 +0100
-@@ -644,12 +644,20 @@
++++ git-2.12.2.aros/configure.ac	2017-05-02 02:51:01.793415935 +0100
+@@ -524,7 +524,7 @@
+ 
+ GIT_STASH_FLAGS($CURLDIR)
+ 
+-AC_CHECK_LIB([curl], [curl_global_init],
++AC_CHECK_HEADER(curl/curl.h,
+ [NO_CURL=],
+ [NO_CURL=YesPlease])
+ 
+@@ -542,7 +542,8 @@
+     GIT_CONF_SUBST([CURL_CONFIG])
+     if test -z "${NO_OPENSSL}"; then
+       AC_MSG_CHECKING([if Curl supports SSL])
+-      if test $(curl-config --features|grep SSL) = SSL; then
++      CURL_CONFIG_CMD=`$CURL_CONFIG --features | grep SSL`
++      if test "$CURL_CONFIG_CMD" = SSL; then
+          NEEDS_SSL_WITH_CURL=YesPlease
+          AC_MSG_RESULT([yes])
+       else
+@@ -644,12 +645,20 @@
  
  GIT_CONF_SUBST([NO_DEFLATE_BOUND])
  
@@ -124,7 +144,7 @@ diff -ruN -X ./exclude.patterns git-2.12.2/configure.ac git-2.12.2.aros/configur
  GIT_CONF_SUBST([NEEDS_SOCKET])
  test -n "$NEEDS_SOCKET" && LIBS="$LIBS -lsocket"
  
-@@ -700,24 +708,31 @@
+@@ -700,24 +709,31 @@
  # build-time, also set it here for remaining configure-time checks.
  test -n "$NEEDS_RESOLV" && LIBS="$LIBS -lresolv"
  
@@ -167,7 +187,7 @@ diff -ruN -X ./exclude.patterns git-2.12.2/configure.ac git-2.12.2.aros/configur
      test -n "$LIBC_CONTAINS_LIBINTL" || LIBS="$LIBS -lintl"
 diff -ruN -X ./exclude.patterns git-2.12.2/git-compat-util.h git-2.12.2.aros/git-compat-util.h
 --- git-2.12.2/git-compat-util.h	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/git-compat-util.h	2017-04-30 03:37:49.508242118 +0100
++++ git-2.12.2.aros/git-compat-util.h	2017-05-02 02:51:01.793415935 +0100
 @@ -179,12 +179,19 @@
  #include <assert.h>
  #include <regex.h>
@@ -242,9 +262,64 @@ diff -ruN -X ./exclude.patterns git-2.12.2/git-compat-util.h git-2.12.2.aros/git
  /* used on Mac OS X */
  #ifdef PRECOMPOSE_UNICODE
  #include "compat/precompose_utf8.h"
+diff -ruN -X ./exclude.patterns git-2.12.2/Makefile git-2.12.2.aros/Makefile
+--- git-2.12.2/Makefile	2017-03-24 19:59:15.000000000 +0000
++++ git-2.12.2.aros/Makefile	2017-05-02 02:53:47.509173802 +0100
+@@ -1105,6 +1105,9 @@
+ 		ifdef NEEDS_CRYPTO_WITH_SSL
+ 			CURL_LIBCURL += -lcrypto
+ 		endif
++		ifdef NEEDS_Z_WITH_SSL
++			CURL_LIBCURL += -lz
++		endif
+ 	endif
+ 	ifdef NEEDS_IDN_WITH_CURL
+ 		CURL_LIBCURL += -lidn
+@@ -1161,6 +1164,9 @@
+ 	ifdef NEEDS_CRYPTO_WITH_SSL
+ 		OPENSSL_LIBSSL += -lcrypto
+ 	endif
++	ifdef NEEDS_Z_WITH_SSL
++		OPENSSL_LIBSSL += -lz
++	endif
+ else
+ 	BASIC_CFLAGS += -DNO_OPENSSL
+ 	BLK_SHA1 = 1
+@@ -1171,6 +1177,9 @@
+ else
+ ifdef NEEDS_SSL_WITH_CRYPTO
+ 	LIB_4_CRYPTO = $(OPENSSL_LINK) -lcrypto -lssl
++	ifdef NEEDS_Z_WITH_SSL
++		LIB_4_CRYPTO += -lz
++	endif
+ else
+ 	LIB_4_CRYPTO = $(OPENSSL_LINK) -lcrypto
+ endif
+@@ -2058,10 +2067,10 @@
+ 
+ git-http-fetch$X: http.o http-walker.o http-fetch.o GIT-LDFLAGS $(GITLIBS)
+ 	$(QUIET_LINK)$(CC) $(ALL_CFLAGS) -o $@ $(ALL_LDFLAGS) $(filter %.o,$^) \
+-		$(CURL_LIBCURL) $(LIBS)
++		$(LIBS) $(CURL_LIBCURL)
+ git-http-push$X: http.o http-push.o GIT-LDFLAGS $(GITLIBS)
+ 	$(QUIET_LINK)$(CC) $(ALL_CFLAGS) -o $@ $(ALL_LDFLAGS) $(filter %.o,$^) \
+-		$(CURL_LIBCURL) $(EXPAT_LIBEXPAT) $(LIBS)
++		$(LIBS) $(CURL_LIBCURL) $(EXPAT_LIBEXPAT)
+ 
+ git-remote-testsvn$X: remote-testsvn.o GIT-LDFLAGS $(GITLIBS) $(VCSSVN_LIB)
+ 	$(QUIET_LINK)$(CC) $(ALL_CFLAGS) -o $@ $(ALL_LDFLAGS) $(filter %.o,$^) $(LIBS) \
+@@ -2185,7 +2194,7 @@
+ GIT-PREFIX: FORCE
+ 	@FLAGS='$(TRACK_PREFIX)'; \
+ 	if test x"$$FLAGS" != x"`cat GIT-PREFIX 2>/dev/null`" ; then \
+-		echo >&2 "    * new prefix flags"; \
++		echo >&2 "    * new prefix flags (=$$FLAGS)"; \
+ 		echo "$$FLAGS" >GIT-PREFIX; \
+ 	fi
+ 
 diff -ruN -X ./exclude.patterns git-2.12.2/refs/iterator.c git-2.12.2.aros/refs/iterator.c
 --- git-2.12.2/refs/iterator.c	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/refs/iterator.c	2017-04-30 03:28:17.578869471 +0100
++++ git-2.12.2.aros/refs/iterator.c	2017-05-02 02:51:01.793415935 +0100
 @@ -8,6 +8,12 @@
  #include "refs/refs-internal.h"
  #include "iterator.h"
@@ -260,7 +335,7 @@ diff -ruN -X ./exclude.patterns git-2.12.2/refs/iterator.c git-2.12.2.aros/refs/
  	return ref_iterator->vtable->advance(ref_iterator);
 diff -ruN -X ./exclude.patterns git-2.12.2/transport.c git-2.12.2.aros/transport.c
 --- git-2.12.2/transport.c	2017-03-24 19:59:15.000000000 +0000
-+++ git-2.12.2.aros/transport.c	2017-04-30 03:28:17.578869471 +0100
++++ git-2.12.2.aros/transport.c	2017-05-02 02:51:01.793415935 +0100
 @@ -17,6 +17,12 @@
  #include "sha1-array.h"
  #include "sigchain.h"
