@@ -3,12 +3,13 @@ AROS Debugging Manual
 =====================
 
 :Authors:   David Le Corfec, Matthias Rustler, Krzysztof Smiechowic
-:Copyright: Copyright (C) 2004-2016, The AROS Development Team
+:Copyright: Copyright (C) 2004-2017, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Work in progress.
 
-This manual explains the various options for AROS debugging.
+The AROS Debugging reference Manual.
+
 
 
 .. Contents::
@@ -18,15 +19,36 @@ This manual explains the various options for AROS debugging.
 Introduction
 ------------
 
-For most developers, the easiest way to develop and debug is to use the
-hosted AROS port under Linux (which is the most popular setting) or BSD.
-This way you can use GDB under Linux to debug AROS. You'll need to pass
-the ``--enable-debug`` to the configure script before compiling AROS.
-Beware: Debugging information may increase the disk size occupied by
-the AROS tree tenfold.
+This manual aims to aid in debugging AROS code, and explains various options
+for debugging AROS or generated binaries.
 
-Low-level hardware developers will rather use the serial debug output on
-the native port.
+
+
+
+-----------
+Configuring
+-----------
+
+To enable debug builds of AROS it is necessary to pass the ``--enable-debug``
+option to the configure script before compiling AROS.  Please note though 
+that by doing so extra debugging information will be generated, and will increase
+the disk size occupied by the AROS build tree considerably.
+Debug information/symbols will be stored in additional *.dbg files.
+
+N.B.: Due to a lack of native debugging tools, using the hosted AROS port under
+Linux or BSD is the prefered way to develop code.  This allows host tools,
+such as GDB under Linux, to be used to debug AROS. 
+
+Low-level hardware developers will more likely test in native environements, using
+the serial ports to output debug, though some devices may also be tested under
+hosted builds (needs citation).
+
+
+
+
+----
+Tips
+----
 
 Application developers need to ensure that their programs release all
 the resources they take. AROS provides some tools for this.
@@ -80,8 +102,8 @@ Live debugging
 
 Start GDB like below::
 
-    > cd /AROS/bin/linux-i386/AROS/
-    > gdb boot/aros-unix
+    > cd ./bin/linux-i386/AROS/
+    > gdb boot/linux/AROSBootstrap --symbols boot/linux/AROSBootstrap.dbg
     GNU gdb 6.0-debian
     Copyright 2003 Free Software Foundation, Inc.
     GDB is free software, covered by the GNU General Public License, and you are
@@ -94,7 +116,7 @@ Start GDB like below::
 Then you run AROS with::
 
     (gdb) r
-    Starting program: /AROS/bin/linux-i386/AROS/aros
+    Starting program: /AROS/bin/linux-i386/AROS/boot/linux/AROSBootstrap
     (... lots of debug output follows ...)
 
 You can pass arguments to AROS by placing them after the ``r`` command.
@@ -111,7 +133,7 @@ shell. Then run AROS and generate a core dump::
 
     > cd /AROS/bin/linux-i386/AROS/
     > ulimit -c unlimited # see your shell manual to enable core dumps
-    > ./boot/aros-unix
+    > ./boot/linux/AROSBootsrap
     Quit (core dumped)
 
 Now you can start GDB, by specifying the aros executable name and the core
@@ -281,14 +303,14 @@ Use ``findaddr`` on any address you want to resolve (probably the innermost)::
     Address found in System:Tests/Zune/list1, which is loaded at 0x402bd454.
     If this is an executable, its .text section starts at 0x402bd460
 
-Next you'll use the ``add-symbol-file`` command to load the given file
-at the given text address::
+Next you'll use the ``add-symbol-file`` command to load the given file's debug
+symbols at the given text address::
 
-    (gdb) add-symbol-file Tests/Zune/list1 0x402bd460
-    add symbol table from file "Tests/Zune/list1" at
+    (gdb) add-symbol-file Tests/Zune/list1.dbg 0x402bd460
+    add symbol table from file "Tests/Zune/list1.dbg" at
     .text_addr = 0x402bd460
     (y or n) y
-    Reading symbols from Tests/Zune/list1...done.
+    Reading symbols from Tests/Zune/list1.dbg...done.
 
 Hopefully it has resolved the addresses::
 
