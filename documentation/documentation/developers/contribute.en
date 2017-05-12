@@ -3,7 +3,7 @@ Contribute
 ==========
 
 :Authors:   Adam Chodorowski, Neil Cafferkey
-:Copyright: Copyright © 1995-2015, The AROS Development Team
+:Copyright: Copyright © 1995-2017, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -49,13 +49,17 @@ Programming
 
     + Native graphics optimisations
 
+  - AROS/arm-raspi
+
+    + Native USB Chipset Driver
+    + Native graphics optimisations
+
   - Generic printer support.
 
 + Porting to other architectures. Some examples of hardware for which no
   maintained AROS port exists or has been started:
 
   - AmigaOne
-  - Raspberry Pi
   - Macintosh, both m68k and PowerPC.
 
 + Implementing missing Preferences editors:
@@ -63,7 +67,7 @@ Programming
   - Overscan
   - Palette
 
-+ Improving the C link library
++ Improving the C standard library
 
   This means implementing missing ANSI (and some POSIX) functions in the clib,
   to make it easier to port Unix software (e.g. GCC, make and binutils). The
@@ -129,7 +133,7 @@ Other
 -----
 
 + Coordinating GUI design for AROS programs, such as prefs programs,
-  tools and utilities.
+  tools and utilities using the Zune toolkit.
 
 
 Joining the Team
