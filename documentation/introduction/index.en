@@ -3,7 +3,7 @@ Short introduction to AROS
 ==========================
 
 :Authors:   Aaron Digulla, Stefan Rieken, Matt Parsons, Adam Chodorowski
-:Copyright: Copyright © 1995-2002, The AROS Development Team
+:Copyright: Copyright © 1995-2017, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Almost finished, I think...
@@ -15,19 +15,19 @@ Short introduction to AROS
 Goal
 =====
 
-The goal of the AROS project is it to create an OS which:
+The primary goals of the AROS project are to create an open source OS which:
 
-1. Is as compatible as possible with AmigaOS 3.1;
+1.  Is as compatible as possible with AmigaOS 3.1 where appropriate;
 
-2. Can be ported to different kinds of hardware architectures and
-   processors, such as x86, PowerPC, Alpha, Sparc, HPPA and other;
+2. Can be easily ported to different kinds of hardware architecture and
+   processors, such as x86, PowerPC, Alpha, Sparc, HPPA;
 
-3. Is binary compatible on Amiga and source compatible on any
+3. Is binary compatible on Amiga, and as source compatible as possible on
    other hardware;
 
-4. Can run as a stand-alone version which boots directly from hard disk and
-   as an emulation which opens a window on an existing OS to develop software
-   and run Amiga and native applications at the same time;
+4. Can run as a stand-alone 'native' version, bootable directly from hard disk -
+   or hosted, opening a window on an existing OS, to develop
+   software and run Amiga and native applications at the same time;
 
 5. Improves upon the functionality of AmigaOS.
 
@@ -35,22 +35,26 @@ The goal of the AROS project is it to create an OS which:
 History
 =======
 
-Some time back in the year 1993, the situation for the Amiga looked somewhat
-worse than usual and some Amiga fans got together and discussed what should
-be done to save their beloved machine. As some saw it, an increase in
-acceptance was necessary, for the main reason for the missing success of the
+Back in the year 1993, the situation for the Amiga family of computers - a highly
+popular system at the time - was looking bleak due to bad management decisions
+by the then owners.  A motly group of Amiga fans got together and discussed what
+could be done to save their beloved machine. As some saw it, an increase in
+acceptance was necessary, since the main reason for the missing success of the
 Amiga seemed clear to them: it was propagation, or rather the lack thereof.
 The Amiga needed a more widespread basis to make it more attractive for
 everyone to use and to develop for. So plans were made to reach this goal.
-One of the plans was to fix the bugs of the AmigaOS, another was to make it
-a modern operating system. These were some of the reasons that created the
+
+One of the main plans was to fix bugs present in the original AmigaOS, another
+was to make it a 'modern' operating system. This eventually lead to the birth of the 
 AOS project.
 
-With the demise of the Amiga, at the time it seemed feasible to acquire the
-AmigaOS sources. Until this happened, the scope of the intended work had to
+At the time of the Amiga's demise , it seemed feasible that it might be possible to
+acquire the AmigaOS sources. Until this happened, the scope of the intended work had to
 be determined more precisely: Which, exactly, were the bugs? What would be the
 best way to fix them? What were the features a so-called *modern* OS had to
 have? And how should they be implemented for the AmigaOS?
+
+...
 
 Two years later, people were still arguing about this, and since the sources
 to the AmigaOS had not been obtained yet, not a single line of code had been
@@ -65,5 +69,6 @@ conclusion was that almost everyone would like to see an open OS which was
 compatible with AmigaOS 3.1 (Kickstart 40.68) on which further discussions
 could be based, to see what was possible and what was not.
 
-So the work on AROS began.
+And so work on AROS began, and the rest is history...
+
 
