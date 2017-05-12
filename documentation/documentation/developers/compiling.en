@@ -9,7 +9,7 @@ Compiling AROS
             + Aaron Digulla
             + Adam Chodorowski
             + Neil Cafferkey
-:Copyright: Copyright (C) 2001-2015, The AROS Development Team
+:Copyright: Copyright (C) 2001-2017, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
 :Status:    Done.
@@ -48,7 +48,7 @@ The following software is required for compiling AROS:
 To compile the hosted Linux or FreeBSD ports, the following are
 also required:
 
-+ X11 development headers and libraries
++ X11 or SDL development headers and libraries
 + OpenGL development headers and libraries
 
 To build the ISO image of the i386-pc or x86-64-pc ports with the GRUB 2
@@ -120,7 +120,7 @@ configure the AROS build using the following steps::
     > cd AROS
     > ./configure
 
-You can specify several options to configure. The following option is
+You can specify several options to configure. The following options are
 available for all targets:
 
 ``--enable-debug=LIST [default: none]``
@@ -144,7 +144,37 @@ available for all targets:
     ``modules``
         Enables modules debug.
 
-Running ``./configure --help`` will give details of additional options.
+``--enable-ccache``
+    Enable using ccache on the host to improve compilation times, particularly
+    when recompiling files with the same options.
+
+``--with-portssources=DIR``
+    External sources downloaded by the build system will be stored in DIR,
+    so that it can be cached/shared/preserved between builds.
+
+``--with-toolchain=TOOLCHAINFAMILY [default: gnu]``
+    Specifies the toolchain family for which crosscompilers will be created to
+    build AROS.
+    Currently the Following options are available:
+
+    ``llvm``
+        Uses the LLVM/Clang toolchain to build AROS
+
+    ``gnu``
+        Uses the GNU/GCC toolchain to build AROS. Additonaly, the following configure options
+        are accepted when using the "gnu" toolchain...
+
+        ``--with-gcc-version=VER [default: 4.6.4]``
+            Specifies a specific version of the GNU GCC compiler to use for the cross compiler
+            and native compiler. Suitable patches must be available (patches are present for
+            GCC 6.3.0)
+
+        ``--with-binutils-version=VER [default: 2.23.2]``
+            Specifies a specific version of the GNU Binutils package to use for crosscompiling and
+            generating native binaries. Suitable patches must be available (patches are present
+            for binutils 2.25)
+
+Running ``./configure --help`` will give details of further additional options.
 
 
 Hosted AROS/i386-linux and AROS/i386-freebsd
@@ -169,7 +199,7 @@ versions on a 64-bit host by providing an option such as
 Native AROS/i386-pc
 """""""""""""""""""
 
-To build the i386-pc port, you have to start configure with this target
+To build the native i386-pc port, configure must be called with the following
 option:
 
 ``--target=pc-i386``.
@@ -225,7 +255,7 @@ Native AROS/i386-pc
 If you are building the native i386-pc port, you should complete
 compilation by creating a bootable ISO image::
 
-    > make bootiso
+    > make distfiles
 
 The ISO image can be found at ``distfiles/aros-pc-i386.iso``.
 
