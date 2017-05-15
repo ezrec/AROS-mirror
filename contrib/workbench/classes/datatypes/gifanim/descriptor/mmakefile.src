@@ -1,0 +1,21 @@
+# Copyright © 2017, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(SRCDIR)/config/aros.cfg
+
+DESCRDIR 		:= $(AROS_DEVS)/DataTypes
+DESCRFILE		:= $(DESCRDIR)/GIFANIM
+
+#MM
+datatype-descriptor-gifanim : $(DESCRFILE)
+
+#MM
+datatype-descriptor-gifanim-quick : datatype-descriptor-gifanim
+
+#MM datatype-descriptor-gifanim-setup :
+%rule_makedirs dirs=$(DESCRDIR) setuptarget=datatype-descriptor-gifanim-setup
+
+$(DESCRDIR)/% : $(SRCDIR)/$(CURDIR)/%.dtd
+	cd $(DESCRDIR) && $(CREATEDTDESC) $<
+	
+%common

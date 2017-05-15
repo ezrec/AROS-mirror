@@ -6,7 +6,7 @@ FILES := classbase methods dispatch prefs misc encoder
 #FILES stackswap 
 TESTSDIR := $(AROS_TESTS)/datatypes
 
-#MM- workbench-datatypes-animation : workbench-datatype-gifanim
+#MM- workbench-datatypes-animation : workbench-datatype-gifanim datatype-descriptor-gifanim
 #MM workbench-datatype-gifanim : includes linklibs
 
 USER_CFLAGS   := -DDEBUG=0
