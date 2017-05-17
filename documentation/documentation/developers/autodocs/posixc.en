@@ -42,21 +42,21 @@ posixc
 `puts()`_                               `putw()`_                               `read()`_                               `readdir()`_                            
 `remove()`_                             `rename()`_                             `rewind()`_                             `rewinddir()`_                          
 `rmdir()`_                              `scandir()`_                            `scanf()`_                              `seed48()`_                             
-`seekdir()`_                            `setbuf()`_                             `setenv()`_                             `seteuid()`_                            
-`setgid()`_                             `setgrent()`_                           `setlinebuf()`_                         `setpwent()`_                           
-`setrlimit()`_                          `setsid()`_                             `setuid()`_                             `setvbuf()`_                            
-`sigaction()`_                          `sigaddset()`_                          `sigdelset()`_                          `sigemptyset()`_                        
-`sigfillset()`_                         `sigismember()`_                        `siglongjmp()`_                         `sigpending()`_                         
-`sigprocmask()`_                        `sigsuspend()`_                         `sleep()`_                              `srand48()`_                            
-`stat()`_                               `statfs()`_                             `swab()`_                               `symlink()`_                            
-`sysconf()`_                            `system()`_                             `tcgetattr()`_                          `tcgetpgrp()`_                          
-`tcsetattr()`_                          `telldir()`_                            `tempnam()`_                            `times()`_                              
-`tmpfile()`_                            `tmpnam()`_                             `truncate()`_                           `ttyname()`_                            
-`umask()`_                              `uname()`_                              `ungetc()`_                             `unlink()`_                             
-`unsetenv()`_                           `updatestdio()`_                        `usleep()`_                             `utime()`_                              
-`utimes()`_                             `vfork()`_                              `vfprintf()`_                           `vfscanf()`_                            
-`vprintf()`_                            `vscanf()`_                             `wait()`_                               `waitpid()`_                            
-`write()`_                              
+`seekdir()`_                            `setbuf()`_                             `setegid()`_                            `setenv()`_                             
+`seteuid()`_                            `setgid()`_                             `setgrent()`_                           `setlinebuf()`_                         
+`setpwent()`_                           `setrlimit()`_                          `setsid()`_                             `setuid()`_                             
+`setvbuf()`_                            `sigaction()`_                          `sigaddset()`_                          `sigdelset()`_                          
+`sigemptyset()`_                        `sigfillset()`_                         `sigismember()`_                        `siglongjmp()`_                         
+`sigpending()`_                         `sigprocmask()`_                        `sigsuspend()`_                         `sleep()`_                              
+`srand48()`_                            `stat()`_                               `statfs()`_                             `swab()`_                               
+`symlink()`_                            `sysconf()`_                            `system()`_                             `tcgetattr()`_                          
+`tcgetpgrp()`_                          `tcsetattr()`_                          `telldir()`_                            `tempnam()`_                            
+`times()`_                              `tmpfile()`_                            `tmpnam()`_                             `truncate()`_                           
+`ttyname()`_                            `umask()`_                              `uname()`_                              `ungetc()`_                             
+`unlink()`_                             `unsetenv()`_                           `updatestdio()`_                        `usleep()`_                             
+`utime()`_                              `utimes()`_                             `vfork()`_                              `vfprintf()`_                           
+`vfscanf()`_                            `vprintf()`_                            `vscanf()`_                             `wait()`_                               
+`waitpid()`_                            `write()`_                              
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -3157,11 +3157,11 @@ Synopsis
      void)
 
 
-Notes
-~~~~~
+Function
+~~~~~~~~
 ::
 
-     Always returns 0 for the moment
+     Returns the effective group ID of the calling process
 
 
 
@@ -3301,14 +3301,7 @@ Function
 ~~~~~~~~
 ::
 
-     Returns the group ID of the calling process
-
-
-Notes
-~~~~~
-::
-
-     Always return 0 for the moment.
+     Returns the real group ID of the calling process
 
 
 
@@ -3648,7 +3641,8 @@ Notes
      containing (the first PASS_MAX bytes of) the password without the
      trailing newline, terminated by a null byte ('\0').
 
-     The buffer may be overwritten by a subsequent call
+     Function is not re-entrant. Results will be overwritten by
+     subsequent calls.
 
 
 
@@ -3796,6 +3790,13 @@ Synopsis
 
   struct passwd *getpwuid(
      uid_t uid)
+
+
+Function
+~~~~~~~~
+::
+
+     Returns the database entry for the user with specified uid.
 
 
 Notes
@@ -4012,6 +4013,13 @@ Synopsis
 
   uid_t getuid(
      void)
+
+
+Function
+~~~~~~~~
+::
+
+     Returns the real user ID of the calling process.
 
 
 
@@ -5742,6 +5750,27 @@ Notes
 
 ----------
 
+setegid()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  int setegid(
+     gid_t gid)
+
+
+Function
+~~~~~~~~
+::
+
+     Set the effective group id of the calling process to gid.
+
+
+
+----------
+
 setenv()
 ========
 
@@ -5822,11 +5851,11 @@ Synopsis
      gid_t gid)
 
 
-Notes
-~~~~~
+Function
+~~~~~~~~
 ::
 
-     Not implemented.
+     Set the group id, and effective group id of the calling process to gid.
 
 
 
@@ -5982,6 +6011,13 @@ Synopsis
 
   int setuid(
      uid_t uid)
+
+
+Function
+~~~~~~~~
+::
+
+     Sets the user ID, and effective user ID of the calling process.
 
 
 Notes
