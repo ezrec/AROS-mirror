@@ -6339,7 +6339,7 @@ Notes
 See also
 ~~~~~~~~
 
-`kill`_ `pause`_ `sigaction`_ `signal`_ `sigprocmask`_ `sigwaitinfo`_ `sigsetops`_ `sigwait`_ `signal`_ 
+`kill()`_ `pause()`_ `sigaction()`_ `signal()`_ `sigprocmask()`_ `sigwaitinfo()`_ `sigsetops()`_ `sigwait()`_ 
 
 ----------
 
