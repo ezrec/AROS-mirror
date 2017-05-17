@@ -33,7 +33,7 @@ To enable debug builds of AROS it is necessary to pass the ``--enable-debug``
 option to the configure script, before compiling AROS.  Please note though 
 that by doing so, extra debugging information will be generated, and will increase
 the disk size occupied by the AROS build tree considerably.
-Debug information/symbols will be stored in additional *.dbg files.
+Debug information/symbols will be stored in additional \*.dbg files.
 
 N.B.: Due to a lack of native debugging tools, using the hosted AROS port under
 Linux or BSD is the prefered way to develop code.  This allows host tools,
