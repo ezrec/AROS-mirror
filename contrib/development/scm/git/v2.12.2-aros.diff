@@ -349,3 +349,13 @@ diff -ruN -X ./exclude.patterns git-2.12.2/transport.c git-2.12.2.aros/transport
  static void set_upstreams(struct transport *transport, struct ref *refs,
  	int pretend)
  {
+diff -ruN -X ./exclude.patterns git-2.12.2/perl/Makefile.PL git-2.12.2.aros/perl/Makefile.PL
+--- git-2.12.2/perl/Makefile.PL	2017-03-24 20:50:52.000000000 +0000
++++ git-2.12.2.aros/perl/Makefile.PL	2017-05-21 04:41:25.000000000 +0100
+@@ -58,5 +58,5 @@
+ 	PM		=> \%pm,
+ 	PM_FILTER	=> qq[\$(PERL) -pe "s<\\Q++LOCALEDIR++\\E><$localedir>"],
+ 	MAKEFILE	=> 'perl.mak',
+-	INSTALLSITEMAN3DIR => '$(SITEPREFIX)/share/man/man3'
++	MAN3PODS	=> { }
+ );
