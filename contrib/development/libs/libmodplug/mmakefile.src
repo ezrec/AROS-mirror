@@ -1,10 +1,13 @@
-# Copyright © 2012, The AROS Development Team. All rights reserved.
+# Copyright © 2012-2017, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-development : contrib-libmodplug
 #MM- contrib-libmodplug : development-libmodplug
+
+REPOSITORIES := sf://modplug-xmms \
+ https://download.videolan.org/pub/contrib/modplug
 
 ifneq (,$(findstring $(AROS_TARGET_CPU),m68k))
 BIGENDIAN=yes
@@ -15,7 +18,7 @@ endif
 MODPLUG_ENVFLAGS := ac_cv_c_bigendian=$(BIGENDIAN)
 
 %fetch_and_build_gnu_development package=libmodplug version=0.8.8.5 patch=no \
-    package_repo=sf://modplug-xmms \
+    package_repo="$(REPOSITORIES)" \
     suffixes="tar.gz" extraoptions="--libdir=$(AROS_LIB)" \
     config_env_extra="$(MODPLUG_ENVFLAGS)"
 
