@@ -1,4 +1,4 @@
-# Copyright © 2008-2015, The AROS Development Team. All rights reserved.
+# Copyright © 2008-2017, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -6,7 +6,9 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- contrib-pack : contrib-pack-lzo
 #MM- contrib-pack-lzo : development-lzo
 
-REPOSITORIES := http://www.oberhumer.com/opensource/lzo/download
+REPOSITORIES := http://www.oberhumer.com/opensource/lzo/download \
+ https://ftp.osuosl.org/pub/blfs/conglomeration/lzo \
+ https://fossies.org/linux/misc
 
 %fetch_and_build_gnu_development package=lzo version=2.09 patch=no \
     package_repo=$(REPOSITORIES) suffixes="tar.gz" \
