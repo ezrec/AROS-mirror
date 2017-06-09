@@ -307,5 +307,5 @@ SVN не станет автоматически заглядывать в новосозданные директории и добавлять
 + `Subversion Home`_
 
 .. _`Version Control with Subversion`: http://svnbook.red-bean.com/
-.. _`Subversion Home`:               http://subversion.tigris.org/
+.. _`Subversion Home`:               http://subversion.apache.org/
 
