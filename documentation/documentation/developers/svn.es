@@ -26,6 +26,7 @@ Trabajando con Subversion
 .. Contents::
 
 
+
 Introducción
 ============
 
@@ -37,6 +38,7 @@ desarrollador no cargó al servidor. Cuando un desarrollador quiere compartir
 sus cambios con el resto del equipo simplemente "envía" sus cambios al
 servidor usando el programa cliente, que se encarga de cargarlos y mezclarlos
 con los cambios hechos por los otros desarrolladores.
+
 
 
 El software
@@ -61,6 +63,7 @@ y Windows.
 SVN no funciona con la localización UTF-8. Tienes que cambiar el locale a
 ISO8859 antes de cualquier acción con SVN.
 
+
 AmigaOS
 -------
 
@@ -69,6 +72,7 @@ de SVN instalados. Una opción es el puerto para Amiga de Olaf Barthel que se
 puede hallar en AminNET__ (busca "subversion").
 
 __ http://main.aminet.net/
+
 
 Windows
 -------
@@ -86,6 +90,7 @@ enhanced notepad), `DOS Navigator OSP <http://dnosp.com/>`__, y muchos más.
 También está disponible el cliente RapidSVN, como se dijo antes.
 
 __ http://www.tortoisesvn.net/
+
 
 MacOS X
 -------
@@ -106,6 +111,7 @@ __ http://www.lachoseinteractive.net/en/community/subversion/svnx/
 __ http://www.barebones.com/products/textwrangler/
 
 
+
 Ingresar al servidor
 ====================
 
@@ -122,6 +128,7 @@ contraseña.
     anónimo de solo-lectura al depósito está deshabilitado.
           
 __ contribute#joining-the-team
+
 
 
 Obtener los fuentes de AROS
@@ -143,6 +150,7 @@ a AROS. Tienes que descarga para compilar todos los sabores de AROS::
     Después de la descarga, SNV recordará de dónde vino el fuente.
 
 
+
 Obtener los fuentes extras
 ==========================
 
@@ -155,6 +163,7 @@ y el módulo "documentation" que contiene los fuentes del sitio web.
 Puedes tener una lista de los módulos disponibles con el comando::
 
     > svn ls https://svn.aros.org/svn/aros/trunk/
+
 
 Actualizar los fuentes
 ======================
@@ -182,6 +191,7 @@ por un ``<<<<``. Necesitarás editar el archivo y resolver el conflicto a mano.
     mezcla (por ej. el otro desarrollador podría haber cambiado la semántica de
     la misma función que usaste en tus cambios). Deberías siempre inspeccionar
     los archivos que fueron mezclados y ver si todavía tienen sentido.
+
 
 
 Enviar los cambios
@@ -212,6 +222,7 @@ cualquier problema antes de hacer el envío. También asegúrate que has
 probado tus cambios antes de enviarlos; al menos para que no rompan la compilación.
 
 
+
 Agregar nuevos archivos y directorios
 =====================================
 
@@ -232,6 +243,7 @@ para de verdad agregarlos al depósito.
     archivo fuente se haya cambiado.
 
     
+
 Ajustar las propiedades
 =======================
 
@@ -250,6 +262,7 @@ Para habilitar esto necesitas hacer::
 
     Puedes configurar Subversion para que ponga automáticamente las propiedades
     para ciertos tipos de archivo. Por favor consulta tu documentación de Subversion.
+
 
 
 Importar
@@ -292,6 +305,8 @@ el comando import en el manual de SVN es muy pobremente escrito, dado el ejemplo
       > svn import -m "Initial import of SVN 1.11.12" 
       \ https://svn.aros.org/svn/aros/trunk/contrib/development/versioning/svn
 
+
+
 Lecturas adicionales
 ====================
 
@@ -305,5 +320,5 @@ Las siguientes páginas se recomiendan bastante:
 + `Subversion Home`_
 
 .. _`Version Control with Subversion`: http://svnbook.red-bean.com/
-.. _`Subversion Home`:               http://subversion.tigris.org/
+.. _`Subversion Home`:               http://subversion.apache.org/
 

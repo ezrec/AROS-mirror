@@ -28,6 +28,7 @@ Werken met Subversion
 .. Contents::
 
 
+
 Introductie
 ===========
 
@@ -39,6 +40,7 @@ niet geupload zijn naar de server. Wanneer een ontwikkelaar zijn veranderingen
 wil delen met de rest van het team, "commit" hij deze naar de server via een client 
 programma. Deze verzorgd het uploaden van de veranderingen
 en voegt ze toe aan de veranderingen van andere gebruikers. 
+
 
 
 De software
@@ -61,6 +63,7 @@ Mac OS X en Windows.
 SVN werkt niet met UTF-8 lokalisatie. U moet de locale veranderen naar ISO8859
 voordat u SVN acties uitvoert.
 
+
 AmigaOS
 -------
 
@@ -69,6 +72,7 @@ nodig. Één optie is de Amiga port van Olaf Barthel die op AmiNET__ gevonden kan
 worden (zoek naar "subversion").
 
 __ http://main.aminet.net/
+
 
 Windows
 -------
@@ -87,6 +91,7 @@ Ook de eSvn client is beschikbaar, zoals eerder vermeld.
 
 __ http://www.tortoisesvn.net/
 
+
 MacOS X
 -------
 
@@ -104,6 +109,7 @@ __ http://www.lachoseinteractive.net/en/community/subversion/svnx/
 __ http://www.barebones.com/products/textwrangler/
 
 
+
 Inloggen op de server
 =====================
 
@@ -118,6 +124,7 @@ vraagt SVN wanneer uw login en paswoord nodig zijn.
     tot het archief uitgeschakeld.
           
 __ contribute#joining-the-team
+
 
 
 De AROS broncode ophalen
@@ -141,6 +148,7 @@ U moet ook hier een checkout toepassen mocht u alle AROS soorten willen bouwen::
     Na de checkout zal SVN onthouden waar de bron vandaan kwam.
 
 
+
 De extra broncode ophalen
 =========================
 
@@ -152,6 +160,8 @@ achtergronden, of de "documentation" module die de bronnen van de website bevat.
 U kunt een lijst met alle modules opvragen met::
 
     > svn ls https://svn.aros.org/svn/aros/trunk/
+
+
 
 Uw lokale archief updaten
 =========================
@@ -181,6 +191,7 @@ U zult daarna handmatig het bestand moeten aanpassen om het conflict op te losse
     om te zien of de inhoud nog klopt.
 
 
+
 Veranderingen doorsturen
 ========================
 
@@ -207,6 +218,7 @@ lossen voordat u deze aanpassingen commit. Test a.u.b. ook eerst uw veranderinge
 om te voorkomen dat deze het build proces onderbreken.
 
 
+
 Toevoegen van nieuwe bestanden en mappen
 ========================================
 
@@ -223,6 +235,7 @@ om deze ook daadwerkelijk aan het archief toe te voegen.
 
     Voeg geen gegenereerde bestanden (gebruikelijk *mmakefile*, *strings.h*) toe aan 
     het archief. Anders zullen deze bestanden niet geupdate worden als de source is veranderd.
+
 
 
 Eigenschappen instellen
@@ -243,6 +256,8 @@ moet u het volgende commando uitvoeren op het bestand::
 
     U kunt Subversion zodanig configureren dat deze automatisch de eigenschappen instelt
     van bepaalde bestandstypes. Consuleert u hiervoor uw Subversion documentatie.
+
+
 
 Importeren
 ==========
@@ -287,6 +302,8 @@ plaats:
       > svn import -m "Begin import van SVN 1.11.12" 
       \ https://svn.aros.org/svn/aros/trunk/contrib/development/versioning/svn
 
+
+
 Aanvullende informatie
 ======================
 
@@ -299,4 +316,4 @@ wel makkelijker te lezen zijn. De volgende (Engelstalige) pagina's worden aanger
 + `Subversion Home (Engels)`_
 
 .. _`Versie Controle met Subversion (Engels)`: http://svnbook.red-bean.com/
-.. _`Subversion Home (Engels)`:               http://subversion.tigris.org/
+.. _`Subversion Home (Engels)`:               http://subversion.apache.org/

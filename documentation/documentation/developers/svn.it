@@ -25,6 +25,7 @@ Lavorare con Subversion
 .. Contents::
 
 
+
 Introduzione
 ============
 
@@ -36,6 +37,7 @@ caricato sul server. Quando uno sviluppatore vuole condividere le sue modifiche
 con il resto del gruppo semplicemente "committa" le sue modifiche sul server
 usando il programma client, che avrà cura di caricarle e unirle con le
 modifiche fatte da altri sviluppatori.
+
 
 
 Il Software
@@ -58,6 +60,7 @@ Mac OS X e Windows.
 SVN non funzione con la localizzazione UTF-8. Dovete settare il locale a ISO8859
 prima di ogni azione SVN.
 
+
 AmigaOS
 -------
 
@@ -66,6 +69,7 @@ installato. Una opzione è il port Amiga di Olaf Barthel che potete trovare su
 AmiNET__ (cerca "subversion").
 
 __ http://main.aminet.net/
+
 
 Windows
 -------
@@ -83,6 +87,7 @@ e migliorata di Notepad), `DOS Navigator OSP <http://dnosp.com/>`__, e altri.
 E' disponibile anche eSvn, come specificato sopra.
 
 __ http://www.tortoisesvn.net/
+
 
 MacOS X
 -------
@@ -104,6 +109,7 @@ __ http://www.lachoseinteractive.net/en/community/subversion/svnx/
 __ http://www.barebones.com/products/textwrangler/
 
 
+
 Loggarsi sul server
 ===================
 
@@ -118,6 +124,7 @@ chiederà login e password quando serve.
     stato disabilitato.    
           
 __ contribute#joining-the-team
+
 
 
 Ottenere i sorgenti di AROS
@@ -141,6 +148,7 @@ Dovete farne il checkout al fine di compilarli::
     Dopo il checkout, SVN ricorderà da dove vengono i sorgenti.    
 
 
+
 Ottenere i sorgenti extra
 =========================
 
@@ -153,6 +161,8 @@ contiene i sorgenti del sito web.
 Potete ottenere una lista dei moduli disponibili col comando::
 
     > svn ls https://svn.aros.org/svn/aros/trunk/
+
+
 
 Aggiornare i sorgenti
 =====================
@@ -184,6 +194,7 @@ risolvere il conflitto manualmente.
     senso.    
 
 
+
 Committare le modifiche
 =======================
 
@@ -210,6 +221,7 @@ di committare. Inoltre per favore, assicuratevi di avere testato le vostre
 modifiche prima di committarle; per lo meno che non danneggino la compilazione.
 
 
+
 Aggiungere nuovi file e directory
 =================================
 
@@ -227,6 +239,7 @@ per aggiungerlo definitivamente al repository.
     Non aggiungere file generati (in genere *mmakefile*, *strings.h*) al
     repository. Altrimenti questi file non saranno aggiornati quando il file
     sorgente viene modificato.    
+
 
     
 Settare le proprietà
@@ -247,6 +260,7 @@ abilitare questa funzione è necessario lanciare::
 
     Puoi configurare Subversion affinchè setti automaticamente le proprietà per
     certi tipi di file. Per favore, consulta la documentazione di Subversion.
+
 
 
 Importare
@@ -291,6 +305,8 @@ esempio è nell'ordine:
       > svn import -m "Initial import of SVN 1.11.12" 
       \ https://svn.aros.org/svn/aros/trunk/contrib/development/versioning/svn
 
+
+
 Letture aggiuntive
 ==================
 
@@ -303,5 +319,5 @@ leggere. Le pagine seguenti sono altamente consigliate:
 + `Subversion Home`_
 
 .. _`Version Control with Subversion`: http://svnbook.red-bean.com/
-.. _`Subversion Home`:               http://subversion.tigris.org/
+.. _`Subversion Home`:               http://subversion.apache.org/
 
