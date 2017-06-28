@@ -12,7 +12,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM  ports-archive-zunearc-quick : ports-archive-zunearc-fetch
 
 REPOSITORIES := sf://zunetools
-ARCHBASE     := ZuneARC_v1.4b
+ARCHBASE     := ZuneArc_v1.5
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Archive/ZuneARC
 
 NOWARN_FLAGS := $(NOWARN_PARENTHESES) $(NOWARN_UNUSED_BUT_SET_VARIABLE)\
