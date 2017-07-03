@@ -161,7 +161,8 @@ The Subversion repository
 
 The AROS repository is running on a password protected Subversion server,
 which means that you need to request access to it to be able to collaborate in
-the development.
+the development (however, if you just want to browse the sources, there is a
+read-only account with username **guest** and password **guest**).
 
 Please email your request to the `Subversion administrator`__. Your 
 mail should include your real name and preferred user name. An account 
