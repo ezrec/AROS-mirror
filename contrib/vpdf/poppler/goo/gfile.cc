@@ -670,7 +670,7 @@ GooFile* GooFile::open(const GooString *fileName) {
     struct FileInfoBlock fib;
     int size = 0;
     BPTR fh = Open(fileName->getCString(), ACCESS_READ);
-    if (fh != NULL)
+    if (fh != BNULL)
     {
       ExamineFH(fh, &fib);
       size = fib.fib_Size;

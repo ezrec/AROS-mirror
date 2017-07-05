@@ -71,7 +71,7 @@ FILES := Annot \
 TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/VPDF/libs
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../goo -I$(AROS_INCLUDES)/cairo
 NOWARN_FLAGS := $(NOWARNFORMAT) $(NOWARN_ERROR)
-USER_CXXFLAGS := $(NOWARN_FLAGS)  -frtti $(CFLAGS_PERMISSIVE) $(CFLAGS_EXCEPTIONS) -Wno-fcheck-new
+USER_CXXFLAGS := $(NOWARN_FLAGS) -frtti $(CFLAGS_PERMISSIVE) $(CFLAGS_EXCEPTIONS) -Wno-fcheck-new
 
 %build_linklib mmake=contrib-vpdf-poppler-poppler libname=poppler \
   cxxfiles=$(FILES) libdir=$(TARGETDIR)
