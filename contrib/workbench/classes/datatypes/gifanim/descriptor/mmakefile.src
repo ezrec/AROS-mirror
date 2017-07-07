@@ -6,6 +6,8 @@ include $(SRCDIR)/config/aros.cfg
 DESCRDIR 		:= $(AROS_DEVS)/DataTypes
 DESCRFILE		:= $(DESCRDIR)/GIFANIM
 
+#MM datatype-descriptor-gifanim : datatype-descriptor-gifanim-setup
+
 #MM
 datatype-descriptor-gifanim : $(DESCRFILE)
 
