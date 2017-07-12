@@ -84,8 +84,6 @@ struct abortcallbackcontext
 
 /* this is bit hacky but we can't/shouldn't use boopsi in poppler.c */
 
-#define D(x) x
-
 extern "C" {
 	void vpdfErrorFunction(int pos, char *message);
 };
