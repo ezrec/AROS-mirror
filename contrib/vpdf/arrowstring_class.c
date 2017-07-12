@@ -31,7 +31,7 @@ struct Data
 	ULONG Min;
 };
 
-ULONG ArrowString_New(struct IClass *cl, Object *obj,  struct opSet *msg)
+IPTR ArrowString_New(struct IClass *cl, Object *obj,  struct opSet *msg)
 {
 	struct Data tmp;
 
@@ -99,7 +99,7 @@ ULONG ArrowString_New(struct IClass *cl, Object *obj,  struct opSet *msg)
 	return (0);
 }
 
-ULONG ArrowString_Get(struct IClass *cl, Object *obj, struct opGet *msg)
+IPTR ArrowString_Get(struct IClass *cl, Object *obj, struct opGet *msg)
 {
 	switch (msg->opg_AttrID)
 	{
@@ -112,7 +112,7 @@ ULONG ArrowString_Get(struct IClass *cl, Object *obj, struct opGet *msg)
 	return(DoSuperMethodA(cl, obj, (APTR)msg));
 }
 
-ULONG ArrowString_Increase(struct IClass *cl, Object *obj)
+IPTR ArrowString_Increase(struct IClass *cl, Object *obj)
 {
 	struct Data *data = INST_DATA(cl, obj);
 	ULONG no = xget(data->ST_Number, MUIA_String_Integer);
@@ -123,7 +123,7 @@ ULONG ArrowString_Increase(struct IClass *cl, Object *obj)
 	return (0);
 }
 
-ULONG ArrowString_Decrease(struct IClass *cl, Object *obj)
+IPTR ArrowString_Decrease(struct IClass *cl, Object *obj)
 {
 	struct Data *data = INST_DATA(cl, obj);
 	ULONG no = xget(data->ST_Number, MUIA_String_Integer);
@@ -137,7 +137,7 @@ ULONG ArrowString_Decrease(struct IClass *cl, Object *obj)
 	return (0);
 }
 
-ULONG ArrowString_Dispose(struct IClass *cl, Object *obj, Msg msg)
+IPTR ArrowString_Dispose(struct IClass *cl, Object *obj, Msg msg)
 {
 	return(DoSuperMethodA(cl, obj, (Msg)msg));
 }

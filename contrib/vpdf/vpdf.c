@@ -65,7 +65,7 @@ extern char * _ProgramName;  // from libnix startup code
 
 struct classinitialization_function
 {
-	ULONG (*initfunc)(void);
+	IPTR (*initfunc)(void);
 	void (*endfunc)(void);
 	int done;
 };
