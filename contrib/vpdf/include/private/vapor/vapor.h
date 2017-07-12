@@ -41,6 +41,38 @@
 
 #define MAINTASK
 
+/*
+ * IPTR is an integer type which is large enough to store a pointer
+ */
+
+#if !defined(__AROS__) && !defined(__MORPHOS__)
+typedef ULONG IPTR;
+#endif
+
+
+/*
+ * Endianity
+ */
+
+#if defined(__AROS__)
+#  if AROS_BIG_ENDIAN
+#    define BE_SWAPLONG_C(x) ((((x) & 0xff000000) >> 24) | (((x) & 0x00ff0000) >>  8) | \
+       (((x) & 0x0000ff00) <<  8) | (((x) & 0x000000ff) << 24))
+#    define BE_SWAPWORD_C(x) ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8))
+#    define BE_SWAPLONG(x)   AROS_SWAP_BYTES_LONG((x))
+#    define LE_SWAPLONG_C(x) (x)
+#  else
+#    define BE_SWAPLONG_C(x) (x)
+#    define BE_SWAPWORD_C(x) (x)
+#    define BE_SWAPLONG(x)   (x)
+#    define LE_SWAPLONG_C(x) ((((x) & 0xff000000) >> 24) | (((x) & 0x00ff0000) >>  8) | \
+       (((x) & 0x0000ff00) <<  8) | (((x) & 0x000000ff) << 24))
+#  endif
+#else
+#  include <hardware/byteswap.h>
+#endif
+
+
 /* MUI Macros */
 #ifndef MAKE_ID
 #define MAKE_ID(a,b,c,d) ((ULONG) (a)<<24 | (ULONG) (b)<<16 | (ULONG) (c)<<8 | (ULONG) (d))
@@ -118,18 +150,18 @@
 /*
  * Some common methods
  */
-#define DECNEW case OM_NEW:return(handleOM_NEW(cl, obj, (struct opSet *)msg));
+#define DECNEW case OM_NEW:return(handleOM_NEW(cl, obj, (APTR)msg));
 #define DECCONST DECNEW // obsolete
-#define DECDISPOSE case OM_DISPOSE:return(handleOM_DISPOSE(cl, obj, (struct opSet *)msg));
+#define DECDISPOSE case OM_DISPOSE:return(handleOM_DISPOSE(cl, obj, (APTR)msg));
 #define DECDISP DECDISPOSE // obsolete
-#define DECSET case OM_SET:return(handleOM_SET(cl, obj, (struct opSet *)msg));
-#define DECGET case OM_GET:return(handleOM_GET(cl, obj, (struct opGet *)msg));
+#define DECSET case OM_SET:return(handleOM_SET(cl, obj, (APTR)msg));
+#define DECGET case OM_GET:return(handleOM_GET(cl, obj, (APTR)msg));
 #define DECADDMEMBER case OM_ADDMEMBER:return(handleOM_ADDMEMBER(cl, obj, (APTR)msg));
 #define DECREMMEMBER case OM_REMMEMBER:return(handleOM_REMMEMBER(cl, obj, (APTR)msg));
-#define DECMMETHOD(methodid) case MUIM_##methodid:return(handleMUIM_##methodid(cl,obj,(struct MUIP_##methodid *)msg));
-#define DECMETHOD(methodid) case MM_##methodid:return(handleMM_##methodid(cl,obj,(type) msg));
-#define DECSMETHOD(methodid) case MM_##methodid:return(handleMM_##methodid(cl,obj,(struct MP_##methodid *)msg));
-#define DECTMETHOD(methodid) case MM_##methodid:return(handleMM_##methodid(cl,obj,(Msg) msg));
+#define DECMMETHOD(methodid) case MUIM_##methodid:return(handleMUIM_##methodid(cl,obj,(APTR)msg));
+#define DECMETHOD(methodid) case MM_##methodid:return(handleMM_##methodid(cl,obj,(APTR)msg));
+#define DECSMETHOD(methodid) case MM_##methodid:return(handleMM_##methodid(cl,obj,(APTR)msg));
+#define DECTMETHOD(methodid) case MM_##methodid:return(handleMM_##methodid(cl,obj,(APTR)msg));
 
 /*
  * Use ENDMTABLE to end the description of a dispatcher
@@ -240,7 +272,7 @@
  * Creates a subclass (no constructor)
  */
 #define DECSUBCLASS_NC(super,name) static struct MUI_CustomClass *mcc##name; \
-	ULONG create_##name(void) \
+	IPTR create_##name(void) \
 	{ \
 		if (!(mcc##name = (struct MUI_CustomClass *)MUI_CreateCustomClass(NULL, super, NULL, sizeof(struct Data), (APTR)DISPATCHERREF))) \
 			return (FALSE); \
@@ -266,7 +298,7 @@
  * Creates a subclass (no constructor) with given dispatcher
  */
 #define DECSUBCLASS2_NC(super,name) static struct MUI_CustomClass *mcc##name; \
-	ULONG create_##name(void) \
+	IPTR create_##name(void) \
 	{ \
 		if (!(mcc##name = (struct MUI_CustomClass *)MUI_CreateCustomClass(NULL, super, NULL, sizeof(struct Data), (APTR)DISPATCHERREF2(name)))) \
 			return (FALSE); \
@@ -293,7 +325,7 @@
  * Creates a subclass of one of your own subclass (no constructor)
  */
 #define DECSUBCLASSPTR_NC(super,name) static struct MUI_CustomClass *mcc##name; \
-	ULONG create_##name(void) \
+	IPTR create_##name(void) \
 	{ \
 		if (!(mcc##name = (struct MUI_CustomClass *)MUI_CreateCustomClass(NULL, NULL, (struct MUI_CustomClass *) get##super##root(), sizeof(struct Data), (APTR)DISPATCHERREF))) \
 			return (FALSE); \
@@ -318,7 +350,7 @@
 /*
  * Declares a subclass
  */
-#define DEFSUBCLASS(name) ULONG create_##name##(void); \
+#define DEFSUBCLASS(name) IPTR create_##name##(void); \
 	APTR get##name##(void); \
 	void delete_##name##(void)
 
@@ -374,12 +406,14 @@
 
 
 /* catmaker */
+#if 0
 #define CATCOMP_NUMBERS
 extern const char * const __stringtable[];
 #ifdef __SASC
 #define GSI(x) __stringtable[x]
 #else
 #define GSI(x) (char *)__stringtable[x]
+#endif
 #endif
 
 /* Long word alignement (mainly used to get
