@@ -288,8 +288,8 @@ DEFNEW
 								Child, (IPTR) (MUI_NewObject(MUIC_Text,
 									MUIA_Text_Contents, (IPTR) "/",
 									MUIA_Text_SetMax, TRUE,
-								TAG_END),
-								Child, StringObject, 
+								TAG_END)),
+								Child, (IPTR) (StringObject, 
 									MUIA_String_Accept, (IPTR) "0123456789",
 									MUIA_Frame, MUIV_Frame_String,
 									MUIA_String_MaxLen, 3,
@@ -506,9 +506,9 @@ DEFMMETHOD(VPDFPrinter_Start)
 	data->pj.mode = !xget(data->chkPS, MUIA_Selected);  // PS or Turboprint
 	
 	if (data->pj.mode==1)
-        data->pj.mode = 2;
-    else 
-        data->pj.mode = xget(data->cycPSVersion, MUIA_Cycle_Active);
+               data->pj.mode = 2;
+        else 
+               data->pj.mode = xget(data->cycPSVersion, MUIA_Cycle_Active);
 	
 	data->pj.autorotatescale = xget(data->chkAutorotatescale, MUIA_Radio_Active);
 	data->pj.step = 1;
