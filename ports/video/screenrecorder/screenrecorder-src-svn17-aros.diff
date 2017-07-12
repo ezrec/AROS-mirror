@@ -1,7 +1,50 @@
 diff -ruN screenrecorder-src-svn17/include/macros/vapor.h screenrecorder-src-svn17.aros/include/macros/vapor.h
---- screenrecorder-src-svn17/include/macros/vapor.h	2010-05-19 08:15:12.000000000 +0100
-+++ screenrecorder-src-svn17.aros/include/macros/vapor.h	2017-03-29 02:43:11.848785745 +0100
-@@ -38,7 +38,11 @@
+--- screenrecorder-src-svn17/include/macros/vapor.h	2010-05-19 09:15:12.000000000 +0200
++++ screenrecorder-src-svn17.aros/include/macros/vapor.h	2017-07-12 12:42:59.374035000 +0200
+@@ -10,18 +10,36 @@
+  * All rights reserved
+  *
+  *
+- * $Id: vapor.h,v 1.1 2008/06/27 22:01:49 itix Exp $
++ * $Id: vapor.h 54587 2017-04-22 21:17:49Z wawa $
+  *
+ */
+ 
+-/*
+- * STACKED is necessary for message elements for a port to 64-bit AROS
+- */
++#ifdef __SASC
++#include <clib/alib_protos.h>
++#endif /* __SASC */
+ 
+-#if !defined(__AROS__)
+-#define STACKED
++#ifdef __MORPHOS__
++#ifndef  CLIB_ALIB_PROTOS_H
++#include <clib/alib_protos.h>
++#endif
++#ifndef EMUL_EMULINTERFACE_H
++#include <emul/emulinterface.h>
++#endif
++#ifndef EMUL_EMULREGS_H_
++#include <emul/emulregs.h>
++#endif
++#ifndef INTUITION_CLASSUSR_H
++#include <intuition/classusr.h>
++#endif
++#ifndef LIBRARIES_MUI_H
++#include <libraries/mui.h>
++#endif
++#ifndef PROTO_MUIMASTER_H
++#include <proto/muimaster.h>
++#endif
+ #endif
+ 
++#define MAINTASK
+ 
+ /*
+  * IPTR is an integer type which is large enough to store a pointer
+@@ -38,7 +56,11 @@
  
  #if defined(__AROS__)
  #  if AROS_BIG_ENDIAN
@@ -14,9 +57,321 @@ diff -ruN screenrecorder-src-svn17/include/macros/vapor.h screenrecorder-src-svn
  #  else
  #    define BE_SWAPLONG_C(x) (x)
  #    define BE_SWAPWORD_C(x) (x)
+@@ -88,7 +110,6 @@
+ 		struct IClass *cl = (struct IClass *)REG_A0; \
+ 		Msg msg = (Msg)REG_A1; \
+ 		Object *obj = (Object *)REG_A2; \
+-		MAINTASK; \
+ 		switch (msg->MethodID) \
+ 		{
+ 
+@@ -102,16 +123,27 @@
+ 		struct IClass *cl = (struct IClass *)REG_A0; \
+ 		Msg msg = (Msg)REG_A1; \
+ 		Object *obj = (Object *)REG_A2; \
+-		MAINTASK; \
+ 		switch (msg->MethodID) \
+ 		{
+ 
++#define BEGINMTABLE2_NOGATE(name) \
++	ULONG name##_dispatch(void) \
++	{ \
++		struct IClass *cl = (struct IClass *)REG_A0; \
++		Msg msg = (Msg)REG_A1; \
++		Object *obj = (Object *)REG_A2; \
++		switch (msg->MethodID) \
++		{
++
++#elif __AROS__
++#define BEGINMTABLE static BOOPSI_DISPATCHER(IPTR, dispatch, cl, obj, msg){switch(msg->MethodID){
++#define BEGINMTABLE2(name) static BOOPSI_DISPATCHER(IPTR, name##_dispatch, cl, obj, msg){switch(msg->MethodID){
+ #else
+-#define BEGINMTABLE static IPTR dispatch(struct IClass *cl, Object *obj, Msg msg){switch(msg->MethodID){
+-#define BEGINMTABLE2(name) static IPTR name##_Dispatcher( __reg(a0, struct IClass *cl), __reg(a2, Object *obj), __reg(a1, Msg msg)){switch(msg->MethodID){
++#define BEGINMTABLE static ULONG dispatch( __reg(a0, struct IClass *cl), __reg(a2, Object *obj), __reg(a1, Msg msg)){switch(msg->MethodID){
++#define BEGINMTABLE2(name) static ULONG name##_dispatch( __reg(a0, struct IClass *cl), __reg(a2, Object *obj), __reg(a1, Msg msg)){switch(msg->MethodID){
+ #endif /* !__MORPHOS__ */
+ #else
+-#define BEGINMTABLE static ULONG __saveds dispatch(__reg("a0")struct IClass *cl, __reg("a2")Object *obj, __reg("a1")Msg msg){switch(msg->MethodID){
++#define BEGINMTABLE static ULONG __asm __saveds dispatch( register __a0 struct IClass *cl, register __a2  Object *obj, register __a1 Msg msg ){switch(msg->MethodID){
+ #define BEGINMTABLE2(name) static ULONG __asm __saveds name##_Dispatcher(register __a0 struct IClass *cl, register __a2 Object *obj, register __a1 Msg msg){switch(msg->MethodID){
+ #endif /* __GNUC__ */
+ 
+@@ -134,12 +166,15 @@
+ /*
+  * Use ENDMTABLE to end the description of a dispatcher
+  */
++#ifndef __AROS__
+ #define ENDMTABLE }return(DOSUPER);}
+-
++#else
++#define ENDMTABLE }return(DOSUPER);}BOOPSI_DISPATCHER_END
++#endif
+ 
+ /* Methods */
+ 
+-#ifdef __INLINED_METHODS
++#ifdef __INLINED_METHODS //#if defined(MUIMASTER_YES_INLINE_STDARG)
+ #define METHOD_INLINE inline
+ #else
+ #define METHOD_INLINE
+@@ -148,53 +183,53 @@
+ /*
+  * MUI method (ie. MUIM_List_InsertSingle)
+  */
+-#define DEFMMETHOD(methodid) METHOD_INLINE static IPTR handleMUIM_##methodid(struct IClass *cl,Object*obj,struct MUIP_##methodid *msg)
++#define DEFMMETHOD(methodid) METHOD_INLINE static ULONG __attribute__ ((noinline)) handleMUIM_##methodid(struct IClass *cl,Object*obj,struct MUIP_##methodid *msg)
+ 
+ /*
+  * Custom method with ONE argument only (no msg[n] please)
+  */
+-#define DEFMETHOD(methodid,type) METHOD_INLINE static IPTR handleMM_##methodid(struct IClass *cl, Object *obj, type *msg)
++#define DEFMETHOD(methodid,type) METHOD_INLINE static ULONG __attribute__ ((noinline)) handleMM_##methodid(struct IClass *cl, Object *obj, type *msg)
+ 
+ /*
+  * Custom method with NO real arguments (Msg still passed for DSM etc.)
+  */
+-#define DEFTMETHOD(methodid) METHOD_INLINE static IPTR handleMM_##methodid(struct IClass *cl, Object *obj, Msg msg)
++#define DEFTMETHOD(methodid) METHOD_INLINE static ULONG __attribute__ ((noinline)) handleMM_##methodid(struct IClass *cl, Object *obj, Msg msg)
+ 
+ /*
+  * Custom structured method
+  */
+-#define DEFSMETHOD(name) METHOD_INLINE static IPTR handleMM_##name(struct IClass *cl,Object*obj,struct MP_##name *msg)
++#define DEFSMETHOD(name) METHOD_INLINE static ULONG __attribute__ ((noinline)) handleMM_##name(struct IClass *cl,Object*obj,struct MP_##name *msg)
+ 
+ /*
+  * OM_NEW method (construct)
+  */
+-#define DEFNEW METHOD_INLINE static IPTR handleOM_NEW(struct IClass *cl,Object*obj,struct opSet *msg)
++#define DEFNEW METHOD_INLINE static ULONG __attribute__ ((noinline)) handleOM_NEW(struct IClass *cl,Object*obj,struct opSet *msg)
+ #define DEFCONST DEFNEW
+ 
+ /*
+  * OM_SET method
+  */
+-#define DEFSET METHOD_INLINE static IPTR handleOM_SET(struct IClass *cl,Object*obj,struct opSet *msg)
++#define DEFSET METHOD_INLINE static ULONG __attribute__ ((noinline)) handleOM_SET(struct IClass *cl,Object*obj,struct opSet *msg)
+ 
+-/*
++/* 
+  * OM_GET method
+  */
+-#define DEFGET METHOD_INLINE static IPTR handleOM_GET(struct IClass *cl,Object*obj,struct opGet *msg)
++#define DEFGET METHOD_INLINE static ULONG handleOM_GET(struct IClass *cl,Object*obj,struct opGet *msg)
+ 
+ /*
+  * OM_ADDMEMBER method
+  */
+-#define DEFADDMEMBER METHOD_INLINE static IPTR handleOM_ADDMEMBER(struct IClass *cl,Object*obj,struct opMember *msg)
++#define DEFADDMEMBER METHOD_INLINE static ULONG __attribute__ ((noinline)) handleOM_ADDMEMBER(struct IClass *cl,Object*obj,struct opMember *msg)
+ 
+ /*
+  * OM_REMMEMBER method
+  */
+-#define DEFREMMEMBER METHOD_INLINE static IPTR handleOM_REMMEMBER(struct IClass *cl,Object*obj,struct opMember *msg)
++#define DEFREMMEMBER METHOD_INLINE static ULONG __attribute__ ((noinline)) handleOM_REMMEMBER(struct IClass *cl,Object*obj,struct opMember *msg)
+ 
+ /*
+  * OM_DISPOSE method (destruct)
+  */
+-#define DEFDISPOSE METHOD_INLINE static IPTR handleOM_DISPOSE( struct IClass *cl,Object*obj,struct opSet *msg)
++#define DEFDISPOSE METHOD_INLINE static ULONG __attribute__ ((noinline)) handleOM_DISPOSE( struct IClass *cl,Object*obj,struct opSet *msg)
+ #define DEFDEST DEFDISPOSE
+ #define DEFDISP DEFDISPOSE
+ 
+@@ -204,16 +239,16 @@
+ /*
+  * Get the instance data
+  */
+-#define GETDATA struct Data *data = INST_DATA(cl, obj)
++#define GETDATA struct Data *data = (struct Data *) INST_DATA(cl, obj)
+ /* same but named one */
+-#define GETDATANAME(name) struct name##_Data *data=INST_DATA(cl,obj)
++#define GETDATANAME(name) struct name##_Data *data = (struct name##_Data *) INST_DATA(cl,obj)
+ 
+ /*
+  * Creates a subclass (constructor type)
+  */
+ #define DECSUBCLASS(super,name,pri) struct MUI_CustomClass *classp##name;\
+ 	CONSTRUCTOR_P(init##name,pri){\
+-		classp##name=MUI_CreateCustomClass(NULL,super,NULL,sizeof(struct Data),(APTR)DISPATCHERREF);\
++		classp##name=MUI_CreateCustomClass(NULL,super,NULL,sizeof(struct Data), (APTR)DISPATCHERREF);\
+ 		if(classp##name&&MUIMasterBase->lib_Version>=20)classp##name->mcc_Class->cl_ID=#name;\
+ 		return(classp##name?0:-1);\
+ 	}\
+@@ -226,7 +261,7 @@
+ #define DECSUBCLASSPTR(super,name,pri) struct MUI_CustomClass *classp##name;\
+ 	CONSTRUCTOR_P(init##name,pri){\
+ 		extern struct MUI_CustomClass *classp##super;\
+-		classp##name=MUI_CreateCustomClass(NULL,NULL,classp##super,sizeof(struct Data),(APTR)DISPATCHERREF);\
++		classp##name=MUI_CreateCustomClass(NULL,NULL,classp##super,sizeof(struct Data), (APTR)DISPATCHERREF);\
+ 		if(classp##name&&MUIMasterBase->lib_Version>=20)classp##name->mcc_Class->cl_ID=#name;\
+ 		return(classp##name?0:-1);\
+ 	}\
+@@ -236,14 +271,13 @@
+ /*
+  * Creates a subclass (no constructor)
+  */
+-#if defined(__MORPHOS__)
+ #define DECSUBCLASS_NC(super,name) static struct MUI_CustomClass *mcc##name; \
+-	ULONG create_##name(void) \
++	IPTR create_##name(void) \
+ 	{ \
+ 		if (!(mcc##name = (struct MUI_CustomClass *)MUI_CreateCustomClass(NULL, super, NULL, sizeof(struct Data), (APTR)DISPATCHERREF))) \
+ 			return (FALSE); \
+ 			if (MUIMasterBase->lib_Version >= 20) \
+-				mcc##name->mcc_Class->cl_ID = #name; \
++				mcc##name->mcc_Class->cl_ID = (CONST_STRPTR) #name; \
+ 		return (TRUE); \
+ 	} \
+ 	void delete_##name(void) \
+@@ -261,37 +295,13 @@
+ 	}
+ 
+ /*
+- * Creates a subclass of one of your own subclass (no constructor)
++ * Creates a subclass (no constructor) with given dispatcher
+  */
+-#define DECSUBCLASSPTR_NC(super,name) static struct MUI_CustomClass *mcc##name; \
+-	ULONG create_##name(void) \
+-	{ \
+-		if (!(mcc##name = (struct MUI_CustomClass *)MUI_CreateCustomClass(NULL, NULL, get##super##root(), sizeof(struct Data), (APTR)DISPATCHERREF))) \
+-			return (FALSE); \
+-			if (MUIMasterBase->lib_Version >= 20) \
+-				mcc##name->mcc_Class->cl_ID = #name; \
+-		return (TRUE); \
+-	} \
+-	void delete_##name(void) \
+-	{ \
+-		if (mcc##name) \
+-			MUI_DeleteCustomClass(mcc##name); \
+-	} \
+-	APTR get##name(void) \
+-	{ \
+-		return (mcc##name->mcc_Class); \
+-	} \
+-	APTR get##name##root(void) \
+-	{ \
+-		return (mcc##name); \
+-	}
+-#else
+-#define DECSUBCLASS_NC(super,name) static struct MUI_CustomClass *mcc##name; \
++#define DECSUBCLASS2_NC(super,name) static struct MUI_CustomClass *mcc##name; \
+ 	IPTR create_##name(void) \
+ 	{ \
+-		if (!(mcc##name = (struct MUI_CustomClass *)MUI_CreateCustomClass(NULL, super, NULL, sizeof(struct Data), (APTR)DISPATCHERREF))) \
++		if (!(mcc##name = (struct MUI_CustomClass *)MUI_CreateCustomClass(NULL, super, NULL, sizeof(struct Data), (APTR)DISPATCHERREF2(name)))) \
+ 			return (FALSE); \
+-			/*mcc##name->mcc_Class->cl_Dispatcher.h_SubEntry = (APTR)DISPATCHERREF;*/ \
+ 			if (MUIMasterBase->lib_Version >= 20) \
+ 				mcc##name->mcc_Class->cl_ID = #name; \
+ 		return (TRUE); \
+@@ -310,17 +320,17 @@
+ 		return (mcc##name); \
+ 	}
+ 
++
+ /*
+  * Creates a subclass of one of your own subclass (no constructor)
+  */
+ #define DECSUBCLASSPTR_NC(super,name) static struct MUI_CustomClass *mcc##name; \
+ 	IPTR create_##name(void) \
+ 	{ \
+-		if (!(mcc##name = (struct MUI_CustomClass *)MUI_CreateCustomClass(NULL, NULL, get##super##root(), sizeof(struct Data), (APTR)DISPATCHERREF))) \
++		if (!(mcc##name = (struct MUI_CustomClass *)MUI_CreateCustomClass(NULL, NULL, (struct MUI_CustomClass *) get##super##root(), sizeof(struct Data), (APTR)DISPATCHERREF))) \
+ 			return (FALSE); \
+-			/*mcc##name->mcc_Class->cl_Dispatcher.h_SubEntry = (APTR)DISPATCHERREF;*/ \
+ 			if (MUIMasterBase->lib_Version >= 20) \
+-				mcc##name->mcc_Class->cl_ID = #name; \
++				mcc##name->mcc_Class->cl_ID = (CONST_STRPTR) #name; \
+ 		return (TRUE); \
+ 	} \
+ 	void delete_##name(void) \
+@@ -336,7 +346,13 @@
+ 	{ \
+ 		return (mcc##name); \
+ 	}
+-#endif
++
++/*
++ * Declares a subclass
++ */
++#define DEFSUBCLASS(name) IPTR create_##name##(void); \
++	APTR get##name##(void); \
++	void delete_##name##(void)
+ 
+ 
+ /* get()/set() */
+@@ -346,8 +362,8 @@
+ #define ENDASTORE }
+ #define ASTORE(t,x) case t: data->x = tag->ti_Data;break;
+ #define ASTOREP(t,x) case t: data->x = (APTR)tag->ti_Data;break;
+-#define STOREP(x) *msg->opg_Storage=(IPTR)(x)
+-#define STOREATTR(i,x) case i:*msg->opg_Storage=(IPTR)(x);return(TRUE);
++#define STOREP(x) *msg->opg_Storage=(ULONG)(x)
++#define STOREATTR(i,x) case i:*msg->opg_Storage=(ULONG)(x);return(TRUE);
+ 
+ /* Hooks */
+ 
+@@ -368,18 +384,14 @@
+ 	struct EmulLibEntry n = { \
+ 	TRAP_LIB, 0, (void (*)(void))n##_GATE }; \
+ 	static LONG n##_GATE(void) { \
+-	return (n##_GATE2((void *)REG_A0, (void *)REG_A2, (void *)REG_A1)); } \
+-	static struct Hook n##_hook = { { 0, 0}, (void *)&n, (void *)&n##_GATE2 , NULL }; \
++	return (n##_GATE2((struct Hook *)REG_A0, (void *)REG_A2, (void *)REG_A1)); } \
++	static struct Hook n##_hook = { { 0, 0}, (ULONG (*)(void))&n, (ULONG (*)(void))&n##_GATE2 , NULL }; \
+ 	static LONG n##_GATE2(struct Hook *h, y, z)
+ #elif __AROS__
+-#define __callback
+-
+-#define DEFHOOK(n) static struct Hook n##_hook={0,0,HookEntry,(HOOKFUNC)n##_func}
+-
+ #define MUI_HOOK(n, y, z) \
+-	static IPTR n##_func(struct Hook *h, y, z; \
+-	static struct Hook n##_hook = { 0, 0, HookEntry, (HOOKFUNC)n##_func }; \
+-	static IPTR n##_func(struct Hook *h, y, z))
++    static LONG n##_func(struct Hook * h, y, z); \
++    static struct Hook n##_hook = {{0, 0}, (APTR)n##_func, NULL, NULL}; \
++    static LONG n##_func(struct Hook * h, y, z)
+ #else
+ #define DEFHOOK(n) static struct Hook n##_hook={0,0,(HOOKFUNC)n##_func}
+ 
+@@ -400,7 +412,7 @@
+ #ifdef __SASC
+ #define GSI(x) __stringtable[x]
+ #else
+-#define GSI(x) ( STRPTR )__stringtable[x]
++#define GSI(x) (char *)__stringtable[x]
+ #endif
+ #endif
+ 
+@@ -426,13 +438,20 @@
+ #endif
+ 
+ #ifndef NEXTNODE
++#if !defined(__cplusplus)   
+ #define NEXTNODE(n) ((APTR)((struct Node*)n)->ln_Succ)
++#else
++#define NEXTNODE(n) ((APTR)((struct ::Node*)n)->ln_Succ)
++#endif
+ #endif
+ 
+ #ifndef PREVNODE
++#if !defined(__cplusplus)
+ #define PREVNODE(n) ((APTR)((struct Node*)n)->ln_Pred)
++#else
++#define PREVNODE(n) ((APTR)((struct ::Node*)n)->ln_Pred)
++#endif
+ #endif
+-
+ #ifndef FINDNAME
+ #define FINDNAME(l,n) ((APTR)FindName((struct List*)l,n))
+ #endif
 diff -ruN screenrecorder-src-svn17/main.c screenrecorder-src-svn17.aros/main.c
---- screenrecorder-src-svn17/main.c	2010-05-17 20:47:25.000000000 +0100
-+++ screenrecorder-src-svn17.aros/main.c	2017-03-29 02:44:22.536527457 +0100
+--- screenrecorder-src-svn17/main.c	2010-05-17 21:47:25.000000000 +0200
++++ screenrecorder-src-svn17.aros/main.c	2017-07-12 11:33:54.864515000 +0200
 @@ -43,7 +43,7 @@
  		wbmsg = (struct WBStartup *)GetMsg(&GUIThread->pr_MsgPort);
  	}
@@ -27,8 +382,45 @@ diff -ruN screenrecorder-src-svn17/main.c screenrecorder-src-svn17.aros/main.c
  	IS_MORPHOS = FindResident("MorphOS") ? TRUE : FALSE;
  	#endif
 diff -ruN screenrecorder-src-svn17/recorder.c screenrecorder-src-svn17.aros/recorder.c
---- screenrecorder-src-svn17/recorder.c	2010-05-17 20:47:25.000000000 +0100
-+++ screenrecorder-src-svn17.aros/recorder.c	2017-03-29 02:46:22.301781431 +0100
+--- screenrecorder-src-svn17/recorder.c	2010-05-17 21:47:25.000000000 +0200
++++ screenrecorder-src-svn17.aros/recorder.c	2017-07-12 12:34:45.122418000 +0200
+@@ -36,9 +36,9 @@
+ struct FormatData
+ {
+ 	CONST_STRPTR postfix;
+-	VOID (*init)  (struct RecorderData * data, APTR fh, ULONG width, ULONG height);
+-	VOID (*write) (struct RecorderData *, APTR, APTR, ULONG, ULONG, ULONG, ULONG);
+-	VOID (*finish)(struct RecorderData *, APTR);
++	VOID (*init)  (struct RecorderData * data, BPTR fh, ULONG width, ULONG height);
++	VOID (*write) (struct RecorderData *, BPTR, APTR, ULONG, ULONG, ULONG, ULONG);
++	VOID (*finish)(struct RecorderData *, BPTR);
+ };
+ 
+ enum
+@@ -83,12 +83,12 @@
+ 	OpenFile
+ **********************************************************************/
+ 
+-STATIC APTR OpenFile(struct RecorderData *data)
++STATIC BPTR OpenFile(struct RecorderData *data)
+ {
+ 	struct DateTime dt;
+ 	TEXT date[32], time[32], filename[108];
+ 	STRPTR p;
+-	APTR fh;
++	BPTR fh;
+ 
+ 	DateStamp(&dt.dat_Stamp);
+ 
+@@ -229,7 +229,7 @@
+ 	GrabFrame
+ **********************************************************************/
+ 
+-STATIC ULONG GrabFrame(struct RecorderData *data, APTR fh, APTR buffer, ULONG width, ULONG height, ULONG dupcount)
++STATIC ULONG GrabFrame(struct RecorderData *data, BPTR fh, APTR buffer, ULONG width, ULONG height, ULONG dupcount)
+ {
+ 	struct Task *self;
+ 	ULONG rc, lock, capture;
 @@ -417,7 +417,7 @@
  	struct Process *proc;
  	struct StartupMsg *msg;
@@ -38,3 +430,97 @@ diff -ruN screenrecorder-src-svn17/recorder.c screenrecorder-src-svn17.aros/reco
  
  	WaitPort(&proc->pr_MsgPort);
  
+@@ -516,7 +516,7 @@
+ 
+ 				if (OpenDevice("timer.device", UNIT_MICROHZ, (struct IORequest *)&timerio, 0) == 0)
+ 				{
+-					APTR fh;
++					BPTR fh;
+ 
+ 					fh = OpenFile(data);
+ 
+diff -ruN screenrecorder-src-svn17/video_avi.h screenrecorder-src-svn17.aros/video_avi.h
+--- screenrecorder-src-svn17/video_avi.h	2010-05-01 15:02:32.000000000 +0200
++++ screenrecorder-src-svn17.aros/video_avi.h	2017-07-12 11:33:54.864515000 +0200
+@@ -10,8 +10,8 @@
+ 
+ struct RecorderData;
+ 
+-VOID avi_write(struct RecorderData *data, APTR fh, APTR buffer, ULONG modulo, ULONG width, ULONG height, ULONG dupcount);
+-VOID avi_write_header(struct RecorderData *data, APTR fh, ULONG width, ULONG height);
+-VOID avi_write_end(struct RecorderData *data, APTR fh);
++VOID avi_write(struct RecorderData *data, BPTR fh, APTR buffer, ULONG modulo, ULONG width, ULONG height, ULONG dupcount);
++VOID avi_write_header(struct RecorderData *data, BPTR fh, ULONG width, ULONG height);
++VOID avi_write_end(struct RecorderData *data, BPTR fh);
+ 
+ #endif /* __AVI_H__ */
+diff -ruN screenrecorder-src-svn17/video_jpeg.c screenrecorder-src-svn17.aros/video_jpeg.c
+--- screenrecorder-src-svn17/video_jpeg.c	2010-05-03 18:35:05.000000000 +0200
++++ screenrecorder-src-svn17.aros/video_jpeg.c	2017-07-12 11:33:54.864515000 +0200
+@@ -25,7 +25,7 @@
+ struct imagetojpeg_dst
+ {
+ 	struct jpeg_destination_mgr pub;
+-	APTR fh;
++	BPTR fh;
+ 	JOCTET *buf;
+ };
+ 
+diff -ruN screenrecorder-src-svn17/video_jpeg.h screenrecorder-src-svn17.aros/video_jpeg.h
+--- screenrecorder-src-svn17/video_jpeg.h	2010-05-01 15:02:32.000000000 +0200
++++ screenrecorder-src-svn17.aros/video_jpeg.h	2017-07-12 11:33:54.864515000 +0200
+@@ -7,6 +7,6 @@
+ 
+ struct RecorderData;
+ 
+-VOID jpeg_write(struct RecorderData *data, APTR fh, APTR rgb, ULONG modulo, ULONG width, ULONG height, ULONG dupcount);
++VOID jpeg_write(struct RecorderData *data, BPTR fh, APTR rgb, ULONG modulo, ULONG width, ULONG height, ULONG dupcount);
+ 
+ #endif /* __JPEG_H__ */
+diff -ruN screenrecorder-src-svn17/video_mng.h screenrecorder-src-svn17.aros/video_mng.h
+--- screenrecorder-src-svn17/video_mng.h	2010-05-01 15:02:32.000000000 +0200
++++ screenrecorder-src-svn17.aros/video_mng.h	2017-07-12 11:33:54.864515000 +0200
+@@ -7,8 +7,8 @@
+ 
+ struct RecorderData;
+ 
+-VOID mng_write(struct RecorderData *data, APTR fh, APTR argb, ULONG modulo, ULONG width, ULONG height);
+-VOID mng_write_header(struct RecorderData *data, APTR fh, ULONG width, ULONG height);
+-VOID mng_write_end(struct RecorderData *data, APTR fh);
++VOID mng_write(struct RecorderData *data, BPTR fh, APTR argb, ULONG modulo, ULONG width, ULONG height);
++VOID mng_write_header(struct RecorderData *data, BPTR fh, ULONG width, ULONG height);
++VOID mng_write_end(struct RecorderData *data, BPTR fh);
+ 
+ #endif /* __MNG_H__ */
+diff -ruN screenrecorder-src-svn17/video_png.c screenrecorder-src-svn17.aros/video_png.c
+--- screenrecorder-src-svn17/video_png.c	2010-05-02 19:30:15.000000000 +0200
++++ screenrecorder-src-svn17.aros/video_png.c	2017-07-12 11:33:54.864515000 +0200
+@@ -47,7 +47,7 @@
+ 	} while (length > 0);
+ }
+ 
+-static LONG dowrite(APTR fh, CONST_APTR data, ULONG size)
++static LONG dowrite(BPTR fh, CONST_APTR data, ULONG size)
+ {
+ 	#if defined(__AROS__)
+ 	return Write(fh, (APTR) data, size) == size;
+@@ -141,7 +141,7 @@
+ }
+ 
+ 
+-VOID png_write(struct RecorderData *data, APTR fh, APTR argb, ULONG modulo, ULONG width, ULONG height, ULONG dupcount)
++VOID png_write(struct RecorderData *data, BPTR fh, APTR argb, ULONG modulo, ULONG width, ULONG height, ULONG dupcount)
+ {
+ 	struct png_header ihdr;
+ 	ULONG length, length2;
+diff -ruN screenrecorder-src-svn17/video_png.h screenrecorder-src-svn17.aros/video_png.h
+--- screenrecorder-src-svn17/video_png.h	2010-05-01 15:02:32.000000000 +0200
++++ screenrecorder-src-svn17.aros/video_png.h	2017-07-12 11:33:54.864515000 +0200
+@@ -21,6 +21,6 @@
+ 
+ struct RecorderData;
+ 
+-VOID png_write(struct RecorderData *data, APTR fh, APTR argb, ULONG modulo, ULONG width, ULONG height, ULONG dupcount);
++VOID png_write(struct RecorderData *data, BPTR fh, APTR argb, ULONG modulo, ULONG width, ULONG height, ULONG dupcount);
+ 
+ #endif /* __PNG_H__ */
