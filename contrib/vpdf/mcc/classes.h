@@ -58,7 +58,7 @@
 #define MUIM_VPDFNumberGenerator_Dummy           ( OM_Dummy + 0x2100 )
 #define MUIA_VPDFNumberGenerator_TagBase         ( TAG_USER + 0x2100 )
 
-#define DEFCLASS(s) ULONG create_##s##Class(void); \
+#define DEFCLASS(s) IPTR create_##s##Class(void); \
 	APTR get##s##Class(void); \
 	APTR get##s##Classroot(void); \
 	void delete_##s##Class(void)
