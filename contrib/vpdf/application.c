@@ -564,32 +564,33 @@ DEFMMETHOD(VPDF_RequestFile)
 static void setuprecent(Object *obj, struct Data *data)
 {
 #if defined(__AROS__)
-    kprintf("[setuprecent] not implemented\n");
+    #define MUIM_Menustrip_Popup                        (MUIB_MUI|0x00420e76) /* MUI: V20 */
+#define MUIM_Menustrip_ExitChange                   (MUIB_MUI|0x0042ce4d) /* MUI: V20 */
+#define MUIM_Menustrip_InitChange                   (MUIB_MUI|0x0042dcd9) /* MUI: V20 */
     // FIXME: AROS
-#else
+#endif
 	int i;
 	Object *o;
-	DoMethod(menu[MEN_OPEN_RECENT] , MUIM_Menustrip_InitChange);
+	DoMethod((Object *)menu[MEN_OPEN_RECENT] , MUIM_Menustrip_InitChange);
 
 	/* cleanup recents */
-	while((o = (Object*)DoMethod(menu[MEN_OPEN_RECENT], MUIM_Family_GetChild, MUIV_Family_GetChild_First)))
+	while((o = (Object *)DoMethod((Object *)menu[MEN_OPEN_RECENT], MUIM_Family_GetChild, MUIV_Family_GetChild_First)))
 	{
-		DoMethod(menu[MEN_OPEN_RECENT], MUIM_Family_Remove, o);
+		DoMethod((Object *)menu[MEN_OPEN_RECENT], MUIM_Family_Remove, o);
 		MUI_DisposeObject(o);
 	};
 	
 	for(i=0; i<MAXRECENT && data->recent[i] != NULL && *data->recent[i] != '\0'; i++)
 	{
-		menu[MEN_OPEN_RECENT0-i] = MenuitemObject,
-					MUIA_Menuitem_Title, data->recent[i],
+		menu[MEN_OPEN_RECENT0-i] = (IPTR)MenuitemObject,
+					MUIA_Menuitem_Title, (IPTR)data->recent[i],
 					MUIA_Menuitem_CopyStrings, TRUE,
 					End;
-		DoMethod(menu[MEN_OPEN_RECENT0-i], MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime, obj, 3, MUIM_VPDF_OpenRecentFile, 0, i);	
-		DoMethod(menu[MEN_OPEN_RECENT], MUIM_Family_AddTail, menu[MEN_OPEN_RECENT0-i]);
+		DoMethod((Object *)menu[MEN_OPEN_RECENT0-i], MUIM_Notify, MUIA_Menuitem_Trigger, MUIV_EveryTime, obj, 3, MUIM_VPDF_OpenRecentFile, 0, i);	
+		DoMethod((Object *)menu[MEN_OPEN_RECENT], MUIM_Family_AddTail, menu[MEN_OPEN_RECENT0-i]);
 	}
 
-	DoMethod(menu[MEN_OPEN_RECENT], MUIM_Menustrip_ExitChange);
-#endif
+	DoMethod((Object *)menu[MEN_OPEN_RECENT], MUIM_Menustrip_ExitChange);
 }
 
 /* this method finds window which was last activated, not currently active one! */
