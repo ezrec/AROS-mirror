@@ -1,4 +1,4 @@
-# Copyright © 2008, 2013, The AROS Development Team. All rights reserved.
+# Copyright © 2008-2017, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -8,7 +8,8 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- contrib-gfx-netpbm-pngtopnm : contrib-gfx-netpbm-fetch
 #MM- contrib-gfx-netpbm-ppmtoilbm : contrib-gfx-netpbm-fetch
 
-REPOSITORIES = sf://netpbm
+REPOSITORIES = sf://netpbm http://mirror.sobukus.de/files/src/netpbm
+
 ARCHBASE := netpbm-10.26.53
 TARGETDIR := $(AROS_DEVELOPER)/bin
 USER_INCLUDES := -I$(PORTSDIR)/netpbm/$(ARCHBASE) \
