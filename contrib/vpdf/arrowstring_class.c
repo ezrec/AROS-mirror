@@ -35,7 +35,7 @@ IPTR ArrowString_New(struct IClass *cl, Object *obj,  struct opSet *msg)
 {
 	struct Data tmp;
 
-	memset(&tmp, sizeof(tmp), 0);
+	memset(&tmp, 0, sizeof(tmp));
 
 	obj = (Object *) DoSuperNew(cl, obj, MUIA_Group_Horiz, TRUE, MUIA_Group_HorizSpacing, 0,
 		Child, tmp.ST_Number = StringObject, StringFrame,
