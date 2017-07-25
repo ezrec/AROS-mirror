@@ -227,7 +227,7 @@ DEFNEW
 						MUIA_Application_Commands, &rexxcommands,
 #endif
 						MUIA_Application_Window, (IPTR) (settingswin = WindowObject,
-							MUIA_Window_Title, (IPTR) "VPDF · Setttings",
+							MUIA_Window_Title, (IPTR) "VPDF · Settings",
 							MUIA_Window_Width, MUIV_Window_Width_Screen(30),
 							MUIA_Window_Height, MUIV_Window_Height_Screen(40),
 							MUIA_Window_ID, MAKE_ID('V', 'P', 'S', 'T'),
@@ -572,7 +572,7 @@ DEFMMETHOD(VPDF_RequestFile)
 static void setuprecent(Object *obj, struct Data *data)
 {
 #if defined(__AROS__)
-    #define MUIM_Menustrip_Popup                        (MUIB_MUI|0x00420e76) /* MUI: V20 */
+#define MUIM_Menustrip_Popup                        (MUIB_MUI|0x00420e76) /* MUI: V20 */
 #define MUIM_Menustrip_ExitChange                   (MUIB_MUI|0x0042ce4d) /* MUI: V20 */
 #define MUIM_Menustrip_InitChange                   (MUIB_MUI|0x0042dcd9) /* MUI: V20 */
     // FIXME: AROS
@@ -659,7 +659,7 @@ DEFMMETHOD(VPDF_CloseWindow)
 	{
 		set(window, MUIA_Window_Open, FALSE);
 		DoMethod(obj, OM_REMMEMBER, window);
-		MUI_DisposeObject(window);
+		DoMethod(obj, MUIM_Application_PushMethod, window, 1, OM_DISPOSE);
 
 		if (DoMethod(obj, MUIM_VPDF_FindWindowByID, MUIV_VPDF_FindWindowByID_First) == 0)
 			DoMethod(obj, MUIM_Application_ReturnID, MUIV_Application_ReturnID_Quit);
