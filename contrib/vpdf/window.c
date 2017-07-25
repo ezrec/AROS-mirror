@@ -228,7 +228,7 @@ DEFMMETHOD(VPDFWindow_UpdateActive)
         if (doc != NULL)
             attr = pdfGetAttr(doc, PDFATTR_TITLE);
 
-        if (attr != NULL && attr->value.s != NULL)
+        if (attr != NULL && attr->value.s != NULL && attr->value.s[0] != '\0')
             snprintf(data->title, sizeof(data->title), "VPDF [%s]", attr->value.s);
         else if (xget(group, MUIA_DocumentView_FileName))
             snprintf(data->title, sizeof(data->title), "VPDF [%s]", FilePart((char*)xget(group, MUIA_DocumentView_FileName)));
