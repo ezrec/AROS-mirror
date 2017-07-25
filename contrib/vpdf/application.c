@@ -80,7 +80,7 @@ struct Data
 	Object *aboutbox;
 };
 
-/* MEnu description */
+/* Menu description */
 
 enum
 {
@@ -95,7 +95,7 @@ enum
 	MEN_OPEN_RECENT0 = 100 /* keep it last*/
 };
 
-Object menu[MEN_OPEN_RECENT0+1];
+static Object *menu[MEN_OPEN_RECENT0 + 1];
 
 /* rexx handling */
 
@@ -178,42 +178,50 @@ DEFNEW
 	Object *btnSave, *btnUse, *btnCancel;
 
 	obj = (Object *) DoSuperNew(cl, obj,
-				MUIA_Application_Menustrip, menu[0] =  (IPTR) (MenustripObject,
+				MUIA_Application_Menustrip, (IPTR) (menu[0] = MenustripObject,
 					MUIA_Family_Child, (IPTR) (MenuObject,
 						MUIA_Menu_Title, (IPTR) LOCSTR(MSG_MENU_PROJECT), 
-						MUIA_Family_Child, menu[MEN_WINDOW_NEW] = (IPTR) CreateMenuitem(LOCSTR(MSG_MENU_NEWWIN), "N"),
-						MUIA_Family_Child, menu[MEN_TAB_NEW] = (IPTR) CreateMenuitem(LOCSTR(MSG_MENU_NEWTAB), "T"),
+						MUIA_Family_Child, (IPTR) (menu[MEN_WINDOW_NEW] =
+							CreateMenuitem(LOCSTR(MSG_MENU_NEWWIN), "N")),
+						MUIA_Family_Child, (IPTR) (menu[MEN_TAB_NEW] =
+							CreateMenuitem(LOCSTR(MSG_MENU_NEWTAB), "T")),
 						/*
-						MUIA_Family_Child, menu[MEN_OPEN_URL] = (IPTR) CreateMenuitem(LOCSTR(MSG_MENU_URL), "T"),
+						MUIA_Family_Child, (IPTR) (menu[MEN_OPEN_URL] =
+							CreateMenuitem(LOCSTR(MSG_MENU_URL), "T")),
 						*/
-						MUIA_Family_Child, menu[MEN_OPEN_FILE] = (IPTR) CreateMenuitem(LOCSTR(MSG_MENU_FILE), 0),
-						MUIA_Family_Child, menu[MEN_OPEN_RECENT] = (IPTR) CreateMenuitem(LOCSTR(MSG_MENU_RECENT), 0),
-						MUIA_Family_Child, menu[MEN_PRINT] = (IPTR) CreateMenuitem(LOCSTR(MSG_MENU_PRINT), "P"),
+						MUIA_Family_Child, (IPTR) (menu[MEN_OPEN_FILE] =
+							CreateMenuitem(LOCSTR(MSG_MENU_FILE), 0)),
+						MUIA_Family_Child, (IPTR) (menu[MEN_OPEN_RECENT] =
+							CreateMenuitem(LOCSTR(MSG_MENU_RECENT), 0)),
+						MUIA_Family_Child, (IPTR) (menu[MEN_PRINT] =
+							CreateMenuitem(LOCSTR(MSG_MENU_PRINT), "P")),
 						MUIA_Family_Child, (IPTR) CreateMenuitem(NM_BARLABEL, NULL),
-						MUIA_Family_Child, menu[MEN_ABOUT] = (IPTR) CreateMenuitem(LOCSTR(MSG_MENU_ABOUT), "?"),
+						MUIA_Family_Child, (IPTR) (menu[MEN_ABOUT] =
+							CreateMenuitem(LOCSTR(MSG_MENU_ABOUT), "?")),
 						MUIA_Family_Child, (IPTR) CreateMenuitem(NM_BARLABEL, NULL),
-						MUIA_Family_Child, menu[MEN_QUIT] = (IPTR) CreateMenuitem(LOCSTR(MSG_MENU_QUIT), "Q"),
+						MUIA_Family_Child, (IPTR) (menu[MEN_QUIT] =
+							CreateMenuitem(LOCSTR(MSG_MENU_QUIT), "Q")),
 					End),
 			   		MUIA_Family_Child, (IPTR) (MenuObject,
 						MUIA_Menu_Title, (IPTR) LOCSTR(MSG_MENU_EDIT), 
-						MUIA_Family_Child, menu[MEN_EDIT_COPY] = (IPTR) CreateMenuitem(LOCSTR(MSG_MENU_COPY), "C"),
+						MUIA_Family_Child, (IPTR) (menu[MEN_EDIT_COPY] =
+							CreateMenuitem(LOCSTR(MSG_MENU_COPY), "C")),
 					End),
 					MUIA_Family_Child, (IPTR) (MenuObject,
 						MUIA_Menu_Title, (IPTR) LOCSTR(MSG_MENU_WINDOWS), 
-						MUIA_Family_Child, menu[MEN_WINDOWS_LOG] = (IPTR) CreateMenuitem(LOCSTR(MSG_MENU_LOG), 0),
+						MUIA_Family_Child, (IPTR) (menu[MEN_WINDOWS_LOG] =
+							CreateMenuitem(LOCSTR(MSG_MENU_LOG), 0)),
 					End),
 					MUIA_Family_Child, (IPTR) (MenuObject,
 						MUIA_Menu_Title, (IPTR) LOCSTR(MSG_MENU_SETTINGS), 
-						MUIA_Family_Child, menu[MEN_SETTINGS_SETTINGS] = 
-							(IPTR) CreateMenuitem(LOCSTR(MSG_MENU_SETTINGS_SETTINGS), 0),
-						MUIA_Family_Child, menu[MEN_SETTINGS_SAVESETTINGS] = 
-							(IPTR) CreateMenuitem(LOCSTR(MSG_MENU_SETTINGS_SAVE), 0),
-						MUIA_Family_Child, menu[MEN_SETTINGS_MUI] = 
-							(IPTR) CreateMenuitem(LOCSTR(MSG_MENU_SETTINGS_MUI), 0),
+						MUIA_Family_Child, (IPTR) (menu[MEN_SETTINGS_SETTINGS] = 
+							CreateMenuitem(LOCSTR(MSG_MENU_SETTINGS_SETTINGS), 0)),
+						MUIA_Family_Child, (IPTR) (menu[MEN_SETTINGS_SAVESETTINGS] = 
+							CreateMenuitem(LOCSTR(MSG_MENU_SETTINGS_SAVE), 0)),
+						MUIA_Family_Child, (IPTR) (menu[MEN_SETTINGS_MUI] = 
+							CreateMenuitem(LOCSTR(MSG_MENU_SETTINGS_MUI), 0)),
 					End),
-       
-                End),
-                    
+				End),
 
 #if !defined(__AROS__)
 						MUIA_Application_Commands, &rexxcommands,
@@ -582,7 +590,7 @@ static void setuprecent(Object *obj, struct Data *data)
 	
 	for(i=0; i<MAXRECENT && data->recent[i] != NULL && *data->recent[i] != '\0'; i++)
 	{
-		menu[MEN_OPEN_RECENT0-i] = (IPTR)MenuitemObject,
+		menu[MEN_OPEN_RECENT0-i] = MenuitemObject,
 					MUIA_Menuitem_Title, (IPTR)data->recent[i],
 					MUIA_Menuitem_CopyStrings, TRUE,
 					End;
