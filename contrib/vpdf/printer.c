@@ -172,7 +172,7 @@ DEFNEW
 								MUIA_Text_Contents, (IPTR) LOCSTR(MSG_PRINTER_FIRSTPAGE),
 								MUIA_Text_PreParse, (IPTR) "\33r",
 #if !defined(__AROS__)
-// FIXMI: AROS
+// FIXME: AROS
 								MUIA_Frame, MUIV_Frame_SliderKnob,
 #endif
 								MUIA_FramePhantomHoriz, TRUE,
@@ -185,7 +185,7 @@ DEFNEW
 								MUIA_Text_Contents, (IPTR) LOCSTR(MSG_PRINTER_LASTPAGE),
 								MUIA_Text_PreParse, (IPTR) "\33r",
 #if !defined(__AROS__)
-// FIXMI: AROS
+// FIXME: AROS
 								MUIA_Frame, MUIV_Frame_SliderKnob,
 #endif
 								MUIA_FramePhantomHoriz, TRUE,
@@ -377,7 +377,7 @@ DEFNEW
 								Child, (IPTR) (btnCancel2 = SimpleButton(LOCSTR(MSG_PRINTER_CANCEL))),
 							End,
 						End,	
-						Child,(IPTR) second_page,
+						Child, (IPTR) second_page,
 					End,
 					TAG_MORE, INITTAGS);
 	if (obj != NULL)
