@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
 	/* handle params */
 	{
 		struct RDArgs *myargs = NULL;
-		LONG args[ARG_NUMARGS] = {0};
+		IPTR args[ARG_NUMARGS] = {0};
 		Object *app;
 		__unused Object *window;
 		ULONG sigs = 0;
@@ -289,7 +289,7 @@ int main(int argc, char *argv[])
 				if(!port)
 				{
 					/* build new application object */
-					disk_object =GetDiskObject(_ProgramName);
+					disk_object = GetDiskObject(_ProgramName);
 					
 	            	app	= VPDFObject,
 						MUIA_Application_Title,			(IPTR)PROGNAME,
