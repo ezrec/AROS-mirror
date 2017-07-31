@@ -1,20 +1,19 @@
-diff -Naur cflow-1.4-orig/src/rc.c cflow-1.4/src/rc.c
---- cflow-1.4-orig/src/rc.c	2012-04-12 22:11:58.618154066 +0200
-+++ cflow-1.4/src/rc.c	2012-04-12 22:14:40.838613413 +0200
-@@ -108,7 +108,11 @@
+diff -Naur cflow-1.5-orig/src/rc.c cflow-1.5/src/rc.c
+--- cflow-1.5-orig/src/rc.c	2017-08-01 00:22:09.440756945 +0200
++++ cflow-1.5/src/rc.c	2017-08-01 00:26:02.641823593 +0200
+@@ -115,7 +115,11 @@
       if (env) 
  	  parse_rc(&xargc, &xargv, env);
       else {
--	  char *home = getenv("HOME");
 +#if defined(__AROS__)
 +	  char *home = "PROGDIR:";
 +#else
-+ 	  char *home = getenv("HOME");
+ 	  char *home = getenv("HOME");
 +#endif
  	  if (home) {
  	       int len = strlen(home);
  	       char *buf = malloc(len + sizeof(LOCAL_RC)
-@@ -116,8 +120,10 @@
+@@ -123,8 +127,10 @@
  	       if (!buf)
  		    return;
  	       strcpy(buf, home);
