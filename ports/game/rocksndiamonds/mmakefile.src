@@ -39,7 +39,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 
 REPOSITORIES := http://www.artsoft.org/RELEASES/unix/rocksndiamonds
-ARCHBASE     := rocksndiamonds-4.0.0.0
+ARCHBASE     := rocksndiamonds-4.0.0.2
 TARGETDIR    := $(AROS_CONTRIB)/Games/Action/Rocksndiamonds
 
 USER_CFLAGS  := -DTARGET_SDL -DRO_GAME_DIR=\"/PROGDIR/Data_RO\" -DRW_GAME_DIR=\"/PROGDIR/Data_RW\"

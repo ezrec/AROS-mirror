@@ -1,0 +1,59 @@
+diff -Naur rocksndiamonds-4.0.0.2-orig/src/libgame/platform.h rocksndiamonds-4.0.0.2/src/libgame/platform.h
+--- rocksndiamonds-4.0.0.2-orig/src/libgame/platform.h	2017-07-31 19:52:35.152379059 +0200
++++ rocksndiamonds-4.0.0.2/src/libgame/platform.h	2017-07-31 19:57:55.645776331 +0200
+@@ -41,6 +41,12 @@
+ #define PLATFORM_STRING "AmigaOS"
+ #endif
+ 
++#if defined(__AROS__)
++#define PLATFORM_AROS
++#undef  PLATFORM_STRING
++#define PLATFORM_STRING "AROS"
++#endif
++
+ #if defined(__BEOS__)
+ #define PLATFORM_BEOS
+ #undef  PLATFORM_STRING
+diff -Naur rocksndiamonds-4.0.0.2-orig/src/libgame/setup.c rocksndiamonds-4.0.0.2/src/libgame/setup.c
+--- rocksndiamonds-4.0.0.2-orig/src/libgame/setup.c	2017-07-31 19:52:35.152379059 +0200
++++ rocksndiamonds-4.0.0.2/src/libgame/setup.c	2017-07-31 19:59:40.068938200 +0200
+@@ -1336,6 +1336,8 @@
+     if (!SUCCEEDED(SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, 0, dir)))
+       strcpy(dir, ".");
+   }
++#elif defined(PLATFORM_AROS)
++  dir = "/PROGDIR";
+ #elif defined(PLATFORM_UNIX)
+   if (dir == NULL)
+   {
+diff -Naur rocksndiamonds-4.0.0.2-orig/src/main.c rocksndiamonds-4.0.0.2/src/main.c
+--- rocksndiamonds-4.0.0.2-orig/src/main.c	2017-07-31 19:52:35.148379092 +0200
++++ rocksndiamonds-4.0.0.2/src/main.c	2017-07-31 19:54:17.619540818 +0200
+@@ -5678,11 +5678,13 @@
+ 	  sdl_version.minor,
+ 	  sdl_version.patch);
+ 
++#if !defined(__AROS__)
+     SDL_IMAGE_VERSION(&sdl_version);
+     Print("- SDL_image %d.%d.%d\n",
+ 	  sdl_version.major,
+ 	  sdl_version.minor,
+ 	  sdl_version.patch);
++#endif
+ 
+     SDL_MIXER_VERSION(&sdl_version);
+     Print("- SDL_mixer %d.%d.%d\n",
+diff -Naur rocksndiamonds-4.0.0.2-orig/src/screens.c rocksndiamonds-4.0.0.2/src/screens.c
+--- rocksndiamonds-4.0.0.2-orig/src/screens.c	2017-07-31 19:52:35.148379092 +0200
++++ rocksndiamonds-4.0.0.2/src/screens.c	2017-07-31 19:55:37.106894864 +0200
+@@ -3341,8 +3341,10 @@
+ 	    sdl_version_linked->minor,
+ 	    sdl_version_linked->patch);
+ 
++#if !defined(__AROS__)
+   SDL_IMAGE_VERSION(&sdl_version_compiled);
+   sdl_version_linked = IMG_Linked_Version();
++#endif
+ 
+   ystart2 += ystep;
+   DrawTextF(xstart1, ystart2, font_text, "SDL_image");
