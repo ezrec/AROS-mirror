@@ -1,0 +1,84 @@
+# $Id$
+
+include $(SRCDIR)/config/aros-contrib.cfg
+
+#MM- ports-graphics : ports-graphics-zunepaint
+
+#MM  ports-graphics-zunepaint : \
+#MM    includes linklibs ports-graphics-zunepaint-fetch \
+#MM    ports-graphics-zunepaint-cpy
+
+#MM  ports-graphics-zunepaint-quick : ports-graphics-zunepaint-fetch
+
+REPOSITORIES := sf://zunetools
+ARCHBASE     := ZunePaint_v0.11
+TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/ZunePaint
+
+NOWARN_FLAGS :=
+#    $(NOWARN_INT_TO_POINTER_CAST) $(NOWARN_POINTER_TO_INT_CAST) \
+#    $(NOWARN_PARENTHESES) $(NOWARN_UNUSED_BUT_SET_VARIABLE) \
+#    $(NOWARN_UNUSED_CONST_VARIABLE) $(NOWARN_MISLEADING_INDENTATION)
+
+USER_CFLAGS  := $(NOWARN_FLAGS) -DZUNEPAINT -DAROS_ABI_V1
+USER_INCLUDES:= -I$(PORTSDIR)/zunepaint/$(ARCHBASE)/zunepaint/src
+ 
+FILES := \
+    SupportFunctions \
+    Picture_Filter \
+    Picture_Artistic \
+    Picture_Geometry \
+    Picture_IO \
+    Picture_Color \
+    FilterFunctions \
+    mcc_Pictdisp \
+    mcc_Histdisp \
+    Picture_GradientFill \
+    Picture_Quantize \
+    Quant_Neu \
+    Quant_Yer \
+    Quant_Octree \
+    mcc_Graddisp \
+    mcc_Matrix \
+    mcc_ScrollerPict \
+    locale \
+    Picture_Paint \
+    Win_BCG \
+    Win_Conv \
+    Win_Stat \
+    Win_Art \
+    Win_Polar \
+    Win_Color \
+    Win_Resize \
+    Win_Barrel \
+    Win_Vigneting \
+    Win_Rotation \
+    Win_Quantize \
+    Win_Save \
+    Win_ColorSel \
+    Win_GenPal \
+    Win_New \
+    Win_ZPSetting \
+    Win_GradDef \
+    mcc_GradEdit \
+    brushes \
+    ZunePaint_Tabs \
+    Picture_Masks \
+    ZunePaint
+
+
+FILES := $(addprefix $(PORTSDIR)/zunepaint/$(ARCHBASE)/ZunePaint/src/,$(FILES))
+
+%build_prog mmake=ports-graphics-zunepaint progname=ZunePaint \
+    files=$(FILES) targetdir=$(TARGETDIR) \
+    uselibs="jpeg png z mui"
+
+%fetch mmake=ports-graphics-zunepaint-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/zunepaint/$(ARCHBASE) \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip" \
+    patches_specs=zunepaint_v0.11-aros.diff:$(ARCHBASE):-p1
+
+CPFILES := ZunePaint.info
+
+%copy_files_q mmake=ports-graphics-zunepaint-cpy files=$(CPFILES) src=$(PORTSDIR)/zunepaint/$(ARCHBASE)/ZunePaint \
+    dst=$(TARGETDIR)
+
+%common

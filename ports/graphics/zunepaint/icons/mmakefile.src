@@ -1,0 +1,13 @@
+# $Id$
+
+include $(SRCDIR)/config/aros-contrib.cfg
+
+#MM- ports-graphics-zunepaint : ports-graphics-zunepaint-icons
+
+TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Gfx
+ICONS     := ZunePaint
+
+%build_icons mmake=ports-graphics-zunepaint-icons \
+	icons=$(ICONS) dir=$(TARGETDIR)
+
+%common
