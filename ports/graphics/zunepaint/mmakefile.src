@@ -6,7 +6,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM  ports-graphics-zunepaint : \
 #MM    includes linklibs ports-graphics-zunepaint-fetch \
-#MM    ports-graphics-zunepaint-cpy
+#MM    ports-graphics-zunepaint-cpy ports-graphics-zunepaint-catalogs
 
 #MM  ports-graphics-zunepaint-quick : ports-graphics-zunepaint-fetch
 
@@ -15,9 +15,6 @@ ARCHBASE     := ZunePaint_v0.11
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/ZunePaint
 
 NOWARN_FLAGS :=
-#    $(NOWARN_INT_TO_POINTER_CAST) $(NOWARN_POINTER_TO_INT_CAST) \
-#    $(NOWARN_PARENTHESES) $(NOWARN_UNUSED_BUT_SET_VARIABLE) \
-#    $(NOWARN_UNUSED_CONST_VARIABLE) $(NOWARN_MISLEADING_INDENTATION)
 
 USER_CFLAGS  := $(NOWARN_FLAGS) -DZUNEPAINT -DAROS_ABI_V1
 USER_INCLUDES:= -I$(PORTSDIR)/zunepaint/$(ARCHBASE)/zunepaint/src
@@ -80,5 +77,8 @@ CPFILES := ZunePaint.info
 
 %copy_files_q mmake=ports-graphics-zunepaint-cpy files=$(CPFILES) src=$(PORTSDIR)/zunepaint/$(ARCHBASE)/ZunePaint \
     dst=$(TARGETDIR)
+
+%copy_dir_recursive mmake=ports-graphics-zunepaint-catalogs src=$(PORTSDIR)/zunepaint/$(ARCHBASE)/ZunePaint//catalogs/french \
+    dst=$(TARGETDIR)/Catalogs/french
 
 %common
