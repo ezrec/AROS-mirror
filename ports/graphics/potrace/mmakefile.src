@@ -7,7 +7,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- ports-graphics-potrace : ports-graphics-potrace-cpy
 
 PACKAGE      := potrace
-VERSION      := 1.13
+VERSION      := 1.14
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/Potrace
 REPOSITORIES := sf://potrace
 
