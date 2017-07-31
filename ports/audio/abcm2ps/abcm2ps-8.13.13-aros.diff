@@ -1,0 +1,27 @@
+diff -Naur abcm2ps-abcm2ps-8.13.13-orig/abcm2ps.h abcm2ps-abcm2ps-8.13.13/abcm2ps.h
+--- abcm2ps-abcm2ps-8.13.13-orig/abcm2ps.h	2017-07-31 21:49:37.052849112 +0200
++++ abcm2ps-abcm2ps-8.13.13/abcm2ps.h	2017-07-31 21:50:54.140239410 +0200
+@@ -3,7 +3,9 @@
+ #include <stdio.h>
+ #include <time.h>
+ 
++#ifdef HAVE_CONFIG_H
+ #include "config.h"
++#endif
+ 
+ #define MAXVOICE 32	/* max number of voices */
+ 
+diff -Naur abcm2ps-abcm2ps-8.13.13-orig/abcparse.c abcm2ps-abcm2ps-8.13.13/abcparse.c
+--- abcm2ps-abcm2ps-8.13.13-orig/abcparse.c	2017-07-31 21:49:37.052849112 +0200
++++ abcm2ps-abcm2ps-8.13.13/abcparse.c	2017-07-31 21:51:40.503872812 +0200
+@@ -10,7 +10,10 @@
+  * (at your option) any later version.
+  */
+ 
++#ifdef HAVE_CONFIG_H
+ #include "config.h"
++#endif
++
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
