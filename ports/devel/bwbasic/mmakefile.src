@@ -13,7 +13,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM  ports-devel-bwbasic-examples : ports-devel-bwbasic-fetch
 #MM  ports-devel-bwbasic-files : ports-devel-bwbasic-fetch
 
-ARCHBASE     := bwbasic-3.10
+ARCHBASE     := bwbasic-3.20
 TARGETDIR    := $(AROS_CONTRIB)/$(AROS_DIR_DEVELOPER)/BWBasic
 REPOSITORIES := sf://bwbasic
 

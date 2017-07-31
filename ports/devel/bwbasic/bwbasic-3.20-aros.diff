@@ -1,0 +1,14 @@
+diff -Naur bwbasic-3.20-orig/bwbasic.h bwbasic-3.20/bwbasic.h
+--- bwbasic-3.20-orig/bwbasic.h	2017-07-31 20:57:52.181462841 +0200
++++ bwbasic-3.20/bwbasic.h	2017-07-31 21:01:52.131544440 +0200
+@@ -59,6 +59,10 @@
+ #include         <string.h>
+ #include         <time.h>
+ 
++#ifdef __AROS__
++#include <unistd.h>
++#include <sys/stat.h>
++#endif
+ 
+ /***************************************************************
+   
