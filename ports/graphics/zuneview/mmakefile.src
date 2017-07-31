@@ -6,17 +6,15 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM  ports-graphics-zuneview : \
 #MM    includes linklibs ports-graphics-zuneview-fetch \
-#MM    ports-graphics-zuneview-cpy
+#MM    ports-graphics-zuneview-cpy ports-graphics-zuneview-catalogs
 
 #MM  ports-graphics-zuneview-quick : ports-graphics-zuneview-fetch
 
 REPOSITORIES := sf://zunetools
-ARCHBASE     := ZuneView_v0.36
+ARCHBASE     := ZuneView_v0.37
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/ZuneView
 
-NOWARN_FLAGS := $(NOWARN_INT_TO_POINTER_CAST) $(NOWARN_POINTER_TO_INT_CAST) \
-    $(NOWARN_PARENTHESES) $(NOWARN_UNUSED_BUT_SET_VARIABLE) \
-    $(NOWARN_UNUSED_CONST_VARIABLE) $(NOWARN_MISLEADING_INDENTATION)
+NOWARN_FLAGS := 
 USER_CFLAGS  := $(NOWARN_FLAGS) -DZUNEVIEW -DAROS_ABI_V1
 USER_INCLUDES:= -I$(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView/src
  
@@ -58,6 +56,8 @@ FILES := \
     mcc_Histdisp \
     exif \
     locale \
+    Picture_Masks \
+    Picture_Paint \
     ZuneView
 
 FILES := $(addprefix $(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView/src/,$(FILES))
@@ -67,11 +67,15 @@ FILES := $(addprefix $(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView/src/,$(FILES))
     uselibs="jpeg png mui"
 
 %fetch mmake=ports-graphics-zuneview-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/zuneview/$(ARCHBASE) \
-    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip"
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip" \
+    patches_specs=zuneview_v0.37-aros.diff:$(ARCHBASE):-p1
 
 CPFILES := ZuneView.info
 
 %copy_files_q mmake=ports-graphics-zuneview-cpy files=$(CPFILES) src=$(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView \
     dst=$(TARGETDIR)
+
+%copy_dir_recursive mmake=ports-graphics-zuneview-catalogs src=$(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView/catalogs \
+    dst=$(TARGETDIR)/Catalogs
 
 %common
