@@ -22,8 +22,9 @@ REPOSITORIES := sf://vbam
 ARCHBASE     := vba-m-SVN1292-sources
 TARGETDIR    := $(AROS_CONTRIB)/Emu/Vbam
 NOWARN_FLAGS := $(NOWARN_IMPLICIT_INT) $(NOWARN_UNUSED_VARIABLE)
-USER_CXXFLAGS  := -fpermissive $(NOWARN_FLAGS) -static-libstdc++
+USER_CXXFLAGS:= -fpermissive $(NOWARN_FLAGS) -static-libstdc++
 USER_CFLAGS  := $(NOWARN_FLAGS)
+USER_INCLUDES:= -I$(AROS_CONTRIB_DEVELOPER)/include
 
 CONFIG_CXXFLAGS := $(subst -Werror ,,$(CONFIG_CXXFLAGS))
 
