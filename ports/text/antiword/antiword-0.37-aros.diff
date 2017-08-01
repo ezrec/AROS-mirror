@@ -1,6 +1,6 @@
-diff -Naur antiword-0.37.orig/antiword.h antiword-0.37/antiword.h
---- antiword-0.37.orig/antiword.h	2010-06-07 22:49:23.415858495 +0200
-+++ antiword-0.37/antiword.h	2010-06-07 22:57:36.714600480 +0200
+diff -Naur antiword-0.37-orig/antiword.h antiword-0.37/antiword.h
+--- antiword-0.37-orig/antiword.h	2005-07-06 19:46:22.000000000 +0200
++++ antiword-0.37/antiword.h	2017-08-01 12:13:51.430657393 +0200
 @@ -195,6 +195,10 @@
  #define GLOBAL_ANTIWORD_DIR	"C:\\antiword"
  #define ANTIWORD_DIR		"antiword"
@@ -12,9 +12,22 @@ diff -Naur antiword-0.37.orig/antiword.h antiword-0.37/antiword.h
  #elif defined(__amigaos)
  #define GLOBAL_ANTIWORD_DIR	"SYS:.antiword"
  #define ANTIWORD_DIR		".antiword"
-diff -Naur antiword-0.37.orig/misc.c antiword-0.37/misc.c
---- antiword-0.37.orig/misc.c	2010-06-07 22:49:23.404638612 +0200
-+++ antiword-0.37/misc.c	2010-06-07 22:50:18.294600436 +0200
+diff -Naur antiword-0.37-orig/main_u.c antiword-0.37/main_u.c
+--- antiword-0.37-orig/main_u.c	2005-01-15 21:08:51.000000000 +0100
++++ antiword-0.37/main_u.c	2017-08-01 12:43:40.622474286 +0200
+@@ -269,7 +269,9 @@
+ #endif /* __STDC_ISO_10646__ */
+ 	} else {
+ 		if (setlocale(LC_CTYPE, "") == NULL) {
++#if !defined(__AROS__)
+ 			werr(0, "Can't set the locale! Will use defaults");
++#endif
+ 			(void)setlocale(LC_CTYPE, "C");
+ 		}
+ 		DBG_MSG("The locale has been set");
+diff -Naur antiword-0.37-orig/misc.c antiword-0.37/misc.c
+--- antiword-0.37-orig/misc.c	2005-07-30 16:43:45.000000000 +0200
++++ antiword-0.37/misc.c	2017-08-01 12:13:51.430657393 +0200
 @@ -39,6 +39,8 @@
  	szHome = decc$translate_vms(getenv("HOME"));
  #elif defined(__Plan9__)
