@@ -14,30 +14,32 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM  ports-game-gnurobbo-quick : ports-game-gnurobbo-fetch
 
 REPOSITORIES := sf://gnurobbo
-ARCHBASE     := gnurobbo-0.66
+ARCHBASE     := gnurobbo-0.68
 TARGETDIR    := $(AROS_CONTRIB)/Games/Action/GnuRobbo
 SDL_PREFIX   := $(AROS_DEVELOPER)
 
 NOWARN_FLAGS := $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_UNUSED_BUT_SET_VARIABLE)
 USER_CFLAGS  := $(NOWARN_FLAGS) $(shell $(SDL_PREFIX)/bin/sdl-config --prefix=$(SDL_PREFIX) --cflags) \
-                -DPLATFORM_AROS -DVERSION=\"0.66\" -DPACKAGE_DATA_DIR=\"PROGDIR:data\" -DHAVE_DESIGNER -DHAVE_MUSIC
+                -DPLATFORM_AROS -DVERSION=\"0.66\" -DPACKAGE_DATA_DIR=\"PROGDIR:data\" -DHAVE_DESIGNER -DHAVE_MUSIC \
+                -DLIGHTNINGENABLED=\"yes\" -D_SMOOTH_SCRL_=\"yes\"
 USER_INCLUDES:= -I$(AROS_CONTRIB_INCLUDES)
 USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
 FILES := \
-	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/board \
-	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/controls \
-	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/font \
-	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/game \
-	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/konstruktor \
-	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/levels \
-	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/locales \
-	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/pointer_controls \
-	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/rcfile \
-	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/ROB_engine \
-	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/screen \
-	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/skins \
-	$(PORTSDIR)/gnurobbo/$(ARCHBASE)/sound
+	board \
+	controls \
+	font \
+	game \
+	konstruktor \
+	levels \
+	locales \
+	pointer_controls \
+	rcfile \
+	ROB_engine \
+	screen \
+	skins \
+	sound
+FILES := $(addprefix $(PORTSDIR)/gnurobbo/$(ARCHBASE)/gnurobbo/,$(FILES))
 
 %build_prog mmake=ports-game-gnurobbo progname=GnuRobbo \
     files=$(FILES) targetdir=$(TARGETDIR) \
@@ -45,7 +47,7 @@ FILES := \
 
 %fetch mmake=ports-game-gnurobbo-fetch archive=$(ARCHBASE)-source destination=$(PORTSDIR)/gnurobbo \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
-    patches_specs=gnurobbo-0.66-aros.diff:$(ARCHBASE):-p1
+    patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
 
 %create_patch mmake=ports-game-gnurobbo-create-patch \
     archive=$(ARCHBASE)-source \
@@ -54,12 +56,12 @@ FILES := \
     destination=$(PORTSDIR)/gnurobbo
 
 
-%copy_dir_recursive mmake=ports-game-gnurobbo-data src=$(PORTSDIR)/gnurobbo/$(ARCHBASE)/data \
+%copy_dir_recursive mmake=ports-game-gnurobbo-data src=$(PORTSDIR)/gnurobbo/$(ARCHBASE)/gnurobbo/data \
     dst=$(TARGETDIR)/data
 
 CPYFILES := ChangeLog NEWS COPYING README LICENSE-sound LICENSE-ttf
 
-%copy_files_q mmake=ports-game-gnurobbo-cpy files=$(CPYFILES) src=$(PORTSDIR)/gnurobbo/$(ARCHBASE) \
+%copy_files_q mmake=ports-game-gnurobbo-cpy files=$(CPYFILES) src=$(PORTSDIR)/gnurobbo/$(ARCHBASE)/gnurobbo \
     dst=$(TARGETDIR)
 
 %common

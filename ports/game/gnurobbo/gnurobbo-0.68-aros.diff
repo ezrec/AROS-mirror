@@ -1,0 +1,156 @@
+diff -Naur gnurobbo-0.68-orig/gnurobbo/controls.c gnurobbo-0.68/gnurobbo/controls.c
+--- gnurobbo-0.68-orig/gnurobbo/controls.c	2017-08-02 17:52:10.133830065 +0200
++++ gnurobbo-0.68/gnurobbo/controls.c	2017-08-02 18:09:19.918861768 +0200
+@@ -563,7 +563,7 @@
+ 	/* Set some defaults */
+ 	for (count = 0; count < USER_CONTROLS; count++)
+ 	{
+-		#if defined(PLATFORM_WIN32) || defined(PLATFORM_PC)
++		#if defined(PLATFORM_WIN32) || defined(PLATFORM_PC) || defined(PLATFORM_AROS)
+ 			user_controls[count].device = DEVICE_KEYBOARD;
+ 		#elif defined(PLATFORM_GP2X)  || defined(PLATFORM_CAANOO)
+ 			user_controls[count].device = DEVICE_JOYSTICK;
+@@ -587,7 +587,7 @@
+ 	 * you don't want to use a control then just set its device to UNDEFINED
+ 	 * (id and mod are already set to UNDEFINED from the above code) otherwise
+ 	 * within Options you'll see the device shown on its own which looks weird */
+-	#if defined(PLATFORM_WIN32) || defined(PLATFORM_PC)
++	#if defined(PLATFORM_WIN32) || defined(PLATFORM_PC) || defined(PLATFORM_AROS)
+ 		user_controls[ACTION_UP].id = SDLK_UP;
+ 		user_controls[ACTION_UP_RIGHT].device = UNDEFINED;
+ 		user_controls[ACTION_RIGHT].id = SDLK_RIGHT;
+@@ -872,7 +872,7 @@
+ 	{
+ 		/* WARNING: attempting to close joystick 0 on the GP2X
+ 		 * using the GPH SDK causes a seg fault */
+-		#if defined(PLATFORM_WIN32) || defined(PLATFORM_PC)
++		#if defined(PLATFORM_WIN32) || defined(PLATFORM_PC) || defined(PLATFORM_AROS)
+ 			if (joystick)
+ 			{
+ 		#elif defined(PLATFORM_GP2X)  || defined(PLATFORM_CAANOO)
+diff -Naur gnurobbo-0.68-orig/gnurobbo/game.c gnurobbo-0.68/gnurobbo/game.c
+--- gnurobbo-0.68-orig/gnurobbo/game.c	2017-08-02 17:52:10.129830092 +0200
++++ gnurobbo-0.68/gnurobbo/game.c	2017-08-02 18:13:27.453211540 +0200
+@@ -180,7 +180,7 @@
+   pointer_controls.state = POINTER_CONTROLS_MODE_OFF;
+   pointer_controls.shoot_state = POINTER_CONTROLS_SHOOT_OFF;
+   pointer_controls.pad_type = POINTER_CONTROLS_PAD_TYPE_VIEWPORT;	/* POINTER_CONTROLS_PAD_TYPE_SCREEN; */
+-#if defined(PLATFORM_WIN32) || defined(PLATFORM_PC) || defined(PLATFORM_CAANOO)
++#if defined(PLATFORM_WIN32) || defined(PLATFORM_PC) || defined(PLATFORM_CAANOO) || defined(PLATFORM_AROS)
+   gnurobbo_op_env.systempointer = TRUE;
+ #elif defined(PLATFORM_GP2X)
+   gnurobbo_op_env.systempointer = FALSE;
+@@ -357,6 +357,8 @@
+ 	#elif defined(PLATFORM_PC)
+ 		strcpy (path_resource_file, getenv ("HOME"));
+ 		strcat (path_resource_file, "/");
++	#elif defined(PLATFORM_AROS)
++		strcpy (path_resource_file, "PROGDIR:");
+ 	#elif defined(PLATFORM_GP2X)  || defined(PLATFORM_CAANOO)
+ 		strcpy (path_resource_file, "./");
+ 	#elif defined(PLATFORM_ZAURUS)
+@@ -468,7 +470,7 @@
+ 	  initialise_joystick (UNDEFINED, default_joystick_name, TRUE);
+     }
+ 
+-#if defined(PLATFORM_WIN32) || defined(PLATFORM_PC)
++#if defined(PLATFORM_WIN32) || defined(PLATFORM_PC) || defined(PLATFORM_AROS)
+   /* Load the window manager icon and set caption */
+   set_wm_icon();
+   SDL_WM_SetCaption ("GNU Robbo", "gnurobbo");
+@@ -1608,7 +1610,7 @@
+ 
+   /* WARNING: attempting to close joystick 0 on the GP2X using the GPH
+    * SDK causes a seg fault and it may do the same on similar devices */
+-#if defined(PLATFORM_WIN32) || defined(PLATFORM_PC)
++#if defined(PLATFORM_WIN32) || defined(PLATFORM_PC) || defined(PLATFORM_AROS)
+   if (joystick)
+     SDL_JoystickClose (joystick);
+ #elif defined(PLATFORM_GP2X)  || defined(PLATFORM_CAANOO)
+diff -Naur gnurobbo-0.68-orig/gnurobbo/game.h gnurobbo-0.68/gnurobbo/game.h
+--- gnurobbo-0.68-orig/gnurobbo/game.h	2017-08-02 17:52:10.133830065 +0200
++++ gnurobbo-0.68/gnurobbo/game.h	2017-08-02 18:15:49.036269136 +0200
+@@ -84,8 +84,13 @@
+ */
+ 
+ 
++#ifndef TRUE
+ #define TRUE 1
++#endif
++#ifndef FALSE
+ #define FALSE 0
++#endif
++ 
+ 
+ #define UNDEFINED -1
+ 
+diff -Naur gnurobbo-0.68-orig/gnurobbo/levels.c gnurobbo-0.68/gnurobbo/levels.c
+--- gnurobbo-0.68-orig/gnurobbo/levels.c	2017-08-02 17:52:10.129830092 +0200
++++ gnurobbo-0.68/gnurobbo/levels.c	2017-08-02 18:37:51.976108821 +0200
+@@ -192,7 +192,7 @@
+ 	FILE *fp;
+ 	char fullpath[256];
+ 	#if defined(PLATFORM_WIN32)
+-	#elif defined(PLATFORM_PC) || defined(PLATFORM_ZAURUS) || defined(PLATFORM_FREMANTLE)
++	#elif defined(PLATFORM_PC) || defined(PLATFORM_ZAURUS) || defined(PLATFORM_FREMANTLE) || defined(PLATFORM_AROS)
+ 		char foldername[256];
+ 	#elif defined(PLATFORM_GP2X)  || defined(PLATFORM_CAANOO)
+ 	#elif defined(PLATFORM_PSP)
+@@ -204,6 +204,9 @@
+ 	#elif defined(PLATFORM_PC) || defined(PLATFORM_ZAURUS) || defined(PLATFORM_FREMANTLE)
+ 		strcpy (fullpath, getenv ("HOME"));
+ 		strcat (fullpath, "/" LOCAL_DATA_DIR "/" LEVELS_DIR "/" DEFAULT_USER_LEVEL_PACK);
++	#elif defined(PLATFORM_AROS)
++		strcpy (fullpath, "PROGDIR:");
++		strcpy (fullpath, PACKAGE_DATA_DIR "/" LEVELS_DIR "/" DEFAULT_USER_LEVEL_PACK);
+ 	#elif defined(PLATFORM_GP2X) || defined(PLATFORM_PSP)  || defined(PLATFORM_CAANOO)
+ 		strcpy (fullpath, PACKAGE_DATA_DIR "/" LEVELS_DIR "/" DEFAULT_USER_LEVEL_PACK);
+ 	#endif
+@@ -224,6 +227,12 @@
+ 				mkdir (foldername, 0755);
+ 				strcat (foldername, "/" LEVELS_DIR);
+ 				mkdir (foldername, 0755);
++			#elif defined(PLATFORM_AROS)
++				strcpy (foldername, "PROGDIR:");
++				strcat (foldername, LOCAL_DATA_DIR);
++				mkdir (foldername, 0755);
++				strcat (foldername, "/" LEVELS_DIR);
++				mkdir (foldername, 0755);
+ 			#elif defined(PLATFORM_GP2X)  || defined(PLATFORM_CAANOO)
+ 			#elif defined(PLATFORM_PSP)
+ 			#endif
+@@ -309,6 +318,8 @@
+ 
+ 	#if defined(PLATFORM_WIN32)
+ 		for (count = 0; count < 1; count++)
++	#elif defined(PLATFORM_AROS)
++		for (count = 0; count < 1; count++)
+ 	#elif defined(PLATFORM_PC) || defined(PLATFORM_ZAURUS) || defined(PLATFORM_FREMANTLE)
+ 		for (count = 0; count < 2; count++)
+ 	#elif defined(PLATFORM_GP2X) || defined(PLATFORM_PSP)  || defined(PLATFORM_CAANOO)
+diff -Naur gnurobbo-0.68-orig/gnurobbo/locales.c gnurobbo-0.68/gnurobbo/locales.c
+--- gnurobbo-0.68-orig/gnurobbo/locales.c	2017-08-02 17:52:10.133830065 +0200
++++ gnurobbo-0.68/gnurobbo/locales.c	2017-08-02 18:35:23.097057260 +0200
+@@ -326,6 +326,10 @@
+ 		strcpy (config_items[++row].name, "[txt_intro_keys_PLATFORM_PC]");
+ 		config_items[row].destination = txt_intro_keys;
+ 		config_items[row].max_rows = TXT_INTRO_KEYS_ROWS;
++	#elif defined(AROS)
++		strcpy (config_items[++row].name, "[txt_intro_keys_PLATFORM_AROS]");
++		config_items[row].destination = txt_intro_keys;
++		config_items[row].max_rows = TXT_INTRO_KEYS_ROWS;
+ 	#elif defined(PLATFORM_GP2X) || defined(PLATFORM_CAANOO)
+ 		strcpy (config_items[++row].name, "[txt_intro_keys_PLATFORM_GP2X]");
+ 		config_items[row].destination = txt_intro_keys;
+diff -Naur gnurobbo-0.68-orig/gnurobbo/rcfile.h gnurobbo-0.68/gnurobbo/rcfile.h
+--- gnurobbo-0.68-orig/gnurobbo/rcfile.h	2017-08-02 17:52:10.133830065 +0200
++++ gnurobbo-0.68/gnurobbo/rcfile.h	2017-08-02 18:20:10.858675704 +0200
+@@ -23,6 +23,8 @@
+ 	#define RESOURCE_FILE "gnurobborc"
+ #elif defined(PLATFORM_PC)
+ 	#define RESOURCE_FILE ".gnurobborc"
++#elif defined(PLATFORM_AROS)
++	#define RESOURCE_FILE "gnurobborc"
+ #elif defined(PLATFORM_GP2X) || defined(PLATFORM_CAANOO)
+ 	#define RESOURCE_FILE "gnurobborc"
+ #elif defined(PLATFORM_ZAURUS)
