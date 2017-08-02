@@ -11,9 +11,9 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM  ports-audio-freepats
 
 PACKAGE      := gnujump
-VERSION      := 1.0.5
+VERSION      := 1.0.8
 TARGETDIR    := $(AROS_CONTRIB)/Games/Platform/Gnujump
-REPOSITORIES := http://download.savannah.gnu.org/releases/gnujump
+REPOSITORIES := gnu://gnujump
 
 USER_INCLUDES:= -I$(AROS_CONTRIB_INCLUDES)
 USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
