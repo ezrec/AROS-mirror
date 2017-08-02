@@ -12,7 +12,9 @@ VERSION      := 0.90.86
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Audio/MilkyTracker
 REPOSITORIES := http://milkytracker.org/files
 
-USER_CXXFLAGS:= -std=c++03 $(CFLAGS_PERMISSIVE)
+USER_CXXFLAGS:= -std=c++03 -UHAVE_CONFIG_H $(CFLAGS_PERMISSIVE)
+USER_INCLUDES:= -I$(AROS_CONTRIB_DEVELOPER)/include
+USER_LDFLAGS := -static-libstdc++
 
 %fetch_and_build mmake=ports-audio-milkytracker prefix=$(TARGETDIR) \
 	package=$(PACKAGE) version=$(VERSION) suffixes="tar.bz2" \
