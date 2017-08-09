@@ -49,8 +49,8 @@ struct CxCallbackUserData {
 };
 
 struct MUIP_CommoditiesWin_CxCommand {
-    ULONG method;
-    UBYTE *command;
+    STACKED ULONG method;
+    STACKED UBYTE *command;
 };
 
 HOOKPROTONHNO(cxlist_con2func, IPTR, struct NList_ConstructMessage *msg)

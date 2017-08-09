@@ -34,11 +34,11 @@ struct SignalWinData {
     APTR swd_OkButton;
 };
 
-struct MUIP_SignalWin_GetSignals { ULONG methodID; STRPTR objname; ULONG *signals; };
+struct MUIP_SignalWin_GetSignals { STACKED ULONG methodID; STACKED STRPTR objname; STACKED ULONG *signals; };
 
-struct MUIP_SigBitChanged { ULONG whichbit; ULONG state; };
+struct MUIP_SigBitChanged { STACKED ULONG whichbit; STACKED ULONG state; };
 
-struct MUIP_SigStrChanged { UBYTE str; };
+struct MUIP_SigStrChanged { STACKED UBYTE str; };
 
 HOOKPROTONH(hex_editfunc, ULONG, struct SGWork *sgw, IPTR *msg)
 {

@@ -39,8 +39,8 @@ struct VectorsCallbackUserData {
 };
 
 struct MUIP_VectorsWin_Disassemble {
-    ULONG methodID;
-    APTR button;
+    STACKED ULONG methodID;
+    STACKED APTR button;
 };
 
 void ClearResetVectors( void )

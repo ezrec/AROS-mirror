@@ -35,10 +35,10 @@ struct FunctionsWinData {
 };
 
 struct MUIP_FunctionsWin_ShowFunctionsMessage {
-    ULONG MethodID;
-    ULONG nodeType;
-    APTR base;
-    STRPTR name;
+    STACKED ULONG MethodID;
+    STACKED ULONG nodeType;
+    STACKED APTR base;
+    STACKED STRPTR name;
 };
 
 struct FunctionsEntry {

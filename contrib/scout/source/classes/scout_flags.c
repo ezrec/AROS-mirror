@@ -33,12 +33,12 @@ struct FlagsWinData {
 };
 
 struct MUIP_FlagsWin_ShowFlagsMessage {
-    ULONG MethodID;
-    ULONG value;
-    ULONG type;
-    void *bitarray;
-    void *maskarray;
-    UBYTE *title;
+    STACKED ULONG MethodID;
+    STACKED ULONG value;
+    STACKED ULONG type;
+    STACKED void *bitarray;
+    STACKED void *maskarray;
+    STACKED UBYTE *title;
 };
 
 struct FlagsEntry {
