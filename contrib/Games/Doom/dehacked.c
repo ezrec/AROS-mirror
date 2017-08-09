@@ -311,36 +311,36 @@ void DE_Text(FILE* f,int len1,int len2)
   if(len1>6)
     return;
 
-    if(fread(s,len1+len2,1,f))
-    {
-      for(i=0;i<108;i++)
-        if(!strncmp(S_sfx[i].name,s,len1))
-        {
-          strncpy(S_sfx[i].name,&(s[len1]),len2);
-          return;
-        }
-      for(i=0;i<NUMSPRITES;i++)
-        if(!strncmp(sprnames[i],s,len1))
-        {
-          strncpy(sprnames[i],&(s[len1]),len2);
-          return;
-        }
-      for(i=0;i<NUMSPRITES;i++)
-        if(!strncmp(sprnames[i],s,len1))
-        {
-          strncpy(sprnames[i],&(s[len1]),len2);
-          return;
-        }
-      for(i=1;i<68;i++)
-        if(!strncmp(S_music[i].name,s,len1))
-        {
-          strncpy(S_music[i].name,&(s[len1]),len2);
-          return;
-        }
+  if(fread(s,len1+len2,1,f))
+  {
+    for(i=0;i<108;i++)
+      if(!strncmp(S_sfx[i].name,s,len1))
+      {
+        strncpy(S_sfx[i].name,&(s[len1]),len2);
+        return;
+      }
+    for(i=0;i<NUMSPRITES;i++)
+      if(!strncmp(sprnames[i],s,len1))
+      {
+        strncpy(sprnames[i],&(s[len1]),len2);
+        return;
+      }
+    for(i=0;i<NUMSPRITES;i++)
+      if(!strncmp(sprnames[i],s,len1))
+      {
+        strncpy(sprnames[i],&(s[len1]),len2);
+        return;
+      }
+    for(i=1;i<68;i++)
+      if(!strncmp(S_music[i].name,s,len1))
+      {
+        strncpy(S_music[i].name,&(s[len1]),len2);
+        return;
+      }
       /* more text to follow */
 
 
-    }
+  }
 }
 
 
