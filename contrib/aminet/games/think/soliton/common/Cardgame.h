@@ -42,17 +42,17 @@ extern struct MUI_CustomClass *CL_Cardgame;
 
 /*** Method structs ***/
 
-struct MUIP_Cardgame_DragStart      {ULONG ID; LONG source; LONG* size;};
-struct MUIP_Cardgame_DragAccept     {ULONG ID; LONG source; LONG dest; LONG size; int* cards;};
-struct MUIP_Cardgame_DragDone       {ULONG ID; LONG source; LONG dest; LONG size;};
-struct MUIP_Cardgame_ClickCard      {ULONG ID; LONG pile;   LONG nr;   LONG dblclck;};
-struct MUIP_Cardgame_TimerTick      {ULONG ID; LONG sec;};
+struct MUIP_Cardgame_DragStart      {STACKED ULONG ID; STACKED LONG source; STACKED LONG* size;};
+struct MUIP_Cardgame_DragAccept     {STACKED ULONG ID; STACKED LONG source; STACKED LONG dest; STACKED LONG size; STACKED int* cards;};
+struct MUIP_Cardgame_DragDone       {STACKED ULONG ID; STACKED LONG source; STACKED LONG dest; STACKED LONG size;};
+struct MUIP_Cardgame_ClickCard      {STACKED ULONG ID; STACKED LONG pile;   STACKED LONG nr;   STACKED LONG dblclck;};
+struct MUIP_Cardgame_TimerTick      {STACKED ULONG ID; STACKED LONG sec;};
 
-struct MUIP_Cardgame_SetGraphic     {ULONG ID; char* cardset; char* pattern;};
-struct MUIP_Cardgame_SetCards       {ULONG ID; LONG pile;   int* cards; LONG size;};
-struct MUIP_Cardgame_GetCards       {ULONG ID; LONG pile;   int* cards; LONG* size;};
-struct MUIP_Cardgame_MoveCards      {ULONG ID; LONG source; LONG dest;  LONG size;};
-struct MUIP_Cardgame_SetEmptyImage  {ULONG ID; LONG pile;   LONG img;};
+struct MUIP_Cardgame_SetGraphic     {STACKED ULONG ID; STACKED char* cardset; STACKED char* pattern;};
+struct MUIP_Cardgame_SetCards       {STACKED ULONG ID; STACKED LONG pile;   STACKED int* cards; STACKED LONG size;};
+struct MUIP_Cardgame_GetCards       {STACKED ULONG ID; STACKED LONG pile;   STACKED int* cards; STACKED LONG* size;};
+struct MUIP_Cardgame_MoveCards      {STACKED ULONG ID; STACKED LONG source; STACKED LONG dest;  STACKED LONG size;};
+struct MUIP_Cardgame_SetEmptyImage  {STACKED ULONG ID; STACKED LONG pile;   STACKED LONG img;};
 
 /*** Attributes ***/
 
