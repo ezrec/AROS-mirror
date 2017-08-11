@@ -771,19 +771,19 @@ MUIM_Chess_Eval,
 MUIM_Chess_Stats
 };
 
-struct MUIP_Chess_ShowThinking {unsigned long MethodID; char *line; };
-struct MUIP_Chess_Post {unsigned long MethodID; int value; };
-struct MUIP_Chess_NullMove {unsigned long MethodID; int value; };
-struct MUIP_Chess_Supervisor {unsigned long MethodID; int value; };
-struct MUIP_Chess_Depth {unsigned long MethodID; int depth; };
-struct MUIP_Chess_Time { unsigned long MethodID; int flag; };
-struct MUIP_Chess_ReverseBoard {unsigned long MethodID; int reverse; };
-struct MUIP_Chess_Autoplay {unsigned long MethodID; int autoplay; };
-struct MUIP_Chess_MyMove {unsigned long MethodID; char *move; };
-struct MUIP_Chess_Board { unsigned long MethodID; void *menu; };
-struct MUIP_Chess_Pieces { unsigned long MethodID; void *menu; };
-struct MUIP_Chess_ClearFlag { unsigned long MethodID; int flag; };
-struct MUIP_Chess_AddMove { unsigned long MethodID; int side; char *move; };
+struct MUIP_Chess_ShowThinking {STACKED unsigned long MethodID; STACKED char *line; };
+struct MUIP_Chess_Post {STACKED unsigned long MethodID; STACKED int value; };
+struct MUIP_Chess_NullMove {STACKED unsigned long MethodID; STACKED int value; };
+struct MUIP_Chess_Supervisor {STACKED unsigned long MethodID; STACKED int value; };
+struct MUIP_Chess_Depth {STACKED unsigned long MethodID; STACKED int depth; };
+struct MUIP_Chess_Time { STACKED unsigned long MethodID; STACKED int flag; };
+struct MUIP_Chess_ReverseBoard {STACKED unsigned long MethodID; STACKED int reverse; };
+struct MUIP_Chess_Autoplay {STACKED unsigned long MethodID; STACKED int autoplay; };
+struct MUIP_Chess_MyMove {STACKED unsigned long MethodID; STACKED char *move; };
+struct MUIP_Chess_Board { STACKED unsigned long MethodID; STACKED void *menu; };
+struct MUIP_Chess_Pieces {STACKED  unsigned long MethodID; STACKED void *menu; };
+struct MUIP_Chess_ClearFlag { STACKED unsigned long MethodID; STACKED int flag; };
+struct MUIP_Chess_AddMove { STACKED unsigned long MethodID; STACKED int side; STACKED char *move; };
 
 #ifdef __MIXEDBINARY__
 
