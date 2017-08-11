@@ -32,7 +32,7 @@
 #define PP_MODE_SINGLE 0
 #define PP_MODE_REPEAT 1
 
-int pceFontPrintf (const char *fmt, ...);
+void pceFontPrintf (const char *fmt, ...);
 void pceFontSetTxColor (int color);
 void pceFontSetBkColor (int color);
 void pceFontSetPos (int x, int y);

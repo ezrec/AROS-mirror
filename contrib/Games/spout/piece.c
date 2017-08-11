@@ -175,14 +175,14 @@ pceLCDSetBuffer (unsigned char *pbuff)
 
 int font_posX = 0, font_posY = 0, font_width = 4, font_height = 6;
 unsigned char font_fgcolor = 3, font_bgcolor = 0, font_bgclear = 0;
-const char *font_adr = FONT6;
+const unsigned char *font_adr = FONT6;
 
 void
 pceFontSetType (int type)
 {
   const int width[] = { 5, 8, 4 };
   const int height[] = { 10, 16, 6 };
-  const char *adr[] = { FONT6, FONT16, FONT6 };
+  const unsigned char *adr[] = { FONT6, FONT16, FONT6 };
 
   type &= 3;
   font_width = width[type];
@@ -217,7 +217,7 @@ pceFontSetPos (int x, int y)
   font_posY = y;
 }
 
-int
+void
 pceFontPrintf (const char *fmt, ...)
 {
   unsigned char *adr = vBuffer + font_posX + font_posY * 128;
@@ -229,7 +229,7 @@ pceFontPrintf (const char *fmt, ...)
   vsprintf (c, fmt, argp);
   va_end (argp);
 
-  pC = c;
+  pC = (unsigned char*)c;
   while (*pC)
     {
       int i, x, y;
