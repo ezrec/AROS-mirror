@@ -46,16 +46,16 @@ STATIC void SetDetails( struct IClass *cl,
     struct MsgPort *mp = pe->pe_Addr;
 
     MySetContentsHealed(pdwd->pdwd_Texts[ 0], "%s", nonetest(mp->mp_Node.ln_Name));
-    MySetContents(pdwd->pdwd_Texts[ 1], "$%08lx", mp);
+    MySetContents(pdwd->pdwd_Texts[ 1], ADDRESS_FORMAT, mp);
     MySetContents(pdwd->pdwd_Texts[ 2], "%s", GetNodeType(mp->mp_Node.ln_Type));
     MySetContents(pdwd->pdwd_Texts[ 3], "%ld", mp->mp_Node.ln_Pri);
     set(pdwd->pdwd_Texts[ 4], MUIA_FlagsButton_Flags, mp->mp_Flags);
     MySetContents(pdwd->pdwd_Texts[ 5], "%s", GetSigBitName(mp->mp_SigBit));
     set(pdwd->pdwd_Texts[ 6], MUIA_TaskButton_Task, mp->mp_SigTask);
-    MySetContents(pdwd->pdwd_Texts[ 7], "$%08lx", &mp->mp_MsgList);
-    MySetContents(pdwd->pdwd_Texts[ 8], "$%08lx", mp->mp_MsgList.lh_Head);
-    MySetContents(pdwd->pdwd_Texts[ 9], "$%08lx", mp->mp_MsgList.lh_Tail);
-    MySetContents(pdwd->pdwd_Texts[10], "$%08lx", mp->mp_MsgList.lh_TailPred);
+    MySetContents(pdwd->pdwd_Texts[ 7], ADDRESS_FORMAT, &mp->mp_MsgList);
+    MySetContents(pdwd->pdwd_Texts[ 8], ADDRESS_FORMAT, mp->mp_MsgList.lh_Head);
+    MySetContents(pdwd->pdwd_Texts[ 9], ADDRESS_FORMAT, mp->mp_MsgList.lh_Tail);
+    MySetContents(pdwd->pdwd_Texts[10], ADDRESS_FORMAT, mp->mp_MsgList.lh_TailPred);
 
     set(obj, MUIA_Window_Title, MyGetChildWindowTitle(txtPortsDetailTitle, pe->pe_Name, pdwd->pdwd_Title, sizeof(pdwd->pdwd_Title)));
 }

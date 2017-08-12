@@ -12,7 +12,7 @@ static void UpdateButton( struct IClass *cl,
     struct DisassemblerButtonData *dbd = INST_DATA(cl, obj);
     TEXT tmp[ADDRESS_LENGTH];
 
-    _snprintf(tmp, sizeof(tmp), "$%08lx", dbd->dbd_Address);
+    _snprintf(tmp, sizeof(tmp), ADDRESS_FORMAT, dbd->dbd_Address);
     SetAttrs(obj, MUIA_Disabled, !isValidPointer(dbd->dbd_Address),
                   MUIA_Text_Contents, tmp,
                   TAG_DONE);

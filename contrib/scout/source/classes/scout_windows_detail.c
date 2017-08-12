@@ -292,9 +292,9 @@ STATIC void SetDetails( struct IClass *cl,
         DoMethod(wdwd->wdwd_MainGroup, MUIM_Group_ExitChange);
 
         MySetContents(texts[ 0], "%s", nonetest((STRPTR)scr->Title));
-        MySetContents(texts[ 1], "$%08lx", scr);
-        MySetContents(texts[ 2], "$%08lx", scr->NextScreen);
-        MySetContents(texts[ 3], "$%08lx", scr->FirstWindow);
+        MySetContents(texts[ 1], ADDRESS_FORMAT, scr);
+        MySetContents(texts[ 2], ADDRESS_FORMAT, scr->NextScreen);
+        MySetContents(texts[ 3], ADDRESS_FORMAT, scr->FirstWindow);
         MySetContents(texts[ 4], "%lD", scr->LeftEdge);
         MySetContents(texts[ 5], "%lD", scr->TopEdge);
         MySetContents(texts[ 6], "%lD", scr->Width);
@@ -349,19 +349,19 @@ STATIC void SetDetails( struct IClass *cl,
         MySetContents(texts[22], " %2lD ", depth);
         MySetContents(texts[23], txtWindowColors, (1L << (depth == 32 ? 24 : depth)));
         MySetContents(texts[24], "%s/%ld", scr->Font->ta_Name, scr->Font->ta_YSize);
-        MySetContents(texts[25], "$%08lx", &scr->ViewPort);
-        MySetContents(texts[26], "$%08lx", &scr->RastPort);
-        MySetContents(texts[27], "$%08lx", scr->RastPort.BitMap);
+        MySetContents(texts[25], ADDRESS_FORMAT, &scr->ViewPort);
+        MySetContents(texts[26], ADDRESS_FORMAT, &scr->RastPort);
+        MySetContents(texts[27], ADDRESS_FORMAT, scr->RastPort.BitMap);
         MySetContents(texts[28], "%lU", GetBitMapAttr(scr->RastPort.BitMap, BMA_WIDTH));
         MySetContents(texts[29], "%lU", GetBitMapAttr(scr->RastPort.BitMap, BMA_HEIGHT));
         MySetContents(texts[30], "%lU", GetBitMapAttr(scr->RastPort.BitMap, BMA_DEPTH));
         set(texts[31], MUIA_FlagsButton_Flags, GetBitMapAttr(scr->RastPort.BitMap, BMA_FLAGS));
-        MySetContents(texts[32], "$%08lx", &scr->LayerInfo);
-        MySetContents(texts[33], "$%08lx", scr->FirstGadget);
+        MySetContents(texts[32], ADDRESS_FORMAT, &scr->LayerInfo);
+        MySetContents(texts[33], ADDRESS_FORMAT, scr->FirstGadget);
         MySetContents(texts[34], "%lD", scr->DetailPen);
         MySetContents(texts[35], "%lD", scr->BlockPen);
         MySetContents(texts[36], "%lD", scr->SaveColor0);
-        MySetContents(texts[37], "$%08lx", scr->BarLayer);
+        MySetContents(texts[37], ADDRESS_FORMAT, scr->BarLayer);
         set(texts[38], MUIA_DisassemblerButton_Address, scr->ExtData);
         set(texts[39], MUIA_DisassemblerButton_Address, scr->UserData);
 
@@ -570,8 +570,8 @@ STATIC void SetDetails( struct IClass *cl,
         DoMethod(wdwd->wdwd_MainGroup, MUIM_Group_ExitChange);
 
         MySetContents(texts[ 0], "%s", nonetest((STRPTR)win->Title));
-        MySetContents(texts[ 1], "$%08lx", win);
-        MySetContents(texts[ 2], "$%08lx", win->NextWindow);
+        MySetContents(texts[ 1], ADDRESS_FORMAT, win);
+        MySetContents(texts[ 2], ADDRESS_FORMAT, win->NextWindow);
         MySetContents(texts[ 3], "%lD", win->LeftEdge);
         MySetContents(texts[ 4], "%lD", win->TopEdge);
         MySetContents(texts[ 5], "%lD", win->Width);
@@ -583,21 +583,21 @@ STATIC void SetDetails( struct IClass *cl,
         MySetContents(texts[11], "%lD", win->MaxWidth);
         MySetContents(texts[12], "%lD", win->MaxHeight);
         set(texts[13], MUIA_FlagsButton_Flags, win->Flags);
-        MySetContents(texts[14], "$%08lx", win->MenuStrip);
-        MySetContents(texts[15], "$%08lx", win->FirstRequest);
-        MySetContents(texts[16], "$%08lx", win->DMRequest);
+        MySetContents(texts[14], ADDRESS_FORMAT, win->MenuStrip);
+        MySetContents(texts[15], ADDRESS_FORMAT, win->FirstRequest);
+        MySetContents(texts[16], ADDRESS_FORMAT, win->DMRequest);
         MySetContents(texts[17], "%lD", win->ReqCount);
-        MySetContents(texts[18], "$%08lx", win->WScreen);
-        MySetContents(texts[19], "$%08lx", win->RPort);
+        MySetContents(texts[18], ADDRESS_FORMAT, win->WScreen);
+        MySetContents(texts[19], ADDRESS_FORMAT, win->RPort);
         MySetContents(texts[20], "%lD", win->BorderLeft);
         MySetContents(texts[21], "%lD", win->BorderTop);
         MySetContents(texts[22], "%lD", win->BorderRight);
         MySetContents(texts[23], "%lD", win->BorderBottom);
-        MySetContents(texts[24], "$%08lx", win->BorderRPort);
-        MySetContents(texts[25], "$%08lx", win->FirstGadget);
-        MySetContents(texts[26], "$%08lx", win->Parent);
-        MySetContents(texts[27], "$%08lx", win->Descendant);
-        MySetContents(texts[28], "$%08lx", win->Pointer);
+        MySetContents(texts[24], ADDRESS_FORMAT, win->BorderRPort);
+        MySetContents(texts[25], ADDRESS_FORMAT, win->FirstGadget);
+        MySetContents(texts[26], ADDRESS_FORMAT, win->Parent);
+        MySetContents(texts[27], ADDRESS_FORMAT, win->Descendant);
+        MySetContents(texts[28], ADDRESS_FORMAT, win->Pointer);
         MySetContents(texts[29], "%lD", win->PtrHeight);
         MySetContents(texts[30], "%lD", win->PtrWidth);
         MySetContents(texts[31], "%lD", win->XOffset);
@@ -605,10 +605,10 @@ STATIC void SetDetails( struct IClass *cl,
         set(texts[33], MUIA_FlagsButton_Flags, win->IDCMPFlags);
         set(texts[34], MUIA_PortButton_Port, win->UserPort);
         set(texts[35], MUIA_PortButton_Port, win->WindowPort);
-        MySetContents(texts[36], "$%08lx", win->MessageKey);
+        MySetContents(texts[36], ADDRESS_FORMAT, win->MessageKey);
         MySetContents(texts[37], "%lD", win->DetailPen);
         MySetContents(texts[38], "%lD", win->BlockPen);
-        MySetContents(texts[39], "$%08lx", win->CheckMark);
+        MySetContents(texts[39], ADDRESS_FORMAT, win->CheckMark);
         MySetContents(texts[40], "%s", win->ScreenTitle);
         MySetContents(texts[41], "%lD", win->GZZMouseX);
         MySetContents(texts[42], "%lD", win->GZZMouseY);
@@ -616,9 +616,9 @@ STATIC void SetDetails( struct IClass *cl,
         MySetContents(texts[44], "%lD", win->GZZHeight);
         set(texts[45], MUIA_DisassemblerButton_Address, win->ExtData);
         set(texts[46], MUIA_DisassemblerButton_Address, win->UserData);
-        MySetContents(texts[47], "$%08lx", win->WLayer);
+        MySetContents(texts[47], ADDRESS_FORMAT, win->WLayer);
         MySetContents(texts[48], "%s/%ld", win->IFont->tf_Message.mn_Node.ln_Name, win->IFont->tf_YSize);
-        MySetContents(texts[49], "$%08lx", win->MoreFlags);
+        MySetContents(texts[49], "$%08lx", win->MoreFlags); // ULONG
 
         set(obj, MUIA_Window_Title, MyGetChildWindowTitle(txtWindowsDetailTitleWindow, we->we_Title, wdwd->wdwd_Title, sizeof(wdwd->wdwd_Title)));
     }

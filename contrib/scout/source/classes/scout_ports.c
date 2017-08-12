@@ -164,7 +164,7 @@ STATIC void IterateList( void (* callback)( struct PortEntry *pe, void *userData
         if ((pe = AllocVec(sizeof(struct PortEntry), MEMF_CLEAR)) != NULL) {
             pe->pe_Addr = mp;
 
-            _snprintf(pe->pe_Address, sizeof(pe->pe_Address), "$%08lx", mp);
+            _snprintf(pe->pe_Address, sizeof(pe->pe_Address), ADDRESS_FORMAT, mp);
             stccpy(pe->pe_Name, nonetest(mp->mp_Node.ln_Name), sizeof(pe->pe_Name));
             _snprintf(pe->pe_Pri, sizeof(pe->pe_Pri), "%4ld", mp->mp_Node.ln_Pri);
             _snprintf(pe->pe_SigBit, sizeof(pe->pe_SigBit), "%2ld", mp->mp_SigBit);

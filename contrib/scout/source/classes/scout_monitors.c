@@ -179,7 +179,7 @@ STATIC void IterateList( void (* callback)( struct MonitorEntry *me, void *userD
         if ((me = AllocVec(sizeof(struct MonitorEntry), MEMF_CLEAR)) != NULL) {
             me->mon_Addr = mspc;
 
-            _snprintf(me->mon_Address, sizeof(me->mon_Address), "$%08lx", mspc);
+            _snprintf(me->mon_Address, sizeof(me->mon_Address), ADDRESS_FORMAT, mspc);
             stccpy(me->mon_Name, nonetest(mspc->ms_Node.xln_Name), sizeof(me->mon_Name));
             stccpy(me->mon_Type, GetNodeType(mspc->ms_Node.xln_Type), sizeof(me->mon_Type));
             _snprintf(me->mon_Pri, sizeof(me->mon_Pri), "%4ld", mspc->ms_Node.xln_Pri);

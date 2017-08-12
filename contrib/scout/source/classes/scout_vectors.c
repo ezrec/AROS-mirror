@@ -83,18 +83,18 @@ STATIC void IterateList( void (* callback)( struct VectorEntry *ve, void *userDa
 
         Forbid();
 
-        _snprintf(ve->ve_ResetVectors[0], sizeof(ve->ve_ResetVectors[0]), "$%08lx", SysBase->ColdCapture);
-        _snprintf(ve->ve_ResetVectors[1], sizeof(ve->ve_ResetVectors[1]), "$%08lx", SysBase->CoolCapture);
-        _snprintf(ve->ve_ResetVectors[2], sizeof(ve->ve_ResetVectors[2]), "$%08lx", SysBase->WarmCapture);
-        _snprintf(ve->ve_ResetVectors[3], sizeof(ve->ve_ResetVectors[3]), "$%08lx", SysBase->KickMemPtr);
-        _snprintf(ve->ve_ResetVectors[4], sizeof(ve->ve_ResetVectors[4]), "$%08lx", SysBase->KickTagPtr);
-        _snprintf(ve->ve_ResetVectors[5], sizeof(ve->ve_ResetVectors[5]), "$%08lx", SysBase->KickCheckSum);
+        _snprintf(ve->ve_ResetVectors[0], sizeof(ve->ve_ResetVectors[0]), ADDRESS_FORMAT, SysBase->ColdCapture);
+        _snprintf(ve->ve_ResetVectors[1], sizeof(ve->ve_ResetVectors[1]), ADDRESS_FORMAT, SysBase->CoolCapture);
+        _snprintf(ve->ve_ResetVectors[2], sizeof(ve->ve_ResetVectors[2]), ADDRESS_FORMAT, SysBase->WarmCapture);
+        _snprintf(ve->ve_ResetVectors[3], sizeof(ve->ve_ResetVectors[3]), ADDRESS_FORMAT, SysBase->KickMemPtr);
+        _snprintf(ve->ve_ResetVectors[4], sizeof(ve->ve_ResetVectors[4]), ADDRESS_FORMAT, SysBase->KickTagPtr);
+        _snprintf(ve->ve_ResetVectors[5], sizeof(ve->ve_ResetVectors[5]), ADDRESS_FORMAT, SysBase->KickCheckSum);
 
         for (vec = 0; vec < 7; vec++) {
 #if !defined(__mc68000)
             if (amigaOS4 || arOS) {
                 // the 68k interrupt vectors don't exist anymore in AmigaOS4/AmigaOne
-                _snprintf(ve->ve_AutoVectors[vec], sizeof(ve->ve_AutoVectors[vec]), "$%08lx", 0);
+                _snprintf(ve->ve_AutoVectors[vec], sizeof(ve->ve_AutoVectors[vec]), ADDRESS_FORMAT, 0);
             } else
 #endif
             {
@@ -104,7 +104,7 @@ STATIC void IterateList( void (* callback)( struct VectorEntry *ve, void *userDa
         }
 
         for (vec = 0; vec < 16; vec++) {
-            _snprintf(ve->ve_IntVectors[vec], sizeof(ve->ve_IntVectors[vec]), "$%08lx", SysBase->IntVects[vec].iv_Code);
+            _snprintf(ve->ve_IntVectors[vec], sizeof(ve->ve_IntVectors[vec]), ADDRESS_FORMAT, SysBase->IntVects[vec].iv_Code);
         }
 
         Permit();
@@ -128,7 +128,7 @@ STATIC void UpdateCallback( struct VectorEntry *ve,
     }
     for (vec = 3; vec < 6; vec++) {
         IsUHex(ve->ve_ResetVectors[vec], &code);
-        MySetContents(ud->ud_ResetVectButton[vec], MUIX_C "$%08lx", code);
+        MySetContents(ud->ud_ResetVectButton[vec], MUIX_C ADDRESS_FORMAT, code);
     }
     for (vec = 0; vec < 7; vec++) {
         IsUHex(ve->ve_AutoVectors[vec], &code);

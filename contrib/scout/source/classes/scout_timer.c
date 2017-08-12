@@ -250,9 +250,9 @@ STATIC void IterateList( void (* callback)( struct TimerEntry *te, void *userDat
                             #endif
 
                                 te->te_Addr = tr;
-                                _snprintf(te->te_Address, sizeof(te->te_Address), "$%08lx", tr);
+                                _snprintf(te->te_Address, sizeof(te->te_Address), ADDRESS_FORMAT, tr);
                                 GetTaskName(tr->Request.io_Message.mn_ReplyPort->mp_SigTask, te->te_Name, sizeof(te->te_Name));
-                                _snprintf(te->te_ReplyPort, sizeof(te->te_ReplyPort), "$%08lx", tr->Request.io_Message.mn_ReplyPort);
+                                _snprintf(te->te_ReplyPort, sizeof(te->te_ReplyPort), ADDRESS_FORMAT, tr->Request.io_Message.mn_ReplyPort);
                                 stccpy(te->te_Unit, txtTimerMicroHz, sizeof(te->te_Unit));
                             #if defined(USE_NATIVE_64BIT_MATH)
                                 _snprintf(te->te_Timeout, sizeof(te->te_Timeout), "%2lld:%02lld'%02lld.%02lld\"", _std, _min, _sec, _hun);
@@ -353,9 +353,9 @@ STATIC void IterateList( void (* callback)( struct TimerEntry *te, void *userDat
                             #endif
 
                                 te->te_Addr = tr;
-                                _snprintf(te->te_Address, sizeof(te->te_Address), "$%08lx", tr);
+                                _snprintf(te->te_Address, sizeof(te->te_Address), ADDRESS_FORMAT, tr);
                                 GetTaskName(tr->Request.io_Message.mn_ReplyPort->mp_SigTask, te->te_Name, sizeof(te->te_Name));
-                                _snprintf(te->te_ReplyPort, sizeof(te->te_ReplyPort), "$%08lx", tr->Request.io_Message.mn_ReplyPort);
+                                _snprintf(te->te_ReplyPort, sizeof(te->te_ReplyPort), ADDRESS_FORMAT, tr->Request.io_Message.mn_ReplyPort);
                                 stccpy(te->te_Unit, txtTimerVBlank, sizeof(te->te_Unit));
                             #if defined(USE_NATIVE_64BIT_MATH)
                                 _snprintf(te->te_Timeout, sizeof(te->te_Timeout), "%2lld:%02lld'%02lld.%02lld\"", _std, _min, _sec, _hun);

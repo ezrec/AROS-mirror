@@ -168,7 +168,7 @@ STATIC void IterateList( void (* callback)( struct CatalogEntry *ce, void *userD
             ITERATE_LIST(catList, struct Catalog *, cat) {
                 if ((ce = AllocVec(sizeof(struct CatalogEntry), MEMF_CLEAR)) != NULL) {
                     ce->ce_Addr = cat;
-                    _snprintf(ce->ce_Address, sizeof(ce->ce_Address), "$%08lx", cat);
+                    _snprintf(ce->ce_Address, sizeof(ce->ce_Address), ADDRESS_FORMAT, cat);
                     stccpy(ce->ce_Name, nonetest(cat->cat_Link.ln_Name), sizeof(ce->ce_Name));
                     _snprintf(ce->ce_Version, sizeof(ce->ce_Version), "%ld.%ld", cat->cat_Version, cat->cat_Revision);
                     stccpy(ce->ce_Language, nonetest(cat->cat_Language), sizeof(ce->ce_Language));

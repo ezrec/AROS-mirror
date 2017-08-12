@@ -195,15 +195,15 @@ STATIC void IterateList( void (* callback)( struct ResetHandlerEntry *rhe, void 
                             if ((rhe = AllocVec(sizeof(struct ResetHandlerEntry), MEMF_CLEAR)) != NULL) {
                                 rhe->rhe_Addr = irq;
 
-                                _snprintf(rhe->rhe_Address, sizeof(rhe->rhe_Address), "$%08lx", irq);
+                                _snprintf(rhe->rhe_Address, sizeof(rhe->rhe_Address), ADDRESS_FORMAT, irq);
                                 stccpy(rhe->rhe_Name, nonetest(irq->is_Node.ln_Name), sizeof(rhe->rhe_Name));
                                 stccpy(rhe->rhe_Type, GetNodeType(irq->is_Node.ln_Type), sizeof(rhe->rhe_Type));
                                 _snprintf(rhe->rhe_Pri, sizeof(rhe->rhe_Pri), "%4ld", irq->is_Node.ln_Pri);
-                                _snprintf(rhe->rhe_Data, sizeof(rhe->rhe_Data), "$%08lx", irq->is_Data);
+                                _snprintf(rhe->rhe_Data, sizeof(rhe->rhe_Data), ADDRESS_FORMAT, irq->is_Data);
                                 if (points2ram((APTR)irq->is_Code)) {
-                                   _snprintf(rhe->rhe_Code, sizeof(rhe->rhe_Code), MUIX_PH "$%08lx" MUIX_PT, irq->is_Code);
+                                   _snprintf(rhe->rhe_Code, sizeof(rhe->rhe_Code), MUIX_PH ADDRESS_FORMAT MUIX_PT, irq->is_Code);
                                 } else {
-                                   _snprintf(rhe->rhe_Code, sizeof(rhe->rhe_Code), "$%08lx", irq->is_Code);
+                                   _snprintf(rhe->rhe_Code, sizeof(rhe->rhe_Code), ADDRESS_FORMAT, irq->is_Code);
                                 }
 
                                 AddTail((struct List *)&tmplist, (struct Node *)rhe);

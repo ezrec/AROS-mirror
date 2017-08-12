@@ -194,7 +194,7 @@ STATIC void IterateList( void (* callback)( struct AudioModeEntry *ame, void *us
                             ULONG bits, minfreq, maxfreq, numfreqs;
 
                             ame->ame_ModeID = id;
-                            _snprintf(ame->ame_Id, sizeof(ame->ame_Id), "$%08lx", id);
+                            _snprintf(ame->ame_Id, sizeof(ame->ame_Id), ADDRESS_FORMAT, id);
 
                             AHI_GetAudioAttrs(id, NULL, AHIDB_Name, (IPTR)ame->ame_Name,
                                                         AHIDB_BufferLen, sizeof(ame->ame_Name),

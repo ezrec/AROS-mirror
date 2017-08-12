@@ -221,7 +221,7 @@ STATIC void IterateList( void (* callback)( struct LockEntry *le, void *userData
 
                                 if (MatchPatternNoCase(ppattern, le->le_Path)) {
                                     le->le_Addr = next;
-                                    _snprintf(le->le_Address, sizeof(le->le_Access), "$%08lx", flock);
+                                    _snprintf(le->le_Address, sizeof(le->le_Access), ADDRESS_FORMAT, flock);
                                     ud->ud_Shown++;
                                 } else {
                                     le->le_Addr = (BPTR)NULL;

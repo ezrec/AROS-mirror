@@ -187,7 +187,7 @@ STATIC void IterateList( void (* callback)( struct SystemEntry *se, void *userDa
         stccpy(se->se_PowerFreq, MyIdHardware(IDHW_POWERFREQ), sizeof(se->se_PowerFreq));
         stccpy(se->se_EClock, MyIdHardware(IDHW_ECLOCK), sizeof(se->se_EClock));
 
-        _snprintf(se->se_SSP, sizeof(se->se_SSP), "$%08lx", SysBase->SysStkLower);
+        _snprintf(se->se_SSP, sizeof(se->se_SSP), ADDRESS_FORMAT, SysBase->SysStkLower);
         stccpy(se->se_VBR, txtNotAvailable, sizeof(se->se_VBR));
         stccpy(se->se_CACR, txtNotAvailable, sizeof(se->se_CACR));
         stccpy(se->se_PCR, txtNotAvailable, sizeof(se->se_PCR));
@@ -201,7 +201,7 @@ STATIC void IterateList( void (* callback)( struct SystemEntry *se, void *userDa
 
             cache = CacheControl(0, 0);
 
-            _snprintf(se->se_VBR, sizeof(se->se_VBR), "$%08lx", GetVBR());
+            _snprintf(se->se_VBR, sizeof(se->se_VBR), ADDRESS_FORMAT, GetVBR());
 
             if (FLAG_IS_SET(attn, AFF_68020)) {
                 _snprintf(se->se_CACR, sizeof(se->se_CACR), "$%08lx", cacr);
@@ -544,9 +544,9 @@ STATIC void IterateList( void (* callback)( struct SystemEntry *se, void *userDa
 
             if ((alerttask = TaskExists((struct Task *)lastalerttask)) != NULL) {
                 GetTaskName(alerttask, tmp, sizeof(tmp));
-                _snprintf(se->se_AlertTask, sizeof(se->se_AlertTask), "$%08lx (%s)", lastalerttask, tmp);
+                _snprintf(se->se_AlertTask, sizeof(se->se_AlertTask), ADDRESS_FORMAT " (%s)", lastalerttask, tmp);
             } else {
-                _snprintf(se->se_AlertTask, sizeof(se->se_AlertTask), "$%08lx", lastalerttask);
+                _snprintf(se->se_AlertTask, sizeof(se->se_AlertTask), ADDRESS_FORMAT, lastalerttask);
             }
 
             if (IdentifyBase) {

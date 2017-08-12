@@ -63,13 +63,13 @@ STATIC void SetDetails( struct IClass *cl,
     struct Resident *rt = (struct Resident *)re->re_Addr;
 
     MySetContentsHealed(rdwd->rdwd_Texts[0], "%s", re->re_Name);
-    MySetContents(rdwd->rdwd_Texts[1], "$%08lx", rt);
+    MySetContents(rdwd->rdwd_Texts[1], ADDRESS_FORMAT, rt);
     MySetContentsHealed(rdwd->rdwd_Texts[2], "%s", nonetest(rt->rt_IdString));
-    MySetContents(rdwd->rdwd_Texts[3], "$%08lx", rt->rt_MatchTag);
+    MySetContents(rdwd->rdwd_Texts[3], ADDRESS_FORMAT, rt->rt_MatchTag);
     MySetContents(rdwd->rdwd_Texts[4], "%s", GetNodeType(rt->rt_Type));
     MySetContents(rdwd->rdwd_Texts[5], "%ld", rt->rt_Pri);
     MySetContents(rdwd->rdwd_Texts[6], "%ld", rt->rt_Version);
-    MySetContents(rdwd->rdwd_Texts[7], "$%08lx", rt->rt_EndSkip);
+    MySetContents(rdwd->rdwd_Texts[7], ADDRESS_FORMAT, rt->rt_EndSkip);
     set(rdwd->rdwd_Texts[8], MUIA_DisassemblerButton_Address, rt->rt_Init);
     set(rdwd->rdwd_Texts[9], MUIA_FlagsButton_Flags, rt->rt_Flags);
 

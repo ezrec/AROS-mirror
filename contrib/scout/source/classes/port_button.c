@@ -18,7 +18,7 @@ STATIC void UpdateButton( struct IClass *cl,
         stccpy(tmp, nonetest(NULL), sizeof(tmp));
     }
 
-    MySetContentsHealed(obj, "$%08lx: " MUIX_B "%s", pbd->pbd_Port, tmp);
+    MySetContentsHealed(obj, ADDRESS_FORMAT ": " MUIX_B "%s", pbd->pbd_Port, tmp);
     set(obj, MUIA_Disabled, (pbd->pbd_Port == NULL) ? TRUE : FALSE);
 }
 

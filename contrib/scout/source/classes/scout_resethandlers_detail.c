@@ -39,7 +39,7 @@ STATIC void SetDetails( struct IClass *cl,
     struct Interrupt *is = rhe->rhe_Addr;
 
     MySetContentsHealed(rhdwd->rhdwd_Texts[0], "%s", rhe->rhe_Name);
-    MySetContents(rhdwd->rhdwd_Texts[1], "$%08lx", is);
+    MySetContents(rhdwd->rhdwd_Texts[1], ADDRESS_FORMAT, is);
     MySetContents(rhdwd->rhdwd_Texts[2], "%s", GetNodeType(is->is_Node.ln_Type));
     MySetContents(rhdwd->rhdwd_Texts[3], "%ld", is->is_Node.ln_Pri);
     set(rhdwd->rhdwd_Texts[4], MUIA_DisassemblerButton_Address, is->is_Data);

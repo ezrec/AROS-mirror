@@ -62,7 +62,7 @@ STATIC void SetDetails( struct IClass *cl,
     LONG cnt, total;
 
     MySetContentsHealed(ldwd->ldwd_Texts[ 0], "%s", lib->lib_Node.ln_Name);
-    MySetContents(ldwd->ldwd_Texts[ 1], "$%08lx", lib);
+    MySetContents(ldwd->ldwd_Texts[ 1], ADDRESS_FORMAT, lib);
     MySetContentsHealed(ldwd->ldwd_Texts[ 2], "%s", nonetest(lib->lib_IdString));
     MySetContents(ldwd->ldwd_Texts[ 3], "%s", GetNodeType(lib->lib_Node.ln_Type));
     MySetContents(ldwd->ldwd_Texts[ 4], "%ld", lib->lib_Node.ln_Pri);
@@ -71,7 +71,7 @@ STATIC void SetDetails( struct IClass *cl,
     set(ldwd->ldwd_Texts[ 7], MUIA_FlagsButton_Flags, lib->lib_Flags);
     MySetContents(ldwd->ldwd_Texts[ 8], "%lD", lib->lib_NegSize);
     MySetContents(ldwd->ldwd_Texts[ 9], "%lD", lib->lib_PosSize);
-    MySetContents(ldwd->ldwd_Texts[10], "$%08lx", lib->lib_Sum);
+    MySetContents(ldwd->ldwd_Texts[10], "$%08lx", lib->lib_Sum); // ULONG
 
     GetRamPointerCount(lib, &cnt, &total);
     MySetContents(ldwd->ldwd_Texts[11], txtLibraryRPCFormat, cnt, total);

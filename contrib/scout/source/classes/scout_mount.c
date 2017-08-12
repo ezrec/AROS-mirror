@@ -263,7 +263,7 @@ STATIC void IterateList( void (* callback)( struct MountEntry *me, void *userDat
             me->me_Device = dol;
             CopyMem(dol, &me->me_dol, sizeof(me->me_dol));
 
-            _snprintf(me->me_Address, sizeof(me->me_Address), "$%08lx", dol);
+            _snprintf(me->me_Address, sizeof(me->me_Address), ADDRESS_FORMAT, dol);
             _snprintf(me->me_Name, sizeof(me->me_Name), "%b:", dol->dol_Name);
             stccpy(me->me_Unit, "---", sizeof(me->me_Unit));
             stccpy(me->me_Heads, "---", sizeof(me->me_Heads));

@@ -82,7 +82,7 @@ STATIC void SetDetails( struct IClass *cl,
     struct MonitorSpec *Mspc = mdwd->mdwd_Monitor;
 
     MySetContents(mdwd->mdwd_Texts[ 0], "%s", Mspc->ms_Node.xln_Name);
-    MySetContents(mdwd->mdwd_Texts[ 1], "$%08lx", Mspc);
+    MySetContents(mdwd->mdwd_Texts[ 1], ADDRESS_FORMAT, Mspc);
     set(mdwd->mdwd_Texts[ 2], MUIA_FlagsButton_Flags, Mspc->ms_Flags);
     MySetContents(mdwd->mdwd_Texts[ 3], "%lD x %lD", Mspc->ratioh, Mspc->ratiov);
     MySetContents(mdwd->mdwd_Texts[ 4], "%lD", Mspc->total_rows);
@@ -100,7 +100,7 @@ STATIC void SetDetails( struct IClass *cl,
     set(mdwd->mdwd_Texts[16], MUIA_DisassemblerButton_Address, Mspc->ms_maxoscan);
     set(mdwd->mdwd_Texts[17], MUIA_DisassemblerButton_Address, Mspc->ms_videoscan);
     MySetContents(mdwd->mdwd_Texts[18], "%lD", Mspc->DeniseMaxDisplayColumn);
-    MySetContents(mdwd->mdwd_Texts[19], "$%08lx", Mspc->DisplayCompatible);
+    MySetContents(mdwd->mdwd_Texts[19], "$%08lx", Mspc->DisplayCompatible); // ULONG
     set(mdwd->mdwd_Texts[20], MUIA_DisassemblerButton_Address, Mspc->ms_MrgCop);
     set(mdwd->mdwd_Texts[21], MUIA_DisassemblerButton_Address, Mspc->ms_LoadView);
     if (GfxBase->LibNode.lib_Version > 38)

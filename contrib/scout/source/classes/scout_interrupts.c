@@ -175,14 +175,14 @@ STATIC void IterateList( void (* callback)( struct InterruptEntry *ie, void *use
 
                     irq = (struct Interrupt *)intvec->iv_Node;
                     ie->ie_Addr = irq;
-                    _snprintf(ie->ie_Address, sizeof(ie->ie_Address), "$%08lx", intvec);
+                    _snprintf(ie->ie_Address, sizeof(ie->ie_Address), ADDRESS_FORMAT, intvec);
                     ie->ie_Name[0] = 0x00;
                     if (points2ram((APTR)intvec->iv_Code)) {
-                        _snprintf(ie->ie_Code, sizeof(ie->ie_Code), MUIX_PH "$%08lx" MUIX_PT, intvec->iv_Code);
+                        _snprintf(ie->ie_Code, sizeof(ie->ie_Code), MUIX_PH ADDRESS_FORMAT MUIX_PT, intvec->iv_Code);
                     } else {
-                        _snprintf(ie->ie_Code, sizeof(ie->ie_Code), "$%08lx", intvec->iv_Code);
+                        _snprintf(ie->ie_Code, sizeof(ie->ie_Code), ADDRESS_FORMAT, intvec->iv_Code);
                     }
-                    _snprintf(ie->ie_Data, sizeof(ie->ie_Data), "$%08lx", intvec->iv_Data);
+                    _snprintf(ie->ie_Data, sizeof(ie->ie_Data), ADDRESS_FORMAT, intvec->iv_Data);
                     _snprintf(ie->ie_Pri, sizeof(ie->ie_Pri), "%4ld", (intvec->iv_Node != NULL) ? intvec->iv_Node->ln_Pri : 0);
                     stccpy(ie->ie_Number, intTypeShort[vec], sizeof(ie->ie_Number));
                     stccpy(ie->ie_RealNumber, intTypeShort[vec], sizeof(ie->ie_RealNumber));
@@ -199,14 +199,14 @@ STATIC void IterateList( void (* callback)( struct InterruptEntry *ie, void *use
 
                             ie->ie_Addr = irq;
                             if (points2ram((APTR)irq->is_Code)) {
-                                _snprintf(ie->ie_Code, sizeof(ie->ie_Code), MUIX_PH "$%08lx" MUIX_PT, irq->is_Code);
+                                _snprintf(ie->ie_Code, sizeof(ie->ie_Code), MUIX_PH ADDRESS_FORMAT MUIX_PT, irq->is_Code);
                             } else {
-                                _snprintf(ie->ie_Code, sizeof(ie->ie_Code), "$%08lx", irq->is_Code);
+                                _snprintf(ie->ie_Code, sizeof(ie->ie_Code), ADDRESS_FORMAT, irq->is_Code);
                             }
-                            _snprintf(ie->ie_Address, sizeof(ie->ie_Address), "$%08lx", irq);
+                            _snprintf(ie->ie_Address, sizeof(ie->ie_Address), ADDRESS_FORMAT, irq);
                             stccpy(ie->ie_Name, nonetest(irq->is_Node.ln_Name), sizeof(ie->ie_Name));
                             _snprintf(ie->ie_Pri, sizeof(ie->ie_Pri), "%4ld", irq->is_Node.ln_Pri);
-                            _snprintf(ie->ie_Data, sizeof(ie->ie_Data), "$%08lx", irq->is_Data);
+                            _snprintf(ie->ie_Data, sizeof(ie->ie_Data), ADDRESS_FORMAT, irq->is_Data);
                             _snprintf(ie->ie_Number, sizeof(ie->ie_Number), "%ld", servercnt);
                             stccpy(ie->ie_RealNumber, intTypeShort[vec], sizeof(ie->ie_RealNumber));
                             stccpy(ie->ie_Kind, txtInterruptServer, sizeof(ie->ie_Kind));
@@ -228,18 +228,18 @@ STATIC void IterateList( void (* callback)( struct InterruptEntry *ie, void *use
                     }
 
                     if (points2ram((APTR)intvec->iv_Code)) {
-                        _snprintf(ie->ie_Code, sizeof(ie->ie_Code), MUIX_PH "$%08lx" MUIX_PT, intvec->iv_Code);
+                        _snprintf(ie->ie_Code, sizeof(ie->ie_Code), MUIX_PH ADDRESS_FORMAT MUIX_PT, intvec->iv_Code);
                     } else {
-                        _snprintf(ie->ie_Code, sizeof(ie->ie_Code), "$%08lx", intvec->iv_Code);
+                        _snprintf(ie->ie_Code, sizeof(ie->ie_Code), ADDRESS_FORMAT, intvec->iv_Code);
                     }
-                    _snprintf(ie->ie_Address, sizeof(ie->ie_Address), "$%08lx", intvec);
+                    _snprintf(ie->ie_Address, sizeof(ie->ie_Address), ADDRESS_FORMAT, intvec);
                     if (irq) {
                         stccpy(ie->ie_Name, nonetest(irq->is_Node.ln_Name), sizeof(ie->ie_Name));
                     } else {
                         stccpy(ie->ie_Name, nonetest(NULL), sizeof(ie->ie_Name));
                     }
                     _snprintf(ie->ie_Pri, sizeof(ie->ie_Pri), "%4ld", (intvec->iv_Node != NULL) ? intvec->iv_Node->ln_Pri : 0);
-                    _snprintf(ie->ie_Data, sizeof(ie->ie_Data), "$%08lx", intvec->iv_Data);
+                    _snprintf(ie->ie_Data, sizeof(ie->ie_Data), ADDRESS_FORMAT, intvec->iv_Data);
                     stccpy(ie->ie_Number, intTypeShort[vec], sizeof(ie->ie_Number));
                     stccpy(ie->ie_RealNumber, intTypeShort[vec], sizeof(ie->ie_RealNumber));
                     if (intvec->iv_Data == NULL && intvec->iv_Code == NULL) {

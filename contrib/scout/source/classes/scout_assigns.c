@@ -151,10 +151,10 @@ STATIC void IterateList( void (* callback)( struct AssignEntry *ae, void *userDa
                     struct AssignList *list;
 
                     ae->ae_Addr = BADDR(dol->dol_Lock);
-                    _snprintf(ae->ae_Address, sizeof(ae->ae_Address), "$%08lx", BADDR(dol->dol_Lock));
+                    _snprintf(ae->ae_Address, sizeof(ae->ae_Address), ADDRESS_FORMAT, BADDR(dol->dol_Lock));
 
                     ae->ae_Addr = dol;
-                    _snprintf(ae->ae_Address, sizeof(ae->ae_Address), "$%08lx", dol);
+                    _snprintf(ae->ae_Address, sizeof(ae->ae_Address), ADDRESS_FORMAT, dol);
                     _snprintf(ae->ae_Name, sizeof(ae->ae_Name), "%b", dol->dol_Name);
 
                     if (dol->dol_Lock != (BPTR)NULL && Examine(dol->dol_Lock, fib)) {
@@ -193,7 +193,7 @@ STATIC void IterateList( void (* callback)( struct AssignEntry *ae, void *userDa
                         do {
                             if ((ae = AllocVec(sizeof(struct AssignEntry), MEMF_CLEAR)) != NULL) {
                                 ae->ae_Addr = (APTR)BADDR(list->al_Lock);
-                                _snprintf(ae->ae_Address, sizeof(ae->ae_Address), "$%08lx", BADDR(list->al_Lock));
+                                _snprintf(ae->ae_Address, sizeof(ae->ae_Address), ADDRESS_FORMAT, BADDR(list->al_Lock));
                                 _snprintf(ae->ae_Name, sizeof(ae->ae_Name), "%b", dol->dol_Name);
 
                                 if (list->al_Lock != (BPTR)NULL && Examine(list->al_Lock, fib)) {
@@ -379,7 +379,7 @@ STATIC IPTR mRemove( struct IClass *cl,
 
         if (stricmp(ae->ae_Type, "ADD_LIST") == 0 || stricmp(ae->ae_Type, "ADD_NODE") == 0) {
             if (MyRequest(msgYesNo, msgWantToRemoveAssignFromList, ae->ae_Path, ae->ae_Name)) {
-                if (MyDoCommand("RemoveAssignList %s $%08lx", ae->ae_Name, MKBADDR(ae->ae_Addr)) == RETURN_OK) {
+                if (MyDoCommand("RemoveAssignList %s " ADDRESS_FORMAT, ae->ae_Name, MKBADDR(ae->ae_Addr)) == RETURN_OK) {
                     DoMethod(obj, MUIM_AssignsWin_Update);
                 }
             }

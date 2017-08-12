@@ -178,7 +178,7 @@ STATIC void IterateList( void (* callback)( struct ResidentEntry *re, void *user
                 rt = (struct Resident *)resi;
 
                 re->re_Addr = rt;
-                _snprintf(re->re_Address, sizeof(re->re_Address), MUIX_PH "$%08lx" MUIX_PT, rt);
+                _snprintf(re->re_Address, sizeof(re->re_Address), MUIX_PH ADDRESS_FORMAT MUIX_PT, rt);
                 stccpy(re->re_Name, nonetest(rt->rt_Name), sizeof(re->re_Name));
                 _snprintf(re->re_Pri, sizeof(re->re_Pri), "%4ld", rt->rt_Pri);
                 stccpy(re->re_IdString, nonetest(rt->rt_IdString), sizeof(re->re_IdString));
@@ -208,7 +208,7 @@ STATIC void IterateList( void (* callback)( struct ResidentEntry *re, void *user
                 rt = (struct Resident *)resi;
 
                 re->re_Addr = rt;
-                _snprintf(re->re_Address, sizeof(re->re_Address), "$%08lx", rt);
+                _snprintf(re->re_Address, sizeof(re->re_Address), ADDRESS_FORMAT, rt);
                 stccpy(re->re_Name, nonetest(rt->rt_Name), sizeof(re->re_Name));
                 _snprintf(re->re_Pri, sizeof(re->re_Pri), "%4ld", rt->rt_Pri);
                 stccpy(re->re_IdString, nonetest(rt->rt_IdString), sizeof(re->re_IdString));

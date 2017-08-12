@@ -62,9 +62,9 @@ static void UpdateButton( struct IClass *cl,
     Permit();
 
     if (strcmp(tmp, txtNoTask) == 0) {
-        MySetContents(obj, "$%08lx", tbd->tbd_Task);
+        MySetContents(obj, ADDRESS_FORMAT, tbd->tbd_Task);
     } else {
-        MySetContentsHealed(obj, "$%08lx: " MUIX_B "%s", tbd->tbd_Task, tmp);
+        MySetContentsHealed(obj, ADDRESS_FORMAT ": " MUIX_B "%s", tbd->tbd_Task, tmp);
     }
     set(obj, MUIA_Disabled, (tbd->tbd_Task == NULL) ? TRUE : FALSE);
 }
@@ -155,7 +155,7 @@ static IPTR mShowTask( struct IClass *cl,
     TEXT ctask[ADDRESS_LENGTH];
     struct Task *task;
 
-    _snprintf(ctask, sizeof(ctask), "$%08lx", tbd->tbd_ExecTask);
+    _snprintf(ctask, sizeof(ctask), ADDRESS_FORMAT, tbd->tbd_ExecTask);
     if ((task = MyFindTask(ctask)) != NULL) {
         APTR parentWin;
         APTR taskWin;

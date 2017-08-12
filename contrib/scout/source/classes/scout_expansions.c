@@ -166,9 +166,9 @@ STATIC void IterateList( void (* callback)( struct ExpansionEntry *ee, void *use
                 cd = NULL;
                 while ((cd = FindConfigDev(cd, -1, -1)) != NULL) {
                     ee->ee_Addr = cd;
-                    _snprintf(ee->ee_Address, sizeof(ee->ee_Address), "$%08lx", cd);
+                    _snprintf(ee->ee_Address, sizeof(ee->ee_Address), ADDRESS_FORMAT, cd);
                     _snprintf(ee->ee_Flags, sizeof(ee->ee_Flags), "$%02lx", cd->cd_Flags);
-                    _snprintf(ee->ee_BoardAddr, sizeof(ee->ee_BoardAddr), "$%08lx", cd->cd_BoardAddr);
+                    _snprintf(ee->ee_BoardAddr, sizeof(ee->ee_BoardAddr), ADDRESS_FORMAT, cd->cd_BoardAddr);
                     _snprintf(ee->ee_BoardSize, sizeof(ee->ee_BoardSize), "$%08lx", cd->cd_BoardSize);
                     _snprintf(ee->ee_Type, sizeof(ee->ee_Type), "$%02lx", cd->cd_Rom.er_Type);
                     _snprintf(ee->ee_Product, sizeof(ee->ee_Product), "%lu", cd->cd_Rom.er_Product);

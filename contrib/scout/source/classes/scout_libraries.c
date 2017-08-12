@@ -198,7 +198,7 @@ STATIC void IterateList( void (* callback)( struct LibraryEntry *le, void *userD
 
             le->le_Addr = lib;
 
-            _snprintf(le->le_Address, sizeof(le->le_Address), "$%08lx", lib);
+            _snprintf(le->le_Address, sizeof(le->le_Address), ADDRESS_FORMAT, lib);
             stccpy(le->le_Name, lib->lib_Node.ln_Name, sizeof(le->le_Name));
             _snprintf(le->le_Pri, sizeof(le->le_Pri), "%4ld", lib->lib_Node.ln_Pri);
             _snprintf(le->le_Version, sizeof(le->le_Version), "%ld.%ld", lib->lib_Version, lib->lib_Revision);

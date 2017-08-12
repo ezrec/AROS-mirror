@@ -92,13 +92,13 @@ STATIC void SetDetails( struct IClass *cl,
         MySetContents(edwd->edwd_Texts[ 4], MUIX_PH "%s", txtNoIdentifyLibrary);
     }
 
-    MySetContents(edwd->edwd_Texts[ 5], "$%08lx", cd);
-    MySetContents(edwd->edwd_Texts[ 6], "$%08lx", cd->cd_BoardAddr);
-    MySetContents(edwd->edwd_Texts[ 7], "$%08lx", cd->cd_BoardSize);
-    MySetContents(edwd->edwd_Texts[ 8], "$%08lx", cd->cd_SlotAddr);
+    MySetContents(edwd->edwd_Texts[ 5], ADDRESS_FORMAT, cd);
+    MySetContents(edwd->edwd_Texts[ 6], ADDRESS_FORMAT, cd->cd_BoardAddr);
+    MySetContents(edwd->edwd_Texts[ 7], "$%08lx", cd->cd_BoardSize); // ULONG
+    MySetContents(edwd->edwd_Texts[ 8], "$%08lx", cd->cd_SlotAddr); // UWORD
     MySetContents(edwd->edwd_Texts[ 9], "%lD", cd->cd_SlotSize);
-    MySetContents(edwd->edwd_Texts[10], "$%08lx", cd->cd_Driver);
-    MySetContents(edwd->edwd_Texts[11], "$%08lx", cd->cd_NextCD);
+    MySetContents(edwd->edwd_Texts[10], ADDRESS_FORMAT, cd->cd_Driver);
+    MySetContents(edwd->edwd_Texts[11], ADDRESS_FORMAT, cd->cd_NextCD);
     set(edwd->edwd_Texts[12], MUIA_FlagsButton_Flags, cd->cd_Flags);
 
     edwd->edwd_Temp[0] = 0x00;
@@ -142,10 +142,10 @@ STATIC void SetDetails( struct IClass *cl,
     MySetContents(edwd->edwd_Texts[13], " $%02lx ", cd->cd_Rom.er_Type);
     MySetContents(edwd->edwd_Texts[14], MUIX_L "%s", edwd->edwd_Temp);
     set(edwd->edwd_Texts[15], MUIA_FlagsButton_Flags, cd->cd_Rom.er_Flags);
-    MySetContents(edwd->edwd_Texts[16], "$%08lx", cd->cd_Rom.er_Reserved03);
-    MySetContents(edwd->edwd_Texts[17], "$%08lx", cd->cd_Rom.er_SerialNumber);
+    MySetContents(edwd->edwd_Texts[16], "$%08lx", cd->cd_Rom.er_Reserved03);  // UBYTE
+    MySetContents(edwd->edwd_Texts[17], "$%08lx", cd->cd_Rom.er_SerialNumber); // ULONG
     MySetContents(edwd->edwd_Texts[18], "%lU", cd->cd_Rom.er_SerialNumber);
-    MySetContents(edwd->edwd_Texts[19], "$%08lx", cd->cd_Rom.er_InitDiagVec);
+    MySetContents(edwd->edwd_Texts[19], "$%08lx", cd->cd_Rom.er_InitDiagVec); // ULONG
 
     if (FLAG_IS_SET(cd->cd_Rom.er_Type, ERTF_DIAGVALID)) {
         APTR subgroup, texts[7];
@@ -185,7 +185,7 @@ STATIC void SetDetails( struct IClass *cl,
         DoMethod(edwd->edwd_MainGroup, OM_ADDMEMBER, subgroup);
         DoMethod(edwd->edwd_MainGroup, MUIM_Group_ExitChange);
 
-        MySetContents(texts[0], "$%08lx", da);
+        MySetContents(texts[0], ADDRESS_FORMAT, da);
         set(texts[1], MUIA_FlagsButton_Flags, da->da_Config);
         set(texts[2], MUIA_FlagsButton_Flags, da->da_Flags);
         MySetContents(texts[3], "$%04lx", da->da_Size);

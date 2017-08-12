@@ -218,13 +218,13 @@ STATIC void IterateList( void (* callback)( struct WindowEntry *we, void *userDa
 
             we->we_Addr = (APTR)screen;
 
-            _snprintf(we->we_Address, sizeof(we->we_Address), "$%08lx", screen);
+            _snprintf(we->we_Address, sizeof(we->we_Address), ADDRESS_FORMAT, screen);
             _snprintf(we->we_Position, sizeof(we->we_Position), "%ld,%ld", screen->LeftEdge, screen->TopEdge);
             _snprintf(we->we_Size, sizeof(we->we_Size), "%ld,%ld", screen->Width, screen->Height);
             _snprintf(we->we_Flags, sizeof(we->we_Flags), "$%04lx", screen->Flags);
             stccpy(we->we_IDCMP, "---------", sizeof(we->we_IDCMP));
             _snprintf(we->we_Title, sizeof(we->we_Title), "%-."TEXT_LENGTH_CHAR"s", (TEXT *)nonetest((STRPTR)screen->Title));
-            _snprintf(we->we_ScreenAddress, sizeof(we->we_ScreenAddress), "$%08lx", screen);
+            _snprintf(we->we_ScreenAddress, sizeof(we->we_ScreenAddress), ADDRESS_FORMAT, screen);
             stccpy(we->we_Type, "SCREEN", sizeof(we->we_Type));
 
             AddTail((struct List *)&tmplist, (struct Node *)we);
@@ -233,13 +233,13 @@ STATIC void IterateList( void (* callback)( struct WindowEntry *we, void *userDa
                 while (window != NULL) {
                     if ((we = AllocVec(sizeof(struct WindowEntry), MEMF_CLEAR)) != NULL) {
                         we->we_Addr = (APTR)window;
-                        _snprintf(we->we_Address, sizeof(we->we_Address), "$%08lx", window);
+                        _snprintf(we->we_Address, sizeof(we->we_Address), ADDRESS_FORMAT, window);
                         _snprintf(we->we_Position, sizeof(we->we_Position), "%ld,%ld", window->LeftEdge, window->TopEdge);
                         _snprintf(we->we_Size, sizeof(we->we_Size), "%ld,%ld", window->Width, window->Height);
                         _snprintf(we->we_Flags, sizeof(we->we_Flags), "$%08lx", window->Flags);
                         _snprintf(we->we_IDCMP, sizeof(we->we_IDCMP), "$%08lx", window->IDCMPFlags);
                         _snprintf(we->we_Title, sizeof(we->we_Title), "%-."TEXT_LENGTH_CHAR"s", (TEXT *)nonetest((STRPTR)window->Title));
-                        _snprintf(we->we_ScreenAddress, sizeof(we->we_ScreenAddress), "$%08lx", screen);
+                        _snprintf(we->we_ScreenAddress, sizeof(we->we_ScreenAddress), ADDRESS_FORMAT, screen);
                         stccpy(we->we_Type, "WINDOW", sizeof(we->we_Type));
 
                         AddTail((struct List *)&tmplist, (struct Node *)we);

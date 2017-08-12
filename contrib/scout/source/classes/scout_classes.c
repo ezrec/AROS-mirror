@@ -148,19 +148,19 @@ STATIC void IterateList( void (* callback)( struct ClassEntry *ce, void *userDat
                     disp = &cl->cl_Dispatcher;
 
                     ce->ce_Addr = cl;
-                    _snprintf(ce->ce_Address, sizeof(ce->ce_Address), "$%08lx", cl);
+                    _snprintf(ce->ce_Address, sizeof(ce->ce_Address), ADDRESS_FORMAT, cl);
                     if (cl->cl_Super) {
                         stccpy(ce->ce_SuperClassName, (TEXT *)nonetest((STRPTR)cl->cl_Super->cl_ID), sizeof(ce->ce_SuperClassName));
                     } else {
                         stccpy(ce->ce_SuperClassName, (TEXT *)nonetest(NULL), sizeof(ce->ce_SuperClassName));
                     }
-                    _snprintf(ce->ce_SuperClassAddress, sizeof(ce->ce_SuperClassAddress), "$%08lx", cl->cl_Super);
+                    _snprintf(ce->ce_SuperClassAddress, sizeof(ce->ce_SuperClassAddress), ADDRESS_FORMAT, cl->cl_Super);
 
                     dispentry = (disp->h_SubEntry) ? (APTR)disp->h_SubEntry : (APTR)disp->h_Entry;
                     if (points2ram(dispentry)) {
-                        _snprintf(ce->ce_Dispatcher, sizeof(ce->ce_Dispatcher), MUIX_PH "$%08lx" MUIX_PT, dispentry);
+                        _snprintf(ce->ce_Dispatcher, sizeof(ce->ce_Dispatcher), MUIX_PH ADDRESS_FORMAT MUIX_PT, dispentry);
                     } else {
-                        _snprintf(ce->ce_Dispatcher, sizeof(ce->ce_Dispatcher), "$%08lx", dispentry);
+                        _snprintf(ce->ce_Dispatcher, sizeof(ce->ce_Dispatcher), ADDRESS_FORMAT, dispentry);
                     }
 
                     stccpy(ce->ce_ClassName, (TEXT *)nonetest((STRPTR)cl->cl_ID), sizeof(ce->ce_ClassName));

@@ -158,7 +158,7 @@ STATIC void IterateList( void (* callback)( struct ScreenModeEntry *sme, void *u
         while ((id = NextDisplayInfo(id)) != INVALID_ID) {
             if ((sme = AllocVec(sizeof(struct ScreenModeEntry), MEMF_CLEAR)) != NULL) {
                 sme->sme_ModeID = id;
-                _snprintf(sme->sme_Id, sizeof(sme->sme_Id), "$%08lx", id);
+                _snprintf(sme->sme_Id, sizeof(sme->sme_Id), ADDRESS_FORMAT, id);
 
                 GetDisplayInfoData(NULL, (UBYTE *)&smd->dimension, sizeof(smd->dimension), DTAG_DIMS, id);
                 _snprintf(sme->sme_Width, sizeof(sme->sme_Width), "%5ld", smd->dimension.Nominal.MaxX - smd->dimension.Nominal.MinX + 1);

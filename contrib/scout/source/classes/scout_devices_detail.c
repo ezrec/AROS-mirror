@@ -478,7 +478,7 @@ STATIC void SetDetails( struct IClass *cl,
     struct NSDeviceQueryResult *nqr;
 
     MySetContentsHealed(ddwd->ddwd_Texts[ 0], "%s", lib->lib_Node.ln_Name);
-    MySetContents(ddwd->ddwd_Texts[ 1], "$%08lx", lib);
+    MySetContents(ddwd->ddwd_Texts[ 1], ADDRESS_FORMAT, lib);
     MySetContentsHealed(ddwd->ddwd_Texts[ 2], "%s", nonetest(lib->lib_IdString));
     MySetContents(ddwd->ddwd_Texts[ 3], "%s", GetNodeType(lib->lib_Node.ln_Type));
     MySetContents(ddwd->ddwd_Texts[ 4], "%ld", lib->lib_Node.ln_Pri);
@@ -487,7 +487,7 @@ STATIC void SetDetails( struct IClass *cl,
     set(ddwd->ddwd_Texts[ 7], MUIA_FlagsButton_Flags, lib->lib_Flags);
     MySetContents(ddwd->ddwd_Texts[ 8], "%lD", lib->lib_NegSize);
     MySetContents(ddwd->ddwd_Texts[ 9], "%lD", lib->lib_PosSize);
-    MySetContents(ddwd->ddwd_Texts[10], "$%08lx", lib->lib_Sum);
+    MySetContents(ddwd->ddwd_Texts[10], "$%08lx", lib->lib_Sum);  // ULONG
 
     GetRamPointerCount(lib, &cnt, &total);
     MySetContents(ddwd->ddwd_Texts[11], txtLibraryRPCFormat, cnt, total);

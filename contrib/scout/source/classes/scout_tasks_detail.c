@@ -213,17 +213,17 @@ STATIC void SetDetails( struct IClass *cl,
 #endif
 
     MySetContents(tdwd->tdwd_Texts[ 0], "%s", te->te_Name);
-    MySetContents(tdwd->tdwd_Texts[ 1], "$%08lx", tc);
+    MySetContents(tdwd->tdwd_Texts[ 1], ADDRESS_FORMAT, tc);
     MySetContents(tdwd->tdwd_Texts[ 2], "%s", GetNodeType(tc->tc_Node.ln_Type));
     MySetContents(tdwd->tdwd_Texts[ 3], "%ld", tc->tc_Node.ln_Pri);
     set(tdwd->tdwd_Texts[ 4], MUIA_FlagsButton_Flags, tc->tc_Flags);
     MySetContents(tdwd->tdwd_Texts[ 5], "%s", GetTaskState(tc->tc_State, tc->tc_SigWait));
     MySetContents(tdwd->tdwd_Texts[ 6], "%lD", tc->tc_IDNestCnt);
     MySetContents(tdwd->tdwd_Texts[ 7], "%lD", tc->tc_TDNestCnt);
-    MySetContents(tdwd->tdwd_Texts[ 8], "$%08lx", tc->tc_SigAlloc);
-    MySetContents(tdwd->tdwd_Texts[ 9], "$%08lx", tc->tc_SigWait);
-    MySetContents(tdwd->tdwd_Texts[10], "$%08lx", tc->tc_SigRecvd);
-    MySetContents(tdwd->tdwd_Texts[11], "$%08lx", tc->tc_SigExcept);
+    MySetContents(tdwd->tdwd_Texts[ 8], "$%08lx", tc->tc_SigAlloc); // ULONG
+    MySetContents(tdwd->tdwd_Texts[ 9], "$%08lx", tc->tc_SigWait); // ULONG
+    MySetContents(tdwd->tdwd_Texts[10], "$%08lx", tc->tc_SigRecvd); // ULONG
+    MySetContents(tdwd->tdwd_Texts[11], "$%08lx", tc->tc_SigExcept); // ULONG
 
 #if defined(__MORPHOS__)
     trapAlloc = tc->tc_ETask->TrapAlloc;
@@ -254,13 +254,13 @@ STATIC void SetDetails( struct IClass *cl,
     set(tdwd->tdwd_Texts[15], MUIA_DisassemblerButton_Address, tc->tc_ExceptCode);
     set(tdwd->tdwd_Texts[16], MUIA_DisassemblerButton_Address, tc->tc_TrapData);
     set(tdwd->tdwd_Texts[17], MUIA_DisassemblerButton_Address, tc->tc_TrapCode);
-    MySetContents(tdwd->tdwd_Texts[18], "$%08lx", tc->tc_SPReg);
-    MySetContents(tdwd->tdwd_Texts[19], "$%08lx", tc->tc_SPLower);
-    MySetContents(tdwd->tdwd_Texts[20], "$%08lx", tc->tc_SPUpper);
+    MySetContents(tdwd->tdwd_Texts[18], ADDRESS_FORMAT, tc->tc_SPReg);
+    MySetContents(tdwd->tdwd_Texts[19], ADDRESS_FORMAT, tc->tc_SPLower);
+    MySetContents(tdwd->tdwd_Texts[20], ADDRESS_FORMAT, tc->tc_SPUpper);
     MySetContents(tdwd->tdwd_Texts[21], "%lD", (ULONG)((IPTR)tc->tc_SPUpper - (IPTR)tc->tc_SPLower));
     set(tdwd->tdwd_Texts[22], MUIA_DisassemblerButton_Address, tc->tc_Switch);
     set(tdwd->tdwd_Texts[23], MUIA_DisassemblerButton_Address, tc->tc_Launch);
-    MySetContents(tdwd->tdwd_Texts[24], "$%08lx", tc->tc_MemEntry);
+    MySetContents(tdwd->tdwd_Texts[24], ADDRESS_FORMAT, tc->tc_MemEntry);
     set(tdwd->tdwd_Texts[25], MUIA_DisassemblerButton_Address, tc->tc_UserData);
 
 #if defined(__MORPHOS__)
@@ -485,7 +485,7 @@ STATIC void SetDetails( struct IClass *cl,
 
         path = tbAllocVecPooled(globalPool, PATH_LENGTH);
 
-        MySetContents(texts[ 0], "$%08lx", BADDR(pr->pr_SegList));
+        MySetContents(texts[ 0], ADDRESS_FORMAT, BADDR(pr->pr_SegList));
         MySetContents(texts[ 1], "%lD", pr->pr_StackSize);
     #if defined(__amigaos4__)
         MySetContents(texts[2], "%s", txtTaskProcessCodeTypeUnknown);
@@ -502,7 +502,7 @@ STATIC void SetDetails( struct IClass *cl,
             MySetContents(texts[2], "%s", txtTaskProcessCodeType68kSegList);
         }
     #else
-        MySetContents(texts[ 2], "$%08lx", pr->pr_GlobVec);
+        MySetContents(texts[ 2], ADDRESS_FORMAT, pr->pr_GlobVec);
     #endif
         MySetContents(texts[ 3], "%s", te->te_Num);
     #if !defined(__amigaos4__)
@@ -525,16 +525,16 @@ STATIC void SetDetails( struct IClass *cl,
         } else {
             MySetContents(texts[ 6], "%s", nonetest(NULL));
         }
-        MySetContents(texts[ 7], "$%08lx", BADDR(pr->pr_CIS));
-        MySetContents(texts[ 8], "$%08lx", BADDR(pr->pr_COS));
+        MySetContents(texts[ 7], ADDRESS_FORMAT, BADDR(pr->pr_CIS));
+        MySetContents(texts[ 8], ADDRESS_FORMAT, BADDR(pr->pr_COS));
         set(texts[ 9], MUIA_TaskButton_Task, pr->pr_ConsoleTask);
         set(texts[10], MUIA_TaskButton_Task, pr->pr_FileSystemTask);
-        MySetContents(texts[11], "$%08lx", BADDR(pr->pr_CLI));
+        MySetContents(texts[11], ADDRESS_FORMAT, BADDR(pr->pr_CLI));
     #if !defined(__amigaos4__)
         set(texts[12], MUIA_DisassemblerButton_Address, pr->pr_ReturnAddr);
     #endif
         set(texts[13], MUIA_DisassemblerButton_Address, pr->pr_PktWait);
-        MySetContents(texts[14], "$%08lx", pr->pr_WindowPtr);
+        MySetContents(texts[14], ADDRESS_FORMAT, pr->pr_WindowPtr);
         if (pr->pr_HomeDir != ZERO && path != NULL) {
             NameFromLock(pr->pr_HomeDir, path, PATH_LENGTH);
             MySetContents(texts[ 15], "%s", path);
@@ -545,9 +545,9 @@ STATIC void SetDetails( struct IClass *cl,
         set(texts[17], MUIA_DisassemblerButton_Address, pr->pr_ExitCode);
         set(texts[18], MUIA_DisassemblerButton_Address, pr->pr_ExitData);
         set(texts[19], MUIA_DisassemblerButton_Address, pr->pr_Arguments);
-        MySetContents(texts[20], "$%08lx", pr->pr_LocalVars);
+        MySetContents(texts[20], ADDRESS_FORMAT, pr->pr_LocalVars);
         set(texts[21], MUIA_DisassemblerButton_Address, pr->pr_ShellPrivate);
-        MySetContents(texts[22], "$%08lx", BADDR(pr->pr_CES));
+        MySetContents(texts[22], ADDRESS_FORMAT, BADDR(pr->pr_CES));
     #if defined(__amigaos4__)
         set(texts[23], MUIA_DisassemblerButton_Address, pr->pr_PrData);
         set(texts[24], MUIA_DisassemblerButton_Address, BADDR(pr->pr_CurrentSeg));
@@ -595,8 +595,8 @@ STATIC void SetDetails( struct IClass *cl,
                     ULONG size;
 
                     size = ((ULONG *)seg)[-1];
-                    _snprintf(sle->sle_Lower, sizeof(sle->sle_Lower), "$%08lx", (ULONG)((IPTR)seg + 4));
-                    _snprintf(sle->sle_Upper, sizeof(sle->sle_Upper), "$%08lx", (ULONG)((IPTR)seg + size - 4));
+                    _snprintf(sle->sle_Lower, sizeof(sle->sle_Lower), ADDRESS_FORMAT, (IPTR)seg + 4);
+                    _snprintf(sle->sle_Upper, sizeof(sle->sle_Upper), ADDRESS_FORMAT, (IPTR)seg + size - 4);
                     _snprintf(sle->sle_Size, sizeof(sle->sle_Size), "%12lD", size);
 
                     AddTail((struct List *)&tmplist, (struct Node *)sle);
@@ -674,20 +674,20 @@ STATIC void SetDetails( struct IClass *cl,
                 MySetContents(texts[ 0], "%lD", cli->cli_Result2);
             }
             MySetContents(texts[ 1], "\"%b\"", cli->cli_SetName);
-            MySetContents(texts[ 2], "$%08lx", BADDR(cli->cli_CommandDir));
+            MySetContents(texts[ 2], ADDRESS_FORMAT, BADDR(cli->cli_CommandDir));
             MySetContents(texts[ 3], "%lD", cli->cli_ReturnCode);
             MySetContents(texts[ 4], "\"%b\"", cli->cli_CommandName);
             MySetContents(texts[ 5], "%lD", cli->cli_FailLevel);
             MySetContents(texts[ 6], "\"%b\"", cli->cli_Prompt);
-            MySetContents(texts[ 7], "$%08lx", BADDR(cli->cli_StandardInput));
-            MySetContents(texts[ 8], "$%08lx", BADDR(cli->cli_CurrentInput));
+            MySetContents(texts[ 7], ADDRESS_FORMAT, BADDR(cli->cli_StandardInput));
+            MySetContents(texts[ 8], ADDRESS_FORMAT, BADDR(cli->cli_CurrentInput));
             MySetContents(texts[ 9], "\"%b\"", cli->cli_CommandFile);
             MySetContents(texts[10], "%s", (cli->cli_Interactive) ? txtCLIBatch : txtCLIInteractive);
             MySetContents(texts[11], "%s", (cli->cli_Background) ? txtCLIBackground : txtCLIForeground);
-            MySetContents(texts[12], "$%08lx", BADDR(cli->cli_CurrentOutput));
+            MySetContents(texts[12], ADDRESS_FORMAT, BADDR(cli->cli_CurrentOutput));
             MySetContents(texts[13], "%lU", cli->cli_DefaultStack);
-            MySetContents(texts[14], "$%08lx", BADDR(cli->cli_StandardOutput));
-            MySetContents(texts[15], "$%08lx", BADDR(cli->cli_Module));
+            MySetContents(texts[14], ADDRESS_FORMAT, BADDR(cli->cli_StandardOutput));
+            MySetContents(texts[15], ADDRESS_FORMAT, BADDR(cli->cli_Module));
         }
 
         if (path != NULL) {

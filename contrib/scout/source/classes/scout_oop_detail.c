@@ -47,8 +47,8 @@ STATIC void SetDetails( struct IClass *cl,
     OOP_Class *ic = ce->ce_Addr;
 
     MySetContentsHealed(cdwd->cdwd_Texts[0], "%s", ce->ce_ClassName);
-    MySetContents(cdwd->cdwd_Texts[1], "$%08lx", ic);
-    MySetContents(cdwd->cdwd_Texts[2], "$%08lx", ic->OOPBasePtr);
+    MySetContents(cdwd->cdwd_Texts[1], ADDRESS_FORMAT, ic);
+    MySetContents(cdwd->cdwd_Texts[2], ADDRESS_FORMAT, ic->OOPBasePtr);
     MySetContents(cdwd->cdwd_Texts[3], "%lD", ic->InstOffset);
     set(cdwd->cdwd_Texts[4], MUIA_DisassemblerButton_Address, ic->UserData);
     set(cdwd->cdwd_Texts[5], MUIA_DisassemblerButton_Address, ic->cl_DoMethod);

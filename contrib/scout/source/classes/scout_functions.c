@@ -216,9 +216,9 @@ STATIC IPTR mShowFunctions( struct IClass *cl,
                 fe->fe_Address = __AROS_GETVECADDR (lib, offset / LIB_VECTSIZE);
                 
                 if (points2ram(fe->fe_Address)) {
-                    _snprintf(fe->fe_AddressStr, sizeof(fe->fe_AddressStr), MUIX_PH "$%08lx" MUIX_PT, fe->fe_Address);
+                    _snprintf(fe->fe_AddressStr, sizeof(fe->fe_AddressStr), MUIX_PH ADDRESS_FORMAT MUIX_PT, fe->fe_Address);
                 } else {
-                    _snprintf(fe->fe_AddressStr, sizeof(fe->fe_AddressStr), "$%08lx", fe->fe_Address);
+                    _snprintf(fe->fe_AddressStr, sizeof(fe->fe_AddressStr), ADDRESS_FORMAT, fe->fe_Address);
                 }
 #else
                 struct JumpEntry *je;

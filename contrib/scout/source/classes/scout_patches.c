@@ -220,7 +220,7 @@ STATIC void IterateSaferPatchesList( struct MinList *tmplist,
                     absOffset = abs(ln->ln_Offset);
 
                     pe->pe_Addr = le;
-                    _snprintf(pe->pe_Address, sizeof(pe->pe_Address), "$%08lx", le->le_NewEntry);
+                    _snprintf(pe->pe_Address, sizeof(pe->pe_Address), ADDRESS_FORMAT, le->le_NewEntry);
                     pe->pe_LibraryAddr = ll->ll_LibBase;
                     stccpy(pe->pe_Library, nonetest(ll->ll_LibBase->lib_Node.ln_Name), sizeof(pe->pe_Library));
                     pe->pe_Offset = ln->ln_Offset;
@@ -269,7 +269,7 @@ STATIC void IteratePatchControlList( struct MinList *tmplist,
                 absOffset = abs(pcn->pcn_Offset);
 
                 pe->pe_Addr = pcn;
-                _snprintf(pe->pe_Address, sizeof(pe->pe_Address), "$%08lx", pcn->pcn_FunctionAddress);
+                _snprintf(pe->pe_Address, sizeof(pe->pe_Address), ADDRESS_FORMAT, pcn->pcn_FunctionAddress);
                 pe->pe_LibraryAddr = pcn->pcn_Library;
                 stccpy(pe->pe_Library, nonetest(pcn->pcn_Library->lib_Node.ln_Name), sizeof(pe->pe_Library));
                 pe->pe_Offset = pcn->pcn_Offset;
@@ -313,7 +313,7 @@ STATIC void IterateSetManList( struct MinList *tmplist,
                 absOffset = abs(sn->sn_Offset);
 
                 pe->pe_Addr = sn;
-                _snprintf(pe->pe_Address, sizeof(pe->pe_Address), "$%08lx", sn->sn_SetFunc);
+                _snprintf(pe->pe_Address, sizeof(pe->pe_Address), ADDRESS_FORMAT, sn->sn_SetFunc);
                 pe->pe_LibraryAddr = sn->sn_Library;
                 stccpy(pe->pe_Library, nonetest(sn->sn_Library->lib_Node.ln_Name), sizeof(pe->pe_Library));
                 pe->pe_Offset = sn->sn_Offset;

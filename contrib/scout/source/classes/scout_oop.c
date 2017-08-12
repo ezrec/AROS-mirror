@@ -146,9 +146,9 @@ STATIC void ReceiveList( void (* callback)( struct OOPClassEntry *ce, void *user
 STATIC void FormatAddress(STRPTR buf, APTR dispentry)
 {
     if (points2ram(dispentry)) {
-        _snprintf(buf, ADDRESS_LENGTH, MUIX_PH "$%08lx" MUIX_PT, dispentry);
+        _snprintf(buf, ADDRESS_LENGTH, MUIX_PH ADDRESS_FORMAT MUIX_PT, dispentry);
     } else {
-        _snprintf(buf, ADDRESS_LENGTH, "$%08lx", dispentry);
+        _snprintf(buf, ADDRESS_LENGTH, ADDRESS_FORMAT, dispentry);
     }
 }
 
@@ -185,13 +185,13 @@ STATIC void IterateList( void (* callback)( struct OOPClassEntry *ce, void *user
             if (cl != myclass) {
                 if ((ce = AllocVec(sizeof(struct OOPClassEntry), MEMF_CLEAR)) != NULL) {
                     ce->ce_Addr = cl;
-                    _snprintf(ce->ce_Address, sizeof(ce->ce_Address), "$%08lx", cl);
+                    _snprintf(ce->ce_Address, sizeof(ce->ce_Address), ADDRESS_FORMAT, cl);
                     if (cl->superclass) {
                         stccpy(ce->ce_SuperClassName, (TEXT *)nonetest((STRPTR)cl->superclass->ClassNode.ln_Name), sizeof(ce->ce_SuperClassName));
                     } else {
                         stccpy(ce->ce_SuperClassName, (TEXT *)nonetest(NULL), sizeof(ce->ce_SuperClassName));
                     }
-                    _snprintf(ce->ce_SuperClassAddress, sizeof(ce->ce_SuperClassAddress), "$%08lx", cl->superclass);
+                    _snprintf(ce->ce_SuperClassAddress, sizeof(ce->ce_SuperClassAddress), ADDRESS_FORMAT, cl->superclass);
 
 		    FormatAddress(ce->ce_Dispatcher, cl->cl_DoMethod);
 		    FormatAddress(ce->ce_CoerceDispatcher, cl->cl_CoerceMethod);

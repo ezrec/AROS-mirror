@@ -438,7 +438,7 @@ STATIC IPTR mDisassemble( struct IClass *cl,
                 LONG s;
                 UWORD i;
 
-                RawDoFmt("$%08lx:", (APTR)&addr, (void(*)(void))&_putchar, &dc);
+                RawDoFmt(ADDRESS_FORMAT ":", (APTR)&addr, (void(*)(void))&_putchar, &dc);
 
                 s = size;
                 for (i = 0; i < 16; i++) {
@@ -482,7 +482,7 @@ STATIC IPTR mDisassemble( struct IClass *cl,
 
         dwd->dwd_Buffer[strlen(dwd->dwd_Buffer) - 1] = 0x00;
 
-        _snprintf(buffer, sizeof(buffer), "$%08lx -> $%08lx", dwd->dwd_Address, (ULONG)(IPTR)(dwd->dwd_Address + dwd->dwd_Range - 1));
+        _snprintf(buffer, sizeof(buffer), ADDRESS_FORMAT " -> " ADDRESS_FORMAT, dwd->dwd_Address, dwd->dwd_Address + dwd->dwd_Range - 1);
         set(obj, MUIA_Window_Title, MyGetChildWindowTitle((dwd->dwd_ForceHexDump) ? txtHexdumpTitle : txtDisassemblyTitle, buffer, dwd->dwd_Title, sizeof(dwd->dwd_Title)));
     }
 

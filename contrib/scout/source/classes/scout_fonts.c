@@ -207,7 +207,7 @@ STATIC void IterateList( void (* callback)( struct FontEntry *fe, void *userData
         if ((fe = AllocVec(sizeof(struct FontEntry), MEMF_CLEAR)) != NULL) {
             fe->fe_Addr = tf;
 
-            _snprintf(fe->fe_Address, sizeof(fe->fe_Address), "$%08lx", tf);
+            _snprintf(fe->fe_Address, sizeof(fe->fe_Address), ADDRESS_FORMAT, tf);
             _snprintf(fe->fe_YSize, sizeof(fe->fe_YSize), "%3ld", tf->tf_YSize);
             _snprintf(fe->fe_XSize, sizeof(fe->fe_XSize), "%3ld", tf->tf_XSize);
             _snprintf(fe->fe_Style, sizeof(fe->fe_Style), "$%02lx", tf->tf_Style);
@@ -394,7 +394,7 @@ STATIC IPTR mClose( struct IClass *cl,
                     }
                 } else if (answer == 2) {
                     while (cnt > 0) {
-                        if (MyDoCommand("CloseFont $%08lx", fe->fe_Addr) != RETURN_OK) break;
+                        if (MyDoCommand("CloseFont " ADDRESS_FORMAT, fe->fe_Addr) != RETURN_OK) break;
                         cnt--;
                     }
                 }

@@ -530,7 +530,7 @@ STATIC void UpdateTaskEntry( UNUSED struct Task *task,
     healstring(te->te_Name);
     _snprintf(te->te_Pri, sizeof(te->te_Pri), "%4ld", task->tc_Node.ln_Pri);
     stccpy(te->te_State, GetTaskState((UBYTE)task->tc_State, task->tc_SigWait), sizeof(te->te_State));
-    _snprintf(te->te_SigWait, sizeof(te->te_SigWait), "$%08lx", task->tc_SigWait);
+    _snprintf(te->te_SigWait, sizeof(te->te_SigWait), "$%08lx", task->tc_SigWait); // ULONG
 
     if ((IPTR)task->tc_SPUpper >= (IPTR)task->tc_SPReg &&
         (IPTR)task->tc_SPReg   >= (IPTR)task->tc_SPLower) {
@@ -560,7 +560,7 @@ void GetTaskEntry( struct Task *task,
 {
     te->te_Addr = task;
 
-    _snprintf(te->te_Address, sizeof(te->te_Address), "$%08lx", task);
+    _snprintf(te->te_Address, sizeof(te->te_Address), ADDRESS_FORMAT, task);
     stccpy(te->te_Type, GetNodeType(task->tc_Node.ln_Type), sizeof(te->te_Type));
 
     if (task->tc_Node.ln_Type == NT_TASK || ((struct Process *)task)->pr_TaskNum == 0) {
@@ -1043,7 +1043,7 @@ STATIC IPTR mSignal( struct IClass *cl,
                 MUIA_Window_ParentWindow, (IPTR)obj,
             End) != NULL) {
             if (DoMethod(sigwin, MUIM_SignalWin_GetSignals, te->te_Name, &sigs)) {
-                if (MyDoCommand("SignalTask %s $%08lx", te->te_Address, sigs) == RETURN_OK) {
+                if (MyDoCommand("SignalTask %s " ADDRESS_FORMAT, te->te_Address, sigs) == RETURN_OK) {
                     Delay(25);
                     RedrawActiveEntry(twd->twd_TaskList);
                 }

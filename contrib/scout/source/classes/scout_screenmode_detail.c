@@ -108,7 +108,7 @@ STATIC void SetDetails( struct IClass *cl,
         } else {
             MySetContents(smdwd->smdwd_Texts[ 0], MUIX_PH "%s" MUIX_PT, sme->sme_Name);
         }
-        MySetContents(smdwd->smdwd_Texts[ 1], "$%08lx", sme->sme_ModeID);
+        MySetContents(smdwd->smdwd_Texts[ 1], "$%08lx", sme->sme_ModeID); // ULONG
 
 	set(smdwd->smdwd_Texts[ 2], MUIA_MonitorButton_MonitorSpec, smd->monitor.Mspc);
         MySetContents(smdwd->smdwd_Texts[ 5], "%lD x %lD", smd->monitor.ViewPosition.x, smd->monitor.ViewPosition.y);
@@ -137,7 +137,7 @@ STATIC void SetDetails( struct IClass *cl,
         MySetContents(smdwd->smdwd_Texts[15], "%s", tmp);
         MySetContents(smdwd->smdwd_Texts[16], "%lD x %lD", smd->monitor.MouseTicks.x, smd->monitor.MouseTicks.y);
         MySetContents(smdwd->smdwd_Texts[17], "%lD x %lD", smd->monitor.DefaultViewPosition.x, smd->monitor.DefaultViewPosition.y);
-        MySetContents(smdwd->smdwd_Texts[18], "$%08lx", smd->monitor.PreferredModeID);
+        MySetContents(smdwd->smdwd_Texts[18], "$%08lx", smd->monitor.PreferredModeID); // ULONG
 
         if (FLAG_IS_SET(smd->display.PropertyFlags, DIPF_IS_DUALPF)) {
            _snprintf(colors, sizeof(colors), "2x%ld",1 << (smd->dimension.MaxDepth >> 1));

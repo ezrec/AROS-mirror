@@ -211,7 +211,7 @@ STATIC void IterateList( void (* callback)( struct ResourceEntry *re, void *user
         if ((re = AllocVec(sizeof(struct ResourceEntry), MEMF_CLEAR)) != NULL) {
             re->re_Addr = res;
 
-            _snprintf(re->re_Address, sizeof(re->re_Address), "$%08lx", res);
+            _snprintf(re->re_Address, sizeof(re->re_Address), ADDRESS_FORMAT, res);
             stccpy(re->re_Name, res->lib_Node.ln_Name, sizeof(re->re_Name));
             _snprintf(re->re_Pri, sizeof(re->re_Pri), "%4ld", res->lib_Node.ln_Pri);
 

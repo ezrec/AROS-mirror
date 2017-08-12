@@ -165,7 +165,7 @@ STATIC void IterateList( void (* callback)( struct SemaphoreEntry *se, void *use
         if ((se = AllocVec(sizeof(struct SemaphoreEntry), MEMF_CLEAR)) != NULL) {
             se->se_Addr = ss;
 
-            _snprintf(se->se_Address, sizeof(se->se_Address), "$%08lx", ss);
+            _snprintf(se->se_Address, sizeof(se->se_Address), ADDRESS_FORMAT, ss);
             stccpy(se->se_Name, nonetest (ss->ss_Link.ln_Name), sizeof(se->se_Name));
             _snprintf(se->se_Pri, sizeof(se->se_Pri), "%4ld", ss->ss_Link.ln_Pri);
             _snprintf(se->se_NestCount, sizeof(se->se_NestCount), "%4ld", ss->ss_NestCount);

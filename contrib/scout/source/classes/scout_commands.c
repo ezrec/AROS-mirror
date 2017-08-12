@@ -187,7 +187,7 @@ STATIC void ScanSegments( struct List *list,
             STRPTR tmp;
 
             ce->ce_Addr = seg;
-            _snprintf(ce->ce_Address, sizeof(ce->ce_Address), "$%08lx", seg);
+            _snprintf(ce->ce_Address, sizeof(ce->ce_Address), ADDRESS_FORMAT, seg);
             _snprintf(ce->ce_Name, sizeof(ce->ce_Name), "%b", MKBADDR(seg->seg_Name));
 
             if ((tmp = GetUCType(seg->seg_UC)) != NULL) {
@@ -223,9 +223,9 @@ STATIC void ScanSegments( struct List *list,
                         CopyMemQuick(ce, _ce, sizeof(struct CommandEntry));
 
                         size = *(_seg - 1);
-                        _snprintf(_ce->ce_Lower, sizeof(_ce->ce_Lower), "$%08lx", ((UBYTE *)_seg) + 4);
+                        _snprintf(_ce->ce_Lower, sizeof(_ce->ce_Lower), ADDRESS_FORMAT, ((UBYTE *)_seg) + 4);
                         _snprintf(_ce->ce_Size, sizeof(_ce->ce_Size), "%lD", size);
-                        _snprintf(_ce->ce_Upper, sizeof(_ce->ce_Upper), "$%08lx", ((UBYTE *)_seg) - 4 + size);
+                        _snprintf(_ce->ce_Upper, sizeof(_ce->ce_Upper), ADDRESS_FORMAT, ((UBYTE *)_seg) - 4 + size);
 
                         if (first) {
                             first = FALSE;
@@ -444,7 +444,7 @@ STATIC IPTR mRemove( struct IClass *cl,
             MyRequest(msgErrorContinue, msgCantRemoveDisabled);
         } else {
             if (MyRequest(msgYesNo, msgWantToRemoveCommand, ce->ce_Name)) {
-                if (MyDoCommand("RemoveCommand $%08lx", ce->ce_Addr) == RETURN_OK) {
+                if (MyDoCommand("RemoveCommand " ADDRESS_FORMAT, ce->ce_Addr) == RETURN_OK) {
                     DoMethod(obj, MUIM_CommandsWin_Update);
                 }
             }

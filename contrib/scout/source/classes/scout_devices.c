@@ -197,7 +197,7 @@ STATIC void IterateList( void (* callback)( struct DeviceEntry *de, void *userDa
 
             de->de_Addr = dd;
 
-            _snprintf(de->de_Address, sizeof(de->de_Address), "$%08lx", dd);
+            _snprintf(de->de_Address, sizeof(de->de_Address), ADDRESS_FORMAT, dd);
             stccpy(de->de_Name, dd->dd_Library.lib_Node.ln_Name, sizeof(de->de_Name));
             _snprintf(de->de_Pri, sizeof(de->de_Pri), "%4ld", dd->dd_Library.lib_Node.ln_Pri);
             _snprintf(de->de_Version, sizeof(de->de_Version), "%ld.%ld", dd->dd_Library.lib_Version, dd->dd_Library.lib_Revision);

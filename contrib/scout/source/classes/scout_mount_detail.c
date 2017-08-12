@@ -110,24 +110,18 @@ STATIC void SetDetails( struct IClass *cl,
     NoReqOn();
 
     MySetContents(mdwd->mdwd_Texts[ 0], "%s", me->me_Name);
-    MySetContents(mdwd->mdwd_Texts[ 1], "$%08lx", me->me_Device);
-    MySetContents(mdwd->mdwd_Texts[ 2], "$%08lx", BADDR(dol->dol_Next));
+    MySetContents(mdwd->mdwd_Texts[ 1], ADDRESS_FORMAT, me->me_Device);
+    MySetContents(mdwd->mdwd_Texts[ 2], ADDRESS_FORMAT, BADDR(dol->dol_Next));
     MySetContents(mdwd->mdwd_Texts[ 3], "%s", dolTypes[MIN(dol->dol_Type, DLT_NONBINDING + 1)]);
     set(mdwd->mdwd_Texts[ 4], MUIA_TaskButton_Task, dol->dol_Task);
-    MySetContents(mdwd->mdwd_Texts[ 5], "$%08lx", BADDR(dol->dol_Lock));
+    MySetContents(mdwd->mdwd_Texts[ 5], ADDRESS_FORMAT, BADDR(dol->dol_Lock));
     MySetContents(mdwd->mdwd_Texts[ 6], "%s", me->me_Handler);
     MySetContents(mdwd->mdwd_Texts[ 7], "%lD", dol->dol_misc.dol_handler.dol_StackSize);
     MySetContents(mdwd->mdwd_Texts[ 8], "%lD", dol->dol_misc.dol_handler.dol_Priority);
     set(mdwd->mdwd_Texts[ 9], MUIA_DisassemblerButton_Address, BADDR(dol->dol_misc.dol_handler.dol_Startup));
 
-#if defined(__AROS__)
-    // FIXME
-    MySetContents(mdwd->mdwd_Texts[10], "$%08lx", 0);
-    MySetContents(mdwd->mdwd_Texts[11], "$%08lx", 0);
-#else
-    MySetContents(mdwd->mdwd_Texts[10], "$%08lx", BADDR(dol->dol_misc.dol_handler.dol_SegList));
-    MySetContents(mdwd->mdwd_Texts[11], "$%08lx", BADDR(dol->dol_misc.dol_handler.dol_GlobVec));
-#endif
+    MySetContents(mdwd->mdwd_Texts[10], ADDRESS_FORMAT, BADDR(dol->dol_misc.dol_handler.dol_SegList));
+    MySetContents(mdwd->mdwd_Texts[11], ADDRESS_FORMAT, BADDR(dol->dol_misc.dol_handler.dol_GlobVec));
 
 #if defined(__MORPHOS__)
     if (me->me_ValidFSSM) {
@@ -356,7 +350,7 @@ STATIC void SetDetails( struct IClass *cl,
     #else
         MySetContents(texts[ 4], "%ld.%ld%s", size.lo, rem.lo, sizetext);
     #endif
-        MySetContents(texts[ 5], "$%08lx", de);
+        MySetContents(texts[ 5], ADDRESS_FORMAT, de);
         MySetContents(texts[ 6], "%lD", de->de_TableSize);
         MySetContents(texts[ 7], "%lD", de->de_SizeBlock);
         MySetContents(texts[ 8], "%lD", de->de_SecOrg);

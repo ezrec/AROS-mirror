@@ -122,8 +122,8 @@ STATIC void SetDetails( struct IClass *cl,
     APTR examplegroup, example;
 
     MySetContentsHealed(fdwd->fdwd_Texts[ 0], "%s", tf->tf_Message.mn_Node.ln_Name);
-    MySetContents(fdwd->fdwd_Texts[ 1], "$%08lx", tf);
-    MySetContents(fdwd->fdwd_Texts[ 2], "$%08lx", tf->tf_Extension);
+    MySetContents(fdwd->fdwd_Texts[ 1], ADDRESS_FORMAT, tf);
+    MySetContents(fdwd->fdwd_Texts[ 2], ADDRESS_FORMAT, tf->tf_Extension);
     MySetContents(fdwd->fdwd_Texts[ 3], "%ld", tf->tf_YSize);
     set(fdwd->fdwd_Texts[ 4], MUIA_FlagsButton_Flags, tf->tf_Style);
     set(fdwd->fdwd_Texts[ 5], MUIA_FlagsButton_Flags, tf->tf_Flags);

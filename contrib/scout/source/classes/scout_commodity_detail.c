@@ -342,7 +342,7 @@ STATIC void SetDetails( struct IClass *cl,
             struct CxSubEntry *cxse;
 
             MySetContents(cdwd->cdwd_Texts[0], "%s", mco->mco_Name);
-            MySetContents(cdwd->cdwd_Texts[1], "$%08lx", mco);
+            MySetContents(cdwd->cdwd_Texts[1], ADDRESS_FORMAT, mco);
             MySetContents(cdwd->cdwd_Texts[2], "%s", mco->mco_Title);
             MySetContents(cdwd->cdwd_Texts[3], "%s", mco->mco_Descr);
             MySetContents(cdwd->cdwd_Texts[4], "%s", GetCxNodeType(CxObjType((CxObj *)mco)));
@@ -362,7 +362,7 @@ STATIC void SetDetails( struct IClass *cl,
 
             ITERATE_LIST(&mco->mco_SubList, struct Node *, node) {
                 if ((cxse = AllocVec(sizeof(struct CxSubEntry), MEMF_CLEAR)) != NULL) {
-                    _snprintf(cxse->cxse_Address, sizeof(cxse->cxse_Address), "$%08lx", node);
+                    _snprintf(cxse->cxse_Address, sizeof(cxse->cxse_Address), ADDRESS_FORMAT, node);
                     stccpy(cxse->cxse_Type, GetCxNodeType(CxObjType((CxObj *)node)), sizeof(cxse->cxse_Type));
                     _snprintf(cxse->cxse_Pri, sizeof(cxse->cxse_Pri), "%4ld", node->ln_Pri);
                     if (node->ln_Type == CX_FILTER) {

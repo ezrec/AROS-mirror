@@ -75,7 +75,7 @@ STATIC void SetDetails( struct IClass *cl,
     struct IClass *ic = ce->ce_Addr;
 
     MySetContentsHealed(cdwd->cdwd_Texts[ 0], "%s", ic->cl_ID);
-    MySetContents(cdwd->cdwd_Texts[ 1], "$%08lx", ic);
+    MySetContents(cdwd->cdwd_Texts[ 1], ADDRESS_FORMAT, ic);
     MySetContentsHealed(cdwd->cdwd_Texts[ 2], "%s", (ic->cl_Super) ? (STRPTR)ic->cl_Super->cl_ID : nonetest(NULL));
     MySetContents(cdwd->cdwd_Texts[ 3], "%lD", ic->cl_InstOffset);
     MySetContents(cdwd->cdwd_Texts[ 4], "%lD", ic->cl_InstSize);
@@ -86,7 +86,7 @@ STATIC void SetDetails( struct IClass *cl,
     MySetContents(cdwd->cdwd_Texts[ 9], "%lD", ic->cl_SubclassCount);
     MySetContents(cdwd->cdwd_Texts[10], "%lD", ic->cl_ObjectCount);
     set(cdwd->cdwd_Texts[11], MUIA_FlagsButton_Flags, ic->cl_Flags);
-    MySetContents(cdwd->cdwd_Texts[12], "$%08lx", ic->cl_Reserved);
+    MySetContents(cdwd->cdwd_Texts[12], "$%08lx", ic->cl_Reserved); // ULONG
 
     set(obj, MUIA_Window_Title, MyGetChildWindowTitle(txtClassesDetailTitle, ce->ce_ClassName, cdwd->cdwd_Title, sizeof(cdwd->cdwd_Title)));
 }

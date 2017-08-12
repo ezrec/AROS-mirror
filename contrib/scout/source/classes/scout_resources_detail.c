@@ -156,7 +156,7 @@ STATIC void SetDetails( struct IClass *cl,
     struct Library *lib = re->re_Addr;
 
     MySetContentsHealed(rdwd->rdwd_Texts[ 0], "%s", lib->lib_Node.ln_Name);
-    MySetContents(rdwd->rdwd_Texts[ 1], "$%08lx", lib);
+    MySetContents(rdwd->rdwd_Texts[ 1], ADDRESS_FORMAT, lib);
     MySetContents(rdwd->rdwd_Texts[ 2], "---");
     MySetContents(rdwd->rdwd_Texts[ 3], "%s", GetNodeType(lib->lib_Node.ln_Type));
     MySetContents(rdwd->rdwd_Texts[ 4], "%ld", lib->lib_Node.ln_Pri);

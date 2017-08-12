@@ -214,14 +214,14 @@ STATIC void IterateList( void (* callback)( struct CxEntry *cxe, void *userData 
                         if (mco != cxbroker) {
                             if ((cxe = AllocVec(sizeof(struct CxEntry), MEMF_CLEAR)) != NULL) {
                                 cxe->cxe_Addr = mco;
-                                _snprintf(cxe->cxe_Address, sizeof(cxe->cxe_Address), "$%08lx", mco);
+                                _snprintf(cxe->cxe_Address, sizeof(cxe->cxe_Address), ADDRESS_FORMAT, mco);
                                 stccpy(cxe->cxe_Type, GetCxNodeType(CxObjType((CxObj *)mco)), sizeof(cxe->cxe_Type));
                                 _snprintf(cxe->cxe_Pri, sizeof(cxe->cxe_Pri), "%4ld", mco->mco_Node.ln_Pri);
                                 stccpy(cxe->cxe_Name, mco->mco_Name, sizeof(cxe->cxe_Name));
                                 stccpy(cxe->cxe_Title, mco->mco_Title, sizeof(cxe->cxe_Title));
                                 stccpy(cxe->cxe_Description, mco->mco_Descr, sizeof(cxe->cxe_Description));
-                                _snprintf(cxe->cxe_Task, sizeof(cxe->cxe_Task), "$%08lx", mco->mco_Task);
-                                _snprintf(cxe->cxe_Port, sizeof(cxe->cxe_Port), "$%08lx", mco->mco_Port);
+                                _snprintf(cxe->cxe_Task, sizeof(cxe->cxe_Task), ADDRESS_FORMAT, mco->mco_Task);
+                                _snprintf(cxe->cxe_Port, sizeof(cxe->cxe_Port), ADDRESS_FORMAT, mco->mco_Port);
                                 _snprintf(cxe->cxe_Unique, sizeof(cxe->cxe_Unique), "$%08lx", mco->mco_dummy3);
                                 cxe->cxe_FlagsInt = mco->mco_Flags;
                                 _snprintf(cxe->cxe_Flags, sizeof(cxe->cxe_Flags), "$%02lx", mco->mco_Flags);

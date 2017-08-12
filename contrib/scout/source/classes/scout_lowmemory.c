@@ -159,15 +159,15 @@ STATIC void IterateList( void (* callback)( struct LowMemoryEntry *lme, void *us
             if ((lme = AllocVec(sizeof(struct LowMemoryEntry), MEMF_CLEAR)) != NULL) {
                 lme->lme_Addr = irq;
 
-                _snprintf(lme->lme_Address, sizeof(lme->lme_Address), "$%08lx", irq);
+                _snprintf(lme->lme_Address, sizeof(lme->lme_Address), ADDRESS_FORMAT, irq);
                 stccpy(lme->lme_Name, nonetest(irq->is_Node.ln_Name), sizeof(lme->lme_Name));
                 stccpy(lme->lme_Type, GetNodeType(irq->is_Node.ln_Type), sizeof(lme->lme_Type));
                 _snprintf(lme->lme_Pri, sizeof(lme->lme_Pri), "%4ld", irq->is_Node.ln_Pri);
-                _snprintf(lme->lme_Data, sizeof(lme->lme_Data), "$%08lx", irq->is_Data);
+                _snprintf(lme->lme_Data, sizeof(lme->lme_Data), ADDRESS_FORMAT, irq->is_Data);
                 if (points2ram((APTR)irq->is_Code)) {
-                   _snprintf(lme->lme_Code, sizeof(lme->lme_Code), MUIX_PH "$%08lx", irq->is_Code);
+                   _snprintf(lme->lme_Code, sizeof(lme->lme_Code), MUIX_PH ADDRESS_FORMAT, irq->is_Code);
                 } else {
-                   _snprintf(lme->lme_Code, sizeof(lme->lme_Code), "$%08lx", irq->is_Code);
+                   _snprintf(lme->lme_Code, sizeof(lme->lme_Code), ADDRESS_FORMAT, irq->is_Code);
                 }
 
                 AddTail((struct List *)&tmplist, (struct Node *)lme);

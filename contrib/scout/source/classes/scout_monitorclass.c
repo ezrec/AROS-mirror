@@ -150,7 +150,7 @@ STATIC void IterateList( void (* callback)( struct MonitorClassEntry *me, void *
 		GetAttr(MA_MonitorName, monList[i], (IPTR *)&name);
 		me->mon_Addr = monList[i];
 
-		_snprintf(me->mon_Address, sizeof(me->mon_Address), "$%08lx", monList[i]);
+		_snprintf(me->mon_Address, sizeof(me->mon_Address), ADDRESS_FORMAT, monList[i]);
 		stccpy(me->mon_Name, nonetest(name), sizeof(me->mon_Name));
 
 		AddTail((struct List *)&tmplist, (struct Node *)me);
