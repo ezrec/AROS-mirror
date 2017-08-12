@@ -56,15 +56,15 @@
 
 /*** Method structs ***/
 
-struct MUIP_Toolbar_CheckNotify      {ULONG MethodID; STACKED ULONG TrigButton; STACKED ULONG TrigAttr; STACKED ULONG TrigValue; };
-struct MUIP_Toolbar_Edge             {ULONG MethodID; STACKED ULONG Button; };
-struct MUIP_Toolbar_KillNotify       {ULONG MethodID; STACKED ULONG TrigButton; STACKED ULONG TrigAttr; };
-struct MUIP_Toolbar_KillNotifyObj    {ULONG MethodID; };
-struct MUIP_Toolbar_MultiSet         {ULONG MethodID; STACKED ULONG Flag; STACKED ULONG Value; LONG Button; /* ... */ };
-struct MUIP_Toolbar_Notify           {ULONG MethodID; STACKED ULONG TrigButton; STACKED ULONG TrigAttr; STACKED ULONG TrigValue; Object *DestObj; STACKED ULONG FollowParams; /* ... */};
-struct MUIP_Toolbar_Redraw           {ULONG MethodID; STACKED ULONG Changes; };
-struct MUIP_Toolbar_ReloadImages     {ULONG MethodID; STRPTR Normal; STRPTR Select; STRPTR Ghost; };
-struct MUIP_Toolbar_Set              {ULONG MethodID; STACKED ULONG Button; STACKED ULONG Flag; STACKED ULONG Value; };
+struct MUIP_Toolbar_CheckNotify      {STACKED ULONG MethodID; STACKED ULONG TrigButton; STACKED ULONG TrigAttr; STACKED ULONG TrigValue; };
+struct MUIP_Toolbar_Edge             {STACKED ULONG MethodID; STACKED ULONG Button; };
+struct MUIP_Toolbar_KillNotify       {STACKED ULONG MethodID; STACKED ULONG TrigButton; STACKED ULONG TrigAttr; };
+struct MUIP_Toolbar_KillNotifyObj    {STACKED ULONG MethodID; };
+struct MUIP_Toolbar_MultiSet         {STACKED ULONG MethodID; STACKED ULONG Flag; STACKED ULONG Value; LONG Button; /* ... */ };
+struct MUIP_Toolbar_Notify           {STACKED ULONG MethodID; STACKED ULONG TrigButton; STACKED ULONG TrigAttr; STACKED ULONG TrigValue; Object *DestObj; STACKED ULONG FollowParams; /* ... */};
+struct MUIP_Toolbar_Redraw           {STACKED ULONG MethodID; STACKED ULONG Changes; };
+struct MUIP_Toolbar_ReloadImages     {STACKED ULONG MethodID; STRPTR Normal; STRPTR Select; STRPTR Ghost; };
+struct MUIP_Toolbar_Set              {STACKED ULONG MethodID; STACKED ULONG Button; STACKED ULONG Flag; STACKED ULONG Value; };
 
 /*** Special method values ***/
 
@@ -115,12 +115,12 @@ struct MUIP_Toolbar_Set              {ULONG MethodID; STACKED ULONG Button; STAC
 
 struct MUIP_Toolbar_Description
 {
-  UBYTE   Type;          /* Type of button - see possible values below (TDT_). */
-  UBYTE   Key;           /* Hotkey */
-  UWORD   Flags;         /* The buttons current setting - see the TDF_ flags */
-  STRPTR  ToolText;      /* The text beneath the icons. */
-  STRPTR  HelpString;    /* The string used for help-bubbles or MUIA_Toolbar_HelpString */
-  ULONG   MutualExclude; /* Buttons to be released when this button is pressed down */
+  STACKED UBYTE   Type;          /* Type of button - see possible values below (TDT_). */
+  STACKED UBYTE   Key;           /* Hotkey */
+  STACKED UWORD   Flags;         /* The buttons current setting - see the TDF_ flags */
+  STACKED STRPTR  ToolText;      /* The text beneath the icons. */
+  STACKED STRPTR  HelpString;    /* The string used for help-bubbles or MUIA_Toolbar_HelpString */
+  STACKED ULONG   MutualExclude; /* Buttons to be released when this button is pressed down */
 };
 
 /*** Toolbar Description Types ***/

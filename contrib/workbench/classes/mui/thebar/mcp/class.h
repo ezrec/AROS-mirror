@@ -158,16 +158,16 @@ extern STRPTR regs[], frames[], precisions[], dismodes[],
 
 struct MUIP_Popbackground_Close
 {
-    ULONG MethodID;
-    ULONG success;
+    STACKED ULONG MethodID;
+    STACKED ULONG success;
 };
 
 struct MUIP_Popbackground_SetSpec
 {
-    ULONG                       MethodID;
-    STRPTR                      spec;
-    struct MUIS_TheBar_Gradient *grad;
-    ULONG                       flags;
+    STACKED ULONG                       MethodID;
+    STACKED STRPTR                      spec;
+    STACKED struct MUIS_TheBar_Gradient *grad;
+    STACKED ULONG                       flags;
 };
 
 enum
@@ -184,10 +184,10 @@ enum
 
 struct MUIP_Popbackground_GetSpec
 {
-    ULONG                       MethodID;
-    STRPTR                      spec;
-    struct MUIS_TheBar_Gradient *grad;
-    ULONG                       flags;
+    STACKED ULONG                       MethodID;
+    STACKED STRPTR                      spec;
+    STACKED struct MUIS_TheBar_Gradient *grad;
+    STACKED ULONG                       flags;
 };
 
 enum
@@ -205,26 +205,26 @@ enum
 
 struct MUIP_Popbackground_SelectPattern
 {
-    ULONG MethodID;
-    ULONG id;
+    STACKED ULONG MethodID;
+    STACKED ULONG id;
 };
 
 struct MUIP_Popbackground_GradientCol
 {
-    ULONG MethodID;
-    ULONG from;
+    STACKED ULONG MethodID;
+    STACKED ULONG from;
 };
 
 struct MUIP_Popbackground_SetStatus
 {
-    ULONG                            MethodID;
-    struct MUIS_Popbackground_Status *status;
+    STACKED ULONG                            MethodID;
+    STACKED struct MUIS_Popbackground_Status *status;
 };
 
 struct MUIP_Popbackground_GetStatus
 {
-    ULONG                            MethodID;
-    struct MUIS_Popbackground_Status *status;
+    STACKED ULONG                            MethodID;
+    STACKED struct MUIS_Popbackground_Status *status;
 };
 
 /* Attributes */
