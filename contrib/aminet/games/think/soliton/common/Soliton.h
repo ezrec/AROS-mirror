@@ -29,7 +29,7 @@
 #define MUIM_Soliton_About            (TAGBASE_KAI | 0x1005)
 #define MUIM_Soliton_Statistics       (TAGBASE_KAI | 0x1006)
 
-struct MUIP_Soliton_Statistics    {ULONG MethodID; LONG winner;};
+struct MUIP_Soliton_Statistics    {STACKED ULONG MethodID; STACKED LONG winner;};
 
 extern struct MUI_CustomClass *CL_Soliton;
 

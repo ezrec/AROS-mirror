@@ -46,8 +46,8 @@
 #define MUIM_MineField_Init         (MINEFIELD_TAG_BASE | 0x0801)
 #define MUIM_MineField_TimerTick    (MINEFIELD_TAG_BASE | 0x0802)
 
-struct MUIP_MineField_Init          { ULONG MethodID; };
-struct MUIP_MineField_TimerTick     { ULONG MethodID; };
+struct MUIP_MineField_Init          { STACKED ULONG MethodID; };
+struct MUIP_MineField_TimerTick     { STACKED ULONG MethodID; };
 
 
 

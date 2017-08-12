@@ -35,8 +35,8 @@ enum GameMode {GAMEMODE_KLONDIKE=0, GAMEMODE_FREECELL};
 #define MUIM_Settings_Close           (TAGBASE_KAI | 0x1302)
 #define MUIM_Settings_GameMode        (TAGBASE_KAI | 0x1303) /* [IS.] */
 
-struct MUIP_Settings_Close            {ULONG MethodID; LONG typ;};
-struct MUIP_Settings_GameMode         {ULONG MethodID; enum GameMode mode;};
+struct MUIP_Settings_Close            {STACKED ULONG MethodID; STACKED LONG typ;};
+struct MUIP_Settings_GameMode         {STACKED ULONG MethodID; STACKED enum GameMode mode;};
 
 struct Settings
 {

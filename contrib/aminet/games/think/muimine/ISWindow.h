@@ -47,7 +47,7 @@
 
 #define MUIM_ISWindow_ExitCheck         (ISWINDOW_TAG_BASE | 0x0800)
 
-struct MUIP_ISWindow_ExitCheck  { ULONG MethodId; ULONG ExitCode; };
+struct MUIP_ISWindow_ExitCheck  { STACKED ULONG MethodId; STACKED ULONG ExitCode; };
 
 
 /********************************************************************
