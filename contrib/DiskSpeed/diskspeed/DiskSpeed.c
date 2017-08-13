@@ -623,7 +623,7 @@ static BOOL SpeedTest(struct DiskSpeed *global,ULONG size,ULONG offset,ULONG mem
 	type = "FAST";
 	if (mem_type & MEMF_CHIP) type = "CHIP";
 
-	type2="LONG";
+	type2 = "LONG";
 	if (offset & 2) type2 = "WORD";
 	if (offset & 1) type2 = "BYTE";
 
@@ -743,7 +743,7 @@ static LONG OpenFileTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_s
 
 static LONG ScanDirectoryTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_struct)
 {
-   BPTR	         lock = NULL;
+   BPTR	         lock = BNULL;
    ULONG	       count = 0;
    LONG	         worked = TRUE;
 
@@ -753,7 +753,7 @@ static LONG ScanDirectoryTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AV
 	{
 		if (lock)
 		{
-			if (!ExNext(lock,global->fib)) lock = NULL;
+			if (!ExNext(lock,global->fib)) lock = BNULL;
 			else count++;
 		}
 		else
@@ -878,7 +878,7 @@ static LONG SeekReadTest(struct DiskSpeed *global, struct CPU_AVAIL *CPU_AVAIL_s
 
 static BOOL SpeedTest(struct DiskSpeed *global,ULONG size,ULONG offset,ULONG mem_type, struct CPU_AVAIL *CPU_AVAIL_struct)
 {
-   BOOL	worked=TRUE;
+   BOOL	worked = TRUE;
    char	*buffer;
    char	*mem;		/* What we really allocated */
    char	*type;
@@ -886,16 +886,16 @@ static BOOL SpeedTest(struct DiskSpeed *global,ULONG size,ULONG offset,ULONG mem
    ULONG	loop;
    ULONG	count;
    LONG	times;
-   BPTR	file=NULL;
+   BPTR	file = BNULL;
 
 	AddDisplayLine(global,"");
 
-	type="FAST";
-	if (mem_type & MEMF_CHIP) type="CHIP";
+	type = "FAST";
+	if (mem_type & MEMF_CHIP) type = "CHIP";
 
 	type2="LONG";
-	if (offset & 2) type2="WORD";
-	if (offset & 1) type2="BYTE";
+	if (offset & 2) type2 = "WORD";
+	if (offset & 1) type2 = "BYTE";
 
 	if ((mem=AllocMem(size+offset,mem_type|MEMF_PUBLIC)))
 	{
@@ -948,7 +948,7 @@ static BOOL SpeedTest(struct DiskSpeed *global,ULONG size,ULONG offset,ULONG mem
 		}
 
 		if (file) Close(file);
-		file=NULL;
+		file = BNULL;
 
 		if (worked) if (!(file=Open(FILE_STRING,MODE_OLDFILE)))
 		{
@@ -956,8 +956,8 @@ static BOOL SpeedTest(struct DiskSpeed *global,ULONG size,ULONG offset,ULONG mem
 			worked=FALSE;
 		}
 
-		count=0;
-		times=0;
+		count = 0;
+		times = 0;
 
 		Start_Timer(global->timer);
 		Init_CPU_Available(CPU_AVAIL_struct);		/* Start counting free CPU cycles... */
@@ -981,7 +981,7 @@ static BOOL SpeedTest(struct DiskSpeed *global,ULONG size,ULONG offset,ULONG mem
 		if (worked) Display_Result(global,GetString(MSG_BYTES_WRITE),count,GetString(MSG_BYTE_UNITS), CPU_AVAIL_struct);
 
 		if (file) Close(file);
-		file = NULL;
+		file = BNULL;
 
 		if (worked) if (!(file = Open(FILE_STRING,MODE_OLDFILE)))
 		{
@@ -1049,9 +1049,9 @@ static void CleanUpFiles(struct DiskSpeed *global)
 		if (Examine(lock,global->fib))
 		{
 			if (ExNext(lock,global->fib)) DeleteFile(global->fib->fib_FileName);
-			else lock = NULL;
+			else lock = BNULL;
 		}
-		else lock = NULL;
+		else lock = BNULL;
 	}
 }
 
