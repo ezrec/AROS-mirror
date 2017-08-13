@@ -55,13 +55,13 @@
 #define PROC1(name,off,type1,parm1,reg1) \
    void name(type1 parm1)                          \
    {                                               \
-   AROS_LVO_CALL1(void, AROS_LCA(type1, parm1, parm1), struct Library*, LibBase, off,0);\
+   AROS_LVO_CALL1(void, AROS_LCA(type1, parm1, reg1), struct Library*, LibBase, off,0);\
    }
 
 #define PROC2(name,off,type1,parm1,reg1,type2,parm2,reg2) \
    void name(type1 parm1, type2 parm2)             \
    {                                               \
-   AROS_LVO_CALL2(void, AROS_LCA(type1, parm1, parm1), AROS_LCA(type2, parm2, parm2), struct Library*, LibBase, off,0);\
+   AROS_LVO_CALL2(void, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), struct Library*, LibBase, off,0);\
    }
 
 #define PROC3(name,off,type1,parm1,reg1,type2,parm2,reg2,type3,parm3,reg3) \
