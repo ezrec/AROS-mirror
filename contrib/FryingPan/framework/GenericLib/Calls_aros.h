@@ -49,67 +49,67 @@
 #define PROC0(name,off) \
    void name()                                     \
    {                                               \
-   AROS_LVO_CALL0(void, struct Library*, LibBase, off,0);\
+   AROS_LVO_CALL0(BOOL, struct Library*, LibBase, off,0);\
    }
    
 #define PROC1(name,off,type1,parm1,reg1) \
    void name(type1 parm1)                          \
    {                                               \
-   AROS_LVO_CALL1(void, AROS_LCA(type1, parm1, reg1), struct Library*, LibBase, off,0);\
+   AROS_LVO_CALL1(BOOL, AROS_LCA(type1, parm1, reg1), struct Library*, LibBase, off,0);\
    }
 
 #define PROC2(name,off,type1,parm1,reg1,type2,parm2,reg2) \
    void name(type1 parm1, type2 parm2)             \
    {                                               \
-   AROS_LVO_CALL2(void, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), struct Library*, LibBase, off,0);\
+   AROS_LVO_CALL2(BOOL, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), struct Library*, LibBase, off,0);\
    }
 
 #define PROC3(name,off,type1,parm1,reg1,type2,parm2,reg2,type3,parm3,reg3) \
    void name(type1 parm1, type2 parm2, type3 parm3)                 \
    {                                               \
-   AROS_LVO_CALL3(void, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), struct Library*, LibBase, off,0);\
+   AROS_LVO_CALL3(BOOL, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), struct Library*, LibBase, off,0);\
    }
 
 #define PROC4(name,off,type1,parm1,reg1,type2,parm2,reg2,type3,parm3,reg3,type4,parm4,reg4) \
    void name(type1 parm1, type2 parm2, type3 parm3, type4 parm4)           \
    {                                               \
-   AROS_LVO_CALL4(void, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), AROS_LCA(type4, parm4, reg4), struct Library*, LibBase, off,0);\
+   AROS_LVO_CALL4(BOOL, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), AROS_LCA(type4, parm4, reg4), struct Library*, LibBase, off,0);\
    }
 
 #define PROC5(name,off,type1,parm1,reg1,type2,parm2,reg2,type3,parm3,reg3,type4,parm4,reg4,type5,parm5,reg5) \
    void name(type1 parm1, type2 parm2, type3 parm3, type4 parm4, type5 parm5)    \
    {                                               \
-   AROS_LVO_CALL5(void, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), AROS_LCA(type4, parm4, reg4), AROS_LCA(type5, parm5, reg5), struct Library*, LibBase, off,0);\
+   AROS_LVO_CALL5(BOOL, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), AROS_LCA(type4, parm4, reg4), AROS_LCA(type5, parm5, reg5), struct Library*, LibBase, off,0);\
    }
 
 #define PROC6(name,off,type1,parm1,reg1,type2,parm2,reg2,type3,parm3,reg3,type4,parm4,reg4,type5,parm5,reg5,type6,parm6,reg6) \
    void name(type1 parm1, type2 parm2, type3 parm3, type4 parm4, type5 parm5, type6 parm6) \
    {                                               \
-   AROS_LVO_CALL6(void, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), AROS_LCA(type4, parm4, reg4), AROS_LCA(type5, parm5, reg5), AROS_LCA(type6, parm6, reg6), struct Library*, LibBase, off,0);\
+   AROS_LVO_CALL6(BOOL, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), AROS_LCA(type4, parm4, reg4), AROS_LCA(type5, parm5, reg5), AROS_LCA(type6, parm6, reg6), struct Library*, LibBase, off,0);\
    }
 
 #define PROC7(name,off,type1,parm1,reg1,type2,parm2,reg2,type3,parm3,reg3,type4,parm4,reg4,type5,parm5,reg5,type6,parm6,reg6,type7,parm7,reg7) \
    void name(type1 parm1, type2 parm2, type3 parm3, type4 parm4, type5 parm5, type6 parm6, type7 parm7) \
    {                                               \
-      AROS_LVO_CALL7(void, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), AROS_LCA(type4, parm4, reg4), AROS_LCA(type5, parm5, reg5), AROS_LCA(type6, parm6, reg6), AROS_LCA(type7, parm7, reg7), struct Library*, LibBase, off,0);\
+      AROS_LVO_CALL7(BOOL, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), AROS_LCA(type4, parm4, reg4), AROS_LCA(type5, parm5, reg5), AROS_LCA(type6, parm6, reg6), AROS_LCA(type7, parm7, reg7), struct Library*, LibBase, off,0);\
    }
    
 #define PROC8(name,off,type1,parm1,reg1,type2,parm2,reg2,type3,parm3,reg3,type4,parm4,reg4,type5,parm5,reg5,type6,parm6,reg6,type7,parm7,reg7,type8,parm8,reg8) \
    void name(type1 parm1, type2 parm2, type3 parm3, type4 parm4, type5 parm5, type6 parm6, type7 parm7, type8 parm8) \
    {                                               \
-      AROS_LVO_CALL8(void, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), AROS_LCA(type4, parm4, reg4), AROS_LCA(type5, parm5, reg5), AROS_LCA(type6, parm6, reg6), AROS_LCA(type7, parm7, reg7), AROS_LCA(type8, parm8, reg8), struct Library*, LibBase, off,0);\
+      AROS_LVO_CALL8(BOOL, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), AROS_LCA(type4, parm4, reg4), AROS_LCA(type5, parm5, reg5), AROS_LCA(type6, parm6, reg6), AROS_LCA(type7, parm7, reg7), AROS_LCA(type8, parm8, reg8), struct Library*, LibBase, off,0);\
    }
    
 #define PROC9(name,off,type1,parm1,reg1,type2,parm2,reg2,type3,parm3,reg3,type4,parm4,reg4,type5,parm5,reg5,type6,parm6,reg6,type7,parm7,reg7,type8,parm8,reg8,type9,parm9,reg9) \
    void name(type1 parm1, type2 parm2, type3 parm3, type4 parm4, type5 parm5, type6 parm6, type7 parm7, type8 parm8, type9 parm9) \
    {                                               \
-      AROS_LVO_CALL9(void, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), AROS_LCA(type4, parm4, reg4), AROS_LCA(type5, parm5, reg5), AROS_LCA(type6, parm6, reg6), AROS_LCA(type7, parm7, reg7), AROS_LCA(type8, parm8, reg8), AROS_LCA(type9, parm9, reg9), struct Library*, LibBase, off,0);\
+      AROS_LVO_CALL9(BOOL, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), AROS_LCA(type4, parm4, reg4), AROS_LCA(type5, parm5, reg5), AROS_LCA(type6, parm6, reg6), AROS_LCA(type7, parm7, reg7), AROS_LCA(type8, parm8, reg8), AROS_LCA(type9, parm9, reg9), struct Library*, LibBase, off,0);\
    }
    
 #define PROC10(name,off,type1,parm1,reg1,type2,parm2,reg2,type3,parm3,reg3,type4,parm4,reg4,type5,parm5,reg5,type6,parm6,reg6,type7,parm7,reg7,type8,parm8,reg8,type9,parm9,reg9,type10,parm10,reg10) \
    void name(type1 parm1, type2 parm2, type3 parm3, type4 parm4, type5 parm5, type6 parm6, type7 parm7, type8 parm8, type9 parm9, type10 parm10) \
    {                                               \
-      AROS_LVO_CALL10(void, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), AROS_LCA(type4, parm4, reg4), AROS_LCA(type5, parm5, reg5), AROS_LCA(type6, parm6, reg6), AROS_LCA(type7, parm7, reg7), AROS_LCA(type8, parm8, reg8), AROS_LCA(type9, parm9, reg9), AROS_LCA(type10, parm10, reg10), struct Library*, LibBase, off,0);\
+      AROS_LVO_CALL10(BOOL, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), AROS_LCA(type4, parm4, reg4), AROS_LCA(type5, parm5, reg5), AROS_LCA(type6, parm6, reg6), AROS_LCA(type7, parm7, reg7), AROS_LCA(type8, parm8, reg8), AROS_LCA(type9, parm9, reg9), AROS_LCA(type10, parm10, reg10), struct Library*, LibBase, off,0);\
    }
    
 #define PROC11(name,off,type1,parm1,reg1,type2,parm2,reg2,type3,parm3,reg3,type4,parm4,reg4,type5,parm5,reg5,type6,parm6,reg6,type7,parm7,reg7,type8,parm8,reg8,type9,parm9,reg9,type10,parm10,reg10,type11,parm11,reg11) \
@@ -196,7 +196,7 @@
    type name(type1 parm1, type2 parm2, type3 parm3, type4 parm4, type5 parm5, type6 parm6, type7 parm7, type8 parm8, type9 parm9) \
    {                                               \
       type Result;                                 \
-      AROS_LVO_CALL9(void, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), AROS_LCA(type4, parm4, reg4), AROS_LCA(type5, parm5, reg5), AROS_LCA(type6, parm6, reg6), AROS_LCA(type7, parm7, reg7), AROS_LCA(type8, parm8, reg8), AROS_LCA(type9, parm9, reg9), struct Library*, LibBase, off,0);\
+      AROS_LVO_CALL9(type, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), AROS_LCA(type4, parm4, reg4), AROS_LCA(type5, parm5, reg5), AROS_LCA(type6, parm6, reg6), AROS_LCA(type7, parm7, reg7), AROS_LCA(type8, parm8, reg8), AROS_LCA(type9, parm9, reg9), struct Library*, LibBase, off,0);\
       return Result;                               \
    }
    
@@ -204,7 +204,7 @@
    type name(type1 parm1, type2 parm2, type3 parm3, type4 parm4, type5 parm5, type6 parm6, type7 parm7, type8 parm8, type9 parm9, type10 parm10) \
    {                                               \
       type Result;                                 \
-      AROS_LVO_CALL10(void, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), AROS_LCA(type4, parm4, reg4), AROS_LCA(type5, parm5, reg5), AROS_LCA(type6, parm6, reg6), AROS_LCA(type7, parm7, reg7), AROS_LCA(type8, parm8, reg8), AROS_LCA(type9, parm9, reg9), AROS_LCA(type10, parm10, reg10), struct Library*, LibBase, off,0);\
+      AROS_LVO_CALL10(type, AROS_LCA(type1, parm1, reg1), AROS_LCA(type2, parm2, reg2), AROS_LCA(type3, parm3, reg3), AROS_LCA(type4, parm4, reg4), AROS_LCA(type5, parm5, reg5), AROS_LCA(type6, parm6, reg6), AROS_LCA(type7, parm7, reg7), AROS_LCA(type8, parm8, reg8), AROS_LCA(type9, parm9, reg9), AROS_LCA(type10, parm10, reg10), struct Library*, LibBase, off,0);\
       return Result;                               \
    }
    
