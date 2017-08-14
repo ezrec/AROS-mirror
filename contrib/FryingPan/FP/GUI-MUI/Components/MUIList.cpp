@@ -214,7 +214,7 @@ VectorT<IPTR> &MUIList::getSelectedItems()
    }
    else
    {
-      IPTR data;
+      IPTR data = 0;
       DoMtd(list, ARRAY(MUIM_List_GetEntry, (IPTR)MUIV_List_GetEntry_Active, (IPTR)&data));
       selected << data;
    }
