@@ -65,7 +65,7 @@ void inline _atomic_item_init(struct _atomic_item* n)
 
 #if defined(__AMIGAOS4__)
    #include "Atomic_ppc.h"
-#elif defined(__AROS__)
+#elif defined(__AROS__) && !defined(mc68000)
    #include "Atomic_x86.h"
 #elif defined(__MORPHOS__)
    #include "Atomic_ppc.h"
