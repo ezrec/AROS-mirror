@@ -9,6 +9,7 @@ uint StartupFlags = 0;
 #define str(x) #x
 int main()
 {
+   return 0;
 }
 
    LIBRARY("expat2.library", "$VER: expat2.library 2.0 by Tomasz Wiszkowski", 2);
