@@ -58,8 +58,8 @@ struct TasksCallbackUserData {
 };
 
 struct CPUCheckChangeMessage {
-    ULONG methodID;
-    ULONG value;
+    STACKED ULONG methodID;
+    STACKED ULONG value;
 };
 
 #define SCOUT_SEMA_NAME         "« Scout's CPU patch »"
