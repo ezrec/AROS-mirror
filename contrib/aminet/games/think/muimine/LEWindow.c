@@ -53,7 +53,7 @@ struct LEWindowData
 #define MUIM_LEWindow_EditUpdate        (LEWINDOW_TAG_BASE | 0x0807)
 
 
-struct EditUpdateParams{ ULONG MethodID; LONG type; };
+struct EditUpdateParams{ STACKED ULONG MethodID; STACKED LONG type; };
 #define MUIV_LEWindow_EditUpdate_Name   1
 #define MUIV_LEWindow_EditUpdate_Width  2
 #define MUIV_LEWindow_EditUpdate_Height 3
@@ -578,7 +578,7 @@ static IPTR mAddLevel(struct IClass *cl, Object *obj, Msg msg)
             attempt to allocate a new edit data buffer for one level
             more than the current number of levels in the level list
         */
-        LONG n = 0;
+        SIPTR n = 0;
         struct EditLevelData * newEdData;
 
         DoMethod(data->LevelList, OM_GET, MUIA_List_Entries, &n);
@@ -656,7 +656,7 @@ static IPTR mDeleteLevel(struct IClass *cl, Object *obj, Msg msg)
             greater than zero (it should be since we have a selected
             entry)
         */
-        LONG n = 0;
+        SIPTR n = 0;
         DoMethod(data->LevelList, OM_GET, MUIA_List_Entries, &n);
         if (n > 0)
         {
@@ -765,7 +765,7 @@ static IPTR mReturnLevels(struct IClass *cl, Object *obj, Msg msg)
         /*
             get the number of entries in the level list
         */
-        LONG n = 0;
+        SIPTR n = 0;
         DoMethod(data->LevelList, OM_GET, MUIA_List_Entries, &n);
         if (n)
         {
@@ -901,7 +901,7 @@ static IPTR mEditUpdate(struct IClass * cl, Object * obj, struct EditUpdateParam
 
             case MUIV_LEWindow_EditUpdate_Width:
             {
-                LONG w = -1;
+                SIPTR w = -1;
                 DoMethod(data->WidthString, OM_GET, MUIA_String_Integer, &w);
                 if (w >= 0)
                 {
@@ -913,7 +913,7 @@ static IPTR mEditUpdate(struct IClass * cl, Object * obj, struct EditUpdateParam
 
             case MUIV_LEWindow_EditUpdate_Height:
             {
-                LONG h = -1;
+                SIPTR h = -1;
                 DoMethod(data->HeightString, OM_GET, MUIA_String_Integer, &h);
                 if (h >= 0)
                 {
@@ -925,7 +925,7 @@ static IPTR mEditUpdate(struct IClass * cl, Object * obj, struct EditUpdateParam
 
             case MUIV_LEWindow_EditUpdate_Mines:
             {
-                LONG m =-1;
+                SIPTR m =-1;
                 DoMethod(data->MinesString, OM_GET, MUIA_String_Integer, &m);
                 if (m >= 0)
                 {

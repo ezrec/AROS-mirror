@@ -680,7 +680,7 @@ static IPTR mSet(struct IClass *cl, Object *obj, struct opSet * msg)
     struct MFWindowData *data = INST_DATA(cl,obj);
     struct TagItem *tag;
     struct TagItem *tags;
-    ULONG WinOpen = FALSE;
+    IPTR WinOpen = FALSE;
     ULONG ret;
 
     for (tags = msg->ops_AttrList; (tag = NextTagItem(&tags)); ) 
@@ -921,7 +921,8 @@ static void SetLevel(Object * obj, struct MFWindowData * data, ULONG level)
     if (level  &&  level != data->Levels.CurrentLevel)
     {
         struct LevelData * pLevel;
-        ULONG opened = 0, menuid = 0;
+        IPTR opened = 0;
+        ULONG menuid = 0;
 
         /*
             set the new level in the window data
@@ -1012,7 +1013,7 @@ static void CheckBestTime(Object * obj, struct MFWindowData * data)
             get the time taken from the minefield and make sure it is
             valid i.e. greater than zero
         */
-        LONG lastTime = -1;
+        SIPTR lastTime = -1;
         DoMethod(data->MineField, OM_GET, MUIA_MineField_TimeTaken, &lastTime);
         if (lastTime > 0)
         {
@@ -1121,7 +1122,7 @@ static BOOL GetBestTimeName(Object * obj, struct LevelData * pLevel, int rank)
     */
     if (win)
     {
-        ULONG sigs = 0;
+        IPTR sigs = 0;
         BOOL running = TRUE;
         Object * app = _app(obj);
 
@@ -1263,7 +1264,7 @@ static void ShowBestTimes(Object * obj, struct LevelDataList * lList, int hiRank
     */
     if (win)
     {
-        ULONG sigs = 0;
+        IPTR sigs = 0;
         BOOL running = TRUE;
         Object * app = _app(obj);
 
@@ -1385,7 +1386,7 @@ static void SetupLevels(Object * obj, struct MFWindowData * data)
     */
     if (win)
     {
-        ULONG sigs = 0;
+        IPTR sigs = 0;
         BOOL running = TRUE;
         Object * app = _app(obj);
 
@@ -1522,7 +1523,8 @@ static void SetupImages(Object * obj, struct MFWindowData * data)
     */
     if (win)
     {
-        ULONG exitcode = ISW_CANCEL, sigs = 0;
+        ULONG exitcode = ISW_CANCEL;
+        IPTR sigs = 0;
         BOOL running = TRUE;
         Object * app = _app(obj);
         BPTR lock = CurrentDir(GetProgramDir());

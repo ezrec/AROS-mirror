@@ -209,12 +209,25 @@ static VOID stccpy(char *dest,char *source,int len)
 
 
 #ifndef USE_ZUNE_ON_AMIGA
+
+#ifdef __AROS__
 IPTR __stdargs DoSuperNew(struct IClass *cl,Object *obj,IPTR tag1,...)
 {
-        return(DoSuperMethod(cl,obj,OM_NEW,&tag1,NULL));
+    AROS_SLOWSTACKTAGS_PRE(tag1);
+    retval = DoSuperMethod(cl, obj, OM_NEW, AROS_SLOWSTACKTAGS_ARG(tag1), NULL);
+    AROS_SLOWSTACKTAGS_POST;
 }
+
+#else
+
+IPTR __stdargs DoSuperNew(struct IClass *cl,Object *obj,IPTR tag1,...)
+{
+    return(DoSuperMethod(cl,obj,OM_NEW,&tag1,NULL));
+}
+
 #endif
 
+#endif
 
 /*
     function :    loads a picture file and remap for a screen using datatypes
@@ -631,7 +644,7 @@ int main(int argc, char *argv[])
     SetAttrs(window, MUIA_Window_Open, TRUE, TAG_DONE);
 
     {
-        ULONG sigs = 0;
+        IPTR sigs = 0;
 
         while (DoMethod(app, MUIM_Application_NewInput, &sigs)
                         != MUIV_Application_ReturnID_Quit)

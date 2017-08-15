@@ -10,7 +10,7 @@
 
 struct BestTime
 {
-    int     Time;               // time to clear mine field (-ve if not set)
+    LONG    Time;               // time to clear mine field (-ve if not set)
     char    Name[BT_NAME_SIZE]; // name of player who achieved this time
 };
 
@@ -29,7 +29,7 @@ struct LevelData
 */
 struct LevelDataList
 {
-    int                 NumLevels;      // number of allocated entries
+    LONG                NumLevels;      // number of allocated entries
     ULONG               Flags;          // flags: private
     ULONG               CurrentLevel;   // level being played
     struct LevelData *  LevelList;      // pointer to the allocated array
