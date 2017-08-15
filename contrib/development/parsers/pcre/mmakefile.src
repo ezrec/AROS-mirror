@@ -4,7 +4,17 @@
 include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-development : contrib-development-parsers-pcre
-#MM contrib-development-parsers-pcre : linklibs-startup linklibs-amiga linklibs-arossupport linklibs-clib
+#MM- contrib-development-parsers-pcre : linklibs-startup linklibs-amiga linklibs-arossupport linklibs-clib
 
-%build_with_configure mmake=contrib-development-parsers-pcre prefix=$(AROS_DEVELOPER) nix=yes \
-    extraoptions="--disable-stack-for-recursion --without-pic --disable-shared --libdir=$(AROS_LIB)"
+PACKAGE      := pcre
+VERSION      := 8.41
+TARGETDIR    := $(AROS_DEVELOPER)
+REPOSITORIES := https://ftp.pcre.org/pub/pcre/
+
+#USER_INCLUDES:= -I$(AROS_CONTRIB_INCLUDES)
+#USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
+
+%fetch_and_build mmake=contrib-development-parsers-pcre prefix=$(TARGETDIR) \
+	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
+	patch=no package_repo=$(REPOSITORIES) nix=yes \
+	extraoptions="--disable-stack-for-recursion --disable-jit --disable-cpp --libdir=$(AROS_LIB)"
