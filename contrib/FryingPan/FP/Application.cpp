@@ -28,28 +28,28 @@ Application::Application()
    _createDebug(true, "Application");
    Interface = 0;
 
-   _d(Lvl_Info, "%s: Acquiring interface..", (int)__PRETTY_FUNCTION__);
+   _d(Lvl_Info, "%s: Acquiring interface..", (IPTR)__PRETTY_FUNCTION__);
    Module = GUIIFace::GetInstance(0);
-   _d(Lvl_Info, "%s: Module caught at %08lx", (int)__PRETTY_FUNCTION__, (int)Module);
+   _d(Lvl_Info, "%s: Module caught at %08lx", (IPTR)__PRETTY_FUNCTION__, (IPTR)Module);
 
    if (NULL != Module)
    {
-      _d(Lvl_Info, "%s: Acquiring module interface...", (int)__PRETTY_FUNCTION__);
+      _d(Lvl_Info, "%s: Acquiring module interface...", (IPTR)__PRETTY_FUNCTION__);
       Interface = Module->getInterface();
-      _d(Lvl_Info, "%s: Obtained interface: %08lx (%s)", (int)__PRETTY_FUNCTION__, (int)Interface, (int)(Interface == 0 ? "Bad" : "Good"));
+      _d(Lvl_Info, "%s: Obtained interface: %08lx (%s)", (IPTR)__PRETTY_FUNCTION__, (IPTR)Interface, (IPTR)(Interface == 0 ? "Bad" : "Good"));
       ASSERT(NULL != Interface);
 
       if (NULL != Interface)
       {
-         _d(Lvl_Info, "%s: Starting the interface", (int)__PRETTY_FUNCTION__);
+         _d(Lvl_Info, "%s: Starting the interface", (IPTR)__PRETTY_FUNCTION__);
          Interface->start();
-         _d(Lvl_Info, "%s: Stoping the interface", (int)__PRETTY_FUNCTION__);
+         _d(Lvl_Info, "%s: Stoping the interface", (IPTR)__PRETTY_FUNCTION__);
          Interface->stop();
-         _d(Lvl_Info, "%s: Disposing the interface", (int)__PRETTY_FUNCTION__);
+         _d(Lvl_Info, "%s: Disposing the interface", (IPTR)__PRETTY_FUNCTION__);
          Interface->dispose();
       }
       Interface = 0;
-      _d(Lvl_Info, "%s: Freeing module...", (int)__PRETTY_FUNCTION__);
+      _d(Lvl_Info, "%s: Freeing module...", (IPTR)__PRETTY_FUNCTION__);
       Module->FreeInstance();
    }
    else
@@ -61,7 +61,7 @@ Application::Application()
 
 Application::~Application()
 {
-   _d(Lvl_Info, "%s: Shutting down", (int)__PRETTY_FUNCTION__);
+   _d(Lvl_Info, "%s: Shutting down", (IPTR)__PRETTY_FUNCTION__);
    _destroyDebug();
 }
 

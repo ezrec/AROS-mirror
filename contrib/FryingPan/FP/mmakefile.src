@@ -19,4 +19,4 @@ USER_CXXFLAGS := -fno-rtti -fno-exceptions -isystem $(SRCDIR)/$(CURDIR)/../frame
 USER_LDFLAGS := -static-libstdc++
 
 %build_prog mmake=contrib-fryingpan-fp progname="FryingPan" \
- targetdir=$(DESTDIR) files="" cxxfiles="$(FILES)" uselibs="C Generic" usestartup=no
+ targetdir=$(DESTDIR) files="" cxxfiles="$(FILES)" uselibs="C Generic pthread" usestartup=no

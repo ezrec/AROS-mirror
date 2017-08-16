@@ -354,7 +354,7 @@ void MUIContents::addRecurse(IPTR parent, const IOptItem* data)
    item = tracks->addEntry(parent, (IPTR)data, true);
 
    _dx(Lvl_Info, "Item branch: %08lx", item);
-   _dx(Lvl_Info, "This item has %ld children, that will be added now.", data->getChildCount());
+   _dx(Lvl_Info, "This item has %ld children, that will be added now.", (IPTR)data->getChildCount());
 
    for (int i=0; i<data->getChildCount(); i++)
    {

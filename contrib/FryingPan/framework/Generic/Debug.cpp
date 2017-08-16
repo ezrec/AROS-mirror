@@ -30,7 +30,7 @@ using namespace GenNS;
    long       DbgMaster::lNumInstances = 0; 
 
   
-DbgMsg::DbgMsg(const DbgHandler *pParent, DbgLevel lvl, char *sFmtStr, IPTR vFmtArgs, void *bData, int lLen)
+DbgMsg::DbgMsg(const DbgHandler *pParent, DbgLevel lvl, const char *sFmtStr, IPTR vFmtArgs, void *bData, int lLen)
    : DbgCmd(pParent, lvl)
 {
    text     = 0;
@@ -53,7 +53,7 @@ DbgMsg::DbgMsg(const DbgHandler *pParent, DbgLevel lvl, char *sFmtStr, IPTR vFmt
 
 DbgMsg::~DbgMsg()
 {
-   if (0 != data) delete [] (char*)data;
+   if (0 != data) delete [] (char const*)data;
    if (0 != text) delete text;
 };
 
@@ -79,7 +79,7 @@ void DbgMsg::Perform()
    parent->DumpMsg(this);
 }
 
-DbgHandler::DbgHandler(int loud, char *file)
+DbgHandler::DbgHandler(int loud, const char *file)
 {
    next   = 0;
    silent = loud ? 0 : 1;
@@ -188,7 +188,7 @@ void DbgHandler::PutDate() const
    if (fh1 != 0) DOS->VFPrintf(fh1, "[%s] ", (void*)ARRAY((IPTR)&TM));
 }
 
-void DbgHandler::DoAsync(DbgLevel l, char* sFmtString, IPTR vFmtArgs, void* bMemBlock, int lMemLen) const
+void DbgHandler::DoAsync(DbgLevel l, const char* sFmtString, IPTR vFmtArgs, void* bMemBlock, int lMemLen) const
 {
    if (0 == this)
       return;
@@ -197,7 +197,7 @@ void DbgHandler::DoAsync(DbgLevel l, char* sFmtString, IPTR vFmtArgs, void* bMem
    dest->DoAsync(0, new DbgMsg(this, l, sFmtString, vFmtArgs, bMemBlock, lMemLen));
 }
 
-void DbgHandler::DoSync(DbgLevel l, char* sFmtString, IPTR vFmtArgs, void* bMemBlock, int lMemLen) const
+void DbgHandler::DoSync(DbgLevel l, const char* sFmtString, IPTR vFmtArgs, void* bMemBlock, int lMemLen) const
 {
    if (0 == this)
       return;
