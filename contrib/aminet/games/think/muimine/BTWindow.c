@@ -575,12 +575,12 @@ static void FillBestTimeText(struct BTWindowData * data, struct LevelData * pLev
                 */
                 if (i == hiRank)
                 {
-                    sprintf(timestr, "\033b%d ", p->Time);
+                    sprintf(timestr, "\033b%d ", (int)p->Time);
                     sprintf(namestr, "\033b%s",  p->Name);
                 }
                 else
                 {
-                    sprintf(timestr, "%d ", p->Time);
+                    sprintf(timestr, "%d ", (int)p->Time);
                     strcpy(namestr, p->Name);
                 }
             }
