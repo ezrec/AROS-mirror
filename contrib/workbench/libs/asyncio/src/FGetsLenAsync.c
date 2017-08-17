@@ -1,10 +1,41 @@
 #include "async.h"
 
+/*****************************************************************************
 
-_LIBCALL APTR
-FGetsLenAsync( _REG( a0 ) AsyncFile *file, _REG( a1 ) APTR buf,
-	_REG( d0 ) LONG numBytes, _REG( a2 ) LONG *len )
+    NAME */
+        AROS_LH4(APTR, FGetsLenAsync,
+
+/*  SYNOPSIS */
+        AROS_LHA(AsyncFile *, file, A0),
+        AROS_LHA(APTR, buf, A1),
+        AROS_LHA(LONG, numBytes, D0),
+        AROS_LHA(LONG *, len, A2),
+
+/*  LOCATION */
+        struct Library *, AsyncIOBase, 16, Asyncio)
+
+/*  FUNCTION
+
+    INPUTS
+
+    RESULT
+
+    NOTES
+
+    EXAMPLE
+
+    BUGS
+
+    SEE ALSO
+
+    INTERNALS
+
+    HISTORY
+
+*****************************************************************************/
 {
+        AROS_LIBFUNC_INIT
+
 	UBYTE	*p;
 	LONG	length = 0;
 
@@ -88,13 +119,49 @@ FGetsLenAsync( _REG( a0 ) AsyncFile *file, _REG( a1 ) APTR buf,
 	}
 
 	return( buf );
+
+        AROS_LIBFUNC_EXIT
 }
 
 
-_CALL APTR
-FGetsAsync( _REG( a0 ) AsyncFile *file, _REG( a1 ) APTR buf, _REG( d0 ) LONG numBytes )
+/*****************************************************************************
+
+    NAME */
+        AROS_LH3(APTR, FGetsAsync,
+
+/*  SYNOPSIS */
+        AROS_LHA(AsyncFile *, file, A0),
+        AROS_LHA(APTR, buf, A1),
+        AROS_LHA(LONG, numBytes, D0),
+
+/*  LOCATION */
+        struct Library *, AsyncIOBase, 15, Asyncio)
+
+/*  FUNCTION
+
+    INPUTS
+
+    RESULT
+
+    NOTES
+
+    EXAMPLE
+
+    BUGS
+
+    SEE ALSO
+
+    INTERNALS
+
+    HISTORY
+
+*****************************************************************************/
 {
+        AROS_LIBFUNC_INIT
+
 	LONG	len;
 
 	return( FGetsLenAsync( file, buf, numBytes, &len ) );
+
+        AROS_LIBFUNC_EXIT
 }

@@ -1,13 +1,44 @@
 #include "async.h"
 
+/*****************************************************************************
 
-_LIBCALL LONG
-ReadLineAsync( _REG( a0 ) AsyncFile *file, _REG( a1 ) APTR buffer, _REG( d0 ) LONG bufSize )
+    NAME */
+        AROS_LH3(LONG, ReadLineAsync,
+
+/*  SYNOPSIS */
+        AROS_LHA(AsyncFile *, file, A0),
+        AROS_LHA(APTR, buffer, A1),
+        AROS_LHA(LONG, size, D0),
+
+/*  LOCATION */
+        struct Library *, AsyncIOBase, 13, Asyncio)
+
+/*  FUNCTION
+
+    INPUTS
+
+    RESULT
+
+    NOTES
+
+    EXAMPLE
+
+    BUGS
+
+    SEE ALSO
+
+    INTERNALS
+
+    HISTORY
+
+*****************************************************************************/
 {
+        AROS_LIBFUNC_INIT
+
 	LONG	len;
 
 	/* First read any data up to the LF or the buffer is full */
-	if( FGetsLenAsync( file, buffer, bufSize, &len ) )
+	if( FGetsLenAsync( file, buffer, size, &len ) )
 	{
 		UBYTE	*end;
 
@@ -73,4 +104,6 @@ ReadLineAsync( _REG( a0 ) AsyncFile *file, _REG( a1 ) APTR buffer, _REG( d0 ) LO
 	}
 
 	return( len );
+
+        AROS_LIBFUNC_EXIT
 }

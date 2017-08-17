@@ -1,17 +1,43 @@
 #include "async.h"
 
 
-_LIBCALL LONG
-CloseAsync( _REG( a0 ) AsyncFile *file )
+/*****************************************************************************
+
+    NAME */
+        AROS_LH1(LONG, CloseAsync,
+
+/*  SYNOPSIS */
+        AROS_LHA(AsyncFile *, file, A0),
+
+/*  LOCATION */
+        struct Library *, AsyncIOBase, 7, Asyncio)
+
+/*  FUNCTION
+
+    INPUTS
+
+    RESULT
+
+    NOTES
+
+    EXAMPLE
+
+    BUGS
+
+    SEE ALSO
+
+    INTERNALS
+
+    HISTORY
+
+*****************************************************************************/
 {
+        AROS_LIBFUNC_INIT
+
 	LONG	result;
 
 	if( file )
 	{
-#ifdef ASIO_NOEXTERNALS
-		struct ExecBase		*SysBase = file->af_SysBase;
-		struct DosLibrary	*DOSBase = file->af_DOSBase;
-#endif
 		result = AS_WaitPacket( file );
 
 		if( result >= 0 )
@@ -38,11 +64,11 @@ CloseAsync( _REG( a0 ) AsyncFile *file )
 	}
 	else
 	{
-#ifndef ASIO_NOEXTERNALS
 		SetIoErr( ERROR_INVALID_LOCK );
-#endif
 		result = -1;
 	}
 
 	return( result );
+
+        AROS_LIBFUNC_EXIT
 }

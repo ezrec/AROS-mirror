@@ -1,12 +1,40 @@
 #include "async.h"
 
+/*****************************************************************************
 
-_LIBCALL LONG
-WriteAsync( _REG( a0 ) AsyncFile *file, _REG( a1 ) APTR buffer, _REG( d0 ) LONG numBytes )
+    NAME */
+        AROS_LH3(LONG, WriteAsync,
+
+/*  SYNOPSIS */
+        AROS_LHA(AsyncFile *, file, A0),
+        AROS_LHA(APTR, buffer, A1),
+        AROS_LHA(LONG, numBytes, D0),
+
+/*  LOCATION */
+        struct Library *, AsyncIOBase, 10, Asyncio)
+
+/*  FUNCTION
+
+    INPUTS
+
+    RESULT
+
+    NOTES
+
+    EXAMPLE
+
+    BUGS
+
+    SEE ALSO
+
+    INTERNALS
+
+    HISTORY
+
+*****************************************************************************/
 {
-#ifdef ASIO_NOEXTERNALS
-	struct ExecBase	*SysBase = file->af_SysBase;
-#endif
+        AROS_LIBFUNC_INIT
+
 	LONG totalBytes = 0;
 
 	/* this takes care of NIL: */
@@ -24,7 +52,7 @@ WriteAsync( _REG( a0 ) AsyncFile *file, _REG( a1 ) APTR buffer, _REG( d0 ) LONG 
 			CopyMem( buffer, file->af_Offset, file->af_BytesLeft );
 
 			numBytes	-= file->af_BytesLeft;
-			buffer		=  ( APTR ) ( ( ULONG ) buffer + file->af_BytesLeft );
+			buffer		=  ( APTR ) ( ( IPTR ) buffer + file->af_BytesLeft );
 			totalBytes	+= file->af_BytesLeft;
 		}
 
@@ -46,4 +74,6 @@ WriteAsync( _REG( a0 ) AsyncFile *file, _REG( a1 ) APTR buffer, _REG( d0 ) LONG 
 	file->af_Offset		+= numBytes;
 
 	return ( totalBytes + numBytes );
+
+        AROS_LIBFUNC_EXIT
 }

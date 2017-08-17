@@ -1,9 +1,38 @@
 #include "async.h"
 
+/*****************************************************************************
 
-_CALL LONG
-ReadCharAsync( _REG( a0 ) AsyncFile *file )
+    NAME */
+        AROS_LH1(LONG, ReadCharAsync,
+
+/*  SYNOPSIS */
+        AROS_LHA(AsyncFile *, file, A0),
+
+/*  LOCATION */
+        struct Library *, AsyncIOBase, 11, Asyncio)
+
+/*  FUNCTION
+
+    INPUTS
+
+    RESULT
+
+    NOTES
+
+    EXAMPLE
+
+    BUGS
+
+    SEE ALSO
+
+    INTERNALS
+
+    HISTORY
+
+*****************************************************************************/
 {
+        AROS_LIBFUNC_INIT
+
 	UBYTE	ch;
 
 	if( file->af_BytesLeft )
@@ -16,7 +45,7 @@ ReadCharAsync( _REG( a0 ) AsyncFile *file )
 		--file->af_BytesLeft;
 		++file->af_Offset;
 
-		return( ( LONG ) ch );
+		return( ch );
 	}
 
 	/* there were no characters in the current buffer, so call the main read
@@ -28,10 +57,12 @@ ReadCharAsync( _REG( a0 ) AsyncFile *file )
 
 	if( ReadAsync( file, &ch, 1 ) > 0 )
 	{
-		return( ( LONG ) ch );
+		return( ch );
 	}
 
 	/* We couldn't read above, so fail */
 
 	return( -1 );
+
+        AROS_LIBFUNC_EXIT
 }

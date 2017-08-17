@@ -1,9 +1,39 @@
 #include "async.h"
 
+/*****************************************************************************
 
-_CALL LONG
-WriteCharAsync( _REG( a0 ) AsyncFile *file, _REG( d0 ) UBYTE ch )
+    NAME */
+        AROS_LH2(LONG, WriteCharAsync,
+
+/*  SYNOPSIS */
+        AROS_LHA(AsyncFile *, file, A0),
+        AROS_LHA(UBYTE, ch, D0),
+
+/*  LOCATION */
+        struct Library *, AsyncIOBase, 12, Asyncio)
+
+/*  FUNCTION
+
+    INPUTS
+
+    RESULT
+
+    NOTES
+
+    EXAMPLE
+
+    BUGS
+
+    SEE ALSO
+
+    INTERNALS
+
+    HISTORY
+
+*****************************************************************************/
 {
+        AROS_LIBFUNC_INIT
+
 	if( file->af_BytesLeft )
 	{
 		/* if there's any room left in the current buffer, directly write
@@ -31,4 +61,6 @@ WriteCharAsync( _REG( a0 ) AsyncFile *file, _REG( d0 ) UBYTE ch )
 
 		return( WriteAsync( file, &c, 1 ) );
 	}
+
+        AROS_LIBFUNC_EXIT
 }

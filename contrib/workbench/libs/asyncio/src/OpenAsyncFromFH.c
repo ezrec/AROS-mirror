@@ -1,21 +1,42 @@
 #include "async.h"
 
+/*****************************************************************************
 
-#ifdef ASIO_NOEXTERNALS
-_CALL AsyncFile *
-OpenAsyncFromFH(
-	_REG( a0 ) BPTR handle,
-	_REG( d0 ) OpenModes mode,
-	_REG( d1 ) LONG bufferSize,
-	_REG( a1 ) struct ExecBase *SysBase,
-	_REG( a2 ) struct DosLibrary *DOSBase )
+    NAME */
+        AROS_LH3(AsyncFile *, OpenAsyncFromFH,
+
+/*  SYNOPSIS */
+        AROS_LHA(BPTR, handle, A0),
+        AROS_LHA(OpenModes, mode, D0),
+        AROS_LHA(LONG, bufferSize, D1),
+
+/*  LOCATION */
+        struct Library *, AsyncIOBase, 6, Asyncio)
+
+/*  FUNCTION
+
+    INPUTS
+
+    RESULT
+
+    NOTES
+
+    EXAMPLE
+
+    BUGS
+
+    SEE ALSO
+
+    INTERNALS
+
+    HISTORY
+
+*****************************************************************************/
 {
-	return( AS_OpenAsyncFH( handle, mode, bufferSize, FALSE, SysBase, DOSBase ) );
-}
-#else
-_CALL AsyncFile *
-OpenAsyncFromFH( _REG( a0 ) BPTR handle, _REG( d0 ) OpenModes mode, _REG( d1 ) LONG bufferSize )
-{
+        AROS_LIBFUNC_INIT
+
 	return( AS_OpenAsyncFH( handle, mode, bufferSize, FALSE ) );
+        
+        AROS_LIBFUNC_EXIT
 }
-#endif
+

@@ -12,10 +12,6 @@
 LONG
 AS_WaitPacket( AsyncFile *file )
 {
-#ifdef ASIO_NOEXTERNALS
-	struct ExecBase		*SysBase = file->af_SysBase;
-	struct DosLibrary	*DOSBase = file->af_DOSBase;
-#endif
 	LONG bytes;
 
 	if( file->af_PacketPending )
@@ -50,7 +46,7 @@ AS_WaitPacket( AsyncFile *file )
 			}
 
 			/* see if the user wants to try again... */
-			if( ErrorReport( file->af_Packet.sp_Pkt.dp_Res2, REPORT_STREAM, file->af_File, NULL ) )
+			if( ErrorReport( file->af_Packet.sp_Pkt.dp_Res2, REPORT_STREAM, (IPTR)file->af_File, NULL ) )
 			{
 				return( -1 );
 			}

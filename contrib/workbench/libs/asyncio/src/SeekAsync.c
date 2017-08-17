@@ -4,9 +4,6 @@
 static ULONG
 GetFileSize( AsyncFile *file, LONG *size )
 {
-#ifdef ASIO_NOEXTERNALS
-	struct DosLibrary	*DOSBase = file->af_DOSBase;
-#endif
 	D_S( struct FileInfoBlock, fib );
 
 	if( !ExamineFH( file->af_File, fib ) )
@@ -20,12 +17,41 @@ GetFileSize( AsyncFile *file, LONG *size )
 }
 
 
-_LIBCALL LONG
-SeekAsync( _REG( a0 ) AsyncFile *file, _REG( d0 ) LONG position, _REG( d1 ) SeekModes mode )
+/*****************************************************************************
+
+    NAME */
+        AROS_LH3(LONG, SeekAsync,
+
+/*  SYNOPSIS */
+        AROS_LHA(AsyncFile *, file, A0),
+        AROS_LHA(LONG, position, D0),
+        AROS_LHA(SeekModes, mode, D1),
+
+/*  LOCATION */
+        struct Library *, AsyncIOBase, 8, Asyncio)
+
+/*  FUNCTION
+
+    INPUTS
+
+    RESULT
+
+    NOTES
+
+    EXAMPLE
+
+    BUGS
+
+    SEE ALSO
+
+    INTERNALS
+
+    HISTORY
+
+*****************************************************************************/
 {
-#ifdef ASIO_NOEXTERNALS
-	struct DosLibrary	*DOSBase = file->af_DOSBase;
-#endif
+        AROS_LIBFUNC_INIT
+
 	LONG	current, target, roundTarget, filePos;
 	LONG	minBuf, maxBuf, bytesArrived, diff;
 	LONG	fileSize;
@@ -303,4 +329,6 @@ SeekAsync( _REG( a0 ) AsyncFile *file, _REG( d0 ) LONG position, _REG( d1 ) Seek
 
 	SetIoErr( 0 );
 	return( current );
+
+        AROS_LIBFUNC_EXIT
 }

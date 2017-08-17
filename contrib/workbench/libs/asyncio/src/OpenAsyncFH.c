@@ -1,19 +1,8 @@
 #include "async.h"
 
 
-#ifdef ASIO_NOEXTERNALS
-AsyncFile*
-AS_OpenAsyncFH(
-	BPTR handle,
-	OpenModes mode,
-	LONG bufferSize,
-	BOOL closeIt,
-	struct ExecBase *SysBase,
-	struct DosLibrary *DOSBase )
-#else
 AsyncFile *
 AS_OpenAsyncFH( BPTR handle, OpenModes mode, LONG bufferSize, BOOL closeIt )
-#endif
 {
 	struct FileHandle	*fh;
 	AsyncFile		*file = NULL;
@@ -131,16 +120,12 @@ AS_OpenAsyncFH( BPTR handle, OpenModes mode, LONG bufferSize, BOOL closeIt )
 			fh			= BADDR( file->af_File );
 			file->af_Handler	= fh->fh_Type;
 			file->af_BufferSize	= ( ULONG ) bufferSize / 2;
-			file->af_Buffers[ 0 ]	= ( APTR ) ( ( ( ULONG ) file + sizeof( AsyncFile ) + 15 ) & 0xfffffff0 );
+			file->af_Buffers[ 0 ]	= ( APTR ) ( ( ( IPTR ) file + sizeof( AsyncFile ) + 15 ) & 0xfffffff0 );
 			file->af_Buffers[ 1 ]	= file->af_Buffers[ 0 ] + file->af_BufferSize;
 			file->af_CurrentBuf	= 0;
 			file->af_SeekOffset	= 0;
 			file->af_PacketPending	= FALSE;
 			file->af_SeekPastEOF	= FALSE;
-#ifdef ASIO_NOEXTERNALS
-			file->af_SysBase	= SysBase;
-			file->af_DOSBase	= DOSBase;
-#endif
 
 			/* this is the port used to get the packets we send out back.
 			 * It is initialized to PA_IGNORE, which means that no signal is

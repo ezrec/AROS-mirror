@@ -1,22 +1,40 @@
 #include "async.h"
 
+/*****************************************************************************
 
-#ifdef ASIO_NOEXTERNALS
-_LIBCALL AsyncFile *
-OpenAsync(
-	_REG( a0 ) const STRPTR fileName,
-	_REG( d0 ) OpenModes mode,
-	_REG( d1 ) LONG bufferSize,
-	_REG( a1 ) struct ExecBase *SysBase,
-	_REG( a2 ) struct DosLibrary *DOSBase )
-#else
-_LIBCALL AsyncFile *
-OpenAsync(
-	_REG( a0 ) const STRPTR fileName,
-	_REG( d0 ) OpenModes mode,
-	_REG( d1 ) LONG bufferSize )
-#endif
+    NAME */
+        AROS_LH3(AsyncFile *, OpenAsync,
+
+/*  SYNOPSIS */
+        AROS_LHA(const STRPTR, fileName, A0),
+        AROS_LHA(OpenModes, mode, D0),
+        AROS_LHA(LONG, bufferSize, D1),
+
+/*  LOCATION */
+        struct Library *, AsyncIOBase, 5, Asyncio)
+
+/*  FUNCTION
+
+    INPUTS
+
+    RESULT
+
+    NOTES
+
+    EXAMPLE
+
+    BUGS
+
+    SEE ALSO
+
+    INTERNALS
+
+    HISTORY
+
+*****************************************************************************/
 {
+        AROS_LIBFUNC_INIT
+
 	static const WORD PrivateOpenModes[] =
 	{
 		MODE_OLDFILE, MODE_NEWFILE, MODE_READWRITE
@@ -26,11 +44,7 @@ OpenAsync(
 
 	if( handle = Open( fileName, PrivateOpenModes[ mode ] ) )
 	{
-#ifdef ASIO_NOEXTERNALS
-		file = AS_OpenAsyncFH( handle, mode, bufferSize, TRUE, SysBase, DOSBase );
-#else
 		file = AS_OpenAsyncFH( handle, mode, bufferSize, TRUE );
-#endif
 
 		if( !file )
 		{
@@ -39,4 +53,6 @@ OpenAsync(
 	}
 
 	return( file );
+
+        AROS_LIBFUNC_EXIT
 }
