@@ -1403,7 +1403,8 @@ int numcols;
             for (a=0,b=0;a<numcols;a++) {
                 SetRGB32(&Window->WScreen->ViewPort,
                     screen_pens[a].pen,
-                    palette[b++],palette[b++],palette[b++]);
+                    palette[b],palette[b+1],palette[b+2]);
+                b+=3;
             }
         }
     }

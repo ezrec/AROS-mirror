@@ -230,7 +230,8 @@ int louise,buttons,banknum;
                     if (fastnum<2) strcat(buf,globstring[STR_CLOCK_MEM]);
                     else strcat(buf,globstring[STR_CLOCK_CHIP]);
                 }
-                for (a=0;a<chipnum;a++) buf1[a]='8'; buf1[a]=0;
+                for (a=0;a<chipnum;a++) buf1[a]='8';
+                buf1[a]=0;
                 strcat(buf,buf1);
                 if (fastnum>1) {
                     if (icon_type&ICON_C_AND_F) lsprintf(buf2," %lc:",globstring[STR_CLOCK_FAST][0]);

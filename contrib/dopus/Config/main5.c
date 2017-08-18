@@ -569,15 +569,18 @@ D(bug("classname: %s\n",classname));
     fclass=firstclass;
     while (fclass) {
         if (fclass->type[0]) {
-            if ((Write(out,fclass->type,(a=strlen(fclass->type))))<a) break;
+            a=strlen(fclass->type);
+            if (Write(out,fclass->type,a)<a) break;
             if (fclass->typeid[0]) {
                 Write(out,&g,1);
-                if ((Write(out,fclass->typeid,(a=strlen(fclass->typeid))))<a) break;
+                a=strlen(fclass->typeid)
+                if (Write(out,fclass->typeid,a)<a) break;
             }
         }
         Write(out,&f,1);
         if (fclass->recognition) {
-            if ((Write(out,fclass->recognition,(a=(strlen(fclass->recognition)+1))))<a)
+            a=strlen(fclass->recognition)+1;
+            if (Write(out,fclass->recognition,a)<a)
                 break;
         }
         else Write(out,&f,1);
