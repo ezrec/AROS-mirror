@@ -470,7 +470,7 @@ char *source,*dest;
                 refreshwindow(data_active_window,0);
                 break;
             case FUNC_PARENT:
-                if (!rexx || !rexx_argcount>0 ||
+                if (!rexx || (!rexx_argcount)>0 ||
                     (a=atoi(rexx_args[0]))<0 || a>1) a=data_active_window;
                 if (dopus_curwin[a]->firstentry &&
                    (dopus_curwin[a]->firstentry->type==ENTRY_CUSTOM) &&
@@ -489,7 +489,7 @@ char *source,*dest;
                 if (doroot(str_pathbuffer[a])) do_parent_root(a);
                 break;
             case FUNC_PARENTLIST:
-                if (!rexx || !rexx_argcount>0 ||
+                if (!rexx || (!rexx_argcount)>0 ||
                     (a=atoi(rexx_args[0]))<0 || a>1) a=data_active_window;
                 if (str_pathbuffer[a][0] && do_parent_multi(str_pathbuffer[a]))
                     startgetdir(a,SGDFLAGS_CANMOVEEMPTY|SGDFLAGS_CANCHECKBUFS);

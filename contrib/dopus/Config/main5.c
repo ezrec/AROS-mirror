@@ -573,7 +573,7 @@ D(bug("classname: %s\n",classname));
             if (Write(out,fclass->type,a)<a) break;
             if (fclass->typeid[0]) {
                 Write(out,&g,1);
-                a=strlen(fclass->typeid)
+                a=strlen(fclass->typeid);
                 if (Write(out,fclass->typeid,a)<a) break;
             }
         }
