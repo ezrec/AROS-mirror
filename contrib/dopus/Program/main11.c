@@ -236,7 +236,8 @@ int louise,buttons,banknum;
                     if (icon_type&ICON_C_AND_F) lsprintf(buf2," %lc:",globstring[STR_CLOCK_FAST][0]);
                     else lsprintf(buf2," %s",globstring[STR_CLOCK_FAST]);
                     strcat(buf,buf2);
-                    for (a=0;a<fastnum;a++) buf1[a]='8'; buf1[a]=0;
+                    for (a=0;a<fastnum;a++) buf1[a]='8';
+                    buf1[a]=0;
                     strcat(buf,buf1);
                 }
                 strcat(buf," ");

@@ -582,7 +582,8 @@ D({char p[256]; unsigned long long s=0; ULONG f=0; strcpy(p,sourcename); getdirc
                     }
                     else if (a>0) {
                         if (a==2) glob_unprotect_all=1;
-                        if (!noremove) removefile(file,swindow,act,1); file=NULL;
+                        if (!noremove) removefile(file,swindow,act,1);
+                        file=NULL;
                         okayflag=1;
                     }
 /*
@@ -630,7 +631,8 @@ D({char p[256]; unsigned long long s=0; ULONG f=0; strcpy(p,sourcename); getdirc
                                 }
                                 else if (a==1 || a==2) {
                                     if (a==2) glob_unprotect_all=1;
-                                    if (!noremove) removefile(file,swindow,act,1); file=NULL;
+                                    if (!noremove) removefile(file,swindow,act,1);
+                                    file=NULL;
                                     okayflag=1;
                                 }
                                 else {
@@ -690,7 +692,8 @@ D({char p[256]; unsigned long long s=0; ULONG f=0; strcpy(p,sourcename); getdirc
                 }
                 if (a) {
                     if (a==2) glob_unprotect_all=1;
-                    if (!noremove) removefile(file,swindow,act,1); file=NULL;
+                    if (!noremove) removefile(file,swindow,act,1);
+                    file=NULL;
                     show=act;
                     okayflag=1;
                 }
@@ -952,7 +955,8 @@ D(bug("recursedir returned %ld\n",a));
                                     break;
                                 }
                                 if (a) {
-                                    if (!noremove) removefile(file,swindow,act,1); file=NULL;
+                                    if (!noremove) removefile(file,swindow,act,1);
+                                    file=NULL;
                                 }
                                 else oldiconname[0]=0;
                                 okayflag=1;
@@ -967,7 +971,8 @@ D(bug("recursedir returned %ld\n",a));
                     addfile(dwindow,inact,namebuf,file->size,file->type,&file->date,
                         file->comment,file->protection,file->subtype,1,NULL,NULL,
                         file->owner_id,file->group_id);
-                    if (!noremove) removefile(file,swindow,act,1); file=NULL;
+                    if (!noremove) removefile(file,swindow,act,1);
+                    file=NULL;
                     okayflag=1;
                 }
                 break;

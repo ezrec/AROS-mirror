@@ -183,7 +183,8 @@ startdragging:
                             }
                             else if (y<scrdata_dispwin_ypos) {
                                 if (juststart!=-1) {
-                                    if (fa<0) fa=0; if (la>=scrdata_dispwin_lines) la=scrdata_dispwin_lines;
+                                    if (fa<0) fa=0;
+                                    if (la>=scrdata_dispwin_lines) la=scrdata_dispwin_lines;
                                     if (state) {
                                         for (d=fa;d<la;d++) defselect(win,d,b);
                                         defselect(win,0,b);
@@ -197,7 +198,8 @@ startdragging:
                             }
                             else if (y>=scrdata_dispwin_height+scrdata_dispwin_ypos) {
                                 if (juststart!=1) {
-                                    if (fa<0) fa=0; if (la>=scrdata_dispwin_lines) la=scrdata_dispwin_lines;
+                                    if (fa<0) fa=0;
+                                    if (la>=scrdata_dispwin_lines) la=scrdata_dispwin_lines;
                                     if (state) {
                                         for (d=fa;d<la;d++) defselect(win,d,b);
                                         defselect(win,scrdata_dispwin_lines-1,b);

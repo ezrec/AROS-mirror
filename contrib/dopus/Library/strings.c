@@ -54,7 +54,8 @@ __saveds int DoStrConcat(register char *buf __asm("a0"),
         LStrnCpy(&buf[b],cat,a); buf[b+a]=0;
         return(1);
     }
-    if (lim>b) LStrnCpy(&buf[b],cat,lim-b); buf[lim]=0;
+    if (lim>b) LStrnCpy(&buf[b],cat,lim-b);
+    buf[lim]=0;
     return(0);
 }
 

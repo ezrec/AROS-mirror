@@ -635,7 +635,8 @@ D(bug("doidcmp: a = %ld\n",a);KDump(&dopus_curgadbank->gadgets[a],sizeof(struct 
                                  }
                                 else
                                   win = isinwindow(x,y); // lister area
-                                  if (win == -1) break;
+                                
+                                if (win == -1) break;
                             case CURSOR_UP:
                                 if (win == -1) win = data_active_window;
                                 if (dopus_curwin[win]->total<scrdata_dispwin_lines) break;
@@ -684,7 +685,8 @@ D(bug("doidcmp: a = %ld\n",a);KDump(&dopus_curgadbank->gadgets[a],sizeof(struct 
                                  }
                                 else
                                   win = isinwindow(x,y); // lister area
-                                  if (win == -1) break;
+                                
+                                if (win == -1) break;
                             case CURSOR_DOWN:
                                 if (win == -1) win = data_active_window;
                                 if (dopus_curwin[win]->total<scrdata_dispwin_lines) break;

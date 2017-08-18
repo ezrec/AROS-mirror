@@ -766,7 +766,9 @@ int count,dir,fadetime;
                 red=((cmap[j]>>8)&0xf)-i;
                 green=((cmap[j]>>4)&0xf)-i;
                 blue=(cmap[j]&0xf)-i;
-                if (red<0) red=0; if (green<0) green=0; if (blue<0) blue=0;
+                if (red<0) red=0;
+                if (green<0) green=0;
+                if (blue<0) blue=0;
                 tempmap[j]=(UWORD)red<<8|(UWORD)green<<4|(UWORD)blue;
             }
             treq.tr_time.tv_secs=0;

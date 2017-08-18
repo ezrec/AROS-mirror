@@ -850,7 +850,8 @@ int new;
                             class=0;
                             while (IMsg=getintuimsg()) {
                                 if (IMsg->Class==IDCMP_MOUSEMOVE || IMsg->Class==IDCMP_MOUSEBUTTONS)
-                                    class=IMsg->Class; code=IMsg->Code;
+                                    class=IMsg->Class;
+                                code=IMsg->Code;
                                 ReplyMsg((struct Message *)IMsg);
                                 if (class==IDCMP_MOUSEBUTTONS && code==SELECTUP) break;
                             }

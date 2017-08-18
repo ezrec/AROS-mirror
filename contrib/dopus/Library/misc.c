@@ -43,7 +43,8 @@ int __saveds DoRawkeyToStr(register UWORD code __asm("d0"),
     struct ConsoleDevice *ConsoleDevice;
     char ocbuf[20],cbuf[20],*foo;
 
-    if (buf) buf[0]=0; ocbuf[0]=cbuf[0]=0;
+    if (buf) buf[0]=0;
+    ocbuf[0]=cbuf[0]=0;
     if (code!=(UWORD)~0 && code!=0xff) {
         if (code&IECODE_UP_PREFIX) code-=0x80;
         if (code>=0x50 && code<=0x59) LSprintf(cbuf,"F%ld",code-0x4f);
