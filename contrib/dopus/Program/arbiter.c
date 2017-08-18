@@ -242,7 +242,7 @@ D(bug("ARBITER_LAUNCH: %s, flags: %lx\n",arb_launch->launch_name,arb_msg->flags)
 #ifdef __AROS__
                                 &CreateNewProcTags(NP_Name,        (IPTR)arb_launch->launch_name,
                                                    NP_Priority,    0,
-                                                   NP_Entry, (Tag)arb_launch->launch_code,
+                                                   NP_Entry, arb_launch->launch_code,
                                                    NP_StackSize,   8192,
                                                    NP_CloseInput,  FALSE,
                                                    NP_CloseOutput, FALSE,

@@ -282,8 +282,8 @@ int win;
 {
     ULONG class;
     UWORD code;
-    int x,y,d,a,ret=0;
-    struct Directory *temp;
+    int x,y,d,__unused a,__unused ret=0;
+    __unused struct Directory *temp;
 
     if (data_active_window!=win) {
         makeactive(win,0);
@@ -801,7 +801,7 @@ int *prot;
 
 void wildselect(wild,boobs,and,mode)
 char *wild;
-int boobs,and;
+int boobs,and,mode;
 {
     char buf[256];
     struct Directory *temp;

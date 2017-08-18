@@ -45,7 +45,7 @@ void __regargs freestring(char *str)
     if (str) FreeMem(str,strlen(str)+1);
 }
 
-int __regargs writestring(int file,char *string)
+int __regargs writestring(BPTR file,char *string)
 {
     int b;
     char nl=0;
@@ -110,7 +110,8 @@ void __regargs linkinnewfiletype(struct ConfigStuff *cstuff,struct dopusfiletype
 
 int __saveds DoReadConfig(register char *name __asm("a0"),register struct ConfigStuff *cstuff __asm("a1"))
 {
-    int a,in,size,pos,b,bk,gad,mv;
+    BPTR in;
+    int a,size,pos,b,bk,gad,mv;
     UWORD ver,mag;
     char *cbuf,*buf,*tbuf,buf2[102],buf3[102];
     struct dopusfiletype *newtype;
@@ -534,7 +535,8 @@ endthis:
 
 int __saveds DoSaveConfig(register char *name __asm("a0"), register struct ConfigStuff *cstuff __asm("a1"))
 {
-    int a,out,ret=0;
+    BPTR out;
+    int a,ret=0;
     struct dopusfiletype *type;
     struct dopushotkey *hotkey;
     struct dopusgadgetbanks *bank;

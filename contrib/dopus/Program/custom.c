@@ -1145,7 +1145,7 @@ struct function_data *funcdata;
     if (config->errorflags&ERROR_ENABLE_DOS) main_proc->pr_WindowPtr=(APTR)Window;
 
     for (a=0;a<100;a++) {
-        lsprintf(funcdata->scriptname,"%sdopustemp.tmp%ld",buf,a);
+        lsprintf(funcdata->scriptname,"%sdopustemp.tmp%ld",buf,(long int)a);
         if ((funcdata->output_file=Open(funcdata->scriptname,MODE_NEWFILE))) break;
     }
     if (!funcdata->output_file) {
@@ -1153,7 +1153,7 @@ struct function_data *funcdata;
         return(0);
     }
 
-    lsprintf(funcdata->tempfile,"%sdopusout.tmp%ld",buf,a);
+    lsprintf(funcdata->tempfile,"%sdopusout.tmp%ld",buf,(long int)a);
 
     rec_pathkey=NULL;
 
@@ -1191,11 +1191,11 @@ struct function_data *funcdata;
     }
     if (buf[0]) Write(funcdata->output_file,buf,strlen(buf));
 
-    lsprintf(buf,"Stack %ld\n",(par->stack<4000)?4000:par->stack);
+    lsprintf(buf,"Stack %ld\n",(long int)((par->stack<4000)?4000:par->stack));
     Write(funcdata->output_file,buf,strlen(buf));
 
     if (par->pri!=0) {
-        lsprintf(buf,"ChangeTaskPri %ld\n",par->pri);
+        lsprintf(buf,"ChangeTaskPri %ld\n",(long int)par->pri);
         Write(funcdata->output_file,buf,strlen(buf));
     }
 
@@ -1228,7 +1228,7 @@ struct function_data *funcdata;
         if (flags&FLAG_OUTWIND) {
             lsprintf(buf2,"%s \"%s\" from %s",config->outputcmd,config->output,funcdata->scriptname);
             if (!(flags&FLAG_ASYNC)) {
-                lsprintf(portname,"dopus_run%ld",system_dopus_runcount);
+                lsprintf(portname,"dopus_run%ld",(long int)system_dopus_runcount);
                 if (!(msgport=LCreatePort(portname,0))) goto freeargs;
             }
             else wb2f=1;
@@ -1239,7 +1239,7 @@ struct function_data *funcdata;
             if (par->delay!=0) {
                 lsprintf(buf,"\"%s\" -w %ld \"%s\"\n",
                     str_dopusrt_path,
-                    par->delay,
+                    (long int)par->delay,
                     globstring[STR_PRESS_MOUSE_BUTTON]);
                 Write(funcdata->output_file,buf,strlen(buf));
             }

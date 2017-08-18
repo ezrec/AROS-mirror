@@ -1139,7 +1139,7 @@ void builddisplaystring(display,sbuf,win)
           case DISPLAY_DATE:
             if ((sptr=display->datebuf)) {
               for(c=sptr;*c;c++) if (*c==' ') break;
-              w=TextLength(&dir_rp[win],sptr,b=(int)c-(int)sptr)+scrdata_font_xsize;
+              w=TextLength(&dir_rp[win],sptr,b=(long)c-(long)sptr)+scrdata_font_xsize;
   /*
               if (w > column[3])
                {

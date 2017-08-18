@@ -184,7 +184,7 @@ static struct TagItem
 int getmakelinkdata(char *namebuf, char *destbuf, int *type)
 {
     ULONG class;
-    UWORD gadgetid,code;
+    UWORD gadgetid,__unused code;
     struct Window *swindow;
     struct Gadget *name_gad,*makelink_type_gad, *makelink_destname_gad;
     char *makelink_type_array[3] = {globstring[STR_MAKELINK_TYPE_SOFT], globstring[STR_MAKELINK_TYPE_HARD], NULL};
@@ -329,7 +329,7 @@ int makelink(int rexx)
      {
       if ((lock = Lock(path,ACCESS_READ)))
        {
-        if (MakeLink(name,lock,FALSE))
+        if (MakeLink(name,(SIPTR)lock,FALSE))
          {
           dostatustext(str_okaystring);
           return 1;
@@ -340,7 +340,7 @@ int makelink(int rexx)
      }
     else
      {
-      if (MakeLink(name,path,TRUE))
+      if (MakeLink(name,(SIPTR)path,TRUE))
        {
         dostatustext(str_okaystring);
         return 1;

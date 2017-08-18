@@ -157,7 +157,7 @@ char *name;
         imagewidth, imageheight,
         minwidth, minheight, maxwidth, maxheight,
         depth,
-        coppersize,
+        __unused coppersize,
         viewmode,
         maxframes;
     UWORD colourlist[4];
@@ -226,10 +226,10 @@ DTload:
           struct BitMapHeader *dto_bmhd;
 
           if (GetDTAttrs (dto,
-                      PDTA_ModeID,            (Tag)&viewmode,
-                      PDTA_BitMapHeader,      (Tag)&dto_bmhd,
-                      PDTA_ColorRegisters,    (Tag)&colourptr,
-                      PDTA_NumColors,         (Tag)&coloursize,
+                      PDTA_ModeID,            &viewmode,
+                      PDTA_BitMapHeader,      &dto_bmhd,
+                      PDTA_ColorRegisters,    &colourptr,
+                      PDTA_NumColors,         &coloursize,
                       TAG_DONE)==4)
            {
 D(bug("viewmode(0) = %08lx\n",viewmode));
@@ -550,14 +550,14 @@ D(bug("extflag,viewmode(5) = %ld,%lx\n",extflag,viewmode));
                           SA_Width,      bitmapwidth,
                           SA_Height,     bitmapheight,
                           SA_Depth,      depth,
-                          dt_ok?SA_Type:SA_BitMap,     dt_ok?CUSTOMSCREEN:(Tag)iffbm[0],
+                          dt_ok?SA_Type:SA_BitMap,     dt_ok?CUSTOMSCREEN:(IPTR)iffbm[0],
                           SA_Behind,     TRUE,
                           SA_DisplayID,  viewmode,
                           SA_AutoScroll, TRUE,
                           SA_Overscan,   OSCAN_MAX,
                           SA_SharePens,  TRUE,
                           SA_ShowTitle,  FALSE,
-                          SA_Colors32,   (Tag)colourtable_8,
+                          SA_Colors32,   colourtable_8,
                  //            SA_ErrorCode,  (Tag)&err,
                           TAG_END)))
      {
@@ -579,13 +579,13 @@ D(bug("extflag,viewmode(5) = %ld,%lx\n",extflag,viewmode));
 
     if (dt_ok)
      {
-      SetDTAttrs(dto,NULL,NULL,PDTA_Screen,(Tag)iffscreen,TAG_END);
+      SetDTAttrs(dto,NULL,NULL,PDTA_Screen,iffscreen,TAG_END);
       DoDTMethod(dto, iffwindow, NULL, DTM_PROCLAYOUT, NULL, 1);
-      GetDTAttrs(dto, PDTA_DestBitMap, (Tag)&iffbm[0],TAG_END);
+      GetDTAttrs(dto, PDTA_DestBitMap, &iffbm[0],TAG_END);
 D(bug("PDTA_DestBitMap: %08lx\n",iffbm[0]));
       if (!(iffbm[0]))
        {
-        GetDTAttrs(dto, PDTA_BitMap, (Tag)&iffbm[0],TAG_END);
+        GetDTAttrs(dto, PDTA_BitMap, &iffbm[0],TAG_END);
 D(bug("PDTA_BitMap: %08lx\n",iffbm[0]));
        }
 //     if (!(iffbm[0])) GetDTAttrs(dto, PDTA_ClassBitMap, (Tag)&iffbm[0],TAG_END);

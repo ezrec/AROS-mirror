@@ -129,7 +129,7 @@ D(bug("rexx.2.%s\n",commandlist[cmd].name));
                                 rexx_return_value=0;
                                 internal_function(func_global_function,rexx_global_flag,NULL,NULL);
                                 func_global_function=0;
-                                lsprintf(buf,"%ld",rexx_return_value);
+                                lsprintf(buf,"%ld",(long int)rexx_return_value);
                                 rexx_set_return(msg,rexx_result_code,buf);
                             }
                             break;

@@ -41,7 +41,7 @@ void chkabort(void) { return; }
 
 int onworkbench=0;
 
-main(argc,argv)
+int main(argc,argv)
 int argc;
 char *argv[];
 {
@@ -162,9 +162,9 @@ char *argv[];
 
         if (wbmsg->sm_NumArgs>1) {
             num=atoi(wbmsg->sm_ArgList[1].wa_Name);
-            lsprintf(portname,"dopus4_config_port%ld",num);
+            lsprintf(portname,"dopus4_config_port%ld",(long int)num);
             if (!(conport=LCreatePort(portname,20))) quit();
-            lsprintf(rportname,"dopus4_config_reply%ld",num);
+            lsprintf(rportname,"dopus4_config_reply%ld",(long int)num);
             Forbid();
             if (!(cmdport=FindPort(rportname))) {
                 LDeletePort(conport);
@@ -870,7 +870,7 @@ void removetickgads()
         x_bot,y_bot);
 }
 
-processtickgad(gads,flag,sel,num)
+int processtickgad(gads,flag,sel,num)
 struct ConfigGadget *gads;
 int flag,sel,num;
 {
@@ -1189,7 +1189,7 @@ void makestring(char *buf,...)
     if (first) ActivateStrGad(first,Window);
 }
 
-getstring(text,buf,len,num)
+int getstring(text,buf,len,num)
 char *text,*buf;
 int len,num;
 {
@@ -1221,13 +1221,13 @@ int len,num;
     return(a);
 }
 
-request(text)
+int request(text)
 char *text;
 {
     return(do_request(text,cfg_string[STR_OKAY],cfg_string[STR_CANCEL]));
 }
 
-do_request(text,pos,neg)
+int do_request(text,pos,neg)
 char *text,*pos,*neg;
 {
     struct DOpusSimpleRequest req;
@@ -1394,6 +1394,7 @@ int num;
 void load_palette(screen,palette,numcols)
 struct Screen *screen;
 ULONG *palette;
+int numcols;
 {
     if (!screen) {
         /*if (version2>=OSVER_39)*/ {

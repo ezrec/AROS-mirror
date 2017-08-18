@@ -208,7 +208,7 @@ int st;
     }
     else err=atoi(rexx_args[0]);
     if (doerror(err)) {
-        lsprintf(buf2,"!%ld",err);
+        lsprintf(buf2,"!%ld",(long int)err);
         dohelp(buf2,NULL,0,0,globstring[STR_NO_HELP_FOR_ERROR]);
     }
     else dostatustext(globstring[STR_NO_HELP_FOR_ERROR]);
@@ -247,7 +247,7 @@ int err;
         if ((skip && a==3) || (!skip && a==2)) {
             char helpbuf[20];
 
-            lsprintf(helpbuf,"!%ld",err);
+            lsprintf(helpbuf,"!%ld",(long int)err);
             dohelp(helpbuf,NULL,0,0,globstring[STR_NO_HELP_FOR_ERROR]);
             busy();
         }

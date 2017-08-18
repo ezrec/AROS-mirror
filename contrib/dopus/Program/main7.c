@@ -239,7 +239,7 @@ BOOL OpenAHI(void)
   if((AHImp = CreateMsgPort())) {
     if((AHIio = (struct AHIRequest *)CreateIORequest(AHImp,sizeof(struct AHIRequest)))) {
       AHIio->ahir_Version = 4;
-      if(!(AHIDevice = OpenDevice(AHINAME, AHI_NO_UNIT,(struct IORequest *) AHIio,NULL))) {
+      if(!(AHIDevice = OpenDevice(AHINAME, AHI_NO_UNIT,(struct IORequest *) AHIio,0))) {
         AHIBase = (struct Library *) AHIio->ahir_Std.io_Device;
         return TRUE;
       }
@@ -287,7 +287,7 @@ __saveds ULONG AHISoundFunc(
 #endif
     if (AHIloops)  // Will it work for stereo sounds too?
      {
-      AHI_SetSound(smsg->ahism_Channel,AHI_NOSOUND,0,0,actrl,NULL);
+      AHI_SetSound(smsg->ahism_Channel,AHI_NOSOUND,0,0,actrl,0);
       Signal(actrl->ahiac_UserData,1L<<AHIsignal);
      }
     else AHIloops++;
@@ -388,8 +388,8 @@ D(bug("AHI opened\n"));
                                     AHIA_MixFreq,         AHI_DEFAULT_FREQ,
                                     AHIA_Channels,        stereo?2:1,
                                     AHIA_Sounds,          stereo?2:1,
-                                    loop?TAG_IGNORE:AHIA_SoundFunc, (Tag)&AHISoundHook,
-                                    AHIA_UserData,        (Tag)FindTask(NULL),
+                                    loop?TAG_IGNORE:AHIA_SoundFunc, (IPTR)&AHISoundHook,
+                                    AHIA_UserData,        FindTask(NULL),
                                     TAG_DONE)))
          {
           struct AHISampleInfo sample = { AHIST_M8S, psample, size /*/ AHI_SampleFrameSize(AHIST_M8S)*/ };
@@ -414,7 +414,7 @@ D(bug("LoadSound(0)=%ld, LoadSound(1)=%ld\n",snd0,snd1));
                 { AHIP_Vol         , vhdr?vhdr->vh_Volume:Unity },
                 { AHIP_Pan         , 0L },
                 { AHIP_Sound       , 1 },
-                { AHIP_EndChannel  , NULL },
+                { AHIP_EndChannel  , 0 },
                 { TAG_END }
               };
 
@@ -427,7 +427,7 @@ D(bug("LoadSound(0)=%ld, LoadSound(1)=%ld\n",snd0,snd1));
                 AHIP_Pan         , stereo?Unity:pan,
                 AHIP_Sound       , 0,
                 AHIP_EndChannel  , NULL,
-                stereo?TAG_MORE:TAG_END, (Tag)ahitags2);
+                stereo?TAG_MORE:TAG_END, (IPTR)ahitags2);
 D(bug("Playing through AHI\n"));
              }
             else CloseAHI();

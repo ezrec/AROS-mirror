@@ -712,7 +712,7 @@ D(bug("getdircontentsinfo(%s)\n",path));
      {
       if ((eac = AllocDosObject(DOS_EXALLCONTROL,NULL)))
        {
-        eac->eac_LastKey = NULL;
+        eac->eac_LastKey = 0;
 
         do
          {

@@ -521,7 +521,7 @@ ULONG a;
 		getfloatstr((double)((double)a/1024),buf);
 		LStrCat(buf,"M");
 	}
-	else lsprintf(buf,"%ldK",a);
+	else lsprintf(buf,"%ldK",(long int)a);
 }
 
 void getfloatstr(f,buf)
@@ -538,11 +538,11 @@ char *buf;
 	if (c==100) {
 		c=0; ++a;
 	}
-	lsprintf(buf1,"%ld",c); buf1[1]=0;
-	lsprintf(buf,"%ld.%s",a,buf1);
+	lsprintf(buf1,"%ld",(long int)c); buf1[1]=0;
+	lsprintf(buf,"%ld.%s",(long int)a,buf1);
 }
 
-do_format(reqbase,border,device,name,flags,quick)
+int do_format(reqbase,border,device,name,flags,quick)
 struct RequesterBase *reqbase;
 Object_Border *border;
 char *device,*name;
@@ -645,7 +645,7 @@ char quick;
 	return((txt==STR_SUCCESS));
 }
 
-do_initialise(device_req,name,dostype,firstblock,numblocks,reserved,memtype,flags)
+int do_initialise(device_req,name,dostype,firstblock,numblocks,reserved,memtype,flags)
 struct IOExtTD *device_req;
 char *name;
 ULONG dostype;
@@ -777,7 +777,7 @@ ULONG flags;
 	return(0);
 }
 
-do_raw_format(reqbase,border,device_req,tracksize,lowtrack,numtracks,memtype,flags)
+int do_raw_format(reqbase,border,device_req,tracksize,lowtrack,numtracks,memtype,flags)
 struct RequesterBase *reqbase;
 Object_Border *border;
 struct IOExtTD *device_req;

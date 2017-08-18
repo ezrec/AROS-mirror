@@ -55,8 +55,10 @@ void readhelp()
       Read(in, &id, 4);
       if ((id == 'PX20') || (id == 'PP11') || (id == 'PP20'))
        {
+#ifndef __AROS__
         struct PPBase *PPBase;
         char *pptemp;
+#endif
 
         Close(in);
 #ifndef __AROS__
@@ -319,7 +321,7 @@ void load_clips()
             break;
         if (clip.func.function &&
             (funcbuf=LAllocRemember(&clipkey,(int)clip.func.function,0))) {
-            if ((Read(file,funcbuf,(int)clip.func.function))<(int)clip.func.function)
+            if ((Read(file,funcbuf,(long)clip.func.function))<(long)clip.func.function)
                 break;
         }
         else funcbuf=NULL;
@@ -338,7 +340,7 @@ void load_clips()
 
 void save_clips()
 {
-    int file;
+    BPTR file;
     struct Clip *clip;
     char *function;
 
@@ -359,7 +361,7 @@ void save_clips()
     Close(file);
 }
 
-readfile(name,buf,size)
+int readfile(name,buf,size)
 char *name,**buf;
 int *size;
 {

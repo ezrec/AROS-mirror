@@ -271,8 +271,8 @@ D(bug("DOS notification message\n"));
                             c=0;
                             for (a=0;a<4;a++) {
                                 if ((old_change_state&(1<<a))!=(disk_change_state&(1<<a))) {
-                                    lsprintf(buf,"DF%ld:",a);
-                                    lsprintf(buf2,"PC%ld:",a);
+                                    lsprintf(buf,"DF%ld:",(long int)a);
+                                    lsprintf(buf2,"PC%ld:",(long int)a);
                                     for (b=0;b<2;b++) {
                                         if ((Stricmp(dopus_curwin[b]->realdevice,buf)==0) ||
                                             (Stricmp(dopus_curwin[b]->realdevice,buf2)==0)) {

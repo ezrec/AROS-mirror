@@ -32,7 +32,7 @@ the existing commercial status of Directory Opus 5.
 
 #define ABS(x) ((x)<0?-(x):(x))
 
-initfontlist(num,move,flags)
+int initfontlist(num,move,flags)
 int num,move,flags;
 {
     int a,b,dist=0,one,val,size=-1;
@@ -78,7 +78,7 @@ int num,move,flags;
                     if (one!=-1) {
                         /*if (version2)*/ {
                             size=config->fontsizes[num];
-                            lsprintf(fontsize_buf,"%ld",size);
+                            lsprintf(fontsize_buf,"%ld",(long int)size);
                             RefreshStrGad(&fontsizegadget,Window);
                             fontsizelistview.itemselected=-1;
                         }

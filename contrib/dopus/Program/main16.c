@@ -96,7 +96,7 @@ int depth;
 UWORD *coltab;
 {
     struct DimensionInfo dims;
-    struct RastPort *font_rp;
+    //struct RastPort *font_rp;
 
     font_scr.Width=GfxBase->NormalDisplayColumns;
     font_scr.Height=STDSCREENHEIGHT;
@@ -124,7 +124,7 @@ D(bug("Font screen ModeID: %lx\n",font_scr.Extension[0].ti_Data));
         CloseScreen(fontscreen);
         return(0);
     }
-    font_rp=fontwindow->RPort;
+    //font_rp=fontwindow->RPort;
     if (coltab) {
         int a,num;
 

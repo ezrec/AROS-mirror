@@ -71,7 +71,7 @@ void WBRun(int,char **);
 int setarg(struct WBArg *,char *,BPTR);
 BPTR CloneCommandDir(const char *);
 
-static const char *version="$VER: DOpusRT 4.8 (" __DATE__ ") by Jacek Rzeuski";
+const char *version="$VER: DOpusRT 4.8 (" __DATE__ ") by Jacek Rzeuski";
 
 static const char *pathlists[7]={
         "Workbench",
@@ -111,7 +111,8 @@ int main(argc,argv)
 int argc;
 char *argv[];
 {
-    int a,out,x,y,flag;
+    BPTR out;
+    int a,x,y,flag;
     struct MsgPort *port,*port1,*cont;
     struct Process *myproc;
     struct Message msg;
@@ -161,7 +162,7 @@ char *argv[];
             if (out) {
                 if (port=LCreatePort(NULL,0)) {
                     if (inputreq=(struct IOStdReq *)LCreateExtIO(port,sizeof(struct IOStdReq))) {
-                        if (!(OpenDevice("input.device",NULL,(struct IORequest *)inputreq,NULL))) {
+                        if (!(OpenDevice("input.device",0,(struct IORequest *)inputreq,0))) {
                             if (interrupt=AllocMem(sizeof(struct Interrupt),MEMF_CLEAR|MEMF_PUBLIC)) {
                                 interrupt->is_Code=(APTR)InputHandler;
                                 interrupt->is_Node.ln_Pri=51;
@@ -275,7 +276,7 @@ char **argv;
     int stacksize,i,ok=1;
     struct Process *ourtask;
     struct MsgPort *replyport=NULL;
-    BPTR olddir=-1;
+    BPTR olddir=(BPTR)-1;
     struct IconBase *IconBase;
     struct DOpusRemember *key=NULL;
     struct CommandLineInterface *cli;
@@ -357,7 +358,7 @@ char **argv;
      }
     if (replyport) LDeletePort(replyport);
     if (diskobj) FreeDiskObject(diskobj);
-    if (olddir!=-1) CurrentDir(olddir);
+    if (olddir!=(BPTR)-1) CurrentDir(olddir);
     if (WBStartup) {
         /*if (WBStartup->sm_Segment)*/ UnLoadSeg(WBStartup->sm_Segment);
         if (WBStartup->sm_ArgList) {

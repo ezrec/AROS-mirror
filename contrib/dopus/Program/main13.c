@@ -233,8 +233,8 @@ int win,clear;
             }
             else if (config->showfree&SHOWFREE_BLOCKS) {
                 if (dopus_curwin[win]->flags&DWF_READONLY)
-                    lsprintf(buf," (%ld)",dopus_curwin[win]->diskblock);
-                else lsprintf(buf," %ld",dopus_curwin[win]->diskblock);
+                    lsprintf(buf," (%ld)",(long int)dopus_curwin[win]->diskblock);
+                else lsprintf(buf," %ld",(long int)dopus_curwin[win]->diskblock);
             }
             else if (config->showfree&SHOWFREE_PERCENT) {
 #ifdef __SASC__
@@ -254,8 +254,8 @@ int win,clear;
 #endif
                 if (b>100) b=100;
                 if (dopus_curwin[win]->flags&DWF_READONLY)
-                    lsprintf(buf," (%ld%%)",b);
-                else lsprintf(buf," %ld%%",b);
+                    lsprintf(buf," (%ld%%)",(long int)b);
+                else lsprintf(buf," %ld%%",(long int)b);
             }
             StrCombine(buf3,buf,str_space_string,14);
             len2=12; len3=strlen(buf);

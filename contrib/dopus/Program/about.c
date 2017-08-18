@@ -119,7 +119,7 @@ void give_version_info()
 
     lsprintf(prog_ver_buf,"v%s",str_version_string);
     lsprintf(lib_ver_buf,"v%ld.%ld",
-        DOpusBase->LibNode.lib_Version,DOpusBase->LibNode.lib_Revision);
+        (long int)DOpusBase->LibNode.lib_Version,(long int)DOpusBase->LibNode.lib_Revision);
 
 #ifndef __AROS__
     if (/*DOSBase->dl_lib.lib_Version<36 ||*/ (GetVar("Kickstart",&kick_ver_buf[1],19,GVF_GLOBAL_ONLY))<1)
@@ -153,7 +153,7 @@ void give_version_info()
         }
         else ver=rev=0;
 
-        lsprintf(wb_ver_buf,"v%ld.%ld",ver,rev);
+        lsprintf(wb_ver_buf,"v%ld.%ld",(long int)ver,(long int)rev);
     }
     else wb_ver_buf[0]='v';
 
@@ -174,7 +174,7 @@ void give_version_info()
     }
     else proc=0;
 
-    lsprintf(proc_buf,"68%03ld",proc);
+    lsprintf(proc_buf,"68%03ld",(long int)proc);
 
     fpu = 0;
     if (SysBase->AttnFlags & AFF_68881)
@@ -190,7 +190,7 @@ void give_version_info()
          }
        }
      }
-    lsprintf(coproc_buf,fpu?"68%03ld":globstring[STR_PROTECT_NONE],fpu);
+    lsprintf(coproc_buf,fpu?"68%03ld":globstring[STR_PROTECT_NONE],(long int)fpu);
 
     if (FindName(&SysBase->LibList,"rtg.library")) strcpy(gfx_buf,"P96");
     else if (FindName(&SysBase->LibList,"cybergraphics.library")) strcpy(gfx_buf,"CGX");

@@ -33,7 +33,7 @@ the existing commercial status of Directory Opus 5.
 
 static char displenmap[]={DISPLAY_NAME,DISPLAY_COMMENT,DISPLAY_FILETYPE,DISPLAY_OWNER,DISPLAY_GROUP};
 
-dooperationconfig()
+int dooperationconfig()
 {
     ULONG class;
     UWORD code,gadgetid,qual;
@@ -148,7 +148,7 @@ clearlast:
                                 b=gadgetid-FORMAT_LENGTH;
                                 a=atoi(formatlen_buf[b]);
                                 if (a<20) a=20; else if (a>MAX_DISPLAYLENGTH) a=MAX_DISPLAYLENGTH;
-                                lsprintf(formatlen_buf[b],"%ld",a);
+                                lsprintf(formatlen_buf[b],"%ld",(long int)a);
                                 RefreshStrGad(gad,Window);
                                 config->displaylength[formatwin][displenmap[b]]=a;
                                 if (code!=0x9) getnextgadget(gad);
@@ -341,7 +341,7 @@ clearlast:
     }
 }
 
-dosystemconfig()
+int dosystemconfig()
 {
     ULONG class;
     UWORD code,gadgetid,qual,hotcode,hotqual;
@@ -600,7 +600,7 @@ dosystemconfig()
                                 if (tick) inittickgads(systemgadgets[gadgetid],(flag)?(int)*flag:0,(flag2)?(int)*flag2:0);
                                 switch (gadgetid) {
                                     case SYS_AMIGADOS:
-                                        lsprintf(buf,"%ld",config->priority);
+                                        lsprintf(buf,"%ld",(long int)config->priority);
                                         makestring(config->outputcmd,config->output,config->shellstartup,
                                             buf,NULL);
                                         break;
@@ -609,7 +609,7 @@ dosystemconfig()
                                             config->startupscript,config->uniconscript,config->configreturnscript,NULL);
                                         break;
                                     case SYS_DIRECTORIES:
-                                        lsprintf(buf,"%ld",config->bufcount);
+                                        lsprintf(buf,"%ld",(long int)config->bufcount);
                                         makestring(buf,NULL);
                                         break;
                                     case SYS_HOTKEYS:
@@ -664,13 +664,13 @@ dosystemconfig()
                                         BltTemplate((PLANEPTR)DOpusBase->pdb_check,0,2,rp,x_off+208,y_off+174,13,7);
 */                                        break;
                                     case SYS_VIEWPLAY:
-                                        lsprintf(buf,"%ld",config->showdelay);
-                                        lsprintf(buf1,"%ld",config->fadetime);
-                                        lsprintf(buf2,"%ld",config->tabsize);
-                                        lsprintf( buf3, "%ld", config->viewtext_topleftx ); //HUX
-                                        lsprintf( buf4, "%ld", config->viewtext_toplefty ); //HUX
-                                        lsprintf( buf5, "%ld", config->viewtext_width ); //HUX
-                                        lsprintf( buf6, "%ld", config->viewtext_height ); //HUX
+                                        lsprintf(buf,"%ld",(long int)config->showdelay);
+                                        lsprintf(buf1,"%ld",(long int)config->fadetime);
+                                        lsprintf(buf2,"%ld",(long int)config->tabsize);
+                                        lsprintf( buf3, "%ld", (long int)config->viewtext_topleftx ); //HUX
+                                        lsprintf( buf4, "%ld", (long int)config->viewtext_toplefty ); //HUX
+                                        lsprintf( buf5, "%ld", (long int)config->viewtext_width ); //HUX
+                                        lsprintf( buf6, "%ld", (long int)config->viewtext_height ); //HUX
                                         makestring( buf, buf1, buf2, buf3, buf4, buf5, buf6, NULL ); //HUX
 //                                        makestring(buf,buf1,buf2,NULL);
                                         break;
@@ -772,7 +772,7 @@ struct Gadget *fgad;
     }
 }
 
-fixformlist(win)
+int fixformlist(win)
 int win;
 {
     int a,b,d;
@@ -800,12 +800,12 @@ int win;
     for (a=0;a<lim;a++) {
         if (config->displaylength[win][displenmap[a]]<20) config->displaylength[win][displenmap[a]]=20;
         else if (config->displaylength[win][displenmap[a]]>MAX_DISPLAYLENGTH) config->displaylength[win][displenmap[a]]=MAX_DISPLAYLENGTH;
-        lsprintf(formatlen_buf[a],"%ld",config->displaylength[win][displenmap[a]]);
+        lsprintf(formatlen_buf[a],"%ld",(long int)config->displaylength[win][displenmap[a]]);
     }
     RefreshGList(&formatgads[6],Window,NULL,-1/*lim*/); //HUX was 5
 }
 
-system_requester(buf,buf2,gad,bit)
+int system_requester(buf,buf2,gad,bit)
 char *buf,*buf2;
 struct Gadget *gad;
 int bit;
@@ -887,8 +887,8 @@ int deftype;
     if (!iconbuf[0]) return;
     if (IconBase->lib_Version >= 44)
      {
-      if(!(icon = GetIconTags(iconbuf,ICONGETA_Screen,(Tag)Window->WScreen,TAG_END)))
-        icon = GetIconTags(NULL, ICONGETA_Screen, (Tag)Window->WScreen,
+      if(!(icon = GetIconTags(iconbuf,ICONGETA_Screen,Window->WScreen,TAG_END)))
+        icon = GetIconTags(NULL, ICONGETA_Screen, Window->WScreen,
                                  ICONGETA_GetDefaultType,(deftype==0)?WBDRAWER:((deftype==1)?WBTOOL:WBPROJECT),
                                  TAG_END);
      }

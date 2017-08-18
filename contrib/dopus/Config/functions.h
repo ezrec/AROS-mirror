@@ -279,7 +279,7 @@ void setup_list_window(struct NewWindow *,struct DOpusListView *,struct Gadget *
 /* lsprintf.asm */
 
 void SwapMem(register char *src __asm("a0"),register char *dst __asm("a1"),register int size __asm("d0"));
-void lsprintf (char *,char *,...);
+int lsprintf (char *,const char *,...);
 
 /* strings.c */
 

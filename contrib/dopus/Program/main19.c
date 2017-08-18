@@ -350,7 +350,7 @@ int ftype,funconly;
 int dochecktype(type,name,fileparam,info)
 struct dopusfiletype *type;
 char *name;
-int fileparam;
+BPTR fileparam;
 struct FileInfoBlock *info;
 {
     unsigned char buf[514],buf2[1024],*recog;
@@ -574,7 +574,7 @@ int bufsize;
             oldpos=Seek(file,0,OFFSET_CURRENT);
             if ((size=Read(file,findbuf,32000))<1) break;
             if ((searchbuffer(findbuf,size,matchbuf,matchsize,flags))==1) {
-                oldpos+=((int)search_found_position-(int)findbuf);
+                oldpos+=((long)search_found_position-(long)findbuf);
                 FreeMem(findbuf,32004);
                 return(oldpos);
             }

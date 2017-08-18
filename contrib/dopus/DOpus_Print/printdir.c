@@ -447,7 +447,7 @@ int wind;
 						lsprintf(buf,"%-30s",pddata.entry->name);
 						if (flags&PD_SIZE) {
 							if (pddata.entry->type<=ENTRY_FILE) {
-								lsprintf(pbuf,"%7ld",pddata.entry->size);
+								lsprintf(pbuf,"%7ld",(long int)pddata.entry->size);
 								strcat(buf,pbuf);
 							}
 							else strcat(buf,"    Dir");

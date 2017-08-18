@@ -28,24 +28,24 @@ the existing commercial status of Directory Opus 5.
 
 */
 
-void main(int,char **);
+int main(int,char **);
 void get_vis_info(struct VisInfo *,char *);
-dopus_message(int,APTR,char *);
+int dopus_message(int,APTR,char *);
 void fill_out_req(struct RequesterBase *,struct VisInfo *);
 struct Gadget *addreqgadgets(struct RequesterBase *,struct TagItem **,int,int *);
-check_error(struct RequesterBase *,char *,int);
-check_disk(struct RequesterBase *,struct IOExtTD *,char *,int);
-check_abort(struct Window *window);
-check_blank_disk(struct RequesterBase *,char *,char *);
+int check_error(struct RequesterBase *,char *,int);
+int check_disk(struct RequesterBase *,struct IOExtTD *,char *,int);
+int check_abort(struct Window *window);
+int check_blank_disk(struct RequesterBase *,char *,char *);
 void set_env(char *,struct Gadget *,int,struct DOpusListView *);
 void get_env(char *,struct Gadget *,int,struct DOpusListView *);
 void fix_listview(struct RequesterBase *,struct DOpusListView *);
 void select_device(struct DOpusListView *,char *);
-like_devices(struct DeviceNode *,struct DeviceNode *);
+int like_devices(struct DeviceNode *,struct DeviceNode *);
 void drive_motor(struct IOExtTD *,int);
 void show_sel_item(struct DOpusListView *);
 
-open_device(char *,struct DeviceHandle *);
+int open_device(char *,struct DeviceHandle *);
 void close_device(struct DeviceHandle *);
 
 char **get_device_list(struct DOpusRemember **,char *);
@@ -53,24 +53,24 @@ void sort_device_list(char **);
 struct DeviceNode *find_device(char *);
 void inhibit_drive(char *,ULONG);
 ULONG do_checksum(ULONG *);
-do_writeblock(struct IOExtTD *,APTR,ULONG);
+int do_writeblock(struct IOExtTD *,APTR,ULONG);
 void border_text(struct RequesterBase *,Object_Border *,char *);
 
 void diskop_format(struct VisInfo *,char *,int,char **);
 void show_device_info(struct RequesterBase *,Object_Border *,char *);
 void getsizestring(char *,ULONG);
 void getfloatstr(double,char *);
-do_format(struct RequesterBase *,Object_Border *,char *,char *,ULONG,char);
-do_initialise(struct IOExtTD *,char *,ULONG,ULONG,ULONG,ULONG,ULONG,ULONG);
-do_raw_format(struct RequesterBase *,Object_Border *,struct IOExtTD *,ULONG,ULONG,ULONG,ULONG,ULONG);
+int do_format(struct RequesterBase *,Object_Border *,char *,char *,ULONG,char);
+int do_initialise(struct IOExtTD *,char *,ULONG,ULONG,ULONG,ULONG,ULONG,ULONG);
+int do_raw_format(struct RequesterBase *,Object_Border *,struct IOExtTD *,ULONG,ULONG,ULONG,ULONG,ULONG);
 void write_trashcan(struct RequesterBase *,Object_Border *,char *);
 
 void diskop_diskcopy(struct VisInfo *,char *,int,char **);
 void show_diskcopy_info(struct RequesterBase *,Object_Border *,char *);
-do_diskcopy(struct RequesterBase *,Object_Border *,char *,char *,int,int,int);
+int do_diskcopy(struct RequesterBase *,Object_Border *,char *,char *,int,int,int);
 void bump_disk_name(char *);
 
 void diskop_install(struct VisInfo *,int,char **);
 void show_install_info(struct RequesterBase *,Object_Border *,char *);
-install_compare_block(ULONG *,ULONG *,ULONG);
-do_install(struct RequesterBase *,Object_Border *,char *,int,int);
+int install_compare_block(ULONG *,ULONG *,ULONG);
+int do_install(struct RequesterBase *,Object_Border *,char *,int,int);

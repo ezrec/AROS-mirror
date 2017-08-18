@@ -550,7 +550,7 @@ char *command;
                     else d=scrdata_statustext_pos;
                     break;
                 case RXSTATUS_CONFIGURATION_ADDRESS:
-                    lsprintf(buf,"%ld",config);
+                    lsprintf(buf,"%ld",(long int)config);
                     buf1=buf;
                     break;
                 case RXSTATUS_FIRST_NODE:
@@ -564,9 +564,9 @@ char *command;
                         else if (c==2) dopus_firsthotkey=(struct dopushotkey *)val;
                     }
                     else {
-                        if (c==0) lsprintf(buf,"%ld",dopus_firsttype);
-                        else if (c==1) lsprintf(buf,"%ld",dopus_firstgadbank);
-                        else if (c==2) lsprintf(buf,"%ld",dopus_firsthotkey);
+                        if (c==0) lsprintf(buf,"%ld",(long int)dopus_firsttype);
+                        else if (c==1) lsprintf(buf,"%ld",(long int)dopus_firstgadbank);
+                        else if (c==2) lsprintf(buf,"%ld",(long int)dopus_firsthotkey);
                         buf1=buf;
                     }
                     break;
@@ -574,7 +574,7 @@ char *command;
                     bank=dopus_firstgadbank;
                     for (a=0;bank && bank!=dopus_curgadbank;a++) bank=bank->next;
                     if (bank!=dopus_curgadbank) a=-1;
-                    lsprintf(buf,"%ld",a);
+                    lsprintf(buf,"%ld",(long int)a);
                     buf1=buf;
                     break;
             }

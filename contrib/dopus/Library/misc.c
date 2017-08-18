@@ -76,7 +76,7 @@ int __saveds DoRawkeyToStr(register UWORD code __asm("d0"),
             ConsoleDevice=(struct ConsoleDevice *)req->io_Device;
             inev.ie_NextEvent=NULL;
             inev.ie_Class=IECLASS_RAWKEY;
-            inev.ie_SubClass=NULL;
+            inev.ie_SubClass=0;
             inev.ie_Code=code;
             inev.ie_Qualifier=qual&(IEQUALIFIER_LSHIFT|IEQUALIFIER_RSHIFT);
             inev.ie_EventAddress=NULL;

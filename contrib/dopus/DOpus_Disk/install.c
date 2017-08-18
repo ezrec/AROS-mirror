@@ -349,7 +349,7 @@ char *name;
 	border_text(reqbase,border,infobuf);
 }
 
-install_compare_block(block,testblock,size)
+int install_compare_block(block,testblock,size)
 ULONG *block,*testblock,size;
 {
 	int a;
@@ -360,7 +360,7 @@ ULONG *block,*testblock,size;
 	return(1);
 }
 
-do_install(reqbase,border,device,noboot,forceffs)
+int do_install(reqbase,border,device,noboot,forceffs)
 struct RequesterBase *reqbase;
 Object_Border *border;
 char *device;

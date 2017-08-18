@@ -525,12 +525,12 @@ char *argv[];
 	else print_file_buffer[0]=0;
 
 	if (printdata->top_margin<1) printdata->top_margin=1;
-	lsprintf(print_topmargin_buffer,"%ld",printdata->top_margin);
-	lsprintf(print_bottommargin_buffer,"%ld",printdata->bottom_margin);
+	lsprintf(print_topmargin_buffer,"%ld",(long int)printdata->top_margin);
+	lsprintf(print_bottommargin_buffer,"%ld",(long int)printdata->bottom_margin);
 	if (printdata->left_margin<1) printdata->left_margin=1;
-	lsprintf(print_leftmargin_buffer,"%ld",printdata->left_margin);
-	lsprintf(print_rightmargin_buffer,"%ld",printdata->right_margin);
-	lsprintf(print_tabsize_buffer,"%ld",printdata->tab_size);
+	lsprintf(print_leftmargin_buffer,"%ld",(long int)printdata->left_margin);
+	lsprintf(print_rightmargin_buffer,"%ld",(long int)printdata->right_margin);
+	lsprintf(print_tabsize_buffer,"%ld",(long int)printdata->tab_size);
 
 	strcpy(output_filestring_buffer,printdata->output_file);
 

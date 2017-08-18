@@ -30,7 +30,7 @@ the existing commercial status of Directory Opus 5.
 
 #include "diskop.h"
 
-void main(argc,argv)
+int  main(argc,argv)
 int argc;
 char *argv[];
 {
@@ -175,7 +175,7 @@ char *portname;
 	}
 }
 
-dopus_message(cmd,data,portname)
+int dopus_message(cmd,data,portname)
 int cmd;
 APTR data;
 char *portname;
@@ -250,7 +250,7 @@ int mask,*count;
 
 int error_rets[]={1,0};
 
-check_error(reqbase,str,gadtxt)
+int check_error(reqbase,str,gadtxt)
 struct RequesterBase *reqbase;
 char *str;
 int gadtxt;
@@ -286,7 +286,7 @@ ULONG *sector;
 	return(sum);
 }
 
-do_writeblock(device_req,buffer,offset)
+int do_writeblock(device_req,buffer,offset)
 struct IOExtTD *device_req;
 APTR buffer;
 ULONG offset;
@@ -302,9 +302,9 @@ void inhibit_drive(device,state)
 char *device;
 ULONG state;
 {
+#if 0
 	struct MsgPort *handler;
 
-#if 0
 	if (DOSBase->dl_lib.lib_Version<36) {
 		if (handler=(struct MsgPort *)DeviceProc(device))
 			SendPacket(handler,ACTION_INHIBIT,&state,1);
@@ -382,7 +382,7 @@ char *name;
 	if (dl = LockDosList(LDF_DEVICES | LDF_READ))
 		dl = (APTR)FindDosEntry(dl,name,LDF_DEVICES);
 	UnLockDosList(LDF_DEVICES | LDF_READ);
-	return dl;
+	return (struct DeviceNode *)dl;
 #endif
 }
 
@@ -460,7 +460,7 @@ char **table;
 			}
 }
 
-check_disk(reqbase,device_req,name,prot)
+int check_disk(reqbase,device_req,name,prot)
 struct RequesterBase *reqbase;
 struct IOExtTD *device_req;
 char *name;
@@ -491,7 +491,7 @@ int prot;
 	return(1);
 }
 
-check_abort(window)
+int check_abort(window)
 struct Window *window;
 {
 	struct IntuiMessage *msg;
@@ -505,7 +505,7 @@ struct Window *window;
 	return(abort);
 }
 
-check_blank_disk(reqbase,device,action)
+int check_blank_disk(reqbase,device,action)
 struct RequesterBase *reqbase;
 char *device,*action;
 {
@@ -560,7 +560,8 @@ struct Gadget *gadget;
 int count;
 struct DOpusListView *list;
 {
-	int file,listid='LIST';
+	BPTR file;
+	int listid='LIST';
 	UWORD len;
 	char envname[80],null=0;
 
@@ -602,7 +603,8 @@ struct Gadget *firstgadget;
 int count;
 struct DOpusListView *list;
 {
-	int file,size,a,b,*lbuf;
+	BPTR file;
+	int size,a,b,*lbuf;
 	char envname[80],*nptr;
 	struct Gadget *gadget;
 	UWORD gadgettype,gadgetid,len,*buf;
@@ -705,7 +707,7 @@ char *exclude;
 	list->topitem=def;
 }
 
-like_devices(node,likenode)
+int like_devices(node,likenode)
 struct DeviceNode *node,*likenode;
 {
 	struct DosEnvec *envec,*likeenvec;
@@ -725,7 +727,7 @@ struct DeviceNode *node,*likenode;
 	return(1);
 }
 
-open_device(device,handle)
+int open_device(device,handle)
 char *device;
 struct DeviceHandle *handle;
 {

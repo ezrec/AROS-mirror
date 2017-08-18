@@ -67,7 +67,7 @@ int countlines(struct ViewData *vd)
             {
                 // We restart from last whitespace
 
-                size += (int)buf - (int)lws;
+                size += (long)buf - (long)lws;
                 buf = lws;
             }
 
@@ -262,7 +262,7 @@ int smartcountlines(struct ViewData *vd)
         {
             if (lws)
             {
-                size += (int)buf - (int)lws;
+                size += (long)buf - (long)lws;
                 buf = lws;
             }
 

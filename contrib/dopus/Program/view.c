@@ -205,7 +205,7 @@ void __saveds view_file_process()
 
   Forbid();
   for (a=0;;a++) {
-    lsprintf(portname,"DOPUS_VIEW%ld",a);
+    lsprintf(portname,"DOPUS_VIEW%ld",(long int)a);
     if (!(FindPort(portname))) break;
   }
   Permit();
@@ -354,7 +354,7 @@ D(bug("linecount = %ld\n",vdata->view_line_count));
                                                                      WA_Width,        vdata->view_char_width*vdata->view_font->tf_XSize,
                                                                      WA_Height,       vdata->view_font->tf_YSize*6, //HUX was 3
                                                                      WA_Flags,        WFLG_SMART_REFRESH | WFLG_BORDERLESS | WFLG_BACKDROP,
-                                                                     WA_CustomScreen, (Tag)vdata->view_screen,
+                                                                     WA_CustomScreen, vdata->view_screen,
                                                                      WA_AutoAdjust,   TRUE,
                                                                      TAG_END)))
                {
@@ -454,7 +454,8 @@ struct ViewData *vdata;
 int view_loadfile(struct ViewData *vdata)
  {
   struct IntuiMessage *msg;
-  int a, in, fsize;
+  BPTR in;
+  int a, fsize;
 
 /*     if ((vdata->view_file_size&15)==0)
     vdata->view_buffer_size=vdata->view_file_size+16;
@@ -1759,7 +1760,7 @@ void view_status_text(struct ViewData *vdata, char *str)
     RectFill(vdata->view_rastport,g->LeftEdge,g->TopEdge+1,g->LeftEdge+g->Width-1,g->TopEdge+g->Height-2);
 */
     GT_SetGadgetAttrs(g,vdata->view_window,NULL,
-        GTTX_Text,(Tag)buf,
+        GTTX_Text,buf,
         TAG_END);
    }
 }
@@ -1958,7 +1959,7 @@ struct ViewData *vdata;
 {
   int a,b,c,d;
 //D(bug("view_fix_scroll_gadget()\n"));
-  GT_GetGadgetAttrs(viewGadgets[VIEW_SCROLLGADGET],vdata->view_window,NULL,GTSC_Top,(Tag)&a,TAG_END);
+  GT_GetGadgetAttrs(viewGadgets[VIEW_SCROLLGADGET],vdata->view_window,NULL,GTSC_Top,&a,TAG_END);
   if (vdata->view_line_count > 0x7FFF)
    {
     b = vdata->view_line_count>>15;

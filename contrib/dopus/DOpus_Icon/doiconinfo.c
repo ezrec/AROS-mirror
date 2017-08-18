@@ -211,7 +211,7 @@ char *name;
 	struct DOpusDateTime datetime;
 	ULONG class;
 	UWORD code;
-	int a,b,x,y,gadgetid,ret,gotid=0,newdef,ttcount=0,curtt=-1,compflag=0;
+	int a,b,x,y,gadgetid,ret,gotid=0,/*newdef,*/ttcount=0,curtt=-1,compflag=0;
 	BPTR lock;
 	struct InfoData __aligned infodata;
 	struct FileInfoBlock __aligned fileinfo;
@@ -220,7 +220,7 @@ char *name;
 	struct Window *window;
 	struct RastPort *rp;
 	struct Gadget
-		*icongad,
+		//*icongad,
 		*gad,	
 		*tooltypegads=NULL,
 		*protectbitgads=NULL,
@@ -238,8 +238,8 @@ char *name;
 
 	strcpy(namebuf,name); if ((ptr=strstr(namebuf,".info"))) *ptr=0;
 	if (!(dobj=GetDiskObject(namebuf))) return(-2);
-	icongad=(struct Gadget *)&(dobj->do_Gadget);
-	oldtooltypes=dobj->do_ToolTypes;
+	//icongad=(struct Gadget *)&(dobj->do_Gadget);
+	oldtooltypes=(char **)dobj->do_ToolTypes;
 
 	switch (dobj->do_Type) {
 		case WBDISK:
@@ -428,7 +428,7 @@ char *name;
 		if (stackgad=addreqgadgets(&icon_req,temp_gadgets)) {
 			stack_buf=((struct StringInfo *)stackgad->SpecialInfo)->Buffer;
 			if (dobj->do_StackSize<4096) dobj->do_StackSize=4096;
-			lsprintf(stack_buf,"%ld",dobj->do_StackSize);
+			lsprintf(stack_buf,"%ld",(long int)dobj->do_StackSize);
 		}
 	}
 
@@ -501,13 +501,13 @@ char *name;
 
 	switch (dobj->do_Type) {
 		case WBDISK:
-			lsprintf(buf,"%ld",infodata.id_NumBlocks);
+			lsprintf(buf,"%ld",(long int)infodata.id_NumBlocks);
 			UScoreText(rp,buf,102+textxoff,40+textyoff,-1);
-			lsprintf(buf,"%ld",infodata.id_NumBlocksUsed);
+			lsprintf(buf,"%ld",(long int)infodata.id_NumBlocksUsed);
 			UScoreText(rp,buf,102+textxoff,50+textyoff,-1);
-			lsprintf(buf,"%ld",infodata.id_NumBlocks-infodata.id_NumBlocksUsed);
+			lsprintf(buf,"%ld",(long int)infodata.id_NumBlocks-infodata.id_NumBlocksUsed);
 			UScoreText(rp,buf,102+textxoff,60+textyoff,-1);
-			lsprintf(buf,"%ld",infodata.id_BytesPerBlock);
+			lsprintf(buf,"%ld",(long int)infodata.id_BytesPerBlock);
 			UScoreText(rp,buf,102+textxoff,70+textyoff,-1);
 
 			switch (infodata.id_DiskState) {
@@ -529,13 +529,13 @@ char *name;
 		case WBTOOL:
 			Move(rp,102+textxoff,40+textyoff);
 			if (gotid) {
-				lsprintf(buf,"%ld",fileinfo.fib_NumBlocks);
+				lsprintf(buf,"%ld",(long int)fileinfo.fib_NumBlocks);
 				Text(rp,buf,strlen(buf));
 			}
 			else Text(rp,"---",3);
 			Move(rp,102+textxoff,50+textyoff);
 			if (gotid) {
-				lsprintf(buf,"%ld",fileinfo.fib_Size);
+				lsprintf(buf,"%ld",(long int)fileinfo.fib_Size);
 				Text(rp,buf,strlen(buf));
 			}
 			else Text(rp,"---",3);
@@ -721,22 +721,22 @@ saveicon:
 									olddeftool=dobj->do_DefaultTool;
 									if (dobj->do_DefaultTool=
 										LAllocRemember(&icon_req.rb_memory,strlen(defaulttool_buf)+1,0)) {
-										newdef=1;
+										//newdef=1;
 										strcpy(dobj->do_DefaultTool,defaulttool_buf);
 									}
-									else newdef=0;
+									//else newdef=0;
 								}
 								if (commentgad) {
 									comment_buf[79]=0;
 									SetComment(namebuf,comment_buf);
 								}
 
-								dobj->do_ToolTypes=ttarray;
+								dobj->do_ToolTypes=(STRPTR *)ttarray;
 								PutDiskObject(namebuf,dobj);
 
 								if (defaulttoolgad) dobj->do_DefaultTool=olddeftool;
 
-								dobj->do_ToolTypes=oldtooltypes;
+								dobj->do_ToolTypes=(STRPTR *)oldtooltypes;
 								if (protectbitgads) {
 									b=15;
 									gad=protectbitgads;

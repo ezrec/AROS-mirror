@@ -419,7 +419,7 @@ char *name;
 	myproc->pr_WindowPtr=wsave;
 }
 
-do_diskcopy(reqbase,border,source,dest,verify,bump,check)
+int do_diskcopy(reqbase,border,source,dest,verify,bump,check)
 struct RequesterBase *reqbase;
 Object_Border *border;
 char *source,*dest;

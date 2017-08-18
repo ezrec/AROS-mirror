@@ -32,7 +32,7 @@ the existing commercial status of Directory Opus 5.
 
 static struct dopusgadgetbanks *currentbank,*selbank;
 
-dogadgetconfig()
+int dogadgetconfig()
 {
     ULONG class;
     UWORD code,gadgetid;
@@ -393,7 +393,7 @@ int show;
             ++a;
             bank2=bank2->next;
         }
-        lsprintf(buf,"%s %ld",cfg_string[STR_GADGET_BANK_NUMBER],a+1);
+        lsprintf(buf,"%s %ld",cfg_string[STR_GADGET_BANK_NUMBER],(long int)(a+1));
         if (paint_state) strcat(buf,cfg_string[STR_PAINT_STATE]);
         ptr=buf;
     }
@@ -424,7 +424,7 @@ struct Gadget *gadget;
     SetBPen(rp,screen_pens[0].pen);
 }
 
-makenewbank(insert)
+int makenewbank(insert)
 int insert;
 {
     struct dopusgadgetbanks *bank,*bank2;
@@ -513,7 +513,7 @@ char *str;
 static struct newdopusfunction *selmenu;
 static int menuoffset;
 
-domenuconfig()
+int domenuconfig()
 {
     ULONG class;
     UWORD code,gadgetid;
@@ -948,7 +948,7 @@ struct newdopusfunction *menu;
     }
 }
 
-doinitmenutext(id)
+int doinitmenutext(id)
 int id;
 {
     int mode=-1;

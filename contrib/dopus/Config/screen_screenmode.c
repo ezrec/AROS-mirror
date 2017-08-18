@@ -208,13 +208,13 @@ struct ScreenMode *showdisplaydesc()
     RectFill(rp,x_off+238,y_off+140,x_off+509,y_off+179);
     SetAPen(rp,screen_pens[1].pen);
     if (!(mode=getscreenmode(screenmodeview.itemselected))) return(NULL);
-    lsprintf(buf,"%-16s: %ld %s %ld",cfg_string[STR_MINIMUM_SIZE],mode->minw,cfg_string[STR_BY],mode->minh);
+    lsprintf(buf,"%-16s: %ld %s %ld",cfg_string[STR_MINIMUM_SIZE],(long int)mode->minw,cfg_string[STR_BY],(long int)mode->minh);
     UScoreText(rp,buf,x_off+240,y_off+147,-1);
-    lsprintf(buf,"%-16s: %ld %s %ld",cfg_string[STR_MAXIMUM_SIZE],mode->maxw,cfg_string[STR_BY],mode->maxh);
+    lsprintf(buf,"%-16s: %ld %s %ld",cfg_string[STR_MAXIMUM_SIZE],(long int)mode->maxw,cfg_string[STR_BY],(long int)mode->maxh);
     UScoreText(rp,buf,x_off+240,y_off+155,-1);
-    lsprintf(buf,"%-16s: %ld %s %ld",cfg_string[STR_DEFAULT_SIZE],mode->defw,cfg_string[STR_BY],mode->defh);
+    lsprintf(buf,"%-16s: %ld %s %ld",cfg_string[STR_DEFAULT_SIZE],(long int)mode->defw,cfg_string[STR_BY],(long int)mode->defh);
     UScoreText(rp,buf,x_off+240,y_off+163,-1);
-    lsprintf(buf,"%-16s: %ld",cfg_string[STR_MAXIMUM_COLORS],(1<<mode->maxdepth));
+    lsprintf(buf,"%-16s: %ld",cfg_string[STR_MAXIMUM_COLORS],(long int)(1<<mode->maxdepth));
     UScoreText(rp,buf,x_off+240,y_off+171,-1);
     return(mode);
 }
@@ -222,12 +222,12 @@ struct ScreenMode *showdisplaydesc()
 void fixmodegads(mode)
 struct ScreenMode *mode;
 {
-    lsprintf(screenwidth_buf,"%ld",config->scrw);
-    lsprintf(screenheight_buf,"%ld",config->scrh);
+    lsprintf(screenwidth_buf,"%ld",(long int)config->scrw);
+    lsprintf(screenheight_buf,"%ld",(long int)config->scrh);
     if (config->scrdepth<2) config->scrdepth+=2;
     if (config->scrdepth>((mode)?mode->maxdepth:8))
         config->scrdepth=((mode)?mode->maxdepth:8);
-    lsprintf(screendepth_buf,"%ld",(1<<config->scrdepth));
+    lsprintf(screendepth_buf,"%ld",(long int)(1<<config->scrdepth));
     if (mode && !(screenmodegads[SCREENMODE_WIDTH-300].Flags&GADGDISABLED)) {
         if (!(CheckNumGad(&screenmodegads[SCREENMODE_WIDTH-300],Window,mode->minw,mode->maxw)))
             RefreshStrGad(&screenmodegads[SCREENMODE_WIDTH-300],Window);

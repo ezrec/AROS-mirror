@@ -33,7 +33,7 @@ the existing commercial status of Directory Opus 5.
 
 #define NUM_TYPES 5
 
-editfunction(func,type,data)
+int editfunction(func,type,data)
 struct dopusfunction *func;
 int type;
 APTR data;
@@ -216,7 +216,7 @@ startedit:
                                 if (type==CFG_FILETYPE) {
                                     LStrnCpy(edit_namebuf,ftype->type,22);
                                     edit_namebuf[22]=0;
-                                    lsprintf(buf," (%ld)",curtype+1);
+                                    lsprintf(buf," (%ld)",(long int)(curtype+1));
                                     StrConcat(edit_namebuf,buf,28);
                                 }
                                 copytoclip(func,funclist,functype,flagsel);
@@ -799,7 +799,7 @@ char *buf;
     }
 }
 
-getselflags(buf)
+int getselflags(buf)
 char *buf;
 {
     int a,flags=0;
@@ -971,7 +971,7 @@ void checkswapgad()
     }
 }
 
-funcrequester(type,buf,title)
+int funcrequester(type,buf,title)
 int type;
 char *buf,*title;
 {
@@ -1240,9 +1240,9 @@ int add;
     }
     else RefreshListView(editlists,3);
     edit_funcbuf[0]=0;
-    lsprintf(edit_stackbuf,"%ld",func->stack);
-    lsprintf(edit_prioritybuf,"%ld",func->pri);
-    lsprintf(edit_delaybuf,"%ld",func->delay);
+    lsprintf(edit_stackbuf,"%ld",(long int)func->stack);
+    lsprintf(edit_prioritybuf,"%ld",(long int)func->pri);
+    lsprintf(edit_delaybuf,"%ld",(long int)func->delay);
     RefreshGList(&editfuncgadgets[6],Window,NULL,3);
     if (type==CFG_FILETYPE) RefreshGList(&editfuncgadgets[13],Window,NULL,1);
 }
@@ -1265,7 +1265,7 @@ char **funclist,**displist,*flagsel;
     makeselflags(0,flagsel);
 }
 
-fixfunctypelist(ftype)
+int fixfunctypelist(ftype)
 struct dopusfiletype *ftype;
 {
     int a,type=-1,b;

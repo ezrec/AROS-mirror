@@ -160,11 +160,11 @@ void doconfig()
 
     if (!(checkwindowquit())) return;
 
-    lsprintf(replyname,"%s%ld",config_replyport_basename,system_dopus_runcount);
+    lsprintf(replyname,"%s%ld",config_replyport_basename,(long int)system_dopus_runcount);
     if (!(conport=LCreatePort(replyname,20))) return;
 
-    lsprintf(buf,"%ld",system_dopus_runcount);
-    lsprintf(buf1,"dopus4_config%ld",system_dopus_runcount);
+    lsprintf(buf,"%ld",(long int)system_dopus_runcount);
+    lsprintf(buf1,"dopus4_config%ld",(long int)system_dopus_runcount);
 
     strcpy(funcpath,"ConfigOpus");
 
@@ -193,7 +193,7 @@ void doconfig()
     }
 
     dostatustext(globstring[STR_WAITING_FOR_PORT]);
-    lsprintf(portname,"dopus4_config_port%ld",system_dopus_runcount);
+    lsprintf(portname,"dopus4_config_port%ld",(long int)system_dopus_runcount);
     cmdport=NULL;
 
     for (a=0;a<100;a++) {
@@ -530,11 +530,11 @@ struct ViewData *vdata;
 
         if (!rexx || rexx_argcount<1 ||
             (win=atoi(rexx_args[0]))<0 || win>1) win=data_active_window;
-        lsprintf(arglistbuf,"@%ld",win);
+        lsprintf(arglistbuf,"@%ld",(long int)win);
         abase=2;
         --rexx_argcount;
     }
-    else lsprintf(arglistbuf,"!%ld",arglist);
+    else lsprintf(arglistbuf,"!%ld",(long int)arglist);
 
     args[2]=arglistbuf;
     argcount=3;

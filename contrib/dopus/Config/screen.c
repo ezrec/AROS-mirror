@@ -32,7 +32,7 @@ the existing commercial status of Directory Opus 5.
 
 char old_general_font[30];
 
-doscreenconfig()
+int doscreenconfig()
 {
     ULONG class;
     UWORD code,gadgetid,qual;
@@ -381,7 +381,7 @@ doscreenconfig()
 
                             case SCREENMODE_WIDTH:
                                 a=atoi(screenwidth_buf);
-                                if (a%2) lsprintf(screenwidth_buf,"%ld",a+1);
+                                if (a%2) lsprintf(screenwidth_buf,"%ld",(long int)(a+1));
                                 CheckNumGad(&screenmodegads[SCREENMODE_WIDTH-300],Window,curmode->minw,curmode->maxw);
                                 config->scrw=atoi(screenwidth_buf);
                                 config->scr_winw=config->scrw;
@@ -410,7 +410,7 @@ doscreenconfig()
                                     a=GetSliderPos(&screenmodegads[SCREENMODE_SLIDER-300],curmode->maxdepth-1,1)+2;
                                 if (a>curmode->maxdepth) a=curmode->maxdepth;
                                 else if (a<2) a=2;
-                                lsprintf(screendepth_buf,"%ld",(1<<a));
+                                lsprintf(screendepth_buf,"%ld",(long int)(1<<a));
                                 RefreshStrGad(&screenmodegads[SCREENMODE_DEPTH-300],Window);
                                 config->scrdepth=a;
                                 FixSliderPot(Window,&screenmodegads[SCREENMODE_SLIDER-300],config->scrdepth-2,curmode->maxdepth-1,1,2);
@@ -788,7 +788,7 @@ int mode;
                             if (!fontsizelist[a][b])
                              {
                               if (/*b>-1 &&*/ (fontsizelist[a][b]=LAllocRemember(&fontkey,8,MEMF_CLEAR)))
-                                  lsprintf(fontsizelist[a][b],"%4ld",avail[fnum].af_Attr.ta_YSize);
+                                  lsprintf(fontsizelist[a][b],"%4ld",(long int)avail[fnum].af_Attr.ta_YSize);
                               break;
                              }
 //D(bug("fontsizelist[%ld][%ld]=%lx (%s)\n",a,b,fontsizelist[a][b],fontsizelist[a][b]));

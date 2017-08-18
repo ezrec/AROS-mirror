@@ -30,7 +30,7 @@ the existing commercial status of Directory Opus 5.
 
 #include "config.h"
 
-dofiletypeconfig()
+int dofiletypeconfig()
 {
     ULONG class;
     UWORD code,gadgetid;
@@ -319,7 +319,7 @@ char **list;
     RefreshListView(&filetypeactionlist,1);
 }
 
-doinitfiletypetext(id)
+int doinitfiletypetext(id)
 int id;
 {
     int mode=-1;
@@ -352,7 +352,7 @@ struct dopusfiletype *type;
     doscreentitle(title);
 }
 
-editfiletype(type,key,new)
+int editfiletype(type,key,new)
 struct dopusfiletype *type;
 struct DOpusRemember **key;
 int new;
@@ -392,7 +392,7 @@ int new;
     return(b);
 }
 
-editclass(class,new)
+int editclass(class,new)
 struct fileclass *class;
 int new;
 {
@@ -478,9 +478,10 @@ void readfileclasses()
     FreeMem(classbuf,size);
 }
 
-importfileclasses()
+int importfileclasses()
 {
-    int in,size,pos,lsize,num,a,b,tpos,ret=0;
+    BPTR in;
+    int size,pos,lsize,num,a,b,tpos,ret=0;
     char *classbuf,**classlist,*classarray,**classtypeid,**classrecog,buf[256],buf2[256];
     struct DOpusRemember *key;
 
@@ -551,7 +552,7 @@ importfileclasses()
     return(ret);
 }
 
-savefileclasses()
+int savefileclasses()
 {
     struct fileclass *fclass;
     BPTR out;
@@ -586,7 +587,7 @@ D(bug("classname: %s\n",classname));
     return(1);
 }
 
-addfileclass(type,typeid,recog)
+int addfileclass(type,typeid,recog)
 char *type,*typeid,*recog;
 {
     struct fileclass *fclass,*newclass,*last;
@@ -663,7 +664,7 @@ struct DOpusRemember **key;
     return(list);
 }
 
-readline(buf,pos,buf1,size)
+int readline(buf,pos,buf1,size)
 char *buf;
 int pos;
 char *buf1;
@@ -684,7 +685,7 @@ int size;
     return(pos);
 }
 
-editfileclass(fclass,new)
+int editfileclass(fclass,new)
 struct fileclass *fclass;
 int new;
 {
@@ -1412,7 +1413,7 @@ void show_file_view(void)
             if (fileview_lines<=line+fileview_topline) file_view_text(NULL,line);
             else {
                 off=(fileview_topline+line)*16;
-                lsprintf(buf,"%08lx: ",off);
+                lsprintf(buf,"%08lx: ",(long unsigned int)off);
                 old=off; ox=px=-1;
                 for (a=0;a<4;a++) {
 /*                    lsprintf(buf2,"%02lx%02lx%02lx%02lx ",
@@ -1448,7 +1449,7 @@ void show_file_view(void)
                 }
                 if (ox>-1) {
                     SetAPen(rp,screen_pens[2].pen);
-                    lsprintf(buf2,"%02lx",fileview_buf[fileview_offset]);
+                    lsprintf(buf2,"%02lx",(long unsigned int)fileview_buf[fileview_offset]);
                     Move(rp,x_off+9+(10+ox)*char_w,y_off+27+(line*8));
                     Text(rp,buf2,2);
                     buf2[0]=(isprint(fileview_buf[fileview_offset])?fileview_buf[fileview_offset]:'.');
@@ -1477,8 +1478,8 @@ int num,pos;
     }
     else {
         y=y_off+39+(26*pos);
-        if (fileview_type==0) lsprintf(buf,"$%08lx",num);
-        else lsprintf(buf,"%09ld",num);
+        if (fileview_type==0) lsprintf(buf,"$%08lx",(long unsigned int)num);
+        else lsprintf(buf,"%09ld",(long int)num);
         UScoreText(rp,buf,x_off+543,y,-1);
     }
 }

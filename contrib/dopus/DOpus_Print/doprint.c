@@ -424,7 +424,7 @@ int type;
 		if (printdata->headfoot[type].headfoot_flags&HEADFOOTFLAG_PAGE) {
 			char pagebuf[20];
 
-			lsprintf(pagebuf,"%s %ld",string_table[STR_PAGE],handle->current_page);
+			lsprintf(pagebuf,"%s %ld",string_table[STR_PAGE],(long int)handle->current_page);
 
 			a=leftoffset+(handle->paper_width-strlen(pagebuf)-1);
 			CopyMem(pagebuf,&handle->buffer[a],strlen(pagebuf));
@@ -543,7 +543,7 @@ struct PrintHandle *handle;
 	if (!handle->total_pos || !handle->filesize) percent=0;
 	else percent=((float)((float)handle->total_pos/(float)handle->filesize))*100;
 
-	lsprintf(buf,"%3ld%% %s ",(int)percent,string_table[STR_COMPLETE]);
+	lsprintf(buf,"%3ld%% %s ",(long int)percent,string_table[STR_COMPLETE]);
 	print_status(handle,buf,handle->progress_y);
 }
 

@@ -303,7 +303,7 @@ UWORD ownerid,groupid;
               strcpy(newentry->dispstr,dispstr);
 //            else return(0);
         }
-        lsprintf(newentry->name,"%ld",dir->total);
+        lsprintf(newentry->name,"%ld",(long int)dir->total);
     }
     else {
         LStrnCpy(newentry->name,name,FILEBUF_SIZE-2);
