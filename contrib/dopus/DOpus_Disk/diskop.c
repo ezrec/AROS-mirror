@@ -561,7 +561,7 @@ int count;
 struct DOpusListView *list;
 {
 	BPTR file;
-	int listid='LIST';
+	int listid=MAKE_ID('L','I','S','T'); // FIXME: endiannes?
 	UWORD len;
 	char envname[80],null=0;
 
@@ -625,7 +625,7 @@ struct DOpusListView *list;
 
 	for (a=0;a<size/2;) {
 		lbuf=(int *)&buf[a];
-		if (lbuf[0]=='LIST') {
+		if (lbuf[0]==MAKE_ID('L','I','S','T')) { // FIXME: endiannes?
 			a+=2;
 			nptr=(char *)&buf[a];
 			if (list) {

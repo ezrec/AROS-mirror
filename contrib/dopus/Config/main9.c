@@ -53,7 +53,7 @@ void readhelp()
     if (in=Open(helpfilename,MODE_OLDFILE))
      {
       Read(in, &id, 4);
-      if ((id == 'PX20') || (id == 'PP11') || (id == 'PP20'))
+      if ((id == MAKE_ID('P','X','2','0')) || (MAKE_ID(id == 'P','P','1','1')) || (MAKE_ID(id == 'P','P','2','0'))) // FIXME: endiannes?
        {
 #ifndef __AROS__
         struct PPBase *PPBase;
