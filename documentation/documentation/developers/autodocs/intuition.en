@@ -1237,8 +1237,8 @@ Function
 
      Deletes a BOOPSI object. All memory associated with the object
      is freed. The object must have been created with NewObject().
-     Some object contain other object which might be freed as well
-     when this function is used on the "parent" while others might
+     Some objects contain other objects which might be freed as well
+     when this function is used on the "parent", while others might
      also contain children but won't free them. Read the documentation
      of the class carefully to find out how it behaves.
 
@@ -1262,7 +1262,7 @@ Notes
 ~~~~~
 ::
 
-     This functions sends OM_DISPOSE to the oejct.
+     This functions sends OM_DISPOSE to the object.
 
 
 

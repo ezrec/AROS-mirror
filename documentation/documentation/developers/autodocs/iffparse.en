@@ -180,25 +180,33 @@ Function
 ~~~~~~~~
 ::
 
-     Completes a read or write session by closing the IFF handle.
-     The IFFHandle struct is ready for reuse in another session,
-     it's just to open it again with OpenIFF(). This function
-     also automatically cleans up if a read or write fails halfway through.
+ Completes a read or write session by closing the IFF handle.
+ The IFFHandle struct is ready for reuse in another session,
+ it's just to open it again with OpenIFF(). This function
+ also automatically cleans up if a read or write fails halfway through.
 
 
 Inputs
 ~~~~~~
 ::
 
-     iff - Pointer to an IFFhandle struct previously opened with OpenIFF()
+ iff - Pointer to an IFFhandle struct previously opened with OpenIFF()
 
 
 Notes
 ~~~~~
 ::
 
-     This function tells the custom stream handler to clean up
-     by sending it a IFFCMD_CLEANUP IFFStreamCmd.
+ This function tells the custom stream handler to clean up
+ by sending it a IFFCMD_CLEANUP IFFStreamCmd.
+
+
+Bugs
+~~~~
+::
+
+ Errors during writing of any of the remaining chunks are just 
+ ignored and both the faulty and all following chunks are not written.
 
 
 
