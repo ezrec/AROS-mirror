@@ -298,7 +298,7 @@ struct DOpusRemember **key;
     LFreeRemember(key);
     type=firsttype;
     for (count=0;type;count++,type=type->next);
-    if (!(list=LAllocRemember(key,(count+1)*4,MEMF_CLEAR))) return(NULL);
+    if (!(list=LAllocRemember(key,(count+1)*sizeof(APTR),MEMF_CLEAR))) return(NULL);
     type=firsttype;
     for (a=0;a<count;a++) {
         if (list[a]=LAllocRemember(key,60,MEMF_CLEAR)) {
@@ -513,9 +513,9 @@ int importfileclasses()
     for (a=0,num=0;a<size;a++) if (!classbuf[a]) ++num;
     num/=2;
 
-    if ((classlist=LAllocRemember(&key,(num+1)*4,MEMF_CLEAR)) &&
-        (classtypeid=LAllocRemember(&key,(num+1)*4,MEMF_CLEAR)) &&
-        (classrecog=LAllocRemember(&key,(num+1)*4,MEMF_CLEAR)) &&
+    if ((classlist=LAllocRemember(&key,(num+1)*sizeof(APTR),MEMF_CLEAR)) &&
+        (classtypeid=LAllocRemember(&key,(num+1)*sizeof(APTR),MEMF_CLEAR)) &&
+        (classrecog=LAllocRemember(&key,(num+1)*sizeof(APTR),MEMF_CLEAR)) &&
         (classarray=LAllocRemember(&key,num+1,MEMF_CLEAR))) {
         pos=0; a=0;
         FOREVER {
@@ -658,7 +658,7 @@ struct DOpusRemember **key;
     if (!firstclass) return(NULL);
     fclass=firstclass;
     for (count=0;fclass;count++,fclass=fclass->next);
-    if (!(list=LAllocRemember(key,(count+1)*4,MEMF_CLEAR))) return(NULL);
+    if (!(list=LAllocRemember(key,(count+1)*sizeof(APTR),MEMF_CLEAR))) return(NULL);
     fclass=firstclass;
     for (a=0;a<count;a++) {
         if (list[a]=LAllocRemember(key,40,MEMF_CLEAR)) strcpy(list[a],fclass->type);
@@ -1167,7 +1167,7 @@ char **classlist,*classtype;
 int entry;
 {
     if (entry<MAXFUNCS-1) {
-        CopyMem(&classlist[entry+1],&classlist[entry],(MAXFUNCS-1-entry)*4);
+        CopyMem(&classlist[entry+1],&classlist[entry],(MAXFUNCS-1-entry)*sizeof(APTR));
         CopyMem(&classtype[entry+1],&classtype[entry],(MAXFUNCS-1-entry));
     }
     classlist[MAXFUNCS-1]=NULL;

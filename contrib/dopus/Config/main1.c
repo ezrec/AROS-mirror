@@ -846,7 +846,7 @@ int make;
         for (count=3,type=firsttype;type;count++,type=type->next) {
             if (LStrCmpI(type->type,"Default")==0) --count;
         }
-        if (iconlistview.items=LAllocRemember(&key,(count+1)*4,MEMF_CLEAR)) {
+        if (iconlistview.items=LAllocRemember(&key,(count+1)*sizeof(APTR),MEMF_CLEAR)) {
             for (a=0;a<3;a++) iconlistview.items[a]=icontypes[a];
             if (config->drawericon[0]) icontypes[0][1]='*'; else icontypes[0][1]=' ';
             if (config->toolicon[0]) icontypes[1][1]='*'; else icontypes[1][1]=' ';

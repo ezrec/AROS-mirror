@@ -121,7 +121,7 @@ int __saveds DoDoSimpleRequest(register struct Window *window __asm("a0"),
         !(newwindow=(struct NewWindow *)DoAllocRemember(&key,sizeof(struct NewWindow),MEMF_CLEAR)) ||
         !(gadgets=(struct Gadget *)DoAllocRemember(&key,sizeof(struct Gadget)*(num+1),MEMF_CLEAR)) ||
         !(contgad=(struct Gadget *)DoAllocRemember(&key,sizeof(struct Gadget),MEMF_CLEAR)) ||
-        !(gadptr=(char **)DoAllocRemember(&key,(num+hnum+1)*4,MEMF_CLEAR)) ||
+        !(gadptr=(char **)DoAllocRemember(&key,(num+hnum+1)*sizeof(APTR),MEMF_CLEAR)) ||
         !(buf=(char *)DoAllocRemember(&key,sw+2,0))) {
         DoFreeRemember(&key);
         return(0);

@@ -415,7 +415,7 @@ char *alike;
 //        devnode=(struct DeviceNode *) BADDR(devnode->dn_Next);
     }
           
-    if ((listtable=LAllocRemember(key,count*4,MEMF_CLEAR))) {
+    if ((listtable=LAllocRemember(key,count*sizeof(APTR),MEMF_CLEAR))) {
         devnode = (struct DeviceNode *)LockDosList(LDF_READ | LDF_DEVICES);
 //        devnode=(struct DeviceNode *) BADDR(dosinfo->di_DevInfo);
         count=0;

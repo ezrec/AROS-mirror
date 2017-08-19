@@ -207,7 +207,7 @@ void makehotkeylist()
         hotkey=hotkey->next;
     }
     if (count &&
-        (hotkeylist=LAllocRemember(&hkey,(count+1)*4,MEMF_CLEAR)) &&
+        (hotkeylist=LAllocRemember(&hkey,(count+1)*sizeof(APTR),MEMF_CLEAR)) &&
         (buf=LAllocRemember(&hkey,count*80,MEMF_CLEAR))) {
         hotkey=firsthotkey;
         for (a=0;a<count;a++) {

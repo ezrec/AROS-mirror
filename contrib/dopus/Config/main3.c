@@ -931,7 +931,7 @@ int selitem;
 
     if (selitem>-1) {
         if (selitem<MAXFUNCS-1) {
-            CopyMem(&funclist[selitem+1],&funclist[selitem],(MAXFUNCS-1-selitem)*4);
+            CopyMem(&funclist[selitem+1],&funclist[selitem],(MAXFUNCS-1-selitem)*sizeof(APTR));
             CopyMem(&functype[selitem+1],&functype[selitem],(MAXFUNCS-1-selitem));
             for (a=selitem;a<MAXFUNCS-1;a++)
                 makedispfunc(funclist[a],functype[a],displist[a]);

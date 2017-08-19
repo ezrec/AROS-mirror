@@ -937,7 +937,7 @@ int __saveds DoFileRequest(register struct DOpusFileReq *freq __asm("a0"))
                     }
                     if (freq->flags&DFRF_MULTI && fr->fr_NumArgs>0) {
                         if ((freq->filearray=
-                            DoAllocRemember(&freq->filearraykey,(fr->fr_NumArgs+1)*4,MEMF_CLEAR))) {
+                            DoAllocRemember(&freq->filearraykey,(fr->fr_NumArgs+1)*sizeof(APTR),MEMF_CLEAR))) {
                             for (a=0;a<fr->fr_NumArgs;a++) {
                                 if (freq->filearray[a]=DoAllocRemember(&freq->filearraykey,
                                     strlen(fr->fr_ArgList[a].wa_Name)+1,MEMF_CLEAR)) {

@@ -665,7 +665,7 @@ int flag,flag2;
     if (!num) return;
 
     if (!(tickgad=LAllocRemember(&tickkey,sizeof(struct Gadget)*num,MEMF_CLEAR)) ||
-        !(namearray=LAllocRemember(&tickkey,num*4,MEMF_CLEAR))) return;
+        !(namearray=LAllocRemember(&tickkey,num*sizeof(APTR),MEMF_CLEAR))) return;
 
     y=y_off+46;
     lasty=y;

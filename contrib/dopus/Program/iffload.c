@@ -384,7 +384,7 @@ D(bug("viewmode(0) = %08lx\n",viewmode));
         numcolours=coloursize/3;
 
         if (/*system_version2>=OSVER_39 &&*/ !specialformat)
-            colourtable_8=LAllocRemember(&iffkey,(coloursize+2)*4,MEMF_CLEAR);
+            colourtable_8=LAllocRemember(&iffkey,(coloursize+2)*sizeof(APTR),MEMF_CLEAR);
 
         colourtable_4=LAllocRemember(&iffkey,numcolours*sizeof(UWORD),MEMF_CLEAR);
     }

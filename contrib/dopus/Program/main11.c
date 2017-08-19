@@ -160,7 +160,7 @@ int louise,buttons,banknum;
             ++bankcount;
             bank=bank->next;
         }
-        if ((bankarray=LAllocRemember(&icon_key,bankcount*4,MEMF_CLEAR))) {
+        if ((bankarray=LAllocRemember(&icon_key,bankcount*sizeof(APTR),MEMF_CLEAR))) {
             bank=dopus_firstgadbank;
             for (a=0;a<bankcount;a++) {
                 bankarray[a]=bank;

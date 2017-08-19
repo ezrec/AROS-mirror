@@ -145,7 +145,7 @@ D(bug("dohelpmsg: %s\n",text));
         }
         else buf[a]=text[a];
     }
-    if (!(helpbuf=LAllocRemember(&key,(lines+2)*4,MEMF_CLEAR))) {
+    if (!(helpbuf=LAllocRemember(&key,(lines+2)*sizeof(APTR),MEMF_CLEAR))) {
         LFreeRemember(&key);
         return;
     }

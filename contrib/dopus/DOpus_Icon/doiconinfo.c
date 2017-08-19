@@ -543,7 +543,7 @@ char *name;
 		case WBDRAWER:
 			if ((ttarray=oldtooltypes)) {
 				for (ttcount=0;;ttcount++) if (!ttarray[ttcount]) break;
-				if (ttarray=AllocMem((ttcount+1)*4,MEMF_CLEAR)) {
+				if (ttarray=AllocMem((ttcount+1)*sizeof(APTR),MEMF_CLEAR)) {
 					for (a=0;a<ttcount;a++) {
 						if (oldtooltypes[a] &&
 							(ttarray[a]=AllocMem(strlen(oldtooltypes[a])+1,0)))
@@ -646,7 +646,7 @@ hiliteimage:
 deletettype:
 								if (ttcount>0 && curtt>-1 && curtt<ttcount && tooltypelist) {
 									if (ttarray) {
-										if (ttcount>1 && !(tttemp=AllocMem(ttcount*4,MEMF_CLEAR)))
+										if (ttcount>1 && !(tttemp=AllocMem(ttcount*sizeof(APTR),MEMF_CLEAR)))
 											break;
 										if (ttarray[curtt]) FreeMem(ttarray[curtt],strlen(ttarray[curtt])+1);
 										if (ttcount==1) {
@@ -654,11 +654,11 @@ deletettype:
 											ttarray=NULL;
 											goto deletedtype;
 										}
-										if (curtt>0) CopyMem((char *)ttarray,(char *)tttemp,curtt*4);
+										if (curtt>0) CopyMem((char *)ttarray,(char *)tttemp,curtt*sizeof(APTR));
 										if (curtt<(ttcount-1))
 											CopyMem((char *)&ttarray[curtt+1],(char *)&tttemp[curtt],
-												(ttcount-1-curtt)*4);
-										FreeMem(ttarray,(ttcount+1)*4); ttarray=tttemp;
+												(ttcount-1-curtt)*sizeof(APTR));
+										FreeMem(ttarray,(ttcount+1)*sizeof(APTR)); ttarray=tttemp;
 									}
 deletedtype:
 									tooltypelist->items=ttarray;
@@ -676,10 +676,10 @@ deletedtype:
 									RefreshStrGad(tooltypegads,window);
 								}
 								else if (tooltypelist) {
-									if (!(tttemp=AllocMem((ttcount+2)*4,MEMF_CLEAR))) break;
+									if (!(tttemp=AllocMem((ttcount+2)*sizeof(APTR),MEMF_CLEAR))) break;
 									if (ttarray) {
-										CopyMem((char *)ttarray,(char *)tttemp,ttcount*4);
-										FreeMem(ttarray,(ttcount+1)*4);
+										CopyMem((char *)ttarray,(char *)tttemp,ttcount*sizeof(APTR));
+										FreeMem(ttarray,(ttcount+1)*sizeof(APTR));
 									}
 									ttarray=tttemp;
 									curtt=ttcount++;
@@ -782,7 +782,7 @@ endreq:
 		for (a=0;a<ttcount;a++) {
 			if (ttarray[a]) FreeMem(ttarray[a],strlen(ttarray[a])+1);
 		}
-		FreeMem(ttarray,(ttcount+1)*4);
+		FreeMem(ttarray,(ttcount+1)*sizeof(APTR));
 	}
 	if (tooltypelist) RemoveListView(tooltypelist,1);
 	if (small) ClearMenuStrip(window);

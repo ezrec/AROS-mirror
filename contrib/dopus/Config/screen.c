@@ -670,7 +670,7 @@ int mode;
             screenmodeview.itemselected=-1; wclone=0;
             busy();
             if ((a=initscreenmodes()) &&
-                (screenmodelist=LAllocRemember(&screenkey,(a+1)*4,MEMF_CLEAR))) {
+                (screenmodelist=LAllocRemember(&screenkey,(a+1)*sizeof(APTR),MEMF_CLEAR))) {
                 screenmode=firstmode;
                 for (b=0;b<a;b++) {
                     if (screenmodelist[b]=LAllocRemember(&screenkey,DISPLAYNAMELEN,MEMF_CLEAR))
@@ -741,15 +741,15 @@ int mode;
                 if (!fontdatabuf) break;
                 num=((struct AvailFontsHeader *)fontdatabuf)->afh_NumEntries;
                 if (!num ||
-                    !(fontlist=LAllocRemember(&fontkey,(num+1)*4,MEMF_CLEAR)) ||
-                    !(fontsizelist=LAllocRemember(&fontkey,(num+1)*4,MEMF_CLEAR)))
+                    !(fontlist=LAllocRemember(&fontkey,(num+1)*sizeof(APTR),MEMF_CLEAR)) ||
+                    !(fontsizelist=LAllocRemember(&fontkey,(num+1)*sizeof(APTR),MEMF_CLEAR)))
                     break;
-                if (!(noproplist=LAllocRemember(&fontkey,(num+1)*4,MEMF_CLEAR)) ||
+                if (!(noproplist=LAllocRemember(&fontkey,(num+1)*sizeof(APTR),MEMF_CLEAR)) ||
                     !(nopropsizelist=LAllocRemember(&fontkey,(num+1)*4,MEMF_CLEAR))) {
                     noproplist=fontlist;
                     nopropsizelist=fontsizelist;
                 }
-                if (!(only8list=LAllocRemember(&fontkey,(num+1)*4,MEMF_CLEAR)))
+                if (!(only8list=LAllocRemember(&fontkey,(num+1)*sizeof(APTR),MEMF_CLEAR)))
                     only8list=fontlist;
                 avail=(struct AvailFonts *)&fontdatabuf[sizeof(UWORD)];
                 sortfontlist(avail,num,0);
@@ -771,7 +771,7 @@ int mode;
                     }
                     if (a==fontnum) {
                         fontlist[fontnum]=(char *)avail[fnum].af_Attr.ta_Name;
-                        fontsizelist[fontnum]=LAllocRemember(&fontkey,(avail[fnum].af_Attr.ta_Style+1)*4,MEMF_CLEAR);
+                        fontsizelist[fontnum]=LAllocRemember(&fontkey,(avail[fnum].af_Attr.ta_Style+1)*sizeof(APTR),MEMF_CLEAR);
                         if (!(avail[fnum].af_Attr.ta_Flags&FPF_PROPORTIONAL)) {
                             noproplist[nopropnum]=fontlist[fontnum];
                             nopropsizelist[nopropnum]=fontsizelist[fontnum];
