@@ -150,7 +150,7 @@ namespace GenNS
       static bool       CleanUp(void);
    };
 };
-
+#define DEBUG
 #if defined( DEBUG ) 
 #define _D(l, a, b...)        __dbg->DoAsync(l, a, SIZEARRAY(b), 0, 0)
 #define _DD(a,b)              __dbg->DoAsync(Lvl_Dump, 0, 0, a, b)

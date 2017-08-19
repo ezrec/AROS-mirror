@@ -20,9 +20,9 @@ int main(void)
         for (i = 0; i < 1000; i++)
         {
             bytes = WriteLineAsync(write_fh, line);
-            printf("%d bytes written.\n", bytes);
+            printf("%d bytes written.\n", (int)bytes);
             bytes = WriteCharAsync(write_fh,'\n');
-            printf("%d byte written.\n", bytes);
+            printf("%d byte written.\n", (int)bytes);
         }
         CloseAsync(write_fh);
     }

@@ -1352,6 +1352,8 @@ static VOID SetVersionStrings(struct DiskSpeed *global)
 
 #if defined(__PPC__)
 	strcpy( global->CPU_Type,"PPC" );
+#elseif defined(__m68k__)
+	strcpy( global->CPU_Type,"m68k" );
 #else
 	strcpy( global->CPU_Type,"i386" );
 #endif

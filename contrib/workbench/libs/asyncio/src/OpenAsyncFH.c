@@ -6,7 +6,7 @@ AS_OpenAsyncFH( BPTR handle, OpenModes mode, LONG bufferSize, BOOL closeIt )
 {
 	struct FileHandle	*fh;
 	AsyncFile		*file = NULL;
-	BPTR	lock = NULL;
+	BPTR	lock = BNULL;
 	LONG	blockSize, blockSize2;
 	D_S( struct InfoData, infoData );
 
@@ -35,7 +35,7 @@ AS_OpenAsyncFH( BPTR handle, OpenModes mode, LONG bufferSize, BOOL closeIt )
 						Close( handle );
 					}
 
-					handle = NULL;
+					handle = BNULL;
 				}
 			}
 		}
