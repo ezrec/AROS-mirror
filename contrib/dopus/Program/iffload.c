@@ -131,11 +131,11 @@ static inline void dotitle(struct BitMapHeader *bmhd)
     getcolstring(cols);
     getviewmodes(modes);
     lsprintf(title,"%ld x %ld x %ld (page %ld x %ld) %s cols (%s)",
-        bmhd->bmh_Width,
-        bmhd->bmh_Height,
-        bmhd->bmh_Depth,
-        bmhd->bmh_PageWidth,
-        bmhd->bmh_PageHeight,
+        (long int)bmhd->bmh_Width,
+        (long int)bmhd->bmh_Height,
+        (long int)bmhd->bmh_Depth,
+        (long int)bmhd->bmh_PageWidth,
+        (long int)bmhd->bmh_PageHeight,
         cols,modes);
     dostatustext(title);
 }
@@ -1383,7 +1383,7 @@ char *str;
         if (bmhd.bmh_Depth==8) strcpy(str,"256K");
         else strcpy(str,"4096");
     }
-    else lsprintf(str,"%ld",1<<bmhd.bmh_Depth);
+    else lsprintf(str,"%ld",(long int)(1<<bmhd.bmh_Depth));
 }
 
 void gfxprint(wind,rast,x,y,w,h,iff)
@@ -1530,8 +1530,8 @@ D(bug("Print screen ModeID: %lx\n",class));
 
         lsprintf(buf,"%12s : %ld x %ld",
             globstring[STR_IMAGE_SIZE],
-            bmhd.bmh_Width,
-            bmhd.bmh_Height);
+            (long int)bmhd.bmh_Width,
+            (long int)bmhd.bmh_Height);
         iffinfotxt(prp,buf,7,35+goff);
 
         if (anim.first_frame) {
@@ -1539,49 +1539,49 @@ D(bug("Print screen ModeID: %lx\n",class));
             else fnum=anim.framenum-1;
             lsprintf(buf,"%12s : %ld %s %ld @ %ld/sec",
                 globstring[STR_NUM_FRAMES],
-                fnum,
+                (long int)fnum,
                 globstring[STR_OF],
-                anim.framecount+(1-got_dpan),
-                anim.framespersec);
+                (long int)(anim.framecount+(1-got_dpan)),
+                (long int)anim.framespersec);
             iffinfotxt(prp,buf,7,43+goff);
 
             lsprintf(buf,"%12s : ANIM Op %ld",
                 globstring[STR_ANIM_TYPE],
-                anim.type);
+                (long int)anim.type);
             iffinfotxt(prp,buf,7,51+goff);
 
             lsprintf(title,"IFF ANIM : %s   %s %ld %s %ld   %ld x %ld x %s\n\n",
                 ptr,
                 globstring[STR_FRAME],
-                fnum,
+                (long int)fnum,
                 globstring[STR_OF],
-                anim.framecount+1,
-                bmhd.bmh_Width,
-                bmhd.bmh_Height,
+                (long int)(anim.framecount+1),
+                (long int)bmhd.bmh_Width,
+                (long int)bmhd.bmh_Height,
                 cols);
         }
         else {
             lsprintf(buf,"%12s : %ld x %ld",
                 globstring[STR_PAGE_SIZE],
-                bmhd.bmh_PageWidth,
-                bmhd.bmh_PageHeight);
+                (long int)bmhd.bmh_PageWidth,
+                (long int)bmhd.bmh_PageHeight);
             iffinfotxt(prp,buf,7,43+goff);
 
             lsprintf(buf,"%12s : %ld x %ld",
                 globstring[STR_SCREEN_SIZE],
-                iffscreen->Width,
-                iffscreen->Height);
+                (long int)iffscreen->Width,
+                (long int)iffscreen->Height);
             iffinfotxt(prp,buf,7,51+goff);
 
             lsprintf(title,"IFF ILBM : %s   %ld x %ld x %s\n\n",
                 ptr,
-                bmhd.bmh_Width,
-                bmhd.bmh_Height,
+                (long int)bmhd.bmh_Width,
+                (long int)bmhd.bmh_Height,
                 cols);
         }
         lsprintf(buf,"%12s : %ld",
             globstring[STR_DEPTH],
-            bmhd.bmh_Depth);
+            (long int)bmhd.bmh_Depth);
         iffinfotxt(prp,buf,7,67+goff);
 
         lsprintf(buf,"%12s : %s",
@@ -1608,14 +1608,14 @@ D(bug("Print screen ModeID: %lx\n",class));
 
         lsprintf(buf,"%12s : %ld",
             globstring[STR_FONT_SIZE],
-            show_global_font->tf_YSize);
+            (long int)show_global_font->tf_YSize);
         iffinfotxt(prp,buf,7,35+goff);
 
         lsprintf(buf,"%12s : %ld (%ld - %ld)",
             globstring[STR_NUM_CHARS],
-            (show_global_font->tf_HiChar-show_global_font->tf_LoChar)+1,
-            show_global_font->tf_LoChar,
-            show_global_font->tf_HiChar);
+            (long int)((show_global_font->tf_HiChar-show_global_font->tf_LoChar)+1),
+            (long int)show_global_font->tf_LoChar,
+            (long int)show_global_font->tf_HiChar);
         iffinfotxt(prp,buf,7,51+goff);
 
         lsprintf(buf,"%12s :",
@@ -1637,10 +1637,10 @@ D(bug("Print screen ModeID: %lx\n",class));
         iffinfotxt(prp,buf,7,75+goff);
 
         lsprintf(title,"Font : %s/%ld   %ld chars (%ld - %ld)\n\n",
-            fontname,show_global_font->tf_YSize,
-            (show_global_font->tf_HiChar-show_global_font->tf_LoChar)+1,
-            show_global_font->tf_LoChar,
-            show_global_font->tf_HiChar);
+            fontname,(long int)show_global_font->tf_YSize,
+            (long int)((show_global_font->tf_HiChar-show_global_font->tf_LoChar)+1),
+            (long int)show_global_font->tf_LoChar,
+            (long int)show_global_font->tf_HiChar);
     }
     else if (show_global_icon) {
         lsprintf(buf,"%12s : %s",

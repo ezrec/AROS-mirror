@@ -528,7 +528,7 @@ functionloop:
                     file->userdata2=blocksize;
                     setdirsize(file,dos_global_bytecount,act);
                     refreshwindow(act,0);
-D({char p[256]; unsigned long long s=0; ULONG f=0; strcpy(p,sourcename); getdircontentsinfo(p,&s,&f); sprintf(p,"size: %qd, files: %ld\n",s,f); bug("%s",p);})
+D({char p[256]; unsigned long long s=0; ULONG f=0; strcpy(p,sourcename); getdircontentsinfo(p,&s,&f); sprintf(p,"size: %qd, files: %ld\n",s,(long int)f); bug("%s",p);})
                 }
                 if (file->type>=ENTRY_DIRECTORY) data+=file->userdata+1;
                 else {

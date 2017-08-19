@@ -148,7 +148,7 @@ getnewdisk:
                         b=strlen(buf1);
                         lsprintf(buf,"%ld",(long int)infodata.id_NumBlocks);
                         lsprintf(formstr,"%%%lds %s; %%%ldld %s; %%s",
-                            b,globstring[STR_DISKINFO_BYTES],
+                            (long int)b,globstring[STR_DISKINFO_BYTES],
                             strlen(buf),globstring[STR_DISKINFO_BLOCKS]);
                         getsizestring(buf,a);
                         lsprintf(disktxt[2],formstr,buf1,infodata.id_NumBlocks,buf);

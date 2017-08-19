@@ -372,7 +372,7 @@ D(bug("linecount = %ld\n",vdata->view_line_count));
                   for (a=0;a<MAXTABS;a++) view_console_unit->cu_TabStops[a]=a*config->tabsize;
                   view_console_unit->cu_TabStops[MAXTABS-1]=0xffff;
 
-                  lsprintf(buf,"\x9b\x30\x20\x70\x9b%ld\x75\x9b%ld\x74",vdata->view_max_line_length+1,vdata->view_lines_per_screen); //turn off cursor, set line length, set page height
+                  lsprintf(buf,"\x9b\x30\x20\x70\x9b%ld\x75\x9b%ld\x74",(long int)(vdata->view_max_line_length+1),(long int)vdata->view_lines_per_screen); //turn off cursor, set line length, set page height
                   view_print(vdata,buf,1,strlen(buf));
 
                   vdata->view_max_line_length=255;
@@ -1893,9 +1893,9 @@ int line;
     buf3[8],buf3[9],buf3[10],buf3[11],buf3[12],buf3[13],buf3[14],buf3[15],
     buf2);*/
   lsprintf((char *)textbuf,
-    "%08lx: %08lx %08lx %08lx %08lx %s\n",line*16,
-    AROS_LONG2BE(((long *)hex)[0]),AROS_LONG2BE(((long *)hex)[1]),
-    AROS_LONG2BE(((long *)hex)[2]),AROS_LONG2BE(((long *)hex)[3]),buf2);
+    "%08lx: %08lx %08lx %08lx %08lx %s\n",(long unsigned int)(line*16),
+    (long unsigned int)AROS_LONG2BE(((long *)hex)[0]),(long unsigned int)AROS_LONG2BE(((long *)hex)[1]),
+    (long unsigned int)AROS_LONG2BE(((long *)hex)[2]),(long unsigned int)AROS_LONG2BE(((long *)hex)[3]),buf2);
 
   if (c>-1) {
     for (b=c;b<46;b++)

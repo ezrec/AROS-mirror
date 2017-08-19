@@ -855,17 +855,17 @@ void __saveds clocktask()
   s = (config->scrclktype&SCRCLOCK_BYTES)?1:0;
 
   if (config->scrclktype&SCRCLOCK_C_AND_F) {
-    lsprintf(memstring,"%lc:%%-%ldld%s",globstring[STR_CLOCK_CHIP][0],chipnum+m,Kstr+s);
+    lsprintf(memstring,"%lc:%%-%ldld%s",globstring[STR_CLOCK_CHIP][0],(long int)(chipnum+m),Kstr+s);
     if (fastnum>1) {
-      lsprintf(memstring+strlen(memstring),"%lc:%%-%ldld%s",globstring[STR_CLOCK_FAST][0],fastnum+m,Kstr+s);
-      lsprintf(memstring+strlen(memstring),"%lc:%%-%ldld%s",globstring[STR_CLOCK_TOTAL][0],a+m,Kstr+s);
+      lsprintf(memstring+strlen(memstring),"%lc:%%-%ldld%s",globstring[STR_CLOCK_FAST][0],(long int)(fastnum+m),Kstr+s);
+      lsprintf(memstring+strlen(memstring),"%lc:%%-%ldld%s",globstring[STR_CLOCK_TOTAL][0],(long int)(a+m),Kstr+s);
     }
   }
   else {
-    lsprintf(memstring,"%s%%-%ldld%s",globstring[STR_CLOCK_CHIP],chipnum+m,Kstr+s);
+    lsprintf(memstring,"%s%%-%ldld%s",globstring[STR_CLOCK_CHIP],(long int)(chipnum+m),Kstr+s);
     if (fastnum>1) {
-      lsprintf(memstring+strlen(memstring),"%s%%-%ldld%s",globstring[STR_CLOCK_FAST],fastnum+m,Kstr+s);
-      lsprintf(memstring+strlen(memstring),"%s%%-%ldld%s",globstring[STR_CLOCK_TOTAL],a+m,Kstr+s);
+      lsprintf(memstring+strlen(memstring),"%s%%-%ldld%s",globstring[STR_CLOCK_FAST],(long int)(fastnum+m),Kstr+s);
+      lsprintf(memstring+strlen(memstring),"%s%%-%ldld%s",globstring[STR_CLOCK_TOTAL],(long int)(a+m),Kstr+s);
     }
   }
 
