@@ -76,7 +76,7 @@ int install_arbiter()
         CreateNewProc(arbiter_tags)->pr_MsgPort);
 #else
 #ifdef __AROS__
-        CreateNewProcTags(NP_Name,(Tag)"dopus_arbiter",NP_Priority,0,
+        CreateNewProcTags(NP_Name,"dopus_arbiter",NP_Priority,0,
             NP_Entry,arbiter_process,NP_StackSize,AROS_STACKSIZE,
             TAG_END);
 #else

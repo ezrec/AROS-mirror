@@ -275,7 +275,7 @@ struct Window *window;
     else request->flags&=~SRF_BORDERS;
 
     request->flags|=SRF_RECESSHI|SRF_EXTEND;
-    request->value=(int)&requester_stringex;
+    request->value=(long)&requester_stringex;
     fix_stringex(&requester_stringex);
 
     a=DoSimpleRequest(win,request);

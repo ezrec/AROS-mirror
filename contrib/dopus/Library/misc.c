@@ -173,7 +173,7 @@ void __saveds DoDecode_RLE(register char *source __asm("a0"),
     }
 }
 
-const static struct TagItem
+static struct TagItem
     busytags[2]={
         {WA_BusyPointer,1},
         {TAG_DONE,0}};

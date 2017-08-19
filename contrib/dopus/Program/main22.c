@@ -1444,7 +1444,7 @@ D(bug("viewfile() returned %ld\n",a));
                 getprot(temp,file->protbuf);
                 if (file->type>=ENTRY_DIRECTORY) {
                     protstuff[0]=data; protstuff[1]=mask;
-                    if ((a=recursedir(sourcename,NULL,R_PROTECT,(int)protstuff)) &&
+                    if ((a=recursedir(sourcename,NULL,R_PROTECT,(long)protstuff)) &&
                         status_justabort) break;
                     if (!a && !func_external_file[0]) setdirsize(file,dos_global_bytecount,act);
                 }
@@ -1562,7 +1562,7 @@ D(bug("viewfile() returned %ld\n",a));
                 }
                 if (status_justabort || !file) break;
                 if (file->type>=ENTRY_DIRECTORY) {
-                    if (!(recursedir(sourcename,NULL,R_DATESTAMP,(int)&datetime.dat_Stamp))) {
+                    if (!(recursedir(sourcename,NULL,R_DATESTAMP,(long)&datetime.dat_Stamp))) {
                         okayflag=1;
                         if (!func_external_file[0]) setdirsize(file,dos_global_bytecount,act);
                     }

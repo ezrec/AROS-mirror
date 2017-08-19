@@ -1212,7 +1212,7 @@ int len,num;
     req.strbuf=buf;
     req.strlen=len;
     req.flags=num|SRF_BORDERS|SRF_RECESSHI|SRF_EXTEND;
-    req.value=(int)&stringex;
+    req.value=(long)&stringex;
     req.font=NULL;
     req.title="ConfigOpus";
     busy();

@@ -320,7 +320,7 @@ void load_clips()
         if ((Read(file,(char *)&clip,sizeof(struct Clip)))<sizeof(struct Clip))
             break;
         if (clip.func.function &&
-            (funcbuf=LAllocRemember(&clipkey,(int)clip.func.function,0))) {
+            (funcbuf=LAllocRemember(&clipkey,(long)clip.func.function,0))) {
             if ((Read(file,funcbuf,(long)clip.func.function))<(long)clip.func.function)
                 break;
         }
@@ -353,7 +353,7 @@ void save_clips()
         if ((Write(file,(char *)clip,sizeof(struct Clip)))<sizeof(struct Clip))
             break;
         if (function &&
-            ((Write(file,(char *)function,(int)clip->func.function))<(int)clip->func.function))
+            ((Write(file,(char *)function,(long)clip->func.function))<(long)clip->func.function))
             break;
         clip=clip->next;
     }

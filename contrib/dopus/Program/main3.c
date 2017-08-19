@@ -557,7 +557,7 @@ UWORD ownerid,groupid;
 
     /* Link the new entry */
 
-    switch ((int)addposition)
+    switch ((long)addposition)
      {
       case -1:   /* Add at head of list */
         newentry->next=workfirst;

@@ -274,7 +274,7 @@ struct DOpusSimpleRequest {
     int strlen;                 /* Maximum string length      */
     int flags;                  /* Flags, see below           */
     struct TextFont *font;      /* Font to use, must be open  */
-    int value;                  /* Generic data               */
+    long value;                 /* Generic data               */
     char *title;                /* Title for req with borders */
 };
 
