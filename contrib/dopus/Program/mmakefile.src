@@ -14,7 +14,9 @@ FILES := about arbiter main main1 main2 main3 main4 main5 main6 main7\
 
 EXEDIR := $(DOPUSDIR)
 
-#MM- DirOpus : dopus-library workbench-libs-rexxsyslib-linklib
+#MM- DirOpus : dopus-library \
+#MM     workbench-libs-rexxsyslib-linklib \
+#MM     workbench-libs-asyncio-linklib
 
 USER_CFLAGS := -I$(DOPUSDIR)/$(AROS_DIR_DEVELOPER)/include \
     -I$(SRCDIR)/$(CURDIR)/../include \

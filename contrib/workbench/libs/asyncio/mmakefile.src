@@ -1,6 +1,6 @@
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- workbench-libs : workbench-libs-asyncio
+#MM- workbench-libs-complete : workbench-libs-asyncio
 
 #MM- workbench-libs-asyncio :  workbench-libs-asyncio-test
 
