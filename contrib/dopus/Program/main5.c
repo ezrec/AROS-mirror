@@ -29,16 +29,10 @@ the existing commercial status of Directory Opus 5.
 */
 
 #include "dopus.h"
-#ifndef __PPC__
-#define ASIO_REGARGS
-#endif
-#ifdef __AROS__
-#include "asyncio.h"
-#else
 #include <proto/asyncio.h>
-#endif
 
-struct Library *AsyncIOBase;
+
+//struct Library *AsyncIOBase;
 
 int copyfile(src,dst,err,/*size,*/password,encryptstate)
 char *src,*dst;
