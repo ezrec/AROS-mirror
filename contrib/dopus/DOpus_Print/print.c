@@ -71,7 +71,7 @@ char *argv[];
 
 		for (arg=1;arg<argc;arg++) {
 			if (argv[arg][0]=='&') port=&argv[arg][1];
-			else if (argv[arg][0]=='!') arglist=(struct DOpusArgsList *)atoi(&argv[arg][1]);
+			else if (argv[arg][0]=='!') arglist=(struct DOpusArgsList *)(long)atoi(&argv[arg][1]);
 			else if (argv[arg][0]=='@') {
 				printdir=1;
 				if (argv[arg][1]=='0') pdwind=0;

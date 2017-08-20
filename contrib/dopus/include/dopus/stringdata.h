@@ -42,7 +42,7 @@ struct DefaultString {
 /* Data structure passed to the string routines */
 
 struct StringData {
-    struct DefaultString             /* Pointer to array of default strings */
+    const struct DefaultString             /* Pointer to array of default strings */
         *default_table;
     int string_count;                /* Number of strings in the table */
 

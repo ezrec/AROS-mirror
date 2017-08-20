@@ -30,7 +30,7 @@ the existing commercial status of Directory Opus 5.
 
 #include "dopuslib.h"
 
-char * __regargs getstringcopy(char *str)
+char * __regargs getstringcopy(const char *str)
 {
     char *newstr=NULL;
 
@@ -51,7 +51,8 @@ int __regargs writestring(BPTR file,char *string)
     char nl=0;
 
     if (string) {
-        if ((Write(file,string,(b=(strlen(string)+1))))<b) return(0);
+        b=strlen(string)+1;
+        if ((Write(file,string,b))<b) return(0);
     }
     else Write(file,&nl,1);
     return(1);
@@ -1097,7 +1098,7 @@ int __saveds DoGetDevices(register struct ConfigStuff *cstuff __asm("a0"))
   return 1;
 }
 
-void __saveds DoAssignGadget(register struct ConfigStuff *cstuff __asm("a0"), register int bk __asm("d0"), register int gad __asm("d1"), register char *name __asm("a1"), register char *func __asm("a2"))
+void __saveds DoAssignGadget(register struct ConfigStuff *cstuff __asm("a0"), register int bk __asm("d0"), register int gad __asm("d1"), register const char *name __asm("a1"), register const char *func __asm("a2"))
 {
     struct dopusgadgetbanks *bank,*temp;
     int a;
@@ -1126,7 +1127,7 @@ void __saveds DoAssignGadget(register struct ConfigStuff *cstuff __asm("a0"), re
     }
 }
 
-void __saveds DoAssignMenu(register struct ConfigStuff *cstuff __asm("a0"), register int men __asm("d0"), register char *name __asm("a1"), register char *func __asm("a2"))
+void __saveds DoAssignMenu(register struct ConfigStuff *cstuff __asm("a0"), register int men __asm("d0"), const register char *name __asm("a1"), const register char *func __asm("a2"))
 {
     struct Config *config;
 

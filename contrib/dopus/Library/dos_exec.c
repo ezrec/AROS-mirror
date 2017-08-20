@@ -30,7 +30,7 @@ the existing commercial status of Directory Opus 5.
 
 #include "dopuslib.h"
 
-int __saveds DoSendPacket(register struct MsgPort *port __asm("a0"), register int action __asm("d0"), register ULONG *args __asm("a1"), register int nargs __asm("d1"))
+int __saveds DoSendPacket(register struct MsgPort *port __asm("a0"), register int action __asm("d0"), register IPTR *args __asm("a1"), register int nargs __asm("d1"))
 {
     struct StandardPacket *packet;
     struct MsgPort *repport;

@@ -122,11 +122,11 @@ void __saveds Do3DCycleBox(register struct RastPort *rp __asm("a0"),register int
 
     if (/*DOpusBase->*/pdb_cycletop)
      {
-      BltTemplate(/*DOpusBase->*/pdb_cycletop,0,2,rp,x+4,y+1,11,6);
+      BltTemplate(/*DOpusBase->*/(PLANEPTR)pdb_cycletop,0,2,rp,x+4,y+1,11,6);
      }
     if (/*DOpusBase->*/pdb_cyclebot)
      {
-      BltTemplate(/*DOpusBase->*/pdb_cyclebot,0,2,rp,x+4,y+1+h-12+7,11,2);
+      BltTemplate(/*DOpusBase->*/(PLANEPTR)pdb_cyclebot,0,2,rp,x+4,y+1+h-12+7,11,2);
      }
 
     drawline(rp,x+4,y+7,x+4,/*y+7+*/y+1+h-12+7/*-12*/);
@@ -155,7 +155,7 @@ D(bug("DrawCheckMark(%lx)\n",pdb_check));
      }
     if (/*DOpusBase->*/pdb_check)
      {
-      BltTemplate(/*DOpusBase->*/pdb_check,0,2,rp,x,y,13,7);
+      BltTemplate(/*DOpusBase->*/(PLANEPTR)pdb_check,0,2,rp,x,y,13,7);
      }
     if (clear==0)
      {
@@ -282,7 +282,7 @@ D(bug("DoGetCheckImage: fg = %ld, bg = %ld\n",fg,bg));
     RectFill(&trp,0,0,12,6);
     if (pen) {
         SetAPen(&trp,fg);
-        BltTemplate(/*(char *)DOpusBase->*/pdb_check,0,2,&trp,0,0,13,7);
+        BltTemplate(/*(char *)DOpusBase->*/(PLANEPTR)pdb_check,0,2,&trp,0,0,13,7);
     }
 
     image->LeftEdge=7;

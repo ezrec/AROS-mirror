@@ -37,7 +37,8 @@ struct RexxMsg *msg;
 struct CommandList *cmd;
 char *command;
 {
-    int a,b,c,f,val,function,win,statval,retval;
+    int a,b,c,f,function,win,statval,retval;
+    long val;
     long long d;
     char buf[520],*buf1,pad[8],buf2[10],*buf3,*ptr,*retbuf;
     unsigned char ch;
@@ -112,7 +113,7 @@ char *command;
                 rexx_set_return(msg,20,NULL);
             }
             else {
-                int a;
+                long a;
 
                 buf[0]=0;
                 for (a=1;a<rexx_argcount;a++) {
@@ -738,7 +739,7 @@ doentryselection:
             if ((b=atoi(rexx_args[2]))==0) d=0;
             else {
                 if (status_iconified) strcpy(rexx_args[7],"0");
-                d=(int)addfile(dopus_curwin[data_active_window],data_active_window,
+                d=(long)addfile(dopus_curwin[data_active_window],data_active_window,
                     rexx_args[0],
                     atoi(rexx_args[1]),
                     b,
@@ -811,7 +812,7 @@ doentryselection:
                         else entry=(struct Directory *)-1;
                     }
                 }
-                if ((a=(int)addfile(dopus_curwin[data_active_window],
+                if ((a=(long)addfile(dopus_curwin[data_active_window],
                     data_active_window,buf2,c,ENTRY_CUSTOM,
                     &ds,rexx_args[0],d,CUSTOMENTRY_USER,
                     (rexx_argcount>5)?atoi(rexx_args[5]):0,NULL,entry,0,0))) {

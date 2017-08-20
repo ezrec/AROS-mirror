@@ -967,7 +967,7 @@ void setnullpointer(wind)
 struct Window *wind;
 {
 D(bug("null_pointer at %lx\n",null_pointer));
-    SetPointer(wind,null_pointer,1,16,0,0);
+    SetPointer(wind,(const UWORD *)null_pointer,1,16,0,0);
 }
 
 void free_file_memory(file)

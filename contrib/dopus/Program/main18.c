@@ -38,7 +38,7 @@ struct makedirlist {
 struct recurse {
     struct recurse *last;
     char *dir,*dest;
-    int data;
+    long data;
     APTR data2;
     APTR data3;
     BPTR lock;
@@ -76,9 +76,9 @@ int dowhat,fdata;
         depth=0,
         b,
         rtry,
-        data=fdata,
-        *pstuff,
         blocks;
+    long *pstuff,
+         data=fdata;
     struct recpath *crec=NULL,*trec;
     struct RecursiveDirectory *cur_recurse,
                               *addparent_recurse,
@@ -225,7 +225,7 @@ D(for(entry = lister.firstentry; entry; entry=entry->next) bug("entry: %s\n",ent
                 }
 
                 else if (dowhat&R_PROTECT) {
-                    pstuff=(int *)data;
+                    pstuff=(long *)data;
                     b=getnewprot(myfinfo.fib_Protection,pstuff[0],pstuff[1]);
                     FOREVER {
                         if (!(SetProtection(name,b))) {
@@ -519,7 +519,7 @@ D(bug("file: %s\n",name));
                     }
                 }
                 else if (dowhat&R_PROTECT) {
-                    pstuff=(int *)data;
+                    pstuff=(long *)data;
                     b=getnewprot(enfinfo.fib_Protection,pstuff[0],pstuff[1]);
                     FOREVER {
                         if (!(SetProtection(name,b))) {

@@ -131,7 +131,7 @@ char *argv[];
     cli=BADDR(myproc->pr_CLI);
     if (cont=GetConsoleTask()) {
         struct InfoData __aligned ind;
-        ULONG arg=MKBADDR(&ind);
+        IPTR arg=(IPTR)MKBADDR(&ind);
 
         if (SendPacket(cont,ACTION_DISK_INFO,&arg,1))
             win=(struct Window *)ind.id_VolumeNode;

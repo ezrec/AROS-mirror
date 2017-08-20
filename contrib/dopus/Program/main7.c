@@ -389,7 +389,7 @@ D(bug("AHI opened\n"));
                                     AHIA_Channels,        stereo?2:1,
                                     AHIA_Sounds,          stereo?2:1,
                                     loop?TAG_IGNORE:AHIA_SoundFunc, (IPTR)&AHISoundHook,
-                                    AHIA_UserData,        FindTask(NULL),
+                                    AHIA_UserData,        (IPTR)FindTask(NULL),
                                     TAG_DONE)))
          {
           struct AHISampleInfo sample = { AHIST_M8S, psample, size /*/ AHI_SampleFrameSize(AHIST_M8S)*/ };
@@ -426,7 +426,7 @@ D(bug("LoadSound(0)=%ld, LoadSound(1)=%ld\n",snd0,snd1));
                 AHIP_Vol         , vhdr?vhdr->vh_Volume:Unity,
                 AHIP_Pan         , stereo?Unity:pan,
                 AHIP_Sound       , 0,
-                AHIP_EndChannel  , NULL,
+                AHIP_EndChannel  , 0,
                 stereo?TAG_MORE:TAG_END, (IPTR)ahitags2);
 D(bug("Playing through AHI\n"));
              }
@@ -681,7 +681,7 @@ D(bug("Playing through AHI\n"));
                     AHIP_Vol         , 0x10000L,
                     AHIP_Pan         , 0x8000L,
                     AHIP_Sound       , 0,
-                    AHIP_EndChannel  , NULL,
+                    AHIP_EndChannel  , 0,
                     TAG_END);
                 Delay(6);
                }
@@ -792,12 +792,12 @@ UWORD data;
 APTR buffer;
 {
     struct MsgPort *handler;
-    ULONG args[2];
+    IPTR args[2];
 
     if (!(handler=(struct MsgPort *)DeviceProc(device))) return(-1);
 
     args[0]=data;
-    args[1]=(ULONG)buffer;
+    args[1]=(IPTR)buffer;
     if (!(SendPacket(handler,action,args,2))) {
         if (action2) return(!(SendPacket(handler,action2,args,2)));
         return(1);

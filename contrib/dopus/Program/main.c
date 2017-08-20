@@ -66,7 +66,7 @@ char *argv[];
     struct WBStartup *WBmsg;
     struct WBArg *p;
 //    struct DiskObject *dobj;
-    const char **toolarray;
+    const STRPTR *toolarray;
     char *s,*startdir=NULL,buf[32];
 //    BPTR lock;
 
@@ -160,7 +160,7 @@ char *argv[];
 
     GfxBase = DOpusBase->GfxBase;
     IntuitionBase = DOpusBase->IntuitionBase;
-    LayersBase = DOpusBase->LayersBase;
+    LayersBase = (struct Library *)DOpusBase->LayersBase;
 #ifdef __SASC
     DOSBase = (struct DosLibrary *)OpenLibrary( "dos.library", 39 );
 #endif
@@ -168,8 +168,8 @@ char *argv[];
     IconBase = OpenLibrary("icon.library",0);
     WorkbenchBase = OpenLibrary("workbench.library",37);
     CxBase = OpenLibrary("commodities.library",37);
-    RexxSysBase = (struct RxsLib *)OpenLibrary("rexxsyslib.library",0);
-    UtilityBase = (struct UtilityBase *)OpenLibrary("utility.library",37);
+    RexxSysBase = OpenLibrary("rexxsyslib.library",0);
+    UtilityBase = OpenLibrary("utility.library",37);
     CyberGfxBase = OpenLibrary("cybergraphics.library",40);
 #ifndef __AROS__
     PopupMenuBase = (struct PopupMenuBase *)OpenLibrary("popupmenu.library", 9);
@@ -282,7 +282,7 @@ D(bug("beepwave: %lx\n",beepwave));
         WBmsg=(struct WBStartup *)argv;
         p=WBmsg->sm_ArgList;
         if ((user_appicon=/*dobj=*/GetDiskObject(p->wa_Name))) {
-            toolarray=(const char **)user_appicon/*dobj*/->do_ToolTypes;
+            toolarray=user_appicon/*dobj*/->do_ToolTypes;
             if ((s=(char *)FindToolType(toolarray,"ICONSTART")))   iconstart=atoi(s);
             if ((s=(char *)FindToolType(toolarray,"BUTTONSTART"))) iconstart=atoi(s)?2:iconstart;
             if ((s=(char *)FindToolType(toolarray,"CONFIGFILE")))  LStrnCpy(str_config_basename,s,256);

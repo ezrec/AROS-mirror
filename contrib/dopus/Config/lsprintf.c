@@ -28,6 +28,8 @@
 
 #include <proto/exec.h>
 #include <aros/asmcall.h>
+#include <exec/rawfmt.h>
+#include <aros/debug.h>
 
 void SwapMem(char *src, char *dst, int size)
 {
@@ -53,12 +55,16 @@ AROS_UFH2 (void, stuffChar,
 
 void lsprintf(char *str, char *fmt, ...)
 {
+#if defined(__AROS__)
+        va_list args;
+
+        va_start(args, fmt);
+        VNewRawDoFmt(fmt, RAWFMTFUNC_STRING, str, args);
+        va_end(args);
+#else
 	char *buf;
 	
 	buf = str;
-	
 	RawDoFmt(fmt,&fmt+1,(VOID_FUNC)stuffChar, &buf);
-
+#endif
 }
-
-	

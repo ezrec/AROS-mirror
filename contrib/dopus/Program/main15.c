@@ -229,7 +229,7 @@ int *found,skipall;
 
     *found=0;
     if (!(in=Open(name,MODE_OLDFILE))) return(0);
-    suc=typesearch((IPTR)in,str_search_string,search_flags,NULL,0);
+    suc=typesearch(in,str_search_string,search_flags,NULL,0);
     Close(in);
     if (suc>-1) {
         char buf[350];

@@ -1280,7 +1280,7 @@ AROS_LH1(int, FileRequest,
 AROS_LH4(int, SendPacket,
 	AROS_LHA(struct MsgPort *, port, A0),
 	AROS_LHA(int , action, 		D0),
-	AROS_LHA(ULONG * , args, 	A1),
+	AROS_LHA(IPTR * , args, 	A1),
 	AROS_LHA(int , nargs, 		D1),
 	struct Library *, DOpusBase, 36, DOpus)
 {

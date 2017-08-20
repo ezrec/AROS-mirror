@@ -419,7 +419,7 @@ extern UBYTE pageflip_data2[];
 extern UBYTE dropbox_data[];
 
 struct StringExtend stringex={NULL,{0,0},{0,0},0,NULL,NULL,{0,0,0,0}};
-struct Image dropboximage={0,0,83,42,2,dropbox_data,3,0,NULL};
+struct Image dropboximage={0,0,83,42,2,(UWORD *)dropbox_data,3,0,NULL};
 
 struct DiskObject *dropboxicon = NULL;
 struct DiskObject dropboxobj={

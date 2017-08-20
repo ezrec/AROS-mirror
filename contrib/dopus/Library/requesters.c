@@ -274,7 +274,7 @@ APTR __saveds R_AddRequesterObject(register struct RequesterBase *reqbase __asm(
 {
     struct RequesterObject *object=NULL,*tempobject;
     struct PrivateData *private;
-    ULONG data;
+    IPTR data;
     int tag,size,type,xoffset,yoffset;
     struct StringInfo *stringinfo=NULL;
     struct PropInfo *propinfo;
@@ -560,7 +560,7 @@ APTR __saveds R_AddRequesterObject(register struct RequesterBase *reqbase __asm(
 
             case RO_TextNum:
                 if (!reqbase->rb_flags&RBF_STRINGS || !reqbase->rb_string_table) break;
-                data=(ULONG)reqbase->rb_string_table[data];
+                data=(IPTR)reqbase->rb_string_table[data];
 
             case RO_Text:
                 if (!object || !data) break;

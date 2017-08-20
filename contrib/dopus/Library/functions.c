@@ -174,7 +174,7 @@ D(bug("LStrCat()\n");/*Delay(50);*/)
     LStrnCat(s1,s2,0xffff);
 }
 
-void /*__saveds*/ LStrCpy(register char *dst __asm("a0"), register char *src __asm("a1"))
+void /*__saveds*/ LStrCpy(register char *dst __asm("a0"), register const char *src __asm("a1"))
 
 {
 //char *d=dst,*s=src;
@@ -185,7 +185,7 @@ void /*__saveds*/ LStrCpy(register char *dst __asm("a0"), register char *src __a
 //strcpy(dst,src);
 }
 
-void /*__saveds*/ LStrnCpy(register char *dst __asm("a0"), register char *src __asm("a1"), register int len __asm("d0"))
+void /*__saveds*/ LStrnCpy(register char *dst __asm("a0"), register const char *src __asm("a1"), register int len __asm("d0"))
 
 {
     char c;

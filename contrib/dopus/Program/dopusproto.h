@@ -382,8 +382,8 @@ int whatsit(char *,int,char *,char *);
 struct dopusfiletype *checkfiletype(char *,int,int);
 int checkfiletypefunc(char *,int);
 int dochecktype(struct dopusfiletype *,char *,BPTR,struct FileInfoBlock *);
-int checktypechars(int,unsigned char *,int);
-int typesearch(int,char *,int,char *,int);
+int checktypechars(BPTR,unsigned char *,int);
+int typesearch(BPTR,char *,int,char *,int);
 int dorequest(struct DOpusSimpleRequest *,char *,char **,int *,struct Window *);
 int searchbuffer(char *,int,char *,int,int);
 

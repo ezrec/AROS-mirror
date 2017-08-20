@@ -856,7 +856,7 @@ void drawentry(char *text, int win)
       default:
         if (!t) t = &(c->type);
         len++;
-        c=(struct TextMode *)(&(c->code));
+        c=(struct TextCode *)(&(c->code));
         break;
      }
    }

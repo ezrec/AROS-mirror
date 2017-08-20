@@ -130,7 +130,7 @@ int __saveds DoPathName(register BPTR lock __asm("a0"),
 
 int __saveds DoSendPacket(register struct MsgPort *port __asm("a0"),
     register int action __asm("d0"),
-    register ULONG *args __asm("a1"),
+    register IPTR *args __asm("a1"),
     register int nargs __asm("d1"));
 
 int __saveds DoTackOn(register char *path __asm("a0"),
@@ -163,12 +163,12 @@ void __saveds DoDoArrow(register struct RastPort * __asm("a0"),
     register int __asm("d6"));
 
 int __saveds DoStrCombine(register char *buf __asm("a0"),
-    register char *one __asm("a1"),
-    register char *two __asm("a2"),
+    register const char *one __asm("a1"),
+    register const char *two __asm("a2"),
     register int lim __asm("d0"));
 
 int __saveds DoStrConcat(register char *buf __asm("a0"),
-    register char *cat __asm("a1"),
+    register const char *cat __asm("a1"),
     register int lim __asm("d0"));
 
 void __saveds DoDecode_RLE(register char *source __asm("a0"),
@@ -279,13 +279,13 @@ int __saveds DoGetDevices(register struct ConfigStuff * __asm("a0"));
 void __saveds DoAssignGadget(register struct ConfigStuff * __asm("a0"),
     register int __asm("d0"),
     register int __asm("d1"),
-    register char * __asm("a1"),
-    register char * __asm("a2"));
+    register const char * __asm("a1"),
+    register const char * __asm("a2"));
 
 void __saveds DoAssignMenu(register struct ConfigStuff * __asm("a0"),
     register int __asm("d0"),
-    register char * __asm("a1"),
-    register char * __asm("a2"));
+    register const char * __asm("a1"),
+    register const char * __asm("a2"));
 
 void __saveds DoFreeConfig(register struct ConfigStuff * __asm("a0"));
 
@@ -420,8 +420,8 @@ void StrToUpper(register unsigned char *src __asm("a0"), register unsigned char 
 void StrToLower(register unsigned char *src __asm("a0"), register unsigned char *dst __asm("a1"));
 void LStrnCat(register char *s1 __asm("a0"), register char *s2 __asm("a1"), register int len __asm("d0"));
 void LStrCat(register char *s1 __asm("a0"), register char *s2 __asm("a1"));
-void LStrCpy(register char *dst __asm("a0"), register char *src __asm("a1"));
-void LStrnCpy(register char *dst __asm("a0"), register char *src __asm("a1"), register int len __asm("d0"));
+void LStrCpy(register char *dst __asm("a0"), register const char *src __asm("a1"));
+void LStrnCpy(register char *dst __asm("a0"), register const char *src __asm("a1"), register int len __asm("d0"));
 int LStrnCmpI(register char *s1 __asm("a0"), register char *s2 __asm("a1"), register int len __asm("d0"));
 int LStrCmpI(register char *s1 __asm("a0"), register char *s2 __asm("a1"));
 int LStrnCmp(register char *s1 __asm("a0"), register char *s2 __asm("a1"), register int len __asm("d0"));

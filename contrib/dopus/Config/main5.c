@@ -1183,8 +1183,8 @@ int type;
     int a;
 
     a=MAXFUNCS-entry-1;
-    CopyMem(&classlist[entry],templist,a*4);
-    CopyMem(templist,&classlist[entry+1],a*4);
+    CopyMem(&classlist[entry],templist,a*sizeof(APTR));
+    CopyMem(templist,&classlist[entry+1],a*sizeof(APTR));
     classlist[entry]=getcopy(string,-1,NULL);
     CopyMem(&classtype[entry],temptype,a);
     CopyMem(temptype,&classtype[entry+1],a);

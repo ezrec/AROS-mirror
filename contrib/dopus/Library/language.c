@@ -100,7 +100,7 @@ void initstrings(void)
 int __saveds DoReadStringFile(register struct StringData *stringdata __asm("a0"), register char *filename __asm("a1"))
 {
     int a;
-    struct DefaultString *defstr;
+    const struct DefaultString *defstr;
 //    BPTR file;
 
 //D(bug("ReadStringFile(%lx,%s)\n",stringdata,filename);Delay(50));

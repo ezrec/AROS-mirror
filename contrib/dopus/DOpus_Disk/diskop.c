@@ -408,7 +408,7 @@ char *alike;
       
     while ((devnode = (struct DeviceNode *)NextDosEntry((struct DosList *)devnode,LDF_DEVICES))) {
         if (/*devnode->dn_Type==DLT_DEVICE && devnode->dn_Task &&*/
-            devnode->dn_Startup>512) {
+            (long)devnode->dn_Startup>512) {
             if (!alikenode || like_devices(devnode,alikenode)) 
                 ++count;
         }
@@ -422,7 +422,7 @@ char *alike;
         while ((devnode = (struct DeviceNode *)NextDosEntry((struct DosList *)devnode,LDF_DEVICES))) {
 //        while (devnode) {
             if (/*devnode->dn_Type==DLT_DEVICE && devnode->dn_Task &&*/
-                devnode->dn_Startup>512) {
+                (long)devnode->dn_Startup>512) {
                 if (!alikenode || like_devices(devnode,alikenode)) {
                     BtoCStr((BPTR)devnode->dn_Name,devname,32);
                     strcat(devname,":");

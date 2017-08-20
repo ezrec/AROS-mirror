@@ -1,9 +1,12 @@
-# Copyright © 2004-2010, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2017, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/$(CURDIR)/make.cfg
 
-SFILES := Package-Startup ConfigOpus.HLP DirectoryOpus.HLP DirectoryOpus.CFG DirectoryOpus.CLA
+SFILES := Package-Startup ConfigOpus.HLP DirectoryOpus.HLP DirectoryOpus.CLA
+
+# DirectoryOpus.CFG not copied because it's 32-bit little endian and hence causes
+# crashes on e.g. x86_64
 
 #MM contrib-dopus : dopus-library DirOpus ConfigOpus DOpusRT DOpus_Disk DOpus_Icon DOpus_Print
 contrib-dopus : $(SFILES:%=$(DOPUSDIR)/S/%)
@@ -19,3 +22,12 @@ contrib-dopus :
 %copy_dir_recursive mmake=dopus-includes src=include \
     dst=$(DOPUSDIR)/$(AROS_DIR_DEVELOPER)/include
 
+
+#MM- contrib-dopus-clean : \
+#MM     DOpusRT-clean \
+#MM     ConfigOpus-clean \
+#MM     DirOpus-clean \
+#MM     DOpus_Print-clean \
+#MM     DOpus_Disk-clean \
+#MM     DOpus_Icon-clean \
+#MM     dopus-library-clean
