@@ -33,7 +33,7 @@
 
 #define FILENAME_LENGTH     512
 #define VERSION_LENGTH      16
-#if defined(__x86_64__)
+#if (__WORDSIZE == 64)
 #define ADDRESS_LENGTH      32
 #define ADDRESS_FORMAT      "$%016lx"
 #else
