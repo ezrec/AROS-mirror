@@ -2,7 +2,12 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- ports-game : ports-game-defendguin
+#MM- ports-game : ports-game-$(AROS_TARGET_CPU)
+
+#MM- ports-game-i386 : ports-game-defendguin
+#DISABLED #MM- ports-game-m68k : ports-game-defendguin
+#MM- ports-game-arm : ports-game-defendguin
+#MM- ports-game-x86_64 : ports-game-defendguin
 
 #MM  ports-game-defendguin : includes linklibs contrib-sdl \
 #MM    contrib-sdl-sdl-mixer \

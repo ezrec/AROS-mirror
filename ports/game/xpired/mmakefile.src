@@ -2,7 +2,12 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- ports-game : ports-game-xpired
+#MM- ports-game : ports-game-$(AROS_TARGET_CPU)
+
+#MM- ports-game-i386 : ports-game-xpired
+#DISABLED #MM- ports-game-m68k : ports-game-xpired
+#MM- ports-game-arm : ports-game-xpired
+#MM- ports-game-x86_64 : ports-game-xpired
 
 #MM- ports-game-xpired : ports-game-xpiredbin ports-game-xpiredit \
 #MM  ports-game-xpired-cpy \

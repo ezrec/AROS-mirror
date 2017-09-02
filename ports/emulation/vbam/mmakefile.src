@@ -4,7 +4,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- ports-emulation : ports-emulation-$(AROS_TARGET_CPU)
 
-#MM- ports-emulation-i386 : ports-emulation-vbam
+##MM- ports-emulation-i386 : ports-emulation-vbam
 #DISABLED #MM- ports-emulation-m68k : ports-emulation-vbam
 ##MM- ports-emulation-arm : ports-emulation-vbam
 ##MM- ports-emulation-x86_64 : ports-emulation-vbam

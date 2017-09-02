@@ -2,7 +2,12 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- ports-game : ports-game-sdlscavenger
+#MM- ports-game : ports-game-$(AROS_TARGET_CPU)
+
+#MM- ports-game-i386 : ports-game-sdlscavenger
+#DISABLED #MM- ports-game-m68k : ports-game-sdlscavenger
+#MM- ports-game-arm : ports-game-sdlscavenger
+#MM- ports-game-x86_64 : ports-game-sdlscavenger
 
 #MM  ports-game-sdlscavenger : includes linklibs contrib-sdl ports-game-sdlscavenger-fetch \
 #MM  ports-game-sdlscavenger-install ports-game-sdlscavenger-cpy

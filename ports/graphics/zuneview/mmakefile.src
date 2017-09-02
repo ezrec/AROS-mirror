@@ -2,7 +2,12 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- ports-graphics : ports-graphics-zuneview
+#MM- ports-graphics : ports-graphics-$(AROS_TARGET_CPU)
+
+#MM- ports-graphics-i386 : ports-graphics-zuneview
+#MM- ports-graphics-m68k : ports-graphics-zuneview
+#MM- ports-graphics-arm : ports-graphics-zuneview
+#DISABLED #MM- ports-graphics-x86_64 : ports-graphics-zuneview
 
 #MM  ports-graphics-zuneview : \
 #MM    includes linklibs ports-graphics-zuneview-fetch \

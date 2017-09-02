@@ -2,8 +2,7 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- ports-audio : ports-audio-milkytracker-$(AROS_TARGET_CPU)
-#MM- ports-audio-milkytracker-i386 : ports-audio-milkytracker
+#MM- ports-audio : ports-audio-milkytracker
 
 #MM- ports-audio-milkytracker : contrib-sdl
 
