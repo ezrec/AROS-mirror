@@ -6,6 +6,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- ports-filetool-i386 : ports-filetool-zaphod
 #MM- ports-filetool-arm : ports-filetool-zaphod
+#MM- ports-filetool-m68k : ports-filetool-zaphod
 
 #MM  ports-filetool-zaphod : includes linklibs ports-filetool-zaphod-catalogs \
 #MM  ports-filetool-fetch ports-filetool-zaphod-docs ports-filetool-zaphod-fonts \
@@ -19,7 +20,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM  ports-filetool-zaphod-quick : ports-filetool-zaphod-fetch
 
-REPOSITORIES := sf://zaphodeditor
+REPOSITORIES := https://sourceforge.net/projects/zaphodeditor/files/1.3/
 ARCHBASE     := zaphod-src-1.3
 TARGETDIR    := $(AROS_CONTRIB)/Utilities/Filetool/Zaphod
 
