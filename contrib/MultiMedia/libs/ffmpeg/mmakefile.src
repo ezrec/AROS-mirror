@@ -45,7 +45,14 @@ FFMPEG_OPTIONS := \
         --disable-rpath \
         --disable-yasm \
         --disable-doc \
+        --disable-debug \
         $(FFMPEG_PROGS)
+
+ifeq ($(AROS_TARGET_CPU),m68k)
+FFMPEG_OPTIONS += \
+        --disable-network \
+        --disable-decoder=hevc
+endif
 
 %fetch_and_build mmake=contrib-ffmpeg prefix=$(AROS_DEVELOPER) \
 	package=ffmpeg version=$(VERSION) suffixes="tar.bz2" \
