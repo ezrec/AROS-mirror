@@ -77,7 +77,8 @@ FILES :=             \
 #MM- contrib-games : Doom-$(AROS_TARGET_CPU)
 #MM- Doom-i386 : Doom Doom-extra
 #MM- Doom-arm  : Doom Doom-extra
-#MM- Doom-m68k : Doom Doom-extra
+# disabled due to gcc-4.6.4 internal error, 6.3.0 works though:
+# #MM- Doom-m68k : Doom Doom-extra
 
 #MM Doom : workbench-devs-AHI includes linklibs
 
