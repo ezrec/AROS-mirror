@@ -4,7 +4,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 EXEDIR := $(AROS_CONTRIB)/Games/Fps/Doom
 
-NOWARN_FLAGS := $(NOWARN_STRICT_ALIASING) $(NOWARN_UNINITIALIZED) $(NOWARN_UNUSED_BUT_SET_VARIABLE) $(NOWARN_UNUSED_CONST_VARIABLE) $(NOWARN_SIZEOF_POINTER_MEMACCESS)
+NOWARN_FLAGS := $(NOWARN_STRICT_ALIASING) $(NOWARN_UNINITIALIZED) $(NOWARN_UNUSED_BUT_SET_VARIABLE) $(NOWARN_UNUSED_CONST_VARIABLE) $(NOWARN_SIZEOF_POINTER_MEMACCESS) $(NOWARN_FORMAT)
 USER_CFLAGS = $(NOWARN_FLAGS) -DAROS -DNORMALUNIX -DUNROLL \
               -O3 -ffast-math -funroll-loops -fomit-frame-pointer -fexpensive-optimizations
 
@@ -26,6 +26,7 @@ FILES :=             \
 	m_bbox           \
 	m_cheat          \
 	m_random         \
+	m_swap         \
 	am_map           \
 	p_ceilng         \
 	p_doors          \
@@ -71,23 +72,12 @@ FILES :=             \
 	aros_net         \
 	aros_system      \
 	aros_video       \
-	aros_net_local   \
-#	amiga_swap       \
-#	amiga_draw       \
-#	amiga_cgxtagfns  \
-#	amiga_socket_lib \
-#	amiga_timer      \
-#	amiga_system     \
-#	amiga_sound      \
-#   amiga_c2p        \
-#	amiga_video      \
-#	amiga_net        \
-#	amiga_sega       \
-#	amiga_main	
+	aros_net_local
 
 #MM- contrib-games : Doom-$(AROS_TARGET_CPU)
 #MM- Doom-i386 : Doom Doom-extra
 #MM- Doom-arm  : Doom Doom-extra
+#MM- Doom-m68k : Doom Doom-extra
 
 #MM Doom : workbench-devs-AHI includes linklibs
 
