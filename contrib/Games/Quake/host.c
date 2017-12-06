@@ -855,7 +855,7 @@ void Host_Init (quakeparms_t *parms)
 printf("memsize: %d\n", parms->memsize);
 	Memory_Init (parms->membase, parms->memsize);
 	
-printf("Memroy inited\n");
+printf("Memory inited\n");
 	Cbuf_Init ();
 printf("Cbuf inited\n");
 	Cmd_Init ();	
