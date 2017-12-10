@@ -45,7 +45,7 @@
 #include <clib/alib_protos.h>
 #include <exec/memory.h>
 #include <stdio.h>
-#define Printf printf
+#include <stdlib.h>
 
 // DEFINITIONS
 
@@ -113,7 +113,7 @@
         // This function closes our window and frees all gadget and menu
         // structures that had been allocated from the gadtools.library
 
-    VOID main(int argc,char **argv);
+    int main(int argc,char **argv);
 
         // The main function starts all actions. The program starts and
         // exits from this function.
@@ -485,11 +485,11 @@ printf("%s - %d\n",__FUNCTION__,__LINE__);
         FreeRemember(&RememberKey,TRUE);
     }
 
-    VOID main(int argc,char **argv)
+    int main(int argc,char **argv)
     {
 
         LONG Error=0L;   // Error indicator
-        BPTR wbout=0L;
+        __unused BPTR wbout=0L;
 
         if (!(IB=(struct IB *)OpenLibrary("intuition.library",37L)))
         { // first checks if we `re running on an OS 2.xx machine
@@ -597,8 +597,8 @@ printf("%s - %d\n",__FUNCTION__,__LINE__);
     VOID HandleIDCMP(VOID)
     { // this handles all inputs
         struct IntuiMessage *Msg;     // the received Message
-        LONG Class,Code,SelGadgetID;  // vars to copy Message`s contents to
-        struct Gadget *SelGadget;     // the selected gadget
+        LONG Class,Code,SelGadgetID = 0;  // vars to copy Message`s contents to
+        struct Gadget *SelGadget = 0;     // the selected gadget
         BOOL ENDTEST=FALSE;           // end indicator
         BOOL CHECKGADGET=TRUE;        // whether the checkbox is checked or not
         char *res=NULL;
@@ -617,8 +617,8 @@ printf("%s - %d\n",__FUNCTION__,__LINE__);
                 if ((Class == IDCMP_GADGETUP) || (Class == IDCMP_GADGETDOWN))
                 { // enforcer is watching you !
 
-                    if ((SelGadget=(struct Gadget *)Msg->IAddress))
-                        SelGadgetID =   SelGadget->GadgetID;
+                    if ((SelGadget = (struct Gadget *)Msg->IAddress))
+                        SelGadgetID = SelGadget->GadgetID;
                 }
                 GT_ReplyIMsg(Msg);
 
