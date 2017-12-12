@@ -32,7 +32,9 @@ GLEXCESS_SOURCES = \
 USER_INCLUDES := \
     -I$(SRCDIR)/$(CURDIR)
 
-USER_CFLAGS := -fno-asynchronous-unwind-tables -fno-exceptions 
+NOWARN_FLAGS := $(NOWARN_WRITE_STRINGS) $(NOWARN_ARRAY_BOUNDS) $(NOWARN_MISLEADING_INDENTATION)
+
+USER_CFLAGS := $(NOWARN_FLAGS) -fno-asynchronous-unwind-tables -fno-exceptions 
 
 # Remove C-only flags
 CXX_FLAGS := $(CFLAGS) $(USER_CFLAGS) -fno-rtti -nostdinc++
@@ -55,7 +57,7 @@ mesa-demos-glexcess-cpp : mesa-demos-glexcess-cpp-directories-setup $(GLEXCESS_S
 mesa-demos-glexcess-cpp-directories-setup :
 %mkdirs_q dirs="$(GENDIR)/$(CURDIR) $(AROS_CONTRIB)/Demos/Mesa/GLExcess"
 
-USER_LDFLAGS := -L$(AROS_LIB)
+USER_LDFLAGS := -L$(AROS_LIB) -static-libstdc++
 
 #MM
 mesa-demos-glexcess :
