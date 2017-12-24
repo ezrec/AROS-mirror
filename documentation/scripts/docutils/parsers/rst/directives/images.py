@@ -18,7 +18,7 @@ from docutils.nodes import fully_normalize_name, whitespace_normalize_name
 from docutils.parsers.rst.roles import set_classes
 
 try:
-    import Image                        # PIL
+    from PIL import Image                        # PIL
 except ImportError:
     Image = None
 

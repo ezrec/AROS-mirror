@@ -23,7 +23,7 @@ import time
 import re
 from types import ListType
 try:
-    import Image                        # check for the Python Imaging Library
+    from PIL import Image             # check for the Python Imaging Library
 except ImportError:
     Image = None
 import docutils
