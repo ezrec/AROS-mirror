@@ -10,6 +10,22 @@ include $(SRCDIR)/config/aros-contrib.cfg
 USER_INCLUDES := -I$(AROS_CONTRIB_INCLUDES)
 USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
+SDL_MIXER_EXTRA_OPTS := \
+        LIBMIKMOD_CONFIG='$(AROS_DEVELOPER)/bin/libmikmod-config' \
+        --disable-music-mp3 \
+        --disable-music-mod-shared \
+        --disable-music-ogg-shared \
+        --disable-music-cmd \
+        --disable-music-flac \
+        libdir=$(AROS_LIB)
+
+ifeq ($(AROS_TARGET_CPU),m68k)
+SDL_MIXER_EXTRA_OPTS += \
+        --disable-music-mod \
+        --disable-music-timidity-midi
+endif
+
+
 %fetch_and_build_gnu_development package=SDL_mixer version=1.2.11 patch=yes \
     package_repo=http://www.libsdl.org/projects/SDL_mixer/release/ \
-    suffixes="tar.gz" extraoptions="LIBMIKMOD_CONFIG='$(AROS_DEVELOPER)/bin/libmikmod-config' --disable-music-mp3 --enable-music-mod --disable-music-mod-shared --disable-music-ogg-shared --disable-music-cmd --disable-music-flac libdir=$(AROS_LIB)"
+    suffixes="tar.gz" extraoptions=$(SDL_MIXER_EXTRA_OPTS)
