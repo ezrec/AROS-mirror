@@ -124,7 +124,8 @@ Inputs
 ~~~~~~
 ::
 
-     locale      - The Locale to use for this conversion.
+     locale      - The Locale to use for this conversion or NULL for
+                   the system default locale.
      character   - The character to convert to lower case.
 
 
@@ -170,7 +171,8 @@ Inputs
 ~~~~~~
 ::
 
-     locale      - The Locale to use for this conversion.
+     locale      - The Locale to use for this conversion or NULL for
+                   the system default locale.
      character   - The character to convert.
 
 
@@ -224,7 +226,8 @@ Inputs
 ::
 
 
- locale        --  the locale to use when formatting the string
+ locale        --  the locale to use when formatting the string or NULL
+                   for the system default locale.
  formatString  --  the formatting template string; this is much like the
                    printf() formatting style, i.e. a % followed by a
                    formatting command. The following commands exist:
@@ -428,7 +431,8 @@ Inputs
 ~~~~~~
 ::
 
-     locale      - The Locale to use for this function.
+     locale      - The Locale to use for this function or NULL
+                   for the system default locale.
      character   - the character to test
 
 
@@ -444,8 +448,6 @@ Result
 Notes
 ~~~~~
 ::
-
-     The Locale MUST be supplied.
 
      These functions require a 32-bit character to support future
      multi-byte character sets.
@@ -555,7 +557,8 @@ Inputs
 ~~~~~~
 ::
 
-     locale      -   the locale to use for the formatting
+     locale      -   the locale to use for the formatting or NULL for
+                     the system default locale.
      date        -   where to put the converted date. If this is NULL,
                      then this function can be used to verify a date
                      string.
@@ -669,7 +672,8 @@ Inputs
 ~~~~~~
 ::
 
-     locale      -   the Locale to use for the transformation.
+     locale      -   the Locale to use for the transformation or
+                     NULL for the system default locale.
      string      -   the string to be transformed
      buffer      -   the destination for the transformed string.
                      This buffer may need to be larger than the
@@ -727,7 +731,8 @@ Inputs
 ~~~~~~
 ::
 
-     locale      -   Which locale to use for this comparison.
+     locale      -   Which locale to use for this comparison or
+                     NULL for the system default locale.
      string1     -   NULL terminated string.
      string2     -   NULL terminated string.
      length      -   Maximum length of string to compare, or -1 to
