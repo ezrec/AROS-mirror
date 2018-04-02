@@ -57,6 +57,17 @@ struct MsgPort * CreatePort (STRPTR name, LONG pri);
 void DeletePort (struct MsgPort * mp);
 #endif
 
+/* C Library */
+typedef long unsigned int _size_t;
+_size_t strlcpy(char *dst, const char *src, _size_t size);
+_size_t strlcat(char *dst, const char *src, _size_t size);
+#define stricmp strcasecmp
+#define strnicmp strncasecmp
+#define stpchr strchr
+#define stccpy strncpy
+int stcd_l(const char *in, long *lvalue);
+char *stpblk (const char *str);
+
 /* Extra */
 extern ULONG RangeSeed;
 ULONG RangeRand (ULONG maxValue);
@@ -253,7 +264,7 @@ void GetDataStreamFromFormat(CONST_STRPTR format, va_list args,
                              ULONG *indexStream, ULONG *indexSize);
 
 #ifdef AROS_SLOWSTACKFORMAT
-#include <aros/posixc/alloca.h>
+#include <alloca.h>
 
 #   define AROS_SLOWSTACKFORMAT_PRE_USING(last, format) {                            \
     va_list _args;                      	                                     \
