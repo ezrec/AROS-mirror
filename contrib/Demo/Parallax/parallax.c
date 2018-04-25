@@ -154,9 +154,9 @@ static void getvisual(void)
 
     if (!wbscreen)
     {
-        scr = OpenScreenTags(NULL, SA_Width	, W	,
-				   SA_Height	, H	,
-				   SA_Depth	, 8	,
+        scr = OpenScreenTags(NULL, SA_Width	, screenwidth	,
+				   SA_Height	, screenheight	,
+				   SA_Depth	, 8	    	,
 				   TAG_DONE);
     	if (!scr) cleanup("Failed to open specified screen!");
     }
