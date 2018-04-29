@@ -12,8 +12,8 @@ Hardware Compatibility Guide
 
 :Authors:   Neil Cafferkey
 :Copyright: Copyright 2018, The AROS Development Team
-:Version:   $Revision: 54458 $
-:Date:      $Date: 2017-04-04 23:53:08 +0100 (Tue, 04 Apr 2017) $
+:Version:   $Revision$
+:Date:      $Date$
 :Status:    N/A
 
 This page lists some computers that have been tested with AROS. For each 
@@ -38,7 +38,7 @@ the compatibility status given is only theoretical. Also take note of
 the adjoining pages for specific components such as graphics, network 
 and sound cards.
 
-.. _`Wikibooks hardware compatibility list`: https://en.wikibooks.org/wiki/Aros/Platforms/x86_Complete_System_HCL`
+.. _`Wikibooks hardware compatibility list`: https://en.wikibooks.org/wiki/Aros/Platforms/x86_Complete_System_HCL
 
 .. Contents::
 
