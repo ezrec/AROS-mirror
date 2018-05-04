@@ -6,7 +6,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 DESTDIR 	:= $(AROS_CONTRIB)/Demos/InfPlane
 
 ifneq (,$(findstring x86_64,$(AROS_TARGET_CPU)))
-INFPLANE_ASM += refresh-i386
+INFPLANE_ASM += refresh-x86_64
 else
 ifneq (,$(findstring i386,$(AROS_TARGET_CPU)))
 INFPLANE_ASM += refresh-i386
