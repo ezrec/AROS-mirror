@@ -1,23 +1,23 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- demo-infplane : demo-infplane-$(AROS_TARGET_CPU)
-
-#MM demo-infplane-i386 : demo-infplane-common
-
-#MM demo-infplane-x86_64 : demo-infplane-common
-
-#MM- demo-infplane-common : demo-infplane-icons demo-infplane-data
+#MM- demo-infplane : demo-infplane-binary demo-infplane-icons demo-infplane-data
 
 DESTDIR 	:= $(AROS_CONTRIB)/Demos/InfPlane
 
-%build_prog mmake=demo-infplane-i386 \
-    progname=InfPlane targetdir=$(DESTDIR) \
-    files=infplane asmfiles=refresh-i386
+ifneq (,$(findstring x86_64,$(AROS_TARGET_CPU)))
+INFPLANE_ASM += refresh-i386
+else
+ifneq (,$(findstring i386,$(AROS_TARGET_CPU)))
+INFPLANE_ASM += refresh-i386
+else
+USER_CFLAGS += -DC_FUNCTION
+endif
+endif
 
-%build_prog mmake=demo-infplane-x86_64 \
+%build_prog mmake=demo-infplane-binary \
     progname=InfPlane targetdir=$(DESTDIR) \
-    files=infplane asmfiles=refresh-x86_64
+    files=infplane asmfiles=$(INFPLANE_ASM)
 
 DATAFILES	:= pattern.data pattern.pal
 
