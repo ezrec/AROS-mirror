@@ -29,7 +29,7 @@ Working with Subversion
 Introduction
 ============
 
-The SVN server maintains a central "repository", which is the main
+The SVN server maintains AROS' central "repository", which is the main
 database containing the published common codebase of the project.
 Individual developers have their own "working copies", which are local
 copies of the database from a specific time, together with local changes
@@ -38,6 +38,9 @@ wants to share his changes with the rest of the team, he simply
 "commits" his changes to the server using the client program, which
 takes care of uploading them and merging them with changes done by other
 developers.
+
+`Alternative access`_ to the repository has been set-up as well. This can be
+used by those not (yet) registered for access as a developer.
 
 
 
@@ -118,8 +121,7 @@ know your login and password, it will ask them.
 
     The AROS repository is running on a password protected SVN server, which
     means that you need to `apply for access to it`__ to be able to
-    collaborate in the development. At the request of Amiga Inc., anonymous
-    read-only access to the repository has been disabled.
+    collaborate in the development.
 
 __ contribute#joining-the-team
 
@@ -400,4 +402,31 @@ The following pages are highly recommended:
 
 .. _`Version Control with Subversion`: http://svnbook.red-bean.com/
 .. _`Subversion Home`:               http://subversion.apache.org/
+
+
+
+Alternative access
+==================
+
+There are other ways to access the repository. These methods are, however,
+read-only. One would be able to set up a working directory but it would then
+not be possible to commit any changes this way. Instead, suggesting a
+modification has to be done by way of the 'developer list'__ or to individual
+developers.
+
+__ contribute#mailing-lists
+
+
+SVN
+---
+
+The repository can be accessed by SVN using the read-only guest account. By
+using  username "guest" and password "guest" the repository can be accessed
+as described above.
+
+
+GIT
+---
+Using GIT, the repository can be accessed through the 
+`AROS-mirror <https://github.com/ezrec/AROS-mirror>`__.
 
