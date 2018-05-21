@@ -64,7 +64,7 @@ AROS Vision
 tillfredsställande krävs antingen en kraftig Amiga eller en emulator som
 Win UAE.
 
-__ http://www.natami-news.de/html/distribution_download.html
+__ http://www.aros-platform.de/download.htm
 
 
 

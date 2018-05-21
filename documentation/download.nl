@@ -64,7 +64,7 @@ AROS Vision
 `AROS Vision`__ is een distributie voor M68k Amiga's. Om het goed te kunnen
 laten draaien, vereist het een krachtige Amiga of een emulator zoals WinUAE.
 
-__ http://www.natami-news.de/html/distribution_download.html
+__ http://www.aros-platform.de/download.htm
 
 
 
