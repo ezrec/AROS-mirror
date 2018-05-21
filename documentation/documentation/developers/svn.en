@@ -427,6 +427,16 @@ as described above.
 
 GIT
 ---
+
 Using GIT, the repository can be accessed through the 
 `AROS-mirror <https://github.com/ezrec/AROS-mirror>`__.
+
+
+Sources
+-------
+
+Those interested in the sources only, should also be able to download them
+from the Sources section of the `Nightly builds`__ page.
+
+__ nightly1
 
