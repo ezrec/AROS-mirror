@@ -63,12 +63,10 @@ void inline _atomic_item_init(struct _atomic_item* n)
    n->next = 0;
 }
 
-#if defined(__AMIGAOS4__)
+#if defined(__AMIGAOS4__) || defined(__MORPHOS__) || (defined(__AROS__) && defined(__PPC__))
    #include "Atomic_ppc.h"
 #elif defined(__AROS__) && !defined(mc68000)
    #include "Atomic_x86.h"
-#elif defined(__MORPHOS__)
-   #include "Atomic_ppc.h"
 #else
    #include "Atomic_m68k.h"
 #endif
