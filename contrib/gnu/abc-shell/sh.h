@@ -72,7 +72,9 @@ void *memmove(void *, const void *, size_t);
 # define SIGKILL 11
 # define SIGALRM 12
 #else
-# define NSIG    32
+# if !defined(NSIG)
+#  define NSIG    32
+# endif
 #endif
 
 #define KSH_SA_FLAGS   0
