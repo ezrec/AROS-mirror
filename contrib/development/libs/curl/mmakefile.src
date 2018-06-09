@@ -1,16 +1,20 @@
-# Copyright © 2009-2016, The AROS Development Team. All rights reserved.
+# Copyright © 2009-2018, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- contrib-curl : contrib-openssl development-curl
+#MM- contrib-curl : contrib-openssl development-curl linklibs-pthread
 
 REPOSITORIES := http://curl.haxx.se/download \
  http://ftp.sunet.se/mirror/archive/ftp.sunet.se/pub/www/utilities/curl
 
-%fetch_and_build_gnu_development package=curl version=7.37.1 \
+CURL_VERSION=7.60.0
+USER_CPPFLAGS=-D__BSD_VISIBLE=1
+CURL_OPTIONS=--without-random --disable-threaded-resolver --disable-ntlm-wb --libdir=$(AROS_LIB)
+
+%fetch_and_build_gnu_development package=curl version=$(CURL_VERSION) \
     patch=yes package_repo="$(REPOSITORIES)" \
-    extraoptions="--without-random --disable-ntlm-wb CPPFLAGS='-D__BSD_VISIBLE=1' --libdir=$(AROS_LIB)" \
+    extraoptions="$(CURL_OPTIONS)" \
     postconfigure="development-curl-fixconfig"
 
 #MM
