@@ -1,4 +1,4 @@
-# Copyright © 2016-2017, The AROS Development Team. All rights reserved.
+# Copyright © 2016-2018, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros.cfg
@@ -26,7 +26,7 @@ GIT_OPTIONS := \
             --with-curl \
             --with-lib='$(AROS_LIB)'
 
-GIT_VERSION := 2.12.2
+GIT_VERSION := 2.17.1
 GIT_PORTDIR := $(PORTSDIR)/git
 
 GIT_ARCHBASE := v$(GIT_VERSION)
