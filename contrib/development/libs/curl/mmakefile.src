@@ -15,10 +15,10 @@ CURL_OPTIONS=--disable-shared --without-random --disable-threaded-resolver --dis
 %fetch_and_build_gnu_development package=curl version=$(CURL_VERSION) \
     patch=yes package_repo="$(REPOSITORIES)" \
     extraoptions="$(CURL_OPTIONS)" \
-    postconfigure="development-curl-fixconfig"
+    postconfigure="development-curl-fixenv" postinstall="development-curl-fixconfig"
 
 #MM
-development-curl-fixconfig :
+development-curl-fixenv :
 	for file in $(GENDIR)/$(CURDIR)/curl/lib/curl_config.h; \
 	do \
 	$(SED) -i -e 's@/\* #undef HAVE_SOCKET \*/@#define HAVE_SOCKET 1@' $$file; \
@@ -48,6 +48,13 @@ development-curl-fixconfig :
 	$(SED) -i -e 's@#define HAVE_IOCTL_SIOCGIFADDR 1@/\* #undef HAVE_IOCTL_SIOCGIFADDR \*/@' $$file; \
 	done; \
 	for file in $(GENDIR)/$(CURDIR)/curl/src/Makefile; \
+	do \
+	$(SED) -i -e 's@-lssl -lcrypto -lz -lssl@-lssl -lcrypto -lz@' $$file; \
+	done
+
+#MM
+development-curl-fixconfig :
+	for file in $(AROS_DEVELOPER)/bin/curl-config; \
 	do \
 	$(SED) -i -e 's@-lssl -lcrypto -lz -lssl@-lssl -lcrypto -lz@' $$file; \
 	done
