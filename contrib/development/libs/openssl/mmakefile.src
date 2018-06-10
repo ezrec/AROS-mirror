@@ -5,13 +5,22 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 REPOSITORIES = http://www.openssl.org/source/ \
  ftp://mirror.switch.ch/mirror/openssl/source/
-ARCHBASE := openssl-1.0.1t
+ARCHBASE := openssl-1.1.0h
 OPENSSL_SOURCE := $(PORTSDIR)/openssl/$(ARCHBASE)
-OPENSSL_BUILD_DIR := $(GENDIR)/$(CURDIR)
+OPENSSL_BUILD_DIR := $(GENDIR)/$(CURDIR)/$(ARCHBASE)
 
-NOWARN_FLAGS :=   $(NOWARN_FORMAT_SECURITY) $(NOWARN_UNUSED_BUT_SET_VARIABLE) $(NOWARN_UNUSED_VALUE) $(NOWARN_UNUSED_VARIABLE) $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_MAYBE_UNINITIALIZED)
+NOWARN_FLAGS := $(NOWARN_FORMAT_SECURITY) $(NOWARN_UNUSED_BUT_SET_VARIABLE) \
+        $(NOWARN_UNUSED_VALUE) $(NOWARN_UNUSED_VARIABLE) \
+        $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_MAYBE_UNINITIALIZED)
+USER_CFLAGS := $(NOWARN_FLAGS) -DOPENSSL_NO_SECURE_MEMORY
 
-#MM- contrib-openssl : contrib-openssl-fetch contrib-openssl-setup contrib-openssl-configure contrib-openssl-build contrib-openssl-install
+OPENSSL_OPTIONS=no-threads no-sse2 no-ssl3
+
+#MM- contrib-openssl : contrib-openssl-install
+#MM contrib-openssl-setup : contrib-openssl-fetch 
+#MM contrib-openssl-configure : contrib-openssl-setup 
+#MM contrib-openssl-build : contrib-openssl-configure 
+#MM contrib-openssl-install : contrib-openssl-build 
 
 %fetch mmake=contrib-openssl-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/openssl \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
@@ -38,7 +47,7 @@ contrib-openssl-setup : $(OPENSSL_BUILD_DIR)/.links-created
 $(OPENSSL_BUILD_DIR)/.build-configured : $(OPENSSL_BUILD_DIR)/.links-created
 	$(RM) $@
 	cd $(OPENSSL_BUILD_DIR); \
-	env -i PATH=$(PATH) AROS_CC="$(TARGET_CC) $(TARGET_SYSROOT)" AROS_CFLAGS="$(CONFIG_CFLAGS) $(NOWARN_FLAGS)" AROS_RANLIB="$(RANLIB)" AR="$(AR_PLAIN)" ./Configure "aros-$(AROS_TARGET_CPU)-cross" no-threads no-sse2 no-ssl3 --prefix=/$(AROS_DIR_DEVELOPER) --openssldir=/$(AROS_DIR_DEVELOPER)/etc/ssl
+	env -i PATH=$(PATH) AROS_CC="$(CC)" AROS_CFLAGS="$(CFLAGS)" AROS_RANLIB="$(RANLIB)" AR="$(AR_PLAIN)" ./Configure "aros-$(AROS_TARGET_CPU)-buildsys" $(OPENSSL_OPTIONS) --prefix=/$(AROS_DIR_DEVELOPER) --openssldir=/$(AROS_DIR_DEVELOPER)/etc/ssl
 	$(TOUCH) $@;
 
 #MM
@@ -55,8 +64,12 @@ contrib-openssl-build : $(OPENSSL_BUILD_DIR)/.build-flag
 
 $(OPENSSL_BUILD_DIR)/.install-flag : $(OPENSSL_BUILD_DIR)/.build-flag
 	$(RM) $@
+	for file in $(OPENSSL_BUILD_DIR)/Makefile; \
+	do \
+	$(SED) -i -e "s@=/Developer@=$(AROS_DEVELOPER)@" $$file; \
+	done;
 	cd $(OPENSSL_BUILD_DIR); \
-	env -i PATH=$(PATH) make install INSTALL_PREFIX=$(AROS_DEVELOPER)/../
+	env -i PATH=$(PATH) make install
 	for file in $(AROS_DEVELOPER)/etc/ssl/openssl.cnf; \
 	do \
 	$(SED) -i -e 's@$$dir/certs	@/ENV/SYS/Certificates@' $$file; \
