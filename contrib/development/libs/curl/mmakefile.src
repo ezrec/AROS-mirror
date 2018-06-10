@@ -12,7 +12,7 @@ REPOSITORIES := http://curl.haxx.se/download \
 
 CURL_VERSION=7.60.0
 USER_CPPFLAGS=-D__BSD_VISIBLE=1
-CURL_OPTIONS=--disable-shared --without-random --disable-threaded-resolver --disable-ntlm-wb --libdir=$(AROS_LIB)
+CURL_OPTIONS=--disable-shared --without-random --disable-threaded-resolver --disable-ntlm-wb --with-ssl=$(AROS_DEVELOPER) --libdir=$(AROS_LIB)
 
 %fetch_and_build_gnu_development package=curl version=$(CURL_VERSION) \
     patch=yes package_repo="$(REPOSITORIES)" \
@@ -51,13 +51,13 @@ development-curl-fixenv :
 	done; \
 	for file in $(GENDIR)/$(CURDIR)/curl/src/Makefile; \
 	do \
-	$(SED) -i -e 's@-lssl -lcrypto -lz -lssl@-lssl -lcrypto -lz@' $$file; \
+	$(SED) -i -e 's@-lssl -lssl -lcrypto -lz@-lssl -lcrypto -lz@' $$file; \
 	done
 
 #MM
 development-curl-fixconfig :
 	@for file in $(AROS_DEVELOPER)/bin/curl-config; \
 	do \
-	$(SED) -i -e 's@-lssl -lcrypto -lz -lssl@-lssl -lcrypto -lz@' $$file; \
+	$(SED) -i -e 's@-lssl -lssl -lcrypto -lz@-lssl -lcrypto -lz@' $$file; \
 	done; \
 	$(ECHO) "SYS:Developer" > $(AROS_ENVARC)/SYS/Packages/Curl
