@@ -1,0 +1,13 @@
+#   $Id: mmakefile.src 54326 2017-03-28 20:54:52Z NicJA $
+
+include $(SRCDIR)/config/aros.cfg
+
+FILES := Curl-Startup
+PACKAGEDIR := $(AROS_DEVELOPER)/S
+#MM development-curl-pakagefiles : development-curl-pakagedir
+
+%copy_files_q mmake=development-curl-pakagefiles dst=$(PACKAGEDIR)
+
+#MM
+development-curl-pakagedir:
+	%mkdir_q dir="$(PACKAGEDIR)"

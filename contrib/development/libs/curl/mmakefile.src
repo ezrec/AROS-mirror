@@ -4,6 +4,7 @@
 include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-curl : contrib-openssl development-curl linklibs-pthread
+#MM development-curl-fixconfig : development-curl-pakagefiles
 
 REPOSITORIES := http://curl.haxx.se/download \
  http://ftp.sunet.se/mirror/archive/ftp.sunet.se/pub/www/utilities/curl
@@ -57,4 +58,5 @@ development-curl-fixconfig :
 	@for file in $(AROS_DEVELOPER)/bin/curl-config; \
 	do \
 	$(SED) -i -e 's@-lssl -lcrypto -lz -lssl@-lssl -lcrypto -lz@' $$file; \
-	done
+	done; \
+	$(ECHO) "SYS:Developer" > $(AROS_ENVARC)/SYS/Packages/Curl
