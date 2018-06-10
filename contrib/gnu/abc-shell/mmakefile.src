@@ -12,7 +12,7 @@ USER_CFLAGS  := $(NOWARN_FLAGS) -DAMIGA -DPOSIXLY_CORRECT -DHISTORY -DAUTOINIT -
 USER_LDFLAGS := -nix
 
 #MM- contrib-gnu    : contrib-gnu-abcshell
-#MM- contrib-gnu-abcshell : contrib-gnu-sh
+#MM- contrib-gnu-abcshell : contrib-gnu-sh iconset-$(AROS_TARGET_ICONSET)-contrib-icons-developer
 
 %build_prog mmake=contrib-gnu-sh progname=sh files=$(FILES) targetdir=$(DESTDIR)
 
