@@ -1,4 +1,4 @@
-# Copyright 2009-2017, The AROS Development Team. All rights reserved.
+# Copyright 2009-2018, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -11,4 +11,4 @@ USER_LDFLAGS := -static-libstdc++
 
 %fetch_and_build_gnu_development package=flac version=1.3.2 patch=yes \
     package_repo=http://downloads.xiph.org/releases/flac/ suffixes="tar.xz" \
-    extraoptions=$(EXTRAOPTS)
+    extraoptions=$(EXTRAOPTS) nlsflag=no xflag=no
