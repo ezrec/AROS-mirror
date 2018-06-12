@@ -1,4 +1,4 @@
-# Copyright © 2004-2017, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2018, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -25,4 +25,4 @@ REPOSITORIES := http://www.ferzkopp.net/Software/SDL_gfx-2.0 \
 
 %fetch_and_build_gnu_development package=SDL_gfx version=2.0.22 patch=no \
      package_repo=$(REPOSITORIES) \
-     suffixes="tar.gz" extraoptions="$(DISABLE_MMX) libdir=$(AROS_LIB)"
+     suffixes="tar.gz" extraoptions="$(DISABLE_MMX) libdir=$(AROS_LIB)" nlsflag=no
