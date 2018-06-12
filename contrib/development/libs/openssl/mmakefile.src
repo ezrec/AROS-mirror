@@ -47,7 +47,7 @@ contrib-openssl-setup : $(OPENSSL_BUILD_DIR)/.links-created
 $(OPENSSL_BUILD_DIR)/.build-configured : $(OPENSSL_BUILD_DIR)/.links-created
 	$(RM) $@
 	cd $(OPENSSL_BUILD_DIR); \
-	env -i PATH=$(PATH) AROS_CC="$(CC)" AROS_CFLAGS="$(CFLAGS)" AROS_RANLIB="$(RANLIB)" AR="$(AR_PLAIN)" ./Configure "aros-$(AROS_TARGET_CPU)-buildsys" $(OPENSSL_OPTIONS) --prefix=/$(AROS_DIR_DEVELOPER) --openssldir=/$(AROS_DIR_DEVELOPER)/etc/ssl
+	env -i PATH=$(PATH) AROS_CC="$(strip $(CC) $(TARGET_SYSROOT))" AROS_CFLAGS="$(CFLAGS)" AROS_RANLIB="$(RANLIB)" AR="$(AR_PLAIN)" ./Configure "aros-$(AROS_TARGET_CPU)-buildsys" $(OPENSSL_OPTIONS) --prefix=/$(AROS_DIR_DEVELOPER) --openssldir=/$(AROS_DIR_DEVELOPER)/etc/ssl
 	$(TOUCH) $@;
 
 #MM
