@@ -1,4 +1,4 @@
-# Copyright © 2008-2017, The AROS Development Team. All rights reserved.
+# Copyright © 2008-2018, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -12,4 +12,4 @@ REPOSITORIES := http://www.oberhumer.com/opensource/lzo/download \
 
 %fetch_and_build_gnu_development package=lzo version=2.09 patch=no \
     package_repo=$(REPOSITORIES) suffixes="tar.gz" \
-    extraoptions="--libdir=$(AROS_LIB)"
+    extraoptions="--libdir=$(AROS_LIB)" nlsflag=no xflag=no
