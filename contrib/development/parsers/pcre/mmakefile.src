@@ -1,4 +1,4 @@
-# Copyright © 2003-2017, The AROS Development Team. All rights reserved.
+# Copyright © 2003-2018, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -17,4 +17,4 @@ REPOSITORIES := https://ftp.pcre.org/pub/pcre/
 %fetch_and_build mmake=contrib-development-parsers-pcre prefix=$(TARGETDIR) \
 	package=$(PACKAGE) version=$(VERSION) suffixes="tar.gz" \
 	patch=no package_repo=$(REPOSITORIES) nix=yes \
-	extraoptions="--disable-stack-for-recursion --disable-jit --disable-cpp --libdir=$(AROS_LIB)"
+	extraoptions="--disable-stack-for-recursion --disable-jit --disable-cpp --libdir=$(AROS_LIB)" nlsflag=no xflag=no
