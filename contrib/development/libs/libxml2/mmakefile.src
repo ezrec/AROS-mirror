@@ -1,4 +1,4 @@
-# Copyright 2008-2016, The AROS Development Team. All rights reserved.
+# Copyright 2008-2018, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -8,6 +8,10 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 REPOSITORIES := ftp://xmlsoft.org/libxml2/ ftp://gd.tuwien.ac.at/pub/libxml/
 
+XML2_OPTIONS=--disable-shared --with-http=no --with-ftp=no --with-modules=no \
+        --with-mem-debug=no --with-iconv=no --with-debug=no --with-run-debug=no \
+        --enable-shared=no --with-threads=no --with-python=no --libdir=$(AROS_LIB)
+
 XML2_CFLAGS=
 ifneq (x86_64,$(AROS_TARGET_CPU))
 XML2_CFLAGS+=$(OPTIMIZATION_CFLAGS)
@@ -15,5 +19,4 @@ endif
 
 %fetch_and_build_gnu_development package=libxml2 version=2.7.8 patch=yes \
     package_repo=$(REPOSITORIES) suffixes="tar.gz"\
-    extracflags="$(XML2_CFLAGS)" extraoptions="--disable-shared --with-http=no --with-ftp=no --with-modules=no --with-mem-debug=no \
-        --with-iconv=no --with-debug=no --with-run-debug=no --enable-shared=no --with-threads=no --with-python=no --libdir=$(AROS_LIB)"
+    extracflags="$(XML2_CFLAGS)" extraoptions="$(XML2_OPTIONS)" nlsflag=no xflag=no
