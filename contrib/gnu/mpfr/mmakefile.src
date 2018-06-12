@@ -1,4 +1,4 @@
-# Copyright © 2004, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2018, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -7,6 +7,6 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- development-mpfr : development-gmp
 
 %fetch_and_build_gnu_development package=mpfr version=3.1.2 patch=no \
-    extraoptions="--libdir=$(AROS_LIB)"
+    extraoptions="--libdir=$(AROS_LIB)" nlsflag=no xflag=no
 
 %common
