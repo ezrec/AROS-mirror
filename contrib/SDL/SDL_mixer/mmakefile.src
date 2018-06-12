@@ -1,4 +1,4 @@
-# Copyright © 2004-2017, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2018, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -28,4 +28,4 @@ endif
 
 %fetch_and_build_gnu_development package=SDL_mixer version=1.2.11 patch=yes \
     package_repo=http://www.libsdl.org/projects/SDL_mixer/release/ \
-    suffixes="tar.gz" extraoptions=$(SDL_MIXER_EXTRA_OPTS)
+    suffixes="tar.gz" extraoptions=$(SDL_MIXER_EXTRA_OPTS) nlsflag=no xflag=no
