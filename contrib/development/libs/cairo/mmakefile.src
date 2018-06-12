@@ -1,4 +1,4 @@
-# Copyright © 2012-2016, The AROS Development Team. All rights reserved.
+# Copyright © 2012-2018, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -8,7 +8,11 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- development-cairo : workbench-libs-freetype-complete contrib-fontconfig
 
+CAIRO_OPTIONS=--enable-ft --disable-lto --disable-shared --disable-xlib --disable-xcb png_CFLAGS=' ' \
+    png_LIBS='-lpng' pixman_CFLAGS='-I$(AROS_DEVELOPER)/include/pixman-1' pixman_LIBS='-lpixman' \
+    FREETYPE_CFLAGS='-I$(AROS_DEVELOPER)/include/freetype' FREETYPE_LIBS='-lfreetype2' --libdir=$(AROS_LIB)
+
 %fetch_and_build_gnu_development package=cairo version=1.12.14 patch=yes \
     package_repo=http://cairographics.org/releases/ suffixes="tar.xz" \
-    extraoptions="--enable-ft --disable-lto --disable-shared --disable-xlib --disable-xcb png_CFLAGS=' ' png_LIBS='-lpng' pixman_CFLAGS='-I$(AROS_DEVELOPER)/include/pixman-1' pixman_LIBS='-lpixman' FREETYPE_CFLAGS='-I$(AROS_DEVELOPER)/include/freetype' FREETYPE_LIBS='-lfreetype2' --libdir=$(AROS_LIB)"
+    extraoptions="$(CAIRO_OPTIONS)" nlsflag=no
 
