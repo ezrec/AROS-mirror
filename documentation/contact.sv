@@ -62,7 +62,7 @@ Följ länkarna till de administrativa sidorna för information om hur man
 prenumererar, avbryter prenumerationerer, listarkiv och andra användbara
 funktioner.
 
-__ https://www.hepe.com/mailman/listinfo/aros-dev/
+__ https://mail.aros.org/mailman/listinfo/aros-dev
 __ http://lists.sourceforge.net/mailman/listinfo/aros-cvs
 __ http://lists.sourceforge.net/mailman/listinfo/aros-website
 

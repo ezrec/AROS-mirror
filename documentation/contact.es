@@ -71,7 +71,7 @@ que tienen los desarrolladores. Están disponibles las siguientes listas de corre
 Sigue los enlaces a las páginas administrativas para información sobre cómo 
 suscribirse, retirarse, acceder a los archivos y otras funciones útiles.
 
-__ https://www.hepe.com/mailman/listinfo/aros-dev/
+__ https://mail.aros.org/mailman/listinfo/aros-dev
 __ http://lists.sourceforge.net/mailman/listinfo/aros-cvs
 __ http://lists.sourceforge.net/mailman/listinfo/aros-website
 

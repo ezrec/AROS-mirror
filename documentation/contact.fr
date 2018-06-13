@@ -63,7 +63,7 @@ disponibles :
 Suivez les liens des pages administratives pour les informations concernant
 l'abonnement, le désabonnement, l'accès aux archives et les autres fonctions utiles.
 
-__ https://www.hepe.com/mailman/listinfo/aros-dev/
+__ https://mail.aros.org/mailman/listinfo/aros-dev
 __ http://lists.sourceforge.net/mailman/listinfo/aros-cvs
 __ http://lists.sourceforge.net/mailman/listinfo/aros-website
 

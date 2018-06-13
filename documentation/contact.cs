@@ -62,7 +62,7 @@ Pou¾ij následující odkazy na administraèní stránky pro získání informací
 o pøihlá¹ení k mailing listu a odhlá¹ení se z nìj, pøístupu k archivùm
 a dal¹ích u¾iteèných funkcích.
 
-__ https://www.hepe.com/mailman/listinfo/aros-dev/
+__ https://mail.aros.org/mailman/listinfo/aros-dev
 __ http://lists.sourceforge.net/mailman/listinfo/aros-cvs
 __ http://lists.sourceforge.net/mailman/listinfo/aros-website
 

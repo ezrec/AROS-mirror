@@ -62,7 +62,7 @@ __ mailto:digulla@aros.org
 Ακολουθείστε τις συνδέσεις στις ιστοσελίδες διαχείρησης των λιστών για πληροφορίες σχετικά με
 εγγραφές, διαγραφές, προσπέλαση των αρχείων μηνυμάτων και άλλες χρήσιμες διεργασίες.
 
-__ https://www.hepe.com/mailman/listinfo/aros-dev/
+__ https://mail.aros.org/mailman/listinfo/aros-dev
 __ http://lists.sourceforge.net/mailman/listinfo/aros-cvs
 __ http://lists.sourceforge.net/mailman/listinfo/aros-website
 

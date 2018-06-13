@@ -68,7 +68,7 @@ lijsten zijn beschikbaar:
 Volg de links naar de administratieve pagina's voor informatie over hoe u uzelf
 kunt aan- en afmelden, archieven kunt inzien en enkele andere handige functies. 
 
-__ https://www.hepe.com/mailman/listinfo/aros-dev/
+__ https://mail.aros.org/mailman/listinfo/aros-dev
 __ http://lists.sourceforge.net/mailman/listinfo/aros-cvs
 __ http://lists.sourceforge.net/mailman/listinfo/aros-website
 
