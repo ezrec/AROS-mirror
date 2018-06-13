@@ -56,7 +56,7 @@ FILES := \
 
 EXEDIR := $(AROS_CONTRIB)/Emu/UAE
 
-NOWARN_FLAGS := $(NOWARN_UNUSED)  $(NOWARN_FORMAT) $(NOWARN_SIGN_COMPARE)
+NOWARN_FLAGS := $(NOWARN_UNUSED)  $(NOWARN_FORMAT) $(NOWARN_SIGN_COMPARE) $(NOWARN_SHIFT_NEGATIVE_VALUE)
 USER_CFLAGS := -O2 -fomit-frame-pointer -fno-exceptions -fno-strength-reduce \
 	       -Wall -W -Wmissing-prototypes  -Wstrict-prototypes $(NOWARN_FLAGS) \
                -DGCCCONSTFUNC='__attribute__((const))'\
