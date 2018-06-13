@@ -56,17 +56,20 @@ FILES := \
 
 EXEDIR := $(AROS_CONTRIB)/Emu/UAE
 
-NOWARN_FLAGS := $(NOWARN_UNUSED)  $(NOWARN_FORMAT) $(NOWARN_SIGN_COMPARE) $(NOWARN_SHIFT_NEGATIVE_VALUE)
+NOWARN_FLAGS := $(NOWARN_UNUSED)  $(NOWARN_FORMAT) $(NOWARN_SIGN_COMPARE) \
+	       $(NOWARN_SHIFT_NEGATIVE_VALUE)
+
 USER_CFLAGS := -O2 -fomit-frame-pointer -fno-exceptions -fno-strength-reduce \
 	       -Wall -W -Wmissing-prototypes  -Wstrict-prototypes $(NOWARN_FLAGS) \
-               -DGCCCONSTFUNC='__attribute__((const))'\
+	       -UAMIGA -U_AMIGA
+
+USER_CPPFLAGS := -DGCCCONSTFUNC='__attribute__((const))'\
                -D_REENTRANT \
                -DUNALIGNED_PROFITABLE\
                -DREGPARAM='__attribute__((regparm(3)))'\
 	       -DX86_ASSEMBLY -DOPTIMIZED_FLAGS -D__inline__=inline\
 	       -I$(UAESRCDIR) -I$(UAESRCDIR)/include \
 	       -I$(TOP)/$(CURDIR) -I$(TOP)/$(CURDIR)/include \
-	       -UAMIGA -U_AMIGA
 
 #MM- contrib-complete: uae
 #MM- uae : uae-$(AROS_TARGET_CPU)
@@ -126,14 +129,14 @@ blittable.c: genblitter blitfunc.h
 #	rm cputmp.s
 
 $(OBJDIR)/_writelog.o : writelog.c
-	$(HOST_CC) $(USER_CFLAGS) $^ -c -o $@
+	$(HOST_CC) $(USER_CFLAGS) $(USER_CPPFLAGS) $^ -c -o $@
 
 genblitter: genblitter.c blitops.c $(OBJDIR)/_writelog.o
-	$(HOST_CC) $(USER_CFLAGS) $^ -o $@
+	$(HOST_CC) $(USER_CFLAGS) $(USER_CPPFLAGS) $^ -o $@
 build68k: build68k.c $(OBJDIR)/_writelog.o
-	$(HOST_CC) $(USER_CFLAGS) $^ -o $@
+	$(HOST_CC) $(USER_CFLAGS) $(USER_CPPFLAGS) $^ -o $@
 gencpu: gencpu.c readcpu.c cpudefs.c missing.c $(OBJDIR)/_writelog.o
-	$(HOST_CC) $(USER_CFLAGS) $^ -o $@
+	$(HOST_CC) $(USER_CFLAGS) $(USER_CPPFLAGS) $^ -o $@
 
 cpuemu.c: gencpu
 	./gencpu
