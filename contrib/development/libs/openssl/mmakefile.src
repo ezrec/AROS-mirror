@@ -5,7 +5,8 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 REPOSITORIES = http://www.openssl.org/source/ \
  ftp://mirror.switch.ch/mirror/openssl/source/
-ARCHBASE := openssl-1.1.0h
+OPENSSL_VERSION=1.1.0h
+ARCHBASE := openssl-$(OPENSSL_VERSION)
 OPENSSL_SOURCE := $(PORTSDIR)/openssl/$(ARCHBASE)
 OPENSSL_BUILD_DIR := $(GENDIR)/$(CURDIR)/$(ARCHBASE)
 
@@ -16,7 +17,7 @@ USER_CFLAGS := $(NOWARN_FLAGS) -DOPENSSL_NO_SECURE_MEMORY
 
 OPENSSL_OPTIONS=no-threads no-sse2 no-ssl3
 
-#MM- contrib-openssl : contrib-openssl-install
+#MM- contrib-openssl : contrib-openssl-install contrib-openssl-installtests
 #MM contrib-openssl-setup : contrib-openssl-fetch 
 #MM contrib-openssl-configure : contrib-openssl-setup 
 #MM contrib-openssl-build : contrib-openssl-configure 
@@ -34,47 +35,69 @@ OPENSSL_OPTIONS=no-threads no-sse2 no-ssl3
     excludes="fips_aes_data Makefile.org.orig include"
 
 $(OPENSSL_BUILD_DIR)/.links-created : $(TOP)/$(CURDIR)/mmakefile
-	$(RM) $@
+	@$(RM) $@
 	%mkdir_q dir=$(OPENSSL_BUILD_DIR)
-	cd $(OPENSSL_SOURCE); \
+	@cd $(OPENSSL_SOURCE); \
 	find . -type d -exec mkdir -p $(OPENSSL_BUILD_DIR)/\{\} \;;\
 	find . -type f -exec ln -fs $(OPENSSL_SOURCE)/\{\} $(OPENSSL_BUILD_DIR)/\{\} \;; 
-	$(TOUCH) $@;
+	@$(TOUCH) $@;
 
 #MM
 contrib-openssl-setup : $(OPENSSL_BUILD_DIR)/.links-created
 
 $(OPENSSL_BUILD_DIR)/.build-configured : $(OPENSSL_BUILD_DIR)/.links-created
-	$(RM) $@
-	cd $(OPENSSL_BUILD_DIR); \
+	@$(RM) $@
+	@$(ECHO) "Configuring build in         $(subst $(TOP)/,,$(OPENSSL_BUILD_DIR))"
+	@cd $(OPENSSL_BUILD_DIR); \
 	env -i PATH=$(PATH) AROS_CC="$(strip $(CC) $(TARGET_SYSROOT))" AROS_CFLAGS="$(CFLAGS)" AROS_RANLIB="$(RANLIB)" AR="$(AR_PLAIN)" ./Configure "aros-$(AROS_TARGET_CPU)-buildsys" $(OPENSSL_OPTIONS) --prefix=/$(AROS_DIR_DEVELOPER) --openssldir=/$(AROS_DIR_DEVELOPER)/etc/ssl
-	$(TOUCH) $@;
+	@$(TOUCH) $@;
 
 #MM
 contrib-openssl-configure : $(OPENSSL_BUILD_DIR)/.build-configured
 
 $(OPENSSL_BUILD_DIR)/.build-flag : $(OPENSSL_BUILD_DIR)/.build-configured
-	$(RM) $@
-	cd $(OPENSSL_BUILD_DIR); \
+	@$(RM) $@
+	@$(ECHO) "Building    OpenSSL..."
+	@cd $(OPENSSL_BUILD_DIR); \
 	env -i PATH=$(PATH) HOME=$(HOME) make
-	$(TOUCH) $@
+	@$(TOUCH) $@
 
 #MM
 contrib-openssl-build : $(OPENSSL_BUILD_DIR)/.build-flag
 
 $(OPENSSL_BUILD_DIR)/.install-flag : $(OPENSSL_BUILD_DIR)/.build-flag
-	$(RM) $@
-	for file in $(OPENSSL_BUILD_DIR)/Makefile; \
+	@$(RM) $@
+	@$(ECHO) "Installing    OpenSSL..."
+	@for file in $(OPENSSL_BUILD_DIR)/Makefile; \
 	do \
-	$(SED) -i -e "s@=/Developer@=$(AROS_DEVELOPER)@" $$file; \
+		$(SED) -i -e "s@=/Developer@=$(AROS_DEVELOPER)@" $$file; \
 	done;
-	cd $(OPENSSL_BUILD_DIR); \
+	@cd $(OPENSSL_BUILD_DIR); \
 	env -i PATH=$(PATH) make install
 	for file in $(AROS_DEVELOPER)/etc/ssl/openssl.cnf; \
 	do \
-	$(SED) -i -e 's@$$dir/certs	@/ENV/SYS/Certificates@' $$file; \
+		$(SED) -i -e 's@$$dir/certs	@/ENV/SYS/Certificates@' $$file; \
 	done;
-	$(TOUCH) $@
+	@$(TOUCH) $@
 
 #MM
 contrib-openssl-install : $(OPENSSL_BUILD_DIR)/.install-flag
+
+$(OPENSSL_BUILD_DIR)/.installtest-flag : $(OPENSSL_BUILD_DIR)/.build-flag $(AROS_TESTS)/openssl
+	@$(RM) $@
+	@$(ECHO) "Installing    OpenSSL Tests..."
+	@$(CP) -R $(OPENSSL_BUILD_DIR)/test/* $(AROS_TESTS)/openssl/
+	@$(RM) $(AROS_TESTS)/openssl/*.c
+	@$(RM) $(AROS_TESTS)/openssl/*.h
+	@$(RM) $(AROS_TESTS)/openssl/*.d
+	@$(RM) $(AROS_TESTS)/openssl/*.o
+	@$(RM) $(AROS_TESTS)/openssl/generate_buildtest.pl
+	@$(RM) $(AROS_TESTS)/openssl/generate_ssl_test.pl
+	@$(RM) $(AROS_TESTS)/openssl/*.info
+	@$(TOUCH) $@
+
+$(AROS_TESTS)/openssl:
+	%mkdir_q dir="$@"
+
+#MM
+contrib-openssl-installtests : $(OPENSSL_BUILD_DIR)/.installtest-flag
