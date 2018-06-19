@@ -126,7 +126,7 @@ USER_LDFLAGS := -static
 %build_module mmake=linklibs-aminet-dev-gui-gtlayout \
     modname=gtlayout modtype=library \
     files="$(FILES) $(OTHERS) $(UFC_SOURCE) $(API_SOURCE) $(LINKLIB_FILES)" \
-    linklibobjs=$(GENDIR)/$(CURDIR)/$(LINKLIB_FILES).o \
+    linklibobjs=$(GENDIR)/$(CURDIR)/gtlayout/$(LINKLIB_FILES).o \
     conffile=lib.conf
 
 #MM linklibs-aminet-dev-gui-gtlayout-includes : gtlayout-includes-copy
