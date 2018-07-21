@@ -16,10 +16,10 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM  ports-graphics-zunepaint-quick : ports-graphics-zunepaint-fetch
 
 REPOSITORIES := sf://zunetools
-ARCHBASE     := ZunePaint_v0.11
+ARCHBASE     := ZunePaint_v0.13
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/ZunePaint
 
-NOWARN_FLAGS := $(NOWARN_INT_CONVERSION) $(NOWARN_MISLEADING_INDENTATION)
+NOWARN_FLAGS := $(NOWARN_MISLEADING_INDENTATION)
 
 USER_CFLAGS  := $(NOWARN_FLAGS) -DZUNEPAINT -DAROS_ABI_V1
 USER_INCLUDES:= -I$(PORTSDIR)/zunepaint/$(ARCHBASE)/zunepaint/src
@@ -65,6 +65,7 @@ FILES := \
     brushes \
     ZunePaint_Tabs \
     Picture_Masks \
+    WriteILBM \
     ZunePaint
 
 
@@ -76,7 +77,7 @@ FILES := $(addprefix $(PORTSDIR)/zunepaint/$(ARCHBASE)/ZunePaint/src/,$(FILES))
 
 %fetch mmake=ports-graphics-zunepaint-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/zunepaint/$(ARCHBASE) \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip" \
-    patches_specs=zunepaint_v0.11-aros.diff:$(ARCHBASE):-p1
+    patches_specs=zunepaint_v0.13-aros.diff:$(ARCHBASE):-p1
 
 CPFILES := ZunePaint.info
 
