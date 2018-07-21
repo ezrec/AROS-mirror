@@ -74,7 +74,7 @@ FILES := $(addprefix $(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView/src/,$(FILES))
 
 %fetch mmake=ports-graphics-zuneview-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/zuneview/$(ARCHBASE) \
     location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip" \
-    patches_specs=zuneview_v0.37-aros.diff:$(ARCHBASE):-p1
+    patches_specs=zuneview_v0.39-aros.diff:$(ARCHBASE):-p1
 
 CPFILES := ZuneView.info
 
