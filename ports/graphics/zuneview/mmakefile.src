@@ -16,10 +16,10 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM  ports-graphics-zuneview-quick : ports-graphics-zuneview-fetch
 
 REPOSITORIES := sf://zunetools
-ARCHBASE     := ZuneView_v0.37
+ARCHBASE     := ZuneView_v0.39
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/ZuneView
 
-NOWARN_FLAGS := $(NOWARN_INT_CONVERSION) $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_FORMAT)
+NOWARN_FLAGS := $(NOWARN_MISLEADING_INDENTATION)
 USER_CFLAGS  := $(NOWARN_FLAGS) -DZUNEVIEW -DAROS_ABI_V1
 USER_INCLUDES:= -I$(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView/src
  
@@ -63,7 +63,8 @@ FILES := \
     locale \
     Picture_Masks \
     Picture_Paint \
-    ZuneView
+    ZuneView \
+    WriteILBM
 
 FILES := $(addprefix $(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView/src/,$(FILES))
 
