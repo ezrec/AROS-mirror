@@ -5,7 +5,13 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- contrib-multimedia : contrib-openal
+#MM- contrib-multimedia : contrib-multimedia-$(AROS_TARGET_CPU)
+
+##MM- contrib-multimedia-i386 : contrib-openal
+#DISABLED till we have a compiler to handle atomics ##MM- contrib-multimedia-m68k : contrib-openal
+##MM- contrib-multimedia-ppc : contrib-openal
+##MM- contrib-multimedia-arm : contrib-openal
+##MM- contrib-multimedia-x86_64 : contrib-openal
 
 #MM- contrib-openal : contrib-openal-linklib contrib-openal-library
 #MM- contrib-openal-common : includes contrib-openal-includes workbench-devs-AHI
