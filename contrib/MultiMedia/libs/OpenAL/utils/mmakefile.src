@@ -1,17 +1,17 @@
-#   $Id$
+#   $Id: mmakefile.src 54166 2017-03-18 00:44:34Z NicJA $
 #
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-##MM- contrib-openal : contrib-openal-examples
-#MM- contrib-openal-examples : contrib-openal-library
+##MM- contrib-openal : contrib-openal-utils
+#MM- contrib-openal-utils : contrib-openal-library
 
-FILES   :=  alffplay allatency alloopback alreverb alstream
+FILES   :=  openal-info
 EXEDIR  := $(AROS_TESTS)/OpenAL
 
 USER_INCLUDES := -I$(AROS_INCLUDES)/SDL -I$(AROS_CONTRIB_INCLUDES)
 
-%build_progs mmake=contrib-openal-examples \
+%build_progs mmake=contrib-openal-utils \
     targetdir=$(EXEDIR) \
     files="$(FILES)" uselibs="openal pthread"
 

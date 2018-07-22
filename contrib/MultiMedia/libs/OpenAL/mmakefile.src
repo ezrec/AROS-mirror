@@ -7,9 +7,11 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-multimedia : contrib-openal
 
-#MM- contrib-openal : contrib-openal-linklib
+#MM- contrib-openal : contrib-openal-linklib contrib-openal-library
+#MM- contrib-openal-common : includes contrib-openal-includes workbench-devs-AHI
 
-#MM contrib-openal-linklib : includes contrib-openal-includes workbench-devs-AHI
+#MM contrib-openal-linklib : contrib-openal-common
+#MM contrib-openal-library : contrib-openal-common
 
 USER_INCLUDES := \
         -I$(SRCDIR)/$(CURDIR) \
@@ -97,7 +99,10 @@ OPENAL_FILES = \
         $(addprefix Alc/midi/, $(ALCMIDI_FILES)) \
         $(addprefix common/, $(COMMON_FILES))
 
-%build_linklib mmake=contrib-openal-linklib libname=openal \
-    files="$(OPENAL_FILES)"
+%build_linklib mmake=contrib-openal-linklib libname=openal.static \
+    files="$(OPENAL_FILES)" objdir=$(OBJDIR)/static
+
+%build_module mmake=contrib-openal-library modname=openal \
+    modtype=library files="$(OPENAL_FILES)" uselibs="pthread posixc stdcio stdc"
 
 %common
