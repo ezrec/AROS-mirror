@@ -6,8 +6,9 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- ports-graphics-i386 : ports-graphics-zunepaint
 #MM- ports-graphics-m68k : ports-graphics-zunepaint
+#MM- ports-graphics-ppc : ports-graphics-zunepaint
 #MM- ports-graphics-arm : ports-graphics-zunepaint
-#DISABLED #MM- ports-graphics-x86_64 : ports-graphics-zunepaint
+#MM- ports-graphics-x86_64 : ports-graphics-zunepaint
 
 #MM  ports-graphics-zunepaint : \
 #MM    includes linklibs ports-graphics-zunepaint-fetch \
@@ -19,8 +20,7 @@ REPOSITORIES := sf://zunetools
 ARCHBASE     := ZunePaint_v0.13
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/ZunePaint
 
-NOWARN_FLAGS := $(NOWARN_MISLEADING_INDENTATION)
-
+NOWARN_FLAGS :=
 USER_CFLAGS  := $(NOWARN_FLAGS) -DZUNEPAINT -DAROS_ABI_V1
 USER_INCLUDES:= -I$(PORTSDIR)/zunepaint/$(ARCHBASE)/zunepaint/src
  
@@ -76,8 +76,7 @@ FILES := $(addprefix $(PORTSDIR)/zunepaint/$(ARCHBASE)/ZunePaint/src/,$(FILES))
     uselibs="jpeg png z mui"
 
 %fetch mmake=ports-graphics-zunepaint-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/zunepaint/$(ARCHBASE) \
-    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip" \
-    patches_specs=zunepaint_v0.13-aros.diff:$(ARCHBASE):-p1
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip"
 
 CPFILES := ZunePaint.info
 

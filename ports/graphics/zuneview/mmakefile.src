@@ -6,6 +6,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- ports-graphics-i386 : ports-graphics-zuneview
 #MM- ports-graphics-m68k : ports-graphics-zuneview
+#MM- ports-graphics-ppc : ports-graphics-zuneview
 #MM- ports-graphics-arm : ports-graphics-zuneview
 #DISABLED #MM- ports-graphics-x86_64 : ports-graphics-zuneview
 
@@ -19,7 +20,7 @@ REPOSITORIES := sf://zunetools
 ARCHBASE     := ZuneView_v0.39
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/ZuneView
 
-NOWARN_FLAGS := $(NOWARN_MISLEADING_INDENTATION)
+NOWARN_FLAGS :=
 USER_CFLAGS  := $(NOWARN_FLAGS) -DZUNEVIEW -DAROS_ABI_V1
 USER_INCLUDES:= -I$(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView/src
  
@@ -73,8 +74,7 @@ FILES := $(addprefix $(PORTSDIR)/zuneview/$(ARCHBASE)/ZuneView/src/,$(FILES))
     uselibs="jpeg png mui"
 
 %fetch mmake=ports-graphics-zuneview-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/zuneview/$(ARCHBASE) \
-    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip" \
-    patches_specs=zuneview_v0.39-aros.diff:$(ARCHBASE):-p1
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip"
 
 CPFILES := ZuneView.info
 
