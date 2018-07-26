@@ -3,7 +3,7 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-##MM- contrib-openal : contrib-openal-utils
+#MM- contrib-openal : contrib-openal-utils
 #MM- contrib-openal-utils : contrib-openal-library
 
 FILES   :=  openal-info
