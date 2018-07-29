@@ -2,8 +2,9 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
+#MM- ports-game : ports-game-naev 
+
 #MM- ports-game-naev : \
-#MM     ports-game-naev-bin \
 #MM     ports-game-naev-data \
 #MM     contrib-sdl \
 #MM     contrib-sdl-sdl-mixer \
@@ -27,8 +28,7 @@ EXTRAOPTIONS  := \
         FREETYPE_LIBS=-lfreetype2 \
         LIBS="-lcrypto -lnet -lbz2 -lz"
 
-
-%fetch_and_build mmake=ports-game-naev-bin prefix=$(TARGETDIR) \
+%fetch_and_build mmake=ports-game-naev prefix=$(TARGETDIR) \
         package=$(PACKAGE) version=$(VERSION) suffixes="tar.bz2" \
         patch=yes package_repo=$(REPOSITORIES) \
         extraoptions="$(EXTRAOPTIONS)"
