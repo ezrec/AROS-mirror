@@ -1,0 +1,48 @@
+# $Id: mmakefile.src $
+
+include $(SRCDIR)/config/aros-contrib.cfg
+
+#MM- ports-game-naev : \
+#MM     ports-game-naev-bin \
+#MM     ports-game-naev-data \
+#MM     contrib-sdl \
+#MM     contrib-sdl-sdl-mixer \
+#MM     development-libxml2 \
+#MM     workbench-libs-freetype-complete \
+#MM     development-libvorbis \
+#MM     workbench-libs-png \
+#MM     ports-libs-libzip
+
+PACKAGE       := naev
+VERSION       := 0.7.0
+TARGETDIR     := $(AROS_CONTRIB)/Games/Misc/Naev
+REPOSITORIES  := https://sourceforge.net/projects/naev/files/$(PACKAGE)-$(VERSION)
+
+USER_INCLUDES := -I$(AROS_INCLUDES) -I$(AROS_CONTRIB_INCLUDES)
+USER_CFLAGS   := -D__unix__
+USER_LDFLAGS  :=
+EXTRAOPTIONS  := \
+        --with-sdl2=no \
+        --with-sdlmixer=yes \
+        FREETYPE_LIBS=-lfreetype2 \
+        LIBS="-lcrypto -lnet -lbz2 -lz"
+
+
+%fetch_and_build mmake=ports-game-naev-bin prefix=$(TARGETDIR) \
+        package=$(PACKAGE) version=$(VERSION) suffixes="tar.bz2" \
+        patch=yes package_repo=$(REPOSITORIES) \
+        extraoptions="$(EXTRAOPTIONS)"
+
+%fetch mmake=ports-game-naev-data archive="$(PACKAGE)-$(VERSION)-ndata" destination="$(TARGETDIR)" \
+        location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip"
+
+%create_patch mmake=ports-game-naev-create-patch \
+        archive="$(PACKAGE)-$(VERSION)" srcdir="$(PACKAGE)-$(VERSION)" \
+        suffixes="tar.bz2" destination="$(PORTSDIR)/$(PACKAGE)"
+
+#MM
+ports-game-naev-clean :
+	$(RM) $(TARGETDIR)
+	$(RM) $(GENDIR)/$(CURDIR)
+
+%common
