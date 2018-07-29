@@ -1,0 +1,31 @@
+# $Id: mmakefile.src $
+
+include $(SRCDIR)/config/aros-contrib.cfg
+
+REPOSITORIES = github://nih-at/libzip/archive
+ARCHBASE := rel-1-5-1
+PATCHSPEC := $(ARCHBASE)-aros.diff:libzip-$(ARCHBASE):-p1
+
+NOWARN_FLAGS := $(NOWARN_FORMAT) $(NOWARN_ERROR)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+
+LIBZIP_OPTIONS := \
+        -DBUILD_SHARED_LIBS=OFF
+
+#MM- ports-libs : ports-libs-libzip
+
+#MM ports-libs-libzip : includes-copy ports-libs-libzip-fetch contrib-openssl
+
+%fetch mmake=ports-libs-libzip-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/libzip \
+       location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz" \
+       patches_specs=$(PATCHSPEC)
+
+%create_patch mmake=ports-libs-libzip-create-patch \
+       archive=$(ARCHBASE) srcdir=libzip-$(ARCHBASE) destination=$(PORTSDIR)/libzip
+
+%build_with_cmake mmake=ports-libs-libzip \
+       srcdir="$(PORTSDIR)/libzip/libzip-$(ARCHBASE)" prefix="$(AROS_DEVELOPER)" \
+       extraoptions="$(LIBZIP_OPTIONS)"
+
+%common
