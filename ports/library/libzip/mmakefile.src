@@ -2,7 +2,7 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-REPOSITORIES = github://nih-at/libzip/archive
+REPOSITORIES := github://nih-at/libzip/archive
 ARCHBASE := rel-1-5-1
 PATCHSPEC := $(ARCHBASE)-aros.diff:libzip-$(ARCHBASE):-p1
 
