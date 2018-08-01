@@ -1,0 +1,28 @@
+# Copyright 2018, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 54166 2017-03-18 00:44:34Z NicJA $
+
+include $(SRCDIR)/config/aros-contrib.cfg
+
+REPOSITORIES := https://sourceforge.net/projects/glew/files/glew/1.5.5
+ARCHBASE := glew-1.5.5
+PATCHSPEC := $(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
+
+USER_CFLAGS := -DGLEW_STATIC
+
+#MM- ports-libs : ports-libs-glew
+
+#MM- ports-libs-glew : ports-libs-glew-copy ports-libs-glew-fetch
+
+%fetch mmake=ports-libs-glew-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/glew \
+       location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tgz" \
+       patches_specs=$(PATCHSPEC)
+
+%create_patch mmake=ports-libs-glew-create-patch \
+       archive=$(ARCHBASE) srcdir=$(ARCHBASE) destination=$(PORTSDIR)/glew suffixes="tgz"
+
+%build_linklib mmake=ports-libs-glew libname=glew files=$(PORTSDIR)/glew/$(ARCHBASE)/src/glew \
+       includedir=$(PORTSDIR)/glew/$(ARCHBASE)/include
+
+%copy_files_q mmake=ports-libs-glew-copy files=glew.h src=$(PORTSDIR)/glew/$(ARCHBASE)/include/GL dst=$(AROS_INCLUDES)/GL
+
+%common
