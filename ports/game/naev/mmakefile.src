@@ -8,6 +8,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM     ports-game-naev-data \
 #MM     contrib-sdl \
 #MM     contrib-sdl-sdl-mixer \
+#MM     contrib-openal \
 #MM     development-libxml2 \
 #MM     workbench-libs-freetype-complete \
 #MM     development-libvorbis \
