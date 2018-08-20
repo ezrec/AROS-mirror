@@ -3,6 +3,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- workbench-libs-complete : workbench-libs-asyncio
 
 #MM- workbench-libs-asyncio :  workbench-libs-asyncio-test
+#MM workbench-libs-asyncio-test :  workbench-libs-asyncio-includes workbench-libs-asyncio-linklib
 
 TARGETDIR := $(AROS_TESTS)/asyncio
 
