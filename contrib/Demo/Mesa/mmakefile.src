@@ -9,7 +9,7 @@ EXEDIR      := $(AROS_CONTRIB)/Demos/Mesa
 #MM     contrib-gfx-libs-glut demo-mesa-images
 
 #MM- demo-mesa-egl-prerequisites : demo-mesa-prerequisites contrib-gfx-libs-eglut \
-#MM     workbench-libs-vega-linklibs workbench-libs-egl-linklib
+#MM     workbench-libs-vega-linklib workbench-libs-egl-linklib
 
 #MM demo-mesa : demo-mesa-prerequisites demo-mesa-teapot demo-mesa-fire demo-mesa-textures \
 #MM     demo-mesa-tunnel demo-mesa-ipers demo-mesa-reflect
