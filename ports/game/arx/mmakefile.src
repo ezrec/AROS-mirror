@@ -1,0 +1,69 @@
+# $Id: mmakefile.src $
+
+include $(SRCDIR)/config/aros-contrib.cfg
+
+#MM- ports-game : ports-game-arx
+
+#MM- ports-game-arx : \
+#MM     workbench-libs-freetype-complete \
+#MM     contrib-sdl \
+#MM     contrib-openal \
+#MM     ports-libs-glew \
+#MM     ports-libs-boost \
+#MM     ports-game-arx-fetch
+
+PACKAGE       := ArxLibertatis
+VERSION       := 1.1.2-r1
+TARGETDIR     := $(AROS_CONTRIB)/Games/Adventure/ArxLibertatis
+REPOSITORIES  := https://github.com/arx/ArxLibertatis/archive
+
+USER_INCLUDES := 
+## -I$(AROS_CONTRIB_INCLUDES)
+
+NOWARN_FLAGS  := $(NOWARN_ERROR) $(NOWARN_RETURN_TYPE) $(NOWARN_MISLEADING_INDENTATION)
+
+USER_CXXFLAGS := $(NOWARN_FLAGS) -I$(AROS_CONTRIB_INCLUDES) 
+
+## USER_LDFLAGS  :=-L$(AROS_CONTRIB_LIB)
+
+ARX_OPTIONS   := \
+    -DFREETYPE_LIBRARY=$(AROS_LIB)/libfreetype2.a \
+    -DOPENAL_INCLUDE_DIR=$(AROS_INCLUDES)/AL \
+    -DOPENAL_EFX_INCLUDE_DIR=$(AROS_INCLUDES)/AL \
+    -DBOOST_INCLUDEDIR=$(AROS_INCLUDES)/boost \
+    -DGLEW_INCLUDE_DIR=$(AROS_INCLUDES)/GL \
+    -DARX_HAVE_POSIX_FILESYSTEM:BOOL=ON \
+    -DUSE_STATIC_LIBS:BOOL=ON \
+    -DBUILD_CRASHREPORTER:BOOL=OFF \
+    .DARX_HAVE_OPENGL=YES \
+    -DUSE_SDL:BOOL=ON \
+    -DBUILD_TOOLS:BOOL=OFF \
+    -DSCRIPTDIR=$(TARGETDIR) \
+    -DCMAKE_INSTALL_DATAROOTDIR=$(TARGETDIR) \
+    -DCMAKE_INSTALL_BINDIR=$(TARGETDIR) \
+    -DCMAKE_BUILD_TYPE=Debug \
+    -DDEBUG:BOOL=ON \
+    -DDEBUG_EXTRA:BOOL=ON
+
+
+%fetch mmake=ports-game-arx-fetch archive="1.1.2-r1" suffixes="tar.gz" \
+        location=$(PORTSSOURCEDIR) destination=$(PORTSDIR)/arx \
+        archive_origins=$(REPOSITORIES) \
+        patches_specs=ArxLibertatis-1.1.2-r1-aros.diff::-p0
+
+
+%build_with_cmake mmake=ports-game-arx\
+       srcdir=$(PORTSDIR)/arx/$(PACKAGE)-$(VERSION) prefix=$(TARGETDIR) \
+       extraoptions="$(ARX_OPTIONS)"
+
+
+%create_patch mmake=ports-game-arx-create-patch \
+        archive="$(VERSION)" srcdir="" \
+        suffixes="tar.gz" destination="$(PORTSDIR)/arx/$(PACKAGE)-$(VERSION)"
+
+#MM
+ports-game-naev-clean :
+	$(RM) $(TARGETDIR)
+	$(RM) $(GENDIR)/$(CURDIR)
+
+%common
