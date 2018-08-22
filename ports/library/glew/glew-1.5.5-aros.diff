@@ -1,26 +1,28 @@
 diff -ruN glew-1.5.5/src/glew.c glew-1.5.5.aros/src/glew.c
 --- glew-1.5.5/src/glew.c	2010-07-13 18:36:45.000000000 +0200
-+++ glew-1.5.5.aros/src/glew.c	2018-07-31 23:51:03.142980498 +0200
-@@ -32,7 +32,7 @@
++++ glew-1.5.5.aros/src/glew.c	2018-08-22 02:39:39.642412439 +0200
+@@ -32,7 +32,10 @@
  #include <GL/glew.h>
  #if defined(_WIN32)
  #  include <GL/wglew.h>
 -#elif !defined(__APPLE__) || defined(GLEW_APPLE_GLX)
-+#elif !defined(__AROS__) && (!defined(__APPLE__) || defined(GLEW_APPLE_GLX))
++#elif defined(__AROS__)
++#  define GLAPI extern
++#  include <GL/gla.h>
++#elif (!defined(__APPLE__) || defined(GLEW_APPLE_GLX))
  #  include <GL/glxew.h>
  #endif
  
-@@ -141,6 +141,9 @@
+@@ -141,6 +144,8 @@
  #else
  #  if defined(__APPLE__)
  #    define glewGetProcAddress(name) NSGLGetProcAddress(name)
 +#  elif defined(__AROS__)
-+extern void ( * glXGetProcAddressARB (const GLubyte *procName)) (void);
-+#    define glewGetProcAddress(name) (*glXGetProcAddressARB)(name)
++#    define glewGetProcAddress(name) glAGetProcAddress(name)
  #  else
  #    if defined(__sgi) || defined(__sun)
  #      define glewGetProcAddress(name) dlGetProcAddress(name)
-@@ -9886,7 +9889,7 @@
+@@ -9886,7 +9891,7 @@
    return GLEW_OK;
  }
  
@@ -29,7 +31,7 @@ diff -ruN glew-1.5.5/src/glew.c glew-1.5.5.aros/src/glew.c
  
  PFNGLXGETCURRENTDISPLAYPROC __glewXGetCurrentDisplay = NULL;
  
-@@ -10905,7 +10908,7 @@
+@@ -10905,7 +10910,7 @@
  
  #if defined(_WIN32)
  extern GLenum wglewContextInit (void);
@@ -38,7 +40,7 @@ diff -ruN glew-1.5.5/src/glew.c glew-1.5.5.aros/src/glew.c
  extern GLenum glxewContextInit (void);
  #endif /* _WIN32 */
  
-@@ -10915,7 +10918,7 @@
+@@ -10915,7 +10920,7 @@
    if ( (r = glewContextInit()) ) return r;
  #if defined(_WIN32)
    return wglewContextInit();
