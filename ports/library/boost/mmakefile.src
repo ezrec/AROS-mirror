@@ -1,0 +1,19 @@
+# Copyright 2018, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src $
+
+include $(SRCDIR)/config/aros-contrib.cfg
+
+REPOSITORIES := https://dl.bintray.com/boostorg/release/1.68.0/source
+ARCHBASE := boost_1_68_0
+
+#MM- ports-libs : ports-libs-boost
+
+#MM- ports-libs-boost : ports-libs-boost-copy-include
+#MM- ports-libs-boost-copy-include : ports-libs-boost-fetch
+
+%fetch mmake=ports-libs-boost-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/boost \
+       location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.bz2"
+
+%copy_dir_recursive mmake=ports-libs-boost-copy-include src=$(PORTSDIR)/boost/$(ARCHBASE)/boost dst=$(AROS_INCLUDES)/boost
+
+%common
