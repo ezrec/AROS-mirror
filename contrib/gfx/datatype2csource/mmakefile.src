@@ -1,4 +1,4 @@
-# Copyright © 2016 The AROS Development Team. All rights reserved.
+# Copyright © 2016-2018 The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -7,7 +7,7 @@ FILES   := main
 EXEDIR  := $(AROS_CONTRIB)/MultiMedia/Gfx/DatatypeToCSource
 
 #MM- contrib-gfx : contrib-gfx-datatype2csource
-#MM  contrib-gfx-datatype2csource : includes linklibs
+#MM  contrib-gfx-datatype2csource : includes linklibs external-bz2-lib-linklib
 
 NOWARN_FLAGS := $(NOWARN_FORMAT)
 USER_CFLAGS := $(NOWARN_FLAGS)
