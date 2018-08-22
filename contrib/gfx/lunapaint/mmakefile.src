@@ -8,7 +8,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #DISABLED #MM- contrib-gfx-m68k : contrib-gfx-lunapaint
 #MM- contrib-gfx-arm : contrib-gfx-lunapaint
 
-#MM  contrib-gfx-lunapaint : includes linklibs workbench-libs-freetype-linklib \
+#MM  contrib-gfx-lunapaint : includes linklibs workbench-libs-freetype-linklibs \
 #MM  contrib-gfx-lunapaint-data \
 #MM  contrib-gfx-lunapaint-cpy \
 #MM  contrib-gfx-lunapaint-catalogs \
