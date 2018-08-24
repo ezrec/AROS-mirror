@@ -1,0 +1,67 @@
+diff -ruN xz-5.0.8/src/xz/message.c xz-5.0.8.aros/src/xz/message.c
+--- xz-5.0.8/src/xz/message.c	2014-12-21 16:16:16.000000000 +0100
++++ xz-5.0.8.aros/src/xz/message.c	2014-12-21 16:16:16.000000000 +0100
+@@ -75,7 +75,7 @@
+ //    or stderr is not a terminal.
+ //  - alarm() + SIGALRM seems to have slightly less overhead than polling
+ //    gettimeofday().
+-#ifdef SIGALRM
++#if defined(SIGALRM) && !defined(__AROS__)
+ 
+ const int message_progress_sigs[] = {
+ 	SIGALRM,
+@@ -152,7 +152,7 @@
+ 	}
+ */
+ 
+-#ifdef SIGALRM
++#if defined(SIGALRM) && !defined(__AROS__)
+ 	// Establish the signal handlers which set a flag to tell us that
+ 	// progress info should be updated.
+ 	struct sigaction sa;
+@@ -283,7 +283,7 @@
+ 		// first message almost immediately, but delaying by one
+ 		// second looks better to me, since extremely early
+ 		// progress info is pretty much useless.
+-#ifdef SIGALRM
++#if defined(SIGALRM) && !defined(__AROS__)
+ 		// First disable a possibly existing alarm.
+ 		alarm(0);
+ 		progress_needs_updating = false;
+@@ -592,7 +592,7 @@
+ 			cols[3],
+ 			cols[4]);
+ 
+-#ifdef SIGALRM
++#if defined(SIGALRM) && !defined(__AROS__)
+ 	// Updating the progress info was finished. Reset
+ 	// progress_needs_updating to wait for the next SIGALRM.
+ 	//
+diff -ruN xz-5.0.8/src/xz/message.h xz-5.0.8.aros/src/xz/message.h
+--- xz-5.0.8/src/xz/message.h	2014-12-21 16:16:16.000000000 +0100
++++ xz-5.0.8.aros/src/xz/message.h	2014-12-21 16:16:16.000000000 +0100
+@@ -19,10 +19,10 @@
+ 	V_DEBUG,    ///< Very verbose
+ };
+ 
+-
++#ifndef __AROS__ 
+ /// \brief      Signals used for progress message handling
+ extern const int message_progress_sigs[];
+-
++#endif
+ 
+ /// \brief      Initializes the message functions
+ ///
+diff -ruN xz-5.0.8/src/xz/signals.c xz-5.0.8.aros/src/xz/signals.c
+--- xz-5.0.8/src/xz/signals.c	2014-12-21 16:16:16.000000000 +0100
++++ xz-5.0.8.aros/src/xz/signals.c	2014-12-21 16:16:16.000000000 +0100
+@@ -71,7 +71,7 @@
+ 	for (size_t i = 0; i < ARRAY_SIZE(sigs); ++i)
+ 		sigaddset(&hooked_signals, sigs[i]);
+ 
+-#ifdef SIGALRM
++#if defined(SIGALRM) && !defined(__AROS__)
+ 	// Add also the signals from message.c to hooked_signals.
+ 	for (size_t i = 0; message_progress_sigs[i] != 0; ++i)
+ 		sigaddset(&hooked_signals, message_progress_sigs[i]);

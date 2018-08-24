@@ -1,0 +1,21 @@
+# Copyright 2018, The AROS Development Team. All rights reserved.
+# $Id: mmakefile.src 
+
+include $(SRCDIR)/config/aros-contrib.cfg
+
+REPOSITORIES := https://tukaani.org/xz
+VERSION := 5.0.8
+##PATCHSPEC := $(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
+
+USER_CFLAGS :=
+USER_INCLUDEs := -I$(AROS_INCLUDES)/aros/posixc
+
+XZ_OPTIONS := \
+       --disable-threads
+
+#MM- ports-libs : development-xz
+
+%fetch_and_build_gnu_development package=xz version=$(VERSION) \
+       patch=yes package_repo="$(REPOSITORIES)" extraoptions="$(XZ_OPTIONS)"
+
+%common
