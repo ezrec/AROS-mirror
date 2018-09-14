@@ -1,0 +1,39 @@
+diff -ruN ffmpeg-4.0.2/configure ffmpeg-4.0.2.aros/configure
+--- ffmpeg-4.0.2/configure	2018-07-18 15:51:59.000000000 +0200
++++ ffmpeg-4.0.2.aros/configure	2018-09-13 21:57:58.527631022 +0200
+@@ -5020,6 +5020,8 @@
+         SLIB_INSTALL_LINKS=
+         SHFLAGS='-shared -Wl,-soname,$(SLIBNAME)'
+         ;;
++    aros)
++        ;;
+     haiku)
+         prefix_default="/boot/common"
+         network_extralibs="-lnetwork"
+diff -ruN ffmpeg-4.0.2/libavformat/Makefile ffmpeg-4.0.2.aros/libavformat/Makefile
+--- ffmpeg-4.0.2/libavformat/Makefile	2018-07-18 15:52:01.000000000 +0200
++++ ffmpeg-4.0.2.aros/libavformat/Makefile	2018-09-13 21:57:58.527631022 +0200
+@@ -4,6 +4,7 @@
+ HEADERS = avformat.h                                                    \
+           avio.h                                                        \
+           version.h                                                     \
++          url.h
+ 
+ OBJS = allformats.o         \
+        avio.o               \
+diff -ruN ffmpeg-4.0.2/libavformat/os_support.h ffmpeg-4.0.2.aros/libavformat/os_support.h
+--- ffmpeg-4.0.2/libavformat/os_support.h	2018-07-18 15:52:02.000000000 +0200
++++ ffmpeg-4.0.2.aros/libavformat/os_support.h	2018-09-13 21:57:58.527631022 +0200
+@@ -105,6 +105,12 @@
+ #define closesocket close
+ #endif
+ 
++#if defined(__AROS__)
++#undef closesocket
++#define closesocket CloseSocket
++#include <proto/socket.h>
++#endif
++
+ #if !HAVE_POLL_H
+ typedef unsigned long nfds_t;
+ 
