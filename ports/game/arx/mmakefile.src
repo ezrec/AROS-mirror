@@ -2,7 +2,7 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- ports-game : ports-game-arx
+##MM- ports-game : ports-game-arx
 
 #MM- ports-game-arx : \
 #MM     workbench-libs-freetype-linklibs \
@@ -10,7 +10,8 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM     contrib-openal \
 #MM     ports-libs-glew \
 #MM     ports-libs-boost \
-#MM     ports-game-arx-fetch
+#MM     ports-game-arx-fetch \
+#MM     ports-game-arx-icon
 
 PACKAGE       := ArxLibertatis
 VERSION       := 1.1.2-r1
@@ -53,18 +54,27 @@ ARX_OPTIONS   := \
     -DGLEW_LIBRARY=$(AROS_LIB)/libglew.a \
     -DBOOST_INCLUDEDIR=$(AROS_INCLUDES)
 
-%fetch mmake=ports-game-arx-fetch archive="1.1.2-r1" suffixes="tar.gz" \
+%fetch mmake=ports-game-arx-fetch archive="$(VERSION)" suffixes="tar.gz" \
         location=$(PORTSSOURCEDIR) destination=$(PORTSDIR)/arx \
         archive_origins=$(REPOSITORIES) \
-        patches_specs=ArxLibertatis-1.1.2-r1-aros.diff::-p0
+        patches_specs=$(VERSION)-aros.diff::-p0
 
 %build_with_cmake mmake=ports-game-arx \
        srcdir=$(PORTSDIR)/arx/$(PACKAGE)-$(VERSION) prefix=$(TARGETDIR) \
        extraoptions="$(ARX_OPTIONS)"
 
 %create_patch mmake=ports-game-arx-create-patch \
-        archive="$(VERSION)" srcdir="" \
-        suffixes="tar.gz" destination="$(PORTSDIR)/arx/$(PACKAGE)-$(VERSION)"
+        archive="$(VERSION)" srcdir="$(PACKAGE)-$(VERSION)" \
+        suffixes="tar.gz" destination="$(PORTSDIR)/arx"
+
+$(PORTSDIR)/arx/Arx.info.src : $(SRCDIR)/$(CURDIR)/Arx.info.src 
+	@$(CP) $< $@
+
+#MM
+ports-game-arx-iconsrc : $(PORTSDIR)/arx/Arx.info.src
+
+%build_icons mmake=ports-game-arx-icon icons=Arx dir=$(TARGETDIR) srcdir=$(PORTSDIR)/arx image=$(PACKAGE)-$(VERSION)/data/icons/arx-libertatis.png
+#MM ports-game-arx-icon : ports-game-arx-iconsrc
 
 #MM
 ports-game-arx-clean :

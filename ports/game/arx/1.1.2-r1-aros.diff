@@ -1,6 +1,6 @@
 diff -ruN ArxLibertatis-1.1.2-r1/CMakeLists.txt ArxLibertatis-1.1.2-r1.aros/CMakeLists.txt
---- ArxLibertatis-1.1.2-r1/CMakeLists.txt	2016-03-24 22:50:29.000000000 +0100
-+++ ArxLibertatis-1.1.2-r1.aros/CMakeLists.txt	2018-08-22 15:35:48.622489341 +0200
+--- ArxLibertatis-1.1.2-r1/CMakeLists.txt	2016-03-24 21:50:29.000000000 +0000
++++ ArxLibertatis-1.1.2-r1.aros/CMakeLists.txt	2018-09-15 00:35:05.691554067 +0100
 @@ -127,7 +127,9 @@
  )
  
@@ -21,8 +21,8 @@ diff -ruN ArxLibertatis-1.1.2-r1/CMakeLists.txt ArxLibertatis-1.1.2-r1.aros/CMak
  
  # Find required libraries
 diff -ruN ArxLibertatis-1.1.2-r1/src/core/ArxGame.cpp ArxLibertatis-1.1.2-r1.aros/src/core/ArxGame.cpp
---- ArxLibertatis-1.1.2-r1/src/core/ArxGame.cpp	2016-03-24 22:50:29.000000000 +0100
-+++ ArxLibertatis-1.1.2-r1.aros/src/core/ArxGame.cpp	2018-08-22 03:39:51.016571901 +0200
+--- ArxLibertatis-1.1.2-r1/src/core/ArxGame.cpp	2016-03-24 21:50:29.000000000 +0000
++++ ArxLibertatis-1.1.2-r1.aros/src/core/ArxGame.cpp	2018-09-15 00:35:05.691554067 +0100
 @@ -49,6 +49,11 @@
  #include <algorithm>
  #include <sstream>
@@ -36,8 +36,8 @@ diff -ruN ArxLibertatis-1.1.2-r1/src/core/ArxGame.cpp ArxLibertatis-1.1.2-r1.aro
  
  #include "ai/PathFinderManager.h"
 diff -ruN ArxLibertatis-1.1.2-r1/src/gui/MenuWidgets.cpp ArxLibertatis-1.1.2-r1.aros/src/gui/MenuWidgets.cpp
---- ArxLibertatis-1.1.2-r1/src/gui/MenuWidgets.cpp	2016-03-24 22:50:29.000000000 +0100
-+++ ArxLibertatis-1.1.2-r1.aros/src/gui/MenuWidgets.cpp	2018-08-22 03:39:51.016571901 +0200
+--- ArxLibertatis-1.1.2-r1/src/gui/MenuWidgets.cpp	2016-03-24 21:50:29.000000000 +0000
++++ ArxLibertatis-1.1.2-r1.aros/src/gui/MenuWidgets.cpp	2018-09-15 00:35:05.691554067 +0100
 @@ -87,7 +87,7 @@
  
  #include "window/RenderWindow.h"
@@ -48,8 +48,8 @@ diff -ruN ArxLibertatis-1.1.2-r1/src/gui/MenuWidgets.cpp ArxLibertatis-1.1.2-r1.
  using std::max;
  using std::string;
 diff -ruN ArxLibertatis-1.1.2-r1/src/input/Input.cpp ArxLibertatis-1.1.2-r1.aros/src/input/Input.cpp
---- ArxLibertatis-1.1.2-r1/src/input/Input.cpp	2016-03-24 22:50:29.000000000 +0100
-+++ ArxLibertatis-1.1.2-r1.aros/src/input/Input.cpp	2018-08-22 03:39:51.016571901 +0200
+--- ArxLibertatis-1.1.2-r1/src/input/Input.cpp	2016-03-24 21:50:29.000000000 +0000
++++ ArxLibertatis-1.1.2-r1.aros/src/input/Input.cpp	2018-09-15 00:35:05.691554067 +0100
 @@ -46,6 +46,11 @@
  
  #include "input/Input.h"
@@ -63,8 +63,8 @@ diff -ruN ArxLibertatis-1.1.2-r1/src/input/Input.cpp ArxLibertatis-1.1.2-r1.aros
  #include <map>
  
 diff -ruN ArxLibertatis-1.1.2-r1/src/io/fs/FilesystemPOSIX.cpp ArxLibertatis-1.1.2-r1.aros/src/io/fs/FilesystemPOSIX.cpp
---- ArxLibertatis-1.1.2-r1/src/io/fs/FilesystemPOSIX.cpp	2016-03-24 22:50:29.000000000 +0100
-+++ ArxLibertatis-1.1.2-r1.aros/src/io/fs/FilesystemPOSIX.cpp	2018-08-22 03:39:51.016571901 +0200
+--- ArxLibertatis-1.1.2-r1/src/io/fs/FilesystemPOSIX.cpp	2016-03-24 21:50:29.000000000 +0000
++++ ArxLibertatis-1.1.2-r1.aros/src/io/fs/FilesystemPOSIX.cpp	2018-09-15 00:35:05.691554067 +0100
 @@ -254,7 +254,12 @@
  	do {
  		
@@ -78,3 +78,22 @@ diff -ruN ArxLibertatis-1.1.2-r1/src/io/fs/FilesystemPOSIX.cpp ArxLibertatis-1.1
  			std::free(_buf), _buf = NULL;
  			return;
  		}
+diff -ruN ArxLibertatis-1.1.2-r1/src/platform/Lock.cpp ArxLibertatis-1.1.2-r1.aros/src/platform/Lock.cpp
+--- ArxLibertatis-1.1.2-r1/src/platform/Lock.cpp	2016-03-24 21:50:29.000000000 +0000
++++ ArxLibertatis-1.1.2-r1.aros/src/platform/Lock.cpp	2018-09-15 01:20:15.455282714 +0100
+@@ -24,10 +24,15 @@
+ #if defined(ARX_HAVE_PTHREADS)
+ 
+ Lock::Lock() : locked(false) {
++#if !defined(__AROS__)
+ 	const pthread_mutex_t mutex_init = PTHREAD_MUTEX_INITIALIZER;
+ 	mutex = mutex_init;
+ 	const pthread_cond_t cond_init = PTHREAD_COND_INITIALIZER;
+ 	cond = cond_init;
++#else
++	pthread_mutex_init(&mutex, NULL);
++	pthread_cond_init(&cond, NULL);
++#endif
+ }
+ 
+ Lock::~Lock() {
