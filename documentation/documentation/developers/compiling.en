@@ -184,7 +184,7 @@ available for all targets:
         ``--with-gcc-version=VER [default: 4.6.4]``
             Specifies a specific version of the GNU GCC compiler to use for the cross compiler
             and native compiler. Suitable patches must be available 
-            (patches are present for GCC 6.3.0 amd 8.1.0)
+            (patches are present for GCC 6.3.0 and 8.1.0)
 
         ``--enable-coverage``
             Enables coverage instrumentation support for programs built in the build system (gcov)
