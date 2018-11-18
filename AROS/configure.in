@@ -1,5 +1,5 @@
 dnl Copyright © 1997-2016, The AROS Development Team. All rights reserved.
-dnl $Id$
+dnl $Id: configure.in 55487 2018-10-01 15:25:27Z wawa $
 dnl
 dnl Desc: Autoconf source for configuration file
 dnl Lang: english 
@@ -257,7 +257,8 @@ case "$host_os" in
         ;;
 
     darwin*)
-        AC_CHECK_FILE(/usr/include/stddef.h,,
+        aros_host_include=[`$CC --print-file-name=include`]
+        AC_CHECK_FILE($aros_host_include/stddef.h,,
                 AC_MSG_ERROR([XCode incorrectly configured!
 please run 'xcode-select --install' before
 re-running configure])
