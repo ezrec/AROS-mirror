@@ -2,36 +2,33 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- ports-game : ports-game-arx
+##MM- ports-game : ports-game-arx
 
 #MM- ports-game-arx : \
-#MM     workbench-libs-freetype-complete \
+#MM     workbench-libs-freetype-linklibs \
 #MM     contrib-sdl \
 #MM     contrib-openal \
 #MM     ports-libs-glew \
 #MM     ports-libs-boost \
-#MM     ports-game-arx-fetch
+#MM     ports-game-arx-fetch \
+#MM     ports-game-arx-icon
 
 PACKAGE       := ArxLibertatis
 VERSION       := 1.1.2-r1
 TARGETDIR     := $(AROS_CONTRIB)/Games/Adventure/ArxLibertatis
 REPOSITORIES  := https://github.com/arx/ArxLibertatis/archive
 
-USER_INCLUDES := 
-## -I$(AROS_CONTRIB_INCLUDES)
-
 NOWARN_FLAGS  := $(NOWARN_ERROR) $(NOWARN_RETURN_TYPE) $(NOWARN_MISLEADING_INDENTATION)
 
-USER_CXXFLAGS := $(NOWARN_FLAGS) -I$(AROS_CONTRIB_INCLUDES) 
+USER_CXXFLAGS := $(NOWARN_FLAGS) -I$(AROS_CONTRIB_INCLUDES)
 
-## USER_LDFLAGS  :=-L$(AROS_CONTRIB_LIB)
+#USER_INCLUDES :=  -I$(AROS_CONTRIB_INCLUDES)
+#USER_LDFLAGS  :=-L$(AROS_CONTRIB_LIB)
 
 ARX_OPTIONS   := \
-    -DFREETYPE_LIBRARY=$(AROS_LIB)/libfreetype2.a \
-    -DOPENAL_INCLUDE_DIR=$(AROS_INCLUDES)/AL \
-    -DOPENAL_EFX_INCLUDE_DIR=$(AROS_INCLUDES)/AL \
-    -DBOOST_INCLUDEDIR=$(AROS_INCLUDES)/boost \
-    -DGLEW_INCLUDE_DIR=$(AROS_INCLUDES)/GL \
+    -DCMAKE_INSTALL_BINDIR=$(TARGETDIR) \
+    -DCMAKE_INSTALL_DATAROOTDIR=$(TARGETDIR) \
+    -DCMAKE_BUILD_TYPE=Debug \
     -DARX_HAVE_POSIX_FILESYSTEM:BOOL=ON \
     -DUSE_STATIC_LIBS:BOOL=ON \
     -DBUILD_CRASHREPORTER:BOOL=OFF \
@@ -39,30 +36,48 @@ ARX_OPTIONS   := \
     -DUSE_SDL:BOOL=ON \
     -DBUILD_TOOLS:BOOL=OFF \
     -DSCRIPTDIR=$(TARGETDIR) \
-    -DCMAKE_INSTALL_DATAROOTDIR=$(TARGETDIR) \
-    -DCMAKE_INSTALL_BINDIR=$(TARGETDIR) \
-    -DCMAKE_BUILD_TYPE=Debug \
     -DDEBUG:BOOL=ON \
-    -DDEBUG_EXTRA:BOOL=ON
+    -DDEBUG_EXTRA:BOOL=ON \
+    -DFREETYPE_LIBRARY=$(AROS_LIB)/libfreetype2.a \
+    -DFREETYPE_INCLUDE_DIRS=$(AROS_INCLUDES)/freetype \
+    -DZLIB_LIBRARY=$(AROS_LIB)/libz.a \
+    -DZLIB_INCLUDE_DIR=$(AROS_INCLUDES) \
+    -DOPENAL_INCLUDE_DIR=$(AROS_INCLUDES)/AL \
+    -DOPENAL_LIBRARY="$(AROS_LIB)/libopenal.a;$(AROS_LIB)/libpthread.a;" \
+    -DOPENAL_EFX_INCLUDE_DIR=$(AROS_INCLUDES)/AL \
+    -DBOOST_INCLUDEDIR=$(AROS_INCLUDES)/boost \
+    -DSDL_LIBRARY=$(AROS_LIB)/libSDL.a \
+    -DSDL_INCLUDE_DIR=$(AROS_INCLUDES)/SDL \
+    -DOPENGL_INCLUDE_DIR=$(AROS_INCLUDES)/GL \
+    -DOPENGL_gl_LIBRARY=$(AROS_LIB)/libGL.a \
+    -DGLEW_INCLUDE_DIR=$(AROS_INCLUDES)/GL \
+    -DGLEW_LIBRARY=$(AROS_LIB)/libglew.a \
+    -DBOOST_INCLUDEDIR=$(AROS_INCLUDES)
 
-
-%fetch mmake=ports-game-arx-fetch archive="1.1.2-r1" suffixes="tar.gz" \
+%fetch mmake=ports-game-arx-fetch archive="$(VERSION)" suffixes="tar.gz" \
         location=$(PORTSSOURCEDIR) destination=$(PORTSDIR)/arx \
         archive_origins=$(REPOSITORIES) \
-        patches_specs=ArxLibertatis-1.1.2-r1-aros.diff::-p0
+        patches_specs=$(VERSION)-aros.diff::-p0
 
-
-%build_with_cmake mmake=ports-game-arx\
+%build_with_cmake mmake=ports-game-arx \
        srcdir=$(PORTSDIR)/arx/$(PACKAGE)-$(VERSION) prefix=$(TARGETDIR) \
        extraoptions="$(ARX_OPTIONS)"
 
-
 %create_patch mmake=ports-game-arx-create-patch \
-        archive="$(VERSION)" srcdir="" \
-        suffixes="tar.gz" destination="$(PORTSDIR)/arx/$(PACKAGE)-$(VERSION)"
+        archive="$(VERSION)" srcdir="$(PACKAGE)-$(VERSION)" \
+        suffixes="tar.gz" destination="$(PORTSDIR)/arx"
+
+$(PORTSDIR)/arx/Arx.info.src : $(SRCDIR)/$(CURDIR)/Arx.info.src 
+	@$(CP) $< $@
 
 #MM
-ports-game-naev-clean :
+ports-game-arx-iconsrc : $(PORTSDIR)/arx/Arx.info.src
+
+%build_icons mmake=ports-game-arx-icon icons=Arx dir=$(TARGETDIR) srcdir=$(PORTSDIR)/arx image=$(PACKAGE)-$(VERSION)/data/icons/arx-libertatis.png
+#MM ports-game-arx-icon : ports-game-arx-iconsrc
+
+#MM
+ports-game-arx-clean :
 	$(RM) $(TARGETDIR)
 	$(RM) $(GENDIR)/$(CURDIR)
 

@@ -1,5 +1,5 @@
 /*
-    Copyright © 2015-2017, The AROS Development Team. All rights reserved.
+    Copyright © 2015-2018, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Virtual USB host controller
@@ -30,7 +30,9 @@
 #include LC_LIBDEFS_FILE
 
 struct VUSBHCIUnit *VUSBHCI_AddNewUnit200(void);
+/*
 struct VUSBHCIUnit *VUSBHCI_AddNewUnit300(void);
+*/
 
 static void handler_task(struct Task *parent, struct VUSBHCIUnit *unit) {
     mybug_unit(-1,("Starting %s handler task\n", unit->name));
@@ -56,46 +58,47 @@ static void handler_task(struct Task *parent, struct VUSBHCIUnit *unit) {
                     //mybug(-1,("[handler_task] Ping...\n"));
 
                     if(!unit->ctrlxfer_pending) {
-                        ObtainSemaphore(&unit->ctrlxfer_queue_lock); {
-                            ForeachNode(&unit->ctrlxfer_queue, unit->ioreq) {
+                        /* Try and get a lock on the semaphore, if not then just move on as some housekeeping is being done */
+                        AttemptSemaphore(&unit->ctrlxfer_queue_lock); {
+                            ForeachNode(&unit->ctrlxfer_queue, unit->ioreq_ctrl) {
                                 /* Now the iorequest lives only on our pointer */
-                                Remove(&unit->ioreq->iouh_Req.io_Message.mn_Node);
+                                Remove(&unit->ioreq_ctrl->iouh_Req.io_Message.mn_Node);
                                 mybug(-1,("[handler_task] Control transfer caught...\n"));
                                 unit->ctrlxfer_pending = TRUE;
-                                do_libusb_ctrl_transfer(unit->ioreq);
+                                do_libusb_ctrl_transfer(unit->ioreq_ctrl);
                             }
                         } ReleaseSemaphore(&unit->ctrlxfer_queue_lock);
                     }
 
                     if(!unit->intrxfer_pending) {
-                        ObtainSemaphore(&unit->intrxfer_queue_lock); {
-                            ForeachNode(&unit->intrxfer_queue, unit->ioreq) {
+                        AttemptSemaphore(&unit->intrxfer_queue_lock); {
+                            ForeachNode(&unit->intrxfer_queue, unit->ioreq_intr) {
                                 /* Now the iorequest lives only on our pointer */
-                                Remove(&unit->ioreq->iouh_Req.io_Message.mn_Node);
+                                Remove(&unit->ioreq_intr->iouh_Req.io_Message.mn_Node);
                                 unit->intrxfer_pending = TRUE;
-                                do_libusb_intr_transfer(unit->ioreq);
+                                do_libusb_intr_transfer(unit->ioreq_intr);
                             }
                         } ReleaseSemaphore(&unit->intrxfer_queue_lock);
                     }
 
                     if(!unit->bulkxfer_pending) {
-                        ObtainSemaphore(&unit->bulkxfer_queue_lock); {
-                            ForeachNode(&unit->bulkxfer_queue, unit->ioreq) {
+                        AttemptSemaphore(&unit->bulkxfer_queue_lock); {
+                            ForeachNode(&unit->bulkxfer_queue, unit->ioreq_bulk) {
                                 /* Now the iorequest lives only on our pointer */
-                                Remove(&unit->ioreq->iouh_Req.io_Message.mn_Node);
+                                Remove(&unit->ioreq_bulk->iouh_Req.io_Message.mn_Node);
                                 unit->bulkxfer_pending = TRUE;
-                                do_libusb_bulk_transfer(unit->ioreq);
+                                do_libusb_bulk_transfer(unit->ioreq_bulk);
                             }
                         } ReleaseSemaphore(&unit->bulkxfer_queue_lock);
                     }
 
                     if(!unit->isocxfer_pending) {
-                        ObtainSemaphore(&unit->isocxfer_queue_lock); {
-                            ForeachNode(&unit->isocxfer_queue, unit->ioreq) {
+                        AttemptSemaphore(&unit->isocxfer_queue_lock); {
+                            ForeachNode(&unit->isocxfer_queue, unit->ioreq_isoc) {
                                 /* Now the iorequest lives only on our pointer */
-                                Remove(&unit->ioreq->iouh_Req.io_Message.mn_Node);
+                                Remove(&unit->ioreq_isoc->iouh_Req.io_Message.mn_Node);
                                 unit->isocxfer_pending = TRUE;
-                                do_libusb_isoc_transfer(unit->ioreq);
+                                do_libusb_isoc_transfer(unit->ioreq_isoc);
                             }
                         } ReleaseSemaphore(&unit->isocxfer_queue_lock);
                     }
@@ -142,12 +145,13 @@ static int GM_UNIQUENAME(Init)(LIBBASETYPEPTR VUSBHCIBase) {
         return FALSE;
     }
 
+/*
     VUSBHCIBase->usbunit300 = VUSBHCI_AddNewUnit300();
     if(VUSBHCIBase->usbunit300 == NULL) {
         mybug(-1, ("[VUSBHCI] Init: Failed to create new USB3.0 unit!\n"));
         return FALSE;
     }
-
+*/
     return TRUE;
 }
 
@@ -163,8 +167,10 @@ static int GM_UNIQUENAME(Open)(LIBBASETYPEPTR VUSBHCIBase, struct IOUsbHWReq *io
 
     if(unitnum == 0) {
         unit = VUSBHCIBase->usbunit200;
+ /*
     } else if(unitnum == 1) {
         unit = VUSBHCIBase->usbunit300;
+*/
     } else {
         return FALSE;
     }
@@ -242,6 +248,7 @@ AROS_LH1(void, BeginIO, AROS_LHA(struct IOUsbHWReq *, ioreq, A1), struct VUSBHCI
                 break;
             case CMD_FLUSH:
                 mybug_unit(-1, ("CMD_FLUSH\n"));
+                ret = cmdFlush(ioreq);
                 break;
             case UHCMD_QUERYDEVICE:
                 mybug_unit(-1, ("UHCMD_QUERYDEVICE\n"));

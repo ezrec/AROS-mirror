@@ -14,7 +14,7 @@ Compiling AROS
 :Date:      $Date$
 :Status:    Done.
 :Abstract:
-    This document will explain how to compile AROS. Development of AROS is
+    This document provides information and advice on how to compile AROS. Development of AROS is
     possible in two ways. One way is to use a Linux, FreeBSD or Mac OS X
     system to cross-compile AROS. The other is to perform the compilation
     directly under AROS. Both methods are explained below.
@@ -152,8 +152,20 @@ available for all targets:
     External sources downloaded by the build system will be stored in DIR,
     so that it can be cached/shared/preserved between builds.
 
+``--with-c-compiler=<host c compiler> [default: autodetected]``
+    Specifies the host c compiler to use when compiling code to run on the build host.
+
+``--with-cxx-compiler=<host c++ compiler> [default: autodetected]``
+    Specifies the host c++ compiler to use when compiling code to run on the build host.
+
+``--with-optimization=FLAGS``
+    Specifies the optimization FLAGS to use when compiling AROS.
+
+``--with-paranoia=(yes|no|FLAGS) [default: -Wall -Werror]``
+    Specifies compiler warning FLAGS to enable for paranoia builds.
+
 ``--with-toolchain=TOOLCHAINFAMILY [default: gnu]``
-    Specifies the toolchain family for which crosscompilers will be created to
+    Specifies the TOOLCHAINFAMILY whos cross compiler toochain will be created to
     build AROS.
     Currently the Following options are available:
 
@@ -164,15 +176,21 @@ available for all targets:
         Uses the GNU/GCC toolchain to build AROS. Additonaly, the following configure options
         are accepted when using the "gnu" toolchain...
 
-        ``--with-gcc-version=VER [default: 4.6.4]``
-            Specifies a specific version of the GNU GCC compiler to use for the cross compiler
-            and native compiler. Suitable patches must be available (patches are present for
-            GCC 6.3.0)
-
         ``--with-binutils-version=VER [default: 2.23.2]``
             Specifies a specific version of the GNU Binutils package to use for crosscompiling and
-            generating native binaries. Suitable patches must be available (patches are present
-            for binutils 2.25)
+            generating native binaries. Suitable patches must be available
+            (patches are present for binutils 2.25 and 2.30)
+
+        ``--with-gcc-version=VER [default: 4.6.4]``
+            Specifies a specific version of the GNU GCC compiler to use for the cross compiler
+            and native compiler. Suitable patches must be available 
+            (patches are present for GCC 6.3.0 and 8.1.0)
+
+        ``--enable-coverage``
+            Enables coverage instrumentation support for programs built in the build system (gcov)
+
+        ``--enable-lto (experimental)``
+            Enables Link Time Optimization(s)
 
 Running ``./configure --help`` will give details of further additional options.
 

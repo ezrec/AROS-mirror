@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2010, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2018, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc:
@@ -114,6 +114,8 @@
 	bodyfmt  - requester body text, can be format string a la RawDoFmt().
 	gadfmt   - text for gadgets (left to right, separated by '|') or NULL.
 	argarray - pointer to array of arguments for format string(s).
+                   nb - : arguments must be handled the same as for RawDoFmt!
+                   use aros slowstack macros.
 	reqinfo  - pointer to a rtReqInfo structure allocated with
 	    rtAllocRequest() or NULL.
 	taglist  - pointer to a TagItem array.
@@ -317,14 +319,14 @@
     AROS_LIBFUNC_INIT
 
     return GetString(bodyfmt,
-    		     (IPTR)argarray,
-		     gadfmt,
-		     0,
-		     NULL,
-		     IS_EZREQUEST,
-		     reqinfo,
-		     taglist);
-		     
+             (SIPTR)argarray,
+             gadfmt,
+             0,
+             NULL,
+             IS_EZREQUEST,
+             reqinfo,
+             taglist);
+
     AROS_LIBFUNC_EXIT
 
 } /* rtEZRequestA */

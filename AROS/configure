@@ -653,6 +653,7 @@ aros_palm_debug_hack
 ENABLE_EXECSMP
 PLATFORM_EXECSMP
 aros_serial_debug
+target_grub2_version
 aros_host_sdl_libs
 aros_host_sdl_cflags
 aros_host_x11_ldflags
@@ -669,6 +670,7 @@ host_x_gfx
 crosstools_cxx_target
 crosstools_target
 aros_isa_flags
+aros_isa_extra
 aros_optimization_cflags
 aros_config_coverage
 aros_config_lto
@@ -2797,6 +2799,8 @@ case $host_os in *\ *) host_os=`echo "$host_os" | sed 's/ /-/g'`;; esac
 # Default versions for the gnu tools we build
 default_gcc_version="4.6.4"
 default_binutils_version="2.23.2"
+default_grub2_version="2.02"
+target_grub2_version=$default_grub2_version
 
 # The AROS target is slightly different to the normal GNU style
 # format. We don't have the middle part, and we reverse the order
@@ -7505,6 +7509,7 @@ aros_nowarn_flags="NOWARN_UNUSED_COMMAND_LINE_ARGUMENT NOWARN_UNKNOWN_WARNING_OP
 toolchain_needs_sysroot=no
 
 aros_warn_flags=
+aros_isa_extra=
 aros_isa_flags=
 aros_config_cppflags=
 aros_config_cflags=
@@ -8185,7 +8190,10 @@ esac
 kernel_tool_prefix="none"
 aros_tool_prefix="none"
 elf_tool_prefix="${target_cpu}-elf-"
-
+x86_isa_extra="ISA_X86_FLAGS           := -m32 -march=i486"
+x86_64_isa_extra="ISA_X8664_FLAGS         := -mcmodel=large"
+export_newline="
+"
 # This is the target configuration switch.
 case "$target_os" in
     linux*)
@@ -8206,6 +8214,8 @@ case "$target_os" in
                 aros_object_format="elf_i386"
                 aros_flavour="emulation"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Di386 -D__linux__"
+                aros_isa_flags="$""(ISA_X86_FLAGS)"
+                x86_64_isa_extra="$x86_64_isa_extra -mno-red-zone"
                 aros_kernel_ldflags="-Wl,-melf_i386"
                 aros_nominal_depth=8
                 gcc_target_cpu="i386"
@@ -8219,7 +8229,8 @@ case "$target_os" in
                 aros_object_format="elf_x86_64"
                 aros_flavour="emulation"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Dx86_64 -D__linux__"
-                aros_isa_flags="$aros_isa_flags -mcmodel=large -mno-red-zone"
+                aros_isa_flags="$""(ISA_X8664_FLAGS)"
+                x86_64_isa_extra="$x86_64_isa_extra -mno-red-zone"
                 aros_config_cflags="$aros_config_cflags -fno-omit-frame-pointer"
                 aros_config_cxxflags="$aros_config_cxxflags -fno-omit-frame-pointer"
                 aros_nominal_depth=8
@@ -8340,6 +8351,8 @@ case "$target_os" in
                 fi
                 aros_flavour="standalone"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Di386"
+                aros_isa_flags="$""(ISA_X86_FLAGS)"
+                x86_64_isa_extra="$x86_64_isa_extra -mno-red-zone"
                 aros_kernel_ldflags="-Wl,-melf_i386"
                 aros_nominal_width=640
                 aros_nominal_height=480
@@ -8354,7 +8367,8 @@ case "$target_os" in
                 fi
                 aros_flavour="standalone"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Dx86_64"
-                aros_isa_flags="$aros_isa_flags -mcmodel=large  -mno-red-zone"
+                aros_isa_flags="$""(ISA_X8664_FLAGS)"
+                x86_64_isa_extra="$x86_64_isa_extra -mno-red-zone"
                 aros_config_cflags="$aros_config_cflags -fno-asynchronous-unwind-tables -fno-omit-frame-pointer"
                 aros_config_cxxflags="$aros_config_cxxflags -fno-asynchronous-unwind-tables -fno-omit-frame-pointer"
                 aros_kernel_ldflags=""
@@ -8405,6 +8419,7 @@ case "$target_os" in
                 aros_ios_platform="iPhoneSimulator"
                 aros_target_cpu="i386"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Di386"
+                aros_isa_flags="$""(ISA_X86_FLAGS)"
                 aros_kernel_ldflags=""
                 aros_macosx_version="10.4"
                 aros_nominal_depth=8
@@ -8418,8 +8433,8 @@ case "$target_os" in
                 aros_target_cpu="x86_64"
                 aros_object_format="elf_x86_64"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Dx86_64"
+                aros_isa_flags="$""(ISA_X8664_FLAGS)"
                 aros_macosx_version="10.6"
-                aros_isa_flags="$aros_isa_flags -mcmodel=large"
                 aros_config_cflags="$aros_config_cflags -fno-omit-frame-pointer"
                 aros_config_cxxflags="$aros_config_cxxflags -fno-omit-frame-pointer"
                 aros_kernel_cflags="-m64"
@@ -8500,6 +8515,7 @@ case "$target_os" in
                 aros_target_cpu="i386"
                 aros_object_format="elf_i386"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Di386 -D__DragonFly__"
+                aros_isa_flags="$""(ISA_X86_FLAGS)"
                 ;;
             *x86_64*)
                 aros_config_cflags="$aros_config_cflags -fno-omit-frame-pointer"
@@ -8507,6 +8523,7 @@ case "$target_os" in
                 aros_target_cpu="x86_64"
                 aros_object_format="elf_x86_64"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Dx86_64 -D__DragonFly__"
+                aros_isa_flags="$""(ISA_X8664_FLAGS)"
                 ;;
             *)
                 as_fn_error $? "\"Unknown CPU for DragonFly -- $target_cpu\"" "$LINENO" 5
@@ -8530,6 +8547,7 @@ case "$target_os" in
                 aros_object_format="elf_i386"
                 aros_flavour="emulation"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Di386 -D__NetBSD__"
+                aros_isa_flags="$""(ISA_X86_FLAGS)"
                 aros_nominal_depth=8
                 gcc_target_cpu="i386"
                 ;;
@@ -8551,6 +8569,7 @@ case "$target_os" in
                 aros_object_format="elf_i386"
                 aros_flavour="emulation"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Di386 -D__OpenBSD__"
+                aros_isa_flags="$""(ISA_X86_FLAGS)"
                 gcc_target_cpu="i386"
                 ;;
             *)
@@ -8571,6 +8590,7 @@ case "$target_os" in
                aros_object_format="elf_i386"
                aros_flavour="emulation"
                aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Di386 -D__Solaris__"
+               aros_isa_flags="$""(ISA_X86_FLAGS)"
                aros_nominal_depth=8
                gcc_target_cpu="i386"
                ;;
@@ -8800,6 +8820,7 @@ fi
                 aros_target_cpu="i386"
                 aros_object_format="elf_i386"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Di386"
+                aros_isa_flags="$""(ISA_X86_FLAGS)"
                 aros_nominal_depth=8
                 gcc_target_cpu="i386"
 
@@ -8809,6 +8830,7 @@ fi
                 aros_target_cpu="x86_64"
                 aros_object_format="elf_x86_64"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Dx86_64"
+                aros_isa_flags="$""(ISA_X8664_FLAGS)"
                 aros_config_cflags="$aros_config_cflags -fno-omit-frame-pointer"
                 aros_config_cxxflags="$aros_config_cxxflags -fno-omit-frame-pointer"
                 aros_nominal_depth=8
@@ -9100,13 +9122,9 @@ $as_echo "$target_gcc_version" >&6; }
 
     if test "$gcc_fix_bitfields" = "true" ; then
         case "$aros_target_cpu" in
-        *x86_64*)
-            aros_kernel_cflags="$aros_kernel_cflags -mno-ms-bitfields"
-            aros_isa_flags="$aros_isa_flags -mno-ms-bitfields"
-            ;;
-        i386)
-            aros_kernel_cflags="$aros_kernel_cflags -mno-ms-bitfields"
-            aros_isa_flags="$aros_isa_flags -mno-ms-bitfields"
+        *x86_64* | i386)
+            x86_isa_extra="$x86_isa_extra -mno-ms-bitfields"
+            x86_64_isa_extra="$x86_64_isa_extra -mno-ms-bitfields"
             ;;
         esac
     fi
@@ -9152,6 +9170,7 @@ spec_obj_format="-m $aros_object_format"
 # as well as floating-point ABI.
 case "$aros_target_cpu" in
 *x86_64*)
+    aros_isa_extra="$x86_isa_extra$export_newline$x86_64_isa_extra$export_newline"
         spec_obj_format="%{!m32:-m elf_x86_64} %{m32:-m elf_i386}"
     ;;
 arm*)
@@ -9248,8 +9267,7 @@ $as_echo "$aros_target_cpu_mode" >&6; }
     aros_config_aflags="$aros_config_aflags -fno-asynchronous-unwind-tables -fno-exceptions"
     ;;
 i386)
-    aros_isa_flags="$aros_isa_flags -m32 -march=i486"
-    aros_kernel_cflags="$aros_kernel_cflags $aros_isa_flags"
+    aros_isa_extra="$x86_isa_extra$export_newline$x86_64_isa_extra$export_newline"
     aros_kernel_ldflags="$aros_kernel_ldflags -m32"
     ;;
 esac
@@ -15037,6 +15055,7 @@ fi
 
 
 
+
 # Hosted Graphics Related
 
 
@@ -15053,6 +15072,9 @@ fi
 
 
 
+
+
+# Bootloader related
 
 
 # Native version related

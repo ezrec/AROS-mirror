@@ -32,7 +32,7 @@ EXTRAOPTIONS  := \
 %fetch_and_build mmake=ports-game-naev prefix=$(TARGETDIR) \
         package=$(PACKAGE) version=$(VERSION) suffixes="tar.bz2" \
         patch=yes package_repo=$(REPOSITORIES) \
-        extraoptions="$(EXTRAOPTIONS)"
+        extraoptions="$(EXTRAOPTIONS)" gnuflags=no nlsflag=no xflag=no
 
 %fetch mmake=ports-game-naev-data archive="$(PACKAGE)-$(VERSION)-ndata" destination="$(TARGETDIR)" \
         location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="zip"

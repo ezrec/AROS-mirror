@@ -17,7 +17,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM  ports-graphics-zuneview-quick : ports-graphics-zuneview-fetch
 
 REPOSITORIES := sf://zunetools
-ARCHBASE     := ZuneView_v0.39
+ARCHBASE     := ZuneView_v0.40
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Gfx/ZuneView
 
 NOWARN_FLAGS :=

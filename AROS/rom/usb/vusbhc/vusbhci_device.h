@@ -38,7 +38,10 @@ struct VUSBHCIUnit {
     struct timerequest          *tr;
     struct MsgPort              *mp;
 
-    struct IOUsbHWReq           *ioreq;
+    struct IOUsbHWReq           *ioreq_ctrl;
+    struct IOUsbHWReq           *ioreq_intr;
+    struct IOUsbHWReq           *ioreq_bulk;
+    struct IOUsbHWReq           *ioreq_isoc;
 
     struct Task                 *handler_task;
     ULONG                        handler_task_sig_run;
@@ -92,10 +95,13 @@ struct VUSBHCIBase {
     //struct Library              *HostLibBase;
 
     struct VUSBHCIUnit          *usbunit200;
+/*
     struct VUSBHCIUnit          *usbunit300;
+*/
 };
 
 BOOL cmdAbortIO(struct IOUsbHWReq *ioreq);
+WORD cmdFlush(struct IOUsbHWReq *ioreq);
 WORD cmdUsbReset(struct IOUsbHWReq *ioreq);
 WORD cmdNSDeviceQuery(struct IOStdReq *ioreq);
 WORD cmdQueryDevice(struct IOUsbHWReq *ioreq);

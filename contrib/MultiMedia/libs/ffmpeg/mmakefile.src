@@ -24,7 +24,7 @@ endif
 FFMPEG_LIBS=-lnet
 FFMPEG_PROGS=--disable-programs
 
-VERSION      := 3.0.1
+VERSION      := 4.0.2
 REPOSITORIES := http://ffmpeg.org/releases
 
 ifneq ($(AROS_TARGET_CPU),i386)

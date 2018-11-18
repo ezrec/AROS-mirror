@@ -4693,7 +4693,7 @@ Object *CreatePrefsPage(struct SCAModule *app, Object *Page, struct NewPageListE
 #if defined(MUIA_Scrollgroup_AutoBars)
 		result = ScrollgroupObject,
 			MUIA_Scrollgroup_AutoBars, TRUE,
-			MUIA_Scrollgroup_Contents, VGroupV,
+			MUIA_Scrollgroup_Contents, (IPTR)(VGroupV,
 #else //MUIA_Scrollgroup_AutoBars
 		result = VGroupV,
 #endif //MUIA_Scrollgroup_AutoBars
@@ -4724,7 +4724,7 @@ Object *CreatePrefsPage(struct SCAModule *app, Object *Page, struct NewPageListE
 					End), //NListviewObject
 				Child, (IPTR)Page,
 #if defined(MUIA_Scrollgroup_AutoBars)
-                        End, //VGroupV
+                        End), //VGroupV
                 End; //ScrollgroupObject
 #else //defined(MUIA_Scrollgroup_AutoBars)
 			End; //VGroupV

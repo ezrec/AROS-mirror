@@ -1,7 +1,9 @@
 /*
-    Copyright © 1995-2014, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2018, The AROS Development Team. All rights reserved.
     $Id$
 */
+
+#include <aros/debug.h>
 
 #include <exec/types.h>
 #include <exec/io.h>
@@ -72,7 +74,7 @@ extern struct GfxBase *GfxBase;
 
 struct FmtBuff
 {
-    long numlines, bufflen;
+    LONG numlines, bufflen;
 };
 
 #define DOFMT_COUNTNEWLINES		0
@@ -81,15 +83,12 @@ struct FmtBuff
 /****************************************************************************************/
 
 
-extern APTR ASM DofmtCount (ASM_REGPARAM(a0, char *,),
-    	    	    	    ASM_REGPARAM(a1, APTR,),
-			    ASM_REGPARAM(a3, struct FmtBuff *,),
-			    ASM_REGPARAM(d0, int,));
+extern APTR DofmtCount (char *, APTR, ULONG *, int);
 extern APTR STDARGS DofmtArgs (char *, char *,...);
 
 
-extern void ASM FillBarTable (ASM_REGPARAM(a1, char **,), ASM_REGPARAM(a0, char *,));
-extern void ASM FillNewLineTable (ASM_REGPARAM(a1, char **,), ASM_REGPARAM(a0, char *,));
+extern void FillBarTable (char **, char *);
+extern void FillNewLineTable (char **, char *);
 
 /****************************************************************************************/
 
@@ -98,7 +97,7 @@ typedef struct Req_RealHandlerInfo	Req_GlobData;
 
 struct Req_RealHandlerInfo
 {
-    ULONG 			(*func)();        /* private */
+    IPTR 			(*func)();        /* private */
     ULONG 			WaitMask;
     ULONG 			DoNotWait;
 
@@ -137,7 +136,7 @@ static CONST UWORD pattern[] = { 0xAAAA,0x5555 };
 static ULONG REGARGS ReqExit (Req_GlobData *, int);
 static struct Image * REGARGS CreateRectImage
 			(Req_GlobData *, struct Image *, int, int, int, int, int, int);
-static ULONG ASM SAVEDS myReqHandler (REGPARAM(a1, Req_GlobData *,),
+static IPTR ASM SAVEDS myReqHandler (REGPARAM(a1, Req_GlobData *,),
 			    	      REGPARAM(d0, ULONG,),
 				      REGPARAM(a0, struct TagItem *,));
 
@@ -151,7 +150,7 @@ static ULONG ASM SAVEDS myReqHandler (REGPARAM(a1, Req_GlobData *,),
 
 ULONG ASM SAVEDS GetString (
 	REGPARAM(a1, UBYTE *, stringbuff),		/* str in case of rtEZRequestA */
-	REGPARAM(d0, LONG, maxlen),			/* args in case of rtEZRequestA */
+	REGPARAM(d0, SIPTR, maxlen),			/* args in case of rtEZRequestA */
 	REGPARAM(a2, char *, title),			/* gadfmt in case of rtEZRequestA */
 	REGPARAM(d1, ULONG, checksum),
 	REGPARAM(d2, ULONG *, value),
@@ -190,14 +189,14 @@ ULONG ASM SAVEDS GetString (
     int 		invisible, scrfontht, gadlines = 0;
     int 		leftoff, rightoff;
     ULONG 		*gadlenptr = NULL, *gadposptr = NULL, idcmpflags;
-    APTR 		gadfmtargs = NULL, textfmtargs = NULL, args;
+    APTR 		gadfmtargs = NULL, textfmtargs = NULL;
 
     memset (&itxt, 0, sizeof (struct IntuiText));
     memset (&ng, 0, sizeof (struct NewGadget));
 
     if (!(glob = AllocVec (sizeof (Req_GlobData), MEMF_PUBLIC | MEMF_CLEAR)))
 	return (FALSE);
-	    
+
     glob->mode = mode;
     glob->checksum = checksum;
     glob->value = value;
@@ -216,7 +215,7 @@ ULONG ASM SAVEDS GetString (
 	if (reqinfo->Width) glob->width = reqinfo->Width;
 	if (reqinfo->ReqTitle) title = reqinfo->ReqTitle;
 	if (reqinfo->ReqPos != REQPOS_DEFAULT) reqpos = reqinfo->ReqPos;
-	
+
 	glob->newreqwin.LeftEdge = reqinfo->LeftOffset;
 	glob->newreqwin.TopEdge = reqinfo->TopOffset;
 	glob->reqflags = reqinfo->Flags;
@@ -225,7 +224,7 @@ ULONG ASM SAVEDS GetString (
 	glob->shareidcmp = reqinfo->ShareIDCMP;
 	glob->imsghook = reqinfo->IntuiMsgFunc;
     }
-	    
+
     /* parse tags */
     tstate = taglist;
     while ((tag = NextTagItem (&tstate)))
@@ -308,14 +307,14 @@ ULONG ASM SAVEDS GetString (
 
     if (!(glob->scr = GetReqScreen (&glob->newreqwin, &glob->prwin, glob->scr, pubname)))
 	return (ReqExit (glob, FALSE));
-	
+
     spacing = rtGetVScreenSize (glob->scr, (ULONG *)&scrwidth, (ULONG *)&scrheight);
 
     if (fontattr)
     {
 	if (!(glob->reqfont = OpenFont (fontattr))) fontattr = NULL;
     }
-    
+
     if (!fontattr) fontattr = glob->scr->Font;
 
     if (!(glob->visinfo = GetVisualInfoA (glob->scr, NULL))
@@ -362,20 +361,20 @@ ULONG ASM SAVEDS GetString (
 		calculates number of lines in format string.
 		(APTR)maxlen points to the arguments! */
 
-	DofmtCount (glob->textfmt, textfmtargs, &glob->bodyfmt, DOFMT_COUNTNEWLINES);
+	DofmtCount (glob->textfmt, textfmtargs, &glob->bodyfmt.numlines, DOFMT_COUNTNEWLINES);
 	glob->numlines = glob->bodyfmt.numlines;
-	
+
 	if (!(glob->buff = (char **)AllocVec (glob->bodyfmt.bufflen
-			   + (8 + (int)sizeof (struct IntuiText)) * glob->numlines, MEMF_PUBLIC)))
+			   + ((sizeof(APTR) * 2) + (int)sizeof (struct IntuiText)) * glob->numlines, MEMF_PUBLIC)))
 	    return (ReqExit (glob, FALSE));
 
 	/* expand format string and fill in table of pointers to each line */
 	glob->lenptr = (ULONG *)&glob->buff[glob->numlines];
 	bodyitxt = (struct IntuiText *)&glob->lenptr[glob->numlines];
 	ptr = (char *)&bodyitxt[glob->numlines];
-	args = Dofmt (ptr, glob->textfmt, textfmtargs);
+	Dofmt (ptr, glob->textfmt, textfmtargs);
 
-	if (mode == IS_EZREQUEST) gadfmtargs = args;
+	if (mode == IS_EZREQUEST) gadfmtargs = textfmtargs;
 	FillNewLineTable (glob->buff, ptr);
 
 	/* Calculate width on screen of each line, remember largest */
@@ -387,14 +386,15 @@ ULONG ASM SAVEDS GetString (
 	}
 	glob->width = glob->len + 70;
     }
-    
+
     nogadgets = (gadfmt == NULL);
 
     if (!nogadgets)
     {
-	DofmtCount (gadfmt, gadfmtargs, &glob->gadfmtbuff, DOFMT_COUNTBARS);
+	DofmtCount (gadfmt, gadfmtargs, &glob->gadfmtbuff.numlines, DOFMT_COUNTBARS);
 	gadlines = glob->gadfmtbuff.numlines;
-	glob->gadfmtbuff.bufflen += 12 * gadlines;
+
+	glob->gadfmtbuff.bufflen += (sizeof(APTR) * 3) * gadlines;
 	if (!(glob->gadstrbuff = (char **)AllocVec (glob->gadfmtbuff.bufflen, MEMF_PUBLIC)))
 	    return (ReqExit (glob, FALSE));
 		
@@ -451,11 +451,11 @@ ULONG ASM SAVEDS GetString (
 	{
 	    height += glob->fontht + spacing + 4;
 	    if (min == 0x80000000)
-		    DofmtArgs (glob->minmaxstr, GetStr (glob->catalog, MSG_MAX_FMT), max);
-	    else DofmtArgs (glob->minmaxstr, (max != 0x7FFFFFFF) ?
-						     GetStr (glob->catalog, MSG_MIN_MAX_FMT) :
-						     GetStr (glob->catalog, MSG_MIN_FMT),
-						     min, max);
+                DofmtArgs (glob->minmaxstr, GetStr (glob->catalog, MSG_MAX_FMT), max);
+	    else if (max != 0x7FFFFFFF)
+                DofmtArgs (glob->minmaxstr, GetStr (glob->catalog, MSG_MIN_MAX_FMT), min, max);
+            else
+                DofmtArgs (glob->minmaxstr, GetStr (glob->catalog, MSG_MIN_FMT), min);
 	    itxt.IText = glob->minmaxstr;
 	    glob->minmaxlen = IntuiTextLength (&itxt) + 8;
 	    if (glob->minmaxlen + 16 > glob->width) glob->width = glob->minmaxlen + 16;
@@ -725,7 +725,7 @@ ULONG ASM SAVEDS GetString (
     glob->pubscr = (glob->newreqwin.Type == PUBLICSCREEN);
 
     /* fill in RealHandlerInfo */
-    glob->func = (ULONG (*)())myReqHandler;
+    glob->func = (IPTR (*)())myReqHandler;
     glob->WaitMask = (1 << glob->reqwin->UserPort->mp_SigBit);
     glob->DoNotWait = TRUE;
 
@@ -772,7 +772,7 @@ static struct Image * REGARGS CreateRectImage (Req_GlobData *glob,
 
 /****************************************************************************************/
 
-static ULONG ASM SAVEDS myReqHandler (
+static IPTR ASM SAVEDS myReqHandler (
 	REGPARAM(a1, Req_GlobData *, glob),
 	REGPARAM(d0, ULONG, sigs),
 	REGPARAM(a0, struct TagItem *, taglist))
@@ -836,7 +836,7 @@ static ULONG ASM SAVEDS myReqHandler (
 			    case 'N': case 'R': selgad = glob->nogad; break;
 			}
 		    }
-		    
+
 		    if ( ( glob->fkeys ) &&
 			 !(qual & QUALS_CONSIDERED) &&
 			 (code >= F1_KEY) && (code <= F10_KEY) &&
