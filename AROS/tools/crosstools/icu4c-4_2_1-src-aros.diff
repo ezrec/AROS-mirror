@@ -1,6 +1,6 @@
 diff -ruN icu/source/common/Makefile.in icu.aros/source/common/Makefile.in
 --- icu/source/common/Makefile.in	2009-07-01 19:50:38.000000000 +0100
-+++ icu.aros/source/common/Makefile.in	2013-04-09 21:16:17.787473921 +0100
++++ icu.aros/source/common/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -31,7 +31,7 @@
  TARGET_STUBNAME=$(COMMON_STUBNAME)
  
@@ -39,7 +39,7 @@ diff -ruN icu/source/common/Makefile.in icu.aros/source/common/Makefile.in
  endif
 diff -ruN icu/source/common/unicode/umachine.h icu.aros/source/common/unicode/umachine.h
 --- icu/source/common/unicode/umachine.h	2009-07-01 19:50:34.000000000 +0100
-+++ icu.aros/source/common/unicode/umachine.h	2013-04-09 21:17:06.520139711 +0100
++++ icu.aros/source/common/unicode/umachine.h	2017-03-31 05:29:00.906782154 +0100
 @@ -273,6 +273,10 @@
  #       endif
  #   elif defined(U_WINDOWS)
@@ -53,7 +53,7 @@ diff -ruN icu/source/common/unicode/umachine.h icu.aros/source/common/unicode/um
  
 diff -ruN icu/source/config/mh-aros icu.aros/source/config/mh-aros
 --- icu/source/config/mh-aros	1970-01-01 01:00:00.000000000 +0100
-+++ icu.aros/source/config/mh-aros	2013-04-09 21:11:20.927496769 +0100
++++ icu.aros/source/config/mh-aros	2017-03-31 05:29:00.906782154 +0100
 @@ -0,0 +1,76 @@
 +## AROS-specific setup
 +
@@ -133,7 +133,7 @@ diff -ruN icu/source/config/mh-aros icu.aros/source/config/mh-aros
 +
 diff -ruN icu/source/configure icu.aros/source/configure
 --- icu/source/configure	2009-07-01 19:51:26.000000000 +0100
-+++ icu.aros/source/configure	2013-04-09 21:17:15.022255807 +0100
++++ icu.aros/source/configure	2017-03-31 05:29:00.906782154 +0100
 @@ -4110,19 +4110,16 @@
              *) ;;
          esac
@@ -189,7 +189,7 @@ diff -ruN icu/source/configure icu.aros/source/configure
  
 diff -ruN icu/source/data/Makefile.in icu.aros/source/data/Makefile.in
 --- icu/source/data/Makefile.in	2009-07-01 19:51:20.000000000 +0100
-+++ icu.aros/source/data/Makefile.in	2013-04-09 21:17:15.023255820 +0100
++++ icu.aros/source/data/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -34,11 +34,14 @@
  ifeq ($(PKGDATA_MODE),dll)
  ICUPKGDATA_OUTDIR = $(LIBDIR)
@@ -548,7 +548,7 @@ diff -ruN icu/source/data/Makefile.in icu.aros/source/data/Makefile.in
  build-icu4j: all
 diff -ruN icu/source/data/Makefile.in.orig icu.aros/source/data/Makefile.in.orig
 --- icu/source/data/Makefile.in.orig	1970-01-01 01:00:00.000000000 +0100
-+++ icu.aros/source/data/Makefile.in.orig	2013-04-09 21:16:22.756541836 +0100
++++ icu.aros/source/data/Makefile.in.orig	2017-03-31 05:29:00.906782154 +0100
 @@ -0,0 +1,638 @@
 +## Makefile.in for ICU data
 +## Copyright (c) 1999-2009, International Business Machines Corporation and
@@ -1190,7 +1190,7 @@ diff -ruN icu/source/data/Makefile.in.orig icu.aros/source/data/Makefile.in.orig
 +
 diff -ruN icu/source/extra/uconv/Makefile.in icu.aros/source/extra/uconv/Makefile.in
 --- icu/source/extra/uconv/Makefile.in	2009-07-01 19:50:32.000000000 +0100
-+++ icu.aros/source/extra/uconv/Makefile.in	2013-04-09 21:17:15.023255820 +0100
++++ icu.aros/source/extra/uconv/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -150,7 +150,7 @@
  package-resfiles: $(RESDIR)/$(RESDIR).lst pkgdata.inc
  	$(INVOKE) $(PKGDATA_INVOKE_OPTS) $(TOOLBINDIR)/pkgdata -p $(MSGNAME) $(PKGDATA_OPTS) -m $(PKGMODE) -s $(RESDIR) -d $(RESDIR) -T $(RESDIR) $(RESDIR)/$(RESDIR).lst
@@ -1202,7 +1202,7 @@ diff -ruN icu/source/extra/uconv/Makefile.in icu.aros/source/extra/uconv/Makefil
  	@for file in $(RESFILES:$(RESDIR)/%.res=%.res); do \
 diff -ruN icu/source/i18n/Makefile.in icu.aros/source/i18n/Makefile.in
 --- icu/source/i18n/Makefile.in	2009-07-01 19:50:12.000000000 +0100
-+++ icu.aros/source/i18n/Makefile.in	2013-04-09 21:16:29.017627402 +0100
++++ icu.aros/source/i18n/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -27,7 +27,7 @@
  TARGET_STUBNAME=$(I18N_STUBNAME)
  
@@ -1241,7 +1241,7 @@ diff -ruN icu/source/i18n/Makefile.in icu.aros/source/i18n/Makefile.in
  endif
 diff -ruN icu/source/icudefs.mk.in icu.aros/source/icudefs.mk.in
 --- icu/source/icudefs.mk.in	2009-07-01 19:51:26.000000000 +0100
-+++ icu.aros/source/icudefs.mk.in	2013-04-09 21:17:15.024255833 +0100
++++ icu.aros/source/icudefs.mk.in	2017-03-31 05:29:00.906782154 +0100
 @@ -64,10 +64,16 @@
  PKGDATA_LIBNAME = -L $(ICUPREFIX)$(DATA_STUBNAME)$(ICULIBSUFFIX)
  ICUPKGDATA_DIR = $(libdir)
@@ -1261,7 +1261,7 @@ diff -ruN icu/source/icudefs.mk.in icu.aros/source/icudefs.mk.in
  
 diff -ruN icu/source/io/Makefile.in icu.aros/source/io/Makefile.in
 --- icu/source/io/Makefile.in	2009-07-01 19:50:48.000000000 +0100
-+++ icu.aros/source/io/Makefile.in	2013-04-09 21:16:30.012640999 +0100
++++ icu.aros/source/io/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -27,7 +27,7 @@
  TARGET_STUBNAME=$(IO_STUBNAME)
  
@@ -1300,7 +1300,7 @@ diff -ruN icu/source/io/Makefile.in icu.aros/source/io/Makefile.in
  endif
 diff -ruN icu/source/layout/Makefile.in icu.aros/source/layout/Makefile.in
 --- icu/source/layout/Makefile.in	2009-07-01 19:51:24.000000000 +0100
-+++ icu.aros/source/layout/Makefile.in	2013-04-09 21:16:30.373645931 +0100
++++ icu.aros/source/layout/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -26,7 +26,7 @@
  TARGET_STUBNAME=$(LAYOUT_STUBNAME)
  
@@ -1339,7 +1339,7 @@ diff -ruN icu/source/layout/Makefile.in icu.aros/source/layout/Makefile.in
  endif
 diff -ruN icu/source/layoutex/Makefile.in icu.aros/source/layoutex/Makefile.in
 --- icu/source/layoutex/Makefile.in	2009-07-01 19:51:20.000000000 +0100
-+++ icu.aros/source/layoutex/Makefile.in	2013-04-09 21:16:30.537648173 +0100
++++ icu.aros/source/layoutex/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -26,7 +26,7 @@
  TARGET_STUBNAME=$(LAYOUTEX_STUBNAME)
  
@@ -1378,7 +1378,7 @@ diff -ruN icu/source/layoutex/Makefile.in icu.aros/source/layoutex/Makefile.in
  endif
 diff -ruN icu/source/stubdata/Makefile.in icu.aros/source/stubdata/Makefile.in
 --- icu/source/stubdata/Makefile.in	2009-07-01 19:50:48.000000000 +0100
-+++ icu.aros/source/stubdata/Makefile.in	2013-04-09 21:16:31.453660690 +0100
++++ icu.aros/source/stubdata/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -27,7 +27,7 @@
  TARGET_STUBNAME=$(DATA_STUBNAME)
  
@@ -1417,7 +1417,7 @@ diff -ruN icu/source/stubdata/Makefile.in icu.aros/source/stubdata/Makefile.in
  endif
 diff -ruN icu/source/tools/ctestfw/Makefile.in icu.aros/source/tools/ctestfw/Makefile.in
 --- icu/source/tools/ctestfw/Makefile.in	2009-07-01 19:50:38.000000000 +0100
-+++ icu.aros/source/tools/ctestfw/Makefile.in	2013-04-09 21:16:36.662731868 +0100
++++ icu.aros/source/tools/ctestfw/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -27,7 +27,7 @@
  TARGET_STUBNAME=$(CTESTFW_STUBNAME)
  
@@ -1447,7 +1447,7 @@ diff -ruN icu/source/tools/ctestfw/Makefile.in icu.aros/source/tools/ctestfw/Mak
  endif
 diff -ruN icu/source/tools/dumpce/Makefile.in icu.aros/source/tools/dumpce/Makefile.in
 --- icu/source/tools/dumpce/Makefile.in	2009-07-01 19:50:42.000000000 +0100
-+++ icu.aros/source/tools/dumpce/Makefile.in	2013-04-09 21:16:36.735732864 +0100
++++ icu.aros/source/tools/dumpce/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -17,7 +17,7 @@
  CLEANFILES = *~ $(DEPS)
  
@@ -1486,7 +1486,7 @@ diff -ruN icu/source/tools/dumpce/Makefile.in icu.aros/source/tools/dumpce/Makef
  
 diff -ruN icu/source/tools/genbidi/Makefile.in icu.aros/source/tools/genbidi/Makefile.in
 --- icu/source/tools/genbidi/Makefile.in	2009-07-01 19:50:40.000000000 +0100
-+++ icu.aros/source/tools/genbidi/Makefile.in	2013-04-09 21:16:36.763733247 +0100
++++ icu.aros/source/tools/genbidi/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -24,7 +24,7 @@
  CLEANFILES = *~ $(DEPS) $(MAN_FILES)
  
@@ -1525,7 +1525,7 @@ diff -ruN icu/source/tools/genbidi/Makefile.in icu.aros/source/tools/genbidi/Mak
  
 diff -ruN icu/source/tools/genbrk/Makefile.in icu.aros/source/tools/genbrk/Makefile.in
 --- icu/source/tools/genbrk/Makefile.in	2009-07-01 19:50:42.000000000 +0100
-+++ icu.aros/source/tools/genbrk/Makefile.in	2013-04-09 21:16:36.782733507 +0100
++++ icu.aros/source/tools/genbrk/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -24,7 +24,7 @@
  CLEANFILES = *~ $(DEPS) $(MAN_FILES)
  
@@ -1569,7 +1569,7 @@ diff -ruN icu/source/tools/genbrk/Makefile.in icu.aros/source/tools/genbrk/Makef
  
 diff -ruN icu/source/tools/gencase/Makefile.in icu.aros/source/tools/gencase/Makefile.in
 --- icu/source/tools/gencase/Makefile.in	2009-07-01 19:50:42.000000000 +0100
-+++ icu.aros/source/tools/gencase/Makefile.in	2013-04-09 21:16:36.803733793 +0100
++++ icu.aros/source/tools/gencase/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -25,7 +25,7 @@
  CLEANFILES = *~ $(DEPS) $(MAN_FILES)
  
@@ -1608,7 +1608,7 @@ diff -ruN icu/source/tools/gencase/Makefile.in icu.aros/source/tools/gencase/Mak
  
 diff -ruN icu/source/tools/genccode/Makefile.in icu.aros/source/tools/genccode/Makefile.in
 --- icu/source/tools/genccode/Makefile.in	2009-07-01 19:50:42.000000000 +0100
-+++ icu.aros/source/tools/genccode/Makefile.in	2013-04-09 21:16:36.811733903 +0100
++++ icu.aros/source/tools/genccode/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -25,7 +25,7 @@
  CLEANFILES = *~ $(DEPS) $(MAN_FILES)
  
@@ -1652,7 +1652,7 @@ diff -ruN icu/source/tools/genccode/Makefile.in icu.aros/source/tools/genccode/M
  
 diff -ruN icu/source/tools/gencfu/Makefile.in icu.aros/source/tools/gencfu/Makefile.in
 --- icu/source/tools/gencfu/Makefile.in	2009-07-01 19:50:42.000000000 +0100
-+++ icu.aros/source/tools/gencfu/Makefile.in	2013-04-09 21:16:36.844734354 +0100
++++ icu.aros/source/tools/gencfu/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -24,7 +24,7 @@
  CLEANFILES = *~ $(DEPS) $(MAN_FILES)
  
@@ -1696,7 +1696,7 @@ diff -ruN icu/source/tools/gencfu/Makefile.in icu.aros/source/tools/gencfu/Makef
  
 diff -ruN icu/source/tools/gencmn/Makefile.in icu.aros/source/tools/gencmn/Makefile.in
 --- icu/source/tools/gencmn/Makefile.in	2009-07-01 19:50:42.000000000 +0100
-+++ icu.aros/source/tools/gencmn/Makefile.in	2013-04-09 21:16:36.853734477 +0100
++++ icu.aros/source/tools/gencmn/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -25,7 +25,7 @@
  CLEANFILES = *~ $(DEPS) $(MAN_FILES)
  
@@ -1740,7 +1740,7 @@ diff -ruN icu/source/tools/gencmn/Makefile.in icu.aros/source/tools/gencmn/Makef
  
 diff -ruN icu/source/tools/gencnval/Makefile.in icu.aros/source/tools/gencnval/Makefile.in
 --- icu/source/tools/gencnval/Makefile.in	2009-07-01 19:50:40.000000000 +0100
-+++ icu.aros/source/tools/gencnval/Makefile.in	2013-04-09 21:16:36.894735037 +0100
++++ icu.aros/source/tools/gencnval/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -25,7 +25,7 @@
  CLEANFILES = *~ $(DEPS) $(MAN_FILES)
  
@@ -1784,7 +1784,7 @@ diff -ruN icu/source/tools/gencnval/Makefile.in icu.aros/source/tools/gencnval/M
  
 diff -ruN icu/source/tools/genctd/Makefile.in icu.aros/source/tools/genctd/Makefile.in
 --- icu/source/tools/genctd/Makefile.in	2009-07-01 19:50:42.000000000 +0100
-+++ icu.aros/source/tools/genctd/Makefile.in	2013-04-09 21:16:36.910735254 +0100
++++ icu.aros/source/tools/genctd/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -24,7 +24,7 @@
  CLEANFILES = *~ $(DEPS) $(MAN_FILES)
  
@@ -1828,7 +1828,7 @@ diff -ruN icu/source/tools/genctd/Makefile.in icu.aros/source/tools/genctd/Makef
  
 diff -ruN icu/source/tools/gennames/Makefile.in icu.aros/source/tools/gennames/Makefile.in
 --- icu/source/tools/gennames/Makefile.in	2009-07-01 19:50:40.000000000 +0100
-+++ icu.aros/source/tools/gennames/Makefile.in	2013-04-09 21:16:36.930735529 +0100
++++ icu.aros/source/tools/gennames/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -25,7 +25,7 @@
  CLEANFILES = *~ $(DEPS) $(MAN_FILES)
  
@@ -1872,7 +1872,7 @@ diff -ruN icu/source/tools/gennames/Makefile.in icu.aros/source/tools/gennames/M
  
 diff -ruN icu/source/tools/gennorm/Makefile.in icu.aros/source/tools/gennorm/Makefile.in
 --- icu/source/tools/gennorm/Makefile.in	2009-07-01 19:50:42.000000000 +0100
-+++ icu.aros/source/tools/gennorm/Makefile.in	2013-04-09 21:16:36.936735611 +0100
++++ icu.aros/source/tools/gennorm/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -25,7 +25,7 @@
  CLEANFILES = *~ $(DEPS) $(MAN_FILES)
  
@@ -1916,7 +1916,7 @@ diff -ruN icu/source/tools/gennorm/Makefile.in icu.aros/source/tools/gennorm/Mak
  
 diff -ruN icu/source/tools/genpname/Makefile.in icu.aros/source/tools/genpname/Makefile.in
 --- icu/source/tools/genpname/Makefile.in	2009-07-01 19:50:40.000000000 +0100
-+++ icu.aros/source/tools/genpname/Makefile.in	2013-04-09 21:16:36.978736185 +0100
++++ icu.aros/source/tools/genpname/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -25,7 +25,7 @@
  CLEANFILES = *~ $(DEPS)
  
@@ -1960,7 +1960,7 @@ diff -ruN icu/source/tools/genpname/Makefile.in icu.aros/source/tools/genpname/M
  
 diff -ruN icu/source/tools/genprops/Makefile.in icu.aros/source/tools/genprops/Makefile.in
 --- icu/source/tools/genprops/Makefile.in	2009-07-01 19:50:40.000000000 +0100
-+++ icu.aros/source/tools/genprops/Makefile.in	2013-04-09 21:16:37.018736731 +0100
++++ icu.aros/source/tools/genprops/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -25,7 +25,7 @@
  CLEANFILES = *~ $(DEPS) $(MAN_FILES)
  
@@ -2004,7 +2004,7 @@ diff -ruN icu/source/tools/genprops/Makefile.in icu.aros/source/tools/genprops/M
  
 diff -ruN icu/source/tools/genrb/Makefile.in icu.aros/source/tools/genrb/Makefile.in
 --- icu/source/tools/genrb/Makefile.in	2009-07-01 19:50:40.000000000 +0100
-+++ icu.aros/source/tools/genrb/Makefile.in	2013-04-09 21:16:37.064737360 +0100
++++ icu.aros/source/tools/genrb/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -34,7 +34,7 @@
  CLEANFILES = *~ $(MAN_FILES) $(DEPS) $(DERB_DEPS)
  
@@ -2048,7 +2048,7 @@ diff -ruN icu/source/tools/genrb/Makefile.in icu.aros/source/tools/genrb/Makefil
  
 diff -ruN icu/source/tools/gensprep/Makefile.in icu.aros/source/tools/gensprep/Makefile.in
 --- icu/source/tools/gensprep/Makefile.in	2009-07-01 19:50:38.000000000 +0100
-+++ icu.aros/source/tools/gensprep/Makefile.in	2013-04-09 21:16:37.109737975 +0100
++++ icu.aros/source/tools/gensprep/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -25,7 +25,7 @@
  CLEANFILES = *~ $(DEPS) $(MAN_FILES)
  
@@ -2092,7 +2092,7 @@ diff -ruN icu/source/tools/gensprep/Makefile.in icu.aros/source/tools/gensprep/M
  
 diff -ruN icu/source/tools/gentest/Makefile.in icu.aros/source/tools/gentest/Makefile.in
 --- icu/source/tools/gentest/Makefile.in	2009-07-01 19:50:42.000000000 +0100
-+++ icu.aros/source/tools/gentest/Makefile.in	2013-04-09 21:16:37.118738098 +0100
++++ icu.aros/source/tools/gentest/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -18,7 +18,7 @@
  CLEANFILES = *~ $(DEPS)
  
@@ -2129,9 +2129,21 @@ diff -ruN icu/source/tools/gentest/Makefile.in icu.aros/source/tools/gentest/Mak
  	$(LINK.cc) $(OUTOPT)$@ $^ $(LIBS) 
  	$(POST_BUILD_STEP)
  
+diff -ruN icu/source/tools/genuca/genuca.cpp icu.aros/source/tools/genuca/genuca.cpp
+--- icu/source/tools/genuca/genuca.cpp	2009-07-01 19:50:40.000000000 +0100
++++ icu.aros/source/tools/genuca/genuca.cpp	2017-04-01 04:52:05.278859744 +0100
+@@ -891,7 +891,7 @@
+ struct {
+       UChar32 start;
+       UChar32 end;
+-      int32_t value;
++      uint32_t value;
+     } ranges[] =
+     {
+ #if 0
 diff -ruN icu/source/tools/genuca/Makefile.in icu.aros/source/tools/genuca/Makefile.in
 --- icu/source/tools/genuca/Makefile.in	2009-07-01 19:50:40.000000000 +0100
-+++ icu.aros/source/tools/genuca/Makefile.in	2013-04-09 21:16:37.138738371 +0100
++++ icu.aros/source/tools/genuca/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -24,7 +24,7 @@
  CLEANFILES = *~ $(DEPS) $(MAN_FILES)
  
@@ -2175,7 +2187,7 @@ diff -ruN icu/source/tools/genuca/Makefile.in icu.aros/source/tools/genuca/Makef
  
 diff -ruN icu/source/tools/icupkg/Makefile.in icu.aros/source/tools/icupkg/Makefile.in
 --- icu/source/tools/icupkg/Makefile.in	2009-07-01 19:50:38.000000000 +0100
-+++ icu.aros/source/tools/icupkg/Makefile.in	2013-04-09 21:16:37.146738481 +0100
++++ icu.aros/source/tools/icupkg/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -24,7 +24,7 @@
  CLEANFILES = *~ $(DEPS) $(MAN_FILES)
  
@@ -2219,7 +2231,7 @@ diff -ruN icu/source/tools/icupkg/Makefile.in icu.aros/source/tools/icupkg/Makef
  
 diff -ruN icu/source/tools/icuswap/Makefile.in icu.aros/source/tools/icuswap/Makefile.in
 --- icu/source/tools/icuswap/Makefile.in	2009-07-01 19:50:42.000000000 +0100
-+++ icu.aros/source/tools/icuswap/Makefile.in	2013-04-09 21:16:37.153738576 +0100
++++ icu.aros/source/tools/icuswap/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -24,7 +24,7 @@
  CLEANFILES = *~ $(DEPS) $(MAN_FILES)
  
@@ -2263,7 +2275,7 @@ diff -ruN icu/source/tools/icuswap/Makefile.in icu.aros/source/tools/icuswap/Mak
  	$(POST_BUILD_STEP)
 diff -ruN icu/source/tools/makeconv/Makefile.in icu.aros/source/tools/makeconv/Makefile.in
 --- icu/source/tools/makeconv/Makefile.in	2009-07-01 19:50:42.000000000 +0100
-+++ icu.aros/source/tools/makeconv/Makefile.in	2013-04-09 21:16:37.186739027 +0100
++++ icu.aros/source/tools/makeconv/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -24,7 +24,7 @@
  CLEANFILES = *~ $(DEPS) $(MAN_FILES)
  
@@ -2307,7 +2319,7 @@ diff -ruN icu/source/tools/makeconv/Makefile.in icu.aros/source/tools/makeconv/M
  
 diff -ruN icu/source/tools/pkgdata/Makefile.in icu.aros/source/tools/pkgdata/Makefile.in
 --- icu/source/tools/pkgdata/Makefile.in	2009-07-01 19:50:42.000000000 +0100
-+++ icu.aros/source/tools/pkgdata/Makefile.in	2013-04-09 21:16:37.198739190 +0100
++++ icu.aros/source/tools/pkgdata/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -28,7 +28,7 @@
  endif
  
@@ -2351,7 +2363,7 @@ diff -ruN icu/source/tools/pkgdata/Makefile.in icu.aros/source/tools/pkgdata/Mak
  
 diff -ruN icu/source/tools/pkgdata/pkgdata.cpp icu.aros/source/tools/pkgdata/pkgdata.cpp
 --- icu/source/tools/pkgdata/pkgdata.cpp	2009-07-01 19:50:42.000000000 +0100
-+++ icu.aros/source/tools/pkgdata/pkgdata.cpp	2013-04-09 21:17:15.024255833 +0100
++++ icu.aros/source/tools/pkgdata/pkgdata.cpp	2017-03-31 05:29:00.906782154 +0100
 @@ -70,12 +70,12 @@
  #define WINDOWS_WITH_MSVC
  #endif
@@ -2627,7 +2639,7 @@ diff -ruN icu/source/tools/pkgdata/pkgdata.cpp icu.aros/source/tools/pkgdata/pkg
  
 diff -ruN icu/source/tools/toolutil/Makefile.in icu.aros/source/tools/toolutil/Makefile.in
 --- icu/source/tools/toolutil/Makefile.in	2009-07-01 19:50:42.000000000 +0100
-+++ icu.aros/source/tools/toolutil/Makefile.in	2013-04-09 21:16:37.236739710 +0100
++++ icu.aros/source/tools/toolutil/Makefile.in	2017-03-31 05:29:00.906782154 +0100
 @@ -27,7 +27,7 @@
  TARGET_STUBNAME=$(TOOLUTIL_STUBNAME)
  
