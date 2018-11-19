@@ -13,17 +13,34 @@ def notify(status){
 }
 
 def buildStep(ext) {
+	stage('Freshing up the root') {
+		freshUpRoot(ext)
+	}
+	
+	stage('Configuring...') {
+		sh "cd build-$ext && ../AROS/configure --target=amiga-m68k --enable-ccache --enable-build-type=nightly --with-serial-debug --with-binutils-version=2.30 --with-gcc-version=6.3.0"
+	}
+	
+	stage('Building...') {
+		sh "cd build-$ext && make"
+	}
+	
+	stage('Making distfiles...') {
+		sh "cd build-$ext && make distfiles"
+	}
+	
+	if (!env.CHANGE_ID) {
+		stage('Moving dist files for publishing') {
+			sh "mkdir -p publishing/deploy/aros/$ext/"
+			sh "cp -fvr build-$ext/distfiles publishing/deploy/aros/$ext/"
+		}
+	}
+}
+
+def freshUpRoot(ext) {
 	sh "rm -rfv build-$ext"
 	sh "mkdir -p build-$ext"
   	sh "mkdir -p externalsources"
-	sh "cd build-$ext && ../AROS/configure --target=amiga-m68k --enable-ccache --enable-build-type=nightly --with-serial-debug --with-binutils-version=2.30 --with-gcc-version=6.3.0"
-	sh "cd build-$ext && make"
-	sh "cd build-$ext && make distfiles"
-	
-	if (!env.CHANGE_ID) {
-		sh "mkdir -p publishing/deploy/aros/$ext/"
-		sh "cp -fvr build-$ext/distfiles publishing/deploy/aros/$ext/"
-	}
 }
 
 node {
@@ -56,7 +73,7 @@ node {
 				sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/releases/aros/$TAG_NAME"
 				sh "scp publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/releases/aros/$TAG_NAME/"
 				sh "scp publishing/deploy/STABLE $DEPLOYHOST:~/public_html/downloads/releases/aros/"
-			} else if (env.BRANCH_NAME.equals('master')) {
+			} else if (env.BRANCH_NAME.equals('ABI_V1')) {
 				sh "date +'%Y-%m-%d %H:%M:%S' > publishing/deploy/BUILDTIME"
 				sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
 				sh "scp publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
