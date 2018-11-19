@@ -18,8 +18,11 @@ def buildStep(ext) {
   	sh "mkdir -p externalsources"
 	sh "cd build-$ext && ../AROS/configure --target=amiga-m68k --enable-ccache --enable-build-type=nightly --with-serial-debug --with-binutils-version=2.30 --with-gcc-version=6.3.0"
 	sh "cd build-$ext && make"
-
+	sh "cd build-$ext && make distfiles"
+	
 	if (!env.CHANGE_ID) {
+		sh "mkdir -p publishing/deploy/aros/$ext/"
+		sh "cp -fvr build-$ext/distfiles publishing/deploy/aros/$ext/"
 	}
 }
 
@@ -42,6 +45,7 @@ node {
 		}
 
 		stage('Build AROS 68k version') {
+			
 			buildStep('68k')
 		}
 
@@ -50,13 +54,13 @@ node {
 			if (env.TAG_NAME) {
 				sh "echo $TAG_NAME > publishing/deploy/STABLE"
 				sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/releases/aros/$TAG_NAME"
-				//sh "scp publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/releases/aros/$TAG_NAME/"
-				//sh "scp publishing/deploy/STABLE $DEPLOYHOST:~/public_html/downloads/releases/aros/"
+				sh "scp publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/releases/aros/$TAG_NAME/"
+				sh "scp publishing/deploy/STABLE $DEPLOYHOST:~/public_html/downloads/releases/aros/"
 			} else if (env.BRANCH_NAME.equals('master')) {
 				sh "date +'%Y-%m-%d %H:%M:%S' > publishing/deploy/BUILDTIME"
 				sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
-				//sh "scp publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
-				//sh "scp publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros/"
+				sh "scp publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
+				sh "scp publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros/"
 			}
 		}
 	
