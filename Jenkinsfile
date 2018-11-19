@@ -18,7 +18,7 @@ def buildStep(ext) {
 	}
 	
 	stage('Configuring...') {
-		sh "cd build-$ext && ../AROS/configure --target=amiga-m68k --enable-ccache --enable-build-type=nightly --with-serial-debug --with-binutils-version=2.30 --with-gcc-version=6.3.0"
+		sh "cd build-$ext && ../AROS/configure --target=amiga-m68k --enable-build-type=nightly --with-serial-debug --with-binutils-version=2.30 --with-gcc-version=6.3.0"
 	}
 	
 	stage('Building...') {
