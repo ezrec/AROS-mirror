@@ -88,6 +88,7 @@ $(TARGET_ISO): $(AROSDIR)/.backdrop \
 	@$(RM) -rf "$(AROSDIR).HUNK/Developer/lib"
 	@$(RM) -rf "$(AROSDIR).HUNK/Developer/man"
 	@$(RM) -rf "$(AROSDIR).HUNK/Developer/S" "$(AROSDIR).HUNK/Developer/Include.info" "$(AROSDIR).HUNK/Developer/Lib.info"
+	@$(RM) -rf "$(AROSDIR).HUNK/Prefs/Presets/Patterns/WallpaperComp2007"
 	@$(SED) -i '1s/.*$\/boot\/amiga\/AROSBootstrap ROM  boot\/amiga\/aros.hunk.gz\n&/g' "$(AROSDIR).HUNK/S/Startup-Sequence"
 	@$(CP) "$(SRCDIR)/arch/m68k-amiga/boot/iso/user-startup" "$(AROSDIR).HUNK/S/user-startup"
 	@$(CP) "$(AROSDIR)/Emergency-Boot/$(AROS_DIR_ARCH)/aros.hunk.gz" "$(AROSDIR).HUNK/$(AROS_DIR_ARCH)"
@@ -102,7 +103,8 @@ $(TARGET_ISO): $(AROSDIR)/.backdrop \
 		-sysid "AROS-$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)" \
                 -l -J -r \
 		"$(AROSDIR).HUNK"
-	@cd $(TARGETDIR) ; lha c $(DISTDIR)/AROS-$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU)-boot.lha AROS.HUNK
+	@cd $(AROSDIR).HUNK ; lha c $(DISTDIR)/AROS-$(AROS_TARGET_ARCH)-inflate_on_an_empty_partition.lha AROS.HUNK *
+	@xdftool $(DISTDIR)/AROS-$(AROS_TARGET_ARCH)-boot.hdf pack $(AROSDIR).HUNK/ size=100M + boot install
 
 $(DEVEL_ISO):   $(AROSDIR)/.backdrop \
 		$(AROSDIR)/Emergency-Boot.adf \
