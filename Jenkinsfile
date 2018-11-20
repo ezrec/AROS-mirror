@@ -13,7 +13,7 @@ def notify(status){
 }
 
 def buildStep(ext) {
-	stage('Starting $ext build target...') {
+	stage("Starting $ext build target...") {
 			
 	}
 
@@ -22,7 +22,7 @@ def buildStep(ext) {
 	}
 	
 	stage('Configuring...') {
-		sh "cd build-$ext && ../AROS/configure --target=$ext --enable-build-type=nightly --with-serial-debug --with-binutils-version=2.30 --with-gcc-version=6.3.0"
+		sh "cd build-$ext && ../AROS/configure --target=$ext --enable-build-type=nightly --with-serial-debug --with-binutils-version=2.30 --with-gcc-version=6.3.0 --with-portssources=externalsources"
 	}
 	
 	stage('Building...') {
@@ -36,6 +36,7 @@ def buildStep(ext) {
 	if (!env.CHANGE_ID) {
 		stage('Moving dist files for publishing') {
 			sh "mkdir -p publishing/deploy/aros/$ext/"
+			sh "echo '$ext,' > publishing/deploy/TARGETS"
 			sh "cp -fvr build-$ext/distfiles publishing/deploy/aros/$ext/"
 		}
 	}
@@ -65,7 +66,7 @@ node {
 			}
 		}
 		
-		buildStep('amiga-68k')
+		buildStep('amiga-m68k')
 		
 		stage('Deploying to stage') {
 			if (env.TAG_NAME) {
