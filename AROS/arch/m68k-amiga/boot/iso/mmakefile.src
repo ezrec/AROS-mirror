@@ -84,6 +84,7 @@ $(TARGET_ISO): $(AROSDIR)/.backdrop \
 	@$(RM) -rf "$(AROSDIR).HUNK/Sources"*
 	@$(RM) -rf "$(AROSDIR).HUNK/$(AROS_DIR_ARCH)/aros.elf"
 	@$(RM) -rf "$(AROSDIR).HUNK/Prefs/Env-Archive/SYS/theme.var"
+	@$(RM) -rf "$(AROSDIR).HUNK/developer"
 	@$(SED) -i '1s/.*$\/boot\/amiga\/AROSBootstrap ROM  boot\/amiga\/aros.hunk.gz\n&/g' "$(AROSDIR).HUNK/S/Startup-Sequence"
 	@$(CP) "$(AROSDIR)/Emergency-Boot/$(AROS_DIR_ARCH)/aros.hunk.gz" "$(AROSDIR).HUNK/$(AROS_DIR_ARCH)"
 	@$(CP) $(SRCDIR)/arch/m68k-amiga/boot/iso/Wanderer-global.prefs "$(AROSDIR).HUNK/Prefs/Env-Archive/SYS/Wanderer/global.prefs"
@@ -97,6 +98,7 @@ $(TARGET_ISO): $(AROSDIR)/.backdrop \
 		-sysid "AROS-$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)" \
                 -l -J -r \
 		"$(AROSDIR).HUNK"
+	@cd $(TARGETDIR) ; lha c $(DISTDIR)/AROS-$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU)-boot.lha AROS.HUNK
 
 $(DEVEL_ISO):   $(AROSDIR)/.backdrop \
 		$(AROSDIR)/Emergency-Boot.adf \

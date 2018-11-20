@@ -3,13 +3,20 @@ AROS m68k-amiga
 
 This disk contains AROS for the amiga-m68k architecture.
 
-To boot, image the 'Emergency-Boot.adf' file to a floppy,
+To boot, you can:
+
+1. copy the content of this directory to a partition,
+bootable with your genuine amiga kickstart, best case with
+the file system installed to the RDB of your media, or
+
+2. image the 'Emergency-Boot.adf' file to a floppy,
 or copy the contents of the 'Emergency-Boot' directory
 to an empty OFS formatted floppy, and run 'C:Install DF0:'
 
-Boot with the AROS Emergency-Boot, and it will start the
+Whether you boot with the AROS Emergency-Boot floppy, 
+or directly from your boot partition, it will start the
 AROSBootstrap program, which will softkick the AROS
-relocatable ROM image (aros.hunk.gz) into RAM.
+relocatable ROM image (aros.hunk.gz) into the RAM.
 
 The Emergency-Boot should boot on any Amiga hardware with
 KickStart 1.3 or later, and at least 2M of KICK RAM, and
