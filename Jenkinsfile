@@ -12,8 +12,6 @@ def notify(status){
 	)
 }
 
-def workspace = pwd() 
-
 def buildStep(ext) {
 	stage("Starting $ext build target...") {
 			
