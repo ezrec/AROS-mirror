@@ -24,7 +24,7 @@ def buildStep(ext) {
 	}
 	
 	stage('Configuring...') {
-		sh "cd build-$ext && ../AROS/configure --target=$ext --enable-build-type=nightly --with-serial-debug --with-binutils-version=2.30 --with-gcc-version=6.3.0 --with-portssources=${workspace}externalsources"
+		sh "cd build-$ext && ../AROS/configure --target=$ext --enable-build-type=nightly --with-serial-debug --with-binutils-version=2.30 --with-gcc-version=6.3.0 --with-portssources=${env.WORKSPACE}/externalsources"
 	}
 	
 	stage('Building...') {
