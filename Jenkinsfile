@@ -14,7 +14,7 @@ def notify(status){
 
 def buildStep(ext) {
 	stage("Starting $ext build target...") {
-			
+		slackSend color: "good", channel: "#aros", message: "Starting ${ext} build target..."
 	}
 
 	stage('Freshing up the root') {
@@ -22,7 +22,7 @@ def buildStep(ext) {
 	}
 	
 	stage('Configuring...') {
-		sh "cd build-$ext && ../AROS/configure --target=$ext --enable-build-type=nightly --with-serial-debug --with-binutils-version=2.30 --with-gcc-version=6.3.0 --with-portssources=${env.WORKSPACE}/externalsources"
+		sh "cd build-$ext && ../AROS/configure --target=$ext --enable-build-type=nightly --with-serial-debug --with-binutils-version=2.30 --with-gcc-version=6.3.0 --with-aros-toolchain-install=${env.WORKSPACE}/tools --with-portssources=${env.WORKSPACE}/externalsources"
 	}
 	
 	stage('Building...') {
@@ -36,8 +36,11 @@ def buildStep(ext) {
 	if (!env.CHANGE_ID) {
 		stage('Moving dist files for publishing') {
 			sh "mkdir -p publishing/deploy/aros/$ext/"
-			sh "echo '$ext,' > publishing/deploy/TARGETS"
-			sh "cp -fvr build-$ext/distfiles publishing/deploy/aros/$ext/"
+			sh "echo '$ext,' > publishing/deploy/aros/TARGETS"
+			sh "cp -fvr build-$ext/distfiles/* publishing/deploy/aros/$ext/"
+			sh "cp -pRL AROS/LICENSE publishing/deploy/aros/$ext/"
+			sh "cp -pRL AROS/ACKNOWLEDGEMENTS publishing/deploy/aros/$ext/"
+			sh "rm -rfv publishing/deploy/aros/$ext/*.elf"
 		}
 	}
 }
@@ -46,10 +49,13 @@ def freshUpRoot(ext) {
 	sh "rm -rfv build-$ext"
 	sh "mkdir -p build-$ext"
   	sh "mkdir -p externalsources"
+	sh "mkdir -p tools"
 }
 
 node {
 	try{
+		slackSend color: "good", channel: "#aros", message: "Build Started: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+		
 		stage('Checkout and pull') {
 			properties([pipelineTriggers([githubPush()])])
 			if (env.CHANGE_ID) {
@@ -75,14 +81,21 @@ node {
 				sh "scp -r publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/releases/aros/$TAG_NAME/"
 				sh "scp publishing/deploy/STABLE $DEPLOYHOST:~/public_html/downloads/releases/aros/"
 			} else if (env.BRANCH_NAME.equals('ABI_V1')) {
+				def deploy_url = sh (
+				    script: 'echo "/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"',
+				    returnStdout: true
+				).trim()
 				sh "date +'%Y-%m-%d %H:%M:%S' > publishing/deploy/BUILDTIME"
 				sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
 				sh "scp -r publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
 				sh "scp publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros/"
+				
+				slackSend color: "good", channel: "#aros", message: "Deploying to web (<https://www.eevul.net/${deploy_url}|Open>)"
 			}
 		}
 	
 	} catch(err) {
+		slackSend color: "danger", channel: "#aros", message: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
 		currentBuild.result = 'FAILURE'
 		notify('Build failed')
 		throw err
