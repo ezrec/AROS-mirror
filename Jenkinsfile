@@ -46,7 +46,7 @@ def buildStep(ext) {
 }
 
 def freshUpRoot(ext) {
-	//sh "rm -rfv build-$ext"
+	sh "rm -rfv build-$ext/distfiles/*"
 	sh "mkdir -p build-$ext"
   	sh "mkdir -p externalsources"
 	sh "mkdir -p tools"
