@@ -21,12 +21,20 @@ def buildStep(ext) {
 		freshUpRoot(ext)
 	}
 	
-	stage('Configuring...') {
+	stage('Configuring AROS main source...') {
 		sh "cd build-$ext && ../AROS/configure --target=$ext --enable-build-type=nightly --with-serial-debug --with-binutils-version=2.30 --with-gcc-version=6.3.0 --with-aros-toolchain-install=${env.WORKSPACE}/tools --with-portssources=${env.WORKSPACE}/externalsources"
 	}
 	
-	stage('Building...') {
+	stage('Configuring AROS contributions...') {
+		sh "cd build-$ext && ../contrib/configure --target=$ext --enable-build-type=nightly --with-serial-debug --with-binutils-version=2.30 --with-gcc-version=6.3.0 --with-aros-toolchain-install=${env.WORKSPACE}/tools --with-portssources=${env.WORKSPACE}/externalsources"
+	}
+	
+	stage('Building AROS main source...') {
 		sh "cd build-$ext && make"
+	}
+	
+	stage('Building selected AROS contributions...') {
+		sh "cd build-$ext && make contrib-installerlg"
 	}
 	
 	stage('Making distfiles...') {
