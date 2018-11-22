@@ -51,7 +51,7 @@ def buildStep(ext) {
 
 def freshUpRoot(ext) {
 	sh "rm -rfv build-$ext/distfiles/*"
-	sh "rm AROS/contrib && ln -s ../contrib AROS/contrib"
+	sh "ln -sf ../contrib AROS/contrib"
 	sh "mkdir -p build-$ext"
   	sh "mkdir -p externalsources"
 	sh "mkdir -p tools"
