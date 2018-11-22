@@ -1,13 +1,16 @@
 AROS m68k-amiga
 ---------------
 
-This disk contains AROS for the amiga-m68k architecture.
+This disk (image) contains AROS
+for the amiga-m68k architecture.
 
 To boot, you can:
 
-1. copy the content of this directory to a partition,
-bootable with your genuine amiga kickstart, best case with
-the file system installed to the RDB of your media, or
+1. copy the content of this image or archive to a bootable
+partition, best case with the file system installed to the
+RDB (Rigid Disk Block) of your media, and attach it to your 
+Amiga via an autoconfig mass storage controller (internal
+IDE ports or most SCSI/IDE expansions will do) , or
 
 2. image the 'Emergency-Boot.adf' file to a floppy,
 or copy the contents of the 'Emergency-Boot' directory
