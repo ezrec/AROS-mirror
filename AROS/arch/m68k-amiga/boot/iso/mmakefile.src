@@ -103,7 +103,7 @@ $(TARGET_ISO): $(AROSDIR)/.backdrop \
 		-sysid "AROS-$(AROS_TARGET_CPU)-$(AROS_TARGET_ARCH)" \
                 -l -J -r \
 		"$(AROSDIR).HUNK"
-	@cd $(AROSDIR).HUNK ; lha c $(DISTDIR)/AROS-$(AROS_TARGET_ARCH)-inflate_on_an_empty_partition.lha AROS.HUNK *
+	@cd $(AROSDIR).HUNK ; lha c $(DISTDIR)/AROS-$(AROS_TARGET_ARCH)-4_empty_boot_media.lha AROS.HUNK *
 	@xdftool $(DISTDIR)/AROS-$(AROS_TARGET_ARCH)-boot.hdf pack $(AROSDIR).HUNK/ size=100M + boot install
 
 $(DEVEL_ISO):   $(AROSDIR)/.backdrop \
