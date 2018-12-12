@@ -52,8 +52,7 @@ def buildStep(ext) {
 def freshUpRoot(ext) {
 	sh "rm -rfv build-$ext/distfiles/*"
 	sh "rm -rfv ${env.WORKSPACE}/tools"
-	sh "rm -rfv ${env.WORKSPACE}/build-$ext/bin/*/Ports"
-	sh "rm -rfv ${env.WORKSPACE}/build-$ext/bin/*/gen"
+	sh "rm -rfv ${env.WORKSPACE}/build-$ext/*"
 	sh "rm -rfv AROS/contrib"
 	sh "rm -rfv AROS/ports"
 	sh "cp -fvr contrib AROS/"
