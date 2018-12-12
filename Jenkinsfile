@@ -52,8 +52,8 @@ def buildStep(ext) {
 def freshUpRoot(ext) {
 	sh "rm -rfv build-$ext/distfiles/*"
 	// uncomment the following section to remove the whole toolchain and build: 
-	// sh "rm -rfv ${env.WORKSPACE}/tools"
-	// sh "rm -rfv ${env.WORKSPACE}/build-$ext/*"
+	sh "rm -rfv ${env.WORKSPACE}/tools"
+	sh "rm -rfv ${env.WORKSPACE}/build-$ext/*"
 	// end of section
 	sh "rm -rfv AROS/contrib"
 	sh "rm -rfv AROS/ports"
