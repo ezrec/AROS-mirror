@@ -22,7 +22,7 @@ def buildStep(ext) {
 	}
 	
 	stage('Configuring...') {
-		sh "cd build-$ext && ../AROS/configure --target=$ext --enable-build-type=nightly --with-serial-debug --enable-ccache --with-binutils-version=2.30 --with-gcc-version=6.3.0 --with-aros-toolchain-install=${env.WORKSPACE}/tools --with-portssources=${env.WORKSPACE}/externalsources"
+		sh "cd build-$ext && ../AROS/configure --target=$ext --enable-build-type=nightly --with-serial-debug --enable-ccache --with-aros-toolchain-install=${env.WORKSPACE}/tools --with-portssources=${env.WORKSPACE}/externalsources"
 	}
 	
 	stage('Building AROS main source...') {
@@ -51,8 +51,10 @@ def buildStep(ext) {
 
 def freshUpRoot(ext) {
 	sh "rm -rfv build-$ext/distfiles/*"
-	sh "rm -rfv ${env.WORKSPACE}/tools"
-	sh "rm -rfv ${env.WORKSPACE}/build-$ext/*"
+	// uncomment the following section to remove the whole toolchain and build: 
+	// sh "rm -rfv ${env.WORKSPACE}/tools"
+	// sh "rm -rfv ${env.WORKSPACE}/build-$ext/*"
+	// end of section
 	sh "rm -rfv AROS/contrib"
 	sh "rm -rfv AROS/ports"
 	sh "cp -fvr contrib AROS/"
