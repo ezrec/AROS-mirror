@@ -12,7 +12,7 @@ def notify(status){
 	)
 }
 
-def buildStep(ext) {
+def buildStep(ext, iconset = 'default') {
 	stage("Starting $ext build target...") {
 		slackSend color: "good", channel: "#aros", message: "Starting ${ext} build target..."
 	}
@@ -22,7 +22,7 @@ def buildStep(ext) {
 	}
 	
 	stage('Configuring...') {
-		sh "cd build-$ext && ../AROS/configure --target=$ext --enable-build-type=nightly --with-serial-debug --enable-ccache --with-binutils-version=2.30 --with-gcc-version=6.3.0 --with-aros-toolchain-install=${env.WORKSPACE}/tools --with-portssources=${env.WORKSPACE}/externalsources"
+		sh "cd build-$ext && ../AROS/configure --target=$ext --enable-ccache --with-iconset=$iconset --enable-build-type=nightly --with-serial-debug --with-binutils-version=2.30 --with-gcc-version=6.3.0 --with-aros-toolchain-install=${env.WORKSPACE}/tools --with-portssources=${env.WORKSPACE}/externalsources"
 	}
 	
 	stage('Building AROS main source...') {
@@ -59,6 +59,7 @@ def freshUpRoot(ext) {
 	sh "rm -rfv AROS/ports"
 	sh "cp -fvr contrib AROS/"
 	sh "cp -fvr ports AROS/"
+
 	sh "mkdir -p build-$ext"
   	sh "mkdir -p externalsources"
 	sh "mkdir -p tools"
