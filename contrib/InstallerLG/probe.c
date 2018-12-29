@@ -233,12 +233,10 @@ entry_p m_database(entry_p contxt)
 
         RSTR(strdup(ret));
     }
-    else
-    {
-        // The parser is broken.
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken.
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -277,12 +275,10 @@ entry_p m_earlier(entry_p contxt)
             f1.st_mtime < f2.st_mtime ? 1 : 0
         );
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -383,7 +379,7 @@ entry_p m_getassign(entry_p contxt)
                         {
                             // Unlock doslist and allocate enough
                             // memory to hold any path.
-                            char *r = calloc(PATH_MAX, 1);
+                            char *r = DBG_ALLOC(calloc(PATH_MAX, 1));
 	                        UnLockDosList(msk);
 
                             if(r)
@@ -458,11 +454,9 @@ entry_p m_getassign(entry_p contxt)
         // on failure.
         REST;
     }
-    else
-    {
-        // Broken parser.
-        RCUR;
-    }
+
+    // Broken parser.
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -540,12 +534,10 @@ entry_p m_getdevice(entry_p contxt)
         // on failure.
         REST;
     }
-    else
-    {
-        // The parser is broken.
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken.
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -631,12 +623,10 @@ entry_p m_getdiskspace(entry_p contxt)
         // Failure.
         RNUM(-1);
     }
-    else
-    {
-        // The parser is broken.
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken.
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -664,12 +654,10 @@ entry_p m_getenv(entry_p contxt)
         // string.
         REST;
     }
-    else
-    {
-        // The parser is broken.
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken.
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -1121,16 +1109,13 @@ entry_p m_iconinfo(entry_p contxt)
             // Success.
             RNUM(1);
         }
-        else
-        {
-            ERR(ERR_MISSING_OPTION, "dest");
-            RNUM(0);
-        }
+
+        // We need a destination.
+        ERR(ERR_MISSING_OPTION, "dest");
+        RNUM(0);
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }

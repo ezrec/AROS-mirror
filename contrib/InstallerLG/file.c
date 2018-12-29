@@ -76,12 +76,10 @@ entry_p m_expandpath(entry_p contxt)
         // Return empty string.
         REST;
     }
-    else
-    {
-        // Broken parser
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // Broken parser
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -91,13 +89,13 @@ entry_p m_expandpath(entry_p contxt)
 //              const char *hlp:    Help text.
 //              const char *msg:    Message format string.
 //              ...:                Format string varargs.
-// Return:      int:                If confirmed '1', else '0'. Both skip and
-//                                  abort will return a value of '0'.
+// Return:      bool:               If confirmed 'true' else 'false'. Both
+//                                  skip and abort will return 'false'.
 //----------------------------------------------------------------------------
-int h_confirm(entry_p contxt,
-              const char *hlp,
-              const char *msg,
-              ...)
+bool h_confirm(entry_p contxt,
+               const char *hlp,
+               const char *msg,
+               ...)
 {
     if(contxt)
     {
@@ -105,9 +103,9 @@ int h_confirm(entry_p contxt,
         // user behaviour can be simulated.
         int yes = get_numvar(contxt, "@yes"),
             skip = get_numvar(contxt, "@skip"),
-            abort = get_numvar(contxt, "@abort"),
-            ret;
+            abort = get_numvar(contxt, "@abort");
 
+        inp_t rc;
         va_list ap;
 
         // Format messsage string.
@@ -118,34 +116,58 @@ int h_confirm(entry_p contxt,
         // If we have any overrides, translate
         // them to the corresponding gui return
         // value.
-        if(yes || skip || abort)
+        if(abort) // || skip || abort)
         {
-            ret = abort ? -1 : yes;
+            rc = G_ABORT;
         }
-        // No overrides, get confirmation from
-        // the user.
+        else
+        if(skip)
+        {
+            rc = G_FALSE;
+        }
+        else
+        if(yes)
+        {
+            rc = G_TRUE;
+        }
+        // No overrides, get confirmation.
         else
         {
-            ret = gui_confirm(get_buf(), hlp);
+            entry_p back = get_opt(contxt, OPT_BACK);
+
+            rc = gui_confirm(get_buf(), hlp, back);
+
+            // Is the back option available?
+            if(back)
+            {
+                // Fake input?
+                if(get_numvar(contxt, "@back"))
+                {
+                    rc = G_ABORT;
+                }
+
+                // On abort execute.
+                if(rc == G_ABORT)
+                {
+                    rc = resolve(back) ?
+                         G_TRUE : G_ERR;
+                }
+            }
         }
 
-        // On abort, set HALT state. The return
-        // value is that same as skip.
-        if(ret < 0)
+        // FIXME
+        if(rc == G_ABORT || rc == G_EXIT)
         {
             HALT();
-            ret = 0;
         }
 
-        // True or false.
-        return ret;
+        // FIXME
+        return rc == G_TRUE;
     }
-    else
-    {
-        // Broken parser.
-        PANIC(contxt);
-        return 0;
-    }
+
+    // Broken parser.
+    PANIC(contxt);
+    return false;
 }
 
 //----------------------------------------------------------------------------
@@ -219,6 +241,7 @@ int h_exists(const char *n)
                     // installer documentation.
                     return 1;
                 }
+
                 // A directory?
                 if(S_ISDIR(fs.st_mode))
                 {
@@ -266,19 +289,20 @@ static const char *h_fileonly(entry_p contxt,
             // the string.
             while(i &&
                   s[i - 1] != '/' &&
-                  s[i - 1] != ':' ) i--;
+                  s[i - 1] != ':' )
+            {
+                i--;
+            }
 
             // Return the new offset.
             return (s + i);
         }
-        else
+
+        // Only fail if we're in 'strict' mode.
+        if(get_numvar(contxt, "@strict"))
         {
-            // Only fail if we're in 'strict' mode.
-            if(get_numvar(contxt, "@strict"))
-            {
-                // Empty string or dir / vol.
-                ERR(ERR_NOT_A_FILE, s);
-            }
+            // Empty string or dir / vol.
+            ERR(ERR_NOT_A_FILE, s);
         }
     }
     else
@@ -325,7 +349,7 @@ static pnode_p h_choices(entry_p contxt,
         entry_p *e = choices->children;
 
         // Create head node.
-        pnode_p node = calloc(1, sizeof(struct pnode_t)),
+        pnode_p node = DBG_ALLOC(calloc(1, sizeof(struct pnode_t))),
                 head = node;
 
         if(node)
@@ -337,7 +361,7 @@ static pnode_p h_choices(entry_p contxt,
             node->type = 2;
 
             // Not necessary to check the return value.
-            node->next = calloc(1, sizeof(struct pnode_t));
+            node->next = DBG_ALLOC(calloc(1, sizeof(struct pnode_t)));
             node = node->next;
 
             // Iterate over all files / dirs.
@@ -393,7 +417,7 @@ static pnode_p h_choices(entry_p contxt,
                     if(*e && *e != end())
                     {
                         // Not necessary to check the return value.
-                        node->next = calloc(1, sizeof(struct pnode_t));
+                        node->next = DBG_ALLOC(calloc(1, sizeof(struct pnode_t)));
                     }
 
                     // Copy the font (if any) as well?
@@ -411,7 +435,7 @@ static pnode_p h_choices(entry_p contxt,
                             if(!node->next)
                             {
                                 // Not necessary to check the return value.
-                                node->next = calloc(1, sizeof(struct pnode_t));
+                                node->next = DBG_ALLOC(calloc(1, sizeof(struct pnode_t)));
                             }
 
                             // Proceed with font.
@@ -432,7 +456,7 @@ static pnode_p h_choices(entry_p contxt,
                                    && *e && *e != end())
                                 {
                                     // Not necessary to check the return value.
-                                    node->next = calloc(1, sizeof(struct pnode_t));
+                                    node->next = DBG_ALLOC(calloc(1, sizeof(struct pnode_t)));
                                 }
                             }
                         }
@@ -507,7 +531,7 @@ static pnode_p h_filetree(entry_p contxt,
             if(dir)
             {
                 // Create head node.
-                pnode_p node = calloc(1, sizeof(struct pnode_t)),
+                pnode_p node = DBG_ALLOC(calloc(1, sizeof(struct pnode_t))),
                         head = node;
 
                 if(node)
@@ -620,7 +644,7 @@ static pnode_p h_filetree(entry_p contxt,
                             }
                             else
                             {
-                                node->next = calloc(1, sizeof(struct pnode_t));
+                                node->next = DBG_ALLOC(calloc(1, sizeof(struct pnode_t)));
 
                                 if(node->next)
                                 {
@@ -658,18 +682,17 @@ static pnode_p h_filetree(entry_p contxt,
                 // The list is complete.
                 return head;
             }
-            else
-            {
-                ERR(ERR_READ_DIR, src);
-                return NULL;
-            }
+
+            // Could not read from dir.
+            ERR(ERR_READ_DIR, src);
+            return NULL;
         }
-        else
+
         // Is source a file?
         if(type == 1)
         {
-            pnode_p file = calloc(1, sizeof(struct pnode_t)),
-                    head = calloc(1, sizeof(struct pnode_t));
+            pnode_p file = DBG_ALLOC(calloc(1, sizeof(struct pnode_t))),
+                    head = DBG_ALLOC(calloc(1, sizeof(struct pnode_t)));
 
             if(head && file)
             {
@@ -706,7 +729,7 @@ static pnode_p h_filetree(entry_p contxt,
 
                             if(h_exists(get_buf()) == 1)
                             {
-                                pnode_p font = calloc(1, sizeof(struct pnode_t));
+                                pnode_p font = DBG_ALLOC(calloc(1, sizeof(struct pnode_t)));
 
                                 if(font)
                                 {
@@ -722,12 +745,11 @@ static pnode_p h_filetree(entry_p contxt,
                                         // The list is complete.
                                         return head;
                                     }
-                                    else
-                                    {
-                                        free(font->name);
-                                        free(font->copy);
-                                        free(font);
-                                    }
+
+                                    // Out of memory.
+                                    free(font->name);
+                                    free(font->copy);
+                                    free(font);
                                 }
                             }
                         }
@@ -872,12 +894,10 @@ static int h_protect_set(entry_p contxt,
         h_log(contxt, tr(S_PTCT), file, mask);
         return 1;
     }
-    else
-    {
-        // Bad input.
-        PANIC(contxt);
-        return 0;
-    }
+
+    // Bad input.
+    PANIC(contxt);
+    return 0;
 }
 
 #define CF_INFOS        (1 << 0)
@@ -896,20 +916,30 @@ static int h_protect_set(entry_p contxt,
 // Input:       entry_p contxt:     The execution context.
 //              char *src:          Source file.
 //              char *dst:          Destination file.
-//              int mode:           Copy mode, see CF_*.
-// Return:      int:                On success '1', else '0'.
+//              int mde:            Copy mode, see CF_*.
+//              bool bck:           Enable back mode.
+// Return:      inp_t:              G_TRUE / G_FALSE / G_ABORT / G_ERR.
 //----------------------------------------------------------------------------
-static int h_copyfile(entry_p contxt,
-                      char *src,
-                      char *dst,
-                      int mode)
+static inp_t h_copyfile(entry_p contxt,
+                        char *src,
+                        char *dst,
+                        bool bck,
+                        int mde)
 {
     if(contxt && src && dst)
     {
+        // GUI return code.
+        inp_t rc = G_TRUE;
+
+        // Show GUI unless we're in silent mode.
+        if(!(mde & CF_SILENT))
+        {
+            rc = gui_copyfiles_setcur(src, mde & CF_NOGAUGE, bck);
+        }
+
         // Prepare GUI unless we're in silent mode
         // as used by copylib.
-        if((mode & CF_SILENT) ||
-           gui_copyfiles_setcur(src, mode & CF_NOGAUGE))
+        if(rc == G_TRUE)
         {
             static char buf[BUFSIZ];
             FILE *fs = fopen(src, "r");
@@ -929,19 +959,19 @@ static int h_copyfile(entry_p contxt,
                     access(dst, W_OK))
                 {
                     // No need to ask if only (force).
-                    if((mode & CF_FORCE) &&
-                      !(mode & CF_ASKUSER))
+                    if((mde & CF_FORCE) &&
+                      !(mde & CF_ASKUSER))
                     {
                         // Unprotect file.
                         chmod(dst, S_IRWXU);
                     }
                     else
                     // Ask for confirmation if (askuser).
-                    if(mode & CF_ASKUSER)
+                    if(mde & CF_ASKUSER)
                     {
                         // Unless we're running in novice mode
                         // and use (force) at the same time.
-                        if((mode & CF_FORCE) ||
+                        if((mde & CF_FORCE) ||
                             get_numvar(contxt, "@user-level"))
                         {
                             if(h_confirm(contxt, "", tr(S_OWRT), dst))
@@ -953,7 +983,8 @@ static int h_copyfile(entry_p contxt,
                             {
                                 // Skip file or abort.
                                 fclose(fs);
-                                return DID_HALT() ? 0 : 1;
+                                return DID_HALT() ?
+                                       G_ABORT : G_TRUE;
                             }
                         }
                     }
@@ -970,21 +1001,25 @@ static int h_copyfile(entry_p contxt,
                     {
                         if(fwrite(buf, 1, n, fd) == n)
                         {
-                            if(!(mode & CF_SILENT) &&
-                               !gui_copyfiles_setcur(NULL, mode & CF_NOGAUGE))
+                            // Update GUI unless we're in silent mode.
+                            if(!(mde & CF_SILENT))
                             {
-                                // User abort.
-                                HALT();
-                                break;
+                                rc = gui_copyfiles_setcur(NULL, mde & CF_NOGAUGE, bck);
+                            }
+
+                            if(rc == G_TRUE)
+                            {
+                                n = fread(buf, 1, sizeof(buf), fs);
                             }
                             else
                             {
-                                n = fread(buf, 1, BUFSIZ, fs);
+                                break;
                             }
                         }
                         else
                         {
                             ERR(ERR_WRITE_FILE, dst);
+                            rc = G_FALSE;
                             break;
                         }
                     }
@@ -1002,7 +1037,7 @@ static int h_copyfile(entry_p contxt,
                         h_log(contxt, tr(S_CPYD), src, dst);
 
                         // Are we going to copy the icon as well?
-                        if(mode & CF_INFOS)
+                        if(mde & CF_INFOS)
                         {
                             // The source icon.
                             static char is[PATH_MAX];
@@ -1018,32 +1053,32 @@ static int h_copyfile(entry_p contxt,
                                 snprintf(id, sizeof(id), "%s.info", dst);
 
                                 // Recur without info set.
-                                if(h_copyfile(contxt, is, id, mode & ~CF_INFOS))
+                                rc = h_copyfile(contxt, is, id, bck, mde & ~CF_INFOS);
+
+                                // Reset icon position?
+                                if(rc == G_TRUE && mde & CF_NOPOSITION)
                                 {
-                                    // Reset icon position?
-                                    if(mode & CF_NOPOSITION)
+                                    #ifdef AMIGA
+                                    struct DiskObject *obj = (struct DiskObject *)
+                                        GetDiskObject(dst);
+
+                                    if(obj)
                                     {
-                                        #ifdef AMIGA
-                                        struct DiskObject *obj = (struct DiskObject *)
-                                            GetDiskObject(dst);
+                                        // Reset icon position.
+                                        obj->do_CurrentX = NO_ICON_POSITION;
+                                        obj->do_CurrentY = NO_ICON_POSITION;
 
-                                        if(obj)
+                                        // Save the changes to the .info file.
+                                        if(!PutDiskObject(dst, obj))
                                         {
-                                            // Reset icon position.
-                                            obj->do_CurrentX = NO_ICON_POSITION;
-                                            obj->do_CurrentY = NO_ICON_POSITION;
-
-                                            // Save the changes to the .info file.
-                                            if(!PutDiskObject(dst, obj))
-                                            {
-                                                // We failed for some unknown reason.
-                                                ERR(ERR_WRITE_FILE, id);
-                                            }
-
-                                            FreeDiskObject(obj);
+                                            // We failed for some unknown reason.
+                                            ERR(ERR_WRITE_FILE, id);
+                                            rc = G_FALSE;
                                         }
-                                        #endif
+
+                                        FreeDiskObject(obj);
                                     }
+                                    #endif
                                 }
                             }
                         }
@@ -1060,7 +1095,7 @@ static int h_copyfile(entry_p contxt,
                         // Reset error codes if necessary.
                         if(DID_ERR())
                         {
-                            if(mode & CF_NOFAIL)
+                            if(mde & CF_NOFAIL)
                             {
                                 // Forget all errors.
                                 RESET();
@@ -1068,12 +1103,9 @@ static int h_copyfile(entry_p contxt,
                             else
                             {
                                 // Fail for real.
-                                return 0;
+                                rc = G_ABORT;
                             }
                         }
-
-                        // We succeeded.
-                        return 1;
                     }
                 }
                 else
@@ -1081,17 +1113,18 @@ static int h_copyfile(entry_p contxt,
                     // The source handle is open.
                     fclose(fs);
 
-                    if((mode & CF_NOFAIL) ||
-                       (mode & CF_OKNODELETE))
+                    if((mde & CF_NOFAIL) ||
+                       (mde & CF_OKNODELETE))
                     {
                         // Ignore failure.
                         h_log(contxt, tr(S_NCPY), src, dst);
-                        return 1;
+                        rc = G_TRUE;
                     }
                     else
                     {
                         // Fail for real.
                         ERR(ERR_WRITE_FILE, dst);
+                        rc = G_FALSE;
                     }
                 }
             }
@@ -1104,16 +1137,17 @@ static int h_copyfile(entry_p contxt,
                     fclose(fs);
                 }
 
-                if(mode & CF_NOFAIL)
+                if(mde & CF_NOFAIL)
                 {
                     // Ignore failure.
                     h_log(contxt, tr(S_NCPY), src, dst);
-                    return 1;
+                    rc = G_TRUE;
                 }
                 else
                 {
                     // Fail for real.
                     ERR(ERR_READ_FILE, src);
+                    rc = G_FALSE;
                 }
             }
         }
@@ -1122,10 +1156,13 @@ static int h_copyfile(entry_p contxt,
             HALT();
             h_log(contxt, tr(S_ACPY), src, dst);
         }
+
+        // Unknown status.
+        return rc;
     }
 
-    // Failure or user abort.
-    return 0;
+    // Unknown error.
+    return G_ERR;
 }
 
 //----------------------------------------------------------------------------
@@ -1266,6 +1303,7 @@ entry_p m_copyfiles(entry_p contxt)
                 fonts      = get_opt(contxt, OPT_FONTS),
                 optional   = get_opt(contxt, OPT_OPTIONAL),
                 delopts    = get_opt(contxt, OPT_DELOPTS),
+                back       = get_opt(contxt, OPT_BACK),
                 files      = all ? NULL : get_opt(contxt, OPT_FILES),
                 fail       = get_opt(delopts, OPT_FAIL) ?
                              NULL : get_opt(optional, OPT_FAIL),
@@ -1360,7 +1398,7 @@ entry_p m_copyfiles(entry_p contxt)
             // source -> destination tuples.
             if(tree)
             {
-                int go = 0;
+                inp_t rc = G_TRUE;
                 pnode_p cur = tree;
 
                 if(newname)
@@ -1417,17 +1455,18 @@ entry_p m_copyfiles(entry_p contxt)
                 // and so on.
                 if(cur)
                 {
-                    go = gui_copyfiles_start
+                    rc = gui_copyfiles_start
                     (
                         prompt ? str(prompt) : NULL,
                         confirm ? str(help) : NULL,
                         cur,
-                        confirm != NULL
+                        confirm,
+                        back
                     );
                 }
 
-                // Start copy unless user canceled / aborted.
-                if(go == 1)
+                // Start copy unless skip / abort / back.
+                if(rc == G_TRUE)
                 {
                     // Set file copy mode.
                     int md = (infos ? CF_INFOS : 0) |
@@ -1438,11 +1477,8 @@ entry_p m_copyfiles(entry_p contxt)
                              (force ? CF_FORCE : 0) |
                              (askuser ? CF_ASKUSER : 0);
 
-                    DNUM = 1;
-
                     // For all files / dirs in list, copy / create.
-                    for(; cur && DNUM;
-                        cur = cur->next)
+                    for(; cur && rc == G_TRUE; cur = cur->next)
                     {
                         int32_t prm = 0;
 
@@ -1453,44 +1489,53 @@ entry_p m_copyfiles(entry_p contxt)
                                 continue;
 
                             case 1:
-                                DNUM = h_copyfile
-                                (
-                                    contxt,
-                                    cur->name,
-                                    cur->copy,
-                                    md
-                                );
+                                rc = h_copyfile(contxt, cur->name,
+                                                cur->copy, back, md);
                                 break;
 
                             case 2:
-                                // Make directory and make sure the protection
-                                // bits the new one matches the old.
-                                if(h_makedir(contxt, cur->copy, md) &&
-                                   h_protect_get(contxt, cur->name, &prm) &&
-                                   h_protect_set(contxt, cur->copy, prm))
+                                // Make dir and make sure the protection
+                                // bits of the new one matches the old.
+                                if(!h_makedir(contxt, cur->copy, md) || 
+                                   !h_protect_get(contxt, cur->name, &prm) ||
+                                   !h_protect_set(contxt, cur->copy, prm))
                                 {
-                                    DNUM = 1;
+                                    rc = G_FALSE;
                                 }
-                                else
-                                {
-                                    DNUM = 0;
-                                }
-                                break;
-
-                            default:
-                                PANIC(contxt);
-                                DNUM = 0;
                         }
                     }
 
                     // GUI teardown.
                     gui_copyfiles_end();
+
+                    // Translate return code.
+                    DNUM = (rc == G_TRUE) ? 1 : 0;
                 }
-                else
+
+                // Back return value.
+                entry_p br = NULL;
+
+                // FIXME
+                if(rc != G_TRUE)
                 {
-                    //  '0' == skip.
-                    // '-1' == halt.
-                    if(go == -1)
+                    // Is the back option available?
+                    if(back)
+                    {
+                        // Fake input?
+                        if(get_numvar(contxt, "@back"))
+                        {
+                            rc = G_ABORT;
+                        }
+
+                        // On abort execute.
+                        if(rc == G_ABORT)
+                        {
+                            br = resolve(back);
+                        }
+                    }
+
+                    // FIXME
+                    if(rc == G_ABORT || rc == G_EXIT)
                     {
                         HALT();
                     }
@@ -1506,6 +1551,14 @@ entry_p m_copyfiles(entry_p contxt)
                     free(cur->copy);
                     cur = cur->next;
                     free(tree);
+                }
+
+                // If we've executed any 'back' code,
+                // return its return value instead of
+                // our own.
+                if(br)
+                {
+                    return br;
                 }
             }
         }
@@ -1552,6 +1605,7 @@ entry_p m_copylib(entry_p contxt)
                 noposition = get_opt(contxt, OPT_NOPOSITION),
                 optional   = get_opt(contxt, OPT_OPTIONAL),
                 delopts    = get_opt(contxt, OPT_DELOPTS),
+                back       = get_opt(contxt, OPT_BACK),
                 fail       = get_opt(delopts, OPT_FAIL) ?
                              NULL : get_opt(optional, OPT_FAIL),
                 nofail     = get_opt(delopts, OPT_NOFAIL) ?
@@ -1594,10 +1648,13 @@ entry_p m_copylib(entry_p contxt)
             {
                 // User level.
                 int level = get_numvar(contxt, "@user-level"),
+
                 // Source file version.
                 vs = h_getversion(contxt, s),
+
                 // Destination type.
                 dt = h_exists(d);
+
                 // Destination file.
                 char *f;
 
@@ -1705,6 +1762,11 @@ entry_p m_copylib(entry_p contxt)
                              (force ? CF_FORCE : 0) |
                              (askuser ? CF_ASKUSER : 0);
 
+                    // Currently there is no way to abort a
+                    // file copy, but we need to handle the
+                    // GUI return values anyway.
+                    inp_t rc = G_FALSE;
+
                     // Are we overwriting a file?
                     if(!ft)
                     {
@@ -1728,7 +1790,7 @@ entry_p m_copylib(entry_p contxt)
                                     tr(S_DDRW),
                                     d))
                                 {
-                                    DNUM = h_copyfile(contxt, s, f, md);
+                                    rc = h_copyfile(contxt, s, f, back, md);
                                 }
                             }
                             // The version of the source file
@@ -1747,14 +1809,14 @@ entry_p m_copylib(entry_p contxt)
                                     tr(S_DDRW),
                                     d))
                                 {
-                                    DNUM = h_copyfile(contxt, s, f, md);
+                                    rc = h_copyfile(contxt, s, f, back, md);
                                 }
                             }
                         }
                         else
                         {
                             // No confirmation needed.
-                            DNUM = h_copyfile(contxt, s, f, md);
+                            rc = h_copyfile(contxt, s, f, back, md);
                         }
                     }
                     else
@@ -1881,7 +1943,7 @@ entry_p m_copylib(entry_p contxt)
                                     tr(S_DDRW),
                                     d))
                                 {
-                                    DNUM = h_copyfile(contxt, s, f, md);
+                                    rc = h_copyfile(contxt, s, f, back, md);
                                 }
                             }
                             else
@@ -1890,7 +1952,7 @@ entry_p m_copylib(entry_p contxt)
                                 // number than the existing one, overwrite.
                                 if(vs > vf)
                                 {
-                                    DNUM = h_copyfile(contxt, s, f, md);
+                                    rc = h_copyfile(contxt, s, f, back, md);
                                 }
                                 else
                                 {
@@ -1914,7 +1976,7 @@ entry_p m_copylib(entry_p contxt)
                                             tr(S_DDRW),
                                             d))
                                         {
-                                            DNUM = h_copyfile(contxt, s, f, md);
+                                            rc = h_copyfile(contxt, s, f, back, md);
                                         }
                                     }
                                 }
@@ -1934,6 +1996,9 @@ entry_p m_copylib(entry_p contxt)
 
                     // Free memory allocated by h_tackon.
                     free(f);
+
+                    // Translate return code.
+                    DNUM = (rc == G_TRUE) ? 1 : 0;
                 }
             }
             else
@@ -1950,6 +2015,7 @@ entry_p m_copylib(entry_p contxt)
         {
             char *m = !source ? "source" : !dest ? "dest" :
                       !prompt ? "prompt" : "help";
+
             ERR(ERR_MISSING_OPTION, m);
         }
     }
@@ -2061,18 +2127,18 @@ static int h_delete_file(entry_p contxt, const char *file)
             // All done.
             return 1;
         }
-        else
-        {
-            ERR(ERR_DELETE_FILE, file);
-            return 0;
-        }
+
+        // Could not delete file.
+        ERR(ERR_DELETE_FILE, file);
     }
     else
     {
         // Unknown error.
         PANIC(contxt);
-        return 0;
     }
+    
+    // Failure.
+    return 0;
 }
 
 //----------------------------------------------------------------------------
@@ -2103,7 +2169,7 @@ static int h_delete_dir(entry_p contxt, const char *dir)
                 // Only ask for confirmation if we're not
                 // running in novice mode.
                 if(!get_numvar(contxt, "@user-level") ||
-                   !h_confirm(contxt, "", tr(S_DWRD), dir))
+                   !h_confirm(CARG(2), "", tr(S_DWRD), dir))
                 {
                     // Halt will be set by h_confirm. Skip
                     // will result in nothing.
@@ -2233,11 +2299,9 @@ static int h_delete_dir(entry_p contxt, const char *dir)
         // Done.
         return 1;
     }
-    else
-    {
-        // Bad input.
-        PANIC(contxt);
-    }
+
+    // Bad input.
+    PANIC(contxt);
 
     // Fail silently.
     return 0;
@@ -2257,7 +2321,7 @@ static int h_delete_pattern(entry_p contxt, const char *pat)
         // Pattern matching is only done on Amiga like OS:es
         #ifdef AMIGA
         struct AnchorPath *ap =
-            calloc(1, sizeof(struct AnchorPath) + PATH_MAX);
+            DBG_ALLOC(calloc(1, sizeof(struct AnchorPath) + PATH_MAX));
 
         if(ap)
         {
@@ -2397,8 +2461,8 @@ entry_p m_delete(entry_p contxt)
             // If we need confirmation and the user skips
             // or aborts, return. On abort, the HALT will
             // be set by h_confirm.
-            if(confirm &&
-               !h_confirm(contxt, str(help), str(prompt)))
+            if(confirm && !h_confirm(CARG(2),
+               str(help), str(prompt)))
             {
                 RCUR;
             }
@@ -2484,7 +2548,6 @@ entry_p m_exists(entry_p contxt)
             #endif
 
             // Get type (file / dir / 0)
-            //r = h_exists(str(CARG(1)));
             DNUM = h_exists(str(CARG(1)));
 
             #ifdef AMIGA
@@ -2519,17 +2582,12 @@ entry_p m_fileonly(entry_p contxt)
 {
     if(c_sane(contxt, 1))
     {
-        const char *p = str(CARG(1)),
-                   *f = h_fileonly(contxt, p);
+        RSTR(strdup(h_fileonly(contxt, str(CARG(1)))));
+    }
 
-        RSTR(strdup(f));
-    }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -2569,7 +2627,7 @@ entry_p m_foreach(entry_p contxt)
                 {
                     // Allocate memory for the start node.
                     pnode_p cur;
-                    top = calloc(1, sizeof(struct pnode_t));
+                    top = DBG_ALLOC(calloc(1, sizeof(struct pnode_t)));
 
                     #ifdef AMIGA
                     // This file info block will be used for all files
@@ -2656,7 +2714,7 @@ entry_p m_foreach(entry_p contxt)
                         // would get entries without names.
                         if(ent && cur->name)
                         {
-                            cur->next = calloc(1, sizeof(struct pnode_t));
+                            cur->next = DBG_ALLOC(calloc(1, sizeof(struct pnode_t)));
                             cur = cur->next;
                         }
                     }
@@ -2914,8 +2972,8 @@ entry_p m_makedir(entry_p contxt)
         // If we need confirmation and the user skips
         // or aborts, return. On abort, the HALT will
         // be set by h_confirm.
-        if(confirm &&
-           !h_confirm(contxt, str(help), str(prompt)))
+        if(confirm && !h_confirm(CARG(2),
+           str(help), str(prompt)))
         {
             RCUR;
         }
@@ -3200,7 +3258,8 @@ entry_p m_startup(entry_p contxt)
         if(get_opt(CARG(2), OPT_CONFIRM) ||
            get_numvar(contxt, "@user-level") > 0)
         {
-            if(!h_confirm(contxt, str(help), str(prompt)))
+            if(!h_confirm(CARG(2),
+               str(help), str(prompt)))
             {
                 RCUR;
             }
@@ -3221,8 +3280,8 @@ entry_p m_startup(entry_p contxt)
             const size_t len = strlen(";BEGIN ") + strlen(app),
                          ins = strlen(cmd) + 2;
 
-            char *pre = calloc(len + 1, 1),
-                 *pst = calloc(len + 1, 1),
+            char *pre = DBG_ALLOC(calloc(len + 1, 1)),
+                 *pst = DBG_ALLOC(calloc(len + 1, 1)),
                  *buf = NULL;
 
             if(pre && pst)
@@ -3262,7 +3321,7 @@ entry_p m_startup(entry_p contxt)
                         // we can keep the old file + any
                         // changes that we need to do in
                         // memory at the same time.
-                        buf = calloc(nsz, 1);
+                        buf = DBG_ALLOC(calloc(nsz, 1));
 
                         if(buf)
                         {
@@ -3353,7 +3412,7 @@ entry_p m_startup(entry_p contxt)
                 // becomes a problem, the system crashes, the
                 // power is lost and so on and so forth.
                 size_t tln = strlen(fln) + sizeof(".XXXXXX\0");
-                char *tmp = calloc(tln, 1);
+                char *tmp = DBG_ALLOC(calloc(tln, 1));
 
                 if(tmp)
                 {
@@ -3523,8 +3582,8 @@ entry_p m_textfile(entry_p contxt)
             // If we need confirmation and the user skips
             // or aborts, return. On abort, the HALT will
             // be set by h_confirm.
-            if(confirm &&
-               !h_confirm(contxt, str(help), str(prompt)))
+            if(confirm && !h_confirm(contxt,
+               str(help), str(prompt)))
             {
                 RCUR;
             }
@@ -3780,7 +3839,7 @@ entry_p m_tooltype(entry_p contxt)
                             if(o)
                             {
                                 // Allocate memory for a new temporary array.
-                                obj->do_ToolTypes = calloc(n, sizeof(char *));
+                                obj->do_ToolTypes = DBG_ALLOC(calloc(n, sizeof(char *)));
 
                                 if(obj->do_ToolTypes)
                                 {
@@ -3829,7 +3888,7 @@ entry_p m_tooltype(entry_p contxt)
                             else
                             {
                                 // Allocate memory for a new temporary array.
-                                obj->do_ToolTypes = calloc(n + 1, sizeof(char *));
+                                obj->do_ToolTypes = DBG_ALLOC(calloc(n + 1, sizeof(char *)));
 
                                 if(obj->do_ToolTypes)
                                 {
@@ -3866,7 +3925,7 @@ entry_p m_tooltype(entry_p contxt)
                             if(o && n > 1)
                             {
                                 // Allocate memory for a new temporary array.
-                                obj->do_ToolTypes = calloc(n, sizeof(char *));
+                                obj->do_ToolTypes = DBG_ALLOC(calloc(n, sizeof(char *)));
 
                                 if(obj->do_ToolTypes)
                                 {
@@ -4099,8 +4158,8 @@ entry_p m_rename(entry_p contxt)
         // If we need confirmation and the user skips
         // or aborts, return. On abort, the HALT will
         // be set by h_confirm.
-        if(confirm &&
-           !h_confirm(contxt, str(help), str(prompt)))
+        if(confirm && !h_confirm(CARG(3),
+           str(help), str(prompt)))
         {
             RNUM(0);
         }
@@ -4112,49 +4171,41 @@ entry_p m_rename(entry_p contxt)
             // Are we going to rename a file/dir?
             if(!disk)
             {
-                // Fail if the target exists.
+                // Rename if target doesn't exist.
                 if(!h_exists(to) && !rename(fr, to))
                 {
                     // Success.
                     h_log(contxt, tr(S_FRND), fr, to);
                     RNUM(-1);
                 }
-                else
-                {
-                    ERR(ERR_RENAME_FILE, fr);
-                    RNUM(0);
-                }
-            }
-            // No, we're going to relabel a volume.
-            else
-            {
-                #ifdef AMIGA
-                // Rename volume.
-                if(!Relabel(fr, to))
-                {
-                    // Failure.
-                    RNUM(0);
-                }
-                #endif
 
-                // Success.
-                h_log(contxt, tr(S_FRND), fr, to);
-                RNUM(-1);
+                // Fail if target exists.
+                ERR(ERR_RENAME_FILE, fr);
+                RNUM(0);
             }
+
+            // No, we're going to relabel a volume.
+            #ifdef AMIGA
+            // Rename volume.
+            if(!Relabel(fr, to))
+            {
+                // Failure.
+                RNUM(0);
+            }
+            #endif
+
+            // Success.
+            h_log(contxt, tr(S_FRND), fr, to);
         }
-        else
-        {
-            // Non safe operations always
-            // succeed in pretend mode.
-            RNUM(-1);
-        }
+
+        // Non safe operation in pretend mode
+        // or normal successful operation.
+        RNUM(-1);
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------

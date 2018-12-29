@@ -79,9 +79,9 @@
 Object *Win;
 
 //----------------------------------------------------------------------------
-// InstallerGui - Class members
+// IG - Class members
 //----------------------------------------------------------------------------
-CLASS_DEF(InstallerGui)
+CLASS_DEF(IG)
 {
     // Timer.
     struct MUI_InputHandlerNode Ticker;
@@ -89,48 +89,51 @@ CLASS_DEF(InstallerGui)
     // Widgets.
     Object *ExpertLevel, *UserLevel, *Progress,
            *Complete, *Pretend, *Bottom, *String,
-           *Number, *Empty, *Text, *List,
-           *Log, *Top, *Ask, *Yes, *No;
+           *Number, *Empty, *Text, *List, *Log,
+           *Top, *Ask, *Yes, *No, *AbortYes, *Abort,
+           *AbortOnly, *AbortRun;
 
     // String buffer.
     char Buf[1 << 10];
 };
 
 //----------------------------------------------------------------------------
-// InstallerGui - Public methods
+// IG - Public methods
 //----------------------------------------------------------------------------
-#define MUIM_InstallerGui_Init             (TAGBASE_LG + 101)
-#define MUIM_InstallerGui_Welcome          (TAGBASE_LG + 102)
-#define MUIM_InstallerGui_CopyFilesStart   (TAGBASE_LG + 104)
-#define MUIM_InstallerGui_CopyFilesSetCur  (TAGBASE_LG + 105)
-#define MUIM_InstallerGui_CopyFilesEnd     (TAGBASE_LG + 106)
-#define MUIM_InstallerGui_Exit             (TAGBASE_LG + 107)
-#define MUIM_InstallerGui_Complete         (TAGBASE_LG + 108)
-#define MUIM_InstallerGui_Ticker           (TAGBASE_LG + 109)
-#define MUIM_InstallerGui_CopyFilesAdd     (TAGBASE_LG + 110)
-#define MUIM_InstallerGui_Confirm          (TAGBASE_LG + 111)
-#define MUIM_InstallerGui_Message          (TAGBASE_LG + 112)
-#define MUIM_InstallerGui_Abort            (TAGBASE_LG + 113)
-#define MUIM_InstallerGui_Radio            (TAGBASE_LG + 114)
-#define MUIM_InstallerGui_Bool             (TAGBASE_LG + 115)
-#define MUIM_InstallerGui_String           (TAGBASE_LG + 116)
-#define MUIM_InstallerGui_Number           (TAGBASE_LG + 117)
-#define MUIM_InstallerGui_CheckBoxes       (TAGBASE_LG + 118)
-#define MUIM_InstallerGui_AskFile          (TAGBASE_LG + 119)
-#define MUIM_InstallerGui_PageSet          (TAGBASE_LG + 120)
+#define MUIM_IG_Init             (TAGBASE_LG + 101)
+#define MUIM_IG_Welcome          (TAGBASE_LG + 102)
+#define MUIM_IG_CopyFilesStart   (TAGBASE_LG + 104)
+#define MUIM_IG_CopyFilesSetCur  (TAGBASE_LG + 105)
+#define MUIM_IG_CopyFilesEnd     (TAGBASE_LG + 106)
+#define MUIM_IG_Exit             (TAGBASE_LG + 107)
+#define MUIM_IG_Complete         (TAGBASE_LG + 108)
+#define MUIM_IG_Ticker           (TAGBASE_LG + 109)
+#define MUIM_IG_CopyFilesAdd     (TAGBASE_LG + 110)
+#define MUIM_IG_Confirm          (TAGBASE_LG + 111)
+#define MUIM_IG_Message          (TAGBASE_LG + 112)
+#define MUIM_IG_Abort            (TAGBASE_LG + 113)
+#define MUIM_IG_Radio            (TAGBASE_LG + 114)
+#define MUIM_IG_Bool             (TAGBASE_LG + 115)
+#define MUIM_IG_String           (TAGBASE_LG + 116)
+#define MUIM_IG_Number           (TAGBASE_LG + 117)
+#define MUIM_IG_CheckBoxes       (TAGBASE_LG + 118)
+#define MUIM_IG_AskFile          (TAGBASE_LG + 119)
+#define MUIM_IG_PageSet          (TAGBASE_LG + 120)
+#define MUIM_IG_Finish           (TAGBASE_LG + 121)
+#define MUIM_IG_Working          (TAGBASE_LG + 122)
 
 //----------------------------------------------------------------------------
-// InstallerGui - Init parameters
+// IG - Init parameters
 //----------------------------------------------------------------------------
-struct MUIP_InstallerGui_Init
+struct MUIP_IG_Init
 {
     ULONG MethodID;
 };
 
 //----------------------------------------------------------------------------
-// InstallerGui - Welcome parameters
+// IG - Welcome parameters
 //----------------------------------------------------------------------------
-struct MUIP_InstallerGui_Welcome
+struct MUIP_IG_Welcome
 {
     ULONG MethodID;
     ULONG Message;
@@ -143,124 +146,148 @@ struct MUIP_InstallerGui_Welcome
 };
 
 //----------------------------------------------------------------------------
-// InstallerGui - CopyFilesStart parameters
+// IG - CopyFilesStart parameters
 //----------------------------------------------------------------------------
-struct MUIP_InstallerGui_CopyFilesStart
+struct MUIP_IG_CopyFilesStart
 {
     ULONG MethodID;
     ULONG Message;
     ULONG Help;
     ULONG List;
     ULONG Confirm;
+    ULONG Back;
 };
 
 //----------------------------------------------------------------------------
-// InstallerGui - CopyFilesSetCur parameters
+// IG - CopyFilesSetCur parameters
 //----------------------------------------------------------------------------
-struct MUIP_InstallerGui_CopyFilesSetCur
+struct MUIP_IG_CopyFilesSetCur
 {
     ULONG MethodID;
     ULONG File;
     ULONG NoGauge;
+    ULONG Back;
 };
 
 //----------------------------------------------------------------------------
-// InstallerGui - Exit parameters
+// IG - Exit parameters
 //----------------------------------------------------------------------------
-struct MUIP_InstallerGui_Exit
+struct MUIP_IG_Exit
 {
     ULONG MethodID;
     ULONG Message;
 };
 
 //----------------------------------------------------------------------------
-// InstallerGui - Complete parameters
+// IG - Complete parameters
 //----------------------------------------------------------------------------
-struct MUIP_InstallerGui_Complete
+struct MUIP_IG_Complete
 {
     ULONG MethodID;
     ULONG Progress;
 };
 
 //----------------------------------------------------------------------------
-// InstallerGui - CopyFilesAdd parameters
+// IG - CopyFilesAdd parameters
 //----------------------------------------------------------------------------
-struct MUIP_InstallerGui_CopyFilesAdd
+struct MUIP_IG_CopyFilesAdd
 {
     ULONG MethodID;
     ULONG File;
 };
 
 //----------------------------------------------------------------------------
-// InstallerGui - Run parameters
+// IG - Run parameters
 //----------------------------------------------------------------------------
-struct MUIP_InstallerGui_Confirm
+struct MUIP_IG_Confirm
 {
     ULONG MethodID;
     ULONG Message;
     ULONG Help;
+    ULONG Back;
 };
 
 //----------------------------------------------------------------------------
-// InstallerGui - Message parameters
+// IG - Message parameters
 //----------------------------------------------------------------------------
-struct MUIP_InstallerGui_Message
+struct MUIP_IG_Message
 {
     ULONG MethodID;
     ULONG Message;
-    ULONG Immediate;
+    ULONG Back;
 };
 
 //----------------------------------------------------------------------------
-// InstallerGui - Abort parameters
+// IG - Finish parameters
 //----------------------------------------------------------------------------
-struct MUIP_InstallerGui_Abort
+struct MUIP_IG_Finish
 {
     ULONG MethodID;
     ULONG Message;
 };
 
 //----------------------------------------------------------------------------
-// InstallerGui - Radio parameters
+// IG - Working parameters
 //----------------------------------------------------------------------------
-struct MUIP_InstallerGui_Radio
+struct MUIP_IG_Working
+{
+    ULONG MethodID;
+    ULONG Message;
+};
+
+//----------------------------------------------------------------------------
+// IG - Abort parameters
+//----------------------------------------------------------------------------
+struct MUIP_IG_Abort
+{
+    ULONG MethodID;
+    ULONG Message;
+};
+
+//----------------------------------------------------------------------------
+// IG - Radio parameters
+//----------------------------------------------------------------------------
+struct MUIP_IG_Radio
 {
     ULONG MethodID;
     ULONG Message;
     ULONG Help;
     ULONG Names;
     ULONG Default;
-    ULONG Halt;
+    ULONG Back;
+    ULONG Select;
 };
 
 //----------------------------------------------------------------------------
-// InstallerGui - Bool parameters
+// IG - Bool parameters
 //----------------------------------------------------------------------------
-struct MUIP_InstallerGui_Bool
+struct MUIP_IG_Bool
 {
     ULONG MethodID;
     ULONG Message;
     ULONG Help;
     ULONG Yes;
     ULONG No;
+    ULONG Back;
 };
 
 //----------------------------------------------------------------------------
-// InstallerGui - String parameters
+// IG - String parameters
 //----------------------------------------------------------------------------
-struct MUIP_InstallerGui_String
+struct MUIP_IG_String
 {
     ULONG MethodID;
     ULONG Message;
     ULONG Help;
     ULONG Default;
-    ULONG Halt;
+    ULONG Back;
+    ULONG String;
 };
 
 //----------------------------------------------------------------------------
-// InstallerGui - Number parameters
+// IG - Number parameters
 //----------------------------------------------------------------------------
-struct MUIP_InstallerGui_Number
+struct MUIP_IG_Number
 {
     ULONG MethodID;
     ULONG Message;
@@ -268,26 +295,28 @@ struct MUIP_InstallerGui_Number
     ULONG Min;
     ULONG Max;
     ULONG Default;
-    ULONG Halt;
+    ULONG Back;
+    ULONG Number;
 };
 
 //----------------------------------------------------------------------------
-// InstallerGui - CheckBoxes parameters
+// IG - CheckBoxes parameters
 //----------------------------------------------------------------------------
-struct MUIP_InstallerGui_CheckBoxes
+struct MUIP_IG_CheckBoxes
 {
     ULONG MethodID;
     ULONG Message;
     ULONG Help;
     ULONG Names;
     ULONG Default;
-    ULONG Halt;
+    ULONG Back;
+    ULONG Bitmap;
 };
 
 //----------------------------------------------------------------------------
-// InstallerGui - AskFile parameters
+// IG - AskFile parameters
 //----------------------------------------------------------------------------
-struct MUIP_InstallerGui_AskFile
+struct MUIP_IG_AskFile
 {
     ULONG MethodID;
     ULONG Message;
@@ -297,12 +326,14 @@ struct MUIP_InstallerGui_AskFile
     ULONG Assign;
     ULONG Default;
     ULONG Dir;
+    ULONG Back;
+    ULONG File;
 };
 
 //----------------------------------------------------------------------------
-// InstallerGui - PageSet parameters
+// IG - PageSet parameters
 //----------------------------------------------------------------------------
-struct MUIP_InstallerGui_PageSet
+struct MUIP_IG_PageSet
 {
     ULONG MethodID;
     ULONG Message;
@@ -312,20 +343,21 @@ struct MUIP_InstallerGui_PageSet
 };
 
 //----------------------------------------------------------------------------
-// InstallerGui - private values
+// IG - private values
 //----------------------------------------------------------------------------
-#define MUIV_InstallerGui_FirstButton      (TAGBASE_LG + 200)
-#define MUIV_InstallerGui_Proceed          (TAGBASE_LG + 200)
-#define MUIV_InstallerGui_Abort            (TAGBASE_LG + 201)
-#define MUIV_InstallerGui_Yes              (TAGBASE_LG + 202)
-#define MUIV_InstallerGui_No               (TAGBASE_LG + 203)
-#define MUIV_InstallerGui_Tick             (TAGBASE_LG + 204)
-#define MUIV_InstallerGui_AbortOnly        (TAGBASE_LG + 205)
-#define MUIV_InstallerGui_ProceedRun       (TAGBASE_LG + 206)
-#define MUIV_InstallerGui_SkipRun          (TAGBASE_LG + 207)
-#define MUIV_InstallerGui_AbortRun         (TAGBASE_LG + 208)
-#define MUIV_InstallerGui_ProceedOnly      (TAGBASE_LG + 209)
-#define MUIV_InstallerGui_LastButton       (TAGBASE_LG + 209)
+#define MUIV_IG_FirstButton      (TAGBASE_LG + 200)
+#define MUIV_IG_Proceed          (TAGBASE_LG + 200)
+#define MUIV_IG_Abort            (TAGBASE_LG + 201)
+#define MUIV_IG_Yes              (TAGBASE_LG + 202)
+#define MUIV_IG_No               (TAGBASE_LG + 203)
+#define MUIV_IG_AbortYes         (TAGBASE_LG + 204)
+#define MUIV_IG_Tick             (TAGBASE_LG + 205)
+#define MUIV_IG_AbortOnly        (TAGBASE_LG + 206)
+#define MUIV_IG_ProceedRun       (TAGBASE_LG + 207)
+#define MUIV_IG_SkipRun          (TAGBASE_LG + 208)
+#define MUIV_IG_AbortRun         (TAGBASE_LG + 209)
+#define MUIV_IG_Ok               (TAGBASE_LG + 210)
+#define MUIV_IG_LastButton       (TAGBASE_LG + 211)
 
 // Pages
 #define P_WELCOME                          0
@@ -339,19 +371,58 @@ struct MUIP_InstallerGui_PageSet
 
 // Buttons
 #define B_PROCEED_ABORT                    0
-#define B_YES_NO                           1
+#define B_YES_NO_ABORT                     1
 #define B_ABORT                            2
 #define B_PROCEED_SKIP_ABORT               3
-#define B_PROCEED                          4
+#define B_OK                               4
 #define B_NONE                             5
 
+
+
+
+  
 //----------------------------------------------------------------------------
-// InstallerGuiWait - [PRIVATE] Wait for notification(s)
+// IGTrans - [PRIVATE] -
+// Input:    ULONG signal:  -
+// Return:   Gui ret val.
+//----------------------------------------------------------------------------
+MUIDSP ULONG IGTrans(ULONG signal)
+{
+    switch(signal)
+    {
+        case MUIV_IG_Ok:
+        case MUIV_IG_Yes:
+        case MUIV_IG_Proceed:
+        case MUIV_IG_ProceedRun:
+            return G_TRUE;
+
+        case MUIV_IG_No:
+        case MUIV_IG_SkipRun:
+            return G_FALSE;
+
+        case MUIV_IG_Abort:
+        case MUIV_IG_AbortRun:
+        case MUIV_IG_AbortYes:
+        case MUIV_IG_AbortOnly:
+            return G_ABORT;
+
+        case 0:
+            return G_EXIT;
+
+        default:
+            return G_ERR;
+
+    }
+}
+
+
+//----------------------------------------------------------------------------
+// IGWait - [PRIVATE] Wait for notification(s)
 // Input:             ULONG notif:  Start notification value
 //                    ULONG range:  Number of values to check for
 // Return:            Notifcation val. / zero on return id quit
 //----------------------------------------------------------------------------
-MUIDSP ULONG InstallerGuiWait(Object *obj, ULONG notif, ULONG range)
+MUIDSP ULONG IGWait(Object *obj, ULONG notif, ULONG range)
 {
     ULONG sig = 0,
           ret = 0, n;
@@ -361,7 +432,7 @@ MUIDSP ULONG InstallerGuiWait(Object *obj, ULONG notif, ULONG range)
     for(n = 0; n < range; n++)
     {
         // Filter out ticks.
-        if(notif + n != MUIV_InstallerGui_Tick)
+        if(notif + n != MUIV_IG_Tick)
         {
             // Find current button.
             Object *but = (Object *) DoMethod
@@ -408,7 +479,7 @@ MUIDSP ULONG InstallerGuiWait(Object *obj, ULONG notif, ULONG range)
                 for(n = 0; n < range; n++)
                 {
                     // Filter out ticks.
-                    if(notif + n != MUIV_InstallerGui_Tick)
+                    if(notif + n != MUIV_IG_Tick)
                     {
                         // Find current button.
                         Object *but = (Object *) DoMethod
@@ -451,22 +522,22 @@ MUIDSP ULONG InstallerGuiWait(Object *obj, ULONG notif, ULONG range)
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiInit - Initialize all the things
+// IGInit - Initialize all the things
 // Input:             -
 // Return:            On success TRUE, FALSE otherwise.
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiInit(Class *cls,
+MUIDSP IPTR IGInit(Class *cls,
                              Object *obj)
 {
-    static ULONG i = MUIV_InstallerGui_FirstButton;
+    static ULONG i = MUIV_IG_FirstButton;
 
     // Have we already done this?
-    if(i != MUIV_InstallerGui_LastButton)
+    if(i != MUIV_IG_LastButton)
     {
-        struct InstallerGuiData *my = INST_DATA(cls, obj);
+        struct IGData *my = INST_DATA(cls, obj);
 
         // Set notifications on all buttons.
-        while(i <= MUIV_InstallerGui_LastButton)
+        while(i <= MUIV_IG_LastButton)
         {
             // Find current button.
             Object *but = (Object *) DoMethod(obj, MUIM_FindUData, i);
@@ -493,7 +564,7 @@ MUIDSP IPTR InstallerGuiInit(Class *cls,
             MUIA_String_Acknowledge,
             MUIV_EveryTime, _app(obj), 2,
             MUIM_Application_ReturnID,
-            MUIV_InstallerGui_Proceed
+            MUIV_IG_Proceed
         );
 
         // Exit upon close request.
@@ -516,18 +587,18 @@ MUIDSP IPTR InstallerGuiInit(Class *cls,
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiPageSet - [PRIVATE] Set page / buttons and display text
+// IGPageSet - [PRIVATE] Set page / buttons and display text
 // Input:                int top:   Top page
 //                       int btm:   Button page
 //                       ULONG msg: Top text message
 // Return:               TRUE on success, FALSE otherwise
 //----------------------------------------------------------------------------
 //
-MUIDSP IPTR InstallerGuiPageSet(Class *cls,
+MUIDSP IPTR IGPageSet(Class *cls,
                                 Object *obj,
-                                struct MUIP_InstallerGui_PageSet *msg)
+                                struct MUIP_IG_PageSet *msg)
 {
-    struct InstallerGuiData *my = INST_DATA(cls, obj);
+    struct IGData *my = INST_DATA(cls, obj);
 
     // Always a valid message string.
     const char *src = msg->Message ? (const char *)
@@ -615,27 +686,27 @@ MUIDSP IPTR InstallerGuiPageSet(Class *cls,
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiWelcome - Show welcome message. The Level, Log, and Pretend
-//                       parameters are int pointers that act as both input
-//                       and output.
-// Input:                Message - the welcome message text
-//                       Level - User level
-//                       Log - Log to file
-//                       Pretend - Pretend mode
-//                       MinLevel - Minimum user level
-//                       NoPretend - Disable pretend mode
-//                       NoLog - Disable logging
-// Return:               1 on success, 0 on abort
+// IGWelcome - Show welcome message. The Level, Log, and Pretend
+//             parameters are int pointers that act as both input
+//             and output.
+// Input:      Message - the welcome message text
+//             Level - User level
+//             Log - Log to file
+//             Pretend - Pretend mode
+//             MinLevel - Minimum user level
+//             NoPretend - Disable pretend mode
+//             NoLog - Disable logging
+// Return:     G_TRUE / G_ABORT / G_EXIT / G_ERR.
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiWelcome(Class *cls,
-                                Object *obj,
-                                struct MUIP_InstallerGui_Welcome *msg)
+MUIDSP IPTR IGWelcome(Class *cls,
+                      Object *obj,
+                      struct MUIP_IG_Welcome *msg)
 {
     // Show welcome page.
-    if(DoMethod(obj, MUIM_InstallerGui_PageSet, msg->Message,
-                NULL, P_WELCOME, B_PROCEED_ABORT))
+    if(DoMethod(obj, MUIM_IG_PageSet,
+       msg->Message, NULL, P_WELCOME, B_PROCEED_ABORT))
     {
-        struct InstallerGuiData *my = INST_DATA(cls, obj);
+        struct IGData *my = INST_DATA(cls, obj);
 
         // If the minimum user level is set to 'expert',
         // disable radio buttons to indicate that there
@@ -644,6 +715,7 @@ MUIDSP IPTR InstallerGuiWelcome(Class *cls,
         {
             set(my->UserLevel, MUIA_Disabled, TRUE);
         }
+
         // If the minimum user level is set to 'average',
         // show 'average' and 'expert' only.
         else if(msg->MinLevel == 1)
@@ -660,8 +732,11 @@ MUIDSP IPTR InstallerGuiWelcome(Class *cls,
         set(my->UserLevel, MUIA_Radio_Active, *((int *) msg->Level));
 
         // Wait for proceed or abort.
-        if(InstallerGuiWait(obj, MUIV_InstallerGui_Proceed, 2)
-           == MUIV_InstallerGui_Proceed)
+        inp_t rc = IGTrans(IGWait(obj, MUIV_IG_Proceed, 2));
+
+KPrintF("rc1:%d\n", rc);
+
+        if(rc == G_TRUE)
         {
             // Get the selected user level value. If we have
             // a minimum user level of 'average' we're using
@@ -708,64 +783,61 @@ MUIDSP IPTR InstallerGuiWelcome(Class *cls,
             if(*((int *) msg->Level))
             {
                 // Show pretend / log page.
-                if(DoMethod(obj, MUIM_InstallerGui_PageSet, NULL,
-                            NULL, P_PRETEND_LOG, B_PROCEED_ABORT))
+                if(DoMethod(obj, MUIM_IG_PageSet, NULL,
+                   NULL, P_PRETEND_LOG, B_PROCEED_ABORT))
                 {
                     // Wait for proceed or abort.
-                    if(InstallerGuiWait(obj, MUIV_InstallerGui_Proceed, 2)
-                       == MUIV_InstallerGui_Proceed)
+                    rc = IGTrans(IGWait(obj, MUIV_IG_Proceed, 2));
+
+KPrintF("rc2:%d\n", rc);
+                    if(rc == G_TRUE)
                     {
                         // Get pretend and log settings.
                         get(my->Pretend, MUIA_Radio_Active, (int *) msg->Pretend);
                         get(my->Log, MUIA_Radio_Active, (int *) msg->Log);
-                    }
-                    else
-                    {
-                        // Abort.
-                        return 0;
                     }
                 }
                 else
                 {
                     // Unknown error.
                     GERR(tr(S_UNER));
-                    return 0;
+                    return G_ERR;
                 }
             }
+        }
 
-            // Done.
-            return 1;
-        }
-        else
-        {
-            // Abort.
-            return 0;
-        }
+KPrintF("rcfinal:%d\n", rc);
+        // 'Proceed', 'Abort' or 'Exit'.
+        return rc;
     }
-
-    // Unknown error.
-    GERR(tr(S_UNER));
-    return 0;
+    else
+    {
+        // Unknown error.
+        GERR(tr(S_UNER));
+        return G_ERR;
+    }
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiAskFile - Show file / directory requester
-// Input:                Message - The prompt
-//                       Help - Help text
-//                       NewPath - Allow non-existent defaults
-//                       Disk - Show drive list first
-//                       Assign - Logical assign OK as dir
-//                       Default - Default file / directory
-//                       Dir - Ask for directory
-// Return:               File / directory name or NULL
+// IGAskFile - Show file / directory requester
+// Input:      Message - The prompt
+//             Help - Help text
+//             NewPath - Allow non-existent defaults
+//             Disk - Show drive list first
+//             Assign - Logical assign OK as dir
+//             Default - Default file / directory
+//             Dir - Ask for directory
+//             Back - Use 'Back' instead of 'Abort'.
+//             File - File / dir return value.
+// Return:     G_TRUE / G_ABORT / G_EXIT / G_ERR.
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiAskFile(Class *cls,
-                                Object *obj,
-                                struct MUIP_InstallerGui_AskFile *msg)
+MUIDSP IPTR IGAskFile(Class *cls,
+                      Object *obj,
+                      struct MUIP_IG_AskFile *msg)
 {
     // Show file requester page.
-    if(DoMethod(obj, MUIM_InstallerGui_PageSet, msg->Message,
-                msg->Help, P_ASKFILE, B_PROCEED_ABORT))
+    if(DoMethod(obj, MUIM_IG_PageSet, msg->Message,
+       msg->Help, P_ASKFILE, B_PROCEED_ABORT))
     {
         // Create ASL file requester
         Object *str, *pop = (Object *) MUI_NewObject
@@ -775,8 +847,10 @@ MUIDSP IPTR InstallerGuiAskFile(Class *cls,
             ASLFR_DrawersOnly, msg->Dir,
             ASLFR_InitialShowVolumes, msg->Disk,
             ASLFR_TitleText, msg->Dir ? tr(S_SDIR) : tr(S_SFLE),
-            MUIA_Popstring_String, str = (Object *) MUI_MakeObject(MUIO_String, NULL, PATH_MAX),
-            MUIA_Popstring_Button, (Object *) MUI_MakeObject(MUIO_PopButton, MUII_PopDrawer),
+            MUIA_Popstring_String, str = (Object *)
+                MUI_MakeObject(MUIO_String, NULL, PATH_MAX),
+            MUIA_Popstring_Button, (Object *)
+                MUI_MakeObject(MUIO_PopButton, MUII_PopDrawer),
             TAG_END
         );
 
@@ -784,7 +858,7 @@ MUIDSP IPTR InstallerGuiAskFile(Class *cls,
         // to the current group.
         if(pop)
         {
-            struct InstallerGuiData *my = INST_DATA(cls, obj);
+            struct IGData *my = INST_DATA(cls, obj);
 
             // Set default file / dir.
             set(str, MUIA_String_Contents, msg->Default);
@@ -792,40 +866,48 @@ MUIDSP IPTR InstallerGuiAskFile(Class *cls,
             // Prepare before adding requester.
             if(DoMethod(my->Ask, MUIM_Group_InitChange))
             {
-                char *ret = NULL;
-
                 // Add pop up requester.
                 DoMethod(my->Ask, OM_ADDMEMBER, pop);
+
+                // Use 'Abort' or 'Back'?
+                if(msg->Back)
+                {
+                    // Set 'Back' button.
+                    set(my->Abort, MUIA_Text_Contents, tr(S_BACK));
+                }
 
                 // We're done adding things.
                 DoMethod(my->Ask, MUIM_Group_ExitChange);
 
                 // Wait for proceed or abort.
-                if(InstallerGuiWait(obj, MUIV_InstallerGui_Proceed, 2)
-                   == MUIV_InstallerGui_Proceed)
+                inp_t rc = IGTrans(IGWait(obj, MUIV_IG_Proceed, 2));
+
+                if(rc == G_TRUE)
                 {
                     // Get filename from requester.
-                    get(str, MUIA_String_Contents, &ret);
+                    get(str, MUIA_String_Contents, (char **) msg->File);
 
-                    if(ret)
+                    if(*((char **) msg->File))
                     {
                         // We need to create a copy of the filename
                         // string since we're about to free the pop
                         // up requester.
-                        int n = snprintf(my->Buf, sizeof(my->Buf), "%s", ret);
+                        int n = snprintf(my->Buf, sizeof(my->Buf), "%s",
+                                         *((char **) msg->File));
 
                         // Make sure that we succeded in creating a
                         // copy of the filename.
                         if(n >= 0 && ((size_t) n < sizeof(my->Buf)))
                         {
-                            ret = my->Buf;
+                            *((char **) msg->File) = my->Buf;
                         }
                     }
 
-                    if(!ret)
+                    if(!*((char **) msg->File))
                     {
                         // Unknown error.
                         GERR(tr(S_UNER));
+                        rc = G_ERR;
                     }
                 }
 
@@ -835,6 +917,12 @@ MUIDSP IPTR InstallerGuiAskFile(Class *cls,
                     // Remove pop up requester.
                     DoMethod(my->Ask, OM_REMMEMBER, pop);
 
+                    if(msg->Back)
+                    {
+                        // Restore 'Abort' if needed.
+                        set(my->Abort, MUIA_Text_Contents, tr(S_ABRT));
+                    }
+
                     // We're done removing things.
                     DoMethod(my->Ask, MUIM_Group_ExitChange);
 
@@ -842,7 +930,7 @@ MUIDSP IPTR InstallerGuiAskFile(Class *cls,
                     MUI_DisposeObject(pop);
 
                     // Return filename.
-                    return (IPTR) ret;
+                    return rc;
                 }
             }
 
@@ -853,22 +941,22 @@ MUIDSP IPTR InstallerGuiAskFile(Class *cls,
 
     // Unknown error.
     GERR(tr(S_UNER));
-    return (IPTR) NULL;
+    return G_ERR;
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiCopyFilesStart - Show file copy requester
-// Input:                       Message - The prompt
-//                              List - File / dir list
-//                              Confirm - User confirmation
-// Return:                      TRUE to start copy, FALSE to cancel
+// IGCopyFilesStart - Show file copy requester
+// Input:             Message - The prompt
+//                    List - File / dir list
+//                    Confirm - User confirmation
+// Return:            G_TRUE / G_ABORT / G_EXIT / G_ERR.
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiCopyFilesStart(Class *cls,
-                                       Object *obj,
-                                       struct MUIP_InstallerGui_CopyFilesStart *msg)
+MUIDSP IPTR IGCopyFilesStart(Class *cls,
+                             Object *obj,
+                             struct MUIP_IG_CopyFilesStart *msg)
 {
 
-    struct InstallerGuiData *my = INST_DATA(cls, obj);
+    struct IGData *my = INST_DATA(cls, obj);
 
     int n = 0;
     pnode_p cur = (pnode_p) msg->List,
@@ -886,7 +974,7 @@ MUIDSP IPTR InstallerGuiCopyFilesStart(Class *cls,
             if(msg->Confirm)
             {
                 // Add file to the selection / deselection list.
-                DoMethod(Win, MUIM_InstallerGui_CopyFilesAdd, cur->name);
+                DoMethod(Win, MUIM_IG_CopyFilesAdd, cur->name);
             }
 
             // Increase the total file count.
@@ -900,18 +988,34 @@ MUIDSP IPTR InstallerGuiCopyFilesStart(Class *cls,
     if(msg->Confirm && n)
     {
         // Show the file selection page.
-        if(DoMethod(Win, MUIM_InstallerGui_PageSet, msg->Message,
+        if(DoMethod(Win, MUIM_IG_PageSet, msg->Message,
                     msg->Help, P_FILEDEST, B_PROCEED_SKIP_ABORT))
         {
-            ULONG b;
-            LONG id = MUIV_List_NextSelected_Start;
+            inp_t rc;
 
-            // Wait for confirmation / skip / abort.
-            b = InstallerGuiWait(Win, MUIV_InstallerGui_ProceedRun, 3);
+            // Use 'Abort' or 'Back'?
+            if(msg->Back)
+            {
+                // Set 'Back' button.
+                set(my->AbortRun, MUIA_Text_Contents, tr(S_BACK));
+
+                // Wait for 'Proceed', 'Skip' or 'Back'.
+                rc = IGTrans(IGWait(obj, MUIV_IG_ProceedRun, 3));
+
+                // Restore 'Abort' button.
+                set(my->AbortRun, MUIA_Text_Contents, tr(S_ABRT));
+            }
+            else
+            {
+                // Wait for 'Proceed', 'Skip' or 'Abort'.
+                rc = IGTrans(IGWait(obj, MUIV_IG_ProceedRun, 3));
+            }
 
             // Did the user confirm?
-            if(b == MUIV_InstallerGui_ProceedRun)
+            if(rc == G_TRUE)
             {
+                LONG id = MUIV_List_NextSelected_Start;
+
                 // For all files in the selection / deselection
                 // list, tag the ones that we're going to copy.
                 for(;;)
@@ -978,16 +1082,14 @@ MUIDSP IPTR InstallerGuiCopyFilesStart(Class *cls,
             }
             else
             {
-                // Are we going to skip the file copy or are
-                // we going to abort?
-                return b == MUIV_InstallerGui_SkipRun ?
-                       0 : -1;
+                // Skip or abort.
+                return rc;
             }
         }
     }
 
     // Show file copy page.
-    if(DoMethod(obj, MUIM_InstallerGui_PageSet, msg->Message,
+    if(DoMethod(obj, MUIM_IG_PageSet, msg->Message,
                 NULL, P_COPYFILES, B_ABORT))
     {
         // Install a timer to create a time slice
@@ -999,32 +1101,45 @@ MUIDSP IPTR InstallerGuiCopyFilesStart(Class *cls,
                  MUIA_Gauge_Current, 0, TAG_END);
 
         // Always true.
-        return (IPTR) TRUE;
+        return (IPTR) G_TRUE;
     }
     else
     {
         // Unknown error.
         GERR(tr(S_UNER));
-        return FALSE;
+        return (IPTR) G_ERR;
     }
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiCopyFilesSetCur - Show current file
-// Input:                        File - filename
-//                               NoGauge - Hide file gauge
-// Return:                       TRUE to continue, FALSE to abort
+// IGCopyFilesSetCur - Show current file
+// Input:              File - filename
+//                     NoGauge - Hide file gauge
+//                     Back - Use 'Back' instead of 'Abort'.
+// Return:             G_TRUE / G_ABORT / G_EXIT / G_ERR.
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiCopyFilesSetCur(Class *cls,
-                                        Object *obj,
-                                        struct MUIP_InstallerGui_CopyFilesSetCur *msg)
+MUIDSP IPTR IGCopyFilesSetCur(Class *cls,
+                              Object *obj,
+                              struct MUIP_IG_CopyFilesSetCur *msg)
 {
     if(msg->File)
     {
-        struct InstallerGuiData *my = INST_DATA(cls, obj);
+        struct IGData *my = INST_DATA(cls, obj);
         char *file = (char *) msg->File;
         size_t len = strlen(file);
         struct TextExtent ext;
+        static ULONG back;
+
+        // Toggle 'Abort' and 'Back'?
+        if(msg->Back != back)
+        {
+            // Save value.
+            back = msg->Back;
+
+            // Set new button text.
+            set(my->AbortOnly, MUIA_Text_Contents,
+                back ? tr(S_BACK) : tr(S_ABRT));
+        }
 
         // Get the number of characters that
         // can be shown given the width of the
@@ -1078,32 +1193,36 @@ MUIDSP IPTR InstallerGuiCopyFilesSetCur(Class *cls,
         // 64:th block.
         if(++n >> 6)
         {
-            // Wait for the next tick (or abort).
-            if(InstallerGuiWait(obj, MUIV_InstallerGui_Tick, 2) !=
-               MUIV_InstallerGui_Tick)
-            {
-                // User abort.
-                return (IPTR) FALSE;
-            }
+            // Wait for tick / abort / exit.
+            ULONG rs = IGWait(obj, MUIV_IG_Tick, 2);
 
-            // Start all over again.
-            n = 0;
+            // Start over or return.
+            if(rs != MUIV_IG_Tick)
+            {
+                // Abort or exit.
+                return IGTrans(rs);
+            }
+            else
+            {
+                // Repeat.
+                n = 0;
+            }
         }
     }
 
     // Next block.
-    return (IPTR) TRUE;
+    return (IPTR) G_TRUE;
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiCopyFilesEnd - End of file copy
-// Input:                     -
-// Return:                    TRUE
+// IGCopyFilesEnd - End of file copy
+// Input:           -
+// Return:          G_TRUE
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiCopyFilesEnd(Class *cls,
-                                     Object *obj)
+MUIDSP IPTR IGCopyFilesEnd(Class *cls,
+                           Object *obj)
 {
-    struct InstallerGuiData *my = INST_DATA(cls, obj);
+    struct IGData *my = INST_DATA(cls, obj);
 
     // Uninstall timer created to establish a time
     // slice where the user has a chance to abort
@@ -1120,19 +1239,19 @@ MUIDSP IPTR InstallerGuiCopyFilesEnd(Class *cls,
     DoMethod(my->List, MUIM_List_Clear);
 
     // Always true.
-    return (IPTR) TRUE;
+    return (IPTR) G_TRUE;
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiCopyFilesAdd - Add files to (expert) file (de)selector
-// Input:                     File - Name of file (or dir)
-// Return:                    TRUE
+// IGCopyFilesAdd - Add files to (expert) file (de)selector
+// Input:           File - Name of file (or dir)
+// Return:          TRUE
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiCopyFilesAdd(Class *cls,
-                                     Object *obj,
-                                     struct MUIP_InstallerGui_CopyFilesAdd *msg)
+MUIDSP IPTR IGCopyFilesAdd(Class *cls,
+                           Object *obj,
+                           struct MUIP_IG_CopyFilesAdd *msg)
 {
-    struct InstallerGuiData *my = INST_DATA(cls, obj);
+    struct IGData *my = INST_DATA(cls, obj);
 
     // Insert filename.
     DoMethod
@@ -1151,13 +1270,13 @@ MUIDSP IPTR InstallerGuiCopyFilesAdd(Class *cls,
 
 
 //----------------------------------------------------------------------------
-// InstallerGuiExit - Say goodbye and close GUI
+// IGExit - Say goodbye and close GUI
 // Input:             Message - The prompt
 // Return:            TRUE
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiExit(Class *cls,
-                             Object *obj,
-                             struct MUIP_InstallerGui_Exit *msg)
+MUIDSP IPTR IGExit(Class *cls,
+                   Object *obj,
+                   struct MUIP_IG_Exit *msg)
 {
     // Silence.
     (void) cls;
@@ -1165,104 +1284,167 @@ MUIDSP IPTR InstallerGuiExit(Class *cls,
     (void) msg;
 
     // Do nothing.
-    return TRUE;
+    return G_TRUE;
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiMessage - Show message
-// Input:                Message - The prompt
-//                       Immediate - No button
-// Return:               TRUE on success, FALSE otherwise
+// IGWorking - Show busy message
+// Input:      Message - The message
+// Return:     G_TRUE / G_ERR.
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiMessage(Class *cls,
-                                Object *obj,
-                                struct MUIP_InstallerGui_Message *msg)
+MUIDSP IPTR IGWorking(Class *cls,
+                      Object *obj,
+                      struct MUIP_IG_Working *msg)
 {
     // Silence.
     (void) cls;
 
-    // Setup the correct page and button combination.
-    if(DoMethod(obj, MUIM_InstallerGui_PageSet, msg->Message, NULL,
-                P_MESSAGE, msg->Immediate ? B_NONE : B_PROCEED))
+    // Set correct page and button combination.
+    if(DoMethod(obj, MUIM_IG_PageSet,
+       msg->Message, NULL, P_MESSAGE, B_NONE))
     {
-        // Wait for user input unless we're in immediate mode.
-        if(!msg->Immediate)
-        {
-            // Wait for proceed or abort.
-            if(InstallerGuiWait(obj, MUIV_InstallerGui_ProceedOnly, 1)
-               != MUIV_InstallerGui_ProceedOnly)
-            {
-                // User abort.
-                return FALSE;
-            }
-        }
-
-        // Proceed.
-        return TRUE;
+        // We don't do anything. The
+        // message is already shown.
+        return G_TRUE;
     }
     else
     {
         // Unknown error.
         GERR(tr(S_UNER));
-        return FALSE;
+        return G_ERR;
+    }
+}
+
+
+
+
+
+
+
+//----------------------------------------------------------------------------
+// IGMessage - Show message
+// Input:      Message - The prompt
+//             Back - Use 'Back' instead of 'Abort'.
+// Return:     G_TRUE / G_ABORT / G_EXIT / G_ERR.
+//----------------------------------------------------------------------------
+MUIDSP IPTR IGMessage(Class *cls,
+                      Object *obj,
+                      struct MUIP_IG_Message *msg)
+{
+    // Set correct page and button combination.
+    if(DoMethod(obj, MUIM_IG_PageSet,
+       msg->Message, NULL, P_MESSAGE, B_PROCEED_ABORT))
+    {
+        struct IGData *my = INST_DATA(cls, obj);
+
+        // Return code.
+        inp_t rc;
+
+        // Use 'Abort' or 'Back'?
+        if(msg->Back)
+        {
+            // Set 'Back' button.
+            set(my->Abort, MUIA_Text_Contents, tr(S_BACK));
+
+            // Wait for 'Proceed' or 'Back'.
+            rc = IGTrans(IGWait(obj, MUIV_IG_Proceed, 2));
+
+            // Restore 'Abort' button.
+            set(my->Abort, MUIA_Text_Contents, tr(S_ABRT));
+        }
+        else
+        {
+            // Wait for 'Proceed' or 'Abort'.
+            rc = IGTrans(IGWait(obj, MUIV_IG_Proceed, 2));
+        }
+
+        // G_TRUE / G_ABORT / G_EXIT
+        return rc;
+    }
+    else
+    {
+        // Unknown error.
+        GERR(tr(S_UNER));
+        return G_ERR;
     }
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiAbort - Show message and abort
-// Input:              Message - The message to be shown
-// Return:             TRUE on success, FALSE otherwise
+// IGFinish - Show final message
+// Input:     Message - The message
+// Return:    G_TRUE / G_ABORT / G_EXIT / G_ERR.
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiAbort(Class *cls,
-                              Object *obj,
-                              struct MUIP_InstallerGui_Abort *msg)
+MUIDSP IPTR IGFinish(Class *cls,
+                     Object *obj,
+                     struct MUIP_IG_Finish *msg)
 {
     // Silence.
     (void) cls;
 
-    // Setup the correct page and button combination.
-    if(DoMethod(obj, MUIM_InstallerGui_PageSet, msg->Message,
-                NULL, P_MESSAGE, B_ABORT))
+    // Set correct page and button combination.
+    if(DoMethod(obj, MUIM_IG_PageSet,
+       msg->Message, NULL, P_MESSAGE, B_OK))
+    {
+        // No need to wait for anything specific.
+        return IGTrans(IGWait(obj, MUIV_IG_Ok, 1));
+    }
+    else
+    {
+        // Unknown error.
+        GERR(tr(S_UNER));
+        return G_ERR;
+    }
+}
+
+//----------------------------------------------------------------------------
+// IGAbort - Show message and abort
+// Input:    Message - The message to be shown
+// Return:   G_ABORT / G_ERR.
+//----------------------------------------------------------------------------
+MUIDSP IPTR IGAbort(Class *cls,
+                    Object *obj,
+                    struct MUIP_IG_Abort *msg)
+{
+    // Silence.
+    (void) cls;
+
+    // Set correct page and button combination.
+    if(DoMethod(obj, MUIM_IG_PageSet,
+       msg->Message, NULL, P_MESSAGE, B_ABORT))
     {
         // Wait for abort.
-        if(InstallerGuiWait(obj, MUIV_InstallerGui_AbortOnly, 1)
-           == MUIV_InstallerGui_AbortOnly)
-        {
-            // User abort.
-            return TRUE;
-        }
+        return IGTrans(IGWait(obj, MUIV_IG_AbortOnly, 1));
     }
     else
     {
         // Unknown error.
         GERR(tr(S_UNER));
+        return G_ERR;
     }
-
-    // Escape or error.
-    return FALSE;
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiRadio - Show radio buttons
-// Input:              Message - The prompt
-//                     Help - Help text
-//                     Names - Array of choices (strings)
-//                     Default - Default selection
-//                     Halt - Halt return value
-// Return:             Zero index representing the selected button
+// IGRadio - Show radio buttons
+// Input:    Message - The prompt
+//           Help - Help text
+//           Names - Array of choices (strings)
+//           Default - Default selection
+//           Back - Use 'Back' instead of 'Abort'.
+//           Select - Zero index representing the selected button
+// Return:   G_TRUE / G_ABORT / G_EXIT / G_ERR.
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiRadio(Class *cls,
-                              Object *obj,
-                              struct MUIP_InstallerGui_Radio *msg)
+MUIDSP IPTR IGRadio(Class *cls,
+                    Object *obj,
+                    struct MUIP_IG_Radio *msg)
 {
-    if(DoMethod(obj, MUIM_InstallerGui_PageSet, msg->Message,
+    if(DoMethod(obj, MUIM_IG_PageSet, msg->Message,
                 msg->Help, P_MESSAGE, B_PROCEED_ABORT))
     {
         char **nms = (char **) msg->Names;
 
         if(nms && *nms)
         {
-            struct InstallerGuiData *my = INST_DATA(cls, obj);
+            struct IGData *my = INST_DATA(cls, obj);
             int def = msg->Default;
 
             // Make sure that the default value is a
@@ -1283,8 +1465,8 @@ MUIDSP IPTR InstallerGuiRadio(Class *cls,
             Object *r = (Object *) MUI_NewObject
             (
                 MUIC_Radio,
-                MUIA_Radio_Active, def, //i,
-                MUIA_Radio_Entries, msg->Names, //c,
+                MUIA_Radio_Active, def,
+                MUIA_Radio_Entries, msg->Names,
                 TAG_END
             );
 
@@ -1293,25 +1475,34 @@ MUIDSP IPTR InstallerGuiRadio(Class *cls,
                 // Prepare before adding radio buttons.
                 if(DoMethod(my->Empty, MUIM_Group_InitChange))
                 {
+                    // Return code.
+                    inp_t rc;
+
+                    // Use 'Abort' or 'Back'?
+                    if(msg->Back)
+                    {
+                        // Set 'Back' button.
+                        set(my->Abort, MUIA_Text_Contents, tr(S_BACK));
+                    }
+
                     // Add radio buttons.
                     DoMethod(my->Empty, OM_ADDMEMBER, r);
 
                     // We're done adding things.
                     DoMethod(my->Empty, MUIM_Group_ExitChange);
 
-                    // Wait for proceed or abort.
-                    if(InstallerGuiWait(obj, MUIV_InstallerGui_Proceed, 2)
-                       != MUIV_InstallerGui_Proceed)
+                    // Wait for 'Proceed' or 'Back'.
+                    rc = IGTrans(IGWait(obj, MUIV_IG_Proceed, 2));
+
+                    if(msg->Back)
                     {
-                        // On abort return HALT.
-                        *((int *) msg->Halt) = 1;
+                        // Restore 'Abort' if needed.
+                        set(my->Abort, MUIA_Text_Contents, tr(S_ABRT));
                     }
 
                     // Prepare before removing radio buttons.
                     if(DoMethod(my->Empty, MUIM_Group_InitChange))
                     {
-                        ULONG ret;
-
                         // Remove radio buttons.
                         DoMethod(my->Empty, OM_REMMEMBER, r);
 
@@ -1320,11 +1511,11 @@ MUIDSP IPTR InstallerGuiRadio(Class *cls,
 
                         // Get value from buttons and then kill them.
                         // A halt above will not make any difference.
-                        GetAttr(MUIA_Radio_Active, r, (IPTR *) &ret);
+                        GetAttr(MUIA_Radio_Active, r, (IPTR *) msg->Select);
                         MUI_DisposeObject(r);
 
-                        // Success.
-                        return ret;
+                        // Unknown status. 
+                        return rc;
                     }
                 }
 
@@ -1340,168 +1531,207 @@ MUIDSP IPTR InstallerGuiRadio(Class *cls,
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiBool - Get boolean value from user
-// Input:             Message - The prompt
-//                    Help - Help text
-//                    Yes - True string value
-//                    No - False string value
-// Return:            0 = no, 1 = yes
+// IGBool - Get boolean value from user
+// Input:   Message - The prompt
+//          Help - Help text
+//          Yes - True string value
+//          No - False string value
+//          Back - Use 'Back' instead of 'Abort'.
+// Return:  G_TRUE / G_FALSE / G_ABORT / G_ERR
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiBool(Class *cls,
-                             Object *obj,
-                             struct MUIP_InstallerGui_Bool *msg)
+MUIDSP IPTR IGBool(Class *cls,
+                   Object *obj,
+                   struct MUIP_IG_Bool *msg)
 {
-    if(DoMethod(obj, MUIM_InstallerGui_PageSet, msg->Message,
-                msg->Help, P_MESSAGE, B_YES_NO))
+    if(DoMethod(obj, MUIM_IG_PageSet, msg->Message,
+       msg->Help, P_MESSAGE, B_YES_NO_ABORT))
     {
-        struct InstallerGuiData *my = INST_DATA(cls, obj);
+        struct IGData *my = INST_DATA(cls, obj);
+        inp_t rc;
 
         // Set values of true and false.
         set(my->No, MUIA_Text_Contents, msg->No);
         set(my->Yes, MUIA_Text_Contents, msg->Yes);
 
-        // Wait for yes, no or abort.
-        switch(InstallerGuiWait(obj, MUIV_InstallerGui_Yes, 2))
+        if(msg->Back)
         {
-            case MUIV_InstallerGui_Yes:
-                return 1;
+            // Set back.
+            set(my->AbortYes, MUIA_Text_Contents, tr(S_BACK));
 
-            case MUIV_InstallerGui_No:
-                return 0;
+            // Wait for yes, no or back.
+            rc = IGTrans(IGWait(obj, MUIV_IG_Yes, 3));
+
+            // Restore abort.
+            set(my->AbortYes, MUIA_Text_Contents, tr(S_ABRT));
         }
+        else
+        {
+            // Wait for yes, no or abort.
+            rc = IGTrans(IGWait(obj, MUIV_IG_Yes, 3));
+        }
+
+        return rc;
     }
     else
     {
         // Unknown error.
         GERR(tr(S_UNER));
+        return G_ERR;
     }
-
-    // Abort or broken GUI.
-    return -1;
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiString - Get string value from user.
-// Input:               Message - The prompt
-//                      Help - Help text
-//                      Default - Default string value
-//                      Halt - Halt return value
-// Return:              A string value
+// IGString - Get string value from user.
+// Input:     Message - The prompt
+//            Help - Help text
+//            Default - Default string value
+//            Back - Use 'Back' instead of 'Abort'.
+//            String - String return value
+// Return:    G_TRUE / G_FALSE / G_ABORT / G_ERR
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiString(Class *cls,
-                               Object *obj,
-                               struct MUIP_InstallerGui_String *msg)
+MUIDSP IPTR IGString(Class *cls,
+                     Object *obj,
+                     struct MUIP_IG_String *msg)
 {
-    // Result.
-    ULONG r = 0;
-
     // Show string widget page.
-    if(DoMethod(obj, MUIM_InstallerGui_PageSet, msg->Message,
+    if(DoMethod(obj, MUIM_IG_PageSet, msg->Message,
                 msg->Help, P_STRING, B_PROCEED_ABORT))
     {
-        struct InstallerGuiData *my = INST_DATA(cls, obj);
+        struct IGData *my = INST_DATA(cls, obj);
+
+        // Return code.
+        inp_t rc;
 
         // Set initial value of string.
         set(my->String, MUIA_String_Contents, msg->Default);
 
-        // Wait for proceed or abort.
-        if(InstallerGuiWait(obj, MUIV_InstallerGui_Proceed, 2)
-           == MUIV_InstallerGui_Proceed)
+        // Use 'Abort' or 'Back'?
+        if(msg->Back)
         {
-            // On proceed get string value.
-            get(my->String, MUIA_String_Contents, &r);
+            // Set 'Back' button.
+            set(my->Abort, MUIA_Text_Contents, tr(S_BACK));
+
+            // Wait for 'Proceed' or 'Back'.
+            rc = IGTrans(IGWait(obj, MUIV_IG_Proceed, 2));
+
+            // Restore 'Abort' button.
+            set(my->Abort, MUIA_Text_Contents, tr(S_ABRT));
         }
         else
         {
-            // On abort return HALT.
-            *((int *) msg->Halt) = 1;
+            // Wait for 'Proceed' or 'Abort'.
+            rc = IGTrans(IGWait(obj, MUIV_IG_Proceed, 2));
         }
+
+        // No matter what, get string.
+        get(my->String, MUIA_String_Contents, (ULONG *) msg->String);
+
+        // Return status.
+        return rc;
     }
     else
     {
         // Unknown error.
         GERR(tr(S_UNER));
+        return G_ERR;
     }
-
-    // Always return a valid string.
-    return r ? r : (ULONG) "";
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiNumber - Get numerical value from user
-// Input:               Message - The prompt
-//                      Help - Help text
-//                      Min - Minimum allowed value
-//                      Max - Maximum allowed value
-//                      Default - Default value
-//                      Halt - Halt return value
-// Return:              Numerical value
+// IGNumber - Get numerical value from user
+// Input:     Message - The prompt
+//            Help - Help text
+//            Min - Minimum allowed value
+//            Max - Maximum allowed value
+//            Default - Default value
+//            Back - Use 'Back' instead of 'Abort'
+//            Number - Return value
+// Return:    G_TRUE / G_ABORT / G_EXIT / G_ERR
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiNumber(Class *cls,
-                               Object *obj,
-                               struct MUIP_InstallerGui_Number *msg)
+MUIDSP IPTR IGNumber(Class *cls,
+                     Object *obj,
+                     struct MUIP_IG_Number *msg)
 {
     // Show slider.
-    if(DoMethod(obj, MUIM_InstallerGui_PageSet, msg->Message,
-                msg->Help, P_NUMBER, B_PROCEED_ABORT))
+    if(DoMethod(obj, MUIM_IG_PageSet,
+       msg->Message, msg->Help, P_NUMBER, B_PROCEED_ABORT))
     {
-        struct InstallerGuiData *my = INST_DATA(cls, obj);
+        struct IGData *my = INST_DATA(cls, obj);
+
+        // Return code.
+        inp_t rc;
 
         // Set min, max and default value.
         set(my->Number, MUIA_Numeric_Min, msg->Min);
         set(my->Number, MUIA_Numeric_Max, msg->Max);
         set(my->Number, MUIA_Numeric_Value, msg->Default);
 
-        // Wait for proceed or abort.
-        if(InstallerGuiWait(obj, MUIV_InstallerGui_Proceed, 2)
-           == MUIV_InstallerGui_Proceed)
+        // Use 'Abort' or 'Back'?
+        if(msg->Back)
         {
-            ULONG res = 0;
+            // Set 'Back' button.
+            set(my->Abort, MUIA_Text_Contents, tr(S_BACK));
 
-            // On proceed get and return numerical value.
-            get(my->Number, MUIA_Numeric_Value, &res);
-            return res;
+            // Wait for 'Proceed' or 'Back'.
+            rc = IGTrans(IGWait(obj, MUIV_IG_Proceed, 2));
+
+            // Restore 'Abort' button.
+            set(my->Abort, MUIA_Text_Contents, tr(S_ABRT));
         }
         else
         {
-            // On abort return HALT.
-            *((int *) msg->Halt) = 1;
-            return 0;
+            // Wait for 'Proceed' or 'Abort'.
+            rc = IGTrans(IGWait(obj, MUIV_IG_Proceed, 2));
         }
-    }
 
-    // Unknown error.
-    GERR(tr(S_UNER));
-    return 0;
+        // No matter what, get numerical value.
+        get(my->Number, MUIA_Numeric_Value, (IPTR *) msg->Number);
+
+        // Success or halt.
+        return rc;
+    }
+    else
+    {
+        // Unknown error.
+        GERR(tr(S_UNER));
+        return G_ERR;
+    }
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiCheckBoxes - Show list of radiobuttons
-// Input:                   Message - The prompt
-//                          Help - Help text
-//                          Names - Array of choices (strings)
-//                          Default - Default bitmask
-//                          Halt - Halt return value
-// Return:                  A bitmask representing the selected button(s)
+// IGCheckBoxes - Show list of radiobuttons
+// Input:         Message - The prompt
+//                Help - Help text
+//                Names - Array of choices (strings)
+//                Default - Default bitmask
+//                Back - Use 'Back' instead of 'Abort'
+//                Bitmap - A bitmask representing the selected button(s)
+// Return:        G_TRUE / G_ABORT / G_EXIT / G_ERR
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiCheckBoxes(Class *cls,
-                                   Object *obj,
-                                   struct MUIP_InstallerGui_CheckBoxes *msg)
+MUIDSP IPTR IGCheckBoxes(Class *cls,
+                         Object *obj,
+                         struct MUIP_IG_CheckBoxes *msg)
 {
-    if(DoMethod(obj, MUIM_InstallerGui_PageSet, msg->Message,
-                msg->Help, P_MESSAGE, B_PROCEED_ABORT))
+    if(DoMethod(obj, MUIM_IG_PageSet,
+       msg->Message, msg->Help, P_MESSAGE, B_PROCEED_ABORT))
     {
-        struct InstallerGuiData *my = INST_DATA(cls, obj);
+        struct IGData *my = INST_DATA(cls, obj);
 
         // Unlike most other pages, this one is
         // partly generated on the fly, we have
         // no choice.
         if(DoMethod(my->Empty, MUIM_Group_InitChange))
         {
-            ULONG id;
             size_t i = 0;
-            static Object * cb[33];
+            static Object *cb[33];
             const char **cs = (const char **) msg->Names;
+
+            // Use 'Abort' or 'Back'?
+            if(msg->Back)
+            {
+                // Set 'Back' button.
+                set(my->Abort, MUIA_Text_Contents, tr(S_BACK));
+            }
 
             // The maximum number of choices is 32.
             while(*cs && i < 32)
@@ -1562,77 +1792,85 @@ MUIDSP IPTR InstallerGuiCheckBoxes(Class *cls,
             // We're done modifying the group.
             DoMethod(my->Empty, MUIM_Group_ExitChange);
 
-            // Wait for proceed or abort.
-            id = InstallerGuiWait(obj, MUIV_InstallerGui_Proceed, 2);
+            // Wait for 'Proceed' or 'Back'.
+            inp_t rc = IGTrans(IGWait(obj, MUIV_IG_Proceed, 2));
+
+            if(msg->Back)
+            {
+                // Restore 'Abort' if needed.
+                set(my->Abort, MUIA_Text_Contents, tr(S_ABRT));
+            }
 
             // Remove all dynamic objects in group.
             if(DoMethod(my->Empty, MUIM_Group_InitChange))
             {
-                // Bitmask.
-                IPTR ret = 0;
+                // The return value.
+                *((ULONG *) msg->Bitmap) = 0;
 
                 while(i--)
                 {
                     ULONG sel = 0;
 
                     get(cb[i], MUIA_Selected, &sel);
-                    ret |= (sel ? (1 << i) : 0);
+                    *((ULONG *) msg->Bitmap) |= (sel ? (1 << i) : 0);
 
                     DoMethod(my->Empty, OM_REMMEMBER, cb[i]);
                     MUI_DisposeObject(cb[i]);
                 }
 
+                // All cleared.
                 DoMethod(my->Empty, MUIM_Group_ExitChange);
 
-                if(id != MUIV_InstallerGui_Proceed)
-                {
-                    // On abort return HALT.
-                    *((int *) msg->Halt) = 1;
-                    ret = 0;
-                }
-
-                // Bitmap or zero on abort.
-                return ret;
+                // Unknown status. 
+                return rc;
             }
         }
     }
 
     // Unknown error.
     GERR(tr(S_UNER));
-    return 0;
+    return G_ERR;
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiComplete - Show progress
-// Input:                 Progress - Installer progress in %
-// Return:                On success TRUE, FALSE otherwise.
+// IGComplete - Show progress
+// Input:       Progress - Installer progress in %
+// Return:      G_TRUE / G_FALSE.
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiComplete(Class *cls,
-                                 Object *obj,
-                                 struct MUIP_InstallerGui_Complete *msg)
+MUIDSP IPTR IGComplete(Class *cls,
+                       Object *obj,
+                       struct MUIP_IG_Complete *msg)
 {
-    struct InstallerGuiData *my = INST_DATA(cls, obj);
-    int p = msg->Progress > 100 ? 100 : msg->Progress;
+    struct IGData *my = INST_DATA(cls, obj);
+    inp_t rc = G_TRUE;
+
+    if(msg->Progress > 100)
+    {
+        rc = G_FALSE;
+        msg->Progress = 100;
+    }
 
     // Set (caped) value and show the gauge.
-    set(my->Complete, MUIA_Gauge_Current, p);
+    set(my->Complete, MUIA_Gauge_Current, msg->Progress);
     set(my->Complete, MUIA_ShowMe, TRUE);
 
-    // Always.
-    return TRUE;
+    // Return value set.
+// Return:     G_TRUE / G_ERR.
+    return rc;
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiConfirm - Get user confirmation before running shell command
-// Input:                Message - The prompt
-//                       Help - Help text
-// Return:               '1' = proceed, '0' = skip, '-1' = abort
+// IGConfirm - Get user confirmation.
+// Input:      Message - The prompt
+//             Help - Help text
+//             Back - Use 'Back' instead of 'Abort'.
+// Return:     '1' = proceed, '0' = skip, '-1' = abort
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiConfirm(Class *cls,
-                                Object *obj,
-                                struct MUIP_InstallerGui_Confirm *msg)
+MUIDSP IPTR IGConfirm(Class *cls,
+                      Object *obj,
+                      struct MUIP_IG_Confirm *msg)
 {
-    struct InstallerGuiData *my = INST_DATA(cls, obj);
+    struct IGData *my = INST_DATA(cls, obj);
     ULONG top = 0, btm = 0, str = 0;
 
     // Save the current state of whatever we're
@@ -1652,11 +1890,28 @@ MUIDSP IPTR InstallerGuiConfirm(Class *cls,
             memcpy(ost, (void *) str, osz);
 
             // Prompt for confirmation.
-            if(DoMethod(obj, MUIM_InstallerGui_PageSet, msg->Message,
+            if(DoMethod(obj, MUIM_IG_PageSet, msg->Message,
                         msg->Help, P_MESSAGE, B_PROCEED_SKIP_ABORT))
             {
-                // Sleep until we get valid input.
-                ULONG b = InstallerGuiWait(obj, MUIV_InstallerGui_ProceedRun, 3);
+                inp_t rc;
+
+                // Use 'Abort' or 'Back'?
+                if(msg->Back)
+                {
+                    // Set 'Back' button.
+                    set(my->AbortRun, MUIA_Text_Contents, tr(S_BACK));
+
+                    // Wait for 'Proceed', 'Skip' or 'Back'.
+                    rc = IGTrans(IGWait(obj, MUIV_IG_ProceedRun, 3));
+
+                    // Restore 'Abort' button.
+                    set(my->AbortRun, MUIA_Text_Contents, tr(S_ABRT));
+                }
+                else
+                {
+                    // Wait for 'Proceed', 'Skip' or 'Abort'.
+                    rc = IGTrans(IGWait(obj, MUIV_IG_ProceedRun, 3));
+                }
 
                 // Restore everything so that things
                 // look the way they did before the
@@ -1669,38 +1924,26 @@ MUIDSP IPTR InstallerGuiConfirm(Class *cls,
                 free(ost);
 
                 // Take care of the user input.
-                switch(b)
-                {
-                    case MUIV_InstallerGui_ProceedRun:
-                        return 1;
-
-                    case MUIV_InstallerGui_SkipRun:
-                        return 0;
-
-                    case MUIV_InstallerGui_AbortRun:
-                        return -1;
-                }
+                return rc;
             }
 
             // We never did show the new message so
             // we can get rid of the old (current).
             free(ost);
         }
-
-        // OOM / broken GUI.
     }
 
     // Unknown error.
     GERR(tr(S_UNER));
-    return -1;
+    return G_ERR;
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiNew - Overloading OM_NEW
+// IGNew - Overloading OM_NEW
 // Input:            See BOOPSI docs
 // Return:           See BOOPSI docs
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiNew(Class *cls,
+MUIDSP IPTR IGNew(Class *cls,
 			                Object *obj,
 			                struct opSet *msg)
 {
@@ -1708,10 +1951,10 @@ MUIDSP IPTR InstallerGuiNew(Class *cls,
     (void) msg;
 
     // Temp widgets.
-    Object *el, *ul, *fp, *cm, *pr,
-           *st, *nm, *bp, *em, *rt,
-           *tx, *ls, *lg, *tp, *af,
-           *ys, *no;
+    Object *el, *ul, *fp, *cm, *pr, *st,
+           *nm, *bp, *em, *rt, *tx, *ls,
+           *lg, *tp, *af, *ys, *no, *ya,
+           *ab, *ao, *ar;
 
     // Radio button strings.
     static const char *lev[4],
@@ -1721,7 +1964,8 @@ MUIDSP IPTR InstallerGuiNew(Class *cls,
     // Clear to enable check.
     el = ul = fp = cm = pr = st =
     nm = bp = em = rt = tx = ls =
-    lg = tp = af = ys = no = NULL;
+    lg = tp = af = ys = no = ya =
+    ab = ao = ar = NULL;
 
     // User level.
     lev[0] = tr(S_ULNV); // Novice
@@ -1895,7 +2139,7 @@ MUIDSP IPTR InstallerGuiNew(Class *cls,
                     MUIA_Group_Horiz, TRUE,
                     MUIA_Group_Child, MUI_NewObject(
                         MUIC_Text,
-                        MUIA_UserData, MUIV_InstallerGui_Proceed,
+                        MUIA_UserData, MUIV_IG_Proceed,
                         MUIA_Frame, MUIV_Frame_Button,
                         MUIA_Text_Contents, tr(S_PRCD),
                         MUIA_Text_PreParse, "\33c",
@@ -1903,9 +2147,9 @@ MUIDSP IPTR InstallerGuiNew(Class *cls,
                         MUIA_Background, MUII_ButtonBack,
                         TAG_END),
                     MUIA_Group_Child, (Object *) MUI_MakeObject(MUIO_HSpace, 0),
-                    MUIA_Group_Child, MUI_NewObject(
+                    MUIA_Group_Child, ab = MUI_NewObject(
                         MUIC_Text,
-                        MUIA_UserData, MUIV_InstallerGui_Abort,
+                        MUIA_UserData, MUIV_IG_Abort,
                         MUIA_Frame, MUIV_Frame_Button,
                         MUIA_Text_Contents, tr(S_ABRT),
                         MUIA_Text_PreParse, "\33c",
@@ -1913,25 +2157,33 @@ MUIDSP IPTR InstallerGuiNew(Class *cls,
                         MUIA_Background, MUII_ButtonBack,
                         TAG_END),
                     TAG_END),
-                /* Page 1 - B_YES_NO */
+                /* Page 1 - B_YES_NO_ABORT */
                 MUIA_Group_Child, MUI_NewObject(
                     MUIC_Group,
                     MUIA_Group_Horiz, TRUE,
                     MUIA_Group_Child, ys = (Object *) MUI_NewObject(
                         MUIC_Text,
-                        MUIA_UserData, MUIV_InstallerGui_Yes,
+                        MUIA_UserData, MUIV_IG_Yes,
                         MUIA_Frame, MUIV_Frame_Button,
                         MUIA_Text_Contents, tr(S_AYES),
                         MUIA_Text_PreParse, "\33c",
                         MUIA_InputMode, MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
                         TAG_END),
-                    MUIA_Group_Child, (Object *) MUI_MakeObject(MUIO_HSpace, 0),
                     MUIA_Group_Child, no = (Object *) MUI_NewObject(
                         MUIC_Text,
-                        MUIA_UserData, MUIV_InstallerGui_No,
+                        MUIA_UserData, MUIV_IG_No,
                         MUIA_Frame, MUIV_Frame_Button,
                         MUIA_Text_Contents, tr(S_NONO),
+                        MUIA_Text_PreParse, "\33c",
+                        MUIA_InputMode, MUIV_InputMode_RelVerify,
+                        MUIA_Background, MUII_ButtonBack,
+                        TAG_END),
+                    MUIA_Group_Child, ya = (Object *) MUI_NewObject(
+                        MUIC_Text,
+                        MUIA_UserData, MUIV_IG_AbortYes,
+                        MUIA_Frame, MUIV_Frame_Button,
+                        MUIA_Text_Contents, tr(S_ABRT),
                         MUIA_Text_PreParse, "\33c",
                         MUIA_InputMode, MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
@@ -1942,9 +2194,9 @@ MUIDSP IPTR InstallerGuiNew(Class *cls,
                     MUIC_Group,
                     MUIA_Group_Horiz, TRUE,
                     MUIA_Group_Child, (Object *) MUI_MakeObject(MUIO_HSpace, 0),
-                    MUIA_Group_Child, MUI_NewObject(
+                    MUIA_Group_Child, ao = MUI_NewObject(
                         MUIC_Text,
-                        MUIA_UserData, MUIV_InstallerGui_AbortOnly,
+                        MUIA_UserData, MUIV_IG_AbortOnly,
                         MUIA_Frame, MUIV_Frame_Button,
                         MUIA_Text_Contents, tr(S_ABRT),
                         MUIA_Text_PreParse, "\33c",
@@ -1959,7 +2211,7 @@ MUIDSP IPTR InstallerGuiNew(Class *cls,
                     MUIA_Group_Horiz, TRUE,
                     MUIA_Group_Child, MUI_NewObject(
                         MUIC_Text,
-                        MUIA_UserData, MUIV_InstallerGui_ProceedRun,
+                        MUIA_UserData, MUIV_IG_ProceedRun,
                         MUIA_Frame, MUIV_Frame_Button,
                         MUIA_Text_Contents, tr(S_PRCD),
                         MUIA_Text_PreParse, "\33c",
@@ -1968,16 +2220,16 @@ MUIDSP IPTR InstallerGuiNew(Class *cls,
                         TAG_END),
                     MUIA_Group_Child, MUI_NewObject(
                         MUIC_Text,
-                        MUIA_UserData, MUIV_InstallerGui_SkipRun,
+                        MUIA_UserData, MUIV_IG_SkipRun,
                         MUIA_Frame, MUIV_Frame_Button,
                         MUIA_Text_Contents, tr(S_SKIP),
                         MUIA_Text_PreParse, "\33c",
                         MUIA_InputMode, MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
                         TAG_END),
-                    MUIA_Group_Child, MUI_NewObject(
+                    MUIA_Group_Child, ar = MUI_NewObject(
                         MUIC_Text,
-                        MUIA_UserData, MUIV_InstallerGui_AbortRun,
+                        MUIA_UserData, MUIV_IG_AbortRun,
                         MUIA_Frame, MUIV_Frame_Button,
                         MUIA_Text_Contents, tr(S_ABRT),
                         MUIA_Text_PreParse, "\33c",
@@ -1985,16 +2237,16 @@ MUIDSP IPTR InstallerGuiNew(Class *cls,
                         MUIA_Background, MUII_ButtonBack,
                         TAG_END),
                     TAG_END),
-                /* Page 4 - B_PROCEED */
+                /* Page 4 - B_OK */
                 MUIA_Group_Child, MUI_NewObject(
                     MUIC_Group,
                     MUIA_Group_Horiz, TRUE,
                     MUIA_Group_Child, (Object *) MUI_MakeObject(MUIO_HSpace, 0),
                     MUIA_Group_Child, MUI_NewObject(
                         MUIC_Text,
-                        MUIA_UserData, MUIV_InstallerGui_ProceedOnly,
+                        MUIA_UserData, MUIV_IG_Ok,
                         MUIA_Frame, MUIV_Frame_Button,
-                        MUIA_Text_Contents, tr(S_PRCD),
+                        MUIA_Text_Contents, tr(S_OKEY),
                         MUIA_Text_PreParse, "\33c",
                         MUIA_InputMode, MUIV_InputMode_RelVerify,
                         MUIA_Background, MUII_ButtonBack,
@@ -2015,29 +2267,33 @@ MUIDSP IPTR InstallerGuiNew(Class *cls,
     // Initialize the rest if the parent is OK.
     if(obj)
     {
-        struct InstallerGuiData *my = INST_DATA(cls, obj);
+        struct IGData *my = INST_DATA(cls, obj);
 
         // Initialize timer struct.
         my->Ticker.ihn_Object = obj;
         my->Ticker.ihn_Flags = MUIIHNF_TIMER;
-        my->Ticker.ihn_Method = MUIM_InstallerGui_Ticker;
+        my->Ticker.ihn_Method = MUIM_IG_Ticker;
         my->Ticker.ihn_Millis = 10;
 
         // Save widgets.
         if(el && ul && fp && cm && pr &&
            st && nm && bp && em && tx &&
            ls && lg && tp && af && ys &&
-           no)
+           no && ab && ao && ar)
         {
             my->ExpertLevel = el;
+            my->AbortOnly = ao;
             my->UserLevel = ul;
             my->Progress = fp;
+            my->AbortRun = ar;
+            my->AbortYes = ya;
             my->Complete = cm;
             my->Pretend = pr;
             my->String = st;
             my->Number = nm;
             my->Bottom = bp;
             my->Empty = em;
+            my->Abort = ab;
             my->Text = tx;
             my->List = ls;
             my->Log = lg;
@@ -2059,11 +2315,11 @@ MUIDSP IPTR InstallerGuiNew(Class *cls,
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiSetup - Overloading MUIM_Setup
+// IGSetup - Overloading MUIM_Setup
 // Input:              See MUI docs
 // Return:             See MUI docs
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiSetup(Class *cls,
+MUIDSP IPTR IGSetup(Class *cls,
                               Object *obj,
                               struct MUI_RenderInfo *msg)
 {
@@ -2081,11 +2337,11 @@ MUIDSP IPTR InstallerGuiSetup(Class *cls,
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiDispose - Overloading OM_DISPOSE
+// IGDispose - Overloading OM_DISPOSE
 // Input:                See BOOPSI docs
 // Return:               See BOOPSI docs
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiDispose (Class *cls,
+MUIDSP IPTR IGDispose (Class *cls,
                                  Object *obj,
                                  Msg msg)
 {
@@ -2093,11 +2349,11 @@ MUIDSP IPTR InstallerGuiDispose (Class *cls,
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiCleanup - Overloading MUIM_Cleanup
+// IGCleanup - Overloading MUIM_Cleanup
 // Input:                See MUI docs
 // Return:               See MUI docs
 //----------------------------------------------------------------------------
-MUIDSP IPTR InstallerGuiCleanup (Class *cls,
+MUIDSP IPTR IGCleanup (Class *cls,
                                  Object *obj,
                                  Msg msg)
 {
@@ -2105,11 +2361,11 @@ MUIDSP IPTR InstallerGuiCleanup (Class *cls,
 }
 
 //----------------------------------------------------------------------------
-// InstallerGuiDispatch - MUI custom class dispatcher
+// IGDispatch - MUI custom class dispatcher
 // Input:                 pass through
 // Return:                pass through
 //----------------------------------------------------------------------------
-DISPATCH(InstallerGui)
+DISPATCH(IG)
 {
     DISPATCH_HEAD;
 
@@ -2117,73 +2373,79 @@ DISPATCH(InstallerGui)
     switch (msg->MethodID)
     {
         case OM_NEW:
-            return InstallerGuiNew (cls, obj, (struct opSet *) msg);
+            return IGNew (cls, obj, (struct opSet *) msg);
 
         case MUIM_Setup:
-            return InstallerGuiSetup (cls, obj, (struct MUI_RenderInfo *) msg);
+            return IGSetup (cls, obj, (struct MUI_RenderInfo *) msg);
 
         case OM_DISPOSE:
-            return InstallerGuiDispose (cls, obj, msg);
+            return IGDispose (cls, obj, msg);
 
         case MUIM_Cleanup:
-            return InstallerGuiCleanup (cls, obj, msg);
+            return IGCleanup (cls, obj, msg);
 
-        case MUIM_InstallerGui_Init:
-            return InstallerGuiInit(cls, obj);
+        case MUIM_IG_Init:
+            return IGInit(cls, obj);
 
-        case MUIM_InstallerGui_Welcome:
-            return InstallerGuiWelcome(cls, obj, (struct MUIP_InstallerGui_Welcome *) msg);
+        case MUIM_IG_Welcome:
+            return IGWelcome(cls, obj, (struct MUIP_IG_Welcome *) msg);
 
-        case MUIM_InstallerGui_AskFile:
-            return InstallerGuiAskFile(cls, obj, (struct MUIP_InstallerGui_AskFile *) msg);
+        case MUIM_IG_AskFile:
+            return IGAskFile(cls, obj, (struct MUIP_IG_AskFile *) msg);
 
-        case MUIM_InstallerGui_PageSet:
-            return InstallerGuiPageSet(cls, obj, (struct MUIP_InstallerGui_PageSet *) msg);
+        case MUIM_IG_PageSet:
+            return IGPageSet(cls, obj, (struct MUIP_IG_PageSet *) msg);
 
-        case MUIM_InstallerGui_CopyFilesStart:
-            return InstallerGuiCopyFilesStart(cls, obj, (struct MUIP_InstallerGui_CopyFilesStart *) msg);
+        case MUIM_IG_CopyFilesStart:
+            return IGCopyFilesStart(cls, obj, (struct MUIP_IG_CopyFilesStart *) msg);
 
-        case MUIM_InstallerGui_CopyFilesSetCur:
-            return InstallerGuiCopyFilesSetCur(cls, obj, (struct MUIP_InstallerGui_CopyFilesSetCur *) msg);
+        case MUIM_IG_CopyFilesSetCur:
+            return IGCopyFilesSetCur(cls, obj, (struct MUIP_IG_CopyFilesSetCur *) msg);
 
-        case MUIM_InstallerGui_CopyFilesEnd:
-            return InstallerGuiCopyFilesEnd(cls, obj);
+        case MUIM_IG_CopyFilesEnd:
+            return IGCopyFilesEnd(cls, obj);
 
-        case MUIM_InstallerGui_CopyFilesAdd:
-            return InstallerGuiCopyFilesAdd(cls, obj, (struct MUIP_InstallerGui_CopyFilesAdd *) msg);
+        case MUIM_IG_CopyFilesAdd:
+            return IGCopyFilesAdd(cls, obj, (struct MUIP_IG_CopyFilesAdd *) msg);
 
-        case MUIM_InstallerGui_Exit:
-            return InstallerGuiExit(cls, obj, (struct MUIP_InstallerGui_Exit *) msg);
+        case MUIM_IG_Exit:
+            return IGExit(cls, obj, (struct MUIP_IG_Exit *) msg);
 
-        case MUIM_InstallerGui_Message:
-            return InstallerGuiMessage(cls, obj, (struct MUIP_InstallerGui_Message *) msg);
+        case MUIM_IG_Message:
+            return IGMessage(cls, obj, (struct MUIP_IG_Message *) msg);
 
-        case MUIM_InstallerGui_Abort:
-            return InstallerGuiAbort(cls, obj, (struct MUIP_InstallerGui_Abort *) msg);
+        case MUIM_IG_Finish:
+            return IGFinish(cls, obj, (struct MUIP_IG_Finish *) msg);
 
-        case MUIM_InstallerGui_Radio:
-            return InstallerGuiRadio(cls, obj, (struct MUIP_InstallerGui_Radio *) msg);
+        case MUIM_IG_Working:
+            return IGWorking(cls, obj, (struct MUIP_IG_Working *) msg);
 
-        case MUIM_InstallerGui_Bool:
-            return InstallerGuiBool(cls, obj, (struct MUIP_InstallerGui_Bool *) msg);
+        case MUIM_IG_Abort:
+            return IGAbort(cls, obj, (struct MUIP_IG_Abort *) msg);
 
-        case MUIM_InstallerGui_String:
-            return InstallerGuiString(cls, obj, (struct MUIP_InstallerGui_String *) msg);
+        case MUIM_IG_Radio:
+            return IGRadio(cls, obj, (struct MUIP_IG_Radio *) msg);
 
-        case MUIM_InstallerGui_Number:
-            return InstallerGuiNumber(cls, obj, (struct MUIP_InstallerGui_Number *) msg);
+        case MUIM_IG_Bool:
+            return IGBool(cls, obj, (struct MUIP_IG_Bool *) msg);
 
-        case MUIM_InstallerGui_CheckBoxes:
-            return InstallerGuiCheckBoxes(cls, obj, (struct MUIP_InstallerGui_CheckBoxes *) msg);
+        case MUIM_IG_String:
+            return IGString(cls, obj, (struct MUIP_IG_String *) msg);
 
-        case MUIM_InstallerGui_Complete:
-            return InstallerGuiComplete(cls, obj, (struct MUIP_InstallerGui_Complete *) msg);
+        case MUIM_IG_Number:
+            return IGNumber(cls, obj, (struct MUIP_IG_Number *) msg);
 
-        case MUIM_InstallerGui_Ticker:
-            return DoMethod(_app(obj), MUIM_Application_ReturnID, MUIV_InstallerGui_Tick);
+        case MUIM_IG_CheckBoxes:
+            return IGCheckBoxes(cls, obj, (struct MUIP_IG_CheckBoxes *) msg);
 
-        case MUIM_InstallerGui_Confirm:
-            return InstallerGuiConfirm(cls, obj, (struct MUIP_InstallerGui_Confirm *) msg);
+        case MUIM_IG_Complete:
+            return IGComplete(cls, obj, (struct MUIP_IG_Complete *) msg);
+
+        case MUIM_IG_Ticker:
+            return DoMethod(_app(obj), MUIM_Application_ReturnID, MUIV_IG_Tick);
+
+        case MUIM_IG_Confirm:
+            return IGConfirm(cls, obj, (struct MUIP_IG_Confirm *) msg);
     }
 
     // Unknown method, promote to parent.
@@ -2223,9 +2485,9 @@ DISPATCH(InstallerGui)
 // Name:        gui_init
 // Description: Initialize and show GUI.
 // Input:       -
-// Return:      int:    TRUE on success, FALSE otherwise.
+// Return:      inp_t: G_TRUE / G_ERR.
 //----------------------------------------------------------------------------
-int gui_init(void)
+inp_t gui_init(void)
 {
     // Amiga style version string.
     static char version[] __attribute__((used)) = VERSION_STRING;
@@ -2234,18 +2496,18 @@ int gui_init(void)
     Object *App;
 
     // Create our GUI class.
-    InstallerGuiClass = (struct MUI_CustomClass *) MUI_CreateCustomClass
+    IGClass = (struct MUI_CustomClass *) MUI_CreateCustomClass
     (
 	    NULL, MUIC_Window, NULL,
-        sizeof (struct CLASS_DATA(InstallerGui)),
-        (APTR) DISPATCH_GATE (InstallerGui)
+        sizeof (struct CLASS_DATA(IG)),
+        (APTR) DISPATCH_GATE (IG)
     );
 
     // Bail out on error.
-    if(!InstallerGuiClass)
+    if(!IGClass)
     {
         GERR(tr(S_FMCC));
-        return FALSE;
+        return G_ERR;
     }
 
     // Create application using our newly created class.
@@ -2256,7 +2518,7 @@ int gui_init(void)
         MUIA_Application_Description, "App installation utility",
         MUIA_Application_HelpFile, "Installer.guide",
         MUIA_Application_Window, Win = (Object *) NewObject(
-            InstallerGuiClass->mcc_Class, NULL,
+            IGClass->mcc_Class, NULL,
             TAG_END),
         TAG_END
     );
@@ -2265,27 +2527,27 @@ int gui_init(void)
     if(!App)
     {
         GERR(tr(S_MAPP));
-        return FALSE;
+        return G_ERR;
     }
 
     // Internal initialization.
-    if(!DoMethod(Win, MUIM_InstallerGui_Init))
+    if(!DoMethod(Win, MUIM_IG_Init))
     {
         // Bail out on error.
         GERR(tr(S_FINT));
         gui_exit();
 
-        return FALSE;
+        return G_ERR;
     }
 
     // Open the window to finish setup.
     set(Win, MUIA_Window_Open, TRUE);
     DoMethod(Win, MUIM_Show);
 
-    return TRUE;
+    return G_TRUE;
     #else
     // Testing purposes.
-    return strlen(version + 1) ? 1 : 0;
+    return strlen(version + 1) ? G_TRUE : G_ERR;
     #endif
 }
 
@@ -2303,9 +2565,9 @@ void gui_exit(void)
     MUI_DisposeObject(_app(Win));
 
     // Destroy custom class. Must check for NULL.
-    if(InstallerGuiClass)
+    if(IGClass)
     {
-        MUI_DeleteCustomClass(InstallerGuiClass);
+        MUI_DeleteCustomClass(IGClass);
     }
     #endif
 }
@@ -2313,37 +2575,68 @@ void gui_exit(void)
 //----------------------------------------------------------------------------
 // Name:        gui_message
 // Description: Show message.
-// Input:       const char *msg:    Message shown to the user.
-//              int imm:            No proceed button.
-// Return:      int:                1 on proceed, 0 on abort.
+// Input:       const char *msg: Message shown to the user.
+//              bool bck: Enable back mode.
+// Return:      inp_t: G_TRUE / G_ABORT / G_EXIT / G_ERR.
 //----------------------------------------------------------------------------
-int gui_message(const char *msg, int imm)
+inp_t gui_message(const char *msg, bool bck)
 {
+    return
     #ifdef AMIGA
-    return (int) DoMethod
+    (inp_t) DoMethod
     (
-        Win, MUIM_InstallerGui_Message,
-        msg, imm
+        Win, MUIM_IG_Message, msg, bck
     );
     #else
     // Testing purposes.
-    if(imm)
-    {
-        printf("%d:%s", imm, msg);
-    }
-    else
-    {
-        fputs(msg, stdout);
-    }
+    printf("%s%d", msg, bck) >= 1 ? G_TRUE : G_ERR;
+    #endif
+}
 
-    return 1;
+//----------------------------------------------------------------------------
+// Name:        gui_finish
+// Description: Show final message.
+// Input:       const char *msg: Message shown to the user.
+// Return:      inp_t: G_TRUE / G_ABORT / G_EXIT / G_ERR.
+//----------------------------------------------------------------------------
+inp_t gui_finish(const char *msg)
+{
+    return
+    #ifdef AMIGA
+    (inp_t) DoMethod
+    (
+        Win, MUIM_IG_Finish, msg
+    );
+    #else
+    // Testing purposes.
+    fputs(msg, stdout) >= 0 ? G_TRUE : G_ERR;
+    #endif
+}
+
+//----------------------------------------------------------------------------
+// Name:        gui_working
+// Description: Show busy message.
+// Input:       const char *msg:    Message shown to the user.
+// Return:      inp_t: G_TRUE / G_ERR.
+//----------------------------------------------------------------------------
+inp_t gui_working(const char *msg)
+{
+    return
+    #ifdef AMIGA
+    (inp_t) DoMethod
+    (
+        Win, MUIM_IG_Working, msg
+    );
+    #else
+    // Testing purposes.
+    fputs(msg, stdout) >= 0 ? G_TRUE : G_ERR;
     #endif
 }
 
 //----------------------------------------------------------------------------
 // Name:        gui_abort
 // Description: Show message and abort.
-// Input:       const char *msg:    Message shown to the user.
+// Input:       const char *msg: Message shown to the user.
 // Return:      -
 //----------------------------------------------------------------------------
 void gui_abort(const char *msg)
@@ -2351,7 +2644,7 @@ void gui_abort(const char *msg)
     #ifdef AMIGA
     DoMethod
     (
-        Win, MUIM_InstallerGui_Abort,
+        Win, MUIM_IG_Abort,
         msg
     );
     #else
@@ -2360,7 +2653,6 @@ void gui_abort(const char *msg)
     #endif
 }
 
-
 //----------------------------------------------------------------------------
 // Name:        gui_choice
 // Description: Get user selecton of a single string out of a list of strings.
@@ -2368,30 +2660,30 @@ void gui_abort(const char *msg)
 //              const char *hlp:    Help text.
 //              const char **nms:   List of strings.
 //              int def:            Default choice (0-index)
-//              int *hlt:           Halt return value.
-// Return:      int:                The choice (0-index).
+//              bool bck:           Enable back mode.
+//              int *ret:           The choice (0-index).
+// Return:      inp_t:              G_TRUE / G_FALSE / G_ABORT / G_ERR.
 //----------------------------------------------------------------------------
-int gui_choice(const char *msg,
-               const char *hlp,
-               const char **nms,
-               int def,
-               int *hlt)
+inp_t gui_choice(const char *msg,
+                 const char *hlp,
+                 const char **nms,
+                 int def,
+                 bool bck,
+                 int *ret)
 {
-    int ret = (int)
+    inp_t r =
     #ifdef AMIGA
-    DoMethod
+    (inp_t) DoMethod
     (
-        Win, MUIM_InstallerGui_Radio,
-        msg, hlp, nms, def, hlt
+        Win, MUIM_IG_Radio, msg,
+        hlp, nms, def, bck, ret
     );
     #else
     // Testing purposes.
-    printf("%s%s%s%d\n", msg, hlp, *nms, def) ? def : 0;
-    // Don't halt on non Amiga systems.
-    *hlt = 0;
+    printf("%s%s%s%d%d\n", msg, hlp, *nms, def, bck) ? G_TRUE : G_ERR;
+    *ret = (r == G_TRUE) ? def : 0;
     #endif
-
-    return ret;
+    return r;
 }
 
 //----------------------------------------------------------------------------
@@ -2402,56 +2694,59 @@ int gui_choice(const char *msg,
 //              const char *hlp:    Help text.
 //              const char **nms:   List of strings from which to choose.
 //              int def:            Default bitmap.
-//              int *hlt:           Halt return value.
-// Return:      int:                A bitmap representing the selection.
+//              bool bck:           Enable back mode.
+//              int *ret:           A bitmap representing the selection.
+// Return:      inp_t:              G_TRUE / G_FALSE / G_ABORT / G_ERR.
 //----------------------------------------------------------------------------
-int gui_options(const char *msg,
-                const char *hlp,
-                const char **nms,
-                int def,
-                int *hlt)
+inp_t gui_options(const char *msg,
+                  const char *hlp,
+                  const char **nms,
+                  int def,
+                  bool bck,
+                  int *ret)
 {
-    int ret = (int)
+    inp_t r =
     #ifdef AMIGA
-    DoMethod
+    (inp_t) DoMethod
     (
-        Win, MUIM_InstallerGui_CheckBoxes,
-        msg, hlp, nms, def, hlt
+        Win, MUIM_IG_CheckBoxes, msg,
+        hlp, nms, def, bck, ret
     );
     #else
     // Testing purposes.
-    printf("%s%s%s%d%d\n", msg, hlp, *nms, def, *hlt) ? def : 0;
+    printf("%s%s%s%d%d%d\n", msg, hlp, *nms, def, *ret, bck) ? G_TRUE : G_ERR;
+    *ret = (r == G_TRUE) ? def : 0;
     #endif
-
-    return ret;
+    return r;
 }
 
 //----------------------------------------------------------------------------
 // Name:        gui_bool
 // Description: Get boolean value from user, e.g 'Yes' / 'No'.
-// Input:       const char *msg:    Message shown to the user.
-//              const char *hlp:    Help text.
-//              const char *yes:    True string.
-//              const char *no:     False string.
-// Return:      int:                '1' or '0'.
+// Input:       const char *msg: Message shown to the user.
+//              const char *hlp: Help text.
+//              const char *yes: True string.
+//              const char *no: False string.
+//              bool bck: Enable back mode.
+// Return:      inp_t: G_TRUE / G_FALSE / G_ABORT / G_ERR.
 //----------------------------------------------------------------------------
-int gui_bool(const char *msg,
-             const char *hlp,
-             const char *yes,
-             const char *no)
+inp_t gui_bool(const char *msg,
+               const char *hlp,
+               const char *yes,
+               const char *no,
+               bool bck)
 {
-    int ret = (int)
+    return
     #ifdef AMIGA
-    DoMethod
+    (inp_t) DoMethod
     (
-        Win, MUIM_InstallerGui_Bool,
-        msg, hlp, yes, no
+        Win, MUIM_IG_Bool,
+        msg, hlp, yes, no, bck
     );
     #else
     // Testing purposes.
-    printf("%s%s%s%s\n", msg, hlp, yes, no) ? 1 : 0;
+    printf("%s%s%s%s%d\n", msg, hlp, yes, no, bck) ? G_TRUE : G_ERR;
     #endif
-    return ret;
 }
 
 //----------------------------------------------------------------------------
@@ -2460,29 +2755,29 @@ int gui_bool(const char *msg,
 // Input:       const char *msg:    Message shown to the user.
 //              const char *hlp:    Help text.
 //              const char *def:    Default string value.
-//              int *hlt:           Halt return value.
-// Return:      const char *:       String value from user.
+//              bool  bck:          Enable back mode.
+//              const char **ret:   String value from user.
+// Return:      inp_t: G_TRUE / G_FALSE / G_ABORT / G_ERR.
 //----------------------------------------------------------------------------
-const char *gui_string(const char *msg,
-                       const char *hlp,
-                       const char *def,
-                       int *hlt)
+inp_t gui_string(const char *msg,
+                 const char *hlp,
+                 const char *def,
+                 bool bck,
+                 const char **ret)
 {
-    const char *ret = (const char *)
+    inp_t r =
     #ifdef AMIGA
-    DoMethod
+    (inp_t) DoMethod
     (
-        Win, MUIM_InstallerGui_String,
-        msg, hlp, def, hlt
+        Win, MUIM_IG_String,
+        msg, hlp, def, bck, ret
     );
     #else
     // Testing purposes.
-    (printf("%s%s%s\n", msg, hlp, def) ? def : "");
-
-    // Don't halt on non Amiga systems.
-    *hlt = 0;
+    printf("%s%s%s%d\n", msg, hlp, def, bck) ? G_TRUE : G_ERR;
+    *ret = (r == G_TRUE) ? def : "";
     #endif
-    return ret;
+    return r;
 }
 
 //----------------------------------------------------------------------------
@@ -2493,31 +2788,31 @@ const char *gui_string(const char *msg,
 //              int min:            Minimum value.
 //              int max:            Maximum value.
 //              int def:            Default value.
-//              int *hlt:           Halt return value.
-// Return:      int:                Numerical value from user.
+//              bool bck:           Enable back mode.
+//              int *ret:           Return value.
+// Return:      inp_t:              G_TRUE / G_FALSE / G_ABORT / G_ERR.
 //----------------------------------------------------------------------------
-int gui_number(const char *msg,
-               const char *hlp,
-               int min,
-               int max,
-               int def,
-               int *hlt)
+inp_t gui_number(const char *msg,
+                 const char *hlp,
+                 int min,
+                 int max,
+                 int def,
+                 bool bck,
+                 int *ret)
 {
-    int ret = (int)
+    inp_t r =
     #ifdef AMIGA
-    DoMethod
+    (inp_t) DoMethod
     (
-        Win, MUIM_InstallerGui_Number,
-        msg, hlp, min, max, def, hlt
+        Win, MUIM_IG_Number, msg,
+        hlp, min, max, def, bck, ret
     );
     #else
     // Testing purposes.
-    (printf("%s%s%d%d\n", msg, hlp, min, max) ? def : 0);
-
-    // Don't halt on non Amiga systems.
-    *hlt = 0;
+    printf("%s%s%d%d%d\n", msg, hlp, min, max, bck) ? G_TRUE : G_ERR;
+    *ret = (r == G_TRUE) ? def : 0;
     #endif
-    return ret;
+    return r;
 }
 
 //----------------------------------------------------------------------------
@@ -2530,24 +2825,24 @@ int gui_number(const char *msg,
 //              int *lgf:           Log settings return and input value.
 //              int *prt:           Pretend mode return and input value.
 //              int min:            Minimum user level.
-//              int npr:            Disable pretend mode.
-//              int nlg:            Disable logging.
-// Return:      int:                1 on proceed, 0 on abort.
+//              bool npr:           Disable pretend mode.
+//              bool nlg:           Disable logging.
+// Return:      inp_t:              G_TRUE / G_FALSE / G_ABORT / G_ERR.
 //----------------------------------------------------------------------------
-int gui_welcome(const char *msg,
-                int *lvl,
-                int *lgf,
-                int *prt,
-                int min,
-                int npr,
-                int nlg)
+inp_t gui_welcome(const char *msg,
+                  int *lvl,
+                  int *lgf,
+                  int *prt,
+                  int min,
+                  bool npr,
+                  bool nlg)
 {
-    int ret = (int)
+    return
     #ifdef AMIGA
-    DoMethod
+    (inp_t) DoMethod
     (
-        Win, MUIM_InstallerGui_Welcome,
-        msg, lvl, lgf, prt, min, npr, nlg
+        Win, MUIM_IG_Welcome, msg,
+        lvl, lgf, prt, min, npr, nlg
     );
     #else
     // Testing purposes.
@@ -2556,10 +2851,8 @@ int gui_welcome(const char *msg,
         "%s%d%d%d%d%d%d\n",
         msg, *lvl, *lgf, *prt,
         min, npr, nlg
-    );
+    ) ? G_TRUE : G_ERR;
     #endif
-
-    return ret;
 }
 
 //----------------------------------------------------------------------------
@@ -2567,32 +2860,40 @@ int gui_welcome(const char *msg,
 // Description: Get directory name from user.
 // Input:       const char *msg:    Message shown to the user.
 //              const char *hlp:    Help text.
-//              int pth:            Allow non-existing default.
-//              int dsk:            Show drive list first.
-//              int asn:            Assigns can satisfy the request as well.
+//              bool pth:           Allow non-existing default.
+//              bool dsk:           Show drive list first.
+//              bool asn:           Assigns can satisfy the request as well.
 //              const char *def:    Default value.
-// Return:      const char*:        Dir name on success, NULL otherwise.
+//              bool  bck:          Enable back mode.
+//              const char **ret:   File / dir string value.
+// Return:      inp_t: G_TRUE / G_FALSE / G_ABORT / G_ERR.
 //----------------------------------------------------------------------------
-const char *gui_askdir(const char *msg,
-                       const char *hlp,
-                       int pth,
-                       int dsk,
-                       int asn,
-                       const char *def)
+inp_t gui_askdir(const char *msg,
+                 const char *hlp,
+                 bool pth,
+                 bool dsk,
+                 bool asn,
+                 const char *def,
+                 bool bck,
+                 const char **ret)
 {
-    const char *ret = (const char *)
     #ifdef AMIGA
-    DoMethod
+    return (inp_t) DoMethod
     (
-        Win, MUIM_InstallerGui_AskFile,
-        msg, hlp, pth, dsk, asn, def, TRUE
+        Win, MUIM_IG_AskFile,
+        msg, hlp, pth, dsk, asn,
+        def, TRUE, bck, ret
     );
     #else
     // Testing purposes.
-    (printf("%s%s%d%d%d%s\n", msg, hlp, pth, dsk, asn, def) ? def : "");
+    if(msg && hlp && def && ret)
+    {
+        *ret = def;
+        printf("%s%s%d%d%d%s%d\n", msg, hlp, pth, dsk, asn, def, bck);
+        return G_TRUE;
+    }
+    return G_FALSE;
     #endif
-
-    return ret;
 }
 
 //----------------------------------------------------------------------------
@@ -2600,30 +2901,38 @@ const char *gui_askdir(const char *msg,
 // Description: Get filename from user.
 // Input:       const char *msg:    Message shown to the user.
 //              const char *hlp:    Help text.
-//              int pth:            Allow non-existing default.
-//              int dsk:            Show drive list first.
+//              bool pth:           Allow non-existing default.
+//              bool dsk:           Show drive list first.
 //              const char *def:    Default value.
-// Return:      const char*:        Filename on success, NULL otherwise.
+//              bool  bck:          Enable back mode.
+//              const char **ret:   File / dir string value.
+// Return:      inp_t: G_TRUE / G_FALSE / G_ABORT / G_ERR.
 //----------------------------------------------------------------------------
-const char *gui_askfile(const char *msg,
-                        const char *hlp,
-                        int pth,
-                        int dsk,
-                        const char *def)
+inp_t gui_askfile(const char *msg,
+                  const char *hlp,
+                  bool pth,
+                  bool dsk,
+                  const char *def,
+                  bool bck,
+                  const char **ret)
 {
-    const char *ret = (const char *)
     #ifdef AMIGA
-    DoMethod
+    return (inp_t) DoMethod
     (
-        Win, MUIM_InstallerGui_AskFile,
-        msg, hlp, pth, dsk, FALSE, def, FALSE
+        Win, MUIM_IG_AskFile,
+        msg, hlp, pth, dsk, FALSE,
+        def, FALSE, bck, ret
     );
     #else
     // Testing purposes.
-    (printf("%s%s%d%d\n", msg, hlp, pth, dsk) ? def : "");
+    if(msg && hlp && def && ret)
+    {
+        *ret = def;
+        printf("%s%s%s%d%d%d\n", msg, hlp, def, pth, dsk, bck);
+        return G_TRUE;
+    }
+    return G_FALSE;
     #endif
-
-    return ret;
 }
 
 //----------------------------------------------------------------------------
@@ -2633,44 +2942,56 @@ const char *gui_askfile(const char *msg,
 // Input:       const char *msg:    Message to be shown.
 //              const char *hlp:    Help text.
 //              pnode_p lst:        List of files / directories.
-//              int cnf:            Confirmation.
-// Return:      int:                '1' - proceed, '0' - skip, '-1' abort.
+//              bool cnf:           Confirmation.
+//              bool bck:           Enable back mode.
+// Return:      inp_t: G_TRUE / G_FALSE / G_ABORT / G_ERR.
 //----------------------------------------------------------------------------
-int gui_copyfiles_start(const char *msg, const char *hlp, pnode_p lst, int cnf)
+inp_t gui_copyfiles_start(const char *msg, const char *hlp, pnode_p lst, bool cnf, bool bck)
 {
-    return (int)
     #ifdef AMIGA
-    DoMethod
+    return (inp_t) DoMethod
     (
-        Win, MUIM_InstallerGui_CopyFilesStart,
-        msg, hlp, lst, cnf
+        Win, MUIM_IG_CopyFilesStart,
+        msg, hlp, lst, cnf, bck
     );
     #else
     // Testing purposes.
-    (lst ? (cnf ? ((fputs(msg, stdout) != EOF &&
-                    fputs(hlp, stdout) != EOF) ? 0 : -1) : 1) : -1);
+    if(lst)
+    {
+        if(cnf)
+        {
+            printf("%s%s%d\n", msg ? msg : "", 
+                               hlp ? hlp : "", bck);
+            return G_FALSE;
+        }
+        return G_TRUE;
+    }
+    return G_ERR;
     #endif
 }
 
 //----------------------------------------------------------------------------
 // Name:        gui_copyfiles_setcur
 // Description: Update progress gauge and show current filename.
-// Input:       const char *cur:    Filename.
-//              int nogauge:        Hide gauge.
-// Return:      int:                TRUE on success, FALSE otherwise.
+// Input:       const char *cur: Filename.
+//              bool nga: Hide gauge.
+//              bool bck: Enable back mode.
+// Return:      inp_t: G_TRUE / G_FALSE / G_ABORT / G_ERR.
 //----------------------------------------------------------------------------
-int gui_copyfiles_setcur(const char *cur, int nogauge)
+inp_t gui_copyfiles_setcur(const char *cur, bool nga, bool bck)
 {
-    return (int)
     #ifdef AMIGA
-    DoMethod
+    return (inp_t) DoMethod
     (
-        Win, MUIM_InstallerGui_CopyFilesSetCur,
-        cur, nogauge
+        Win, MUIM_IG_CopyFilesSetCur,
+        cur, nga, bck
     );
     #else
-    // Testing purposes.
-    (!cur ? 1 + nogauge : 3);
+    (void) cur;
+    (void) nga;
+    (void) bck;
+
+    return G_TRUE;
     #endif
 }
 
@@ -2683,24 +3004,23 @@ int gui_copyfiles_setcur(const char *cur, int nogauge)
 void gui_copyfiles_end(void)
 {
     #ifdef AMIGA
-    DoMethod(Win, MUIM_InstallerGui_CopyFilesEnd);
+    DoMethod(Win, MUIM_IG_CopyFilesEnd);
     #endif
 }
 
 //----------------------------------------------------------------------------
 // Name:        gui_complete
 // Description: Show progress gauge.
-// Input:       int com:            Progress in percent.
-// Return:      int:                TRUE on success, FALSE otherwise.
+// Input:       int com: Progress in percent.
+// Return:      -
 //----------------------------------------------------------------------------
-int gui_complete(int com)
+void gui_complete(int com)
 {
-    return (int)
     #ifdef AMIGA
-    DoMethod(Win, MUIM_InstallerGui_Complete, com);
+    DoMethod(Win, MUIM_IG_Complete, com);
     #else
     // Testing purposes.
-    com;
+    printf("%d\n", com);
     #endif
 }
 
@@ -2709,30 +3029,31 @@ int gui_complete(int com)
 // Description: Get user confirmation.
 // Input:       const char *msg:    Message shown to the user.
 //              const char *hlp:    Help text.
-// Return:      int:                '1' = proceed, '0' = skip, '-1' = abort
+//              bool bck:           Enable back mode.
+// Return:      inp_t:              G_TRUE / G_FALSE / G_ABORT / G_ERR.
 //----------------------------------------------------------------------------
-int gui_confirm(const char *msg, const char *hlp)
+inp_t gui_confirm(const char *msg, const char *hlp, bool bck)
 {
-    return (int)
+    return
     #ifdef AMIGA
-    DoMethod(Win, MUIM_InstallerGui_Confirm, msg, hlp);
+    (inp_t) DoMethod(Win, MUIM_IG_Confirm, msg, hlp, bck);
     #else
     // Testing purposes.
-    printf("%s%s\n", msg, hlp) ? 1 : 0;
+    printf("%s%s%d\n", msg, hlp, bck) ? G_TRUE : G_ERR;
     #endif
 }
 
 //----------------------------------------------------------------------------
 // Name:        gui_error
 // Description: Show error message.
-// Input:       int id:             Line number.
-//              const char *type:   Error description.
-//              const char *info:   Extra info, e.g. filename.
-// Return:      int:                1
+// Input:       int id: Line number.
+//              const char *type: Error description.
+//              const char *info: Extra info, e.g. filename.
+// Return:      -
 //----------------------------------------------------------------------------
-int gui_error(int id,
-              const char *type,
-              const char *info)
+void gui_error(int id,
+               const char *type,
+               const char *info)
 {
     #ifdef AMIGA
     static char err[BUFSIZ];
@@ -2749,11 +3070,7 @@ int gui_error(int id,
     // We don't have any way of knowing
     // whether this really works out...
     EasyRequest(NULL, &es, NULL);
-
-    // Ignore the user feedback.
-    return 1;
     #else
-    // Testing purposes.
-    return (id && type && info) ? 0 : 1;
+    fprintf(stderr, tr(S_LERR), id, type, info);
     #endif
 }

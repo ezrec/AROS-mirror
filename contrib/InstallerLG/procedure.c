@@ -28,9 +28,6 @@
 //----------------------------------------------------------------------------
 entry_p m_gosub(entry_p contxt)
 {
-    // Recursion depth.
-    static int dep = 0;
-
     // Global context where the user
     // defined procedures are found.
     entry_p con = global(contxt);
@@ -48,7 +45,6 @@ entry_p m_gosub(entry_p contxt)
             if((*cus)->type == CUSTOM &&
                !strcasecmp((*cus)->name, contxt->name))
             {
-                entry_p ret;
                 entry_p *arg = (*cus)->symbols,
                         *ina = contxt->children;
 
@@ -71,7 +67,7 @@ entry_p m_gosub(entry_p contxt)
                     while(*arg && *arg != end() &&
                           *ina && *ina != end())
                     {
-                        entry_p res = malloc(sizeof(entry_t));
+                        entry_p res = DBG_ALLOC(malloc(sizeof(entry_t)));
 
                         // Do a deep copy and free the resources from
                         // the last invocation, if any.
@@ -98,21 +94,23 @@ entry_p m_gosub(entry_p contxt)
                     }
                 }
 
+                // Recursion depth.
+                static int dep = 0;
+
                 // Keep track of the recursion depth. Do not
                 // invoke if we're beyond MAXDEP.
                 if(dep++ < MAXDEP)
                 {
-                    ret = invoke(*cus);
+                    // Return value.
+                    entry_p ret = invoke(*cus);
                     dep--;
                     return ret;
                 }
-                else
-                {
-                    // We will run out of stack if
-                    // we don't abort.
-                    ERR(ERR_MAX_DEPTH, contxt->name);
-                    return end();
-                }
+
+                // We will run out of stack if
+                // we don't abort.
+                ERR(ERR_MAX_DEPTH, contxt->name);
+                return end();
             }
 
             // Next function.
@@ -218,10 +216,8 @@ entry_p m_procedure(entry_p contxt)
         // Return the function itself.
         return contxt->symbols[0];
     }
-    else
-    {
-        // Everything is broken.
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // Everything is broken.
+    PANIC(contxt);
+    RCUR;
 }

@@ -41,12 +41,10 @@ entry_p m_and(entry_p contxt)
         // All children were true.
         RNUM(1);
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -66,12 +64,10 @@ entry_p m_bitand(entry_p contxt)
             num(CARG(2))
         );
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -90,12 +86,10 @@ entry_p m_bitnot(entry_p contxt)
             ~num(CARG(1))
         );
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -115,12 +109,10 @@ entry_p m_bitor(entry_p contxt)
             num(CARG(2))
         );
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -140,12 +132,10 @@ entry_p m_bitxor(entry_p contxt)
             num(CARG(2))
         );
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -164,12 +154,10 @@ entry_p m_not(entry_p contxt)
             !num(CARG(1))
         );
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -204,12 +192,10 @@ entry_p m_in(entry_p contxt)
             DNUM
         );
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -240,12 +226,10 @@ entry_p m_or(entry_p contxt)
         // All children were false.
         RNUM(0);
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -265,12 +249,10 @@ entry_p m_shiftleft(entry_p contxt)
             num(CARG(2))
         );
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -290,12 +272,10 @@ entry_p m_shiftright(entry_p contxt)
             num(CARG(2))
         );
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -322,10 +302,8 @@ entry_p m_xor(entry_p contxt)
             )
         );
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }

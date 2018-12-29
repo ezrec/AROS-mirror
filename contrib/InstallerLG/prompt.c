@@ -39,6 +39,7 @@ entry_p m_askbool(entry_p contxt)
         const char *yes = tr(S_AYES), *no = tr(S_NONO);
         entry_p prompt   = get_opt(contxt, OPT_PROMPT),
                 help     = get_opt(contxt, OPT_HELP),
+                back     = get_opt(contxt, OPT_BACK),
                 deflt    = get_opt(contxt, OPT_DEFAULT),
                 choices  = get_opt(contxt, OPT_CHOICES);
 
@@ -78,14 +79,40 @@ entry_p m_askbool(entry_p contxt)
                 if(!DID_ERR())
                 {
                     // Prompt user.
-                    DNUM = gui_bool(p, h, yes, no);
+                    inp_t rc = gui_bool(p, h, yes, no, back);
+
+                    // Is the back option available?
+                    if(back)
+                    {
+                        // Fake input?
+                        if(get_numvar(contxt, "@back"))
+                        {
+                            rc = G_ABORT;
+                        }
+
+                        // On abort execute.
+                        if(rc == G_ABORT)
+                        {
+                            return resolve(back);
+                        }
+                    }
+
+                    // FIXME
+                    if(rc == G_ABORT || rc == G_EXIT)
+                    {
+                        HALT();
+                    }
+
+                    // Translate return code.
+                    DNUM = (rc == G_TRUE) ? 1 : 0;
                 }
             }
         }
         else
         {
-            char *m = !prompt ? "prompt" : "help";
-            ERR(ERR_MISSING_OPTION, m);
+            // Missing one or more options.
+            ERR(ERR_MISSING_OPTION, !prompt ?
+                "prompt" : "help");
         }
     }
     else
@@ -101,7 +128,7 @@ entry_p m_askbool(entry_p contxt)
 
 //----------------------------------------------------------------------------
 // (askchoice (prompt..) (choices..) (default..))
-//     choose 1 options
+//     choose 1 option
 //
 // Refer to Installer.guide 1.19 (29.4.96) 1995-96 by ESCOM AG
 //
@@ -116,6 +143,7 @@ entry_p m_askchoice(entry_p contxt)
     {
         entry_p prompt   = get_opt(contxt, OPT_PROMPT),
                 help     = get_opt(contxt, OPT_HELP),
+                back     = get_opt(contxt, OPT_BACK),
                 choices  = get_opt(contxt, OPT_CHOICES),
                 deflt    = get_opt(contxt, OPT_DEFAULT);
 
@@ -238,7 +266,8 @@ entry_p m_askchoice(entry_p contxt)
                 // resolve all options.
                 if(!DID_ERR())
                 {
-                    int hlt = 0, d = 0;
+                    // Skipper.
+                    int d = 0;
 
                     // Cap / compute skipper.
                     if(i > 0 && i < 31 &&
@@ -249,14 +278,30 @@ entry_p m_askchoice(entry_p contxt)
                     }
 
                     // Prompt user. Subtract skipper from default.
-                    DNUM = gui_choice(p, h, chs, i - d, &hlt);
+                    inp_t rc = gui_choice(p, h, chs, i - d, back, &DNUM);
 
                     // Add skipper. Don't trust the GUI.
                     DNUM += ((DNUM < 32 && DNUM >= 0) ?
                             add[DNUM] : 0);
 
-                    // Halt if abort.
-                    if(hlt)
+                    // Is the back option available?
+                    if(back)
+                    {
+                        // Fake input?
+                        if(get_numvar(contxt, "@back"))
+                        {
+                            rc = G_ABORT;
+                        }
+
+                        // On abort execute.
+                        if(rc == G_ABORT)
+                        {
+                            return resolve(back);
+                        }
+                    }
+
+                    // FIXME
+                    if(rc == G_ABORT || rc == G_EXIT)
                     {
                         HALT();
                     }
@@ -269,8 +314,9 @@ entry_p m_askchoice(entry_p contxt)
         }
         else
         {
-            char *m = !prompt ? "prompt" : !help ? "help" : "choices";
-            ERR(ERR_MISSING_OPTION, m);
+            // Missing one or more options.
+            ERR(ERR_MISSING_OPTION, !prompt ?
+                "prompt" : !help ? "help" : "choices");
         }
     }
     else
@@ -299,6 +345,7 @@ entry_p m_askdir(entry_p contxt)
     {
         entry_p prompt   = get_opt(contxt, OPT_PROMPT),
                 help     = get_opt(contxt, OPT_HELP),
+                back     = get_opt(contxt, OPT_BACK),
                 deflt    = get_opt(contxt, OPT_DEFAULT),
                 newpath  = get_opt(contxt, OPT_NEWPATH),
                 disk     = get_opt(contxt, OPT_DISK),
@@ -321,16 +368,28 @@ entry_p m_askdir(entry_p contxt)
                 // resolve all options.
                 if(!DID_ERR())
                 {
-                    int np = newpath ? 1 : 0,
-                        dk = disk ? 1 : 0,
-                        as = assigns ? 1 : 0;
-
                     // Prompt user.
-                    ret = gui_askdir(p, h, np, dk, as, d);
+                    inp_t rc = gui_askdir(p, h, newpath, disk, assigns,
+                                          d, back, &ret);
 
-                    // Return empty string and
-                    // halt if user aborted.
-                    if(!ret)
+                    // Is the back option available?
+                    if(back)
+                    {
+                        // Fake input?
+                        if(get_numvar(contxt, "@back"))
+                        {
+                            rc = G_ABORT;
+                        }
+
+                        // On abort execute.
+                        if(rc == G_ABORT)
+                        {
+                            return resolve(back);
+                        }
+                    }
+
+                    // FIXME
+                    if(rc == G_ABORT || rc == G_EXIT)
                     {
                         HALT();
                         REST;
@@ -353,22 +412,19 @@ entry_p m_askdir(entry_p contxt)
             // We have a file.
             RSTR(strdup(ret));
         }
-        else
-        {
-            char *m = !prompt ? "prompt" : !help ? "help" : "default";
-            ERR(ERR_MISSING_OPTION, m);
-        }
+
+        // What option are we missing?
+        ERR(ERR_MISSING_OPTION, !prompt ?
+            "prompt" : !help ? "help" : "default");
 
         // Return empty string
         // on failure.
         REST;
     }
-    else
-    {
-        // Broken parser.
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // Broken parser.
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -387,6 +443,7 @@ entry_p m_askdisk(entry_p contxt)
     {
         entry_p prompt   = get_opt(contxt, OPT_PROMPT),
                 help     = get_opt(contxt, OPT_HELP),
+                back     = get_opt(contxt, OPT_BACK),
                 dest     = get_opt(contxt, OPT_DEST),
                 newname  = get_opt(contxt, OPT_NEWNAME);
 
@@ -421,7 +478,7 @@ entry_p m_askdisk(entry_p contxt)
                     const char *msg = str(prompt),
                                *hlp = str(help),
                                *bt1 = tr(S_RTRY),
-                               *bt2 = tr(S_ABRT);
+                               *bt2 = tr(S_SKIP);
 
                     // Only show requester if we could
                     // resolve all options.
@@ -431,14 +488,40 @@ entry_p m_askdisk(entry_p contxt)
                         // user aborts.
                         while(!l)
                         {
-                            // Probe user, retry or abort?
-                            if(gui_bool(msg, hlp, bt1, bt2))
+                            // Prompt user.
+                            inp_t rc = gui_bool(msg, hlp, bt1, bt2, back);
+
+                            if(rc == G_TRUE)
                             {
                                 l = (BPTR) Lock(n, ACCESS_READ);
                             }
                             else
                             {
-                                // User abort.
+                                // Is the back option available?
+                                if(back)
+                                {
+                                    // Fake input?
+                                    if(get_numvar(contxt, "@back"))
+                                    {
+                                        rc = G_ABORT;
+                                    }
+
+                                    // On abort execute.
+                                    if(rc == G_ABORT)
+                                    {
+                                        // Restore auto request before
+                                        // executing the 'back' code.
+                                        p->pr_WindowPtr = w;
+                                        return resolve(back);
+                                    }
+                                }
+                                // FIXME
+                                if(rc == G_ABORT || rc == G_EXIT)
+                                {
+                                    HALT();
+                                }
+
+                                // User abort or err.
                                 break;
                             }
                         }
@@ -472,7 +555,8 @@ entry_p m_askdisk(entry_p contxt)
                         }
                         else
                         {
-                            // An assign must contain at least one character.
+                            // An assign must contain at
+                            // least one character.
                             ERR(ERR_INVALID_ASSIGN, nn);
                             UnLock(l);
                         }
@@ -492,7 +576,7 @@ entry_p m_askdisk(entry_p contxt)
                 DNUM = 1;
 
                 // For testing purposes only.
-                printf("%d", newname ? 1 : 0);
+                printf("%d", (newname || back) ? 1 : 0);
                 #endif
             }
             else
@@ -504,8 +588,9 @@ entry_p m_askdisk(entry_p contxt)
         }
         else
         {
-            char *m = !prompt ? "prompt" : !help ? "help" : "dest";
-            ERR(ERR_MISSING_OPTION, m);
+            // Missing one or more options.
+            ERR(ERR_MISSING_OPTION, !prompt ?
+                "prompt" : !help ? "help" : "dest");
         }
     }
     else
@@ -535,6 +620,7 @@ entry_p m_askfile(entry_p contxt)
     {
         entry_p prompt   = get_opt(contxt, OPT_PROMPT),
                 help     = get_opt(contxt, OPT_HELP),
+                back     = get_opt(contxt, OPT_BACK),
                 newpath  = get_opt(contxt, OPT_NEWPATH),
                 disk     = get_opt(contxt, OPT_DISK),
                 deflt    = get_opt(contxt, OPT_DEFAULT);
@@ -556,15 +642,28 @@ entry_p m_askfile(entry_p contxt)
                 // resolve all options.
                 if(!DID_ERR())
                 {
-                    int np = newpath ? 1 : 0,
-                        dk = disk ? 1 : 0;
-
                     // Prompt user.
-                    ret = gui_askfile(p, h, np, dk, d);
+                    inp_t rc = gui_askfile(p, h, newpath, disk,
+                                           d, back, &ret);
 
-                    // Return empty string and
-                    // halt if user aborted.
-                    if(!ret)
+                    // Is the back option available?
+                    if(back)
+                    {
+                        // Fake input?
+                        if(get_numvar(contxt, "@back"))
+                        {
+                            rc = G_ABORT;
+                        }
+
+                        // On abort execute.
+                        if(rc == G_ABORT)
+                        {
+                            return resolve(back);
+                        }
+                    }
+
+                    // FIXME
+                    if(rc == G_ABORT || rc == G_EXIT)
                     {
                         HALT();
                         REST;
@@ -587,22 +686,19 @@ entry_p m_askfile(entry_p contxt)
             // We have a file.
             RSTR(strdup(ret));
         }
-        else
-        {
-            char *m = !prompt ? "prompt" : !help ? "help" : "default";
-            ERR(ERR_MISSING_OPTION, m);
-        }
+
+        // Missing one or more options.
+        ERR(ERR_MISSING_OPTION, !prompt ?
+            "prompt" : !help ? "help" : "default");
 
         // Return empty string
         // on failure.
         REST;
     }
-    else
-    {
-        // Broken parser.
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // Broken parser.
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -622,6 +718,7 @@ entry_p m_asknumber(entry_p contxt)
     {
         entry_p prompt   = get_opt(contxt, OPT_PROMPT),
                 help     = get_opt(contxt, OPT_HELP),
+                back     = get_opt(contxt, OPT_BACK),
                 range    = get_opt(contxt, OPT_RANGE),
                 deflt    = get_opt(contxt, OPT_DEFAULT);
 
@@ -667,13 +764,27 @@ entry_p m_asknumber(entry_p contxt)
                 // resolve all options.
                 if(!DID_ERR())
                 {
-                    int hlt = 0;
-
                     // Prompt user.
-                    DNUM = gui_number(p, h, min, max, d, &hlt);
+                    inp_t rc = gui_number(p, h, min, max, d, back, &DNUM);
 
-                    // Halt if abort.
-                    if(hlt)
+                    // Is the back option available?
+                    if(back)
+                    {
+                        // Fake input?
+                        if(get_numvar(contxt, "@back"))
+                        {
+                            rc = G_ABORT;
+                        }
+
+                        // On abort execute.
+                        if(rc == G_ABORT)
+                        {
+                            return resolve(back);
+                        }
+                    }
+
+                    // FIXME
+                    if(rc == G_ABORT || rc == G_EXIT)
                     {
                         HALT();
                     }
@@ -687,8 +798,9 @@ entry_p m_asknumber(entry_p contxt)
         }
         else
         {
-            char *m = !prompt ? "prompt" : !help ? "help" : "default";
-            ERR(ERR_MISSING_OPTION, m);
+            // Missing one or more options.
+            ERR(ERR_MISSING_OPTION, !prompt ?
+                "prompt" : !help ? "help" : "default");
         }
     }
     else
@@ -714,6 +826,7 @@ entry_p m_askoptions(entry_p contxt)
     {
         entry_p prompt   = get_opt(contxt, OPT_PROMPT),
                 help     = get_opt(contxt, OPT_HELP),
+                back     = get_opt(contxt, OPT_BACK),
                 choices  = get_opt(contxt, OPT_CHOICES),
                 deflt    = get_opt(contxt, OPT_DEFAULT);
 
@@ -812,13 +925,27 @@ entry_p m_askoptions(entry_p contxt)
                 // resolve all options.
                 if(!DID_ERR())
                 {
-                    int hlt = 0;
-
                     // Prompt user.
-                    DNUM = gui_options(p, h, chs, i, &hlt);
+                    inp_t rc = gui_options(p, h, chs, i, back, &DNUM);
 
-                    // Halt if abort.
-                    if(hlt)
+                    // Is the back option available?
+                    if(back)
+                    {
+                        // Fake input?
+                        if(get_numvar(contxt, "@back"))
+                        {
+                            rc = G_ABORT;
+                        }
+
+                        // On abort execute.
+                        if(rc == G_ABORT)
+                        {
+                            return resolve(back);
+                        }
+                    }
+
+                    // FIXME
+                    if(rc == G_ABORT || rc == G_EXIT)
                     {
                         HALT();
                     }
@@ -831,8 +958,9 @@ entry_p m_askoptions(entry_p contxt)
         }
         else
         {
-            char *m = !prompt ? "prompt" : !help ? "help" : "choices";
-            ERR(ERR_MISSING_OPTION, m);
+            // Missing one or more options.
+            ERR(ERR_MISSING_OPTION, !prompt ?
+                "prompt" : !help ? "help" : "choices");
         }
     }
     else
@@ -858,6 +986,7 @@ entry_p m_askstring(entry_p contxt)
     {
         entry_p prompt   = get_opt(contxt, OPT_PROMPT),
                 help     = get_opt(contxt, OPT_HELP),
+                back     = get_opt(contxt, OPT_BACK),
                 deflt    = get_opt(contxt, OPT_DEFAULT);
 
         if(prompt && help && deflt)
@@ -876,13 +1005,27 @@ entry_p m_askstring(entry_p contxt)
                 // resolve all options.
                 if(!DID_ERR())
                 {
-                    int hlt = 0;
-
                     // Prompt user.
-                    res = gui_string(p, h, d, &hlt);
+                    inp_t rc = gui_string(p, h, d, back, &res);
 
-                    // Halt if abort.
-                    if(hlt)
+                    // Is the back option available?
+                    if(back)
+                    {
+                        // Fake input?
+                        if(get_numvar(contxt, "@back"))
+                        {
+                            rc = G_ABORT;
+                        }
+
+                        // On abort execute.
+                        if(rc == G_ABORT)
+                        {
+                            return resolve(back);
+                        }
+                    }
+
+                    // FIXME
+                    if(rc == G_ABORT || rc == G_EXIT)
                     {
                         HALT();
                         REST;
@@ -904,20 +1047,17 @@ entry_p m_askstring(entry_p contxt)
 
             RSTR(strdup(res));
         }
-        else
-        {
-            char *m = !prompt ? "prompt" : !help ? "help" : "default";
-            ERR(ERR_MISSING_OPTION, m);
-        }
+
+        // Missing one or more options.
+        ERR(ERR_MISSING_OPTION, !prompt ?
+            "prompt" : !help ? "help" : "default");
 
         // Return empty string
         // on failure.
         REST;
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
