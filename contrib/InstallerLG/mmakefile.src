@@ -1,0 +1,17 @@
+# InstallerLG Makefile
+#
+
+include $(SRCDIR)/config/aros-contrib.cfg
+
+EXEDIR := $(AROSDIR)/C
+FILES := alloc args arithmetic bitwise comparison control error eval exit external file gui information init lexer parser probe procedure prompt resource strop symbol util wb
+USER_CFLAGS := -std=gnu99 $(NOWARN_UNUSED_FUNCTION)
+
+#MM- contrib : contrib-installerlg
+#MM contrib-installerlg : includes linklibs
+
+%build_prog mmake=contrib-installerlg \
+    progname=Installer targetdir=$(EXEDIR) \
+    files=$(FILES) uselibs="debug"
+
+%common
