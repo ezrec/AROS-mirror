@@ -86,12 +86,10 @@ entry_p m_select(entry_p contxt)
         ERR(ERR_NO_ITEM, str(CARG(1)));
         RNUM(0);
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -129,12 +127,10 @@ static entry_p h_whunt(entry_p contxt, int m)
         // the last function in the last iteration.
         return r;
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -190,30 +186,57 @@ entry_p m_trace(entry_p contxt)
 //----------------------------------------------------------------------------
 entry_p m_retrace(entry_p contxt)
 {
-    // We need a context with a parent.
-    if(contxt && contxt->parent &&
-       contxt->parent->children)
+    // No children.
+    if(contxt)
     {
+        // Find nearest context / user defined
+        // procedure.
+        while(contxt->parent &&
+              contxt->parent->type != CONTXT &&
+              contxt->parent->type != CUSTOM)
+        {
+            // Climb one generation.
+            contxt = contxt->parent;
+        }
+
+        // This shouldn't happen.
+        if(!contxt->parent ||
+           !contxt->parent->children)
+        {
+            // Nowhere to go.
+            PANIC(contxt);
+            RCUR;
+        }
+
         // Iterator and stop.
         entry_p *c = contxt->parent->children;
         entry_p s = *c;
 
         // Locate ourselves.
-        while(*c != contxt) c++;
+        while(*c != contxt)
+        {
+            c++;
+        }
 
         // Locate the first trace point,
         // unless we're first in line.
         if(*c != s)
         {
             // Find trace point.
-            while(*(--c) != s && (*c)->call != m_trace);
+            while(*(--c) != s && (*c)->call != m_trace)
+            {
+                // Do nothing.
+            }
 
             // Look for the second trace point,
             // unless we're at the top by now.
             if(*c != s)
             {
                 // Find the second point.
-                while(*(--c) != s && (*c)->call != m_trace);
+                while(*(--c) != s && (*c)->call != m_trace)
+                {
+                    // Do nothing.
+                }
             }
         }
 
@@ -224,18 +247,35 @@ entry_p m_retrace(entry_p contxt)
             entry_p r = end();
             entry_p *t = c;
 
-            for(; !DID_ERR(); c = t)
+            // Frame counter.
+            static int dep = 0;
+
+            // Keep track of the recursion depth. Do not
+            // invoke if we're beyond MAXDEP.
+            if(dep++ < MAXDEP)
             {
-                while (*c != contxt && !DID_ERR())
+                for(; !DID_ERR(); c = t)
                 {
-                    // Resolve and proceed.
-                    r = resolve(*c);
-                    c++;
+                    // As long as no one fails, resolve
+                    // all children and save the return
+                    // value of the last one.
+                    while(*c && *c != end() && !DID_ERR())
+                    {
+                        // Resolve and proceed.
+                        r = resolve(*c);
+                        c++;
+                    }
                 }
+
+                // Leaving frame.
+                dep--;
+
+                // Return the last value.
+                return r;
             }
 
-            // Return the last value.
-            return r;
+            // We risk running out of stack.
+            ERR(ERR_MAX_DEPTH, contxt->name);
         }
     }
     else

@@ -13,6 +13,7 @@
 #include "eval.h"
 #include "exit.h"
 #include "gui.h"
+#include "resource.h"
 #include "util.h"
 
 #include <stdio.h>
@@ -79,8 +80,12 @@ entry_p find_symbol(entry_p entry)
         }
         while(con);
 
-        // Only fail if we're in 'strict' mode.
-        if(get_numvar(global(entry), "@strict"))
+        // Only fail if we're in 'strict' mode. Never
+        // recur when looking for @strict, it might not
+        // be there if we're OOM. If we do so, we will
+        // run out of stack as well.
+        if(strcasecmp(entry->name, "@strict") &&
+           get_numvar(global(entry), "@strict"))
         {
             // We found nothing.
             ERR_C(entry, ERR_UNDEF_VAR, entry->name);
@@ -129,10 +134,21 @@ entry_p resolve(entry_p entry)
             case NATIVE:
                 return entry->call(entry);
 
-            // Dynamic options are treated like functions.
+            // Special options.
             case OPTION:
-                return entry->id == OPT_DYNOPT ?
-                       entry->call(entry) : entry;
+                switch(entry->id)
+                {
+                    // Dynamic options are treated like functions.
+                    case OPT_DYNOPT:
+                        return entry->call(entry);
+
+                    // Back options are treated like contexts.
+                    case OPT_BACK:
+                        return invoke(entry);
+
+                    default:
+                        return entry;
+                }
 
             // We already have a primitive.
             case NUMBER:
@@ -342,11 +358,9 @@ char *str(entry_p entry)
                         {
                             return entry->name;
                         }
-                        else
-                        {
-                            // OOM.
-                            PANIC(entry);
-                        }
+
+                        // OOM.
+                        PANIC(entry);
                 }
 
             // Dangling entries and options
@@ -381,7 +395,7 @@ char *str(entry_p entry)
                 // string before?
                 if(!entry->name)
                 {
-                    entry->name = malloc(NUMLEN);
+                    entry->name = DBG_ALLOC(malloc(NUMLEN));
                 }
 
                 // On OOM, fall through and PANIC below.
@@ -406,12 +420,12 @@ char *str(entry_p entry)
 
 //----------------------------------------------------------------------------
 // Name:        invoke
-// Description: Evaluate all children of a CONTXT. In most cases this implies
+// Description: Evaluate all children of an entry. In most cases this implies
 //              executing all executable children and return the return value
-//              of the last executed function. If any of the functions in the
-//              CONTXT fails, the execution will be aborted.
-// Input:       entry_p entry:  An entry_t pointer to a CONTXT object.
-// Return:      entry_p:        The last resolved value in the entry CONTXT.
+//              of the last executed function. If any of the functions fail,
+//              the execution will be aborted.
+// Input:       entry_p entry:  An entry_t pointer to a parent object.
+// Return:      entry_p:        The last resolved value.
 //----------------------------------------------------------------------------
 entry_p invoke(entry_p entry)
 {

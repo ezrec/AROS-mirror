@@ -49,6 +49,7 @@ typedef enum
     S_OKEY, /* "Ok" */
     S_NEXT, /* "Next" */
     S_SKIP, /* "Skip" */
+    S_BACK, /* "Back" */
     S_UNER, /* "Unknown error" */
     S_STFL, /* "Setup failed" */
     S_FMCC, /* "Failed creating MUI custom class" */
@@ -56,7 +57,7 @@ typedef enum
     S_FINT, /* "Initialization failed" */
     S_ERRS, /* "Error" */
     S_SUCC, /* "Success" */
-    S_LERR, /* "Line %d: %s '%s'" */
+    S_LERR, /* "Line %d: %s '%s'\n" */
     S_ULNV, /* "Novice User - All Actions Automatic" */
     S_ULIN, /* "Intermediate User - Limited Manual Control" */
     S_ULEX, /* "Expert User - Must Confirm all actions" */

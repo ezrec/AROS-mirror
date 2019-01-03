@@ -80,7 +80,7 @@ entry_p m_openwbobject(entry_p contxt)
             }
         }
 
-        if(!confirm || h_confirm(contxt, str(help), str(prompt)))
+        if(!confirm || h_confirm(CARG(2), str(help), str(prompt)))
         {
             #ifdef AMIGA
             DNUM = OpenWorkbenchObjectA(str(CARG(1)), NULL) ? 1 : 0;

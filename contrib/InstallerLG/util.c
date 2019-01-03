@@ -76,7 +76,10 @@ entry_p local(entry_p e)
     for(; e &&
         e->type != CONTXT &&
         e->type != CUSTOM
-        ; e = e->parent);
+        ; e = e->parent)
+    {
+        // Do nothing.
+    }
 
     // Something or NULL:
     return e;
@@ -95,7 +98,10 @@ entry_p global(entry_p e)
     // any further.
     for(e = local(e);
         e && local(e->parent);
-        e = local(e->parent));
+        e = local(e->parent))
+    {
+        // Do nothing.
+    }
 
     // Something or NULL:
     return e;
@@ -482,7 +488,7 @@ char *get_optstr(entry_p c, opt_t t)
     {
         // References to string evaluations of all
         // options of the right type.
-        char **cs = calloc(n + 1, sizeof(char *));
+        char **cs = DBG_ALLOC(calloc(n + 1, sizeof(char *)));
 
         if(cs)
         {
@@ -511,7 +517,7 @@ char *get_optstr(entry_p c, opt_t t)
 
             // Allocate memory to hold the
             // concatenation of all strings.
-            char *r = calloc(ln, 1);
+            char *r = DBG_ALLOC(calloc(ln, 1));
 
             if(r)
             {
@@ -529,11 +535,9 @@ char *get_optstr(entry_p c, opt_t t)
                 // Done.
                 return r;
             }
-            else
-            {
-                // Out of memory.
-                free(cs);
-            }
+
+            // Out of memory.
+            free(cs);
         }
         // Out of memory
     }
@@ -574,7 +578,7 @@ char *get_chlstr(entry_p c)
         {
             // Allocate memory to hold a string pointer
             // for each child.
-            char **v = calloc(n + 1, sizeof(char *));
+            char **v = DBG_ALLOC(calloc(n + 1, sizeof(char *)));
 
             if(v)
             {
@@ -601,7 +605,7 @@ char *get_chlstr(entry_p c)
                 {
                     // Allocate memory to hold the full
                     // concatenated string.
-                    r = calloc(l + 1, 1);
+                    r = DBG_ALLOC(calloc(l + 1, 1));
 
                     if(r)
                     {
@@ -815,5 +819,55 @@ char *get_buf(void)
 size_t buf_size(void)
 {
     return LG_BUFSIZ - 1;
+}
+
+//----------------------------------------------------------------------------
+// Name:        dbg_alloc
+// Description: Used by the DBG_ALLOC macro to provide more info when failing
+//              to allocate memory. And to fail deliberately when testing.
+// Input:       int line: Source code line.
+//              const char *file: Source code file.
+//              const char *func: Source code function.
+//              void *mem: Pointer to allocated memory.
+// Return:      void *: Pointer to allocated memory.
+//----------------------------------------------------------------------------
+void *dbg_alloc(int line, const char *file, const char *func, void *mem)
+{
+    // Fail deliberately if file or line defines are set.
+    #if defined(FAIL_LINE) || defined(FAIL_FILE)
+    const char *fail_file =
+    #ifdef FAIL_FILE
+    FAIL_FILE;
+    #else
+    NULL;
+    #endif
+    int fail_line =
+    #ifdef FAIL_LINE
+    FAIL_LINE;
+    #else
+    0;
+    #endif
+
+    // Do we have a line number restriction?
+    if(!fail_line || (line == fail_line))
+    {
+        // Do we have a file restriction?
+        if(!fail_file || (fail_file && !strcmp(file, fail_file)))
+        {
+            // Free memory and pass NULL to the calling function.
+            free(mem);
+            mem = NULL;
+        }
+    }
+    #endif
+
+    // Debug info.
+    if(!mem)
+    {
+        DBG("Out of memory in %s (%s) line %d\n", func, file, line);
+    }
+
+    // Pass this on.
+    return mem;
 }
 

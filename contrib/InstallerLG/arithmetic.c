@@ -70,11 +70,9 @@ entry_p m_div(entry_p contxt)
                 DNUM
             );
         }
-        else
-        {
-            // Division by zero.
-            ERR(ERR_DIV_BY_ZERO, contxt->name);
-        }
+
+        // Division by zero.
+        ERR(ERR_DIV_BY_ZERO, contxt->name);
     }
     else
     {
@@ -138,10 +136,8 @@ entry_p m_sub(entry_p contxt)
             num(CARG(2))
         );
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }

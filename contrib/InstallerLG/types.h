@@ -17,7 +17,7 @@
 //----------------------------------------------------------------------------
 #define VECLEN 4        // Default array size
 #define NUMLEN 16       // Max string length of numerical values
-#define MAXDEP 64       // Max recursion depth
+#define MAXDEP 32       // Max recursion depth
 
 //----------------------------------------------------------------------------
 // Data types.
