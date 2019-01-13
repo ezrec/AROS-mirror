@@ -6,6 +6,8 @@
 #include <libraries/mui.h>
 #include <libraries/gadtools.h>
 
+#include "include/arosx.h"
+
 #define ID_ABOUT        0x55555555
 #define ID_STORE_CONFIG 0xaaaaaaaa
 
@@ -20,18 +22,25 @@ struct ClsGlobalCfg
 
 struct NepHidBase
 {
-    struct Library      nh_Library;       /* standard */
-    UWORD               nh_Flags;         /* various flags */
-    struct Library     *nh_UtilityBase;   /* utility base */
+    struct Library          nh_Library;     /* standard */
 
-    struct Library     *nh_MUIBase;       /* MUI master base */
-    struct Library     *nh_PsdBase;       /* Poseidon base */
-    struct Library     *nh_IntBase;       /* Intuition base */
+    struct Library         *nh_MUIBase;     /* MUI master base */
+    struct Library         *nh_PsdBase;     /* Poseidon base */
+
+    struct SignalSemaphore  nh_gamepadlock;
+    BOOL                    nh_gamepad1;
+    BOOL                    nh_gamepad2;
+    BOOL                    nh_gamepad3;
+    BOOL                    nh_gamepad4;
+
+    struct Library         *nh_AROSXBase;   /* AROSX base */
+
 };
 
 struct NepClassHid
 {
     struct Node         nch_Node;         /* Node linkage */
+
     struct NepHidBase  *nch_ClsBase;      /* Up linkage */
     struct Library     *nch_Base;         /* Poseidon base */
     struct PsdDevice   *nch_Device;       /* Up linkage */
@@ -72,18 +81,29 @@ struct NepClassHid
     Object             *nch_CloseObj;
 
     Object             *nch_GamepadGroupObject;
-    Object             *nch_ButtonsGroupObject;
-    Object             *nch_GaugeObject_buttons[10];
-    Object             *nch_GaugeObject_buttonA;
-    Object             *nch_GaugeObject_buttonB;
-    Object             *nch_GaugeObject_buttonX;
-    Object             *nch_GaugeObject_buttonY;
-    Object             *nch_GaugeObject_buttonLB;
-    Object             *nch_GaugeObject_buttonRB;
-    Object             *nch_GaugeObject_stick_lx;
-    Object             *nch_GaugeObject_stick_ly;
-    Object             *nch_GaugeObject_stick_rx;
-    Object             *nch_GaugeObject_stick_ry;
+    Object             *nch_GamepadObject_button_a;
+    Object             *nch_GamepadObject_button_b;
+    Object             *nch_GamepadObject_button_x;
+    Object             *nch_GamepadObject_button_y;
+    Object             *nch_GamepadObject_button_ls;
+    Object             *nch_GamepadObject_button_rs;
+    Object             *nch_GamepadObject_left_thumb;
+    Object             *nch_GamepadObject_right_thumb;
+
+    Object             *nch_GamepadObject_dpad_left;
+    Object             *nch_GamepadObject_dpad_right;
+    Object             *nch_GamepadObject_dpad_up;
+    Object             *nch_GamepadObject_dpad_down;
+
+    Object             *nch_GamepadObject_button_back;
+    Object             *nch_GamepadObject_button_start;
+
+    Object             *nch_GamepadObject_left_trigger;
+    Object             *nch_GamepadObject_right_trigger;
+    Object             *nch_GamepadObject_left_stick_x;
+    Object             *nch_GamepadObject_left_stick_y;
+    Object             *nch_GamepadObject_right_stick_x;
+    Object             *nch_GamepadObject_right_stick_y;
 
     Object             *nch_AboutMI;
     Object             *nch_UseMI;
@@ -94,17 +114,9 @@ struct NepClassHid
     struct PsdDescriptor *nch_pdd;
     UBYTE                *nch_xinput_desc;
 
-    UWORD stick_lx;
-    UWORD stick_ly;
-    UWORD stick_rx;
-    UWORD stick_ry;
-
-    BOOL  buttonA;
-    BOOL  buttonB;
-    BOOL  buttonX;
-    BOOL  buttonY;
-    BOOL  buttonLB;
-    BOOL  buttonRB;
+    UBYTE                nch_gamepad;
+    UBYTE                nch_gamepadname[64];
+    struct AROSX_GAMEPAD nch_arosx_gamepad;
 
     BOOL  wireless;
     BOOL  signallost;

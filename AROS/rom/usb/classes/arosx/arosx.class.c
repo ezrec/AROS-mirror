@@ -1,32 +1,49 @@
 /*
-    Copyright © 2018, The AROS Development Team. All rights reserved.
+    Copyright © 2018-2019, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Gamepad (XInput) USB class driver
     Lang: English
 */
 
+
+#include <aros/libcall.h>
+
 #include "debug.h"
 
 #include "arosx.class.h"
 
+struct Library * AROSXInit(void);
+
 /* /// "Lib Stuff" */
 static int libInit(LIBBASETYPEPTR nh)
 {
-    mybug(10, ("libInit nh: 0x%08lx SysBase: 0x%08lx\n", nh, SysBase));
 
-    nh->nh_UtilityBase = OpenLibrary("utility.library", 39);
+    mybug(-1, ("libInit nh: 0x%08lx SysBase: 0x%08lx\n", nh, SysBase));
 
-#define	UtilityBase	nh->nh_UtilityBase
+	nh->nh_gamepad1 = FALSE;
+	nh->nh_gamepad2 = FALSE;
+	nh->nh_gamepad3 = FALSE;
+	nh->nh_gamepad4 = FALSE;
 
-    if(!UtilityBase)
+	InitSemaphore(&nh->nh_gamepadlock);
+
+#define	AROSXBase	nh->nh_AROSXBase
+
+	AROSXBase = AROSXInit();
+
+    if(!AROSXBase)
     {
-        mybug(20, ("libInit: OpenLibrary(\"utility.library\", 39) failed!\n"));
-        nh = NULL;
+        mybug(-1, ("libInit: MakeLibrary(\"arosx.library\") failed!\n"));
+        return(FALSE);
     }
 
+ 	mybug(-1, ("AROSX: 0x%08lx\n", AROSXBase));
+	AROS_LC0(ULONG, Dummy1, LIBBASETYPEPTR, AROSXBase, 5, arosx);
+
     mybug(10, ("libInit: Ok\n"));
-    return(nh ? TRUE : FALSE);
+
+    return(TRUE);
 }
 
 static int libOpen(LIBBASETYPEPTR nh)
@@ -38,7 +55,7 @@ static int libOpen(LIBBASETYPEPTR nh)
 static int libExpunge(LIBBASETYPEPTR nh)
 {
     mybug(10, ("libExpunge nh: 0x%08lx\n", nh));
-    CloseLibrary((struct Library *) UtilityBase);
+    //CloseLibrary((struct Library *) UtilityBase);
     return(TRUE);
 }
 
@@ -71,7 +88,8 @@ struct NepClassHid * usbAttemptInterfaceBinding(struct NepHidBase *nh, struct Ps
     UBYTE buf[64];
     struct Task *tmptask;
 
-    mybug(1, ("nepHidAttemptInterfaceBinding(%08lx)\n", pif));
+    mybug(0, ("nepHidAttemptInterfaceBinding(%08lx)\n", pif));
+
     if((ps = OpenLibrary("poseidon.library", 4)))
     {
         if((nch = psdAllocVec(sizeof(struct NepClassHid))))
@@ -131,7 +149,43 @@ struct NepClassHid * usbAttemptInterfaceBinding(struct NepHidBase *nh, struct Ps
                 return(NULL);
             }
 
-            psdSafeRawDoFmt(buf, 64, "arosx.class<%08lx>", nch);
+            /*
+            	We have a valid XInput gamepad, hopefully... Let's see if there's a free gamepad slot for it
+            */
+
+			ObtainSemaphore(&nh->nh_gamepadlock);
+
+			UBYTE gamepad = 0;
+
+			if(nh->nh_gamepad1 == FALSE) {
+				nh->nh_gamepad1 = TRUE;
+				gamepad = 1;
+			}else if(nh->nh_gamepad2 == FALSE) {
+				nh->nh_gamepad2 = TRUE;
+				gamepad = 2;
+			}else if(nh->nh_gamepad3 == FALSE) {
+				nh->nh_gamepad3 = TRUE;
+				gamepad = 3;
+			}else if(nh->nh_gamepad4 == FALSE) {
+				nh->nh_gamepad4 = TRUE;
+				gamepad = 4;
+			}
+
+			ReleaseSemaphore(&nh->nh_gamepadlock);
+
+			mybug(1, ("nepHidAttemptInterfaceBinding gamepad (%01x)\n", gamepad));
+
+            if(!gamepad)
+            {
+                mybug(1, ("nepHidAttemptInterfaceBinding gamepad count exceeded\n"));
+                psdFreeVec(nch);
+                CloseLibrary(ps);
+                return(NULL);
+            }
+
+        	nch->nch_gamepad = gamepad;
+
+            psdSafeRawDoFmt(buf, 64, "arosx.class.gamepad.%01x", nch->nch_gamepad);
             nch->nch_ReadySignal = SIGB_SINGLE;
             nch->nch_ReadySigTask = FindTask(NULL);
             SetSignal(0, SIGF_SINGLE);
@@ -143,9 +197,10 @@ struct NepClassHid * usbAttemptInterfaceBinding(struct NepHidBase *nh, struct Ps
                     nch->nch_ReadySigTask = NULL;
                     //FreeSignal(nch->nch_ReadySignal);
                     psdGetAttrs(PGA_DEVICE, pd, DA_ProductName, &nch->nch_devname, TAG_END);
-                    psdAddErrorMsg(RETURN_OK, (STRPTR) libname,
-                                   "Play it again, '%s'!",
-                                   nch->nch_devname);
+
+					psdSafeRawDoFmt(nch->nch_gamepadname, 64, "%s (%01x)", nch->nch_devname, nch->nch_gamepad);
+
+                    psdAddErrorMsg(RETURN_OK, (STRPTR) libname, "Play it again, '%s'!", nch->nch_gamepadname);
 
                     CloseLibrary(ps);
                     return(nch);
@@ -157,6 +212,7 @@ struct NepClassHid * usbAttemptInterfaceBinding(struct NepHidBase *nh, struct Ps
         }
         CloseLibrary(ps);
     }
+
     return(NULL);
 }
 /* \\\ */
@@ -195,9 +251,20 @@ void usbReleaseInterfaceBinding(struct NepHidBase *nh, struct NepClassHid *nch)
         psdGetAttrs(PGA_INTERFACE, nch->nch_Interface, IFA_Config, &pc, TAG_END);
         psdGetAttrs(PGA_CONFIG, pc, CA_Device, &pd, TAG_END);
         psdGetAttrs(PGA_DEVICE, pd, DA_ProductName, &devname, TAG_END);
-        psdAddErrorMsg(RETURN_OK, (STRPTR) libname,
-                       "'%s' fell silent!",
-                       devname);
+        psdAddErrorMsg(RETURN_OK, (STRPTR) libname, "'%s' fell silent!", devname);
+
+		ObtainSemaphore(&nh->nh_gamepadlock);
+		if(nch->nch_gamepad == 1) {
+			nh->nh_gamepad1 = FALSE;
+		}else if(nch->nch_gamepad == 2) {
+			nh->nh_gamepad2 = FALSE;
+		}else if(nch->nch_gamepad == 3) {
+			nh->nh_gamepad3 = FALSE;
+		}else if(nch->nch_gamepad == 4) {
+			nh->nh_gamepad4 = FALSE;
+		}
+		ReleaseSemaphore(&nh->nh_gamepadlock);
+
         psdFreeVec(nch);
         CloseLibrary(ps);
     }
@@ -242,7 +309,7 @@ AROS_LH3(LONG, usbGetAttrsA,
              }
              if((ti = FindTagItem(UCCA_AfterDOSRestart, tags)))
              {
-                 *((IPTR *) ti->ti_Data) = TRUE;
+                 *((IPTR *) ti->ti_Data) = FALSE;
                  count++;
              }
              break;
@@ -396,6 +463,28 @@ AROS_UFH0(void, nHidTask)
 
 		*/
 
+        /*
+        	Set led ring to gamepad number. Should flash for a while and then lid on constantly.
+        */
+
+    	UBYTE *bufout;
+    	bufout = nch->nch_EPOutBuf;
+
+    	bufout[0] = 0x01;
+    	bufout[1] = 0x03;
+    	bufout[2] = nch->nch_gamepad + 1;
+    	bufout[3] = 0x00;
+    	bufout[4] = 0x00;
+    	bufout[5] = 0x00;
+    	bufout[6] = 0x00;
+    	bufout[7] = 0x00;
+		bufout[8] = 0x00;
+    	bufout[9] = 0x00;
+    	bufout[10] = 0x00;
+		bufout[11] = 0x00;
+
+    	psdDoPipe(nch->nch_EPOutPipe, bufout, 12);
+
 		psdSendPipe(nch->nch_EPInPipe, epinbuf, 20);
         do
         {
@@ -412,6 +501,11 @@ AROS_UFH0(void, nHidTask)
                         mybug(1, ("Int Pipe failed %ld\n", ioerr));
                         psdDelayMS(200);
                     }
+                    /*
+                    	TODO: One Chinese gamepad doesn't wait for new input but sends data back at once
+                    		   - Check if response is the same and not much time has elapsed between and set some babble flag and force wait between calls
+                    */
+                    //psdDelayMS(1);
                     psdSendPipe(nch->nch_EPInPipe, epinbuf, 20);
                     break;
                 }
@@ -430,7 +524,7 @@ AROS_UFH0(void, nHidTask)
 /* /// "nParseMsg()" */
 void nParseMsg(struct NepClassHid *nch, UBYTE *buf, ULONG len)
 {
-/* TODO: Store controller information and parse accordingly */
+/* TODO: Check the input message type... */
 
 /*
     Ta-daa!!
@@ -473,38 +567,25 @@ void nParseMsg(struct NepClassHid *nch, UBYTE *buf, ULONG len)
         Msg: 00 14 00 00 00 00 80 00 80 00 80 00 80 00 00 00 00 00 00 00
         Msg: 00 14 00 00 00 00 80 00 80 00 80 00 80 00 00 00 00 00 00 00
 */
-    mybug(1, ("EPIn: %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx\n",
+    mybug(0, ("EPIn: %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx %02lx\n",
                     buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7], buf[8], buf[9], buf[10],
                     buf[11], buf[12], buf[13], buf[14], buf[15], buf[16], buf[17], buf[18], buf[19]));
 
-
     /*
-        Just blindly map thumb sticks (They should be there for XBox360 and Logitech F710 and F310)
-
-        Blindly adjust for 10-bit analog as reported by F710 bitmask
-        Values reported seems like they fall short, but actually the gamepad has reached
-        the maximum analog output well before the thumb stick meets it's mechanical limit
-        Also there is a built in deadband around the center when the bitmask is applied (now just shift 6)
-
-        If DPad is set as the left thumb stick and UP button is pressed
-        then the analog channel on left and right shows the thumb stick value and vice versa
+        Works at least with Logitech F710
     */
-    //UBYTE *ep0buf;
-    //ep0buf  = nch->nch_EP0Buf;
-
 	nch->signallost = (buf[14]&(1<<4))? FALSE:TRUE;
 
-    nch->stick_lx = (UWORD)AROS_WORD2LE((UWORD)((buf[6])  | (buf[7]<<8)))>>6;
-    nch->stick_ly = (UWORD)AROS_WORD2LE((UWORD)((buf[8])  | (buf[9]<<8)))>>6;
-    nch->stick_rx = (UWORD)AROS_WORD2LE((UWORD)((buf[10]) | (buf[11]<<8)))>>6;
-    nch->stick_ry = (UWORD)AROS_WORD2LE((UWORD)((buf[12]) | (buf[13]<<8)))>>6;
-
-    nch->buttonA = (buf[3]&(1<<4))? TRUE:FALSE;
-    nch->buttonB = (buf[3]&(1<<5))? TRUE:FALSE;
-    nch->buttonX = (buf[3]&(1<<6))? TRUE:FALSE;
-    nch->buttonY = (buf[3]&(1<<7))? TRUE:FALSE;
-    nch->buttonLB = (buf[3]&(1<<0))? TRUE:FALSE;
-    nch->buttonRB = (buf[3]&(1<<1))? TRUE:FALSE;
+ 	/*
+    	This will map everything according to Microsoft game controller API
+    */
+    nch->nch_arosx_gamepad.Buttons = (buf[2]<<0) | (buf[3]<<8);
+    nch->nch_arosx_gamepad.LeftTrigger = (buf[4]);
+	nch->nch_arosx_gamepad.RightTrigger = (buf[5]);
+	nch->nch_arosx_gamepad.ThumbLX = ((buf[6])  | (buf[7]<<8));
+	nch->nch_arosx_gamepad.ThumbLY = ((buf[8])  | (buf[9]<<8));
+	nch->nch_arosx_gamepad.ThumbRX = ((buf[10]) | (buf[11]<<8));
+	nch->nch_arosx_gamepad.ThumbRY = ((buf[12]) | (buf[13]<<8));
 
     /* Rumble effect
     UBYTE *bufout;
@@ -519,14 +600,6 @@ void nParseMsg(struct NepClassHid *nch, UBYTE *buf, ULONG len)
     bufout[6] = 0x00;
     bufout[7] = 0x00;
     psdDoPipe(nch->nch_EPOutPipe, bufout, 8);
-    */
-
-    /*
-    mybug(1, ("\n"))
-    mybug(1, ("stick_lx: %04x\n", nch->stick_lx)); //0x8000 - 0x7fff
-    mybug(1, ("stick_ly: %04x\n", nch->stick_ly));
-    mybug(1, ("stick_rx: %04x\n", nch->stick_rx));
-    mybug(1, ("stick_ry: %04x\n", nch->stick_ry));
     */
 
     if(nch->nch_GUITask)
@@ -755,7 +828,7 @@ AROS_UFH0(void, nGUITask)
 
             SubWindow, (IPTR)(nch->nch_MainWindow = WindowObject,
                 MUIA_Window_ID   , MAKE_ID('M','A','I','N'),
-                MUIA_Window_Title, (IPTR)nch->nch_devname,
+                MUIA_Window_Title, (IPTR)nch->nch_gamepadname,
                 MUIA_HelpNode, (IPTR)libname,
 
                 WindowContents, (IPTR)VGroup,
@@ -765,7 +838,7 @@ AROS_UFH0(void, nGUITask)
 
 
                     	Child, (IPTR)HGroup,
-            			Child, (IPTR)(nch->nch_GaugeObject_buttonA = ImageObject,
+            			Child, (IPTR)(nch->nch_GamepadObject_button_a = ImageObject,
                 			MUIA_Image_FontMatch, TRUE,
                 			MUIA_Selected, FALSE,
                 			MUIA_ShowSelState, FALSE,
@@ -773,7 +846,7 @@ AROS_UFH0(void, nGUITask)
                 			MUIA_Frame, MUIV_Frame_None,
                    			End),
 
-            			Child, (IPTR)(nch->nch_GaugeObject_buttonB = ImageObject,
+            			Child, (IPTR)(nch->nch_GamepadObject_button_b = ImageObject,
                 			MUIA_Image_FontMatch, TRUE,
                 			MUIA_Selected, FALSE,
                 			MUIA_ShowSelState, FALSE,
@@ -781,7 +854,7 @@ AROS_UFH0(void, nGUITask)
                 			MUIA_Frame, MUIV_Frame_None,
                    			End),
 
-            			Child, (IPTR)(nch->nch_GaugeObject_buttonX = ImageObject,
+            			Child, (IPTR)(nch->nch_GamepadObject_button_x = ImageObject,
                 			MUIA_Image_FontMatch, TRUE,
                 			MUIA_Selected, FALSE,
                 			MUIA_ShowSelState, FALSE,
@@ -789,7 +862,7 @@ AROS_UFH0(void, nGUITask)
                 			MUIA_Frame, MUIV_Frame_None,
                    			End),
 
-            			Child, (IPTR)(nch->nch_GaugeObject_buttonY = ImageObject,
+            			Child, (IPTR)(nch->nch_GamepadObject_button_y = ImageObject,
                 			MUIA_Image_FontMatch, TRUE,
                 			MUIA_Selected, FALSE,
                 			MUIA_ShowSelState, FALSE,
@@ -797,7 +870,7 @@ AROS_UFH0(void, nGUITask)
                 			MUIA_Frame, MUIV_Frame_None,
                    			End),
 
-            			Child, (IPTR)(nch->nch_GaugeObject_buttonLB = ImageObject,
+            			Child, (IPTR)(nch->nch_GamepadObject_button_ls = ImageObject,
                 			MUIA_Image_FontMatch, TRUE,
                 			MUIA_Selected, FALSE,
                 			MUIA_ShowSelState, FALSE,
@@ -805,7 +878,71 @@ AROS_UFH0(void, nGUITask)
                 			MUIA_Frame, MUIV_Frame_None,
                    			End),
 
-            			Child, (IPTR)(nch->nch_GaugeObject_buttonRB = ImageObject,
+            			Child, (IPTR)(nch->nch_GamepadObject_button_rs = ImageObject,
+                			MUIA_Image_FontMatch, TRUE,
+                			MUIA_Selected, FALSE,
+                			MUIA_ShowSelState, FALSE,
+                			MUIA_Image_Spec, MUII_RadioButton,
+                			MUIA_Frame, MUIV_Frame_None,
+                   			End),
+
+            			Child, (IPTR)(nch->nch_GamepadObject_left_thumb = ImageObject,
+                			MUIA_Image_FontMatch, TRUE,
+                			MUIA_Selected, FALSE,
+                			MUIA_ShowSelState, FALSE,
+                			MUIA_Image_Spec, MUII_RadioButton,
+                			MUIA_Frame, MUIV_Frame_None,
+                   			End),
+
+            			Child, (IPTR)(nch->nch_GamepadObject_right_thumb = ImageObject,
+                			MUIA_Image_FontMatch, TRUE,
+                			MUIA_Selected, FALSE,
+                			MUIA_ShowSelState, FALSE,
+                			MUIA_Image_Spec, MUII_RadioButton,
+                			MUIA_Frame, MUIV_Frame_None,
+                   			End),
+
+            			Child, (IPTR)(nch->nch_GamepadObject_dpad_left = ImageObject,
+                			MUIA_Image_FontMatch, TRUE,
+                			MUIA_Selected, FALSE,
+                			MUIA_ShowSelState, FALSE,
+                			MUIA_Image_Spec, MUII_RadioButton,
+                			MUIA_Frame, MUIV_Frame_None,
+                   			End),
+
+            			Child, (IPTR)(nch->nch_GamepadObject_dpad_right = ImageObject,
+                			MUIA_Image_FontMatch, TRUE,
+                			MUIA_Selected, FALSE,
+                			MUIA_ShowSelState, FALSE,
+                			MUIA_Image_Spec, MUII_RadioButton,
+                			MUIA_Frame, MUIV_Frame_None,
+                   			End),
+
+            			Child, (IPTR)(nch->nch_GamepadObject_dpad_up = ImageObject,
+                			MUIA_Image_FontMatch, TRUE,
+                			MUIA_Selected, FALSE,
+                			MUIA_ShowSelState, FALSE,
+                			MUIA_Image_Spec, MUII_RadioButton,
+                			MUIA_Frame, MUIV_Frame_None,
+                   			End),
+
+            			Child, (IPTR)(nch->nch_GamepadObject_dpad_down = ImageObject,
+                			MUIA_Image_FontMatch, TRUE,
+                			MUIA_Selected, FALSE,
+                			MUIA_ShowSelState, FALSE,
+                			MUIA_Image_Spec, MUII_RadioButton,
+                			MUIA_Frame, MUIV_Frame_None,
+                   			End),
+
+            			Child, (IPTR)(nch->nch_GamepadObject_button_back = ImageObject,
+                			MUIA_Image_FontMatch, TRUE,
+                			MUIA_Selected, FALSE,
+                			MUIA_ShowSelState, FALSE,
+                			MUIA_Image_Spec, MUII_RadioButton,
+                			MUIA_Frame, MUIV_Frame_None,
+                   			End),
+
+            			Child, (IPTR)(nch->nch_GamepadObject_button_start = ImageObject,
                 			MUIA_Image_FontMatch, TRUE,
                 			MUIA_Selected, FALSE,
                 			MUIA_ShowSelState, FALSE,
@@ -814,36 +951,54 @@ AROS_UFH0(void, nGUITask)
                    			End),
                         End,
 
+                        Child, (IPTR)(nch->nch_GamepadObject_left_trigger = GaugeObject,
+                            GaugeFrame,
+                            MUIA_Gauge_Max, 0xff,
+                            MUIA_Gauge_InfoText, (IPTR)"%lx",
+                            MUIA_Gauge_Horiz, TRUE,
+                            MUIA_Gauge_Current, 0,
+                            End),
 
+                        Child, (IPTR)(nch->nch_GamepadObject_right_trigger = GaugeObject,
+                            GaugeFrame,
+                            MUIA_Gauge_Max, 0xff,
+                            MUIA_Gauge_InfoText, (IPTR)"%lx",
+                            MUIA_Gauge_Horiz, TRUE,
+                            MUIA_Gauge_Current, 0,
+                            End),
 
-                        Child, (IPTR)(nch->nch_GaugeObject_stick_lx = GaugeObject,
+                        Child, (IPTR)(nch->nch_GamepadObject_left_stick_x = GaugeObject,
                             GaugeFrame,
-                            MUIA_Gauge_Max, 0x3ff,
+                            MUIA_Gauge_Max, 0xffff,
                             MUIA_Gauge_InfoText, (IPTR)"%lx",
                             MUIA_Gauge_Horiz, TRUE,
                             MUIA_Gauge_Current, 0,
                             End),
-                        Child, (IPTR)(nch->nch_GaugeObject_stick_ly = GaugeObject,
+
+                        Child, (IPTR)(nch->nch_GamepadObject_left_stick_y = GaugeObject,
                             GaugeFrame,
-                            MUIA_Gauge_Max, 0x3ff,
+                            MUIA_Gauge_Max, 0xffff,
                             MUIA_Gauge_InfoText, (IPTR)"%lx",
                             MUIA_Gauge_Horiz, TRUE,
                             MUIA_Gauge_Current, 0,
                             End),
-                        Child, (IPTR)(nch->nch_GaugeObject_stick_rx = GaugeObject,
+
+                        Child, (IPTR)(nch->nch_GamepadObject_right_stick_x = GaugeObject,
                             GaugeFrame,
-                            MUIA_Gauge_Max, 0x3ff,
+                            MUIA_Gauge_Max, 0xffff,
                             MUIA_Gauge_InfoText, (IPTR)"%lx",
                             MUIA_Gauge_Horiz, TRUE,
                             MUIA_Gauge_Current, 0,
                             End),
-                        Child, (IPTR)(nch->nch_GaugeObject_stick_ry = GaugeObject,
+
+                        Child, (IPTR)(nch->nch_GamepadObject_right_stick_y = GaugeObject,
                             GaugeFrame,
-                            MUIA_Gauge_Max, 0x3ff,
+                            MUIA_Gauge_Max, 0xffff,
                             MUIA_Gauge_InfoText, (IPTR)"%lx",
                             MUIA_Gauge_Horiz, TRUE,
                             MUIA_Gauge_Current, 0,
                             End),
+
                         End),
                     Child, (IPTR)VSpace(0),
                     Child, (IPTR)HGroup,
@@ -926,35 +1081,46 @@ AROS_UFH0(void, nGUITask)
                                 } else {
                                     set(nch->nch_GamepadGroupObject, MUIA_Disabled, FALSE);
 
-                                    set(nch->nch_GaugeObject_buttonA, MUIA_Selected, nch->buttonA);
-                                    set(nch->nch_GaugeObject_buttonB, MUIA_Selected, nch->buttonB);
-                                    set(nch->nch_GaugeObject_buttonX, MUIA_Selected, nch->buttonX);
-                                    set(nch->nch_GaugeObject_buttonY, MUIA_Selected, nch->buttonY);
-                                    set(nch->nch_GaugeObject_buttonLB, MUIA_Selected, nch->buttonLB);
-                                    set(nch->nch_GaugeObject_buttonRB, MUIA_Selected, nch->buttonRB);
+                                    set(nch->nch_GamepadObject_button_a, MUIA_Selected, (nch->nch_arosx_gamepad.Buttons & AROSX_GAMEPAD_A));
+                                    set(nch->nch_GamepadObject_button_b, MUIA_Selected, (nch->nch_arosx_gamepad.Buttons & AROSX_GAMEPAD_B));
+                                    set(nch->nch_GamepadObject_button_x, MUIA_Selected, (nch->nch_arosx_gamepad.Buttons & AROSX_GAMEPAD_X));
+                                    set(nch->nch_GamepadObject_button_y, MUIA_Selected, (nch->nch_arosx_gamepad.Buttons & AROSX_GAMEPAD_Y));
+                                    set(nch->nch_GamepadObject_button_ls, MUIA_Selected, (nch->nch_arosx_gamepad.Buttons & AROSX_GAMEPAD_LEFT_SHOULDER));
+                                    set(nch->nch_GamepadObject_button_rs, MUIA_Selected, (nch->nch_arosx_gamepad.Buttons & AROSX_GAMEPAD_RIGHT_SHOULDER));
+                                    set(nch->nch_GamepadObject_left_thumb, MUIA_Selected, (nch->nch_arosx_gamepad.Buttons & AROSX_GAMEPAD_LEFT_THUMB));
+                                    set(nch->nch_GamepadObject_right_thumb, MUIA_Selected, (nch->nch_arosx_gamepad.Buttons & AROSX_GAMEPAD_RIGHT_THUMB));
+                                    set(nch->nch_GamepadObject_dpad_left, MUIA_Selected, (nch->nch_arosx_gamepad.Buttons & AROSX_GAMEPAD_DPAD_LEFT));
+									set(nch->nch_GamepadObject_dpad_right, MUIA_Selected, (nch->nch_arosx_gamepad.Buttons & AROSX_GAMEPAD_DPAD_RIGHT));
+									set(nch->nch_GamepadObject_dpad_up, MUIA_Selected, (nch->nch_arosx_gamepad.Buttons & AROSX_GAMEPAD_DPAD_UP));
+									set(nch->nch_GamepadObject_dpad_down, MUIA_Selected, (nch->nch_arosx_gamepad.Buttons & AROSX_GAMEPAD_DPAD_DOWN));
+									set(nch->nch_GamepadObject_button_back, MUIA_Selected, (nch->nch_arosx_gamepad.Buttons & AROSX_GAMEPAD_BACK));
+									set(nch->nch_GamepadObject_button_start, MUIA_Selected, (nch->nch_arosx_gamepad.Buttons & AROSX_GAMEPAD_START));
 
-                            		if(nch->stick_lx>=0x200) {
-                                		set(nch->nch_GaugeObject_stick_lx, MUIA_Gauge_Current, (nch->stick_lx-0x200));
+                                    set(nch->nch_GamepadObject_left_trigger, MUIA_Gauge_Current, (nch->nch_arosx_gamepad.LeftTrigger));
+                                    set(nch->nch_GamepadObject_right_trigger, MUIA_Gauge_Current, (nch->nch_arosx_gamepad.RightTrigger));
+
+                            		if(nch->nch_arosx_gamepad.ThumbLX>=0x8000) {
+                                		set(nch->nch_GamepadObject_left_stick_x, MUIA_Gauge_Current, (nch->nch_arosx_gamepad.ThumbLX-0x8000));
                             		} else {
-                                		set(nch->nch_GaugeObject_stick_lx, MUIA_Gauge_Current, (0x200+nch->stick_lx));
+                                		set(nch->nch_GamepadObject_left_stick_x, MUIA_Gauge_Current, (0x8000+nch->nch_arosx_gamepad.ThumbLX));
                             		}
 
-                            		if(nch->stick_ly>=0x200) {
-                                		set(nch->nch_GaugeObject_stick_ly, MUIA_Gauge_Current, (nch->stick_ly-0x200));
+                            		if(nch->nch_arosx_gamepad.ThumbLY>=0x8000) {
+                                		set(nch->nch_GamepadObject_left_stick_y, MUIA_Gauge_Current, (nch->nch_arosx_gamepad.ThumbLY-0x8000));
                             		} else {
-                                		set(nch->nch_GaugeObject_stick_ly, MUIA_Gauge_Current, (0x200+nch->stick_ly));
+                                		set(nch->nch_GamepadObject_left_stick_y, MUIA_Gauge_Current, (0x8000+nch->nch_arosx_gamepad.ThumbLY));
                             		}
 
-                            		if(nch->stick_rx>=0x200) {
-                                		set(nch->nch_GaugeObject_stick_rx, MUIA_Gauge_Current, (nch->stick_rx-0x200));
+                            		if(nch->nch_arosx_gamepad.ThumbRX>=0x8000) {
+                                		set(nch->nch_GamepadObject_right_stick_x, MUIA_Gauge_Current, (nch->nch_arosx_gamepad.ThumbRX-0x8000));
                             		} else {
-                                		set(nch->nch_GaugeObject_stick_rx, MUIA_Gauge_Current, (0x200+nch->stick_rx));
+                                		set(nch->nch_GamepadObject_right_stick_x, MUIA_Gauge_Current, (0x8000+nch->nch_arosx_gamepad.ThumbRX));
                             		}
 
-                            		if(nch->stick_ry>=0x200) {
-                                		set(nch->nch_GaugeObject_stick_ry, MUIA_Gauge_Current, (nch->stick_ry-0x200));
+                            		if(nch->nch_arosx_gamepad.ThumbRY>=0x8000) {
+                                		set(nch->nch_GamepadObject_right_stick_y, MUIA_Gauge_Current, (nch->nch_arosx_gamepad.ThumbRY-0x8000));
                             		} else {
-                                		set(nch->nch_GaugeObject_stick_ry, MUIA_Gauge_Current, (0x200+nch->stick_ry));
+                                		set(nch->nch_GamepadObject_right_stick_y, MUIA_Gauge_Current, (0x8000+nch->nch_arosx_gamepad.ThumbRY));
                             		}
 
                             		/* 100Hz max. GUI update frequency should be enough for everyone... */
