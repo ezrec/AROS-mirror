@@ -9,7 +9,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 PACKAGE      := milkytracker
 VERSION      := 0.90.86
 TARGETDIR    := $(AROS_CONTRIB)/MultiMedia/Audio/MilkyTracker
-REPOSITORIES := https://github.com/milkytracker/milkytracker.github.io/raw/master/files/
+REPOSITORIES := https://github.com/milkytracker/milkytracker.github.io/raw/master/files
 
 USER_CXXFLAGS:= -std=c++03 -UHAVE_CONFIG_H $(CFLAGS_PERMISSIVE)
 USER_INCLUDES:= -I$(AROS_CONTRIB_DEVELOPER)/include
