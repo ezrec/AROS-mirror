@@ -1,5 +1,5 @@
 /*
-    Copyright © 2013, The AROS Development Team. All rights reserved
+    Copyright ï¿½ 2013, The AROS Development Team. All rights reserved
     $Id$
 */
 
@@ -17,30 +17,41 @@ BOOL ata_Calibrate(struct IORequest* tmr, struct ataBase *base)
     return TRUE;
 }
 
-static void busywait(UWORD cnt)
+static inline void wait_1EClock()
 {
-    asm volatile (
-    	"move.w %0,%%d0\n"
-        "lea 0xbfe001,%%a0\n"
-        "0:\n"
-        "tst.b (%%a0)\n"
-        "tst.b (%%a0)\n"
-        "tst.b (%%a0)\n"
-        "tst.b (%%a0)\n"
-        "dbf %%d0,0b\n"
-    : : "m" (cnt) : "d0", "a0");
+    asm volatile("tst.b (%0)"::"a"((void*)0xdbf001));
 }
 
-/* Single CIA access = 1 E-clock */
+static void wait_EClock(UWORD cnt)
+{
+    do {
+        wait_1EClock();
+    } while(cnt-- > 0);
+}
+
 void ata_WaitNano(ULONG ns, struct ataBase *base)
 {
-    ns /= 2;
-    if (!(SysBase->AttnFlags & AFF_68020))
-    	ns /= 2;
-    while (ns >= 65536 * 4) {
-        busywait(65535);
-        ns -= 65536 * 4;
+    (void)base;
+    ULONG e_cycle_cnt = 0;
+    UWORD short_delay_cnt = 0;
+
+    /* 
+        Convert ns to number of E-clock cycles (about 700kHz, 709379 on PAL, 715909 on NTSC)
+        Assume 732kHz in order to simplify calculations
+    */
+
+    e_cycle_cnt = ns >> 11;     /* /2048 */
+    e_cycle_cnt += (ns + 4095) >> 12;
+    
+    while (e_cycle_cnt > 65535)
+    {
+        wait_EClock(65535);
+        e_cycle_cnt -= 65535;
     }
-    if (ns >= 4)
-        busywait(ns / 4);
+
+    short_delay_cnt = e_cycle_cnt & 0xffff;
+    while (short_delay_cnt-- > 0)
+    {
+        wait_1EClock();
+    }
 }
