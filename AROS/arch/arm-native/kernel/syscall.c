@@ -1,5 +1,5 @@
 /*
-    Copyright © 2013, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 2013, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -21,8 +21,8 @@
 #include "kernel_intr.h"
 #include "kernel_syscall.h"
 
-extern char * __text_start;
-extern char * __text_end;
+extern char __text_start;
+extern char __text_end;
 
 #ifndef _CUSTOM
 #define _CUSTOM NULL
@@ -57,7 +57,7 @@ void cache_clear_e(void *addr, uint32_t length, uint32_t flags)
     }
     else
     {
-        void *end_addr = ((uintptr_t)addr + length + 31) & ~31;
+        void *end_addr = (void*)(((uintptr_t)addr + length + 31) & ~31);
         addr = (void *)((uintptr_t)addr & ~31);
         count = (uintptr_t)(end_addr - addr) >> 5;
     }
@@ -68,6 +68,10 @@ void cache_clear_e(void *addr, uint32_t length, uint32_t flags)
     {
         if (flags & CACRF_ClearD)
         {
+            /*
+                Should be c10 (D-Cache clear) but unfortunately some software assumes that this also
+                invalidates the cache line
+            */
             __asm__ __volatile__("mcr p15, 0, %0, c7, c14, 1"::"r"(addr));
         }
         if (flags & CACRF_ClearI)
@@ -82,7 +86,7 @@ void cache_clear_e(void *addr, uint32_t length, uint32_t flags)
         addr += 32;
     }
 
-    __asm__ __volatile__("mcr p15, 0, %0, c7, c10, 4"::"r"(addr));
+    __asm__ __volatile__("dsb":::"memory");
 }
 
 void handle_syscall(void *regs)
@@ -94,11 +98,14 @@ void handle_syscall(void *regs)
        program counter, subtract the instruction from it and
        obtain the value from there.  we also use this to check if
        we have been called from outwith the kernel's code (illegal!)
+
+       Keep in mind ARM instructions are *always* little endian, remmeber
+       it when extracting SWI number...
      */
 
     addr = ((uint32_t *)regs)[15];
     addr -= 4;
-    swi_no = *((unsigned int *)addr) & 0x00ffffff;
+    swi_no = AROS_LE2LONG(*((unsigned int *)addr)) & 0x00ffffff;
 
     D(bug("[Kernel] ## SWI %d @ 0x%p\n", swi_no, addr));
 
@@ -110,7 +117,7 @@ void handle_syscall(void *regs)
     if (swi_no <= 0x0b || swi_no == 0x100)
     {
         DREGS(cpu_DumpRegs(regs));
-    
+
         switch (swi_no)
         {
             case SC_CLI:

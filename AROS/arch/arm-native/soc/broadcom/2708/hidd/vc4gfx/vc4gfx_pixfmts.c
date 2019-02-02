@@ -1,5 +1,5 @@
 /*
-    Copyright © 2013-2017, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 2013-2017, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -21,25 +21,62 @@
 #define ARRAYSIZE_LUT           15
 
 #if defined(VC_FMT_32)
+#if AROS_BIG_ENDIAN
 IPTR pftags_32bpp[ARRAYSIZE_TRUECOLOR] =
 {
     ARRAYSIZE_TRUECOLOR,
-    8,
     16,
-    24,
+    8,
     0,
-    0x00FF0000,
+    24,
     0x0000FF00,
+    0x00FF0000,
+    0xFF000000,
     0x000000FF,
-    0x00000000,
     32,
     4,
     32,
     vHidd_StdPixFmt_BGR032
 };
+#else
+IPTR pftags_32bpp[ARRAYSIZE_TRUECOLOR] =
+{
+    ARRAYSIZE_TRUECOLOR,
+    0,
+    8,
+    16,
+    24,
+    0xFF000000,
+    0x00FF0000,
+    0x0000FF00,
+    0x000000FF,
+    32,
+    4,
+    32,
+    vHidd_StdPixFmt_RGB032
+};
+#endif
 #endif
 
 #if defined(VC_FMT_24)
+#if AROS_BIG_ENDIAN
+IPTR pftags_24bpp[ARRAYSIZE_TRUECOLOR] =
+{
+    ARRAYSIZE_TRUECOLOR,
+    0,
+    8,
+    16,
+    0,
+    0x000000FF,
+    0x0000FF00,
+    0x00FF0000,
+    0x00000000,
+    24,
+    3,
+    24,
+    vHidd_StdPixFmt_RGB24
+};
+#else
 IPTR pftags_24bpp[ARRAYSIZE_TRUECOLOR] =
 {
     ARRAYSIZE_TRUECOLOR,
@@ -56,6 +93,7 @@ IPTR pftags_24bpp[ARRAYSIZE_TRUECOLOR] =
     24,
     vHidd_StdPixFmt_BGR24
 };
+#endif
 #endif
 
 #if defined(VC_FMT_16)
@@ -140,7 +178,7 @@ IPTR vc_fmts[6] =
 APTR FNAME_SUPPORT(GenPixFmts)(OOP_Class *cl)
 {
     struct TagItem *pixfmtarray = NULL;
-    IPTR  **supportedfmts = vc_fmts;
+    IPTR  **supportedfmts = (IPTR**)vc_fmts;
     int fmtcount = 0;
 
     while (supportedfmts[fmtcount] != 0)
@@ -232,7 +270,7 @@ APTR FNAME_SUPPORT(GenPixFmts)(OOP_Class *cl)
                 continue;
             }
             pixfmtarray[fmtcount].ti_Tag = aHidd_Gfx_PixFmtTags;
-            pixfmtarray[fmtcount].ti_Data = newfmt_tags;
+            pixfmtarray[fmtcount].ti_Data = (IPTR)newfmt_tags;
         }
         pixfmtarray[fmtcount].ti_Tag = TAG_DONE;
     }

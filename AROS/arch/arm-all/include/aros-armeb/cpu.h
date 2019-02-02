@@ -2,7 +2,7 @@
 #define AROS_ARM_CPU_H
 
 /*
-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     NOTE: This file must compile *without* any other header !
@@ -37,7 +37,7 @@ typedef	unsigned int	cpumask_t;
 /* Information about size and alignment,
  * the defines have to be numeric constants */
 #define AROS_STACK_GROWS_DOWNWARDS 1 /* Stack direction */
-#define AROS_BIG_ENDIAN 	   0 /* Big or little endian */
+#define AROS_BIG_ENDIAN 	   1 /* Big or little endian */
 #define AROS_SIZEOFULONG	   4 /* Size of an ULONG */
 #define AROS_SIZEOFPTR		   4 /* Size of a PTR */
 #define AROS_WORDALIGN		   2 /* Alignment for WORD */
@@ -94,7 +94,7 @@ struct FullJumpVec
 do \
 {  \
     struct FullJumpVec *_v = (v); \
-    _v->jmp = 0xe51ff004; 		/* ldr pc, [pc, #-4] */ 	\
+    _v->jmp = 0x04f01fe5;  		/* big endian format: ldr pc, [pc, #-4] */ 	\
     _v->vec = (ULONG)(a); 		/* .word target_address */ 	\
 } while (0)
 
@@ -180,5 +180,8 @@ extern void aros_not_implemented ();
  * AROS code expects it is nonvolatile (as defined in the AAPCS).
  */
 #define AROS_HOST_BARRIER asm volatile("":::"r9");
+
+#define AROS_SWAP_BYTES_LONG_CPU(l)     __builtin_bswap32(l)
+#define AROS_SWAP_BYTES_WORD_CPU(l)     __builtin_bswap16(l)
 
 #endif /* AROS_ARM_CPU_H */

@@ -1,5 +1,5 @@
 /*
-    Copyright © 2013-2016, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 2013-2016, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -42,7 +42,17 @@ asm(
 "       .globl mpcore_trampoline                \n"
 "       .type mpcore_trampoline,%function       \n"
 "mpcore_trampoline:                             \n"
-"               ldr     r3, mpcore_pde          \n"
+"               mrs     r4, cpsr_all            \n" /* Check if in hypervisor mode */
+"               and     r4, r4, #0x1f           \n" /* In that case try to leave it */
+"               mov     r8, #0x1a               \n"
+"               cmp     r4, r8                  \n"
+"               beq     leave_hyper             \n"
+"mpcore_continue_boot:                          \n"
+"               cps     #0x13                   \n"
+#if AROS_BIG_ENDIAN
+"               setend  be                      \n" /* If AROS is big endian set the endianess of cpu here */
+#endif
+"               ldr     r3, mpcore_pde          \n" /* MMU table */
 "               mcr     p15, 0, r3, c2, c0, 0   \n"
 "               mov     r3, #0                  \n"
 "               mcr     p15, 0, r3, c2, c0, 2   \n"
@@ -51,17 +61,32 @@ asm(
 "               mrc     p15, 0, r4, c1, c0, 0   \n"
 "               mov     r3, #0                  \n"
 "               mcr     p15, 0, r3, c7, c10, 4  \n"
-"               orr     r4, r4, #0x800000       \n"
-"               orr     r4, r4, #1              \n"
+"               orr     r4, r4, #0x800000       \n" /* v6 page tables */
+"               orr     r4, r4, #1              \n" /* Enable MMU */
+#if AROS_BIG_ENDIAN
+"               orr     r4, r4, #0x2000000      \n" /* EE bit - BigEndian exceptions and BigEndian page tables */
+#endif
 "               mcr     p15, 0, r4, c1, c0, 0   \n"
 "               mcr     p15, 0, r3, c7, c5, 4   \n"
 "               cps     #0x11                   \n"
+#if AROS_BIG_ENDIAN
+"               setend  be                      \n" /* If AROS is big endian set the endianess of cpu here */
+#endif
 "               ldr     sp, mpcore_fstack       \n"
 "               cps     #0x13                   \n"
 "               ldr     sp, mpcore_stack        \n"
 "               ldr     r3, mpcore_tls          \n"
 "               mcr     p15, 0, r3, c13, c0, 3  \n"
 "               ldr     pc, mpcore_code         \n"
+
+"leave_hyper:                                   \n" /* Escape hypervisor mode forever */
+"               adr     r4, mpcore_continue_boot\n"
+"               msr     ELR_hyp, r4             \n"
+"               mrs     r4, cpsr_all            \n"
+"               and     r4, r4, #0x1f           \n"
+"               orr     r4, r4, #0x13           \n"
+"               msr     SPSR_hyp, r4            \n"
+"               eret                            \n" /* Exit hypervisor */
 
 "       .globl mpcore_pde                       \n"
 "mpcore_pde:    .word   0                       \n"
@@ -91,7 +116,7 @@ void cpu_Register()
     asm volatile ("mcr p15, 0, %0, c1, c0, 0" : : "r"(tmp));
 
     cpu_Init(&__arm_arosintern, NULL);
-    
+
 #if defined(__AROSEXEC_SMP__)
     __tls = TLS_PTR_GET();
 
@@ -123,7 +148,9 @@ void cpu_Register()
 
     bug("[Kernel:%02d] Operational\n", cpunum);
 
+#if defined(__AROSEXEC_SMP__)
 cpu_registerfatal:
+#endif
     bug("[Kernel:%02d] Waiting for interrupts\n", cpunum);
 
     KrnSpinUnLock(&startup_lock);
@@ -142,6 +169,9 @@ cpu_registerfatal:
     uint32_t bs_stack = __tls->ThisTask->tc_SPUpper;
     asm volatile(
         "cps %[mode_user]\n"
+#if AROS_BIG_ENDIAN
+        "setend be\n"
+#endif
         "mov sp, %[bs_stack]\n"
         : : [bs_stack] "r" (bs_stack), [mode_user] "I" (CPUMODE_USER)
         );
@@ -199,7 +229,7 @@ void cpu_Probe(struct ARM_Implementation *krnARMImpl)
     uint32_t tmp;
 
     asm volatile ("mrc p15, 0, %0, c0, c0, 0" : "=r" (tmp));
-    if ((tmp & 0xfff0) == 0xc070)
+    if ((tmp & 0xfff0) == 0xc070 || (tmp & 0xfff0) == 0xd030)
     {
         krnARMImpl->ARMI_Family = 7;
 
@@ -237,11 +267,11 @@ void cpu_Init(struct ARM_Implementation *krnARMImpl, struct TagItem *msg)
      __arm_arosintern.ARMI_AffinityMask |= (1 << cpunum);
 
     /* Enable Vector Floating Point Calculations */
-    asm volatile("mrc p15,0,%[fpuflags],c1,c0,2\n" : [fpuflags] "=r" (fpuflags));   // Read Access Control Register 
-    fpuflags |= (VFPSingle | VFPDouble);                                            // Enable Single & Double Precision 
+    asm volatile("mrc p15,0,%[fpuflags],c1,c0,2\n" : [fpuflags] "=r" (fpuflags));   // Read Access Control Register
+    fpuflags |= (VFPSingle | VFPDouble);                                            // Enable Single & Double Precision
     asm volatile("mcr p15,0,%[fpuflags],c1,c0,2\n" : : [fpuflags] "r" (fpuflags)); // Set Access Control Register
     asm volatile(
-        "       mov %[fpuflags],%[vfpenable]    \n"                                 // Enable VFP 
+        "       mov %[fpuflags],%[vfpenable]    \n"                                 // Enable VFP
         "       fmxr fpexc,%[fpuflags]          \n"
          : [fpuflags] "=r" (fpuflags) : [vfpenable] "I" (VFPEnable));
 }
@@ -328,17 +358,17 @@ void cpu_Dispatch(regs_t *regs)
     {
         /* Store the launch time */
         IntETask(task->tc_UnionETask.tc_ETask)->iet_private1 = __arm_arosintern.ARMI_GetTime();
-        if (!IntETask(task->tc_UnionETask.tc_ETask)->iet_StartTime.tv_secs && !IntETask(task->tc_UnionETask.tc_ETask)->iet_StartTime.tv_micro)
+        if (!IntETask(task->tc_UnionETask.tc_ETask)->iet_StartTime.tv_sec && !IntETask(task->tc_UnionETask.tc_ETask)->iet_StartTime.tv_nsec)
         {
-            IntETask(task->tc_UnionETask.tc_ETask)->iet_StartTime.tv_secs = IntETask(task->tc_UnionETask.tc_ETask)->iet_private1 / 1000000;
-            IntETask(task->tc_UnionETask.tc_ETask)->iet_StartTime.tv_micro = IntETask(task->tc_UnionETask.tc_ETask)->iet_private1 % 1000000;
+            IntETask(task->tc_UnionETask.tc_ETask)->iet_StartTime.tv_sec = IntETask(task->tc_UnionETask.tc_ETask)->iet_private1 / 1000000;
+            IntETask(task->tc_UnionETask.tc_ETask)->iet_StartTime.tv_nsec = (IntETask(task->tc_UnionETask.tc_ETask)->iet_private1 % 1000000) * 1000;
         }
     }
 
     if (task->tc_Flags & TF_LAUNCH)
     {
         AROS_UFC1(void, task->tc_Launch,
-                  AROS_UFCA(struct ExecBase *, SysBase, A6));       
+                  AROS_UFCA(struct ExecBase *, SysBase, A6));
     }
     /* Leave interrupt and jump to the new task */
 }
@@ -347,7 +377,7 @@ void cpu_DumpRegs(regs_t *regs)
 {
     cpuid_t cpunum = GetCPUNumber();
     int i;
-    
+
     bug("[Kernel:%02d] CPU Register Dump:\n", cpunum);
     for (i = 0; i < 12; i++)
     {
