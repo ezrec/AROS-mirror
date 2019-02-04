@@ -104,6 +104,17 @@ node {
 				sh "scp publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros/"
 				
 				slackSend color: "good", channel: "#aros", message: "Deploying to web (<https://www.eevul.net/${deploy_url}|Open>)"
+			} else if (env.BRANCH_NAME.equals('ABI_V1_experimental')) {
+				def deploy_url = sh (
+				    script: 'echo "/downloads/nightly/aros-experimental/`date +\'%Y\'`/`date +\'%m\'`/`date +\'%d\'`/"',
+				    returnStdout: true
+				).trim()
+				sh "date +'%Y-%m-%d %H:%M:%S' > publishing/deploy/BUILDTIME"
+				sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/nightly/aros-experimental/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
+				sh "scp -r publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros-experimental/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
+				sh "scp publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros-experimental/"
+				
+				slackSend color: "good", channel: "#aros", message: "Deploying to web (<https://www.eevul.net/${deploy_url}|Open>)"
 			}
 		}
 	
