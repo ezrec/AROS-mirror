@@ -14,7 +14,7 @@ def notify(status){
 
 def buildStep(ext, iconset = 'default') {
 	stage("Starting $ext build target...") {
-		slackSend color: "good", channel: "#aros", message: "Starting ${ext} build target..."
+		slackSend color: "good", channel: "#jenkins", message: "Starting ${ext} build target..."
 	}
 
 	stage('Freshing up the root') {
@@ -67,7 +67,7 @@ def freshUpRoot(ext) {
 
 node {
 	try{
-		slackSend color: "good", channel: "#aros", message: "Build Started: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+		slackSend color: "good", channel: "#jenkins", message: "Build Started: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
 		
 		stage('Checkout and pull') {
 			properties([pipelineTriggers([githubPush()])])
@@ -114,7 +114,7 @@ node {
 				sh "scp -r publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros-experimental/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
 				sh "scp publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros-experimental/"
 				
-				slackSend color: "good", channel: "#aros", message: "Deploying to web (<https://www.eevul.net/${deploy_url}|Open>)"
+				slackSend color: "good", channel: "#aros", message: "Deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} to web (<https://www.eevul.net/${deploy_url}|https://www.eevul.net/${deploy_url}>)"
 			}
 		}
 	
