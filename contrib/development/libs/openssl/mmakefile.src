@@ -1,4 +1,4 @@
-# Copyright © 2008-2018, The AROS Development Team. All rights reserved.
+# Copyright © 2008-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -49,7 +49,7 @@ $(OPENSSL_BUILD_DIR)/.build-configured : $(OPENSSL_BUILD_DIR)/.links-created
 	@$(RM) $@
 	@$(ECHO) "Configuring build in         $(subst $(TOP)/,,$(OPENSSL_BUILD_DIR))"
 	@cd $(OPENSSL_BUILD_DIR); \
-	env -i PATH=$(PATH) AROS_CC="$(strip $(CC) $(TARGET_SYSROOT))" AROS_CFLAGS="$(CFLAGS)" AROS_RANLIB="$(RANLIB)" AR="$(AR_PLAIN)" ./Configure "aros-$(AROS_TARGET_CPU)-buildsys" $(OPENSSL_OPTIONS) --prefix=/$(AROS_DIR_DEVELOPER) --openssldir=/$(AROS_DIR_DEVELOPER)/etc/ssl
+	env -i PATH="$(PATH)" AROS_CC="$(strip $(CC) $(TARGET_SYSROOT))" AROS_CFLAGS="$(CFLAGS)" AROS_RANLIB="$(RANLIB)" AR="$(AR_PLAIN)" ./Configure "aros-$(AROS_TARGET_CPU)-buildsys" $(OPENSSL_OPTIONS) --prefix=/$(AROS_DIR_DEVELOPER) --openssldir=/$(AROS_DIR_DEVELOPER)/etc/ssl
 	@$(TOUCH) $@;
 
 #MM
@@ -59,7 +59,7 @@ $(OPENSSL_BUILD_DIR)/.build-flag : $(OPENSSL_BUILD_DIR)/.build-configured
 	@$(RM) $@
 	@$(ECHO) "Building    OpenSSL..."
 	@cd $(OPENSSL_BUILD_DIR); \
-	env -i PATH=$(PATH) HOME=$(HOME) make
+	env -i PATH="$(PATH)" HOME="$(HOME)" make
 	@$(TOUCH) $@
 
 #MM
@@ -73,7 +73,7 @@ $(OPENSSL_BUILD_DIR)/.install-flag : $(OPENSSL_BUILD_DIR)/.build-flag
 		$(SED) -i -e "s@=/Developer@=$(AROS_DEVELOPER)@" $$file; \
 	done;
 	@cd $(OPENSSL_BUILD_DIR); \
-	env -i PATH=$(PATH) make install
+	env -i PATH="$(PATH)" make install
 	for file in $(AROS_DEVELOPER)/etc/ssl/openssl.cnf; \
 	do \
 		$(SED) -i -e 's@$$dir/certs	@/ENV/SYS/Certificates@' $$file; \
