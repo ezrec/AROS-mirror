@@ -8,7 +8,12 @@ FILES := unsit updcrc
 
 EXEDIR := $(AROS_CONTRIB)/Misc/aminet/C
 
-USER_CFLAGS := -DAROS -DHAVE_GETOPT=1
+NOWARN_FLAGS := \
+    $(NOWARN_STRINGOP_OVERFLOW) \
+    $(NOWARN_FORMAT_OVERFLOW)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+USER_CPPFLAGS := -DAROS -DHAVE_GETOPT=1
 
 #MM aminet-util-arc-unsit : includes linklibs
 

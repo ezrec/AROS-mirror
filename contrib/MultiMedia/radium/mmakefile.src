@@ -14,19 +14,6 @@ AD=amiga/
 CD=common/
 AR=aros/
 
-USER_CPPFLAGS := -DVERSION=$(VERSION) -DDISKVERSION=$(DISKVERSION) \
-        -DPLAYERPRI=$(PLAYERPRI) -DVERSION_LETTER="" \
-        -D__int8_t_defined -DAMIAROS -DNO_INLINE_STDARG
-
-# -DMEMORY_DEBUG
-# define SYSBASEDEBUG
-# define TRACKER_DEBUG
-# define MEMORY_DEBUG
-# define TRACKER_GB
-
-USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/$(AD) -I$(SRCDIR)/$(CURDIR)/$(AR) \
-    -I$(SRCDIR)/$(CURDIR)/$(CD)
-
 OBJ1=  $(AD)Amiga_main $(AD)Amiga_config $(AD)Amiga_colors $(CD)windows \
        $(CD)window_config $(CD)list $(AD)GFX_Amiga_egc $(CD)song $(CD)blocks \
        $(CD)block_insert $(CD)block_delete $(CD)block_properties $(CD)tracks
@@ -107,6 +94,21 @@ OBJ=  $(OBJ1) $(OBJ2) $(OBJ3) $(OBJ4) $(OBJ5) $(OBJ6) $(OBJ7) $(OBJ8) $(OBJ9) $(
 FILES := $(OBJ)
 
 EXEDIR := $(AROS_CONTRIB)/MultiMedia/Audio/Radium
+
+NOWARN_FLAGS := \
+    $(NOWARN_FORMAT_OVERFLOW)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/$(AD) -I$(SRCDIR)/$(CURDIR)/$(AR) \
+    -I$(SRCDIR)/$(CURDIR)/$(CD)
+USER_CPPFLAGS := -DVERSION=$(VERSION) -DDISKVERSION=$(DISKVERSION) \
+        -DPLAYERPRI=$(PLAYERPRI) -DVERSION_LETTER="" \
+        -D__int8_t_defined -DAMIAROS -DNO_INLINE_STDARG
+# -DMEMORY_DEBUG
+# define SYSBASEDEBUG
+# define TRACKER_DEBUG
+# define MEMORY_DEBUG
+# define TRACKER_GB
 
 %build_prog mmake=contrib-radium \
     progname=Radium targetdir=$(EXEDIR) \

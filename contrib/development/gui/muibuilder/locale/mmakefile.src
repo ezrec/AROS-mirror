@@ -8,12 +8,12 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM               contrib-development-gui-muibuilder-locale-c
 
 %build_catalogs mmake=contrib-development-gui-muibuilder-locale-h \
-		source=../src/MUIBuilder_cat.h \
+		source=$(GENDIR)/$(CURDIR)/../src/MUIBuilder_cat.h \
 		sourcedescription=$(SRCDIR)/contrib/development/gui/muibuilder/locale/C_h \
                 name=MUIBuilder subdir=MUIBuilder
 
 %build_catalogs mmake=contrib-development-gui-muibuilder-locale-c \
-		source=../src/MUIBuilder_cat.c \
+		source=$(GENDIR)/$(CURDIR)/../src/MUIBuilder_cat.c \
 		sourcedescription=$(SRCDIR)/contrib/development/gui/muibuilder/locale/C_c \
                 name=MUIBuilder subdir=MUIBuilder
 

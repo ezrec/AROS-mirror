@@ -1,6 +1,11 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
+NOWARN_FLAGS := \
+    $(NOWARN_FORMAT_OVERFLOW)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+
 %build_prog mmake=fish-yachtc \
     progname=yachtc targetdir=$(AROS_CONTRIB)/Misc/fish \
     files=yachtc

@@ -116,18 +116,22 @@ FILES :=	about                   	\
 		Patches-aros			\
 		ScaLibrary-aros
 
-NOWARN_FLAGS := $(NOWARN_DISCARDED_QUALIFIERS)
+TARGETDIR := $(AROS_CONTRIB)/Scalos
+
+NOWARN_FLAGS := \
+    $(NOWARN_DISCARDED_QUALIFIERS) \
+    $(NOWARN_STRINGOP_TRUNCATION)
+
 USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/$(AROS_DIR_DEVELOPER)/include -idirafter $(SRCDIR)/$(CURDIR)/../include -I$(SRCDIR)/$(CURDIR)/../common/McpGfx \
     -I$(SRCDIR)/$(CURDIR)/../common/Fs -I$(SRCDIR)/$(CURDIR)/../common/Int64 -I$(SRCDIR)/$(CURDIR)
 SCALOS_LOCALE := Scalos_Locale.h
-USER_CFLAGS := $(NOWARN_FLAGS) -D__UTILITY_STDLIBBASE__ -D__REXXSYSLIB_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ \
+USER_CFLAGS := $(NOWARN_FLAGS)
+USER_CPPFLAGS := -D__UTILITY_STDLIBBASE__ -D__REXXSYSLIB_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ \
     -D__CONSOLE_STDLIBBASE__ -DSCALOSLOCALE=$(SCALOS_LOCALE)
-TARGETDIR := $(AROS_CONTRIB)/Scalos
 
 %build_prog mmake=contrib-scalos-main progname=Scalos \
     files=$(FILES) targetdir=$(TARGETDIR) \
     uselibs="png"
-
 
 #MM
 contrib-scalos-main-locale : Scalos_Locale.h
@@ -136,14 +140,12 @@ Scalos_Locale.h : $(SRCDIR)/$(CURDIR)/Scalos.cd $(SRCDIR)/$(CURDIR)/../CatComp_h
 	@$(ECHO) 'Compile $@ from $<'
 	@$(FLEXCAT) $< $@=$(SRCDIR)/$(CURDIR)/../CatComp_h.sd
 
-
 #MM
 contrib-scalos-main-msgid : MsgIdNames.h
 
 MsgIdNames.h : $(SRCDIR)/$(CURDIR)/Scalos.cd $(SRCDIR)/$(CURDIR)/../msgidnames.sd
 	@$(ECHO) 'Generate $@'
 	@$(FLEXCAT) $< $@=$(SRCDIR)/$(CURDIR)/../msgidnames.sd
-
 
 INCLUDES := $(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include/clib/scalos_protos.h $(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include/defines/scalos.h \
     $(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include/inline/scalos.h $(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include/proto/scalos.h 
@@ -155,7 +157,6 @@ $(INCLUDES) : $(SRCDIR)/$(CURDIR)/scalos-aros.conf
 	%mkdirs_q $(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include/clib $(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include/defines/ \
 		$(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include/inline $(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include/proto
 	$(GENMODULE) -c $^ -d $(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include writeincludes scalos library
-
 
 ICON := $(TARGETDIR)/Scalos.info
 

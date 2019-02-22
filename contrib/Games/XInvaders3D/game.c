@@ -325,7 +325,7 @@ void Game_overlay ( void )
 {
    char buffer[256], tmp_num[2];
    int  i, x, *tmp_score[20];
-   const int const life[6] = { 0, 450, 25, 450, 12, 425 }; 
+   const int life[6] = { 0, 450, 25, 450, 12, 425 }; 
 
    if ( gv->display_fps )
    {

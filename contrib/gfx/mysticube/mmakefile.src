@@ -9,7 +9,11 @@ FILES := mysticube logo
 
 EXEDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/MystiCube
 
-USER_CFLAGS := -D__far
+NOWARN_FLAGS  := \
+    $(NOWARN_STRINGOP_TRUNCATION)
+
+USER_CFLAGS   := $(NOWARN_FLAGS)
+USER_CPPFLAGS := -D__far
 
 #MM- contrib-gfx : contrib-gfx-mysticube
 #MM contrib-gfx-mysticube : includes linklibs contrib-gfx-libs-guigfx

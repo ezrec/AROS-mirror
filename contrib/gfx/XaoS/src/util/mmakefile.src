@@ -12,10 +12,13 @@ FILES := \
 	arosstdio \
 	aros_thread
 
-USER_CFLAGS := -DAROS -I$(SRCDIR)/$(CURDIR)/../include -I../include
+USER_CPPFLAGS := -DAROS -I$(SRCDIR)/$(CURDIR)/../include -I../include
+
+NOWARN_FLAGS := $(NOWARN_FORMAT_OVERFLOW)
+USER_CFLAGS := $(NOWARN_FLAGS)
 
 ifeq ($(AROS_TARGET_CPU), i386)
-USER_CFLAGS := -DAROS -I$(SRCDIR)/$(CURDIR)/../include -I../include -O2 -fstrength-reduce -ffast-math -fomit-frame-pointer -funroll-loops
+USER_CFLAGS += -O2 -fstrength-reduce -ffast-math -fomit-frame-pointer -funroll-loops
 endif
 
 %build_linklib mmake=linklibs-xaosutil libname=xaosutil files=$(FILES)

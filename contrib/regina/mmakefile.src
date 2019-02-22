@@ -34,11 +34,13 @@ OFILES := \
   rexxbif arxfuncs amifuncs os_amiga
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)
-USER_CFLAGS := -DNO_EXTERNAL_QUEUES \
+USER_CPPFLAGS := -DNO_EXTERNAL_QUEUES \
     -DREGINA_VERSION_DATE=\"$(VER_DATE)\" \
     -DREGINA_VERSION_MAJOR=\"$(VER_MAJOR)\" \
     -DREGINA_VERSION_MINOR=\"$(VER_MINOR)\" \
     -DREGINA_VERSION_SUPP=\"$(VER_SUPP)\"
+NOWARN_FLAGS := $(NOWARN_STRINGOP_TRUNCATION) $(NOWARN_STRINGOP_OVERFLOW)
+USER_CFLAGS := $(NOWARN_FLAGS)
 
 FILES := $(OFILES) rexx nosaa mt_notmt
 %build_prog mmake=contrib-regina-rexx \
@@ -50,10 +52,8 @@ FILES := regina
     progname=regina targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="regina_shared"
 
-
-
 USER_INCLUDES := -I.
-USER_CFLAGS   := -DRXLIB -DINCL_REXXSAA -DAPIENTRY= \
+USER_CPPFLAGS   := -DRXLIB -DINCL_REXXSAA -DAPIENTRY= \
     -DNO_EXTERNAL_QUEUES \
     -DREGINA_VERSION_DATE=\"$(VER_DATE)\" \
     -DREGINA_VERSION_MAJOR=\"$(VER_MAJOR)\" \

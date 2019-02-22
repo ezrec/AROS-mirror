@@ -6,6 +6,11 @@ EXEDIR := $(AROS_CONTRIB)/Games/Board/Yahzee
 FILES := dice draw game highscores layout localize requesters rules tooltypes \
 	yahzee yahzee_strings
 
+NOWARN_FLAGS := \
+    $(NOWARN_FORMAT_OVERFLOW)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+
 %build_prog mmake=aminet-games-think-yahzee \
     progname=Yahzee targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="chunkyiclass"

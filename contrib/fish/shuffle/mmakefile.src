@@ -1,6 +1,11 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
+NOWARN_FLAGS := \
+    $(NOWARN_FORMAT_OVERFLOW)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+
 %build_prog mmake=fish-shuffle \
     progname=shuffle targetdir=$(AROS_CONTRIB)/Misc/fish \
     files="shuffle shuffle_files shuffle_main shuffle_temp"

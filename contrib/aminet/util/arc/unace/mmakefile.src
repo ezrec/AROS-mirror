@@ -5,8 +5,13 @@ FILES := uac_crc globals uac_crt unace uac_sys uac_dcpr uac_comm
 
 EXEDIR := $(AROS_CONTRIB)/Misc/aminet/C
 
-NOWARN_FLAGS := $(NOWARN_FORMAT_SECURITY)
-USER_CFLAGS := $(NOWARN_FLAGS) -DUNIX -UAMIGA -U_AMIGA
+NOWARN_FLAGS := \
+    $(NOWARN_FORMAT_SECURITY) \
+    $(NOWARN_FORMAT_OVERFLOW) \
+    $(NOWARN_STRINGOP_TRUNCATION)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+USER_CPPFLAGS := -DUNIX -UAMIGA -U_AMIGA
 
 #MM aminet-util-arc-unace : includes linklibs
 

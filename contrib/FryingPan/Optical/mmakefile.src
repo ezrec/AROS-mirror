@@ -44,7 +44,10 @@ CXXFILES := \
  OptIndex \
  CDText
 
-NOWARN_FLAGS := $(NOWARN_ATTRIBUTES)
+NOWARN_FLAGS := \
+    $(NOWARN_ATTRIBUTES) \
+    $(NOWARN_INT_IN_BOOL_CONTEXT)
+
 USER_CXXFLAGS := -fno-rtti -fno-exceptions $(NOWARN_FLAGS) -isystem $(SRCDIR)/$(CURDIR)/../framework
 USER_LDFLAGS := -static-libstdc++
 

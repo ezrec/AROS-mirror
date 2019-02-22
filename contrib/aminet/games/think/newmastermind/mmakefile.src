@@ -3,6 +3,11 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 EXEDIR := $(AROS_CONTRIB)/Games/Board/NewMasterMind
 
+NOWARN_FLAGS := \
+    $(NOWARN_FORMAT_OVERFLOW)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+
 %build_prog mmake=aminet-games-think-newmastermind \
     progname=NewMasterMind targetdir=$(EXEDIR) \
     files="draw game layout localize newmastermind requesters tooltypes newmastermind_strings" \

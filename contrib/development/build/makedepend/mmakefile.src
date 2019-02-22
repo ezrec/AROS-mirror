@@ -8,7 +8,10 @@ FILES  := include main parse pr cppsetup ifparser
 
 EXEDIR := $(AROS_CONTRIB)/$(AROS_DIR_DEVELOPER)/Build
 
-USER_CFLAGS := -DAROS -DINCLUDEDIR=\"\" 
+NOWARN_FLAGS := $(NOWARN_FORMAT_OVERFLOW)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+USER_CPPFLAGS := -DAROS -DINCLUDEDIR=\"\" 
 
 #MM- contrib-development : contrib-development-makedepend
 #MM contrib-development-makedepend : setup-contrib-development-makedepend 

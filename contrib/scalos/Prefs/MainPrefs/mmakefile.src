@@ -30,19 +30,23 @@ FILES := \
     PrefsVersion \
     $(SRCDIR)/$(CURDIR)/../../common/McpGfx/ScalosMcpGfx \
     SelectMarkSampleClass
+TARGETDIR := $(AROS_CONTRIB)/Scalos/Prefs
+SCALOS_LOCALE := ScalosPrefs_locale.h
 
+NOWARN_FLAGS := \
+    $(NOWARN_STRINGOP_OVERFLOW) \
+    $(NOWARN_FORMAT_TRUNCATION) \
+    $(NOWARN_FORMAT_OVERFLOW)
 
+USER_CFLAGS := $(NOWARN_FLAGS)
 USER_INCLUDES := \
     -I$(AROS_CONTRIB)/Scalos/$(AROS_DIR_DEVELOPER)/include \
     -I$(SRCDIR)/$(CURDIR)/../../common/FontSampleMCC \
     -I$(SRCDIR)/$(CURDIR)/../../common/McpGfx \
     -I$(SRCDIR)/$(CURDIR)/../../common/DataTypesMCC \
     -idirafter $(SRCDIR)/$(CURDIR)/../../include
+USER_CPPFLAGS := -DMUI_OBSOLETE -D__LOCALE_STDLIBBASE__ -D__UTILITY_STDLIBBASE__ -DSCALOSLOCALE=$(SCALOS_LOCALE)
 
-SCALOS_LOCALE := ScalosPrefs_locale.h
-USER_CFLAGS := -DMUI_OBSOLETE -D__LOCALE_STDLIBBASE__ -D__UTILITY_STDLIBBASE__ -DSCALOSLOCALE=$(SCALOS_LOCALE)
-
-TARGETDIR := $(AROS_CONTRIB)/Scalos/Prefs
 
 %build_prog mmake=contrib-scalos-prefs-main progname=Scalos_Prefs \
     files=$(FILES) targetdir=$(TARGETDIR)
