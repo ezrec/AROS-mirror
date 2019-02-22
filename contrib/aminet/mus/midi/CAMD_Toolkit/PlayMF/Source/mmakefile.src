@@ -6,7 +6,12 @@ include $(SRCDIR)/config/aros-contrib.cfg
 FILES := PlayMF filter divdi3 qdivrem
 
 EXEDIR := $(AROS_CONTRIB)/Misc/aminet/CAMD
-USER_CFLAGS := -D_QUAD_HIGHWORD=1 -D_QUAD_LOWWORD=0 -D__BSD_VISIBLE=1
+
+NOWARN_FLAGS := \
+    $(NOWARN_STRINGOP_TRUNCATION)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+USER_CPPFLAGS := -D_QUAD_HIGHWORD=1 -D_QUAD_LOWWORD=0 -D__BSD_VISIBLE=1
 
 #MM aminet-mus-midi-CAMD_Toolkit-PlayMF : setup-aminet-mus-midi-CAMD_Toolkit-PlayMF
 

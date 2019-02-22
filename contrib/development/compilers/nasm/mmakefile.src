@@ -15,6 +15,10 @@ EXEDIR := $(AROS_CONTRIB)/$(AROS_DIR_DEVELOPER)/nasm
 #MM contrib-development-nasm : contrib-development-nasm-setup \
 #MM     contrib-development-nasm-asm-includes
 
+NOWARN_FLAGS := $(NOWARN_STRINGOP_TRUNCATION)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+
 %build_prog mmake=contrib-development-nasm \
     progname=Nasm targetdir=$(EXEDIR) \
     files=$(FILES) uselibs="z"

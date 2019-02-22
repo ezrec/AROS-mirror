@@ -1,4 +1,4 @@
-# Copyright © 2003, The AROS Development Team. All rights reserved.
+# Copyright © 2003-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -6,7 +6,10 @@ include $(SRCDIR)/config/aros-contrib.cfg
 FILES   := SmartTrash
 EXEDIR  := $(AROSDIR)/WBStartup
 
-NOWARN_FLAGS := $(NOWARN_PARENTHESES)
+NOWARN_FLAGS := \
+    $(NOWARN_PARENTHESES) \
+    $(NOWARN_STRINGOP_TRUNCATION)
+
 USER_CFLAGS := $(NOWARN_FLAGS)
 
 #MM  aminet-util-app-smarttrash : aminet-util-app-smarttrash-icon includes linklibs \

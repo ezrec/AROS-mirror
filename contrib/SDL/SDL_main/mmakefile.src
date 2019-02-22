@@ -1,4 +1,4 @@
-# Copyright © 2009-2017, The AROS Development Team. All rights reserved.
+# Copyright © 2009-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -107,8 +107,11 @@ FILES := \
 
 SDLINCDIR := $(AROS_INCLUDES)/SDL
 
+NOWARN_FLAGS := $(NOWARN_STRINGOP_TRUNCATION)
+USER_CFLAGS := $(NOWARN_FLAGS) -std=gnu99
+
 USER_INCLUDES := -I$(SDLINCDIR) -I$(ARCHSRCDIR) -I$(ARCHSRCDIR)/src -I$(AROS_CONTRIB_INCLUDES)
-USER_CFLAGS := -DSDL_AROS_SHARED
+USER_CPPFLAGS := -DSDL_AROS_SHARED
 USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
 %build_module mmake=SDL-aros-sharedlib \
@@ -118,7 +121,7 @@ USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
 #MM SDL-aros-staticlib : SDL-aros-includes
 
-USER_CFLAGS :=
+USER_CPPFLAGS :=
 
 %build_linklib mmake=SDL-aros-staticlib libname=SDL_static \
     files="$(FILES)"

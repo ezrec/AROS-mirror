@@ -1,6 +1,11 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
+NOWARN_FLAGS := \
+    $(NOWARN_MAYBE_UNINITIALIZED)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+
 %build_prog mmake=fish-eval \
     progname=eval targetdir=$(AROS_CONTRIB)/Misc/fish \
     files="base bitwise emath estack etable eval funcs help parse"

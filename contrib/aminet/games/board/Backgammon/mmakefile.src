@@ -3,6 +3,11 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 EXEDIR := $(AROS_CONTRIB)/Games/Board/Backgammon
 
+NOWARN_FLAGS := \
+    $(NOWARN_FORMAT_OVERFLOW)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+
 %build_prog mmake=aminet-games-board-backgammon \
     progname=Backgammon targetdir=$(EXEDIR) \
     files="BackEval BackMenu BackScreen Backgammon"

@@ -1,6 +1,12 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
+NOWARN_FLAGS := \
+    $(NOWARN_STRINGOP_OVERFLOW) \
+    $(NOWARN_STRINGOP_TRUNCATION)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+
 %build_prog mmake=fish-aroach \
     progname=aroach targetdir=$(AROS_CONTRIB)/Misc/fish \
     files="animtools ARoach RoachData"

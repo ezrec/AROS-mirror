@@ -10,9 +10,13 @@ EXE := Scout
 
 EXEDIR := $(AROS_CONTRIB)/System/Scout
 
-USER_INCLUDES := -D_UTMP_H_ -I$(SRCDIR)/$(CURDIR) -idirafter$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/classes -I$(SRCDIR)/$(CURDIR)/tbLib
+NOWARN_FLAGS := \
+    $(NOWARN_STRINGOP_TRUNCATION)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR) -idirafter$(SRCDIR)/$(CURDIR)/include -I$(SRCDIR)/$(CURDIR)/classes -I$(SRCDIR)/$(CURDIR)/tbLib
 USER_LDFLAGS  := -L$(EXEDIR)/libs -static
-USER_CFLAGS   := -D__BSD_VISIBLE=1
+USER_CPPFLAGS   := -D__BSD_VISIBLE=1 -D_UTMP_H_
 
 FILES := \
    Scout \
@@ -100,7 +104,6 @@ FILES := \
 %build_prog mmake=contrib-scout-bin \
 	progname=$(EXE) targetdir=$(EXEDIR) \
 	files=$(FILES) uselibs="tblib" usestartup=no
-
 
 #MM
 contrib-scout-icon : $(EXEDIR)/Scout.info

@@ -1,4 +1,4 @@
-# Copyright © 2017 The AROS Development Team. All rights reserved.
+# Copyright © 2017-2019 The AROS Development Team. All rights reserved.
 # $Id$
 
 # Makefile to make dt2thumb.
@@ -10,7 +10,9 @@ EXEDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/Dt2Thumb
 FILES := \
     Datatype2Thumb 
 
-NOWARN_FLAGS  :=
+NOWARN_FLAGS  := \
+    $(NOWARN_STRINGOP_TRUNCATION)
+
 USER_CFLAGS   := $(NOWARN_FLAGS)
 USER_INCLUDES :=
 USER_LDFLAGS  := 

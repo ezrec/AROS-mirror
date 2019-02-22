@@ -19,6 +19,11 @@ FILES :=           \
 
 EXEDIR := $(AROS_CONTRIB)/Games/Board/MUIMine
 
+NOWARN_FLAGS := \
+    $(NOWARN_FORMAT_OVERFLOW)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+
 #MM aminet-games-think-muimine : setup-aminet-games-think-muimine-images
 
 %build_prog mmake=aminet-games-think-muimine \

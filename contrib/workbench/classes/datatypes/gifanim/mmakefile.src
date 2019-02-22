@@ -9,7 +9,7 @@ TESTSDIR := $(AROS_TESTS)/datatypes
 #MM- workbench-datatypes-animation : workbench-datatype-gifanim datatype-descriptor-gifanim
 #MM workbench-datatype-gifanim : includes linklibs
 
-USER_CFLAGS   := -DDEBUG=0
+USER_CPPFLAGS   := -DDEBUG=0
 USER_LDFLAGS := -static
 
 %build_module mmake=workbench-datatype-gifanim \

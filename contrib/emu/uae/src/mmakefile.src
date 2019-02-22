@@ -56,19 +56,28 @@ FILES := \
 
 EXEDIR := $(AROS_CONTRIB)/Emu/UAE
 
-NOWARN_FLAGS := $(NOWARN_UNUSED)  $(NOWARN_FORMAT) $(NOWARN_SIGN_COMPARE) \
-	       $(NOWARN_SHIFT_NEGATIVE_VALUE)
+WARN_FLAGS := \
+    $(WARN_ALL) \
+    -W \
+    $(WARN_MISSING_PROTOTYPES) \
+    $(WARN_STRICT_PROTOTYPES)
 
-USER_CFLAGS := -O2 -fomit-frame-pointer -fno-exceptions -fno-strength-reduce \
-	       -Wall -W -Wmissing-prototypes  -Wstrict-prototypes $(NOWARN_FLAGS) \
+NOWARN_FLAGS := \
+    $(NOWARN_UNUSED) \
+    $(NOWARN_FORMAT) \
+    $(NOWARN_SIGN_COMPARE) \
+    $(NOWARN_SHIFT_NEGATIVE_VALUE) \
+    $(NOWARN_IMPLICIT_FALLTHROUGH)
+
+USER_CFLAGS := -O2 $(CFLAGS_OMIT_FP) -fno-exceptions -fno-strength-reduce \
+	       $(WARN_FLAGS) $(NOWARN_FLAGS) \
 	       -UAMIGA -U_AMIGA
-
 USER_CPPFLAGS := -DGCCCONSTFUNC='__attribute__((const))'\
                -D_REENTRANT \
                -DUNALIGNED_PROFITABLE\
                -DREGPARAM='__attribute__((regparm(3)))'\
-	       -DX86_ASSEMBLY -DOPTIMIZED_FLAGS -D__inline__=inline\
-	       -I$(UAESRCDIR) -I$(UAESRCDIR)/include \
+	       -DX86_ASSEMBLY -DOPTIMIZED_FLAGS -D__inline__=inline
+USER_INCLUDES := -I$(UAESRCDIR) -I$(UAESRCDIR)/include \
 	       -I$(TOP)/$(CURDIR) -I$(TOP)/$(CURDIR)/include \
 
 #MM- contrib-complete: uae

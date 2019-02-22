@@ -11,7 +11,7 @@ DTFILES		:= $(foreach f, $(DESCFILES), $(DTDIR)/$(f))
 #MM- workbench-datatypes-animation : workbench-datatype-mpegvideo
 #MM workbench-datatype-mpegvideo : includes linklibs
 
-USER_CFLAGS   := -DDEBUG=1
+USER_CPPFLAGS   := -DDEBUG=1
 USER_LDFLAGS := -static
 
 %build_module mmake=workbench-datatype-mpegvideo \

@@ -7,7 +7,11 @@ FILES := fireworks async message timer libopen stubs fwmodes linear parabolic
 
 EXEDIR := $(AROS_CONTRIB)/Misc/aminet/CAMD
 
-# -DNO_INLINE_STDARG
+NOWARN_FLAGS := \
+    $(NOWARN_STRINGOP_TRUNCATION)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+#USER_CPPFLAGS := -DNO_INLINE_STDARG
 
 #MM aminet-mus-midi-CAMD_Toolkit-Fireworks : setup-aminet-mus-midi-CAMD_Toolkit-Fireworks
 

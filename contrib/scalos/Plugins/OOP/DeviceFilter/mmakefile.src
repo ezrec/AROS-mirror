@@ -11,12 +11,15 @@ FILES := devicefilter
 
 TARGETDIR := $(AROS_CONTRIB)/Scalos
 
+NOWARN_FLAGS := \
+    $(NOWARN_STRINGOP_OVERFLOW)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
 USER_INCLUDES := \
     -I$(TARGETDIR)/$(AROS_DIR_DEVELOPER)/include \
     -I$(SRCDIR)/$(CURDIR)/../../../common/Plugin \
     -idirafter $(SRCDIR)/$(CURDIR)/../../../include
-
-USER_CFLAGS := -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__
+USER_CPPFLAGS := -D__UTILITY_STDLIBBASE__ -D__LOCALE_STDLIBBASE__ -D__TIMER_STDLIBBASE__
 USER_LDFLAGS := -static
 
 %build_module mmake=contrib-scalos-plugins-oop-devicefilter \

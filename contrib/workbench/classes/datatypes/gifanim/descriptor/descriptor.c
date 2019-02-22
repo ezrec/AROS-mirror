@@ -12,8 +12,10 @@
 */
 
 /* main includes */
-#include "/classbase.h"
-#include "/classdata.h"
+struct GIFAnimInstData;
+struct GIFEncoder;
+#include "classbase.h"
+#include "classdata.h"
 
 /* we don't have our class library base yet, therefore we use the resources from the given DTHookContext */
 #undef SysBase
@@ -126,7 +128,7 @@ BOOL DTHook( REGA0 struct DTHookContext *dthc )
 
               if( !ReadOK( file, &c, 1 ) )
               {
-                D( kprintf( "OF / read error on extention function code\n" ) );
+                D( kprintf( "OF / read error on extension function code\n" ) );
                 return( EnougthFramesToBeAGIFAnimation );
               }
 
