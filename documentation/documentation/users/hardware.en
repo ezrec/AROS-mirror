@@ -190,6 +190,16 @@ HP/Compaq
       - :n:`Intel 3945ABG`
       - Icaros Desktop 2.2
       -
+    * - Compaq nc6710b
+      - :y:`Intel GMA 965 (2D)`
+      - :n:`Intel HD Audio - Analog Devices AD1981 codec`
+      - :p:`Intel ICH8 (IDE mode)`
+      - :y:`Intel ICH8`
+      - :y:`Intel EHCI/UHCI`
+      - :n:`Broadcom BCM5787M`
+      - :n:`Intel 3945ABG`
+      - Icaros Desktop 2.2.5
+      - Only 8GB of the HD is accessible in AHCI mode.
     * - 255 G5
       - :p:`AMD Radeon R2/R4/R5 (VESA only)`
       - :p:`AMD HD Audio - Realtek ALC3227 codec (playback only)`
