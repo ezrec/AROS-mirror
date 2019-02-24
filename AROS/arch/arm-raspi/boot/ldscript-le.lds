@@ -3,9 +3,9 @@ FORCE_COMMON_ALLOCATION
 SECTIONS
 {
     . = 0x8000;
-    
+
     __bootstrap_start = . ;
-    
+
     .text :
     {
         *(.aros.startup)
@@ -29,6 +29,7 @@ SECTIONS
 
     .data ALIGN(0x1000) :
     {
+        *core.bin.o(.data)
         *(.data)
         *(.data.*)
         *(.gnu.linkonce.d.*)
@@ -46,7 +47,7 @@ SECTIONS
     }
 
     __bss_start = . ;
-    
+
     .sbss ALIGN(0x1000) :
     {
         *(.sbss)
@@ -62,8 +63,20 @@ SECTIONS
         *(.gnu.linkonce.b.*)
         *(COMMON)
     }
-    
+
     _end = . ;
-    
+
     __bootstrap_end = . ;
+
+    .trailer ALIGN(4) :
+    {
+    LONG(0)
+    LONG(0)
+    LONG(0x00000001)    /* DTOK = 1, please give us device tree */
+    LONG(0x00000004)
+    LONG(0x4b4f5444)    /* DTOK */
+    LONG(0x00000020)
+    LONG(0x00000004)
+    LONG(0x4c545052)
+    }
 }

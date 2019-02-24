@@ -1,5 +1,5 @@
 /*
-    Copyright © 2013, The AROS Development Team. All rights reserved.
+    Copyright © 2013-2019, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: elf.c
@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define DELF(x)
+#define DELF(x) /* x */
 
 uint32_t        int_shnum;
 uint32_t        int_shstrndx;
@@ -69,7 +69,11 @@ int checkHeader(struct elfheader *eh)
 			eh->ident[EI_CLASS]   != ELFCLASS32  ||
 			eh->ident[EI_VERSION] != EV_CURRENT  ||
 			eh->type              != ET_REL      ||
+#if AROS_BIG_ENDIAN
+			eh->ident[EI_DATA]        != ELFDATA2MSB ||
+#else
 			eh->ident[EI_DATA]        != ELFDATA2LSB ||
+#endif
 			eh->machine               != EM_ARM
 	)
 	{
@@ -162,19 +166,19 @@ static int load_hunk(void *file, struct sheader *sh)
 	/* Allocate a chunk with write access */
 	if (sh->flags & SHF_WRITE)
 	{
-		ptr_rw = (char *)(((unsigned long)ptr_rw
+		ptr_rw = (((unsigned long)ptr_rw
 				+ (unsigned long)sh->addralign - 1)
 				& ~((unsigned long)sh->addralign - 1));
-		ptr = ptr_rw;
+		ptr = (APTR)ptr_rw;
 		ptr_rw = ptr_rw + sh->size;
 	}
 	else
 	{
 		/* Read-Only mode? Get the memory from the kernel space, align it accorting to the demand */
-		ptr_ro = (char *)(((unsigned long)ptr_ro
+		ptr_ro = (((unsigned long)ptr_ro
 				+ (unsigned long)sh->addralign - 1)
 				& ~((unsigned long)sh->addralign - 1));
-		ptr = ptr_ro;
+		ptr = (APTR)ptr_ro;
 		ptr_ro = ptr_ro + sh->size;
 	}
 
@@ -291,7 +295,7 @@ static int relocate(struct elfheader *eh, struct sheader *sh, long shrel_idx,
 		case R_ARM_PC24:
 		{
 			/* On ARM the 24 bit offset is shifted by 2 to the right */
-			signed long offset = (*p & 0x00ffffff) << 2;
+			signed long offset = (AROS_LE2LONG(*p) & 0x00ffffff) << 2;
 			/* If highest bit set, make offset negative */
 			if (offset & 0x02000000)
 				offset -= 0x04000000;
@@ -299,8 +303,8 @@ static int relocate(struct elfheader *eh, struct sheader *sh, long shrel_idx,
 			offset += s - (ULONG)p;
 
 			offset >>= 2;
-			*p &= 0xff000000;
-			*p |= offset & 0x00ffffff;
+			*p &= AROS_LONG2LE(0xff000000);
+			*p |= AROS_LONG2LE(offset & 0x00ffffff);
 		}
 		break;
 
@@ -308,7 +312,7 @@ static int relocate(struct elfheader *eh, struct sheader *sh, long shrel_idx,
 		case R_ARM_MOVW_ABS_NC:
 		case R_ARM_MOVT_ABS:
 		{
-			signed long offset = *p;
+			signed long offset = AROS_LE2LONG(*p);
 			offset = ((offset & 0xf0000) >> 4) | (offset & 0xfff);
 			offset = (offset ^ 0x8000) - 0x8000;
 
@@ -317,8 +321,8 @@ static int relocate(struct elfheader *eh, struct sheader *sh, long shrel_idx,
 			if (ELF_R_TYPE(rel->info) == R_ARM_MOVT_ABS)
 				offset >>= 16;
 
-			*p &= 0xfff0f000;
-			*p |= ((offset & 0xf000) << 4) | (offset & 0x0fff);
+			*p &= AROS_LONG2LE(0xfff0f000);
+			*p |= AROS_LONG2LE(((offset & 0xf000) << 4) | (offset & 0x0fff));
 		}
 		break;
 
@@ -342,8 +346,8 @@ static int relocate(struct elfheader *eh, struct sheader *sh, long shrel_idx,
 int loadElf(void *elf_file)
 {
 	struct elfheader *eh = (struct elfheader *)elf_file;
-	uint32_t s_ro = 0;
-	uint32_t s_rw = 0;
+	//uint32_t s_ro = 0;
+	//uint32_t s_rw = 0;
 
 	DELF(kprintf("[BOOT] loadElf(%p)\n", eh));
 
@@ -357,7 +361,7 @@ int loadElf(void *elf_file)
 			/* Load the symbol and string tables */
 			if (sh[i].type == SHT_SYMTAB || sh[i].type == SHT_STRTAB)
 			{
-				sh[i].addr = (unsigned long)elf_file + sh[i].offset;
+				sh[i].addr = (APTR)((unsigned long)elf_file + sh[i].offset);
 			}
 			/* Does the section require memoy allcation? */
 			else if (sh[i].flags & SHF_ALLOC)
@@ -385,7 +389,7 @@ int loadElf(void *elf_file)
 		{
 			if (sh[i].type == SHT_REL && sh[sh[i].info].addr)
 			{
-				sh[i].addr = (uint32_t) elf_file + sh[i].offset;
+				sh[i].addr = (APTR)((uint32_t) elf_file + sh[i].offset);
 				if (!sh[i].addr || !relocate(eh, sh, i, virtoffset))
 				{
 					return 0;
@@ -393,5 +397,5 @@ int loadElf(void *elf_file)
 			}
 		}
 	}
+    return 1;
 }
-

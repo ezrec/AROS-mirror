@@ -1,5 +1,5 @@
 /*
-    Copyright © 2013, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 2013, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -165,9 +165,9 @@ struct tag {
 
 #define tag_member_present(tag,member)                          \
 		((unsigned long)(&((struct tag *)0L)->member + 1)       \
-				<= (tag)->hdr.size * 4)
+				<= AROS_LE2LONG((tag)->hdr.size * 4))
 
-#define tag_next(t)     ((struct tag *)((uint32_t *)(t) + (t)->hdr.size))
+#define tag_next(t)     ((struct tag *)((uint32_t *)(t) + AROS_LE2LONG((t)->hdr.size)))
 #define tag_size(type)  ((sizeof(struct tag_header) + sizeof(struct type)) >> 2)
 
 #define for_each_tag(t,base)            \

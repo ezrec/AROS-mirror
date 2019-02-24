@@ -1,5 +1,5 @@
 /*
-    Copyright © 2013, The AROS Development Team. All rights reserved.
+    Copyright © 2013-2019, The AROS Development Team. All rights reserved.
     $Id$
  */
 
@@ -58,6 +58,9 @@ void *malloc(size_t size)
 		free_memory -= size;
 	}
 
+        if (!ret)
+                kprintf("[BOOT] malloc - OUT OF MEMORY\n");
+
 	return ret;
 }
 
@@ -65,6 +68,12 @@ void mem_init(void)
 {
     first_free = &__tmpspace[0];
     free_memory = BOOT_TMP_SIZE;
+}
+
+void explicit_mem_init(void *first, unsigned long free)
+{
+    first_free = first;
+    free_memory = free;
 }
 
 size_t mem_avail()
