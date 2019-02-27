@@ -48,8 +48,9 @@ FILES := \
     testnotify \
     testnotifydefs \
     text \
-    window \
-    MUIBuilder_cat
+    window
+
+LOCGENFILES := $(GENDIR)/$(CURDIR)/MUIBuilder_cat
 
 #MM contrib-development-gui-muibuilder-src : includes linklib contrib-development-gui-muibuilder-locale
 
@@ -65,11 +66,11 @@ NOWARN_FLAGS := \
     $(NOWARN_RESTRICT)
 
 USER_CFLAGS := $(NOWARN_FLAGS)
-USER_CPPFLAGS := -I$(AROS_INCLUDES)/SDI -DMUI_OBSOLETE
+USER_INCLUDES := -I$(AROS_INCLUDES)/SDI -iquote $(GENDIR)/$(CURDIR)
+USER_CPPFLAGS := -DMUI_OBSOLETE
 
 %build_prog mmake=contrib-development-gui-muibuilder-src \
     progname=MUIBuilder targetdir=$(EXEDIR) \
-    files=$(FILES)
-
+    files="$(FILES) $(LOCGENFILES)"
 
 %common
