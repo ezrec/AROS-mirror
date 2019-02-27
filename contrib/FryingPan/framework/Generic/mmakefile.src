@@ -36,7 +36,8 @@ FILES := \
  Locale
 
 NOWARN_FLAGS := $(NOWARN_NONNULL_COMPARE)
-USER_CXXFLAGS := -fno-rtti -fno-exceptions -fpermissive $(NOWARN_FLAGS) -isystem $(SRCDIR)/$(CURDIR)/..
+USER_CXXFLAGS := $(CFLAGS_NO_RTTI) $(CFLAGS_NO_EXCEPTIONS) $(CFLAGS_PERMISSIVE) $(CFLAGS_ALIGNED_NEW) $(NOWARN_FLAGS)
+USER_INCLUDES := -isystem $(SRCDIR)/$(CURDIR)/..
 
 %build_linklib mmake=contrib-fryingpan-framework-generic \
  libname="Generic" files= cxxfiles="$(FILES)"
