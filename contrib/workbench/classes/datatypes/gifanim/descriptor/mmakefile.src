@@ -28,6 +28,7 @@ $(DESCRDIR)/% : $(SRCDIR)/$(CURDIR)/%.dtd
 datatype-descriptor-gifanim : $(DESCRFILE)
 
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/..
+USER_LDFLAGS := -static
 
 %build_prog mmake=datatype-descriptor-gifanim-matchfunc \
     progname=$(DESCRNAME).$(AROS_TARGET_CPU) targetdir=$(DESCRDIR) \
