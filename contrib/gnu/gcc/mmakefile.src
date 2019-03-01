@@ -73,6 +73,7 @@ endif
 %fetch_and_build_gnu_development package=gcc version=$(GCC_VERSION)  crossbuild=yes patch=yes \
     package_repo="$(GNU_REPOSITORY)/gcc/gcc-$(GCC_VERSION)" \
     config_env_extra=$(GCC_HOST_VARS) extraoptions=$(GCC_EXTRA_OPTS) \
+    usecppflags=no targetisaflags= \
     postinstall=contrib-gnu-gcc-deletefixed
 
 #MM
