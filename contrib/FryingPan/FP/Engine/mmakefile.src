@@ -2,7 +2,7 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- contrib-fryingpan-fp-engine: $(CROSSTOOLS_TARGET)
+##MM contrib-fryingpan-fp-engine: $(CROSSTOOLS_TARGET)
 
 #MM contrib-fryingpan-fp-engine: \
 #MM     contrib-fryingpan-framework-generic \
@@ -12,28 +12,30 @@ include $(SRCDIR)/config/aros-contrib.cfg
 DESTDIR := $(AROS_CONTRIB)/FryingPan/Libs
 
 CXXFILES := \
- Wrapper \
- Engine \
- Track \
- ISOTrack \
- Globals \
- Event \
- Jobs/Job \
- Jobs/JobControl \
- Jobs/JobMediumAction \
- Jobs/JobDownload \
- Jobs/JobUpload \
- Jobs/JobUploadSession \
- Jobs/JobLayout \
- Jobs/JobUpdate \
- Jobs/JobCreateISO \
- Jobs/JobISOAddItem \
- Jobs/JobISORemItem \
- Jobs/JobISOMakeDir
+        Wrapper \
+        Engine \
+        Track \
+        ISOTrack \
+        Globals \
+        Event \
+        Jobs/Job \
+        Jobs/JobControl \
+        Jobs/JobMediumAction \
+        Jobs/JobDownload \
+        Jobs/JobUpload \
+        Jobs/JobUploadSession \
+        Jobs/JobLayout \
+        Jobs/JobUpdate \
+        Jobs/JobCreateISO \
+        Jobs/JobISOAddItem \
+        Jobs/JobISORemItem \
+        Jobs/JobISOMakeDir
 
-USER_CXXFLAGS := -fno-rtti -fno-exceptions -isystem $(SRCDIR)/$(CURDIR)/../../framework \
- -isystem $(SRCDIR)/$(CURDIR)/../.. 
+USER_INCLUDES := $(CFLAGS_ISYSTEM) $(SRCDIR)/$(CURDIR)/../../framework \
+        $(CFLAGS_ISYSTEM) $(SRCDIR)/$(CURDIR)/../..  $(CFLAGS_ISYSTEM_END)
+USER_CXXFLAGS := $(CFLAGS_NO_RTTI) $(CFLAGS_NO_EXCEPTIONS) 
 USER_LDFLAGS := -static-libstdc++
+#USER_CPPFLAGS := -DDEBUG
 
 %build_prog mmake=contrib-fryingpan-fp-engine \
  progname="fryingpan.engine" targetdir=$(DESTDIR) files= \

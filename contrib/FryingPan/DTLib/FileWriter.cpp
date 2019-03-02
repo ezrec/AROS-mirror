@@ -116,12 +116,12 @@ void                       FileWriter::dispose()
     delete this;
 }
 
-unsigned short             FileWriter::getBlockSize()
+uint16                     FileWriter::getBlockSize()
 {
    return sectorSize;
 }
 
-unsigned long              FileWriter::getBlockCount()
+uint32                     FileWriter::getBlockCount()
 {
    return sectorCount;
 }

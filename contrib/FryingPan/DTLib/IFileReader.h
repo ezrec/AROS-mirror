@@ -21,6 +21,8 @@
 #define _IFILEREADER_H_
 
 #include <Generic/Generic.h>
+#include <Generic/Types.h>
+
 struct IOptItem;
 
 class IFileReader 
@@ -32,8 +34,8 @@ public:  // pure-virtual
    virtual bool                        setUp()                          = 0;
    virtual void                        cleanUp()                        = 0;
    virtual void                        dispose()                        = 0;
-   virtual unsigned long               getBlockCount()                  = 0;
-   virtual unsigned short              getBlockSize()                   = 0;
+   virtual uint32                      getBlockCount()                  = 0;
+   virtual uint16                      getBlockSize()                   = 0;
    virtual bool                        isAudio()                        = 0;
    virtual bool                        isData()                         = 0;
    virtual bool                        fillOptItem(IOptItem *item)      = 0;

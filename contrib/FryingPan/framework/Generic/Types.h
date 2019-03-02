@@ -94,9 +94,9 @@ enum TriState
 
 //! Use this macro instead of varargs. Maintains compatibility across platforms.
 #define ARRAY(arg...) \
-   ((IPTR) \
+   ((uint) \
       ({ \
-         IPTR __parm[] = {arg}; \
+         uint __parm[] = {arg}; \
          &__parm; \
       }))
 
@@ -105,9 +105,9 @@ enum TriState
  * \b Size is always stored in \b param[-1].
  */
 #define SIZEARRAY(arg...) \
-   ((IPTR) \
+   ((uint) \
       ({ \
-         IPTR __parm[] = {0, arg}; \
+         uint __parm[] = {0, arg}; \
          __parm[0] = sizeof(__parm) / sizeof(__parm[0]) - 1; \
          &__parm[1]; \
       }))
@@ -120,7 +120,7 @@ enum TriState
 #define TAGARRAY(arg...) \
    ((struct TagItem*) \
       ({ \
-         IPTR __parm[] = {arg, TAG_DONE, TAG_DONE}; \
+         uint __parm[] = {arg, TAG_DONE, TAG_DONE}; \
          &__parm; \
        }))
 

@@ -46,7 +46,7 @@ protected:
    HookT<JobUpload, void*, int>  hHkData;
 
 protected:
-   virtual uint32          onData(void* mem, int sectors);
+   virtual uint          onData(void* mem, int sectors);
 public:
                            JobUpload(unsigned long drive, VectorT<ITrack*> &tracks, bool masterize, bool closedisc);
    virtual                ~JobUpload();                              

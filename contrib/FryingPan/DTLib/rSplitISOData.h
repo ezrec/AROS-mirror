@@ -73,8 +73,8 @@ public:
    virtual bool                  setUp();
    virtual void                  cleanUp();
    virtual void                  dispose();
-   virtual unsigned long         getBlockCount();
-   virtual unsigned short        getBlockSize();
+   virtual uint32                getBlockCount();
+   virtual uint16                getBlockSize();
    virtual bool                  fillOptItem(IOptItem *item);
 };
 

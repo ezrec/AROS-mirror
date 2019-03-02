@@ -245,7 +245,7 @@ void                       FileReader::dispose()
    delete this;
 }
 
-unsigned long              FileReader::getBlockCount()
+uint32                     FileReader::getBlockCount()
 {
    ASSERT(getBlockSize() != 0);
    _D(Lvl_Info, "%s: assuming size=%lub, sector=%ldb -> block count=%ld",
@@ -256,7 +256,7 @@ unsigned long              FileReader::getBlockCount()
    return udiv6432(size, getBlockSize());
 }
 
-unsigned short             FileReader::getBlockSize()
+uint16                     FileReader::getBlockSize()
 {
    _D(Lvl_Info, "%s: Reading block size (%ld)", (int)__PRETTY_FUNCTION__, sectorSize);
    return sectorSize;
