@@ -2,7 +2,7 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- contrib-fryingpan-dtlib: $(CROSSTOOLS_TARGET)
+##MM- contrib-fryingpan-dtlib: $(CROSSTOOLS_TARGET)
 
 #MM contrib-fryingpan-dtlib: \
 #MM     contrib-fryingpan-framework-generic \
@@ -32,8 +32,9 @@ CXXFILES := \
  rCUESession \
  rNRGSession
 
-USER_CXXFLAGS := -fno-rtti -fno-exceptions -isystem $(SRCDIR)/$(CURDIR)/.. \
- -isystem $(SRCDIR)/$(CURDIR)/../framework
+USER_INCLUDES := $(CFLAGS_ISYSTEM) $(SRCDIR)/$(CURDIR)/../framework \
+        $(CFLAGS_ISYSTEM) $(SRCDIR)/$(CURDIR)/..  $(CFLAGS_ISYSTEM_END)
+USER_CXXFLAGS := $(CFLAGS_NO_RTTI) $(CFLAGS_NO_EXCEPTIONS) 
 USER_LDFLAGS := -static-libstdc++
 
 %build_prog mmake=contrib-fryingpan-dtlib progname="dtlibio.module" \

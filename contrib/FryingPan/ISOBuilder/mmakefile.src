@@ -30,8 +30,9 @@ CXXFILES := \
  Xlators/TransQChars \
  Xlators/TransRChars
 
-USER_CXXFLAGS := -fno-rtti -fno-exceptions -isystem $(SRCDIR)/$(CURDIR)/../framework \
- -isystem $(SRCDIR)/$(CURDIR)/..
+USER_INCLUDES := $(CFLAGS_ISYSTEM) $(SRCDIR)/$(CURDIR)/../framework \
+        $(CFLAGS_ISYSTEM) $(SRCDIR)/$(CURDIR)/..  $(CFLAGS_ISYSTEM_END)
+USER_CXXFLAGS := $(CFLAGS_NO_RTTI) $(CFLAGS_NO_EXCEPTIONS) 
 USER_LDFLAGS := -static-libstdc++
 
 %build_prog mmake=contrib-fryingpan-isobuilder \

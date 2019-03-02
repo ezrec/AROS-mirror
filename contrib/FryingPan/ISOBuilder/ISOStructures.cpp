@@ -336,39 +336,39 @@ struct DateStamp ISOPrimaryVolumeDescriptor::getEffectiveDate() const
    return desc.hEffectiveDate.getDate();  
 }
 
-void ISOPrimaryVolumeDescriptor::setVolumeSize(unsigned long lSize)
+void ISOPrimaryVolumeDescriptor::setVolumeSize(uint32 lSize)
 {
    desc.hVolumeSpaceSize.setVal(lSize);
 }
 
-unsigned long ISOPrimaryVolumeDescriptor::getVolumeSize() const
+uint32 ISOPrimaryVolumeDescriptor::getVolumeSize() const
 {
    return desc.hVolumeSpaceSize.getVal();
 }
 
-void ISOPrimaryVolumeDescriptor::setLSBPathTablePosition(unsigned long lPosition)
+void ISOPrimaryVolumeDescriptor::setLSBPathTablePosition(uint32 lPosition)
 {
    desc.hLSBPathTableBlockNum.setVal(lPosition);
    desc.hLSBOptPathTableBlockNum.setVal(0);
 }
 
-void ISOPrimaryVolumeDescriptor::setMSBPathTablePosition(unsigned long lPosition)
+void ISOPrimaryVolumeDescriptor::setMSBPathTablePosition(uint32 lPosition)
 {
    desc.hMSBPathTableBlockNum.setVal(lPosition);
    desc.hMSBOptPathTableBlockNum.setVal(0);
 }
 
-void ISOPrimaryVolumeDescriptor::setPathTableSize(unsigned long lSize)
+void ISOPrimaryVolumeDescriptor::setPathTableSize(uint32 lSize)
 {
    desc.hPathTableSizeInBytes.setVal(lSize);
 }
 
-void ISOPrimaryVolumeDescriptor::setRootSize(unsigned long lSize)
+void ISOPrimaryVolumeDescriptor::setRootSize(uint32 lSize)
 {
    desc.hRootDirRecord.setSize(lSize);
 }
 
-void ISOPrimaryVolumeDescriptor::setRootPosition(unsigned long lPos)
+void ISOPrimaryVolumeDescriptor::setRootPosition(uint32 lPos)
 {
    desc.hRootDirRecord.setPosition(lPos);
 }
@@ -448,39 +448,39 @@ ISOSupplementaryVolumeDescriptor::ISOSupplementaryVolumeDescriptor()
    hRootDirRecord.setFlags(2);
 }
 
-void ISOSupplementaryVolumeDescriptor::setLSBPathTablePosition(unsigned long lPosition)
+void ISOSupplementaryVolumeDescriptor::setLSBPathTablePosition(uint32 lPosition)
 {
    hLSBPathTableBlockNum.setVal(lPosition);
    hLSBOptPathTableBlockNum.setVal(0);
 }
 
-void ISOSupplementaryVolumeDescriptor::setMSBPathTablePosition(unsigned long lPosition)
+void ISOSupplementaryVolumeDescriptor::setMSBPathTablePosition(uint32 lPosition)
 {
    hMSBPathTableBlockNum.setVal(lPosition);
    hMSBOptPathTableBlockNum.setVal(0);
 }
 
-void ISOSupplementaryVolumeDescriptor::setPathTableSize(unsigned long lSize)
+void ISOSupplementaryVolumeDescriptor::setPathTableSize(uint32 lSize)
 {
    hPathTableSizeInBytes.setVal(lSize);
 }
 
-void ISOSupplementaryVolumeDescriptor::setRootSize(unsigned long lSize)
+void ISOSupplementaryVolumeDescriptor::setRootSize(uint32 lSize)
 {
    hRootDirRecord.setSize(lSize);
 }
 
-void ISOSupplementaryVolumeDescriptor::setRootPosition(unsigned long lPos)
+void ISOSupplementaryVolumeDescriptor::setRootPosition(uint32 lPos)
 {
    hRootDirRecord.setPosition(lPos);
 }
 
-void ISOSupplementaryVolumeDescriptor::setVolumeSize(unsigned long lSize)
+void ISOSupplementaryVolumeDescriptor::setVolumeSize(uint32 lSize)
 {
    hVolumeSpaceSize.setVal(lSize);
 }
 
-unsigned long ISOSupplementaryVolumeDescriptor::getVolumeSize() const
+uint32 ISOSupplementaryVolumeDescriptor::getVolumeSize() const
 {
    return hVolumeSpaceSize.getVal();
 }
@@ -547,7 +547,7 @@ const char* ISOSupplementaryVolumeDescriptor::getSystemID() const
 
 
 
-unsigned long ISODirRecord::getLength(const char* sName, unsigned long extsize)
+uint32 ISODirRecord::getLength(const char* sName, uint32 extsize)
 {
    int sLength = strlen(sName);
    sLength += 33;    // sizeof(ISODirRecord) - sizeof(ISODirRecord::sFileID);
@@ -569,7 +569,7 @@ void ISODirRecord::setName(const char *sName)
    lGapSize             = 0;
 }
 
-unsigned long ISOWDirRecord::getLength(const char* sName)
+uint32 ISOWDirRecord::getLength(const char* sName)
 {
    int sLength = strlen(sName);
    sLength <<= 1;
@@ -591,7 +591,7 @@ void ISOWDirRecord::setName(const char *sName)
 
 
 
-unsigned long ISOPathRecord::getISOLength(const char *sName)
+uint32 ISOPathRecord::getISOLength(const char *sName)
 {
    int sLength = strlen(sName);
    if (!sLength)
@@ -605,7 +605,7 @@ unsigned long ISOPathRecord::getISOLength(const char *sName)
 
 
 
-unsigned long ISOPathRecord::getJolietLength(const char *sName)
+uint32 ISOPathRecord::getJolietLength(const char *sName)
 {
    int sLength = strlen(sName);
    if (!sLength)
@@ -616,7 +616,7 @@ unsigned long ISOPathRecord::getJolietLength(const char *sName)
    return sLength;
 }
 
-void ISOPathRecord::setExtent(unsigned long lExtent, bool bIsMSB)
+void ISOPathRecord::setExtent(uint32 lExtent, bool bIsMSB)
 {
    if (bIsMSB)
       hMSBExtent.setVal(lExtent);

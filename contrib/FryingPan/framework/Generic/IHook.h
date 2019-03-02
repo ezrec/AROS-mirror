@@ -79,11 +79,11 @@ namespace GenNS
        * \arg a1 - Object parameter passed to CallHookPkt()
        * \arg a2 - Message parameter passed to CallHookPkt()
        */
-      virtual IPTR Call(IPTR a1, IPTR a2) = 0;
+      virtual uint Call(uint a1, uint a2) = 0;
 
    protected:
 #if defined (__AROS__) || defined (__AMIGAOS4__)
-      static IPTR subCaller(Hook *pHook, IPTR pObject, IPTR pMessage);
+      static uint subCaller(Hook *pHook, uint pObject, uint pMessage);
 #elif defined (__MORPHOS__) || defined(__mc68000)
       static uint subCaller();
 #endif

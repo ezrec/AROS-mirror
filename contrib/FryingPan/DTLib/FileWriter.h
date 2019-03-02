@@ -33,8 +33,8 @@ private:
    BPTR                       fh;
    String                     sFileName;
    bool                       isLE;
-   unsigned short             sectorSize;
-   unsigned long              sectorCount;
+   uint16                     sectorSize;
+   uint32                     sectorCount;
 
 protected:
                                        FileWriter(const char* sFileName, EDtError &rc);
@@ -50,8 +50,8 @@ public:  // non pure-virtual
    virtual void                        cleanUp();
    virtual const char     	           *getTrackName();
    virtual void                        dispose();
-   virtual unsigned short              getBlockSize();
-   virtual unsigned long               getBlockCount();
+   virtual uint16                      getBlockSize();
+   virtual uint32                      getBlockCount();
    virtual void                        deleteFiles();
    virtual void                        setBlockSize(unsigned short size);
    virtual void                        setBlockCount(unsigned long count);

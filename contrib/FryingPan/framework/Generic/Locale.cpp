@@ -224,7 +224,7 @@ const char* GenNS::Localization::Shortcut(IPTR key)
    return (const char*)(&hash.GetVal(key).accel);
 }
       
-GenNS::String GenNS::Localization::FormatNumber(int32 integer, int32 millionth)
+GenNS::String GenNS::Localization::FormatNumber(sint integer, sint millionth)
 {
    char temp[32];
   
