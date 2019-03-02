@@ -4961,7 +4961,7 @@ static SAVEDS(ULONG) INTERRUPT EditAttrTTFontOpenHookFunc(struct Hook *hook, Obj
 
 	if (ttRequest)
 		{
-		struct Window *PrefsWindow;
+		struct Window *PrefsWindow = NULL;
 		struct TagItem *AttrList;
 		char FontName[MAX_ATTRVALUE];
 		IPTR FontStyle, FontWeight, FontSize;
