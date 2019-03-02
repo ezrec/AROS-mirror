@@ -2,7 +2,7 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- contrib-fryingpan-fp: $(CROSSTOOLS_TARGET)
+##MM contrib-fryingpan-fp: $(CROSSTOOLS_TARGET)
 
 #MM contrib-fryingpan-fp: \
 #MM     contrib-fryingpan-fp-engine \
@@ -15,7 +15,8 @@ DESTDIR := $(AROS_CONTRIB)/FryingPan
 
 FILES := ../framework/Startup/Startup_aros Main Application Globals
 
-USER_CXXFLAGS := -fno-rtti -fno-exceptions -isystem $(SRCDIR)/$(CURDIR)/../framework -fno-builtin
+USER_INCLUDES := $(CFLAGS_ISYSTEM) $(SRCDIR)/$(CURDIR)/../framework $(CFLAGS_ISYSTEM_END)
+USER_CXXFLAGS := $(CFLAGS_NO_RTTI) $(CFLAGS_NO_EXCEPTIONS) $(CFLAGS_NO_BUILTIN)
 USER_LDFLAGS := -static-libstdc++
 
 %build_prog mmake=contrib-fryingpan-fp progname="FryingPan" \

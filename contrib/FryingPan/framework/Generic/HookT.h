@@ -46,13 +46,13 @@ namespace GenNS
        * \typedef uint (BaseClass::*TCall)(Arg1 a1, Arg2 a2)
        * \brief This specifies a type of the nonvirtual method that can be called by the specialized class when hook fires. You usually should have no interest in this.
        */
-      typedef IPTR(BaseClass::*TCall)(Arg1 a1, Arg2 a2);
+      typedef uint(BaseClass::*TCall)(Arg1 a1, Arg2 a2);
 
       /**
        * \typedef uint (*TStaticCall)(Arg1 a1, Arg2 a2)
        * \brief This specifies a type of the static method or function that can be called by the specialized class when hook fires. You usually should have no interest in this.
        */
-      typedef IPTR(*TStaticCall)(Arg1 a1, Arg2 a2);
+      typedef uint(*TStaticCall)(Arg1 a1, Arg2 a2);
    
    private:
 
@@ -62,7 +62,7 @@ namespace GenNS
 
    public:
 
-      virtual IPTR Call(IPTR a1, IPTR a2)
+      virtual uint Call(uint a1, uint a2)
       {
          if (0 != baseClass)
          {

@@ -2,7 +2,7 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- contrib-fryingpan-framework-generic : AHI $(CROSSTOOLS_TARGET)
+##MM- contrib-fryingpan-framework-generic : AHI $(CROSSTOOLS_TARGET)
 
 FILES := \
  DynList \
@@ -37,7 +37,7 @@ FILES := \
 
 NOWARN_FLAGS := $(NOWARN_NONNULL_COMPARE)
 USER_CXXFLAGS := $(CFLAGS_NO_RTTI) $(CFLAGS_NO_EXCEPTIONS) $(CFLAGS_PERMISSIVE) $(CFLAGS_ALIGNED_NEW) $(NOWARN_FLAGS)
-USER_INCLUDES := -isystem $(SRCDIR)/$(CURDIR)/..
+USER_INCLUDES := $(CFLAGS_ISYSTEM) $(SRCDIR)/$(CURDIR)/.. $(CFLAGS_ISYSTEM_END)
 
 %build_linklib mmake=contrib-fryingpan-framework-generic \
  libname="Generic" files= cxxfiles="$(FILES)"

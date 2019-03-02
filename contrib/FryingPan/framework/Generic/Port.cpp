@@ -48,7 +48,7 @@ Port::~Port()
    }
 }
 
-unsigned long Port::GetSignals()
+uint32 Port::GetSignals()
 {
    if (!pPort) return 0;
    return (1<<pPort->mp_SigBit);
@@ -60,7 +60,7 @@ void Port::DoAsync(sint ACmd, void* AData)
    Exec->PutMsg(pPort, new Msg(false, ACmd, AData));
 }
 
-unsigned long Port::DoSync(sint ACmd, void* AData)
+uint Port::DoSync(sint ACmd, void* AData)
 {
    unsigned long lRes = 0;
    if (!pPort) return 0;

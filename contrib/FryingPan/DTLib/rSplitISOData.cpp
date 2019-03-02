@@ -322,12 +322,12 @@ void                 rSplitISOData::dispose()
    delete this;
 }
 
-unsigned long        rSplitISOData::getBlockCount()
+uint32               rSplitISOData::getBlockCount()
 {
    return sector_count;
 }
 
-unsigned short       rSplitISOData::getBlockSize()
+uint16               rSplitISOData::getBlockSize()
 {
    return sector_size;
 }

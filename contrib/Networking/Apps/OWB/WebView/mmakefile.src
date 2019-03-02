@@ -12,15 +12,15 @@ OWB_SOURCE := $(PORTSDIR)/OWB/$(ARCHBASE)
 
 OWB_I18N=GENERIC
 OWB_I18N_OPTS=
-ifneq ($(AROS_TARGET_CPU),arm)
-    ifneq ($(AROS_TARGET_CPU),m68k)
-        ifneq ($(AROS_TARGET_CPU),ppc)
-            OWB_I18N=ICU
-            OWB_I18N_OPTS=-DICU_LIBRARY="-licui18n -licuuc -licudata" \
-            -DICU_INCLUDE="$(AROS_INCLUDES)"
-        endif
-    endif
-endif
+# ifneq ($(AROS_TARGET_CPU),arm)
+#    ifneq ($(AROS_TARGET_CPU),m68k)
+#        ifneq ($(AROS_TARGET_CPU),ppc)
+#            OWB_I18N=ICU
+#            OWB_I18N_OPTS=-DICU_LIBRARY="-licui18n -licuuc -licudata" \
+#            -DICU_INCLUDE="$(AROS_INCLUDES)"
+#        endif
+#    endif
+# endif
 
 #MM- aros-tcpip-apps-owb-libs : contrib-fontconfig contrib-curl SDL-aros development-SDL_gfx-quick contrib-sqlite contrib-libxslt aros-tcpip-apps-owb-libs-$(AROS_TARGET_CPU)
 #MM- aros-tcpip-apps-owb-libs-i386: contrib-icu4c

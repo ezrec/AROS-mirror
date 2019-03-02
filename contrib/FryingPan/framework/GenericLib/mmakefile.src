@@ -4,7 +4,8 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 FILES := LibWrapper_aros Library
 
-USER_CXXFLAGS := -fno-rtti -fno-exceptions -isystem $(SRCDIR)/$(CURDIR)/..
+USER_INCLUDES := $(CFLAGS_ISYSTEM) $(SRCDIR)/$(CURDIR)/.. $(CFLAGS_ISYSTEM_END)
+USER_CXXFLAGS := $(CFLAGS_NO_RTTI) $(CFLAGS_NO_EXCEPTIONS) 
 USER_LDFLAGS := -static-libstdc++
 
 %build_linklib mmake=contrib-fryingpan-framework-genericlib \

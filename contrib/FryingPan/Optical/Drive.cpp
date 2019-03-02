@@ -45,7 +45,7 @@ Drive  *Drive::OpenDrive(Drive *& pChain, char* pDevice, int lUnit)
    return pDrive;
 }
 
-ULONG Drive::SendMessage(ULONG* pMsg)
+uint32 Drive::SendMessage(uint32* pMsg)
 {
    return pThread->DoSync(pMsg[0], &pMsg[2]);
 }
@@ -78,7 +78,7 @@ Drive::Drive(char *drv, int unit)
 
    bRegistered = Clear2;
 
-   _D(Lvl_Info, "Spawning new drive process for %s.%ld, class %08lx", (ULONG)drv, unit, (int)this);
+   _D(Lvl_Info, "Spawning new drive process for %s.%ld, class %08lx", (uint32)drv, unit, (int)this);
    pThread = new Thread("Drive Subprocess", hHkProcMsgs.GetHook(), 0);
    pThread->SetHandler(hHkProcHandle.GetHook());
 
@@ -139,7 +139,7 @@ bool Drive::ProcInit()
 
    driveio = new DriveIO(DEBUG_ENGINE); 
 
-   _D(Lvl_Debug, "Opening drive %s.%ld@%08lx", (ULONG)drive_name.Data(), unit_number, (ULONG)driveio);
+   _D(Lvl_Debug, "Opening drive %s.%ld@%08lx", (uint32)drive_name.Data(), unit_number, (uint32)driveio);
    if (!driveio->OpenDev(drive_name.Data(), unit_number))
       return false;
    _D(Lvl_Info, "Drive initialization went fine. Proceeding with thread data initialization");
@@ -426,7 +426,7 @@ void Drive::AnalyseDrive(void)
    Cfg->onWrite();
 }
 
-uint32 Drive::HandleMessages(unsigned long ACmd, unsigned long *msg)
+uint Drive::HandleMessages(uint ACmd, uint *msg)
 {
    if (drive_status == DRT_DriveStatus_NotOpened)
       return (unsigned)ODE_NoHandler;
@@ -483,7 +483,7 @@ uint32 Drive::HandleMessages(unsigned long ACmd, unsigned long *msg)
          {
             _D(Lvl_Debug, "LayoutTracks");
             if (d) 
-               res = d->LayoutTracks((IOptItem*)msg[0]);
+               res = d->LayoutTracks(reinterpret_cast<IOptItem*>(msg[0]));
             else              
                res = (unsigned)(ODE_NoDisc);
          }
@@ -493,7 +493,7 @@ uint32 Drive::HandleMessages(unsigned long ACmd, unsigned long *msg)
          {
             _D(Lvl_Debug, "UploadLayout");
             if (d) 
-               res = d->UploadLayout((IOptItem*)msg[0]);
+               res = d->UploadLayout(reinterpret_cast<IOptItem*>(msg[0]));
             else              
                res = (unsigned)(ODE_NoDisc);
          }
@@ -503,7 +503,10 @@ uint32 Drive::HandleMessages(unsigned long ACmd, unsigned long *msg)
          {
             _D(Lvl_Debug, "ReadTrackAbsolute");
             if (d) 
-               res = d->RandomRead((IOptItem*)msg[0], (ULONG)msg[1], (ULONG)msg[2], (APTR)msg[3]);
+               res = d->RandomRead(reinterpret_cast<IOptItem*>(msg[0]),
+                                                 (uint32)msg[1],
+                                                 (uint32)msg[2],
+                                                 (APTR)msg[3]);
             else              
                res = (unsigned)(ODE_NoDisc);
          }
@@ -513,7 +516,10 @@ uint32 Drive::HandleMessages(unsigned long ACmd, unsigned long *msg)
          {
             _D(Lvl_Debug,"ReadTrackRelative");
             if (d) 
-               res = d->RandomRead((IOptItem*)msg[0], (ULONG)msg[1]+((IOptItem*)msg[0])->getStartAddress(), (ULONG)msg[2], (APTR)msg[3]);
+               res = d->RandomRead(reinterpret_cast<IOptItem*>(msg[0]),
+                                                 (uint32)msg[1]+(reinterpret_cast<IOptItem*>(msg[0]))->getStartAddress(),
+                                                 (uint32)msg[2],
+                                                 (APTR)msg[3]);
             else              
                res = (unsigned)(ODE_NoDisc);
          }
@@ -523,7 +529,7 @@ uint32 Drive::HandleMessages(unsigned long ACmd, unsigned long *msg)
          {
             _D(Lvl_Debug, "WriteTrackAbsolute");
             if (d) 
-               res = d->RandomWrite((IOptItem*)msg[0], (ULONG)msg[1], (ULONG)msg[2], (APTR)msg[3]);
+               res = d->RandomWrite(reinterpret_cast<IOptItem*>(msg[0]), (uint32)msg[1], (uint32)msg[2], (APTR)msg[3]);
             else              
                res = (unsigned)(ODE_NoDisc);
          }
@@ -533,7 +539,7 @@ uint32 Drive::HandleMessages(unsigned long ACmd, unsigned long *msg)
          {
             _D(Lvl_Debug, "WriteTrackRelative");
             if (d) 
-               res = (d->RandomWrite((IOptItem*)msg[0], (ULONG)msg[1]+((IOptItem*)msg[0])->getStartAddress(), (ULONG)msg[2], (APTR)msg[3]));
+               res = (d->RandomWrite(reinterpret_cast<IOptItem*>(msg[0]), (uint32)msg[1]+(reinterpret_cast<IOptItem*>(msg[0]))->getStartAddress(), (uint32)msg[2], (APTR)msg[3]));
             else              
                res = (unsigned)(ODE_NoDisc);
          }
@@ -552,7 +558,7 @@ uint32 Drive::HandleMessages(unsigned long ACmd, unsigned long *msg)
       case DRV_SetAttr:
          {
             _D(Lvl_Debug, "SetDriveAttr");
-            res = SetDriveAttrs((ULONG)msg[0], (ULONG)msg[1]);
+            res = SetDriveAttrs((uint32)msg[0], (uint32)msg[1]);
          }
          break;
 
@@ -567,7 +573,7 @@ uint32 Drive::HandleMessages(unsigned long ACmd, unsigned long *msg)
          {
             _D(Lvl_Debug, "Write sequential");
             if (d) 
-               res = d->SequentialWrite((APTR)msg[0], (ULONG)msg[1]);
+               res = d->SequentialWrite((APTR)msg[0], (uint32)msg[1]);
             else              
                res = (unsigned)(ODE_NoDisc);
          }
@@ -661,13 +667,13 @@ long Drive::LockDrive(long lLockType)
 }
 
 
-IPTR Drive::GetDriveAttrs(IPTR tag, IPTR attr)
+uint Drive::GetDriveAttrs(uint tag, uint attr)
 {
    if (drive_status == DRT_DriveStatus_NotOpened)
       return 0;
   
    register Disc* d = current_disc.ObtainRead(); 
-   register uint32 res = 0;
+   register uint res = 0;
       
    switch (tag)
    {
@@ -678,7 +684,7 @@ IPTR Drive::GetDriveAttrs(IPTR tag, IPTR attr)
           break;
 
       case DRA_DeviceName:                   
-          res = (IPTR)drive_name.Data();
+          res = (uint)drive_name.Data();
           break;
 
       case DRA_UnitNumber:                   
@@ -699,11 +705,11 @@ IPTR Drive::GetDriveAttrs(IPTR tag, IPTR attr)
 
 
       case DRA_Drive_ReadSpeeds:             
-          res = d ? (uint32)d->GetReadSpeeds() : 0;
+          res = d ? (uint)d->GetReadSpeeds() : 0;
           break;
 
       case DRA_Drive_WriteSpeeds:
-          res = d ? (uint32)d->GetWriteSpeeds() : 0;
+          res = d ? (uint)d->GetWriteSpeeds() : 0;
           break;
 
       case DRA_Drive_CurrentOperation:       
@@ -715,7 +721,7 @@ IPTR Drive::GetDriveAttrs(IPTR tag, IPTR attr)
           break;
 
       case DRA_Drive_SenseData:
-          res = (IPTR)driveio->Sense();
+          res = (uint)driveio->Sense();
           break;
 
       case DRA_Drive_Status:
@@ -735,19 +741,19 @@ IPTR Drive::GetDriveAttrs(IPTR tag, IPTR attr)
           break;
 
       case DRA_Drive_Vendor:                 
-          res = (IPTR)((inquiry) ? inquiry->VendorID() : "");
+          res = (uint)((inquiry) ? inquiry->VendorID() : "");
           break;
 
       case DRA_Drive_Product:                
-          res = (IPTR)((inquiry) ? inquiry->ProductID() : "");
+          res = (uint)((inquiry) ? inquiry->ProductID() : "");
           break;
 
       case DRA_Drive_Version:                
-          res = (IPTR)((inquiry) ? inquiry->ProductVersion() : "");
+          res = (uint)((inquiry) ? inquiry->ProductVersion() : "");
           break;
 
       case DRA_Drive_Firmware:               
-          res = (IPTR)((inquiry) ? inquiry->FirmwareVersion() : "");
+          res = (uint)((inquiry) ? inquiry->FirmwareVersion() : "");
           break;
 
       case DRA_Drive_ReadsMedia:             
@@ -808,11 +814,11 @@ IPTR Drive::GetDriveAttrs(IPTR tag, IPTR attr)
 
 
       case DRA_Disc_NumTracks:               
-          res = d ? (ULONG)d->GetNumTracks() : 0;
+          res = d ? (uint32)d->GetNumTracks() : 0;
           break;
 
       case DRA_Disc_Contents:                
-          res = d ? (IPTR)d->GetContents() : 0;
+          res = d ? (uint)d->GetContents() : 0;
           break;
 
       case DRA_Disc_SubType:                 
@@ -864,7 +870,7 @@ IPTR Drive::GetDriveAttrs(IPTR tag, IPTR attr)
           break;
 
       case DRA_Disc_NextWritableTrack:       
-         res = d ? (IPTR)d->GetNextWritableTrack((IOptItem*)attr) : 0;
+         res = d ? (uint)d->GetNextWritableTrack((IOptItem*)attr) : 0;
          break;
 
       case DRA_Disc_WriteMethod:             
@@ -876,7 +882,7 @@ IPTR Drive::GetDriveAttrs(IPTR tag, IPTR attr)
          break;
 
       case DRA_Disc_Vendor:                  
-         res = d ? (IPTR)d->DiscVendor() : 0;
+         res = d ? (uint)d->DiscVendor() : 0;
          break;
 
       default:
@@ -888,12 +894,12 @@ IPTR Drive::GetDriveAttrs(IPTR tag, IPTR attr)
    return res;
 }
 
-IPTR Drive::SetDriveAttrs(IPTR tag, IPTR value)
+uint Drive::SetDriveAttrs(uint tag, uint value)
 {
    if (drive_status == DRT_DriveStatus_NotOpened)
       return (unsigned)ODE_NoHandler;
    
-   register uint32 res = 0;
+   register uint res = 0;
    register Disc *d = current_disc.ObtainRead();
 
    switch (tag)
@@ -903,7 +909,7 @@ IPTR Drive::SetDriveAttrs(IPTR tag, IPTR value)
             Page<Page_Write> &pw = GetWritePage();
             if (!pw.IsValid()) 
             {
-               res = (ULONG)ODE_IllegalCommand;
+               res = (uint32)ODE_IllegalCommand;
             }
             else
             {
@@ -949,7 +955,7 @@ IPTR Drive::SetDriveAttrs(IPTR tag, IPTR value)
    return res;
 }
 
-ULONG Drive::SetDriveAttrs(TagItem *ti)
+uint32 Drive::SetDriveAttrs(TagItem *ti)
 {
    if (drive_status == DRT_DriveStatus_NotOpened)
       return (unsigned)ODE_NoHandler;
@@ -1026,7 +1032,7 @@ cmd_GetConfiguration::Feature *Drive::GetDriveFeature(cmd_GetConfiguration::Feat
    return features->GetFeature(id);
 };
 
-ULONG Drive::ScanDevice(char* sDeviceName)
+uint32 Drive::ScanDevice(char* sDeviceName)
 {
    DEFINE_DEBUG;
    cmd_Inquiry*pInq = 0;
@@ -1042,14 +1048,14 @@ ULONG Drive::ScanDevice(char* sDeviceName)
       case stYes:
          {
             _D(Lvl_Warning, "Device is harmful.");
-            request("Error", "Device %s is considered harmful\nOperation aborted.", "Ok", ARRAY((IPTR)sDeviceName));
+            request("Error", "Device %s is considered harmful\nOperation aborted.", "Ok", ARRAY((uint)sDeviceName));
          }
          break;
 
       case stUnknown:
          {
             _D(Lvl_Warning, "Device is not recorded yet.");
-            if (0 == request("Warning", "Device %s is not known and may be harmful.\nDo you want to continue?", "Yes|No", ARRAY((IPTR)sDeviceName)))
+            if (0 == request("Warning", "Device %s is not known and may be harmful.\nDo you want to continue?", "Yes|No", ARRAY((uint)sDeviceName)))
             {
                Cfg->Drivers()->addDevice(sDeviceName, true);
                break;
@@ -1059,10 +1065,10 @@ ULONG Drive::ScanDevice(char* sDeviceName)
          
       case stNo:
          {
-            _D(Lvl_Info, "Scanning device %s...", (IPTR)sDeviceName);
+            _D(Lvl_Info, "Scanning device %s...", (uint)sDeviceName);
             for (int i=0; i<8; i++)
             {
-               _D(Lvl_Info, "Accessing device %s, unit %ld...", (IPTR)sDeviceName, i);
+               _D(Lvl_Info, "Accessing device %s, unit %ld...", (uint)sDeviceName, i);
                if (pIO->OpenDev(sDeviceName, i))
                {
                   pInq = new cmd_Inquiry(pIO);
@@ -1104,7 +1110,7 @@ ULONG Drive::ScanDevice(char* sDeviceName)
    return (unsigned long)pRes;
 }
 
-ULONG Drive::FreeScanResults(ScanData*pData)
+uint32 Drive::FreeScanResults(ScanData*pData)
 {
    while (pData)
    {
@@ -1177,7 +1183,7 @@ int DriveSense::ASCQ(void)
       return 0;
 };
 
-ULONG DriveSense::SCSIError(void)
+uint32 DriveSense::SCSIError(void)
 {
    if (sense->primary.getCode())
       return (Key()<<16) | (ASC()<<8) | (ASCQ());
@@ -1276,7 +1282,7 @@ int DriveIO::Exec(SCSICommand *scmd)
 
       att++;
       if (att>= scmd->MaxAttempts()) break;
-      _D(Lvl_Debug, "%s: %08lx", (IPTR)scmd->CmdName(), sense->SCSIError());
+      _D(Lvl_Debug, "%s: %08lx", (uint)scmd->CmdName(), sense->SCSIError());
       if ((err = scmd->onLoop())!=ODE_OK) break;
    } while (true);
 
@@ -1323,7 +1329,7 @@ DriveSpool *DriveSpool::GetInstance()
 DriveSpool::DriveSpool(void)
 {
    _ND("Spool");
-   _D(Lvl_Info, "Created new drive spool: %08lx", (ULONG)this);
+   _D(Lvl_Info, "Created new drive spool: %08lx", (uint32)this);
    drive_list = 0;
 };
 
@@ -1350,7 +1356,7 @@ DriveClient *DriveSpool::NewClient(char* drv, int unit)
 {
    Drive       *el=0;
 
-   _D(Lvl_Info, "Adding a client for drive at: %s.%ld", (IPTR)drv, unit);
+   _D(Lvl_Info, "Adding a client for drive at: %s.%ld", (uint)drv, unit);
 
    if (drive_list) el = drive_list->FindDrive(drv, unit);
    if (!el)        el = Drive::OpenDrive(drive_list, drv, unit);
@@ -1371,8 +1377,8 @@ void DriveSpool::DelClient(DriveClient *dc)
 {
    if (dc)
    {
-      _D(Lvl_Info, "Attempting to remove client: %08lx", (ULONG)dc);
-      _D(Lvl_Info, "Owner: %08lx", (ULONG)dc->GetDrive());
+      _D(Lvl_Info, "Attempting to remove client: %08lx", (uint32)dc);
+      _D(Lvl_Info, "Owner: %08lx", (uint32)dc->GetDrive());
       dc->GetDrive()->RemClient(dc);
       _D(Lvl_Info, "Removed.");
    }
@@ -1385,7 +1391,7 @@ DriveClient::DriveClient(DriveClient *next, Drive* drv)
    next_client = next;
    drive       = drv;
    SET_DEBUG_ENGINE(drv->GetDebug());
-   _D(Lvl_Info, "New client ready at %08lx", (ULONG)this);
+   _D(Lvl_Info, "New client ready at %08lx", (uint32)this);
 };
 
 DriveClient *DriveClient::UnLink(DriveClient *el)
@@ -1407,7 +1413,7 @@ Drive *DriveClient::GetDrive(void)
    return drive;
 }
 
-ULONG DriveClient::GetDriveStatus(void)
+uint32 DriveClient::GetDriveStatus(void)
 {
    return drive->CurrentStatus();
 };
@@ -1416,12 +1422,12 @@ DriveClient::~DriveClient(void)
 {
 };
 
-ULONG DriveClient::Send(ULONG *msg)
+uint32 DriveClient::Send(uint32 *msg)
 {
    return drive->SendMessage(msg);
 }
 
-IPTR DriveClient::GetDriveAttrs(TagItem *ti)
+uint DriveClient::GetDriveAttrs(TagItem *ti)
 {
    TagItem  *t;
    
@@ -1435,13 +1441,13 @@ IPTR DriveClient::GetDriveAttrs(TagItem *ti)
    return 0x0;
 }
 
-IPTR DriveClient::GetDriveAttrs(IPTR tag)
+uint DriveClient::GetDriveAttrs(uint tag)
 {
    long lRet = drive->GetDriveAttrs(tag, 0UL);
    return lRet;
 }
 
-ULONG DriveClient::WaitForDisc(int lDuration)
+uint32 DriveClient::WaitForDisc(int lDuration)
 {
    // probe periodically every 1/2 sec
    lDuration *= 50;
@@ -1452,5 +1458,5 @@ ULONG DriveClient::WaitForDisc(int lDuration)
       if (lWait) DOS->Delay(lWait);
       lDuration -= lWait;
    } while (lDuration);
-   return (ULONG)ODE_NoDisc;
+   return (uint32)ODE_NoDisc;
 }

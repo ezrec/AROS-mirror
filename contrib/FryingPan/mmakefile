@@ -11,3 +11,13 @@
 #MM      contrib-fryingpan-expat \
 #MM      contrib-fryingpan-isobuilder \
 #MM      contrib-fryingpan-optical
+
+
+#MM- contrib-fryingpan-quick: \
+#MM      contrib-fryingpan-fp-quick \
+#MM      contrib-fryingpan-data-quick \
+#MM      contrib-fryingpan-framework-quick \
+#MM      contrib-fryingpan-dtlib-quick \
+#MM      contrib-fryingpan-expat-quick \
+#MM      contrib-fryingpan-isobuilder-quick \
+#MM      contrib-fryingpan-optical-quick
