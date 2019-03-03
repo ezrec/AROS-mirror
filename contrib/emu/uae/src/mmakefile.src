@@ -69,7 +69,8 @@ NOWARN_FLAGS := \
     $(NOWARN_SHIFT_NEGATIVE_VALUE) \
     $(NOWARN_IMPLICIT_FALLTHROUGH)
 
-USER_CFLAGS := -O2 $(CFLAGS_OMIT_FP) -fno-exceptions -fno-strength-reduce \
+OPTIMIZATION_CFLAGS := -O2 
+USER_CFLAGS := $(CFLAGS_OMIT_FP) $(CFLAGS_NO_EXCEPTIONS) -fno-strength-reduce \
 	       $(WARN_FLAGS) $(NOWARN_FLAGS) \
 	       -UAMIGA -U_AMIGA
 USER_CPPFLAGS := -DGCCCONSTFUNC='__attribute__((const))'\
@@ -138,14 +139,14 @@ blittable.c: genblitter blitfunc.h
 #	rm cputmp.s
 
 $(OBJDIR)/_writelog.o : writelog.c
-	$(HOST_CC) $(USER_CFLAGS) $(USER_CPPFLAGS) $^ -c -o $@
+	$(HOST_CC) $(USER_CFLAGS) $(CPPFLAGS) $^ -c -o $@
 
 genblitter: genblitter.c blitops.c $(OBJDIR)/_writelog.o
-	$(HOST_CC) $(USER_CFLAGS) $(USER_CPPFLAGS) $^ -o $@
+	$(HOST_CC) $(USER_CFLAGS) $(CPPFLAGS) $^ -o $@
 build68k: build68k.c $(OBJDIR)/_writelog.o
-	$(HOST_CC) $(USER_CFLAGS) $(USER_CPPFLAGS) $^ -o $@
+	$(HOST_CC) $(USER_CFLAGS) $(CPPFLAGS) $^ -o $@
 gencpu: gencpu.c readcpu.c cpudefs.c missing.c $(OBJDIR)/_writelog.o
-	$(HOST_CC) $(USER_CFLAGS) $(USER_CPPFLAGS) $^ -o $@
+	$(HOST_CC) $(USER_CFLAGS) $(CPPFLAGS) $^ -o $@
 
 cpuemu.c: gencpu
 	./gencpu
