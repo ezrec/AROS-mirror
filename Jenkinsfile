@@ -13,6 +13,15 @@ def notify(status){
 }
 
 def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') {
+	stage('Checkout and pull') {
+		properties([pipelineTriggers([githubPush()])])
+		if (env.CHANGE_ID) {
+			echo 'Trying to build pull request'
+		}
+
+		checkout scm
+	}
+
 	stage("Starting $ext build target...") {
 		slackSend color: "good", channel: "#jenkins", message: "Starting ${ext} build target..."
 	}
@@ -27,6 +36,10 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') 
 	
 	stage('Building AROS main source...') {
 		sh "cd build-${ext} && make"
+	}
+	
+	stage('Copy over contrib...') {
+		postCoreBuild(ext)
 	}
 	
 	stage('Building selected AROS contributions...') {
@@ -57,26 +70,22 @@ def freshUpRoot(ext) {
 	// end of section
 	sh "rm -rfv AROS/contrib"
 	sh "rm -rfv AROS/ports"
-	sh "cp -fvr contrib AROS/"
-	sh "cp -fvr ports AROS/"
 
 	sh "mkdir -p build-$ext"
   	sh "mkdir -p externalsources"
 	sh "mkdir -p tools"
 }
 
+def postCoreBuild(ext) {
+	sh "cp -fvr contrib AROS/"
+	sh "cp -fvr ports AROS/"
+}
+
 node {
 	try{
 		slackSend color: "good", channel: "#jenkins", message: "Build Started: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
 		
-		stage('Checkout and pull') {
-			properties([pipelineTriggers([githubPush()])])
-			if (env.CHANGE_ID) {
-				echo 'Trying to build pull request'
-			}
-
-			checkout scm
-		}
+		
 	
 		if (!env.CHANGE_ID) {
 			stage('Generate publishing directories') {
