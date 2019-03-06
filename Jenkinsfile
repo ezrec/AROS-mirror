@@ -14,64 +14,64 @@ def notify(status){
 
 
 def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') {
-  stage("Building ${ext}...") {
-    stage('Checkout and pull') {
-      properties([pipelineTriggers([githubPush()])])
-      if (env.CHANGE_ID) {
-        echo 'Trying to build pull request'
-      }
+	stage("Building ${ext} with gcc ${gccver} and binutils ${binutilsver}...") {
+	    stage('Checkout and pull') {
+	      properties([pipelineTriggers([githubPush()])])
+	      if (env.CHANGE_ID) {
+		echo 'Trying to build pull request'
+	      }
 
-      checkout scm
-    }
+	      checkout scm
+	    }
 
-    if (!env.CHANGE_ID) {
-        stage('Generate publishing directories') {
-          sh "rm -rfv publishing/deploy/*"
-          sh "mkdir -p publishing/deploy/aros"
-        }
-    }
-  
-    stage("Starting $ext build target...") {
-      slackSend color: "good", channel: "#jenkins", message: "Starting ${ext} build target..."
-    }
+	    if (!env.CHANGE_ID) {
+		stage('Generate publishing directories') {
+		  sh "rm -rfv publishing/deploy/*"
+		  sh "mkdir -p publishing/deploy/aros"
+		}
+	    }
 
-    stage('Freshing up the root') {
-      freshUpRoot(ext)
-    }
+	    stage("Starting $ext build target...") {
+	      slackSend color: "good", channel: "#jenkins", message: "Starting ${ext} build target..."
+	    }
 
-    stage('Configuring...') {
-      sh "cd build-${ext} && ../AROS/configure --target=${ext} --enable-ccache --with-iconset=${iconset} --enable-build-type=nightly --with-serial-debug --with-binutils-version=${binutilsver} --with-gcc-version=${gccver} --with-aros-toolchain-install=${env.WORKSPACE}/tools --with-portssources=${env.WORKSPACE}/externalsources"
-    }
+	    stage('Freshing up the root') {
+	      freshUpRoot(ext, binutilsver, gccver)
+	    }
 
-    stage('Building AROS main source...') {
-      sh "cd build-${ext} && make"
+	    stage('Configuring...') {
+	      sh "cd build-${ext}-${gccver}-${binutilsver} && ../AROS/configure --target=${ext} --enable-ccache --with-iconset=${iconset} --enable-build-type=nightly --with-serial-debug --with-binutils-version=${binutilsver} --with-gcc-version=${gccver} --with-aros-toolchain-install=${env.WORKSPACE}/tools-${gccver}-${binutilsver} --with-portssources=${env.WORKSPACE}/externalsources"
+	    }
 
-    }
+	    stage('Building AROS main source...') {
+	      sh "cd build-${ext}-${gccver}-${binutilsver} && make"
 
-    stage('Copy over contrib...') {
-      postCoreBuild(ext)
-    }
+	    }
 
-    stage('Building selected AROS contributions...') {
-      sh "cd build-${ext} && make contrib-installerlg"
-    }
+	    stage('Copy over contrib...') {
+	      postCoreBuild(ext)
+	    }
 
-    stage('Making distfiles...') {
-      sh "cd build-${ext} && make distfiles"
-    }
+	    stage('Building selected AROS contributions...') {
+	      sh "cd build-${ext}-${gccver}-${binutilsver} && make contrib-installerlg"
+	    }
 
-    if (!env.CHANGE_ID) {
-      stage('Moving dist files for publishing') {
-        sh "mkdir -p publishing/deploy/aros/$ext/"
-        sh "echo '${ext},' > publishing/deploy/aros/TARGETS"
-        sh "cp -fvr build-${ext}/distfiles/* publishing/deploy/aros/${ext}/"
-        sh "cp -pRL AROS/LICENSE publishing/deploy/aros/${ext}/"
-        sh "cp -pRL AROS/ACKNOWLEDGEMENTS publishing/deploy/aros/${ext}/"
-        sh "rm -rfv publishing/deploy/aros/${ext}/*.elf"
-      }
-    }
-    
-    stage('Deploying to stage') {
+	    stage('Making distfiles...') {
+	      sh "cd build-${ext}-${gccver}-${binutilsver} && make distfiles"
+	    }
+
+	    if (!env.CHANGE_ID) {
+	      stage('Moving dist files for publishing') {
+		sh "mkdir -p publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
+		sh "echo '${ext}-${gccver}-${binutilsver},' > publishing/deploy/aros/TARGETS"
+		sh "cp -fvr build-${ext}-${gccver}-${binutilsver}/distfiles/* publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
+		sh "cp -pRL AROS/LICENSE publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
+		sh "cp -pRL AROS/ACKNOWLEDGEMENTS publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
+		sh "rm -rfv publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/*.elf"
+	      }
+	    }
+
+	    stage('Deploying to stage') {
 			if (env.TAG_NAME) {
 				sh "echo $TAG_NAME > publishing/deploy/STABLE"
 				sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/releases/aros/$TAG_NAME"
@@ -86,8 +86,8 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') 
 				sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
 				sh "scp -r publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
 				sh "scp publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros/"
-				
-				slackSend color: "good", channel: "#aros", message: "Deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} to web (<https://www.eevul.net/${deploy_url}|https://www.eevul.net/${deploy_url}>)"
+
+				slackSend color: "good", channel: "#aros", message: "Deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} to web (<https://www.eevul.net/${deploy_url}|https://www.eevul.net/${deploy_url}>)"
 			} else if (env.BRANCH_NAME.equals('ABI_V1_experimental')) {
 				def deploy_url = sh (
 				    script: 'echo "/downloads/nightly/aros-experimental/`date +\'%Y\'`/`date +\'%m\'`/`date +\'%d\'`/"',
@@ -97,17 +97,17 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') 
 				sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/nightly/aros-experimental/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
 				sh "scp -r publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros-experimental/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
 				sh "scp publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros-experimental/"
-				
-				slackSend color: "good", channel: "#aros", message: "Deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} to web (<https://www.eevul.net/${deploy_url}|https://www.eevul.net/${deploy_url}>)"
+
+				slackSend color: "good", channel: "#aros", message: "Deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} to web (<https://www.eevul.net/${deploy_url}|https://www.eevul.net/${deploy_url}>)"
 			} else {
-				slackSend color: "good", channel: "#aros", message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} successful!"
+				slackSend color: "good", channel: "#aros", message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} successful!"
 			}
 		}
-  }
+	}
 }
 
-def freshUpRoot(ext) {
-	sh "rm -rfv build-$ext/distfiles/*"
+def freshUpRoot(ext, binutilsver, gccver) {
+	sh "rm -rfv build-${ext}-${gccver}-${binutilsver}/distfiles/*"
 	// uncomment the following section to remove the whole toolchain and build: 
 	// sh "rm -rfv ${env.WORKSPACE}/tools"
 	// sh "rm -rfv ${env.WORKSPACE}/build-$ext/*"
@@ -115,9 +115,9 @@ def freshUpRoot(ext) {
 	sh "rm -rfv AROS/contrib"
 	sh "rm -rfv AROS/ports"
 
-	sh "mkdir -p build-$ext"
+	sh "mkdir -p build-${ext}-${gccver}-${binutilsver}"
   	sh "mkdir -p externalsources"
-	sh "mkdir -p tools"
+	sh "mkdir -p tools-${gccver}-${binutilsver}"
 }
 
 def postCoreBuild(ext) {
