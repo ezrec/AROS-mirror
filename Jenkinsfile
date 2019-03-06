@@ -12,91 +12,66 @@ def notify(status){
 	)
 }
 
+
 def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') {
-	stage('Checkout and pull') {
-		properties([pipelineTriggers([githubPush()])])
-		if (env.CHANGE_ID) {
-			echo 'Trying to build pull request'
-		}
+  stage("Building ${ext}...") {
+    stage('Checkout and pull') {
+      properties([pipelineTriggers([githubPush()])])
+      if (env.CHANGE_ID) {
+        echo 'Trying to build pull request'
+      }
 
-		checkout scm
-	}
+      checkout scm
+    }
 
-	stage("Starting $ext build target...") {
-		slackSend color: "good", channel: "#jenkins", message: "Starting ${ext} build target..."
-	}
+    if (!env.CHANGE_ID) {
+        stage('Generate publishing directories') {
+          sh "rm -rfv publishing/deploy/*"
+          sh "mkdir -p publishing/deploy/aros"
+        }
+    }
+  
+    stage("Starting $ext build target...") {
+      slackSend color: "good", channel: "#jenkins", message: "Starting ${ext} build target..."
+    }
 
-	stage('Freshing up the root') {
-		freshUpRoot(ext)
-	}
-	
-	stage('Configuring...') {
-		sh "cd build-${ext} && ../AROS/configure --target=${ext} --enable-ccache --with-iconset=${iconset} --enable-build-type=nightly --with-serial-debug --with-binutils-version=${binutilsver} --with-gcc-version=${gccver} --with-aros-toolchain-install=${env.WORKSPACE}/tools --with-portssources=${env.WORKSPACE}/externalsources"
-	}
-	
-	stage('Building AROS main source...') {
-		sh "cd build-${ext} && make"
-	}
-	
-	stage('Copy over contrib...') {
-		postCoreBuild(ext)
-	}
-	
-	stage('Building selected AROS contributions...') {
-		sh "cd build-${ext} && make contrib-installerlg"
-	}
-	
-	stage('Making distfiles...') {
-		sh "cd build-${ext} && make distfiles"
-	}
-	
-	if (!env.CHANGE_ID) {
-		stage('Moving dist files for publishing') {
-			sh "mkdir -p publishing/deploy/aros/$ext/"
-			sh "echo '${ext},' > publishing/deploy/aros/TARGETS"
-			sh "cp -fvr build-${ext}/distfiles/* publishing/deploy/aros/${ext}/"
-			sh "cp -pRL AROS/LICENSE publishing/deploy/aros/${ext}/"
-			sh "cp -pRL AROS/ACKNOWLEDGEMENTS publishing/deploy/aros/${ext}/"
-			sh "rm -rfv publishing/deploy/aros/${ext}/*.elf"
-		}
-	}
-}
+    stage('Freshing up the root') {
+      freshUpRoot(ext)
+    }
 
-def freshUpRoot(ext) {
-	sh "rm -rfv build-$ext/distfiles/*"
-	// uncomment the following section to remove the whole toolchain and build: 
-	// sh "rm -rfv ${env.WORKSPACE}/tools"
-	// sh "rm -rfv ${env.WORKSPACE}/build-$ext/*"
-	// end of section
-	sh "rm -rfv AROS/contrib"
-	sh "rm -rfv AROS/ports"
+    stage('Configuring...') {
+      sh "cd build-${ext} && ../AROS/configure --target=${ext} --enable-ccache --with-iconset=${iconset} --enable-build-type=nightly --with-serial-debug --with-binutils-version=${binutilsver} --with-gcc-version=${gccver} --with-aros-toolchain-install=${env.WORKSPACE}/tools --with-portssources=${env.WORKSPACE}/externalsources"
+    }
 
-	sh "mkdir -p build-$ext"
-  	sh "mkdir -p externalsources"
-	sh "mkdir -p tools"
-}
+    stage('Building AROS main source...') {
+      sh "cd build-${ext} && make"
 
-def postCoreBuild(ext) {
-	sh "cp -fvr contrib AROS/"
-	sh "cp -fvr ports AROS/"
-}
+    }
 
-node {
-	try{
-		slackSend color: "good", channel: "#jenkins", message: "Build Started: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
-		
-		
-	
-		if (!env.CHANGE_ID) {
-			stage('Generate publishing directories') {
-				sh "rm -rfv publishing/deploy/*"
-				sh "mkdir -p publishing/deploy/aros"
-			}
-		}
-		
-		buildStep('amiga-m68k')
-		
-		stage('Deploying to stage') {
+    stage('Copy over contrib...') {
+      postCoreBuild(ext)
+    }
+
+    stage('Building selected AROS contributions...') {
+      sh "cd build-${ext} && make contrib-installerlg"
+    }
+
+    stage('Making distfiles...') {
+      sh "cd build-${ext} && make distfiles"
+    }
+
+    if (!env.CHANGE_ID) {
+      stage('Moving dist files for publishing') {
+        sh "mkdir -p publishing/deploy/aros/$ext/"
+        sh "echo '${ext},' > publishing/deploy/aros/TARGETS"
+        sh "cp -fvr build-${ext}/distfiles/* publishing/deploy/aros/${ext}/"
+        sh "cp -pRL AROS/LICENSE publishing/deploy/aros/${ext}/"
+        sh "cp -pRL AROS/ACKNOWLEDGEMENTS publishing/deploy/aros/${ext}/"
+        sh "rm -rfv publishing/deploy/aros/${ext}/*.elf"
+      }
+    }
+    
+    stage('Deploying to stage') {
 			if (env.TAG_NAME) {
 				sh "echo $TAG_NAME > publishing/deploy/STABLE"
 				sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/releases/aros/$TAG_NAME"
@@ -128,7 +103,44 @@ node {
 				slackSend color: "good", channel: "#aros", message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} successful!"
 			}
 		}
-	
+  }
+}
+
+def freshUpRoot(ext) {
+	sh "rm -rfv build-$ext/distfiles/*"
+	// uncomment the following section to remove the whole toolchain and build: 
+	// sh "rm -rfv ${env.WORKSPACE}/tools"
+	// sh "rm -rfv ${env.WORKSPACE}/build-$ext/*"
+	// end of section
+	sh "rm -rfv AROS/contrib"
+	sh "rm -rfv AROS/ports"
+
+	sh "mkdir -p build-$ext"
+  	sh "mkdir -p externalsources"
+	sh "mkdir -p tools"
+}
+
+def postCoreBuild(ext) {
+	sh "cp -fvr contrib AROS/"
+	sh "cp -fvr ports AROS/"
+}
+
+node {
+	try{
+		slackSend color: "good", channel: "#jenkins", message: "Build Started: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+		parallel (
+			'Build Amiga 68k version - GCC 6.3.0 - Binutils 2.30': {
+				node {			
+					buildStep('amiga-m68k', 'default', '2.30', '6.3.0')
+				}
+			},
+			'Build Amiga 68k version - GCC 6.5.0 - Binutils 2.32': {
+				node {			
+					buildStep('amiga-m68k', 'default', '2.32', '6.5.0')
+				}
+			}
+		)
+			
 	} catch(err) {
 		slackSend color: "danger", channel: "#aros", message: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
 		currentBuild.result = 'FAILURE'
