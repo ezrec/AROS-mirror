@@ -178,8 +178,9 @@ $(HOSTGENDIR)/tools/romcheck: romcheck.c
 $(GENDIR)/%_objs.ld: $(SRCDIR)/$(CURDIR)/mmakefile.src
 	$(Q)rm -f $@
 	$(Q)for file in $(OBJS_$*) $(KOBJS_$*); do \
-		echo "$$file(.rodata .rodata.*)" >>$@; \
-		echo "$$file(.text)" >>$@; \
+		export relfile=`echo "$$file" | sed 's|$(TOP)|../../..|g'`; \
+		echo "$$relfile(.rodata .rodata.*)" >>$@; \
+		echo "$$relfile(.text)" >>$@; \
 	done
 
 $(DISTDIR)/aros-amiga-m68k-reloc.elf : $(DEPLIBS) $(SRCDIR)/$(CURDIR)/mmakefile.src \
