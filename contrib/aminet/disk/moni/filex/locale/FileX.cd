@@ -360,7 +360,7 @@ MSG_GADGET_ABOUT2 (//)
 More|Leave about
 ;
 MSG_GADGET_REGISTERED (//)
-!\\\\_ö/!
+!\\\\_\xf6/!
 ;
 MSG_GADGET_GRAB_START (//)
 _Start
@@ -626,7 +626,7 @@ Can't open \"%s.info\"!
 ;
 MSG_INFO_GLOBAL_NERVREQUESTER (//)
      FileX V2.0 (9.6.94) Shareware 20 DM or 15 US-Dollar,     \
-           Copyright © 1993-1994 by Klaas Hermanns,           \
+           Copyright \xa9 1993-1994 by Klaas Hermanns,           \
                      all rights reserved.                     \
                                                               \
   To contact me write to one of the following addresses:      \
@@ -642,7 +642,7 @@ MSG_INFO_GLOBAL_NERVREQUESTER (//)
 ;
 MSG_INFO_GLOBAL_ABOUTTEXT1 (//)
 FileX %s Version %s (%s)\n\
-Copyright © 1993-1994 by Klaas Hermanns\n\
+Copyright \xa9 1993-1994 by Klaas Hermanns\n\
 Shareware 20 DM or 15 US-Dollar,\n\
 all rights reserved.\n\n\
 To contact me write to one of the following addresses:\n\n\
@@ -654,7 +654,7 @@ Klaas Hermanns,Weberstrasse 42, 47533 Kleve, Germany
 MSG_INFO_GLOBAL_ABOUTTEXT2 (//)
 Special thanks in no order to:\n\n\
 Robert Gorthmanns,Thomas Hornik,\n\
-Benjamin Schörner, Jörg Groenewald,\n\
+Benjamin Sch\xf6rner, J\xf6rg Groenewald,\n\
 Thomas Hertz for betatesting.\n\n\
 Michael Balzer for his `ARexxBox'\n\
 which was used to create the basis\n\
@@ -805,7 +805,7 @@ Not convertible!
 ;****************************** MISC ******************************
 ;
 MSG_SCREENTITLE (1000//)
-FileX © 1993-1994 by Klaas Hermanns. Publicscreenname = \"%s\".
+FileX \xa9 1993-1994 by Klaas Hermanns. Publicscreenname = \"%s\".
 ;
 MSG_APPICONNAME (//)
 FileX

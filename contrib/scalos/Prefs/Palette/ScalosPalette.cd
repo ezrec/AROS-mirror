@@ -234,7 +234,7 @@ _OK
 MSGID_ABOUTREQFORMAT (//)
 \033c\033bScalos Palette Preferences V%ld.%ld\033n\n\
 %s\n\
-© 1999%s The Scalos Team\n\
+\xa9 1999%s The Scalos Team\n\
 Based on original code by Stefan Sommerfeld of ALiENDESiGN!
 ;
 ;

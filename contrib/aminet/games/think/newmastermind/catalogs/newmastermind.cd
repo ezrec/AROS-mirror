@@ -53,7 +53,7 @@ MSG_ABOUT_REQTITLE (//)
 About %s
 ;
 MSG_ABOUT_REQMSG (//)
-%s v%s\nBy %s %s\nCopyright © %s %s
+%s v%s\nBy %s %s\nCopyright \xa9 %s %s
 ;
 MSG_CONTINUE_GAD (//)
 Continue
