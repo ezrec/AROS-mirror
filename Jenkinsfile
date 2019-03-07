@@ -129,14 +129,24 @@ node {
 	try{
 		slackSend color: "good", channel: "#jenkins", message: "Build Started: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
 		parallel (
-			'Build Amiga 68k version - GCC 6.3.0 - Binutils 2.30': {
+			'Build Amiga 68k version - GCC 8.3.0 - Binutils 2.32': {
 				node {			
-					buildStep('amiga-m68k', 'default', '2.30', '6.3.0')
+					buildStep('amiga-m68k', 'default', '2.32', '8.3.0')
 				}
 			},
 			'Build Amiga 68k version - GCC 6.5.0 - Binutils 2.32': {
 				node {			
 					buildStep('amiga-m68k', 'default', '2.32', '6.5.0')
+				}
+			},
+			'Build Linux Hosted x86_64 version - GCC 8.3.0 - Binutils 2.32': {
+				node {			
+					buildStep('linux-x86_64', 'default', '2.32', '8.3.0')
+				}
+			},
+			'Build Linux Hosted x86_64 version - GCC 6.5.0 - Binutils 2.32': {
+				node {			
+					buildStep('linux-x86_64', 'default', '2.32', '6.5.0')
 				}
 			}
 		)
