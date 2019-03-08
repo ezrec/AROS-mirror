@@ -1,37 +1,37 @@
-## version $VER: Unarc.catalog 1.0 (06.04.2012)
-## language deutsch
-## codeset 0
+## version $VER: unarc.catalog 1.0 (08.03.2019)
+## language polski
+## codeset 5
 ;
 MSG_AppDescription
-Entpacker
+UnArc
 ; Unarchiver
 ;
 MSG_AppCopyright
-Copyright © 2012 The AROS Development Team
-; Copyright © 2012 The AROS Development Team
+Copyright \xa9 2012 The AROS Development Team
+; Copyright \xa9 2012 The AROS Development Team
 ;
 MSG_WI_TITLE
-Unarc
+UnArc
 ; Unarc
 ;
 MSG_LA_ARCHIVE
-Archiv
+Archiwum
 ; Archive
 ;
 MSG_LA_DESTINATION
-Zielverzeichnis
+Cel
 ; Destination
 ;
 MSG_BT_ALL
-_Alle
+_Wszystko
 ; _All
 ;
 MSG_BT_NONE
-_Keine
+_Nic
 ; _None
 ;
 MSG_BT_INVERT
-_Invertieren
+_Odwróæ
 ; _Invert
 ;
 MSG_BT_START
@@ -39,23 +39,23 @@ _Start
 ; _Start
 ;
 MSG_BT_CANCEL
-A_bbrechen
+_Poniechaj
 ; _Cancel
 ;
 MSG_TXT_STATUS_ALL
-%u Bytes in %u Dateien
+%u bytów w %u plikach
 ; %u bytes in %u files
 ;
 MSG_TXT_STATUS_SEL
-%u Bytes in %u ausgewählten Dateien
+%u bytów v %u wybranch plikach
 ; %u bytes in %u selected files
 ;
 MSG_FREQ_ARCHIVE_TITLE
-Archiv wählen
+Wybierz archiwum
 ; Select Archive
 ;
 MSG_FREQ_DESTINATION_TITLE
-Zielverzeichnis wählen
+Wybierz cel
 ; Select Destination
 ;
 MSG_OK
@@ -63,71 +63,71 @@ _OK
 ; _OK
 ;
 MSG_SKIP_CANCEL
-_Überspringen|_Abbrechen
+_Pomiñ|_Poniechaj
 ; _Skip|_Cancel
 ;
 ;
 ; List labels
 MSG_LBL_NAME
-Name
+Nazwa
 ; Name
 ;
 MSG_LBL_PROTECTION
-Schutz
+Atrybuty
 ; Protection
 ;
 MSG_LBL_SIZE
-Größe
+Wielko¶æ
 ; Size
 ;
 MSG_LBL_PACKSIZE
-Packgröße
+Wielko¶æ archiwum
 ; Packsize
 ;
 MSG_LBL_RATE
-Rate
+Wapó³czynnik kompresji
 ; Rate
 ;
 MSG_LBL_DATE
-Datum
+Data
 ; Date
 ;
 MSG_LBL_TIME
-Zeit
+Czas
 ; Time
 ;
 ;
 ; Error messages
 ;
 MSG_ERR
-Fehler
+B³±d
 ; Error
 ;
 MSG_ERR_NO_APPLICATION
-Kann Applikation nicht erzeugen
+Nie mo¿na utworzyæ aplikacji
 ; Can't create application
 ;
 MSG_ERR_READARGS
-Kann Argumente nicht lesen
+Nie mo¿na odczytaæ argumentów polecenia
 ; Can't read commandline arguments
 ;
 MSG_ERR_NO_MEM
-Kein Speicher
+Brak pamiêci
 ; Out of memory
 ;
 MSG_ERR_NO_ARC
-Kann Archiv nicht lesen
+Nie mo¿na odczytaæ archiwum
 ; Can't read archive
 ;
 MSG_ERR_CANT_UNPACK
-Entpacken von\n%s\nführte zu Fehler\n%s
+Rozpakowywanie\n%s\nzwraca b³±d:\n%s
 ; Unpacking of\n%s\nreturned error:\n%s
 ;
 MSG_ERR_ADDPART
-Kann Zieldateiname nicht erzeugen
+Nie mo¿na utworzyæ docelowej nazwy pliku
 ; Can't create target file name
 ;
 MSG_ERR_NODEST
-Bitte ein Zielverzeichnis auswählen
+Proszê wybraæ cel
 ; Please, select a destination
 ;

@@ -1,9 +1,9 @@
-## version $VER: unarc.catalog 1.0 (25.11.2016)
-## language czech
-## codeset 5
+## version $VER: Unarc.catalog 1.0 (06.04.2012)
+## language deutsch
+## codeset 0
 ;
 MSG_AppDescription
-UnArchiv
+Entpacker
 ; Unarchiver
 ;
 MSG_AppCopyright
@@ -11,7 +11,7 @@ Copyright \xa9 2012 The AROS Development Team
 ; Copyright \xa9 2012 The AROS Development Team
 ;
 MSG_WI_TITLE
-UnArchiv
+Unarc
 ; Unarc
 ;
 MSG_LA_ARCHIVE
@@ -19,19 +19,19 @@ Archiv
 ; Archive
 ;
 MSG_LA_DESTINATION
-Cílová slo¾ka
+Zielverzeichnis
 ; Destination
 ;
 MSG_BT_ALL
-_V¹e
+_Alle
 ; _All
 ;
 MSG_BT_NONE
-®á_dný
+_Keine
 ; _None
 ;
 MSG_BT_INVERT
-_Inverznì
+_Invertieren
 ; _Invert
 ;
 MSG_BT_START
@@ -39,23 +39,23 @@ _Start
 ; _Start
 ;
 MSG_BT_CANCEL
-_Ukonèit
+A_bbrechen
 ; _Cancel
 ;
 MSG_TXT_STATUS_ALL
-%u bytù v %u souborech
+%u Bytes in %u Dateien
 ; %u bytes in %u files
 ;
 MSG_TXT_STATUS_SEL
-%u bytù v %u vybraných souborech
+%u Bytes in %u ausgewählten Dateien
 ; %u bytes in %u selected files
 ;
 MSG_FREQ_ARCHIVE_TITLE
-Výbìr archivu
+Archiv wählen
 ; Select Archive
 ;
 MSG_FREQ_DESTINATION_TITLE
-Cílová slo¾ka
+Zielverzeichnis wählen
 ; Select Destination
 ;
 MSG_OK
@@ -63,29 +63,29 @@ _OK
 ; _OK
 ;
 MSG_SKIP_CANCEL
-_Pøeskoèit|_Ukonèit
+_Überspringen|_Abbrechen
 ; _Skip|_Cancel
 ;
 ;
 ; List labels
 MSG_LBL_NAME
-Jméno
+Name
 ; Name
 ;
 MSG_LBL_PROTECTION
-Atributy
+Schutz
 ; Protection
 ;
 MSG_LBL_SIZE
-Rozbaleno
+Größe
 ; Size
 ;
 MSG_LBL_PACKSIZE
-Zabaleno
+Packgröße
 ; Packsize
 ;
 MSG_LBL_RATE
-Komprese
+Rate
 ; Rate
 ;
 MSG_LBL_DATE
@@ -93,41 +93,41 @@ Datum
 ; Date
 ;
 MSG_LBL_TIME
-Èas
+Zeit
 ; Time
 ;
 ;
 ; Error messages
 ;
 MSG_ERR
-Chyba
+Fehler
 ; Error
 ;
 MSG_ERR_NO_APPLICATION
-Nelze vytvoøit aplikace
+Kann Applikation nicht erzeugen
 ; Can't create application
 ;
 MSG_ERR_READARGS
-Nelze pøeèíst øádkový argument
+Kann Argumente nicht lesen
 ; Can't read commandline arguments
 ;
 MSG_ERR_NO_MEM
-Nedostatek pamìti
+Kein Speicher
 ; Out of memory
 ;
 MSG_ERR_NO_ARC
-Nelze pøeèíst archiv
+Kann Archiv nicht lesen
 ; Can't read archive
 ;
 MSG_ERR_CANT_UNPACK
-Rozbaleno z\n%s\nohlá¹ena chyba:\n%s
+Entpacken von\n%s\nführte zu Fehler\n%s
 ; Unpacking of\n%s\nreturned error:\n%s
 ;
 MSG_ERR_ADDPART
-Nelze vytvoøit cílový soubor
+Kann Zieldateiname nicht erzeugen
 ; Can't create target file name
 ;
 MSG_ERR_NODEST
-Prosím vyberte cílovou slo¾ku
+Bitte ein Zielverzeichnis auswählen
 ; Please, select a destination
 ;
