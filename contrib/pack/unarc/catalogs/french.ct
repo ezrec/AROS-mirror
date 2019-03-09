@@ -75,7 +75,7 @@ Taille
 ;Size
 ;
 MSG_LBL_PACKSIZE
-Compacté
+Compressé
 ;Packsize
 ;
 MSG_LBL_RATE
@@ -113,7 +113,7 @@ Impossible de lire l'archive
 ;Can't read archive
 ;
 MSG_ERR_CANT_UNPACK
-Le décompressage de\n%s a retourné l'erreur :\n%s
+La décompression de\n%s a retourné l'erreur :\n%s
 ;Unpacking of\n%s\nreturned error:\n%s
 ;
 MSG_ERR_ADDPART
