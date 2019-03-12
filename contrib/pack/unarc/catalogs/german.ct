@@ -1,0 +1,133 @@
+## version $VER: Unarc.catalog 1.0 (06.04.2012)
+## language deutsch
+## codeset 0
+;
+MSG_AppDescription
+Entpacker
+; Unarchiver
+;
+MSG_AppCopyright
+Copyright \xa9 2012 The AROS Development Team
+; Copyright \xa9 2012 The AROS Development Team
+;
+MSG_WI_TITLE
+Unarc
+; Unarc
+;
+MSG_LA_ARCHIVE
+Archiv
+; Archive
+;
+MSG_LA_DESTINATION
+Zielverzeichnis
+; Destination
+;
+MSG_BT_ALL
+_Alle
+; _All
+;
+MSG_BT_NONE
+_Keine
+; _None
+;
+MSG_BT_INVERT
+_Invertieren
+; _Invert
+;
+MSG_BT_START
+_Start
+; _Start
+;
+MSG_BT_CANCEL
+A_bbrechen
+; _Cancel
+;
+MSG_TXT_STATUS_ALL
+%u Bytes in %u Dateien
+; %u bytes in %u files
+;
+MSG_TXT_STATUS_SEL
+%u Bytes in %u ausgewählten Dateien
+; %u bytes in %u selected files
+;
+MSG_FREQ_ARCHIVE_TITLE
+Archiv wählen
+; Select Archive
+;
+MSG_FREQ_DESTINATION_TITLE
+Zielverzeichnis wählen
+; Select Destination
+;
+MSG_OK
+_OK
+; _OK
+;
+MSG_SKIP_CANCEL
+_Überspringen|_Abbrechen
+; _Skip|_Cancel
+;
+;
+; List labels
+MSG_LBL_NAME
+Name
+; Name
+;
+MSG_LBL_PROTECTION
+Schutz
+; Protection
+;
+MSG_LBL_SIZE
+Größe
+; Size
+;
+MSG_LBL_PACKSIZE
+Packgröße
+; Packsize
+;
+MSG_LBL_RATE
+Rate
+; Rate
+;
+MSG_LBL_DATE
+Datum
+; Date
+;
+MSG_LBL_TIME
+Zeit
+; Time
+;
+;
+; Error messages
+;
+MSG_ERR
+Fehler
+; Error
+;
+MSG_ERR_NO_APPLICATION
+Kann Applikation nicht erzeugen
+; Can't create application
+;
+MSG_ERR_READARGS
+Kann Argumente nicht lesen
+; Can't read commandline arguments
+;
+MSG_ERR_NO_MEM
+Kein Speicher
+; Out of memory
+;
+MSG_ERR_NO_ARC
+Kann Archiv nicht lesen
+; Can't read archive
+;
+MSG_ERR_CANT_UNPACK
+Entpacken von\n%s\nführte zu Fehler\n%s
+; Unpacking of\n%s\nreturned error:\n%s
+;
+MSG_ERR_ADDPART
+Kann Zieldateiname nicht erzeugen
+; Can't create target file name
+;
+MSG_ERR_NODEST
+Bitte ein Zielverzeichnis auswählen
+; Please, select a destination
+;

@@ -1,0 +1,133 @@
+## version $VER: unarc.catalog 1.0 (08.03.2019)
+## language polski
+## codeset 5
+;
+MSG_AppDescription
+UnArc
+; Unarchiver
+;
+MSG_AppCopyright
+Copyright \xa9 2012 The AROS Development Team
+; Copyright \xa9 2012 The AROS Development Team
+;
+MSG_WI_TITLE
+UnArc
+; Unarc
+;
+MSG_LA_ARCHIVE
+Archiwum
+; Archive
+;
+MSG_LA_DESTINATION
+Cel
+; Destination
+;
+MSG_BT_ALL
+_Wszystko
+; _All
+;
+MSG_BT_NONE
+_Nic
+; _None
+;
+MSG_BT_INVERT
+_Odwróæ
+; _Invert
+;
+MSG_BT_START
+_Start
+; _Start
+;
+MSG_BT_CANCEL
+_Poniechaj
+; _Cancel
+;
+MSG_TXT_STATUS_ALL
+%u bytów w %u plikach
+; %u bytes in %u files
+;
+MSG_TXT_STATUS_SEL
+%u bytów v %u wybranch plikach
+; %u bytes in %u selected files
+;
+MSG_FREQ_ARCHIVE_TITLE
+Wybierz archiwum
+; Select Archive
+;
+MSG_FREQ_DESTINATION_TITLE
+Wybierz cel
+; Select Destination
+;
+MSG_OK
+_OK
+; _OK
+;
+MSG_SKIP_CANCEL
+_Pomiñ|_Poniechaj
+; _Skip|_Cancel
+;
+;
+; List labels
+MSG_LBL_NAME
+Nazwa
+; Name
+;
+MSG_LBL_PROTECTION
+Atrybuty
+; Protection
+;
+MSG_LBL_SIZE
+Wielko¶æ
+; Size
+;
+MSG_LBL_PACKSIZE
+Wielko¶æ archiwum
+; Packsize
+;
+MSG_LBL_RATE
+Wapó³czynnik kompresji
+; Rate
+;
+MSG_LBL_DATE
+Data
+; Date
+;
+MSG_LBL_TIME
+Czas
+; Time
+;
+;
+; Error messages
+;
+MSG_ERR
+B³±d
+; Error
+;
+MSG_ERR_NO_APPLICATION
+Nie mo¿na utworzyæ aplikacji
+; Can't create application
+;
+MSG_ERR_READARGS
+Nie mo¿na odczytaæ argumentów polecenia
+; Can't read commandline arguments
+;
+MSG_ERR_NO_MEM
+Brak pamiêci
+; Out of memory
+;
+MSG_ERR_NO_ARC
+Nie mo¿na odczytaæ archiwum
+; Can't read archive
+;
+MSG_ERR_CANT_UNPACK
+Rozpakowywanie\n%s\nzwraca b³±d:\n%s
+; Unpacking of\n%s\nreturned error:\n%s
+;
+MSG_ERR_ADDPART
+Nie mo¿na utworzyæ docelowej nazwy pliku
+; Can't create target file name
+;
+MSG_ERR_NODEST
+Proszê wybraæ cel
+; Please, select a destination
+;
