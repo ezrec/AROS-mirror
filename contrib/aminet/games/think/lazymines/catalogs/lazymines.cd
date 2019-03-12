@@ -73,7 +73,7 @@ About
 ;
 MSG_ABOUT_REQMSG (//)
 By %s (%s)\n\
-Copyright © %s %s
+Copyright \xa9 %s %s
 ;
 MSG_OPTIONAL_REQTITLE (//)
 Optional Level

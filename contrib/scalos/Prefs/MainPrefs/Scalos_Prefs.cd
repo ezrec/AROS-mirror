@@ -619,7 +619,7 @@ MSGID_ICONDRAGLOOK_SOLID_TRANSP (//)
 ;-----------------------------------------------------------
 ;
 MSGID_COPYRIGHTSTRING (5001//)
-®2003%s The Scalos Team
+\xae2003%s The Scalos Team
 ;
 ;
 MSGID_SPLASHWINDOW_LOADINGPREFS (//)
@@ -640,7 +640,7 @@ Scalos Version %s (%d.%d) (Build %s)
 ;-----------------------------------------------------------
 ;
 MSGID_ABOUTPAGE_COPYRIGHT (5100//)
-\033c\033bCopyright ©2003%s The Scalos Team
+\033c\033bCopyright \xa92003%s The Scalos Team
 ;
 ;
 MSGID_ABOUTPAGE_CONTACT1 (//)
@@ -2622,7 +2622,7 @@ _OK
 MSGID_ABOUTREQFORMAT (//)
 \33c\033bScalos Main Preferences V%ld.%ld\033n\n\
 %s\n\
-© 2003%s The Scalos Team
+\xa9 2003%s The Scalos Team
 ;
 ;-----------------------------------------------------------
 ;

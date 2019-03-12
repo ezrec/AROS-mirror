@@ -1,17 +1,17 @@
-## version $VER: diskimagegui.catalog 52.26 (27.09.2010)
-## codeset 0
+## version $VER: diskimagegui.catalog 1.1 (08.03.2019)
 ## language deutsch
+## codeset 0
 ;
 ; *********************
 ; ** Unit/drive list **
 ; *********************
 ;
 MSG_UNIT_LBL
-Unit
+Einheit
 ; Unit
 ;
 MSG_DEVICE_LBL
-Device
+Gerät
 ; Device
 ;
 MSG_FILENAME_LBL
@@ -19,12 +19,16 @@ Disk Image
 ; Disk Image
 ;
 MSG_WRITEPROTECT_LBL
-WP
+Schreibgeschützt
 ; WP
 ;
 MSG_NO_DISK
 Keine Disk eingelegt
 ; No disk present
+;
+MSG_APPDESCRIPTION
+GUI für diskimage.device
+; Control GUI for diskimage.device
 ;
 ; ******************
 ; ** Plugins list **
@@ -47,7 +51,7 @@ MSG_AUTO_LBL
 ; (Auto)
 ;
 MSG_WRITESUPPORT_LBL
-W
+Beschreibbar
 ; W
 ;
 ; *****************
@@ -63,7 +67,7 @@ Verbergen
 ; Hide
 ;
 MSG_PROJECT_ICONIFY
-Iconifizieren
+Ikonifizieren
 ; Iconify
 ;
 MSG_PROJECT_SNAPSHOT
@@ -111,12 +115,20 @@ Fehler
 ; Error
 ;
 MSG_NOAISS_REQ
-AISS Assign nicht gefunden.\n\nLade und installiere die neuste Version\nvon hier: http://masonicons.de
-; AISS assign not found.\n\nDownload and install the latest version\nfrom here: http://masonicons.de
+AISS Assign nicht gefunden.\n\n\
+Lade und installiere die neuste Version\n\
+von hier: http://masonicons.de
+; AISS assign not found.\n\n\
+; Download and install the latest version\n\
+; from here: http://masonicons.de
 ;
 MSG_OLDAISS_REQ
-AISS V%ld.%ld oder neuer wird benötigt.\n\nLade und installiere die neuste Version\nvon hier: http://masonicons.de
-; AISS v%ld.%ld or newer required.\n\nDownload and install the latest version\nfrom here: http://masonicons.de
+AISS V%ld.%ld oder neuer wird benötigt.\n\n\
+Lade und installiere die neuste Version\n\
+von hier: http://masonicons.de
+; AISS v%ld.%ld or newer required.\n\n\
+; Download and install the latest version\n\
+; from here: http://masonicons.de
 ;
 MSG_IMAGENOTFOUND_REQ
 Imagedatei '%s' nicht gefunden.
@@ -125,6 +137,18 @@ Imagedatei '%s' nicht gefunden.
 ; *******************
 ; ** Speedbar help **
 ; *******************
+;
+MSG_CANCEL_GAD
+_Abbrechen
+; _Cancel
+;
+MSG_SAVE_GAD
+_Sichern
+; _Save
+;
+MSG_USE_GAD
+An_wenden
+; _Use
 ;
 MSG_INSERT_GAD
 Einlegen
@@ -161,4 +185,28 @@ MSG_ABOUT_WND
 MSG_ERROR_WND
 Fehler - %s
 ; Error - %s
+;
+MSG_SETDEVICETYPE_GAD
+Wähle Gerätetyp
+; Set Device Type
+;
+MSG_SETDEVICETYPE_WND
+Einheit : %ld - Gerätetyp
+; Unit: %ld - Device Type
+;
+MSG_DEVICETYPE_GAD
+Gerätetyp
+; Device Type
+;
+MSG_DEVICETYPE_DIRECT_ACCESS
+Direktezugriff (Standardeinstellung)
+; Direct Access (Default setting)
+;
+MSG_DEVICETYPE_CDROM
+CD-ROM
+; CD-ROM
+;
+MSG_DEVICETYPE_OPTICAL_DISK
+Optisches Medium
+; Optical Disk
 ;
