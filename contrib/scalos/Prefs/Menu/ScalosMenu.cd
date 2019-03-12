@@ -519,7 +519,7 @@ _OK
 MSGID_ABOUTREQFORMAT (//)
 \33c\033bScalos Menu Preferences V%ld.%ld\033n\n\
 %s\n\
-© 1999%s The Scalos Team
+\xa9 1999%s The Scalos Team
 ;
 ;
 MSGID_SHORTHELP_NEWMENUBUTTON (//)

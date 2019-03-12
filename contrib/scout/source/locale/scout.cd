@@ -979,7 +979,7 @@ txtExpansionsPrintHeader (//)
 ;
 ;
 txtExpansionsPrintLine (//)
-\n %s  %s %s %s  %s  %s   %s %9s\n Board = %s · %s %s\n
+\n %s  %s %s %s  %s  %s   %s %9s\n Board = %s \xb7 %s %s\n
 ;
 ; strings in fonts window
 msgWantToCloseFont (1100//)
@@ -1105,7 +1105,7 @@ Font example
 ;
 ;
 txtFontsExampleText (//)
-¤¢ the quick brown fox jumps over the lazy dog
+\xa4\xa2 the quick brown fox jumps over the lazy dog
 ;
 ;
 txtFontsPrintHeader (//)

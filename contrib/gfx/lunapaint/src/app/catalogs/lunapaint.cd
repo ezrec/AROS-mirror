@@ -90,7 +90,7 @@ MSG_MENU_FLIPBH (//)
 Flip brush horizontally
 ;
 MSG_MENU_ROT_BRSH (//)
-Rotate brush 90°
+Rotate brush 90\xb0
 ;
 MSG_MENU_TOOLS (//)
 Tools
