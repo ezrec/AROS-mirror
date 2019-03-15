@@ -12,7 +12,7 @@ def notify(status){
 	)
 }
 
-def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') {
+def buildStep(ext, iconset = 'default', binutilsver = '2.32', gccver = '6.5.0') {
 	stage('Checkout and pull') {
 		properties([pipelineTriggers([githubPush()])])
 		if (env.CHANGE_ID) {
