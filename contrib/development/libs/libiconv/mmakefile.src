@@ -8,7 +8,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 # iconv is not placed directly in AROS_DEVELOPER/INCLUDE/LIB
 # its presence there can cause some components to fail to compile,
 # such as the native gnu toolchain.
-# code using it should explicitly include AROS_CONTRIB_DEVELOPER/INCLUDE/LIB
+# code using it should explicitly include AROS_CONTRIB_INCLUDE/LIB
 #
 
 #MM- contrib-development : contrib-libiconv
