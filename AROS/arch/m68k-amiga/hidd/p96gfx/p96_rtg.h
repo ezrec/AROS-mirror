@@ -1,5 +1,5 @@
-#ifndef UAEGFX_UAERTG_H
-#define UAEGFX_UAERTG_H
+#ifndef P96GFX_P96RTG_H
+#define P96GFX_P96RTG_H
 
 /* Types for RGBFormat used */
 typedef enum {
@@ -130,6 +130,20 @@ struct Pattern {
 	ULONG			FgPen, BgPen;
 	UBYTE			Size;
 	UBYTE			DrawMode;
+};
+
+struct Line {
+	WORD            X, Y;
+	UWORD           Length;
+	WORD            dX, dY;
+	WORD            sDelta, lDelta, twoSDminusLD;
+	UWORD           LinePtrn;
+	UWORD           PatternShift;
+	ULONG           FgPen, BgPen;
+	BOOL            Horizontal;
+	UBYTE           DrawMode;
+	BYTE            pad;
+	UWORD           Xorigin, Yorigin;
 };
 
 struct ModeInfo {
@@ -351,9 +365,9 @@ struct ModeInfo {
 #define PSSO_BoardInfo_SizeOf			    PSSO_BoardInfo_AROSFlag + 4
 
 WORD getrtgdepth (ULONG rgbformat);
-ULONG getrtgformat(struct uaegfx_staticdata *csd, OOP_Object *);
-void makerenderinfo(struct uaegfx_staticdata *csd, struct RenderInfo*, struct bm_data*);
-struct ModeInfo *getrtgmodeinfo(struct uaegfx_staticdata *csd, OOP_Object *sync, OOP_Object *pixfmt, struct ModeInfo *modeinfo);
+ULONG getrtgformat(struct p96gfx_staticdata *csd, OOP_Object *);
+void makerenderinfo(struct p96gfx_staticdata *csd, struct RenderInfo*, struct bm_data*);
+struct ModeInfo *getrtgmodeinfo(struct p96gfx_staticdata *csd, OOP_Object *sync, OOP_Object *pixfmt, struct ModeInfo *modeinfo);
 
 APTR  gp(UBYTE *p);
 ULONG gl(UBYTE *p);
@@ -365,36 +379,59 @@ void pb(UBYTE *p, BYTE b);
 
 extern const UBYTE modetable[16];
 
-BOOL FindCard(struct uaegfx_staticdata *csd);
-BOOL InitCard(struct uaegfx_staticdata *csd);
-BOOL SetDisplay(struct uaegfx_staticdata *csd, BOOL state);
-BOOL SetSwitch(struct uaegfx_staticdata *csd, BOOL state);
-void SetColorArray(struct uaegfx_staticdata *csd, UWORD start, UWORD count);
-void SetDAC(struct uaegfx_staticdata *csd);
-void SetGC(struct uaegfx_staticdata *csd, struct ModeInfo *mi, BOOL border);
-void SetPanning(struct uaegfx_staticdata *csd, UBYTE *video, UWORD width, WORD x, WORD y);
-BOOL FillRect(struct uaegfx_staticdata *csd, struct RenderInfo *ri, WORD x, WORD y, WORD w, WORD h, ULONG pen, UBYTE mask, ULONG rgbformat);
-BOOL InvertRect(struct uaegfx_staticdata *csd, struct RenderInfo *ri, WORD x, WORD y, WORD w, WORD h, UBYTE mask, ULONG rgbformat);
-BOOL BlitRectNoMaskComplete(struct uaegfx_staticdata *csd, struct RenderInfo *risrc, struct RenderInfo *ridst,
-    WORD sx, WORD sy, WORD dx, WORD dy, WORD w, WORD h, UBYTE opcode, ULONG rgbformat);
-BOOL BlitPattern(struct uaegfx_staticdata *csd, struct RenderInfo *ri, struct Pattern *pat,
-    WORD x, WORD y, WORD w, WORD h, UBYTE mask, ULONG rgbformat);
-BOOL BlitTemplate(struct uaegfx_staticdata *csd, struct RenderInfo *ri, struct Template *tmpl,
-    WORD x, WORD y, WORD w, WORD h, UBYTE mask, ULONG rgbformat);
+BOOL FindCard(struct p96gfx_staticdata *csd);
+BOOL InitCard(struct p96gfx_staticdata *csd);
+BOOL SetDisplay(struct p96gfx_staticdata *csd, BOOL state);
+BOOL SetSwitch(struct p96gfx_staticdata *csd, BOOL state);
+void SetColorArray(struct p96gfx_staticdata *csd, UWORD start, UWORD count);
+void SetDAC(struct p96gfx_staticdata *csd);
+void SetGC(struct p96gfx_staticdata *csd, struct ModeInfo *mi, BOOL border);
+void SetPanning(struct p96gfx_staticdata *csd, UBYTE *video, UWORD width, WORD x, WORD y);
+/*
+TODO:
+SetDPMSLevel
+GetFeatureAttrs
+SetFeatureAttrs
+*/
 
-WORD CalculateBytesPerRow(struct uaegfx_staticdata *csd, WORD width, ULONG rgbformat);
-BOOL SetSprite(struct uaegfx_staticdata *sd, BOOL activate);
-BOOL SetSpritePosition(struct uaegfx_staticdata *sd);
-BOOL SetSpriteImage(struct uaegfx_staticdata *sd);
-BOOL SetSpriteColor(struct uaegfx_staticdata *sd, UBYTE idx, UBYTE r, UBYTE g, UBYTE b);
+/* Render Operation Stubs .. */
+BOOL DrawLine(struct p96gfx_staticdata *csd, struct RenderInfo *ri,
+    struct Line *line, ULONG rgbformat);
+BOOL BlitRect(struct p96gfx_staticdata *csd, struct RenderInfo *ri,
+    WORD sx, WORD sy, WORD dx, WORD dy, WORD w, WORD h, UBYTE mask, ULONG rgbformat);
+BOOL FillRect(struct p96gfx_staticdata *csd, struct RenderInfo *ri, WORD x, WORD y, WORD w, WORD h, ULONG pen, UBYTE mask, ULONG rgbformat);
+BOOL InvertRect(struct p96gfx_staticdata *csd, struct RenderInfo *ri, WORD x, WORD y, WORD w, WORD h, UBYTE mask, ULONG rgbformat);
+BOOL BlitRectNoMaskComplete(struct p96gfx_staticdata *csd, struct RenderInfo *risrc, struct RenderInfo *ridst,
+    WORD sx, WORD sy, WORD dx, WORD dy, WORD w, WORD h, UBYTE opcode, ULONG rgbformat);
+BOOL BlitPattern(struct p96gfx_staticdata *csd, struct RenderInfo *ri, struct Pattern *pat,
+    WORD x, WORD y, WORD w, WORD h, UBYTE mask, ULONG rgbformat);
+BOOL BlitTemplate(struct p96gfx_staticdata *csd, struct RenderInfo *ri, struct Template *tmpl,
+    WORD x, WORD y, WORD w, WORD h, UBYTE mask, ULONG rgbformat);
+/*
+TODO:
+BlitPlanar2Chunky
+BlitPlanar2Direct
+WriteYUVRect
+*/
+
+WORD CalculateBytesPerRow(struct p96gfx_staticdata *csd, WORD width, ULONG rgbformat);
+BOOL SetSprite(struct p96gfx_staticdata *sd, BOOL activate);
+BOOL SetSpritePosition(struct p96gfx_staticdata *sd);
+BOOL SetSpriteImage(struct p96gfx_staticdata *sd);
+BOOL SetSpriteColor(struct p96gfx_staticdata *sd, UBYTE idx, UBYTE r, UBYTE g, UBYTE b);
 
 /* real RTG only functions */
-ULONG GetPixelClock(struct uaegfx_staticdata *csd, struct ModeInfo *mi, ULONG index, ULONG rgbformat);
-ULONG ResolvePixelClock(struct uaegfx_staticdata *csd, struct ModeInfo *mi, ULONG pixelclock, ULONG rgbformat);
-ULONG SetClock(struct uaegfx_staticdata *csd);
-void SetMemoryMode(struct uaegfx_staticdata *csd, ULONG rgbformat);
-void WaitBlitter(struct uaegfx_staticdata *csd);
-void SetInterrupt(struct uaegfx_staticdata *csd, ULONG state);
+ULONG GetPixelClock(struct p96gfx_staticdata *csd, struct ModeInfo *mi, ULONG index, ULONG rgbformat);
+ULONG ResolvePixelClock(struct p96gfx_staticdata *csd, struct ModeInfo *mi, ULONG pixelclock, ULONG rgbformat);
+ULONG SetClock(struct p96gfx_staticdata *csd);
+void SetMemoryMode(struct p96gfx_staticdata *csd, ULONG rgbformat);
+void WaitBlitter(struct p96gfx_staticdata *csd);
+void SetInterrupt(struct p96gfx_staticdata *csd, ULONG state);
 void InitRTG(APTR boardinfo);
-
+/*
+TODO:
+GetVSyncState
+WaitVerticalSync
+GetVBeamPos
+*/
 #endif
