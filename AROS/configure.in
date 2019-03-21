@@ -23,8 +23,11 @@ AC_CONFIG_AUX_DIR(scripts/autoconf)
 AC_CANONICAL_HOST
 
 # Default versions for the gnu tools we build
-default_gcc_version="6.5.0"
-default_binutils_version="2.32"
+default_toolchain_family=`cat ${srcdir}/config/toolchain_def`
+default_gcc_version=`cat ${srcdir}/config/gcc_def`
+exp_gcc_version=`cat ${srcdir}/config/gcc_exp`
+default_binutils_version=`cat ${srcdir}/config/binutils_def`
+exp_binutils_version=`cat ${srcdir}/config/binutils_exp`
 default_grub2_version="2.02"
 target_grub2_version=$default_grub2_version
 
@@ -645,6 +648,8 @@ dnl The target configuration section is responsible for setting up all
 dnl the paths for includes, and tools required to build AROS to some
 dnl particular target.
 
+test_kernel_cc=no
+
 aros_nowarn_flags="NOWARN_UNUSED_COMMAND_LINE_ARGUMENT NOWARN_UNKNOWN_WARNING_OPTION NOWARN_POINTER_SIGN NOWARN_PARENTHESES"
 export_newline="
 "
@@ -699,7 +704,7 @@ host_android_gfx=no
 
 
 AC_MSG_CHECKING([Which toolchain family to use ...])
-AC_ARG_WITH(toolchain,AC_HELP_STRING([--with-toolchain=family],[Which toolchain family to crosscompile with (defaults to gnu)]),aros_toolchain="$withval",aros_toolchain="gnu")
+AC_ARG_WITH(toolchain,AC_HELP_STRING([--with-toolchain=family],[Which toolchain family to crosscompile with (defaults to gnu)]),aros_toolchain="$withval",aros_toolchain="$default_toolchain_family")
 AC_MSG_RESULT($aros_toolchain)
 
 
@@ -2240,6 +2245,7 @@ else
     # Kernel tools required - find them
     # Note that 'normally', aros_kernel_* overrides will be
     # empty, unless specified in the per-arch sections above.
+    test_kernel_cc=yes
     if test "x$aros_kernel_cpp" = "x"; then
         aros_kernel_cpp=${kernel_tool_prefix}${CPP}
     fi
@@ -2425,6 +2431,8 @@ AC_SUBST(aros_target_nix_ldflags,-nix)
 AC_SUBST(aros_target_detach_ldflags,-detach)
 AC_SUBST(aros_target_nostdlib_ldflags,-nostdlib)
 
+aros_target_cc_path=
+
 # Target tools
 AC_SUBST(aros_toolchain)
 if test "$aros_target_toolchain" != "yes"; then
@@ -2465,61 +2473,73 @@ aros_plain_ar="${prefix}${toolchain_ar}"
 
 AC_ARG_ENABLE(includes,
 AC_HELP_STRING([--enable-includes=dir],[Alternative system include directory]),
-[aros_target_incl=$enable_includes], [aros_target_incl=`$aros_kernel_cc -print-sysroot`/`$aros_kernel_cc --print-sysroot-headers-suffix 2>/dev/null || echo usr/include`])
+[aros_target_incl=$enable_includes], [aros_target_incl=no])
 
-if test "$aros_kernel_includes" = ""; then
-    if test "x-$aros_flavour" = "x-emulation" -o "x-$aros_flavour" = "x-emulcompat" ; then
-        aros_kernel_includes="-isystem $aros_target_incl"
+if test "x$aros_target_incl" = "xno"; then
+    if test "x$test_kernel_cc" != "xno"; then
+        aros_target_incl=`$aros_kernel_cc -print-sysroot`/`$aros_kernel_cc --print-sysroot-headers-suffix 2>/dev/null || echo usr/include`
+    else
+        aros_target_incl=
     fi
 fi
 
-if test "$aros_kernel_includes" != "" ; then
-    dnl find out about the kernel cc's include path
-    AC_MSG_CHECKING([for the kernel compiler's include path])
-    if test "$aros_kernel_cc_includes" = "" ; then
-        # Try to guess where the directory is.
-        aros_kernel_cc_includes=`dirname \`${aros_kernel_cc} ${aros_kernel_cflags} -print-libgcc-file-name\``/include
-        if test -d $aros_kernel_cc_includes; then
-            # Check if there is also an include-fixed directory and add it
-            # to kernel compiler's include path as it may contain some of
-            # the headers we need.
-            if test -d "$aros_kernel_cc_includes"-fixed; then
-                aros_kernel_cc_includes+=" -isystem $aros_kernel_cc_includes"-fixed
-            fi
-            # Check for specific includes directory. Needed for Ubuntu 11.10 and Debian
-            if test -d "/usr/include/${aros_target_cpu}-linux-gnu"; then
-                aros_kernel_cc_includes+=" -isystem /usr/include/${aros_target_cpu}-linux-gnu"
-            fi
-        else
-            # The directory doesn't exist, we need to do some more work.
-            aros_kernel_cc_includes=${PWD}/${aros_gendir}/cc_include
-
-            # These are the headers we're looking for.
-            headers="limits.h mmintrin.h stdbool.h syslimits.h float.h \
-                     stddef.h xmmintrin.h iso646.h stdarg.h unwind.h   \
-                     zutil.h stdint.h"
-
-            dirs=
-            for h in $headers; do
-                # Which other headers are needed by each of the above?
-                deps=$(echo "#include <$h>" | \
-                       $aros_kernel_cc -E -M - 2>/dev/null | \
-                       sed 's/^.*://; s/\\$/ /g; s/[[ \t]]\+/ /g')
-
-                # Copy all the needed headers to a directory beneath gendir.
-                for d in $deps; do
-                    h=$(basename $d)
-                    dir=${aros_kernel_cc_includes}$(echo $(dirname $d) | \
-                                                sed -n "s,^.*/include\(/.*\),\1,p")
-                    ! test -d $dir && mkdir -p $dir
-                    ! test -f $dir/$h && { cp $d $dir; chmod u+w $dir/$h; }
-                done
-            done            
+if test "x$aros_kernel_includes" = "x"; then
+    if test "x-$aros_flavour" = "x-emulation" -o "x-$aros_flavour" = "x-emulcompat" ; then
+        if test "x$aros_target_incl" != "x"; then
+            aros_kernel_includes="-isystem $aros_target_incl"
         fi
     fi
-    AC_MSG_RESULT($aros_kernel_cc_includes)
-    # Adding -nostdinc to kernel includes as they are always used together.
-    aros_kernel_includes="$aros_kernel_includes $aros_target_nostdinc_cflags -isystem $aros_kernel_cc_includes"
+fi
+
+if test "x$test_kernel_cc" != "xno"; then
+    if test "$aros_kernel_includes" != "" ; then
+        dnl find out about the kernel cc's include path
+        AC_MSG_CHECKING([for the kernel compiler's include path])
+        if test "$aros_kernel_cc_includes" = "" ; then
+            # Try to guess where the directory is.
+            aros_kernel_cc_includes=`dirname \`${aros_kernel_cc} ${aros_kernel_cflags} -print-libgcc-file-name\``/include
+            if test -d $aros_kernel_cc_includes; then
+                # Check if there is also an include-fixed directory and add it
+                # to kernel compiler's include path as it may contain some of
+                # the headers we need.
+                if test -d "$aros_kernel_cc_includes"-fixed; then
+                    aros_kernel_cc_includes+=" -isystem $aros_kernel_cc_includes"-fixed
+                fi
+                # Check for specific includes directory. Needed for Ubuntu 11.10 and Debian
+                if test -d "/usr/include/${aros_target_cpu}-linux-gnu"; then
+                    aros_kernel_cc_includes+=" -isystem /usr/include/${aros_target_cpu}-linux-gnu"
+                fi
+            else
+                # The directory doesn't exist, we need to do some more work.
+                aros_kernel_cc_includes=${PWD}/${aros_gendir}/cc_include
+
+                # These are the headers we're looking for.
+                headers="limits.h mmintrin.h stdbool.h syslimits.h float.h \
+                         stddef.h xmmintrin.h iso646.h stdarg.h unwind.h   \
+                         zutil.h stdint.h"
+
+                dirs=
+                for h in $headers; do
+                    # Which other headers are needed by each of the above?
+                    deps=$(echo "#include <$h>" | \
+                           $aros_kernel_cc -E -M - 2>/dev/null | \
+                           sed 's/^.*://; s/\\$/ /g; s/[[ \t]]\+/ /g')
+
+                    # Copy all the needed headers to a directory beneath gendir.
+                    for d in $deps; do
+                        h=$(basename $d)
+                        dir=${aros_kernel_cc_includes}$(echo $(dirname $d) | \
+                                                sed -n "s,^.*/include\(/.*\),\1,p")
+                        ! test -d $dir && mkdir -p $dir
+                        ! test -f $dir/$h && { cp $d $dir; chmod u+w $dir/$h; }
+                    done
+                done            
+            fi
+        fi
+        AC_MSG_RESULT($aros_kernel_cc_includes)
+        # Adding -nostdinc to kernel includes as they are always used together.
+        aros_kernel_includes="$aros_kernel_includes $aros_target_nostdinc_cflags -isystem $aros_kernel_cc_includes"
+    fi
 fi
 
 if test "$crosstools" != "yes"; then
@@ -2570,52 +2590,54 @@ fi
 
 save_cc="$CC"
 save_cflags="$CFLAGS"
-CFLAGS="-iquote."
-kernel_cflags_iquote=$host_cflags_iquote
-kernel_cflags_iquote_end=$host_cflags_iquote_end
-if test "x-$cross_compiling" = "x-yes"; then
+if test "x$test_kernel_cc" != "xno"; then
+    CFLAGS="-iquote."
+    kernel_cflags_iquote=$host_cflags_iquote
+    kernel_cflags_iquote_end=$host_cflags_iquote_end
+    if test "x-$cross_compiling" = "x-yes"; then
+        CC="$aros_kernel_cc"
+        AC_MSG_CHECKING([whether ${CC} accepts -fno-stack-protector])
+        if test "x-$crosstools" != "x-yes"; then
+            AC_TRY_COMPILE(,, use_no_stack_protector="yes", use_no_stack_protector="no")
+        else
+            # we do know it is supported for the smallest version of gcc we are going to build
+            # we assume it's also supported by later versions
+            use_no_stack_protector=yes
+        fi
+        AC_MSG_RESULT($use_no_stack_protector)
+        AC_MSG_CHECKING([whether ${CC} accepts -iquote])
+        if test "x-$crosstools" != "x-yes"; then
+            AC_TRY_COMPILE(,, has_iquote="yes", has_iquote="no")
+        else
+            # we do know it is supported for the smallest version of gcc we are going to build
+            # we assume it's also supported by later versions
+            has_iquote=yes
+        fi
+        AC_MSG_RESULT($has_iquote)
+        if test "x-$has_iquote" = "x-yes" ; then
+            kernel_cflags_iquote=-iquote
+            kernel_cflags_iquote_end=
+        else
+            kernel_cflags_iquote=-I
+            kernel_cflags_iquote_end=-I-
+        fi
+    fi
+    if test "x-$use_no_stack_protector" = "x-yes" ; then
+        aros_kernel_cflags="$aros_kernel_cflags -fno-stack-protector"
+    fi
+
+    #-----------------------------------------------------------------------------
+
+    # Check if we can explicitly choose older version of symbol hashing
+
+    CFLAGS="save_cflags -Wl,--hash-style=sysv"
     CC="$aros_kernel_cc"
-    AC_MSG_CHECKING([whether ${CC} accepts -fno-stack-protector])
-    if test "x-$crosstools" != "x-yes"; then
-        AC_TRY_COMPILE(,, use_no_stack_protector="yes", use_no_stack_protector="no")
-    else
-        # we do know it is supported for the smallest version of gcc we are going to build
-        # we assume it's also supported by later versions
-        use_no_stack_protector=yes
+    AC_MSG_CHECKING([whether ${CC} accepts -Wl,--hash-style=sysv])
+    AC_TRY_LINK(,, use_hash_style="yes", use_hash_style="no")
+    AC_MSG_RESULT($use_hash_style)
+    if test "x-$use_hash_style" = "x-yes" ; then
+        aros_kernel_cflags="$aros_kernel_cflags -Wl,--hash-style=sysv"
     fi
-    AC_MSG_RESULT($use_no_stack_protector)
-    AC_MSG_CHECKING([whether ${CC} accepts -iquote])
-    if test "x-$crosstools" != "x-yes"; then
-        AC_TRY_COMPILE(,, has_iquote="yes", has_iquote="no")
-    else
-        # we do know it is supported for the smallest version of gcc we are going to build
-        # we assume it's also supported by later versions
-        has_iquote=yes
-    fi
-    AC_MSG_RESULT($has_iquote)
-    if test "x-$has_iquote" = "x-yes" ; then
-        kernel_cflags_iquote=-iquote
-        kernel_cflags_iquote_end=
-    else
-        kernel_cflags_iquote=-I
-        kernel_cflags_iquote_end=-I-
-    fi
-fi
-if test "x-$use_no_stack_protector" = "x-yes" ; then
-    aros_kernel_cflags="$aros_kernel_cflags -fno-stack-protector"
-fi
-
-#-----------------------------------------------------------------------------
-
-# Check if we can explicitly choose older version of symbol hashing
-
-CFLAGS="save_cflags -Wl,--hash-style=sysv"
-CC="$aros_kernel_cc"
-AC_MSG_CHECKING([whether ${CC} accepts -Wl,--hash-style=sysv])
-AC_TRY_LINK(,, use_hash_style="yes", use_hash_style="no")
-AC_MSG_RESULT($use_hash_style)
-if test "x-$use_hash_style" = "x-yes" ; then
-    aros_kernel_cflags="$aros_kernel_cflags -Wl,--hash-style=sysv"
 fi
 CC="$save_cc"
 CFLAGS="$save_cflags"
