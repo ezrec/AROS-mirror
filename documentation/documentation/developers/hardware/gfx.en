@@ -77,6 +77,17 @@ use with the selected hardware device. Gfx drivers which support hardware 3d usi
 expose the gallium object via this call. The mesagl subsystem will call this method to create an instance of
 the hardware driver and use it for client applications.
 
+currently supported classes:
+
+CLID_Hidd_GC
+    Creates a Graphics Context Object
+CLID_Hidd_BitMap
+    Creates a BitMap Object defined by the given attributes.
+ CLID_Hidd_Gallium
+     Creates a gallium 3d hardware driver object (if supported)
+CLID_Hidd_I2C
+    Returns the Driver instances i2c Object (if supported)
+    
 
 Hidd_Gfx::CopyBox()
 -------------------------
