@@ -15,14 +15,13 @@ def notify(status){
 
 def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') {
 	stage("Building ${ext} with gcc ${gccver} and binutils ${binutilsver}...") {
-	    stage('Checkout and pull') {
-	      properties([pipelineTriggers([githubPush()])])
-	      if (env.CHANGE_ID) {
-		echo 'Trying to build pull request'
-	      }
+		properties([pipelineTriggers([githubPush()])])
+		if (env.CHANGE_ID) {
+			echo 'Trying to build pull request'
+		}
 
-	      checkout scm
-	    }
+		checkout scm
+	    
 
 	    if (!env.CHANGE_ID) {
 		stage('Generate publishing directories') {
@@ -31,77 +30,58 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') 
 		}
 	    }
 
-	    stage("Starting $ext build target...") {
-	      slackSend color: "good", channel: "#jenkins", message: "Starting ${ext} build target..."
-	    }
+		slackSend color: "good", channel: "#jenkins", message: "Starting ${ext} build target..."
+	    
+		freshUpRoot(ext, binutilsver, gccver)
 
-	    stage('Freshing up the root') {
-	      freshUpRoot(ext, binutilsver, gccver)
-	    }
-
-	    stage('Configuring...') {
 	      sh "cd build-${ext}-${gccver}-${binutilsver} && ../AROS/configure --target=${ext} --enable-ccache --with-iconset=${iconset} --enable-build-type=nightly --with-serial-debug --with-binutils-version=${binutilsver} --with-gcc-version=${gccver} --with-aros-toolchain-install=${env.WORKSPACE}/tools-${gccver}-${binutilsver} --with-portssources=${env.WORKSPACE}/externalsources"
-	    }
 
-	    stage('Building AROS main source...') {
 	      sh "cd build-${ext}-${gccver}-${binutilsver} && make"
 
-	    }
+		postCoreBuild(ext)
 
-	    stage('Copy over contrib...') {
-	      postCoreBuild(ext)
-	    }
-
-	    stage('Building selected AROS contributions...') {
 	      sh "cd build-${ext}-${gccver}-${binutilsver} && make contrib-installerlg"
-	    }
 
-	    stage('Making distfiles...') {
 	      sh "cd build-${ext}-${gccver}-${binutilsver} && make distfiles"
-	    }
 
 	    if (!env.CHANGE_ID) {
-	      stage('Moving dist files for publishing') {
 		sh "mkdir -p publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
 		sh "echo '${ext}-${gccver}-${binutilsver},' > publishing/deploy/aros/TARGETS"
 		sh "cp -fvr build-${ext}-${gccver}-${binutilsver}/distfiles/* publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
 		sh "cp -pRL AROS/LICENSE publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
 		sh "cp -pRL AROS/ACKNOWLEDGEMENTS publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
 		sh "rm -rfv publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/*.elf"
-	      }
 	    }
 
-	    stage('Deploying to stage') {
-			if (env.TAG_NAME) {
-				sh "echo $TAG_NAME > publishing/deploy/STABLE"
-				sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/releases/aros/$TAG_NAME"
-				sh "scp -r publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/releases/aros/$TAG_NAME/"
-				sh "scp publishing/deploy/STABLE $DEPLOYHOST:~/public_html/downloads/releases/aros/"
-			} else if (env.BRANCH_NAME.equals('ABI_V1')) {
-				def deploy_url = sh (
-				    script: 'echo "/downloads/nightly/aros/`date +\'%Y\'`/`date +\'%m\'`/`date +\'%d\'`/"',
-				    returnStdout: true
-				).trim()
-				sh "date +'%Y-%m-%d %H:%M:%S' > publishing/deploy/BUILDTIME"
-				sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
-				sh "scp -r publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
-				sh "scp publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros/"
+		if (env.TAG_NAME) {
+			sh "echo $TAG_NAME > publishing/deploy/STABLE"
+			sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/releases/aros/$TAG_NAME"
+			sh "scp -r publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/releases/aros/$TAG_NAME/"
+			sh "scp publishing/deploy/STABLE $DEPLOYHOST:~/public_html/downloads/releases/aros/"
+		} else if (env.BRANCH_NAME.equals('ABI_V1')) {
+			def deploy_url = sh (
+			    script: 'echo "/downloads/nightly/aros/`date +\'%Y\'`/`date +\'%m\'`/`date +\'%d\'`/"',
+			    returnStdout: true
+			).trim()
+			sh "date +'%Y-%m-%d %H:%M:%S' > publishing/deploy/BUILDTIME"
+			sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
+			sh "scp -r publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
+			sh "scp publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros/"
 
-				slackSend color: "good", channel: "#aros", message: "Deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} to web (<https://www.eevul.net/${deploy_url}|https://www.eevul.net/${deploy_url}>)"
-			} else if (env.BRANCH_NAME.equals('ABI_V1_experimental')) {
-				def deploy_url = sh (
-				    script: 'echo "/downloads/nightly/aros-experimental/`date +\'%Y\'`/`date +\'%m\'`/`date +\'%d\'`/"',
-				    returnStdout: true
-				).trim()
-				sh "date +'%Y-%m-%d %H:%M:%S' > publishing/deploy/BUILDTIME"
-				sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/nightly/aros-experimental/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
-				sh "scp -r publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros-experimental/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
-				sh "scp publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros-experimental/"
+			slackSend color: "good", channel: "#aros", message: "Deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} to web (<https://www.eevul.net/${deploy_url}|https://www.eevul.net/${deploy_url}>)"
+		} else if (env.BRANCH_NAME.equals('ABI_V1_experimental')) {
+			def deploy_url = sh (
+			    script: 'echo "/downloads/nightly/aros-experimental/`date +\'%Y\'`/`date +\'%m\'`/`date +\'%d\'`/"',
+			    returnStdout: true
+			).trim()
+			sh "date +'%Y-%m-%d %H:%M:%S' > publishing/deploy/BUILDTIME"
+			sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/nightly/aros-experimental/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
+			sh "scp -r publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros-experimental/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
+			sh "scp publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros-experimental/"
 
-				slackSend color: "good", channel: "#aros", message: "Deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} to web (<https://www.eevul.net/${deploy_url}|https://www.eevul.net/${deploy_url}>)"
-			} else {
-				slackSend color: "good", channel: "#aros", message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} successful!"
-			}
+			slackSend color: "good", channel: "#aros", message: "Deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} to web (<https://www.eevul.net/${deploy_url}|https://www.eevul.net/${deploy_url}>)"
+		} else {
+			slackSend color: "good", channel: "#aros", message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} successful!"
 		}
 	}
 }
@@ -142,11 +122,6 @@ node {
 			'Build Linux Hosted x86_64 version - GCC 8.3.0 - Binutils 2.32': {
 				node {			
 					buildStep('linux-x86_64', 'default', '2.32', '8.3.0')
-				}
-			},
-			'Build Linux Hosted x86_64 version - GCC 6.5.0 - Binutils 2.32': {
-				node {			
-					buildStep('linux-x86_64', 'default', '2.32', '6.5.0')
 				}
 			}
 		)
