@@ -1,0 +1,101 @@
+===========================================
+AROS Hardware Manual -- Gfx Class Subsystem
+===========================================
+
+:Author:    Nick Andrews
+:Copyright: Copyright © 2019, The AROS Development Team
+:Version:   $Revision$
+:Date:      $Date$
+s
+.. Note::
+
+   This document is w.i.p and needs a lot more detail added.
+   Throughout this document "gfx" is used to refer to the gfx.hidd susbsystem API and
+   "graphics" is used to refer to the AmigaOS(tm) graphics.library API.
+
+
+The gfx.hidd is a collection of classes used to implement and maintain all gfx
+display devices available in the system. All device properties are available through
+appropriate OOP_Object properties and should not be changed by hand.
+
+
+How to query available gfx display devices?
+============================
+
+The HW Root can be queried to find available gfx display devices. Display
+drivers will have CLID_Hidd_Gfx as a superclass, while the base software
+implementation is exposed with OOP_OCLASS(obj) == CLID_Hidd_Gfx.
+
+BitMap objects can also be queired to determine the gfx.hidd objects implementing them.
+This is used for example by the mesagl subsystem to determine the correct gfx driver to query
+for a given display.
+
+What to do with a gfx display devices object?
+==================================
+
+Once a  pointer to the gfx device object is known, the gfx device may be asked
+for its properties, as well as some of the device properties may be changed.
+
+Generally user code will not interact directly with the gfx subsystem but will go
+through graphics.library and cybergraphics.library.
+
+
+Driver creation
+===============
+
+In order to write a gfx hardware driver, one has to create a class deriving
+from the CLID_Hidd_Gfx class. That simplifies the work on the driver,
+as only few methods have to be implemented:
+
+
+Hidd_Gfx::New()
+----------------
+
+This method should add some attributes to the msg->attrList and pass the ::New
+message to the superclass. Drivers generally provide a suitable aHidd_Name and
+aHidd_HardwareName to describe the device they represent here.
+
+THe New method must determine suitable display modes for the hardware, and create sync modes etc
+to register them with the gfx susbsystem. These modes will be used by the graphics library
+to expose suitable display modes in its display database and to determine the correct classes to
+use when creating (bitmap) objects for a given mode.
+
+
+Hidd_Gfx::CreateObject()
+-------------------------
+
+This method is used to expose the graphics drivers implementations of object classes. The
+graphics susbstem will call this method to create suitable gc (graphics context) and bitmap objectst to
+use with the selected hardware device. Gfx drivers which support hardware 3d using the gallium subsystem
+expose the gallium object via this call. The mesagl subsystem will call this method to create an instance of
+the hardware driver and use it for client applications.
+
+
+Hidd_Gfx::CopyBox()
+-------------------------
+
+This method is used to expose a copy routine for copying between xxx.
+
+
+Hardware Cursors
+--------------------
+
+Drivers exposing hardware cursors have to provide a few mthods to expose the actual cursor..
+
+Hidd_Gfx::SetCursorShape()
+---------------------------------
+
+This method allows the gfx susbsyetm to specify the imagery to use for the cursor.
+
+
+Hidd_Gfx::SetCursorVisible()
+---------------------------------
+
+This method allows the gfx susbsyetm to tell a driver to make the cursor visible or hidden.
+
+
+Hidd_Gfx::SetCursorPos()
+---------------------------------
+
+This method allows the gfx susbsyetm to set the current location of the cursor.
+
