@@ -13,6 +13,8 @@ AROS_TARGET_CPU_MODE    ?= @aros_target_cpu_mode@
 AROS_TARGET_ARCH        ?= @aros_target_arch@
 AROS_TARGET_VARIANT     ?= @aros_target_variant@
 
+AMIGAOSNDKDIR           ?= $(SRCDIR)/local/NDK_3.1
+
 # normally, these variable's should go in mmake.config/globalvarfile
 export AROS_TARGET_BOOTLOADER := @aros_target_bootloader@
 export AROS_TARGET_ICONSET := @aros_target_iconset@
@@ -39,23 +41,25 @@ endif
 # Rules for Configure generated files ...
 #
 
-$(TOP)/Makefile: $(SRCDIR)/Makefile.in $(TOP)/config.status
-	@+$(ECHO) "Regenerating " $(subst $(TOP)/,,$@); \
-	@$(TOP)/config.status --silent --file=$@:$<
-
-CONFIGUREFILES += $(TOP)/Makefile
+#$(TOP)/Makefile: $(SRCDIR)/Makefile.in $(TOP)/config.status
+#	@+$(ECHO) "Regenerating " $(subst $(TOP)/,,$@); \
+#	@$(TOP)/config.status --silent --file=$@:$<
+#
+#CONFIGUREFILES += $(TOP)/Makefile
 
 $(TOP)/mmake.config: $(SRCDIR)/mmake.config.in $(TOP)/config.status
 	@+$(ECHO) "Regenerating " $(subst $(TOP)/,,$@); \
 	@$(TOP)/config.status --silent --file=$@:$<
 
 CONFIGUREFILES += $(TOP)/mmake.config
+CONFIGBUILDFILES += $(TOP)/mmake.config
 
 $(TOP)/config/make.cfg: $(SRCDIR)/config/make.cfg.in $(TOP)/config.status
 	@+$(ECHO) "Regenerating " $(subst $(TOP)/,,$@); \
 	@$(TOP)/config.status --silent --file=$@:$<
 
 CONFIGUREFILES += $(TOP)/config/make.cfg
+CONFIGBUILDARCHFILES += $(TOP)/config/make.cfg
 
 $(TOP)/compiler/include/geninc.cfg: $(SRCDIR)/compiler/include/geninc.cfg.in $(TOP)/config.status
 	@+$(ECHO) "Regenerating " $(subst $(TOP)/,,$@); \
@@ -80,12 +84,14 @@ $(GENDIR)/config/target.cfg: $(SRCDIR)/config/target.cfg.in $(TOP)/config.status
 	@$(TOP)/config.status --silent --file=$@:$<
 
 CONFIGUREFILES += $(GENDIR)/config/target.cfg
+CONFIGBUILDARCHFILES += $(GENDIR)/config/target.cfg
 
 $(GENDIR)/config/build.cfg: $(SRCDIR)/config/build.cfg.in $(TOP)/config.status
 	@+$(ECHO) "Regenerating " $(subst $(TOP)/,,$@); \
 	@$(TOP)/config.status --silent --file=$@:$<
 
 CONFIGUREFILES += $(GENDIR)/config/build.cfg
+CONFIGBUILDARCHFILES += $(GENDIR)/config/build.cfg
 
 $(GENDIR)/config/make.defaults: $(SRCDIR)/config/make.defaults.in $(TOP)/config.status
 	@+$(ECHO) "Regenerating " $(subst $(TOP)/,,$@); \
@@ -118,12 +124,24 @@ makedirs:
 	    $(CP) $(SRCDIR)/_gdbinit $(AROSDIR)/.gdbinit ; \
 	else true ; fi
 
+$(PARSEOFFSETS): $(wildcard $(SRCDIR)/tools/parseoffsets/*.[ch])
+	@$(ECHO) Building parseoffsets...
+	@$(CALL) $(MAKE) $(MKARGS) -C $(SRCDIR)/tools/parseoffsets SRCDIR=$(SRCDIR) TOP=$(TOP)
+
+parsesdkoffsets : $(PARSEOFFSETS)
+	@$(IF) [ ! -d $(AMIGAOSNDKDIR) ]; then \
+		$(ECHO) "Please copy the AmigaOS 3.1 (tm) NDK files to $(AMIGAOSNDKDIR)" ; \
+	else \
+		$(ECHO) "Parsing Structure.Offsets file..." ; \
+		$(PARSEOFFSETS) --offsetsfile=$(AMIGAOSNDKDIR)/Includes_Libs/StructOffsets/Structure.Offsets --gendir=$(GENDIR)/tools/parseoffsets --bindir=$(AROS_TESTS)/sdk --sdkdir=$(AROS_INCLUDES) ; \
+    fi ; 
+
 # Create the tools that are used to build AROS.
 tools : makedirs mmake $(GENMFSCRIPT) $(ARCHTOOL) $(ELF2HUNK) \
 	$(FLEXCAT) $(CREATEDTDESC) \
 	$(ILBMTOC) $(ILBMTOICON) $(INFOINFO) \
 	$(COLLECT-AROS) $(AFSLIB) $(COPYTOAFS) \
-	$(FD2INLINE) $(FD2PRAGMA) $(SFDC) $(SETREV)
+	$(FD2INLINE) $(FD2PRAGMA) $(SFDC) $(SETREV) $(PARSEOFFSETS)
 	@$(NOP)
 
 # rebuild the crosstools if we are reconfigured, or its dependencies change.
@@ -141,8 +159,16 @@ $(TOP)/config/features.status: $(SRCDIR)/config/features $(CROSSTOOLS_BUILDFLAG)
 	    cd $(TOP)/config ; CC="$(TARGET_CC) $(TARGET_SYSROOT)" CFLAGS="$(TARGET_CFLAGS) $(DEBUG_CFLAGS) $(OPTIMIZATION_CFLAGS)" CPP="$(TARGET_CPP) $(TARGET_SYSROOT)" CXX="$(TARGET_CXX) $(TARGET_SYSROOT)" CXXFLAGS=" $(TARGET_CXXFLAGS) $(DEBUG_CFLAGS) $(OPTIMIZATION_CFLAGS)" CONFIG_STATUS="features.status" $(SRCDIR)/config/features  --host=$(AROS_BUILD_HOST) --with-config-dir=$(GENDIR)/config ; \
 	fi
 
+CONFIGBUILDARCHFILES += $(TOP)/config/features.status
+
 features: crosstools $(TOP)/config/features.status
 	@$(NOP)
+
+NATIVEBUILDFILES = $(addprefix $(AROS_SDK)/,$(notdir $(CONFIGBUILDFILES)))
+NATIVEBUILDARCHFILES = $(addprefix $(AROS_ARCH_SDK)/config/,$(notdir $(CONFIGBUILDARCHFILES)))
+
+$(NATIVEBUILDFILES) $(NATIVEBUILDARCHFILES) : $(CONFIGBUILDFILES) $(CONFIGBUILDARCHFILES)
+	@$(ECHO) "Generating " $(subst $(TOP)/,,$@)
 
 $(GENMFSCRIPT): $(SRCDIR)/tools/genmf/genmf.py
 	@$(ECHO) Generating $(subst $(TOP)/,,$(GENMFSCRIPT))...
@@ -257,6 +283,12 @@ arch-clean: clean
 dist-clean: arch-clean
 	@$(NOP)
 
+sdk : crosstools features $(CONFIGUREFILES) $(NATIVEBUILDFILES) $(NATIVEBUILDARCHFILES)
+	@+$(CALL) $(MMAKE) $(MMAKE_OPTIONS) AROS.$@
+
+sdk-test: parsesdkoffsets crosstools features $(CONFIGUREFILES)
+	@$(CALL) $(MAKE) $(MKARGS) -C $(GENDIR)/tools/parseoffsets SRCDIR=$(SRCDIR) TOP=$(TOP) test-sdk-headers-genfiles
+
 # Don't try to generate $(TOP)/bin/$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU)$(AROS_TARGET_SUFFIX)/gen/config/make.opts
 $(TOP)/bin/$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU)$(AROS_TARGET_SUFFIX)/gen/config/make.opts:
 	@$(NOP)
@@ -267,8 +299,9 @@ $(TOP)/bin/$(AROS_TARGET_ARCH)-$(AROS_TARGET_CPU)$(AROS_TARGET_SUFFIX)/gen/confi
 	test kernel boot workbench compiler contrib ports sdk mmake query
 
 # Workaround for bug in make v3.81 (should normally be handled by .DEFAULT)
-install test kernel boot workbench compiler contrib ports sdk : crosstools features $(CONFIGUREFILES)
+install test kernel boot workbench compiler contrib ports : crosstools features $(CONFIGUREFILES)
 	@+$(CALL) $(MMAKE) $(MMAKE_OPTIONS) AROS.$@
+
 
 # Bypass crosstools target.
 query: tools

@@ -728,6 +728,10 @@ aros_target_arch
 aros_target_bootloader
 aros_target_iconset
 aros_target_guitheme
+target_extra_cfg
+make_extra_targetcfg
+make_extra_commands
+aros_elf_translate
 aros_tools_dir
 aros_host_lib_suffix
 aros_host_exe_suffix
@@ -2809,8 +2813,11 @@ case $host_os in *\ *) host_os=`echo "$host_os" | sed 's/ /-/g'`;; esac
 
 
 # Default versions for the gnu tools we build
-default_gcc_version="6.5.0"
-default_binutils_version="2.32"
+default_toolchain_family=`cat ${srcdir}/config/toolchain_def`
+default_gcc_version=`cat ${srcdir}/config/gcc_def`
+exp_gcc_version=`cat ${srcdir}/config/gcc_exp`
+default_binutils_version=`cat ${srcdir}/config/binutils_def`
+exp_binutils_version=`cat ${srcdir}/config/binutils_exp`
 default_grub2_version="2.02"
 target_grub2_version=$default_grub2_version
 
@@ -7504,10 +7511,15 @@ fi
 $as_echo "$as_me: Performing target configuration..." >&6;}
 
 
+test_kernel_cc=no
+
 aros_nowarn_flags="NOWARN_UNUSED_COMMAND_LINE_ARGUMENT NOWARN_UNKNOWN_WARNING_OPTION NOWARN_POINTER_SIGN NOWARN_PARENTHESES"
+export_newline="
+"
 
 toolchain_needs_sysroot=no
 
+aros_elf_translate=
 aros_warn_flags=
 aros_isa_extra=
 aros_isa_flags=
@@ -7561,7 +7573,7 @@ $as_echo_n "checking Which toolchain family to use ...... " >&6; }
 if test "${with_toolchain+set}" = set; then :
   withval=$with_toolchain; aros_toolchain="$withval"
 else
-  aros_toolchain="gnu"
+  aros_toolchain="$default_toolchain_family"
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $aros_toolchain" >&5
@@ -8176,6 +8188,8 @@ fi
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: $aros_android_antapk" >&5
 $as_echo "$aros_android_antapk" >&6; }
 
+    target_extra_cfg+="$export_newline""# Android$export_newline""AROS_ANDROID_ANTAPK           := $aros_android_antapk$export_newline"
+
         if test "$host_os" = "mingw32"; then
         android_tool="cmd //c $android_tool"
     fi
@@ -8191,9 +8205,6 @@ kernel_tool_prefix="none"
 aros_tool_prefix="none"
 elf_tool_prefix="${target_cpu}-elf-"
 
-export_newline="
-"
-
 # Base target cpu ISA configuration switch.
 case "$target_cpu" in
     *aarch64*)
@@ -8201,32 +8212,32 @@ case "$target_cpu" in
     *arm*)
         ;;
     *m68k*)
-        m68k_isa_extra="ISA_MC68000_FLAGS           := -march=68000"
-        m68k_020_isa_extra="ISA_MC68020_FLAGS         := -march=68020"
-        m68k_030_isa_extra="ISA_MC68030_FLAGS         := -march=68030"
-        m68k_040_isa_extra="ISA_MC68040_FLAGS         := -march=68040"
-        m68k_060_isa_extra="ISA_MC68060_FLAGS         := -march=68060"
-        m68k_ac080_isa_extra="ISA_AC68080_FLAGS         := -march=68040"
-        m68k_020_ext="ISA_MC68020_EXT           :=020"
-        m68k_030_ext="ISA_MC68030_EXT           :=030"
-        m68k_040_ext="ISA_MC68040_EXT           :=040"
-        m68k_060_ext="ISA_MC68060_EXT           :=060"
-        m68k_020_cflags="ISA_MC68020_CFLAGS        :="
-        m68k_030_cflags="ISA_MC68030_CFLAGS        :="
-        m68k_040_cflags="ISA_MC68040_CFLAGS        :="
-        m68k_060_cflags="ISA_MC68060_CFLAGS        :="
-        m68k_020_cppflags="ISA_MC68020_CPPFLAGS      :="
-        m68k_030_cppflags="ISA_MC68030_CPPFLAGS      :="
-        m68k_040_cppflags="ISA_MC68040_CPPFLAGS      :="
-        m68k_060_cppflags="ISA_MC68060_CPPFLAGS      :="
-        m68k_020_ldflags="ISA_MC68020_LDFLAGS       :="
-        m68k_030_ldflags="ISA_MC68030_LDFLAGS        :="
-        m68k_040_ldflags="ISA_MC68040_LDFLAGS        :="
-        m68k_060_ldflags="ISA_MC68060_LDFLAGS        :="
+        m68k_isa_extra="ISA_MC68000_FLAGS             := -march=68000"
+        m68k_020_isa_extra="ISA_MC68020_FLAGS             := -march=68020"
+        m68k_030_isa_extra="ISA_MC68030_FLAGS             := -march=68030"
+        m68k_040_isa_extra="ISA_MC68040_FLAGS             := -march=68040"
+        m68k_060_isa_extra="ISA_MC68060_FLAGS             := -march=68060"
+        m68k_ac080_isa_extra="ISA_AC68080_FLAGS             := -march=68040"
+        m68k_020_ext="ISA_MC68020_EXT               :=020"
+        m68k_030_ext="ISA_MC68030_EXT               :=030"
+        m68k_040_ext="ISA_MC68040_EXT               :=040"
+        m68k_060_ext="ISA_MC68060_EXT               :=060"
+        m68k_020_cflags="ISA_MC68020_CFLAGS            :="
+        m68k_030_cflags="ISA_MC68030_CFLAGS            :="
+        m68k_040_cflags="ISA_MC68040_CFLAGS            :="
+        m68k_060_cflags="ISA_MC68060_CFLAGS            :="
+        m68k_020_cppflags="ISA_MC68020_CPPFLAGS          :="
+        m68k_030_cppflags="ISA_MC68030_CPPFLAGS          :="
+        m68k_040_cppflags="ISA_MC68040_CPPFLAGS          :="
+        m68k_060_cppflags="ISA_MC68060_CPPFLAGS          :="
+        m68k_020_ldflags="ISA_MC68020_LDFLAGS           :="
+        m68k_030_ldflags="ISA_MC68030_LDFLAGS           :="
+        m68k_040_ldflags="ISA_MC68040_LDFLAGS           :="
+        m68k_060_ldflags="ISA_MC68060_LDFLAGS           :="
         ;;
     *x86_64* | *i?86*)
-        x86_isa_extra="ISA_X86_FLAGS           := -m32 -march=i486"
-        x86_64_isa_extra="ISA_X8664_FLAGS         := -mcmodel=large"
+        x86_isa_extra="ISA_X86_FLAGS                 := -m32 -march=i486"
+        x86_64_isa_extra="ISA_X8664_FLAGS               := -mcmodel=large"
         ;;
     *powerpc*)
         ;;
@@ -8526,10 +8537,12 @@ case "$target_os" in
         esac
         case "$aros_target_variant" in
             ios)
+                make_extra_targetcfg="$export_newline""# Apple iOS stuff for gcc$export_newline""IOS_LDFLAGS  := -F$""(IOS_SDK_PATH)/System/Library/Frameworks$export_newline"
                 aros_ios_version="3.0"
                 aros_nominal_width=320
                 aros_nominal_height=480
                 aros_ios_sdk="$aros_xcode_path/Platforms/$aros_ios_platform.platform/Developer/SDKs/$aros_ios_platform$aros_sdk_version.sdk"
+                target_extra_cfg+="$export_newline""# Apple iOS specific$export_newline""IOS_PLATFORM            := $aros_ios_platform$export_newline""IOS_OS_VERSION          := $aros_ios_version$export_newline""IOS_SDK_PATH            := $aros_ios_sdk$export_newline"
                 kernel_tool_flags="$target_tool_flags -isysroot $aros_ios_sdk"
                 aros_kernel_includes="-isystem $aros_ios_sdk/usr/include"
                 need_x11=no
@@ -8822,6 +8835,8 @@ case "$target_os" in
         ;;
 
     amiga*)
+        aros_elf_translate="$""(ELF2HUNK)"
+        make_extra_commands="$export_newline""ELF2HUNK	:= $""(TOOLDIR)/elf2hunk$""(HOST_EXE_SUFFIX)$export_newline"
         aros_target_arch="amiga"
         aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -D_AMIGA -DAMIGA"
         aros_shared_default="no"
@@ -9228,7 +9243,7 @@ spec_obj_format="-m $aros_object_format"
 # as well as floating-point ABI.
 case "$aros_target_cpu" in
     *m68k*)
-        aros_isa_targets="M68K_ISA_TARGETS:=MC68020 MC68040"
+        aros_isa_targets="M68K_ISA_TARGETS              :=MC68020 MC68040"
         aros_isa_extra="$aros_isa_extra$export_newline$aros_isa_targets$export_newline"
         aros_isa_extra="$aros_isa_extra$m68k_isa_extra$export_newline$m68k_020_isa_extra$export_newline$m68k_030_isa_extra$export_newline$m68k_040_isa_extra$export_newline$m68k_060_isa_extra$export_newline$m68k_ac080_isa_extra$export_newline"
         aros_isa_extra="$aros_isa_extra$m68k_020_cppflags$export_newline$m68k_030_cppflags$export_newline$m68k_040_cppflags$export_newline$m68k_060_cppflags$export_newline"
@@ -9237,7 +9252,7 @@ case "$aros_target_cpu" in
         aros_isa_extra="$aros_isa_extra$m68k_020_ext$export_newline$m68k_030_ext$export_newline$m68k_040_ext$export_newline$m68k_060_ext$export_newline"
         ;;
     *x86_64*)
-        aros_isa_extra="$x86_isa_extra$export_newline$x86_64_isa_extra$export_newline"
+        aros_isa_extra="$export_newline$x86_isa_extra$export_newline$x86_64_isa_extra$export_newline"
                 spec_obj_format="%{!m32:-m elf_x86_64} %{m32:-m elf_i386}"
         ;;
     arm*)
@@ -9536,6 +9551,7 @@ else
     # Kernel tools required - find them
     # Note that 'normally', aros_kernel_* overrides will be
     # empty, unless specified in the per-arch sections above.
+    test_kernel_cc=yes
     if test "x$aros_kernel_cpp" = "x"; then
         aros_kernel_cpp=${kernel_tool_prefix}${CPP}
     fi
@@ -13821,6 +13837,8 @@ aros_target_detach_ldflags=-detach
 aros_target_nostdlib_ldflags=-nostdlib
 
 
+aros_target_cc_path=
+
 # Target tools
 
 if test "$aros_target_toolchain" != "yes"; then
@@ -13863,64 +13881,76 @@ aros_plain_ar="${prefix}${toolchain_ar}"
 if test "${enable_includes+set}" = set; then :
   enableval=$enable_includes; aros_target_incl=$enable_includes
 else
-  aros_target_incl=`$aros_kernel_cc -print-sysroot`/`$aros_kernel_cc --print-sysroot-headers-suffix 2>/dev/null || echo usr/include`
+  aros_target_incl=no
 fi
 
 
-if test "$aros_kernel_includes" = ""; then
-    if test "x-$aros_flavour" = "x-emulation" -o "x-$aros_flavour" = "x-emulcompat" ; then
-        aros_kernel_includes="-isystem $aros_target_incl"
+if test "x$aros_target_incl" = "xno"; then
+    if test "x$test_kernel_cc" != "xno"; then
+        aros_target_incl=`$aros_kernel_cc -print-sysroot`/`$aros_kernel_cc --print-sysroot-headers-suffix 2>/dev/null || echo usr/include`
+    else
+        aros_target_incl=
     fi
 fi
 
-if test "$aros_kernel_includes" != "" ; then
-        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for the kernel compiler's include path" >&5
-$as_echo_n "checking for the kernel compiler's include path... " >&6; }
-    if test "$aros_kernel_cc_includes" = "" ; then
-        # Try to guess where the directory is.
-        aros_kernel_cc_includes=`dirname \`${aros_kernel_cc} ${aros_kernel_cflags} -print-libgcc-file-name\``/include
-        if test -d $aros_kernel_cc_includes; then
-            # Check if there is also an include-fixed directory and add it
-            # to kernel compiler's include path as it may contain some of
-            # the headers we need.
-            if test -d "$aros_kernel_cc_includes"-fixed; then
-                aros_kernel_cc_includes+=" -isystem $aros_kernel_cc_includes"-fixed
-            fi
-            # Check for specific includes directory. Needed for Ubuntu 11.10 and Debian
-            if test -d "/usr/include/${aros_target_cpu}-linux-gnu"; then
-                aros_kernel_cc_includes+=" -isystem /usr/include/${aros_target_cpu}-linux-gnu"
-            fi
-        else
-            # The directory doesn't exist, we need to do some more work.
-            aros_kernel_cc_includes=${PWD}/${aros_gendir}/cc_include
-
-            # These are the headers we're looking for.
-            headers="limits.h mmintrin.h stdbool.h syslimits.h float.h \
-                     stddef.h xmmintrin.h iso646.h stdarg.h unwind.h   \
-                     zutil.h stdint.h"
-
-            dirs=
-            for h in $headers; do
-                # Which other headers are needed by each of the above?
-                deps=$(echo "#include <$h>" | \
-                       $aros_kernel_cc -E -M - 2>/dev/null | \
-                       sed 's/^.*://; s/\\$/ /g; s/[ \t]\+/ /g')
-
-                # Copy all the needed headers to a directory beneath gendir.
-                for d in $deps; do
-                    h=$(basename $d)
-                    dir=${aros_kernel_cc_includes}$(echo $(dirname $d) | \
-                                                sed -n "s,^.*/include\(/.*\),\1,p")
-                    ! test -d $dir && mkdir -p $dir
-                    ! test -f $dir/$h && { cp $d $dir; chmod u+w $dir/$h; }
-                done
-            done
+if test "x$aros_kernel_includes" = "x"; then
+    if test "x-$aros_flavour" = "x-emulation" -o "x-$aros_flavour" = "x-emulcompat" ; then
+        if test "x$aros_target_incl" != "x"; then
+            aros_kernel_includes="-isystem $aros_target_incl"
         fi
     fi
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $aros_kernel_cc_includes" >&5
+fi
+
+if test "x$test_kernel_cc" != "xno"; then
+    if test "$aros_kernel_includes" != "" ; then
+                { $as_echo "$as_me:${as_lineno-$LINENO}: checking for the kernel compiler's include path" >&5
+$as_echo_n "checking for the kernel compiler's include path... " >&6; }
+        if test "$aros_kernel_cc_includes" = "" ; then
+            # Try to guess where the directory is.
+            aros_kernel_cc_includes=`dirname \`${aros_kernel_cc} ${aros_kernel_cflags} -print-libgcc-file-name\``/include
+            if test -d $aros_kernel_cc_includes; then
+                # Check if there is also an include-fixed directory and add it
+                # to kernel compiler's include path as it may contain some of
+                # the headers we need.
+                if test -d "$aros_kernel_cc_includes"-fixed; then
+                    aros_kernel_cc_includes+=" -isystem $aros_kernel_cc_includes"-fixed
+                fi
+                # Check for specific includes directory. Needed for Ubuntu 11.10 and Debian
+                if test -d "/usr/include/${aros_target_cpu}-linux-gnu"; then
+                    aros_kernel_cc_includes+=" -isystem /usr/include/${aros_target_cpu}-linux-gnu"
+                fi
+            else
+                # The directory doesn't exist, we need to do some more work.
+                aros_kernel_cc_includes=${PWD}/${aros_gendir}/cc_include
+
+                # These are the headers we're looking for.
+                headers="limits.h mmintrin.h stdbool.h syslimits.h float.h \
+                         stddef.h xmmintrin.h iso646.h stdarg.h unwind.h   \
+                         zutil.h stdint.h"
+
+                dirs=
+                for h in $headers; do
+                    # Which other headers are needed by each of the above?
+                    deps=$(echo "#include <$h>" | \
+                           $aros_kernel_cc -E -M - 2>/dev/null | \
+                           sed 's/^.*://; s/\\$/ /g; s/[ \t]\+/ /g')
+
+                    # Copy all the needed headers to a directory beneath gendir.
+                    for d in $deps; do
+                        h=$(basename $d)
+                        dir=${aros_kernel_cc_includes}$(echo $(dirname $d) | \
+                                                sed -n "s,^.*/include\(/.*\),\1,p")
+                        ! test -d $dir && mkdir -p $dir
+                        ! test -f $dir/$h && { cp $d $dir; chmod u+w $dir/$h; }
+                    done
+                done
+            fi
+        fi
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: $aros_kernel_cc_includes" >&5
 $as_echo "$aros_kernel_cc_includes" >&6; }
-    # Adding -nostdinc to kernel includes as they are always used together.
-    aros_kernel_includes="$aros_kernel_includes $aros_target_nostdinc_cflags -isystem $aros_kernel_cc_includes"
+        # Adding -nostdinc to kernel includes as they are always used together.
+        aros_kernel_includes="$aros_kernel_includes $aros_target_nostdinc_cflags -isystem $aros_kernel_cc_includes"
+    fi
 fi
 
 if test "$crosstools" != "yes"; then
@@ -13972,15 +14002,16 @@ fi
 
 save_cc="$CC"
 save_cflags="$CFLAGS"
-CFLAGS="-iquote."
-kernel_cflags_iquote=$host_cflags_iquote
-kernel_cflags_iquote_end=$host_cflags_iquote_end
-if test "x-$cross_compiling" = "x-yes"; then
-    CC="$aros_kernel_cc"
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ${CC} accepts -fno-stack-protector" >&5
+if test "x$test_kernel_cc" != "xno"; then
+    CFLAGS="-iquote."
+    kernel_cflags_iquote=$host_cflags_iquote
+    kernel_cflags_iquote_end=$host_cflags_iquote_end
+    if test "x-$cross_compiling" = "x-yes"; then
+        CC="$aros_kernel_cc"
+        { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ${CC} accepts -fno-stack-protector" >&5
 $as_echo_n "checking whether ${CC} accepts -fno-stack-protector... " >&6; }
-    if test "x-$crosstools" != "x-yes"; then
-        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+        if test "x-$crosstools" != "x-yes"; then
+            cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 int
@@ -13997,17 +14028,17 @@ else
   use_no_stack_protector="no"
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-    else
-        # we do know it is supported for the smallest version of gcc we are going to build
-        # we assume it's also supported by later versions
-        use_no_stack_protector=yes
-    fi
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $use_no_stack_protector" >&5
+        else
+            # we do know it is supported for the smallest version of gcc we are going to build
+            # we assume it's also supported by later versions
+            use_no_stack_protector=yes
+        fi
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: $use_no_stack_protector" >&5
 $as_echo "$use_no_stack_protector" >&6; }
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ${CC} accepts -iquote" >&5
+        { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ${CC} accepts -iquote" >&5
 $as_echo_n "checking whether ${CC} accepts -iquote... " >&6; }
-    if test "x-$crosstools" != "x-yes"; then
-        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+        if test "x-$crosstools" != "x-yes"; then
+            cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 int
@@ -14024,34 +14055,34 @@ else
   has_iquote="no"
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
-    else
-        # we do know it is supported for the smallest version of gcc we are going to build
-        # we assume it's also supported by later versions
-        has_iquote=yes
-    fi
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $has_iquote" >&5
+        else
+            # we do know it is supported for the smallest version of gcc we are going to build
+            # we assume it's also supported by later versions
+            has_iquote=yes
+        fi
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: $has_iquote" >&5
 $as_echo "$has_iquote" >&6; }
-    if test "x-$has_iquote" = "x-yes" ; then
-        kernel_cflags_iquote=-iquote
-        kernel_cflags_iquote_end=
-    else
-        kernel_cflags_iquote=-I
-        kernel_cflags_iquote_end=-I-
+        if test "x-$has_iquote" = "x-yes" ; then
+            kernel_cflags_iquote=-iquote
+            kernel_cflags_iquote_end=
+        else
+            kernel_cflags_iquote=-I
+            kernel_cflags_iquote_end=-I-
+        fi
     fi
-fi
-if test "x-$use_no_stack_protector" = "x-yes" ; then
-    aros_kernel_cflags="$aros_kernel_cflags -fno-stack-protector"
-fi
+    if test "x-$use_no_stack_protector" = "x-yes" ; then
+        aros_kernel_cflags="$aros_kernel_cflags -fno-stack-protector"
+    fi
 
-#-----------------------------------------------------------------------------
+    #-----------------------------------------------------------------------------
 
-# Check if we can explicitly choose older version of symbol hashing
+    # Check if we can explicitly choose older version of symbol hashing
 
-CFLAGS="save_cflags -Wl,--hash-style=sysv"
-CC="$aros_kernel_cc"
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ${CC} accepts -Wl,--hash-style=sysv" >&5
+    CFLAGS="save_cflags -Wl,--hash-style=sysv"
+    CC="$aros_kernel_cc"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ${CC} accepts -Wl,--hash-style=sysv" >&5
 $as_echo_n "checking whether ${CC} accepts -Wl,--hash-style=sysv... " >&6; }
-cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
 
 int
@@ -14069,10 +14100,14 @@ else
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $use_hash_style" >&5
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $use_hash_style" >&5
 $as_echo "$use_hash_style" >&6; }
-if test "x-$use_hash_style" = "x-yes" ; then
-    aros_kernel_cflags="$aros_kernel_cflags -Wl,--hash-style=sysv"
+    if test "x-$use_hash_style" = "x-yes" ; then
+        aros_kernel_cflags="$aros_kernel_cflags -Wl,--hash-style=sysv"
+    fi
+else
+    kernel_cflags_iquote="$""(CFLAGS_IQUOTE)"
+    kernel_cflags_iquote_end="$""(CFLAGS_IQUOTE_END)"
 fi
 CC="$save_cc"
 CFLAGS="$save_cflags"
@@ -15002,6 +15037,10 @@ $as_echo_n "checking default optimization level to use... " >&6; }
 $as_echo "$optimization_level" >&6; }
 fi
 
+if ! test "$gcc_default_cpu" = "" ; then
+    target_extra_cfg+="$export_newline""# ARM gcc default target$export_newline""GCC_DEFAULT_CPU         := $gcc_default_cpu$export_newline""GCC_DEFAULT_FPU         := $gcc_default_fpu$export_newline""GCC_DEFAULT_FLOAT_ABI   := $gcc_default_float_abi$export_newline""GCC_DEFAULT_MODE        := $gcc_default_mode$export_newline"
+fi
+
 
 # Generic
 
@@ -15051,6 +15090,11 @@ fi
 
 
 # Target Related
+
+
+
+
+
 
 
 

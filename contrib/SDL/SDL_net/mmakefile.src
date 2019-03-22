@@ -1,4 +1,4 @@
-# Copyright © 2008-2017, The AROS Development Team. All rights reserved.
+# Copyright © 2008-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -11,7 +11,11 @@ USER_INCLUDES := -I$(AROS_CONTRIB_INCLUDES)
 USER_CFLAGS := -D__BSD_VISIBLE=1
 USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
-%fetch_and_build_gnu_development package=SDL_net version=1.2.7 patch=yes \
-    package_repo=http://www.libsdl.org/projects/SDL_net/release/ \
-    suffixes="tar.gz" extraoptions="libdir=$(AROS_LIB)"
+REPOSITORIES := https://www.libsdl.org/projects/SDL_net/release \
+ http://kobyla.info/distfiles \
+ https://gsdview.appspot.com/webports/mirror \
+ https://floss.freebox.fr/packages
 
+%fetch_and_build_gnu_development package=SDL_net version=1.2.7 patch=yes \
+    package_repo="$(REPOSITORIES)" \
+    suffixes="tar.gz" extraoptions="libdir=$(AROS_LIB)"
