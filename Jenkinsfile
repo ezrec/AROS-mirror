@@ -12,7 +12,6 @@ def notify(status){
 	)
 }
 
-
 def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') {
 	stage("Building ${ext} with gcc ${gccver} and binutils ${binutilsver}...") {
 		properties([pipelineTriggers([githubPush()])])
