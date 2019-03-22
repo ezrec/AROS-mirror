@@ -31,7 +31,7 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') 
 
 			freshUpRoot(ext, binutilsver, gccver)
 
-			sh "cd build-${ext}-${gccver}-${binutilsver} && ../AROS/configure --target=${ext} --enable-ccache --with-iconset=${iconset} --enable-build-type=nightly --with-serial-debug --with-binutils-version=${binutilsver} --with-gcc-version=${gccver} --with-aros-toolchain-install=${env.WORKSPACE}/tools-${gccver}-${binutilsver} --with-portssources=${env.WORKSPACE}/externalsources"
+			sh "cd build-${ext}-${gccver}-${binutilsver} && ../AROS/configure --target=${ext} --enable-ccache --with-iconset=${iconset} --enable-build-type=nightly --with-serial-debug --with-binutils-version=${binutilsver} --with-gcc-version=${gccver} --with-aros-toolchain-install=${env.WORKSPACE}/tools-${ext}-${gccver}-${binutilsver} --with-portssources=${env.WORKSPACE}/externalsources"
 
 			sh "cd build-${ext}-${gccver}-${binutilsver} && make"
 
@@ -100,7 +100,7 @@ def freshUpRoot(ext, binutilsver, gccver) {
 
 	sh "mkdir -p build-${ext}-${gccver}-${binutilsver}"
   	sh "mkdir -p externalsources"
-	sh "mkdir -p tools-${gccver}-${binutilsver}"
+	sh "mkdir -p tools-${ext}-${gccver}-${binutilsver}"
 }
 
 def postCoreBuild(ext) {
