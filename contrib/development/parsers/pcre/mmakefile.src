@@ -1,4 +1,4 @@
-# Copyright © 2003-2018, The AROS Development Team. All rights reserved.
+# Copyright © 2003-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -9,7 +9,10 @@ include $(SRCDIR)/config/aros-contrib.cfg
 PACKAGE      := pcre
 VERSION      := 8.41
 TARGETDIR    := $(AROS_DEVELOPER)
-REPOSITORIES := https://ftp.pcre.org/pub/pcre/
+REPOSITORIES := https://ftp.pcre.org/pub/pcre \
+ http://www.mirrorservice.org/sites/ftp.exim.org/pub/pcre \
+ http://ftp.cs.stanford.edu/pub/exim/pcre \
+ ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre
 
 #USER_INCLUDES:= -I$(AROS_CONTRIB_INCLUDES)
 #USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
