@@ -1,4 +1,4 @@
-# Copyright © 2009-2010, The AROS Development Team. All rights reserved.
+# Copyright © 2009-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -7,9 +7,11 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- development-SDL_sound : SDL-aros-lib
 
-REPOSITORIES := http://icculus.org/SDL_sound/downloads/ \
- http://downloads.openwrt.org/sources/
- 
+REPOSITORIES := http://icculus.org/SDL_sound/downloads \
+ http://repository.timesys.com/buildsources/s/sdl-sound/sdl-sound-1.0.3 \
+ http://www.slackware.com/~alien/slackbuilds/SDL_sound/build \
+ http://kobyla.info/distfiles
+
 USER_INCLUDES := -I$(AROS_CONTRIB_INCLUDES)
 USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 

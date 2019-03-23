@@ -1,4 +1,4 @@
-# Copyright 2008-2018, The AROS Development Team. All rights reserved.
+# Copyright 2008-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -6,7 +6,10 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- contrib-development : development-libxml2
 #MM- development-libxml2 : workbench-libs-z development-libiconv
 
-REPOSITORIES := ftp://xmlsoft.org/libxml2/ ftp://gd.tuwien.ac.at/pub/libxml/
+REPOSITORIES := ftp://xmlsoft.org/libxml2 \
+ http://bbgentoo.ilb.ru/distfiles \
+ https://ftp.osuosl.org/pub/blfs/conglomeration/libxml2 \
+ https://download.videolan.org/contrib/libxml2
 
 XML2_OPTIONS=--disable-shared --with-http=no --with-ftp=no --with-modules=no \
         --with-mem-debug=no --with-iconv=no --with-debug=no --with-run-debug=no \

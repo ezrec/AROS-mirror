@@ -1,4 +1,4 @@
-# Copyright © 2009-2018, The AROS Development Team. All rights reserved.
+# Copyright © 2009-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -7,8 +7,10 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- development-curl : contrib-openssl linklibs-pthread
 #MM development-curl-fixconfig : development-curl-pakagefiles
 
-REPOSITORIES := http://curl.haxx.se/download \
- http://ftp.sunet.se/mirror/archive/ftp.sunet.se/pub/www/utilities/curl
+REPOSITORIES := https://curl.haxx.se/download \
+ http://piotrkosoft.net/pub/mirrors/curl \
+ https://ftp.icm.edu.pl/packages/curl \
+ https://mirror.sobukus.de/files/src/curl
 
 CURL_VERSION=7.60.0
 USER_CPPFLAGS=-D__BSD_VISIBLE=1

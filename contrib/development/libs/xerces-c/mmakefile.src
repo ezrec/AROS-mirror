@@ -1,8 +1,13 @@
+# Copyright © 1995-2019, The AROS Development Team. All rights reserved.
+# $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-xerces-c : development-xerces-c
 
+REPOSITORIES := https://archive.apache.org/dist/xerces/c/3/sources \
+ http://repository.timesys.com/buildsources/x/xerces-c/xerces-c-3.1.1
+
 %fetch_and_build_gnu_development package=xerces-c version=3.1.1 \
-    patch="yes" suffixes="tar.gz" package_repo="http://mirror.vorboss.net/apache//xerces/c/3/sources/" \
+    patch="yes" suffixes="tar.gz" package_repo="$(REPOSITORIES)" \
     extraoptions="--disable-network --enable-transcoder-gnuiconv --enable-msgloader-inmemory --disable-threads"
