@@ -546,6 +546,16 @@ AC_CHECK_HEADERS([sys/ipc.h sys/shm.h \
 AC_CHECK_HEADERS([sys/mount.h],,,[#include <sys/param.h>])
 AC_CHECK_HEADERS([GL/glx.h],[host_feature_glx=yes],[host_feature_glx=no],)
 
+AC_MSG_CHECKING([if __unused conflicts with sys/stat.h])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+     [[
+     #define __unused __attribute__((unused))
+     #include <sys/stat.h>
+     ]])],
+     [host_stat_h__unused_used=no],
+     [host_stat_h__unused_used=yes])
+AC_MSG_RESULT($host_stat_h__unused_used)
+
 AC_HEADER_DIRENT
 AC_HEADER_STAT
 AC_HEADER_STDC
@@ -2960,6 +2970,7 @@ AC_SUBST(AROS_PORTSSRCDIR)
 AC_SUBST(aros_amigaos_compliance)
 
 # Host related
+AC_SUBST(host_stat_h__unused_used)
 AC_SUBST(host_extra_cfg)
 AC_SUBST(aros_cc_pre)
 AC_SUBST(aros_host_strip)

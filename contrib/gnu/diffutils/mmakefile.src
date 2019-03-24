@@ -1,4 +1,4 @@
-# Copyright © 2004-2014, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -6,8 +6,10 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- contrib-gnu : contrib-gnu-diffutils
 #MM- contrib-gnu-diffutils : development-diffutils
 
-REPOSITORIES := ftp://alpha.gnu.org/pub/gnu/diffutils\
- http://mirrors.ibiblio.org/gnu/alpha/gnu/diffutils
+REPOSITORIES := ftp://ftp.gnu.org/pub/gnu/diffutils \
+ http://ftp.vim.org/gnu/diffutils \
+ http://ftp.swin.edu.au/gnu/diffutils \
+ http://ftp.yz.yamagata-u.ac.jp/pub/GNU/diffutils
 
 %fetch_and_build_gnu_development package=diffutils version=3.3 patch=no \
     package_repo=$(REPOSITORIES) suffixes="tar.xz"
