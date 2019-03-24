@@ -12,11 +12,16 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM     contrib-scalos-library-includes
 
 FILES := Device_Handler Format FormatVolume FullFormat GetInputFromWindow GUI NSD_64bit ParseArgs
-
-NOWARN_FLAGS := $(NOWARN_PARENTHESES)
-USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/$(AROS_DIR_DEVELOPER)/include -idirafter $(SRCDIR)/$(CURDIR)/../../include
 SCALOS_LOCALE := FormatDisk_Locale.h
-USER_CFLAGS := $(NOWARN_FLAGS) -DMUI_OBSOLETE -D__UTILITY_STDLIBBASE__ \
+
+NOWARN_FLAGS := \
+    $(NOWARN_PARENTHESES) \
+    $(NOWARN_FORMAT_OVERFLOW) \
+    $(NOWARN_FORMAT_TRUNCATION)
+
+USER_INCLUDES := -I$(AROS_CONTRIB)/Scalos/$(AROS_DIR_DEVELOPER)/include -idirafter $(SRCDIR)/$(CURDIR)/../../include
+USER_CFLAGS := $(NOWARN_FLAGS)
+USER_CPPFLAGS := -DMUI_OBSOLETE -D__UTILITY_STDLIBBASE__ \
     -D__LOCALE_STDLIBBASE__ -DSCALOSLOCALE=$(SCALOS_LOCALE)
 
 TARGETDIR := $(AROS_CONTRIB)/Scalos/Modules

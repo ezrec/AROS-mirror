@@ -1,4 +1,4 @@
-dnl Copyright © 1997-2018, The AROS Development Team. All rights reserved.
+dnl Copyright © 1997-2019, The AROS Development Team. All rights reserved.
 dnl $Id$
 dnl
 dnl Desc: Autoconf source for target compiler feature detection
@@ -36,8 +36,8 @@ AC_MSG_RESULT($aros_targetcfg_dir)
 # Check if the target compiler supports some features:
 #  -fexceptions
 #  -fpermissive
+#  -frtti
 #  -ffast-math
-#  -fno-builtin-floor
 #  -flto
 #  -fwhole-program
 #  -floop-block
@@ -51,7 +51,14 @@ AC_MSG_RESULT($aros_targetcfg_dir)
 #  -fomit-frame-pointer
 #  -fprofile-arcs
 #  -ftest-coverage
+#  -finstrument-functions
+#  -faligned-new
 
+#  -fno-builtin
+#  -fno-builtin-floor
+#  -fno-builtin-vsnprintf
+
+save_cflags="$CFLAGS"
 AC_MSG_CHECKING([whether ${CC} accepts -fexceptions])
 CFLAGS=-fexceptions
 AC_TRY_COMPILE(,, aros_exceptions="yes", aros_exceptions="no")
@@ -67,6 +74,16 @@ AC_TRY_COMPILE(,, aros_permissive="yes", aros_permissive="no")
 AC_MSG_RESULT($aros_permissive)
 if test "x-$aros_permissive" = "x-yes" ; then
     aros_cflags_permissive=-fpermissive
+    aros_cflags_nopermissive=-fno-permissive
+fi
+
+AC_MSG_CHECKING([whether ${CC} accepts -frtti])
+CFLAGS=-frtti
+AC_TRY_COMPILE(,, aros_rtti="yes", aros_rtti="no")
+AC_MSG_RESULT($aros_rtti)
+if test "x-$aros_rtti" = "x-yes" ; then
+    aros_cflags_rtti=-frtti
+    aros_cflags_nortti=-fno-rtti
 fi
 
 AC_MSG_CHECKING([whether ${CC} accepts -ffast-math])
@@ -75,14 +92,6 @@ AC_TRY_COMPILE(,, aros_fast_math="yes", aros_fast_math="no")
 AC_MSG_RESULT($aros_fast_math)
 if test "x-$aros_fast_math" = "x-yes" ; then
     aros_cflags_fast_math=-ffast-math
-fi
-
-AC_MSG_CHECKING([whether ${CC} accepts -fno-builtin-floor])
-CFLAGS=-fno-builtin-floor
-AC_TRY_COMPILE(,, aros_no_builtin_floor="yes", aros_no_builtin_floor="no")
-AC_MSG_RESULT($aros_no_builtin_floor)
-if test "x-$aros_no_builtin_floor" = "x-yes" ; then
-    aros_cflags_no_builtin_floor=-fno-builtin-floor
 fi
 
 AC_MSG_CHECKING([whether ${CC} accepts -flto])
@@ -196,8 +205,51 @@ if test "x-$aros_test_coverage" = "x-yes" ; then
     aros_cflags_notestcoverage=-fno-test-coverage
 fi
 
+AC_MSG_CHECKING([whether ${CC} accepts -finstrument-functions])
+CFLAGS=-finstrument-functions
+AC_TRY_COMPILE(,, aros_instrument_functions="yes", aros_instrument_functions="no")
+AC_MSG_RESULT($aros_instrument_functions)
+if test "x-$aros_instrument_functions" = "x-yes" ; then
+    aros_cflags_instrfuncs=-finstrument-functions
+    aros_cflags_noinstrfuncs=-fno-instrument-functions
+fi
+
+AC_MSG_CHECKING([whether ${CC} accepts -faligned-new])
+CFLAGS=-faligned-new
+AC_TRY_COMPILE(,, aros_aligned_new="yes", aros_aligned_new="no")
+AC_MSG_RESULT($aros_aligned_new)
+if test "x-$aros_aligned_new" = "x-yes" ; then
+    aros_cflags_alignednew=-faligned-new
+    aros_cflags_noalignednew=-fno-aligned-new
+fi
+
+AC_MSG_CHECKING([whether ${CC} accepts -fno-builtin])
+CFLAGS=-fno-builtin
+AC_TRY_COMPILE(,, aros_no_builtin="yes", aros_no_builtin="no")
+AC_MSG_RESULT($aros_no_builtin)
+if test "x-$aros_no_builtin" = "x-yes" ; then
+    aros_cflags_no_builtin=-fno-builtin
+fi
+
+AC_MSG_CHECKING([whether ${CC} accepts -fno-builtin-floor])
+CFLAGS=-fno-builtin-floor
+AC_TRY_COMPILE(,, aros_no_builtin_floor="yes", aros_no_builtin_floor="no")
+AC_MSG_RESULT($aros_no_builtin_floor)
+if test "x-$aros_no_builtin_floor" = "x-yes" ; then
+    aros_cflags_no_builtin_floor=-fno-builtin-floor
+fi
+
+AC_MSG_CHECKING([whether ${CC} accepts -fno-builtin-vsnprintf])
+CFLAGS=-fno-builtin-vsnprintf
+AC_TRY_COMPILE(,, aros_no_builtin_vsnprintf="yes", aros_no_builtin_vsnprintf="no")
+AC_MSG_RESULT($aros_no_builtin_vsnprintf)
+if test "x-$aros_no_builtin_vsnprintf" = "x-yes" ; then
+    aros_cflags_no_builtin_vsnprintf=-fno-builtin-vsnprintf
+fi
+
+#-----------------------------------------------------------------------------
 #
-#
+# Check if the target compiler supports some include directory options:
 
 AC_MSG_CHECKING([whether ${CC} accepts -iquote])
 CFLAGS="-iquote."
@@ -211,9 +263,21 @@ else
     aros_cflags_iquote_end=-I-
 fi
 
+AC_MSG_CHECKING([whether ${CC} accepts -isystem])
+CFLAGS="-isystem."
+AC_TRY_COMPILE(,, has_isystem="yes", has_isystem="no")
+AC_MSG_RESULT($has_isystem)
+if test "x-$has_isystem" = "x-yes" ; then
+    aros_cflags_isystem=-isystem
+    aros_cflags_isystem_end=
+else
+    aros_cflags_isystem=-I
+    aros_cflags_isystem_end=
+fi
+
 #-----------------------------------------------------------------------------
 
-# Check if the target compiler supports some options:
+# Check if the target compiler supports some ISA options:
 #  -mno-red-zone
 
 AC_MSG_CHECKING([whether ${CC} accepts -mno-red-zone])
@@ -223,6 +287,7 @@ AC_MSG_RESULT($aros_no_red_zone)
 if test "x-$aros_no_red_zone" = "x-yes" ; then
     aros_cflags_no_red_zone=-mno-red-zone
 fi
+CFLAGS="$save_cflags"
 
 #-----------------------------------------------------------------------------
 
@@ -301,6 +366,7 @@ fi
 #  -Wclass-memaccess
 #  -Wint-in-bool-context
 
+save_cflags="$CFLAGS"
 AC_MSG_CHECKING([whether ${CC} accepts -Werror])
 CFLAGS=-Werror
 AC_TRY_COMPILE(,, aros_error="yes", aros_error="no")
@@ -959,14 +1025,61 @@ if test "x-$aros_int_in_bool_context" = "x-yes" ; then
     aros_warnflags_int_in_bool_context=-Wint-in-bool-context
     aros_nowarnflags_int_in_bool_context=-Wno-int-in-bool-context
 fi
+CFLAGS="$save_cflags"
+
+#########################################################
+#
+# Now check what we need to use with the toolchain
+
+cat >$AROS_DEVELOPER/include/__testsincdir.h <<_ACEOF
+/* Copyright (c) The AROS Dev Team  */
+#define _TESTINCFOUND
+_ACEOF
+
+AC_MSG_CHECKING([if we need to use --sysroot])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+     [[
+     #include <__testsincdir.h>
+     #ifndef _TESTINCFOUND
+      error: Couldnt find include!
+     #endif
+     ]])],
+     [toolchain_needs_sysroot=no],
+     [toolchain_needs_sysroot=yes])
+AC_MSG_RESULT($toolchain_needs_sysroot)
+
+if test "$toolchain_needs_sysroot" = "yes" ; then
+    aros_toolchain_sysroot="--sysroot $""(AROS_DEVELOPER)"
+fi
+
+#AC_MSG_CHECKING([if we need to use --isysroot])
+#AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+#     [[
+#     (#include <__testsincdir.h>
+#     #ifndef _TESTINCFOUND
+#      error: Couldnt find include!
+#     #endif
+#     ]])],
+#     [toolchain_needs_isysroot=no],
+#     [toolchain_needs_isysroot=yes])
+#AC_MSG_RESULT($toolchain_needs_isysroot)
+#
+#if test "$toolchain_needs_isysroot" = "yes" ; then
+#    aros_toolchain_isysroot="-isysroot $""(AROS_SDK)"
+#    aros_toolchain_iarchdir="-I $""(AROS_SDK)/$""(AROS_TARGET_CPU)-aros/include"
+#fi
+rm -f $AROS_DEVELOPER/include/__testsincdir.h
 
 #
 # export the feature flags...
 #
 AC_SUBST(aros_cflags_exceptions)
+AC_SUBST(aros_cflags_noexceptions)
 AC_SUBST(aros_cflags_permissive)
+AC_SUBST(aros_cflags_nopermissive)
+AC_SUBST(aros_cflags_rtti)
+AC_SUBST(aros_cflags_nortti)
 AC_SUBST(aros_cflags_fast_math)
-AC_SUBST(aros_cflags_no_builtin_floor)
 AC_SUBST(aros_cflags_lto)
 AC_SUBST(aros_cflags_nolto)
 AC_SUBST(aros_cflags_whole_program)
@@ -993,7 +1106,20 @@ AC_SUBST(aros_cflags_noprofilearcs)
 
 AC_SUBST(aros_cflags_testcoverage)
 AC_SUBST(aros_cflags_notestcoverage)
+
+AC_SUBST(aros_cflags_instrfuncs)
+AC_SUBST(aros_cflags_noinstrfuncs)
     
+AC_SUBST(aros_cflags_alignednew)
+AC_SUBST(aros_cflags_noalignednew)
+    
+AC_SUBST(aros_cflags_no_builtin)
+AC_SUBST(aros_cflags_no_builtin_floor)
+AC_SUBST(aros_cflags_no_builtin_vsnprintf)
+
+#
+AC_SUBST(aros_cflags_isystem)
+AC_SUBST(aros_cflags_isystem_end)
 AC_SUBST(aros_cflags_iquote)
 AC_SUBST(aros_cflags_iquote_end)
 
@@ -1150,6 +1276,9 @@ AC_SUBST(aros_warnflags_class_memaccess)
 AC_SUBST(aros_nowarnflags_class_memaccess)
 AC_SUBST(aros_warnflags_int_in_bool_context)
 AC_SUBST(aros_nowarnflags_int_in_bool_context)
+
+# Additional toolchain support ...
+AC_SUBST(aros_toolchain_sysroot)
 
 AC_CONFIG_FILES(
     ${aros_targetcfg_dir}/compiler.cfg:compiler.cfg.in

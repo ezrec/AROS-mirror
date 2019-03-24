@@ -6,11 +6,16 @@
 # Standard compiler features ...
 #
 CFLAGS_EXCEPTIONS                       := @aros_cflags_exceptions@
+CFLAGS_NO_EXCEPTIONS                    := @aros_cflags_noexceptions@
 CFLAGS_PERMISSIVE                       := @aros_cflags_permissive@
+CFLAGS_NO_PERMISSIVE                    := @aros_cflags_nopermissive@
+
+# Runtime type-information
+CFLAGS_RTTI                             := @aros_cflags_rtti@
+CFLAGS_NO_RTTI                          := @aros_cflags_nortti@
 
 #
 CFLAGS_FAST_MATH                        := @aros_cflags_fast_math@
-CFLAGS_NO_BUILTIN_FLOOR                 := @aros_cflags_no_builtin_floor@
 
 #
 # LTO/Graphite optimization flags
@@ -49,9 +54,22 @@ CFLAGS_NO_PROFILE_ARCS                  := @aros_cflags_noprofilearcs@
 CFLAGS_TEST_COVERAGE                    := @aros_cflags_testcoverage@
 CFLAGS_NO_TEST_COVERAGE                 := @aros_cflags_notestcoverage@
 
+CFLAGS_INSTR_FUNCTIONS                  := @aros_cflags_instrfuncs@
+CFLAGS_NO_INSTR_FUNCTIONS               := @aros_cflags_noinstrfuncs@
+
+CFLAGS_ALIGNED_NEW                      := @aros_cflags_alignednew@
+CFLAGS_NO_ALIGNED_NEW                   := @aros_cflags_noalignednew@
+
+#Builtins
+CFLAGS_NO_BUILTIN                       := @aros_cflags_no_builtin@
+CFLAGS_NO_BUILTIN_FLOOR                 := @aros_cflags_no_builtin_floor@
+CFLAGS_NO_BUILTIN_VSNPRINTF             := @aros_cflags_no_builtin_vsnprintf@
+
 #
-# -iquote support
+# -isystem/-iquote support
 #
+CFLAGS_ISYSTEM                          := @aros_cflags_isystem@
+CFLAGS_ISYSTEM_END                      := @aros_cflags_isystem_end@
 CFLAGS_IQUOTE                           := @aros_cflags_iquote@
 CFLAGS_IQUOTE_END                       := @aros_cflags_iquote_end@
 
@@ -220,3 +238,7 @@ NOWARN_IMPLICIT_FALLTHROUGH             := @aros_nowarnflags_implicit_fallthroug
 NOWARN_MISSING_PROTOTYPES               := @aros_nowarnflags_missing_prototypes@
 NOWARN_CLASS_MEMACCESS                  := @aros_nowarnflags_class_memaccess@
 NOWARN_INT_IN_BOOL_CONTEXT              := @aros_nowarnflags_int_in_bool_context@
+
+# Toolchain support
+
+COMPILER_SYSROOT                        := @aros_toolchain_sysroot@

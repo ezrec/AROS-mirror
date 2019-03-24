@@ -28,7 +28,7 @@ AROS_LH0(APTR, SuperState,
         : [swi_no] "I" (6 /*SC_SUPERSTATE*/) : "r1"
     );
 
-    return superSP;
+    return (APTR)superSP;
 
     AROS_LIBFUNC_EXIT
 } /* SuperState() */

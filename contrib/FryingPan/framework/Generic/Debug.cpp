@@ -30,7 +30,7 @@ using namespace GenNS;
    long       DbgMaster::lNumInstances = 0; 
 
   
-DbgMsg::DbgMsg(const DbgHandler *pParent, DbgLevel lvl, const char *sFmtStr, IPTR vFmtArgs, void *bData, int lLen)
+DbgMsg::DbgMsg(const DbgHandler *pParent, DbgLevel lvl, const char *sFmtStr, uint vFmtArgs, void *bData, int lLen)
    : DbgCmd(pParent, lvl)
 {
    text     = 0;
@@ -142,11 +142,11 @@ void DbgHandler::InitH()
       DOS->UnLock(DOS->CreateDir(i->Data()));
    }
 
-   j->FormatStr("%s_%05ld.txt", ARRAY((uint32)name.Data(), Utility->GetUniqueID()));
+   j->FormatStr("%s_%05ld.txt", ARRAY((uint)name.Data(), Utility->GetUniqueID()));
    i->AddPath(j->Data());
    DOS->DeleteFile(i->Data());
    fh1 = DOS->Open(i->Data(), MODE_READWRITE);
-   i->FormatStr("con:0/10//80/Debug: %s/auto/close/wait", ARRAY((IPTR)name.Data()));
+   i->FormatStr("con:0/10//80/Debug: %s/auto/close/wait", ARRAY((uint)name.Data()));
    if (!silent) fh2 = DOS->Open(i->Data(), MODE_NEWFILE);
    delete i;
    delete j;
@@ -184,11 +184,11 @@ void DbgHandler::PutDate() const
 
    DOS->DateStamp(&CDT.dat_Stamp);
    DOS->DateToStr(&CDT);
-   if (fh2 != 0) DOS->VFPrintf(fh2, "[%s] ", (void*)ARRAY((IPTR)&TM));
-   if (fh1 != 0) DOS->VFPrintf(fh1, "[%s] ", (void*)ARRAY((IPTR)&TM));
+   if (fh2 != 0) DOS->VFPrintf(fh2, "[%s] ", (void*)ARRAY((uint)&TM));
+   if (fh1 != 0) DOS->VFPrintf(fh1, "[%s] ", (void*)ARRAY((uint)&TM));
 }
 
-void DbgHandler::DoAsync(DbgLevel l, const char* sFmtString, IPTR vFmtArgs, void* bMemBlock, int lMemLen) const
+void DbgHandler::DoAsync(DbgLevel l, const char* sFmtString, uint vFmtArgs, void* bMemBlock, int lMemLen) const
 {
    if (0 == this)
       return;
@@ -197,7 +197,7 @@ void DbgHandler::DoAsync(DbgLevel l, const char* sFmtString, IPTR vFmtArgs, void
    dest->DoAsync(0, new DbgMsg(this, l, sFmtString, vFmtArgs, bMemBlock, lMemLen));
 }
 
-void DbgHandler::DoSync(DbgLevel l, const char* sFmtString, IPTR vFmtArgs, void* bMemBlock, int lMemLen) const
+void DbgHandler::DoSync(DbgLevel l, const char* sFmtString, uint vFmtArgs, void* bMemBlock, int lMemLen) const
 {
    if (0 == this)
       return;

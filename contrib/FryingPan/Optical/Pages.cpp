@@ -107,7 +107,7 @@ DRT_Mechanism Page_Capabilities::GetMechanismType()
    }
 }
 
-uint32 Page_Capabilities::GetCapabilities()
+uint Page_Capabilities::GetCapabilities()
 {
    unsigned long caps = 0;
    if (rw.doesReadMethod2())              caps |= DRT_Can_Read_Mode2;

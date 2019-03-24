@@ -9,8 +9,13 @@ FILES  := char checkbox error node locale \
 
 EXEDIR := $(AROS_CONTRIB)/Misc/aminet/Typeface
 
-NOWARN_FLAGS := $(NOWARN_UNUSED_FUNCTION) $(NOWARN_FORMAT_SECURITY)
-USER_CFLAGS := $(NOWARN_FLAGS) -DINTUITION_NO_INLINE_STDARG
+NOWARN_FLAGS := \
+    $(NOWARN_UNUSED_FUNCTION) \
+    $(NOWARN_FORMAT_SECURITY) \
+    $(NOWARN_FORMAT_OVERFLOW)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+USER_CPPFLAGS := -DINTUITION_NO_INLINE_STDARG
 
 #MM aminet-text-misc-typeface : setup-typeface-catalogs contrib-bgui
 

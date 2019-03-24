@@ -1,12 +1,15 @@
-# Copyright © 2004, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-fribidi : development-fribidi
 
-VERSION    := 0.10.4
-REPOSITORY  = http://fribidi.org/download/
+VERSION := 0.10.4
+REPOSITORIES := http://ftp.yz.yamagata-u.ac.jp/pub/linux/momonga/2/SOURCES \
+ http://ftp.riken.jp/pub/Linux/momonga/2/SOURCES \
+ http://www.gnu-darwin.org/distfiles
 
 %fetch_and_build_gnu_development package=fribidi version=$(VERSION) patch=no \
-    package_repo=$(REPOSITORY) extraoptions="--enable-longlong --enable-sjlj-exceptions --disable-shared --without-pic"
+    package_repo=$(REPOSITORIES) \
+    extraoptions="--enable-longlong --enable-sjlj-exceptions --disable-shared --without-pic"

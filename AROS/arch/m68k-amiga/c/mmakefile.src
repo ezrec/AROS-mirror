@@ -1,9 +1,10 @@
-# Copyright © 2003-2018, The AROS Development Team. All rights reserved.
+# Copyright © 2003-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros.cfg
 
-USER_CPPFLAGS := -I$(GENINCDIR) -I$(SRCDIR) -DADATE="\"$(shell date "+%d.%m.%Y")\""
+USER_CPPFLAGS := -DADATE="\"$(shell date "+%d.%m.%Y")\""
+USER_INCLUDES := -I$(GENINCDIR) -I$(SRCDIR)
 USER_CFLAGS := -fno-delete-null-pointer-checks
 USER_AFLAGS := -Os -march=68060
 
@@ -47,7 +48,7 @@ FILES := gdbstop
 
 CFILES := SetPatchAROS
 AFILES := newstackswap
-USER_INCLUDES := -isystem $(SRCDIR)/rom/dos/include
+USER_INCLUDES += -isystem $(SRCDIR)/rom/dos/include
 USER_LDFLAGS  := -L$(GENDIR)/lib -static
 
 %build_prog mmake=workbench-c-m68k-setpatcharos progname=SetPatchAROS \
@@ -72,5 +73,17 @@ CFILES		:= SetPatch
 %build_prog mmake=workbench-c-m68k-setpatch progname=SetPatch \
     files=$(CFILES) targetdir=$(AROS_C) \
     uselibs=setpatch usestartup=no
+
+# Some Tests to check SetPatch functionality ..
+
+CFILES	      := test-cas
+TARGET_ISA_CFLAGS := $(ISA_MC68020_FLAGS)
+USER_LDFLAGS  := 
+
+%build_prog mmake=workbench-c-m68k-setpatch-testcas progname=test-CAS \
+    files=$(CFILES) targetdir=$(AROS_TESTS)/m68k
+
+#MM- workbench-c-m68k-setpatch-tests : workbench-c-m68k-setpatch-testcas
+#MM- workbench-c-m68k-setpatch-tests-quick : workbench-c-m68k-setpatch-testcas-quick
 
 %common

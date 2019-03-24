@@ -41,6 +41,11 @@ FILES := \
     library_CheckLibVersion \
     library_CheckLibVersionName
 
+NOWARN_FLAGS := \
+    $(NOWARN_STRINGOP_TRUNCATION)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+
 %build_linklib mmake=contrib-scout-tblib libname=$(LIB) \
   files=$(FILES) libdir=$(AROS_LIB)
 

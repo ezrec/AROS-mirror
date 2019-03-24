@@ -1,5 +1,5 @@
 dnl Copyright © 1997-2016, The AROS Development Team. All rights reserved.
-dnl $Id: configure.in 55487 2018-10-01 15:25:27Z wawa $
+dnl $Id$
 dnl
 dnl Desc: Autoconf source for configuration file
 dnl Lang: english 
@@ -23,8 +23,11 @@ AC_CONFIG_AUX_DIR(scripts/autoconf)
 AC_CANONICAL_HOST
 
 # Default versions for the gnu tools we build
-default_gcc_version="4.6.4"
-default_binutils_version="2.23.2"
+default_toolchain_family=`cat ${srcdir}/config/toolchain_def`
+default_gcc_version=`cat ${srcdir}/config/gcc_def`
+exp_gcc_version=`cat ${srcdir}/config/gcc_exp`
+default_binutils_version=`cat ${srcdir}/config/binutils_def`
+exp_binutils_version=`cat ${srcdir}/config/binutils_exp`
 default_grub2_version="2.02"
 target_grub2_version=$default_grub2_version
 
@@ -257,12 +260,12 @@ case "$host_os" in
         ;;
 
     darwin*)
-        aros_host_include=[`$CC --print-file-name=include`]
-        AC_CHECK_FILE($aros_host_include/stddef.h,,
-                AC_MSG_ERROR([XCode incorrectly configured!
+        AC_MSG_CHECKING([for macOS SDK files])
+        LOC=$( xcode-select -p )
+        AS_IF([ test $? != 0],[AC_MSG_ERROR([XCode incorrectly configured!
 please run 'xcode-select --install' before
-re-running configure])
-        )
+re-running configure])])
+        AC_MSG_RESULT($LOC)
         aros_host_cflags="$aros_host_cflags $aros_host_cc_pipe"
         aros_host_arch="darwin"
         host_cc_elf=no
@@ -541,6 +544,17 @@ AC_CHECK_HEADERS([sys/ipc.h sys/shm.h \
 ])
 
 AC_CHECK_HEADERS([sys/mount.h],,,[#include <sys/param.h>])
+AC_CHECK_HEADERS([GL/glx.h],[host_feature_glx=yes],[host_feature_glx=no],)
+
+AC_MSG_CHECKING([if __unused conflicts with sys/stat.h])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+     [[
+     #define __unused __attribute__((unused))
+     #include <sys/stat.h>
+     ]])],
+     [host_stat_h__unused_used=no],
+     [host_stat_h__unused_used=yes])
+AC_MSG_RESULT($host_stat_h__unused_used)
 
 AC_HEADER_DIRENT
 AC_HEADER_STAT
@@ -645,10 +659,13 @@ dnl The target configuration section is responsible for setting up all
 dnl the paths for includes, and tools required to build AROS to some
 dnl particular target.
 
+test_kernel_cc=no
+
 aros_nowarn_flags="NOWARN_UNUSED_COMMAND_LINE_ARGUMENT NOWARN_UNKNOWN_WARNING_OPTION NOWARN_POINTER_SIGN NOWARN_PARENTHESES"
+export_newline="
+"
 
-toolchain_needs_sysroot=no
-
+aros_elf_translate=
 aros_warn_flags=
 aros_isa_extra=
 aros_isa_flags=
@@ -690,13 +707,8 @@ ignore_undefined_symbols=""
 # Check for X11 by default
 need_x11="auto"
 
-host_x_gfx=no
-host_sdl_gfx=no
-host_android_gfx=no
-
-
 AC_MSG_CHECKING([Which toolchain family to use ...])
-AC_ARG_WITH(toolchain,AC_HELP_STRING([--with-toolchain=family],[Which toolchain family to crosscompile with (defaults to gnu)]),aros_toolchain="$withval",aros_toolchain="gnu")
+AC_ARG_WITH(toolchain,AC_HELP_STRING([--with-toolchain=family],[Which toolchain family to crosscompile with (defaults to gnu)]),aros_toolchain="$withval",aros_toolchain="$default_toolchain_family")
 AC_MSG_RESULT($aros_toolchain)
 
 
@@ -720,7 +732,6 @@ use_ld_wrapper=yes
 
 case "$aros_toolchain" in
     *llvm*)
-        # toolchain_needs_sysroot=yes
         toolchain_c_compiler="clang"
         toolchain_cxx_compiler="clang++"
         toolchain_cpp_preprocessor="clang -E"
@@ -1001,6 +1012,10 @@ ios)
     fi
     AC_MSG_RESULT($aros_android_antapk)
 
+    target_extra_cfg+="$export_newline""# Android$export_newline""AROS_ANDROID_ANTAPK           := $aros_android_antapk$export_newline"
+    host_extra_cfg+="$export_newline""# Android-specific$export_newline""ANDROID                       := $android_tool$export_newline""ANT		                      := $ant$export_newline"
+    aros_target_options+="$export_newline""# Enable Android Gfx Driver$export_newline""OPT_HOST_ANDROIDGFX           := yes$export_newline"
+
     dnl MSYS bash can't run .bat files directly, then need to be started via cmd.exe
     if test "$host_os" = "mingw32"; then
         android_tool="cmd //c $android_tool"
@@ -1016,10 +1031,45 @@ esac
 kernel_tool_prefix="none"
 aros_tool_prefix="none"
 elf_tool_prefix="${target_cpu}-elf-"
-x86_isa_extra="ISA_X86_FLAGS           := -m32 -march=i486"
-x86_64_isa_extra="ISA_X8664_FLAGS         := -mcmodel=large"
-export_newline="
-"
+
+# Base target cpu ISA configuration switch.
+case "$target_cpu" in
+    *aarch64*)
+        ;;
+    *arm*)
+        ;;
+    *m68k*)
+        m68k_isa_extra="ISA_MC68000_FLAGS             := -march=68000"
+        m68k_020_isa_extra="ISA_MC68020_FLAGS             := -march=68020"
+        m68k_030_isa_extra="ISA_MC68030_FLAGS             := -march=68030"
+        m68k_040_isa_extra="ISA_MC68040_FLAGS             := -march=68040"
+        m68k_060_isa_extra="ISA_MC68060_FLAGS             := -march=68060"
+        m68k_ac080_isa_extra="ISA_AC68080_FLAGS             := -march=68040"
+        m68k_020_ext="ISA_MC68020_EXT               :=020"
+        m68k_030_ext="ISA_MC68030_EXT               :=030"
+        m68k_040_ext="ISA_MC68040_EXT               :=040"
+        m68k_060_ext="ISA_MC68060_EXT               :=060"
+        m68k_020_cflags="ISA_MC68020_CFLAGS            :="
+        m68k_030_cflags="ISA_MC68030_CFLAGS            :="
+        m68k_040_cflags="ISA_MC68040_CFLAGS            :="
+        m68k_060_cflags="ISA_MC68060_CFLAGS            :="
+        m68k_020_cppflags="ISA_MC68020_CPPFLAGS          :="
+        m68k_030_cppflags="ISA_MC68030_CPPFLAGS          :="
+        m68k_040_cppflags="ISA_MC68040_CPPFLAGS          :="
+        m68k_060_cppflags="ISA_MC68060_CPPFLAGS          :="
+        m68k_020_ldflags="ISA_MC68020_LDFLAGS           :="
+        m68k_030_ldflags="ISA_MC68030_LDFLAGS           :="
+        m68k_040_ldflags="ISA_MC68040_LDFLAGS           :="
+        m68k_060_ldflags="ISA_MC68060_LDFLAGS           :="
+        ;;
+    *x86_64* | *i?86*)
+        x86_isa_extra="ISA_X86_FLAGS                 := -m32 -march=i486"
+        x86_64_isa_extra="ISA_X8664_FLAGS               := -mcmodel=large"
+        ;;
+    *powerpc*)
+        ;;
+esac
+
 # This is the target configuration switch.
 case "$target_os" in
     linux*)
@@ -1031,6 +1081,7 @@ case "$target_os" in
                 aros_object_format="m68kelf"
                 aros_flavour="emulcompat"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -D__mc68000 -D__linux__"
+                aros_isa_flags="$""(ISA_MC68000_FLAGS)"
                 aros_shared_ldflags="-Wl,-T,\$(TOP)/config/linux/m68k/script.so"
                 aros_kernel_ldflags="-Wl,-rpath,./lib,-T,\$(TOP)/config/linux/m68k/script.normal"
                 gcc_target_cpu="mc68000"
@@ -1159,7 +1210,6 @@ case "$target_os" in
                     aros_kernel_includes="-isystem $aros_android_ndk/usr/include"
                 fi
                 need_x11=no
-                host_android_gfx=yes
                 # Disable implicit PIC mode
                 aros_config_cflags="$aros_config_cflags -fno-pic"
                 kernel_tool_prefix="$android_tool_prefix-"
@@ -1294,10 +1344,10 @@ case "$target_os" in
                 aros_kernel_ar="ar"
                 aros_kernel_ar_flags="-cr"
                 aros_kernel_ld="ld -arch ppc"
-		aros_kernel_as="as -arch ppc"
+                aros_kernel_as="as -arch ppc"
                 aros_kernel_ranlib="ranlib -arch ppc"
-		aros_kernel_nm="nm -arch ppc"
-		aros_kernel_strip="strip -arch ppc"
+                aros_kernel_nm="nm -arch ppc"
+                aros_kernel_strip="strip -arch ppc"
                 kernel_tool_prefix="powerpc-apple-darwin10-"
                 ;;
             *arm*)
@@ -1321,10 +1371,12 @@ case "$target_os" in
         esac
         case "$aros_target_variant" in
             ios)
+                make_extra_targetcfg="$export_newline""# Apple iOS stuff for gcc$export_newline""IOS_LDFLAGS  := -F$""(IOS_SDK_PATH)/System/Library/Frameworks$export_newline"
                 aros_ios_version="3.0"
                 aros_nominal_width=320
                 aros_nominal_height=480
                 aros_ios_sdk="$aros_xcode_path/Platforms/$aros_ios_platform.platform/Developer/SDKs/$aros_ios_platform$aros_sdk_version.sdk"
+                target_extra_cfg+="$export_newline""# Apple iOS specific$export_newline""IOS_PLATFORM            := $aros_ios_platform$export_newline""IOS_OS_VERSION          := $aros_ios_version$export_newline""IOS_SDK_PATH            := $aros_ios_sdk$export_newline"
                 kernel_tool_flags="$target_tool_flags -isysroot $aros_ios_sdk"
                 aros_kernel_includes="-isystem $aros_ios_sdk/usr/include"
                 need_x11=no
@@ -1374,6 +1426,7 @@ case "$target_os" in
                 aros_object_format="m68kelf"
                 aros_flavour="emulcompat"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -D__mc68000 -D__NetBSD__"
+                aros_isa_flags="$""(ISA_MC68000_FLAGS)"
                 gcc_target_cpu="mc68000"
                 ;;
             *i?86*)
@@ -1554,6 +1607,21 @@ case "$target_os" in
                 aros_target_mkdep="$aros_target_mkdep -Darm"
                 aros_arch_libs="-laeabi"
                 ;;
+            *armeb*)
+                aros_flavour="standcompat"
+                aros_target_cpu="armeb"
+                gcc_default_float_abi="hard"
+                gcc_default_cpu="armv7ve"
+                gcc_default_cpu_tune="cortex-a7"
+                aros_object_format="armelfb_aros"
+                aros_isa_flags="$aros_isa_flags -marm"
+                aros_config_cflags="$aros_config_cflags"
+                aros_config_cxxflags="$aros_config_cxxflags"
+                aros_config_aflags="$aros_config_aflags -marm"
+                aros_kernel_cflags="$aros_kernel_cflags -marm"
+                aros_target_mkdep="$aros_target_mkdep -Darm"
+                aros_arch_libs="-laeabi"
+                ;;
             *arm*)
                 aros_target_cpu="arm"
                 gcc_default_cpu="armv6zk"
@@ -1601,6 +1669,8 @@ case "$target_os" in
         ;;
 
     amiga*)
+        aros_elf_translate="$""(ELF2HUNK)"
+        make_extra_commands="$export_newline""ELF2HUNK	:= $""(TOOLDIR)/elf2hunk$""(HOST_EXE_SUFFIX)$export_newline"
         aros_target_arch="amiga"
         aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -D_AMIGA -DAMIGA"
         aros_shared_default="no"
@@ -1613,6 +1683,7 @@ case "$target_os" in
                 aros_object_format="m68kelf"
                 aros_flavour="standcompat"
                 gcc_target_cpu="m68000"
+                aros_isa_flags="$""(ISA_MC68000_FLAGS)"
                 aros_nowarn_flags="$aros_nowarn_flags NOWARN_VOLATILE_REGISTER_VAR"
                 aros_config_cppflags="$aros_config_cppflags -DNOLIBINLINE"
                 aros_config_cflags="$aros_config_cflags -fno-strict-aliasing -ffreestanding -fomit-frame-pointer -fbuiltin"
@@ -1695,6 +1766,7 @@ case "$target_os" in
                 aros_object_format="m68kelf"
                 aros_flavour="palmnative"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Dm68k"
+                aros_isa_flags="$""(ISA_MC68000_FLAGS)"
                 aros_nominal_width=160
                 aros_nominal_height=160
                 aros_nominal_depth=1
@@ -1729,6 +1801,7 @@ case "$target_os" in
                 aros_object_format="m68kelf"
                 aros_flavour="mac68knative"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Dm68k"
+                aros_isa_flags="$""(ISA_MC68000_FLAGS)"
                 aros_nominal_width=512
                 aros_nominal_height=384
                 aros_nominal_depth=8
@@ -1762,7 +1835,6 @@ esac
 #-----------------------------------------------------------------------------
 crosstools_guess="yes"
 aros_target_toolchain="no"
-aros_config_sysroot=""
 aros_kernel_sysroot=""
 
 AC_MSG_CHECKING([Kernel toolchain prefix])
@@ -1806,20 +1878,12 @@ else
     AROS_CROSSTOOLSDIR="$aros_toolchain_install"
     PATH="$AROS_CROSSTOOLSDIR:$PATH"
     if test "$crosstools_guess" = "no" ; then
-        toolchain_needs_sysroot=yes
-
         if test "x-$aros_flavour" != "x-emulation" -a "x-$aros_flavour" != "x-emulcompat" ; then
-            aros_kernel_sysroot = $aros_config_sysroot
+            aros_kernel_sysroot="$""(TARGET_SYSROOT)"
         fi
     fi
 fi
 AC_MSG_RESULT($AROS_CROSSTOOLSDIR)
-
-AC_MSG_CHECKING([If we need to use --sysroot])
-if test "$toolchain_needs_sysroot" = "yes" ; then
-    aros_config_sysroot="--sysroot $AROS_BUILDDIR_UNIX/bin/${aros_target_arch}-${aros_target_cpu}${aros_target_suffix}/AROS/Developer"
-fi
-AC_MSG_RESULT($toolchain_needs_sysroot)
 
 #-----------------------------------------------------------------------------
 if test "$aros_toolchain" = "gnu" ; then
@@ -1886,7 +1950,7 @@ if test "$aros_toolchain" = "gnu" ; then
 
     if test "$gcc_fix_bitfields" = "true" ; then
         case "$aros_target_cpu" in
-        *x86_64* | i386)
+        *x86_64* | *i?86*)
             x86_isa_extra="$x86_isa_extra -mno-ms-bitfields"
             x86_64_isa_extra="$x86_64_isa_extra -mno-ms-bitfields"
             ;;
@@ -1917,79 +1981,95 @@ spec_obj_format="-m $aros_object_format"
 # Currently this is implemented only for ARM. We can specify which minimum CPU and FPU to use,\
 # as well as floating-point ABI.
 case "$aros_target_cpu" in
-*x86_64*)
-    aros_isa_extra="$x86_isa_extra$export_newline$x86_64_isa_extra$export_newline"
-    dnl x86_64 can build 32 or 64bit code
-    spec_obj_format="%{!m32:-m elf_x86_64} %{m32:-m elf_i386}"
-    ;;
-arm*)
-    dnl ARM defaults are: armv6 + vfp (unless overriden in per-target section above)
-    if test "$gcc_default_cpu" = ""; then
-        gcc_default_cpu="armv6"
-    fi
-    if test "$gcc_default_fpu" = ""; then
-        gcc_default_fpu="vfp"
-    fi
-    if test "$gcc_default_float_abi" = ""; then
-        if test "$target_cpu" = "armhf"; then
-            gcc_default_float_abi="hard"
-        else
-            gcc_default_float_abi="softfp"
+    *m68k*)
+        aros_isa_targets="M68K_ISA_TARGETS              :=MC68020 MC68040"
+        aros_isa_extra="$aros_isa_extra$export_newline$aros_isa_targets$export_newline"
+        aros_isa_extra="$aros_isa_extra$m68k_isa_extra$export_newline$m68k_020_isa_extra$export_newline$m68k_030_isa_extra$export_newline$m68k_040_isa_extra$export_newline$m68k_060_isa_extra$export_newline$m68k_ac080_isa_extra$export_newline"
+        aros_isa_extra="$aros_isa_extra$m68k_020_cppflags$export_newline$m68k_030_cppflags$export_newline$m68k_040_cppflags$export_newline$m68k_060_cppflags$export_newline"
+        aros_isa_extra="$aros_isa_extra$m68k_020_cflags$export_newline$m68k_030_cflags$export_newline$m68k_040_cflags$export_newline$m68k_060_cflags$export_newline"
+        aros_isa_extra="$aros_isa_extra$m68k_020_ldflags$export_newline$m68k_030_ldflags$export_newline$m68k_040_ldflags$export_newline$m68k_060_ldflags$export_newline"
+        aros_isa_extra="$aros_isa_extra$m68k_020_ext$export_newline$m68k_030_ext$export_newline$m68k_040_ext$export_newline$m68k_060_ext$export_newline"
+        ;;
+    *x86_64*)
+        aros_isa_extra="$export_newline$x86_isa_extra$export_newline$x86_64_isa_extra$export_newline"
+        dnl x86_64 can build 32 or 64bit code
+        spec_obj_format="%{!m32:-m elf_x86_64} %{m32:-m elf_i386}"
+        ;;
+    arm*)
+        dnl ARM defaults are: armv6 + vfp (unless overriden in per-target section above)
+        if test "$gcc_default_cpu" = ""; then
+            gcc_default_cpu="armv6"
         fi
-    fi
+        if test "$gcc_default_fpu" = ""; then
+            gcc_default_fpu="vfp"
+        fi
+        if test "$gcc_default_endian" = ""; then
+            if test "$target_cpu" = "armeb"; then
+                gcc_default_endian="big-endian"
+            else
+                gcc_default_endian="little-endian"
+            fi
+        fi
+        if test "$gcc_default_float_abi" = ""; then
+            if test "$target_cpu" = "armhf"; then
+                gcc_default_float_abi="hard"
+            else
+                gcc_default_float_abi="softfp"
+            fi
+        fi
 
-    AC_MSG_CHECKING([Which minimum CPU to use])
-    AC_ARG_WITH(cpu,AC_HELP_STRING([--with-cpu=<spec>],[Specify minumum CPU (default=$gcc_default_cpu).]),aros_gcc_cpu="$withval",aros_gcc_cpu=$gcc_default_cpu)
-    AC_MSG_RESULT($aros_gcc_cpu)
+        AC_MSG_CHECKING([Which minimum CPU to use])
+        AC_ARG_WITH(cpu,AC_HELP_STRING([--with-cpu=<spec>],[Specify minumum CPU (default=$gcc_default_cpu).]),aros_gcc_cpu="$withval",aros_gcc_cpu=$gcc_default_cpu)
+        AC_MSG_RESULT($aros_gcc_cpu)
 
-    AC_MSG_CHECKING([Which minimum FPU to use])
-    AC_ARG_WITH(fpu,AC_HELP_STRING([--with-fpu=<spec>],[Specify minumum FPU (default=$gcc_default_fpu).]),aros_gcc_fpu="$withval",aros_gcc_fpu=$gcc_default_fpu)
-    AC_MSG_RESULT($aros_gcc_fpu)
+        AC_MSG_CHECKING([Which minimum FPU to use])
+        AC_ARG_WITH(fpu,AC_HELP_STRING([--with-fpu=<spec>],[Specify minumum FPU (default=$gcc_default_fpu).]),aros_gcc_fpu="$withval",aros_gcc_fpu=$gcc_default_fpu)
+        AC_MSG_RESULT($aros_gcc_fpu)
 
-    AC_MSG_CHECKING([Which floating point ABI to use])
-    AC_ARG_WITH(float,AC_HELP_STRING([--with-float=<spec>],[Specify floating point ABI (default=$gcc_default_float_abi).]),aros_gcc_float_abi="$withval",aros_gcc_float_abi=$gcc_default_float_abi)
-    AC_MSG_RESULT($aros_gcc_float_abi)
+        AC_MSG_CHECKING([Which floating point ABI to use])
+        AC_ARG_WITH(float,AC_HELP_STRING([--with-float=<spec>],[Specify floating point ABI (default=$gcc_default_float_abi).]),aros_gcc_float_abi="$withval",aros_gcc_float_abi=$gcc_default_float_abi)
+        AC_MSG_RESULT($aros_gcc_float_abi)
 
-    AC_MSG_CHECKING([Which ARM mode to use])
-    if test "$aros_target_cpu_mode" = ""; then
-        aros_target_cpu_mode="arm32"
-        AC_MSG_RESULT([Defaulting to $aros_target_cpu_mode])
-    else
-        AC_MSG_RESULT([$aros_target_cpu_mode])
-    fi
+        AC_MSG_CHECKING([Which ARM mode to use])
+        if test "$aros_target_cpu_mode" = ""; then
+            aros_target_cpu_mode="arm32"
+            AC_MSG_RESULT([Defaulting to $aros_target_cpu_mode])
+        else
+            AC_MSG_RESULT([$aros_target_cpu_mode])
+        fi
 
-    case "$aros_target_cpu_mode" in
-    arm32)
-        gcc_default_mode="arm"
-        aros_isa_flags="$aros_isa_flags -m$gcc_default_mode -mthumb-interwork -march=$aros_gcc_cpu -mfpu=$aros_gcc_fpu -mfloat-abi=$aros_gcc_float_abi"
-    ;;
-    arm64)
-        AC_MSG_ERROR([ARM 64-bit mode is unsupported])
-    ;;
-    thumb)
-        AC_MSG_ERROR([Thumb1 16-bit mode is unsupported])
-    ;;
-    thumb1)
-        AC_MSG_ERROR([Thumb1 16-bit mode is unsupported])
-    ;;
-    thumb2)
-        gcc_default_mode="thumb"
-        # Do not specify -mthumb-interwork as it may add extra code to support arm/thumb interwork
-        aros_isa_flags="$aros_isa_flags -m$gcc_default_mode -march=$aros_gcc_cpu -mfpu=$aros_gcc_fpu -mfloat-abi=$aros_gcc_float_abi"
-    ;;
-    *)
-        AC_MSG_ERROR([Unsupported ARM mode specified $aros_target_cpu_mode])
-    ;;
-    esac
+        case "$aros_target_cpu_mode" in
+        arm32)
+            gcc_default_mode="arm"
+            aros_isa_flags="$aros_isa_flags -m$gcc_default_mode -m$gcc_default_endian -mthumb-interwork -march=$aros_gcc_cpu -mfpu=$aros_gcc_fpu -mfloat-abi=$aros_gcc_float_abi"
+        ;;
+        arm64)
+            AC_MSG_ERROR([ARM 64-bit mode is unsupported])
+        ;;
+        thumb)
+            AC_MSG_ERROR([Thumb1 16-bit mode is unsupported])
+        ;;
+        thumb1)
+            AC_MSG_ERROR([Thumb1 16-bit mode is unsupported])
+        ;;
+        thumb2)
+            gcc_default_mode="thumb"
+            # Do not specify -mthumb-interwork as it may add extra code to support arm/thumb interwork
+            aros_isa_flags="$aros_isa_flags -m$gcc_default_mode -$gcc_default_endian -march=$aros_gcc_cpu -mfpu=$aros_gcc_fpu -mfloat-abi=$aros_gcc_float_abi"
+        ;;
+        *)
+            AC_MSG_ERROR([Unsupported ARM mode specified $aros_target_cpu_mode])
+        ;;
+        esac
 
-    aros_config_cflags="$aros_config_cflags -fno-asynchronous-unwind-tables -fno-exceptions"
-    aros_config_cxxflags="$aros_config_cxxflags -fno-asynchronous-unwind-tables -fno-exceptions"
-    aros_config_aflags="$aros_config_aflags -fno-asynchronous-unwind-tables -fno-exceptions"
-    ;;
-i386)
-    aros_isa_extra="$x86_isa_extra$export_newline$x86_64_isa_extra$export_newline"
-    aros_kernel_ldflags="$aros_kernel_ldflags -m32" 
-    ;;
+        aros_config_cflags="$aros_config_cflags -fno-asynchronous-unwind-tables -fno-exceptions"
+        aros_config_cxxflags="$aros_config_cxxflags -fno-asynchronous-unwind-tables -fno-exceptions"
+        aros_config_aflags="$aros_config_aflags -fno-asynchronous-unwind-tables -fno-exceptions"
+        ;;
+    i386)
+        aros_isa_extra="$x86_isa_extra$export_newline$x86_64_isa_extra$export_newline"
+        aros_kernel_ldflags="$aros_kernel_ldflags -m32" 
+        ;;
 esac
 
 # Some architectures may need custom ELF specs.
@@ -2160,6 +2240,7 @@ else
     # Kernel tools required - find them
     # Note that 'normally', aros_kernel_* overrides will be
     # empty, unless specified in the per-arch sections above.
+    test_kernel_cc=yes
     if test "x$aros_kernel_cpp" = "x"; then
         aros_kernel_cpp=${kernel_tool_prefix}${CPP}
     fi
@@ -2345,6 +2426,8 @@ AC_SUBST(aros_target_nix_ldflags,-nix)
 AC_SUBST(aros_target_detach_ldflags,-detach)
 AC_SUBST(aros_target_nostdlib_ldflags,-nostdlib)
 
+aros_target_cc_path=
+
 # Target tools
 AC_SUBST(aros_toolchain)
 if test "$aros_target_toolchain" != "yes"; then
@@ -2385,61 +2468,73 @@ aros_plain_ar="${prefix}${toolchain_ar}"
 
 AC_ARG_ENABLE(includes,
 AC_HELP_STRING([--enable-includes=dir],[Alternative system include directory]),
-[aros_target_incl=$enable_includes], [aros_target_incl=`$aros_kernel_cc -print-sysroot`/`$aros_kernel_cc --print-sysroot-headers-suffix 2>/dev/null || echo usr/include`])
+[aros_target_incl=$enable_includes], [aros_target_incl=no])
 
-if test "$aros_kernel_includes" = ""; then
-    if test "x-$aros_flavour" = "x-emulation" -o "x-$aros_flavour" = "x-emulcompat" ; then
-        aros_kernel_includes="-isystem $aros_target_incl"
+if test "x$aros_target_incl" = "xno"; then
+    if test "x$test_kernel_cc" != "xno"; then
+        aros_target_incl=`$aros_kernel_cc -print-sysroot`/`$aros_kernel_cc --print-sysroot-headers-suffix 2>/dev/null || echo usr/include`
+    else
+        aros_target_incl=
     fi
 fi
 
-if test "$aros_kernel_includes" != "" ; then
-    dnl find out about the kernel cc's include path
-    AC_MSG_CHECKING([for the kernel compiler's include path])
-    if test "$aros_kernel_cc_includes" = "" ; then
-        # Try to guess where the directory is.
-        aros_kernel_cc_includes=`dirname \`${aros_kernel_cc} ${aros_kernel_cflags} -print-libgcc-file-name\``/include
-        if test -d $aros_kernel_cc_includes; then
-            # Check if there is also an include-fixed directory and add it
-            # to kernel compiler's include path as it may contain some of
-            # the headers we need.
-            if test -d "$aros_kernel_cc_includes"-fixed; then
-                aros_kernel_cc_includes+=" -isystem $aros_kernel_cc_includes"-fixed
-            fi
-            # Check for specific includes directory. Needed for Ubuntu 11.10 and Debian
-            if test -d "/usr/include/${aros_target_cpu}-linux-gnu"; then
-                aros_kernel_cc_includes+=" -isystem /usr/include/${aros_target_cpu}-linux-gnu"
-            fi
-        else
-            # The directory doesn't exist, we need to do some more work.
-            aros_kernel_cc_includes=${PWD}/${aros_gendir}/cc_include
-
-            # These are the headers we're looking for.
-            headers="limits.h mmintrin.h stdbool.h syslimits.h float.h \
-                     stddef.h xmmintrin.h iso646.h stdarg.h unwind.h   \
-                     zutil.h stdint.h"
-
-            dirs=
-            for h in $headers; do
-                # Which other headers are needed by each of the above?
-                deps=$(echo "#include <$h>" | \
-                       $aros_kernel_cc -E -M - 2>/dev/null | \
-                       sed 's/^.*://; s/\\$/ /g; s/[[ \t]]\+/ /g')
-
-                # Copy all the needed headers to a directory beneath gendir.
-                for d in $deps; do
-                    h=$(basename $d)
-                    dir=${aros_kernel_cc_includes}$(echo $(dirname $d) | \
-                                                sed -n "s,^.*/include\(/.*\),\1,p")
-                    ! test -d $dir && mkdir -p $dir
-                    ! test -f $dir/$h && { cp $d $dir; chmod u+w $dir/$h; }
-                done
-            done            
+if test "x$aros_kernel_includes" = "x"; then
+    if test "x-$aros_flavour" = "x-emulation" -o "x-$aros_flavour" = "x-emulcompat" ; then
+        if test "x$aros_target_incl" != "x"; then
+            aros_kernel_includes="-isystem $aros_target_incl"
         fi
     fi
-    AC_MSG_RESULT($aros_kernel_cc_includes)
-    # Adding -nostdinc to kernel includes as they are always used together.
-    aros_kernel_includes="$aros_kernel_includes $aros_target_nostdinc_cflags -isystem $aros_kernel_cc_includes"
+fi
+
+if test "x$test_kernel_cc" != "xno"; then
+    if test "$aros_kernel_includes" != "" ; then
+        dnl find out about the kernel cc's include path
+        AC_MSG_CHECKING([for the kernel compiler's include path])
+        if test "$aros_kernel_cc_includes" = "" ; then
+            # Try to guess where the directory is.
+            aros_kernel_cc_includes=`dirname \`${aros_kernel_cc} ${aros_kernel_cflags} -print-libgcc-file-name\``/include
+            if test -d $aros_kernel_cc_includes; then
+                # Check if there is also an include-fixed directory and add it
+                # to kernel compiler's include path as it may contain some of
+                # the headers we need.
+                if test -d "$aros_kernel_cc_includes"-fixed; then
+                    aros_kernel_cc_includes+=" -isystem $aros_kernel_cc_includes"-fixed
+                fi
+                # Check for specific includes directory. Needed for Ubuntu 11.10 and Debian
+                if test -d "/usr/include/${aros_target_cpu}-linux-gnu"; then
+                    aros_kernel_cc_includes+=" -isystem /usr/include/${aros_target_cpu}-linux-gnu"
+                fi
+            else
+                # The directory doesn't exist, we need to do some more work.
+                aros_kernel_cc_includes=${PWD}/${aros_gendir}/cc_include
+
+                # These are the headers we're looking for.
+                headers="limits.h mmintrin.h stdbool.h syslimits.h float.h \
+                         stddef.h xmmintrin.h iso646.h stdarg.h unwind.h   \
+                         zutil.h stdint.h"
+
+                dirs=
+                for h in $headers; do
+                    # Which other headers are needed by each of the above?
+                    deps=$(echo "#include <$h>" | \
+                           $aros_kernel_cc -E -M - 2>/dev/null | \
+                           sed 's/^.*://; s/\\$/ /g; s/[[ \t]]\+/ /g')
+
+                    # Copy all the needed headers to a directory beneath gendir.
+                    for d in $deps; do
+                        h=$(basename $d)
+                        dir=${aros_kernel_cc_includes}$(echo $(dirname $d) | \
+                                                sed -n "s,^.*/include\(/.*\),\1,p")
+                        ! test -d $dir && mkdir -p $dir
+                        ! test -f $dir/$h && { cp $d $dir; chmod u+w $dir/$h; }
+                    done
+                done            
+            fi
+        fi
+        AC_MSG_RESULT($aros_kernel_cc_includes)
+        # Adding -nostdinc to kernel includes as they are always used together.
+        aros_kernel_includes="$aros_kernel_includes $aros_target_nostdinc_cflags -isystem $aros_kernel_cc_includes"
+    fi
 fi
 
 if test "$crosstools" != "yes"; then
@@ -2490,52 +2585,57 @@ fi
 
 save_cc="$CC"
 save_cflags="$CFLAGS"
-CFLAGS="-iquote."
-kernel_cflags_iquote=$host_cflags_iquote
-kernel_cflags_iquote_end=$host_cflags_iquote_end
-if test "x-$cross_compiling" = "x-yes"; then
+if test "x$test_kernel_cc" != "xno"; then
+    CFLAGS="-iquote."
+    kernel_cflags_iquote=$host_cflags_iquote
+    kernel_cflags_iquote_end=$host_cflags_iquote_end
+    if test "x-$cross_compiling" = "x-yes"; then
+        CC="$aros_kernel_cc"
+        AC_MSG_CHECKING([whether ${CC} accepts -fno-stack-protector])
+        if test "x-$crosstools" != "x-yes"; then
+            AC_TRY_COMPILE(,, use_no_stack_protector="yes", use_no_stack_protector="no")
+        else
+            # we do know it is supported for the smallest version of gcc we are going to build
+            # we assume it's also supported by later versions
+            use_no_stack_protector=yes
+        fi
+        AC_MSG_RESULT($use_no_stack_protector)
+        AC_MSG_CHECKING([whether ${CC} accepts -iquote])
+        if test "x-$crosstools" != "x-yes"; then
+            AC_TRY_COMPILE(,, has_iquote="yes", has_iquote="no")
+        else
+            # we do know it is supported for the smallest version of gcc we are going to build
+            # we assume it's also supported by later versions
+            has_iquote=yes
+        fi
+        AC_MSG_RESULT($has_iquote)
+        if test "x-$has_iquote" = "x-yes" ; then
+            kernel_cflags_iquote=-iquote
+            kernel_cflags_iquote_end=
+        else
+            kernel_cflags_iquote=-I
+            kernel_cflags_iquote_end=-I-
+        fi
+    fi
+    if test "x-$use_no_stack_protector" = "x-yes" ; then
+        aros_kernel_cflags="$aros_kernel_cflags -fno-stack-protector"
+    fi
+
+    #-----------------------------------------------------------------------------
+
+    # Check if we can explicitly choose older version of symbol hashing
+
+    CFLAGS="save_cflags -Wl,--hash-style=sysv"
     CC="$aros_kernel_cc"
-    AC_MSG_CHECKING([whether ${CC} accepts -fno-stack-protector])
-    if test "x-$crosstools" != "x-yes"; then
-        AC_TRY_COMPILE(,, use_no_stack_protector="yes", use_no_stack_protector="no")
-    else
-        # we do know it is supported for the smallest version of gcc we are going to build
-        # we assume it's also supported by later versions
-        use_no_stack_protector=yes
+    AC_MSG_CHECKING([whether ${CC} accepts -Wl,--hash-style=sysv])
+    AC_TRY_LINK(,, use_hash_style="yes", use_hash_style="no")
+    AC_MSG_RESULT($use_hash_style)
+    if test "x-$use_hash_style" = "x-yes" ; then
+        aros_kernel_cflags="$aros_kernel_cflags -Wl,--hash-style=sysv"
     fi
-    AC_MSG_RESULT($use_no_stack_protector)
-    AC_MSG_CHECKING([whether ${CC} accepts -iquote])
-    if test "x-$crosstools" != "x-yes"; then
-        AC_TRY_COMPILE(,, has_iquote="yes", has_iquote="no")
-    else
-        # we do know it is supported for the smallest version of gcc we are going to build
-        # we assume it's also supported by later versions
-        has_iquote=yes
-    fi
-    AC_MSG_RESULT($has_iquote)
-    if test "x-$has_iquote" = "x-yes" ; then
-        kernel_cflags_iquote=-iquote
-        kernel_cflags_iquote_end=
-    else
-        kernel_cflags_iquote=-I
-        kernel_cflags_iquote_end=-I-
-    fi
-fi
-if test "x-$use_no_stack_protector" = "x-yes" ; then
-    aros_kernel_cflags="$aros_kernel_cflags -fno-stack-protector"
-fi
-
-#-----------------------------------------------------------------------------
-
-# Check if we can explicitly choose older version of symbol hashing
-
-CFLAGS="save_cflags -Wl,--hash-style=sysv"
-CC="$aros_kernel_cc"
-AC_MSG_CHECKING([whether ${CC} accepts -Wl,--hash-style=sysv])
-AC_TRY_LINK(,, use_hash_style="yes", use_hash_style="no")
-AC_MSG_RESULT($use_hash_style)
-if test "x-$use_hash_style" = "x-yes" ; then
-    aros_kernel_cflags="$aros_kernel_cflags -Wl,--hash-style=sysv"
+else
+    kernel_cflags_iquote="$""(CFLAGS_IQUOTE)"
+    kernel_cflags_iquote_end="$""(CFLAGS_IQUOTE_END)"
 fi
 CC="$save_cc"
 CFLAGS="$save_cflags"
@@ -2688,7 +2788,10 @@ if test "x-$aros_flavour" = "x-emulation" -o "x-$aros_flavour" = "x-emulcompat" 
         
         else
             dnl found it, setup the metatarget
-            host_x_gfx=yes
+            aros_target_options+="$export_newline""# Enable X11 Gfx Driver$export_newline""OPT_HOST_X11GFX               := yes$export_newline"
+            if test "x-$host_feature_glx" != "x-no" ; then
+                aros_target_options+="$export_newline""# Enable X11 HostGL 3D Passthrough$export_newline""OPT_HOST_X11_HOSTGL           := yes$export_newline"
+            fi
             ENABLE_X11=1
 
             aros_host_x11_cflags="$X_CFLAGS"
@@ -2807,7 +2910,7 @@ if test "x-$aros_flavour" = "x-emulation" -o "x-$aros_flavour" = "x-emulcompat" 
 
         else
             dnl found it, enable the build
-            host_sdl_gfx=yes
+            aros_target_options+="$export_newline""# Enable SDL Gfx Driver$export_newline""OPT_HOST_SDLGFX               := yes$export_newline"
             aros_host_sdl_cflags=$SDL_CFLAGS
             aros_host_sdl_libs=$SDL_LIBS
         fi
@@ -2841,6 +2944,10 @@ AC_MSG_CHECKING([default optimization level to use])
 AC_MSG_RESULT($optimization_level)
 fi
 
+if ! test "$gcc_default_cpu" = "" ; then
+    target_extra_cfg+="$export_newline""# ARM gcc default target$export_newline""GCC_DEFAULT_CPU         := $gcc_default_cpu$export_newline""GCC_DEFAULT_FPU         := $gcc_default_fpu$export_newline""GCC_DEFAULT_FLOAT_ABI   := $gcc_default_float_abi$export_newline""GCC_DEFAULT_MODE        := $gcc_default_mode$export_newline"
+fi
+
 dnl --------------------------------------------------------------------
 dnl Configuration Output Section
 dnl --------------------------------------------------------------------
@@ -2863,6 +2970,8 @@ AC_SUBST(AROS_PORTSSRCDIR)
 AC_SUBST(aros_amigaos_compliance)
 
 # Host related
+AC_SUBST(host_stat_h__unused_used)
+AC_SUBST(host_extra_cfg)
 AC_SUBST(aros_cc_pre)
 AC_SUBST(aros_host_strip)
 AC_SUBST(aros_host_arch)
@@ -2893,6 +3002,12 @@ AC_SUBST(aros_host_automake)
 AC_SUBST(ant)
 
 # Target Related
+AC_SUBST(aros_elf_translate)
+AC_SUBST(make_extra_commands)
+AC_SUBST(make_extra_targetcfg)
+AC_SUBST(target_extra_cfg)
+AC_SUBST(aros_target_options)
+
 AC_SUBST(aros_target_guitheme)
 AC_SUBST(aros_target_iconset)
 AC_SUBST(aros_target_bootloader)
@@ -2941,7 +3056,6 @@ AC_SUBST(aros_shared_cflags)
 AC_SUBST(aros_shared_aflags)
 AC_SUBST(aros_shared_ldflags)
 
-AC_SUBST(aros_config_sysroot)
 AC_SUBST(aros_warn_flags)
 AC_SUBST(aros_nowarn_flags)
 AC_SUBST(aros_config_cppflags)
@@ -2972,10 +3086,6 @@ AC_SUBST(aros_isa_flags)
 AC_SUBST(crosstools_target)
 AC_SUBST(crosstools_cxx_target)
 
-# Hosted Graphics Related
-AC_SUBST(host_x_gfx)
-AC_SUBST(host_sdl_gfx)
-AC_SUBST(host_android_gfx)
 
 AC_SUBST(pci_hidd_target)
 

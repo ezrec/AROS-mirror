@@ -47,267 +47,269 @@ extern int yydebug;
   {
     SYM = 258,
     STR = 259,
-    INT = 260,
-    HEX = 261,
-    BIN = 262,
-    AND = 263,
-    BITAND = 264,
-    BITNOT = 265,
-    BITOR = 266,
-    BITXOR = 267,
-    NOT = 268,
-    IN = 269,
-    OR = 270,
-    SHIFTLEFT = 271,
-    SHIFTRIGHT = 272,
-    XOR = 273,
-    EQ = 274,
-    GT = 275,
-    GTE = 276,
-    LT = 277,
-    LTE = 278,
-    NEQ = 279,
-    IF = 280,
-    SELECT = 281,
-    UNTIL = 282,
-    WHILE = 283,
-    TRACE = 284,
-    RETRACE = 285,
-    EXECUTE = 286,
-    REXX = 287,
-    RUN = 288,
-    ABORT = 289,
-    EXIT = 290,
-    ONERROR = 291,
-    TRAP = 292,
-    REBOOT = 293,
-    COPYFILES = 294,
-    COPYLIB = 295,
-    DELETE = 296,
-    EXISTS = 297,
-    FILEONLY = 298,
-    FOREACH = 299,
-    MAKEASSIGN = 300,
-    MAKEDIR = 301,
-    PROTECT = 302,
-    STARTUP = 303,
-    TEXTFILE = 304,
-    TOOLTYPE = 305,
-    TRANSCRIPT = 306,
-    RENAME = 307,
-    COMPLETE = 308,
-    DEBUG = 309,
-    MESSAGE = 310,
-    USER = 311,
-    WELCOME = 312,
-    WORKING = 313,
-    DATABASE = 314,
-    EARLIER = 315,
-    GETASSIGN = 316,
-    GETDEVICE = 317,
-    GETDISKSPACE = 318,
-    GETENV = 319,
-    GETSIZE = 320,
-    GETSUM = 321,
-    GETVERSION = 322,
-    ICONINFO = 323,
-    CUS = 324,
-    DCL = 325,
-    ASKBOOL = 326,
-    ASKCHOICE = 327,
-    ASKDIR = 328,
-    ASKDISK = 329,
-    ASKFILE = 330,
-    ASKNUMBER = 331,
-    ASKOPTIONS = 332,
-    ASKSTRING = 333,
-    CAT = 334,
-    EXPANDPATH = 335,
-    FMT = 336,
-    PATHONLY = 337,
-    PATMATCH = 338,
-    STRLEN = 339,
-    SUBSTR = 340,
-    TACKON = 341,
-    SET = 342,
-    SYMBOLSET = 343,
-    SYMBOLVAL = 344,
-    OPENWBOBJECT = 345,
-    SHOWWBOBJECT = 346,
-    CLOSEWBOBJECT = 347,
-    ALL = 348,
-    APPEND = 349,
-    ASSIGNS = 350,
-    BACK = 351,
-    CHOICES = 352,
-    COMMAND = 353,
-    COMPRESSION = 354,
-    CONFIRM = 355,
-    DEFAULT = 356,
-    DELOPTS = 357,
-    DEST = 358,
-    DISK = 359,
-    FILES = 360,
-    FONTS = 361,
-    GETDEFAULTTOOL = 362,
-    GETPOSITION = 363,
-    GETSTACK = 364,
-    GETTOOLTYPE = 365,
-    HELP = 366,
-    INFOS = 367,
-    INCLUDE = 368,
-    NEWNAME = 369,
-    NEWPATH = 370,
-    NOGAUGE = 371,
-    NOPOSITION = 372,
-    NOREQ = 373,
-    PATTERN = 374,
-    PROMPT = 375,
-    QUIET = 376,
-    RANGE = 377,
-    SAFE = 378,
-    SETDEFAULTTOOL = 379,
-    SETPOSITION = 380,
-    SETSTACK = 381,
-    SETTOOLTYPE = 382,
-    SOURCE = 383,
-    SWAPCOLORS = 384,
-    OPTIONAL = 385,
-    RESIDENT = 386,
-    OVERRIDE = 387
+    OOM = 260,
+    INT = 261,
+    HEX = 262,
+    BIN = 263,
+    AND = 264,
+    BITAND = 265,
+    BITNOT = 266,
+    BITOR = 267,
+    BITXOR = 268,
+    NOT = 269,
+    IN = 270,
+    OR = 271,
+    SHIFTLEFT = 272,
+    SHIFTRIGHT = 273,
+    XOR = 274,
+    EQ = 275,
+    GT = 276,
+    GTE = 277,
+    LT = 278,
+    LTE = 279,
+    NEQ = 280,
+    IF = 281,
+    SELECT = 282,
+    UNTIL = 283,
+    WHILE = 284,
+    TRACE = 285,
+    RETRACE = 286,
+    EXECUTE = 287,
+    REXX = 288,
+    RUN = 289,
+    ABORT = 290,
+    EXIT = 291,
+    ONERROR = 292,
+    TRAP = 293,
+    REBOOT = 294,
+    COPYFILES = 295,
+    COPYLIB = 296,
+    DELETE = 297,
+    EXISTS = 298,
+    FILEONLY = 299,
+    FOREACH = 300,
+    MAKEASSIGN = 301,
+    MAKEDIR = 302,
+    PROTECT = 303,
+    STARTUP = 304,
+    TEXTFILE = 305,
+    TOOLTYPE = 306,
+    TRANSCRIPT = 307,
+    RENAME = 308,
+    COMPLETE = 309,
+    DEBUG = 310,
+    MESSAGE = 311,
+    USER = 312,
+    WELCOME = 313,
+    WORKING = 314,
+    DATABASE = 315,
+    EARLIER = 316,
+    GETASSIGN = 317,
+    GETDEVICE = 318,
+    GETDISKSPACE = 319,
+    GETENV = 320,
+    GETSIZE = 321,
+    GETSUM = 322,
+    GETVERSION = 323,
+    ICONINFO = 324,
+    CUS = 325,
+    DCL = 326,
+    ASKBOOL = 327,
+    ASKCHOICE = 328,
+    ASKDIR = 329,
+    ASKDISK = 330,
+    ASKFILE = 331,
+    ASKNUMBER = 332,
+    ASKOPTIONS = 333,
+    ASKSTRING = 334,
+    CAT = 335,
+    EXPANDPATH = 336,
+    FMT = 337,
+    PATHONLY = 338,
+    PATMATCH = 339,
+    STRLEN = 340,
+    SUBSTR = 341,
+    TACKON = 342,
+    SET = 343,
+    SYMBOLSET = 344,
+    SYMBOLVAL = 345,
+    OPENWBOBJECT = 346,
+    SHOWWBOBJECT = 347,
+    CLOSEWBOBJECT = 348,
+    ALL = 349,
+    APPEND = 350,
+    ASSIGNS = 351,
+    BACK = 352,
+    CHOICES = 353,
+    COMMAND = 354,
+    COMPRESSION = 355,
+    CONFIRM = 356,
+    DEFAULT = 357,
+    DELOPTS = 358,
+    DEST = 359,
+    DISK = 360,
+    FILES = 361,
+    FONTS = 362,
+    GETDEFAULTTOOL = 363,
+    GETPOSITION = 364,
+    GETSTACK = 365,
+    GETTOOLTYPE = 366,
+    HELP = 367,
+    INFOS = 368,
+    INCLUDE = 369,
+    NEWNAME = 370,
+    NEWPATH = 371,
+    NOGAUGE = 372,
+    NOPOSITION = 373,
+    NOREQ = 374,
+    PATTERN = 375,
+    PROMPT = 376,
+    QUIET = 377,
+    RANGE = 378,
+    SAFE = 379,
+    SETDEFAULTTOOL = 380,
+    SETPOSITION = 381,
+    SETSTACK = 382,
+    SETTOOLTYPE = 383,
+    SOURCE = 384,
+    SWAPCOLORS = 385,
+    OPTIONAL = 386,
+    RESIDENT = 387,
+    OVERRIDE = 388
   };
 #endif
 /* Tokens.  */
 #define SYM 258
 #define STR 259
-#define INT 260
-#define HEX 261
-#define BIN 262
-#define AND 263
-#define BITAND 264
-#define BITNOT 265
-#define BITOR 266
-#define BITXOR 267
-#define NOT 268
-#define IN 269
-#define OR 270
-#define SHIFTLEFT 271
-#define SHIFTRIGHT 272
-#define XOR 273
-#define EQ 274
-#define GT 275
-#define GTE 276
-#define LT 277
-#define LTE 278
-#define NEQ 279
-#define IF 280
-#define SELECT 281
-#define UNTIL 282
-#define WHILE 283
-#define TRACE 284
-#define RETRACE 285
-#define EXECUTE 286
-#define REXX 287
-#define RUN 288
-#define ABORT 289
-#define EXIT 290
-#define ONERROR 291
-#define TRAP 292
-#define REBOOT 293
-#define COPYFILES 294
-#define COPYLIB 295
-#define DELETE 296
-#define EXISTS 297
-#define FILEONLY 298
-#define FOREACH 299
-#define MAKEASSIGN 300
-#define MAKEDIR 301
-#define PROTECT 302
-#define STARTUP 303
-#define TEXTFILE 304
-#define TOOLTYPE 305
-#define TRANSCRIPT 306
-#define RENAME 307
-#define COMPLETE 308
-#define DEBUG 309
-#define MESSAGE 310
-#define USER 311
-#define WELCOME 312
-#define WORKING 313
-#define DATABASE 314
-#define EARLIER 315
-#define GETASSIGN 316
-#define GETDEVICE 317
-#define GETDISKSPACE 318
-#define GETENV 319
-#define GETSIZE 320
-#define GETSUM 321
-#define GETVERSION 322
-#define ICONINFO 323
-#define CUS 324
-#define DCL 325
-#define ASKBOOL 326
-#define ASKCHOICE 327
-#define ASKDIR 328
-#define ASKDISK 329
-#define ASKFILE 330
-#define ASKNUMBER 331
-#define ASKOPTIONS 332
-#define ASKSTRING 333
-#define CAT 334
-#define EXPANDPATH 335
-#define FMT 336
-#define PATHONLY 337
-#define PATMATCH 338
-#define STRLEN 339
-#define SUBSTR 340
-#define TACKON 341
-#define SET 342
-#define SYMBOLSET 343
-#define SYMBOLVAL 344
-#define OPENWBOBJECT 345
-#define SHOWWBOBJECT 346
-#define CLOSEWBOBJECT 347
-#define ALL 348
-#define APPEND 349
-#define ASSIGNS 350
-#define BACK 351
-#define CHOICES 352
-#define COMMAND 353
-#define COMPRESSION 354
-#define CONFIRM 355
-#define DEFAULT 356
-#define DELOPTS 357
-#define DEST 358
-#define DISK 359
-#define FILES 360
-#define FONTS 361
-#define GETDEFAULTTOOL 362
-#define GETPOSITION 363
-#define GETSTACK 364
-#define GETTOOLTYPE 365
-#define HELP 366
-#define INFOS 367
-#define INCLUDE 368
-#define NEWNAME 369
-#define NEWPATH 370
-#define NOGAUGE 371
-#define NOPOSITION 372
-#define NOREQ 373
-#define PATTERN 374
-#define PROMPT 375
-#define QUIET 376
-#define RANGE 377
-#define SAFE 378
-#define SETDEFAULTTOOL 379
-#define SETPOSITION 380
-#define SETSTACK 381
-#define SETTOOLTYPE 382
-#define SOURCE 383
-#define SWAPCOLORS 384
-#define OPTIONAL 385
-#define RESIDENT 386
-#define OVERRIDE 387
+#define OOM 260
+#define INT 261
+#define HEX 262
+#define BIN 263
+#define AND 264
+#define BITAND 265
+#define BITNOT 266
+#define BITOR 267
+#define BITXOR 268
+#define NOT 269
+#define IN 270
+#define OR 271
+#define SHIFTLEFT 272
+#define SHIFTRIGHT 273
+#define XOR 274
+#define EQ 275
+#define GT 276
+#define GTE 277
+#define LT 278
+#define LTE 279
+#define NEQ 280
+#define IF 281
+#define SELECT 282
+#define UNTIL 283
+#define WHILE 284
+#define TRACE 285
+#define RETRACE 286
+#define EXECUTE 287
+#define REXX 288
+#define RUN 289
+#define ABORT 290
+#define EXIT 291
+#define ONERROR 292
+#define TRAP 293
+#define REBOOT 294
+#define COPYFILES 295
+#define COPYLIB 296
+#define DELETE 297
+#define EXISTS 298
+#define FILEONLY 299
+#define FOREACH 300
+#define MAKEASSIGN 301
+#define MAKEDIR 302
+#define PROTECT 303
+#define STARTUP 304
+#define TEXTFILE 305
+#define TOOLTYPE 306
+#define TRANSCRIPT 307
+#define RENAME 308
+#define COMPLETE 309
+#define DEBUG 310
+#define MESSAGE 311
+#define USER 312
+#define WELCOME 313
+#define WORKING 314
+#define DATABASE 315
+#define EARLIER 316
+#define GETASSIGN 317
+#define GETDEVICE 318
+#define GETDISKSPACE 319
+#define GETENV 320
+#define GETSIZE 321
+#define GETSUM 322
+#define GETVERSION 323
+#define ICONINFO 324
+#define CUS 325
+#define DCL 326
+#define ASKBOOL 327
+#define ASKCHOICE 328
+#define ASKDIR 329
+#define ASKDISK 330
+#define ASKFILE 331
+#define ASKNUMBER 332
+#define ASKOPTIONS 333
+#define ASKSTRING 334
+#define CAT 335
+#define EXPANDPATH 336
+#define FMT 337
+#define PATHONLY 338
+#define PATMATCH 339
+#define STRLEN 340
+#define SUBSTR 341
+#define TACKON 342
+#define SET 343
+#define SYMBOLSET 344
+#define SYMBOLVAL 345
+#define OPENWBOBJECT 346
+#define SHOWWBOBJECT 347
+#define CLOSEWBOBJECT 348
+#define ALL 349
+#define APPEND 350
+#define ASSIGNS 351
+#define BACK 352
+#define CHOICES 353
+#define COMMAND 354
+#define COMPRESSION 355
+#define CONFIRM 356
+#define DEFAULT 357
+#define DELOPTS 358
+#define DEST 359
+#define DISK 360
+#define FILES 361
+#define FONTS 362
+#define GETDEFAULTTOOL 363
+#define GETPOSITION 364
+#define GETSTACK 365
+#define GETTOOLTYPE 366
+#define HELP 367
+#define INFOS 368
+#define INCLUDE 369
+#define NEWNAME 370
+#define NEWPATH 371
+#define NOGAUGE 372
+#define NOPOSITION 373
+#define NOREQ 374
+#define PATTERN 375
+#define PROMPT 376
+#define QUIET 377
+#define RANGE 378
+#define SAFE 379
+#define SETDEFAULTTOOL 380
+#define SETPOSITION 381
+#define SETSTACK 382
+#define SETTOOLTYPE 383
+#define SOURCE 384
+#define SWAPCOLORS 385
+#define OPTIONAL 386
+#define RESIDENT 387
+#define OVERRIDE 388
 
 /* Value type.  */
 

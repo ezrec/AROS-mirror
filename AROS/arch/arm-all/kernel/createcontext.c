@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
+    Copyright ï¿½ 1995-2011, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Create an empty usable CPU context, ARM version.
@@ -25,7 +25,7 @@ AROS_LH0(void *, KrnCreateContext,
     /*
      * Allocate common data block and FPU data block in one
      * chunk. This way we simplify things a lot.
-     * 
+     *
      * On native ports AROSCPUContext can be simply #define'd to ExceptionContext,
      * so we refer struct AROSCPUContext only for size calculation.
      */
@@ -34,7 +34,10 @@ AROS_LH0(void *, KrnCreateContext,
     {
         ctx->FPUType    = KernelBase->kb_ContextFlags;
         ctx->cpsr       = CPUMODE_USER;		/* Initial value for user mode */
-	ctx->fpuContext = (APTR)((IPTR)ctx + sizeof(struct AROSCPUContext));
+#if AROS_BIG_ENDIAN
+        ctx->cpsr      |= CPUMODE_BIGENDIAN;
+#endif
+        ctx->fpuContext = (APTR)((IPTR)ctx + sizeof(struct AROSCPUContext));
     }
 
     return ctx;

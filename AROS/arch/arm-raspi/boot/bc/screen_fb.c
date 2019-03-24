@@ -138,13 +138,13 @@ void fb_Putc(char chr)
     /* Ignore null bytes, they are output by formatting routines as terminators */
     if (chr == 0)
         return;
- 
+
     if (chr == 0xFF)
     {
         fb_Clear();
         return;
     }
-    
+
     /* Reached end of line ? New line if so. */
     if ((chr == '\n') || (scr_XPos >= scr_Width))
     {

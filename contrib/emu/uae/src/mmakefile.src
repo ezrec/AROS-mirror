@@ -56,19 +56,29 @@ FILES := \
 
 EXEDIR := $(AROS_CONTRIB)/Emu/UAE
 
-NOWARN_FLAGS := $(NOWARN_UNUSED)  $(NOWARN_FORMAT) $(NOWARN_SIGN_COMPARE) \
-	       $(NOWARN_SHIFT_NEGATIVE_VALUE)
+WARN_FLAGS := \
+    $(WARN_ALL) \
+    -W \
+    $(WARN_MISSING_PROTOTYPES) \
+    $(WARN_STRICT_PROTOTYPES)
 
-USER_CFLAGS := -O2 -fomit-frame-pointer -fno-exceptions -fno-strength-reduce \
-	       -Wall -W -Wmissing-prototypes  -Wstrict-prototypes $(NOWARN_FLAGS) \
+NOWARN_FLAGS := \
+    $(NOWARN_UNUSED) \
+    $(NOWARN_FORMAT) \
+    $(NOWARN_SIGN_COMPARE) \
+    $(NOWARN_SHIFT_NEGATIVE_VALUE) \
+    $(NOWARN_IMPLICIT_FALLTHROUGH)
+
+OPTIMIZATION_CFLAGS := -O2 
+USER_CFLAGS := $(CFLAGS_OMIT_FP) $(CFLAGS_NO_EXCEPTIONS) -fno-strength-reduce \
+	       $(WARN_FLAGS) $(NOWARN_FLAGS) \
 	       -UAMIGA -U_AMIGA
-
 USER_CPPFLAGS := -DGCCCONSTFUNC='__attribute__((const))'\
                -D_REENTRANT \
                -DUNALIGNED_PROFITABLE\
                -DREGPARAM='__attribute__((regparm(3)))'\
-	       -DX86_ASSEMBLY -DOPTIMIZED_FLAGS -D__inline__=inline\
-	       -I$(UAESRCDIR) -I$(UAESRCDIR)/include \
+	       -DX86_ASSEMBLY -DOPTIMIZED_FLAGS -D__inline__=inline
+USER_INCLUDES := -I$(UAESRCDIR) -I$(UAESRCDIR)/include \
 	       -I$(TOP)/$(CURDIR) -I$(TOP)/$(CURDIR)/include \
 
 #MM- contrib-complete: uae
@@ -129,14 +139,14 @@ blittable.c: genblitter blitfunc.h
 #	rm cputmp.s
 
 $(OBJDIR)/_writelog.o : writelog.c
-	$(HOST_CC) $(USER_CFLAGS) $(USER_CPPFLAGS) $^ -c -o $@
+	$(HOST_CC) $(USER_CFLAGS) $(CPPFLAGS) $^ -c -o $@
 
 genblitter: genblitter.c blitops.c $(OBJDIR)/_writelog.o
-	$(HOST_CC) $(USER_CFLAGS) $(USER_CPPFLAGS) $^ -o $@
+	$(HOST_CC) $(USER_CFLAGS) $(CPPFLAGS) $^ -o $@
 build68k: build68k.c $(OBJDIR)/_writelog.o
-	$(HOST_CC) $(USER_CFLAGS) $(USER_CPPFLAGS) $^ -o $@
+	$(HOST_CC) $(USER_CFLAGS) $(CPPFLAGS) $^ -o $@
 gencpu: gencpu.c readcpu.c cpudefs.c missing.c $(OBJDIR)/_writelog.o
-	$(HOST_CC) $(USER_CFLAGS) $(USER_CPPFLAGS) $^ -o $@
+	$(HOST_CC) $(USER_CFLAGS) $(CPPFLAGS) $^ -o $@
 
 cpuemu.c: gencpu
 	./gencpu

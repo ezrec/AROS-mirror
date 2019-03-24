@@ -1,5 +1,5 @@
 /*
-    Copyright © 2004-2014, The AROS Development Team. All rights reserved
+    Copyright © 2004-2019, The AROS Development Team. All rights reserved
     $Id$
 
     Desc:
@@ -7,6 +7,14 @@
 */
 
 #include <aros/debug.h>
+
+#include <proto/exec.h>
+
+/* We want all other bases obtained from our base */
+#define __NOLIBBASE__
+
+#include <proto/oop.h>
+
 #include <exec/exec.h>
 #include <exec/resident.h>
 #include <hidd/hidd.h>
@@ -15,8 +23,7 @@
 #include <oop/oop.h>
 #include <dos/bptr.h>
 
-#include <proto/exec.h>
-#include <proto/oop.h>
+#include <devices/ata.h>
 
 #include "timer.h"
 #include "ata.h"
@@ -29,7 +36,7 @@
 /* Invalid comand does nothing, complains only. */
 static void cmd_Invalid(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 {
-    D(bug("[ATA%02ld] cmd_Invalid: %d\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, io->io_Command));
+    D(bug("[ATA%02ld] %s(%d)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__, io->io_Command));
     io->io_Error = IOERR_NOCMD;
 }
 
@@ -44,17 +51,17 @@ static void cmd_Read32(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 {
     struct ata_Unit *unit = (struct ata_Unit *)IOStdReq(io)->io_Unit;
 
-	if (AF_Removable == (unit->au_Flags & (AF_Removable | AF_DiscPresent)))
-	{
-		D(bug("[ATA%02ld] cmd_Read32: USUALLY YOU'D WANT TO CHECK IF DISC IS PRESENT FIRST\n", unit->au_UnitNum));
-		io->io_Error = TDERR_DiskChanged;
-		return;
-	}
+    if (AF_Removable == (unit->au_Flags & (AF_Removable | AF_DiscPresent)))
+    {
+        D(bug("[ATA%02ld] %s: USUALLY YOU'D WANT TO CHECK IF DISC IS PRESENT FIRST\n", unit->au_UnitNum, __func__));
+        io->io_Error = TDERR_DiskChanged;
+        return;
+    }
 
     ULONG block = IOStdReq(io)->io_Offset;
     ULONG count = IOStdReq(io)->io_Length;
 
-    D(bug("[ATA%02ld] cmd_Read32(%08x, %08x)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, block, count));
+    D(bug("[ATA%02ld] %s(%08x, %08x)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__, block, count));
 
     ULONG mask = (1 << unit->au_SectorShift) - 1;
 
@@ -64,7 +71,7 @@ static void cmd_Read32(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
     */
     if ((block & mask) | (count & mask))
     {
-        D(bug("[ATA%02ld] cmd_Read32: offset or length not sector-aligned.\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
+        D(bug("[ATA%02ld] %s: offset or length not sector-aligned.\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
         cmd_Invalid(io, LIBBASE);
     }
     else
@@ -75,7 +82,7 @@ static void cmd_Read32(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 
         if ((0 == (unit->au_XferModes & AF_XFER_PACKET)) && ((block + count) > unit->au_Capacity))
         {
-            bug("[ATA%02ld] cmd_Read32: Requested block (%lx;%ld) outside disk range (%lx)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, block, count, unit->au_Capacity);
+            bug("[ATA%02ld] %s: Requested block (%lx;%ld) outside disk range (%lx)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__, block, count, unit->au_Capacity);
             io->io_Error = IOERR_BADADDRESS;
             return;
         }
@@ -96,23 +103,23 @@ static void cmd_Read64(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 {
     struct ata_Unit *unit = (struct ata_Unit *)IOStdReq(io)->io_Unit;
 
-	if (AF_Removable == (unit->au_Flags & (AF_Removable | AF_DiscPresent)))
-	{
-		D(bug("[ATA%02ld] cmd_Read64: USUALLY YOU'D WANT TO CHECK IF DISC IS PRESENT FIRST\n", unit->au_UnitNum));
-		io->io_Error = TDERR_DiskChanged;
-		return;
-	}
+    if (AF_Removable == (unit->au_Flags & (AF_Removable | AF_DiscPresent)))
+    {
+        D(bug("[ATA%02ld] %s: USUALLY YOU'D WANT TO CHECK IF DISC IS PRESENT FIRST\n", unit->au_UnitNum, __func__));
+        io->io_Error = TDERR_DiskChanged;
+        return;
+    }
 
     UQUAD block = IOStdReq(io)->io_Offset | (UQUAD)(IOStdReq(io)->io_Actual) << 32;
     ULONG count = IOStdReq(io)->io_Length;
 
-    D(bug("[ATA%02ld] cmd_Read64(%08x-%08x, %08x)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, IOStdReq(io)->io_Actual, IOStdReq(io)->io_Offset, count));
+    D(bug("[ATA%02ld] %s(%08x-%08x, %08x)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__, IOStdReq(io)->io_Actual, IOStdReq(io)->io_Offset, count));
 
     ULONG mask = (1 << unit->au_SectorShift) - 1;
 
     if ((block & (UQUAD)mask) | (count & mask) | (count == 0))
     {
-        D(bug("[ATA%02ld] cmd_Read64: offset or length not sector-aligned.\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
+        D(bug("[ATA%02ld] %s: offset or length not sector-aligned.\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
         cmd_Invalid(io, LIBBASE);
     }
     else
@@ -130,7 +137,7 @@ static void cmd_Read64(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
         {
             if ((0 == (unit->au_XferModes & AF_XFER_PACKET)) && ((block + count) > unit->au_Capacity))
             {
-                bug("[ATA%02ld] cmd_Read64: Requested block (%lx;%ld) outside disk range (%lx)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, block, count, unit->au_Capacity);
+                bug("[ATA%02ld] %s: Requested block (%lx;%ld) outside disk range (%lx)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__, block, count, unit->au_Capacity);
                 io->io_Error = IOERR_BADADDRESS;
                 return;
             }
@@ -140,7 +147,7 @@ static void cmd_Read64(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
         {
             if ((0 == (unit->au_XferModes & AF_XFER_PACKET)) && ((block + count) > unit->au_Capacity48))
             {
-                bug("[ATA%02ld] cmd_Read64: Requested block (%lx:%08lx;%ld) outside disk range (%lx:%08lx)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, block>>32, block&0xfffffffful, count, unit->au_Capacity48>>32, unit->au_Capacity48 & 0xfffffffful);
+                bug("[ATA%02ld] %s: Requested block (%lx:%08lx;%ld) outside disk range (%lx:%08lx)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__, block>>32, block&0xfffffffful, count, unit->au_Capacity48>>32, unit->au_Capacity48 & 0xfffffffful);
                 io->io_Error = IOERR_BADADDRESS;
                 return;
             }
@@ -157,17 +164,17 @@ static void cmd_Write32(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 {
     struct ata_Unit *unit = (struct ata_Unit *)IOStdReq(io)->io_Unit;
 
-	if (AF_Removable == (unit->au_Flags & (AF_Removable | AF_DiscPresent)))
-	{
-		D(bug("[ATA%02ld] cmd_Write32: USUALLY YOU'D WANT TO CHECK IF DISC IS PRESENT FIRST\n", unit->au_UnitNum));
-		io->io_Error = TDERR_DiskChanged;
-		return;
-	}
+    if (AF_Removable == (unit->au_Flags & (AF_Removable | AF_DiscPresent)))
+    {
+        D(bug("[ATA%02ld] %s: USUALLY YOU'D WANT TO CHECK IF DISC IS PRESENT FIRST\n", unit->au_UnitNum, __func__));
+        io->io_Error = TDERR_DiskChanged;
+        return;
+    }
 
     ULONG block = IOStdReq(io)->io_Offset;
     ULONG count = IOStdReq(io)->io_Length;
 
-    D(bug("[ATA%02ld] cmd_Write32(%08x, %08x)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, block, count));
+    D(bug("[ATA%02ld] %s(%08x, %08x)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__, block, count));
 
     ULONG mask = (1 << unit->au_SectorShift) - 1;
 
@@ -177,7 +184,7 @@ static void cmd_Write32(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
     */
     if ((block & mask) | (count & mask))
     {
-        D(bug("[ATA%02ld] cmd_Write32: offset or length not sector-aligned.\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
+        D(bug("[ATA%02ld] %s: offset or length not sector-aligned.\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
         cmd_Invalid(io, LIBBASE);
     }
     else
@@ -189,7 +196,8 @@ static void cmd_Write32(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
         if ((0 == (unit->au_XferModes & AF_XFER_PACKET))
             && ((block + count) > unit->au_Capacity))
         {
-            bug("[ATA%02ld] cmd_Write32: Requested block (%lx;%ld) outside disk range (%lx)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum,
+            bug("[ATA%02ld] %s: Requested block (%lx;%ld) outside disk range (%lx)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum,
+                __func__,
                 block, count, unit->au_Capacity);
             io->io_Error = IOERR_BADADDRESS;
             return;
@@ -211,24 +219,23 @@ static void cmd_Write64(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 {
     struct ata_Unit *unit = (struct ata_Unit *)IOStdReq(io)->io_Unit;
 
-	if (AF_Removable == (unit->au_Flags & (AF_Removable | AF_DiscPresent)))
-	{
-		D(bug("[ATA%02ld] cmd_Write64: USUALLY YOU'D WANT TO CHECK IF DISC IS PRESENT FIRST\n", unit->au_UnitNum));
-		io->io_Error = TDERR_DiskChanged;
-		return;
-	}
-
+    if (AF_Removable == (unit->au_Flags & (AF_Removable | AF_DiscPresent)))
+    {
+        D(bug("[ATA%02ld] %s: USUALLY YOU'D WANT TO CHECK IF DISC IS PRESENT FIRST\n", unit->au_UnitNum, __func__));
+        io->io_Error = TDERR_DiskChanged;
+        return;
+    }
 
     UQUAD block = IOStdReq(io)->io_Offset | (UQUAD)(IOStdReq(io)->io_Actual) << 32;
     ULONG count = IOStdReq(io)->io_Length;
 
-    D(bug("[ATA%02ld] cmd_Write64(%08x-%08x, %08x)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, IOStdReq(io)->io_Actual, IOStdReq(io)->io_Offset, count));
+    D(bug("[ATA%02ld] %s(%08x-%08x, %08x)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__, IOStdReq(io)->io_Actual, IOStdReq(io)->io_Offset, count));
 
     ULONG mask = (1 << unit->au_SectorShift) - 1;
 
     if ((block & mask) | (count & mask) | (count==0))
     {
-        D(bug("[ATA%02ld] cmd_Write64: offset or length not sector-aligned.\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
+        D(bug("[ATA%02ld] %s: offset or length not sector-aligned.\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
         cmd_Invalid(io, LIBBASE);
     }
     else
@@ -247,8 +254,8 @@ static void cmd_Write64(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
             if ((0 == (unit->au_XferModes & AF_XFER_PACKET))
                 && ((block + count) > unit->au_Capacity))
             {
-                bug("[ATA%02ld] cmd_Write64: Requested block (%lx;%ld) outside disk range "
-                    "(%lx)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, block, count, unit->au_Capacity);
+                bug("[ATA%02ld] %s: Requested block (%lx;%ld) outside disk range "
+                    "(%lx)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__, block, count, unit->au_Capacity);
                 io->io_Error = IOERR_BADADDRESS;
                 return;
             }
@@ -260,8 +267,9 @@ static void cmd_Write64(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
             if ((0 == (unit->au_XferModes & AF_XFER_PACKET))
                 && ((block + count) > unit->au_Capacity48))
             {
-                bug("[ATA%02ld] cmd_Write64: Requested block (%lx:%08lx;%ld) outside disk "
+                bug("[ATA%02ld] %s: Requested block (%lx:%08lx;%ld) outside disk "
                     "range (%lx:%08lx)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum,
+                     __func__,
                      block>>32, block&0xfffffffful,
                      count, unit->au_Capacity48>>32,
                      unit->au_Capacity48 & 0xfffffffful);
@@ -283,8 +291,8 @@ static void cmd_Flush(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
     struct IORequest *msg;
     struct ata_Bus *bus = ((struct ata_Unit *)io->io_Unit)->au_Bus;
 
-    D(bug("[ATA%02ld] cmd_Flush()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
-
+    D(bug("[ATA%02ld] %s()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
+ 
     Forbid();
 
     while((msg = (struct IORequest *)GetMsg((struct MsgPort *)bus->ab_MsgPort)))
@@ -305,7 +313,7 @@ static void cmd_TestChanged(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
     struct ata_Unit *unit = (struct ata_Unit *)io->io_Unit;
     struct IORequest *msg;
 
-    D(bug("[ATA%02ld] cmd_TestChanged()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
+    D(bug("[ATA%02ld] %s()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
 
     if ((unit->au_XferModes & AF_XFER_PACKET) && (unit->au_Flags & AF_Removable))
     {
@@ -336,14 +344,14 @@ static void cmd_TestChanged(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 static void cmd_Update(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 {
     /* Do nothing now. In near future there should be drive cache flush though */
-    D(bug("[ATA%02ld] cmd_Update()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
+    D(bug("[ATA%02ld] %s()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
 }
 
 static void cmd_Remove(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 {
     struct ata_Unit *unit = (struct ata_Unit *)io->io_Unit;
 
-    D(bug("[ATA%02ld] cmd_Remove()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
+    D(bug("[ATA%02ld] %s()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
 
     if (unit->au_RemoveInt)
         io->io_Error = TDERR_DriveInUse;
@@ -353,7 +361,7 @@ static void cmd_Remove(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 
 static void cmd_ChangeNum(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 {
-    D(bug("[ATA%02ld] cmd_ChangeNum()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
+    D(bug("[ATA%02ld] %s()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
 
     IOStdReq(io)->io_Actual = ((struct ata_Unit *)io->io_Unit)->au_ChangeNum;
 }
@@ -362,21 +370,21 @@ static void cmd_ChangeState(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 {
     struct ata_Unit *unit = (struct ata_Unit *)io->io_Unit;
 
-    D(bug("[ATA%02ld] cmd_ChangeState()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
+    D(bug("[ATA%02ld] %s()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
 
     if (unit->au_Flags & AF_DiscPresent)
         IOStdReq(io)->io_Actual = 0;
     else
         IOStdReq(io)->io_Actual = 1;
 
-    D(bug("[ATA%02ld] cmd_ChangeState: Media %s\n", unit->au_UnitNum, IOStdReq(io)->io_Actual ? "ABSENT" : "PRESENT"));
+    D(bug("[ATA%02ld] %s: Media %s\n", unit->au_UnitNum, __func__, IOStdReq(io)->io_Actual ? "ABSENT" : "PRESENT"));
 }
 
 static void cmd_ProtStatus(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 {
     struct ata_Unit *unit = (struct ata_Unit *)io->io_Unit;
 
-    D(bug("[ATA%02ld] cmd_ProtStatus()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
+    D(bug("[ATA%02ld] %s()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
 
     if (unit->au_DevType)
         IOStdReq(io)->io_Actual = -1;
@@ -387,7 +395,7 @@ static void cmd_ProtStatus(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 
 static void cmd_GetNumTracks(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 {
-    D(bug("[ATA%02ld] cmd_GetNumTracks()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
+    D(bug("[ATA%02ld] %s()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
 
     IOStdReq(io)->io_Actual = ((struct ata_Unit *)io->io_Unit)->au_Cylinders;
 }
@@ -396,7 +404,7 @@ static void cmd_AddChangeInt(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 {
     struct ata_Unit *unit = (struct ata_Unit *)io->io_Unit;
 
-    D(bug("[ATA%02ld] cmd_AddChangeInt()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
+    D(bug("[ATA%02ld] %s()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
 
     Forbid();
     AddHead(&unit->au_SoftList, (struct Node *)io);
@@ -408,7 +416,7 @@ static void cmd_AddChangeInt(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 
 static void cmd_RemChangeInt(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 {
-    D(bug("[ATA%02ld] cmd_RemChangeInt()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
+    D(bug("[ATA%02ld] %s()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
 
     Forbid();
     Remove((struct Node *)io);
@@ -419,7 +427,7 @@ static void cmd_Eject(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 {
     struct ata_Unit *unit = (struct ata_Unit *)io->io_Unit;
 
-    D(bug("[ATA%02ld] cmd_Eject()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
+    D(bug("[ATA%02ld] %s()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
 
     IOStdReq(io)->io_Error = unit->au_Eject(unit);
     cmd_TestChanged(io, LIBBASE);
@@ -429,7 +437,7 @@ static void cmd_GetGeometry(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 {
     struct ata_Unit *unit = (struct ata_Unit *)io->io_Unit;
 
-    D(bug("[ATA%02ld] cmd_GetGeometry()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
+    D(bug("[ATA%02ld] %s()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
 
     if (IOStdReq(io)->io_Length == sizeof(struct DriveGeometry))
     {
@@ -472,7 +480,7 @@ static void cmd_DirectScsi(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 {
     struct ata_Unit *unit = (struct ata_Unit *)io->io_Unit;
 
-    D(bug("[ATA%02ld] cmd_DirectScsi()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
+    D(bug("[ATA%02ld] %s()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
 
     IOStdReq(io)->io_Actual = sizeof(struct SCSICmd);
     if (unit->au_XferModes & AF_XFER_PACKET)
@@ -481,9 +489,114 @@ static void cmd_DirectScsi(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
     }
     else if (unit->au_DevType == DG_DIRECT_ACCESS)
     {
-    	io->io_Error = SCSIEmu(unit, (struct SCSICmd *)IOStdReq(io)->io_Data);
+        io->io_Error = SCSIEmu(unit, (struct SCSICmd *)IOStdReq(io)->io_Data);
     }
     else io->io_Error = IOERR_BADADDRESS;
+}
+
+static BOOL ValidSMARTCmd(struct IORequest *io)
+{
+#if (0)
+    if ((IOStdReq(io)->io_Reserved1) != (IOStdReq(io)->io_Reserved2))
+        return FALSE;
+
+    switch (IOStdReq(io)->io_Reserved1)
+    {
+        case SMARTC_TEST_AVAIL:
+        case SMARTC_READ_VALUES:
+        case SMARTC_READ_THRESHOLDS:
+                    if (!IOStdReq(io)->io_Data) 
+                    {
+                        D(bug("[ATA%02ld] %s: invalid io_Data (%p)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__, IOStdReq(io)->io_Data));
+                        io->io_Error = IOERR_BADADDRESS;
+                        return FALSE;
+                    }
+                    if ((IOStdReq(io)->io_Offset != SMARTC_TEST_AVAIL) && (IOStdReq(io)->io_Length != SMART_DATA_LENGTH))
+                    {
+                        D(bug("[ATA%02ld] %s: invalid io_Length (%d)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__, IOStdReq(io)->io_Length));
+                        io->io_Error = IOERR_BADLENGTH;
+                        return FALSE;
+                    }
+                    break;
+
+            case SMARTC_ENABLE:
+            case SMARTC_DISABLE:
+            case SMARTC_STATUS:
+                    break;
+
+            default:
+                    D(bug("[ATA%02ld] %s: invalid SMART command (%d)\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__, IOStdReq(io)->io_Offset));
+                    io->io_Error = IOERR_NOCMD;
+                    return FALSE;
+        }
+#endif
+        return TRUE;
+}
+
+static void cmd_SMART(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
+{
+    struct ata_Unit *unit = (struct ata_Unit *)io->io_Unit;
+#if (0)
+    struct ata_Bus *bus = unit->au_Bus;
+    UBYTE u;
+#endif
+    D(bug("[ATA%02ld] %s()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
+
+    if (unit->au_Flags & AF_DiscPresent)
+    {
+        io->io_Error = IOERR_OPENFAIL;
+        return;
+    }
+
+    if (!ValidSMARTCmd(io))
+        return;
+#if (0)
+    u = unit->au_UnitNum & 1;
+
+    if (bus->ab_Dev[u] == DEV_ATA || bus->ab_Dev[u] == DEV_SATA)
+    {
+        if (IOStdReq(io)->io_Reserved1 == ATAFEATURE_TEST_AVAIL)
+        {
+            if (IOStdReq(io)->io_Length >= sizeof(ULONG))
+            {
+                *((ULONG *)IOStdReq(io)->io_Data) = SMART_MAGIC_ID;
+                IOStdReq(io)->io_Actual = sizeof(ULONG);
+            }
+            io->io_Error = 0;
+            return;
+        }
+        ata_SMARTCmd(IOStdReq(io));
+    }
+    else
+#endif
+        io->io_Error = IOERR_NOCMD;
+}
+
+static void cmd_TRIM(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
+{
+    struct ata_Unit *unit = (struct ata_Unit *)io->io_Unit;
+
+    D(bug("[ATA%02ld] %s()\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
+
+    if ((unit->au_Drive->id_ATAVersion >= 7) && (unit->au_Drive->id_DSManagement & 1))
+    {
+        D(bug("[ATA%02ld] %s: Unit supports TRIM\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
+#if (0)
+        if (IOStdReq(io)->io_Reserved1 == ATAFEATURE_TEST_AVAIL)
+        {
+            if (IOStdReq(io)->io_Length >= sizeof(ULONG))
+            {
+                *((ULONG *)IOStdReq(io)->io_Data) = TRIM_MAGIC_ID;
+                IOStdReq(io)->io_Actual = sizeof(ULONG);
+            }
+            io->io_Error = 0;
+            return;
+        }
+        ata_TRIMCmd(IOStdReq(io));
+#endif
+    }
+    else
+        io->io_Error = IOERR_NOCMD;
 }
 
 //-----------------------------------------------------------------------------
@@ -536,6 +649,8 @@ static mapfunc const map32[] = {
     [TD_FORMAT64]   = cmd_Write64,
     [HD_SCSICMD]    = cmd_DirectScsi,
     [HD_SCSICMD+1]  = cmd_TestChanged,
+    [HD_SMARTCMD]    = cmd_SMART,
+    [HD_TRIMCMD]    = cmd_TRIM
 };
 
 static UWORD const NSDSupported[] = {
@@ -570,6 +685,8 @@ static UWORD const NSDSupported[] = {
     NSCMD_TD_WRITE64,
     NSCMD_TD_SEEK64,
     NSCMD_TD_FORMAT64,
+    HD_SMARTCMD,
+    HD_TRIMCMD,
     0
 };
 
@@ -615,7 +732,7 @@ static void HandleIO(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
             make the function cmd_Invalid.
         */
         default:
-            if (io->io_Command <= (HD_SCSICMD+1))
+            if ((io->io_Command <= (HD_SCSICMD+1)) || (io->io_Command >= HD_SMARTCMD && io->io_Command <= HD_TRIMCMD))
             {
                 if (map32[io->io_Command])
                     map32[io->io_Command](io, LIBBASE);
@@ -638,17 +755,21 @@ static void HandleIO(struct IORequest *io, LIBBASETYPEPTR LIBBASE)
 static const ULONG IMMEDIATE_COMMANDS = 0x803ff1e3; // 10000000001111111111000111100011
 
 /* See whether the command can be done quick */
-static BOOL isSlow(ULONG comm)
+static BOOL isSlow(struct IORequest *io)
 {
     BOOL slow = TRUE;   /* Assume always slow command */
 
     /* For commands with numbers <= 31 check the mask */
-    if (comm <= 31)
+    if (io->io_Command <= 31)
     {
-        if (IMMEDIATE_COMMANDS & (1 << comm))
+        if (IMMEDIATE_COMMANDS & (1 << io->io_Command))
             slow = FALSE;
     }
-    else if (comm == NSCMD_TD_SEEK64) slow = FALSE;
+#if(0)
+    else if ((io->io_Command >= HD_SMARTCMD && io->io_Command <= HD_TRIMCMD) &&
+                (IOStdReq(io)->io_Reserved1 == ATAFEATURE_TEST_AVAIL)) slow = FALSE;
+#endif
+    else if (io->io_Command == NSCMD_TD_SEEK64 || io->io_Command == NSCMD_DEVICEQUERY) slow = FALSE;
 
     return slow;
 }
@@ -671,13 +792,13 @@ AROS_LH1(void, BeginIO,
     /* Disable interrupts for a while to modify message flags */
     Disable();
 
-    D(bug("[ATA%02ld] BeginIO: Executing IO Command %lx\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, io->io_Command));
+    D(bug("[ATA%02ld] %s: Executing IO Command %lx\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__, io->io_Command));
 
     /*
         If the command is not-immediate, or presence of disc is still unknown,
         let the bus task do the job.
     */
-    if (isSlow(io->io_Command))
+    if (isSlow(io))
     {
         unit->au_Unit.unit_flags |= UNITF_ACTIVE | UNITF_INTASK;
         io->io_Flags &= ~IOF_QUICK;
@@ -688,8 +809,8 @@ AROS_LH1(void, BeginIO,
     }
     else
     {
-    	D(bug("[ATA%02ld] Fast command\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
-    
+        D(bug("[ATA%02ld] %s: ->Fast command\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
+
         /* Immediate command. Mark unit as active and do the command directly */
         unit->au_Unit.unit_flags |= UNITF_ACTIVE;
         Enable();
@@ -707,7 +828,7 @@ AROS_LH1(void, BeginIO,
         }
     }
 
-    D(bug("[ATA%02ld] BeginIO: Done\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum));
+    D(bug("[ATA%02ld] %s: Done\n", ((struct ata_Unit*)io->io_Unit)->au_UnitNum, __func__));
     AROS_LIBFUNC_EXIT
 }
 
@@ -838,7 +959,7 @@ void DaemonCode(struct ataBase *ATABase)
     } while (!sigs);
 
     D(bug("[ATA++] Daemon quits\n"));
-    
+
     ata_CloseTimer(timer);
 
     Forbid();
@@ -855,6 +976,7 @@ void BusTaskCode(struct ata_Bus *bus, struct ataBase *ATABase)
     ULONG sig;
     int iter;
     struct IORequest *msg;
+    OOP_Object *unitObj;
     struct ata_Unit *unit;
 
     DINIT(bug("[ATA**] Task started (bus: %u)\n", bus->ab_BusNum));
@@ -877,9 +999,10 @@ void BusTaskCode(struct ata_Bus *bus, struct ataBase *ATABase)
 
         if (bus->ab_Dev[iter] > DEV_UNKNOWN)
         {
-            unit = OOP_NewObject(ATABase->unitClass, NULL, NULL);
-            if (unit)
+            unitObj = OOP_NewObject(ATABase->unitClass, NULL, NULL);
+            if (unitObj)
             {
+                unit = OOP_INST_DATA(ATABase->unitClass, unitObj);
                 ata_init_unit(bus, unit, iter);
                 if (ata_setup_unit(bus, unit))
                 {
@@ -887,7 +1010,7 @@ void BusTaskCode(struct ata_Bus *bus, struct ataBase *ATABase)
                      * Add unit to the bus.
                      * At this point it becomes visible to OpenDevice().
                      */
-                    bus->ab_Units[iter] = unit;
+                    bus->ab_Units[iter] = unitObj;
 
                     if (unit->au_XferModes & AF_XFER_PACKET)
                     {

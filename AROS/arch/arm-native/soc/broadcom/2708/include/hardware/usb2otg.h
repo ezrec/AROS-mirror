@@ -1,12 +1,12 @@
 /*
-    Copyright © 2013, The AROS Development Team. All rights reserved.
+    Copyright © 2013-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 #ifndef USB2OTG_H
 #define USB2OTG_H
 
-/** Maximum number of Periodic FIFOs */ 
+/** Maximum number of Periodic FIFOs */
 
 #define PERIFIFO_MAX                                    15                      // Max no. of Periodic FIFO's
 #define TXFIFO_MAX                                      15                      // Max no. of Tx FIFO's
@@ -69,6 +69,7 @@
 #define USB2OTG_HOSTPORT_PRTSPD_HIGH                    (0 << 17)
 #define USB2OTG_HOSTPORT_PRTSPD_FULL                    (1 << 17)
 #define USB2OTG_HOSTPORT_PRTSPD_LOW                     (2 << 17)
+#define USB2OTG_HOSTPORT_SC_BITS                        0x2e
 
 #define USB2OTG_HOST_CHANBASE                           (USB2OTG_BASE + 0x0500)
 #define USB2OTG_HOSTCHAN_CHARBASE                       (0x00)
@@ -80,11 +81,31 @@
 #define USB2OTG_HOSTCHAN_DMABUFF                        (0x1c)
 #define USB2OTG_HOST_CHANREGSIZE                        (0x20)
 
-#define USB2OTG_HOSTCHAR_MAXPACKETSIZE                  0
-#define USB2OTG_HOSTCHAR_EPNO                           11
-#define USB2OTG_HOSTCHAR_EPDIR                          15
-#define USB2OTG_HOSTCHAR_DISABLE                        30
-#define USB2OTG_HOSTCHAR_ENABLE                         31
+#define USB2OTG_HOSTCHAR_MAXPACKETSIZE(x)               ((x) & 1023)
+#define USB2OTG_HOSTCHAR_EPNO(x)                        (((x) & 0x0f) << 11)
+#define USB2OTG_HOSTCHAR_EPDIR(x)                       (((x) & 1) << 15)
+#define USB2OTG_HOSTCHAR_ADDR(x)                        (((x) & 0x7f) << 22)
+#define USB2OTG_HOSTCHAR_EC(x)                          (((x) & 3) << 20)
+#define USB2OTG_HOSTCHAR_DISABLE                        (1 << 30)
+#define USB2OTG_HOSTCHAR_ENABLE                         (1 << 31)
+#define USB2OTG_HOSTCHAR_EPTYPE(x)                      (((x) & 3) << 18)
+#define USB2OTG_HOSTCHAR_LOWSPEED                       (1 << 17)
+
+#define USB2OTG_HOSTTSIZE_PID(x)                        (((x) & 3) << 29)
+#define USB2OTG_HOSTTSIZE_PKTCNT(x)                     (((x) & 1023) << 19)
+#define USB2OTG_HOSTTSIZE_PING                          (1 << 31)
+#define USB2OTG_HOSTTSIZE_SIZE(x)                       ((x) & 524287)
+
+#define USB2OTG_PID_DATA0                               0
+#define USB2OTG_PID_DATA1                               2
+#define USB2OTG_PID_DATA2                               1
+#define USB2OTG_PID_MDATA                               3
+#define USB2OTG_PID_SETUP                               3
+
+#define USB2OTG_TYPE_CTRL                               0
+#define USB2OTG_TYPE_ISO                                1
+#define USB2OTG_TYPE_BULK                               2
+#define USB2OTG_TYPE_INT                                3
 
 #define USB2OTG_DEVCFG                                  (USB2OTG_BASE + 0x0800)
 #define USB2OTG_DEVCTRL                                 (USB2OTG_BASE + 0x0804)
@@ -104,7 +125,7 @@
 
 
 #define USB2OTG_DEV_INEP_BASE                           (USB2OTG_BASE + 0x0900)
-#define USB2OTG_DEV_INEP_DIEPCTL                        (0x00) 
+#define USB2OTG_DEV_INEP_DIEPCTL                        (0x00)
 #define USB2OTG_DEV_INEP_DIEPINT                        (0x08)
 #define USB2OTG_DEV_INEP_DIEPTSIZ                       (0x10)
 #define USB2OTG_DEV_INEP_DIEPDMA                        (0x14)
@@ -240,7 +261,7 @@
 #define USB2OTG_MDIOCTRL_MDCWRITE                       (1 << 22)
 #define USB2OTG_MDIOCTRL_MDOWRITE                       (1 << 23)
 #define USB2OTG_MDIOCTRL_BUSY                           (1 << 31)
-        
+
 /* Bits in USB2OTG_MISCCTRL */
 #define USB2OTG_MISCCTRL_SESSIONEND                     (1 << 0)
 #define USB2OTG_MISCCTRL_VBUSVALID                      (1 << 1)
@@ -317,5 +338,8 @@
 #define USB2OTG_POWER_ENABLESLEEPCLOCKGATING            (1 << 5)
 #define USB2OTG_POWER_PHYSLEEPING                       (1 << 6)
 #define USB2OTG_POWER_DEEPSLEEP                         (1 << 7)
+
+/* Some useful macros */
+#define USB2OTG_CHANNEL_REG(chan, reg)  ((USB2OTG_HOST_CHANBASE) + (0x20 * (chan)) + USB2OTG_HOSTCHAN_ ## reg)
 
 #endif	/* USB2OTG_H */

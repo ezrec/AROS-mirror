@@ -4,10 +4,10 @@ include $(SRCDIR)/config/aros.cfg
 
 DEBUG_ACPI=no
 
-ACPICAREPOSITORIES := \
-    https://acpica.org/sites/acpica/files https://mirrors.omniosce.org/acpica
 ACPICAPACKAGE      := acpica
-ACPICAVERSION      := 20180810
+ACPICAVERSION      := 20190215
+ACPICAREPOSITORIES := \
+    https://acpica.org/sites/acpica/files https://sources.voidlinux.org/acpica-utils-$(ACPICAVERSION)
 ACPICAARCHBASE     := $(ACPICAPACKAGE)-unix-$(ACPICAVERSION)
 ACPICASRCDIR       := $(PORTSDIR)/acpica/$(ACPICAARCHBASE)
 
@@ -42,7 +42,7 @@ ACPICA_BASESOURCES = \
        $(call WILDCARD, $(ACPICASRCDIR)/source/components/namespace/*.c)
 
 NOWARN_FLAGS := $(NOWARN_STRICT_ALIASING)
-USER_CFLAGS := $(NOWARN_FLAGS)
+USER_CFLAGS := $(NOWARN_FLAGS) $(CFLAGS_NO_BUILTIN_VSNPRINTF)
 USER_LDFLAGS := -static
 
 # ACPICA debugging options

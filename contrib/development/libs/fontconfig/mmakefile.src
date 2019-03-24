@@ -1,4 +1,4 @@
-# Copyright © 2009-2018, The AROS Development Team. All rights reserved.
+# Copyright © 2009-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -11,7 +11,13 @@ FONTCONFIG_OPTIONS=--without-expat --enable-libxml2 --without-expat-lib --with-d
     LIBXML2_CFLAGS='-I$(AROS_INCLUDES)/libxml2' LIBXML2_LIBS='-L$(AROS_LIB) -lxml2 -lz' \
     lt_sys_lib_search_path_spec='$(AROS_DEVELOPER)/lib/' --libdir=$(AROS_LIB)
 
+REPOSITORIES := https://www.freedesktop.org/software/fontconfig/release \
+ http://distfiles.macports.org/fontconfig \
+ http://repository.timesys.com/buildsources/f/fontconfig/fontconfig-2.11.1 \
+ https://download.videolan.org/contrib/fontconfig \
+ http://sources.openelec.tv/mirror/fontconfig
+
 %fetch_and_build_gnu_development package=fontconfig version=2.11.1 \
-    srcdir=fontconfig-2.11.1 patch=yes suffixes="tar.gz" \
-    package_repo="http://fontconfig.org/release http://distfiles.macports.org/fontconfig http://repository.timesys.com/buildsources/f/fontconfig/fontconfig-2.6.0 http://www.freedesktop.org/software/fontconfig/release" \
+    srcdir=fontconfig-2.11.1 patch=yes suffixes="tar.gz tar.bz2" \
+    package_repo="$(REPOSITORIES)" \
     extraoptions="$(FONTCONFIG_OPTIONS)" nlsflag=no xflag=no

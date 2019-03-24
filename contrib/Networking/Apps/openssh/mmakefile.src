@@ -1,4 +1,4 @@
-# Copyright © 2016, The AROS Development Team. All rights reserved.
+# Copyright © 2016-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -6,8 +6,11 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- aros-tcpip-apps-openssh : development-openssh
 #MM- development-openssh : contrib-openssl
 
-%fetch_and_build_gnu_development package=openssh version=7.3p1 suffixes="tar.gz" \
-    package_repo="http://mirrors.evowise.com/pub/OpenBSD/OpenSSH/portable/" \
-    patch=yes
+REPOSITORIES := http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable \
+ https://ftp.nluug.nl/security/OpenSSH \
+ https://ftp.icm.edu.pl/packages/openssh
+
+%fetch_and_build_gnu_development package=openssh version=7.3p1 \
+    suffixes="tar.gz" package_repo="$(REPOSITORIES)" patch=yes
 
 %common

@@ -32,7 +32,7 @@ extern "C"
    extern struct Library*      SysBase;
    extern struct Library*      OurBase;
    
-   extern uint32               LIB_FuncTable[];    // LIB_FT_Begin + LIB_FT_Function + LIB_FT_End
+   extern uint                 LIB_FuncTable[];    // LIB_FT_Begin + LIB_FT_Function + LIB_FT_End
 
    extern bool                 Lib_SetUp();        // user defined setup with weak local binding
    extern void                 Lib_CleanUp();      // in these functions you should only perform your own

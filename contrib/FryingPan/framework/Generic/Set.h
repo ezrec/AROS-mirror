@@ -36,18 +36,18 @@ namespace GenNS
     */
    class Set
    {
-      IPTR                  val;
+      uint                  val;
    public:
       Set();
-      Set(IPTR val);
+      Set(uint val);
       virtual                ~Set();
-      virtual Set&            operator << (IPTR);
-      virtual Set&            operator >> (IPTR);
-      virtual Set&            operator =  (IPTR);
-      virtual bool            operator == (IPTR);
-      virtual bool            ContainsAny(IPTR);
-      virtual bool            ContainsAll(IPTR);
-      virtual                 operator IPTR ();
+      virtual Set&            operator << (uint);
+      virtual Set&            operator >> (uint);
+      virtual Set&            operator =  (uint);
+      virtual bool            operator == (uint);
+      virtual bool            ContainsAny(uint);
+      virtual bool            ContainsAll(uint);
+      virtual                 operator uint ();
    };
 };
 #endif

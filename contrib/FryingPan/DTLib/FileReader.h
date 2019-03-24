@@ -38,9 +38,9 @@ private:
    String                     sFileName;
    uint64                     offset;     // in bytes
    uint64                     size;       // in bytes
-   unsigned long              position;   // in blocks
+   uint32                     position;   // in blocks
    bool                       isLE;
-   unsigned short             sectorSize;
+   uint16                     sectorSize;
    EDataType                  dataType;
 
 protected:
@@ -67,8 +67,8 @@ public:  // non pure-virtual
    static bool                         checkFile(const char* sFileName, EDtError &rc);
    virtual const char     	           *getTrackName();
    virtual void                        dispose();
-   virtual unsigned long               getBlockCount();
-   virtual unsigned short              getBlockSize();
+   virtual uint32                      getBlockCount();
+   virtual uint16                      getBlockSize();
    virtual bool                        isAudio();
    virtual bool                        isData();
    virtual bool                        fillOptItem(IOptItem *item);

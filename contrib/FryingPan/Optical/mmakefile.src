@@ -44,8 +44,12 @@ CXXFILES := \
  OptIndex \
  CDText
 
-NOWARN_FLAGS := $(NOWARN_ATTRIBUTES)
-USER_CXXFLAGS := -fno-rtti -fno-exceptions $(NOWARN_FLAGS) -isystem $(SRCDIR)/$(CURDIR)/../framework
+NOWARN_FLAGS := \
+    $(NOWARN_ATTRIBUTES) \
+    $(NOWARN_INT_IN_BOOL_CONTEXT)
+
+USER_INCLUDES := $(CFLAGS_ISYSTEM) $(SRCDIR)/$(CURDIR)/../framework $(CFLAGS_ISYSTEM_END)
+USER_CXXFLAGS := $(CFLAGS_NO_RTTI) $(CFLAGS_NO_EXCEPTIONS) $(NOWARN_FLAGS)
 USER_LDFLAGS := -static-libstdc++
 
 %build_prog mmake=contrib-fryingpan-optical progname="Optical" \

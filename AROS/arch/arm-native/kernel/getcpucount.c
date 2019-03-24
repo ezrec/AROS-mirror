@@ -10,7 +10,7 @@
 #include "kernel_intern.h"
 
 AROS_LH0(cpuid_t, KrnGetCPUCount,
-	 struct KernelBase *, KernelBase, 36, Kernel)
+	 struct KernelBase *, KernelBase, 40, Kernel)
 {
     AROS_LIBFUNC_INIT
 

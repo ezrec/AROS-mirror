@@ -1,10 +1,10 @@
-#ifndef AROSX_H
-#define AROSX_H
+#ifndef AROSXClass_H
+#define AROSXClass_H
 
-#include <intuition/intuition.h>
-#include <intuition/intuitionbase.h>
 #include <libraries/mui.h>
-#include <libraries/gadtools.h>
+#include <sys/time.h>
+
+#include "include/arosx.h"
 
 #define ID_ABOUT        0x55555555
 #define ID_STORE_CONFIG 0xaaaaaaaa
@@ -18,82 +18,104 @@ struct ClsGlobalCfg
     ULONG cgc_AutoKeyUp;
 };
 
-struct NepHidBase
-{
-    struct Library      nh_Library;       /* standard */
-    UWORD               nh_Flags;         /* various flags */
-    struct Library     *nh_UtilityBase;   /* utility base */
-
-    struct Library     *nh_MUIBase;       /* MUI master base */
-    struct Library     *nh_PsdBase;       /* Poseidon base */
-    struct Library     *nh_IntBase;       /* Intuition base */
+struct AROSXBase {
+    struct Library          arosx_LibNode;
+    struct AROSXClassBase  *arosxb;
 };
 
-struct NepClassHid
+struct AROSXClassBase
 {
-    struct Node         nch_Node;         /* Node linkage */
-    struct NepHidBase  *nch_ClsBase;      /* Up linkage */
-    struct Library     *nch_Base;         /* Poseidon base */
-    struct PsdDevice   *nch_Device;       /* Up linkage */
-    struct PsdConfig   *nch_Config;       /* Up linkage */
-    struct PsdInterface *nch_Interface;   /* Up linkage */
+    struct Library               Library;     /* standard */
 
-    struct PsdPipe     *nch_EP0Pipe;      /* Endpoint 0 pipe */
-    UBYTE              *nch_EP0Buf;       /* Packet buffer for EP0 */
+    struct Library              *MUIBase;     /* MUI master base */
+    struct Library              *PsdBase;     /* Poseidon base */
 
-    struct PsdEndpoint *nch_EPIn;         /* Endpoint 1 */
-    struct PsdPipe     *nch_EPInPipe;     /* Endpoint 1 pipe */
-    UBYTE              *nch_EPInBuf;      /* Packet buffer for EP1 */
+    struct AROSXBase            *AROSXBase;
 
-    struct PsdEndpoint *nch_EPOut;         /* Endpoint 2 */
-    struct PsdPipe     *nch_EPOutPipe;     /* Endpoint 2 pipe */
-    UBYTE              *nch_EPOutBuf;      /* Packet buffer for EP2 */
+    ULONG                        tv_secs;
+    ULONG                        tv_micro;
 
-    struct Task        *nch_ReadySigTask; /* Task to send ready signal to */
-    LONG                nch_ReadySignal;  /* Signal to send when ready */
-    struct Task        *nch_Task;         /* Subtask */
-    struct MsgPort     *nch_TaskMsgPort;  /* Message Port of Subtask */
-    struct MsgPort     *nch_InpMsgPort;   /* input.device MsgPort */
-    struct IOStdReq    *nch_InpIOReq;     /* input.device IORequest */
-    struct InputEvent   nch_FakeEvent;    /* Input Event */
-    struct Library     *nch_InputBase;    /* Pointer to input.device base */
+    UBYTE                        arosxc_count;
 
-    IPTR                nch_IfNum;        /* Interface Number */
+    struct SignalSemaphore       arosxc_lock;
 
-    ULONG               nch_TrackingSignal;
+    struct AROSXClassController *arosxc_0;
+    struct AROSXClassController *arosxc_1;
+    struct AROSXClassController *arosxc_2;
+    struct AROSXClassController *arosxc_3;
 
-    struct Task        *nch_GUITask;       /* GUI Task */
-    Object             *nch_App;
-    Object             *nch_MainWindow;
-    Object             *nch_MidiMinOctaveObj;
-    Object             *nch_KeyMaxOctaveObj;
-    Object             *nch_AutoKeyUpObj;
-    Object             *nch_UseObj;
-    Object             *nch_CloseObj;
-
-    Object             *nch_GaugeGroupObject;
-    Object             *nch_GaugeObject_stick_lx;
-    Object             *nch_GaugeObject_stick_ly;
-    Object             *nch_GaugeObject_stick_rx;
-    Object             *nch_GaugeObject_stick_ry;
-
-    Object             *nch_AboutMI;
-    Object             *nch_UseMI;
-    Object             *nch_MUIPrefsMI;
-
-    STRPTR              nch_devname;
-
-    struct PsdDescriptor *nch_pdd;
-    UBYTE                *nch_xinput_desc;
-
-    UWORD stick_lx;
-    UWORD stick_ly;
-    UWORD stick_rx;
-    UWORD stick_ry;
-
-    BOOL  wireless;
-    BOOL  signallost;
+    struct SignalSemaphore       event_lock;
+    struct List                  event_port_list;
+    struct MsgPort               event_reply_port;
 
 };
 
-#endif /* AROSX_H */
+struct AROSXClassController
+{
+    struct Node         Node;         /* Node linkage */
+
+    UBYTE   id;
+    UBYTE   name[64];
+
+    UBYTE   controller_type;
+
+    ULONG                        initial_tv_secs;
+    ULONG                        initial_tv_micro;
+
+    struct AROSXClassController_status {
+        BOOL    connected;
+
+        BOOL    wireless;
+        BOOL    signallost;
+
+        UBYTE   battery_type;
+        UBYTE   battery_level;
+    } status;
+
+    union {
+        struct AROSX_GAMEPAD arosx_gamepad;
+    };
+
+    struct Device               *TimerBase;
+    struct MsgPort              *TimerMP;
+    struct timerequest          *TimerIO;
+
+    struct AROSXClassBase  *arosxb;      /* Up linkage */
+
+    struct Library     *Base;         /* Poseidon base */
+    struct PsdDevice   *Device;       /* Up linkage */
+    struct PsdConfig   *Config;       /* Up linkage */
+    struct PsdInterface *Interface;   /* Up linkage */
+
+    struct PsdPipe     *EP0Pipe;      /* Endpoint 0 pipe */
+    UBYTE              *EP0Buf;       /* Packet buffer for EP0 */
+
+    struct PsdEndpoint *EPIn;         /* Endpoint 1 */
+    struct PsdPipe     *EPInPipe;     /* Endpoint 1 pipe */
+    UBYTE              *EPInBuf;      /* Packet buffer for EP1 */
+
+    struct PsdEndpoint *EPOut;         /* Endpoint 2 */
+    struct PsdPipe     *EPOutPipe;     /* Endpoint 2 pipe */
+    UBYTE              *EPOutBuf;      /* Packet buffer for EP2 */
+
+    struct Task        *ReadySigTask; /* Task to send ready signal to */
+    LONG                ReadySignal;  /* Signal to send when ready */
+    struct Task        *Task;         /* Subtask */
+    struct MsgPort     *TaskMsgPort;  /* Message Port of Subtask */
+    struct MsgPort     *InpMsgPort;   /* input.device MsgPort */
+    struct IOStdReq    *InpIOReq;     /* input.device IORequest */
+    struct InputEvent   FakeEvent;    /* Input Event */
+    struct Library     *InputBase;    /* Pointer to input.device base */
+
+    IPTR                IfNum;        /* Interface Number */
+
+    STRPTR              devname;
+
+    struct PsdDescriptor *pdd;
+    UBYTE                *xinput_desc;
+
+    struct Task        *GUITask;       /* GUI Task */
+
+};
+
+#endif /* AROSXClass_H */

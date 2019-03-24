@@ -34,12 +34,10 @@ static int h_cmp(entry_p a, entry_p b)
     {
         return strcmp(a->name, b->name);
     }
+
     // Otherwise convert whatever we have to
     // numerical values and subtract.
-    else
-    {
-        return num(a) - num(b);
-    }
+    return num(a) - num(b);
 }
 
 //----------------------------------------------------------------------------
@@ -60,12 +58,10 @@ entry_p m_eq(entry_p contxt)
             !h_cmp(CARG(1), CARG(2)) ? 1 : 0
         );
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -86,12 +82,10 @@ entry_p m_gt(entry_p contxt)
             h_cmp(CARG(1), CARG(2)) > 0 ? 1 : 0
         );
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -112,12 +106,10 @@ entry_p m_gte(entry_p contxt)
             h_cmp(CARG(1), CARG(2)) >= 0 ? 1 : 0
         );
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -138,12 +130,10 @@ entry_p m_lt(entry_p contxt)
             h_cmp(CARG(1), CARG(2)) < 0 ? 1 : 0
         );
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -164,12 +154,10 @@ entry_p m_lte(entry_p contxt)
             h_cmp(CARG(1), CARG(2)) <= 0 ? 1 : 0
         );
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -190,10 +178,8 @@ entry_p m_neq(entry_p contxt)
             h_cmp(CARG(1), CARG(2)) ? 1 : 0
         );
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
-        RCUR;
-    }
+
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }

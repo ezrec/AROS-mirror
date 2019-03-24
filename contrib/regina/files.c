@@ -6182,7 +6182,7 @@ void find_shared_library(const tsd_t *TSD, const char *inname, const char *inenv
 
       sep = strchr( paths, PATH_SEPARATOR );
       pathlen = sep ? sep-paths : strlen( paths );
-      strncpy( outname, paths, pathlen );
+      memcpy( outname, paths, pathlen);
       outname[pathlen] = 0;
 
       if ( ( pathlen > 0 ) && ( outname[pathlen-1] != FILE_SEPARATOR ) )

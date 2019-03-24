@@ -1,4 +1,4 @@
-# Copyright © 2003, The AROS Development Team. All rights reserved.
+# Copyright © 2003-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -11,15 +11,25 @@ FILES  := \
 #MM uae-od-aros : uae-gui
 #MM- uae-od-aros-quick : uae-gui-quick
 
-NOWARN_FLAGS := $(NOWARN_UNUSED)  $(NOWARN_FORMAT) 
+WARN_FLAGS := \
+    $(WARN_ALL) \
+    -W \
+    $(WARN_MISSING_PROTOTYPES) \
+    $(WARN_STRICT_PROTOTYPES)
+
+NOWARN_FLAGS := \
+    $(NOWARN_UNUSED) \
+    $(NOWARN_FORMAT) \
+    $(NOWARN_IMPLICIT_FALLTHROUGH)
+
 USER_CFLAGS := -O2 -fno-exceptions -fno-strength-reduce \
-               -Wall -W -Wmissing-prototypes -Wstrict-prototypes $(NOWARN_FLAGS) \
-               -DGCCCONSTFUNC='__attribute__((const))' \
+               $(WARN_FLAGS) $(NOWARN_FLAGS)
+USER_CPPFLAGS := -DGCCCONSTFUNC='__attribute__((const))' \
                -D_REENTRANT \
                -DUNALIGNED_PROFITABLE \
                -DREGPARAM='__attribute__((regparm(3)))' \
-               -DX86_ASSEMBLY -DOPTIMIZED_FLAGS -D__inline__=inline \
-               -I$(UAESRCDIR)/.. -I$(UAESRCDIR)/../include \
+               -DX86_ASSEMBLY -DOPTIMIZED_FLAGS -D__inline__=inline
+USER_INCLUDES := -I$(UAESRCDIR)/.. -I$(UAESRCDIR)/../include \
                -I$(TOP)/$(CURDIR)/.. -I$(TOP)/$(CURDIR)/../include
 
 # Hack: do not strip object

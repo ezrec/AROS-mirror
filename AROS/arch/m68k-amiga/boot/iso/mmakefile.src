@@ -82,7 +82,7 @@ $(TARGET_ISO): $(AROSDIR)/.backdrop \
 	@$(ECHO) "Converting $(subst $(TARGETDIR)/,,$(AROSDIR)) -> $(subst $(TARGETDIR)/,,$(AROSDIR).HUNK)"
 	@$(ELF2HUNK) "$(AROSDIR)" "$(AROSDIR).HUNK"
 	@$(RM) -rf "$(AROSDIR).HUNK/Sources"*
-	@$(RM) -rf "$(AROSDIR).HUNK/$(AROS_DIR_ARCH)/aros.elf"
+	@$(RM) -rf "$(AROSDIR).HUNK/$(AROS_DIR_ARCH)/aros.hunk.gz"
 	@$(RM) -rf "$(AROSDIR).HUNK/Prefs/Env-Archive/SYS/theme.var"
 	@$(RM) -rf "$(AROSDIR).HUNK/Developer/include"
 	@$(RM) -rf "$(AROSDIR).HUNK/Developer/lib"
@@ -90,7 +90,7 @@ $(TARGET_ISO): $(AROSDIR)/.backdrop \
 	@$(RM) -rf "$(AROSDIR).HUNK/Developer/S" "$(AROSDIR).HUNK/Developer/Include.info" "$(AROSDIR).HUNK/Developer/Lib.info"
 	@$(RM) -rf "$(AROSDIR).HUNK/Prefs/Presets/Patterns/WallpaperComp2007"
 	@$(RM) -rf "$(AROSDIR).HUNK/Fonts/TrueType/DejaVu"*
-	@$(SED) -i '1s/.*$\/boot\/amiga\/AROSBootstrap ROM  boot\/amiga\/aros.hunk.gz\n&/g' "$(AROSDIR).HUNK/S/Startup-Sequence"
+	@$(SED) -i '1s/.*$\/boot\/amiga\/AROSBootstrap ROM  boot\/amiga\/aros.elf\n&/g' "$(AROSDIR).HUNK/S/Startup-Sequence"
 	@$(CP) "$(SRCDIR)/arch/m68k-amiga/boot/iso/user-startup" "$(AROSDIR).HUNK/S/user-startup"
 	@$(CP) "$(AROSDIR)/Emergency-Boot/$(AROS_DIR_ARCH)/aros.hunk.gz" "$(AROSDIR).HUNK/$(AROS_DIR_ARCH)"
 	@$(CP) "$(SRCDIR)/arch/m68k-amiga/boot/iso/Wanderer-global.prefs" "$(AROSDIR).HUNK/Prefs/Env-Archive/SYS/Wanderer/global.prefs"

@@ -13,7 +13,12 @@ FILES := \
 
 EXEDIR := $(AROSDIR)/Extras/$(AROS_DIR_DEVELOPER)/MUIBuilder/Modules
 
-USER_CFLAGS += -I$(SRCDIR)/contrib/development/gui/muibuilder/include
+NOWARN_FLAGS := \
+    $(NOWARN_STRINGOP_TRUNCATION) \
+    $(NOWARN_FORMAT_OVERFLOW)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+USER_CPPFLAGS = -I$(SRCDIR)/contrib/development/gui/muibuilder/include
 
 %build_prog mmake=contrib-development-gui-muibuilder-modules-c \
     progname=GenCodeC targetdir=$(EXEDIR) \

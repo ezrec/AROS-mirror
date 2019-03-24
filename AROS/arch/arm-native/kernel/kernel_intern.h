@@ -23,9 +23,16 @@ struct KernelBase;
 #define KERNEL_PHYS_BASE        0x07800000
 #define KERNEL_VIRT_BASE        0xff800000
 
-#define VFPEnable               (1 << 30) 
-#define VFPSingle               (3 << 20) 
+#define VFPEnable               (1 << 30)
+#define VFPSingle               (3 << 20)
 #define VFPDouble               (3 << 22)
+
+void dt_set_root(void * r);
+void *dt_find_node_by_phandle(uint32_t phandle);
+void *dt_find_node(char *key);
+void *dt_find_property(void *key, char *propname);
+int dt_get_prop_len(void *prop);
+void *dt_get_prop_value(void *prop);
 
 void cpu_Probe(struct ARM_Implementation *);
 void cpu_Init(struct ARM_Implementation *, struct TagItem *);
@@ -112,7 +119,8 @@ static inline void bug(const char *format, ...)
         ctx->r[__task_reg_no] = ((uint32_t *)regs)[__task_reg_no];              \
     }                                                                           \
     ctx->ip = ((uint32_t *)regs)[12];                                           \
-    ctx->sp = task->tc_SPReg = ((uint32_t *)regs)[13];                          \
+    ctx->sp = ((uint32_t *)regs)[13];                                           \
+    task->tc_SPReg = (void *)ctx->sp;                                           \
     ctx->lr = ((uint32_t *)regs)[14];                                           \
     ctx->pc = ((uint32_t *)regs)[15];                                           \
     ctx->cpsr = ((uint32_t *)regs)[16];                                         \
@@ -126,7 +134,8 @@ static inline void bug(const char *format, ...)
         ((uint32_t *)regs)[__task_reg_no] = ctx->r[__task_reg_no];              \
     }                                                                           \
     ((uint32_t *)regs)[12] = ctx->ip;                                           \
-    ((uint32_t *)regs)[13] = ctx->sp = task->tc_SPReg;                          \
+    ctx->sp = (intptr_t)task->tc_SPReg;                                         \
+    ((uint32_t *)regs)[13] = ctx->sp;                                           \
     ((uint32_t *)regs)[14] = ctx->lr;                                           \
     ((uint32_t *)regs)[15] = ctx->pc;                                           \
     ((uint32_t *)regs)[16] = ctx->cpsr;                                         \

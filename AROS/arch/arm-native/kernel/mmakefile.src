@@ -34,7 +34,8 @@ CFILES := \
         unmapglobal \
         vars \
         screen_fb \
-        font8x14
+        font8x14 \
+        devicetree
 
 PLATFILES := platform_bcm2708
 
@@ -43,6 +44,15 @@ AFILES := intvecs
 #MM kernel-raspi-arm: setup-raspi-arm kernel-kernel-kobj kernel-exec-kobj kernel-task-kobj
 kernel-raspi-arm: $(OSGENDIR)/boot/core.elf
 
+#MM kernel-raspi-arm-quick: setup-raspi-arm-quick kernel-kernel-kobj-quick kernel-exec-kobj-quick kernel-task-kobj-quick
+kernel-raspi-arm-quick: $(OSGENDIR)/boot/core.elf
+
+#MM kernel-raspi-armeb: setup-raspi-armeb kernel-kernel-kobj kernel-exec-kobj kernel-task-kobj
+kernel-raspi-armeb: $(OSGENDIR)/boot/core.elf
+
+#MM kernel-raspi-armeb-quick: setup-raspi-armeb-quick kernel-kernel-kobj-quick kernel-exec-kobj-quick kernel-task-kobj-quick
+kernel-raspi-armeb-quick: $(OSGENDIR)/boot/core.elf
+
 $(OSGENDIR)/boot/core.elf: $(KOBJSDIR)/kernel_resource.o $(KOBJSDIR)/exec_library.o  $(KOBJSDIR)/task_resource.o
 		%mkdirs_q $(OSGENDIR)/boot
 		$(TARGET_LD) -Map $(OSGENDIR)/boot/core.map -T $(SRCDIR)/$(CURDIR)/ldscript.lds -o $@ $^ -L$(AROS_LIB) -larossupport -lautoinit -llibinit -lstdc.static -laeabi
@@ -50,10 +60,15 @@ $(OSGENDIR)/boot/core.elf: $(KOBJSDIR)/kernel_resource.o $(KOBJSDIR)/exec_librar
 
 #MM kernel-kernel-raspi-arm : includes
 #MM kernel-kernel-raspi-arm-kobj : includes
+#MM kernel-kernel-raspi-armeb : includes
+#MM kernel-kernel-raspi-armeb-kobj : includes
 
-USER_INCLUDES := $(PRIV_KERNEL_INCLUDES) -I$(GENINCDIR) -I$(AROS_DEVELOPER)/include
+USER_INCLUDES := $(PRIV_KERNEL_INCLUDES) -I$(GENINCDIR) -I$(AROS_DEVELOPER)/include -I$(SRCDIR)/rom/openfirmware
 
 %build_archspecific \
   mainmmake=kernel-kernel modname=kernel maindir=rom/kernel arch=raspi-arm \
   files="$(CFILES) $(PLATFILES)" asmfiles="$(AFILES)" compiler=kernel
-  
+
+%build_archspecific \
+  mainmmake=kernel-kernel modname=kernel maindir=rom/kernel arch=raspi-armeb \
+  files="$(CFILES) $(PLATFILES)" asmfiles="$(AFILES)" compiler=kernel

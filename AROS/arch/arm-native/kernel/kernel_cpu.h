@@ -33,6 +33,7 @@ extern uint32_t __arm_affinitymask;
 #define goSuper() 0
 #define goUser()
 
+#undef krnSysCall
 #define krnSysCall(n) asm volatile ("swi %[swi_no]\n\t" : : [swi_no] "I" (n) : "lr");
 
 void cpu_DumpRegs(regs_t *regs);

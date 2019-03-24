@@ -137,6 +137,33 @@ Fujitsu Siemens
       - Boot fails if both ATA and VESA are enabled. The test machine's
         wireless card was broken, but it should work.
 
+Lenovo
+------
+
+.. list-table::
+    :header-rows: 1
+
+    * - Model
+      - Video
+      - Audio
+      - SATA
+      - PATA
+      - USB
+      - Ethernet
+      - Wireless
+      - Test Distro
+      - Notes
+    * - ThinkPad T530i
+      - :p:`Intel HD Graphics 4000 (VESA only)`
+      - :y:`Intel HD Audio - Realtek ALC3202 codec`
+      - :y:`Intel 7-Series PCH`
+      - N/A
+      - :p:`Intel EHCI/xHCI (1.1/2.0 only)`
+      - :n:`Intel 82579LM`
+      - :n:`Intel 6205`
+      - Icaros Desktop 2.2
+      -
+
 HP/Compaq
 ---------
 
@@ -163,6 +190,16 @@ HP/Compaq
       - :n:`Intel 3945ABG`
       - Icaros Desktop 2.2
       -
+    * - Compaq nc6710b
+      - :y:`Intel GMA 965 (2D)`
+      - :n:`Intel HD Audio - Analog Devices AD1981 codec`
+      - :p:`Intel ICH8 (IDE mode)`
+      - :y:`Intel ICH8`
+      - :y:`Intel EHCI/UHCI`
+      - :n:`Broadcom BCM5787M`
+      - :n:`Intel 3945ABG`
+      - Icaros Desktop 2.2.5
+      - Only 8GB of the HD is accessible in AHCI mode.
     * - 255 G5
       - :p:`AMD Radeon R2/R4/R5 (VESA only)`
       - :p:`AMD HD Audio - Realtek ALC3227 codec (playback only)`
@@ -230,6 +267,16 @@ Acer
       - :y:`Atheros AR5BXB63`
       - Icaros Desktop 2.2
       -
+    * - Aspire One D270
+      - :p:`PowerVR (VESA)`
+      - :n:`Intel HD Audio - Realtek ALC269VB codec`
+      - :p:`Intel ICH7M (IDE mode)`
+      - N/A
+      - :y:`Intel EHCI/UHCI`
+      - :y:`Realtek RTL810xE`
+      - :n:`Broadcom BCM4313`
+      - Icaros Desktop 2.2.5
+      - Only 8GB of the HD is accessible in AHCI mode.
 
 Sony
 ----
@@ -248,7 +295,7 @@ Sony
       - Test Distro
       - Notes
     * - Vaio VGN-P11Z
-      - :p:`Intel (VESA only)`
+      - :p:`PowerVR (VESA only)`
       - :n:`Intel HD Audio - Realtek ALC262 codec`
       - N/A
       - :y:`Intel SCH`
@@ -260,6 +307,31 @@ Sony
 
 Desktops
 ========
+
+Acer
+----
+
+.. list-table::
+    :header-rows: 1
+
+    * - Model
+      - Video
+      - Audio
+      - SATA
+      - PATA
+      - USB
+      - Ethernet
+      - Test Distro
+      - Notes
+    * - E380-2B7H
+      - :y:`nVidia GeForce 6150SE (3D)`
+      - :y:`nVidia HD Audio - Realtek ALC888 codec`
+      - :p:`nVidia MCP61 (IDE mode)`
+      - :y:`nVidia MCP61`
+      - :y:`nVidia EHCI/OHCI`
+      - :n:`Marvell 88E8056`
+      - Icaros Desktop 1.5.2
+      - Does not boot with Icaros Desktop 2.x. Use rear green socket for audio.
 
 Dell
 ----
@@ -276,6 +348,15 @@ Dell
       - Ethernet
       - Test Distro
       - Notes
+    * - Dimension 3000
+      - :p:`Intel Extreme (VGA)`
+      - :n:`Intel AC97 - Analog Devices AD1980 codec`
+      - N/A
+      - :y:`Intel ICH5`
+      - :y:`Intel EHCI/UHCI`
+      - :y:`Intel 82562EZ`
+      - Icaros Desktop 2.2.5
+      - Does not boot with VESA enabled.
     * - Dimension 4600
       - :p:`Intel Extreme (VESA)`
       - :p:`Intel AC97 (playback only, use rear black port)`

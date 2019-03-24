@@ -1,11 +1,17 @@
-# Copyright 2009-2010, The AROS Development Team. All rights reserved.
+# Copyright 2009-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-multimedia : development-libogg
 
+REPOSITORIES := http://downloads.xiph.org/releases/ogg \
+ https://ftp.osuosl.org/pub/xiph/releases/ogg \
+ https://launchpad.net/ogg/trunk/1.1.4/+download \
+ http://meanwhile.dreamhost.com/pub/blfs/conglomeration/libogg \
+ http://ftp.vim.org/pub/mediaplayer/xbmc/build-deps/sources
+
 %fetch_and_build_gnu_development package=libogg version=1.1.4 \
-    package_repo=http://downloads.xiph.org/releases/ogg/ suffixes="tar.gz" \
+    package_repo="$(REPOSITORIES)" suffixes="tar.gz" \
     extraoptions="libdir=$(AROS_LIB)"
 

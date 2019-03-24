@@ -1,23 +1,28 @@
-# Copyright © 2009-2017, The AROS Development Team. All rights reserved.
+# Copyright © 2009-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- contrib-development : contrib-icu4c
+##MM- contrib-development : contrib-icu4c
 
-#MM- contrib-icu4c : contrib-icu4c-$(AROS_TARGET_CPU)
-#MM- contrib-icu4c-i386 : contrib-icu4c-complete
-#MM- contrib-icu4c-x86_64 : contrib-icu4c-complete
+##MM- contrib-icu4c : contrib-icu4c-$(AROS_TARGET_CPU)
+##MM- contrib-icu4c-i386 : contrib-icu4c-complete
+##MM- contrib-icu4c-x86_64 : contrib-icu4c-complete
 ##MM- contrib-icu4c-ppc : contrib-icu4c-complete
 ##MM- contrib-icu4c-m68k : contrib-icu4c-complete
 
-#MM- contrib-icu4c-complete : crosstools-icu
+##MM- contrib-icu4c-complete : crosstools-icu
 
 ICU_VERSION := 4.2.1
 ##ICU_VERSION := 60.2
 ICU_PKGNAME := icu4c
 ICU_PKGVERSION := $(subst .,_,$(ICU_VERSION))
 ICU_REPOSITORY := http://download.icu-project.org/files/$(ICU_PKGNAME)/$(ICU_VERSION)
+REPOSITORIES := $(ICU_REPOSITORY) \
+ https://ftp.osuosl.org/pub/blfs/conglomeration/icu \
+ http://bbgentoo.ilb.ru/distfiles \
+ http://repository.timesys.com/buildsources/i/icu/icu-4.2.1
+
 ARCHBASE := $(ICU_PKGNAME)-$(ICU_VERSION)-src
 
 NOWARN_FLAGS:= $(NOWARN_UNUSED_BUT_SET_VARIABLE)
@@ -48,6 +53,6 @@ endif
 endif
 
 %fetch_and_build mmake=contrib-icu4c-complete package=$(ICU_PKGNAME) version=$(ICU_PKGVERSION)-src \
-	package_repo="$(ICU_REPOSITORY)" suffixes="tgz" \
+	package_repo="$(REPOSITORIES)" suffixes="tgz" \
 	patch=yes srcdir=icu builddir=source prefix=$(AROS_DEVELOPER) aros_prefix=/$(AROS_DIR_DEVELOPER) nix=yes \
 	extraoptions="$(ICU_EXTRA_OPTS)"

@@ -4,7 +4,7 @@
 #include "expat.h"
 #include <Startup/Startup.h>
 
-uint StartupFlags = 0;
+uint32 StartupFlags = 0;
 
 #define str(x) #x
 int main()

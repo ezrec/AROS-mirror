@@ -491,7 +491,7 @@ public:
    int32            GetSpeedDescriptor(int32 i);
    int32            GetMediaReadSupport();
    int32            GetMediaWriteSupport();
-   uint32           GetCapabilities();
+   uint             GetCapabilities();
    int32            GetAudioFlags();
    int32            GetAudioVolumeLevels();
    uint16           GetCurrentWriteSpeed();
@@ -1750,7 +1750,7 @@ class cmd_GetConfiguration : public SCSICommand
    public:
       int32       IsCurrent(void)      {  return type.isCurrent();                     };
       FeatureId   GetId()              {  return (FeatureId)(int16)id;                 };
-      Feature*    Next()               {  return (Feature*)(((uint32)this)+length+4);  };
+      Feature*    Next()               {  return (Feature*)(((uint)this)+length+4);  };
       int32       GetLength()          {  return length+4;                             };
       APTR        GetBody()            {  return &((uint8*)this)[4];                   };
       int32       GetBodyLength()      {  return length;                               };

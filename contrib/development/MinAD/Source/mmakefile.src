@@ -3,9 +3,13 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-NOWARN_FLAGS := $(NOWARN_UNINITIALIZED)
-USER_CFLAGS := $(NOWARN_FLAGS) \
-    -D__AMIGADATE__=\"$(shell date "+%d.%m.%Y")\" \
+NOWARN_FLAGS := \
+    $(NOWARN_UNINITIALIZED) \
+    $(NOWARN_STRINGOP_TRUNCATION) \
+    $(NOWARN_STRINGOP_OVERFLOW)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+USER_CPPFLAGS := -D__AMIGADATE__=\"$(shell date "+%d.%m.%Y")\" \
     -D__YEAR__=\"$(shell date "+%Y")\" \
     -DMUI_OBSOLETE
 

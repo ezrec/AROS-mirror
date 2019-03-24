@@ -9,6 +9,7 @@
 
 struct HIDDSystemData
 {
+    ULONG   sd_Private;
 };
 
 struct class_static_data
@@ -18,7 +19,10 @@ struct class_static_data
 
     OOP_Class                   *oopclass;
     OOP_Object                  *instance;
+
     OOP_AttrBase                hwAttrBase;
+
+    OOP_MethodID                hwMethodBase;
 };
 
 /* Library base */
@@ -32,6 +36,10 @@ struct HiddSystemIntBase
 
 #define CSD(x) (&((struct HiddSystemIntBase *)x->UserData)->hsi_csd)
 
-#define __IHW 	                (CSD(cl)->hwAttrBase)
+#undef HWAttrBase
+#define HWAttrBase 	                (CSD(cl)->hwAttrBase)
+
+#undef HWBase
+#define HWBase                          (CSD(cl)->hwMethodBase)
 
 #endif

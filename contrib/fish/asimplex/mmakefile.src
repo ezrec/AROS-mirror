@@ -1,6 +1,11 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
+NOWARN_FLAGS := \
+    $(NOWARN_FORMAT_OVERFLOW)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+
 %build_prog mmake=fish-asimplex \
     progname=asimplex targetdir=$(AROS_CONTRIB)/Misc/fish \
     files="main matrix phase1 phase2 mpsx"

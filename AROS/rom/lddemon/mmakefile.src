@@ -2,11 +2,13 @@
 
 include $(SRCDIR)/config/aros.cfg
 
-USER_CFLAGS += -D__DOS_NOLIBBASE__
+INCLUDE_FILES := lddemon.h
+
+USER_CPPFLAGS += -D__DOS_NOLIBBASE__
 USER_LDFLAGS := -static
 
 %build_module mmake=kernel-lddemon \
   modname=lddemon modtype=resource \
   files="lddemon" 
 
-%common
+%copy_includes dir=include path=resources

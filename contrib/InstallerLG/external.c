@@ -35,10 +35,11 @@ static entry_p h_run(entry_p contxt, const char *pre, const char *dir)
     // We need atleast one argument
     if(c_sane(contxt, 1))
     {
-        entry_p prompt   = get_opt(CARG(2),OPT_PROMPT),
-                help     = get_opt(CARG(2),OPT_HELP),
-                confirm  = get_opt(CARG(2),OPT_CONFIRM),
-                safe     = get_opt(CARG(2),OPT_SAFE);
+        entry_p prompt   = get_opt(CARG(2), OPT_PROMPT),
+                help     = get_opt(CARG(2), OPT_HELP),
+                confirm  = get_opt(CARG(2), OPT_CONFIRM),
+                safe     = get_opt(CARG(2), OPT_SAFE),
+                back     = get_opt(CARG(2), OPT_BACK);
 
         DNUM = 0;
 
@@ -85,16 +86,32 @@ static entry_p h_run(entry_p contxt, const char *pre, const char *dir)
         // Did we need it? (confirmation)
         if(confirm)
         {
-            int c = gui_confirm(str(prompt), str(help));
+            inp_t rc = gui_confirm(str(prompt), str(help), back);
 
-            // HALT if abort
-            if(c == -1)
+            // Is the back option available?
+            if(back)
+            {
+                // Fake input?
+                if(get_numvar(contxt, "@back"))
+                {
+                    rc = G_ABORT;
+                }
+
+                // On abort execute.
+                if(rc == G_ABORT)
+                {
+                    return resolve(back);
+                }
+            }
+
+            // FIXME
+            if(rc == G_ABORT || rc == G_EXIT)
             {
                 HALT();
             }
 
-            // Abort or skip
-            if(c != 1)
+            // FIXME
+            if(rc != G_TRUE)
             {
                 RCUR;
             }
@@ -116,7 +133,7 @@ static entry_p h_run(entry_p contxt, const char *pre, const char *dir)
                 if(pre)
                 {
                     size_t cl = strlen(cmd) + strlen(pre) + 2;
-                    char *t = malloc(cl);
+                    char *t = DBG_ALLOC(malloc(cl));
 
                     if(t)
                     {
@@ -220,14 +237,10 @@ static entry_p h_run(entry_p contxt, const char *pre, const char *dir)
                     chdir(cwd);
                 }
 
-                // OK == 0.
-                if(DNUM)
+                // OK == 0. Only fail in 'strict' mode.
+                if(DNUM && get_numvar(contxt, "@strict"))
                 {
-                    // Only fail if we're in 'strict' mode.
-                    if(get_numvar(contxt, "@strict"))
-                    {
-                        ERR(ERR_EXEC, cmd);
-                    }
+                    ERR(ERR_EXEC, cmd);
                 }
 
                 // Free concatenation.

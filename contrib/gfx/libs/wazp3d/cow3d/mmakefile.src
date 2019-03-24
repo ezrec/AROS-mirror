@@ -8,6 +8,12 @@ EXE := CoW3D
 TARGETDIR := $(AROS_CONTRIB)/MultiMedia/Gfx/Wazp3D
 FILES := CoW3D
 
+NOWARN_FLAGS := \
+    $(NOWARN_ARRAY_BOUNDS) \
+    $(NOWARN_STRINGOP_OVERFLOW)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+
 %build_prog mmake=contrib-wazp3d-cow3d progname=$(EXE) files=$(FILES) \
     targetdir=$(TARGETDIR) \
     uselibs="Warp3D"

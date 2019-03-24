@@ -24,7 +24,6 @@
 
 #include "exec_intern.h"
 #include "etask.h"
-
 #include "tlsf.h"
 
 #include "kernel_intern.h"
@@ -32,6 +31,9 @@
 #include "kernel_romtags.h"
 
 #include "exec_platform.h"
+
+#undef KernelBase
+#include "tls.h"
 
 extern struct TagItem *BootMsg;
 
@@ -48,7 +50,7 @@ asm (
     ".type start,%function\n"
     "start:\n"
     "           push {r0}                    \n"
-    "           bl      __clear_bss          \n" 
+    "           bl      __clear_bss          \n"
     "           pop {r0}                     \n"
     "           cps     #0x1f                \n" /* system mode */
     "           ldr     sp, stack_end        \n"
@@ -56,7 +58,7 @@ asm (
     "           ldr     sp, stack_fiq_end    \n"
     "           cps     #0x13                \n" /* SVC (supervisor) mode */
     "           ldr     sp, stack_super_end  \n"
-    "		b       kernel_cstart	     \n"
+    "           b       kernel_cstart	     \n"
 
     ".string \"Native/CORE v3 (" __DATE__ ")\"" "\n\t\n\t"
 );
@@ -66,7 +68,7 @@ static uint32_t * const stack_super_end __attribute__((used, section(".aros.init
 static uint32_t * const stack_fiq_end __attribute__((used, section(".aros.init"))) = &stack_fiq[1024 - sizeof(IPTR)];
 
 
-struct ARM_Implementation __arm_arosintern  __attribute__((aligned(4), section(".data"))) = {0,0,NULL,NULL};
+struct ARM_Implementation __arm_arosintern  __attribute__((aligned(4), section(".data"))) = {0,0,NULL,0};
 struct ExecBase *SysBase __attribute__((section(".data"))) = NULL;
 
 static void __attribute__((used)) __clear_bss(struct TagItem *msg)
@@ -115,11 +117,30 @@ void __attribute__((used)) kernel_cstart(struct TagItem *msg)
     UWORD *ranges[3];
     struct MinList memList;
     struct MemHeader *mh;
-    struct MemChunk *mc;
     long unsigned int memlower = 0, memupper = 0, protlower = 0, protupper = 0;
     char *cmdline = NULL;
     BootMsg = msg;
     tls_t *__tls;
+
+    // First find out if device tree is present
+    while(msg->ti_Tag != TAG_DONE)
+    {
+        int found = 0;
+
+        switch (msg->ti_Tag)
+        {
+        case KRN_OpenFirmwareTree:
+            dt_set_root((void *)msg->ti_Data);
+            found = 1;
+            break;
+        }
+
+        if (found)
+            break;
+
+        msg++;
+    }
+    msg = BootMsg;
 
     // Probe the ARM core
     cpu_Probe(&__arm_arosintern);
@@ -203,11 +224,14 @@ void __attribute__((used)) kernel_cstart(struct TagItem *msg)
     __tls->ThisTask = NULL;
 
     D(bug("[Kernel] AROS ARM Native Kernel built on %s\n", __DATE__));
+    if (dt_find_node("/")) {
+        D(bug("[Kernel] Device: %s\n", dt_get_prop_value(dt_find_property(dt_find_node("/"), "model"))));
+    }
 
     D(bug("[Kernel] Entered kernel_cstart @ 0x%p, BootMsg @ 0x%p\n", kernel_cstart, BootMsg));
 
     asm volatile("mcr p15, 0, %0, c13, c0, 3" : : "r"(__tls));
-    
+
     D(
         if (__arm_arosintern.ARMI_PutChar)
         {
@@ -225,7 +249,7 @@ void __attribute__((used)) kernel_cstart(struct TagItem *msg)
 
     if (__arm_arosintern.ARMI_Delay)
             __arm_arosintern.ARMI_Delay(1500);
-    
+
     if (__arm_arosintern.ARMI_LED_Toggle)
         __arm_arosintern.ARMI_LED_Toggle(ARM_LED_POWER, ARM_LED_ON);
 
@@ -271,7 +295,7 @@ void __attribute__((used)) kernel_cstart(struct TagItem *msg)
     __tls->SysBase = SysBase;
     D(bug("[Kernel] SysBase @ 0x%p\n", SysBase));
 
-    /* 
+    /*
      * Make kickstart code area read-only.
      * We do it only after ExecBase creation because SysBase pointer is put
      * into .rodata. This way we prevent it from ocassional modification by buggy software.
@@ -282,7 +306,11 @@ void __attribute__((used)) kernel_cstart(struct TagItem *msg)
     InitCode(RTF_SINGLETASK, 0);
 
     D(bug("[Kernel] Dropping into USER mode ... \n"));
-    asm("cps %[mode_user]\n" : : [mode_user] "I" (CPUMODE_USER)); /* switch to user mode */
+    asm("cps %[mode_user]\n"
+#if AROS_BIG_ENDIAN
+        "setend be\n"
+#endif
+     : : [mode_user] "I" (CPUMODE_USER)); /* switch to user mode */
 
     D(bug("[Kernel] InitCode(RTF_COLDSTART) ...\n"));
     InitCode(RTF_COLDSTART, 0);

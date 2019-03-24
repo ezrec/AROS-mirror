@@ -1,0 +1,126 @@
+## version $VER: Unarc.catalog 1.0 (06.04.2012)
+## language français
+## codeset 0
+;
+MSG_AppDescription
+Désarchiveur
+;Unarchiver
+;
+MSG_AppCopyright
+Copyright \xa9 2012 The AROS Development Team
+;
+MSG_WI_TITLE
+Unarc
+;
+MSG_LA_ARCHIVE
+Archive
+;
+MSG_LA_DESTINATION
+Destination
+;
+MSG_BT_ALL
+_Tout
+;_All
+;
+MSG_BT_NONE
+_Rien
+;_None
+;
+MSG_BT_INVERT
+_Inverser
+;_Invert
+;
+MSG_BT_START
+_Démarrer
+;_Start
+;
+MSG_BT_CANCEL
+_Annuler
+;_Cancel
+;
+MSG_TXT_STATUS_ALL
+%u octets dans %u fichiers
+;%u bytes in %u files
+;
+MSG_TXT_STATUS_SEL
+%u octets dans %u fichiers sélectionés
+;%u bytes in %u selected files
+;
+MSG_FREQ_ARCHIVE_TITLE
+Choisir l'archive
+;Select Archive
+;
+MSG_FREQ_DESTINATION_TITLE
+Choisir la destination
+;Select Destination
+;
+MSG_OK
+_OK
+;
+MSG_SKIP_CANCEL
+_Sauter|Annuler
+;_Skip|_Cancel
+;
+;
+; List labels
+MSG_LBL_NAME
+Nom
+;Name
+;
+MSG_LBL_PROTECTION
+Protection
+;
+MSG_LBL_SIZE
+Taille
+;Size
+;
+MSG_LBL_PACKSIZE
+Compressé
+;Packsize
+;
+MSG_LBL_RATE
+Vitesse
+;Rate
+;
+MSG_LBL_DATE
+Date
+;
+MSG_LBL_TIME
+Temps
+;Time
+;
+;
+; Error messages
+;
+MSG_ERR
+Erreur
+;Error
+;
+MSG_ERR_NO_APPLICATION
+Impossible de créer l'application
+;Can't create application
+;
+MSG_ERR_READARGS
+Impossible de lire les arguments
+;Can't read commandline arguments
+;
+MSG_ERR_NO_MEM
+Plus de mémoire
+;Out of memory
+;
+MSG_ERR_NO_ARC
+Impossible de lire l'archive
+;Can't read archive
+;
+MSG_ERR_CANT_UNPACK
+La décompression de\n%s a retourné l'erreur :\n%s
+;Unpacking of\n%s\nreturned error:\n%s
+;
+MSG_ERR_ADDPART
+Impossible de créer le nom de fichier cible
+;Can't create target file name
+;
+MSG_ERR_NODEST
+Choisissez une destination s'il vous plaît
+;Please, select a destination
+;

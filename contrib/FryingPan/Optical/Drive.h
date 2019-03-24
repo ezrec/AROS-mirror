@@ -40,9 +40,9 @@ class Thread;
 
 struct DriveMsg
 {
-   ULONG    cmd;
-   ULONG    client;
-   ULONG    params[0];
+   uint32    cmd;
+   uint32    client;
+   uint32    params[0];
 };
 
 class Drive 
@@ -74,17 +74,17 @@ class Drive
    bool                       bLockInterOperations;   // true if we dont want additional operations inbetween our calls
 
    HookT<Drive, Thread*, void*>                 hHkProcMsgs;
-   HookT<Drive, unsigned long, unsigned long*>  hHkProcHandle;
+   HookT<Drive, uint, uint*>                  hHkProcHandle;
    
    CfgHardware         *hwconfig;
 
-   ULONG                media_write_capabilities;
-   ULONG                media_read_capabilities;
-   ULONG                data_write_capabilities;
-   ULONG                data_read_capabilities;
+   uint32                media_write_capabilities;
+   uint32                media_read_capabilities;
+   uint32                data_write_capabilities;
+   uint32                data_read_capabilities;
    UWORD                drive_buffer_size;         // in kb
 
-   ULONG                current_drive_profile;
+   uint32                current_drive_profile;
    uint16               selected_read_speed;
    uint16               selected_write_speed;
 
@@ -108,10 +108,10 @@ public:
    void                 AnalyseDisc(void);
    void                 AnalyseDrive(void);
 
-   static ULONG         ScanDevice(char* sDeviceName);
-   static ULONG         FreeScanResults(ScanData*pData);
+   static uint32         ScanDevice(char* sDeviceName);
+   static uint32         FreeScanResults(ScanData*pData);
    
-   ULONG                SendMessage(ULONG* pMsg);
+   uint32                SendMessage(uint32* pMsg);
 
    long                 LockDrive(long lLockType);
 
@@ -121,35 +121,35 @@ public:
    DbgHandler          *GetDebug(void)
       {  return DEBUG_ENGINE;                };
 
-   ULONG                CurrentStatus(void)
+   uint32                CurrentStatus(void)
       {  return drive_status;                };
 
-   ULONG                MediaReadCapabilities(void)
+   uint32                MediaReadCapabilities(void)
       {  return media_read_capabilities;     };
 
-   ULONG                MediaWriteCapabilities(void)
+   uint32                MediaWriteCapabilities(void)
       {  return media_write_capabilities;    };
 
-   ULONG                DataReadCapabilities(void)
+   uint32                DataReadCapabilities(void)
       {  return data_read_capabilities;      };
 
-   ULONG                DataWriteCapabilities(void)
+   uint32                DataWriteCapabilities(void)
       {  return data_write_capabilities;     };
 
-   ULONG                DriveBufferSize(void)
+   uint32                DriveBufferSize(void)
       {  return drive_buffer_size;           };
 
-   ULONG                CurrentProfile(void)
+   uint32                CurrentProfile(void)
       {  return (int)current_drive_profile;  };
 
    CfgHardware         *GetHardwareConfig()
       {  return hwconfig;                    };
 
-   IPTR                            GetDriveAttrs(IPTR, IPTR);
-   IPTR                            SetDriveAttrs(IPTR, IPTR);
+   uint                             GetDriveAttrs(uint, uint);
+   uint                             SetDriveAttrs(uint, uint);
 
-   ULONG                            SetDriveAttrs(TagItem*);
-   unsigned long                    HandleMessages(unsigned long Cmd, unsigned long *Msg);
+   uint32                            SetDriveAttrs(TagItem*);
+   uint                             HandleMessages(uint Cmd, uint *Msg);
 
    Page<Page_Write>                &GetWritePage();
    Page<Page_Capabilities>         &GetCapabilitiesPage();
@@ -209,7 +209,7 @@ class DriveSense
    int         Code(void);
    int         ASC(void);
    int         ASCQ(void);
-   ULONG       SCSIError(void);
+   uint32       SCSIError(void);
 };
 
 class DriveIO 
@@ -236,19 +236,19 @@ class DriveIO
 class DriveClient 
 {
    DEFINE_DEBUG;
-   DriveClient *next_client;
-   Drive       *drive;
+   DriveClient         *next_client;
+   Drive               *drive;
 
    public:
-                    ~DriveClient(void);         // DON'T CALL IT
-                     DriveClient(DriveClient*, Drive*);
-   DriveClient      *UnLink(DriveClient*);
-   class Drive      *GetDrive(void);
-   ULONG             GetDriveStatus(void);
-   ULONG             Send(ULONG*);
-   ULONG             WaitForDisc(int lDuration);
-   IPTR             GetDriveAttrs(TagItem*);
-   IPTR             GetDriveAttrs(IPTR);
+                       ~DriveClient(void);         // DON'T CALL IT
+                        DriveClient(DriveClient*, Drive*);
+   DriveClient         *UnLink(DriveClient*);
+   class Drive         *GetDrive(void);
+   uint32               GetDriveStatus(void);
+   uint32               Send(uint32*);
+   uint32               WaitForDisc(int lDuration);
+   uint                 GetDriveAttrs(TagItem*);
+   uint                 GetDriveAttrs(uint);
 };
 
 class DriveSpool 

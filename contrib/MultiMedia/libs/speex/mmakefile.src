@@ -1,10 +1,15 @@
-# Copyright 2009-2018, The AROS Development Team. All rights reserved.
+# Copyright 2009-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-multimedia : development-speex
 
+REPOSITORIES := http://downloads.xiph.org/releases/speex \
+ https://ftp.osuosl.org/pub/xiph/releases/speex \
+ https://download.videolan.org/contrib/speex \
+ http://bbgentoo.ilb.ru/distfiles
+
 %fetch_and_build_gnu_development package=speex version=1.2.0 \
-    package_repo=http://downloads.xiph.org/releases/speex/ suffixes="tar.gz" nlsflag=no xflag=no
+    package_repo="$(REPOSITORIES)" suffixes="tar.gz" nlsflag=no xflag=no
 

@@ -1,4 +1,4 @@
-# Copyright © 2015-2018, The AROS Development Team. All rights reserved.
+# Copyright © 2015-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -7,8 +7,9 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-development-libs-t1lib : development-t1lib
 
-REPOSITORIES := ftp://sunsite.unc.edu/pub/Linux/libs/graphics/ \
+REPOSITORIES := http://www.ibiblio.org/pub/Linux/libs/graphics \
  http://fossies.org/linux/misc/old/ \
+ http://download.openpkg.org/components/cache/t1lib \
  http://www.mazze-online.de/aros/ports-src/
 
 T1_ENVFLAGS := T1_AA_TYPE16="-DT1_AA_TYPE16=short" T1_AA_TYPE32="-DT1_AA_TYPE32=int" T1_AA_TYPE64="-DT1_AA_TYPE64=\"long long\""

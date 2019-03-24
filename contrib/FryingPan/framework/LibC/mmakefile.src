@@ -44,8 +44,9 @@ CXXFILES := \
  StartCode
 
 NOWARN_FLAGS := $(NOWARN_NONNULL_COMPARE)
-USER_CFLAGS := $(NOWARN_FLAGS) -isystem $(SRCDIR)/$(CURDIR)/..
-USER_CXXFLAGS := -fno-rtti -fno-exceptions -isystem $(SRCDIR)/$(CURDIR)/..
+USER_CFLAGS := $(NOWARN_FLAGS)
+USER_INCLUDES := $(CFLAGS_ISYSTEM) $(SRCDIR)/$(CURDIR)/.. $(CFLAGS_ISYSTEM_END)
+USER_CXXFLAGS := $(CFLAGS_NO_RTTI) $(CFLAGS_NO_EXCEPTIONS) 
 USER_LDFLAGS := -static-libstdc++
 
 %build_linklib mmake=contrib-fryingpan-framework-libc libname="C" \

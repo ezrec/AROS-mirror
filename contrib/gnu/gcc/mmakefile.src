@@ -1,4 +1,4 @@
-# Copyright © 2004-2017, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -6,8 +6,13 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- contrib-gnu : contrib-gnu-gcc
 #MM- contrib-gnu-gcc : development-collect-aros development-gcc
 #MM- development-gcc : development-gmp development-mpfr development-mpc contrib-development-libs-gc
+#MM- linklibs-libatomic : development-gcc
 
 GCC_VERSION     = $(TARGET_GCC_VER)
+
+REPOSITORIES := $(GNU_REPOSITORY)/gcc/gcc-$(GCC_VERSION) \
+ http://mirrors.ibiblio.org/gnu/ftp/gnu/gcc/gcc-$(GCC_VERSION) \
+ https://ftp.wayne.edu/gnu/gcc/gcc-$(GCC_VERSION)
 
 GCC_LANGUAGES:=c,c++
 ifneq (no-objc,$(OBJC_TARGET))
@@ -70,8 +75,9 @@ endif
 # Rules to build the native GCC compiler.
 #
 %fetch_and_build_gnu_development package=gcc version=$(GCC_VERSION)  crossbuild=yes patch=yes \
-    package_repo="$(GNU_REPOSITORY)/gcc/gcc-$(GCC_VERSION)" \
+    package_repo="$(REPOSITORIES)" \
     config_env_extra=$(GCC_HOST_VARS) extraoptions=$(GCC_EXTRA_OPTS) \
+    usecppflags=no targetisaflags= \
     postinstall=contrib-gnu-gcc-deletefixed
 
 #MM

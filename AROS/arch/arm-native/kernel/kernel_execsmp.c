@@ -13,6 +13,7 @@
 
 #include "kernel_cpu.h"
 
+#undef D
 #define D(x)
 
 #if defined(__AROSEXEC_SMP__)

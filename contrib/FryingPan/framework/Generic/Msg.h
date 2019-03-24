@@ -37,7 +37,7 @@ namespace GenNS
       virtual             ~Msg();
       void                 Reply(unsigned long AResult);
       uint32               WaitFor();
-      uint                 GetCommand();
+      sint                 GetCommand();
       void                *GetData();
    };
 };

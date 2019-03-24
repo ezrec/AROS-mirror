@@ -1,5 +1,5 @@
 /*
-    Copyright © 2013-2015, The AROS Development Team. All rights reserved.
+    Copyright © 2013-2019, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: mmu.c
@@ -11,11 +11,11 @@
 #include "mmu.h"
 #include "boot.h"
 
-#define DMMU(x) x
+#define DMMU(x)
 
 void mmu_init()
 {
-    static pde_t *pde = BOOTMEMADDR(bm_pde);
+    static pde_t *pde = (pde_t *)BOOTMEMADDR(bm_pde);
     int i;
 
     for (i = 0; i < 4096; i++)
@@ -38,7 +38,7 @@ void mmu_load()
 {
     uint32_t tmp;
 
-    static pde_t *pde = BOOTMEMADDR(bm_pde);
+    static pde_t *pde = (pde_t *)BOOTMEMADDR(bm_pde);
 
     arm_flush_cache((uint32_t)pde, 16384);
 
@@ -59,11 +59,12 @@ void mmu_load()
     asm volatile ("mcr  p15, 0, %[r], c7, c10, 4" : : [r] "r" (0)); /* dsb */
     asm volatile ("mcr p15, 0, %0, c1, c0, 0"::"r"(tmp));
     asm volatile ("mcr  p15, 0, %[r], c7, c5, 4" : : [r] "r" (0)); /* isb */
+    DMMU(kprintf("[BOOT] mmu up\n"));
 }
 
 void mmu_unmap_section(uint32_t virt, uint32_t length)
 {
-    static pde_t *pde = BOOTMEMADDR(bm_pde);
+    static pde_t *pde = (pde_t *)BOOTMEMADDR(bm_pde);
 
     uint32_t start = virt & ~(1024*1024-1);
     uint32_t end = (start + length) & ~(1024*1024-1);
@@ -80,7 +81,7 @@ void mmu_unmap_section(uint32_t virt, uint32_t length)
 
 void mmu_map_section(uint32_t phys, uint32_t virt, uint32_t length, int b, int c, int ap, int tex)
 {
-    static pde_t *pde = BOOTMEMADDR(bm_pde);
+    static pde_t *pde = (pde_t *)BOOTMEMADDR(bm_pde);
 
     uint32_t start = virt & ~(1024*1024-1);
     uint32_t end = (start + length) & ~(1024*1024-1);
@@ -96,6 +97,12 @@ void mmu_map_section(uint32_t phys, uint32_t virt, uint32_t length, int b, int c
     {
         pde_t s;
 
+        s.raw = PDE_TYPE_SECTION | (c << 3) | (b << 2);
+        s.raw |= (ap & 3) << 10;
+        s.raw |= (tex) << 12;
+        s.raw |= ((ap >> 2) & 1) << 15;
+        s.raw |= phys << 20;
+#if 0
         s.section.type = PDE_TYPE_SECTION;
         s.section.b = b;
         s.section.c = c;
@@ -103,8 +110,10 @@ void mmu_map_section(uint32_t phys, uint32_t virt, uint32_t length, int b, int c
         s.section.apx = (ap >> 2) & 1;
         s.section.tex = tex;
         s.section.base_address = phys;
+#endif
 
         pde[i] = s;
+        //DMMU(kprintf("[BOOT] pde[%04d] = %08x\n", i, s.raw));
 
         phys++;
         i++;

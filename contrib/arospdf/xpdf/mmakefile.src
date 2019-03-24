@@ -14,10 +14,15 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM     contrib-arospdf-pdfimages
 
 TARGETDIR := $(AROS_CONTRIB)/Utilities/Text/AROSPDF
+NOWARN_FLAGS := \
+    $(NOWARN_WRITE_STRINGS) \
+    $(NOWARN_PARENTHESES) \
+    $(NOWARN_MAYBE_UNINITIALIZED) \
+    $(NOWARN_VOLATILE_REGISTER_VAR) \
+    $(NOWARN_CLASS_MEMACCESS)
 USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/.. -I$(SRCDIR)/$(CURDIR)/../goo -I$(SRCDIR)/$(CURDIR)/../splash -I$(SRCDIR)/$(CURDIR)/../fofi
-NOWARN_FLAGS := $(NOWARN_WRITE_STRINGS) $(NOWARN_PARENTHESES)\
- $(NOWARN_MAYBE_UNINITIALIZED) $(NOWARN_VOLATILE_REGISTER_VAR)
-USER_CXXFLAGS := -fpermissive $(NOWARN_FLAGS) -DHAVE_CONFIG_H
+USER_CXXFLAGS := $(CFLAGS_PERMISSIVE) $(NOWARN_FLAGS)
+USER_CPPFLAGS := -DHAVE_CONFIG_H
 USER_LDFLAGS := -static-libstdc++ -L$(TARGETDIR)/libs
 
 ################################################################################

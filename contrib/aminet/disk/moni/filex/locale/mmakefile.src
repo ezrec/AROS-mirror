@@ -3,7 +3,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 DESTDIR := $(AROS_CONTRIB)/Misc/aminet/FileX/Catalogs
 
-CATALOGS 	:= $(basename $(call WILDCARD, *.ct))
+CATALOGS 	:= $(strip $(subst blank,,$(basename $(call WILDCARD, *.ct))))
 CATDESC 	:= FileX
 CATSUBDIR	:= 
 CATNAME 	:= FileX

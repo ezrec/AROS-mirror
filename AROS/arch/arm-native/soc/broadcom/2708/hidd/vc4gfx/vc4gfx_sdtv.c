@@ -16,7 +16,7 @@ int FNAME_SUPPORT(SDTV_SyncGen)(struct List *modelist, OOP_Class *cl)
 
     D(bug("[VideoCoreGfx] %s()\n", __PRETTY_FUNCTION__));
 
-#warning "TODO: check if an SDTV is attached"
+//#warning "TODO: check if an SDTV is attached"
     if (sdtv_active)
     {
         if ((sdtv_mode = AllocMem(sizeof(struct DisplayMode), MEMF_PUBLIC)) != NULL)
@@ -49,7 +49,7 @@ int FNAME_SUPPORT(SDTV_SyncGen)(struct List *modelist, OOP_Class *cl)
             sdtv_mode->dm_descr = "VideoCore: NTSC 640x400";
             AddTail(modelist, &sdtv_mode->dm_Node);
             sdtv_modecount++;
-        }    
+        }
     }
     return sdtv_modecount;
 }

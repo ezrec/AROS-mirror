@@ -28,9 +28,24 @@
  */
 
 /*
- * default types common for all platforms.
- */
+ * default common types & platform specific includes */
+#if defined(__AROS__)
+#include <exec/types.h>
+#include <stddef.h>
 
+typedef UQUAD              uint64;  /**< @brief unsigned 64bit integer */
+typedef ULONG              uint32;  /**< @brief unsigned 32bit integer */
+typedef UWORD              uint16;  /**< @brief unsigned 16bit integer */
+typedef UBYTE              uint8;   /**< @brief unsigned 8bit integer  */
+typedef QUAD               int64;   /**< @brief signed 64bit integer */
+typedef LONG               int32;   /**< @brief signed 32bit integer */
+typedef WORD               int16;   /**< @brief signed 16bit integer */
+typedef BYTE               int8;    /**< @brief signed 8bit integer  */
+
+typedef SIPTR              sint;    /**< @brief architecture specific signed int: sizeof(s_int) = sizeof(void*) */
+typedef IPTR               uint;    /**< @brief architecture specific unsigned int: sizeof(u_int) = sizeof(void*) */
+
+#else
 typedef unsigned long long uint64;  /**< @brief unsigned 64bit integer */
 typedef unsigned long int  uint32;  /**< @brief unsigned 32bit integer */
 typedef unsigned short     uint16;  /**< @brief unsigned 16bit integer */
@@ -43,20 +58,17 @@ typedef signed char        int8;    /**< @brief signed 8bit integer  */
 typedef signed long        sint;    /**< @brief architecture specific signed int: sizeof(s_int) = sizeof(void*) */
 typedef unsigned long      uint;    /**< @brief architecture specific unsigned int: sizeof(u_int) = sizeof(void*) */
 
-/* platform specific includes */
-#if defined(__AROS__)
-#include <exec/types.h>
-#include <stddef.h>
-#elif defined(__mc68000)
+# if defined(__mc68000)
 typedef long unsigned int size_t;
 typedef long IPTR;
-#elif defined(__AMIGAOS4__)
+#  elif defined(__AMIGAOS4__)
 typedef unsigned int size_t;
 typedef long IPTR;
-#elif defined(__MORPHOS__)
+#  elif defined(__MORPHOS__)
 typedef unsigned int size_t;
-#else
+#  else
 #error no size_t defined
+#  endif
 #endif
 
 #if (0)
@@ -82,9 +94,9 @@ enum TriState
 
 //! Use this macro instead of varargs. Maintains compatibility across platforms.
 #define ARRAY(arg...) \
-   ((IPTR) \
+   ((uint) \
       ({ \
-         IPTR __parm[] = {arg}; \
+         uint __parm[] = {arg}; \
          &__parm; \
       }))
 
@@ -93,9 +105,9 @@ enum TriState
  * \b Size is always stored in \b param[-1].
  */
 #define SIZEARRAY(arg...) \
-   ((IPTR) \
+   ((uint) \
       ({ \
-         IPTR __parm[] = {0, arg}; \
+         uint __parm[] = {0, arg}; \
          __parm[0] = sizeof(__parm) / sizeof(__parm[0]) - 1; \
          &__parm[1]; \
       }))
@@ -108,7 +120,7 @@ enum TriState
 #define TAGARRAY(arg...) \
    ((struct TagItem*) \
       ({ \
-         IPTR __parm[] = {arg, TAG_DONE, TAG_DONE}; \
+         uint __parm[] = {arg, TAG_DONE, TAG_DONE}; \
          &__parm; \
        }))
 

@@ -4,6 +4,11 @@ include $(SRCDIR)/config/aros-contrib.cfg
 FILES := Mine
 DESTDIR := $(AROS_CONTRIB)/Games/Misc/Kiel
 
+NOWARN_FLAGS := \
+    $(NOWARN_FORMAT_OVERFLOW)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+
 #MM- contrib-games : games-kiel-mine
 
 %build_progs mmake=games-kiel-mine \

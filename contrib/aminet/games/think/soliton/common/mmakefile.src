@@ -18,9 +18,16 @@ FILES := About \
 	 Cardgame
 
 EXEDIR := $(AROS_CONTRIB)/Games/Card/Soliton
-USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../images
 
-USER_CFLAGS := -DUSE_ZUNE
+NOWARN_FLAGS := \
+    $(NOWARN_UNINITIALIZED) \
+    $(NOWARN_MAYBE_UNINITIALIZED) \
+    $(NOWARN_STRINGOP_TRUNCATION)
+
+USER_CFLAGS := $(NOWARN_FLAGS)
+
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/../images
+USER_CPPFLAGS := -DUSE_ZUNE
 
 #MM aminet-games-think-soliton-program : setup-soliton-catalogs
 

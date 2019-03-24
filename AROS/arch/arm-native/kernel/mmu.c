@@ -1,5 +1,5 @@
 /*
-    Copyright ï¿½ 2013, The AROS Development Team. All rights reserved.
+    Copyright © 2013, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -18,7 +18,7 @@
 
 void core_MMUUpdatePageTables(void)
 {
-    static pde_t *pde = BOOTMEMADDR(bm_pde);
+    static pde_t *pde = (pde_t *)BOOTMEMADDR(bm_pde);
 
     /* Invalidate caches */
     asm volatile("mcr   p15, 0, %[r], c8, c7, 0" : : [r] "r" (0x0));   //Invalidate entire unified TLB
@@ -35,7 +35,6 @@ void core_MMUUpdatePageTables(void)
 
 void core_SetupMMU(struct TagItem *msg)
 {
-    unsigned int page;
     register unsigned int control;
 
     core_MMUUpdatePageTables();

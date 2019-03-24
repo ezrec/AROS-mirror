@@ -97,7 +97,7 @@ entry_p m_exit(entry_p contxt)
                 // unless we have an empty string.
                 if(*msg && !DID_ERR())
                 {
-                    gui_message(msg, 0);
+                    gui_finish(msg);
                 }
 
                 // Free the temporary buffer.
@@ -130,12 +130,12 @@ entry_p m_exit(entry_p contxt)
                          app, dst);
 
                 // Display the full message.
-                gui_message(get_buf(), 0);
+                gui_finish(get_buf());
             }
             else
             {
                 // Display the bare minimum.
-                gui_message(tr(S_ICPL), 0);
+                gui_finish(tr(S_ICPL));
             }
         }
 
@@ -143,14 +143,10 @@ entry_p m_exit(entry_p contxt)
         HALT();
         RNUM(0);
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
 
-        // Failure.
-        RCUR;
-    }
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -172,29 +168,47 @@ entry_p m_onerror(entry_p contxt)
     static entry_t ref = { .type = CUSREF,
                            .name = "@onerror" };
 
-    // We need nothing but a context.
+    // We need a context.
     if(c_sane(contxt, 0))
     {
-        // Reset error code otherwise
-        // m_gosub / invoke will halt
-        // immediately.
-        RESET();
+        // Global context where the user
+        // defined procedures are found.
+        entry_p con = global(contxt);
 
-        // Connect reference to the current context.
-        ref.parent = contxt;
+        // Make sure that '@onerror' exists. On
+        // OOM it might be missing.
+        entry_p *err = con->symbols;
 
-        // Invoke @onerror by calling m_gosub just
-        // like any non-native function call.
-        return m_gosub(&ref);
+        while(*err && *err != end())
+        {
+            if((*err)->type == CUSTOM &&
+               !strcasecmp((*err)->name, ref.name))
+            {
+                // Reset error code otherwise
+                // m_gosub / invoke will halt
+                // immediately.
+                RESET();
+
+                // Connect reference to the current context.
+                ref.parent = contxt;
+
+                // Invoke @onerror by calling m_gosub just
+                // like any non-native function call.
+                return m_gosub(&ref);
+            }
+
+            // Next function.
+            err++;
+        }
     }
     else
     {
         // The parser is broken
         PANIC(contxt);
-
-        // Failure.
-        RCUR;
     }
+
+    // Failure.
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
@@ -215,14 +229,10 @@ entry_p m_trap(entry_p contxt)
         // Dummy.
         RNUM(1);
     }
-    else
-    {
-        // The parser is broken
-        PANIC(contxt);
 
-        // Failure.
-        RCUR;
-    }
+    // The parser is broken
+    PANIC(contxt);
+    RCUR;
 }
 
 //----------------------------------------------------------------------------
