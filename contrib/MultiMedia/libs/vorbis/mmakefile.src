@@ -1,4 +1,4 @@
-# Copyright 2009, The AROS Development Team. All rights reserved.
+# Copyright 2009-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -7,7 +7,13 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- development-libvorbis : development-libogg
 
+REPOSITORIES := http://downloads.xiph.org/releases/vorbis \
+ https://ftp.osuosl.org/pub/xiph/releases/vorbis \
+ http://mirror.csclub.uwaterloo.ca/xiph/releases/vorbis \
+ https://launchpad.net/vorbis/trunk/1.2.3/+download \
+ http://repository.timesys.com/buildsources/l/libvorbis/libvorbis-1.2.3
+
 %fetch_and_build_gnu_development package=libvorbis version=1.2.3 patch=yes \
-    package_repo=http://downloads.xiph.org/releases/vorbis/ \
+    package_repo="$(REPOSITORIES)" \
     extraoptions="libdir=$(AROS_LIB)"
 

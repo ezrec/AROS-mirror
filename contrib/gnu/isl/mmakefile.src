@@ -1,17 +1,19 @@
-# Copyright © 2015-2017, The AROS Development Team. All rights reserved.
+# Copyright © 2015-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
 ISL_VERSION=0.14
 ISL_PKGNAME := isl
-ISL_REPOSITORY :=  ftp://gcc.gnu.org/pub/gcc/infrastructure
+ISL_REPOSITORIES := ftp://gcc.gnu.org/pub/gcc/infrastructure \
+ http://isl.gforge.inria.fr \
+ https://mirror.sobukus.de/files/src/isl
 
 ISL_EXTRA_OPTS := \
         --without-piplib \
         --disable-shared
 
 %fetch_and_build mmake=contrib-gnu-isl package=$(ISL_PKGNAME) version=$(ISL_VERSION) \
-	package_repo="$(ISL_REPOSITORY)" \
-	patch=no  prefix=$(AROS_DEVELOPER) aros_prefix=/$(AROS_DIR_DEVELOPER) nix=yes \
+	package_repo="$(ISL_REPOSITORIES)" \
+	patch=no prefix=$(AROS_DEVELOPER) aros_prefix=/$(AROS_DIR_DEVELOPER) nix=yes \
 	extraoptions="$(ISL_EXTRA_OPTS)"
