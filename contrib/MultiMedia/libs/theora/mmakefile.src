@@ -1,4 +1,4 @@
-# Copyright 2011-2018, The AROS Development Team. All rights reserved.
+# Copyright 2011-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -7,7 +7,12 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- development-libtheora : development-libogg development-libvorbis
 
+REPOSITORIES := http://downloads.xiph.org/releases/theora \
+ https://ftp.osuosl.org/pub/xiph/releases/theora \
+ http://dlc-origin.openindiana.org/oi/jds/downloads/sources \
+ http://www.slackware.com/~alien/slackbuilds/vlc/build/sources
+
 %fetch_and_build_gnu_development package=libtheora version=1.1.1 patch=yes \
-    package_repo=http://downloads.xiph.org/releases/theora/ suffixes="tar.gz" \
+    package_repo="$(REPOSITORIES)" suffixes="tar.gz" \
     extraoptions="--disable-examples --libdir=$(AROS_LIB)" nlsflag=no xflag=no
 
