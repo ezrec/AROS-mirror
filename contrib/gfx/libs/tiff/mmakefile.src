@@ -1,4 +1,4 @@
-# Copyright © 2008, The AROS Development Team. All rights reserved.
+# Copyright © 2008-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -6,6 +6,11 @@ include $(SRCDIR)/config/aros-contrib.cfg
 ##MM- contrib-gfx-libs : contrib-gfx-libs-tiff
 #MM- contrib-gfx-libs-tiff : development-tiff
 
+REPOSITORIES := http://dl.maptools.org/dl/libtiff \
+ https://ftp.osuosl.org/pub/blfs/conglomeration/tiff \
+ https://download.osgeo.org/libtiff/old \
+ http://repository.timesys.com/buildsources/l/libtiff/tiff-3.8.2
+
 %fetch_and_build_gnu_development package=tiff version=3.8.2 patch=yes \
-    package_repo="ftp://ftp.remotesensing.org/pub/libtiff/" \
+    package_repo="$(REPOSITORIES)" \
     extraoptions="--disable-shared --disable-cxx --with-zlib-include-dir=$(AROS_INCLUDES) --with-zlib-lib-dir=$(AROS_LIBRARIES) --with-jpeg-include-dir=$(AROS_INCLUDES) --with-jpeg-lib-dir=$(AROS_LIBRARIES)"

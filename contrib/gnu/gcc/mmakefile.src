@@ -10,6 +10,10 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 GCC_VERSION     = $(TARGET_GCC_VER)
 
+REPOSITORIES := $(GNU_REPOSITORY)/gcc/gcc-$(GCC_VERSION) \
+ http://mirrors.ibiblio.org/gnu/ftp/gnu/gcc/gcc-$(GCC_VERSION) \
+ https://ftp.wayne.edu/gnu/gcc/gcc-$(GCC_VERSION)
+
 GCC_LANGUAGES:=c,c++
 ifneq (no-objc,$(OBJC_TARGET))
 GCC_LANGUAGES:=$(GCC_LANGUAGES),objc
@@ -71,7 +75,7 @@ endif
 # Rules to build the native GCC compiler.
 #
 %fetch_and_build_gnu_development package=gcc version=$(GCC_VERSION)  crossbuild=yes patch=yes \
-    package_repo="$(GNU_REPOSITORY)/gcc/gcc-$(GCC_VERSION)" \
+    package_repo="$(REPOSITORIES)" \
     config_env_extra=$(GCC_HOST_VARS) extraoptions=$(GCC_EXTRA_OPTS) \
     usecppflags=no targetisaflags= \
     postinstall=contrib-gnu-gcc-deletefixed

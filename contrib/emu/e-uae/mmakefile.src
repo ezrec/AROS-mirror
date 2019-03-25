@@ -1,3 +1,5 @@
+# Copyright © 1995-2019, The AROS Development Team. All rights reserved.
+# $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
@@ -7,11 +9,15 @@ PROGDIR := $(AROS_CONTRIB)/Emu/E-UAE
 PACKAGE := e-uae
 VERSION := 0.8.28
 PKG_VER := $(PACKAGE)-$(VERSION)
+REPOSITORIES := http://www.rcdrummond.net/uae/$(PKG_VER) \
+ http://dl.t2-project.org/mirror/6.0/e \
+ http://mirror.sobukus.de/files/grimoire/games-emulators \
+ https://ftp.gwdg.de/pub/linux/openmoko/sources
 
 %fetch_and_build mmake=contrib-euae \
 	prefix=$(PROGDIR) \
 	package=$(PACKAGE) version=$(VERSION) patch=yes \
-	package_repo=http://www.rcdrummond.net/uae/$(PKG_VER) \
+	package_repo="$(REPOSITORIES)" \
 	extraoptions="--includedir=$(AROS_INCLUDES) --with-zlib=$(AROS_DEVELOPER)" \
 	postinstall=euae-copy-files
 

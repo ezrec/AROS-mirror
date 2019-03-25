@@ -1,10 +1,17 @@
+# Copyright © 1995-2019, The AROS Development Team. All rights reserved.
+# $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- contrib-development : contrib-libxslt
 #MM- contrib-libxslt : development-libxml2 development-libxslt
 
+REPOSITORIES := http://xmlsoft.org/sources \
+ http://ftp.devil-linux.org/pub/devel/sources/1.2 \
+ https://ftp.osuosl.org/pub/blfs/conglomeration/libxslt \
+ http://files.directadmin.com/services/custombuild
+
 %fetch_and_build_gnu_development package=libxslt version=1.1.24 \
-    patch="yes" suffixes="tar.gz" package_repo="http://xmlsoft.org/sources" \
+    patch="yes" suffixes="tar.gz" package_repo="$(REPOSITORIES)" \
     extraoptions="--without-crypto --without-plugins --with-libxml-prefix=$(AROS_DEVELOPER) --with-libxml-include-prefix=$(AROS_INCLUDES)/libxml2 --with-libxml-libs-prefix=$(AROS_DEVELOPER)/lib --without-python --libdir=$(AROS_LIB)"
 

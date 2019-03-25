@@ -137,6 +137,8 @@ OOP_Object *GAYLEATA__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_New *
         //OOP_MethodID mDispose;
 
         data->bus = bus;
+        /* Signal structure ownership */
+        data->bus->atapb_Node.ln_Succ = (struct Node *)-1;
         data->gaylebase = data->bus->port;
         data->gayleirqbase = data->bus->gayleirqbase;
         ata_CreateGayleInterrupt(data, 0);
@@ -211,21 +213,24 @@ void GAYLEATA__Root__Set(OOP_Class *cl, OOP_Object *o, struct pRoot_Set *msg)
             break;
         }
     }
+
+    OOP_DoSuperMethod(cl, o, &msg->mID);
 }
 
 APTR GAYLEATA__Hidd_ATABus__GetPIOInterface(OOP_Class *cl, OOP_Object *o, OOP_Msg msg)
 {
     struct ATA_BusData *data = OOP_INST_DATA(cl, o);
-    struct pio_data *pio = (struct pio_data *)OOP_DoSuperMethod(cl, o, msg);
-    
+    struct pio_data *pio;
+
     D(bug("[ATA:Gayle] %s()\n", __func__);)
 
+    pio = (struct pio_data *)OOP_DoSuperMethod(cl, o, msg);
     if (pio)
     {
         pio->port = data->bus->port;
         pio->altport  = data->bus->altport;
         pio->dataport = (UBYTE*)(((ULONG)pio->port) & ~3);
-     }
+    }
 
     return pio;
 }

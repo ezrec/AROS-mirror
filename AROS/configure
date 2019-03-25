@@ -664,9 +664,6 @@ aros_nominal_depth
 aros_nominal_height
 aros_nominal_width
 pci_hidd_target
-host_android_gfx
-host_sdl_gfx
-host_x_gfx
 crosstools_cxx_target
 crosstools_target
 aros_isa_flags
@@ -694,7 +691,6 @@ aros_config_cflags
 aros_config_cppflags
 aros_nowarn_flags
 aros_warn_flags
-aros_config_sysroot
 aros_shared_ldflags
 aros_shared_aflags
 aros_shared_cflags
@@ -728,6 +724,7 @@ aros_target_arch
 aros_target_bootloader
 aros_target_iconset
 aros_target_guitheme
+aros_target_options
 target_extra_cfg
 make_extra_targetcfg
 make_extra_commands
@@ -751,6 +748,8 @@ aros_host_cpp
 aros_host_cpu
 aros_host_arch
 aros_cc_pre
+host_extra_cfg
+host_stat_h__unused_used
 aros_amigaos_compliance
 AROS_PORTSSRCDIR
 AROS_CROSSTOOLSDIR
@@ -6534,6 +6533,45 @@ fi
 
 done
 
+for ac_header in GL/glx.h
+do :
+  ac_fn_c_check_header_mongrel "$LINENO" "GL/glx.h" "ac_cv_header_GL_glx_h" "$ac_includes_default"
+if test "x$ac_cv_header_GL_glx_h" = xyes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_GL_GLX_H 1
+_ACEOF
+ host_feature_glx=yes
+else
+  host_feature_glx=no
+fi
+
+done
+
+
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking if __unused conflicts with sys/stat.h" >&5
+$as_echo_n "checking if __unused conflicts with sys/stat.h... " >&6; }
+cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+     #define __unused __attribute__((unused))
+     #include <sys/stat.h>
+
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"; then :
+  host_stat_h__unused_used=no
+else
+  host_stat_h__unused_used=yes
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $host_stat_h__unused_used" >&5
+$as_echo "$host_stat_h__unused_used" >&6; }
 
 ac_header_dirent=no
 for ac_hdr in dirent.h sys/ndir.h sys/dir.h ndir.h; do
@@ -7517,8 +7555,6 @@ aros_nowarn_flags="NOWARN_UNUSED_COMMAND_LINE_ARGUMENT NOWARN_UNKNOWN_WARNING_OP
 export_newline="
 "
 
-toolchain_needs_sysroot=no
-
 aros_elf_translate=
 aros_warn_flags=
 aros_isa_extra=
@@ -7560,11 +7596,6 @@ ignore_undefined_symbols=""
 
 # Check for X11 by default
 need_x11="auto"
-
-host_x_gfx=no
-host_sdl_gfx=no
-host_android_gfx=no
-
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking Which toolchain family to use ..." >&5
 $as_echo_n "checking Which toolchain family to use ...... " >&6; }
@@ -7614,7 +7645,6 @@ use_ld_wrapper=yes
 
 case "$aros_toolchain" in
     *llvm*)
-        # toolchain_needs_sysroot=yes
         toolchain_c_compiler="clang"
         toolchain_cxx_compiler="clang++"
         toolchain_cpp_preprocessor="clang -E"
@@ -8189,6 +8219,8 @@ fi
 $as_echo "$aros_android_antapk" >&6; }
 
     target_extra_cfg+="$export_newline""# Android$export_newline""AROS_ANDROID_ANTAPK           := $aros_android_antapk$export_newline"
+    host_extra_cfg+="$export_newline""# Android-specific$export_newline""ANDROID                       := $android_tool$export_newline""ANT		                      := $ant$export_newline"
+    aros_target_options+="$export_newline""# Enable Android Gfx Driver$export_newline""OPT_HOST_ANDROIDGFX           := yes$export_newline"
 
         if test "$host_os" = "mingw32"; then
         android_tool="cmd //c $android_tool"
@@ -8379,7 +8411,6 @@ case "$target_os" in
                     aros_kernel_includes="-isystem $aros_android_ndk/usr/include"
                 fi
                 need_x11=no
-                host_android_gfx=yes
                 # Disable implicit PIC mode
                 aros_config_cflags="$aros_config_cflags -fno-pic"
                 kernel_tool_prefix="$android_tool_prefix-"
@@ -9005,7 +9036,6 @@ esac
 #-----------------------------------------------------------------------------
 crosstools_guess="yes"
 aros_target_toolchain="no"
-aros_config_sysroot=""
 aros_kernel_sysroot=""
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking Kernel toolchain prefix" >&5
@@ -9084,23 +9114,13 @@ else
     AROS_CROSSTOOLSDIR="$aros_toolchain_install"
     PATH="$AROS_CROSSTOOLSDIR:$PATH"
     if test "$crosstools_guess" = "no" ; then
-        toolchain_needs_sysroot=yes
-
         if test "x-$aros_flavour" != "x-emulation" -a "x-$aros_flavour" != "x-emulcompat" ; then
-            aros_kernel_sysroot = $aros_config_sysroot
+            aros_kernel_sysroot="$""(TARGET_SYSROOT)"
         fi
     fi
 fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $AROS_CROSSTOOLSDIR" >&5
 $as_echo "$AROS_CROSSTOOLSDIR" >&6; }
-
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking If we need to use --sysroot" >&5
-$as_echo_n "checking If we need to use --sysroot... " >&6; }
-if test "$toolchain_needs_sysroot" = "yes" ; then
-    aros_config_sysroot="--sysroot $AROS_BUILDDIR_UNIX/bin/${aros_target_arch}-${aros_target_cpu}${aros_target_suffix}/AROS/Developer"
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $toolchain_needs_sysroot" >&5
-$as_echo "$toolchain_needs_sysroot" >&6; }
 
 #-----------------------------------------------------------------------------
 if test "$aros_toolchain" = "gnu" ; then
@@ -14535,7 +14555,10 @@ fi
             fi
 
         else
-                        host_x_gfx=yes
+                        aros_target_options+="$export_newline""# Enable X11 Gfx Driver$export_newline""OPT_HOST_X11GFX               := yes$export_newline"
+            if test "x-$host_feature_glx" != "x-no" ; then
+                aros_target_options+="$export_newline""# Enable X11 HostGL 3D Passthrough$export_newline""OPT_HOST_X11_HOSTGL           := yes$export_newline"
+            fi
             ENABLE_X11=1
 
             aros_host_x11_cflags="$X_CFLAGS"
@@ -14994,7 +15017,7 @@ rm -f core conftest.err conftest.$ac_objext \
             fi
 
         else
-                        host_sdl_gfx=yes
+                        aros_target_options+="$export_newline""# Enable SDL Gfx Driver$export_newline""OPT_HOST_SDLGFX               := yes$export_newline"
             aros_host_sdl_cflags=$SDL_CFLAGS
             aros_host_sdl_libs=$SDL_LIBS
         fi
@@ -15060,6 +15083,8 @@ fi
 
 
 # Host related
+
+
 
 
 
@@ -15171,10 +15196,6 @@ fi
 
 
 
-
-
-
-# Hosted Graphics Related
 
 
 

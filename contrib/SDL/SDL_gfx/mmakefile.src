@@ -1,4 +1,4 @@
-# Copyright © 2004-2018, The AROS Development Team. All rights reserved.
+# Copyright © 2004-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -21,7 +21,9 @@ USER_INCLUDES := -I$(AROS_CONTRIB_INCLUDES)
 USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
 REPOSITORIES := http://www.ferzkopp.net/Software/SDL_gfx-2.0 \
- ftp://ftp.netbsd.org/pub/pkgsrc/distfiles
+ http://ftp.sleepgate.ru/pub/pub/FreeBSD/ports/distfiles \
+ https://mirror.sobukus.de/files/grimoire/libs \
+ http://bbgentoo.ilb.ru/distfiles
 
 %fetch_and_build_gnu_development package=SDL_gfx version=2.0.22 patch=no \
      package_repo=$(REPOSITORIES) \

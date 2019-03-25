@@ -1,4 +1,4 @@
-# Copyright 2009-2018, The AROS Development Team. All rights reserved.
+# Copyright 2009-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
@@ -9,6 +9,12 @@ EXTRAOPTS := --disable-doxygen-docs --disable-xmms-plugin --disable-valgrind-tes
 
 USER_LDFLAGS := -static-libstdc++
 
+REPOSITORIES := http://downloads.xiph.org/releases/flac \
+ https://ftp.osuosl.org/pub/xiph/releases/flac \
+ http://mirror.sobukus.de/files/grimoire/audio-libs \
+ https://download.videolan.org/videolan/testing/contrib/flac \
+ http://meanwhile.dreamhost.com/pub/blfs/conglomeration/flac
+
 %fetch_and_build_gnu_development package=flac version=1.3.2 patch=yes \
-    package_repo=http://downloads.xiph.org/releases/flac/ suffixes="tar.xz" \
+    package_repo="$(REPOSITORIES)" suffixes="tar.xz" \
     extraoptions=$(EXTRAOPTS) nlsflag=no xflag=no

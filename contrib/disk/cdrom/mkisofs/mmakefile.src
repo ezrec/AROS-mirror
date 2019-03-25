@@ -1,10 +1,15 @@
-# Copyright © 2009-2017, The AROS Development Team. All rights reserved.
+# Copyright © 2009-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- disk-cdrom : disk-cdrom-mkisofs
 
+REPOSITORIES := ftp://ftp.gwdg.de/pub/misc/cdrecord/mkisofs/old \
+ https://ftp.gnu.org/old-gnu/isofsmk \
+ http://ftp.gnu.org.ua/old-gnu/isofsmk \
+ https://ftp.icm.edu.pl/packages/cdrtools/mkisofs/old
+
 %fetch_and_build_gnu mmake=disk-cdrom-mkisofs package=mkisofs version=1.11.3 \
 	patch=yes prefix=$(AROS_DEVELOPER) aros_prefix=/$(AROS_DIR_DEVELOPER) \
-	package_repo=ftp://ftp.gwdg.de/pub/misc/cdrecord/mkisofs/old/
+	package_repo="$(REPOSITORIES)"

@@ -544,6 +544,17 @@ AC_CHECK_HEADERS([sys/ipc.h sys/shm.h \
 ])
 
 AC_CHECK_HEADERS([sys/mount.h],,,[#include <sys/param.h>])
+AC_CHECK_HEADERS([GL/glx.h],[host_feature_glx=yes],[host_feature_glx=no],)
+
+AC_MSG_CHECKING([if __unused conflicts with sys/stat.h])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM(
+     [[
+     #define __unused __attribute__((unused))
+     #include <sys/stat.h>
+     ]])],
+     [host_stat_h__unused_used=no],
+     [host_stat_h__unused_used=yes])
+AC_MSG_RESULT($host_stat_h__unused_used)
 
 AC_HEADER_DIRENT
 AC_HEADER_STAT
@@ -654,8 +665,6 @@ aros_nowarn_flags="NOWARN_UNUSED_COMMAND_LINE_ARGUMENT NOWARN_UNKNOWN_WARNING_OP
 export_newline="
 "
 
-toolchain_needs_sysroot=no
-
 aros_elf_translate=
 aros_warn_flags=
 aros_isa_extra=
@@ -698,11 +707,6 @@ ignore_undefined_symbols=""
 # Check for X11 by default
 need_x11="auto"
 
-host_x_gfx=no
-host_sdl_gfx=no
-host_android_gfx=no
-
-
 AC_MSG_CHECKING([Which toolchain family to use ...])
 AC_ARG_WITH(toolchain,AC_HELP_STRING([--with-toolchain=family],[Which toolchain family to crosscompile with (defaults to gnu)]),aros_toolchain="$withval",aros_toolchain="$default_toolchain_family")
 AC_MSG_RESULT($aros_toolchain)
@@ -728,7 +732,6 @@ use_ld_wrapper=yes
 
 case "$aros_toolchain" in
     *llvm*)
-        # toolchain_needs_sysroot=yes
         toolchain_c_compiler="clang"
         toolchain_cxx_compiler="clang++"
         toolchain_cpp_preprocessor="clang -E"
@@ -1010,6 +1013,8 @@ ios)
     AC_MSG_RESULT($aros_android_antapk)
 
     target_extra_cfg+="$export_newline""# Android$export_newline""AROS_ANDROID_ANTAPK           := $aros_android_antapk$export_newline"
+    host_extra_cfg+="$export_newline""# Android-specific$export_newline""ANDROID                       := $android_tool$export_newline""ANT		                      := $ant$export_newline"
+    aros_target_options+="$export_newline""# Enable Android Gfx Driver$export_newline""OPT_HOST_ANDROIDGFX           := yes$export_newline"
 
     dnl MSYS bash can't run .bat files directly, then need to be started via cmd.exe
     if test "$host_os" = "mingw32"; then
@@ -1205,7 +1210,6 @@ case "$target_os" in
                     aros_kernel_includes="-isystem $aros_android_ndk/usr/include"
                 fi
                 need_x11=no
-                host_android_gfx=yes
                 # Disable implicit PIC mode
                 aros_config_cflags="$aros_config_cflags -fno-pic"
                 kernel_tool_prefix="$android_tool_prefix-"
@@ -1831,7 +1835,6 @@ esac
 #-----------------------------------------------------------------------------
 crosstools_guess="yes"
 aros_target_toolchain="no"
-aros_config_sysroot=""
 aros_kernel_sysroot=""
 
 AC_MSG_CHECKING([Kernel toolchain prefix])
@@ -1875,20 +1878,12 @@ else
     AROS_CROSSTOOLSDIR="$aros_toolchain_install"
     PATH="$AROS_CROSSTOOLSDIR:$PATH"
     if test "$crosstools_guess" = "no" ; then
-        toolchain_needs_sysroot=yes
-
         if test "x-$aros_flavour" != "x-emulation" -a "x-$aros_flavour" != "x-emulcompat" ; then
-            aros_kernel_sysroot = $aros_config_sysroot
+            aros_kernel_sysroot="$""(TARGET_SYSROOT)"
         fi
     fi
 fi
 AC_MSG_RESULT($AROS_CROSSTOOLSDIR)
-
-AC_MSG_CHECKING([If we need to use --sysroot])
-if test "$toolchain_needs_sysroot" = "yes" ; then
-    aros_config_sysroot="--sysroot $AROS_BUILDDIR_UNIX/bin/${aros_target_arch}-${aros_target_cpu}${aros_target_suffix}/AROS/Developer"
-fi
-AC_MSG_RESULT($toolchain_needs_sysroot)
 
 #-----------------------------------------------------------------------------
 if test "$aros_toolchain" = "gnu" ; then
@@ -2793,7 +2788,10 @@ if test "x-$aros_flavour" = "x-emulation" -o "x-$aros_flavour" = "x-emulcompat" 
         
         else
             dnl found it, setup the metatarget
-            host_x_gfx=yes
+            aros_target_options+="$export_newline""# Enable X11 Gfx Driver$export_newline""OPT_HOST_X11GFX               := yes$export_newline"
+            if test "x-$host_feature_glx" != "x-no" ; then
+                aros_target_options+="$export_newline""# Enable X11 HostGL 3D Passthrough$export_newline""OPT_HOST_X11_HOSTGL           := yes$export_newline"
+            fi
             ENABLE_X11=1
 
             aros_host_x11_cflags="$X_CFLAGS"
@@ -2912,7 +2910,7 @@ if test "x-$aros_flavour" = "x-emulation" -o "x-$aros_flavour" = "x-emulcompat" 
 
         else
             dnl found it, enable the build
-            host_sdl_gfx=yes
+            aros_target_options+="$export_newline""# Enable SDL Gfx Driver$export_newline""OPT_HOST_SDLGFX               := yes$export_newline"
             aros_host_sdl_cflags=$SDL_CFLAGS
             aros_host_sdl_libs=$SDL_LIBS
         fi
@@ -2972,6 +2970,8 @@ AC_SUBST(AROS_PORTSSRCDIR)
 AC_SUBST(aros_amigaos_compliance)
 
 # Host related
+AC_SUBST(host_stat_h__unused_used)
+AC_SUBST(host_extra_cfg)
 AC_SUBST(aros_cc_pre)
 AC_SUBST(aros_host_strip)
 AC_SUBST(aros_host_arch)
@@ -3006,6 +3006,7 @@ AC_SUBST(aros_elf_translate)
 AC_SUBST(make_extra_commands)
 AC_SUBST(make_extra_targetcfg)
 AC_SUBST(target_extra_cfg)
+AC_SUBST(aros_target_options)
 
 AC_SUBST(aros_target_guitheme)
 AC_SUBST(aros_target_iconset)
@@ -3055,7 +3056,6 @@ AC_SUBST(aros_shared_cflags)
 AC_SUBST(aros_shared_aflags)
 AC_SUBST(aros_shared_ldflags)
 
-AC_SUBST(aros_config_sysroot)
 AC_SUBST(aros_warn_flags)
 AC_SUBST(aros_nowarn_flags)
 AC_SUBST(aros_config_cppflags)
@@ -3086,10 +3086,6 @@ AC_SUBST(aros_isa_flags)
 AC_SUBST(crosstools_target)
 AC_SUBST(crosstools_cxx_target)
 
-# Hosted Graphics Related
-AC_SUBST(host_x_gfx)
-AC_SUBST(host_sdl_gfx)
-AC_SUBST(host_android_gfx)
 
 AC_SUBST(pci_hidd_target)
 
