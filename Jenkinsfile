@@ -27,6 +27,7 @@ def killall_jobs() {
 		slackSend color: "danger", channel: "#aros", message: "Killing task ${env.JOB_NAME} #${build.getNumber().toInteger()} in favor of #${buildnum}, ignore following failed builds for #${build.getNumber().toInteger()}"
 		build.doStop();
 	}
+	echo "Done killing"
 }
 
 def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') {
@@ -126,7 +127,7 @@ def postCoreBuild(ext) {
 	sh "cp -fvr ports AROS/"
 }
 
-node('master') {
+node {
 	killall_jobs()
 	slackSend color: "good", channel: "#jenkins", message: "Build Started: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
 	parallel (
