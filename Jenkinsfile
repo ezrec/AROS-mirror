@@ -23,7 +23,7 @@ def killall_jobs() {
 		
 		def killbuildnum = build.getNumber().toInteger()
 		echo "Kill task = ${build}"
-		slackSend color: "danger", channel: "#aros", message: "Killing task ${env.JOB_NAME} #${killbuildnum} in favor of #${buildnum}, ignore following failed builds for #{killbuildnum}"
+		slackSend color: "danger", channel: "#aros", message: "Killing task ${env.JOB_NAME} #${killbuildnum} in favor of #${buildnum}, ignore following failed builds for #${killbuildnum}"
 		build.doStop();
 	}
 }
