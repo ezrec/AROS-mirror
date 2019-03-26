@@ -125,7 +125,7 @@ def postCoreBuild(ext) {
 	sh "cp -fvr ports AROS/"
 }
 
-node {
+node('master') {
 	killall_jobs()
 	slackSend color: "good", channel: "#jenkins", message: "Build Started: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
 	parallel (
