@@ -15,15 +15,15 @@ def notify(status){
 def killall_jobs() {
 	def jobname = env.JOB_NAME
 	def buildnum = env.BUILD_NUMBER.toInteger()
-	def killbuildnum = 0
+
 	def job = Jenkins.instance.getItemByFullName(jobname)
 	for (build in job.builds) {
 		if (!build.isBuilding()) { continue; }
 		if (buildnum == build.getNumber().toInteger()) { continue; println "equals" }
 		
-		killbuildnum = build.getNumber().toInteger()
+
 		echo "Kill task = ${build}"
-		slackSend color: "danger", channel: "#aros", message: "Killing task ${env.JOB_NAME} #${killbuildnum} in favor of #${buildnum}, ignore following failed builds for #${killbuildnum}"
+		slackSend color: "danger", channel: "#aros", message: "Killing task ${env.JOB_NAME} #${build.getNumber().toInteger()} in favor of #${buildnum}, ignore following failed builds for #${build.getNumber().toInteger()}"
 		build.doStop();
 	}
 }
