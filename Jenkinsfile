@@ -21,6 +21,7 @@ def killall_jobs() {
 	for (build in job.builds) {
 		if (!build.isBuilding()) { continue; }
 		if (buildnum == build.getNumber().toInteger()) { continue; println "equals" }
+		if (buildnum < build.getNumber().toInteger()) { continue; println "newer" }
 		
 		echo "Kill task = ${build}"
 		
