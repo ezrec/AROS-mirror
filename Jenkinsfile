@@ -12,6 +12,19 @@ def notify(status){
 	)
 }
 
+def killall_jobs() {
+	def jobname = env.JOB_NAME
+	def buildnum = env.BUILD_NUMBER.toInteger()
+
+	def job = Jenkins.instance.getItemByFullName(jobname)
+	for (build in job.builds) {
+		if (!build.isBuilding()) { continue; }
+		if (buildnum == build.getNumber().toInteger()) { continue; println "equals" }
+		echo "Kill task = ${build}"
+		build.doStop();
+	}
+}
+
 def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') {
 	try{
 		stage("Building ${ext} with gcc ${gccver} and binutils ${binutilsver}...") {
@@ -110,6 +123,7 @@ def postCoreBuild(ext) {
 }
 
 node {
+	killall_jobs()
 	slackSend color: "good", channel: "#jenkins", message: "Build Started: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
 	parallel (
 		'Build Amiga 68k version - GCC 8.3.0 - Binutils 2.32': {
