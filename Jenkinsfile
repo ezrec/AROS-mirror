@@ -44,6 +44,7 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') 
 			if (!env.CHANGE_ID) {
 				sh "mkdir -p publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
 				sh "echo '${ext}-${gccver}-${binutilsver},' > publishing/deploy/aros/TARGETS"
+				sh "echo '${env.BUILD_NUMBER}' > publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/BUILD"
 				sh "cp -fvr build-${ext}-${gccver}-${binutilsver}/distfiles/* publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
 				sh "cp -pRL AROS/LICENSE publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
 				sh "cp -pRL AROS/ACKNOWLEDGEMENTS publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
@@ -57,7 +58,7 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') 
 				sh "scp publishing/deploy/STABLE $DEPLOYHOST:~/public_html/downloads/releases/aros/"
 			} else if (env.BRANCH_NAME.equals('ABI_V1')) {
 				def deploy_url = sh (
-				    script: 'echo "/downloads/nightly/aros/`date +\'%Y\'`/`date +\'%m\'`/`date +\'%d\'`/"',
+				    script: 'echo "nightly/aros/`date +\'%Y\'`/`date +\'%m\'`/`date +\'%d\'`/"',
 				    returnStdout: true
 				).trim()
 				sh "date +'%Y-%m-%d %H:%M:%S' > publishing/deploy/BUILDTIME"
@@ -65,10 +66,10 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') 
 				sh "scp -r publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
 				sh "scp publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros/"
 
-				slackSend color: "good", channel: "#aros", message: "Deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} to web (<https://www.eevul.net/${deploy_url}|https://www.eevul.net/${deploy_url}>)"
+				slackSend color: "good", channel: "#aros", message: "Deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} to web (<https://dl.amigadev.com/${deploy_url}|https://dl.amigadev.com/${deploy_url}>)"
 			} else if (env.BRANCH_NAME.equals('ABI_V1_experimental')) {
 				def deploy_url = sh (
-				    script: 'echo "/downloads/nightly/aros-experimental/`date +\'%Y\'`/`date +\'%m\'`/`date +\'%d\'`/"',
+				    script: 'echo "nightly/aros-experimental/`date +\'%Y\'`/`date +\'%m\'`/`date +\'%d\'`/"',
 				    returnStdout: true
 				).trim()
 				sh "date +'%Y-%m-%d %H:%M:%S' > publishing/deploy/BUILDTIME"
@@ -76,7 +77,7 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') 
 				sh "scp -r publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros-experimental/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
 				sh "scp publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros-experimental/"
 
-				slackSend color: "good", channel: "#aros", message: "Deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} to web (<https://www.eevul.net/${deploy_url}|https://www.eevul.net/${deploy_url}>)"
+				slackSend color: "good", channel: "#aros", message: "Deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} to web (<https://dl.amigadev.com/${deploy_url}|https://dl.amigadev.com/${deploy_url}>)"
 			} else {
 				slackSend color: "good", channel: "#aros", message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} successful!"
 			}
