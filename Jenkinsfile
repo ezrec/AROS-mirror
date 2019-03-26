@@ -16,17 +16,19 @@ def notify(status){
 def killall_jobs() {
 	def jobname = env.JOB_NAME
 	def buildnum = env.BUILD_NUMBER.toInteger()
-
+	def killnums = ""
 	def job = Jenkins.instance.getItemByFullName(jobname)
 	for (build in job.builds) {
 		if (!build.isBuilding()) { continue; }
 		if (buildnum == build.getNumber().toInteger()) { continue; println "equals" }
 		
-
 		echo "Kill task = ${build}"
-		slackSend color: "danger", channel: "#aros", message: "Killing task ${env.JOB_NAME} #${build.getNumber().toInteger()} in favor of #${buildnum}, ignore following failed builds for #${build.getNumber().toInteger()}"
+		
+		killnums += "#" + build.getNumber().toInteger() + ", "
+		
 		build.doStop();
 	}
+	slackSend color: "danger", channel: "#aros", message: "Killing task(s) ${env.JOB_NAME} ${killnums} in favor of #${buildnum}, ignore following failed builds for ${killnums}"
 	echo "Done killing"
 }
 
@@ -127,7 +129,7 @@ def postCoreBuild(ext) {
 	sh "cp -fvr ports AROS/"
 }
 
-node {
+node('master') {
 	killall_jobs()
 	slackSend color: "good", channel: "#jenkins", message: "Build Started: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
 	parallel (
