@@ -1,5 +1,5 @@
 /*
-    Copyright © 2003-2011, The AROS Development Team. All rights reserved.
+    Copyright © 2003-2019, The AROS Development Team. All rights reserved.
     This file is part of the About program, which is distributed under
     the terms of version 2 of the GNU General Public License.
     
@@ -38,7 +38,7 @@
 #include "sponsors.h"
 #include "acknowledgements.h"
 
-#define VERSION "$VER: AboutAROS 0.1 ("ADATE") ©AROS Dev Team"
+#define VERSION "$VER: AboutAROS 0.2 ("ADATE") ©AROS Dev Team"
 
 #define WINDOW_BG   ((IPTR) "2:00000000,00000000,00000000")
 #define REGISTER_BG ((IPTR) "7:V,00000000,92000000,91000000-00000000,82000000,81000000")
@@ -298,16 +298,27 @@ Object *AboutAROS__OM_NEW(Class *CLASS, Object *self, struct opSet *message)
                         MUIA_Text_Contents, (IPTR) str_builddate,
                         MUIA_Weight,               0,
                     End,
-#ifdef SVNREV
+                    Child, (IPTR) HVSpace,
+                End,
+#ifdef REPOTYPE
+                Child, (IPTR) HGroup,
+                    InnerSpacing(0,0),
+                    GroupSpacing(0),
+
                     Child, (IPTR) TextObject,
-                        MUIA_Font,                 MUIV_Font_Big,
                         MUIA_Text_PreParse, (IPTR) "\0333\033b",
-                        MUIA_Text_Contents, (IPTR) "SVN: " SVNREV,
+                        MUIA_Text_Contents, (IPTR) "" REPOTYPE " ID: " REPOREVISION,
+                        MUIA_Weight,               0,
+                    End,
+#ifdef REPOID
+                    Child, (IPTR) TextObject,
+                        MUIA_Text_PreParse, (IPTR) "\0333\033b",
+                        MUIA_Text_Contents, (IPTR) "(" REPOID ")",
                         MUIA_Weight,               0,
                     End,
 #endif
-                    Child, (IPTR) HVSpace,
                 End,
+#endif
                 Child, (IPTR) VSpace(4),
                 Child, (IPTR) TextObject,
                     MUIA_Text_PreParse, (IPTR) "\0333\033c",
