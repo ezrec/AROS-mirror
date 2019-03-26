@@ -29,7 +29,10 @@ def killall_jobs() {
 		
 		build.doStop();
 	}
-	slackSend color: "danger", channel: "#aros", message: "Killing task(s) ${env.JOB_NAME} ${killnums} in favor of #${buildnum}, ignore following failed builds for ${killnums}"
+	
+	if (killnums != "") {
+		slackSend color: "danger", channel: "#aros", message: "Killing task(s) ${env.JOB_NAME} ${killnums} in favor of #${buildnum}, ignore following failed builds for ${killnums}"
+	}
 	echo "Done killing"
 }
 
