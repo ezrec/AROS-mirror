@@ -44,7 +44,7 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0', 
 				echo 'Trying to build pull request'
 			}
 
-			def commondir = env.JENKINS_HOME + '/' + env.JOB_NAME + '/'
+			def commondir = env.WORKSPACE + '/../' + env.JOB_NAME + '/'
 
 			checkout scm
 
@@ -128,7 +128,7 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0', 
 }
 
 def freshUpRoot(ext, binutilsver, gccver) {
-	def commondir = env.JENKINS_HOME + '/' + env.JOB_NAME + '/'
+	def commondir = env.WORKSPACE + '/../' + env.JOB_NAME + '/'
 	sh "rm -rfv ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver}/distfiles/*"
 	// uncomment the following section to remove the whole toolchain and build: 
 	// sh "rm -rfv ${commondir}/tools/tools-${ext}-${gccver}-${binutilsver}"
