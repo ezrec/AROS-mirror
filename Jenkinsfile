@@ -36,7 +36,7 @@ def killall_jobs() {
 	echo "Done killing"
 }
 
-def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') {
+def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0', nativetarget = true) {
 	try{
 		stage("Building ${ext} with gcc ${gccver} and binutils ${binutilsver}...") {
 			properties([pipelineTriggers([githubPush()])])
@@ -61,6 +61,10 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') 
 
 			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make"
 
+			if (!nativetarget) {
+				sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make default-x11keymaptable"
+			}
+
 			postCoreBuild(ext)
 
 			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make contrib-installerlg"
@@ -69,12 +73,19 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') 
 
 			if (!env.CHANGE_ID) {
 				sh "mkdir -p ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
-				sh "echo '${ext}-${gccver}-${binutilsver},' > ${env.WORKSPACE}/publishing/deploy/aros/TARGETS"
 				sh "echo '${env.BUILD_NUMBER}' > ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/BUILD"
-				sh "cp -fvr ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver}/distfiles/* ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
 				sh "cp -pRL ${env.WORKSPACE}/AROS/LICENSE ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
 				sh "cp -pRL ${env.WORKSPACE}/AROS/ACKNOWLEDGEMENTS ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
-				sh "rm -rfv ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/*.elf"
+
+				if (nativetarget) {					
+					sh "cp -fvr ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver}/distfiles/* ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
+
+					//sh "rm -rfv ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/*.elf" // Can't remember what this is good for...
+				} else {
+					sh "cp -fvr ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver}/bin/${ext}/AROS ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
+					sh "cd ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/ && tar -Jcvvf ${ext}-hosted.tar.xz *"
+					sh "rm -fvr ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/AROS"
+				}
 			}
 
 			if (env.TAG_NAME) {
@@ -152,7 +163,7 @@ node('master') {
 		},
 		'Build Linux Hosted x86_64 version - GCC 8.3.0 - Binutils 2.32': {
 			node {			
-				buildStep('linux-x86_64', 'default', '2.32', '8.3.0')
+				buildStep('linux-x86_64', 'default', '2.32', '8.3.0', false)
 			}
 		}
 	)
