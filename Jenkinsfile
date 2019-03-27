@@ -44,6 +44,8 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') 
 				echo 'Trying to build pull request'
 			}
 
+			def commondir = ${env.JENKINS_HOME} + '/' + ${env.JOB_NAME} + '/'
+
 			checkout scm
 
 			if (!env.CHANGE_ID) {
@@ -55,7 +57,7 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') 
 
 			freshUpRoot(ext, binutilsver, gccver)
 
-			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && ${env.WORKSPACE}/AROS/configure --target=${ext} --enable-ccache --with-iconset=${iconset} --enable-build-type=nightly --with-serial-debug --with-binutils-version=${binutilsver} --with-gcc-version=${gccver} --with-aros-toolchain-install=${env.WORKSPACE}/tools-${ext}-${gccver}-${binutilsver} --with-portssources=${env.WORKSPACE}/externalsources"
+			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && ${env.WORKSPACE}/AROS/configure --target=${ext} --enable-ccache --with-iconset=${iconset} --enable-build-type=nightly --with-serial-debug --with-binutils-version=${binutilsver} --with-gcc-version=${gccver} --with-aros-toolchain-install=${commondir}/tools/tools-${ext}-${gccver}-${binutilsver} --with-portssources=${commondir}/externalsources"
 
 			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make"
 
@@ -115,17 +117,18 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') 
 }
 
 def freshUpRoot(ext, binutilsver, gccver) {
+	def commondir = ${env.JENKINS_HOME} + '/' + ${env.JOB_NAME} + '/'
 	sh "rm -rfv ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver}/distfiles/*"
 	// uncomment the following section to remove the whole toolchain and build: 
-	// sh "rm -rfv ${env.WORKSPACE}/tools"
-	// sh "rm -rfv ${env.WORKSPACE}/build-$ext/*"
+	// sh "rm -rfv ${commondir}/tools/tools-${ext}-${gccver}-${binutilsver}"
+	// sh "rm -rfv ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver}/*"
 	// end of section
 	sh "rm -rfv ${env.WORKSPACE}/AROS/contrib"
 	sh "rm -rfv ${env.WORKSPACE}/AROS/ports"
-
+	
 	sh "mkdir -p ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver}"
-  	sh "mkdir -p ${env.WORKSPACE}/externalsources"
-	sh "mkdir -p ${env.WORKSPACE}/tools-${ext}-${gccver}-${binutilsver}"
+	sh "mkdir -p ${commondir}/externalsources"
+	sh "mkdir -p ${commondir}/tools/tools-${ext}-${gccver}-${binutilsver}"
 }
 
 def postCoreBuild(ext) {
