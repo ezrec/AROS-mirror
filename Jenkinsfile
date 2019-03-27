@@ -55,7 +55,7 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') 
 
 			freshUpRoot(ext, binutilsver, gccver)
 
-			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && ../AROS/configure --target=${ext} --enable-ccache --with-iconset=${iconset} --enable-build-type=nightly --with-serial-debug --with-binutils-version=${binutilsver} --with-gcc-version=${gccver} --with-aros-toolchain-install=${env.WORKSPACE}/tools-${ext}-${gccver}-${binutilsver} --with-portssources=${env.WORKSPACE}/externalsources"
+			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && ${env.WORKSPACE}/AROS/configure --target=${ext} --enable-ccache --with-iconset=${iconset} --enable-build-type=nightly --with-serial-debug --with-binutils-version=${binutilsver} --with-gcc-version=${gccver} --with-aros-toolchain-install=${env.WORKSPACE}/tools-${ext}-${gccver}-${binutilsver} --with-portssources=${env.WORKSPACE}/externalsources"
 
 			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make"
 
