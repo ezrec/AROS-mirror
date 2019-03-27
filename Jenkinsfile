@@ -18,6 +18,8 @@ def killall_jobs() {
 	def buildnum = env.BUILD_NUMBER.toInteger()
 	def killnums = ""
 	def job = Jenkins.instance.getItemByFullName(jobname)
+	def fixed_job_name = env.JOB_NAME.replace('%2F','/')
+
 	for (build in job.builds) {
 		if (!build.isBuilding()) { continue; }
 		if (buildnum == build.getNumber().toInteger()) { continue; println "equals" }
@@ -31,20 +33,21 @@ def killall_jobs() {
 	}
 	
 	if (killnums != "") {
-		slackSend color: "danger", channel: "#aros", message: "Killing task(s) ${env.JOB_NAME} ${killnums} in favor of #${buildnum}, ignore following failed builds for ${killnums}"
+		slackSend color: "danger", channel: "#aros", message: "Killing task(s) ${fixed_job_name} ${killnums} in favor of #${buildnum}, ignore following failed builds for ${killnums}"
 	}
 	echo "Done killing"
 }
 
 def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0', nativetarget = true) {
+	def fixed_job_name = env.JOB_NAME.replace('%2F','/')
 	try{
 		stage("Building ${ext} with gcc ${gccver} and binutils ${binutilsver}...") {
 			properties([pipelineTriggers([githubPush()])])
 			if (env.CHANGE_ID) {
 				echo 'Trying to build pull request'
 			}
-
-			def commondir = env.WORKSPACE + '/../' + env.JOB_NAME.replace('%2F','/') + '/'
+			
+			def commondir = env.WORKSPACE + '/../' + fixed_job_name + '/'
 
 			checkout scm
 
@@ -103,7 +106,7 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0', 
 				sh "scp -r ${env.WORKSPACE}/publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
 				sh "scp ${env.WORKSPACE}/publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros/"
 
-				slackSend color: "good", channel: "#aros", message: "Deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} to web (<https://dl.amigadev.com/${deploy_url}|https://dl.amigadev.com/${deploy_url}>)"
+				slackSend color: "good", channel: "#aros", message: "Deploying ${fixed_job_name} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} to web (<https://dl.amigadev.com/${deploy_url}|https://dl.amigadev.com/${deploy_url}>)"
 			} else if (env.BRANCH_NAME.equals('ABI_V1_experimental')) {
 				def deploy_url = sh (
 				    script: 'echo "nightly/aros-experimental/`date +\'%Y\'`/`date +\'%m\'`/`date +\'%d\'`/"',
@@ -114,13 +117,13 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0', 
 				sh "scp -r ${env.WORKSPACE}/publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros-experimental/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
 				sh "scp ${env.WORKSPACE}/publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros-experimental/"
 
-				slackSend color: "good", channel: "#aros", message: "Deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} to web (<https://dl.amigadev.com/${deploy_url}|https://dl.amigadev.com/${deploy_url}>)"
+				slackSend color: "good", channel: "#aros", message: "Deploying ${fixed_job_name} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} to web (<https://dl.amigadev.com/${deploy_url}|https://dl.amigadev.com/${deploy_url}>)"
 			} else {
-				slackSend color: "good", channel: "#aros", message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} successful!"
+				slackSend color: "good", channel: "#aros", message: "Build ${fixed_job_name} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} successful!"
 			}
 		}
 	} catch(err) {
-		slackSend color: "danger", channel: "#aros", message: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} (<${env.BUILD_URL}|Open>)"
+		slackSend color: "danger", channel: "#aros", message: "Build Failed: ${fixed_job_name} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} (<${env.BUILD_URL}|Open>)"
 		currentBuild.result = 'FAILURE'
 		notify('Build failed')
 		throw err
@@ -149,7 +152,8 @@ def postCoreBuild(ext) {
 
 node('master') {
 	killall_jobs()
-	slackSend color: "good", channel: "#jenkins", message: "Build Started: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+	def fixed_job_name = env.JOB_NAME.replace('%2F','/')
+	slackSend color: "good", channel: "#jenkins", message: "Build Started: ${fixed_job_name} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
 	parallel (
 		'Build Amiga 68k version - GCC 8.3.0 - Binutils 2.32': {
 			node {			
