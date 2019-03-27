@@ -57,7 +57,7 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0', 
 
 			freshUpRoot(ext, binutilsver, gccver)
 
-			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && ${env.WORKSPACE}/AROS/configure --target=${ext} --enable-ccache --with-iconset=${iconset} --enable-build-type=nightly --with-serial-debug --with-binutils-version=${binutilsver} --with-gcc-version=${gccver} --with-aros-toolchain-install=${commondir}/tools/tools-${ext}-${gccver}-${binutilsver} --with-portssources=${commondir}/externalsources"
+			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && ${env.WORKSPACE}/AROS/configure --target=${ext} --enable-ccache --with-iconset=${iconset} --enable-build-type=nightly --with-serial-debug --with-binutils-version=${binutilsver} --with-gcc-version=${gccver} --with-aros-toolchain-install=${commondir}/tools/tools-${ext}-${gccver}-${binutilsver} --with-portssources=${env.WORKSPACE}/externalsources"
 
 			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make"
 
@@ -138,7 +138,7 @@ def freshUpRoot(ext, binutilsver, gccver) {
 	sh "rm -rfv ${env.WORKSPACE}/AROS/ports"
 	
 	sh "mkdir -p ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver}"
-	sh "mkdir -p ${commondir}/externalsources"
+	sh "mkdir -p ${env.WORKSPACE}/externalsources"
 	sh "mkdir -p ${commondir}/tools/tools-${ext}-${gccver}-${binutilsver}"
 }
 
