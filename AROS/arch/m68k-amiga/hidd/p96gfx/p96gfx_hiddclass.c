@@ -32,7 +32,7 @@
 
 #include "p96gfx_intern.h"
 #include "p96gfx_bitmap.h"
-#include "p96_rtg.h"
+#include "p96gfx_rtg.h"
 
 #define SDEBUG 0
 #define DEBUG 0
@@ -673,7 +673,7 @@ static void doshow(struct p96gfx_staticdata *csd, OOP_Object *bm, struct ViewPor
         OOP_SetAttrs(bm, (struct TagItem *)tags);
 
         if (csd->acb)
-            csd->acb(csd->acbdata, NULL);
+            csd->acb(csd->acbdata, bm);
 
     } else if (bm) {
         /* we are not topmost -> turn off our display */
