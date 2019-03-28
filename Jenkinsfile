@@ -169,6 +169,11 @@ node('master') {
 			node {			
 				buildStep('linux-x86_64', 'default', '2.32', '8.3.0', false)
 			}
+		},
+		'Build RasPi BigEndian version - GCC 8.3.0 - Binutils 2.32': {
+			node {			
+				buildStep('raspi-armeb', 'default', '2.32', '8.3.0')
+			}
 		}
 	)
 }
