@@ -2,7 +2,7 @@
 #define INTERN_H
 
 /*
-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2019, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc:
@@ -215,12 +215,12 @@ struct basemetaobject /* Real instance data of the base meta class */
     OOP_Class  *oclass; /* The meta object's class */
     struct basemeta_inst
     {
-    	struct metadata data;
-    	struct IFMethod *iftable[NUM_BASEMETA_IFS]; /* has two interfaces: root and meta */
+        struct metadata data;
+        struct IFMethod *iftable[NUM_BASEMETA_IFS]; /* has two interfaces: root and meta */
     
-    	/* The interface tables */
-    	struct IFMethod	rootif[num_Root_Methods];
-    	struct IFMethod	metaif[NUMTOTAL_M_Meta];
+        /* The interface tables */
+        struct IFMethod	rootif[num_Root_Methods];
+        struct IFMethod	metaif[NUMTOTAL_M_Meta];
     } inst;
 };
 
@@ -229,8 +229,8 @@ struct rootclassobject
     OOP_Class *oclass; /* The rootclass object's class */
     struct rootinst
     {
-    	struct metadata data;
-    	struct IFMethod rootif[num_Root_Methods];
+        struct metadata data;
+        struct IFMethod rootif[num_Root_Methods];
     } inst;
 };
 
@@ -262,9 +262,9 @@ struct ifmetaobject
     OOP_Class *oclass; /* The interface metaclass' class (itself) */
     struct ifmeta_inst
     {
-    	struct metadata base;
-	struct ifmeta_data data;
-	
+        struct metadata base;
+        struct ifmeta_data data;
+        
     } inst;
 };
 
@@ -313,7 +313,7 @@ struct IntOOPBase
     */
     
     ULONG			 ob_CurrentMethodBase;
-    ULONG			 ob_CurrentAttrBase;
+    ULONG			 ob_CurrentAttrBase; // NB: Always use pre-increment when allocating.
     
     /* An array of the interface IDs used internally. */
     ULONG			 ob_InternIDs[NUM_Indexes];
