@@ -76,7 +76,7 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0', 
 
 			if (!env.CHANGE_ID) {
 				sh "mkdir -p ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
-				sh "echo '${env.BUILD_NUMBER}' > ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/BUILD"
+				sh "echo '${env.BUILD_NUMBER}|${env.BUILD_URL}' > ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/BUILD"
 				sh "cp -pRL ${env.WORKSPACE}/AROS/LICENSE ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
 				sh "cp -pRL ${env.WORKSPACE}/AROS/ACKNOWLEDGEMENTS ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
 
