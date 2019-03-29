@@ -60,12 +60,13 @@ struct p96gfx_staticdata
 	struct List bitmaplist;
 	struct Library *CardBase;
 	struct ExecBase *cs_SysBase;
+	struct Library  				*cs_GfxBase;
 	struct Library *cs_IntuitionBase;
 	struct Library *cs_UtilityBase;
 	struct Library *cs_OOPBase;
 	struct bm_data *disp;
 	APTR p96romvector;
-	ULONG *rgbformat;
+	ULONG *rgbformat, spritergbformat;
 	struct ModeInfo *modeinfo;
 	struct ModeInfo *fakemodeinfo;
 	UBYTE *boardinfo;
