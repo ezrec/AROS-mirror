@@ -21,6 +21,7 @@
 #include <exec/lists.h>
 #include <graphics/rastport.h>
 #include <graphics/gfx.h>
+#include <graphics/gfxbase.h>
 #include <oop/oop.h>
 #include <hidd/gfx.h>
 #include <aros/symbolsets.h>
@@ -251,6 +252,7 @@ OOP_Object *P96GFXBitmap__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_N
     IPTR 	    	     width, height, multi;
     IPTR		     displayable;
     struct TagItem tags[2];
+    ULONG softsflags;
 
     DB2(bug("[P96Gfx:Bitmap] %s(%x)\n", __func__, o));
 
@@ -272,6 +274,14 @@ OOP_Object *P96GFXBitmap__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_N
     OOP_GetAttr(data->pixfmtobj, aHidd_PixFmt_BytesPerPixel, &multi);
 
     data->rgbformat = getrtgformat(csd, data->pixfmtobj);
+#if (0)
+    softsflags = gl(csd->boardinfo + PSSO_BoardInfo_SoftSpriteFlags);
+    if ((softsflags & data->rgbformat) == data->rgbformat)
+    {
+        csd->spritergbformat = data->rgbformat;
+        DB2(bug("[P96Gfx:Bitmap] %s: HW Sprite Format set to %08x\n", __func__, csd->spritergbformat));
+    }
+#endif
     data->align = displayable ? 32 : 16;
     width = (width + data->align - 1) & ~(data->align - 1);
     data->bytesperline = CalculateBytesPerRow(csd, width, data->rgbformat);
@@ -369,9 +379,10 @@ VOID P96GFXBitmap__Root__Set(OOP_Class *cl, OOP_Object *o, struct pRoot_Set *msg
                         DB2(bug("[P96Gfx:Bitmap] %s: aoHidd_BitMap_Focus\n", __func__);)
                         if (boardType == P96BoardType_Vampire)
                         {
+                            struct GfxBase *GfxBase = (struct GfxBase *)csd->cs_GfxBase;
                             volatile struct Custom *custom = (struct Custom*)0xdff000;
                             /* Tell the Vampire SAGA chipset we are visible */
-                            custom->bplcon0 |= 0x80;
+                            custom->bplcon0 = GfxBase->system_bplcon0 | 0x80;
                         }
                     }
                     break;
