@@ -36,6 +36,9 @@ struct RTGMode
 
 struct p96gfx_staticdata
 {
+	char							*p96gfx_HWName;
+	char							*p96gfx_HWResTmplt;
+
     OOP_Class 	    	    *basebm;            /* baseclass for CreateObject */
     OOP_Class 	    	    *gfxclass;
     OOP_Class 	    	    *bmclass;
@@ -57,12 +60,13 @@ struct p96gfx_staticdata
 	struct List bitmaplist;
 	struct Library *CardBase;
 	struct ExecBase *cs_SysBase;
+	struct Library  				*cs_GfxBase;
 	struct Library *cs_IntuitionBase;
 	struct Library *cs_UtilityBase;
 	struct Library *cs_OOPBase;
 	struct bm_data *disp;
 	APTR p96romvector;
-	ULONG *rgbformat;
+	ULONG *rgbformat, spritergbformat;
 	struct ModeInfo *modeinfo;
 	struct ModeInfo *fakemodeinfo;
 	UBYTE *boardinfo;

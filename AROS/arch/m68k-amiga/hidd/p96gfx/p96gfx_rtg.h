@@ -360,25 +360,60 @@ struct ModeInfo {
 #define PSSO_BoardInfo_SyncTime			    PSSO_BoardInfo_DoubleBufferList + 4
 #define PSSO_BoardInfo_SyncPeriod		    PSSO_BoardInfo_SyncTime + 4
 #define PSSO_BoardInfo_SoftVBlankPort		    PSSO_BoardInfo_SyncPeriod + 8
-#define PSSO_BoardInfo_WaitQ		    PSSO_BoardInfo_SyncPeriod + 34
-#define PSSO_BoardInfo_AROSFlag			PSSO_BoardInfo_WaitQ + 12
+#define PSSO_BoardInfo_WaitQ		            PSSO_BoardInfo_SyncPeriod + 34
+#define PSSO_BoardInfo_AROSFlag			    PSSO_BoardInfo_WaitQ + 12
 #define PSSO_BoardInfo_SizeOf			    PSSO_BoardInfo_AROSFlag + 4
+
+#define P96BoardType_PicassoII                      6
+#define P96BoardType_Piccolo                        7
+#define P96BoardType_RetinaBLT                      8
+#define P96BoardType_PicassoIV                      10
+#define P96BoardType_PiccoloSD64                    11
+#define P96BoardType_A2410                          12
+#define P96BoardType_Pixel64                        13
+#define P96BoardType_UAEGfx                         14
+#define P96BoardType_Vampire                        25
+
+/* inline access wrappers */
+static inline APTR gp(UBYTE *p)
+{
+    return ((APTR*)p)[0];
+}
+static inline ULONG gl(UBYTE *p)
+{
+    return ((ULONG*)p)[0];
+}
+static inline UWORD gw(UBYTE *p)
+{
+    return ((UWORD*)p)[0];
+}
+static inline void pp(UBYTE *p, APTR a)
+{
+    ((APTR*)p)[0] = a;
+}
+static inline void pl(UBYTE *p, ULONG l)
+{
+    ((ULONG*)p)[0] = l;
+}
+static inline void pw(UBYTE *p, WORD w)
+{
+    ((WORD*)p)[0] = w;
+}
+static inline void pb(UBYTE *p, BYTE b)
+{
+    ((BYTE*)p)[0] = b;
+}
+
+/* RTG Support functions */
+extern const UBYTE modetable[16];
 
 WORD getrtgdepth (ULONG rgbformat);
 ULONG getrtgformat(struct p96gfx_staticdata *csd, OOP_Object *);
 void makerenderinfo(struct p96gfx_staticdata *csd, struct RenderInfo*, struct bm_data*);
 struct ModeInfo *getrtgmodeinfo(struct p96gfx_staticdata *csd, OOP_Object *sync, OOP_Object *pixfmt, struct ModeInfo *modeinfo);
+void InitRTG(APTR boardinfo);
 
-APTR  gp(UBYTE *p);
-ULONG gl(UBYTE *p);
-UWORD gw(UBYTE *p);
-void pp(UBYTE *p, APTR a);
-void pl(UBYTE *p, ULONG l);
-void pw(UBYTE *p, WORD w);
-void pb(UBYTE *p, BYTE b);
-
-extern const UBYTE modetable[16];
-
+/* Card functions */
 BOOL FindCard(struct p96gfx_staticdata *csd);
 BOOL InitCard(struct p96gfx_staticdata *csd);
 BOOL SetDisplay(struct p96gfx_staticdata *csd, BOOL state);
@@ -394,7 +429,7 @@ GetFeatureAttrs
 SetFeatureAttrs
 */
 
-/* Render Operation Stubs .. */
+/* Card Render Operation Stubs .. */
 BOOL DrawLine(struct p96gfx_staticdata *csd, struct RenderInfo *ri,
     struct Line *line, ULONG rgbformat);
 BOOL BlitRect(struct p96gfx_staticdata *csd, struct RenderInfo *ri,
@@ -420,14 +455,13 @@ BOOL SetSpritePosition(struct p96gfx_staticdata *sd);
 BOOL SetSpriteImage(struct p96gfx_staticdata *sd);
 BOOL SetSpriteColor(struct p96gfx_staticdata *sd, UBYTE idx, UBYTE r, UBYTE g, UBYTE b);
 
-/* real RTG only functions */
+/* Real RTG only card functions */
 ULONG GetPixelClock(struct p96gfx_staticdata *csd, struct ModeInfo *mi, ULONG index, ULONG rgbformat);
 ULONG ResolvePixelClock(struct p96gfx_staticdata *csd, struct ModeInfo *mi, ULONG pixelclock, ULONG rgbformat);
 ULONG SetClock(struct p96gfx_staticdata *csd);
 void SetMemoryMode(struct p96gfx_staticdata *csd, ULONG rgbformat);
 void WaitBlitter(struct p96gfx_staticdata *csd);
 void SetInterrupt(struct p96gfx_staticdata *csd, ULONG state);
-void InitRTG(APTR boardinfo);
 /*
 TODO:
 GetVSyncState

@@ -12,77 +12,120 @@ def notify(status){
 	)
 }
 
-def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') {
+@NonCPS
+def killall_jobs() {
+	def jobname = env.JOB_NAME
+	def buildnum = env.BUILD_NUMBER.toInteger()
+	def killnums = ""
+	def job = Jenkins.instance.getItemByFullName(jobname)
+	def fixed_job_name = env.JOB_NAME.replace('%2F','/')
+
+	for (build in job.builds) {
+		if (!build.isBuilding()) { continue; }
+		if (buildnum == build.getNumber().toInteger()) { continue; println "equals" }
+		if (buildnum < build.getNumber().toInteger()) { continue; println "newer" }
+		
+		echo "Kill task = ${build}"
+		
+		killnums += "#" + build.getNumber().toInteger() + ", "
+		
+		build.doStop();
+	}
+	
+	if (killnums != "") {
+		slackSend color: "danger", channel: "#aros", message: "Killing task(s) ${fixed_job_name} ${killnums} in favor of #${buildnum}, ignore following failed builds for ${killnums}"
+	}
+	echo "Done killing"
+}
+
+def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0', nativetarget = true) {
+	def fixed_job_name = env.JOB_NAME.replace('%2F','/')
 	try{
 		stage("Building ${ext} with gcc ${gccver} and binutils ${binutilsver}...") {
 			properties([pipelineTriggers([githubPush()])])
 			if (env.CHANGE_ID) {
 				echo 'Trying to build pull request'
 			}
+			
+			def commondir = env.WORKSPACE + '/../' + fixed_job_name + '/'
 
 			checkout scm
 
 			if (!env.CHANGE_ID) {
-				sh "rm -rfv publishing/deploy/*"
-				sh "mkdir -p publishing/deploy/aros"
+				sh "rm -rfv ${env.WORKSPACE}/publishing/deploy/*"
+				sh "mkdir -p ${env.WORKSPACE}/publishing/deploy/aros"
 			}
 
 			slackSend color: "good", channel: "#jenkins", message: "Starting ${ext} build target..."
 
 			freshUpRoot(ext, binutilsver, gccver)
 
-			sh "cd build-${ext}-${gccver}-${binutilsver} && ../AROS/configure --target=${ext} --enable-ccache --with-iconset=${iconset} --enable-build-type=nightly --with-serial-debug --with-binutils-version=${binutilsver} --with-gcc-version=${gccver} --with-aros-toolchain-install=${env.WORKSPACE}/tools-${ext}-${gccver}-${binutilsver} --with-portssources=${env.WORKSPACE}/externalsources"
+			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && ${env.WORKSPACE}/AROS/configure --target=${ext} --enable-ccache --with-iconset=${iconset} --enable-build-type=nightly --with-serial-debug --with-binutils-version=${binutilsver} --with-gcc-version=${gccver} --with-aros-toolchain-install=${commondir}/tools/tools-${ext}-${gccver}-${binutilsver} --with-portssources=${env.WORKSPACE}/externalsources"
 
-			sh "cd build-${ext}-${gccver}-${binutilsver} && make"
+			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make"
+
+			if (!nativetarget) {
+				sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make default-x11keymaptable"
+			}
 
 			postCoreBuild(ext)
 
-			sh "cd build-${ext}-${gccver}-${binutilsver} && make contrib-installerlg"
+			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make contrib-installerlg"
 
-			sh "cd build-${ext}-${gccver}-${binutilsver} && make distfiles"
+			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make distfiles"
 
 			if (!env.CHANGE_ID) {
-				sh "mkdir -p publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
-				sh "echo '${ext}-${gccver}-${binutilsver},' > publishing/deploy/aros/TARGETS"
-				sh "cp -fvr build-${ext}-${gccver}-${binutilsver}/distfiles/* publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
-				sh "cp -pRL AROS/LICENSE publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
-				sh "cp -pRL AROS/ACKNOWLEDGEMENTS publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
-				sh "rm -rfv publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/*.elf"
+				sh "mkdir -p ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
+
+				sh "echo '${env.BUILD_NUMBER}|${env.BUILD_URL}' > ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/BUILD"
+
+				sh "cp -pRL ${env.WORKSPACE}/AROS/LICENSE ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
+				sh "cp -pRL ${env.WORKSPACE}/AROS/ACKNOWLEDGEMENTS ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
+
+				if (nativetarget) {					
+					sh "cp -fvr ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver}/distfiles/* ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
+
+					//sh "rm -rfv ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/*.elf" // Can't remember what this is good for...
+				} else {
+					sh "cp -fvr ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver}/bin/${ext}/AROS ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
+					sh "cd ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/ && tar -Jcvvf ${ext}-hosted.tar.xz *"
+					sh "rm -fvr ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/AROS"
+				}
 			}
 
 			if (env.TAG_NAME) {
-				sh "echo $TAG_NAME > publishing/deploy/STABLE"
+				sh "echo $TAG_NAME > ${env.WORKSPACE}/publishing/deploy/STABLE"
 				sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/releases/aros/$TAG_NAME"
-				sh "scp -r publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/releases/aros/$TAG_NAME/"
-				sh "scp publishing/deploy/STABLE $DEPLOYHOST:~/public_html/downloads/releases/aros/"
+				sh "scp -r ${env.WORKSPACE}/publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/releases/aros/$TAG_NAME/"
+				sh "scp ${env.WORKSPACE}/publishing/deploy/STABLE $DEPLOYHOST:~/public_html/downloads/releases/aros/"
 			} else if (env.BRANCH_NAME.equals('ABI_V1')) {
 				def deploy_url = sh (
-				    script: 'echo "/downloads/nightly/aros/`date +\'%Y\'`/`date +\'%m\'`/`date +\'%d\'`/"',
+				    script: 'echo "nightly/aros/`date +\'%Y\'`/`date +\'%m\'`/`date +\'%d\'`/"',
 				    returnStdout: true
 				).trim()
-				sh "date +'%Y-%m-%d %H:%M:%S' > publishing/deploy/BUILDTIME"
+				sh "date +'%Y-%m-%d %H:%M:%S' > ${env.WORKSPACE}/publishing/deploy/BUILDTIME"
 				sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
-				sh "scp -r publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
-				sh "scp publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros/"
+				sh "scp -r ${env.WORKSPACE}/publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
+				sh "scp ${env.WORKSPACE}/publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros/"
 
-				slackSend color: "good", channel: "#aros", message: "Deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} to web (<https://www.eevul.net/${deploy_url}|https://www.eevul.net/${deploy_url}>)"
+				slackSend color: "good", channel: "#aros", message: "Deploying ${fixed_job_name} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} to web (<https://dl.amigadev.com/${deploy_url}|https://dl.amigadev.com/${deploy_url}>)"
 			} else if (env.BRANCH_NAME.equals('ABI_V1_experimental')) {
 				def deploy_url = sh (
-				    script: 'echo "/downloads/nightly/aros-experimental/`date +\'%Y\'`/`date +\'%m\'`/`date +\'%d\'`/"',
+				    script: 'echo "nightly/aros-experimental/`date +\'%Y\'`/`date +\'%m\'`/`date +\'%d\'`/"',
 				    returnStdout: true
 				).trim()
-				sh "date +'%Y-%m-%d %H:%M:%S' > publishing/deploy/BUILDTIME"
+				sh "date +'%Y-%m-%d %H:%M:%S' > ${env.WORKSPACE}/publishing/deploy/BUILDTIME"
 				sh "ssh $DEPLOYHOST mkdir -p public_html/downloads/nightly/aros-experimental/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
-				sh "scp -r publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros-experimental/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
-				sh "scp publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros-experimental/"
+				sh "scp -r ${env.WORKSPACE}/publishing/deploy/aros/* $DEPLOYHOST:~/public_html/downloads/nightly/aros-experimental/`date +'%Y'`/`date +'%m'`/`date +'%d'`/"
+				sh "scp ${env.WORKSPACE}/publishing/deploy/BUILDTIME $DEPLOYHOST:~/public_html/downloads/nightly/aros-experimental/"
 
-				slackSend color: "good", channel: "#aros", message: "Deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} to web (<https://www.eevul.net/${deploy_url}|https://www.eevul.net/${deploy_url}>)"
+				slackSend color: "good", channel: "#aros", message: "Deploying ${fixed_job_name} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} to web (<https://dl.amigadev.com/${deploy_url}|https://dl.amigadev.com/${deploy_url}>)"
 			} else {
-				slackSend color: "good", channel: "#aros", message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} successful!"
+				slackSend color: "good", channel: "#aros", message: "Build ${fixed_job_name} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} Binutils: ${binutilsver} successful!"
 			}
 		}
 	} catch(err) {
-		slackSend color: "danger", channel: "#aros", message: "Build Failed: ${env.JOB_NAME} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} (<${env.BUILD_URL}|Open>)"
+		slackSend color: "danger", channel: "#aros", message: "Build Failed: ${fixed_job_name} #${env.BUILD_NUMBER} Target: ${ext} GCC: ${gccver} (<${env.BUILD_URL}|Open>)"
 		currentBuild.result = 'FAILURE'
 		notify('Build failed')
 		throw err
@@ -90,26 +133,29 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0') 
 }
 
 def freshUpRoot(ext, binutilsver, gccver) {
-	sh "rm -rfv build-${ext}-${gccver}-${binutilsver}/distfiles/*"
+	def commondir = env.WORKSPACE + '/../' + env.JOB_NAME.replace('%2F','/') + '/'
+	sh "rm -rfv ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver}/distfiles/*"
 	// uncomment the following section to remove the whole toolchain and build: 
-	// sh "rm -rfv ${env.WORKSPACE}/tools"
-	// sh "rm -rfv ${env.WORKSPACE}/build-$ext/*"
+	// sh "rm -rfv ${commondir}/tools/tools-${ext}-${gccver}-${binutilsver}"
+	// sh "rm -rfv ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver}/*"
 	// end of section
-	sh "rm -rfv AROS/contrib"
-	sh "rm -rfv AROS/ports"
-
-	sh "mkdir -p build-${ext}-${gccver}-${binutilsver}"
-  	sh "mkdir -p externalsources"
-	sh "mkdir -p tools-${ext}-${gccver}-${binutilsver}"
+	sh "rm -rfv ${env.WORKSPACE}/AROS/contrib"
+	sh "rm -rfv ${env.WORKSPACE}/AROS/ports"
+	
+	sh "mkdir -p ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver}"
+	sh "mkdir -p ${env.WORKSPACE}/externalsources"
+	sh "mkdir -p ${commondir}/tools/tools-${ext}-${gccver}-${binutilsver}"
 }
 
 def postCoreBuild(ext) {
-	sh "cp -fvr contrib AROS/"
-	sh "cp -fvr ports AROS/"
+	sh "cp -fvr ${env.WORKSPACE}/contrib ${env.WORKSPACE}/AROS/"
+	sh "cp -fvr ${env.WORKSPACE}/ports ${env.WORKSPACE}/AROS/"
 }
 
-node {
-	slackSend color: "good", channel: "#jenkins", message: "Build Started: ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+node('master') {
+	killall_jobs()
+	def fixed_job_name = env.JOB_NAME.replace('%2F','/')
+	slackSend color: "good", channel: "#jenkins", message: "Build Started: ${fixed_job_name} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
 	parallel (
 		'Build Amiga 68k version - GCC 8.3.0 - Binutils 2.32': {
 			node {			
@@ -123,7 +169,12 @@ node {
 		},
 		'Build Linux Hosted x86_64 version - GCC 8.3.0 - Binutils 2.32': {
 			node {			
-				buildStep('linux-x86_64', 'default', '2.32', '8.3.0')
+				buildStep('linux-x86_64', 'default', '2.32', '8.3.0', false)
+			}
+		},
+		'Build RasPi BigEndian version - GCC 8.3.0 - Binutils 2.32': {
+			node {			
+				buildStep('raspi-armeb', 'default', '2.32', '8.3.0')
 			}
 		}
 	)

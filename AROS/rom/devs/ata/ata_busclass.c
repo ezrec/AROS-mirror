@@ -23,6 +23,7 @@
 #include "ata_bus.h"
 
 #define DIRQ(x)
+#define DATTR(x)
 
 static void Hidd_ATABus_HandleIRQ(UBYTE status, struct ata_Bus *bus)
 {
@@ -65,7 +66,7 @@ static AROS_INTH1(ataBus_Reset, struct ata_Bus *, bus)
     struct ataBase *ATABase = bus->ab_Base;
     OOP_Object *obj = (void *)bus - ATABase->busClass->InstOffset;
 
-    D(bug("[ATA:Bus] %s()\n", __PRETTY_FUNCTION__));
+    D(bug("[ATA:Bus] %s()\n", __func__));
 
     HIDD_ATABus_Shutdown(obj);
 
@@ -511,7 +512,8 @@ static AROS_INTH1(ataBus_Reset, struct ata_Bus *, bus)
 OOP_Object *ATABus__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_New *msg)
 {
     struct ataBase *ATABase = cl->UserData;
-    D(bug("[ATA:Bus] %s()\n", __PRETTY_FUNCTION__));
+    D(bug("[ATA:Bus] %s()\n", __func__));
+
     o = (OOP_Object *)OOP_DoSuperMethod(cl, o, &msg->mID);
     if (o)
     {
@@ -519,7 +521,10 @@ OOP_Object *ATABus__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_New *ms
         struct TagItem *tstate = msg->attrList;
         struct TagItem *tag;
 
-        D(bug("[ATA:Bus] %s: instance @ 0x%p\n", __PRETTY_FUNCTION__, o));
+        D(
+          bug("[ATA:Bus] %s: instance @ 0x%p\n", __func__, o);
+          bug("[ATA:Bus] %s: ata_Bus @ 0x%p\n", __func__, data);
+         )
 
         /* Defaults */
         data->keepEmpty = TRUE;
@@ -532,22 +537,27 @@ OOP_Object *ATABus__Root__New(OOP_Class *cl, OOP_Object *o, struct pRoot_New *ms
             {
             case aoHidd_ATABus_PIODataSize:
                 data->pioDataSize = tag->ti_Data;
+                D(bug("[ATA:Bus] %s: PIODataSize = %d\n", __func__, data->pioDataSize);)
                 break;
 
             case aoHidd_ATABus_DMADataSize:
                 data->dmaDataSize = tag->ti_Data;
+                DATTR(bug("[ATA:Bus] %s: DMADataSize = %d\n", __func__, data->dmaDataSize);)
                 break;
 
             case aoHidd_ATABus_BusVectors:
                 data->busVectors = (struct ATA_BusInterface *)tag->ti_Data;
+                DATTR(bug("[ATA:Bus] %s: BusVectors @ 0x%p\n", __func__, data->busVectors);)
                 break;
 
             case aoHidd_ATABus_PIOVectors:
                 data->pioVectors = (struct ATA_PIOInterface *)tag->ti_Data;
+                DATTR(bug("[ATA:Bus] %s: PIOVectors @ 0x%p\n", __func__, data->pioVectors);)
                 break;
 
             case aoHidd_ATABus_DMAVectors:
                 data->dmaVectors = (APTR *)tag->ti_Data;
+                DATTR(bug("[ATA:Bus] %s: DMAVectors @ 0x%p\n", __func__, data->dmaVectors);)
                 break;
             }
             Hidd_Bus_Switch(tag->ti_Tag, idx)
@@ -728,12 +738,17 @@ APTR ATABus__Hidd_ATABus__GetPIOInterface(OOP_Class *cl, OOP_Object *o, OOP_Msg 
     struct ata_Bus *data = OOP_INST_DATA(cl, o);
     struct ATA_BusInterface *vec;
 
-    D(bug("[ATA:Bus] %s()\n", __PRETTY_FUNCTION__));
+    D(
+      bug("[ATA:Bus] %s()\n", __func__);
+      bug("[ATA:Bus] %s: ata_Bus @ 0x%p\n", __func__, data);
+     )
 
     vec = AllocMem(sizeof(struct ATA_BusInterface) + data->pioDataSize,
                    MEMF_PUBLIC|MEMF_CLEAR);
     if (vec)
     {
+        D(bug("[ATA:Bus] %s: ATA_BusInterface @ 0x%p (%d bytes + %d)\n", __func__, vec, sizeof(struct ATA_BusInterface), data->pioDataSize);)
+
         /* Some default vectors for simplicity */
         vec->ata_out_alt = default_out_alt;
         vec->ata_in_alt  = default_in_alt;
@@ -796,7 +811,7 @@ APTR ATABus__Hidd_ATABus__GetDMAInterface(OOP_Class *cl, OOP_Object *o, OOP_Msg 
     struct ata_Bus *data = OOP_INST_DATA(cl, o);
     struct ATA_DMAInterface *vec;
 
-    D(bug("[ATA:Bus] %s()\n", __PRETTY_FUNCTION__));
+    D(bug("[ATA:Bus] %s()\n", __func__));
 
     if (!data->dmaVectors)
         return NULL;
@@ -859,7 +874,7 @@ APTR ATABus__Hidd_ATABus__GetDMAInterface(OOP_Class *cl, OOP_Object *o, OOP_Msg 
 
 BOOL ATABus__Hidd_ATABus__SetXferMode(OOP_Class *cl, OOP_Object *o, struct pHidd_ATABus_SetXferMode *msg)
 {
-    D(bug("[ATA:Bus] %s()\n", __PRETTY_FUNCTION__));
+    D(bug("[ATA:Bus] %s()\n", __func__));
 
     if ((msg->mode >= AB_XFER_MDMA0) && (msg->mode <= AB_XFER_UDMA6))
     {
@@ -910,7 +925,7 @@ void ATABus__Hidd_ATABus__Shutdown(OOP_Class *cl, OOP_Object *o, OOP_Msg *msg)
 {
     struct ata_Bus *data = OOP_INST_DATA(cl, o);
 
-    D(bug("[ATA:Bus] %s()\n", __PRETTY_FUNCTION__));
+    D(bug("[ATA:Bus] %s()\n", __func__));
 
     if (data->pioInterface)
     {
@@ -926,7 +941,7 @@ BOOL Hidd_ATABus_Start(OOP_Object *o, struct ataBase *ATABase)
 {
     struct ata_Bus *ab = OOP_INST_DATA(ATABase->busClass, o);
 
-    D(bug("[ATA:Bus] %s()\n", __PRETTY_FUNCTION__));
+    D(bug("[ATA:Bus] %s()\n", __func__));
 
     /* Attach IRQ handler */
     OOP_SetAttrsTags(o, aHidd_Bus_IRQHandler, Hidd_ATABus_HandleIRQ,
@@ -1002,7 +1017,7 @@ AROS_UFH3(BOOL, Hidd_ATABus_Open,
     ULONG bus = reqUnit >> 1;
     UBYTE dev = reqUnit & 1;
 
-    D(bug("[ATA:Bus] %s()\n", __PRETTY_FUNCTION__));
+    D(bug("[ATA:Bus] %s()\n", __func__));
     D(bug("[ATA%02ld] Checking bus %u dev %u\n", reqUnit, bus, dev));
     
     if ((b->ab_BusNum == bus) && b->ab_Units[dev])
