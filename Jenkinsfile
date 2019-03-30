@@ -159,7 +159,7 @@ node('master') {
 	parallel (
 		'Build Amiga 68k version - GCC 8.3.0 - Binutils 2.32': {
 			node {			
-				buildStep('amiga-m68k', 'default', '2.32', '8.3.0')
+				buildStep('amiga-m68k', 'default', '2.32', '9-20190324')
 			}
 		},
 		'Build Amiga 68k version - GCC 6.5.0 - Binutils 2.32': {
