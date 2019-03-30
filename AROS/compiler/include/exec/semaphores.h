@@ -27,10 +27,6 @@
 #    include <exec/tasks.h>
 #endif
 
-#if defined(__AROSEXEC_SMP__)
-#include <aros/types/spinlock_s.h>
-#endif
-
                            /* Signal Semaphores */
 
 /* Private structure for use in ObtainSemaphore */
@@ -38,13 +34,6 @@ struct SemaphoreRequest
 {
     struct MinNode              sr_Link;
     struct Task                 *sr_Waiter;
-#if defined(__AROSPLATFORM_SMP__)
-#if defined(__AROSEXEC_SMP__)
-    spinlock_t                  sr_SpinLock;
-#else
-    spinlock_t                  sr_Pad;
-#endif
-#endif
 };
 
 struct SignalSemaphore

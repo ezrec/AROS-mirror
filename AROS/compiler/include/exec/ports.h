@@ -17,9 +17,6 @@
 #ifndef EXEC_LISTS_H
 #   include "exec/lists.h"
 #endif
-#if defined(__AROSPLATFORM_SMP__)
-#include <aros/types/spinlock_s.h>
-#endif
 
 /* MsgPort */
 struct MsgPort
@@ -29,13 +26,7 @@ struct MsgPort
     UBYTE	mp_SigBit;  /* Signal bit number */
     void      * mp_SigTask; /* Object to be signalled */
     struct List mp_MsgList; /* Linked list of messages */
-#if defined(__AROSPLATFORM_SMP__)
-#if defined(__AROSEXEC_SMP__)
-    spinlock_t mp_SpinLock;
-#else
-    spinlock_t mp_Pad;
-#endif
-#endif
+    IPTR        mp_Private[2]; /* Private extension field */
 };
 
 #define mp_SoftInt mp_SigTask	/* Alias */
