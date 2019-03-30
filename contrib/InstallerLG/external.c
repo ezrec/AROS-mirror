@@ -48,7 +48,7 @@ static entry_p h_run(entry_p contxt, const char *pre, const char *dir)
         {
             // The default threshold is expert.
             int level = get_numvar(contxt, "@user-level");
-            int th = 2;
+            int thres = 2;
 
             // If the (confirm ...) option contains
             // something that can be translated into
@@ -58,13 +58,13 @@ static entry_p h_run(entry_p contxt, const char *pre, const char *dir)
                confirm->children[0] != end())
             {
                 // ...then do so.
-                th = num(confirm);
+                thres = num(confirm);
             }
 
             // If we are below the threshold value,
             // don't care about getting confirmation
             // from the user.
-            if(level < th)
+            if(level < thres)
             {
                 confirm = NULL;
             }
@@ -76,9 +76,8 @@ static entry_p h_run(entry_p contxt, const char *pre, const char *dir)
             // valid code so lets fail anyway.
             if(!prompt || !help)
             {
-                char *m = prompt ? "help" : "prompt";
-
-                ERR(ERR_MISSING_OPTION, m);
+                char *opt = prompt ? "help" : "prompt";
+                ERR(ERR_MISSING_OPTION, opt);
                 RCUR;
             }
         }
@@ -86,7 +85,7 @@ static entry_p h_run(entry_p contxt, const char *pre, const char *dir)
         // Did we need it? (confirmation)
         if(confirm)
         {
-            inp_t rc = gui_confirm(str(prompt), str(help), back);
+            inp_t grc = gui_confirm(str(prompt), str(help), back != false);
 
             // Is the back option available?
             if(back)
@@ -94,24 +93,24 @@ static entry_p h_run(entry_p contxt, const char *pre, const char *dir)
                 // Fake input?
                 if(get_numvar(contxt, "@back"))
                 {
-                    rc = G_ABORT;
+                    grc = G_ABORT;
                 }
 
                 // On abort execute.
-                if(rc == G_ABORT)
+                if(grc == G_ABORT)
                 {
                     return resolve(back);
                 }
             }
 
             // FIXME
-            if(rc == G_ABORT || rc == G_EXIT)
+            if(grc == G_ABORT || grc == G_EXIT)
             {
-                HALT();
+                HALT;
             }
 
             // FIXME
-            if(rc != G_TRUE)
+            if(grc != G_TRUE)
             {
                 RCUR;
             }
@@ -121,8 +120,9 @@ static entry_p h_run(entry_p contxt, const char *pre, const char *dir)
         // in pretend mode?
         if(safe || !get_numvar(contxt, "@pretend"))
         {
-            // Command / script. Merge all.
-            char *cmd = get_chlstr(contxt);
+            // Command / script. Merge all and insert
+            // space between arguments.
+            char *cmd = get_chlstr(contxt, true);
 
             if(cmd)
             {
@@ -132,15 +132,15 @@ static entry_p h_run(entry_p contxt, const char *pre, const char *dir)
                 // DOS / Arexx script?
                 if(pre)
                 {
-                    size_t cl = strlen(cmd) + strlen(pre) + 2;
-                    char *t = DBG_ALLOC(malloc(cl));
+                    size_t len = strlen(cmd) + strlen(pre) + 2;
+                    char *tmp = DBG_ALLOC(malloc(len));
 
-                    if(t)
+                    if(tmp)
                     {
                         // Prepend prefix to command string.
-                        snprintf(t, cl, "%s %s", pre, cmd);
+                        snprintf(tmp, len, "%s %s", pre, cmd);
                         free(cmd);
-                        cmd = t;
+                        cmd = tmp;
                     }
                     else
                     {
@@ -161,16 +161,14 @@ static entry_p h_run(entry_p contxt, const char *pre, const char *dir)
                     // Use the global buffer.
                     char *buf = get_buf();
 
-                    // Try to get current working dir.
-                    if(getcwd(buf, buf_size()) == buf)
+                    // Try to get current working dir
+                    // before changing to the new dir
+                    // Save the old one so that we can
+                    // go back afterwards.
+                    if(getcwd(buf, buf_size()) == buf
+                       && !chdir(dir))
                     {
-                        // Try to change to the new dir
-                        // and save the old one so that
-                        // we can go back afterwards.
-                        if(!chdir(dir))
-                        {
-                            cwd = buf;
-                        }
+                        cwd = buf;
                     }
                 }
 

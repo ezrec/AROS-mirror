@@ -13,6 +13,7 @@
 #include "eval.h"
 #include "exit.h"
 #include "gui.h"
+#include "media.h"
 #include "resource.h"
 #include "util.h"
 
@@ -58,12 +59,13 @@ entry_p find_symbol(entry_p entry)
                 if(ret->type == SYMBOL &&
                    !strcasecmp(ret->name, entry->name))
                 {
-                    // Rearrange symbols to make the
-                    // next lookup (if any) faster.
-                    // Don't do this on user defined
-                    // procedures though, symbols in
-                    // those are positional (args).
-                    if(ret->parent->type != CUSTOM)
+                    // Rearrange symbols to make the next
+                    // lookup faster. Don't do this unless
+                    // we're at the root and not in a user
+                    // defined procedure. This would break
+                    // all positional symbols (arguments).
+                    if(!ret->parent->parent &&
+                        ret->parent->type != CUSTOM)
                     {
                         *tmp = *(con->symbols);
                         *(con->symbols) = ret;
@@ -275,22 +277,17 @@ int num(entry_p entry)
 //----------------------------------------------------------------------------
 int tru(entry_p entry)
 {
-    // Is there anything to resolve?
+    // Anything to resolve?
     if(entry)
     {
         // Attempt to resolve it.
-        entry_p e = resolve(entry);
+        entry_p val = resolve(entry);
 
-        // Evaluate on success.
-        if(!DID_ERR())
+        // Only numerals and strings can be true.
+        if(((val->type == STRING && *(val->name)) ||
+            (val->type == NUMBER && val->id)) && !DID_ERR)
         {
-            // Only numerical values and strings
-            // can be true.
-            if((e->type == NUMBER && e->id) ||
-               (e->type == STRING && *(e->name)))
-            {
-                return 1;
-            }
+            return 1;
         }
     }
     else
@@ -351,7 +348,7 @@ char *str(entry_p entry)
                         // (help) and (prompt) may have multiple
                         // childred that must be concatenated.
                         free(entry->name);
-                        entry->name = get_chlstr(entry);
+                        entry->name = get_chlstr(entry, false);
 
                         // On OOM, fall through.
                         if(entry->name)
@@ -362,6 +359,7 @@ char *str(entry_p entry)
                         // OOM.
                         PANIC(entry);
                 }
+                /* FALLTHRU */
 
             // Dangling entries and options
             // are considered empty strings
@@ -430,37 +428,37 @@ char *str(entry_p entry)
 entry_p invoke(entry_p entry)
 {
     // Expect failure.
-    entry_p r = end();
+    entry_p ret = end();
 
     if(entry)
     {
         // Iterator.
-        entry_p *c = entry->children;
+        entry_p *cur = entry->children;
 
         // Empty procedures are allowed, there
         // might be no children at all.
-        if(c)
+        if(cur)
         {
             // As long as no one fails, resolve
             // all children and save the return
             // value of the last one.
-            while(*c && *c != end() && !DID_ERR())
+            while(*cur && *cur != end() && !DID_ERR)
             {
                 // Resolve and proceed.
-                r = resolve(*c);
-                c++;
+                ret = resolve(*cur);
+                cur++;
             }
         }
 
         // Return the last value.
-        return r;
+        return ret;
     }
 
     // Bad input.
     PANIC(entry);
 
     // Failure.
-    return r;
+    return ret;
 }
 
 //----------------------------------------------------------------------------
@@ -471,20 +469,38 @@ entry_p invoke(entry_p entry)
 //----------------------------------------------------------------------------
 void run(entry_p entry)
 {
+    // Is there an 'effect' statement in there?
+    entry_p status = native_exists(entry, m_effect);
+
+    // i18n setup.
     locale_init();
 
-    // Initialize GUI before starting
-    // the execution.
-    if(gui_init())
+    // Initialize GUI before starting the execution.
+    // If (effect) type is set, use a custom screen.
+    if(gui_init(status != false))
     {
-        // Execute the script.
-        entry_p status = invoke(entry);
-
-        // Execute the (onerror) function
-        // on failure.
-        if(DID_ERR() && !DID_HALT())
+        // If an 'effect' statement exists,
+        // execute this first of all.
+        if(status)
         {
-            status = m_onerror(entry);
+            // Since this is not a context, we
+            // must resolve it like a symbol.
+            status = resolve(status);
+        }
+
+        // Execute the script unless there
+        // was an 'effect' statement that
+        // generated an error or a halt.
+        if(!DID_ERR && !DID_HALT)
+        {
+            status = invoke(entry);
+
+            // Execute the (onerror)
+            // function on failure.
+            if(DID_ERR && !DID_HALT)
+            {
+                status = m_onerror(entry);
+            }
         }
 
         // Output what we have unless we're

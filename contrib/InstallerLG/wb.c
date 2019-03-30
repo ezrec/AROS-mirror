@@ -47,7 +47,7 @@ entry_p m_openwbobject(entry_p contxt)
         {
             // The default threshold is expert.
             int level = get_numvar(contxt, "@user-level"),
-                th = 2;
+                thld = 2;
 
             // If the (confirm ...) option contains
             // something that can be translated into
@@ -57,13 +57,13 @@ entry_p m_openwbobject(entry_p contxt)
                confirm->children[0] != end())
             {
                 // ...then do so.
-                th = num(confirm);
+                thld = num(confirm);
             }
 
             // If we are below the threshold value, or
             // user input has been short-circuited by
             // @yes, skip confirmation.
-            if(level < th ||
+            if(level < thld ||
                get_numvar(contxt, "@yes"))
             {
                 confirm = NULL;
@@ -74,8 +74,8 @@ entry_p m_openwbobject(entry_p contxt)
             // is set.
             if(!prompt || !help)
             {
-                char * m = prompt ? "help" : "prompt";
-                ERR(ERR_MISSING_OPTION, m);
+                char * msg = prompt ? "help" : "prompt";
+                ERR(ERR_MISSING_OPTION, msg);
                 RNUM(0);
             }
         }

@@ -102,80 +102,84 @@ extern int yydebug;
     USER = 312,
     WELCOME = 313,
     WORKING = 314,
-    DATABASE = 315,
-    EARLIER = 316,
-    GETASSIGN = 317,
-    GETDEVICE = 318,
-    GETDISKSPACE = 319,
-    GETENV = 320,
-    GETSIZE = 321,
-    GETSUM = 322,
-    GETVERSION = 323,
-    ICONINFO = 324,
-    CUS = 325,
-    DCL = 326,
-    ASKBOOL = 327,
-    ASKCHOICE = 328,
-    ASKDIR = 329,
-    ASKDISK = 330,
-    ASKFILE = 331,
-    ASKNUMBER = 332,
-    ASKOPTIONS = 333,
-    ASKSTRING = 334,
-    CAT = 335,
-    EXPANDPATH = 336,
-    FMT = 337,
-    PATHONLY = 338,
-    PATMATCH = 339,
-    STRLEN = 340,
-    SUBSTR = 341,
-    TACKON = 342,
-    SET = 343,
-    SYMBOLSET = 344,
-    SYMBOLVAL = 345,
-    OPENWBOBJECT = 346,
-    SHOWWBOBJECT = 347,
-    CLOSEWBOBJECT = 348,
-    ALL = 349,
-    APPEND = 350,
-    ASSIGNS = 351,
-    BACK = 352,
-    CHOICES = 353,
-    COMMAND = 354,
-    COMPRESSION = 355,
-    CONFIRM = 356,
-    DEFAULT = 357,
-    DELOPTS = 358,
-    DEST = 359,
-    DISK = 360,
-    FILES = 361,
-    FONTS = 362,
-    GETDEFAULTTOOL = 363,
-    GETPOSITION = 364,
-    GETSTACK = 365,
-    GETTOOLTYPE = 366,
-    HELP = 367,
-    INFOS = 368,
-    INCLUDE = 369,
-    NEWNAME = 370,
-    NEWPATH = 371,
-    NOGAUGE = 372,
-    NOPOSITION = 373,
-    NOREQ = 374,
-    PATTERN = 375,
-    PROMPT = 376,
-    QUIET = 377,
-    RANGE = 378,
-    SAFE = 379,
-    SETDEFAULTTOOL = 380,
-    SETPOSITION = 381,
-    SETSTACK = 382,
-    SETTOOLTYPE = 383,
-    SOURCE = 384,
-    SWAPCOLORS = 385,
-    OPTIONAL = 386,
-    RESIDENT = 387,
-    OVERRIDE = 388
+    CLOSEMEDIA = 315,
+    EFFECT = 316,
+    SETMEDIA = 317,
+    SHOWMEDIA = 318,
+    DATABASE = 319,
+    EARLIER = 320,
+    GETASSIGN = 321,
+    GETDEVICE = 322,
+    GETDISKSPACE = 323,
+    GETENV = 324,
+    GETSIZE = 325,
+    GETSUM = 326,
+    GETVERSION = 327,
+    ICONINFO = 328,
+    CUS = 329,
+    DCL = 330,
+    ASKBOOL = 331,
+    ASKCHOICE = 332,
+    ASKDIR = 333,
+    ASKDISK = 334,
+    ASKFILE = 335,
+    ASKNUMBER = 336,
+    ASKOPTIONS = 337,
+    ASKSTRING = 338,
+    CAT = 339,
+    EXPANDPATH = 340,
+    FMT = 341,
+    PATHONLY = 342,
+    PATMATCH = 343,
+    STRLEN = 344,
+    SUBSTR = 345,
+    TACKON = 346,
+    SET = 347,
+    SYMBOLSET = 348,
+    SYMBOLVAL = 349,
+    OPENWBOBJECT = 350,
+    SHOWWBOBJECT = 351,
+    CLOSEWBOBJECT = 352,
+    ALL = 353,
+    APPEND = 354,
+    ASSIGNS = 355,
+    BACK = 356,
+    CHOICES = 357,
+    COMMAND = 358,
+    COMPRESSION = 359,
+    CONFIRM = 360,
+    DEFAULT = 361,
+    DELOPTS = 362,
+    DEST = 363,
+    DISK = 364,
+    FILES = 365,
+    FONTS = 366,
+    GETDEFAULTTOOL = 367,
+    GETPOSITION = 368,
+    GETSTACK = 369,
+    GETTOOLTYPE = 370,
+    HELP = 371,
+    INFOS = 372,
+    INCLUDE = 373,
+    NEWNAME = 374,
+    NEWPATH = 375,
+    NOGAUGE = 376,
+    NOPOSITION = 377,
+    NOREQ = 378,
+    PATTERN = 379,
+    PROMPT = 380,
+    QUIET = 381,
+    RANGE = 382,
+    SAFE = 383,
+    SETDEFAULTTOOL = 384,
+    SETPOSITION = 385,
+    SETSTACK = 386,
+    SETTOOLTYPE = 387,
+    SOURCE = 388,
+    SWAPCOLORS = 389,
+    OPTIONAL = 390,
+    RESIDENT = 391,
+    OVERRIDE = 392
   };
 #endif
 /* Tokens.  */
@@ -236,80 +240,84 @@ extern int yydebug;
 #define USER 312
 #define WELCOME 313
 #define WORKING 314
-#define DATABASE 315
-#define EARLIER 316
-#define GETASSIGN 317
-#define GETDEVICE 318
-#define GETDISKSPACE 319
-#define GETENV 320
-#define GETSIZE 321
-#define GETSUM 322
-#define GETVERSION 323
-#define ICONINFO 324
-#define CUS 325
-#define DCL 326
-#define ASKBOOL 327
-#define ASKCHOICE 328
-#define ASKDIR 329
-#define ASKDISK 330
-#define ASKFILE 331
-#define ASKNUMBER 332
-#define ASKOPTIONS 333
-#define ASKSTRING 334
-#define CAT 335
-#define EXPANDPATH 336
-#define FMT 337
-#define PATHONLY 338
-#define PATMATCH 339
-#define STRLEN 340
-#define SUBSTR 341
-#define TACKON 342
-#define SET 343
-#define SYMBOLSET 344
-#define SYMBOLVAL 345
-#define OPENWBOBJECT 346
-#define SHOWWBOBJECT 347
-#define CLOSEWBOBJECT 348
-#define ALL 349
-#define APPEND 350
-#define ASSIGNS 351
-#define BACK 352
-#define CHOICES 353
-#define COMMAND 354
-#define COMPRESSION 355
-#define CONFIRM 356
-#define DEFAULT 357
-#define DELOPTS 358
-#define DEST 359
-#define DISK 360
-#define FILES 361
-#define FONTS 362
-#define GETDEFAULTTOOL 363
-#define GETPOSITION 364
-#define GETSTACK 365
-#define GETTOOLTYPE 366
-#define HELP 367
-#define INFOS 368
-#define INCLUDE 369
-#define NEWNAME 370
-#define NEWPATH 371
-#define NOGAUGE 372
-#define NOPOSITION 373
-#define NOREQ 374
-#define PATTERN 375
-#define PROMPT 376
-#define QUIET 377
-#define RANGE 378
-#define SAFE 379
-#define SETDEFAULTTOOL 380
-#define SETPOSITION 381
-#define SETSTACK 382
-#define SETTOOLTYPE 383
-#define SOURCE 384
-#define SWAPCOLORS 385
-#define OPTIONAL 386
-#define RESIDENT 387
-#define OVERRIDE 388
+#define CLOSEMEDIA 315
+#define EFFECT 316
+#define SETMEDIA 317
+#define SHOWMEDIA 318
+#define DATABASE 319
+#define EARLIER 320
+#define GETASSIGN 321
+#define GETDEVICE 322
+#define GETDISKSPACE 323
+#define GETENV 324
+#define GETSIZE 325
+#define GETSUM 326
+#define GETVERSION 327
+#define ICONINFO 328
+#define CUS 329
+#define DCL 330
+#define ASKBOOL 331
+#define ASKCHOICE 332
+#define ASKDIR 333
+#define ASKDISK 334
+#define ASKFILE 335
+#define ASKNUMBER 336
+#define ASKOPTIONS 337
+#define ASKSTRING 338
+#define CAT 339
+#define EXPANDPATH 340
+#define FMT 341
+#define PATHONLY 342
+#define PATMATCH 343
+#define STRLEN 344
+#define SUBSTR 345
+#define TACKON 346
+#define SET 347
+#define SYMBOLSET 348
+#define SYMBOLVAL 349
+#define OPENWBOBJECT 350
+#define SHOWWBOBJECT 351
+#define CLOSEWBOBJECT 352
+#define ALL 353
+#define APPEND 354
+#define ASSIGNS 355
+#define BACK 356
+#define CHOICES 357
+#define COMMAND 358
+#define COMPRESSION 359
+#define CONFIRM 360
+#define DEFAULT 361
+#define DELOPTS 362
+#define DEST 363
+#define DISK 364
+#define FILES 365
+#define FONTS 366
+#define GETDEFAULTTOOL 367
+#define GETPOSITION 368
+#define GETSTACK 369
+#define GETTOOLTYPE 370
+#define HELP 371
+#define INFOS 372
+#define INCLUDE 373
+#define NEWNAME 374
+#define NEWPATH 375
+#define NOGAUGE 376
+#define NOPOSITION 377
+#define NOREQ 378
+#define PATTERN 379
+#define PROMPT 380
+#define QUIET 381
+#define RANGE 382
+#define SAFE 383
+#define SETDEFAULTTOOL 384
+#define SETPOSITION 385
+#define SETSTACK 386
+#define SETTOOLTYPE 387
+#define SOURCE 388
+#define SWAPCOLORS 389
+#define OPTIONAL 390
+#define RESIDENT 391
+#define OVERRIDE 392
 
 /* Value type.  */
 
