@@ -62,15 +62,15 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0', 
 
 			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && ${env.WORKSPACE}/AROS/configure --target=${ext} --enable-ccache --with-iconset=${iconset} --enable-build-type=nightly --with-serial-debug --with-binutils-version=${binutilsver} --with-gcc-version=${gccver} --with-aros-toolchain-install=${commondir}/tools/tools-${ext}-${gccver}-${binutilsver} --with-portssources=${env.WORKSPACE}/externalsources"
 
-			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make"
+			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make -j8"
 
 			if (!nativetarget) {
-				sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make default-x11keymaptable"
+				sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make -j8 default-x11keymaptable"
 			}
 
 			postCoreBuild(ext)
 
-			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make contrib-installerlg"
+			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make -j8 contrib-installerlg"
 
 			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make distfiles"
 
