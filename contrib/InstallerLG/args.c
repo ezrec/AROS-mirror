@@ -49,6 +49,21 @@ int arg_init(int argc, char **argv)
     {
         // Use the builtin parser.
         rda = (struct RDArgs *)
+    #ifdef __VBCC__
+        ReadArgs
+        (
+            "SCRIPT/A,"
+            "APPNAME/K,"
+            "MINUSER/K,"
+            "DEFUSER/K,"
+            "LANGUAGE/K,"
+            "LOGFILE/K,"
+            "NOLOG/S,"
+            "NOPRETEND/S",
+            (LONG *) args,
+            NULL
+        );
+    #else
         ReadArgs
         (
             "SCRIPT/A,"
@@ -62,6 +77,7 @@ int arg_init(int argc, char **argv)
             (IPTR *) args,
             NULL
         );
+    #endif
     }
     else
     // Invoked from Workbench. Examine 'tooltypes'.

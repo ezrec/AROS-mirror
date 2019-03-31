@@ -35,57 +35,57 @@ entry_p m_cat(entry_p contxt)
     if(c_sane(contxt, 1))
     {
         // Start with a string length of 64.
-        size_t n = 64;
-        char *buf = DBG_ALLOC(calloc(n + 1, 1));
+        size_t num = 64;
+        char *buf = DBG_ALLOC(calloc(num + 1, 1));
 
         if(buf)
         {
-            size_t l = 0, i = 0;
+            size_t len = 0, cur = 0;
 
             // Iterate over all arguments.
-            while(contxt->children[i] &&
-                  contxt->children[i] != end())
+            while(contxt->children[cur] &&
+                  contxt->children[cur] != end())
             {
                 // Resolve and get a string representation
                 // of the current argument.
-                const char *s = str(contxt->children[i++]);
-                size_t ln;
+                const char *arg = str(contxt->children[cur++]);
+                size_t alen;
 
                 // If we couldn't resolve the current argument,
                 // return an empty string.
-                if(DID_ERR())
+                if(DID_ERR)
                 {
                     free(buf);
                     REST;
                 }
 
                 // Get length of the current argument.
-                ln = strlen(s);
+                alen = strlen(arg);
 
                 // If the length is > 0, append to the result.
-                if(ln)
+                if(alen)
                 {
-                    l += strlen(s);
+                    len += strlen(arg);
 
                     // If we're about to exceed the current buffer,
                     // allocate a new one big enough.
-                    if(l > n)
+                    if(len > num)
                     {
                         char *tmp;
 
                         // Double up until we have enough.
-                        while(n && n < l)
+                        while(num && num < len)
                         {
-                            n = n << 1;
+                            num = num << 1;
                         }
 
-                        tmp = DBG_ALLOC(calloc(n + 1, 1));
+                        tmp = DBG_ALLOC(calloc(num + 1, 1));
 
                         // Copy the contents to the new buffer
                         // and free the old one.
-                        if(tmp && n)
+                        if(tmp && num)
                         {
-                            memcpy(tmp, buf, l - ln + 1);
+                            memcpy(tmp, buf, len - alen + 1);
                             free(buf);
                             buf = tmp;
                         }
@@ -100,7 +100,7 @@ entry_p m_cat(entry_p contxt)
                     }
 
                     // By now we're ready to append.
-                    strncat(buf, s, n - strlen(buf));
+                    strncat(buf, arg, num - strlen(buf));
                 }
             }
 
@@ -132,73 +132,66 @@ entry_p m_fmt(entry_p contxt)
 
     if(sct)
     {
-        size_t i = 0, j = 0, k = 0, l = 0;
+        size_t ndx = 0, off = 0, num = 0, len = 0;
         entry_p *arg = contxt->children;
 
         // Scan the format string.
-        for(; fmt[i]; i++)
+        for(; fmt[ndx]; ndx++)
         {
-            // If we have a specifier,
-            if(fmt[i] == '%')
+            // A specifier not preceeded by an escape?
+            if(fmt[ndx] == '%' && (!ndx || fmt[ndx - 1] != '\\'))
             {
-                // that's not preceeded by an escape.
-                if(!i || fmt[i - 1] != '\\')
+                // If this is a specifier that we recognize,
+                // then allocate a new string with just this
+                // specifier, nothing else.
+                if(fmt[++ndx] == 's' || (
+                   fmt[ndx++] == 'l' &&
+                   fmt[ndx] == 'd'))
                 {
-                    i++;
+                    sct[num] = DBG_ALLOC(calloc(ndx - off + 2, 1));
 
-                    // If this is a specifier that we recognize,
-                    // then allocate a new string with just this
-                    // specifier, nothing else.
-                    if(fmt[i] == 's' || (
-                       fmt[i++] == 'l' &&
-                       fmt[i] == 'd'))
+                    if(sct[num])
                     {
-                        sct[k] = DBG_ALLOC(calloc(i - j + 2, 1));
-
-                        if(sct[k])
-                        {
-                            memcpy(sct[k], fmt + j, i - j + 1);
-                            j = i + 1;
-                            k++;
-                        }
-                        else
-                        {
-                            // Out of memory
-                            PANIC(contxt);
-                        }
+                        memcpy(sct[num], fmt + off, ndx - off + 1);
+                        off = ndx + 1;
+                        num++;
                     }
                     else
                     {
-                        ERR(ERR_FMT_INVALID, contxt->name);
-                        break;
+                        // Out of memory
+                        PANIC(contxt);
                     }
+                }
+                else
+                {
+                    ERR(ERR_FMT_INVALID, contxt->name);
+                    break;
                 }
             }
         }
 
         // Iterate over all format specifiers and arguments and do
         // the appropriate conversions and formating.
-        if(k)
+        if(num)
         {
-            for(k = 0; sct[k]; k++)
+            for(num = 0; sct[num]; num++)
             {
                 if(arg && *arg &&
                    *arg != end())
                 {
-                    size_t oln = strlen(sct[k]);
+                    size_t oln = strlen(sct[num]);
                     entry_p cur = resolve(*arg);
 
                     // Bail out if we didn't manage to
                     // resolve the current argument.
-                    if(DID_ERR())
+                    if(DID_ERR)
                     {
                         arg = NULL;
                         break;
                     }
 
                     // Format string.
-                    if(sct[k][oln - 1] == 's' &&
-                       cur->type == STRING)
+                    if(sct[num][oln - 1] == 's' && cur->type == STRING)
                     {
                         size_t nln = oln + strlen(cur->name);
                         char *new = DBG_ALLOC(calloc(nln + 1, 1));
@@ -207,20 +200,21 @@ entry_p m_fmt(entry_p contxt)
                         // the corresponding formated string.
                         if(new)
                         {
-                            int n = snprintf(new, nln, sct[k], cur->name);
+                            int sln = snprintf(new, nln, sct[num], cur->name);
 
-                            l += n > 0 ? (size_t) n : 0;
-                            free(sct[k]);
-                            sct[k] = new;
+                            len += sln > 0 ? (size_t) sln : 0;
+                            free(sct[num]);
+                            sct[num] = new;
                         }
                         else
                         {
                             // Out of memory
                             PANIC(contxt);
+                            len = 0;
                         }
                     }
                     // Format numeric value.
-                    else if(sct[k][oln - 1] == 'd' &&
+                    else if(sct[num][oln - 1] == 'd' &&
                             cur->type == NUMBER)
                     {
                         size_t nln = oln + NUMLEN;
@@ -230,16 +224,17 @@ entry_p m_fmt(entry_p contxt)
                         // the corresponding formated string.
                         if(new)
                         {
-                            int n = snprintf(new, nln, sct[k], cur->id);
+                            int sln = snprintf(new, nln, sct[num], cur->id);
 
-                            l += n > 0 ? (size_t) n : 0;
-                            free(sct[k]);
-                            sct[k] = new;
+                            len += sln > 0 ? (size_t) sln : 0;
+                            free(sct[num]);
+                            sct[num] = new;
                         }
                         else
                         {
                             // Out of memory
                             PANIC(contxt);
+                            len = 0;
                         }
                     }
                     else
@@ -262,22 +257,22 @@ entry_p m_fmt(entry_p contxt)
         }
 
         // Concatenate all formated strings.
-        if(k && l)
+        if(num && len)
         {
             // Allocate memory to hold all of them.
-            l += strlen(fmt + j) + 1;
-            ret = DBG_ALLOC(calloc(l, 1));
+            len += strlen(fmt + off) + 1;
+            ret = DBG_ALLOC(calloc(len, 1));
 
             if(ret)
             {
                 // All format strings.
-                for(k = 0; sct[k]; k++)
+                for(num = 0; sct[num]; num++)
                 {
-                    strncat(ret, sct[k], l - strlen(ret));
+                    strncat(ret, sct[num], len - strlen(ret));
                 }
 
                 // Suffix.
-                strncat(ret, fmt + j, l - strlen(ret));
+                strncat(ret, fmt + off, len - strlen(ret));
             }
             else
             {
@@ -287,18 +282,19 @@ entry_p m_fmt(entry_p contxt)
         }
 
         // Free all temporary format strings.
-        for(k = 0; sct[k]; k++)
+        for(num = 0; sct[num]; num++)
         {
-            free(sct[k]);
+            free(sct[num]);
         }
 
+        // Free scatter list.
         free(sct);
 
         // Without format specifiers, the format string
         // is the return value.
-        if(!k)
+        if(!num)
         {
-            ret = strdup(fmt);
+            ret = DBG_ALLOC(strdup(fmt));
         }
 
         // Fail if the number of arguments and the number
@@ -341,38 +337,38 @@ entry_p m_pathonly(entry_p contxt)
     // We need one argument, a full path.
     if(c_sane(contxt, 1))
     {
-        const char *s = str(CARG(1));
-        size_t i = strlen(s);
+        const char *arg = str(CARG(1));
+        size_t len = strlen(arg);
 
         // Scan backwards.
-        while(i--)
+        while(len--)
         {
             // If we find a delimiter, then
             // we have the path to the left
             // of it.
-            if(s[i] == '/' ||
-               s[i] == ':' )
+            if(arg[len] == '/' ||
+               arg[len] == ':' )
             {
                 // Get termination for free.
-                char *r = DBG_ALLOC(calloc(i + 2, 1));
+                char *ret = DBG_ALLOC(calloc(len + 2, 1));
 
-                if(r)
+                if(ret)
                 {
                     // Copy full path.
-                    memcpy(r, s, i + 1);
+                    memcpy(ret, arg, len + 1);
 
                     // Cut trailing '/' if preceeded
                     // by something absolute, dir or
                     // volume.
-                    if(i > 1 &&
-                       r[i] == '/' &&
-                       r[i - 1] != '/' &&
-                       r[i - 1] != ':')
+                    if(len > 1 &&
+                       ret[len] == '/' &&
+                       ret[len - 1] != '/' &&
+                       ret[len - 1] != ':')
                     {
-                        r[i] = '\0';
+                        ret[len] = '\0';
                     }
 
-                    RSTR(r);
+                    RSTR(ret);
                 }
 
                 // Out of memory.
@@ -464,31 +460,31 @@ entry_p m_substr(entry_p contxt)
 {
     if(c_sane(contxt, 2))
     {
-        char *s = str(CARG(1));
-        int i = num(CARG(2)),
-            l = (int) strlen(s);
+        char *arg = str(CARG(1));
+        int off = num(CARG(2)),
+            len = (int) strlen(arg);
 
         // Is the number characters limited?
         if(CARG(3) && CARG(3) != end())
         {
             // Get the number of characters
             // to copy.
-            int j = num(CARG(3));
+            int chr = num(CARG(3));
 
             // Use the limitations used by the
             // CBM installer.
-            if(i < l && j > 0 && i >= 0)
+            if(off < len && chr > 0 && off >= 0)
             {
-                char *r = DBG_ALLOC(calloc((size_t) l + 1, 1));
+                char *ret = DBG_ALLOC(calloc((size_t) len + 1, 1));
 
-                if(r)
+                if(ret)
                 {
                     // Cap all values and do the
                     // actual copy.
-                    l -= i;
-                    l = l < j ? l : j;
-                    memcpy(r, s + i, l);
-                    RSTR(r);
+                    len -= off;
+                    len = len < chr ? len : chr;
+                    memcpy(ret, arg + off, len);
+                    RSTR(ret);
                 }
 
                 // Out of memory.
@@ -499,20 +495,20 @@ entry_p m_substr(entry_p contxt)
         else
         // No, copy until the end of the string.
         {
-            // Max cap
-            if(i < l)
+            // Max cap.
+            if(off < len)
             {
-                // Min cap
-                if(i > 0)
+                // Min cap.
+                if(off > 0)
                 {
-                    char *r = DBG_ALLOC(calloc((size_t) l + 1, 1));
+                    char *ret = DBG_ALLOC(calloc((size_t) len + 1, 1));
 
-                    if(r)
+                    if(ret)
                     {
                         // All values are already
                         // capped, just copy.
-                        memcpy(r, s + i, l - i);
-                        RSTR(r);
+                        memcpy(ret, arg + off, len - off);
+                        RSTR(ret);
                     }
 
                     // Out of memory.
@@ -549,11 +545,11 @@ entry_p m_tackon(entry_p contxt)
     // and a file.
     if(c_sane(contxt, 2))
     {
-        char *r = h_tackon(contxt, str(CARG(1)), str(CARG(2)));
+        char *ret = h_tackon(contxt, str(CARG(1)), str(CARG(2)));
 
-        if(r)
+        if(ret)
         {
-            RSTR(r);
+            RSTR(ret);
         }
 
         // Return empty string
@@ -570,89 +566,94 @@ entry_p m_tackon(entry_p contxt)
 // Name:        h_tackon
 // Description: Concatenate directory and file strings
 // Input:       entry_p contxt:     The execution context.
-//              const char *p:      The directory.
-//              const char *f:      The file.
+//              const char *pre:    The directory.
+//              const char *suf:    The file.
 // Return:      const char *:       The dir/file concatenation.
 //----------------------------------------------------------------------------
 char *h_tackon(entry_p contxt,
-               const char *p,
-               const char *f)
+               const char *pre,
+               const char *suf)
 {
     // We need a path and a file.
-    if(p && f)
+    if(pre && suf)
     {
-        size_t lp = strlen(p),
-               lf = strlen(f);
+        size_t lep = strlen(pre),
+               les = strlen(suf);
 
         // No point doing this if both
         // strings are empty.
-        if(lp || lf)
+        if(lep || les)
         {
-            char *r = NULL;
+            char *ret = NULL;
 
-            // If the path is empty, the result
-            // equals the filename.
-            if(!lp)
+            // If the filename ends with a delimiter,
+            // it's not a valid filename. Only fail if
+            // we're running in 'strict' mode.
+            if(les && (suf[les - 1] == '/' || suf[les - 1] == ':')
+               && get_numvar(contxt, "@strict"))
             {
-                r = strdup(f);
+                ERR(ERR_NOT_A_FILE, suf);
+                return NULL;
+            }
 
-                if(!r)
+            // Ignore the path part if the file part is
+            // an absolute Amiga style path.
+            if(strchr(suf, ':'))
+            {
+                // Empty path.
+                lep = 0;
+            }
+
+            // If the path is empty, the result equals
+            // the filename.
+            if(!lep)
+            {
+                ret = DBG_ALLOC(strdup(suf));
+
+                if(!ret)
                 {
                     // Out of memory.
                     PANIC(contxt);
                 }
 
-                return r;
+                return ret;
             }
 
             // If the filename is empty, the result
             // equals the path.
-            if(!lf)
+            if(!les)
             {
-                r = strdup(p);
+                ret = DBG_ALLOC(strdup(pre));
 
-                if(!r)
+                if(!ret)
                 {
                     // Out of memory.
                     PANIC(contxt);
                 }
 
-                return r;
-            }
-
-            // If the filename ends with a delimiter,
-            // it's not a valid filename.
-            if(f[lf - 1] == '/' ||
-               f[lf - 1] == ':')
-            {
-                 // Only fail if we're in 'strict' mode.
-                if(get_numvar(contxt, "@strict"))
-                {
-                    ERR(ERR_NOT_A_FILE, f);
-                    return NULL;
-                }
+                return ret;
             }
 
             // Allocate memory to hold path, filename,
             // delimiter and termination.
-            size_t lt = lp + lf + 2;
-            r = DBG_ALLOC(calloc(lt, 1));
+            size_t let = lep + les + 2;
+            ret = DBG_ALLOC(calloc(let, 1));
 
-            if(r)
+            if(ret)
             {
                 // Copy the path.
-                memcpy(r, p, lp);
+                memcpy(ret, pre, lep);
 
                 // Insert delimiter if none exist.
-                if(p[lp - 1] != '/' &&
-                   p[lp - 1] != ':')
+                if(pre[lep - 1] != '/' &&
+                   pre[lep - 1] != ':')
                 {
-                   strncat(r, "/", lt - strlen(r));
+                   strncat(ret, "/", let - strlen(ret));
                 }
 
                 // Concatenate the result.
-                strncat(r, f, lt - strlen(r));
-                return r;
+                strncat(ret, suf, let - strlen(ret));
+                return ret;
             }
 
             // Out of memory.

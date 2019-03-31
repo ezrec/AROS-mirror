@@ -13,18 +13,26 @@
 #include "resource.h"
 
 #ifdef AMIGA
+#include <graphics/rpattr.h>
 #include <libraries/asl.h>
 #include <libraries/mui.h>
+# ifndef __VBCC__
 #include <proto/alib.h>
+# endif
 # ifndef __MORPHOS__
+#  ifndef __VBCC__
 #include <proto/debug.h>
+#  endif
 # else
 #include <clib/debug_protos.h>
 # endif
 #include <proto/exec.h>
+#include <proto/datatypes.h>
+#include <proto/dos.h>
 #include <proto/graphics.h>
 #include <proto/intuition.h>
 #include <proto/muimaster.h>
+#include <proto/utility.h>
 #endif /* AMIGA */
 
 #include <stdio.h>
@@ -33,6 +41,10 @@
 #include <unistd.h>
 #include <limits.h>
 #include <sys/time.h>
+
+#ifndef __GNUC__
+#define __attribute__(a)
+#endif
 
 #ifdef AMIGA
 //----------------------------------------------------------------------------
@@ -74,7 +86,7 @@
 #define INFO(S) if(LLVL>1) GPUT("INFO",S)
 
 //----------------------------------------------------------------------------
-// The installer window
+// IG - Installer window
 //----------------------------------------------------------------------------
 Object *Win;
 
@@ -85,6 +97,10 @@ CLASS_DEF(IG)
 {
     // Timer.
     struct MUI_InputHandlerNode Ticker;
+
+    // Backdrop screen / window.
+    struct Screen *Scr;
+    struct Window *Win;
 
     // Widgets.
     Object *ExpertLevel, *UserLevel, *Progress,
@@ -121,6 +137,23 @@ CLASS_DEF(IG)
 #define MUIM_IG_PageSet          (TAGBASE_LG + 120)
 #define MUIM_IG_Finish           (TAGBASE_LG + 121)
 #define MUIM_IG_Working          (TAGBASE_LG + 122)
+#define MUIM_IG_Effect           (TAGBASE_LG + 123)
+#define MUIM_IG_CloseMedia       (TAGBASE_LG + 124)
+#define MUIM_IG_SetMedia         (TAGBASE_LG + 125)
+#define MUIM_IG_ShowMedia        (TAGBASE_LG + 126)
+#define MUIM_IG_ShowPicture      (TAGBASE_LG + 127)
+#define MUIM_IG_GetCustomScreen  (TAGBASE_LG + 128)
+
+//----------------------------------------------------------------------------
+// IG - Attributes
+//----------------------------------------------------------------------------
+#define MUIA_IG_UseCustomScreen  (TAGBASE_LG + 201)
+
+//----------------------------------------------------------------------------
+// IG - Media ID
+//----------------------------------------------------------------------------
+#define MUIA_IG_MediaBase        (TAGBASE_LG + 301)
+#define MUIA_IG_MediaMax         (TAGBASE_LG + 399)
 
 //----------------------------------------------------------------------------
 // IG - Init parameters
@@ -236,6 +269,59 @@ struct MUIP_IG_Working
 };
 
 //----------------------------------------------------------------------------
+// IG - Effect parameters
+//----------------------------------------------------------------------------
+struct MUIP_IG_Effect
+{
+    ULONG MethodID;
+    ULONG Effect;
+    ULONG ColorStart;
+    ULONG ColorEnd;
+};
+
+//----------------------------------------------------------------------------
+// IG - CloseMedia parameters
+//----------------------------------------------------------------------------
+struct MUIP_IG_CloseMedia
+{
+    ULONG MethodID;
+    ULONG MediaID;
+};
+
+//----------------------------------------------------------------------------
+// IG - SetMedia parameters
+//----------------------------------------------------------------------------
+struct MUIP_IG_SetMedia
+{
+    ULONG MethodID;
+    ULONG MediaID;
+    ULONG Action;
+    ULONG Parameter;
+};
+
+//----------------------------------------------------------------------------
+// IG - ShowMedia parameters
+//----------------------------------------------------------------------------
+struct MUIP_IG_ShowMedia
+{
+    ULONG MethodID;
+    ULONG MediaID;
+    ULONG Media;
+    ULONG Action;
+};
+
+//----------------------------------------------------------------------------
+// IG - ShowPicture parameters
+//----------------------------------------------------------------------------
+struct MUIP_IG_ShowPicture
+{
+    ULONG MethodID;
+    ULONG MediaID;
+    ULONG Picture;
+    ULONG Action;
+};
+
+//----------------------------------------------------------------------------
 // IG - Abort parameters
 //----------------------------------------------------------------------------
 struct MUIP_IG_Abort
@@ -343,6 +429,14 @@ struct MUIP_IG_PageSet
 };
 
 //----------------------------------------------------------------------------
+// IG - GetCustomScreen parameters
+//----------------------------------------------------------------------------
+struct MUIP_IG_GetCustomScreen
+{
+    ULONG MethodID;
+};
+
+//----------------------------------------------------------------------------
 // IG - private values
 //----------------------------------------------------------------------------
 #define MUIV_IG_FirstButton      (TAGBASE_LG + 200)
@@ -377,10 +471,6 @@ struct MUIP_IG_PageSet
 #define B_OK                               4
 #define B_NONE                             5
 
-
-
-
-  
 //----------------------------------------------------------------------------
 // IGTrans - [PRIVATE] -
 // Input:    ULONG signal:  -
@@ -411,10 +501,8 @@ MUIDSP ULONG IGTrans(ULONG signal)
 
         default:
             return G_ERR;
-
     }
 }
-
 
 //----------------------------------------------------------------------------
 // IGWait - [PRIVATE] Wait for notification(s)
@@ -523,11 +611,11 @@ MUIDSP ULONG IGWait(Object *obj, ULONG notif, ULONG range)
 
 //----------------------------------------------------------------------------
 // IGInit - Initialize all the things
-// Input:             -
-// Return:            On success TRUE, FALSE otherwise.
+// Input:   -
+// Return:  On success TRUE, FALSE otherwise.
 //----------------------------------------------------------------------------
 MUIDSP IPTR IGInit(Class *cls,
-                             Object *obj)
+                   Object *obj)
 {
     static ULONG i = MUIV_IG_FirstButton;
 
@@ -595,8 +683,8 @@ MUIDSP IPTR IGInit(Class *cls,
 //----------------------------------------------------------------------------
 //
 MUIDSP IPTR IGPageSet(Class *cls,
-                                Object *obj,
-                                struct MUIP_IG_PageSet *msg)
+                      Object *obj,
+                      struct MUIP_IG_PageSet *msg)
 {
     struct IGData *my = INST_DATA(cls, obj);
 
@@ -734,8 +822,6 @@ MUIDSP IPTR IGWelcome(Class *cls,
         // Wait for proceed or abort.
         inp_t rc = IGTrans(IGWait(obj, MUIV_IG_Proceed, 2));
 
-KPrintF("rc1:%d\n", rc);
-
         if(rc == G_TRUE)
         {
             // Get the selected user level value. If we have
@@ -789,7 +875,6 @@ KPrintF("rc1:%d\n", rc);
                     // Wait for proceed or abort.
                     rc = IGTrans(IGWait(obj, MUIV_IG_Proceed, 2));
 
-KPrintF("rc2:%d\n", rc);
                     if(rc == G_TRUE)
                     {
                         // Get pretend and log settings.
@@ -806,7 +891,6 @@ KPrintF("rc2:%d\n", rc);
             }
         }
 
-KPrintF("rcfinal:%d\n", rc);
         // 'Proceed', 'Abort' or 'Exit'.
         return rc;
     }
@@ -1271,8 +1355,8 @@ MUIDSP IPTR IGCopyFilesAdd(Class *cls,
 
 //----------------------------------------------------------------------------
 // IGExit - Say goodbye and close GUI
-// Input:             Message - The prompt
-// Return:            TRUE
+// Input    Message - The prompt
+// Return:  TRUE
 //----------------------------------------------------------------------------
 MUIDSP IPTR IGExit(Class *cls,
                    Object *obj,
@@ -1315,11 +1399,449 @@ MUIDSP IPTR IGWorking(Class *cls,
     }
 }
 
+//----------------------------------------------------------------------------
+// IGEffect -  Show gradient backdrop.
+// Input:      Effect - Type and position
+//             ColorStart - First color in gradient.
+//             ColorEnd - Last color in gradient.
+// Return:     G_TRUE / G_FALSE / G_ERR.
+//----------------------------------------------------------------------------
+MUIDSP IPTR IGEffect(Class *cls,
+                     Object *obj,
+                     struct MUIP_IG_Effect *msg)
+{
+    struct IGData *my = INST_DATA(cls, obj);
 
+    // Do we have anything to do?
+    if(!(msg->Effect & G_EFFECT))
+    {
+        // No effect.
+        return G_FALSE;
+    }
 
+    // Don't trust Init().
+    if(my->Scr && my->Win)
+    {
+        // Allocate pen for the gradient.
+        LONG pn = ObtainPen(my->Scr->ViewPort.ColorMap, -1,
+                  0, 0, 0, PEN_EXCLUSIVE | PEN_NO_SETCOLOR);
 
+        // Valid pen?
+        if(pn != -1)
+        {
+            // Get 8-bit RGB start and stop values.
+            int r1 = msg->ColorStart >> 16,
+                g1 = (msg->ColorStart >> 8) & 0xff,
+                b1 = msg->ColorStart & 0xff,
+                r2 = msg->ColorEnd >> 16,
+                g2 = (msg->ColorEnd >> 8) & 0xff,
+                b2 = msg->ColorEnd & 0xff,
 
+                // Minimum chunk = 1 << ct pixels,
+                // to save time when drawing.
+                ct = 2, s = my->Win->Height >> ct;
 
+            // RGB deltas per chunk.
+            float rd = (r2 - r1) / ((float) s - 1),
+                  gd = (g2 - g1) / ((float) s - 1),
+                  bd = (b2 - b1) / ((float) s - 1);
+
+            // Backdrop big enough?
+            if(s)
+            {
+                // Allocate color vector.
+                ULONG *cv = calloc(s * 3, sizeof(ULONG));
+
+                // Release pen and bail on OOM.
+                if(!cv)
+                {
+                    ReleasePen(my->Scr->ViewPort.ColorMap, pn);
+                    return G_ERR;
+                }
+
+                // Color index.
+                int i = 0;
+
+                // Initial RGB values.
+                float r = r1,
+                      g = g1,
+                      b = b1;
+
+                // Compute gradient.
+                while(i < s * 3)
+                {
+                    cv[i++] = ((ULONG) r) << 24;
+                    cv[i++] = ((ULONG) g) << 24;
+                    cv[i++] = ((ULONG) b) << 24;
+                    r += rd;
+                    g += gd;
+                    b += bd;
+                }
+
+                // Set backdrop pen.
+                SetRPAttrs
+                (
+                    my->Win->RPort,
+                    RPTAG_APen, pn,
+                    RPTAG_BPen, pn,
+                    TAG_END
+                );
+
+                // Draw effect if it's enabled.
+                if(msg->Effect & G_EFFECT)
+                {
+                    // Start from the bottom, one
+                    // delta at a time.
+                    int d = 1 << ct,
+                        v = my->Win->Height;
+
+                    // For all colors in gradient,
+                    // draw rectangle with delta
+                    // height.
+                    while(i >= 0)
+                    {
+                        // Go backwards in vector.
+                        i -= 3;
+
+                        // Use the same pen again
+                        // and again.
+                        SetRGB32
+                        (
+                            &my->Scr->ViewPort, pn,
+                            cv[i],
+                            cv[i + 1],
+                            cv[i + 2]
+                        );
+
+                        // From bottom to top.
+                        v -= d;
+
+                        // Draw rectangle.
+                        RectFill
+                        (
+                            my->Win->RPort, 0, v,
+                            my->Win->Width, v + d
+                        );
+                    }
+                }
+
+                // Free color vector.
+                free(cv);
+            }
+
+            // We're done with the pen.
+            ReleasePen(my->Scr->ViewPort.ColorMap, pn);
+
+            // True even if Window is too small.
+            return G_TRUE;
+        }
+    }
+
+    // Unknown error.
+    GERR(tr(S_UNER));
+    return G_ERR;
+}
+
+//----------------------------------------------------------------------------
+// IGCloseMedia -  FIXME
+// Input:          FIXME
+// Return:         G_TRUE / G_FALSE
+//----------------------------------------------------------------------------
+MUIDSP IPTR IGCloseMedia(Class *cls,
+                         Object *obj,
+                         struct MUIP_IG_CloseMedia *msg)
+{
+    // Silence.
+    (void) cls;
+
+    // Compute user data value.
+    ULONG mid = msg->MediaID + MUIA_IG_MediaBase;
+
+    // Is the media ID valid?
+    if(mid <= MUIA_IG_MediaMax)
+    {
+        // Is the ID in use?
+        Object *win = (Object *) DoMethod
+        (
+            _app(obj), MUIM_FindUData, mid
+        );
+
+        // If it's in use, close the window.
+        if(win)
+        {
+            set(win, MUIA_Window_Open, FALSE);
+            return G_TRUE;
+        }
+    }
+
+    // Invalid / non existing ID.
+    return G_FALSE;
+}
+
+//----------------------------------------------------------------------------
+// IGSetMedia -  FIXME
+// Input:        FIXME
+// Return:       G_TRUE / G_FALSE / G_ERR.
+//----------------------------------------------------------------------------
+MUIDSP IPTR IGSetMedia(Class *cls,
+                       Object *obj,
+                       struct MUIP_IG_SetMedia *msg)
+{
+    // Silence.
+    (void) cls;
+    (void) obj;
+
+    // Do we have anything to do?
+    if(msg->MediaID)
+    {
+        // Dummy.
+        return G_TRUE;
+    }
+
+    // Invalid ID.
+    return G_FALSE;
+}
+
+//----------------------------------------------------------------------------
+// IGGetCustomScreen - Get custom screen.
+// Input:            -
+// Return:             struct Screen * if open, NULL otherwise.
+//----------------------------------------------------------------------------
+MUIDSP IPTR IGGetCustomScreen(Class *cls,
+                              Object *obj)
+{
+    struct IGData *my = INST_DATA(cls, obj);
+    return (IPTR) my->Scr;
+}
+
+//----------------------------------------------------------------------------
+// IGShowPicture -  FIXME
+// Input:           Picture - Image file.
+//                  Action - FIXME
+// Return:          FIXME
+//----------------------------------------------------------------------------
+MUIDSP IPTR IGShowPicture(Class *cls,
+                          Object *obj,
+                          struct MUIP_IG_ShowPicture *msg)
+{
+    // Silence.
+    (void) cls;
+
+    Object *win = NULL;
+
+    // We need something to show.
+    if(msg->Picture)
+    {
+        // Default behaviour is to put the window
+        // in the center and leave the size as is.
+        ULONG xs = 0, ys = 0,
+              yp = MUIV_Window_TopEdge_Centered,
+              xp = MUIV_Window_LeftEdge_Centered;
+
+        // Set size explicitly?
+        if(msg->Action & G_SIZE)
+        {
+            // Get screen dimensions.
+            struct Screen *scr = NULL;
+            get(obj, MUIA_Window_Screen, &scr);
+
+            // Can we not have a screen?
+            if(scr)
+            {
+                // Screen / 2 (large) 4 (medium) 8 (small).
+                xs = scr->Width >> (msg->Action & G_SMALL ? 3 :
+                                    msg->Action & G_LARGE ? 1 : 2);
+
+                // Height of the window depends on the width.
+                ys = msg->Action & G_MORE ? scr->Height >>
+                         (msg->Action & G_LARGE ? 2 : 1) :
+                     msg->Action & G_LESS ? scr->Height >>
+                         (msg->Action & G_SMALL ? 2 : 3) :
+                     scr->Height >> (msg->Action & G_SMALL ? 3 :
+                                     msg->Action & G_LARGE ? 1 : 2);
+            }
+        }
+
+        // Explicit horizontal placement?
+        if(msg->Action & G_HORIZ)
+        {
+            xp = msg->Action & G_LEFT ? 0 :
+            #ifndef __AROS__
+                // This doesn't work on AROS.
+                MUIV_Window_LeftEdge_Right(0);
+            #else
+                MUIV_Window_LeftEdge_Centered;
+            #endif
+        }
+
+        // Explicit vertical placement?
+        if(msg->Action & G_VERT)
+        {
+            yp = msg->Action & G_UPPER ? 0 :
+            #ifndef __AROS__
+                // This doesn't work on AROS.
+                 MUIV_Window_TopEdge_Bottom(0);
+            #else
+                MUIV_Window_TopEdge_Centered;
+            #endif
+        }
+
+        // Proper window unless borderless is set.
+        if(msg->Action & G_BORDER)
+        {
+            // Take size and placement into account. Make
+            // sure that this window is not activated and
+            // that it's not possible to close it.
+            win = (Object *) MUI_NewObject
+            (
+                MUIC_Window,
+                MUIA_Window_TopEdge, yp,
+                MUIA_Window_LeftEdge, xp,
+                MUIA_UserData, msg->MediaID,
+                xs ? MUIA_Window_Width : TAG_IGNORE, xs,
+                ys ? MUIA_Window_Height : TAG_IGNORE, ys,
+                MUIA_Window_Activate, FALSE,
+                MUIA_Window_CloseGadget, FALSE,
+                MUIA_Window_RootObject, (Object *) MUI_NewObject(
+                    MUIC_Scrollgroup,
+                    MUIA_Scrollgroup_Contents, (Object *) MUI_NewObject(
+                        MUIC_Virtgroup,
+                        MUIA_Group_Child, (Object *) MUI_NewObject(
+                            MUIC_Dtpic,
+                            MUIA_Dtpic_Name, msg->Picture,
+                            TAG_END),
+                        TAG_END),
+                    TAG_END),
+                TAG_END
+            );
+        }
+        else
+        {
+            // Take placement into account, ignore size. Create
+            // no gadgets whatsoever, and it should be inactive.
+            win = (Object *) MUI_NewObject
+            (
+                MUIC_Window,
+                MUIA_Window_TopEdge, yp,
+                MUIA_Window_LeftEdge, xp,
+                MUIA_Window_DragBar, FALSE,
+                MUIA_UserData, msg->MediaID,
+                MUIA_Window_Activate, FALSE,
+                MUIA_Window_Borderless, TRUE,
+                MUIA_Window_SizeGadget, FALSE,
+                MUIA_Window_CloseGadget, FALSE,
+                MUIA_Window_DepthGadget, FALSE,
+                MUIA_Window_RootObject, (Object *) MUI_NewObject(
+                    MUIC_Dtpic,
+                    MUIA_Dtpic_Name, msg->Picture,
+                    TAG_END),
+                TAG_END
+            );
+        }
+    }
+
+    // On success, let the application manage the new
+    // window. Make sure that the installer window is
+    // in front of it.
+    if(win)
+    {
+        DoMethod(_app(obj), OM_ADDMEMBER, win);
+        set(win, MUIA_Window_Open, TRUE);
+        DoMethod(win, MUIM_Show);
+        DoMethod(obj, MUIM_Window_ToFront);
+    }
+
+    // FIXME
+    return (IPTR) win;
+
+}
+
+//----------------------------------------------------------------------------
+// IGShowMedia -  FIXME
+// Input:         MediaID - Output FIXME
+//                Media - Media file.
+//                Action - FIXME
+// Return:        G_TRUE / G_FALSE / G_ERR.
+//----------------------------------------------------------------------------
+MUIDSP IPTR IGShowMedia(Class *cls,
+                        Object *obj,
+                        struct MUIP_IG_ShowMedia *msg)
+{
+    // Silence.
+    (void) cls;
+
+    // ID counter.
+    static int mid;
+
+    // Test name and cap the number of open files.
+    if(mid + MUIA_IG_MediaBase <= MUIA_IG_MediaMax
+       && msg->Media)
+    {
+        // And we need permission to read from the file.
+        BPTR flk = Lock((STRPTR) msg->Media, ACCESS_READ);
+
+        if(flk)
+        {
+            // Check datatype before opening the file for real.
+            struct DataType *dtp = ObtainDataTypeA(DTST_FILE, (APTR) flk, NULL);
+
+            if(dtp)
+            {
+                // Get group ID of datatype.
+                struct DataTypeHeader *dth = dtp->dtn_Header;
+                ULONG gid = dth->dth_GroupID;
+
+                // Free datatype resources and release lock.
+                ReleaseDataType(dtp);
+                UnLock(flk);
+
+                // We only support pictures at the moment.
+                if(gid == GID_PICTURE)
+                {
+                    DoMethod
+                    (
+                        obj, MUIM_IG_ShowPicture,
+                        mid + MUIA_IG_MediaBase,
+                        msg->Media, msg->Action
+                    );
+
+                    // Return current media ID.
+                    *((int *) msg->MediaID) = mid;
+
+                    // Next ID.
+                    mid++;
+
+                    // FIXME.
+                    return G_TRUE;
+                }
+                else
+                {
+                    /*
+                    case GID_SYSTEM:
+                    case GID_TEXT:
+                    case GID_DOCUMENT:
+                    case GID_SOUND:
+                    case GID_INSTRUMENT:
+                    case GID_MUSIC:
+                    case GID_ANIMATION:
+                    case GID_MOVIE:
+                    */
+                    // FIXME - ID?.
+                    return G_FALSE;
+                }
+
+            }
+            else
+            {
+                // Unknown data.
+                UnLock(flk);
+            }
+        }
+    }
+
+    // Invalid input.
+    return G_ERR;
+}
 
 //----------------------------------------------------------------------------
 // IGMessage - Show message
@@ -1547,6 +2069,8 @@ MUIDSP IPTR IGBool(Class *cls,
        msg->Help, P_MESSAGE, B_YES_NO_ABORT))
     {
         struct IGData *my = INST_DATA(cls, obj);
+
+        // Return code.
         inp_t rc;
 
         // Set values of true and false.
@@ -1785,7 +2309,7 @@ MUIDSP IPTR IGCheckBoxes(Class *cls,
 
                     // We're done modifying the group.
                     DoMethod(my->Empty, MUIM_Group_ExitChange);
-                    return 0;
+                    return G_ERR;
                 }
             }
 
@@ -1842,20 +2366,21 @@ MUIDSP IPTR IGComplete(Class *cls,
                        struct MUIP_IG_Complete *msg)
 {
     struct IGData *my = INST_DATA(cls, obj);
+
+    // Return code.
     inp_t rc = G_TRUE;
 
     if(msg->Progress > 100)
     {
-        rc = G_FALSE;
         msg->Progress = 100;
+        rc = G_FALSE;
     }
 
-    // Set (caped) value and show the gauge.
+    // Set (capped) value and show gauge.
     set(my->Complete, MUIA_Gauge_Current, msg->Progress);
     set(my->Complete, MUIA_ShowMe, TRUE);
 
-    // Return value set.
-// Return:     G_TRUE / G_ERR.
+    // Nothing to wait for.
     return rc;
 }
 
@@ -1887,12 +2412,13 @@ MUIDSP IPTR IGConfirm(Class *cls,
         if(ost)
         {
             // Copy the current message.
-            memcpy(ost, (void *) str, osz);
+            memcpy(ost, (void *) (uintptr_t) str, osz);
 
             // Prompt for confirmation.
             if(DoMethod(obj, MUIM_IG_PageSet, msg->Message,
                         msg->Help, P_MESSAGE, B_PROCEED_SKIP_ABORT))
             {
+                // Return code.
                 inp_t rc;
 
                 // Use 'Abort' or 'Back'?
@@ -1940,16 +2466,13 @@ MUIDSP IPTR IGConfirm(Class *cls,
 
 //----------------------------------------------------------------------------
 // IGNew - Overloading OM_NEW
-// Input:            See BOOPSI docs
-// Return:           See BOOPSI docs
+// Input:  See BOOPSI docs
+// Return: See BOOPSI docs
 //----------------------------------------------------------------------------
 MUIDSP IPTR IGNew(Class *cls,
-			                Object *obj,
-			                struct opSet *msg)
+                  Object *obj,
+                  struct opSet *msg)
 {
-    // Silence.
-    (void) msg;
-
     // Temp widgets.
     Object *el, *ul, *fp, *cm, *pr, *st,
            *nm, *bp, *em, *rt, *tx, *ls,
@@ -1980,6 +2503,35 @@ MUIDSP IPTR IGNew(Class *cls,
     log[0] = tr(S_NOLG); // No logging
     log[1] = tr(S_SILG); // Log to file
 
+    // Screen / window backdrop.
+    struct Screen *scr = NULL;
+    struct Window *win = NULL;
+
+    // Open backdrop screen / window on demand.
+    if(GetTagData(MUIA_IG_UseCustomScreen, FALSE, msg->ops_AttrList))
+    {
+        scr = OpenScreenTags
+        (
+            NULL,
+            SA_PubName, "Installer",
+            SA_LikeWorkbench, TRUE,
+            SA_ShowTitle, FALSE,
+            TAG_END
+        );
+
+        if(scr)
+        {
+            win = OpenWindowTags
+            (
+                NULL,
+                WA_CustomScreen, scr,
+                WA_Borderless, TRUE,
+                WA_Backdrop, TRUE,
+                TAG_END
+            );
+        }
+    }
+
     // The GUI is, as far as possible, a static
     // construct. We're not constructing things
     // on the fly, instead we use paging to let
@@ -1989,6 +2541,7 @@ MUIDSP IPTR IGNew(Class *cls,
         cls, obj,
         MUIA_Window_Title, tr(S_INST),
         MUIA_Window_AppWindow, TRUE,
+        scr ? MUIA_Window_Screen : TAG_IGNORE, scr,
         MUIA_Window_RootObject, MUI_NewObject(
             MUIC_Group,
             MUIA_Group_Child, (Object *) MUI_MakeObject(MUIO_VSpace, 0),
@@ -2275,6 +2828,10 @@ MUIDSP IPTR IGNew(Class *cls,
         my->Ticker.ihn_Method = MUIM_IG_Ticker;
         my->Ticker.ihn_Millis = 10;
 
+        // Backdrop.
+        my->Scr = scr;
+        my->Win = win;
+
         // Save widgets.
         if(el && ul && fp && cm && pr &&
            st && nm && bp && em && tx &&
@@ -2316,12 +2873,12 @@ MUIDSP IPTR IGNew(Class *cls,
 
 //----------------------------------------------------------------------------
 // IGSetup - Overloading MUIM_Setup
-// Input:              See MUI docs
-// Return:             See MUI docs
+// Input:    See MUI docs
+// Return:   See MUI docs
 //----------------------------------------------------------------------------
 MUIDSP IPTR IGSetup(Class *cls,
-                              Object *obj,
-                              struct MUI_RenderInfo *msg)
+                    Object *obj,
+                    struct MUI_RenderInfo *msg)
 {
     // Let our parent set itself up first
     if(!DoSuperMethodA (cls, obj, (Msg) msg))
@@ -2338,32 +2895,41 @@ MUIDSP IPTR IGSetup(Class *cls,
 
 //----------------------------------------------------------------------------
 // IGDispose - Overloading OM_DISPOSE
-// Input:                See BOOPSI docs
-// Return:               See BOOPSI docs
+// Input:      See BOOPSI docs
+// Return:     See BOOPSI docs
 //----------------------------------------------------------------------------
 MUIDSP IPTR IGDispose (Class *cls,
-                                 Object *obj,
-                                 Msg msg)
+                       Object *obj,
+                       Msg msg)
 {
-    return (IPTR) DoSuperMethodA(cls, obj, msg);
+
+    struct IGData *my = INST_DATA(cls, obj);
+
+    // Close backdrop window.
+    if(my->Win)
+    {
+        CloseWindow(my->Win);
+    }
+
+    return DoSuperMethodA(cls, obj, msg);
 }
 
 //----------------------------------------------------------------------------
 // IGCleanup - Overloading MUIM_Cleanup
-// Input:                See MUI docs
-// Return:               See MUI docs
+// Input:      See MUI docs
+// Return:     See MUI docs
 //----------------------------------------------------------------------------
 MUIDSP IPTR IGCleanup (Class *cls,
-                                 Object *obj,
-                                 Msg msg)
+                       Object *obj,
+                       Msg msg)
 {
     return (IPTR) DoSuperMethodA(cls, obj, (Msg) msg);
 }
 
 //----------------------------------------------------------------------------
 // IGDispatch - MUI custom class dispatcher
-// Input:                 pass through
-// Return:                pass through
+// Input:       Pass through
+// Return:      Pass through
 //----------------------------------------------------------------------------
 DISPATCH(IG)
 {
@@ -2386,6 +2952,9 @@ DISPATCH(IG)
 
         case MUIM_IG_Init:
             return IGInit(cls, obj);
+
+        case MUIM_IG_GetCustomScreen:
+            return IGGetCustomScreen(cls, obj);
 
         case MUIM_IG_Welcome:
             return IGWelcome(cls, obj, (struct MUIP_IG_Welcome *) msg);
@@ -2419,6 +2988,21 @@ DISPATCH(IG)
 
         case MUIM_IG_Working:
             return IGWorking(cls, obj, (struct MUIP_IG_Working *) msg);
+
+        case MUIM_IG_Effect:
+            return IGEffect(cls, obj, (struct MUIP_IG_Effect *) msg);
+
+        case MUIM_IG_CloseMedia:
+            return IGCloseMedia(cls, obj, (struct MUIP_IG_CloseMedia *) msg);
+
+        case MUIM_IG_SetMedia:
+            return IGSetMedia(cls, obj, (struct MUIP_IG_SetMedia *) msg);
+
+        case MUIM_IG_ShowMedia:
+            return IGShowMedia(cls, obj, (struct MUIP_IG_ShowMedia *) msg);
+
+        case MUIM_IG_ShowPicture:
+            return IGShowPicture(cls, obj, (struct MUIP_IG_ShowPicture *) msg);
 
         case MUIM_IG_Abort:
             return IGAbort(cls, obj, (struct MUIP_IG_Abort *) msg);
@@ -2480,14 +3064,13 @@ DISPATCH(IG)
 //############################################################################
 //############################################################################
 
-
 //----------------------------------------------------------------------------
 // Name:        gui_init
 // Description: Initialize and show GUI.
-// Input:       -
+// Input:       bool scr: Use custom screen.
 // Return:      inp_t: G_TRUE / G_ERR.
 //----------------------------------------------------------------------------
-inp_t gui_init(void)
+inp_t gui_init(bool scr)
 {
     // Amiga style version string.
     static char version[] __attribute__((used)) = VERSION_STRING;
@@ -2498,7 +3081,7 @@ inp_t gui_init(void)
     // Create our GUI class.
     IGClass = (struct MUI_CustomClass *) MUI_CreateCustomClass
     (
-	    NULL, MUIC_Window, NULL,
+        NULL, MUIC_Window, NULL,
         sizeof (struct CLASS_DATA(IG)),
         (APTR) DISPATCH_GATE (IG)
     );
@@ -2519,6 +3102,7 @@ inp_t gui_init(void)
         MUIA_Application_HelpFile, "Installer.guide",
         MUIA_Application_Window, Win = (Object *) NewObject(
             IGClass->mcc_Class, NULL,
+            MUIA_IG_UseCustomScreen, scr ? TRUE : FALSE,
             TAG_END),
         TAG_END
     );
@@ -2547,6 +3131,7 @@ inp_t gui_init(void)
     return G_TRUE;
     #else
     // Testing purposes.
+    puts(scr ? "e" : "");
     return strlen(version + 1) ? G_TRUE : G_ERR;
     #endif
 }
@@ -2560,15 +3145,30 @@ inp_t gui_init(void)
 void gui_exit(void)
 {
     #ifdef AMIGA
-    // Close window and destroy app
-    set(Win, MUIA_Window_Open, FALSE);
-    MUI_DisposeObject(_app(Win));
-
-    // Destroy custom class. Must check for NULL.
+    // Must check for NULL. Class creation might have failed.
     if(IGClass)
     {
+        // Save screen if we're using a custom one.
+        struct Screen *scr = (struct Screen *)
+        DoMethod(Win, MUIM_IG_GetCustomScreen);
+
+        // Close window.
+        set(Win, MUIA_Window_Open, FALSE);
+
+        // Destroy application.
+        MUI_DisposeObject(_app(Win));
+
+        // Destroy custom class.
         MUI_DeleteCustomClass(IGClass);
+
+        // Have we used a custom screen?
+        if(scr)
+        {
+            // It's no longer needed.
+            CloseScreen(scr);
+        }
     }
+
     #endif
 }
 
@@ -2671,7 +3271,7 @@ inp_t gui_choice(const char *msg,
                  bool bck,
                  int *ret)
 {
-    inp_t r =
+    inp_t grc =
     #ifdef AMIGA
     (inp_t) DoMethod
     (
@@ -2681,9 +3281,9 @@ inp_t gui_choice(const char *msg,
     #else
     // Testing purposes.
     printf("%s%s%s%d%d\n", msg, hlp, *nms, def, bck) ? G_TRUE : G_ERR;
-    *ret = (r == G_TRUE) ? def : 0;
+    *ret = (grc == G_TRUE) ? def : 0;
     #endif
-    return r;
+    return grc;
 }
 
 //----------------------------------------------------------------------------
@@ -2705,7 +3305,7 @@ inp_t gui_options(const char *msg,
                   bool bck,
                   int *ret)
 {
-    inp_t r =
+    inp_t grc =
     #ifdef AMIGA
     (inp_t) DoMethod
     (
@@ -2715,9 +3315,9 @@ inp_t gui_options(const char *msg,
     #else
     // Testing purposes.
     printf("%s%s%s%d%d%d\n", msg, hlp, *nms, def, *ret, bck) ? G_TRUE : G_ERR;
-    *ret = (r == G_TRUE) ? def : 0;
+    *ret = (grc == G_TRUE) ? def : 0;
     #endif
-    return r;
+    return grc;
 }
 
 //----------------------------------------------------------------------------
@@ -2726,14 +3326,14 @@ inp_t gui_options(const char *msg,
 // Input:       const char *msg: Message shown to the user.
 //              const char *hlp: Help text.
 //              const char *yes: True string.
-//              const char *no: False string.
+//              const char *nay: False string.
 //              bool bck: Enable back mode.
 // Return:      inp_t: G_TRUE / G_FALSE / G_ABORT / G_ERR.
 //----------------------------------------------------------------------------
 inp_t gui_bool(const char *msg,
                const char *hlp,
                const char *yes,
-               const char *no,
+               const char *nay,
                bool bck)
 {
     return
@@ -2741,11 +3341,11 @@ inp_t gui_bool(const char *msg,
     (inp_t) DoMethod
     (
         Win, MUIM_IG_Bool,
-        msg, hlp, yes, no, bck
+        msg, hlp, yes, nay, bck
     );
     #else
     // Testing purposes.
-    printf("%s%s%s%s%d\n", msg, hlp, yes, no, bck) ? G_TRUE : G_ERR;
+    printf("%s%s%s%s%d\n", msg, hlp, yes, nay, bck) ? G_TRUE : G_ERR;
     #endif
 }
 
@@ -2765,7 +3365,7 @@ inp_t gui_string(const char *msg,
                  bool bck,
                  const char **ret)
 {
-    inp_t r =
+    inp_t grc =
     #ifdef AMIGA
     (inp_t) DoMethod
     (
@@ -2775,9 +3375,9 @@ inp_t gui_string(const char *msg,
     #else
     // Testing purposes.
     printf("%s%s%s%d\n", msg, hlp, def, bck) ? G_TRUE : G_ERR;
-    *ret = (r == G_TRUE) ? def : "";
+    *ret = (grc == G_TRUE) ? def : "";
     #endif
-    return r;
+    return grc;
 }
 
 //----------------------------------------------------------------------------
@@ -2800,7 +3400,7 @@ inp_t gui_number(const char *msg,
                  bool bck,
                  int *ret)
 {
-    inp_t r =
+    inp_t grc =
     #ifdef AMIGA
     (inp_t) DoMethod
     (
@@ -2810,9 +3410,9 @@ inp_t gui_number(const char *msg,
     #else
     // Testing purposes.
     printf("%s%s%d%d%d\n", msg, hlp, min, max, bck) ? G_TRUE : G_ERR;
-    *ret = (r == G_TRUE) ? def : 0;
+    *ret = (grc == G_TRUE) ? def : 0;
     #endif
-    return r;
+    return grc;
 }
 
 //----------------------------------------------------------------------------
@@ -3046,12 +3646,12 @@ inp_t gui_confirm(const char *msg, const char *hlp, bool bck)
 //----------------------------------------------------------------------------
 // Name:        gui_error
 // Description: Show error message.
-// Input:       int id: Line number.
+// Input:       int line: Line number.
 //              const char *type: Error description.
 //              const char *info: Extra info, e.g. filename.
 // Return:      -
 //----------------------------------------------------------------------------
-void gui_error(int id,
+void gui_error(int line,
                const char *type,
                const char *info)
 {
@@ -3065,12 +3665,86 @@ void gui_error(int id,
 
     es.es_Title = (UBYTE *) tr(S_ERRS);
     es.es_GadgetFormat = (UBYTE *) tr(S_OKEY);
-    snprintf(err, sizeof(err), tr(S_LERR), id, type, info);
+    snprintf(err, sizeof(err), tr(S_LERR), line, type, info);
 
     // We don't have any way of knowing
     // whether this really works out...
     EasyRequest(NULL, &es, NULL);
     #else
-    fprintf(stderr, tr(S_LERR), id, type, info);
+    fprintf(stderr, tr(S_LERR), line, type, info);
     #endif
 }
+
+//----------------------------------------------------------------------------
+// Name:        gui_effect
+// Description: Show custom screen gradient.
+// Input:       int eff:            Type and position.
+//              int cl1:            Color 1.
+//              int cl2:            Color 2.
+// Return:      -
+//----------------------------------------------------------------------------
+void gui_effect(int eff, int cl1, int cl2)
+{
+    #ifdef AMIGA
+    DoMethod(Win, MUIM_IG_Effect, eff, cl1, cl2);
+    #else
+    // Testing purposes.
+    printf("%d:%d:%d\n", eff, cl1, cl2);
+    #endif
+}
+
+//----------------------------------------------------------------------------
+// Name:        gui_closemedia
+// Description: FIXME
+// Input:       int mid:    Media ID.
+// Return:      FIXME
+//----------------------------------------------------------------------------
+inp_t gui_closemedia(int mid)
+{
+    // Testing purposes.
+    #ifdef AMIGA
+    DoMethod(Win, MUIM_IG_CloseMedia, mid);
+    #else
+    printf("%d\n", mid);
+    #endif
+    return G_TRUE;
+}
+
+//----------------------------------------------------------------------------
+// Name:        gui_setmedia
+// Description: FIXME
+// Input:       int mid:            Media ID
+//              int act:            Action
+//              const char* par:    Parameter
+// Return:      FIXME
+//----------------------------------------------------------------------------
+inp_t gui_setmedia(int mid, int act, const char *par)
+{
+    // Testing purposes.
+    #ifdef AMIGA
+    DoMethod(Win, MUIM_IG_SetMedia, mid, act, par);
+    #else
+    printf("%d:%d:%s\n", mid, act, par ? par : "_");
+    #endif
+    return G_TRUE;
+}
+
+//----------------------------------------------------------------------------
+// Name:        gui_showmedia
+// Description: FIXME
+// Input:       FIXME
+// Return:      FIXME
+//----------------------------------------------------------------------------
+inp_t gui_showmedia(int *mid, const char* mda, int act)
+{
+    // Testing purposes.
+    #ifdef AMIGA
+    DoMethod(Win, MUIM_IG_ShowMedia, mid, mda, act);
+    #else
+    static int num;
+    *mid = num++;
+    printf("%d:%d:%s\n", *mid, act, mda ? mda : "_");
+    #endif
+    return G_TRUE;
+}
+

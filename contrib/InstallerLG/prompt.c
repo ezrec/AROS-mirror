@@ -36,7 +36,7 @@ entry_p m_askbool(entry_p contxt)
 {
     if(contxt)
     {
-        const char *yes = tr(S_AYES), *no = tr(S_NONO);
+        const char *yes = tr(S_AYES), *nay = tr(S_NONO);
         entry_p prompt   = get_opt(contxt, OPT_PROMPT),
                 help     = get_opt(contxt, OPT_HELP),
                 back     = get_opt(contxt, OPT_BACK),
@@ -53,12 +53,12 @@ entry_p m_askbool(entry_p contxt)
             {
                 // Unless the parser is broken,
                 // we will have >= one child.
-                entry_p *e = choices->children;
+                entry_p *entry = choices->children;
 
                 // Pick up whatever we can, use the default
                 // value if we only have a single choice.
-                yes = *e && *e != end() ? str(*e) : yes;
-                no = *(++e) && *e != end() ? str(*e) : no;
+                yes = *entry && *entry != end() ? str(*entry) : yes;
+                nay = *(++entry) && *entry != end() ? str(*entry) : nay;
             }
 
             // Do we have a user specified default?
@@ -71,15 +71,15 @@ entry_p m_askbool(entry_p contxt)
             // 'novice' mode.
             if(get_numvar(contxt, "@user-level") > 0)
             {
-                const char *p = str(prompt),
-                           *h = str(help);
+                const char *prt = str(prompt),
+                           *hlp = str(help);
 
                 // Only show requester if we could
                 // resolve all options.
-                if(!DID_ERR())
+                if(!DID_ERR)
                 {
                     // Prompt user.
-                    inp_t rc = gui_bool(p, h, yes, no, back);
+                    inp_t grc = gui_bool(prt, hlp, yes, nay, back != false);
 
                     // Is the back option available?
                     if(back)
@@ -87,24 +87,24 @@ entry_p m_askbool(entry_p contxt)
                         // Fake input?
                         if(get_numvar(contxt, "@back"))
                         {
-                            rc = G_ABORT;
+                            grc = G_ABORT;
                         }
 
                         // On abort execute.
-                        if(rc == G_ABORT)
+                        if(grc == G_ABORT)
                         {
                             return resolve(back);
                         }
                     }
 
                     // FIXME
-                    if(rc == G_ABORT || rc == G_EXIT)
+                    if(grc == G_ABORT || grc == G_EXIT)
                     {
-                        HALT();
+                        HALT;
                     }
 
                     // Translate return code.
-                    DNUM = (rc == G_TRUE) ? 1 : 0;
+                    DNUM = (grc == G_TRUE) ? 1 : 0;
                 }
             }
         }
@@ -154,7 +154,7 @@ entry_p m_askchoice(entry_p contxt)
         {
             // Unless the parser is broken,
             // we will have >= one child.
-            entry_p *e = choices->children;
+            entry_p *entry = choices->children;
 
             // The choice is represented by a bitmask of
             // 32 bits, refer to Install.guide. Thus, we
@@ -163,17 +163,17 @@ entry_p m_askchoice(entry_p contxt)
             static int add[32];
 
             // Indices
-            int i = 0, j = 0;
+            int ndx = 0, off = 0;
 
             // Pick up a string representation of all
             // the options.
-            while(*e && *e != end() && j < 32)
+            while(*entry && *entry != end() && off < 32)
             {
                 // Resolve once.
-                char *cur = str(*e);
+                char *opt = str(*entry);
 
                 // Save skip deltas. See (1).
-                add[i] = j - i;
+                add[ndx] = off - ndx;
 
                 // From the Installer.guide:
                 //
@@ -181,7 +181,7 @@ entry_p m_askchoice(entry_p contxt)
                 //    be invisible to the user, i.e. it will not be displayed on screen.
                 //    By using variables you can easily set up a programable number of
                 //    choices then while retaining the bit numbering.
-                if(*cur)
+                if(*opt)
                 {
                     // 2. Previous versions of Installer did not support proportional fonts
                     //    well and some people depended on the non proportional layout of
@@ -190,37 +190,33 @@ entry_p m_askchoice(entry_p contxt)
                     //    choices with a special escape sequence `"<ESC>[2p"'. This escape
                     //    sequence allows proportional rendering. It is wise to specify this
                     //    only in the first choice of the list. Note this well.  (V42)
-                    if(strlen(cur) > 3)
+                    if(strlen(opt) > 3 && !memcmp("\x1B[2p", opt, 4))
                     {
                         // We rely on Zune / MUI for #2. Hide
                         // this control sequence if it exists.
-                        if(!memcmp("\x1B[2p", cur, 4))
-                        {
-                            // Skip sequence.
-                            cur += 4;
-                        }
+                        opt += 4;
                     }
 
                     // Make sure that the removal of the control
                     // sequence hasn't cleared the string.
-                    if(*cur)
+                    if(*opt)
                     {
                         // Something to show.
-                        chs[i++] = cur;
+                        chs[ndx++] = opt;
                     }
                 }
 
                 // Invisible items are valid as default
                 // values, so we need to count these as
                 // well.
-                j++;
+                off++;
 
                 // Next option.
-                e++;
+                entry++;
             }
 
             // Exit if there's nothing to show.
-            if(!i)
+            if(!ndx)
             {
                 // Use the default value if such
                 // exists.
@@ -228,17 +224,17 @@ entry_p m_askchoice(entry_p contxt)
             }
 
             // Terminate array.
-            chs[i] = NULL;
+            chs[ndx] = NULL;
 
             // Do we have default option?
             if(deflt)
             {
                 // Is there such a choice?
-                int d = num(deflt);
+                int def = num(deflt);
 
                 // Check for negative values
                 // as well.
-                if(d < 0 || d >= j)
+                if(def < 0 || def >= off)
                 {
                     // Nope, out of range.
                     ERR(ERR_NO_ITEM, str(deflt));
@@ -247,38 +243,38 @@ entry_p m_askchoice(entry_p contxt)
 
                 // Yes, use the default
                 // value given.
-                i = d;
+                ndx = def;
             }
             else
             {
                 // No default = 0
-                i = 0;
+                ndx = 0;
             }
 
             // Show requester unless we're executing in
             // 'novice' mode.
             if(get_numvar(contxt, "@user-level") > 0)
             {
-                const char *p = str(prompt),
-                           *h = str(help);
+                const char *prt = str(prompt),
+                           *hlp = str(help);
 
                 // Only show requester if we could
                 // resolve all options.
-                if(!DID_ERR())
+                if(!DID_ERR)
                 {
                     // Skipper.
-                    int d = 0;
+                    int del = 0;
 
                     // Cap / compute skipper.
-                    if(i > 0 && i < 31 &&
-                       i - add[i - 1] > 0 &&
-                       i + add[i - 1] < 31)
+                    if(ndx > 0 && ndx < 31 &&
+                       ndx - add[ndx - 1] > 0 &&
+                       ndx + add[ndx - 1] < 31)
                     {
-                        d = add[i - 1];
+                        del = add[ndx - 1];
                     }
 
                     // Prompt user. Subtract skipper from default.
-                    inp_t rc = gui_choice(p, h, chs, i - d, back, &DNUM);
+                    inp_t grc = gui_choice(prt, hlp, chs, ndx - del, back != false, &DNUM);
 
                     // Add skipper. Don't trust the GUI.
                     DNUM += ((DNUM < 32 && DNUM >= 0) ?
@@ -290,26 +286,26 @@ entry_p m_askchoice(entry_p contxt)
                         // Fake input?
                         if(get_numvar(contxt, "@back"))
                         {
-                            rc = G_ABORT;
+                            grc = G_ABORT;
                         }
 
                         // On abort execute.
-                        if(rc == G_ABORT)
+                        if(grc == G_ABORT)
                         {
                             return resolve(back);
                         }
                     }
 
                     // FIXME
-                    if(rc == G_ABORT || rc == G_EXIT)
+                    if(grc == G_ABORT || grc == G_EXIT)
                     {
-                        HALT();
+                        HALT;
                     }
                 }
             }
             else
             {
-                DNUM = i;
+                DNUM = ndx;
             }
         }
         else
@@ -360,17 +356,17 @@ entry_p m_askdir(entry_p contxt)
             // 'novice' mode.
             if(get_numvar(contxt, "@user-level") > 0)
             {
-                const char *p = str(prompt),
-                           *h = str(help),
-                           *d = str(deflt);
+                const char *prt = str(prompt),
+                           *hlp = str(help),
+                           *def = str(deflt);
 
                 // Only show requester if we could
                 // resolve all options.
-                if(!DID_ERR())
+                if(!DID_ERR)
                 {
                     // Prompt user.
-                    inp_t rc = gui_askdir(p, h, newpath, disk, assigns,
-                                          d, back, &ret);
+                    inp_t grc = gui_askdir(prt, hlp, newpath != false, disk != false, assigns != false,
+                                           def, back != false, &ret);
 
                     // Is the back option available?
                     if(back)
@@ -378,20 +374,20 @@ entry_p m_askdir(entry_p contxt)
                         // Fake input?
                         if(get_numvar(contxt, "@back"))
                         {
-                            rc = G_ABORT;
+                            grc = G_ABORT;
                         }
 
                         // On abort execute.
-                        if(rc == G_ABORT)
+                        if(grc == G_ABORT)
                         {
                             return resolve(back);
                         }
                     }
 
                     // FIXME
-                    if(rc == G_ABORT || rc == G_EXIT)
+                    if(grc == G_ABORT || grc == G_EXIT)
                     {
-                        HALT();
+                        HALT;
                         REST;
                     }
                 }
@@ -410,7 +406,7 @@ entry_p m_askdir(entry_p contxt)
             }
 
             // We have a file.
-            RSTR(strdup(ret));
+            RSTR(DBG_ALLOC(strdup(ret)));
         }
 
         // What option are we missing?
@@ -452,14 +448,14 @@ entry_p m_askdisk(entry_p contxt)
         // Are all mandatory options (!?) present?
         if(prompt && help && dest)
         {
-            char n[PATH_MAX];
+            char dsk[PATH_MAX];
 
             // Append ':' to turn 'dest' into something
             // we can 'Lock'.
-            snprintf(n, PATH_MAX, "%s:", str(dest));
+            snprintf(dsk, sizeof(dsk), "%s:", str(dest));
 
             // Volume names must be > 0 characters long.
-            if(strlen(n) > 1)
+            if(strlen(dsk) > 1)
             {
                 #ifdef AMIGA
                 struct Process *p = (struct Process *)
@@ -472,7 +468,7 @@ entry_p m_askdisk(entry_p contxt)
                 p->pr_WindowPtr = (APTR) -1L;
 
                 // Is this volume present already?
-                BPTR l = (BPTR) Lock(n, ACCESS_READ);
+                BPTR l = (BPTR) Lock(dsk, ACCESS_READ);
                 if(!l)
                 {
                     const char *msg = str(prompt),
@@ -482,18 +478,18 @@ entry_p m_askdisk(entry_p contxt)
 
                     // Only show requester if we could
                     // resolve all options.
-                    if(!DID_ERR())
+                    if(!DID_ERR)
                     {
                         // Retry until we can get a lock or the
                         // user aborts.
                         while(!l)
                         {
                             // Prompt user.
-                            inp_t rc = gui_bool(msg, hlp, bt1, bt2, back);
+                            inp_t grc = gui_bool(msg, hlp, bt1, bt2, back != false);
 
-                            if(rc == G_TRUE)
+                            if(grc == G_TRUE)
                             {
-                                l = (BPTR) Lock(n, ACCESS_READ);
+                                l = (BPTR) Lock(dsk, ACCESS_READ);
                             }
                             else
                             {
@@ -503,11 +499,11 @@ entry_p m_askdisk(entry_p contxt)
                                     // Fake input?
                                     if(get_numvar(contxt, "@back"))
                                     {
-                                        rc = G_ABORT;
+                                        grc = G_ABORT;
                                     }
 
                                     // On abort execute.
-                                    if(rc == G_ABORT)
+                                    if(grc == G_ABORT)
                                     {
                                         // Restore auto request before
                                         // executing the 'back' code.
@@ -516,9 +512,9 @@ entry_p m_askdisk(entry_p contxt)
                                     }
                                 }
                                 // FIXME
-                                if(rc == G_ABORT || rc == G_EXIT)
+                                if(grc == G_ABORT || grc == G_EXIT)
                                 {
-                                    HALT();
+                                    HALT;
                                 }
 
                                 // User abort or err.
@@ -583,7 +579,7 @@ entry_p m_askdisk(entry_p contxt)
             {
                 // A volume name must contain at
                 // least one character.
-                ERR(ERR_INVALID_VOLUME, n);
+                ERR(ERR_INVALID_VOLUME, dsk);
             }
         }
         else
@@ -634,17 +630,17 @@ entry_p m_askfile(entry_p contxt)
             // in 'novice' mode.
             if(get_numvar(contxt, "@user-level") > 0)
             {
-                const char *p = str(prompt),
-                           *h = str(help),
-                           *d = str(deflt);
+                const char *prt = str(prompt),
+                           *hlp = str(help),
+                           *def = str(deflt);
 
                 // Only show requester if we could
                 // resolve all options.
-                if(!DID_ERR())
+                if(!DID_ERR)
                 {
                     // Prompt user.
-                    inp_t rc = gui_askfile(p, h, newpath, disk,
-                                           d, back, &ret);
+                    inp_t grc = gui_askfile(prt, hlp, newpath != false, disk != false,
+                                            def, back != false, &ret);
 
                     // Is the back option available?
                     if(back)
@@ -652,20 +648,20 @@ entry_p m_askfile(entry_p contxt)
                         // Fake input?
                         if(get_numvar(contxt, "@back"))
                         {
-                            rc = G_ABORT;
+                            grc = G_ABORT;
                         }
 
                         // On abort execute.
-                        if(rc == G_ABORT)
+                        if(grc == G_ABORT)
                         {
                             return resolve(back);
                         }
                     }
 
                     // FIXME
-                    if(rc == G_ABORT || rc == G_EXIT)
+                    if(grc == G_ABORT || grc == G_EXIT)
                     {
-                        HALT();
+                        HALT;
                         REST;
                     }
                 }
@@ -684,7 +680,7 @@ entry_p m_askfile(entry_p contxt)
             }
 
             // We have a file.
-            RSTR(strdup(ret));
+            RSTR(DBG_ALLOC(strdup(ret)));
         }
 
         // Missing one or more options.
@@ -756,16 +752,16 @@ entry_p m_asknumber(entry_p contxt)
             // 'novice' mode.
             if(get_numvar(contxt, "@user-level") > 0)
             {
-                int d = num(deflt);
-                const char *p = str(prompt),
-                           *h = str(help);
+                int def = num(deflt);
+                const char *prt = str(prompt),
+                           *hlp = str(help);
 
                 // Only show requester if we could
                 // resolve all options.
-                if(!DID_ERR())
+                if(!DID_ERR)
                 {
                     // Prompt user.
-                    inp_t rc = gui_number(p, h, min, max, d, back, &DNUM);
+                    inp_t grc = gui_number(prt, hlp, min, max, def, back != false, &DNUM);
 
                     // Is the back option available?
                     if(back)
@@ -773,20 +769,20 @@ entry_p m_asknumber(entry_p contxt)
                         // Fake input?
                         if(get_numvar(contxt, "@back"))
                         {
-                            rc = G_ABORT;
+                            grc = G_ABORT;
                         }
 
                         // On abort execute.
-                        if(rc == G_ABORT)
+                        if(grc == G_ABORT)
                         {
                             return resolve(back);
                         }
                     }
 
                     // FIXME
-                    if(rc == G_ABORT || rc == G_EXIT)
+                    if(grc == G_ABORT || grc == G_EXIT)
                     {
-                        HALT();
+                        HALT;
                     }
                 }
             }
@@ -837,7 +833,7 @@ entry_p m_askoptions(entry_p contxt)
         {
             // Unless the parser is broken,
             // we will have >= one child.
-            entry_p *e = choices->children;
+            entry_p *chl = choices->children;
 
             // Options are represented by bitmask of 32
             // bits, refer to Install.guide. Thus, we
@@ -845,13 +841,13 @@ entry_p m_askoptions(entry_p contxt)
             static const char *chs[33];
 
             // Choice index.
-            int i = 0;
+            int ndx = 0;
 
             // Pick up a string representation of all
             // the options.
-            while(*e && *e != end() && i < 32)
+            while(*chl && *chl != end() && ndx < 32)
             {
-                char *cur = str(*e);
+                char *cur = str(*chl);
 
                 // From the Installer.guide:
                 //
@@ -862,26 +858,22 @@ entry_p m_askoptions(entry_p contxt)
                 // choices with a special escape sequence `"<ESC>[2p"'. This escape
                 // sequence allows proportional rendering. It is wise to specify this
                 // only in the first choice of the list. Note this well.  (V42)
-                if(strlen(cur) > 3)
+                if(strlen(cur) > 3 && !memcmp("\x1B[2p", cur, 4))
                 {
                     // We rely on Zune / MUI for #2. Hide
                     // this control sequence if it exists.
-                    if(!memcmp("\x1B[2p", cur, 4))
-                    {
-                        // Skip sequence.
-                        cur += 4;
-                    }
+                    cur += 4;
                 }
 
                 // Save choice.
-                chs[i++] = cur;
+                chs[ndx++] = cur;
 
                 // Next option.
-                e++;
+                chl++;
             }
 
             // Exit if there's nothing to show.
-            if(!i)
+            if(!ndx)
             {
                 // Use the default value if such
                 // exists.
@@ -889,15 +881,15 @@ entry_p m_askoptions(entry_p contxt)
             }
 
             // Terminate array.
-            chs[i] = NULL;
+            chs[ndx] = NULL;
 
             // Do we have default option?
             if(deflt)
             {
                 // Is there such a choice?
-                int d = num(deflt);
+                int def = num(deflt);
 
-                if(d >= (1L << i))
+                if(def >= (1L << ndx))
                 {
                     // Nope, out of range.
                     ERR(ERR_NO_ITEM, str(deflt));
@@ -906,27 +898,27 @@ entry_p m_askoptions(entry_p contxt)
 
                 // Yes, use the default
                 // value given.
-                i = d;
+                ndx = def;
             }
             else
             {
                 // No default = -1
-                i = -1;
+                ndx = -1;
             }
 
             // Show requester unless we're executing in
             // 'novice' mode.
             if(get_numvar(contxt, "@user-level") > 0)
             {
-                const char *p = str(prompt),
-                           *h = str(help);
+                const char *prt = str(prompt),
+                           *hlp = str(help);
 
                 // Only show requester if we could
                 // resolve all options.
-                if(!DID_ERR())
+                if(!DID_ERR)
                 {
                     // Prompt user.
-                    inp_t rc = gui_options(p, h, chs, i, back, &DNUM);
+                    inp_t grc = gui_options(prt, hlp, chs, ndx, back != false, &DNUM);
 
                     // Is the back option available?
                     if(back)
@@ -934,26 +926,26 @@ entry_p m_askoptions(entry_p contxt)
                         // Fake input?
                         if(get_numvar(contxt, "@back"))
                         {
-                            rc = G_ABORT;
+                            grc = G_ABORT;
                         }
 
                         // On abort execute.
-                        if(rc == G_ABORT)
+                        if(grc == G_ABORT)
                         {
                             return resolve(back);
                         }
                     }
 
                     // FIXME
-                    if(rc == G_ABORT || rc == G_EXIT)
+                    if(grc == G_ABORT || grc == G_EXIT)
                     {
-                        HALT();
+                        HALT;
                     }
                 }
             }
             else
             {
-                DNUM = i;
+                DNUM = ndx;
             }
         }
         else
@@ -997,16 +989,16 @@ entry_p m_askstring(entry_p contxt)
             // 'novice' mode.
             if(get_numvar(contxt, "@user-level") > 0)
             {
-                const char *p = str(prompt),
-                           *h = str(help),
-                           *d = str(deflt);
+                const char *prt = str(prompt),
+                           *hlp = str(help),
+                           *def = str(deflt);
 
                 // Only show requester if we could
                 // resolve all options.
-                if(!DID_ERR())
+                if(!DID_ERR)
                 {
                     // Prompt user.
-                    inp_t rc = gui_string(p, h, d, back, &res);
+                    inp_t grc = gui_string(prt, hlp, def, back != false, &res);
 
                     // Is the back option available?
                     if(back)
@@ -1014,20 +1006,20 @@ entry_p m_askstring(entry_p contxt)
                         // Fake input?
                         if(get_numvar(contxt, "@back"))
                         {
-                            rc = G_ABORT;
+                            grc = G_ABORT;
                         }
 
                         // On abort execute.
-                        if(rc == G_ABORT)
+                        if(grc == G_ABORT)
                         {
                             return resolve(back);
                         }
                     }
 
                     // FIXME
-                    if(rc == G_ABORT || rc == G_EXIT)
+                    if(grc == G_ABORT || grc == G_EXIT)
                     {
-                        HALT();
+                        HALT;
                         REST;
                     }
                 }
@@ -1045,7 +1037,7 @@ entry_p m_askstring(entry_p contxt)
                 res = str(deflt);
             }
 
-            RSTR(strdup(res));
+            RSTR(DBG_ALLOC(strdup(res)));
         }
 
         // Missing one or more options.

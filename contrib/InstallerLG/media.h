@@ -1,22 +1,20 @@
 //----------------------------------------------------------------------------
-// version.h:
+// media.h:
 //
-// InstallerLG version information
+// Multimedia features
 //----------------------------------------------------------------------------
 // Copyright (C) 2018, Ola Söder. All rights reserved.
 // Licensed under the AROS PUBLIC LICENSE (APL) Version 1.1
 //----------------------------------------------------------------------------
 
-#ifndef VERSION_H_
-#define VERSION_H_
+#ifndef MEDIA_H_
+#define MEDIA_H_
 
-#define MAJOR 44
-#define MINOR 10
-#define BUILD 35
-#define PHASE "ALPHA"
+#include "types.h"
 
-#define STY(X) #X
-#define VER(X) STY(X)
-#define VERSION_STRING "\0$VER: InstallerLG " VER(MAJOR) "." VER(MINOR) " (" __AMIGADATE__ ") [" PHASE VER(BUILD) "]";
+entry_p m_closemedia(entry_p contxt);
+entry_p m_effect(entry_p contxt);
+entry_p m_setmedia(entry_p contxt);
+entry_p m_showmedia(entry_p contxt);
 
 #endif

@@ -45,7 +45,7 @@ entry_p m_complete(entry_p contxt)
         // The parser is broken.
         PANIC(contxt);
     }
-        
+
     // Success or panic.
     RCUR;
 }
@@ -77,7 +77,7 @@ entry_p m_debug(entry_p contxt)
             // log when invoked from Workbench.
             while(*cur && *cur != end())
             {
-                char *s = NULL;
+                char *val = NULL;
 
                 // If this is a variable, test if it's
                 // defined, and if not, print <NIL>.
@@ -85,7 +85,7 @@ entry_p m_debug(entry_p contxt)
                 {
                     // Save level of strictness.
                     entry_p res;
-                    int m = get_numvar(contxt, "@strict");
+                    int mode = get_numvar(contxt, "@strict");
 
                     // Set non strict mode and search
                     // for symbol. By doing it this way
@@ -99,33 +99,33 @@ entry_p m_debug(entry_p contxt)
                     if(res->type == DANGLE && !tru(res))
                     {
                         // As prescribed.
-                        s = "<NIL>";
+                        val = "<NIL>";
                     }
                     else
                     {
                         // Symbol found. Resolve it.
-                        s = str(*cur);
+                        val = str(*cur);
                     }
 
                     // Restore level of strictness.
-                    set_numvar(contxt, "@strict", m);
+                    set_numvar(contxt, "@strict", mode);
                 }
                 else
                 {
                     // Resolve string.
-                    s = str(*cur);
+                    val = str(*cur);
                 }
 
                 if(cli)
                 {
                     // Invoked from CLI.
-                    printf("%s ", s);
+                    printf("%s ", val);
                 }
                 #ifdef AMIGA
                 else
                 {
                     // Invoked from WB.
-                    KPrintF("%s ", s);
+                    KPrintF("%s ", val);
                 }
                 #endif
                 cur++;
@@ -183,17 +183,17 @@ entry_p m_message(entry_p contxt)
         if(level > 0 || all)
         {
             // Concatenate all children.
-            char *msg = get_chlstr(contxt);
+            char *msg = get_chlstr(contxt, false);
 
             // Did we manage to concatenate something?
             if(msg)
             {
                 // If we could resolve all our children,
                 // show the result of the concatenation.
-                if(!DID_ERR())
+                if(!DID_ERR)
                 {
                     // Show message dialog.
-                    inp_t rc = gui_message(msg, back);
+                    inp_t grc = gui_message(msg, back != false);
 
                     // Free the temporary buffer.
                     free(msg);
@@ -204,24 +204,24 @@ entry_p m_message(entry_p contxt)
                         // Fake input?
                         if(get_numvar(contxt, "@back"))
                         {
-                            rc = G_ABORT;
+                            grc = G_ABORT;
                         }
 
                         // On abort execute.
-                        if(rc == G_ABORT)
+                        if(grc == G_ABORT)
                         {
                             return resolve(back);
                         }
                     }
 
                     // FIXME
-                    if(rc == G_ABORT || rc == G_EXIT)
+                    if(grc == G_ABORT || grc == G_EXIT)
                     {
-                        HALT();
+                        HALT;
                     }
 
                     // Translate response.
-                    DNUM = (rc == G_TRUE) ? 1 : 0;
+                    DNUM = (grc == G_TRUE) ? 1 : 0;
                 }
                 else
                 {
@@ -298,7 +298,7 @@ entry_p m_welcome(entry_p contxt)
            c_sane(contxt, 1))
         {
             // Concatenate all children.
-            msg = get_chlstr(contxt);
+            msg = get_chlstr(contxt, false);
         }
 
         // Did we manage to concatenate something?
@@ -306,10 +306,10 @@ entry_p m_welcome(entry_p contxt)
         {
             // If we could resolve all our children,
             // show the result of the concatenation.
-            if(!DID_ERR())
+            if(!DID_ERR)
             {
                 // Show welcome dialog.
-                inp_t rc = gui_welcome
+                inp_t grc = gui_welcome
                 (
                     msg, &lvl, &lgf, &prt,
                     get_numvar(contxt, "@user-min"),
@@ -318,10 +318,10 @@ entry_p m_welcome(entry_p contxt)
                 );
 
                 // True or false only.
-                DNUM = (rc == G_TRUE) ? 1 : 0;
+                DNUM = (grc == G_TRUE) ? 1 : 0;
 
                 // On 'Proceed', set level and mode.
-                if(rc == G_TRUE)
+                if(grc == G_TRUE)
                 {
                     set_numvar(contxt, "@user-level", lvl);
                     set_numvar(contxt, "@pretend", prt);
@@ -330,7 +330,7 @@ entry_p m_welcome(entry_p contxt)
                 else
                 {
                     // Abort.
-                    HALT();
+                    HALT;
                 }
             }
 
@@ -363,14 +363,14 @@ entry_p m_working(entry_p contxt)
     if(c_sane(contxt, 1))
     {
         // Concatenate all children.
-        char *msg = get_chlstr(contxt);
+        char *msg = get_chlstr(contxt, false);
 
         // Did we manage to concatenate something?
         if(msg)
         {
             // Only proceed if we could resolve all
             // our children.
-            if(!DID_ERR())
+            if(!DID_ERR)
             {
                 // Standard prefix.
                 const char *pre = tr(S_WRKN);
