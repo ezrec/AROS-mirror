@@ -157,7 +157,7 @@ node('master') {
 	def fixed_job_name = env.JOB_NAME.replace('%2F','/')
 	slackSend color: "good", channel: "#jenkins", message: "Build Started: ${fixed_job_name} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
 	parallel (
-		'Build Amiga 68k version - GCC 8.3.0 - Binutils 2.32': {
+		'Build Amiga 68k version - GCC 9 - Binutils 2.32': {
 			node {			
 				buildStep('amiga-m68k', 'default', '2.32', '9-20190324')
 			}
@@ -167,14 +167,14 @@ node('master') {
 				buildStep('amiga-m68k', 'default', '2.32', '6.5.0')
 			}
 		},
-		'Build Linux Hosted x86_64 version - GCC 8.3.0 - Binutils 2.32': {
+		'Build Linux Hosted x86_64 version - GCC 9 - Binutils 2.32': {
 			node {			
-				buildStep('linux-x86_64', 'default', '2.32', '8.3.0', false)
+				buildStep('linux-x86_64', 'default', '2.32', '9-20190324', false)
 			}
 		},
 		'Build RasPi BigEndian version - GCC 8.3.0 - Binutils 2.32': {
 			node {			
-				buildStep('raspi-armeb', 'default', '2.32', '8.3.0')
+				buildStep('raspi-armeb', 'default', '2.32', '9-20190324')
 			}
 		}
 	)
