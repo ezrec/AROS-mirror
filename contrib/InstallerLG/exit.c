@@ -36,7 +36,7 @@ entry_p m_abort(entry_p contxt)
     if(c_sane(contxt, 0))
     {
         // Concatenate all children.
-        char *msg = get_chlstr(contxt);
+        char *msg = get_chlstr(contxt, false);
 
         // Did we manage to concatenate something?
         if(msg)
@@ -44,7 +44,7 @@ entry_p m_abort(entry_p contxt)
             // If we could resolve all our children,
             // show the result of the concatenation
             // unless we have an empty string.
-            if(*msg && !DID_ERR())
+            if(*msg && !DID_ERR)
             {
                 gui_abort(msg);
             }
@@ -87,7 +87,7 @@ entry_p m_exit(entry_p contxt)
         if(contxt->children)
         {
             // Concatenate all children.
-            char *msg = get_chlstr(contxt);
+            char *msg = get_chlstr(contxt, false);
 
             // Did we manage to concatenate something?
             if(msg)
@@ -95,7 +95,7 @@ entry_p m_exit(entry_p contxt)
                 // If we could resolve all our children,
                 // show the result of the concatenation
                 // unless we have an empty string.
-                if(*msg && !DID_ERR())
+                if(*msg && !DID_ERR)
                 {
                     gui_finish(msg);
                 }
@@ -114,8 +114,7 @@ entry_p m_exit(entry_p contxt)
         }
 
         // Show final message unless 'quiet' is set.
-        if(!DID_ERR() &&
-           !get_opt(contxt, OPT_QUIET))
+        if(!DID_ERR && !get_opt(contxt, OPT_QUIET))
         {
             // Get name and location of application.
             const char *app = get_strvar(contxt, "@app-name"),
@@ -140,7 +139,7 @@ entry_p m_exit(entry_p contxt)
         }
 
         // Make invoke() halt.
-        HALT();
+        HALT;
         RNUM(0);
     }
 
@@ -187,7 +186,7 @@ entry_p m_onerror(entry_p contxt)
                 // Reset error code otherwise
                 // m_gosub / invoke will halt
                 // immediately.
-                RESET();
+                RESET;
 
                 // Connect reference to the current context.
                 ref.parent = contxt;

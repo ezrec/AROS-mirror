@@ -3,9 +3,10 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
+DATE := $(shell date +%d.%m.%Y)
 EXEDIR := $(AROSDIR)/C
-FILES := alloc args arithmetic bitwise comparison control error eval exit external file gui information init lexer parser probe procedure prompt resource strop symbol util wb
-USER_CFLAGS := -std=gnu99 $(NOWARN_UNUSED_FUNCTION) -Wno-error
+FILES := alloc args arithmetic bitwise comparison control error eval exit external file gui information init lexer media parser probe procedure prompt resource strcasestr strop symbol util wb
+USER_CFLAGS := -std=gnu99 $(NOWARN_UNUSED_FUNCTION) -D__AMIGADATE__=\"$(DATE)\" -Wno-error
 
 #MM- contrib : contrib-installerlg
 #MM contrib-installerlg : includes linklibs

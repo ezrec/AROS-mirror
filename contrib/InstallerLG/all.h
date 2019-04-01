@@ -18,6 +18,7 @@
 #include "external.h"
 #include "file.h"
 #include "information.h"
+#include "media.h"
 #include "probe.h"
 #include "procedure.h"
 #include "prompt.h"

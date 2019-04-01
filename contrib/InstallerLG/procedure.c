@@ -74,7 +74,7 @@ entry_p m_gosub(entry_p contxt)
                         if(res)
                         {
                             memmove(res, resolve(*ina), sizeof(entry_t));
-                            res->name = res->name ? strdup(res->name) : NULL;
+                            res->name = res->name ? DBG_ALLOC(strdup(res->name)) : NULL;
                             res->parent = *arg;
                             kill((*arg)->resolved);
                             (*arg)->resolved = res;
@@ -133,7 +133,7 @@ entry_p m_gosub(entry_p contxt)
                 // We need a resolved dummy. See new_*.
                 // In this case we're mimicing a NATIVE
                 // returning a STRING:
-                contxt->resolved = new_string(strdup(""));
+                contxt->resolved = new_string(DBG_ALLOC(strdup("")));
 
                 // Out of memory?
                 if(contxt->resolved)

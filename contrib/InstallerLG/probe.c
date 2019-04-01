@@ -231,7 +231,7 @@ entry_p m_database(entry_p contxt)
             ret = strcmp(ret, str(CARG(2))) ? "0" : "1";
         }
 
-        RSTR(strdup(ret));
+        RSTR(DBG_ALLOC(strdup(ret)));
     }
 
     // The parser is broken.
@@ -251,10 +251,10 @@ entry_p m_earlier(entry_p contxt)
     if(c_sane(contxt, 2))
     {
         // One struct per file.
-        struct stat f1, f2;
+        struct stat old, new;
 
         // Get information about the first file.
-        if(stat(str(CARG(1)), &f1))
+        if(stat(str(CARG(1)), &old))
         {
             // Could not read from file / dir.
             ERR(ERR_READ, str(CARG(1)));
@@ -262,7 +262,7 @@ entry_p m_earlier(entry_p contxt)
         }
 
         // Get information about the second file.
-        if(stat(str(CARG(2)), &f2))
+        if(stat(str(CARG(2)), &new))
         {
             // Could not read from file / dir.
             ERR(ERR_READ, str(CARG(2)));
@@ -272,7 +272,7 @@ entry_p m_earlier(entry_p contxt)
         // Is the first older than the second one?
         RNUM
         (
-            f1.st_mtime < f2.st_mtime ? 1 : 0
+            old.st_mtime < new.st_mtime ? 1 : 0
         );
     }
 
@@ -510,7 +510,7 @@ entry_p m_getdevice(entry_p contxt)
                         // strdup(NULL) is undefined.
                         if(n)
                         {
-                            RSTR(strdup(n));
+                            RSTR(DBG_ALLOC(strdup(n)));
                         }
                         else
                         {
@@ -642,12 +642,12 @@ entry_p m_getenv(entry_p contxt)
     {
         // Is there such an environment
         // variable?
-        char *e = getenv(str(CARG(1)));
+        char *env = getenv(str(CARG(1)));
 
-        if(e)
+        if(env)
         {
             // Return what we found.
-            RSTR(strdup(e));
+            RSTR(DBG_ALLOC(strdup(env)));
         }
 
         // Nothing found, return empty
@@ -672,18 +672,18 @@ entry_p m_getsize(entry_p contxt)
     if(c_sane(contxt, 1))
     {
         // Open the file in read only mode.
-        FILE *f = fopen(str(CARG(1)), "r");
+        FILE *file = fopen(str(CARG(1)), "r");
 
-        if(f)
+        if(file)
         {
             // Seek to the end of the file.
-            fseek(f, 0L, SEEK_END);
+            fseek(file, 0L, SEEK_END);
 
             // Let the result be the position.
-            DNUM = (int) ftell(f);
+            DNUM = (int) ftell(file);
 
             // We're done.
-            fclose(f);
+            fclose(file);
         }
         else
         {
@@ -714,31 +714,31 @@ entry_p m_getsum(entry_p contxt)
     // We need a filename.
     if(c_sane(contxt, 1))
     {
-        const char *fn = str(CARG(1));
-        FILE *f = fopen(fn, "r");
+        const char *name = str(CARG(1));
+        FILE *file = fopen(name, "r");
 
-        if(f)
+        if(file)
         {
             // This will yield different results
             // on 32 / 64 bit systems but that's
             // hardly a problem (or?).
-            int c = getc(f),
-                a = 1, b = 0;
+            int chr = getc(file),
+                alfa = 1, beta = 0;
 
             // Adler-32 checksum.
-            while(c != EOF)
+            while(chr != EOF)
             {
-                a = (a + c) % 65521;
-                b = (a + b) % 65521;
-                c = getc(f);
+                alfa = (alfa + chr) % 65521;
+                beta = (alfa + beta) % 65521;
+                chr = getc(file);
             }
 
-            DNUM = (b << 16) | a;
-            fclose(f);
+            DNUM = (beta << 16) | alfa;
+            fclose(file);
         }
         else
         {
-            ERR(ERR_READ_FILE, fn);
+            ERR(ERR_READ_FILE, name);
             DNUM = 0;
         }
     }
@@ -755,74 +755,76 @@ entry_p m_getsum(entry_p contxt)
 
 //----------------------------------------------------------------------------
 // getversion helper
+//
+// FIXME - description
 //----------------------------------------------------------------------------
-int h_getversion(entry_p contxt, const char *file)
+int h_getversion(entry_p contxt, const char *name)
 {
     // Try to open whatever we have
     // in read only mode.
-    FILE *fp = fopen(file, "r");
+    FILE *file = fopen(name, "r");
     int ver = -1;
 
     // Could we open the file?
-    if(fp)
+    if(file)
     {
-        int i = 0, c = 0;
+        int ndx = 0, chr = 0;
 
         // Version key.
-        int vk[] = {'$','V','E','R',':', ' ', 0};
+        int key[] = {'$','V','E','R',':', ' ', 0};
 
         // Read one byte at a time to find the
         // location of the version key if any.
-        while(c != EOF && vk[i])
+        while(chr != EOF && key[ndx])
         {
-            c = fgetc(fp);
-            i = c == vk[i] ? i + 1 : 0;
+            chr = fgetc(file);
+            ndx = chr == key[ndx] ? ndx + 1 : 0;
         }
 
         // If we found the key, we have reached
         // the terminating 0, ergo found a match.
-        if(!vk[i])
+        if(!key[ndx])
         {
             // Fill up buffer with enough data to
             // hold any realistic version string.
-            fread(get_buf(), 1, buf_size(), fp);
+            fread(get_buf(), 1, buf_size(), file);
 
             // Do we have data in the buffer?
-            if(!ferror(fp))
+            if(!ferror(file))
             {
                 // Begin search after first ws.
-                char *s = strchr(get_buf(), ' ');
+                char *data = strchr(get_buf(), ' ');
 
                 // If there's no ws we fail.
-                if(s)
+                if(data)
                 {
-                    // Ver and rev.
-                    int v = 0, r = 0;
+                    // Major and revision.
+                    int maj = 0, rev = 0;
 
                     // Version string pattern.
-                    const char *p = "%*[^0123456789]%d.%d%*[^\0]";
+                    const char *pat = "%*[^0123456789]%d.%d%*[^\0]";
 
                     // Try to find version string.
-                    if(sscanf(s, p, &v, &r) == 2)
+                    if(sscanf(data, pat, &maj, &rev) == 2)
                     {
                         // We found something.
-                        ver = (v << 16) | r;
+                        ver = (maj << 16) | rev;
                     }
                 }
             }
         }
 
         // Did we have any reading problems?
-        if(ferror(fp))
+        if(ferror(file))
         {
             // Could not read from file. This
             // will pick up problems from both
             // fgetc() and fread() above.
-            ERR(ERR_READ_FILE, file);
+            ERR(ERR_READ_FILE, name);
         }
 
         // We don't need the file anymore.
-        fclose(fp);
+        fclose(file);
     }
     else
     {
@@ -830,7 +832,7 @@ int h_getversion(entry_p contxt, const char *file)
         if(get_numvar(contxt, "@strict"))
         {
             // Could not read from file.
-            ERR(ERR_READ_FILE, file);
+            ERR(ERR_READ_FILE, name);
         }
         else
         {
@@ -864,14 +866,14 @@ entry_p m_getversion(entry_p contxt)
         {
             // Name of whatever we're trying to
             // get the version information from.
-            const char *w = str(CARG(1));
+            const char *name = str(CARG(1));
 
             // A resident library or device?
             if(get_opt(contxt, OPT_RESIDENT))
             {
                 #ifdef AMIGA
                 struct Resident *res =
-                    (struct Resident *) FindResident(w);
+                    (struct Resident *) FindResident(name);
 
                 if(res)
                 {
@@ -904,20 +906,19 @@ entry_p m_getversion(entry_p contxt)
             // A file of some sort, on disk, not resident.
             else
             {
-                int ver = h_getversion(contxt, w);
+                int ver = h_getversion(contxt, name);
                 DNUM = ver != -1 ? ver : 0;
             }
         }
+        #ifdef AMIGA
         else
         {
             // No arguments, return version of Exec.
-            #ifdef AMIGA
             extern struct ExecBase *SysBase;
-
             DNUM = (SysBase->LibNode.lib_Version << 16) |
                     SysBase->SoftVer;
-            #endif
         }
+        #endif
     }
     else
     {
@@ -948,11 +949,11 @@ entry_p m_iconinfo(entry_p contxt)
     // We need one or more arguments.
     if(c_sane(contxt, 1))
     {
-        entry_p dst   =   get_opt(contxt, OPT_DEST);
-        entry_p tt[]  = { get_opt(contxt, OPT_GETTOOLTYPE),
-                          get_opt(contxt, OPT_GETDEFAULTTOOL),
-                          get_opt(contxt, OPT_GETSTACK),
-                          get_opt(contxt, OPT_GETPOSITION), end() };
+        entry_p dst     =   get_opt(contxt, OPT_DEST);
+        entry_p types[] = { get_opt(contxt, OPT_GETTOOLTYPE),
+                            get_opt(contxt, OPT_GETDEFAULTTOOL),
+                            get_opt(contxt, OPT_GETSTACK),
+                            get_opt(contxt, OPT_GETPOSITION), end() };
 
         // We need something to work with.
         if(dst)
@@ -972,70 +973,67 @@ entry_p m_iconinfo(entry_p contxt)
             {
                 // Iterate over all options or until
                 // we run into resource problems.
-                for(size_t i = 0;
-                    tt[i] != end() &&
-                    !DID_ERR(); i++)
+                for(size_t i = 0; types[i] != end() &&
+                    !DID_ERR; i++)
                 {
                     // If we have an option of any kind.
-                    if(tt[i])
+                    if(types[i])
                     {
                         // Iterate over all its children.
                         for(size_t j = 0;
-                            tt[i]->children[j] &&
-                            tt[i]->children[j] != end(); j++)
+                            types[i]->children[j] &&
+                            types[i]->children[j] != end(); j++)
                         {
                             // Get variable name and option type.
-                            int t = tt[i]->id;
-                            char *n = str(tt[i]->children[j]);
+                            int type = types[i]->id;
+                            char *name = str(types[i]->children[j]);
 
                             // Variable names must be atleast one
                             // character long.
-                            if(*n)
+                            if(*name)
                             {
                                 char *svl = NULL;
                                 entry_p val;
 
                                 #ifdef AMIGA
                                 // Is this a numerical value?
-                                if(t == OPT_GETSTACK ||
-                                   t == OPT_GETPOSITION)
+                                if(type == OPT_GETSTACK ||
+                                   type == OPT_GETPOSITION)
                                 {
                                     int v =
                                     (
-                                        t == OPT_GETSTACK ?
-                                        obj->do_StackSize :
-                                        j == 0 ?
-                                        obj->do_CurrentX :
-                                        obj->do_CurrentY
+                                        type == OPT_GETSTACK ?
+                                        obj->do_StackSize : j == 0 ?
+                                        obj->do_CurrentX : obj->do_CurrentY
                                     );
 
                                     snprintf(get_buf(), buf_size(), "%d", v);
                                     svl = get_buf();
                                 }
                                 else
-                                if(t == OPT_GETDEFAULTTOOL &&
+                                if(type == OPT_GETDEFAULTTOOL &&
                                    obj->do_DefaultTool)
                                 {
                                     svl = obj->do_DefaultTool;
                                 }
                                 else
-                                if(t == OPT_GETTOOLTYPE &&
+                                if(type == OPT_GETTOOLTYPE &&
                                    obj->do_ToolTypes)
                                 {
-                                    svl = (char *) FindToolType(obj->do_ToolTypes, n);
-                                    n = str(tt[i]->children[++j]);
+                                    svl = (char *) FindToolType(obj->do_ToolTypes, name);
+                                    name = str(types[i]->children[++j]);
                                 }
 
                                 // Always a valid value.
                                 svl = svl ? svl : "";
                                 #else
                                 // Testing purposes only.
-                                snprintf(get_buf(), buf_size(), "%d:%zu", t, j);
+                                snprintf(get_buf(), buf_size(), "%d:%zu", type, j);
                                 svl = get_buf();
                                 #endif
 
                                 // Always a valid (string).
-                                val = new_string(strdup(svl));
+                                val = new_string(DBG_ALLOC(strdup(svl)));
 
                                 if(val)
                                 {
@@ -1049,7 +1047,7 @@ entry_p m_iconinfo(entry_p contxt)
                                             contxt->symbols[k] != end();
                                             k++)
                                         {
-                                            if(!strcasecmp(contxt->symbols[k]->name, n))
+                                            if(!strcasecmp(contxt->symbols[k]->name, name))
                                             {
                                                 kill(contxt->symbols[k]->resolved);
                                                 contxt->symbols[k]->resolved = val;
@@ -1068,7 +1066,7 @@ entry_p m_iconinfo(entry_p contxt)
                                     // context.
                                     if(val)
                                     {
-                                        entry_p sym = new_symbol(strdup(n));
+                                        entry_p sym = new_symbol(DBG_ALLOC(strdup(name)));
 
                                         if(sym)
                                         {
