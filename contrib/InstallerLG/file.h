@@ -30,7 +30,7 @@ entry_p m_tooltype(entry_p contxt);
 entry_p m_transcript(entry_p contxt);
 entry_p m_rename(entry_p contxt);
 
-int h_exists(const char *n);
+int h_exists(const char *file);
 int h_log(entry_p contxt, const char *fmt, ...);
 bool h_confirm(entry_p contxt, const char *hlp, const char *msg, ...);
 

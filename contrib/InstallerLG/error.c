@@ -16,15 +16,14 @@
 //----------------------------------------------------------------------------
 // Name:        error
 // Description: Function used to set / get / communicate errors.
-// Input:       int id:             A numerical identifier aiding debugging.
-//                                  In most cases this will be a line number.
-//              err_t:              Type of error to set, or ERR_NONE to get
+// Input:       int line:           Line number.
+//              err_t type:         Type of error to set, or ERR_NONE to get
 //                                  status.
 //              const char *info:   A message describing the problem in a way
 //                                  that makes sense to the user.
 // Return:      int:                The current state.
 //----------------------------------------------------------------------------
-int error(entry_p contxt, int id, err_t type, const char *info)
+int error(entry_p contxt, int line, err_t type, const char *info)
 {
     // Last error.
     static err_t last;
@@ -86,11 +85,12 @@ int error(entry_p contxt, int id, err_t type, const char *info)
                     "Invalid application name",
                     "Invalid name of volume",
                     "Invalid name of assign",
-                    "Options are mutually exclusive"
+                    "Options are mutually exclusive",
+                    "Invalid value"
                 };
 
                 // Error window / console output.
-                gui_error(id, des[type], info);
+                gui_error(line, des[type], info);
 
                 // If this is a PANIC, or if we're in
                 // debug mode, do a context dump.

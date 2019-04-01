@@ -27,20 +27,20 @@ entry_p m_if(entry_p contxt)
     if(c_sane(contxt, 1))
     {
         // Truth value of the condition.
-        int c = tru(CARG(1));
+        int val = tru(CARG(1));
 
         // Is the body non-empty?
         if(CARG(2) && CARG(2) != end())
         {
-            // Let p be the branch that will be executed.
-            entry_p p = c ? CARG(2) : CARG(3);
+            // Select branch to execute.
+            entry_p sel = val ? CARG(2) : CARG(3);
 
             // Is there a branch corresponding to the
             // resolved truth value?
-            if(p && p != end())
+            if(sel && sel != end())
             {
                 // We execute the branch by resolving it.
-                return resolve(p);
+                return resolve(sel);
             }
         }
 
@@ -65,21 +65,21 @@ entry_p m_select(entry_p contxt)
     // and the non-empty list of items.
     if(c_sane(contxt, 2))
     {
-        int i = 0, j = num(CARG(1));
+        int ndx = 0, sel = num(CARG(1));
 
         // Find the n:th (0-indexed) item, go one step
         // at a time in case no such item exist.
-        while(CARG(2)->children[i] &&
-              CARG(2)->children[i] != end())
+        while(CARG(2)->children[ndx] &&
+              CARG(2)->children[ndx] != end())
         {
             // Return the resolved value of the found
             // item.
-            if(i == j)
+            if(ndx == sel)
             {
-                return resolve(CARG(2)->children[i]);
+                return resolve(CARG(2)->children[ndx]);
             }
 
-            i++;
+            ndx++;
         }
 
         // No such item, n > the number of items.
@@ -98,7 +98,7 @@ entry_p m_select(entry_p contxt)
 //
 // Refer to Installer.guide 1.19 (29.4.96) 1995-96 by ESCOM AG
 //----------------------------------------------------------------------------
-static entry_p h_whunt(entry_p contxt, int m)
+static entry_p h_whunt(entry_p contxt, int mode)
 {
     // We always have two arguments, the expression
     // and the 'contents' of the loop, a CONTXT.
@@ -110,22 +110,21 @@ static entry_p h_whunt(entry_p contxt, int m)
 
         // Prepare to return the resolved value of this
         // function if the expression is false from the start.
-        entry_p r = contxt->resolved;
+        entry_p ret = contxt->resolved;
 
         // Use XOR to support both 'while' and 'until'. Break
         // the loop if something goes wrong inside.
-        while((m ^ tru(CARG(1))) &&
-              !DID_ERR())
+        while((mode ^ tru(CARG(1))) && !DID_ERR)
         {
             // Save the return value of the last function
             // in the CONTXT
-            r = invoke(CARG(2));
+            ret = invoke(CARG(2));
         }
 
         // Return either zero, the value of the resolved
         // value of this function, or the return value of
         // the last function in the last iteration.
-        return r;
+        return ret;
     }
 
     // The parser is broken
@@ -209,43 +208,51 @@ entry_p m_retrace(entry_p contxt)
         }
 
         // Iterator and stop.
-        entry_p *c = contxt->parent->children;
-        entry_p s = *c;
+        entry_p *chl = contxt->parent->children;
+        entry_p top = *chl;
 
         // Locate ourselves.
-        while(*c != contxt)
+        while(*chl != contxt)
         {
-            c++;
+            chl++;
         }
 
         // Locate the first trace point,
         // unless we're first in line.
-        if(*c != s)
+        if(*chl != top)
         {
-            // Find trace point.
-            while(*(--c) != s && (*c)->call != m_trace)
+            // Find first trace point.
+            while(*(--chl) != top)
             {
-                // Do nothing.
+                if((*chl)->call == m_trace)
+                {
+                    // Found it.
+                    break;
+                }
             }
 
             // Look for the second trace point,
             // unless we're at the top by now.
-            if(*c != s)
+            if(*chl != top)
             {
                 // Find the second point.
-                while(*(--c) != s && (*c)->call != m_trace)
+                while(*(--chl) != top)
                 {
-                    // Do nothing.
+                    if((*chl)->call == m_trace)
+                    {
+                        // Found it.
+                        break;
+                    }
                 }
             }
         }
 
         // Backtrack if we found two trace points.
-        if((*c)->call == m_trace)
+        if((*chl)->call == m_trace)
         {
             // Expect failure.
-            entry_p r = end();
-            entry_p *t = c;
+            entry_p ret = end();
+            entry_p *org = chl;
 
             // Frame counter.
             static int dep = 0;
@@ -254,16 +261,16 @@ entry_p m_retrace(entry_p contxt)
             // invoke if we're beyond MAXDEP.
             if(dep++ < MAXDEP)
             {
-                for(; !DID_ERR(); c = t)
+                for(; !DID_ERR; chl = org)
                 {
                     // As long as no one fails, resolve
                     // all children and save the return
                     // value of the last one.
-                    while(*c && *c != end() && !DID_ERR())
+                    while(*chl && *chl != end() && !DID_ERR)
                     {
                         // Resolve and proceed.
-                        r = resolve(*c);
-                        c++;
+                        ret = resolve(*chl);
+                        chl++;
                     }
                 }
 
@@ -271,7 +278,7 @@ entry_p m_retrace(entry_p contxt)
                 dep--;
 
                 // Return the last value.
-                return r;
+                return ret;
             }
 
             // We risk running out of stack.

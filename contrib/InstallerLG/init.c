@@ -11,8 +11,10 @@
 #include "args.h"
 #include "control.h"
 #include "exit.h"
+#include "gui.h"
 #include "information.h"
 #include "init.h"
+#include "media.h"
 #include "procedure.h"
 #include "symbol.h"
 #include "util.h"
@@ -22,43 +24,161 @@
 
 #ifdef AMIGA
 #include <proto/locale.h>
+#ifdef __MORPHOS__
+char *strcasestr(const char *, const char *);
+#endif
 #endif
 
 //----------------------------------------------------------------------------
-// Name:        native_exists
-// Description: Init helper; find first occurence of callback in AST.
-// Input:       entry_p contxt:  CONTXT.
-// Return:      entry_p:         NATIVE callback if found, NULL otherwise.
+// Name:        init_num
+// Description: Init helper; insert numeric variable in CONTXT. This is only
+//              for use in init(), nothing is resolved and duplicates aren't
+//              accounted for.
+// Input:       entry_p contxt: CONTXT.
+//              char *sym:      Name.
+//              int num:        Value.
+// Return:      -
 //----------------------------------------------------------------------------
-static entry_p native_exists(entry_p contxt, call_t f)
+static void init_num(entry_p contxt, char *sym, int num)
 {
-    entry_p e = NULL;
+    // Create SYMBOL VALUE tuple.
+    entry_p var = new_symbol(DBG_ALLOC(strdup(sym))),
+            val = new_number(num);
 
-    // NULL are valid values.
-    if(contxt &&
-       contxt->children)
+    // Unless we're OOM, init tuple.
+    if(var && val)
     {
-        // Iterate over all children and
-        // recur if needed.
-        for(entry_p *c = contxt->children;
-            *c && *c != end() && !e; c++)
+        var->parent = contxt;
+        var->resolved = val;
+        val->parent = var;
+
+        // Insert result in CONTXT.
+        append(&contxt->symbols, var);
+    }
+    else
+    {
+        // Don't leak on OOM.
+        kill(var);
+        kill(val);
+    }
+}
+
+//----------------------------------------------------------------------------
+// Name:        init_str
+// Description: Init helper; insert string variable in CONTXT. This is only
+//              for use in init(), nothing is resolved and duplicates aren't
+//              accounted for.
+// Input:       entry_p contxt: CONTXT.
+//              char *sym:      Name.
+//              char *str:      Value.
+// Return:      -
+//----------------------------------------------------------------------------
+static void init_str(entry_p contxt, char *sym, char *str)
+{
+    // Create SYMBOL VALUE tuple.
+    entry_p var = new_symbol(DBG_ALLOC(strdup(sym))),
+            val = new_string(DBG_ALLOC(strdup(str)));
+
+    // Unless we're OOM, init tuple.
+    if(var && val)
+    {
+        var->parent = contxt;
+        var->resolved = val;
+        val->parent = var;
+
+        // Insert result in CONTXT.
+        append(&contxt->symbols, var);
+    }
+    else
+    {
+        // Don't leak on OOM.
+        kill(var);
+        kill(val);
+    }
+}
+
+//----------------------------------------------------------------------------
+// Name:        init_tooltypes
+// Description: Init helper; Promote tooltypes to variables in CONTXT.
+// Input:       entry_p contxt: CONTXT.
+// Return:      -
+//----------------------------------------------------------------------------
+static void init_tooltypes(entry_p contxt)
+{
+    // Get tooltype values / cli arguments.
+    char *a_app = arg_get(ARG_APPNAME),
+         *a_scr = arg_get(ARG_SCRIPT),
+         *a_min = arg_get(ARG_MINUSER),
+         *a_def = arg_get(ARG_DEFUSER),
+         *a_log = arg_get(ARG_LOGFILE),
+         *a_lng = arg_get(ARG_LANGUAGE);
+
+    // Modus.
+    init_num(contxt, "@no-log", arg_get(ARG_NOLOG) ? 1 : 0);
+    init_num(contxt, "@no-pretend", arg_get(ARG_NOPRETEND) ? 1 : 0);
+
+    // File names.
+    init_str(contxt, "@icon", a_scr ? a_scr : "");
+    init_str(contxt, "@app-name", a_app ? a_app : "Test App");
+    init_str(contxt, "@log-file", a_log ? a_log : "install_log_file");
+
+    // Default and minimum user level.
+    int l_def = 1, l_min = 0;
+
+    // Minimum user level setting?
+    if(a_min)
+    {
+        // NOVICE (0) is implicit.
+        if(!strcasecmp("AVERAGE", a_min))
         {
-            if((*c)->type == NATIVE &&
-               (*c)->call == f)
-            {
-                // We found it.
-                e = *c;
-            }
-            else
-            {
-                // Recur.
-                e = native_exists(*c, f);
-            }
+            l_min = 1;
+        }
+        else
+        if(!strcasecmp("EXPERT", a_min))
+        {
+            l_min = 2;
         }
     }
 
-    // NULL or m_welcome.
-    return e;
+    // Default user level setting?
+    if(a_def)
+    {
+        // AVERAGE (1) is implicit.
+        if(!strcasecmp("NOVICE", a_def))
+        {
+            l_def = 0;
+        }
+        else
+        if(!strcasecmp("EXPERT", a_def))
+        {
+            l_def = 2;
+        }
+    }
+
+    // Set capped values, default must be >= minimum.
+    init_num(contxt, "@user-level", l_def < l_min ? l_min : l_def);
+    init_num(contxt, "@user-min", l_min);
+
+    if(!a_lng)
+    {
+        #ifdef AMIGA
+        // Open the current default locale.
+        struct Locale *loc = OpenLocale(NULL);
+
+        // Set the preferred installer language.
+        if(loc && loc->loc_PrefLanguages[0])
+        {
+            init_str(contxt, "@language", loc->loc_PrefLanguages[0]);
+            CloseLocale(loc);
+        }
+        #else
+        init_str(contxt, "@language", "english");
+        #endif
+    }
+    else
+    {
+        init_str(contxt, "@language", arg_get(ARG_LANGUAGE));
+    }
 }
 
 //----------------------------------------------------------------------------
@@ -69,141 +189,65 @@ static entry_p native_exists(entry_p contxt, call_t f)
 //----------------------------------------------------------------------------
 entry_p init(entry_p contxt)
 {
-    // If we don't have a context with
-    // children the parser is broken.
-    if(contxt &&
-       contxt->children)
+    // Sanity check.
+    if(c_sane(contxt, 0) &&
+       s_sane(contxt, 0))
     {
-        // Is there a 'welcome' already?
-        entry_p e = native_exists(contxt, m_welcome);
+        // Is there a (welcome) already?
+        entry_p entry = native_exists(contxt, m_welcome);
 
-        // Get tooltype values / cli arguments.
-        char *a_app = arg_get(ARG_APPNAME),
-             *a_scr = arg_get(ARG_SCRIPT),
-             *a_min = arg_get(ARG_MINUSER),
-             *a_def = arg_get(ARG_DEFUSER),
-             *a_log = arg_get(ARG_LOGFILE),
-             *a_loc = arg_get(ARG_LANGUAGE);
-
-        // Set default values.
-        int defusr = 1, minusr = 0,
-            nolog = arg_get(ARG_NOLOG) ? 1 : 0,
-            nopretend = arg_get(ARG_NOPRETEND) ? 1 : 0;
-
-        #ifdef AMIGA
-        if(!a_loc)
-        {
-            // Open the current default locale.
-            struct Locale *loc = OpenLocale(NULL);
-
-            // Set the preferred installer language.
-            if(loc && loc->loc_PrefLanguages[0])
-            {
-                a_loc = strdup(loc->loc_PrefLanguages[0]);
-                CloseLocale(loc);
-            }
-        }
-        else
-        {
-            // A copy is required. See the init
-            // of @language below.
-            a_loc = strdup(a_loc);
-        }
-        #endif
-
-        // Use the defaults of the CBM installer.
-        a_scr = a_scr ? a_scr : "";
-        a_app = a_app ? a_app : "Test App";
-        a_log = a_log ? a_log : "install_log_file";
-
-        // Minimum user level setting?
-        if(a_min)
-        {
-            // 'NOVICE' (0) is implicit.
-            if(!strcasecmp("AVERAGE", a_min))
-            {
-                minusr = 1;
-            }
-            else if(!strcasecmp("EXPERT", a_min))
-            {
-                minusr = 2;
-            }
-
-            // Default user must be >= min user.
-            if(minusr > defusr)
-            {
-                defusr = minusr;
-            }
-        }
-
-        // Default user level setting?
-        if(a_def)
-        {
-            // 'AVERAGE' (1) is implicit.
-            if(!strcasecmp("NOVICE", a_def))
-            {
-                defusr = 0;
-            }
-            else if(!strcasecmp("EXPERT", a_def))
-            {
-                defusr = 2;
-            }
-
-            defusr = defusr > minusr ?
-                     defusr : minusr;
-        }
-
-        // If no (welcome) is found insert a default one on top.
-        if(!e)
+        // If not, insert a default (welcome).
+        if(!entry)
         {
             // The line numbers and naming are for debugging
             // purposes only.
-            e = new_native
+            entry = new_native
             (
-                strdup("welcome"), __LINE__, m_welcome,
+                DBG_ALLOC(strdup("welcome")), __LINE__, m_welcome,
                 push
                 (
                     new_contxt(),
-                    new_string(strdup("Welcome"))
+                    new_string(DBG_ALLOC(strdup("Welcome")))
                 ),
                 NUMBER
             );
 
-            // Only on Amiga, otherwise tests will break, they don't
-            // expect any default (welcome).
             #ifdef AMIGA
+            // Only on Amiga, otherwise tests will break,
+            // they don't expect any default (welcome).
+
             // Add to the root and reparent.
-            if(e)
+            if(entry)
             {
-                append(&contxt->children, e);
-                e->parent = contxt;
+                append(&contxt->children, entry);
+                entry->parent = contxt;
             }
 
             // Rotate right to make it end up on top.
             ror(contxt->children);
             #else
             // We're not using this, kill it directly.
-            kill(e);
+            kill(entry);
             #endif
         }
 
         // Create default error handler, it simply returns '0'
         // without doing anything.
-        e = new_native
+        entry = new_native
         (
-            strdup("onerror"), __LINE__, m_procedure,
+            DBG_ALLOC(strdup("onerror")), __LINE__, m_procedure,
             push
             (
                 new_contxt(),
                 new_custom
                 (
-                    strdup("@onerror"), __LINE__, NULL,
+                    DBG_ALLOC(strdup("@onerror")), __LINE__, NULL,
                     push
                     (
                         new_contxt(),
                         new_native
                         (
-                            strdup("select"), __LINE__, m_select,
+                            DBG_ALLOC(strdup("select")), __LINE__, m_select,
                             push(push
                             (
                                 new_contxt(),
@@ -223,347 +267,22 @@ entry_p init(entry_p contxt)
             DANGLE
         );
 
-        // Add to the root and reparent.
-        if(e)
+        // Unless we're out of memory.
+        if(entry)
         {
-            append(&contxt->children, e);
-            e->parent = contxt;
+            // Add to the root and reparent.
+            append(&contxt->children, entry);
+            entry->parent = contxt;
+
+            // Rotate to put it on top.
+            ror(contxt->children);
         }
-
-        // Rotate right to make it end up on top.
-        ror(contxt->children);
-
-        // Set default variables using (set) instead
-        // of creating them directly. Hides all the
-        // magic involved in symbol handling.
-        e = new_native
-        (
-            // All the numerical values.
-            strdup("set"), __LINE__, m_set,
-            push(push(push(push(push(push(
-            push(push(push(push(push(push(
-            push(push(push(push(push(push(
-            push(push(push(push(push(push(
-            push(push(push(push(push(push
-            (
-                new_contxt(),
-                new_symbol(strdup("@user-level"))),
-                new_number(defusr)
-                /*
-                User level, 0 = novice, 1 = average,
-                2 = expert.
-                */
-            ),
-                new_symbol(strdup("@user-min"))),
-                new_number(minusr)
-                /*
-                Minimum user level.
-                */
-            ),
-                new_symbol(strdup("@pretend"))),
-                new_number(0)
-                /*
-                Pretend mode, 1 = on, 0 = off.
-                */
-            ),
-                new_symbol(strdup("@no-pretend"))),
-                new_number(nopretend)
-                /*
-                Disallow pretend mode.
-                */
-            ),
-                new_symbol(strdup("@installer-version"))),
-                new_number((MAJOR << 16) | MINOR)
-                /*
-                The version of Installer.
-                */
-            ),
-                new_symbol(strdup("@ioerr"))),
-                new_number(0)
-                /*
-                The value of the last DOS error.
-                */
-            ),
-                new_symbol(strdup("@log"))),
-                new_number(0)
-                /*
-                Logging enabled = 1, disabled = 0.
-                */
-            ),
-                new_symbol(strdup("@no-log"))),
-                new_number(nolog)
-                /*
-                Disallow logging.
-                */
-            ),
-                new_symbol(strdup("@yes"))),
-                /*
-                Mock user input. 1 = always yes.
-                */
-                new_number(0)
-            ),
-                new_symbol(strdup("@skip"))),
-                new_number(0)
-                /*
-                Mock user input. 1 = always skip.
-                */
-            ),
-                new_symbol(strdup("@abort"))),
-                new_number(0)
-                /*
-                Mock user input. 1 = abort.
-                */
-            ),
-                new_symbol(strdup("@back"))),
-                new_number(0)
-                /*
-                Mock user input. 1 = go back.
-                */
-            ),
-                new_symbol(strdup("@each-type"))),
-                new_number(0)
-                /*
-                When using (foreach), @each-name and @each-type
-                will contain the filename and the object type.
-                */
-            ),
-                new_symbol(strdup("@strict"))),
-                #ifdef AMIGA
-                new_number(0)
-                #else
-                new_number(1)
-                #endif
-                /*
-                Toggle 'strict' mode.
-                */
-            ),
-                new_symbol(strdup("@debug"))),
-                new_number(0)
-                /*
-                Toggle 'debug' mode.
-                */
-            ),
-
-            NUMBER
-        );
-
-        // Add to the root and reparent.
-        if(e)
-        {
-            append(&contxt->children, e);
-            e->parent = contxt;
-        }
-
-        // Rotate right to make it end up on top.
-        // We need these to be set before any user
-        // code is executed.
-        ror(contxt->children);
-
-        e = new_native
-        (
-            // All the string values.
-            strdup("set"), __LINE__, m_set,
-            push(push(push(push(push(push(push(push(
-            push(push(push(push(push(push(push(push(
-            push(push(push(push(push(push(push(push(
-            push(push(push(push(push(push(push(push(
-            push(push(push(push(push(push(push(push(
-            push(push(push(push(push(push(push(push(
-            push(push(push(push(push(push(push(push
-            (
-                new_contxt(),
-                new_symbol(strdup("@abort-button"))),
-                new_string(strdup(""))
-                /*
-                NOT USED.
-                */
-            ),
-                new_symbol(strdup("@app-name"))),
-                new_string(strdup(a_app))
-                /*
-                The `APPNAME' value given at startup.
-                */
-            ),
-                new_symbol(strdup("@askoptions-help"))),
-                new_string(strdup(""))
-                /*
-                NOT USED.
-                */
-            ),
-                new_symbol(strdup("@askchoice-help"))),
-                new_string(strdup(""))
-                /*
-                NOT USED.
-                */
-            ),
-                new_symbol(strdup("@asknumber-help"))),
-                new_string(strdup(""))
-                /*
-                NOT USED.
-                */
-            ),
-                new_symbol(strdup("@askstring-help"))),
-                new_string(strdup(""))
-                /*
-                NOT USED.
-                */
-            ),
-                new_symbol(strdup("@askdisk-help"))),
-                new_string(strdup(""))
-                /*
-                NOT USED.
-                */
-            ),
-                new_symbol(strdup("@askfile-help"))),
-                new_string(strdup(""))
-                /*
-                NOT USED.
-                */
-            ),
-                new_symbol(strdup("@askdir-help"))),
-                new_string(strdup(""))
-                /*
-                NOT USED.
-                */
-            ),
-                new_symbol(strdup("@copylib-help"))),
-                new_string(strdup(""))
-                /*
-                NOT USED.
-                */
-            ),
-                new_symbol(strdup("@copyfiles-help"))),
-                new_string(strdup(""))
-                /*
-                NOT USED.
-                */
-            ),
-                new_symbol(strdup("@makedir-help"))),
-                new_string(strdup(""))
-                /*
-                NOT USED.
-                */
-            ),
-                new_symbol(strdup("@startup-help"))),
-                new_string(strdup(""))
-                /*
-                NOT USED.
-                */
-            ),
-                new_symbol(strdup("@default-dest"))),
-                new_string(strdup("T:"))
-                /*
-                Suggested location for installing
-                an application.
-                */
-            ),
-                new_symbol(strdup("@error-msg"))),
-                new_string(strdup(""))
-                /*
-                NOT USED.
-                */
-            ),
-                new_symbol(strdup("@execute-dir"))),
-                new_string(strdup(""))
-                /*
-                The Installer will change to this directory
-                whenever (run) or (execute) are performed.
-                */
-            ),
-                new_symbol(strdup("@icon"))),
-                new_string(strdup(a_scr))
-                /*
-                Installer icon path.
-                */
-            ),
-                new_symbol(strdup("@language"))),
-                new_string(a_loc ? a_loc : strdup("english"))
-                /*
-                Default language.
-                */
-            ),
-                new_symbol(strdup("@special-msg"))),
-                new_string(strdup(""))
-                /*
-                NOT USED.
-                */
-            ),
-                new_symbol(strdup("@log-file"))),
-                new_string(strdup(a_log))
-                /*
-                The default log file.
-                */
-            ),
-                new_symbol(strdup("@each-name"))),
-                new_string(strdup(""))
-                /*
-                When using (foreach), @each-name and
-                @each-type will contain the filename
-                and the object type.
-                */
-            ),
-                new_symbol(strdup("@user-startup"))),
-                new_string(strdup("s:user-startup"))
-                /*
-                The default file used by (startup).
-                */
-            ),
-                new_symbol(strdup("fail"))),
-                new_string(strdup("fail"))
-                /*
-                Hack to deal with (optional) quirks.
-                */
-            ),
-                new_symbol(strdup("nofail"))),
-                new_string(strdup("nofail"))
-                /*
-                Hack to deal with (optional) quirks.
-                */
-            ),
-                new_symbol(strdup("oknodelete"))),
-                new_string(strdup("oknodelete"))
-                /*
-                Hack to deal with (optional) quirks.
-                */
-            ),
-                new_symbol(strdup("force"))),
-                new_string(strdup("force"))
-                /*
-                Hack to deal with (optional) quirks.
-                */
-            ),
-                new_symbol(strdup("askuser"))),
-                new_string(strdup("askuser"))
-                /*
-                Hack to deal with (optional) quirks.
-                */
-            ),
-                new_symbol(strdup("@null"))),
-                new_string(strdup("NULL"))
-                /*
-                Hack to deal with broken scripts.
-                */
-            ),
-            STRING
-        );
-
-        // Add to the root and reparent.
-        if(e)
-        {
-            append(&contxt->children, e);
-            e->parent = contxt;
-        }
-
-        // Rotate right to make it end up on top.
-        // We need these to be set before any user
-        // code is executed.
-        ror(contxt->children);
 
         // Create default (exit). Line numbers and
         // naming are for debugging purposes only.
-        e = new_native
+        entry = new_native
         (
-            strdup("exit"), __LINE__,
+            DBG_ALLOC(strdup("exit")), __LINE__,
             m_exit, NULL, NUMBER
         );
 
@@ -572,19 +291,66 @@ entry_p init(entry_p contxt)
         // break, they don't expect any default (exit).
 
         // Add to the root and reparent.
-        if(e)
+        if(entry)
         {
-            append(&contxt->children, e);
-            e->parent = contxt;
+            append(&contxt->children, entry);
+            entry->parent = contxt;
         }
 
         // No rotation. Default (exit) should be last.
         #else
         // We're not using this, kill it directly.
-        kill(e);
+        kill(entry);
         #endif
+
+        // Get tooltype / cli arguments.
+        init_tooltypes(contxt);
+
+        // Set misc numerical values.
+        init_num(contxt, "@pretend", 0);
+        init_num(contxt, "@installer-version", (MAJOR << 16) | MINOR);
+        init_num(contxt, "@ioerr", 0);
+        init_num(contxt, "@log", 0);
+        init_num(contxt, "@yes", 0);
+        init_num(contxt, "@skip", 0);
+        init_num(contxt, "@abort", 0);
+        init_num(contxt, "@back", 0);
+        init_num(contxt, "@each-type", 0);
+        init_num(contxt, "@debug", 0);
+        init_num(contxt, "@strict",
+                         #ifdef AMIGA
+                         0
+                         #else
+                         1
+                         #endif
+                         );
+
+        // Set misc strings values.
+        init_str(contxt, "@abort-button", "");
+        init_str(contxt, "@askoptions-help", "");
+        init_str(contxt, "@askchoice-help", "");
+        init_str(contxt, "@asknumber-help", "");
+        init_str(contxt, "@askstring-help", "");
+        init_str(contxt, "@askdisk-help", "");
+        init_str(contxt, "@askfile-help", "");
+        init_str(contxt, "@askdir-help", "");
+        init_str(contxt, "@copylib-help", "");
+        init_str(contxt, "@copyfiles-help", "");
+        init_str(contxt, "@makedir-help", "");
+        init_str(contxt, "@startup-help", "");
+        init_str(contxt, "@default-dest", "T:");
+        init_str(contxt, "@error-msg", "");
+        init_str(contxt, "@execute-dir", "");
+        init_str(contxt, "@special-msg", "");
+        init_str(contxt, "@each-name", "");
+        init_str(contxt, "@user-startup", "s:user-startup");
+        init_str(contxt, "fail", "fail");
+        init_str(contxt, "nofail", "nofail");
+        init_str(contxt, "oknodelete", "oknodelete");
+        init_str(contxt, "force", "force");
+        init_str(contxt, "askuser", "askuser");
+        init_str(contxt, "@null", "NULL");
     }
 
     return contxt;
 }
-

@@ -12,6 +12,7 @@
 
 #include "types.h"
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -21,19 +22,21 @@
 void ror(entry_p *e);
 entry_p local(entry_p e);
 entry_p global(entry_p e);
+entry_p custom(entry_p e);
 int c_sane(entry_p c, size_t n);
 int s_sane(entry_p c, size_t n);
 void pretty_print(entry_p entry);
 int get_numvar(entry_p c, char *v);
 entry_p get_opt(entry_p c, opt_t t);
 char *get_strvar(entry_p c, char *v);
-char *get_optstr(entry_p c, opt_t);
-char *get_chlstr(entry_p c);
+char *get_optstr(entry_p c, opt_t t);
+char *get_chlstr(entry_p c, bool p);
 void set_numvar(entry_p c, char *v, int n);
 void set_strvar(entry_p c, char *v, char *n);
 char *get_buf(void);
 size_t buf_size(void);
 void *dbg_alloc(int line, const char *file, const char *func, void *mem);
+entry_p native_exists(entry_p contxt, call_t f);
 
 //----------------------------------------------------------------------------
 // Utility macros.

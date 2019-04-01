@@ -19,25 +19,25 @@
 // < <= == >= >
 //     helper function for m_eq, m_gt, m_gte, m_lt, m_lte, m_ne.
 //----------------------------------------------------------------------------
-static int h_cmp(entry_p a, entry_p b)
+static int h_cmp(entry_p lhs, entry_p rhs)
 {
     // Resolve both arguments. We don't need
     // to check for failures; we will always
     // get something to compare.
-    a = resolve(a);
-    b = resolve(b);
+    entry_p alfa = resolve(lhs);
+    entry_p beta = resolve(rhs);
 
     // If both arguments are strings then use
     // string comparison.
-    if(a->type == STRING &&
-       b->type == STRING)
+    if(alfa->type == STRING &&
+       beta->type == STRING)
     {
-        return strcmp(a->name, b->name);
+        return strcmp(alfa->name, beta->name);
     }
 
     // Otherwise convert whatever we have to
     // numerical values and subtract.
-    return num(a) - num(b);
+    return num(alfa) - num(beta);
 }
 
 //----------------------------------------------------------------------------

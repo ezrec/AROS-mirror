@@ -20,7 +20,7 @@ struct LocaleInfo
     APTR li_Catalog;
 };
 
-static struct LocaleInfo li;
+static struct LocaleInfo loc;
 
 //----------------------------------------------------------------------------
 // Name:        tr
@@ -28,13 +28,13 @@ static struct LocaleInfo li;
 // Input:       A res_t string ID.
 // Return:      The string corresponding to the string ID.
 //----------------------------------------------------------------------------
-const char *tr(res_t r)
+const char *tr(res_t res)
 {
     // Fail nicely if we're out of range.
-    res_t i = r > S_GONE ? S_GONE : r;
+    res_t cur = res > S_GONE ? S_GONE : res;
 
     // res_t -> string mappings.
-    static const char *res[] =
+    static const char *str[] =
     {
         // Out of range.
         "NONE",
@@ -113,15 +113,15 @@ const char *tr(res_t r)
     };
 
     #ifdef AMIGA
-    if(li.li_LocaleBase &&
-       li.li_Catalog && i > S_NONE)
+    if(loc.li_LocaleBase &&
+       loc.li_Catalog && cur > S_NONE)
     {
-        return GetCatalogStr(li.li_Catalog, i - 1, res[i]);
+        return GetCatalogStr(loc.li_Catalog, cur - 1, str[cur]);
     }
     #endif
 
     // Always a valid string.
-    return res[i];
+    return str[cur];
 }
 
 //----------------------------------------------------------------------------
@@ -132,13 +132,13 @@ const char *tr(res_t r)
 //----------------------------------------------------------------------------
 void locale_init(void)
 {
-    if(!li.li_LocaleBase)
+    if(!loc.li_LocaleBase)
     {
         #ifdef AMIGA
-        li.li_LocaleBase = OpenLibrary("locale.library", 37);
-        li.li_Catalog = OpenCatalog(NULL, "Installer.catalog", TAG_DONE);
+        loc.li_LocaleBase = OpenLibrary("locale.library", 37);
+        loc.li_Catalog = OpenCatalog(NULL, "Installer.catalog", TAG_DONE);
         #else
-        li.li_LocaleBase = li.li_Catalog = (APTR) 0;
+        loc.li_LocaleBase = loc.li_Catalog = (APTR) 0;
         #endif
     }
 }
@@ -151,13 +151,13 @@ void locale_init(void)
 //----------------------------------------------------------------------------
 void locale_exit(void)
 {
-    if(li.li_LocaleBase)
+    if(loc.li_LocaleBase)
     {
         #ifdef AMIGA
-        CloseCatalog(li.li_Catalog);
-        CloseLibrary(li.li_LocaleBase);
+        CloseCatalog(loc.li_Catalog);
+        CloseLibrary(loc.li_LocaleBase);
         #else
-        li.li_LocaleBase = li.li_Catalog = (APTR) 0;
+        loc.li_LocaleBase = loc.li_Catalog = (APTR) 0;
         #endif
     }
 }
