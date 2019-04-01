@@ -29,7 +29,7 @@
  */
 #define _get_index(_ah) ( IS_5416V1(_ah)  ? -4 : 0 )
 #define AR5416_DS_TXSTATUS(_ah, _ads) \
-	((uint32_t*)(&(_ads)->u.tx.status[_get_index(_ah)]))
+	((uint32_t*)(void *)(&(_ads)->u.tx.status[_get_index(_ah)]))
 #define AR5416_DS_TXSTATUS_CONST(_ah, _ads) \
 	((const uint32_t*)(&(_ads)->u.tx.status[_get_index(_ah)]))
 
