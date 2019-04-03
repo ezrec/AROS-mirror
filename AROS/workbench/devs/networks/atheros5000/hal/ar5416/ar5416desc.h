@@ -74,7 +74,7 @@ struct ar5416_rx_desc { /* rx desc has 2 control words + 9 status words */
 	uint32_t	status6;
  	uint32_t	status7;
 	uint32_t	status8;
-};
+} __packed;
 
 
 struct ar5416_desc {
