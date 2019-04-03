@@ -9,10 +9,14 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- linklibs-libatomic : development-gcc
 
 GCC_VERSION     = $(TARGET_GCC_VER)
-
-REPOSITORIES := $(GNU_REPOSITORY)/gcc/gcc-$(GCC_VERSION) \
- http://mirrors.ibiblio.org/gnu/ftp/gnu/gcc/gcc-$(GCC_VERSION) \
- https://ftp.wayne.edu/gnu/gcc/gcc-$(GCC_VERSION)
+ifeq (,$(findstring -,$(GCC_VERSION)))
+    REPOSITORIES := $(GNU_REPOSITORY)/gcc/gcc-$(GCC_VERSION) \
+        http://mirrors.ibiblio.org/gnu/ftp/gnu/gcc/gcc-$(GCC_VERSION) \
+        https://ftp.wayne.edu/gnu/gcc/gcc-$(GCC_VERSION)
+else
+    REPOSITORIES := ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/snapshots/$(GCC_VERSION)
+endif
+$(info REPOSITORIES='$(REPOSITORIES)')
 
 GCC_LANGUAGES:=c,c++
 ifneq (no-objc,$(OBJC_TARGET))
@@ -75,7 +79,7 @@ endif
 # Rules to build the native GCC compiler.
 #
 %fetch_and_build_gnu_development package=gcc version=$(GCC_VERSION)  crossbuild=yes patch=yes \
-    package_repo="$(REPOSITORIES)" \
+    package_repo="$(REPOSITORIES)" suffixes="tar.bz2 tar.gz tar.xz" \
     config_env_extra=$(GCC_HOST_VARS) extraoptions=$(GCC_EXTRA_OPTS) \
     usecppflags=no targetisaflags= \
     postinstall=contrib-gnu-gcc-deletefixed
