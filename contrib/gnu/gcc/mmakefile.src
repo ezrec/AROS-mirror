@@ -16,7 +16,6 @@ ifeq (,$(findstring -,$(GCC_VERSION)))
 else
     REPOSITORIES := ftp://ftp.mirrorservice.org/sites/sourceware.org/pub/gcc/snapshots/$(GCC_VERSION)
 endif
-$(info REPOSITORIES='$(REPOSITORIES)')
 
 GCC_LANGUAGES:=c,c++
 ifneq (no-objc,$(OBJC_TARGET))
