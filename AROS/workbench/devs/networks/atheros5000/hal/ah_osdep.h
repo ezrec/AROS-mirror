@@ -31,7 +31,7 @@
  */
 #define	__ahdecl
 #ifndef __packed
-#define	__packed	__attribute__((__packed__))
+#define	__packed	__attribute__((packed, aligned (2)))
 #endif
 
 /*
