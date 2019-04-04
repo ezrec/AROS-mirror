@@ -622,6 +622,18 @@ ac_includes_default="\
 ac_header_list=
 ac_subst_vars='LTLIBOBJS
 aros_usb30_code
+aros_host_sdl_libs
+aros_host_sdl_cflags
+aros_host_x11_ldflags
+aros_host_x11_cflags
+DO_VIDMODE_SUPPORT
+DO_XSHM_SUPPORT
+ENABLE_X11
+KERNEL_DBUS_INCLUDES
+KERNEL_DBUS_KOBJ
+DBUS_LIBFLAGS
+DBUS_CFLAGS
+ENABLE_DBUS
 java_target
 objc_target
 target_binutils_version
@@ -631,39 +643,28 @@ aros_modules_debug
 aros_stack_debug
 aros_mungwall_debug
 aros_debug
-ENABLE_X11
-KERNEL_DBUS_INCLUDES
-KERNEL_DBUS_KOBJ
-DBUS_LIBFLAGS
-DBUS_CFLAGS
-ENABLE_DBUS
 aros_android_antapk
 aros_android_level
+aros_ios_sdk
+aros_ios_version
+aros_ios_platform
+aros_palm_debug_hack
 gcc_default_mode
 gcc_default_float_abi
 gcc_default_fpu
 gcc_default_cpu_tune
 gcc_default_cpu
-aros_ios_sdk
-aros_ios_version
-aros_ios_platform
-aros_enable_mmu
 aros_nesting_supervisor
-aros_palm_debug_hack
+target_grub2_version
+aros_enable_mmu
 ENABLE_EXECSMP
 PLATFORM_EXECSMP
 aros_serial_debug
-target_grub2_version
-aros_host_sdl_libs
-aros_host_sdl_cflags
-aros_host_x11_ldflags
-aros_host_x11_cflags
-DO_VIDMODE_SUPPORT
-DO_XSHM_SUPPORT
 aros_nominal_depth
 aros_nominal_height
 aros_nominal_width
 pci_hidd_target
+use_libatomic
 crosstools_cxx_target
 crosstools_target
 aros_isa_flags
@@ -694,8 +695,8 @@ aros_warn_flags
 aros_shared_ldflags
 aros_shared_aflags
 aros_shared_cflags
-aros_arch_libs
-aros_compiler_libs
+aros_cxx_libs
+aros_c_libs
 spec_obj_format
 aros_object_format
 aros_shared_ld
@@ -7577,8 +7578,8 @@ aros_target_ar_flags="cr"
 aros_target_nm_flags="-C -ul"
 aros_target_strip_flags="--strip-unneeded -R.comment"
 
-aros_compiler_libs=
-aros_arch_libs=
+aros_c_libs=
+aros_cxx_libs=
 
 aros_target_genmap="-Wl,-Map -Xlinker"
 
@@ -7657,6 +7658,7 @@ case "$aros_toolchain" in
         toolchain_strip="true"
         toolchain_objcopy="llvm-objcopy"
         toolchain_objdump="llvm-objdump"
+        use_libatomic=yes
         ;;
     *gnu*)
         toolchain_c_compiler="gcc"
@@ -7678,6 +7680,7 @@ case "$aros_toolchain" in
         toolchain_strip="strip"
         toolchain_objcopy="objcopy"
         toolchain_objdump="objdump"
+        use_libatomic=yes
         ;;
     *)
         { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: \"Unknown toolchain family!\"" >&5
@@ -8348,7 +8351,7 @@ case "$target_os" in
                 aros_config_cflags="$aros_config_cflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_OMIT_FP)"
                 aros_config_cxxflags="$aros_config_cxxflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_OMIT_FP)"
                 aros_config_aflags="$aros_config_aflags $""(CFLAGS_NO_STRICT_ALIASING)"
-                aros_arch_libs="-laeabi"
+                aros_c_libs="$aros_c_libs -laeabi"
                 gcc_default_float_abi="hard"
                 kernel_tool_prefix="aarch64-linux-gnueabihf-"
                 ;;
@@ -8362,7 +8365,7 @@ case "$target_os" in
                 aros_config_cflags="$aros_config_cflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_OMIT_FP)"
                 aros_config_cxxflags="$aros_config_cxxflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_OMIT_FP)"
                 aros_config_aflags="$aros_config_aflags $""(CFLAGS_NO_STRICT_ALIASING)"
-                aros_arch_libs="-laeabi"
+                aros_c_libs="$aros_c_libs -laeabi"
                 gcc_default_float_abi="hard"
                 android_tool_dir_prefix="arm-linux-androideabi"
                 android_tool_prefix="arm-linux-androideabi"
@@ -8378,7 +8381,7 @@ case "$target_os" in
                 aros_config_cflags="$aros_config_cflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_OMIT_FP)"
                 aros_config_cxxflags="$aros_config_cxxflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_OMIT_FP)"
                 aros_config_aflags="$aros_config_aflags $""(CFLAGS_NO_STRICT_ALIASING)"
-                aros_arch_libs="-laeabi"
+                aros_c_libs="$aros_c_libs -laeabi"
                 android_tool_dir_prefix="arm-linux-androideabi"
                 android_tool_prefix="arm-linux-androideabi"
                 android_ndk_arch="arm"
@@ -8552,7 +8555,7 @@ case "$target_os" in
                 aros_target_cpu="arm"
                 aros_object_format="armelf_aros"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Darm"
-                aros_arch_libs="-laeabi"
+                aros_c_libs="$aros_c_libs -laeabi"
                 aros_nominal_depth=8
                 gcc_target_cpu="arm"
                 aros_kernel_ar="ar"
@@ -8729,7 +8732,7 @@ case "$target_os" in
         aros_kernel_ldflags=""
         aros_nominal_width=1024
         aros_nominal_height=600
-        aros_arch_libs="-laeabi"
+        aros_c_libs="$aros_c_libs -laeabi"
         gcc_default_cpu="armv7-a"
         gcc_default_fpu="vfpv3"
         aros_isa_flags="$aros_isa_flags -mtune=cortex-a8"
@@ -8802,7 +8805,7 @@ case "$target_os" in
                 aros_config_aflags="$aros_config_aflags -marm"
                 aros_kernel_cflags="$aros_kernel_cflags -marm"
                 aros_target_mkdep="$aros_target_mkdep -Darm"
-                aros_arch_libs="-laeabi"
+                aros_c_libs="$aros_c_libs -laeabi"
                 ;;
             *armeb*)
                 aros_flavour="standcompat"
@@ -8817,7 +8820,7 @@ case "$target_os" in
                 aros_config_aflags="$aros_config_aflags -marm"
                 aros_kernel_cflags="$aros_kernel_cflags -marm"
                 aros_target_mkdep="$aros_target_mkdep -Darm"
-                aros_arch_libs="-laeabi"
+                aros_c_libs="$aros_c_libs -laeabi"
                 ;;
             *arm*)
                 aros_target_cpu="arm"
@@ -8830,7 +8833,7 @@ case "$target_os" in
                 aros_config_aflags="$aros_config_aflags -marm"
                 aros_kernel_cflags="$aros_kernel_cflags -marm"
                 aros_target_mkdep="$aros_target_mkdep -Darm"
-                aros_arch_libs="-laeabi"
+                aros_c_libs="$aros_c_libs -laeabi"
                 ;;
             *)
                 as_fn_error $? "\"Unknown CPU for RasPi $target_cpu\"" "$LINENO" 5
@@ -8942,7 +8945,7 @@ fi
                 aros_target_cpu="arm"
                 aros_object_format="armelf_aros"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Darm"
-                aros_arch_libs="-laeabi"
+                aros_c_libs="$aros_c_libs -laeabi"
                 aros_nominal_depth=8
                 gcc_target_cpu="arm"
                 gcc_default_float_abi="soft"
@@ -8972,7 +8975,7 @@ fi
                 aros_nominal_height=160
                 aros_nominal_depth=1
                 aros_target_ar_flags="cru"
-                aros_compiler_libs="-lgcc1"
+                aros_c_libs="$aros_c_libs -lgcc1"
                 aros_shared_default=no
                 aros_shared_cflags="-fpic"
                 aros_shared_aflags=""
@@ -9007,7 +9010,7 @@ fi
                 aros_nominal_height=384
                 aros_nominal_depth=8
                 aros_target_ar_flags="cru"
-                aros_compiler_libs="-lgcc1"
+                aros_c_libs="$aros_c_libs -lgcc1"
                 aros_shared_default=no
                 aros_shared_cflags="-fpic"
                 aros_shared_aflags=""
@@ -9486,10 +9489,8 @@ if test "x-$aros_flavour" = "x-emulation" -o "x-$aros_flavour" = "x-emulcompat" 
         cross_compiling=yes
     fi
 else
-            if test "$host_cc_elf" = "no" ; then
-        cross_compiling=yes
+                    cross_compiling=yes
     fi
-fi
 
 if test "$cross_compiling" = "no" ; then
     kernel_tool_prefix=""
@@ -9568,14 +9569,15 @@ if test "$kernel_tool_prefix" = "none" ; then
         as_fn_error $? "--with-kernel-toolchain-prefix= is required for this arch" "$LINENO" 5
     fi
 else
-    # Kernel tools required - find them
-    # Note that 'normally', aros_kernel_* overrides will be
-    # empty, unless specified in the per-arch sections above.
-    test_kernel_cc=yes
-    if test "x$aros_kernel_cpp" = "x"; then
-        aros_kernel_cpp=${kernel_tool_prefix}${CPP}
-    fi
-    if test "${kernel_tool_version}" != ""; then
+    if test "x-$aros_flavour" != "x-standalone" -o "x-$aros_flavour" != "x-standcompat" ; then
+        # Kernel tools required - find them
+        # Note that 'normally', aros_kernel_* overrides will be
+        # empty, unless specified in the per-arch sections above.
+        test_kernel_cc=yes
+        if test "x$aros_kernel_cpp" = "x"; then
+            aros_kernel_cpp=${kernel_tool_prefix}${CPP}
+        fi
+        if test "${kernel_tool_version}" != ""; then
     if test "$aros_kernel_cpp" != ""; then
         ac_prog_args=`expr "X$aros_kernel_cpp" : '[^ ]* \(.*\)'`
         ac_prog_cmd=`expr "X$aros_kernel_cpp" : '^\S*'`
@@ -9757,7 +9759,7 @@ fi
     aros_kernel_cpp="$aros_kernel_cpp $ac_tool_optarg"
 fi
 
-    req_avail=yes
+        req_avail=yes
 if test "$aros_kernel_cpp" = ""; then
     req_avail=no
 fi
@@ -9768,10 +9770,10 @@ if test "$req_avail" = "no"; then
     as_fn_error $? "cpp is required to build AROS. Please install and run configure again." "$LINENO" 5
 fi
 
-    if test "x$aros_kernel_cc" = "x"; then
-        aros_kernel_cc=${kernel_tool_prefix}${CC}
-    fi
-    if test "${kernel_tool_version}" != ""; then
+        if test "x$aros_kernel_cc" = "x"; then
+            aros_kernel_cc=${kernel_tool_prefix}${CC}
+        fi
+        if test "${kernel_tool_version}" != ""; then
     if test "$aros_kernel_cc" != ""; then
         ac_prog_args=`expr "X$aros_kernel_cc" : '[^ ]* \(.*\)'`
         ac_prog_cmd=`expr "X$aros_kernel_cc" : '^\S*'`
@@ -9953,7 +9955,7 @@ fi
     aros_kernel_cc="$aros_kernel_cc $ac_tool_optarg"
 fi
 
-    req_avail=yes
+        req_avail=yes
 if test "$aros_kernel_cc" = ""; then
     req_avail=no
 fi
@@ -9964,10 +9966,10 @@ if test "$req_avail" = "no"; then
     as_fn_error $? "cc is required to build AROS. Please install and run configure again." "$LINENO" 5
 fi
 
-    if test "x$aros_kernel_cxx" = "x"; then
-        aros_kernel_cxx=${kernel_tool_prefix}${CXX}
-    fi
-    if test "${kernel_tool_version}" != ""; then
+        if test "x$aros_kernel_cxx" = "x"; then
+            aros_kernel_cxx=${kernel_tool_prefix}${CXX}
+        fi
+        if test "${kernel_tool_version}" != ""; then
     if test "$aros_kernel_cxx" != ""; then
         ac_prog_args=`expr "X$aros_kernel_cxx" : '[^ ]* \(.*\)'`
         ac_prog_cmd=`expr "X$aros_kernel_cxx" : '^\S*'`
@@ -10149,9 +10151,9 @@ fi
     aros_kernel_cxx="$aros_kernel_cxx $ac_tool_optarg"
 fi
 
-    # If it's set, make sure it's really there
-    if test "x$aros_kernel_cxx" != "x" ; then
-        req_avail=yes
+        # If it's set, make sure it's really there
+        if test "x$aros_kernel_cxx" != "x" ; then
+            req_avail=yes
 if test "$aros_kernel_cxx" = ""; then
     req_avail=no
 fi
@@ -10161,7 +10163,7 @@ fi
 if test "$req_avail" = "no"; then
     as_fn_error $? "cxx is required to build AROS. Please install and run configure again." "$LINENO" 5
 fi
-    fi
+        fi
 
 if test "$aros_kernel_ld" = ""; then
     if test "$cross_compiling" = "yes" ; then
@@ -10337,7 +10339,7 @@ fi
     aros_kernel_ld="$aros_kernel_ld $ac_tool_optarg"
 fi
 
-    req_avail=yes
+        req_avail=yes
 if test "$aros_kernel_ld" = ""; then
     req_avail=no
 fi
@@ -10522,7 +10524,7 @@ fi
     aros_kernel_as="$aros_kernel_as $ac_tool_optarg"
 fi
 
-    req_avail=yes
+        req_avail=yes
 if test "$aros_kernel_as" = ""; then
     req_avail=no
 fi
@@ -10707,7 +10709,7 @@ fi
     aros_kernel_ar="$aros_kernel_ar $ac_tool_optarg"
 fi
 
-    req_avail=yes
+        req_avail=yes
 if test "$aros_kernel_ar" = ""; then
     req_avail=no
 fi
@@ -10892,7 +10894,7 @@ fi
     aros_kernel_ranlib="$aros_kernel_ranlib $ac_tool_optarg"
 fi
 
-    req_avail=yes
+        req_avail=yes
 if test "$aros_kernel_ranlib" = ""; then
     req_avail=no
 fi
@@ -11077,7 +11079,7 @@ fi
     aros_kernel_nm="$aros_kernel_nm $ac_tool_optarg"
 fi
 
-    req_avail=yes
+        req_avail=yes
 if test "$aros_kernel_nm" = ""; then
     req_avail=no
 fi
@@ -11262,7 +11264,7 @@ fi
     aros_kernel_strip="$aros_kernel_strip $ac_tool_optarg"
 fi
 
-    req_avail=yes
+        req_avail=yes
 if test "$aros_kernel_strip" = ""; then
     req_avail=no
 fi
@@ -11273,9 +11275,9 @@ if test "$req_avail" = "no"; then
     as_fn_error $? "strip is required to build AROS. Please install and run configure again." "$LINENO" 5
 fi
 
-    # Objcopy and objdump are not required for the kernel
-    # toolchain on many architectures.
-    # So we'll look for them, but not make them strictly required.
+        # Objcopy and objdump are not required for the kernel
+        # toolchain on many architectures.
+        # So we'll look for them, but not make them strictly required.
 
 if test "$aros_kernel_objcopy" = ""; then
     if test "$cross_compiling" = "yes" ; then
@@ -11626,8 +11628,8 @@ fi
     aros_kernel_objdump="$aros_kernel_objdump $ac_tool_optarg"
 fi
 
-    if test "x${crosstools}" != "xyes" ; then
-        req_avail=yes
+        if test "x${crosstools}" != "xyes" ; then
+            req_avail=yes
 if test "$aros_kernel_objcopy" = ""; then
     req_avail=no
 fi
@@ -11637,7 +11639,7 @@ fi
 if test "$req_avail" = "no"; then
     as_fn_error $? "objcopy is required to build AROS. Please install and run configure again." "$LINENO" 5
 fi
-        req_avail=yes
+            req_avail=yes
 if test "$aros_kernel_objdump" = ""; then
     req_avail=no
 fi
@@ -11647,6 +11649,7 @@ fi
 if test "$req_avail" = "no"; then
     as_fn_error $? "objdump is required to build AROS. Please install and run configure again." "$LINENO" 5
 fi
+        fi
     fi
 fi
 
@@ -15064,6 +15067,10 @@ if ! test "$gcc_default_cpu" = "" ; then
     target_extra_cfg+="$export_newline""# ARM gcc default target$export_newline""GCC_DEFAULT_CPU         := $gcc_default_cpu$export_newline""GCC_DEFAULT_FPU         := $gcc_default_fpu$export_newline""GCC_DEFAULT_FLOAT_ABI   := $gcc_default_float_abi$export_newline""GCC_DEFAULT_MODE        := $gcc_default_mode$export_newline"
 fi
 
+if test "$use_libatomic" = "yes" ; then
+    aros_cxx_libs="$aros_cxx_libs  -latomic"
+fi
+
 
 # Generic
 
@@ -15079,10 +15086,10 @@ fi
 
 
 
-# Compatability with other Amiga-like operation systems
+# Compatability with other Amiga-like operating systems
 
 
-# Host related
+# Host Related ###########################
 
 
 
@@ -15113,8 +15120,8 @@ fi
 
 
 
+# Target Related #########################
 
-# Target Related
 
 
 
@@ -15204,16 +15211,6 @@ fi
 
 
 
-
-
-
-
-
-
-
-
-
-# Bootloader related
 
 
 # Native version related
@@ -15221,18 +15218,13 @@ fi
 
 
 
-# Palm native version related
-
-
-# Unix/Hosted version related
-
-
 # MMU related
 
 
-# Apple iOS related
+# Bootloader related
 
 
+# Unix/Hosted version related
 
 
 # ARM default GCC target related
@@ -15242,19 +15234,18 @@ fi
 
 
 
+# Palm native version related
+
+
+# Apple iOS related
+
+
+
+
 # Android related
 
 
 
-
-# DBUS related
-
-
-
-
-
-
-#X11 related
 
 
 # Debug related
@@ -15275,6 +15266,25 @@ fi
 
 
 #Java related
+
+
+# DBUS related
+
+
+
+
+
+
+#X11 related
+
+
+
+
+
+
+
+#X11 related
+
 
 
 # USB3.0 code

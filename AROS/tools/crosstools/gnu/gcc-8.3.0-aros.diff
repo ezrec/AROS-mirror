@@ -1,31 +1,7 @@
-diff -ruN gcc-6.3.0/boehm-gc/include/gc_amiga_redirects.h gcc-6.3.0.aros/boehm-gc/include/gc_amiga_redirects.h
---- gcc-6.3.0/boehm-gc/include/gc_amiga_redirects.h	2001-08-17 19:30:51.000000000 +0100
-+++ gcc-6.3.0.aros/boehm-gc/include/gc_amiga_redirects.h	2018-04-23 15:24:25.358883950 +0100
-@@ -2,7 +2,7 @@
- 
- # define GC_AMIGA_REDIRECTS_H
- 
--# if ( defined(_AMIGA) && !defined(GC_AMIGA_MAKINGLIB) )
-+# if !defined(__AROS__) && ( defined(_AMIGA) && !defined(GC_AMIGA_MAKINGLIB) )
-     extern void *GC_amiga_realloc(void *old_object,size_t new_size_in_bytes);
- #   define GC_realloc(a,b) GC_amiga_realloc(a,b)
-     extern void GC_amiga_set_toany(void (*func)(void));
-diff -ruN gcc-6.3.0/boehm-gc/include/gc.h gcc-6.3.0.aros/boehm-gc/include/gc.h
---- gcc-6.3.0/boehm-gc/include/gc.h	2014-10-23 09:39:19.000000000 +0100
-+++ gcc-6.3.0.aros/boehm-gc/include/gc.h	2018-04-23 15:24:25.358883950 +0100
-@@ -1056,7 +1056,7 @@
-     GC_API void GC_win32_free_heap ();
- #endif
- 
--#if ( defined(_AMIGA) && !defined(GC_AMIGA_MAKINGLIB) )
-+#if !defined(__AROS__) && ( defined(_AMIGA) && !defined(GC_AMIGA_MAKINGLIB) )
-   /* Allocation really goes through GC_amiga_allocwrapper_do */
- # include "gc_amiga_redirects.h"
- #endif
-diff -ruN gcc-6.3.0/configure gcc-6.3.0.aros/configure
---- gcc-6.3.0/configure	2016-03-17 22:54:19.000000000 +0000
-+++ gcc-6.3.0.aros/configure	2018-04-23 15:24:25.358883950 +0100
-@@ -3896,6 +3896,9 @@
+diff -ruN gcc-8.3.0/configure gcc-8.3.0.aros/configure
+--- gcc-8.3.0/configure	2019-02-22 14:22:13.000000000 +0000
++++ gcc-8.3.0.aros/configure	2019-03-02 21:36:33.831874200 +0000
+@@ -3791,6 +3791,9 @@
    powerpcle-*-solaris*)
      noconfigdirs="$noconfigdirs gdb sim tcl tk itcl"
      ;;
@@ -35,7 +11,7 @@ diff -ruN gcc-6.3.0/configure gcc-6.3.0.aros/configure
    powerpc-*-beos*)
      noconfigdirs="$noconfigdirs gdb"
      ;;
-@@ -4034,6 +4037,8 @@
+@@ -3926,6 +3929,8 @@
    rs6000-*-aix*)
      host_makefile_frag="config/mh-ppc-aix"
      ;;
@@ -44,10 +20,10 @@ diff -ruN gcc-6.3.0/configure gcc-6.3.0.aros/configure
  esac
  fi
  
-diff -ruN gcc-6.3.0/configure.ac gcc-6.3.0.aros/configure.ac
---- gcc-6.3.0/configure.ac	2016-03-17 22:54:19.000000000 +0000
-+++ gcc-6.3.0.aros/configure.ac	2018-04-23 15:24:25.358883950 +0100
-@@ -1232,6 +1232,9 @@
+diff -ruN gcc-8.3.0/configure.ac gcc-8.3.0.aros/configure.ac
+--- gcc-8.3.0/configure.ac	2018-02-13 13:01:33.000000000 +0000
++++ gcc-8.3.0.aros/configure.ac	2019-03-02 21:36:33.831874200 +0000
+@@ -1122,6 +1122,9 @@
    powerpcle-*-solaris*)
      noconfigdirs="$noconfigdirs gdb sim tcl tk itcl"
      ;;
@@ -57,7 +33,7 @@ diff -ruN gcc-6.3.0/configure.ac gcc-6.3.0.aros/configure.ac
    powerpc-*-beos*)
      noconfigdirs="$noconfigdirs gdb"
      ;;
-@@ -1351,6 +1354,8 @@
+@@ -1238,6 +1241,8 @@
    rs6000-*-aix*)
      host_makefile_frag="config/mh-ppc-aix"
      ;;
@@ -66,10 +42,10 @@ diff -ruN gcc-6.3.0/configure.ac gcc-6.3.0.aros/configure.ac
  esac
  fi
  
-diff -ruN gcc-6.3.0/fixincludes/configure gcc-6.3.0.aros/fixincludes/configure
---- gcc-6.3.0/fixincludes/configure	2016-12-21 07:53:16.000000000 +0000
-+++ gcc-6.3.0.aros/fixincludes/configure	2018-04-23 15:24:25.358883950 +0100
-@@ -4712,6 +4712,7 @@
+diff -ruN gcc-8.3.0/fixincludes/configure gcc-8.3.0.aros/fixincludes/configure
+--- gcc-8.3.0/fixincludes/configure	2018-04-18 10:46:58.000000000 +0100
++++ gcc-8.3.0.aros/fixincludes/configure	2019-03-02 21:36:33.831874200 +0000
+@@ -4752,6 +4752,7 @@
  fi
  else
    case $host in
@@ -77,9 +53,9 @@ diff -ruN gcc-6.3.0/fixincludes/configure gcc-6.3.0.aros/fixincludes/configure
  	i?86-*-msdosdjgpp* | \
  	i?86-*-mingw32* | \
  	x86_64-*-mingw32* | \
-diff -ruN gcc-6.3.0/fixincludes/configure.ac gcc-6.3.0.aros/fixincludes/configure.ac
---- gcc-6.3.0/fixincludes/configure.ac	2012-05-29 20:28:57.000000000 +0100
-+++ gcc-6.3.0.aros/fixincludes/configure.ac	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/fixincludes/configure.ac gcc-8.3.0.aros/fixincludes/configure.ac
+--- gcc-8.3.0/fixincludes/configure.ac	2017-01-17 09:38:48.000000000 +0000
++++ gcc-8.3.0.aros/fixincludes/configure.ac	2019-03-02 21:36:33.831874200 +0000
 @@ -50,6 +50,7 @@
  	TARGET=oneprocess
  fi],
@@ -88,9 +64,9 @@ diff -ruN gcc-6.3.0/fixincludes/configure.ac gcc-6.3.0.aros/fixincludes/configur
  	i?86-*-msdosdjgpp* | \
  	i?86-*-mingw32* | \
  	x86_64-*-mingw32* | \
-diff -ruN gcc-6.3.0/gcc/config/aarch64/aros.h gcc-6.3.0.aros/gcc/config/aarch64/aros.h
---- gcc-6.3.0/gcc/config/aarch64/aros.h	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/gcc/config/aarch64/aros.h	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/gcc/config/aarch64/aros.h gcc-8.3.0.aros/gcc/config/aarch64/aros.h
+--- gcc-8.3.0/gcc/config/aarch64/aros.h	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/gcc/config/aarch64/aros.h	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,63 @@
 +/* Configuration file for ARM AROS EABI targets.
 +   Copyright (C) 2004, 2005, 2006, 2007, 2010
@@ -149,15 +125,15 @@ diff -ruN gcc-6.3.0/gcc/config/aarch64/aros.h gcc-6.3.0.aros/gcc/config/aarch64/
 +
 +/* Provide a LINK_SPEC appropriate for AROS.  */
 +#undef  LINK_SPEC
-+#define LINK_SPEC "-m aarch64elf_aros -L %R/lib"
++#define LINK_SPEC SUBTARGET_EXTRA_LINK_SPEC " -L %R/lib"
 +
 +/* Use own supplement to libgcc.  */
 +#undef LIBGCC_SPEC
 +#define LIBGCC_SPEC "-lgcc"
 +
-diff -ruN gcc-6.3.0/gcc/config/aarch64/t-aros gcc-6.3.0.aros/gcc/config/aarch64/t-aros
---- gcc-6.3.0/gcc/config/aarch64/t-aros	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/gcc/config/aarch64/t-aros	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/gcc/config/aarch64/t-aros gcc-8.3.0.aros/gcc/config/aarch64/t-aros
+--- gcc-8.3.0/gcc/config/aarch64/t-aros	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/gcc/config/aarch64/t-aros	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,21 @@
 +# Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007,
 +# 2008, 2010 Free Software Foundation, Inc.
@@ -180,9 +156,9 @@ diff -ruN gcc-6.3.0/gcc/config/aarch64/t-aros gcc-6.3.0.aros/gcc/config/aarch64/
 +
 +
 +
-diff -ruN gcc-6.3.0/gcc/config/arm/aros.h gcc-6.3.0.aros/gcc/config/arm/aros.h
---- gcc-6.3.0/gcc/config/arm/aros.h	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/gcc/config/arm/aros.h	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/gcc/config/arm/aros.h gcc-8.3.0.aros/gcc/config/arm/aros.h
+--- gcc-8.3.0/gcc/config/arm/aros.h	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/gcc/config/arm/aros.h	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,82 @@
 +/* Configuration file for ARM AROS EABI targets.
 +   Copyright (C) 2004, 2005, 2006, 2007, 2010
@@ -258,7 +234,7 @@ diff -ruN gcc-6.3.0/gcc/config/arm/aros.h gcc-6.3.0.aros/gcc/config/arm/aros.h
 +
 +/* Provide a LINK_SPEC appropriate for AROS.  */
 +#undef  LINK_SPEC
-+#define LINK_SPEC "-m armelf_aros -L %R/lib"
++#define LINK_SPEC SUBTARGET_EXTRA_LINK_SPEC " -L %R/lib"
 +
 +/* Use own supplement to libgcc.  */
 +#undef LIBGCC_SPEC
@@ -266,10 +242,10 @@ diff -ruN gcc-6.3.0/gcc/config/arm/aros.h gcc-6.3.0.aros/gcc/config/arm/aros.h
 +
 +/* FIXME: AROS doesn't support dw2 unwinding yet.  */
 +#undef MD_FALLBACK_FRAME_STATE_FOR
-diff -ruN gcc-6.3.0/gcc/config/arm/t-aros gcc-6.3.0.aros/gcc/config/arm/t-aros
---- gcc-6.3.0/gcc/config/arm/t-aros	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/gcc/config/arm/t-aros	2018-04-23 15:24:25.358883950 +0100
-@@ -0,0 +1,22 @@
+diff -ruN gcc-8.3.0/gcc/config/arm/t-aros gcc-8.3.0.aros/gcc/config/arm/t-aros
+--- gcc-8.3.0/gcc/config/arm/t-aros	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/gcc/config/arm/t-aros	2019-03-02 21:36:33.831874200 +0000
+@@ -0,0 +1,34 @@
 +# Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007,
 +# 2008, 2010 Free Software Foundation, Inc.
 +#
@@ -289,12 +265,84 @@ diff -ruN gcc-6.3.0/gcc/config/arm/t-aros gcc-6.3.0.aros/gcc/config/arm/t-aros
 +# along with GCC; see the file COPYING3.  If not see
 +# <http://www.gnu.org/licenses/>.
 +
-+MULTILIB_OPTIONS     = marm mfloat-abi=hard/mfloat-abi=soft march=armv6/march=armv7-a
-+MULTILIB_DIRNAMES    = arm fpu soft armv6 armv7-a
++# Enumeration of multilibs
 +
-diff -ruN gcc-6.3.0/gcc/config/aros.h gcc-6.3.0.aros/gcc/config/aros.h
---- gcc-6.3.0/gcc/config/aros.h	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/gcc/config/aros.h	2018-04-23 15:24:25.358883950 +0100
++MULTILIB_OPTIONS     = marm march=armv6/march=armv7-a/march=armv7-a+simd
++MULTILIB_DIRNAMES    = arm armv6 armv7-a armv7-a+simd
++MULTILIB_EXCEPTIONS	=
++MULTILIB_MATCHES	=
++MULTILIB_REUSE		=
++MULTILIB_REQUIRED	=
++
++MULTILIB_OPTIONS	+= mfloat-abi=hard/mfloat-abi=soft
++MULTILIB_DIRNAMES	+= fpu soft
++MULTILIB_MATCHES	+= mfloat-abi?hard=mhard-float mfloat-abi?soft=msoft-float
++
++MULTILIB_OPTIONS	+= mbig-endian
++MULTILIB_DIRNAMES	+= eb
+diff -ruN gcc-8.3.0/gcc/config/aros-stdint.h gcc-8.3.0.aros/gcc/config/aros-stdint.h
+--- gcc-8.3.0/gcc/config/aros-stdint.h	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/gcc/config/aros-stdint.h	2019-03-02 21:36:33.831874200 +0000
+@@ -0,0 +1,56 @@
++/* Definitions for <stdint.h> types for AROS systems.
++   Copyright (C) 2018 Free Software Foundation, Inc.
++   Contributed by Nick Andrews <kalamatee@gmail.com>
++
++This file is part of GCC.
++
++GCC is free software; you can redistribute it and/or modify
++it under the terms of the GNU General Public License as published by
++the Free Software Foundation; either version 3, or (at your option)
++any later version.
++
++GCC is distributed in the hope that it will be useful,
++but WITHOUT ANY WARRANTY; without even the implied warranty of
++MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++GNU General Public License for more details.
++
++Under Section 7 of GPL version 3, you are granted additional
++permissions described in the GCC Runtime Library Exception, version
++3.1, as published by the Free Software Foundation.
++
++You should have received a copy of the GNU General Public License and
++a copy of the GCC Runtime Library Exception along with this program;
++see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
++<http://www.gnu.org/licenses/>.  */
++
++#define SIG_ATOMIC_TYPE   "int"
++
++#define INT8_TYPE         "signed char"
++#define INT16_TYPE        "short int"
++#define INT32_TYPE        "int"
++#define INT64_TYPE        (LONG_TYPE_SIZE == 64 ? "long int" : "long long int")
++#define UINT8_TYPE        "unsigned char"
++#define UINT16_TYPE       "short unsigned int"
++#define UINT32_TYPE       "unsigned int"
++#define UINT64_TYPE       (LONG_TYPE_SIZE == 64 ? "long unsigned int" : "long long unsigned int")
++
++#define INT_LEAST8_TYPE   INT8_TYPE
++#define INT_LEAST16_TYPE  INT16_TYPE
++#define INT_LEAST32_TYPE  INT32_TYPE
++#define INT_LEAST64_TYPE  INT64_TYPE
++#define UINT_LEAST8_TYPE  UINT8_TYPE
++#define UINT_LEAST16_TYPE UINT16_TYPE
++#define UINT_LEAST32_TYPE UINT32_TYPE
++#define UINT_LEAST64_TYPE UINT64_TYPE
++
++#define INT_FAST8_TYPE    INT32_TYPE
++#define INT_FAST16_TYPE   INT32_TYPE
++#define INT_FAST32_TYPE   INT32_TYPE
++#define INT_FAST64_TYPE   INT64_TYPE
++#define UINT_FAST8_TYPE   UINT32_TYPE
++#define UINT_FAST16_TYPE  UINT32_TYPE
++#define UINT_FAST32_TYPE  UINT32_TYPE
++#define UINT_FAST64_TYPE  UINT64_TYPE
++
++#define INTPTR_TYPE       (LONG_TYPE_SIZE == 64 ?  INT64_TYPE :  INT32_TYPE)
++#define UINTPTR_TYPE      (LONG_TYPE_SIZE == 64 ? UINT64_TYPE : UINT32_TYPE)
+diff -ruN gcc-8.3.0/gcc/config/aros.h gcc-8.3.0.aros/gcc/config/aros.h
+--- gcc-8.3.0/gcc/config/aros.h	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/gcc/config/aros.h	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,115 @@
 +/* Definitions for AROS
 +   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
@@ -360,7 +408,7 @@ diff -ruN gcc-6.3.0/gcc/config/aros.h gcc-6.3.0.aros/gcc/config/aros.h
 +
 +#undef	STARTFILE_SPEC
 +#define STARTFILE_SPEC \
-+  "startup.o%s %{detach:detach.o%s} %{nix:nixmain.o%s}"
++  "startup%O%s %{detach:detach%O%s} %{nix:nixmain%O%s}"
 +
 +/* Provide a ENDFILE_SPEC appropriate for AROS. */
 +
@@ -379,7 +427,7 @@ diff -ruN gcc-6.3.0/gcc/config/aros.h gcc-6.3.0.aros/gcc/config/aros.h
 +    { GCC_INCLUDE_DIR, "GCC", 0, 0, 0, 0 }, \
 +    { NATIVE_SYSTEM_HEADER_DIR, NATIVE_SYSTEM_HEADER_COMPONENT, 0, 0, 1, 0 }, \
 +    { 0, 0, 0, 0, 0, 0 } \
-+};
++}
 +
 +#undef CPP_SPEC
 +#define CPP_SPEC "%(cpp_cpu) %{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT} %{nix:-D__NIX__}  %{!nostdinc:%{!nostdc:%{!noposixc:-idirafter %R/include/aros/posixc} -idirafter %R/include/aros/stdc}}"
@@ -411,9 +459,9 @@ diff -ruN gcc-6.3.0/gcc/config/aros.h gcc-6.3.0.aros/gcc/config/aros.h
 +#define TARGET_HAS_F_SETLKW
 +
 +#define TARGET_POSIX_IO
-diff -ruN gcc-6.3.0/gcc/config/aros.opt gcc-6.3.0.aros/gcc/config/aros.opt
---- gcc-6.3.0/gcc/config/aros.opt	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/gcc/config/aros.opt	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/gcc/config/aros.opt gcc-8.3.0.aros/gcc/config/aros.opt
+--- gcc-8.3.0/gcc/config/aros.opt	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/gcc/config/aros.opt	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,35 @@
 +; Processor-independent options for AROS.
 +
@@ -450,9 +498,38 @@ diff -ruN gcc-6.3.0/gcc/config/aros.opt gcc-6.3.0.aros/gcc/config/aros.opt
 +nix
 +Driver
 +
-diff -ruN gcc-6.3.0/gcc/config/i386/aros64.h gcc-6.3.0.aros/gcc/config/i386/aros64.h
---- gcc-6.3.0/gcc/config/i386/aros64.h	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/gcc/config/i386/aros64.h	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/gcc/config/i386/aros.h gcc-8.3.0.aros/gcc/config/i386/aros.h
+--- gcc-8.3.0/gcc/config/i386/aros.h	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/gcc/config/i386/aros.h	2019-03-02 21:36:33.831874200 +0000
+@@ -0,0 +1,25 @@
++/* Definitions for Intel 386 running AROS systems with ELF format.
++   Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2001, 2002
++   Free Software Foundation, Inc.
++   Contributed by Fabio Alemagna.
++   Based upon i386/linux.h by Eric Youngdale.
++
++This file is part of GNU CC.
++
++GNU CC is free software; you can redistribute it and/or modify
++it under the terms of the GNU General Public License as published by
++the Free Software Foundation; either version 2, or (at your option)
++any later version.
++
++GNU CC is distributed in the hope that it will be useful,
++but WITHOUT ANY WARRANTY; without even the implied warranty of
++MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++GNU General Public License for more details.
++
++You should have received a copy of the GNU General Public License
++along with GNU CC; see the file COPYING.  If not, write to
++the Free Software Foundation, 59 Temple Place - Suite 330,
++Boston, MA 02111-1307, USA.  */
++
++#undef	LINK_SPEC
++#define LINK_SPEC "-m elf_i386 -L%R/lib"
+diff -ruN gcc-8.3.0/gcc/config/i386/aros64.h gcc-8.3.0.aros/gcc/config/i386/aros64.h
+--- gcc-8.3.0/gcc/config/i386/aros64.h	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/gcc/config/i386/aros64.h	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,34 @@
 +/* Definitions for AMD x86_64 running AROS systems with ELF64 format.
 +   Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2001, 2002
@@ -488,39 +565,10 @@ diff -ruN gcc-6.3.0/gcc/config/i386/aros64.h gcc-6.3.0.aros/gcc/config/i386/aros
 +#define LINK_SPEC "%{!m32:-m elf_x86_64} %{m32:-m elf_i386} -L %R/lib" 
 +
 +/* FIXME: AROS doesn't support dw2 unwinding yet.  */
-diff -ruN gcc-6.3.0/gcc/config/i386/aros.h gcc-6.3.0.aros/gcc/config/i386/aros.h
---- gcc-6.3.0/gcc/config/i386/aros.h	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/gcc/config/i386/aros.h	2018-04-23 15:24:25.358883950 +0100
-@@ -0,0 +1,25 @@
-+/* Definitions for Intel 386 running AROS systems with ELF format.
-+   Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2001, 2002
-+   Free Software Foundation, Inc.
-+   Contributed by Fabio Alemagna.
-+   Based upon i386/linux.h by Eric Youngdale.
-+
-+This file is part of GNU CC.
-+
-+GNU CC is free software; you can redistribute it and/or modify
-+it under the terms of the GNU General Public License as published by
-+the Free Software Foundation; either version 2, or (at your option)
-+any later version.
-+
-+GNU CC is distributed in the hope that it will be useful,
-+but WITHOUT ANY WARRANTY; without even the implied warranty of
-+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+GNU General Public License for more details.
-+
-+You should have received a copy of the GNU General Public License
-+along with GNU CC; see the file COPYING.  If not, write to
-+the Free Software Foundation, 59 Temple Place - Suite 330,
-+Boston, MA 02111-1307, USA.  */
-+
-+#undef	LINK_SPEC
-+#define LINK_SPEC "-m elf_i386 -L%R/lib"
-diff -ruN gcc-6.3.0/gcc/config/m68k/m68k.c gcc-6.3.0.aros/gcc/config/m68k/m68k.c
---- gcc-6.3.0/gcc/config/m68k/m68k.c	2016-01-04 14:30:50.000000000 +0000
-+++ gcc-6.3.0.aros/gcc/config/m68k/m68k.c	2018-04-23 15:24:25.358883950 +0100
-@@ -4452,7 +4452,7 @@
+diff -ruN gcc-8.3.0/gcc/config/m68k/m68k.c gcc-8.3.0.aros/gcc/config/m68k/m68k.c
+--- gcc-8.3.0/gcc/config/m68k/m68k.c	2018-01-24 23:36:29.000000000 +0000
++++ gcc-8.3.0.aros/gcc/config/m68k/m68k.c	2019-03-02 21:36:33.831874200 +0000
+@@ -4484,7 +4484,7 @@
    else if (letter == '/')
      asm_fprintf (file, "%R");
    else if (letter == '?')
@@ -529,10 +577,10 @@ diff -ruN gcc-6.3.0/gcc/config/m68k/m68k.c gcc-6.3.0.aros/gcc/config/m68k/m68k.c
    else if (letter == 'p')
      {
        output_addr_const (file, op);
-diff -ruN gcc-6.3.0/gcc/config/m68k/m68k.h gcc-6.3.0.aros/gcc/config/m68k/m68k.h
---- gcc-6.3.0/gcc/config/m68k/m68k.h	2016-01-04 14:30:50.000000000 +0000
-+++ gcc-6.3.0.aros/gcc/config/m68k/m68k.h	2018-04-23 15:24:25.358883950 +0100
-@@ -330,7 +330,9 @@
+diff -ruN gcc-8.3.0/gcc/config/m68k/m68k.h gcc-8.3.0.aros/gcc/config/m68k/m68k.h
+--- gcc-8.3.0/gcc/config/m68k/m68k.h	2018-01-03 10:03:58.000000000 +0000
++++ gcc-8.3.0.aros/gcc/config/m68k/m68k.h	2019-03-02 21:36:33.831874200 +0000
+@@ -325,7 +325,9 @@
     register elimination.  */
  #define FIRST_PSEUDO_REGISTER 25
  
@@ -543,7 +591,7 @@ diff -ruN gcc-6.3.0/gcc/config/m68k/m68k.h gcc-6.3.0.aros/gcc/config/m68k/m68k.h
  #define PIC_OFFSET_TABLE_REGNUM				\
    (!flag_pic ? INVALID_REGNUM				\
     : reload_completed ? REGNO (pic_offset_table_rtx)	\
-@@ -420,7 +422,8 @@
+@@ -398,7 +400,8 @@
  /* Most m68k targets use %a6 as a frame pointer.  The AmigaOS
     ABI uses %a6 for shared library calls, therefore the frame
     pointer is shifted to %a5 on this target.  */
@@ -553,9 +601,9 @@ diff -ruN gcc-6.3.0/gcc/config/m68k/m68k.h gcc-6.3.0.aros/gcc/config/m68k/m68k.h
  
  /* Base register for access to arguments of the function.
   * This isn't a hardware register. It will be eliminated to the
-diff -ruN gcc-6.3.0/gcc/config/m68k/m68k.md gcc-6.3.0.aros/gcc/config/m68k/m68k.md
---- gcc-6.3.0/gcc/config/m68k/m68k.md	2016-02-22 14:22:07.000000000 +0000
-+++ gcc-6.3.0.aros/gcc/config/m68k/m68k.md	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/gcc/config/m68k/m68k.md gcc-8.3.0.aros/gcc/config/m68k/m68k.md
+--- gcc-8.3.0/gcc/config/m68k/m68k.md	2018-08-02 18:23:13.000000000 +0100
++++ gcc-8.3.0.aros/gcc/config/m68k/m68k.md	2019-03-02 21:36:33.831874200 +0000
 @@ -133,7 +133,8 @@
    [(D0_REG		0)
     (A0_REG		8)
@@ -566,7 +614,7 @@ diff -ruN gcc-6.3.0/gcc/config/m68k/m68k.md gcc-6.3.0.aros/gcc/config/m68k/m68k.
     (A6_REG		14)
     (SP_REG		15)
     (FP0_REG		16)
-@@ -7089,7 +7090,7 @@
+@@ -7166,7 +7167,7 @@
  {
    if (TARGET_ID_SHARED_LIBRARY)
      {
@@ -575,15 +623,15 @@ diff -ruN gcc-6.3.0/gcc/config/m68k/m68k.md gcc-6.3.0.aros/gcc/config/m68k/m68k.
        return MOTOROLA ? "move.l %?(%1),%0" : "movel %1@(%?), %0";
      }
    else if (MOTOROLA)
-diff -ruN gcc-6.3.0/gcc/config/m68k/t-aros gcc-6.3.0.aros/gcc/config/m68k/t-aros
---- gcc-6.3.0/gcc/config/m68k/t-aros	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/gcc/config/m68k/t-aros	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/gcc/config/m68k/t-aros gcc-8.3.0.aros/gcc/config/m68k/t-aros
+--- gcc-8.3.0/gcc/config/m68k/t-aros	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/gcc/config/m68k/t-aros	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,2 @@
 +# Custom multilibs for AROS
 +M68K_MLIB_CPU += && match(MLIB, "^68")
-diff -ruN gcc-6.3.0/gcc/config/rs6000/aros.h gcc-6.3.0.aros/gcc/config/rs6000/aros.h
---- gcc-6.3.0/gcc/config/rs6000/aros.h	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/gcc/config/rs6000/aros.h	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/gcc/config/rs6000/aros.h gcc-8.3.0.aros/gcc/config/rs6000/aros.h
+--- gcc-8.3.0/gcc/config/rs6000/aros.h	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/gcc/config/rs6000/aros.h	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,151 @@
 +/* Definitions for Powerpc running AROS systems with ELF format.
 +   Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2001, 2002
@@ -736,19 +784,19 @@ diff -ruN gcc-6.3.0/gcc/config/rs6000/aros.h gcc-6.3.0.aros/gcc/config/rs6000/ar
 +
 +/* FIXME: AROS doesn't support dw2 unwinding yet.  */
 +#undef MD_FALLBACK_FRAME_STATE_FOR
-diff -ruN gcc-6.3.0/gcc/config/rs6000/rs6000.c gcc-6.3.0.aros/gcc/config/rs6000/rs6000.c
---- gcc-6.3.0/gcc/config/rs6000/rs6000.c	2016-12-13 23:56:17.000000000 +0000
-+++ gcc-6.3.0.aros/gcc/config/rs6000/rs6000.c	2018-04-23 15:24:25.358883950 +0100
-@@ -1446,6 +1446,8 @@
-     false },
-   { "shortcall", 0, 0, false, true,  true,  rs6000_handle_longcall_attribute,
-     false },
-+  { "stackparm", 0, 0, false, true,  true,  rs6000_handle_longcall_attribute,
-+    false },
-   { "ms_struct", 0, 0, false, false, false, rs6000_handle_struct_attribute,
-     false },
-   { "gcc_struct", 0, 0, false, false, false, rs6000_handle_struct_attribute,
-@@ -10378,6 +10380,9 @@
+diff -ruN gcc-8.3.0/gcc/config/rs6000/rs6000.c gcc-8.3.0.aros/gcc/config/rs6000/rs6000.c
+--- gcc-8.3.0/gcc/config/rs6000/rs6000.c	2019-02-13 19:20:56.000000000 +0000
++++ gcc-8.3.0.aros/gcc/config/rs6000/rs6000.c	2019-03-02 21:36:33.831874200 +0000
+@@ -1545,6 +1545,8 @@
+     rs6000_handle_longcall_attribute, NULL },
+   { "shortcall", 0, 0, false, true,  true,  false,
+     rs6000_handle_longcall_attribute, NULL },
++  { "stackparm", 0, 0, false, true,  true, false,
++    rs6000_handle_longcall_attribute, NULL },
+   { "ms_struct", 0, 0, false, false, false, false,
+     rs6000_handle_struct_attribute, NULL },
+   { "gcc_struct", 0, 0, false, false, false, false,
+@@ -11379,6 +11381,9 @@
  	  && !lookup_attribute ("shortcall", TYPE_ATTRIBUTES (fntype))))
      cum->call_cookie |= CALL_LONG;
  
@@ -758,7 +806,7 @@ diff -ruN gcc-6.3.0/gcc/config/rs6000/rs6000.c gcc-6.3.0.aros/gcc/config/rs6000/
    if (TARGET_DEBUG_ARG)
      {
        fprintf (stderr, "\ninit_cumulative_args:");
-@@ -11550,6 +11555,9 @@
+@@ -12468,6 +12473,9 @@
  
    rs6000_discover_homogeneous_aggregate (mode, type, &elt_mode, &n_elts);
  
@@ -768,7 +816,7 @@ diff -ruN gcc-6.3.0/gcc/config/rs6000/rs6000.c gcc-6.3.0.aros/gcc/config/rs6000/
    if (TARGET_MACHO && rs6000_darwin64_struct_check_p (mode, type))
      {
        rtx rslt = rs6000_darwin64_record_arg (cum, type, named, /*retval= */false);
-@@ -12156,6 +12164,8 @@
+@@ -13068,6 +13076,8 @@
  
    /* Skip the last named argument.  */
    next_cum = *get_cumulative_args (cum);
@@ -777,10 +825,10 @@ diff -ruN gcc-6.3.0/gcc/config/rs6000/rs6000.c gcc-6.3.0.aros/gcc/config/rs6000/
    rs6000_function_arg_advance_1 (&next_cum, mode, type, true, 0);
  
    if (DEFAULT_ABI == ABI_V4)
-diff -ruN gcc-6.3.0/gcc/config/rs6000/rs6000.h gcc-6.3.0.aros/gcc/config/rs6000/rs6000.h
---- gcc-6.3.0/gcc/config/rs6000/rs6000.h	2016-07-07 20:42:07.000000000 +0100
-+++ gcc-6.3.0.aros/gcc/config/rs6000/rs6000.h	2018-04-23 15:24:25.358883950 +0100
-@@ -1876,6 +1876,7 @@
+diff -ruN gcc-8.3.0/gcc/config/rs6000/rs6000.h gcc-8.3.0.aros/gcc/config/rs6000/rs6000.h
+--- gcc-8.3.0/gcc/config/rs6000/rs6000.h	2018-06-25 20:34:01.000000000 +0100
++++ gcc-8.3.0.aros/gcc/config/rs6000/rs6000.h	2019-03-02 21:36:33.831874200 +0000
+@@ -1729,6 +1729,7 @@
    int nargs_prototype;		/* # args left in the current prototype */
    int prototype;		/* Whether a prototype was defined */
    int stdarg;			/* Whether function is a stdarg function.  */
@@ -788,9 +836,9 @@ diff -ruN gcc-6.3.0/gcc/config/rs6000/rs6000.h gcc-6.3.0.aros/gcc/config/rs6000/
    int call_cookie;		/* Do special things for this call */
    int sysv_gregno;		/* next available GP register */
    int intoffset;		/* running offset in struct (darwin64) */
-diff -ruN gcc-6.3.0/gcc/config/t-aros gcc-6.3.0.aros/gcc/config/t-aros
---- gcc-6.3.0/gcc/config/t-aros	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/gcc/config/t-aros	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/gcc/config/t-aros gcc-8.3.0.aros/gcc/config/t-aros
+--- gcc-8.3.0/gcc/config/t-aros	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/gcc/config/t-aros	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,29 @@
 +# In AROS, "/usr" is a four-letter word.
 +# Must match NATIVE_SYSTEM_HEADER_COMPONENT in aros.h !
@@ -821,9 +869,9 @@ diff -ruN gcc-6.3.0/gcc/config/t-aros gcc-6.3.0.aros/gcc/config/t-aros
 +	  cp $(srcdir)/ginclude/$$file include/$$file; \
 +	  chmod a+r include/$$file; \
 +	done
-diff -ruN gcc-6.3.0/gcc/config.build gcc-6.3.0.aros/gcc/config.build
---- gcc-6.3.0/gcc/config.build	2016-01-04 14:30:50.000000000 +0000
-+++ gcc-6.3.0.aros/gcc/config.build	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/gcc/config.build gcc-8.3.0.aros/gcc/config.build
+--- gcc-8.3.0/gcc/config.build	2018-01-03 10:03:58.000000000 +0000
++++ gcc-8.3.0.aros/gcc/config.build	2019-03-02 21:36:33.831874200 +0000
 @@ -73,6 +73,9 @@
      build_xm_file=i386/xm-djgpp.h
      build_exeext=.exe
@@ -834,14 +882,15 @@ diff -ruN gcc-6.3.0/gcc/config.build gcc-6.3.0.aros/gcc/config.build
    *-*-sysv*)
      # All other System V variants.
      build_install_headers_dir=install-headers-cpio
-diff -ruN gcc-6.3.0/gcc/config.gcc gcc-6.3.0.aros/gcc/config.gcc
---- gcc-6.3.0/gcc/config.gcc	2016-11-07 21:38:43.000000000 +0000
-+++ gcc-6.3.0.aros/gcc/config.gcc	2018-04-23 15:24:25.358883950 +0100
-@@ -798,6 +798,15 @@
-       ;;
-   esac
+diff -ruN gcc-8.3.0/gcc/config.gcc gcc-8.3.0.aros/gcc/config.gcc
+--- gcc-8.3.0/gcc/config.gcc	2019-01-29 15:31:10.000000000 +0000
++++ gcc-8.3.0.aros/gcc/config.gcc	2019-03-02 21:36:33.831874200 +0000
+@@ -818,6 +818,16 @@
+   nbsd_tm_file="netbsd.h netbsd-stdint.h netbsd-elf.h"
+   default_use_cxa_atexit=yes
    ;;
 +*-*-aros*)
++  aros_tm_file="aros-stdint.h"
 +  gas=yes
 +  gnu_ld=yes
 +  thread_file=posix
@@ -853,87 +902,97 @@ diff -ruN gcc-6.3.0/gcc/config.gcc gcc-6.3.0.aros/gcc/config.gcc
  *-*-openbsd*)
    tmake_file="t-openbsd"
    case ${enable_threads} in
-@@ -912,6 +921,11 @@
+@@ -938,6 +948,16 @@
  esac
  
  case ${target} in
 +aarch64*-*-aros*)
-+	tm_file="${tm_file} dbxelf.h elfos.h aarch64/aarch64-elf.h aros.h aarch64/aros.h"
++	tm_file="${tm_file} ${aros_tm_file} dbxelf.h elfos.h aarch64/aarch64-elf.h aros.h aarch64/aros.h"
 +	tmake_file="${tmake_file} aarch64/t-aarch64 aarch64/t-aros t-aros"
 +	xm_file="xm-aros.h"
++	case $target in
++	aarch64_be-*)
++		tm_defines="${tm_defines} TARGET_BIG_ENDIAN_DEFAULT=1"
++		;;
++	esac
 +	;;
- aarch64*-*-elf | aarch64*-*-rtems*)
+ aarch64*-*-elf | aarch64*-*-fuchsia* | aarch64*-*-rtems*)
  	tm_file="${tm_file} dbxelf.h elfos.h newlib-stdint.h"
  	tm_file="${tm_file} aarch64/aarch64-elf.h aarch64/aarch64-elf-raw.h"
-@@ -998,6 +1012,16 @@
+@@ -1036,6 +1051,21 @@
  	tm_file="${tm_file} vms/vms.h alpha/vms.h"
- 	tmake_file="${tmake_file} alpha/t-vms"
+ 	tmake_file="${tmake_file} alpha/t-vms alpha/t-alpha"
  	;;
 +arm*-*-aros*)
-+	tm_file="dbxelf.h elfos.h arm/elf.h arm/bpabi.h aros.h arm/aros.h arm/aout.h arm/arm.h"
-+	tm_file="$tm_file ../../libgcc/config/arm/bpabi-lib.h"
++	tm_file="${aros_tm_file} dbxelf.h elfos.h arm/elf.h arm/bpabi.h aros.h arm/aros.h arm/aout.h arm/arm.h"
++	tm_file="${tm_file} ../../libgcc/config/arm/bpabi-lib.h"
 +	tmake_file="${tmake_file} arm/t-arm arm/t-arm-elf arm/t-arm-softfp arm/t-bpabi arm/t-aros t-aros"
 +	xm_file="xm-aros.h"
 +	# The BPABI long long divmod functions return a 128-bit value in
 +	# registers r0-r3.  Correctly modeling that requires the use of
 +	# TImode.
++	case $target in
++	arm*b-*-aros*)
++		tm_defines="${tm_defines} TARGET_BIG_ENDIAN_DEFAULT=1"
++		;;
++	esac
 +	need_64bit_hwint=yes
 +	;;
  arc*-*-elf*)
- 	extra_headers="arc-simd.h"
- 	tm_file="dbxelf.h elfos.h newlib-stdint.h ${tm_file}"
-@@ -1603,6 +1627,16 @@
+ 	tm_file="arc/arc-arch.h dbxelf.h elfos.h newlib-stdint.h arc/elf.h ${tm_file}"
+ 	tmake_file="arc/t-multilib arc/t-arc"
+@@ -1641,6 +1666,16 @@
  	done
  	TM_MULTILIB_CONFIG=`echo $TM_MULTILIB_CONFIG | sed 's/^,//'`
  	;;
 +i[34567]86-*-aros*)
-+	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h i386/i386elf.h aros.h i386/aros.h"
++	tm_file="${tm_file} ${aros_tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h i386/i386elf.h aros.h i386/aros.h"
 +	xm_file=xm-aros.h
 +	tmake_file="${tmake_file} i386/t-i386elf t-aros"
 +	;;	
 +x86_64-*-aros*)
-+	tm_file="${tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h i386/i386elf.h i386/x86-64.h aros.h i386/aros64.h"
++	tm_file="${tm_file} ${aros_tm_file} i386/unix.h i386/att.h dbxelf.h elfos.h i386/i386elf.h i386/x86-64.h aros.h i386/aros64.h"
 +	tmake_file="${tmake_file} i386/t-i386elf t-aros"
 +	xm_file=xm-aros.h
 +	;;
  i[34567]86-pc-msdosdjgpp*)
  	xm_file=i386/xm-djgpp.h
  	tm_file="dbxcoff.h ${tm_file} i386/unix.h i386/bsd.h i386/gas.h i386/djgpp.h i386/djgpp-stdint.h"
-@@ -1900,6 +1934,16 @@
+@@ -1932,6 +1967,16 @@
  		thread_file='posix'
  	fi
  	;;
 +m68k-*-aros*)
 +	default_m68k_cpu=68000
 +	default_cf_cpu=5206
-+	tm_file="${tm_file} m68k/m68k-none.h m68k/m68kelf.h dbxelf.h elfos.h newlib-stdint.h m68k/m68kemb.h m68k/m68020-elf.h"
++	tm_file="${tm_file} ${aros_tm_file} m68k/m68k-none.h m68k/m68kelf.h dbxelf.h elfos.h m68k/m68kemb.h m68k/m68020-elf.h"
 +	tm_file="${tm_file} aros.h"
 +	tm_defines="${tm_defines} MOTOROLA=1"
-+	tmake_file="m68k/t-floatlib m68k/t-m68kbare m68k/t-m68kelf"
-+	tmake_file="$tmake_file m68k/t-aros m68k/t-mlibs t-aros"
++	tmake_file="${tmake_file} m68k/t-floatlib m68k/t-m68kbare m68k/t-m68kelf"
++	tmake_file="${tmake_file} m68k/t-aros m68k/t-mlibs t-aros"
 +	extra_parts="crtbegin.o crtend.o"
 +	;;
  m68k-*-elf* | fido-*-elf*)
  	case ${target} in
  	fido-*-elf*)
-@@ -2400,6 +2444,13 @@
- 	extra_options="${extra_options} rs6000/sysv4.opt"
- 	tmake_file="${tmake_file} rs6000/t-fprules rs6000/t-rtems rs6000/t-ppccomm"
+@@ -2489,6 +2534,13 @@
+ 	tmake_file="${tmake_file} powerpcspe/t-ppcos powerpcspe/t-linux"
+ 	tm_file="${tm_file} powerpcspe/linuxspe.h powerpcspe/e500.h"
  	;;
 +powerpc-*-aros*)
-+ 	tm_file="${tm_file} dbxelf.h elfos.h freebsd-spec.h rs6000/sysv4.h aros.h"
++ 	tm_file="${tm_file} ${aros_tm_file} dbxelf.h elfos.h freebsd-spec.h rs6000/sysv4.h aros.h"
 + 	extra_options="${extra_options} rs6000/sysv4.opt"
 + 	tm_file="${tm_file} rs6000/aros.h"
 + 	xm_file=xm-aros.h
-+	tmake_file="$tmake_file t-aros"
++	tmake_file="${tmake_file} t-aros"
 + 	;;
  powerpc*-*-linux*)
  	tm_file="${tm_file} dbxelf.h elfos.h gnu-user.h freebsd-spec.h rs6000/sysv4.h"
  	extra_options="${extra_options} rs6000/sysv4.opt"
-diff -ruN gcc-6.3.0/gcc/config.host gcc-6.3.0.aros/gcc/config.host
---- gcc-6.3.0/gcc/config.host	2016-01-04 14:30:50.000000000 +0000
-+++ gcc-6.3.0.aros/gcc/config.host	2018-04-23 15:24:25.358883950 +0100
-@@ -281,6 +281,10 @@
+diff -ruN gcc-8.3.0/gcc/config.host gcc-8.3.0.aros/gcc/config.host
+--- gcc-8.3.0/gcc/config.host	2018-01-03 10:03:58.000000000 +0000
++++ gcc-8.3.0.aros/gcc/config.host	2019-03-02 21:36:33.831874200 +0000
+@@ -287,6 +287,10 @@
      out_host_hook_obj=host-hpux.o
      host_xmake_file="${host_xmake_file} x-hpux"
      ;;
@@ -944,44 +1003,44 @@ diff -ruN gcc-6.3.0/gcc/config.host gcc-6.3.0.aros/gcc/config.host
    *-*-*vms*)
      host_xm_file="vms/xm-vms.h"
      host_xmake_file=vms/x-vms
-diff -ruN gcc-6.3.0/gcc/ginclude/aros/types/null.h gcc-6.3.0.aros/gcc/ginclude/aros/types/null.h
---- gcc-6.3.0/gcc/ginclude/aros/types/null.h	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/gcc/ginclude/aros/types/null.h	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/gcc/ginclude/aros/types/null.h gcc-8.3.0.aros/gcc/ginclude/aros/types/null.h
+--- gcc-8.3.0/gcc/ginclude/aros/types/null.h	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/gcc/ginclude/aros/types/null.h	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,3 @@
 +/* Replace AROS' NULL definition with gcc's one */
 +#define __need_NULL
 +#include <stddef.h>
-diff -ruN gcc-6.3.0/gcc/ginclude/aros/types/ptrdiff_t.h gcc-6.3.0.aros/gcc/ginclude/aros/types/ptrdiff_t.h
---- gcc-6.3.0/gcc/ginclude/aros/types/ptrdiff_t.h	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/gcc/ginclude/aros/types/ptrdiff_t.h	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/gcc/ginclude/aros/types/ptrdiff_t.h gcc-8.3.0.aros/gcc/ginclude/aros/types/ptrdiff_t.h
+--- gcc-8.3.0/gcc/ginclude/aros/types/ptrdiff_t.h	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/gcc/ginclude/aros/types/ptrdiff_t.h	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,3 @@
 +/* Replace AROS' ptrdiff_t definition with gcc's one */
 +#define __need_ptrdiff_t
 +#include <stddef.h>
-diff -ruN gcc-6.3.0/gcc/ginclude/aros/types/size_t.h gcc-6.3.0.aros/gcc/ginclude/aros/types/size_t.h
---- gcc-6.3.0/gcc/ginclude/aros/types/size_t.h	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/gcc/ginclude/aros/types/size_t.h	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/gcc/ginclude/aros/types/size_t.h gcc-8.3.0.aros/gcc/ginclude/aros/types/size_t.h
+--- gcc-8.3.0/gcc/ginclude/aros/types/size_t.h	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/gcc/ginclude/aros/types/size_t.h	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,3 @@
 +/* Replace AROS' size_t definition with gcc's one */
 +#define __need_size_t
 +#include <stddef.h>
-diff -ruN gcc-6.3.0/gcc/ginclude/aros/types/wchar_t.h gcc-6.3.0.aros/gcc/ginclude/aros/types/wchar_t.h
---- gcc-6.3.0/gcc/ginclude/aros/types/wchar_t.h	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/gcc/ginclude/aros/types/wchar_t.h	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/gcc/ginclude/aros/types/wchar_t.h gcc-8.3.0.aros/gcc/ginclude/aros/types/wchar_t.h
+--- gcc-8.3.0/gcc/ginclude/aros/types/wchar_t.h	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/gcc/ginclude/aros/types/wchar_t.h	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,3 @@
 +/* Replace AROS' wchar_t definition with gcc's one */
 +#define __need_wchar_t
 +#include <stddef.h>
-diff -ruN gcc-6.3.0/gcc/ginclude/aros/types/wint_t.h gcc-6.3.0.aros/gcc/ginclude/aros/types/wint_t.h
---- gcc-6.3.0/gcc/ginclude/aros/types/wint_t.h	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/gcc/ginclude/aros/types/wint_t.h	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/gcc/ginclude/aros/types/wint_t.h gcc-8.3.0.aros/gcc/ginclude/aros/types/wint_t.h
+--- gcc-8.3.0/gcc/ginclude/aros/types/wint_t.h	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/gcc/ginclude/aros/types/wint_t.h	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,3 @@
 +/* Replace AROS' wint_t definition with gcc's one */
 +#define __need_wint_t
 +#include <stddef.h>
-diff -ruN gcc-6.3.0/gcc/ginclude/stddef.h gcc-6.3.0.aros/gcc/ginclude/stddef.h
---- gcc-6.3.0/gcc/ginclude/stddef.h	2016-01-04 14:30:50.000000000 +0000
-+++ gcc-6.3.0.aros/gcc/ginclude/stddef.h	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/gcc/ginclude/stddef.h gcc-8.3.0.aros/gcc/ginclude/stddef.h
+--- gcc-8.3.0/gcc/ginclude/stddef.h	2018-01-03 10:03:58.000000000 +0000
++++ gcc-8.3.0.aros/gcc/ginclude/stddef.h	2019-03-02 21:36:33.831874200 +0000
 @@ -131,6 +131,7 @@
  #ifndef __PTRDIFF_T
  #ifndef _PTRDIFF_T_
@@ -1030,21 +1089,9 @@ diff -ruN gcc-6.3.0/gcc/ginclude/stddef.h gcc-6.3.0.aros/gcc/ginclude/stddef.h
  #endif /* _BSD_SIZE_T_ */
  #endif /* _SIZE_T_ */
  #endif /* __SIZE_T */
-diff -ruN gcc-6.3.0/gcc/ubsan.c gcc-6.3.0.aros/gcc/ubsan.c
---- gcc-6.3.0/gcc/ubsan.c	2016-12-07 22:39:29.000000000 +0000
-+++ gcc-6.3.0.aros/gcc/ubsan.c	2018-04-23 15:24:25.358883950 +0100
-@@ -1471,7 +1471,7 @@
- 
-   expanded_location xloc = expand_location (loc);
-   if (xloc.file == NULL || strncmp (xloc.file, "\1", 2) == 0
--      || xloc.file == '\0' || xloc.file[0] == '\xff'
-+      || xloc.file[0] == '\0' || xloc.file[0] == '\xff'
-       || xloc.file[1] == '\xff')
-     return false;
- 
-diff -ruN gcc-6.3.0/include/filenames.h gcc-6.3.0.aros/include/filenames.h
---- gcc-6.3.0/include/filenames.h	2015-07-14 17:08:59.000000000 +0100
-+++ gcc-6.3.0.aros/include/filenames.h	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/include/filenames.h gcc-8.3.0.aros/include/filenames.h
+--- gcc-8.3.0/include/filenames.h	2018-01-03 10:03:58.000000000 +0000
++++ gcc-8.3.0.aros/include/filenames.h	2019-03-02 21:36:33.831874200 +0000
 @@ -42,6 +42,13 @@
  #  define HAS_DRIVE_SPEC(f) HAS_DOS_DRIVE_SPEC (f)
  #  define IS_DIR_SEPARATOR(c) IS_DOS_DIR_SEPARATOR (c)
@@ -1059,19 +1106,80 @@ diff -ruN gcc-6.3.0/include/filenames.h gcc-6.3.0.aros/include/filenames.h
  #else /* not DOSish */
  #  if defined(__APPLE__)
  #    ifndef HAVE_CASE_INSENSITIVE_FILE_SYSTEM
-diff -ruN gcc-6.3.0/libgcc/config.host gcc-6.3.0.aros/libgcc/config.host
---- gcc-6.3.0/libgcc/config.host	2016-11-19 03:03:55.000000000 +0000
-+++ gcc-6.3.0.aros/libgcc/config.host	2018-04-23 15:24:25.358883950 +0100
-@@ -811,7 +811,7 @@
+diff -ruN gcc-8.3.0/libatomic/configure.tgt gcc-8.3.0.aros/libatomic/configure.tgt
+--- gcc-8.3.0/libatomic/configure.tgt	2016-05-10 08:03:07.000000000 +0100
++++ gcc-8.3.0.aros/libatomic/configure.tgt	2019-03-01 02:31:13.371291400 +0000
+@@ -119,6 +119,10 @@
+ 
+ # Other system configury
+ case "${target}" in
++  *-*-aros*)
++	config_path="${config_path} posix"
++	;;
++
+   aarch64*-*-linux*)
+ 	# OS support for atomic primitives.
+ 	config_path="${config_path} linux/aarch64 posix"
+diff -ruN gcc-8.3.0/libatomic/libatomic_i.h gcc-8.3.0.aros/libatomic/libatomic_i.h
+--- gcc-8.3.0/libatomic/libatomic_i.h	2016-01-04 14:30:50.000000000 +0000
++++ gcc-8.3.0.aros/libatomic/libatomic_i.h	2019-03-01 02:31:13.371291400 +0000
+@@ -35,6 +35,9 @@
+ #include <limits.h>
+ #include <string.h>
+ 
++#if defined(__AROS__)
++#include <exec/types.h>
++#endif
+ 
+ /* Symbol concatenation macros.  */
+ #define C2_(X,Y)	X ## Y
+@@ -103,7 +106,9 @@
+ };
+ 
+ /* The "word" size of the machine.  */
++#if !defined(__AROS__) || !defined(__typedef_WORD)
+ typedef unsigned UWORD __attribute__((mode(word)));
++#endif
+ 
+ /* Macros for handing sub-word sized quantities.  */
+ #define MASK_1		((UWORD)0xff)
+diff -ruN gcc-8.3.0/libgcc/config/m68k/lb1sf68.S gcc-8.3.0.aros/libgcc/config/m68k/lb1sf68.S
+--- gcc-8.3.0/libgcc/config/m68k/lb1sf68.S	2018-01-03 10:03:58.000000000 +0000
++++ gcc-8.3.0.aros/libgcc/config/m68k/lb1sf68.S	2019-03-02 21:36:33.831874200 +0000
+@@ -3123,9 +3123,9 @@
+ | Now comes the check for +/-INFINITY. We know that both are (maybe not
+ | finite) numbers, but we have to check if both are infinite whether we
+ | are adding or subtracting them.
+-	eorl	d3,d2		| to check sign bits
++	movel	d2,d7		| save sign bit
++	eorl	d3,d2		| check sign bits
+ 	bmi	1f
+-	movel	d0,d7
+ 	andl	IMM (0x80000000),d7	| get (common) sign bit
+ 	bra	Lf$infty
+ 1:
+@@ -3135,7 +3135,6 @@
+ 	cmpl	d1,d0		| are both infinite?
+ 	beq	Lf$inop		| if so return NaN
+ 
+-	movel	d0,d7
+ 	andl	IMM (0x80000000),d7 | get a's sign bit '
+ 	cmpl	d4,d0		| test now for infinity
+ 	beq	Lf$infty	| if a is INFINITY return with this sign
+diff -ruN gcc-8.3.0/libgcc/config.host gcc-8.3.0.aros/libgcc/config.host
+--- gcc-8.3.0/libgcc/config.host	2018-04-06 21:04:17.000000000 +0100
++++ gcc-8.3.0.aros/libgcc/config.host	2019-03-02 21:36:33.831874200 +0000
+@@ -839,6 +839,9 @@
  m32rle-*-linux*)
  	tmake_file="$tmake_file m32r/t-linux t-fdpbit"
  	;;
--m68k-*-elf* | fido-*-elf)
-+m68k-*-elf* | fido-*-elf | m68k-*-aros*)
++m68k-*-aros*)
++	tmake_file="$tmake_file m68k/t-floatlib"
++	;;
+ m68k-*-elf* | fido-*-elf)
  	tmake_file="$tmake_file m68k/t-floatlib"
  	;;
- m68k*-*-netbsdelf*)
-@@ -1335,6 +1335,9 @@
+@@ -1359,6 +1362,9 @@
  	tmake_file="$tmake_file nvptx/t-nvptx"
  	extra_parts="crt0.o"
  	;;
@@ -1081,9 +1189,9 @@ diff -ruN gcc-6.3.0/libgcc/config.host gcc-6.3.0.aros/libgcc/config.host
  *)
  	echo "*** Configuration ${host} not supported" 1>&2
  	exit 1
-diff -ruN gcc-6.3.0/libgcc/gthr.h gcc-6.3.0.aros/libgcc/gthr.h
---- gcc-6.3.0/libgcc/gthr.h	2016-01-04 14:30:50.000000000 +0000
-+++ gcc-6.3.0.aros/libgcc/gthr.h	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/libgcc/gthr.h gcc-8.3.0.aros/libgcc/gthr.h
+--- gcc-8.3.0/libgcc/gthr.h	2018-01-03 10:03:58.000000000 +0000
++++ gcc-8.3.0.aros/libgcc/gthr.h	2019-03-02 21:36:33.831874200 +0000
 @@ -141,6 +141,11 @@
  #define GTHREAD_USE_WEAK 0
  #endif
@@ -1096,10 +1204,35 @@ diff -ruN gcc-6.3.0/libgcc/gthr.h gcc-6.3.0.aros/libgcc/gthr.h
  #ifndef GTHREAD_USE_WEAK
  #define GTHREAD_USE_WEAK 1
  #endif
-diff -ruN gcc-6.3.0/libgcc/unwind-dw2.c gcc-6.3.0.aros/libgcc/unwind-dw2.c
---- gcc-6.3.0/libgcc/unwind-dw2.c	2016-01-04 14:30:50.000000000 +0000
-+++ gcc-6.3.0.aros/libgcc/unwind-dw2.c	2018-04-23 15:24:25.358883950 +0100
-@@ -1542,7 +1542,9 @@
+diff -ruN gcc-8.3.0/libgcc/unwind-dw2-fde.c gcc-8.3.0.aros/libgcc/unwind-dw2-fde.c
+--- gcc-8.3.0/libgcc/unwind-dw2-fde.c	2018-01-03 10:03:58.000000000 +0000
++++ gcc-8.3.0.aros/libgcc/unwind-dw2-fde.c	2019-03-02 21:36:33.831874200 +0000
+@@ -100,8 +100,10 @@
+ #endif
+ 
+   init_object_mutex_once ();
++#ifndef __AROS__ /* This is called when SysBase is not yet set up */
+   __gthread_mutex_lock (&object_mutex);
+-
++#endif
++  
+   ob->next = unseen_objects;
+   unseen_objects = ob;
+ #ifdef ATOMIC_FDE_FAST_PATH
+@@ -115,7 +117,9 @@
+     __atomic_store_n (&any_objects_registered, 1, __ATOMIC_RELAXED);
+ #endif
+ 
++#ifndef __AROS__
+   __gthread_mutex_unlock (&object_mutex);
++#endif
+ }
+ 
+ void
+diff -ruN gcc-8.3.0/libgcc/unwind-dw2.c gcc-8.3.0.aros/libgcc/unwind-dw2.c
+--- gcc-8.3.0/libgcc/unwind-dw2.c	2019-02-19 16:14:34.000000000 +0000
++++ gcc-8.3.0.aros/libgcc/unwind-dw2.c	2019-03-02 21:36:33.831874200 +0000
+@@ -1563,7 +1563,9 @@
  static inline void
  init_dwarf_reg_size_table (void)
  {
@@ -1109,29 +1242,9 @@ diff -ruN gcc-6.3.0/libgcc/unwind-dw2.c gcc-6.3.0.aros/libgcc/unwind-dw2.c
  }
  
  static void __attribute__((noinline))
-diff -ruN gcc-6.3.0/libgcc/unwind-dw2-fde.c gcc-6.3.0.aros/libgcc/unwind-dw2-fde.c
---- gcc-6.3.0/libgcc/unwind-dw2-fde.c	2016-01-04 14:30:50.000000000 +0000
-+++ gcc-6.3.0.aros/libgcc/unwind-dw2-fde.c	2018-04-23 15:24:25.358883950 +0100
-@@ -92,12 +92,16 @@
- #endif
- 
-   init_object_mutex_once ();
-+#ifndef __AROS__ /* This is called when SysBase is not yet set up */
-   __gthread_mutex_lock (&object_mutex);
-+#endif
- 
-   ob->next = unseen_objects;
-   unseen_objects = ob;
- 
-+#ifndef __AROS__
-   __gthread_mutex_unlock (&object_mutex);
-+#endif
- }
- 
- void
-diff -ruN gcc-6.3.0/libiberty/filename_cmp.c gcc-6.3.0.aros/libiberty/filename_cmp.c
---- gcc-6.3.0/libiberty/filename_cmp.c	2014-11-11 23:33:25.000000000 +0000
-+++ gcc-6.3.0.aros/libiberty/filename_cmp.c	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/libiberty/filename_cmp.c gcc-8.3.0.aros/libiberty/filename_cmp.c
+--- gcc-8.3.0/libiberty/filename_cmp.c	2018-01-03 10:03:58.000000000 +0000
++++ gcc-8.3.0.aros/libiberty/filename_cmp.c	2019-03-02 21:36:33.831874200 +0000
 @@ -55,9 +55,12 @@
  int
  filename_cmp (const char *s1, const char *s2)
@@ -1147,10 +1260,10 @@ diff -ruN gcc-6.3.0/libiberty/filename_cmp.c gcc-6.3.0.aros/libiberty/filename_c
  #else
    for (;;)
      {
-diff -ruN gcc-6.3.0/libobjc/configure gcc-6.3.0.aros/libobjc/configure
---- gcc-6.3.0/libobjc/configure	2016-12-21 07:53:23.000000000 +0000
-+++ gcc-6.3.0.aros/libobjc/configure	2018-04-23 15:24:25.358883950 +0100
-@@ -11253,214 +11253,7 @@
+diff -ruN gcc-8.3.0/libobjc/configure gcc-8.3.0.aros/libobjc/configure
+--- gcc-8.3.0/libobjc/configure	2018-04-24 17:45:26.000000000 +0100
++++ gcc-8.3.0.aros/libobjc/configure	2019-03-02 21:36:33.831874200 +0000
+@@ -11337,214 +11337,7 @@
  # -----------
  
  # Check if we have thread-local storage
@@ -1366,10 +1479,10 @@ diff -ruN gcc-6.3.0/libobjc/configure gcc-6.3.0.aros/libobjc/configure
  
  
    { $as_echo "$as_me:${as_lineno-$LINENO}: checking if the type of bitfields matters" >&5
-diff -ruN gcc-6.3.0/libobjc/configure.ac gcc-6.3.0.aros/libobjc/configure.ac
---- gcc-6.3.0/libobjc/configure.ac	2016-01-04 14:30:50.000000000 +0000
-+++ gcc-6.3.0.aros/libobjc/configure.ac	2018-04-23 15:24:25.358883950 +0100
-@@ -210,7 +210,7 @@
+diff -ruN gcc-8.3.0/libobjc/configure.ac gcc-8.3.0.aros/libobjc/configure.ac
+--- gcc-8.3.0/libobjc/configure.ac	2018-01-03 10:03:58.000000000 +0000
++++ gcc-8.3.0.aros/libobjc/configure.ac	2019-03-02 21:36:33.831874200 +0000
+@@ -195,7 +195,7 @@
  # -----------
  
  # Check if we have thread-local storage
@@ -1378,9 +1491,9 @@ diff -ruN gcc-6.3.0/libobjc/configure.ac gcc-6.3.0.aros/libobjc/configure.ac
  
  gt_BITFIELD_TYPE_MATTERS
  
-diff -ruN gcc-6.3.0/libobjc/thr.c gcc-6.3.0.aros/libobjc/thr.c
---- gcc-6.3.0/libobjc/thr.c	2016-01-04 14:30:50.000000000 +0000
-+++ gcc-6.3.0.aros/libobjc/thr.c	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/libobjc/thr.c gcc-8.3.0.aros/libobjc/thr.c
+--- gcc-8.3.0/libobjc/thr.c	2018-01-03 10:03:58.000000000 +0000
++++ gcc-8.3.0.aros/libobjc/thr.c	2019-03-02 21:36:33.831874200 +0000
 @@ -35,6 +35,7 @@
  #include "objc/runtime.h"
  #include "objc-private/module-abi-8.h"
@@ -1389,9 +1502,9 @@ diff -ruN gcc-6.3.0/libobjc/thr.c gcc-6.3.0.aros/libobjc/thr.c
  #include <gthr.h>
  
  #include <stdlib.h>
-diff -ruN gcc-6.3.0/libstdc++-v3/config/os/aros/ctype_base.h gcc-6.3.0.aros/libstdc++-v3/config/os/aros/ctype_base.h
---- gcc-6.3.0/libstdc++-v3/config/os/aros/ctype_base.h	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/libstdc++-v3/config/os/aros/ctype_base.h	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/libstdc++-v3/config/os/aros/ctype_base.h gcc-8.3.0.aros/libstdc++-v3/config/os/aros/ctype_base.h
+--- gcc-8.3.0/libstdc++-v3/config/os/aros/ctype_base.h	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/libstdc++-v3/config/os/aros/ctype_base.h	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,30 @@
 +namespace std _GLIBCXX_VISIBILITY(default)
 +{
@@ -1423,9 +1536,9 @@ diff -ruN gcc-6.3.0/libstdc++-v3/config/os/aros/ctype_base.h gcc-6.3.0.aros/libs
 +
 +_GLIBCXX_END_NAMESPACE_VERSION
 +} // namespace
-diff -ruN gcc-6.3.0/libstdc++-v3/config/os/aros/ctype_configure_char.cc gcc-6.3.0.aros/libstdc++-v3/config/os/aros/ctype_configure_char.cc
---- gcc-6.3.0/libstdc++-v3/config/os/aros/ctype_configure_char.cc	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/libstdc++-v3/config/os/aros/ctype_configure_char.cc	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/libstdc++-v3/config/os/aros/ctype_configure_char.cc gcc-8.3.0.aros/libstdc++-v3/config/os/aros/ctype_configure_char.cc
+--- gcc-8.3.0/libstdc++-v3/config/os/aros/ctype_configure_char.cc	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/libstdc++-v3/config/os/aros/ctype_configure_char.cc	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,99 @@
 +// Locale support -*- C++ -*-
 +
@@ -1526,9 +1639,9 @@ diff -ruN gcc-6.3.0/libstdc++-v3/config/os/aros/ctype_configure_char.cc gcc-6.3.
 +
 +_GLIBCXX_END_NAMESPACE_VERSION
 +} // namespace
-diff -ruN gcc-6.3.0/libstdc++-v3/config/os/aros/ctype_inline.h gcc-6.3.0.aros/libstdc++-v3/config/os/aros/ctype_inline.h
---- gcc-6.3.0/libstdc++-v3/config/os/aros/ctype_inline.h	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/libstdc++-v3/config/os/aros/ctype_inline.h	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/libstdc++-v3/config/os/aros/ctype_inline.h gcc-8.3.0.aros/libstdc++-v3/config/os/aros/ctype_inline.h
+--- gcc-8.3.0/libstdc++-v3/config/os/aros/ctype_inline.h	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/libstdc++-v3/config/os/aros/ctype_inline.h	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,173 @@
 +// Locale support -*- C++ -*-
 +
@@ -1703,9 +1816,9 @@ diff -ruN gcc-6.3.0/libstdc++-v3/config/os/aros/ctype_inline.h gcc-6.3.0.aros/li
 +
 +_GLIBCXX_END_NAMESPACE_VERSION
 +} // namespace
-diff -ruN gcc-6.3.0/libstdc++-v3/config/os/aros/ctype_noninline.h gcc-6.3.0.aros/libstdc++-v3/config/os/aros/ctype_noninline.h
---- gcc-6.3.0/libstdc++-v3/config/os/aros/ctype_noninline.h	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/libstdc++-v3/config/os/aros/ctype_noninline.h	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/libstdc++-v3/config/os/aros/ctype_noninline.h gcc-8.3.0.aros/libstdc++-v3/config/os/aros/ctype_noninline.h
+--- gcc-8.3.0/libstdc++-v3/config/os/aros/ctype_noninline.h	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/libstdc++-v3/config/os/aros/ctype_noninline.h	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,56 @@
 +  const ctype_base::mask*
 +  ctype<char>::classic_table() throw()
@@ -1763,9 +1876,9 @@ diff -ruN gcc-6.3.0/libstdc++-v3/config/os/aros/ctype_noninline.h gcc-6.3.0.aros
 +      }
 +    return __high;
 +  }
-diff -ruN gcc-6.3.0/libstdc++-v3/config/os/aros/os_defines.h gcc-6.3.0.aros/libstdc++-v3/config/os/aros/os_defines.h
---- gcc-6.3.0/libstdc++-v3/config/os/aros/os_defines.h	1970-01-01 01:00:00.000000000 +0100
-+++ gcc-6.3.0.aros/libstdc++-v3/config/os/aros/os_defines.h	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/libstdc++-v3/config/os/aros/os_defines.h gcc-8.3.0.aros/libstdc++-v3/config/os/aros/os_defines.h
+--- gcc-8.3.0/libstdc++-v3/config/os/aros/os_defines.h	1970-01-01 00:00:00.000000000 +0000
++++ gcc-8.3.0.aros/libstdc++-v3/config/os/aros/os_defines.h	2019-03-02 21:36:33.831874200 +0000
 @@ -0,0 +1,11 @@
 +// Specific definitions for AROS  -*- C++ -*-
 +
@@ -1778,10 +1891,10 @@ diff -ruN gcc-6.3.0/libstdc++-v3/config/os/aros/os_defines.h gcc-6.3.0.aros/libs
 +#define _GLIBCXX_USE_WEAK_REF 0
 +
 +#endif
-diff -ruN gcc-6.3.0/libstdc++-v3/configure gcc-6.3.0.aros/libstdc++-v3/configure
---- gcc-6.3.0/libstdc++-v3/configure	2016-12-12 18:03:30.000000000 +0000
-+++ gcc-6.3.0.aros/libstdc++-v3/configure	2018-04-23 15:24:25.358883950 +0100
-@@ -5365,12 +5365,12 @@
+diff -ruN gcc-8.3.0/libstdc++-v3/configure gcc-8.3.0.aros/libstdc++-v3/configure
+--- gcc-8.3.0/libstdc++-v3/configure	2018-08-13 20:15:40.000000000 +0100
++++ gcc-8.3.0.aros/libstdc++-v3/configure	2019-03-02 21:36:33.831874200 +0000
+@@ -5377,12 +5377,12 @@
  
  
  # Libtool setup.
@@ -1800,7 +1913,7 @@ diff -ruN gcc-6.3.0/libstdc++-v3/configure gcc-6.3.0.aros/libstdc++-v3/configure
  case `pwd` in
    *\ * | *\	*)
      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Libtool does not cope well with whitespace in \`pwd\`" >&5
-@@ -8101,6 +8101,8 @@
+@@ -8113,6 +8113,8 @@
  
  
  
@@ -1809,7 +1922,7 @@ diff -ruN gcc-6.3.0/libstdc++-v3/configure gcc-6.3.0.aros/libstdc++-v3/configure
  
    enable_win32_dll=no
  
-@@ -19640,6 +19642,7 @@
+@@ -19651,6 +19653,7 @@
  {
  struct iovec iov[2];
         writev(0, iov, 0);
@@ -1817,7 +1930,7 @@ diff -ruN gcc-6.3.0/libstdc++-v3/configure gcc-6.3.0.aros/libstdc++-v3/configure
    ;
    return 0;
  }
-@@ -19662,6 +19665,7 @@
+@@ -19673,6 +19676,7 @@
  {
  struct iovec iov[2];
         writev(0, iov, 0);
@@ -1825,7 +1938,7 @@ diff -ruN gcc-6.3.0/libstdc++-v3/configure gcc-6.3.0.aros/libstdc++-v3/configure
    ;
    return 0;
  }
-@@ -28882,6 +28886,58 @@
+@@ -28973,6 +28977,58 @@
  
  # Base decisions on target environment.
  case "${host}" in
@@ -1884,9 +1997,9 @@ diff -ruN gcc-6.3.0/libstdc++-v3/configure gcc-6.3.0.aros/libstdc++-v3/configure
    arm*-*-symbianelf*)
      # This is a freestanding configuration; there is nothing to do here.
      ;;
-diff -ruN gcc-6.3.0/libstdc++-v3/configure.ac gcc-6.3.0.aros/libstdc++-v3/configure.ac
---- gcc-6.3.0/libstdc++-v3/configure.ac	2016-01-15 22:42:41.000000000 +0000
-+++ gcc-6.3.0.aros/libstdc++-v3/configure.ac	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/libstdc++-v3/configure.ac gcc-8.3.0.aros/libstdc++-v3/configure.ac
+--- gcc-8.3.0/libstdc++-v3/configure.ac	2018-08-13 20:15:40.000000000 +0100
++++ gcc-8.3.0.aros/libstdc++-v3/configure.ac	2019-03-02 21:36:33.831874200 +0000
 @@ -89,9 +89,9 @@
  GLIBCXX_CONFIGURE
  
@@ -1900,10 +2013,10 @@ diff -ruN gcc-6.3.0/libstdc++-v3/configure.ac gcc-6.3.0.aros/libstdc++-v3/config
  AM_PROG_LIBTOOL
  ACX_LT_HOST_FLAGS
  AC_SUBST(enable_shared)
-diff -ruN gcc-6.3.0/libstdc++-v3/configure.host gcc-6.3.0.aros/libstdc++-v3/configure.host
---- gcc-6.3.0/libstdc++-v3/configure.host	2016-09-27 07:11:15.000000000 +0100
-+++ gcc-6.3.0.aros/libstdc++-v3/configure.host	2018-04-23 15:24:25.358883950 +0100
-@@ -226,6 +226,9 @@
+diff -ruN gcc-8.3.0/libstdc++-v3/configure.host gcc-8.3.0.aros/libstdc++-v3/configure.host
+--- gcc-8.3.0/libstdc++-v3/configure.host	2018-12-06 08:45:58.000000000 +0000
++++ gcc-8.3.0.aros/libstdc++-v3/configure.host	2019-03-02 21:36:33.831874200 +0000
+@@ -222,6 +222,9 @@
      os_include_dir="os/generic"
      atomicity_dir="cpu/generic"
      ;;
@@ -1913,9 +2026,9 @@ diff -ruN gcc-6.3.0/libstdc++-v3/configure.host gcc-6.3.0.aros/libstdc++-v3/conf
    bsd*)
      # Plain BSD attempts to share FreeBSD files.
      os_include_dir="os/bsd/freebsd"
-diff -ruN gcc-6.3.0/libstdc++-v3/crossconfig.m4 gcc-6.3.0.aros/libstdc++-v3/crossconfig.m4
---- gcc-6.3.0/libstdc++-v3/crossconfig.m4	2015-10-11 23:34:28.000000000 +0100
-+++ gcc-6.3.0.aros/libstdc++-v3/crossconfig.m4	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/libstdc++-v3/crossconfig.m4 gcc-8.3.0.aros/libstdc++-v3/crossconfig.m4
+--- gcc-8.3.0/libstdc++-v3/crossconfig.m4	2018-07-04 12:45:51.000000000 +0100
++++ gcc-8.3.0.aros/libstdc++-v3/crossconfig.m4	2019-03-02 21:36:33.831874200 +0000
 @@ -5,6 +5,31 @@
  AC_DEFUN([GLIBCXX_CROSSCONFIG],[
  # Base decisions on target environment.
@@ -1948,9 +2061,20 @@ diff -ruN gcc-6.3.0/libstdc++-v3/crossconfig.m4 gcc-6.3.0.aros/libstdc++-v3/cros
    arm*-*-symbianelf*)
      # This is a freestanding configuration; there is nothing to do here.
      ;;
-diff -ruN gcc-6.3.0/libstdc++-v3/include/c_global/cstdint gcc-6.3.0.aros/libstdc++-v3/include/c_global/cstdint
---- gcc-6.3.0/libstdc++-v3/include/c_global/cstdint	2016-01-04 14:30:50.000000000 +0000
-+++ gcc-6.3.0.aros/libstdc++-v3/include/c_global/cstdint	2018-04-23 21:21:20.585774397 +0100
+diff -ruN gcc-8.3.0/libstdc++-v3/include/Makefile.in gcc-8.3.0.aros/libstdc++-v3/include/Makefile.in
+--- gcc-8.3.0/libstdc++-v3/include/Makefile.in	2018-07-31 10:38:28.000000000 +0100
++++ gcc-8.3.0.aros/libstdc++-v3/include/Makefile.in	2019-03-02 21:36:33.831874200 +0000
+@@ -1719,6 +1719,7 @@
+ 	    -e '/^#/s/\(${uppercase}${uppercase}*\)/_GLIBCXX_\1/g' \
+ 	    -e 's/_GLIBCXX_SUPPORTS_WEAK/__GXX_WEAK__/g' \
+ 	    -e 's/_GLIBCXX___MINGW32_GLIBCXX___/__MINGW32__/g' \
++	    -e 's/_GLIBCXX___AROS__/__AROS__/g' \
+ 	    -e 's,^#include "\(.*\)",#include <bits/\1>,g' \
+ 	    < $< > $@
+ 
+diff -ruN gcc-8.3.0/libstdc++-v3/include/c_global/cstdint gcc-8.3.0.aros/libstdc++-v3/include/c_global/cstdint
+--- gcc-8.3.0/libstdc++-v3/include/c_global/cstdint	2018-01-03 10:03:58.000000000 +0000
++++ gcc-8.3.0.aros/libstdc++-v3/include/c_global/cstdint	2019-03-02 21:36:33.831874200 +0000
 @@ -41,7 +41,7 @@
  # include <stdint.h>
  #endif
@@ -1971,20 +2095,9 @@ diff -ruN gcc-6.3.0/libstdc++-v3/include/c_global/cstdint gcc-6.3.0.aros/libstdc
    using ::uint_least64_t;
  
    using ::uintmax_t;
-diff -ruN gcc-6.3.0/libstdc++-v3/include/Makefile.in gcc-6.3.0.aros/libstdc++-v3/include/Makefile.in
---- gcc-6.3.0/libstdc++-v3/include/Makefile.in	2016-10-03 15:36:13.000000000 +0100
-+++ gcc-6.3.0.aros/libstdc++-v3/include/Makefile.in	2018-04-23 15:24:25.358883950 +0100
-@@ -1687,6 +1687,7 @@
- 	    -e '/^#/s/\(${uppercase}${uppercase}*\)/_GLIBCXX_\1/g' \
- 	    -e 's/_GLIBCXX_SUPPORTS_WEAK/__GXX_WEAK__/g' \
- 	    -e 's/_GLIBCXX___MINGW32_GLIBCXX___/__MINGW32__/g' \
-+	    -e 's/_GLIBCXX___AROS__/__AROS__/g' \
- 	    -e 's,^#include "\(.*\)",#include <bits/\1>,g' \
- 	    < $< > $@
- 
-diff -ruN gcc-6.3.0/libstdc++-v3/include/std/ratio gcc-6.3.0.aros/libstdc++-v3/include/std/ratio
---- gcc-6.3.0/libstdc++-v3/include/std/ratio	2016-01-04 14:30:50.000000000 +0000
-+++ gcc-6.3.0.aros/libstdc++-v3/include/std/ratio	2018-04-23 15:24:25.358883950 +0100
+diff -ruN gcc-8.3.0/libstdc++-v3/include/std/ratio gcc-8.3.0.aros/libstdc++-v3/include/std/ratio
+--- gcc-8.3.0/libstdc++-v3/include/std/ratio	2018-01-03 10:03:58.000000000 +0000
++++ gcc-8.3.0.aros/libstdc++-v3/include/std/ratio	2019-03-02 21:36:33.831874200 +0000
 @@ -211,10 +211,10 @@
      {
      private:
