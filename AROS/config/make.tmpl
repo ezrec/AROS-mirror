@@ -2546,7 +2546,7 @@ endif # $(TARGET) in $(%(mmake)%(flavour)_ALLTARGETS)
 %(mmake)_CXX_NARCHFILES   := $(filter-out $(%(mmake)_ARCHFILES),$(%(mmake)_CXXFILES))
 %(mmake)_OBJC_NARCHFILES   := $(filter-out $(%(mmake)_ARCHFILES),$(%(mmake)_OBJCFILES))
 
-%(mmake)_OBJS         := $(%(mmake)_ARCHOBJS) \
+%(mmake)_OBJS         ?= $(%(mmake)_ARCHOBJS) \
                  $(addprefix %(objdir)/,$(notdir $(%(mmake)_C_NARCHFILES:=.o) $(%(mmake)_CXX_NARCHFILES:=.o) $(%(mmake)_ASMFILES:=.o) $(%(mmake)_OBJC_NARCHFILES:=.o))) \
                  %(objs)
 %(mmake)_DEPS         := $(patsubst %.o,%.d,$(%(mmake)_OBJS))
@@ -3382,7 +3382,8 @@ $(%(mmake)-pkgdir)/.local-copy:
 	$(Q)$(ECHO) "Copying Local-Build Sources to  \`$(patsubst $(TOP)/%,%,$(abspath $(%(mmake)-pkgdir)))'"
 	$(Q)$(CP) -Rf "%(srcdir)/." $(%(mmake)-pkgdir)/ && $(TOUCH) $@
 
-$(%(mmake)-pkgdir)/.files-touched : $(%(mmake)-pkgdir)/.local-copy
+%(mmake)-touchfileflag ?= $(%(mmake)-pkgdir)/.files-touched
+$(%(mmake)-touchfileflag) : $(%(mmake)-pkgdir)/.local-copy
 
     %(mmake)-cfg-srcdir=$(%(mmake)-pkgdir)
 else
@@ -3436,7 +3437,7 @@ $(%(mmake)-installflag) : $(%(mmake)-configflag)
 	    $(TOUCH) $@ -r $^; \
 	fi
 
-$(%(mmake)-pkgdir)/.files-touched:
+$(%(mmake)-touchfileflag):
 	%mkdirs_q $(%(mmake)-pkgdir)
 	$(Q)find %(srcdir) -exec $(TOUCH) -c -r $(%(mmake)-cfg-srcdir)/configure '{}' \; && \
 	$(TOUCH) $@
@@ -3449,7 +3450,7 @@ $(%(mmake)-pkgdir)/.files-touched:
 %(mmake)-configure : $(%(mmake)-configflag)
 
 $(%(mmake)-configflag) : TMP_SRCDIR := $(shell echo $(%(mmake)-cfg-srcdir) | sed 's/^\(.\):\//\/\1\//')
-$(%(mmake)-configflag) : $(%(mmake)-pkgdir)/.files-touched $(TOP)/$(CURDIR)/mmakefile
+$(%(mmake)-configflag) : $(%(mmake)-touchfileflag) $(TOP)/$(CURDIR)/mmakefile
 	$(Q)$(RM) $@
 	%mkdirs_q $(%(mmake)-pkgdir)
 	$(Q)$(ECHO) "Configuring build in         $(subst $(TOP)/,,$(%(mmake)-pkgdir))"
@@ -3565,7 +3566,8 @@ $(%(mmake)-installflag) : $(%(mmake)-cmakeflag)
 	    $(TOUCH) $@ -r $^; \
 	fi
 
-$(%(mmake)-pkgdir)/.files-touched:
+%(mmake)-touchfileflag ?= $(%(mmake)-pkgdir)/.files-touched
+$(%(mmake)-touchfileflag):
 	%mkdirs_q $(%(mmake)-pkgdir)
 	find %(srcdir) -exec $(TOUCH) -c -r %(srcdir)/CMakeLists.txt '{}' \; && \
 	$(TOUCH) $@
@@ -3574,7 +3576,7 @@ $(%(mmake)-pkgdir)/.files-touched:
 %(mmake)-cmake : $(%(mmake)-cmakeflag)
 
 $(%(mmake)-cmakeflag) : TMP_SRCDIR := $(shell echo %(srcdir) | sed 's/^\(.\):\//\/\1\//')
-$(%(mmake)-cmakeflag) : $(%(mmake)-pkgdir)/.files-touched $(TOP)/$(CURDIR)/mmakefile
+$(%(mmake)-cmakeflag) : $(%(mmake)-touchfileflag) $(TOP)/$(CURDIR)/mmakefile
 	$(RM) $@
 	%mkdirs_q $(%(mmake)-pkgdir)
 	cd $(%(mmake)-pkgdir) && \
@@ -3690,6 +3692,7 @@ endif
 	$(FOR) f in %(excludes) ; do \
 	    $(ECHO) $$f >> ./exclude.patterns ; \
 	done ; \
+    $(ECHO) "Creating   \`%(archive)-aros-new.diff'" ; \
 	diff -ruN $(%(mmake)-exclude) \
 	    $(%(mmake)-srcdir) \
 	    $(%(mmake)-srcdir).aros \
@@ -3758,6 +3761,7 @@ endif
 #MM- %(mmake)-%(subpackage)-quick : %(mmake)-%(subpackage)-fetch
 #MM- %(mmake)-fetch : %(mmake)-%(subpackage)-fetch
 #MM- %(mmake)-create-patch : %(mmake)-%(subpackage)-create-patch
+#MM- %(mmake)-create-patch-quick : %(mmake)-%(subpackage)-create-patch
  
 %(mmake)-archbase  := %(package)-%(version)
 
