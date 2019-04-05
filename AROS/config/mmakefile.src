@@ -30,4 +30,11 @@ machine : $(SRCDIR)/$(CURDIR)/machine.c
 #MM      kernel-dos-includes \
 #MM      workbench-libs-workbench-includes
 
+#MM
+tmp-rule:
+	@$(RM) -rf "$(AROSDIR)/Utilities/Mult*"
+	@$(RM) -rf "$(AROSDIR).HUNK/Utilities/Mult*"
+
+#MM- includes : tmp-rule
+
 %include_deps $(TOP)/bin/$(AROS_TARGET_ARCH)-$(TARGET_CPU)/gen/config/host.cfg
