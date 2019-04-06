@@ -76,13 +76,13 @@ $(OPENSSL_BUILD_DIR)/.install-flag : $(OPENSSL_BUILD_DIR)/.build-flag
 	@$(ECHO) "Installing    OpenSSL..."
 	@for file in $(OPENSSL_BUILD_DIR)/Makefile; \
 	do \
-		$(SED) -i -e "s@=/Developer@=$(AROS_DEVELOPER)@" $$file; \
+		$(SED) -i -e "s|=/Developer|=$(AROS_DEVELOPER)|" $$file; \
 	done;
 	@cd $(OPENSSL_BUILD_DIR); \
 	env -i PATH="$(PATH)" make install
 	for file in $(AROS_DEVELOPER)/etc/ssl/openssl.cnf; \
 	do \
-		$(SED) -i -e 's@$$dir/certs	@/ENV/SYS/Certificates@' $$file; \
+		$(SED) -i -e 's|$$dir/certs	|/ENV/SYS/Certificates|' $$file; \
 	done;
 	@$(TOUCH) $@
 
