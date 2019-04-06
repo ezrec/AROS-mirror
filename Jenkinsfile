@@ -70,7 +70,7 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0', 
 
 			postCoreBuild(ext)
 
-			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make -j8 contrib-installerlg"
+			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make -j8 contrib"
 
 			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make distfiles"
 
