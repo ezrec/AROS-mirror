@@ -9,13 +9,28 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- contrib-games-quick : contrib-games-lbreakout2-quick
 #MM- lbreakout2-quick : contrib-games-lbreakout2-quick
 
+LB2NAME := lbreakout2
+LB2VERS := 2.6.5
+LB2REPO := http://prdownloads.sourceforge.net/lgames
+LB2ARCH := $(LB2NAME)-$(LB2VERS)
+LB2PS     := $(LB2ARCH)-aros.diff:$(LB2ARCH):-p1
+
 USER_INCLUDES := -I$(AROS_CONTRIB_INCLUDES)
 USER_CFLAGS := -DSDL_NET_ENABLED
 USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
-%build_with_configure mmake=contrib-games-lbreakout2 nix=yes \
-    extraoptions="--bindir='$$(PROGDIR)' --datarootdir='$$(PROGDIR)data' \
-    --localstatedir='$$(PROGDIR)var' --docdir='$$(PROGDIR)docs' \
-    --disable-sdltest --with-docdir='$$(PROGDIR)docs' --program-prefix='' \
-    LIBS='-lmikmod -lvorbisfile -lvorbis -logg -lSDL_net'" \
-    prefix=$(AROS_CONTRIB)/Games/Action/LBreakout2 nix_dir_layout=no
+LB2OPTS := \
+    --bindir='$$(PROGDIR)' \
+    --datarootdir='$$(PROGDIR)data' \
+    --localstatedir='$$(PROGDIR)var' \
+    --docdir='$$(PROGDIR)docs' \
+    --disable-sdltest \
+    --with-docdir='$$(PROGDIR)docs' \
+    --program-prefix='' \
+    LIBS='-lmikmod -lvorbisfile -lvorbis -logg -lSDL_net'
+
+%fetch_and_build mmake=contrib-games-lbreakout2 package=$(LB2NAME) version=$(LB2VERS) \
+    package_repo="$(LB2REPO)" \
+    nix=yes patch=yes \
+    prefix=$(AROS_CONTRIB)/Games/Action/LBreakout2 nix_dir_layout=no \
+    extraoptions="$(LB2OPTS)"
