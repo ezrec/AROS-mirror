@@ -23,7 +23,7 @@ ARCHBASE     := SDL-$(ARCHVER)
 
 ARCHSRCDIR := $(PORTSDIR)/SDL/$(ARCHBASE)
 
-%create_patch mmake=sdl_main-patch archive=$(ARCHBASE) suffixes="tar.gz" destination=$(PORTSDIR)/SDL
+%create_patch mmake=contrib-sdl-sdl-main-create-patch archive=$(ARCHBASE) suffixes="tar.gz" destination=$(PORTSDIR)/SDL
 
 TESTEXEDIR := $(AROS_TESTS)/SDL
 
