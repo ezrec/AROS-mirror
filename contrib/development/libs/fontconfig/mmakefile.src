@@ -6,6 +6,8 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- contrib-fontconfig : development-fontconfig
 #MM development-fontconfig : linklibs workbench-libs-freetype-complete development-libxml2
 
+FONTCONFIG_VERS = 2.11.1
+
 FONTCONFIG_OPTIONS = \
     --without-expat \
     --without-expat-lib \
@@ -24,11 +26,11 @@ FONTCONFIG_OPTIONS = \
 
 REPOSITORIES := https://www.freedesktop.org/software/fontconfig/release \
  http://distfiles.macports.org/fontconfig \
- http://repository.timesys.com/buildsources/f/fontconfig/fontconfig-2.11.1 \
+ http://repository.timesys.com/buildsources/f/fontconfig/fontconfig-$(FONTCONFIG_VERS) \
  https://download.videolan.org/contrib/fontconfig \
  http://sources.openelec.tv/mirror/fontconfig
 
-%fetch_and_build_gnu_development package=fontconfig version=2.11.1 \
-    srcdir=fontconfig-2.11.1 patch=yes suffixes="tar.gz tar.bz2" \
+%fetch_and_build_gnu_development package=fontconfig version=$(FONTCONFIG_VERS) \
+    srcdir=fontconfig-$(FONTCONFIG_VERS) patch=yes suffixes="tar.gz tar.bz2" \
     package_repo="$(REPOSITORIES)" \
     extraoptions="$(FONTCONFIG_OPTIONS)" nlsflag=no xflag=no
