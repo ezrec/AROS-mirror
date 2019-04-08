@@ -10,6 +10,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 CAIRO_OPTIONS= \
     --enable-ft \
+    --enable-fc \
     --disable-lto \
     --disable-shared \
     --disable-xlib \
@@ -19,7 +20,9 @@ CAIRO_OPTIONS= \
     pixman_CFLAGS='-I$(AROS_INCLUDES)/pixman-1' \
     pixman_LIBS='-lpixman' \
     FREETYPE_CFLAGS='-I$(AROS_INCLUDES)/freetype' \
-    FREETYPE_LIBS='-lfreetype2'
+    FONTCONFIG_CFLAGS='-I$(AROS_INCLUDES)/fontconfig' \
+    FREETYPE_LIBS='-lfreetype2' \
+    FONTCONFIG_LIBS='-lfontconfig'
 
 REPOSITORIES := https://cairographics.org/releases \
  https://ftp.osuosl.org/pub/blfs/conglomeration/cairo \
