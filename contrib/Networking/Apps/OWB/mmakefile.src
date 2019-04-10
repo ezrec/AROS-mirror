@@ -43,7 +43,7 @@ FILES :=               \
 	browserapp
 	
 #MM- aros-tcpip-apps: aros-tcpip-apps-owb-$(BUILDOWB)
-#MM- aros-tcpip-apps-owb-$(BUILDOWB) : aros-tcpip-apps-owb
+#MM- aros-tcpip-apps-owb-yes : aros-tcpip-apps-owb
 
 #MM- aros-tcpip-apps-startowb : contrib-fontconfig
 
