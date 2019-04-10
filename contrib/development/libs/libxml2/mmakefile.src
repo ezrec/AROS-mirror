@@ -6,20 +6,32 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- contrib-development : development-libxml2
 #MM- development-libxml2 : workbench-libs-z development-libiconv
 
+XML2_VERS := 2.7.8
+
 REPOSITORIES := ftp://xmlsoft.org/libxml2 \
  http://bbgentoo.ilb.ru/distfiles \
  https://ftp.osuosl.org/pub/blfs/conglomeration/libxml2 \
  https://download.videolan.org/contrib/libxml2
 
-XML2_OPTIONS=--disable-shared --with-http=no --with-ftp=no --with-modules=no \
-        --with-mem-debug=no --with-iconv=no --with-debug=no --with-run-debug=no \
-        --enable-shared=no --with-threads=no --with-python=no --libdir=$(AROS_LIB)
+XML2_OPTIONS = \
+    --disable-shared \
+    --with-http=no \
+    --with-ftp=no \
+    --with-modules=no \
+    --with-mem-debug=no \
+    --with-iconv=no \
+    --with-debug=no \
+    --with-run-debug=no \
+    --enable-shared=no \
+    --with-threads=no \
+    --with-python=no \
+    --libdir=$(AROS_LIB)
 
 XML2_CFLAGS=
 ifneq (x86_64,$(AROS_TARGET_CPU))
 XML2_CFLAGS+=$(OPTIMIZATION_CFLAGS)
 endif
 
-%fetch_and_build_gnu_development package=libxml2 version=2.7.8 patch=yes \
+%fetch_and_build_gnu_development package=libxml2 version=$(XML2_VERS) patch=yes \
     package_repo=$(REPOSITORIES) suffixes="tar.gz"\
     extracflags="$(XML2_CFLAGS)" extraoptions="$(XML2_OPTIONS)" nlsflag=no xflag=no
