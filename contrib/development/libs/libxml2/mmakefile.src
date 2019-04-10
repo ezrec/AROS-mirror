@@ -6,7 +6,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- contrib-development : development-libxml2
 #MM- development-libxml2 : workbench-libs-z development-libiconv
 
-XML2_VERS := 2.7.8
+XML2_VERS := 2.9.9
 
 REPOSITORIES := ftp://xmlsoft.org/libxml2 \
  http://bbgentoo.ilb.ru/distfiles \
