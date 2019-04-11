@@ -22,7 +22,7 @@ XSLT_OPTIONS := \
     --without-python \
     --libdir=$(AROS_LIB)
 
-%fetch_and_build_gnu_development package=libxslt version=1.1.24 \
+%fetch_and_build_gnu_development package=libxslt version=$(XSLT_VERS) \
     patch="yes" suffixes="tar.gz" package_repo="$(REPOSITORIES)" \
     extraoptions="$(XSLT_OPTIONS)"
 
