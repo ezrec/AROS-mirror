@@ -6,7 +6,7 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- contrib-development : contrib-libxslt
 #MM- contrib-libxslt : development-libxml2 development-libxslt
 
-XSLT_VERS := 1.1.24
+XSLT_VERS := 1.1.33
 
 REPOSITORIES := http://xmlsoft.org/sources \
  http://ftp.devil-linux.org/pub/devel/sources/1.2 \
@@ -18,11 +18,10 @@ XSLT_OPTIONS := \
     --without-plugins \
     --with-libxml-prefix=$(AROS_DEVELOPER) \
     --with-libxml-include-prefix=$(AROS_INCLUDES)/libxml2 \
-    --with-libxml-libs-prefix=$(AROS_DEVELOPER)/lib \
     --without-python \
     --libdir=$(AROS_LIB)
 
 %fetch_and_build_gnu_development package=libxslt version=$(XSLT_VERS) \
     patch="yes" suffixes="tar.gz" package_repo="$(REPOSITORIES)" \
-    extraoptions="$(XSLT_OPTIONS)"
+    extraoptions="$(XSLT_OPTIONS)" config_env_extra="enable_shared=no"
 
