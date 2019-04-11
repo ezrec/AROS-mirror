@@ -1,0 +1,80 @@
+# Copyright © 2009-2017, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(SRCDIR)/config/aros-contrib.cfg
+
+EXEDIR := $(AROS_CONTRIB)/Networking/Apps/OWB
+    
+USER_CFLAGS := -DZUNE_BUILTIN_SCROLLGROUP=0 -DWTF_PLATFORM_AROS=1
+USER_INCLUDES := -I$(AROS_CONTRIB_INCLUDES)
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
+
+%build_prog mmake=aros-tcpip-apps-startowb \
+    files="startowb locale" targetdir=$(EXEDIR) \
+    progname="startowb" uselibs="fontconfig xml2 freetype2.static z iconv pthread"
+
+FILES :=               \
+	tabs/tab           \
+	tabs/tabs          \
+	tabs/tabbedgroup   \
+	main               \
+	locale             \
+	browsertab         \
+	downloadmanager    \
+	searchbar          \
+	browserpreferences \
+	preferencesmanager \
+	tabbedview         \
+	bookmarkmanager    \
+	browserwindow      \
+	browserapp
+	
+#MM- aros-tcpip-apps: aros-tcpip-apps-owb
+
+#MM- aros-tcpip-apps-startowb : contrib-fontconfig
+
+#MM- aros-tcpip-apps-owb : workbench-libs-jpeg-linklib   \
+#MM                        workbench-libs-png-linklib    \
+#MM                        workbench-libs-thread         \
+#MM                        aros-tcpip-apps-owb-webview   \
+#MM                        aros-tcpip-apps-owb-icon      \
+#MM                        aros-tcpip-apps-owb-catalogs  \
+#MM                        aros-tcpip-apps-owb-resources \
+#MM                        aros-tcpip-apps-owb-fonts     \
+#MM                        aros-tcpip-apps-owb-licenses  \
+#MM                        aros-tcpip-apps-startowb      \
+#MM                        aros-tcpip-apps-owb-quick
+
+#MM aros-tcpip-apps-owb-resources : aros-tcpip-apps-owb-icons iconset-$(AROS_TARGET_ICONSET)-contrib-icons-owb aros-tcpip-apps-owb-readme
+
+I18N_LIBS=
+# ifneq ($(AROS_TARGET_CPU),arm)
+#    ifneq ($(AROS_TARGET_CPU),m68k)
+#        ifneq ($(AROS_TARGET_CPU),ppc)
+#            I18N_LIBS=icui18n icuuc icudata
+#        endif
+#    endif
+# endif
+
+
+#TODO: Link OWB with shared library version of freetype2
+
+USER_CFLAGS := -DZUNE_BUILTIN_SCROLLGROUP=0 -DMUIMASTER_YES_INLINE_STDARG \
+    -DWTF_PLATFORM_AROS=1
+USER_INCLUDES := -I$(SRCDIR)/$(CURDIR)/tabs -I$(AROS_INCLUDES)/SDL \
+    -I$(AROS_INCLUDES)/webkit-owb -I$(AROS_CONTRIB_INCLUDES)
+
+%build_prog mmake=aros-tcpip-apps-owb progname=owb targetdir=$(EXEDIR) \
+            files="$(FILES)" uselibs="webkit-owb webcore wtf jsc webkit-owb $(I18N_LIBS) codesets thread xml2 fontconfig freetype2.static SDL SDL_gfx GL png jpeg curl iconv z mui ssl crypto sqlite3 xslt thread stdc++ pthread"
+
+ICONS := back.png close.png download.png find.png forward.png go.png home.png preferences.png reload.png search.png stop.png bookmarks.png logo.png
+
+%copy_files_q mmake=aros-tcpip-apps-owb-icons files="$(ICONS)" src="icons" dst="$(EXEDIR)/resources"
+
+%copy_files_q mmake=aros-tcpip-apps-owb-readme files="README" dst="$(EXEDIR)/"
+
+%copy_dir_recursive src="fonts" dst="$(EXEDIR)/fonts" mmake=aros-tcpip-apps-owb-fonts
+%copy_dir_recursive src="$(AROS_DEVELOPER)/share/webkit-owb/resources" dst="$(EXEDIR)/resources" mmake=aros-tcpip-apps-owb-resources
+%copy_dir_recursive src="licenses" dst="$(EXEDIR)/licenses" mmake=aros-tcpip-apps-owb-licenses
+
+%common

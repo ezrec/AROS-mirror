@@ -1,0 +1,80 @@
+# Copyright © 2008-2017, The AROS Development Team. All rights reserved.
+# $Id$
+
+include $(SRCDIR)/config/aros-contrib.cfg
+
+# www.sand-labs.org now points to a .ru malware site.
+# Using www.evillabs.net (Jason McMullan's web site)
+# until we have a more permanent solution
+REPOSITORIES = http://www.evillabs.net/AROS
+ARCHBASE := OWB-r1097
+OWB_SOURCE := $(PORTSDIR)/OWB/$(ARCHBASE)
+
+OWB_I18N=GENERIC
+OWB_I18N_OPTS=
+# ifneq ($(AROS_TARGET_CPU),arm)
+#    ifneq ($(AROS_TARGET_CPU),m68k)
+#        ifneq ($(AROS_TARGET_CPU),ppc)
+#            OWB_I18N=ICU
+#            OWB_I18N_OPTS=-DICU_LIBRARY="-licui18n -licuuc -licudata" \
+#            -DICU_INCLUDE="$(AROS_INCLUDES)"
+#        endif
+#    endif
+# endif
+
+#MM- aros-tcpip-apps-owb-libs : contrib-fontconfig contrib-curl SDL-aros development-SDL_gfx-quick contrib-sqlite contrib-libxslt aros-tcpip-apps-owb-libs-$(AROS_TARGET_CPU)
+#MM- aros-tcpip-apps-owb-libs-i386: contrib-icu4c
+#MM- aros-tcpip-apps-owb-libs-x86_64: contrib-icu4c
+#MM aros-tcpip-apps-owb-webview : aros-tcpip-apps-owb-libs aros-tcpip-apps-owb-webview-fetch
+
+%fetch mmake=aros-tcpip-apps-owb-webview-fetch archive=$(ARCHBASE) destination=$(PORTSDIR)/OWB \
+    location=$(PORTSSOURCEDIR) archive_origins=$(REPOSITORIES) suffixes="tar.gz tar.bz2" \
+    patches_specs=$(ARCHBASE)-aros.diff:$(ARCHBASE):-p1
+
+%create_patch mmake=aros-tcpip-apps-owb-webview-create-patch \
+    archive=$(ARCHBASE) destination=$(PORTSDIR)/OWB
+
+NOWARN_CFLAGS := $(NOWARN_ERROR) $(NOWARN_UNUSED_VARIABLE) $(NOWARN_UNUSED_LOCAL_TYPEDEFS) $(NOWARN_WRITE_STRINGS)
+NOWARN_CXXFLAGS := $(NOWARN_CFLAGS) $(NOWARN_CONVERSION_NULL)
+USER_CFLAGS := $(NOWARN_CFLAGS)
+USER_CXXFLAGS := -std=gnu++98 $(NOWARN_CXXFLAGS)
+USER_INCLUDES := -I$(AROS_CONTRIB_INCLUDES)
+USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
+
+OWB_OPTIONS := \
+	-DENABLE_DATABASE:BOOL=ON \
+	-DENABLE_XPATH:BOOL=ON \
+	-DENABLE_XSLT:BOOL=ON \
+	-DENABLE_INSPECTOR:BOOL=ON \
+	-DUSE_I18N:STRING=$(OWB_I18N) \
+	-DJPEG_LIBRARY=$(AROS_LIB)/libjpeg.a \
+	-DJPEG_INCLUDE_DIR=$(AROS_INCLUDES)/ \
+	-DOWB_BASE_DEPS_LIBRARIES=$(AROS_LIB)/libxml2.a \
+	-DOWB_BASE_DEPS_INCLUDE_DIRS=$(AROS_INCLUDES)/libxml2 \
+	-DCURL_LIBRARIES="$(AROS_LIB)/libcurl.a;$(AROS_CONTRIB_LIB)/libiconv.a;$(AROS_LIB)/libz.a;$(AROS_LIB)/libssl.a;$(AROS_LIB)/libcrypto.a;" \
+	-DCURL_INCLUDE_DIRS=$(AROS_INCLUDES)/ \
+	-DPNG12_LIBRARIES=$(AROS_LIB)/libpng.a \
+	-DPNG12_INCLUDE_DIRS=$(AROS_INCLUDES)/ \
+	-DLIBXSLT_LIBRARIES=$(AROS_LIB)/libxslt.a \
+	-DLIBXSLT_INCLUDE_DIRS=$(AROS_INCLUDES)/ \
+	-DSDL_LIBRARIES=$(AROS_LIB)/libSDL.a \
+	-DSDL_LDFLAGS=-lSDL \
+	-DSDL_INCLUDE_DIRS=$(AROS_INCLUDES)/SDL \
+	-DSDLGFX_LIBRARY=$(AROS_LIB)/libSDL_gfx.a \
+	-DSDLGFX_INCLUDE_DIR=$(AROS_INCLUDES)/SDL \
+	-DFREETYPE_LIBRARIES=$(AROS_LIB)/libfreetype2.a \
+	-DFREETYPE_INCLUDE_DIRS=$(AROS_INCLUDES) \
+	-DFONTCONFIG_LIBRARIES=$(AROS_LIB)/libfontconfig.a \
+	-DFONTCONFIG_INCLUDE_DIRS=$(AROS_INCLUDES) \
+	-DTHREAD_LIBRARIES=$(AROS_LIB)/libthread.a \
+	-DSQLITE3_INCLUDE_DIR=$(AROS_INCLUDES)/ \
+	-DSQLITE3_LIBRARIES=$(AROS_LIB)/libsqlite3.a \
+	-DSQLITE3_LDFLAGS=-lsqlite3 \
+	$(OWB_I18N_OPTS)
+
+# Uncomment to display verbose build info..
+##OWB_OPTIONS := -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON $(OWB_OPTIONS)
+
+%build_with_cmake mmake=aros-tcpip-apps-owb-webview		\
+	srcdir=$(OWB_SOURCE) prefix="$(AROS_DEVELOPER)"	\
+	extraoptions="$(OWB_OPTIONS)"

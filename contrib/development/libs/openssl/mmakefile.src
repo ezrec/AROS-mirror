@@ -15,6 +15,12 @@ NOWARN_FLAGS := $(NOWARN_FORMAT_SECURITY) $(NOWARN_UNUSED_BUT_SET_VARIABLE) \
         $(NOWARN_MISLEADING_INDENTATION) $(NOWARN_MAYBE_UNINITIALIZED)
 USER_CFLAGS := $(NOWARN_FLAGS) -DOPENSSL_NO_SECURE_MEMORY
 
+ifneq (,$(findstring arm,$(AROS_TARGET_CPU)))
+OPENSSL_TARGET := aros-arm-buildsys
+else
+OPENSSL_TARGET := aros-$(AROS_TARGET_CPU)-buildsys
+endif
+
 OPENSSL_OPTIONS=no-threads no-sse2 no-ssl3
 
 #MM- contrib-openssl : contrib-openssl-install contrib-openssl-installtests
@@ -49,7 +55,7 @@ $(OPENSSL_BUILD_DIR)/.build-configured : $(OPENSSL_BUILD_DIR)/.links-created
 	@$(RM) $@
 	@$(ECHO) "Configuring build in         $(subst $(TOP)/,,$(OPENSSL_BUILD_DIR))"
 	@cd $(OPENSSL_BUILD_DIR); \
-	env -i PATH="$(PATH)" AROS_CC="$(strip $(CC) $(TARGET_SYSROOT))" AROS_CFLAGS="$(CFLAGS)" AROS_RANLIB="$(RANLIB)" AR="$(AR_PLAIN)" ./Configure "aros-$(AROS_TARGET_CPU)-buildsys" $(OPENSSL_OPTIONS) --prefix=/$(AROS_DIR_DEVELOPER) --openssldir=/$(AROS_DIR_DEVELOPER)/etc/ssl
+	env -i PATH="$(PATH)" AROS_CC="$(strip $(CC) $(TARGET_SYSROOT))" AROS_CFLAGS="$(CFLAGS)" AROS_RANLIB="$(RANLIB)" AR="$(AR_PLAIN)" ./Configure "$(OPENSSL_TARGET)" $(OPENSSL_OPTIONS) --prefix=/$(AROS_DIR_DEVELOPER) --openssldir=/$(AROS_DIR_DEVELOPER)/etc/ssl
 	@$(TOUCH) $@;
 
 #MM
@@ -70,13 +76,13 @@ $(OPENSSL_BUILD_DIR)/.install-flag : $(OPENSSL_BUILD_DIR)/.build-flag
 	@$(ECHO) "Installing    OpenSSL..."
 	@for file in $(OPENSSL_BUILD_DIR)/Makefile; \
 	do \
-		$(SED) -i -e "s@=/Developer@=$(AROS_DEVELOPER)@" $$file; \
+		$(SED) -i -e "s|=/Developer|=$(AROS_DEVELOPER)|" $$file; \
 	done;
 	@cd $(OPENSSL_BUILD_DIR); \
 	env -i PATH="$(PATH)" make install
 	for file in $(AROS_DEVELOPER)/etc/ssl/openssl.cnf; \
 	do \
-		$(SED) -i -e 's@$$dir/certs	@/ENV/SYS/Certificates@' $$file; \
+		$(SED) -i -e 's|$$dir/certs	|/ENV/SYS/Certificates|' $$file; \
 	done;
 	@$(TOUCH) $@
 

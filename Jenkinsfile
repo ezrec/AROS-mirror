@@ -38,7 +38,7 @@ def killall_jobs() {
 	echo "Done killing"
 }
 
-def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0', nativetarget = true) {
+def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0', nativetarget = true, contrib = 'contrib') {
 	def fixed_job_name = env.JOB_NAME.replace('%2F','/')
 	try{
 		stage("Building ${ext} with gcc ${gccver} and binutils ${binutilsver}...") {
@@ -70,7 +70,7 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0', 
 
 			postCoreBuild(ext)
 
-			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make -j8 contrib-installerlg"
+			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make -j8 ${contrib}"
 
 			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make distfiles"
 
@@ -159,22 +159,22 @@ node('master') {
 	parallel (
 		'Build Amiga 68k version - GCC 8.3.0 - Binutils 2.32': {
 			node {			
-				buildStep('amiga-m68k', 'default', '2.32', '8.3.0')
+				buildStep('amiga-m68k', 'Mason', '2.32', '8.3.0', true, 'contrib-installerlg')
 			}
 		},
 		'Build Amiga 68k version - GCC 6.5.0 - Binutils 2.32': {
 			node {			
-				buildStep('amiga-m68k', 'default', '2.32', '6.5.0')
+				buildStep('amiga-m68k', 'Mason', '2.32', '6.5.0', true, 'contrib-installerlg')
 			}
 		},
 		'Build Linux Hosted x86_64 version - GCC 8.3.0 - Binutils 2.32': {
 			node {			
-				buildStep('linux-x86_64', 'default', '2.32', '8.3.0', false)
+				buildStep('linux-x86_64', 'Mason', '2.32', '8.3.0', false)
 			}
 		},
 		'Build RasPi BigEndian version - GCC 8.3.0 - Binutils 2.32': {
 			node {			
-				buildStep('raspi-armeb', 'default', '2.32', '8.3.0')
+				buildStep('raspi-armeb', 'Mason', '2.32', '8.3.0')
 			}
 		}
 	)

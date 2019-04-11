@@ -8,9 +8,21 @@ include $(SRCDIR)/config/aros-contrib.cfg
 
 #MM- development-cairo : workbench-libs-freetype-complete contrib-fontconfig
 
-CAIRO_OPTIONS=--enable-ft --disable-lto --disable-shared --disable-xlib --disable-xcb png_CFLAGS=' ' \
-    png_LIBS='-lpng' pixman_CFLAGS='-I$(AROS_DEVELOPER)/include/pixman-1' pixman_LIBS='-lpixman' \
-    FREETYPE_CFLAGS='-I$(AROS_DEVELOPER)/include/freetype' FREETYPE_LIBS='-lfreetype2' --libdir=$(AROS_LIB)
+CAIRO_OPTIONS= \
+    --enable-ft \
+    --enable-fc \
+    --disable-lto \
+    --disable-shared \
+    --disable-xlib \
+    --disable-xcb png_CFLAGS=' ' \
+    --libdir=$(AROS_LIB) \
+    png_LIBS='-lpng' \
+    pixman_CFLAGS='-I$(AROS_INCLUDES)/pixman-1' \
+    pixman_LIBS='-lpixman' \
+    FREETYPE_CFLAGS='-I$(AROS_INCLUDES)/freetype' \
+    FONTCONFIG_CFLAGS='-I$(AROS_INCLUDES)/fontconfig' \
+    FREETYPE_LIBS='-lfreetype2' \
+    FONTCONFIG_LIBS='-lfontconfig'
 
 REPOSITORIES := https://cairographics.org/releases \
  https://ftp.osuosl.org/pub/blfs/conglomeration/cairo \

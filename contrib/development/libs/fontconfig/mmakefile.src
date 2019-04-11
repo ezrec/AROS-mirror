@@ -3,21 +3,34 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- contrib-fontconfig : linklibs workbench-libs-freetype-complete development-libxml2 development-fontconfig
+#MM- contrib-fontconfig : development-fontconfig
+#MM development-fontconfig : linklibs workbench-libs-freetype-complete development-libxml2
 
-FONTCONFIG_OPTIONS=--without-expat --enable-libxml2 --without-expat-lib --with-default-fonts=Fonts:TrueType \
-    --disable-shared --disable-docs --with-arch=$(AROS_TARGET_CPU)-aros --localstatedir=/var \
-    FREETYPE_CFLAGS='-I$(AROS_INCLUDES)/freetype' FREETYPE_LIBS='-L$(AROS_LIB) -lfreetype2' \
-    LIBXML2_CFLAGS='-I$(AROS_INCLUDES)/libxml2' LIBXML2_LIBS='-L$(AROS_LIB) -lxml2 -lz' \
-    lt_sys_lib_search_path_spec='$(AROS_DEVELOPER)/lib/' --libdir=$(AROS_LIB)
+FONTCONFIG_VERS = 2.11.1
+
+FONTCONFIG_OPTIONS = \
+    --without-expat \
+    --without-expat-lib \
+    --enable-libxml2 \
+    --with-default-fonts=Fonts:TrueType \
+    --disable-shared \
+    --disable-docs \
+    --with-arch=$(AROS_TARGET_CPU)-aros \
+    --localstatedir=/var \
+    --libdir=$(AROS_LIB) \
+    FREETYPE_CFLAGS='-I$(AROS_INCLUDES)/freetype' \
+    FREETYPE_LIBS='-L$(AROS_LIB) -lfreetype2' \
+    LIBXML2_CFLAGS='-I$(AROS_INCLUDES)/libxml2' \
+    LIBXML2_LIBS='-L$(AROS_LIB) -lxml2 -lz' \
+    lt_sys_lib_search_path_spec='$(AROS_DEVELOPER)/lib/'
 
 REPOSITORIES := https://www.freedesktop.org/software/fontconfig/release \
  http://distfiles.macports.org/fontconfig \
- http://repository.timesys.com/buildsources/f/fontconfig/fontconfig-2.11.1 \
+ http://repository.timesys.com/buildsources/f/fontconfig/fontconfig-$(FONTCONFIG_VERS) \
  https://download.videolan.org/contrib/fontconfig \
  http://sources.openelec.tv/mirror/fontconfig
 
-%fetch_and_build_gnu_development package=fontconfig version=2.11.1 \
-    srcdir=fontconfig-2.11.1 patch=yes suffixes="tar.gz tar.bz2" \
+%fetch_and_build_gnu_development package=fontconfig version=$(FONTCONFIG_VERS) \
+    srcdir=fontconfig-$(FONTCONFIG_VERS) patch=yes suffixes="tar.gz tar.bz2" \
     package_repo="$(REPOSITORIES)" \
     extraoptions="$(FONTCONFIG_OPTIONS)" nlsflag=no xflag=no
