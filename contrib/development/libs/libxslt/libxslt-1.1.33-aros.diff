@@ -1,0 +1,72 @@
+diff -ruN libxslt-1.1.33/configure libxslt-1.1.33.aros/configure
+--- libxslt-1.1.33/configure	2019-01-03 18:29:44.000000000 +0000
++++ libxslt-1.1.33.aros/configure	2019-01-03 18:29:44.000000000 +0000
+@@ -14443,7 +14443,7 @@
+   ;;
+   *)
+   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+-for as_dir in ${LIBXML_CONFIG_PREFIX}/bin
++for as_dir in ${LIBXML_CONFIG_PREFIX} ${LIBXML_CONFIG_PREFIX}/bin
+ do
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+@@ -14486,7 +14486,7 @@
+   ;;
+   *)
+   as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+-for as_dir in ${LIBXML_CONFIG_PREFIX}/bin
++for as_dir in ${LIBXML_CONFIG_PREFIX} ${LIBXML_CONFIG_PREFIX}/bin
+ do
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+@@ -14794,9 +14794,14 @@
+ $as_echo "$as_me: WARNING: Plugins require that shared libraries be built." >&2;}
+ 	 with_plugins=no
+ else
++if test "$enable_shared" = "no"; then
++	 { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
++else
+ 	 { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
+ fi
++fi
+ 
+ if test "$with_plugins" = "yes" ; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking libxml2 module support" >&5
+diff -ruN libxslt-1.1.33/configure.ac libxslt-1.1.33.aros/configure.ac
+--- libxslt-1.1.33/configure.ac	2018-11-22 18:00:58.000000000 +0000
++++ libxslt-1.1.33.aros/configure.ac	2018-11-22 18:00:58.000000000 +0000
+@@ -442,7 +442,7 @@
+ AC_SUBST(LIBXML_REQUIRED_VERSION)
+ if test "x$LIBXML_CONFIG_PREFIX" != "x"
+ then
+-	AC_PATH_TOOL([XML_CONFIG], [xml2-config], [false], [${LIBXML_CONFIG_PREFIX}/bin])
++	AC_PATH_TOOL([XML_CONFIG], [xml2-config], [false], [${LIBXML_CONFIG_PREFIX} ${LIBXML_CONFIG_PREFIX}/bin])
+ else
+ 	AC_PATH_TOOL([XML_CONFIG], [xml2-config], [false])
+ fi
+@@ -546,8 +546,12 @@
+ 	 AC_MSG_WARN([Plugins require that shared libraries be built.])
+ 	 with_plugins=no
+ else
++if test "$enable_shared" = "no"; then
++	 AC_MSG_RESULT(no)
++else
+ 	 AC_MSG_RESULT(yes)
+ fi
++fi
+ 
+ if test "$with_plugins" = "yes" ; then
+   AC_MSG_CHECKING([libxml2 module support])
+diff -ruN libxslt-1.1.33/libexslt/date.c libxslt-1.1.33.aros/libexslt/date.c
+--- libxslt-1.1.33/libexslt/date.c	2017-11-02 20:35:15.000000000 +0000
++++ libxslt-1.1.33.aros/libexslt/date.c	2017-11-02 20:35:15.000000000 +0000
+@@ -34,6 +34,7 @@
+ #endif
+ #endif
+ 
++#include <stdarg.h>
+ #include <libxml/tree.h>
+ #include <libxml/xpath.h>
+ #include <libxml/xpathInternals.h>

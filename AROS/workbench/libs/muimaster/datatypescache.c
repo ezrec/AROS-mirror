@@ -1,5 +1,5 @@
 /*
-    Copyright © 2002-2013, The AROS Development Team. All rights reserved.
+    Copyright © 2002-2019, The AROS Development Team. All rights reserved.
 
     $Id$
 */
@@ -171,47 +171,59 @@ VOID MyBltMaskBitMapRastPort(struct BitMap *srcBitMap, LONG xSrc, LONG ySrc,
 
 #endif
 
-
-static Object *LoadPicture(CONST_STRPTR filename, struct Screen *scr)
+static Object *LoadDTPicture(CONST_STRPTR filename, struct Screen *scr, BOOL dtDoRemap, BOOL dtBMFree)
 {
-    Object *o;
-
     struct Process *myproc = (struct Process *)FindTask(NULL);
     APTR oldwindowptr = myproc->pr_WindowPtr;
+    Object *o;
+
+    /* Suppress requesters */
     myproc->pr_WindowPtr = (APTR) - 1;
 
-    o = NewDTObject((APTR) filename,
-        DTA_GroupID, GID_PICTURE,
-        OBP_Precision, PRECISION_EXACT,
-        PDTA_Screen, (IPTR) scr,
-        PDTA_DestMode, PMODE_V43, PDTA_UseFriendBitMap, TRUE, TAG_DONE);
+    if (!scr)
+    {
+        dtDoRemap = FALSE;
+    }
 
+    o = NewDTObject((APTR) filename,
+        DTA_SourceType,         DTST_FILE,
+        DTA_GroupID,            GID_PICTURE,
+        OBP_Precision,          PRECISION_EXACT,
+        PDTA_DestMode,          PMODE_V43,
+        (scr) ? PDTA_Screen : TAG_IGNORE ,
+            (IPTR) scr,
+        (scr) ? PDTA_UseFriendBitMap : TAG_IGNORE ,
+            TRUE,
+        TAG_DONE);
+
+    /* restore window behaviour */
     myproc->pr_WindowPtr = oldwindowptr;
-    D(bug("... picture=%lx\n", o));
+    D(bug("[Zune:DTC] %s: picture datatype object @ 0x%p\n", __func__, o));
 
     if (o)
     {
         struct BitMapHeader *bmhd;
+        struct FrameInfo fri = { 0 };
 
         GetDTAttrs(o, PDTA_BitMapHeader, (IPTR) & bmhd, TAG_DONE);
         if (bmhd->bmh_Masking == mskHasAlpha)
         {
             if (GetBitMapAttr(scr->RastPort.BitMap, BMA_DEPTH) >= 15)
             {
-                SetAttrs(o, PDTA_FreeSourceBitMap, FALSE,
-                    PDTA_Remap, FALSE, TAG_DONE);
+                dtDoRemap = FALSE;
+                dtBMFree = FALSE;
             }
         }
+        SetAttrs(o, PDTA_Remap, dtDoRemap, TAG_DONE);
+        SetAttrs(o, PDTA_FreeSourceBitMap, dtBMFree, TAG_DONE);
 
-        struct FrameInfo fri = { 0 };
-
-        D(bug("DTM_FRAMEBOX\n", o));
+        D(bug("[Zune:DTC] %s:  DTM_FRAMEBOX\n", __func__, o));
         DoMethod(o, DTM_FRAMEBOX, NULL, (IPTR) & fri, (IPTR) & fri,
             sizeof(struct FrameInfo), 0);
 
         if (fri.fri_Dimensions.Depth > 0)
         {
-            D(bug("DTM_PROCLAYOUT\n", o));
+            D(bug("[Zune:DTC] %s:  DTM_PROCLAYOUT\n", __func__, o));
             if (DoMethod(o, DTM_PROCLAYOUT, NULL, 1))
             {
                 return o;
@@ -414,7 +426,7 @@ struct NewImage *GetImageFromFile(char *name, struct Screen *scr)
                     depth = (ULONG) GetBitMapAttr(scr->RastPort.BitMap, BMA_DEPTH);
 
                     if (depth < 15)
-                        ni->o = LoadPicture(name, scr);
+                        ni->o = LoadDTPicture(name, scr, FALSE, FALSE);
                     if (ni->o != NULL)
                     {
                         GetDTAttrs(ni->o, PDTA_DestBitMap,
@@ -736,7 +748,7 @@ struct dt_node *dt_load_picture(CONST_STRPTR filename, struct Screen *scr)
         if ((node->filename = StrDup(filename)))
         {
             /* create the datatypes object */
-            D(bug("loading %s\n", filename));
+            D(bug("[Zune:DTC] %s: loading %s\n", __func__, filename));
 
             /* special configuration image for prop gadgets */
             if ((Stricmp(FilePart(filename), "prop.config") == 0)
@@ -759,19 +771,19 @@ struct dt_node *dt_load_picture(CONST_STRPTR filename, struct Screen *scr)
             }
             else
             {
-                if ((node->o = LoadPicture(filename, scr)))
+                if ((node->o = LoadDTPicture(filename, scr, TRUE, TRUE)))
                 {
                     struct BitMapHeader *bmhd;
                     GetDTAttrs(node->o, PDTA_BitMapHeader, (IPTR) & bmhd,
                         TAG_DONE);
-                    D(bug("picture %lx\n", node->o));
+                    D(bug("[Zune:DTC] %s: picture @ 0x%p\n", __func__, node->o));
 
                     if (bmhd)
                     {
                         node->width = bmhd->bmh_Width;
                         node->height = bmhd->bmh_Height;
                         node->mask = bmhd->bmh_Masking;
-                        D(bug("picture %lx = %ldx%ld\n", node->o,
+                        D(bug("[Zune:DTC] %s: picture @ 0x%p = %ldx%ld\n", __func__, node->o,
                                 node->width, node->height));
                     }
                     node->scr = scr;
@@ -1069,8 +1081,8 @@ AROS_UFH3S(void, WindowPatternBackFillFunc,
     OffsetY = BFM->Bounds.MinY - BFI->Options.OffsetY;
 
 /*
-	if (BFI->Options.OffsetTitleY) // shift the tiles down?
-		OffsetY -= BFI->Screen->BarHeight+1;
+        if (BFI->Options.OffsetTitleY) // shift the tiles down?
+                OffsetY -= BFI->Screen->BarHeight+1;
 */
 
 //    if (BFI->Options.CenterY) // horizontal centering?

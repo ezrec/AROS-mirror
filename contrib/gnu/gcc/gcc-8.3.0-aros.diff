@@ -902,7 +902,7 @@ diff -ruN gcc-8.3.0/gcc/config.gcc gcc-8.3.0.aros/gcc/config.gcc
  *-*-openbsd*)
    tmake_file="t-openbsd"
    case ${enable_threads} in
-@@ -938,6 +948,11 @@
+@@ -938,6 +948,16 @@
  esac
  
  case ${target} in
@@ -910,11 +910,16 @@ diff -ruN gcc-8.3.0/gcc/config.gcc gcc-8.3.0.aros/gcc/config.gcc
 +	tm_file="${tm_file} ${aros_tm_file} dbxelf.h elfos.h aarch64/aarch64-elf.h aros.h aarch64/aros.h"
 +	tmake_file="${tmake_file} aarch64/t-aarch64 aarch64/t-aros t-aros"
 +	xm_file="xm-aros.h"
++	case $target in
++	aarch64_be-*)
++		tm_defines="${tm_defines} TARGET_BIG_ENDIAN_DEFAULT=1"
++		;;
++	esac
 +	;;
  aarch64*-*-elf | aarch64*-*-fuchsia* | aarch64*-*-rtems*)
  	tm_file="${tm_file} dbxelf.h elfos.h newlib-stdint.h"
  	tm_file="${tm_file} aarch64/aarch64-elf.h aarch64/aarch64-elf-raw.h"
-@@ -1036,6 +1051,16 @@
+@@ -1036,6 +1051,21 @@
  	tm_file="${tm_file} vms/vms.h alpha/vms.h"
  	tmake_file="${tmake_file} alpha/t-vms alpha/t-alpha"
  	;;
@@ -926,6 +931,11 @@ diff -ruN gcc-8.3.0/gcc/config.gcc gcc-8.3.0.aros/gcc/config.gcc
 +	# The BPABI long long divmod functions return a 128-bit value in
 +	# registers r0-r3.  Correctly modeling that requires the use of
 +	# TImode.
++	case $target in
++	arm*b-*-aros*)
++		tm_defines="${tm_defines} TARGET_BIG_ENDIAN_DEFAULT=1"
++		;;
++	esac
 +	need_64bit_hwint=yes
 +	;;
  arc*-*-elf*)
@@ -1096,6 +1106,43 @@ diff -ruN gcc-8.3.0/include/filenames.h gcc-8.3.0.aros/include/filenames.h
  #else /* not DOSish */
  #  if defined(__APPLE__)
  #    ifndef HAVE_CASE_INSENSITIVE_FILE_SYSTEM
+diff -ruN gcc-8.3.0/libatomic/configure.tgt gcc-8.3.0.aros/libatomic/configure.tgt
+--- gcc-8.3.0/libatomic/configure.tgt	2016-05-10 08:03:07.000000000 +0100
++++ gcc-8.3.0.aros/libatomic/configure.tgt	2019-03-01 02:31:13.371291400 +0000
+@@ -119,6 +119,10 @@
+ 
+ # Other system configury
+ case "${target}" in
++  *-*-aros*)
++	config_path="${config_path} posix"
++	;;
++
+   aarch64*-*-linux*)
+ 	# OS support for atomic primitives.
+ 	config_path="${config_path} linux/aarch64 posix"
+diff -ruN gcc-8.3.0/libatomic/libatomic_i.h gcc-8.3.0.aros/libatomic/libatomic_i.h
+--- gcc-8.3.0/libatomic/libatomic_i.h	2016-01-04 14:30:50.000000000 +0000
++++ gcc-8.3.0.aros/libatomic/libatomic_i.h	2019-03-01 02:31:13.371291400 +0000
+@@ -35,6 +35,9 @@
+ #include <limits.h>
+ #include <string.h>
+ 
++#if defined(__AROS__)
++#include <exec/types.h>
++#endif
+ 
+ /* Symbol concatenation macros.  */
+ #define C2_(X,Y)	X ## Y
+@@ -103,7 +106,9 @@
+ };
+ 
+ /* The "word" size of the machine.  */
++#if !defined(__AROS__) || !defined(__typedef_WORD)
+ typedef unsigned UWORD __attribute__((mode(word)));
++#endif
+ 
+ /* Macros for handing sub-word sized quantities.  */
+ #define MASK_1		((UWORD)0xff)
 diff -ruN gcc-8.3.0/libgcc/config/m68k/lb1sf68.S gcc-8.3.0.aros/libgcc/config/m68k/lb1sf68.S
 --- gcc-8.3.0/libgcc/config/m68k/lb1sf68.S	2018-01-03 10:03:58.000000000 +0000
 +++ gcc-8.3.0.aros/libgcc/config/m68k/lb1sf68.S	2019-03-02 21:36:33.831874200 +0000

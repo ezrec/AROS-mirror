@@ -6,7 +6,12 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM- contrib-gnu-mpc : development-mpc
 #MM- development-mpc : development-mpfr
 
+MPCOPTIONS := \
+    --libdir=$(AROS_LIB) \
+    --with-mpfr-lib=$(AROS_LIB) \
+    --with-mpfr-include=$(AROS_INCLUDES)
+
 %fetch_and_build_gnu_development package=mpc version=1.0.3 patch=no \
-    extraoptions="--libdir=$(AROS_LIB)" nlsflag=no xflag=no
+    extraoptions="$(MPCOPTIONS)" nlsflag=no xflag=no
 
 %common
