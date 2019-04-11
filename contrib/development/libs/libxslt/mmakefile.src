@@ -16,7 +16,7 @@ REPOSITORIES := http://xmlsoft.org/sources \
 XSLT_OPTIONS := \
     --without-crypto \
     --without-plugins \
-    --with-libxml-prefix=$(AROS_DEVELOPER) \
+    --with-libxml-prefix=$(CROSSTOOLSDIR) \
     --with-libxml-include-prefix=$(AROS_INCLUDES)/libxml2 \
     --without-python \
     --libdir=$(AROS_LIB)
