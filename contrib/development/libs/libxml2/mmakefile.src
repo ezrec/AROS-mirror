@@ -25,7 +25,8 @@ XML2_OPTIONS = \
     --enable-shared=no \
     --with-threads=no \
     --with-python=no \
-    --libdir=$(AROS_LIB)
+    --libdir=$(AROS_LIB) \
+    --includedir=$(AROS_INCLUDES)
 
 XML2_CFLAGS=
 ifneq (x86_64,$(AROS_TARGET_CPU))
