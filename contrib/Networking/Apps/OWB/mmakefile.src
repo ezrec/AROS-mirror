@@ -9,6 +9,19 @@ USER_CFLAGS := -DZUNE_BUILTIN_SCROLLGROUP=0 -DWTF_PLATFORM_AROS=1
 USER_INCLUDES := -I$(AROS_CONTRIB_INCLUDES)
 USER_LDFLAGS := -L$(AROS_CONTRIB_LIB)
 
+# The webkit code can only be compiled if flex <2.5 is used
+# otherwise it malforms tokenize.cpp. older compilers will silently
+# compile the code and not generate an error - so disable it if
+# we dont have a suitable flex version
+
+HOST_FLEX_MAJOR = $(shell echo "$(HOST_FLEX_VERSION)" | cut -d"." -f1)
+HOST_FLEX_MINOR = $(shell echo "$(HOST_FLEX_VERSION)" | cut -d"." -f2)
+ifeq ($(shell test $(HOST_FLEX_MAJOR) -lt 3; echo $$?),0)
+ifeq ($(shell test $(HOST_FLEX_MINOR) -lt 5; echo $$?),0)
+BUILDOWB := yes
+endif
+endif
+ 
 %build_prog mmake=aros-tcpip-apps-startowb \
     files="startowb locale" targetdir=$(EXEDIR) \
     progname="startowb" uselibs="fontconfig xml2 freetype2.static z iconv pthread"
@@ -29,7 +42,8 @@ FILES :=               \
 	browserwindow      \
 	browserapp
 	
-#MM- aros-tcpip-apps: aros-tcpip-apps-owb
+#MM- aros-tcpip-apps: aros-tcpip-apps-owb-$(BUILDOWB)
+#MM- aros-tcpip-apps-owb-yes : aros-tcpip-apps-owb
 
 #MM- aros-tcpip-apps-startowb : contrib-fontconfig
 

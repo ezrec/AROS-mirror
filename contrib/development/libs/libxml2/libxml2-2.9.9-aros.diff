@@ -1,0 +1,33 @@
+diff -ruN libxml2-2.9.9/runtest.c libxml2-2.9.9.aros/runtest.c
+--- libxml2-2.9.9/runtest.c	2018-11-13 13:45:27.000000000 +0000
++++ libxml2-2.9.9.aros/runtest.c	2019-01-03 18:12:34.000000000 +0000
+@@ -28,7 +28,7 @@
+ #include <libxml/uri.h>
+ #include <libxml/encoding.h>
+ 
+-#ifdef LIBXML_OUTPUT_ENABLED
++#if definef LIBXML_OUTPUT_ENABLED && !defined __AROS__
+ #ifdef LIBXML_READER_ENABLED
+ #include <libxml/xmlreader.h>
+ #endif
+diff -ruN libxml2-2.9.9/testrecurse.c libxml2-2.9.9.aros/testrecurse.c
+--- libxml2-2.9.9/testrecurse.c	2017-10-26 08:54:40.000000000 +0100
++++ libxml2-2.9.9.aros/testrecurse.c	2019-01-03 18:12:34.000000000 +0000
+@@ -13,6 +13,8 @@
+ #include "libxml.h"
+ #include <stdio.h>
+ 
++#if !defined(__AROS__)
++
+ #if !defined(_WIN32) || defined(__CYGWIN__)
+ #include <unistd.h>
+ #endif
+@@ -963,3 +965,8 @@
+ 
+     return(ret);
+ }
++#else
++int main()
++{
++}
++#endif
