@@ -23,5 +23,6 @@ XSLT_OPTIONS := \
 
 %fetch_and_build_gnu_development package=libxslt version=$(XSLT_VERS) \
     patch="yes" suffixes="tar.gz" package_repo="$(REPOSITORIES)" \
-    extraoptions="$(XSLT_OPTIONS)" config_env_extra="enable_shared=no"
+    extraoptions="$(XSLT_OPTIONS)" \
+    config_env_extra="enable_shared=no" use_build_env=yes nlsflag=no xflag=no 
 
