@@ -854,6 +854,7 @@ aros_host_autoheader
 aros_host_autoconf
 aros_host_aclocal
 aros_host_ld
+base_lld_name
 MMAKE
 AWK
 CPP
@@ -2897,6 +2898,7 @@ if test "$use_c_compiler" = ""; then
     host_c_compilers="$default_c_compilers"
 else
     host_c_compilers="$use_c_compiler"
+    CC=$use_c_compiler
 fi
 
 default_cxx_compilers="g++ clang++ c++"
@@ -2912,6 +2914,7 @@ if test "$use_cxx_compiler" = ""; then
         host_cxx_compilers="$default_cxx_compilers"
 else
     host_cxx_compilers="$use_cxx_compiler"
+    CXX=$use_cxx_compiler
 fi
 
 
@@ -4305,13 +4308,17 @@ if test "$IS_SUN_COMPILER" -ne "0"; then
 fi
 IS_LLVM_COMPILER=`echo $HOST_COMPILER_VERSION | grep -i -c -E 'LLVM|clang'`
 if test "$IS_LLVM_COMPILER" -ne "0"; then
-    HOST_TOOLCHAIN_PREFIX=llvm-
     if test "$CC_BASE" != "gcc"; then
+        HOST_TOOLCHAIN_PREFIX=llvm-
         HOST_TOOLCHAIN_SUFFIX="`echo $CC_BASE | sed -e \"s|clang||g\"`"
+        HOST_TOOLCHAIN_FAMILY=llvm
+    else
+        IS_GNU_COMPILER=1
     fi
-    HOST_TOOLCHAIN_FAMILY=llvm
 fi
-IS_GNU_COMPILER=`echo $HOST_COMPILER_VERSION | grep -i -c -E 'gcc'`
+if test "x$IS_GNU_COMPILER" = "x"; then
+    IS_GNU_COMPILER=`echo $HOST_COMPILER_VERSION | grep -i -c -E 'gcc'`
+fi
 if test "$IS_GNU_COMPILER" -ne "0"; then
     HOST_TOOLCHAIN_PREFIX=
     HOST_TOOLCHAIN_SUFFIX=
@@ -4421,9 +4428,51 @@ aros_build_host=$host
 aros_host_cpp="$CPP"
 aros_host_cc="$CC"
 aros_host_cxx="$CXX"
-base_ld_name="${HOST_TOOLCHAIN_PREFIX}ld${HOST_TOOLCHAIN_SUFFIX}"
+base_ld_name=${HOST_TOOLCHAIN_PREFIX}ld${HOST_TOOLCHAIN_SUFFIX}
 if test "$HOST_TOOLCHAIN_FAMILY" = "llvm"; then
-    base_ld_name="ld.lld${HOST_TOOLCHAIN_SUFFIX}"
+    for ac_prog in $base_ld_name ld.lld${HOST_TOOLCHAIN_SUFFIX} ld64.lld${HOST_TOOLCHAIN_SUFFIX} ld-link${HOST_TOOLCHAIN_SUFFIX}.exe ld${HOST_TOOLCHAIN_SUFFIX}
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+$as_echo_n "checking for $ac_word... " >&6; }
+if ${ac_cv_prog_base_lld_name+:} false; then :
+  $as_echo_n "(cached) " >&6
+else
+  if test -n "$base_lld_name"; then
+  ac_cv_prog_base_lld_name="$base_lld_name" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
+    ac_cv_prog_base_lld_name="$ac_prog"
+    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+fi
+fi
+base_lld_name=$ac_cv_prog_base_lld_name
+if test -n "$base_lld_name"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $base_lld_name" >&5
+$as_echo "$base_lld_name" >&6; }
+else
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+  test -n "$base_lld_name" && break
+done
+
+    base_ld_name=$base_lld_name
 fi
 
 if test "$base_ld_name" = ""; then
@@ -8715,12 +8764,12 @@ case "$target_os" in
                 aros_kernel_cflags="-m64"
                 aros_kernel_ldflags="-m64"
                 aros_nominal_depth=8
-                aros_kernel_rs="$AR"
+                aros_kernel_rs="$toolchain_ar"
                 aros_kernel_ar_flags="-cr"
-                aros_kernel_ld="$LD"
-                aros_kernel_as="$AS"
-                aros_kernel_ranlib="$RANLIB"
-                aros_kernel_nm="$NM"
+                aros_kernel_ld="$toolchain_ld"
+                aros_kernel_as="$toolchain_as"
+                aros_kernel_ranlib="$toolchain_ranlib"
+                aros_kernel_nm="$toolchain_nm"
                 aros_kernel_strip="strip"
                 kernel_tool_prefix="i686-apple-darwin10-"
                 ;;
@@ -8732,12 +8781,12 @@ case "$target_os" in
                 aros_macosx_version="10.0"
                 aros_nominal_depth=8
                 gcc_target_cpu="ppc"
-                aros_kernel_rs="$AR"
+                aros_kernel_rs="$toolchain_ar"
                 aros_kernel_ar_flags="-cr"
-                aros_kernel_ld="$LD -arch ppc"
-                aros_kernel_as="$AS -arch ppc"
-                aros_kernel_ranlib="$RANLIB -arch ppc"
-                aros_kernel_nm="$NM -arch ppc"
+                aros_kernel_ld="$toolchain_ld -arch ppc"
+                aros_kernel_as="$toolchain_as -arch ppc"
+                aros_kernel_ranlib="$toolchain_ranlib -arch ppc"
+                aros_kernel_nm="$toolchain_nm -arch ppc"
                 aros_kernel_strip="strip -arch ppc"
                 kernel_tool_prefix="powerpc-apple-darwin10-"
                 ;;
@@ -8749,10 +8798,10 @@ case "$target_os" in
                 aros_c_libs="$aros_c_libs -laeabi"
                 aros_nominal_depth=8
                 gcc_target_cpu="arm"
-                aros_kernel_rs="$AR"
+                aros_kernel_rs="$toolchain_ar"
                 aros_kernel_ar_flags="-cr"
-                aros_kernel_ld="$LD -arch arm"
-                aros_kernel_ranlib="$RANLIB -arch arm"
+                aros_kernel_ld="$toolchain_ld -arch arm"
+                aros_kernel_ranlib="$toolchain_ranlib -arch arm"
                 kernel_tool_prefix="arm-apple-darwin10-"
                 export PATH="$aros_xcode_path/Platforms/$aros_ios_platform.platform/Developer/usr/bin:$PATH"
                 ;;
@@ -10807,7 +10856,7 @@ if test "$req_avail" = "no"; then
     as_fn_error $? "as is required to build AROS. Please install and run configure again." "$LINENO" 5
 fi
         if test "x$aros_kernel_ar" = "x"; then
-            aros_kernel_ar=$aros_host_ar
+            aros_kernel_ar=$aros_host_full_ar
         fi
 
 if test "$aros_kernel_ar" = ""; then
