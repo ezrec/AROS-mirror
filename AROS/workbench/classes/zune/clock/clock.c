@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2011, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -183,7 +183,16 @@ IPTR Clock__MUIM_Setup(Class *cl, Object *obj, struct MUIP_Setup *msg)
     if (!DoSuperMethodA(cl, obj, (Msg)msg)) return FALSE;
 
     DoMethod(_app(obj), MUIM_Application_AddInputHandler, (IPTR) &data->ihn);
+
+    return TRUE;
+}
+
+IPTR Clock__MUIM_Show(Class *cl, Object *obj, struct MUIP_Setup *msg)
+{
+    struct Clock_DATA *data = INST_DATA(cl, obj);
     
+    if (!DoSuperMethodA(cl, obj, (Msg)msg)) return FALSE;
+
     data->editpen = ObtainBestPen(_screen(obj)->ViewPort.ColorMap,
     	    	    	    	  0xFFFFFFFF,
 				  0xD8D8D8D8,
@@ -194,8 +203,7 @@ IPTR Clock__MUIM_Setup(Class *cl, Object *obj, struct MUIP_Setup *msg)
     return TRUE;
 }
 
-
-IPTR Clock__MUIM_Cleanup(Class *cl, Object *obj, struct MUIP_Cleanup *msg)
+IPTR Clock__MUIM_Hide(Class *cl, Object *obj, struct MUIP_Cleanup *msg)
 {
     struct Clock_DATA *data = INST_DATA(cl, obj);
  
@@ -205,6 +213,14 @@ IPTR Clock__MUIM_Cleanup(Class *cl, Object *obj, struct MUIP_Cleanup *msg)
     	data->editpen = -1;
     }
     
+    return DoSuperMethodA(cl, obj, (Msg)msg);
+}
+
+
+IPTR Clock__MUIM_Cleanup(Class *cl, Object *obj, struct MUIP_Cleanup *msg)
+{
+    struct Clock_DATA *data = INST_DATA(cl, obj);
+ 
     if (data->clockbm)
     {
     	FreeBitMap(data->clockbm);

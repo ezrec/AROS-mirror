@@ -358,8 +358,8 @@ struct attrs_subsection
 #endif
 #ifdef __arm__
 #define AROS_ELF_MACHINE EM_ARM
-#define AROS_ELF_REL     SHT_REL
-#define relo             rel
+#define AROS_ELF_REL     SHT_RELA
+#define relo             rela
 #endif
 
 #endif
