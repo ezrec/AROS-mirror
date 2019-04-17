@@ -21,8 +21,9 @@ include $(SRCDIR)/config/aros-contrib.cfg
 #MM		demo-rubberstrings \
 #MM		demo-kitty \
 #MM		demo-powerzoom \
-#MM		demo-mesa \
-#MM		demo-mesa-egl
+#MM		demo-mesa
+
+##MM		demo-mesa-egl
 
 SCRIPTFILES = StartSomeDemos StartSomeDemos2 StartMesaDemos
 DSTDIR := $(AROS_CONTRIB)/Demos
