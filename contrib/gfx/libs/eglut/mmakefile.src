@@ -5,7 +5,7 @@
 
 include $(SRCDIR)/config/aros-contrib.cfg
 
-#MM- contrib-gfx-libs : contrib-gfx-libs-eglut
+##MM- contrib-gfx-libs : contrib-gfx-libs-eglut
 
 #MM contrib-gfx-libs-eglut : includes contrib-gfx-libs-eglut-includes
 
