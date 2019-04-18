@@ -40,7 +40,7 @@ static void __bye()
     exit(100);
 }
 
-void __init_runtime()
+void __runtimestartup()
 {
     /* This thread is not an AROS Process/Task. Restrictions apply. */
 
