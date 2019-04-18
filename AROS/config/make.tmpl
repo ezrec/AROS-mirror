@@ -2185,7 +2185,7 @@ $(%(mmake)%(flavour)_LIBDEFSINC) $(%(mmake)%(flavour)_DEFLIBDEFSINC) : | $(%(mma
 
 $(%(mmake)-genmodfiles_GENFILEFLAG) : $(%(mmake)%(flavour)_DEFLIBDEFSINC) $(%(mmake)%(flavour)-makefile)
 
-%rule_makedirs dirs="$(%(mmake)%(flavour)_OBJDIR)/linklib" setuptarget=%(mmake)%(flavour)-linklib-setup
+%rule_makedirs dirs="$(%(mmake)%(flavour)_OBJDIR)/linklib" setuptarget=$(%(mmake)-genmodfiles_GENFILEFLAG)
 
 ifeq (%(build_abi),M)
 ## Create FD file
@@ -3290,7 +3290,7 @@ endif
 
 ifeq (%(usecflags),yes)
     %(mmake)-HOST_CFLAGS=%(hostisaflags) $(HOST_CFLAGS)
-    %(mmake)-KERNEL_CFLAGS=%(kernelisaflags) $(KERNEL_CFLAGS) $$(%(mmake)-s_flag)
+    %(mmake)-KERNEL_CFLAGS=%(kernelisaflags) $(KERNEL_CFLAGS) $(%(mmake)-s_flag)
 ifeq (%(crossbuild),yes)
     %(mmake)-TARGET_CFLAGS=%(targetisaflags) $(USER_INCLUDES) $(BASE_CFLAGS) $(USER_CFLAGS) $(%(mmake)-s_flag)
 else
@@ -3582,10 +3582,10 @@ $(%(mmake)-configflag) : $(%(mmake)-touchfileflag) $(TOP)/$(CURDIR)/mmakefile
 
 %define build_with_cmake mmake=/A package= srcdir=$(SRCDIR)/$(CURDIR) gendir= prefix= \
     aros_prefix= extraoptions= installoptions= maketarget= compiler=target \
-    usecppflags=yes extracppflags=$(CPPFLAGS) \
-    usecflags=yes extracflags=$(CFLAGS) \
-    usecxxflags=yes extracxxflags=$(CXXFLAGS) \
-    extraldflags=
+    usecppflags=yes extracppflags= \
+    usecflags=yes extracflags= \
+    usecxxflags=yes extracxxflags= \
+    extraldflags= useldlinker=no
 
 ifneq (%(prefix),)
     %(mmake)-prefix          := %(prefix)
@@ -3600,11 +3600,18 @@ else
 endif
 
 ifeq (%(compiler),host)
-    BD_LDFLAGS               := -L$(CROSSTOOLSDIR)/lib $(USER_LDFLAGS) %(extraldflags)
+    BD_LDFLAGS               := $(HOST_LDFLAGS) -L$(CROSSTOOLSDIR)/lib $(USER_LDFLAGS) %(extraldflags)
     BD_CFLAGS                := $(HOST_CFLAGS) -I$(CROSSTOOLSDIR)/include %(extracflags)
     BD_CXXFLAGS              := $(HOST_CXXFLAGS) -I$(CROSSTOOLSDIR)/include %(extracxxflags)
     BD_CPPFLAGS              := $(HOST_CPPFLAGS) %(extracppflags)
-    %(mmake)-cmake_opts      := -DCMAKE_INSTALL_PREFIX=$(%(mmake)-prefix) -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER="$(strip $(HOST_DEF_CC))"
+    %(mmake)-cmake_opts      := -DCMAKE_INSTALL_PREFIX=$(%(mmake)-prefix) \
+                                -DCMAKE_BUILD_TYPE=Release \
+                                -DCMAKE_LINKER="$(strip $(HOST_LD))" \
+                                -DCMAKE_EXE_LINKER_FLAGS="$(strip $(BD_LDFLAGS))"
+    ifeq (%(useldlinker),yes)
+        %(mmake)-cmake_opts  += -DCMAKE_CXX_LINK_EXECUTABLE="<CMAKE_LINKER> <FLAGS> <CMAKE_CXX_LINK_FLAGS> <LINK_FLAGS> <OBJECTS> -o <TARGET> <LINK_LIBRARIES>"
+    endif
+    %(mmake)-cmake_opts      += -DCMAKE_C_COMPILER="$(strip $(HOST_DEF_CC))"
     ifeq (%(usecflags),yes)
         %(mmake)-cmake_opts  += -DCMAKE_C_FLAGS="$(strip $(BD_CFLAGS))"
     endif
