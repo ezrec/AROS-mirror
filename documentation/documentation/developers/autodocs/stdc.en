@@ -15,38 +15,39 @@ stdc
 `__stdc_strerror()`_                    `__stdcio_assert()`_                    `__vcformat()`_                         `_Exit()`_                              
 `abort()`_                              `abs()`_                                `asctime()`_                            `asctime_r()`_                          
 `assert()`_                             `atexit()`_                             `atof()`_                               `atoi()`_                               
-`atol()`_                               `bsearch()`_                            `calloc()`_                             `clearerr()`_                           
-`clock()`_                              `ctime()`_                              `ctime_r()`_                            `difftime()`_                           
-`div()`_                                `exit()`_                               `fclose()`_                             `feof()`_                               
-`ferror()`_                             `fflush()`_                             `fgetc()`_                              `fgetpos()`_                            
-`fgets()`_                              `fopen()`_                              `fprintf()`_                            `fputc()`_                              
-`fputs()`_                              `fread()`_                              `free()`_                               `freopen()`_                            
-`fscanf()`_                             `fseek()`_                              `fsetpos()`_                            `ftell()`_                              
-`fwrite()`_                             `getc()`_                               `getchar()`_                            `getenv()`_                             
-`gets()`_                               `gmtime()`_                             `gmtime_r()`_                           `isalnum()`_                            
-`isalpha()`_                            `isascii()`_                            `isblank()`_                            `iscntrl()`_                            
-`isdigit()`_                            `isgraph()`_                            `islower()`_                            `isprint()`_                            
-`ispunct()`_                            `isspace()`_                            `isupper()`_                            `isxdigit()`_                           
-`labs()`_                               `ldiv()`_                               `llabs()`_                              `lldiv()`_                              
-`localeconv()`_                         `localtime()`_                          `localtime_r()`_                        `malloc()`_                             
-`malloc_align()`_                       `mblen()`_                              `mbstowcs()`_                           `mbtowc()`_                             
-`memchr()`_                             `memcmp()`_                             `memcpy()`_                             `memmove()`_                            
-`memset()`_                             `mktime()`_                             `on_exit()`_                            `printf()`_                             
-`putc()`_                               `putchar()`_                            `puts()`_                               `qsort()`_                              
-`raise()`_                              `rand()`_                               `realloc()`_                            `realloc_nocopy()`_                     
-`remove()`_                             `rename()`_                             `rewind()`_                             `scanf()`_                              
-`setbuf()`_                             `setlocale()`_                          `setvbuf()`_                            `signal()`_                             
-`snprintf()`_                           `sprintf()`_                            `srand()`_                              `sscanf()`_                             
-`stccpy()`_                             `stcd_l()`_                             `stch_l()`_                             `stcl_d()`_                             
-`stcl_h()`_                             `stcl_o()`_                             `stco_l()`_                             `stcu_d()`_                             
-`stpblk()`_                             `stpcpy()`_                             `stpsym()`_                             `strcasecmp()`_                         
-`strcasestr()`_                         `strcat()`_                             `strchr()`_                             `strcmp()`_                             
-`strcoll()`_                            `strcpy()`_                             `strcspn()`_                            `strdup()`_                             
-`strerror()`_                           `strftime()`_                           `strlcat()`_                            `strlcpy()`_                            
-`strlen()`_                             `strlwr()`_                             `strncasecmp()`_                        `strncat()`_                            
-`strncmp()`_                            `strncpy()`_                            `strndup()`_                            `strnlen()`_                            
-`strpbrk()`_                            `strrchr()`_                            `strrev()`_                             `strsep()`_                             
-`strspn()`_                             `strstr()`_                             `strtod()`_                             `strtoimax()`_                          
+`atol()`_                               `atoll()`_                              `bsearch()`_                            `calloc()`_                             
+`clearerr()`_                           `clock()`_                              `ctime()`_                              `ctime_r()`_                            
+`difftime()`_                           `div()`_                                `exit()`_                               `fclose()`_                             
+`feof()`_                               `ferror()`_                             `fflush()`_                             `fgetc()`_                              
+`fgetpos()`_                            `fgets()`_                              `fopen()`_                              `fprintf()`_                            
+`fputc()`_                              `fputs()`_                              `fread()`_                              `free()`_                               
+`freopen()`_                            `fscanf()`_                             `fseek()`_                              `fsetpos()`_                            
+`ftell()`_                              `fwrite()`_                             `getc()`_                               `getchar()`_                            
+`getenv()`_                             `gets()`_                               `gmtime()`_                             `gmtime_r()`_                           
+`imaxabs()`_                            `imaxdiv()`_                            `isalnum()`_                            `isalpha()`_                            
+`isascii()`_                            `isblank()`_                            `iscntrl()`_                            `isdigit()`_                            
+`isgraph()`_                            `islower()`_                            `isprint()`_                            `ispunct()`_                            
+`isspace()`_                            `isupper()`_                            `isxdigit()`_                           `labs()`_                               
+`ldiv()`_                               `llabs()`_                              `lldiv()`_                              `localeconv()`_                         
+`localtime()`_                          `localtime_r()`_                        `malloc()`_                             `malloc_align()`_                       
+`mblen()`_                              `mbstowcs()`_                           `mbtowc()`_                             `memchr()`_                             
+`memcmp()`_                             `memcpy()`_                             `memmove()`_                            `memset()`_                             
+`mktime()`_                             `on_exit()`_                            `printf()`_                             `putc()`_                               
+`putchar()`_                            `puts()`_                               `qsort()`_                              `raise()`_                              
+`rand()`_                               `realloc()`_                            `realloc_nocopy()`_                     `remove()`_                             
+`rename()`_                             `rewind()`_                             `scanf()`_                              `setbuf()`_                             
+`setlocale()`_                          `setvbuf()`_                            `signal()`_                             `snprintf()`_                           
+`sprintf()`_                            `srand()`_                              `sscanf()`_                             `stccpy()`_                             
+`stcd_l()`_                             `stch_l()`_                             `stcl_d()`_                             `stcl_h()`_                             
+`stcl_o()`_                             `stco_l()`_                             `stcu_d()`_                             `stpblk()`_                             
+`stpcpy()`_                             `stpsym()`_                             `strcasecmp()`_                         `strcasestr()`_                         
+`strcat()`_                             `strchr()`_                             `strcmp()`_                             `strcoll()`_                            
+`strcpy()`_                             `strcspn()`_                            `strdup()`_                             `strerror()`_                           
+`strftime()`_                           `strlcat()`_                            `strlcpy()`_                            `strlen()`_                             
+`strlwr()`_                             `strncasecmp()`_                        `strncat()`_                            `strncmp()`_                            
+`strncpy()`_                            `strndup()`_                            `strnlen()`_                            `strpbrk()`_                            
+`strrchr()`_                            `strrev()`_                             `strsep()`_                             `strspn()`_                             
+`strstr()`_                             `strtod()`_                             `strtof()`_                             `strtoimax()`_                          
 `strtok()`_                             `strtok_r()`_                           `strtol()`_                             `strtold()`_                            
 `strtoll()`_                            `strtoul()`_                            `strtoull()`_                           `strtoumax()`_                          
 `strupr()`_                             `strxfrm()`_                            `system()`_                             `time()`_                               
@@ -662,7 +663,7 @@ Inputs
 ~~~~~~
 ::
 
-     data - This is passed to the usercallback outc
+     data - This is passed to the user callback outc as its second argument.
      outc - Call this function for every character that should be
              emitted. The function should return EOF on error and
              > 0 otherwise.
@@ -1229,6 +1230,62 @@ See also
 ~~~~~~~~
 
 `atof()`_ `atoi()`_ `strtod()`_ `strtol()`_ `strtoul()`_ 
+
+----------
+
+atoll()
+=======
+
+Synopsis
+~~~~~~~~
+::
+
+  long long atoll(
+     const char * str)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert a string of digits into an long long integer.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string which should be converted. Leading
+             whitespace are ignored. The number may be prefixed
+             by a '+' or '-'.
+
+
+Result
+~~~~~~
+::
+
+     The value of string str.
+
+
+Example
+~~~~~~~
+::
+
+     // returns 1
+     atoll ("  \t +1");
+
+     // returns 1
+     atoll ("1");
+
+     // returns -1
+     atoll ("  \n -1");
+
+
+
+See also
+~~~~~~~~
+
+`atof()`_ `atoi()`_ `atol()`_ `strtod()`_ `strtol()`_ `strtoul()`_ 
 
 ----------
 
@@ -2900,6 +2957,63 @@ See also
 ~~~~~~~~
 
 `time()`_ `ctime_r()`_ `asctime_r()`_ `localtime_r()`_ 
+
+----------
+
+imaxabs()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  intmax_t imaxabs(
+     intmax_t j)
+
+
+Function
+~~~~~~~~
+::
+
+     Compute the absolute value of an integer "j".
+
+
+Result
+~~~~~~
+::
+
+     Return the absolute value.
+
+
+
+----------
+
+imaxdiv()
+=========
+
+Synopsis
+~~~~~~~~
+::
+
+  imaxdiv_t imaxdiv(
+     intmax_t num, intmax_t denom)
+
+
+Function
+~~~~~~~~
+::
+
+     Computes the value num/denom and returns
+     the quotient and remainder in a structure named imaxdiv_t.
+
+
+Result
+~~~~~~
+::
+
+     Return quotient and remainder from division.
+
+
 
 ----------
 
@@ -7558,6 +7672,55 @@ See also
 ~~~~~~~~
 
 `atof()`_ `atoi()`_ `atol()`_ `strtol()`_ `strtoul()`_ 
+
+----------
+
+strtof()
+========
+
+Synopsis
+~~~~~~~~
+::
+
+  float strtof(
+     const char * str,
+     char      ** endptr)
+
+
+Function
+~~~~~~~~
+::
+
+     Convert a floating-point number from an ASCII decimal
+     representation into a double-precision format.
+
+
+Inputs
+~~~~~~
+::
+
+     str - The string which should be converted. Leading
+             whitespace are ignored.
+     endptr - If this is non-NULL, then the address of the first
+             character after the number in the string is stored
+             here.
+
+
+Result
+~~~~~~
+::
+
+     The float value of the string. The first character after the number
+     is returned in *endptr, if endptr is non-NULL. If no digits can
+     be converted, *endptr contains str (if non-NULL) and 0 is
+     returned.
+
+
+
+See also
+~~~~~~~~
+
+`strtod()`_ `strtold()`_ 
 
 ----------
 

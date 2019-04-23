@@ -87,7 +87,7 @@ Inputs
 ~~~~~~
 ::
 
-     newname  -  a buffer for the new string. Should be at leas 31 bytes.
+     newname  -  a buffer for the new string. Should be at least 31 bytes.
      oldname  -  the old name to be revisioned.
 
 

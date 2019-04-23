@@ -795,8 +795,7 @@ def create_module_docs():
                 os.path.join(topdir, "arch", "all-pc"),
                 os.path.join(topdir, "arch", "m68k-amiga"),
                 os.path.join(topdir, "workbench", "libs"),
-                os.path.join(topdir, "workbench/libs/mesa/src/aros"),
-                os.path.join(topdir, "workbench/libs/mesa/src/gallium/state_trackers") )
+                os.path.join(topdir, "workbench/libs/mesa"))
     for dir in srcdirs:
         create_lib_docs_dir(dir, targetdir, module_titles)
 

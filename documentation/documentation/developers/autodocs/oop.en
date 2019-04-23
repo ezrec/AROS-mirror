@@ -618,9 +618,7 @@ Inputs
                
      attrID  - Attribute ID for property to get.
      
-     storage - Pointer to IPTR the gitten data should be put
-               into.
-
+     storage - Pointer to IPTR the fetched data should be put into.
 
 
 Result

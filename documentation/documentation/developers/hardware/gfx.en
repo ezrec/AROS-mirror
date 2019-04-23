@@ -1,12 +1,12 @@
-===========================================
+================================================
 AROS Hardware Manual -- Gfx Hidd Class Subsystem
-===========================================
+================================================
 
 :Author:    Nick Andrews
 :Copyright: Copyright © 2019, The AROS Development Team
 :Version:   $Revision$
 :Date:      $Date$
-s
+
 .. Note::
 
    This document is w.i.p and needs a lot more detail added.
@@ -20,7 +20,7 @@ appropriate OOP_Object properties and should not be changed by hand.
 
 
 How to query available gfx display devices?
-============================
+===========================================
 
 The HW Root can be queried to find available gfx display devices. Display
 drivers will have CLID_Hidd_Gfx as a superclass, while the base software
@@ -31,7 +31,7 @@ This is used for example by the mesagl subsystem to determine the correct gfx dr
 for a given display.
 
 What to do with a gfx display devices object?
-==================================
+=============================================
 
 Once a  pointer to the gfx device object is known, the gfx device may be asked
 for its properties, as well as some of the device properties may be changed.
@@ -83,7 +83,7 @@ CLID_Hidd_GC
     Creates a Graphics Context Object
 CLID_Hidd_BitMap
     Creates a BitMap Object defined by the given attributes.
- CLID_Hidd_Gallium
+CLID_Hidd_Gallium
      Creates a gallium 3d hardware driver object (if supported)
 CLID_Hidd_I2C
     Returns the Driver instances i2c Object (if supported)
