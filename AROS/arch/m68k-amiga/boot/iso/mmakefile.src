@@ -94,7 +94,7 @@ $(TARGET_ISO): $(AROSDIR)/.backdrop \
 		  If NOT EXISTS boot\/amiga\/aros-1mb.bin \
 		    JOIN boot\/amiga\/aros-ext.bin boot\/amiga\/aros-rom.bin AS boot\/amiga\/aros-1mb.bin \
 		  Endif \
-		  c/acatune maprom boot/amiga/aros-1mb.bin maxmem >NIL: \
+		  c\/acatune maprom boot\/amiga\/aros-1mb.bin maxmem >NIL: \
 		ELSE \
 		  boot\/amiga\/AROSBootstrap ROM boot\/amiga\/aros.hunk.gz \
 		ENDIF\
