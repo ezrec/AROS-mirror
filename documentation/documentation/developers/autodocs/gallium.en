@@ -9,8 +9,8 @@ gallium
 ----------
 
 ======================================= ======================================= ======================================= ======================================= 
-`BltPipeResourceRastPort()`_            `CreatePipe()`_                         `CreatePipeScreen()`_                   `DestroyPipeScreen()`_                  
-
+`BltPipeResourceRastPort()`_            `CreatePipe()`_                         `CreatePipeScreen()`_                   `DestroyPipe()`_                        
+`DestroyPipeScreen()`_                  
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -136,6 +136,33 @@ Result
 ::
 
      A valid pipe screen instance or NULL if creation was not successful.
+
+
+
+----------
+
+DestroyPipe()
+=============
+
+Synopsis
+~~~~~~~~
+::
+
+ void DestroyPipe(
+          PipeHandle_t pipe );
+
+Function
+~~~~~~~~
+::
+
+     Destroys a peviously created pipe.
+
+
+Inputs
+~~~~~~
+::
+
+     pipe - a pipe handle created using CreatePipe().
 
 
 

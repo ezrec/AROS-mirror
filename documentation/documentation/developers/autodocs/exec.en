@@ -2249,7 +2249,7 @@ Function
 
      Schedule a software interrupt to occur. If the processor is
      currently running a user task, then the software interrupt will
-     prempt the current task and run itself. From a real interrupt, it
+     pre-empt the current task and run itself. From a real interrupt, it
      will queue the software interrupt for a later time.
 
      Software interrupts are useful from hardware interrupts if you
@@ -3279,7 +3279,7 @@ Notes
      this function has the side effect of disabling
      multitasking.
 
-     (*) On EXECSMP builds, Enable() only aplies to the processor
+     (*) On EXECSMP builds, Enable() only applies to the processor
          it is called from. Data which needs to be protected from
          parallel access will also require a spinlock.            
 

@@ -67,8 +67,8 @@ Inputs
 ::
 
      buffer   --  the buffer to fill
-     format   --  the format string, see the VNewRawDoFmt() documentation for
-                  information on which formatting commands there are
+     format   --  the format string, see the VNewRawDoFmt() documentation
+                  for information on which formatting commands there are
 
 
 

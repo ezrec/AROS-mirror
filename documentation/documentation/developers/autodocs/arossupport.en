@@ -2296,6 +2296,13 @@ Notes
      endian machines.
 
 
+Bugs
+~~~~
+::
+
+     SDT_SPECIAL not implemented.
+
+
 
 See also
 ~~~~~~~~

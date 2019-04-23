@@ -10,7 +10,7 @@ timer
 
 ======================================= ======================================= ======================================= ======================================= 
 `AddTime()`_                            `BeginIO()`_                            `CmpTime()`_                            `GetSysTime()`_                         
-`ReadEClock()`_                         `SubTime()`_                            
+`GetUpTime()`_                          `ReadEClock()`_                         `SubTime()`_                            
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -211,6 +211,55 @@ See also
 ~~~~~~~~
 
 `TR_GETSYSTIME`_ `TR_SETSYSTIME`_ 
+
+----------
+
+GetUpTime()
+===========
+
+Synopsis
+~~~~~~~~
+::
+
+ void GetUpTime(
+          struct timeval * dest );
+
+Function
+~~~~~~~~
+::
+
+     GetUpTime() will fill in the supplied timeval with the current
+     uptime.
+
+
+Inputs
+~~~~~~
+::
+
+     dest    -   A pointer to the timeval you want the time stored in.
+
+
+Result
+~~~~~~
+::
+
+     The timeval "dest" will be filled with the current uptime. This timer
+     cannot be changed by the software and thus can be considered to be a
+     monotonic clock..
+
+
+Notes
+~~~~~
+::
+
+     This function is safe to call from interrupts.
+
+
+
+See also
+~~~~~~~~
+
+`TR_GETSYSTIME`_ `TR_SETSYSTIME`_ `GetSysTime`_ 
 
 ----------
 

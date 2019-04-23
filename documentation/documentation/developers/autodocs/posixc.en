@@ -12,51 +12,51 @@ posixc
 `--background_POSIX--`_                 `__get_default_file()`_                 `__path_a2u()`_                         `__path_u2a()`_                         
 `__posixc_assert()`_                    `__posixc_get_environptr()`_            `__posixc_set_environptr()`_            `__posixc_strerror()`_                  
 `access()`_                             `alphasort()`_                          `basename()`_                           `chdir()`_                              
-`chmod()`_                              `chown()`_                              `clearerr()`_                           `close()`_                              
-`closedir()`_                           `creat()`_                              `dirfd()`_                              `dirname()`_                            
-`dup()`_                                `dup2()`_                               `endgrent()`_                           `endpwent()`_                           
-`execl()`_                              `execlp()`_                             `execv()`_                              `execve()`_                             
-`execvp()`_                             `fchdir()`_                             `fchmod()`_                             `fchown()`_                             
-`fclose()`_                             `fcntl()`_                              `fdopen()`_                             `feof()`_                               
-`ferror()`_                             `fflush()`_                             `fgetc()`_                              `fgetpos()`_                            
-`fgets()`_                              `fileno()`_                             `flock()`_                              `flockfile()`_                          
-`fopen()`_                              `fprintf()`_                            `fputc()`_                              `fputs()`_                              
-`fread()`_                              `freopen()`_                            `fscanf()`_                             `fseek()`_                              
-`fseeko()`_                             `fsetpos()`_                            `fstat()`_                              `fsync()`_                              
-`ftell()`_                              `ftime()`_                              `ftruncate()`_                          `funlockfile()`_                        
-`fwrite()`_                             `gcvt()`_                               `getc()`_                               `getc_unlocked()`_                      
-`getchar()`_                            `getcwd()`_                             `getegid()`_                            `getenv()`_                             
-`geteuid()`_                            `getfsstat()`_                          `getgid()`_                             `getgrent()`_                           
-`getgrgid()`_                           `getgrnam()`_                           `getgroups()`_                          `getloadavg()`_                         
-`getlogin()`_                           `getopt()`_                             `getopt_long()`_                        `getopt_long_only()`_                   
-`getpass()`_                            `getpgid()`_                            `getpgrp()`_                            `getpid()`_                             
-`getppid()`_                            `getpwent()`_                           `getpwnam()`_                           `getpwuid()`_                           
-`getrlimit()`_                          `gets()`_                               `gettimeofday()`_                       `getuid()`_                             
-`getw()`_                               `ioctl()`_                              `isatty()`_                             `jrand48()`_                            
-`kill()`_                               `lcong48()`_                            `link()`_                               `lrand48()`_                            
-`lseek()`_                              `lstat()`_                              `mkdir()`_                              `mknod()`_                              
-`mkstemp()`_                            `mktemp()`_                             `mrand48()`_                            `nanosleep()`_                          
-`nrand48()`_                            `open()`_                               `opendir()`_                            `pclose()`_                             
-`perror()`_                             `pipe()`_                               `popen()`_                              `posix_memalign()`_                     
-`printf()`_                             `putc()`_                               `putchar()`_                            `putenv()`_                             
-`puts()`_                               `putw()`_                               `read()`_                               `readdir()`_                            
-`remove()`_                             `rename()`_                             `rewind()`_                             `rewinddir()`_                          
-`rmdir()`_                              `scandir()`_                            `scanf()`_                              `seed48()`_                             
-`seekdir()`_                            `setbuf()`_                             `setegid()`_                            `setenv()`_                             
-`seteuid()`_                            `setgid()`_                             `setgrent()`_                           `setlinebuf()`_                         
-`setpwent()`_                           `setrlimit()`_                          `setsid()`_                             `setuid()`_                             
-`setvbuf()`_                            `sigaction()`_                          `sigaddset()`_                          `sigdelset()`_                          
-`sigemptyset()`_                        `sigfillset()`_                         `sigismember()`_                        `siglongjmp()`_                         
-`sigpending()`_                         `sigprocmask()`_                        `sigsuspend()`_                         `sleep()`_                              
-`srand48()`_                            `stat()`_                               `statfs()`_                             `swab()`_                               
-`symlink()`_                            `sysconf()`_                            `system()`_                             `tcgetattr()`_                          
-`tcgetpgrp()`_                          `tcsetattr()`_                          `telldir()`_                            `tempnam()`_                            
-`times()`_                              `tmpfile()`_                            `tmpnam()`_                             `truncate()`_                           
-`ttyname()`_                            `umask()`_                              `uname()`_                              `ungetc()`_                             
-`unlink()`_                             `unsetenv()`_                           `updatestdio()`_                        `usleep()`_                             
-`utime()`_                              `utimes()`_                             `vfork()`_                              `vfprintf()`_                           
-`vfscanf()`_                            `vprintf()`_                            `vscanf()`_                             `wait()`_                               
-`waitpid()`_                            `write()`_                              
+`chmod()`_                              `chown()`_                              `clearerr()`_                           `clock_gettime()`_                      
+`close()`_                              `closedir()`_                           `creat()`_                              `dirfd()`_                              
+`dirname()`_                            `dup()`_                                `dup2()`_                               `endgrent()`_                           
+`endpwent()`_                           `execl()`_                              `execlp()`_                             `execv()`_                              
+`execve()`_                             `execvp()`_                             `fchdir()`_                             `fchmod()`_                             
+`fchown()`_                             `fclose()`_                             `fcntl()`_                              `fdopen()`_                             
+`feof()`_                               `ferror()`_                             `fflush()`_                             `fgetc()`_                              
+`fgetpos()`_                            `fgets()`_                              `fileno()`_                             `flock()`_                              
+`flockfile()`_                          `fopen()`_                              `fprintf()`_                            `fputc()`_                              
+`fputs()`_                              `fread()`_                              `freopen()`_                            `fscanf()`_                             
+`fseek()`_                              `fseeko()`_                             `fsetpos()`_                            `fstat()`_                              
+`fsync()`_                              `ftell()`_                              `ftime()`_                              `ftruncate()`_                          
+`funlockfile()`_                        `fwrite()`_                             `gcvt()`_                               `getc()`_                               
+`getc_unlocked()`_                      `getchar()`_                            `getcwd()`_                             `getegid()`_                            
+`getenv()`_                             `geteuid()`_                            `getfsstat()`_                          `getgid()`_                             
+`getgrent()`_                           `getgrgid()`_                           `getgrnam()`_                           `getgroups()`_                          
+`getloadavg()`_                         `getlogin()`_                           `getopt()`_                             `getopt_long()`_                        
+`getopt_long_only()`_                   `getpass()`_                            `getpgid()`_                            `getpgrp()`_                            
+`getpid()`_                             `getppid()`_                            `getpwent()`_                           `getpwnam()`_                           
+`getpwuid()`_                           `getrlimit()`_                          `gets()`_                               `gettimeofday()`_                       
+`getuid()`_                             `getw()`_                               `ioctl()`_                              `isatty()`_                             
+`jrand48()`_                            `kill()`_                               `lcong48()`_                            `link()`_                               
+`lrand48()`_                            `lseek()`_                              `lstat()`_                              `mkdir()`_                              
+`mknod()`_                              `mkstemp()`_                            `mktemp()`_                             `mrand48()`_                            
+`nanosleep()`_                          `nrand48()`_                            `open()`_                               `opendir()`_                            
+`pclose()`_                             `perror()`_                             `pipe()`_                               `popen()`_                              
+`posix_memalign()`_                     `printf()`_                             `putc()`_                               `putchar()`_                            
+`putenv()`_                             `puts()`_                               `putw()`_                               `read()`_                               
+`readdir()`_                            `remove()`_                             `rename()`_                             `rewind()`_                             
+`rewinddir()`_                          `rmdir()`_                              `scandir()`_                            `scanf()`_                              
+`seed48()`_                             `seekdir()`_                            `setbuf()`_                             `setegid()`_                            
+`setenv()`_                             `seteuid()`_                            `setgid()`_                             `setgrent()`_                           
+`setlinebuf()`_                         `setpwent()`_                           `setrlimit()`_                          `setsid()`_                             
+`setuid()`_                             `setvbuf()`_                            `sigaction()`_                          `sigaddset()`_                          
+`sigdelset()`_                          `sigemptyset()`_                        `sigfillset()`_                         `sigismember()`_                        
+`siglongjmp()`_                         `sigpending()`_                         `sigprocmask()`_                        `sigsuspend()`_                         
+`sleep()`_                              `srand48()`_                            `stat()`_                               `statfs()`_                             
+`swab()`_                               `symlink()`_                            `sysconf()`_                            `system()`_                             
+`tcgetattr()`_                          `tcgetpgrp()`_                          `tcsetattr()`_                          `telldir()`_                            
+`tempnam()`_                            `times()`_                              `tmpfile()`_                            `tmpnam()`_                             
+`truncate()`_                           `ttyname()`_                            `umask()`_                              `uname()`_                              
+`ungetc()`_                             `unlink()`_                             `unsetenv()`_                           `updatestdio()`_                        
+`usleep()`_                             `utime()`_                              `utimes()`_                             `vfork()`_                              
+`vfprintf()`_                           `vfscanf()`_                            `vprintf()`_                            `vscanf()`_                             
+`wait()`_                               `waitpid()`_                            `write()`_                              
 ======================================= ======================================= ======================================= ======================================= 
 
 -----------
@@ -777,6 +777,58 @@ See also
 ~~~~~~~~
 
 `ferror()`_ `clearerr()`_ 
+
+----------
+
+clock_gettime()
+===============
+
+Synopsis
+~~~~~~~~
+::
+
+  int clock_gettime(
+ clockid_t clk_id,
+ struct timespec *tp)
+     
+
+Function
+~~~~~~~~
+::
+
+     retrieve the time of the specified clock clk_id.
+
+
+Inputs
+~~~~~~
+::
+
+     clk_id - identifier of the particular clock on which to act
+             CLOCK_REALTIME 
+             System-wide realtime clock. Setting this clock requires appropriate privileges. 
+             CLOCK_MONOTONIC 
+             Clock that cannot be set and represents monotonic time since some unspecified starting point. 
+             CLOCK_PROCESS_CPUTIME_ID 
+             High-resolution per-process timer from the CPU. 
+             CLOCK_THREAD_CPUTIME_ID 
+             Thread-specific CPU-time clock. 
+     tp - structure to hold the retrieved time value
+
+
+Result
+~~~~~~
+::
+
+     0 on success, -1 on error
+
+
+Notes
+~~~~~
+::
+
+     Currently at most a resolution of milliseconds is supported.
+
+
 
 ----------
 
@@ -4930,13 +4982,13 @@ Function
      Zero or more of the following flags:
 
      # - specifying that the value should be converted to an
-         ``alternate form''. For c, d, i, n, p, s, and u conversions, this
+         ``alternate form''. For a,A,c, d, i, n, p, s, and u conversions, this
          option has no effect. For o conversions, the precision of the
          number is increased to force the first character of the output
          string to a zero (except if a zero value is printed with an
          explicit precision of zero). For x and X conversions, a non-zero
          result has the string `0x' (or `0X' for X conversions) prepended to
-         it. For e, E, f, g, and G conversions, the result will always
+         it. For e, E, f, F,g, and G conversions, the result will always
          contain a decimal point, even if no digits follow it (normally, a
          decimal point appears in the results of those conversions only if a
          digit follows). For g and G conversions, trailing zeros are not
@@ -4944,8 +4996,8 @@ Function
 
      0 - specifying zero padding. For all conversions except n, the
          converted value is padded on the left with zeros rather than
-         blanks. If a precision is given with a numeric conversion (d, i, o,
-         u, i, x, and X), the 0 flag is ignored.
+         blanks. For f,F conversion, or if a precision is given with a numeric
+         conversion (d, i, o,u, i, x, and X), the 0 flag is ignored.
 
      - - (a negative field width flag) indicates the converted
          value is to be left adjusted on the field boundary. Except for n
@@ -5023,6 +5075,10 @@ Function
               digits that must appear; if the converted value requires fewer
               digits, it is padded on the left with zeros.
 
+     aA - (TODO) The double argument is rounded and converted to the C99
+           floating-point number in hexadecimal notation - preserving all
+           bits of precision, and presenting them in a robust way.
+
      eE - The double argument is rounded and converted in the style
           [<->]d.dddedd where there is one digit before the decimal-point
           character and the number of digits after it is equal to the
@@ -5032,7 +5088,7 @@ Function
           exponent. The exponent always contains at least two digits; if the
           value is zero, the exponent is 00.
 
-     f - The double argument is rounded and converted to decimal
+     fF - The double argument is rounded and converted to decimal
          notation in the style [-]ddd.ddd, where the number of digits after
          the decimal-point character is equal to the precision
          specification. If the precision is missing, it is taken as 6; if
