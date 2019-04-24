@@ -38,6 +38,15 @@ static inline WORD max(WORD a, WORD b)
     return (a > b) ? a : b;
 }
 
+struct EasyStruct aboutES =
+        {
+                sizeof(struct EasyStruct),
+                0,
+                "About Workbook",
+                "Workbook 1.0\n(c) AROS Dev TEAM",
+                "OK",
+        };
+
 struct wbWindow_Icon {
     struct MinNode wbwiNode;
     Object *wbwiObject;
@@ -843,7 +852,13 @@ static IPTR WBWindowRefresh(Class *cl, Object *obj, Msg msg)
 
     return 0;
 }
+static void About(Class *cl, Object *obj) {
+    struct WorkbookBase *wb = (APTR)cl->cl_UserData;
+    struct wbWindow *my = INST_DATA(cl, obj);
+    extern struct EasyStruct aboutES;
 
+    EasyRequest(my->Window,&aboutES,NULL);
+}
 static void NewCLI(Class *cl, Object *obj)
 {
     struct WorkbookBase *wb = (APTR)cl->cl_UserData;
@@ -853,7 +868,7 @@ static void NewCLI(Class *cl, Object *obj)
 
     SetWindowPointer(my->Window, WA_BusyPointer, TRUE, TAG_END);
     dir = CurrentDir(my->Lock);
-    Execute("", BNULL, BNULL);
+    Execute("newshell", BNULL, BNULL);
     CurrentDir(dir);
     SetWindowPointer(my->Window, WA_BusyPointer, FALSE, TAG_END);
 }
@@ -906,6 +921,8 @@ static IPTR WBWindowMenuPick(Class *cl, Object *obj, struct wbwm_MenuPick *wbwmp
     case WBMENU_ID(WBMENU_WB_SHELL):
     	NewCLI(cl, obj);
     	break;
+    case WBMENU_ID(WBMENU_WB_ABOUT):
+        About(cl, obj);
     case WBMENU_ID(WBMENU_IC_OPEN):
     	rc = WBWindowForSelectedIcons(cl, obj, WBIM_Open);
     	break;
