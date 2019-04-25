@@ -15,6 +15,7 @@ Developers Resources
 + `Debugging manual`__
 + `API Reference`__
 + `Specifications`__
++ `Hardware`__
 + `User interface style guide`__
 + `Testing`__
 + `Documenting`__
@@ -36,6 +37,7 @@ __ hardware/pci
 __ debugging
 __ autodocs/index
 __ specifications/index
+__ hardware/index
 __ ui
 __ testing/index
 __ documenting
