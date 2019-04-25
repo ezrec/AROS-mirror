@@ -21,12 +21,9 @@ AROS resources
 + `AROS software on Aminet`__
 + `Development statistics from openhub.net`__
 + `Planet AROS`__ aggregates various blogs
-+ `AROS for Amiga`__ replaces AmigaOS core libraries with their more advanced AROS counterparts.
 + `AROS on Wikipedia`__
 + `AROS documentation on WikiBooks`__
-+ `AROS on Google+`__
 + `Bszili's ports`__
-+ `Yannickescu's ports`__
 + `Serk118uk's ports`__
 
 __ https://power2people.org/
@@ -36,12 +33,9 @@ __ http://archives.aros-exec.org/
 __ http://aros.aminet.net/
 __ https://www.openhub.net/p/aros?p=AROS
 __ http://planet-aros.heimstetten.net/
-__ http://amidevcpp.amiga-world.de/afa_binarie_upload.php
 __ https://en.wikipedia.org/wiki/AROS_Research_Operating_System
 __ https://en.wikibooks.org/wiki/Aros
-__ https://plus.google.com/u/0/communities/102339819113712301695
 __ http://bszili.morphos.me/
-__ http://www.dusabledanslherbe.eu:8080/AROSPage/
 __ http://serk118.blogspot.co.uk/
 
 
@@ -57,9 +51,9 @@ Title                                            Author              Date
 `"If you like Amiga, you'll love AROS"`__        Elwood              Unknown
 ===============================================  ==================  ==========
 
-__ http://www.networkworld.com/article/2995585/opensource-subnet/linux-review-aros-os-amiga.html
-__ http://www.osnews.com/story/15819
-__ http://www.amigafuture.de/kb.php?mode=article&k=1315&page_num=37&start=0
+__ https://www.networkworld.com/article/2995585/linux-review-aros-os-amiga.html
+__ https://www.osnews.com/story/1532/climbing-the-kernel-mountain/
+__ https://www.amigafuture.de/kb.php?mode=article&k=1315&page_num=37&start=0
 __ http://elwoodb.free.fr/articles/AROS/
 
 If you know some article about AROS that we haven't mentioned listed, please
@@ -76,8 +70,8 @@ Title                                            Author          Date
 `"10 best alternative operating systems"`__      PC Plus         unknown
 ===============================================  ==============  ==========
 
-__ http://www.osnews.com/story/1532&page=1
-__ http://www.techradar.com/news/software/operating-systems/10-best-alternative-operating-systems-934484
+__ https://www.osnews.com/story/1532/climbing-the-kernel-mountain/
+__ https://www.techradar.com/news/software/operating-systems/10-best-alternative-operating-systems-934484
 
 If you know some article that mentions AROS that we haven't listed here,
 please contact_ us so we can add it. Thanks.
@@ -87,22 +81,20 @@ Homepages of developers
 =======================
 
 + `Aaron Digulla`__
-+ `Krzysztof Smiechowicz`__
 + `Lennard voor den Dag`__
 + `Martin Steigerwald`__
 + `Matthias Rustler`__
 + `Michal Schulz`__
-+ `Nic Andrews`__
++ `Nick Andrews`__
 + `Oliver Brunner`__
 
 __ http://www.philmann-dark.de/
-__ http://www.aros3d.org/
 __ http://ldp.home.xs4all.nl/
 __ https://lichtvoll.de/
 __ http://www.mazze-online.de/
-__ http://meehow.de/
+__ https://www.patreon.com/michal_schulz
 __ http://kalamatee.blogspot.com/
-__ http://homes.hallertau.net/~oli/
+__ https://www.oliver-brunner.de/
 
 
 .. _contact: contact
