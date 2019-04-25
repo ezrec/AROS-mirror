@@ -55,10 +55,12 @@ simply need to install the official SVN software, version 1.0 or higher, for
 your OS. All common Linux distributions come with SVN packaged.
 
 There's also a cross-platform GUI front-end for Subversion called
-`RapidSVN <http://rapidsvn.org/>`__, available for Unixes (GNU/Linux
+RapidSVN__, available for Unixes (GNU/Linux
 distributions, FreeBSD, Sun Solaris and others), Mac OS X and Windows.
 
 .. Note:: The server runs Subversion 1.5.
+
+__ http://rapidsvn.org/
 
 
 AmigaOS
@@ -78,7 +80,7 @@ If you run Microsoft Windows, you can use the TortoiseSVN__ SVN client,
 especially if you like using Windows Explorer. This program is Open
 Source and free, feature-rich and well-supported. Please do make sure
 that the text files you submit have the svn:eol-style property set (see the
-`Setting Properties <svn#setting-properties>`__ section), otherwise you can
+`Setting Properties`_ section), otherwise you can
 *break* code generation. If files you're changing already have the
 eol-style:LF SVN property set (basically, they would not be new files) then
 you can forget about it, and line endings (EOLs) will automatically
@@ -397,11 +399,11 @@ sites containing useful tutorials and guides which might be easier to read.
 
 The following pages are highly recommended:
 
-+ `Version Control with Subversion`_
-+ `Subversion Home`_
++ `Version Control with Subversion`__
++ `Subversion Home`__
 
-.. _`Version Control with Subversion`: http://svnbook.red-bean.com/
-.. _`Subversion Home`:               http://subversion.apache.org/
+__ http://svnbook.red-bean.com/
+__ http://subversion.apache.org/
 
 
 
@@ -411,7 +413,7 @@ Alternative access
 There are other ways to access the repository. These methods are, however,
 read-only. One would be able to set up a working directory but it would then
 not be possible to commit any changes this way. Instead, suggesting a
-modification has to be done by way of the 'developer list'__ or to individual
+modification has to be done by way of the `developer list`__ or to individual
 developers.
 
 __ contribute#mailing-lists
@@ -428,8 +430,9 @@ as described above.
 GIT
 ---
 
-Using GIT, the repository can be accessed through the 
-`AROS-mirror <https://github.com/ezrec/AROS-mirror>`__.
+Using GIT, the repository can be accessed through the `AROS-mirror`__.
+
+__ https://github.com/ezrec/AROS-mirror
 
 
 Sources
