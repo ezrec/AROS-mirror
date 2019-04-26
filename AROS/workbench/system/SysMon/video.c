@@ -11,11 +11,15 @@
 #include <proto/graphics.h>
 #include <proto/oop.h>
 #include <hidd/gfx.h>
-OOP_Object * gfxhidd;
+
+#define DVMEM(x)
+
 #undef HiddBitMapAttrBase
 OOP_AttrBase HiddGfxAttrBase;
 OOP_AttrBase HiddBitMapAttrBase;
+
 struct Library * OOPBase = NULL;
+OOP_Object * gfxhidd;
 
 /* Videofunctions */
 static BOOL InitVideo(struct SysMonData *smdata)
@@ -38,7 +42,7 @@ static BOOL InitVideo(struct SysMonData *smdata)
 
     wbscreen = LockPubScreen(NULL);
     OOP_GetAttr(HIDD_BM_OBJ(wbscreen->RastPort.BitMap), aHidd_BitMap_GfxHidd, (APTR)&gfxhidd);
-    bug("[SysMon:Video] %s: gfxhidd @ 0x%p\n", __func__, gfxhidd);
+    D(bug("[SysMon:Video] %s: gfxhidd @ 0x%p\n", __func__, gfxhidd);)
     UnlockPubScreen(NULL, wbscreen);
 
     return TRUE;
@@ -56,12 +60,12 @@ VOID UpdateVideoStaticInformation(struct SysMonData * smdata)
     TEXT buffer[64] = {0};
     struct TagItem memTags[] =
     {
-        {vHidd_Gfx_MemTotal,            0       },
-        {vHidd_Gfx_MemAddressableTotal, 0       },
+        {tHidd_Gfx_MemTotal,            0       },
+        {tHidd_Gfx_MemAddressableTotal, 0       },
         {TAG_DONE,                      0       }
     };
 
-    bug("[SysMon:Video] %s: memTags @ 0x%p\n", __func__, memTags);
+    DVMEM(bug("[SysMon:Video] %s: memTags @ 0x%p\n", __func__, memTags);)
     OOP_GetAttr(gfxhidd, aHidd_Gfx_MemoryAttribs, (IPTR *)memTags);
 
     __sprintf(buffer, "%ld kB", (ULONG)(memTags[0].ti_Data / 1024));
@@ -75,12 +79,12 @@ VOID UpdateVideoInformation(struct SysMonData * smdata)
     TEXT buffer[64] = {0};
     struct TagItem memTags[] =
     {
-        {vHidd_Gfx_MemFree,             0       },
-        {vHidd_Gfx_MemAddressableFree,  0       },
+        {tHidd_Gfx_MemFree,             0       },
+        {tHidd_Gfx_MemAddressableFree,  0       },
         {TAG_DONE,                      0       }
     };
 
-    bug("[SysMon:Video] %s: memTags @ 0x%p\n", __func__, memTags);
+    DVMEM(bug("[SysMon:Video] %s: memTags @ 0x%p\n", __func__, memTags);)
     OOP_GetAttr(gfxhidd, aHidd_Gfx_MemoryAttribs, (IPTR *)memTags);
 
     __sprintf(buffer, "%ld kB", (ULONG)(memTags[0].ti_Data / 1024));
