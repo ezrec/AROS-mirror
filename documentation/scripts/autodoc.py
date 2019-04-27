@@ -35,6 +35,9 @@ from one directory level above.
 import glob
 import os
 import re
+import tempfile
+import shutil
+import filecmp
 
 # Relative path from the main build script to the root of the AROS source
 topdir = ".."
@@ -89,6 +92,17 @@ xref_kind_localfunction = 2
 xref_kind_header = 3
 xref_kind_string = 4
 xref_kind_any = 5
+
+
+def move_if_changed(tmpfilename, targetfilename):
+    if os.path.exists(targetfilename):
+        if not filecmp.cmp(tmpfilename, targetfilename):
+            print tmpfilename, "moved to", targetfilename
+            shutil.move(tmpfilename, targetfilename)
+            return
+    
+    print tmpfilename, "removed"            
+    os.remove(tmpfilename)
 
 
 class autodoc:
@@ -163,7 +177,7 @@ class autodoc:
         
         return cmp(self.docfilename, other.docfilename)
 
-    def write(self, filehandle, titles):
+    def write(self, fd, titles):
         """Write autodoc elements to file.
         
         Arguments:
@@ -177,13 +191,13 @@ class autodoc:
             if title_key != "SEE ALSO" and self.titles.has_key(title_key):
                 lines = self.titles[title_key]
                 if len(lines) > 0:
-                    filehandle.write(title + "\n")
-                    filehandle.write("~" * len(title) + "\n")
-                    filehandle.write("::\n\n")
-                    filehandle.write(lines)
-                    filehandle.write("\n")
+                    os.write(fd, title + "\n")
+                    os.write(fd, "~" * len(title) + "\n")
+                    os.write(fd, "::\n\n")
+                    os.write(fd, lines)
+                    os.write(fd, "\n")
 
-    def write_xref(self, filehandle, path_to_shell, path_to_lib, path_to_header):
+    def write_xref(self, fd, path_to_shell, path_to_lib, path_to_header):
         """Write xrefs ('see also') to file.
         
         Arguments:
@@ -196,35 +210,35 @@ class autodoc:
         
         if self.titles.has_key("XREF"):
             if len(self.titles["XREF"]) > 0:
-                filehandle.write("See also\n~~~~~~~~\n\n")
+                os.write(fd, "See also\n~~~~~~~~\n\n")
                 for kind, name1, name2 in self.titles["XREF"]:
                     if kind == xref_kind_function:
-                        self.write_xref_function(filehandle, name1, name2, path_to_lib)
+                        self.write_xref_function(fd, name1, name2, path_to_lib)
                     elif kind == xref_kind_localfunction:
-                        self.write_xref_localfunction(filehandle, name1)
+                        self.write_xref_localfunction(fd, name1)
                     elif kind == xref_kind_any:
-                        self.write_xref_any(filehandle, name1)
+                        self.write_xref_any(fd, name1)
                     elif kind == xref_kind_string:
-                        self.write_xref_string(filehandle, name1)
+                        self.write_xref_string(fd, name1)
                     elif kind == xref_kind_header:
-                        self.write_xref_header(filehandle, name1, path_to_header)
-                filehandle.write("\n\n")
+                        self.write_xref_header(fd, name1, path_to_header)
+                os.write(fd, "\n\n")
 
-    def write_xref_function(self, filehandle, libname, funcname, path_to_lib):
-        filehandle.write("`%s.library/%s() <%s/%s#%s>`_ "
+    def write_xref_function(self, fd, libname, funcname, path_to_lib):
+        os.write(fd, "`%s.library/%s() <%s/%s#%s>`_ "
                         %(libname, funcname, path_to_lib, libname, funcname.lower()) )
 
-    def write_xref_localfunction(self, filehandle, funcname):
-        filehandle.write("`%s()`_ " %(funcname) )
+    def write_xref_localfunction(self, fd, funcname):
+        os.write(fd, "`%s()`_ " %(funcname) )
 
-    def write_xref_header(self, filehandle, name, path):
-        filehandle.write("`%s <%s/%s>`_ " %(name, path, name) )
+    def write_xref_header(self, fd, name, path):
+        os.write(fd, "`%s <%s/%s>`_ " %(name, path, name) )
     
-    def write_xref_string(self, filehandle, name):
-        filehandle.write("`%s`_ " %(name) )
+    def write_xref_string(self, fd, name):
+        os.write(fd, "`%s`_ " %(name) )
 
-    def write_xref_any(self, filehandle, name):
-        filehandle.write("%s " %name)                  
+    def write_xref_any(self, fd, name):
+        os.write(fd, "%s " %name)                  
 
 
 class shellautodoc(autodoc):
@@ -249,7 +263,7 @@ class shellautodoc(autodoc):
             raise ValueError("docname is empty")
         self.docfilename = self.docname.lower()
 
-    def write(self, filehandle, titles):
+    def write(self, fd, titles):
         """Write autodoc elements to file.
         
         Arguments:
@@ -261,24 +275,24 @@ class shellautodoc(autodoc):
         """
 
         underline="=" * len(self.docname) + "\n"
-        filehandle.write(underline)
-        filehandle.write(self.docname + "\n")
-        filehandle.write(underline + "\n")
+        os.write(fd, underline)
+        os.write(fd, self.docname + "\n")
+        os.write(fd, underline + "\n")
 
-        filehandle.write(".. This document is automatically generated. Don't edit it!\n\n")
+        os.write(fd, ".. This document is automatically generated. Don't edit it!\n\n")
 
-        filehandle.write("`Index <index>`_ ")
+        os.write(fd, "`Index <index>`_ ")
         if self.prevdocfilename:
-            filehandle.write("`Prev <" + self.prevdocfilename + ">`_ ")
+            os.write(fd, "`Prev <" + self.prevdocfilename + ">`_ ")
         if self.nextdocfilename:
-            filehandle.write("`Next <" + self.nextdocfilename + ">`_ ")
+            os.write(fd, "`Next <" + self.nextdocfilename + ">`_ ")
 
-        filehandle.write("\n\n---------------\n\n")
+        os.write(fd, "\n\n---------------\n\n")
         
-        autodoc.write(self, filehandle, titles)
+        autodoc.write(self, fd, titles)
 
-    def write_xref_string(self, filehandle, name):
-        filehandle.write("`%s <%s>`_ " %(name, name.lower()) )
+    def write_xref_string(self, fd, name):
+        os.write(fd, "`%s <%s>`_ " %(name, name.lower()) )
 
 
 class libautodoc(autodoc):
@@ -377,7 +391,7 @@ class libautodoc(autodoc):
                 self.titles["SYNOPSIS"] = syn
             #else => use normal text autodoc format
 
-    def write(self, filehandle, titles):
+    def write(self, fd, titles):
         """Write autodoc to file.
         
         Arguments:
@@ -387,10 +401,10 @@ class libautodoc(autodoc):
                         Write them in the given capitalization.
         """
 
-        filehandle.write(self.docname + "\n")
-        filehandle.write("=" * len(self.docname) + "\n\n")
-        autodoc.write(self, filehandle, titles)
-        filehandle.write("\n")
+        os.write(fd, self.docname + "\n")
+        os.write(fd, "=" * len(self.docname) + "\n\n")
+        autodoc.write(self, fd, titles)
+        os.write(fd, "\n")
 
 
 class hiddautodoc(autodoc):
@@ -415,7 +429,7 @@ class hiddautodoc(autodoc):
             raise ValueError("docname is empty")
         self.docfilename = self.docname.lower()
 
-    def write(self, filehandle, titles):
+    def write(self, fd, titles):
         """Write autodoc elements to file.
         
         Arguments:
@@ -426,10 +440,10 @@ class hiddautodoc(autodoc):
 
         """
 
-        filehandle.write(self.docname + "\n")
-        filehandle.write("=" * len(self.docname) + "\n\n")
-        autodoc.write(self, filehandle, titles)
-        filehandle.write("\n")
+        os.write(fd, self.docname + "\n")
+        os.write(fd, "=" * len(self.docname) + "\n\n")
+        autodoc.write(self, fd, titles)
+        os.write(fd, "\n")
 
 
 class shelldoclist:
@@ -473,7 +487,7 @@ class shelldoclist:
             if docnr<len(self.doclist) - 1:
                 self.doclist[docnr].nextdocfilename = self.doclist[docnr + 1].docfilename
 
-    def write_index(self, filehandle, targetdir):
+    def write_index(self, fd, targetdir):
         """Write index file.
         
         Arguments:
@@ -483,17 +497,17 @@ class shelldoclist:
         """
         
         print "Creating index file"
-        filehandle.write(".. This document is automatically generated. Don't edit it!\n\n")
-        filehandle.write("==============\n")
-        filehandle.write("Shell Commands\n")
-        filehandle.write("==============\n\n")
-        filehandle.write("+ `Introduction <introduction>`_\n")
-        filehandle.write("+ `Scripts <scripts>`_\n\n")
+        os.write(fd, ".. This document is automatically generated. Don't edit it!\n\n")
+        os.write(fd, "==============\n")
+        os.write(fd, "Shell Commands\n")
+        os.write(fd, "==============\n\n")
+        os.write(fd, "+ `Introduction <introduction>`_\n")
+        os.write(fd, "+ `Scripts <scripts>`_\n\n")
 
-        filehandle.write("Commands\n")
-        filehandle.write("--------\n")
+        os.write(fd, "Commands\n")
+        os.write(fd, "--------\n")
 
-        write_index(filehandle, targetdir)
+        write_index(fd, targetdir)
 
     
     def write(self, targetdir, titles):
@@ -511,15 +525,19 @@ class shelldoclist:
         for doc in self.doclist:
             filename = os.path.join(targetdir, doc.docfilename + ".en")
             print "Writing to file", filename
-            filehandle = open(filename, "w")
-            doc.write(filehandle, titles)
-            doc.write_xref(filehandle, ".", "../../developers/autodocs", "../../developers/headerfiles")
-            filehandle.close()
+            (tempfd, tempfilename) = tempfile.mkstemp(suffix='adoc', text=True)
+            doc.write(tempfd, titles)
+            doc.write_xref(tempfd, ".", "../../developers/autodocs", "../../developers/headerfiles")
+            os.close(tempfd)
+            move_if_changed(tempfilename, filename)
         
         # create index page
-        filehandle = open(os.path.join(targetdir, "index.en"), "w")
-        self.write_index(filehandle, targetdir)
-        filehandle.close()
+        filename = os.path.join(targetdir, "index.en")
+        print "Writing to file", filename
+        (tempfd, tempfilename) = tempfile.mkstemp(suffix='adoc', text=True)
+        self.write_index(tempfd, targetdir)
+        os.close(tempfd)
+        move_if_changed(tempfilename, filename)
 
 
 class libdoclist:
@@ -581,37 +599,38 @@ class libdoclist:
         if len(self.doclist) > 0:
             filename = os.path.join(targetdir, self.docfilename + ".en")
             print "Writing to file", filename
-            filehandle = open(filename, "w")
+            (tempfd, tempfilename) = tempfile.mkstemp(suffix='adoc', text=True)
 
             #create header
             underline = "=" * len(self.docfilename)
-            filehandle.write(underline + "\n")
-            filehandle.write(self.docfilename + "\n")
-            filehandle.write(underline + "\n\n")
+            os.write(tempfd, underline + "\n")
+            os.write(tempfd, self.docfilename + "\n")
+            os.write(tempfd, underline + "\n\n")
 
-            filehandle.write(".. This document is automatically generated. Don't edit it!\n\n")
-            filehandle.write("`Index <index>`_\n\n")
-            filehandle.write("----------\n\n")
+            os.write(tempfd, ".. This document is automatically generated. Don't edit it!\n\n")
+            os.write(tempfd, "`Index <index>`_\n\n")
+            os.write(tempfd, "----------\n\n")
 
             # create toc
             tablesep = (("=" * 39) + " ") * 4
-            filehandle.write(tablesep + "\n")
+            os.write(tempfd, tablesep + "\n")
             for docnr in range(len(self.doclist)):
                 tocname = "`" + self.doclist[docnr].docname + "`_"
                 tocname = tocname.ljust(40)
-                filehandle.write(tocname)
+                os.write(tempfd, tocname)
                 if (docnr + 1) % 4 == 0:
-                    filehandle.write("\n")
-            filehandle.write("\n" + tablesep)
-            filehandle.write("\n\n-----------\n\n")
+                    os.write(tempfd, "\n")
+            os.write(tempfd, "\n" + tablesep)
+            os.write(tempfd, "\n\n-----------\n\n")
      
             for doc in self.doclist:
-                doc.write(filehandle, titles)
-                doc.write_xref(filehandle, "../../users/shell", ".", "../headerfiles")
+                doc.write(tempfd, titles)
+                doc.write_xref(tempfd, "../../users/shell", ".", "../headerfiles")
                 # write transition
                 if doc is not self.doclist[-1]:
-                    filehandle.write("----------\n\n")
-            filehandle.close()
+                    os.write(tempfd, "----------\n\n")
+            os.close(tempfd)
+            move_if_changed(tempfilename, filename)
 
 
 class appsdoclist(shelldoclist):
@@ -620,7 +639,7 @@ class appsdoclist(shelldoclist):
     Handles the autodocs of a single directory.
     """
 
-    def write_index(self, filehandle, targetdir):
+    def write_index(self, fd, targetdir):
         """Write index file.
         
         Arguments:
@@ -630,14 +649,11 @@ class appsdoclist(shelldoclist):
         """
         
         # create index page
-        filehandle = open(os.path.join(targetdir, "index.en"), "w")
-        print "Creating index file"
-        filehandle.write(".. This document is automatically generated. Don't edit it!\n\n")
-        filehandle.write("==============\n")
-        filehandle.write("Applications\n")
-        filehandle.write("==============\n\n")
-        write_index(filehandle, targetdir)
-        filehandle.close()
+        os.write(fd, ".. This document is automatically generated. Don't edit it!\n\n")
+        os.write(fd, "==============\n")
+        os.write(fd, "Applications\n")
+        os.write(fd, "==============\n\n")
+        write_index(fd, targetdir)
 
 
 class hidddoclist:
@@ -709,51 +725,52 @@ class hidddoclist:
         if len(self.doclist) > 0:
             filename = os.path.join(targetdir, self.docfilename + ".en")
             print "Writing to file", filename
-            filehandle = open(filename, "w")
+            (tempfd, tempfilename) = tempfile.mkstemp(suffix='adoc', text=True)
 
             # create header
             underline = "=" * len(self.docfilename)
-            filehandle.write(underline + "\n")
-            filehandle.write(self.docfilename + "\n")
-            filehandle.write(underline + "\n\n")
+            os.write(tempfd, underline + "\n")
+            os.write(tempfd, self.docfilename + "\n")
+            os.write(tempfd, underline + "\n\n")
 
-            filehandle.write(".. This document is automatically generated. Don't edit it!\n\n")
-            filehandle.write("`Index <index>`_\n\n")
-            filehandle.write("----------\n\n")
+            os.write(tempfd, ".. This document is automatically generated. Don't edit it!\n\n")
+            os.write(tempfd, "`Index <index>`_\n\n")
+            os.write(tempfd, "----------\n\n")
 
             # create list of classes
             if len(self.doclist) > 1: # only when more than one class exists
-                filehandle.write("Classes\n-------\n\n")
+                os.write(tempfd, "Classes\n-------\n\n")
                 for classname, doclist in self.doclist.iteritems():
-                    filehandle.write("+ `" + classname + "`_\n")
-                filehandle.write("\n----------\n\n")
+                    os.write(tempfd, "+ `" + classname + "`_\n")
+                os.write(tempfd, "\n----------\n\n")
 
             for classname, doclist in self.doclist.iteritems():
                 if len(self.doclist) > 1:
-                    filehandle.write(classname + "\n" + len(classname) * "-" + "\n\n")
+                    os.write(tempfd, classname + "\n" + len(classname) * "-" + "\n\n")
  
                 # create toc
                 tablesep = (("=" * 42) + " ") * 4
-                filehandle.write(tablesep + "\n")
+                os.write(tempfd, tablesep + "\n")
                 for docnr in range(len(doclist)):
                     tocname = "`" + doclist[docnr].docname + "`_"
                     tocname = tocname.ljust(43)
-                    filehandle.write(tocname)
+                    os.write(tempfd, tocname)
                     if (docnr + 1) % 4 == 0:
-                        filehandle.write("\n")
-                filehandle.write("\n" + tablesep)
-                filehandle.write("\n\n-----------\n\n")
+                        os.write(tempfd, "\n")
+                os.write(tempfd, "\n" + tablesep)
+                os.write(tempfd, "\n\n-----------\n\n")
 
                 for doc in doclist:
-                    doc.write(filehandle, titles)
-                    doc.write_xref(filehandle, "../../users/shell", ".", "../headerfiles")
+                    doc.write(tempfd, titles)
+                    doc.write_xref(tempfd, "../../users/shell", ".", "../headerfiles")
                     # write transition
                     if doc is not doclist[-1]: # not last entry
-                        filehandle.write("----------\n\n")
-            filehandle.close()
+                        os.write(tempfd, "----------\n\n")
+            os.close(tempfd)
+            move_if_changed(tempfilename, filename)
 
 
-def write_index(filehandle, targetdir):
+def write_index(fd, targetdir):
     """Append directory listing to index file
     
     Arguments:
@@ -766,21 +783,20 @@ def write_index(filehandle, targetdir):
     files.sort()
 
     tablesep = (("=" * 49) + " ") * 5
-    filehandle.write(tablesep + "\n")
+    os.write(fd, tablesep + "\n")
     docnr = 1
     for doc in files:
         if doc[-3:] == ".en" and doc[:5] != "index" and doc != ".svn" and doc != "scripts" and doc[:12] != "introduction":
             docname = doc[:-3]
             tocname = "`%s <%s>`_" %(docname, docname)
             tocname = tocname.ljust(50)
-            filehandle.write(tocname)
+            os.write(fd, tocname)
             if (docnr) % 5 == 0:
-                filehandle.write("\n")
+                os.write(fd, "\n")
             docnr = docnr + 1
-    filehandle.write("\n" + tablesep + "\n")
+    os.write(fd, "\n" + tablesep + "\n")
 
 
-    
 def create_module_docs():
     """Create the module docs.
     """
@@ -826,16 +842,19 @@ def create_module_docs():
     #hidddocs.write(targetdir, module_titles)
 
     # print index file
-    filehandle = open(os.path.join(targetdir, "index.en"), "w")
-    print "Creating index.en"
-    filehandle.write("======================\n")
-    filehandle.write("Autodocs for Modules\n")
-    filehandle.write("======================\n\n")
-    filehandle.write(".. This document is automatically generated. Don't edit it!\n\n")
+    filename = os.path.join(targetdir, "index.en")
+    print "Writing to file", filename
+    (tempfd, tempfilename) = tempfile.mkstemp(suffix='adoc', text=True)
+    os.write(tempfd, "======================\n")
+    os.write(tempfd, "Autodocs for Modules\n")
+    os.write(tempfd, "======================\n\n")
+    os.write(tempfd, ".. This document is automatically generated. Don't edit it!\n\n")
 
-    write_index(filehandle, targetdir)
-    filehandle.close()
+    write_index(tempfd, targetdir)
+    os.close(tempfd)
+    move_if_changed(tempfilename, filename)
     print "Done"
+
 
 def create_lib_docs_dir(srcdir, targetdir, titles):
     """Scan whole parent directory.
