@@ -96,7 +96,7 @@ xref_kind_any = 5
 
 def move_if_changed(tmpfilename, targetfilename):
     if os.path.exists(targetfilename):
-        if not filecmp.cmp(tmpfilename, targetfilename):
+        if not filecmp.cmp(tmpfilename, targetfilename, shallow=False):
             print tmpfilename, "moved to", targetfilename
             shutil.move(tmpfilename, targetfilename)
             return
