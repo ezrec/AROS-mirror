@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-1 -*-
-# Copyright © 2008-2010, The AROS Development Team. All rights reserved.
+# Copyright © 2008-2019, The AROS Development Team. All rights reserved.
 # $Id$
 
 
@@ -21,7 +21,7 @@ AROS
         scripts
 ...
 
-If you have them in another directory the variable "topdir" can be adjusted.
+If you have them in another directory the variable "TOPDIR" can be adjusted.
 If you use a relative path take care that the script is called by the main build script
 from one directory level above.
 """
@@ -40,10 +40,10 @@ import shutil
 import filecmp
 
 # Relative path from the main build script to the root of the AROS source
-topdir = ".."
+TOPDIR = ".."
 
 # Regex for autodoc block (without surrounding comments)
-ad_regx = re.compile(r"""
+AD_REGX = re.compile(r"""
 ^/\*{6,}
 (
 .*?
@@ -54,22 +54,22 @@ ad_regx = re.compile(r"""
 """, re.VERBOSE | re.MULTILINE | re.DOTALL)
 
 # Regex for a title
-titles_regx = re.compile(r"""
+TITLES_REGX = re.compile(r"""
 ^[/\*\s]{4,4}
 (NAME|FORMAT|SYNOPSIS|LOCATION|FUNCTION|INPUTS|TAGS|RESULT|EXAMPLE|NOTES|BUGS|SEE\ ALSO|INTERNALS|HISTORY|TEMPLATE)[/\*\s]*?$
 """, re.VERBOSE)
 
 # Regex for AROS library functions
-libfunc_regx = re.compile(r'AROS_.*\(\s*(.*?)\s*\,\s*(.*?)\s*\,')
+LIBFUNC_REGX = re.compile(r'AROS_.*\(\s*(.*?)\s*\,\s*(.*?)\s*\,')
 
 # Regex for C library functions
-cfunc_regx = re.compile(r"^\s*(.*?)(\w*)\s*\([\w,()]*$", re.MULTILINE)
+CFUNC_REGX = re.compile(r"^\s*(.*?)(\w*)\s*\([\w,()]*$", re.MULTILINE)
 
 # Regex for splitting a block by comma and \n
-split_regx = re.compile(r"[\n,]+", re.MULTILINE)
+SPLIT_REGX = re.compile(r"[\n,]+", re.MULTILINE)
 
 # Regex for parsing a line of "see also"
-xref_regx = re.compile(r"""
+XREF_REGX = re.compile(r"""
 ^
 \s*<*
 (
@@ -87,31 +87,33 @@ xref_regx = re.compile(r"""
 $
 """, re.VERBOSE | re.MULTILINE)
 
-xref_kind_function = 1
-xref_kind_localfunction = 2
-xref_kind_header = 3
-xref_kind_string = 4
-xref_kind_any = 5
+XREF_KIND_FUNCTION = 1
+XREF_KIND_LOCALFUNCTION = 2
+XREF_KIND_HEADER = 3
+XREF_KIND_STRING = 4
+XREF_KIND_ANY = 5
 
 
 def move_if_changed(tmpfilename, targetfilename):
+    """Move the tempfile to the targetfile only if it differs
+    """
     if os.path.exists(targetfilename):
         if not filecmp.cmp(tmpfilename, targetfilename, shallow=False):
             print tmpfilename, "moved to", targetfilename
             shutil.move(tmpfilename, targetfilename)
             return
-    
-    print tmpfilename, "removed"            
+
+    print tmpfilename, "removed"
     os.remove(tmpfilename)
 
 
-class autodoc:
+class AutoDoc(object):
     """ Autodoc base class.
-    
+
     Subclasses must set the elements
     docname (function or command name e.g. "Draw") and docfilename (lower case docname)
     """
-    
+
     def __init__(self, content):
         """Constructor. Reads and parses autodoc string.
 
@@ -119,30 +121,30 @@ class autodoc:
 
         content - String of autodoc text chunk without sourrounding comment lines
         """
-        
+
         self.titles = {} # dict for each title
         self.docname = "" # function or command name
         self.docfilename = "" # filename without ".en"
 
         current_title = None
         for line in content.splitlines():
-            match = titles_regx.match(line)
+            match = TITLES_REGX.match(line)
             if match:
                 current_title = match.group(1)
                 self.titles[current_title] = ""
             elif current_title:
                 self.titles[current_title] += (" " + line.expandtabs())[4:] + "\n"
-        
+
         # check for empty chapters, because we don't want to print them
         for title, content in self.titles.iteritems():
             if content.strip() == "":
                 self.titles[title] = ""
-        
+
         # parse "see also"
         if self.titles.has_key("SEE ALSO"):
             self.titles["XREF"] = []
-            for ref in split_regx.split(self.titles["SEE ALSO"]):
-                xref = xref_regx.match(ref)
+            for ref in SPLIT_REGX.split(self.titles["SEE ALSO"]):
+                xref = XREF_REGX.match(ref)
                 if xref:
                     libname = xref.group('libname')
                     funcname = xref.group('funcname')
@@ -153,98 +155,108 @@ class autodoc:
                     # check for allowed combinations
                     if libname and funcname and not localfuncname and not path and not command and not header:
                         # libname + funcname
-                        self.titles["XREF"].append( (xref_kind_function, libname, funcname) )
+                        self.titles["XREF"].append((XREF_KIND_FUNCTION, libname, funcname))
                     elif not libname and not funcname and localfuncname and not path and not command and not header:
                         # localfuncname
-                        self.titles["XREF"].append( (xref_kind_localfunction, localfuncname, "") )
+                        self.titles["XREF"].append((XREF_KIND_LOCALFUNCTION, localfuncname, ""))
                     elif not libname and not funcname and not localfuncname and path and not command and not header:
                         # path
-                        self.titles["XREF"].append( (xref_kind_any, path, "") )
+                        self.titles["XREF"].append((XREF_KIND_ANY, path, ""))
                     elif not libname and not funcname and not localfuncname and not path and command and not header:
                         # command
-                        self.titles["XREF"].append( (xref_kind_string, command, "") )
+                        self.titles["XREF"].append((XREF_KIND_STRING, command, ""))
                     elif not libname and not funcname and not localfuncname and not path and not command and header:
                         # header
-                        self.titles["XREF"].append( (xref_kind_header, header, "") )
+                        self.titles["XREF"].append((XREF_KIND_HEADER, header, ""))
                     else:
                         print "*" * 20
                         print self.titles["SEE ALSO"]
                         raise ValueError("XREF parsing error")
-        
+
     def __cmp__(self, other):
         """Compare function for sorting by docfilename.
         """
-        
+
         return cmp(self.docfilename, other.docfilename)
 
-    def write(self, fd, titles):
+    def write(self, fdesc, titles):
         """Write autodoc elements to file.
-        
+
         Arguments:
-        
+
         filehandle - filehandle of a file to write the autodoc in
         titles - what titles (e.g. Synopsis, Note) should be printed
         """
-        
+
         for title in titles:
             title_key = title.upper()
             if title_key != "SEE ALSO" and self.titles.has_key(title_key):
                 lines = self.titles[title_key]
                 if len(lines) > 0:
-                    os.write(fd, title + "\n")
-                    os.write(fd, "~" * len(title) + "\n")
-                    os.write(fd, "::\n\n")
-                    os.write(fd, lines)
-                    os.write(fd, "\n")
+                    os.write(fdesc, title + "\n")
+                    os.write(fdesc, "~" * len(title) + "\n")
+                    os.write(fdesc, "::\n\n")
+                    os.write(fdesc, lines)
+                    os.write(fdesc, "\n")
 
-    def write_xref(self, fd, path_to_shell, path_to_lib, path_to_header):
+    def write_xref(self, fdesc, path_to_lib, path_to_header):
         """Write xrefs ('see also') to file.
-        
+
         Arguments:
-        
+
         filehandle - filehandle of a file to write the autodoc in
         path_to_shell - relative path from target document to directory with Shell command documents
         path_to_lib - relative path from target document to directory with library documents
         path_to_header - relative path from target document to directory with header files
         """
-        
+
         if self.titles.has_key("XREF"):
             if len(self.titles["XREF"]) > 0:
-                os.write(fd, "See also\n~~~~~~~~\n\n")
+                os.write(fdesc, "See also\n~~~~~~~~\n\n")
                 for kind, name1, name2 in self.titles["XREF"]:
-                    if kind == xref_kind_function:
-                        self.write_xref_function(fd, name1, name2, path_to_lib)
-                    elif kind == xref_kind_localfunction:
-                        self.write_xref_localfunction(fd, name1)
-                    elif kind == xref_kind_any:
-                        self.write_xref_any(fd, name1)
-                    elif kind == xref_kind_string:
-                        self.write_xref_string(fd, name1)
-                    elif kind == xref_kind_header:
-                        self.write_xref_header(fd, name1, path_to_header)
-                os.write(fd, "\n\n")
+                    if kind == XREF_KIND_FUNCTION:
+                        self.write_xref_function(fdesc, name1, name2, path_to_lib)
+                    elif kind == XREF_KIND_LOCALFUNCTION:
+                        self.write_xref_localfunction(fdesc, name1)
+                    elif kind == XREF_KIND_ANY:
+                        self.write_xref_any(fdesc, name1)
+                    elif kind == XREF_KIND_STRING:
+                        self.write_xref_string(fdesc, name1)
+                    elif kind == XREF_KIND_HEADER:
+                        self.write_xref_header(fdesc, name1, path_to_header)
+                os.write(fdesc, "\n\n")
 
-    def write_xref_function(self, fd, libname, funcname, path_to_lib):
-        os.write(fd, "`%s.library/%s() <%s/%s#%s>`_ "
-                        %(libname, funcname, path_to_lib, libname, funcname.lower()) )
+    def write_xref_function(self, fdesc, libname, funcname, path_to_lib):
+        """ Write XREF of a function
+        """
+        os.write(fdesc, "`%s.library/%s() <%s/%s#%s>`_ "
+                 %(libname, funcname, path_to_lib, libname, funcname.lower()))
 
-    def write_xref_localfunction(self, fd, funcname):
-        os.write(fd, "`%s()`_ " %(funcname) )
+    def write_xref_localfunction(self, fdesc, funcname):
+        """ Write XREF of a local
+        """
+        os.write(fdesc, "`%s()`_ " %(funcname))
 
-    def write_xref_header(self, fd, name, path):
-        os.write(fd, "`%s <%s/%s>`_ " %(name, path, name) )
-    
-    def write_xref_string(self, fd, name):
-        os.write(fd, "`%s`_ " %(name) )
+    def write_xref_header(self, fdesc, name, path):
+        """ Write XREF of a header file
+        """
+        os.write(fdesc, "`%s <%s/%s>`_ " %(name, path, name))
 
-    def write_xref_any(self, fd, name):
-        os.write(fd, "%s " %name)                  
+    def write_xref_string(self, fdesc, name):
+        """ Write XREF of a string
+        """
+        os.write(fdesc, "`%s`_ " %(name))
+
+    def write_xref_any(self, fdesc, name):
+        """ Write XREF of a a string without a link
+        """
+        os.write(fdesc, "%s " %name)
 
 
-class shellautodoc(autodoc):
+class ShellAutoDoc(AutoDoc):
     """Autodoc class for Shell commands and applications.
     """
-    
+
     def __init__(self, content):
         """Constructor. Reads and parses autodoc string.
 
@@ -253,7 +265,7 @@ class shellautodoc(autodoc):
         content - String of autodoc text chunk without sourrounding comment lines
         """
 
-        autodoc.__init__(self, content)
+        AutoDoc.__init__(self, content)
         self.prevdocfilename = ""
         self.nextdocfilename = ""
 
@@ -263,39 +275,39 @@ class shellautodoc(autodoc):
             raise ValueError("docname is empty")
         self.docfilename = self.docname.lower()
 
-    def write(self, fd, titles):
+    def write(self, fdesc, titles):
         """Write autodoc elements to file.
-        
+
         Arguments:
-        
+
         filehandle -    filehandle of a file to write the autodoc in
         titles -        what titles (e.g. Synopsis, Note) should be printed.
                         Write them in the given capitalization.
 
         """
 
-        underline="=" * len(self.docname) + "\n"
-        os.write(fd, underline)
-        os.write(fd, self.docname + "\n")
-        os.write(fd, underline + "\n")
+        underline = "=" * len(self.docname) + "\n"
+        os.write(fdesc, underline)
+        os.write(fdesc, self.docname + "\n")
+        os.write(fdesc, underline + "\n")
 
-        os.write(fd, ".. This document is automatically generated. Don't edit it!\n\n")
+        os.write(fdesc, ".. This document is automatically generated. Don't edit it!\n\n")
 
-        os.write(fd, "`Index <index>`_ ")
+        os.write(fdesc, "`Index <index>`_ ")
         if self.prevdocfilename:
-            os.write(fd, "`Prev <" + self.prevdocfilename + ">`_ ")
+            os.write(fdesc, "`Prev <" + self.prevdocfilename + ">`_ ")
         if self.nextdocfilename:
-            os.write(fd, "`Next <" + self.nextdocfilename + ">`_ ")
+            os.write(fdesc, "`Next <" + self.nextdocfilename + ">`_ ")
 
-        os.write(fd, "\n\n---------------\n\n")
-        
-        autodoc.write(self, fd, titles)
+        os.write(fdesc, "\n\n---------------\n\n")
 
-    def write_xref_string(self, fd, name):
-        os.write(fd, "`%s <%s>`_ " %(name, name.lower()) )
+        AutoDoc.write(self, fdesc, titles)
+
+    def write_xref_string(self, fdesc, name):
+        os.write(fdesc, "`%s <%s>`_ " %(name, name.lower()))
 
 
-class libautodoc(autodoc):
+class LibAutoDoc(AutoDoc):
     """Autodoc class for library functions (shared and static).
     """
 
@@ -307,11 +319,11 @@ class libautodoc(autodoc):
         content - String of autodoc text chunk without sourrounding comment lines
         """
 
-        autodoc.__init__(self, content)
+        AutoDoc.__init__(self, content)
         self.rettype = ""
         self.parameters = []
 
-        if (not "NAME" in self.titles):
+        if "NAME" not in self.titles:
             print content
             raise ValueError("Field 'NAME' is missing")
         self.docname = self.titles["NAME"].strip()
@@ -321,17 +333,17 @@ class libautodoc(autodoc):
         self.docfilename = self.docname.lower()
 
         # search for function name
-        m = libfunc_regx.search(self.docname)
-        if m:
+        match = LIBFUNC_REGX.search(self.docname)
+        if match:
             # AROS lib function
-            funcname = m.group(2)
+            funcname = match.group(2)
             self.docname = funcname + "()"
-            self.rettype = m.group(1)
+            self.rettype = match.group(1)
             self.docfilename = self.docname.lower()
 
             #search for parameter/type
             if self.titles.has_key("SYNOPSIS"):
-                for par in libfunc_regx.findall(self.titles["SYNOPSIS"]):
+                for par in LIBFUNC_REGX.findall(self.titles["SYNOPSIS"]):
                     self.parameters.append(par)
 
             # create new Synopsis
@@ -346,7 +358,7 @@ class libautodoc(autodoc):
                         syn += " );\n"
                     else:
                         syn += ",\n"
-            
+
             # check for variadic prototype
             varproto = ""
             if len(self.parameters) > 0:
@@ -356,7 +368,7 @@ class libautodoc(autodoc):
                 elif funcname[-7:] == "TagList":
                     # function name ends with "TagList"
                     varproto = funcname[:-7] + "Tags"
-                elif funcname[-4:] == "Args" and (funcname not in ("ReadArgs","FreeArgs")):
+                elif funcname[-4:] == "Args" and (funcname not in ("ReadArgs", "FreeArgs")):
                     # function name ends with "Args"
                     varproto = funcname[:-4]
                 else:
@@ -365,7 +377,7 @@ class libautodoc(autodoc):
                     lastarg = lastarg[0] # type
                     if lastarg[-16:] == "struct TagItem *":
                         varproto = funcname + "Tags"
-                
+
             # append variadic prototype
             if len(varproto) > 0:
                 syn += " \n"
@@ -379,11 +391,11 @@ class libautodoc(autodoc):
 
         else:
             # C function
-            m = cfunc_regx.search(self.docname)
-            if m:
-                funcname = m.group(2)
+            match = CFUNC_REGX.search(self.docname)
+            if match:
+                funcname = match.group(2)
                 self.docname = funcname + "()"
-                self.rettype = m.group(1)
+                self.rettype = match.group(1)
                 self.docfilename = self.docname.lower()
                 # We don't parse the Synopsis but insert the function name at the beginning
                 syn = self.titles["SYNOPSIS"]
@@ -391,26 +403,26 @@ class libautodoc(autodoc):
                 self.titles["SYNOPSIS"] = syn
             #else => use normal text autodoc format
 
-    def write(self, fd, titles):
+    def write(self, fdesc, titles):
         """Write autodoc to file.
-        
+
         Arguments:
-        
+
         filehandle -    filehandle of a file to write the autodoc in
         titles -        what titles (e.g. Synopsis, Note) should be printed.
                         Write them in the given capitalization.
         """
 
-        os.write(fd, self.docname + "\n")
-        os.write(fd, "=" * len(self.docname) + "\n\n")
-        autodoc.write(self, fd, titles)
-        os.write(fd, "\n")
+        os.write(fdesc, self.docname + "\n")
+        os.write(fdesc, "=" * len(self.docname) + "\n\n")
+        AutoDoc.write(self, fdesc, titles)
+        os.write(fdesc, "\n")
 
 
-class hiddautodoc(autodoc):
+class HiddAutoDoc(AutoDoc):
     """Autodoc class for HIDD classes.
     """
-    
+
     def __init__(self, content):
         """Constructor. Reads and parses autodoc string.
 
@@ -419,7 +431,7 @@ class hiddautodoc(autodoc):
         content - String of autodoc text chunk without sourrounding comment lines
         """
 
-        autodoc.__init__(self, content)
+        AutoDoc.__init__(self, content)
         self.prevdocfilename = ""
         self.nextdocfilename = ""
 
@@ -429,26 +441,26 @@ class hiddautodoc(autodoc):
             raise ValueError("docname is empty")
         self.docfilename = self.docname.lower()
 
-    def write(self, fd, titles):
+    def write(self, fdesc, titles):
         """Write autodoc elements to file.
-        
+
         Arguments:
-        
+
         filehandle -    filehandle of a file to write the autodoc in
         titles -        what titles (e.g. Synopsis, Note) should be printed.
                         Write them in the given capitalization.
 
         """
 
-        os.write(fd, self.docname + "\n")
-        os.write(fd, "=" * len(self.docname) + "\n\n")
-        autodoc.write(self, fd, titles)
-        os.write(fd, "\n")
+        os.write(fdesc, self.docname + "\n")
+        os.write(fdesc, "=" * len(self.docname) + "\n\n")
+        AutoDoc.write(self, fdesc, titles)
+        os.write(fdesc, "\n")
 
 
-class shelldoclist:
+class ShellDocList(object):
     """List of Shell autodocs
-    
+
     Handles the Shell autodocs of a single directory.
     """
 
@@ -457,80 +469,80 @@ class shelldoclist:
         """
 
         self.doclist = []
-    
+
     def read(self, srcdir):
         """Scan directory for autodocs
-        
+
         Reads all *.c files of the given directory and scans them for autodocs.
-        
+
         Arguments:
-        
+
         srcdir - directory from which the autodocs should be read
         """
-        
+
         filenames = glob.glob(os.path.join(srcdir, "*.c"))
         for filename in filenames:
             print "Reading from file", filename
             filehandle = open(filename)
             content = filehandle.read() # read whole file
-            for ad_entry in ad_regx.findall(content):
-                ad = shellautodoc(ad_entry)
-                if ad.docname != "":
-                    self.doclist.append(ad)
+            for ad_entry in AD_REGX.findall(content):
+                adoc = ShellAutoDoc(ad_entry)
+                if adoc.docname != "":
+                    self.doclist.append(adoc)
             filehandle.close()
         self.doclist.sort()
 
         # set prev/next fields
         for docnr in range(len(self.doclist)):
-            if docnr>0:
+            if docnr > 0:
                 self.doclist[docnr].prevdocfilename = self.doclist[docnr - 1].docfilename
-            if docnr<len(self.doclist) - 1:
+            if docnr < len(self.doclist) - 1:
                 self.doclist[docnr].nextdocfilename = self.doclist[docnr + 1].docfilename
 
-    def write_index(self, fd, targetdir):
+    def write_index(self, fdesc, targetdir):
         """Write index file.
-        
+
         Arguments:
-        
+
         filehandle - handle of a file where the index (TOC) should be written
         targetdir - directory which should be listed
         """
-        
+
         print "Creating index file"
-        os.write(fd, ".. This document is automatically generated. Don't edit it!\n\n")
-        os.write(fd, "==============\n")
-        os.write(fd, "Shell Commands\n")
-        os.write(fd, "==============\n\n")
-        os.write(fd, "+ `Introduction <introduction>`_\n")
-        os.write(fd, "+ `Scripts <scripts>`_\n\n")
+        os.write(fdesc, ".. This document is automatically generated. Don't edit it!\n\n")
+        os.write(fdesc, "==============\n")
+        os.write(fdesc, "Shell Commands\n")
+        os.write(fdesc, "==============\n\n")
+        os.write(fdesc, "+ `Introduction <introduction>`_\n")
+        os.write(fdesc, "+ `Scripts <scripts>`_\n\n")
 
-        os.write(fd, "Commands\n")
-        os.write(fd, "--------\n")
+        os.write(fdesc, "Commands\n")
+        os.write(fdesc, "--------\n")
 
-        write_index(fd, targetdir)
+        write_index(fdesc, targetdir)
 
-    
+
     def write(self, targetdir, titles):
         """Write autodocs to directory.
-        
+
         Each autodoc will be written in a single file.
-        
+
         Arguments:
-        
+
         targedir -      name of a directory to where autodocs and index should be written
         titles -        what titles (e.g. Synopsis, Note) should be printed.
                         Write them in the given capitalization.
         """
-        
+
         for doc in self.doclist:
             filename = os.path.join(targetdir, doc.docfilename + ".en")
             print "Writing to file", filename
             (tempfd, tempfilename) = tempfile.mkstemp(suffix='adoc', text=True)
             doc.write(tempfd, titles)
-            doc.write_xref(tempfd, ".", "../../developers/autodocs", "../../developers/headerfiles")
+            doc.write_xref(tempfd, "../../developers/autodocs", "../../developers/headerfiles")
             os.close(tempfd)
             move_if_changed(tempfilename, filename)
-        
+
         # create index page
         filename = os.path.join(targetdir, "index.en")
         print "Writing to file", filename
@@ -540,26 +552,26 @@ class shelldoclist:
         move_if_changed(tempfilename, filename)
 
 
-class libdoclist:
+class LibDocList(object):
     """List of autodocs of static and shared libraries.
-    
+
     Handles the autodocs of a single directory.
     """
 
     def __init__(self):
         """Constructor.
         """
-        
+
         self.doclist = []
         self.docfilename = ""
 
     def read(self, srcdir, name=None):
         """Scan directory for autodocs.
-        
+
         Reads all *.c files of the given directory and scans them for autodocs.
-        
+
         Arguments:
-        
+
         srcdir - directory from which the autodocs should be read
         name -  Name of the document. If no name is given the rightmost part of
                 srcdir will be used. This name will be later used for storing the file.
@@ -569,28 +581,28 @@ class libdoclist:
             self.docfilename = name
         else:
             self.docfilename = os.path.basename(srcdir) # rightmost part of the path
-        
+
         cfiles = os.listdir(srcdir)
-        for file in cfiles:
-            if file[-2:]==".c":
-                filename = os.path.join(srcdir, file)
+        for infile in cfiles:
+            if infile[-2:] == ".c":
+                filename = os.path.join(srcdir, infile)
                 print "Reading from file", filename
                 filehandle = open(filename)
                 content = filehandle.read() # read whole file
-                for ad_entry in ad_regx.findall(content):
-                    ad = libautodoc(ad_entry)
-                    if ad.docname != "":
-                        self.doclist.append(ad)
+                for ad_entry in AD_REGX.findall(content):
+                    adoc = LibAutoDoc(ad_entry)
+                    if adoc.docname != "":
+                        self.doclist.append(adoc)
                 filehandle.close()
         self.doclist.sort()
 
     def write(self, targetdir, titles):
         """Write autodocs to directory.
-        
+
         All autodocs will be written in a single file.
-        
+
         Arguments:
-        
+
         targedir -      name of a directory to where autodocs and index should be written
         titles -        what titles (e.g. Synopsis, Note) should be printed.
                         Write them in the given capitalization.
@@ -622,10 +634,10 @@ class libdoclist:
                     os.write(tempfd, "\n")
             os.write(tempfd, "\n" + tablesep)
             os.write(tempfd, "\n\n-----------\n\n")
-     
+
             for doc in self.doclist:
                 doc.write(tempfd, titles)
-                doc.write_xref(tempfd, "../../users/shell", ".", "../headerfiles")
+                doc.write_xref(tempfd, ".", "../headerfiles")
                 # write transition
                 if doc is not self.doclist[-1]:
                     os.write(tempfd, "----------\n\n")
@@ -633,49 +645,49 @@ class libdoclist:
             move_if_changed(tempfilename, filename)
 
 
-class appsdoclist(shelldoclist):
+class AppsDocList(ShellDocList):
     """List of autodocs of applications.
-    
+
     Handles the autodocs of a single directory.
     """
 
-    def write_index(self, fd, targetdir):
+    def write_index(self, fdesc, targetdir):
         """Write index file.
-        
+
         Arguments:
-        
+
         filehandle - handle of a file where the index (TOC) should be written.
         targetdir - directory which should be listed
         """
-        
+
         # create index page
-        os.write(fd, ".. This document is automatically generated. Don't edit it!\n\n")
-        os.write(fd, "==============\n")
-        os.write(fd, "Applications\n")
-        os.write(fd, "==============\n\n")
-        write_index(fd, targetdir)
+        os.write(fdesc, ".. This document is automatically generated. Don't edit it!\n\n")
+        os.write(fdesc, "==============\n")
+        os.write(fdesc, "Applications\n")
+        os.write(fdesc, "==============\n\n")
+        write_index(fdesc, targetdir)
 
 
-class hidddoclist:
+class HiddDocList(object):
     """List of autodocs of HIDD classes.
-    
+
     Handles the autodocs of a single directory.
     """
 
     def __init__(self):
         """Constructor.
         """
-        
+
         self.doclist = {} # key is classname, content is list of documents per class
         self.docfilename = ""
 
     def read(self, srcdir, name=None):
         """Scan directory for autodocs.
-        
+
         Reads all *.c files of the given directory and scans them for autodocs.
-        
+
         Arguments:
-        
+
         srcdir - directory from which the autodocs should be read
         name -  Name of the document. If no name is given the rightmost part of
                 srcdir will be used. This name will be later used for storing the file.
@@ -685,38 +697,38 @@ class hidddoclist:
             self.docfilename = name
         else:
             self.docfilename = os.path.basename(srcdir) + "_hidd" # rightmost part of the path
-        
+
         cfiles = os.listdir(srcdir)
-        for file in cfiles:
-            if file[-2:]==".c":
-                filename = os.path.join(srcdir, file)
+        for infile in cfiles:
+            if infile[-2:] == ".c":
+                filename = os.path.join(srcdir, infile)
                 print "Reading from file", filename
                 filehandle = open(filename)
                 content = filehandle.read() # read whole file
-                for ad_entry in ad_regx.findall(content):
-                    ad = hiddautodoc(ad_entry)
-                    if ad.docname != "":
-                        if ad.titles.has_key("LOCATION"):
-                            classname = ad.titles["LOCATION"].strip()
+                for ad_entry in AD_REGX.findall(content):
+                    adoc = HiddAutoDoc(ad_entry)
+                    if adoc.docname != "":
+                        if adoc.titles.has_key("LOCATION"):
+                            classname = adoc.titles["LOCATION"].strip()
                             if self.doclist.has_key(classname):
-                                self.doclist[classname].append(ad)
+                                self.doclist[classname].append(adoc)
                             else:
-                                self.doclist[classname] = [ad]    
+                                self.doclist[classname] = [adoc]
                         else:
-                            raise ValueError("'%s' hidd doc has no LOCATION" % (ad.docname))
-                        
+                            raise ValueError("'%s' hidd doc has no LOCATION" % (adoc.docname))
+
                 filehandle.close()
 
-        for k,v in self.doclist.iteritems():
-            v.sort()
+        for _, value in self.doclist.iteritems():
+            value.sort()
 
     def write(self, targetdir, titles):
         """Write autodocs to directory.
-        
+
         All autodocs will be written in a single file.
-        
+
         Arguments:
-        
+
         targedir -      name of a directory to where autodocs and index should be written
         titles -        what titles (e.g. Synopsis, Note) should be printed.
                         Write them in the given capitalization.
@@ -747,7 +759,7 @@ class hidddoclist:
             for classname, doclist in self.doclist.iteritems():
                 if len(self.doclist) > 1:
                     os.write(tempfd, classname + "\n" + len(classname) * "-" + "\n\n")
- 
+
                 # create toc
                 tablesep = (("=" * 42) + " ") * 4
                 os.write(tempfd, tablesep + "\n")
@@ -762,7 +774,7 @@ class hidddoclist:
 
                 for doc in doclist:
                     doc.write(tempfd, titles)
-                    doc.write_xref(tempfd, "../../users/shell", ".", "../headerfiles")
+                    doc.write_xref(tempfd, ".", "../headerfiles")
                     # write transition
                     if doc is not doclist[-1]: # not last entry
                         os.write(tempfd, "----------\n\n")
@@ -770,70 +782,69 @@ class hidddoclist:
             move_if_changed(tempfilename, filename)
 
 
-def write_index(fd, targetdir):
+def write_index(fdesc, targetdir):
     """Append directory listing to index file
-    
+
     Arguments:
-    
+
     filehandle - file where directory listing should be appended
     targedir - directory which should be listed
     """
-        
+
     files = os.listdir(targetdir)
     files.sort()
 
     tablesep = (("=" * 49) + " ") * 5
-    os.write(fd, tablesep + "\n")
+    os.write(fdesc, tablesep + "\n")
     docnr = 1
     for doc in files:
         if doc[-3:] == ".en" and doc[:5] != "index" and doc != ".svn" and doc != "scripts" and doc[:12] != "introduction":
             docname = doc[:-3]
             tocname = "`%s <%s>`_" %(docname, docname)
             tocname = tocname.ljust(50)
-            os.write(fd, tocname)
+            os.write(fdesc, tocname)
             if (docnr) % 5 == 0:
-                os.write(fd, "\n")
+                os.write(fdesc, "\n")
             docnr = docnr + 1
-    os.write(fd, "\n" + tablesep + "\n")
+    os.write(fdesc, "\n" + tablesep + "\n")
 
 
 def create_module_docs():
     """Create the module docs.
     """
-    
-    module_titles = ("Synopsis","Template","Function",
-        "Inputs","Tags", "Result","Example","Notes","Bugs","See also")  # The titles we want
-                                                                        # to be printed
+
+    module_titles = ("Synopsis", "Template", "Function",
+                     "Inputs", "Tags", "Result", "Example", "Notes", "Bugs", "See also")  # The titles we want
+                                                                                          # to be printed
     targetdir = os.path.join("documentation", "developers", "autodocs")
-    srcdirs = ( os.path.join(topdir, "rom"),
-                os.path.join(topdir, "rom", "devs"),
-                os.path.join(topdir, "arch", "all-hosted"),
-                os.path.join(topdir, "arch", "all-pc"),
-                os.path.join(topdir, "arch", "m68k-amiga"),
-                os.path.join(topdir, "workbench", "libs"),
-                os.path.join(topdir, "workbench/libs/mesa"))
-    for dir in srcdirs:
-        create_lib_docs_dir(dir, targetdir, module_titles)
+    srcdirs = (os.path.join(TOPDIR, "rom"),
+               os.path.join(TOPDIR, "rom", "devs"),
+               os.path.join(TOPDIR, "arch", "all-hosted"),
+               os.path.join(TOPDIR, "arch", "all-pc"),
+               os.path.join(TOPDIR, "arch", "m68k-amiga"),
+               os.path.join(TOPDIR, "workbench", "libs"),
+               os.path.join(TOPDIR, "workbench/libs/mesa"))
+    for sdir in srcdirs:
+        create_lib_docs_dir(sdir, targetdir, module_titles)
 
     # add some docs for linker libs in AROS/compiler
-    subdirs = ( os.path.join(topdir, "compiler", "alib"),
-                os.path.join(topdir, "compiler", "arossupport"),
-                os.path.join(topdir, "compiler", "stdc"),
-                os.path.join(topdir, "compiler", "posixc")
-    )
-    
+    subdirs = (os.path.join(TOPDIR, "compiler", "alib"),
+               os.path.join(TOPDIR, "compiler", "arossupport"),
+               os.path.join(TOPDIR, "compiler", "stdc"),
+               os.path.join(TOPDIR, "compiler", "posixc"))
+
     for docpath in subdirs:
-        libdocs = libdoclist()
+        libdocs = LibDocList()
         libdocs.read(docpath)
         libdocs.write(targetdir, module_titles)
 
     # add HIDD docs
-    srcdirs = ( os.path.join(topdir, "rom", "hidds"),
-                os.path.join(topdir, "workbench", "hidds"),
-                os.path.join(topdir, "arch", "all-unix", "hidd"),
-                os.path.join(topdir, "rom", "devs", "ata") )
-    for dir in srcdirs:
-        create_hidd_docs_dir(dir, targetdir, module_titles)
+    srcdirs = (os.path.join(TOPDIR, "rom", "hidds"),
+               os.path.join(TOPDIR, "workbench", "hidds"),
+               os.path.join(TOPDIR, "arch", "all-unix", "hidd"),
+               os.path.join(TOPDIR, "rom", "devs", "ata"))
+    for sdir in srcdirs:
+        create_hidd_docs_dir(sdir, targetdir, module_titles)
 
     # add muimaster classes
     #docpath = os.path.join(topdir, "workbench", "libs", "muimaster", "classes")
@@ -858,85 +869,85 @@ def create_module_docs():
 
 def create_lib_docs_dir(srcdir, targetdir, titles):
     """Scan whole parent directory.
-    
+
     Scans a parent directory like AROS/rom for subdirectories with
     *.c files with autodoc headers.
-    
+
     Arguments:
-    
+
     srcdir -    parent directory of directory with autodocs.
     targetdir - the directory where the resulting ReST files should be stored
     titles -    what titles (e.g. Synopsis, Note) should be printed.
                 Write them in the given capitalization.
     """
-    
+
     subdirs = os.listdir(srcdir)
-    for dir in subdirs: # exec ,graphics etc.
-        docpath = os.path.join(srcdir, dir)
-        if (dir != ".svn") and (dir != "ata") and os.path.isdir(docpath) :
-            libdocs = libdoclist()
+    for sdir in subdirs: # exec ,graphics etc.
+        docpath = os.path.join(srcdir, sdir)
+        if (sdir != ".svn") and (sdir != "ata") and os.path.isdir(docpath):
+            libdocs = LibDocList()
             libdocs.read(docpath)
             libdocs.write(targetdir, titles)
 
 def create_hidd_docs_dir(srcdir, targetdir, titles):
     """Scan whole parent directory.
-    
+
     Scans a parent directory like AROS/rom/hidds for subdirectories with
     *.c files with autodoc headers.
-    
+
     Arguments:
-    
+
     srcdir -    parent directory of directory with autodocs.
     targetdir - the directory where the resulting ReST files should be stored
     titles -    what titles (e.g. Synopsis, Note) should be printed.
                 Write them in the given capitalization.
     """
-    
+
     subdirs = os.listdir(srcdir)
-    for dir in subdirs: # kbd, mouse, graphics etc.
-        docpath = os.path.join(srcdir, dir)
-        if (dir != ".svn") and os.path.isdir(docpath) :
-            hidddocs = hidddoclist()
+    for sdir in subdirs: # kbd, mouse, graphics etc.
+        docpath = os.path.join(srcdir, sdir)
+        if (sdir != ".svn") and os.path.isdir(docpath):
+            hidddocs = HiddDocList()
             hidddocs.read(docpath)
             hidddocs.write(targetdir, titles)
 
 def create_shell_docs():
     """Create the Shell commands docs.
     """
-    
-    srcdirs = ( os.path.join(topdir, "workbench", "c"),
-                os.path.join(topdir, "workbench", "c", "shellcommands"),
-                os.path.join(topdir, "workbench", "c", "Shell"),
-                os.path.join(topdir, "workbench", "c", "R"),
-                os.path.join(topdir, "workbench", "c", "Identify"),
-                os.path.join(topdir, "workbench", "c", "Partition"),
-                os.path.join(topdir, "workbench", "c", "Decoration"),
-                os.path.join(topdir, "workbench", "c", "iprefs") )
+
+    srcdirs = (os.path.join(TOPDIR, "workbench", "c"),
+               os.path.join(TOPDIR, "workbench", "c", "shellcommands"),
+               os.path.join(TOPDIR, "workbench", "c", "Shell"),
+               os.path.join(TOPDIR, "workbench", "c", "R"),
+               os.path.join(TOPDIR, "workbench", "c", "Identify"),
+               os.path.join(TOPDIR, "workbench", "c", "Partition"),
+               os.path.join(TOPDIR, "workbench", "c", "Decoration"),
+               os.path.join(TOPDIR, "workbench", "c", "iprefs"))
     targetdir = os.path.join("documentation", "users", "shell") # relative to main build script
-    shell_titles = ("Name","Format","Template","Synopsis","Location","Function",
-        "Inputs","Tags","Result","Example","Notes","Bugs","See also")  # The titles we want
-                                                                       # to be printed
-    shelldocs = shelldoclist()
-    for dir in srcdirs:
-        shelldocs.read(dir)
+    shell_titles = ("Name", "Format", "Template", "Synopsis", "Location", "Function",
+                    "Inputs", "Tags", "Result", "Example", "Notes", "Bugs", "See also")  # The titles we want
+                                                                                         # to be printed
+    shelldocs = ShellDocList()
+    for sdir in srcdirs:
+        shelldocs.read(sdir)
     shelldocs.write(targetdir, shell_titles)
     print "Done"
 
 def create_apps_docs():
     """Create the application docs.
     """
-    
-    srcdirs = ( os.path.join(topdir, "workbench", "tools", "commodities"),
-                os.path.join(topdir, "workbench", "tools", "WiMP"),
-                os.path.join(topdir, "workbench", "tools") )
-                
+
+    srcdirs = (os.path.join(TOPDIR, "workbench", "tools", "commodities"),
+               os.path.join(TOPDIR, "workbench", "tools", "WiMP"),
+               os.path.join(TOPDIR, "workbench", "tools"))
+
     targetdir = os.path.join("documentation", "users", "applications") # relative to main build script
-    apps_titles = ("Name","Format","Template","Synopsis","Location","Function",
-        "Inputs","Tags","Result","Example","Notes","Bugs","See also")  # The titles we want
-                                                                       # to be printed
-    appsdocs = appsdoclist()
-    for dir in srcdirs:
-        appsdocs.read(dir)
+    apps_titles = ("Name", "Format", "Template", "Synopsis", "Location", "Function",
+                   "Inputs", "Tags", "Result", "Example", "Notes", "Bugs", "See also")  # The titles we want
+                                                                                        # to be printed
+    appsdocs = AppsDocList()
+    for sdir in srcdirs:
+        appsdocs.read(sdir)
     appsdocs.write(targetdir, apps_titles)
     print "Done"
 
