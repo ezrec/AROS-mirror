@@ -2,7 +2,10 @@
 # Copyright © 2002-2012, The AROS Development Team. All rights reserved.
 # $Id$
 
-import os, sys, shutil, glob
+import os
+import sys
+import shutil
+import glob
 
 import db.credits.parse
 import db.credits.format.rest
@@ -23,19 +26,19 @@ import autodoc
 
 # Setup
 DEFAULTLANG= 'en'
-SRCROOT    = os.path.abspath( '.' )
-DSTROOT    = os.path.abspath( '../bin/documentation' )
+SRCROOT    = os.path.abspath('.')
+DSTROOT    = os.path.abspath('../bin/documentation')
 
 TEMPLATE   = 'targets/www/template.html.'
 
 TEMPLATE_DATA = {}
 
 # languages supported by docutils:
-LANGUAGES  = [ 'en', 'de', 'cs', 'el', 'es', 'fi', 'fr', 'it', 'nl', 'pl', 'pt', 'ru', 'sv' ]
+LANGUAGES  = ['en', 'de', 'cs', 'el', 'es', 'fi', 'fr', 'it', 'nl', 'pl', 'pt', 'ru', 'sv']
 # languages not supported by docutils yet (but that we have files written in):
 # 'no'
 # Languages to build (defaults to LANGUAGES):
-languages= []
+languages  = []
 
 
 # altLang
@@ -43,10 +46,10 @@ languages= []
 # Returns the translation of the specified base name into the specified
 # language, if it exists. Otherwise, returns the file name for DEFAULTLANG.
 
-def altLang( base, lang, path='.'):
-    langfile= base +'.' +lang
-    if not(os.path.exists( os.path.join( path, langfile))):
-        langfile= base +'.' +DEFAULTLANG
+def altLang(base, lang, path='.'):
+    langfile = base + '.' + lang
+    if not os.path.exists(os.path.join(path, langfile)):
+        langfile = base + '.' + DEFAULTLANG
 
     return langfile
 
@@ -55,47 +58,48 @@ def altLang( base, lang, path='.'):
 # -------
 # Joins the result of altLang with the specified path.
 
-def pathAltLang( base, lang, path='.'):
-    return  os.path.join( path, altLang( base, lang, path))
+def pathAltLang(base, lang, path='.'):
+    return os.path.join(path, altLang(base, lang, path))
 
 
-def recurse( function, path='.', depth=0 ):
-    for name in os.listdir( path ):
-        name = os.path.join( path, name )
+def recurse(function, path='.', depth=0):
+    for name in os.listdir(path):
+        name = os.path.join(path, name)
 
-        if not ignore( name ):
-            if os.path.isdir( name ):
-                recurse( function, name, depth + 1 )
+        if not ignore(name):
+            if os.path.isdir(name):
+                recurse(function, name, depth + 1)
             else:
-                function( name, depth )
+                function(name, depth)
 
 
-def processPicture( src, depth ):
-    FORMATS = [ 'jpg', 'jpeg', 'png' ]
+def processPicture(src, depth):
+    FORMATS = ['jpg', 'jpeg', 'png']
 
-    extension  = os.path.splitext( src )[1][1:]
-    if extension not in FORMATS: return
+    extension = os.path.splitext(src)[1][1:]
+    if extension not in FORMATS:
+        return
 
-    src     = os.path.normpath( src )
-    dst_abs = os.path.normpath( os.path.join( TRGROOT, src ) )
-    src_abs = os.path.normpath( os.path.join( SRCROOT, src ) )
-    dst_dir = os.path.dirname( dst_abs )
+    src     = os.path.normpath(src)
+    dst_abs = os.path.normpath(os.path.join(TRGROOT, src))
+    src_abs = os.path.normpath(os.path.join(SRCROOT, src))
+    dst_dir = os.path.dirname(dst_abs)
 
-    tn_dst     = makeThumbnailPath( src )
-    tn_dst_abs = os.path.normpath( os.path.join( TRGROOT, tn_dst ) )
-    tn_dst_dir = os.path.dirname( tn_dst_abs )
+    tn_dst     = makeThumbnailPath(src)
+    tn_dst_abs = os.path.normpath(os.path.join(TRGROOT, tn_dst))
+    tn_dst_dir = os.path.dirname(tn_dst_abs)
 
     # Make sure the destination directories exist.
-    makedir( dst_dir )
-    makedir( tn_dst_dir )
+    makedir(dst_dir)
+    makedir(tn_dst_dir)
 
     # Copy the original image over.
-    copy( src_abs, dst_abs )
+    copy(src_abs, dst_abs)
 
     # Create the thumbnail.
-    if newer( [ src_abs ], tn_dst_abs ):
+    if newer([src_abs], tn_dst_abs):
         print '» Thumbnailing', src
-        makeThumbnail( src_abs, tn_dst_abs, (200, 200) )
+        makeThumbnail(src_abs, tn_dst_abs, (200, 200))
 
 
 # makePictures
@@ -103,46 +107,49 @@ def processPicture( src, depth ):
 # Creates picture galleries.
 
 def makePictures():
-    DIRECTORIES = [ 
-        'pictures/developers', 
-        'pictures/screenshots' 
+    DIRECTORIES = [
+        'pictures/developers',
+        'pictures/screenshots'
     ]
 
-    options = [ '--report=none' ]
+    options = ['--report=none']
 
     # First, copy the pictures and generate thumbnails
     for root in DIRECTORIES:
-        recurse( processPicture, root )
+        recurse(processPicture, root)
 
     # Second, create the galleries
     for root in DIRECTORIES:
         for lang in languages:
-            output = convertWWW( pathAltLang( 'index', lang, root ), lang, options )
+            output = convertWWW(pathAltLang('index', lang, root), lang, options)
 
-            names = os.listdir( root )
+            names = os.listdir(root)
             names.sort()
             if root == 'pictures/screenshots':
                 names.reverse()
 
             for name in names:
-                path = os.path.join( root, name )
-                if name == '.svn' or not os.path.isdir( path ): continue
+                path = os.path.join(root, name)
+                if name == '.svn' or not os.path.isdir(path):
+                    continue
 
                 output += '\n<div class="gallerygroup">\n<a name=%s>\n' % name
-                output += convertWWW( pathAltLang( 'overview', lang, path), lang, options )
+                output += convertWWW(pathAltLang('overview', lang, path), lang, options)
 
-                pictureNames = os.listdir( path )
+                pictureNames = os.listdir(path)
                 pictureNames.sort()
                 for pictureName in pictureNames:
-                    picturePath = os.path.join( path, pictureName )
-                    pictureFormat = os.path.splitext( pictureName )[1][1:]
-                    if pictureName == '.svn' or os.path.isdir( picturePath ): continue
-                    if pictureFormat not in [ 'jpg', 'jpeg', 'png' ]: continue
+                    picturePath = os.path.join(path, pictureName)
+                    pictureFormat = os.path.splitext(pictureName)[1][1:]
+                    if pictureName == '.svn' or os.path.isdir(picturePath):
+                        continue
+                    if pictureFormat not in ['jpg', 'jpeg', 'png']:
+                        continue
 
-                    output += makePicture( 
+                    output += makePicture(
                         picturePath,
-                        convertWWW( pathAltLang( os.path.splitext( picturePath )[0], lang), lang, options ),
-                        lang
+                        convertWWW(pathAltLang(os.path.splitext(picturePath)[0], lang),
+                                   lang, options), lang
                     )
 
                 output += '</a>\n</div>\n'
@@ -162,30 +169,28 @@ def makePictures():
 
             filename = 'index.php'
             if lang == DEFAULTLANG:
-                dst = os.path.join( TRGROOT, root )
+                dst = os.path.join(TRGROOT, root)
             else:
-                dst = os.path.join( TRGROOT, lang, root )
-            if not os.path.exists( dst ):
-                makedir( dst )
-            file( 
-		os.path.join( dst, filename ), 'w'
-	    ).write( TEMPLATE_DATA[lang] % strings )
+                dst = os.path.join(TRGROOT, lang, root)
+            if not os.path.exists(dst):
+                makedir(dst)
+            file(os.path.join(dst, filename), 'w').write(TEMPLATE_DATA[lang] % strings)
 
 
 # makeStatus
 # ----------
 # Creates graphs of component implementation status.
 
-def makeStatus( extension = '.php' ):
-    tasks  = db.tasks.parse.parse( file( 'db/status', 'r' ) )
+def makeStatus(extension='.php'):
+    tasks = db.tasks.parse.parse(file('db/status', 'r'))
     for lang in languages:
         dstdir = 'introduction/status'
         if lang == DEFAULTLANG:
-            dstdir = os.path.join( TRGROOT, dstdir )
+            dstdir = os.path.join(TRGROOT, dstdir)
         else:
-            dstdir = os.path.join( TRGROOT, lang, dstdir )
-        makedir( dstdir )
-        db.tasks.format.html.format( tasks, dstdir, TEMPLATE_DATA[lang], lang, extension )
+            dstdir = os.path.join(TRGROOT, lang, dstdir)
+        makedir(dstdir)
+        db.tasks.format.html.format(tasks, dstdir, TEMPLATE_DATA[lang], lang, extension)
 
 
 # makeNews
@@ -194,11 +199,11 @@ def makeStatus( extension = '.php' ):
 # Returns True is files were created or False if no correct news files were found
 
 def makeNews():
-    NEWS_SRC_DIR = os.path.join( SRCROOT, 'news/data' )
-    NEWS_DST_DIR = os.path.join( SRCROOT, 'news/data' )
-    NEWS_SRC_INDX= os.path.join( SRCROOT, 'news/index.' )
-    NEWS_SRC_ARCH= os.path.join( SRCROOT, 'news/archive/')
-    NOOFITEMS=     5
+    NEWS_SRC_DIR = os.path.join(SRCROOT, 'news/data')
+    NEWS_DST_DIR = os.path.join(SRCROOT, 'news/data')
+    NEWS_SRC_INDX= os.path.join(SRCROOT, 'news/index.')
+    NEWS_SRC_ARCH= os.path.join(SRCROOT, 'news/archive/')
+    NOOFITEMS    = 5
 
     news     = {}  # Lists of news, per language, to determine the recent news
     archives = {}  # Lists of news, per year per language, to list news per year
@@ -210,64 +215,64 @@ def makeNews():
         archives[lang] = {}
 
     # Do all the year directories
-    for yeardirname in os.listdir( NEWS_SRC_DIR ):
-        yeardirpath= os.path.join( NEWS_SRC_DIR, yeardirname)
+    for yeardirname in os.listdir(NEWS_SRC_DIR):
+        yeardirpath = os.path.join(NEWS_SRC_DIR, yeardirname)
         for lang in languages:
-            archives[ lang][yeardirname]= list()
+            archives[lang][yeardirname] = list()
 
         # Do all the news item files (originals) in a specific year directory
-        for filename in os.listdir( yeardirpath):
-            date, ext= os.path.splitext( filename)
-            if ext == '.en' and len( date ) == 8 and date.isdigit():
+        for filename in os.listdir(yeardirpath):
+            date, ext = os.path.splitext(filename)
+            if ext == '.en' and len(date) == 8 and date.isdigit():
                 year = date[:4]
                 if year != yeardirname:
-                    print 'Error: News item "' +date +'" found in news year "' +yeardirname +'".'
+                    print 'Error: News item "' + date + '" found in news year "' + yeardirname + '".'
 
                 # Generate a recent news source list and year news source lists for each language
                 for lang in languages:
-                    lang_filepath = os.path.join( yeardirpath, altLang( date, lang, yeardirpath))
-                    news[lang].append( lang_filepath)
-                    archives[lang][year].append( lang_filepath)
+                    lang_filepath = os.path.join(yeardirpath, altLang(date, lang, yeardirpath))
+                    news[lang].append(lang_filepath)
+                    archives[lang][year].append(lang_filepath)
                     # Disadvantage of this approach is that sorting the lists will have to compare entire paths.
 
     # Check whether we actually found any news (we test for DEFAULTLANG, but all news lists have the same length)
-    if not( len( news[ DEFAULTLANG])):
+    if not len(news[DEFAULTLANG]):
         return False
 
     # Generate news and archive ReST files
     for lang in languages:
-        news[lang].sort( reverse= True)
+        news[lang].sort(reverse=True)
         current = news[lang][:NOOFITEMS]
-        _dst = NEWS_SRC_INDX +lang
+        _dst = NEWS_SRC_INDX + lang
 
         # Set up translated title dictionary
         config = ConfigParser()
-        config.read( os.path.join( 'targets/www/template/languages', lang ) )
+        config.read(os.path.join('targets/www/template/languages', lang))
         _T = {}
-        for option in config.options( 'titles' ):
-            _T[option] = config.get( 'titles', option )
+        for option in config.options('titles'):
+            _T[option] = config.get('titles', option)
 
         # Create a recent news page
-        if newer( current, _dst ):
-            output  = file( _dst, 'w' )
-            output.write( titleReST( _T['news']))
+        if newer(current, _dst):
+            output = file(_dst, 'w')
+            output.write(titleReST(_T['news']))
             for filepath in current:
-                output.write( htmlReST( '   <a name="%s"></a>\n' % filepath[-11:-3])) # Not ideal, but at least legal HTML
-                output.write( drctReST( 'include', filepath))
+                output.write(htmlReST('   <a name="%s"></a>\n' % filepath[-11:-3])) # Not ideal, but at least legal HTML
+                output.write(drctReST('include', filepath))
             output.close()
 
         # Create year news pages
         for year in archives[lang].keys():
-            if len( archives[ lang][ year]):
-                archives[lang][year].sort( reverse= True)
-                _dst = os.path.join( NEWS_SRC_ARCH +year +'.' +lang)
+            if len(archives[lang][year]):
+                archives[lang][year].sort(reverse=True)
+                _dst = os.path.join(NEWS_SRC_ARCH + year + '.' + lang)
 
-                if newer( archives[lang][year], _dst ):
-                    output = file( _dst, 'w' )
-                    output.write( titleReST( _T[ 'news-archive-for'] +' ' + year))
+                if newer(archives[lang][year], _dst):
+                    output = file(_dst, 'w')
+                    output.write(titleReST(_T['news-archive-for'] + ' ' + year))
                     for filepath in archives[lang][year]:
-                        output.write( htmlReST( '   <a name="%s"></a>\n' % filepath[-11:-3])) # At least legal HTML
-                        output.write( drctReST( 'include', filepath))
+                        output.write(htmlReST('   <a name="%s"></a>\n' % filepath[-11:-3])) # At least legal HTML
+                        output.write(drctReST('include', filepath))
                     output.close()
 
     return True
@@ -278,19 +283,19 @@ def makeNews():
 # Creates ReST file for credits.
 
 def makeCredits():
-    if (not os.path.exists( 'credits.en' ) ) \
-        or (os.path.getmtime( 'db/credits' ) > os.path.getmtime( 'credits.en' )):
-        CREDITS_DATA = db.credits.format.rest.format( 
-            db.credits.parse.parse( file( 'db/credits', 'r' ) )
+    if (not os.path.exists('credits.en')) \
+        or (os.path.getmtime('db/credits') > os.path.getmtime('credits.en')):
+        CREDITS_DATA = db.credits.format.rest.format(
+            db.credits.parse.parse(file('db/credits', 'r'))
         )
-        file( 'credits.en', 'w' ).write( CREDITS_DATA )
+        file('credits.en', 'w').write(CREDITS_DATA)
 
 
 # convertWWW
 # ----------
 # Converts a source file into an HTML string.
 
-def convertWWW( src, language, options=None ):
+def convertWWW(src, language, options=None):
     if language == 'el':
         encoding = 'iso-8859-7'
     elif language == 'pl':
@@ -308,21 +313,21 @@ def convertWWW( src, language, options=None ):
         '--input-encoding=' + encoding,
         '--output-encoding=' + encoding,
         '--target-suffix=' + 'php',
-        src, '' ]
+        src, '']
 
     if options:
         for option in options:
-            arguments.insert( 0, option )
+            arguments.insert(0, option)
 
-    publisher = Publisher( destination_class = NullOutput )
-    publisher.set_reader( 'standalone', None, 'restructuredtext' )
-    publisher.set_writer( 'html' )
-    publisher.publish( argv = arguments )
+    publisher = Publisher(destination_class=NullOutput)
+    publisher.set_reader('standalone', None, 'restructuredtext')
+    publisher.set_writer('html')
+    publisher.publish(argv=arguments)
 
     return ''.join(
         publisher.writer.body_pre_docinfo +
         publisher.writer.body
-    ).encode( encoding )
+    ).encode(encoding)
 
 
 # processWWW
@@ -333,12 +338,13 @@ def convertWWW( src, language, options=None ):
 # is used, but with the translated template. If src is not an English source
 # file, nothing is done.
 
-def processWWW( src, depth ):
-    src     = os.path.normpath( src )
+def processWWW(src, depth):
+    src     = os.path.normpath(src)
 
-    prefix = os.path.splitext( src )[0]
-    suffix = os.path.splitext( src )[1][1:]
-    if suffix != DEFAULTLANG: return
+    prefix = os.path.splitext(src)[0]
+    suffix = os.path.splitext(src)[1][1:]
+    if suffix != DEFAULTLANG:
+        return
 
     for lang in languages:
         if lang == DEFAULTLANG:
@@ -347,41 +353,42 @@ def processWWW( src, depth ):
         else:
             dst = lang + '/' + prefix + '.php'
             dst_depth = depth + 1
-        src = altLang( prefix, lang )
-        dst_abs = os.path.normpath( os.path.join( TRGROOT, dst ) )
-        src_abs = os.path.normpath( os.path.join( SRCROOT, src ) )
-        dst_dir = os.path.dirname( dst_abs )
+        src = altLang(prefix, lang)
+        dst_abs = os.path.normpath(os.path.join(TRGROOT, dst))
+        src_abs = os.path.normpath(os.path.join(SRCROOT, src))
+        dst_dir = os.path.dirname(dst_abs)
 
-        makedir( dst_dir )
+        makedir(dst_dir)
 
-        if newer( [ TEMPLATE + lang, src_abs ], dst_abs ):
-            reportBuilding( dst )
+        if newer([TEMPLATE + lang, src_abs], dst_abs):
+            reportBuilding(dst)
             strings = {
                 'ROOT'    : '../' * dst_depth,
                 'BASE'    : '../' * dst_depth,
-                'CONTENT' : convertWWW( src_abs, lang )
+                'CONTENT' : convertWWW(src_abs, lang)
             }
-            file( dst_abs, 'w').write( TEMPLATE_DATA[lang] % strings )
+            file(dst_abs, 'w').write(TEMPLATE_DATA[lang] % strings)
         else:
-            reportSkipping( dst )
+            reportSkipping(dst)
 
 
-def processHTML( src, depth ):
-    src    = os.path.normpath( src )
+def processHTML(src, depth):
+    src    = os.path.normpath(src)
 
-    prefix = os.path.splitext( src )[0]
-    suffix = os.path.splitext( src )[1][1:]
-    if suffix != DEFAULTLANG: return
+    prefix = os.path.splitext(src)[0]
+    suffix = os.path.splitext(src)[1][1:]
+    if suffix != DEFAULTLANG:
+        return
 
     dst     = prefix + '.html' #.' + suffix
-    dst_abs = os.path.normpath( os.path.join( TRGROOT, dst ) )
-    src_abs = os.path.normpath( os.path.join( SRCROOT, src ) )
-    dst_dir = os.path.dirname( dst_abs )
+    dst_abs = os.path.normpath(os.path.join(TRGROOT, dst))
+    src_abs = os.path.normpath(os.path.join(SRCROOT, src))
+    dst_dir = os.path.dirname(dst_abs)
 
-    makedir( dst_dir )
+    makedir(dst_dir)
 
-    if newer( [ src_abs ], dst_abs ):
-        reportBuilding( src )
+    if newer([src_abs], dst_abs):
+        reportBuilding(src)
         arguments = [
             '--no-generator',   '--language=' + suffix,
             '--no-source-link', '--no-datestamp',
@@ -393,20 +400,20 @@ def processHTML( src, depth ):
         ]
 
         publisher = Publisher()
-        publisher.set_reader( 'standalone', None, 'restructuredtext' )
-        publisher.set_writer( 'html' )
-        publisher.publish( argv = arguments )
+        publisher.set_reader('standalone', None, 'restructuredtext')
+        publisher.set_writer('html')
+        publisher.publish(argv=arguments)
     else:
-        reportSkipping( dst )
+        reportSkipping(dst)
 
 
 def copyImages():
     imagepath = 'documentation/developers/ui/images'
-    dstpath   = os.path.join( TRGROOT, imagepath )
+    dstpath   = os.path.join(TRGROOT, imagepath)
     srcpath   = imagepath
-    
-    makedir( dstpath )
-    
+
+    makedir(dstpath)
+
     pathscopy(
         [
             'windows-prefs-titlebar.png',
@@ -415,20 +422,20 @@ def copyImages():
         srcpath,
         dstpath
     )
-    
+
     imagepath = 'documentation/developers/zune-dev/images'
-    dstpath   = os.path.join( TRGROOT, imagepath )
+    dstpath   = os.path.join(TRGROOT, imagepath)
     srcpath   = imagepath
-    
-    makedir( dstpath )
-    
-    pathscopy( 'hello.png', srcpath, dstpath)
+
+    makedir(dstpath)
+
+    pathscopy('hello.png', srcpath, dstpath)
 
     imagepath = 'images'
-    dstpath   = os.path.join( TRGROOT, imagepath )
+    dstpath   = os.path.join(TRGROOT, imagepath)
     srcpath   = imagepath
-    
-    makedir( dstpath )
+
+    makedir(dstpath)
 
     pathscopy(
         [
@@ -454,59 +461,60 @@ def copyImages():
 
 
 def copySamples():
-    srcpath = os.path.join( "documentation", "developers", "samplecode")
-    dstpath = os.path.join( TRGROOT, srcpath)
+    srcpath = os.path.join('documentation', 'developers', 'samplecode')
+    dstpath = os.path.join(TRGROOT, srcpath)
     shutil.rmtree(dstpath, True)
     copytree(srcpath, dstpath)
 
 
 def copyHeaders():
-    srcpath = os.path.join( "documentation", "developers", "headerfiles")
-    dstpath = os.path.join( TRGROOT, srcpath)
+    srcpath = os.path.join('documentation', 'developers', 'headerfiles')
+    dstpath = os.path.join(TRGROOT, srcpath)
     shutil.rmtree(dstpath, True)
     copytree(srcpath, dstpath)
 
 
 def buildClean():
-    shutil.rmtree( DSTROOT, True )
+    shutil.rmtree(DSTROOT, True)
 
-    filenames = glob.glob( 'credits.??' ) \
-        + glob.glob( 'news/index.??' ) \
-        + glob.glob( 'news/archive/20[0-9][0-9].??' )
+    filenames = glob.glob('credits.??') \
+        + glob.glob('news/index.??') \
+        + glob.glob('news/archive/20[0-9][0-9].??')
     for filename in filenames:
-        remove( filename )
+        remove(filename)
 
 
 def buildWWW():
-    global TRGROOT ; TRGROOT = os.path.join( DSTROOT, 'www' )
+    global TRGROOT
+    TRGROOT = os.path.join(DSTROOT, 'www')
 
     # Hack to get around dependency problems
     for lang in languages:
         if lang == DEFAULTLANG:
             dstpath = TRGROOT
         else:
-            dstpath = os.path.join( TRGROOT, lang )
-        remove( os.path.join( dstpath, 'index.php' ) )
-        remove( os.path.join( dstpath, 'introduction/index.php' ) )
-        remove( os.path.join( dstpath, 'download.php' ) )
+            dstpath = os.path.join(TRGROOT, lang)
+        remove(os.path.join(dstpath, 'index.php'))
+        remove(os.path.join(dstpath, 'introduction/index.php'))
+        remove(os.path.join(dstpath, 'download.php'))
 
     makeNews()
     makeCredits()
     makeTemplates()
 
     for lang in languages:
-        TEMPLATE_DATA[lang] = file( TEMPLATE + lang, 'r' ).read()
+        TEMPLATE_DATA[lang] = file(TEMPLATE + lang, 'r').read()
 
     makePictures()
     makeStatus()
 
-    recurse( processWWW )
+    recurse(processWWW)
 
-    copy( 'license.html', TRGROOT )
+    copy('license.html', TRGROOT)
 
-    imagepath = os.path.join( TRGROOT, 'images' )
-    makedir( imagepath )
-    srcpath= 'targets/www/images'
+    imagepath = os.path.join(TRGROOT, 'images')
+    makedir(imagepath)
+    srcpath = 'targets/www/images'
 
     pathscopy(
         [
@@ -551,7 +559,7 @@ def buildWWW():
             'rssicon1.png',
             'russialogo.png',
             'swedenlogo.png',
-            'spanishlogo.png',            
+            'spanishlogo.png',
             'pointer.png'
         ],
         srcpath,
@@ -567,96 +575,98 @@ def buildWWW():
         [
             'docutils.css',
             'aros.css',
-			'print.css'
+            'print.css'
         ],
         srcpath,
         TRGROOT
     )
 
-    copy( os.path.join( 'targets/www', 'htaccess'), os.path.join( TRGROOT, '.htaccess' ) )
+    copy(os.path.join('targets/www', 'htaccess'), os.path.join(TRGROOT, '.htaccess'))
 
-    dbpath = os.path.join( TRGROOT, 'db' )
-    makedir( dbpath )
+    dbpath = os.path.join(TRGROOT, 'db')
+    makedir(dbpath)
 
-    makedir( os.path.join( dbpath, 'download-descriptions' ) )
+    makedir(os.path.join(dbpath, 'download-descriptions'))
     for lang in languages:
-        desc_file = os.path.join( 'db/download-descriptions', lang )
-        if os.path.exists( desc_file ):
-            copy( desc_file, os.path.join( dbpath, 'download-descriptions' ) )
+        desc_file = os.path.join('db/download-descriptions', lang)
+        if os.path.exists(desc_file):
+            copy(desc_file, os.path.join(dbpath, 'download-descriptions'))
 
-    cgi_dest = os.path.join( TRGROOT, 'cgi-bin' )
-    if os.path.exists( cgi_dest ):
-        shutil.rmtree( cgi_dest )
-    copytree( 'targets/www/cgi-bin', cgi_dest )
+    cgi_dest = os.path.join(TRGROOT, 'cgi-bin')
+    if os.path.exists(cgi_dest):
+        shutil.rmtree(cgi_dest)
+    copytree('targets/www/cgi-bin', cgi_dest)
 
-    thub_dest = os.path.join( TRGROOT, 'images/thubs' )
-    if os.path.exists( thub_dest ):
-       shutil.rmtree ( thub_dest )
-    copytree( 'targets/www/images/thubs', thub_dest )
+    thub_dest = os.path.join(TRGROOT, 'images/thubs')
+    if os.path.exists(thub_dest):
+        shutil.rmtree(thub_dest)
+    copytree('targets/www/images/thubs', thub_dest)
 
 
-    rsfeed_dest = os.path.join( TRGROOT, 'rsfeed' )
-    if os.path.exists( rsfeed_dest ):
-       shutil.rmtree ( rsfeed_dest )
-    copytree( 'targets/www/rsfeed', rsfeed_dest )   
+    rsfeed_dest = os.path.join(TRGROOT, 'rsfeed')
+    if os.path.exists(rsfeed_dest):
+        shutil.rmtree(rsfeed_dest)
+    copytree('targets/www/rsfeed', rsfeed_dest)
 
-    toolpath = os.path.join( TRGROOT, 'tools' )
-    makedir( toolpath )
+    toolpath = os.path.join(TRGROOT, 'tools')
+    makedir(toolpath)
 
-    srcpath= 'targets/www/tools'
-    pathscopy( 
-        [ 
+    srcpath = 'targets/www/tools'
+    pathscopy(
+        [
             'password.html',
-            'password.php', 
-            'redirect.php' 
+            'password.php',
+            'redirect.php'
         ],
         srcpath,
-        toolpath 
+        toolpath
     )
 
     # Remove index-offline.php
-    remove( os.path.join( TRGROOT, 'index-offline.php' ) )
+    remove(os.path.join(TRGROOT, 'index-offline.php'))
 
-    os.system( 'chmod -R go+r %s' % TRGROOT )
+    os.system('chmod -R go+r %s' % TRGROOT)
 
 
 def buildHTML():
-    global TRGROOT ; TRGROOT = os.path.join( DSTROOT, 'html' )
-    global languages ; languages = [ DEFAULTLANG ]
-    TEMPLATE_DATA[DEFAULTLANG] = file( 'targets/html/template.html.en', 'r' ).read()
+    global TRGROOT
+    TRGROOT = os.path.join(DSTROOT, 'html')
+    global languages
+    languages = [DEFAULTLANG]
+    TEMPLATE_DATA[DEFAULTLANG] = file('targets/html/template.html.en', 'r').read()
 
     makeNews()
     makeCredits()
 
-    if not os.path.exists( 'news/index.en' ):
-        file( 'news/index.en', 'w' ).write( '' )
-    recurse( processHTML )
+    if not os.path.exists('news/index.en'):
+        file('news/index.en', 'w').write('')
+    recurse(processHTML)
 
     copyImages()
     copySamples()
     copyHeaders()
 
-    srcpath= 'targets/www'
+    srcpath = 'targets/www'
     pathscopy(
         [
             'docutils.css',
             'aros.css',
-			'print.css'
+            'print.css'
         ],
         srcpath,
         TRGROOT
     )
 
-    copy( 'license.html', TRGROOT )
+    copy('license.html', TRGROOT)
 
     # Make status
-    makeStatus( '.html' )
+    makeStatus('.html')
 
     # Use index-offline as index
-    remove( os.path.join( TRGROOT, 'index.html' ) )
-    os.rename( os.path.join( TRGROOT, 'index-offline.html' ), os.path.join( TRGROOT, 'index.html' ) )
+    remove(os.path.join(TRGROOT, 'index.html'))
+    os.rename(os.path.join(TRGROOT, 'index-offline.html'), os.path.join(TRGROOT, 'index.html'))
 
-    os.system( 'chmod -R go+r %s' % TRGROOT )
+    os.system('chmod -R go+r %s' % TRGROOT)
 
 
 TARGETS = {
@@ -678,27 +688,26 @@ TARGETS = {
 # languages are built.
 
 if __name__ == '__main__':
-    targets= []
-    valid= 1
+    targets = []
+    valid = 1
 
     # Interpret arguments
-    for arg in sys.argv[ 1:]:
-        if   arg in LANGUAGES:
-            languages.append( arg)
-        elif TARGETS.has_key( arg):
-            targets.append( arg)
+    for arg in sys.argv[1:]:
+        if arg in LANGUAGES:
+            languages.append(arg)
+        elif TARGETS.has_key(arg):
+            targets.append(arg)
         else:
             print 'Error: Unrecognised argument, "' + arg + '".'
-            valid= 0
+            valid = 0
 
     if valid:
         # Fill in defaults if necessary
-        if len( languages) == 0:
-            languages= list( LANGUAGES)
-        if len( targets) == 0:
-            targets.append( 'www')
+        if len(languages) == 0:
+            languages = list(LANGUAGES)
+        if len(targets) == 0:
+            targets.append('www')
 
         # Build each target
         for target in targets:
             TARGETS[target]()
-
