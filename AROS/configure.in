@@ -1,4 +1,4 @@
-dnl Copyright (C) 1997-2019, The AROS Development Team. All rights reserved.
+dnl Copyright � 1997-2016, The AROS Development Team. All rights reserved.
 dnl $Id$
 dnl
 dnl Desc: Autoconf source for configuration file
@@ -27,7 +27,6 @@ default_toolchain_family=`cat ${srcdir}/config/toolchain_def`
 default_gcc_version=`cat ${srcdir}/config/gcc_def`
 exp_gcc_version=`cat ${srcdir}/config/gcc_exp`
 default_binutils_version=`cat ${srcdir}/config/binutils_def`
-default_llvm_version=`cat ${srcdir}/config/llvm_def`
 exp_binutils_version=`cat ${srcdir}/config/binutils_exp`
 default_grub2_version="2.02"
 target_grub2_version=$default_grub2_version
@@ -92,19 +91,12 @@ dnl The idea here is to find out all the information we need about the
 dnl host. This means things like tools for building directory structures,
 dnl copying files around and the like.
 
-HOST_WANTS_X11=
-HOST_WANTS_GLX=
-HOST_WANTS_SDL=
-HOST_WANTS_DBUS=
-HOST_WANTS_DLOPEN=
-
 default_c_compilers="gcc clang cc"
 AC_ARG_WITH(c-compiler,AC_HELP_STRING([--with-c-compiler=VERSION],[Use specified c compiler for building AROS]),use_c_compiler="$withval",use_c_compiler="")
 if test "$use_c_compiler" = ""; then
     host_c_compilers="$default_c_compilers"
 else
     host_c_compilers="$use_c_compiler"
-    CC=$use_c_compiler
 fi
 
 default_cxx_compilers="g++ clang++ c++"
@@ -113,7 +105,6 @@ if test "$use_cxx_compiler" = ""; then
         host_cxx_compilers="$default_cxx_compilers"
 else
     host_cxx_compilers="$use_cxx_compiler"
-    CXX=$use_cxx_compiler
 fi
 
 
@@ -122,55 +113,10 @@ fi
 # Due to a bug in autoconf check for c++ compiler first.
 # For mor info see, http://osdir.com/ml/bug-autoconf-gnu/2010-05/msg00001.html.
 AC_PROG_CXX([${host_cxx_compilers}])
-CXX_BASE=$CXX
-AC_PATH_PROG(CXX,$CXX)
 AC_PROG_CC([${host_c_compilers}])
-CC_BASE=$CC
-AC_PROG_CPP
-CPP_BASE=$CPP
-AC_PATH_PROG(CC,$CC)
 aros_host_def_cc="$CC"
 AC_PROG_CC_STDC
 AC_PROG_CPP
-
-# detect the compiler version
-AC_MSG_CHECKING([which toolchain family ${CC_BASE} belongs to])
-HOST_COMPILER_VERSION=`"$CC" --version 2>/dev/null`
-if test x"$HOST_COMPILER_VERSION" = "x"; then
-    HOST_COMPILER_VERSION=`"$CC" --qversion 2>/dev/null`
-fi
-if test x"$HOST_COMPILER_VERSION" = "x"; then
-    HOST_COMPILER_VERSION=`"$CC" -V 2>/dev/null`
-fi
-
-IS_SUN_COMPILER=`echo $HOST_COMPILER_VERSION | grep -i -c -E 'Sun C\+\+'`
-if test "$IS_SUN_COMPILER" -ne "0"; then
-    HOST_TOOLCHAIN_PREFIX=
-    HOST_TOOLCHAIN_SUFFIX=
-    HOST_TOOLCHAIN_FAMILY=sun
-fi
-IS_LLVM_COMPILER=`echo $HOST_COMPILER_VERSION | grep -i -c -E 'LLVM|clang'`
-if test "$IS_LLVM_COMPILER" -ne "0"; then
-    if test "$CC_BASE" != "gcc"; then
-        HOST_TOOLCHAIN_PREFIX=llvm-
-        HOST_TOOLCHAIN_SUFFIX="`echo $CC_BASE | sed -e \"s|clang||g\"`"
-        HOST_TOOLCHAIN_FAMILY=llvm
-    else
-        IS_GNU_COMPILER=1
-    fi
-fi
-if test "x$IS_GNU_COMPILER" = "x"; then
-    IS_GNU_COMPILER=`echo $HOST_COMPILER_VERSION | grep -i -c -E 'gcc'`
-fi
-if test "$IS_GNU_COMPILER" -ne "0"; then
-    HOST_TOOLCHAIN_PREFIX=
-    HOST_TOOLCHAIN_SUFFIX=
-    HOST_TOOLCHAIN_FAMILY=gnu
-fi
-if test x"$HOST_TOOLCHAIN_FAMILY" = "x"; then
-    HOST_TOOLCHAIN_FAMILY=unknown
-fi
-AC_MSG_RESULT($HOST_TOOLCHAIN_FAMILY)
 
 # Check for a compatible awk
 AC_CHECK_PROGS(AWK,[gawk nawk])
@@ -184,14 +130,7 @@ aros_build_host=$host
 aros_host_cpp="$CPP"
 aros_host_cc="$CC"
 aros_host_cxx="$CXX"
-base_ld_name=${HOST_TOOLCHAIN_PREFIX}ld${HOST_TOOLCHAIN_SUFFIX}
-if test "$HOST_TOOLCHAIN_FAMILY" = "llvm"; then
-    AC_CHECK_PROGS(base_lld_name,[$base_ld_name ld.lld${HOST_TOOLCHAIN_SUFFIX} ld64.lld${HOST_TOOLCHAIN_SUFFIX} ld-link${HOST_TOOLCHAIN_SUFFIX}.exe ld${HOST_TOOLCHAIN_SUFFIX}])
-    LD_BASE=$base_lld_name
-else
-    AC_CHECK_PROG(LD_BASE,$base_ld_name)
-fi
-AROS_TOOL_CCPATH(aros_host_ld,ld,$LD_BASE)
+AROS_TOOL_CCPATH(aros_host_ld,ld)
 AROS_REQUIRED(ld,$aros_host_ld)
 aros_host_make="make"
 aros_host_cflags="$CFLAGS"
@@ -522,16 +461,9 @@ re-running configure])])
         ;;
 esac
 
-base_ar_name=${HOST_TOOLCHAIN_PREFIX}ar${HOST_TOOLCHAIN_SUFFIX}
-AROS_PROG(AR_BASE,$base_ar_name)
-aros_host_ar_flags="cr"
-aros_host_cmd_ar="$AR_BASE $aros_host_ar_flags"
-AROS_PATH_PROG(aros_host_plain_ar,$aros_host_cmd_ar)
-aros_host_ar=`echo $aros_host_cmd_ar | sed -e "s|$base_ar_name|$aros_host_plain_ar|g"`
+AROS_PROG(aros_host_ar,[ar],[cr])
 AROS_REQUIRED(ar,$aros_host_ar)
-base_ranlib_name=${HOST_TOOLCHAIN_PREFIX}ranlib${HOST_TOOLCHAIN_SUFFIX}
-AROS_PROG(RANLIB_BASE,$base_ranlib_name)
-AROS_PATH_PROG(aros_host_ranlib,$RANLIB_BASE)
+AROS_PROG(aros_host_ranlib,ranlib)
 AROS_REQUIRED(ranlib,$aros_host_ranlib)
 AROS_PROG(aros_host_strip,strip)
 AROS_REQUIRED(strip,$aros_host_strip)
@@ -560,9 +492,6 @@ AROS_PROG(BISON,[bison])
 AROS_REQUIRED(bison,$BISON)
 AROS_PROG(FLEX,[flex])
 AROS_REQUIRED(flex,$FLEX)
-AC_MSG_CHECKING([version of $FLEX])
-ax_cv_flex_version="`$FLEX --version | cut -d\" \" -f2`"
-AC_MSG_RESULT($ax_cv_flex_version)
 AROS_PROG(PNGTOPNM,[pngtopnm])
 AROS_REQUIRED(pngtopnm,$PNGTOPNM)
 AROS_PROG(PPMTOILBM,[ppmtoilbm])
@@ -665,7 +594,7 @@ AC_FUNC_MMAP
 # work on all platforms.
 #
 
-AC_MSG_CHECKING([whether ${CC_BASE} accepts -fno-stack-protector])
+AC_MSG_CHECKING([whether ${CC} accepts -fno-stack-protector])
 save_cflags="$CFLAGS"
 CFLAGS="$CFLAGS -fno-stack-protector"
 AC_TRY_COMPILE(,, use_no_stack_protector="yes", use_no_stack_protector="no")
@@ -680,7 +609,7 @@ CFLAGS="$save_cflags"
 # Disable pointer-signedness warnings if the compiler recognises the option
 # (this only works for the host compiler at the moment)
 
-AC_MSG_CHECKING([whether ${CC_BASE} accepts -Wno-pointer-sign])
+AC_MSG_CHECKING([whether ${CC} accepts -Wno-pointer-sign])
 save_cflags="$CFLAGS"
 CFLAGS="$CFLAGS -Wno-pointer-sign"
 AC_TRY_COMPILE(,, use_no_sign_warning="yes", use_no_sign_warning="no")
@@ -694,7 +623,7 @@ CFLAGS="$save_cflags"
 
 # Check if host compiler supports -fgnu89-inline, can be needed for crosstools.
 
-AC_MSG_CHECKING([whether ${CC_BASE} accepts -fgnu89-inline])
+AC_MSG_CHECKING([whether ${CC} accepts -fgnu89-inline])
 save_cflags="$CFLAGS"
 CFLAGS="$CFLAGS -fgnu89-inline"
 AC_TRY_COMPILE(,, use_gnu89_inline="yes", use_gnu89_inline="no")
@@ -708,7 +637,7 @@ CFLAGS="$save_cflags"
 # For GCC < 4.0 -I- is used for giving the search path for '#include "..."'
 # On GCC >= 4.0 -iquote should be used
 #
-AC_MSG_CHECKING([whether ${CC_BASE} accepts -iquote])
+AC_MSG_CHECKING([whether ${CC} accepts -iquote])
 CFLAGS="$CFLAGS -iquote."
 AC_TRY_COMPILE(,, has_iquote="yes", has_iquote="no")
 AC_MSG_RESULT($has_iquote)
@@ -740,7 +669,6 @@ aros_elf_translate=
 aros_warn_flags=
 aros_isa_extra=
 aros_isa_flags=
-aros_kernel_isaflags=
 aros_config_cppflags=
 aros_config_cflags=
 aros_config_cxxflags=
@@ -759,8 +687,8 @@ aros_target_ar_flags="cr"
 aros_target_nm_flags="-C -ul"
 aros_target_strip_flags="--strip-unneeded -R.comment"
 
-aros_c_libs=
-aros_cxx_libs=
+aros_compiler_libs=
+aros_arch_libs=
 
 aros_target_genmap="-Wl,-Map -Xlinker"
 
@@ -806,8 +734,7 @@ case "$aros_toolchain" in
     *llvm*)
         toolchain_c_compiler="clang"
         toolchain_cxx_compiler="clang++"
-        toolchain_cpp_preprocessor="clang"
-        toolchain_cpp_opts=" -E"
+        toolchain_cpp_preprocessor="clang -E"
         toolchain_ld="ld.lld"
         aros_ld="ld"
         toolchain_as="llvm-as"
@@ -817,16 +744,11 @@ case "$aros_toolchain" in
         toolchain_strip="true"
         toolchain_objcopy="llvm-objcopy"
         toolchain_objdump="llvm-objdump"
-        use_libatomic=yes
-        toolchain_def_opt_lvl="-O2"
-        toolchain_debug_opt_lvl="-O0"
-        toolchain_size_opt_lvl="-Os"
         ;;
     *gnu*)
         toolchain_c_compiler="gcc"
         toolchain_cxx_compiler="g++"
-        toolchain_cpp_preprocessor="gcc"
-        toolchain_cpp_opts=" -E"
+        toolchain_cpp_preprocessor="gcc -E"
         toolchain_as="as"
         aros_ld="ld"
         if test "$aros_config_lto" != "yes"; then
@@ -843,17 +765,12 @@ case "$aros_toolchain" in
         toolchain_strip="strip"
         toolchain_objcopy="objcopy"
         toolchain_objdump="objdump"
-        use_libatomic=yes
-        toolchain_def_opt_lvl="-O2"
-        toolchain_debug_opt_lvl="-O0"
-        toolchain_size_opt_lvl="-Os"
         ;;
     *)
         AC_MSG_WARN("Unknown toolchain family!")
         toolchain_c_compiler="cc"
         toolchain_cxx_compiler="c++"
         toolchain_cpp_preprocessor="cpp"
-        toolchain_cpp_opts=
         toolchain_ld="ld"
         aros_ld="ld"
         toolchain_as="as"
@@ -987,12 +904,12 @@ AC_MSG_RESULT($msg_result)
 AC_MSG_CHECKING([what optimization flags to use])
 AC_ARG_WITH(optimization,AC_HELP_STRING([--with-optimization=FLAGS],[Use optimization flags FLAGS (e.g --with-optimization=-O2).]),optimization_level="$withval",optimization_level="unknown")
 if test "$optimization_level" = "unknown"; then
-    dnl use the toolchain defaults for normal and debug builds
+    dnl default is -O2 for normal builds, -O0 for debug builds
     optimization="default"
     if test "$debug" != "none"; then
-        optimization_level=$toolchain_debug_opt_lvl
+        optimization_level="-O0"
     else
-        optimization_level=$toolchain_def_opt_lvl
+        optimization_level="-O2"
     fi
 else
     optimization="$optimization_level"
@@ -1156,11 +1073,6 @@ esac
 # This is the target configuration switch.
 case "$target_os" in
     linux*)
-        HOST_WANTS_X11=yes
-        HOST_WANTS_GLX=yes
-        HOST_WANTS_SDL=yes
-        HOST_WANTS_DBUS=yes
-        HOST_WANTS_DLOPEN=yes
         aros_target_arch="linux"
         aros_target_family="unix"
         case "$target_cpu" in
@@ -1231,7 +1143,7 @@ case "$target_os" in
                 aros_config_cflags="$aros_config_cflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_OMIT_FP)"
                 aros_config_cxxflags="$aros_config_cxxflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_OMIT_FP)"
                 aros_config_aflags="$aros_config_aflags $""(CFLAGS_NO_STRICT_ALIASING)"
-                aros_c_libs="$aros_c_libs -laeabi"
+                aros_arch_libs="-laeabi"
                 gcc_default_float_abi="hard"
                 kernel_tool_prefix="aarch64-linux-gnueabihf-"
                 ;;
@@ -1245,7 +1157,7 @@ case "$target_os" in
                 aros_config_cflags="$aros_config_cflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_OMIT_FP)"
                 aros_config_cxxflags="$aros_config_cxxflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_OMIT_FP)"
                 aros_config_aflags="$aros_config_aflags $""(CFLAGS_NO_STRICT_ALIASING)"
-                aros_c_libs="$aros_c_libs -laeabi"
+                aros_arch_libs="-laeabi"
                 gcc_default_float_abi="hard"
                 android_tool_dir_prefix="arm-linux-androideabi"
                 android_tool_prefix="arm-linux-androideabi"
@@ -1261,7 +1173,7 @@ case "$target_os" in
                 aros_config_cflags="$aros_config_cflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_OMIT_FP)"
                 aros_config_cxxflags="$aros_config_cxxflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_OMIT_FP)"
                 aros_config_aflags="$aros_config_aflags $""(CFLAGS_NO_STRICT_ALIASING)"
-                aros_c_libs="$aros_c_libs -laeabi"
+                aros_arch_libs="-laeabi"
                 android_tool_dir_prefix="arm-linux-androideabi"
                 android_tool_prefix="arm-linux-androideabi"
                 android_ndk_arch="arm"
@@ -1372,11 +1284,6 @@ case "$target_os" in
         ;;
 
     freebsd*)
-        HOST_WANTS_X11=yes
-        HOST_WANTS_GLX=yes
-        HOST_WANTS_SDL=yes
-        HOST_WANTS_DBUS=yes
-        HOST_WANTS_DLOPEN=yes
         aros_target_arch="freebsd"
         aros_target_family="unix"
         aros_target_cpu="i386"
@@ -1388,11 +1295,6 @@ case "$target_os" in
         ;;
 
     darwin*)
-        HOST_WANTS_X11=yes
-        HOST_WANTS_GLX=yes
-        HOST_WANTS_SDL=yes
-        HOST_WANTS_DBUS=yes
-        HOST_WANTS_DLOPEN=yes
         aros_target_arch="darwin"
         aros_target_family="unix"
         aros_flavour="emulation"
@@ -1422,12 +1324,12 @@ case "$target_os" in
                 aros_kernel_cflags="-m64"
                 aros_kernel_ldflags="-m64"
                 aros_nominal_depth=8
-                aros_kernel_rs="$toolchain_ar"
+                aros_kernel_ar="ar"
                 aros_kernel_ar_flags="-cr"
-                aros_kernel_ld="$toolchain_ld"
-                aros_kernel_as="$toolchain_as"
-                aros_kernel_ranlib="$toolchain_ranlib"
-                aros_kernel_nm="$toolchain_nm"
+                aros_kernel_ld="ld"
+                aros_kernel_as="as"
+                aros_kernel_ranlib="ranlib"
+                aros_kernel_nm="nm"
                 aros_kernel_strip="strip"
                 kernel_tool_prefix="i686-apple-darwin10-"
                 ;;
@@ -1439,12 +1341,12 @@ case "$target_os" in
                 aros_macosx_version="10.0"
                 aros_nominal_depth=8
                 gcc_target_cpu="ppc"
-                aros_kernel_rs="$toolchain_ar"
+                aros_kernel_ar="ar"
                 aros_kernel_ar_flags="-cr"
-                aros_kernel_ld="$toolchain_ld -arch ppc"
-                aros_kernel_as="$toolchain_as -arch ppc"
-                aros_kernel_ranlib="$toolchain_ranlib -arch ppc"
-                aros_kernel_nm="$toolchain_nm -arch ppc"
+                aros_kernel_ld="ld -arch ppc"
+                aros_kernel_as="as -arch ppc"
+                aros_kernel_ranlib="ranlib -arch ppc"
+                aros_kernel_nm="nm -arch ppc"
                 aros_kernel_strip="strip -arch ppc"
                 kernel_tool_prefix="powerpc-apple-darwin10-"
                 ;;
@@ -1453,13 +1355,13 @@ case "$target_os" in
                 aros_target_cpu="arm"
                 aros_object_format="armelf_aros"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Darm"
-                aros_c_libs="$aros_c_libs -laeabi"
+                aros_arch_libs="-laeabi"
                 aros_nominal_depth=8
                 gcc_target_cpu="arm"
-                aros_kernel_rs="$toolchain_ar"
+                aros_kernel_ar="ar"
                 aros_kernel_ar_flags="-cr"
-                aros_kernel_ld="$toolchain_ld -arch arm"
-                aros_kernel_ranlib="$toolchain_ranlib -arch arm"
+                aros_kernel_ld="ld -arch arm"
+                aros_kernel_ranlib="ranlib -arch arm"
                 kernel_tool_prefix="arm-apple-darwin10-" 
                 export PATH="$aros_xcode_path/Platforms/$aros_ios_platform.platform/Developer/usr/bin:$PATH"
                 ;;
@@ -1491,11 +1393,6 @@ case "$target_os" in
         ;;
 
     dragonfly*)
-        HOST_WANTS_X11=yes
-        HOST_WANTS_GLX=yes
-        HOST_WANTS_SDL=yes
-        HOST_WANTS_DBUS=yes
-        HOST_WANTS_DLOPEN=yes
         aros_target_arch="dragonfly"
         aros_target_family="unix"
         aros_flavour="emulation"
@@ -1521,11 +1418,6 @@ case "$target_os" in
         ;;
 
     netbsd*)
-        HOST_WANTS_X11=yes
-        HOST_WANTS_GLX=yes
-        HOST_WANTS_SDL=yes
-        HOST_WANTS_DBUS=yes
-        HOST_WANTS_DLOPEN=yes
         aros_target_arch="netbsd"
         aros_target_family="unix"
         case "$target_cpu" in
@@ -1556,11 +1448,6 @@ case "$target_os" in
         ;;   
 
     openbsd*)
-        HOST_WANTS_X11=yes
-        HOST_WANTS_GLX=yes
-        HOST_WANTS_SDL=yes
-        HOST_WANTS_DBUS=yes
-        HOST_WANTS_DLOPEN=yes
         aros_target_arch="openbsd"
         aros_target_family="unix"
         case "$target_cpu" in
@@ -1645,7 +1532,7 @@ case "$target_os" in
         aros_kernel_ldflags=""
         aros_nominal_width=1024
         aros_nominal_height=600
-        aros_c_libs="$aros_c_libs -laeabi"
+        aros_arch_libs="-laeabi"
         gcc_default_cpu="armv7-a"
         gcc_default_fpu="vfpv3"
         aros_isa_flags="$aros_isa_flags -mtune=cortex-a8"
@@ -1653,7 +1540,7 @@ case "$target_os" in
         aros_config_cxxflags="$aros_config_cxxflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_ASYNCHRONOUS_UNWIND_TABLES)"
         aros_config_aflags="$aros_config_aflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_ASYNCHRONOUS_UNWIND_TABLES)"
         if test "$optimization" = "default"; then
-            optimization_level=$toolchain_size_opt_lvl
+            optimization_level="-Os"
         fi
         case "$target_cpu" in
             *armhf*)
@@ -1718,7 +1605,7 @@ case "$target_os" in
                 aros_config_aflags="$aros_config_aflags -marm"
                 aros_kernel_cflags="$aros_kernel_cflags -marm"
                 aros_target_mkdep="$aros_target_mkdep -Darm"
-                aros_c_libs="$aros_c_libs -laeabi"
+                aros_arch_libs="-laeabi"
                 ;;
             *armeb*)
                 aros_flavour="standcompat"
@@ -1733,7 +1620,7 @@ case "$target_os" in
                 aros_config_aflags="$aros_config_aflags -marm"
                 aros_kernel_cflags="$aros_kernel_cflags -marm"
                 aros_target_mkdep="$aros_target_mkdep -Darm"
-                aros_c_libs="$aros_c_libs -laeabi"
+                aros_arch_libs="-laeabi"
                 ;;
             *arm*)
                 aros_target_cpu="arm"
@@ -1746,7 +1633,7 @@ case "$target_os" in
                 aros_config_aflags="$aros_config_aflags -marm"
                 aros_kernel_cflags="$aros_kernel_cflags -marm"
                 aros_target_mkdep="$aros_target_mkdep -Darm"
-                aros_c_libs="$aros_c_libs -laeabi"
+                aros_arch_libs="-laeabi"
                 ;;
             *)
                 AC_MSG_ERROR("Unknown CPU for RasPi $target_cpu")
@@ -1802,7 +1689,7 @@ case "$target_os" in
                 aros_config_cflags="$aros_config_cflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_FREESTANDING) $""(CFLAGS_OMIT_FP) $""(CFLAGS_BUILTIN)"
                 aros_config_cxxflags="$aros_config_cxxflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_FREESTANDING) $""(CFLAGS_OMIT_FP) $""(CFLAGS_BUILTIN)"
                 if test "$optimization" = "default"; then
-                    optimization_level=$toolchain_size_opt_lvl
+                    optimization_level="-Os"
                 fi
                 aros_config_aflags="$aros_config_aflags"
                 aros_target_strip_flags="-R.comment --strip-debug"
@@ -1854,7 +1741,7 @@ case "$target_os" in
                 aros_target_cpu="arm"
                 aros_object_format="armelf_aros"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Darm"
-                aros_c_libs="$aros_c_libs -laeabi"
+                aros_arch_libs="-laeabi"
                 aros_nominal_depth=8
                 gcc_target_cpu="arm"
                 gcc_default_float_abi="soft"
@@ -1884,7 +1771,7 @@ case "$target_os" in
                 aros_nominal_height=160
                 aros_nominal_depth=1
                 aros_target_ar_flags="cru"
-                aros_c_libs="$aros_c_libs -lgcc1"
+                aros_compiler_libs="-lgcc1"
                 aros_shared_default=no
                 aros_shared_cflags="-fpic"
                 aros_shared_aflags=""
@@ -1919,7 +1806,7 @@ case "$target_os" in
                 aros_nominal_height=384
                 aros_nominal_depth=8
                 aros_target_ar_flags="cru"
-                aros_c_libs="$aros_c_libs -lgcc1"
+                aros_compiler_libs="-lgcc1"
                 aros_shared_default=no
                 aros_shared_cflags="-fpic"
                 aros_shared_aflags=""
@@ -2017,7 +1904,7 @@ fi
 AC_DEFUN([CROSS_GCC_VERSION], [
   target_gcc_version=""
   AC_CACHE_CHECK([gcc version],[ax_cv_gcc_version],[
-    ax_cv_gcc_version="`$AROS_CROSSTOOLSDIR/${aros_tool_prefix}${toolchain_cpp_preprocessor}$(toolchain_cpp_opts) -dumpversion`"
+    ax_cv_gcc_version="`$AROS_CROSSTOOLSDIR/${aros_tool_prefix}${toolchain_cpp_preprocessor} -dumpversion`"
     AS_IF([test "x$ax_cv_gcc_version" = "x"],[
       ax_cv_gcc_version=""
     ])
@@ -2046,18 +1933,9 @@ fi
 if test "$aros_toolchain" = "gnu" ; then
     AC_MSG_RESULT($target_gcc_version)
 
-    AC_MSG_CHECKING([version string style])
-    if test "${target_gcc_version#*$'-'}" != "$target_gcc_version" ; then
-        AC_MSG_RESULT(snapshot)
-        GCC_VERSION_MAJOR=$(echo $target_gcc_version | cut -d'-' -f1)
-        GCC_VERSION_MINOR=-1
-        GCC_VERSION_PATCH=-1
-    else
-        AC_MSG_RESULT(release)
-        GCC_VERSION_MAJOR=$(echo $target_gcc_version | cut -d'.' -f1)
-        GCC_VERSION_MINOR=$(echo $target_gcc_version | cut -d'.' -f2)
-        GCC_VERSION_PATCH=$(echo $target_gcc_version | cut -d'.' -f3)
-    fi
+    GCC_VERSION_MAJOR=$(echo $target_gcc_version | cut -d'.' -f1)
+    GCC_VERSION_MINOR=$(echo $target_gcc_version | cut -d'.' -f2)
+    GCC_VERSION_PATCH=$(echo $target_gcc_version | cut -d'.' -f3)
 
     gcc_fix_bitfields="false"
     if test "$GCC_VERSION_MAJOR" -gt "4" ; then
@@ -2078,39 +1956,6 @@ if test "$aros_toolchain" = "gnu" ; then
             ;;
         esac
     fi
-fi
-
-# Helper to identify llvm version
-AC_DEFUN([CROSS_LLVM_VERSION], [
-  target_llvm_version=""
-  AC_CACHE_CHECK([llvm version],[ax_cv_llvm_version],[
-    ax_cv_llvm_version="`$AROS_CROSSTOOLSDIR/${aros_tool_prefix}${toolchain_cpp_preprocessor}$(toolchain_cpp_opts) -dumpversion`"
-    AS_IF([test "x$ax_cv_llvm_version" = "x"],[
-      ax_cv_llvm_version=""
-    ])
-  ])
-  target_llvm_version=$ax_cv_llvm_version
-  AC_SUBST([target_llvm_version])
-])
-
-if test "$aros_toolchain" = "llvm" ; then
-    AC_MSG_CHECKING([what specific target llvm version to use])
-fi
-AC_ARG_WITH(llvm-version,AC_HELP_STRING([--with-llvm-version=VERSION],[Compile llvm-VERSION for AROS]),use_llvm_version="$withval",use_llvm_version="")
-if test "$use_llvm_version" = ""; then
-    if test "${crosstools}" = "no"; then
-      if test "x$aros_toolchain_install" != "x"; then
-          CROSS_LLVM_VERSION
-      fi
-    fi
-    if test "$use_llvm_version" = ""; then
-        target_llvm_version="$default_llvm_version"
-    fi
-else
-    target_llvm_version="$use_llvm_version"
-fi
-if test "$aros_toolchain" = "llvm" ; then
-    AC_MSG_RESULT($target_llvm_version)
 fi
 
 AC_MSG_CHECKING([whether to enable Objective-C suppport])
@@ -2398,21 +2243,21 @@ else
         # empty, unless specified in the per-arch sections above.
         test_kernel_cc=yes
         if test "x$aros_kernel_cpp" = "x"; then
-            aros_kernel_cpp=${kernel_tool_prefix}${CPP_BASE}
+            aros_kernel_cpp=${kernel_tool_prefix}${CPP}
         fi
         AROS_BUILDCMD(aros_kernel_cpp,$aros_kernel_cpp,${kernel_tool_version})
         AROS_TOOL_KERNEL(aros_kernel_cpp,cpp,$aros_kernel_cpp)
         AROS_REQUIRED(cpp,$aros_kernel_cpp)
 
         if test "x$aros_kernel_cc" = "x"; then
-            aros_kernel_cc=${kernel_tool_prefix}${CC_BASE}
+            aros_kernel_cc=${kernel_tool_prefix}${CC}
         fi
         AROS_BUILDCMD(aros_kernel_cc,$aros_kernel_cc,${kernel_tool_version})
         AROS_TOOL_KERNEL(aros_kernel_cc,cc,$aros_kernel_cc)
         AROS_REQUIRED(cc,$aros_kernel_cc)
 
         if test "x$aros_kernel_cxx" = "x"; then
-            aros_kernel_cxx=${kernel_tool_prefix}${CXX_BASE}
+            aros_kernel_cxx=${kernel_tool_prefix}${CXX}
         fi
         AROS_BUILDCMD(aros_kernel_cxx,$aros_kernel_cxx,${kernel_tool_version})
         AROS_TOOL_KERNEL(aros_kernel_cxx,cxx,$aros_kernel_cxx)
@@ -2420,38 +2265,14 @@ else
         if test "x$aros_kernel_cxx" != "x" ; then
             AROS_REQUIRED(cxx,$aros_kernel_cxx)
         fi
-        if test "x$aros_kernel_ld" = "x"; then
-            aros_kernel_ld=${kernel_tool_prefix}${LD_BASE}
-        fi
         AROS_TOOL_KERNEL(aros_kernel_ld,ld,$aros_kernel_ld)
         AROS_REQUIRED(ld,$aros_kernel_ld)
-        if test "x$aros_kernel_as" = "x"; then
-            aros_kernel_as=$aros_host_as
-            if test "x$aros_kernel_as" = "x"; then
-                aros_kernel_as=${HOST_TOOLCHAIN_PREFIX}as${HOST_TOOLCHAIN_SUFFIX}
-            fi
-        fi
         AROS_TOOL_KERNEL(aros_kernel_as,as,$aros_kernel_as)
         AROS_REQUIRED(as,$aros_kernel_as)
-
-        if test "x$aros_kernel_ar" = "x"; then
-            aros_kernel_ar="${kernel_tool_prefix}${AR_BASE}"
-        fi
-        AROS_BUILDCMD(aros_kernel_ar,$aros_kernel_ar,${kernel_tool_version})
         AROS_TOOL_KERNEL(aros_kernel_ar,ar,$aros_kernel_ar)
         AROS_REQUIRED(ar,$aros_kernel_ar)
-        if test "x$aros_kernel_ranlib" = "x"; then
-            aros_kernel_ranlib=${kernel_tool_prefix}${RANLIB_BASE}
-        fi
-        AROS_BUILDCMD(aros_kernel_ranlib,$aros_kernel_ranlib,${kernel_tool_version})
         AROS_TOOL_KERNEL(aros_kernel_ranlib,ranlib,$aros_kernel_ranlib)
         AROS_REQUIRED(ranlib,$aros_kernel_ranlib)
-        if test "x$aros_kernel_nm" = "x"; then
-            aros_kernel_nm=$aros_host_nm
-            if test "x$aros_kernel_nm" = "x"; then
-                aros_kernel_nm=${HOST_TOOLCHAIN_PREFIX}nm${HOST_TOOLCHAIN_SUFFIX}
-            fi
-        fi
         AROS_TOOL_KERNEL(aros_kernel_nm,nm,$aros_kernel_nm)
         AROS_REQUIRED(nm,$aros_kernel_nm)
         AROS_TOOL_KERNEL(aros_kernel_strip,strip,$aros_kernel_strip)
@@ -2460,19 +2281,7 @@ else
         # Objcopy and objdump are not required for the kernel
         # toolchain on many architectures.
         # So we'll look for them, but not make them strictly required.
-        if test "x$aros_kernel_objcopy" = "x"; then
-            aros_kernel_objcopy=$aros_host_objcopy
-            if test "x$aros_kernel_objcopy" = "x"; then
-                aros_kernel_objcopy=${HOST_TOOLCHAIN_PREFIX}objcopy${HOST_TOOLCHAIN_SUFFIX}
-            fi
-        fi
         AROS_TOOL_KERNEL(aros_kernel_objcopy,objcopy,$aros_kernel_objcopy)
-        if test "x$aros_kernel_objdump" = "x"; then
-            aros_kernel_objdump=$aros_host_objdump
-            if test "x$aros_kernel_objdump" = "x"; then
-                aros_kernel_objdump=${HOST_TOOLCHAIN_PREFIX}objdump${HOST_TOOLCHAIN_SUFFIX}
-            fi
-        fi
         AROS_TOOL_KERNEL(aros_kernel_objdump,objdump,$aros_kernel_objdump)
         if test "x${crosstools}" != "xyes" ; then
             AROS_REQUIRED(objcopy,$aros_kernel_objcopy)
@@ -2493,7 +2302,7 @@ if test "$aros_target_toolchain" = "yes"; then
     tmp_tool_prefix="$AROS_CROSSTOOLSDIR/${target_tool_prefix}"
     orig_target_cc="${tmp_tool_prefix}${toolchain_c_compiler}${target_tool_version}"
     orig_target_cxx="${tmp_tool_prefix}${toolchain_cxx_compiler}${target_tool_version}"
-    orig_target_cpp="${tmp_tool_prefix}${toolchain_cpp_preprocessor}${toolchain_cpp_opts}"
+    orig_target_cpp="${tmp_tool_prefix}${toolchain_cpp_preprocessor}"
     orig_target_ld="${tmp_tool_prefix}${toolchain_ld}"
     orig_target_as="${tmp_tool_prefix}${toolchain_as}"
     orig_target_ar="${tmp_tool_prefix}${toolchain_ar}"
@@ -2510,7 +2319,7 @@ else
 
     AC_MSG_RESULT([$aros_tool_prefix])
     # We are *not* building AROS crosstools - use the AROS or ELF tools
-    AROS_TOOL_TARGET(orig_target_cpp,cpp,${aros_tool_prefix}${toolchain_cpp_preprocessor}${target_tool_version}${toolchain_cpp_opts})
+    AROS_TOOL_TARGET(orig_target_cpp,cpp,${aros_tool_prefix}${toolchain_cpp_preprocessor}${target_tool_version})
     AROS_REQUIRED(cpp,$orig_target_cpp)
     AROS_TOOL_TARGET(orig_target_cc,gcc,${aros_tool_prefix}${toolchain_c_compiler}${target_tool_version})
     AROS_REQUIRED(cc,$orig_target_cc)
@@ -2536,10 +2345,10 @@ fi
 
 if test "$kernel_tool_prefix" = "none" ; then
     # No kernel tools specified
-    # Assume kernel tools == target tools with ELF wrapper
+    # Assume target tools == kernel tools with ELF wrapper
     aros_kernel_cc=$orig_target_cc
     aros_kernel_cxx=$orig_target_cxx
-    aros_kernel_cpp="$orig_target_cpp"
+    aros_kernel_cpp=$orig_target_cpp
     aros_kernel_ld=$orig_target_ld
     aros_kernel_as=$orig_target_as
     aros_kernel_ar=$orig_target_ar
@@ -2548,7 +2357,6 @@ if test "$kernel_tool_prefix" = "none" ; then
     aros_kernel_strip=$orig_target_strip
     aros_kernel_objcopy=$orig_target_objcopy
     aros_kernel_objdump=$orig_target_objdump
-    aros_kernel_isa_flags=$aros_isa_flags
     use_kernel_cc_wrapper=yes
 fi
 
@@ -2640,7 +2448,7 @@ else
     fi
     aros_target_cc_path=@aros_target_cc_path@
 fi
-aros_target_cpp="${prefix}${toolchain_cpp_preprocessor}${toolchain_cpp_opts}"
+aros_target_cpp="${prefix}${toolchain_cpp_preprocessor}"
 aros_target_cc="${prefix}${toolchain_c_compiler}"
 aros_target_cxx="${prefix}${toolchain_cxx_compiler}"
 aros_target_as="${prefix}${toolchain_as}"
@@ -2666,7 +2474,7 @@ AC_HELP_STRING([--enable-includes=dir],[Alternative system include directory]),
 
 if test "x$aros_target_incl" = "xno"; then
     if test "x$test_kernel_cc" != "xno"; then
-        aros_target_incl=`$aros_kernel_cc -print-sysroot 2>/dev/null`/`$aros_kernel_cc --print-sysroot-headers-suffix 2>/dev/null || echo usr/include`
+        aros_target_incl=`$aros_kernel_cc -print-sysroot`/`$aros_kernel_cc --print-sysroot-headers-suffix 2>/dev/null || echo usr/include`
     else
         aros_target_incl=
     fi
@@ -2819,7 +2627,7 @@ if test "x$test_kernel_cc" != "xno"; then
 
     # Check if we can explicitly choose older version of symbol hashing
 
-    CFLAGS="$save_cflags -Wl,--hash-style=sysv"
+    CFLAGS="save_cflags -Wl,--hash-style=sysv"
     CC="$aros_kernel_cc"
     AC_MSG_CHECKING([whether ${CC} accepts -Wl,--hash-style=sysv])
     AC_TRY_LINK(,, use_hash_style="yes", use_hash_style="no")
@@ -3142,54 +2950,9 @@ if ! test "$gcc_default_cpu" = "" ; then
     target_extra_cfg+="$export_newline""# ARM gcc default target$export_newline""GCC_DEFAULT_CPU         := $gcc_default_cpu$export_newline""GCC_DEFAULT_FPU         := $gcc_default_fpu$export_newline""GCC_DEFAULT_FLOAT_ABI   := $gcc_default_float_abi$export_newline""GCC_DEFAULT_MODE        := $gcc_default_mode$export_newline"
 fi
 
-if test "$use_libatomic" = "yes" ; then
-    aros_cxx_libs="$aros_cxx_libs  -latomic"
-fi
-
-aros_target_options+="$export_newline""# Enable Nouveau Gfx Driver$export_newline""OPT_GFX_NOUVEAU               := no$export_newline"
-
 dnl --------------------------------------------------------------------
 dnl Configuration Output Section
 dnl --------------------------------------------------------------------
-
-dnl strip trailing spaces ...
-CC=m4_normalize($CC)
-CFLAGS=m4_normalize($CFLAGS)
-CHMOD=m4_normalize($CHMOD)
-CP=m4_normalize($CP)
-ECHO=m4_normalize($ECHO)
-FLEX=m4_normalize($FLEX)
-MV=m4_normalize($MV)
-NOP=m4_normalize($NOP)
-PATCH=m4_normalize($PATCH)
-PNGTOPNM=m4_normalize($PNGTOPNM)
-PPMTOILBM=m4_normalize($PPMTOILBM)
-SED=m4_normalize($SED)
-SORT=m4_normalize($SORT)
-TOUCH=m4_normalize($TOUCH)
-UNIQ=m4_normalize($UNIQ)
-
-aros_config_cflags=m4_normalize($aros_config_cflags)
-aros_config_cppflags=m4_normalize($aros_config_cppflags)
-aros_config_cxxflags=m4_normalize($aros_config_cxxflags)
-
-aros_c_libs=m4_normalize($aros_c_libs)
-aros_cxx_libs=m4_normalize($aros_cxx_libs)
-
-aros_host_ldflags=m4_normalize($aros_host_ldflags)
-aros_host_strip=m4_normalize($aros_host_strip)
-aros_host_x11_ldflags=m4_normalize($aros_host_x11_ldflags)
-
-aros_kernel_ar=m4_normalize($aros_kernel_ar)
-aros_kernel_as=m4_normalize($aros_kernel_as)
-aros_kernel_cc=m4_normalize($aros_kernel_cc)
-aros_kernel_cflags=m4_normalize($aros_kernel_cflags)
-aros_kernel_cppflags=m4_normalize($aros_kernel_cppflags)
-aros_kernel_cxx=m4_normalize($aros_kernel_cxx)
-aros_kernel_nm=m4_normalize($aros_kernel_nm)
-aros_kernel_objcopy=m4_normalize($aros_kernel_objcopy)
-aros_kernel_objdump=m4_normalize($aros_kernel_objdump)
-aros_kernel_ranlib=m4_normalize($aros_kernel_ranlib)
 
 # Generic
 AC_SUBST(aros_arch)
@@ -3205,12 +2968,11 @@ AC_SUBST(SRCDIR)
 AC_SUBST(AROS_CROSSTOOLSDIR)
 AC_SUBST(AROS_PORTSSRCDIR)
 
-# Compatability with other Amiga-like operating systems
+# Compatability with other Amiga-like operation systems
 AC_SUBST(aros_amigaos_compliance)
 
-# Host Related ###########################
+# Host related
 AC_SUBST(host_stat_h__unused_used)
-AC_SUBST(ax_cv_flex_version)
 AC_SUBST(host_extra_cfg)
 AC_SUBST(aros_cc_pre)
 AC_SUBST(aros_host_strip)
@@ -3239,8 +3001,9 @@ AC_SUBST(aros_host_aclocal)
 AC_SUBST(aros_host_autoconf)
 AC_SUBST(aros_host_autoheader)
 AC_SUBST(aros_host_automake)
+AC_SUBST(ant)
 
-# Target Related #########################
+# Target Related
 AC_SUBST(aros_elf_translate)
 AC_SUBST(make_extra_commands)
 AC_SUBST(make_extra_targetcfg)
@@ -3288,8 +3051,8 @@ AC_SUBST(aros_shared_default)
 AC_SUBST(aros_shared_ld)
 AC_SUBST(aros_object_format)
 AC_SUBST(spec_obj_format)
-AC_SUBST(aros_c_libs)
-AC_SUBST(aros_cxx_libs)
+AC_SUBST(aros_compiler_libs)
+AC_SUBST(aros_arch_libs)
 
 AC_SUBST(aros_shared_cflags)
 AC_SUBST(aros_shared_aflags)
@@ -3319,34 +3082,47 @@ AC_SUBST(aros_target_strip_flags)
 AC_SUBST(aros_config_lto)
 AC_SUBST(aros_config_coverage)
 AC_SUBST(aros_optimization_cflags)
-AC_SUBST(aros_kernel_isa_flags)
 AC_SUBST(aros_isa_extra)
 AC_SUBST(aros_isa_flags)
 
 AC_SUBST(crosstools_target)
 AC_SUBST(crosstools_cxx_target)
 
-AC_SUBST(use_libatomic)
 
 AC_SUBST(pci_hidd_target)
 
 AC_SUBST(aros_nominal_width)
 AC_SUBST(aros_nominal_height)
 AC_SUBST(aros_nominal_depth)
+AC_SUBST(DO_XSHM_SUPPORT)
+AC_SUBST(DO_VIDMODE_SUPPORT)
+
+AC_SUBST(aros_host_x11_cflags)
+AC_SUBST(aros_host_x11_ldflags)
+AC_SUBST(aros_host_sdl_cflags)
+AC_SUBST(aros_host_sdl_libs)
+
+# Bootloader related
+AC_SUBST(target_grub2_version)
 
 # Native version related
 AC_SUBST(aros_serial_debug)
 AC_SUBST(PLATFORM_EXECSMP)
 AC_SUBST(ENABLE_EXECSMP)
 
-# MMU related
-AC_SUBST(aros_enable_mmu)
-
-# Bootloader related
-AC_SUBST(target_grub2_version)
+# Palm native version related
+AC_SUBST(aros_palm_debug_hack)
 
 # Unix/Hosted version related
 AC_SUBST(aros_nesting_supervisor)
+
+# MMU related
+AC_SUBST(aros_enable_mmu)
+
+# Apple iOS related
+AC_SUBST(aros_ios_platform)
+AC_SUBST(aros_ios_version)
+AC_SUBST(aros_ios_sdk)
 
 # ARM default GCC target related
 AC_SUBST(gcc_default_cpu)
@@ -3355,19 +3131,20 @@ AC_SUBST(gcc_default_fpu)
 AC_SUBST(gcc_default_float_abi)
 AC_SUBST(gcc_default_mode)
 
-# Palm native version related
-AC_SUBST(aros_palm_debug_hack)
-
-# Apple iOS related
-AC_SUBST(aros_ios_platform)
-AC_SUBST(aros_ios_version)
-AC_SUBST(aros_ios_sdk)
-
 # Android related
-AC_SUBST(ant)
 AC_SUBST(android_tool)
 AC_SUBST(aros_android_level)
 AC_SUBST(aros_android_antapk)
+
+# DBUS related
+AC_SUBST(ENABLE_DBUS)
+AC_SUBST(DBUS_CFLAGS)
+AC_SUBST(DBUS_LIBFLAGS)
+AC_SUBST(KERNEL_DBUS_KOBJ)
+AC_SUBST(KERNEL_DBUS_INCLUDES)
+
+#X11 related
+AC_SUBST(ENABLE_X11)
 
 # Debug related
 AC_SUBST(aros_debug)
@@ -3382,32 +3159,12 @@ AC_SUBST(ignore_undefined_symbols)
 AC_SUBST(gcc_target_cpu)
 AC_SUBST(target_binutils_version)
 AC_SUBST(target_gcc_version)
-AC_SUBST(target_llvm_version)
 
 #ObjC compiler related
 AC_SUBST(objc_target)
 
 #Java related
 AC_SUBST(java_target)
-
-# DBUS related
-AC_SUBST(ENABLE_DBUS)
-AC_SUBST(DBUS_CFLAGS)
-AC_SUBST(DBUS_LIBFLAGS)
-AC_SUBST(KERNEL_DBUS_KOBJ)
-AC_SUBST(KERNEL_DBUS_INCLUDES)
-
-#X11 related
-AC_SUBST(ENABLE_X11)
-AC_SUBST(DO_XSHM_SUPPORT)
-AC_SUBST(DO_VIDMODE_SUPPORT)
-
-AC_SUBST(aros_host_x11_cflags)
-AC_SUBST(aros_host_x11_ldflags)
-
-#SDL related
-AC_SUBST(aros_host_sdl_cflags)
-AC_SUBST(aros_host_sdl_libs)
 
 # USB3.0 code
 AC_SUBST(aros_usb30_code)

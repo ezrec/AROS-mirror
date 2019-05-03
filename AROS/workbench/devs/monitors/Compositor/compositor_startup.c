@@ -22,17 +22,28 @@ OOP_AttrBase HiddCompositorAttrBase;
 
 const TEXT version[] = "$VER: Compositor 41.1 (8.10.2013)\n";
 
+static const struct OOP_ABDescr attrbases[] = 
+{
+    { IID_Hidd_PixFmt,          &HiddPixFmtAttrBase },
+    { IID_Hidd_Sync,            &HiddSyncAttrBase },
+    { IID_Hidd_BitMap,          &HiddBitMapAttrBase },
+    { IID_Hidd_GC,              &HiddGCAttrBase },
+    { IID_Hidd_Compositor,      &HiddCompositorAttrBase },
+    { NULL, NULL }
+};
+
 static OOP_Class *InitClass(void)
 {
     OOP_AttrBase MetaAttrBase = OOP_ObtainAttrBase(IID_Meta);
     OOP_Class *cl = NULL;
+
     struct TagItem Compositor_tags[] =
     {
-        {aMeta_SuperID,             (IPTR)CLID_Root                     },
-        {aMeta_InterfaceDescr,      (IPTR)Compositor_ifdescr            },
-        {aMeta_InstSize,            sizeof(struct HIDDCompositorData)   },
-        {aMeta_ID,                  (IPTR)CLID_Hidd_Compositor          },
-        {TAG_DONE,                  0                                   }
+        {aMeta_SuperID         , (IPTR)CLID_Root             },
+        {aMeta_InterfaceDescr, (IPTR)Compositor_ifdescr     },
+        {aMeta_InstSize         , sizeof(struct HIDDCompositorData)},
+        {aMeta_ID         , (IPTR)CLID_Hidd_Compositor     },
+        {TAG_DONE         , 0                 }
     };
 
     if (MetaAttrBase == 0)
@@ -50,15 +61,6 @@ int __nocommandline = 1;
 
 int main(void)
 {
-    const struct OOP_ABDescr attrbases[] = 
-    {
-        { IID_Hidd_PixFmt,          &HiddPixFmtAttrBase                 },
-        { IID_Hidd_Sync,            &HiddSyncAttrBase                   },
-        { IID_Hidd_BitMap,          &HiddBitMapAttrBase                 },
-        { IID_Hidd_GC,              &HiddGCAttrBase                     },
-        { IID_Hidd_Compositor,      &HiddCompositorAttrBase             },
-        { NULL,                     NULL                                }
-    };
     int ret = RETURN_FAIL;
 
     /* 

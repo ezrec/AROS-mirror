@@ -25,12 +25,6 @@ dnl
 AC_DEFUN([AROS_PROG],
 [AC_CHECK_PROG([$1],[$2],[$2 $3])])
 
-dnl AROS_PATH_PROG(var,prog,args)
-dnl Like AROS_PROG but gets the full path
-dnl
-AC_DEFUN([AROS_PATH_PROG],
-[AC_PATH_PROG([$1],[$2],[$2 $3])])
-
 dnl AROS_BUILDCMD(var,prog,ext)
 dnl appends the cmd part of prog with ext
 dnl
@@ -43,24 +37,17 @@ AC_DEFUN([AROS_BUILDCMD],
     fi
 fi])
 
-dnl AROS_TOOL_CCPATH(var,prog,override)
+dnl AROS_TOOL_CCPATH(var,prog)
 dnl This will first look for the tool in the CC path and then in the
 dnl normal path (CC path only supported for gcc at the moment)
 AC_DEFUN([AROS_TOOL_CCPATH],
-[
-if test "$3" = ""; then
-    ac_tool_[$2]=[$2]
-else
-    ac_tool_[$2]=[$3]
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_[$2]=`$CC -print-prog-name=$ac_tool_[$2]`
+[if test "$GCC" = "yes"; then
+    aros_gcc_[$2]=`$CC -print-prog-name=[$2]`
     AC_PATH_PROG([$1], [`basename $aros_gcc_[$2]`], , [`dirname $aros_gcc_[$2]`])
 fi
 if test "$[$1]" = ""; then
-    AC_PATH_PROGS([$1],[$ac_tool_[$2]])
-fi
-])
+    AC_PATH_PROG([$1],[$2])
+fi])
 
 dnl AROS_TOOL_TARGET(var,prog,override)
 dnl This is effectively the same as AROS_PROG, but adds the appropriate

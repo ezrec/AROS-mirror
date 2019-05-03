@@ -37,10 +37,6 @@ AC_MSG_RESULT($aros_targetcfg_dir)
 # C/ObjC
 #  -fexceptions
 #  -ffast-math
-#  -fassociative-math
-#  -fno-math-errno
-#  -fno-trapping-math
-#  -ftree-vectorize
 #  -flto
 #  -fwhole-program
 #  -floop-block
@@ -68,8 +64,6 @@ AC_MSG_RESULT($aros_targetcfg_dir)
 #  -fpermissive
 #  -frtti
 
-#  -fvisibility=hidden
-
 # C features first 
 AC_LANG_PUSH(C)
 
@@ -89,38 +83,6 @@ AC_TRY_COMPILE(,, aros_fast_math="yes", aros_fast_math="no")
 AC_MSG_RESULT($aros_fast_math)
 if test "x-$aros_fast_math" = "x-yes" ; then
     aros_cflags_fast_math=-ffast-math
-fi
-
-AC_MSG_CHECKING([whether ${CC} accepts -fassociative-math])
-CFLAGS=-fassociative-math
-AC_TRY_COMPILE(,, aros_associative_math="yes", aros_associative_math="no")
-AC_MSG_RESULT($aros_associative_math)
-if test "x-$aros_associative_math" = "x-yes" ; then
-    aros_cflags_associative_math=-fassociative-math
-fi
-
-AC_MSG_CHECKING([whether ${CC} accepts -fno-math-errno])
-CFLAGS=-fno-math-errno
-AC_TRY_COMPILE(,, aros_no_math_errno="yes", aros_no_math_errno="no")
-AC_MSG_RESULT($aros_no_math_errno)
-if test "x-$aros_no_math_errno" = "x-yes" ; then
-    aros_cflags_no_math_errno=-fno-math-errno
-fi
-
-AC_MSG_CHECKING([whether ${CC} accepts -fno-trapping-math])
-CFLAGS=-fno-trapping-math
-AC_TRY_COMPILE(,, aros_no_trapping_math="yes", aros_no_trapping_math="no")
-AC_MSG_RESULT($aros_no_trapping_math)
-if test "x-$aros_no_trapping_math" = "x-yes" ; then
-    aros_cflags_no_trapping_math=-fno-trapping-math
-fi
-
-AC_MSG_CHECKING([whether ${CC} accepts -ftree-vectorize])
-CFLAGS=-ftree-vectorize
-AC_TRY_COMPILE(,, aros_tree_vectorize="yes", aros_tree_vectorize="no")
-AC_MSG_RESULT($aros_tree_vectorize)
-if test "x-$aros_tree_vectorize" = "x-yes" ; then
-    aros_cflags_tree_vectorize=-ftree-vectorize
 fi
 
 AC_MSG_CHECKING([whether ${CC} accepts -flto])
@@ -293,14 +255,6 @@ AC_MSG_RESULT($aros_asynchronous_unwind_tables)
 if test "x-$aros_asynchronous_unwind_tables" = "x-yes" ; then
     aros_cflags_asynchronous_unwind_tables=-fasynchronous-unwind-tables
     aros_cflags_no_asynchronous_unwind_tables=-fno-asynchronous-unwind-tables
-fi
-
-AC_MSG_CHECKING([whether ${CC} accepts -fvisibility=hidden])
-CFLAGS=-fvisibility=hidden
-AC_TRY_COMPILE(,, aros_visibility_hidden="yes", aros_visibility_hidden="no")
-AC_MSG_RESULT($aros_visibility_hidden)
-if test "x-$aros_visibility_hidden" = "x-yes" ; then
-    aros_cflags_visibility_hidden=-fvisibility=hidden
 fi
 
 # C++ features
@@ -1186,10 +1140,6 @@ AC_SUBST(aros_cxxflags_nopermissive)
 AC_SUBST(aros_cxxflags_rtti)
 AC_SUBST(aros_cxxflags_nortti)
 AC_SUBST(aros_cflags_fast_math)
-AC_SUBST(aros_cflags_associative_math)
-AC_SUBST(aros_cflags_no_math_errno)
-AC_SUBST(aros_cflags_no_trapping_math)
-AC_SUBST(aros_cflags_tree_vectorize)
 AC_SUBST(aros_cflags_lto)
 AC_SUBST(aros_cflags_nolto)
 AC_SUBST(aros_cflags_whole_program)
@@ -1233,8 +1183,6 @@ AC_SUBST(aros_cflags_no_freestanding)
 
 AC_SUBST(aros_cflags_asynchronous_unwind_tables)
 AC_SUBST(aros_cflags_no_asynchronous_unwind_tables)
-
-AC_SUBST(aros_cflags_visibility_hidden)
 
 #
 AC_SUBST(aros_cflags_isystem)

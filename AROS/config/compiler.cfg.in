@@ -10,12 +10,6 @@ CFLAGS_NO_EXCEPTIONS                    := @aros_cflags_noexceptions@
 
 #
 CFLAGS_FAST_MATH                        := @aros_cflags_fast_math@
-CFLAGS_ASSOCIATIVE_MATH                 := @aros_cflags_associative_math@
-CFLAGS_NO_MATH_ERRNO                    := @aros_cflags_no_math_errno@
-CFLAGS_NO_TRAPPING_MATH                 := @aros_cflags_no_trapping_math@
-
-# Auto vectorize
-CFLAGS_TREE_VECTORIZE                   := @aros_cflags_tree_vectorize@
 
 #
 # LTO/Graphite optimization flags
@@ -71,8 +65,6 @@ CFLAGS_NO_FREESTANDING                  := @aros_cflags_no_freestanding@
 
 CFLAGS_ASYNCHRONOUS_UNWIND_TABLES       := @aros_cflags_asynchronous_unwind_tables@
 CFLAGS_NO_ASYNCHRONOUS_UNWIND_TABLES    := @aros_cflags_no_asynchronous_unwind_tables@
-
-CFLAGS_VISIBILITY_HIDDEN                := @aros_cflags_visibility_hidden@
 
 # C++/ObjC++
 CFLAGS_PERMISSIVE                       := @aros_cxxflags_permissive@

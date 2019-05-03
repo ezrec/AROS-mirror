@@ -1,14 +1,11 @@
 /*
-    Copyright © 1995-2019, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2017, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: VMWare SVGA Hidd initialisation code
     Lang: english
 */
 
-#ifdef DEBUG
-#undef DEBUG
-#endif
 #define DEBUG 0
 #include <aros/debug.h>
 
@@ -24,7 +21,9 @@
 #include <utility/utility.h>
 #include <aros/symbolsets.h>
 
-#include "vmwaresvga_intern.h"
+#include "vmwaresvgahardware.h"
+#include "vmwaresvgaclass.h"
+#include "svga_reg.h"
 
 #include LC_LIBDEFS_FILE
 
@@ -45,38 +44,33 @@ AROS_UFH3(void, VMWSVGAEnumerator,
     AROS_USERFUNC_INIT
 
     struct VMWareSVGA_staticdata *xsd = (struct VMWareSVGA_staticdata *)hook->h_Data;
-    IPTR io_base, fb_base, mmio_base, INTLine;
+
     IPTR ProductID, VendorID, SubClass;
 
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_ProductID, &ProductID);
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_VendorID, &VendorID);
     OOP_GetAttr(pciDevice, aHidd_PCIDevice_SubClass, &SubClass);
 
-    OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base0, &io_base);
-    OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base1, &fb_base);
-    OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base2, &mmio_base);
-    xsd->data.iobase = (APTR)io_base;
-    xsd->data.vrambase = (APTR)fb_base;
-    xsd->data.mmiobase = (APTR)mmio_base;
-    OOP_GetAttr(pciDevice, aHidd_PCIDevice_INTLine, &INTLine);
-    xsd->data.hwint = (ULONG)INTLine;
-
-    D(bug("[vmwaresvga.hidd] %s: VMWare SVGA device %04x\n", __func__, ProductID);)
+    bug("[VMWareSVGA] VMWSVGAEnumerator: VMWare SVGA device %04x\n", ProductID);
 
     if (ProductID == DEVICE_VMWARE0710)
     {
         xsd->data.indexReg = SVGA_LEGACY_BASE_PORT + SVGA_INDEX_PORT * sizeof(ULONG);
         xsd->data.valueReg = SVGA_LEGACY_BASE_PORT + SVGA_VALUE_PORT * sizeof(ULONG);
 
-        D(bug("[vmwaresvga.hidd] %s: Found VMWare SVGA 0710 device\n", __func__);)
+        bug("[VMWareSVGA] VMWSVGAEnumerator: Found VMWare SVGA 0710 device\n");
         xsd->card = pciDevice;
     }
     else if (ProductID == DEVICE_VMWARE0405)
     {
-        xsd->data.indexReg = io_base + SVGA_INDEX_PORT;
-        xsd->data.valueReg = io_base + SVGA_VALUE_PORT;
+        IPTR mmio;
+        
+        OOP_GetAttr(pciDevice, aHidd_PCIDevice_Base0, &mmio);
+        
+        xsd->data.indexReg = mmio + SVGA_INDEX_PORT;
+        xsd->data.valueReg = mmio + SVGA_VALUE_PORT;
 
-        D(bug("[vmwaresvga.hidd] %s: Found VMWare SVGA 0405 device\n", __func__);)
+        bug("[VMWareSVGA] VMWSVGAEnumerator: Found VMWare SVGA 0405 device\n");
         xsd->card = pciDevice;
     }
 
@@ -104,7 +98,7 @@ STATIC BOOL findCard(struct VMWareSVGA_staticdata *xsd)
     {
         if (!initVMWareSVGAHW(&xsd->data, xsd->card))
         {
-            D(bug("[vmwaresvga.hidd] %s: Unsupported VMWare SVGA device found - skipping\n", __func__);)
+            bug("[VMWareSVGA] findCard: Unsupported VMWare SVGA device found - skipping\n");
             xsd->card = NULL;
         }
     }
@@ -115,19 +109,10 @@ static int VMWareSVGA_Init(LIBBASETYPEPTR LIBBASE)
 {
     struct VMWareSVGA_staticdata *xsd = &LIBBASE->vsd;
 
-    xsd->VMWareSVGACyberGfxBase = OpenLibrary((STRPTR)"cybergraphics.library",0);
-    if (xsd->VMWareSVGACyberGfxBase == NULL)
-        goto failure;
-
-    xsd->VMWareSVGAKernelBase = OpenResource("kernel.resource");
-    if (xsd->VMWareSVGAKernelBase == NULL)
-        goto failure;
-
     if (!OOP_ObtainAttrBases(abd))
         goto failure;
 
     xsd->basebm = OOP_FindClass(CLID_Hidd_BitMap);
-    xsd->basegallium = OOP_FindClass(CLID_Hidd_Gallium);
 
     xsd->pcihidd = OOP_NewObject(NULL, CLID_Hidd_PCI, NULL);
     if (xsd->pcihidd == NULL)
@@ -137,25 +122,14 @@ static int VMWareSVGA_Init(LIBBASETYPEPTR LIBBASE)
     if (HiddPCIDeviceAttrBase == 0)
         goto failure;
 
-    xsd->hiddGalliumAB = OOP_ObtainAttrBase((STRPTR)IID_Hidd_Gallium);
-    if (xsd->hiddGalliumAB == 0)
-        goto failure;
-
     if (!findCard(xsd))
         goto failure;
 
-    D(bug("[vmwaresvga.hidd] %s: Suitable adaptor found\n", __func__);)
+    D(bug("[VMWareSVGA] Init: VMWare SVGA Adaptor Found\n"));
     return TRUE;
 
 failure:
-    D(bug("[vmwaresvga.hidd] %s: No suitable adaptors found\n", __func__);)
-
-    if (xsd->VMWareSVGACyberGfxBase)
-        CloseLibrary(xsd->VMWareSVGACyberGfxBase);
-
-    if (xsd->hiddGalliumAB)
-        OOP_ReleaseAttrBase((STRPTR)IID_Hidd_Gallium);
-
+    D(bug("[VMWareSVGA] Init: No VMWare SVGA Adaptor Found\n"));
     if (HiddPCIDeviceAttrBase != 0)
     {
         OOP_ReleaseAttrBase(IID_Hidd_PCIDevice);
@@ -174,5 +148,3 @@ failure:
 }
 
 ADD2INITLIB(VMWareSVGA_Init, 0)
-
-ADD2LIBS((STRPTR)"gallium.hidd", 7, static struct Library *, GalliumHiddBase);

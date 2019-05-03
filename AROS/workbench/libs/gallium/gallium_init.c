@@ -1,5 +1,5 @@
 /*
-    Copyright © 2010-2019, The AROS Development Team. All rights reserved.
+    Copyright © 2010-2018, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -10,12 +10,17 @@
 #include <hidd/gfx.h>
 
 #include LC_LIBDEFS_FILE
-#include "gallium_intern.h"
 
 CONST_STRPTR softpipe_str = "softpipe";
 
 static int Init(LIBBASETYPEPTR LIBBASE)
 {
+    InitSemaphore(&LIBBASE->driversemaphore);
+
+    LIBBASE->basegallium = OOP_FindClass(CLID_Hidd_Gallium);
+    if (!LIBBASE->basegallium)
+        return FALSE;
+
     LIBBASE->gfxAttrBase = OOP_ObtainAttrBase((STRPTR)IID_Hidd_Gfx);
     if (!LIBBASE->gfxAttrBase)
         return FALSE;
@@ -28,20 +33,23 @@ static int Init(LIBBASETYPEPTR LIBBASE)
     if (!LIBBASE->galliumAttrBase)
         return FALSE;
 
-    LIBBASE->basegallium = OOP_FindClass(CLID_Hidd_Gallium);
     LIBBASE->fallback = (char *)softpipe_str;
     LIBBASE->fallbackmodule = NULL;
 
-    /* cache method id's that we use ..  */
-    LIBBASE->galliumMId_UpdateRect = OOP_GetMethodID(IID_Hidd_BitMap, moHidd_BitMap_UpdateRect);
-    LIBBASE->galliumMId_DisplayResource = OOP_GetMethodID(IID_Hidd_Gallium, moHidd_Gallium_DisplayResource);
+    /* Cache method IDs that we use */
+    LIBBASE->galliumMId_UpdateRect =
+        OOP_GetMethodID(IID_Hidd_BitMap, moHidd_BitMap_UpdateRect);
+    LIBBASE->galliumMId_DisplayResource =
+        OOP_GetMethodID(IID_Hidd_Gallium, moHidd_Gallium_DisplayResource);
 
     return TRUE;
 }
 
 static int Expunge(LIBBASETYPEPTR LIBBASE)
 {
-    
+    if (LIBBASE->driver)
+        OOP_DisposeObject(LIBBASE->driver);
+
     if (LIBBASE->galliumAttrBase)
         OOP_ReleaseAttrBase((STRPTR)IID_Hidd_Gallium);
 
@@ -51,8 +59,8 @@ static int Expunge(LIBBASETYPEPTR LIBBASE)
     if (LIBBASE->gfxAttrBase)
         OOP_ReleaseAttrBase((STRPTR)IID_Hidd_Gfx);
 
-    if (LIBBASE->fallbackmodule)
-        CloseLibrary(LIBBASE->fallbackmodule);
+    if (LIBBASE->drivermodule)
+        CloseLibrary(LIBBASE->drivermodule);
 
     return TRUE;
 }

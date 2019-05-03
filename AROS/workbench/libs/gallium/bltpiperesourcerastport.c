@@ -1,5 +1,5 @@
 /*
-    Copyright © 2011-2019, The AROS Development Team. All rights reserved.
+    Copyright © 2011-2017, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -8,7 +8,7 @@
 #include <proto/alib.h>
 #include <proto/layers.h>
 #include <proto/graphics.h>
-#include "pipe/p_state.h"
+#include <gallium/pipe/p_state.h>
 #include <aros/debug.h>
 
 #include "gallium_intern.h"
@@ -56,23 +56,13 @@
 {
     AROS_LIBFUNC_INIT
 
-    struct Layer *L;
-
-    if (!pipe || !(L = destRP->Layer))
-        return;
+    struct Layer *L = destRP->Layer;
+    struct ClipRect *CR;
+    struct Rectangle renderableLayerRect;
+    BOOL copied = FALSE;
 
     if (!IsLayerVisible(L))
         return;
-
-    struct Rectangle renderableLayerRect;
-    struct pHidd_Gallium_DisplayResource drmsg = {
-        mID : ((struct GalliumBase *)GalliumBase)->galliumMId_DisplayResource,
-        resource : srcPipeResource,
-        bitmap: destRP->BitMap,
-    };
-    struct Rectangle result;
-    struct ClipRect *CR;
-    BOOL copied = FALSE;
 
     LockLayerRom(L);
     
@@ -89,37 +79,44 @@
     if (renderableLayerRect.MaxY > L->bounds.MaxY)
         renderableLayerRect.MaxY = L->bounds.MaxY;
 
+    
     /*  Do not clip renderableLayerRect to screen rast port. CRs are already clipped and unclipped 
         layer coords are needed. */
-
+    
     CR = L->ClipRect;
-
+    
     for (;NULL != CR; CR = CR->Next)
     {
         D(bug("Cliprect (%d, %d, %d, %d), lobs=%p\n",
             CR->bounds.MinX, CR->bounds.MinY, CR->bounds.MaxX, CR->bounds.MaxY,
-            CR->lobs);)
+            CR->lobs));
 
         /* I assume this means the cliprect is visible */
         if (NULL == CR->lobs)
         {
+            struct Rectangle result;
+            
             if (AndRectRect(&renderableLayerRect, &CR->bounds, &result))
             {
                 /* This clip rect intersects renderable layer rect */
-                drmsg.srcx =   xSrc + result.MinX - L->bounds.MinX - xDest; /* x in the source buffer */
-                drmsg.srcy =   ySrc + result.MinY - L->bounds.MinY - yDest; /* y in the source buffer */
-                drmsg.dstx =   result.MinX; /* Absolute (on bitmap) X of dest blit */
-                drmsg.dsty =   result.MinY; /* Absolute (on bitmap) Y of dest blit */
-                drmsg.width =  result.MaxX - result.MinX + 1; /* width of the rect in source buffer */
-                drmsg.height = result.MaxY - result.MinY + 1; /* height of the rect in source buffer */
-
-                OOP_DoMethod((OOP_Object *)pipe, (OOP_Msg)&drmsg);
-
+                struct pHidd_Gallium_DisplayResource drmsg = {
+                mID : ((struct GalliumBase *)GalliumBase)->galliumMId_DisplayResource,
+                resource : srcPipeResource,
+                srcx : xSrc + result.MinX - L->bounds.MinX - xDest, /* x in the source buffer */
+                srcy : ySrc + result.MinY - L->bounds.MinY - yDest, /* y in the source buffer */
+                bitmap: destRP->BitMap,
+                dstx : result.MinX, /* Absolute (on bitmap) X of dest blit */
+                dsty : result.MinY, /* Absolute (on bitmap) Y of dest blit */
+                width : result.MaxX - result.MinX + 1, /* width of the rect in source buffer */
+                height : result.MaxY - result.MinY + 1, /* height of the rect in source buffer */
+                };
+                OOP_DoMethod(pipe, (OOP_Msg)&drmsg);
+                
                 copied = TRUE;
             }
         }
     }
-
+    
     /* Notify the bitmap about blitting */
     if (copied)
     {
@@ -136,6 +133,6 @@
     }
 
     UnlockLayerRom(L);    
-
+    
     AROS_LIBFUNC_EXIT
 }

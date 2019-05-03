@@ -2,7 +2,7 @@
 #define HIDD_GRAPHICS_H
 
 /*
-    Copyright © 1995-2019, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2017, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Definitions for the Gfx Hidd system.
@@ -34,15 +34,10 @@ typedef OOP_Object *HIDDT_GC;
 #define vHidd_SpriteType_2Plus1      0x02 /* Color 0 transparrent, 1 undefined, 2-3 visible */
 #define vHidd_SpriteType_DirectColor 0x04 /* Hi- or truecolor image                          */
 
-#define tHidd_Gfx_BASE                  TAG_USER
-#define tHidd_Gfx_QuerModeBASE          (tHidd_Gfx_BASE + 0x1000)
-#define tHidd_Gfx_CursorBASE            (tHidd_Gfx_BASE + 0x2000)
-#define tHidd_Gfx_MemAttribBASE         (tHidd_Gfx_BASE + 0x3000)
-
 /* Parameter tags for the QueryModeIDs method */
 enum
 {
-    tHidd_GfxMode_MinWidth = tHidd_Gfx_QuerModeBASE,
+    tHidd_GfxMode_MinWidth = TAG_USER,
     tHidd_GfxMode_MaxWidth,
     tHidd_GfxMode_MinHeight,
     tHidd_GfxMode_MaxHeight,
@@ -114,10 +109,10 @@ struct HIDD_ViewPortData
 
 enum
 {
-    tHidd_Cursor_BitMap = tHidd_Gfx_CursorBASE,         /* OOP_Object *, cursor shape bitmap */
-    tHidd_Cursor_XPos,                                  /* ULONG, cursor x position     */
-    tHidd_Cursor_YPos,                                  /* ULONG, cursor Y position */
-    tHidd_Cursor_On                                     /* BOOL, cursor on, TRUE, FALSE. */
+    tHidd_Cursor_BitMap,        /* OOP_Object *, cursor shape bitmap */
+    tHidd_Cursor_XPos,          /* ULONG, cursor x position     */
+    tHidd_Cursor_YPos,          /* ULONG, cursor Y position */
+    tHidd_Cursor_On             /* BOOL, cursor on, TRUE, FALSE. */
 };
 
 /* Framebuffer types */
@@ -539,14 +534,13 @@ enum
 
 #define CLID_Hidd_Gfx IID_Hidd_Gfx
 
-/* Parameter tags for the MemoryAttribs attribute */
 enum
 {
-    tHidd_Gfx_MemTotal = tHidd_Gfx_MemAttribBASE,       // Total video memory
-    tHidd_Gfx_MemFree,                                  // unused video memory
-    tHidd_Gfx_MemAddressableTotal,                      // Total addressable video memory
-    tHidd_Gfx_MemAddressableFree,                       // unused addressable video memory
-    tHidd_Gfx_MemClock,                                 // video card's memory clock in Hz
+    vHidd_Gfx_MemTotal,
+    vHidd_Gfx_MemFree,
+    vHidd_Gfx_MemAddressableTotal,                         //
+    vHidd_Gfx_MemAddressableFree,
+    vHidd_Gfx_MemClock,                                         //video card's memory clock in Hz
 };
 
 /* Compatability types */

@@ -2,7 +2,7 @@
 #define _ATA_H
 
 /*
-    Copyright © 2004-2019, The AROS Development Team. All rights reserved.
+    Copyright © 2004-2018, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: ata.device main private include file
@@ -31,7 +31,7 @@
 #include <hardware/ata.h>
 #include <hidd/ata.h>
 
-#include <devices/scsicmds.h>
+#include "include/devices/scsicmds.h"
 
 #define MAX_DEVICEBUSES         2
 #define MAX_BUSUNITS            2

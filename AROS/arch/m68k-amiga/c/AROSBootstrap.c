@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011-2019, The AROS Development Team.  All rights reserved.
+ * Copyright (C) 2011-2018, The AROS Development Team.  All rights reserved.
  *
  * Licensed under the AROS PUBLIC LICENSE (APL) Version 1.1
  */
@@ -1188,20 +1188,6 @@ static void doreboot(void)
 }
 
 struct BootStruct *bs;
-
-/* AROSBootstrap's ClearCacheE implementations
- * This function can either be called from AmigaOS, where
- * CacheClearE may not be implemented (<v37) or from AROS
- * where the CPU may be configured .. so we always call it if
- * the OS version provides it.
- */
-void ils_ClearCache(APTR address, IPTR length, ULONG caches) 
-{
-    if (SysBase->LibNode.lib_Version >= 37)
-    {
-        CacheClearE(address, length, caches);
-    }
-}
 
 static void supercode(void)
 {

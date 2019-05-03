@@ -1,5 +1,5 @@
 /* MetaMake - A Make extension
-   Copyright © 1995-2019, The AROS Development Team. All rights reserved.
+   Copyright © 1995-2004, The AROS Development Team. All rights reserved.
 
 This file is part of MetaMake.
 
@@ -50,14 +50,19 @@ int
 checkdeps (struct List * deps, time_t desttime)
 {
     struct Dep * dep;
-    double diff_t = 0;
+    int newer = 0;
 
+    /*printf("MMAKE/dep.c:checkdeps()\n");*/
     ForeachNode (deps, dep)
     {
-        diff_t = difftime(desttime, dep->time);
-        if (diff_t < 0.0)
-            return 1;
+        /*printf("MMAKE:\"%s\" %d > %d ?\n", dep->node.name, dep->time, desttime);*/
+	if (dep->time > desttime)
+	{
+	    /*printf ("%s is newer\n", dep->node.name);*/
+	    newer = 1;
+	    break;
+	}
     }
 
-    return 0;
+    return newer;
 }

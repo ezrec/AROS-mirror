@@ -622,18 +622,6 @@ ac_includes_default="\
 ac_header_list=
 ac_subst_vars='LTLIBOBJS
 aros_usb30_code
-aros_host_sdl_libs
-aros_host_sdl_cflags
-aros_host_x11_ldflags
-aros_host_x11_cflags
-DO_VIDMODE_SUPPORT
-DO_XSHM_SUPPORT
-ENABLE_X11
-KERNEL_DBUS_INCLUDES
-KERNEL_DBUS_KOBJ
-DBUS_LIBFLAGS
-DBUS_CFLAGS
-ENABLE_DBUS
 java_target
 objc_target
 target_binutils_version
@@ -643,33 +631,43 @@ aros_modules_debug
 aros_stack_debug
 aros_mungwall_debug
 aros_debug
+ENABLE_X11
+KERNEL_DBUS_INCLUDES
+KERNEL_DBUS_KOBJ
+DBUS_LIBFLAGS
+DBUS_CFLAGS
+ENABLE_DBUS
 aros_android_antapk
 aros_android_level
-aros_ios_sdk
-aros_ios_version
-aros_ios_platform
-aros_palm_debug_hack
 gcc_default_mode
 gcc_default_float_abi
 gcc_default_fpu
 gcc_default_cpu_tune
 gcc_default_cpu
-aros_nesting_supervisor
-target_grub2_version
+aros_ios_sdk
+aros_ios_version
+aros_ios_platform
 aros_enable_mmu
+aros_nesting_supervisor
+aros_palm_debug_hack
 ENABLE_EXECSMP
 PLATFORM_EXECSMP
 aros_serial_debug
+target_grub2_version
+aros_host_sdl_libs
+aros_host_sdl_cflags
+aros_host_x11_ldflags
+aros_host_x11_cflags
+DO_VIDMODE_SUPPORT
+DO_XSHM_SUPPORT
 aros_nominal_depth
 aros_nominal_height
 aros_nominal_width
 pci_hidd_target
-use_libatomic
 crosstools_cxx_target
 crosstools_target
 aros_isa_flags
 aros_isa_extra
-aros_kernel_isa_flags
 aros_optimization_cflags
 aros_config_coverage
 aros_config_lto
@@ -696,8 +694,8 @@ aros_warn_flags
 aros_shared_ldflags
 aros_shared_aflags
 aros_shared_cflags
-aros_cxx_libs
-aros_c_libs
+aros_arch_libs
+aros_compiler_libs
 spec_obj_format
 aros_object_format
 aros_shared_ld
@@ -743,7 +741,6 @@ aros_host_cxxflags
 aros_host_cflags
 aros_host_cppflags
 aros_host_make
-aros_host_ar
 aros_host_cxx
 aros_host_cc
 aros_host_def_cc
@@ -752,7 +749,6 @@ aros_host_cpu
 aros_host_arch
 aros_cc_pre
 host_extra_cfg
-ax_cv_flex_version
 host_stat_h__unused_used
 aros_amigaos_compliance
 AROS_PORTSSRCDIR
@@ -804,7 +800,6 @@ aros_kernel_ld
 aros_kernel_cxx
 aros_kernel_cc
 aros_kernel_cpp
-target_llvm_version
 target_gcc_version
 ant
 android_tool
@@ -849,16 +844,12 @@ CP
 RM
 aros_host_strip
 aros_host_ranlib
-RANLIB_BASE
-aros_host_plain_ar
-AR_BASE
+aros_host_ar
 aros_host_automake
 aros_host_autoheader
 aros_host_autoconf
 aros_host_aclocal
 aros_host_ld
-LD_BASE
-base_lld_name
 MMAKE
 AWK
 CPP
@@ -950,7 +941,6 @@ enable_crosstools
 with_aros_toolchain_install
 with_binutils_version
 with_gcc_version
-with_llvm_version
 enable_objc
 enable_java
 with_cpu
@@ -1709,8 +1699,6 @@ Optional Packages:
                           Use binutils-VERSION for building AROS
   --with-gcc-version=VERSION
                           Compile gcc-VERSION for AROS
-  --with-llvm-version=VERSION
-                          Compile llvm-VERSION for AROS
   --with-cpu=<spec>       Specify minumum CPU (default=$gcc_default_cpu).
   --with-fpu=<spec>       Specify minumum FPU (default=$gcc_default_fpu).
   --with-float=<spec>     Specify floating point ABI
@@ -2828,7 +2816,6 @@ default_toolchain_family=`cat ${srcdir}/config/toolchain_def`
 default_gcc_version=`cat ${srcdir}/config/gcc_def`
 exp_gcc_version=`cat ${srcdir}/config/gcc_exp`
 default_binutils_version=`cat ${srcdir}/config/binutils_def`
-default_llvm_version=`cat ${srcdir}/config/llvm_def`
 exp_binutils_version=`cat ${srcdir}/config/binutils_exp`
 default_grub2_version="2.02"
 target_grub2_version=$default_grub2_version
@@ -2893,12 +2880,6 @@ aros_nominal_height=600
 aros_nominal_depth=4
 
 
-HOST_WANTS_X11=
-HOST_WANTS_GLX=
-HOST_WANTS_SDL=
-HOST_WANTS_DBUS=
-HOST_WANTS_DLOPEN=
-
 default_c_compilers="gcc clang cc"
 
 # Check whether --with-c-compiler was given.
@@ -2912,7 +2893,6 @@ if test "$use_c_compiler" = ""; then
     host_c_compilers="$default_c_compilers"
 else
     host_c_compilers="$use_c_compiler"
-    CC=$use_c_compiler
 fi
 
 default_cxx_compilers="g++ clang++ c++"
@@ -2928,7 +2908,6 @@ if test "$use_cxx_compiler" = ""; then
         host_cxx_compilers="$default_cxx_compilers"
 else
     host_cxx_compilers="$use_cxx_compiler"
-    CXX=$use_cxx_compiler
 fi
 
 
@@ -3443,47 +3422,6 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
-CXX_BASE=$CXX
-# Extract the first word of "$CXX", so it can be a program name with args.
-set dummy $CXX; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_CXX+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $CXX in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_CXX="$CXX" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_CXX="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-CXX=$ac_cv_path_CXX
-if test -n "$CXX"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CXX" >&5
-$as_echo "$CXX" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -3830,185 +3768,6 @@ ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
-
-CC_BASE=$CC
-ac_ext=c
-ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_c_compiler_gnu
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking how to run the C preprocessor" >&5
-$as_echo_n "checking how to run the C preprocessor... " >&6; }
-# On Suns, sometimes $CPP names a directory.
-if test -n "$CPP" && test -d "$CPP"; then
-  CPP=
-fi
-if test -z "$CPP"; then
-  if ${ac_cv_prog_CPP+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-      # Double quotes because CPP needs to be expanded
-    for CPP in "$CC -E" "$CC -E -traditional-cpp" "/lib/cpp"
-    do
-      ac_preproc_ok=false
-for ac_c_preproc_warn_flag in '' yes
-do
-  # Use a header file that comes with gcc, so configuring glibc
-  # with a fresh cross-compiler works.
-  # Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
-  # <limits.h> exists even on freestanding compilers.
-  # On the NeXT, cc -E runs the code through the compiler's parser,
-  # not just through cpp. "Syntax error" is here to catch this case.
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#ifdef __STDC__
-# include <limits.h>
-#else
-# include <assert.h>
-#endif
-		     Syntax error
-_ACEOF
-if ac_fn_c_try_cpp "$LINENO"; then :
-
-else
-  # Broken: fails on valid input.
-continue
-fi
-rm -f conftest.err conftest.i conftest.$ac_ext
-
-  # OK, works on sane cases.  Now check whether nonexistent headers
-  # can be detected and how.
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <ac_nonexistent.h>
-_ACEOF
-if ac_fn_c_try_cpp "$LINENO"; then :
-  # Broken: success on invalid input.
-continue
-else
-  # Passes both tests.
-ac_preproc_ok=:
-break
-fi
-rm -f conftest.err conftest.i conftest.$ac_ext
-
-done
-# Because of `break', _AC_PREPROC_IFELSE's cleaning code was skipped.
-rm -f conftest.i conftest.err conftest.$ac_ext
-if $ac_preproc_ok; then :
-  break
-fi
-
-    done
-    ac_cv_prog_CPP=$CPP
-
-fi
-  CPP=$ac_cv_prog_CPP
-else
-  ac_cv_prog_CPP=$CPP
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $CPP" >&5
-$as_echo "$CPP" >&6; }
-ac_preproc_ok=false
-for ac_c_preproc_warn_flag in '' yes
-do
-  # Use a header file that comes with gcc, so configuring glibc
-  # with a fresh cross-compiler works.
-  # Prefer <limits.h> to <assert.h> if __STDC__ is defined, since
-  # <limits.h> exists even on freestanding compilers.
-  # On the NeXT, cc -E runs the code through the compiler's parser,
-  # not just through cpp. "Syntax error" is here to catch this case.
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#ifdef __STDC__
-# include <limits.h>
-#else
-# include <assert.h>
-#endif
-		     Syntax error
-_ACEOF
-if ac_fn_c_try_cpp "$LINENO"; then :
-
-else
-  # Broken: fails on valid input.
-continue
-fi
-rm -f conftest.err conftest.i conftest.$ac_ext
-
-  # OK, works on sane cases.  Now check whether nonexistent headers
-  # can be detected and how.
-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
-/* end confdefs.h.  */
-#include <ac_nonexistent.h>
-_ACEOF
-if ac_fn_c_try_cpp "$LINENO"; then :
-  # Broken: success on invalid input.
-continue
-else
-  # Passes both tests.
-ac_preproc_ok=:
-break
-fi
-rm -f conftest.err conftest.i conftest.$ac_ext
-
-done
-# Because of `break', _AC_PREPROC_IFELSE's cleaning code was skipped.
-rm -f conftest.i conftest.err conftest.$ac_ext
-if $ac_preproc_ok; then :
-
-else
-  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
-as_fn_error $? "C preprocessor \"$CPP\" fails sanity check
-See \`config.log' for more details" "$LINENO" 5; }
-fi
-
-ac_ext=c
-ac_cpp='$CPP $CPPFLAGS'
-ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
-ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
-ac_compiler_gnu=$ac_cv_c_compiler_gnu
-
-CPP_BASE=$CPP
-# Extract the first word of "$CC", so it can be a program name with args.
-set dummy $CC; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_CC+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $CC in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_CC="$CC" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_CC="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  ;;
-esac
-fi
-CC=$ac_cv_path_CC
-if test -n "$CC"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $CC" >&5
-$as_echo "$CC" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
 
 aros_host_def_cc="$CC"
    case $ac_cv_prog_cc_stdc in #(
@@ -4441,47 +4200,6 @@ ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
-# detect the compiler version
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking which toolchain family ${CC_BASE} belongs to" >&5
-$as_echo_n "checking which toolchain family ${CC_BASE} belongs to... " >&6; }
-HOST_COMPILER_VERSION=`"$CC" --version 2>/dev/null`
-if test x"$HOST_COMPILER_VERSION" = "x"; then
-    HOST_COMPILER_VERSION=`"$CC" --qversion 2>/dev/null`
-fi
-if test x"$HOST_COMPILER_VERSION" = "x"; then
-    HOST_COMPILER_VERSION=`"$CC" -V 2>/dev/null`
-fi
-
-IS_SUN_COMPILER=`echo $HOST_COMPILER_VERSION | grep -i -c -E 'Sun C\+\+'`
-if test "$IS_SUN_COMPILER" -ne "0"; then
-    HOST_TOOLCHAIN_PREFIX=
-    HOST_TOOLCHAIN_SUFFIX=
-    HOST_TOOLCHAIN_FAMILY=sun
-fi
-IS_LLVM_COMPILER=`echo $HOST_COMPILER_VERSION | grep -i -c -E 'LLVM|clang'`
-if test "$IS_LLVM_COMPILER" -ne "0"; then
-    if test "$CC_BASE" != "gcc"; then
-        HOST_TOOLCHAIN_PREFIX=llvm-
-        HOST_TOOLCHAIN_SUFFIX="`echo $CC_BASE | sed -e \"s|clang||g\"`"
-        HOST_TOOLCHAIN_FAMILY=llvm
-    else
-        IS_GNU_COMPILER=1
-    fi
-fi
-if test "x$IS_GNU_COMPILER" = "x"; then
-    IS_GNU_COMPILER=`echo $HOST_COMPILER_VERSION | grep -i -c -E 'gcc'`
-fi
-if test "$IS_GNU_COMPILER" -ne "0"; then
-    HOST_TOOLCHAIN_PREFIX=
-    HOST_TOOLCHAIN_SUFFIX=
-    HOST_TOOLCHAIN_FAMILY=gnu
-fi
-if test x"$HOST_TOOLCHAIN_FAMILY" = "x"; then
-    HOST_TOOLCHAIN_FAMILY=unknown
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $HOST_TOOLCHAIN_FAMILY" >&5
-$as_echo "$HOST_TOOLCHAIN_FAMILY" >&6; }
-
 # Check for a compatible awk
 for ac_prog in gawk nawk
 do
@@ -4580,98 +4298,8 @@ aros_build_host=$host
 aros_host_cpp="$CPP"
 aros_host_cc="$CC"
 aros_host_cxx="$CXX"
-base_ld_name=${HOST_TOOLCHAIN_PREFIX}ld${HOST_TOOLCHAIN_SUFFIX}
-if test "$HOST_TOOLCHAIN_FAMILY" = "llvm"; then
-    for ac_prog in $base_ld_name ld.lld${HOST_TOOLCHAIN_SUFFIX} ld64.lld${HOST_TOOLCHAIN_SUFFIX} ld-link${HOST_TOOLCHAIN_SUFFIX}.exe ld${HOST_TOOLCHAIN_SUFFIX}
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_base_lld_name+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$base_lld_name"; then
-  ac_cv_prog_base_lld_name="$base_lld_name" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_base_lld_name="$ac_prog"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-fi
-fi
-base_lld_name=$ac_cv_prog_base_lld_name
-if test -n "$base_lld_name"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $base_lld_name" >&5
-$as_echo "$base_lld_name" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-  test -n "$base_lld_name" && break
-done
-
-    LD_BASE=$base_lld_name
-else
-    # Extract the first word of "$base_ld_name", so it can be a program name with args.
-set dummy $base_ld_name; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_LD_BASE+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$LD_BASE"; then
-  ac_cv_prog_LD_BASE="$LD_BASE" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_LD_BASE=""
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-fi
-fi
-LD_BASE=$ac_cv_prog_LD_BASE
-if test -n "$LD_BASE"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $LD_BASE" >&5
-$as_echo "$LD_BASE" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-fi
-
-if test "$LD_BASE" = ""; then
-    ac_tool_ld=ld
-else
-    ac_tool_ld=$LD_BASE
-fi
 if test "$GCC" = "yes"; then
-    aros_gcc_ld=`$CC -print-prog-name=$ac_tool_ld`
+    aros_gcc_ld=`$CC -print-prog-name=ld`
     # Extract the first word of "`basename $aros_gcc_[ld]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_ld`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -4714,10 +4342,8 @@ fi
 
 fi
 if test "$aros_host_ld" = ""; then
-    for ac_prog in $ac_tool_ld
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "ld", so it can be a program name with args.
+set dummy ld; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_aros_host_ld+:} false; then :
@@ -4756,11 +4382,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$aros_host_ld" && break
-done
-
 fi
-
 req_avail=yes
 if test "$aros_host_ld" = ""; then
     req_avail=no
@@ -5289,16 +4911,15 @@ $as_echo "$as_me: WARNING: \"Unknown CPU for host -- $host_cpu\"" >&2;}
         ;;
 esac
 
-base_ar_name=${HOST_TOOLCHAIN_PREFIX}ar${HOST_TOOLCHAIN_SUFFIX}
-# Extract the first word of "$base_ar_name", so it can be a program name with args.
-set dummy $base_ar_name; ac_word=$2
+# Extract the first word of "ar", so it can be a program name with args.
+set dummy ar; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_AR_BASE+:} false; then :
+if ${ac_cv_prog_aros_host_ar+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  if test -n "$AR_BASE"; then
-  ac_cv_prog_AR_BASE="$AR_BASE" # Let the user override the test.
+  if test -n "$aros_host_ar"; then
+  ac_cv_prog_aros_host_ar="$aros_host_ar" # Let the user override the test.
 else
 as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
@@ -5307,7 +4928,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_AR_BASE="$base_ar_name "
+    ac_cv_prog_aros_host_ar="ar cr"
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -5317,60 +4938,16 @@ IFS=$as_save_IFS
 
 fi
 fi
-AR_BASE=$ac_cv_prog_AR_BASE
-if test -n "$AR_BASE"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $AR_BASE" >&5
-$as_echo "$AR_BASE" >&6; }
+aros_host_ar=$ac_cv_prog_aros_host_ar
+if test -n "$aros_host_ar"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $aros_host_ar" >&5
+$as_echo "$aros_host_ar" >&6; }
 else
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
 fi
 
 
-aros_host_ar_flags="cr"
-aros_host_cmd_ar="$AR_BASE $aros_host_ar_flags"
-# Extract the first word of "$aros_host_cmd_ar", so it can be a program name with args.
-set dummy $aros_host_cmd_ar; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_aros_host_plain_ar+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $aros_host_plain_ar in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_aros_host_plain_ar="$aros_host_plain_ar" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_aros_host_plain_ar="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_aros_host_plain_ar" && ac_cv_path_aros_host_plain_ar="$aros_host_cmd_ar "
-  ;;
-esac
-fi
-aros_host_plain_ar=$ac_cv_path_aros_host_plain_ar
-if test -n "$aros_host_plain_ar"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $aros_host_plain_ar" >&5
-$as_echo "$aros_host_plain_ar" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-aros_host_ar=`echo $aros_host_cmd_ar | sed -e "s|$base_ar_name|$aros_host_plain_ar|g"`
 req_avail=yes
 if test "$aros_host_ar" = ""; then
     req_avail=no
@@ -5381,16 +4958,15 @@ fi
 if test "$req_avail" = "no"; then
     as_fn_error $? "ar is required to build AROS. Please install and run configure again." "$LINENO" 5
 fi
-base_ranlib_name=${HOST_TOOLCHAIN_PREFIX}ranlib${HOST_TOOLCHAIN_SUFFIX}
-# Extract the first word of "$base_ranlib_name", so it can be a program name with args.
-set dummy $base_ranlib_name; ac_word=$2
+# Extract the first word of "ranlib", so it can be a program name with args.
+set dummy ranlib; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_RANLIB_BASE+:} false; then :
+if ${ac_cv_prog_aros_host_ranlib+:} false; then :
   $as_echo_n "(cached) " >&6
 else
-  if test -n "$RANLIB_BASE"; then
-  ac_cv_prog_RANLIB_BASE="$RANLIB_BASE" # Let the user override the test.
+  if test -n "$aros_host_ranlib"; then
+  ac_cv_prog_aros_host_ranlib="$aros_host_ranlib" # Let the user override the test.
 else
 as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
@@ -5399,7 +4975,7 @@ do
   test -z "$as_dir" && as_dir=.
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_RANLIB_BASE="$base_ranlib_name "
+    ac_cv_prog_aros_host_ranlib="ranlib "
     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -5409,48 +4985,7 @@ IFS=$as_save_IFS
 
 fi
 fi
-RANLIB_BASE=$ac_cv_prog_RANLIB_BASE
-if test -n "$RANLIB_BASE"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $RANLIB_BASE" >&5
-$as_echo "$RANLIB_BASE" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-# Extract the first word of "$RANLIB_BASE", so it can be a program name with args.
-set dummy $RANLIB_BASE; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_path_aros_host_ranlib+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  case $aros_host_ranlib in
-  [\\/]* | ?:[\\/]*)
-  ac_cv_path_aros_host_ranlib="$aros_host_ranlib" # Let the user override the test with a path.
-  ;;
-  *)
-  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_path_aros_host_ranlib="$as_dir/$ac_word$ac_exec_ext"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-  test -z "$ac_cv_path_aros_host_ranlib" && ac_cv_path_aros_host_ranlib="$RANLIB_BASE "
-  ;;
-esac
-fi
-aros_host_ranlib=$ac_cv_path_aros_host_ranlib
+aros_host_ranlib=$ac_cv_prog_aros_host_ranlib
 if test -n "$aros_host_ranlib"; then
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $aros_host_ranlib" >&5
 $as_echo "$aros_host_ranlib" >&6; }
@@ -6082,11 +5617,6 @@ fi
 if test "$req_avail" = "no"; then
     as_fn_error $? "flex is required to build AROS. Please install and run configure again." "$LINENO" 5
 fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking version of $FLEX" >&5
-$as_echo_n "checking version of $FLEX... " >&6; }
-ax_cv_flex_version="`$FLEX --version | cut -d\" \" -f2`"
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_flex_version" >&5
-$as_echo "$ax_cv_flex_version" >&6; }
 # Extract the first word of "pngtopnm", so it can be a program name with args.
 set dummy pngtopnm; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -6364,7 +5894,7 @@ if ${am_cv_pathless_PYTHON+:} false; then :
   $as_echo_n "(cached) " >&6
 else
 
-	for am_cv_pathless_PYTHON in python python2 python3 python3.8 python3.7 python3.6 python3.5 python3.4 python3.3 python3.2 python3.1 python3.0 python2.7  python2.6 python2.5 python2.4 python2.3 python2.2 python2.1 python2.0 none; do
+	for am_cv_pathless_PYTHON in python python2 python3 python3.3 python3.2 python3.1 python3.0 python2.7  python2.6 python2.5 python2.4 python2.3 python2.2 python2.1 python2.0 none; do
 	  test "$am_cv_pathless_PYTHON" = none && break
 	  prog="import sys
 # split strings by '.' and convert to numeric.  Append some zeros
@@ -7888,8 +7418,8 @@ rm -f conftest.mmap conftest.txt
 # work on all platforms.
 #
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ${CC_BASE} accepts -fno-stack-protector" >&5
-$as_echo_n "checking whether ${CC_BASE} accepts -fno-stack-protector... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ${CC} accepts -fno-stack-protector" >&5
+$as_echo_n "checking whether ${CC} accepts -fno-stack-protector... " >&6; }
 save_cflags="$CFLAGS"
 CFLAGS="$CFLAGS -fno-stack-protector"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -7921,8 +7451,8 @@ CFLAGS="$save_cflags"
 # Disable pointer-signedness warnings if the compiler recognises the option
 # (this only works for the host compiler at the moment)
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ${CC_BASE} accepts -Wno-pointer-sign" >&5
-$as_echo_n "checking whether ${CC_BASE} accepts -Wno-pointer-sign... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ${CC} accepts -Wno-pointer-sign" >&5
+$as_echo_n "checking whether ${CC} accepts -Wno-pointer-sign... " >&6; }
 save_cflags="$CFLAGS"
 CFLAGS="$CFLAGS -Wno-pointer-sign"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -7953,8 +7483,8 @@ CFLAGS="$save_cflags"
 
 # Check if host compiler supports -fgnu89-inline, can be needed for crosstools.
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ${CC_BASE} accepts -fgnu89-inline" >&5
-$as_echo_n "checking whether ${CC_BASE} accepts -fgnu89-inline... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ${CC} accepts -fgnu89-inline" >&5
+$as_echo_n "checking whether ${CC} accepts -fgnu89-inline... " >&6; }
 save_cflags="$CFLAGS"
 CFLAGS="$CFLAGS -fgnu89-inline"
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
@@ -7985,8 +7515,8 @@ CFLAGS="$save_cflags"
 # For GCC < 4.0 -I- is used for giving the search path for '#include "..."'
 # On GCC >= 4.0 -iquote should be used
 #
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ${CC_BASE} accepts -iquote" >&5
-$as_echo_n "checking whether ${CC_BASE} accepts -iquote... " >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ${CC} accepts -iquote" >&5
+$as_echo_n "checking whether ${CC} accepts -iquote... " >&6; }
 CFLAGS="$CFLAGS -iquote."
 cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
@@ -8029,7 +7559,6 @@ aros_elf_translate=
 aros_warn_flags=
 aros_isa_extra=
 aros_isa_flags=
-aros_kernel_isaflags=
 aros_config_cppflags=
 aros_config_cflags=
 aros_config_cxxflags=
@@ -8048,8 +7577,8 @@ aros_target_ar_flags="cr"
 aros_target_nm_flags="-C -ul"
 aros_target_strip_flags="--strip-unneeded -R.comment"
 
-aros_c_libs=
-aros_cxx_libs=
+aros_compiler_libs=
+aros_arch_libs=
 
 aros_target_genmap="-Wl,-Map -Xlinker"
 
@@ -8118,8 +7647,7 @@ case "$aros_toolchain" in
     *llvm*)
         toolchain_c_compiler="clang"
         toolchain_cxx_compiler="clang++"
-        toolchain_cpp_preprocessor="clang"
-        toolchain_cpp_opts=" -E"
+        toolchain_cpp_preprocessor="clang -E"
         toolchain_ld="ld.lld"
         aros_ld="ld"
         toolchain_as="llvm-as"
@@ -8129,16 +7657,11 @@ case "$aros_toolchain" in
         toolchain_strip="true"
         toolchain_objcopy="llvm-objcopy"
         toolchain_objdump="llvm-objdump"
-        use_libatomic=yes
-        toolchain_def_opt_lvl="-O2"
-        toolchain_debug_opt_lvl="-O0"
-        toolchain_size_opt_lvl="-Os"
         ;;
     *gnu*)
         toolchain_c_compiler="gcc"
         toolchain_cxx_compiler="g++"
-        toolchain_cpp_preprocessor="gcc"
-        toolchain_cpp_opts=" -E"
+        toolchain_cpp_preprocessor="gcc -E"
         toolchain_as="as"
         aros_ld="ld"
         if test "$aros_config_lto" != "yes"; then
@@ -8155,10 +7678,6 @@ case "$aros_toolchain" in
         toolchain_strip="strip"
         toolchain_objcopy="objcopy"
         toolchain_objdump="objdump"
-        use_libatomic=yes
-        toolchain_def_opt_lvl="-O2"
-        toolchain_debug_opt_lvl="-O0"
-        toolchain_size_opt_lvl="-Os"
         ;;
     *)
         { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: \"Unknown toolchain family!\"" >&5
@@ -8166,7 +7685,6 @@ $as_echo "$as_me: WARNING: \"Unknown toolchain family!\"" >&2;}
         toolchain_c_compiler="cc"
         toolchain_cxx_compiler="c++"
         toolchain_cpp_preprocessor="cpp"
-        toolchain_cpp_opts=
         toolchain_ld="ld"
         aros_ld="ld"
         toolchain_as="as"
@@ -8426,9 +7944,9 @@ fi
 if test "$optimization_level" = "unknown"; then
         optimization="default"
     if test "$debug" != "none"; then
-        optimization_level=$toolchain_debug_opt_lvl
+        optimization_level="-O0"
     else
-        optimization_level=$toolchain_def_opt_lvl
+        optimization_level="-O2"
     fi
 else
     optimization="$optimization_level"
@@ -8760,11 +8278,6 @@ esac
 # This is the target configuration switch.
 case "$target_os" in
     linux*)
-        HOST_WANTS_X11=yes
-        HOST_WANTS_GLX=yes
-        HOST_WANTS_SDL=yes
-        HOST_WANTS_DBUS=yes
-        HOST_WANTS_DLOPEN=yes
         aros_target_arch="linux"
         aros_target_family="unix"
         case "$target_cpu" in
@@ -8835,7 +8348,7 @@ case "$target_os" in
                 aros_config_cflags="$aros_config_cflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_OMIT_FP)"
                 aros_config_cxxflags="$aros_config_cxxflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_OMIT_FP)"
                 aros_config_aflags="$aros_config_aflags $""(CFLAGS_NO_STRICT_ALIASING)"
-                aros_c_libs="$aros_c_libs -laeabi"
+                aros_arch_libs="-laeabi"
                 gcc_default_float_abi="hard"
                 kernel_tool_prefix="aarch64-linux-gnueabihf-"
                 ;;
@@ -8849,7 +8362,7 @@ case "$target_os" in
                 aros_config_cflags="$aros_config_cflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_OMIT_FP)"
                 aros_config_cxxflags="$aros_config_cxxflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_OMIT_FP)"
                 aros_config_aflags="$aros_config_aflags $""(CFLAGS_NO_STRICT_ALIASING)"
-                aros_c_libs="$aros_c_libs -laeabi"
+                aros_arch_libs="-laeabi"
                 gcc_default_float_abi="hard"
                 android_tool_dir_prefix="arm-linux-androideabi"
                 android_tool_prefix="arm-linux-androideabi"
@@ -8865,7 +8378,7 @@ case "$target_os" in
                 aros_config_cflags="$aros_config_cflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_OMIT_FP)"
                 aros_config_cxxflags="$aros_config_cxxflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_OMIT_FP)"
                 aros_config_aflags="$aros_config_aflags $""(CFLAGS_NO_STRICT_ALIASING)"
-                aros_c_libs="$aros_c_libs -laeabi"
+                aros_arch_libs="-laeabi"
                 android_tool_dir_prefix="arm-linux-androideabi"
                 android_tool_prefix="arm-linux-androideabi"
                 android_ndk_arch="arm"
@@ -8968,11 +8481,6 @@ case "$target_os" in
         ;;
 
     freebsd*)
-        HOST_WANTS_X11=yes
-        HOST_WANTS_GLX=yes
-        HOST_WANTS_SDL=yes
-        HOST_WANTS_DBUS=yes
-        HOST_WANTS_DLOPEN=yes
         aros_target_arch="freebsd"
         aros_target_family="unix"
         aros_target_cpu="i386"
@@ -8984,11 +8492,6 @@ case "$target_os" in
         ;;
 
     darwin*)
-        HOST_WANTS_X11=yes
-        HOST_WANTS_GLX=yes
-        HOST_WANTS_SDL=yes
-        HOST_WANTS_DBUS=yes
-        HOST_WANTS_DLOPEN=yes
         aros_target_arch="darwin"
         aros_target_family="unix"
         aros_flavour="emulation"
@@ -9018,12 +8521,12 @@ case "$target_os" in
                 aros_kernel_cflags="-m64"
                 aros_kernel_ldflags="-m64"
                 aros_nominal_depth=8
-                aros_kernel_rs="$toolchain_ar"
+                aros_kernel_ar="ar"
                 aros_kernel_ar_flags="-cr"
-                aros_kernel_ld="$toolchain_ld"
-                aros_kernel_as="$toolchain_as"
-                aros_kernel_ranlib="$toolchain_ranlib"
-                aros_kernel_nm="$toolchain_nm"
+                aros_kernel_ld="ld"
+                aros_kernel_as="as"
+                aros_kernel_ranlib="ranlib"
+                aros_kernel_nm="nm"
                 aros_kernel_strip="strip"
                 kernel_tool_prefix="i686-apple-darwin10-"
                 ;;
@@ -9035,12 +8538,12 @@ case "$target_os" in
                 aros_macosx_version="10.0"
                 aros_nominal_depth=8
                 gcc_target_cpu="ppc"
-                aros_kernel_rs="$toolchain_ar"
+                aros_kernel_ar="ar"
                 aros_kernel_ar_flags="-cr"
-                aros_kernel_ld="$toolchain_ld -arch ppc"
-                aros_kernel_as="$toolchain_as -arch ppc"
-                aros_kernel_ranlib="$toolchain_ranlib -arch ppc"
-                aros_kernel_nm="$toolchain_nm -arch ppc"
+                aros_kernel_ld="ld -arch ppc"
+                aros_kernel_as="as -arch ppc"
+                aros_kernel_ranlib="ranlib -arch ppc"
+                aros_kernel_nm="nm -arch ppc"
                 aros_kernel_strip="strip -arch ppc"
                 kernel_tool_prefix="powerpc-apple-darwin10-"
                 ;;
@@ -9049,13 +8552,13 @@ case "$target_os" in
                 aros_target_cpu="arm"
                 aros_object_format="armelf_aros"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Darm"
-                aros_c_libs="$aros_c_libs -laeabi"
+                aros_arch_libs="-laeabi"
                 aros_nominal_depth=8
                 gcc_target_cpu="arm"
-                aros_kernel_rs="$toolchain_ar"
+                aros_kernel_ar="ar"
                 aros_kernel_ar_flags="-cr"
-                aros_kernel_ld="$toolchain_ld -arch arm"
-                aros_kernel_ranlib="$toolchain_ranlib -arch arm"
+                aros_kernel_ld="ld -arch arm"
+                aros_kernel_ranlib="ranlib -arch arm"
                 kernel_tool_prefix="arm-apple-darwin10-"
                 export PATH="$aros_xcode_path/Platforms/$aros_ios_platform.platform/Developer/usr/bin:$PATH"
                 ;;
@@ -9087,11 +8590,6 @@ case "$target_os" in
         ;;
 
     dragonfly*)
-        HOST_WANTS_X11=yes
-        HOST_WANTS_GLX=yes
-        HOST_WANTS_SDL=yes
-        HOST_WANTS_DBUS=yes
-        HOST_WANTS_DLOPEN=yes
         aros_target_arch="dragonfly"
         aros_target_family="unix"
         aros_flavour="emulation"
@@ -9117,11 +8615,6 @@ case "$target_os" in
         ;;
 
     netbsd*)
-        HOST_WANTS_X11=yes
-        HOST_WANTS_GLX=yes
-        HOST_WANTS_SDL=yes
-        HOST_WANTS_DBUS=yes
-        HOST_WANTS_DLOPEN=yes
         aros_target_arch="netbsd"
         aros_target_family="unix"
         case "$target_cpu" in
@@ -9152,11 +8645,6 @@ case "$target_os" in
         ;;
 
     openbsd*)
-        HOST_WANTS_X11=yes
-        HOST_WANTS_GLX=yes
-        HOST_WANTS_SDL=yes
-        HOST_WANTS_DBUS=yes
-        HOST_WANTS_DLOPEN=yes
         aros_target_arch="openbsd"
         aros_target_family="unix"
         case "$target_cpu" in
@@ -9241,7 +8729,7 @@ case "$target_os" in
         aros_kernel_ldflags=""
         aros_nominal_width=1024
         aros_nominal_height=600
-        aros_c_libs="$aros_c_libs -laeabi"
+        aros_arch_libs="-laeabi"
         gcc_default_cpu="armv7-a"
         gcc_default_fpu="vfpv3"
         aros_isa_flags="$aros_isa_flags -mtune=cortex-a8"
@@ -9249,7 +8737,7 @@ case "$target_os" in
         aros_config_cxxflags="$aros_config_cxxflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_ASYNCHRONOUS_UNWIND_TABLES)"
         aros_config_aflags="$aros_config_aflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_NO_ASYNCHRONOUS_UNWIND_TABLES)"
         if test "$optimization" = "default"; then
-            optimization_level=$toolchain_size_opt_lvl
+            optimization_level="-Os"
         fi
         case "$target_cpu" in
             *armhf*)
@@ -9314,7 +8802,7 @@ case "$target_os" in
                 aros_config_aflags="$aros_config_aflags -marm"
                 aros_kernel_cflags="$aros_kernel_cflags -marm"
                 aros_target_mkdep="$aros_target_mkdep -Darm"
-                aros_c_libs="$aros_c_libs -laeabi"
+                aros_arch_libs="-laeabi"
                 ;;
             *armeb*)
                 aros_flavour="standcompat"
@@ -9329,7 +8817,7 @@ case "$target_os" in
                 aros_config_aflags="$aros_config_aflags -marm"
                 aros_kernel_cflags="$aros_kernel_cflags -marm"
                 aros_target_mkdep="$aros_target_mkdep -Darm"
-                aros_c_libs="$aros_c_libs -laeabi"
+                aros_arch_libs="-laeabi"
                 ;;
             *arm*)
                 aros_target_cpu="arm"
@@ -9342,7 +8830,7 @@ case "$target_os" in
                 aros_config_aflags="$aros_config_aflags -marm"
                 aros_kernel_cflags="$aros_kernel_cflags -marm"
                 aros_target_mkdep="$aros_target_mkdep -Darm"
-                aros_c_libs="$aros_c_libs -laeabi"
+                aros_arch_libs="-laeabi"
                 ;;
             *)
                 as_fn_error $? "\"Unknown CPU for RasPi $target_cpu\"" "$LINENO" 5
@@ -9402,7 +8890,7 @@ fi
                 aros_config_cflags="$aros_config_cflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_FREESTANDING) $""(CFLAGS_OMIT_FP) $""(CFLAGS_BUILTIN)"
                 aros_config_cxxflags="$aros_config_cxxflags $""(CFLAGS_NO_STRICT_ALIASING) $""(CFLAGS_FREESTANDING) $""(CFLAGS_OMIT_FP) $""(CFLAGS_BUILTIN)"
                 if test "$optimization" = "default"; then
-                    optimization_level=$toolchain_size_opt_lvl
+                    optimization_level="-Os"
                 fi
                 aros_config_aflags="$aros_config_aflags"
                 aros_target_strip_flags="-R.comment --strip-debug"
@@ -9454,7 +8942,7 @@ fi
                 aros_target_cpu="arm"
                 aros_object_format="armelf_aros"
                 aros_target_mkdep="$aros_target_mkdep -D__GNUC__ -Darm"
-                aros_c_libs="$aros_c_libs -laeabi"
+                aros_arch_libs="-laeabi"
                 aros_nominal_depth=8
                 gcc_target_cpu="arm"
                 gcc_default_float_abi="soft"
@@ -9484,7 +8972,7 @@ fi
                 aros_nominal_height=160
                 aros_nominal_depth=1
                 aros_target_ar_flags="cru"
-                aros_c_libs="$aros_c_libs -lgcc1"
+                aros_compiler_libs="-lgcc1"
                 aros_shared_default=no
                 aros_shared_cflags="-fpic"
                 aros_shared_aflags=""
@@ -9519,7 +9007,7 @@ fi
                 aros_nominal_height=384
                 aros_nominal_depth=8
                 aros_target_ar_flags="cru"
-                aros_c_libs="$aros_c_libs -lgcc1"
+                aros_compiler_libs="-lgcc1"
                 aros_shared_default=no
                 aros_shared_cflags="-fpic"
                 aros_shared_aflags=""
@@ -9685,7 +9173,7 @@ if ${ax_cv_gcc_version+:} false; then :
   $as_echo_n "(cached) " >&6
 else
 
-    ax_cv_gcc_version="`$AROS_CROSSTOOLSDIR/${aros_tool_prefix}${toolchain_cpp_preprocessor}$(toolchain_cpp_opts) -dumpversion`"
+    ax_cv_gcc_version="`$AROS_CROSSTOOLSDIR/${aros_tool_prefix}${toolchain_cpp_preprocessor} -dumpversion`"
     if test "x$ax_cv_gcc_version" = "x"; then :
 
       ax_cv_gcc_version=""
@@ -9710,21 +9198,9 @@ if test "$aros_toolchain" = "gnu" ; then
     { $as_echo "$as_me:${as_lineno-$LINENO}: result: $target_gcc_version" >&5
 $as_echo "$target_gcc_version" >&6; }
 
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking version string style" >&5
-$as_echo_n "checking version string style... " >&6; }
-    if test "${target_gcc_version#*$'-'}" != "$target_gcc_version" ; then
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: snapshot" >&5
-$as_echo "snapshot" >&6; }
-        GCC_VERSION_MAJOR=$(echo $target_gcc_version | cut -d'-' -f1)
-        GCC_VERSION_MINOR=-1
-        GCC_VERSION_PATCH=-1
-    else
-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: release" >&5
-$as_echo "release" >&6; }
-        GCC_VERSION_MAJOR=$(echo $target_gcc_version | cut -d'.' -f1)
-        GCC_VERSION_MINOR=$(echo $target_gcc_version | cut -d'.' -f2)
-        GCC_VERSION_PATCH=$(echo $target_gcc_version | cut -d'.' -f3)
-    fi
+    GCC_VERSION_MAJOR=$(echo $target_gcc_version | cut -d'.' -f1)
+    GCC_VERSION_MINOR=$(echo $target_gcc_version | cut -d'.' -f2)
+    GCC_VERSION_PATCH=$(echo $target_gcc_version | cut -d'.' -f3)
 
     gcc_fix_bitfields="false"
     if test "$GCC_VERSION_MAJOR" -gt "4" ; then
@@ -9745,58 +9221,6 @@ $as_echo "release" >&6; }
             ;;
         esac
     fi
-fi
-
-# Helper to identify llvm version
-
-
-if test "$aros_toolchain" = "llvm" ; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: checking what specific target llvm version to use" >&5
-$as_echo_n "checking what specific target llvm version to use... " >&6; }
-fi
-
-# Check whether --with-llvm-version was given.
-if test "${with_llvm_version+set}" = set; then :
-  withval=$with_llvm_version; use_llvm_version="$withval"
-else
-  use_llvm_version=""
-fi
-
-if test "$use_llvm_version" = ""; then
-    if test "${crosstools}" = "no"; then
-      if test "x$aros_toolchain_install" != "x"; then
-
-  target_llvm_version=""
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking llvm version" >&5
-$as_echo_n "checking llvm version... " >&6; }
-if ${ax_cv_llvm_version+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-
-    ax_cv_llvm_version="`$AROS_CROSSTOOLSDIR/${aros_tool_prefix}${toolchain_cpp_preprocessor}$(toolchain_cpp_opts) -dumpversion`"
-    if test "x$ax_cv_llvm_version" = "x"; then :
-
-      ax_cv_llvm_version=""
-
-fi
-
-fi
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ax_cv_llvm_version" >&5
-$as_echo "$ax_cv_llvm_version" >&6; }
-  target_llvm_version=$ax_cv_llvm_version
-
-
-      fi
-    fi
-    if test "$use_llvm_version" = ""; then
-        target_llvm_version="$default_llvm_version"
-    fi
-else
-    target_llvm_version="$use_llvm_version"
-fi
-if test "$aros_toolchain" = "llvm" ; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $target_llvm_version" >&5
-$as_echo "$target_llvm_version" >&6; }
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable Objective-C suppport" >&5
@@ -10148,7 +9572,7 @@ else
         # empty, unless specified in the per-arch sections above.
         test_kernel_cc=yes
         if test "x$aros_kernel_cpp" = "x"; then
-            aros_kernel_cpp=${kernel_tool_prefix}${CPP_BASE}
+            aros_kernel_cpp=${kernel_tool_prefix}${CPP}
         fi
         if test "${kernel_tool_version}" != ""; then
     if test "$aros_kernel_cpp" != ""; then
@@ -10201,14 +9625,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_cpp=cpp
-else
-    ac_tool_cpp=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_cpp=`$CC -print-prog-name=$ac_tool_cpp`
+        if test "$GCC" = "yes"; then
+    aros_gcc_cpp=`$CC -print-prog-name=cpp`
     # Extract the first word of "`basename $aros_gcc_[cpp]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_cpp`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -10251,10 +9669,8 @@ fi
 
 fi
 if test "$aros_kernel_cpp" = ""; then
-    for ac_prog in $ac_tool_cpp
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "cpp", so it can be a program name with args.
+set dummy cpp; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_aros_kernel_cpp+:} false; then :
@@ -10293,11 +9709,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$aros_kernel_cpp" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X$aros_kernel_cpp" : '[^ ]* \(.*\)'`
@@ -10356,7 +9768,7 @@ if test "$req_avail" = "no"; then
 fi
 
         if test "x$aros_kernel_cc" = "x"; then
-            aros_kernel_cc=${kernel_tool_prefix}${CC_BASE}
+            aros_kernel_cc=${kernel_tool_prefix}${CC}
         fi
         if test "${kernel_tool_version}" != ""; then
     if test "$aros_kernel_cc" != ""; then
@@ -10409,14 +9821,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_cc=cc
-else
-    ac_tool_cc=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_cc=`$CC -print-prog-name=$ac_tool_cc`
+        if test "$GCC" = "yes"; then
+    aros_gcc_cc=`$CC -print-prog-name=cc`
     # Extract the first word of "`basename $aros_gcc_[cc]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_cc`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -10459,10 +9865,8 @@ fi
 
 fi
 if test "$aros_kernel_cc" = ""; then
-    for ac_prog in $ac_tool_cc
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "cc", so it can be a program name with args.
+set dummy cc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_aros_kernel_cc+:} false; then :
@@ -10501,11 +9905,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$aros_kernel_cc" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X$aros_kernel_cc" : '[^ ]* \(.*\)'`
@@ -10564,7 +9964,7 @@ if test "$req_avail" = "no"; then
 fi
 
         if test "x$aros_kernel_cxx" = "x"; then
-            aros_kernel_cxx=${kernel_tool_prefix}${CXX_BASE}
+            aros_kernel_cxx=${kernel_tool_prefix}${CXX}
         fi
         if test "${kernel_tool_version}" != ""; then
     if test "$aros_kernel_cxx" != ""; then
@@ -10617,14 +10017,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_cxx=cxx
-else
-    ac_tool_cxx=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_cxx=`$CC -print-prog-name=$ac_tool_cxx`
+        if test "$GCC" = "yes"; then
+    aros_gcc_cxx=`$CC -print-prog-name=cxx`
     # Extract the first word of "`basename $aros_gcc_[cxx]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_cxx`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -10667,10 +10061,8 @@ fi
 
 fi
 if test "$aros_kernel_cxx" = ""; then
-    for ac_prog in $ac_tool_cxx
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "cxx", so it can be a program name with args.
+set dummy cxx; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_aros_kernel_cxx+:} false; then :
@@ -10709,11 +10101,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$aros_kernel_cxx" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X$aros_kernel_cxx" : '[^ ]* \(.*\)'`
@@ -10773,9 +10161,6 @@ if test "$req_avail" = "no"; then
     as_fn_error $? "cxx is required to build AROS. Please install and run configure again." "$LINENO" 5
 fi
         fi
-        if test "x$aros_kernel_ld" = "x"; then
-            aros_kernel_ld=${kernel_tool_prefix}${LD_BASE}
-        fi
 
 if test "$aros_kernel_ld" = ""; then
     if test "$cross_compiling" = "yes" ; then
@@ -10820,14 +10205,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_ld=ld
-else
-    ac_tool_ld=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_ld=`$CC -print-prog-name=$ac_tool_ld`
+        if test "$GCC" = "yes"; then
+    aros_gcc_ld=`$CC -print-prog-name=ld`
     # Extract the first word of "`basename $aros_gcc_[ld]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_ld`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -10870,10 +10249,8 @@ fi
 
 fi
 if test "$aros_kernel_ld" = ""; then
-    for ac_prog in $ac_tool_ld
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "ld", so it can be a program name with args.
+set dummy ld; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_aros_kernel_ld+:} false; then :
@@ -10912,11 +10289,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$aros_kernel_ld" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X$aros_kernel_ld" : '[^ ]* \(.*\)'`
@@ -10973,12 +10346,6 @@ fi
 if test "$req_avail" = "no"; then
     as_fn_error $? "ld is required to build AROS. Please install and run configure again." "$LINENO" 5
 fi
-        if test "x$aros_kernel_as" = "x"; then
-            aros_kernel_as=$aros_host_as
-            if test "x$aros_kernel_as" = "x"; then
-                aros_kernel_as=${HOST_TOOLCHAIN_PREFIX}as${HOST_TOOLCHAIN_SUFFIX}
-            fi
-        fi
 
 if test "$aros_kernel_as" = ""; then
     if test "$cross_compiling" = "yes" ; then
@@ -11023,14 +10390,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_as=as
-else
-    ac_tool_as=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_as=`$CC -print-prog-name=$ac_tool_as`
+        if test "$GCC" = "yes"; then
+    aros_gcc_as=`$CC -print-prog-name=as`
     # Extract the first word of "`basename $aros_gcc_[as]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_as`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -11073,10 +10434,8 @@ fi
 
 fi
 if test "$aros_kernel_as" = ""; then
-    for ac_prog in $ac_tool_as
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "as", so it can be a program name with args.
+set dummy as; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_aros_kernel_as+:} false; then :
@@ -11115,11 +10474,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$aros_kernel_as" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X$aros_kernel_as" : '[^ ]* \(.*\)'`
@@ -11177,17 +10532,6 @@ if test "$req_avail" = "no"; then
     as_fn_error $? "as is required to build AROS. Please install and run configure again." "$LINENO" 5
 fi
 
-        if test "x$aros_kernel_ar" = "x"; then
-            aros_kernel_ar="${kernel_tool_prefix}${AR_BASE}"
-        fi
-        if test "${kernel_tool_version}" != ""; then
-    if test "$aros_kernel_ar" != ""; then
-        ac_prog_args=`expr "X$aros_kernel_ar" : '[^ ]* \(.*\)'`
-        ac_prog_cmd=`expr "X$aros_kernel_ar" : '^\S*'`
-        aros_kernel_ar="$ac_prog_cmd$${kernel_tool_version} $ac_prog_args"
-    fi
-fi
-
 if test "$aros_kernel_ar" = ""; then
     if test "$cross_compiling" = "yes" ; then
         # Extract the first word of "${kernel_tool_prefix}ar", so it can be a program name with args.
@@ -11231,14 +10575,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_ar=ar
-else
-    ac_tool_ar=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_ar=`$CC -print-prog-name=$ac_tool_ar`
+        if test "$GCC" = "yes"; then
+    aros_gcc_ar=`$CC -print-prog-name=ar`
     # Extract the first word of "`basename $aros_gcc_[ar]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_ar`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -11281,10 +10619,8 @@ fi
 
 fi
 if test "$aros_kernel_ar" = ""; then
-    for ac_prog in $ac_tool_ar
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "ar", so it can be a program name with args.
+set dummy ar; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_aros_kernel_ar+:} false; then :
@@ -11323,11 +10659,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$aros_kernel_ar" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X$aros_kernel_ar" : '[^ ]* \(.*\)'`
@@ -11384,16 +10716,6 @@ fi
 if test "$req_avail" = "no"; then
     as_fn_error $? "ar is required to build AROS. Please install and run configure again." "$LINENO" 5
 fi
-        if test "x$aros_kernel_ranlib" = "x"; then
-            aros_kernel_ranlib=${kernel_tool_prefix}${RANLIB_BASE}
-        fi
-        if test "${kernel_tool_version}" != ""; then
-    if test "$aros_kernel_ranlib" != ""; then
-        ac_prog_args=`expr "X$aros_kernel_ranlib" : '[^ ]* \(.*\)'`
-        ac_prog_cmd=`expr "X$aros_kernel_ranlib" : '^\S*'`
-        aros_kernel_ranlib="$ac_prog_cmd$${kernel_tool_version} $ac_prog_args"
-    fi
-fi
 
 if test "$aros_kernel_ranlib" = ""; then
     if test "$cross_compiling" = "yes" ; then
@@ -11438,14 +10760,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_ranlib=ranlib
-else
-    ac_tool_ranlib=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_ranlib=`$CC -print-prog-name=$ac_tool_ranlib`
+        if test "$GCC" = "yes"; then
+    aros_gcc_ranlib=`$CC -print-prog-name=ranlib`
     # Extract the first word of "`basename $aros_gcc_[ranlib]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_ranlib`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -11488,10 +10804,8 @@ fi
 
 fi
 if test "$aros_kernel_ranlib" = ""; then
-    for ac_prog in $ac_tool_ranlib
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "ranlib", so it can be a program name with args.
+set dummy ranlib; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_aros_kernel_ranlib+:} false; then :
@@ -11530,11 +10844,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$aros_kernel_ranlib" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X$aros_kernel_ranlib" : '[^ ]* \(.*\)'`
@@ -11591,12 +10901,6 @@ fi
 if test "$req_avail" = "no"; then
     as_fn_error $? "ranlib is required to build AROS. Please install and run configure again." "$LINENO" 5
 fi
-        if test "x$aros_kernel_nm" = "x"; then
-            aros_kernel_nm=$aros_host_nm
-            if test "x$aros_kernel_nm" = "x"; then
-                aros_kernel_nm=${HOST_TOOLCHAIN_PREFIX}nm${HOST_TOOLCHAIN_SUFFIX}
-            fi
-        fi
 
 if test "$aros_kernel_nm" = ""; then
     if test "$cross_compiling" = "yes" ; then
@@ -11641,14 +10945,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_nm=nm
-else
-    ac_tool_nm=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_nm=`$CC -print-prog-name=$ac_tool_nm`
+        if test "$GCC" = "yes"; then
+    aros_gcc_nm=`$CC -print-prog-name=nm`
     # Extract the first word of "`basename $aros_gcc_[nm]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_nm`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -11691,10 +10989,8 @@ fi
 
 fi
 if test "$aros_kernel_nm" = ""; then
-    for ac_prog in $ac_tool_nm
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "nm", so it can be a program name with args.
+set dummy nm; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_aros_kernel_nm+:} false; then :
@@ -11733,11 +11029,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$aros_kernel_nm" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X$aros_kernel_nm" : '[^ ]* \(.*\)'`
@@ -11838,14 +11130,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_strip=strip
-else
-    ac_tool_strip=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_strip=`$CC -print-prog-name=$ac_tool_strip`
+        if test "$GCC" = "yes"; then
+    aros_gcc_strip=`$CC -print-prog-name=strip`
     # Extract the first word of "`basename $aros_gcc_[strip]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_strip`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -11888,10 +11174,8 @@ fi
 
 fi
 if test "$aros_kernel_strip" = ""; then
-    for ac_prog in $ac_tool_strip
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "strip", so it can be a program name with args.
+set dummy strip; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_aros_kernel_strip+:} false; then :
@@ -11930,11 +11214,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$aros_kernel_strip" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X$aros_kernel_strip" : '[^ ]* \(.*\)'`
@@ -11995,12 +11275,6 @@ fi
         # Objcopy and objdump are not required for the kernel
         # toolchain on many architectures.
         # So we'll look for them, but not make them strictly required.
-        if test "x$aros_kernel_objcopy" = "x"; then
-            aros_kernel_objcopy=$aros_host_objcopy
-            if test "x$aros_kernel_objcopy" = "x"; then
-                aros_kernel_objcopy=${HOST_TOOLCHAIN_PREFIX}objcopy${HOST_TOOLCHAIN_SUFFIX}
-            fi
-        fi
 
 if test "$aros_kernel_objcopy" = ""; then
     if test "$cross_compiling" = "yes" ; then
@@ -12045,14 +11319,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_objcopy=objcopy
-else
-    ac_tool_objcopy=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_objcopy=`$CC -print-prog-name=$ac_tool_objcopy`
+        if test "$GCC" = "yes"; then
+    aros_gcc_objcopy=`$CC -print-prog-name=objcopy`
     # Extract the first word of "`basename $aros_gcc_[objcopy]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_objcopy`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -12095,10 +11363,8 @@ fi
 
 fi
 if test "$aros_kernel_objcopy" = ""; then
-    for ac_prog in $ac_tool_objcopy
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "objcopy", so it can be a program name with args.
+set dummy objcopy; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_aros_kernel_objcopy+:} false; then :
@@ -12137,11 +11403,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$aros_kernel_objcopy" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X$aros_kernel_objcopy" : '[^ ]* \(.*\)'`
@@ -12188,12 +11450,6 @@ fi
     aros_kernel_objcopy="$aros_kernel_objcopy $ac_tool_optarg"
 fi
 
-        if test "x$aros_kernel_objdump" = "x"; then
-            aros_kernel_objdump=$aros_host_objdump
-            if test "x$aros_kernel_objdump" = "x"; then
-                aros_kernel_objdump=${HOST_TOOLCHAIN_PREFIX}objdump${HOST_TOOLCHAIN_SUFFIX}
-            fi
-        fi
 
 if test "$aros_kernel_objdump" = ""; then
     if test "$cross_compiling" = "yes" ; then
@@ -12238,14 +11494,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_objdump=objdump
-else
-    ac_tool_objdump=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_objdump=`$CC -print-prog-name=$ac_tool_objdump`
+        if test "$GCC" = "yes"; then
+    aros_gcc_objdump=`$CC -print-prog-name=objdump`
     # Extract the first word of "`basename $aros_gcc_[objdump]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_objdump`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -12288,10 +11538,8 @@ fi
 
 fi
 if test "$aros_kernel_objdump" = ""; then
-    for ac_prog in $ac_tool_objdump
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "objdump", so it can be a program name with args.
+set dummy objdump; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_aros_kernel_objdump+:} false; then :
@@ -12330,11 +11578,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$aros_kernel_objdump" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X$aros_kernel_objdump" : '[^ ]* \(.*\)'`
@@ -12420,7 +11664,7 @@ $as_echo "$msg_result" >&6; }
     tmp_tool_prefix="$AROS_CROSSTOOLSDIR/${target_tool_prefix}"
     orig_target_cc="${tmp_tool_prefix}${toolchain_c_compiler}${target_tool_version}"
     orig_target_cxx="${tmp_tool_prefix}${toolchain_cxx_compiler}${target_tool_version}"
-    orig_target_cpp="${tmp_tool_prefix}${toolchain_cpp_preprocessor}${toolchain_cpp_opts}"
+    orig_target_cpp="${tmp_tool_prefix}${toolchain_cpp_preprocessor}"
     orig_target_ld="${tmp_tool_prefix}${toolchain_ld}"
     orig_target_as="${tmp_tool_prefix}${toolchain_as}"
     orig_target_ar="${tmp_tool_prefix}${toolchain_ar}"
@@ -12439,7 +11683,7 @@ else
 $as_echo "$aros_tool_prefix" >&6; }
     # We are *not* building AROS crosstools - use the AROS or ELF tools
 
-if test "${aros_tool_prefix}${toolchain_cpp_preprocessor}${target_tool_version}${toolchain_cpp_opts}" = ""; then
+if test "${aros_tool_prefix}${toolchain_cpp_preprocessor}${target_tool_version}" = ""; then
     if test "$cross_compiling" = "yes" ; then
         # Extract the first word of "${target_tool_prefix}cpp", so it can be a program name with args.
 set dummy ${target_tool_prefix}cpp; ac_word=$2
@@ -12482,14 +11726,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_cpp=cpp
-else
-    ac_tool_cpp=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_cpp=`$CC -print-prog-name=$ac_tool_cpp`
+        if test "$GCC" = "yes"; then
+    aros_gcc_cpp=`$CC -print-prog-name=cpp`
     # Extract the first word of "`basename $aros_gcc_[cpp]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_cpp`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -12532,10 +11770,8 @@ fi
 
 fi
 if test "$orig_target_cpp" = ""; then
-    for ac_prog in $ac_tool_cpp
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "cpp", so it can be a program name with args.
+set dummy cpp; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_orig_target_cpp+:} false; then :
@@ -12574,16 +11810,12 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$orig_target_cpp" && break
-done
-
 fi
-
     fi
 else
-    ac_tool_optarg=`expr "X${aros_tool_prefix}${toolchain_cpp_preprocessor}${target_tool_version}${toolchain_cpp_opts}" : '[^ ]* \(.*\)'`
-    # Extract the first word of "${aros_tool_prefix}${toolchain_cpp_preprocessor}${target_tool_version}${toolchain_cpp_opts}", so it can be a program name with args.
-set dummy ${aros_tool_prefix}${toolchain_cpp_preprocessor}${target_tool_version}${toolchain_cpp_opts}; ac_word=$2
+    ac_tool_optarg=`expr "X${aros_tool_prefix}${toolchain_cpp_preprocessor}${target_tool_version}" : '[^ ]* \(.*\)'`
+    # Extract the first word of "${aros_tool_prefix}${toolchain_cpp_preprocessor}${target_tool_version}", so it can be a program name with args.
+set dummy ${aros_tool_prefix}${toolchain_cpp_preprocessor}${target_tool_version}; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_orig_target_cpp+:} false; then :
@@ -12679,14 +11911,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_gcc=gcc
-else
-    ac_tool_gcc=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_gcc=`$CC -print-prog-name=$ac_tool_gcc`
+        if test "$GCC" = "yes"; then
+    aros_gcc_gcc=`$CC -print-prog-name=gcc`
     # Extract the first word of "`basename $aros_gcc_[gcc]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_gcc`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -12729,10 +11955,8 @@ fi
 
 fi
 if test "$orig_target_cc" = ""; then
-    for ac_prog in $ac_tool_gcc
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "gcc", so it can be a program name with args.
+set dummy gcc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_orig_target_cc+:} false; then :
@@ -12771,11 +11995,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$orig_target_cc" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X${aros_tool_prefix}${toolchain_c_compiler}${target_tool_version}" : '[^ ]* \(.*\)'`
@@ -12876,14 +12096,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_g++=g++
-else
-    ac_tool_g++=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_g++=`$CC -print-prog-name=$ac_tool_g++`
+        if test "$GCC" = "yes"; then
+    aros_gcc_g++=`$CC -print-prog-name=g++`
     # Extract the first word of "`basename $aros_gcc_[g++]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_g++`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -12926,10 +12140,8 @@ fi
 
 fi
 if test "$orig_target_cxx" = ""; then
-    for ac_prog in $ac_tool_g++
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "g++", so it can be a program name with args.
+set dummy g++; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_orig_target_cxx+:} false; then :
@@ -12968,11 +12180,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$orig_target_cxx" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X${aros_tool_prefix}${toolchain_cxx_compiler}${target_tool_version}" : '[^ ]* \(.*\)'`
@@ -13073,14 +12281,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_gcc=gcc
-else
-    ac_tool_gcc=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_gcc=`$CC -print-prog-name=$ac_tool_gcc`
+        if test "$GCC" = "yes"; then
+    aros_gcc_gcc=`$CC -print-prog-name=gcc`
     # Extract the first word of "`basename $aros_gcc_[gcc]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_gcc`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -13123,10 +12325,8 @@ fi
 
 fi
 if test "$orig_target_ld" = ""; then
-    for ac_prog in $ac_tool_gcc
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "gcc", so it can be a program name with args.
+set dummy gcc; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_orig_target_ld+:} false; then :
@@ -13165,11 +12365,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$orig_target_ld" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X${aros_tool_prefix}${toolchain_ld}" : '[^ ]* \(.*\)'`
@@ -13270,14 +12466,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_as=as
-else
-    ac_tool_as=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_as=`$CC -print-prog-name=$ac_tool_as`
+        if test "$GCC" = "yes"; then
+    aros_gcc_as=`$CC -print-prog-name=as`
     # Extract the first word of "`basename $aros_gcc_[as]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_as`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -13320,10 +12510,8 @@ fi
 
 fi
 if test "$orig_target_as" = ""; then
-    for ac_prog in $ac_tool_as
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "as", so it can be a program name with args.
+set dummy as; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_orig_target_as+:} false; then :
@@ -13362,11 +12550,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$orig_target_as" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "Xaros_tool_prefix}${toolchain_as}" : '[^ ]* \(.*\)'`
@@ -13467,14 +12651,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_ar=ar
-else
-    ac_tool_ar=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_ar=`$CC -print-prog-name=$ac_tool_ar`
+        if test "$GCC" = "yes"; then
+    aros_gcc_ar=`$CC -print-prog-name=ar`
     # Extract the first word of "`basename $aros_gcc_[ar]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_ar`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -13517,10 +12695,8 @@ fi
 
 fi
 if test "$orig_target_ar" = ""; then
-    for ac_prog in $ac_tool_ar
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "ar", so it can be a program name with args.
+set dummy ar; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_orig_target_ar+:} false; then :
@@ -13559,11 +12735,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$orig_target_ar" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X${aros_tool_prefix}${toolchain_ar}" : '[^ ]* \(.*\)'`
@@ -13664,14 +12836,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_ar=ar
-else
-    ac_tool_ar=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_ar=`$CC -print-prog-name=$ac_tool_ar`
+        if test "$GCC" = "yes"; then
+    aros_gcc_ar=`$CC -print-prog-name=ar`
     # Extract the first word of "`basename $aros_gcc_[ar]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_ar`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -13714,10 +12880,8 @@ fi
 
 fi
 if test "$orig_target_ranlib" = ""; then
-    for ac_prog in $ac_tool_ar
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "ar", so it can be a program name with args.
+set dummy ar; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_orig_target_ranlib+:} false; then :
@@ -13756,11 +12920,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$orig_target_ranlib" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X${aros_tool_prefix}${toolchain_ranlib}" : '[^ ]* \(.*\)'`
@@ -13861,14 +13021,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_nm=nm
-else
-    ac_tool_nm=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_nm=`$CC -print-prog-name=$ac_tool_nm`
+        if test "$GCC" = "yes"; then
+    aros_gcc_nm=`$CC -print-prog-name=nm`
     # Extract the first word of "`basename $aros_gcc_[nm]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_nm`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -13911,10 +13065,8 @@ fi
 
 fi
 if test "$orig_target_nm" = ""; then
-    for ac_prog in $ac_tool_nm
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "nm", so it can be a program name with args.
+set dummy nm; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_orig_target_nm+:} false; then :
@@ -13953,11 +13105,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$orig_target_nm" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X${aros_tool_prefix}${toolchain_nm}" : '[^ ]* \(.*\)'`
@@ -14058,14 +13206,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_strip=strip
-else
-    ac_tool_strip=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_strip=`$CC -print-prog-name=$ac_tool_strip`
+        if test "$GCC" = "yes"; then
+    aros_gcc_strip=`$CC -print-prog-name=strip`
     # Extract the first word of "`basename $aros_gcc_[strip]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_strip`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -14108,10 +13250,8 @@ fi
 
 fi
 if test "$orig_target_strip" = ""; then
-    for ac_prog in $ac_tool_strip
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "strip", so it can be a program name with args.
+set dummy strip; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_orig_target_strip+:} false; then :
@@ -14150,11 +13290,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$orig_target_strip" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X${aros_tool_prefix}${toolchain_strip}" : '[^ ]* \(.*\)'`
@@ -14255,14 +13391,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_objcopy=objcopy
-else
-    ac_tool_objcopy=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_objcopy=`$CC -print-prog-name=$ac_tool_objcopy`
+        if test "$GCC" = "yes"; then
+    aros_gcc_objcopy=`$CC -print-prog-name=objcopy`
     # Extract the first word of "`basename $aros_gcc_[objcopy]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_objcopy`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -14305,10 +13435,8 @@ fi
 
 fi
 if test "$orig_target_objcopy" = ""; then
-    for ac_prog in $ac_tool_objcopy
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "objcopy", so it can be a program name with args.
+set dummy objcopy; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_orig_target_objcopy+:} false; then :
@@ -14347,11 +13475,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$orig_target_objcopy" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X${aros_tool_prefix}${toolchain_objcopy}" : '[^ ]* \(.*\)'`
@@ -14452,14 +13576,8 @@ fi
 
 
     else
-
-if test "" = ""; then
-    ac_tool_objdump=objdump
-else
-    ac_tool_objdump=
-fi
-if test "$GCC" = "yes"; then
-    aros_gcc_objdump=`$CC -print-prog-name=$ac_tool_objdump`
+        if test "$GCC" = "yes"; then
+    aros_gcc_objdump=`$CC -print-prog-name=objdump`
     # Extract the first word of "`basename $aros_gcc_[objdump]`", so it can be a program name with args.
 set dummy `basename $aros_gcc_objdump`; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -14502,10 +13620,8 @@ fi
 
 fi
 if test "$orig_target_objdump" = ""; then
-    for ac_prog in $ac_tool_objdump
-do
-  # Extract the first word of "$ac_prog", so it can be a program name with args.
-set dummy $ac_prog; ac_word=$2
+    # Extract the first word of "objdump", so it can be a program name with args.
+set dummy objdump; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 $as_echo_n "checking for $ac_word... " >&6; }
 if ${ac_cv_path_orig_target_objdump+:} false; then :
@@ -14544,11 +13660,7 @@ $as_echo "no" >&6; }
 fi
 
 
-  test -n "$orig_target_objdump" && break
-done
-
 fi
-
     fi
 else
     ac_tool_optarg=`expr "X${aros_tool_prefix}${toolchain_objdump}" : '[^ ]* \(.*\)'`
@@ -14609,10 +13721,10 @@ fi
 
 if test "$kernel_tool_prefix" = "none" ; then
     # No kernel tools specified
-    # Assume kernel tools == target tools with ELF wrapper
+    # Assume target tools == kernel tools with ELF wrapper
     aros_kernel_cc=$orig_target_cc
     aros_kernel_cxx=$orig_target_cxx
-    aros_kernel_cpp="$orig_target_cpp"
+    aros_kernel_cpp=$orig_target_cpp
     aros_kernel_ld=$orig_target_ld
     aros_kernel_as=$orig_target_as
     aros_kernel_ar=$orig_target_ar
@@ -14621,7 +13733,6 @@ if test "$kernel_tool_prefix" = "none" ; then
     aros_kernel_strip=$orig_target_strip
     aros_kernel_objcopy=$orig_target_objcopy
     aros_kernel_objdump=$orig_target_objdump
-    aros_kernel_isa_flags=$aros_isa_flags
     use_kernel_cc_wrapper=yes
 fi
 
@@ -14766,7 +13877,7 @@ else
     fi
     aros_target_cc_path=@aros_target_cc_path@
 fi
-aros_target_cpp="${prefix}${toolchain_cpp_preprocessor}${toolchain_cpp_opts}"
+aros_target_cpp="${prefix}${toolchain_cpp_preprocessor}"
 aros_target_cc="${prefix}${toolchain_c_compiler}"
 aros_target_cxx="${prefix}${toolchain_cxx_compiler}"
 aros_target_as="${prefix}${toolchain_as}"
@@ -14796,7 +13907,7 @@ fi
 
 if test "x$aros_target_incl" = "xno"; then
     if test "x$test_kernel_cc" != "xno"; then
-        aros_target_incl=`$aros_kernel_cc -print-sysroot 2>/dev/null`/`$aros_kernel_cc --print-sysroot-headers-suffix 2>/dev/null || echo usr/include`
+        aros_target_incl=`$aros_kernel_cc -print-sysroot`/`$aros_kernel_cc --print-sysroot-headers-suffix 2>/dev/null || echo usr/include`
     else
         aros_target_incl=
     fi
@@ -14987,7 +14098,7 @@ $as_echo "$has_iquote" >&6; }
 
     # Check if we can explicitly choose older version of symbol hashing
 
-    CFLAGS="$save_cflags -Wl,--hash-style=sysv"
+    CFLAGS="save_cflags -Wl,--hash-style=sysv"
     CC="$aros_kernel_cc"
     { $as_echo "$as_me:${as_lineno-$LINENO}: checking whether ${CC} accepts -Wl,--hash-style=sysv" >&5
 $as_echo_n "checking whether ${CC} accepts -Wl,--hash-style=sysv... " >&6; }
@@ -15953,50 +15064,6 @@ if ! test "$gcc_default_cpu" = "" ; then
     target_extra_cfg+="$export_newline""# ARM gcc default target$export_newline""GCC_DEFAULT_CPU         := $gcc_default_cpu$export_newline""GCC_DEFAULT_FPU         := $gcc_default_fpu$export_newline""GCC_DEFAULT_FLOAT_ABI   := $gcc_default_float_abi$export_newline""GCC_DEFAULT_MODE        := $gcc_default_mode$export_newline"
 fi
 
-if test "$use_libatomic" = "yes" ; then
-    aros_cxx_libs="$aros_cxx_libs  -latomic"
-fi
-
-aros_target_options+="$export_newline""# Enable Nouveau Gfx Driver$export_newline""OPT_GFX_NOUVEAU               := no$export_newline"
-
-
-CC=$CC
-CFLAGS=$CFLAGS
-CHMOD=$CHMOD
-CP=$CP
-ECHO=$ECHO
-FLEX=$FLEX
-MV=$MV
-NOP=$NOP
-PATCH=$PATCH
-PNGTOPNM=$PNGTOPNM
-PPMTOILBM=$PPMTOILBM
-SED=$SED
-SORT=$SORT
-TOUCH=$TOUCH
-UNIQ=$UNIQ
-
-aros_config_cflags=$aros_config_cflags
-aros_config_cppflags=$aros_config_cppflags
-aros_config_cxxflags=$aros_config_cxxflags
-
-aros_c_libs=$aros_c_libs
-aros_cxx_libs=$aros_cxx_libs
-
-aros_host_ldflags=$aros_host_ldflags
-aros_host_strip=$aros_host_strip
-aros_host_x11_ldflags=$aros_host_x11_ldflags
-
-aros_kernel_ar=$aros_kernel_ar
-aros_kernel_as=$aros_kernel_as
-aros_kernel_cc=$aros_kernel_cc
-aros_kernel_cflags=$aros_kernel_cflags
-aros_kernel_cppflags=$aros_kernel_cppflags
-aros_kernel_cxx=$aros_kernel_cxx
-aros_kernel_nm=$aros_kernel_nm
-aros_kernel_objcopy=$aros_kernel_objcopy
-aros_kernel_objdump=$aros_kernel_objdump
-aros_kernel_ranlib=$aros_kernel_ranlib
 
 # Generic
 
@@ -16012,10 +15079,10 @@ aros_kernel_ranlib=$aros_kernel_ranlib
 
 
 
-# Compatability with other Amiga-like operating systems
+# Compatability with other Amiga-like operation systems
 
 
-# Host Related ###########################
+# Host related
 
 
 
@@ -16047,7 +15114,7 @@ aros_kernel_ranlib=$aros_kernel_ranlib
 
 
 
-# Target Related #########################
+# Target Related
 
 
 
@@ -16139,6 +15206,14 @@ aros_kernel_ranlib=$aros_kernel_ranlib
 
 
 
+
+
+
+
+
+
+
+# Bootloader related
 
 
 # Native version related
@@ -16146,13 +15221,18 @@ aros_kernel_ranlib=$aros_kernel_ranlib
 
 
 
-# MMU related
-
-
-# Bootloader related
+# Palm native version related
 
 
 # Unix/Hosted version related
+
+
+# MMU related
+
+
+# Apple iOS related
+
+
 
 
 # ARM default GCC target related
@@ -16162,18 +15242,19 @@ aros_kernel_ranlib=$aros_kernel_ranlib
 
 
 
-# Palm native version related
-
-
-# Apple iOS related
-
-
-
-
 # Android related
 
 
 
+
+# DBUS related
+
+
+
+
+
+
+#X11 related
 
 
 # Debug related
@@ -16190,30 +15271,10 @@ aros_kernel_ranlib=$aros_kernel_ranlib
 
 
 
-
 #ObjC compiler related
 
 
 #Java related
-
-
-# DBUS related
-
-
-
-
-
-
-#X11 related
-
-
-
-
-
-
-
-#SDL related
-
 
 
 # USB3.0 code

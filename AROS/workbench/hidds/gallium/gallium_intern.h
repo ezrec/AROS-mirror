@@ -2,17 +2,15 @@
 #define _GALLIUM_INTERN_H
 
 /*
-    Copyright 2010-2019, The AROS Development Team. All rights reserved.
+    Copyright 2010, The AROS Development Team. All rights reserved.
     $Id$
 */
 
-#include "state_tracker/sw_winsys.h"
 
 #include LC_LIBDEFS_FILE
 
-struct HiddGalliumData
+struct HIDDGalliumData
 {
-    APTR  pad;
 };
 
 struct galliumstaticdata 

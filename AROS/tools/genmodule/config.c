@@ -1,5 +1,5 @@
 /*
-    Copyright © 1995-2019, The AROS Development Team. All rights reserved.
+    Copyright © 1995-2017, The AROS Development Team. All rights reserved.
     $Id$
 
     Code to parse the command line options and the module config file for
@@ -55,7 +55,7 @@ freeBanner(char *banner)
 
 const static char usage[] =
     "\n"
-    "Usage: genmodule [-c conffile] [-o configoverridefile] [-s suffix] [-d gendir] [-l library-stub gendir] [-f flavour] [-v versionextra]\n"
+    "Usage: genmodule [-c conffile] [-s suffix] [-d gendir] [-l library-stub gendir] [-f flavour] [-v versionextra]\n"
     "       {writefiles|writemakefile|writeincludes|writelibdefs|writefunclist|writefd|writeskel|writethunk} modname modtype\n"
 ;
 
@@ -105,7 +105,7 @@ struct config *initconfig(int argc, char **argv)
 
     memset(cfg, 0, sizeof(struct config));
 
-    while ((c = getopt(argc, argv, ":c:o:s:d:l:f:v:")) != -1)
+    while ((c = getopt(argc, argv, ":c:s:d:l:f:v:")) != -1)
     {
         if (c == ':')
         {
@@ -117,10 +117,6 @@ struct config *initconfig(int argc, char **argv)
         {
         case 'c':
             cfg->conffile = optarg;
-            break;
-
-        case 'o':
-            cfg->confoverridefile = optarg;
             break;
 
         case 's':
@@ -384,8 +380,8 @@ struct config *initconfig(int argc, char **argv)
 
 #include "fileread.h"
 
-static char *readsections(struct config *, struct classinfo *cl, struct interfaceinfo *in, int inclass, int inoverride);
-static void readsectionconfig(struct config *, struct classinfo *cl, struct interfaceinfo *in, int inclass, int inoverride);
+static char *readsections(struct config *, struct classinfo *cl, struct interfaceinfo *in, int inclass);
+static void readsectionconfig(struct config *, struct classinfo *cl, struct interfaceinfo *in, int inclass);
 static void readsectioncdef(struct config *);
 static void readsectioncdefprivate(struct config *);
 static void readsectionstubprivate(struct config *);
@@ -468,25 +464,10 @@ static void readconfig(struct config *cfg)
     }
 
     /* Read all sections and see that we are at the end of the file */
-    if (readsections(cfg, mainclass, NULL, 0, 0) != NULL)
+    if (readsections(cfg, mainclass, NULL, 0) != NULL)
         exitfileerror(20, "Syntax error");
 
     fileclose();
-    
-    if (cfg->confoverridefile)
-    {
-        if (!fileopen(cfg->confoverridefile))
-        {
-            fprintf(stderr, "In readconfig: Could not open %s\n", cfg->confoverridefile);
-            exit(20);
-        }
-
-        /* Read all sections and see that we are at the end of the file */
-        if (readsections(cfg, mainclass, NULL, 0, 1) != NULL)
-            exitfileerror(20, "Syntax error");
-
-        fileclose();
-    }
 }
 
 /* readsections will scan through all the sections in the config file.
@@ -499,7 +480,7 @@ static void readconfig(struct config *cfg)
  * int inclass: Boolean to indicate if we are in a class part. If not we are in the main
  *     part of the config file.
  */
-static char *readsections(struct config *cfg, struct classinfo *cl, struct interfaceinfo *in, int inclass, int inoverride)
+static char *readsections(struct config *cfg, struct classinfo *cl, struct interfaceinfo *in, int inclass)
 {
     char *line, *s, *s2;
     int hasconfig = 0;
@@ -543,7 +524,7 @@ static char *readsections(struct config *cfg, struct classinfo *cl, struct inter
             switch (partnum)
             {
             case 1: /* config */
-                readsectionconfig(cfg, cl, in, inclass, inoverride);
+                readsectionconfig(cfg, cl, in, inclass);
                 hasconfig = 1;
                 break;
 
@@ -749,7 +730,7 @@ static char *readsections(struct config *cfg, struct classinfo *cl, struct inter
     return NULL;
 }
 
-static void readsectionconfig(struct config *cfg, struct classinfo *cl, struct interfaceinfo *in, int inclass, int inoverride)
+static void readsectionconfig(struct config *cfg, struct classinfo *cl, struct interfaceinfo *in, int inclass)
 {
     int atend = 0, i;
     char *line, *s, *s2, *libbasetypeextern = NULL;
@@ -2131,7 +2112,7 @@ readsectioninterface(struct config *cfg)
     struct interfaceinfo *in;
 
     in = newinterface(cfg);
-    s = readsections(cfg, NULL, in, 1, 0);
+    s = readsections(cfg, NULL, in, 1);
     if (s == NULL)
         exitfileerror(20, "Unexpected end of file\n");
 
@@ -2188,7 +2169,7 @@ readsectionclass(struct config *cfg)
     struct classinfo *cl;
 
     cl = newclass(cfg);
-    s = readsections(cfg, cl, NULL, 1, 0);
+    s = readsections(cfg, cl, NULL, 1);
     if (s == NULL)
         exitfileerror(20, "Unexpected end of file\n");
 
