@@ -1,5 +1,5 @@
 /*
-    Copyright © 2017-2019, The AROS Development Team. All rights reserved.
+    Copyright © 2017-2018, The AROS Development Team. All rights reserved.
     $Id$
 
     Desc: Elbox FastATA HIDD
@@ -10,7 +10,6 @@
 #include <proto/exec.h>
 
 #include <hardware/ata.h>
-#include <hidd/bus.h>
 #include <hidd/ata.h>
 #include <hidd/pci.h>
 #include <oop/oop.h>
@@ -119,13 +118,13 @@ void FASTATA__Root__Set(OOP_Class *cl, OOP_Object *o, struct pRoot_Set *msg)
     {
         ULONG idx;
 
-        Hidd_Bus_Switch(tag->ti_Tag, idx)
+        Hidd_ATABus_Switch(tag->ti_Tag, idx)
         {
-        case aoHidd_Bus_IRQHandler:
+        case aoHidd_ATABus_IRQHandler:
             data->ata_HandleIRQ = (APTR)tag->ti_Data;
             break;
 
-        case aoHidd_Bus_IRQData:
+        case aoHidd_ATABus_IRQData:
             data->irqData = (APTR)tag->ti_Data;
             break;
         }

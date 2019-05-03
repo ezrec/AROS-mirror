@@ -68,7 +68,7 @@ int checkHeader(struct elfheader *eh)
 	(
 			eh->ident[EI_CLASS]   != ELFCLASS32  ||
 			eh->ident[EI_VERSION] != EV_CURRENT  ||
-			!(eh->type == ET_REL || eh->type == ET_EXEC) ||
+			eh->type              != ET_REL      ||
 #if AROS_BIG_ENDIAN
 			eh->ident[EI_DATA]        != ELFDATA2MSB ||
 #else
@@ -210,12 +210,11 @@ static int load_hunk(void *file, struct sheader *sh)
 
 /* Perform relocations of given section */
 static int relocate(struct elfheader *eh, struct sheader *sh, long shrel_idx,
-		uint32_t virt, uintptr_t *deltas)
+		uint32_t virt)
 {
 	struct sheader *shrel = &sh[shrel_idx];
 	struct sheader *shsymtab = &sh[shrel->link];
 	struct sheader *toreloc = &sh[shrel->info];
-	uintptr_t orig_addr = deltas[shrel->info];
 	int is_exec = (eh->type == ET_EXEC);
 
 	struct symbol *symtab =
@@ -234,7 +233,7 @@ static int relocate(struct elfheader *eh, struct sheader *sh, long shrel_idx,
 	for (i = 0; i < numrel; i++, rel++)
 	{
 		struct symbol *sym = &symtab[ELF32_R_SYM(rel->info)];
-		uint32_t *p = (uint32_t *) & section[rel->offset - orig_addr];
+		uint32_t *p = (uint32_t *) & section[rel->offset];
 		uint32_t s;
 		virtoffset = virt;
 
@@ -398,7 +397,6 @@ kprintf("movw/movt: offset=%08x, s=%08x, sym->value=%08x, section_orig_addr=%08x
 int loadElf(void *elf_file)
 {
 	struct elfheader *eh = (struct elfheader *)elf_file;
-	uintptr_t deltas[int_shnum];
 	//uint32_t s_ro = 0;
 	//uint32_t s_rw = 0;
 
@@ -419,7 +417,6 @@ int loadElf(void *elf_file)
 			/* Does the section require memoy allcation? */
 			else if (sh[i].flags & SHF_ALLOC)
 			{
-				deltas[i] = (uintptr_t)sh[i].addr;
 				/* Yup, it does. Load the hunk */
 				if (!load_hunk(elf_file, &sh[i]))
 				{
@@ -429,11 +426,10 @@ int loadElf(void *elf_file)
 				{
 					if (sh[i].size)
 					{
-						DELF(kprintf("[BOOT:ELF] %s section loaded at %p (Virtual addr: %p, requestet addr: %p)\n",
+						DELF(kprintf("[BOOT:ELF] %s section loaded at %p (Virtual addr: %p)\n",
 								sh[i].flags & SHF_WRITE ? "RW":"RO",
 										sh[i].addr,
-										sh[i].addr + virtoffset,
-										deltas[i]));
+										sh[i].addr + virtoffset));
 					}
 				}
 			}
@@ -445,7 +441,7 @@ int loadElf(void *elf_file)
 			if (sh[i].type == SHT_REL && sh[sh[i].info].addr)
 			{
 				sh[i].addr = (APTR)((uint32_t) elf_file + sh[i].offset);
-				if (!sh[i].addr || !relocate(eh, sh, i, virtoffset, deltas))
+				if (!sh[i].addr || !relocate(eh, sh, i, virtoffset))
 				{
 					return 0;
 				}
