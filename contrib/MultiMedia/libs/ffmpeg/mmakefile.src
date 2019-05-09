@@ -24,7 +24,7 @@ endif
 FFMPEG_LIBS=-lnet
 FFMPEG_PROGS=--disable-programs
 
-VERSION      := 4.0.2
+VERSION      := 3.0.1
 REPOSITORIES := http://ffmpeg.org/releases \
  http://mirror.sobukus.de/files/src/ffmpeg \
  http://download.openpkg.org/components/cache/ffmpeg

@@ -1,0 +1,3 @@
+[submodule "contrib/Networking/Apps/odyssey"]
+	path = contrib/Networking/Apps/odyssey
+	url = https://github.com/AmigaPorts/OdysseyWebBrowser

@@ -2,7 +2,7 @@ include $(SRCDIR)/config/aros.cfg
 
 LN ?= ln
 
-ICU_VERSION := 4.2.1
+ICU_VERSION := 60.2
 ICU_PKGNAME := icu4c
 ICU_PKGVERSION=$(subst .,_,$(ICU_VERSION))
 
