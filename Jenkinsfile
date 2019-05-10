@@ -38,7 +38,7 @@ def killall_jobs() {
 	echo "Done killing"
 }
 
-def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0', nativetarget = true, contrib = 'contrib') {
+def buildStep(ext, iconset = 'default', binutilsver = '2.32', gccver = '9.1.0', nativetarget = true, contrib = 'contrib', configureextras = '', sfx = '') {
 	def fixed_job_name = env.JOB_NAME.replace('%2F','/')
 	try{
 		stage("Building ${ext} with gcc ${gccver} and binutils ${binutilsver}...") {
@@ -58,21 +58,21 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0', 
 
 			slackSend color: "good", channel: "#jenkins", message: "Starting ${ext} build target..."
 
-			freshUpRoot(ext, binutilsver, gccver)
+			freshUpRoot(ext, binutilsver, gccver, sfx)
 
-			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && ${env.WORKSPACE}/AROS/configure --target=${ext} --enable-ccache --with-iconset=${iconset} --enable-build-type=nightly --with-serial-debug --with-binutils-version=${binutilsver} --with-gcc-version=${gccver} --with-aros-toolchain-install=${commondir}/tools/tools-${ext}-${gccver}-${binutilsver} --with-portssources=${env.WORKSPACE}/externalsources"
+			sh "cd ${env.WORKSPACE}/build-${ext}${sfx}-${gccver}-${binutilsver} && ${env.WORKSPACE}/AROS/configure --target=${ext} ${configureextras} --enable-ccache --with-iconset=${iconset} --enable-build-type=nightly --with-serial-debug --with-binutils-version=${binutilsver} --with-gcc-version=${gccver} --with-aros-toolchain-install=${commondir}/tools/tools-${ext}-${gccver}-${binutilsver} --with-portssources=${env.WORKSPACE}/externalsources"
 
-			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make -j8"
+			sh "cd ${env.WORKSPACE}/build-${ext}${sfx}-${gccver}-${binutilsver} && make -j8"
 
 			if (!nativetarget) {
-				sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make -j8 default-x11keymaptable"
+				sh "cd ${env.WORKSPACE}/build-${ext}${sfx}-${gccver}-${binutilsver} && make -j8 default-x11keymaptable"
 			}
 
 			postCoreBuild(ext)
 
-			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make -j8 ${contrib}"
+			sh "cd ${env.WORKSPACE}/build-${ext}${sfx}-${gccver}-${binutilsver} && make -j8 ${contrib}"
 
-			sh "cd ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver} && make distfiles"
+			sh "cd ${env.WORKSPACE}/build-${ext}${sfx}-${gccver}-${binutilsver} && make distfiles"
 
 			if (!env.CHANGE_ID) {
 				sh "mkdir -p ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
@@ -83,11 +83,11 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0', 
 				sh "cp -pRL ${env.WORKSPACE}/AROS/ACKNOWLEDGEMENTS ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
 
 				if (nativetarget) {					
-					sh "cp -fvr ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver}/distfiles/* ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
+					sh "cp -fvr ${env.WORKSPACE}/build-${ext}${sfx}-${gccver}-${binutilsver}/distfiles/* ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
 
 					//sh "rm -rfv ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/*.elf" // Can't remember what this is good for...
 				} else {
-					sh "cp -fvr ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver}/bin/${ext}/AROS ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
+					sh "cp -fvr ${env.WORKSPACE}/build-${ext}${sfx}-${gccver}-${binutilsver}/bin/${ext}/AROS ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
 					sh "cd ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/ && tar -Jcvvf ${ext}-hosted.tar.xz *"
 					sh "rm -fvr ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/AROS"
 				}
@@ -132,9 +132,9 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.30', gccver = '6.3.0', 
 	}
 }
 
-def freshUpRoot(ext, binutilsver, gccver) {
+def freshUpRoot(ext, binutilsver, gccver, sfx) {
 	def commondir = env.WORKSPACE + '/../' + env.JOB_NAME.replace('%2F','/') + '/'
-	sh "rm -rfv ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver}/distfiles/*"
+	sh "rm -rfv ${env.WORKSPACE}/build-${ext}${sfx}-${gccver}-${binutilsver}/distfiles/*"
 	// uncomment the following section to remove the whole toolchain and build: 
 	// sh "rm -rfv ${commondir}/tools/tools-${ext}-${gccver}-${binutilsver}"
 	// sh "rm -rfv ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver}/*"
@@ -142,7 +142,7 @@ def freshUpRoot(ext, binutilsver, gccver) {
 	sh "rm -rfv ${env.WORKSPACE}/AROS/contrib"
 	sh "rm -rfv ${env.WORKSPACE}/AROS/ports"
 	
-	sh "mkdir -p ${env.WORKSPACE}/build-${ext}-${gccver}-${binutilsver}"
+	sh "mkdir -p ${env.WORKSPACE}/build-${ext}${sfx}-${gccver}-${binutilsver}"
 	sh "mkdir -p ${env.WORKSPACE}/externalsources"
 	sh "mkdir -p ${commondir}/tools/tools-${ext}-${gccver}-${binutilsver}"
 }
@@ -159,17 +159,27 @@ node('master') {
 	parallel (
 		'Build Amiga 68k version - GCC 9.1.0 - Binutils 2.32': {
 			node {			
-				buildStep('amiga-m68k', 'Mason', '2.32', '9.1.0', true, 'contrib-installerlg')
+				buildStep('amiga-m68k', 'Mason', '2.32', '9.1.0', true, 'contrib-installerlg local-odyssey')
 			}
 		},
-		'Build Amiga 68k version - GCC 6.5.0 - Binutils 2.32': {
+		'Build Amiga 68k version - GCC 8.3.0 - Binutils 2.32': {
 			node {			
-				buildStep('amiga-m68k', 'Mason', '2.32', '6.5.0', true, 'contrib-installerlg')
+				buildStep('amiga-m68k', 'Mason', '2.32', '8.3.0', true, 'contrib-installerlg local-odyssey')
 			}
 		},
 		'Build Linux Hosted x86_64 version - GCC 9.1.0 - Binutils 2.32': {
 			node {			
 				buildStep('linux-x86_64', 'Mason', '2.32', '9.1.0', false)
+			}
+		},
+		'Build Native x86_64 version - GCC 9.1.0 - Binutils 2.32': {
+			node {			
+				buildStep('pc-x86_64', 'Mason', '2.32', '9.1.0', true, 'contrib', '--with-bootloader=grub2')
+			}
+		},
+		'Build Native x86_64-SMP version - GCC 9.1.0 - Binutils 2.32': {
+			node {			
+				buildStep('pc-x86_64', 'Mason', '2.32', '9.1.0', true, 'contrib', '--enable-target-variant=smp --with-bootloader=grub2', '-smp')
 			}
 		},
 		'Build RasPi BigEndian version - GCC 9.1.0 - Binutils 2.32': {
