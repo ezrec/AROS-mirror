@@ -75,21 +75,21 @@ def buildStep(ext, iconset = 'default', binutilsver = '2.32', gccver = '9.1.0', 
 			sh "cd ${env.WORKSPACE}/build-${ext}${sfx}-${gccver}-${binutilsver} && make distfiles"
 
 			if (!env.CHANGE_ID) {
-				sh "mkdir -p ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
+				sh "mkdir -p ${env.WORKSPACE}/publishing/deploy/aros/${ext}${sfx}-${gccver}-${binutilsver}/"
 
-				sh "echo '${env.BUILD_NUMBER}|${env.BUILD_URL}' > ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/BUILD"
+				sh "echo '${env.BUILD_NUMBER}|${env.BUILD_URL}' > ${env.WORKSPACE}/publishing/deploy/aros/${ext}${sfx}-${gccver}-${binutilsver}/BUILD"
 
-				sh "cp -pRL ${env.WORKSPACE}/AROS/LICENSE ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
-				sh "cp -pRL ${env.WORKSPACE}/AROS/ACKNOWLEDGEMENTS ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
+				sh "cp -pRL ${env.WORKSPACE}/AROS/LICENSE ${env.WORKSPACE}/publishing/deploy/aros/${ext}${sfx}-${gccver}-${binutilsver}/"
+				sh "cp -pRL ${env.WORKSPACE}/AROS/ACKNOWLEDGEMENTS ${env.WORKSPACE}/publishing/deploy/aros/${ext}${sfx}-${gccver}-${binutilsver}/"
 
 				if (nativetarget) {					
-					sh "cp -fvr ${env.WORKSPACE}/build-${ext}${sfx}-${gccver}-${binutilsver}/distfiles/* ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
+					sh "cp -fvr ${env.WORKSPACE}/build-${ext}${sfx}-${gccver}-${binutilsver}/distfiles/* ${env.WORKSPACE}/publishing/deploy/aros/${ext}${sfx}-${gccver}-${binutilsver}/"
 
 					//sh "rm -rfv ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/*.elf" // Can't remember what this is good for...
 				} else {
-					sh "cp -fvr ${env.WORKSPACE}/build-${ext}${sfx}-${gccver}-${binutilsver}/bin/${ext}/AROS ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/"
-					sh "cd ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/ && tar -Jcvvf ${ext}-hosted.tar.xz *"
-					sh "rm -fvr ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/AROS"
+					sh "cp -fvr ${env.WORKSPACE}/build-${ext}${sfx}-${gccver}-${binutilsver}/bin/${ext}/AROS ${env.WORKSPACE}/publishing/deploy/aros/${ext}${sfx}-${gccver}-${binutilsver}/"
+					sh "cd ${env.WORKSPACE}/publishing/deploy/aros/${ext}-${gccver}-${binutilsver}/ && tar -Jcvvf ${ext}${sfx}-hosted.tar.xz *"
+					sh "rm -fvr ${env.WORKSPACE}/publishing/deploy/aros/${ext}${sfx}-${gccver}-${binutilsver}/AROS"
 				}
 			}
 
