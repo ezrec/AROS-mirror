@@ -159,12 +159,12 @@ node('master') {
 	parallel (
 		'Build Amiga 68k version - GCC 9.1.0 - Binutils 2.32': {
 			node {			
-				buildStep('amiga-m68k', 'Mason', '2.32', '9.1.0', true, 'contrib-installerlg local-odyssey')
+				buildStep('amiga-m68k', 'Mason', '2.32', '9.1.0', true, 'contrib-installerlg')
 			}
 		},
 		'Build Amiga 68k version - GCC 8.3.0 - Binutils 2.32': {
 			node {			
-				buildStep('amiga-m68k', 'Mason', '2.32', '8.3.0', true, 'contrib-installerlg local-odyssey')
+				buildStep('amiga-m68k', 'Mason', '2.32', '8.3.0', true, 'contrib-installerlg')
 			}
 		},
 		'Build Linux Hosted x86_64 version - GCC 9.1.0 - Binutils 2.32': {
