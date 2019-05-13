@@ -6,7 +6,7 @@
     Lang: english
 */
 
-#define DEBUG 1
+#define DEBUG 0
 #include <aros/debug.h>
 
 #include <proto/expansion.h>
@@ -19,6 +19,8 @@
 #include <exec/resident.h>
 
 #define ROMIMG_SIZE                     0x80000
+#define PROBEMEM_QUITAFTERADD
+
 
 AROS_UFP3(ULONG, MemoryTest,
     AROS_UFPA(APTR, startaddr, A0),
@@ -128,45 +130,34 @@ static LONG scanmbram(struct ExpansionBase *ExpansionBase, APTR *start, APTR *en
         {
             tmpstart = romstart;
             tmpend = romend + 1;
-            ret = scanmbram(ExpansionBase, start, &tmpend, step, prio);
-            if (ret >= 0)
-                ret = scanmbram(ExpansionBase, &tmpstart, end, step, prio);
         }
         else
         {
             tmpend = romstart;
             tmpstart = romend + 1;
-            ret = scanmbram(ExpansionBase, start, &tmpend, step, prio);
-            if (ret >= 0)
-                ret = scanmbram(ExpansionBase, &tmpstart, end, step, prio);
         }
+        ret = scanmbram(ExpansionBase, start, &tmpend, step, prio);
+        if (ret >= 0)
+            ret = scanmbram(ExpansionBase, &tmpstart, end, step, prio);
         return ret;
     }
     else if (romatregionstart(romend, *start, *end, (step < 0) ? TRUE : FALSE))
     {
         if (step < 0)
-        {
             tmpstart = romstart;
-            return scanmbram(ExpansionBase, &tmpstart, end, step, prio);
-        }
         else
-        {
             tmpstart = romend + 1;
-            return scanmbram(ExpansionBase, &tmpstart, end, step, prio);
-        }
+        
+        return scanmbram(ExpansionBase, &tmpstart, end, step, prio);
     }
     else if (romatregionend(romstart, *start, *end, (step < 0) ? TRUE : FALSE))
     {
         if (step < 0)
-        {
             tmpend = romend + 1;
-            return scanmbram(ExpansionBase, start, &tmpend, step, prio);
-        }
         else
-        {
             tmpend = romstart;
-            return scanmbram(ExpansionBase, start, &tmpend, step, prio);
-        }
+
+        return scanmbram(ExpansionBase, start, &tmpend, step, prio);
     }
     /* end splitting the region around the system rom ***********************************/
 
@@ -180,45 +171,34 @@ static LONG scanmbram(struct ExpansionBase *ExpansionBase, APTR *start, APTR *en
         {
             tmpstart = romstart;
             tmpend = romend + 1;
-            ret = scanmbram(ExpansionBase, start, &tmpend, step, prio);
-            if (ret >= 0)
-                ret = scanmbram(ExpansionBase, &tmpstart, end, step, prio);
         }
         else
         {
             tmpend = romstart;
             tmpstart = romend + 1;
-            ret = scanmbram(ExpansionBase, start, &tmpend, step, prio);
-            if (ret >= 0)
-                ret = scanmbram(ExpansionBase, &tmpstart, end, step, prio);
         }
+        ret = scanmbram(ExpansionBase, start, &tmpend, step, prio);
+        if (ret >= 0)
+            ret = scanmbram(ExpansionBase, &tmpstart, end, step, prio);
         return ret;
     }
     else if (romatregionstart(romend, *start, *end, (step < 0) ? TRUE : FALSE))
     {
         if (step < 0)
-        {
             tmpstart = romstart;
-            return scanmbram(ExpansionBase, &tmpstart, end, step, prio);
-        }
         else
-        {
             tmpstart = romend + 1;
-            return scanmbram(ExpansionBase, &tmpstart, end, step, prio);
-        }
+
+        return scanmbram(ExpansionBase, &tmpstart, end, step, prio);
     }
     else if (romatregionend(romstart, *start, *end, (step < 0) ? TRUE : FALSE))
     {
         if (step < 0)
-        {
             tmpend = romend + 1;
-            return scanmbram(ExpansionBase, start, &tmpend, step, prio);
-        }
         else
-        {
             tmpend = romstart;
-            return scanmbram(ExpansionBase, start, &tmpend, step, prio);
-        }
+
+        return scanmbram(ExpansionBase, start, &tmpend, step, prio);
     }
     /* end splitting the region around the extended rom *********************************/
 
@@ -299,9 +279,13 @@ static LONG scanmbram(struct ExpansionBase *ExpansionBase, APTR *start, APTR *en
         {
             D(bug("[expansion:am68k] %s: Adding %08x;%08x (size=%08x) to the expansion memlist\n", __func__, rangestart, rangestart + ret, ret));
             AddMemList(ret, MEMF_KICK | MEMF_LOCAL | MEMF_FAST | MEMF_PUBLIC, prio, rangestart, "expansion.memory");
+#if defined(PROBEMEM_QUITAFTERADD)
+            break;
+#else
             if (((step >= 0) && ((rangestart + ret) == *end)) ||
                 ((step < 0 ) && (rangestart == *end)))
                 break;
+#endif
         }
         if (step >= 0)
             mbramstart += step;
