@@ -4,13 +4,11 @@
 /* Includeheader
 
         Name:           SDI_lib.h
-        Versionstring:  $VER: SDI_lib.h 1.12 (01.04.2014)
+        Versionstring:  $VER: SDI_lib.h 1.14 (18.02.2016)
         Author:         Jens Maus
         Distribution:   PD
-        Project page:   http://sf.net/p/adtools/code/HEAD/tree/trunk/sdi/
+        Project page:   https://github.com/adtools/SDI
         Description:    defines to hide OS specific library function definitions
-        Id:             $Id$
-        URL:            $URL: svn://svn.code.sf.net/p/adtools/code/trunk/sdi/SDI_lib.h $
 
  1.0   09.05.04 : initial version which allows to hide OS specific shared
                   library function definition like it has been introduced with
@@ -44,6 +42,9 @@
  1.12  01.04.14 : removed the necessity of stub functions for AmigaOS4 (Thore
                   Böckelmann)
  1.13  07.09.14 : adapted to AROS (AROS Development Team)
+ 1.13  28.09.15 : removed the exclusion of C++ (Thore Böckelmann)
+ 1.14  18.02.16 : added LFUNC_NULL (Jens Maus)
+
 */
 
 /*
@@ -56,7 +57,7 @@
 ** (e.g. add your name or nick name).
 **
 ** Find the latest version of this file at:
-** http://sf.net/p/adtools/code/HEAD/tree/trunk/sdi/
+** https://github.com/adtools/SDI
 **
 ** Jens Maus <mail@jens-maus.de>
 ** Dirk Stöcker <soft@dstoecker.de>
@@ -154,6 +155,7 @@
   #define LFUNC_VAS(name) LIB_##name
   #define LFUNC_FA_(name) ,LIB_##name
   #define LFUNC_VA_(name) ,LIB_##name
+  #define LFUNC_NULL      ,NULL
   #define LFUNC(name)     LIB_##name
 #elif defined(__MORPHOS__)
   #define LIBFUNC
@@ -173,6 +175,7 @@
   #define LFUNC_VAS(name)
   #define LFUNC_FA_(name) ,LIBSTUB_##name
   #define LFUNC_VA_(name)
+  #define LFUNC_NULL      ,NULL
   #define LFUNC(name)     LIBSTUB_##name
 #elif defined(__AROS__)
   #if defined(AROS_ABI_V1)
@@ -214,11 +217,8 @@
   #endif
 #else
   #define LIBFUNC SAVEDS ASM
-  #if !defined(__cplusplus) &&                                        \
-    (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 ||                  \
-    (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
-    #define LIBPROTO(name, ret, ...)                                  \
-      LIBFUNC ret LIB_##name(__VA_ARGS__)
+  #if (__STDC_VERSION__ >= 199901L || __GNUC__ >= 3 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 95))
+    #define LIBPROTO(name, ret, ...) LIBFUNC ret LIB_##name(__VA_ARGS__)
     #define LIBPROTOVA(name, ret, ...)
     #define LIBSTUB(name, ret, ...)
     #define CALL_LFUNC_NP(name, ...) LIB_##name(__BASE_OR_IFACE_VAR)
@@ -228,6 +228,7 @@
   #define LFUNC_VAS(name)
   #define LFUNC_FA_(name) ,LIB_##name
   #define LFUNC_VA_(name)
+  #define LFUNC_NULL      ,NULL
   #define LFUNC(name)     LIB_##name
 #endif
 
