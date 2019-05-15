@@ -1,5 +1,5 @@
 /*
-    Copyright  2002-2012, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -26,7 +26,7 @@
 #   define SAVEDS
 #else
 /*
-    Copyright ฉ 2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -55,7 +55,8 @@
 
 #define IMSPEC_EXTERNAL_PREFIX "MUI:Images/"
 
-/* Define all classes as built in...should be moved out to config.h like file */
+/* Define all classes as built in...should be
+   moved out to config.h like file */
 #define ZUNE_BUILTIN_ABOUTMUI 1
 #define ZUNE_BUILTIN_BALANCE 1
 #define ZUNE_BUILTIN_BOOPSI 1
@@ -109,7 +110,8 @@ ASM ULONG HookEntry(REG(a0, struct Hook *hook),REG(a2, APTR obj), REG(a1, APTR m
 /*** OS4 Exec Interface support *********************************************/
 #ifdef __amigaos4__
 #define EXEC_INTERFACE_DECLARE(x) x
-#define EXEC_INTERFACE_GET_MAIN(interface,libbase) (interface = (void*)GetInterface(libbase,"main",1,NULL))
+#define EXEC_INTERFACE_GET_MAIN(interface,libbase) \
+        (interface = (void*)GetInterface(libbase,"main",1,NULL))
 #define EXEC_INTERFACE_DROP(interface) DropInterface((struct Interface*)interface)
 #define EXEC_INTERFACE_ASSIGN(a,b) (a = b)
 #else
@@ -130,7 +132,7 @@ VOID FreeVecPooled(APTR pool, APTR memory);
 #define CloneRastPort(rp) (rp)  
 #define FreeRastPort(rp)        
 
-/*** Miscellanous compiler supprot ******************************************/
+/*** Miscellanous compiler support ******************************************/
 #ifndef SAVEDS
 #   ifdef __MAXON__
 #       define __asm
@@ -301,7 +303,7 @@ for                                            \
 #define _MUI_IDENTIFIERS_H
 
 /*
-    Copyright ฉ 2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -387,7 +389,7 @@ struct __MUIBuiltinClass {
 #define _MUI_CLASSES_NOTIFY_H
 
 /*
-    Copyright ฉ 2002-2012, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -487,14 +489,14 @@ struct MUIP_MultiSet
     STACKED ULONG MethodID;
     STACKED ULONG attr;
     STACKED IPTR val;
-    STACKED APTR obj;           /* more might follow */
+    STACKED APTR obj;    /* more might follow */
 };
 
 struct MUIP_NoNotifySet
 {
     STACKED ULONG MethodID;
     STACKED ULONG attr;
-    STACKED IPTR val;           /* more might follow */
+    STACKED IPTR val;    /* more might follow */
 };
 
 struct MUIP_Notify
@@ -518,7 +520,7 @@ struct MUIP_SetAsString
     STACKED ULONG MethodID;
     STACKED ULONG attr;
     STACKED char *format;
-    STACKED IPTR val;           /* more might follow */
+    STACKED IPTR val;    /* more might follow */
 };
 
 struct MUIP_SetUData
@@ -551,8 +553,8 @@ struct MUIP_WriteString
     STACKED char *memory;
 };
 
-#define MUIM_ConnectParent       (MUIB_Notify | 0x00000000)     /* Zune: V1 */
-#define MUIM_DisconnectParent    (MUIB_Notify | 0x00000001)     /* Zune: V1 */
+#define MUIM_ConnectParent     (MUIB_Notify | 0x00000000)    /* Zune: V1 */
+#define MUIM_DisconnectParent  (MUIB_Notify | 0x00000001)    /* Zune: V1 */
 
 struct MUIP_ConnectParent
 {
@@ -590,7 +592,7 @@ struct MUIP_DisconnectParent
 /* Special values for MUIM_Notify */
 #define MUIV_TriggerValue    0x49893131UL
 #define MUIV_NotTriggerValue 0x49893133UL
-#define MUIV_EveryTime       0x49893131UL       /* as TrigVal */
+#define MUIV_EveryTime       0x49893131UL    /* as TrigVal */
 
 enum
 {
@@ -603,7 +605,7 @@ enum
 
 /* Private stuff */
 
-#define _parent(obj)    (muiNotifyData(obj)->mnd_ParentObject)  /* Shortcut */
+#define _parent(obj)  (muiNotifyData(obj)->mnd_ParentObject)  /* Shortcut */
 
 
 #endif /* _MUI_CLASSES_NOTIFY_H */
@@ -614,8 +616,8 @@ enum
 #define _CLASSES_FAMILY_H
 
 /* 
-    Copyright ฉ 1999, David Le Corfec.
-    Copyright ฉ 2002-2012, The AROS Development Team.
+    Copyright (C) 1999, David Le Corfec.
+    Copyright (C) 2002-2019, The AROS Development Team.
     All rights reserved.
 
     $Id$
@@ -699,8 +701,8 @@ struct MUIP_Family_GetChild
 
 #ifndef _MUI_CLASSES_APPLICATION_H
 /* 
-    Copyright ฉ 1999, David Le Corfec.
-    Copyright ฉ 2002-2003, The AROS Development Team.
+    Copyright (C) 1999, David Le Corfec.
+    Copyright (C) 2002-2019, The AROS Development Team.
     All rights reserved.
 
     $Id$
@@ -714,36 +716,41 @@ struct MUIP_Family_GetChild
 #endif
 
 /*** Name *******************************************************************/
-#define MUIC_Application                        "Application.mui"
+#define MUIC_Application                  "Application.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Application                        (MUIB_ZUNE | 0x00000100)
+#define MUIB_Application                  (MUIB_ZUNE | 0x00000100)
 
 /*** Methods ****************************************************************/
-#define MUIM_Application_AboutMUI         (MUIB_MUI|0x0042d21d) /* MUI: V14 */
-#define MUIM_Application_AddInputHandler  (MUIB_MUI|0x0042f099) /* MUI: V11 */
-#define MUIM_Application_CheckRefresh     (MUIB_MUI|0x00424d68) /* MUI: V11 */
-#define MUIM_Application_GetMenuCheck     (MUIB_MUI|0x0042c0a7) /* MUI: V4  */
-#define MUIM_Application_GetMenuState     (MUIB_MUI|0x0042a58f) /* MUI: V4  */
-#define MUIM_Application_Input            (MUIB_MUI|0x0042d0f5) /* MUI: V4  */
-#define MUIM_Application_InputBuffered    (MUIB_MUI|0x00427e59) /* MUI: V4  */
-#define MUIM_Application_Load             (MUIB_MUI|0x0042f90d) /* MUI: V4  */
-#define MUIM_Application_NewInput         (MUIB_MUI|0x00423ba6) /* MUI: V11 */
-#define MUIM_Application_OpenConfigWindow (MUIB_MUI|0x004299ba) /* MUI: V11 */
-#define MUIM_Application_PushMethod       (MUIB_MUI|0x00429ef8) /* MUI: V4  */
-#define MUIM_Application_RemInputHandler  (MUIB_MUI|0x0042e7af) /* MUI: V11 */
-#define MUIM_Application_ReturnID         (MUIB_MUI|0x004276ef) /* MUI: V4  */
-#define MUIM_Application_Save             (MUIB_MUI|0x004227ef) /* MUI: V4  */
-#define MUIM_Application_SetConfigItem    (MUIB_MUI|0x00424a80) /* MUI: V11 */
-#define MUIM_Application_SetMenuCheck     (MUIB_MUI|0x0042a707) /* MUI: V4  */
-#define MUIM_Application_SetMenuState     (MUIB_MUI|0x00428bef) /* MUI: V4  */
-#define MUIM_Application_ShowHelp         (MUIB_MUI|0x00426479) /* MUI: V4  */
+#define MUIM_Application_AboutMUI         (MUIB_MUI | 0x0042d21d) /* MUI: V14 */
+#define MUIM_Application_AddInputHandler  (MUIB_MUI | 0x0042f099) /* MUI: V11 */
+#define MUIM_Application_CheckRefresh     (MUIB_MUI | 0x00424d68) /* MUI: V11 */
+#define MUIM_Application_GetMenuCheck     (MUIB_MUI | 0x0042c0a7) /* MUI: V4  */
+#define MUIM_Application_GetMenuState     (MUIB_MUI | 0x0042a58f) /* MUI: V4  */
+#define MUIM_Application_Input            (MUIB_MUI | 0x0042d0f5) /* MUI: V4  */
+#define MUIM_Application_InputBuffered    (MUIB_MUI | 0x00427e59) /* MUI: V4  */
+#define MUIM_Application_Load             (MUIB_MUI | 0x0042f90d) /* MUI: V4  */
+#define MUIM_Application_NewInput         (MUIB_MUI | 0x00423ba6) /* MUI: V11 */
+#define MUIM_Application_OpenConfigWindow (MUIB_MUI | 0x004299ba) /* MUI: V11 */
+#define MUIM_Application_PushMethod       (MUIB_MUI | 0x00429ef8) /* MUI: V4  */
+#define MUIM_Application_RemInputHandler  (MUIB_MUI | 0x0042e7af) /* MUI: V11 */
+#define MUIM_Application_ReturnID         (MUIB_MUI | 0x004276ef) /* MUI: V4  */
+#define MUIM_Application_Save             (MUIB_MUI | 0x004227ef) /* MUI: V4  */
+#define MUIM_Application_SetConfigItem    (MUIB_MUI | 0x00424a80) /* MUI: V11 */
+#define MUIM_Application_SetMenuCheck     (MUIB_MUI | 0x0042a707) /* MUI: V4  */
+#define MUIM_Application_SetMenuState     (MUIB_MUI | 0x00428bef) /* MUI: V4  */
+#define MUIM_Application_ShowHelp         (MUIB_MUI | 0x00426479) /* MUI: V4  */
 
-#define MUIM_Application_SetConfigdata    (MUIB_Application | 0x00000000) /* Zune 20030407 */
-#define MUIM_Application_OpenWindows      (MUIB_Application | 0x00000001) /* Zune 20030407 */
-#define MUIM_Application_Iconify          (MUIB_Application | 0x00000002) /* Zune: V1  */
-#define MUIM_Application_Execute          (MUIB_Application | 0x00000003)
-#define MUIM_Application_UpdateMenus      (MUIB_Application | 0x00000004) /* Zune 20070712 */
+#define MUIM_Application_SetConfigdata    \
+        (MUIB_Application | 0x00000000)    /* Zune 20030407 */
+#define MUIM_Application_OpenWindows      \
+        (MUIB_Application | 0x00000001)    /* Zune 20030407 */
+#define MUIM_Application_Iconify          \
+        (MUIB_Application | 0x00000002)    /* Zune: V1  */
+#define MUIM_Application_Execute          \
+        (MUIB_Application | 0x00000003)
+#define MUIM_Application_UpdateMenus      \
+        (MUIB_Application | 0x00000004)    /* Zune 20070712 */
 
 /* Method Structures */
 struct MUIP_Application_AboutMUI
@@ -877,73 +884,73 @@ struct MUIP_Application_UpdateMenus
 
 /*** Attributes *************************************************************/
 #define MUIA_Application_Active \
-    (MUIB_MUI|0x004260ab)   /* MUI: V4  isg BOOL              */
+    (MUIB_MUI | 0x004260ab)   /* MUI: V4  isg BOOL              */
 #define MUIA_Application_Author \
-    (MUIB_MUI|0x00424842)   /* MUI: V4  i.g STRPTR            */
+    (MUIB_MUI | 0x00424842)   /* MUI: V4  i.g STRPTR            */
 #define MUIA_Application_Base \
-    (MUIB_MUI|0x0042e07a)   /* MUI: V4  i.g STRPTR            */
+    (MUIB_MUI | 0x0042e07a)   /* MUI: V4  i.g STRPTR            */
 #define MUIA_Application_Broker \
-    (MUIB_MUI|0x0042dbce)   /* MUI: V4  ..g Broker *          */
+    (MUIB_MUI | 0x0042dbce)   /* MUI: V4  ..g Broker *          */
 #define MUIA_Application_BrokerHook \
-    (MUIB_MUI|0x00428f4b)   /* MUI: V4  isg struct Hook *     */
+    (MUIB_MUI | 0x00428f4b)   /* MUI: V4  isg struct Hook *     */
 #define MUIA_Application_BrokerPort \
-    (MUIB_MUI|0x0042e0ad)   /* MUI: V6  ..g struct MsgPort *  */
+    (MUIB_MUI | 0x0042e0ad)   /* MUI: V6  ..g struct MsgPort *  */
 #define MUIA_Application_BrokerPri \
-    (MUIB_MUI|0x0042c8d0)   /* MUI: V6  i.g LONG              */
+    (MUIB_MUI | 0x0042c8d0)   /* MUI: V6  i.g LONG              */
 #define MUIA_Application_Commands \
-    (MUIB_MUI|0x00428648)   /* MUI: V4  isg struct MUI_Command * */
+    (MUIB_MUI | 0x00428648)   /* MUI: V4  isg struct MUI_Command * */
 #define MUIA_Application_Copyright \
-    (MUIB_MUI|0x0042ef4d)   /* MUI: V4  i.g STRPTR            */
+    (MUIB_MUI | 0x0042ef4d)   /* MUI: V4  i.g STRPTR            */
 #define MUIA_Application_Description \
-    (MUIB_MUI|0x00421fc6)   /* MUI: V4  i.g STRPTR            */
+    (MUIB_MUI | 0x00421fc6)   /* MUI: V4  i.g STRPTR            */
 #define MUIA_Application_DiskObject \
-    (MUIB_MUI|0x004235cb)   /* MUI: V4  isg struct DiskObject * */
+    (MUIB_MUI | 0x004235cb)   /* MUI: V4  isg struct DiskObject * */
 #define MUIA_Application_DoubleStart \
-    (MUIB_MUI|0x00423bc6)   /* MUI: V4  ..g BOOL              */
+    (MUIB_MUI  |0x00423bc6)   /* MUI: V4  ..g BOOL              */
 #define MUIA_Application_DropObject \
-    (MUIB_MUI|0x00421266)   /* MUI: V5  is. Object *          */
+    (MUIB_MUI | 0x00421266)   /* MUI: V5  is. Object *          */
 #define MUIA_Application_ForceQuit \
-    (MUIB_MUI|0x004257df)   /* MUI: V8  ..g BOOL              */
+    (MUIB_MUI | 0x004257df)   /* MUI: V8  ..g BOOL              */
 #define MUIA_Application_HelpFile \
-    (MUIB_MUI|0x004293f4)   /* MUI: V8  isg STRPTR            */
+    (MUIB_MUI | 0x004293f4)   /* MUI: V8  isg STRPTR            */
 #define MUIA_Application_Iconified \
-    (MUIB_MUI|0x0042a07f)   /* MUI: V4  .sg BOOL              */
+    (MUIB_MUI | 0x0042a07f)   /* MUI: V4  .sg BOOL              */
 #define MUIA_Application_MenuAction \
-    (MUIB_MUI|0x00428961)   /* MUI: V4  ..g ULONG             */
+    (MUIB_MUI | 0x00428961)   /* MUI: V4  ..g ULONG             */
 #define MUIA_Application_MenuHelp \
-    (MUIB_MUI|0x0042540b)   /* MUI: V4  ..g ULONG             */
+    (MUIB_MUI | 0x0042540b)   /* MUI: V4  ..g ULONG             */
 #define MUIA_Application_Menustrip \
-    (MUIB_MUI|0x004252d9)   /* MUI: V8  i.. Object *          */
+    (MUIB_MUI | 0x004252d9)   /* MUI: V8  i.. Object *          */
 #define MUIA_Application_RexxHook \
-    (MUIB_MUI|0x00427c42)   /* MUI: V7  isg struct Hook *     */
+    (MUIB_MUI | 0x00427c42)   /* MUI: V7  isg struct Hook *     */
 #define MUIA_Application_RexxMsg \
-    (MUIB_MUI|0x0042fd88)   /* MUI: V4  ..g struct RxMsg *    */
+    (MUIB_MUI | 0x0042fd88)   /* MUI: V4  ..g struct RxMsg *    */
 #define MUIA_Application_RexxString \
-    (MUIB_MUI|0x0042d711)   /* MUI: V4  .s. STRPTR            */
+    (MUIB_MUI | 0x0042d711)   /* MUI: V4  .s. STRPTR            */
 #define MUIA_Application_SingleTask \
-    (MUIB_MUI|0x0042a2c8)   /* MUI: V4  i.. BOOL              */
+    (MUIB_MUI | 0x0042a2c8)   /* MUI: V4  i.. BOOL              */
 #define MUIA_Application_Sleep \
-    (MUIB_MUI|0x00425711)   /* MUI: V4  .s. BOOL              */
+    (MUIB_MUI | 0x00425711)   /* MUI: V4  .s. BOOL              */
 #define MUIA_Application_Title \
-    (MUIB_MUI|0x004281b8)   /* MUI: V4  i.g STRPTR            */
+    (MUIB_MUI | 0x004281b8)   /* MUI: V4  i.g STRPTR            */
 #define MUIA_Application_UseCommodities \
-    (MUIB_MUI|0x00425ee5)   /* MUI: V10 i.. BOOL              */
+    (MUIB_MUI | 0x00425ee5)   /* MUI: V10 i.. BOOL              */
 #define MUIA_Application_UsedClasses \
-    (MUIB_MUI|0x0042e9a7)   /* MUI undoc: V20 i.. STRPTR [] */
+    (MUIB_MUI | 0x0042e9a7)   /* MUI undoc: V20 i.. STRPTR [] */
 #define MUIA_Application_UseRexx \
-    (MUIB_MUI|0x00422387)   /* MUI: V10 i.. BOOL              */
+    (MUIB_MUI | 0x00422387)   /* MUI: V10 i.. BOOL              */
 #define MUIA_Application_SetWinPos \
-    (MUIB_MUI|0x00432387)
+    (MUIB_MUI | 0x00432387)
 #define MUIA_Application_GetWinPos \
-    (MUIB_MUI|0x00432388)
+    (MUIB_MUI | 0x00432388)
 #define MUIA_Application_SearchWinId \
-    (MUIB_MUI|0x00432389)
+    (MUIB_MUI | 0x00432389)
 #define MUIA_Application_GetWinPosAddr \
-    (MUIB_MUI|0x00432390)
+    (MUIB_MUI | 0x00432390)
 #define MUIA_Application_GetWinPosSize \
-    (MUIB_MUI|0x00432391)
+    (MUIB_MUI | 0x00432391)
 #define MUIA_Application_CopyWinPosToApp \
-    (MUIB_MUI|0x00432392)
+    (MUIB_MUI | 0x00432392)
 #define MAXWINS 300
 
 struct windowpos
@@ -962,12 +969,12 @@ struct windowpos
     follows: "$VER: <title> <version> (<date>) [<extra>]".
 +*/
 #define MUIA_Application_Version \
-    (MUIB_MUI|0x0042b33f)
+    (MUIB_MUI | 0x0042b33f)
 
 #define MUIA_Application_Window \
-    (MUIB_MUI|0x0042bfe0)   /* MUI: V4  i.. Object *          */
+    (MUIB_MUI | 0x0042bfe0)   /* MUI: V4  i.. Object *          */
 #define MUIA_Application_WindowList \
-    (MUIB_MUI|0x00429abe)   /* MUI: V13 ..g struct List *     */
+    (MUIB_MUI | 0x00429abe)   /* MUI: V13 ..g struct List *     */
 
 #define MUIA_Application_Configdata \
     (MUIB_Application | 0x00000000) /* Zune 20030407 .s. Object *     */
@@ -1268,18 +1275,18 @@ struct MUI_RGBcolor
 #define _MUI_CLASSES_WINDOW_H
 
 /*
-    Copyright  1999, David Le Corfec.
-    Copyright  2002-2003, The AROS Development Team.
+    Copyright (C) 1999, David Le Corfec.
+    Copyright (C) 2002-2019, The AROS Development Team.
     All rights reserved.
 
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Window                 "Window.mui"
+#define MUIC_Window            "Window.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Window                 (MUIB_ZUNE | 0x00003600)
+#define MUIB_Window            (MUIB_ZUNE | 0x00003600)
 
 /*** Methods ****************************************************************/
 #define MUIM_Window_ActionIconify \
@@ -1593,7 +1600,7 @@ struct MUIP_Window_SetMenuState
 
 #ifdef MUI_OBSOLETE
 #define MUIA_Window_Menu \
-    (MUIB_MUI | 0x0042db94)       /* MUI: V4  i.. struct NewMenu * */
+    (MUIB_MUI | 0x0042db94)    /* MUI: V4  i.. struct NewMenu * */
 
 #define MUIV_Window_Menu_NoMenu     (-1)
 #endif /* MUI_OBSOLETE */
@@ -1663,37 +1670,62 @@ struct MUI_RenderInfo
     struct dt_frame_image *mri_FrameImage[16];
 };
 
-#define MUIMRI_RECTFILL (1<<0)
-#define MUIMRI_TRUECOLOR (1<<1)
-#define MUIMRI_THINFRAMES (1<<2)
+#define MUIMRI_RECTFILL    (1<<0)
+#define MUIMRI_TRUECOLOR   (1<<1)
+#define MUIMRI_THINFRAMES  (1<<2)
 #define MUIMRI_REFRESHMODE (1<<3)
 
 /**************************************************************************
  MUI_EventHandlerNode as used by
  MUIM_Window_AddEventHandler/RemoveEventHandler
 **************************************************************************/
+#ifdef __AROS__
+#if !(AROS_FLAVOUR & AROS_FLAVOUR_BINCOMPAT)
+/* AROS Nodes are not necessarily binary compatible with AOS ones, so
+ * the (MUI_EventHandlerNode *) -> (Node *) cast hack doesnt work.
+ */
+struct MUI_EventHandlerNode
+{
+    struct Node    ehn_Node;     /* embedded node structure, private! */
+    UWORD          ehn_Flags;    /* some flags, see below */
+    Object        *ehn_Object;   /* object which should receive
+                                  * MUIM_HandleEvent. */
+    struct IClass *ehn_Class;    /* Class for CoerceMethod(). If NULL,
+                                  * DoMethod() is used */
+    ULONG          ehn_Events;   /* the IDCMP flags the handler should be
+                                  * invoked with. */
+    BYTE           ehn_Priority; /* sorted by priority. */
+};
+#define MUI_EVENTHANDLERNODE_DEFINED
+#endif
+#endif
 
+#ifndef MUI_EVENTHANDLERNODE_DEFINED
 struct MUI_EventHandlerNode
 {
     struct MinNode ehn_Node;    /* embedded node structure, private! */
     BYTE ehn_Reserved;          /* private! */
     BYTE ehn_Priority;          /* sorted by priority. */
     UWORD ehn_Flags;            /* some flags, see below */
-    Object *ehn_Object;     /* object which should receive MUIM_HandleEvent. */
+    Object *ehn_Object;         /* object which should receive
+                                 * MUIM_HandleEvent. */
     struct IClass *ehn_Class;   /* Class for CoerceMethod(). If NULL,
                                  * DoMethod() is used */
     ULONG ehn_Events;           /* the IDCMP flags the handler should be
                                  * invoked with */
 };
+#endif
+
+#undef MUI_EVENTHANDLERNODE_DEFINED
 
 /* here are the flags for ehn_Flags */
 #define MUI_EHF_ALWAYSKEYS  (1<<0)
-#define MUI_EHF_GUIMODE     (1<<1)      /* handler will not be called if object
-                                         * is not visible or disabled */
+#define MUI_EHF_GUIMODE     (1<<1)  /* handler will not be called if object
+                                     * is not visible or disabled */
 
 /* MUIM_HandleEvent must return a bitmask where following bits can be set
  * (all others must be 0) */
-#define MUI_EventHandlerRC_Eat (1<<0)   /* do not invoke more handlers ers */
+#define MUI_EventHandlerRC_Eat (1<<0)  /* do not invoke more handlers ers */
 
 
 
@@ -1702,8 +1734,8 @@ struct MUI_EventHandlerNode
 
 #ifndef _MUI_CLASSES_AREA_H
 /* 
-    Copyright ฉ 1999, David Le Corfec.
-    Copyright ฉ 2002 - 2012, The AROS Development Team.
+    Copyright (C) 1999, David Le Corfec.
+    Copyright (C) 2002 - 2019, The AROS Development Team.
     All rights reserved.
 
     $Id$
@@ -1724,66 +1756,66 @@ struct MUI_EventHandlerNode
 #endif
 
 /*** Name *******************************************************************/
-#define MUIC_Area                   "Area.mui"
+#define MUIC_Area            "Area.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Area                   (MUIB_ZUNE | 0x00000200)
+#define MUIB_Area            (MUIB_ZUNE | 0x00000200)
 
 /*** Methods ****************************************************************/
 #define MUIM_AskMinMax \
-    (MUIB_MUI | 0x00423874) /* MUI: V4  */        /* For Custom Classes only */
+    (MUIB_MUI | 0x00423874)    /* MUI: V4  */   /* For Custom Classes only */
 #define MUIM_Cleanup \
-    (MUIB_MUI | 0x0042d985) /* MUI: V4  */        /* For Custom Classes only */
+    (MUIB_MUI | 0x0042d985)    /* MUI: V4  */   /* For Custom Classes only */
 #define MUIM_ContextMenuBuild \
-    (MUIB_MUI | 0x00429d2e)       /* MUI: V11 */
+    (MUIB_MUI | 0x00429d2e)    /* MUI: V11 */
 #define MUIM_ContextMenuChoice \
-    (MUIB_MUI | 0x00420f0e)       /* MUI: V11 */
+    (MUIB_MUI | 0x00420f0e)    /* MUI: V11 */
 #define MUIM_CreateBubble \
-    (MUIB_MUI | 0x00421c41)       /* MUI: V18 */
+    (MUIB_MUI | 0x00421c41)    /* MUI: V18 */
 #define MUIM_CreateDragImage \
     (MUIB_MUI | 0x0042eb6f) /* MUI: V18 */ /* For Custom Classes only, undoc */
 #define MUIM_CreateShortHelp \
-    (MUIB_MUI | 0x00428e93)       /* MUI: V11 */
+    (MUIB_MUI | 0x00428e93)    /* MUI: V11 */
 #define MUIM_CustomBackfill \
-    (MUIB_MUI | 0x00428d73)       /* Undoc */
+    (MUIB_MUI | 0x00428d73)    /* Undoc */
 #define MUIM_DeleteBubble \
-    (MUIB_MUI | 0x004211af)       /* MUI: V18 */
+    (MUIB_MUI | 0x004211af)    /* MUI: V18 */
 #define MUIM_DeleteDragImage \
     (MUIB_MUI | 0x00423037) /* MUI: V18 */ /* For Custom Classes only, undoc */
 #define MUIM_DeleteShortHelp \
-    (MUIB_MUI | 0x0042d35a)       /* MUI: V11 */
+    (MUIB_MUI | 0x0042d35a)    /* MUI: V11 */
 #define MUIM_DoDrag \
     (MUIB_MUI | 0x004216bb) /* MUI: V18 */ /* For Custom Classes only, undoc */
 #define MUIM_DragBegin \
-    (MUIB_MUI | 0x0042c03a)       /* MUI: V11 */
+    (MUIB_MUI | 0x0042c03a)    /* MUI: V11 */
 #define MUIM_DragDrop \
-    (MUIB_MUI | 0x0042c555)       /* MUI: V11 */
+    (MUIB_MUI | 0x0042c555)    /* MUI: V11 */
 #define MUIM_UnknownDropDestination \
-    (MUIB_MUI | 0x00425550)       /* ZUNE */
+    (MUIB_MUI | 0x00425550)    /* ZUNE */
 #define MUIM_DragFinish \
-    (MUIB_MUI | 0x004251f0)       /* MUI: V11 */
+    (MUIB_MUI | 0x004251f0)    /* MUI: V11 */
 #define MUIM_DragQuery \
-    (MUIB_MUI | 0x00420261)       /* MUI: V11 */
+    (MUIB_MUI | 0x00420261)    /* MUI: V11 */
 #define MUIM_DragReport \
-    (MUIB_MUI | 0x0042edad)       /* MUI: V11 */
+    (MUIB_MUI | 0x0042edad)    /* MUI: V11 */
 #define MUIM_Draw \
-    (MUIB_MUI | 0x00426f3f) /* MUI: V4  */        /* For Custom Classes only */
+    (MUIB_MUI | 0x00426f3f) /* MUI: V4  */ /* For Custom Classes only */
 #define MUIM_DrawBackground \
-    (MUIB_MUI | 0x004238ca)       /* MUI: V11 */
+    (MUIB_MUI | 0x004238ca)    /* MUI: V11 */
 #define MUIM_GoActive \
-    (MUIB_MUI | 0x0042491a)       /* Undoc */
+    (MUIB_MUI | 0x0042491a)    /* Undoc */
 #define MUIM_GoInactive \
-    (MUIB_MUI | 0x00422c0c)       /* Undoc */
+    (MUIB_MUI | 0x00422c0c)    /* Undoc */
 #define MUIM_HandleEvent \
-    (MUIB_MUI | 0x00426d66) /* MUI: V16 */        /* For Custom Classes only */
+    (MUIB_MUI | 0x00426d66) /* MUI: V16 */ /* For Custom Classes only */
 #define MUIM_HandleInput \
-    (MUIB_MUI | 0x00422a1a) /* MUI: V4  */        /* For Custom Classes only */
+    (MUIB_MUI | 0x00422a1a) /* MUI: V4  */ /* For Custom Classes only */
 #define MUIM_Hide \
-    (MUIB_MUI | 0x0042f20f) /* MUI: V4  */        /* For Custom Classes only */
+    (MUIB_MUI | 0x0042f20f) /* MUI: V4  */ /* For Custom Classes only */
 #define MUIM_Setup \
-    (MUIB_MUI | 0x00428354) /* MUI: V4  */        /* For Custom Classes only */
+    (MUIB_MUI | 0x00428354) /* MUI: V4  */ /* For Custom Classes only */
 #define MUIM_Show \
-    (MUIB_MUI | 0x0042cc84) /* MUI: V4  */        /* For Custom Classes only */
+    (MUIB_MUI | 0x0042cc84) /* MUI: V4  */ /* For Custom Classes only */
 
 struct MUIP_AskMinMax
 {
@@ -2011,18 +2043,18 @@ struct MUIP_DrawParentBackground
 struct MUI_DragImage
 {
     struct BitMap *bm;
-    WORD width;                 /* exact width and height of bitmap */
+    WORD width;        /* exact width and height of bitmap */
     WORD height;
-    WORD touchx;                /* position of pointer click relative to bitmap */
+    WORD touchx;       /* position of pointer click relative to bitmap */
     WORD touchy;
     ULONG flags;
 };
 
-// #define MUIF_DRAGIMAGE_HASMASK       (1<<0) /* Use provided mask for drawing */
-                                               /* Not supported at the moment */
-#define MUIF_DRAGIMAGE_SOURCEALPHA   (1<<1)     /* Use drag image source alpha
-                                                 * information for transparent
-                                                 * drawing */
+// #define MUIF_DRAGIMAGE_HASMASK   (1<<0) /* Use provided mask for drawing */
+                                           /* Not supported at the moment */
+#define MUIF_DRAGIMAGE_SOURCEALPHA  (1<<1) /* Use drag image source alpha
+                                            * information for transparent
+                                            * drawing */
 
 /*** Attributes *************************************************************/
 #define MUIA_Background \
@@ -2127,67 +2159,81 @@ struct MUI_ImageSpec_intern;
 
 struct MUI_AreaData
 {
-    struct MUI_RenderInfo *mad_RenderInfo;      /* RenderInfo for this object */
-    struct MUI_ImageSpec_intern *mad_Background;        /* bg setting - *private* ! */
-    struct TextFont *mad_Font;  /* Font which is used to draw */
-    struct MUI_MinMax mad_MinMax;       /* min/max/default dimensions */
-    struct IBox mad_Box;        /* coordinates and dim of this object after layout */
-    BYTE mad_addleft;           /* left offset (frame & innerspacing) */
-    BYTE mad_addtop;            /* top offset (frame & innerspacing) */
-    BYTE mad_subwidth;          /* additional width (frame & innerspacing) */
-    BYTE mad_subheight;         /* additional height (frame & innerspacing) */
-    ULONG mad_Flags;            /* some flags; see below */
-    ULONG mad_Flags2;
+    struct MUI_RenderInfo *mad_RenderInfo; /* RenderInfo for this object */
+    struct MUI_ImageSpec_intern *mad_Background;  /* bg setting - *private* ! */
+    struct TextFont   *mad_Font;      /* Font which is used to draw */
+    struct MUI_MinMax  mad_MinMax;    /* min/max/default dimensions */
+    struct IBox        mad_Box;       /* coordinates and dim of this
+                                       * object after layouted */
+    BYTE               mad_addleft;   /* left offset (frame & innerspacing) */
+    BYTE               mad_addtop;    /* top offset (frame & innerspacing) */
+    BYTE               mad_subwidth;  /* additional width (frame & innerspacing) */
+    BYTE               mad_subheight; /* additional height (frame & innerspacing) */
+    ULONG              mad_Flags;     /* some flags; see below */
+    ULONG              mad_Flags2;
 // 40 bytes up to here
 
-    /* The following data is private */
+/* The following data is private */
+
 // offset 40
-    UWORD mad_HorizWeight;      /* weight values for layout. default 100 */
-    UWORD mad_VertWeight;
+    UWORD              mad_HorizWeight;  /* weight values for layout. default 100 */
+    UWORD              mad_VertWeight;
+
 // offset 44
 // ?
+
 // offset 48
-    ULONG mad_IDCMP;            /* IDCMP flags this listens to (for HandleInput) */
+    ULONG              mad_IDCMP;        /* IDCMP flags this listens to (for HandleInput) */
+
 // offset 52
-    CONST_STRPTR mad_BackgroundSpec;
+    CONST_STRPTR       mad_BackgroundSpec;
+
 // offset 56
-    IPTR mad_FontPreset;        /* MUIV_Font_xxx or pointer to struct TextFont */
+    IPTR               mad_FontPreset;   /* MUIV_Font_xxx or pointer to struct TextFont */
+
 // offset 76
-    CONST_STRPTR mad_FrameTitle;        /* for groups. Req. mad_Frame > 0 */
+    CONST_STRPTR       mad_FrameTitle;   /* for groups. Req. mad_Frame > 0 */
+
 // Inner values at offset 88 in MUI:
-    BYTE mad_InnerLeft;         /* frame or hardcoded */
-    BYTE mad_InnerTop;
-    BYTE mad_InnerRight;
-    BYTE mad_InnerBottom;
+    BYTE               mad_InnerLeft;    /* frame or hardcoded */
+    BYTE               mad_InnerTop;
+    BYTE               mad_InnerRight;
+    BYTE               mad_InnerBottom;
+
 // offset 94
-    BYTE mad_FrameOBSOLETE;     /* frame setting -- private */
+    BYTE               mad_FrameOBSOLETE;    /* frame setting -- private */
+
 // offset 95
-    BYTE mad_InputMode;         /* how to react to events */
+    BYTE               mad_InputMode;        /* how to react to events */
+
 // offset 96
-    TEXT mad_ControlChar;       /* key shortcut */
-    BYTE mad_TitleHeightAdd;    /* frame title height = mad_TitleBelow + mad_TitleBaseline */
-    BYTE mad_TitleHeightBelow;  /* height below frame */
-    BYTE mad_TitleHeightAbove;  /* height above frame */
+    TEXT               mad_ControlChar;      /* key shortcut */
+    BYTE               mad_TitleHeightAdd;   /* frame title height = mad_TitleBelow + mad_TitleBaseline */
+    BYTE               mad_TitleHeightBelow; /* height below frame */
+    BYTE               mad_TitleHeightAbove; /* height above frame */
+
 // 100
 // ?
-    IPTR mad_Frame;
-    WORD mad_HardHeight;        /* if harcoded dim (see flags)  */
-    WORD mad_HardWidth;         /* if harcoded dim (see flags)  */
-    CONST_STRPTR mad_HardWidthTxt;
-    CONST_STRPTR mad_HardHeightTxt;
+    IPTR               mad_Frame;
+    WORD               mad_HardHeight;       /* if harcoded dim (see flags)  */
+    WORD               mad_HardWidth;        /* if harcoded dim (see flags)  */
+    CONST_STRPTR       mad_HardWidthTxt;
+    CONST_STRPTR       mad_HardHeightTxt;
+
 // TODO: move SelBack in RenderInfo as it's common for all objects
-    struct MUI_ImageSpec_intern *mad_SelBack;   /* selected state background */
-    CONST_STRPTR mad_ShortHelp; /* bubble help */
+    struct MUI_ImageSpec_intern *mad_SelBack;     /* selected state background */
+    CONST_STRPTR       mad_ShortHelp;       /* bubble help */
+
 // there's an event handler at 114
     struct MUI_EventHandlerNode mad_ehn;
-    struct MUI_InputHandlerNode mad_Timer;      /* MUIA_Timer */
-    ULONG mad_Timeval;          /* just to trigger notifications */
-    struct MUI_EventHandlerNode mad_ccn;        /* gross hack for control char */
-    Object *mad_ContextMenu;    /* menu strip */
-    LONG mad_ClickX;            /* x position of the initial SELECTDOWN click */
-    LONG mad_ClickY;            /* y position of the intiial SELECTDOWN click */
-    struct ZMenu *mad_ContextZMenu;
-    struct MUI_EventHandlerNode mad_hiehn;      /* Eventhandler to simulate MUIM_HandleInput */
+    struct MUI_InputHandlerNode mad_Timer;  /* MUIA_Timer */
+    ULONG              mad_Timeval;         /* just to trigger notifications */
+    struct MUI_EventHandlerNode mad_ccn;    /* gross hack for control char */
+    Object            *mad_ContextMenu;     /* menu strip */
+    LONG               mad_ClickX;          /* x position of the initial SELECTDOWN click */
+    LONG               mad_ClickY;          /* y position of the intiial SELECTDOWN click */
+    struct ZMenu      *mad_ContextZMenu;
+    struct MUI_EventHandlerNode mad_hiehn;  /* Eventhandler to simulate MUIM_HandleInput */
 
     LONG mad_DisableCount;      /* counts number of disables */
 // only 148 bytes for the struct in MUI !
@@ -2257,6 +2303,7 @@ enum
 #define MUIV_CreateBubble_DontHidePointer (1<<0)
 
 /* A private functions and macros */
+void __area_finish_minmax(Object *obj, struct MUI_MinMax *MinMaxInfo);
 
 /*#define DRAW_BG_RECURSIVE (1<<1)*/
 
@@ -2269,26 +2316,26 @@ enum
 #define _MUI_CLASSES_GROUP_H
 
 /* 
-    Copyright ฉ 1999, David Le Corfec.
-    Copyright ฉ 2002-2012, The AROS Development Team.
+    Copyright (C) 1999, David Le Corfec.
+    Copyright (C) 2002-2019, The AROS Development Team.
     All rights reserved.
 
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Group                 "Group.mui"
+#define MUIC_Group            "Group.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Group                 (MUIB_ZUNE | 0x00001000)
+#define MUIB_Group            (MUIB_ZUNE | 0x00001000)
 
 /*** Methods ****************************************************************/
-#define MUIM_Group_AddHead      (MUIB_MUI | 0x0042e200)        /* MUI: V8 */
-#define MUIM_Group_AddTail      (MUIB_MUI | 0x0042d752)        /* MUI: V8 */
-#define MUIM_Group_ExitChange   (MUIB_MUI | 0x0042d1cc)        /* MUI: V11 */
-#define MUIM_Group_InitChange   (MUIB_MUI | 0x00420887)        /* MUI: V11 */
-#define MUIM_Group_Sort         (MUIB_MUI | 0x00427417)        /* MUI: V4  */
-#define MUIM_Group_Remove       (MUIB_MUI | 0x0042f8a9)        /* MUI: V8 */
+#define MUIM_Group_AddHead    (MUIB_MUI | 0x0042e200) /* MUI: V8 */
+#define MUIM_Group_AddTail    (MUIB_MUI | 0x0042d752) /* MUI: V8 */
+#define MUIM_Group_ExitChange (MUIB_MUI | 0x0042d1cc) /* MUI: V11 */
+#define MUIM_Group_InitChange (MUIB_MUI | 0x00420887) /* MUI: V11 */
+#define MUIM_Group_Sort       (MUIB_MUI | 0x00427417) /* MUI: V4  */
+#define MUIM_Group_Remove     (MUIB_MUI | 0x0042f8a9) /* MUI: V8 */
 
 struct MUIP_Group_AddHead
 {
@@ -2369,10 +2416,10 @@ struct MUIP_Group_DoMethodNoForward
 
 enum
 {
-    MUIV_Group_ActivePage_First = 0,
-    MUIV_Group_ActivePage_Last = -1,
-    MUIV_Group_ActivePage_Prev = -2,
-    MUIV_Group_ActivePage_Next = -3,
+    MUIV_Group_ActivePage_First   =  0,
+    MUIV_Group_ActivePage_Last    = -1,
+    MUIV_Group_ActivePage_Prev    = -2,
+    MUIV_Group_ActivePage_Next    = -3,
     MUIV_Group_ActivePage_Advance = -4,
 };
 
@@ -2413,8 +2460,8 @@ enum
 #define _MUI_CLASSES_RECTANGLE_H
 
 /* 
-    Copyright ฉ 1999, David Le Corfec.
-    Copyright ฉ 2002-2003, The AROS Development Team.
+    Copyright (C) 1999, David Le Corfec.
+    Copyright (C) 2002-2019, The AROS Development Team.
     All rights reserved.
 
     $Id$
@@ -2440,8 +2487,8 @@ enum
 #define _MUI_CLASSES_TEXT_H
 
 /* 
-    Copyright ฉ 1999, David Le Corfec.
-    Copyright ฉ 2002-2003, The AROS Development Team.
+    Copyright (C) 1999, David Le Corfec.
+    Copyright (C) 2002-2019, The AROS Development Team.
     All rights reserved.
 
     $Id$
@@ -2455,37 +2502,37 @@ enum
 
 /*** Attributes *************************************************************/
 #define MUIA_Text_Contents \
-    (MUIB_MUI | 0x0042f8dc)       /* MUI: V4  isg STRPTR */
+    (MUIB_MUI | 0x0042f8dc)    /* MUI: V4  isg STRPTR */
 #define MUIA_Text_HiChar \
-    (MUIB_MUI | 0x004218ff)       /* MUI: V4  i.. char   */
+    (MUIB_MUI | 0x004218ff)    /* MUI: V4  i.. char   */
 #define MUIA_Text_HiCharIdx \
-    (MUIB_MUI | 0x004214f5)       /*          i.. char   */
+    (MUIB_MUI | 0x004214f5)    /*          i.. char   */
 #define MUIA_Text_PreParse \
-    (MUIB_MUI | 0x0042566d)       /* MUI: V4  isg STRPTR */
+    (MUIB_MUI | 0x0042566d)    /* MUI: V4  isg STRPTR */
 #define MUIA_Text_SetMax \
-    (MUIB_MUI | 0x00424d0a)       /* MUI: V4  i.. BOOL   */
+    (MUIB_MUI | 0x00424d0a)    /* MUI: V4  i.. BOOL   */
 #define MUIA_Text_SetMin \
-    (MUIB_MUI | 0x00424e10)       /* MUI: V4  i.. BOOL   */
+    (MUIB_MUI | 0x00424e10)    /* MUI: V4  i.. BOOL   */
 #define MUIA_Text_SetVMax \
-    (MUIB_MUI | 0x00420d8b)       /* MUI: V11 i.. BOOL   */
+    (MUIB_MUI | 0x00420d8b)    /* MUI: V11 i.. BOOL   */
 
 #define MUIA_Text_Editable \
-    (MUIB_Text | 0x00000000)  /* DEPRECATED */
+    (MUIB_Text | 0x00000000)   /* DEPRECATED */
 #define MUIA_Text_Multiline \
-    (MUIB_Text | 0x00000001)  /* DEPRECATED */
+    (MUIB_Text | 0x00000001)   /* DEPRECATED */
 
 /* Codes which can be used in text strings */
-#define MUIX_L "\033l"          /* justify left */
-#define MUIX_C "\033c"          /* justify centered */
-#define MUIX_R "\033r"          /* justify right */
+#define MUIX_L "\033l"         /* justify left */
+#define MUIX_C "\033c"         /* justify centered */
+#define MUIX_R "\033r"         /* justify right */
 
-#define MUIX_N "\033n"          /* normal style */
-#define MUIX_B "\033b"          /* bold style */
-#define MUIX_I "\033i"          /* italic style */
-#define MUIX_U "\033u"          /* underlined style */
+#define MUIX_N "\033n"         /* normal style */
+#define MUIX_B "\033b"         /* bold style */
+#define MUIX_I "\033i"         /* italic style */
+#define MUIX_U "\033u"         /* underlined style */
 
-#define MUIX_PT "\0332"         /* use text pen */
-#define MUIX_PH "\0338"         /* use highlight text pen */
+#define MUIX_PT "\0332"        /* use text pen */
+#define MUIX_PH "\0338"        /* use highlight text pen */
 
 
 
@@ -2497,7 +2544,7 @@ enum
 #define _MUI_CLASSES_NUMERIC_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -2592,8 +2639,8 @@ struct MUIP_Numeric_ValueToScaleExt
 #define _MUI_CLASSES_SLIDER_H
 
 /* 
-    Copyright ฉ 1999, David Le Corfec.
-    Copyright ฉ 2002-2003, The AROS Development Team.
+    Copyright (C) 1999, David Le Corfec.
+    Copyright (C) 2002-2019, The AROS Development Team.
     All rights reserved.
 
     $Id$
@@ -2606,14 +2653,14 @@ struct MUIP_Numeric_ValueToScaleExt
 #define MUIB_Slider          (MUIB_ZUNE | 0x00003300)
 
 /*** Attributes *************************************************************/
-#define MUIA_Slider_Horiz    (MUIB_MUI | 0x0042fad1)      /* V11 isg BOOL */
-#define MUIA_Slider_Quiet    (MUIB_MUI | 0x00420b26)      /* V6  i.. BOOL */
+#define MUIA_Slider_Horiz    (MUIB_MUI | 0x0042fad1)    /* V11 isg BOOL */
+#define MUIA_Slider_Quiet    (MUIB_MUI | 0x00420b26)    /* V6  i.. BOOL */
 
 #ifdef MUI_OBSOLETE
-#define MUIA_Slider_Level    (MUIB_MUI | 0x0042ae3a)      /* V4  isg LONG */
-#define MUIA_Slider_Max      (MUIB_MUI | 0x0042d78a)      /* V4  isg LONG */
-#define MUIA_Slider_Min      (MUIB_MUI | 0x0042e404)      /* V4  isg LONG */
-#define MUIA_Slider_Reverse  (MUIB_MUI | 0x0042f2a0)      /* V4  isg BOOL */
+#define MUIA_Slider_Level    (MUIB_MUI | 0x0042ae3a)    /* V4  isg LONG */
+#define MUIA_Slider_Max      (MUIB_MUI | 0x0042d78a)    /* V4  isg LONG */
+#define MUIA_Slider_Min      (MUIB_MUI | 0x0042e404)    /* V4  isg LONG */
+#define MUIA_Slider_Reverse  (MUIB_MUI | 0x0042f2a0)    /* V4  isg BOOL */
 #endif /* MUI_OBSOLETE */
 
 
@@ -2626,7 +2673,7 @@ struct MUIP_Numeric_ValueToScaleExt
 #define _MUI_CLASSES_STRING_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -2676,16 +2723,16 @@ enum
 /* Extended features taken over from Alan Odgaard's BetterString MCC.
    Attribute and method IDs match those of BetterString class. */
 
-#define MUIA_String_Columns                     0xad001005
-#define MUIA_String_NoInput                     0xad001007
-#define MUIA_String_SelectSize                  0xad001001
-#define MUIA_String_StayActive                  0xad001003
-#define MUIA_String_KeyUpFocus                  0xad001008
-#define MUIA_String_KeyDownFocus                0xad001009
+#define MUIA_String_Columns                 0xad001005
+#define MUIA_String_NoInput                 0xad001007
+#define MUIA_String_SelectSize              0xad001001
+#define MUIA_String_StayActive              0xad001003
+#define MUIA_String_KeyUpFocus              0xad001008
+#define MUIA_String_KeyDownFocus            0xad001009
 
-#define MUIM_String_ClearSelected               0xad001004
-#define MUIM_String_FileNameStart               0xad001006
-#define MUIM_String_Insert                      0xad001002
+#define MUIM_String_ClearSelected           0xad001004
+#define MUIM_String_FileNameStart           0xad001006
+#define MUIM_String_Insert                  0xad001002
 
 #define MUIV_String_Insert_StartOfString    0x00000000
 #define MUIV_String_Insert_EndOfString      0xfffffffe
@@ -2719,7 +2766,7 @@ struct MUIP_String_Insert
 
 #ifndef _MUI_CLASSES_BOOPSI_H
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -2727,36 +2774,36 @@ struct MUIP_String_Insert
 #define _MUI_CLASSES_BOOPSI_H
 
 /*** Name *******************************************************************/
-#define MUIC_Boopsi             "Boopsi.mui"
+#define MUIC_Boopsi            "Boopsi.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Boopsi             (MUIB_ZUNE | 0x00000600)
+#define MUIB_Boopsi            (MUIB_ZUNE | 0x00000600)
 
 /*** Attributes *************************************************************/
 #define MUIA_Boopsi_Class \
-    (MUIB_MUI | 0x00426999) /* V4  isg struct IClass * */
+    (MUIB_MUI | 0x00426999)    /* V4  isg struct IClass * */
 #define MUIA_Boopsi_ClassID \
-    (MUIB_MUI | 0x0042bfa3) /* V4  isg char *          */
+    (MUIB_MUI | 0x0042bfa3)    /* V4  isg char *          */
 #define MUIA_Boopsi_MaxHeight \
-    (MUIB_MUI | 0x0042757f) /* V4  isg ULONG           */
+    (MUIB_MUI | 0x0042757f)    /* V4  isg ULONG           */
 #define MUIA_Boopsi_MaxWidth \
-    (MUIB_MUI | 0x0042bcb1) /* V4  isg ULONG           */
+    (MUIB_MUI | 0x0042bcb1)    /* V4  isg ULONG           */
 #define MUIA_Boopsi_MinHeight \
-    (MUIB_MUI | 0x00422c93) /* V4  isg ULONG           */
+    (MUIB_MUI | 0x00422c93)    /* V4  isg ULONG           */
 #define MUIA_Boopsi_MinWidth \
-    (MUIB_MUI | 0x00428fb2) /* V4  isg ULONG           */
+    (MUIB_MUI | 0x00428fb2)    /* V4  isg ULONG           */
 #define MUIA_Boopsi_Object \
-    (MUIB_MUI | 0x00420178) /* V4  ..g Object *        */
+    (MUIB_MUI | 0x00420178)    /* V4  ..g Object *        */
 #define MUIA_Boopsi_Remember \
-    (MUIB_MUI | 0x0042f4bd) /* V4  i.. ULONG           */
+    (MUIB_MUI | 0x0042f4bd)    /* V4  i.. ULONG           */
 #define MUIA_Boopsi_Smart \
-    (MUIB_MUI | 0x0042b8d7) /* V9  i.. BOOL            */
+    (MUIB_MUI | 0x0042b8d7)    /* V9  i.. BOOL            */
 #define MUIA_Boopsi_TagDrawInfo \
-    (MUIB_MUI | 0x0042bae7) /* V4  isg ULONG           */
+    (MUIB_MUI | 0x0042bae7)    /* V4  isg ULONG           */
 #define MUIA_Boopsi_TagScreen \
-    (MUIB_MUI | 0x0042bc71) /* V4  isg ULONG           */
+    (MUIB_MUI | 0x0042bc71)    /* V4  isg ULONG           */
 #define MUIA_Boopsi_TagWindow \
-    (MUIB_MUI | 0x0042e11d) /* V4  isg ULONG           */
+    (MUIB_MUI | 0x0042e11d)    /* V4  isg ULONG           */
 
 
 
@@ -2769,7 +2816,7 @@ struct MUIP_String_Insert
 #define _MUI_CLASSES_PROP_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -2780,8 +2827,8 @@ struct MUIP_String_Insert
 #define MUIB_Prop           (MUIB_ZUNE | 0x00002900)
 
 /*** Methods ****************************************************************/
-#define MUIM_Prop_Decrease  (MUIB_MUI | 0x00420dd1)       /* MUI: V16 */
-#define MUIM_Prop_Increase  (MUIB_MUI | 0x0042cac0)       /* MUI: V16 */
+#define MUIM_Prop_Decrease  (MUIB_MUI | 0x00420dd1) /* MUI: V16 */
+#define MUIM_Prop_Increase  (MUIB_MUI | 0x0042cac0) /* MUI: V16 */
 
 struct MUIP_Prop_Decrease
 {
@@ -2797,17 +2844,17 @@ struct MUIP_Prop_Increase
 
 /*** Attributes *************************************************************/
 #define MUIA_Prop_Entries \
-    (MUIB_MUI | 0x0042fbdb)  /* MUI: V4  isg LONG */
+    (MUIB_MUI | 0x0042fbdb)    /* MUI: V4  isg LONG */
 #define MUIA_Prop_First \
-    (MUIB_MUI | 0x0042d4b2)  /* MUI: V4  isg LONG */
+    (MUIB_MUI | 0x0042d4b2)    /* MUI: V4  isg LONG */
 #define MUIA_Prop_Horiz \
-    (MUIB_MUI | 0x0042f4f3)  /* MUI: V4  i.g BOOL */
+    (MUIB_MUI | 0x0042f4f3)    /* MUI: V4  i.g BOOL */
 #define MUIA_Prop_Slider \
-    (MUIB_MUI | 0x00429c3a)  /* MUI: V4  isg BOOL */
+    (MUIB_MUI | 0x00429c3a)    /* MUI: V4  isg BOOL */
 #define MUIA_Prop_UseWinBorder \
-    (MUIB_MUI | 0x0042deee)  /* MUI: V13 i.. LONG */
+    (MUIB_MUI | 0x0042deee)    /* MUI: V13 i.. LONG */
 #define MUIA_Prop_Visible \
-    (MUIB_MUI | 0x0042fea6)  /* MUI: V4  isg LONG */
+    (MUIB_MUI | 0x0042fea6)    /* MUI: V4  isg LONG */
 
 
 enum
@@ -2819,9 +2866,9 @@ enum
 };
 
 #define MUIA_Prop_DeltaFactor \
-    (MUIB_MUI | 0x00427c5e)  /* MUI:    is. LONG */
+    (MUIB_MUI | 0x00427c5e)    /* MUI:    is. LONG */
 #define MUIA_Prop_DoSmooth \
-    (MUIB_MUI | 0x004236ce)  /* MUI: V4 i.. LONG */
+    (MUIB_MUI | 0x004236ce)    /* MUI: V4 i.. LONG */
 
 
 
@@ -2833,7 +2880,7 @@ enum
 #define _MUI_CLASSES_SCROLLBAR_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -2844,7 +2891,7 @@ enum
 #define MUIB_Scrollbar       (MUIB_ZUNE | 0x00002e00)
 
 /*** Attributes *************************************************************/
-#define MUIA_Scrollbar_Type  (MUIB_MUI | 0x0042fb6b)      /* V11 i.. LONG */
+#define MUIA_Scrollbar_Type  (MUIB_MUI | 0x0042fb6b)    /* V11 i.. LONG */
 
 enum
 {
@@ -2864,15 +2911,15 @@ enum
 #define _MUI_CLASSES_REGISTER_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Register           "Register.mui"
+#define MUIC_Register         "Register.mui"
 
 /*** Identifier base  (for Zune extensions) *********************************/
-#define MUIB_Register           (MUIB_ZUNE | 0x00002c00)
+#define MUIB_Register         (MUIB_ZUNE | 0x00002c00)
 
 /*** Attributes *************************************************************/
 #define MUIA_Register_Frame   (MUIB_MUI | 0x0042349b)   /* V7  i.g BOOL     */
@@ -2890,7 +2937,7 @@ enum
 #define _MUI_CLASSES_MENUITEM_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -2902,7 +2949,7 @@ enum
 #define MUIB_Menustrip         (MUIB_ZUNE | 0x00001a00)
 
 /*** Attributes *************************************************************/
-#define MUIA_Menustrip_Enabled (MUIB_MUI | 0x0042815b)    /* MUI: V8  isg BOOL */
+#define MUIA_Menustrip_Enabled (MUIB_MUI | 0x0042815b) /* MUI: V8  isg BOOL */
 
 
 
@@ -2914,8 +2961,8 @@ enum
 #define MUIB_Menu         (MUIB_ZUNE | 0x00001b00)
 
 /*** Attributes *************************************************************/
-#define MUIA_Menu_Enabled (MUIB_MUI | 0x0042ed48) /* MUI: V8  isg BOOL   */
-#define MUIA_Menu_Title   (MUIB_MUI | 0x0042a0e3) /* MUI: V8  isg STRPTR */
+#define MUIA_Menu_Enabled (MUIB_MUI | 0x0042ed48)    /* MUI: V8  isg BOOL   */
+#define MUIA_Menu_Title   (MUIB_MUI | 0x0042a0e3)    /* MUI: V8  isg STRPTR */
 
 
 
@@ -2962,7 +3009,7 @@ enum
 #define _MUI_CLASSES_DATASPACE_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -2974,13 +3021,13 @@ enum
 
 
 /*** Methods ****************************************************************/
-#define MUIM_Dataspace_Add        (MUIB_MUI | 0x00423366) /* MUI: V11 */
-#define MUIM_Dataspace_Clear      (MUIB_MUI | 0x0042b6c9) /* MUI: V11 */
-#define MUIM_Dataspace_Find       (MUIB_MUI | 0x0042832c) /* MUI: V11 */
-#define MUIM_Dataspace_Merge      (MUIB_MUI | 0x00423e2b) /* MUI: V11 */
-#define MUIM_Dataspace_ReadIFF    (MUIB_MUI | 0x00420dfb) /* MUI: V11 */
-#define MUIM_Dataspace_Remove     (MUIB_MUI | 0x0042dce1) /* MUI: V11 */
-#define MUIM_Dataspace_WriteIFF   (MUIB_MUI | 0x00425e8e) /* MUI: V11 */
+#define MUIM_Dataspace_Add        (MUIB_MUI | 0x00423366)    /* MUI: V11 */
+#define MUIM_Dataspace_Clear      (MUIB_MUI | 0x0042b6c9)    /* MUI: V11 */
+#define MUIM_Dataspace_Find       (MUIB_MUI | 0x0042832c)    /* MUI: V11 */
+#define MUIM_Dataspace_Merge      (MUIB_MUI | 0x00423e2b)    /* MUI: V11 */
+#define MUIM_Dataspace_ReadIFF    (MUIB_MUI | 0x00420dfb)    /* MUI: V11 */
+#define MUIM_Dataspace_Remove     (MUIB_MUI | 0x0042dce1)    /* MUI: V11 */
+#define MUIM_Dataspace_WriteIFF   (MUIB_MUI | 0x00425e8e)    /* MUI: V11 */
 
 struct MUIP_Dataspace_Add
 {
@@ -3028,7 +3075,7 @@ struct MUIP_Dataspace_WriteIFF
 };
 
 /*** Attributes *************************************************************/
-#define MUIA_Dataspace_Pool       (MUIB_MUI | 0x00424cf9) /* MUI: V11 i.. APTR */
+#define MUIA_Dataspace_Pool  (MUIB_MUI | 0x00424cf9)  /* MUI: V11 i.. APTR */
 
 
 
@@ -3040,7 +3087,7 @@ struct MUIP_Dataspace_WriteIFF
 #define _MUI_CLASSES_VIRTGROUP_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -3051,11 +3098,11 @@ struct MUIP_Dataspace_WriteIFF
 #define MUIB_Virtgroup          (MUIB_ZUNE | 0x00003700)
 
 /*** Attributes *************************************************************/
-#define MUIA_Virtgroup_Height   (MUIB_MUI | 0x00423038)   /* V6  ..g LONG */
-#define MUIA_Virtgroup_Input    (MUIB_MUI | 0x00427f7e)   /* V11 i.. BOOL */
-#define MUIA_Virtgroup_Left     (MUIB_MUI | 0x00429371)   /* V6  isg LONG */
-#define MUIA_Virtgroup_Top      (MUIB_MUI | 0x00425200)   /* V6  isg LONG */
-#define MUIA_Virtgroup_Width    (MUIB_MUI | 0x00427c49)   /* V6  ..g LONG */
+#define MUIA_Virtgroup_Height   (MUIB_MUI | 0x00423038)    /* V6  ..g LONG */
+#define MUIA_Virtgroup_Input    (MUIB_MUI | 0x00427f7e)    /* V11 i.. BOOL */
+#define MUIA_Virtgroup_Left     (MUIB_MUI | 0x00429371)    /* V6  isg LONG */
+#define MUIA_Virtgroup_Top      (MUIB_MUI | 0x00425200)    /* V6  isg LONG */
+#define MUIA_Virtgroup_Width    (MUIB_MUI | 0x00427c49)    /* V6  ..g LONG */
 
 
 
@@ -3068,7 +3115,7 @@ struct MUIP_Dataspace_WriteIFF
 #define _MUI_CLASSES_SCROLLGROUP_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -3099,7 +3146,7 @@ struct MUIP_Dataspace_WriteIFF
 
 #ifndef _MUI_CLASSES_SCROLLBUTTON_H
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -3114,15 +3161,15 @@ struct MUIP_Dataspace_WriteIFF
 
 /*** Attributes *************************************************************/
 #define MUIA_Scrollbutton_NewPosition \
-    (MUIB_Scrollbutton | 0x00000000)  /* --G  ULONG (2 x WORD) */
+    (MUIB_Scrollbutton | 0x00000000)    /* --G  ULONG (2 x WORD) */
 #define MUIA_Scrollbutton_Horiz \
-    (MUIB_Scrollbutton | 0x00000001)  /* -SG  WORD             */
+    (MUIB_Scrollbutton | 0x00000001)    /* -SG  WORD             */
 #define MUIA_Scrollbutton_Vert \
-    (MUIB_Scrollbutton | 0x00000002)  /* -SG  WORD             */
+    (MUIB_Scrollbutton | 0x00000002)    /* -SG  WORD             */
 #define MUIA_Scrollbutton_HorizProp \
-    (MUIB_Scrollbutton | 0x00000003)  /* --G  Object *         */
+    (MUIB_Scrollbutton | 0x00000003)    /* --G  Object *         */
 #define MUIA_Scrollbutton_VertProp \
-    (MUIB_Scrollbutton | 0x00000004)  /* --G  Object *         */
+    (MUIB_Scrollbutton | 0x00000004)    /* --G  Object *         */
 
 /*** Macros *****************************************************************/
 #define ScrollbuttonObject MUIOBJMACRO_START(MUIC_Scrollbutton)
@@ -3136,22 +3183,22 @@ struct MUIP_Dataspace_WriteIFF
 #define _MUI_CLASSES_SEMAPHORE_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Semaphore "Semaphore.mui"
+#define MUIC_Semaphore                "Semaphore.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Semaphore (MUIB_ZUNE | 0x00003000)
+#define MUIB_Semaphore                (MUIB_ZUNE | 0x00003000)
 
 /*** Methods ****************************************************************/
-#define MUIM_Semaphore_Attempt       (MUIB_MUI | 0x00426ce2)    /* MUI: V11 */
-#define MUIM_Semaphore_AttemptShared (MUIB_MUI | 0x00422551)    /* MUI: V11 */
-#define MUIM_Semaphore_Obtain        (MUIB_MUI | 0x004276f0)    /* MUI: V11 */
-#define MUIM_Semaphore_ObtainShared  (MUIB_MUI | 0x0042ea02)    /* MUI: V11 */
-#define MUIM_Semaphore_Release       (MUIB_MUI | 0x00421f2d)    /* MUI: V11 */
+#define MUIM_Semaphore_Attempt        (MUIB_MUI | 0x00426ce2)  /* MUI: V11 */
+#define MUIM_Semaphore_AttemptShared  (MUIB_MUI | 0x00422551)  /* MUI: V11 */
+#define MUIM_Semaphore_Obtain         (MUIB_MUI | 0x004276f0)  /* MUI: V11 */
+#define MUIM_Semaphore_ObtainShared   (MUIB_MUI | 0x0042ea02)  /* MUI: V11 */
+#define MUIM_Semaphore_Release        (MUIB_MUI | 0x00421f2d)  /* MUI: V11 */
 
 struct MUIP_Semaphore_Attempt
 {
@@ -3185,7 +3232,7 @@ struct MUIP_Semaphore_Release
 
 #ifndef _MUI_CLASSES_BITMAP_H
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -3193,30 +3240,30 @@ struct MUIP_Semaphore_Release
 #define _MUI_CLASSES_BITMAP_H
 
 /*** Name *******************************************************************/
-#define MUIC_Bitmap                 "Bitmap.mui"
+#define MUIC_Bitmap             "Bitmap.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Bitmap                 (MUIB_ZUNE | 0x00000400)
+#define MUIB_Bitmap             (MUIB_ZUNE | 0x00000400)
 
 /*** Attributes *************************************************************/
 #define MUIA_Bitmap_Bitmap \
-    (MUIB_MUI | 0x004279bd) /* MUI: V8  isg struct BitMap *   */
+    (MUIB_MUI | 0x004279bd)    /* MUI: V8  isg struct BitMap *   */
 #define MUIA_Bitmap_Height \
-    (MUIB_MUI | 0x00421560) /* MUI: V8  isg LONG              */
+    (MUIB_MUI | 0x00421560)    /* MUI: V8  isg LONG              */
 #define MUIA_Bitmap_MappingTable \
-    (MUIB_MUI | 0x0042e23d) /* MUI: V8  isg UBYTE *           */
+    (MUIB_MUI | 0x0042e23d)    /* MUI: V8  isg UBYTE *           */
 #define MUIA_Bitmap_Precision \
-    (MUIB_MUI | 0x00420c74) /* MUI: V11 isg LONG              */
+    (MUIB_MUI | 0x00420c74)    /* MUI: V11 isg LONG              */
 #define MUIA_Bitmap_RemappedBitmap \
-    (MUIB_MUI | 0x00423a47) /* MUI: V11 ..g struct BitMap *   */
+    (MUIB_MUI | 0x00423a47)    /* MUI: V11 ..g struct BitMap *   */
 #define MUIA_Bitmap_SourceColors \
-    (MUIB_MUI | 0x00425360) /* MUI: V8  isg ULONG *           */
+    (MUIB_MUI | 0x00425360)    /* MUI: V8  isg ULONG *           */
 #define MUIA_Bitmap_Transparent \
-    (MUIB_MUI | 0x00422805) /* MUI: V8  isg LONG              */
+    (MUIB_MUI | 0x00422805)    /* MUI: V8  isg LONG              */
 #define MUIA_Bitmap_UseFriend \
-    (MUIB_MUI | 0x004239d8) /* MUI: V11 i.. BOOL              */
+    (MUIB_MUI | 0x004239d8)    /* MUI: V11 i.. BOOL              */
 #define MUIA_Bitmap_Width \
-    (MUIB_MUI | 0x0042eb3a) /* MUI: V8  isg LONG              */
+    (MUIB_MUI | 0x0042eb3a)    /* MUI: V8  isg LONG              */
 
 
 #endif /* _MUI_CLASSES_BITMAP_H */
@@ -3224,7 +3271,7 @@ struct MUIP_Semaphore_Release
 
 #ifndef _MUI_CLASSES_BODYCHUNK_H
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -3232,20 +3279,20 @@ struct MUIP_Semaphore_Release
 #define _MUI_CLASSES_BODYCHUNK_H
 
 /*** Name *******************************************************************/
-#define MUIC_Bodychunk              "Bodychunk.mui"
+#define MUIC_Bodychunk        "Bodychunk.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Bodychunk              (MUIB_ZUNE | 0x00000500)  
+#define MUIB_Bodychunk        (MUIB_ZUNE | 0x00000500)
 
 /*** Attributes *************************************************************/
 #define MUIA_Bodychunk_Body \
-    (MUIB_MUI | 0x0042ca67) /* V8  isg UBYTE * */
+    (MUIB_MUI | 0x0042ca67)    /* V8  isg UBYTE * */
 #define MUIA_Bodychunk_Compression \
-    (MUIB_MUI | 0x0042de5f) /* V8  isg UBYTE   */
+    (MUIB_MUI | 0x0042de5f)    /* V8  isg UBYTE   */
 #define MUIA_Bodychunk_Depth \
-    (MUIB_MUI | 0x0042c392) /* V8  isg LONG    */
+    (MUIB_MUI | 0x0042c392)    /* V8  isg LONG    */
 #define MUIA_Bodychunk_Masking \
-    (MUIB_MUI | 0x00423b0e) /* V8  isg UBYTE   */
+    (MUIB_MUI | 0x00423b0e)    /* V8  isg UBYTE   */
 
 
 
@@ -3257,7 +3304,7 @@ struct MUIP_Semaphore_Release
 #define _MUI_CLASSES_CHUNKYIMAGE_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -3269,13 +3316,13 @@ struct MUIP_Semaphore_Release
 
 /*** Attributes *************************************************************/
 #define MUIA_ChunkyImage_Pixels \
-    (MUIB_ChunkyImage | 0x00000000)     /* V8  isg UBYTE * */
+    (MUIB_ChunkyImage | 0x00000000)    /* V8  isg UBYTE * */
 #define MUIA_ChunkyImage_Palette \
-    (MUIB_ChunkyImage | 0x00000001)     /* V8  isg UBYTE * */
+    (MUIB_ChunkyImage | 0x00000001)    /* V8  isg UBYTE * */
 #define MUIA_ChunkyImage_NumColors \
-    (MUIB_ChunkyImage | 0x00000002)     /* V8  isg LONG    */
+    (MUIB_ChunkyImage | 0x00000002)    /* V8  isg LONG    */
 #define MUIA_ChunkyImage_Modulo \
-    (MUIB_ChunkyImage | 0x00000003)     /* V8  isg LONG    */
+    (MUIB_ChunkyImage | 0x00000003)    /* V8  isg LONG    */
 
 
 
@@ -3287,15 +3334,15 @@ struct MUIP_Semaphore_Release
 #define _CLASSES_LISTVIEW_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Listview "Listview.mui"
+#define MUIC_Listview            "Listview.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Listview                (MUIB_ZUNE | 0x00001900)
+#define MUIB_Listview            (MUIB_ZUNE | 0x00001900)
 
 /*** Attributes *************************************************************/
 #define MUIA_Listview_ClickColumn \
@@ -3331,8 +3378,7 @@ enum
     MUIV_Listview_MultiSelect_Always,
 };
 
-enum
-{
+enum {
     MUIV_Listview_ScrollerPos_Default = 0,
     MUIV_Listview_ScrollerPos_Left,
     MUIV_Listview_ScrollerPos_Right,
@@ -3349,16 +3395,16 @@ enum
 #define _MUI_CLASSES_LIST_H
 
 /*
-    Copyright ฉ 2002-2013, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /****************************************************************************/
 /*** Name *******************************************************************/
-#define MUIC_List                     "List.mui"
+#define MUIC_List                 "List.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_List                     (MUIB_ZUNE | 0x00001400)
+#define MUIB_List                 (MUIB_ZUNE | 0x00001400)
 
 /*** Methods ****************************************************************/
 #define MUIM_List_Clear           (MUIB_MUI | 0x0042ad89)     /* MUI: V4  */
@@ -3594,86 +3640,78 @@ struct MUI_List_TestPos_Result
 
 enum
 {
-    MUIV_List_Active_Off = -1,
-    MUIV_List_Active_Top = -2,
-    MUIV_List_Active_Bottom = -3,
-    MUIV_List_Active_Up = -4,
-    MUIV_List_Active_Down = -5,
-    MUIV_List_Active_PageUp = -6,
+    MUIV_List_Active_Off      = -1,
+    MUIV_List_Active_Top      = -2,
+    MUIV_List_Active_Bottom   = -3,
+    MUIV_List_Active_Up       = -4,
+    MUIV_List_Active_Down     = -5,
+    MUIV_List_Active_PageUp   = -6,
     MUIV_List_Active_PageDown = -7,
 };
 
 #define MUIV_List_ConstructHook_String (IPTR)-1
 #define MUIV_List_CopyHook_String      (IPTR)-1
-#define MUIV_List_CursorType_None 0
-#define MUIV_List_CursorType_Bar  1
-#define MUIV_List_CursorType_Rect 2
+#define MUIV_List_CursorType_None      0
+#define MUIV_List_CursorType_Bar       1
+#define MUIV_List_CursorType_Rect      2
 #define MUIV_List_DestructHook_String  (IPTR)-1
 
-enum
-{
-    MUIV_List_Insert_Top = 0,
+enum {
+    MUIV_List_Insert_Top    =  0,
     MUIV_List_Insert_Active = -1,
     MUIV_List_Insert_Sorted = -2,
     MUIV_List_Insert_Bottom = -3
 };
 
-enum
-{
-    MUIV_List_Remove_First = 0,
-    MUIV_List_Remove_Active = -1,
-    MUIV_List_Remove_Last = -2,
+enum {
+    MUIV_List_Remove_First    =  0,
+    MUIV_List_Remove_Active   = -1,
+    MUIV_List_Remove_Last     = -2,
     MUIV_List_Remove_Selected = -3,
 };
 
-enum
-{
+enum {
     MUIV_List_Select_Active = -1,
-    MUIV_List_Select_All = -2,
+    MUIV_List_Select_All    = -2,
 
-    MUIV_List_Select_Off = 0,
-    MUIV_List_Select_On = 1,
+    MUIV_List_Select_Off    = 0,
+    MUIV_List_Select_On     = 1,
     MUIV_List_Select_Toggle = 2,
-    MUIV_List_Select_Ask = 3,
+    MUIV_List_Select_Ask    = 3,
 };
 
-enum
-{
+enum {
     MUIV_List_GetEntry_Active = -1,
 };
 
-enum
-{
+enum {
     MUIV_List_Redraw_Active = -1,
-    MUIV_List_Redraw_All = -2,
-    MUIV_List_Redraw_Entry = -3,
+    MUIV_List_Redraw_All    = -2,
+    MUIV_List_Redraw_Entry  = -3,
 };
 
-enum
-{
-    MUIV_List_Move_Top = 0,
-    MUIV_List_Move_Active = -1,
-    MUIV_List_Move_Bottom = -2,
-    MUIV_List_Move_Next = -3,        /* for 2nd parameter only */
-    MUIV_List_Move_Previous = -4,    /* for 2nd parameter only */
+enum {
+    MUIV_List_Move_Top      =  0,
+    MUIV_List_Move_Active   = -1,
+    MUIV_List_Move_Bottom   = -2,
+    MUIV_List_Move_Next     = -3, /* for 2nd parameter only */
+    MUIV_List_Move_Previous = -4, /* for 2nd parameter only */
 };
 
-enum
-{
-    MUIV_List_Exchange_Top = 0,
-    MUIV_List_Exchange_Active = -1,
-    MUIV_List_Exchange_Bottom = -2,
-    MUIV_List_Exchange_Next = -3,       /* for 2nd parameter only */
-    MUIV_List_Exchange_Previous = -4,   /* for 2nd parameter only */
+enum {
+    MUIV_List_Exchange_Top      =  0,
+    MUIV_List_Exchange_Active   = -1,
+    MUIV_List_Exchange_Bottom   = -2,
+    MUIV_List_Exchange_Next     = -3,    /* for 2nd parameter only */
+    MUIV_List_Exchange_Previous = -4,    /* for 2nd parameter only */
 };
 
-enum
-{
-    MUIV_List_Jump_Top = 0,
+enum {
+    MUIV_List_Jump_Top    =  0,
     MUIV_List_Jump_Active = -1,
     MUIV_List_Jump_Bottom = -2,
-    MUIV_List_Jump_Down = -3,
-    MUIV_List_Jump_Up = -4,
+    MUIV_List_Jump_Down   = -3,
+    MUIV_List_Jump_Up     = -4,
 };
 
 #define MUIV_List_NextSelected_Start  (-1)
@@ -3702,15 +3740,15 @@ enum
 #define _MUI_CLASSES_FLOATTEXT_H
 
 /*
-    Copyright ฉ 2002-2013, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Floattext           "Floattext.mui"
+#define MUIC_Floattext        "Floattext.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Floattext           (MUIB_ZUNE | 0x00001500)
+#define MUIB_Floattext        (MUIB_ZUNE | 0x00001500)
 
 /*** Attributes *************************************************************/
 #define MUIA_Floattext_Justify \
@@ -3731,7 +3769,7 @@ enum
 #define _MUI_CLASSES_POPSTRING_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -3742,8 +3780,8 @@ enum
 #define MUIB_Popstring        (MUIB_ZUNE | 0x00002800)
 
 /*** Methods ****************************************************************/
-#define MUIM_Popstring_Close  (MUIB_MUI | 0x0042dc52)     /* MUI: V7  */
-#define MUIM_Popstring_Open   (MUIB_MUI | 0x004258ba)     /* MUI: V7  */
+#define MUIM_Popstring_Close  (MUIB_MUI | 0x0042dc52)    /* MUI: V7  */
+#define MUIM_Popstring_Open   (MUIB_MUI | 0x004258ba)    /* MUI: V7  */
 
 struct MUIP_Popstring_Close
 {
@@ -3778,16 +3816,16 @@ struct MUIP_Popstring_Open
 #define _MUI_CLASSES_POPOBJECT_H
 
 /*
-    Copyright ฉ 2002-2006, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /****************************************************************************/
 /*** Name *******************************************************************/
-#define MUIC_Popobject              "Popobject.mui"
+#define MUIC_Popobject        "Popobject.mui"
 
 /*** Identifier base ********************************************************/
-#define MUIB_Popobject              (MUIB_ZUNE | 0x00002400)
+#define MUIB_Popobject        (MUIB_ZUNE | 0x00002400)
 
 /*** Attributes *************************************************************/
 #define MUIA_Popobject_Follow \
@@ -3815,12 +3853,12 @@ struct MUIP_Popstring_Open
 #define _MUI_CLASSES_CYCLE_H
 
 /*
-    Copyright ฉ 2002-2013, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Cycle "Cycle.mui"
+#define MUIC_Cycle         "Cycle.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
 #define MUIB_Cycle         (MUIB_ZUNE | 0x00000a00)
@@ -3844,7 +3882,7 @@ enum
 #define _MUI_CLASSES_GAUGE_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -3879,15 +3917,15 @@ enum
 #define _MUI_CLASSES_IMAGE_H
 
 /*
-    Copyright  2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Image                  "Image.mui"
+#define MUIC_Image        "Image.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Image                  (MUIB_ZUNE | 0x00001300)
+#define MUIB_Image        (MUIB_ZUNE | 0x00001300)
 
 /*** Attributes *************************************************************/
 #define MUIA_Image_FontMatch \
@@ -3917,21 +3955,21 @@ enum
 #define _MUI_CLASSES_IMAGEDISPLAY_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Imagedisplay           "Imagedisplay.mui"
+#define MUIC_Imagedisplay        "Imagedisplay.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Imagedisplay           (MUIB_ZUNE | 0x00001200)
+#define MUIB_Imagedisplay        (MUIB_ZUNE | 0x00001200)
 
 /*** Attributes *************************************************************/
-#define MUIA_Imagedisplay_Spec \
-    (MUIB_MUI | 0x0042a547)      /* MUI: V11 isg struct MUI_ImageSpec * */
+#define MUIA_Imagedisplay_Spec       \
+        (MUIB_MUI | 0x0042a547) /* MUI: V11 isg struct MUI_ImageSpec * */
 #define MUIA_Imagedisplay_UseDefSize \
-    (MUIB_MUI  |0x0042186d)      /* MUI: V11 i.. BOOL (undoc) */
+        (MUIB_MUI | 0x0042186d)   /* MUI: V11 i.. BOOL (undoc) */
 
 #define MUIA_Imagedisplay_FreeHoriz \
     (MUIB_Imagedisplay | 0x00000000)   /* Zune 20030323 i.. BOOL [TRUE] */
@@ -3948,15 +3986,15 @@ enum
 #define _MUI_CLASSES_POPASL_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Popasl             "Popasl.mui"
+#define MUIC_Popasl        "Popasl.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Popasl            (MUIB_ZUNE | 0x00002100)
+#define MUIB_Popasl        (MUIB_ZUNE | 0x00002100)
 
 
 /*** Attributes *************************************************************/
@@ -3979,15 +4017,15 @@ enum
 #define _MUI_CLASSES_SETTINGSGROUP_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (c) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Settingsgroup                 "Settingsgroup.mui"
+#define MUIC_Settingsgroup    "Settingsgroup.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Settingsgroup                 (MUIB_ZUNE | 0x00003100)
+#define MUIB_Settingsgroup    (MUIB_ZUNE | 0x00003100)
 
 /*** Methods ****************************************************************/
 #define MUIM_Settingsgroup_ConfigToGadgets \
@@ -4017,7 +4055,7 @@ struct MUIP_Settingsgroup_GadgetsToConfig
 #define _MUI_CLASSES_SETTINGS_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -4034,7 +4072,7 @@ struct MUIP_Settingsgroup_GadgetsToConfig
 
 #ifndef _MUI_CLASSES_ABOUTMUI_H
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -4057,7 +4095,7 @@ struct MUIP_Settingsgroup_GadgetsToConfig
 
 #ifndef _MUI_CLASSES_CONFIGDATA_H
 /*
-    Copyright  2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -4072,28 +4110,28 @@ struct MUIP_Settingsgroup_GadgetsToConfig
 
 /* The config items for MUIM_GetConfigItem */
 #define MUICFG_Invalid                  (-1)
-#define MUICFG_Window_Spacing_Left      0x01    /* ULONG, horiz pixels (def=4) */
-#define MUICFG_Window_Spacing_Right     0x02    /* ULONG, horiz pixels (def=4) */
-#define MUICFG_Window_Spacing_Top       0x03    /* ULONG, vert pixels (def=3) */
-#define MUICFG_Window_Spacing_Bottom    0x04    /* ULONG, vert pixels (def=3) */
-#define MUICFG_Radio_HSpacing           0x05    /* ULONG, horiz pixels (def=4) */
-#define MUICFG_Radio_VSpacing           0x06    /* ULONG, vertical pixels (def=1) */
-#define MUICFG_Group_HSpacing           0x07    /* ULONG, horiz pixels (def=6) */
-#define MUICFG_Group_VSpacing           0x08    /* ULONG, vertical pixels (def=3) */
-#define MUICFG_Scrollbar_Arrangement    0x09    /* ULONG, top = 0 (def), middle, bottom */
-#define MUICFG_Listview_Refresh         0x0a    /* ULONG, linear, mixed = 1 (def) */
-#define MUICFG_Listview_Font_Leading    0x0b    /* ULONG, vertical pixels (def=1) */
-#define MUICFG_Listview_SmoothVal       0x0c    /* ULONG, ? (def=0) */
-#define MUICFG_Listview_Multi           0x0d    /* ULONG, shifted = 0 (def), always */
-#define MUICFG_GroupTitle_Position      0x0f    /* ULONG, 1=centered */
-#define MUICFG_GroupTitle_Color         0x10    /* ULONG, 0=normal */
-#define MUICFG_Cycle_MenuCtrl_Level     0x11    /* ULONG, num of entries (def=2) */
-#define MUICFG_Cycle_MenuCtrl_Position  0x12    /* ULONG, below = 0 (def), on active */
+#define MUICFG_Window_Spacing_Left      0x01  /* ULONG, horiz pixels (def=4) */
+#define MUICFG_Window_Spacing_Right     0x02  /* ULONG, horiz pixels (def=4) */
+#define MUICFG_Window_Spacing_Top       0x03  /* ULONG, vert pixels (def=3) */
+#define MUICFG_Window_Spacing_Bottom    0x04  /* ULONG, vert pixels (def=3) */
+#define MUICFG_Radio_HSpacing           0x05  /* ULONG, horiz pixels (def=4) */
+#define MUICFG_Radio_VSpacing           0x06  /* ULONG, vertical pixels (def=1) */
+#define MUICFG_Group_HSpacing           0x07  /* ULONG, horiz pixels (def=6) */
+#define MUICFG_Group_VSpacing           0x08  /* ULONG, vertical pixels (def=3) */
+#define MUICFG_Scrollbar_Arrangement    0x09  /* ULONG, top = 0 (def), middle, bottom */
+#define MUICFG_Listview_Refresh         0x0a  /* ULONG, linear, mixed = 1 (def) */
+#define MUICFG_Listview_Font_Leading    0x0b  /* ULONG, vertical pixels (def=1) */
+#define MUICFG_Listview_SmoothVal       0x0c  /* ULONG, ? (def=0) */
+#define MUICFG_Listview_Multi           0x0d  /* ULONG, shifted = 0 (def), always */
+#define MUICFG_GroupTitle_Position      0x0f  /* ULONG, 1=centered */
+#define MUICFG_GroupTitle_Color         0x10  /* ULONG, 0=normal */
+#define MUICFG_Cycle_MenuCtrl_Level     0x11  /* ULONG, num of entries (def=2) */
+#define MUICFG_Cycle_MenuCtrl_Position  0x12  /* ULONG, below = 0 (def), on active */
 #define MUICFG_Frame_Drag               0x18
-#define MUICFG_Cycle_Menu_Recessed      0x19    /* ULONG, false = 0 (def), true */
-#define MUICFG_Cycle_MenuCtrl_Speed     0x1a    /* ULONG, num of ticks (0..50) (def=0) */
-#define MUICFG_Listview_Smoothed        0x1b    /* ULONG, false = 0 (def), true */
-#define MUICFG_Window_Redraw            0x1d    /* ULONG, no clear, clear = 1 (def) */
+#define MUICFG_Cycle_Menu_Recessed      0x19  /* ULONG, false = 0 (def), true */
+#define MUICFG_Cycle_MenuCtrl_Speed     0x1a  /* ULONG, num of ticks (0..50) (def=0) */
+#define MUICFG_Listview_Smoothed        0x1b  /* ULONG, false = 0 (def), true */
+#define MUICFG_Window_Redraw            0x1d  /* ULONG, no clear, clear = 1 (def) */
 #define MUICFG_Font_Normal              0x1e
 #define MUICFG_Font_List                0x1f
 #define MUICFG_Font_Tiny                0x20
@@ -4176,23 +4214,23 @@ struct MUIP_Settingsgroup_GadgetsToConfig
 #define MUICFG_Keyboard_Help            0x73
 #define MUICFG_Keyboard_Popup           0x74
 #define MUICFG_Window_Positions         0x7a
-#define MUICFG_Balance_Look             0x7b    /* ULONG, frame = 0 (def), object */
+#define MUICFG_Balance_Look             0x7b  /* ULONG, frame = 0 (def), object */
 #define MUICFG_Font_Button              0x80
-#define MUICFG_Scrollbar_Type           0x83    /* ULONG, standard = 0 (def), newlook, custom */
+#define MUICFG_Scrollbar_Type           0x83  /* ULONG, standard = 0 (def), newlook, custom */
 #define MUICFG_String_Background        0x84
 #define MUICFG_String_Text              0x85
 #define MUICFG_String_ActiveBackground  0x86
 #define MUICFG_String_ActiveText        0x87
 #define MUICFG_Font_Knob                0x88
-#define MUICFG_Drag_LeftButton          0x89    /* ULONG, false, true (def) */
-#define MUICFG_Drag_MiddleButton        0x8a    /* ULONG, false (def), true */
-#define MUICFG_Drag_LMBModifier         0x8b    /* key desc (def = control) */
-#define MUICFG_Drag_MMBModifier         0x8c    /* key desc */
-#define MUICFG_Drag_Autostart           0x8d    /* ULONG, false = 0, true (def) */
-#define MUICFG_Drag_Autostart_Length    0x8e    /* ULONG, pixels (def = 3) */
-#define MUICFG_ActiveObject_Color       0x8f    /* penspec */
+#define MUICFG_Drag_LeftButton          0x89  /* ULONG, false, true (def) */
+#define MUICFG_Drag_MiddleButton        0x8a  /* ULONG, false (def), true */
+#define MUICFG_Drag_LMBModifier         0x8b  /* key desc (def = control) */
+#define MUICFG_Drag_MMBModifier         0x8c  /* key desc */
+#define MUICFG_Drag_Autostart           0x8d  /* ULONG, false = 0, true (def) */
+#define MUICFG_Drag_Autostart_Length    0x8e  /* ULONG, pixels (def = 3) */
+#define MUICFG_ActiveObject_Color       0x8f  /* penspec */
 #define MUICFG_Frame_Knob               0x90
-#define MUICFG_Dragndrop_Look           0x94    /* ULONG, solid, ghosted on obj (def), ... */
+#define MUICFG_Dragndrop_Look           0x94  /* ULONG, solid, ghosted on obj (def), ... */
 #define MUICFG_Background_Page          0x95
 #define MUICFG_Background_ReadList      0x96
 #define MUICFG_String_Cursor            0x400
@@ -4317,9 +4355,9 @@ struct MUIP_Configdata_SetString
 
 /*** Attributes *************************************************************/
 #define MUIA_Configdata_Application \
-    (MUIB_Configdata | 0x00000000)  /* ZV1: i..  Object * */
+    (MUIB_Configdata | 0x00000000)    /* ZV1: i..  Object *    */
 #define MUIA_Configdata_ApplicationBase \
-    (MUIB_Configdata | 0x00000002)  /* ZV1: i..  Object * */
+    (MUIB_Configdata | 0x00000002)    /* ZV1: i..  Object *    */
 
 
 
@@ -4331,7 +4369,7 @@ struct MUIP_Configdata_SetString
 #define _MUI_CLASSES_IMAGEADJUST_H
 
 /* 
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -4343,11 +4381,11 @@ struct MUIP_Configdata_SetString
 
 /*** Attributes *************************************************************/
 #define MUIA_Imageadjust_Type \
-    (MUIB_MUI | 0x00422f2b)     /* MUI: V11 i.. LONG */
+    (MUIB_MUI | 0x00422f2b)    /* MUI: V11 i.. LONG    */
 #define MUIA_Imageadjust_Spec \
-    (MUIB_MUI | 0x004279e1)     /* MUI: ??? .g. char * */
+    (MUIB_MUI | 0x004279e1)    /* MUI: ??? .g. char *    */
 #define MUIA_Imageadjust_Originator \
-    (MUIB_Imageadjust | 0x00000000)       /* Zune: i.. Object * */
+    (MUIB_Imageadjust | 0x00000000)    /* Zune: i.. Object *   */
 
 enum
 {
@@ -4368,15 +4406,15 @@ enum
 #define _MUI_CLASSES_POPIMAGE_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Popimage              "Popimage.mui"
+#define MUIC_Popimage        "Popimage.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Popimage              (MUIB_ZUNE | 0x00002300)
+#define MUIB_Popimage        (MUIB_ZUNE | 0x00002300)
 
 /*** Methods ****************************************************************/
 
@@ -4392,18 +4430,18 @@ enum
 #define _MUI_CLASSES_SCALE_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Scale          "Scale.mui"
+#define MUIC_Scale        "Scale.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Scale          (MUIB_ZUNE | 0x00002d00)
+#define MUIB_Scale        (MUIB_ZUNE | 0x00002d00)
 
 /*** Attributes *************************************************************/
-#define MUIA_Scale_Horiz   (MUIB_MUI | 0x0042919a)  /* MUI: V4  isg BOOL    */
+#define MUIA_Scale_Horiz  (MUIB_MUI | 0x0042919a)  /* MUI: V4  isg BOOL  */
 
 
 
@@ -4415,21 +4453,21 @@ enum
 #define _MUI_CLASSES_RADIO_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Radio         "Radio.mui"
+#define MUIC_Radio        "Radio.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Radio         (MUIB_ZUNE | 0x00002a00)
+#define MUIB_Radio        (MUIB_ZUNE | 0x00002a00)
 
 /*** Attributes *************************************************************/
 #define MUIA_Radio_Active \
-    (MUIB_MUI | 0x00429b41)        /* MUI:V4  isg LONG      */
+    (MUIB_MUI | 0x00429b41)    /* MUI:V4  isg LONG      */
 #define MUIA_Radio_Entries \
-    (MUIB_MUI | 0x0042b6a1)        /* MUI:V4  i.. STRPTR *  */
+    (MUIB_MUI | 0x0042b6a1)    /* MUI:V4  i.. STRPTR *  */
 
 
 
@@ -4438,7 +4476,7 @@ enum
 
 #ifndef _MUI_CLASSES_BALANCE_H
 /* 
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -4465,7 +4503,7 @@ enum
 #define _MUI_CLASSES_PENDISPLAY_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -4520,19 +4558,19 @@ struct MUIP_Pendisplay_SetRGB
 #define _MUI_CLASSES_PENADJUST_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Penadjust "Penadjust.mui"
+#define MUIC_Penadjust         "Penadjust.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
 #define MUIB_Penadjust         (MUIB_ZUNE | 0x00001f00)
 
 /*** Attributes *************************************************************/
 #define MUIA_Penadjust_PSIMode \
-    (MUIB_MUI | 0x00421cbb)    /* MUI: V11  i.. BOOL       */
+    (MUIB_MUI | 0x00421cbb)    /* MUI: V11  i.. BOOL  */
 
 
 
@@ -4545,15 +4583,15 @@ struct MUIP_Pendisplay_SetRGB
 #define _MUI_CLASSES_POPPEN_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Poppen              "Poppen.mui"
+#define MUIC_Poppen            "Poppen.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Poppen              (MUIB_ZUNE | 0x00002700)
+#define MUIB_Poppen            (MUIB_ZUNE | 0x00002700)
 
 /*** Methods ****************************************************************/
 
@@ -4566,7 +4604,7 @@ struct MUIP_Pendisplay_SetRGB
 
 #ifndef _MUI_CLASSES_COLORFIELD_H
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -4574,17 +4612,17 @@ struct MUIP_Pendisplay_SetRGB
 #define _MUI_CLASSES_COLORFIELD_H
 
 /*** Name *******************************************************************/
-#define MUIC_Colorfield "Colorfield.mui"
+#define MUIC_Colorfield        "Colorfield.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Colorfield         (MUIB_ZUNE | 0x00000800)
+#define MUIB_Colorfield        (MUIB_ZUNE | 0x00000800)
 
 /*** Attributes *************************************************************/
-#define MUIA_Colorfield_Pen         (MUIB_MUI | 0x0042713a) /* ..g  ULONG   */
-#define MUIA_Colorfield_Red         (MUIB_MUI | 0x004279f6) /* isg  ULONG   */
-#define MUIA_Colorfield_Green       (MUIB_MUI | 0x00424466) /* isg  ULONG   */
-#define MUIA_Colorfield_Blue        (MUIB_MUI | 0x0042d3b0) /* isg  ULONG   */
-#define MUIA_Colorfield_RGB         (MUIB_MUI | 0x0042677a) /* isg  ULONG * */
+#define MUIA_Colorfield_Pen    (MUIB_MUI | 0x0042713a) /* ..g  ULONG   */
+#define MUIA_Colorfield_Red    (MUIB_MUI | 0x004279f6) /* isg  ULONG   */
+#define MUIA_Colorfield_Green  (MUIB_MUI | 0x00424466) /* isg  ULONG   */
+#define MUIA_Colorfield_Blue   (MUIB_MUI | 0x0042d3b0) /* isg  ULONG   */
+#define MUIA_Colorfield_RGB    (MUIB_MUI | 0x0042677a) /* isg  ULONG * */
 
 
 
@@ -4593,7 +4631,7 @@ struct MUIP_Pendisplay_SetRGB
 
 #ifndef _MUI_CLASSES_COLORADJUST_H
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -4625,7 +4663,7 @@ struct MUIP_Pendisplay_SetRGB
 
 #ifndef _MUI_CLASSES_MCCPREFS_H
 /*
-    Copyright ฉ 2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -4643,15 +4681,15 @@ struct MUIP_Pendisplay_SetRGB
 #define _MUI_CLASSES_FRAMEADJUST_H
 
 /* 
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Frameadjust "Frameadjust.mui"
+#define MUIC_Frameadjust        "Frameadjust.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Frameadjust      (MUIB_ZUNE | 0x00000d00)
+#define MUIB_Frameadjust        (MUIB_ZUNE | 0x00000d00)
 
 /*** Attributes *************************************************************/
 #define MUIA_Frameadjust_Spec \
@@ -4667,7 +4705,7 @@ struct MUIP_Pendisplay_SetRGB
 #define _MUI_CLASSES_FRAMEDISPLAY_H
 
 /*
-    Copyright ฉ 2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -4679,7 +4717,7 @@ struct MUIP_Pendisplay_SetRGB
 
 /*** Attributes *************************************************************/
 #define MUIA_Framedisplay_Spec \
-    (MUIB_MUI | 0x00421794)    /* MUI: V??  isg struct MUI_FrameSpec  * */
+    (MUIB_MUI | 0x00421794)    /* MUI: V??  isg struct MUI_FrameSpec  *  */
 
 
 #endif /* _MUI_CLASSES_FRAMEDISPLAY_H */
@@ -4690,7 +4728,7 @@ struct MUIP_Pendisplay_SetRGB
 #define _MUI_CLASSES_POPFRAME_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -4714,7 +4752,7 @@ struct MUIP_Pendisplay_SetRGB
 #define _MUI_CLASSES_VOLUMELIST_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -4733,20 +4771,20 @@ struct MUIP_Pendisplay_SetRGB
 #define _MUI_CLASSES_DIRLIST_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /****************************************************************************/
 /*** Name *******************************************************************/
-#define MUIC_Dirlist "Dirlist.mui"
+#define MUIC_Dirlist          "Dirlist.mui"
 
 /*** Identifer base (for Zune extensions) ***********************************/
-#define MUIB_Dirlist (MUIB_ZUNE | 0x00001800)
+#define MUIB_Dirlist          (MUIB_ZUNE | 0x00001800)
 
 /*** Methods ****************************************************************/
 
-#define MUIM_Dirlist_ReRead         (MUIB_MUI | 0x00422d71)       /* MUI: V4  */
+#define MUIM_Dirlist_ReRead   (MUIB_MUI | 0x00422d71)   /* MUI: V4  */
 struct MUIP_Dirlist_ReRead
 {
     STACKED ULONG MethodID;
@@ -4818,7 +4856,7 @@ enum
 #define _MUI_CLASSES_NUMERICBUTTON_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -4837,20 +4875,19 @@ enum
 #define _MUI_CLASSES_POPLIST_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /****************************************************************************/
 /*** Name *******************************************************************/
-#define MUIC_Poplist                "Poplist.mui"
+#define MUIC_Poplist        "Poplist.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Poplist                (MUIB_ZUNE | 0x00002500)
+#define MUIB_Poplist        (MUIB_ZUNE | 0x00002500)
 
 /*** Attributes *************************************************************/
-#define MUIA_Poplist_Array \
-    (MUIB_MUI | 0x0042084c)       /* MUI: V8  i.. char ** */
+#define MUIA_Poplist_Array  (MUIB_MUI | 0x0042084c) /* MUI: V8  i.. char ** */
 
 
 #endif /* _MUI_CLASSES_POPLIST_H */
@@ -4861,16 +4898,16 @@ enum
 #define _MUI_CLASSES_POPSCREEN_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /****************************************************************************/
 /*** Name *******************************************************************/
-#define MUIC_Popscreen              "Popscreen.mui"
+#define MUIC_Popscreen    "Popscreen.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Popscreen              (MUIB_ZUNE | 0x00002600)
+#define MUIB_Popscreen    (MUIB_ZUNE | 0x00002600)
 
 
 
@@ -4882,16 +4919,16 @@ enum
 #define _MUI_CLASSES_CRAWLING_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /****************************************************************************/
 /*** Name *******************************************************************/
-#define MUIC_Crawling                "Crawling.mcc"
+#define MUIC_Crawling      "Crawling.mcc"
 
 /*** Identifier base (for Zune extensions) **********************************/
-//#define MUIB_Crawling                (MUIB_ZUNE | 0x0000????)
+//#define MUIB_Crawling    (MUIB_ZUNE | 0x0000????)
 
 
 #endif /* _MUI_CLASSES_CRAWLING_H */
@@ -4902,18 +4939,18 @@ enum
 #define _MUI_CLASSES_LEVELMETER_H
 
 /*
-    Copyright ฉ 2002-2006, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Levelmeter          "Levelmeter.mui"
+#define MUIC_Levelmeter       "Levelmeter.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-//#define MUIB_Levelmeter       (MUIB_ZUNE | 0x????)  
+//#define MUIB_Levelmeter     (MUIB_ZUNE | 0x????)
 
 /*** Attributes *************************************************************/
-#define MUIA_Levelmeter_Label   (MUIB_MUI | 0x00420dd5) /* V11 isg STRPTR */
+#define MUIA_Levelmeter_Label (MUIB_MUI | 0x00420dd5) /* V11 isg STRPTR */
 
 
 
@@ -4925,7 +4962,7 @@ enum
 #define _MUI_CLASSES_KNOB_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -4933,7 +4970,7 @@ enum
 #define MUIC_Knob          "Knob.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-//#define MUIB_Knob           (MUIB_ZUNE | 0x????)  
+//#define MUIB_Knob        (MUIB_ZUNE | 0x????)
 
 
 #endif /* _MUI_CLASSES_KNOB_H */
@@ -4944,7 +4981,7 @@ enum
 #define _MUI_CLASSES_DTPIC_H
 
 /*
-    Copyright ฉ 2002-2009, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -4963,15 +5000,15 @@ enum
 #define _MUI_CLASSES_PALETTE_H
 
 /*
-    Copyright ฉ 2002-2003, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
 /*** Name *******************************************************************/
-#define MUIC_Palette "Palette.mui"
+#define MUIC_Palette    "Palette.mui"
 
 /*** Identifier base (for Zune extensions) **********************************/
-#define MUIB_Palette         (MUIB_ZUNE | 0x00008a00)
+#define MUIB_Palette    (MUIB_ZUNE | 0x00008a00)
 
 /*** Attributes *************************************************************/
 #define MUIA_Palette_Entries \
@@ -4985,11 +5022,11 @@ enum
 
 struct MUI_Palette_Entry
 {
-    LONG mpe_ID;
+    LONG  mpe_ID;
     ULONG mpe_Red;
     ULONG mpe_Green;
     ULONG mpe_Blue;
-    LONG mpe_Group;
+    LONG  mpe_Group;
 };
 
 
@@ -5001,7 +5038,7 @@ struct MUI_Palette_Entry
 #define _MUI_CLASSES_TITLE_H
 
 /*
-    Copyright ฉ 2012, The AROS Development Team. All rights reserved.
+    Copyright (C) 2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -5023,7 +5060,7 @@ struct MUI_Palette_Entry
 #define _MUI_CLASSES_PROCESS_H
 
 /*
-    Copyright ฉ 2012, The AROS Development Team. All rights reserved.
+    Copyright (C) 2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -5088,8 +5125,8 @@ struct MUIP_Process_Signal
 #define _MUI_CLASSES_PIXMAP_H
 
 /*
-    Copyright ฉ 2011, Thore B๖ckelmann. All rights reserved.
-    Copyright ฉ 2012, The AROS Development Team. All rights reserved.
+    Copyright (C) 2011, Thore Bรถckelmann. All rights reserved.
+    Copyright (C) 2019, The AROS Development Team. All rights reserved.
     $Id$
 */
 
@@ -5134,12 +5171,12 @@ struct MUIP_Pixmap_DrawSection
 #define MUIA_Pixmap_Width \
     (MUIB_MUI | 0x0042ccb8)   /* V20 isg LONG              */
 
-#define MUIV_Pixmap_Compression_None 0
-#define MUIV_Pixmap_Compression_RLE 1
+#define MUIV_Pixmap_Compression_None  0
+#define MUIV_Pixmap_Compression_RLE   1
 #define MUIV_Pixmap_Compression_BZip2 2
-#define MUIV_Pixmap_Format_CLUT8 0
-#define MUIV_Pixmap_Format_RGB24 1
-#define MUIV_Pixmap_Format_ARGB32 2
+#define MUIV_Pixmap_Format_CLUT8      0
+#define MUIV_Pixmap_Format_RGB24      1
+#define MUIV_Pixmap_Format_ARGB32     2
 
 
 
@@ -5240,7 +5277,7 @@ struct MUI_Command
 #define _MUI_MACROS_H
 
 /*
-    Copyright ฉ 2002-2007, The AROS Development Team. All rights reserved.
+    Copyright (C) 2002-2019, The AROS Development Team. All rights reserved.
     $Id$
 
     Macros available in original MUI and also some additional ones.
