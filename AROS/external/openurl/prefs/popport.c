@@ -2,7 +2,7 @@
 
  openurl.library - universal URL display and browser launcher library
  Copyright (C) 1998-2005 by Troels Walsted Hansen, et al.
- Copyright (C) 2005-2013 by openurl.library Open Source Team
+ Copyright (C) 2005-2019 openurl.library Open Source Team
 
  This library is free software; it has been placed in the public domain
  and you can freely redistribute it and/or modify it. Please note, however,
@@ -216,7 +216,8 @@ HOOKPROTONH(closeFun, void, Object *list, Object *str)
     DoMethod(list,MUIM_List_GetEntry,MUIV_List_GetEntry_Active,(IPTR)&port);
     if (port)
     {
-        TEXT buf[PORT_LEN], *dot, *digit;
+        TEXT buf[PORT_LEN], *digit;
+        STRPTR dot;
 
         dot = strrchr(port,'.');
 
@@ -231,11 +232,11 @@ HOOKPROTONH(closeFun, void, Object *list, Object *str)
                     break;
                 }
 
-            if (dot)
-            {
-                strlcpy(buf, port, dot-port);
-                port = buf;
-            }
+                if (dot)
+                {
+                    strlcpy(buf, port, dot-port);
+                    port = buf;
+                }
         }
     }
 
