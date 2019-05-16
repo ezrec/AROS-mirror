@@ -3,7 +3,7 @@
 #
 # openurl.library - universal URL display and browser launcher library
 # Copyright (C) 1998-2005 by Troels Walsted Hansen, et al.
-# Copyright (C) 2005-2013 by openurl.library Open Source Team
+# Copyright (C) 2005-2019 openurl.library Open Source Team
 #
 # This library is free software; it has been placed in the public domain
 # and you can freely redistribute it and/or modify it. Please note, however,
@@ -15,7 +15,7 @@
 #
 # openurl.library project: http://sourceforge.net/projects/openurllib/
 #
-# $Id: AUTHORS 102 2009-05-27 22:22:46Z marust $
+# $Id$
 #
 #***************************************************************************/
 
@@ -38,9 +38,8 @@ mkdir -p "release/OpenURL/Developer/sfd"
 mkdir -p "release/OpenURL/Developer/xml"
 
 for os in os3 os4 mos aros-i386 aros-ppc aros-x86_64; do
-
-  make OS=$os clean
-  make OS=$os DEBUG=
+	make OS=$os clean
+	make OS=$os DEBUG=
 
 	case $os in
 	    os3)         fullsys="AmigaOS3";;
@@ -77,17 +76,17 @@ cp -a locale/OpenURL.pot "release/OpenURL/Catalogs/"
 rm -f locale/*.catalog
 make -C prefs catalogs
 for language in `ls locale/*.catalog`; do
-  catalog=$(basename "$language")
-  lang="${catalog%.*}"
-  mkdir -p "release/OpenURL/Catalogs/${lang}"
-  cp -a ${language} "release/OpenURL/Catalogs/${lang}/OpenURL.catalog"
+	catalog=$(basename "$language")
+	lang="${catalog%.*}"
+	mkdir -p "release/OpenURL/Catalogs/${lang}"
+	cp -a ${language} "release/OpenURL/Catalogs/${lang}/OpenURL.catalog"
 done
 
 releasever=`grep "#define LIB_VERSION" library/version.h | awk '{ print $3 }'`
 releaserev=`grep "#define LIB_REVISION" library/version.h | awk '{ print $3 }'`
 
 echo "  MK OpenURL-$releasever.$releaserev.lha"
-find release -nowarn -name ".svn" -exec rm -rf {} \; 2>/dev/null
+find release -nowarn -name ".git" -exec rm -rf {} \; 2>/dev/null
 cd release
 rm -f ../OpenURL-$releasever.$releaserev.lha
 lha -ao5q ../OpenURL-$releasever.$releaserev.lha *
