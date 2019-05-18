@@ -396,14 +396,14 @@ struct __MUIBuiltinClass {
 struct MUI_NotifyData
 {
     struct MUI_GlobalInfo *mnd_GlobalInfo;
-    IPTR mnd_UserData;
-    ULONG mnd_ObjectID;
+    IPTR                   mnd_UserData;
+    ULONG                  mnd_ObjectID;
 
     /* private starts here */
-    struct MinList *mnd_NotifyList; /* priv1 */
-    Object *mnd_ParentObject;       /* priv2 */
+    struct MinList        *mnd_NotifyList;     /* priv1 */
+    Object                *mnd_ParentObject;   /* priv2 */
     struct MUI_NotifyAttributes *mnd_Attributes; /* priv3 */
-    IPTR mnd_Dummy;                 /* priv4 */
+    IPTR                   mnd_Dummy;          /* priv4 */
 };
 
 /*** Name *******************************************************************/
@@ -1617,41 +1617,41 @@ struct dt_frame_image;
 
 struct MUI_RenderInfo
 {
-    Object *mri_WindowObject;   /* accessable in-between
-                                 * MUIM_Setup/MUIM_Cleanup */
-    struct Screen *mri_Screen;  /* accessable in-between
-                                 * MUIM_Setup/MUIM_Cleanup */
-    struct DrawInfo *mri_DrawInfo;    /* accessable in-between
-                                       * MUIM_Setup/MUIM_Cleanup */
-    UWORD *mri_Pens;            /* accessable in-between
-                                 * MUIM_Setup/MUIM_Cleanup */
-    struct Window *mri_Window;  /* accessable in-between
-                                 * MUIM_Show/MUIM_Hide */
-    struct RastPort *mri_RastPort;      /* accessable in-between
-                                         * MUIM_Show/MUIM_Hide */
-    ULONG mri_Flags;            /* accessable in-between
-                                 * MUIM_Setup/MUIM_Cleanup */
+    Object          *mri_WindowObject;  /* accessable in-between
+                                         * MUIM_Setup/MUIM_Cleanup */
+    struct Screen   *mri_Screen;   /* accessable in-between
+                                    * MUIM_Setup/MUIM_Cleanup */
+    struct DrawInfo *mri_DrawInfo; /* accessable in-between
+                                    * MUIM_Setup/MUIM_Cleanup */
+    UWORD           *mri_Pens;     /* accessable in-between
+                                    * MUIM_Setup/MUIM_Cleanup */
+    struct Window   *mri_Window;   /* accessable in-between
+                                    * MUIM_Show/MUIM_Hide */
+    struct RastPort *mri_RastPort; /* accessable in-between
+                                    * MUIM_Show/MUIM_Hide */
+    ULONG            mri_Flags;    /* accessable in-between
+                                    * MUIM_Setup/MUIM_Cleanup */
 
     /* the following stuff is private */
     struct ColorMap *mri_Colormap;
-    UWORD mri_ScreenWidth;
-    UWORD mri_ScreenHeight;
-    UWORD mri_PensStorage[MPEN_COUNT];  /* storage for pens, mri_Pens points
-                                         * to here */
+    UWORD            mri_ScreenWidth;
+    UWORD            mri_ScreenHeight;
+    UWORD            mri_PensStorage[MPEN_COUNT]; /* storage for pens, 
+                                                   * mri_Pens points to here */
 
     /* Opened text fonts, done by zune_get_font() */
     struct TextFont *mri_Fonts[-MUIV_Font_NegCount];
 
     /* this is for AddClipping/AddClipRegion */
-    struct Region *mri_rArray[MRI_RARRAY_SIZE];
-    int mri_rCount;
+    struct Region   *mri_rArray[MRI_RARRAY_SIZE];
+    int              mri_rCount;
 
     struct Rectangle mri_ClipRect;
 
-    UWORD mri_BorderTop; /* The height of the window's top border (title) */
-    UWORD mri_BorderBottom;     /* The height of the window's bottom bodder */
-    UWORD mri_BorderLeft;       /* The width of the window's left border */
-    UWORD mri_BorderRight;      /* The width of the window's right border */
+    UWORD   mri_BorderTop; /* The height of the window's top border (title) */
+    UWORD   mri_BorderBottom;     /* The height of the window's bottom bodder */
+    UWORD   mri_BorderLeft;       /* The width of the window's left border */
+    UWORD   mri_BorderRight;      /* The width of the window's right border */
 
     /* Stuff for Borderscrollers */
     Object *mri_LeftImage;      /* Valid between MUIM_Setup/MUIM_Cleanup */
@@ -1665,7 +1665,7 @@ struct MUI_RenderInfo
 
     /* buffering */
     struct RastPort mri_BufferRP;
-    struct BitMap *mri_BufferBM;
+    struct BitMap  *mri_BufferBM;
 
     struct dt_frame_image *mri_FrameImage[16];
 };
@@ -1703,15 +1703,15 @@ struct MUI_EventHandlerNode
 #ifndef MUI_EVENTHANDLERNODE_DEFINED
 struct MUI_EventHandlerNode
 {
-    struct MinNode ehn_Node;    /* embedded node structure, private! */
-    BYTE ehn_Reserved;          /* private! */
-    BYTE ehn_Priority;          /* sorted by priority. */
-    UWORD ehn_Flags;            /* some flags, see below */
-    Object *ehn_Object;         /* object which should receive
-                                 * MUIM_HandleEvent. */
-    struct IClass *ehn_Class;   /* Class for CoerceMethod(). If NULL,
-                                 * DoMethod() is used */
-    ULONG ehn_Events;           /* the IDCMP flags the handler should be
+    struct MinNode ehn_Node;     /* embedded node structure, private! */
+    BYTE           ehn_Reserved; /* private! */
+    BYTE           ehn_Priority; /* sorted by priority. */
+    UWORD          ehn_Flags;    /* some flags, see below */
+    Object        *ehn_Object;   /* object which should receive
+                                  * MUIM_HandleEvent. */
+    struct IClass *ehn_Class;    /* Class for CoerceMethod(). If NULL,
+                                  * DoMethod() is used */
+    ULONG          ehn_Events;   /* the IDCMP flags the handler should be
                                  * invoked with */
 };
 #endif
@@ -1807,15 +1807,15 @@ struct MUI_EventHandlerNode
 #define MUIM_GoInactive \
     (MUIB_MUI | 0x00422c0c)    /* Undoc */
 #define MUIM_HandleEvent \
-    (MUIB_MUI | 0x00426d66) /* MUI: V16 */ /* For Custom Classes only */
+    (MUIB_MUI | 0x00426d66)    /* MUI: V16 */ /* For Custom Classes only */
 #define MUIM_HandleInput \
-    (MUIB_MUI | 0x00422a1a) /* MUI: V4  */ /* For Custom Classes only */
+    (MUIB_MUI | 0x00422a1a)    /* MUI: V4  */ /* For Custom Classes only */
 #define MUIM_Hide \
-    (MUIB_MUI | 0x0042f20f) /* MUI: V4  */ /* For Custom Classes only */
+    (MUIB_MUI | 0x0042f20f)    /* MUI: V4  */ /* For Custom Classes only */
 #define MUIM_Setup \
-    (MUIB_MUI | 0x00428354) /* MUI: V4  */ /* For Custom Classes only */
+    (MUIB_MUI | 0x00428354)    /* MUI: V4  */ /* For Custom Classes only */
 #define MUIM_Show \
-    (MUIB_MUI | 0x0042cc84) /* MUI: V4  */ /* For Custom Classes only */
+    (MUIB_MUI | 0x0042cc84)    /* MUI: V4  */ /* For Custom Classes only */
 
 struct MUIP_AskMinMax
 {
@@ -2043,10 +2043,10 @@ struct MUIP_DrawParentBackground
 struct MUI_DragImage
 {
     struct BitMap *bm;
-    WORD width;        /* exact width and height of bitmap */
-    WORD height;
-    WORD touchx;       /* position of pointer click relative to bitmap */
-    WORD touchy;
+    WORD  width;        /* exact width and height of bitmap */
+    WORD  height;
+    WORD  touchx;       /* position of pointer click relative to bitmap */
+    WORD  touchy;
     ULONG flags;
 };
 
@@ -2149,10 +2149,10 @@ struct MUI_DragImage
     (MUIB_MUI | 0x0042669e)   /* MUI: V4  ..g Object *          */
 
 #define MUIA_NestedDisabled \
-    (MUIB_Area | 0x00000000)        /* Zune 20030530  isg BOOL        */
+    (MUIB_Area | 0x00000000)  /* Zune 20030530  isg BOOL        */
 
 #ifdef MUI_OBSOLETE
-#define MUIA_ExportID (MUIB_MUI | 0x0042d76e)     /* V4  isg ULONG */
+#define MUIA_ExportID (MUIB_MUI | 0x0042d76e)  /* V4  isg ULONG */
 #endif /* MUI_OBSOLETE */
 
 struct MUI_ImageSpec_intern;
@@ -2412,7 +2412,7 @@ struct MUIP_Group_DoMethodNoForward
     (MUIB_MUI | 0x0042e1bf)        /* MUI: V4  isg LONG          */
 
 #define MUIA_Group_Virtual \
-    (MUIB_Group | 0x00000000)    /* Zune: V1 i.. BOOL  */
+    (MUIB_Group | 0x00000000)      /* Zune: V1 i.. BOOL  */
 
 enum
 {
@@ -2433,8 +2433,8 @@ struct MUI_LayoutMsg
                                              * MUILM_MINMAX results */
     struct
     {
-        STACKED LONG Width;
-        STACKED LONG Height;
+        STACKED LONG  Width;
+        STACKED LONG  Height;
         STACKED ULONG priv5;
         STACKED ULONG priv6;
     } lm_Layout;                /* size (and result) for MUILM_LAYOUT */
